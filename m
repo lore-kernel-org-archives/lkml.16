@@ -1,47 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7549725C712;
-	Thu, 26 Jun 2025 08:18:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F711FF7B4;
+	Thu, 26 Jun 2025 08:19:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750925884; cv=none; b=DV3ezoSX5RhW9jifqNF7xl9TPmKvo7Al3uxsiTLDHTgiFANBJ7ztflNUYggwyX1DqnAH9KgCwMKGqq5D/ihy2bW1JK92x2AYRlBoMkJlVzQGskEUP8XnUNaEEk39Jg/psxstU9YeLetiuAdOQeuiDhb/h35RfrE6B7YyK8X+Zkw=
+	t=1750925952; cv=none; b=Lwt0PvPapl7CX+9uIEgb14b5uy7A8xasDICXbj2VppTGzuR+/YqNt7IyubvR1vV3uayIiJlzWc+bBnLOL6gp/a4V+bJXD+RNi5H8y2Y/ojiQ/f08VyN9IY3ZQA6/VTyxKeMEne96at1y3i0/Kx1C7DRaMxsYpwYHUaI2jFt5te0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750925884; c=relaxed/simple;
-	bh=nw32RVdX+sPxj5/rkp3fDWbgLPASW4ZNwW2EgR81hY4=;
+	s=arc-20240116; t=1750925952; c=relaxed/simple;
+	bh=agZj/wzaMpG6bvF18cvXlY4v555Y3BqcKQTQxhyrWhE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uwGi8u9Bnl5YtXCe4mLGci5ADeJahhAIXVDIARyRCIdc9yynXX9X2phujVY08uCRfAWClNe7XFPFc+NLqj57CzSxKc0i13qvnD19NzHG9Mzf4Bhklzdi3lJ41XeKOGuMiqgbPlKeoeUvhpTPXAzXxI/qo4957z6n/bOBbhZjLWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjFvrUMT; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MWPEF/xpO2ws4gJrn6nC9YL33DzDWe1GjJ/5tAI6St/2LSLHRSck9z7nROgFX0cNQAgYSqSP2qjBpyt5i3XJ81q9fnH0VrlQk0QkMMg/JAqIB7ClRqiQZL1h/Dc1ZmIY9Wuar3AqYwo86G29/ooCLOHkPC1xdKTLSlqe3ihKkoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JHAtd2Ro; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjFvrUMT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C91DC4CEEB;
-	Thu, 26 Jun 2025 08:18:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JHAtd2Ro"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32322C4CEEB;
+	Thu, 26 Jun 2025 08:19:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750925884;
-	bh=nw32RVdX+sPxj5/rkp3fDWbgLPASW4ZNwW2EgR81hY4=;
+	s=k20201202; t=1750925951;
+	bh=agZj/wzaMpG6bvF18cvXlY4v555Y3BqcKQTQxhyrWhE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QjFvrUMTZeqVFVWmPj6l/dNsJiepWMU78PBkVm726SNdtI5hGDmSJCu4+6RDkhLLn
-	 qqmfmOMY5rHyIZBG9WcKcjp5QlMB4gG5YNg7EV2HqA/kxAkvKJqnPhbZc3b1m2LHEY
-	 MU2F4I82+9A02ABknSba6WNFRG67ZpSwJ/aE0pzPxzCLDSCWe7tNnGAmXI0wDYTYHT
-	 bzRjJOEvsETaGkZTq/YH/rbSnRYoP1/U3BKem0TveGfDFuBV4QsFRMtxsOOz3wvEaz
-	 tbtD8siEMyDIS6Pwn/pEGZ3Y9sDvPUSyTdgXGqRsR8d3aZC0Mx/S1LtHgYWL80LvYp
-	 CIy98Nay2IitA==
-Date: Thu, 26 Jun 2025 09:17:59 +0100
-From: Simon Horman <horms@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	bpf@vger.kernel.org, gustavold@gmail.com,
-	Stanislav Fomichev <sdf@fomichev.me>
-Subject: Re: [PATCH net-next v2 0/4] selftest: net: Add selftest for netpoll
-Message-ID: <20250626081759.GS1562@horms.kernel.org>
-References: <20250625-netpoll_test-v2-0-47d27775222c@debian.org>
- <20250625184346.GM1562@horms.kernel.org>
- <20250625144604.3f60d09d@kernel.org>
+	b=JHAtd2RowB8YUj61KdTZX0EkkfQeqM1sQjQiU4ebRUsQTxFnsAtvwmSnDVNOKt3Lj
+	 dZv41Y0aTFp+blxCjjjciIAfJTKsQP8atdMyF50ceEgJymd9Pt2Vwv3h/ZsWHqdv77
+	 9oHdmNyvr+g3lRPE+tAJ+Uiei6mQ1ZTGltFj5nC18Di9/5zaGQLzlOUqKhW355+jSZ
+	 3cudfWUHngbills5+n/2rOKx4Dfh9tdjvS820U27v+Mye/XZsNh/sKyFkcb0PHbjaX
+	 C7Zx2maWxH0nhD12jbl/oyoiKbJSQQ2zldEOPcyG1A/meONM7Uczvd6NuXowBPzuup
+	 9c/+RORnADZXw==
+Date: Thu, 26 Jun 2025 10:19:06 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: linux-coco@lists.linux.dev, kvm@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>,
+	"open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" <linux-efi@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] x86/sev: Let sev_es_efi_map_ghcbs() map the caa
+ pages too
+Message-ID: <aF0CemSo0go8-Bru@gmail.com>
+References: <20250626074236.307848-1-kraxel@redhat.com>
+ <20250626074236.307848-3-kraxel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,24 +50,109 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250625144604.3f60d09d@kernel.org>
+In-Reply-To: <20250626074236.307848-3-kraxel@redhat.com>
 
-On Wed, Jun 25, 2025 at 02:46:04PM -0700, Jakub Kicinski wrote:
-> On Wed, 25 Jun 2025 19:43:46 +0100 Simon Horman wrote:
-> > # # Exception| Traceback (most recent call last):
-> > # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/net/lib/py/ksft.py", line 243, in ksft_run
-> > # # Exception|     case(*args)
-> > # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/drivers/net/./netpoll_basic.py", line 308, in test_netpoll
-> > # # Exception|     do_netpoll_flush_monitored(cfg, netdevnl, ifname, target_name)
-> > # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/drivers/net/./netpoll_basic.py", line 243, in do_netpoll_flush_monitored
-> > # # Exception|     do_netpoll_flush(cfg, netdevnl, ifname, target_name)
-> > # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/drivers/net/./netpoll_basic.py", line 278, in do_netpoll_flush
-> > # # Exception|     if bpftrace_any_hit(join=False):
-> > # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/drivers/net/./netpoll_basic.py", line 230, in bpftrace_any_hit
-> > # # Exception|     raise KsftFailEx(f"bpftrace failed to run!?: {MAPS}")
-> > # # Exception| net.lib.py.ksft.KsftFailEx: bpftrace failed to run!?: {}
+
+* Gerd Hoffmann <kraxel@redhat.com> wrote:
+
+> OVMF EFI firmware needs access to the CAA page to do SVSM protocol calls. For
+> example, when the SVSM implements an EFI variable store, such calls will be
+> necessary.
 > 
-> Looks like I haven't added bpftrace to the image before.
-> Fixed now.
+> So add that to sev_es_efi_map_ghcbs() and also rename the function to reflect
+> the additional job it is doing now.
+> 
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  arch/x86/include/asm/sev.h     |  4 ++--
+>  arch/x86/coco/sev/core.c       | 20 ++++++++++++++++++--
+>  arch/x86/platform/efi/efi_64.c |  4 ++--
+>  3 files changed, 22 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+> index 58e028d42e41..6e0ef192f23b 100644
+> --- a/arch/x86/include/asm/sev.h
+> +++ b/arch/x86/include/asm/sev.h
+> @@ -445,7 +445,7 @@ static __always_inline void sev_es_nmi_complete(void)
+>  	    cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
+>  		__sev_es_nmi_complete();
+>  }
+> -extern int __init sev_es_efi_map_ghcbs(pgd_t *pgd);
+> +extern int __init sev_es_efi_map_ghcbs_caas(pgd_t *pgd);
+>  extern void sev_enable(struct boot_params *bp);
+>  
+>  /*
+> @@ -556,7 +556,7 @@ static inline void sev_es_ist_enter(struct pt_regs *regs) { }
+>  static inline void sev_es_ist_exit(void) { }
+>  static inline int sev_es_setup_ap_jump_table(struct real_mode_header *rmh) { return 0; }
+>  static inline void sev_es_nmi_complete(void) { }
+> -static inline int sev_es_efi_map_ghcbs(pgd_t *pgd) { return 0; }
+> +static inline int sev_es_efi_map_ghcbs_caas(pgd_t *pgd) { return 0; }
+>  static inline void sev_enable(struct boot_params *bp) { }
+>  static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate) { return 0; }
+>  static inline int rmpadjust(unsigned long vaddr, bool rmp_psize, unsigned long attrs) { return 0; }
+> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+> index b6db4e0b936b..b52318d806b6 100644
+> --- a/arch/x86/coco/sev/core.c
+> +++ b/arch/x86/coco/sev/core.c
+> @@ -1045,11 +1045,13 @@ int __init sev_es_setup_ap_jump_table(struct real_mode_header *rmh)
+>   * This is needed by the OVMF UEFI firmware which will use whatever it finds in
+>   * the GHCB MSR as its GHCB to talk to the hypervisor. So make sure the per-cpu
+>   * runtime GHCBs used by the kernel are also mapped in the EFI page-table.
+> + *
+> + * When running under SVSM the CCA page is needed too, so map it as well.
+>   */
+> -int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
+> +int __init sev_es_efi_map_ghcbs_caas(pgd_t *pgd)
+>  {
+>  	struct sev_es_runtime_data *data;
+> -	unsigned long address, pflags;
+> +	unsigned long address, pflags, pflags_enc;
+>  	int cpu;
+>  	u64 pfn;
+>  
+> @@ -1057,6 +1059,7 @@ int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
+>  		return 0;
+>  
+>  	pflags = _PAGE_NX | _PAGE_RW;
+> +	pflags_enc = cc_mkenc(pflags);
+>  
+>  	for_each_possible_cpu(cpu) {
+>  		data = per_cpu(runtime_data, cpu);
+> @@ -1068,6 +1071,19 @@ int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
+>  			return 1;
+>  	}
+>  
+> +	if (!snp_vmpl)
+> +		return 0;
+> +
+> +	for_each_possible_cpu(cpu) {
 
-Thanks, it looks good now.
+
+So while it's only run-once __init code, still there's no good reason 
+to have *two* all-CPUs loops in the same function.
+
+> +		address = per_cpu(svsm_caa_pa, cpu);
+> +		if (!address)
+> +			return 1;
+
+Yeah, so could we please use sensible & standard error return values 
+such as -EINVAL? This is a pre-existing problem in this function, so it 
+should be done in a separate, preparatory patch. (And yeah, the error 
+codes of efi_setup_page_tables() are kinda lame too, but there's no 
+reason to repeat that mistake in the SEV code.)
+
+> +
+> +		pfn = address >> PAGE_SHIFT;
+> +		if (kernel_map_pages_in_pgd(pgd, pfn, address, 1, pflags_enc))
+> +			return 1;
+
+
+Ditto - for consistency this should just pass through the error code 
+that kernel_map_pages_in_pgd() gives.
+
+No objections to the added functionality/fix aspect.
+
+Thanks,
+
+	Ingo
