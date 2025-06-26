@@ -1,64 +1,64 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB55F4C74;
-	Thu, 26 Jun 2025 01:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265104C74;
+	Thu, 26 Jun 2025 01:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750902375; cv=none; b=iI68FHcIZy6xo3Hqc6ESMMO3i5QkcDL5ZaF3xf3g1MLwEu28+cBQvWkOj3OPb8z11LVUhHIh1wDglJr699WORWxlWfYgs4OeBx9j6xI+MuBkCSDgah0wdGLR3anbU8NcpmRMdcOhE5RIeZ61uSM+BF/bzaiZb59Ozo0+CBDvCc8=
+	t=1750902472; cv=none; b=lA+2JqPpEFBDvROdPGx8LgUHd6UhlVS+ePQ5bxwx4Iik8kTX6Ws+vPWGHxfWsracGXdaD1NZ7HOnm1QjGCRgIiB3292HdPFZY7eFI3cfFBXYdhpF+TNdWEhjkfW38SEP20k8aJQpID7F5xdl1x+rFBUqXZgB+bCOexbdTmCHpnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750902375; c=relaxed/simple;
-	bh=bSn+PlAXhoSl/y3LaLVJ7aGxeWPVSPw+rfLL25K0Lc0=;
+	s=arc-20240116; t=1750902472; c=relaxed/simple;
+	bh=yse0S93gaz/snfwu4NSc3Kiq0itbOcpq8FTI+UMzEGw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ELMuuKjCtEKV1dYGzGG0jSdiy3x6p/xSDn+cCnP/eWM2zZEylp0mObhLGMbLNr+LmU9tiGLEV0VqJGRnvgoOjdrHflTn1VoYrQLjh5mvZmPWtHt3pUjyi4HadWXrd8GlopewbpNeCpB443QOHST38xjVpJQScIaqgeOspAQZx+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b/gN/ncd; arc=none smtp.client-ip=209.85.215.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=pqYJAF3fgilA5Q4t2Dv/TSXt4z7+Lalfxtu9JJV9/XOEx1BnHbC4VlGcm8bzUY7FHbhrYOb5R+t/99owHrN6E85cxcLQoJthD6YpEMxLuqRpIipi7Nmvi87LXyL94PbWslnkF2UnMzFxRP2Fbf/DafEKTwpelqlsR7SE0o4Qj0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MZLOf9VF; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/gN/ncd"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b3182c6d03bso565126a12.0;
-        Wed, 25 Jun 2025 18:46:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZLOf9VF"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-23633a6ac50so7223555ad.2;
+        Wed, 25 Jun 2025 18:47:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750902373; x=1751507173; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750902470; x=1751507270; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lq3SiHnJ/sMr4QNwXyLgB3hBprROz+eEGhl/zVcI28w=;
-        b=b/gN/ncdwm7+I7ZthP6I4l9oAr8Km84V1R+/ykta6whqgLcbxnOuaHs5ZIy64MOh5J
-         IT0wYAUFAZu3xZKjriLVEJn3yqT1y/V+/grjIPsQMZmRyvV2VJ5D9767C3ih430KPd00
-         WF46F9Ua39NpYFxtyN7/m0VyglkOVsad6OAPeI7lmOE4lbKsd6asssIHWEAu+FuDqXhb
-         xcLKqRp9ataPAY95mk0GzXgkJJPJVSFwzNIWQBkIcgZD9xNYKzfv8G/ePxTCr+QDdVNB
-         vDbUZ+Uf2zSHtmWWQCRDb+9usR/lf8nTn8mRPmcHJmhQYzm1GjQRySaoOsFVD5fwcrDe
-         5r6A==
+        bh=oeEe2xDl4J3QKXU3s6+5yOfkNnMzI/iOfTI3SJ90Emg=;
+        b=MZLOf9VFd9rOveuErKsiiJQjHco/o8SfetDSdY9Yi1/yuf/B/g+5QgIY4ZCrmuuwGB
+         K/XrwymHwRHfy3fyDR3GEnk+WRGP1L4ULGs4NK2PVVyb713y0hu6b8CpKw3aeto/+BPn
+         Z5Ku5cSujr+db70OOGmfwsTdUfk+RJ3gL21Rs7xR55X3F4FeNMTsP2PSAMrVCt5XV8oD
+         143JIwf5h/lZudJGGCVq0EM/dxQzUrmWUgqOelCBOq5DzdgWWJkE9rbGd3P/zEbkObMl
+         9MTyVP38TpVOQpXTwoh2CLj7xD7xKnIQcVpxKje304nphFR0VkSxA2uVQrzCyJ/Zy5mD
+         glWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750902373; x=1751507173;
+        d=1e100.net; s=20230601; t=1750902470; x=1751507270;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lq3SiHnJ/sMr4QNwXyLgB3hBprROz+eEGhl/zVcI28w=;
-        b=PKD2U54QipL8BL8VbrCavJ4CyWBx8eTGb/eWAVbSOR1Yp+2KUHqFDoU0VPXy9GL1M/
-         nGuZF04T95J5WpCzx71QK5+MROWVOfU5tsx6OMwA9iROHB0EDEO66pyqEsFLRamtf9AS
-         ONYCEaJtwZ7f8+ujg5BBV6n0+A/AoN1lL0J3GYw4F4fILB9bVgOpHWoAj379KKWu/XtO
-         seq1Usw5vpMQSyk6qjLG34cXGRhMV49yiGM+cUPFM3Grt0eCFkjF13LF7S0g0MDJI1IZ
-         BAzocLlr8KlSbOqYv009f41ACvF4Cf5deL5r55wiGaz6lwuMbOrJn4loZ4c///VkTW1G
-         Fc0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUUYjOuu/vqntCezDcLJrk/fP1xpdlkwxSYqkD9rpy6prZGTdWwSRQXUkNLckT9I3Ja5pIPpxL9w7U=@vger.kernel.org, AJvYcCWeZ+/Ho9vt3kd/bs6PZ3UDP9DD3i6ws6oQUPq0DZyDhu9zkqpt49oadtFtzx96hVNZLuE6DgH7RmFvcoDZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw89MSK6CrTIcIjuJc767YrJSDBaGXhgNAwgg0YroEPUYegcbFs
-	WxjtnQ0mK7Sdqyq3oma1DDRI7Fdsq3gc5NC1otOVA2irqMQy8E0mfrRh
-X-Gm-Gg: ASbGnctfFoyBDprCWLbRNys+BRS51b4gHVTQy1MVYhIQ1+YwXjB2Z9VX+9xqZogEb7+
-	9ZnjG6nPAw0hHYp0bStnNyJw64w/vJnXoWgmYy4fpo1Fc11scGSx2awnG4krxKTyc9eJV5j/5Es
-	zOE1tKvOLiENQMlJ8BkBR6ZatEvTJ6e28hRKJ5tky58/fPfAIgjToOXaluJCGGDDnejQOmwxOEf
-	ZqT/VcqeCK7moOeITNGN/xqNpKtj8ldAyAjhmnQhhPjEN0BoBeU09CVTo+kA53+0ij5pB9oiRb4
-	BUw//wGvNgHS0RoVRpOQ3Mevjx4AseJPzb8vwZCOBuDtihDi7JaQO5xmB5Qctg==
-X-Google-Smtp-Source: AGHT+IGyr80L4eOHv3yLu/dw1hnDWmf1wAOjqnPnOOGwaeNvDeEwtPUcQtn3Lwxiua7BosRBAt1eoQ==
-X-Received: by 2002:a05:6a21:1807:b0:21f:792c:dc75 with SMTP id adf61e73a8af0-2207f285d61mr9401593637.34.1750902373062;
-        Wed, 25 Jun 2025 18:46:13 -0700 (PDT)
+        bh=oeEe2xDl4J3QKXU3s6+5yOfkNnMzI/iOfTI3SJ90Emg=;
+        b=ALUPe93MtgaamxKrPZtlJ8oueZ4PC5sPgEIgStkozlS1Exs9npjheZBvf141ptpLu6
+         5L8BCHsNwn4W3o1jIzc8WBLQrrbTg9BKiyxuJiWp6fz9fYy8TS3YA4bKzvIjSbkGkO/s
+         xgD8Iy1SdAFMYla4lS0LOH6kD9w5DnjfUr/xi7cuRtAT335/DRG7FyFtUUwCi0y70ZgV
+         ji6tTYKNeesOqfnuf13TdA4TYE5aw5UYh33/9hss08SOsHdZC0RKKbkBZ6m9ivSN8EkU
+         0oybtv/QyzFnd8Lpw9cCPG39bJqxy2uPfkvFrChZAsQkfRzW5XlozCfSpWsGp9Twu3sT
+         iAZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhxRnqy0EFk+wFRmWNktjcMLj1J5IrM4is2aB7T+8r0nIui5dt76thTNu1aHbSKXtGtjavJ735rQs=@vger.kernel.org, AJvYcCWnR1SbHwHF0jBlI9NiQHQMrwxliucL6BKeMh8UckqQiCAy0gf4TCsOIKKpV5Dcuj4jk10rqcERobclGIb5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9H2XpGbBnSuccWJ+hsz062zFrDVgCedasT+qbNNO9Vx1+QCB7
+	oD9kM+4MvGYJxeL9/QGVKA7pYXSCd57Lx6rSNGcTpA54ffUckr2TCl3t
+X-Gm-Gg: ASbGncvPFwDr+cZgkPcOw5M4Vv20Nz5GvabTXmlOrazcwX2SIAckD9cQGB0fjATeJZz
+	JAehBawXt7riPTaVISUfFPhq+b9cLcm6k7V9+OBMJDoXafF1I8h/xyxRhnCPXuskHPe3ZsM8SmP
+	h5+BJtPDhZFDxVRke8xRILV4CzXqjPI/koOLHoGNkg9v5DFb7kEba3i5j+ypG2ayLPtj/jXes6B
+	SSa80lE7uXINuRKj1RmA8coP9umvsjHYTuMFMfX5ukP7uU/GsEggqXa3UIknDdb9Fv5TDDcBV1W
+	VEg0qjqreOtjBPVbNTmRgR2XFbVZunaK/qd/QcUdHjfWt9pGEFjkkhL8FEI6cw==
+X-Google-Smtp-Source: AGHT+IHUyuL8SGf3zYTOKdOAHOCLsm1QeirLg59dt/DDUrPTSwKLQ+Bt6deh6FLvwy83L6KVHx7/Qw==
+X-Received: by 2002:a17:902:dacf:b0:234:8e54:2d53 with SMTP id d9443c01a7336-2382406d49bmr84147085ad.45.1750902470390;
+        Wed, 25 Jun 2025 18:47:50 -0700 (PDT)
 Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34c431806fsm295313a12.31.2025.06.25.18.46.11
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8398dcbsm143408545ad.48.2025.06.25.18.47.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 18:46:12 -0700 (PDT)
+        Wed, 25 Jun 2025 18:47:49 -0700 (PDT)
 Received: by archie.me (Postfix, from userid 1000)
-	id 0E031420A9A6; Thu, 26 Jun 2025 08:46:08 +0700 (WIB)
-Date: Thu, 26 Jun 2025 08:46:08 +0700
+	id BB6FC420A9A6; Thu, 26 Jun 2025 08:47:46 +0700 (WIB)
+Date: Thu, 26 Jun 2025 08:47:46 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
 To: Petr Tesarik <ptesarik@suse.com>, Jonathan Corbet <corbet@lwn.net>,
 	Morton <akpm@linux-foundation.org>
@@ -70,10 +70,10 @@ Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
 	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
 	open list <linux-kernel@vger.kernel.org>,
 	"open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
-Subject: Re: [PATCH 3/8] docs: dma-api: remove remnants of PCI DMA API
-Message-ID: <aFymYNdHSApXXSzy@archie.me>
+Subject: Re: [PATCH 6/8] docs: dma-api: clarify DMA addressing limitations
+Message-ID: <aFymwvL5vcfWBy73@archie.me>
 References: <20250624133923.1140421-1-ptesarik@suse.com>
- <20250624133923.1140421-4-ptesarik@suse.com>
+ <20250624133923.1140421-7-ptesarik@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,84 +81,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/k8GDMthe5m94/ks"
+	protocol="application/pgp-signature"; boundary="BITuZ8ddHLuJ6SPc"
 Content-Disposition: inline
-In-Reply-To: <20250624133923.1140421-4-ptesarik@suse.com>
+In-Reply-To: <20250624133923.1140421-7-ptesarik@suse.com>
 
 
---/k8GDMthe5m94/ks
+--BITuZ8ddHLuJ6SPc
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 24, 2025 at 03:39:18PM +0200, Petr Tesarik wrote:
+On Tue, Jun 24, 2025 at 03:39:21PM +0200, Petr Tesarik wrote:
 > diff --git a/Documentation/core-api/dma-api.rst b/Documentation/core-api/=
 dma-api.rst
-> index c0a2cc7d0b95..3e89e3b0ecfd 100644
+> index f7fddaf7510c..cd432996949c 100644
 > --- a/Documentation/core-api/dma-api.rst
 > +++ b/Documentation/core-api/dma-api.rst
-> @@ -53,10 +53,9 @@ minimum allocation length may be as big as a page, so =
-you should
->  consolidate your requests for coherent memory as much as possible.
->  The simplest way to do that is to use the dma_pool calls (see below).
+> @@ -90,13 +90,20 @@ description of the DMA pools API.
+>  Part Ic - DMA addressing limitations
+>  ------------------------------------
 > =20
-> -The flag parameter (dma_alloc_coherent() only) allows the caller to
-> -specify the ``GFP_`` flags (see kmalloc()) for the allocation (the
-> -implementation may choose to ignore flags that affect the location of
-> -the returned memory, like GFP_DMA).
-> +The flag parameter allows the caller to specify the ``GFP_`` flags (see
-> +kmalloc()) for the allocation (the implementation may ignore flags that =
-affect
-> +the location of the returned memory, like GFP_DMA).
-> =20
+> +DMA mask is a bit mask of the addressable region for the device. In othe=
+r words,
+> +if applying the DMA mask (a bitwise AND operation) to the DMA address of=
+ a
+> +memory region does not clear any bits in the address, then the device can
+> +perform DMA to that memory region.
+> +
+> +All the below functions which set a DMA mask may fail if the requested m=
+ask
+> +cannot be used with the device, or if the device is not capable of doing=
+ DMA.
+> +
 >  ::
 > =20
-> @@ -64,13 +63,12 @@ the returned memory, like GFP_DMA).
->  	dma_free_coherent(struct device *dev, size_t size, void *cpu_addr,
->  			  dma_addr_t dma_handle)
+>  	int
+>  	dma_set_mask_and_coherent(struct device *dev, u64 mask)
 > =20
-> -Free a region of coherent memory you previously allocated.  dev,
-> -size and dma_handle must all be the same as those passed into
-> -dma_alloc_coherent().  cpu_addr must be the virtual address returned by
-> -the dma_alloc_coherent().
-> +Free a previously allocated region of coherent memory.  dev, size and dm=
-a_handle
-> +must all be the same as those passed into dma_alloc_coherent().  cpu_add=
-r must
-> +be the virtual address returned by dma_alloc_coherent().
+> -Checks to see if the mask is possible and updates the device
+> -streaming and coherent DMA mask parameters if it is.
+> +Updates both streaming and coherent DMA masks.
 > =20
-> -Note that unlike their sibling allocation calls, these routines
-> -may only be called with IRQs enabled.
-> +Note that unlike the sibling allocation call, this routine may only be c=
-alled
-> +with IRQs enabled.
+>  Returns: 0 if successful and a negative error if not.
 > =20
+> @@ -105,8 +112,7 @@ Returns: 0 if successful and a negative error if not.
+>  	int
+>  	dma_set_mask(struct device *dev, u64 mask)
 > =20
->  Part Ib - Using small DMA-coherent buffers
-> @@ -246,9 +244,7 @@ Part Id - Streaming DMA mappings
->  Maps a piece of processor virtual memory so it can be accessed by the
->  device and returns the DMA address of the memory.
+> -Checks to see if the mask is possible and updates the device
+> -parameters if it is.
+> +Updates only the streaming DMA mask.
 > =20
-> -The direction for both APIs may be converted freely by casting.
-> -However the DMA API uses a strongly typed enumerator for its
-> -direction:
-> +The DMA API uses a strongly typed enumerator for its direction:
+>  Returns: 0 if successful and a negative error if not.
 > =20
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->  DMA_NONE		no direction (used for debugging)
-> @@ -325,8 +321,7 @@ DMA_BIDIRECTIONAL	direction isn't known
->  			 enum dma_data_direction direction)
+> @@ -115,8 +121,7 @@ Returns: 0 if successful and a negative error if not.
+>  	int
+>  	dma_set_coherent_mask(struct device *dev, u64 mask)
 > =20
->  Unmaps the region previously mapped.  All the parameters passed in
-> -must be identical to those passed in (and returned) by the mapping
-> -API.
-> +must be identical to those passed to (and returned by) dma_map_single().
+> -Checks to see if the mask is possible and updates the device
+> -parameters if it is.
+> +Updates only the coherent DMA mask.
 > =20
->  ::
+>  Returns: 0 if successful and a negative error if not.
 > =20
-
+> @@ -171,7 +176,7 @@ transfer memory ownership.  Returns %false if those c=
+alls can be skipped.
+>  	unsigned long
+>  	dma_get_merge_boundary(struct device *dev);
+> =20
+> -Returns the DMA merge boundary. If the device cannot merge any the DMA a=
+ddress
+> +Returns the DMA merge boundary. If the device cannot merge any DMA addre=
+ss
+>  segments, the function returns 0.
+> =20
+>  Part Id - Streaming DMA mappings
+> @@ -205,16 +210,12 @@ DMA_BIDIRECTIONAL	direction isn't known
+>  	this API should be obtained from sources which guarantee it to be
+>  	physically contiguous (like kmalloc).
+> =20
+> -	Further, the DMA address of the memory must be within the
+> -	dma_mask of the device (the dma_mask is a bit mask of the
+> -	addressable region for the device, i.e., if the DMA address of
+> -	the memory ANDed with the dma_mask is still equal to the DMA
+> -	address, then the device can perform DMA to the memory).  To
+> -	ensure that the memory allocated by kmalloc is within the dma_mask,
+> -	the driver may specify various platform-dependent flags to restrict
+> -	the DMA address range of the allocation (e.g., on x86, GFP_DMA
+> -	guarantees to be within the first 16MB of available DMA addresses,
+> -	as required by ISA devices).
+> +	Further, the DMA address of the memory must be within the dma_mask of
+> +	the device.  To ensure that the memory allocated by kmalloc is within
+> +	the dma_mask, the driver may specify various platform-dependent flags
+> +	to restrict the DMA address range of the allocation (e.g., on x86,
+> +	GFP_DMA guarantees to be within the first 16MB of available DMA
+> +	addresses, as required by ISA devices).
+> =20
+>  	Note also that the above constraints on physical contiguity and
+>  	dma_mask may not apply if the platform has an IOMMU (a device which
+=20
 LGTM, thanks!
 
 Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
@@ -166,15 +187,15 @@ Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 --=20
 An old man doll... just what I always wanted! - Clara
 
---/k8GDMthe5m94/ks
+--BITuZ8ddHLuJ6SPc
 Content-Type: application/pgp-signature; name=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaFymWgAKCRD2uYlJVVFO
-o5drAP9fXYdw6+4fZYNwvXAgGezIFB9llc5nQyNnXWPwVbdB9QEA6e7hI2YkqCD3
-JGNjhBlbhEfrMD7mZTXRieoVHwpNNgQ=
-=26Za
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaFymwgAKCRD2uYlJVVFO
+o7rxAP0ZAy7lZM118PZvIR9Mzi0gfM5j+SZoiRLHRS/Zy5z1kAEAn7A9H4kowyXC
+g8MS770xUyWQOX9UL6zHv1qIaH95ZwA=
+=2Td5
 -----END PGP SIGNATURE-----
 
---/k8GDMthe5m94/ks--
+--BITuZ8ddHLuJ6SPc--
