@@ -1,260 +1,219 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023CFBA53;
-	Thu, 26 Jun 2025 13:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E8D2E542A
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943696; cv=none; b=usMRzCRQRbaJLOy4Uudv7CY/zYb0gonnRTYV3BGZ5XCA8kBjaEYF+MItgR39/jmWvDSKBaqdBETDXq3Ybx8yO4ef2cnHY+SQ6fraK5dl9FMgGdrI6fhTGY7Rhgp1id3URXAnFQLgMezRzcyMHcVR0GZZMrv4KQB3Y02ZAffe58Q=
+	t=1750943713; cv=none; b=jwA5ppjR8pieTVlEQGPaPrl+wyiqFkm8O9cut63QDgf6y3UP4o1sdRtZXMZK6ENqRBvjcW5iyD4Ulki+qoRVs5Dd45uT/cw+gdEuTEp8RgkJ1fIT61PLw91eSGYqcBEBzsOBLmaWxtFOHK+vfbbI/NCXFo/Hd+7EZHoXxd1j93Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943696; c=relaxed/simple;
-	bh=1CEaKdy1TOG3I9LzmMkTnI5kzN0ZIN0cpolnrxRYvOI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aXB/8Ox9lHPC27+oaFS4SZ6yAxd2SDDJArAnwIAalezf1CX1ZCGUbii2LrsKTG1BP7yTI0uEyaEzJF28x3Tf/aaWz49ll0kbUCzXTb0Z6ioIF/txZrlHTg4u8Eqqh03sWWZL6IqHxbH8qh3gEs3+WJigGEo8XGoCOalD8Pe5iiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nP/sruRc; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750943713; c=relaxed/simple;
+	bh=5u9cun5r3VtNRTKJoYoiJ4o51uev8f7R7V33C7qbCmQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=UGypvFzBJSPxMN5ulqLQqJaUFTyY1U3Y2vXG/5czpXR5+Qev+Db6Htg8G54jlc4Z0V3bQULJbXpnfjfHpQVE4EhSbCn5Tdj7Jq2rPap0xxuIYmD0RwcCf+QawSC4iSMlSmyZINt50YON3DrS9rdfRfQerFut+TsILdor6JXX2aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=HseF3YoJ; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nP/sruRc"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-32ade3723adso10387291fa.0;
-        Thu, 26 Jun 2025 06:14:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750943693; x=1751548493; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5lnf8dy7gqziu3el989oNu2CQe5RMJbnDd94a6NU/JI=;
-        b=nP/sruRc2aXgC0JdCnspy1WocPkNMawYDIXHviUO4f3kSLfgrb32pswfeACrzVEAWD
-         Ex19oxFZCWRnwpMg2Ac5hBrqat5yX1NcF8BUInOpT9D2Wtl9ukLEoa+J/0YwGwvb9YRH
-         fp6GOKoJNDPuXEv2xBCVPo10joXkSfQwhORX2yi164AdOZ2ojqAjaDQwHCvxBiW5piDa
-         36iE7DJ5z+6UID1zQNrgomrN2hoQ20jRsVheQB6i+6KeeZ/KxES+GyG/zjAog22w2FV+
-         Csu8a4f1IKuhNraFmuT0GkP3cP1Cnqc5/SEZxJ2J19UlOaVBVgE1YgtoXVkYhtFlNgi3
-         bblQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750943693; x=1751548493;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5lnf8dy7gqziu3el989oNu2CQe5RMJbnDd94a6NU/JI=;
-        b=ZMqGjKwssbGerV7D3wWJvBb9hAZpSHNdhNZ30JPG9rrhZ8/bXGh7vfSABf9HIrTFLr
-         UxndAYBbXmgltViKAN7yNMMw4lvuDvT7lAMqVwedgid4LcQJq0v/AWTIvTpFkH0jFZud
-         XdZpINJBzkQrl36ooOZQfjo9aMeHXrKZ/PzxhyIxXKml4KWZJS31JLpkEabKvbq2Qc48
-         OJGLczhMPZkOUsq/ZHwOvSU+qvWItisXQHEKe3zxOnG7dsdHHtpWuAqGN588Fvy1lnDM
-         pQOjsYz59C+I9nGcbY3yv3bak4iO5AL6N3LT+SVgjaL7Mxmvihm4hrSBiFf9YfBNZEDc
-         mDCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUEDy4zmWGYsMqttaqi0WDrdMtn7+WiOr1AUS8UUndAsFwE9HTRxDtQjhE9F/PFAtZNelBQWtMWDW1tHV3l@vger.kernel.org, AJvYcCVKNrURyXp0DqVSP6wc6JNO7NCl3rSAWY73akJjcffLp2PAb+xz8M3vV9qBhg7aizhaxWdYqBiTS2MC0q0rBgo=@vger.kernel.org, AJvYcCVqSAzbQYlaGgg83TePRBemDO2jeMBfQ5dGw/49kMqnDyrwl35+Atea4GjMyIC+qOS1pW95xgT0@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwlyrzIcvRTm/wxZ7fn0CE4hRBPGx9Fs91fUZsutQqReS4vu5v
-	0mjGWwDSfHXoX6DoHzlrZJs49VbR5NAy/lVQK8jjC3IC2uvar87/EH+O5E4bgosp13U04yXYtWF
-	zn0yWehqCjd9TxnSQjl5WUsHbnbpgcbI=
-X-Gm-Gg: ASbGncvVMbbVURJyFo19Rux0yw5tm3690dTmBOBHhwQuZRCcM6yGUyaGQh32X1pp7tT
-	xYJIpeRVqHTCQdFz/Yw/NLw4FYCJLp1JHln/rOej9UmCmCkY8Lwo95mOccw6N3CXmuBECzfTddD
-	XgZnVB5ssQE3KOS7rrXZ1kSZvVKIP2vU70B7oV7ygtFg==
-X-Google-Smtp-Source: AGHT+IGE8RpqcSJalWopzSPMD6gmtxmQMZZk8w6T2SLCJ0icJVZoYy+rFvK8hokg31uZA75ITTysdg/W64MRaXJYPtc=
-X-Received: by 2002:a2e:b754:0:b0:32b:47be:e1a5 with SMTP id
- 38308e7fff4ca-32cc65c1285mr14373901fa.39.1750943692808; Thu, 26 Jun 2025
- 06:14:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HseF3YoJ"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250626131503epoutp02bfd81caa7192de014b36abc82aed4338~MmgWJIV1u1401914019epoutp02d
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:15:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250626131503epoutp02bfd81caa7192de014b36abc82aed4338~MmgWJIV1u1401914019epoutp02d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750943703;
+	bh=Z48CYdHuCTJ8UqTDSPkDCBaoRT5Me1js72mN5Gpyzc4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HseF3YoJ/ErY1Q3qa8hrIZSWKvis+9/cOakNJcNU3YfiiS3ZGcY82cFKHb/hO7h/4
+	 YzjQ20vlHbPsjt/uEh0e8hOi7Cymp8BqVtzUSXSCvmsK13Tbpa7GpAdEJYwy6cGWAr
+	 HgjKAP7SPWdlMr9l3+oQDoo0iE6mvKjGny+8vNyc=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250626131503epcas5p3ad3b098c17283812411ba6ae12e24742~MmgVg38-g2713827138epcas5p3g;
+	Thu, 26 Jun 2025 13:15:03 +0000 (GMT)
+Received: from epcpadp1new (unknown [182.195.40.141]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4bSfLG73jWz2SSKX; Thu, 26 Jun
+	2025 13:15:02 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250626094852epcas5p3dc4fb79d144ce6259c3ed731bedf661c~MjsUQCGNZ0414204142epcas5p3b;
+	Thu, 26 Jun 2025 09:48:52 +0000 (GMT)
+Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250626094849epsmtip1111d25dc34d42797b28a2665724e47e4~MjsRx9vFF1194711947epsmtip1b;
+	Thu, 26 Jun 2025 09:48:49 +0000 (GMT)
+Date: Thu, 26 Jun 2025 15:18:40 +0530
+From: Neeraj Kumar <s.neeraj@samsung.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: dan.j.williams@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+	a.manzanares@samsung.com, nifan.cxl@gmail.com, anisa.su@samsung.com,
+	vishak.g@samsung.com, krish.reddy@samsung.com, arun.george@samsung.com,
+	alok.rathore@samsung.com, neeraj.kernel@gmail.com,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
+Subject: Re: [RFC PATCH 01/20] nvdimm/label: Introduce NDD_CXL_LABEL flag to
+ set cxl label format
+Message-ID: <1983025922.01750943702980.JavaMail.epsvc@epcpadp1new>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625-handle_big_sync_lost_event-v2-1-81f163057a21@amlogic.com>
- <1306a61f39fd92565d1e292517154aa3009dbd11.camel@iki.fi> <1842c694-045e-4014-9521-e95718f32037@amlogic.com>
-In-Reply-To: <1842c694-045e-4014-9521-e95718f32037@amlogic.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Thu, 26 Jun 2025 09:14:40 -0400
-X-Gm-Features: Ac12FXyiFO_dBm7V7r6zYY31bmSDmDlgXR2PMhxLYRZlfXCNtBk2c9BYbH8_4KU
-Message-ID: <CABBYNZJYeYdggm7WEoz4iPM5UAp3F-BOTrL2yTcTfSrgSnQ2ww@mail.gmail.com>
-Subject: Re: [PATCH v2] Bluetooth: hci_event: Add support for handling LE BIG
- Sync Lost event
-To: Yang Li <yang.li@amlogic.com>
-Cc: Pauli Virtanen <pav@iki.fi>, Marcel Holtmann <marcel@holtmann.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250620174001.00003aa2@huawei.com>
+X-CMS-MailID: 20250626094852epcas5p3dc4fb79d144ce6259c3ed731bedf661c
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_cd417_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e@epcas5p2.samsung.com>
+	<158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
+	<20250620174001.00003aa2@huawei.com>
 
-Hi Yang,
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_cd417_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-On Thu, Jun 26, 2025 at 1:54=E2=80=AFAM Yang Li <yang.li@amlogic.com> wrote=
-:
+On 20/06/25 05:40PM, Jonathan Cameron wrote:
+>On Tue, 17 Jun 2025 18:09:25 +0530
+>Neeraj Kumar <s.neeraj@samsung.com> wrote:
 >
-> Hi Pauli,
-> > [ EXTERNAL EMAIL ]
-> >
-> > Hi,
-> >
-> > ke, 2025-06-25 kello 16:42 +0800, Yang Li via B4 Relay kirjoitti:
-> >> From: Yang Li <yang.li@amlogic.com>
-> >>
-> >> When the BIS source stops, the controller sends an LE BIG Sync Lost
-> >> event (subevent 0x1E). Currently, this event is not handled, causing
-> >> the BIS stream to remain active in BlueZ and preventing recovery.
-> >>
-> >> Signed-off-by: Yang Li <yang.li@amlogic.com>
-> >> ---
-> >> Changes in v2:
-> >> - Matching the BIG handle is required when looking up a BIG connection=
-.
-> >> - Use ev->reason to determine the cause of disconnection.
-> >> - Call hci_conn_del after hci_disconnect_cfm to remove the connection =
-entry
-> >> - Delete the big connection
-> >> - Link to v1: https://lore.kernel.org/r/20250624-handle_big_sync_lost_=
-event-v1-1-c32ce37dd6a5@amlogic.com
-> >> ---
-> >>   include/net/bluetooth/hci.h |  6 ++++++
-> >>   net/bluetooth/hci_event.c   | 31 +++++++++++++++++++++++++++++++
-> >>   2 files changed, 37 insertions(+)
-> >>
-> >> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> >> index 82cbd54443ac..48389a64accb 100644
-> >> --- a/include/net/bluetooth/hci.h
-> >> +++ b/include/net/bluetooth/hci.h
-> >> @@ -2849,6 +2849,12 @@ struct hci_evt_le_big_sync_estabilished {
-> >>        __le16  bis[];
-> >>   } __packed;
-> >>
-> >> +#define HCI_EVT_LE_BIG_SYNC_LOST 0x1e
-> >> +struct hci_evt_le_big_sync_lost {
-> >> +     __u8    handle;
-> >> +     __u8    reason;
-> >> +} __packed;
-> >> +
-> >>   #define HCI_EVT_LE_BIG_INFO_ADV_REPORT       0x22
-> >>   struct hci_evt_le_big_info_adv_report {
-> >>        __le16  sync_handle;
-> >> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> >> index 66052d6aaa1d..d0b9c8dca891 100644
-> >> --- a/net/bluetooth/hci_event.c
-> >> +++ b/net/bluetooth/hci_event.c
-> >> @@ -7026,6 +7026,32 @@ static void hci_le_big_sync_established_evt(str=
-uct hci_dev *hdev, void *data,
-> >>        hci_dev_unlock(hdev);
-> >>   }
-> >>
-> >> +static void hci_le_big_sync_lost_evt(struct hci_dev *hdev, void *data=
-,
-> >> +                                         struct sk_buff *skb)
-> >> +{
-> >> +     struct hci_evt_le_big_sync_lost *ev =3D data;
-> >> +     struct hci_conn *bis, *conn;
-> >> +
-> >> +     bt_dev_dbg(hdev, "big handle 0x%2.2x", ev->handle);
-> >> +
-> >> +     hci_dev_lock(hdev);
-> >> +
-> >> +     list_for_each_entry(bis, &hdev->conn_hash.list, list) {
-> > This should check bis->type =3D=3D BIS_LINK too.
-> Will do.
-> >
-> >> +             if (test_and_clear_bit(HCI_CONN_BIG_SYNC, &bis->flags) &=
-&
-> >> +                 (bis->iso_qos.bcast.big =3D=3D ev->handle)) {
-> >> +                     hci_disconn_cfm(bis, ev->reason);
-> >> +                     hci_conn_del(bis);
-> >> +
-> >> +                     /* Delete the big connection */
-> >> +                     conn =3D hci_conn_hash_lookup_pa_sync_handle(hde=
-v, bis->sync_handle);
-> >> +                     if (conn)
-> >> +                             hci_conn_del(conn);
-> > Problems:
-> >
-> > - use after free
-> >
-> > - hci_conn_del() cannot be used inside list_for_each_entry()
-> >    of the connection list
-> >
-> > - also list_for_each_entry_safe() allows deleting only the iteration
-> >    cursor, so some restructuring above is needed
+>> NDD_CXL_LABEL is introduced to set cxl LSA 2.1 label format
+>> Accordingly updated label index version
+>>
+>> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+>A few local comments.  I'll need to read on to figure out how this
+>fits in generally.
 >
-> Following your suggestion, I updated the hci_le_big_sync_lost_evt functio=
-n.
+>> ---
+>>  drivers/nvdimm/dimm.c      |  1 +
+>>  drivers/nvdimm/dimm_devs.c | 10 ++++++++++
+>>  drivers/nvdimm/label.c     | 16 ++++++++++++----
+>>  drivers/nvdimm/nd.h        |  1 +
+>>  include/linux/libnvdimm.h  |  3 +++
+>>  5 files changed, 27 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/nvdimm/dimm.c b/drivers/nvdimm/dimm.c
+>> index 91d9163ee303..8753b5cd91cc 100644
+>> --- a/drivers/nvdimm/dimm.c
+>> +++ b/drivers/nvdimm/dimm.c
+>> @@ -62,6 +62,7 @@ static int nvdimm_probe(struct device *dev)
+>>  	if (rc < 0)
+>>  		dev_dbg(dev, "failed to unlock dimm: %d\n", rc);
+>>
+>> +	ndd->cxl = nvdimm_check_cxl_label_format(ndd->dev);
+>>
+>>  	/*
+>>  	 * EACCES failures reading the namespace label-area-properties
+>> diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
+>> index 21498d461fde..e8f545f889fd 100644
+>> --- a/drivers/nvdimm/dimm_devs.c
+>> +++ b/drivers/nvdimm/dimm_devs.c
+>> @@ -18,6 +18,16 @@
+>>
+>>  static DEFINE_IDA(dimm_ida);
+>>
+>> +bool nvdimm_check_cxl_label_format(struct device *dev)
+>> +{
+>> +	struct nvdimm *nvdimm = to_nvdimm(dev);
+>> +
+>> +	if (test_bit(NDD_CXL_LABEL, &nvdimm->flags))
+>> +		return true;
+>> +
+>> +	return false;
 >
-> +static void hci_le_big_sync_lost_evt(struct hci_dev *hdev, void *data,
-> +                                           struct sk_buff *skb)
-> +{
-> +       struct hci_evt_le_big_sync_lost *ev =3D data;
-> +       struct hci_conn *bis, *conn, *n;
-> +
-> +       bt_dev_dbg(hdev, "big handle 0x%2.2x", ev->handle);
-> +
-> +       hci_dev_lock(hdev);
-> +
-> +       /* Delete the pa sync connection */
-> +       bis =3D hci_conn_hash_lookup_pa_sync_big_handle(hdev, ev->handle)=
-;
-> +       if (bis) {
-> +               conn =3D hci_conn_hash_lookup_pa_sync_handle(hdev,
-> bis->sync_handle);
-> +               if (conn)
-> +                       hci_conn_del(conn);
-> +       }
-> +
-> +       /* Delete each bis connection */
-> +       list_for_each_entry_safe(bis, n, &hdev->conn_hash.list, list) {
-> +               if (bis->type =3D=3D BIS_LINK &&
-> +                   bis->iso_qos.bcast.big =3D=3D ev->handle &&
-> +                   test_and_clear_bit(HCI_CONN_BIG_SYNC, &bis->flags)) {
-> +                       hci_disconn_cfm(bis, ev->reason);
-> +                       hci_conn_del(bis);
-> +               }
-> +       }
-
-Id follow the logic in hci_le_create_big_complete_evt, so you do something =
-like:
-
-    while ((conn =3D hci_conn_hash_lookup_big_state(hdev, ev->handle,
-                              BT_CONNECTED)))...
-
-That way we don't operate on the list cursor, that said we may need to
-add the role as parameter to hci_conn_hash_lookup_big_state, because
-the BIG id domain is role specific so we can have clashes if there are
-Broadcast Sources using the same BIG id the above would return them as
-well and even if we check for the role inside the while loop will keep
-returning it forever.
-
-> +
-> +       hci_dev_unlock(hdev);
-> +}
+>	return test_bit(NDD_CXL_LABEL, &nvdimm->flags);
 >
-> >
-> >> +             }
-> >> +     }
-> >> +
-> >> +     hci_dev_unlock(hdev);
-> >> +}
-> >> +
-> >>   static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, voi=
-d *data,
-> >>                                           struct sk_buff *skb)
-> >>   {
-> >> @@ -7149,6 +7175,11 @@ static const struct hci_le_ev {
-> >>                     hci_le_big_sync_established_evt,
-> >>                     sizeof(struct hci_evt_le_big_sync_estabilished),
-> >>                     HCI_MAX_EVENT_SIZE),
-> >> +     /* [0x1e =3D HCI_EVT_LE_BIG_SYNC_LOST] */
-> >> +     HCI_LE_EV_VL(HCI_EVT_LE_BIG_SYNC_LOST,
-> >> +                  hci_le_big_sync_lost_evt,
-> >> +                  sizeof(struct hci_evt_le_big_sync_lost),
-> >> +                  HCI_MAX_EVENT_SIZE),
-> >>        /* [0x22 =3D HCI_EVT_LE_BIG_INFO_ADV_REPORT] */
-> >>        HCI_LE_EV_VL(HCI_EVT_LE_BIG_INFO_ADV_REPORT,
-> >>                     hci_le_big_info_adv_report_evt,
-> >>
-> >> ---
-> >> base-commit: bd35cd12d915bc410c721ba28afcada16f0ebd16
-> >> change-id: 20250612-handle_big_sync_lost_event-4c7dc64390a2
-> >>
-> >> Best regards,
-> > --
-> > Pauli Virtanen
+>Unless this is going to get more complex in later patches, in which case
+>may be fine to ignore this comment.
+>
+
+Okay. I will fix in V1 patch.
+
+>> +}
+>> +
+>>  /*
+>>   * Retrieve bus and dimm handle and return if this bus supports
+>>   * get_config_data commands
+>> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
+>> index 082253a3a956..48b5ba90216d 100644
+>> --- a/drivers/nvdimm/label.c
+>> +++ b/drivers/nvdimm/label.c
+>> @@ -687,11 +687,19 @@ static int nd_label_write_index(struct nvdimm_drvdata *ndd, int index, u32 seq,
+>>  		- (unsigned long) to_namespace_index(ndd, 0);
+>>  	nsindex->labeloff = __cpu_to_le64(offset);
+>>  	nsindex->nslot = __cpu_to_le32(nslot);
+>> -	nsindex->major = __cpu_to_le16(1);
+>> -	if (sizeof_namespace_label(ndd) < 256)
+>> +
+>> +	/* Support CXL LSA 2.1 label format */
+>
+>Might be good to sprinkle some extra details in the references.
+>E.g. CXL r3.2 Table 9-9 Label Index Block Layout
+>
+
+Sure, I will update it in V1
+
+>> +	if (ndd->cxl) {
+>> +		nsindex->major = __cpu_to_le16(2);
+>>  		nsindex->minor = __cpu_to_le16(1);
+>> -	else
+>> -		nsindex->minor = __cpu_to_le16(2);
+>> +	} else {
+>> +		nsindex->major = __cpu_to_le16(1);
+>
+>Same for these.  Case of making reviewers jobs easier by
+>giving them breadcrumb trails to follow.
+>
+
+Sure, I will update it in V1
+
+>> +		if (sizeof_namespace_label(ndd) < 256)
+>> +			nsindex->minor = __cpu_to_le16(1);
+>> +		else
+>> +			nsindex->minor = __cpu_to_le16(2);
+>> +	}
+>> +
+>>  	nsindex->checksum = __cpu_to_le64(0);
+>>  	if (flags & ND_NSINDEX_INIT) {
+>>  		unsigned long *free = (unsigned long *) nsindex->free;
+>> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+>> index 5ca06e9a2d29..304f0e9904f1 100644
+>> --- a/drivers/nvdimm/nd.h
+>> +++ b/drivers/nvdimm/nd.h
+>> @@ -522,6 +522,7 @@ void nvdimm_set_labeling(struct device *dev);
+>>  void nvdimm_set_locked(struct device *dev);
+>>  void nvdimm_clear_locked(struct device *dev);
+>>  int nvdimm_security_setup_events(struct device *dev);
+>> +bool nvdimm_check_cxl_label_format(struct device *dev);
+>>  #if IS_ENABLED(CONFIG_NVDIMM_KEYS)
+>>  int nvdimm_security_unlock(struct device *dev);
+>>  #else
+>> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+>> index e772aae71843..0a55900842c8 100644
+>> --- a/include/linux/libnvdimm.h
+>> +++ b/include/linux/libnvdimm.h
+>> @@ -44,6 +44,9 @@ enum {
+>>  	/* dimm provider wants synchronous registration by __nvdimm_create() */
+>>  	NDD_REGISTER_SYNC = 8,
+>>
+>> +	/* dimm supports region labels (LSA Format 2.1) */
+>> +	NDD_CXL_LABEL = 9,
+>> +
+>>  	/* need to set a limit somewhere, but yes, this is likely overkill */
+>>  	ND_IOCTL_MAX_BUFLEN = SZ_4M,
+>>  	ND_CMD_MAX_ELEM = 5,
+>
+
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_cd417_
+Content-Type: text/plain; charset="utf-8"
 
 
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_cd417_--
 
---=20
-Luiz Augusto von Dentz
