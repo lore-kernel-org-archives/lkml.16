@@ -1,161 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2BD1DFFD;
-	Thu, 26 Jun 2025 20:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C511DFFD
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 20:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750970890; cv=none; b=ILv3Y4Bm2gImyHT0fXSny96SQZO3Z5hXDa4bb6hC1JHkd/FdskMY3h55lR0L+zpfVv8FypGhks+GzkGJmUcx/fqujR4wrPuidP72c3s2Zr0j99sZN4X8FIcm5TQ8qOq2gCv0MYho9hQ65udmn4p1xPdcCR49RGyhLqAnKCCzp0w=
+	t=1750971012; cv=none; b=IguhoeCqqdeRirBHjvEoAqc/nmzln+2UwkitSpk2KCapMCe9d2KGefxRhQCAnpaIiEI7prvaE6m9cj0cqLep9+g5iE0UoIuYOpUpsrstvBUTeempmyLCXjP8YoWgetb86HOgv6aRf8XQseih7ue9F18LiH2I42eHktSR9tpJnSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750970890; c=relaxed/simple;
-	bh=7z6321plEQZT+2ZW+imOOp3mUqwzt6EqgUbPghQ4g14=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rWFHDyuJKlNKxGPdgWq0qotoWOZWjQqZaNj8HC10OWmN7UDLyjZaAhD0xSEDyEYV2XXY3cFfPgvMNkrO+5yn9CQBDPKwvmIrjsIgM6SPms/TqmyZ9aNgYK33HVC1HACqtNWkBjOu8zEbleLIUbUYUoV8y54Zsc5zLdDtSNgE6B8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rh5mgufi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750971012; c=relaxed/simple;
+	bh=0B+GG0V9IxayHUjd+GrM2c+j6iCMSNSpCAoduPtwMhI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=K+67bEanl5MeDk++kVb/Q33STx6JFSgzskB+Z22IFmEcNPDj7OmaWu9Q7TpdcpDqaREnrG1Zf9QMBbGsi/WQgA53DWR/atKmmgssbI9o9WnLvQZxlqAklEGL+PVmF66/3s5iaJtm1g2lpsdbQiQBapnLGWzFTIxso7+NBqzegX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EqhnfKT+; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rh5mgufi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7269C4CEEB;
-	Thu, 26 Jun 2025 20:48:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750970889;
-	bh=7z6321plEQZT+2ZW+imOOp3mUqwzt6EqgUbPghQ4g14=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rh5mgufiRVHufKUNpaxAtyi0MkSAQIG24UdKl5C4U45muLrijDAAgGD7BBMXFN51A
-	 ySJAKcP5E/XfzsZOiZLp/9vSnhk/0p5vVXPangtey4dXiO7u5GGBFG6TltEx5KugfN
-	 zEL1ZrU0+rZn55bd6kNYbnuwUr6ZTfLrfjkg6vYjxlHQtGmfHKh0zBTBHkBpPwhl1p
-	 Sq2YSEIvKlcIrDVkYIhAuhA7QpZDtuKiauRvIOc3mk5PNhrJOYCmln6Q8QMTFUSK3G
-	 Rp5ZNX47yU7Qr42D//F0fAHCEK8y4ajxpz0u4/I1oipQcJqd50jt7jPXovUkgnY9Yi
-	 +Bz9OkOhKg3cw==
-Date: Thu, 26 Jun 2025 22:48:03 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
-	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 5/5] rust: devres: implement register_release()
-Message-ID: <aF2yA9TbeIrTg-XG@cassiopeiae>
-References: <20250626200054.243480-1-dakr@kernel.org>
- <20250626200054.243480-6-dakr@kernel.org>
- <aF2vgthQlNA3BsCD@tardis.local>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EqhnfKT+"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74ad608d60aso1145580b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750971011; x=1751575811; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C7OlW39s6ulMaqljMLUWDij/EiBowAxWTwHoPBioqCw=;
+        b=EqhnfKT+hDusE1aTwykpY1/5vhixXbk7JkMhUqvQVSAPYWWc+oTZKOw9q8kOhkz714
+         gLoBasHaTRtvuQtV6op9rsKnkXm/KGjtcEyBMCDFBIAPZ5v6tlaL+kD85Fjid0/8EoTr
+         96FPF1NFXfZOm3l6s6qUOiZDKmdJVArYteoV7vl0LGgFxIMPENOQvLR8aif1rcfwIRWG
+         Uyndrz9RhBzI6B0FJzuIB0jDPP1K8+XuJPPHIOJlAH1NembqL4aI/dozzNde8hS8l4Ip
+         qu2h44DxBaVJslUTy4xjYTifS1917TAceRqpolmpkZ5AeLIdO8sTBz7qNbwGwtmnoHzZ
+         ST4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750971011; x=1751575811;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=C7OlW39s6ulMaqljMLUWDij/EiBowAxWTwHoPBioqCw=;
+        b=T6zD8hWMlEkst+uVYNkJGq49ntR7Sy3lIm6xzyxIvSwVjnRtT1pyoiK3Lx5lcPNuIS
+         LFJuXfXjDd5q8SHuTrieVEY2tGpXSnovVFKtQvaT9VQVyf8qV+kWTK/lsaQTqlL0bvLt
+         t1bxLUCPamUzkmrM/JkFlyS5tSM/Mlri1LYSlwxFVBxoSqfZqOpgmE0x2mEhDTSgh4wU
+         mDckeTT9zhI9roaEBUWcaz5MyEyMYGVRRCuOYrPIrWt70hUU27PvZSD416uD3pvo6LIZ
+         J/x2XH3BOIxHSLcduYKiz1jAYaogynFqkCAlwpKAQZ6TKaD4CZLqn35EEoMEy1hIoDwf
+         x0Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCVSfMmE5Thx5w7l3jtiSOm9i/GzDHQJl7NZbnpXEaU6u5Skam3UngreMbAXk8kgNt99kpE/mt0QDWJID+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKXS1lobINGU9uGq35QypmzKlvs8B7AB8qWXmwwTXteSOtml9s
+	vRlaPH41sdCjNFJkI9Udq4FcWnRzbkHzyD7XSt5AXS8uV6rxNagMgPKuWqrtek7wQF6zmJnsqZ7
+	ry/4Wbg==
+X-Google-Smtp-Source: AGHT+IEvqZwxFHUi+bQpaauJGtY8KGrib3OUPRdkSaQ6XydD6Sn6vov8+Sgs49EQUuL4CN8i3MDM/JPkMv0=
+X-Received: from pfbdo6.prod.google.com ([2002:a05:6a00:4a06:b0:749:1d32:aa78])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3e1e:b0:748:2eb7:8cc7
+ with SMTP id d2e1a72fcca58-74af6f79db6mr649612b3a.21.1750971010693; Thu, 26
+ Jun 2025 13:50:10 -0700 (PDT)
+Date: Thu, 26 Jun 2025 13:50:09 -0700
+In-Reply-To: <003b5de7-502c-47ba-ae46-0905ee467384@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aF2vgthQlNA3BsCD@tardis.local>
+Mime-Version: 1.0
+References: <20250328171205.2029296-1-xin@zytor.com> <20250328171205.2029296-9-xin@zytor.com>
+ <aFrR5Nk1Ge3_ApWy@google.com> <858a3c30-08ab-4b9b-b74c-a3917a247841@zytor.com>
+ <003b5de7-502c-47ba-ae46-0905ee467384@zytor.com>
+Message-ID: <aF2ygVI8MN5IrAcg@google.com>
+Subject: Re: [PATCH v4 08/19] KVM: VMX: Add support for FRED context save/restore
+From: Sean Christopherson <seanjc@google.com>
+To: Xin Li <xin@zytor.com>
+Cc: pbonzini@redhat.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, corbet@lwn.net, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, andrew.cooper3@citrix.com, luto@kernel.org, 
+	peterz@infradead.org, chao.gao@intel.com, xin3.li@intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 01:37:22PM -0700, Boqun Feng wrote:
-> On Thu, Jun 26, 2025 at 10:00:43PM +0200, Danilo Krummrich wrote:
-> > register_release() is useful when a device resource has associated data,
-> > but does not require the capability of accessing it or manually releasing
-> > it.
-> > 
-> > If we would want to be able to access the device resource and release the
-> > device resource manually before the device is unbound, but still keep
-> > access to the associated data, we could implement it as follows.
-> > 
-> > 	struct Registration<T> {
-> > 	   inner: Devres<RegistrationInner>,
-> > 	   data: T,
-> > 	}
-> > 
-> > However, if we never need to access the resource or release it manually,
-> > register_release() is great optimization for the above, since it does not
-> > require the synchronization of the Devres type.
-> > 
-> > Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> > ---
-> >  rust/kernel/devres.rs | 73 +++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 73 insertions(+)
-> > 
-> > diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-> > index 3ce8d6161778..92aca78874ff 100644
-> > --- a/rust/kernel/devres.rs
-> > +++ b/rust/kernel/devres.rs
-> > @@ -353,3 +353,76 @@ pub fn register<T, E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flag
-> >  
-> >      register_foreign(dev, data)
-> >  }
-> > +
-> > +/// [`Devres`]-releaseable resource.
-> > +///
-> > +/// Register an object implementing this trait with [`register_release`]. Its `release`
-> > +/// function will be called once the device is being unbound.
-> > +pub trait Release {
-> > +    /// The [`ForeignOwnable`] pointer type consumed by [`register_release`].
-> > +    type Ptr: ForeignOwnable;
-> > +
-> > +    /// Called once the [`Device`] given to [`register_release`] is unbound.
-> > +    fn release(this: Self::Ptr);
-> > +}
-> > +
-> 
-> I would like to point out the limitation of this design, say you have a
-> `Foo` that can ipml `Release`, with this, I think you could only support
-> either `Arc<Foo>` or `KBox<Foo>`. You cannot support both as the input
-> for `register_release()`. Maybe we want:
-> 
->     pub trait Release<Ptr: ForeignOwnable> {
->         fn release(this: Ptr);
->     }
+On Thu, Jun 26, 2025, Xin Li wrote:
+> On 6/25/2025 10:18 AM, Xin Li wrote:
+> > >=20
+> > > Maybe add helpers to deal with the preemption stuff?=C2=A0 Oh, never
+> > > mind, FRED
+> >=20
+> > This is a good idea.
+> >=20
+> > Do you want to upstream the following patch?
+>=20
+> As I have almost done addressing your comments in my local repo, just
+> sent out the patch.
 
-Good catch! I think this wasn't possible without ForeignOwnable::Target.
+Saw it, and the LKGS patch.  I'm OOO for a week, so I probably won't get th=
+em
+applied for a couple weeks.
 
-Here's the diff for the change:
-
-diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-index 92aca78874ff..42a9cd2812d8 100644
---- a/rust/kernel/devres.rs
-+++ b/rust/kernel/devres.rs
-@@ -358,12 +358,9 @@ pub fn register<T, E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flag
- ///
- /// Register an object implementing this trait with [`register_release`]. Its `release`
- /// function will be called once the device is being unbound.
--pub trait Release {
--    /// The [`ForeignOwnable`] pointer type consumed by [`register_release`].
--    type Ptr: ForeignOwnable;
--
-+pub trait Release<Ptr: ForeignOwnable> {
-     /// Called once the [`Device`] given to [`register_release`] is unbound.
--    fn release(this: Self::Ptr);
-+    fn release(this: Ptr);
- }
-
- /// Consume the `data`, [`Release::release`] and [`Drop::drop`] `data` once `dev` is unbound.
-@@ -384,9 +381,7 @@ pub trait Release {
- ///     }
- /// }
- ///
--/// impl Release for Registration {
--///     type Ptr = Arc<Self>;
--///
-+/// impl Release<Arc<Self>> for Registration {
- ///     fn release(this: Arc<Self>) {
- ///        // unregister
- ///     }
-@@ -401,7 +396,7 @@ pub trait Release {
- pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
- where
-     P: ForeignOwnable,
--    P::Target: Release<Ptr = P> + Send,
-+    P::Target: Release<P> + Send,
- {
-     let ptr = data.into_foreign();
-
-@@ -409,7 +404,7 @@ pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
-     unsafe extern "C" fn callback<P>(ptr: *mut kernel::ffi::c_void)
-     where
-         P: ForeignOwnable,
--        P::Target: Release<Ptr = P>,
-+        P::Target: Release<P>,
-     {
-         // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked above and hence valid.
-         let data = unsafe { P::from_foreign(ptr.cast()) };
+Thanks!
