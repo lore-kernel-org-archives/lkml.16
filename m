@@ -1,45 +1,36 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11E926A1AC;
-	Thu, 26 Jun 2025 10:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id A7AF326A1AE;
+	Thu, 26 Jun 2025 10:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750935276; cv=none; b=u8f1mhDSU2F6GKbh6tsulMLNBnewU3jXuI+nIzYiu0zq3KZkLb5Wy5JlThDipCrOy5w2UTfOyo4Qmp0bM4/H7L8TdSGoBZH4JOX2fXPTGQBfv5iBRd9S2Lyr+5tjucLAavb5Bi/m6l/78k024g1SoSP3/aZsW1aNquubdS10cHM=
+	t=1750935310; cv=none; b=lT1fkBK9bhF0NRRz+K2zFcBpQVpP7VmfJq0GBeWJHR+Hg18ZuGis6sx7jXrV6klGwQXD5zg1Ph8Vqye9eMviKxUxs7ucbwe7lmoYhjS/klPzh+lItPLlkfc2bhMpXr/Gjl9RRa/G2KNlXGv2/MKkUjRA4fylA6LC7tVZjXYnegU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750935276; c=relaxed/simple;
-	bh=vl24n8aM4Ut+tNFLr2AcJcy6+Q0gPPmMquqRtf8KWs8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UuUWGtL3Tgls6RlnEVxUHMVZCzoTsB8t78TIiyiaNWEo923MNauruPRCfZD1twNNIdqsv6xUSqrVT5oTukJK/a/yniG0JDaqaJoh8cjEmI9j1fxZYe7Lex21hHHMKVJYGxkYKTZLhf9RgQICepbbcyBLGf54bhzGXrXpxzl41fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EszjdSlM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EszjdSlM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E1D7C4CEEB;
-	Thu, 26 Jun 2025 10:54:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750935276;
-	bh=vl24n8aM4Ut+tNFLr2AcJcy6+Q0gPPmMquqRtf8KWs8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EszjdSlMkl07Gyybl7i66ZVdVnlx5kjBXnhmCwqJwqJCUxMM595+tJXToqRWxM+2d
-	 3XJWQfUKRl34GKW1sSNus1WvM1NEQMfFgdsSgmu4GQUTkU+PJsw6yautu47Ahhvd4z
-	 wyfWny5+hOarz98l8P54pCOWlBcJcppNCVpkfNrgiXhfcObZHBjCrmS2SIu7ipDbZt
-	 aEIlgQd91T4dRjG/8RmJv8EShJmOJEav508TjfAnUMFW/bcQfaLOstNSFMTPgTGFPI
-	 rPcxz5EA1pk1owAXKccysnhY2t6r9HA/Uhrkdb9gbLM3IC5MGa8ZaRHZLh/eszt1AH
-	 /C7i8ns2FgBxg==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: keyrings@vger.kernel.org,
-	Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
-	stable@vger.kernel.org,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Stuart Yoder <stuart.yoder@arm.com>,
-	linux-integrity@vger.kernel.org (open list:TPM DEVICE DRIVER)
-Subject: [PATCH] tpm_crb_ffa: Remove unused export
-Date: Thu, 26 Jun 2025 13:54:23 +0300
-Message-Id: <20250626105423.1043485-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1750935310; c=relaxed/simple;
+	bh=5dk0wI1bh0HVM00PIbFjraq1e8U1FtyfdlZ87SEHcxw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DjM/p6ydDCIAchviUoP0Ztu1E/eSC+UvgbPQramCgXGqZNqEybBBprLIoGDbD7AiWgqDSuMwjlNmx5ekKCjAsO5jLVba3DmvqyTeIspXF+0oVQbKq8zQLsCxM+/MoiI0OnLkwRDcNWsC13LSa4VUzDmHDGoDi+JMcRRTvHS3xAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 2E0E1604F1A67;
+	Thu, 26 Jun 2025 18:54:47 +0800 (CST)
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+To: akpm@linux-foundation.org,
+	bhe@redhat.com,
+	vgoyal@redhat.com,
+	dyoung@redhat.com
+Cc: Su Hui <suhui@nfschina.com>,
+	dan.carpenter@linaro.org,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH v2] fs/proc/vmcore: a few cleanups for vmcore_add_device_dump
+Date: Thu, 26 Jun 2025 18:54:41 +0800
+Message-Id: <20250626105440.1053139-1-suhui@nfschina.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,56 +39,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+There are two cleanups for vmcore_add_device_dump(). Return -ENOMEM
+directly rather than goto the label to simplify the code. Using
+scoped_guard() to simplify the lock/unlock code.
 
-Remove the export of tpm_crb_ffa_get_interface_version() as it has no
-callers outside tpm_crb_ffa.
-
-Cc: stable@vger.kernel.org # v6.15+
-Fixes: eb93f0734ef1 ("tpm_crb: ffa_tpm: Implement driver compliant to CRB over FF-A")
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+Signed-off-by: Su Hui <suhui@nfschina.com>
 ---
- drivers/char/tpm/tpm_crb_ffa.c | 3 +--
- drivers/char/tpm/tpm_crb_ffa.h | 2 --
- 2 files changed, 1 insertion(+), 4 deletions(-)
+v2:
+ - Remove the wrong change of 'data_size'.
+ - Move 'Return 0;' out of the scoped_guard.
 
-diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
-index 462fcf610020..9c6a2988a598 100644
---- a/drivers/char/tpm/tpm_crb_ffa.c
-+++ b/drivers/char/tpm/tpm_crb_ffa.c
-@@ -247,7 +247,7 @@ static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
-  *
-  * Return: 0 on success, negative error code on failure.
-  */
--int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor)
-+static int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor)
- {
- 	int rc;
+v1:
+ - https://lore.kernel.org/all/20250623104704.3489471-1-suhui@nfschina.com/
+
+ fs/proc/vmcore.c | 29 ++++++++++++-----------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
+
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 10d01eb09c43..f188bd900eb2 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -1490,10 +1490,8 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+ 		return -EINVAL;
  
-@@ -275,7 +275,6 @@ int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor)
+ 	dump = vzalloc(sizeof(*dump));
+-	if (!dump) {
+-		ret = -ENOMEM;
+-		goto out_err;
+-	}
++	if (!dump)
++		return -ENOMEM;
  
- 	return rc;
- }
--EXPORT_SYMBOL_GPL(tpm_crb_ffa_get_interface_version);
+ 	/* Keep size of the buffer page aligned so that it can be mmaped */
+ 	data_size = roundup(sizeof(struct vmcoredd_header) + data->size,
+@@ -1519,22 +1517,19 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+ 	dump->size = data_size;
  
- /**
-  * tpm_crb_ffa_start() - signals the TPM that a field has changed in the CRB
-diff --git a/drivers/char/tpm/tpm_crb_ffa.h b/drivers/char/tpm/tpm_crb_ffa.h
-index 645c41ede10e..d7e1344ea003 100644
---- a/drivers/char/tpm/tpm_crb_ffa.h
-+++ b/drivers/char/tpm/tpm_crb_ffa.h
-@@ -11,11 +11,9 @@
+ 	/* Add the dump to driver sysfs list and update the elfcore hdr */
+-	mutex_lock(&vmcore_mutex);
+-	if (vmcore_opened)
+-		pr_warn_once("Unexpected adding of device dump\n");
+-	if (vmcore_open) {
+-		ret = -EBUSY;
+-		goto unlock;
+-	}
++	scoped_guard(mutex, &vmcore_mutex) {
++		if (vmcore_opened)
++			pr_warn_once("Unexpected adding of device dump\n");
++		if (vmcore_open) {
++			ret = -EBUSY;
++			goto out_err;
++		}
  
- #if IS_REACHABLE(CONFIG_TCG_ARM_CRB_FFA)
- int tpm_crb_ffa_init(void);
--int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor);
- int tpm_crb_ffa_start(int request_type, int locality);
- #else
- static inline int tpm_crb_ffa_init(void) { return 0; }
--static inline int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor) { return 0; }
- static inline int tpm_crb_ffa_start(int request_type, int locality) { return 0; }
- #endif
+-	list_add_tail(&dump->list, &vmcoredd_list);
+-	vmcoredd_update_size(data_size);
+-	mutex_unlock(&vmcore_mutex);
++		list_add_tail(&dump->list, &vmcoredd_list);
++		vmcoredd_update_size(data_size);
++	}
+ 	return 0;
  
+-unlock:
+-	mutex_unlock(&vmcore_mutex);
+-
+ out_err:
+ 	vfree(buf);
+ 	vfree(dump);
 -- 
-2.39.5
+2.30.2
 
