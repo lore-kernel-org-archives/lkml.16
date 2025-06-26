@@ -1,267 +1,150 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE93212B31
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A14F405F7;
+	Thu, 26 Jun 2025 16:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750955985; cv=none; b=a250cnoSFByAqjz+HD52DmTf0IFyVj/3JbsoyqtGUKMdfl3VGO8+P3DYs3XlqS3avVc2D0CAsQj58t2plR9Q/iVjkkDFSoNiFe1PffF2zf+Bm92dWaByD5R/fr9E4JE1glKERNj+dJDnnVD/sb6dvfwRgJBO0+0GBka1DtVlNbQ=
+	t=1750956316; cv=none; b=leA2V6px5tXduP4hrc6QQX45IhfgkzHbKBoRpAzK8dXa95jE1tZsYgu/myfIDERuXQUabIMfGAisBDnDcV4onBaIz3l+wdOHk+UXyNkro9xi9h3QVzDJiShLJwGZbYoVA+WnmmvbtYjNGBEPK0EAg7GYgVuEBAX4u/3BpnrHdAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750955985; c=relaxed/simple;
-	bh=GohStccsSwcqfOZBBSgPLYUEx/+iekuLxgT7uEl7yoA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=aD+KhBX6yQrLDT8HFRgDeUIw3F90e8Hwot/beOoiqqhsW3n2CiwK0Izw7l2XReFBx12DkWRVp9b1FsE1ULhiKG604tzkkOTLlNlVNYlcqEp6IvgPICl1oFDWjbV3noA7uBUZI04Vo5TDhPzskHQQR3esvFAd36IaKIOsx3H5/CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Fn6oA183; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1750956316; c=relaxed/simple;
+	bh=52tMnreW8uelOqocxxeVtuaIXYhaUzlqD6oKmCy37xA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jb1R4hlyVdAnbWNz1BcsETZXLh0cg3B+BUm5qxBPvDL37Deq5TXe3PIt5mbambEguONcOBol/hiJUWIuNuV9J8gEzfFanj8wwMnhxZVUohOi+3G69OaaBD8mndXmeOfEnsLwAJytn3t4oDzmi3B43ikT5nW44BLVMZq8z5qVJMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BFHA4Az3; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Fn6oA183"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso1315200a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:39:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1750955982; x=1751560782; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=kiB7sElStizaKuG4ZG0mE7ZHh4hndYmdW5MwoUlLuUc=;
-        b=Fn6oA18352dL863hv8WUwzwyW+H+UGF0SgOmcs9gRb+IMqXdft8aob2Rv8Hsa5+H2G
-         6rgK6VbxUU6xnKMT7XtocXVmqpjULEAHL4/9s/DzwIlDzjeZRqGVVXui4749CHgXXa7w
-         9/dkm7JEXLeCv5bxMRxkbP2gO0xHr0umq9d30=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750955982; x=1751560782;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kiB7sElStizaKuG4ZG0mE7ZHh4hndYmdW5MwoUlLuUc=;
-        b=nf7WBcRihH8/4Z04/Oo/oEr/rK2bzhNXJnpXBOZcIyPK1Ed24XWhSIaPmE2fW32Ymg
-         YOKQOAu2cJ/MDgFJIYu87G/qijgOLhJmPfH8oYGkvbPXNrUQSF126W6TBOv/01E6AYi+
-         SN8ZYuMmxGxbuKdTKv3AOVezlOhLrprXwiwwAfwOa52LT5lsBWm8Ye7C+S9FG2rZE1tv
-         hp7FQ907nidvsmmVGmlAPwwulnD/l7YWfsOwu3sBJ+nLxo0CUSdj//4yy2ra/ywILmV7
-         E2xUIPL1tbAbuWM85CQjX1eUMhpGg7CYpMD4c/oxsheISRaBP39uSQbIXH1S83vfbRB7
-         dfQA==
-X-Forwarded-Encrypted: i=1; AJvYcCWEbHkojMg2+/p2SarUzWzxE3aTadem4vBG4mY8qHNjTmUDH8qdQYZtIfrVyGRaqj3URAH7/XwLypeS6rk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEWTmiPX5fU1FUqywPit8uoplsS1BhZL3fYR3k3pydy7zVmku9
-	rkawmsAHVdj8R887sy7Qp7yXHLZNyKzq1OAedkGmJ0olEmd+DisFOp2Qd0zK/hgCwQ==
-X-Gm-Gg: ASbGncsmyV9eueCHDzVu6ZIBEUGLUhpX/8AEnUPMP06a1Fn4MGez9181mC3MS5actg6
-	IqbN0Sf8Lhs+eg/mkvgocZcgsWn8oQYXpDq1bQ+e3Z8GMYHd5do6yIHs+Cmq+tLn9hVqe7tyeye
-	V88JizhCtmMHwZX/c2nZx3AwrJLB5uNGa5phS49T6FI2xMGT2sXtuctrCSy5gAX9tkoO6KBPyz8
-	UOZb9/ghW/tpp3A0rbGuPwm3tQRHVzUM/W9HnqRKXMg/qEzm0PWy2xfUCR7rx6D52xfIuYCdqbc
-	SD4vCfMvspU5Fxf4s9DT8zsvEC9OdaZALZ1Q1GcFM6daLeiS/U02vwtHuYyx05tQcIEPNUejiF1
-	dbxWgEjRAjT7SBB/UUG8moKtOkLTxGKkIix5p
-X-Google-Smtp-Source: AGHT+IHEodYyA0JwEfIYPoh2/MM1Lu2s8aF4hU27hBW/g0OK17fBGh6vDcMzM6wG4s7dCi1eZ9/MNA==
-X-Received: by 2002:a17:90b:2e87:b0:314:7e4a:db08 with SMTP id 98e67ed59e1d1-315f2675fc7mr12720722a91.18.1750955982382;
-        Thu, 26 Jun 2025 09:39:42 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c13921fdsm209101a91.10.2025.06.26.09.39.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 09:39:41 -0700 (PDT)
-Message-ID: <c66deb8f-774e-4981-accf-4f507943e08c@broadcom.com>
-Date: Thu, 26 Jun 2025 09:39:36 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BFHA4Az3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750956314; x=1782492314;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=52tMnreW8uelOqocxxeVtuaIXYhaUzlqD6oKmCy37xA=;
+  b=BFHA4Az3NGm0izz4IOLtmTc4hrqzh0KtmnmgakMALLSyrGre6tzxDTbd
+   dHqJE2gCu09TWn3zpm8PpbgPxtxZrPdZOKp2DDnQfqIRsE5zOpVkFCkRI
+   RP5YP1h5IPfK9cmpKQ/ussGiRIxVXtEcm+d8fFd2P3Mat8fBGSgd1+j8y
+   EiyUxymBlNQmanl+O5LH9ZKf4Uf4erhg1E9J02WApkhWJzDyH5MEFYFJR
+   RdzeThUepT7mwnGhK+bxURAdLvDoBIPnb/cqly++p4kIv74OAihatr4XM
+   l5rX6b+hoxDiB9Ro61NgoTcYcG4FN+7eEifg58oD/1BkO7rJat+PjWB38
+   Q==;
+X-CSE-ConnectionGUID: 0bHRnXx3TMGL7CI87oRgPA==
+X-CSE-MsgGUID: 0x8s+rQPT3eQdqKMBP1iWw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="64616473"
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="64616473"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:45:14 -0700
+X-CSE-ConnectionGUID: Xd7pQarPSgOgwvcrAXpOIg==
+X-CSE-MsgGUID: 3IBmPZz2TEi2ZqTV/SNSnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="152079578"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa006.jf.intel.com with ESMTP; 26 Jun 2025 09:45:12 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 59AA82AD; Thu, 26 Jun 2025 19:45:10 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Leon Romanovsky <leon@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH net-next v1 1/1] net/mlx5: Don't use "proxy" headers
+Date: Thu, 26 Jun 2025 19:45:09 +0300
+Message-ID: <20250626164509.327410-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/16] MAINTAINERS: Include GDB scripts under their
- relevant subsystems
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
- Kieran Bingham <kbingham@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Dennis Zhou <dennis@kernel.org>,
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
- John Ogness <john.ogness@linutronix.de>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, Thomas Gleixner <tglx@linutronix.de>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Alexander Potapenko <glider@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, Kent Overstreet <kent.overstreet@linux.dev>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Uladzislau Rezki <urezki@gmail.com>, Matthew Wilcox <willy@infradead.org>,
- Kuan-Ying Lee <kuan-ying.lee@canonical.com>,
- Ilya Leoshkevich <iii@linux.ibm.com>, Etienne Buira <etienne.buira@free.fr>,
- Antonio Quartulli <antonio@mandelbit.com>, Illia Ostapyshyn
- <illia@yshyn.com>, "open list:COMMON CLK FRAMEWORK"
- <linux-clk@vger.kernel.org>,
- "open list:PER-CPU MEMORY ALLOCATOR" <linux-mm@kvack.org>,
- "open list:GENERIC PM DOMAINS" <linux-pm@vger.kernel.org>,
- "open list:KASAN" <kasan-dev@googlegroups.com>,
- "open list:MAPLE TREE" <maple-tree@lists.infradead.org>,
- "open list:MODULE SUPPORT" <linux-modules@vger.kernel.org>,
- "open list:PROC FILESYSTEM" <linux-fsdevel@vger.kernel.org>
-References: <20250625231053.1134589-1-florian.fainelli@broadcom.com>
- <fynmrmsglw4liexcb37ykutf724lh7zbibilcjpysbmvgtkmes@mtjrfkve4av7>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <fynmrmsglw4liexcb37ykutf724lh7zbibilcjpysbmvgtkmes@mtjrfkve4av7>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/26/25 09:17, Liam R. Howlett wrote:
-> * Florian Fainelli <florian.fainelli@broadcom.com> [250625 19:13]:
->> Linux has a number of very useful GDB scripts under scripts/gdb/linux/*
->> that provide OS awareness for debuggers and allows for debugging of a
->> variety of data structures (lists, timers, radix tree, mapletree, etc.)
->> as well as subsystems (clocks, devices, classes, busses, etc.).
->>
->> These scripts are typically maintained in isolation from the subsystem
->> that they parse the data structures and symbols of, which can lead to
->> people playing catch up with fixing bugs or updating the script to work
->> with updates made to the internal APIs/objects etc. Here are some
->> recents examples:
->>
->> https://lore.kernel.org/all/20250601055027.3661480-1-tony.ambardar@gmail.com/
->> https://lore.kernel.org/all/20250619225105.320729-1-florian.fainelli@broadcom.com/
->> https://lore.kernel.org/all/20250625021020.1056930-1-florian.fainelli@broadcom.com/
->>
->> This patch series is intentionally split such that each subsystem
->> maintainer can decide whether to accept the extra
->> review/maintenance/guidance that can be offered when GDB scripts are
->> being updated or added.
-> 
-> I don't see why you think it was okay to propose this in the way you
-> have gone about it.  Looking at the mailing list, you've been around for
-> a while.
+Update header inclusions to follow IWYU (Include What You Use)
+principle.
 
-This should probably have been posted as RFC rather than PATCH, but as I 
-indicate in the cover letter this is broken down to allow maintainers 
-like yourself to accept/reject
+Note that kernel.h is discouraged to be included as it's written
+at the top of that file.
 
-> 
-> The file you are telling me about seems to be extremely new and I needed
-> to pull akpm/mm-new to discover where it came from.. because you never
-> Cc'ed me on the file you are asking me to own.
+While doing that, sort headers alphabetically.
 
-Yes, that file is very new indeed, and my bad for not copying you on it.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/mlx5/driver.h | 45 +++++++++++++++++++++++--------------
+ 1 file changed, 28 insertions(+), 17 deletions(-)
 
-I was not planning on burning an entire day worth of work to transition 
-the GDB scripts dumping the interrupt tree away from a radix tree to a 
-maple tree. All of which happens with the author of that conversion 
-having absolutely no idea that broke anything in the tree because very 
-few people know about the Python GDB scripts that Linux has. It is not 
-pleasant to be playing catch when it would have take maybe an extra 
-couple hours for someone intimately familiar with the maple tree to come 
-up with a suitable implementation replacement for mtree_load().
-
-So having done it felt like there is a maintenance void that needs to be 
-filled, hence this patch set.
-
-> 
-> I'm actually apposed to the filename you used for the script you want me
-> to own.
-
-Is there a different filename that you would prefer?
-
-> 
-> I consider myself a low-volume email maintainer and I get enough useless
-> emails about apparent trivial fixes that end up causing significant
-> damage if they are not dealt with.  So I take care not to sign up for
-> more time erosion from meaningful forward progress on tasks I hope to
-> have high impact.  I suspect you know that, but I don't know you so I
-> don't want to assume.
-
-That seems entirely sane and thanks for being explicit about it.
-
-> 
-> Is there anything else you might want to share to entice me to maintain
-> this file?  Perhaps there's a documentation pointer that shows how
-> useful it is and why I should use it?
-
-It can be as simple as spawning a QEMU instance:
-
-qemu-system-x86_64 \
-         -s \
-         -cpu "max" \
-         -smp 4 \
-         -kernel ~/dev/linux/arch/x86/boot/bzImage \
-         -device pci-bridge,id=pci_bridge1,bus=pci.0,chassis_nr=1 \
-         -drive 
-file=debian.img,if=none,id=drive-virtio-disk0,format=qcow2 -device 
-virtio-blk-pci,scsi=off,drive=drive-virtio-disk0,id=virtio-disk0,bootindex=1 
-\
-         -nographic \
-         -append "root=/dev/vda1 console=ttyS0,115200 mitigations=off" \
-         -net nic,model=e1000 -net tap,ifname=tap0
-
-and in another terminal running GDB with:
-
-gdb vmlinux -ex "target remote localhost:1234" -ex "lx-interruptlist"
-
-to obtain a dump of /proc/interrupts which is effectively a replacement 
-for iterating over every interrupt descriptor in the system.
-
-> 
-> Right now, I have no idea what that file does or how to even check if
-> that file works today, so I cannot sign on to maintain it.
-> 
-> If you want to depend on APIs, this should probably be generated in a
-> way that enables updates.  And if that's the case, then why even have a
-> file at all and just generate it when needed?  Or, at least, half
-> generated and finished by hand?
-
-As it stands today that is not happening, there is zero coordination and 
-people who care about GDB scripts just play catch up. But you raise a 
-good point, if we are to do that, then we should be able to target 
-C/Rust/Python/whatever, that seems like a bigger undertaking and I am 
-not clear whether the kernel community as a whole is looking for 
-transitioning over to something like this.
-
-> 
-> Maybe this is the case but scripts/gdb doesn't have any documentation in
-> there, there's no Documentation/scripts or Documentation/gdb either.
-> 
-> Can you please include more details on the uses of these files?  Failing
-> that, perhaps you could point to any documentation?
-
-See the two commands above, those should give you a good environment to 
-play with the various GDB scripts which are all prefix with "lx-".
-
-Thanks!
+diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
+index e6ba8f4f4bd1..2a2d9cead9b3 100644
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -33,28 +33,38 @@
+ #ifndef MLX5_DRIVER_H
+ #define MLX5_DRIVER_H
+ 
+-#include <linux/kernel.h>
+-#include <linux/completion.h>
+-#include <linux/pci.h>
+-#include <linux/irq.h>
+-#include <linux/spinlock_types.h>
+-#include <linux/semaphore.h>
+-#include <linux/slab.h>
+-#include <linux/vmalloc.h>
+-#include <linux/xarray.h>
+-#include <linux/workqueue.h>
+-#include <linux/mempool.h>
+-#include <linux/interrupt.h>
+-#include <linux/notifier.h>
+-#include <linux/refcount.h>
+ #include <linux/auxiliary_bus.h>
+-#include <linux/mutex.h>
++#include <linux/completion.h>
++#include <linux/idr.h>
++#include <linux/io.h>
++#include <linux/kref.h>
++#include <linux/lockdep_types.h>
++#include <linux/minmax.h>
++#include <linux/mutex_types.h>
++#include <linux/notifier.h>
++#include <linux/pci.h>
++#include <linux/printk.h>
++#include <linux/refcount.h>
++#include <linux/semaphore.h>
++#include <linux/spinlock_types.h>
++#include <linux/timer_types.h>
++#include <linux/types.h>
++#include <linux/workqueue.h>
++#include <linux/xarray.h>
++
++#include <rdma/ib_verbs.h>
++
++#include <asm/page.h>
+ 
+ #include <linux/mlx5/device.h>
+ #include <linux/mlx5/doorbell.h>
+ #include <linux/mlx5/eq.h>
+-#include <linux/timecounter.h>
+-#include <net/devlink.h>
++
++struct dentry;
++struct device;
++struct dma_pool;
++struct net_device;
++struct pci_dev;
+ 
+ #define MLX5_ADEV_NAME "mlx5_core"
+ 
+@@ -243,6 +253,7 @@ struct mlx5_cmd_first {
+ 	__be32		data[4];
+ };
+ 
++struct cmd_msg_cache;
+ struct mlx5_cmd_msg {
+ 	struct list_head		list;
+ 	struct cmd_msg_cache	       *parent;
 -- 
-Florian
+2.47.2
+
