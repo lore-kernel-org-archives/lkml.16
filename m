@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99012E06E4
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:36:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F90D2DFF0D
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:36:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750941378; cv=none; b=s+FCFIysbvlVq+IEHHb7h5MHdI2nFcprklkUiAFnXktsWQDG3C3XZYz3QI1M+UEeus7ieQ0nRa+ewDt/vW7b5W7komkcGHL0NaEQQ36sKvybo3siEI7tXceg/joCyvODckFPJXYmKV34Rlb+d9EYEO8t/MhsNsoy7EcMCx0jSyI=
+	t=1750941380; cv=none; b=bgujWDvklvNwmYXri4P0zTMVIL4RPVQ+39hVP2EspG+o9WYPGFkpofvi1xKy/6R2phr7izUaHw+84NpoAZhv2HWiayoHS/yrI4TYj3S4J8vkuaRljLsCeUharCj2rl1TkgyWwSqm/kF8sluVUU/EZW0bUPMgiSeAdavHSFkONTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750941378; c=relaxed/simple;
-	bh=e5G1LQaHGKEk+Uq+ZBbUmduHV4uJn9Y27OD86/nVQTc=;
+	s=arc-20240116; t=1750941380; c=relaxed/simple;
+	bh=cOpwCH8DVaBtcRF0XPiHH/CxI5nZlNIp5nt3wZOKeWs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qQVyQrUBXfz68TQYqlThW57G23dCFQwMK9IBcaGWzSQU95ptitKJk4ZTy1iy2wLhprAQcfNGXA4OUm2Te1hpO3kz5PdoXHIkLG0IVR2CJsrjK/eeKZJBvBRhVfrrVal1e6UfYVbFiWSgrwnUMUmgmtmgPMcxjjGwIza17zgN5v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HF79Risw; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=tc1GCIWopzUU+2gEtESe1d5wHCib/B9F/4ktZ2MfSzSiabu0bCxnr4BTzxV/6uPZ5J8s2Lptk/PUjvpEJnofucpl4VzBENvro36eQvcn8TaifeOvZfH43vmPpovgudNFWupwiK4JRCB0zgeosOa9V48kzb9RjCmJDmD5d4ceAkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H9CPucYu; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HF79Risw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H9CPucYu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750941375;
+	s=mimecast20190719; t=1750941377;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PsKlgJn34is2kOicYgqOhMcE5nDUrsqk6HaC7NVZhto=;
-	b=HF79Risw3Q/ilAxX6WTZLG22XJz3dUktgHMis9yGoc5u4b2Lgfg/tgzUlmhMxSngpd+QEH
-	Q5J/t5O/qq8098fSMJ7puebtat4SYxeYyNcefMPisesGwjANowgekHIkha6xHC8hYn7unN
-	VmckcD1YFKv1JTGZI7m/HjqepoPOqH0=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	bh=8wnuRWICz/3L1A5kr+hgYjZ7aQO+C6vPwfPXybDrYEg=;
+	b=H9CPucYulMPrbxDTFima73+/Qs+YqmF7y8UVEAzh/p6AyU9mwPTnqPhEEqvnwJ/uwalqsN
+	S8EFASm+5PqAz55BFOqZJd/ps7rzf55ClJYk0PODU/fOmKt0Mhyb0tEM+qWA28fN9mmCFP
+	+0e6bXVtpvTC04c2YFcQtet3D+Gndpc=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-382-j9_UXHl_P7SCABDdSeod2g-1; Thu,
- 26 Jun 2025 08:36:09 -0400
-X-MC-Unique: j9_UXHl_P7SCABDdSeod2g-1
-X-Mimecast-MFC-AGG-ID: j9_UXHl_P7SCABDdSeod2g_1750941368
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-106-pd2-vGxGP-6TCkJ4sGP65A-1; Thu,
+ 26 Jun 2025 08:36:16 -0400
+X-MC-Unique: pd2-vGxGP-6TCkJ4sGP65A-1
+X-Mimecast-MFC-AGG-ID: pd2-vGxGP-6TCkJ4sGP65A_1750941375
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 55ABF1978F63;
-	Thu, 26 Jun 2025 12:36:08 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4B52B1955EC3;
+	Thu, 26 Jun 2025 12:36:15 +0000 (UTC)
 Received: from fedora.brq.redhat.com (unknown [10.43.17.241])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5E801180045B;
-	Thu, 26 Jun 2025 12:36:05 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 683A9180045B;
+	Thu, 26 Jun 2025 12:36:12 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: linux-trace-kernel@vger.kernel.org,
@@ -54,9 +54,9 @@ Cc: linux-trace-kernel@vger.kernel.org,
 	Crystal Wood <crwood@redhat.com>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH v2 1/9] rtla/timerlat: Introduce enum timerlat_tracing_mode
-Date: Thu, 26 Jun 2025 14:33:57 +0200
-Message-ID: <20250626123405.1496931-2-tglozar@redhat.com>
+Subject: [PATCH v2 3/9] rtla/timerlat_bpf: Allow resuming tracing
+Date: Thu, 26 Jun 2025 14:33:59 +0200
+Message-ID: <20250626123405.1496931-4-tglozar@redhat.com>
 In-Reply-To: <20250626123405.1496931-1-tglozar@redhat.com>
 References: <20250626123405.1496931-1-tglozar@redhat.com>
 Precedence: bulk
@@ -68,380 +68,117 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-After the introduction of BPF-based sample collection, rtla-timerlat
-effectively runs in one of three modes:
+Currently, rtla-timerlat BPF program uses a global variable stored in a
+.bss section to store whether tracing has been stopped.
 
-- Pure BPF mode, with tracefs only being used to set up the timerlat
-tracer. Sample processing and stop on threshold are handled by BPF.
-
-- tracefs mode. BPF is unsupported or kernel is lacking the necessary
-trace event (osnoise:timerlat_sample). Stop on theshold is handled by
-timerlat tracer stopping tracing in all instances.
-
-- BPF/tracefs mixed mode - BPF is used for sample collection for top or
-histogram, tracefs is used for trace output and/or auto-analysis. Stop
-on threshold is handled both through BPF program, which stops sample
-collection for top/histogram and wakes up rtla, and by timerlat
-tracer, which stops tracing for trace output/auto-analysis instances.
-
-Add enum timerlat_tracing_mode, with three values:
-
-- TRACING_MODE_BPF
-- TRACING_MODE_TRACEFS
-- TRACING_MODE_MIXED
-
-Those represent the modes described above. A field of this type is added
-to struct timerlat_params, named "mode", replacing the no_bpf variable.
-params->mode is set in timerlat_{top,hist}_parse_args to
-TRACING_MODE_BPF or TRACING_MODE_MIXED based on whether trace output
-and/or auto-analysis is requested. timerlat_{top,hist}_main then checks
-if BPF is not unavailable or disabled, in that case, it sets
-params->mode to TRACING_MODE_TRACEFS.
-
-A condition is added to timerlat_apply_config that skips setting
-timerlat tracer thresholds if params->mode is TRACING_MODE_BPF (those
-are unnecessary, since they only turn off tracing, which is already
-turned off in that case, since BPF is used to collect samples).
+Move the information to a separate map, so that it is easily writable
+from userspace, and add a function that clears the value, resuming
+tracing after it has been stopped.
 
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 ---
- tools/tracing/rtla/src/timerlat.c      | 24 +++++++----
- tools/tracing/rtla/src/timerlat.h      | 18 ++++++++
- tools/tracing/rtla/src/timerlat_hist.c | 51 +++++++++++++----------
- tools/tracing/rtla/src/timerlat_top.c  | 57 +++++++++++++++-----------
- 4 files changed, 97 insertions(+), 53 deletions(-)
+ tools/tracing/rtla/src/timerlat.bpf.c | 13 +++++++++----
+ tools/tracing/rtla/src/timerlat_bpf.c | 13 +++++++++++++
+ tools/tracing/rtla/src/timerlat_bpf.h |  3 +++
+ 3 files changed, 25 insertions(+), 4 deletions(-)
 
-diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/timerlat.c
-index c29e2ba2d7d8..63d6d43eafff 100644
---- a/tools/tracing/rtla/src/timerlat.c
-+++ b/tools/tracing/rtla/src/timerlat.c
-@@ -40,16 +40,22 @@ timerlat_apply_config(struct osnoise_tool *tool, struct timerlat_params *params)
- 			CPU_SET(i, &params->monitored_cpus);
- 	}
+diff --git a/tools/tracing/rtla/src/timerlat.bpf.c b/tools/tracing/rtla/src/timerlat.bpf.c
+index 96196d46e170..084cd10c21fc 100644
+--- a/tools/tracing/rtla/src/timerlat.bpf.c
++++ b/tools/tracing/rtla/src/timerlat.bpf.c
+@@ -28,6 +28,13 @@ struct {
+ 	__type(value, unsigned long long);
+ } summary_irq SEC(".maps"), summary_thread SEC(".maps"), summary_user SEC(".maps");
  
--	retval = osnoise_set_stop_us(tool->context, params->stop_us);
--	if (retval) {
--		err_msg("Failed to set stop us\n");
--		goto out_err;
--	}
-+	if (params->mode != TRACING_MODE_BPF) {
-+		/*
-+		 * In tracefs and mixed mode, timerlat tracer handles stopping
-+		 * on threshold
-+		 */
-+		retval = osnoise_set_stop_us(tool->context, params->stop_us);
-+		if (retval) {
-+			err_msg("Failed to set stop us\n");
-+			goto out_err;
-+		}
++struct {
++	__uint(type, BPF_MAP_TYPE_ARRAY);
++	__uint(max_entries, 1);
++	__type(key, unsigned int);
++	__type(value, unsigned long long);
++} stop_tracing SEC(".maps");
++
+ struct {
+ 	__uint(type, BPF_MAP_TYPE_RINGBUF);
+ 	__uint(max_entries, 1);
+@@ -41,8 +48,6 @@ const volatile int irq_threshold;
+ const volatile int thread_threshold;
+ const volatile bool aa_only;
  
--	retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
--	if (retval) {
--		err_msg("Failed to set stop total us\n");
--		goto out_err;
-+		retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
-+		if (retval) {
-+			err_msg("Failed to set stop total us\n");
-+			goto out_err;
-+		}
- 	}
+-int stop_tracing;
+-
+ nosubprog unsigned long long map_get(void *map,
+ 				     unsigned int key)
+ {
+@@ -109,7 +114,7 @@ nosubprog void set_stop_tracing(void)
+ 	int value = 0;
  
+ 	/* Suppress further sample processing */
+-	stop_tracing = 1;
++	map_set(&stop_tracing, 0, 1);
  
-diff --git a/tools/tracing/rtla/src/timerlat.h b/tools/tracing/rtla/src/timerlat.h
-index 73045aef23fa..e0a553545d03 100644
---- a/tools/tracing/rtla/src/timerlat.h
-+++ b/tools/tracing/rtla/src/timerlat.h
-@@ -1,6 +1,23 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "osnoise.h"
+ 	/* Signal to userspace */
+ 	bpf_ringbuf_output(&signal_stop_tracing, &value, sizeof(value), 0);
+@@ -121,7 +126,7 @@ int handle_timerlat_sample(struct trace_event_raw_timerlat_sample *tp_args)
+ 	unsigned long long latency, latency_us;
+ 	int bucket;
+ 
+-	if (stop_tracing)
++	if (map_get(&stop_tracing, 0))
+ 		return 0;
+ 
+ 	latency = tp_args->timer_latency / output_divisor;
+diff --git a/tools/tracing/rtla/src/timerlat_bpf.c b/tools/tracing/rtla/src/timerlat_bpf.c
+index 0bc44ce5d69b..1666215dd687 100644
+--- a/tools/tracing/rtla/src/timerlat_bpf.c
++++ b/tools/tracing/rtla/src/timerlat_bpf.c
+@@ -106,6 +106,19 @@ int timerlat_bpf_wait(int timeout)
+ 	return retval;
+ }
  
 +/*
-+ * Define timerlat tracing mode.
-+ *
-+ * There are three tracing modes:
-+ * - tracefs-only, used when BPF is unavailable.
-+ * - BPF-only, used when BPF is available and neither trace saving nor
-+ * auto-analysis are enabled.
-+ * - mixed mode, used when BPF is available and either trace saving or
-+ * auto-analysis is enabled (which rely on sample collection through
-+ * tracefs).
++ * timerlat_bpf_restart_tracing - restart stopped tracing
 + */
-+enum timerlat_tracing_mode {
-+	TRACING_MODE_BPF,
-+	TRACING_MODE_TRACEFS,
-+	TRACING_MODE_MIXED,
-+};
++int timerlat_bpf_restart_tracing(void)
++{
++	unsigned int key = 0;
++	unsigned long long value = 0;
 +
- struct timerlat_params {
- 	/* Common params */
- 	char			*cpus;
-@@ -30,6 +47,7 @@ struct timerlat_params {
- 	cpu_set_t		hk_cpu_set;
- 	struct sched_attr	sched_param;
- 	struct trace_events	*events;
-+	enum timerlat_tracing_mode mode;
- 	union {
- 		struct {
- 			/* top only */
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 36d2294c963d..6cf260e8553b 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -802,6 +802,9 @@ static struct timerlat_params
- 	params->bucket_size = 1;
- 	params->entries = 256;
- 
-+	/* default to BPF mode */
-+	params->mode = TRACING_MODE_BPF;
++	return bpf_map__update_elem(bpf->maps.stop_tracing,
++				    &key, sizeof(key),
++				    &value, sizeof(value), BPF_ANY);
++}
 +
- 	while (1) {
- 		static struct option long_options[] = {
- 			{"auto",		required_argument,	0, 'a'},
-@@ -1054,6 +1057,13 @@ static struct timerlat_params
- 	if (params->kernel_workload && params->user_workload)
- 		timerlat_hist_usage("--kernel-threads and --user-threads are mutually exclusive!");
- 
-+	/*
-+	 * If auto-analysis or trace output is enabled, switch from BPF mode to
-+	 * mixed mode
-+	 */
-+	if (params->mode == TRACING_MODE_BPF && params->trace_output && !params->no_aa)
-+		params->mode = TRACING_MODE_MIXED;
+ static int get_value(struct bpf_map *map_irq,
+ 		     struct bpf_map *map_thread,
+ 		     struct bpf_map *map_user,
+diff --git a/tools/tracing/rtla/src/timerlat_bpf.h b/tools/tracing/rtla/src/timerlat_bpf.h
+index f1b54dbddb0e..118487436d30 100644
+--- a/tools/tracing/rtla/src/timerlat_bpf.h
++++ b/tools/tracing/rtla/src/timerlat_bpf.h
+@@ -18,6 +18,7 @@ int timerlat_bpf_attach(void);
+ void timerlat_bpf_detach(void);
+ void timerlat_bpf_destroy(void);
+ int timerlat_bpf_wait(int timeout);
++int timerlat_bpf_restart_tracing(void);
+ int timerlat_bpf_get_hist_value(int key,
+ 				long long *value_irq,
+ 				long long *value_thread,
+@@ -28,6 +29,7 @@ int timerlat_bpf_get_summary_value(enum summary_field key,
+ 				   long long *value_thread,
+ 				   long long *value_user,
+ 				   int cpus);
 +
- 	return params;
- }
- 
-@@ -1149,7 +1159,6 @@ int timerlat_hist_main(int argc, char *argv[])
- 	pthread_t timerlat_u;
- 	int retval;
- 	int nr_cpus, i;
--	bool no_bpf = false;
- 
- 	params = timerlat_hist_parse_args(argc, argv);
- 	if (!params)
-@@ -1161,12 +1170,6 @@ int timerlat_hist_main(int argc, char *argv[])
- 		goto out_exit;
- 	}
- 
--	retval = timerlat_hist_apply_config(tool, params);
--	if (retval) {
--		err_msg("Could not apply config\n");
--		goto out_free;
--	}
--
- 	trace = &tool->trace;
- 	/*
- 	 * Save trace instance into global variable so that SIGINT can stop
-@@ -1175,24 +1178,30 @@ int timerlat_hist_main(int argc, char *argv[])
- 	 */
- 	hist_inst = trace;
- 
-+	/*
-+	 * Try to enable BPF, unless disabled explicitly.
-+	 * If BPF enablement fails, fall back to tracefs mode.
-+	 */
- 	if (getenv("RTLA_NO_BPF") && strncmp(getenv("RTLA_NO_BPF"), "1", 2) == 0) {
- 		debug_msg("RTLA_NO_BPF set, disabling BPF\n");
--		no_bpf = true;
--	}
--
--	if (!no_bpf && !tep_find_event_by_name(trace->tep, "osnoise", "timerlat_sample")) {
-+		params->mode = TRACING_MODE_TRACEFS;
-+	} else if (!tep_find_event_by_name(trace->tep, "osnoise", "timerlat_sample")) {
- 		debug_msg("osnoise:timerlat_sample missing, disabling BPF\n");
--		no_bpf = true;
--	}
--
--	if (!no_bpf) {
-+		params->mode = TRACING_MODE_TRACEFS;
-+	} else {
- 		retval = timerlat_bpf_init(params);
- 		if (retval) {
- 			debug_msg("Could not enable BPF\n");
--			no_bpf = true;
-+			params->mode = TRACING_MODE_TRACEFS;
- 		}
- 	}
- 
-+	retval = timerlat_hist_apply_config(tool, params);
-+	if (retval) {
-+		err_msg("Could not apply config\n");
-+		goto out_free;
-+	}
-+
- 	retval = enable_timerlat(trace);
- 	if (retval) {
- 		err_msg("Failed to enable timerlat tracer\n");
-@@ -1320,7 +1329,7 @@ int timerlat_hist_main(int argc, char *argv[])
- 		trace_instance_start(&record->trace);
- 	if (!params->no_aa)
- 		trace_instance_start(&aa->trace);
--	if (no_bpf) {
-+	if (params->mode == TRACING_MODE_TRACEFS) {
- 		trace_instance_start(trace);
- 	} else {
- 		retval = timerlat_bpf_attach();
-@@ -1333,7 +1342,7 @@ int timerlat_hist_main(int argc, char *argv[])
- 	tool->start_time = time(NULL);
- 	timerlat_hist_set_signals(params);
- 
--	if (no_bpf) {
-+	if (params->mode == TRACING_MODE_TRACEFS) {
- 		while (!stop_tracing) {
- 			sleep(params->sleep_time);
- 
-@@ -1362,7 +1371,7 @@ int timerlat_hist_main(int argc, char *argv[])
- 	} else
- 		timerlat_bpf_wait(-1);
- 
--	if (!no_bpf) {
-+	if (params->mode != TRACING_MODE_TRACEFS) {
- 		timerlat_bpf_detach();
- 		retval = timerlat_hist_bpf_pull_data(tool);
- 		if (retval) {
-@@ -1409,10 +1418,10 @@ int timerlat_hist_main(int argc, char *argv[])
- 	osnoise_destroy_tool(aa);
- 	osnoise_destroy_tool(record);
- 	osnoise_destroy_tool(tool);
-+	if (params->mode != TRACING_MODE_TRACEFS)
-+		timerlat_bpf_destroy();
- 	free(params);
- 	free_cpu_idle_disable_states();
--	if (!no_bpf)
--		timerlat_bpf_destroy();
- out_exit:
- 	exit(return_value);
- }
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 7365e08fe986..1644eeb60181 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -559,6 +559,9 @@ static struct timerlat_params
- 	/* display data in microseconds */
- 	params->output_divisor = 1000;
- 
-+	/* default to BPF mode */
-+	params->mode = TRACING_MODE_BPF;
-+
- 	while (1) {
- 		static struct option long_options[] = {
- 			{"auto",		required_argument,	0, 'a'},
-@@ -790,6 +793,13 @@ static struct timerlat_params
- 	if (params->kernel_workload && params->user_workload)
- 		timerlat_top_usage("--kernel-threads and --user-threads are mutually exclusive!");
- 
-+	/*
-+	 * If auto-analysis or trace output is enabled, switch from BPF mode to
-+	 * mixed mode
-+	 */
-+	if (params->mode == TRACING_MODE_BPF && params->trace_output && !params->no_aa)
-+		params->mode = TRACING_MODE_MIXED;
-+
- 	return params;
- }
- 
-@@ -994,7 +1004,6 @@ int timerlat_top_main(int argc, char *argv[])
- 	char *max_lat;
- 	int retval;
- 	int nr_cpus, i;
--	bool no_bpf = false;
- 
- 	params = timerlat_top_parse_args(argc, argv);
- 	if (!params)
-@@ -1006,38 +1015,38 @@ int timerlat_top_main(int argc, char *argv[])
- 		goto out_exit;
- 	}
- 
--	retval = timerlat_top_apply_config(top, params);
--	if (retval) {
--		err_msg("Could not apply config\n");
--		goto out_free;
--	}
--
- 	trace = &top->trace;
- 	/*
--	* Save trace instance into global variable so that SIGINT can stop
--	* the timerlat tracer.
--	* Otherwise, rtla could loop indefinitely when overloaded.
--	*/
-+	 * Save trace instance into global variable so that SIGINT can stop
-+	 * the timerlat tracer.
-+	 * Otherwise, rtla could loop indefinitely when overloaded.
-+	 */
- 	top_inst = trace;
- 
-+	/*
-+	 * Try to enable BPF, unless disabled explicitly.
-+	 * If BPF enablement fails, fall back to tracefs mode.
-+	 */
- 	if (getenv("RTLA_NO_BPF") && strncmp(getenv("RTLA_NO_BPF"), "1", 2) == 0) {
- 		debug_msg("RTLA_NO_BPF set, disabling BPF\n");
--		no_bpf = true;
--	}
--
--	if (!no_bpf && !tep_find_event_by_name(trace->tep, "osnoise", "timerlat_sample")) {
-+		params->mode = TRACING_MODE_TRACEFS;
-+	} else if (!tep_find_event_by_name(trace->tep, "osnoise", "timerlat_sample")) {
- 		debug_msg("osnoise:timerlat_sample missing, disabling BPF\n");
--		no_bpf = true;
--	}
--
--	if (!no_bpf) {
-+		params->mode = TRACING_MODE_TRACEFS;
-+	} else {
- 		retval = timerlat_bpf_init(params);
- 		if (retval) {
- 			debug_msg("Could not enable BPF\n");
--			no_bpf = true;
-+			params->mode = TRACING_MODE_TRACEFS;
- 		}
- 	}
- 
-+	retval = timerlat_top_apply_config(top, params);
-+	if (retval) {
-+		err_msg("Could not apply config\n");
-+		goto out_free;
-+	}
-+
- 	retval = enable_timerlat(trace);
- 	if (retval) {
- 		err_msg("Failed to enable timerlat tracer\n");
-@@ -1166,7 +1175,7 @@ int timerlat_top_main(int argc, char *argv[])
- 		trace_instance_start(&record->trace);
- 	if (!params->no_aa)
- 		trace_instance_start(&aa->trace);
--	if (no_bpf) {
-+	if (params->mode == TRACING_MODE_TRACEFS) {
- 		trace_instance_start(trace);
- 	} else {
- 		retval = timerlat_bpf_attach();
-@@ -1179,7 +1188,7 @@ int timerlat_top_main(int argc, char *argv[])
- 	top->start_time = time(NULL);
- 	timerlat_top_set_signals(params);
- 
--	if (no_bpf)
-+	if (params->mode == TRACING_MODE_TRACEFS)
- 		retval = timerlat_top_main_loop(top, record, params, &params_u);
- 	else
- 		retval = timerlat_top_bpf_main_loop(top, record, params, &params_u);
-@@ -1187,7 +1196,7 @@ int timerlat_top_main(int argc, char *argv[])
- 	if (retval)
- 		goto out_top;
- 
--	if (!no_bpf)
-+	if (params->mode != TRACING_MODE_TRACEFS)
- 		timerlat_bpf_detach();
- 
- 	if (params->user_workload && !params_u.stopped_running) {
-@@ -1239,6 +1248,8 @@ int timerlat_top_main(int argc, char *argv[])
- 		osnoise_destroy_tool(aa);
- 	osnoise_destroy_tool(record);
- 	osnoise_destroy_tool(top);
-+	if (params->mode != TRACING_MODE_TRACEFS)
-+		timerlat_bpf_destroy();
- 	free(params);
- 	free_cpu_idle_disable_states();
- out_exit:
+ static inline int have_libbpf_support(void) { return 1; }
+ #else
+ static inline int timerlat_bpf_init(struct timerlat_params *params)
+@@ -38,6 +40,7 @@ static inline int timerlat_bpf_attach(void) { return -1; }
+ static inline void timerlat_bpf_detach(void) { };
+ static inline void timerlat_bpf_destroy(void) { };
+ static inline int timerlat_bpf_wait(int timeout) { return -1; }
++static inline int timerlat_bpf_restart_tracing(void) { return -1; };
+ static inline int timerlat_bpf_get_hist_value(int key,
+ 					      long long *value_irq,
+ 					      long long *value_thread,
 -- 
 2.49.0
 
