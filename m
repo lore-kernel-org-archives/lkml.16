@@ -1,367 +1,590 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2137.outbound.protection.outlook.com [40.107.236.137])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2041.outbound.protection.outlook.com [40.107.92.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4448825C838
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E6420487E;
+	Thu, 26 Jun 2025 22:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750977567; cv=fail; b=OAiOHt1Tg3n20uZacQe7UZJsoj2gIc+6dJv6usY1x2D7glZ5MJRYDM71gttTvVAHxEWUPL36rTHXsgzNa4V41BFTthcIjl3FGAOjRikLqhuJPXwcQ3vkkkIxfn3TtGVAuLkOOyZrfYOiVcCMeRxPi+gdNfY4q3mG94LFQB2jQEw=
+	t=1750977784; cv=fail; b=LRoYGKtFzw5X/4Z701CI5IKxzYKFVnWiK5/igFsbnwXDQpjLJOH3Swvz4hYQb37qUyLkwpH1dnGOsomLpxy8akztEJwkKFRf2syotxzvjxDRZoMhMmloVr3wx9fdhbUekoME21csPHQuSCEXjb8aTyIg2Tk5VH1mj34P0ecy4lg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750977567; c=relaxed/simple;
-	bh=pqt/p6z1PyP5+sJM1ZKSIDdX+dvDz1FB0bIcf6iM6XQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=KoZgHPKZb6qg+8AQrr/RMXmxc0bWwoqFEy2ZrmfhpC12lhGwoUbbQ7WwZm9V7tKqniCBGLYNzCAD9hY+qYnlwT53nhtCbPNIg8sG+/xl9zTEBS0O00/3QSCh/QA6m6w3b9yi2Ny1WF92AqlOcCGGVxtKYeD5f6PXtWLCvKcLxkE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=oyu3jVL6; arc=fail smtp.client-ip=40.107.236.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	s=arc-20240116; t=1750977784; c=relaxed/simple;
+	bh=Jtsgm1KC4wenO6KcfSGxliFL6idYc+2kAJ28QSLXEDk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PRVy9hLO5vOTL2V9CpCRE+oYldX49J89PTdluRL5mpyhh5Aa7oY8+t8l/SxyLLqv0XZzbGFsYKuETDsEvxr5yvqdOU3wbVh/miI3EwPdGjSMxZSmE2aLmbfPPTBy5jKl1VsweCX3/2PUzt+LYwgC2GJ5I/cnq4g+xYhc8n0ZiFI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=K1BrnR4q; arc=fail smtp.client-ip=40.107.92.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="oyu3jVL6"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="K1BrnR4q"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dKUU7CHA8xvBYeewGjdUNeFkMQZq5fuKC1RkHz4/LSwez+0uJlkFLrPO624IdAEXM3WYUNLwz6ne7hceYdAuEcRBAosQOakQZpZa+jOykB8yDkBaUi6IOo9HWtQB/c+ELVNrXidgmY+YPJYDvPuuca/xU7p+fzGCOEH76EKyCnx+gQcBD7ok3BiEXREe/Z+OQ/Rujp4NMQLM4yedQHawrSFvDnQz9O1VX/w+YezW7PEFbeHg21ALduJfTTVZz8qKomFHA6NaTkldwM/L/sHkJC3NWLGuRZ0Eo+HPVZJLXVO5iYDTuGrWJkmP8CmNYE+6Yzluyc8mvLEn66tWxLn9Sw==
+ b=WkesOEjzgG8hM/r0VBzr5b8Bg+x7ycl/F38fi+/rcF0d3/LhM38J/UyDzX1pTnfTm+Za+qiph8RFJTPmQcY28wD2A96qmgpM8ifEWWPad9HIGxl8DXSJIWWMqSrI0Uq/jvz+qOlxh6ZkS9NS+UCiaWfEbBUhP0JgNCAtJ0aatV1T9qLkAakinGsOlHEBaYpayJ5UPZaZhB4xo8Ny+W7GFtU2LU8ZbQJ6+LiTcQHZIDWhDa/5pSAWB6uQQ2SM4MEpHfNfO2L3LJwglWqSao0RAwBh34zBKIrn4+zE3DgXr1UkOSnBbRLsZ1LhhRQ2zFGbd4O9GSSzj9VyUzzVtbOrsA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5Q7emcwz40o/IOq7Dpt44XLKxli0dOa1B3zDTrX9yLE=;
- b=KAkveq9w3uVo4X/Tc2GTdHUwqyAiXwWSbuQqRzLk0zTW15CT6RWZ1k40Zm9jer0Yo7LS/r89OAKN1/NaAo/7fin4r/nmdX5qeQZRozDtoJ2J7gFEIigrL5A7CDrtzMhgKS9p0pfMZtGPD9tBhPUjVElyTYVv60bCmtl8C19nXr2RtirPLg+vZbsbnmmsBbuJGnLWZ76VJmOsO/WBwgSsjeLNuFHpU4VIIWWWKUhiFcY6uBsM94YTdc3sO6iJ1xcXTyCySkPgwAPtc7ytEAUb94Qkfi1CJmNK1oA0Ry8C401VTk09IeUtd937Egs9ShjMv5qwBsBB/0zo3EvvVDna2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
+ bh=vYZjNn38dq7L5eqwlLjqVLCAJFfSsIFbVCTsTpA62qI=;
+ b=x4neBr1+25wq0Lxjgb7eqP712L5IvWNPBXoc3tvfmE8uHtstAsx9Y+5VcBJQBnC5gnUgFicWLoi8Tn3m/dHO1jbD/L78ILzRx1VTTUuoxMnHFVDAE5MuR90P7Cu+CAHQBlLJz82b9kb2LSL341NGAxQwpgIcWFeaSt9q1sHMoe/SFR+kWVnUzVluCmV+skjjhmvAEVLKQEEQxFpQMxsx0OZHuqnHbsQxvwncm5/CwAQih5QKeDTU3k6UK0MOGLvZ4hvrmWAtGwdRtZeKiXiu/LFumoMlTNKElggFw3Px+bEgQT5tReBRkgDu3V1jOCpGkxPvXpBTiVYgwq4cCAFylA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5Q7emcwz40o/IOq7Dpt44XLKxli0dOa1B3zDTrX9yLE=;
- b=oyu3jVL6QCIUgL8KZ9BUQ6XK2YRCiTU4E9Na6jEfdP4PgeVPBxQgeYwq9C+bgadGvNId/PKS+Ts8+7viGnNUSMcuT6zk6C2QKTTPms+C66vVWp/CAjOcpuu2pefStJYjCkXk9RLO658xc+Gqk0j1gY69Xn7MFfrbsBu30Gr8W4Q=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from BN0PR01MB6877.prod.exchangelabs.com (2603:10b6:408:161::22) by
- DS7PR01MB7784.prod.exchangelabs.com (2603:10b6:8:7f::22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8880.21; Thu, 26 Jun 2025 22:39:21 +0000
-Received: from BN0PR01MB6877.prod.exchangelabs.com
- ([fe80::91fc:9877:8a2a:d4e0]) by BN0PR01MB6877.prod.exchangelabs.com
- ([fe80::91fc:9877:8a2a:d4e0%4]) with mapi id 15.20.8880.021; Thu, 26 Jun 2025
- 22:39:20 +0000
-Message-ID: <25ecbf39-e5dc-496c-be3c-8b25eeae2414@os.amperecomputing.com>
-Date: Thu, 26 Jun 2025 15:39:14 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] arm64: mm: support large block mapping when
- rodata=full
-To: Ryan Roberts <ryan.roberts@arm.com>, will@kernel.org,
- catalin.marinas@arm.com, Miko.Lenczewski@arm.com, dev.jain@arm.com,
- scott@os.amperecomputing.com, cl@gentwo.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250531024545.1101304-1-yang@os.amperecomputing.com>
- <20250531024545.1101304-4-yang@os.amperecomputing.com>
- <f036acea-1bd1-48a7-8600-75ddd504b8db@arm.com>
- <50a4f767-0007-4f6a-8c62-398962d54029@os.amperecomputing.com>
- <ed942c01-58e8-4d91-8f86-3b3645af6940@arm.com>
-Content-Language: en-US
-From: Yang Shi <yang@os.amperecomputing.com>
-In-Reply-To: <ed942c01-58e8-4d91-8f86-3b3645af6940@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA9PR13CA0173.namprd13.prod.outlook.com
- (2603:10b6:806:28::28) To BN0PR01MB6877.prod.exchangelabs.com
- (2603:10b6:408:161::22)
+ bh=vYZjNn38dq7L5eqwlLjqVLCAJFfSsIFbVCTsTpA62qI=;
+ b=K1BrnR4qJSKAdMfgy94KPOrZNxVg9wSaJNEzjUlO4E++SEkHSKelTTm25rQnOfiyvufuQ+JPgEump9xEWlOcxXG4AoWK7glDQrDQsdCXAUmG3U+HY7teLgzhdDNNWWj169lURdX0rgIB81M9XK1+qzQzHKoCOXaX3gF6NA1xt3o=
+Received: from DM6PR10CA0027.namprd10.prod.outlook.com (2603:10b6:5:60::40) by
+ DM6PR12MB4340.namprd12.prod.outlook.com (2603:10b6:5:2a8::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8880.21; Thu, 26 Jun 2025 22:42:59 +0000
+Received: from DS3PEPF000099D6.namprd04.prod.outlook.com
+ (2603:10b6:5:60:cafe::bb) by DM6PR10CA0027.outlook.office365.com
+ (2603:10b6:5:60::40) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.21 via Frontend Transport; Thu,
+ 26 Jun 2025 22:42:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF000099D6.mail.protection.outlook.com (10.167.17.7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8880.14 via Frontend Transport; Thu, 26 Jun 2025 22:42:59 +0000
+Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 26 Jun
+ 2025 17:42:57 -0500
+From: Terry Bowman <terry.bowman@amd.com>
+To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
+	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
+	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	<terry.bowman@amd.com>, <linux-cxl@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: [PATCH v10 00/17] Enable CXL PCIe Port Protocol Error handling and logging
+Date: Thu, 26 Jun 2025 17:42:35 -0500
+Message-ID: <20250626224252.1415009-1-terry.bowman@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR01MB6877:EE_|DS7PR01MB7784:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a015634-bd42-46dd-bbd9-08ddb5024a54
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099D6:EE_|DM6PR12MB4340:EE_
+X-MS-Office365-Filtering-Correlation-Id: c41a7365-9517-4fed-763b-08ddb502cd15
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|7416014|376014|1800799024|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VVpQS0x4T2d6VEJSYVlLeGx1dE12c3JES3dKL1BPRFFBRFRzQi9yUVJrMG82?=
- =?utf-8?B?RDZjYjhSOGdOUHFKNW01V3l2ZVRHTWdCdnRoN2g5Z0RHWU8wU0tCakE5eU9u?=
- =?utf-8?B?RXRCbndZdzd4TDJCR1ZxdzBwT2taV0lGVmtmTThIT2xwVGI2S3dJazQ2aW5a?=
- =?utf-8?B?K0pyYWx2cFNoMmJJRzlMcE9MME1hUVNkMm1FNlV6ZkRCKzJXTE11cHNCUmky?=
- =?utf-8?B?amg0S3FBL2R6UlErOFRmM2JGSDMvRzBreUhEWEZRWHBNTFhNYTdDaXZMWE5j?=
- =?utf-8?B?Z1pBYUxUaWo0YllFdkVaOUZuN21pUmwrU1l1Smc5OFpseFExejl2YW95Q2lT?=
- =?utf-8?B?czh0NVFaYnFmR05WRS9wZEd4NE5SUXl3cDdsN0RacWM3dUQ4WC9ldFh3bmpt?=
- =?utf-8?B?QVJnRDRZaWdURkJvVW9KK0cvZEtzZDZWR1dGRjExL1g0RzA2S3NEa0g4YmhS?=
- =?utf-8?B?NnVlTWw1QVY5UW5CNFVDZ3prVjVkakRsZThpRHpHdXVvSEtNSHFaYnV4TnFN?=
- =?utf-8?B?RzZqMzRVaVBEb1pKaDg5TlU1QjlSbi9kUDBoa1BTWGd2d2pEODlkdWN3bGJ3?=
- =?utf-8?B?YlhFV213YmNSc2ZaczU0bllERG0zK28wTVRWQXBLazdxYlZMdmxmWmRGdFNr?=
- =?utf-8?B?SlZBYzhpcGZhWFMrbnZybHJ6S0NhUUZlWGRHTit3SVBaNFZaYlhtbkUreThW?=
- =?utf-8?B?amx4eGNsM2V4enQ5UGEwbWtPanhtTXBWZ29oeVl6bUxFdU9vYkpJc2lRVnpX?=
- =?utf-8?B?Sm5yaVo5UW1WK1E2TnNzaU1JTkxGRWdSQkU3WEdQeGVLNXNLeDdDbU5JVVR3?=
- =?utf-8?B?L3FEUTRVOGxEcUcwbGxMVTZXcVk1cGQ5dTdzMjczVm4xcTN0clFZbk0vZGlv?=
- =?utf-8?B?Q2QvaVRFLytUOG5VcTVvWWFZQ2hvWDlPdWtjbEMzS2hxbmNhenltaUMwK0NG?=
- =?utf-8?B?ODhGL3NmOFNuRWMrT0hXSm5OWVNZMk1HVEZYODVzNmlRVTc1TE56ODdFSkJD?=
- =?utf-8?B?dENHSGtYVDNRWTJRZGMzRUtRZExDRXJNSmFZWWJWTjZZOStGSUtYeXBHWDNq?=
- =?utf-8?B?dFltNlVZeFlPeDk2dUZsRWtDN0VJSEhVeFlkT3p1dFcxdGR4SFdobW0rbzJu?=
- =?utf-8?B?ZE5EZ21FMjV2NWpRbzZRU0hvZFNPeWpsM2pJbEdJcG85blNSRUNGaGwzOUVw?=
- =?utf-8?B?NXExakRXZWZEMkNxQ3J6aGRjNytOYXd2ais4dnFKSHhzUFRBcEdoY1ZmTWFQ?=
- =?utf-8?B?dWZsVVRDRHhNa29iNTBiVTJ1OUUwdnFyUXpqQzhuMjh6TnZzZ1BMRVRUT1or?=
- =?utf-8?B?cWxJQjBzWlpFeGpoblBmRGhoZ1ZjTUpMOFd0dlJpUmJUNjNLcmtQSWkraFZI?=
- =?utf-8?B?UVEweEZMTm9ObE9UUTVoVlcvZjUwdUZFd2EwZ2ExZXgycmZkUytyaVIva2s5?=
- =?utf-8?B?Q3UrSlQ3dUhTZEVSUXYwYjhBR0xQY2RFWUsyWWc4R2xvT3RlcHRqbHk1MStx?=
- =?utf-8?B?ZThsU1NqVXIycHI1aldVYTVaVEcrc2NpNFNsb3VaMmRXVmFuOVpNWVFVZTdB?=
- =?utf-8?B?a0NmT3lYdjZVM3I4NnU0ZWxxWmdnSGxqN3BCN1o1Z1pvKzFrcjByODRwR0Rt?=
- =?utf-8?B?L2VJajF6VUtuaW5YZXNyVnBZUnlhMTN6M3duTWlRU1lDOFhzd3NKUkQyUVZi?=
- =?utf-8?B?NEFMSndTQUtRZXRSYi9tRGp3TVB5SHR0V2tRWjRnSlBKWVBjMXIzbzhSQmt1?=
- =?utf-8?B?N3VxSk52c3dyS252MjhydjRUcHYwb1ZUbmF1QmJOQUMrMUF1aEtXY3RmN0pW?=
- =?utf-8?B?QmdaQitGUWxCYnVKY2ZkQTRYM2RpVlI3Y1hxZkJiMkxiajJCanU2endBSU5z?=
- =?utf-8?B?S25zY0x0b01OdjFFeExwQUJKcFdLK3NRZXVCWVdnU1k0NHc9PQ==?=
+	=?us-ascii?Q?RliyjHBMHsF/F0NdxyK6bVolxZpQ6/wQz/Jn1L4HQBEJF5TPuJrmOwEU/ARV?=
+ =?us-ascii?Q?No4WTPiPkBMV9MfQ85zboSySG2tgsSTVkQaocs6kf4t58ZNzac8aPueDXunM?=
+ =?us-ascii?Q?9f8EyFKYlDB0RUcMHqdaxW3vplSyhe1mOp4TpbzrJ6s2O3cvWfp/N21ah6GS?=
+ =?us-ascii?Q?Cx3R8zp5IMbsOsquD1wxi1ubvHNCvN0ql5T2FYiwepxqMe59URWYIv2il1lR?=
+ =?us-ascii?Q?xerKICdkLls5ovUGJX5QP1Umgduox6SEOJaSj5mviOY6dPmwtw9MJ5Tr3AIu?=
+ =?us-ascii?Q?L24uAk+qiqJuEOpnKSoLQwAdq4GYwnCAQcIIm0+4poHj2vzgsaUM+VojytM+?=
+ =?us-ascii?Q?xMg6m0rmre8d6Pwa8owYRAiw1OPFPAvMyf6pj9dMXNweRvPLC6oDAndCUeUl?=
+ =?us-ascii?Q?igQgPrlSKYXrtt0TantuxjOgtDOvg5bSUQI5TXwB51BL0Tvz9RiEmiGAZbR8?=
+ =?us-ascii?Q?GSMcpxPvWxCF53s90HES1qlq1iq1Oe8zu2D528zywkfSrI70ge6kdqiL4Y5e?=
+ =?us-ascii?Q?Fgpn2uymEb6qYjkZY+sBIYeDjpSePtHgBTPinOloPdnQMLStAvtkkBWovRUC?=
+ =?us-ascii?Q?KPskgvmsonz9EG1tK/YZXrkAV6of+9pv7nat7pqhuVGh3fdeNuszhnVgoW9X?=
+ =?us-ascii?Q?1s+1f3OgUPM16I+8K1jCaWl3Ous4VD6udFebTH/PcVuwU3xNzTJ3lNbEvZ0z?=
+ =?us-ascii?Q?vFkeknKhEWPNxcJass4+fWC+Yx95irL7gWZPFLVmdXyMgKGgZwbUiaUKqvZw?=
+ =?us-ascii?Q?0OR+nCekqZWLrm+OzdbRhrSHSe7Dr57rZhzZrwVSJXMC9YJwHZIFXA+k1Sow?=
+ =?us-ascii?Q?fjdxx5rpTBwt93cZUHPSm5oZzVE9mXx40PCU2kVfHXnI7wNFK8AjPm8tREUh?=
+ =?us-ascii?Q?pC2+RiY/mj/Alak7MnzAvD2mkoYHtHcGvrVoDn/vE+74LzsaSxdPjoHKKxmM?=
+ =?us-ascii?Q?bdsRT6emTn0rsdRWORlaI2FISnYAlDZHtIQu4hRGaLEQKeeL3C4fCRv4FYJo?=
+ =?us-ascii?Q?T3SEUfAVmi4Rz/feLj6luFJaa7GXcT8T6/fqZqHBUgludgyK3NAru+PFovfS?=
+ =?us-ascii?Q?8XBAes7WdVAA1i3Yeov0/BGBhvjv7yRMC58mDkYMIj7R5Q+x2Piu+5rNg8Ds?=
+ =?us-ascii?Q?IgjUjnQAorK0hCVQaZbye7cFa/qNxzv4o1nRAD8ZsbJudRdWdJyqU/ww3ikF?=
+ =?us-ascii?Q?Ec4dEN7Ws4l5tseEY/wHwKZSsHNrUKYhNNxkJ172HMOmOLHvxljVUQGA4U8t?=
+ =?us-ascii?Q?bvhkcUIajHV/Ma9GuTqXPATO/gIfZ3nJkoXwQ5Ybwp/O6H6GFr88fNgXvVMY?=
+ =?us-ascii?Q?nafsnNVM1Wox5e6RUkuuLZs9djARSvmLw3ZUvxanhnotvpnDdcwWqPbwrdbX?=
+ =?us-ascii?Q?Cg9YirVvMfeXhpmlBg12aeQpA15hyYb4cNk6g0UdwuOIEk/ncod5UYsKIxUh?=
+ =?us-ascii?Q?zNJD0tU+E/CA3pHi+x+hsZ5usXFJZZw6vJ3Dsg+cVwmXCDt0XiMBNHdMUP1c?=
+ =?us-ascii?Q?06nLHyyLP0eN6gHNGyv2mpT2SRUyU8hES/UbzkMfGtLfWy/0Okx85uYH0g?=
+ =?us-ascii?Q?=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR01MB6877.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QTA0ZzBibWlBZHF4TG8xMmd6bGdRK1QrdUFBTFNjSHRxSWRQMDdmbzIzMjlU?=
- =?utf-8?B?TE5WMXF3Z3JxdXdtbUpzVHYxczFFb2FzNmxsbURObE9mK213UW5QajFPbWw2?=
- =?utf-8?B?QTVkTUtKZ3MxeDNJYXhzTEVvUGUzZGxiWjUxYzBUOWI1ZkxrSXk5cDI3SVJn?=
- =?utf-8?B?alFMZis2aVk3ak9VYlhBTDc2REo2VWFpNzNmbmgwa083RHlrYWxWekxaOVNl?=
- =?utf-8?B?Z0djWktmMUIzbElrQ2V4UXJhdlBSTmI2NE5MRURoRjRVbEVZdDhXVUxyS05w?=
- =?utf-8?B?N2lHTVQrYTV3ZFFtQVRpUjc0TEJ6M05LNHNYdzhTbDZEVTgzR0p6Z1JRKzJs?=
- =?utf-8?B?SC9WSHhOYWhjWTVBazhHYU1pcmErbjlKZE9KRnZLYjVYd2hkRTFpUzBreml3?=
- =?utf-8?B?SVFibUdKckJYZmcxbzU0NmovTCtkWTRrL1BOMm5sYUtwTitFM3JFOW1sd2c0?=
- =?utf-8?B?a0h2MVppSnFZd0I1SERmU2NPNUZLUUpNRE5RZEl2M2RpdnZmMEorZm9HVXNG?=
- =?utf-8?B?a0lPamp3endDNXhCRlp0d0g5cUcwWFIwbkpHdmVadzBzT3BLMUozVm9tWi9P?=
- =?utf-8?B?U3lrTndXTWdMK0IvK2t0SExhZkpIVWtSeUZUU09QZE9jUGs3R1RweHVyQnVl?=
- =?utf-8?B?R0RGQmliV0w3cVQ5VjlqYVpFZ3RiNUN6OTdBTnV6N3Yybkk5YTgxNDlkWTJl?=
- =?utf-8?B?UHEwc2dhaVB4NUV5NG0wSFozOWxSR2VoK1ZZR3NtOE1TM3BvazI1eTlDRkdW?=
- =?utf-8?B?YjJ0dTUzK0ZWZzR3Q05Cc1UyZnp2L2lGLzhlY2JRWTd5UTNMcVJlWHpkYTFD?=
- =?utf-8?B?emVIL2MrR3pvRmtoN3kxUHpXMHMvM1dETFhwSlNxM0RCM3VicFZrS1BsTFlR?=
- =?utf-8?B?WTBodnplRHlWRk1IRHZZbjVRLzhBaWZtRitvRFJWTDVYd3pTS205RS8rNGJY?=
- =?utf-8?B?ejZ0WlAyNkVoVkpiRXZMaWdWRXo4NHJDNDgvZ0Q1VkxpTFB4VkVDbGVRTTVC?=
- =?utf-8?B?dTllczFPNWJZVng1SGlZL0pqRWh4Z3o4M0FqWlFEdDRNK0w1OWZNbXFTMTFx?=
- =?utf-8?B?SGZQQW0yMDZycXk5ckU1RThKdm4ya25mUnAvTzlpNVA2RlpmUnlmOW5UeEFZ?=
- =?utf-8?B?UnhzOE5KNTR5dWowelJoRi9FdFBybklMZmdCKzFLMFpEckFYelNyZU5reTc5?=
- =?utf-8?B?RWtKR2VSSzFvRVFPUHh5Rm94b0dBR3l3SFJ3dHFPWVBUSEJKR0NJdERwSVlP?=
- =?utf-8?B?MjRBSE45eVA3VWZsUEpCVk9YWVlqWU5jQURyUkF3YjhsOGlKZW82TmsxYnl2?=
- =?utf-8?B?M2JIWnpiblZlNUJVN3lNSmZ1WmhHenI1OXVYaDFVNFhDbk9uRFhKaFlxOExk?=
- =?utf-8?B?V2FCcENjK1VoVXNGSFBmL0xsd2ovU3dYd0pwS29PTXhJWmpDMTlNNEpudFpW?=
- =?utf-8?B?d0M4cVE0dzBCcTBMMXZ3UUFGV2ZJQkJmUFE4dGN2WEpNSlFRdEEvczEzdVo3?=
- =?utf-8?B?Y1RYaHo4OFBHVVgxbnVEdHc3cUhqY1U0WVpoVUptdWM5YlJ3aXEyYlZWOGZB?=
- =?utf-8?B?SFFVcDl6dkxuZHQyWk9GQVllVGN1VmtiVStGUExTQ1RMK2hNM0QwZ0JnSzJN?=
- =?utf-8?B?RkJoRFZoZlR4L0tWb3dXVnc5NVNFL3BDaWZjK09JZEhMZ3JpV0ZuWGEvZFdv?=
- =?utf-8?B?YjQ2SERQdnN2ZE80ZW0xdzQreDgwV3FXMGk1UnYwOU9yYXNDcllpRnF3a2lh?=
- =?utf-8?B?dFY1QmRYN0tDMjBqS2srUGFwZDlXS2VLNTgvTVd2QTQrb2VWNjd3b0FEZzdQ?=
- =?utf-8?B?VWx3dmMraHNwMzlCODloWEJUQUtOMHBLckdaOVVoa1hiOUs4UWh5SG0wNEtw?=
- =?utf-8?B?QkZLN3QweG5hUXlVZS9USmJLcGNkL3BnRXpCMlJZS0VGL0IrbHBSMTV2dUo3?=
- =?utf-8?B?YWRmR09UN2RPKzFUeDRqQWc0a213UTBnTHF1Z0V0bFlRUzJrTCtFR0NOMTJW?=
- =?utf-8?B?Zm0xV2VEZUMwRXhkWDhnblBReG1NWUxVTzhPU2piZWxRb3RQckNocTVtQlMw?=
- =?utf-8?B?cGJ5R1k3Q2ZwS09vL2NuMWZ2eXRUbldjYmYwNkV4TERaeEZoTnEwV3BnNENh?=
- =?utf-8?B?K0R5Y2RIbHRWSWhFeFdWaWppRG93TkRZbGlxVTRFQ3Z4SjQ5VGVxZnYwK2Rx?=
- =?utf-8?Q?bEycXMHDtqPRGMutFHLsHwk=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a015634-bd42-46dd-bbd9-08ddb5024a54
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR01MB6877.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 22:39:20.1022
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(7416014)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 22:42:59.0979
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: t3Fd33LJX/9nkLj+AL83uNL78CKQTGyzQvlxLcIiwdbWCn0j1l9kT3yo4trUf7RWN3vcdPCBCYM0pHQYgKEA7txBtrNfoVIsNQLPPt21Byw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR01MB7784
+X-MS-Exchange-CrossTenant-Network-Message-Id: c41a7365-9517-4fed-763b-08ddb502cd15
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099D6.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4340
+
+This patchset updates CXL Protocol Error handling for CXL Ports and CXL
+Endpoints (EP). The reach of this patchset grew from CXL Ports to include
+EPs as well.
+
+This patchset is a continuation of v9 found here:
+https://lore.kernel.org/linux-cxl/20250603172239.159260-1-terry.bowman@amd.com/
+
+The first patch is a small cleanup change to reduce amount of code. 
+
+The next 2 patches introduce pci_dev::is_cxl, aer_info::is_cxl, and add
+bus string to AER log tracing. aer_info::is_cxl will be used to indicate a
+CXL or PCI error and will be used to direct the error handling flow in
+later patches.
+
+The next patch introduces a new driver file, pci/pcie/cxl_aer.c, to move
+the existing CXL AER logic into.
+
+The next 3 patches update the AER driver and CXL driver to use a kfifo. 
+The kfifo is added to offload CXL-AER protocol error work to the CXL
+driver. These patches provide the kfifo work add and work remove. 
+
+The next 5 patches prepare the CXL driver for adding the updated protocol
+error handlers. This includes adding CXL Port RAS mapping and updating
+interfaces for common support.
+
+The final 5 patches add the CXL error handlers for CXL EPs and CXL Ports.
+CXL EPs keep the PCIe error handler for cases the EP error is interpreted
+as a PCIe error. These patches also add logic to unmask CXL Protocol Errors
+during port probing, and mask CXL Protocol Errors during port device
+cleanup.
+
+== Testing ==
+Testing results below shows the Upstream Switch Port UCE and EP UCE errors
+are handled as PCI errors. This is because aer_get_device_error_info() does
+not populate the AER error severity and status in the case of FATAL UCE on
+Upstream Ports and Endpoints. This is intended because the USP link to
+access the device can be compromised. The check for is_cxl_error() and
+is_internal_error() fail as a result and then processes the error as a PCI
+error. Also, the AER event logging is missing the PCIe AER status.
+
+The sub-topology for the QEMU testing is:
+                    ---------------------
+                    | CXL RP - 0C:00.0  |
+                    ---------------------
+                              |
+                    ---------------------
+                    | CXL USP - 0D:00.0 |
+                    ---------------------
+                              |
+                    ---------------------
+                    | CXL DSP - 0E:00.0 |
+                    ---------------------
+                              |
+                    ---------------------
+                    | CXL EP - 0F:00.0  |
+                    ---------------------
+
+ root@tbowman-cxl:~# lspci -t
+ -+-[0000:00]-+-00.0
+  |           +-01.0
+  |           +-02.0
+  |           +-03.0
+  |           +-1f.0
+  |           +-1f.2
+  |           \-1f.3
+  \-[0000:0c]---00.0-[0d-0f]----00.0-[0e-0f]----00.0-[0f]----00.0
+
+ The topology was created with:
+  ${qemu} -boot menu=on \
+             -cpu host \
+             -nographic \
+             -monitor telnet:127.0.0.1:1234,server,nowait \
+             -M virt,cxl=on \
+             -chardev stdio,id=s1,signal=off,mux=on -serial none \
+             -device isa-serial,chardev=s1 -mon chardev=s1,mode=readline \
+             -machine q35,cxl=on \
+             -m 16G,maxmem=24G,slots=8 \
+             -cpu EPYC-v3 \
+             -smp 16 \
+             -accel kvm \
+             -drive file=${img},format=raw,index=0,media=disk \
+             -device e1000,netdev=user.0 \
+             -netdev user,id=user.0,hostfwd=tcp::5555-:22 \
+             -object memory-backend-file,id=cxl-mem0,share=on,mem-path=/tmp/cxltest.raw,size=256M \
+             -object memory-backend-file,id=cxl-lsa0,share=on,mem-path=/tmp/lsa0.raw,size=256M \
+             -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+             -device cxl-rp,port=0,bus=cxl.1,id=root_port0,chassis=0,slot=0 \
+             -device cxl-upstream,bus=root_port0,id=us0 \
+             -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
+             -device cxl-type3,bus=swport0,volatile-memdev=cxl-mem0,lsa=cxl-lsa0,id=cxl-vmem0 \
+             -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
+
+== Root Port ==
+root@tbowman-cxl:~/aer-inject# ./root-ce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0c:00.0
+pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0c:00.0
+aer_event: 0000:0c:00.0 CXL Bus Error: severity=Corrected, Corrected Internal Error, TLP Header=Not available
+pcieport 0000:0c:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+pcieport 0000:0c:00.0:   device [8086:7075] error status/mask=00004000/0000a000
+pcieport 0000:0c:00.0:    [14] CorrIntErr    
+cxl_aer_correctable_error: memdev=0000:0c:00.0 host=pci0000:0c serial=0 status='CRC Threshold Hit'
+
+root@tbowman-cxl:~/aer-inject# ./root-uce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0c:00.0
+pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0c:00.0
+aer_event: 0000:0c:00.0 CXL Bus Error: severity=Fatal, Uncorrectable Internal Error, TLP Header=Not available
+pcieport 0000:0c:00.0: CXL Bus Error: severity=Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
+pcieport 0000:0c:00.0:   device [8086:7075] error status/mask=00400000/02000000
+pcieport 0000:0c:00.0:    [22] UncorrIntErr          
+cxl_aer_uncorrectable_error: memdev=mem3 host=0000:0f:00.0 serial=0 status='Cache Byte Enable Parity Error' first_error='Cache Byte Enable Pari'
+Kernel panic - not syncing: CXL cachemem error.
+CPU: 10 UID: 0 PID: 214 Comm: kworker/10:1 Tainted: G            E       6.16.0-rc1-gec6a70ce29c1-dirty #423 PREEMPT(voluntary) 
+Tainted: [E]=UNSIGNED_MODULE
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+Workqueue: events cxl_proto_err_work_fn
+Call Trace:
+ <TASK>
+ panic+0x364/0x3d0
+ ? __pfx_cxl_report_error_detected+0x10/0x10
+ cxl_do_recovery+0xa3/0xb0
+ cxl_proto_err_work_fn+0xf5/0x180
+ process_scheduled_works+0xa8/0x420
+ ? __pfx_worker_thread+0x10/0x10
+ worker_thread+0x11c/0x260
+ ? __pfx_worker_thread+0x10/0x10
+ kthread+0xfe/0x210
+ ? __pfx_kthread+0x10/0x10
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x84/0xf0
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel Offset: 0xc000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+---[ end Kernel panic - not syncing: CXL cachemem error. ]---
+
+== Upstream Port ==
+root@tbowman-cxl:~/aer-inject# ./us-ce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0d:00.0
+pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0d:00.0
+aer_event: 0000:0d:00.0 CXL Bus Error: severity=Corrected, Corrected Internal Error, TLP Header=Not available
+pcieport 0000:0d:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+pcieport 0000:0d:00.0:   device [19e5:a128] error status/mask=00004000/0000a000
+pcieport 0000:0d:00.0:    [14] CorrIntErr            
+cxl_aer_correctable_error: memdev=0000:0d:00.0 host=0000:0c:00.0 serial=0 status='CRC Threshold Hit'
+
+root@tbowman-cxl:~/aer-inject# ./us-uce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0d:00.0
+pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0d:00.0
+AER: aer_print_error():850: status=0, mask=0
+aer_event: 0000:0d:00.0 CXL Bus Error: severity=Fatal, , TLP Header=Not available
+pcieport 0000:0d:00.0: AER: CXL Bus Error: severity=Uncorrectable (Fatal), type=Inaccessible, (Unregistered Agent ID)
+cxl_aer_uncorrectable_error: memdev=mem0 host=0000:0f:00.0 serial=0 status='Cache Byte Enable Parity Error' first_error='Cache Byte Enable Pari'
+Kernel panic - not syncing: CXL cachemem error.
+CPU: 10 UID: 0 PID: 146 Comm: irq/24-aerdrv Tainted: G            E       6.16.0-rc1-gec6a70ce29c1-dirty #427 PREEMPT(voluntary) 
+Tainted: [E]=UNSIGNED_MODULE
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <TASK>
+ panic+0x364/0x3d0
+ ? __pfx_aer_root_reset+0x10/0x10
+ pci_error_detected+0x2b/0x30
+ report_error_detected+0xf7/0x170
+ ? __pfx_report_frozen_detected+0x10/0x10
+ __pci_walk_bus+0x4c/0x70
+ ? __pfx_report_frozen_detected+0x10/0x10
+ __pci_walk_bus+0x34/0x70
+ ? __pfx_report_frozen_detected+0x10/0x10
+ __pci_walk_bus+0x34/0x70
+ ? __pfx_report_frozen_detected+0x10/0x10
+ pci_walk_bus+0x31/0x50
+ pcie_do_recovery+0x163/0x2b0
+ aer_isr_one_error_type+0x1e8/0x380
+ ? __pfx_irq_thread_fn+0x10/0x10
+ aer_isr_one_error+0x11d/0x140
+ aer_isr+0x4c/0x80
+ irq_thread_fn+0x24/0x70
+ irq_thread+0x188/0x280
+ ? __pfx_irq_thread_dtor+0x10/0x10
+ ? __pfx_irq_thread+0x10/0x10
+ kthread+0xfe/0x210
+ ? __pfx_kthread+0x10/0x10
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x84/0xf0
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel Offset: 0x12400000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+---[ end Kernel panic - not syncing: CXL cachemem error. ]---
+
+== Downstream Port ==
+root@tbowman-cxl:~/aer-inject# ./ds-ce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0e:00.0
+pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0e:00.0
+aer_event: 0000:0e:00.0 CXL Bus Error: severity=Corrected, Corrected Internal Error, TLP Header=Not available
+pcieport 0000:0e:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+pcieport 0000:0e:00.0:   device [19e5:a129] error status/mask=00004000/0000a000
+pcieport 0000:0e:00.0:    [14] CorrIntErr            
+cxl_aer_correctable_error: memdev=0000:0e:00.0 host=0000:0d:00.0 serial=0 status='CRC Threshold Hit'
+
+root@tbowman-cxl:~/aer-inject# ./ds-uce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0e:00.0
+pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0e:00.0
+AER: aer_print_error():850: status=400000, mask=2000000
+aer_event: 0000:0e:00.0 CXL Bus Error: severity=Fatal, Uncorrectable Internal Error, TLP Header=Not available
+pcieport 0000:0e:00.0: CXL Bus Error: severity=Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
+pcieport 0000:0e:00.0:   device [19e5:a129] error status/mask=00400000/02000000
+pcieport 0000:0e:00.0:    [22] UncorrIntErr          
+cxl_aer_uncorrectable_error: memdev=0000:0e:00.0 host=0000:0d:00.0 serial=0 status='Cache Byte Enable Parity Error' first_error='Cache Byte Ena'
+cxl_aer_uncorrectable_error: memdev=mem3 host=0000:0f:00.0 serial=0 status='Cache Byte Enable Parity Error' first_error='Cache Byte Enable Pari'
+Kernel panic - not syncing: CXL cachemem error.
+CPU: 10 UID: 0 PID: 218 Comm: kworker/10:1 Tainted: G            E       6.16.0-rc1-gec6a70ce29c1-dirty #428 PREEMPT(voluntary) 
+Tainted: [E]=UNSIGNED_MODULE
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+Workqueue: events cxl_proto_err_work_fn
+Call Trace:
+ <TASK>
+ panic+0x364/0x3d0
+ cxl_do_recovery+0xa3/0xb0
+ cxl_proto_err_work_fn+0xf5/0x180
+ process_scheduled_works+0xa8/0x420
+ ? __pfx_worker_thread+0x10/0x10
+ worker_thread+0x11c/0x260
+ ? __pfx_worker_thread+0x10/0x10
+ kthread+0xfe/0x210
+ ? __pfx_kthread+0x10/0x10
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x84/0xf0
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel Offset: 0x3b400000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+---[ end Kernel panic - not syncing: CXL cachemem error. ]---
+
+== Endpoint ==
+root@tbowman-cxl:~/aer-inject# ./ep-ce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0f:00.0
+pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0f:00.0
+aer_event: 0000:0f:00.0 CXL Bus Error: severity=Corrected, Corrected Internal Error, TLP Header=Not avaie
+cxl_pci 0000:0f:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+cxl_pci 0000:0f:00.0:   device [8086:0d93] error status/mask=00004000/00000000
+cxl_pci 0000:0f:00.0:    [14] CorrIntErr            
+cxl_aer_correctable_error: memdev=mem3 host=0000:0f:00.0 serial=0 status='CRC Threshold Hit'
+
+root@tbowman-cxl:~/aer-inject# ./ep-uce-inject.sh
+pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0f:00.0
+pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0f:00.0
+aer_event: 0000:0f:00.0 CXL Bus Error: severity=Fatal, , TLP Header=Not available
+cxl_pci 0000:0f:00.0: AER: CXL Bus Error: severity=Uncorrectable (Fatal), type=Inaccessible, (Unregistered Agent ID)
+cxl_aer_uncorrectable_error: memdev=mem1 host=0000:0f:00.0 serial=0 status='Cache Byte Enable Parity Error' first_error='Cache Byte Enable Pari'
+Kernel panic - not syncing: CXL cachemem error.
+CPU: 10 UID: 0 PID: 147 Comm: irq/24-aerdrv Tainted: G            E       6.16.0-rc1-gec6a70ce29c1-dirty #423 PREEMPT(voluntary) 
+Tainted: [E]=UNSIGNED_MODULE
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <TASK>
+ panic+0x364/0x3d0
+ ? __pfx_aer_root_reset+0x10/0x10
+ pci_error_detected+0x2b/0x30
+ report_error_detected+0xf7/0x170
+ ? __pfx_report_frozen_detected+0x10/0x10
+ __pci_walk_bus+0x4c/0x70
+ ? __pfx_report_frozen_detected+0x10/0x10
+ pci_walk_bus+0x31/0x50
+ pcie_do_recovery+0x163/0x2b0
+ aer_isr_one_error_type+0x1e8/0x380
+ ? __pfx_irq_thread_fn+0x10/0x10
+ aer_isr_one_error+0x11d/0x140
+ aer_isr+0x4c/0x80
+ irq_thread_fn+0x24/0x70
+ irq_thread+0x188/0x280
+ ? __pfx_irq_thread_dtor+0x10/0x10
+ ? __pfx_irq_thread+0x10/0x10
+ kthread+0xfe/0x210
+ ? __pfx_kthread+0x10/0x10
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x84/0xf0
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+Kernel Offset: 0x2b200000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+---[ end Kernel panic - not syncing: CXL cachemem error. ]---
+
+Changes
+=======
+
+Changes in v9 -> v10:
+ - Add drivers/pci/pcie/cxl_aer.c
+ - Add drivers/cxl/core/native_ras.c
+ - Change cxl_register_prot_err_work()/cxl_unregister_prot_err_work to return void
+ - Check for pcie_ports_native in cxl_do_recovery()
+ - Remove debug logging in cxl_do_recovery()
+ - Update PCI_ERS_RESULT_PANIC definition to indicate is CXL specific
+ - Revert trace logging changes: name,parent -> memdev,host.
+ - Use FIELD_GET() to check for EP class code (cxl_aer.c & native_ras.c).
+ - Change _prot_ to _proto_ everywhere
+ - cxl_rch_handle_error_iter(), check if driver is cxl_pci_driver
+ - Remove cxl_create_prot_error_info(). Move logic into forward_cxl_error()
+ - Remove sbdf_to_pci() and move logic into cxl_handle_proto_error()
+ - Simplify/refactor get_pci_cxl_host_dev()
+ - Simplify/refactor cxl_get_ras_base()
+ - Move patch 'Remove unnecessary CXL Endpoint handling helper functions' to front
+ - Update description for 'CXL/PCI: Introduce CXL Port protocol error
+   handlers' with why state is not used to determine handling
+ - Introduce cxl_pci_drv_bound() and call from cxl_rch_handle_error_iter()
+
+Changes in v8 -> v9:
+ - Updated reference counting to use pci_get_device()/pci_put_device() in
+   cxl_disable_prot_errors()/cxl_enable_prot_errors
+ - Refactored cxl_create_prot_err_info() to fix reference counting
+ - Removed 'struct cxl_port' driver changes for error handler. Instead
+   check for CXL device type (EP or Port device) and call handler
+ - Make pcie_is_cxl() static inline in include/linux/linux.h
+ - Remove NULL check in create_prot_err_info()
+ - Change success return in cxl_ras_init() to use hardcoded 0
+ - Changed 'struct work_struct cxl_prot_err_work' declaration to static
+ - Change to use rate limited log with dev anchor in forward_cxl_error()
+ - Refactored forward-cxl_error() to remove severity auto variable
+ - Changed pci_aer_clear_nonfatal_status() to be static inline for
+   !(CONFIG_PCIEAER)
+ - Renamed merge_result() to be cxl_merge_result()
+ - Removed 'ue' condition in cxl_error_detected()
+ - Updated 2nd parameter in call to __cxl_handle_cor_ras()/__cxl_handle_ras()
+   in unify patch
+ - Added log message for failure while assigning interrupt disable callback
+ - Updated pci_aer_mask_internal_errors() to use pci_clear_and_set_config_dword()
+ - Simplified patch titles for clarity
+ - Moved CXL error interrupt disabling into cxl/core/port.c with CXL Port
+ teardown
+ - Updated 'struct cxl_port_err_info' to only contain sbdf and severity
+ Removed everything else.
+ - Added pdev and CXL device get_device()/put_device() before calling handlers
+ 
+Changes in v7 -> v8:
+ [Dan] Use kfifo. Move handling to CXL driver. AER forwards error to CXL
+driver
+ [Dan] Add device reference incrementors where needed throughout
+ [Dan] Initiate CXL Port RAS init from Switch Port and Endpoint Port init 
+ [Dan] Combine CXL Port and CXL Endpoint trace routine
+ [Dan] Introduce aer_info::is_cxl. Use to indicate CXL or PCI errors
+ [Jonathan] Add serial number for all devices in trace
+ [DaveJ] Move find_cxl_port() change into patch using it
+ [Terry] Move CXL Port RAS init into cxl/port.c
+ [Terry] Moved kfifo functions into cxl/core/ras.c 
+ 
+ Changes in v6 -> v7:
+ [Terry] Move updated trace routine call to later patch. Was causing build
+ error.
+ 
+ Changes in v5 -> v6:
+ [Ira] Move pcie_is_cxl(dev) define to a inline function
+ [Ira] Update returning value from pcie_is_cxl_port() to bool w/o cast
+ [Ira] Change cxl_report_error_detected() cleanup to return correct bool
+ [Ira] Introduce and use PCI_ERS_RESULT_PANIC
+ [Ira] Reuse comment for PCIe and CXL recovery paths
+ [Jonathan] Add type check in for cxl_handle_cor_ras() and cxl_handle_ras()
+ [Jonathan] cxl_uport/dport_init_ras_reporting(), added a mutex.
+ [Jonathan] Add logging example to patches updating trace output
+ [Jonathan] Make parameter 'const' to eliminate for cast in match_uport()
+ [Jonathan] Use __free() in cxl_pci_port_ras()
+ [Terry] Add patch to log the PCIe SBDF along with CXL device name
+ [Terry] Add patch to handle CXL endpoint and RCH DP errors as CXL errors
+ [Terry] Remove patch w USP UCE fatal support @ aer_get_device_error_info()
+ [Terry] Rebase to cxl/next commit 5585e342e8d3 ("cxl/memdev: Remove unused partition values")
+ [Gregory] Pre-initialize pointer to NULL in cxl_pci_port_ras()
+ [Gregory] Move AER driver bus name detection to a static function
+
+ Changes in v4 -> v5:
+ [Alejandro] Refactor cxl_walk_bridge to simplify 'status' variable usage
+ [Alejandro] Add WARN_ONCE() in __cxl_handle_ras() and cxl_handle_cor_ras()
+ [Ming] Remove unnecessary NULL check in cxl_pci_port_ras()
+ [Terry] Add failure check for call to to_cxl_port() in cxl_pci_port_ras()
+ [Ming] Use port->dev for call to devm_add_action_or_reset() in
+ cxl_dport_init_ras_reporting() and cxl_uport_init_ras_reporting()
+ [Jonathan] Use get_device()/put_device() to prevent race condition in
+ cxl_clear_port_error_handlers() and cxl_clear_port_error_handlers()
+ [Terry] Commit message cleanup. Capitalize keywords from CXL and PCI
+ specifications
+
+ Changes in v3 -> v4:
+ [Lukas] Capitalize PCIe and CXL device names as in specifications
+ [Lukas] Move call to pcie_is_cxl() into cxl_port_devsec()
+ [Lukas] Correct namespace spelling
+ [Lukas] Removed export from pcie_is_cxl_port()
+ [Lukas] Simplify 'if' blocks in cxl_handle_error()
+ [Lukas] Change panic message to remove redundant 'panic' text
+ [Ming] Update to call cxl_dport_init_ras_reporting() in RCH case
+ [lkp@intel] 'host' parameter is already removed. Remove parameter description too.
+ [Terry] Added field description for cxl_err_handlers in pci.h comment block
+
+ Changes in v1 -> v2:
+ [Jonathan] Remove extra NULL check and cleanup in cxl_pci_port_ras()
+ [Jonathan] Update description to DSP map patch description
+ [Jonathan] Update cxl_pci_port_ras() to check for NULL port
+ [Jonathan] Dont call handler before handler port changes are present (patch order)
+ [Bjorn] Fix linebreak in cover sheet URL
+ [Bjorn] Remove timestamps from test logs in cover sheet
+ [Bjorn] Retitle AER commits to use "PCI/AER:"
+ [Bjorn] Retitle patch#3 to use renaming instead of refactoring
+ [Bjorn] Fix base commit-id on cover sheet
+ [Bjorn] Add VH spec reference/citation
+ [Terry] Removed last 2 patches to enable internal errors. Is not needed
+ because internal errors are enabled in AER driver.
+ [Dan] Create cxl_do_recovery() and pci_driver::cxl_err_handlers.
+ [Dan] Use kernel panic in CXL recovery
+ [Dan] cxl_port_hndlrs -> cxl_port_error_handlers
+ 
+Terry Bowman (17):
+  cxl/pci: Remove unnecessary CXL Endpoint handling helper functions
+  PCI/CXL: Add pcie_is_cxl()
+  PCI/AER: Report CXL or PCIe bus error type in trace logging
+  CXL/AER: Introduce CXL specific AER driver file
+  CXL/AER: Introduce kfifo for forwarding CXL errors
+  PCI/AER: Dequeue forwarded CXL error
+  CXL/PCI: Introduce CXL uncorrectable protocol error recovery
+  cxl/pci: Move RAS initialization to cxl_port driver
+  cxl/pci: Map CXL Endpoint Port and CXL Switch Port RAS registers
+  cxl/pci: Update RAS handler interfaces to also support CXL Ports
+  cxl/pci: Log message if RAS registers are unmapped
+  cxl/pci: Unify CXL trace logging for CXL Endpoints and CXL Ports
+  cxl/pci: Update cxl_handle_cor_ras() to return early if no RAS errors
+  cxl/pci: Introduce CXL Endpoint protocol error handlers
+  CXL/PCI: Introduce CXL Port protocol error handlers
+  CXL/PCI: Enable CXL protocol errors during CXL Port probe
+  CXL/PCI: Disable CXL protocol error interrupts during CXL Port cleanup
+
+ drivers/cxl/Kconfig           |  14 +++
+ drivers/cxl/core/Makefile     |   1 +
+ drivers/cxl/core/core.h       |  10 ++
+ drivers/cxl/core/native_ras.c | 231 ++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/pci.c        | 231 ++++++++++++++++------------------
+ drivers/cxl/core/port.c       |  12 +-
+ drivers/cxl/core/ras.c        |  15 ++-
+ drivers/cxl/core/regs.c       |   2 +
+ drivers/cxl/core/trace.h      |  84 +++----------
+ drivers/cxl/cxl.h             |  20 +++
+ drivers/cxl/cxlpci.h          |   8 +-
+ drivers/cxl/mem.c             |   3 +-
+ drivers/cxl/pci.c             |  14 ++-
+ drivers/cxl/port.c            | 159 +++++++++++++++++++++++
+ drivers/pci/pci.c             |   1 +
+ drivers/pci/pci.h             |  25 ++--
+ drivers/pci/pcie/Makefile     |   1 +
+ drivers/pci/pcie/aer.c        | 167 ++++--------------------
+ drivers/pci/pcie/cxl_aer.c    | 179 ++++++++++++++++++++++++++
+ drivers/pci/pcie/err.c        |   8 +-
+ drivers/pci/pcie/rcec.c       |   1 +
+ drivers/pci/probe.c           |  10 ++
+ include/linux/aer.h           |  46 +++++++
+ include/linux/pci.h           |  19 +++
+ include/linux/pci_ids.h       |   2 +
+ include/ras/ras_event.h       |   9 +-
+ include/uapi/linux/pci_regs.h |   8 +-
+ 27 files changed, 916 insertions(+), 364 deletions(-)
+ create mode 100644 drivers/cxl/core/native_ras.c
+ create mode 100644 drivers/pci/pcie/cxl_aer.c
 
 
-
-On 6/23/25 6:26 AM, Ryan Roberts wrote:
-> [...]
->
->>> +
->>> +int split_leaf_mapping(unsigned long addr)
->> Thanks for coming up with the code. It does help to understand your idea. Now I
->> see why you suggested "split_mapping(start); split_mapping(end);" model. It does
->> make the implementation easier because we don't need a loop anymore. But this
->> may have a couple of problems:
->>    1. We need walk the page table twice instead of once. It sounds expensive.
-> Yes we need to walk twice. That may be more expensive or less expensive,
-> depending on the size of the range that you are splitting. If the range is large
-> then your approach loops through every leaf mapping between the start and end
-> which will be more expensive than just doing 2 walks. If the range is small then
-> your approach can avoid the second walk, but at the expense of all the extra
-> loop overhead.
-
-Thinking about this further. Although there is some extra loop overhead, 
-but there should be not extra loads. We can check whether the start and 
-end are properly aligned or not, it they are aligned, we just continue 
-the loop without loading page table entry.
-
-And we can optimize the loop by advancing multiple PUD/PMD/CONT size at 
-a time instead of one at a time. The pseudo code (for example, pmd 
-level) looks like:
-
-do {
-      next = pmd_addr_end(start, end);
-
-      if (next < end)
-          nr = ((end - next) / PMD_SIZE) + 1;
-
-      if (((start | next) & ~PMD_MASK) == 0)
-          continue;
-
-      split_pmd(start, next);
-} while (pmdp += nr, start = next * nr, start != end)
-
-
-For repainting case, we just need do:
-
-do {
-      nr = 1;
-      next = pmd_addr_end(start, end);
-
-      if (next < end && !repainting)
-          nr = ((end - next) / PMD_SIZE) + 1;
-
-      if (((start | next) & ~PMD_MASK) == 0 && !repainting)
-          continue;
-
-      split_pmd(start, next);
-} while (pmdp += nr, start = next * nr, start != end)
-
-This should reduce loop overhead and duplicate code for repainting.
-
-Thanks,
-Yang
-
->
-> My suggestion requires 5 loads (assuming the maximum of 5 levels of lookup).
-> Personally I think this is probably acceptable? Perhaps we need some other
-> voices here.
->
->
->>    2. How should we handle repainting? We need split all the page tables all the
->> way down to PTE for repainting between start and end rather than keeping block
->> mappings. This model doesn't work, right? For example, repaint a 2G block. The
->> first 1G is mapped by a PUD, the second 1G is mapped by 511 PMD and 512 PTEs.
->> split_mapping(start) will split the first 1G, but split_mapping(end) will do
->> nothing, the 511 PMDs are kept intact. In addition, I think we also prefer reuse
->> the split primitive for repainting instead of inventing another one.
-> I agree my approach doesn't work for the repainting case. But I think what I'm
-> trying to say is that the 2 things are different operations;
-> split_leaf_mapping() is just trying to ensure that the start and end of a ragion
-> are on leaf boundaries. Repainting is trying to ensure that all leaf mappings
-> within a range are PTE-size. I've implemented the former and you've implemented
-> that latter. Your implementation looks like meets the former's requirements
-> because you are only testing it for the case where the range is 1 page. But
-> actually it is splitting everything in the range to PTEs.
->
-> Thanks,
-> Ryan
->
->> Thanks,
->> Yang
->>
->>> +{
->>> +    pgd_t *pgdp, pgd;
->>> +    p4d_t *p4dp, p4d;
->>> +    pud_t *pudp, pud;
->>> +    pmd_t *pmdp, pmd;
->>> +    pte_t *ptep, pte;
->>> +    int ret = 0;
->>> +
->>> +    /*
->>> +     * !BBML2_NOABORT systems should not be trying to change permissions on
->>> +     * anything that is not pte-mapped in the first place. Just return early
->>> +     * and let the permission change code raise a warning if not already
->>> +     * pte-mapped.
->>> +     */
->>> +    if (!system_supports_bbml2_noabort())
->>> +        return 0;
->>> +
->>> +    /*
->>> +     * Ensure addr is at least page-aligned since this is the finest
->>> +     * granularity we can split to.
->>> +     */
->>> +    if (addr != PAGE_ALIGN(addr))
->>> +        return -EINVAL;
->>> +
->>> +    arch_enter_lazy_mmu_mode();
->>> +
->>> +    /*
->>> +     * PGD: If addr is PGD aligned then addr already describes a leaf
->>> +     * boundary. If not present then there is nothing to split.
->>> +     */
->>> +    if (ALIGN_DOWN(addr, PGDIR_SIZE) == addr)
->>> +        goto out;
->>> +    pgdp = pgd_offset_k(addr);
->>> +    pgd = pgdp_get(pgdp);
->>> +    if (!pgd_present(pgd))
->>> +        goto out;
->>> +
->>> +    /*
->>> +     * P4D: If addr is P4D aligned then addr already describes a leaf
->>> +     * boundary. If not present then there is nothing to split.
->>> +     */
->>> +    if (ALIGN_DOWN(addr, P4D_SIZE) == addr)
->>> +        goto out;
->>> +    p4dp = p4d_offset(pgdp, addr);
->>> +    p4d = p4dp_get(p4dp);
->>> +    if (!p4d_present(p4d))
->>> +        goto out;
->>> +
->>> +    /*
->>> +     * PUD: If addr is PUD aligned then addr already describes a leaf
->>> +     * boundary. If not present then there is nothing to split. Otherwise,
->>> +     * if we have a pud leaf, split to contpmd.
->>> +     */
->>> +    if (ALIGN_DOWN(addr, PUD_SIZE) == addr)
->>> +        goto out;
->>> +    pudp = pud_offset(p4dp, addr);
->>> +    pud = pudp_get(pudp);
->>> +    if (!pud_present(pud))
->>> +        goto out;
->>> +    if (pud_leaf(pud)) {
->>> +        ret = split_pud(pudp, pud);
->>> +        if (ret)
->>> +            goto out;
->>> +    }
->>> +
->>> +    /*
->>> +     * CONTPMD: If addr is CONTPMD aligned then addr already describes a
->>> +     * leaf boundary. If not present then there is nothing to split.
->>> +     * Otherwise, if we have a contpmd leaf, split to pmd.
->>> +     */
->>> +    if (ALIGN_DOWN(addr, CONT_PMD_SIZE) == addr)
->>> +        goto out;
->>> +    pmdp = pmd_offset(pudp, addr);
->>> +    pmd = pmdp_get(pmdp);
->>> +    if (!pmd_present(pmd))
->>> +        goto out;
->>> +    if (pmd_leaf(pmd)) {
->>> +        if (pmd_cont(pmd))
->>> +            split_contpmd(pmdp);
->>> +        /*
->>> +         * PMD: If addr is PMD aligned then addr already describes a
->>> +         * leaf boundary. Otherwise, split to contpte.
->>> +         */
->>> +        if (ALIGN_DOWN(addr, PMD_SIZE) == addr)
->>> +            goto out;
->>> +        ret = split_pmd(pmdp, pmd);
->>> +        if (ret)
->>> +            goto out;
->>> +    }
->>> +
->>> +    /*
->>> +     * CONTPTE: If addr is CONTPTE aligned then addr already describes a
->>> +     * leaf boundary. If not present then there is nothing to split.
->>> +     * Otherwise, if we have a contpte leaf, split to pte.
->>> +     */
->>> +    if (ALIGN_DOWN(addr, CONT_PMD_SIZE) == addr)
->>> +        goto out;
->>> +    ptep = pte_offset_kernel(pmdp, addr);
->>> +    pte = __ptep_get(ptep);
->>> +    if (!pte_present(pte))
->>> +        goto out;
->>> +    if (pte_cont(pte))
->>> +        split_contpte(ptep);
->>> +
->>> +out:
->>> +    arch_leave_lazy_mmu_mode();
->>> +    return ret;
->>> +}
->>> ---8<---
->>>
->>> Thanks,
->>> Ryan
->>>
+base-commit: 716ba3023561ccacfaa28f988d26717535b8fed1
+-- 
+2.34.1
 
