@@ -1,75 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3B02E92CA;
-	Thu, 26 Jun 2025 13:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C892E7623
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750946327; cv=none; b=Slk8ml8UqIMvNvKSmMDtYdkmygNbh9KHzsu0wz1FQUvwz2Jay+R8Xjfb0n8r/sHn8v9M7+fcElEfO/RY3Sld0JL4ck1KBPPI9jsM0DOcXquiERVVqDI5oJjtXl/oUBhdinu4Drfy2tzeG7/bJhiSKCom6/C2wbljfEf4SEeRO7Q=
+	t=1750946381; cv=none; b=P6W/qFa1dmpCI0fGrJXfYRIQyuDC11k1uM84FdwyT4jLCo5zVTFEMXmkoVEzB4VIfO5au5+5ttlgZX22ou4hyAnC18RVdpgyS9G2j+J/TzetH9emX+zO4dTUy8vDM5n7CGL7IQCi5QyDsCsO5KQ/kb8f3e7Ec5FFW43DoBcJ0vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750946327; c=relaxed/simple;
-	bh=0laFhqlvaqRpPTlxzuDrZaFjv+XR0TCdM/C39Z5OfSc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ea6+RxWGe7IIPVf1nJWvu21qvbgx+ZJD9kcdPLzUAZFi7ndXxOMIz6B53rd9KLwEKvvPlFcKbhXJb5uX/nt/RHDZ1NxgE7dz9X3AEfFGzcAFFZ41E2WQJuhytP5pqIYGw/Qau5+cRL83uHqB/LO9sWG/R0kasJ/yssWKN0Q+0Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nvz66jWq; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750946381; c=relaxed/simple;
+	bh=kmEGhYciyMMp4G/GxiAobkj/2CDHouIK6RTlTVRsPMA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LkQnVgY6mVyaHtofnpGYEqptJCYEqeRr6xEdXq76hnj12EroSBwkB9Gy4RRIpGQmC+Fd7SQ3hfMnzm2C2aKNN0U+pdfpS/oUvmICNwcltc5xb4+gLgQfW2n6zBTt57FK0SEXHwQu1p5KEHAQlluCtS/Co4nR5zjq6btsMpqi2JM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=o5PkjtLx; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nvz66jWq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750946325; x=1782482325;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=0laFhqlvaqRpPTlxzuDrZaFjv+XR0TCdM/C39Z5OfSc=;
-  b=nvz66jWqHTCfRN1+25LpPN7LX9YZbuRp6JBYJ87LVA9g9B999Ety2LVA
-   cPBJhwx8s+SvU72e24FdJnlpyJUg9hkSsNBIOsZaiwqu+WpfWX8kwW1Gy
-   vNG5QHmXQg9JoqPbxD+4SFcUIspriaJTmsdLWhYriyPWX7PU0OW/gvnKc
-   p2OFd/RLawyQX9shNSlHYlXqoi+TVQvoDNJJVMSTF/tLVKITQd6BXAbdJ
-   hNINfPX5PHxWLHJZNQf9p6/jZ6qibsJYoUx9XWf2851JdxU6IWTUbKRzQ
-   OV+Zdt7uS81Ev1DxGSu3yvhkSSqz4ydQN+CDjj4dsyfmnKly3G1MlXCji
-   A==;
-X-CSE-ConnectionGUID: jY7MsYT8T/ak+EfjW9desg==
-X-CSE-MsgGUID: qm+0yN3LSUGWdIzm2EjnpA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="40859264"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="40859264"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 06:58:44 -0700
-X-CSE-ConnectionGUID: EqZ4Acf9TfW2tm0jq5CtNA==
-X-CSE-MsgGUID: yGZNMOGeQoy2hmGXgJ94EQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="158271347"
-Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
-  by orviesa005.jf.intel.com with ESMTP; 26 Jun 2025 06:58:40 -0700
-From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-To: donald.hunter@gmail.com,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	vadim.fedorenko@linux.dev,
-	jiri@resnulli.us,
-	anthony.l.nguyen@intel.com,
-	przemyslaw.kitszel@intel.com,
-	andrew+netdev@lunn.ch,
-	aleksandr.loktionov@intel.com,
-	corbet@lwn.net
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	linux-rdma@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Milena Olech <milena.olech@intel.com>
-Subject: [PATCH net-next v7 3/3] ice: add ref-sync dpll pins
-Date: Thu, 26 Jun 2025 15:52:19 +0200
-Message-Id: <20250626135219.1769350-4-arkadiusz.kubalewski@intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250626135219.1769350-1-arkadiusz.kubalewski@intel.com>
-References: <20250626135219.1769350-1-arkadiusz.kubalewski@intel.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="o5PkjtLx"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q9x1kC013644
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:59:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=5tgkYFTM5Xrw95Ff69bLBTB8QDp/Y5pR5JN
+	HIoSX3ys=; b=o5PkjtLxjpIJg6ia2CjX17OQPVrTV/c0zNWZH4arCQeXVAMHqxO
+	GHkuXWB4OmgpW/ZurUn0UIeJ8/UMU3dranvAhqLDGTcTBDJEwy6UBc28vpDnNgjt
+	myWjX3AuMWGIvO3KlRuLh6fBBkgJrlwiemKVGf0vScr9zmpFXUprOzSE7dKgKyyd
+	daJaUfcBMBUOI1cISCYltTM1IfMKf2jUdhtxtoeMR5/b2soSB+FMsm5RUHu0CkHl
+	VdR1xYzHWwxaHUIbvXi1r/KlqCH6vyR/3pQtNN/YSuhCBsI0cDqU5KaayK5tXi77
+	grdKvjH8QKTeeXfQo7nGkKAzuvZxWf4esYA==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f3bgkgve-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:59:37 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d22790afd2so137987485a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:59:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750946377; x=1751551177;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5tgkYFTM5Xrw95Ff69bLBTB8QDp/Y5pR5JNHIoSX3ys=;
+        b=uSHJvOrfbZ8/ruCvYp2xi+Eq7nb/SLemwvKKHoxeokc8OD4kbX1534eumF13jFYD37
+         lNWv83ITALi1kiNZsFXpSG/TzFrim45IlWHZLm9HXr0F+qWLNBVlxCooscdC0Cixt6bj
+         5+ft0LsdiTxSF0egQjPW6lMh8+K9NWyPqnPy98ejxp27SHIUyyw/EOuXFAAXP/qCo78N
+         fv6zl0cTqFjBPAlIGPWhqhtlzMhwl+1ySLm7uIeTaGSrJpb1sL2IVZQA3/tFtHNsJvd1
+         16Ap6MUR0mrI8o5jmEppvQBJGNso3yh8m3fQQJVQKxFNeTqckPhRcoW1uOs7mHIZfVes
+         EMDw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLO4xcWBIMf3j15+hCfxsYzHRt7nQWGnbRaf5W627VA19kYqfO8lvs6hBGdRdtM5AdF82z2z+Ei+zYW48=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+OrLwxp5NV1kSUP+IelXqf6xwFFIWQmadoF1quOdoM3eoKed/
+	I35cM+2dn/DXvsLdHFYghd0WSG7r1WGmqci1HOfydLZCOMMN+l5DqRxCUWPCv8qebyBTIsr56BG
+	wknsZJHBqa6SdgzZgQDOIBuCzBzBfcYaKTU2hprFOptHTOHi9l6iFic5Cg0xWKL8vrlo=
+X-Gm-Gg: ASbGnctez1FHlbYJn9IiXcrOAMiyk1alCTvZ7j3S1oe7koduNFc6wp4uxMIzbiYjqFY
+	7z9vAOKzqofncIGPSveWQby0vRxp9+A/7E9dpOynfRpaytjEmKzHWRpPOLXXF43aDl0ZK5COdl/
+	QYGsTmx2yXhsdjzFrc9dFuAaC9AK4ExJcIINAVqX9w+y1VIpzhklTQeQuISfaTvZEwh0hfOqQZC
+	hHWz4O4VAUwjBgacYznTN0LgMkfCmpH3qJltNsAQC4AXlOqG5j77vLnTMBxG8P6Hgrv4syTzBhY
+	nfgGe87gWoy5V+EOqEoOxk3FG/XNy2xeAbVWTJWmfHSs5ogE71PlpU1gU2ravP6nnsO585k2snn
+	9
+X-Received: by 2002:a05:620a:c4e:b0:7d4:29b8:b573 with SMTP id af79cd13be357-7d429b8f1f2mr955658885a.30.1750946376571;
+        Thu, 26 Jun 2025 06:59:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHa+vixNwigHwEtVGLKHaX1GvWyXjxTDO3Co4S7iTaf40s0SAmzfWX9ACUxorf8rQ9eiSSNsg==
+X-Received: by 2002:a05:620a:c4e:b0:7d4:29b8:b573 with SMTP id af79cd13be357-7d429b8f1f2mr955653785a.30.1750946375894;
+        Thu, 26 Jun 2025 06:59:35 -0700 (PDT)
+Received: from trex.. (132.red-79-144-190.dynamicip.rima-tde.net. [79.144.190.132])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823c57d7sm53723365e9.40.2025.06.26.06.59.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 06:59:35 -0700 (PDT)
+From: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
+To: jorge.ramirez@oss.qualcomm.com, krzk+dt@kernel.org,
+        bryan.odonoghue@linaro.org, quic_vgarodia@quicinc.com,
+        quic_dikshita@quicinc.com, mchehab@kernel.org, robh@kernel.org,
+        conor+dt@kernel.org, konradybcio@kernel.org, andersson@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/5] media: venus: Add QCM2290 support with AR50_LITE core
+Date: Thu, 26 Jun 2025 15:59:26 +0200
+Message-Id: <20250626135931.700937-1-jorge.ramirez@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,405 +82,132 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: T4i_csfQ6FamgfPGWwgHUdK8J5e1Ydwv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDExOCBTYWx0ZWRfX/MGAM5mv5guJ
+ 0OLxR7NFlZkFbhNP+u/RyGhA8I4A0ae0dRZMRODj56yvTWNKXEX/NflEZiv5BTXdXbqF4VfXnuK
+ 9cBdEFGGrCHCZIG72uJ8OdPcS07fqwUFAuf2tqvHO4OBEMlMhA39CaSTYsYk0+xmpmQsDt1mdD1
+ Z9T1xIFuiRnBEyMw5IzmPQxR/6V5/b4UPdqkvOJCZ9Q+Jl5hqShqUzzLzrOzbW2rjZGS70bHO7L
+ gy88mzw7wvbXBabsYnS8W07/PxQKEtX8niQ3MKAQTlF+2rvxFOM7dejEI5YDSquZcCRR2CAERkb
+ EYMcVP3MXfX+jjTlfdb4+PpcbVvW5Pu5H0395cKsCdn2t1K36OexWR1gZSpn5oa/dOLT6+6ZD76
+ BjtsYgcngFU4mLUvCEqyicvBpXY6sgn/vC7e8sbKF+L0uhRyXoB57Dql7Dh9dSuXdq5U86Bz
+X-Authority-Analysis: v=2.4 cv=L4kdQ/T8 c=1 sm=1 tr=0 ts=685d5249 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=wjE3nLva0YkvARyJ+Gfmxg==:17
+ a=6IFa9wvqVegA:10 a=vaIsIKZIAAAA:8 a=7WrQi52fQBeieaC-wGsA:9
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=rh-XPM1-DYv4t-UOgbwD:22
+X-Proofpoint-GUID: T4i_csfQ6FamgfPGWwgHUdK8J5e1Ydwv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_06,2025-06-26_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1015 suspectscore=0
+ adultscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ spamscore=0 phishscore=0 mlxlogscore=999 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506260118
 
-Implement reference sync input pin get/set callbacks, allow user space
-control over dpll pin pairs capable of reference sync support.
+Changes since v4:
+- patch 1/5:
+  - added reviewed by: Krzysztof Kozlowski
+  - updated example section
+- patch 2/5:
+  - added reviewed by: Bryan O'Donoghue
+  - Fixed Co-developed-by order
+- patch 3/5:
+- patch 4/5:
+ - removed encode-node (userspace exposure)
+ - fixed Co-developed-by order
+- patch 5/5:
+ - fixed venus register region
+ - power-domain-names: one per line
+ - clock-names: one per line
+ - fixed interconnect tags
+ - empty line before subnode
+ - enable the venus node
 
-Reviewed-by: Milena Olech <milena.olech@intel.com>
-Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Changes since v3:
+- Fixed schema commit subject.
+
+Changes since v2:
+- Removed IS_HFI/IS_VPU macros
+- checkpatch.pl --strict fixes:
+  - convert macro to static inline to avoid argument reuse side effect
+
+Changes since v1:
+- Added IS_HFI macro usage
+- Moved schema patch to top
+- Fixed commit messages
+
+This patch series adds support for the Venus video decoder/encoder block
+present on the Qualcomm QCM2290.
+
+Only video decoding is supported in this set - video encoding should
+follow up in the coming weeks.
+
+The QCM2290 integrates an AR50_LITE core, a low-power implementation of
+Venus supporting H.264, HEVC (H.265), and VP9 decoding.
+
+The series includes:
+  - DT binding schema for qcom,qcm2290-venus
+  - SoC integration via qcm2290.dtsi
+  - Resource table definitions and frequency scaling
+  - Platform capability registration for the AR50_LITE core decoding block.
+
+Decoding was verified on the QCOM RB1 platform using GStreamer with V4L2-based
+decode plugins. The following pipelines were used for playback 1280x720 and
+1920x1080 H.264, HEVC and VP9 videos from https://www.elecard.com/videos.
+
+[H.264]
+gst-launch-1.0 filesrc location=videos/xxxxx.mp4 \
+  ! qtdemux name=demux demux.video_0 ! queue ! h264parse ! v4l2h264dec \
+  ! videoconvert ! autovideosink
+
+[H.265]
+gst-launch-1.0 filesrc location=videos/xxxxx.mp4 \
+  ! qtdemux name=demux demux.video_0 ! queue ! h265parse ! v4l2h265dec \
+  ! videoconvert ! autovideosink
+
+[VP9]
+gst-launch-1.0 filesrc location=videos/xxxxx.webm \
+  ! matroskademux ! queue ! v4l2vp9dec \
+  ! videoconvert ! autovideosink
+
+[Fluster]
+The H.264 decoder was also tested using the Fluster test suite
+(version: v0.4.0-12-g33566abd0964).
+ Target: GStreamer-H.264-V4L2-Gst1.0, Test Suite: JVT-AVC_V1
+ Result: 126/135 tests passed
+ Failures:
+ FM1_BT_B, FM1_FT_E, FM2_SVA_C, BA3_SVA_C, SP1_BT_A,
+ SP2_BT_B, MR6_BT_B, MR7_BT_B, MR8_BT_B
+
 ---
-v7:
-- rebase and align with introducation of software pins
----
- .../net/ethernet/intel/ice/ice_adminq_cmd.h   |   2 +
- drivers/net/ethernet/intel/ice/ice_dpll.c     | 284 ++++++++++++++++++
- drivers/net/ethernet/intel/ice/ice_dpll.h     |   2 +
- 3 files changed, 288 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-index 0ae7387e0599..712f7ef2a00a 100644
---- a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-+++ b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-@@ -2304,6 +2304,8 @@ struct ice_aqc_get_cgu_abilities {
- 	u8 rsvd[3];
- };
- 
-+#define ICE_AQC_CGU_IN_CFG_FLG2_REFSYNC_EN		BIT(7)
-+
- /* Set CGU input config (direct 0x0C62) */
- struct ice_aqc_set_cgu_input_config {
- 	u8 input_idx;
-diff --git a/drivers/net/ethernet/intel/ice/ice_dpll.c b/drivers/net/ethernet/intel/ice/ice_dpll.c
-index d6190d9e32ba..39743cdba986 100644
---- a/drivers/net/ethernet/intel/ice/ice_dpll.c
-+++ b/drivers/net/ethernet/intel/ice/ice_dpll.c
-@@ -36,6 +36,19 @@
- #define ICE_DPLL_PIN_SW_2_OUTPUT_ABS_IDX \
- 	(ICE_DPLL_PIN_SW_OUTPUT_ABS(ICE_DPLL_PIN_SW_2_IDX))
- 
-+#define ICE_SR_PFA_DPLL_DEFAULTS		0x152
-+#define ICE_DPLL_PFA_REF_SYNC_TYPE		0x2420
-+#define ICE_DPLL_PFA_REF_SYNC_TYPE2		0x2424
-+#define ICE_DPLL_PFA_END			0xFFFF
-+#define ICE_DPLL_PFA_HEADER_LEN			4
-+#define ICE_DPLL_PFA_ENTRY_LEN			3
-+#define ICE_DPLL_PFA_MAILBOX_REF_SYNC_PIN_S	4
-+#define ICE_DPLL_PFA_MASK_OFFSET		1
-+#define ICE_DPLL_PFA_VALUE_OFFSET		2
-+
-+#define ICE_DPLL_E810C_SFP_NC_PINS		2
-+#define ICE_DPLL_E810C_SFP_NC_START		4
-+
- /**
-  * enum ice_dpll_pin_type - enumerate ice pin types:
-  * @ICE_DPLL_PIN_INVALID: invalid pin type
-@@ -2107,6 +2120,149 @@ ice_dpll_sw_esync_get(const struct dpll_pin *pin, void *pin_priv,
- 						 extack);
- }
- 
-+/*
-+ * ice_dpll_input_ref_sync_set - callback for setting reference sync feature
-+ * @pin: pointer to a pin
-+ * @pin_priv: private data pointer passed on pin registration
-+ * @ref_pin: pin pointer for reference sync pair
-+ * @ref_pin_priv: private data pointer of ref_pin
-+ * @state: requested state for reference sync for pin pair
-+ * @extack: error reporting
-+ *
-+ * Dpll subsystem callback. Handler for setting reference sync frequency
-+ * feature for input pin.
-+ *
-+ * Context: Acquires and releases pf->dplls.lock
-+ * Return:
-+ * * 0 - success
-+ * * negative - error
-+ */
-+static int
-+ice_dpll_input_ref_sync_set(const struct dpll_pin *pin, void *pin_priv,
-+			    const struct dpll_pin *ref_pin, void *ref_pin_priv,
-+			    const enum dpll_pin_state state,
-+			    struct netlink_ext_ack *extack)
-+{
-+	struct ice_dpll_pin *p = pin_priv;
-+	struct ice_pf *pf = p->pf;
-+	u8 flags_en = 0;
-+	int ret;
-+
-+	if (ice_dpll_is_reset(pf, extack))
-+		return -EBUSY;
-+	mutex_lock(&pf->dplls.lock);
-+
-+	if (p->flags[0] & ICE_AQC_GET_CGU_IN_CFG_FLG2_INPUT_EN)
-+		flags_en = ICE_AQC_SET_CGU_IN_CFG_FLG2_INPUT_EN;
-+	if (state == DPLL_PIN_STATE_CONNECTED)
-+		flags_en |= ICE_AQC_CGU_IN_CFG_FLG2_REFSYNC_EN;
-+	ret = ice_aq_set_input_pin_cfg(&pf->hw, p->idx, 0, flags_en, 0, 0);
-+	if (!ret)
-+		ret = ice_dpll_pin_state_update(pf, p, ICE_DPLL_PIN_TYPE_INPUT,
-+						extack);
-+	mutex_unlock(&pf->dplls.lock);
-+
-+	return ret;
-+}
-+
-+/**
-+ * ice_dpll_input_ref_sync_get - callback for getting reference sync config
-+ * @pin: pointer to a pin
-+ * @pin_priv: private data pointer passed on pin registration
-+ * @ref_pin: pin pointer for reference sync pair
-+ * @ref_pin_priv: private data pointer of ref_pin
-+ * @state: on success holds reference sync state for pin pair
-+ * @extack: error reporting
-+ *
-+ * Dpll subsystem callback. Handler for setting reference sync frequency
-+ * feature for input pin.
-+ *
-+ * Context: Acquires and releases pf->dplls.lock
-+ * Return:
-+ * * 0 - success
-+ * * negative - error
-+ */
-+static int
-+ice_dpll_input_ref_sync_get(const struct dpll_pin *pin, void *pin_priv,
-+			    const struct dpll_pin *ref_pin, void *ref_pin_priv,
-+			    enum dpll_pin_state *state,
-+			    struct netlink_ext_ack *extack)
-+{
-+	struct ice_dpll_pin *p = pin_priv;
-+	struct ice_pf *pf = p->pf;
-+
-+	if (ice_dpll_is_reset(pf, extack))
-+		return -EBUSY;
-+	mutex_lock(&pf->dplls.lock);
-+	if (p->flags[0] & ICE_AQC_CGU_IN_CFG_FLG2_REFSYNC_EN)
-+		*state = DPLL_PIN_STATE_CONNECTED;
-+	else
-+		*state = DPLL_PIN_STATE_DISCONNECTED;
-+	mutex_unlock(&pf->dplls.lock);
-+
-+	return 0;
-+}
-+
-+/*
-+ * ice_dpll_sw_input_ref_sync_set - callback for setting reference sync feature
-+ * @pin: pointer to a pin
-+ * @pin_priv: private data pointer passed on pin registration
-+ * @ref_pin: pin pointer for reference sync pair
-+ * @ref_pin_priv: private data pointer of ref_pin
-+ * @state: requested state for reference sync for pin pair
-+ * @extack: error reporting
-+ *
-+ * Dpll subsystem callback. Handler for setting reference sync
-+ * feature for input pins.
-+ *
-+ * Context: Calls a function which acquires and releases pf->dplls.lock
-+ * Return:
-+ * * 0 - success
-+ * * negative - error
-+ */
-+static int
-+ice_dpll_sw_input_ref_sync_set(const struct dpll_pin *pin, void *pin_priv,
-+			       const struct dpll_pin *ref_pin,
-+			       void *ref_pin_priv,
-+			       const enum dpll_pin_state state,
-+			       struct netlink_ext_ack *extack)
-+{
-+	struct ice_dpll_pin *p = pin_priv;
-+
-+	return ice_dpll_input_ref_sync_set(pin, p->input, ref_pin, ref_pin_priv,
-+					   state, extack);
-+}
-+
-+/**
-+ * ice_dpll_sw_input_ref_sync_get - callback for getting reference sync config
-+ * @pin: pointer to a pin
-+ * @pin_priv: private data pointer passed on pin registration
-+ * @ref_pin: pin pointer for reference sync pair
-+ * @ref_pin_priv: private data pointer of ref_pin
-+ * @state: on success holds reference sync state for pin pair
-+ * @extack: error reporting
-+ *
-+ * Dpll subsystem callback. Handler for setting reference sync feature for
-+ * input pins.
-+ *
-+ * Context: Calls a function which acquires and releases pf->dplls.lock
-+ * Return:
-+ * * 0 - success
-+ * * negative - error
-+ */
-+static int
-+ice_dpll_sw_input_ref_sync_get(const struct dpll_pin *pin, void *pin_priv,
-+			       const struct dpll_pin *ref_pin,
-+			       void *ref_pin_priv,
-+			       enum dpll_pin_state *state,
-+			       struct netlink_ext_ack *extack)
-+{
-+	struct ice_dpll_pin *p = pin_priv;
-+
-+	return ice_dpll_input_ref_sync_get(pin, p->input, ref_pin, ref_pin_priv,
-+					   state, extack);
-+}
-+
- /**
-  * ice_dpll_rclk_state_on_pin_set - set a state on rclk pin
-  * @pin: pointer to a pin
-@@ -2234,6 +2390,8 @@ static const struct dpll_pin_ops ice_dpll_pin_sma_ops = {
- 	.phase_offset_get = ice_dpll_phase_offset_get,
- 	.esync_set = ice_dpll_sw_esync_set,
- 	.esync_get = ice_dpll_sw_esync_get,
-+	.ref_sync_set = ice_dpll_sw_input_ref_sync_set,
-+	.ref_sync_get = ice_dpll_sw_input_ref_sync_get,
- };
- 
- static const struct dpll_pin_ops ice_dpll_pin_ufl_ops = {
-@@ -2262,6 +2420,8 @@ static const struct dpll_pin_ops ice_dpll_input_ops = {
- 	.phase_offset_get = ice_dpll_phase_offset_get,
- 	.esync_set = ice_dpll_input_esync_set,
- 	.esync_get = ice_dpll_input_esync_get,
-+	.ref_sync_set = ice_dpll_input_ref_sync_set,
-+	.ref_sync_get = ice_dpll_input_ref_sync_get,
- };
- 
- static const struct dpll_pin_ops ice_dpll_output_ops = {
-@@ -2560,6 +2720,88 @@ static void ice_dpll_periodic_work(struct kthread_work *work)
- 				   msecs_to_jiffies(500));
- }
- 
-+/**
-+ * ice_dpll_init_ref_sync_inputs - initialize reference sync pin pairs
-+ * @pf: pf private structure
-+ *
-+ * Read DPLL TLV capabilities and initialize reference sync pin pairs in
-+ * dpll subsystem.
-+ *
-+ * Return:
-+ * * 0 - success or nothing to do (no ref-sync tlv are present)
-+ * * negative - AQ failure
-+ */
-+static int ice_dpll_init_ref_sync_inputs(struct ice_pf *pf)
-+{
-+	struct ice_dpll_pin *inputs = pf->dplls.inputs;
-+	struct ice_hw *hw = &pf->hw;
-+	u16 addr, len, end, hdr;
-+	int ret;
-+
-+	ret = ice_get_pfa_module_tlv(hw, &hdr, &len, ICE_SR_PFA_DPLL_DEFAULTS);
-+	if (ret) {
-+		dev_err(ice_pf_to_dev(pf),
-+			"Failed to read PFA dpll defaults TLV ret=%d\n", ret);
-+		return ret;
-+	}
-+	end = hdr + len;
-+
-+	for (addr = hdr + ICE_DPLL_PFA_HEADER_LEN; addr < end;
-+	     addr += ICE_DPLL_PFA_ENTRY_LEN) {
-+		unsigned long bit, ul_mask, offset;
-+		u16 pin, mask, buf;
-+		bool valid = false;
-+
-+		ret = ice_read_sr_word(hw, addr, &buf);
-+		if (ret)
-+			return ret;
-+
-+		switch (buf) {
-+		case ICE_DPLL_PFA_REF_SYNC_TYPE:
-+		case ICE_DPLL_PFA_REF_SYNC_TYPE2:
-+		{
-+			u16 mask_addr = addr + ICE_DPLL_PFA_MASK_OFFSET;
-+			u16 val_addr = addr + ICE_DPLL_PFA_VALUE_OFFSET;
-+
-+			ret = ice_read_sr_word(hw, mask_addr, &mask);
-+			if (ret)
-+				return ret;
-+			ret = ice_read_sr_word(hw, val_addr, &pin);
-+			if (ret)
-+				return ret;
-+			if (buf == ICE_DPLL_PFA_REF_SYNC_TYPE)
-+				pin >>= ICE_DPLL_PFA_MAILBOX_REF_SYNC_PIN_S;
-+			valid = true;
-+			break;
-+		}
-+		case ICE_DPLL_PFA_END:
-+			addr = end;
-+			break;
-+		default:
-+			continue;
-+		}
-+		if (!valid)
-+			continue;
-+
-+		ul_mask = mask;
-+		offset = 0;
-+		for_each_set_bit(bit, &ul_mask, BITS_PER_TYPE(u16)) {
-+			int i, j;
-+
-+			if (hw->device_id == ICE_DEV_ID_E810C_SFP &&
-+			    pin > ICE_DPLL_E810C_SFP_NC_START)
-+				offset = -ICE_DPLL_E810C_SFP_NC_PINS;
-+			i = pin + offset;
-+			j = bit + offset;
-+			if (i < 0 || j < 0)
-+				return -ERANGE;
-+			inputs[i].ref_sync = j;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * ice_dpll_release_pins - release pins resources from dpll subsystem
-  * @pins: pointer to pins array
-@@ -2634,6 +2876,36 @@ ice_dpll_unregister_pins(struct dpll_device *dpll, struct ice_dpll_pin *pins,
- 			dpll_pin_unregister(dpll, pins[i].pin, ops, &pins[i]);
- }
- 
-+/**
-+ * ice_dpll_pin_ref_sync_register - register reference sync pins
-+ * @pins: pointer to pins array
-+ * @count: number of pins
-+ *
-+ * Register reference sync pins in dpll subsystem.
-+ *
-+ * Return:
-+ * * 0 - success
-+ * * negative - registration failure reason
-+ */
-+static int
-+ice_dpll_pin_ref_sync_register(struct ice_dpll_pin *pins, int count)
-+{
-+	int ret, i;
-+
-+	for (i = 0; i < count; i++) {
-+		if (!pins[i].hidden && pins[i].ref_sync) {
-+			int j = pins[i].ref_sync;
-+
-+			ret = dpll_pin_ref_sync_pair_add(pins[i].pin,
-+							 pins[j].pin);
-+			if (ret)
-+				return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * ice_dpll_register_pins - register pins with a dpll
-  * @dpll: dpll pointer to register pins with
-@@ -2922,6 +3194,14 @@ static int ice_dpll_init_pins(struct ice_pf *pf, bool cgu)
- 				goto deinit_sma;
- 			count += ICE_DPLL_PIN_SW_NUM;
- 		}
-+		ret = ice_dpll_pin_ref_sync_register(pf->dplls.inputs,
-+						     pf->dplls.num_inputs);
-+		if (ret)
-+			goto deinit_ufl;
-+		ret = ice_dpll_pin_ref_sync_register(pf->dplls.sma,
-+						     ICE_DPLL_PIN_SW_NUM);
-+		if (ret)
-+			goto deinit_ufl;
- 	} else {
- 		count += pf->dplls.num_outputs + 2 * ICE_DPLL_PIN_SW_NUM;
- 	}
-@@ -3219,6 +3499,8 @@ ice_dpll_init_info_direct_pins(struct ice_pf *pf,
- 		pins[i].prop.freq_supported_num = freq_supp_num;
- 		pins[i].pf = pf;
- 	}
-+	if (input)
-+		ret = ice_dpll_init_ref_sync_inputs(pf);
- 
- 	return ret;
- }
-@@ -3284,6 +3566,8 @@ static int ice_dpll_init_info_sw_pins(struct ice_pf *pf)
- 		pin->pf = pf;
- 		pin->prop.board_label = ice_dpll_sw_pin_sma[i];
- 		pin->input = &d->inputs[pin_abs_idx];
-+		if (pin->input->ref_sync)
-+			pin->ref_sync = pin->input->ref_sync - pin_abs_idx;
- 		pin->output = &d->outputs[ICE_DPLL_PIN_SW_OUTPUT_ABS(i)];
- 		ice_dpll_phase_range_set(&pin->prop.phase_range, phase_adj_max);
- 	}
-diff --git a/drivers/net/ethernet/intel/ice/ice_dpll.h b/drivers/net/ethernet/intel/ice/ice_dpll.h
-index a5a5b61c5115..c0da03384ce9 100644
---- a/drivers/net/ethernet/intel/ice/ice_dpll.h
-+++ b/drivers/net/ethernet/intel/ice/ice_dpll.h
-@@ -32,6 +32,7 @@ enum ice_dpll_pin_sw {
-  * @freq: current frequency of a pin
-  * @phase_adjust: current phase adjust value
-  * @phase_offset: monitored phase offset value
-+ * @ref_sync: store id of reference sync pin
-  */
- struct ice_dpll_pin {
- 	struct dpll_pin *pin;
-@@ -49,6 +50,7 @@ struct ice_dpll_pin {
- 	enum dpll_pin_direction direction;
- 	s64 phase_offset;
- 	u8 status;
-+	u8 ref_sync;
- 	bool active;
- 	bool hidden;
- };
+Jorge Ramirez-Ortiz (5):
+  media: dt-bindings: venus: Add qcm2290 dt schema
+  media: venus: vdec: AR50_LITE video core support
+  media: venus: hfi_plat_v6_lite: Populate decode capabilities
+  media: venus: core: Add qcm2290 DT compatible and resource data
+  arm64: dts: qcom: qcm2290: Add venus video node
+
+ .../bindings/media/qcom,qcm2290-venus.yaml    | 127 +++++++++++++++
+ arch/arm64/boot/dts/qcom/qcm2290.dtsi         |  57 +++++++
+ drivers/media/platform/qcom/venus/Makefile    |   2 +-
+ drivers/media/platform/qcom/venus/core.c      |  50 +++++-
+ drivers/media/platform/qcom/venus/core.h      |  11 +-
+ drivers/media/platform/qcom/venus/firmware.c  |   8 +-
+ drivers/media/platform/qcom/venus/helpers.c   |  80 ++++++++++
+ drivers/media/platform/qcom/venus/helpers.h   |   2 +
+ .../media/platform/qcom/venus/hfi_helper.h    |  10 +-
+ .../media/platform/qcom/venus/hfi_platform.c  |   2 +
+ .../media/platform/qcom/venus/hfi_platform.h  |   1 +
+ .../qcom/venus/hfi_platform_v6_lite.c         | 148 ++++++++++++++++++
+ drivers/media/platform/qcom/venus/hfi_venus.c |  14 +-
+ .../media/platform/qcom/venus/pm_helpers.c    |   1 +
+ drivers/media/platform/qcom/venus/vdec.c      |  15 +-
+ 15 files changed, 503 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,qcm2290-venus.yaml
+ create mode 100644 drivers/media/platform/qcom/venus/hfi_platform_v6_lite.c
+
 -- 
-2.38.1
+2.34.1
 
