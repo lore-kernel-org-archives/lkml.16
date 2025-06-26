@@ -1,133 +1,153 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF052F1FEE;
-	Thu, 26 Jun 2025 00:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92202F1FC6;
+	Thu, 26 Jun 2025 00:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750897495; cv=none; b=OUUIcZJkDqjm4I3tpgfTANZ8ccwRst0ssgLTQJ8ShVCyBNDm1h2LFklKk30efYAMbbzkFdFhdJuQU9Rw071vMFW/3DxZgFxTnJ//YsMqfbqvkxVsxNh9ygPF9a9t23RzC8J5NJWv5SyO1/31YdRiK5vupvO/R3469S7fOVdYQXE=
+	t=1750897803; cv=none; b=nO2+5Re9wgJMc1/RNgXoUktiS4tGs6wXd/AuqElQJD359Ml8WksntuK5CuH3w3VaiD7H1Cmfj2HS/3l7nm31QB0yB64GgGjo60+prodJmbkQaiE3iKwfYf6VCxfPF19wuiTDgX1tKpYlSwKmHsDW+Re1ejTe/dbUJXlks8mKs7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750897495; c=relaxed/simple;
-	bh=3RUBDXcCOOdlEWGj394RlJKkuphbNDVZPadUh0UHBNc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EuT+Tk3PFAgqlxEARS4Sj7QMIu6h5IkYeEIV+9Qo+/Bysrsv8EO6WywzHSDGncxy/gdegLL7ctGFvHyBs9ND0Vnr8wagCHeaK/aOKU+DT3+SI6lGuXWZtWkBvmipnE+KzMi0bcXZmFkAWhM9HtMbUE4IaZomVQMF8wI1YJzYe40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JxYkyVRi; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750897803; c=relaxed/simple;
+	bh=rQVlwmiRyQSv075kPvUyrgQeXP16QvD+Pp6G7Fgm8Fs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=rooqeUCVxqBlx5X/tyODig5eoHwey5PLDj+HD2bil1JGJOmBT2kVPAVRZJNyheyxcRwgyhOLetddjnEdx0kx/cD/Xb68k0HwJQ26p6rjwbAHqRW8+IMRCdhHoR8joCJSaUX0a7fkO/2BMD7u6BoIBGKtCblllJswivJt/tztRWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=A2gLGXhk; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JxYkyVRi"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3da82c6c5d4so3564005ab.1;
-        Wed, 25 Jun 2025 17:24:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750897493; x=1751502293; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8DpDcu8odICYcSvPG11YgRezz0sdLDRgeHofe1ELDoU=;
-        b=JxYkyVRiWHXBBYCr3SShKWyM29q9FUnRpYjAfchNV2rwRTIbgiSVc2totr5aU6W9cn
-         ngVq6SMGFMkWIO2xIC4spUkvcENFazVtLQxcIep/hmh11RjmaHnMgg7p4nDdfNUl9Fog
-         459fP3gk/QqRPjGSvwavLOo1GbPzXEeb8Mpd5BCkBKWoRRT6LTV/6EaJq/+YVu+V7M8y
-         nYIVEqSpQnc5E4J2ez2soZEvihvzdiTHaBRSFUb92OVy5kBIdteWHOdquIgYD+kKRKYq
-         V+35rdTAxp271BdS3JWGHI1KH4c8tAru0VdJFmXJ9/uOSN2dWVlDvIj5Xf8ZtBjaE0Gv
-         QdEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750897493; x=1751502293;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8DpDcu8odICYcSvPG11YgRezz0sdLDRgeHofe1ELDoU=;
-        b=Uyql8qbdHoBqQI5z62TvJ+3oIwPbl4rCbSqW2fJplH03PWdLrKxbi4vKTDliQI8DWR
-         cAX/XZ1xlGt3OBdoJQmkvGXU8aCh+1idVKHusk1QLc1cECuLC6RiHaLeyGKZpb5367sO
-         2KXkQdkSUZT6rpQpV6xHNZV+jou1M1144Zx/oPReoqCBp9mo8QNSwT9CEL9H4T2l0NIK
-         17rOjBeeq07o01SzJoZOaWlaqJpc0BGkLgHGVYX/3n0LfxWqY3J/5CefcRzpX2DJvbSc
-         I+csxOH4QOVdB+Z6G4JDgHPwDhibyDGBFgUOB4dLr72q8FjGY5KkgiAeP/AO4bNeAk8g
-         cTeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPnQwQqTBL6Xg2YAo5dH8mw8H3EAMed4CYwhRxfm7XDk6gRDHcV809ZoMFuJ/DoW4ead0=@vger.kernel.org, AJvYcCVyEsoMHXf5bAl2majzblRPxfTa8fxXnEOvUyunZJMduEotkge0j66cacqsAYjvXEhKfXNiHXyf@vger.kernel.org, AJvYcCWFu363SXdHZFDv/gEabQb89+/r/NK6OcH+MLOxDYnbTUOHqqoKy6WfQy4hrY+ZMUCijbRc8BXLVI1yvjpq@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIq4C6veJqSxdA7RRC84zNNteTElk74Rh/oTBUJF2vVIWvjcxN
-	AKl0qmX/10RF30VeMj4xNwb7C8ilHoG4Rmc9mUx2I7Udxd+jcJrEfeeSfv4Z7S+UPoMnSL1Hbfa
-	yYibd3rdle0G5ONvnfn15ImGzmT4Y5mlsdyow+0k=
-X-Gm-Gg: ASbGncuV11xnh7Dg72NjJ/bFXq41/oY3gYHVr0W0x/LgHnqR+QJpl/rvvAErd97bdEX
-	Jevp3CaZKPEic3PjLrbJHW74Nk26/yJQAnIWs6DYa20ItVoXMGByqILnMjvoO4gNQAC1/ml8GFz
-	Zx/aTUSaUQ1aZf4fJkoJmbKdh0SrTOjRzGVWfhyQ/H5g==
-X-Google-Smtp-Source: AGHT+IHtHZaMbuHXKnztiu9cs2xdpESBu0dN6VQeV3lqpz2a3TdX5SwmtdYGOSge9cKK8qiIbygUpjoUG8TS68we2io=
-X-Received: by 2002:a05:6e02:1a82:b0:3df:2cd1:f61b with SMTP id
- e9e14a558f8ab-3df327de62cmr62782435ab.0.1750897492975; Wed, 25 Jun 2025
- 17:24:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A2gLGXhk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:Sender:
+	Reply-To:Cc:Content-ID:Content-Description;
+	bh=asEZ63uNdqnRmgnYrhTIGz393/XojMchHHXovIsLp68=; b=A2gLGXhkiJRwKraD1mBY5wWyCL
+	GeOZiJPwZvqcEt0qCRpRQMvepDgFVG03f30rNTBwO+RF3qi2U3CFi6jByUPjAzwg5zYnxkPOaNgq7
+	Osgw+RaQ71nqD9xutiRw9bBJUMzc3rPK4eRSEcC5MGy+0ppopQyaD1/NFX7S793wLpu7yUn7YrH6B
+	aclVA3UqCsQ/Q/kaxvG6A7zwrf+X+c/dC/db1atMMDdQJnLN7GbfgY0ViwOpvvrpgwiPPWNo0Y21M
+	YiSenSJp3vlkoDOoWzkCoZgPtjIIowycD8O23zl9ISm5G13ORwdKhhrfgniolA/D+Tr8ztFXarVLO
+	HcgDD7kA==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uUaUZ-000000060m1-18Zj;
+	Thu, 26 Jun 2025 00:29:27 +0000
+Message-ID: <d6e44430-ec9c-4d77-a00b-15e97ab9beab@infradead.org>
+Date: Wed, 25 Jun 2025 17:29:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <685af3b1.a00a0220.2e5631.0091.GAE@google.com> <CAL+tcoB0as6+5VOk9nu0M_OH4TqT6NjDZBZmgQgdQcYx0pciCw@mail.gmail.com>
- <aFwQZhpWIxVLJ1Ui@mini-arch> <CAL+tcoCmiT9XXUVGwcT1NB6bLVK69php-oH+9UL+mH6_HYxGhA@mail.gmail.com>
- <aFwZ5WWj835sDGpS@mini-arch> <aFxgg4rCQ8tfM9dw@mini-arch> <20250625140357.6203d0af@kernel.org>
- <aFyIRxuBrpRsB0iF@mini-arch>
-In-Reply-To: <aFyIRxuBrpRsB0iF@mini-arch>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Thu, 26 Jun 2025 08:24:16 +0800
-X-Gm-Features: Ac12FXzGwQs2zmklf2_XcL1cpsjKfoR8Pt8xDZ7LtAzluD81WRF_rGvoLqid8-c
-Message-ID: <CAL+tcoDkgcBfFsHRzjNCm-VYq8-bV+VjPm259+qu548GurZggA@mail.gmail.com>
-Subject: Re: [syzbot] [bpf?] [net?] possible deadlock in xsk_notifier (3)
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, 
-	syzbot <syzbot+e67ea9c235b13b4f0020@syzkaller.appspotmail.com>, andrii@kernel.org, 
-	ast@kernel.org, bjorn@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net, 
-	davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	jonathan.lemon@gmail.com, linux-kernel@vger.kernel.org, 
-	maciej.fijalkowski@intel.com, magnus.karlsson@intel.com, 
-	netdev@vger.kernel.org, pabeni@redhat.com, sdf@fomichev.me, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 17/32] liveupdate: luo_sysfs: add sysfs state
+ monitoring
+To: Pasha Tatashin <pasha.tatashin@soleen.com>, pratyush@kernel.org,
+ jasonmiu@google.com, graf@amazon.com, changyuanl@google.com,
+ rppt@kernel.org, dmatlack@google.com, rientjes@google.com, corbet@lwn.net,
+ ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, ojeda@kernel.org,
+ aliceryhl@google.com, masahiroy@kernel.org, akpm@linux-foundation.org,
+ tj@kernel.org, yoann.congal@smile.fr, mmaurer@google.com,
+ roman.gushchin@linux.dev, chenridong@huawei.com, axboe@kernel.dk,
+ mark.rutland@arm.com, jannh@google.com, vincent.guittot@linaro.org,
+ hannes@cmpxchg.org, dan.j.williams@intel.com, david@redhat.com,
+ joel.granados@kernel.org, rostedt@goodmis.org, anna.schumaker@oracle.com,
+ song@kernel.org, zhangguopeng@kylinos.cn, linux@weissschuh.net,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org,
+ gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org,
+ cw00.choi@samsung.com, myungjoo.ham@samsung.com, yesanishhere@gmail.com,
+ Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com,
+ aleksander.lobakin@intel.com, ira.weiny@intel.com,
+ andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de,
+ bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com,
+ stuart.w.hayes@gmail.com, ptyadav@amazon.de, lennart@poettering.net,
+ brauner@kernel.org, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20250625231838.1897085-1-pasha.tatashin@soleen.com>
+ <20250625231838.1897085-18-pasha.tatashin@soleen.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250625231838.1897085-18-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 26, 2025 at 7:37=E2=80=AFAM Stanislav Fomichev <stfomichev@gmai=
-l.com> wrote:
->
-> On 06/25, Jakub Kicinski wrote:
-> > On Wed, 25 Jun 2025 13:48:03 -0700 Stanislav Fomichev wrote:
-> > > > > I'm still learning the af_xdp. Sure, I'm interested in it, just a=
- bit
-> > > > > worried if I'm capable of completing it. I will try then.
-> > > >
-> > > > SG, thanks! If you need more details lmk, but basically we need to =
-reorder
-> > > > netdev_lock_ops() and mutex_lock(lock: &xs->mutex)+XSK_READY check.
-> > > > And similarly for cleanup (out_unlock/out_release) path.
-> > >
-> > > Jakub just told me that I'm wrong and it looks similar to commit
-> > > f0433eea4688 ("net: don't mix device locking in dev_close_many()
-> > > calls"). So this is not as easy as flipping the lock ordering :-(
-> >
-> > I don't think registering a netdev from NETDEV_UP even of another
-> > netdev is going to play way with instance locks and lockdep.
-> > This is likely a false positive but if syzbot keeps complaining
-> > we could:
-> >
-> > diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-> > index 995a7207bdf8..f357a7ac70ac 100644
-> > --- a/drivers/net/wan/lapbether.c
-> > +++ b/drivers/net/wan/lapbether.c
-> > @@ -81,7 +81,7 @@ static struct lapbethdev *lapbeth_get_x25_dev(struct =
-net_device *dev)
-> >
-> >  static __inline__ int dev_is_ethdev(struct net_device *dev)
-> >  {
-> > -       return dev->type =3D=3D ARPHRD_ETHER && strncmp(dev->name, "dum=
-my", 5);
-> > +       return dev->type =3D=3D ARPHRD_ETHER && !netdev_need_ops_lock(d=
-ev);
-> >  }
-> >
-> > IDK what the dummy hack is there for, it's been like that since
-> > git begun..
->
-> Agreed. The driver itlself looks interesting. IIUC, when loaded, it
-> unconditionally creates virtual netdev for any eth device in the init
-> ns. A bit surprised that syzbot enables it, none of my machines have it
-> enabled.
+Hi,
 
-Interesting case I find. Thank you both for the detailed explanation :)
 
-Thanks,
-Jason
+On 6/25/25 4:18 PM, Pasha Tatashin wrote:
+> diff --git a/Documentation/ABI/testing/sysfs-kernel-liveupdate b/Documentation/ABI/testing/sysfs-kernel-liveupdate
+> new file mode 100644
+> index 000000000000..4cd4a4fe2f93
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-kernel-liveupdate
+> @@ -0,0 +1,51 @@
+> +What:		/sys/kernel/liveupdate/
+> +Date:		May 2025
+> +KernelVersion:	6.16.0
+> +Contact:	pasha.tatashin@soleen.com
+> +Description:	Directory containing interfaces to query the live
+> +		update orchestrator. Live update is the ability to reboot the
+> +		host kernel (e.g., via kexec, without a full power cycle) while
+> +		keeping specifically designated devices operational ("alive")
+> +		across the transition. After the new kernel boots, these devices
+> +		can be re-attached to their original workloads (e.g., virtual
+> +		machines) with their state preserved. This is particularly
+> +		useful, for example, for quick hypervisor updates without
+> +		terminating running virtual machines.
+> +
+> +
+> +What:		/sys/kernel/liveupdate/state
+> +Date:		May 2025
+> +KernelVersion:	6.16.0
+> +Contact:	pasha.tatashin@soleen.com
+> +Description:	Read-only file that displays the current state of the live
+> +		update orchestrator as a string. Possible values are:
+> +
+> +		"normal":	No live update operation is in progress. This is
+> +				the default operational state.
+
+Just an opinion, but the ':'s after each possible value aren't needed
+and just add noise.
+
+You could just drop the ':'s -- or you could make a table here, like
+Documentation/ABI/testing/sysfs-hypervisor-xen does, by adding
+
+                ===========     ================================================
+
+
+> +		"prepared":	The live update preparation phase has completed
+> +				successfully (e.g., triggered via the
+> +				/dev/liveupdate event). Kernel subsystems have
+> +				been notified via the %LIVEUPDATE_PREPARE
+> +				event/callback and should have initiated state
+> +				saving. User workloads (e.g., VMs) are generally
+> +				still running, but some operations (like device
+> +				unbinding or new DMA mappings) might be
+> +				restricted. The system is ready for the reboot
+> +				trigger.
+> +
+> +		"frozen":	The final reboot notification has been sent
+> +				(e.g., triggered via the 'reboot()' syscall),
+> +				corresponding to the %LIVEUPDATE_REBOOT kernel
+> +				event. Subsystems have had their final chance to
+> +				save state. User workloads must be suspended.
+> +				The system is about to execute the reboot into
+> +				the new kernel (imminent kexec). This state
+> +				corresponds to the "blackout window".
+> +
+> +		"updated":	The system has successfully rebooted into the
+> +				new kernel via live update. Restoration of
+> +				preserved resources can now occur (typically via
+> +				ioctl commands). The system is awaiting the
+> +				final 'finish' signal after user space completes
+> +				restoration tasks.
+
+and
+
+                ===========     ================================================
+
+Or just disagree or ignore. :)
+
+-- 
+~Randy
+
