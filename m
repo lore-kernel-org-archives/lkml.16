@@ -1,339 +1,198 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBD52EF2B1;
-	Thu, 26 Jun 2025 14:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35142EF9A4;
+	Thu, 26 Jun 2025 14:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750948341; cv=none; b=BfM8gHfryyk3B5h3SCITTw8C47rUCxHegNK/1c9GyWfFLheTe3Q8kjGNNEmpZj45lyk/0xTFngs5m8Ev/0fS7+qDyl3aZfZc84dy7ZSa4v8qv5KodeJZ5WVSwrEZ+cRQDbSSsjd5GCaireAczEajvYZh5BTPlgUkn5kcJL7F2iQ=
+	t=1750948346; cv=none; b=BiHcX107Nc6MGqGz+FdIJ0/ZGJ0z9x9qg2W2emFNETVqvWF+8NcqFcVouSWBx7u6wRIiWYAuXfnd9ZNVcKGmApQaReWlSMCAlHOhVgiCuyuJ7frPgBkFMu8utvJ6fSWTuaPKMj1BH/FTdoTxlQn77Zx/Uqz415Svun6EXz2uU0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750948341; c=relaxed/simple;
-	bh=RL4eU+Ww5lTkAQ1MMHEL1b8EYy2ZO2hBO1eHGYuiH8A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=aUNRxKC/tSEKuabtV3Bm6r99bSLolCSq4a4swjd9mYwmcDMW4RpA1tCzbngczEdx7dhyu4qvN5OVhmqgQvpnj6Gz5H9sN7bT/DGJvGdIXQ7+xwlvlm0rfjHinvtYRst8xiYx+OZbvt0hCcXDcGFCZBzHO1lHIbuqYjpvlbVNt0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OfVAoeZj; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750948346; c=relaxed/simple;
+	bh=1jC/tGnvYZqIX1z6MW25LhIXH6ubgU5rEfdthqI9T7w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H/m4rUt2gowkL9stVfgNSSkcfuVNx+MFxyYQcayDHa/IVEUwrH57PgszOka5L+J/BEMzdjYkz9qQguldYRtiVY2SRpzmko11PMDaEWhTIX8sP6V7E029UtB1tvgID0VhWqOnAe1hv/HEY+W1yZNH9XZVU4EVG8Z8Vz9ublxBxFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FQzYbB+F; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OfVAoeZj"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q9CP2r018960;
-	Thu, 26 Jun 2025 14:32:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	wuO+J4H0VXvSvixMVNZkyo7uOYr3zGO9aJXQVdGjVwQ=; b=OfVAoeZjGWNxOhgU
-	y6iP1NS+Jx8lVpdTxWJI8hoSsAFV1Kqe7+iCrxiOdIUme8/fte2WT1GZCKf1XaRr
-	Qr5Tplpvu+ctteaP1yIAMDfGaQWYRQ6qYsOYK5mJiJDgMYyVdjMo5c9YgazAs5KE
-	O5f4JiP6FDzqhe6J7qCTcGGJuO+hQbZUxhyKNcZQVepD8QREpe/J4GZYjHVJ4H8s
-	ywItjqOnVyBV+Tg5995mtLdv+WfHVLgQgHm2jB6G9pXaX09OQrvkeFRDXj178IRd
-	JKFbr2j1AHthZoCYyXQkHl0FXgwcMJP93BPA56rMTOxOaFzEY1ZsnF+XuhwUNmv+
-	fBkMhw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g7tddjuv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 14:32:09 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55QEW9Pq027530
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 14:32:09 GMT
-Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 26 Jun 2025 07:32:03 -0700
-From: Luo Jie <quic_luoj@quicinc.com>
-Date: Thu, 26 Jun 2025 22:31:08 +0800
-Subject: [PATCH net-next v5 09/14] net: ethernet: qualcomm: Initialize PPE
- port control settings
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQzYbB+F"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-553b6a349ccso1184028e87.0;
+        Thu, 26 Jun 2025 07:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750948342; x=1751553142; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F4ep8LpzklDdJ/PRT38YsBKJnMGg/9nUE3qJ238rNuc=;
+        b=FQzYbB+FEWv41LK3BZZWc9xBmXjSrBI20FIISTS5xlN4nu+GHu6Pyixf1sLGHR31DT
+         73AQj4CqEXq/sxBhNJJMofELAL7y88Y1Tuoj5tVgU8aGkiFBmv6xaekkTKRzd1NYJDBv
+         5ancmOy8PReBzVSCJkEXEg4cirEk1KTs/u2s3Z01FqMaysG4+nbvb5+mFxbeninJU1vy
+         SsJtSPFNdAMDEvH2Ua6Qcza5T8V0dtWh96bcBXqfrzVEniVf7+u5miyItV93EH0cj6Z1
+         q0wQY8t+36XKh0/jRccMwgmjsWTY5okb4ZOt6SJ9sANZ3Zuat4xBrkVTNRkxRkigPbr4
+         +8cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750948342; x=1751553142;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F4ep8LpzklDdJ/PRT38YsBKJnMGg/9nUE3qJ238rNuc=;
+        b=vo5fh6DIkDJSnpulmSQlPNrLT5JIUUlR44K20pxFkmep38w+hp49RxBbstVRESyVS4
+         564tv2i9Vk8vpaOOp3avLWt3QSEtuP/HN6zwSu0isslGHwJoo8cBxYPjxPC7emgUrMPi
+         0qKYuhNyEhOu6NjBjfSIaY9tvtqo39vxYyhBDyIAwWmG2kANl1H/oZ32fr9GKaaFZJOG
+         rvZywNawWxj5z8rmiWBT3GCWO/zKuQ8wRyyLa9Kydunu7bFFZsemBB0zrKs2iPEtAx0Y
+         eDdNqhW4wBwM6nogod5qb/wRIQHy9+A4yeSR3ZjiAXkizg9z8ut1tlxilK7SgyfH9tED
+         alwg==
+X-Forwarded-Encrypted: i=1; AJvYcCWifAWErc4fsBadzqUrWTasM+tlD+g+kOK4FbGUpo6j+vO4OCb19kjSIgLFv0X/9xzK1GoHQCaHzAY+Zwkn@vger.kernel.org, AJvYcCXyJ4P0FNPMQcMAYdhMZZVEheh1kiD+4n3KVTBvg0QXAg07+XAx2P0xbCOCCEBfx+CXP3Nz5rMEteY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5SqSm/jg5PUI/MsJQWQXqtRJBnBvhQjftHci/ZSiUNdME03lm
+	PhgiPrvGckBv2g9XqfxIabFO8Tzn4IBq9/nvaUxYcT9vokuAPzFRkoRjG3/wHtUuA5EK3+0iF0E
+	X+hn1H33xlwfG/olTv/Z5HXR1ROnY31Y=
+X-Gm-Gg: ASbGnctnZ7F+u5xP5RMcxIOnosA3RcPPXIPmyAKxXAKBD5rYOX6GiVzr1ri6J7Ttkm0
+	e+pFHIj+Oij3HF3cjbdcsCAMjVUs4kQMxoNJgwWOa75rS3AIEraT5q1wO6xmz46p+WdhSMs842X
+	3xV+CFsq/zdpthV+oY6nU/vDF4VRfVWJXVBs/u+9C0dRppGvS9wGp5bqL70Q7FdalbpTn7n5BFN
+	XhwLg==
+X-Google-Smtp-Source: AGHT+IFx4sduEJGCHwL3U+pSB2Tg8LNQZ44ZqhdKUQhPbzhrEtPy2s8ZWPFPfbdHNZSYNd8FSRJALxpHY5AcPjo/atk=
+X-Received: by 2002:ac2:568e:0:b0:553:2e0f:96c with SMTP id
+ 2adb3069b0e04-554fdd0e51fmr2690042e87.23.1750948341966; Thu, 26 Jun 2025
+ 07:32:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250626-qcom_ipq_ppe-v5-9-95bdc6b8f6ff@quicinc.com>
-References: <20250626-qcom_ipq_ppe-v5-0-95bdc6b8f6ff@quicinc.com>
-In-Reply-To: <20250626-qcom_ipq_ppe-v5-0-95bdc6b8f6ff@quicinc.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
-        Suruchi Agarwal
-	<quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>,
-        "Simon
- Horman" <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook
-	<kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Philipp
- Zabel" <p.zabel@pengutronix.de>
-CC: <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        Luo Jie
-	<quic_luoj@quicinc.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750948277; l=8504;
- i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
- bh=RL4eU+Ww5lTkAQ1MMHEL1b8EYy2ZO2hBO1eHGYuiH8A=;
- b=0upLr/8cHrLUuU0Qp2Rxf3gBA5+hTwRppo5yWIR/Mk/WsdtBLh96Z3UPo22GmMd7dZi9Y0tm1
- GWFDQai431WDjPaQDRVqz/w1oy/lQNLo2keNYXh/l4+FpyB3Asxwd3A
-X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
- pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=CPYqXQrD c=1 sm=1 tr=0 ts=685d59e9 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=J0k_80nE0nYP0oceNegA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDEyMyBTYWx0ZWRfXxh0FZtxFaYLC
- PqHcCM2I1h3lUVrAV5e8ICZ9B0Iw9gfSNNxep2yFM6Wl6EjM9sp4AjtejGjcscHlu0HGdgE6SCB
- rT1clm+nKNbdHXl0OxJ2wUBRJ2eqXZczWyZsczI8dCaUVIU3oNrZ0LjHNfwcRvqh7jWZehfPluz
- ehNBosgzh5BonCCy4wgjBvel6lWyMuQ28q698HpVBSqBS/dfhY/+18YL5u91Z6B1t53utqkCTyx
- vnUiPgHVXsXPdVrLT7H8aCfrUTP+3Ix/PcVPmrQAuomej3faIOO+ynH4+NczbMgSyzj79eVNGSJ
- lMyDXFa2bcAcdWLhUmjEhU+ozMW4q4KsS9K29pnkmClziQ9Ep6GThnoqO+Ho7uodUm2q43GPgYn
- SUbZKuLv7C4IO3n0ulLIbsua+aP23tq2Wky5BR7EEpK9qcDMMJ31cglMAecb+FqeODl+VFjw
-X-Proofpoint-GUID: jFyyfVt2yB3ktzUZFo75C4p3PtDxVbS-
-X-Proofpoint-ORIG-GUID: jFyyfVt2yB3ktzUZFo75C4p3PtDxVbS-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_06,2025-06-26_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
- impostorscore=0 suspectscore=0 clxscore=1015 spamscore=0 priorityscore=1501
- adultscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506260123
+References: <20250623083841.364002-1-pranav.tyagi03@gmail.com> <aFrBeCn-j_AB1yzv@rric.localdomain>
+In-Reply-To: <aFrBeCn-j_AB1yzv@rric.localdomain>
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Date: Thu, 26 Jun 2025 20:02:10 +0530
+X-Gm-Features: Ac12FXysQiC9JCtpThr23nOptpbU1SVBPAIAYLzmUaBViKaSpsg8hiX7ofi6dBg
+Message-ID: <CAH4c4jLAfMTn6wN3wJSOQZ3mAoYC3uhswDu6c+c6v-wv8mSifQ@mail.gmail.com>
+Subject: Re: [PATCH v2] cxl/memdev: automate cleanup with __free()
+To: Robert Richter <rrichter@amd.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com, 
+	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com, 
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ming.li@zohomail.com, peterz@infradead.org, 
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Configure the default action as drop when the packet size is more than
-the configured MTU of physical port. Also enable port specific counters
-in PPE.
+On Tue, Jun 24, 2025 at 8:47=E2=80=AFPM Robert Richter <rrichter@amd.com> w=
+rote:
+>
+> On 23.06.25 14:08:41, Pranav Tyagi wrote:
+> > Use the scope based resource management (defined in linux/cleanup.h) to
+> > automate the lifetime control of struct cxl_mbox_transfer_fw. This
+> > eliminates explicit kfree() calls and makes the code more robust and
+> > maintainable in presence of early returns.
+> >
+> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+> > ---
+> >  drivers/cxl/core/memdev.c | 21 ++++++++-------------
+> >  1 file changed, 8 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > index f88a13adf7fa..38f4449f9740 100644
+> > --- a/drivers/cxl/core/memdev.c
+> > +++ b/drivers/cxl/core/memdev.c
+> > @@ -7,6 +7,7 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/idr.h>
+> >  #include <linux/pci.h>
+> > +#include <linux/cleanup.h>
+> >  #include <cxlmem.h>
+> >  #include "trace.h"
+> >  #include "core.h"
+> > @@ -802,11 +803,10 @@ static int cxl_mem_activate_fw(struct cxl_memdev_=
+state *mds, int slot)
+> >  static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
+> >  {
+> >       struct cxl_mailbox *cxl_mbox =3D &mds->cxlds.cxl_mbox;
+> > -     struct cxl_mbox_transfer_fw *transfer;
+> >       struct cxl_mbox_cmd mbox_cmd;
+> > -     int rc;
+> > -
+> > -     transfer =3D kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
+> > +
+> > +     struct cxl_mbox_transfer_fw *transfer __free(kfree) =3D
+> > +             kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
+>
+> I don't see a reason for __free() here as there are no early exits.
+>
+> >       if (!transfer)
+> >               return -ENOMEM;
+> >
+> > @@ -821,9 +821,7 @@ static int cxl_mem_abort_fw_xfer(struct cxl_memdev_=
+state *mds)
+> >
+> >       transfer->action =3D CXL_FW_TRANSFER_ACTION_ABORT;
+> >
+> > -     rc =3D cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+> > -     kfree(transfer);
+> > -     return rc;
+> > +     return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+> >  }
+> >
+> >  static void cxl_fw_cleanup(struct fw_upload *fwl)
+> > @@ -880,7 +878,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_up=
+load *fwl, const u8 *data,
+> >       struct cxl_dev_state *cxlds =3D &mds->cxlds;
+> >       struct cxl_mailbox *cxl_mbox =3D &cxlds->cxl_mbox;
+> >       struct cxl_memdev *cxlmd =3D cxlds->cxlmd;
+> > -     struct cxl_mbox_transfer_fw *transfer;
+> > +     struct cxl_mbox_transfer_fw *transfer __free(kfree);
+>
+> Jonathan already catched this.
+>
+> >       struct cxl_mbox_cmd mbox_cmd;
+> >       u32 cur_size, remaining;
+> >       size_t size_in;
+> > @@ -949,7 +947,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_up=
+load *fwl, const u8 *data,
+> >       rc =3D cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+> >       if (rc < 0) {
+> >               rc =3D FW_UPLOAD_ERR_RW_ERROR;
+> > -             goto out_free;
+> > +             return rc;
+>
+> If you want to remove the goto here, just free transfer right after
+> calling cxl_internal_send_cmd(). It is no longer used then.
+>
+> I only want those cleanup helpers where they are actually useful and
+> do not just add complexity.
+>
+> Thanks,
+>
+> -Robert
+>
+> >       }
+> >
+> >       *written =3D cur_size;
+> > @@ -963,14 +961,11 @@ static enum fw_upload_err cxl_fw_write(struct fw_=
+upload *fwl, const u8 *data,
+> >                       dev_err(&cxlmd->dev, "Error activating firmware: =
+%d\n",
+> >                               rc);
+> >                       rc =3D FW_UPLOAD_ERR_HW_ERROR;
+> > -                     goto out_free;
+> > +                     return rc;
+> >               }
+> >       }
+> >
+> >       rc =3D FW_UPLOAD_ERR_NONE;
+> > -
+> > -out_free:
+> > -     kfree(transfer);
+> >       return rc;
+> >  }
+> >
+> > --
+> > 2.49.0
+> >
 
-Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
----
- drivers/net/ethernet/qualcomm/ppe/ppe_config.c | 86 +++++++++++++++++++++++++-
- drivers/net/ethernet/qualcomm/ppe/ppe_config.h | 15 +++++
- drivers/net/ethernet/qualcomm/ppe/ppe_regs.h   | 47 ++++++++++++++
- 3 files changed, 147 insertions(+), 1 deletion(-)
+Thank you for the feedback. I understand your concerns and completely
+agree with your reasoning. Please pardon my misjudgment in sending this
+patch. I am still a beginner with kernel development and learning to
+better assess what makes a meaningful contribution.
 
-diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_config.c b/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
-index 1fecb6ea927c..dd7a4949f049 100644
---- a/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
-+++ b/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
-@@ -1178,6 +1178,44 @@ int ppe_sc_config_set(struct ppe_device *ppe_dev, int sc, struct ppe_sc_cfg cfg)
- 	return regmap_write(ppe_dev->regmap, reg, val);
- }
- 
-+/**
-+ * ppe_counter_enable_set - Set PPE port counter enabled
-+ * @ppe_dev: PPE device
-+ * @port: PPE port ID
-+ *
-+ * Enable PPE counters on the given port for the unicast packet, multicast
-+ * packet and VLAN packet received and transmitted by PPE.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int ppe_counter_enable_set(struct ppe_device *ppe_dev, int port)
-+{
-+	u32 reg, mru_mtu_val[3];
-+	int ret;
-+
-+	reg = PPE_MRU_MTU_CTRL_TBL_ADDR + PPE_MRU_MTU_CTRL_TBL_INC * port;
-+	ret = regmap_bulk_read(ppe_dev->regmap, reg,
-+			       mru_mtu_val, ARRAY_SIZE(mru_mtu_val));
-+	if (ret)
-+		return ret;
-+
-+	PPE_MRU_MTU_CTRL_SET_RX_CNT_EN(mru_mtu_val, true);
-+	PPE_MRU_MTU_CTRL_SET_TX_CNT_EN(mru_mtu_val, true);
-+	ret = regmap_bulk_write(ppe_dev->regmap, reg,
-+				mru_mtu_val, ARRAY_SIZE(mru_mtu_val));
-+	if (ret)
-+		return ret;
-+
-+	reg = PPE_MC_MTU_CTRL_TBL_ADDR + PPE_MC_MTU_CTRL_TBL_INC * port;
-+	ret = regmap_set_bits(ppe_dev->regmap, reg, PPE_MC_MTU_CTRL_TBL_TX_CNT_EN);
-+	if (ret)
-+		return ret;
-+
-+	reg = PPE_PORT_EG_VLAN_TBL_ADDR + PPE_PORT_EG_VLAN_TBL_INC * port;
-+
-+	return regmap_set_bits(ppe_dev->regmap, reg, PPE_PORT_EG_VLAN_TBL_TX_COUNTING_EN);
-+}
-+
- static int ppe_config_bm_threshold(struct ppe_device *ppe_dev, int bm_port_id,
- 				   const struct ppe_bm_port_config port_cfg)
- {
-@@ -1606,6 +1644,48 @@ static int ppe_servcode_init(struct ppe_device *ppe_dev)
- 	return ppe_sc_config_set(ppe_dev, PPE_EDMA_SC_BYPASS_ID, sc_cfg);
- }
- 
-+/* Initialize PPE port configurations. */
-+static int ppe_port_config_init(struct ppe_device *ppe_dev)
-+{
-+	u32 reg, val, mru_mtu_val[3];
-+	int i, ret;
-+
-+	/* MTU and MRU settings are not required for CPU port 0. */
-+	for (i = 1; i < ppe_dev->num_ports; i++) {
-+		/* Enable Ethernet port counter */
-+		ret = ppe_counter_enable_set(ppe_dev, i);
-+		if (ret)
-+			return ret;
-+
-+		reg = PPE_MRU_MTU_CTRL_TBL_ADDR + PPE_MRU_MTU_CTRL_TBL_INC * i;
-+		ret = regmap_bulk_read(ppe_dev->regmap, reg,
-+				       mru_mtu_val, ARRAY_SIZE(mru_mtu_val));
-+		if (ret)
-+			return ret;
-+
-+		/* Drop the packet when the packet size is more than
-+		 * the MTU or MRU of the physical interface.
-+		 */
-+		PPE_MRU_MTU_CTRL_SET_MRU_CMD(mru_mtu_val, PPE_ACTION_DROP);
-+		PPE_MRU_MTU_CTRL_SET_MTU_CMD(mru_mtu_val, PPE_ACTION_DROP);
-+		ret = regmap_bulk_write(ppe_dev->regmap, reg,
-+					mru_mtu_val, ARRAY_SIZE(mru_mtu_val));
-+		if (ret)
-+			return ret;
-+
-+		reg = PPE_MC_MTU_CTRL_TBL_ADDR + PPE_MC_MTU_CTRL_TBL_INC * i;
-+		val = FIELD_PREP(PPE_MC_MTU_CTRL_TBL_MTU_CMD, PPE_ACTION_DROP);
-+		ret = regmap_update_bits(ppe_dev->regmap, reg,
-+					 PPE_MC_MTU_CTRL_TBL_MTU_CMD,
-+					 val);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/* Enable CPU port counters. */
-+	return ppe_counter_enable_set(ppe_dev, 0);
-+}
-+
- int ppe_hw_config(struct ppe_device *ppe_dev)
- {
- 	int ret;
-@@ -1626,5 +1706,9 @@ int ppe_hw_config(struct ppe_device *ppe_dev)
- 	if (ret)
- 		return ret;
- 
--	return ppe_servcode_init(ppe_dev);
-+	ret = ppe_servcode_init(ppe_dev);
-+	if (ret)
-+		return ret;
-+
-+	return ppe_port_config_init(ppe_dev);
- }
-diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_config.h b/drivers/net/ethernet/qualcomm/ppe/ppe_config.h
-index 374635009ae3..277a77257b85 100644
---- a/drivers/net/ethernet/qualcomm/ppe/ppe_config.h
-+++ b/drivers/net/ethernet/qualcomm/ppe/ppe_config.h
-@@ -233,6 +233,20 @@ struct ppe_sc_cfg {
- 	int eip_offset_sel;
- };
- 
-+/**
-+ * enum ppe_action_type - PPE action of the received packet.
-+ * @PPE_ACTION_FORWARD: Packet forwarded per L2/L3 process.
-+ * @PPE_ACTION_DROP: Packet dropped by PPE.
-+ * @PPE_ACTION_COPY_TO_CPU: Packet copied to CPU port per multicast queue.
-+ * @PPE_ACTION_REDIRECT_TO_CPU: Packet redirected to CPU port per unicast queue.
-+ */
-+enum ppe_action_type {
-+	PPE_ACTION_FORWARD = 0,
-+	PPE_ACTION_DROP = 1,
-+	PPE_ACTION_COPY_TO_CPU = 2,
-+	PPE_ACTION_REDIRECT_TO_CPU = 3,
-+};
-+
- int ppe_hw_config(struct ppe_device *ppe_dev);
- int ppe_queue_scheduler_set(struct ppe_device *ppe_dev,
- 			    int node_id, bool flow_level, int port,
-@@ -254,4 +268,5 @@ int ppe_port_resource_get(struct ppe_device *ppe_dev, int port,
- 			  int *res_start, int *res_end);
- int ppe_sc_config_set(struct ppe_device *ppe_dev, int sc,
- 		      struct ppe_sc_cfg cfg);
-+int ppe_counter_enable_set(struct ppe_device *ppe_dev, int port);
- #endif
-diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h b/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-index 5d43326ad99b..82716c3d42e9 100644
---- a/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-+++ b/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-@@ -40,6 +40,18 @@
- #define PPE_SERVICE_SET_RX_CNT_EN(tbl_cfg, value)	\
- 	FIELD_MODIFY(PPE_SERVICE_W1_RX_CNT_EN, (tbl_cfg) + 0x1, value)
- 
-+/* PPE port egress VLAN configurations. */
-+#define PPE_PORT_EG_VLAN_TBL_ADDR		0x20020
-+#define PPE_PORT_EG_VLAN_TBL_ENTRIES		8
-+#define PPE_PORT_EG_VLAN_TBL_INC		4
-+#define PPE_PORT_EG_VLAN_TBL_VLAN_TYPE		BIT(0)
-+#define PPE_PORT_EG_VLAN_TBL_CTAG_MODE		GENMASK(2, 1)
-+#define PPE_PORT_EG_VLAN_TBL_STAG_MODE		GENMASK(4, 3)
-+#define PPE_PORT_EG_VLAN_TBL_VSI_TAG_MODE_EN	BIT(5)
-+#define PPE_PORT_EG_VLAN_TBL_PCP_PROP_CMD	BIT(6)
-+#define PPE_PORT_EG_VLAN_TBL_DEI_PROP_CMD	BIT(7)
-+#define PPE_PORT_EG_VLAN_TBL_TX_COUNTING_EN	BIT(8)
-+
- /* PPE queue counters enable/disable control. */
- #define PPE_EG_BRIDGE_CONFIG_ADDR		0x20044
- #define PPE_EG_BRIDGE_CONFIG_QUEUE_CNT_EN	BIT(2)
-@@ -65,6 +77,41 @@
- #define PPE_EG_SERVICE_SET_TX_CNT_EN(tbl_cfg, value)	\
- 	FIELD_MODIFY(PPE_EG_SERVICE_W1_TX_CNT_EN, (tbl_cfg) + 0x1, value)
- 
-+/* PPE port control configurations for the traffic to the multicast queues. */
-+#define PPE_MC_MTU_CTRL_TBL_ADDR		0x60a00
-+#define PPE_MC_MTU_CTRL_TBL_ENTRIES		8
-+#define PPE_MC_MTU_CTRL_TBL_INC			4
-+#define PPE_MC_MTU_CTRL_TBL_MTU			GENMASK(13, 0)
-+#define PPE_MC_MTU_CTRL_TBL_MTU_CMD		GENMASK(15, 14)
-+#define PPE_MC_MTU_CTRL_TBL_TX_CNT_EN		BIT(16)
-+
-+/* PPE port control configurations for the traffic to the unicast queues. */
-+#define PPE_MRU_MTU_CTRL_TBL_ADDR		0x65000
-+#define PPE_MRU_MTU_CTRL_TBL_ENTRIES		256
-+#define PPE_MRU_MTU_CTRL_TBL_INC		0x10
-+#define PPE_MRU_MTU_CTRL_W0_MRU			GENMASK(13, 0)
-+#define PPE_MRU_MTU_CTRL_W0_MRU_CMD		GENMASK(15, 14)
-+#define PPE_MRU_MTU_CTRL_W0_MTU			GENMASK(29, 16)
-+#define PPE_MRU_MTU_CTRL_W0_MTU_CMD		GENMASK(31, 30)
-+#define PPE_MRU_MTU_CTRL_W1_RX_CNT_EN		BIT(0)
-+#define PPE_MRU_MTU_CTRL_W1_TX_CNT_EN		BIT(1)
-+#define PPE_MRU_MTU_CTRL_W1_SRC_PROFILE		GENMASK(3, 2)
-+#define PPE_MRU_MTU_CTRL_W1_INNER_PREC_LOW	BIT(31)
-+#define PPE_MRU_MTU_CTRL_W2_INNER_PREC_HIGH	GENMASK(1, 0)
-+
-+#define PPE_MRU_MTU_CTRL_SET_MRU(tbl_cfg, value)	\
-+	FIELD_MODIFY(PPE_MRU_MTU_CTRL_W0_MRU, tbl_cfg, value)
-+#define PPE_MRU_MTU_CTRL_SET_MRU_CMD(tbl_cfg, value)	\
-+	FIELD_MODIFY(PPE_MRU_MTU_CTRL_W0_MRU_CMD, tbl_cfg, value)
-+#define PPE_MRU_MTU_CTRL_SET_MTU(tbl_cfg, value)	\
-+	FIELD_MODIFY(PPE_MRU_MTU_CTRL_W0_MTU, tbl_cfg, value)
-+#define PPE_MRU_MTU_CTRL_SET_MTU_CMD(tbl_cfg, value)	\
-+	FIELD_MODIFY(PPE_MRU_MTU_CTRL_W0_MTU_CMD, tbl_cfg, value)
-+#define PPE_MRU_MTU_CTRL_SET_RX_CNT_EN(tbl_cfg, value)	\
-+	FIELD_MODIFY(PPE_MRU_MTU_CTRL_W1_RX_CNT_EN, (tbl_cfg) + 0x1, value)
-+#define PPE_MRU_MTU_CTRL_SET_TX_CNT_EN(tbl_cfg, value)	\
-+	FIELD_MODIFY(PPE_MRU_MTU_CTRL_W1_TX_CNT_EN, (tbl_cfg) + 0x1, value)
-+
- /* PPE service code configuration for destination port and counter. */
- #define PPE_IN_L2_SERVICE_TBL_ADDR		0x66000
- #define PPE_IN_L2_SERVICE_TBL_ENTRIES		256
-
--- 
-2.34.1
-
+Regards
+Pranav Tyagi
