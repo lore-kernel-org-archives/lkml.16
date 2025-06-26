@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF232BF017;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D62729824E;
 	Thu, 26 Jun 2025 08:53:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750928038; cv=none; b=rZNNbJmGfwnMUVux9Ydy6ylhAYKvVrdEA3DZyTGtnR7Nu6FLq015Kz+PPoZJiEwZO5/msJdfAbyBuxCzuEBUJX+NVfHvQQS9kV+fCfckFQY/90Zn2U2khOX+Vmxh7Qbh/gexJcD+FHW+nWPu7Af94jZYQ0TVkz/UDqjBNQxVObI=
+	t=1750928038; cv=none; b=PBXgfhLLCyB2b4BN4xX0srUC8JiMe1Uzcdn6JFIXLhH5wB0mA+OoKq2DiwyDjxX+cVLnkn+mq20PG5QQQC124yodCrn2lf3VtjkOZFrvE/1ac4EgWbQ3cSeD2aYeBoV0IP2ENMMnqf7GN1xebouLubGJxBQ8xh9PT03dWhe2tPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750928038; c=relaxed/simple;
-	bh=yl69ujOKudAoxb7BsY6W6/j+nW0EaIsBsX9NLiSjkC4=;
+	bh=MpQ2gtnaw7N9SW/uFQ+s6QcBME/V8/ZonAnCkD0MPhQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WkG58+++n+n+L1IBGJ/aQ7z1lXB5jAAdi0mkQvpTfpp4WE4XM0M0C8LiBn1aLnJQKFkJJTwZDzN4xLycouuTTBKsCW2hr5HhQ6VxuDz+dTnsEjKRyPjd1qbBEwvhPn9/DJ325duiEPSdUR9xonk/ikivsgC8NlxoVk+hjmIgDbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j6AJkPh6; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=IeIUuVaWF7iURKZGBVvowGbcWzl4lDXc4K16qRuHGNY/jGNk2rcTyyp2OYfU6RepnwD5jEmEhKx5r+YeowhcHowI7u5S3M7Ec0LPvAlFqmzoZlUtgGXuZ+WmWIJzLdyD5Gd7Hi9UayuftBh9lv+1KRjN3yEIVYHII09ZLaoBrvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwWYGiLA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j6AJkPh6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5576AC4CEF5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwWYGiLA"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 75300C113D0;
 	Thu, 26 Jun 2025 08:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750928038;
-	bh=yl69ujOKudAoxb7BsY6W6/j+nW0EaIsBsX9NLiSjkC4=;
+	bh=MpQ2gtnaw7N9SW/uFQ+s6QcBME/V8/ZonAnCkD0MPhQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=j6AJkPh6jiRpTTLHkdrcjcpUCnHAnerHejz5HU7KgF+u0IV/UlQXrGOm1WW/2IRnG
-	 wipTvep0j8F8O+nt0JzCLtacMLN3CgvWB28TfGhJTld7eiDSTKG532Z8ZA+a1+svft
-	 WJs5L4Atxy1wizvhoZk1RVDdpvK4di4qBKfBI5KpsBsDEIUODyWH++96KHn7C1AtEf
-	 wu9Sb6TvOFfQnekZjEWEOcznqxmukYdmZ9tI2cPUAHggeWru4A2frs+E8xUbjgvPpr
-	 17A1VqqYLCsylEHc/Q8zq3Ei0+/BR9lPuq80wgWp/EuXj+YrRXE18XwiSS2lNv0QG/
-	 e4TqG3es1YiJQ==
+	b=mwWYGiLAvwRE4MHKGGC0C35HIfVrPFyEdhfRamaDziFSUuimHsoBiC1sejkcSpFp7
+	 vRq0AiWpCr9mJNHgMOtR+hXvQoWSbk2q5nlT2lMFXRIzxDd/0RxEK1sCoRqLWqB8f8
+	 kl6w+IELDvLDmK8fPAPWq7Q89yoVwJs+cXpiqlCgBDvXpSMYDi+ZDc8vS6MigYhwGT
+	 0mlWL/Cb0syjZBdxphlBsVCNf4bQ4guVTCjR1YW79nHhYwanpn6Fe4zjHjQe7jxBH/
+	 lHO78U9FIrKCoFKjA8GvnKhsDhIWgmrs2xY/5s37CjhhV/OJd3cEazW9rAgAM1Quo6
+	 A8GSeF12P1o7g==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B57BC7EE39;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B9C3C7EE33;
 	Thu, 26 Jun 2025 08:53:58 +0000 (UTC)
 From: Max Shevchenko via B4 Relay <devnull+wctrl.proton.me@kernel.org>
-Date: Thu, 26 Jun 2025 11:54:01 +0300
-Subject: [PATCH v2 08/11] ARM: mediatek: add MT6572 smp bring up code
+Date: Thu, 26 Jun 2025 11:54:03 +0300
+Subject: [PATCH v2 10/11] ARM: dts: mediatek: add basic support for JTY
+ D101 board
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250626-mt6572-v2-8-f7f842196986@proton.me>
+Message-Id: <20250626-mt6572-v2-10-f7f842196986@proton.me>
 References: <20250626-mt6572-v2-0-f7f842196986@proton.me>
 In-Reply-To: <20250626-mt6572-v2-0-f7f842196986@proton.me>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -59,11 +60,11 @@ Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
  linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org, 
  Max Shevchenko <wctrl@proton.me>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750928035; l=1940;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750928035; l=2336;
  i=wctrl@proton.me; s=20250603; h=from:subject:message-id;
- bh=PSE9MkQgZmOqgXgkbRv8mf/3whMKOtrk3zwWFrj3c7Q=;
- b=EtH/D6zXOkpxM6VpdFFNzxmHLCMnLjl/J04meIJmKoli+ginyiEvsHWGUM56wkjsplZXKRKY1
- ybaL0xOhzmzCYRKhO+2cnmkIiP2CB0TnxqD0q7lxRA3EGMAxlbtMbnY
+ bh=NU9J2QXI2zRB0vLkzxM/enp+SQ7Qa7xpupUaXf5gGMs=;
+ b=u6y5VEQKcjrn0P+xyrIXWueepFAPfCFaCZ0d+P2Aeo1SL9grfE0Rv3LApZb3EfkIRfpVT9zi/
+ NwnEYMpzT0HAuwnusq+v2MKwJ23YkZnkljXxYIbDE4/kkgK94skQvXT
 X-Developer-Key: i=wctrl@proton.me; a=ed25519;
  pk=JXUx3mL/OrnRvbK57HXgugBjEBKq4QgDKJqp7BALm74=
 X-Endpoint-Received: by B4 Relay for wctrl@proton.me/20250603 with
@@ -73,55 +74,95 @@ Reply-To: wctrl@proton.me
 
 From: Max Shevchenko <wctrl@proton.me>
 
-Add support for booting the secondary CPU on the MT6572 SoC.
+This tablet uses a MediaTek MT6572 system-on-chip with 1GB of RAM.
+It can currently boot into initramfs with a working UART and
+Simple Framebuffer using already initialized panel by the bootloader.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Max Shevchenko <wctrl@proton.me>
 ---
- arch/arm/mach-mediatek/Kconfig   | 4 ++++
- arch/arm/mach-mediatek/platsmp.c | 7 +++++++
- 2 files changed, 11 insertions(+)
+ arch/arm/boot/dts/mediatek/Makefile            |  1 +
+ arch/arm/boot/dts/mediatek/mt6572-jty-d101.dts | 61 ++++++++++++++++++++++++++
+ 2 files changed, 62 insertions(+)
 
-diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
-index 35a3430c7942d897106bb32916df78347113798a..638eabad2dd37ee56244fc036cb76af135aee416 100644
---- a/arch/arm/mach-mediatek/Kconfig
-+++ b/arch/arm/mach-mediatek/Kconfig
-@@ -15,6 +15,10 @@ config MACH_MT2701
- 	bool "MediaTek MT2701 SoCs support"
- 	default ARCH_MEDIATEK
- 
-+config MACH_MT6572
-+	bool "MediaTek MT6572 SoCs support"
-+	default ARCH_MEDIATEK
+diff --git a/arch/arm/boot/dts/mediatek/Makefile b/arch/arm/boot/dts/mediatek/Makefile
+index 1957947cb41ce86ed101466bf822d4e2dfdfbb61..cb869a1aaec21a1d99f7f2a829b84672a3f52726 100644
+--- a/arch/arm/boot/dts/mediatek/Makefile
++++ b/arch/arm/boot/dts/mediatek/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_MEDIATEK) += \
+ 	mt2701-evb.dtb \
++	mt6572-jty-d101.dtb \
+ 	mt6580-evbp1.dtb \
+ 	mt6582-prestigio-pmt5008-3g.dtb \
+ 	mt6589-aquaris5.dtb \
+diff --git a/arch/arm/boot/dts/mediatek/mt6572-jty-d101.dts b/arch/arm/boot/dts/mediatek/mt6572-jty-d101.dts
+new file mode 100644
+index 0000000000000000000000000000000000000000..68c432cb38700939102b1186c8f5bca4c5140831
+--- /dev/null
++++ b/arch/arm/boot/dts/mediatek/mt6572-jty-d101.dts
+@@ -0,0 +1,61 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2025 Max Shevchenko <wctrl@proton.me>
++ */
 +
- config MACH_MT6589
- 	bool "MediaTek MT6589 SoCs support"
- 	default ARCH_MEDIATEK
-diff --git a/arch/arm/mach-mediatek/platsmp.c b/arch/arm/mach-mediatek/platsmp.c
-index 16a4ee6c959050474c5535ac6a65d92b29482d53..bbd26d423bdef23629ec5ca9d9c61903748988b7 100644
---- a/arch/arm/mach-mediatek/platsmp.c
-+++ b/arch/arm/mach-mediatek/platsmp.c
-@@ -29,6 +29,12 @@ static const struct mtk_smp_boot_info mtk_mt8135_tz_boot = {
- 	{ 0x3f8, 0x3f8, 0x3f8 },
- };
- 
-+static const struct mtk_smp_boot_info mtk_mt6572_boot = {
-+	0x10001400, 0x08,
-+	{ 0x534c4131 },
-+	{ 0x0c },
++/dts-v1/;
++#include "mt6572.dtsi"
++
++/ {
++	model = "JTY D101";
++	compatible = "jty,d101", "mediatek,mt6572";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		stdout-path = "serial0:921600n8";
++
++		framebuffer: framebuffer@bf400000 {
++			compatible = "simple-framebuffer";
++			memory-region = <&framebuffer_reserved>;
++			width = <1024>;
++			height = <600>;
++			stride = <(1024 * 2)>;
++			format = "r5g6b5";
++		};
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x80000000 0x40000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		connsys@80000000 {
++			reg = <0x80000000 0x100000>;
++			no-map;
++		};
++
++		modem@be000000 {
++			reg = <0xbe000000 0x1400000>;
++			no-map;
++		};
++
++		framebuffer_reserved: framebuffer@bf400000 {
++			reg = <0xbf400000 0xc00000>;
++			no-map;
++		};
++	};
 +};
 +
- static const struct mtk_smp_boot_info mtk_mt6589_boot = {
- 	0x10002000, 0x34,
- 	{ 0x534c4131, 0x4c415332, 0x41534c33 },
-@@ -49,6 +55,7 @@ static const struct of_device_id mtk_tz_smp_boot_infos[] __initconst = {
- };
- 
- static const struct of_device_id mtk_smp_boot_infos[] __initconst = {
-+	{ .compatible   = "mediatek,mt6572", .data = &mtk_mt6572_boot },
- 	{ .compatible   = "mediatek,mt6589", .data = &mtk_mt6589_boot },
- 	{ .compatible   = "mediatek,mt7623", .data = &mtk_mt7623_boot },
- 	{ .compatible   = "mediatek,mt7629", .data = &mtk_mt7623_boot },
++&uart0 {
++	status = "okay";
++};
 
 -- 
 2.50.0
