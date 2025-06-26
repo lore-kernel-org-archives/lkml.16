@@ -1,117 +1,137 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EFC2EACFB
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4083B274FED;
+	Thu, 26 Jun 2025 15:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750949999; cv=none; b=bPLYSbqU/MjK11Wc85sCmLZGcMkKslSF8Fo0R6zal54wAvXqO+XWKSqTVNo/E0WFMQYQrurDOAOJ3J0413MQZBZydnk2H3nRdTQ+0l7xztLb0yo99w/48i5/7YU+sW7fdMLQizpKg6cUdD7wX+BJjaoNZJ0q8UKs78e789Yud6E=
+	t=1750950020; cv=none; b=ddyGLdgX3kqmRZzsA3Z3JG4maTucAhjcOS3JHaqCdJtNPgkCDH1SYdmMew5ya6bnOCpHM3N/X//AkcTX5Dowp9xEk3Lom3UyCqLmi4ged1Zo1VNbcXZah+FRdgkMyO6ZwbBKLJPsyVqloIEr/npbNT8kYDmml5leK0y59FET6zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750949999; c=relaxed/simple;
-	bh=qKJ3TOgBVgAG191jBalz7NNV9sHrI5LIdnTqgeqMt7M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OY43p9S0AAnfPeOCWFgDjMSwG3HJ3T2lSc8h4Yqu2yRn/7TLWiLaK98yCHJPcLRU/TnQXm3NicHNL6VUgJ6bBZoxhElTOFupHniFc28zhYeTjpQm4syT4/X1gDKcyWoXGhwO0gusNl95wOsOoo4vY+w51qnNRkBfRqKWSx1JaQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-87ed3b792a2so278381241.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:59:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750949995; x=1751554795;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r88EEJAotUoVpruAcVJoQDPPsGCVaFlUVSarfnMZBus=;
-        b=TWGFMEHnSQZewFLoq/2MlUiSNi9ia79DA3DdGamlVZPfu0AxTVblMjtptr3wy9t7u1
-         8wAu3g3Aff9QhnQ/kSrP2LkpVP3K4so0SfyJ4h7GHCbfxypmJOthxJDIVTAXM5BwSCGw
-         b39zFQBQkXm/GcjAPvSpa2hcSa2fk/ergyoKMnDr9+TR/RHDNhtDhJbkfSF2ChO8654S
-         c9L1Lcbcu+jfSi+xhk5kay2dPBo9b/EnLsODowfiwjbO3qdFmMQvL5PeP9zVS5f74zMt
-         z8qLSPT6oELQrXXkzT8lOkXULAJD+fkgcJy7gVCtAwOlD9TPGojxB0sXWMATXTHlUNkI
-         3WTA==
-X-Gm-Message-State: AOJu0YyWzjYRoH9gyiBkIKkQmj2borpyGb0ivZ66DouCQmGl54OBpNok
-	cxwX3Yem72dcXqQoyJV6lXOBVqg287ykXT0xNHf/zPEtjWJAjEgk+Zs9+8YuxAhydCE=
-X-Gm-Gg: ASbGncs+lik2HAanm47fsiciNm0A72iIz8++RfbMKQTjao6LO1KiqVK0ZCD1Vjl9nTB
-	oRiJXezHo0sbnKCTAFKFNYVDW9rxUymdljkCV0YSc+To8VetcVmpK+51Kf6/hbvXr6FJZmeydQD
-	/FoYbTmkTcZebS2t2shY2R0VPRZ3DgUvy+fZxSMGX/iaRA7r2NMSmJjt54KKYFJEaN83SfSL2qS
-	GVhvD3xCo1miqCJaJBhsC7myin8uweYw/xibsieGRbzyR6gySxGbnseel1TnrO83XLQJVgGCkob
-	A0hZN1Iqv/leYcUudAShqpP0iZRy4H3rb28IR9LfYsyIDtBYHpuHFozXqcg+YCBEqMh00Lw/iUB
-	b3rFxrlIMmKz/5/MyOUwazayKQPZd
-X-Google-Smtp-Source: AGHT+IEc7Yjq8X6rek4PfLzTOCzomzRWOySprQHK3VBSNhwVWgt+YslzwYP5TwMi4hAifDK7gOJyfA==
-X-Received: by 2002:a05:6102:6c7:b0:4e7:db33:5725 with SMTP id ada2fe7eead31-4ecc6a6e9bamr6580715137.3.1750949994899;
-        Thu, 26 Jun 2025 07:59:54 -0700 (PDT)
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com. [209.85.221.177])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ee4cb724ecsm12928137.16.2025.06.26.07.59.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 07:59:54 -0700 (PDT)
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-5314b486207so321753e0c.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:59:54 -0700 (PDT)
-X-Received: by 2002:a05:6122:3985:b0:531:2afc:461b with SMTP id
- 71dfb90a1353d-532ef3b9108mr6081914e0c.4.1750949993756; Thu, 26 Jun 2025
- 07:59:53 -0700 (PDT)
+	s=arc-20240116; t=1750950020; c=relaxed/simple;
+	bh=NCW1/aOIcerxFsXM9RKk0cIz5hyj78/lxy0fK07wt7U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DKwpARzI708w2fMw469If5hQZ1BhqoDUgmLAZdjUXxnE0NVoRtVqkWsI/pvzFZxEHQkP/BpsaEVPWt54GKHcNiO7iK8ja+8/DX3eA4V3za7hQJEjfpkdT1j1QX4Pf1ltwOpdFam0ZQa9WaHZLKAfTnxGFdrcZbldIerPmzZMP6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jY6WFcOd; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jY6WFcOd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6497BC4CEEB;
+	Thu, 26 Jun 2025 15:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750950019;
+	bh=NCW1/aOIcerxFsXM9RKk0cIz5hyj78/lxy0fK07wt7U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jY6WFcOd1SGKGpGDrERjXC29gPUIPrTazpGKNCvI1U2hS6aC6UCUWA4CHC4AUp/K0
+	 cb/rAlF5yM0g7vlYXFrQfkrVnTz0ZfuKZH5eUcnTisj1nTuDU4ZNq8jM8K7UrFc+D8
+	 omjNMO0uJTdIJzDNPshyXS3AwgYRhXSGAYUSctH+0ncoS5EIsmcED122FfdUd4rf2u
+	 KN2QZTQghyPHBhwVcfTKWU4JLRgzXgM8wHbU6jySSpe7x/elurMAd474kJziO/rPp1
+	 6weQwqZwzYO7ApU/aGQaHb/24sRQxNHeqgMvDzGOLTq4LBsjFSqpQ1YOmpdKs84I1S
+	 MPtVLzhyi//9w==
+From: "Naveen N Rao (AMD)" <naveen@kernel.org>
+To: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>
+Cc: <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Subject: [EARLY RFC] KVM: SVM: Enable AVIC by default from Zen 4
+Date: Thu, 26 Jun 2025 20:21:22 +0530
+Message-ID: <20250626145122.2228258-1-naveen@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626145119.2048423-1-jani.nikula@intel.com>
-In-Reply-To: <20250626145119.2048423-1-jani.nikula@intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 26 Jun 2025 16:59:39 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU+tgMqHcU8Fwr_XVE9RfNEGHnbEYHQ1DraE=YRvQxJuw@mail.gmail.com>
-X-Gm-Features: Ac12FXx-6bz0nK_P8UsF2VW3B2ShhCuX5ocsE3wCLtJQXSrU2FWYjeTIxhmMFs0
-Message-ID: <CAMuHMdU+tgMqHcU8Fwr_XVE9RfNEGHnbEYHQ1DraE=YRvQxJuw@mail.gmail.com>
-Subject: Re: [PATCH] iopoll: use fsleep() instead of usleep_range()
-To: Jani Nikula <jani.nikula@intel.com>
-Cc: linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Jani,
+This is early RFC to understand if there are any concerns with enabling
+AVIC by default from Zen 4. There are a few issues related to irq window
+inhibits (*) that will need to be addressed before we can enable AVIC,
+but I wanted to understand if there are other issues that I may not be
+aware of. I will split up the changes and turn this into a proper patch
+series once there is agreement on how to proceed.
 
-Thanks for your patch!
+AVIC (and x2AVIC) is fully functional since Zen 4, and has so far been
+working well in our tests across various workloads. So, enable AVIC by
+default from Zen 4.
 
-On Thu, 26 Jun 2025 at 16:51, Jani Nikula <jani.nikula@intel.com> wrote:
-> Sometimes it's necessary to poll with long sleeps, and the accuracy of
-> usleep_range() is overkill. Use the flexible sleep helper fsleep() for
-> sleeping in the read_poll_timeout() family of macros to automatically
-> choose the appropriate method of waiting.
->
-> Functionally there are a few consequences for existing users:
->
-> - 10 us and shorter sleeps will use usleep() instead of
+CPUs prior to Zen 4 are affected by hardware errata related to AVIC and
+workaround for those (erratum #1235) is only just landing upstream. So,
+it is unlikely that anyone was using AVIC on those CPUs. Start requiring
+users on those CPUs to pass force_avic=1 to explicitly enable AVIC going
+forward. This helps convey that AVIC isn't fully enabled (so users are
+aware of what they are signing up for), while allowing us to make
+kvm_amd module parameter 'avic' as an alias for 'enable_apicv'
+simplifying the code.  The only downside is that force_avic taints the
+kernel, but if this is otherwise agreeable, the taint can be restricted
+to the AVIC feature bit not being enabled.
 
-s/usleep/udelay/.
+Finally, stop complaining that x2AVIC CPUID feature bit is present
+without basic AVIC feature bit, since that looks to be the way AVIC is
+being disabled on certain systems and enabling AVIC by default will
+start printing this warning on systems that have AVIC disabled.
 
->   usleep_range(). Presumably this will not be an issue.
+(*) http://lkml.kernel.org/r/Z6JoInXNntIoHLQ8@google.com
 
-Note that udelay() does not sleep, but loops.
+Signed-off-by: Naveen N Rao (AMD) <naveen@kernel.org>
+---
+ arch/x86/kvm/svm/avic.c | 11 +++++------
+ arch/x86/kvm/svm/svm.c  | 10 +++-------
+ 2 files changed, 8 insertions(+), 13 deletions(-)
 
->
-> - When it leads to a slack of less than 25%, msleep() will be used
->   instead of usleep_range(). Presumably this will not be an issue, given
->   the sleeps will be longer in this case.
->
-> - Otherwise, the usleep_range() slack gets switched from the begin of
->   the range to the end of the range, i.e. [sleep/2+1..sleep] ->
->   [sleep..sleep+sleep/2]. In theory, this could be an issue in some
->   cases, but difficult to determine before this hits the real world.
->
-> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+index a34c5c3b164e..bf7f91f41a6e 100644
+--- a/arch/x86/kvm/svm/avic.c
++++ b/arch/x86/kvm/svm/avic.c
+@@ -1101,12 +1101,11 @@ bool avic_hardware_setup(void)
+ 	if (!npt_enabled)
+ 		return false;
+ 
+-	/* AVIC is a prerequisite for x2AVIC. */
+-	if (!boot_cpu_has(X86_FEATURE_AVIC) && !force_avic) {
+-		if (boot_cpu_has(X86_FEATURE_X2AVIC)) {
+-			pr_warn(FW_BUG "Cannot support x2AVIC due to AVIC is disabled");
+-			pr_warn(FW_BUG "Try enable AVIC using force_avic option");
+-		}
++	if (!boot_cpu_has(X86_FEATURE_AVIC) && !force_avic)
++		return false;
++
++	if (!force_avic && (boot_cpu_data.x86 < 0x19 || boot_cpu_has(X86_FEATURE_ZEN3))) {
++		pr_warn("AVIC disabled due to hardware errata. Use force_avic=1 if you really want to enable AVIC.\n");
+ 		return false;
+ 	}
+ 
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index ab11d1d0ec51..9b5356e74384 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -158,12 +158,7 @@ module_param(lbrv, int, 0444);
+ static int tsc_scaling = true;
+ module_param(tsc_scaling, int, 0444);
+ 
+-/*
+- * enable / disable AVIC.  Because the defaults differ for APICv
+- * support between VMX and SVM we cannot use module_param_named.
+- */
+-static bool avic;
+-module_param(avic, bool, 0444);
++module_param_named(avic, enable_apicv, bool, 0444);
+ module_param(enable_ipiv, bool, 0444);
+ 
+ module_param(enable_device_posted_irqs, bool, 0444);
+@@ -5404,7 +5399,8 @@ static __init int svm_hardware_setup(void)
+ 			goto err;
+ 	}
+ 
+-	enable_apicv = avic = avic && avic_hardware_setup();
++	if (enable_apicv)
++		enable_apicv = avic_hardware_setup();
+ 
+ 	if (!enable_apicv) {
+ 		enable_ipiv = false;
 
-> Not really sure who to Cc, given MAINTAINERS doesn't match this. Adding
-> some past committers.
-
-Oh well ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+base-commit: 7ee45fdd644b138e7a213c6936474161b28d0e1a
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.49.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
