@@ -1,67 +1,41 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0CB28BA9C
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D2C2EACE3;
+	Thu, 26 Jun 2025 14:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750949206; cv=none; b=tMKJz1nCIRZc2Ws/HglxfWNdJYXV5NyMgr30Y+Vcnbvtqb1toxIVxPq9M/WawtckRS4Uom7vVtLSuHqGK27Es0yUzu2OzBsO7S0kAOp7yyBeIcenTYZvpIRYNhiu1viQcTsoEQPR6CVkzKNe0U4pGU+i8279fgGQZ7gHQy0RDT8=
+	t=1750949207; cv=none; b=Unc1Od4NE/Uqkm1IxFVeE40F322oOOvhEYqDi7L1d2sJ3w9Pz6+NDQrhYORvpPEb9JoZGXh+vTSbIUNfArot4EhF9bBXCzAstKwXJJCzLiA6VZvEmobNRLrRusHVakSw9COny0AXmw/KSFf/hITQDjngJL1H0NmWE3l8uMlGB4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750949206; c=relaxed/simple;
-	bh=WYhdaHivbvq1TD7YbmmW5muFA+zw6eu68ZiCH8y5iIQ=;
+	s=arc-20240116; t=1750949207; c=relaxed/simple;
+	bh=0TXAeuIr72M1E3iccaZNVuj4v2u5X5A6qlrnq/rmSW8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SsRvoqgzxEq0lwHwvaJScQQlAPZjQvLW3yOez1mp0lG8tuRl9PGPBjv4dYIrNPr1Q/bgefYrk+nMm1PelJViet+5Y+KbVXdCiXf2CJDlURCb2WrNIw9yk/BplG+HUgJUUMuXVtK6+bjbePyM5nBm1xF6hyYtkmtOGJDVs1AZTGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RmUGXmgo; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=uGWlnYwRy6Hm27AUpfjIRTMf5h9Qicd+FD+ujqk6AszIcTJTzYWDMxvhzGbqheaciGTpKiQMI1j2jdBlxNLzop6+tgb1cALbkaXB9M/SlTC1eZpaR7hG8in2LYh1EGE15pqoAEc0aLymZMZHSnCZHXq8in0zCPrl0/LoG7DOEnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=sYN13UTn; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RmUGXmgo"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QCLaRR015789;
-	Thu, 26 Jun 2025 14:46:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=3PBNcY
-	qVG8q1lbVR+5gNQQ/T5/i3ccSpv4GZaNVQIrY=; b=RmUGXmgozSdP/cZlEiD0L3
-	e+/ayjvK1L0+HHMWfHCYtqmEX80bQIqRGcWNkOO4XjkmZBMDvKGXCmbCsoEw444D
-	/03P9zo1gvPmOPp1a5i2NolMZekuO00U6g16mss1zSCE8OZEB0h4In2pt/5FGA3X
-	MTMrhlphw54uFVBKqt9CmBbFotiApPbJQmyutrxvrs0xsQZASuIadJfYozOnloqB
-	y1BBPshN7SaOJSk0yZqezzZbGmsEyw55+n+VafgcwQQI5wdG0rFZr/qzKCaPhG/7
-	u9nJZJBAtqfqgJ/wQ7NLw43AC0Iqv5u8vfElwkqyMYd4nu6vHwUS4CfEvQqiPMbQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dm8jqc51-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 14:46:41 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55QEe49Z004195;
-	Thu, 26 Jun 2025 14:46:41 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dm8jqc4t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 14:46:41 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55QEFrTD014698;
-	Thu, 26 Jun 2025 14:46:40 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e9s2q3qw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 14:46:40 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55QEkc0E14877136
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 26 Jun 2025 14:46:38 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 830AE20040;
-	Thu, 26 Jun 2025 14:46:38 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9038020043;
-	Thu, 26 Jun 2025 14:46:37 +0000 (GMT)
-Received: from [9.39.23.153] (unknown [9.39.23.153])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 26 Jun 2025 14:46:37 +0000 (GMT)
-Message-ID: <15328540-0c0a-4076-8ec8-77661b984fba@linux.ibm.com>
-Date: Thu, 26 Jun 2025 20:16:36 +0530
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="sYN13UTn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1750949194; x=1751553994; i=markus.elfring@web.de;
+	bh=u5P7/QcsjF0uH++GL6EuasjuGVlJ0QeuR+X4QWr8wRE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=sYN13UTn9e54NVwnsWr9eJi4R4RFta8Ms2dA0ZJTTG7x3FuKYKsT3qS6yxuiy43M
+	 tyUuTSUsA1IV99lLunUXOgULwZQNvOyzuKRAjTbxeDdwvpReApRVwR57OQxhhC1qo
+	 s9e4pHdORHtm9TA/fkoXESJAbN88699Lzuw6Z8CSWQvZri2vTpzugkoQejPUWU1pO
+	 BlTwjRtS7TCan5wnW+w03sIvC5Wit+GGqI5JBZlGNd/fzKS2gLKZU++8x1Z82462J
+	 AwWo3u3lx6+mdybSRy7VY1G5xLnjGJB1oGPIt7vcjCkdk5Cl4hs3h3OzNxkkX8O3v
+	 ueJ7HbFSD9p3xzdvmw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.69.202]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MDdyH-1ucoEI45LT-003ryP; Thu, 26
+ Jun 2025 16:46:34 +0200
+Message-ID: <e70a929f-a5c5-487e-9231-61b5423115db@web.de>
+Date: Thu, 26 Jun 2025 16:46:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,102 +43,132 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 1/9] sched/docs: Document avoid_cpu_mask and avoid CPU
- concept
-To: Hillf Danton <hdanton@sina.com>
-Cc: peterz@infradead.org, kprateek.nayak@amd.com, linux-kernel@vger.kernel.org
-References: <20250625191108.1646208-1-sshegde@linux.ibm.com>
- <20250626062749.1854-1-hdanton@sina.com>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <20250626062749.1854-1-hdanton@sina.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDEyNSBTYWx0ZWRfX3n0pfCb7oUEy ErKRh/fPGnLpzqFA8e0ghT5p0w8zy6iKKyw8K9dEliEvY8rIh0rHB36D2g/BvQHlslMB9g8ylcw cKg8MW9t5shtupu5epynURLXkW3gsbm7qGZe0JhdVOQOKWe4ZBbNXK/1IFZ0Mr58b7+Op8hv+q8
- 3vtTq9mdlLQ5dfeyw1M7EKhV5NK5Pb+BA+mONR6ZCSEtMxNwLtqJtN5BDA0S7najnzbJdju+vxi SHA6vqnZJ82f5lnz6Ao06U/pzpMpowFQZmzYmRzxCkmSR34c1nM45CVnLzPwFZAn5o8s4G33t05 /prLrlehbAhhI0gJQhJInSjnMU3yGw5pVetrMZd0MCME7aW6y0FiyUjLOJLAYYbyjcHpNwG2AIf
- cZ6A09pgpgxrO/EeOe/mSts6Lh9ZGiPlggaIrxXhjGByfBkEsao8s+ppdBrecLvbndJEl6DM
-X-Proofpoint-GUID: RyiolXDrH9HxcnLSGY4vZP07lZIfbOzT
-X-Proofpoint-ORIG-GUID: yLcGBipEqA8xS5PCzZgSxJdIqysqs_KV
-X-Authority-Analysis: v=2.4 cv=combk04i c=1 sm=1 tr=0 ts=685d5d51 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=D-tfdNA0c9R1JAUw7BAA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_06,2025-06-26_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=999 clxscore=1015
- impostorscore=0 suspectscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506260125
+Subject: [PATCH v2] can: ucan: Use two USB endpoint API functions rather than
+ duplicating their implementations
+To: linux-can@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
+ Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ Chen Ni <nichen@iscas.ac.cn>
+References: <48e217a7-b90e-4af3-b535-812c449dd3ba@web.de>
+ <bf5442d1-34e0-495f-8a56-4e47f53ca4ad@wanadoo.fr>
+ <a7a00125-b393-4283-a7dc-6c80ced8e7e6@web.de>
+ <c96a5d2c-0ee1-4e3e-a95d-d38a8f668feb@wanadoo.fr>
+ <0768a008-d4a9-41ec-bc47-1e7c63362296@web.de>
+ <c04376f2-6ab7-4256-8bdc-aa6ff3ea88b4@wanadoo.fr>
+ <7e6f8929-6665-45af-b01b-167a1aa80305@web.de>
+ <CAMZ6Rq+PEZWzxNYDODq-Rz_Y8T_XEihyZKoY-MYo6bn5ATaGLQ@mail.gmail.com>
+ <1e64bcef-33f1-4295-b91f-d4598b32b866@web.de>
+ <57815326-740d-4053-8b85-c5e57d7cec90@wanadoo.fr>
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <57815326-740d-4053-8b85-c5e57d7cec90@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:cnPnYvywW0Sg0h/Oo/SyHrXxHQjrPfUXY0VJpiYBVL3/J8/xwlx
+ 0VKM9cd0kGSfGuUhopVuPfA+g6faXVh8soKIEKZndwVjYWu5+9+AE6e6b3mifhDXIXc0mRi
+ luPHTFZK6WuPrrC1oSWPCQe8vTgvYevacYfgvwh9KERDeAzWyBREN6sy2WfQa+GpBp3GzHY
+ KbHl/EagUdEk14XpoysOA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:A5dZRsET5LM=;5kwEyO8yLuStl8gyET5/1AbHFoP
+ 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
 
-Hi Hillf.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Thu, 26 Jun 2025 16:34:26 +0200
 
-> On Thu, 26 Jun 2025 00:41:00 +0530 Shrikanth Hegde wrote
->> This describes what avoid CPU means and what scheduler aims to do
->> when a CPU is marked as avoid.
->>
->> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
->> ---
->>   Documentation/scheduler/sched-arch.rst | 25 +++++++++++++++++++++++++
->>   1 file changed, 25 insertions(+)
->>
->> diff --git a/Documentation/scheduler/sched-arch.rst b/Documentation/scheduler/sched-arch.rst
->> index ed07efea7d02..d32755298fca 100644
->> --- a/Documentation/scheduler/sched-arch.rst
->> +++ b/Documentation/scheduler/sched-arch.rst
->> @@ -62,6 +62,31 @@ Your cpu_idle routines need to obey the following rules:
->>   arch/x86/kernel/process.c has examples of both polling and
->>   sleeping idle functions.
->>   
->> +CPU Avoid
->> +=========
->> +
->> +Under paravirt conditions it is possible to overcommit CPU resources.
->> +i.e sum of virtual CPU(vCPU) of all VM is greater than number of physical
->> +CPUs(pCPU). Under such conditions when all or many VM have high utilization,
->> +hypervisor won't be able to satisfy the requirement and has to context switch
->> +within or across VM. VM level context switch is more expensive compared to
->> +task context switch within the VM.
->> +
-> Sounds like VMs not well configured (or pCPUs not well partationed).
+* Reuse existing functionality from usb_endpoint_is_bulk_in()
+  and usb_endpoint_is_bulk_out() instead of keeping duplicate source code.
 
-No. That's how VMs under paravirtulized case configured as i understand.
-Correct me if i am wrong.
+* Omit two comment lines which became redundant with this refactoring.
 
-On powerpc, we have Shared Processor Logical partitions (SPLPAR) which allows overcommit.
-When other LPAR(VM) are idle, by having overcommit one could get more work done. This allows one
-to configure more VMs too. The said issue happens only when every/most VMs ask for
-CPU at the same time.
+The source code was transformed by using the Coccinelle software.
 
-> 
->> +In such cases it is better that VM's co-ordinate among themselves and ask for
->> +less CPU request by not using some of the vCPUs. Such vCPUs where workload
->> +can be avoided at the moment are called as "Avoid CPUs". Note that when the
->> +pCPU contention goes away, these vCPUs can be used again by the workload.
->> +
-> In the car cockpit scenario for example with type1 hypervisor, there is app
-> kicking watchdog bound to every vCPU, so no vCPU should be avoided.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
 
-I don't understand what is meant here. Any reference links? Also in such cases,
-arch shouldn't set any CPU as avoid. But it may not get this feature benefit.
+V2:
+Further change possibilities were taken better into account for
+the USB endpoint API with the help of Vincent Mailhol.
 
-> 
->> +Arch need to set/unset the vCPU as avoid in cpu_avoid_mask. When set, avoid
->> +the CPU and when unset, use it as usual.
->> +
->> +Scheduler will try to avoid those CPUs as much as it can.
->> +This is achived by
->> +1. Not selecting those CPU at wakeup.
->> +2. Push the task away from avoid CPU at tick.
->> +3. Not selecting avoid CPU at load balance.
->> +
->> +This works only for SCHED_RT and SCHED_NORMAL.
->>   
-> Sounds like forcing a pill down through Peter's throat because Steve's headache.
 
-I meant, this series till now address only RT and NORMAL. It could be made work for other classes too.
-But i didn't see a point.
+ drivers/net/can/usb/ucan.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-Since the mask is available, SCHED_EXT one could design their BPF hooks accordingly and SCHED_DL isn't designed to
-work under such conditions. I don't know any user/workload which deploys SCHED_DL in CPU over-commited cases.
+diff --git a/drivers/net/can/usb/ucan.c b/drivers/net/can/usb/ucan.c
+index 07406daf7c88..0935a9b540d6 100644
+=2D-- a/drivers/net/can/usb/ucan.c
++++ b/drivers/net/can/usb/ucan.c
+@@ -1351,19 +1351,11 @@ static int ucan_probe(struct usb_interface *intf,
+ 	out_ep_size =3D 0;
+ 	for (i =3D 0; i < iface_desc->desc.bNumEndpoints; i++) {
+ 		ep =3D &iface_desc->endpoint[i].desc;
+-
+-		if (((ep->bEndpointAddress & USB_ENDPOINT_DIR_MASK) !=3D 0) &&
+-		    ((ep->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) =3D=3D
+-		     USB_ENDPOINT_XFER_BULK)) {
+-			/* In Endpoint */
++		if (usb_endpoint_is_bulk_in(ep)) {
+ 			in_ep_addr =3D ep->bEndpointAddress;
+ 			in_ep_addr &=3D USB_ENDPOINT_NUMBER_MASK;
+ 			in_ep_size =3D le16_to_cpu(ep->wMaxPacketSize);
+-		} else if (((ep->bEndpointAddress & USB_ENDPOINT_DIR_MASK) =3D=3D
+-			    0) &&
+-			   ((ep->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) =3D=3D
+-			    USB_ENDPOINT_XFER_BULK)) {
+-			/* Out Endpoint */
++		} else if (usb_endpoint_is_bulk_out(ep)) {
+ 			out_ep_addr =3D ep->bEndpointAddress;
+ 			out_ep_addr &=3D USB_ENDPOINT_NUMBER_MASK;
+ 			out_ep_size =3D le16_to_cpu(ep->wMaxPacketSize);
+=2D-=20
+2.50.0
+
 
