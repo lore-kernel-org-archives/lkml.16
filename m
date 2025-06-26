@@ -1,110 +1,119 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BF92ECE80;
-	Thu, 26 Jun 2025 17:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C5B19B3EC;
+	Thu, 26 Jun 2025 17:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750959217; cv=none; b=Ai7/xfLJ+IjvdODNQktNoyYLdWqYdnS2zEQTP88KuOjttHrCw5WUneJddagLOYt54Q7I0C9gspo+L/ZT15v5n3Syz1XK0YoF5W/A6Cz2Jms/jw1XeWZoiK+ZlYHCK057T0hs9AukzQ+QmEUep/DV9lC4UNURkJSb7i80RUxBejM=
+	t=1750959261; cv=none; b=uLudhh4xwk7TtvFCBJSWRuK9r81gmYnbjxcIK0PP/x1RCu7KtCK+SAdc8tiZkkRP9ODJsn5COd2y1RocdXviXOiDhesGU4SXUBHf5yMjCiCDz0yS3C6zcehdyBPNDwfN8h+aUHyt/rarT4gnzTaxKBVLcOPmni/W5NLawYnpHeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750959217; c=relaxed/simple;
-	bh=AQiq4z0xA88o3HSFvbhcfQRTGqMXtRqE6hPl7TrS0QA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FMH58I1Zitp19xlvt5tCwhP3Fq3ODoT0li+P96EetrfSFLcD/czC4l62xjvyX7j2dCPr/gy6WbqNIB9VvvXErJETJWlrhhGPR9oY1ddWqmPsxcCjXewhTgnf4iD5aWhij3QEMeSOS4gOn/n0pOGOgqYyhs29DvHOe8f99HYXDMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a52VXkw3; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750959261; c=relaxed/simple;
+	bh=zEQS1ug5v1lforkO+zqWpi+COmj73DWRUbk05YFmnSE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VCan8vc1ztQ5YCcQuePoDHtd54E9JK1TNheRp5pXptkh0fZ6bV+/ogK7mEqLV1IwC4Drk68Pf14hMA52oS8nGZrRqeyOx9seDsoDRfGYW7xNcJE19AtIr5nzM3xxD6P4AL8er1hhgCnpFYOz6MbJwq8TsxJgod14BMZ4IVt9pfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nVbMnrMA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a52VXkw3"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-747c2cc3419so1219803b3a.2;
-        Thu, 26 Jun 2025 10:33:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750959214; x=1751564014; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RO2tN+aSoxvaSEMRq7XEvMbHrJsjG9xLguEP52powFc=;
-        b=a52VXkw3rDIYQbIuhbx3mjYgEx/2JqZWgxiLpUxW9MXxkB7nDQi4j+sbc5Mu4GI4rs
-         jbleitE9No5BhliykIocfNnhNbcdjvaPIkjUzRQugwpVvVdjnzbJyLTefdU9Qt2Z6CYJ
-         e6D6EFCEyof3bCK8gssCBXQK9TXwXxVDf5nhDnwipgDOTMFTKVn/ru0EMSjSm+qNG+2F
-         mjP+UwWWFp6uf7SgPfgiDWi4ahDlKhI8snByPTeFA76HFnz2kZXAhhjRq3sEMdMTu6J9
-         LbJ+DHXLV5BODWMx1djLzADwSDJe317CKzEFtkuaG9252itHxZOCMKuzZborfvhkJyjL
-         ZGyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750959214; x=1751564014;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RO2tN+aSoxvaSEMRq7XEvMbHrJsjG9xLguEP52powFc=;
-        b=cwPB2tMgv98fh4AscedMxiAvTb+XTNSZcfmKA0s9DLRsGg2xHAyYetSbvNWRckB4gF
-         eiEsePxW8xqGb1ZIH1SnDYp0pbHggDDSDEkvrqBx6DNNMPbVkk5E2O44J4niCECQZGhh
-         wMVtTlcjTp5V+ieTyEzOXDYNUe4R/byJwnUXjOsbGx5x2O7nHmzXGImtnPyutRm8iKPg
-         GqVJBXo9ziSSmgDo/ewYhnzXNxKq7IfFWUXsjkRIUjfsFnwH2dBV14WtTEidhljmylGC
-         Ot2nxi6sK4ZbeVtDlcUwj8HcKC3aeYzaHZFTEjxW5Jp6yP9CaFS5bjxMn6x+bYhzXB+b
-         r5Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCV8KwrcUzgEbF8iZ391wJPDpEp+J/u/10bJuxJoWDqz7C1En/asxJ0M06W1m23RQDJz/SI7/Y4PlRpT43w=@vger.kernel.org, AJvYcCX7T4UZWt1BWJkOvmJIlsXIHBTBfnutgEbmCRuNc6DH1XnhscJzfKz2GjQVoB2sqQ9n4d8MdAEbGEG471c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1lFwmQvsJyAFVJdNzn1BTzYUp9iRDfTat7clyf+fcLBC227hK
-	heHRBaAT3SvjM+3/RBiV85NSamYN0KNeygL76EFRD263HhpKR19/zYLC
-X-Gm-Gg: ASbGncs1kAqfLocxFDn9JpVAKFeANfyWF5lSnLYj9bZ71f9qTgxKMaMCCmJwMzYVvuN
-	fPQBQMR+U8Oi2gDZXDSpvYjDpdb6xNpgJfXCcuQhs4qIlWZpG+84OK58UXiVOXfYKOBYECAt/3e
-	uDHiktpMRpCQzMOjK1jO5WXDcqPFnwUS3tz9SOTa9pbqTAY8p5JhMMGoUwJq3yNxDNpDJUhj1sM
-	n+D183jwB66YU50SYbtdF2H/B+ZFIOPDQmFIQnMVNJvw7IxmlCDiDinvgUPSDdkrGILcC3D66gW
-	sMVuUUg34ySR+tsbtBEr1AOpAqUioG05xKlrpngqVbmh1Wj8tlGbs1fybr0/Y/tzlA==
-X-Google-Smtp-Source: AGHT+IG1DAgBupnSqQgcHCQfLJdAyinWnaEnkp06DOFnaLcpFpHJqPABegrTjg5EqIcIrnhafsbaBQ==
-X-Received: by 2002:a05:6a21:170f:b0:21f:54e0:b09a with SMTP id adf61e73a8af0-2207f1bb117mr13924042637.15.1750959214258;
-        Thu, 26 Jun 2025 10:33:34 -0700 (PDT)
-Received: from icarus.. ([45.64.160.138])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34c4472eafsm2172155a12.53.2025.06.26.10.33.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 10:33:33 -0700 (PDT)
-From: Pratibimba Khadka <pratibimbakhadka@gmail.com>
-To: mchehab@kernel.org
-Cc: Pratibimba Khadka <pratibimbakhadka@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)),
-	linux-staging@lists.linux.dev (open list:STAGING SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] staging: media: av7110: Replace msleep() with usleep_range() in tuner function
-Date: Thu, 26 Jun 2025 23:17:25 +0545
-Message-ID: <20250626173229.10967-1-pratibimbakhadka@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nVbMnrMA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B4E7C4CEEB;
+	Thu, 26 Jun 2025 17:34:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750959260;
+	bh=zEQS1ug5v1lforkO+zqWpi+COmj73DWRUbk05YFmnSE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nVbMnrMACT4Kqkly4XlcOPUhXlk1+vFfwFSNJSf4aHKapL2d0Za6G04NXIkINHlGg
+	 JmRT73lRGrYidZyPwg2a5BiUwpqMJQOSq47chG7tYzrBF7WDOlsyMwJZWHT8YYyhwY
+	 NGodrhrOS4pxv2QPFE4JxUucSNrEwj4RN3qlHNkThHAvtrURJGkuEwhUXJsBYGyogG
+	 1+pHohn2v/Wz6QvFt+KZOwsHNrVNw24M7rZH6dAUdmU46HgLmlw1Id8z+R8N/YSrTt
+	 xXHB171fRZMN1kZg+1umA0k9Gih6AXN6+fMPvfuaM1nLDDSibezkW3ZGM3W8n4PALM
+	 4qfDWd+FsidVg==
+Date: Thu, 26 Jun 2025 10:34:19 -0700
+From: Vinod Koul <vkoul@kernel.org>
+To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+Cc: yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev,
+	sanyog.r.kale@intel.com, ~lkcamp/patches@lists.sr.ht,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] soundwire: debugfs: move debug statement outside of
+ error handling
+Message-ID: <aF2Em76RGWVpJfg-@vaman>
+References: <20250621191522.14415-1-rodrigo.gobbi.7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250621191522.14415-1-rodrigo.gobbi.7@gmail.com>
 
-Replace msleep(10) with usleep_range(10000, 12000) in the PLL lock
-waiting loop of nexusca_stv0297_tuner_set_params().
+On 21-06-25, 16:09, Rodrigo Gobbi wrote:
+> The start_t and finish_t variables are not properly initialized
+> if errors happens over request_firmware actions.
+> This was also detected by smatch:
+> 
+> drivers/soundwire/debugfs.c:301 cmd_go() error: uninitialized symbol 'finish_t'.
+> drivers/soundwire/debugfs.c:301 cmd_go() error: uninitialized symbol 'start_t'.
+> 
+> Initialize those variables and move the debug statement outside of
+> firmware error handling.
+> 
+> Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/linux-sound/0db6d0bf-7bac-43a7-b624-a00d3d2bf829@stanley.mountain/
+> Fixes: bb5cb09eedce ("soundwire: debugfs: add interface for BPT/BRA transfers")
+> ---
+> @Vinod Koul, tks for the suggestion. I`ve kept the ktime_t initialization, after moving
+> the debug statement, they are not actually needed, but I think there is no harm to keep that.
+> Tks and regards.
 
-usleep_range() is preferred over msleep() for short delays (< 20ms) as
-it provides better accuracy and allows the scheduler flexibility for
-power management optimizations. The 10-12ms range maintains the same
-timing behavior while giving the kernel scheduler room to optimize.
+Thanks, but I guess lets avoid superfluous initialization. we should
+drop this as well
 
-This change improves timing precision during the PLL lock detection
-phase without affecting the overall functionality of the tuner
-configuration process.
+> 
+> Changelog:
+> v2: moving debug statement
+> v1: https://lore.kernel.org/linux-sound/20250617015230.54981-1-rodrigo.gobbi.7@gmail.com/#t
+> ---
+>  drivers/soundwire/debugfs.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/soundwire/debugfs.c b/drivers/soundwire/debugfs.c
+> index 3099ea074f10..42d2aba285f5 100644
+> --- a/drivers/soundwire/debugfs.c
+> +++ b/drivers/soundwire/debugfs.c
+> @@ -237,8 +237,8 @@ static int cmd_go(void *data, u64 value)
+>  {
+>  	const struct firmware *fw = NULL;
+>  	struct sdw_slave *slave = data;
+> -	ktime_t start_t;
+> -	ktime_t finish_t;
+> +	ktime_t start_t = 0;
+> +	ktime_t finish_t = 0;
+>  	int ret;
+>  
+>  	if (value != 1)
+> @@ -291,6 +291,9 @@ static int cmd_go(void *data, u64 value)
+>  
+>  	finish_t = ktime_get();
+>  
+> +	dev_dbg(&slave->dev, "command completed, num_byte %zu status %d, time %lld ms\n",
+> +		num_bytes, ret, div_u64(finish_t - start_t, NSEC_PER_MSEC));
+> +
+>  out:
+>  	if (fw)
+>  		release_firmware(fw);
+> @@ -298,9 +301,6 @@ static int cmd_go(void *data, u64 value)
+>  	pm_runtime_mark_last_busy(&slave->dev);
+>  	pm_runtime_put(&slave->dev);
+>  
+> -	dev_dbg(&slave->dev, "command completed, num_byte %zu status %d, time %lld ms\n",
+> -		num_bytes, ret, div_u64(finish_t - start_t, NSEC_PER_MSEC));
+> -
+>  	return ret;
+>  }
+>  DEFINE_DEBUGFS_ATTRIBUTE(cmd_go_fops, NULL,
+> -- 
+> 2.49.0
 
-Signed-off-by: Pratibimba Khadka <pratibimbakhadka@gmail.com>
----
- drivers/staging/media/av7110/av7110.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/media/av7110/av7110.c b/drivers/staging/media/av7110/av7110.c
-index bc9a2a40afcb..7f6c610579c8 100644
---- a/drivers/staging/media/av7110/av7110.c
-+++ b/drivers/staging/media/av7110/av7110.c
-@@ -1827,7 +1827,7 @@ static int nexusca_stv0297_tuner_set_params(struct dvb_frontend *fe)
- 		if (i2c_transfer(&av7110->i2c_adap, &readmsg, 1) == 1)
- 			if (data[0] & 0x40)
- 				break;
--		msleep(10);
-+		usleep_range(10000, 12000);
- 	}
- 
- 	return 0;
 -- 
-2.49.0
-
+~Vinod
