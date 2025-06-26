@@ -1,131 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8B32CCA9;
-	Thu, 26 Jun 2025 19:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750965333; cv=none; b=K7nzbksOEzXns53iYKQoAILyuZxrfF0rxGExriPMljKUUP50e5JueWW4ja7BxqOj2OvzjtLZ7BGPiJWqL825itFZzCaSd8z/1rG3E91otqwnXx5Tj84H+erA6OJ+RkLbpNVfdU/U7+h48xiBdl1mJ4u4UwARrbZHxlkgWqf4Ih8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750965333; c=relaxed/simple;
-	bh=GVTVZKAcmUFrxnDCM5D1GDi3JRVk55utZxoEDR6QU+8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nbooe41m8NeGu5hOkAQd1uUQZSqPwM9nYhHW+ySzxkCZ1oV5R1v/Vuq46JJ7g/kSxRJjcy3MeRtY+yQAakQjCQhZPXepxiknYGq2tv6i0NeXeJ31xbfaiRADdUxElpmJtcz9Jau7DPnINkwGUy9dm0UoV8WUvDtxFgzgePuDdK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BdeRN5Hl; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119201B0F33;
+	Thu, 26 Jun 2025 19:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750965365; cv=fail; b=RwvOU+VYtDdBwCe4tcbObFqeGSpF+qtGkYZDX0MzC3Xm9yJZdt3x+5wPUrNrWDlYKfntS+Ve+DCwvRLj/wq6eQKm4fV3SoUEvKpYTWNCQCu9HpVaK5Nq6cOj/VXweeaqV5gWNBKwwrFS4FfzcT/U703hvu9GW7Tnj9QkK5kJT6g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750965365; c=relaxed/simple;
+	bh=6vfQ6DImhvsRbErmGbKkdmgE40ezSb+6WwuGZvzuo28=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=XGLLoxh2dZrhde8Lz7Px5xRp723WV9iczbBp4hutm5Uzf9+143gWl3v64McqxnmsvWx6WI67PlOu1DoAtOspemzbtEes26LAkHOuxRwidH0wgssr5wdJio7BOzXDAGamJCn3gn9mLMfP937smf0wFy+7PeM5+gsODtmXDaVM7sY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XJBgJ/KB; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BdeRN5Hl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86560C4AF09;
-	Thu, 26 Jun 2025 19:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750965332;
-	bh=GVTVZKAcmUFrxnDCM5D1GDi3JRVk55utZxoEDR6QU+8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BdeRN5Hl8XOH+v0XpP96wSL+JU4vbDSfi0H1r3RDkvdoC6WAB+/pUvVt94HnLJ9dP
-	 MDTs4oYtq4/76SEN3QF5RSfRt2O3XuwcJkO3eX6PezWoAvTTK5LtKv59oiu4gbU3Bg
-	 OD4I9rKo1/EoEP4ZjGY5a2yZHi8pMH75nQlwVjzbm4pP4SRXmePRPPCyUfI1shHmYG
-	 N8BdqTadbVA+aIrB6WyzpBltNRNLKKjHn3oAJOZYid7WxIlyPjs16uAios+mBTUnOF
-	 QvZYpvqgG1meoGDjJygywTuM5/WPNeaXMsxXruS5qWcLqCLNPj1RNesgyurK6GvFO7
-	 KH4PP6RIi78WA==
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2d09d495c6cso379891fac.3;
-        Thu, 26 Jun 2025 12:15:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU+D/1cnWS6T93Hrld5Us1G3No86VNLz4Dmm5h0Arz6ccroahPcfKKKS3GSqdp6HTEw9wa+JuUA6b/y9kc=@vger.kernel.org, AJvYcCVEZXGhPyKcDArH6QPtdO0+PoEqUnaUcSiKVpxtv9/Bgp6YoeQzQEG/g6XyEaQKeucE4/zvUrz8@vger.kernel.org, AJvYcCW9HBTRkhrobq5xFpO5CXkWByjj/7Pi/qIxS7a4jEhESjGpajHrHvK/AjeRYpDNHvUiqR/hMZbj+qw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNbT7EvJerfgsthntmExK7JJMB0yPlKR4YN5yI+LLTFxEQsm/0
-	X/sPK+q8FtttefbXKso1v/6cf1zFhrENlXw7A+dusmIYXX6pJ+lvDGaCehQkIjqia7YdIawsYAi
-	0HndHKtHefwAHOu8XvUDp2fZC/VPGdx8=
-X-Google-Smtp-Source: AGHT+IHF9pqM5Ydclvi+iFU8TmSmeOmdqu4oVPUqgHbDY7h2PY1K/BE4yM1Tsg43GYzwGgNnIRIujkcAM4w7hZ2UsvQ=
-X-Received: by 2002:a05:6870:3511:b0:2cc:3d66:b6ea with SMTP id
- 586e51a60fabf-2efed795392mr158783fac.34.1750965331752; Thu, 26 Jun 2025
- 12:15:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XJBgJ/KB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750965362; x=1782501362;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=6vfQ6DImhvsRbErmGbKkdmgE40ezSb+6WwuGZvzuo28=;
+  b=XJBgJ/KB+gC4xo385XkKWdG18tRxcr91z/7MVOGn0Bw9isx99sB65nCl
+   8AyNtK710CtizHyCoaQloEnW0437O4LfzyEFhLwHsJ7CRmWePW7BrXG5I
+   aarUG63R8CvmeygY3aD0NMEodphZceC+YjIe4dUMCIrVSUU5CSFGHjKDK
+   HJNERm2teKNAZ+nsT0Zo+JuS5rehRjhUVeOMe01/YQ3VzvTzeee1Rw5VK
+   stj0QibCiDqW8SqCloKjXmU/NSwJCRYqkXPDHjVLaK9iYxfFe3/qX/OOu
+   nz0+2zt9A1XzbErGCviS9mx0LYNWmXlFQPPxEOYjSE8JAG/8fvpDP5Ejc
+   Q==;
+X-CSE-ConnectionGUID: KE3qXVhPQ4+Mup/IgESJxw==
+X-CSE-MsgGUID: T1wCFk4/RFOKztMOReTi7g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53239553"
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="53239553"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 12:16:02 -0700
+X-CSE-ConnectionGUID: gP1MridIQY6AkVMSSkkn2g==
+X-CSE-MsgGUID: ugtNj+dtQ+OgFVy0gfplJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="156630001"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 12:16:01 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 26 Jun 2025 12:16:00 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Thu, 26 Jun 2025 12:16:00 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (40.107.212.55)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 26 Jun 2025 12:16:00 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sqvZdd23EihYtC7XAl1UHftrAoOm4J4ZQUk1/Rn6OzpQsXgy4VLyWaQ7Z0nh4mxRXdGsX11cilTa3hH7xcCQ7jSNMDoXH0Wtn1/gKjzMzBm4Rr9nzpcgwOOX5e7daC12SCkSQUJDQD6SQ1HcVNysvX2/+oYWtOkT0O6WJGE4+jgD+I2BP5XkiOLDsfGyqXBbrFvxlyAlRI97j724QpFhkEHS0RRGUC54uWDNfZgLEzE+SdiKYKVmmlvnYZzoTCBSmSonr+zKf2EhoMXz2FqpZVeHyCyU7RfSMoJVU4du7cHhMoytFYVT3fhEMJH2ovxkvjq63S44eQFlJT/OEEK4GA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BFs7XtJ5pAN0qxq03utxvAQrd7o/KBjH2IJEvJUNOEY=;
+ b=NlQXGr6nLUrcHLF0C6u1wDhUSw2PBQb8rSD6ItJoIlwh8Qw5wMLiUJencbMpi6KsWDEjyNt8rv/P42KDWvqw39WwcR/XTMQSpYDcN+HbHMZOH+OrSLqtJ7Lb4jLeI5esTj9KTB7XZnew5BtBwzPoyRP5dwZZ+yqQQk990q+tYukFJvDAW/pNKF2NjHH1COsW5PIdXOAe8SZtGApohuveS0UkPVTbfn/hs6vVKYYce6FJ2w60lNLqx9wvqf3brAlBq7CnkbUBCX5VZhtWzhQFXMFMHD4lOJua9V/bXxT6uYFfdZSExnMpI9mmvMB0AsXtTb6klRwYTu43hoxCHNa+6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
+ by DM4PR11MB6503.namprd11.prod.outlook.com (2603:10b6:8:8c::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8857.29; Thu, 26 Jun 2025 19:15:29 +0000
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44%5]) with mapi id 15.20.8857.022; Thu, 26 Jun 2025
+ 19:15:29 +0000
+Date: Thu, 26 Jun 2025 14:15:26 -0500
+From: Lucas De Marchi <lucas.demarchi@intel.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+CC: Stephen Rothwell <sfr@canb.auug.org.au>, Linux Next Mailing List
+	<linux-next@vger.kernel.org>, Linux Kernel Mailing List
+	<linux-kernel@vger.kernel.org>, Linux DRI Development
+	<dri-devel@lists.freedesktop.org>, <intel-gfx@lists.freedesktop.org>,
+	<intel-xe@lists.freedesktop.org>
+Subject: Re: linux-next: Tree for Jun 25
+ (drivers/gpu/drm/{i915,xe}/intel_pcode.o)
+Message-ID: <v7cozjpsggel5uzg5krdork42k4tqnefn5tqs6lxdjqvbnyzp2@65nioys2ix64>
+References: <20250625172220.2b6aeff8@canb.auug.org.au>
+ <3667a992-a24b-4e49-aab2-5ca73f2c0a56@infradead.org>
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <3667a992-a24b-4e49-aab2-5ca73f2c0a56@infradead.org>
+X-ClientProxiedBy: SJ0PR05CA0001.namprd05.prod.outlook.com
+ (2603:10b6:a03:33b::6) To CY5PR11MB6139.namprd11.prod.outlook.com
+ (2603:10b6:930:29::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619071340.384782-1-rui.zhang@intel.com>
-In-Reply-To: <20250619071340.384782-1-rui.zhang@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 26 Jun 2025 21:15:19 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hfO6eSbwYo2iD4JuqHth0AUQY3cG2109Yhyz-=RNaVWQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzJ7BuhzTdUQAYlDXdtcJzEQvwlFR3N2p_d41kJUWcGANG9wZIpsJco93c
-Message-ID: <CAJZ5v0hfO6eSbwYo2iD4JuqHth0AUQY3cG2109Yhyz-=RNaVWQ@mail.gmail.com>
-Subject: Re: [PATCH V2] powercap: intel_rapl: Do not change CLAMPING bit if
- ENABLE bit cannot be changed
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: rafael.j.wysocki@intel.com, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, stable@vger.kernel.org, 
-	srinivas.pandruvada@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|DM4PR11MB6503:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1db2e2b0-0856-4287-baaf-08ddb4e5d038
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?P3Kj8s18aUqxGgeDba8Z4IQLKoGhzNrxNZVMAZWaI4kusM/6jERGxhooRmnf?=
+ =?us-ascii?Q?Y9gE8OjT0kUGsrE0LSnA9tHBEbibeSYuQthGQKtlc+EnHPnzhZYos71RToow?=
+ =?us-ascii?Q?q4GxvZ41XWdSx6QKQmh+pA7hhSfjlLp4yYxBXTdlqZLZF2+BgwVXLrcw00FB?=
+ =?us-ascii?Q?WhMZ1OsJgSHB0+3tYHR+EN9xQfCYBDuiNcW+fJ7LKEdnln6nQHlK906WUin8?=
+ =?us-ascii?Q?dxdzmYrt442M2P44FOayhaNDQvKhcSIYQASirtERaI/6msvgOExBqmz/pRQv?=
+ =?us-ascii?Q?+kXUd1wVtOL1n2CRgqfn1jIwN3Jus+a/UhNBfWZuYEkPQy5f4tNPFDpVNNuk?=
+ =?us-ascii?Q?X+fGkxY+lcuOoahZy5o4ufV9wxzNI5U5e5pOUaSqNRGLJ//mMTNu+YQnm/Mg?=
+ =?us-ascii?Q?2aAFMXMCsHk26WOqIpqa2fTrxe3Cqtgkl+lh/GXU1DLXi3QkPxwLJtQYo7Fv?=
+ =?us-ascii?Q?xQWCWI55PhWGvItVgDhuI0KVQZpWxmTa+2+Y7izF8S69ClBhp3mLuq7EDn/q?=
+ =?us-ascii?Q?YtVOXVujAtvd4LkITFZxK93lri+QcT+bYMzfffpyJSnVaZA+ypI2k3sm8hZv?=
+ =?us-ascii?Q?gkvgR87VFYLmB4I/lJAu5A2mG8efIdj4LZQDyqIdk0rSTvLdSyZidmh7oXU4?=
+ =?us-ascii?Q?GQNkn3CEr57IwaCzs36H0JYGaAenFbsxNub+WT1yn7KvKtTpRdNpu+zgYMuI?=
+ =?us-ascii?Q?frfZrGSEMjPmSek30sGCvHxpx6wKdmv4KAZPg33cA2x9+XSo7U2sbCk6JnjN?=
+ =?us-ascii?Q?iyLeDJIf+ajb4nT55Vb9LHs7//79qvZ0zK5GCvnvXTc+9zGLZ8FMrtlFe7x8?=
+ =?us-ascii?Q?e+185hKvxViZ/BWrd1nccpX9mNJpXCDVnKDRQGONJvZ71TBuSrM1OfSSULLb?=
+ =?us-ascii?Q?M5TEviGl3TIYrP6HozasozA5DWcon2iq4RKhG2AJILWWyBTOqtE/N7ozS96F?=
+ =?us-ascii?Q?qQraBl9bJRMaJTKULdxd+WnnpcZbr7KdxuR9UN8RadrttrZRZu4QlY5GiMHv?=
+ =?us-ascii?Q?vm2suMdlPcCIxRnEm70LnDZrSn79auIBODk329rLzO5mSJOkCieDrLauG+UD?=
+ =?us-ascii?Q?jIe4KVJGjIgG4fzufY+VnYnJPBH5XsxoW4L1OomGHnn1R74QNYRwHPR4Y3cX?=
+ =?us-ascii?Q?bbymBVsAr/SCWnXxYsf41/XJHTLC20GDRUUIG2s3izShltyyzEzT3Lu9Hm/e?=
+ =?us-ascii?Q?BOOrZs7vAQb3rVSifiKjX9AdjKa1xO39f0/0grty74OgdiQnkA4HsuQFMJMN?=
+ =?us-ascii?Q?VuAw3hyhf1mfuHHnsfxSFur01bpXucBYMIHCNKW2qLDRp68S5qqBGBtMRb+S?=
+ =?us-ascii?Q?8SabJOTSfjq3SJfU7cggQ0zL96FCsFfHEZqfLrWv0FnkMEcSCM2JZdqAK0lt?=
+ =?us-ascii?Q?ktb5vo01v/kRqAqYj7SXiRxCK2O/ksBsn9JpmDqwRff3Q5n7sIA7BzHbzjkR?=
+ =?us-ascii?Q?Q/lJpGriHm4=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?roSqW9Kxn1Zh4c6cqMAsW+gPLccZkOPrWQB+ADUmsgnfs2TjOtH/7NlTiCHI?=
+ =?us-ascii?Q?GQhEScuQ3qjp0zFLWvoXWyNvdeFfYywYuItubnijxNce6g2wdFsuvjWDDbJ3?=
+ =?us-ascii?Q?a2Svb3l4RWas37RVxHh1aLC8fIj9ra0/xk0ZoKOlODnWljvST2eMWlIsrclO?=
+ =?us-ascii?Q?2SkkcuL/LFryy/c/WxEc6A6Ag0mnjLsJ2UdZt+qiD5sSHH++ZCSUTwan7F1i?=
+ =?us-ascii?Q?KIQE5xSFwr5cioKG47YrEGKhtDTGOGzBpTxh2TMqjHjWxmPYcKbxlgO+114/?=
+ =?us-ascii?Q?3+B3QDDTRL9fPr0Pr1SrTOzq+Ra165Wl2oXXOEOYcUB/1rIrMy6W8xovNWfU?=
+ =?us-ascii?Q?dYpEKFNN55peARl2xlg42scuCA33pMDVMDVEfRmnoInhng5/g6B52qSUbUER?=
+ =?us-ascii?Q?Q4chDJCmAiurVeku3z33IhkKJUs0njFaYyGaMEXYwfuyGLNsny1bJ4gIB5NJ?=
+ =?us-ascii?Q?Uw8fSabFrrODiL2X3+RtxpO3FcI4PeczDIhppO+d1A5E+ve0AdQ6QcTKffYY?=
+ =?us-ascii?Q?ocs0k1oAC+z6BNT549iGNyw7DQUsfw5R2x4atlfbpiEOFLUbADFnbSHpRmhg?=
+ =?us-ascii?Q?n/UWJ4vd+8ZLJzeAnmB5mmEI1F7G//5IMbgFH8d48nqpDrrX5Eg7O3nsZU7y?=
+ =?us-ascii?Q?E3OVv6qc+CL39EY9z4EcsR/fKKHzjctqfN7aB8JpRKuOLkop0DQmJjygYGdF?=
+ =?us-ascii?Q?B/LmIbuqjjgfSChkF3+UUjDuCHgwgGTGtGK1R0FFWS6m0LrA0vsvpyjq7tn8?=
+ =?us-ascii?Q?Zsrc7mzw9AhCWvB0KjIU9PajmTcWUuSK6a5puu8bcINn4uBFTrFVwycod1ti?=
+ =?us-ascii?Q?hexcMzjfhRMpFXNnwxczgmuRqL4/KBEYsETnn6vHsHiKiGQ0NkAuBtr/1At1?=
+ =?us-ascii?Q?cSySGzbNQ/iJ/t4VZhju88ahyV7GXvoRFC35QMgsPQcGU3N/VhBhm5hV/lw1?=
+ =?us-ascii?Q?lynwhTTSoHeo1Nx46yozS8GbRZIS5fDEt1VeuYWRyI3thKY3iQoBRs+Lv97A?=
+ =?us-ascii?Q?cwj0hdaIeVPQr0ozCs9Vr9/wfnnuZaWtEnhzYiOKgjsOeBK7Gqmp3q+Kr1pq?=
+ =?us-ascii?Q?/hVW8EsEwBqbyN2+RCM0HM2cdKVxzt4vZvO5N4ZkdJpqDQDNZKB2IzJ10Gxy?=
+ =?us-ascii?Q?c+qOFVOkylMqaK7gbJk4KtIYBRfkLyhEk3Bzh7o7N0cMceHNi8JHHQXu7lsn?=
+ =?us-ascii?Q?6mDfI8IkZaIOBC3QxRdCjIhB/EgAk4oTDdZDPt78626BF7cJEDC+pAvsdnDy?=
+ =?us-ascii?Q?wIOhNhJrakDLe7wwgqYKzjzFo+7iXf4Hy7/Jk7eq4+MHTHSNzdwpkouCwqeK?=
+ =?us-ascii?Q?wsCZuFX4cOzUE1NpdcNUaRH/stvmHAWymqTRWJ+2iFeUy7I5s18YbBqpO8zp?=
+ =?us-ascii?Q?chfJhvGRMwMZiJ8hJMAzKdBba7wQpYM4mD6S2KnUeY2y/rtmcYz9hf42Ehxc?=
+ =?us-ascii?Q?+OsPTsLBcDivsV2VPguFAlOMbGYd3+fT/0M8eOof9cFl8MhLXke7VBpgFnQm?=
+ =?us-ascii?Q?ajDZGR63KLdw1PqElydL8oaN1oSdjpgFoFseNYO67nn1xCRhJWnrEGeBAE/Q?=
+ =?us-ascii?Q?CBbKACivr/6wVQegrDHUT83LLgdgjwXFMpyRjYFJ6pZ0oRcVgw/okpFRuq35?=
+ =?us-ascii?Q?4g=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1db2e2b0-0856-4287-baaf-08ddb4e5d038
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 19:15:29.3902
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ANR5jBXdwzEsRDb1//RwvtVZ4r7PAStmNdGmxQKm4OrMfFL7fEIr++WUNfPcQ0Rjnfk1HELV923mAzEVvwSt8L/vA5z2APG8zoBh+pSZIDA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6503
+X-OriginatorOrg: intel.com
 
-On Thu, Jun 19, 2025 at 9:13=E2=80=AFAM Zhang Rui <rui.zhang@intel.com> wro=
-te:
+On Wed, Jun 25, 2025 at 08:57:40PM -0700, Randy Dunlap wrote:
 >
-> PL1 cannot be disabled on some platforms. The ENABLE bit is still set
-> after software clears it. This behavior leads to a scenario where, upon
-> user request to disable the Power Limit through the powercap sysfs, the
-> ENABLE bit remains set while the CLAMPING bit is inadvertently cleared.
 >
-> According to the Intel Software Developer's Manual, the CLAMPING bit,
-> "When set, allows the processor to go below the OS requested P states in
-> order to maintain the power below specified Platform Power Limit value."
+>On 6/25/25 12:22 AM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Changes since 20250624:
+>>
 >
-> Thus this means the system may operate at higher power levels than
-> intended on such platforms.
+>on i386, when both CONFIG_DRM_XE=y
+>and CONFIG_DRM_I915=y:
 >
-> Enhance the code to check ENABLE bit after writing to it, and stop
-> further processing if ENABLE bit cannot be changed.
->
-> Cc: stable@vger.kernel.org
-> Reported-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Fixes: 2d281d8196e3 ("PowerCap: Introduce Intel RAPL power capping driver=
-")
-> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> ---
-> Changes since V1:
-> - Add Fixes tag
-> - CC stable kernel
-> ---
->  drivers/powercap/intel_rapl_common.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/inte=
-l_rapl_common.c
-> index e3be40adc0d7..602f540cbe15 100644
-> --- a/drivers/powercap/intel_rapl_common.c
-> +++ b/drivers/powercap/intel_rapl_common.c
-> @@ -341,12 +341,27 @@ static int set_domain_enable(struct powercap_zone *=
-power_zone, bool mode)
->  {
->         struct rapl_domain *rd =3D power_zone_to_rapl_domain(power_zone);
->         struct rapl_defaults *defaults =3D get_defaults(rd->rp);
-> +       u64 val;
->         int ret;
->
->         cpus_read_lock();
->         ret =3D rapl_write_pl_data(rd, POWER_LIMIT1, PL_ENABLE, mode);
-> -       if (!ret && defaults->set_floor_freq)
-> +       if (ret)
-> +               goto end;
-> +
-> +       ret =3D rapl_read_pl_data(rd, POWER_LIMIT1, PL_ENABLE, false, &va=
-l);
-> +       if (ret)
-> +               goto end;
-> +
-> +       if (mode !=3D val) {
-> +               pr_debug("%s cannot be %s\n", power_zone->name, mode ? "e=
-nabled" : "disabled");
-> +               goto end;
-> +       }
-> +
-> +       if (defaults->set_floor_freq)
->                 defaults->set_floor_freq(rd, mode);
-> +
-> +end:
->         cpus_read_unlock();
->
->         return ret;
-> --
+>ld: drivers/gpu/drm/xe/xe_pcode.o: in function `intel_pcode_read':
+>xe_pcode.c:(.text+0x7d0): multiple definition of `intel_pcode_read'; drivers/gpu/drm/i915/intel_pcode.o:intel_pcode.c:(.text+0x990): first defined here
+>ld: drivers/gpu/drm/xe/xe_pcode.o: in function `intel_pcode_write_timeout':
+>xe_pcode.c:(.text+0x850): multiple definition of `intel_pcode_write_timeout'; drivers/gpu/drm/i915/intel_pcode.o:intel_pcode.c:(.text+0x9b0): first defined here
+>ld: drivers/gpu/drm/xe/xe_pcode.o: in function `intel_pcode_request':
+>xe_pcode.c:(.text+0x8f0): multiple definition of `intel_pcode_request'; drivers/gpu/drm/i915/intel_pcode.o:intel_pcode.c:(.text+0x9d0): first defined here
 
-Applied as 6.16-rc material, thanks!
+not exclusive to i386... the pcode part used to be guarded by
+CONFIG_DRM_XE_DISPLAY, but that is broken now. Possible fix discussed
+in https://lore.kernel.org/intel-xe/gbisrh7ep2gn2fxv7xz4g4sy75qjpmcr5yqdx5atlab2oxevlx@j3zwx3k4o4x4/
+
+Lucas De Marchi
+
+
+>
+>
+>-- 
+>~Randy
+>
