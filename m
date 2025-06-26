@@ -1,101 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9D119D06A;
-	Thu, 26 Jun 2025 21:19:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F21019D06A;
+	Thu, 26 Jun 2025 21:20:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750972758; cv=none; b=q6/RqvBao/iB0lpv14h1LDVCAKF1qLbVxFmceEbNzxshFyHWG46RWzzQEziS6qicjQnXNv02BEJCBGUjTrsBRkA5NpLfx4+wNGVDaZlNAKeh+Wfv3nTQi6SY4CYfs9MvtgtD7I0XQzch/4wjJwYQisyej6P/ajxWL9QP1L6vFIE=
+	t=1750972827; cv=none; b=CBWVKeBwDla/PlVCjP5q/3hZto5ITFC4tzcswO34qO3pJMtWFnoKiyln7IUCkKUOGSaztgzFbuJaduVs7R2lCtB30O6LVJyKhHp7BWhKozRuyq9NCugd9ZzLC4ipv0yxa1CXAlVijA6Tgc8bhLYHqqOS4252N7cntQBXUMAhZwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750972758; c=relaxed/simple;
-	bh=28uNc/vEFpqvghgBWV99ylJqmaORBokqPOIAZlT5Edg=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=tuT8ZMo4cy5YDUXyk92dx/FxWZZys3v6PcuTU/2uawxkhQtMs0d3Lzi1CZtPbdKVdB+/7sEUpSjEVWKsNtz3shd+chsdAw+16yKdj8xJ2+O9tT5l+OWDX6K3TGvccBLTN/ugweROncpo7w6P3jMG3b5vB/mU648BpXycXamdMOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bbF9XJlu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750972827; c=relaxed/simple;
+	bh=OHrl1UV24sECLcdoKKUjl/MCEiD+j72S/KlN+z+3AjI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DBG22lQhgrRuzkhpHnyaTGNPpoVQT4ZtqY7p/LTz2yz5UwJQfOucqePmnB2Hk25fbTfy4IfXJFyGlIvuFq+eGnVw459S01RRPN0Ec7SvJibOHHkT/rV8OacV25vB88mIkJr2rjB7meamtQlwdqErxl1yXA7ggoAfqgZa+SVO1qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MpFWpcNv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bbF9XJlu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B9E8C4CEEB;
-	Thu, 26 Jun 2025 21:19:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MpFWpcNv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 992F0C4CEEB;
+	Thu, 26 Jun 2025 21:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750972756;
-	bh=28uNc/vEFpqvghgBWV99ylJqmaORBokqPOIAZlT5Edg=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=bbF9XJlul92CmEGz3T4uQ+yndC/DlJOuuo42kGpnawZlzPRbvVNUAo6S1NnSvvvqJ
-	 mGLgTWTcyPGSpu74VJjKbv8HrO3lcGcLqj1eTACiGW7PwR8fKbklDtULObkihl1Ue7
-	 PPi/EI5Dw3ZMUccOKbL5/fISnsfHPTQxB5cUEivQV8vItuLr6JxecvCBNO1YEENwqQ
-	 qcc0e6LguLIwq34dOxDixADb2i9t8PlGSiIgwYXD8AGhrgiVvX1JWn+6kQnV80QWcf
-	 9L6Yh0PXMyH5ilHF58rjqvrbzb3ZepOM25v3iGmIcC2smqNXGYYbswVPhcDu5IrXtG
-	 6c47qfe4l0hgQ==
-Date: Thu, 26 Jun 2025 16:19:15 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1750972827;
+	bh=OHrl1UV24sECLcdoKKUjl/MCEiD+j72S/KlN+z+3AjI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MpFWpcNvFBHW/TbrieGMr4V1H2s1BBYKWVkwaRbaQ7Sm8tElnJLBnwacBK0F9bGYZ
+	 Yrf8OHy23Kuh5dssuyaRv4xwivExURGjtSXOaqnKtV7Ezgy4ZBuhBX4RdjHBKYr2qP
+	 8Y7jv2XJLy5MaXjQpVAObecEuJPAscbHDdv69vMaRazqMuVgxGpHR7SB6RG2nzNWKJ
+	 abS02ndvyN01J7Voy3M1lADdJQ3xRrhMqF1EKbkab17mjnbsJGX9LJyVnHwTx1lvQy
+	 BKnblLfxpGgFJEDyLNlSlrUSEMuhl8rd+9cws1GsjK3720fYrGh83beFbF/ulLB67D
+	 ePCEW99EXibjQ==
+Message-ID: <411adfbb-1110-434f-a22d-d60914be6968@kernel.org>
+Date: Thu, 26 Jun 2025 23:20:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, 
- Mark Rutland <mark.rutland@arm.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
- Will Deacon <will@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
- linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org
-To: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-In-Reply-To: <20250626-ddr-bindings-v1-2-cae30933c54c@foss.st.com>
-References: <20250626-ddr-bindings-v1-0-cae30933c54c@foss.st.com>
- <20250626-ddr-bindings-v1-2-cae30933c54c@foss.st.com>
-Message-Id: <175097275573.957711.15313846796838099778.robh@kernel.org>
-Subject: Re: [PATCH RFC 2/2] dt-bindings: perf: stm32: introduce DDRPERFM
- dt-bindings
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/5] rust: devres: implement register_release()
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+ alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+ tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
+ leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250626200054.243480-1-dakr@kernel.org>
+ <20250626200054.243480-6-dakr@kernel.org> <aF2vgthQlNA3BsCD@tardis.local>
+ <aF2yA9TbeIrTg-XG@cassiopeiae> <aF24vbtHgP-kYuBg@tardis.local>
+From: Danilo Krummrich <dakr@kernel.org>
+Content-Language: en-US
+In-Reply-To: <aF24vbtHgP-kYuBg@tardis.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-On Thu, 26 Jun 2025 21:48:35 +0200, Clément Le Goffic wrote:
-> DDRPERFM is the DDR Performance Monitor embedded in STM32MPU SoC.
-> It allows to monitor DDR events that come from the DDR Controller
-> such as read or write events.
+On 6/26/25 11:16 PM, Boqun Feng wrote:
+> On Thu, Jun 26, 2025 at 10:48:03PM +0200, Danilo Krummrich wrote:
+>> On Thu, Jun 26, 2025 at 01:37:22PM -0700, Boqun Feng wrote:
+>>> On Thu, Jun 26, 2025 at 10:00:43PM +0200, Danilo Krummrich wrote:
+>>>> register_release() is useful when a device resource has associated data,
+>>>> but does not require the capability of accessing it or manually releasing
+>>>> it.
+>>>>
+>>>> If we would want to be able to access the device resource and release the
+>>>> device resource manually before the device is unbound, but still keep
+>>>> access to the associated data, we could implement it as follows.
+>>>>
+>>>> 	struct Registration<T> {
+>>>> 	   inner: Devres<RegistrationInner>,
+>>>> 	   data: T,
+>>>> 	}
+>>>>
+>>>> However, if we never need to access the resource or release it manually,
+>>>> register_release() is great optimization for the above, since it does not
+>>>> require the synchronization of the Devres type.
+>>>>
+>>>> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+>>>> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+>>>> ---
+>>>>   rust/kernel/devres.rs | 73 +++++++++++++++++++++++++++++++++++++++++++
+>>>>   1 file changed, 73 insertions(+)
+>>>>
+>>>> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+>>>> index 3ce8d6161778..92aca78874ff 100644
+>>>> --- a/rust/kernel/devres.rs
+>>>> +++ b/rust/kernel/devres.rs
+>>>> @@ -353,3 +353,76 @@ pub fn register<T, E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flag
+>>>>   
+>>>>       register_foreign(dev, data)
+>>>>   }
+>>>> +
+>>>> +/// [`Devres`]-releaseable resource.
+>>>> +///
+>>>> +/// Register an object implementing this trait with [`register_release`]. Its `release`
+>>>> +/// function will be called once the device is being unbound.
+>>>> +pub trait Release {
+>>>> +    /// The [`ForeignOwnable`] pointer type consumed by [`register_release`].
+>>>> +    type Ptr: ForeignOwnable;
+>>>> +
+>>>> +    /// Called once the [`Device`] given to [`register_release`] is unbound.
+>>>> +    fn release(this: Self::Ptr);
+>>>> +}
+>>>> +
+>>>
+>>> I would like to point out the limitation of this design, say you have a
+>>> `Foo` that can ipml `Release`, with this, I think you could only support
+>>> either `Arc<Foo>` or `KBox<Foo>`. You cannot support both as the input
+>>> for `register_release()`. Maybe we want:
+>>>
+>>>      pub trait Release<Ptr: ForeignOwnable> {
+>>>          fn release(this: Ptr);
+>>>      }
+>>
+>> Good catch! I think this wasn't possible without ForeignOwnable::Target.
+>>
+>> Here's the diff for the change:
+>>
 > 
-> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
-> ---
->  .../devicetree/bindings/perf/st,stm32-ddr-pmu.yaml | 90 ++++++++++++++++++++++
->  1 file changed, 90 insertions(+)
+> Looks good to me.
 > 
+>> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+>> index 92aca78874ff..42a9cd2812d8 100644
+>> --- a/rust/kernel/devres.rs
+>> +++ b/rust/kernel/devres.rs
+>> @@ -358,12 +358,9 @@ pub fn register<T, E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flag
+>>   ///
+>>   /// Register an object implementing this trait with [`register_release`]. Its `release`
+>>   /// function will be called once the device is being unbound.
+>> -pub trait Release {
+>> -    /// The [`ForeignOwnable`] pointer type consumed by [`register_release`].
+>> -    type Ptr: ForeignOwnable;
+>> -
+>> +pub trait Release<Ptr: ForeignOwnable> {
+> 
+> My bad, is it possible to do
+> 
+> 	pub trait Release<Ptr: ForeignOwnable<Target=Self>> {
+> 
+> ? that's better IMO.
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml: ignoring, error in schema: properties: compatible: oneOf
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml: properties:compatible:oneOf: {'enum': ['st,stm32mp131-ddr-pmu', 'st,stm32mp151-ddr-pmu'], 'const': 'st,stm32mp251-ddr-pmu'} is not of type 'array'
-	from schema $id: http://json-schema.org/draft-07/schema#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml: properties:compatible:oneOf: {'enum': ['st,stm32mp131-ddr-pmu', 'st,stm32mp151-ddr-pmu'], 'const': 'st,stm32mp251-ddr-pmu'} should not be valid under {'items': {'propertyNames': {'const': 'const'}, 'required': ['const']}}
-	hint: Use 'enum' rather than 'oneOf' + 'const' entries
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml: properties:compatible:oneOf: {'enum': ['st,stm32mp131-ddr-pmu', 'st,stm32mp151-ddr-pmu'], 'const': 'st,stm32mp251-ddr-pmu'} is not of type 'array'
-	from schema $id: http://devicetree.org/meta-schemas/string-array.yaml#
-Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.example.dts:44.37-47.11: Warning (unit_address_vs_reg): /example-1/ddr4-channel@0: node has a unit name, but no reg or ranges property
-Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.example.dtb: /example-0/perf@5a007000: failed to match any schema with compatible: ['st,stm32mp151-ddr-pmu']
-Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.example.dtb: /example-1/perf@48041000: failed to match any schema with compatible: ['st,stm32mp251-ddr-pmu']
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250626-ddr-bindings-v1-2-cae30933c54c@foss.st.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Sure, that works.
