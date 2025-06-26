@@ -1,202 +1,165 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7ECB2AD11;
-	Thu, 26 Jun 2025 13:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC69B2AD11;
+	Thu, 26 Jun 2025 13:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943329; cv=none; b=Mw4LxIlZN3FOAp7DlI5lyaOna0LEywA7zmyYszCz8uTd6cJ4sJSOISmcs/sG1QFWuPQ3Xm9txvGlc98f/uU78mwFOmDLxkPfgOKhsuFpO59YLHBk4VjzdLcI7kfVlMNtAU6zSi8PRRer6bVbJsbRBeIkddcE6pVT78mOrzukjKc=
+	t=1750943345; cv=none; b=EGHU2WB6GqKG76ZaJqe44xnr9QARS6M9SyMDD4idqok5sdvtOmY5YbT4iSawr+y7RI0kPdRapUyco141zmOjKWXce6IdhRmjJGOnR4IOjHF+cLNznlaSbx9jcRf+bIvzTZxZrJsxOLCSzH6QcDL1ItY91T4M4wIQjOd5TmSC+pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943329; c=relaxed/simple;
-	bh=M3+W48GBr7ps/RTDpEQhEjapukwGJfycaI+PsS00OH4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KT+atmrg/ChS6527FbFWCVLv+pQ/eEkUMUdPMashx+oIQKiAp5RQXy/dYLBzWBuiDTGX8ZyMnpOQBAc5+MV0Ij1ipowZMT3eFg+P9JxhjRj2YslO3MGVAN302tNVTJOxzTxIXS/DSUzQD2Gxh6WffPp27egSxWO8IAaZmbMOFoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bSfC116tMzYQvCR;
-	Thu, 26 Jun 2025 21:08:45 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 0F7551A11DE;
-	Thu, 26 Jun 2025 21:08:44 +0800 (CST)
-Received: from [10.67.108.244] (unknown [10.67.108.244])
-	by APP4 (Coremail) with SMTP id gCh0CgBHq19WRl1oAoPgQg--.29022S3;
-	Thu, 26 Jun 2025 21:08:40 +0800 (CST)
-Message-ID: <3dfe387c-d1db-4cbe-b41d-8f9f27fe3a1f@huaweicloud.com>
-Date: Thu, 26 Jun 2025 21:08:38 +0800
+	s=arc-20240116; t=1750943345; c=relaxed/simple;
+	bh=oOQgk5plAXC3cHkBFuuDTyF/8Mxjc15JcHehSvv9EQ8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZI5IiBSH/8z+s9MrSIUT2x34U/pQf3BgzZQByK+EWto1BBro7UT5amKFUedho3nv84aaQjkX0jeiQKnggpJX2YYx9R0aBJ9z59B81npNTKcfH1MoSFxsQExJGJuPIgCg2Pge2Y4dIpuOdjKoqXKabUn+D4/OExtMCJfUqxTShX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=arunraghavan.net; spf=pass smtp.mailfrom=arunraghavan.net; dkim=pass (2048-bit key) header.d=arunraghavan.net header.i=@arunraghavan.net header.b=PtNmuljE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OgUgAiwO; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=arunraghavan.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arunraghavan.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arunraghavan.net header.i=@arunraghavan.net header.b="PtNmuljE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OgUgAiwO"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfout.phl.internal (Postfix) with ESMTP id 05540EC01D1;
+	Thu, 26 Jun 2025 09:09:02 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Thu, 26 Jun 2025 09:09:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	arunraghavan.net; h=cc:cc:content-transfer-encoding:content-type
+	:date:date:from:from:in-reply-to:message-id:mime-version
+	:reply-to:subject:subject:to:to; s=fm1; t=1750943342; x=
+	1751029742; bh=3TR8c1XlSAHzq5ql4c7mGOadV5LanrZWk1R0NaowOXw=; b=P
+	tNmuljElytKPpwQz2xCaNZXiDrB2v+MUCcyu4EOq+nvkgcUyiOH18XhQbZent4dc
+	mIQpNliglBAWiM79yhhbQwmeyzqj/ZuFmui8i3MM1hbOHTDEwzlM5rHo0w0zsgtj
+	1yXJ6ick3qlMTadVmoFCtZx8jdVTiainoddnZmImk9wu1mPwVVqrOKxJ/+Kb8MOU
+	hZhDcatHzawvRfZjJ40rRKEjV9T+qJ6SLqTEzD9yEuk51xXFoto3acnZfZO6bDP+
+	d9GBYP/e1EcIkT9zibyQbDduqdXFisWM31H4VdXsRkhEm0Vm6odJvR5qSetNzSBb
+	DtPWqAeU/n3wKb6LEsVqg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1750943342; x=1751029742; bh=3TR8c1XlSAHzq5ql4c7mGOadV5LanrZWk1R
+	0NaowOXw=; b=OgUgAiwOR+NljDySxtWkacQflqePd6AVC7W1eXEjYtm0AZLzCiN
+	0cx8EvvL+J9TYWEnOB1gNxhOierzdYC8rMFNLLFiPZLQLppa3ABJUUCG9xiTCdgt
+	CKvyDH5MJLfO/oit9BfH21YlNxvkyWCyYHAufnd2yvzndB1Ls8c5aXoq3VPLuihx
+	ACYak+2cke2D6RZ3Xz1827UYmZIrFiaQ+vc0rNdLInY6IHH4EjW8jNwHS2lbU7UJ
+	GmzVz1twBAWNGp+vu8gwb40A+p2V2xLugVT6BrnlrbVZjHXOTOCD4i40GQ4uYX9n
+	BT9BfjTNdQ4Fc9+gU1WJVLjWu4sW7rMvf/A==
+X-ME-Sender: <xms:bUZdaCobQOs-jdUnkj5hgNMqXWq5ubSYk3YQL8uQw0wKLpjcSSINOA>
+    <xme:bUZdaAppYYFqbQqI5YUyUFG9M83YNERiHj4g8Bxxsdsa--HRFH73uqKQ2V9pcYsRm
+    EavPXnHvqK4WIyZXg>
+X-ME-Received: <xmr:bUZdaHMNcRNZjIIoM4K_rYEgD6bBA5tgG7dHJ-FFuBjwzWYJjl9hQFImdgp1QmdS>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddviecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegrihhl
+    ohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpe
+    fhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetrhhunhcutfgrghhhrghv
+    rghnuceorghruhhnsegrrhhunhhrrghghhgrvhgrnhdrnhgvtheqnecuggftrfgrthhtvg
+    hrnhepteduheelvedvledvudfhudevkefhhfeifefggeevkedvudfgueelvdehtdetvdef
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghruh
+    hnsegrrhhunhhrrghghhgrvhgrnhdrnhgvthdpnhgspghrtghpthhtohepudegpdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehshhgvnhhgjhhiuhdrfigrnhhgsehgmhgrih
+    hlrdgtohhmpdhrtghpthhtohepgihiuhgsohdrlhgvvgesghhmrghilhdrtghomhdprhgt
+    phhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomhdprhgtphhtthhopehnihgtoh
+    hlvghothhsuhhkrgesghhmrghilhdrtghomhdprhgtphhtthhopehlghhirhgufihoohgu
+    sehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtohepphgvrhgvgiesphgvrhgvgidrtgiipdhrtghpthhtohepthhifigr
+    ihesshhushgvrdgtohhmpdhrtghpthhtohepphdrtggrmhgvrhhlhihntghksehtvghlvg
+    hvihgtrdgtohhm
+X-ME-Proxy: <xmx:bUZdaB54Hz6UhUVeDLG3l_ZwEUttpvdcpg1T5EsH99vDQPKzVTJTAg>
+    <xmx:bUZdaB7dPLXisgzE6x7ObluNUnAkDoKb8nFuVrH2WW8-jdav1B2htw>
+    <xmx:bUZdaBi2ITaqNxZIk6IqQvI_Y3DJAfLp9WeiX7noVe3XwalDn9mCGQ>
+    <xmx:bUZdaL6psXbo9zJBPJ_3Ybzg4-di_hvQl0sm6ETIqBojIV2YSUwHlg>
+    <xmx:bUZdaNpGehd9MBJzwrMUl8LVtfQNs4jACysufrmqmU4sldkB8Q23KAd_>
+Feedback-ID: i42c0435e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 26 Jun 2025 09:09:00 -0400 (EDT)
+From: Arun Raghavan <arun@arunraghavan.net>
+To: Shengjiu Wang <shengjiu.wang@gmail.com>,
+	Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>,
+	Nicolin Chen <nicoleotsuka@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Pieterjan Camerlynck <p.camerlynck@televic.com>,
+	linux-sound@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	Arun Raghavan <arun@asymptotic.io>,
+	stable@vger.kernel.org
+Subject: [PATCH v4] ASoC: fsl_sai: Force a software reset when starting in consumer mode
+Date: Thu, 26 Jun 2025 09:08:25 -0400
+Message-ID: <20250626130858.163825-1-arun@arunraghavan.net>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [tip: perf/urgent] perf/core: Fix WARN in perf_cgroup_switch()
-Content-Language: en-US
-To: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org
-References: <20250604033924.3914647-3-luogengkun@huaweicloud.com>
- <174963417198.406.3332177110975635135.tip-bot2@tip-bot2>
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-In-Reply-To: <174963417198.406.3332177110975635135.tip-bot2@tip-bot2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgBHq19WRl1oAoPgQg--.29022S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3Jw48WFy7Ar1DCrW5Zr1UWrg_yoW7GF43pa
-	97CrWag398XFy2qay3tw1vva4Svw4FqaykWr13Kw4ayFW5Xrn8JF47Gw45XFn8Zwn7tFyf
-	JrZ09r1ak34Uta7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUgvb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
-	Ja73UjIFyTuYvjxUzsqWUUUUU
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+Content-Transfer-Encoding: 8bit
 
+From: Arun Raghavan <arun@asymptotic.io>
 
-On 2025/6/11 17:29, tip-bot2 for Luo Gengkun wrote:
-> The following commit has been merged into the perf/urgent branch of tip:
->
-> Commit-ID:     3172fb986666dfb71bf483b6d3539e1e587fa197
-> Gitweb:        https://git.kernel.org/tip/3172fb986666dfb71bf483b6d3539e1e587fa197
-> Author:        Luo Gengkun <luogengkun@huaweicloud.com>
-> AuthorDate:    Wed, 04 Jun 2025 03:39:24
-> Committer:     Peter Zijlstra <peterz@infradead.org>
-> CommitterDate: Thu, 05 Jun 2025 14:37:52 +02:00
->
-> perf/core: Fix WARN in perf_cgroup_switch()
->
-> There may be concurrency between perf_cgroup_switch and
-> perf_cgroup_event_disable. Consider the following scenario: after a new
-> perf cgroup event is created on CPU0, the new event may not trigger
-> a reprogramming, causing ctx->is_active to be 0. In this case, when CPU1
-> disables this perf event, it executes __perf_remove_from_context->
-> list _del_event->perf_cgroup_event_disable on CPU1, which causes a race
-> with perf_cgroup_switch running on CPU0.
->
-> The following describes the details of this concurrency scenario:
->
-> CPU0						CPU1
->
-> perf_cgroup_switch:
->     ...
->     # cpuctx->cgrp is not NULL here
->     if (READ_ONCE(cpuctx->cgrp) == NULL)
->     	return;
->
-> 						perf_remove_from_context:
-> 						   ...
-> 						   raw_spin_lock_irq(&ctx->lock);
-> 						   ...
-> 						   # ctx->is_active == 0 because reprogramm is not
-> 						   # tigger, so CPU1 can do __perf_remove_from_context
-> 						   # for CPU0
-> 						   __perf_remove_from_context:
-> 						         perf_cgroup_event_disable:
-> 							    ...
-> 							    if (--ctx->nr_cgroups)
-> 							    ...
->
->     # this warning will happened because CPU1 changed
->     # ctx.nr_cgroups to 0.
->     WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
->
-> [peterz: use guard instead of goto unlock]
-> Fixes: db4a835601b7 ("perf/core: Set cgroup in CPU contexts for new cgroup events")
-> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Link: https://lkml.kernel.org/r/20250604033924.3914647-3-luogengkun@huaweicloud.com
+On an imx8mm platform with an external clock provider, when running the
+receiver (arecord) and triggering an xrun with xrun_injection, we see a
+channel swap/offset. This happens sometimes when running only the
+receiver, but occurs reliably if a transmitter (aplay) is also
+concurrently running.
 
-Sorry for the late reply, I found that the link is v2 instead of v3.
-This v3 link is:
+It seems that the SAI loses track of frame sync during the trigger stop
+-> trigger start cycle that occurs during an xrun. Doing just a FIFO
+reset in this case does not suffice, and only a software reset seems to
+get it back on track.
 
-https://lore.kernel.org/all/20250609035316.250557-1-luogengkun@huaweicloud.com/
+This looks like the same h/w bug that is already handled for the
+producer case, so we now do the reset unconditionally on config disable.
 
-v2 attempts to fix a concurrency problem between perf_cgroup_switch
-and perf_cgroup_event_disable. But it does not to move WARN_ON_ONCE
-into lock-protected region, so the warning is still triggered.
+Signed-off-by: Arun Raghavan <arun@asymptotic.io>
+Reported-by: Pieterjan Camerlynck <p.camerlynck@televic.com>
+Fixes: 3e3f8bd56955 ("ASoC: fsl_sai: fix no frame clk in master mode")
+Cc: stable@vger.kernel.org
+---
 
-The following patches have been tested and fix this issue.
+v4
+- Add Fixes and cc stable
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 1f746469fda5..a35784d42c66 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -951,8 +951,6 @@ static void perf_cgroup_switch(struct task_struct *task)
-         if (READ_ONCE(cpuctx->cgrp) == NULL)
-                 return;
+v3
+- Incorporate feedback from Shengjiu Wang to consolidate with the
+  existing handling of this issue in producer mode
 
--       WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
--
-         cgrp = perf_cgroup_from_task(task, NULL);
-         if (READ_ONCE(cpuctx->cgrp) == cgrp)
-                 return;
-@@ -964,6 +962,8 @@ static void perf_cgroup_switch(struct task_struct *task)
-         if (READ_ONCE(cpuctx->cgrp) == NULL)
-                 return;
+v2 (no longer relevant)
+- Address build warning from kernel test robot
 
-+       WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
-+
-         perf_ctx_disable(&cpuctx->ctx, true);
+ sound/soc/fsl/fsl_sai.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-         ctx_sched_out(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
-
-> ---
->   kernel/events/core.c | 22 ++++++++++++++++++++--
->   1 file changed, 20 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index d786083..d7cf008 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -207,6 +207,19 @@ static void perf_ctx_unlock(struct perf_cpu_context *cpuctx,
->   	__perf_ctx_unlock(&cpuctx->ctx);
->   }
->   
-> +typedef struct {
-> +	struct perf_cpu_context *cpuctx;
-> +	struct perf_event_context *ctx;
-> +} class_perf_ctx_lock_t;
-> +
-> +static inline void class_perf_ctx_lock_destructor(class_perf_ctx_lock_t *_T)
-> +{ perf_ctx_unlock(_T->cpuctx, _T->ctx); }
-> +
-> +static inline class_perf_ctx_lock_t
-> +class_perf_ctx_lock_constructor(struct perf_cpu_context *cpuctx,
-> +				struct perf_event_context *ctx)
-> +{ perf_ctx_lock(cpuctx, ctx); return (class_perf_ctx_lock_t){ cpuctx, ctx }; }
-> +
->   #define TASK_TOMBSTONE ((void *)-1L)
->   
->   static bool is_kernel_event(struct perf_event *event)
-> @@ -944,7 +957,13 @@ static void perf_cgroup_switch(struct task_struct *task)
->   	if (READ_ONCE(cpuctx->cgrp) == cgrp)
->   		return;
->   
-> -	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
-> +	guard(perf_ctx_lock)(cpuctx, cpuctx->task_ctx);
-> +	/*
-> +	 * Re-check, could've raced vs perf_remove_from_context().
-> +	 */
-> +	if (READ_ONCE(cpuctx->cgrp) == NULL)
-> +		return;
-> +
->   	perf_ctx_disable(&cpuctx->ctx, true);
->   
->   	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
-> @@ -962,7 +981,6 @@ static void perf_cgroup_switch(struct task_struct *task)
->   	ctx_sched_in(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
->   
->   	perf_ctx_enable(&cpuctx->ctx, true);
-> -	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
->   }
->   
->   static int perf_cgroup_ensure_storage(struct perf_event *event,
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index af1a168d35e3..50af6b725670 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -803,13 +803,15 @@ static void fsl_sai_config_disable(struct fsl_sai *sai, int dir)
+ 	 * anymore. Add software reset to fix this issue.
+ 	 * This is a hardware bug, and will be fix in the
+ 	 * next sai version.
++	 *
++	 * In consumer mode, this can happen even after a
++	 * single open/close, especially if both tx and rx
++	 * are running concurrently.
+ 	 */
+-	if (!sai->is_consumer_mode[tx]) {
+-		/* Software Reset */
+-		regmap_write(sai->regmap, FSL_SAI_xCSR(tx, ofs), FSL_SAI_CSR_SR);
+-		/* Clear SR bit to finish the reset */
+-		regmap_write(sai->regmap, FSL_SAI_xCSR(tx, ofs), 0);
+-	}
++	/* Software Reset */
++	regmap_write(sai->regmap, FSL_SAI_xCSR(tx, ofs), FSL_SAI_CSR_SR);
++	/* Clear SR bit to finish the reset */
++	regmap_write(sai->regmap, FSL_SAI_xCSR(tx, ofs), 0);
+ }
+ 
+ static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
+-- 
+2.49.0
 
