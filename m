@@ -1,77 +1,170 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662C443159;
-	Thu, 26 Jun 2025 03:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77891CAA79
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 03:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750910269; cv=none; b=jpIVWvDAY2/sVDcaFV8aymmbxc8Jfcg/RX72YfQebpD8qLSKJCJmfURvRPxgC6NNqMtFukoiWRajj9idvr/vZr5foiKneAaSlyuYZ4WGJQDUZfs/G3j+sJKAQxrrHH8CprvyJotZHHu/a9uH0KLlQLmjQwaomYI9DghA9/fexOY=
+	t=1750910285; cv=none; b=MFY5mrGspB0cBxa7gZLmPHbox/n17ijbkze64BOJbT6pR3ak/bJYvZIx/FInayMj9QxALrCre+h9bIiDIikShAZifwdT6OptlkHk5ET/b/aevSOvAxJyjeh+oKaHOhokQSBc5wAvCciIH0EoWAH+d0yFVQD1Xv5P3lNBFVsuyUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750910269; c=relaxed/simple;
-	bh=SlcXsvXW48zZL04UTuAILB5e5RHAL6SvSBvDeN9nWCE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KVrlrDcWRsrthoh1VhtLYHRm3+1cSN7GMPHKr31Oj7tQsJHqpnopQDS5yPmPwFL2tA71xRkg2iaQKuZ5eK/Q8/53PzIFXlKzOwGqkLyBtF+/aR8aR/SnseKn4t+YUR7tRPWcymtY/PCu0w4d2a2z2vbC5HNoxtQ/McPL/adFZRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ONY/arsN; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750910285; c=relaxed/simple;
+	bh=T2Miax55TEaH5XXrNWxmT95KXQwslFMTuIhlDQPaD6o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KlsgTWPjwdEqSUj1CuirfJLL2salAJITAjZFGE+MOdN0BWiQCLpVW0Lm9ExJvcfBYTD8G0j4IW5I3jsipWy3APjq/VLhpWl18Gb8WfXtfblDxtY/an+QU+LF2mfumRu3RePkRFolavae8Y8P0R/+cRcEJLoJIbmv7J/TA0P8N+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=3NzRWHAm; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ONY/arsN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=w/Yyw+ccEoMxrDSG6h1V3bV+6dI8LKFZgQRaaNFKTG8=; b=ONY/arsND3fW9q8HlHOr5pl5v5
-	NGV/4L6+g0DYo35fjuh31SlKo/m7oxVvMrUFqZx9QlLRRKs8Tp3qtx822xs0u9Vw31ImgGlZdof7G
-	vMn5uG71kyaa0t0MKWSm0x8heuli+n+QmwgDLN5sPrNJipLP5kB5p9kAYK3J0Hf1xnPTnJUCylVZL
-	UvcGfMJAxWE2VGtK4iwiWYwWYD4QgTcUTUDp9ftYcsCJWRM/i21qT5SaxuWl7JFvL3m2+zWH6SLWs
-	tV47Z7IQHYJY/zIIW4KCyptS9isYuS45KJPP57NDwgT0kzyMOnETdeyZjjKjRIa7SacY/WtaJDdp2
-	iVClIP9A==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uUdk6-000000061sE-1uGB;
-	Thu, 26 Jun 2025 03:57:44 +0000
-Message-ID: <3667a992-a24b-4e49-aab2-5ca73f2c0a56@infradead.org>
-Date: Wed, 25 Jun 2025 20:57:40 -0700
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="3NzRWHAm"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-748f5a4a423so439158b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:58:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1750910283; x=1751515083; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ukewhoDGjvLSFodXCnO2Wi7qwdFCCxAWQjKm3BxoyQw=;
+        b=3NzRWHAm72ObkQsmlY+xEArO65buF439G7C0VhjZEwSSIe2/gnAnYiYiHzpFnXsf43
+         8gZ2H46RzbSiL3nHERBMuO9hTELT4lmYsekqVMHyq9UHhnykJs7/OzYeDdRYRiILApW2
+         WgRmsWcK6thNMXyAH5wtS9T1LKy+qDK3JOQZS2D8uR8mIqIr9QwznFSA/PzVL7l/S1gw
+         AkF0ABxBR+0Mk7vBqoxomKd06u9smeX/eGdVvF+OFADKqarURp2hzLSRP2lUnYuojHC2
+         MhHR3or1gS8hxXAc5HBk+g7SCXksXr8g7KqRkERX+Yg+MgUTis23Cwlyh8eLV4jGdEYC
+         3R2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750910283; x=1751515083;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ukewhoDGjvLSFodXCnO2Wi7qwdFCCxAWQjKm3BxoyQw=;
+        b=XmHhfAuKvj1eRjC4WkZxfO6KnHevW9F3O1er1x+eUrqMP1mxJFeB6+/9qcr7+Lhaxa
+         v90N/qoOQ4krCi4gjbHiCjSTeET+pJ0llyeFUOLAKpx39AIxuradoa5ChovgX03jtGD5
+         I6neDmCbvF9IdlZOM253t82raVsyC9YipJ9G0rTE5Xy4hWZW5j0lBRM7Yypim9WrLUFa
+         /ai6bwP33bmNOhr4TsyJlf/96TJZ01KjPpHKpKl5EPEETGNFbYnVYlsB4YvPCOITLPUf
+         Ec8GAorkG5OCzyFCRuH9lOpkvE3Jj1tgsTQXZAo4okseHnOyGdb9opzTq3F3HezUjtWi
+         aPlg==
+X-Forwarded-Encrypted: i=1; AJvYcCXiFIGC6HoP+c6MnkUMocjjY7Ztieg5v2FUwLR6Rd+k1ZepwyoyIeoA8dcOOfsPtvQ29+xes7+xIz0esm0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnlDicD3vtoT48cj5b43DvNTfQkr6R2sZrr4gwbQyIEem6iZia
+	i46SlDbIIiMPOHBjJAnHJqjiZKxqEoHrvuBFaKmFPfkm1e29wrzqRHjSRSIaorOx8lw=
+X-Gm-Gg: ASbGncvcFefV7keYGssrL+xycvMKUa+XnpsmRj2brY3SroxE2MBn18VWUgqaitpURg3
+	Dabn4yw7qwmwDZfy4vbfO38b4/2SwiCh5Dgqkx/SXLE+wdWyGU28SR0ligQQPZaAg7HwUZn3oYK
+	h9IlPSwgfZok2hQqrbMgsz2Gn3DBmXSd7MK0xwIof1eDbIQ6xlh61tjk4XffCPZSAKyZ/VHzTs6
+	8EET6vbl2Jl6NnTMS3/7KpSV7ABwlmPEiHs13c3YDWnfMXOHTYIfoNLyy+zg8NJX8F7Vz7fpZuJ
+	/P76l1aO+8A+IY58Wz8EhDTQQEjqN4M/+r7TJD0SSBwNgCXZq12s53e01R75R+XgBW48WMLQX2s
+	MgjQg08XQhdAxGUKDB8Bic6xPc/qgpKW+HQyhHxsEuULCuGuy
+X-Google-Smtp-Source: AGHT+IGfMj1hupvnOX/mD73qau+DpHSUC+w5eDTmeBI+czHsebUdwnvPvrfHC2KQ/TS+fSfAjMVx1g==
+X-Received: by 2002:a05:6a00:c86:b0:740:afda:a742 with SMTP id d2e1a72fcca58-74ad4059d79mr8122379b3a.0.1750910283181;
+        Wed, 25 Jun 2025 20:58:03 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-184-88.pa.nsw.optusnet.com.au. [49.180.184.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c88548dbsm6145745b3a.133.2025.06.25.20.58.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 20:58:02 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.98.2)
+	(envelope-from <david@fromorbit.com>)
+	id 1uUdkN-00000003L0Q-42Kg;
+	Thu, 26 Jun 2025 13:57:59 +1000
+Date: Thu, 26 Jun 2025 13:57:59 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: Jeff Layton <jlayton@kernel.org>, Christoph Hellwig <hch@infradead.org>,
+	djwong@kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	yc1082463@gmail.com
+Subject: Re: [PATCH] xfs: report a writeback error on a read() call
+Message-ID: <aFzFR6zD7X1_9bWj@dread.disaster.area>
+References: <aFqyyUk9lO5mSguL@infradead.org>
+ <51cc5d2e-b7b1-4e48-9a8c-d6563bbc5e2d@gmail.com>
+ <aFuezjrRG4L5dumV@infradead.org>
+ <88e4b40b61f0860c28409bd50e3ae5f1d9c0410b.camel@kernel.org>
+ <aFvbr6H3WUyix2fR@infradead.org>
+ <6ac46aa32eee969d9d8bc55be035247e3fdc0ac8.camel@kernel.org>
+ <aFvkAIg4pAeCO3PN@infradead.org>
+ <11735cf2e1893c14435c91264d58fae48be2973d.camel@kernel.org>
+ <CALOAHbDtFh5P_P0aTzaKRcwGfQmkrhgmk09BQ1tu9ZdXvKi8vQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: Tree for Jun 25
- (drivers/gpu/drm/{i915,xe}/intel_pcode.o)
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux DRI Development <dri-devel@lists.freedesktop.org>,
- intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org
-References: <20250625172220.2b6aeff8@canb.auug.org.au>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250625172220.2b6aeff8@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALOAHbDtFh5P_P0aTzaKRcwGfQmkrhgmk09BQ1tu9ZdXvKi8vQ@mail.gmail.com>
 
-
-
-On 6/25/25 12:22 AM, Stephen Rothwell wrote:
-> Hi all,
+On Thu, Jun 26, 2025 at 10:41:47AM +0800, Yafang Shao wrote:
+> On Wed, Jun 25, 2025 at 10:06 PM Jeff Layton <jlayton@kernel.org> wrote:
+> >
+> > On Wed, 2025-06-25 at 04:56 -0700, Christoph Hellwig wrote:
+> > > On Wed, Jun 25, 2025 at 07:49:31AM -0400, Jeff Layton wrote:
+> > > > Another idea: add a new generic ioctl() that checks for writeback
+> > > > errors without syncing anything. That would be fairly simple to do and
+> > > > sounds like it would be useful, but I'd want to hear a better
+> > > > description of the use-case before we did anything like that.
 > 
-> Changes since 20250624:
+> As you mentioned earlier, calling fsync()/fdatasync() after every
+> write() blocks the thread, degrading performance—especially on HDDs.
+> However, this isn’t the main issue in practice.
+> The real problem is that users typically don’t understand "writeback
+> errors". If you warn them, "You should call fsync() because writeback
+> errors might occur," their response will likely be: "What the hell is
+> a writeback error?"
 > 
+> For example, our users (a big data platform) demanded that we
+> immediately shut down the filesystem upon writeback errors. These
+> users are algorithm analysts who write Python/Java UDFs for custom
+> logic—often involving temporary disk writes followed by reads to pass
+> data downstream. Yet, most have no idea how these underlying processes
+> work.
 
-on i386, when both CONFIG_DRM_XE=y
-and CONFIG_DRM_I915=y:
+And that's exactly why XFS originally never threw away dirty data on
+writeback errors. Because scientists and data analysts that wrote
+programs to chew through large amounts of data didn't care about
+persistence of their data mid-processing. They just wanted what they
+wrote to be there the next time the processing pipeline read it.
 
-ld: drivers/gpu/drm/xe/xe_pcode.o: in function `intel_pcode_read':
-xe_pcode.c:(.text+0x7d0): multiple definition of `intel_pcode_read'; drivers/gpu/drm/i915/intel_pcode.o:intel_pcode.c:(.text+0x990): first defined here
-ld: drivers/gpu/drm/xe/xe_pcode.o: in function `intel_pcode_write_timeout':
-xe_pcode.c:(.text+0x850): multiple definition of `intel_pcode_write_timeout'; drivers/gpu/drm/i915/intel_pcode.o:intel_pcode.c:(.text+0x9b0): first defined here
-ld: drivers/gpu/drm/xe/xe_pcode.o: in function `intel_pcode_request':
-xe_pcode.c:(.text+0x8f0): multiple definition of `intel_pcode_request'; drivers/gpu/drm/i915/intel_pcode.o:intel_pcode.c:(.text+0x9d0): first defined here
+> > > That's what I mean with my above proposal, except that I though of an
+> > > fcntl or syscall and not an ioctl.
+> >
+> > Yeah, a fcntl() would be reasonable, I think.
+> >
+> > For a syscall, I guess we could add an fsync2() which just adds a flags
+> > field. Then add a FSYNC_JUSTCHECK flag that makes it just check for
+> > errors and return.
+> >
+> > Personally, I like the fcntl() idea better for this, but maybe we have
+> > other uses for a fsync2().
+> 
+> What do you expect users to do with this new fcntl() or fsync2()? Call
+> fsync2() after every write()? That would still require massive
+> application refactoring.
 
+<sigh>
 
+We already have a user interface that provides exactly the desired
+functionality.
+
+$ man sync_file_range
+....
+   Some details
+       SYNC_FILE_RANGE_WAIT_BEFORE  and  SYNC_FILE_RANGE_WAIT_AFTER
+       will  detect  any I/O errors or ENOSPC conditions and will
+       return these to the caller.
+....
+
+IOWs, checking for a past writeback IO error is as simple as:
+
+	if (sync_file_range(fd, 0, 0, SYNC_FILE_RANGE_WAIT_BEFORE) < 0) {
+		/* An unreported writeback error was pending on the file */
+		wb_err = -errno;
+		......
+	}
+
+This does not cause new IO to be issued, it only blocks on writeback
+that is currently in progress, and it has no data integrity
+requirements at all. If the writeback has already been done, all it
+will do is sweep residual errors out to userspace.....
+
+-Dave.
 -- 
-~Randy
-
+Dave Chinner
+david@fromorbit.com
