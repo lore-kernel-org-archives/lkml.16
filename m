@@ -1,33 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6D021B91F;
-	Thu, 26 Jun 2025 21:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193CE25EF81
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750973979; cv=none; b=Q4ypz9XxeVNNSq2hmd6tuJqGwadi2oAdF/q+dB/WLaT3l7odYPYw1fxLS5LTEDamAA0LQpxad0x10IiLcKu5c/pRQwc7OpsN11KlxVql3HYnOIJZ+MWEwbw7jsnXIc1uK0i1pQH+Mbgx1+5qhQpq4dnCLY6vc1PVTyXMhJsdb8o=
+	t=1750974182; cv=none; b=P2i49ebu1PL5FKmCgIbmJ9gEVQ4wmpj8+sRpx8B/r2DA9XIoaxN0mvJMoxGxdp0X4wU0QZn0+39ZclJ0a477Z3EYxIw/h95mTobeRFeyAAR0H3uJPLogpvIaQHm4wyHdq0ODyZ/a07r7QaxvaIoio1kbmtSw66d13na/kbZec2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750973979; c=relaxed/simple;
-	bh=Nz2jVvW7wO9Ij5hiZw9zZN5i8COpgPRaAQssyAZqtDs=;
+	s=arc-20240116; t=1750974182; c=relaxed/simple;
+	bh=Zl4V58iwZbet/9mZRLMeILtAO+yONh8a+C7b4WWrgAw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ClZxJDpzw6SXWvjHGV9phrH/ncV8HwLr1KP0xm0dhc710l+sdsz8/i7LqcgbAcwVNUiZ8xciZqwyUueq2WQH3VhAAK/uQQn0xzCPXOFX0ChxbZd0jYz+a2vQwhTaQETARuXGGEEdV51PzV41omdLulgeSPKG93JDaTM3bAveSas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IxRRdYeQ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=iR9ZnfwpQJXoYKnLDt4dVF4VOkJgUjM5u4J4HSHCTJm/iHy2V0YQtPcDogl8k9lRsByusSrY00FIY5blM/GUn0rdIrVQhGgB+SjTf64JGW7/MLAGFP/D91aPsd2sKXdNvAwPcuHvTnzNM0HdYHDO+0lMbABCJgMM75YETLwvnOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ckDBn1b1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IxRRdYeQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62F33C4CEEF;
-	Thu, 26 Jun 2025 21:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750973976;
-	bh=Nz2jVvW7wO9Ij5hiZw9zZN5i8COpgPRaAQssyAZqtDs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IxRRdYeQyv9NBNR6rNQcw0DM5gPTjCLsCpdfUKcd4geT+ihlaAv0CbTmCFR6qEkjD
-	 58JeEqQMvAVE1rP0qgZ38pWOLKshdRJq1IsVoRnPKX6ua2VAL859sFEZHM9LkYhqrb
-	 +24UMiLRX3hjtt33EvzbVpcjXaaL4pRh+LWuTOUOFVPNjiVOLhP0TuCiSl8gRJSHmb
-	 AxrsQhZXLA0o019PxXrsxFa4sX7VAxcao8n2J9Gd/abWwCJKozYayBTP53zXMUnuvI
-	 +idFgQYhU1111GpMh1+b0ZqJj9qUslbajdWe7LutL120smoAiQKHHiAEdaYWyDdSAT
-	 Iq45ItSgBuF2Q==
-Message-ID: <90ff69f1-0308-4591-9374-5319922f0870@kernel.org>
-Date: Thu, 26 Jun 2025 16:39:34 -0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ckDBn1b1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750974178;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=75dl3DeypNDiAtmR3WWaBq44pb5bGGxuHo+PqUY4Jz0=;
+	b=ckDBn1b1R/VEWxxwyWVfi/er4NnsNhQ6TKsRKJihjpD4WFJKr8izJdfBZPIgj5ltBp0AEx
+	6Wep3HOJ3ixeAgzZ68kBZBSWBRNB3DkJ4U471wQL7Sgz8Tj0GOSe0vOdhUtsn4X5D1zmZK
+	DidslOumQKIMagK2wIiXUJSNzCYZFK4=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-56-daAyZLn7O36EZJ9qSBNDdQ-1; Thu, 26 Jun 2025 17:42:55 -0400
+X-MC-Unique: daAyZLn7O36EZJ9qSBNDdQ-1
+X-Mimecast-MFC-AGG-ID: daAyZLn7O36EZJ9qSBNDdQ_1750974175
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d09bc05b77so235785885a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:42:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750974175; x=1751578975;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=75dl3DeypNDiAtmR3WWaBq44pb5bGGxuHo+PqUY4Jz0=;
+        b=KGJRA/Q30JBXMt8+vNEE96C7+3XJiB4ei2CjhDjJgwkobFDyg0VNMzd9OulgKy8AP3
+         tsSLKRr/feOhKPWI986424gGWmLBDCLmZvNeqNCuZrZ0Gs4CbKOXMytWzTgyiyvEt0EA
+         wYRu7FQ+++m3wkfaJn9cuqNHOAj1/l4iIXMSmIJE4XBKjd25WiFwl4Cfc4fu32sJEuAT
+         hzXHYrTxI8Bp26XxLZ8CEOrnonblDHNhQ+uVYvZ9n57VAD8qpSr0xlrtz7q1usQOX5iF
+         xswbImpdBekXcwmG3Lfrh7erGmJjolQYQkACorVECBduTSYaQ4y9NDucmwrSkrJJcQ2Z
+         ZwNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVDEuRXI4dGQPhjAFEqF1MYPRqo1TtyOlojgEdrXXj/4vGOVyR6ua3eRyNeP/qRG+jQWCHkHnqztNK5VGo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJ5aGayDR4ECCO8B5NZnMV08WCz6as0+UJ48kH7fIdsEJyC311
+	pSc+13IC75bdt2HqOlM+BCFRrgSPIBPqE/WgRYUhxCt2fDJ4XtzOU9HIQrNUV85ZwsyJfhwfv3y
+	AUypF8UEA5pq0hvBMomGtJO8DJN3B/fttfkCQn+KXyVgqfAhZHQZh7lJYoLg+FkGdlA==
+X-Gm-Gg: ASbGncsX/sVpen+dS0dMMzps/U2C53vdT0cICLZ18l0oePCPMO0Y3WNlr2lrqXs6+qJ
+	HEaHmYNt0nNTHTQKWzD3HNbxlJCtwUwtgPs3/42YD58Txrk9Mt8cnOqn/PRHYeKXB0uVBACOx53
+	YnIBgTv1vyy7pPecaIQpEXBTQ5vIm8SgWc2giliopU4x3oo+SawlbXd1Tq+jaKobPlc6YT3HwlH
+	Y+5wbuSxKFvJ0iiqL6AHrUoQID19dRjgFxXq4Db2SUXz5Q2WJZ8iZ3Gsgxe5MFQIaE7mOVx7p9v
+	qrmPlDQGSfFX3i356s1DgSYwjxfK4oR2T9KNPAeTzfeey7oLYHPzm3y1Rk0u6oGt2EYq3+yy07o
+	LkjgKPOgyaZ9F
+X-Received: by 2002:a05:620a:468e:b0:7d3:8d2e:1f69 with SMTP id af79cd13be357-7d443947fbamr183755885a.17.1750974174923;
+        Thu, 26 Jun 2025 14:42:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFUieCka+aOZrUbXnLnmpVlLncLoLoEijYEGoYBPSFatbcBvDkiAfQTVyy0D8U8ztRdJluPVg==
+X-Received: by 2002:a05:620a:468e:b0:7d3:8d2e:1f69 with SMTP id af79cd13be357-7d443947fbamr183753785a.17.1750974174559;
+        Thu, 26 Jun 2025 14:42:54 -0700 (PDT)
+Received: from [192.168.2.110] (bras-base-aylmpq0104w-grc-65-69-156-206-24.dsl.bell.ca. [69.156.206.24])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44320265asm46963085a.66.2025.06.26.14.42.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 14:42:54 -0700 (PDT)
+Message-ID: <a96141cb-9eba-4f61-be20-0f2c0d466e05@redhat.com>
+Date: Thu, 26 Jun 2025 17:42:53 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,265 +74,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] Input: soc_button_array: Only debounce cherryview
- and baytrail systems
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <f5e1d50f-d85e-45a3-a131-f2da603c620c@kernel.org>
- <57e9b1d5-faf1-4c7a-87fc-047e0dc102f9@kernel.org>
- <a9bed0b4-b050-468b-91cb-bc4c81352046@kernel.org>
- <8fc9051f-bef3-43fc-83a1-172a0eb599dc@kernel.org>
- <du46jt3mmkvceestjadbqmxbztp5xcurg4pzwzmqavo3pnfmak@tcfnufcu6de5>
- <55b4cd56-1812-4048-bf16-4b5b94a842d7@kernel.org>
- <vmjnwfg2mqr2anugefjtzezimcep27gi64d4wsctiu476w73rl@oo6r4o33jk44>
- <06ad432d-e138-4457-8180-bc35f08feed6@kernel.org>
- <blkvhrhch4y7psjqi6mlpn4q2qqrggwosw47plwizbxnjvlh5o@dux3as52kbqd>
- <5297e128-1906-4617-9c6c-f16498ef4907@kernel.org>
- <mkgtrb5gt7miyg6kvqdlbu4nj3elym6ijudobpdi26gp4xxay5@rsa6ytrjvj2q>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <mkgtrb5gt7miyg6kvqdlbu4nj3elym6ijudobpdi26gp4xxay5@rsa6ytrjvj2q>
+Subject: Re: [PATCH 1/3] mm: introduce snapshot_page()
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: david@redhat.com, willy@infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, lcapitulino@gmail.com, shivankg@amd.com
+References: <cover.1750961812.git.luizcap@redhat.com>
+ <4a9745dd2989f7d5bf5bc69c37fc3e3cfda37e87.1750961812.git.luizcap@redhat.com>
+ <20250626143929.a7f2bcbb8e90290f23af452e@linux-foundation.org>
+Content-Language: en-US, en-CA
+From: Luiz Capitulino <luizcap@redhat.com>
+In-Reply-To: <20250626143929.a7f2bcbb8e90290f23af452e@linux-foundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 6/26/2025 2:54 PM, Dmitry Torokhov wrote:
-> On Thu, Jun 26, 2025 at 02:37:19PM -0500, Mario Limonciello wrote:
->> On 6/26/2025 2:32 PM, Dmitry Torokhov wrote:
->>> On Thu, Jun 26, 2025 at 09:04:22PM +0200, Hans de Goede wrote:
->>>> Hi Dmitry,
->>>>
->>>> On 26-Jun-25 20:53, Dmitry Torokhov wrote:
->>>>> On Thu, Jun 26, 2025 at 01:30:15PM -0500, Mario Limonciello wrote:
->>>>>> On 6/26/2025 1:27 PM, Dmitry Torokhov wrote:
->>>>>>> On Wed, Jun 25, 2025 at 03:34:07PM -0500, Mario Limonciello wrote:
->>>>>>>> On 6/25/25 2:42 PM, Hans de Goede wrote:
->>>>>>>>> Hi,
->>>>>>>>>
->>>>>>>>> On 25-Jun-25 9:23 PM, Mario Limonciello wrote:
->>>>>>>>>> On 6/25/25 2:03 PM, Hans de Goede wrote:
->>>>>>>>>>> Hi,
->>>>>>>>>>>
->>>>>>>>>>> On 25-Jun-25 8:13 PM, Mario Limonciello wrote:
->>>>>>>>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>>>>>>>>>>
->>>>>>>>>>>> commit 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
->>>>>>>>>>>> hardcoded all soc-button-array devices to use a 50ms debounce timeout
->>>>>>>>>>>> but this doesn't work on all hardware.  The hardware I have on hand
->>>>>>>>>>>> actually prescribes in the ASL that the timeout should be 0:
->>>>>>>>>>>>
->>>>>>>>>>>> GpioInt (Edge, ActiveBoth, Exclusive, PullUp, 0x0000,
->>>>>>>>>>>>               "\\_SB.GPIO", 0x00, ResourceConsumer, ,)
->>>>>>>>>>>> {   // Pin list
->>>>>>>>>>>>          0x0000
->>>>>>>>>>>> }
->>>>>>>>>>>>
->>>>>>>>>>>> Many cherryview and baytrail systems don't have accurate values in the
->>>>>>>>>>>> ASL for debouncing and thus use software debouncing in gpio_keys. The
->>>>>>>>>>>> value to use is programmed in soc_button_array.  Detect Cherry View
->>>>>>>>>>>> and Baytrail using ACPI HID IDs used for those GPIO controllers and apply
->>>>>>>>>>>> the 50ms only for those systems.
->>>>>>>>>>>>
->>>>>>>>>>>> Cc: Hans de Goede <hansg@kernel.org>
->>>>>>>>>>>> Fixes: 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
->>>>>>>>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>>>>>>>>>
->>>>>>>>>>> I'm not a fan of this approach, I believe that we need to always debounce
->>>>>>>>>>> when dealing with mechanical buttons otherwise we will get unreliable /
->>>>>>>>>>> spurious input events.
->>>>>>>>>>>
->>>>>>>>>>> My suggestion to deal with the issue where setting up debouncing at
->>>>>>>>>>> the GPIO controller level is causing issues is to always use software
->>>>>>>>>>> debouncing (which I suspect is what Windows does).
->>>>>>>>>>>
->>>>>>>>>>> Let me copy and pasting my reply from the v1 thread with
->>>>>>>>>>> a bit more detail on my proposal:
->>>>>>>>>>>
->>>>>>>>>>> My proposal is to add a "no_hw_debounce" flag to
->>>>>>>>>>> struct gpio_keys_platform_data and make the soc_button_array
->>>>>>>>>>> driver set that regardless of which platform it is running on.
->>>>>>>>>>>
->>>>>>>>>>> And then in gpio_keys.c do something like this:
->>>>>>>>>>>
->>>>>>>>>>> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
->>>>>>>>>>> index f9db86da0818..2788d1e5782c 100644
->>>>>>>>>>> --- a/drivers/input/keyboard/gpio_keys.c
->>>>>>>>>>> +++ b/drivers/input/keyboard/gpio_keys.c
->>>>>>>>>>> @@ -552,8 +552,11 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
->>>>>>>>>>>               bool active_low = gpiod_is_active_low(bdata->gpiod);
->>>>>>>>>>>                 if (button->debounce_interval) {
->>>>>>>>>>> -            error = gpiod_set_debounce(bdata->gpiod,
->>>>>>>>>>> -                    button->debounce_interval * 1000);
->>>>>>>>>>> +            if (ddata->pdata->no_hw_debounce)
->>>>>>>>>>> +                error = -EINVAL;
->>>>>>>>>>> +            else
->>>>>>>>>>> +                error = gpiod_set_debounce(bdata->gpiod,
->>>>>>>>>>> +                        button->debounce_interval * 1000);
->>>>>>>>>>>                   /* use timer if gpiolib doesn't provide debounce */
->>>>>>>>>>>                   if (error < 0)
->>>>>>>>>>>                       bdata->software_debounce =
->>>>>>>>>>>
->>>>>>>>>>> So keep debouncing, as that will always be necessary when dealing with
->>>>>>>>>>> mechanical buttons, but always use software debouncing to avoid issues
->>>>>>>>>>> like the issue you are seeing.
->>>>>>>>>>>
->>>>>>>>>>> My mention of the BYT/CHT behavior in my previous email was to point
->>>>>>>>>>> out that those already always use software debouncing for the 50 ms
->>>>>>>>>>> debounce-period. It was *not* my intention to suggest to solve this
->>>>>>>>>>> with platform specific quirks/behavior.
->>>>>>>>>>>
->>>>>>>>>>> Regards,
->>>>>>>>>>>
->>>>>>>>>>> Hans
->>>>>>>>>>
->>>>>>>>>> I mentioned on the v1 too, but let's shift conversation here.
->>>>>>>>>
->>>>>>>>> Ack.
->>>>>>>>>
->>>>>>>>>> So essentially all platforms using soc_button_array would always turn on software debouncing of 50ms?
->>>>>>>>>
->>>>>>>>> Yes that is what my proposal entails.
->>>>>>>>>
->>>>>>>>>> In that case what happens if the hardware debounce was ALSO set from the ASL?  You end up with double debouncing I would expect.
->>>>>>>>>
->>>>>>>>> A hardware debounce of say 25 ms would still report the button down
->>>>>>>>> immediately, it just won't report any state changes for 25 ms
->>>>>>>>> after that, at least that is how I would expect this to work.
->>>>>>>>>
->>>>>>>>> So the 50 ms ignore-button-releases for the sw debounce will start
->>>>>>>>> at the same time as the hw ignore-button-release window and basically
->>>>>>>>> the longest window will win. So having both active should not really
->>>>>>>>> cause any problems.
->>>>>>>>>
->>>>>>>>> Still only using one or the other as you propose below would
->>>>>>>>> be better.
->>>>>>>>>
->>>>>>>>>> Shouldn't you only turn on software debouncing when it's required?
->>>>>>>>>>
->>>>>>>>>> I'm wondering if considering the first two patches we should have gpio-keys look up if hardware can support debounce, and then "only if it can't" we program the value from soc button array.
->>>>>>>>>>
->>>>>>>>>> It can be done by having gpio_keys do a "get()" on debounce.  Iff the driver returns -ENOTSUPP /then/ program the software debounce.
->>>>>>>>>
->>>>>>>>> Any special handling here should be done in soc_button_array since
->>>>>>>>> this is specific to how with ACPI we have the GPIO resource
->>>>>>>>> descriptors setting up the hw-debounce and then the need to do
->>>>>>>>> software debounce when that was not setup.
->>>>>>>>>
->>>>>>>>> As for checking for -ENOTSUPP I would make soc_button_array
->>>>>>>>> do something like this.
->>>>>>>>>
->>>>>>>>> ret = debounce_get()
->>>>>>>>> if (ret <= 0)
->>>>>>>>> 	use-sw-debounce;
->>>>>>>>>
->>>>>>>>> If hw-debounce is supported but not setup, either because
->>>>>>>>> the exact debounce value being requested is not supported
->>>>>>>>> or because the DSDT specified 0, then sw-debouncing should
->>>>>>>>> also be used.
->>>>>>>>>
->>>>>>>>> Note this will still require the use of a new no_hw_debounce
->>>>>>>>> flag so that we don't end up enabling hw-debounce in
->>>>>>>>> the hw-debounce is supported but not setup case.
->>>>>>>>>
->>>>>>>>> Regards,
->>>>>>>>>
->>>>>>>>> Hans
->>>>>>>>>
->>>>>>>>
->>>>>>>> I did some experiments with your proposal (letting SW debounce get
->>>>>>>> programmed) and everything seems to work fine*.  I think you're right that
->>>>>>>> setting a double debounce would be worst one wins.
->>>>>>>
->>>>>>> I am confused, can you explain why do we need this new no_hw_debounce
->>>>>>> flag? If AMD gpio driver is unable to program 50 ms debounce for a given
->>>>>>> pin but does not return an error (or returns an error but leaves system
->>>>>>> in a bad state) that is the issue in that driver and needs to be fixed
->>>>>>> there? Why do we need to change soc_button_driver at all?
->>>>>>>
->>>>>>> Thanks.
->>>>>>>
->>>>>>
->>>>>> The requested 50ms HW debounce gets programmed to the hardware register
->>>>>> successfully.  It is within bound that the GPIO controller can support.
->>>>>>
->>>>>> The problem is the power button does not function with a 50ms debounce.
->>>>>> The firmware asserted that 0ms should have been programmed (by the _CRS
->>>>>> value in GpioInt).
->>>>>
->>>>> I do not understand how debounce that is within the controller's
->>>>> supported range can not work. The button is a switch that reports on and
->>>>> off, there is nothing more to it, is there?
->>>>>
->>>>> I feel there is a deeper problem that we simply trying to paper over.
->>>>
->>>> Note that on x86 wakeup events and GPIO IRQs typically use a different
->>>> event mechanism / path under the hood (PME events to resume from suspend).
->>>> It is not just a case of marking the IRQ used while running as a wakeup
->>>> source.
->>>>
->>>> So it is possible that setting the hw-debouncing is in some way interfering
->>>> with the reporting of x86 PME events while the system is suspended.
->>>
->>> Still this looks like platform issue, not driver issue. Should GPIO
->>> driver refuse programming debounce if pin is configured as potential
->>> wakeup source then?
+On 2025-06-26 17:39, Andrew Morton wrote:
+> On Thu, 26 Jun 2025 14:16:51 -0400 Luiz Capitulino <luizcap@redhat.com> wrote:
+> 
+>> This commit refactors __dump_page() into snapshot_page().
 >>
->> How can the driver intricate details about the hardware connected to the
->> GPIO and how it behaves?
+>> snapshot_page() tries to take a faithful snapshot of a page and its
+>> folio representation. The snapshot is returned in the struct
+>> page_snapshot parameter along with additional flags that are best
+>> retrieved at snapshot creation time to reduce race windows.
 >>
->> The driver is "dumb" and programs the registers according to the calls given
->> to it.
-> 
-> I do not think driver needs to know details of hardware connected to
-> GPIO. I know you mentioned that it may be connected to an EC that does
-> its own debouncing, however this should make no difference from AP
-> standpoint: you are still dealing with a GPIO line and your GPIO
-> controller does debouncing for that line (which may be unnecessary
-> because the line will not be bouncing).
-> 
-> Hans mentioned that it is possible that this debounce interferes with
-> the platform reporting wakeup events. I can easily believe that. But
-> that means that if there is another peripheral device similarly attached
-> to such GPIO configured for wakeup, device that does not use gpio_keys
-> driver, it will have the same issue. And I wonder if the solution is for
-> your GPIO provider driver to refuse programming debounce for GPIOs that
-> are marked as wake capable.
-
-Hmm; how would we guarantee there was no regressions for other systems 
-with such a heuristics change?
-
-IE what if there is a system that doesn't use soc-button-array and has a 
-non-zero debounce value in the GpioInt from _AEI() and is wake capable? 
-"Today" that would be programmed to the GPIO register.
-
-If we're aiming for a driver specific heuristic another alternative is 
-to clear debounce for everything at suspend and restore it at resume.
-
-I actually did that and it seems to work fine on this affected system, 
-so I'll draft it up as an alternative to patch v3 3/4.
-
-> 
+>> This function is intended to be used by callers that need a stable
+>> representation of a struct page and struct folio so that pointers
+>> or page information doesn't change while working on a page.
 >>
->>>
->>>>
->>>> Most systems where soc_button_array is used don't support hw-debouncing
->>>> in the first place, so on most systems this change is a no-op.
->>>
->>> The change is not limited to soc_button_array driver, we need to add
->>> flags to gpio_keys as well...
+>> The idea and original implemenetation of snapshot_page() comes from
+> 
+> tpyo!
+> 
+>> Matthew Wilcox with suggestions for improvements from David Hildenbrand.
+>> All bugs and misconceptions are mine.
 >>
->> That's exactly what the patch v3 3/4 is doing.
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -4184,4 +4184,24 @@ static inline bool page_pool_page_is_pp(struct page *page)
+>>   }
+>>   #endif
+>>   
+>> +#define PAGE_SNAPSHOT_FAITHFUL     (1 << 0)
+>> +#define PAGE_SNAPSHOT_PG_HUGE_ZERO (1 << 1)
+>> +#define PAGE_SNAPSHOT_PG_FREE      (1 << 2)
+>> +#define PAGE_SNAPSHOT_PG_IDLE      (1 << 3)
+>> +
+>> +struct page_snapshot {
+>> +	struct folio folio_snapshot;
+>> +	struct page page_snapshot;
+>> +	unsigned long pfn;
+>> +	unsigned long idx;
+>> +	unsigned long flags;
+>> +};
+>> +
+>> +static inline bool snapshot_page_is_faithful(const struct page_snapshot *ps)
+>> +{
+>> +	return ps->flags & 0x1;'
 > 
-> What I was trying to say is that we are not only touching
-> soc_button_array driver but also have to make changes to more generic
-> gpio_keys driver which I would like to avoid if possible.
+> 	& PAGE_SNAPSHOT_FAITHFUL?
 > 
-> Thanks.
+>> +}
+>> +
 > 
+> All looks sane to me.  Small-system people (are there any left?) might
+> point out that all the new code could be under ifdef CONFIG_PROCFS?
+> 
+> I'll skip v1, see what reviewers have to say, thanks.
+
+Yes, no rush. And I'll fix the things you pointed out for v2 (including
+ifdef CONFIG_PROCFS). Thanks for the super quick feedback.
 
