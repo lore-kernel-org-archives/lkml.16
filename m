@@ -1,194 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAA42ECE80
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 18:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B51C194AD5;
+	Thu, 26 Jun 2025 18:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750961676; cv=none; b=J3Xva23RxFlQBhIB2COy2Bd8hWB56gZFt4hReP9neIID+4UckGn3BEWodIaoWGomceLf+yO5DwPBT9/plHnjwu9hPD+7ToahenTXIVf7RoTwj2Y2O2AH0u+TdN+LPR5rBqvKT3UrX7PK+EuiKU5yZVFJs1gQN1OdF6rRsfQhybg=
+	t=1750961747; cv=none; b=nFBhysiYFVQhOaOXBBdQb7VPAg1hL/CB5n83VsP4WkgiRE7qJWmRWCpBnVtVrygPUesmdb75yetF8vpvdAqoKCVXAoF2/3KCE8AwE3gS1aZt/X7WGjAu9p4idE9lMuCUtTXbPZctpW8CtYWvYIAatancY0IUgcz3ZN8hSB2VJIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750961676; c=relaxed/simple;
-	bh=Wypp5r6nB0NDGvG/zFS4NFbxzbafwEncAhIhaI6bOJk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=kThKAXb1ezbgSYy6I92a2/iZoZzUZnZp+11jaBq7OJUk0DZ5GX8ciwpQYla5p7SlFRGMvh/sfr6tD7qFk+RuONtyAuS2ze6c6S/5TWz91UOlW2bydLnPM48kMFGrTVLQohCOLAs317UVPtui7+q/w7DyywxTIAUPT5muwDiMnns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dXW/YJs7; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750961747; c=relaxed/simple;
+	bh=r3WpNTdcTTb9WS1CkoWJWXyTbx4bCpMGmoYafXc0yDw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=APPJAie98fi2/0f4uEKjp19ZbYCA3rRBycnJwAR9U34RSPI9bBU7Qf6ix9o2+WN4y5rP27mhb8Nxj0X2UwZNORQ3+/xSo0eRmYKil4X12aVDMrBwezKGxwU0gHWyur22L87i9uIdwSomWFOYZTEFcR0XZIOECtP5NPsOc1v/FYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=hpor0GUh; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dXW/YJs7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750961674; x=1782497674;
-  h=date:from:to:cc:subject:message-id;
-  bh=Wypp5r6nB0NDGvG/zFS4NFbxzbafwEncAhIhaI6bOJk=;
-  b=dXW/YJs7E7kKf244u/OgI++OeF7AqTKbDRRE5DbOB8CqDdmMY0Ypi3KC
-   byuHmxlWmU7Proy8pC2UKffTYaTvGnQv9f3YKy52lhGqOBvnudev2alPX
-   iHoCAU/Ykdx3MfonylMQcy3U9fPgZbCMgWQCLA9mglDKv3Sm1DQYXJ4jO
-   9BnxQkT3nVx+8+VsZP0gQ7fgmkcVWA36FV3+urumKFeoLSa/gclHnOIwY
-   2B18LFEnP90pMaST7kMGrctMZwEeWJ4fNPtm+8Fn+2qQnrReeUsYIRdx8
-   JucC8DFRa5RAOeOFNfdH++KuxhVHZhVo4+KGrfZ8FqwL9L1BArh8JDemh
-   w==;
-X-CSE-ConnectionGUID: VMrkCgn5R5arv2XdwKPxOQ==
-X-CSE-MsgGUID: ycmgA6jXSQamJIJDteHMJw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53344836"
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="53344836"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 11:14:34 -0700
-X-CSE-ConnectionGUID: jM33DZR5QwGRoalpkp714Q==
-X-CSE-MsgGUID: 3f3OsVUQRWWZaujz4bil5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="151997838"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 26 Jun 2025 11:14:32 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUr7G-000VPc-0k;
-	Thu, 26 Jun 2025 18:14:30 +0000
-Date: Fri, 27 Jun 2025 02:13:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/wfamnae-next20250616] BUILD REGRESSION
- 78f053980ba50a0becae798ab7d07527d97e790d
-Message-ID: <202506270238.Ia9msE6v-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="hpor0GUh"
+Received: from kreacher.localnet (unknown [5.63.189.50])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id C6FE866E981;
+	Thu, 26 Jun 2025 20:15:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1750961742;
+	bh=r3WpNTdcTTb9WS1CkoWJWXyTbx4bCpMGmoYafXc0yDw=;
+	h=From:Subject:Date;
+	b=hpor0GUhJU2UpT+mWXAZ1iWAve1fG94EubYMxOT46UKLSs8yOOAQE+vzOoNXHv9Ki
+	 /Djl4XicABpoRuIosEIM35P7DGWPNbLL0BXPw37w+GoKUmGQwf7FVbZKRg96bLOner
+	 9pRIXiwFKZBBENi7ijqeWE986edmvmkavYqdPNkDDp6737RoBMnkvPubOyUOPvwbgG
+	 PMJUq+aSNWYAqJrSjMF1wB4Ns8Inb8p0rn0+vlq9dz1YXINaw+RQXrU3GHGK7H4aZ6
+	 EBm7j8roAulQoxNlXxKExOP9pAW0whovm62YAjtjGId1v2UXnB7+QJoCMjHDjyCw0k
+	 ktrza3gphBuoA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux ACPI <linux-acpi@vger.kernel.org>,
+ Linux PCI <linux-pci@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 9/9] PCI: PM: Set power.strict_midlayer in pci_pm_init()
+Date: Thu, 26 Jun 2025 20:15:05 +0200
+Message-ID: <1952931.CQOukoFCf9@rjwysocki.net>
+In-Reply-To: <5015172.GXAFRqVoOG@rjwysocki.net>
+References: <5015172.GXAFRqVoOG@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 5.63.189.50
+X-CLIENT-HOSTNAME: 5.63.189.50
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: dmFkZTF716g97GLxl5r0PfOIWPAhDchnkSWDAqwBHc32sD+HpU8yKJB8xV8olL9lC0SzkWwWofqH3VgYdVRji5cIw9ZbUY7WKZiWjf3xKrF5n/kFXPdAEOzPBCDRv7/dwAHJIQ0XttMc6iSOqO8REJ6/sQbblDgpzZ3yfiPesShmkNx66bo1AYj8VcmdJw/BBHB050Zj303Yb/wm5mvAwXKjtlQwzCdkCdX+5402uydNZLICOp4E4D8MElAkMJkSAvvY8Q7l6VyWrFK73NizhJc5WdxP07GoEdKSjFDXh87nwem3gX8mTgRruroBzE94AJIHpV56uBgDMbkYtmhRhrGWknT+ZVaBlvUkIf98kXjOh7zf/rwGM6n5dCbEfhHGQsWrA3HHQ1Ms69CW6/9hCbQ4LW2sBpvzkT+ob09vZAir5OzBRnrYQvtEu6tWtZPptSh/D2v+ZmI4P9wfInsWJnlKaQO0HUEI0SdovPPVucY/QICxEMoh5P4LDjntqEKznBeXXVNU1cu0zOf8wFMoDcEy2PuFDCAn/NTalwQ426kcLJTYUZ8njOm8r/OoiFgnbiL+DlhmVUKLnpHEZvkLpyGdCqZW8JN/XGKgzIPTrDUGWeYja9pPzJBn53SlI7X1T4+Dmv5hGO+u1/B3JPLn/ScRy5A5hAd17B8W4SM3SBLM+9EJsw
+X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250616
-branch HEAD: 78f053980ba50a0becae798ab7d07527d97e790d  treewide: Avoid -Wflex-array-member-not-at-end warnings
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Error/Warning (recently discovered and may have been fixed):
+The PCI bus type does not expect its runtime PM callbacks,
+pci_pm_runtime_suspend() and pci_pm_runtime_resume(), to be invoked at
+any point during system-wide suspend and resume, so make it express
+that expectation by setting power.strict_midlayer for all PCI devices
+in pci_pm_prepare() and clear it in pci_pm_complete().
 
-    https://lore.kernel.org/oe-kbuild-all/202506260845.3py4BoAJ-lkp@intel.com
-    https://lore.kernel.org/oe-kbuild-all/202506260858.2DTGYCvK-lkp@intel.com
-    https://lore.kernel.org/oe-kbuild-all/202506261829.It6MPDTn-lkp@intel.com
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-    Warning: drivers/gpu/drm/xlnx/zynqmp_disp.c:103 Excess struct member 'xt' description in 'zynqmp_disp_layer_dma'
-    include/asm-generic/tlb.h:367:28: error: expected ';' at end of declaration list
-    include/asm-generic/tlb.h:378:2: error: expected member name or ';' after declaration specifiers
-    include/asm-generic/tlb.h:378:2: error: type name requires a specifier or qualifier
-    kernel/sched/ext.c:3712:10: error: incompatible pointer types returning 'struct cgroup_hdr *' from a function with result type 'struct cgroup *' [-Werror,-Wincompatible-pointer-types]
-    kernel/sched/ext.c:7407:17: error: incompatible pointer types initializing 'struct cgroup *' with an expression of type 'struct cgroup_hdr *' [-Werror,-Wincompatible-pointer-types]
+v1 -> v2:
+   * Set and clear the new flag in "prepare" and "complete" to allow
+     pm_runtime_force_suspend() invoked from driver remove callbacks to
+     work.
+   * Update subject and changelog.
 
-Error/Warning ids grouped by kconfigs:
+---
+ drivers/pci/pci-driver.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-recent_errors
-|-- alpha-allmodconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- alpha-allyesconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- arm64-randconfig-004-20250626
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- hexagon-allmodconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- hexagon-allyesconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- loongarch-allmodconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- m68k-allmodconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- m68k-allyesconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- microblaze-allmodconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- microblaze-allyesconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- s390-allmodconfig
-|   |-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|   |-- include-asm-generic-tlb.h:error:expected-at-end-of-declaration-list
-|   |-- include-asm-generic-tlb.h:error:expected-member-name-or-after-declaration-specifiers
-|   `-- include-asm-generic-tlb.h:error:type-name-requires-a-specifier-or-qualifier
-|-- s390-allnoconfig
-|   |-- include-asm-generic-tlb.h:error:expected-at-end-of-declaration-list
-|   |-- include-asm-generic-tlb.h:error:expected-member-name-or-after-declaration-specifiers
-|   `-- include-asm-generic-tlb.h:error:type-name-requires-a-specifier-or-qualifier
-|-- s390-allyesconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- sparc-allmodconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- um-allmodconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- um-allyesconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- x86_64-allmodconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-|-- x86_64-allyesconfig
-|   `-- Warning:drivers-gpu-drm-xlnx-zynqmp_disp.c-Excess-struct-member-xt-description-in-zynqmp_disp_layer_dma
-`-- x86_64-buildonly-randconfig-005-20250626
-    |-- kernel-sched-ext.c:error:incompatible-pointer-types-initializing-struct-cgroup-with-an-expression-of-type-struct-cgroup_hdr-Werror-Wincompatible-pointer-types
-    `-- kernel-sched-ext.c:error:incompatible-pointer-types-returning-struct-cgroup_hdr-from-a-function-with-result-type-struct-cgroup-Werror-Wincompatible-pointer-types
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -708,6 +708,8 @@
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+ 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+ 
++	dev_pm_set_strict_midlayer(dev, true);
++
+ 	if (pm && pm->prepare) {
+ 		int error = pm->prepare(dev);
+ 		if (error < 0)
+@@ -749,6 +751,8 @@
+ 		if (pci_dev->current_state < pre_sleep_state)
+ 			pm_request_resume(dev);
+ 	}
++
++	dev_pm_set_strict_midlayer(dev, false);
+ }
+ 
+ #else /* !CONFIG_PM_SLEEP */
 
-elapsed time: 1458m
 
-configs tested: 59
-configs skipped: 1
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                   randconfig-001-20250626    gcc-12.4.0
-arc                   randconfig-002-20250626    gcc-13.3.0
-arm                               allnoconfig    clang-21
-arm                   randconfig-001-20250626    clang-21
-arm                   randconfig-002-20250626    clang-20
-arm                   randconfig-003-20250626    gcc-10.5.0
-arm                   randconfig-004-20250626    clang-21
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250626    clang-21
-arm64                 randconfig-002-20250626    clang-17
-arm64                 randconfig-003-20250626    gcc-8.5.0
-arm64                 randconfig-004-20250626    clang-21
-csky                              allnoconfig    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-i386        buildonly-randconfig-001-20250626    clang-20
-i386        buildonly-randconfig-002-20250626    clang-20
-i386        buildonly-randconfig-003-20250626    clang-20
-i386        buildonly-randconfig-004-20250626    clang-20
-i386        buildonly-randconfig-005-20250626    clang-20
-i386        buildonly-randconfig-006-20250626    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-openrisc                          allnoconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-riscv                             allnoconfig    gcc-15.1.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64      buildonly-randconfig-001-20250626    clang-20
-x86_64      buildonly-randconfig-002-20250626    clang-20
-x86_64      buildonly-randconfig-003-20250626    clang-20
-x86_64      buildonly-randconfig-004-20250626    clang-20
-x86_64      buildonly-randconfig-005-20250626    clang-20
-x86_64      buildonly-randconfig-006-20250626    clang-20
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-15.1.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
