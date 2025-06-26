@@ -1,148 +1,105 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4B6267B61;
-	Thu, 26 Jun 2025 21:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBB52609E5
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750975184; cv=none; b=cEDoGC0aTMryjKPVbrEzsj3beIjjPXATLvUEPa7D9m1T6e5e58e6nLVjMvAJx+4uYswH45lKvdsJ1d9vc4Q7FrkxAfVSWKDpM2BQ/004TmpG47L8zvtjbU03dlg5MV/nTs0UIZeYCXujEAR88WiXKTdFxnchxcDSDbDLgt3bLOA=
+	t=1750975186; cv=none; b=V2K02Sy7vooKsotJGqpC/zlBn8o1xX3t9tHnaDSgao3fuEIuaMr8vrPSZl9nx/Rg/1f+xRgLehO0EP6l/S6b/Y0SaEfguHtIJN1vqXKesIY/AeooEZGAGg0SLiJ2KvrEWVLe4Ixm3beSqWzKDUJS0S/HOCfdhvTl3zF0zDqtPwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750975184; c=relaxed/simple;
-	bh=HGCefvJVkJYHUUtIEx37dq0fjaTZbRZcwkr3/SvRe/Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dKa/HcnF1IIwYnNt8v3vAThO4+7ji1WcJlPQRrZCtaSwLsxlCs7ku1SWR+Jur5YkjtOp2+zKrZLYpT/ttpcnSdP32kh34pM/jQUobwg4NQr9r3LrOuxaSmh1cIr2ylEjo5O7bu5YNiJXTbNxolZFfGU8iJw4ABx2u7+hzl1G3So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YddFxxTR; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YddFxxTR"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-234bfe37cccso20374145ad.0;
-        Thu, 26 Jun 2025 14:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750975181; x=1751579981; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=19+6eq/UcLTUhcGPnlhBGclygh3KIPHQ5cqQpFzjJBc=;
-        b=YddFxxTRosLKsyqLu/Y5FjV75dEPfumkvM9Q+Y56Be/+DIAUfHBL02Qmsgu6QeKxru
-         JHG6LYTXJLp61z2raVDno/8Nvt/uKPeENqlVZpJLVFxbDs1nDqGb1xcYjzvA0B9oUMN6
-         PkfN1J6zVyOXCS6fDrapQzusTpEfiFJ4dJkbgysd9Ypf+ugV2nggdDNf0j7jiAq0O5YK
-         wDvtuyCWBlyrdpY7jBQIawQORLQmCYgKL3IXitDLjXFoCDw2XzBkbYGcciHzVsfMXPHD
-         mKq5ZypJAKEntcz2M15VnlxYJjvBUQGRbWqAiRyHEwuV8GKrHOsD0SDVVrGv6cNvgylp
-         BUGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750975181; x=1751579981;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=19+6eq/UcLTUhcGPnlhBGclygh3KIPHQ5cqQpFzjJBc=;
-        b=bWklFbqJSbrI1pBpkVdgIV6Gn3kEuK/ACjUdCzlWc49ro+LpPHZ5vc/FFMaSxvni6S
-         iUF9tLRiOSMygco5fX3kYtj0UBGe/3gQazVmzpr7MZEyqrwWF4aJBgVieK9RnAYs24We
-         7DoDI1Z3lBEV3KzVMa93zJihARzqNx0/vkDXzSfMF6zyeOtwswNm/3XYgHXtD9tkAGNT
-         D8TITgRqsZduiEdIA8C5iZ4ApZo16i+sRYozmOfz0u2tGQpxo2/DOdPw0mNhWEpl24hm
-         E3D2yK4mFHwryZREJ5OQFgue9v7yTXXVveSi0OMNcelYrYsRPDlGoxo3Qp5tUKRjKyaN
-         CgcA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4afO4xCyC9VX7q5zIU1wWhWCIJjQGW0VcIZ2TkeyCpimBCXUW/ZS3q7pD4YUPq8VLGHsqt6M7GEXKgpf35I17Xw==@vger.kernel.org, AJvYcCW3N/HOi9mZF8bzNYZfc//BMK3MmWLregRp0P+GD6zwBCKmnQ6j8j99GsPtaXkhN0AnYiMsh6Uqu3tQMqg=@vger.kernel.org, AJvYcCWo3Lx1+9cEbq1AtVeYCedQ2XWuoo0dxmqVNqOG+U8nN1FYc7YY5mFRlrBBKB+tMOl8G7gwpTRAagg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJXpstjksk03bhW9SaYJn/MKp7CG6dCJtQbdPIdtqTiuJsCOUA
-	yPYeA1jPxULU99NQ0TLr3Mru+Y04J9beGHHoa5XBzlWC4YyhytBlSfGi
-X-Gm-Gg: ASbGnctvBsGRXYzjwisFQ88qFnRn3diVNl8NnmkCrb0+4rBV0yl1IMv7iblhMPVnvfs
-	xFmA0JNgypj0UZdXaoT9F0uF6VC6posjNxxUTrCRg8VUR0mDbZzEt9iO4a/k+1E4v/mXx3f7giM
-	ujKOX425BlXksYBQO3/AiBlsbUZ7C3hHwQ4bvCpjOiunoMkzzhFnaT6ZVsr1k2724xzy3Gk/34j
-	Yj3oTH6s+dwIJaMbwQfKeq01UnAp1C0THfZbh/8KEeAnjh90S7+aoEhQzC5YDfE362U+YpS/sDJ
-	VlWa2MA2QyoDeCkt4HgnvfbxpMwVEkvfxHinwMVrmptJHZDo/3Kpc2Cj2+kJ4hwbtmqxakod29B
-	wsjo=
-X-Google-Smtp-Source: AGHT+IFGHYw7pNh3YY2ppWd/GXJ7nll6kZo8n/rfheAtH7R1R5QnYe8TH6ojABszFWMLG+uP4MGkOg==
-X-Received: by 2002:a17:902:ec89:b0:234:8a4a:adad with SMTP id d9443c01a7336-23ac46824a1mr12395525ad.26.1750975181615;
-        Thu, 26 Jun 2025 14:59:41 -0700 (PDT)
-Received: from localhost.localdomain ([2804:1b3:a7c3:c88d:6da3:af6d:a237:3289])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39b8b9sm585275ad.118.2025.06.26.14.59.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 14:59:40 -0700 (PDT)
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-pm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org
-Cc: Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Hiago De Franco <hiago.franco@toradex.com>,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@oss.nxp.com>,
-	daniel.baluta@nxp.com,
-	iuliana.prodan@oss.nxp.com,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH v6 2/3] remoteproc: imx_rproc: skip clock enable when M-core is managed by the SCU
-Date: Thu, 26 Jun 2025 18:59:10 -0300
-Message-Id: <20250626215911.5992-3-hiagofranco@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250626215911.5992-1-hiagofranco@gmail.com>
-References: <20250626215911.5992-1-hiagofranco@gmail.com>
+	s=arc-20240116; t=1750975186; c=relaxed/simple;
+	bh=W4UO3HjXnhwlsoocybFNQKYOaf64K89DJ1Due3lreUM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MrLOOsNLMgXvZHKGANv5ooptNMLD0KZUDm/u3aKDZHjMZftfgzfTPydTXkEC8bxTEEXyFrVBLeBWBh0vr95zpkUB2lbt+HmuTb0yvUNKvRqRSN9rAb9hSguKxDM+iHxyU7YO14rkV6NG6jPGFVrGaKLmeGsVCpt4rfNHiBPqMyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id d64cf432-52d8-11f0-a011-005056bd6ce9;
+	Fri, 27 Jun 2025 00:59:31 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 27 Jun 2025 00:59:30 +0300
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Abdun Nihaal <abdun.nihaal@gmail.com>, andy@kernel.org,
+	gregkh@linuxfoundation.org, lorenzo.stoakes@oracle.com,
+	tzimmermann@suse.de, riyandhiman14@gmail.com, willy@infradead.org,
+	notro@tronnes.org, thomas.petazzoni@free-electrons.com,
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: fbtft: fix potential memory leak in
+ fbtft_framebuffer_alloc()
+Message-ID: <aF3CwnHyW5HHzDSG@surfacebook.localdomain>
+References: <20250626172412.18355-1-abdun.nihaal@gmail.com>
+ <aF2Ic8BP0zWS6R19@smile.fi.intel.com>
+ <0327da98-8a7c-4db8-8bcd-4179b87a9486@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0327da98-8a7c-4db8-8bcd-4179b87a9486@suswa.mountain>
 
-From: Hiago De Franco <hiago.franco@toradex.com>
+Thu, Jun 26, 2025 at 11:11:39PM +0300, Dan Carpenter kirjoitti:
+> On Thu, Jun 26, 2025 at 08:50:43PM +0300, Andy Shevchenko wrote:
+> > On Thu, Jun 26, 2025 at 10:54:10PM +0530, Abdun Nihaal wrote:
 
-For the i.MX8X and i.MX8 family SoCs, when the Cortex-M core is powered
-up and started by the Cortex-A core using the bootloader (e.g., via the
-U-Boot bootaux command), both M-core and Linux run within the same SCFW
-(System Controller Firmware) partition. With that, Linux has permission
-to control the M-core.
+...
 
-But once the M-core is started by the bootloader, the SCFW automatically
-enables its clock and sets the clock rate. If Linux later attempts to
-enable the same clock via clk_prepare_enable(), the SCFW returns a
-'LOCKED' error, as the clock is already configured by the SCFW. This
-causes the probe function in imx_rproc.c to fail, leading to the M-core
-power domain being shut down while the core is still running. This
-results in a fault from the SCU (System Controller Unit) and triggers a
-system reset.
+> > >  release_framebuf:
+> > > +	fb_deferred_io_cleanup(info);
+> > >  	framebuffer_release(info);
+> > 
+> > While the fix sounds good, there are still problems in the driver in this area:
+> > 
+> > 1) managed resources allocation is mixed up with plain allocations
+> > (as you discovery hints);
+> > 
+> > 2) the order in fbtft_framebuffer_release() is asymmetrical to what
+> > we have in fbtft_framebuffer_alloc().
+> > 
+> > I would recommend to study this code a bit more and provide the following
+> > patches as a result:
+> > 
+> > 1) fixing the order in fbtft_framebuffer_release();
+> > 
+> > 2) moving vmem allocation closer to when it's needed, i.e. just after
+> > successful allocation of the info; at the same time move txbuf allocation
+> > from managed to unmanaged (drop devm, add respective kfree() calls where
+> > it's required);
+> 
+> Symetrical in this sense means that the cleanup in
+> fbtft_framebuffer_release() and in fbtft_framebuffer_alloc() are
+> similar:
+> 
+> 	fb_deferred_io_cleanup();
+> 	vfree();
+>  	framebuffer_release();
+> 
+> I feel like number 1 and 2 are sort of opposite approaches to making the
+> order symmetrical.  #1 is changing fbtft_framebuffer_release() and #2 is
+> changing fbtft_framebuffer_alloc().  #2 is the less awkward approach.
+> 
+> > 3) this patch.
+> > 
+> > All three should have the respective Fixes tags and hence may be backported.
+> 
+> Changing the order isn't a bug fix so it wouldn't get a Fixes tag.
+> I agree with Andy that the code isn't beautiful.  But I think it's
+> easier to just fix the bug, and do the cleanup later as an optional
+> patch 2/2.  I would also have been fine with a larger patch that does
+> the cleanup and the bug fix in one patch but I think other people
+> won't like that.
 
-To address this issue, ignore handling the clk for i.MX8X and i.MX8
-M-core, as SCFW already takes care of enabling and configuring the
-clock.
+Ah, you have a point. Yes, the moving vmem allocation will solve the ordering
+issue.
 
-Suggested-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
----
-v5 -> v6:
- - Commit description improved, as suggested.
-v4 -> v5:
- - Unchanged.
-v3 -> v4:
- - Unchanged.
-v2 -> v3:
- - Unchanged.
-v1 -> v2:
- - Commit description updated, as suggested. Fixed Peng Fan email.
----
- drivers/remoteproc/imx_rproc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-index 74299af1d7f1..627e57a88db2 100644
---- a/drivers/remoteproc/imx_rproc.c
-+++ b/drivers/remoteproc/imx_rproc.c
-@@ -1029,8 +1029,8 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
- 	struct device *dev = priv->dev;
- 	int ret;
- 
--	/* Remote core is not under control of Linux */
--	if (dcfg->method == IMX_RPROC_NONE)
-+	/* Remote core is not under control of Linux or it is managed by SCU API */
-+	if (dcfg->method == IMX_RPROC_NONE || dcfg->method == IMX_RPROC_SCU_API)
- 		return 0;
- 
- 	priv->clk = devm_clk_get(dev, NULL);
 -- 
-2.39.5
+With Best Regards,
+Andy Shevchenko
+
 
