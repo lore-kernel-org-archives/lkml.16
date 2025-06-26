@@ -1,169 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADD1215191;
-	Thu, 26 Jun 2025 10:01:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AB621858A;
+	Thu, 26 Jun 2025 10:01:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750932093; cv=none; b=fWLUkIh9woFnXtOz1Pd5J5qwvyhHDoVl4H43stfq9zOnPNjqchDI25Q362ZiYOhrQIlOBYHULtaK772Sabx/ZmAq6YPNnX7/NkkMPtJB2hPllGanGn+zW4J/iGvQxabO1XYg8BvtApDYnih7ItceMOIjDoDcqZWBafSONp2dlko=
+	t=1750932112; cv=none; b=ReoGOuBAsMBgKSvznye/6nW7YKKILMZHrbmFh9lpE5SNnKERvnwe03cGhxbDw7J3CG/t1BQr14FMIEYHWL9CGUjiFi/FK0+aUkw2t0TPQeWyKmFd9IK9BA3hgDSOfMjawEKxuW4LdnIWVzHJQGdzfugaT4UvVrcYUa3MdjxSQ6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750932093; c=relaxed/simple;
-	bh=McmUIOqUXrJIctsME9vRVAlp/RiJlS0oVENtAK6eEZo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bhlRRgRepYwUmIJk6OaEb8ruUeR+nKfNWSdYNvF42deGPiq8qTCmLkL9dZok/N08m7ZL8GJFufw39ld8pX07XQ4iRAqsd0eu9TyZCIhjvhxgXKGXeRQcNazWR7VvGrp6bgaSLBDJ0/rUkmGXTYMBQImA1MpDleeCeJhIc4WZyVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V18s4SIh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750932112; c=relaxed/simple;
+	bh=celi5Quy8J2eAxPMvubiJIyTHstasenQDNv4zGeqqlM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OpBBuxTr+Uc6hltugPuw6UJ4y8p7HILHmwN9S3Ex9WVn8dldLYTSi62mSkR/72ZKZYtP5lk06IkBUJQHe7J2hi8OMeAn3F9sMKG8RICj3HxUNQO4OkH7biXC+jx+gQEnv+rbJskl0eg9Uyr7OakzzUbJLDtnfEfGxVejgAnc1vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G10n5isK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V18s4SIh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1171EC4CEEF;
-	Thu, 26 Jun 2025 10:01:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G10n5isK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1C91C4CEEB;
+	Thu, 26 Jun 2025 10:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750932093;
-	bh=McmUIOqUXrJIctsME9vRVAlp/RiJlS0oVENtAK6eEZo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=V18s4SIhJNqVzj6SmwB746eb//vIN/RpBbuUpotJsowRRBIFHlQ8nr6J3OQ+pV5th
-	 CpnWVqUlKVc0G3BZkDBqaRYit1mo5RHAWbied1NXSEYzq5AFnxH8bqUW7Po2BYi9Ih
-	 iY8xgSMnh/n2QUByGFe+h0TVEp/W+vCHRm84UFJ+J5epburPOn4VIdBxi8WkExX+Sl
-	 RlgbLlee8R3zKcBhfPMICdxW1mTClLEWIdq1WRgOEuG27RgG96KCY+GgyqE1hEryp1
-	 qAK/WTTR18jK5PypaAYxnxuKFAUTSWscMtjF6uBEjOQfQHVp6tBAtoYUxhI0U6diWu
-	 0GbAiG7D1UUYQ==
-Message-ID: <2a5849d2-2e75-4d04-ad24-bccbed6ed666@kernel.org>
-Date: Thu, 26 Jun 2025 12:01:25 +0200
+	s=k20201202; t=1750932111;
+	bh=celi5Quy8J2eAxPMvubiJIyTHstasenQDNv4zGeqqlM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G10n5isK4W0bH3XYMDpsJN8M8qCOpelQH8JUJtnaJbJZ8BmZJP5GjqfOYABkwLStP
+	 m4I/Sulaerg6ilQnwkR/HplEt86l9Vu3zQwmis4d4h5jkBlQYwr5a1oyxdhDczYaa5
+	 UNcOiKE3yz57xUjkexR3pstmX8WRlFsK4/axblcsgww264/lRgwm4O18OBgN0wB9/8
+	 s4k4MXO2kdSo7MChLn0f1RHTUW8Sgdfa1cuwRYSGsBaKdbLwpOQ4Shc+oMBcB+hkER
+	 Yv8a3O3G7rK00cWJloDVyMjxbFxOCtg4m4mE+GCDKK2A5aN/412UQRVXelNrBfNQ8d
+	 Wi4ut9WxXx1YA==
+Date: Thu, 26 Jun 2025 12:01:44 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] rust: devres: get rid of Devres' inner Arc
+Message-ID: <aF0aiHhCuHjLFIij@pollux>
+References: <20250624215600.221167-1-dakr@kernel.org>
+ <20250624215600.221167-4-dakr@kernel.org>
+ <aFzI5L__OcB9hqdG@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] media: dt-bindings: Add qcom,msm8939-camss
-To: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
- vincent.knecht@mailoo.org, Robert Foss <rfoss@kernel.org>,
- Todor Tomov <todor.too@gmail.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250602-camss-8x39-vbif-v4-0-32c277d8f9bf@mailoo.org>
- <20250602-camss-8x39-vbif-v4-3-32c277d8f9bf@mailoo.org>
- <2884f55c-6b80-406a-ba21-aaa26297b1bf@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <2884f55c-6b80-406a-ba21-aaa26297b1bf@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFzI5L__OcB9hqdG@Mac.home>
 
-On 06/06/2025 12:46, Vladimir Zapolskiy wrote:
-> Hello Vincent.
+On Wed, Jun 25, 2025 at 09:13:24PM -0700, Boqun Feng wrote:
+> On Tue, Jun 24, 2025 at 11:54:01PM +0200, Danilo Krummrich wrote:
+> [...]
+> > +#[pin_data(PinnedDrop)]
+> > +pub struct Devres<T> {
 > 
-> On 6/2/25 20:27, Vincent Knecht via B4 Relay wrote:
->> From: Vincent Knecht <vincent.knecht@mailoo.org>
->>
->> Add bindings for qcom,msm8939-camss in order to support the camera
->> subsystem for MSM8939.
->>
->> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
->> ---
->>   .../bindings/media/qcom,msm8939-camss.yaml         | 254 +++++++++++++++++++++
->>   1 file changed, 254 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml b/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..59bf16888a8235495a2080e512ce179583bcd25d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml
->> @@ -0,0 +1,254 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/media/qcom,msm8939-camss.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm MSM8939 Camera Subsystem (CAMSS)
->> +
->> +maintainers:
->> +  - Vincent Knecht <vincent.knecht@mailoo.org>
->> +
->> +description:
->> +  The CAMSS IP is a CSI decoder and ISP present on Qualcomm platforms
->> +
->> +properties:
->> +  compatible:
->> +    const: qcom,msm8939-camss
->> +
->> +  reg:
->> +    maxItems: 11
->> +
->> +  reg-names:
->> +    items:
->> +      - const: csid0
->> +      - const: csid1
->> +      - const: csid2
->> +      - const: csiphy0
->> +      - const: csiphy0_clk_mux
->> +      - const: csiphy1
->> +      - const: csiphy1_clk_mux
->> +      - const: csi_clk_mux
->> +      - const: ispif
->> +      - const: vfe0
->> +      - const: vfe0_vbif
+> It makes me realize: I think we need to make `T` being `Send`? Because
+> the devm callback can happen on a different thread other than
+> `Devres::new()` and the callback may drop `T` because of revoke(), so we
+> are essientially sending `T`. Alternatively we can make `Devres::new()`
+> and its friend require `T` being `Send`.
 > 
-> Please sort the list alphanumerically, accorting to the ASCII character set
-> the underscore symbol precedes lower case letters.
+> If it's true, we need a separate patch that "Fixes" this.
 
+Indeed, that needs a fix.
 
-This messes up with preferred style, as I described multiple times now.
-You need to stop this sorting madness - asking people to sort values by
-some own rules.
+> (Imagine a Devres<MutexGuard>)
+> 
+> > +    dev: ARef<Device>,
+> > +    /// Pointer to [`Self::devres_callback`].
+> > +    ///
+> > +    /// Has to be stored, since Rust does not guarantee to always return the same address for a
+> > +    /// function. However, the C API uses the address as a key.
+> > +    callback: unsafe extern "C" fn(*mut c_void),
+> > +    /// Contains all the fields shared with [`Self::callback`].
+> > +    // TODO: Replace with `UnsafePinned`, once available.
+> 
+> nit: Maybe also reference the `drop_in_place()` in Devres::drop() as
+> well, because once we use `UnsafePinned`, we don't need that
+> `drop_in_place()`. But not a big deal, just trying to help the people
+> who would handle that "TODO" ;-)
 
-Best regards,
-Krzysztof
+Makes sense, the same is true for the Send and Sync impls, I think. AFAIK,
+UnsafePinned should cover them automatically.
