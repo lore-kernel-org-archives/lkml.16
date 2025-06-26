@@ -1,139 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EE02ED16C;
-	Thu, 26 Jun 2025 16:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3381C2E7179;
+	Thu, 26 Jun 2025 17:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750957190; cv=none; b=ah5y/r40ORhlvNMTXSafSX1Tzj/QVXJzmWayvdJ7GWR8cHNpH5wSd14ShqpGFDAin9o4NdHRDby3NFLbQfsZ2R8zQ6mo6q09LcYPOpbYLSYJ9Kf+JwpJBypazXgM6vjXLBjnwxhb0KxziPC+y2uotYeMpQ2bxBQr24rQuY0K/d8=
+	t=1750957202; cv=none; b=XbODoiqxyoEUU2LMyU8PBdUvF+Qw6n85V7Sf1ngX9iWnOdrEjKWHQksKihiqb03q5h2e4BtfTRxVq6PBCqedLBi+sQbwLUVKBQN+7S6KROvhnggeZ3J3YGljg7ZU+qXly2DO9gugQE5bb3JLGJYy0i89G1sUPEcJCNqhYwOwsos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750957190; c=relaxed/simple;
-	bh=XDZrZwxwxUIuc0jfolFJs79wYj64E78GgF4qSIDssKs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oV/jScGO3/iJ/GR0ybFErU+jbJVIcC/XWNPRUsEjZctypx5c9VVF9iQlfdjyUjo4vW+xkVRJxHJw70KUkhC4gowe6HRbNaq1Shs48bGJMug7gcu0oqCZdwiPMAcLH5ysX+FPq/2JEuFgjepGThGqyCQIk2PazIP2yHlcRzAs2/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cDhHALsY; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750957202; c=relaxed/simple;
+	bh=Bo6oxtzL0W1GxO/VSlDn0dbBOu/B/7fXMahDuNOFn/w=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=dr2WvE7f+uGh51Ft2uUwQqkeOnkp8zYsA9/w2NwHVjCJaGIf946YtyHFa02kofOOBzq5oSKHCRcOTgyXPTlqh/gQVQSJMcDkrzxTQn3/9ux6lyOJlaTrh+QP1sZ4+NUnLfRFhLuplBlrzi/X1UvEaWU+xZBDoPfnkbHQsfz5mls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BKisp8kf; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cDhHALsY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750957189; x=1782493189;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=XDZrZwxwxUIuc0jfolFJs79wYj64E78GgF4qSIDssKs=;
-  b=cDhHALsY0H1iNykZcIiifaxu2dchjYKF7u19ut1gpkowrWTxspUXE/f9
-   ZQEc1SyFg/27qfrsJX5oJ5W44R4+XAJghIG5V6UJ4SfkLhq72jUVTl9Jx
-   fnJrGUPuWrzJNXVTHEcE2u7Zn0izUUqVUUdenswNVVu7vR8qDAQ8ni+io
-   JF4cbvL9WtuqfET9CIlqV5Eqd7AUhutyJh02x8XUKGnIvSCK2+DQFZvSC
-   5sz20M5biWm3yeFuDA0XYtmIwpzqIg/UNPXZnbeq0RKb97tE/NfZktlZG
-   eLgSY/VCXXZFryQTCXei1rr1obHuZfpezg/+vhFkjmEs0915jIgWLlK5L
-   A==;
-X-CSE-ConnectionGUID: uwEtla1dTzeLSBkyVPfQBg==
-X-CSE-MsgGUID: FHOkYa7GQ/Sw8DvHBOP3tA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="55887735"
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="55887735"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:59:48 -0700
-X-CSE-ConnectionGUID: J+uphDd+TlqC0dcbXL4H5w==
-X-CSE-MsgGUID: sbLwaa6ITd6slQ3Ps7cfVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="158066056"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.109.42]) ([10.125.109.42])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:59:48 -0700
-Message-ID: <1fbdfffa-ac43-419c-8d96-c5bb1bdac73f@intel.com>
-Date: Thu, 26 Jun 2025 09:59:47 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKisp8kf"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e82314f9a51so929973276.0;
+        Thu, 26 Jun 2025 10:00:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750957200; x=1751562000; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mkb2HmUMZIP2Rb2qugNA8k3jpv7TnOwxrJKFq3ITnEA=;
+        b=BKisp8kfyeS+yp1ctYUjYit2JSwnIdTo/hEE4K8IxVnxV3lJIoR45gTWS0m0K30OT2
+         t3iAg2jpWeAZPVE77S2pdNmu/E88tukKoGz2AR+NBFy7/fR09AYXvevicNHZlWj7NNru
+         ro+EYWJPSESu3/fg4gb8InDe/MFvuGm3GRvBpYmcvCruCkMCC2wRVJRqVxuInCCIGDV4
+         z0cOuVVdTU4+Q8GaY8ueBdHOsAC3GFLvUCfffc+274Y6VNl7kY2KJpQalkeRzs2KBlWg
+         8wV+A0QvVikG3FaU0/3BXQ4mx49B5D4XjDCjOCCuWde3/ksWN2wKABYXMQTLWXIMiK8p
+         0bhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750957200; x=1751562000;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Mkb2HmUMZIP2Rb2qugNA8k3jpv7TnOwxrJKFq3ITnEA=;
+        b=crS41Hg3vukPG6gMYDusiLu90nznaM6ijhZFtnfUTHUoLQChy5WA7qUsIAA4p3mvdS
+         AehphCwk1ERf7Po/mwvspXThgolkvsTqMFyf3xiGZYar1WkiUHT9/nkgctGLufqUi0kF
+         tF6L4sCXeuceXqHKv85utdl9+br5mSYEya41Ffn70ORKhzxarJMmjIGd3ZB94ifJJUrO
+         BKYHcbeXII7D1fBA+Ffxmt1S6d0Sw1jNlojhJhvjAW/w2w3f5PHvc4DfixiwExWSzj1T
+         GBaJNwxMahSH0jm3239+yDC/d1hjDWUz2q2PlCuwUeRAEbwsPNeAjQDKvjPSw6yypGoW
+         DwvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1oz0xxs6gUJ1ALtcZ9cBH3rGkbDh4bZUBrmhGPiybJD27NA0KUkyFPHr+c8nfF403HFDeyHJLkVuj/yk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2zE7OF+ZRNN1nIC1ws3UaaheIWtP8yGBUlW7SUvozLv//BCi7
+	aGNVOPM/51TxrFn/0jGz7xPURv4E2rrW4154vqBzevLIvBt7yQV7GukH
+X-Gm-Gg: ASbGncvDKuZk66Vk3OhXxyyI1TNSNt9miaBGtk1wSwi43tp4qj5U+9dJmEM9qQMllYv
+	oci5pkzbzM/gmvWrVKrgfmVzBlxUTaQHQkuk+geDIsikkh6IO244x0BDg2Rm+sRhAGw+5FWeAcW
+	CtnPCtwQJO9Wbf60ILZ+5PM8wS6A/3OSpG/PHLTF2buft+bSADMfza+dTjSin7+iQz0+/7npK8y
+	NMrNIuIL9B9a/ky4NNKH2pEq09srbbbl8mpmynbbUHQTYdYBr0vESoyr9XoTU/qRBNRR44vJqWn
+	DU2eAKHhP7FkZ4wkQRYWSjSpnivSNbXh0HtJKvyTDntgvClYNIFwW7vl3ymN1Lg5mQlClqq+Vwb
+	2He5DVN/5u//wwf78y8kAHPCQsx8iugCDsxGvgUwt4X18Gz1r3LbH
+X-Google-Smtp-Source: AGHT+IHSgie8fw6PjGHutaIA8FKdtcevCg+f97UD5nQ6Qv0RVto5ZdWE0vRUQrfByGAa+C+Dn0BrpQ==
+X-Received: by 2002:a05:690c:ecf:b0:70e:326:6aeb with SMTP id 00721157ae682-71515fb3045mr8687597b3.10.1750957200084;
+        Thu, 26 Jun 2025 10:00:00 -0700 (PDT)
+Received: from localhost (141.139.145.34.bc.googleusercontent.com. [34.145.139.141])
+        by smtp.gmail.com with UTF8SMTPSA id 00721157ae682-71515bee153sm674257b3.5.2025.06.26.09.59.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 09:59:59 -0700 (PDT)
+Date: Thu, 26 Jun 2025 12:59:58 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Breno Leitao <leitao@debian.org>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, 
+ Joe Damato <jdamato@fastly.com>
+Cc: netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ kernel-team@meta.com, 
+ Breno Leitao <leitao@debian.org>
+Message-ID: <685d7c8e25747_2e676c2944e@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20250620-netpoll_fix-v1-1-f9f0b82bc059@debian.org>
+References: <20250620-netpoll_fix-v1-1-f9f0b82bc059@debian.org>
+Subject: Re: [PATCH net] net: netpoll: Initialize UDP checksum field before
+ checksumming
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv2 01/12] x86/tdx: Consolidate TDX error handling
-To: Sean Christopherson <seanjc@google.com>
-Cc: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
- Rick P Edgecombe <rick.p.edgecombe@intel.com>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- Chao Gao <chao.gao@intel.com>, "bp@alien8.de" <bp@alien8.de>,
- Kai Huang <kai.huang@intel.com>, "x86@kernel.org" <x86@kernel.org>,
- "mingo@redhat.com" <mingo@redhat.com>, Yan Y Zhao <yan.y.zhao@intel.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
- Isaku Yamahata <isaku.yamahata@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
- <20250609191340.2051741-2-kirill.shutemov@linux.intel.com>
- <5cfb2e09-7ecb-4144-9122-c11152b18b5e@intel.com>
- <d897ab70d48be4508a8a9086de1ff3953041e063.camel@intel.com>
- <aFxpuRLYA2L6Qfsi@google.com>
- <vgk3ql5kcpmpsoxfw25hjcw4knyugszdaeqnzur6xl4qll73xy@xi7ttxlxot2r>
- <3e55fd58-1d1c-437a-9e0a-72ac92facbb5@intel.com>
- <aF1sjdV2UDEbAK2h@google.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <aF1sjdV2UDEbAK2h@google.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-On 6/26/25 08:51, Sean Christopherson wrote:
-> No, I was thinking:
+Breno Leitao wrote:
+> commit f1fce08e63fe ("netpoll: Eliminate redundant assignment") removed
+> the initialization of the UDP checksum, which was wrong and broke
+> netpoll IPv6 transmission due to bad checksumming.
 > 
-> 	if (IS_TDX_ERR_OPERAND_BUSY(err))
+> udph->check needs to be set before calling csum_ipv6_magic().
 > 
-> e.g. to so that it looks like IS_ERR(), which is a familiar pattern.
+> Fixes: f1fce08e63fe ("netpoll: Eliminate redundant assignment")
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-That would be a more more compelling if IS_ERR() worked on integers. It
-works on pointers, so I'm not sure it's a pattern we want to apply to
-integers here.
-
-I kind of hate all of this. I'd kinda prefer that we just shove the TDX
-error codes as far up into the helpers as possible rather than making
-them easier to deal with in random code.
+Reviewed-by: Willem de Bruijn <willemb@google.com>
