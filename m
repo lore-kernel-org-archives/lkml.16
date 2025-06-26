@@ -1,127 +1,127 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB93727EFE9;
-	Thu, 26 Jun 2025 08:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB0519D07A
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750927261; cv=none; b=ptwkpzzOrWEdR/85pFJWOBEb5pceUZacWi3/OzzIY+EKXFnkrUm27QWgq14XfHgGpcMNuUYUol8oNe6uFgO1tP9WCP6H0NYdjoc0YQqb7uJxfW9fHfiOQbaPZ93MD5dzeAuA+TPJ0BpHJ00lFyDeGzRKXEe1VNt4Jx3qu57F/C4=
+	t=1750927263; cv=none; b=uwt2/pZNrHFlu2d4kedSD/hsgS2pPXcvTbgogT9h6t0kn00Vg2eCeAu2E4GWRnkHSyc4xpMHoW8HU9TmtMYDz88mDimtkQmCjLSN8Xl8Lw5ex+DxewJrTZCC9GMmglCkx2+28R9KaaKYVr5GOTRXgkfUyBOnfYA49Ymb4mgEpPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750927261; c=relaxed/simple;
-	bh=X7liYNZKtZ/SRtsmqGvcVDdn/3KBB20klOip54vWi7o=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ooL2ovO7ROg587eoC2+ixR5PuWm9rOWmg1oFvoJGdl6m5ri1ifo4+7DEkcxF1Gzr5jXXAL83GuKV9sdC90K7Y+IoA96FgGMhvqPyRyvSb853qHZoXwpmbG3ZuXZtg2w+xxOPmTASQofg5XneS+CCvb0B78E/+7bsqYBivuVrHYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=yAcNns/e; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1750927263; c=relaxed/simple;
+	bh=CEOLxKnBSHxdNK/8E/hZDZadpr6VDDrPkQ3LThRniAc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=eS1enZ+67QJD5Sb7fRQYMpcqgNw8KHl42XPr94q10nopfXpY1dw6fJAmtGXRHTzBkNZJCE1BInA0JfZo+v2ZbA0+0licRHy0P0TeonqZn96OQCrnpq+j8MjcLEjfAOk87WqzgsbYYWqkdzwxknxwGTvc1kiGLyVis43Ic6XzQgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bYwjv9VK; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="yAcNns/e"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q8PD5s026846;
-	Thu, 26 Jun 2025 10:40:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	5xLXEiPmIkFsOWq2iScRt7BhDQ5CLO6wEMeeYC9tPQw=; b=yAcNns/eKTBEPfvF
-	brtge3KBWhvYe/uSk9spqaox79wdlAKfckfm1jprWhwvaHBI4BvhcuI2HlePQNDJ
-	MeoSMRdIO4uGXT1H04TjELdVKe6z6lpj9irdpw6upp7KzjGEC7pE6O9J8KhUty+R
-	VDPvYz/mRhaSOpyH4RJFCS3qLhPYvWusBwhhp03g92LtBsFkdLahsO25v9bnduVm
-	CDPbcT9Rvmrqj4R4DDu0ic4LkIRYqimc2G+M6gEGCstRZMM3+e0Uc1CQSA32di49
-	oADO1A0KfMQa2MMwO+jL1+SEHSY8ZSgI8ExKTt9rOqwj3CklBCDmGVq/xpNp5Y6x
-	5ERS9g==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dhvbwe8f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 10:40:40 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 24FE640047;
-	Thu, 26 Jun 2025 10:39:11 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9EADBB22D16;
-	Thu, 26 Jun 2025 10:37:51 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.130.77.119) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 26 Jun
- 2025 10:37:50 +0200
-Date: Thu, 26 Jun 2025 10:37:44 +0200
-From: Alain Volmat <alain.volmat@foss.st.com>
-To: =?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
-CC: Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
-        Andi Shyti
-	<andi.shyti@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Sumit Semwal
-	<sumit.semwal@linaro.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?=
-	<christian.koenig@amd.com>,
-        M'boumba Cedric Madianga
-	<cedric.madianga@gmail.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        "Pierre-Yves
- MORDRET" <pierre-yves.mordret@st.com>,
-        <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>
-Subject: Re: [PATCH 1/3] i2c: stm32: fix the device used for the DMA map
-Message-ID: <20250626083744.GA348766@gnbcxd0016.gnb.st.com>
-References: <20250616-i2c-upstream-v1-0-42d3d5374e65@foss.st.com>
- <20250616-i2c-upstream-v1-1-42d3d5374e65@foss.st.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bYwjv9VK"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451d3f72391so6725285e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 01:41:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750927259; x=1751532059; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=mqydyuV2L+c1cc3gUPzPyIMoiV1f+E/9GxzbGWjpkkQ=;
+        b=bYwjv9VK8SbHRY5c1pQpiLIr4DGEgt6O3u1rG4ZrGr7Rw+aNk+aACztjBt4EfYX9Js
+         +7Gvnm/ID+a5JBZF5DVYEZJEYGLYSH3x0Wtm1DHpxj5We9H9bmGSpPrjk70kKQAh3YS6
+         p6fsvGJxs1ILh1Vpp5/MnBOaiAD8/UWO1aVrADmz3cXp4Mjt1sdr7Y1PB8YbRrXPiIHs
+         kNObQJdM3U9X0FVKbx+io8Vkf04/v2lfscVolZ3ol2aueb8DT1Lah+U8rJbshMSXsAVC
+         IyCraL03wGWgfzRHkkCX8TNcwlxAtAKS7n1j/IpNsxxzDXNFp9+GW40q0JAz9kwmGA1p
+         0ZIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750927259; x=1751532059;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mqydyuV2L+c1cc3gUPzPyIMoiV1f+E/9GxzbGWjpkkQ=;
+        b=a3lbqHKdkgI33G0IYjEJgav4K3VRV9V3aiucZjGWjR20u0xuWBGrtSwlVW6SmJVy9T
+         CQp8/G8qwRLY9OXDHzsKyCZ3ACUBy8rknVGCI1dunz3A4Z3ErtnlOMdJxpBhkj6sa0cE
+         sSXf7a3sAmaJB0Nuon1vDrJGqIqDiXXXe1I7/oSJYNyA91zFB9djzCFXHnDaComIJSOq
+         GIi3cVCCjvY8xWAlmE0yBjsDodLLZIm44dLHlppz/L+e5pab3+6NbKkCnVm7yxJrth6n
+         vS6ua7rNNxPtkMgDJULGhZ2/4u3tyN4H1zJkvHGQqFgNz+U28D8TJOzJ43ur1u9BvgVP
+         NG9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVo02qPcZBHVt/9Mg64zEj6k2yDzgiCxU6qbQH5RHuhzrpLuk7M/NktulDcrwc8Tc+wpI97612hmTgz4eo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc7EXSZn57pL8v6H5Ib6nrP55LN1oej+/pTuM6z/VVEATTsdjR
+	LqtZWebHms9n3Z2lcWfUFkt6+im2f0ISBpBeueNadjzJEZr1a9h87FwdULH6Z5FF5bc=
+X-Gm-Gg: ASbGncu/pgbQeXp6bhojjD9WfYwD1cujHJSF0ZVDTIbx5KPBpACscrQy4DU4hn81A3V
+	muMQiRzeCwyA7T2y+9xOE9AZvd+WP7N0hRfVYidOYPLW7tfd6NSUfmmjND7BrWQKM/j5Bvro0UI
+	j6VUgHo8G411GDVIzimpcUCsKVxIXlGd45NJb9fdKMjPpgwj6RjzDC6eYToeqVCpkfBWGjtiv3Q
+	Q6f05E4oDn+nMfXOQYLSup+BCXnD/8h3uWb43hS2ORq9Grv0AfGEzNS/jBExXSd8jhUSxTF6nQr
+	SNRlM8RmBF4Fh+pqiz0O0ZQQylKhnOYKwgPSbeAcDBb0tF/rowxzIfZEVZYvFho0A9fuSPIVDYE
+	jO81FNBzOkViOhA==
+X-Google-Smtp-Source: AGHT+IGk85pAoZNBdaoex59k88lUaajcvjUnUboS9LkkZ9rI1dqglevNKjOCDS/0Wdg3nwTyqGkdxQ==
+X-Received: by 2002:a05:6000:4287:b0:3a4:f8fa:8a3a with SMTP id ffacd0b85a97d-3a6ed5db09fmr4797028f8f.18.1750927259315;
+        Thu, 26 Jun 2025 01:40:59 -0700 (PDT)
+Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f5386dfcsm3890495a91.10.2025.06.26.01.40.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 01:40:58 -0700 (PDT)
+Message-ID: <ac0d17a3-34c6-41a4-9bb8-ad9f3900c809@suse.com>
+Date: Thu, 26 Jun 2025 18:10:51 +0930
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [btrfs?] possible deadlock in btrfs_read_chunk_tree
+To: syzbot <syzbot+fa90fcaa28f5cd4b1fc1@syzkaller.appspotmail.com>,
+ clm@fb.com, dsterba@suse.com, josef@toxicpanda.com,
+ linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quwenruo.btrfs@gmx.com, syzkaller-bugs@googlegroups.com
+References: <685cea8e.050a0220.2303ee.014f.GAE@google.com>
+Content-Language: en-US
+From: Qu Wenruo <wqu@suse.com>
+Autocrypt: addr=wqu@suse.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
+ FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
+ Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
+ fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
+ 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
+ V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
+ rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
+ rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
+ Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
+ E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
+ vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
+ g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
+ AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
+ cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
+ qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
+ /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
+ o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
+ JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
+In-Reply-To: <685cea8e.050a0220.2303ee.014f.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250616-i2c-upstream-v1-1-42d3d5374e65@foss.st.com>
-X-Disclaimer: ce message est personnel / this message is private
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_04,2025-06-25_01,2025-03-28_01
 
-Hi Clément,
+#syz test: https://github.com/adam900710/linux.git shutdown
 
-On Mon, Jun 16, 2025 at 10:53:54AM +0200, Clément Le Goffic wrote:
-> If the DMA mapping failed, it produced an error log with the wrong
-> device name:
-> "stm32-dma3 40400000.dma-controller: rejecting DMA map of vmalloc memory"
-> Fix this issue by replacing the dev with the I2C dev.
-
-Indeed, nice catch ! Thanks a lot !
-
+åœ¨ 2025/6/26 16:07, syzbot å†™é“:
+> Hello,
 > 
-> Fixes: bb8822cbbc53 ("i2c: i2c-stm32: Add generic DMA API")
-> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
-> ---
->  drivers/i2c/busses/i2c-stm32.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> syzbot tried to test the proposed patch but the build/boot failed:
 > 
-> diff --git a/drivers/i2c/busses/i2c-stm32.c b/drivers/i2c/busses/i2c-stm32.c
-> index 157c64e27d0b..5e0b31aed774 100644
-> --- a/drivers/i2c/busses/i2c-stm32.c
-> +++ b/drivers/i2c/busses/i2c-stm32.c
-> @@ -118,7 +118,7 @@ int stm32_i2c_prep_dma_xfer(struct device *dev, struct stm32_i2c_dma *dma,
->  	dma->dma_len = len;
->  	chan_dev = dma->chan_using->device->dev;
->  
-> -	dma->dma_buf = dma_map_single(chan_dev, buf, dma->dma_len,
-> +	dma->dma_buf = dma_map_single(dev, buf, dma->dma_len,
->  				      dma->dma_data_dir);
->  	if (dma_mapping_error(chan_dev, dma->dma_buf)) {
->  		dev_err(dev, "DMA mapping failed\n");
+> fs/btrfs/ioctl.c:5417:1: error: function definition is not allowed here
+> fs/btrfs/ioctl.c:5430:7: error: expected '}'
 > 
-> -- 
-> 2.43.0
->
+> 
+> Tested on:
+> 
+> commit:         86186e83 btrfs: implement remove_bdev super operation ..
+> git tree:       https://github.com/adam900710/linux.git shutdown
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=58afc4b78b52b7e3
+> dashboard link: https://syzkaller.appspot.com/bug?extid=fa90fcaa28f5cd4b1fc1
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> 
+> Note: no patches were applied.
 
-Acked-by: Alain Volmat <alain.volmat@foss.st.com>
-
-Regards,
-Alain
