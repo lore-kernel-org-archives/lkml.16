@@ -1,29 +1,29 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA481C5D44;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6D31C84D6;
 	Thu, 26 Jun 2025 02:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750903983; cv=none; b=Px0BiT3rgIfBhY5fBUcWAQYu1m+zAhKURNJLz+7JYSuaCjUQJGNF8iDbrmBkqiVSUv9kCUGdV22I4La7kulFL5KgAQLw0brnTSY2SPQaioMj3zL3qyE8E0zsQMrdnfSBtUYfOV63b6QOjHgWNwdfZC/J9oJOXRUj05yAa5jUpb4=
+	t=1750903984; cv=none; b=iZ08rNyqEUV1cDmGLwTHQUtuX7MX/6nWUJ5E2aHHVd0+Qi2aTmWUGk5vfF+Xmcn22Lb5CT3fqtSv/UaBGQqOK0JEerOo9p/uNq2IWsKvKHUvIKgLrueltPd/gIEMwqtQY/+XhhhlX9AO9TJz7jGR/vciMSI4S/kyjEwyVCtUXU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750903983; c=relaxed/simple;
-	bh=6L8GoP+5WqzddAh8kYsfwbUi0ImEROV6JwfXPep3qD0=;
+	s=arc-20240116; t=1750903984; c=relaxed/simple;
+	bh=T9HkFnDBMvtvh+rx8Kod6hT1Ps6qQGtTGTjHSzPg5hY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CngdX4SlS7FixpZhdhkawI08OAy8zQ8m7fJqZ9Eodt7IzGNVpi+Y7Yb/biqR8zg8m3ah7muLGM6ivda1drbt6DUtEMHy2J4Q5y7A18ybSf81cEoPztxLhiQPM0oxYRFga7ahegpt4pdeqepYv3uwu9iVPqBX6y9xy+G1IW8VB7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	 MIME-Version:Content-Type; b=YiEy1bVfbVMZ0tgt6kD9cW6NMRJGi6aueXYDApap6gX2X1pLBRGoxs8tiwc5LwLwQUt8ZSpqtZvLHmHDD5uvA0VsI3Zk4JHtPXjP1Lo2X4mZr9rpLFnSClnFNs/UrUuo517ahfEo6V85qxnZJb44XpZgoX9GhFcdECYf2zh4EWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bSMd15tlbztSbs;
-	Thu, 26 Jun 2025 10:11:49 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bSMcV1V9Wz2BdVy;
+	Thu, 26 Jun 2025 10:11:22 +0800 (CST)
 Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id C18EE14027D;
-	Thu, 26 Jun 2025 10:12:58 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id E6E37140109;
+	Thu, 26 Jun 2025 10:12:59 +0800 (CST)
 Received: from localhost.localdomain (10.90.31.46) by
  kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 26 Jun 2025 10:12:57 +0800
+ 15.2.1544.11; Thu, 26 Jun 2025 10:12:59 +0800
 From: Jijie Shao <shaojijie@huawei.com>
 To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
 	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
@@ -32,9 +32,9 @@ CC: <shenjian15@huawei.com>, <liuyonglong@huawei.com>,
 	<shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
 	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<shaojijie@huawei.com>
-Subject: [PATCH v3 net-next 1/3] net: hibmcge: support scenario without PHY
-Date: Thu, 26 Jun 2025 10:06:11 +0800
-Message-ID: <20250626020613.637949-2-shaojijie@huawei.com>
+Subject: [PATCH v3 net-next 3/3] net: hibmcge: configure FIFO thresholds according to the MAC controller documentation
+Date: Thu, 26 Jun 2025 10:06:13 +0800
+Message-ID: <20250626020613.637949-4-shaojijie@huawei.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20250626020613.637949-1-shaojijie@huawei.com>
 References: <20250626020613.637949-1-shaojijie@huawei.com>
@@ -49,95 +49,111 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
  kwepemk100013.china.huawei.com (7.202.194.61)
 
-Currently, the driver uses phylib to operate PHY by default.
-
-On some boards, the PHY device is separated from the MAC device.
-As a result, the hibmcge driver cannot operate the PHY device.
-
-In this patch, the driver determines whether a PHY is available
-based on register configuration. If no PHY is available,
-the driver use fixed_phy to register fake phydev.
+Configure FIFO thresholds according to the MAC controller documentation
 
 Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
 ---
 ChangeLog:
-v2 -> v3:
-  - Use fixed_phy to re-implement the no-phy scenario, suggested by Andrew Lunn
-  v2: https://lore.kernel.org/all/20250623034129.838246-1-shaojijie@huawei.com/
+v1 -> v2:
+  - Fix code formatting errors, reported by Jakub Kicinski
+  v1: https://lore.kernel.org/all/20250619144423.2661528-1-shaojijie@huawei.com/
 ---
- .../net/ethernet/hisilicon/hibmcge/hbg_mdio.c | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ .../net/ethernet/hisilicon/hibmcge/hbg_hw.c   | 49 +++++++++++++++++++
+ .../net/ethernet/hisilicon/hibmcge/hbg_reg.h  |  6 +++
+ 2 files changed, 55 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c
-index 42b0083c9193..41558fe7770c 100644
---- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c
-+++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c
-@@ -2,6 +2,7 @@
- // Copyright (c) 2024 Hisilicon Limited.
+diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
+index 6e5602591554..8cca8316ba40 100644
+--- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
++++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
+@@ -18,6 +18,13 @@
+ #define HBG_ENDIAN_CTRL_LE_DATA_BE	0x0
+ #define HBG_PCU_FRAME_LEN_PLUS 4
  
- #include <linux/phy.h>
-+#include <linux/phy_fixed.h>
- #include <linux/rtnetlink.h>
- #include "hbg_common.h"
- #include "hbg_hw.h"
-@@ -19,6 +20,7 @@
- #define HBG_MDIO_OP_INTERVAL_US		(5 * 1000)
- 
- #define HBG_NP_LINK_FAIL_RETRY_TIMES	5
-+#define HBG_NO_PHY	0xFF
- 
- static void hbg_mdio_set_command(struct hbg_mac *mac, u32 cmd)
++#define HBG_FIFO_TX_FULL_THRSLD		0x3F0
++#define HBG_FIFO_TX_EMPTY_THRSLD	0x1F0
++#define HBG_FIFO_RX_FULL_THRSLD		0x240
++#define HBG_FIFO_RX_EMPTY_THRSLD	0x190
++#define HBG_CFG_FIFO_FULL_THRSLD	0x10
++#define HBG_CFG_FIFO_EMPTY_THRSLD	0x01
++
+ static bool hbg_hw_spec_is_valid(struct hbg_priv *priv)
  {
-@@ -229,6 +231,39 @@ void hbg_phy_stop(struct hbg_priv *priv)
- 	phy_stop(priv->mac.phydev);
+ 	return hbg_reg_read(priv, HBG_REG_SPEC_VALID_ADDR) &&
+@@ -272,6 +279,41 @@ void hbg_hw_set_rx_pause_mac_addr(struct hbg_priv *priv, u64 mac_addr)
+ 	hbg_reg_write64(priv, HBG_REG_FD_FC_ADDR_LOW_ADDR, mac_addr);
  }
  
-+static void hbg_fixed_phy_uninit(void *data)
++static void hbg_hw_set_fifo_thrsld(struct hbg_priv *priv,
++				   u32 full, u32 empty, enum hbg_dir dir)
 +{
-+	fixed_phy_unregister((struct phy_device *)data);
++	u32 value = 0;
++
++	value |= FIELD_PREP(HBG_REG_FIFO_THRSLD_FULL_M, full);
++	value |= FIELD_PREP(HBG_REG_FIFO_THRSLD_EMPTY_M, empty);
++
++	if (dir & HBG_DIR_TX)
++		hbg_reg_write(priv, HBG_REG_TX_FIFO_THRSLD_ADDR, value);
++
++	if (dir & HBG_DIR_RX)
++		hbg_reg_write(priv, HBG_REG_RX_FIFO_THRSLD_ADDR, value);
 +}
 +
-+static int hbg_fixed_phy_init(struct hbg_priv *priv)
++static void hbg_hw_set_cfg_fifo_thrsld(struct hbg_priv *priv,
++				       u32 full, u32 empty, enum hbg_dir dir)
 +{
-+	struct fixed_phy_status hbg_fixed_phy_status = {
-+		.link = 1,
-+		.speed = SPEED_1000,
-+		.duplex = DUPLEX_FULL,
-+		.pause = 1,
-+		.asym_pause = 1,
-+	};
-+	struct device *dev = &priv->pdev->dev;
-+	struct phy_device *phydev;
-+	int ret;
++	u32 value;
 +
-+	phydev = fixed_phy_register(&hbg_fixed_phy_status, NULL);
-+	if (IS_ERR(phydev)) {
-+		dev_err_probe(dev, IS_ERR(phydev),
-+			      "failed to register fixed PHY device\n");
-+		return IS_ERR(phydev);
++	value = hbg_reg_read(priv, HBG_REG_CFG_FIFO_THRSLD_ADDR);
++
++	if (dir & HBG_DIR_TX) {
++		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_TX_FULL_M, full);
++		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_TX_EMPTY_M, empty);
 +	}
 +
-+	ret = devm_add_action_or_reset(dev, hbg_fixed_phy_uninit, phydev);
-+	if (ret)
-+		return ret;
++	if (dir & HBG_DIR_RX) {
++		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_RX_FULL_M, full);
++		value |= FIELD_PREP(HBG_REG_CFG_FIFO_THRSLD_RX_EMPTY_M, empty);
++	}
 +
-+	priv->mac.phydev = phydev;
-+	return hbg_phy_connect(priv);
++	hbg_reg_write(priv, HBG_REG_CFG_FIFO_THRSLD_ADDR, value);
 +}
 +
- int hbg_mdio_init(struct hbg_priv *priv)
+ static void hbg_hw_init_transmit_ctrl(struct hbg_priv *priv)
  {
- 	struct device *dev = &priv->pdev->dev;
-@@ -238,6 +273,9 @@ int hbg_mdio_init(struct hbg_priv *priv)
- 	int ret;
+ 	u32 ctrl = 0;
+@@ -332,5 +374,12 @@ int hbg_hw_init(struct hbg_priv *priv)
  
- 	mac->phy_addr = priv->dev_specs.phy_addr;
-+	if (mac->phy_addr == HBG_NO_PHY)
-+		return hbg_fixed_phy_init(priv);
+ 	hbg_hw_init_rx_control(priv);
+ 	hbg_hw_init_transmit_ctrl(priv);
 +
- 	mdio_bus = devm_mdiobus_alloc(dev);
- 	if (!mdio_bus)
- 		return dev_err_probe(dev, -ENOMEM,
++	hbg_hw_set_fifo_thrsld(priv, HBG_FIFO_TX_FULL_THRSLD,
++			       HBG_FIFO_TX_EMPTY_THRSLD, HBG_DIR_TX);
++	hbg_hw_set_fifo_thrsld(priv, HBG_FIFO_RX_FULL_THRSLD,
++			       HBG_FIFO_RX_EMPTY_THRSLD, HBG_DIR_RX);
++	hbg_hw_set_cfg_fifo_thrsld(priv, HBG_CFG_FIFO_FULL_THRSLD,
++				   HBG_CFG_FIFO_EMPTY_THRSLD, HBG_DIR_TX_RX);
+ 	return 0;
+ }
+diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h b/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
+index d40880beb2f8..a39d1e796e4a 100644
+--- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
++++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
+@@ -141,7 +141,13 @@
+ /* PCU */
+ #define HBG_REG_TX_FIFO_THRSLD_ADDR		(HBG_REG_SGMII_BASE + 0x0420)
+ #define HBG_REG_RX_FIFO_THRSLD_ADDR		(HBG_REG_SGMII_BASE + 0x0424)
++#define HBG_REG_FIFO_THRSLD_FULL_M		GENMASK(25, 16)
++#define HBG_REG_FIFO_THRSLD_EMPTY_M		GENMASK(9, 0)
+ #define HBG_REG_CFG_FIFO_THRSLD_ADDR		(HBG_REG_SGMII_BASE + 0x0428)
++#define HBG_REG_CFG_FIFO_THRSLD_TX_FULL_M	GENMASK(31, 24)
++#define HBG_REG_CFG_FIFO_THRSLD_TX_EMPTY_M	GENMASK(23, 16)
++#define HBG_REG_CFG_FIFO_THRSLD_RX_FULL_M	GENMASK(15, 8)
++#define HBG_REG_CFG_FIFO_THRSLD_RX_EMPTY_M	GENMASK(7, 0)
+ #define HBG_REG_CF_INTRPT_MSK_ADDR		(HBG_REG_SGMII_BASE + 0x042C)
+ #define HBG_INT_MSK_WE_ERR_B			BIT(31)
+ #define HBG_INT_MSK_RBREQ_ERR_B			BIT(30)
 -- 
 2.33.0
 
