@@ -1,231 +1,282 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18B919D06A
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E4E78F59
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943715; cv=none; b=f+yF+8qYoXUB+NBvOm6bAt4yJUp9SP5Wp0Q2L4ffjIpFcRig9L3nVZJKSMGHlTGL0gbKIEzA95SzX9CoIJKBENuc/iVG8t6TzrhLYoJcNd98GsDgyzO5gXw3zfbpxnBbuU8SEXesHwCaJbw6JRTcx6A3LKIZvnp+zWkfUkbLj3U=
+	t=1750943793; cv=none; b=K4EWEcgEGpGvfob7cP71R5WNDWJVWzfPwWSDV1hrLoJhqZih6fgdKSY76f33Mid01AXEWz1yXLO0BL6pjwkmkByWtcDuYJTE8C8fk+HhwmK/2Xv4VWuI+jfEM0KuXMlH3GWF5C9pU1GbTCI67ZwYhimEuV5sQwohD/BpBcjc3Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943715; c=relaxed/simple;
-	bh=ZSgIbHV65OUjPWW+R9rf5sLnxci+8B31HhmlhWW0ph8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=ko0MHTUuiR1m0LP4TChokX65JKarVFj5uRD+NftqFiySl+kE3R2c6bq4Zqke6Rv6NXrDRL30AjcuJKyZvpwpp6/WSfI/p3aejBwKVZp+uuNWpJ4V6V+jMqcgHPMCTvBcYUXrb9KgYJLQjQ3VwSzPbUDobCkayeT6mr5BjxREFB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=rbOnsG5a; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750943793; c=relaxed/simple;
+	bh=57xRGw1RitrO35h0ikz2Zd4I5IKZDNL6GTAY1qunid4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VcnI9PTvX5Cak1nkpwxWWaTDZyH5Vgl+2/sW9Uw29vWBjTjZCKXmLNTlbdiKjh0LZqp662oHVzM7eAbBTDwJdaPvuAdM8tChBnQPz7vWPYrxVAjM5nspvCwXJVwOfoLkW7vkHHO457c+c/sbI//X8OgASqdX32iglbpA41fhkOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KOk2k/Zz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rbOnsG5a"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250626131504epoutp04c8010404ec308fdbd873370ac0c30248~MmgW7ogcu2079120791epoutp043
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:15:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250626131504epoutp04c8010404ec308fdbd873370ac0c30248~MmgW7ogcu2079120791epoutp043
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750943704;
-	bh=4evuVLG5EGfIhYC9BEuNbIbuPuG4yhtuxXDxWAZbR2E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rbOnsG5aWQf34l17odf8u/vR3bEILpkYixJ0zFtfR/5ziXEGG+AMGWWW1KTByuqtc
-	 ZFnDGCyQZA9o9l6Jk30+2+hM70K+1PNcSBb55d5A4Z+ugj9kqBubXXpVxD5cRaQ35m
-	 4VyQ5t4VdNjSVOxTUOWE5crY0b2SOoTHO5w/GcuE=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250626131503epcas5p196400b03aea1d442e9af83bb8c8447a6~MmgVuBBvE1928319283epcas5p1E;
-	Thu, 26 Jun 2025 13:15:03 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4bSfLH1gPZz3hhT9; Thu, 26 Jun
-	2025 13:15:03 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250626095207epcas5p1139365aff279eebb8d10728d9853feb5~MjvKOJhdL2808428084epcas5p1N;
-	Thu, 26 Jun 2025 09:52:07 +0000 (GMT)
-Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250626095204epsmtip2975a762943c55430affa21662dba40fa~MjvHy0kpd2251522515epsmtip2d;
-	Thu, 26 Jun 2025 09:52:04 +0000 (GMT)
-Date: Thu, 26 Jun 2025 15:21:58 +0530
-From: Neeraj Kumar <s.neeraj@samsung.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: dan.j.williams@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
-	a.manzanares@samsung.com, nifan.cxl@gmail.com, anisa.su@samsung.com,
-	vishak.g@samsung.com, krish.reddy@samsung.com, arun.george@samsung.com,
-	alok.rathore@samsung.com, neeraj.kernel@gmail.com,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
-Subject: Re: [RFC PATCH 02/20] nvdimm/label: Prep patch to accommodate cxl
- lsa 2.1 support
-Message-ID: <1296674576.21750943703230.JavaMail.epsvc@epcpadp1new>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KOk2k/Zz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750943790;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5kjvDf5aAqvtOZDqG4fPq/JsCa063DTsIxW032jfbEA=;
+	b=KOk2k/ZzTMerJRZRLmSclfWqaOtrC1XS1hfrT9tbNiyqSMiJ1K1JouK8nH70Y6/ye+lDWv
+	uID29wX0rfTd8PrZDd7Fg71oIc/PgVMIsjsA+V3NHMxJC/xMNiQd9lYOeTX8vL9j3JG24k
+	NuHLpXg2A9Y1AEPUJjA5CpEoAN1PJiw=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-133-oowmOyneMXqpF3F-zEqezA-1; Thu, 26 Jun 2025 09:16:28 -0400
+X-MC-Unique: oowmOyneMXqpF3F-zEqezA-1
+X-Mimecast-MFC-AGG-ID: oowmOyneMXqpF3F-zEqezA_1750943787
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f8192e2cso579462f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:16:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750943787; x=1751548587;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5kjvDf5aAqvtOZDqG4fPq/JsCa063DTsIxW032jfbEA=;
+        b=UmvN3SrLuB/jHHhwzPeYXqYEJ5z3y7yDk3K+Cmijox4meAuaCfUDpJ4M8h9hEkqhJV
+         wrFZ2kNMyNt5BdpTPUm1smTqJWMqjJzlcjHxhVGtyoYBt6tfHNfTJZZa8QYIqwuINNao
+         PxFwz8p72qWABMXV6O4vKyTxIMVYaxSNRC1ZNREpXYCDb+z0qaWel0oPNYGvyQo8u+2N
+         TwoSHry54p+8nXsYHtMCEanV2F+4ChY5MyI9kx8MYNXlj3OBYjSVrFRIuCRXRKsuTr+G
+         ZRyz/muUjjqga8NTmFPjc1C7ZdW89n8/LQkHQKvmmzRJyLdqDMbL0jUwRMzUlthLd7QY
+         hg4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXWNSpjUQr3q/iIUFvdvYArEkWjL9jzEgMEzpZATsiQ0UMXIj9ea8qB5IP+NkowYwDfaR3rI+s7nX8GCbQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU4Emh7x7GOaw+B/DuEpj7mzHcsBhyU6t4d/N6kst/rO+eCTw1
+	n6/qm2VaBdioU1gdbpQyxye8lPxs8ckfbq2FqZCoRmu9a4vzavaXdmMkNwZEm4cEtST/BaN+fWP
+	LcEx5eVS5rX7Jjc3t1V7rtYsN++aYTQQfTYowKEbuSXhseQAuc6vyVeV+c7ZHZU5VTLuNXpkEfc
+	rb
+X-Gm-Gg: ASbGnctvKnkdpGTjret0Q/4ZaJWFhmCtydCzCaWpsF30fWSSaqT0/1Dd6b63AsUMmdo
+	2nJEfM/33QSaavtkQ95ezZuCsivVkjumlnrbA3lQ0Dwr7PE1pSE9/pSXgN69eUULUinyhdCzdkj
+	nwEWLJAEOrOVlVgdXWoTb3QZqLPkBVsX9Li68cNLnyOJJeBcU2+8DOyaTDPAVl9HgG9WuMVy4mt
+	xcIWNAfNMFjTzz5D2fwitkAmSJMyb5goadzatbGA29/4gXy1GmVzACmo5xzPbjJfVHH2IoOtlPy
+	y+hM3KXcaTK5XcwPJjidaMTFAdgWfH5Ov0atojKItRiFvHWbT57rxg==
+X-Received: by 2002:a5d:588e:0:b0:3a6:da76:38b0 with SMTP id ffacd0b85a97d-3a6ed60d1a6mr6701448f8f.25.1750943787100;
+        Thu, 26 Jun 2025 06:16:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGFHAlgxWUmXemwlxp5O4hqDpp8xYzthkusYlul1qIoy7dQaRUijfVPXNzepkcnqcCtg4BtsA==
+X-Received: by 2002:a5d:588e:0:b0:3a6:da76:38b0 with SMTP id ffacd0b85a97d-3a6ed60d1a6mr6701390f8f.25.1750943786556;
+        Thu, 26 Jun 2025 06:16:26 -0700 (PDT)
+Received: from [192.168.3.141] (p4fe0f3bf.dip0.t-ipconnect.de. [79.224.243.191])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a831051c49sm234050f8f.30.2025.06.26.06.16.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 06:16:26 -0700 (PDT)
+Message-ID: <1a55f9f3-f5b1-4761-97ba-423756c707fe@redhat.com>
+Date: Thu, 26 Jun 2025 15:16:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250623115351.00005312@huawei.com>
-X-CMS-MailID: 20250626095207epcas5p1139365aff279eebb8d10728d9853feb5
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----nR.o9xAt.CKA9Q2_7V_sz8FZ15p3Iy14m0uxA3-zFK6OxaPG=_cd11d_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20250617124011epcas5p2264e30ec58977907f80d311083265641
-References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124011epcas5p2264e30ec58977907f80d311083265641@epcas5p2.samsung.com>
-	<700072760.81750165203833.JavaMail.epsvc@epcpadp1new>
-	<20250623115351.00005312@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
+ folios during reclamation
+To: Lance Yang <ioworker0@gmail.com>
+Cc: 21cnbao@gmail.com, akpm@linux-foundation.org,
+ baolin.wang@linux.alibaba.com, chrisl@kernel.org, kasong@tencent.com,
+ lance.yang@linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-riscv@lists.infradead.org, lorenzo.stoakes@oracle.com,
+ ryan.roberts@arm.com, v-songbaohua@oppo.com, x86@kernel.org,
+ ying.huang@intel.com, zhengtangquan@oppo.com
+References: <20250626092905.31305-1-ioworker0@gmail.com>
+ <20250626124445.77865-1-ioworker0@gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250626124445.77865-1-ioworker0@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-------nR.o9xAt.CKA9Q2_7V_sz8FZ15p3Iy14m0uxA3-zFK6OxaPG=_cd11d_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
-
-On 23/06/25 11:53AM, Jonathan Cameron wrote:
->On Tue, 17 Jun 2025 18:09:26 +0530
->Neeraj Kumar <s.neeraj@samsung.com> wrote:
->
->> In order to accommodate cxl lsa 2.1 format region label, renamed
->> nd_namespace_label to nd_lsa_label.
->
->I would add some more information on why.  I've no idea from this
->description whether the issue is a naming clash or a need for a broader
->name or something entirely different.
->
->Most readers aren't going to be particular familiar with the lsa spec
->version changes, so help them out with a little more detail.
->
->The comment you have with the union is probably the right info
->to duplicate here.
->
-
-Thanks Jonathan, I will elaborate commit message with more information.
-
+On 26.06.25 14:44, Lance Yang wrote:
+> 
+> On 2025/6/26 17:29, Lance Yang wrote:
+>> Before I send out the real patch, I'd like to get some quick feedback to
+>> ensure I've understood the discussion correctly ;)
 >>
->> No functional change introduced.
+>> Does this look like the right direction?
 >>
->> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
->
->This is quite a lot of churn which, just looking at this patch, could
->be avoided by just setting local variables to point at a particular
->member of the union rather than the containing struct.
->You already do this in a few places like nd_label_reserve_dpa().
->
->Perhaps it will be come clearer why that doesn't make sense as
->I ready later patches.
->
+>> diff --git a/mm/rmap.c b/mm/rmap.c
+>> index fb63d9256f09..5ebffe2137e4 100644
+>> --- a/mm/rmap.c
+>> +++ b/mm/rmap.c
+>> @@ -1845,23 +1845,37 @@ void folio_remove_rmap_pud(struct folio *folio, struct page *page,
+>>    #endif
+>>    }
+>>    
+>> -/* We support batch unmapping of PTEs for lazyfree large folios */
+>> -static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
+>> -			struct folio *folio, pte_t *ptep)
+>> +static inline unsigned int folio_unmap_pte_batch(struct folio *folio,
+>> +			struct page_vma_mapped_walk *pvmw,
+>> +			enum ttu_flags flags, pte_t pte)
+>>    {
+>>    	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>> -	int max_nr = folio_nr_pages(folio);
+>> -	pte_t pte = ptep_get(ptep);
+>> +	unsigned long end_addr, addr = pvmw->address;
+>> +	struct vm_area_struct *vma = pvmw->vma;
+>> +	unsigned int max_nr;
+>> +
+>> +	if (flags & TTU_HWPOISON)
+>> +		return 1;
+>> +	if (!folio_test_large(folio))
+>> +		return 1;
+>>    
+>> +	/* We may only batch within a single VMA and a single page table. */
+>> +	end_addr = pmd_addr_end(addr, vma->vm_end);
+>> +	max_nr = (end_addr - addr) >> PAGE_SHIFT;
+>> +
+>> +	/* We only support lazyfree batching for now ... */
+>>    	if (!folio_test_anon(folio) || folio_test_swapbacked(folio))
+>> -		return false;
+>> +		return 1;
+>>    	if (pte_unused(pte))
+>> -		return false;
+>> -	if (pte_pfn(pte) != folio_pfn(folio))
+>> -		return false;
+>> +		return 1;
+>> +
+>> +	/* ... where we must be able to batch the whole folio. */
+>> +	if (pte_pfn(pte) != folio_pfn(folio) || max_nr != folio_nr_pages(folio))
+>> +		return 1;
+>> +	max_nr = folio_pte_batch(folio, addr, pvmw->pte, pte, max_nr, fpb_flags,
+>> +				 NULL, NULL, NULL);
+>>    
+>> -	return folio_pte_batch(folio, addr, ptep, pte, max_nr, fpb_flags, NULL,
+>> -			       NULL, NULL) == max_nr;
+>> +	return (max_nr != folio_nr_pages(folio)) ? 1 : max_nr;
+>>    }
+>>    
+>>    /*
+>> @@ -2024,9 +2038,7 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>>    			if (pte_dirty(pteval))
+>>    				folio_mark_dirty(folio);
+>>    		} else if (likely(pte_present(pteval))) {
+>> -			if (folio_test_large(folio) && !(flags & TTU_HWPOISON) &&
+>> -			    can_batch_unmap_folio_ptes(address, folio, pvmw.pte))
+>> -				nr_pages = folio_nr_pages(folio);
+>> +			nr_pages = folio_unmap_pte_batch(folio, &pvmw, flags, pteval);
+>>    			end_addr = address + nr_pages * PAGE_SIZE;
+>>    			flush_cache_range(vma, address, end_addr);
+>>    
+>> @@ -2206,13 +2218,16 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>>    			hugetlb_remove_rmap(folio);
+>>    		} else {
+>>    			folio_remove_rmap_ptes(folio, subpage, nr_pages, vma);
+>> -			folio_ref_sub(folio, nr_pages - 1);
+>>    		}
+>>    		if (vma->vm_flags & VM_LOCKED)
+>>    			mlock_drain_local();
+>> -		folio_put(folio);
+>> -		/* We have already batched the entire folio */
+>> -		if (nr_pages > 1)
+>> +		folio_put_refs(folio, nr_pages);
+>> +
+>> +		/*
+>> +		 * If we are sure that we batched the entire folio and cleared
+>> +		 * all PTEs, we can just optimize and stop right here.
+>> +		 */
+>> +		if (nr_pages == folio_nr_pages(folio))
+>>    			goto walk_done;
+>>    		continue;
+>>    walk_abort:
+>> --
+> 
+> Oops ... Through testing on my machine, I found that the logic doesn't
+> behave as expected because I messed up the meaning of max_nr (the available
+> scan room in the page table) with folio_nr_pages(folio) :(
+> 
+> With the following change:
+> 
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index 5ebffe2137e4..b1407348e14e 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1850,9 +1850,9 @@ static inline unsigned int folio_unmap_pte_batch(struct folio *folio,
+>   			enum ttu_flags flags, pte_t pte)
+>   {
+>   	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+> +	unsigned int max_nr, nr_pages = folio_nr_pages(folio);
+>   	unsigned long end_addr, addr = pvmw->address;
+>   	struct vm_area_struct *vma = pvmw->vma;
+> -	unsigned int max_nr;
+>   
+>   	if (flags & TTU_HWPOISON)
+>   		return 1;
+> @@ -1870,12 +1870,13 @@ static inline unsigned int folio_unmap_pte_batch(struct folio *folio,
+>   		return 1;
+>   
+>   	/* ... where we must be able to batch the whole folio. */
 
-Sure, I will try to minimize wherever its possible.
+Why is that still required? :)
 
->> diff --git a/drivers/nvdimm/label.h b/drivers/nvdimm/label.h
->> index 0650fb4b9821..4883b3a1320f 100644
->> --- a/drivers/nvdimm/label.h
->> +++ b/drivers/nvdimm/label.h
->> @@ -183,6 +183,16 @@ struct nd_namespace_label {
->>  	};
->>  };
->>
->> +/*
->> + * LSA 2.1 format introduces region label, which can also reside
->> + * into LSA along with only namespace label as per v1.1 and v1.2
->> + */
->> +struct nd_lsa_label {
->> +	union {
->> +		struct nd_namespace_label ns_label;
->> +	};
->> +};
->
->> diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
->> index 55cfbf1e0a95..f180f0068c15 100644
->> --- a/drivers/nvdimm/namespace_devs.c
->> +++ b/drivers/nvdimm/namespace_devs.c
->
->> @@ -1595,7 +1596,8 @@ static bool has_uuid_at_pos(struct nd_region *nd_region, const uuid_t *uuid,
->>  				return false;
->>  			}
->>  			found_uuid = true;
->> -			if (!nsl_validate_nlabel(nd_region, ndd, nd_label))
->> +			if (!nsl_validate_nlabel(nd_region,
->> +						 ndd, &nd_label->ns_label))
->
->Strange wrap.  I'd move ndd up a line.
->
->
+> -	if (pte_pfn(pte) != folio_pfn(folio) || max_nr != folio_nr_pages(folio))
+> +	if (pte_pfn(pte) != folio_pfn(folio) || max_nr < nr_pages)
+>   		return 1;
+> -	max_nr = folio_pte_batch(folio, addr, pvmw->pte, pte, max_nr, fpb_flags,
+> -				 NULL, NULL, NULL);
+>   
+> -	return (max_nr != folio_nr_pages(folio)) ? 1 : max_nr;
+> +	max_nr = folio_pte_batch(folio, addr, pvmw->pte, pte, nr_pages,
+> +				 fpb_flags, NULL, NULL, NULL);
+> +
+> +	return (max_nr != nr_pages) ? 1 : max_nr;
 
-Sure, I will fix it in V1
+Why is that still required? :)
 
->>  				continue;
->>  			if (position != pos)
->>  				continue;
->> @@ -1615,7 +1617,7 @@ static int select_pmem_id(struct nd_region *nd_region, const uuid_t *pmem_id)
->>  	for (i = 0; i < nd_region->ndr_mappings; i++) {
->>  		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
->>  		struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
->> -		struct nd_namespace_label *nd_label = NULL;
->> +		struct nd_lsa_label *nd_label = NULL;
->>  		u64 hw_start, hw_end, pmem_start, pmem_end;
->>  		struct nd_label_ent *label_ent;
->>
->
->
->> @@ -1739,14 +1741,14 @@ static struct device *create_namespace_pmem(struct nd_region *nd_region,
->>  	 * that position at labels[0], and NULL at labels[1].  In the process,
->>  	 * check that the namespace aligns with interleave-set.
->>  	 */
->> -	nsl_get_uuid(ndd, nd_label, &uuid);
->> +	nsl_get_uuid(ndd, &nd_label->ns_label, &uuid);
->>  	rc = select_pmem_id(nd_region, &uuid);
->>  	if (rc)
->>  		goto err;
->>
->>  	/* Calculate total size and populate namespace properties from label0 */
->>  	for (i = 0; i < nd_region->ndr_mappings; i++) {
->> -		struct nd_namespace_label *label0;
->> +		struct nd_lsa_label *label0;
->
->If you are only ever going to use one part of the union in a given
->bit of code, why not use a struct of that type so you only need to change
->the point where it is assigned rather that lots of places.
->
->So keep this as struct nd_namespace_label *label0;
->
->If that makes sense, check for other places where doing that will reduce the churn
->and complexity of the code.
->
+-- 
+Cheers,
 
-Sure, Let me revisit these. Thanks
-
->
->
->>  		struct nvdimm_drvdata *ndd;
->>
->>  		nd_mapping = &nd_region->mapping[i];
->> @@ -1760,17 +1762,17 @@ static struct device *create_namespace_pmem(struct nd_region *nd_region,
->>  		}
->>
->>  		ndd = to_ndd(nd_mapping);
->> -		size += nsl_get_rawsize(ndd, label0);
->> -		if (nsl_get_position(ndd, label0) != 0)
->> +		size += nsl_get_rawsize(ndd, &label0->ns_label);
->> +		if (nsl_get_position(ndd, &label0->ns_label) != 0)
->>  			continue;
->>  		WARN_ON(nspm->alt_name || nspm->uuid);
->> -		nspm->alt_name = kmemdup(nsl_ref_name(ndd, label0),
->> +		nspm->alt_name = kmemdup(nsl_ref_name(ndd, &label0->ns_label),
->>  					 NSLABEL_NAME_LEN, GFP_KERNEL);
->> -		nsl_get_uuid(ndd, label0, &uuid);
->> +		nsl_get_uuid(ndd, &label0->ns_label, &uuid);
->>  		nspm->uuid = kmemdup(&uuid, sizeof(uuid_t), GFP_KERNEL);
->> -		nspm->lbasize = nsl_get_lbasize(ndd, label0);
->> +		nspm->lbasize = nsl_get_lbasize(ndd, &label0->ns_label);
->>  		nspm->nsio.common.claim_class =
->> -			nsl_get_claim_class(ndd, label0);
->> +			nsl_get_claim_class(ndd, &label0->ns_label);
->>  	}
->
-
-------nR.o9xAt.CKA9Q2_7V_sz8FZ15p3Iy14m0uxA3-zFK6OxaPG=_cd11d_
-Content-Type: text/plain; charset="utf-8"
-
-
-------nR.o9xAt.CKA9Q2_7V_sz8FZ15p3Iy14m0uxA3-zFK6OxaPG=_cd11d_--
+David / dhildenb
 
