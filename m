@@ -1,72 +1,48 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DF02264AC
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63FC2185AC;
+	Thu, 26 Jun 2025 06:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750918994; cv=none; b=sG6aXTHbkLOc1lUmx+IOSobFjgilmjHQJG76mOwRg1z9d+9lGGmAuJUU64WnoN5sdzMj3MFK8FfSr3qf2OmmT3JmRxA3XX4tbAEVj886IXPWAT+01ExN4YfIuTBxN9UPWBd/vC3LPCnUwr+8gmtlsZssDcbQckq5WRomjau+MZk=
+	t=1750919214; cv=none; b=aEzfD57g1bpDHAtVkI4Iu7SA/3kNfgf9oL5N6dD/xmhc6jCzMgtyVMjNvYvVCLGTG3b+jhM+ojcrP0oKZPKtrC1KWOxlw6JBjBRS86HLLVzTCAS/CRqpbllHsz8KMYV7tyE2dySeIYc27pqPajRflu3Uj1LaiFx3RSCULrDQPjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750918994; c=relaxed/simple;
-	bh=GBMZ20+Dx521eudEWEJS5G6reVV23iA7Cl0uMWTkqCc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VXaamO3k3eTCWzUtl0YyL4tscAgzRcvMdKEZB8Losij45qKmCkWw/EjbFDs+LiPcQuDtPbADb/fyH7fxYBIvl+BiqCULWKmFeQ+GXDhzUVZKfXmbhUKk+vRKoUav4rX4T7WBoy2BJpqSWG9+rhTGcRcjf3nUn67VvysvTm2p/Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=i7QYsI0j; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750919214; c=relaxed/simple;
+	bh=II1Ir5NR+QRoI3IRUlyDEzWlYvURoigZ+NWr9nLVGgQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nKAVMsj1scSdFl6Y9kvE1+HPM0LsBvlvKRIpqW62YjLOWB4YdHBxM/u4gYe0/xJIE42558OLNSIwVoXe9B4zJEc3iouqDX7OJEzTCZYJHBcY8fieV/oQbOFBCrIVm64YHEW1pUFr31+4AWjS+xPfcPRZbnvUUF/Pq/EzGFvCh68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PVvC2kM3; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="i7QYsI0j"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q0ErTr031055
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:23:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	zSPp3x1ZRhdbBSvE6qtd0GrLv5iuaB817ClElVTDfa0=; b=i7QYsI0jqXY5ICIh
-	MjhKUgo+deZ7nGds3kDxAzLhazFjZ2jmOCWw0kJmB+qcEd0ftB+dn/6D73/So3Y0
-	kpj56Hq+YX2FOjwRKeyq00azJ24uFswmBXCCx/pLteNZ4n7cBRFtchh4ebyB4GSt
-	baP0MCr+5bFukgTyVrhbQ4NrdsfiMvKdM2yUxwIv34562+Jm/SyOoAfJtfrJcUlQ
-	xE1V1dpJtJs9FaEdZ3/DKlt5i7a7KuucKWULAvdLQhrm+e2fHdkV3UP1PgGOOSY7
-	JG7bQdNzU8I0RrlbitPFVBl9mNMVMgiTcvWokMdugHa3VYtFxZGbKz2LYe8KN+j5
-	sgeGTQ==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47esa4ue9b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:23:11 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2369261224bso8509465ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 23:23:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750918991; x=1751523791;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zSPp3x1ZRhdbBSvE6qtd0GrLv5iuaB817ClElVTDfa0=;
-        b=aUldB4U2TlJa7XfIJED/udwb0lMumfLIaccYt0b87+ILWW59RRoK/cQ6jv1OAM3zb6
-         uwjV1Rvjp1d825AAXM/HmWtNf0j4D+Iz7QYiJ2Sm6g+YsJrdMU0/RuNLFsRpopXlwi7Z
-         qFkeSZ6o3HPZm7D4hneZaXDP1L8itQCNODV1xs523jgb0iopyH0g9Nsyzwnhg4yqC04b
-         h69Uqt4trX6KN6Us/g/FwaS5LJx8Z3nj+/y1r056cqYKjLu4ItmYjkHh2m6vQPHtBs5j
-         B/Wu0rpUksRyDIx8Vx3HRf6Rq8py/YHpMZKY33HEjRnxurRUp9rnRze5mymCBfiXBkH+
-         v1+w==
-X-Forwarded-Encrypted: i=1; AJvYcCU9d+TGI2Tvj65y7aPP1/sQr7FQawVUte13vTgEJ9/g252a52fVA74LrVTu8iRUP3KnGv91bYayYPzy6Mw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzihACiXSnylZAn++ov2wb1TCulEjZeR5OeXBnlhKy9kP5kPi1M
-	yiB+WBK/y8tK7LssVKZGIlGyQ+mastwMhvbV7D4u8H4FC8o+HJdV5YTj0abonzemS8GI/Mmilqu
-	She67gV4QkHMEBzyIkgpYnrm2DecsPUD8tH1Q6LBBJ9yG+6/itDqxmDho9zG8srKuhac=
-X-Gm-Gg: ASbGncvDacQfqKLJDa6pK3QeNdHRqOXNvxCZkMyHpcskB+Uk/aUTpQ3osPw/Uu1Vhkj
-	IccX2NYRPsZisFEBnVLvzPGuESgCDuBwEuSnFR0OMzQ6F7Vf0U0Kfbp2nS6lUJdAlXtHmUIDIyv
-	AWuXOIDGKmNUMJEK6tNamqxdxdWlV4IAWbMvpBUfoPTE/+5+7JXQsgeEmZRu86hTB5EGGeak5Lt
-	Nofh+skkLPcJz4pWDQVGihYTlWXRLG0T5w9Lnf/0eODIweg87UV/rije7Ro/G2JyuDdYolEwcxN
-	Pl1G8yAaCpVL8/tKg6zeoqZpPcfWZe/zx3WuRfmhVDSmguE8KSA=
-X-Received: by 2002:a17:902:e546:b0:234:c549:da10 with SMTP id d9443c01a7336-2382408fa5amr88572965ad.47.1750918990971;
-        Wed, 25 Jun 2025 23:23:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IER407T8JX75ySM0Lw9z0XE+rIFx1Ls7SaSTA+7leEyGkIE6L8/SALvv6z5XbFaMGqM97xPBg==
-X-Received: by 2002:a17:902:e546:b0:234:c549:da10 with SMTP id d9443c01a7336-2382408fa5amr88572625ad.47.1750918990576;
-        Wed, 25 Jun 2025 23:23:10 -0700 (PDT)
-Received: from [10.218.10.142] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86c5a7dsm150270925ad.201.2025.06.25.23.23.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 23:23:09 -0700 (PDT)
-Message-ID: <fde57cbf-4367-4741-8d67-b569ecb9dc61@oss.qualcomm.com>
-Date: Thu, 26 Jun 2025 11:53:05 +0530
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PVvC2kM3"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55Q6QkoM1660090;
+	Thu, 26 Jun 2025 01:26:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750919206;
+	bh=M0QB/ArAtecVdowUteC5U8rjZZ9tDnr2B5EWNpTbhxo=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=PVvC2kM3h80BGzcV6LCzJiIka5x7oLOpmH70dB69hek2zkcy+ep+3ZC29a2KNN3l2
+	 vjyR4zEJHzth/wvVQ9FL/m2hdveG49AF5IMTqZ2TlPkKT1Olyg1N8HcR4uQd1ppeSy
+	 DGAnkyuh1PjKcgYSHBLJtC1A5GjBDFtCMgoYn/iI=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55Q6Qktd3374631
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 26 Jun 2025 01:26:46 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
+ Jun 2025 01:26:46 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 26 Jun 2025 01:26:46 -0500
+Received: from [172.24.227.245] (uda0132425.dhcp.ti.com [172.24.227.245])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55Q6QgrU520141;
+	Thu, 26 Jun 2025 01:26:43 -0500
+Message-ID: <ed2ccf14-b470-4f3e-a793-61866cf7e26c@ti.com>
+Date: Thu, 26 Jun 2025 11:56:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,76 +50,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] usb: gadget: u_serial: remove some dead code
-To: Dan Carpenter <dan.carpenter@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Lianqin Hu <hulianqin@vivo.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        Michael Walle <mwalle@kernel.org>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <685c1413.050a0220.1a8223.d0b9@mx.google.com>
+Subject: Re: [PATCH v2 1/7] arm64: dts: ti: k3-j784s4-j742s2-main-common: add
+ DSI & DSI PHY
+To: Jayesh Choudhary <j-choudhary@ti.com>, <nm@ti.com>,
+        <devicetree@vger.kernel.org>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devarsht@ti.com>, <u-kumar1@ti.com>
+References: <20250624082619.324851-1-j-choudhary@ti.com>
+ <20250624082619.324851-2-j-choudhary@ti.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
 Content-Language: en-US
-From: Prashanth K <prashanth.k@oss.qualcomm.com>
-In-Reply-To: <685c1413.050a0220.1a8223.d0b9@mx.google.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20250624082619.324851-2-j-choudhary@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=eLYTjGp1 c=1 sm=1 tr=0 ts=685ce74f cx=c_pps
- a=cmESyDAEBpBGqyK7t0alAg==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
- a=xcl-ZwCfIxIsq7HH9cIA:9 a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: 7D6IrmE-lYT4LX5et7aexCTM32mAS2FV
-X-Proofpoint-ORIG-GUID: 7D6IrmE-lYT4LX5et7aexCTM32mAS2FV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA1MCBTYWx0ZWRfX2Bp3PtAONIeD
- PojdTtE92rTTE86pTeR4KW4sbr0J+gY8X/Wy8dbfdQyRV80MKsiBx2PXzcE7I0ZjKcSS4KJzT9y
- 6zwL3DoAVMdchnpd8mO7QdWTrFMwNZDll74QVgEOuUWqK8yiC0Pd43ZUvgbUUeaA/82RlENQJ9z
- etD755KQ4oPsa1KwC5ZVuYR3NlyXKT2dA90CHPVw4Jhk3tQbyu1Khj7IR9Q5y1HP1prLmBpJHUu
- SXEt8KikDlyLiKmmd7ILSWs5qZ12DSW+cavUSwv41w4THD2ZXBWxp9q5Vsj4wi9Ie35g+AUDNG+
- xUfU30ybaMYOqpOoQTOSzkxcBnkJFnTE9M5Ld/wItsOB3LxMPLJG0VFz7GBKmfBLRBtQSuKtw+h
- B5aG+t708IjVTOLujejhBNQSiN+7zvUBY0p6MQsl+DugKLb1+gzTKSLkDYA+CQU8PKuXIu1T
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_03,2025-06-25_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 mlxlogscore=975
- suspectscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506260050
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+Hi
 
-
-On 6/25/2025 8:51 PM, Dan Carpenter wrote:
-> There is no need to check if "port" is NULL.  We already verified that it
-> is non-NULL.  It's a stack variable and can't be modified by a different
-> thread.  Delete this dead code.
+On 24/06/25 13:56, Jayesh Choudhary wrote:
+> Add DT nodes for DPI to DSI Bridge and DSI Phy.
+> The DSI bridge is Cadence DSI and the PHY is a
+> Cadence DPHY with TI wrapper.
 > 
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
 > ---
-
-Perhaps you could add Closes and Fixes tag, but its up to you.
-
-Reviewed-by: Prashanth K <prashanth.k@oss.qualcomm.com>
-
->  drivers/usb/gadget/function/u_serial.c | 7 ------
->  1 file changed, 6 deletions(-)
+>  .../dts/ti/k3-j784s4-j742s2-main-common.dtsi  | 37 +++++++++++++++++++
+>  1 file changed, 37 insertions(+)
 > 
-> diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
-> index ab544f6824be..96756a489d6a 100644
-> --- a/drivers/usb/gadget/function/u_serial.c
-> +++ b/drivers/usb/gadget/function/u_serial.c
-> @@ -1501,13 +1501,7 @@ void gserial_suspend(struct gserial *gser)
->  		spin_unlock_irqrestore(&serial_port_lock, flags);
->  		if (!gserial_wakeup_host(gser))
->  			return;
-> -
-> -		/* Check if port is valid after acquiring lock back */
->  		spin_lock_irqsave(&serial_port_lock, flags);
-> -		if (!port) {
-> -			spin_unlock_irqrestore(&serial_port_lock, flags);
-> -			return;
-> -		}
->  	}
+> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
+> index 363d68fec387..2413c4913a8b 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
+> @@ -2517,6 +2517,43 @@ watchdog18: watchdog@2550000 {
+>  		status = "reserved";
+>  	};
 >  
->  	spin_lock(&port->port_lock);
+> +	dphy_tx0: phy@4480000 {
+> +		compatible = "ti,j721e-dphy";
+> +		reg = <0x0 0x04480000 0x0 0x1000>;
+
+Follow the convention of the file. Use:
+
+		reg = <0x00 0x04480000 0x00 0x1000>;
+
+Please fix throughout the series.
+
+> +		clocks = <&k3_clks 402 20>, <&k3_clks 402 3>;
+> +		clock-names = "psm", "pll_ref";
+> +		#phy-cells = <0>;
+> +		power-domains = <&k3_pds 402 TI_SCI_PD_EXCLUSIVE>;
+> +		assigned-clocks = <&k3_clks 402 3>;
+> +		assigned-clock-parents = <&k3_clks 402 4>;
+> +		assigned-clock-rates = <19200000>;
+> +		status = "disabled";
+> +	};
+> +
+> +	dsi0: dsi@4800000 {
+> +		compatible = "ti,j721e-dsi";
+> +		reg = <0x0 0x04800000 0x0 0x100000>, <0x0 0x04710000 0x0 0x100>;
+> +		clocks = <&k3_clks 215 2>, <&k3_clks 215 5>;
+> +		clock-names = "dsi_p_clk", "dsi_sys_clk";
+> +		power-domains = <&k3_pds 215 TI_SCI_PD_EXCLUSIVE>;
+
+> +		interrupt-parent = <&gic500>;
+
+This is implied and can be dropped.
+
+> +		interrupts = <GIC_SPI 600 IRQ_TYPE_LEVEL_HIGH>;
+> +		phys = <&dphy_tx0>;
+> +		phy-names = "dphy";
+> +		status = "disabled";
+> +
+> +		dsi0_ports: ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			port@0 {
+> +				reg = <0>;
+> +			};
+> +			port@1 {
+> +				reg = <1>;
+> +			};
+> +		};
+> +	};
+> +
+>  	mhdp: bridge@a000000 {
+>  		compatible = "ti,j721e-mhdp8546";
+>  		reg = <0x0 0xa000000 0x0 0x30a00>,
+
+-- 
+Regards
+Vignesh
+https://ti.com/opensource
+
