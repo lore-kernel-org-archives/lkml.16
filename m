@@ -1,244 +1,134 @@
-Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60BE1EF36B
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE48C205502
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750954196; cv=none; b=SU7lDa1TWyQkqol0iC1ayFg+cWfhUSiWYcVwrXlMi2CWFrPbH19K0mgSbK0U4iGRXk5WJcE8MKHsD5amzxNvEChY1Vp+DKr64PDpXXhEptBa4cWKsugU40IP7UXaZ6YYsrGlUiFIrmwhTx0H+3qVXQ9YJWN1cpVNJgSxR+9mCNo=
+	t=1750954201; cv=none; b=Z2rzOQd1PJHDNOrXv3WWpphok1G5/FhRMH9EJh6/YFnYW2DyS7WVyYaWcfI7sop+4mGSM28fG35owPl1noWpn3PGM2ltywoMuRd2fQc76T4hzl+MgMFA6SsT1lty9cNfVFhaBDW0t1BnTlCzxGW+T38Eu+npwh48F1P+K9euvas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750954196; c=relaxed/simple;
-	bh=ytGi2CI81yYquxhb2ptqmJdqYDkJAscsvZjaIhReO/c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XeHOhe8pSZQzVhI/Mb6+TWPzdQgHISDhKpnrH5jkZGWMJPc/nRrEh3HM9lhDdgT0KADdKB5HcXnxYs3I0J02qNvWo8dEZWWDYtBepFFnebJ1TXMFupt2P8hEuuI62sssphswsezECnJ1Z/CxvGgv8sBFhCOoszF/6SzGU7Qz/q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=mx6hBOGa; arc=none smtp.client-ip=52.119.213.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1750954201; c=relaxed/simple;
+	bh=3dK9igG34LPxdpMV5UVh61EIuQaT+1ajbcjtbc7qkR0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ptSK+RpRTyt1GFGGyDZl8qqnK/oUasVmXDLLCCecNaywhmjQ8aCc0d46GBRCi7SWSSG1qgUR9efvtodjR4evFYCaF3mqV6iGLcO7AZMrk3IKwXS0qIHT8NDoJbUM4+JNXa8C7eN/NTPpA1YD4oKj9zfCUa4GTBWTJmHKcB+DGfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ga7WPov+; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="mx6hBOGa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ga7WPov+"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-313ff01d2a6so1155107a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:09:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1750954195; x=1782490195;
-  h=message-id:date:mime-version:reply-to:subject:to:cc:
-   references:from:in-reply-to:content-transfer-encoding;
-  bh=g3xFeXZI3QqRMs02H2fge/YdYUqqiszTKp89blpgsUg=;
-  b=mx6hBOGaQ56EAUDX51Xr2de2hpVy+vBY0gqYSQep+mZhR0j58GR/J4aV
-   ifvhnh5qlRMkmWLUmx/M8eRix+3XusjezgHQzsl4SqB2TGBbiMMyaEg/m
-   jXMJk+R8cW2Zt+V9AQ4mkcFFqgf2/HGfcZDnvvAnsQcNFtEfPHIpboWgu
-   ipOl09HpmhzQKyggHxCcDJno7S/nmxjuKST/XJd4GqKV3NSuZ22IUqsw/
-   G0DAwYwsYdZPzFlsAsI8QVzdMZjC8RtL7HyJDLULmCCG4+uZz1Wv2VjvM
-   OLpLsOxk5sIpyM3sXmb0Qi9VU62Ro9qe98j6oNafEcJPgvkmajYHEFtSr
-   w==;
-X-IronPort-AV: E=Sophos;i="6.16,268,1744070400"; 
-   d="scan'208";a="312994400"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 16:09:51 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [10.0.17.79:13317]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.47.53:2525] with esmtp (Farcaster)
- id 5ba97137-2dfa-4eb8-9ed5-afeceeeb58e6; Thu, 26 Jun 2025 16:09:49 +0000 (UTC)
-X-Farcaster-Flow-ID: 5ba97137-2dfa-4eb8-9ed5-afeceeeb58e6
-Received: from EX19D022EUC002.ant.amazon.com (10.252.51.137) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 26 Jun 2025 16:09:49 +0000
-Received: from [192.168.30.146] (10.106.83.33) by
- EX19D022EUC002.ant.amazon.com (10.252.51.137) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 26 Jun 2025 16:09:48 +0000
-Message-ID: <7666ee96-6f09-4dc1-8cb2-002a2d2a29cf@amazon.com>
-Date: Thu, 26 Jun 2025 17:09:47 +0100
+        d=google.com; s=20230601; t=1750954199; x=1751558999; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=E3koCSQ+MjDFXN15L8H0SZR0G6VhYzkxm2MTypvzZIY=;
+        b=ga7WPov+qkOcBlFX11xGR2LYmqEeB1vcNWy2DNJz0MyqjwyJlRS2vWQ9oKON9WIzrv
+         577dB+figq6cWHFiGI0LsDL5hLbZSFAkKssAPNrQ18ZQNSQHarP6hbT1Qvjz7Pl+0gHg
+         gOhZkgsx1izb2wZow/T3XPMeipGczZKtKbFHmqFccWtDlcTyiZE8FlggIjEwYBhb4CS+
+         CAD2biHlheBisBbQYUcFFaEcXd3MiUneQ34BajfR1UUGo+QO3CQSqIYQGELkwS4sqKps
+         FFV1mA141m3ybxoukc4B/m7imgRlWqPOF9tHA1GjHOpZ1GqeRTeUFdVwDPCJT9rGS4nP
+         q/lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750954199; x=1751558999;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E3koCSQ+MjDFXN15L8H0SZR0G6VhYzkxm2MTypvzZIY=;
+        b=qSusSW6xUxNfFXi1Wl5Hk9xGDxcbtlH4L9y7rZOPcfzUU+EuZSOSiZogNBZalVim2Q
+         prj1HbryF8icsu3jDppOs0P/bwrG/iVs82PfdB7tdr/BSjW7FOJeDCfqChl+rmZimYvL
+         dRlbF6jBI3EvRXwd1U8Zzp/fY97rIH7XeGtUen38RbI2RxzEFljVmTPOBk/G2pgZx4yJ
+         kn4Nncqe28HLEiHJqrhHbx2g2T+wd55w7E5GFsT2UTDgZlH0wwHlrDZNPAgmgx4V0PC9
+         iH7mOJGsZutizhtxJy4pgplevYdSE8ARF7Z369/ojGIdESRXycC4P0KY3EobVDZbncbA
+         0m+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVSjjbU09Du/DafXCUIJKBwxCFS8lmWcFuwFcCKEUUeKLx8LLI5mVcm9myqQIYH0Jph7JfpJYaFxS3wXiI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv8YxCs94jg5xVFPVV2k7y975eCXS+kNymQ2cYuf0mIjhTdki+
+	UDTZc6HRWtCRmr59MMH3mgd9swOOwb7q4sy0Vfd5ql7Pxu3Q4y/rCRW+B6oSRFnOlf7iNGFKaFC
+	v7/+LhA==
+X-Google-Smtp-Source: AGHT+IE7rsD7356Nl+vRDhGo8NRkVod7EnT+hBgAUIZ+abYCwm7vR4tFPCrzIC8Kmhqp/KsxB8p468JM0aQ=
+X-Received: from pjbnb6.prod.google.com ([2002:a17:90b:35c6:b0:311:8076:14f1])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5201:b0:311:fde5:c4c2
+ with SMTP id 98e67ed59e1d1-315f261389emr9800147a91.1.1750954199184; Thu, 26
+ Jun 2025 09:09:59 -0700 (PDT)
+Date: Thu, 26 Jun 2025 09:09:57 -0700
+In-Reply-To: <mqeuxn4in7pscni5odii2qvzoils5ce3jdzvmp45w3bg462buj@4elenf2mxaro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: <kalyazin@amazon.com>
-Subject: Re: [PATCH 0/4] mm/userfaultfd: modulize memory types
-To: Peter Xu <peterx@redhat.com>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, Hugh Dickins
-	<hughd@google.com>, Oscar Salvador <osalvador@suse.de>, Michal Hocko
-	<mhocko@suse.com>, David Hildenbrand <david@redhat.com>, Muchun Song
-	<muchun.song@linux.dev>, Andrea Arcangeli <aarcange@redhat.com>, Ujwal Kundur
-	<ujwal.kundur@gmail.com>, Suren Baghdasaryan <surenb@google.com>, "Andrew
- Morton" <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, "Liam
- R . Howlett" <Liam.Howlett@oracle.com>, James Houghton
-	<jthoughton@google.com>, Mike Rapoport <rppt@kernel.org>, Lorenzo Stoakes
-	<lorenzo.stoakes@oracle.com>, Axel Rasmussen <axelrasmussen@google.com>
-References: <20250620190342.1780170-1-peterx@redhat.com>
- <114133f5-0282-463d-9d65-3143aa658806@amazon.com> <aFxZUHcQh3hSraqe@x1.local>
-Content-Language: en-US
-From: Nikita Kalyazin <kalyazin@amazon.com>
-Autocrypt: addr=kalyazin@amazon.com; keydata=
- xjMEY+ZIvRYJKwYBBAHaRw8BAQdA9FwYskD/5BFmiiTgktstviS9svHeszG2JfIkUqjxf+/N
- JU5pa2l0YSBLYWx5YXppbiA8a2FseWF6aW5AYW1hem9uLmNvbT7CjwQTFggANxYhBGhhGDEy
- BjLQwD9FsK+SyiCpmmTzBQJnrNfABQkFps9DAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQr5LK
- IKmaZPOpfgD/exazh4C2Z8fNEz54YLJ6tuFEgQrVQPX6nQ/PfQi2+dwBAMGTpZcj9Z9NvSe1
- CmmKYnYjhzGxzjBs8itSUvWIcMsFzjgEY+ZIvRIKKwYBBAGXVQEFAQEHQCqd7/nb2tb36vZt
- ubg1iBLCSDctMlKHsQTp7wCnEc4RAwEIB8J+BBgWCAAmFiEEaGEYMTIGMtDAP0Wwr5LKIKma
- ZPMFAmes18AFCQWmz0MCGwwACgkQr5LKIKmaZPNTlQEA+q+rGFn7273rOAg+rxPty0M8lJbT
- i2kGo8RmPPLu650A/1kWgz1AnenQUYzTAFnZrKSsXAw5WoHaDLBz9kiO5pAK
-In-Reply-To: <aFxZUHcQh3hSraqe@x1.local>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EX19D003EUB001.ant.amazon.com (10.252.51.97) To
- EX19D022EUC002.ant.amazon.com (10.252.51.137)
+Mime-Version: 1.0
+References: <20250619200442.1694583-1-riel@surriel.com> <20250619200442.1694583-5-riel@surriel.com>
+ <mqeuxn4in7pscni5odii2qvzoils5ce3jdzvmp45w3bg462buj@4elenf2mxaro>
+Message-ID: <aF1w1RLgA9w7tRUg@google.com>
+Subject: Re: [RFC PATCH v4 4/8] x86/apic: Introduce Remote Action Request Operations
+From: Sean Christopherson <seanjc@google.com>
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org, kernel-team@meta.com, 
+	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, 
+	bp@alien8.de, x86@kernel.org, nadav.amit@gmail.com, tglx@linutronix.de, 
+	mingo@kernel.org, Yu-cheng Yu <yu-cheng.yu@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-
-
-On 25/06/2025 21:17, Peter Xu wrote:
-> On Wed, Jun 25, 2025 at 05:56:23PM +0100, Nikita Kalyazin wrote:
->>
->>
->> On 20/06/2025 20:03, Peter Xu wrote:
->>> [based on akpm/mm-new]
->>>
->>> This series is an alternative proposal of what Nikita proposed here on the
->>> initial three patches:
->>>
->>>     https://lore.kernel.org/r/20250404154352.23078-1-kalyazin@amazon.com
->>>
->>> This is not yet relevant to any guest-memfd support, but paving way for it.
->>
->> Hi Peter,
+On Thu, Jun 26, 2025, Kirill A. Shutemov wrote:
+> On Thu, Jun 19, 2025 at 04:03:56PM -0400, Rik van Riel wrote:
+> > From: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> > 
+> > RAR TLB flushing is started by sending a command to the APIC.
+> > This patch adds Remote Action Request commands.
+> > 
+> > Because RAR_VECTOR is hardcoded at 0xe0, POSTED_MSI_NOTIFICATION_VECTOR
+> > has to be lowered to 0xdf, reducing the number of available vectors by
+> > 13.
+> > 
+> > [riel: refactor after 6 years of changes, lower POSTED_MSI_NOTIFICATION_VECTOR]
 > 
-> Hi, Nikita,
+> But why? Because it is used as FIRST_SYSTEM_VECTOR?
+
+The Posted MSI Notifications vector should be the lowest of the system vectors
+so that device IRQs are NOT prioritized over "real" system vectors.
+
+> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> > Signed-off-by: Rik van Riel <riel@surriel.com>
+> > ---
+> >  arch/x86/include/asm/apicdef.h     | 1 +
+> >  arch/x86/include/asm/irq_vectors.h | 7 ++++++-
+> >  arch/x86/include/asm/smp.h         | 1 +
+> >  arch/x86/kernel/apic/ipi.c         | 5 +++++
+> >  arch/x86/kernel/apic/local.h       | 3 +++
+> >  5 files changed, 16 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/include/asm/apicdef.h b/arch/x86/include/asm/apicdef.h
+> > index 094106b6a538..b152d45af91a 100644
+> > --- a/arch/x86/include/asm/apicdef.h
+> > +++ b/arch/x86/include/asm/apicdef.h
+> > @@ -92,6 +92,7 @@
+> >  #define		APIC_DM_LOWEST		0x00100
+> >  #define		APIC_DM_SMI		0x00200
+> >  #define		APIC_DM_REMRD		0x00300
+> > +#define		APIC_DM_RAR		0x00300
 > 
->>
->> Thanks for posting this.  I confirmed that minor fault handling was working
->> for guest_memfd based on this series and looked simple (a draft based on
->> mmap support in guest_memfd v7 [1]):
-> 
-> Thanks for the quick spin, glad to know it works. Some trivial things to
-> mention below..
+> Hm. Do we conflict with APIC_DM_REMRD here?
 
-Following up, I drafted UFFDIO_COPY support for guest_memfd to confirm 
-it works as well:
+Yes and no.  Yes, it literally conflicts, but it's easy enough to define the behavior
+of APIC_DM_{REMRD,RAR} based on feature support.  E.g. KVM is likely going to add
+support for Remote Read, which would conflict with KVM's bastardization of
+APIC_DM_REMRD for PV kicks.  But as Paolo pointed out[*], KVM's PV unhalt/kick
+can simply be gated on KVM_FEATURE_PV_UNHALT.  Any code that cares should be able
+to do the same thing for RAR.  E.g. KVM's code could end up being something like:
 
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 8c44e4b9f5f8..b5458a22fff4 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -349,12 +349,19 @@ static bool kvm_gmem_offset_is_shared(struct file 
-*file, pgoff_t index)
+	case APIC_DM_REMRD:
+		if (guest_pv_has(vcpu, KVM_FEATURE_PV_UNHALT)) {
+			result = 1;
+			vcpu->arch.pv.pv_unhalted = 1;
+			kvm_make_request(KVM_REQ_EVENT, vcpu);
+			kvm_vcpu_kick(vcpu);
+		} else if (guest_has_rar(vcpu)) {
+			<magic!>
+		} else {
+			<emulate legacy Remote Read>;
+		}
+		break;
 
-  static vm_fault_t kvm_gmem_fault(struct vm_fault *vmf)
-  {
-+	struct vm_area_struct *vma = vmf ? vmf->vma : NULL;
-  	struct inode *inode = file_inode(vmf->vma->vm_file);
-  	struct folio *folio;
-  	vm_fault_t ret = VM_FAULT_LOCKED;
+For the kernel itself, there's nothing to do, because Linux doesn't use Remote Read.
 
-  	filemap_invalidate_lock_shared(inode->i_mapping);
-
-+	folio = filemap_get_entry(inode->i_mapping, vmf->pgoff);
-+	if (!folio && vma && userfaultfd_missing(vma)) {
-+		filemap_invalidate_unlock_shared(inode->i_mapping);
-+		return handle_userfault(vmf, VM_UFFD_MISSING);
-+	}
-+
-  	folio = kvm_gmem_get_folio(inode, vmf->pgoff);
-  	if (IS_ERR(folio)) {
-  		int err = PTR_ERR(folio);
-@@ -438,10 +445,57 @@ static int kvm_gmem_uffd_get_folio(struct inode 
-*inode, pgoff_t pgoff,
-  	return 0;
-  }
-
-+static int kvm_gmem_mfill_atomic_pte(pmd_t *dst_pmd,
-+			   struct vm_area_struct *dst_vma,
-+			   unsigned long dst_addr,
-+			   unsigned long src_addr,
-+			   uffd_flags_t flags,
-+			   struct folio **foliop)
-+{
-+	struct inode *inode = file_inode(dst_vma->vm_file);
-+	pgoff_t pgoff = linear_page_index(dst_vma, dst_addr);
-+	struct folio *folio;
-+	int ret;
-+
-+	folio = kvm_gmem_get_folio(inode, pgoff);
-+	if (IS_ERR(folio)) {
-+		ret = PTR_ERR(folio);
-+		goto out;
-+	}
-+
-+	folio_unlock(folio);
-+
-+	if (uffd_flags_mode_is(flags, MFILL_ATOMIC_COPY)) {
-+		void *vaddr = kmap_local_folio(folio, 0);
-+		ret = copy_from_user(vaddr, (const void __user *)src_addr, PAGE_SIZE);
-+		kunmap_local(vaddr);
-+		if (unlikely(ret)) {
-+			*foliop = folio;
-+			ret = -ENOENT;
-+			goto out;
-+		}
-+	} else {		/* ZEROPAGE */
-+		clear_user_highpage(&folio->page, dst_addr);
-+	}
-+
-+	kvm_gmem_mark_prepared(folio);
-+
-+	ret = mfill_atomic_install_pte(dst_pmd, dst_vma, dst_addr,
-+				       &folio->page, true, flags);
-+
-+	if (ret)
-+		folio_put(folio);
-+out:
-+	return ret;
-+}
-+
-  static const vm_uffd_ops kvm_gmem_uffd_ops = {
--	.uffd_features	= 	VM_UFFD_MINOR,
--	.uffd_ioctls	= 	BIT(_UFFDIO_CONTINUE),
-+	.uffd_features	= 	VM_UFFD_MISSING | VM_UFFD_MINOR,
-+	.uffd_ioctls	= 	BIT(_UFFDIO_COPY) |
-+				BIT(_UFFDIO_ZEROPAGE) |
-+				BIT(_UFFDIO_CONTINUE),
-  	.uffd_get_folio	=	kvm_gmem_uffd_get_folio,
-+	.uffd_copy	=	kvm_gmem_mfill_atomic_pte,
-  };
-  #endif
-
-> 
->>
->> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
->> index 5abb6d52a375..6ddc73419724 100644
->> --- a/virt/kvm/guest_memfd.c
->> +++ b/virt/kvm/guest_memfd.c
->> @@ -5,6 +5,9 @@
->>   #include <linux/pagemap.h>
->>   #include <linux/anon_inodes.h>
->>   #include <linux/set_memory.h>
->> +#ifdef CONFIG_USERFAULTFD
-> 
-> This ifdef not needed, userfaultfd_k.h has taken care of all cases.
-
-Good to know, thanks.
-
->> +#include <linux/userfaultfd_k.h>
->> +#endif
->>
->>   #include "kvm_mm.h"
->>
->> @@ -396,6 +399,14 @@ static vm_fault_t kvm_gmem_fault(struct vm_fault *vmf)
->>                kvm_gmem_mark_prepared(folio);
->>        }
->>
->> +#ifdef CONFIG_USERFAULTFD
-> 
-> Same here.  userfaultfd_minor() is always defined.
-
-Thank you.
-
-> I'll wait for a few more days for reviewers, and likely send v2 before next
-> week.
-> 
-> Thanks,
-> 
-> --
-> Peter Xu
-> 
-
+[*] https://lore.kernel.org/all/CABgObfadZZ5sXYB0xR5OcLDw_eVUmXTOTFSWkVpkgiCJmNnFRQ@mail.gmail.com
