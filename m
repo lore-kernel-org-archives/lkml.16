@@ -1,220 +1,130 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A13E13A3F7;
-	Thu, 26 Jun 2025 06:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C0E13A3F7;
+	Thu, 26 Jun 2025 06:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750919662; cv=none; b=VDzeiuEYfF1j4I5hFnU6NqGxug8ZTAlq03/6SyfLTAyfrH84dI8y7No0Sicfk+ToyViVJX+GUglKkcD2ExHAsL8y+Pz7KIcOYBwbVUCvQTjtYL47/B6tSWr7vD/hk3mABfzlnmzuY6O/MISlRYEpAXTz1dL2blFEf7gP2wKmY0E=
+	t=1750919712; cv=none; b=P8uTkIEZ7Sg9WKCIDtrhb1h5qSF9gCJgw7EEl6D5mDFZRID7F5066JSPzh76E1hPkVqV/ojT5dJn1qTkhSDS9u3Vd/tFUSdxFH0Xwco43RQm3ZsCludn0DuLKLPKoj//okSYzCSuJ8WuI5aUqbzMyzAd253D202sW30y/tpsdSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750919662; c=relaxed/simple;
-	bh=h9xTRIpmxk6RffAgcVzfrjeaGDAnBp8G3HY8XzUvDp0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YKI3wNJDFMXnw/i9222UVP/i9QEO92YJpNbHholaX5Rn14ygaSnHyjHvTfbhjh56fuffkNmFBGCGWC9iS/iIolkSs8IDE7QRAR5if+uHSIY3hetHEzAg1mBJaoFBFTLwwwozBc7rtgUwFrcIIMERz9aZvTgQ0bWdBvMhuKkBOuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=RMnOvH2T; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750919712; c=relaxed/simple;
+	bh=kXEwt3IRU2NN6XR4T29MvS381DWcfgzy/ExFUQTFHXc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jwM1xhA3gsxrAxEp7JbBQ0f98jMOpZd1osm7i/AdXzz+I+MgED3WZY+8GGHa9WH6DKeqY+s27WidyWRa3lwiFtL0tMHhikn1nkki88HXu1fuQ9LkDk/CXnFnrLBrIx6PrFqsd4FIU6hrsXnLyZGBiQ7vlrH7YyAVcHm0K5HPw9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=g0m/wFnB; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RMnOvH2T"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55Q6YDaV2376660;
-	Thu, 26 Jun 2025 01:34:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750919653;
-	bh=Mth4wXANQfN7CfdhwyXVkM+yuM1L4hdreVBkMvSqM44=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=RMnOvH2TNUGZKM7SreBG7TgsMpMfuS7BIFjsAB4qoTYO39QN9ReVI7WQsZNqYpCA4
-	 pn3K1j8TxF0f1NAJ7JyKfpsfeBw7gE/JgjfI60VkZ1iHdYUf3BaDjCBMCIaucDpxuu
-	 asEXwo8cPiv+EXq0DSiM35SWeM4MMDDrbF0uFccM=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55Q6YDNv1726431
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 26 Jun 2025 01:34:13 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
- Jun 2025 01:34:13 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 26 Jun 2025 01:34:13 -0500
-Received: from [172.24.227.245] (uda0132425.dhcp.ti.com [172.24.227.245])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55Q6Y81i530502;
-	Thu, 26 Jun 2025 01:34:09 -0500
-Message-ID: <4765b426-e625-4563-a748-7edb40e3b260@ti.com>
-Date: Thu, 26 Jun 2025 12:04:09 +0530
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="g0m/wFnB"
+Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PI6RxZ019763;
+	Wed, 25 Jun 2025 23:34:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pfpt0220; bh=/6+WkD4QKS5qw/KRv6OC76vlR
+	Djj+Bgyl5FuINvA4tI=; b=g0m/wFnBbrUp46kQzthTvmNcQYmJSXvVQKnDUA8zl
+	V6x3qXfQQC1fmAQ3f6Z6Ovp1EQsOjcW/RL6Xanmjbx0HpCyLAL6Uarm0kdu+zEiT
+	bGPUvhTq/sVGqmIvrnjMqRLt+j3FfJ7Co7+TvrXBp2t8s/KdoGZzsL5A2//rQxhE
+	TfRa3gBopk55a+C0uNRDR6ObESX3x83YcOCAdkLuP/dPan9FBi35fEVNC4WCUEo6
+	Hr4+MFcv8xVjqh2pYId1WDG+YvBCjJEo84kKMO4vb+wPf1PSHLyyH0ZoOic7JN9C
+	2d/eT+oImf8+Kp95CpvsE64RgC1y/CLHHU9NrOlatAYVg==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 47gp3q95v7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 23:34:43 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 25 Jun 2025 23:34:28 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Wed, 25 Jun 2025 23:34:28 -0700
+Received: from 822c91e11a5c (HY-LT91368.marvell.com [10.29.24.116])
+	by maili.marvell.com (Postfix) with SMTP id 360CC3F7077;
+	Wed, 25 Jun 2025 23:34:23 -0700 (PDT)
+Date: Thu, 26 Jun 2025 06:34:23 +0000
+From: Subbaraya Sundeep <sbhatta@marvell.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+CC: Sai Krishna <saikrishnag@marvell.com>,
+        Sunil Goutham
+	<sgoutham@marvell.com>,
+        Linu Cherian <lcherian@marvell.com>,
+        Geetha sowjanya
+	<gakula@marvell.com>,
+        Jerin Jacob <jerinj@marvell.com>, hariprasad
+	<hkelam@marvell.com>,
+        Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH net-next] octeontx2-af: Fix error code in rvu_mbox_init()
+Message-ID: <aFzp70LaPoO0ukw8@822c91e11a5c>
+References: <ee7944ae-7d7d-480d-af33-b77f2aa15500@sabinyo.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/7] arm64: dts: ti: k3-am68-sk: Enable DSI on
- DisplayPort-0
-To: Jayesh Choudhary <j-choudhary@ti.com>, <nm@ti.com>,
-        <devicetree@vger.kernel.org>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devarsht@ti.com>, <u-kumar1@ti.com>
-References: <20250624082619.324851-1-j-choudhary@ti.com>
- <20250624082619.324851-8-j-choudhary@ti.com>
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Content-Language: en-US
-In-Reply-To: <20250624082619.324851-8-j-choudhary@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ee7944ae-7d7d-480d-af33-b77f2aa15500@sabinyo.mountain>
+X-Authority-Analysis: v=2.4 cv=AemxH2XG c=1 sm=1 tr=0 ts=685cea03 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=M5GUcnROAAAA:8 a=BdBXECxqI82sMXVekp8A:9
+ a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22 a=OBjm3rFKGHvpk9ecZwUJ:22 a=yGmsW_zf-WRfUAWRrVPH:22
+X-Proofpoint-ORIG-GUID: rr-0S0kE2nnZrOVJiDy2RL4GxNgV0ymn
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA1MiBTYWx0ZWRfX4hOtyfPTcBMi jtnd7kv0aVeZF+b8wCmCoLgKkaObtcZ5Er6sS9SKl8sDnGgC5Yz5WftEXCLRZLsTdIR+R9DoiMt 8TxxFvJs+FNThxbMb/QzOeVxQrQV7ThY6w4av1nSPkBrl2CBWG3g7ABC+45jhy2mVLM+QZqOTq/
+ IH3C+biTBk/h5dG6SifF7mtXtB0B/zjtatYRerDEDtL3AZrWQHywwfX9OV69jMvVSn84HNVySbH GpvUEwEyiuOK3b9AYiL1+ZLsRbN5yUSNmFXIQ8D6EKWJ175dx1McANSXAYo81a+pu8rzcAu2VtA jm9RVmJhsROZ/cEyDNv5R9wIIpsKzWekEhT5gktLlYhH6NOPu3loQ9EnIKkvgn1sUnbr/k7b6Kf
+ 5V7Kezg+ptIsEL3NweP8CGDzeavdGWx/SVDwrAidq5hPJbgRIQk3g8cUXMpuRrnKFj/ZiTIJ
+X-Proofpoint-GUID: rr-0S0kE2nnZrOVJiDy2RL4GxNgV0ymn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_03,2025-06-25_01,2025-03-28_01
 
+On 2025-06-25 at 15:23:05, Dan Carpenter (dan.carpenter@linaro.org) wrote:
+> The error code was intended to be -EINVAL here, but it was accidentally
+> changed to returning success.  Set the error code.
+> 
+> Fixes: e53ee4acb220 ("octeontx2-af: CN20k basic mbox operations and structures")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
+ Reviewed-by: Subbaraya Sundeep <sbhatta@marvell.com>
 
-On 24/06/25 13:56, Jayesh Choudhary wrote:
-> Enable DSI support for AM68-SK platform.
-> 
-> Add DT node for DSI2eDP bridge. The DSI to eDP bridge is sn65dsi86
-> on the board.
-> 
-> Add the endpoint nodes to describe connection from:
-> DSS => DSI => SN65DSI86 bridge => DisplayPort-0
-> 
-> Set status for all required nodes for DisplayPort-0 as 'okay'.
-> 
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+ Thanks for the patch. This has been pointed by Simon earlier:
+ https://lore.kernel.org/all/20250618194301.GA1699@horms.kernel.org/
+
+ Thanks,
+ Sundeep
+
 > ---
->  .../boot/dts/ti/k3-am68-sk-base-board.dts     | 96 +++++++++++++++++++
->  1 file changed, 96 insertions(+)
+>  drivers/net/ethernet/marvell/octeontx2/af/rvu.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-> index 5fa70a874d7b..aef63ae2994c 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-> @@ -135,6 +135,35 @@ transceiver4: can-phy3 {
->  		max-bitrate = <5000000>;
->  	};
+> diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+> index 7e538ee8a59f..c6bb3aaa8e0d 100644
+> --- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+> +++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+> @@ -2458,9 +2458,9 @@ static int rvu_mbox_init(struct rvu *rvu, struct mbox_wq_info *mw,
+>  			 void (mbox_handler)(struct work_struct *),
+>  			 void (mbox_up_handler)(struct work_struct *))
+>  {
+> -	int err = -EINVAL, i, dir, dir_up;
+>  	void __iomem **mbox_regions;
+>  	struct ng_rvu *ng_rvu_mbox;
+> +	int err, i, dir, dir_up;
+>  	void __iomem *reg_base;
+>  	struct rvu_work *mwork;
+>  	unsigned long *pf_bmap;
+> @@ -2526,6 +2526,7 @@ static int rvu_mbox_init(struct rvu *rvu, struct mbox_wq_info *mw,
+>  			goto free_regions;
+>  		break;
+>  	default:
+> +		err = -EINVAL;
+>  		goto free_regions;
+>  	}
 >  
-> +	edp0_refclk: clock-edp0-refclk {
-> +		#clock-cells = <0>;
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <19200000>;
-> +	};
-> +
-> +	dp0_pwr_3v3: fixedregulator-dp0-pwr {
-
-use std node name: regulator-...
-
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "dp0-pwr";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		gpio = <&exp2 2 GPIO_ACTIVE_HIGH>;     /*P0 - DP0_3V3 _EN */
-> +		enable-active-high;
-> +		regulator-always-on;
-> +	};
-> +
-> +	dp0: dp0-connector {
-> +		compatible = "dp-connector";
-> +		label = "DP0";
-> +		type = "full-size";
-> +		dp-pwr-supply = <&dp0_pwr_3v3>;
-> +
-> +		port {
-> +			dp0_connector_in: endpoint {
-> +				remote-endpoint = <&dp0_out>;
-> +			};
-> +		};
-> +	};
-> +
->  	connector-hdmi {
->  		compatible = "hdmi-connector";
->  		label = "hdmi";
-> @@ -605,6 +634,39 @@ exp2: gpio@20 {
->  		gpio-line-names = "HDMI_PDn","HDMI_LS_OE",
->  				  "DP0_3V3_EN","eDP_ENABLE";
->  	};
-> +
-> +	dsi_edp_bridge: dsi-edp-bridge@2c {
-> +		compatible = "ti,sn65dsi86";
-> +		reg = <0x2c>;
-> +		clock-names = "refclk";
-> +		clocks = <&edp0_refclk>;
-> +		enable-gpios = <&exp2 3 GPIO_ACTIVE_HIGH>;
-> +		vpll-supply = <&vsys_io_1v8>;
-> +		vccio-supply = <&vsys_io_1v8>;
-> +		vcca-supply = <&vsys_io_1v2>;
-> +		vcc-supply = <&vsys_io_1v2>;
-> +
-> +		dsi_edp_bridge_ports: ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +
-> +				dp0_in: endpoint {
-> +					remote-endpoint = <&dsi0_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +
-> +				dp0_out: endpoint {
-> +					remote-endpoint = <&dp0_connector_in>;
-> +				};
-> +			};
-> +		};
-> +	};
->  };
->  
->  &main_sdhci1 {
-> @@ -699,6 +761,15 @@ dpi_out0: endpoint {
->  			remote-endpoint = <&tfp410_in>;
->  		};
->  	};
-> +
-> +	/* DSI */
-> +	port@2 {
-> +		reg = <2>;
-> +
-> +		dpi0_out: endpoint {
-> +			remote-endpoint = <&dsi0_in>;
-> +		};
-> +	};
->  };
->  
->  &serdes_ln_ctrl {
-> @@ -756,3 +827,28 @@ &usb0 {
->  	phys = <&serdes0_usb_link>;
->  	phy-names = "cdns3,usb3-phy";
->  };
-> +
-> +&dphy_tx0 {
-> +	status = "okay";
-> +};
-> +
-> +&dsi0 {
-> +	status = "okay";
-> +};
-> +
-> +&dsi0_ports {
-> +
-> +	port@0 {
-> +		reg = <0>;
-> +		dsi0_out: endpoint {
-> +			remote-endpoint = <&dp0_in>;
-> +		};
-> +	};
-> +
-> +	port@1 {
-> +		reg = <1>;
-> +		dsi0_in: endpoint {
-> +			remote-endpoint = <&dpi0_out>;
-> +		};
-> +	};
-> +};
-
--- 
-Regards
-Vignesh
-https://ti.com/opensource
-
+> -- 
+> 2.47.2
+> 
