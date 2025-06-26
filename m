@@ -1,65 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739C6202996;
-	Thu, 26 Jun 2025 20:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7E925A334;
+	Thu, 26 Jun 2025 20:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750971436; cv=none; b=OBgab2kqGe8D4PoCdRFjjcQYjtoBhtQlQY9sojoFLQDnfmdp1n+GDAar0um7lUUSgjfde7gtsD58OIwH8Ox8RCnjG2Kie+1pNLPEG7J5cyFfrXyCge6l1ohGb6hitYAdIlzMRYew0gZ1NZn7hrQmfeog/bxQLUXcrUwWY0CKZEE=
+	t=1750971465; cv=none; b=tyWguNuaKPbDgN/okFFoCC/JYOXy9ebo1HFqVnKHF2M/Kr8Ht2wDV04GqEAJ1xqQF0A/M9VY5QEjhemMsa10rPoTcAcpLjIYGcrv8h3eZLAVCtonaM0GUI+gTESrPh8NyoY5CC1Z+Pr2Z1EPoc7fwAyO/max+Jy8O8bEW2EM0N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750971436; c=relaxed/simple;
-	bh=ChGnZmmq74D9pfG2y/C73bIqbdSptliB1w7H48IgBHA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gzElzeqLJxyTPJWPS7dCOrZ/JZoeJ/m6l3GP5v0Au417kf9szJwPnFs1R+uVYGJ7Y+9hORyKxYGsT0zNQ2j4ehFeHr5wAzT/T3bfi7x7wbOWCcJKU3ECNLJmuG75gMQ0lw8rvajY8mumPdjqfsWh2+ZrDI0iB9edD4w2MkelWeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cqz8D8lc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750971465; c=relaxed/simple;
+	bh=fboFooiv5nQCNWPaoV3T7R8k3RIvcK1dRe+5TeMQ214=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=p+QHU/oR0LUvEV9mVutzD3OVhMrZeWYn0zN1YqKlQXqYxPo4G3oiHbuvgK3w9vCMUUIf+r6jod8huzAlXM7CSX2vC/9vj6FEVT35WveT8O9Fad0UdRCaJVIvm9VqVbR3B4jO4yKFJbq6pJFUemQz0yc5whoIEmXhTH4LPbhKpRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H2xrVoGt; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cqz8D8lc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72AB7C4CEF0;
-	Thu, 26 Jun 2025 20:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750971435;
-	bh=ChGnZmmq74D9pfG2y/C73bIqbdSptliB1w7H48IgBHA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Cqz8D8lckJxEqfgvuXbgojB/kmH14u65gcYJX1holi9BE+7JaEybVkjEuObqSifjx
-	 7B3uYWAHAQTF47TZiMDaiaJWI5Wl7uxq3UIXmWHqkbEuUwTJg3oUFCqeppnd9lWp+m
-	 wevRCzsJOLom3e2C9CGhdTgJehfBKB7WK0BB7NcLxE8mzP6zlxWokRZUX469ThJXIY
-	 KWPQlyA2TVKV/Pe263hec5hI4N2J3q/qNMC5wNabnIyzkt9fjZknSOxPeYOQLI1aSQ
-	 uqsVAf5vk3Vx1E8tPHOwe35GVo2uy0RpaKgc0a96r1m+0OF1D+1N4mPIU6iQ97dtzD
-	 lcubmSfFHcH/w==
-From: Vinod Koul <vkoul@kernel.org>
-To: linux-sound@vger.kernel.org, 
- Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc: vinod.koul@linaro.org, linux-kernel@vger.kernel.org, 
- pierre-louis.bossart@linux.dev, bard.liao@intel.com
-In-Reply-To: <20250626060937.405978-1-yung-chuan.liao@linux.intel.com>
-References: <20250626060937.405978-1-yung-chuan.liao@linux.intel.com>
-Subject: Re: [PATCH] soundwire: intel_auxdevice: add rt721 codec to
- wake_capable_list
-Message-Id: <175097143542.44160.16482034102820784391.b4-ty@kernel.org>
-Date: Thu, 26 Jun 2025 13:57:15 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2xrVoGt"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-74af4af04fdso412653b3a.1;
+        Thu, 26 Jun 2025 13:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750971463; x=1751576263; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fboFooiv5nQCNWPaoV3T7R8k3RIvcK1dRe+5TeMQ214=;
+        b=H2xrVoGtgqABU379MSLXy5p/OM/FRfEwUmcEsFAe+w58Br0lcAqUfaA5/9CrMYSzA5
+         7VBQ93LUwa56h6eh2fW2g8SOGtfwCJZGyzC4kvz44NNcrftBuixxahibMYTguZXGazVM
+         BJkAtWV12J/Mk0yvm2tI08hzQ5LmldgXVAGMwBozjPpLQNih6KAsBgMbGs4T2RjP3fPX
+         y86lKf+/ugAtFDpBzSmKpGL56ficg82/yq4feT64nj3LUT51SX4qq9mOARzeDP9FbI2M
+         HUg17VYaGc0IiOSEXY8SqWLEo075z+k0wUJ/s4u/y5yQQVH14c+db7wL72c6BHB/xo0r
+         5Pzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750971463; x=1751576263;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fboFooiv5nQCNWPaoV3T7R8k3RIvcK1dRe+5TeMQ214=;
+        b=r67qgQ2URV44PY+3AsqSofHenpTS1MeFTrD1ne3EbMA0m7PbrQKj01Kw2p68ru6a9Z
+         eEETEvuWf4whyoUNGdkA2y2/3iMcyZzAyF3yeSs2PpNTxcOC4CA9/I9zt/P6KGS4xxJd
+         h5J30YUUt8z4DVAQrpQ3UHc0GOZjhSskCBU+lfjOz77+nHAmPLQbx5nYB2DzJcojYC8F
+         qPNVH5UdRHu1NHYj21WGjyZwNlRoOGPT3XC31okRW7ZdY8/nGoJ6x9ag4wiVNu78UfDE
+         UoY98+ow/2sQ69fOikHeCxCvlhMWOnDvBOtA6WvOuuUMYh4U5Ek+sg+JzOi/fH+S8MNh
+         UP1A==
+X-Forwarded-Encrypted: i=1; AJvYcCU36tVT6BOJzj9K/V2cVGMjhuCOqz7RTcOeAiVZxwybGv7KmyHeNBlO2qhyqR6r6KtlMcjzdOMmYz+SWVxg@vger.kernel.org, AJvYcCU5KfiEa4MJXsC73gq3Ppbz1u6ufov7MKhxlhjUEoxl7T/yB6tDeW8r9yWy+1lEuNo0cuplpRy7bT06@vger.kernel.org, AJvYcCUZDQ7/DnNxtxSvJab6tG6v0rPeerqEvDVXYv6NzJDPqZyEVEQVcT6Z4udDWArFl3dpdeuRr3QaA1pk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7c+D6zSiwPWaeJoVTrwnyUcaLto2eHNv1q20a/KTo0OYR0nqR
+	tZNs3QkM7LdIthE9NGQvwx7r25InxLimn/hjbWHcRlU1dIKAGvQvEqJo
+X-Gm-Gg: ASbGncs7hNLSOvNRq/CwSab9PVuOxLoRO4G26xHZjbCq4FwlJm6/zGj/U5PMOhWUI8I
+	x0QF/0jQSRZedET5cpCBkKiW3owTaeVgFl7GSJY7LaGJaRil9zt2pXSoV2K8/8pgnoK2qPnwBTq
+	ICDFz0NdyaGRhvw72R7koYhqO8Of/I4N+8r9mKNmy6W/oiCXZy1j4U3J7EruDn8qsRrxLlTMXtz
+	li080t3SGRDM1oWdxBA/l/vNm4jVBM3xUQC7ErRw6LgkbwcnED55s/8dWu/073jE+em1tWN/WIx
+	Wzh91ogJu8R9uWnLCEXzD7LlNkHYCyCw0bqZ7Dmlv3wZk1ixcyrP0c6xKRynHoYMyhDQ9XlS/z9
+	XZEDl5OtMoxuIBrWwkOY=
+X-Google-Smtp-Source: AGHT+IHOMStf689VxqL03BfuyX0jEndQjIUPRMfj87Aj79T5t0yVc3e26PVqXcYYXZ9eoinzT1hcnw==
+X-Received: by 2002:a05:6a00:8ca:b0:749:1e60:bdd with SMTP id d2e1a72fcca58-74af7893218mr609513b3a.2.1750971463012;
+        Thu, 26 Jun 2025 13:57:43 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14d:4c64:81ec:4ff:1626:32b1:712a])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af57ef669sm498169b3a.158.2025.06.26.13.57.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 13:57:42 -0700 (PDT)
+From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+To: conor@kernel.org
+Cc: andy@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	dlechner@baylibre.com,
+	jic23@kernel.org,
+	krzk+dt@kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	nuno.sa@analog.com,
+	robh@kernel.org,
+	rodrigo.gobbi.7@gmail.com,
+	~lkcamp/patches@lists.sr.ht
+Subject: Re: [PATCH v3] dt-bindings: iio: adc: st,spear600-adc: txt to yaml format conversion.
+Date: Thu, 26 Jun 2025 17:54:01 -0300
+Message-ID: <20250626205733.6354-1-rodrigo.gobbi.7@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250526-overtake-charger-6c5ffcc2bc09@spud>
+References: <20250526-overtake-charger-6c5ffcc2bc09@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
 
+Hi, all,
 
-On Thu, 26 Jun 2025 14:09:37 +0800, Bard Liao wrote:
-> rt721 has wake capability. Add it to the wake_capable_list.
-> 
-> 
-
-Applied, thanks!
-
-[1/1] soundwire: intel_auxdevice: add rt721 codec to wake_capable_list
-      commit: 8168dba757c08aed00d0a1a25426c807adbf4491
-
-Best regards,
--- 
-~Vinod
-
-
+Just a gentle ping here since it was already been reviewed.
+If there is any other concerns, let me know.
+Tks and regards.
