@@ -1,64 +1,69 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E2033993
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 00:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3317D335C7
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 00:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750896751; cv=none; b=dCWvklqlmJUb6S82cJCamBgXfRMUzEUvxCqb+qML/F4TA6E/swPUQiXoSatvIRSFfCipCVbk2gct8f+5c548c4aIG5A/CxsTvF8pHUjP5QnNALS2cKFURwex3h37zM6NYnYpvmDWKp1NLgK1tmyFH8r+6BAPstpIsrqNkbQN00Y=
+	t=1750896752; cv=none; b=WX9564IZK2WUPyEK5WHF678vuvQo6IDZJJC0Z3Nk3WgIQxSmnBysD92PZuGzxLIunRFfiu1F06q7uAY9fW+hAgiMGdu4n6/0/bFsKR0m+ipibuopm9n/rlQLpfrhzQWSugOB/dF25dneAZ4E4Gy8E7GkyoyKVg4DUesK8XjNG9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750896751; c=relaxed/simple;
-	bh=OQuE1+mbvlY7kYCA416+0UPNmYM+WCsDdKYrx20KBY4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=kO0i7UoX6GZPzyBfa9sq6doOvc6rb7Y6WwxuIhcpX8cRGaQcJsUjw6/8Jq/+FbvMeL2KaPteOxKD8b0ZEpbU/K9EflXW3jAQM5xukQ4SFppS+rLX+ue/Kjhmld1KyrXfPZtn4kp+qpVOzoJCugLJ3zhZfuc8TbatyzCn59mirhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xad341A2; arc=none smtp.client-ip=209.85.210.202
+	s=arc-20240116; t=1750896752; c=relaxed/simple;
+	bh=2XyDfFWH/0eDwvNxvoMEhqm8qOkWL90TlQT4lYrrQX4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=thQT9Azzw9chafA1RAUO0HNpf6oZl1znKH7OiMXnJWgdFfCURn1oQbhbWlTiy15lQqgmDlIAlKtAfbk13QmkjxXy/B002zncl4Bp/ODQLDh8ShD44W1IZu2Gef9PznLYSFN28yWJSRmomEREltVDaJdq5MYxtmbMZnh7hFu5QL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RZAC4igl; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xad341A2"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7394772635dso280598b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:12:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RZAC4igl"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3138e671316so335679a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:12:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750896749; x=1751501549; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ty9Yky/2YRmZBC/kRaxnlFXhTAWNXxw17qo7VWYFUnw=;
-        b=Xad341A2tTdn7vHCG/v6xeXQMCyvWV7kiR8odzMWQ71s+n2A94Ioawqyb7yHYcAILp
-         0RmiSr7zAG5b50i9yi2RtprpxjH5zuUGevm0Wv6w43YZOIIR/yxfM7TDx8rNXIwqG8KB
-         fYcaZGNj9t6HE5FH1hRwlyA4aN/HRc57J3mFtBp9vOzATSEkZbnrk98xZgCW4KIUAtXI
-         EAVJ5hvN0WOuITRhInwLgVvK7OV8Vn4KVgOCRsLSjAPDMbt0FeOE0PZGMWa4KafUGq87
-         5H4pQJcvWC9clIWjbiNPsj8TgTPaYejO93ABVNzwZp7g9mQubXDQ5ie9bTQ+o6L2onyl
-         +/ew==
+        d=google.com; s=20230601; t=1750896750; x=1751501550; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=XIDgjwUm8CjgtXg9AIcmlFZZ7eZmoPHxzXcxCBew1V0=;
+        b=RZAC4iglHDc5wFi5q3yqGFjPakn8kr1A7dPSAmqa1fhRxDppBSuhFxdmXgCipNd2SD
+         s5+bMK70UA0lJZxbmumw0gRV/Qpuj6DLs8plH4pE8X7VjGEfrji88BuGbyyOl0E8e0WH
+         ZSFE888OtxweQHNUd+l18qw6qPJW95DJNjnM7F0TAJrJ2O2nZGURWBKeZYGImrRWlJgz
+         qyryiiE5sVAxg3ojccoa29ePlbd+lvAVkVd5mkUlrwPeFtvRJxJALJmfIUmw9iFwjQrv
+         Bfqim8qncHG8l9BOjMKKLQpgrDaCK6cDXsU5mb0ukcseGpM9mDa5MTkbWRHCiCjfoKuf
+         GXsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750896749; x=1751501549;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ty9Yky/2YRmZBC/kRaxnlFXhTAWNXxw17qo7VWYFUnw=;
-        b=s3ZaMQUUhgEait4oavra35R1RDRsloCwW6rTiLFZrboyCoQTyNqzthAsaxmvILl0Pn
-         1f9HTe9sAXD/JyIut9qepfrl3ZVSFuNgBCjHeS9QGJUwcbSWrXunEcEH3AkFDi8uPofl
-         65MSbAB2bzXshB9/3gv1r4M9N8hSUlU+LJ00zi3aBFsllZeTzSe/RQY/HK4cxiynh8rR
-         HFKYbjjhpTHECEEMlPSUzTdNAqP+xk73BEjiHhA67VO+1wpvjc6eANFw6LnJPduNB6Ff
-         RumrPJG8W0U+RuwUgD+p9KYKvqFx7cxyiAaL7MDX8gnewpEF6fuYiFBTH8tfF5Suc19O
-         pt5g==
-X-Forwarded-Encrypted: i=1; AJvYcCU+zmxC+zVmXv/S2ZCdVhkTiNBNgVTdk+WrLwnhMoRVFf3bEngu38+wsjgZiUzbrzxKa9fCGA7l032Out4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0HDPyelXHhTa/PgjFfLRG74qYPAjOqCtB3sf525h6Rd+x181c
-	jqPaxx0elD3GUksvw8F6Qr0CingmerfmeMZLm03FI7pp7xR22uevzmj6azYbVkiM29080hLHqHH
-	0xdwhTg==
-X-Google-Smtp-Source: AGHT+IF8TpcPM4+ngzfFRwoy1CLwhMuA7U208BIrPiA30EGA+J604Zlx0v8xnfd75p/sgB3YCcwXzUB7EWM=
-X-Received: from pfrh7.prod.google.com ([2002:aa7:9f47:0:b0:748:4f7c:c605])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1256:b0:748:f1ba:9afe
- with SMTP id d2e1a72fcca58-74ad4462128mr7447673b3a.4.1750896748834; Wed, 25
- Jun 2025 17:12:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750896750; x=1751501550;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XIDgjwUm8CjgtXg9AIcmlFZZ7eZmoPHxzXcxCBew1V0=;
+        b=tdbZ9yNFL4zqqhdw/q+0TnvjMaZIAA74JJz27kbxWy44Em69d9Rm15UG3O1E8vDlF7
+         rz6n6fOUgH5psTmsuZWgXSg7hGKyDLtv8QnjYyL4tkr/Ck0Up6SBcEkrTCqvbbJ7mgI+
+         t9n59YxLfCCU0UaLycMXAqe4Dv45gV9eHIJOiFQv6vI5p+r1RHTiEgVfMLRV0Frd/Fxq
+         YAwOvAdN8lbjJ46SaXYWRKCW2KzQqTOlGhSQVb1137KI8B2yGWfpDI20y1DvV0m21vXH
+         euZo2LR6dFxVWfF3y2HVwvZJCBrHxBtz1PRgY1/f9pBF26oHZRummoYW+W1LsEPxThrM
+         Q/kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1zS/icVUA55j+yFO4fPYBqX4Ly9VBjScqtkDhSZWzQcZ8oGrdhUDZsdknmYq7wbxSbS6HEFGBXTEkG4o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR5xvIMkZJbACLEgnDjjJfZn+Ee4Bt9yJ/h4co2GcN/9mkYQs1
+	1VzA76/KGiRX4pDAAh+c0Rfel3avY5on/al+eBN30nctkcjWmq+8SLF2TBLzLjloWGjpIKFK6NE
+	9nnx5hw==
+X-Google-Smtp-Source: AGHT+IFxqzI3I7qPfHhdkJFEVHE7dAj1xtEraHFWyog88QsjEjNsPNLon63KPUv4mv/v10Bg3S343op+M7c=
+X-Received: from pjvf13.prod.google.com ([2002:a17:90a:da8d:b0:2fe:800f:23a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5345:b0:311:1617:5bc4
+ with SMTP id 98e67ed59e1d1-316ed3a99d5mr1851989a91.12.1750896750459; Wed, 25
+ Jun 2025 17:12:30 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 25 Jun 2025 17:12:20 -0700
+Date: Wed, 25 Jun 2025 17:12:21 -0700
+In-Reply-To: <20250626001225.744268-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250626001225.744268-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250626001225.744268-1-seanjc@google.com>
-Subject: [PATCH v5 0/5] KVM: x86: Provide a cap to disable APERF/MPERF read intercepts
+Message-ID: <20250626001225.744268-2-seanjc@google.com>
+Subject: [PATCH v5 1/5] KVM: x86: Replace growing set of *_in_guest bools with
+ a u64
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
 	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
@@ -67,81 +72,124 @@ Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	Jim Mattson <jmattson@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-arm64 folks, y'all got pulled in because of selftests changes.  I deliberately
-put that patch at the end of the series so that it can be discarded/ignored
-without interfering with the x86 stuff.
+From: Jim Mattson <jmattson@google.com>
 
+Store each "disabled exit" boolean in a single bit rather than a byte.
 
-Jim's series to allow a guest to read IA32_APERF and IA32_MPERF, so that it
-can determine the effective frequency multiplier for the physical LPU.
+No functional change intended.
 
-Commit b51700632e0e ("KVM: X86: Provide a capability to disable cstate
-msr read intercepts") allowed the userspace VMM to grant a guest read
-access to four core C-state residency MSRs. Do the same for IA32_APERF
-and IA32_MPERF.
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Link: https://lore.kernel.org/r/20250530185239.2335185-2-jmattson@google.com
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/include/asm/kvm_host.h |  5 +----
+ arch/x86/kvm/svm/svm.c          |  2 +-
+ arch/x86/kvm/vmx/vmx.c          |  2 +-
+ arch/x86/kvm/x86.c              |  9 +--------
+ arch/x86/kvm/x86.h              | 13 +++++++++----
+ 5 files changed, 13 insertions(+), 18 deletions(-)
 
-While this isn't sufficient to claim support for
-CPUID.6:ECX.APERFMPERF[bit 0], it may suffice in a sufficiently
-restricted environment (i.e. vCPUs pinned to LPUs, no TSC multiplier,
-and no suspend/resume).
-
-v5:
- - Rebase on top of the MSR interception rework.
- - Support passthrough to L2 on VMX (it was there somewhat unintentionally
-   for SVM).
- - Expand the selftest to cover the nested case.
- - Sanity check that the MSRs are inaccesible in the selftest.
- - Add selftests patches to expand the task=>CPU pinning APIs.
- - OR-in the new disabled exits in one batch.
-
-v4:
- - https://lore.kernel.org/all/20250530185239.2335185-1-jmattson@google.com
- - Collect all disabled_exit flags in a u64 [Sean]
- - Improve documentation [Sean]
- - Add pin_task_to_one_cpu() to kvm selftests library [Sean]
-
-v3:
- - https://lore.kernel.org/all/20250321221444.2449974-1-jmattson@google.com
- - Add a selftest
-
-v2:
- - https://lore.kernel.org/all/20250314180117.740591-1-jmattson@google.com
- - Add {IA32_APERF,IA32_MPERF} to vmx_possible_passthrough_msrs[]
-
-v1:
- - https://lore.kernel.org/all/20250225004708.1001320-1-jmattson@google.com
-
-Jim Mattson (3):
-  KVM: x86: Replace growing set of *_in_guest bools with a u64
-  KVM: x86: Provide a capability to disable APERF/MPERF read intercepts
-  KVM: selftests: Test behavior of KVM_X86_DISABLE_EXITS_APERFMPERF
-
-Sean Christopherson (2):
-  KVM: selftests: Expand set of APIs for pinning tasks to a single CPU
-  KVM: selftests: Convert arch_timer tests to common helpers to pin task
-
- Documentation/virt/kvm/api.rst                |  23 ++
- arch/x86/include/asm/kvm_host.h               |   5 +-
- arch/x86/kvm/svm/nested.c                     |   4 +-
- arch/x86/kvm/svm/svm.c                        |   7 +-
- arch/x86/kvm/vmx/nested.c                     |   6 +
- arch/x86/kvm/vmx/vmx.c                        |   6 +-
- arch/x86/kvm/x86.c                            |  15 +-
- arch/x86/kvm/x86.h                            |  18 +-
- include/uapi/linux/kvm.h                      |   1 +
- tools/include/uapi/linux/kvm.h                |   1 +
- tools/testing/selftests/kvm/Makefile.kvm      |   1 +
- tools/testing/selftests/kvm/arch_timer.c      |   7 +-
- .../kvm/arm64/arch_timer_edge_cases.c         |  23 +-
- .../testing/selftests/kvm/include/kvm_util.h  |  31 ++-
- tools/testing/selftests/kvm/lib/kvm_util.c    |  15 +-
- tools/testing/selftests/kvm/lib/memstress.c   |   2 +-
- .../selftests/kvm/x86/aperfmperf_test.c       | 213 ++++++++++++++++++
- 17 files changed, 321 insertions(+), 57 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/x86/aperfmperf_test.c
-
-
-base-commit: 7ee45fdd644b138e7a213c6936474161b28d0e1a
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index bf26dfb5416d..6fdeeb5870b3 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1407,10 +1407,7 @@ struct kvm_arch {
+ 
+ 	gpa_t wall_clock;
+ 
+-	bool mwait_in_guest;
+-	bool hlt_in_guest;
+-	bool pause_in_guest;
+-	bool cstate_in_guest;
++	u64 disabled_exits;
+ 
+ 	s64 kvmclock_offset;
+ 
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index ab11d1d0ec51..5ad54640314f 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -5015,7 +5015,7 @@ static int svm_vm_init(struct kvm *kvm)
+ 	}
+ 
+ 	if (!pause_filter_count || !pause_filter_thresh)
+-		kvm->arch.pause_in_guest = true;
++		kvm_disable_exits(kvm, KVM_X86_DISABLE_EXITS_PAUSE);
+ 
+ 	if (enable_apicv) {
+ 		int ret = avic_vm_init(kvm);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 65949882afa9..702486e7511c 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7519,7 +7519,7 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
+ int vmx_vm_init(struct kvm *kvm)
+ {
+ 	if (!ple_gap)
+-		kvm->arch.pause_in_guest = true;
++		kvm_disable_exits(kvm, KVM_X86_DISABLE_EXITS_PAUSE);
+ 
+ 	if (boot_cpu_has(X86_BUG_L1TF) && enable_ept) {
+ 		switch (l1tf_mitigation) {
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 2806f7104295..2d893993262b 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6481,14 +6481,7 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 		    (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE))
+ 			pr_warn_once(SMT_RSB_MSG);
+ 
+-		if (cap->args[0] & KVM_X86_DISABLE_EXITS_PAUSE)
+-			kvm->arch.pause_in_guest = true;
+-		if (cap->args[0] & KVM_X86_DISABLE_EXITS_MWAIT)
+-			kvm->arch.mwait_in_guest = true;
+-		if (cap->args[0] & KVM_X86_DISABLE_EXITS_HLT)
+-			kvm->arch.hlt_in_guest = true;
+-		if (cap->args[0] & KVM_X86_DISABLE_EXITS_CSTATE)
+-			kvm->arch.cstate_in_guest = true;
++		kvm_disable_exits(kvm, cap->args[0]);
+ 		r = 0;
+ disable_exits_unlock:
+ 		mutex_unlock(&kvm->lock);
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index db4e6a90e83d..31ae58b765f3 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -521,24 +521,29 @@ static inline u64 nsec_to_cycles(struct kvm_vcpu *vcpu, u64 nsec)
+ 	    __rem;						\
+ 	 })
+ 
++static inline void kvm_disable_exits(struct kvm *kvm, u64 mask)
++{
++	kvm->arch.disabled_exits |= mask;
++}
++
+ static inline bool kvm_mwait_in_guest(struct kvm *kvm)
+ {
+-	return kvm->arch.mwait_in_guest;
++	return kvm->arch.disabled_exits & KVM_X86_DISABLE_EXITS_MWAIT;
+ }
+ 
+ static inline bool kvm_hlt_in_guest(struct kvm *kvm)
+ {
+-	return kvm->arch.hlt_in_guest;
++	return kvm->arch.disabled_exits & KVM_X86_DISABLE_EXITS_HLT;
+ }
+ 
+ static inline bool kvm_pause_in_guest(struct kvm *kvm)
+ {
+-	return kvm->arch.pause_in_guest;
++	return kvm->arch.disabled_exits & KVM_X86_DISABLE_EXITS_PAUSE;
+ }
+ 
+ static inline bool kvm_cstate_in_guest(struct kvm *kvm)
+ {
+-	return kvm->arch.cstate_in_guest;
++	return kvm->arch.disabled_exits & KVM_X86_DISABLE_EXITS_CSTATE;
+ }
+ 
+ static inline bool kvm_notify_vmexit_enabled(struct kvm *kvm)
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
