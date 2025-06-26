@@ -1,180 +1,411 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99BD1D7984;
-	Thu, 26 Jun 2025 21:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750971889; cv=none; b=t2+HO7onVIK641q6d6ax8FRf3do2xOUV/DkyJAxvzBuLFcd2CnBjUtgyfjsuPW9ppF3gLb7UB5kOYoka0g7Z0OlPMn7+eUuZs7FAJaAZ3qJrEoszyW53HQBQMgL18XjOM1bd2/Pph824+y4yyUcIDv1qCrekEaZ4tS8YuDc5NGE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750971889; c=relaxed/simple;
-	bh=YFJB1XcxtOWivqWH4uhOZ5kCezXChaPprpNEOpK0ocI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QbitqzaZo8wwv+8t05z6mukOQcprNdS1HibKHKxuFwEzCCPuIzwX/GhviyEMo2udhdUhRJlZGU3iXj5sV2tV9Rn+FIRAZnRVCw+LCbhMPKPO+KwZc5BWKw0SQ8dEqptfkU/8FbLmUIOc36hG/zSQdtKeHLsKMf5pq2wkFsD7n0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FdwKZEZ+; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B0A1EDA3C
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750971979; cv=fail; b=L/ycFF+sBWOvFQF7KP3J5aqC1x2rECsaX+jOQZ8y/gvoetMWN4P9ZHp+/hEL9jIgoHQkEiB33B5aW/5EK3h6nehZT0wzHPU2LQmCOqtAR/LjYzEAYTvJsMIuqyo0fKRmAPcuegpXRFOv8KFpTYwFLOY8vqp/qygNyRuaih5E1a4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750971979; c=relaxed/simple;
+	bh=KuzNfHvxjYNrEUp5L6G2QXtFsm9Xfhg5R+dk1CdU1MQ=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=YNkT/uHe7NgCAN2H/tpC4iWmKfo9XD9jW2fbDJxkwAIqw2zLFMshnR/daAXkmDIH15DyWid0ToBhiQ7s/AdP5YCkksGzkjp0F83oZnVQOgDRFiCzIfPg9eJqS1np5E7JbjMd5+P+Sa8VJEDKj0eo3GBcbycUrYHIWAhDu2jcv2U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NiHH9Xf1; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FdwKZEZ+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 141FAC4CEEB;
-	Thu, 26 Jun 2025 21:04:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750971889;
-	bh=YFJB1XcxtOWivqWH4uhOZ5kCezXChaPprpNEOpK0ocI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FdwKZEZ+H9h+9oTrqEvY3Jr+P9PQpcf7l8CXC/18r3RHDXSDv0/QV0fO/GjvRwJgp
-	 2PrkQBEU2IVrH7YV6wzk0RGwNb1DANqGGkAED20uhXmBp7UB7r7IGgHWGAa3Acuq2w
-	 6WyCqMNkvX1j8v7IDIIR0KJPQmMIYPH7xTKqCo0dQli7MiDhZIhMxl+mswHTKab65Z
-	 CfU9HKoz11ewAGiwzgrDjITiumGjo3wD+bxwYbOixgpTamkoiH+zM6leyV7SR86jEZ
-	 rZfR45GojneklqF94S4WrizyVEB4PIyGiZsbgb58G7EO+9wNt+KBJwdopzepjn6Pwl
-	 TIxczH5mcl3sQ==
-Date: Thu, 26 Jun 2025 23:04:47 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Carlos O'Donell <carlos@redhat.com>
-Cc: "Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
-Subject: Re: man-pages-6.14 released
-Message-ID: <e363mzanav4inu3wtk5pmyzfwlquxr5kwh7ytk5emtayizi7qi@dqxritlnl22g>
-References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
- <20250509112627.GA924923@if>
- <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
- <20250509121454.GA952723@if>
- <3e82680d-149c-4a67-b838-bc73c0be3e4e@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NiHH9Xf1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750971977; x=1782507977;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=KuzNfHvxjYNrEUp5L6G2QXtFsm9Xfhg5R+dk1CdU1MQ=;
+  b=NiHH9Xf1UkZvPJuI78WLDRC/BAc9akfDHMdOEcirGclI8qMUm3ira5w9
+   BsmJ8IF/Z5Q1odCqJqZVdBcQPJdosDUefgCQTGTYwTJEbS611kjnDOq0W
+   v1Tsd5iCdTwkxAWvDcUCTOj6lghUV7l9WxLnP2r64TZDB7OxbPx0LQi89
+   VL8KJmk63bUrXUAFp+WuwD4mEpypj4cQ614FsheFZ+Ipff+Q5kjC7m5v6
+   CUoMFHp8tW65/+wncwtPxEF/fNhtAcRXz14/J3kCtJeELJk5ZoO4Y4Fzv
+   /H1M+NIoin/FolRlAFLf9wRUhyvWpSYjskwSl3+mTFuwDMHG+4vF1S8/9
+   Q==;
+X-CSE-ConnectionGUID: 1JGDN/tHS4G/s0PWaAcK8w==
+X-CSE-MsgGUID: v2apIxk2QUOVkui4RMdSXA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53361129"
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="53361129"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 14:06:16 -0700
+X-CSE-ConnectionGUID: s8pM54K0QUi5qdgODhYQoQ==
+X-CSE-MsgGUID: OnnS0f6eTbOyoKYq1zuIXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="157004257"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 14:06:16 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 26 Jun 2025 14:06:15 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Thu, 26 Jun 2025 14:06:15 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.68) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 26 Jun 2025 14:06:14 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=I6Y+7+8uM8unE8bngsyG01KCEVFv0dFPN2EMJSiCI01kPmodFYcJZZpwPF+mTMLoXSBZ3wViPCSAhKfvXXhXg9DMeV+m3smwLrY3hOpwFVvRt4j/f5eIcJgeYRx7dk4BA4KBc4UNw7u6na9Pl7F+gRCPJsl/1hIuMDglJnDb/9Z4pnx9hS3F5xjReSTNBJDOlG5Z35Pw+cUTXtnctZJKNZfXtD6ZvKRaENZOK73vdw4WhU9LT0KDcTHQC0sMF0KdAl5uKmhqcFmzXmO5vpoKOGPRILjb92n3PVSEF3MVIOCVNud2auaGQ+hDNwXXLkE/1DFL7LQOFW4pw8jSuVmvog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=15OWYK4HH9AkbHmKrwM7FqKI+P2Cp68VdCGw3T2ax9E=;
+ b=EEn0ejysYgbWqJRGr7noSwVMtISXCwmw37p94nVe5Cu+0CFe9akTYPQP5W7QLQLkmHQ9Ph30ab23a7iLbvzKQoRnHubBUA+A07NexzVtES1ac5psoawnVDdu62dEXjinWI01E4qhFu/HLuTB7s73ZPW4o/FZTAfc2DLaw+zZubt3biFwkySZj7x2aBzF40sX3heRo0wdAhHdfcFtrRuNBMtrZCZzFEDEJX9hVO+4G00ncMwVq49q/zMyC35dlA8tPbgxFILPOjCk5kTKgLYQnyEYmbk9ZJCKDZ6MJakeUqUf3PlsoVRzvGUAbaE5y1GyuBRSLHAz/Q09oS7nE2FcOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB7605.namprd11.prod.outlook.com (2603:10b6:510:277::5)
+ by PH0PR11MB7561.namprd11.prod.outlook.com (2603:10b6:510:282::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.19; Thu, 26 Jun
+ 2025 21:06:12 +0000
+Received: from PH7PR11MB7605.namprd11.prod.outlook.com
+ ([fe80::d720:25db:67bb:6f50]) by PH7PR11MB7605.namprd11.prod.outlook.com
+ ([fe80::d720:25db:67bb:6f50%4]) with mapi id 15.20.8857.025; Thu, 26 Jun 2025
+ 21:06:12 +0000
+Message-ID: <f1bfbdf6-8f66-477d-92e3-50612b4c4b71@intel.com>
+Date: Thu, 26 Jun 2025 14:06:10 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 04/10] drm/xe/xe_late_bind_fw: Initialize late binding
+ firmware
+To: Badal Nilawar <badal.nilawar@intel.com>, <intel-xe@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC: <anshuman.gupta@intel.com>, <rodrigo.vivi@intel.com>,
+	<alexander.usyskin@intel.com>, <gregkh@linuxfoundation.org>
+References: <20250625170015.33912-1-badal.nilawar@intel.com>
+ <20250625170015.33912-5-badal.nilawar@intel.com>
+Content-Language: en-US
+From: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
+In-Reply-To: <20250625170015.33912-5-badal.nilawar@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0217.namprd03.prod.outlook.com
+ (2603:10b6:a03:39f::12) To PH7PR11MB7605.namprd11.prod.outlook.com
+ (2603:10b6:510:277::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6ljou54wzeco3awg"
-Content-Disposition: inline
-In-Reply-To: <3e82680d-149c-4a67-b838-bc73c0be3e4e@redhat.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB7605:EE_|PH0PR11MB7561:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2e33c154-ccba-4d91-7993-08ddb4f547ff
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?eHYyakNEVzF3M3JOcFFGNXJrR2xDbzZaSUNNbDBYRmJRVHRrdmdDMldZZnVF?=
+ =?utf-8?B?Ti9YUUxiRVo1SXBrSXk5OElxcVByM2Z0WjErZWtqeGwybHlzTEc1T0l2TXBK?=
+ =?utf-8?B?WTRxZ2J6QnowbnJkamVmMlgzZUdMcGtTY0k0aUptWjFEUjhQSGUybGRRZTB6?=
+ =?utf-8?B?MW5RQUk4SEx5WnQ4SVEyd2lHdlltbFowMlBTWk5aWGIwQjBMcUZlU2E4bmJn?=
+ =?utf-8?B?bXhMZWZ2bk9VbzJhNlpSQ2EwYWFpcVV6Q3RnRlZRcG5DY3hRblFZSjhCVHhH?=
+ =?utf-8?B?WnUraHBIQTFWeXNsWjdzY3o1QmZPcmdqNjVkOTh4TjBnTXVxb0l2dmpyTFho?=
+ =?utf-8?B?S3Q2TE4xa0dWbFB3cW1GTlVDenk0Q1JHZFl5dVY5SjIrcklxRVgvd1hQRmhK?=
+ =?utf-8?B?R0FZT0FHYkxQL2MzZ2I5eGtMSUUxOEZnK2xZcFlIQzc5NktuN2hCdWxndUZz?=
+ =?utf-8?B?Q1dFeEhPTW53bVZTS1U5RktXOGZHcDBVRlBicXlvWDR1dk1DOHpFRFJxekk4?=
+ =?utf-8?B?NkpWNDAvKzJwMXFLeG9YcVVSTHkzT0haMitLb0dkMHJjdi9VOSsycVlRcDNv?=
+ =?utf-8?B?YlAxYTUwMFBKN1djd0l4QVJOWkdtZlZ2RVptb2hKMDVnNHVnM3pqQjFOZTBG?=
+ =?utf-8?B?NmZza1RQclQyZWlSZkhrOHVBbGt0MGRERGxlWnZzTW5ueStuMHAyZmJiNUVp?=
+ =?utf-8?B?SUFnWWd0c1JxM0ZxMzhEMVpwLzJ0TWVoWDIvbFFKMEhvN0FNdWdKaEJaSlJx?=
+ =?utf-8?B?UVRaakhJbXhVeTdOeHVrbGc2N3pteVdUYytRNVJtaTZuZVN2enIraFpVeERW?=
+ =?utf-8?B?aGJxem1sK00yK3E4dGdBZ2ZvaVFuYnR2b1RDRm1aMG1OS2NTRllzOTlhMU9i?=
+ =?utf-8?B?UUIyb2FyZXdkSXkzN0krcy9TYU1yK3I0cDJWSkhkMEZZMkVPRE9OREVienVi?=
+ =?utf-8?B?TzJRczByUXNTQVZhNGFBdnFQK2d6Szl3c1dYS3VvYktBbGpsTFFDdEFGTnNW?=
+ =?utf-8?B?L3ozZllPL2cyYU1DYVAvK2ZmMjlKSU9aMElRVEZUVk1lWHBsMGFrd1A5R1NO?=
+ =?utf-8?B?SXk0Wk1wNDgrbzJteko4RHMxM09UM2tValE5bDdJalpiNWsyNFFWTXRaV1J1?=
+ =?utf-8?B?aGYrMmlRZmFrR09KK0NadE54MElxMGt1NVZtdnNobXNjUkk2MExaQzBVYWVB?=
+ =?utf-8?B?eGJoR2pMbERNZE9YTWRvR29JYWhPMDhMaDFWRmxpbkNLV0l1S2grSGlYRUxl?=
+ =?utf-8?B?R09OQXY0MUpLREJkUEtBcFBmT2tFdFJ2SXZhNGIxbEY5TmNWZDk1dFMyeDMx?=
+ =?utf-8?B?R3ZDLzdpWWlFNHlQY1hudG45OWMyYUQ4MjAvS083cWNBOFZDamNBUXE3Uk42?=
+ =?utf-8?B?aEp3S1Uya3E2eE5taGJMMEtBM21JQWZQcFhoQW5NWDhjWFhpUy9kLzJrSHVB?=
+ =?utf-8?B?TnNRWDNjRFFRcTdxZ2hSUzV0UUZyS0JIc1JOVDRiMnFodEZORGlIQ0R1Q1A4?=
+ =?utf-8?B?RlEvS2FkMDlSVXFMWitYQSt1UHFxd042N3gweW4yZEp3WWkvQzdoZjVGTHlo?=
+ =?utf-8?B?amJoMkxXTEV4d0tBbVlUeDVHemZrallLdXc0L3RVaTNQaHlnemNFQXRGRkc0?=
+ =?utf-8?B?TVQ1L0dRL0htQVZEQXpxZzJwSnljTUlxWTJVSlhJcHM3M0hhZDc2TGtITWFS?=
+ =?utf-8?B?RzJ6b1QzQkw3dmViRFdPcEJveEZ5OHNnNkhJM25QbjBwQzRWTlpsSmpqRGNU?=
+ =?utf-8?B?Z0p6cDJjRGVnUnpZbWl3aTBKLzF3bWQySVYrOHE3S3dDdUEzZFdCa2F3TUVy?=
+ =?utf-8?B?dndJZDJPcmppdDVTbTUvWFhtN3Y2R0N4VzVUZXpDM1NESXFsVnNTR2syTFdu?=
+ =?utf-8?B?aC9kS0FhMEY2NllJRE1oL1I4ZFpBOFEyRjRSdFlsV2RTbnEzMVNOeEFrQnIv?=
+ =?utf-8?Q?cRe8fQjbfxY=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB7605.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K0ZZK0Y0VjJGUkVNdUROWU01SnJreWs2UDRNS0lEcUY1b3I4RUNrcnFQWHg0?=
+ =?utf-8?B?OTU5Q1JEUWlLeGF6QnB6Y3IwUXUva2FCREJMWTJjODlrS0hqa05PeGY0dHJk?=
+ =?utf-8?B?aHVsQ25DNm5JbzQ1V1UrVFloQWNwY1A0RTA4N2ZQVUVaN0dXVnJQSnBEZVZW?=
+ =?utf-8?B?VmZvcEF4MXNRMnh1UVIxeXBDUVRhWkYwOUlULzNKZEgxdEhZMWZ1NG90QU1n?=
+ =?utf-8?B?eVVPVVBPZ0tteXIxbUFZdjQ5YURtSmZxOVRKaVhHNlc4eVFQVVl5ekN2V1JK?=
+ =?utf-8?B?NXl5UXBJSzQ3bGprODRWaDhXSXRaVUZsT0piRk9DdWlGbVhkbWt3QVNYSUM0?=
+ =?utf-8?B?ZlM2T2UzN213a2pDK09OUWgzV25kdUtDai9FU3Y5dURWMFZyTTNxUncxZWEz?=
+ =?utf-8?B?UGtwYnhzT3ZwRDNON0xKZHRIZ2xaVVc5ZFRtVEV0QVRkSlpDMU1weEZ0R2hK?=
+ =?utf-8?B?U1BOalRNZTJYY2RzQkFTblVJSG5JLzVjVVhXbXdnTXRVVlV6S2hIMldyMlZE?=
+ =?utf-8?B?U1VOem0yVEdBV21BRXBjZCt6STRLNmJwMUtWMUJGaW9QK2dQOHhXTFE3ZE1U?=
+ =?utf-8?B?QUZQSUNIblhsYjNZUUU3SFJqTkVxNWRMVG5LVmNyVVJsa1ZFdkxFM1ZINldv?=
+ =?utf-8?B?c1pVeFRFWFlSWURYYmYvOUF0VWFFamRvM25nbGJiMjVQU05MNzg3bDZXek81?=
+ =?utf-8?B?dEpBd1RzM3M1VDJwTW5iK1BxMUhsQlJtMm1mYXZGbUFLZ3ovMmIyODhrN1Nt?=
+ =?utf-8?B?NjBkTTdjMUNITnRnNGpIL01oaTlWZFYycmRPYUtDczFCS09nWjhJZ0k4TTZO?=
+ =?utf-8?B?R3pITlZwQ0hOb3hKNDNnWVVmcE9yY0NyRFB4M1h0dnRoRlBlMlR4RlVzSW9M?=
+ =?utf-8?B?cWFEZDFyZkVVSXJzTVRqclk3RU5TdG56N01ocmpRS280QXJQZGR5UmxPZnl5?=
+ =?utf-8?B?OTBUNzN5SWN5S1d2TEhjVkJsQzlGVGJNeG15TVNaWDVsZDhjVDMzS2QrOWo4?=
+ =?utf-8?B?cDB1QlZOZHYybFhqZU5uNUZSbHB1N1Z2MkNBdEZEamhlYlI1TVNZQTh6MXIx?=
+ =?utf-8?B?RFNFQU15SHRSbnMwVzJ6cEFaRUkzVDE2cW10TGtWaWJXMmYyc1BTYjc1TERW?=
+ =?utf-8?B?dUlML3NZSTRFM3ZkL2JMVENDOWVadFV3Njg0eDVhNXUvL05ESmVVL3JIS2oy?=
+ =?utf-8?B?dDh4cForYjVkdnVLNlk0Z3dGSVpNc3BxMFI2Yy9DRk9keFVYb2xkRDdRWG05?=
+ =?utf-8?B?eDQ5ZFVkb3p2ZjlWYnpZNU5zSXBsS01tWktoWGJUUzlIWG5CWTUwdmdvazY0?=
+ =?utf-8?B?OXpZdHBTbGdDWDhMR1lBeW5oalVFWjZncWc5WWhOUUtTUDJDbzBrNm9WODJR?=
+ =?utf-8?B?dTJCeS9pcS8zYmdLUGZOZk8rUmpKaExIZkhHK1k3d1VtMlNPbEd3T090cFJC?=
+ =?utf-8?B?R2RLYmFQeUR5djRwaHlZU2pSN01TM0cydXZqZUVhYWdXYTlBb25YQXc0QXFo?=
+ =?utf-8?B?cjdpc214Z3AvWDVHUERhdGZDREx6cGdoa1dEYnh4WHhoRDNtR1UxaVNFMlhr?=
+ =?utf-8?B?VHV3MjQyckM0bVlJczlUSHNHR2o2SWR2ZUNxTy9URm9OWU01cGZmaldpTWNF?=
+ =?utf-8?B?Z3k5NFdTY25GdnNhMWUvTkJuRGhwSnFralRBWHNCT2w4SklwbXQvM3RnZzBU?=
+ =?utf-8?B?aWxvc0w2VkY2OXU5UTdnZlJVdG02RUQvZFYzV254cXRMM08xVnMwaitnZi9m?=
+ =?utf-8?B?MjZzaGVzNDlkUU1UaVRBeU15VHM4dk9mTG5US2Vna1JxUmdqdGd1bi9qdGFX?=
+ =?utf-8?B?MkVPREVRdUk1TTNpQ3pPRERySFN6YVBNejA5aXFmQ0E0YVpkM2VyUTIxM09W?=
+ =?utf-8?B?SmV0d0Vtc1NINXVaR1RsUmozdDdWQS8xL0FENU5qTktHZWJxRmlBdmlpVEtJ?=
+ =?utf-8?B?RGtjQ0JJYTdEcEZ4NXZyUVRrVU42S1VPMW9UVUpncHE5SWR0RUwxNmxJMGkz?=
+ =?utf-8?B?aWZsSnUwdnlpUzJURDJBb0dvc3QzTDVtdnBNSzEzWFltSGhvcU81Q25TM0x6?=
+ =?utf-8?B?OWRkWmhCWTBhaldxblNzYmVnajhDbEFncS9qSXBmS2U1L2pNa3YzNU9pMll6?=
+ =?utf-8?B?UC9XRUFORG9OUHp3RVM3bkIwazVkZnNnTCt3cDF5OGR6KytWMTd1N0NkMlZq?=
+ =?utf-8?Q?Z0Yz7XXQ9r+P/w+DDh6QyCc=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e33c154-ccba-4d91-7993-08ddb4f547ff
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB7605.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 21:06:12.5760
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Imo3Qlh/uWS+aKQeHA64yc4qTbJxEJyftC5Ix61oOfa3BxzF3rYUVPqMR7Bzu/ma81l3XVlU+9mpwfiFW2eZPtXg8jvn1NlpoJL0y3+SQQg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7561
+X-OriginatorOrg: intel.com
 
 
---6ljou54wzeco3awg
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Carlos O'Donell <carlos@redhat.com>
-Cc: "Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
-Subject: Re: man-pages-6.14 released
-References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
- <20250509112627.GA924923@if>
- <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
- <20250509121454.GA952723@if>
- <3e82680d-149c-4a67-b838-bc73c0be3e4e@redhat.com>
-MIME-Version: 1.0
-In-Reply-To: <3e82680d-149c-4a67-b838-bc73c0be3e4e@redhat.com>
 
-Hi Carlos,
+On 6/25/2025 10:00 AM, Badal Nilawar wrote:
+> Search for late binding firmware binaries and populate the meta data of
+> firmware structures.
+>
+> v2 (Daniele):
+>   - drm_err if firmware size is more than max pay load size
+>   - s/request_firmware/firmware_request_nowarn/ as firmware will
+>     not be available for all possible cards
+> v3 (Daniele):
+>   - init firmware from within xe_late_bind_init, propagate error
+>   - switch late_bind_fw to array to handle multiple firmware types
+> v4 (Daniele):
+>   - Alloc payload dynamically, fix nits
+>
+> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+> ---
+>   drivers/gpu/drm/xe/xe_late_bind_fw.c       | 103 ++++++++++++++++++++-
+>   drivers/gpu/drm/xe/xe_late_bind_fw_types.h |  32 +++++++
+>   2 files changed, 134 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.c b/drivers/gpu/drm/xe/xe_late_bind_fw.c
+> index eaf12cfec848..32d1436e7191 100644
+> --- a/drivers/gpu/drm/xe/xe_late_bind_fw.c
+> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw.c
+> @@ -5,6 +5,7 @@
+>   
+>   #include <linux/component.h>
+>   #include <linux/delay.h>
+> +#include <linux/firmware.h>
+>   
+>   #include <drm/drm_managed.h>
+>   #include <drm/intel/i915_component.h>
+> @@ -13,6 +14,16 @@
+>   
+>   #include "xe_device.h"
+>   #include "xe_late_bind_fw.h"
+> +#include "xe_pcode.h"
+> +#include "xe_pcode_api.h"
+> +
+> +static const u32 fw_id_to_type[] = {
+> +		[XE_LB_FW_FAN_CONTROL] = CSC_LATE_BINDING_TYPE_FAN_CONTROL,
+> +	};
+> +
+> +static const char * const fw_id_to_name[] = {
+> +		[XE_LB_FW_FAN_CONTROL] = "fan_control",
+> +	};
+>   
+>   static struct xe_device *
+>   late_bind_to_xe(struct xe_late_bind *late_bind)
+> @@ -20,6 +31,92 @@ late_bind_to_xe(struct xe_late_bind *late_bind)
+>   	return container_of(late_bind, struct xe_device, late_bind);
+>   }
+>   
+> +static int xe_late_bind_fw_num_fans(struct xe_late_bind *late_bind)
+> +{
+> +	struct xe_device *xe = late_bind_to_xe(late_bind);
+> +	struct xe_tile *root_tile = xe_device_get_root_tile(xe);
+> +	u32 uval;
+> +
+> +	if (!xe_pcode_read(root_tile,
+> +			   PCODE_MBOX(FAN_SPEED_CONTROL, FSC_READ_NUM_FANS, 0), &uval, NULL))
+> +		return uval;
+> +	else
+> +		return 0;
+> +}
+> +
+> +static int __xe_late_bind_fw_init(struct xe_late_bind *late_bind, u32 fw_id)
+> +{
+> +	struct xe_device *xe = late_bind_to_xe(late_bind);
+> +	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
+> +	struct xe_late_bind_fw *lb_fw;
+> +	const struct firmware *fw;
+> +	u32 num_fans;
+> +	int ret;
+> +
+> +	if (fw_id >= XE_LB_FW_MAX_ID)
+> +		return -EINVAL;
+> +
+> +	lb_fw = &late_bind->late_bind_fw[fw_id];
+> +
+> +	lb_fw->valid = false;
+> +	lb_fw->id = fw_id;
+> +	lb_fw->type = fw_id_to_type[lb_fw->id];
+> +	lb_fw->flags &= ~CSC_LATE_BINDING_FLAGS_IS_PERSISTENT;
+> +
+> +	if (lb_fw->type == CSC_LATE_BINDING_TYPE_FAN_CONTROL) {
+> +		num_fans = xe_late_bind_fw_num_fans(late_bind);
+> +		drm_dbg(&xe->drm, "Number of Fans: %d\n", num_fans);
+> +		if (!num_fans)
+> +			return 0;
+> +	}
+> +
+> +	snprintf(lb_fw->blob_path, sizeof(lb_fw->blob_path), "xe/%s_8086_%04x_%04x_%04x.bin",
+> +		 fw_id_to_name[lb_fw->id], pdev->device,
+> +		 pdev->subsystem_vendor, pdev->subsystem_device);
+> +
+> +	drm_dbg(&xe->drm, "Request late binding firmware %s\n", lb_fw->blob_path);
+> +	ret = firmware_request_nowarn(&fw, lb_fw->blob_path, xe->drm.dev);
+> +	if (ret) {
+> +		drm_dbg(&xe->drm, "%s late binding fw not available for current device",
+> +			fw_id_to_name[lb_fw->id]);
+> +		return 0;
+> +	}
+> +
+> +	if (fw->size > MAX_PAYLOAD_SIZE) {
+> +		drm_err(&xe->drm, "Firmware %s size %zu is larger than max pay load size %u\n",
+> +			lb_fw->blob_path, fw->size, MAX_PAYLOAD_SIZE);
+> +		release_firmware(fw);
+> +		return -ENODATA;
+> +	}
+> +
+> +	lb_fw->payload = drmm_kzalloc(&xe->drm, lb_fw->payload_size, GFP_KERNEL);
 
-On Thu, Jun 26, 2025 at 04:41:16PM -0400, Carlos O'Donell wrote:
-> On 5/9/25 8:14 AM, Andries E. Brouwer wrote:
-> > Hi Alejandro,
-> >=20
-> > > > I wonder about the legal status of such a change.
-> > > > There is ownership of the pages, and a license that allows
-> > > > others to do certain things.
-> > >=20
-> > > I also wonder about it.  We discussed it for several (~3) months, and=
- I
-> > > documented links to the discussion in the commit message:
-> > >=20
-> > > commit 9f2986c34166085225bb5606ebfd4952054e1657
-> > > Author: Alejandro Colomar <alx@kernel.org>
-> > > Date:   Fri Apr 11 02:19:48 2025 +0200
-> > >=20
-> > >      *, CREDITS: Unify copyright notices
-> > >      Link: <https://lore.kernel.org/linux-man/jpin2dbnp5vpitnh7l4qmvk=
-amzq3h3xljzsznrudgioox3nn72@57uybxbe3h4p/T/#u>
-> > >      Link: <https://www.linuxfoundation.org/blog/blog/copyright-notic=
-es-in-open-source-software-projects>
-> >=20
-> > So I read this last link, and see
-> >=20
-> > "Don=E2=80=99t change someone else=E2=80=99s copyright notice without t=
-heir permission
-> > You should not change or remove someone else=E2=80=99s copyright notice=
- unless
-> > they have expressly (in writing) permitted you to do so. This includes
-> > third parties=E2=80=99 notices in pre-existing code."
-> >=20
-> > The main topic of that link is how one should document new contribution=
-s,
-> > and writing "by the contributors of the foo project" is OK for new stuf=
-f,
-> > of course provided the new contributor agrees.
-> > In my opinion it is illegal to change existing copyright notices,
-> > unless you get permission from all people involved, which seems unlikel=
-y.
->=20
-> I agree with Andries.
->=20
-> This is also my interpretation, you cannot remove these entries without
-> express permission from the copyright holder.
+here you're using lb_fw->payload_size before assigning it.
 
-Well, we got express permission for a third of the copyright holders in
-the last few months.  Also, we got no express notices in the contrary,
-so around two thirds have remained silent.
+> +	if (!lb_fw->payload) {
+> +		release_firmware(fw);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	lb_fw->payload_size = fw->size;
+> +
+> +	memcpy(lb_fw->payload, fw->data, lb_fw->payload_size);
+> +	release_firmware(fw);
+> +	lb_fw->valid = true;
 
-We could restore those that haven't expressely granted permission...
+You can now use lb_fw->payload to check if the FW is valid, no need for 
+a separate variable. not a blocker.
 
-The thing is, as someone else mentioned, removals happen also implicitly
-by moving text from one page to another and not copying copyright
-notices, so how much does it matter an intentional rewrite of the
-copyright notices into a different form (but which keeps their
-copyright, as part of the AUTHORS file), compared to an unintentional
-removal of copyright by moving the text (these do actually remove
-copyright, so these are the problematic ones).
+> +
+> +	return 0;
+> +}
+> +
+> +static int xe_late_bind_fw_init(struct xe_late_bind *late_bind)
+> +{
+> +	int ret;
+> +	int fw_id;
+> +
+> +	for (fw_id = 0; fw_id < XE_LB_FW_MAX_ID; fw_id++) {
+> +		ret = __xe_late_bind_fw_init(late_bind, fw_id);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +	return 0;
+> +}
+> +
+>   static int xe_late_bind_component_bind(struct device *xe_kdev,
+>   				       struct device *mei_kdev, void *data)
+>   {
+> @@ -86,5 +183,9 @@ int xe_late_bind_init(struct xe_late_bind *late_bind)
+>   		return err;
+>   	}
+>   
+> -	return devm_add_action_or_reset(xe->drm.dev, xe_late_bind_remove, late_bind);
+> +	err = devm_add_action_or_reset(xe->drm.dev, xe_late_bind_remove, late_bind);
+> +	if (err)
+> +		return err;
+> +
+> +	return xe_late_bind_fw_init(late_bind);
+>   }
+> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
+> index 1156ef94f0d5..93abf4c51789 100644
+> --- a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
+> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
+> @@ -10,6 +10,36 @@
+>   #include <linux/mutex.h>
+>   #include <linux/types.h>
+>   
+> +#define MAX_PAYLOAD_SIZE SZ_4K
+> +
+> +/**
+> + * xe_late_bind_fw_id - enum to determine late binding fw index
+> + */
+> +enum xe_late_bind_fw_id {
+> +	XE_LB_FW_FAN_CONTROL = 0,
+> +	XE_LB_FW_MAX_ID
+> +};
+> +
+> +/**
+> + * struct xe_late_bind_fw
+> + */
+> +struct xe_late_bind_fw {
+> +	/** @late_bind_fw.valid: to check if fw is valid */
+> +	bool valid;
+> +	/** @late_bind_fw.id: firmware index */
+> +	u32 id;
+> +	/** @late_bind_fw.blob_path: firmware binary path */
+> +	char blob_path[PATH_MAX];
+> +	/** @late_bind_fw.type: firmware type */
+> +	u32  type;
+> +	/** @late_bind_fw.flags: firmware flags */
+> +	u32  flags;
+> +	/** @late_bind_fw.payload: to store the late binding blob */
+> +	u8  *payload;
 
-By rewriting the copyright notices, we'd actually be honoring the
-copyright, even when text is moved from page to page.  I think that is
-more important.  And since all explicit notices have granted us
-permission, even if some have remained silent (in some cases, their
-email probably isn't monitored anymore), I think we should go forward.
+Why a u8 pointer and not a void one?
 
+Daniele
 
-Have a lovely day!
-Alex
+> +	/** @late_bind_fw.payload_size: late binding blob payload_size */
+> +	size_t payload_size;
+> +};
+> +
+>   /**
+>    * struct xe_late_bind_component - Late Binding services component
+>    * @mei_dev: device that provide Late Binding service.
+> @@ -32,6 +62,8 @@ struct xe_late_bind {
+>   	struct xe_late_bind_component component;
+>   	/** @late_bind.mutex: protects the component binding and usage */
+>   	struct mutex mutex;
+> +	/** @late_bind.late_bind_fw: late binding firmware array */
+> +	struct xe_late_bind_fw late_bind_fw[XE_LB_FW_MAX_ID];
+>   };
+>   
+>   #endif
 
-> In glibc we did not remove any copyright notices, but *added* under DCO
-> "Copyright, The GNU Toolchain authors."
->=20
-> Example:
->    1 /* Map in a shared object's segments from the file.
->    2    Copyright (C) 1995-2025 Free Software Foundation, Inc.
->    3    Copyright The GNU Toolchain Authors.
->    4    This file is part of the GNU C Library.
->    ...
->=20
-> --=20
-> Cheers,
-> Carlos.
->=20
->=20
-
---=20
-<https://www.alejandro-colomar.es/>
-
---6ljou54wzeco3awg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhdtegACgkQ64mZXMKQ
-wqkKHw//Uop15pce4Po1Xf+bYzkClcH0romBAtS4SK4Wc7kJz609SUXyI/Z0bqAA
-/4j6jSq5BMc28Wnw2PUqUZodS2wZ5jKm0FrcoT7ut2AAle5iGhHUAfoHKcmsJAMW
-5Ze9QWu55Rvoo6c9tRPw8E5WEyN4QbQ6cp+xiqjK3x7UOAQDbYvJ0WIPb6fWEJ9G
-uUjlIygCz8uZsZiQT5K1Xf2MzXnY03oI0IknvVYevUhH/jStCCJEPB18w/HZsJuK
-G4QRoTN7375B6h462jdypEtlnbvsO7ry1kkv7azJh1q2/TlzWnPsvBDdotEjHcbm
-/flbT11dWKB5o3LJ/LAwmVxyK6EAYSiJTUaKwH5feN9ooDNhi7Hkleykv0GjZ8F/
-4wazEGTLWbI5SiaIAaZfWwyejjIW9FfL/mpElMPhlsNxRWZ38THwYRf56dJvIGrh
-94MoSvXYc3OwPUidfVKdFqpr89stUlQvfzM1YAT1COSVA0q0hjcO0wsFHDag+sRw
-v2x0ckpCsxbOqDGM2uKvCHmui5e7C863XwCunuhQD9bu+StNHFmd31cT4P0jocCQ
-f6a7Kn5oc1DrtlrYjlM2Js5k1LLXFqftmpqwmL7WYVD1L8UYg6It1523i1XUM+EQ
-Hhf0owQ3YtsZnyxzMYHuhlWPwoSVTYVRjezVVPjemNZZRkmeBT8=
-=UClA
------END PGP SIGNATURE-----
-
---6ljou54wzeco3awg--
