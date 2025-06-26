@@ -1,129 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CA97081E
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A8F2EB5B4;
+	Thu, 26 Jun 2025 15:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750952310; cv=none; b=XSTYOyg9vYosvCBYeJGvmc7b2TxZlbZ+2v6NKoxcj8qjBPbl7lL7N3k3LNM+rc8r2HorkASuTaRs4tJq0lWV0g14JJ2PwV/T2efQROuWLcpX4bwpiIAVsnZ/JjZHIv+894egrq9z8z+eyjUJMwKoTfnaaO45v542Bdok9HnQsTE=
+	t=1750952458; cv=none; b=kRaVHwEG6eCkMIOsvcSUYKVf6P3dLNN4Ey2krpJ6FCXREKnI9WrpJU+miUafC+03IL3qF9BNF2DW7C1g+S9XR5dQ1CEi/g3PGfek1eCFAUQYDwPOMx4L3QHNhahN2rAYyXiiogZfdXI6FQRSstXBYc9B2BqFNxH9kb6C4UwXWdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750952310; c=relaxed/simple;
-	bh=jcRyQyoHFXZTXy637shBXrGAv2EhK0gTzTWgtuJpAWo=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=adye6qzU1OMTisWDpc8mcBt8jf+3aivm77XW5EjzI7CJER5IghMYluy7BrFrqwvySiA8GzwgedQ+D3irMr9HQhLmU8140Mroc0mchygdH72Y3x828McZh7UX07BwPa0MrRxjwOz6e9XzkMLc7Y50uEHM60rM6y9nV0g4C+L82sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IQeGMyN9; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750952458; c=relaxed/simple;
+	bh=DGUPDEFy7xdCqVQ+Tf3uSe277RZ/z35tORf5iNIWDbg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ry9rgSydevi1/QrbwNUhSypPReRtlM0XgtKAP8gTAEtPwZ4UoAAvRJQiy/8q9NB9/lrmc+5UcoBXRQ3msCKPCijdCCx0/lccS+vqDR0ui0mxQfMpNm5gBxZkFwSuEM3Zupq5s1Qug0Tf3pVFk9NJFQ5VRxYxtASEFwWMFL2dKlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RY9PDGDw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IQeGMyN9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750952309; x=1782488309;
-  h=date:from:to:cc:subject:message-id;
-  bh=jcRyQyoHFXZTXy637shBXrGAv2EhK0gTzTWgtuJpAWo=;
-  b=IQeGMyN9IICI0b9EF55U+Vzw9KYDynIdVVwK2uZkwUfmtDMO/4Oxnmz/
-   nyj8MMHcaCXQLkeIGYKhZZtVD2TxzCIJwd6nicleO1cMMsJ/FDZve+47P
-   pZYYYI3UJm+EJXj+q7Axz5COTUz67allEi+O3dSCjYdPhvJ+BCyBUNCCk
-   3IZPJFPDo5QGbZqDz72YQOMyFVOQJDF1/JveYi+yMG6VGIhwacvkjQ4Vp
-   u9Ysv3TRFhODp/oWTZpR5x3E+X8fJ/+OyuJJ4Nt6MLKKQGr4TItQvMnlH
-   wtRwvsQqNeGl/bjpOYqOQoQcIxEphqNB/yvcgzYqYcy08Dxk1CtM4rorz
-   Q==;
-X-CSE-ConnectionGUID: bI1b4/T8S9a1w8m3WL21Jg==
-X-CSE-MsgGUID: hAc/wfPwTLy73G5t6+kCAw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="52482149"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="52482149"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:38:28 -0700
-X-CSE-ConnectionGUID: nylp8k6BSZa5dwhTKrYBPg==
-X-CSE-MsgGUID: AsWv3F5/RPW4G+5t1UVIgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="183578711"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 26 Jun 2025 08:38:27 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUogD-000UDP-0R;
-	Thu, 26 Jun 2025 15:38:25 +0000
-Date: Thu, 26 Jun 2025 23:37:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/fpu] BUILD SUCCESS
- 1cec9ac2d071cfd2da562241aab0ef701355762a
-Message-ID: <202506262327.Y2CCsChK-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RY9PDGDw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80954C4CEEB;
+	Thu, 26 Jun 2025 15:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750952458;
+	bh=DGUPDEFy7xdCqVQ+Tf3uSe277RZ/z35tORf5iNIWDbg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RY9PDGDwNqrJi/wW5kVSe3ZkKfFDw9kItmx6MeS7aUvAwcnYfhDw/TTA2Qpdp7F0y
+	 i0iPbzjgv3LCtw21DmcZNpnjanQOXyq1eS1sDecpNTlwRkUGY0Hm3nT24I/8d0ulzS
+	 ZosBG4R1vOCXBhthT6h4Ji2TZxx+Wjkm/Wwa5MNwb13+lrY01vhUj+txjM3L25yWr8
+	 xR7f5/xaRM2jaGQxedzwDyL9BAc6hTf7txtA5z4mrt33/qxRjnbHqXkmU2KySXQT3p
+	 /dv5pquW0gn3GgW3abMXHgmCWr/BL8MVn7NN7zx/6tsHy0mwOdTDfiGEGmJPXLEqE5
+	 KUcT+h7qe3fQA==
+Date: Thu, 26 Jun 2025 16:40:55 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>, linux-i2c@vger.kernel.org,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v1] i2c: microchip-core: re-fix fake detections w/
+ i2cdetect
+Message-ID: <20250626-reprint-curtly-358d13458b66@spud>
+References: <20250612-jaybird-arrange-53b6200548e9@wendy>
+ <20250625-irate-cursive-fa0de9009012@spud>
+ <fjb7t2c7agr45aw5zrojfxrsqq5fej2k7uymqw2gsqyzjprd63@a4ldxxgg3vg5>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="APZQmEsqgORw7CKt"
+Content-Disposition: inline
+In-Reply-To: <fjb7t2c7agr45aw5zrojfxrsqq5fej2k7uymqw2gsqyzjprd63@a4ldxxgg3vg5>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/fpu
-branch HEAD: 1cec9ac2d071cfd2da562241aab0ef701355762a  x86/fpu: Delay instruction pointer fixup until after warning
 
-elapsed time: 926m
+--APZQmEsqgORw7CKt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 52
-configs skipped: 58
+On Wed, Jun 25, 2025 at 11:50:28PM +0200, Andi Shyti wrote:
+> Hi Conor,
+>=20
+> On Wed, Jun 25, 2025 at 02:27:51PM +0100, Conor Dooley wrote:
+> > On Thu, Jun 12, 2025 at 12:12:49PM +0100, Conor Dooley wrote:
+> > > Introducing support for smbus re-broke i2cdetect, causing it to detect
+> > > devices at every i2c address, just as it did prior to being fixed in
+> > > commit 49e1f0fd0d4cb ("i2c: microchip-core: fix "ghost" detections").
+> > > This was caused by an oversight, where the new smbus code failed to
+> > > check the return value of mchp_corei2c_xfer(). Check it, and propagate
+> > > any errors.
+> > >=20
+> > > Fixes: d6ceb40538263 ("i2c: microchip-corei2c: add smbus support")
+> > > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> > > ---
+> > >=20
+> > > Resending cos I think it attempted a send using my korg address on a
+> > > network where that is not possible.
+> >=20
+> > Seemingly this patch has exposed an issue that causes a hang that was
+> > not noticed previously:
+> > # cd /sys/bus/iio/devices/iio\:device0
+> > # cat *
+> > VDDREG_IBUS_1
+> > 0
+> > [   92.178899] ------------[ cut here ]------------
+> > [   92.178921] WARNING: CPU: 0 PID: 291 at kernel/workqueue.c:2496 __qu=
+eue_delayed_work+0xb4/0xbe
+> > [   92.178981] Modules linked in: pac1934 industrialio autofs4
+> > [   92.179024] CPU: 0 UID: 0 PID: 291 Comm: cat Not tainted 6.12.22 #1
+> > [   92.179045] Hardware name: Microchip PolarFire-SoC Icicle Kit (DT)
+> > [   92.179055] epc : __queue_delayed_work+0xb4/0xbe
+> > [   92.179081]  ra : mod_delayed_work_on+0x4a/0xa6
+> > [   92.179107] epc : ffffffff8002b2f0 ra : ffffffff8002b3ba sp : ffffff=
+c600863b70
+> > [   92.179122]  gp : ffffffff812d6068 tp : ffffffe5a5bc24c0 t0 : 000000=
+0000000000
+> > [   92.179136]  t1 : 000000000000ff00 t2 : ffffffff80c01210 s0 : ffffff=
+c600863b90
+> > [   92.179150]  s1 : ffffffe5a2aa7568 a0 : 0000000000000040 a1 : ffffff=
+e5a2054000
+> > [   92.179164]  a2 : ffffffe5a2aa7568 a3 : 0000000000003a98 a4 : 000000=
+0000000000
+> > [   92.179178]  a5 : ffffffff8002b1fa a6 : 0000000000000000 a7 : 000000=
+0000000000
+> > [   92.179191]  s2 : 0000000000000040 s3 : ffffffe5a2054000 s4 : 000000=
+0000003a98
+> > [   92.179205]  s5 : 0000000000000000 s6 : ffffffc600863c5c s7 : ffffff=
+c600863c58
+> > [   92.179219]  s8 : 0000000000400cc0 s9 : fffffffffffff000 s10: 000000=
+007ffff000
+> > [   92.179233]  s11: ffffffe5a2806128 t3 : 0000000000ff0000 t4 : 000000=
+0000000000
+> > [   92.179247]  t5 : 0000000000000000 t6 : 0000000000000000
+> > [   92.179258] status: 0000000200000100 badaddr: 0000000000000000 cause=
+: 0000000000000003
+> > [   92.179273] [<ffffffff8002b2f0>] __queue_delayed_work+0xb4/0xbe
+> > [   92.179302] [<ffffffff8002b3ba>] mod_delayed_work_on+0x4a/0xa6
+> > [   92.179331] [<ffffffff01375980>] pac1934_read_raw+0xba/0x1fc [pac193=
+4]
+> > [   92.179392] [<ffffffff0134942e>] iio_read_channel_info+0xae/0xc4 [in=
+dustrialio]
+> > [   92.179704] [<ffffffff80442fde>] dev_attr_show+0x14/0x46
+> > [   92.179748] [<ffffffff8020ca3e>] sysfs_kf_seq_show+0x6c/0xe2
+> > [   92.179788] [<ffffffff8020b15c>] kernfs_seq_show+0x18/0x20
+> > [   92.179814] [<ffffffff801bc1ca>] seq_read_iter+0xd0/0x328
+> > [   92.179844] [<ffffffff8020b634>] kernfs_fop_read_iter+0xfa/0x15c
+> > [   92.179871] [<ffffffff8018e128>] vfs_read+0x1aa/0x25a
+> > [   92.179895] [<ffffffff8018e998>] ksys_read+0x5a/0xcc
+> > [   92.179915] [<ffffffff8018ea1e>] __riscv_sys_read+0x14/0x1c
+> > [   92.179936] [<ffffffff807662f8>] do_trap_ecall_u+0x1ac/0x1d8
+> > [   92.179981] [<ffffffff8076e3ba>] handle_exception+0x146/0x152
+> > [   92.180018] ---[ end trace 0000000000000000 ]---
+> > (The issue was detected on an internal 6.12 based branch, but the
+> > content there is identical to what's in mainline + this patch).
+> >=20
+> > Obviously adding the check for an error here doesn't cause there to be
+> > problems with a transfer, only actually report problems that have
+> > occurred. I have not yet been able to reproduce this on my setup, but
+> > the reporter saw the issues going away when they disabled hardware smbus
+> > support and used software emulation instead.
+> >=20
+> > I don't know if this has any bearing on applying the patch, but I wanted
+> > to mention it for reasons that should be apparent. I'm looking into the
+> > issue still and hope to figure out what's going wrong.
+>=20
+> Thanks for letting me know. I'll hold off on this for now. Please
+> ping me once you have some results.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Well, I made a mistake in my patch, so I'll be sending a v2. I still do
+not know what is causing there to be issues with corruption of the
+workqueue in the client driver. Nothing really makes sense, as the bug
+in my patch causes read date to never get populated into the rx data
+array rather than writing to something invalid. There's nothing obvious
+in the client driver either that is blindly writing into some address
+based on the result (there are some reads indexed by it). I'll continue
+to look at that more, but I have a v2 that fixes the patch here.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                   randconfig-001-20250626    clang-20
-arc                   randconfig-002-20250626    clang-20
-arm                               allnoconfig    gcc-15.1.0
-arm                   randconfig-001-20250626    clang-20
-arm                   randconfig-002-20250626    clang-20
-arm                   randconfig-003-20250626    clang-20
-arm                   randconfig-004-20250626    clang-20
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250626    clang-20
-arm64                 randconfig-002-20250626    clang-20
-arm64                 randconfig-003-20250626    clang-20
-arm64                 randconfig-004-20250626    clang-20
-csky                              allnoconfig    gcc-15.1.0
-hexagon                           allnoconfig    gcc-15.1.0
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    clang-20
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20250626    clang-20
-i386        buildonly-randconfig-002-20250626    clang-20
-i386        buildonly-randconfig-003-20250626    clang-20
-i386        buildonly-randconfig-004-20250626    clang-20
-i386        buildonly-randconfig-005-20250626    clang-20
-i386        buildonly-randconfig-006-20250626    clang-20
-i386                                defconfig    clang-20
-loongarch                         allnoconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-15.1.0
-openrisc                          allnoconfig    clang-21
-parisc                            allnoconfig    clang-21
-powerpc                           allnoconfig    clang-21
-riscv                             allnoconfig    clang-21
-s390                              allnoconfig    clang-21
-sh                                allnoconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-um                                allnoconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250626    clang-20
-x86_64      buildonly-randconfig-002-20250626    clang-20
-x86_64      buildonly-randconfig-003-20250626    clang-20
-x86_64      buildonly-randconfig-004-20250626    clang-20
-x86_64      buildonly-randconfig-005-20250626    clang-20
-x86_64      buildonly-randconfig-006-20250626    clang-20
-x86_64                              defconfig    clang-20
-x86_64                                  kexec    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
+--APZQmEsqgORw7CKt
+Content-Type: application/pgp-signature; name="signature.asc"
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaF1qBwAKCRB4tDGHoIJi
+0tM/AP0Rj8p7kPDlIv1Bz7/oVIJ5mmKT/rqfA4Vtd67pmZYIjgEA/TuOAzYKrYTe
+zn12InyTK4ibqxMsreSCiaVMDqOxOQ8=
+=SyWM
+-----END PGP SIGNATURE-----
+
+--APZQmEsqgORw7CKt--
