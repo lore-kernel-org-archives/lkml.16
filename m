@@ -1,153 +1,128 @@
-Received: from mailhub11-fb.kaspersky-labs.com (mailhub11-fb.kaspersky-labs.com [81.19.104.124])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6C3BA53;
-	Thu, 26 Jun 2025 13:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.104.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F8E2E5418
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943574; cv=none; b=u+bZ/vzbKpmZmSpY9TD7ueajzZiEnEudIu9TT3ZWtrQ6iZ9awt5VlM6n1pzJdQNRNXrPWzJwW+5RfNftOL8misYoFDCWQ6ZVXhvU8rVrkUJjhk1dVdC8cQdtCgixIHfv1q3+8jSQ5GNSaRKigXxCkDB0FVMQfPwXGPPBn6MPjoY=
+	t=1750943577; cv=none; b=UoZgjfrJS2y021GIlok1pjpvTCt6s9HFu3Vib44SHTjNoXB/zasccJmSMnj+o8e3RkrG+EJu4LrQH+12ttFbsrPP/innr3giwqK+s4lEO/EKs1AAcXiEzBU24Y0UG9SdPi5hHHVujD9ceY84zLoPffvF8LlYRQ26WIwkUzLv2HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943574; c=relaxed/simple;
-	bh=Lpiun+e9hghwKOdC+LoX+vFUp0uDxWgQNx2ZIGK2jyk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uAkXGRvz+9ZX2AWNTr2ZZoBf1YeDEcPBPSfXadKq+cGd4GepeHDi83HUy8kPa6uRmKKzN6TsCesPsuihQ4D89nkJDJlfkliVTOJlCDUekKYYhKNpdpTc6eL3sci6AE5vf58q5aXrx3WSyapQkcoqEgcOvlHeXKeHb7U2n6FZVbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaspersky.com; spf=pass smtp.mailfrom=kaspersky.com; dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b=sg3hSkEe; dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b=DwpE1x7J; arc=none smtp.client-ip=81.19.104.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaspersky.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaspersky.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b="sg3hSkEe";
-	dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b="DwpE1x7J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaspersky.com;
-	s=mail202505; t=1750942966;
-	bh=KwM5ykq3ZGPECVovJGENXdxG2avNxU0cDbAyYbVt4F4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=sg3hSkEeCbmFwzz2UblXUxdicySLu/nhUuejBixKIACIp/7f/nr31AEIrdSbixe6x
-	 ETbYxhLTL/IWrH6SXulI26yWWP7lIg9fOFaMleFiJYtwavZHJ17zPpX9/ICXFeadS/
-	 MvPKvp2AtqjDSdjNaUuHmvq5PI8R1kIPFZdxcV4KEt1JdLxw+lA5A4SYvkkGqlpAKx
-	 gN2yEzwkRIG7VWTp8wQ2cmEiOE9bco11k/Wa7LUkGXG2nK+5x+DzAJ2DJnzO5+1rZ7
-	 xtKyXqS4ZzzQA9tr6WGhdxAYBhOA3FB1Pd7eT/glyhny9wHFCzilTirPrZ9TZZlXrU
-	 WgO9nkezotxBg==
-Received: from mailhub11-fb.kaspersky-labs.com (localhost [127.0.0.1])
-	by mailhub11-fb.kaspersky-labs.com (Postfix) with ESMTP id 98EC2E8EAF0;
-	Thu, 26 Jun 2025 16:02:46 +0300 (MSK)
-Received: from mx12.kaspersky-labs.com (mx12.kaspersky-labs.com [91.103.66.155])
+	s=arc-20240116; t=1750943577; c=relaxed/simple;
+	bh=UakOI/WvFkgeH35/JbanD0jEC3cwT/gOCqsa2NorhOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E9OE1EKLk3XJpdy/z5ao8Dp+1uViqq3SN47bbN33ILqZJWyrHIe/g4wWXL0CDdg4xxfPsT5diqM4AMAnOIuJ5qyq0YnS24T3Nfo5JZtZ1kXQp+p1BDWYl80ZV/d2BdrioxSc9NebJKMfVtKntu2CfqN2n44cdEIDsgqPLnpobaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uUmPI-00079D-S2; Thu, 26 Jun 2025 15:12:48 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uUmPI-005SFg-0h;
+	Thu, 26 Jun 2025 15:12:48 +0200
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "mx12.kaspersky-labs.com", Issuer "Kaspersky MailRelays CA G3" (verified OK))
-	by mailhub11-fb.kaspersky-labs.com (Postfix) with ESMTPS id 73803E8EADE;
-	Thu, 26 Jun 2025 16:02:46 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaspersky.com;
-	s=mail202505; t=1750942957;
-	bh=KwM5ykq3ZGPECVovJGENXdxG2avNxU0cDbAyYbVt4F4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=DwpE1x7JamPzdSwaU/Mj/ZGZVYmT9AUCjLLsD+BTS2O8/GjkAn1mTFyAEy9qVpmwC
-	 e6OBcYqHU+YCeYUKVNsugMvP7L0xjxFQTJFzckNfRgdyXxHrn/i0Aa9Qr9k5PQ4Tu0
-	 vx7jJZeLIsvY+DPGCxmVya+U0RS2Vzn8DeUWWng9AIBNH11y75Al0XOVgdBtmZFyhw
-	 fj8T18pd+XMyNst2NVPp59J8sPL2MdaFKX1hhIqCWVOpBdYF+GkVEUH3+nXtAVhyx2
-	 60Bp4xm220Itp+Qbw5EY1C/hCuVt/ulbgAO2tPZFQZ4CJDuIYXUMSm4UVjHSMQ1SL2
-	 4yWMy0rJF70IA==
-Received: from relay12.kaspersky-labs.com (localhost [127.0.0.1])
-	by relay12.kaspersky-labs.com (Postfix) with ESMTP id B67265A2083;
-	Thu, 26 Jun 2025 16:02:37 +0300 (MSK)
-Received: from mail-hq2.kaspersky.com (unknown [91.103.66.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "mail-hq2.kaspersky.com", Issuer "Kaspersky MailRelays CA G3" (verified OK))
-	by mailhub12.kaspersky-labs.com (Postfix) with ESMTPS id 3C3755A258D;
-	Thu, 26 Jun 2025 16:02:37 +0300 (MSK)
-Received: from moskovkin-pc.avp.ru (10.16.49.191) by HQMAILSRV1.avp.ru
- (10.64.57.51) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 26 Jun
- 2025 16:02:36 +0300
-From: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-CC: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>, Bartosz Golaszewski
-	<brgl@bgdev.pl>, <linux-gpio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH] gpio: kempld: Remove redundant check in kempld_gpio_probe()
-Date: Thu, 26 Jun 2025 16:02:18 +0300
-Message-ID: <20250626130219.676866-1-Vladimir.Moskovkin@kaspersky.com>
-X-Mailer: git-send-email 2.34.1
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id DE551431176;
+	Thu, 26 Jun 2025 13:12:47 +0000 (UTC)
+Date: Thu, 26 Jun 2025 15:12:47 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>, 
+	Guenter Roeck <linux@roeck-us.net>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel@pengutronix.de
+Subject: Re: [PATCH v2] spi: Raise limit on number of chip selects
+Message-ID: <20250626-practical-heavenly-pony-af7296-mkl@pengutronix.de>
+References: <20240124-spi-multi-cs-max-v2-1-df6fc5ab1abc@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: HQMAILSRV3.avp.ru (10.64.57.53) To HQMAILSRV1.avp.ru
- (10.64.57.51)
-X-KSE-ServerInfo: HQMAILSRV1.avp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 06/26/2025 12:50:36
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 0
-X-KSE-AntiSpam-Info: Lua profiles 194364 [Jun 26 2025]
-X-KSE-AntiSpam-Info: Version: 6.1.1.11
-X-KSE-AntiSpam-Info: Envelope from: Vladimir.Moskovkin@kaspersky.com
-X-KSE-AntiSpam-Info: LuaCore: 62 0.3.62
- e2af3448995f5f8a7fe71abf21bb23519d0f38c3
-X-KSE-AntiSpam-Info: {Tracking_cluster_exceptions}
-X-KSE-AntiSpam-Info: {Tracking_real_kaspersky_domains}
-X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: 127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;kaspersky.com:5.0.1,7.1.1;moskovkin-pc.avp.ru:5.0.1,7.1.1
-X-KSE-AntiSpam-Info: {Tracking_white_helo}
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: Rate: 0
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Deterministic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 06/26/2025 12:52:00
-X-KSE-AttachmentFiltering-Interceptor-Info: no applicable attachment filtering
- rules found
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 6/26/2025 11:01:00 AM
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
-X-KSE-AttachmentFiltering-Interceptor-Info: no applicable attachment filtering
- rules found
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Interceptor-Info: not scanned
-X-KSMG-AntiSpam-Status: not scanned, disabled by settings
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/06/26 11:20:00 #27592830
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 52
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="exd2capfccwaslk5"
+Content-Disposition: inline
+In-Reply-To: <20240124-spi-multi-cs-max-v2-1-df6fc5ab1abc@kernel.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-In kempld_gpio_probe() function 'pdata' pointer is compared to NULL.
-But in subsequent call to kempld_gpio_pincount() it is dereferenced inside
-kempld_get_mutex() function. kempld-core module ensures that
-kempld_platform_data is not NULL for corresponding device, see
-kempld_acpi_table[]. So 'if (pdata)' check looks illogical and worsens
-code readability.
 
-Remove this check.
+--exd2capfccwaslk5
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] spi: Raise limit on number of chip selects
+MIME-Version: 1.0
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+(sorry my mail setup had a glitch in my previous mail)
 
-Signed-off-by: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>
----
- drivers/gpio/gpio-kempld.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 24.01.2024 13:24:24, Mark Brown wrote:
+> As reported by Guenter the limit we've got on the number of chip selects =
+is
+> set too low for some systems, raise the limit. We should really remove the
+> hard coded limit but this is needed as a fix so let's do the simple thing
+> and raise the limit for now.
 
-diff --git a/drivers/gpio/gpio-kempld.c b/drivers/gpio/gpio-kempld.c
-index e38e604baa22..61c4a53865b9 100644
---- a/drivers/gpio/gpio-kempld.c
-+++ b/drivers/gpio/gpio-kempld.c
-@@ -161,7 +161,7 @@ static int kempld_gpio_probe(struct platform_device *pdev)
- 	chip->owner = THIS_MODULE;
- 	chip->parent = dev;
- 	chip->can_sleep = true;
--	if (pdata && pdata->gpio_base)
-+	if (pdata->gpio_base)
- 		chip->base = pdata->gpio_base;
- 	else
- 		chip->base = -1;
--- 
-2.34.1
+We currently have a use case for 24 chip selects.
 
+> Fixes: 4d8ff6b0991d ("spi: Add multi-cs memories support in SPI core")
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Suggested-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+> Changes in v2:
+> - Raise the limit further, the highest I've seen thus far is 12.
+> - Link to v1: https://lore.kernel.org/r/20240122-spi-multi-cs-max-v1-1-a7=
+e98cd5f6c7@kernel.org
+> ---
+>  include/linux/spi/spi.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+> index 471fe2ff9066..600fbd5daf68 100644
+> --- a/include/linux/spi/spi.h
+> +++ b/include/linux/spi/spi.h
+> @@ -21,7 +21,7 @@
+>  #include <uapi/linux/spi/spi.h>
+> =20
+>  /* Max no. of CS supported per spi device */
+> -#define SPI_CS_CNT_MAX 4
+> +#define SPI_CS_CNT_MAX 16
+
+Just further increase the limit to 24? Add a Kconfig symbol?
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--exd2capfccwaslk5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmhdR0wACgkQDHRl3/mQ
+kZy41Af9HwbbqTmrPAMa/9ziw5fz9I7Hw8XSOK6Mm/qDudl/8K+aqecCP8zL2j6a
+P/YjPQFYFh/HLUTL8XXbDI7bcn1vMZwSTM/1cHD0hkBEaLSeiXRvqkNasePuW8ia
+kwnX5TuBWUFQEqAxfPiJ8TsGLVsyDTEgeSFGxj4ha0eQfNWlXSnYQoCNbasrwXRe
+dioG4QY7Y8PJIk77PcvA1HWFCfSPhEe3r+ryweOSGELsq42nlVOMO0uhMyenkF4O
+pVV5WliQEQ2egocNvKLzuJGH9hKH3GJrOqrO99IJYpNRDdlxgGAJ9c/vm5MR6Z0S
+fvCuWaZ/o6Wjn47rVHIj8fLH6/BDmQ==
+=3Xka
+-----END PGP SIGNATURE-----
+
+--exd2capfccwaslk5--
