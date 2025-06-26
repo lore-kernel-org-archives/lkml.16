@@ -1,41 +1,51 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8402520013A;
-	Thu, 26 Jun 2025 07:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 400DD20013A;
+	Thu, 26 Jun 2025 07:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750924224; cv=none; b=FwrmaTlhcKKT7opdGTnU1L0TyRtkzONq3JxELjhxvDVB1RKAIWLZSDBEgrbycMvSFrnkjNe46Kb6VDyEeyv3fHZ9hZsKeenYIHQYTxkUnKFIrJ/1qUwOJGIYduFE26TzfTVHgM7ZkfHb9/vL54037rbfvFTt9ur9Qrmeb93qhXo=
+	t=1750924272; cv=none; b=JH6Ho+x4xiZ5FKg1ozKVDn+Zygk5iLN1YaMCrPxfF/kVA5Cezf7/7AaUAPiTbj24eSGvoBvTlEFYN473ePOz55d7/UFkKR7RxfCir1AaXLWpppgm1pz6mQhCqDOEoJcp+6yPws5beb7/7WnGBO+R+RgQ/63aRacMaRLMtzX3Iqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750924224; c=relaxed/simple;
-	bh=DrLS180neJeC5dQve1RV7glRwMtowA1GDHPS1HnSDh0=;
+	s=arc-20240116; t=1750924272; c=relaxed/simple;
+	bh=xjVdLV/JVz2BsWEL05AlHxeZQWEEvAm7WvVCsdy8r8Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SIKgYHzdDCXFEh+o0XY64Q817Y+2r+5b6d+91nTEFdzzX8Ii05Gh+tvGvn2zlb3x6FOXBx7J+rau/Rej2gG/5lyx9Gmd757PUkb+ftdEO6cjhjaEE1rORpmyNffIKRO6OSzulIKgN1D+cw6DrPDevZhPoKCurewOaWcTuGZXd4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MBqRGZ1Q; arc=none smtp.client-ip=220.197.31.3
+	 MIME-Version; b=ZauVaJX6rri1QTLUUHMKFrCSdZ6rVNjMYYbnQTVDHdFToj3xpF0fR+JIysTU8g1htdWSEVUbAX6wpsQ9PYom++y7EcQrG+gUcmBxijvTZNp60DTHWLdD0XXX2xjyTQV9UfAI7MM6ZgOZAUJeDE3WZ9/fHS70Fjc9XedinJM74C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=O659ElZ4; arc=none smtp.client-ip=117.135.210.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MBqRGZ1Q"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="O659ElZ4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=lq
-	oqxU9YUnAwTXjO8851Gt6t66InMt1Bb1xi6bmCY3Q=; b=MBqRGZ1QAkAgLEJqCn
-	jEBReHftDNkXK1RzVfQobCbcD0d0YQVPNXtLMF+tWSrftG/4+BaM/Kyo7OEMtjEv
-	tzwnPfzc8kexu0J5aJWidpvqwdlINg4zs2zBkNmTCBSW2R6wl95Mu/KZXryFHUW3
-	WgRf5aOm8OzKCfxghZc1Koiso=
-Received: from 163.com (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD3H4OQ+1xooBCyAg--.46751S2;
-	Thu, 26 Jun 2025 15:49:38 +0800 (CST)
-From: Yuan Chen <chenyuan_fl@163.com>
-To: ast@kernel.org,
-	qmo@qmon.net
-Cc: bpf@vger.kernel.org,
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=nr
+	cH+J0mcbi7MPQc1gfhaJE8haS8C9y1V4Z6MecyyhQ=; b=O659ElZ43LwpJ6LGnv
+	iK3ZnWDuqvKYBGWSTLSn+Wu2Y/dLWk12YeIOOP6JQYYuHHzhZXnBgITO9wVcVZbG
+	KTxPpblbRKacaR0mbLtOuD87xYRIOuZZleEdi7bAub6x77vJkUsFZ91nDy/Hk9HN
+	drPNa9urCGwBov1ew3UioPn/c=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDXX+i8+1xoujOlAg--.17814S2;
+	Thu, 26 Jun 2025 15:50:22 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: stfomichev@gmail.com
+Cc: aleksander.lobakin@intel.com,
+	almasrymina@google.com,
+	asml.silence@gmail.com,
+	davem@davemloft.net,
+	ebiggers@google.com,
+	edumazet@google.com,
+	horms@kernel.org,
+	kerneljasonxing@gmail.com,
+	kuba@kernel.org,
 	linux-kernel@vger.kernel.org,
-	chenyuan_fl@163.com,
-	Yuan Chen <chenyuan@kylinos.cn>
-Subject: [PATCH v3] bpftool: Add CET-aware symbol matching for x86_64 architectures
-Date: Thu, 26 Jun 2025 15:49:30 +0800
-Message-Id: <20250626074930.81813-1-chenyuan_fl@163.com>
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	willemb@google.com,
+	yangfeng59949@163.com,
+	yangfeng@kylinos.cn
+Subject: Re: [PATCH] skbuff: Improve the sending efficiency of __skb_send_sock
+Date: Thu, 26 Jun 2025 15:50:20 +0800
+Message-Id: <20250626075020.95425-1-yangfeng59949@163.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250626061158.29702-1-chenyuan_fl@163.com>
-References: <20250626061158.29702-1-chenyuan_fl@163.com>
+In-Reply-To: <aFxBi55GlhVdHzE4@mini-arch>
+References: <aFxBi55GlhVdHzE4@mini-arch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,74 +53,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3H4OQ+1xooBCyAg--.46751S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGr48Jw1kWFykKr4kWry8Zrb_yoW5Jw45pr
-	s3Ars5KF4UXFW3Wws3Xa1IyFW3KFs2v3yUZF9rG34Ykr45Xwn2vF42k3W8AF1aqr1kXw13
-	XFyayrZ0gryvyrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piwID5UUUUU=
-X-CM-SenderInfo: xfkh05pxdqswro6rljoofrz/1tbiNwV4vWhc8Sv7mQAAs7
+X-CM-TRANSID:_____wDXX+i8+1xoujOlAg--.17814S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXF17XFyfuFWfAF47Cry5twb_yoW5Cry7pF
+	WfGFZxWr4DJF17urn3tw4F9r43tayvkr48GF4Sva4fAr90yryFgF4UKr10ka9YkryxCF4x
+	Xr4qqr1UKrn0yaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUyxRhUUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiZRx4eGhc+MFgSQAAsd
 
-From: Yuan Chen <chenyuan@kylinos.cn>
+On Wed, 25 Jun 2025 11:35:55 -0700, Stanislav Fomichev <stfomichev@gmail.com> wrote:
 
-Adjust symbol matching logic to account for Control-flow Enforcement
-Technology (CET) on x86_64 systems. CET prefixes functions with a 4-byte
-'endbr' instruction, shifting the actual entry point to symbol + 4.
+> On 06/23, Feng Yang wrote:
+> > From: Feng Yang <yangfeng@kylinos.cn>
+> > 
+> > By aggregating skb data into a bvec array for transmission, when using sockmap to forward large packets,
+> > what previously required multiple transmissions now only needs a single transmission, which significantly enhances performance.
+> > For small packets, the performance remains comparable to the original level.
+> > 
+> > When using sockmap for forwarding, the average latency for different packet sizes
+> > after sending 10,000 packets is as follows:
+> > size	old(us)		new(us)
+> > 512	56		55
+> > 1472	58		58
+> > 1600	106		79
+> > 3000	145		108
+> > 5000	182		123
+> > 
+> > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+> > ---
+> >  net/core/skbuff.c | 112 +++++++++++++++++++++-------------------------
+> >  1 file changed, 52 insertions(+), 60 deletions(-)
+> > 
+> > diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+> > index 85fc82f72d26..664443fc9baf 100644
+> > --- a/net/core/skbuff.c
+> > +++ b/net/core/skbuff.c
+> > @@ -3235,84 +3235,75 @@ typedef int (*sendmsg_func)(struct sock *sk, struct msghdr *msg);
+> >  static int __skb_send_sock(struct sock *sk, struct sk_buff *skb, int offset,
+> >  			   int len, sendmsg_func sendmsg, int flags)
+> >  {
+> > -	unsigned int orig_len = len;
+> >  	struct sk_buff *head = skb;
+> >  	unsigned short fragidx;
+> > -	int slen, ret;
+> > +	struct msghdr msg;
+> > +	struct bio_vec *bvec;
+> > +	int max_vecs, ret, slen;
+> > +	int bvec_count = 0;
+> > +	unsigned int copied = 0;
+> >  
+> > -do_frag_list:
+> > -
+> > -	/* Deal with head data */
+> > -	while (offset < skb_headlen(skb) && len) {
+> > -		struct kvec kv;
+> > -		struct msghdr msg;
+> > -
+> > -		slen = min_t(int, len, skb_headlen(skb) - offset);
+> > -		kv.iov_base = skb->data + offset;
+> > -		kv.iov_len = slen;
+> > -		memset(&msg, 0, sizeof(msg));
+> > -		msg.msg_flags = MSG_DONTWAIT | flags;
+> > -
+> > -		iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, &kv, 1, slen);
+> > -		ret = INDIRECT_CALL_2(sendmsg, sendmsg_locked,
+> > -				      sendmsg_unlocked, sk, &msg);
+> > -		if (ret <= 0)
+> > -			goto error;
+> > +	max_vecs = skb_shinfo(skb)->nr_frags + 1; // +1 for linear data
+> > +	if (skb_has_frag_list(skb)) {
+> > +		struct sk_buff *frag_skb = skb_shinfo(skb)->frag_list;
+> >  
+> > -		offset += ret;
+> > -		len -= ret;
+> > +		while (frag_skb) {
+> > +			max_vecs += skb_shinfo(frag_skb)->nr_frags + 1; // +1 for linear data
+> > +			frag_skb = frag_skb->next;
+> > +		}
+> >  	}
+> >  
+> > -	/* All the data was skb head? */
+> > -	if (!len)
+> > -		goto out;
+> > +	bvec = kcalloc(max_vecs, sizeof(struct bio_vec), GFP_KERNEL);
+> > +	if (!bvec)
+> > +		return -ENOMEM;
+> 
+> Not sure allocating memory here is a good idea. From what I can tell
+> this function is used by non-sockmap callers as well..
 
-Signed-off-by: Yuan Chen <chenyuan@kylinos.cn>
----
- tools/bpf/bpftool/link.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+Alternatively, we can use struct bio_vec bvec[size] to avoid memory allocation.
+Even if the "size" is insufficient, the unsent portion will be transmitted in the next call to `__skb_send_sock`.
 
-diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
-index 03513ffffb79..dfd192b4c5ad 100644
---- a/tools/bpf/bpftool/link.c
-+++ b/tools/bpf/bpftool/link.c
-@@ -307,8 +307,21 @@ show_kprobe_multi_json(struct bpf_link_info *info, json_writer_t *wtr)
- 		goto error;
- 
- 	for (i = 0; i < dd.sym_count; i++) {
--		if (dd.sym_mapping[i].address != data[j].addr)
-+		if (dd.sym_mapping[i].address != data[j].addr) {
-+#if defined(__x86_64__) || defined(__amd64__)
-+			/*
-+			 * On x86_64 architectures with CET (Control-flow Enforcement Technology),
-+			 * function entry points have a 4-byte 'endbr' instruction prefix.
-+			 * This causes the actual function address = symbol address + 4.
-+			 * Here we check if this symbol matches the target address minus 4,
-+			 * indicating we've found a CET-enabled function entry point.
-+			 */
-+			if (dd.sym_mapping[i].address == data[j].addr - 4)
-+				goto found;
-+#endif
- 			continue;
-+		}
-+found:
- 		jsonw_start_object(json_wtr);
- 		jsonw_uint_field(json_wtr, "addr", dd.sym_mapping[i].address);
- 		jsonw_string_field(json_wtr, "func", dd.sym_mapping[i].name);
-@@ -744,8 +757,21 @@ static void show_kprobe_multi_plain(struct bpf_link_info *info)
- 
- 	printf("\n\t%-16s %-16s %s", "addr", "cookie", "func [module]");
- 	for (i = 0; i < dd.sym_count; i++) {
--		if (dd.sym_mapping[i].address != data[j].addr)
-+		if (dd.sym_mapping[i].address != data[j].addr) {
-+#if defined(__x86_64__) || defined(__amd64__)
-+			/*
-+			 * On x86_64 architectures with CET (Control-flow Enforcement Technology),
-+			 * function entry points have a 4-byte 'endbr' instruction prefix.
-+			 * This causes the actual function address = symbol address + 4.
-+			 * Here we check if this symbol matches the target address minus 4,
-+			 * indicating we've found a CET-enabled function entry point.
-+			 */
-+			if (dd.sym_mapping[i].address == data[j].addr - 4)
-+				goto found;
-+#endif
- 			continue;
-+		}
-+found:
- 		printf("\n\t%016lx %-16llx %s",
- 		       dd.sym_mapping[i].address, data[j].cookie, dd.sym_mapping[i].name);
- 		if (dd.sym_mapping[i].module[0] != '\0')
--- 
-2.43.0
+Here we just merge them and send together. The other invocations of this function should still be able to send normally.
 
