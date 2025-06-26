@@ -1,147 +1,155 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506F2237717
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636791411EB;
+	Thu, 26 Jun 2025 07:05:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750921437; cv=none; b=tm0CSO6HhfaIZj4GVLjS1x8KslaNGkcmIyOTI+2VGpIjRd36I4tbvbTD6moTaljeFcaiwxsmZ0J4rJxVgcoqSh29w9cUCBXvxzg6b+xFXfdIFhjUCodFT4np9lmWuBX7iUIDrAa7mZAM9VDTrgqyvwMnpm5zucaOopJ9AjxaRgk=
+	t=1750921548; cv=none; b=h9oFaBXt9uYoLeFIAcBkGUFy+jj3ncq1W0ZZvz/OZdaWb3a+fkI0KPumUgZibwSVYEyeSmKD0ASUx6e7Bp0ymkDKGVtzP9UzDNAgwYrh7aDlr46TO6V+qKDWKWBY2rjoW5dIX97jYjfM8MDkfz0utlzEPfDYcpzBXJ22G0n/1Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750921437; c=relaxed/simple;
-	bh=9C/yPC65dyt5L285Ad0r8Enf6n6g55IaUv+DoEN+0PI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=AKeGI3i3MiC3KPy0CjH1a5AHYcYZA2WgzM0m4+iN4YQdYfL10HLwomTksUjoXJz5DAFhUMm0sLmSXqFnBKMcwDhTW5JdRPxK8/wOdLKJYb3SUUsX6eZDeJwh3WadiHHPjIsRVZbIlUQMSHKjjb9qqra1V82J2E0O5/loInxnQxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UO2yXuDg; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750921548; c=relaxed/simple;
+	bh=DsbCranEGLf3M4bGrBRu4hdiZKB6aoe7B2QDjC5oq/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B+u5X+DJ9EOfFo/scf6cIoUf2n6fmDWjLU1TLg1E90ksGdrHXmlbviGf4Slsxp7RHZqfwRr2tkCRIGWbzTi2i/bsGsR2LlipUBAQEbvFwxqYHqWcwQbB4/zilaeQ/QMl1ZKV5V1JEl7KQTxVp9LJ7KrGMQNJEixbK2lFZCWzf5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=e3tIXIab; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UO2yXuDg"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3137c20213cso736319a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 00:03:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750921435; x=1751526235; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9C/yPC65dyt5L285Ad0r8Enf6n6g55IaUv+DoEN+0PI=;
-        b=UO2yXuDgntwHQ6MR8cvQeo7Q9IirTmfpF4LlGbTd9hES9M+eDcsJ7d0WzpG5bAFYkR
-         c/7gVPNjpgZfWvXbUkiprXq5V+JUcPLbX7jde260tH2YizxHrd0iTNUiqSZALXk4E+Pd
-         F2fIRvrGM56c9U6H+Dycyt8YoTk/o5hFvAurBZ0vz7xZGSFCH+SbJf5bd8DHZFPxahtQ
-         uqw+PCoTjHvMAGTdJD/T5/GECwChBPNjJZCk60zK2Z/tLLJjsb1D/rUdclEmq8LeG2Ih
-         7okva+6XM2mKiKKU6JQi4Llg+KB95AlRwXL0+Z/0vqLLkX3zb3T/fqjXGNPUyBnUBvP6
-         5D8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750921435; x=1751526235;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9C/yPC65dyt5L285Ad0r8Enf6n6g55IaUv+DoEN+0PI=;
-        b=B+rFm2TWGfQSxzntmfcVzcgN8FpEg4Qx/iEX2N9M17TQccOWCKqme5e70radhphjXb
-         nVy/SBB4zboSSEIAr+NiKz+Yh0RnZ/V8TvSe7XexMLpFWW3K8W9scq4BOkXxrTy1ee0j
-         kLOpp4wLQxookNMN9bv79VmOuYas7Azz14dEnSyEtrJHsxcBZmnF8dgcg5c+MBlxO6lG
-         q0Jcv26fjSMCU9L07DitYUWhBtrSOLSHJxxcJg0PRxtoiViR6fFPdkKtb5wIhD8iYI14
-         qblq3VFIJQNGnugf6oABae10FH8ixW3rJcfvfRQ7LV1w1bZ+nbIOuGP9o5YtpLMTNuQ8
-         0lYw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0byN7OksEFt51FVQqS6D6+mDpv0X6MvC8/dSm/bdVuUKL+EXVggB47TkMMrFLGjC4yl6/Pz6Azpngh5M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/mT4Iy/3l3hPBa5Gbc6wO6VABPnOZK15lHP91KxJZnHBX1OsA
-	Z2PIJf+vrr+RlEx9rPWrCT7AeYat/mTxN8AlMufl3crkI0qhNhIm0j2QK1FkFf0P1wuj0JAbTz5
-	OvJANt1jooSRdJLJPeyLP1SFRVOH+X7RBDKrRn4AFLQ==
-X-Gm-Gg: ASbGncu678J5VYTaeVecJIv+8pGNLEO4r7yRbONFjuoOcf+8UlSgQILK2mYbWjZhbx+
-	F5oph5yreZd/kSr3jtfb5gHm0kPIHWyEKfrplNn2j7oHDTpcqH1Uqelw6mkflGnlvR+3zpLAHgJ
-	y//eQdP2HvrwmNCrL5W/mGcCndMDZQ3d8ivtOVgvhd6KKFtzwkHtoQu35UkTrWF095wP4FxpeLc
-	SeX
-X-Google-Smtp-Source: AGHT+IGB3/XrVvwCiSKGcdM/uKLZZR2BBjt/EJ8TFkLwSBLUw9n1kq4/A/cuTaHIdw+LRFJ+QBCRjPhK4cZiYm51gdc=
-X-Received: by 2002:a17:90b:53c5:b0:312:1508:fb4e with SMTP id
- 98e67ed59e1d1-315f2675bbbmr9154353a91.17.1750921435517; Thu, 26 Jun 2025
- 00:03:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="e3tIXIab"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1750921540;
+	bh=8SeYKbv8qac5pO42Nz+KU0YBM2oD16iJ08jD6EI2JTQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=e3tIXIab+uT2JSsMLBqA0zDRoHsOmBqdar+NP5uzu27qLr2Wq3xScXw06xp8XP5wg
+	 3AjaMP5UZ7BKPT51y6YQ9rYoxEccMUY9RwanJaSyAzVt6ANVU+0YcsbFx+r5mHzl0P
+	 tTpEmrpL67TnKhuGRBhaL1bbmGZE/V3P9Jigu/XGWWIV/1I0Gzp4zOwQEhHY7I7eZk
+	 WpG9LjYJ+K8i+LuWr3Gt5aIe2dT3SZlQyDIXpN4M8We5WSaHOkXUGRA4DUV+TueZos
+	 IB28l3f3djYEhRK03v5dI0oMHPWra4gdmoR2NyDA3528y6S6VbQ70kUE6ip1TC+xwq
+	 cXo9KZ32BdXDQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bSV842G7Lz4wcn;
+	Thu, 26 Jun 2025 17:05:40 +1000 (AEST)
+Date: Thu, 26 Jun 2025 17:05:38 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: "Danilo Krummrich" <dakr@kernel.org>, "Alexandre Courbot"
+ <acourbot@nvidia.com>, "FUJITA Tomonori" <fujita.tomonori@gmail.com>,
+ "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, "Linux Next
+ Mailing List" <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the rust-timekeeping tree with the
+ drm-nova tree
+Message-ID: <20250626170538.67e26afc@canb.auug.org.au>
+In-Reply-To: <20250625161301.48264659@canb.auug.org.au>
+References: <iuo4BpdTglZkpW9Xyy1ehjFspmj3ay0q7iejyeOShBG0HLZmIrhzIpi0eG_wBv71ZPPCgh2lcn2BOsrFHOegfg==@protonmail.internalid>
+	<20250624195142.1050e147@canb.auug.org.au>
+	<87ecv94ay9.fsf@kernel.org>
+	<DAUQZ1TY9VT3.UJEFQ96157DJ@nvidia.com>
+	<CeKXJWcbSngalEPTkHeRti8od7cPavN5gh1Opt1oNESUBUh8W4Kt7xnuHkD7l7dr1178GDTfqrabr9Pye6SWpw==@protonmail.internalid>
+	<aFqXKKAxQp0yxUvL@pollux>
+	<87ikkl2ca4.fsf@kernel.org>
+	<20250625161301.48264659@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 26 Jun 2025 12:33:43 +0530
-X-Gm-Features: Ac12FXzrp0QOBUWJ7tIxkv-cgchxT19rQvDD483_utcFbw2DHpKfR-GbfFmMvSU
-Message-ID: <CA+G9fYtJO4DbiabJwpSamTPHjPzyrD3O6ZCwm2+CDEUA7f+ZYw@mail.gmail.com>
-Subject: stable-rc: 5.4 and 5.10: fanotify01.c:339: TFAIL: fanotify_mark(fd_notify,
- 0x00000001, 0x00000008, -100, ".") expected EXDEV: ENODEV (19)
-To: LTP List <ltp@lists.linux.it>, open list <linux-kernel@vger.kernel.org>, 
-	linux-stable <stable@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Amir Goldstein <amir73il@gmail.com>, chrubis <chrubis@suse.cz>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Petr Vorel <pvorel@suse.cz>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/45vukThAs+uifaaVPr.IT_B";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/45vukThAs+uifaaVPr.IT_B
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Regression in the LTP syscalls/fanotify01 test on the Linux stable-rc 5.4
-and 5.10 kernel after upgrading to LTP version 20250530.
+Hi all,
 
- - The test passed with LTP version 20250130
- - The test fails with LTP version 20250530
+On Wed, 25 Jun 2025 16:13:01 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> On Tue, 24 Jun 2025 21:02:43 +0200 Andreas Hindborg <a.hindborg@kernel.or=
+g> wrote:
+> >
+> > diff --git a/drivers/gpu/nova-core/util.rs b/drivers/gpu/nova-core/util=
+.rs
+> > index 5cafe0797cd6..01a920085438 100644
+> > --- a/drivers/gpu/nova-core/util.rs
+> > +++ b/drivers/gpu/nova-core/util.rs
+> > @@ -3,7 +3,7 @@
+> >  use core::time::Duration;
+> > =20
+> >  use kernel::prelude::*;
+> > -use kernel::time::Instant;
+> > +use kernel::time::{Instant, Monotonic};
+> > =20
+> >  pub(crate) const fn to_lowercase_bytes<const N: usize>(s: &str) -> [u8=
+; N] {
+> >      let src =3D s.as_bytes();
+> > @@ -35,7 +35,7 @@ pub(crate) const fn const_bytes_to_str(bytes: &[u8]) =
+-> &str {
+> >  /// TODO[DLAY]: replace with `read_poll_timeout` once it is available.
+> >  /// (https://lore.kernel.org/lkml/20250220070611.214262-8-fujita.tomon=
+ori@gmail.com/)
+> >  pub(crate) fn wait_on<R, F: Fn() -> Option<R>>(timeout: Duration, cond=
+: F) -> Result<R> {
+> > -    let start_time =3D Instant::now();
+> > +    let start_time =3D Instant::<Monotonic>::now();
+> > =20
+> >      loop {
+> >          if let Some(ret) =3D cond() { =20
+>=20
+> I have applied that to the merge of the rust-timekeeping tree today,
+> thanks.
 
-Regressions found on stable-rc 5.4 and 5.10 LTP syscalls fanotify01.c
-fanotify_mark expected EXDEV: ENODEV (19)
+The merge resolution now looks like this:
 
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
+diff --git a/drivers/gpu/nova-core/util.rs b/drivers/gpu/nova-core/util.rs
+index 64fb13760764..76cedf3710d7 100644
+--- a/drivers/gpu/nova-core/util.rs
++++ b/drivers/gpu/nova-core/util.rs
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+=20
+ use kernel::prelude::*;
+-use kernel::time::{Delta, Instant};
++use kernel::time::{Delta, Instant, Monotonic};
+=20
+ pub(crate) const fn to_lowercase_bytes<const N: usize>(s: &str) -> [u8; N]=
+ {
+     let src =3D s.as_bytes();
+@@ -33,7 +33,7 @@ pub(crate) const fn const_bytes_to_str(bytes: &[u8]) -> &=
+str {
+ /// TODO[DLAY]: replace with `read_poll_timeout` once it is available.
+ /// (https://lore.kernel.org/lkml/20250220070611.214262-8-fujita.tomonori@=
+gmail.com/)
+ pub(crate) fn wait_on<R, F: Fn() -> Option<R>>(timeout: Delta, cond: F) ->=
+ Result<R> {
+-    let start_time =3D Instant::now();
++    let start_time =3D Instant::<Monotonic>::now();
+=20
+     loop {
+         if let Some(ret) =3D cond() {
 
-Test regression: stable-rc 5.4 and 5.10
+--=20
+Cheers,
+Stephen Rothwell
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+--Sig_/45vukThAs+uifaaVPr.IT_B
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-fanotify01.c:339: TFAIL: fanotify_mark(fd_notify, 0x00000001,
-0x00000008, -100, ".") expected EXDEV: ENODEV (19)
+-----BEGIN PGP SIGNATURE-----
 
-The test expected fanotify_mark() to fail with EXDEV, but received
-ENODEV instead. This indicates a potential mismatch between updated
-LTP test expectations and the behavior of the 5.4 kernel=E2=80=99s fanotify
-implementation.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhc8UMACgkQAVBC80lX
+0GwkYwf/ZKZ57yJ6rc96nxgoZ7jASEBVZ0d67OY4eMA3R4yz1uBDTq7DgOdccAoJ
+cXMPk/BAgWLjZpGNCxy9qAkrOJFkSSb4LphlXZBwj6e7XllXqVaLTWFHGsyK4GIy
+KlMBqc8szKiY+1hWdogmJ8FS/LUDvXD10sWubfKcQ148qs03l21rpdpX8x3ffDRz
+KYeJB/erKeH3o5iR07+opGJMbXiT+mxZDXnRVLoTj1SuAszzAYOD/dWrenJnGCNJ
+7bKJ7ErI4lKcEEOg7bsKN6XgK75ISeYc224Dv+xjs9cne5O5/PZw3vxDpfZIxsv6
++YgVSfl7/e/fMLlJrLALr9UjaBw8rw==
+=lKPR
+-----END PGP SIGNATURE-----
 
-Test log,
---
-
-fanotify01.c:94: TINFO: Test #3: inode mark events (FAN_REPORT_FID)
-fanotify01.c:301: TPASS: got event: mask=3D31 pid=3D2364 fd=3D-1
-...
-fanotify01.c:301: TPASS: got event: mask=3D8 pid=3D2364 fd=3D-1
-fanotify01.c:339: TFAIL: fanotify_mark(fd_notify, 0x00000001,
-0x00000008, -100, ".") expected EXDEV: ENODEV (19)
-fanotify01.c:94: TINFO: Test #4: mount mark events (FAN_REPORT_FID)
-fanotify01.c:301: TPASS: got event: mask=3D31 pid=3D2364 fd=3D-1
-...
-fanotify01.c:301: TPASS: got event: mask=3D8 pid=3D2364 fd=3D-1
-fanotify01.c:339: TFAIL: fanotify_mark(fd_notify, 0x00000001,
-0x00000008, -100, ".") expected EXDEV: ENODEV (19)
-fanotify01.c:94: TINFO: Test #5: filesystem mark events (FAN_REPORT_FID)
-fanotify01.c:301: TPASS: got event: mask=3D31 pid=3D2364 fd=3D-1
-...
-fanotify01.c:301: TPASS: got event: mask=3D8 pid=3D2364 fd=3D-1
-fanotify01.c:339: TFAIL: fanotify_mark(fd_notify, 0x00000001,
-0x00000008, -100, ".") expected EXDEV: ENODEV (19)
-
-
-## Test logs
-* Build details:
-https://regressions.linaro.org/lkft/linux-stable-rc-linux-5.4.y/v5.4.294-22=
-3-g7ff2d32362e4/ltp-syscalls/fanotify01/
-* Build detail 2:
-https://regressions.linaro.org/lkft/linux-stable-rc-linux-5.10.y/v5.10.238-=
-353-g9dc843c66f6f/ltp-syscalls/fanotify01/
-* Test log: https://qa-reports.linaro.org/api/testruns/28859312/log_file/
-* Issue: https://regressions.linaro.org/-/known-issues/6609/
-* Test LAVA job 1:
-https://lkft.validation.linaro.org/scheduler/job/8329278#L28572
-* Test LAVA job 2:
-https://lkft.validation.linaro.org/scheduler/job/8326518#L28491
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2yxHGv=
-VkVpcbKqPahSKRnlITnVS/
-* Build config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2yxHGvVkVpcbKqPahSKR=
-nlITnVS/bzImage
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+--Sig_/45vukThAs+uifaaVPr.IT_B--
