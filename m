@@ -1,104 +1,135 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C0A1B4F0A
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69EFC2E11CB
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750942639; cv=none; b=cCybvTKr80qA/L9bP9Y+8sYkX1OkO7ZbRlXjGeDfQJjTI/9CHbJCitKo0pT/cE+lil8J+y1+z5ai9HVTTJJkowGV8dCpGOwnDxE5pV1Qk/cG080PYkRphmYejgL+RsdHefyEBorzTr6HAREw+RIOlygANbd5qu66g9dpRlUNDa8=
+	t=1750942652; cv=none; b=CX3ijgzoW1wn6ptR6h6FBh0d2xTbifbkCRBR2e6DGsJ/uo2bzA2A0q3D1OcNfu2zniZ9zaLIqh0BLd17tKGgThIppGLA9NkNh/xshVgutg3mTjqNBOrw7OkuoO+/tYFVGpQEz+L/b7Dlxu1zkGcuv7qbv2dkPVDd03iA4ibgaus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750942639; c=relaxed/simple;
-	bh=n679wSAWWOiJ9JTMrysAzGgXFa3wPFP/gQmNq2IQmn4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=las7YgSo2ribCX1UuRkmq/E0pVoDifOfE7K6R8806CtZpPgBlG0VLewstvwW8Vq31mxEVBTk4GVjSnSazbnjBO+06kHd/M7RM75lWgEFqPizJaEd8hhbZTqQyApAWBINgIxTfvLvHH4bGGOOdyN3ByidZdmvQUVBTGCoYsaPetE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PUdiby0/; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PUdiby0/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4EgDGm6+JjMaSHHTQLImViqJKszRwHALciz1EDmlv3k=; b=PUdiby0/r30UJepnl62/YjZb+q
-	21+qOBf6mhtIWw1ohPknJyY8pN16AH+cBKXvO9etVu7UvCoEMmsbMq/+BPQULD6voNcXoBXdM3d4I
-	jICeGmQ8/tHpXAZfDmGa7w6BigyWUztpMxXZDxENROPzUylZOkJgQ6XMoGGlr28Sl3r7U2x8SzuJS
-	EMPv+Yo3ZIyNpghFGh8CacGHfFIPZxUk/upR20y2T8fPKpBNpgXTAQxDX4Q5E9jscw1XbINRZmHNl
-	rnBKbEu180OHyEuvbX1I9leMmyq0zMbsBFRIdmHcttT5iuGYBdVCXrd/XkdHzTLlZex+iw8OelRin
-	NgQafXPQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uUmAF-0000000BfqF-4BKe;
-	Thu, 26 Jun 2025 12:57:16 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 89A0030BDA9; Thu, 26 Jun 2025 14:57:15 +0200 (CEST)
-Date: Thu, 26 Jun 2025 14:57:15 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dave Chinner <david@fromorbit.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [BUG v6.16-rc3] kernel oops in __migrate_swap_task
-Message-ID: <20250626125715.GF1613200@noisy.programming.kicks-ass.net>
-References: <aFtfZgcL66nq6TcY@dread.disaster.area>
+	s=arc-20240116; t=1750942652; c=relaxed/simple;
+	bh=rPXf71MDkv1KkvzkugTsNBkpv9MI4q54otRR8aGtKxg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=uAlZqbgF/d0qjjan6xuGj2lHfvFROrD20YK21+MMvWuxt/R4meC6oHIKhTMcYngr2m+egIhjsyjNlOV4VtLx1MtKoGV5xeaTp563Wrx/0EOh/BByUI/lf3T9wcCe1tbDFMWKeQ3seEqPMTsK+qhZ/a2JsMpLY2Zi0iWgyL1IF0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddc5137992so10580595ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:57:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750942649; x=1751547449;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nwN0ldL1U178GSOcHtpYmNajlC0ep0MCuxdwVuLJqik=;
+        b=gipeAJge5DBw93NCXxbMsZQqAFULnGnVlI94mIch/PAyojcyssSMh8JXjFNX7FBy3K
+         cb/wOO6lfbX9mJbqXzr4BUi0Q1EuchUXHXzD6PZNlTMx2W0KAmv9Hq1fmRPRvlB6HkCY
+         gxwG6toPq/23ad4LsOtvZQ+zVbUTX/qGGsO93hi1PG3LQz1UoJnqaA7TX7T07ZYW5dqd
+         RuhOrM88xWXsTz3XTvqVUra7XIjRqGMDE1HxwbtJxScW6F0uJeQX5aRciMWP7QoxB6He
+         by55d1Zc+WM1EsfmuB3r4WYb0h4hI6mCgUldtYdjkf+YKMBSkw6uUjanR395OTHUY0PB
+         ZJTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXF1sAEwh61IoQWPih8pVoNWZ5Be49R8flo1C6my32WwrXTgjF7TAKyvyzykJi/+JZEQiuY8omcKYth1C4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUQdVOy6hj/DZbPg7jkMYeBMuwdUjd0GYf5kzSs63BeIUf8kJG
+	VpIPPJ9mBXql1N/ELp7mgqdEt7GiZg+LsSeErRER2SeTMxc+XSDsejl41HZjBGVy3MVAdc4j2sH
+	4xL1w4ozgXYLW3g+2qfE7Ob8R+2Di2L+BTCZZ+L+te4zIWyUzLMPrnrrvcFo=
+X-Google-Smtp-Source: AGHT+IHXEk1bZFIRP52lSlkallAfbwT7GM52DnNGb6AhRhB7qmX+IWQhTW+84vSo3Ni9jUrSIxOP37ua4ZcX8RmsveKxub85M+GI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFtfZgcL66nq6TcY@dread.disaster.area>
+X-Received: by 2002:a05:6e02:1f08:b0:3df:2a58:381a with SMTP id
+ e9e14a558f8ab-3df32871b05mr91740935ab.3.1750942649532; Thu, 26 Jun 2025
+ 05:57:29 -0700 (PDT)
+Date: Thu, 26 Jun 2025 05:57:29 -0700
+In-Reply-To: <685ce019.a00a0220.2e5631.0206.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685d43b9.050a0220.2303ee.01db.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] WARNING in _ieee80211_sta_cur_vht_bw
+From: syzbot <syzbot+ededba317ddeca8b3f08@syzkaller.appspotmail.com>
+To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 25, 2025 at 12:31:02PM +1000, Dave Chinner wrote:
-> Hi folks,
-> 
-> I had this happen once randomly on 6.16-rc2 but was messed up in
-> amongst a heap of failures, but I've now got a clean, single failure
-> on 6.16-rc3 that looks like this:
-> 
-> [11001.388660] BUG: kernel NULL pointer dereference, address: 00000000000004c8
-> [11001.392374] #PF: supervisor read access in kernel mode
-> [11001.394574] #PF: error_code(0x0000) - not-present page
-> [11001.396687] PGD 0 P4D 0
-> [11001.397821] Oops: Oops: 0000 [#1] SMP NOPTI
-> [11001.399507] CPU: 10 UID: 0 PID: 66 Comm: migration/10 Not tainted 6.16.0-rc3-dgc+ #342 PREEMPT(full)
-> [11001.403327] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [11001.407288] Stopper: multi_cpu_stop+0x0/0x120 <- migrate_swap+0x80/0x110
-> [11001.410066] RIP: 0010:__migrate_swap_task+0x31/0x1a0
-> [11001.412132] Code: 89 e5 41 57 41 56 53 48 89 fb 48 ff 87 60 03 00 00 41 89 f7 65 48 ff 05 7d 13 22 04 4c 8b b7 10 09 00 00 66 90 e8 ff db 05 00 0
-> [11001.419845] RSP: 0018:ffffc90006677d90 EFLAGS: 00010002
-> [11001.422015] RAX: ffff88810231d100 RBX: ffff888843982880 RCX: 000000000000392e
-> [11001.425316] RDX: 0000000075dcabe7 RSI: 0000000000000020 RDI: ffff888843982880
-> [11001.428559] RBP: ffffc90006677da8 R08: 0000000000000001 R09: 0000000000000090
-> [11001.431695] R10: 0000000000000080 R11: 00000000000000d0 R12: ffff88881fcab440
-> [11001.434781] R13: ffff88981fa2b440 R14: 0000000000000000 R15: 0000000000000020
-> [11001.437783] FS:  0000000000000000(0000) GS:ffff88889a6f1000(0000) knlGS:0000000000000000
-> [11001.441208] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [11001.443645] CR2: 00000000000004c8 CR3: 000000013c31b000 CR4: 0000000000350ef0
-> [11001.446645] Call Trace:
-> [11001.447770]  <TASK>
-> [11001.448618]  migrate_swap_stop+0x16a/0x1d0
+syzbot has found a reproducer for the following issue on:
 
-> I don't know exactly what triggers it, except to say I'm running the
-> parallel variant of fstests with 64 concurrent tests being run.
-> These tests are in parallel with operations like random CPU hotplug,
+HEAD commit:    ecb259c4f70d Add linux-next specific files for 20250626
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=130db182580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4e847490ba2a1e14
+dashboard link: https://syzkaller.appspot.com/bug?extid=ededba317ddeca8b3f08
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=102fcf0c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11b67dd4580000
 
-The stopper thread and hotplug involved make me think it *might* be
-related to this:
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/5c1b08ab7d3a/disk-ecb259c4.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/f8489f3be9c8/vmlinux-ecb259c4.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/150ce938c7c2/bzImage-ecb259c4.xz
 
-  https://lkml.kernel.org/r/20250626125323.GG1613376@noisy.programming.kicks-ass.net
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ededba317ddeca8b3f08@syzkaller.appspotmail.com
 
-Which isn't a new problem, but seems to have popped up recently.
+------------[ cut here ]------------
+WARNING: ./include/net/mac80211.h:7769 at ieee80211_chan_width_to_rx_bw include/net/mac80211.h:7769 [inline], CPU#0: syz-executor109/5836
+WARNING: ./include/net/mac80211.h:7769 at _ieee80211_sta_cur_vht_bw+0x524/0x6e0 net/mac80211/vht.c:549, CPU#0: syz-executor109/5836
+Modules linked in:
+CPU: 0 UID: 0 PID: 5836 Comm: syz-executor109 Not tainted 6.16.0-rc3-next-20250626-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:ieee80211_chan_width_to_rx_bw include/net/mac80211.h:7769 [inline]
+RIP: 0010:_ieee80211_sta_cur_vht_bw+0x524/0x6e0 net/mac80211/vht.c:549
+Code: 00 00 00 eb 49 41 83 fd 05 74 30 41 83 fd 0d 75 13 e8 70 f9 d5 f6 b8 04 00 00 00 eb 31 e8 64 f9 d5 f6 eb 28 e8 5d f9 d5 f6 90 <0f> 0b 90 eb 1d e8 52 f9 d5 f6 b8 02 00 00 00 eb 13 e8 46 f9 d5 f6
+RSP: 0018:ffffc90003fcef48 EFLAGS: 00010293
+RAX: ffffffff8aea1323 RBX: ffff888073fd8000 RCX: ffff888032595a00
+RDX: 0000000000000000 RSI: ffffffff8f9a5660 RDI: 0000000000000007
+RBP: 0000000000000000 R08: ffff888032595a00 R09: 0000000000000007
+R10: 000000000000000d R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000007 R14: ffff888073fd8180 R15: 1ffff1100e7fb030
+FS:  0000555588b13380(0000) GS:ffff8881259e6000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055dba778f798 CR3: 0000000076a32000 CR4: 00000000003526f0
+Call Trace:
+ <TASK>
+ ieee80211_sta_cur_vht_bw net/mac80211/ieee80211_i.h:2230 [inline]
+ __ieee80211_vht_handle_opmode+0x3c0/0x850 net/mac80211/vht.c:701
+ sta_link_apply_parameters+0xb75/0xf60 net/mac80211/cfg.c:1987
+ sta_apply_parameters+0x944/0x15b0 net/mac80211/cfg.c:2111
+ ieee80211_add_station+0x424/0x6a0 net/mac80211/cfg.c:2194
+ rdev_add_station+0x108/0x290 net/wireless/rdev-ops.h:201
+ nl80211_new_station+0x1755/0x1b70 net/wireless/nl80211.c:8358
+ genl_family_rcv_msg_doit+0x212/0x300 net/netlink/genetlink.c:1115
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0x60e/0x790 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x205/0x470 net/netlink/af_netlink.c:2534
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:714 [inline]
+ __sock_sendmsg+0x219/0x270 net/socket.c:729
+ ____sys_sendmsg+0x505/0x830 net/socket.c:2614
+ ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2668
+ __sys_sendmsg net/socket.c:2700 [inline]
+ __do_sys_sendmsg net/socket.c:2705 [inline]
+ __se_sys_sendmsg net/socket.c:2703 [inline]
+ __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2703
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f22ab1537d9
+Code: 48 83 c4 28 c3 e8 e7 18 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fffa34ff748 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fffa34ff918 RCX: 00007f22ab1537d9
+RDX: 0000000000000000 RSI: 0000200000001080 RDI: 0000000000000006
+RBP: 00007f22ab1c6610 R08: 0000000000000000 R09: 00007fffa34ff918
+R10: 0000000000000012 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007fffa34ff908 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
 
-> memory migration, cache dropping, etc whilst there may be thousands
-> of processes executing filesystem stress across more than a hundred
-> mounted filesystems on loop devices.
-> 
-> This is not reproducable on 6.15.0, so it is likely a regression
-> introduced in the 6.16 merge window....
 
-Let me go look through the commits to see if anything stands out..
-
-Thanks!
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
