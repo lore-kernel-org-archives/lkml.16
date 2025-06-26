@@ -1,129 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B3F1D5CD7
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C98A186E2E;
+	Thu, 26 Jun 2025 02:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750904111; cv=none; b=iNzFgh2/5V/2I6QvZazyYLMzIEH0HJfzHGZYZgQpYrawTBWNlpxawS2yh3O4W4nOkCALCmR0CxJKOZZSzKib+QEU2s/kKNVoJ9UEtcxU+XBMprhS9BfPGRVyZOzrbJ0LtDDlx8ycHLTeN6iBGGaMKd3ULNyJVq7hCT3xlR5L0GA=
+	t=1750904153; cv=none; b=RoqtVM47JNzuSmrSErEoBBpwwiwcCjT8MHth5xqw86fZSDWTSBTgsHD5qs6+MIMBQgiVnnTosBXAkN9uAjB143ydwI4Dwek4BusGKi6KNNvaQiHrlzlJ8Zx4xEX3nNeFk1EgU7remvXQQxP9ZwzpbPWNIa+IFUnSZMN40x1SBmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750904111; c=relaxed/simple;
-	bh=lZtfrUzdtKa2dc1veBMHMFFXhGyABRCLdrad9t+rpE8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VvxjzxHNH3cQmKNv/10DQzM327e9WGsgyFKRdXQfMN3qRCyxBO0wpnmlcZ6xc/8+DDsVZ/JyqWwh0LX/tUipwlCgJLMw7M0Ny/pz98AU0YNl3ag9vJu3niXNJATmIRze3ZWfFpj3zN7Wr6XAVH1pjrpmV2hIYHCeaElUk434X4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ClKN8hNr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ClKN8hNr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750904109;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xnv5Y0gY1WjGlCiy0+9RTcm9way0yzjnbceB3ew7Pq4=;
-	b=ClKN8hNrCKQIzSziqFxRSxYsT8kN18cUvy+WCkku79YEByX5NrEjfxyTSB72V1vE28mctd
-	MLG9bR5y87207MnpPX5L7cBUff4P4lOBmsj49WAE598DAUAEjs9OJrwBpyCJq9lO+AGRYL
-	EZL1FG72tLHMtD+pvlI8DCnTQLyq608=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-43-otEP-VNYNEyzBzLp7R7pKA-1; Wed,
- 25 Jun 2025 22:15:04 -0400
-X-MC-Unique: otEP-VNYNEyzBzLp7R7pKA-1
-X-Mimecast-MFC-AGG-ID: otEP-VNYNEyzBzLp7R7pKA_1750904103
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DD1CC195608C;
-	Thu, 26 Jun 2025 02:15:02 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.72.112.68])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 82BAA19560A3;
-	Thu, 26 Jun 2025 02:14:56 +0000 (UTC)
-From: Jason Wang <jasowang@redhat.com>
-To: willemdebruijn.kernel@gmail.com,
-	jasowang@redhat.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: mst@redhat.com,
-	eperezma@redhat.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	Willem de Bruijn <willemb@google.com>
-Subject: [PATCH V2 net-next 2/2] vhost-net: reduce one userspace copy when building XDP buff
-Date: Thu, 26 Jun 2025 10:14:45 +0800
-Message-ID: <20250626021445.49068-2-jasowang@redhat.com>
-In-Reply-To: <20250626021445.49068-1-jasowang@redhat.com>
-References: <20250626021445.49068-1-jasowang@redhat.com>
+	s=arc-20240116; t=1750904153; c=relaxed/simple;
+	bh=+dRX2AVflqAwHDhDktn+4p4n+goMhVeeIqK/XjI75m0=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=DOJuugS/r2Cm6ceogTGgmwaMijEkA8wyRK31zyexgoMG1cHNidPHScLipLFH3UHpSfmk1OdBExsP3ooP9/fdd2gP16Rs7xfPJ2ZJlo3UY1BJ3luPzR/8kto2w3o+q5Yh938gXkfxGtAu0XmL3SOz2bwPKf9NqvIj+YeMZK9zS7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55Q2F2Mc028149;
+	Thu, 26 Jun 2025 11:15:02 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55Q2F0Cq028142
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Thu, 26 Jun 2025 11:15:00 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <d689279f-03ed-4f9b-8fde-713b2431f303@I-love.SAKURA.ne.jp>
+Date: Thu, 26 Jun 2025 11:14:59 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Richard Weinberger
+ <richard@nod.at>,
+        Al Viro <viro@zeniv.linux.org.uk>, ocfs2-devel@lists.linux.dev,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: [PATCH] ocfs2: update d_splice_alias() return code checking
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Anti-Virus-Server: fsav101.rs.sakura.ne.jp
+X-Virus-Status: clean
 
-We used to do twice copy_from_iter() to copy virtio-net and packet
-separately. This introduce overheads for userspace access hardening as
-well as SMAP (for x86 it's stac/clac). So this patch tries to use one
-copy_from_iter() to copy them once and move the virtio-net header
-afterwards to reduce overheads.
+When commit d3556babd7fa ("ocfs2: fix d_splice_alias() return code
+checking") was merged into v3.18-rc3, d_splice_alias() was returning
+one of a valid dentry, NULL or an ERR_PTR.
 
-Testpmd + vhost_net shows 10% improvement from 5.45Mpps to 6.0Mpps.
+But when commit b5ae6b15bd73 ("merge d_materialise_unique() into
+d_splice_alias()") was merged into v3.19-rc1, d_splice_alias() started
+returning -ELOOP as one of ERR_PTR values.
 
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Jason Wang <jasowang@redhat.com>
+As a result, when syzkaller mounts a crafted ocfs2 filesystem image that
+hits d_splice_alias() == -ELOOP case from ocfs2_lookup(), ocfs2_lookup()
+fails to handle -ELOOP case and generic_shutdown_super() hits "VFS: Busy
+inodes after unmount" message.
+
+Don't call ocfs2_dentry_attach_lock() nor ocfs2_dentry_attach_gen()
+when d_splice_alias() returned -ELOOP.
+
+Reported-by: syzbot <syzbot+1134d3a5b062e9665a7a@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=1134d3a5b062e9665a7a
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 ---
-Changes since V1:
-- Add a comment to explain no overlapping when using memcpy
----
- drivers/vhost/net.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+This patch wants review from maintainers. I'm not familiar with this change.
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index 777eb6193985..a33a32a1e488 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -690,13 +690,13 @@ static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
- 	if (unlikely(!buf))
- 		return -ENOMEM;
+ fs/ocfs2/namei.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/ocfs2/namei.c b/fs/ocfs2/namei.c
+index 99278c8f0e24..4ccb39f43bc6 100644
+--- a/fs/ocfs2/namei.c
++++ b/fs/ocfs2/namei.c
+@@ -142,6 +142,8 @@ static struct dentry *ocfs2_lookup(struct inode *dir, struct dentry *dentry,
  
--	copied = copy_from_iter(buf, sock_hlen, from);
--	if (copied != sock_hlen) {
-+	copied = copy_from_iter(buf + pad - sock_hlen, len, from);
-+	if (copied != len) {
- 		ret = -EFAULT;
- 		goto err;
- 	}
+ bail_add:
+ 	ret = d_splice_alias(inode, dentry);
++	if (ret == ERR_PTR(-ELOOP))
++		goto bail_unlock;
  
--	gso = buf;
-+	gso = buf + pad - sock_hlen;
- 
- 	if (!sock_hlen)
- 		memset(buf, 0, pad);
-@@ -715,12 +715,8 @@ static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
- 		}
- 	}
- 
--	len -= sock_hlen;
--	copied = copy_from_iter(buf + pad, len, from);
--	if (copied != len) {
--		ret = -EFAULT;
--		goto err;
--	}
-+	/* pad contains sock_hlen */
-+	memcpy(buf, buf + pad - sock_hlen, sock_hlen);
- 
- 	xdp_init_buff(xdp, buflen, NULL);
- 	xdp_prepare_buff(xdp, buf, pad, len, true);
+ 	if (inode) {
+ 		/*
 -- 
-2.34.1
+2.49.0
 
