@@ -1,75 +1,183 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C2F1FC0E2
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:32:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA93312DDA1;
+	Thu, 26 Jun 2025 23:33:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750980737; cv=none; b=rgaThlFoKqNWeGjZsWLRvUE7rtukCjoIsKuUPrGtwMij9eDU5H/+CsqgBUH/lIaL/Nc+pdUJRiUsMw7adarVGXXZbDaZTG4YbLE5mHi/Bn/EYAcg/l/QeREY55rW6Hm4L/CqpQqys/8CIRRz5eFajhmx1lRfFk7QkVsga+1ERiE=
+	t=1750980801; cv=none; b=qiSjOj+UiZ7S5Ih7OQgV3nB9/3WPhb8Dwbmpxwvpy5eD7YSRvvSSImfR5J54MV1XvBjkRWLVKkH3B0TYBpWtNVVJgmX1HLFtsAHkK/SY3hJy9wTG4YbmigrbowK5CMlTXIn2k20H0po1TEiFTQ7HKSQaxAXO/eTagV1olSJo3KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750980737; c=relaxed/simple;
-	bh=p9T5tKbPyQn9WU/Ctj4Au9KigTyc9WURcP91i9yJwPg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NBWRWK7+VSfsxYdnS5LTcAhGmjNRSvIhZ86tM37eN1oNBnfRPufvXxdCEQW5cwbD6d5cOFuujlu9DHBJNZoxYBzXvR4aoQNidyKQtiXobPiQMc92tpWK23ty8xqWyN9j+TFQ97ocfQ7q8J+qRXRnHQTUEHdbsLcfq+xLCaZ0Zew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPmlCSmo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750980801; c=relaxed/simple;
+	bh=vbC2GLOPug5kOMvejYkJyMkJ9xu1B3O8gjNYLt5ErVk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=URh/4PPzx8hXdYod+bsNtCjKDl7HcPrb/VT8CRaVsyYbxfmwjIIq+5bR358EHKwH+mjRRsRz7l3b4xd5sWTc4Vjwjx0dTXpiCf3H1OrZf0GFMVBVY3i4k/4WH3w2m+A8+E0baEtSlO68VzddD5+wo/529NNxrQ+cZtmUz+TbzCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DW9xo6/l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPmlCSmo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA556C4CEEB;
-	Thu, 26 Jun 2025 23:32:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DW9xo6/l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59CECC4CEEB;
+	Thu, 26 Jun 2025 23:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750980736;
-	bh=p9T5tKbPyQn9WU/Ctj4Au9KigTyc9WURcP91i9yJwPg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PPmlCSmoLgBO0j/SIml3aZayN9reJ2oZPPNkIycp8F5PROgpVZ2ClK6knBSuobp3C
-	 /CJ6DR6IbJqEhMD+I6HFWvSeCPTB4apGNMaqdd9VzKncvWmymd6bjm8AxinS4EqWzm
-	 0VHsUFCyvkaxy3JjRVkXfHGt9TdC+HMJP2ovmI5EVccNvkjBcCItOvFHXD9DYZYpp9
-	 7nPf60OAqsa6KsDpnj45VAhMEj/KRQoL+iem2n02bsC2MUiPOuZO5kny23ecJyAcOb
-	 la/I1Txteu/H1XFFbJUyoHixZsLZbtfWEG7o3a0oxr689bbVYUWUX7HVj1L5Qfn2iy
-	 01ZEtuwJP3v2Q==
-Date: Thu, 26 Jun 2025 16:32:16 -0700
-From: Vinod Koul <vkoul@kernel.org>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Jyri Sarha <jyri.sarha@iki.fi>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Jayesh Choudhary <j-choudhary@ti.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-phy@lists.infradead.org,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Aradhya Bhatia <aradhya.bhatia@linux.dev>,
-	Devarsh Thakkar <devarsht@ti.com>,
-	Parth Pancholi <parth.pancholi@toradex.com>
-Subject: Re: [PATCH v4 05/17] phy: cdns-dphy: Remove leftover code
-Message-ID: <aF3YgKoaLniqs1XC@vaman>
-References: <20250618-cdns-dsi-impro-v4-0-862c841dbe02@ideasonboard.com>
- <20250618-cdns-dsi-impro-v4-5-862c841dbe02@ideasonboard.com>
+	s=k20201202; t=1750980800;
+	bh=vbC2GLOPug5kOMvejYkJyMkJ9xu1B3O8gjNYLt5ErVk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DW9xo6/lYAVQiwgc1gQ50Tgcs4VY4qQJqnlo3+KOkhY4Ig4ItPZ/hQ8pP8sl2717W
+	 LrXTt2n9Tuohuix3Qg8C0pWunv8kympVYEFcI7hS/fGqIaLGL8da1MH/Ar6JXnH6FT
+	 bsDihuEDI4RD0UegoB2QyZiRSa/f1Z02MM1O0jPa3Lzb8tyVCrmjqUTl9oAkewG/CN
+	 dmnglJAANFHsnviXQc7QcSktYcwsm1e3esJTNxIN2QLkbt/mJGFFeOxzccZGLI2gyB
+	 6beMyO8BIt4Elomey3lOqu0ZYg0kygV3LmEtminDytwzgzLC3jZPpeQVbFh8q1ztQG
+	 CjxHW59JgL7RQ==
+Message-ID: <5cc01163-1feb-4a18-8060-27f4da39b2e4@kernel.org>
+Date: Thu, 26 Jun 2025 18:33:15 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618-cdns-dsi-impro-v4-5-862c841dbe02@ideasonboard.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 9/9] PCI: Add a new 'boot_display' attribute
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Lukas Wunner <lukas@wunner.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+ "open list:SOUND" <linux-sound@vger.kernel.org>,
+ Daniel Dadap <ddadap@nvidia.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250626214721.GA1642412@bhelgaas>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250626214721.GA1642412@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 18-06-25, 12:59, Tomi Valkeinen wrote:
-> The code in cdns-dphy has probably been part of a DSI driver in the
-> past. Remove DSI defines and variables which are not used or do not
-> actually do anything. Also rename cdns_dsi_get_dphy_pll_cfg() to
-> cdns_dphy_get_pll_cfg(), i.e. drop the "dsi", as it's not relevant here.
 
-Acked-by: Vinod Koul <vkoul@kernel.org>
 
--- 
-~Vinod
+On 6/26/25 4:47 PM, Bjorn Helgaas wrote:
+> On Thu, Jun 26, 2025 at 04:12:21PM -0500, Mario Limonciello wrote:
+>> On 6/26/2025 3:45 PM, Bjorn Helgaas wrote:
+>>> On Tue, Jun 24, 2025 at 03:30:42PM -0500, Mario Limonciello wrote:
+>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>
+>>>> On systems with multiple GPUs there can be uncertainty which GPU is the
+>>>> primary one used to drive the display at bootup. In order to disambiguate
+>>>> this add a new sysfs attribute 'boot_display' that uses the output of
+>>>> video_is_primary_device() to populate whether a PCI device was used for
+>>>> driving the display.
+>>>>
+>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>
+>>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>>>
+>>> Question below.
+>>>
+>>>> ---
+>>>> v4:
+>>>>    * new patch
+>>>> ---
+>>>>    Documentation/ABI/testing/sysfs-bus-pci |  9 +++++++++
+>>>>    drivers/pci/pci-sysfs.c                 | 14 ++++++++++++++
+>>>>    2 files changed, 23 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+>>>> index 69f952fffec72..897cfc1b0de0f 100644
+>>>> --- a/Documentation/ABI/testing/sysfs-bus-pci
+>>>> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+>>>> @@ -612,3 +612,12 @@ Description:
+>>>>    		  # ls doe_features
+>>>>    		  0001:01        0001:02        doe_discovery
+>>>> +
+>>>> +What:		/sys/bus/pci/devices/.../boot_display
+>>>> +Date:		October 2025
+>>>> +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
+>>>> +Description:
+>>>> +		This file indicates whether the device was used as a boot
+>>>> +		display. If the device was used as the boot display, the file
+>>>> +		will contain "1". If the device is a display device but wasn't
+>>>> +		used as a boot display, the file will contain "0".
+>>>
+>>> Is there a reason to expose this file if it wasn't a boot display
+>>> device?  Maybe it doesn't need to exist at all unless it contains "1"?
+>>
+>> I was mostly thinking that it's a handy way for userspace to know whether
+>> the kernel even supports this feature.  If userspace sees that file on any
+>> GPU as it walks a list then it knows it can use that for a hint.
+>>
+>> But if you would rather it only shows up for the boot display yes it's
+>> possible to do I think.  It's just more complexity to the visibility lookup
+>> to also call video_is_primary_device().
+> 
+> I think for a singleton situation like this it makes more sense to
+> only expose the file for one device, not several files where only one
+> of them contains "1".
+
+I did an experiment with this but the PCI resources aren't ready at the 
+time visibility is determined.
+
+So either:
+* the sysfs file creation needs to be deferred similar to 
+pci_create_resource_files() does
+
+or
+
+* call to sysfs_update_group() is needed to recalculate visibility.
+
+> 
+>>>> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+>>>> index 268c69daa4d57..5bbf79b1b953d 100644
+>>>> --- a/drivers/pci/pci-sysfs.c
+>>>> +++ b/drivers/pci/pci-sysfs.c
+>>>> @@ -30,6 +30,7 @@
+>>>>    #include <linux/msi.h>
+>>>>    #include <linux/of.h>
+>>>>    #include <linux/aperture.h>
+>>>> +#include <asm/video.h>
+>>>>    #include "pci.h"
+>>>>    #ifndef ARCH_PCI_DEV_GROUPS
+>>>> @@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
+>>>>    	NULL,
+>>>>    };
+>>>> +static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
+>>>> +				 char *buf)
+>>>> +{
+>>>> +	return sysfs_emit(buf, "%u\n", video_is_primary_device(dev));
+>>>> +}
+>>>> +static DEVICE_ATTR_RO(boot_display);
+>>>> +
+>>>>    static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
+>>>>    			     char *buf)
+>>>>    {
+>>>> @@ -1698,6 +1706,7 @@ late_initcall(pci_sysfs_init);
+>>>>    static struct attribute *pci_dev_dev_attrs[] = {
+>>>>    	&dev_attr_boot_vga.attr,
+>>>> +	&dev_attr_boot_display.attr,
+>>>>    	NULL,
+>>>>    };
+>>>> @@ -1710,6 +1719,11 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
+>>>>    	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
+>>>>    		return a->mode;
+>>>> +#ifdef CONFIG_VIDEO
+>>>> +	if (a == &dev_attr_boot_display.attr && pci_is_display(pdev))
+>>>> +		return a->mode;
+>>>> +#endif
+>>>> +
+>>>>    	return 0;
+>>>>    }
+>>>> -- 
+>>>> 2.43.0
+>>>>
+>>
+
