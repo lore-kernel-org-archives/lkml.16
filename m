@@ -1,152 +1,275 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F194A33;
-	Thu, 26 Jun 2025 17:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA4A4A33;
+	Thu, 26 Jun 2025 17:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750960168; cv=none; b=t/8XNFc2nkqUrhLXM79bLeI81r5eiUa1vd2djpcTbTkZ2WiQInNW5yZsJcAO1ePlQBjoTbyfMlx+Ca5CVgd4Ir8fY4jGfeX0Yipgw8iFrouvz2CSiXDzTr3AgqxXIdEaykDqaTMrnWpN2A1WS05hqbtQy06BhKVB6TUKeCAZElk=
+	t=1750960240; cv=none; b=onpiBj0T/fwwboCGJMlvN1JJooQD4TXZRdfIlHMM7NEt6sUE0K7kZfDlAuuVWIB705Q5GWsSgdKzpXCdoS4P8++iKCyANLJvCoDmyLHpimBNlN5YNTRxgkRDkSriJlPiXtDdKnGF2Q8vmRZue6NFm+3NeY76emJjmVWvsLmzbPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750960168; c=relaxed/simple;
-	bh=pA/HumsEb3FbACANSoie7ksQi0PxTKJgmxzGlNGc7Zc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=p1F+FASy5cHLJeHz1EosMjg0VxMFBvcSOqqi7exsy3r9tMCPywgoLwR8FprT6SytWGg4+xp7YtVK4/Ia28wUtWj8cQ/y7XL1LaJMRguFuphuzwPy9vpce0TLOdnBRGtCnirkOWdh/LTLD5m4h+4/h2SdAuHZZc5VX3jC95o6eGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VMVBBBtn; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750960240; c=relaxed/simple;
+	bh=eeYWsVThjIY01P/CUkD0Vk7rWE+85aKF38UTy8A0piA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VGHf+mIOmi+BjfJu39lhdnpreU0ptUZwQufAP2o14d1oDu2PjiKBy1BI8b4/rZOAkLDqqdEd6Cmo44EeyZTM6R0SM+uCDV2oBcOKe9EN+Rk8lRZJxw5NFhNd9u9ivQAJtM/Mh9Ft/RRCq1KeRT7qdpanliktv1WmlojY/sQ96eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XDDAhNfj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VMVBBBtn"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a52874d593so1055725f8f.0;
-        Thu, 26 Jun 2025 10:49:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750960165; x=1751564965; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=EGVko47bYwkqeRQ8uopxpBSob9deDBlIVisawEmMxXM=;
-        b=VMVBBBtnPHFEgrJJMm+eduOEp7NtCc6faPsdqextLJ2hEYmBoiXZ9fvrONfWc3iG6E
-         lyjC6WcgaoaFpfpQBGCMjrcWIRXmzPSGyFnp4wRoDnMP4diaR0UoCHwqtEVTrNwm7jx7
-         7XxG4xRpC4MUB7rWyEqJ5Sw/Mqh1DjiQSUwjlojeQDATvZMFI2v2M50iNT/8alVWDhfS
-         xJHm50Kfd7++b/+7BoiTwJPT/ym0Ca9hSX4zKXUYd9txcyvwDuCKXCxqDjQz+5jthUpY
-         LqBkKViw/Wk4s5aCHebgd8KYVHB88UxCIC/KCdvY27mKRl1MMytC2ir2vO+6OVvYsL52
-         +Beg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750960165; x=1751564965;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EGVko47bYwkqeRQ8uopxpBSob9deDBlIVisawEmMxXM=;
-        b=Eh9hoIPpWUZFcQFkZfFyXE/yQwgp7d1hEdJaotN3fLsfXBpkd/PHfzRJuGmLay4yd5
-         RY0d21WJGJ8CFMdKFfoCSlJMAy0889IH7b+Pg0nGlyOtyveY9m8y8F8jqDEFYAZzjQNW
-         gu40ow/Yz1LmGBAzo0Ka4tC/5oQbynHSbs3J/qf/F2zcKk5L74JWz+CNiuaNQChpWlMK
-         4ZXNxAqYC52m6Wm0KwRgXQ4EiajagAESCzmZ4XvNXtQ8vv9EKUtV1wynSJsdXcORSsni
-         5kb5/dG0lptYh1c6gk9BrZ3dU0LNe02DFCCSF/qcp6DoZXV7W6uH+ZgFSjP/YRyRz4yN
-         JMuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8FkFxWHV5aULANrBe/Qx356Vq6wDFUhqZajN+8BYxHEyXJnFlD9ol/YNUCISjLH3XyNv8ZWywyP85uQR5h0Y=@vger.kernel.org, AJvYcCWYGuRb4K3G8GIDEh4jcPCxRPoEV+0FK3fM6HBK1IQlzWE9F/Qv+UAqnYZlJ3iiu68CwvHPPy0aFcQ=@vger.kernel.org, AJvYcCXrbhCTEw+4bx1xkLG7VFUN2YfLcDM+SGFZTU/aX/mkWWUt7nxhpRcvPqPyoOlXqUcHyTMQMC9/TKyX++V4@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxHJ2GV4TS9AuZUGuonMiPsHIbQdhkkF4a6MbAZxeslD6o1pd+
-	qmldOpGJJ1kGUZ29i1Ur9W+92m4mdyKfG4csxqXfcsegPZpPPNb+Cmqi
-X-Gm-Gg: ASbGnct34fduGMJCIfzpTg5GvT5vjoywuvh209iPfL0hSO3FVWTes5cVeXry4ZJpHVx
-	+qIF1ILuj342j56rljKis9SyPHdt6pcyl0iWU51kWrjErYXAnALOrjgrJ9F2y1/RPyRROnLNln+
-	6okrP8prQ7dnXZ2wTRZ1PybvWtCwsclzz4uxbEhxkGT+AvJBNs9nsOAmWIE5dd7dRGp7576QgXx
-	rO15Gad+jWVq7h2+O0ZaKVHLKWTznlGmg0JjkBbNJVbQYusBbjnnTLQVCgmCXglVNCJ1q2R3zjg
-	+Vs7KGyEkL5M5jXlJdnh3OUKsgplsVLSXF7Y1/QOE/zR9vTsQjlHQ3XYBQHZa79ysv7RlMw=
-X-Google-Smtp-Source: AGHT+IGMkg6j1sln3NzDGxo1GLe9xtRdjm3U/0ZlalidTdk2/enJr007E5WTmxKqgGIlcwekSqrSug==
-X-Received: by 2002:a05:6000:2905:b0:3a4:de02:208 with SMTP id ffacd0b85a97d-3a8fda34e30mr463230f8f.25.1750960164761;
-        Thu, 26 Jun 2025 10:49:24 -0700 (PDT)
-Received: from [10.38.1.85] ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e591d7sm495948f8f.67.2025.06.26.10.49.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 10:49:24 -0700 (PDT)
-Message-ID: <ca7b2f6e-1195-4c6f-b45d-799496277b31@gmail.com>
-Date: Thu, 26 Jun 2025 18:47:11 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XDDAhNfj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 540C9C4CEEB;
+	Thu, 26 Jun 2025 17:50:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750960239;
+	bh=eeYWsVThjIY01P/CUkD0Vk7rWE+85aKF38UTy8A0piA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XDDAhNfj1QeZQikOL5AnqcAqQIGyv/pWdYvJ5PDEfQtxmidcbr7s5N6EnJG4x1VbF
+	 1S8S47hjntC4yt7HFEPAjihfWKkipg1FOzctxAFPgZrvVjILNYcpYnVe3mFGhcBaai
+	 4RcHPhhmuR+G/xZENLQTZE1oM6oho3IfCRq8s4idoj3az0PpQOquGPrhlkwzWlLQx/
+	 oe3eNynTCsC2n3iH4GfLrbt+aJ59o2QyEIRGI8myLNMjAS27PyJEeCoHMzoGmvV3qU
+	 JRtrGyuW6PQ1oVv4ib+jRgxU9MEZfMsDOH2YpnNb/yXn8Z+n4wZQimAICnT6pS8AXP
+	 gmGytd5SMmRIQ==
+Date: Thu, 26 Jun 2025 10:50:37 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3] perf annotate: Fix source code annotate with objdump
+Message-ID: <aF2IbcebglJOP1LG@google.com>
+References: <20250625230339.702610-1-namhyung@kernel.org>
+ <CAP-5=fUUOT4-1DU=Lx7OTayLssUq_ZT-bdGuqRzj_2jMqBx_FQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/4] rust: Add basic I2C driver abstractions
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Asahi Lina <lina+kernel@asahilina.net>,
- Wedson Almeida Filho <wedsonaf@gmail.com>, Alex Hung <alex.hung@amd.com>,
- Tamir Duberstein <tamird@gmail.com>,
- Xiangfei Ding <dingxiangfei2009@gmail.com>, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-i2c@vger.kernel.org
-References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
- <20250626173333.897333-1-igor.korotin.linux@gmail.com>
-Content-Language: en-US
-In-Reply-To: <20250626173333.897333-1-igor.korotin.linux@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUUOT4-1DU=Lx7OTayLssUq_ZT-bdGuqRzj_2jMqBx_FQ@mail.gmail.com>
 
+Hi Ian,
 
+On Thu, Jun 26, 2025 at 08:23:30AM -0700, Ian Rogers wrote:
+> On Wed, Jun 25, 2025 at 4:03 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Recently it uses llvm and capstone to speed up annotation or disassembly
+> > of instructions.  But they don't support source code view yet.  Until it
+> > fixed, we can force to use objdump for source code annotation.
+> >
+> > To prevent performance loss, it's disabled by default and turned it on
+> > when user requests it in TUI by pressing 's' key.
+> >
+> > Link: https://lore.kernel.org/r/20250608004613.238291-1-namhyung@kernel.org
+> > Reported-by: Ingo Molnar <mingo@kernel.org>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> Can we move this series forward:
+> https://lore.kernel.org/lkml/20250417230740.86048-1-irogers@google.com/
+> There was some build testing by Arnaldo but then things became
+> stalled. I'm guessing I'll need to send a rebase.
 
-On 6/26/25 18:33, Igor Korotin wrote:
-> This patch series introduces basic Rust I2C driver abstractions 
-> and optional ACPI match-table support and provides a sample driver 
-> demonstrating both OF and ACPI binding
-> 
-> Currently Rust I2C abstractions support only Open Firmware OF device 
-> matching. This series splits the work into four patches so that the 
-> core abstractions and sample driver can land immediately while ACPI 
-> integration may be reviewed once the ACPI macros are upstream
-> 
-> Changes include
->  - core I2C abstractions `i2c::Device` `i2c::Driver` `i2c::Adapter` 
->    built on `struct i2c_client` and `struct i2c_driver`
->  - a standalone Rust sample driver exercising Legacy I2C ID and OF ID
->    matching
->  - optional ACPI ID-table support in the `i2c::Driver` abstraction
->  - ACPI-enabled sample driver showing `kernel::acpi_device_table!` 
->    usage
-> 
-> This separation lets maintainers review and merge the non-ACPI portions
-> immediately while patches 3 and 4 both depending on the ACPI 
-> infrastructure can be queued once the ACPI macros are upstream
-> 
-> Patch series:
-> 
-> 1 rust: i2c: add basic I2C device and driver abstractions
-> 2 samples: rust: add I2C sample driver (OF only)
-> 3 rust: i2c: support ACPI match-table in driver abstractions
-> Depends-on: 20250620152425.285683-1-igor.korotin.linux@gmail.com
-> 4 samples: rust: show ACPI ID-table in I2C sample driver
-> Depends-on: 20250620152425.285683-1-igor.korotin.linux@gmail.com
-> 
-> Igor Korotin (4):
->   rust: i2c: add basic I2C device and driver abstractions
->   samples: rust: add Rust I2C sample driver
->   rust: i2c: ACPI ID-table support for I2C abstractions
->   samples: rust: show ACPI ID-table in I2C sample driver
-> 
->  MAINTAINERS                     |   3 +
->  rust/bindings/bindings_helper.h |   1 +
->  rust/helpers/helpers.c          |   1 +
->  rust/helpers/i2c.c              |  15 ++
->  rust/kernel/i2c.rs              | 386 ++++++++++++++++++++++++++++++++
->  rust/kernel/lib.rs              |   2 +
->  samples/rust/Kconfig            |  11 +
->  samples/rust/Makefile           |   1 +
->  samples/rust/rust_driver_i2c.rs |  69 ++++++
->  9 files changed, 489 insertions(+)
->  create mode 100644 rust/helpers/i2c.c
->  create mode 100644 rust/kernel/i2c.rs
->  create mode 100644 samples/rust/rust_driver_i2c.rs
-> 
-> 
-> base-commit: 63dafeb392139b893a73b6331f347613f0929702
+I'll take a look.  Is there any thing related to this patchset?
+It'd be nice if we can land this first.
 
-Please ignore. Was sent by mistake.
+Thanks,
+Namhyung
 
-Thanks
-Igor
+> 
+> > ---
+> > v3)
+> >  * show warning when there's no source code
+> >
+> >  tools/perf/ui/browsers/annotate.c | 86 +++++++++++++++++++++++++++++--
+> >  tools/perf/util/annotate.c        |  2 +
+> >  tools/perf/util/annotate.h        |  1 +
+> >  tools/perf/util/disasm.c          |  7 +++
+> >  4 files changed, 93 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+> > index ab776b1ed2d5b4ba..183902dac042ecb0 100644
+> > --- a/tools/perf/ui/browsers/annotate.c
+> > +++ b/tools/perf/ui/browsers/annotate.c
+> > @@ -345,6 +345,23 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
+> >         browser->curr_hot = rb_last(&browser->entries);
+> >  }
+> >
+> > +static struct annotation_line *annotate_browser__find_new_asm_line(
+> > +                                       struct annotate_browser *browser,
+> > +                                       int idx_asm)
+> > +{
+> > +       struct annotation_line *al;
+> > +       struct list_head *head = browser->b.entries;
+> > +
+> > +       /* find an annotation line in the new list with the same idx_asm */
+> > +       list_for_each_entry(al, head, node) {
+> > +               if (al->idx_asm == idx_asm)
+> > +                       return al;
+> > +       }
+> > +
+> > +       /* There are no asm lines */
+> > +       return NULL;
+> > +}
+> > +
+> >  static struct annotation_line *annotate_browser__find_next_asm_line(
+> >                                         struct annotate_browser *browser,
+> >                                         struct annotation_line *al)
+> > @@ -368,7 +385,31 @@ static struct annotation_line *annotate_browser__find_next_asm_line(
+> >         return NULL;
+> >  }
+> >
+> > -static bool annotate_browser__toggle_source(struct annotate_browser *browser)
+> > +static bool annotation__has_source(struct annotation *notes)
+> > +{
+> > +       struct annotation_line *al;
+> > +       bool found_asm = false;
+> > +
+> > +       /* Let's skip the first non-asm lines which present regardless of source. */
+> > +       list_for_each_entry(al, &notes->src->source, node) {
+> > +               if (al->offset >= 0) {
+> > +                       found_asm = true;
+> > +                       break;
+> > +               }
+> > +       }
+> > +
+> > +       if (found_asm) {
+> > +               /* After assembly lines, any line without offset means source. */
+> > +               list_for_each_entry_continue(al, &notes->src->source, node) {
+> > +                       if (al->offset == -1)
+> > +                               return true;
+> > +               }
+> > +       }
+> > +       return false;
+> > +}
+> > +
+> > +static bool annotate_browser__toggle_source(struct annotate_browser *browser,
+> > +                                           struct evsel *evsel)
+> >  {
+> >         struct annotation *notes = browser__annotation(&browser->b);
+> >         struct annotation_line *al;
+> > @@ -377,6 +418,39 @@ static bool annotate_browser__toggle_source(struct annotate_browser *browser)
+> >         browser->b.seek(&browser->b, offset, SEEK_CUR);
+> >         al = list_entry(browser->b.top, struct annotation_line, node);
+> >
+> > +       if (!annotate_opts.annotate_src)
+> > +               annotate_opts.annotate_src = true;
+> > +
+> > +       /*
+> > +        * It's about to get source code annotation for the first time.
+> > +        * Drop the existing annotation_lines and get the new one with source.
+> > +        * And then move to the original line at the same asm index.
+> > +        */
+> > +       if (annotate_opts.hide_src_code && !notes->src->tried_source) {
+> > +               struct map_symbol *ms = browser->b.priv;
+> > +               int orig_idx_asm = al->idx_asm;
+> > +
+> > +               /* annotate again with source code info */
+> > +               annotate_opts.hide_src_code = false;
+> > +               annotated_source__purge(notes->src);
+> > +               symbol__annotate2(ms, evsel, &browser->arch);
+> > +               annotate_opts.hide_src_code = true;
+> > +
+> > +               /* should be after annotated_source__purge() */
+> > +               notes->src->tried_source = true;
+> > +
+> > +               if (!annotation__has_source(notes))
+> > +                       ui__warning("Annotation has no source code.");
+> > +
+> > +               browser->b.entries = &notes->src->source;
+> > +               al = annotate_browser__find_new_asm_line(browser, orig_idx_asm);
+> > +               if (unlikely(al == NULL)) {
+> > +                       al = list_first_entry(&notes->src->source,
+> > +                                             struct annotation_line, node);
+> > +               }
+> > +               browser->b.seek(&browser->b, al->idx_asm, SEEK_SET);
+> > +       }
+> > +
+> >         if (annotate_opts.hide_src_code) {
+> >                 if (al->idx_asm < offset)
+> >                         offset = al->idx;
+> > @@ -833,7 +907,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
+> >                         nd = browser->curr_hot;
+> >                         break;
+> >                 case 's':
+> > -                       if (annotate_browser__toggle_source(browser))
+> > +                       if (annotate_browser__toggle_source(browser, evsel))
+> >                                 ui_helpline__puts(help);
+> >                         annotate__scnprintf_title(hists, title, sizeof(title));
+> >                         annotate_browser__show(&browser->b, title, help);
+> > @@ -1011,6 +1085,12 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+> >                         ui__error("Couldn't annotate %s:\n%s", sym->name, msg);
+> >                         return -1;
+> >                 }
+> > +
+> > +               if (!annotate_opts.hide_src_code) {
+> > +                       notes->src->tried_source = true;
+> > +                       if (!annotation__has_source(notes))
+> > +                               ui__warning("Annotation has no source code.");
+> > +               }
+> >         }
+> >
+> >         ui_helpline__push("Press ESC to exit");
+> > @@ -1025,7 +1105,7 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+> >
+> >         ret = annotate_browser__run(&browser, evsel, hbt);
+> >
+> > -       if(not_annotated)
+> > +       if (not_annotated && !notes->src->tried_source)
+> >                 annotated_source__purge(notes->src);
+> >
+> >         return ret;
+> > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> > index 264a212b47df850c..0dd475a744b6dfac 100644
+> > --- a/tools/perf/util/annotate.c
+> > +++ b/tools/perf/util/annotate.c
+> > @@ -1451,6 +1451,7 @@ void annotated_source__purge(struct annotated_source *as)
+> >                 list_del_init(&al->node);
+> >                 disasm_line__free(disasm_line(al));
+> >         }
+> > +       as->tried_source = false;
+> >  }
+> >
+> >  static size_t disasm_line__fprintf(struct disasm_line *dl, FILE *fp)
+> > @@ -2280,6 +2281,7 @@ void annotation_options__init(void)
+> >         opt->annotate_src = true;
+> >         opt->offset_level = ANNOTATION__OFFSET_JUMP_TARGETS;
+> >         opt->percent_type = PERCENT_PERIOD_LOCAL;
+> > +       opt->hide_src_code = true;
+> >         opt->hide_src_code_on_title = true;
+> >  }
+> >
+> > diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> > index bbb89b32f398b3c9..8b5131d257b01e3e 100644
+> > --- a/tools/perf/util/annotate.h
+> > +++ b/tools/perf/util/annotate.h
+> > @@ -294,6 +294,7 @@ struct annotated_source {
+> >         int                     nr_entries;
+> >         int                     nr_asm_entries;
+> >         int                     max_jump_sources;
+> > +       bool                    tried_source;
+> >         u64                     start;
+> >         struct {
+> >                 u8              addr;
+> > diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> > index 8f0eb56c6fc66a96..ff475a239f4b0db4 100644
+> > --- a/tools/perf/util/disasm.c
+> > +++ b/tools/perf/util/disasm.c
+> > @@ -2284,6 +2284,13 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+> >                 }
+> >         }
+> >
+> > +       /* FIXME: LLVM and CAPSTONE should support source code */
+> > +       if (options->annotate_src && !options->hide_src_code) {
+> > +               err = symbol__disassemble_objdump(symfs_filename, sym, args);
+> > +               if (err == 0)
+> > +                       goto out_remove_tmp;
+> > +       }
+> > +
+> >         err = -1;
+> >         for (u8 i = 0; i < ARRAY_SIZE(options->disassemblers) && err != 0; i++) {
+> >                 enum perf_disassembler dis = options->disassemblers[i];
+> > --
+> > 2.50.0.727.gbf7dc18ff4-goog
+> >
