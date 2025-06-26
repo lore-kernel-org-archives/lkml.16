@@ -1,165 +1,235 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03111C84D6
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:36:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8083A2EAB7F;
+	Thu, 26 Jun 2025 14:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750948569; cv=none; b=Td5XwNcTLHKmVNMnuVatnoHT4LmS31QKICEPqj055QH6P2B3fmja1gTfBbJ+YtplHePfDgWMq3hfVGycEqsFQUyRLoTMidot9975adVnGljcHyMWB5ldf5oWVQja0hy3W3Hi/fwxGUuTk9Lk4+K+5e/1WHQbQ4GgZ9O0d5CkU1w=
+	t=1750948590; cv=none; b=fDzpImYc9j8rBxDOz9YYS89XNYlMw7h/rR/Q6VPrxtVP7eo27uPYqj3w7iJuHbQnkN6PI69CbZYADeOdXpnNzU3mShPIjY0Qd9h2nxGnlGGMsSB8LPnARMKyUG2b3+GTvWhrRk6nEsSqKSkaQSouGUWE3YnwkulnzxTeQb/ruRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750948569; c=relaxed/simple;
-	bh=yD+jwp3XvOuIN+FbHxjIKxsde2qvmEkhMOFeyRmm4vo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mmaE8/XqfwRBInao6Fy4d6NDa/u6ip8w824IZhsPEtAfhJM8DcBMCtZiWKDt6iREVroZrj7YDsMlZhg9NwT+l1wzX665CzGIS57fNziS0BZllTM0onhP0ejlKIRCaS8TQajRm+ZQfxXxO6Q6IoqliH7OlSLRsgshC7wKNS1h5uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FXaCLjI+; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1750948590; c=relaxed/simple;
+	bh=4MiqkkriQBlV+nEZU4vsU82B47r4lAT7W5HOK1FQACY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fsWLIaOVyI6tHeT74YJbWgNRsunbcmrcrHAg7XtDnDnsyZ4GUDPNAgNTjSevmyyxGmxSFLDWBfDi9D/FlYw1vNsZ44A982toqmXwAMawTGvGWBmnIxsdA9coRYY7vBuKd2Jea8xeel2g6PHjRDEF9hMVd31krOjAEJm7FS+Uzmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FOCDYFei; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FXaCLjI+"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2360ff7ac1bso9277855ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:36:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FOCDYFei"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60867565fb5so1749293a12.3;
+        Thu, 26 Jun 2025 07:36:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750948566; x=1751553366; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cwfCb3HStzLYNemG0jhj9xtMv8KEqGsstQp467/a7+Q=;
-        b=FXaCLjI+oEOSPPDoiDuKPCrjIXfzGsUgYBcNY6Lfkboanek2aaGumUDVtULfGFcnA+
-         VWJD6uykdsglJXrvOO7s0ijzdKjg+bo3q7MldZjkjFyF7FaCgGEthrF+KMeaQ5mzE4kA
-         Jy9MxR42vj6IB86HFmRUlKNs4HKRITYPXQfSM04pwCJ3OglS7QqqcmsXfgm88C6Vb3M0
-         XgEV/ELbizq30ywqcPNTLSnQ3BsyrBPoNzlf0vZGfJZDGvyviNxnJMVpDGDGxveEx2G0
-         YQedV3fdoTW3JmQn9XdsX2DROgUqfad8VMaQq9eK4lDy7gWEEJZrNGhAl+PYY8KeOPB+
-         oYEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750948566; x=1751553366;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1750948587; x=1751553387; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cwfCb3HStzLYNemG0jhj9xtMv8KEqGsstQp467/a7+Q=;
-        b=YWaTwVbmEK4kpjxhmMTVuBEsWynRMlgyWwesZB+ncuzOrlwmQLyPLDLH9JPe2fJICz
-         5XthED0Ib+vOUZH3rGbh4HG4LlEtuFWGPNzIQt+qugohb5b3NeHkrgx+4prTRVzJr3CJ
-         VskilYR16cRg9CG+OAI1T6FeU08NrXOtqvWGj6zsqBd878HI+5VkU7A6G9yynrIzVSbh
-         mLI6YxcsgDzOIAV1FZv2QeoWEv/jGkEEIDTHkICo7QWW0tjXwnqKKDeIa/oYGcYlwASK
-         VkSRExc92TyMdOXqmH9EDAQZNmYAmQ+Zeic8ze2TddimfgsiTPtBPiQLnT1qUd2/kbuV
-         kQ2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXhoH/QXwYVPKXqvELv1KYoE+/QvmnOUmDKznOF1Tt2er1dBj6wytbinuyDIPAdMcFvGqcaaeLw3wb89Rc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwT/d/kL1hrRp4tyEnG9Kc1ZyFO/GwPAMLCHa81gkhHCZC6w1V3
-	dyrORHHjEibdYwY5lIt73zY2LS6qdkIkIgEPaWJTOujka3aAbu5UQKyG
-X-Gm-Gg: ASbGncuiLT6NA3BU23/VvI8M2ku+aupTRvpBjnLFioJ1cvqijK1AQC4fAfCkZXtNvYC
-	ijpV62GbbGI2ySAptt5G1LxAOck+ylhTewVt4hB64J0YRZi8kmXbzldBPNGBARYu0v4PGB1fK55
-	HIppAcIiuabSSaPapnOyIU7Sf0PTofHi3u4Aspc4WMxUPR9mbQSvQJPg5c6AjCJm8kzJ5KzPRkN
-	JIqy0eVRfFxVpSSGTCyhMGdDW4E6H+BgLRrHCqMqbmmrddY2IxC6UuOXV12J/k0KDMkgkrgmD1/
-	88SWe3CvSpPwucwW19fXurkLK2gvf7c6C1YICYXaAB+5e7E5D5vv3eYv324P1w==
-X-Google-Smtp-Source: AGHT+IEVyDPp9k80VDuUCrLNKQmlEtSXfoludbY3B58xoY26SFn1xly7MqN+BYr/f4jui/IQUVyb7A==
-X-Received: by 2002:a17:902:d584:b0:236:7333:f183 with SMTP id d9443c01a7336-238c8741569mr50043525ad.19.1750948565864;
-        Thu, 26 Jun 2025 07:36:05 -0700 (PDT)
-Received: from localhost ([216.228.127.131])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23abe329bf2sm38555ad.64.2025.06.26.07.36.04
+        bh=zeiWsIBvFrWgna5yEgaH/IXXNiu0EY7mLCIeHhCpakg=;
+        b=FOCDYFeiZhefQODLQCtaaLm436uBG20J3Z/7wmU7MnIQmi7qKETw9Y7D2nS9PQneVM
+         zunyhN8fMFKH5AOSKOx9OvKfXcA6N+rEpYvn5EoAR/47D0whkGNbHjOUBm7bBLUnWtIw
+         miQcDGnzmrzZo0CVqbRVNXPhU6zP4MBYEc3bkm9/L7EFzEiGwpWohifbiYze/QToL1w5
+         saaFMTM5/VKFF2CMH8LyGzfTlX/zOdz7BN14MGlLVf/M2CKOPKcP8+IlYH6rXW+PJ+Ii
+         0EqDsYMY8DorBhZU76Pq21T7WfluJMvJ26z9kcRuEClxetLiYEP52EjpJBiohvU2jEsD
+         jc9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750948587; x=1751553387;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zeiWsIBvFrWgna5yEgaH/IXXNiu0EY7mLCIeHhCpakg=;
+        b=Df5lUr+Owknh1/8PuNOHRJO4hN+DsQfMrxjg8I+KLW5jGh/k5gojKhduUNSxu963cf
+         YYHsJ4eg7X3Klz74310MkUGQ3gHF66Nr2+HJX1gWeq66CNr21wRbCvMlpJlBoDyN0jjV
+         x7y9ahwYX+E1/5PAXBuHcf55o8O2gKOEVBdymhh4Zy2px5TIldr5sxna9dky/hu7QmAn
+         v8PwErS4neZNLJutFgnn08bGCJ1WOm4gkqtS+u/9uc/VSn90S1xwFDnFSqp668Q/gsJl
+         rp8sgBZdU4mwhRDAToKg8RzwIEG/vtPifc4i3dnYWKjxmWB7yNjki7qURfI+VZBXhQ65
+         tgwA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkz3KzreGQ0XXpHl71Mqq8XiCHnacp4AQ9PTbsOy83U1E3mqcZgNevTB5UPuAXCE+JWD0YkPQNobDyj965@vger.kernel.org, AJvYcCW5/GaLcCfVAugc3u/iY4AHSM4qwk5EYP6gpi2f+ZtRg5F68SZtW3/tL/6fwrDnuyZSrYWkyBE5tZe+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwX+Y7IO8/UKaFhV6bGwPj8iAPxzn4q5sHr6CtF9x0Fj1on+hkz
+	eeQnRQt5kjeX72Rvb+8V7HMkIEIWbP++yGdvhP6F5WUuKymY0TiJOPWh
+X-Gm-Gg: ASbGnctR9JbNhaNneoC1JR3Fv/n+k0tqqjoDYgTWtn3xgra8yKVYLbkQbqJhflvkP9V
+	b24sf0dj/nWrGFRoHE9QMaWlHa0bXZkG2fOoCUZCEL0FcHq6z1P3AvY0smDSkgkMf5rUwrv2ieH
+	USkNoyrwUR8SdU6OZ4S1PL0AhlEEJYzEGTU99blAzyOv3hFL/H+CJPI1pg/jMrc4oCzpOQnTX8M
+	jGSnm4YaDS0Z9BuRuHbFAOOLXNZcEpcBDuxxCyRO6p0ZNKn3a9oSvPJs5p/TngP5FBwdCDFR0yH
+	1QzgyTDhB/H5Iobq0B0A4THzmMrZTKAnGFjB3wM87w2aeb2SY0GNrpk5BlVORsXxi+ILSAwZQhK
+	lrHsGIv7enXDN
+X-Google-Smtp-Source: AGHT+IGBfj0HisJC5Hs7wbCAlRtLKFU3fvp+QXCNcRi1xOH0OF9hMH/GCsxQFG5ls3pbZPdGawEVYA==
+X-Received: by 2002:a17:906:f581:b0:ade:43e8:8fa4 with SMTP id a640c23a62f3a-ae0bec4e39cmr782595366b.18.1750948586462;
+        Thu, 26 Jun 2025 07:36:26 -0700 (PDT)
+Received: from localhost.localdomain ([176.227.88.86])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae2143da38fsm7884666b.78.2025.06.26.07.36.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 07:36:05 -0700 (PDT)
-Date: Thu, 26 Jun 2025 10:36:03 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Cheng Yu <serein.chengyu@huawei.com>
-Cc: linux@rasmusvillemoes.dk, akpm@linux-foundation.org, travis@sgi.com,
-	linux-kernel@vger.kernel.org, zhangqiao22@huawei.com,
-	tanghui20@huawei.com, chenweilong@huawei.com,
-	judy.chenhui@huawei.com, chenjun102@huawei.com
-Subject: Re: [PATCH] bitmap-str: Limit the size of ulen in
- bitmap_parselist_user()
-Message-ID: <aF1a0w2scIR8zRnQ@yury>
-References: <20250626121903.3086789-1-serein.chengyu@huawei.com>
+        Thu, 26 Jun 2025 07:36:25 -0700 (PDT)
+From: muhammed.efecetin.67@gmail.com
+To: neil.armstrong@linaro.org
+Cc: daniel.lezcano@linaro.org,
+	devicetree@vger.kernel.org,
+	efectn@protonmail.com,
+	heiko@sntech.de,
+	krzysztof.kozlowski+dt@linaro.org,
+	lee@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	muhammed.efecetin.67@gmail.com,
+	rafael@kernel.org,
+	robh+dt@kernel.org
+Subject: Re: [PATCH 4/5] thermal: khadas_mcu_fan: add support for Khadas Edge 2
+Date: Thu, 26 Jun 2025 17:36:07 +0300
+Message-ID: <20250626143607.1423954-1-muhammed.efecetin.67@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <09af27e2-34a7-4cda-b36c-5577829cc173@linaro.org>
+References: <09af27e2-34a7-4cda-b36c-5577829cc173@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626121903.3086789-1-serein.chengyu@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 26, 2025 at 08:19:03PM +0800, Cheng Yu wrote:
-> Wu randomly sets the smp_affinity_list of the specified irq through a
+On 6/26/25 17:11, neil.armstrong@linaro.org wrote:
+> On 26/06/2025 16:04, muhammed.efecetin.67@gmail.com wrote:
+>> From: Muhammed Efe Cetin <efectn@protonmail.com>
+>>
+>> Fan control on the Khadas Edge 2 is controlled with the 0x8A register,
+>> using percentage values from 0 to 100, whereas there are only 3 constant steps in previous Khadas boards.
+>> Therefore, i added a new cooling-levels property, similar to the one used in the pwm-fan driver.
+>> The original behavior can still be used when the cooling-levels property is not specified,
+>> ensuring that the new functionality does not break old boards. 
+>
+> Thanks for the explanation, but would would you like to change that ? The MCU can accept
+> any value between 0 and 99, so why change the levels from DT ?
+>
+> Neil
 
-Is this Wu a type of fuzzer, or a person? We don't put persons names
-in commit messages, other than in tags section.
+Thanks for the review. Therefore, you say just add values between 0-100 to cooling-device instead of remapping them using cooling-levels property?
 
-> code on the linux-5.10.y kernel:
->     ================================
->     ...
->     memcpy((void*)0x20000080, "/proc/irq/18/smp_affinity_list", 30);
->     res = syscall(__NR_openat, /*fd=*/0xffffffffffffff9cul,
->                   /*file=*/0x20000080ul, /*flags=*/1ul, /*mode=*/0ul);
->     r[0] = res;
->     ...
->     syscall(__NR_write, /*fd=*/r[0], /*arg=*/0x20002100ul,
->             /*len=*/0xfffffdfeul);
->     ...
->     ================================
-> 
-> Warning will be triggered and the call trace is as follows:
+What would be the best practise of detecting whether the board is Khadas Edge 2? Adding new bool property, reading model propety from devicetree etc.
 
-So, can you show the warning itself?
+Best regards.
 
-> [   69.732366] Call Trace:
-> [   69.732373]  ? show_trace_log_lvl+0x1c1/0x2d9
-> [   69.732374]  ? show_trace_log_lvl+0x1c1/0x2d9
-> [   69.732379]  ? kmalloc_order+0x28/0xf0
-> [   69.732389]  ? __alloc_pages_nodemask+0x287/0x300
-> [   69.732393]  ? __warn+0x80/0x100
-> [   69.732394]  ? __alloc_pages_nodemask+0x287/0x300
-> [   69.732397]  ? report_bug+0x9e/0xc0
-> [   69.732400]  ? handle_bug+0x41/0x90
-> [   69.732402]  ? exc_invalid_op+0x14/0x70
-> [   69.732403]  ? asm_exc_invalid_op+0x12/0x20
-> [   69.732405]  ? __alloc_pages_nodemask+0x287/0x300
-> [   69.732407]  ? bitmap_parselist+0x120/0x120
-> [   69.732409]  kmalloc_order+0x28/0xf0
-> [   69.732410]  kmalloc_order_trace+0x19/0x90
-> [   69.732414]  memdup_user_nul+0x22/0xa0
-> [   69.732415]  bitmap_parselist_user+0x35/0x80
-> [   69.732419]  write_irq_affinity.constprop.0.isra.0+0xb9/0x110
-> [   69.732422]  proc_reg_write+0x4e/0x90
-> [   69.732425]  vfs_write+0xbf/0x290
-> [   69.732426]  ksys_write+0x5f/0xe0
-> [   69.732428]  do_syscall_64+0x30/0x40
-> [   69.732430]  entry_SYSCALL_64_after_hwframe+0x67/0xd1
-> 
-> It is due to the lack of a check for the maximum value of ulen in
-> bitmap_parselist_user().
-> 
-> Fixes: 4b060420a596 ("bitmap, irq: add smp_affinity_list interface to /proc/irq")
-> Signed-off-by: Cheng Yu <serein.chengyu@huawei.com>
-> Signed-off-by: Wu Guanghao <wuguanghao3@huawei.com>
-> ---
->  lib/bitmap-str.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/lib/bitmap-str.c b/lib/bitmap-str.c
-> index be745209507a..0b5d9ffe20c6 100644
-> --- a/lib/bitmap-str.c
-> +++ b/lib/bitmap-str.c
-> @@ -419,6 +419,9 @@ int bitmap_parselist_user(const char __user *ubuf,
->  	char *buf;
->  	int ret;
->  
-> +	if (ulen > PAGE_SIZE)
-> +		return -ENOMEM;
+>
+>>
+>> Signed-off-by: Muhammed Efe Cetin <efectn@protonmail.com>
+>> ---
+>>   drivers/thermal/khadas_mcu_fan.c | 76 ++++++++++++++++++++++++++++++--
+>>   1 file changed, 72 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/thermal/khadas_mcu_fan.c b/drivers/thermal/khadas_mcu_fan.c
+>> index d35e5313b..504e7d254 100644
+>> --- a/drivers/thermal/khadas_mcu_fan.c
+>> +++ b/drivers/thermal/khadas_mcu_fan.c
+>> @@ -15,10 +15,16 @@
+>>   #include <linux/thermal.h>
+>>     #define MAX_LEVEL 3
+>> +#define MAX_SPEED 0x64
+>>     struct khadas_mcu_fan_ctx {
+>>       struct khadas_mcu *mcu;
+>>       unsigned int level;
+>> +
+>> +    unsigned int fan_max_level;
+>> +    unsigned int fan_register;
+>> +    unsigned int *fan_cooling_levels;
+>> +
+>>       struct thermal_cooling_device *cdev;
+>>   };
+>>   @@ -26,9 +32,21 @@ static int khadas_mcu_fan_set_level(struct khadas_mcu_fan_ctx *ctx,
+>>                       unsigned int level)
+>>   {
+>>       int ret;
+>> +    unsigned int write_level = level;
+>> +
+>> +    if (level > ctx->fan_max_level)
+>> +        return -EINVAL;
+>> +
+>> +    if (ctx->fan_cooling_levels != NULL) {
+>> +        write_level = ctx->fan_cooling_levels[level];
+>> +
+>> +        if (write_level > MAX_SPEED)
+>> +            return -EINVAL;
+>> +    }
+>> +
+>> +    ret = regmap_write(ctx->mcu->regmap, ctx->fan_register,
+>> +               write_level);
+>>   -    ret = regmap_write(ctx->mcu->regmap, KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG,
+>> -               level);
+>>       if (ret)
+>>           return ret;
+>>   @@ -40,7 +58,9 @@ static int khadas_mcu_fan_set_level(struct khadas_mcu_fan_ctx *ctx,
+>>   static int khadas_mcu_fan_get_max_state(struct thermal_cooling_device *cdev,
+>>                       unsigned long *state)
+>>   {
+>> -    *state = MAX_LEVEL;
+>> +    struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
+>> +
+>> +    *state = ctx->fan_max_level;
+>>         return 0;
+>>   }
+>> @@ -61,7 +81,7 @@ khadas_mcu_fan_set_cur_state(struct thermal_cooling_device *cdev,
+>>   {
+>>       struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
+>>   -    if (state > MAX_LEVEL)
+>> +    if (state > ctx->fan_max_level)
+>>           return -EINVAL;
+>>         if (state == ctx->level)
+>> @@ -76,6 +96,47 @@ static const struct thermal_cooling_device_ops khadas_mcu_fan_cooling_ops = {
+>>       .set_cur_state = khadas_mcu_fan_set_cur_state,
+>>   };
+>>   +static int khadas_mcu_fan_get_cooling_data_edge2(struct khadas_mcu_fan_ctx *ctx, struct device *dev)
+>> +{
+>> +    struct device_node *np = ctx->mcu->dev->of_node;
+>> +    int num, i, ret;
+>> +
+>> +    if (!of_property_present(np, "cooling-levels"))
+>> +        return 0;
+>> +
+>> +    ret = of_property_count_u32_elems(np, "cooling-levels");
+>> +    if (ret <= 0) {
+>> +        dev_err(dev, "Wrong data!\n");
+>> +        return ret ? : -EINVAL;
+>> +    }
+>> +
+>> +    num = ret;
+>> +    ctx->fan_cooling_levels = devm_kcalloc(dev, num, sizeof(u32),
+>> +                           GFP_KERNEL);
+>> +    if (!ctx->fan_cooling_levels)
+>> +        return -ENOMEM;
+>> +
+>> +    ret = of_property_read_u32_array(np, "cooling-levels",
+>> +                     ctx->fan_cooling_levels, num);
+>> +    if (ret) {
+>> +        dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
+>> +        return ret;
+>> +    }
+>> +
+>> +    for (i = 0; i < num; i++) {
+>> +        if (ctx->fan_cooling_levels[i] > MAX_SPEED) {
+>> +            dev_err(dev, "MCU fan state[%d]:%d > %d\n", i,
+>> +                ctx->fan_cooling_levels[i], MAX_SPEED);
+>> +            return -EINVAL;
+>> +        }
+>> +    }
+>> +
+>> +    ctx->fan_max_level = num - 1;
+>> +    ctx->fan_register = KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG_V2;
+>> +
+>> +    return 0;
+>> +}
+>> +
+>>   static int khadas_mcu_fan_probe(struct platform_device *pdev)
+>>   {
+>>       struct khadas_mcu *mcu = dev_get_drvdata(pdev->dev.parent);
+>> @@ -90,6 +151,13 @@ static int khadas_mcu_fan_probe(struct platform_device *pdev)
+>>       ctx->mcu = mcu;
+>>       platform_set_drvdata(pdev, ctx);
+>>   +    ctx->fan_max_level = MAX_LEVEL;
+>> +    ctx->fan_register = KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG;
+>> +
+>> +    ret = khadas_mcu_fan_get_cooling_data_edge2(ctx, dev);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>>       cdev = devm_thermal_of_cooling_device_register(dev->parent,
+>>               dev->parent->of_node, "khadas-mcu-fan", ctx,
+>>               &khadas_mcu_fan_cooling_ops); 
+>
 
-This is wrong. A valid cpulist can easily overflow the PAGE_SIZE
-limit, see the CPULIST_FILE_MAX_BYTES() macro.
-
-From general perspective, passing huge cpulists is not restricted now,
-and what you're proposing here is the change of UAPI. I generally
-agree that kernel should reject sizes like '(unsigned)-EINVAL', but the
-change should be broadly discussed and documented.
-
-Currently we don't reject huge sizes because users' scrips may
-concatenate cpulists from different sources, and we theoretically may
-end up with something like [0-1,3-4] x 1000 times, and it's a valid
-pattern.
-
->  	buf = memdup_user_nul(ubuf, ulen);
->  	if (IS_ERR(buf))
->  		return PTR_ERR(buf);
-> -- 
-> 2.25.1
