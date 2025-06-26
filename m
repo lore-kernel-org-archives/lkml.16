@@ -1,35 +1,54 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62A1A295DAA;
-	Thu, 26 Jun 2025 09:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FE22264C3;
+	Thu, 26 Jun 2025 09:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750930249; cv=none; b=hqc8JfDcqQgehuS3XTH4RW2oLrdpxYlbz1R8Q+Z+ifcltWFuwTUADUg/B3N33NbjnbtePrPM8IblbEpq8FrOZZxcjoRWbUO16DcCMWWk+OnESLPdRZQruIHARDpI/p+m0S0lnobkiTojmM70ldqm3ZZ2tbkFNiJ37EhIJlZuyTQ=
+	t=1750930248; cv=none; b=MWHvNRJGRaVSkPUGDyMk1ZTDJOIV0gBxev1vWC77hzndOSsCHTbN0zDEFNs/J7RtaZWGrjSe54NUh+7wlakNPceyNM8ryTBUuTYm+7Y1S0ciy03EYutc/RnFMENps1UYmDOiefyev/ugRerikXmbAE1bDvRtvwa6GgOI8NaUq3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750930249; c=relaxed/simple;
-	bh=3s6usKiJD5sKkUXuZnQU8k249aZMs0i8lS5Xo2pslDQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DO+HSkwigcA+mDozpr2X6+lvkC3/NTbG7AMR4IA1pom4HhwFd2debcUTIoG2F5mwIvDmzLiIMfwvafNnCvTS4X0iS4QCMPxJWi14LuACSX/RwPYeoO3a7tgpQgv+OAQbpJwkH+X52QkzxR2GfRNQA7iDqJChq8kHHOrsBklqdzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FFDB1063;
-	Thu, 26 Jun 2025 02:30:28 -0700 (PDT)
-Received: from e125579.fritz.box (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 71B823F63F;
-	Thu, 26 Jun 2025 02:30:44 -0700 (PDT)
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Christian Loehle <christian.loehle@arm.com>
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Robin Murphy <robin.murphy@arm.com>,
-	Beata Michalska <beata.michalska@arm.com>,
-	zhenglifeng1@huawei.com
-Subject: [RFC PATCH] cpufreq,base/arch_topology: Calculate cpu_capacity according to boost
-Date: Thu, 26 Jun 2025 11:30:18 +0200
-Message-Id: <20250626093018.106265-1-dietmar.eggemann@arm.com>
+	s=arc-20240116; t=1750930248; c=relaxed/simple;
+	bh=IlkNMzux1bdmIAPi2kGZMq826sbYkBUtao2A2Cu2dyg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jm3U8BuosNJE4GS2HEono+j4QOikshVPCZgA387QTWNiOQNJXRHcfjJBh8LXx0c4WCoKfx9j1P2CBIFnfzGRjVVr6hzeFJa/VZrVoHpIvBv+lQJEyYW4OEWWev73upM0vNw4TSMCCq8mJXGfsKpEj6HNxhB81rocOO1xcD5XJvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cp1a70XI; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cp1a70XI"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q0EDtk014499;
+	Thu, 26 Jun 2025 09:30:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=+8ZFQIryNLDWfo2NkMJE/R
+	C9YVC5xe0Yms/pvV0HVSs=; b=cp1a70XIjAjlk71phocySKzDzPRObUThtKBEcR
+	6xXbsXZqidpP/9CVkwFGOKzP97rfaPfcG/XsJRhMHWOAuVDtDHZPu2eJL96xBNP3
+	nc3S3E3Le8O7DNbKDcgd4DddDCz93c26A/Jz8ZjSO5vtHqKk/S7e9mCeLac+Eg9U
+	a+O9gQS5gZdO24SuXN9a20APJQsM1zkhD+C1uLKNP85Z4nFxR52XfZiQm8c9iv90
+	w24va34TDgWWZuXxwp0HeRdfP3yqwGec/joH8+rx9OmEmiUwntMigApvXula6i0J
+	EEELdOf8g5H6VFu1teqKrJDqjOGlxwqdfaDW8ZyeYwIyuqiw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f3bgjt0e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 09:30:43 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55Q9Ugvs010132
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 09:30:42 GMT
+Received: from hu-lxu5-sha.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 26 Jun 2025 02:30:11 -0700
+From: Ling Xu <quic_lxu5@quicinc.com>
+To: <cros-qcom-dts-watchers@chromium.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>
+CC: <quic_kuiw@quicinc.com>, <ekansh.gupta@oss.qualcomm.com>,
+        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Ling Xu <quic_lxu5@quicinc.com>
+Subject: [PATCH v3 0/2] arm64: dts: qcom: sc7280: Add property for sc7280
+Date: Thu, 26 Jun 2025 14:59:50 +0530
+Message-ID: <20250626092952.847393-1-quic_lxu5@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -38,144 +57,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: C2LI0kuCZwWmT940ErjJ_sA-oZBHyG0r
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA3OCBTYWx0ZWRfX9Qhcq7/DljAF
+ Mk/I02zkV76/mcPZRxfHVDtUL6LUPAfOEzZ56YFVOJxS+FNtHWZ7r1EsemMpNbiiunI9vn1FH5T
+ bSpqhikZNN6bSz/ufHSlfZJZxKVV1DYUOzNhraqcIEq9Mj7akflwO46cNWmnC2YjDP8z2e8qhDe
+ 3jpFRNoG7mJVD7GXhHxgHIC/6DDH/9WgDBIINWjOlaYBwYBHO29nQAl2JLcF+AGH9fgKOVuEjjs
+ 4uO2SznwUa6YPrhD+jBSZFhhFsuZUKd3pCOYFBd74YsVtJfPDbQOPdfr4f+FOalS0TSrM1OQdr5
+ rE+eaktUdfUNyB2bfL1c7lCVnXchotAvs3BHL9aoy4fInTVnGl9Nc/ATot67xFKGf2oAq7NDp5C
+ kSEsMAyflT1LM9zTStq/VgsNQeoonapQ78ty5zxqEns3j+OYjYRtKFk1cORvJCICHOvPbyoK
+X-Authority-Analysis: v=2.4 cv=L4kdQ/T8 c=1 sm=1 tr=0 ts=685d1343 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
+ a=nP9DjPefQNtmf87SolwA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: C2LI0kuCZwWmT940ErjJ_sA-oZBHyG0r
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_04,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1015 suspectscore=0
+ adultscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ spamscore=0 phishscore=0 mlxlogscore=364 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506260078
 
-I noticed on my Arm64 big.Little platform (Juno-r0, scmi-cpufreq) that
-the cpu_scale values (/sys/devices/system/cpu/cpu*/cpu_capacity) of the
-little CPU changed in v6.14 from 446 to 505. I bisected and found that
-commit dd016f379ebc ("cpufreq: Introduce a more generic way to set
-default per-policy boost flag") (1) introduced this change.
-Juno's scmi FW marks the 2 topmost OPPs of each CPUfreq policy (policy0:
-775000 850000, policy1: 950000 1100000) as boost OPPs.
+This patch series add memory region, nsessions and dma-coherent property
+for sc7280.
+Patch [v2]: https://lore.kernel.org/linux-arm-msm/20250516110029.1637270-1-quic_lxu5@quicinc.com/
 
-The reason is that the 'policy->boost_enabled = true' is now done after
-'cpufreq_table_validate_and_sort() -> cpufreq_frequency_table_cpuinfo()'
-in cpufreq_online() so that 'policy->cpuinfo.max_freq' is set to the
-'highest non-boost' instead of the 'highest boost' frequency.
+Changes in v3:
+  - Dropped dma-coherent change.
+  - Modified indentation.
+Changes in v2:
+  - Added compatible.
 
-This is before the CPUFREQ_CREATE_POLICY notifier is fired in
-cpufreq_online() to which the cpu_capacity setup code in
-[drivers/base/arch_topology.c] has registered.
+Ling Xu (2):
+  arm64: dts: qcom: sc7280: Add memory region for audiopd
+  arm64: dts: qcom: sc7280: Add nsessions property for adsp
 
-Its notifier_call init_cpu_capacity_callback() uses
-'policy->cpuinfo.max_freq' to set the per-cpu
-capacity_freq_ref so that the cpu_capacity can be calculated as:
+ arch/arm64/boot/dts/qcom/sc7280.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-cpu_capacity = raw_cpu_capacity (2) * capacity_freq_ref /
-				      'max system-wide cpu frequency'
-
-(2) Juno's little CPU has 'capacity-dmips-mhz = <578>'.
-
-So before (1) for a little CPU:
-
-cpu_capacity = 578 * 850000 / 1100000 = 446
-
-and after:
-
-cpu_capacity = 578 * 700000 / 800000 = 505
-
-This issue can also be seen on Arm64 boards with cpufreq-dt drivers
-using the 'turbo-mode' dt property for boosted OPPs.
-
-What's actually needed IMHO is to calculate cpu_capacity according to
-the boost value. I.e.:
-
-(a) The infrastructure to adjust cpu_capacity in arch_topology.c has to
-    be kept alive after boot.
-
-(b) There has to be some kind of notification from cpufreq.c to
-    arch_topology.c about the toggling of boost. I'm abusing
-    CPUFREQ_CREATE_POLICY for this right now. Could we perhaps add a
-    CPUFREQ_MOD_POLICY for this?
-
-(c) Allow unconditional set of policy->cpuinfo.max_freq in case boost
-    is set to 0 in cpufreq_frequency_table_cpuinfo().
-    This currently clashes with the commented feature that in case the
-    driver has set a higher value it should stay untouched.
-
-Tested on Arm64 Juno (scmi-cpufreq) and Hikey 960 (cpufreq-dt +
-added 'turbo-mode' to the topmost OPPs in dts file).
-
-This is probably related what Christian Loehle tried to address in
-https://lkml.kernel.org/r/3cc5b83b-f81c-4bd7-b7ff-4d02db4e25d8@arm.com .
-
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
----
- drivers/base/arch_topology.c | 11 -----------
- drivers/cpufreq/cpufreq.c    |  3 +++
- drivers/cpufreq/freq_table.c |  8 +-------
- 3 files changed, 4 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 1c3221ff1d1f..0a3916dc9644 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -378,8 +378,6 @@ void acpi_processor_init_invariance_cppc(void)
- 
- #ifdef CONFIG_CPU_FREQ
- static cpumask_var_t cpus_to_visit;
--static void parsing_done_workfn(struct work_struct *work);
--static DECLARE_WORK(parsing_done_work, parsing_done_workfn);
- 
- static int
- init_cpu_capacity_callback(struct notifier_block *nb,
-@@ -408,10 +406,8 @@ init_cpu_capacity_callback(struct notifier_block *nb,
- 		if (raw_capacity) {
- 			topology_normalize_cpu_scale();
- 			schedule_work(&update_topology_flags_work);
--			free_raw_capacity();
- 		}
- 		pr_debug("cpu_capacity: parsing done\n");
--		schedule_work(&parsing_done_work);
- 	}
- 
- 	return 0;
-@@ -447,13 +443,6 @@ static int __init register_cpufreq_notifier(void)
- }
- core_initcall(register_cpufreq_notifier);
- 
--static void parsing_done_workfn(struct work_struct *work)
--{
--	cpufreq_unregister_notifier(&init_cpu_capacity_notifier,
--					 CPUFREQ_POLICY_NOTIFIER);
--	free_cpumask_var(cpus_to_visit);
--}
--
- #else
- core_initcall(free_raw_capacity);
- #endif
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index d7426e1d8bdd..6fdfcb6815d7 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2798,6 +2798,9 @@ int cpufreq_boost_set_sw(struct cpufreq_policy *policy, int state)
- 		return ret;
- 	}
- 
-+	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
-+				     CPUFREQ_CREATE_POLICY, policy);
-+
- 	ret = freq_qos_update_request(policy->max_freq_req, policy->max);
- 	if (ret < 0)
- 		return ret;
-diff --git a/drivers/cpufreq/freq_table.c b/drivers/cpufreq/freq_table.c
-index 35de513af6c9..06068a12ec53 100644
---- a/drivers/cpufreq/freq_table.c
-+++ b/drivers/cpufreq/freq_table.c
-@@ -51,13 +51,7 @@ int cpufreq_frequency_table_cpuinfo(struct cpufreq_policy *policy,
- 	}
- 
- 	policy->min = policy->cpuinfo.min_freq = min_freq;
--	policy->max = max_freq;
--	/*
--	 * If the driver has set its own cpuinfo.max_freq above max_freq, leave
--	 * it as is.
--	 */
--	if (policy->cpuinfo.max_freq < max_freq)
--		policy->max = policy->cpuinfo.max_freq = max_freq;
-+	policy->max = policy->cpuinfo.max_freq = max_freq;
- 
- 	if (policy->min == ~0)
- 		return -EINVAL;
 -- 
 2.34.1
 
