@@ -1,251 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12322397A4;
-	Thu, 26 Jun 2025 22:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750976475; cv=fail; b=lprKWQxsqF5xbi4cgxa6Rp8trQCv8oEUomAbbpDGwiiPl2JCOmVlRluG7L9w3HOG3RP8EaviQY+i1OAi7YTIx+FwNw4w2Ioe6B+Z6hveU3Dr72EjUde8xBLcYPG5TiV8MqSTXNItfQrtzpapbEcl814CgIMiYWcduLkE533G1Qo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750976475; c=relaxed/simple;
-	bh=kFm8li7lOmEvi9OoVEn45GQhWfDkrMJw4vQVep01l38=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=jvhTP9ynk24rkYIuQo1Zal8EtepdKsqdfwgv3iHe90foljfxuqlCdFppGFb27ZiIlPErAcrvRazd8lOV5seDQPyirdZJtuVh1DiQLrgHuoMauy2mgQSahCJbHd9mJy/STsxuTK7OGBP/UE3XzJ3JuK89xrJCvWzlyxJwDn8Deb0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m27d+Ujq; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C3C2185AC;
+	Thu, 26 Jun 2025 22:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750976498; cv=none; b=jJzS73F9Rt2O3l2J4tN6+HaVav7clkwYM1ZPhXzs49PhvPGbiDGlOLdm3gLE+DSL/25WabwY5WGg9/3cKMlcfpjAVUZwqpu8OpM3JEoquUmIcmNaHfukxGy4vp5qNg2cVZbHatqdGnWbyvT87AScF2KMQT1VxCQorRrkXp8h+pA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750976498; c=relaxed/simple;
+	bh=S4MQ+wCspDRAXFvPxNkjxgXfaczwIPQ46HAjeRIjCq4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TFyViSp40makklYOZuQtOVkhJGpdrxTtjFJLoQBYlglvkypDP9zZbrmhaNLWRn/DmVxag79QtKiC74LZXRen/XmuvRf0mDPanREgLw5Nax4S9s1YDXn8eiLyJptqXNKvK3+u70jwkZy/zN1xUjJWKXGtsgyBLJj/nXTtumVkZFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTrt4WkV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m27d+Ujq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750976474; x=1782512474;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=kFm8li7lOmEvi9OoVEn45GQhWfDkrMJw4vQVep01l38=;
-  b=m27d+Ujq43ZTKRi8CDsg8ndnaJQQJlo7qqbp7h4Lkgb7yZtpeBuQ4CSe
-   cwEdbcyaXfFu3tvFPgF3KtaayO5hdRujUiIBfvU72GlYS5HeIM1YNU4zb
-   gg7ksSNrHRDFsMuwLgJWdJjdheoCvcVEdk7GyffmBuqh0QwWLcCqxg9cq
-   Yp+uCS7Xdkw6A68Nqy6snoTPvmKhZExDuZhQkSqvkcSn34igurFlJFo90
-   M94Fqf74LschFJRwbj4VPcl2fEHCZNG10kXWKzZdu32mGKiidjjxZk4pY
-   RVqMv/+rd7gJBMpQV97ix57AyxgWBUCbIr9iwUTGz/9rBKDCVJM0ueztD
-   g==;
-X-CSE-ConnectionGUID: Wr5AITziSNqz06l58r55aA==
-X-CSE-MsgGUID: thuMFoDSQme2+xz9USKQcA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="55909562"
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="55909562"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 15:21:13 -0700
-X-CSE-ConnectionGUID: TuFXMBjxQOeQYDV3CR6wpg==
-X-CSE-MsgGUID: MG667vTFRqWqyk2tYrLqLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="153141024"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 15:21:13 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 26 Jun 2025 15:21:12 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 26 Jun 2025 15:21:12 -0700
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (40.107.95.83) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 26 Jun 2025 15:21:11 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wOyUgorcngO/b+nk+x8a+0y3sKqfib2Z7l3vEFpWwDCBx6JvEpyc8Gr34RDaPgE+7ZjYc43CkmgCzZt/1Mahso3gwdh+9xXS0FsCzinq2tLlEfufiUH/quxkbkxQoAU5P0UK9KwOrJCfykar2RJt6fKEFTJkneu78eCPmo9xhGDV6RTJW9uEfkPt3zWYn0K9S07kuG+9jTtm9d/eTrrU4e59tkEUXgWvkJnDcY83hFJRIL7voPJwwHzZPO42SEWp/qdxu4vIeEIeVuQJLdycn2/J4mx8UxKmBtEAOh3KF7ptsTe2u95/vfzo/qf7NGINLgqkERbZIP++HBlkqL1TQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kFm8li7lOmEvi9OoVEn45GQhWfDkrMJw4vQVep01l38=;
- b=p9Gh0JPKnlRgevrbT8K43uVZf3oz8PLhps9mqkDda83z1RYLPBwtizSpH1hTspRN547B1cZoh6u4IH8OnCWuQqYWgbHqPp0SEZ2eTKp1tRjfgGl5yGrMCcHv9GOjnrz/6Zv4Z7Jqtp3Nf1Hc62/oz6XB+mvvZzBiec+81Aj+fJDftZONq5U43bOsdUUzu0CduUvM8iKsy0QPGaKl05BwD3uSSl/5ixy+N3tKC/2oaPQpGkDA00cIiUczH+EFi+3ovGjaRawcRVDtzNz2qlh5bmDc/npmiiAOkc/6mqEphGvJYSm4hEycFHI8a4QWoLnnhGUbbXSbSBtLIPyR5Y5GXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL1PR11MB5525.namprd11.prod.outlook.com (2603:10b6:208:31f::10)
- by LV8PR11MB8536.namprd11.prod.outlook.com (2603:10b6:408:1ec::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.21; Thu, 26 Jun
- 2025 22:20:53 +0000
-Received: from BL1PR11MB5525.namprd11.prod.outlook.com
- ([fe80::1a2f:c489:24a5:da66]) by BL1PR11MB5525.namprd11.prod.outlook.com
- ([fe80::1a2f:c489:24a5:da66%5]) with mapi id 15.20.8857.026; Thu, 26 Jun 2025
- 22:20:53 +0000
-From: "Huang, Kai" <kai.huang@intel.com>
-To: "Luck, Tony" <tony.luck@intel.com>, "Hansen, Dave"
-	<dave.hansen@intel.com>, "Hunter, Adrian" <adrian.hunter@intel.com>,
-	"Annapurve, Vishal" <vannapurve@google.com>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Li, Xiaoyao"
-	<xiaoyao.li@intel.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"mingo@redhat.com" <mingo@redhat.com>, "seanjc@google.com"
-	<seanjc@google.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "tony.lindgren@linux.intel.com"
-	<tony.lindgren@linux.intel.com>, "binbin.wu@linux.intel.com"
-	<binbin.wu@linux.intel.com>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "Chatre,
- Reinette" <reinette.chatre@intel.com>, "pbonzini@redhat.com"
-	<pbonzini@redhat.com>, "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	"bp@alien8.de" <bp@alien8.de>, "Gao, Chao" <chao.gao@intel.com>,
-	"x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 2/2] KVM: TDX: Do not clear poisoned pages
-Thread-Topic: [PATCH 2/2] KVM: TDX: Do not clear poisoned pages
-Thread-Index: AQHb4EnDpX31F9fykECcZZx9vdaxeLQJAkSAgAr5c4CAAB9IgIAAZo+AgAABkICAAC0ggIAA7dQAgAByfAA=
-Date: Thu, 26 Jun 2025 22:20:53 +0000
-Message-ID: <f51e62543aa765da3b4f4ed19aa13340881fbc89.camel@intel.com>
-References: <20250618120806.113884-1-adrian.hunter@intel.com>
-		 <20250618120806.113884-3-adrian.hunter@intel.com>
-		 <68938275-3f6a-46fc-9b38-2c916fdec3d6@intel.com>
-		 <CAGtprH_cVwWhfXFkM-=rVzQZ0CpY_zcnkF=q5x1n_9Bzm1xKfw@mail.gmail.com>
-		 <bc492cb2-1d30-4a30-9eb9-d48b09cd29a9@intel.com>
-		 <c315604761ad760fc29bebdb007fac239a1b45f9.camel@intel.com>
-		 <91df7051-2405-4609-9e86-2bbc02829644@intel.com>
-	 <8c24d9b9c888eed972e8ee75fa9d31cc7fd72a73.camel@intel.com>
-	 <DS7PR11MB6077ED08B85A000014BDAE00FC7AA@DS7PR11MB6077.namprd11.prod.outlook.com>
-In-Reply-To: <DS7PR11MB6077ED08B85A000014BDAE00FC7AA@DS7PR11MB6077.namprd11.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.56.2 (3.56.2-1.fc42) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5525:EE_|LV8PR11MB8536:EE_
-x-ms-office365-filtering-correlation-id: 390dfac9-bffc-47a6-6dab-08ddb4ffb703
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?cWRHaWVrL1dEZTF6dVh4ZStBazRPckNBSFNkRDIzRmY3NGxrTXZTbDgzc1pZ?=
- =?utf-8?B?WlVqbkFLMGtPVVQyRndRTk5CZTA2K3ZKN1Nrc0gyRVVJWnpSaFM5NTBnQmcv?=
- =?utf-8?B?T0o3TTVGcDdGNTBZV0YzQjBzeEQzOThEY3RhdWphOUo2aFFrWkl5YTdYR2F6?=
- =?utf-8?B?eVErVlltSDVyTEQvay9UbDNmWlVLRkJHQVVMZlRjL0M1RU5xYXpSNmZiVk1U?=
- =?utf-8?B?V3FJRzc0ZUFMbUdQOVBzSFJHMTA0bnIyTEQrUi9jR2JpOHBUT3pxMnR6K3h3?=
- =?utf-8?B?ZnRNTkp3eGluSFV3dkx1UWI5YTB1TTQvN1lxWi92Z2pVdkhBNFZxb09YVElG?=
- =?utf-8?B?ZVA2YldHUVZ2dVpPYW1VbGFValNjWVJONjQ1RzJkdVpNUGxUNVQwcGhBVlY2?=
- =?utf-8?B?NmMwK3phZUo5ZFFEdE0rZ05NWDN3bVpuTHZWL0h3RHkrUEQ1ajNMYTFsVGli?=
- =?utf-8?B?MG1FN0ppZkVJbW9rMUJYN1NjU3BQeWlzVWxQbnVGcXo1YmNEUWpWck5MUldk?=
- =?utf-8?B?ZlZkZnZhdmZqU1pTck9GMkNnT2d1VzE1TjhZeXk1TU5uS1BrVkFRaUJCK1RT?=
- =?utf-8?B?aXZOSXRkOHg3eDNqQU5SR3hHYi9ac1c3Q1VMZlllM2MwQ1ZRQUlZbE0ra2J5?=
- =?utf-8?B?REQxWE92SU1PTzFycVhxUEU2RVBkQTF3emhYMHplMkZ5UGhiaTd2QVRhQ29p?=
- =?utf-8?B?SG1jU2xZTDV3MmcxWXc1K25VMUJWYzArSmI3Y2J2U3h3TEdDOG1tTldxR2R2?=
- =?utf-8?B?V3JoQlJuZ2hja29uaEcyaWl3dXdWR0VhTEdUdWNsNDBmSzM5U1k4QzR6ZUdN?=
- =?utf-8?B?WDk4S2JscENtTnpOYjByczlMVnZmaERaSGMwbW0rd1RJYnBPUlVzdk01dEY3?=
- =?utf-8?B?Qk9FVkdOUjZlSUFhNkhpa1RzTm9Ud2RPZlJuWmJqSGU3Z1JxbllsY3B5d210?=
- =?utf-8?B?di94WlUzc2ZFYjI5YXZobnRlZmJDN3E3eUFkbVRGQllrbkU2aHlubXVyU2Jp?=
- =?utf-8?B?TWh3NDdrcm82ZVlrd0xEMzY3UDlNZnp6VTBKdTBnOEtwa3liUjd3WTE2N3hC?=
- =?utf-8?B?VHhTOUtXTWp6UXRWUlI5Z1NHYTAvVVZUS2tTSWNQY3lVRmdrcmtUd0h3OWVW?=
- =?utf-8?B?ajd0YWlCMVE0dTQvT0NqR0NNZTFublNnQTByZjJXajZKa2U4dzE4UW9waGtY?=
- =?utf-8?B?bjBHdUdWODluM295R2RySnhsZjMyWHdRakRKc09KSmNBQUFpVFZUdURrMGd4?=
- =?utf-8?B?cjJ6a0k0b3ZrbE1BbXN5anJ5TkE1RHNZYmRKcU9jU2NaaFJmUDNLM0piSUFI?=
- =?utf-8?B?L2FycGhaVDhOTmtBYXhrTEFFanIzS0p4Mnp0eU1uZWhkMnpCRzJQY3NlOGRw?=
- =?utf-8?B?cmNhVXczMGpSSVZRdXRIbklQVjRsODNMWXVHZGsxejlTamU2V0EwK0NoUWg5?=
- =?utf-8?B?dnB4dzdzZG9RdXVFYVlNbXNnNFMrZFBNaitQMDZld241alo0dE83em9UTnZ5?=
- =?utf-8?B?RklFeEYraXV3NE9sMDNleC9FYVFsSUlCV1N0VXNQa3YvcFF1YldoZTVlV2wz?=
- =?utf-8?B?ZVl2Zk02Vk5DZDdWZFl3ank0OVEyM1ovZDg1RXJIYUZmSmdsVVRQU2RvRkFR?=
- =?utf-8?B?Y3U5V2FkL00xNzdHNWw2WkkwT2llK0VOTm8yankzQjltcDg0Q2p6dGVONVZ0?=
- =?utf-8?B?ZjR1SHhDcExieXZNdTBPZS9aZmRsNXNFUEtrRHRmWG5KMjJiYmJYQ3VzUG5p?=
- =?utf-8?B?K0x1c1BGeHdJWi9MSUVPTlZNL2NSbzBzRXVnYnBnQjRCaGhkY3NUZlRjVmFE?=
- =?utf-8?B?RWdWWUZXbU4yRUg5TXdzVVhkTGxPd1JwU3h6MytTaWRCa09wNExIZHh0Y0g2?=
- =?utf-8?B?UTdNcnN3Ni9tUGxCWENFYzlCdDVhRkVMRlNwTHgyWUZuVzF4TU9nWldYb0Jk?=
- =?utf-8?B?NlBxQjc4V01OSHRETjhyTitYenFVWUJTRWhxU2tGZ0NwSldtWlUwaFF2dlZl?=
- =?utf-8?B?UEtUa2RGd3pBPT0=?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5525.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?b2ZuNTU4RlFVVWVJcDRlcE90Vm9pUXFnWnZ4NTJOdit6V21MeDVNS3FBWW5L?=
- =?utf-8?B?bXQwblJPUEtydWJ2YjNVem5kQzJhaFFhZ25Gck40dmtoampxRmdmc3VyRXJo?=
- =?utf-8?B?Y0F2b3R5a0x3V1dTTnhybndVWkdLYm41NDFNN0dkSEdDOE1kZnd2N2RvYkZM?=
- =?utf-8?B?R1BSajB4NE04WllOUkNxUUdEdkVzb2o0WGpFZjgvNzRRSDNUcEphSENUR2wx?=
- =?utf-8?B?M1BUYkx1UCtpRGVnNy9xUFJQR0VIN0JZQmltVWRUWVJhQ25Mck4vYjJxamxm?=
- =?utf-8?B?R2dDWjFXNnk4TkkydUtmR2dFSUMvOVhqanBZOFJEM0Fja2Y1clRzaGFtYVcw?=
- =?utf-8?B?RTJqbWlWbkxzTTJzU2hLWGV3RGgvMytnL1RwUGFwVlBLdGNudzZOcEJudElh?=
- =?utf-8?B?OU14bFpZVTFBeS85RlBPNk5LN3V4aktLOVN2UzZVWmtLVzFCQ2pQNVR4cmc4?=
- =?utf-8?B?RUZGNVVaelA4RVd2dnl2UnV6bGV1azRaV1hBYVlDcGZqTHFXV3RiTU8zckg2?=
- =?utf-8?B?ZTA1bDBqaWUveGRnV3BjVzBHcVI5ajhnSVVSWWlvRG5BWkUxU082UnlxVWlU?=
- =?utf-8?B?alVVWWxyTWxRMnNzVmg2MEEyUFhzU21iNldzYTdtamVRdzM5dVB6cmNMMXRR?=
- =?utf-8?B?bXhZUWo2dkU4c0tzU21UQnhlSklxVkFGNEc1ekFvY0xuQlNwYlBVb29uQmQz?=
- =?utf-8?B?a2xyU0djL0pKS2NTbDBnSUdLMGZ3d1crTWxDajA4V2F0SWcyVXc0ME9pRHow?=
- =?utf-8?B?MTkwc3VtYU8vY1RpOUdOWUtLcC9CMnAvQzB4R0NyR1VvZzFXRW5FSUJqNEJ6?=
- =?utf-8?B?TElqeWFRdWFQMG9nZWkzUjk3Q3ZrVkVqSkRhT1FWb3dYc2pSOFZSR1F6d0sz?=
- =?utf-8?B?WnlReE12Y0tjZGd4THNSWTU1WHZ4QTUyQjZZVmVZdXlWemdHdWQ5NzZsTUQ2?=
- =?utf-8?B?cjlvKzBWWkRBTk9XNDlwZjZXbnFQcTZsT0VKajkwQnNMVG5HRTZRNFJwNFdD?=
- =?utf-8?B?UnJYNmlZbndQcjRnN3hQV0QwSnV4SHM2OG9XWmc1NmZweVBKNUt2S0xiVXlu?=
- =?utf-8?B?aTNIMzFPVkliMVYrdURoT3JKU1NQSVR2Y1FzZndzeGpSNWwyWVBxUVI2dXYw?=
- =?utf-8?B?L1Z2aitySG9xM0hyZWp4RFVjcE9XR3ozd09Kamd1Z0liODM0Z0Q4Ymt5N3BG?=
- =?utf-8?B?RXM0NkVSYTdBVVI2dzFqNGhPZmwzNXk2a1hBSXQwYXcrblFGS3prVUYyM1NT?=
- =?utf-8?B?clNDb0tqMmJ5R294ZHRQNkF3YTJuZFo5TEV3djhXWUxZcGZoRmNlL2swazNV?=
- =?utf-8?B?TEU1THA4QzV0bFVhanRLenQvTmx1am5DbTZlRTZLSy9zR1BOWUN5SE1Zc3BF?=
- =?utf-8?B?K3B1MUpXbkh0c0lnaEFlNmhuaTVFQStKM0MrRVJhSm5WMGdvNkZobHhXd09n?=
- =?utf-8?B?Ry8rUVBtTEphL2FrdGlZa0JEUFpqc0N4cTBQNklwcnhVeGk4a0NOL3J1NDVO?=
- =?utf-8?B?RWllb2sybDJZVkFFd0wzRThoQmdqV01qUkhDVkpQN0s3Y1VMR2pPTTE0Yk40?=
- =?utf-8?B?QXFvU1RBQWJwTU1HYVlHdHNzM1NINWdlanBrWU5XSk92b2VBTWI0OTJKbDFs?=
- =?utf-8?B?S2xQSzVub2lkckRIQTJ1MDFpZHh6ZEZkR01JTXIwSW0wTFZBVlJpWDBxRjB6?=
- =?utf-8?B?aFRLL010aTVjMVZid1lUa1c2bHdPS0UvMFlwR3ZBTVp6aUVCSWtkZkF5dU0y?=
- =?utf-8?B?UVhnN05mNU5BRU1TNFg0RjlWeTQ1a256RmVHdUxHWlFkUmhrc1djUnJ0SU1H?=
- =?utf-8?B?V2VmWENkcTE5b1U0L09GWFNGRHM1VUZqbGxpV0NsTlhWSTE4ZkdlNGF4UmhY?=
- =?utf-8?B?RENqa3E4OFFoeWNDWEQvdGdYQnN1QXlHNkZ2NjQ0RUYrV3hNbUgzc0ZVL0hr?=
- =?utf-8?B?MUNHU1J2SWNsWlhLR0ZqRWlBVUpBVkkxTnFlUXY4VGZkbmtidDhsL3FBOWdJ?=
- =?utf-8?B?ZTd2bHZSaFFodXd6dVpzUW1xSzZTU21PMlQ2UXB3TE9XdEtlVzVvQURjUFNp?=
- =?utf-8?B?cUQ2dnlZSEhQekVyMytBVVNUbXU5aEdUc2w0ME5TRUJHNDNIWEUyQXp1N2xi?=
- =?utf-8?Q?KXlq05LZCMOqGCuGL7lQ9F1Ui?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A04444D44D3DFD4FBDD962D5B478363B@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTrt4WkV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F778C4CEEB;
+	Thu, 26 Jun 2025 22:21:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750976498;
+	bh=S4MQ+wCspDRAXFvPxNkjxgXfaczwIPQ46HAjeRIjCq4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CTrt4WkVJKOL0eSc1X21mUYuVtrkxMBdcEjoCNAmbsmyoMWFkKbdFDlNqDDc6s5FZ
+	 iuproVump4dstGukb02DSUrq7f6BkEjdBkd8JBUILPB4M2Z6rHZKIub3M+avK011W7
+	 YRUPGu4pKS/dtuJ6gOaeLzuSnBW1pvmKTajcunoD8NhqQMHwrPNFkzXjqAeEDETgu6
+	 hs0oILjp6poL1wZwYYCn5lWH6rzwsGNtZwbFTrpz3Z21Ubi3NL+R+L07BsgfSUMimX
+	 4qsijFyNhKs5oMA9C+nq5GzPxhySYJ3or8hI46ElNzrqp61OvkXE/bf0SAfJ6gc6Wo
+	 3IPvaCXKRTowg==
+Message-ID: <de548b27-4c43-4f30-af9d-b060101e6fd8@kernel.org>
+Date: Thu, 26 Jun 2025 17:21:35 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5525.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 390dfac9-bffc-47a6-6dab-08ddb4ffb703
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2025 22:20:53.6033
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: j/coUYxsWqlwBdXjKFwtmjI9YX87OE/PX3YWa1aJgNJUqxCkSqgTxUncOgVWNDB76/R06gbkNJajrKH6285MAA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8536
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
+ system
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <363c2b92-4bfc-4537-9fca-025eef09526f@kernel.org>
+ <nxticocp26r5mmpkttritw76h5igw7bdpus6zaf5krkso2h5xy@wna6m2quekfi>
+ <cbbf0caf-82ce-4427-9844-b11e0f5cacdb@kernel.org>
+ <obpakvzyludc4jskqzyxf65dhqds7ie3jkbfsqdve32ouuaili@xvogkmwvbmbf>
+ <284ea5c0-dca5-4e9e-a3e7-705eca794010@kernel.org>
+ <vkau25ybcx3bcoa2jmxlukumunzii5h6em43anh6mmzk2kyiv7@kyych4kxc4zo>
+ <0d71a686-da67-4686-8976-a17d0d1ca923@kernel.org>
+ <CAJZ5v0gKUN1OdqAHnXNcFUAOfhpdRfa_o=L6TA2GZTpe1bMaNQ@mail.gmail.com>
+ <exmgckzoakt2ncsdphqvymcadon7k6tl36a3zvrj2pv23dffps@znq23v3qbcm2>
+ <CAJZ5v0j3ZyuEqSKQ+3K8M3BwPCxn5Z6KOwjyjt4cJW6HfxjPDw@mail.gmail.com>
+ <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-T24gVGh1LCAyMDI1LTA2LTI2IGF0IDE1OjMxICswMDAwLCBMdWNrLCBUb255IHdyb3RlOg0KPiA+
-IEhvd2V2ZXIgaWYgdGhlIGtlcm5lbCB0b3VjaCB0aGUgcGFnZSBhZ2FpbiB1c2luZyBNT1ZESVI2
-NEIsIHRoZSBmdXJ0aGVyICNNQw0KPiA+IHdvbid0IGhhdmUgTUNHX1NUQVRVU19TRUFNX05SIGJp
-dCBzZXQgKGJlY2F1c2UgaXQgZG9lc24ndCBoYXBwZW4gaW4gU0VBTQ0KPiA+IG5vbi1yb290KSwg
-dGhlcmVmb3JlIGl0IHdpbGwgYmUgdHJlYXRlZCBhcyBhIG5vcm1hbCBrZXJuZWwgI01DIHdoaWNo
-IHdpbGwNCj4gPiByZXN1bHQgaW4ga2VybmVsIHBhbmljLg0KPiANCj4gSW50ZWwgQ1BVcyBzaWdu
-YWwgI01DIHdoZW4gYW4gaW5zdHJ1Y3Rpb24gdGhhdCBpcyB0cnlpbmcgdG8gY29uc3VtZSBwb2lz
-b24gZGF0YQ0KPiBpcyBhYm91dCB0byByZXRpcmUuDQo+IA0KPiBTdG9yZXMgdG8gbWVtb3J5IGRv
-IG5vdCBjb25zdW1lIHBvaXNvbiwgc28gd2lsbCBub3Qgc2lnbmFsIGEgI01DLg0KPiANCj4gSW4g
-dGhlIE1PVkRJUjY0QiBjYXNlIGFuIGVudGlyZSBjYWNoZSBsaW5lIGlzIHN0b3JlZCBpbiBhIHNp
-bmdsZSBhdG9taWMNCj4gd3JpdGUuIFRoaXMgd2lsbCBjbGVhciB0aGUgcG9pc29uIHN0YXRlIG9m
-IHRoZSBjYWNoZWxpbmUgKGFzc3VtaW5nIHRoYXQgdGhlDQo+IHBvaXNvbiB3YXMgZHVlIHRvIGFu
-IGludGVncml0eSBlcnJvciwgbWVtb3J5IGVycm9yIGluamVjdGlvbiwgSS9PIGVycm9yIGV0Yy4N
-Cj4gSWYgdGhlIERJTU0gaXMgYmFkIGFuZCBoYXMgc3R1Y2sgYml0cywgdGhlbiB0aGUgbWVtb3J5
-IG1heSBzdGlsbCBmYWlsIEVDQw0KPiBjaGVjayBvbiB0aGUgbmV4dCByZWFkLikNCj4gDQo+IFVz
-aW5nIHNtYWxsZXIgc3RvcmVzIHRvIG92ZXJ3cml0ZSB0aGUgY2FjaGUgbGluZSB3aWxsIG5vdCBj
-bGVhciBwb2lzb24uIFRoZQ0KPiBjYWNoZWxpbmUgaXMgcmVhZCBmcm9tIG1lbW9yeSB0byBzb21l
-IGNhY2hlIGxldmVsLCB0aGUgc21hbGwgc3RvcmUgdXBkYXRlcw0KPiBzb21lIGJ5dGVzIGluIHRo
-ZSBsaW5lLCBidXQgdGhlIHBvaXNvbiBmbGFnIHJlbWFpbnMuIE5vdGUgdGhhdCB0aGlzIGRvZXNu
-J3QNCj4gdHJpZ2dlciAjTUMgYmVjYXVzZSB0aGUgcG9pc29uIGRhdGEgaXMgbm90IGJlaW5nIGNv
-bnN1bWVkLCBpdCBzdGlsbCBpc24ndA0KPiBhcmNoaXRlY3R1cmFsbHkgdmlzaWJsZSBpbiBzb21l
-IHJlZ2lzdGVyLCBtZW1vcnksIG9yIEkvTyBkZXZpY2UuDQo+IA0KPiBZb3UgbWF5IHN0aWxsIHNl
-ZSBhIFVDTkEgc2lnbmF0dXJlIHNpZ25hbGVkIHdpdGggQ01DSSBmcm9tIHRoZSBtZW1vcnkNCj4g
-Y29udHJvbGxlciBpZiBlaXRoZXIgY2FzZSByZXN1bHRlZCBpbiBhIHNwZWN1bGF0aXZlIHByZWZl
-dGNoIG9mIHRoZSBwb2lzb25lZA0KPiBjYWNoZSBsaW5lLg0KPiANCj4gLVRvbnkNCg0KVGhhbmtz
-IGZvciB0aGUgaW5mby4gIDotKQ0KDQpTbyBpdCBzZWVtcyBNT1ZESVI2NEIgdG8gYSBiYWQgbWVt
-b3J5IHdvbid0IG5lY2Vzc2FyaWx5IHRyaWdnZXIgI01DIHdoZW4gdGhlDQp3cml0dGVuIGlzIHBl
-cmZvcm1lZC4NCg0KQnV0IElNSE8gd2UgbWF5IHNob3VsZCBqdXN0IGhhdmUgYSBzaW1wbGUgcG9s
-aWN5IHRoYXQgd2hlbiBhIHBhZ2UgaXMgbWFya2VkDQphcyBwb2lzb25lZCwgaXQgc2hvdWxkIG5l
-dmVyIGJlIHRvdWNoZWQgYWdhaW4uICBJdCdzIG9ubHkgb25lIHBhZ2UgYW55d2F5DQooZm9yIG9u
-ZSBURCkgc28gbG9zaW5nIHRoYXQgZG9lc24ndCBzZWVtIGJhZCB0byBtZS4gIElmIHdlIHdhbnQg
-dG8gY2xlYXIgdGhlDQpwb2lzb25lZCBwYWdlLCB0aGVuIHBlcmhhcHMgd2Ugc2hvdWxkIG1hcmsg
-dGhhdCBwYWdlIHRvIGJlIG5vdC1wb2lzb25lZA0KYWdhaW4uDQo=
+On 6/26/2025 2:40 PM, Dmitry Torokhov wrote:
+> On Thu, Jun 26, 2025 at 09:31:12PM +0200, Rafael J. Wysocki wrote:
+>> On Thu, Jun 26, 2025 at 9:28 PM Dmitry Torokhov
+>> <dmitry.torokhov@gmail.com> wrote:
+>>>
+>>> On Thu, Jun 26, 2025 at 09:18:56PM +0200, Rafael J. Wysocki wrote:
+>>>> On Thu, Jun 26, 2025 at 9:16 PM Hans de Goede <hansg@kernel.org> wrote:
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>> On 26-Jun-25 21:14, Dmitry Torokhov wrote:
+>>>>>> On Thu, Jun 26, 2025 at 08:57:30PM +0200, Hans de Goede wrote:
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> On 26-Jun-25 20:48, Dmitry Torokhov wrote:
+>>>>>>>> On Thu, Jun 26, 2025 at 01:20:54PM -0500, Mario Limonciello wrote:
+>>> [...]
+>>>>>>>>> I want to note this driver works quite differently than how ACPI power
+>>>>>>>>> button does.
+>>>>>>>>>
+>>>>>>>>> You can see in acpi_button_notify() that the "keypress" is only forwarded
+>>>>>>>>> when not suspended [1].  Otherwise it's just wakeup event (which is what my
+>>>>>>>>> patch was modeling).
+>>>>>>>>>
+>>>>>>>>> https://github.com/torvalds/linux/blob/v6.16-rc3/drivers/acpi/button.c#L461
+>>>>>>>>> [1]
+>>>>>>>>
+>>>>>>>> If you check acpi_button_resume() you will see that the events are sent
+>>>>>>>> from there. Except that for some reason they chose to use KEY_WAKEUP and
+>>>>>>>> not KEY_POWER, oh well. Unlike acpi button driver gpio_keys is used on
+>>>>>>>> multiple other platforms.
+>>>>>>>
+>>>>>>> Interesting, but the ACPI button code presumably only does this on resume
+>>>>>>> for a normal press while the system is awake it does use KEY_POWER, right ?
+>>>>>>
+>>>>>> Yes. It is unclear to me why they chose to mangle the event on wakeup,
+>>>>>> it does not seem to be captured in the email discussions or in the patch
+>>>>>> description.
+>>>>>
+>>>>> I assume they did this to avoid the immediate re-suspend on wakeup by
+>>>>> power-button issue. GNOME has a workaround for this, but I assume that
+>>>>> some userspace desktop environments are still going to have a problem
+>>>>> with this.
+>>>>
+>>>> It was done for this reason IIRC, but it should have been documented
+>>>> more thoroughly.
+>>>
+>>> I assert that it should not have been done and instead dealt with in
+>>> userspace. There are numerous drivers in the kernel emitting
+>>> KEY_POWER. Let userspace decide how to handle this, what keys to ignore,
+>>> what keys to process and when.
+>>
+>> Please see my last message in this thread (just sent) and see the
+>> changelog of commit 16f70feaabe9 ("ACPI: button: trigger wakeup key
+>> events").
+>>
+>> This appears to be about cases when no event would be signaled to user
+>> space at all (power button wakeup from ACPI S3).
+> 
+> Ahh, in S3 we do not know if we've been woken up with Sleep or Power
+> button, right? So we can not send the "right" event code and use
+> "neutral" KEY_WAKEUP for both. Is this right?
+> 
+> Thanks.
+> 
+
+I did some more experiments with this affected system that started this 
+thread (which uses s2idle).
+
+I only applied patch 3 in this series to help the debounce behavior and 
+figure out impacts from patch 4 with existing Linux userspace.
+
+If suspended using systemd in GNOME (click the GUI button) on Ubuntu 
+24.04 the GNOME workaround mitigates this problem and no visible impact.
+
+If I suspend by hand using the kernel interface and then press power 
+button to wake:
+
+# echo mem | sudo tee /sys/power/state:
+
+* When GNOME is running:
+I get the shutdown popup and it eventually shuts down.
+
+* When GNOME isn't running (just on a VT):
+System shuts down.
+
+
