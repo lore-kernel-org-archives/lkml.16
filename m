@@ -1,71 +1,236 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6962E54AF;
-	Thu, 26 Jun 2025 13:35:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583922E54AF;
+	Thu, 26 Jun 2025 13:36:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750944950; cv=none; b=Lh3xUH1IM5HgeneTpuFzwu/7LtdsgLsE63VLUPzXBheeRHBSaJZYsSHihHWQDUIxgcFJ457j35NG6GFTPcXR2MBjEQTDcinM4nS3sFFSDikWW8MO1iBogFh+i2hK0foqwQSyFvg/0XoE9oW1uJ7ksFWLJbAXoXxB1xj/7tohNcs=
+	t=1750944996; cv=none; b=kkIUvWWV8P4qWYAIAiHbr+c8W6GtIGe578EFtdD6/gWxgLcI3gVz+16d3gdRWqzNWRe7/uYOWGcOPGtxJ/UjEtCl6+NVmcv96WginyoNQIPwLNO9+r0/r5isfBza4FDkuGM7VbsuWbqwgN0/4cWWtGjaZHNFX2BvgApyego8O98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750944950; c=relaxed/simple;
-	bh=rdIz5xXm5ngXP00Ob9tXBkL/GKcoEcsNS9qsuE+RcA4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eH8BV7METuGsUknhBZpU5Cvu3Trp/vkETK1AcOAQQXFpOfo8abdQLbe4MJylWCMgeMFhHmF3aj0GELjvP53/hN+nViuOVq5/C9yIpD/r6/9ytkpPkIGz1ZZmvqcJk+6nhCQiiVIQ92VLwLRW/k4gj7svQ+iC2cdYurcZj+a7Xo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k1ZAJ98E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750944996; c=relaxed/simple;
+	bh=S0Ln0L0FITmTu64+cEXbgyorFVfjS69CFW5Phe8pQhU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=RKL+UzEjbUIm1bsR1Qd5Pr9QWv7CCCWpWz2pee5Q6us50P1MaGCdiNWdYh+eeoi+WSqR+GYLbhpRYbNjcSBmQKFH1b6yGhirCtadrCGawkVJqHvRnda7fNrx50XFHpFIyYtn4Pckirsx3uvAhWWPRbe/JkWnJeykuMulZtUxiPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mkx7OzxB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1ZAJ98E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB201C4CEF2;
-	Thu, 26 Jun 2025 13:35:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mkx7OzxB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54D44C4CEEE;
+	Thu, 26 Jun 2025 13:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750944950;
-	bh=rdIz5xXm5ngXP00Ob9tXBkL/GKcoEcsNS9qsuE+RcA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k1ZAJ98Ego3DmGDITHwQtcAiWL4EuAuaFMn/MquM93z/Z5kLe388/ZsvN5qoONJe7
-	 FJjGNZfphQUGsbUjBGLW5I/iBxKWYJsFe+PTgUlwQoWZVnCmBvmQnWzdje8r02xlI6
-	 0MzMCZ5Tfq/Bcg+r3CZ9+AKi5e91KpZifkG/MH4g6zbsp35cXAv8QL24ZzRr4VFsiE
-	 Bn7GcDUHcbYNwcM1BUKpVDZctjLV2x3PKjOiq14ABfwxYzImsMMBA4Hedm3/qNAWb2
-	 KcTu6Ho4alz3m6QVqJxEl3Ofk4V12tCqIojwPY2GeM1mw/2mRTkfBtCyQA4ppsorId
-	 /VXBrvAMN4GqQ==
-Date: Thu, 26 Jun 2025 15:35:47 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Christian Brauner <brauner@kernel.org>, Nam Cao <namcao@linutronix.de>,
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-	John Ogness <john.ogness@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>,
-	Martin Karsten <mkarsten@uwaterloo.ca>,
-	Jens Axboe <axboe@kernel.dk>,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH v3] eventpoll: Fix priority inversion problem
-Message-ID: <aF1MszYwYhUt0Mjy@localhost.localdomain>
-References: <20250527090836.1290532-1-namcao@linutronix.de>
- <20250530-definieren-minze-7be7a10b4354@brauner>
- <20250625153519.4QpnajiI@linutronix.de>
+	s=k20201202; t=1750944995;
+	bh=S0Ln0L0FITmTu64+cEXbgyorFVfjS69CFW5Phe8pQhU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Mkx7OzxBYzdEqyovK2Sgoog/b6QMRYK1PrfreB2+9b01L34L2mROUWnkSLX7fckKQ
+	 NeNjq/KQsJ8RTkASVTQhzMvt42Q7PfdyEATb9bEf1tTT5C+DbYnYpLukhtfyOyNnYp
+	 exJ3w1A7dhlbyWFhA4f7dt4sEsyqLGkuKBnVVdhlBzaz0FNGUAwkxywdmFg5yyzUqb
+	 QIik8B2NzcpJZPI0xpkOpJM/uK2FCKOd6aQuD3cseuiI7+62nI3SYUJv4G3275dWoR
+	 wVJzM49uNSqzPRnuNmeuVP3xsIKk1YF/Jr7IUxuUUp+By+qTJABtOeF8njJccZZFMu
+	 uIw8dvMcG6+HA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+Cc: <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
+  <lkmm@lists.linux.dev>,  <linux-arch@vger.kernel.org>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <lossin@kernel.org>,  "Alice Ryhl" <aliceryhl@google.com>,
+  "Trevor Gross" <tmgross@umich.edu>,  "Danilo Krummrich"
+ <dakr@kernel.org>,  "Will Deacon" <will@kernel.org>,  "Peter Zijlstra"
+ <peterz@infradead.org>,  "Mark Rutland" <mark.rutland@arm.com>,  "Wedson
+ Almeida Filho" <wedsonaf@gmail.com>,  "Viresh Kumar"
+ <viresh.kumar@linaro.org>,  "Lyude Paul" <lyude@redhat.com>,  "Ingo
+ Molnar" <mingo@kernel.org>,  "Mitchell Levy" <levymitchell0@gmail.com>,
+  "Paul E. McKenney" <paulmck@kernel.org>,  "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>,  "Linus Torvalds"
+ <torvalds@linux-foundation.org>,  "Thomas Gleixner" <tglx@linutronix.de>
+Subject: Re: [PATCH v5 10/10] rust: sync: Add memory barriers
+In-Reply-To: <20250618164934.19817-11-boqun.feng@gmail.com> (Boqun Feng's
+	message of "Wed, 18 Jun 2025 09:49:34 -0700")
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+	<A-SZkzm2EzwbPsG5Vm5qfT1BIGijzoQ7zQI6ExgXZbSXf8ZfIMw6fe-Z7xWgvKnr0BPylikGRuhEfiKfXx5xTw==@protonmail.internalid>
+	<20250618164934.19817-11-boqun.feng@gmail.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Thu, 26 Jun 2025 15:36:25 +0200
+Message-ID: <874iw2zkti.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250625153519.4QpnajiI@linutronix.de>
+Content-Type: text/plain
 
-Le Wed, Jun 25, 2025 at 05:35:19PM +0200, Sebastian Andrzej Siewior a écrit :
-> On 2025-05-30 07:08:45 [+0200], Christian Brauner wrote:
-> > Care to review this, Frederic?
-> 
-> Frederic, may I summon you?
+"Boqun Feng" <boqun.feng@gmail.com> writes:
 
-I can't review the guts and details but it looks like a sane
-approach to me. Also the numbers are nice:
+> Memory barriers are building blocks for concurrent code, hence provide
+> a minimal set of them.
+>
+> The compiler barrier, barrier(), is implemented in inline asm instead of
+> using core::sync::atomic::compiler_fence() because memory models are
+> different: kernel's atomics are implemented in inline asm therefore the
+> compiler barrier should be implemented in inline asm as well. Also it's
+> currently only public to the kernel crate until there's a reasonable
+> driver usage.
+>
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  rust/helpers/barrier.c      | 18 ++++++++++
+>  rust/helpers/helpers.c      |  1 +
+>  rust/kernel/sync.rs         |  1 +
+>  rust/kernel/sync/barrier.rs | 67 +++++++++++++++++++++++++++++++++++++
+>  4 files changed, 87 insertions(+)
+>  create mode 100644 rust/helpers/barrier.c
+>  create mode 100644 rust/kernel/sync/barrier.rs
+>
+> diff --git a/rust/helpers/barrier.c b/rust/helpers/barrier.c
+> new file mode 100644
+> index 000000000000..cdf28ce8e511
+> --- /dev/null
+> +++ b/rust/helpers/barrier.c
+> @@ -0,0 +1,18 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <asm/barrier.h>
+> +
+> +void rust_helper_smp_mb(void)
+> +{
+> +	smp_mb();
+> +}
+> +
+> +void rust_helper_smp_wmb(void)
+> +{
+> +	smp_wmb();
+> +}
+> +
+> +void rust_helper_smp_rmb(void)
+> +{
+> +	smp_rmb();
+> +}
+> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+> index 83e89f6a68fb..8ddfc8f84e87 100644
+> --- a/rust/helpers/helpers.c
+> +++ b/rust/helpers/helpers.c
+> @@ -9,6 +9,7 @@
+>
+>  #include "atomic.c"
+>  #include "auxiliary.c"
+> +#include "barrier.c"
+>  #include "blk.c"
+>  #include "bug.c"
+>  #include "build_assert.c"
+> diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
+> index b620027e0641..c7c0e552bafe 100644
+> --- a/rust/kernel/sync.rs
+> +++ b/rust/kernel/sync.rs
+> @@ -11,6 +11,7 @@
+>
+>  mod arc;
+>  pub mod atomic;
+> +pub mod barrier;
+>  mod condvar;
+>  pub mod lock;
+>  mod locked_by;
+> diff --git a/rust/kernel/sync/barrier.rs b/rust/kernel/sync/barrier.rs
+> new file mode 100644
+> index 000000000000..36a5c70e6716
+> --- /dev/null
+> +++ b/rust/kernel/sync/barrier.rs
+> @@ -0,0 +1,67 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Memory barriers.
+> +//!
+> +//! These primitives have the same semantics as their C counterparts: and the precise definitions of
+> +//! semantics can be found at [`LKMM`].
+> +//!
+> +//! [`LKMM`]: srctree/tools/memory-mode/
 
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
+Typo in link target.
 
--- 
-Frederic Weisbecker
-SUSE Labs
+> +
+> +/// A compiler barrier.
+> +///
+> +/// An explicic compiler barrier function that prevents the compiler from moving the memory
+> +/// accesses either side of it to the other side.
+
+Typo in "explicit".
+
+How about:
+
+  A compiler barrier. Prevents the compiler from reordering
+  memory access instructions across the barrier.
+
+
+> +pub(crate) fn barrier() {
+> +    // By default, Rust inline asms are treated as being able to access any memory or flags, hence
+> +    // it suffices as a compiler barrier.
+> +    //
+> +    // SAFETY: An empty asm block should be safe.
+> +    unsafe {
+> +        core::arch::asm!("");
+> +    }
+> +}
+> +
+> +/// A full memory barrier.
+> +///
+> +/// A barrier function that prevents both the compiler and the CPU from moving the memory accesses
+> +/// either side of it to the other side.
+
+
+  A barrier that prevents compiler and CPU from reordering memory access
+  instructions across the barrier.
+
+> +pub fn smp_mb() {
+> +    if cfg!(CONFIG_SMP) {
+> +        // SAFETY: `smp_mb()` is safe to call.
+> +        unsafe {
+> +            bindings::smp_mb();
+> +        }
+> +    } else {
+> +        barrier();
+> +    }
+> +}
+> +
+> +/// A write-write memory barrier.
+> +///
+> +/// A barrier function that prevents both the compiler and the CPU from moving the memory write
+> +/// accesses either side of it to the other side.
+
+  A barrier that prevents compiler and CPU from reordering memory write
+  instructions across the barrier.
+
+> +pub fn smp_wmb() {
+> +    if cfg!(CONFIG_SMP) {
+> +        // SAFETY: `smp_wmb()` is safe to call.
+> +        unsafe {
+> +            bindings::smp_wmb();
+> +        }
+> +    } else {
+> +        barrier();
+> +    }
+> +}
+> +
+> +/// A read-read memory barrier.
+> +///
+> +/// A barrier function that prevents both the compiler and the CPU from moving the memory read
+> +/// accesses either side of it to the other side.
+
+  A barrier that prevents compiler and CPU from reordering memory read
+  instructions across the barrier.
+
+> +pub fn smp_rmb() {
+> +    if cfg!(CONFIG_SMP) {
+> +        // SAFETY: `smp_rmb()` is safe to call.
+> +        unsafe {
+> +            bindings::smp_rmb();
+> +        }
+> +    } else {
+> +        barrier();
+> +    }
+> +}
+
+
+Best regards,
+Andreas Hindborg
+
+
