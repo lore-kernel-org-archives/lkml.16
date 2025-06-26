@@ -1,160 +1,167 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E87A15539A;
-	Thu, 26 Jun 2025 09:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B6415539A;
+	Thu, 26 Jun 2025 09:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750930883; cv=none; b=PrnVDjmw58HToYXkx8ZiJ0UqwfCf/cmEQe5Jrl/q7Y+o3CTPgEtT3Rwo6orrn3o2Ulueke2sH4c7p2fkAw+WSOGJaKexsHkSlE6ZNp8yoLxglMkiqmNzPMMuMwNakOJFxZYwEsyaHz5hYJw9Exq1jk+dP+xOrrsNp2HmjIyGew0=
+	t=1750930887; cv=none; b=mUiTUONG+Hu3SZhEGIYCo99jLkjHuWjZT/sujJuSA2PV0Xn1ybhXu22RiW1BHEQuyxsWzAN01V6Ygw81aDxrMu2PAdo0hSUxvL63cb3IAK36V3yYfuBrt9Q2xSIhsYHAFL+u2g0FMsaTsZiLpwpgYijm/A5M9O2CCcZgOAv4sKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750930883; c=relaxed/simple;
-	bh=zhRAEAp6CfRUkELZ88WpIQpghW2g7vON8T0ZWoFnEh0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JNlmhu3Z5U6qxKPD27Tgo8KwEkcqos87dXi6RlSKG3udu41KiWQIsiZJDfAGM8Zt26yMyMqaR7XWUZDQdWORN74PALo3rZh8oHUKl+kU2yK4zHrufSG7+E66SbLVfYoByiA2HDdB5eqjSKRqq4b6AD5iziRvra8cNQ/o+unb0/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=a83gXHvo; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750930887; c=relaxed/simple;
+	bh=kXlWtFJHYGZXpfxU2XTeWX5St19iKLmVxqcz6yj4hsI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eB4qGHjMVmBhMXrQhYOMASgxPVI7wL1Lu6r//cIc1s8nbQDbGx7bq1T85y7nreTfbpkIZQ/izwtuxIzFLb9/Q8y/OpKO1DFl8ZWkPDDXNTNr43Ef/sRjzsKDONViDF+iLBNmMax1+/0NfCPGKKcE2GiLLrbCWATQIRujfDqbaT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScBbOi07; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a83gXHvo"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55Q9eqhl2115910;
-	Thu, 26 Jun 2025 04:40:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750930852;
-	bh=iA/8SO2mGfVZC7bo0ZFuR79S7HLwYm6xuSgZaGNdeiM=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=a83gXHvo1EAsgKkMTTOdCfZ7FG+dcLW6lnsxqrO3vv6KzDFjYYavD3BmGgdHuOFQ7
-	 T7dABv2Yn0kS8PgiswWFN+rRYN+cBZ2+ksB+v5dAJYKmZhdYNnf95CDeMXDOxQ9i+S
-	 gaiFno2pnCTsW33QChz7rI/BRsEsaS79G1cGgIM4=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55Q9eqxZ2128746
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 26 Jun 2025 04:40:52 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
- Jun 2025 04:40:51 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 26 Jun 2025 04:40:51 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.169])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55Q9eodS789152;
-	Thu, 26 Jun 2025 04:40:51 -0500
-Date: Thu, 26 Jun 2025 15:10:50 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Andy Whitcroft <apw@canonical.com>,
-        Dwaipayan Ray
-	<dwaipayanray1@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Joe
- Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
-        Nishanth Menon
-	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Siddharth Vadapalli
-	<s-vadapalli@ti.com>,
-        Roger Quadros <rogerq@kernel.org>, Tero Kristo
-	<kristo@kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux@ew.tq-group.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v2 2/3] net: ethernet: ti: am65-cpsw: fixup PHY
- mode for fixed RGMII TX delay
-Message-ID: <54d6cd05-65ef-4e1d-8041-3e4a2c50b443@ti.com>
-References: <cover.1750756583.git.matthias.schiffer@ew.tq-group.com>
- <9b3fb1fbf719bef30702192155c6413cd5de5dcf.1750756583.git.matthias.schiffer@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScBbOi07"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B32AC4CEF4;
+	Thu, 26 Jun 2025 09:41:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750930887;
+	bh=kXlWtFJHYGZXpfxU2XTeWX5St19iKLmVxqcz6yj4hsI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ScBbOi07yuPICS41cWr23Z8x2Dj6pCzsY3pt4nv7xT5ANvkI/acXnHtiY+7hQGpXy
+	 DOBY0yVLXK7EIyR+Nl2j4tFeG/azHDbmgSDDSxqjctSEh3TQjTO4ix81yX4SSAFmR8
+	 YqaEejf66EIH2my6g0Hg5n23aGExiRYHLE9Fq4udNfCuR7RKI+vrnyaI5vugjrdg81
+	 NbctxnOxn97CxC1xPM3VIbGkknseMAVMTq/xKhyTfFv4rSMIY/yixJUSkCTTYr2QZe
+	 CZI5kh6vFcWDRO2sO2iz7vTkGBnBgWsESpZVMVNJBBBJiHqbCHHFPMX9ajqzwRmkFg
+	 QI/jxC941Nmsg==
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-611998766c0so441024eaf.1;
+        Thu, 26 Jun 2025 02:41:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU0aVubtXBluevkUkXfhG/FCNHWmBpY9UhQKoQrA0XvGD+O9dOvEmBfWjZ9UmWE8zGviY2K19yQsJHZ@vger.kernel.org, AJvYcCUbC4Z2E/6qJCJReW2ZqKgqj22qSQVp6K/sk7A2ziKHN6Nw/ops524+zR4Awn7UiGcfR0NP3/35uxk=@vger.kernel.org, AJvYcCVFSl/W1OOcfjbzb35OQIXCHqlWMWTL/U3FO9jri/PF73CG2dQwnUT1XV5WDEcovU2Zo+gnEHDXI13nXENI@vger.kernel.org, AJvYcCWeGMsPTEPZpLtlkRBHHwdt+TY2XqYnuSuUXmvuDTpobaw8vj+4cpUjDgnGvtobKn9IZuW787Xmk88t@vger.kernel.org
+X-Gm-Message-State: AOJu0YyST7/uH6ZVsazOhAOfyMoZa+YtaJvaC89+DRWFqTNVwPUKbSq0
+	peiP9p/xSk4CwrOzJM1l7yCGAzn2ibnk20+nWeH3eC9BON38/S+ob0VKoH3ALgVl/VE3TImaNzH
+	1eYm/r54ub62V8Vf6AxAwPff28dm4eMI=
+X-Google-Smtp-Source: AGHT+IFFwcMnbazn9ld0BJf02w2SGzFl4BsPLD6/WVI+cKUPMvArB0HpKkLKr9h1POnuYo1bzegPrS6Er7Okr8detwA=
+X-Received: by 2002:a05:6820:907:b0:611:b1b0:2adf with SMTP id
+ 006d021491bc7-611b1b02e35mr448886eaf.1.1750930886224; Thu, 26 Jun 2025
+ 02:41:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <9b3fb1fbf719bef30702192155c6413cd5de5dcf.1750756583.git.matthias.schiffer@ew.tq-group.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <22759968.EfDdHjke4D@rjwysocki.net> <2045419.usQuhbGJ8B@rjwysocki.net>
+ <CAPDyKFq8ea+YogkAExUOBc2TEqi1z9WZswqgP29bLbursFUApg@mail.gmail.com>
+In-Reply-To: <CAPDyKFq8ea+YogkAExUOBc2TEqi1z9WZswqgP29bLbursFUApg@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 26 Jun 2025 11:41:14 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0h-9UnvhrQ7YaaYPG5CktwV-i+ZeqAri8OhJQb4TVp82w@mail.gmail.com>
+X-Gm-Features: Ac12FXx4t9s1OQAcDGkW25YSbl2lqTUdJSGgwNxO3wpv-ubVObtrt96eUGaNFYE
+Message-ID: <CAJZ5v0h-9UnvhrQ7YaaYPG5CktwV-i+ZeqAri8OhJQb4TVp82w@mail.gmail.com>
+Subject: Re: [PATCH v1 4/9] PM: Move pm_runtime_force_suspend/resume() under CONFIG_PM_SLEEP
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 24, 2025 at 12:53:33PM +0200, Matthias Schiffer wrote:
+On Thu, Jun 26, 2025 at 11:38=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.or=
+g> wrote:
+>
+> On Wed, 25 Jun 2025 at 21:25, Rafael J. Wysocki <rjw@rjwysocki.net> wrote=
+:
+> >
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Since pm_runtime_force_suspend/resume() and pm_runtime_need_not_resume(=
+)
+> > are only used during system-wide PM transitions, there is no reason to
+> > compile them in if CONFIG_PM_SLEEP is unset.
+> >
+> > Accordingly, move them all under CONFIG_PM_SLEEP and make the static
+> > inline stubs for pm_runtime_force_suspend/resume() return an error
+> > to indicate that they should not be used outside CONFIG_PM_SLEEP.
+> >
+>
+> Just realized that there seems to be some drivers that actually make
+> use of pm_runtime_force_suspend() from their ->remove() callbacks.
+>
+> To not break them, we probably need to leave this code to stay under CONF=
+IG_PM.
 
-Hello Matthias,
+OK, pm_runtime_force_suspend() need not be under CONFIG_PM_SLEEP.
+That's not the case for the other two functions though AFAICS.
 
-> All am65-cpsw controllers have a fixed TX delay, so the PHY interface
-> mode must be fixed up to account for this.
-> 
-> Modes that claim to a delay on the PCB can't actually work. Warn people
-> to update their Device Trees if one of the unsupported modes is specified.
-> 
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> ---
->  drivers/net/ethernet/ti/am65-cpsw-nuss.c | 27 ++++++++++++++++++++++--
->  1 file changed, 25 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> index f20d1ff192efe..519757e618ad0 100644
-> --- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> +++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> @@ -2602,6 +2602,7 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
->  		return -ENOENT;
->  
->  	for_each_child_of_node(node, port_np) {
-> +		phy_interface_t phy_if;
->  		struct am65_cpsw_port *port;
->  		u32 port_id;
->  
-> @@ -2667,14 +2668,36 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
->  
->  		/* get phy/link info */
->  		port->slave.port_np = of_node_get(port_np);
-> -		ret = of_get_phy_mode(port_np, &port->slave.phy_if);
-> +		ret = of_get_phy_mode(port_np, &phy_if);
->  		if (ret) {
->  			dev_err(dev, "%pOF read phy-mode err %d\n",
->  				port_np, ret);
->  			goto of_node_put;
->  		}
->  
-> -		ret = phy_set_mode_ext(port->slave.ifphy, PHY_MODE_ETHERNET, port->slave.phy_if);
-> +		/* CPSW controllers supported by this driver have a fixed
-> +		 * internal TX delay in RGMII mode. Fix up PHY mode to account
-> +		 * for this and warn about Device Trees that claim to have a TX
-> +		 * delay on the PCB.
-> +		 */
-> +		switch (phy_if) {
-> +		case PHY_INTERFACE_MODE_RGMII_ID:
-> +			phy_if = PHY_INTERFACE_MODE_RGMII_RXID;
-> +			break;
-> +		case PHY_INTERFACE_MODE_RGMII_TXID:
-> +			phy_if = PHY_INTERFACE_MODE_RGMII;
-> +			break;
-> +		case PHY_INTERFACE_MODE_RGMII:
-> +		case PHY_INTERFACE_MODE_RGMII_RXID:
-> +			dev_warn(dev,
-> +				 "RGMII mode without internal TX delay unsupported; please fix your Device Tree\n");
-
-Existing users designed boards and enabled Ethernet functionality using
-"rgmii-rxid" in the device-tree and implementing the PCB traces in a
-way that they interpret "rgmii-rxid". So their (mis)interpretation of
-it is being challenged by the series. While it is true that we are updating
-the bindings and driver to move towards the correct definition, I believe that
-the above message would cause confusion. Would it be alright to update it to
-something similar to:
-
-"Interpretation of RGMII delays has been corrected; no functional impact; please fix your Device Tree"
-
-Regards,
-Siddharth.
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >  drivers/base/power/runtime.c |    4 ++++
+> >  include/linux/pm_runtime.h   |   20 ++++++++++++++------
+> >  2 files changed, 18 insertions(+), 6 deletions(-)
+> >
+> > --- a/drivers/base/power/runtime.c
+> > +++ b/drivers/base/power/runtime.c
+> > @@ -1941,6 +1941,8 @@
+> >         pm_request_idle(link->supplier);
+> >  }
+> >
+> > +#ifdef CONFIG_PM_SLEEP
+> > +
+> >  bool pm_runtime_need_not_resume(struct device *dev)
+> >  {
+> >         return atomic_read(&dev->power.usage_count) <=3D 1 &&
+> > @@ -2063,3 +2065,5 @@
+> >         return ret;
+> >  }
+> >  EXPORT_SYMBOL_GPL(pm_runtime_force_resume);
+> > +
+> > +#endif /* CONFIG_PM_SLEEP */
+> > --- a/include/linux/pm_runtime.h
+> > +++ b/include/linux/pm_runtime.h
+> > @@ -66,9 +66,6 @@
+> >
+> >  extern int pm_generic_runtime_suspend(struct device *dev);
+> >  extern int pm_generic_runtime_resume(struct device *dev);
+> > -extern bool pm_runtime_need_not_resume(struct device *dev);
+> > -extern int pm_runtime_force_suspend(struct device *dev);
+> > -extern int pm_runtime_force_resume(struct device *dev);
+> >
+> >  extern int __pm_runtime_idle(struct device *dev, int rpmflags);
+> >  extern int __pm_runtime_suspend(struct device *dev, int rpmflags);
+> > @@ -257,9 +254,6 @@
+> >
+> >  static inline int pm_generic_runtime_suspend(struct device *dev) { ret=
+urn 0; }
+> >  static inline int pm_generic_runtime_resume(struct device *dev) { retu=
+rn 0; }
+> > -static inline bool pm_runtime_need_not_resume(struct device *dev) {ret=
+urn true; }
+> > -static inline int pm_runtime_force_suspend(struct device *dev) { retur=
+n 0; }
+> > -static inline int pm_runtime_force_resume(struct device *dev) { return=
+ 0; }
+> >
+> >  static inline int __pm_runtime_idle(struct device *dev, int rpmflags)
+> >  {
+> > @@ -330,6 +324,20 @@
+> >
+> >  #endif /* !CONFIG_PM */
+> >
+> > +#ifdef CONFIG_PM_SLEEP
+> > +
+> > +extern bool pm_runtime_need_not_resume(struct device *dev);
+> > +extern int pm_runtime_force_suspend(struct device *dev);
+> > +extern int pm_runtime_force_resume(struct device *dev);
+> > +
+> > +#else /* !CONFIG_PM_SLEEP */
+> > +
+> > +static inline bool pm_runtime_need_not_resume(struct device *dev) {ret=
+urn true; }
+> > +static inline int pm_runtime_force_suspend(struct device *dev) { retur=
+n -ENXIO; }
+> > +static inline int pm_runtime_force_resume(struct device *dev) { return=
+ -ENXIO; }
+> > +
+> > +#endif /* CONFIG_PM_SLEEP */
+> > +
+> >  /**
+> >   * pm_runtime_idle - Conditionally set up autosuspend of a device or s=
+uspend it.
+> >   * @dev: Target device.
+> >
+> >
+> >
+>
