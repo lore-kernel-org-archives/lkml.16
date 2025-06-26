@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D750260575;
-	Thu, 26 Jun 2025 23:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04A9267AFC;
+	Thu, 26 Jun 2025 23:56:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750982180; cv=none; b=Q8o7rMMIl0IAAaLABg62ChWFrpakf1RE5/9FW5zgpGfTLr903MjqZS286m3ShkXl5N6pn+1qalPC7EUhzsd0nMrOO+geHDIrhD07VAI0JYLZYMgikd0yP6Vl9z9MuSAk+X1E9khcAf7v5SY+Fa5WjIhyW/UnNMTBZh/HGP/GYkk=
+	t=1750982181; cv=none; b=E2yE1zjc5ctNislFjeQRcTDgHkqHKRkfLbrm6sEAR7rgpD8EN3fAR94x3mcEE/YvaB8CO9tq4uv29YVVNxKn1tUDhU9hey1tRLXvCpCxm9mgYovzqEjxO05kT+iOSAmHsk0mNcImGU7tW9niqNh68Mj6TR6i4oaxYUq46Np/iPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750982180; c=relaxed/simple;
-	bh=dH9lJ5pVgRGXRU3nCJAoakjNV0irDXPbwo3dgXZoSp4=;
+	s=arc-20240116; t=1750982181; c=relaxed/simple;
+	bh=QfBHWmIVnkYafDr60dzPf4Vjy/KCp+oTkW0957LIfng=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Tt2Vc1y9iK9SiP3hzBxbYH4ZQ3WJuQnaLfUGFYBPna4YqSJq1l/LJq2kXlNG1CtQA9M/YOqN97vIMymnjuXcGv3M6ZODtpyDG6ioe2GC+Ykj57z7qD0rC979BImFZboYpTmMiUKwSCubNUxeos+owyxnGJwkbEWzI6AbNV02iR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rpkwyaSD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=e7Yz6WjKmSmmMp5Sh40AAAym+C5hXUpNUJ8F2kxTEkfRcOHNlQK40l2eLecdW0f6OCyUywRMPSOMPGk44v7FrvzJJfkbpiUBFhecP97PGYiLdLNSpN8UUWpve4jS3oblLuxhnMgJ/d+yxPh8Z++YbTHQHsGF8Vsp54Fay4Ms7Ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CB74pnoD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rpkwyaSD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 735F1C4CEF1;
-	Thu, 26 Jun 2025 23:56:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CB74pnoD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0FBCC4CEF0;
+	Thu, 26 Jun 2025 23:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750982180;
-	bh=dH9lJ5pVgRGXRU3nCJAoakjNV0irDXPbwo3dgXZoSp4=;
+	s=k20201202; t=1750982181;
+	bh=QfBHWmIVnkYafDr60dzPf4Vjy/KCp+oTkW0957LIfng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rpkwyaSDXwHMvgADj/Iw35oDFc1zcI+wED1Ynz3z6m8oBWVxbnCiNAXNfMo83KCbb
-	 Rt/NEXpjszZWZdA/GqOjCNNEhbyMUJU5dDNOndvzBAogkg9QhMq6fbc0i03S4+gZfF
-	 jCzr6fVPS0l5WwtAYjYANncN0bKWlGN0yE+4QgoEB/c32vf9FQNxVrK2iI0FyavlR5
-	 rhy3HsW+AkrDM30SeTjSksONr7iAsnVq+NRFZ6ut0Ag8PVkrkKc81Fhbr+/ARY9AGG
-	 vvs8sJUxL/Sh8BFNG30EBoK/8G5QJWiNbv/8CATYZS2pT0OwzYxiDUxJ3Vos/4cYaL
-	 or9ngntSmQBRQ==
+	b=CB74pnoDE51uJhDYqvAEFsnNqQGKo281i8tF7MrjNylE3nq+lunRo5IUjnMdmCEnF
+	 857EeoGicP0KcXdyYn7rjxOfiIInlf66ejoogVSWg0OCN/WvVqfzSbNj95JApVPLBA
+	 sPZANRhGIaBfCUmFj9o8eTlnQ+ZoqgKoIXjL8BFJLhafvTouMfsQGYH5znzc+7Hs3K
+	 LWxzEDv0v+BvufkxWWFFS15zZMqCFWtFcCsjGX5jE9f4nUwx45sHYpEefPWZ4rnyYR
+	 aeEozcZ3qwPc0GfhaxHFdDksT7TS09hocHLoB+QA+j4uDpFL4pi1xhZKHG4GJqfiS/
+	 T3KokYn5k9VNA==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -42,9 +42,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Chen Zhongjin <chenzhongjin@huawei.com>,
 	Puranjay Mohan <puranjay@kernel.org>,
 	Dylan Hatch <dylanbhatch@google.com>
-Subject: [PATCH v3 13/64] objtool: Propagate elf_truncate_section() error in elf_write()
-Date: Thu, 26 Jun 2025 16:55:00 -0700
-Message-ID: <7fefa2fc608709425c24ac24f727936df86fcb07.1750980517.git.jpoimboe@kernel.org>
+Subject: [PATCH v3 15/64] objtool: Add empty symbols to the symbol tree again
+Date: Thu, 26 Jun 2025 16:55:02 -0700
+Message-ID: <9e858a0ab92dbbab161920dde93090301b52470b.1750980517.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750980516.git.jpoimboe@kernel.org>
 References: <cover.1750980516.git.jpoimboe@kernel.org>
@@ -56,37 +56,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Properly check and propagate the return value of elf_truncate_section()
-to avoid silent failures.
+The following commit
+
+  5da6aea375cd ("objtool: Fix find_{symbol,func}_containing()")
+
+fixed the issue where overlapping symbols weren't getting sorted
+properly in the symbol tree.  Therefore the workaround to skip adding
+empty symbols from the following commit
+
+  a2e38dffcd93 ("objtool: Don't add empty symbols to the rbtree")
+
+is no longer needed.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- tools/objtool/elf.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ tools/objtool/elf.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
 diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index b009d9feed76..19e249f4783c 100644
+index 19e249f4783c..a8a78b55d3ec 100644
 --- a/tools/objtool/elf.c
 +++ b/tools/objtool/elf.c
-@@ -1307,7 +1307,6 @@ static int elf_truncate_section(struct elf *elf, struct section *sec)
- 	for (;;) {
- 		/* get next data descriptor for the relevant section */
- 		data = elf_getdata(s, data);
+@@ -96,7 +96,8 @@ static inline unsigned long __sym_last(struct symbol *s)
+ }
+ 
+ INTERVAL_TREE_DEFINE(struct symbol, node, unsigned long, __subtree_last,
+-		     __sym_start, __sym_last, static, __sym)
++		     __sym_start, __sym_last, static inline __maybe_unused,
++		     __sym)
+ 
+ #define __sym_for_each(_iter, _tree, _start, _end)			\
+ 	for (_iter = __sym_iter_first((_tree), (_start), (_end));	\
+@@ -440,13 +441,6 @@ static void elf_add_symbol(struct elf *elf, struct symbol *sym)
+ 	list_add(&sym->list, entry);
+ 	elf_hash_add(symbol, &sym->hash, sym->idx);
+ 	elf_hash_add(symbol_name, &sym->name_hash, str_hash(sym->name));
 -
- 		if (!data) {
- 			if (size) {
- 				ERROR("end of section data but non-zero size left\n");
-@@ -1343,8 +1342,8 @@ int elf_write(struct elf *elf)
+-	/*
+-	 * Don't store empty STT_NOTYPE symbols in the rbtree.  They
+-	 * can exist within a function, confusing the sorting.
+-	 */
+-	if (!sym->len)
+-		__sym_remove(sym, &sym->sec->symbol_tree);
+ }
  
- 	/* Update changed relocation sections and section headers: */
- 	list_for_each_entry(sec, &elf->sections, list) {
--		if (sec->truncate)
--			elf_truncate_section(elf, sec);
-+		if (sec->truncate && elf_truncate_section(elf, sec))
-+			return -1;
- 
- 		if (sec_changed(sec)) {
- 			s = elf_getscn(elf->elf, sec->idx);
+ static int read_symbols(struct elf *elf)
 -- 
 2.49.0
 
