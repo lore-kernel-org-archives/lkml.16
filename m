@@ -1,65 +1,48 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C5325A2C2
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5191623314B;
+	Thu, 26 Jun 2025 08:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750925005; cv=none; b=qyM8lWzM3NdEiMfW5Un0Hkgy4VchK7zBXrQpFubAYgMaSln7vnAVfIsBZ2YqLRs+VA2W2biNNn1dY+Ezm9O3Rspd4xpD9bRGWGwc4Zgb79IOFCH5pIgJmlYjX15QELXAGsLor3eWT76SZylcGjAeJrfweLuGfrFA+3NP7JwmboA=
+	t=1750925069; cv=none; b=BucD5LMup1mVLg9qLBhcd5btgJ+c11o65xJlhhm1cN1TXfom1i78SllTlxjEWcaEpYpIZYbNbGq1CUCIaki/Ux2mqW335hKpiy+94/v+7PfQdUD+37gi8JkxFaviRGmX3LlLlQstNPrOXokUAUftGSZDkVkFtHWoJZydBRj66Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750925005; c=relaxed/simple;
-	bh=TX6cbqK3A7wm0xr8OkuHjx5m5oXahXwOVit8R3fCsJY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IlPTPXccFqoHp/7mYj/0CVA5/iJqCqVBaEOdVgf69UJQQ4Ff/ZpOjeNiw12kiGwP42OTQrSLZIqMnKxJhUZ2xgPzLe+a/5kiwnyYuqPukCeUaFupSVyuV759bv3+XwJtEBuSqS7JTRf367J2C8T0T2fN+GfJg7/yTi2hPOKkBIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UMY0CRr3; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1750925069; c=relaxed/simple;
+	bh=ll/GCByaq6L/vUF7X3hIS3Ke3ltdmYqhTq+wVmecgn8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DcV2AENcigRJz3W9bOZ99PT3ft7+wx8QhdiNbGYzY8VEpPZ4fIt7EP4RekkriCY/ErIfvDeqrTSRdr+ufgNR+23ffoWNFES9CV+B9JkI2FwvX54HL1Q7K42WhT9DzkLq7NxIaDyIiAZZ7GV62oHl5HbI2Pwd6CMUXH6J7zlg7sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=B47zkZ5P; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UMY0CRr3"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a6cdc27438so556610f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 01:03:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750925002; x=1751529802; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=eASQdGU0xGhBkNS6Re9mJOkMCP/ZJe7Z9f/s6yhHpfI=;
-        b=UMY0CRr3MK6r+JkzVFNGb4ePcbdW52arXsHEFsA/6oieqDhxRNxw0tVMGHTIY60nAE
-         W0ZZ2LY6bfH69r+YXXOwAgOpbyHBw1xx06pRpbJfpvTI8EZDYUpVzUNZPzb+Avhd7MOk
-         MQ2n0qIDA1cIvgju+MnzGmru6Q6Dg1Z+wqBOn2uH4EW6tzm87+SqJJfJL+FYkMqHrfuS
-         Be0++E7A3Ig0+QycyEDw+rIeGG06RrDMmYzJlGbUwAjWhTf+Q5qWGBF8LYz3BmtN5iCo
-         Q3NgphZxvTEoWogLLLHYOn2H8g2ekKRHsZTslTVOWVHgqJ0hPmU7uflS2WNOpiV3Z8pf
-         cIVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750925002; x=1751529802;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eASQdGU0xGhBkNS6Re9mJOkMCP/ZJe7Z9f/s6yhHpfI=;
-        b=aGwBk5udUOL8yu46RjkXRX18scqdPVP0ChGEiEg//xMPbLUD7FV9tbmkJ9fHgUB1mN
-         hwVlylaJr4COTworkiT7FvU3qwcShRjyw0bs1Jx/9wSEnq4OAAG0BBlYx0gD0HA6PTSo
-         3c7KoRaIokhw88Qz1WZSAVxW1Eprl51cGIPUJ4M2tyTo41k+hiPek1AEls3pmBSyxctu
-         s1AHYOF3tIBX97sL6eRqUuGrZzpU5ACPO5uKVcMrAyY2BCrVAMzeSmjHwA85oJSm803S
-         Ad1PfxKhZyoOuKqUzOsebMaVHbodA160j/c5W++Mp9SDyFlOJ2mjuw//EwfpIS12/DlW
-         fbeA==
-X-Gm-Message-State: AOJu0YxiVIUzcRCNCHKvNdp5m8d7Kd5Be80zUDJGw3D7MTxdYsKNRMyp
-	/+UWKhofsH+lJMlh0qVdAQq1N4TSO982jbovb1qBRBWSznOmasq9nlJZy5GMI5cmcV4=
-X-Gm-Gg: ASbGncsqw/vLMXkNTxB2jIzohb/Amo0WYcJ2I4ROpXUJMYeBFbxHDG8or11TrXcG9Vn
-	oOTrmEGGIuehhB2Y+Dqtg4XapzYNsjfvzGeiiVLDd6vRTARfhYdcF38f9ersRxzPlD1jUyCWi1a
-	H35vUS6wZ8k5LKw8Yw+5Cdr5CoE4SSZFY+NG5wE9/zZUipO6xwAOhF8MrYh4drABYnCMmX4t0Zm
-	YswoN4QeoSCd0NkI9iSyI3JKJlYNMjMqpEhq2NyTaom9xQR/du93hej/vDssKr3zqQJTl33D36v
-	kMTAqeGbRgkPo5E5s0txRCUtCJNRyaWqa470tGBRWYBXmC24ILKYvdTCtJuYXABiU1nPE0mBkDk
-	P
-X-Google-Smtp-Source: AGHT+IF6yQImeJzcD3ZrKiWueyJc8jgxSQIaNzReiWnJay/LPDvnwG+t/EWe4mdsd+HllkB5N/cBWg==
-X-Received: by 2002:a05:6000:2dc2:b0:3a5:2e59:833a with SMTP id ffacd0b85a97d-3a6ed5d62f2mr4861840f8f.1.1750925001683;
-        Thu, 26 Jun 2025 01:03:21 -0700 (PDT)
-Received: from [192.168.0.20] ([212.21.159.38])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80f27besm6691313f8f.57.2025.06.26.01.03.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 01:03:21 -0700 (PDT)
-Message-ID: <52a37afe-c41b-4f20-bbdc-bddc3ae26260@suse.com>
-Date: Thu, 26 Jun 2025 11:03:20 +0300
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="B47zkZ5P"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q0EXZa027655;
+	Thu, 26 Jun 2025 08:04:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9bh0BdyixRnDd6O7y8OvWoe7BilB3MF8CQqhr1ip8jM=; b=B47zkZ5P/f5rZs0C
+	sv+zpXXegSp5V8D03Yqf02SdiNEdjGQzExSCEYkckthqnlcdZpuananbDe9RDliW
+	yKJMC6P3CZ4l1KU3xgj3EGRfXaUXXhlJ++zbJ05eS5aO6/EOh6Xt3iZ1hOaI+/cV
+	38ihwf+qDFBbCerJgzDji4O4mEA7K/oPKX6qT4iiMwbNewYQfBJDx6ecaLjrU82R
+	WkXuN3/NVoY1PIvoHEcqb1Ha30sYrvIs5bWem8vgP3upWf3xie4h7o8IdAU6Z2iw
+	fU0hubREb791B34FjJoKuWgyAzljIzOh66TRY01tuk2Dzss39W78HrGJAREY6kcK
+	25hzsQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47evc5umfv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 08:04:12 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55Q84Brl031370
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 08:04:11 GMT
+Received: from [10.239.133.49] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 26 Jun
+ 2025 01:04:07 -0700
+Message-ID: <3905c8ab-941a-4171-a1d9-7721059a7490@quicinc.com>
+Date: Thu, 26 Jun 2025 16:04:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,112 +50,133 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/22] x86/mce: Remove __mcheck_cpu_init_early()
-To: Yazen Ghannam <yazen.ghannam@amd.com>, x86@kernel.org,
- Tony Luck <tony.luck@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- Smita.KoralahalliChannabasappa@amd.com, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
- linux-acpi@vger.kernel.org
-References: <20250624-wip-mca-updates-v4-0-236dd74f645f@amd.com>
- <20250624-wip-mca-updates-v4-10-236dd74f645f@amd.com>
-From: Nikolay Borisov <nik.borisov@suse.com>
+Subject: Re: [PATCH v5 3/5] dt-bindings: arm: Add qcom,qmi-id for remote etm
+To: Bjorn Andersson <andersson@kernel.org>
+CC: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>,
+        Konrad Dybcio <konradybcio@kernel.org>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250424115854.2328190-1-quic_jinlmao@quicinc.com>
+ <20250424115854.2328190-4-quic_jinlmao@quicinc.com>
+ <ugxijerhh5yfgpvmuaatvenh7yrk5uoiracfp7xknsxrb73dcl@hwsatze4rjuq>
 Content-Language: en-US
-Autocrypt: addr=nik.borisov@suse.com; keydata=
- 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
-In-Reply-To: <20250624-wip-mca-updates-v4-10-236dd74f645f@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Jinlong Mao <quic_jinlmao@quicinc.com>
+In-Reply-To: <ugxijerhh5yfgpvmuaatvenh7yrk5uoiracfp7xknsxrb73dcl@hwsatze4rjuq>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: lkzTFagtO3N3ZaAkJPjolOa-R_hAEndf
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA2NSBTYWx0ZWRfXw+rmMdNYNj/b
+ FDIWbb6LfSWXdLmOXQIs7bMkYQ0f1i3ekwh9XG7MX1ShPY9oED+xgAuVNs6oMUrvODR0rc1epUJ
+ iZ+mn7P92bWZwsg1g88877kyAWKMK/M60Fe3yHA7sfXCK12opzP1kZ1r1x9HfmdguQgEYAdoqKA
+ HQLpil9QA6btULs8U/DThickdN29S0FMHOmZx3HZvmZ6kJ4FzqOSxrk2zyABE1JnHilcm6j8xOL
+ 1ktDVc/Q82+phCFlM+xz45jnOYmAL6VZddPc7e6mApngYgYt56K/kLFPauHTJ8g4jM4wrmj8tVC
+ 3lj81PaXCxnQtAiqwwTs9Bv6r1gqDssLDdxPRZAg71n9RfYJpau8IvdeT8+NS6ffIL8aaujPbsH
+ X1CICqoyBl8OhHBuRdMsrpAb4Wd7EpY3CWtP6FWM/R8KxQS+pmGmldbFoW1biPrGGjSrTwAI
+X-Authority-Analysis: v=2.4 cv=caHSrmDM c=1 sm=1 tr=0 ts=685cfefc cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=GsXIiSCn9My1Hi_4oy0A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: lkzTFagtO3N3ZaAkJPjolOa-R_hAEndf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_03,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 phishscore=0 clxscore=1015 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506260065
 
 
 
-On 6/24/25 17:16, Yazen Ghannam wrote:
-> The __mcheck_cpu_init_early() function was introduced so that some
-> vendor-specific features are detected before the first MCA polling event
-> done in __mcheck_cpu_init_generic().
+On 2025/6/18 11:16, Bjorn Andersson wrote:
+> On Thu, Apr 24, 2025 at 04:58:52AM -0700, Mao Jinlong wrote:
+>> qcom,qmi-id is required for remote etm driver to find the remote
+>> subsystem connection. It is the instance id used by qmi API to
+>> communicate with remote processor.
+>>
+>> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
+>> ---
+>>   .../bindings/arm/qcom,coresight-remote-etm.yaml        | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-remote-etm.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-remote-etm.yaml
+>> index 4fd5752978cd..947fe33738a3 100644
+>> --- a/Documentation/devicetree/bindings/arm/qcom,coresight-remote-etm.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/qcom,coresight-remote-etm.yaml
+>> @@ -20,6 +20,13 @@ properties:
+>>     compatible:
+>>       const: qcom,coresight-remote-etm
+>>   
+>> +  qcom,qmi-id:
 > 
-> Currently, __mcheck_cpu_init_early() is only used on AMD-based systems and
-> additional code will be needed to support various system configurations.
-> 
-> However, the current and future vendor-specific code should be done during
-> vendor init. This keeps all the vendor code in a common location and
-> simplifies the generic init flow.
-> 
-> Move all the __mcheck_cpu_init_early() code into mce_amd_feature_init().
-> 
-> Also, move __mcheck_cpu_init_generic() after
-> __mcheck_cpu_init_prepare_banks() so that MCA is enabled after the first
-> MCA polling event.
-> 
-> Additionally, this brings the MCA init flow closer to what is described
-> in the x86 docs.
-> 
-> The AMD PPRs say
->    "The operating system must initialize the MCA_CONFIG registers prior to
->    initialization of the MCA_CTL registers.
-> 
->    The MCA_CTL registers must be initialized prior to enabling the error
->    reporting banks in MCG_CTL".
-> 
-> However, the Intel SDM "Machine-Check Initialization Pseudocode" says
-> MCG_CTL first then MCi_CTL.
-> 
-> But both agree that CR4.MCE should be set last.
-> 
-> Reviewed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Tested-by: Tony Luck <tony.luck@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> Why isn't this "qcom,qmi-instance-id" if that's what it represents?
 
+ok.
 
-IMO the change which moves __mcheck_cpu_init_generic should be in a 
-separate patch so that in the changelog it's abundantly clear that it's 
-a "world switch" function and its invocation timing is important.
+> 
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      This id is used by qmi API to communicate with remote processor for
+>> +      enabling and disabling remote etm. Each processor has its unique instance
+>> +      id.
+> 
+> DeviceTree describes the hardware and firmware interface, so don't
+> describe properties in terms of what Linux will do with this value, but
+> what it represents.
 
-<snip>
+Sure. I will update it.
 
+> 
+>> +
+>>     out-ports:
+>>       $ref: /schemas/graph.yaml#/properties/ports
+>>       additionalProperties: false
+>> @@ -32,6 +39,7 @@ properties:
+>>   required:
+>>     - compatible
+>>     - out-ports
+>> +  - qcom,qmi-id
+> 
+> How can this suddenly be required, did devices described by this binding
+> up until this point not work?
 
-In any case:
+Without this instance id, remote etm won't work.
 
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+> 
+> If this is the case, make sure to clearly describe this in the commit
+> message.
+> 
+> Regards,
+> Bjorn
+> 
+>>   
+>>   additionalProperties: false
+>>   
+>> @@ -40,6 +48,8 @@ examples:
+>>       etm {
+>>           compatible = "qcom,coresight-remote-etm";
+>>   
+>> +        qcom,qmi-id = <2>;
+>> +
+>>           out-ports {
+>>               port {
+>>                   modem_etm0_out_funnel_modem: endpoint {
+>> -- 
+>> 2.25.1
+>>
+
