@@ -1,84 +1,292 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC01921A420;
-	Thu, 26 Jun 2025 10:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BC9265289
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750933889; cv=none; b=kkT4Tf+RQfflfn8g0Wthm4X/OweS3UHYFDfzNy09S7YNNBQiGY9ThFEugZHZ3/69rtFAC1ewnRI7ym5tCvUXGIO9e6Xt9dE8VGoIVTQqBMC97anUpJX40VOv3HZ3kPSvBGq1ShjyOfG8GxRSbv/Ad3ojfmWrcp8pX5ExAzw9ypg=
+	t=1750933903; cv=none; b=AD8PwYBAk2vnkmynnw6af83o/jkQFPrb/svNp0CtyoMPN9ATgC+oeYVL1DSQjqII9zI8P87rXgVdKzPGSAVHAiWrPz//8E3lC+nF8EMptvABUPion0VHAZbRcpQQ9eYgeKIFB19sURS31ExR7Lee1dgEV/V0v3EBRq3/F5A3Nc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750933889; c=relaxed/simple;
-	bh=GnDNt+q5EI8c/ZXXdaO/Ry+x4SX461tey5/yPbMiUC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PAui7yG2oIIE2VXShNn8fGdGcjEtBHcGuGsSrOgUxoZ9Ct/cUXz9MrGQJDRtjLph/ot+DG2X8WpKRO/1Te8znVT6/Dkt4jFY7hecOeyTC31KPLndAJmpwgoYf43Jh6QFJ0PSgpzrB3MA4dDFgvvsRSnyV1YtFcVh35m5GJvUDT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60c4521ae2cso1513661a12.0;
-        Thu, 26 Jun 2025 03:31:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750933886; x=1751538686;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OmpUdW5cO4HhOMld9+otLQ45frNnQ2stlAqm727cEZc=;
-        b=n3TA+GithyQbldQXglA7C4d7Ohtl4YBFeT3l0Oes+qvaUz1lyvcJjw3fIGxegeJCsR
-         5JcSP3Ro4q0SwjK/RN94QoD0Tu5Qlz3K29l/K5vSgGUxhGAwmUtVfKq8E+Hc+N1bBGJm
-         De09VridrF6/m6rW4y5Kg1Gisg/3pkE/sv49C//0Utl6eNeNVXHfCDo2dbv0SDwFEkWN
-         elwd6He5u7jzX0RA83/362B+p80H7dyddE/b+muVD6BeY0Qz9w1grSXToirJhTE33cfy
-         r/jZSdNRk52x1A2CqJQXy8ZAzM4E2myuoLVuH2MnS7dubzIu4IF+a2Me+hTbbjGumLkt
-         qUHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEthHSbPY3b+TKGEyPecCc8F0aL01hCcWIRmkw0TrEhCxZZ47/hQKERGj2ML93mI4p0pqlLs3vrXCHdMYxZ8up@vger.kernel.org, AJvYcCUR5CkolATV/yP7Iv9YHbK/INJ11mjPS7k1PC75RB/Uqvsv1MrE3Jhs7yt2lna7rcQFfbk=@vger.kernel.org, AJvYcCVFexzgOpTZ6SKQCAc1B5cDm1Eq49TuLnpPictFotHJDkuK6jNZlErj/bvrkczw0ag4V4fJm/jHQEBCbdB/@vger.kernel.org, AJvYcCVjghlNcWQQ6SSvQCQ7/sFRjaDw8Ma7IcQJ6bB79wqD6VawxYsG+4jIZjeMclZ5r8jIQ49bgHvn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+D7ihM0I63oL3WS+jR+f4x7hT0psVpZXtZIa0+/yIeDzO1mb6
-	V5bFzdOPguATaiWRYMgtOp90f6jXY2bbCFAIXYsEmnB+G01oPnbqpJCQ
-X-Gm-Gg: ASbGncstKuG4erZnD7Fy72ZW1gF4BznTVseyAE5/wRWtLv3csx9CerkWGEvgcnZwjuT
-	BcmlOufIbGw61m6Ghoja2dbatCRzSwzgpwZFDHiMDTixH1dOfvUd+CZplvKswbbF0zgNfHVODr2
-	EKgJIgrM5iitUq5Sp3Vbjkzz6WLqwc5ipJbSV6t/qJ5g1JlIhvR47XJL2QmAAWiN5lRqSLWAjDT
-	icPtz6cdFVHWeAuoz62ms/53qUipHlL8gUXRG8DTv2erKjUw1UdhyV72b/GwzYM6ukBRmILMmcb
-	6zCUO1mlEs1KA6DjxqHP6UvduuZNM9Xd6D1/gAuhqZM7p8YwMbIf
-X-Google-Smtp-Source: AGHT+IHd9W2v8OJUTxiUy7PQcBOs9sxn8KJRAFWKIx4csWgVqOlg3SR9T44yg3x21QnhYH8gtFjLPw==
-X-Received: by 2002:a17:906:f5a7:b0:ad9:f54f:70a2 with SMTP id a640c23a62f3a-ae0be88e5c9mr636284366b.22.1750933885862;
-        Thu, 26 Jun 2025 03:31:25 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:4::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0d4815f46sm126845666b.185.2025.06.26.03.31.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 03:31:25 -0700 (PDT)
-Date: Thu, 26 Jun 2025 03:31:23 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	bpf@vger.kernel.org, gustavold@gmail.com
-Subject: Re: [PATCH net-next v2 4/4] selftests: net: add netpoll basic
- functionality test
-Message-ID: <aF0hes00SoHF8umw@gmail.com>
-References: <20250625-netpoll_test-v2-0-47d27775222c@debian.org>
- <20250625-netpoll_test-v2-4-47d27775222c@debian.org>
- <20250625150919.7b06b436@kernel.org>
+	s=arc-20240116; t=1750933903; c=relaxed/simple;
+	bh=3ruTSftSudukUxsgTGRxvI43lHrj/qhZ+FTYT1CjjpU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c2LU5CIhF9W/gpTQBHD6ZRvAibEQdQYSjURtGfOsBX0I8/aOKOPEYPv44gQa55OjFYahvFhWW62SdGAEuoyYVzaXBQlfe4KNV8hlK6uko9xTJbJJCYs1B5xO8VaeZMpEzS/2bxqlKTBLO5gsFE3pm8mRVtJj/3Q9luM+ThiYrwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0HHVlB7+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wgkHfQoC; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bvUdgTqa; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XR/pTJdS; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0HHVlB7+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wgkHfQoC";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bvUdgTqa";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XR/pTJdS"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BD95721174;
+	Thu, 26 Jun 2025 10:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750933893; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ClzSD6HNMq3DsFUbkYh+DB0h/oRjb6Sh//7r0btRfN4=;
+	b=0HHVlB7+XDVZRkk6vS7m3hFdl5LYFdEG3DxApiert3GpgFaRztWSl6wg8VCVRG/8RmwwKo
+	uueGPdH8NoKx7vBpUoIBgVUyNmWRQYnTWf+pTqlJturh+5ky70fqGCWyeqo54rr4ahpP+N
+	4FjCOMSvL0xN4KxYmHL/ro9Bf8c5AdQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750933893;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ClzSD6HNMq3DsFUbkYh+DB0h/oRjb6Sh//7r0btRfN4=;
+	b=wgkHfQoCSP856X2zbTiAYDy/jQ5uGV121lMtHYyJfwaxM1eIjT2UBbQR+5rmP34Hl3UNZB
+	1wZWgOvPozYhYSAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750933892; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ClzSD6HNMq3DsFUbkYh+DB0h/oRjb6Sh//7r0btRfN4=;
+	b=bvUdgTqaoAeNiW9idPjDl1aPn77IYbrTyQ+BoPLsl3v7BUSBzqwB6skPZRmDNn4GR/6EGr
+	krEcMhMZtbd+8EWUfP1vGcJekC9IOU6o7bMO6Z4Zk5C4lp9sOAH35RzXxi3vYN9wUF09aS
+	XTZzRPCJ4GrmRx/GUONei//DokG/8wQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750933892;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ClzSD6HNMq3DsFUbkYh+DB0h/oRjb6Sh//7r0btRfN4=;
+	b=XR/pTJdSRmZMODChFK6j4nIyRBdBDJQEMKBAor7ml/7rZfp2Y0+scylP+7pBL1s4nNX/s1
+	sTS7ggXZwrn/5VBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 88089138A7;
+	Thu, 26 Jun 2025 10:31:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id etjEH4QhXWjfYQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 26 Jun 2025 10:31:32 +0000
+Message-ID: <ecf7f260-4c5f-45fc-be8d-0361b00af6a3@suse.de>
+Date: Thu, 26 Jun 2025 12:31:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625150919.7b06b436@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fbdev: efifb: do not load efifb if PCI BAR has changed
+ but not fixuped
+To: oushixiong1025@163.com, Helge Deller <deller@gmx.de>
+Cc: Peter Jones <pjones@redhat.com>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Shixiong Ou <oushixiong@kylinos.cn>
+References: <20250626094937.515552-1-oushixiong1025@163.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250626094937.515552-1-oushixiong1025@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[163.com,gmx.de];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[163.com,gmx.de];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
+X-Spam-Level: 
 
-On Wed, Jun 25, 2025 at 03:09:19PM -0700, Jakub Kicinski wrote:
-> On Wed, 25 Jun 2025 04:39:49 -0700 Breno Leitao wrote:
-> > +    raise KsftSkipEx("netpoll_poll_dev() was not called. Skipping test")
-> 
-> Let's make this an Xfail. Looks like the condition doesn't trigger 
-> in VM testing :(
+Hi
 
-Exactly, there is a chance this will not trigger it, and you do not want
-this bothering you. Having it as Xfail will be a false positive.
+Am 26.06.25 um 11:49 schrieb oushixiong1025@163.com:
+> From: Shixiong Ou <oushixiong@kylinos.cn>
+>
+> [WHY]
+> On an ARM machine, the following log is present:
+> [    0.900884] efifb: framebuffer at 0x1020000000, using 3072k, total 3072k
+> [    2.297884] amdgpu 0000:04:00.0: remove_conflicting_pci_framebuffers: bar 0: 0x1000000000 -> 0x100fffffff
+> [    2.297886] amdgpu 0000:04:00.0: remove_conflicting_pci_framebuffers: bar 2: 0x1010000000 -> 0x10101fffff
+> [    2.297888] amdgpu 0000:04:00.0: remove_conflicting_pci_framebuffers: bar 5: 0x58200000 -> 0x5823ffff
+>
+> It show that the efifb framebuffer base is out of PCI BAR, and this
 
-I have a plan to make this consitent by writing some configfs hook
-for debug, then maybe we can make it a debug?!
+The patch at
+
+   https://patchwork.freedesktop.org/series/148057/
+
+is supposed to fix the problem. It has been merged with v6.16-rc1 as 
+commit 2f29b5c23101 ("video: screen_info: Relocate framebuffers behind 
+PCI bridges"). It is in your tree?
+
+Best regards
+Thomas
+
+> results in both efi-framebuffer and amdgpudrmfb co-existing.
+>
+> The fbcon will be bound to efi-framebuffer by default and cannot be used.
+>
+> [HOW]
+> Do not load efifb driver if PCI BAR has changed but not fixuped.
+> In the following cases:
+> 	1. screen_info_lfb_pdev is NULL.
+> 	2. __screen_info_relocation_is_valid return false.
+>
+> Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+> ---
+>   drivers/video/fbdev/efifb.c     |  4 ++++
+>   drivers/video/screen_info_pci.c | 24 ++++++++++++++++++++++++
+>   include/linux/screen_info.h     |  5 +++++
+>   3 files changed, 33 insertions(+)
+>
+> diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+> index 0e1bd3dba255..de8d016c9a66 100644
+> --- a/drivers/video/fbdev/efifb.c
+> +++ b/drivers/video/fbdev/efifb.c
+> @@ -303,6 +303,10 @@ static void efifb_setup(struct screen_info *si, char *options)
+>   
+>   static inline bool fb_base_is_valid(struct screen_info *si)
+>   {
+> +	/* check whether fb_base has changed but not fixuped */
+> +	if (!screen_info_is_useful())
+> +		return false;
+> +
+>   	if (si->lfb_base)
+>   		return true;
+>   
+> diff --git a/drivers/video/screen_info_pci.c b/drivers/video/screen_info_pci.c
+> index 66bfc1d0a6dc..ac57dcaf0cac 100644
+> --- a/drivers/video/screen_info_pci.c
+> +++ b/drivers/video/screen_info_pci.c
+> @@ -9,6 +9,8 @@ static struct pci_dev *screen_info_lfb_pdev;
+>   static size_t screen_info_lfb_bar;
+>   static resource_size_t screen_info_lfb_res_start; // original start of resource
+>   static resource_size_t screen_info_lfb_offset; // framebuffer offset within resource
+> +static bool screen_info_changed;
+> +static bool screen_info_fixuped;
+>   
+>   static bool __screen_info_relocation_is_valid(const struct screen_info *si, struct resource *pr)
+>   {
+> @@ -24,6 +26,24 @@ static bool __screen_info_relocation_is_valid(const struct screen_info *si, stru
+>   	return true;
+>   }
+>   
+> +bool screen_info_is_useful(void)
+> +{
+> +	unsigned int type;
+> +	const struct screen_info *si = &screen_info;
+> +
+> +	type = screen_info_video_type(si);
+> +	if (type != VIDEO_TYPE_EFI)
+> +		return true;
+> +
+> +	if (screen_info_changed && !screen_info_fixuped) {
+> +		pr_warn("The screen_info has changed but not fixuped");
+> +		return false;
+> +	}
+> +
+> +	pr_info("The screen_info is useful");
+> +	return true;
+> +}
+> +
+>   void screen_info_apply_fixups(void)
+>   {
+>   	struct screen_info *si = &screen_info;
+> @@ -32,18 +52,22 @@ void screen_info_apply_fixups(void)
+>   		struct resource *pr = &screen_info_lfb_pdev->resource[screen_info_lfb_bar];
+>   
+>   		if (pr->start != screen_info_lfb_res_start) {
+> +			screen_info_changed = true;
+>   			if (__screen_info_relocation_is_valid(si, pr)) {
+>   				/*
+>   				 * Only update base if we have an actual
+>   				 * relocation to a valid I/O range.
+>   				 */
+>   				__screen_info_set_lfb_base(si, pr->start + screen_info_lfb_offset);
+> +				screen_info_fixuped = true;
+>   				pr_info("Relocating firmware framebuffer to offset %pa[d] within %pr\n",
+>   					&screen_info_lfb_offset, pr);
+>   			} else {
+>   				pr_warn("Invalid relocating, disabling firmware framebuffer\n");
+>   			}
+>   		}
+> +	} else {
+> +		screen_info_changed = true;
+>   	}
+>   }
+>   
+> diff --git a/include/linux/screen_info.h b/include/linux/screen_info.h
+> index 923d68e07679..632cdbb1adbe 100644
+> --- a/include/linux/screen_info.h
+> +++ b/include/linux/screen_info.h
+> @@ -138,9 +138,14 @@ ssize_t screen_info_resources(const struct screen_info *si, struct resource *r,
+>   u32 __screen_info_lfb_bits_per_pixel(const struct screen_info *si);
+>   
+>   #if defined(CONFIG_PCI)
+> +bool screen_info_is_useful(void);
+>   void screen_info_apply_fixups(void);
+>   struct pci_dev *screen_info_pci_dev(const struct screen_info *si);
+>   #else
+> +bool screen_info_is_useful(void)
+> +{
+> +	return true;
+> +}
+>   static inline void screen_info_apply_fixups(void)
+>   { }
+>   static inline struct pci_dev *screen_info_pci_dev(const struct screen_info *si)
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
