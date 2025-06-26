@@ -1,97 +1,109 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5862EB5B4
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750951090; cv=pass; b=u8q4w6uL1Wj5OD++oYZv5ShG5jxhKetXu1TvhcEiN43aUoiFeq8Ww64ZGewxLa8n3bUVeIW74veyYDYo6ycUl4HljiD7hvvfmcliYfVui1sNLD81G1QyIwPS8S57b1kEP04H4P3stC0POvW/m4hJG0l5F6NlO4tIPSmvtwh0xHQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750951090; c=relaxed/simple;
-	bh=X7Q+9YMrBKMmMa3dSOm/Sr602ckt24Mw/XdVfKpVW+I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kajURjr/MOQGSEkoPjaf0BmHJ8IKTbkb7ZgqlJbtFM9I6OaP/LRF5Yw3HJPAkjhTWrgy58V2NcTyQ9wYQtd3D3U6DlRl0BgI8Jq64PoXvp3zCjpN59MNUkcrIS6bgCIm0y5TvbLvIwN9ggOGo4xtXnNcostSSoGKHfaJv6c3Q88=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=ZYdfM9BP; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01F52EB5CA;
+	Thu, 26 Jun 2025 15:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750951098; cv=none; b=D7HL23AWNh4cnYPPQDCgqeGmDgvpyV/slrWehFVVMAPgBU8PGjStuXlEqUyZYIY2/0MViwtxwRIY2kQmiNcU0Wuvxr0X8T5RB/ivEr/OMfo5PH+AtgUsJ6bg/gaNswIow9aHA6ZqJKj1B24JmCG2fl+YBgkZ4H9Z20MOY7zYIeg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750951098; c=relaxed/simple;
+	bh=O/PahS6LrdahoJgUmBA8HOvNulGcN+KpvOPWLplfST4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=N8oOMOafFQwFFzINxV+LyiheQURE15Xhg6JvgX8iXg5udgJ0G+SfZdhnj96XnJUlXTr7u5O5zTqzEPb/Sw09jp9Kew1NdozV3YmM/O8Q4IrRJQdvwGjBBIXFpTeUOZsSyT0gi39z8y7D3IyOg3f5nUsgnTROyBh1s89zKIVU4TA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ui2NLhQ5; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="ZYdfM9BP"
-ARC-Seal: i=1; a=rsa-sha256; t=1750951060; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=KdSQNg44XY0aDBvJpvwXJ7hZnCNtm34c2MB+E5W50MAJcF15A5lW5tN0yLKUY4dmZ2hd7FBA8Wpq4zxs6C2QhOiv2UdiD2NMWACJVvae0vAdODDYmWZBRFNK/3vUso0LJLfoj5mQ38H3yK21dGM99BnFPKR0merCQtCf8Ln6vzA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750951060; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Mp0Gioriq+Cm97moLnLwRbcOGGhJvQyXKdRIuZwi4PY=; 
-	b=E/O9TBewgZI2hhCliPHlup/Fk9aG+rWNhf4zGhfN1J4arLvGktzO1syiexEMAqfqti5smuv9j7zgN56ZDiqe6EDMZ3SeTTbhjaeMClSuY4B6zPJZMN55IVQ2iz5jJewf7AR5HlJyvwTqV73cjXVrUSQtl0PWhqcksyDl9kzfewY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750951060;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
-	bh=Mp0Gioriq+Cm97moLnLwRbcOGGhJvQyXKdRIuZwi4PY=;
-	b=ZYdfM9BPepva/BjM/XIknPqiog0Qholkn1PB6/NVAawm0j21pgk8/tUelTxG5GHP
-	bHzBMPgrE/wVmBuBJMHy1Q2xWwNs4GVKCW7Z31rgzmlWmpUk0nV+RgPUkVsGxhGV9vb
-	welB1E4xpdwqNvOD8sa0NtTdM+0T1P9h8L97Rh7g=
-Received: by mx.zohomail.com with SMTPS id 1750951058759577.5834453049853;
-	Thu, 26 Jun 2025 08:17:38 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Thu, 26 Jun 2025 17:16:49 +0200
-Subject: [PATCH] arm64: defconfig: enable further Rockchip platform drivers
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ui2NLhQ5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750951097; x=1782487097;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=O/PahS6LrdahoJgUmBA8HOvNulGcN+KpvOPWLplfST4=;
+  b=Ui2NLhQ5cctMxhuO+NkSMPx/tQz13lDHbI6yu/vn5czITopoRulRmUTr
+   NJ+sjCohPVyd40x8ZTA5i8eObsumAjOsZq7aOcbm8kiqXzDw44mfiIbto
+   0kuR9C7kvEFebef96ZrgrSCcH4DR8Vt+UqikAazJovaewAUOi7T+mUi+l
+   SQYTDmvPmPGgB2dy/jVeayJgaNk9ruSuYkLEFskuuJePopMccbWes290u
+   PLm86uYt8NI0EKCTBnvWgA7UWlpXMsDFIZSCYrdfxvXbn8WrxkxjExsUN
+   /1g1Ga7dXaX5Ml+JlVHM3x9go9fPKIU3TW8oa25jp+g1ID533a/ntpdIZ
+   A==;
+X-CSE-ConnectionGUID: hKmQa6LkS1CXAYavPeKaiQ==
+X-CSE-MsgGUID: qmNxp4ouTliF7f7eiz9yig==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="78688262"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="78688262"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:18:16 -0700
+X-CSE-ConnectionGUID: +TsuNq6pRkeISQ6zV4HevQ==
+X-CSE-MsgGUID: QhoFw5F/Q66u4O/fZY9sbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="183576678"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:18:12 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 26 Jun 2025 18:18:07 +0300 (EEST)
+To: Arnd Bergmann <arnd@kernel.org>
+cc: Hans de Goede <hansg@kernel.org>, 
+    Pratap Nirujogi <pratap.nirujogi@amd.com>, 
+    Benjamin Chan <benjamin.chan@amd.com>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>, 
+    Armin Wolf <W_Armin@gmx.de>, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
+    Suma Hegde <suma.hegde@amd.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86/amd_isp4: prevent built-in configuration
+In-Reply-To: <20250620115448.202425-1-arnd@kernel.org>
+Message-ID: <49a6a302-8660-5072-27b9-abc61253f608@linux.intel.com>
+References: <20250620115448.202425-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250626-rk3588-defconfig-v1-1-39a19a41c181@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAGBkXWgC/zXMQQqDMBCF4auEWXdAY6PiVYoLm0zsUEzaSSyCe
- PeGSpf/g/ftkEiYEgxqB6EPJ46hRH1RYB9TmAnZlQZdaVO1ukV5Nqbv0ZG3MXiesasNNZ13xlw
- tlNtLyPP2I2/j2ULvtcj5HOE+JUIbl4XzoAJtGf86jMfxBfiKZT2TAAAA
-X-Change-ID: 20250626-rk3588-defconfig-715e37fd554c
-To: Heiko Stuebner <heiko@sntech.de>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: kernel@collabora.com, linux-rockchip@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=US-ASCII
 
-The RK3588 SoC, and its sibling, the RK3588S, are supported by mainline
-Linux. However, some of its SoC drivers are currently not enabled in the
-arm64 defconfig.
+On Fri, 20 Jun 2025, Arnd Bergmann wrote:
 
-Enable rockchip-dfi, rockchip-rga, and the Rockchip specific extensions
-to Hantro as modules.
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> Checking the module owner of the device only works when modules are
+> enabled, and the device is created from a module:
+> 
+> drivers/platform/x86/amd/amd_isp4.c:154:28: error: incomplete definition of type 'struct module'
+> 
+> Building the driver as a loadable module avoids the build failure,
+> though this should probably be fixed in a different way that still
+> works if the device was created from built-in code.
+> 
+> Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV05C10")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202506150313.UHoIoVhR-lkp@intel.com/
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/platform/x86/amd/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+> index 63e4bd985699..9e150500e37e 100644
+> --- a/drivers/platform/x86/amd/Kconfig
+> +++ b/drivers/platform/x86/amd/Kconfig
+> @@ -36,6 +36,7 @@ config AMD_WBRF
+>  config AMD_ISP_PLATFORM
+>  	tristate "AMD ISP4 platform driver"
+>  	depends on I2C && X86_64 && ACPI
+> +	depends on m
+>  	help
+>  	  Platform driver for AMD platforms containing image signal processor
+>  	  gen 4. Provides camera sensor module board information to allow
+> 
 
-These drivers are also used on other Rockchip SoCs that mainline
-supports, notably RK3566/RK3568, as well as RK3399.
+The fix series should finally be on its way to Linus through i2c tree. 
+I'm sorry for the unexpected delay in getting the real fix applied.
 
-Suggested-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index e071f8f45607dbfd8e00b915b27999949ee0fc88..8b5ecb20ed6450faa0da14a6fdb4cb227a1f735f 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1789,3 +1789,6 @@ CONFIG_CORESIGHT_STM=m
- CONFIG_CORESIGHT_CPU_DEBUG=m
- CONFIG_CORESIGHT_CTI=m
- CONFIG_MEMTEST=y
-+CONFIG_DEVFREQ_EVENT_ROCKCHIP_DFI=m
-+CONFIG_VIDEO_ROCKCHIP_RGA=m
-+CONFIG_VIDEO_HANTRO_ROCKCHIP=m
-
----
-base-commit: 7e5ee158886bb7c244a34623de6a410b62023d60
-change-id: 20250626-rk3588-defconfig-715e37fd554c
-
-Best regards,
 -- 
-Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+ i.
 
