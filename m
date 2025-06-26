@@ -1,80 +1,119 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34F521D3EA
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CE11891A9;
+	Thu, 26 Jun 2025 10:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750933292; cv=none; b=ZUnU4CXg6WiLpACQi8ah23wC423KZv3FkEvq2VW7JgtJ3I3mAghRewVKncK88sw+opwV+Bz2eT5RHW31c7w2MpkKxeFP7iJxeFbKyuHKxQoG+h7b5S1vLafnP3W4UgvAqoQn6EKptwd1vUZ5Iv1dBXerOXlfZja2mqM3DENTm2E=
+	t=1750933363; cv=none; b=oVbOHZ8L8Ajx0zvlButpCtU1YzK/oAbtCDCKmn3tz9jOUM7/lOLbLTIglkxMNtGKXDF5mHTQNTkvy/SWLwiQ6U6SxIF/4/WECQ7WCCK7E53btPqMNbG5SAQPXxE+46DXpqE/RUf+BJPU4mtzgj98dnhfVlZScOiD/0YW8Je+i4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750933292; c=relaxed/simple;
-	bh=wuyYUJYBGjMGsR5z8Xt+sWOwz08ARzD+e0c376gudIk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f9VXlfcTW7tdtC4mWrr1FCX2lK89DgcCxf5OklLSMY/nC+24ELUPGFV6hodlljkvFN2ATvL0P8Qvp8lz5F1AUcMUAaFcmf8sufVX6+tKMmDQ6zIJmv/nlx0B22Lmyw9YHPd5R8QcoMAySzn7e2kI0+YKGY3efYT40NsIc7X/fzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=C+JGQTgl; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="C+JGQTgl"
-Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 866231FA9F;
-	Thu, 26 Jun 2025 12:21:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1750933288;
-	bh=8mDX2mVu5psUDXip/UEM+GhL2PEeUin4P89BMTdn6xc=;
-	h=Received:From:To:Subject;
-	b=C+JGQTglztBCnKVPAZCdr5iMERa2OSCeP4znfS4XhVyRD1GOS4D5ZVYSRgm4G0CYt
-	 QBWL5HmEAMG2/52afkE8PDl1zSqpJbuBxAWx1fIXa/Z6S+sPvOGZLUID7vEGoHUL27
-	 6LrRoAwHs5aDVd5fSxjfgOUA0ZOYMg2AJmp2JfAChJUt7UQHrzT+O5z6gVEB+uPqIz
-	 jeqfRsAOjpgYGhpFNE9e00h5Aq4LP7DVZiD4WpZYoXqQtv/uCu7aMpYW/e+PIo2owP
-	 Vt/ssRmyTPb0ZqYGBMQ+pdTiBYNLu/StnvxsoCMdvSClI6h9Z1ZFLKuGsymbUtTvsj
-	 I8ifHMV6XgFcQ==
-Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
-	id 2E5177FA06; Thu, 26 Jun 2025 12:21:28 +0200 (CEST)
-Date: Thu, 26 Jun 2025 12:21:28 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Anusha Srivatsa <asrivats@redhat.com>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] drm/panel: panel-simple: Fix panel-dpi probe error
-Message-ID: <aF0fKHQywtoG63wT@gaggiata.pivistrello.it>
-References: <20250626-drm-panel-simple-fixes-v2-0-5afcaa608bdc@kernel.org>
+	s=arc-20240116; t=1750933363; c=relaxed/simple;
+	bh=2H+kJL+bS84EB32auPPLkuKNf04DurQZwXhkw/BdWuM=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=acaBdbrc5WdG+BHNTTF6+4Aq9ojXh0epr45P5/KzzvAGAhma5AGRwUzJx0ROtV13RleFHt5J8PaWvp8GvTp896RnxDSu0qm9lye4QUACYzZQJDnuZ+kK8Z4yl6psayvbeNcWZE0Dvnlw3u65g74B25BARK8xSrDQ/wJPxuyd3eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uUjkV-005OrH-U1;
+	Thu, 26 Jun 2025 10:22:32 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626-drm-panel-simple-fixes-v2-0-5afcaa608bdc@kernel.org>
+From: "NeilBrown" <neil@brown.name>
+To: "Song Liu" <songliubraving@meta.com>
+Cc: "Tingmao Wang" <m@maowtm.org>,
+ =?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ "Song Liu" <song@kernel.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-security-module@vger.kernel.org"
+ <linux-security-module@vger.kernel.org>,
+ "brauner@kernel.org" <brauner@kernel.org>,
+ "Kernel Team" <kernel-team@meta.com>, "andrii@kernel.org" <andrii@kernel.org>,
+ "eddyz87@gmail.com" <eddyz87@gmail.com>, "ast@kernel.org" <ast@kernel.org>,
+ "daniel@iogearbox.net" <daniel@iogearbox.net>,
+ "martin.lau@linux.dev" <martin.lau@linux.dev>,
+ "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+ "jack@suse.cz" <jack@suse.cz>, "kpsingh@kernel.org" <kpsingh@kernel.org>,
+ "mattbobrowski@google.com" <mattbobrowski@google.com>,
+ =?utf-8?q?G=C3=BCnther?= Noack <gnoack@google.com>
+Subject: Re: [PATCH v5 bpf-next 0/5] bpf path iterator
+In-reply-to: <9BD19ABC-08B8-4976-912D-DFCC06C29CAA@meta.com>
+References: <>, <9BD19ABC-08B8-4976-912D-DFCC06C29CAA@meta.com>
+Date: Thu, 26 Jun 2025 20:22:29 +1000
+Message-id: <175093334910.2280845.2994364473463803565@noble.neil.brown.name>
 
-Hello Maxime,
-it works for me, thanks!
+On Thu, 26 Jun 2025, Song Liu wrote:
+>=20
+>=20
+> > On Jun 25, 2025, at 6:05=E2=80=AFPM, NeilBrown <neil@brown.name> wrote:
+>=20
+> [...]
+>=20
+> >>=20
+> >> I can't speak for Micka=C3=ABl, but a callback-based interface is less f=
+lexible
+> >> (and _maybe_ less performant?).  Also, probably we will want to fallback
+> >> to a reference-taking walk if the walk fails (rather than, say, retry
+> >> infinitely), and this should probably use Song's proposed iterator.  I'm
+> >> not sure if Song would be keen to rewrite this iterator patch series in
+> >> callback style (to be clear, it doesn't necessarily seem like a good idea
+> >> to me, and I'm not asking him to), which means that we will end up with
+> >> the reference walk API being a "call this function repeatedly", and the
+> >> rcu walk API taking a callback.  I think it is still workable (after all,
+> >> if Landlock wants to reuse the code in the callback it can just call the
+> >> callback function itself when doing the reference walk), but it seems a
+> >> bit "ugly" to me.
+> >=20
+> > call-back can have a performance impact (less opportunity for compiler
+> > optimisation and CPU speculation), though less than taking spinlock and
+> > references.  However Al and Christian have drawn a hard line against
+> > making seq numbers visible outside VFS code so I think it is the
+> > approach most likely to be accepted.
+> >=20
+> > Certainly vfs_walk_ancestors() would fallback to ref-walk if rcu-walk
+> > resulted in -ECHILD - just like all other path walking code in namei.c.
+> > This would be largely transparent to the caller - the caller would only
+> > see that the callback received a NULL path indicating a restart.  It
+> > wouldn't need to know why.
+>=20
+> I guess I misunderstood the proposal of vfs_walk_ancestors()=20
+> initially, so some clarification:
+>=20
+> I think vfs_walk_ancestors() is good for the rcu-walk, and some=20
+> rcu-then-ref-walk. However, I don=E2=80=99t think it fits all use cases.=20
+> A reliable step-by-step ref-walk, like this set, works well with=20
+> BPF, and we want to keep it.=20
 
-On Thu, Jun 26, 2025 at 12:04:58PM +0200, Maxime Ripard wrote:
-> Here's a series fixing (hopefully) the panel-simple regression for
-> panels with a panel-dpi compatible.
-> 
-> It's only build tested, so if you could give that series a try
-> Francesco, I'd really appreciate it.
-> 
-> Thanks!
-> Maxime 
-> 
-> Link: https://lore.kernel.org/dri-devel/20250612081834.GA248237@francesco-nb/
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+The distinction between rcu-walk and ref-walk is an internal
+implementation detail.  You as a caller shouldn't need to think about
+the difference.  You just want to walk.  Note that LOOKUP_RCU is
+documented in namei.h as "semi-internal".  The only uses outside of
+core-VFS code is in individual filesystem's d_revalidate handler - they
+are checking if they are allowed to sleep or not.  You should never
+expect to pass LOOKUP_RCU to an VFS API - no other code does.
 
-For the whole series,
+It might be reasonable for you as a caller to have some control over
+whether the call can sleep or not.  LOOKUP_CACHED is a bit like that.
+But for dotdot lookup the code will never sleep - so that is not
+relevant.
 
-Tested-by: Francesco Dolcini <francesco.dolcini@toradex.com> # Toradex Colibri iMX6
+I strongly suggest you stop thinking about rcu-walk vs ref-walk.  Think
+about the needs of your code.  If you need a high-performance API, then
+ask for a high-performance API, don't assume what form it will take or
+what the internal implementation details will be.
 
-Francesco
+I think you already have a clear answer that a step-by-step API will not
+be read-only on the dcache (i.e.  it will adjust refcounts) and so will
+not be high performance.  If you want high performance, you need to
+accept a different style of API.
 
+NeilBrown
