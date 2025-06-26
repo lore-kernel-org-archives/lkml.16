@@ -1,363 +1,147 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5C21F463B
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506F2237717
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750921373; cv=none; b=VwFDHSpivo8d2ZTwI9cz3bFA29ee4q23X7d+HkhQruivWKFaVEBhSUDEiSTSxnMl/he4E/Assi2hm5ipjHiSFhvKm54ZMIX+lT2h9LbQftYSd2Ee3zFu4Vj1Z7YQNroJtiMT2+FyF6u9Wgm6daYfAO5y87vBXKCzJRmujP1r2QQ=
+	t=1750921437; cv=none; b=tm0CSO6HhfaIZj4GVLjS1x8KslaNGkcmIyOTI+2VGpIjRd36I4tbvbTD6moTaljeFcaiwxsmZ0J4rJxVgcoqSh29w9cUCBXvxzg6b+xFXfdIFhjUCodFT4np9lmWuBX7iUIDrAa7mZAM9VDTrgqyvwMnpm5zucaOopJ9AjxaRgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750921373; c=relaxed/simple;
-	bh=JeCIQ4IL3sxvd31af3WXViJMtBO5qnzW2MhlAjyRs1A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hprIfWYghbPwWw9H1/fzxl6PEL6iJ0Xvf/EWVF7iQpb1060EEiqJgOeK+YHzKe9e69XS0tGYFc9sMEMYeIdP/xGP9SvIJ3LWQyhqKedVJvzA6FLvxrVCAXDR1SRgO2A9WlvoPHjBwaOEWgMAMfyhbugz04bxCXBSmjG9JBqJunI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=i1gVJWfN; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1750921437; c=relaxed/simple;
+	bh=9C/yPC65dyt5L285Ad0r8Enf6n6g55IaUv+DoEN+0PI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=AKeGI3i3MiC3KPy0CjH1a5AHYcYZA2WgzM0m4+iN4YQdYfL10HLwomTksUjoXJz5DAFhUMm0sLmSXqFnBKMcwDhTW5JdRPxK8/wOdLKJYb3SUUsX6eZDeJwh3WadiHHPjIsRVZbIlUQMSHKjjb9qqra1V82J2E0O5/loInxnQxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UO2yXuDg; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="i1gVJWfN"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3138e64b3fcso505449a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 00:02:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UO2yXuDg"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3137c20213cso736319a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 00:03:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1750921371; x=1751526171; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750921435; x=1751526235; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8ezoYursQ3Oig93OOMoe1zsrf1bzMlW/yf403T+KaH4=;
-        b=i1gVJWfNiLyhUcEcFUbfe/c/uC7/h+7IK74qX4Vp4Skj2ekvmi5K+ARpUJaC3eLrt+
-         lXCYlz/ytrjo2KK8IehtCYyEdAAgCPdcv18GH+bEN60IhRusVgtsOFCyHrY/5TzbWUCC
-         K+XruDWEGSnvhmMKG/ITx22LxuJWoTFOL1F28bJtq2NfsFcfUZmWOtGiGMz2E2CWawOT
-         T+8Kcq671boFyGMoo+3G5JlR9NnjI9fNTp7gGwpZTB336xfHOPoZQtxkzJHJBKnVKZGH
-         OUIgGsxVDQ/eLWjvaB+I6ketc/WFKBWrPWWvWHa6+6hp6E0iCJJHo3rYilIBZp4jba7U
-         KoOg==
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9C/yPC65dyt5L285Ad0r8Enf6n6g55IaUv+DoEN+0PI=;
+        b=UO2yXuDgntwHQ6MR8cvQeo7Q9IirTmfpF4LlGbTd9hES9M+eDcsJ7d0WzpG5bAFYkR
+         c/7gVPNjpgZfWvXbUkiprXq5V+JUcPLbX7jde260tH2YizxHrd0iTNUiqSZALXk4E+Pd
+         F2fIRvrGM56c9U6H+Dycyt8YoTk/o5hFvAurBZ0vz7xZGSFCH+SbJf5bd8DHZFPxahtQ
+         uqw+PCoTjHvMAGTdJD/T5/GECwChBPNjJZCk60zK2Z/tLLJjsb1D/rUdclEmq8LeG2Ih
+         7okva+6XM2mKiKKU6JQi4Llg+KB95AlRwXL0+Z/0vqLLkX3zb3T/fqjXGNPUyBnUBvP6
+         5D8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750921371; x=1751526171;
+        d=1e100.net; s=20230601; t=1750921435; x=1751526235;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8ezoYursQ3Oig93OOMoe1zsrf1bzMlW/yf403T+KaH4=;
-        b=fA94IUQKXuFSV3/epSicnSgVnfkRBoK16jHu2oFWUts+a2TVGCF8IpVYcNsf/4xbD2
-         Z7aiyn40Tk8uGCWFGOiEU2/gK4I5iCZRJkp0dvhjyzYmNzsNPFZZN/jjejGUECSX5baw
-         h/iajTHVNsXsNIsy0DKk4MxdTWrMwgVmZqdJT6dK1Q2mwQYZh599yh4hl5VqcZrlNemC
-         jdvSQv36MUQvqlLX/Ja98noeh8hTFdnvLtBNypQlpNkSkQLcvpelSKz2MPgfV103j972
-         l/MVJI6qAK6r7DwKWUnrHA4uTqI+sTEL8MTnmG7NYXoygonwTA5GZ/oysLec9nrwenys
-         lO4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVrntCaZ+ds3M4ynkq8UdHMDirmm+pq3umxdZbGkmtehNgCMeaxxOHbam9U8SWuWXRUsWWtI35ZJGGaR8s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDwzW52UoKfi2uYdxlE7l1jt2eqRKhUrxHvPjAClF4YFFfNyvD
-	hzDPasEs8fe7J2dXSRuSLSMM5hXWsjm1O9VmfpJhdngU9oGwvYOUKrpA1q4+7L4Djp2WessJdAL
-	5hauKghLI2io01PO0Hec+2mYNLjAw4/NrDCXMTEuVDg==
-X-Gm-Gg: ASbGnctdbS+B0swVDVh53oNcAgvOHFLwyLATcxZXNJJVIQtbK9ovRt7Txan9tI7b1X2
-	Eygn2pl5AKlassSQeay5fjaqzVTMdX/AYMU3p/wPb7n/b+e0J7I49M4UFzsw8YAS3liBTbfUiLm
-	JbVoOcSGbzSGckgDECGbfM4nqS7zSZuUm921ZerNnx71PtB027WzliYZ9X7Lg7EYI2lYzItMeG9
-	RjPofThK5D1wmY=
-X-Google-Smtp-Source: AGHT+IFAHFhc1sG2VjqU+uJ8gNcDmA7e/PrfZ8E+mKfaFvA9q0lqjh6eFhvh0NJwzb3bJOHZBhk/+7B5CQz0QdRGscA=
-X-Received: by 2002:a17:90a:d60d:b0:313:f6fa:5bb5 with SMTP id
- 98e67ed59e1d1-315f26893d4mr9452944a91.18.1750921370751; Thu, 26 Jun 2025
- 00:02:50 -0700 (PDT)
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9C/yPC65dyt5L285Ad0r8Enf6n6g55IaUv+DoEN+0PI=;
+        b=B+rFm2TWGfQSxzntmfcVzcgN8FpEg4Qx/iEX2N9M17TQccOWCKqme5e70radhphjXb
+         nVy/SBB4zboSSEIAr+NiKz+Yh0RnZ/V8TvSe7XexMLpFWW3K8W9scq4BOkXxrTy1ee0j
+         kLOpp4wLQxookNMN9bv79VmOuYas7Azz14dEnSyEtrJHsxcBZmnF8dgcg5c+MBlxO6lG
+         q0Jcv26fjSMCU9L07DitYUWhBtrSOLSHJxxcJg0PRxtoiViR6fFPdkKtb5wIhD8iYI14
+         qblq3VFIJQNGnugf6oABae10FH8ixW3rJcfvfRQ7LV1w1bZ+nbIOuGP9o5YtpLMTNuQ8
+         0lYw==
+X-Forwarded-Encrypted: i=1; AJvYcCU0byN7OksEFt51FVQqS6D6+mDpv0X6MvC8/dSm/bdVuUKL+EXVggB47TkMMrFLGjC4yl6/Pz6Azpngh5M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/mT4Iy/3l3hPBa5Gbc6wO6VABPnOZK15lHP91KxJZnHBX1OsA
+	Z2PIJf+vrr+RlEx9rPWrCT7AeYat/mTxN8AlMufl3crkI0qhNhIm0j2QK1FkFf0P1wuj0JAbTz5
+	OvJANt1jooSRdJLJPeyLP1SFRVOH+X7RBDKrRn4AFLQ==
+X-Gm-Gg: ASbGncu678J5VYTaeVecJIv+8pGNLEO4r7yRbONFjuoOcf+8UlSgQILK2mYbWjZhbx+
+	F5oph5yreZd/kSr3jtfb5gHm0kPIHWyEKfrplNn2j7oHDTpcqH1Uqelw6mkflGnlvR+3zpLAHgJ
+	y//eQdP2HvrwmNCrL5W/mGcCndMDZQ3d8ivtOVgvhd6KKFtzwkHtoQu35UkTrWF095wP4FxpeLc
+	SeX
+X-Google-Smtp-Source: AGHT+IGB3/XrVvwCiSKGcdM/uKLZZR2BBjt/EJ8TFkLwSBLUw9n1kq4/A/cuTaHIdw+LRFJ+QBCRjPhK4cZiYm51gdc=
+X-Received: by 2002:a17:90b:53c5:b0:312:1508:fb4e with SMTP id
+ 98e67ed59e1d1-315f2675bbbmr9154353a91.17.1750921435517; Thu, 26 Jun 2025
+ 00:03:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618121358.503781-1-apatel@ventanamicro.com>
- <20250618121358.503781-10-apatel@ventanamicro.com> <aFkZJKnweqBi64b8@smile.fi.intel.com>
-In-Reply-To: <aFkZJKnweqBi64b8@smile.fi.intel.com>
-From: Rahul Pathak <rpathak@ventanamicro.com>
-Date: Thu, 26 Jun 2025 12:32:14 +0530
-X-Gm-Features: Ac12FXy2D20JGtdoC12UYlFRQvl9rpENvx4ZUy4WrZrFd5OnE24sZvklsv5hZz4
-Message-ID: <CA+Oz1=a65HvfXHWjeSq4Ubq=5kzHp9pkLJVr77hvTYAGFHv0Mg@mail.gmail.com>
-Subject: Re: [PATCH v6 09/23] clk: Add clock driver for the RISC-V RPMI clock
- service group
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Anup Patel <apatel@ventanamicro.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>, Atish Patra <atish.patra@linux.dev>, 
-	Andrew Jones <ajones@ventanamicro.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 26 Jun 2025 12:33:43 +0530
+X-Gm-Features: Ac12FXzrp0QOBUWJ7tIxkv-cgchxT19rQvDD483_utcFbw2DHpKfR-GbfFmMvSU
+Message-ID: <CA+G9fYtJO4DbiabJwpSamTPHjPzyrD3O6ZCwm2+CDEUA7f+ZYw@mail.gmail.com>
+Subject: stable-rc: 5.4 and 5.10: fanotify01.c:339: TFAIL: fanotify_mark(fd_notify,
+ 0x00000001, 0x00000008, -100, ".") expected EXDEV: ENODEV (19)
+To: LTP List <ltp@lists.linux.it>, open list <linux-kernel@vger.kernel.org>, 
+	linux-stable <stable@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Amir Goldstein <amir73il@gmail.com>, chrubis <chrubis@suse.cz>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Petr Vorel <pvorel@suse.cz>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Anders Roxell <anders.roxell@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 23, 2025 at 2:36=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Jun 18, 2025 at 05:43:44PM +0530, Anup Patel wrote:
-> > From: Rahul Pathak <rpathak@ventanamicro.com>
-> >
-> > The RPMI specification defines a clock service group which can be
-> > accessed via SBI MPXY extension or dedicated S-mode RPMI transport.
-> >
-> > Add mailbox client based clock driver for the RISC-V RPMI clock
-> > service group.
->
-> ...
->
-> ...
->
-> > +enum rpmi_clk_config {
-> > +     RPMI_CLK_DISABLE =3D 0,
-> > +     RPMI_CLK_ENABLE =3D 1
->
-> It's still unclear if this enum can be expanded in the future (and no, yo=
-u may
-> not answer this either). Hence, to reduce potential churn in the future, =
-leave
-> the trailing comma here.
->
+Regression in the LTP syscalls/fanotify01 test on the Linux stable-rc 5.4
+and 5.10 kernel after upgrading to LTP version 20250530.
 
-Ok, will update
+ - The test passed with LTP version 20250130
+ - The test fails with LTP version 20250530
 
-> > +};
->
-> ...
->
-> > +union rpmi_clk_rates {
-> > +     u64 discrete[RPMI_CLK_DISCRETE_MAX_NUM_RATES];
-> > +     struct {
-> > +             u64 min;
-> > +             u64 max;
-> > +             u64 step;
-> > +     } linear;
->
-> Have you looked at the linear_range.h? Why can it not be (re-)used here?
->
+Regressions found on stable-rc 5.4 and 5.10 LTP syscalls fanotify01.c
+fanotify_mark expected EXDEV: ENODEV (19)
 
-I did the first time only when you commented. And i dont see any
-benefit in that.
-linear_range has slightly different way to access any value using `sel`.
-Here this union represents how RPMI protocol represents the rates and
-reusing linear_range will only introduce conversion to and fro.
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
 
-> > +};
->
-> ...
->
-> > +static u32 rpmi_clk_get_num_clocks(struct rpmi_clk_context *context)
-> > +{
-> > +     struct rpmi_get_num_clocks_rx rx;
-> > +     struct rpmi_mbox_message msg;
-> > +     int ret;
-> > +
-> > +     rpmi_mbox_init_send_with_response(&msg, RPMI_CLK_SRV_GET_NUM_CLOC=
-KS,
-> > +                                       NULL, 0, &rx, sizeof(rx));
->
-> ...here
->
-> > +     ret =3D rpmi_mbox_send_message(context->chan, &msg);
-> > +
->
-> This blank line should be rather ^^^
+Test regression: stable-rc 5.4 and 5.10
 
-Sure, I will update.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
->
-> > +     if (ret || rx.status)
-> > +             return 0;
->
-> Why rx.status can't be checked before calling to a sending message?
-> Sounds like the rpmi_mbox_init_send_with_response() links rx to msg someh=
-ow.
-> If this is the case, use msg here, otherwise move the check to be in the
-> correct place.
+fanotify01.c:339: TFAIL: fanotify_mark(fd_notify, 0x00000001,
+0x00000008, -100, ".") expected EXDEV: ENODEV (19)
 
-Yes, the rpmi_mbox_init_send_with_response is a helper function which links
-the rx to msg. It's a very simple function which only performs assignments.
+The test expected fanotify_mark() to fail with EXDEV, but received
+ENODEV instead. This indicates a potential mismatch between updated
+LTP test expectations and the behavior of the 5.4 kernel=E2=80=99s fanotify
+implementation.
 
-Using msg instead of rx directly will require additional typecasting
-which will only clutter
-I can add a comment if that helps wherever the rpmi_mbox_init_send_with_res=
-ponse
-is used.
+Test log,
+--
 
->
-> Seems the same question to the all similar checks in the code.
->
-> > +     return le32_to_cpu(rx.num_clocks);
-> > +}
->
-> ...
->
-> > +static int rpmi_clk_get_supported_rates(u32 clkid, struct rpmi_clk *rp=
-mi_clk)
-> > +{
-> > +     struct rpmi_clk_context *context =3D rpmi_clk->context;
-> > +     struct rpmi_clk_rate_discrete *rate_discrete;
-> > +     struct rpmi_clk_rate_linear *rate_linear;
-> > +     struct rpmi_get_supp_rates_rx *rx __free(kfree) =3D NULL;
-> > +     struct rpmi_get_supp_rates_tx tx;
-> > +     struct rpmi_mbox_message msg;
->
-> > +     size_t clk_rate_idx =3D 0;
->
-> This kind of assignments is hard to maintain and it's mistake prone in ca=
-se
-> some additional code is injected in the future that might reuse it.
->
-I dont understand what is the problem with this assignment. If any
-code added in the future reuse it then it has to make sure that
-clk_rate_idx has the correct initial value before any further references.
-
-> > +     int ret, rateidx, j;
-> > +
-
+fanotify01.c:94: TINFO: Test #3: inode mark events (FAN_REPORT_FID)
+fanotify01.c:301: TPASS: got event: mask=3D31 pid=3D2364 fd=3D-1
 ...
-
-> > +static void rpmi_clk_disable(struct clk_hw *hw)
-> > +{
-> > +     struct rpmi_clk *rpmi_clk =3D to_rpmi_clk(hw);
-> > +     struct rpmi_clk_context *context =3D rpmi_clk->context;
-> > +     struct rpmi_mbox_message msg;
-> > +     struct rpmi_set_config_tx tx;
-> > +     struct rpmi_set_config_rx rx;
-> > +     int ret;
-> > +
-> > +     tx.config =3D cpu_to_le32(RPMI_CLK_DISABLE);
-> > +     tx.clkid =3D cpu_to_le32(rpmi_clk->id);
-> > +
-> > +     rpmi_mbox_init_send_with_response(&msg, RPMI_CLK_SRV_SET_CONFIG,
-> > +                                       &tx, sizeof(tx), &rx, sizeof(rx=
-));
-> > +     ret =3D rpmi_mbox_send_message(context->chan, &msg);
-> > +     if (ret || rx.status)
-> > +             pr_err("Failed to disable clk-%u\n", rpmi_clk->id);
->
-> Close to useless message. You may improve it by splitting to two and prin=
-ting
-> rx.status in one and ret in the other with different text. Or drop it.
-
-Sure, I think it's better to keep and split it into two as you suggest
-instead of dropping.
-
->
-> > +}
->
-> > +static int rpmi_clk_probe(struct platform_device *pdev)
-> > +{
-> > +     int ret;
-> > +     unsigned int num_clocks, i;
-> > +     struct clk_hw_onecell_data *clk_data;
-> > +     struct rpmi_clk_context *context;
-> > +     struct rpmi_mbox_message msg;
-> > +     struct clk_hw *hw_ptr;
-> > +     struct device *dev =3D &pdev->dev;
-> > +
-> > +     context =3D devm_kzalloc(dev, sizeof(*context), GFP_KERNEL);
-> > +     if (!context)
-> > +             return -ENOMEM;
-> > +     context->dev =3D dev;
-> > +     platform_set_drvdata(pdev, context);
-> > +
-> > +     context->client.dev             =3D context->dev;
-> > +     context->client.rx_callback     =3D NULL;
-> > +     context->client.tx_block        =3D false;
-> > +     context->client.knows_txdone    =3D true;
-> > +     context->client.tx_tout         =3D 0;
-> > +
-> > +     context->chan =3D mbox_request_channel(&context->client, 0);
-> > +     if (IS_ERR(context->chan))
-> > +             return PTR_ERR(context->chan);
->
-> Here is an incorrect order of the freeing resources. Besides that, wrappi=
-ng the
-> mbox_free_channel() into managed resources reduces this code by more
-> than 10 LoCs! At bare minimum if will fix the bug,
-
-Understood. So we can use devm_add_action_or_reset to link a release functi=
-on
-with the context->chan. Is this what you are suggesting? This will also mak=
-e
-the .remove callback redundant which can be removed.
-
+fanotify01.c:301: TPASS: got event: mask=3D8 pid=3D2364 fd=3D-1
+fanotify01.c:339: TFAIL: fanotify_mark(fd_notify, 0x00000001,
+0x00000008, -100, ".") expected EXDEV: ENODEV (19)
+fanotify01.c:94: TINFO: Test #4: mount mark events (FAN_REPORT_FID)
+fanotify01.c:301: TPASS: got event: mask=3D31 pid=3D2364 fd=3D-1
 ...
-
-> > +
-> > +     rpmi_mbox_init_get_attribute(&msg, RPMI_MBOX_ATTR_MAX_MSG_DATA_SI=
-ZE);
-> > +     ret =3D rpmi_mbox_send_message(context->chan, &msg);
-> > +     if (ret) {
-> > +             mbox_free_channel(context->chan);
-> > +             return dev_err_probe(dev, ret, "Failed to get max message=
- data size\n");
-> > +     }
-> > +
-> > +     context->max_msg_data_size =3D msg.attr.value;
-> > +     num_clocks =3D rpmi_clk_get_num_clocks(context);
-> > +     if (!num_clocks) {
-> > +             mbox_free_channel(context->chan);
-> > +             return dev_err_probe(dev, -ENODEV, "No clocks found\n");
-> > +     }
-> > +
-> > +     clk_data =3D devm_kzalloc(dev, struct_size(clk_data, hws, num_clo=
-cks),
-> > +                             GFP_KERNEL);
->
-> (The above mention problem comes here after the successful allocation of
->  clk_data but failing of any further code.
-
-Once the change mentioned in above comment will be done this will take
-care of the rest of the exit scenarios.
-
->
-> > +     if (!clk_data) {
-> > +             mbox_free_channel(context->chan);
-> > +             return dev_err_probe(dev, -ENOMEM, "No memory for clock d=
-ata\n");
-> > +     }
-> > +     clk_data->num =3D num_clocks;
-> > +
-> > +     for (i =3D 0; i < clk_data->num; i++) {
-> > +             hw_ptr =3D rpmi_clk_enumerate(context, i);
-> > +             if (IS_ERR(hw_ptr)) {
-> > +                     mbox_free_channel(context->chan);
-> > +                     return dev_err_probe(dev, PTR_ERR(hw_ptr),
-> > +                                          "failed to register clk-%d\n=
-", i);
-> > +             }
-> > +             clk_data->hws[i] =3D hw_ptr;
-> > +     }
-> > +
-> > +     ret =3D devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, c=
-lk_data);
-> > +     if (ret) {
-> > +             mbox_free_channel(context->chan);
-> > +             return dev_err_probe(dev, ret, "failed to register clock =
-HW provider\n");
-> > +     }
-> > +
-> > +     return 0;
-> > +}
->
-> ...
->
-> > +static void rpmi_clk_remove(struct platform_device *pdev)
-> > +{
-> > +     struct rpmi_clk_context *context =3D platform_get_drvdata(pdev);
-> > +
-> > +     mbox_free_channel(context->chan);
-> > +}
->
-> This function will be gone. See above.
-
-Agree
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+fanotify01.c:301: TPASS: got event: mask=3D8 pid=3D2364 fd=3D-1
+fanotify01.c:339: TFAIL: fanotify_mark(fd_notify, 0x00000001,
+0x00000008, -100, ".") expected EXDEV: ENODEV (19)
+fanotify01.c:94: TINFO: Test #5: filesystem mark events (FAN_REPORT_FID)
+fanotify01.c:301: TPASS: got event: mask=3D31 pid=3D2364 fd=3D-1
+...
+fanotify01.c:301: TPASS: got event: mask=3D8 pid=3D2364 fd=3D-1
+fanotify01.c:339: TFAIL: fanotify_mark(fd_notify, 0x00000001,
+0x00000008, -100, ".") expected EXDEV: ENODEV (19)
 
 
---=20
+## Test logs
+* Build details:
+https://regressions.linaro.org/lkft/linux-stable-rc-linux-5.4.y/v5.4.294-22=
+3-g7ff2d32362e4/ltp-syscalls/fanotify01/
+* Build detail 2:
+https://regressions.linaro.org/lkft/linux-stable-rc-linux-5.10.y/v5.10.238-=
+353-g9dc843c66f6f/ltp-syscalls/fanotify01/
+* Test log: https://qa-reports.linaro.org/api/testruns/28859312/log_file/
+* Issue: https://regressions.linaro.org/-/known-issues/6609/
+* Test LAVA job 1:
+https://lkft.validation.linaro.org/scheduler/job/8329278#L28572
+* Test LAVA job 2:
+https://lkft.validation.linaro.org/scheduler/job/8326518#L28491
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2yxHGv=
+VkVpcbKqPahSKRnlITnVS/
+* Build config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2yxHGvVkVpcbKqPahSKR=
+nlITnVS/bzImage
 
-Thanks
-Rahul Pathak
+
+--
+Linaro LKFT
+https://lkft.linaro.org
