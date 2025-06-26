@@ -1,190 +1,132 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4481FF7C8;
-	Thu, 26 Jun 2025 10:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C81222590;
+	Thu, 26 Jun 2025 10:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750934158; cv=none; b=Xv9XlZUjUVywIPqHlyLJAwFeZKMS/dbuzGNmi1FL6VxngFo3yrzuv3h2Sa6+oCWwduvYZ0lx+Znftd7kX5p3iWY732gBV4RkF2/bS8aRzpZTWJS6fU0n1DpLHgHbm5zP26kjlc/eKkvqLDfv/YlSmsBTz893dDOkOWTVebi9d7k=
+	t=1750934189; cv=none; b=dDO47fhPrOokNTKtjsg7maHX4Wzh8bx/AN9NcrXBF4vESNCjSpNRro4uyGa4Sf/L6EcEjE4LUMDtDnqKBdWk/hZ1ADcWxfU/6NGlRWekNt7HXZbLcnI98m6wkpaDGMP7wlG0h9DidbGb1hzdpj74oZMzxTObDo1gKwpvmM38Mlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750934158; c=relaxed/simple;
-	bh=wctAJxLB4oheSszXnRLwa7JcjgrvlkawrXhZWDSFB98=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UYsiyIBu1P1RSBf3+vXb9U0ji0++XVRbN0vnbPQfUpy49FT4RhaH+oyvP+bB/CrsUg/3WN2EE2f4uWKUHtGaqUoLVFWMbBlzxIeCGfTWGOtAJW5RdiFiEnKCeaU8MIU8TETl/22AfCq7fUckNv712JmxJ6y6hG4mYXL+Nr6mx/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=CXa2JDHB; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1750934189; c=relaxed/simple;
+	bh=awgx4GCv+DU9O391SVRk/D4EEDX+wR3EWr3gJ0RVJZ4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=AsChr+hJ+18U0OO9FQ6ZSpUqswoZaRIvKa7aZJ6z4iYoABkWO75N6bTHvyzYPUaqA010EQFV1DtxkzYceuvi/7Kv70HRNroTChKHsFZaPJjCpKJL3/IgFtvL4vb9/PNFTMr1IXYZHqNI529XZAJgj3gSIwGoYLgZidKNyq7RP3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UIimtl2L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="CXa2JDHB"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QA9QY8025602;
-	Thu, 26 Jun 2025 12:35:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	NV4+KoQwrrIsbeLEb3se8T07/pyaJ/I/7ykprHiqctM=; b=CXa2JDHB4uTNEMai
-	2f9NWHp3xztyJ3Y6ituNRm8BfaNOHQDmcwn1mnLUaoppY3rpexlzw5toG7Yzc9Ci
-	JKp9PsrWevNASEoRdbIBLdiOMsFJDxfmn0VOZOelEX57qfqL/YTOVrrSQo7TqpOp
-	XFQULhMnRqcIJxyRqxAagjgJLDICpsnsdxnqBKpzhekKrxCHVoqgelkfI7OSfqh4
-	U9rIhzGVL75BA+IScVOGJS3qirFCX0VVC2gBnnmLwS0h0j54WJv8vIX3I1OKfBmj
-	CHPz1w0S+YKt+JKt67MkWXnKCu3uI7YwBnWLZ/dDXhh5JKuFkXjjgNYRjh+mHfVN
-	u8Prkw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dhvbx1rh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 12:35:33 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1B0064002D;
-	Thu, 26 Jun 2025 12:33:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8967DB63201;
-	Thu, 26 Jun 2025 12:33:03 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.130.77.119) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 26 Jun
- 2025 12:33:02 +0200
-Date: Thu, 26 Jun 2025 12:32:57 +0200
-From: Alain Volmat <alain.volmat@foss.st.com>
-To: =?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
-CC: Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
-        Andi Shyti
-	<andi.shyti@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Sumit Semwal
-	<sumit.semwal@linaro.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?=
-	<christian.koenig@amd.com>,
-        M'boumba Cedric Madianga
-	<cedric.madianga@gmail.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        "Pierre-Yves
- MORDRET" <pierre-yves.mordret@st.com>,
-        <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>
-Subject: Re: [PATCH 3/3] i2c: stm32f7: support i2c_*_dma_safe_msg_buf APIs
-Message-ID: <20250626103257.GA349896@gnbcxd0016.gnb.st.com>
-References: <20250616-i2c-upstream-v1-0-42d3d5374e65@foss.st.com>
- <20250616-i2c-upstream-v1-3-42d3d5374e65@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UIimtl2L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2FF4C4CEEB;
+	Thu, 26 Jun 2025 10:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750934188;
+	bh=awgx4GCv+DU9O391SVRk/D4EEDX+wR3EWr3gJ0RVJZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UIimtl2LFIMtv61BMJTLnOiyklJzr5y1r/gaLDPPDy+hHVsUj825W7EO1MpTh98KO
+	 Bfyys9ZRcY85iIqA4qvdHGYDdwwTtvocxo5GxYiUTuQ0MJHGxUZ3i6+ZEo+ip679gh
+	 I+5xTGkWfvVweJIaE7SkDYjnw0G5xI8evVeI6ErRSUeYMEgpLUU2jlyhg8iBek3GOP
+	 ya+du6Mw+aelhuVjgctRiT70B9Y5lfLkndKtGWm0ylBUJEWDsDMTs/Sqe8QvcSCIQm
+	 qzxDUiW3Gw3FBD4ZzpEK9xjNa3Yywu54oNlU5KvdNDYGj4ayDtY2lH9mEIplohJp53
+	 WLAbq0M+3A10g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250616-i2c-upstream-v1-3-42d3d5374e65@foss.st.com>
-X-Disclaimer: ce message est personnel / this message is private
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_05,2025-06-25_01,2025-03-28_01
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 26 Jun 2025 12:36:23 +0200
+Message-Id: <DAWED7BIC32G.338MXRHK4NSJG@kernel.org>
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
+ <kwilczynski@kernel.org>, <bhelgaas@google.com>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 4/4] rust: devres: implement register_release()
+X-Mailer: aerc 0.20.1
+References: <20250624215600.221167-1-dakr@kernel.org>
+ <20250624215600.221167-5-dakr@kernel.org>
+In-Reply-To: <20250624215600.221167-5-dakr@kernel.org>
 
-Hi Clément,
+On Tue Jun 24, 2025 at 11:54 PM CEST, Danilo Krummrich wrote:
+> +pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
+> +where
+> +    P: ForeignOwnable + 'static,
+> +    for<'a> P::Borrowed<'a>: Release,
+> +{
+> +    let ptr =3D data.into_foreign();
+> +
+> +    #[allow(clippy::missing_safety_doc)]
+> +    unsafe extern "C" fn callback<P>(ptr: *mut kernel::ffi::c_void)
+> +    where
+> +        P: ForeignOwnable,
+> +        for<'a> P::Borrowed<'a>: Release,
+> +    {
+> +        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked a=
+bove and hence valid.
+> +        unsafe { P::borrow(ptr.cast()) }.release();
+> +
+> +        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked a=
+bove and hence valid.
+> +        drop(unsafe { P::from_foreign(ptr.cast()) });
 
-thanks for the patch.
+Maybe this function should just be:
 
-On Mon, Jun 16, 2025 at 10:53:56AM +0200, Clément Le Goffic wrote:
-> Use the i2c-core-base APIs to allocate a DMA safe buffer when needed.
-> 
-> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
-> ---
->  drivers/i2c/busses/i2c-stm32f7.c | 36 +++++++++++++++++++++++++-----------
->  1 file changed, 25 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-> index a05cac5ee9db..5be14c8a2af4 100644
-> --- a/drivers/i2c/busses/i2c-stm32f7.c
-> +++ b/drivers/i2c/busses/i2c-stm32f7.c
-> @@ -742,9 +742,12 @@ static void stm32f7_i2c_dma_callback(void *arg)
->  	struct stm32f7_i2c_dev *i2c_dev = (struct stm32f7_i2c_dev *)arg;
->  	struct stm32_i2c_dma *dma = i2c_dev->dma;
->  	struct device *dev = dma->chan_using->device->dev;
-> +	struct stm32f7_i2c_msg *f7_msg = &i2c_dev->f7_msg;
->  
->  	stm32f7_i2c_disable_dma_req(i2c_dev);
->  	dma_unmap_single(dev, dma->dma_buf, dma->dma_len, dma->dma_data_dir);
-> +	if (!f7_msg->smbus)
-> +		i2c_put_dma_safe_msg_buf(f7_msg->buf, i2c_dev->msg, true);
->  	complete(&dma->dma_complete);
->  }
->  
-> @@ -880,6 +883,7 @@ static void stm32f7_i2c_xfer_msg(struct stm32f7_i2c_dev *i2c_dev,
->  {
->  	struct stm32f7_i2c_msg *f7_msg = &i2c_dev->f7_msg;
->  	void __iomem *base = i2c_dev->base;
-> +	u8 *dma_buf;
->  	u32 cr1, cr2;
->  	int ret;
->  
-> @@ -929,17 +933,23 @@ static void stm32f7_i2c_xfer_msg(struct stm32f7_i2c_dev *i2c_dev,
->  
->  	/* Configure DMA or enable RX/TX interrupt */
->  	i2c_dev->use_dma = false;
-> -	if (i2c_dev->dma && f7_msg->count >= STM32F7_I2C_DMA_LEN_MIN
-> -	    && !i2c_dev->atomic) {
-> -		ret = stm32_i2c_prep_dma_xfer(i2c_dev->dev, i2c_dev->dma,
-> -					      msg->flags & I2C_M_RD,
-> -					      f7_msg->count, f7_msg->buf,
-> -					      stm32f7_i2c_dma_callback,
-> -					      i2c_dev);
-> -		if (!ret)
-> -			i2c_dev->use_dma = true;
-> -		else
-> -			dev_warn(i2c_dev->dev, "can't use DMA\n");
-> +	if (i2c_dev->dma && !i2c_dev->atomic) {
-> +		dma_buf = i2c_get_dma_safe_msg_buf(msg, STM32F7_I2C_DMA_LEN_MIN);
-> +		if (dma_buf) {
-> +			f7_msg->buf = dma_buf;
-> +			ret = stm32_i2c_prep_dma_xfer(i2c_dev->dev, i2c_dev->dma,
-> +						      msg->flags & I2C_M_RD,
-> +						      f7_msg->count, f7_msg->buf,
-> +						      stm32f7_i2c_dma_callback,
-> +						      i2c_dev);
-> +			if (ret) {
-> +				dev_warn(i2c_dev->dev, "can't use DMA\n");
-> +				i2c_put_dma_safe_msg_buf(f7_msg->buf, msg, false);
-> +				f7_msg->buf = msg->buf;
-> +			} else {
-> +				i2c_dev->use_dma = true;
-> +			}
-> +		}
->  	}
->  
->  	if (!i2c_dev->use_dma) {
-> @@ -1624,6 +1634,8 @@ static irqreturn_t stm32f7_i2c_isr_event_thread(int irq, void *data)
->  			dmaengine_terminate_async(dma->chan_using);
->  			dma_unmap_single(i2c_dev->dev, dma->dma_buf, dma->dma_len,
->  					 dma->dma_data_dir);
-> +			if (!f7_msg->smbus)
-> +				i2c_put_dma_safe_msg_buf(f7_msg->buf, i2c_dev->msg, false);
->  		}
->  		f7_msg->result = -ENXIO;
->  	}
-> @@ -1646,6 +1658,8 @@ static irqreturn_t stm32f7_i2c_isr_event_thread(int irq, void *data)
->  				dmaengine_terminate_async(dma->chan_using);
->  				dma_unmap_single(i2c_dev->dev, dma->dma_buf, dma->dma_len,
->  						 dma->dma_data_dir);
-> +				if (!f7_msg->smbus)
-> +					i2c_put_dma_safe_msg_buf(f7_msg->buf, i2c_dev->msg, false);
->  				f7_msg->result = -ETIMEDOUT;
->  			}
->  		}
-> 
+    let p =3D unsafe { P::from_foreign(ptr.cast()) };
+    p.release();
 
-Looks good to me.
+And we require `P: ForeignOwnable + Release + 'static`?
 
-Acked-by: Alain Volmat <alain.volmat@foss.st.com>
+We then need these impls instead:
 
-Regards,
-Alain
+    impl<T: Release, A: Allocator> Release for Pin<Box<T, A>>;
+    impl<T: Release, A: Allocator> Release for Box<T, A>;
+    impl<T: Release> Release for Arc<T>;
 
-> -- 
-> 2.43.0
-> 
+Or, we could change `Release` to be:
+
+    pub trait Release {
+        type Ptr: ForeignOwnable;
+
+        fn release(this: Self::Ptr);
+    }
+
+and then `register_release` is:
+
+    pub fn register_release<T: Release>(dev: &Device<Bound>, data: T::Ptr) =
+-> Result
+
+This way, one can store a `Box<T>` and get access to the `T` at the end.
+Or if they store the value in an `Arc<T>`, they have the option to clone
+it and give it to somewhere else.
+
+Related questions:
+
+* should we implement `ForeignOwnable` for `&'static T`?
+* should we require `'static` in `ForeignOwnable`? At the moment we only
+  have those kinds supported and it only makes sense, a foreign owned
+  object can be owned for any amount of time (so it must stay valid
+  indefinitely).
+
+---
+Cheers,
+Benno
+
+> +    }
+> +
+> +    // SAFETY:
+> +    // - `dev.as_raw()` is a pointer to a valid and bound device.
+> +    // - `ptr` is a valid pointer the `ForeignOwnable` devres takes owne=
+rship of.
+> +    to_result(unsafe {
+> +        // `devm_add_action_or_reset()` also calls `callback` on failure=
+, such that the
+> +        // `ForeignOwnable` is released eventually.
+> +        bindings::devm_add_action_or_reset(dev.as_raw(), Some(callback::=
+<P>), ptr.cast())
+> +    })
+> +}
+
