@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571292F531D;
-	Thu, 26 Jun 2025 14:49:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D2B2F547A;
+	Thu, 26 Jun 2025 14:49:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750949377; cv=none; b=fON8YNsU7zNWcUAj+u7KQeodiLhHXfsZ82rxKYX6SN4iPlFnZBCW2zDpgXBazOQNbQZrnoiYpoH0jzS2kRx1txZwcKrHBOqJGeq4TGLlSQN50XFU5mqA93JLLDRkC2pBOVSJcD7eRaH15xN3ZMR/FVniAU4t8mxRmOuEjlwGhLo=
+	t=1750949379; cv=none; b=S3VAP+8WRxoW0QYzCrC5kml6h0wFn1onYZEIzEQ0W5AplkKSiOYEuAn3u0Pqy/ArnKCUAl5mV+vvP3UiGb4UfM/cyx5PESuQ/T02kOK5qxr50fs6weELeuyAku1xbTAB15wFOJF36aZfHC2BHxzynksm5X2WQDtqZMnrXjROOq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750949377; c=relaxed/simple;
-	bh=KJqGjiCZWU9fj4zotEjWwy5zPpJjIZO+4otyCmaUWAg=;
+	s=arc-20240116; t=1750949379; c=relaxed/simple;
+	bh=L0XKbe8Qa702YJqL8CmRi5qnaGzCPPWZf27atfQlU0U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LPYHttKeG5XVBbzbsahTY7W8XbfKTpzQ4WfGiYq091Wnr8O+W/JYqHsK0IxL9ILp6Fm6HQ9Kr7sOyaamouaizbU1ucOhkgn5kxuBrbNLyASSB78Qi+hQ997HR7TCs3mGED1aiCOBMHrLgVo5nMlUjls5h3UR1tP2/IAneEc9Ycc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q89pqfCd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xxE65vbv; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=V9kualG1F4zL+2xwOgUT2+plRmA7/ybb6VbuMF5h+L3C8YVJWvLO5atq+1M6TgZLOIlCAbf5tM4Jw6lAqYpgqYIGlUzATY5kuDvEE6nT2/gmK+ApeX2hi2hDjPX107ZELwirxmX31sBqh5JkkqQX7qGrmlMn8IaGH+vNkOiw2Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d7RpVYHG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l9HDPg8d; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q89pqfCd";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xxE65vbv"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d7RpVYHG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l9HDPg8d"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750949375;
+	s=2020; t=1750949376;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QQJvh+4qMJpBwXh0oz+ildmCIKYnFwkVpJiG0W9NSek=;
-	b=Q89pqfCdat4vTT56i2MTX0cTaMwEjsqBm0u4pbQnqmzE0GD2jw+bQLBlo/pBmMGqNAA0Qi
-	IKr2QvMqOX0DRNXW90uw9oHztaPjiVlvXBFiF/aOqOgvpaQ87+cJuATK29xIkL+q9W/e2M
-	t0p5DWIbScJ+4w9ctgp1UJXODLgYog+boNeuXrfqMuQxenCHgmvPdcibhqLp7kk7OxcBpb
-	KopyBUISrjxix+ONfrCI9WMMwfd7rxwufRt3hoF63Ls1srjswmZK2RcKQ6EeeYhQScDfV9
-	ZBbW94kOKIvU3Kh57llhjE8i1PBVG4WT5t3mTGLHXX6JC3cTSmAQXEk9QRY1uQ==
+	bh=Pi9UqFBmG0ABPdW7goJnL2FLekqeOwHCLTz3aDeGlnw=;
+	b=d7RpVYHGdlxfyf0WiFnopVOhvS5IgLshX910+umF5VObQhNZ1ujRTniufW5dMtsTPKSlhF
+	urakTifQAqOHMw+5EqyQT2e6ndF2HKPA64Z/NNCLq82v1jodx0BWqZfzeh8nVbO6rc6Cf4
+	76E4Z0oMVNZh5Pc6drneoWcbeYh6qlNZCFBHk7x9CzCFrQdY42qUN/Sj7F+chf+3hQ76qD
+	dEeGlxLv/RnLcUbgoOt26UCaTr5Daxb3TZY9s6iSX0IYZm9LZm/hvhyrSCwggfMs6MIWQ1
+	Px1LLCDY8obutNGKEwgmRKIc17WjuRdOg/LEDGZMwsGTdNuFFWMMSoYwq8FUkA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750949375;
+	s=2020e; t=1750949376;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QQJvh+4qMJpBwXh0oz+ildmCIKYnFwkVpJiG0W9NSek=;
-	b=xxE65vbvF2hQ7Y9sZ9cCcwBqJ1qtggiCp0YusxI6VwHfX7Psmg4sc3ccQUZF44/xzfh1Jh
-	2lSa5cZxvKNYFKBg==
+	bh=Pi9UqFBmG0ABPdW7goJnL2FLekqeOwHCLTz3aDeGlnw=;
+	b=l9HDPg8d9E07sSs5ILVUEbh58kaGOI05w6928VyvfHfE8vIWVBWMGdIIjPat2eWzCBI9lX
+	8pXUG5ZKCqOW6XCg==
 To: Marc Zyngier <maz@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Antoine Tenart <atenart@kernel.org>,
@@ -62,9 +62,9 @@ To: Marc Zyngier <maz@kernel.org>,
 	linux-mips@vger.kernel.org,
 	linux-riscv@lists.infradead.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH 06/12] irqchip/sg2042-msi: Switch to msi_create_parent_irq_domain()
-Date: Thu, 26 Jun 2025 16:49:03 +0200
-Message-Id: <3e901db1a4c87678af053019774d95b73bfb9ef9.1750860131.git.namcao@linutronix.de>
+Subject: [PATCH 08/12] irqchip/alpine-msi: Convert to lock guards
+Date: Thu, 26 Jun 2025 16:49:05 +0200
+Message-Id: <7886b9595aaf8e102f79364784f68dec9c49b023.1750860131.git.namcao@linutronix.de>
 In-Reply-To: <cover.1750860131.git.namcao@linutronix.de>
 References: <cover.1750860131.git.namcao@linutronix.de>
 Precedence: bulk
@@ -77,51 +77,64 @@ Content-Transfer-Encoding: quoted-printable
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-Switch to use the concise helper to create an MSI parent domain.
+Convert lock/unlock pairs to guards and tidy up the code.
+
+No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- drivers/irqchip/irq-sg2042-msi.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+Cc: Antoine Tenart <atenart@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ drivers/irqchip/irq-alpine-msi.c | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/irqchip/irq-sg2042-msi.c b/drivers/irqchip/irq-sg2042-=
+diff --git a/drivers/irqchip/irq-alpine-msi.c b/drivers/irqchip/irq-alpine-=
 msi.c
-index af16bc5a3c8b5..bcfddc51bc6a1 100644
---- a/drivers/irqchip/irq-sg2042-msi.c
-+++ b/drivers/irqchip/irq-sg2042-msi.c
-@@ -219,20 +219,18 @@ static const struct msi_parent_ops sg2044_msi_parent_=
-ops =3D {
- static int sg204x_msi_init_domains(struct sg204x_msi_chipdata *data,
- 				   struct irq_domain *plic_domain, struct device *dev)
+index 7e379a6985a6a..cf188e5feefc0 100644
+--- a/drivers/irqchip/irq-alpine-msi.c
++++ b/drivers/irqchip/irq-alpine-msi.c
+@@ -60,19 +60,12 @@ static int alpine_msix_allocate_sgi(struct alpine_msix_=
+data *priv, int num_req)
  {
--	struct fwnode_handle *fwnode =3D dev_fwnode(dev);
--	struct irq_domain *middle_domain;
+ 	int first;
+=20
+-	spin_lock(&priv->msi_map_lock);
 -
--	middle_domain =3D irq_domain_create_hierarchy(plic_domain, 0, data->num_i=
-rqs, fwnode,
--						    &sg204x_msi_middle_domain_ops, data);
--	if (!middle_domain) {
-+	struct irq_domain_info info =3D {
-+		.ops		=3D &sg204x_msi_middle_domain_ops,
-+		.parent		=3D plic_domain,
-+		.size		=3D data->num_irqs,
-+		.fwnode		=3D dev_fwnode(dev),
-+		.host_data	=3D data,
-+	};
-+
-+	if (!msi_create_parent_irq_domain(&info, data->chip_info->parent_ops)) {
- 		pr_err("Failed to create the MSI middle domain\n");
- 		return -ENOMEM;
- 	}
+-	first =3D bitmap_find_next_zero_area(priv->msi_map, priv->num_spis, 0,
+-					   num_req, 0);
+-	if (first >=3D priv->num_spis) {
+-		spin_unlock(&priv->msi_map_lock);
++	guard(spinlock)(&priv->msi_map_lock);
++	first =3D bitmap_find_next_zero_area(priv->msi_map, priv->num_spis, 0, nu=
+m_req, 0);
++	if (first >=3D priv->num_spis)
+ 		return -ENOSPC;
+-	}
+=20
+ 	bitmap_set(priv->msi_map, first, num_req);
 -
--	irq_domain_update_bus_token(middle_domain, DOMAIN_BUS_NEXUS);
+-	spin_unlock(&priv->msi_map_lock);
 -
--	middle_domain->flags |=3D IRQ_DOMAIN_FLAG_MSI_PARENT;
--	middle_domain->msi_parent_ops =3D data->chip_info->parent_ops;
- 	return 0;
+ 	return priv->spi_first + first;
  }
 =20
+@@ -80,11 +73,8 @@ static void alpine_msix_free_sgi(struct alpine_msix_data=
+ *priv, unsigned int sgi
+ {
+ 	int first =3D sgi - priv->spi_first;
+=20
+-	spin_lock(&priv->msi_map_lock);
+-
++	guard(spinlock)(&priv->msi_map_lock);
+ 	bitmap_clear(priv->msi_map, first, num_req);
+-
+-	spin_unlock(&priv->msi_map_lock);
+ }
+=20
+ static void alpine_msix_compose_msi_msg(struct irq_data *data, struct msi_=
+msg *msg)
 --=20
 2.39.5
 
