@@ -1,97 +1,170 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30AFB1E9B04;
-	Thu, 26 Jun 2025 12:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FDB1AC88B;
+	Thu, 26 Jun 2025 12:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750940510; cv=none; b=PEV+e3Dhru6y1HrwMLyBWKlB3UkOZLYp1u2wsp3z980MIb5sFPa1hMglbanRzsTxt3mxKEHQl+XsY/iFC4v0lbnI8lokoS0j9+xL7mnw0yT1LGkXFoGiQLJviRY/UN0cNtNpFkkfuxMYd8NHkvBQS27y/uSQtQDLvu6fHmS7puc=
+	t=1750940614; cv=none; b=dg8XiN5CbMenLhjmel/ftHB2Cr2I3PiShqhV3mZd5UJnqCURZVtpmxJD7K8DAvrJNLE/RRqQNVZMub4+iJhxFzGU5IXlTUO3u7qmoal8WfIvo/kyNPsc6BjMIx/nweGetqWRATyAwMPzJBUCVpTqMOoKemICD1YnZH/6Ul4UyFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750940510; c=relaxed/simple;
-	bh=IvwD9enofwaWHk5EKV3xYw7xtkO0TsUXpoVn0G7Fgn0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bY7zJS3Q3ZjeQWqQrtGNzNB9dKmK1LxkT/tt94Rh92fJxvBghNK5gcm3+NHudoOFNvcRbJuxyrotgoiss0KKTZhyLxsNHHwxYo/LNFdTs8LR7iXi1jj1yAV5IrJ/CnEkPdTCyBQtIAomBk8z5ANkgBVEm9y+9EAFq4eUC5GfmcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-531426c7143so305437e0c.0;
-        Thu, 26 Jun 2025 05:21:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750940508; x=1751545308;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FpiBJAJen5FnxRnRmJkJFwp8KsGawuNPRUHHa/PQ1oE=;
-        b=K8wjbmggr2aiChl0TVAL8qYB14p3lCS/l5rUZ3g21ZR2DjnYxQvT0RNQTWvYEsLFtN
-         tch8FcoB5KLqh7iGJCcYyP7472MaLdKsU+Gi4SIlrBfAg4pNQAijmM1dq8DQ5msVli6Q
-         QyxyOC67ziUDQ4eOnSp/vruXGOe6KnA63spwMr85/WVAe3gqlpt5+8qNRXE4IrSAxgqg
-         rAaG5uuffnGLQJcy0iPOB5OTmS0hXLPewieNnsCH93G82hVkeRn4lD/0oyNUPBgNcOYE
-         x+Ur7uot5KGNXfEpI/2GvGbKCcAMCC2BxMIyrssIFJZOO7Xvc41BD+gFkDatoWCj9QoA
-         G8AA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4MWvXEjQ7UA4xTIUnGaKpVjKveXYPWdd0v4viVeXWWccHc+1BtPjdvBn9w2N9cpMKj/J1MtGV16PiLBmfvprrb+M=@vger.kernel.org, AJvYcCUw7m6emeUJ+8/RPaOYG02eZZp7YABp6LSNOScPJ4wh4wVu69FLkFrvCnHhj3feqRO9qKGmu87ISfQd@vger.kernel.org, AJvYcCXo7Rza+WONTUdunQt5gJ0xx1CV3NKplkZBz6LmwJzp68Ym7nEL+eMa+C4Oh1/eECj8uN6mvlAipUHTTLvn@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIfd5fT3QYl1FSAE/kmWJfHROlINQo+/tzEe82NW1HRs5eFCRT
-	cJFJGDTaPnGt7cMgFi09fnMXbsFUIsA9UmsBNMSirIaNth7Dsvs6EtOoDmnFaBWd
-X-Gm-Gg: ASbGncueshjr8xtynRSK/UoZz0qsQfP0TeVMKOWV9a2aUTHUmjHo0voabL41eQNTZ9q
-	0XeBtQB1Kh+cXYtnx/yFKpG80rJdLA7Rl9vER3Q0iwg1x+7R3v+sLKmqZWQJcMzyymTAGGE6/mv
-	WcgI7tBx6GTXy4YbnXt8l1aXzoC/4CXy4KQ/ON9yC+sLH3EvR4t4FS1u4Lj+jkp+5xxU/72HsAo
-	8QWn0G9b0NASCvMo41r6t0sujDFuIKDozrL+DsaPqBbqD73lBPry7gDPUn1j33dltKEtI4fO2eH
-	zVSzJ6YfHyz45bEs+46Sx6fWuWTTgcLpitSmHS2fL/rlhAKLpeCzc6iU4MYdM+DDIic/aw18fJr
-	nJjs3Vl0K9kHFFBP5LO19JxuX
-X-Google-Smtp-Source: AGHT+IFnUl//LCizgT2LRzYik6uLFBUhxVLcQ9SP+9bmHMdVqzjk+4omzpus0OUdkM+liFESxGYIAg==
-X-Received: by 2002:a05:6122:3214:b0:531:2afc:463a with SMTP id 71dfb90a1353d-532ef6aefcfmr5577237e0c.7.1750940507704;
-        Thu, 26 Jun 2025 05:21:47 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-531ab37fd36sm2270170e0c.38.2025.06.26.05.21.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 05:21:47 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4dfa2aeec86so281358137.1;
-        Thu, 26 Jun 2025 05:21:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWU3OEbAupFlvKfmlbeklD4Xh5ajXdsGI/U6TqVEGGCyGHEzVEtPGUafHfsTB3kkRXivqw6POc8HwpW8qvqlzS5zqY=@vger.kernel.org, AJvYcCWU4nD6IVHCv/xYDQK7but6LHsNonTzqoF2HmdR75HvmL5Flyz4eQDbS9qM1fzBpzU3Xvj3/2wGWS2Z@vger.kernel.org, AJvYcCXbNLuZQNAC6GST9N8m/6m0Q5dbes0Zq5CG6j3XDu3HROiXa4iuzNQNulU9dsSnuEqxJMsKmaPZIe3y1BIC@vger.kernel.org
-X-Received: by 2002:a05:6102:3910:b0:4e9:d847:edb8 with SMTP id
- ada2fe7eead31-4ecc6a723e4mr4928978137.7.1750940507361; Thu, 26 Jun 2025
- 05:21:47 -0700 (PDT)
+	s=arc-20240116; t=1750940614; c=relaxed/simple;
+	bh=2Sp612tDVYuV219ldRTTsYX/6nrY446brBlysdIfi18=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lxs3AguMsXhueJCdOjPG/nk43JeWh0kcNkdN91UJ+dPO0yHz4uZcJs7TvyX7lEcbg13STVxgcNgWNHTI9KmA8ig8Si6gZjaZc1stosIoB3OwVZyvUy+6btJdfoxZQXxlB6N0xy3f4QI5b/IwKp295hCaDxk088GLh48mXwidDsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=X0G77clW; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="X0G77clW"
+Received: from pendragon.ideasonboard.com (85-76-34-12-nat.elisa-mobile.fi [85.76.34.12])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id BF601743;
+	Thu, 26 Jun 2025 14:23:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750940592;
+	bh=2Sp612tDVYuV219ldRTTsYX/6nrY446brBlysdIfi18=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X0G77clWrsCFjg9iK/S3+x8qiTuEozvvB7bvzHFYmhhis9l2CWAQeVWBbeUqTEmLr
+	 u7sBl14zs24/9O1pYQjioPNuQiGi4tsX0IonQ7+d6YMkr3O5++6YOkB0RnoMNraoBj
+	 AMXevJ72CsxSimktvoJA4YcHg6aTY/lgYA/yRSrA=
+Date: Thu, 26 Jun 2025 15:23:06 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: "Nirujogi, Pratap" <pnirujog@amd.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Hao Yao <hao.yao@intel.com>,
+	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
+	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
+	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
+	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
+	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
+	dongcheng.yan@intel.com, jason.z.chen@intel.com, jimmy.su@intel.com,
+	Svetoslav.Stoilov@amd.com, Yana.Zheleva@amd.com
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+Message-ID: <20250626122306.GI8738@pendragon.ideasonboard.com>
+References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
+ <6a49eb11-d434-4315-8ee9-0f8aa7347de2@intel.com>
+ <aEygCdk-zEqRwfoF@kekkonen.localdomain>
+ <3e8364e8-22e4-42ad-a0f0-017f86fd6bf9@amd.com>
+ <20250623120929.GE826@pendragon.ideasonboard.com>
+ <aFlU-E_GCHWBXErq@kekkonen.localdomain>
+ <20250623134200.GB29597@pendragon.ideasonboard.com>
+ <b6425dbe-44e6-47b4-a06b-b9a172a8cac4@amd.com>
+ <fb719113-513f-44d9-82ae-63ff6aaca142@amd.com>
+ <175093628786.4005407.10292502794888309807@ping.linuxembedded.co.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619135539.207828-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250619135539.207828-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250619135539.207828-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 26 Jun 2025 14:21:35 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVeiPbUkmwSkDtULRC6izrexgHF=6vOEiLTRD9pPnQoOA@mail.gmail.com>
-X-Gm-Features: Ac12FXzFVI6KdbkRdIaH-XkbIqRgphSSH2nVuf-k98kJDTGUV9HJUJ8R2v9mCLM
-Message-ID: <CAMuHMdVeiPbUkmwSkDtULRC6izrexgHF=6vOEiLTRD9pPnQoOA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Add
- RAA215300 PMIC
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <175093628786.4005407.10292502794888309807@ping.linuxembedded.co.uk>
 
-On Thu, 19 Jun 2025 at 15:55, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add support for the Renesas RAA215300 PMIC to the RZ/V2N EVK. The PMIC is
-> connected to I2C8 and uses a 32.768kHz fixed clock source (x6).
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu, Jun 26, 2025 at 12:11:27PM +0100, Kieran Bingham wrote:
+> Quoting Nirujogi, Pratap (2025-06-25 23:06:01)
+> > Hi Sakari, Hi Laurent,
+> > 
+> > On 6/23/2025 5:55 PM, Nirujogi, Pratap wrote:
+> > [...]
+> > >>>> I think it can live in the driver for now. Given that the device uses
+> > >>>> only 8 bits of register address, I would store the page number in bits
+> > >>>> 15:8 instead of bits 31:24, as the CCI helpers do not make bits 27:24
+> > >>>> available for driver-specific purpose.
+> > >>>
+> > >>> I'd use the CCI private bits, the driver uses page numbers up to 4 so 4
+> > >>> bits are plenty for that. If we add pages to CCI later, this may be
+> > >>> refactored then.
+> > >>
+> > >> That works too.
+> > >>
+> > > Thanks for your support. We will add the page number in the register 
+> > > address 15:8 or 11:8 and will update the implementation accordingly in 
+> > > the next version.
+> > > 
+> > I would like to share the approach we are taking to implement the CCI 
+> > helpers that support page value. Could you please review the steps and 
+> > let us know if they make sense or if any adjustments are needed?
+> > 
+> > 1: Add new macros to embed page value into the register address.
+> > 
+> > Ex:
+> > #define CCI_PAGE_REG8(x, p)             ((1 << CCI_REG_WIDTH_SHIFT) | (p << 
+> > CCI_REG_PRIVATE_SHIFT) | (x))
+> > #define CCI_PAGE_REG16(x, p)            ((2 << CCI_REG_WIDTH_SHIFT) | (p << 
+> > CCI_REG_PRIVATE_SHIFT) | (x))
+> > 
+> > 2: Create V4L2 CCI context. Initialize page control reg, current_page, 
+> > regmap etc.
+> > 
+> > Ex:
+> > struct v4l2_cci_ctx {
+> >         struct mutex lock;
+> >         struct regmap *map;
+> >         s16 current_page;
+> >         u8 page_ctrl_reg;
+> > }
+> > 
+> > 3: Introduce new CCI helpers - cci_pwrite() and cci_pread() to handle 
+> > register read-writes updating the page control register as necessary.
+> 
+> Out of curiosity - but couldn't the existing cci_write and cci_read
+> already be used by the users - and then the default behaviour is that
+> the page isn't modified if there is no page_ctrl_reg - and by default
+> CCI_REG() will simply have (initilised) as page 0 - so the pages will
+> never change on those calls?
+> 
+> Then the users can indeed define
+> 
+> #define TEST_PATTERN_PAGE 5
+> #define TEST_PATTERN_COLOUR_BARS BIT(3)
+> 
+> #define MY_TEST_PATTERN_REG CCI_PAGE_REG8(0x33, TEST_PATTERN_PAGE)
+> 
+> and can call 
+>  cci_write(regmap, MY_TEST_PATTERN_REG, TEST_PATTERN_COLOUR_BARS, &ret);
+> 
+> with everything handled transparently ?
+> 
+> 
+> Or do you envisage more complications with the types of pages that might
+> be supportable ?
+> 
+> (I perfectly understand if I'm wishing for an unreachable utopia -
+> because I haven't considered something implicit about the page handling
+> that I haven't yet used :D)
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.17.
+I don't think we should implement page support in the CCI helpers
+themselves yet. We have too few drivers to look at to understand the
+requirements. Instead, I would store the page number in the driver
+private bits of the 32-bit address (that's bits 31:28), and add wrappers
+around cci_read() and cci_write() to the OV05C10 driver that handles the
+page configuration.
 
-Gr{oetje,eeting}s,
+Once we'll have multiple drivers doing the same, it will be easier to
+see what requirements they share, and move the feature to the CCI
+helpers.
 
-                        Geert
+> > int cci_pwrite(void *data, u32 reg, u64 val, int *err)
+> > {
+> >         /* get v4l2_cci_ctx context from data */
+> > 
+> >         /* get page value from reg */
+> > 
+> >         /* acquire mutex */
+> > 
+> >         /* update cci page control reg, save current page value */
+> >         
+> >         /* do cci_write */
+> > 
+> >         /* release mutex */
+> > }
+> > 
+> > Similar steps for cci_pread() as well.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Regards,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Laurent Pinchart
