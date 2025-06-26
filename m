@@ -1,67 +1,73 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B2B2E9745
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953F32E6D11
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750947234; cv=none; b=QWWkgf/iBfGnYJHahJPvK0+rOvnwKe9FOEaqSPPwrwnbvfTAc0Z9HuTHySV07j7xA/75VYGqPJ9a/ZnUlSBPN3O4S0u2+jUzMZoMxbG/vvalRffAiNaBLa3TNZCSUMfgnRy3DXYNmccwVOJ394nXNE6I8EGv8bOygceChOd0YHA=
+	t=1750947279; cv=none; b=cqJiMcmt+69ovIN9Q+YgGntuExtai4A3Qyu9royW7w1DsvgUXNLWA4v004ccCctBBvZY5XYKTXNcisklSoC/I19PjY8YCllEpHPlD2Tz6/zrdfvLE945DHNabniChiLW4Sn4+eAsHL7J2ggbEFj/sSnKpa7qiGpil2+D1gTURuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750947234; c=relaxed/simple;
-	bh=m9gYVDA+vIGLS/Y1cwTdJGaO3vOZMPWvV30eu6+ER3g=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ECeiEpENMgD2plr4pm6BIlQYWwDRBU+tCH/b+19ZFe2gtAVJN2v/WaY+wGZUSvRjqVjmnFqYtxrxyLDUuR14DyHae7aX9X09gxFlJxpn2dyBiokRvjOq8zjKOf5MjdD1vSljUMMa6S1wUZSL9aZYYWXR49mfe5wuTKDMVaK7HwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TcApoWX9; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750947279; c=relaxed/simple;
+	bh=s6jU1sXHDJ+SIoAkRoACgYHE64C6JjBjN0FDZ0zZu0k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=akZP6i4OBUxXX1OptenIwYWlB3B1oYL0OCheHXm8iEgf7KuqNIZ8xQuHDZ5H82BbSeVBbE+2T35uJKQ+2Y9D0fKVGKi+W0krt5t25lp1bDcFlShg1QR5RlJFJSiMLHxwCJLnpAjkq7zyiyyjybzFZq9aBIQO0I0/t2166W5INRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZpL7jRUL; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TcApoWX9"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4536b8c183cso6993515e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:13:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750947229; x=1751552029; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NMJbxK+Vs0vHD/rLpXgatG28H8njeuPukA8Oh9Ztkak=;
-        b=TcApoWX9+DqY1DYekru/PIyQ/0wOFY30HF3E7H/0AUR5gra/AhjC9yIv5STrhL1VPE
-         TRxEt8SBNYBJxv+EqYk3ZE49IJqgvfX515NUsPi0g50FTomgZdMDJwZ1n3TaKF4sBbtw
-         lwq+P3IrcwLOOWC66v8eK+p4SLBYhRKCbJvuUd2REXcNeBCs81jrHX3+T/8oaEDTCJ+K
-         OHPlil9bWJnlMAbDEYwKFojG7GAblbWwNKekitKo7P2UMbT9lc++kKuimmhXO9p64SXT
-         V5tfJXU9DKP8gXMEqq5ZZJisc9DcgZH3STNnkcTlzT8PjuNsMx7ZLCDfFbU/8G2+W+ZJ
-         TiUw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZpL7jRUL"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QA1nZR014014
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:14:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+N4R0U7vukwp5S4+1i/lwayf9jQJ9BLGw//WHS7jJbc=; b=ZpL7jRULjhGLDwRs
+	MAmpKaoeoSmWlqe9/a7PyhzJHJ+VwGGACGaCmHSeSB6HQo1BEtogAmHvnr3g0hNG
+	QB8LWpSZnBeGzS/WQ+32obgzML3KN7THZ57WLydhVHV8q0kr77rkym+6gL+FX8YP
+	7fV71sZFcDefoo5wfRGYmGvhfLj+9VNBBlCXk5W1dIXvuYsTpXkyxfbxxQdeGvcJ
+	Yrlrj+5clm4orhqwzvaPs14ix+QK/FPB5NoDv4aQDVw/x/tYxGep6kz4TWTdjibQ
+	RfoLKESrMB+/c9KAERe/EkJ7Z76XWsOzSNI1jX0qlx0bieHYO86h3EC6PPYi4wZG
+	7Nrmcw==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbm224ya-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:14:36 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d09b74dc4bso22743085a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:14:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750947229; x=1751552029;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NMJbxK+Vs0vHD/rLpXgatG28H8njeuPukA8Oh9Ztkak=;
-        b=IKoD7T9bxaij5byah77yMPVLgnzsY2iyYGtHDporAhMxpRsc8xSuaF0a2BjNyGSC9C
-         GnS03ucL+NBoi8xm6FdhGWtPEuBc8f0yOXw8U6dnXKhmlOi6ebLAx8xm0OTHWAPLG603
-         JClhcIXKynxcrdjHdC9h11HPPbDXZm0H0MY5yE9CyvBAK1gkijGu/3I5mKJH1eRleSqy
-         2jR3GZecu3n/Q9skJGavKT0pF8rNO0ZXeBQQQGZaVDtZ+icVQCuduuAnJ+ja8kIqk4ii
-         bLzsMEImv6Ov+MsEXv/vk8O9LN6G6iEjLnTUOpbhWUo9ktug4V1dmxyy4ZcHl4BQ5Ceq
-         aYtg==
-X-Forwarded-Encrypted: i=1; AJvYcCUf+sXU1cT9IBD3jqOtr9pP2b2EE5140jPdwgyyIHRD8ZAlIalwMwclWMa+TwqdCvD1offW80+K/hBcBgo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxOGQuWevWq8HeGA4fI3LzxLMS/RVe2hON6pOUpzLNiT3wdthy
-	x+LkYgdA9ERUTfTuB6RIErnlTozqc4Hp2/92d3k/WAkiYUa1Y9KvLPDevmMJlqmQiLE=
-X-Gm-Gg: ASbGncsrSE1JeJTM9QdymMGDMhENmi4eUE+shT9/7xhHlSf/Zf2lVUkzk2hf4oNpGh+
-	pCDxygrKb+BZ8TZPAdBWAUhdT3pW19HcVlqsmIO2jY6clEQXXm1ju7d6wJLn34jUXGxYavfPBIj
-	jIsTfWLpHb9k7JfYVMcZZPBxbx/bHPshGC/5VaXek4u16UCH2o/KsvHMM+svYxVJQiNzZud270z
-	IjRt+JdI4WtnMfRNI5mjUOxdt4goD4OQ3XByMHiwoIGK6h96UOEgcBqnMudiwwYz9GSrpr22rHJ
-	IYZqu/zCF94l/hZP9g2ue/xIdYrKtZgDO7KvBkNh//MyOSLatt65G02AgrtompVisRGdV0Hw0MG
-	73qn4z1UGOal2alnaLUasO7/MXbwEJPBmncKv/8I=
-X-Google-Smtp-Source: AGHT+IHAaJHtYzCJoYKM9gdvCp6tWkdRHXxVPebdwEL9y2imblqKnZ4SnYi7AI2VF2X9Y7HivIxDYA==
-X-Received: by 2002:a05:600c:a01:b0:451:df07:d8e0 with SMTP id 5b1f17b1804b1-453889d0d93mr40114195e9.11.1750947228759;
-        Thu, 26 Jun 2025 07:13:48 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:fa6f:b132:4858:18cc? ([2a01:e0a:3d9:2080:fa6f:b132:4858:18cc])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a406ab6sm21614295e9.30.2025.06.26.07.13.48
+        d=1e100.net; s=20230601; t=1750947275; x=1751552075;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+N4R0U7vukwp5S4+1i/lwayf9jQJ9BLGw//WHS7jJbc=;
+        b=KbqS0hAv/apx5QsrWf/zesdzREK/zGITX6sPdP5VoZ1/BaT2mBhHCWrL0A2Gk/PEkU
+         8Ej83squofYb45av10C8L7YsWTM/VhibOsdhVLekkMpd7lyiDlKr2XqWHxwGJRCokhdL
+         Kz9/6DF5R+ZFw6O6B8+7Us8TIc8SxFjcaq4QGpCHH/HEzbubhBcybwMG8Wfo7EDP6n2W
+         HagfnM7DCc+rwjktN4tnzL/AeE2a7Ss/BTfTmGfRwpdbppoCwNB6W1ZqtYergdIzTYUk
+         G5+5enD0ZtKBEdFaus4J55C3Wlw5XcU9yDNkKOE679V4g8Vil6sUg/3rG6dqGaTQmPL4
+         3I0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXaDXb3v+joKwkJSI8ePkEB2SZ5CgbQXwFpQN7EusI/wwXSn3W550UMKPGbky3OSOUXGSC2+nLsy9MYEJQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxv0iodR3sAaLkyZrIaH/xzGppCeUVakgwhIpV2JlLmo2JwaO+i
+	sojPrhq/KYRRibotJXocypC+wNxRoR2yrr4Quohfm6yEsdSTGvADphrONDOmdhNT3zFaFdFYnkU
+	HvD/qZCcBp5OsHeNt7w6XpPFSEcr1er/8NBMk2UKX9C7qqyzuaRytiZuapv64fgvCtQg=
+X-Gm-Gg: ASbGncuJ1NnhiEFKqqZUN3naQcIGqCUQgQFkciHtKZTRivkVMlYaVdEK/ReqxD1g7Pc
+	Br1+8QEejGlBCgQOYzWhwsrMaGlAy1HHc9OaaYj/qJraNvY5oUYCPKIDU0FkzkOhRIhNykZkCzb
+	ASbMYPFHFS/kWI42856X4b+iJiUUgFFbYVaVN00Z7uLDEkZP1X0VTEGSQ7VN54E2eK/YvpR8cnc
+	DAsnE/nm1LRfzeOadcDQJ5PA7hY+5W8vceY0N6CfMkzUr8XBPmdyhRVmxugCLiDkeVdEX4Qh68o
+	c2emk3NUnh4RgxKO0kA1sO3a7WdHS2H1hfVx4zPLuciTaVzXSTRiZgW3wDVFlSPg7ZmSebS9BMy
+	A40Y=
+X-Received: by 2002:a05:620a:44c6:b0:7d0:a01f:fb88 with SMTP id af79cd13be357-7d42968f182mr425993185a.3.1750947275086;
+        Thu, 26 Jun 2025 07:14:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFc0t0Q2Mn9NfrI6NhR4IzS8rzupePtJu4DHDSHjoos+xGBqqXt7a01IDlkiAczEHK+bPfwrQ==
+X-Received: by 2002:a05:620a:44c6:b0:7d0:a01f:fb88 with SMTP id af79cd13be357-7d42968f182mr425989785a.3.1750947274558;
+        Thu, 26 Jun 2025 07:14:34 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c8320b592sm44184a12.75.2025.06.26.07.14.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 07:13:48 -0700 (PDT)
-Message-ID: <4da70304-96c6-4b2a-bd8c-0b53811089de@linaro.org>
-Date: Thu, 26 Jun 2025 16:13:47 +0200
+        Thu, 26 Jun 2025 07:14:34 -0700 (PDT)
+Message-ID: <05a443b5-628e-4bd8-a189-7f5a7ccb7b2c@oss.qualcomm.com>
+Date: Thu, 26 Jun 2025 16:14:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,160 +75,113 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 3/5] mfd: khadas-mcu: add Khadas Edge 2 registers
-To: muhammed.efecetin.67@gmail.com, linux-rockchip@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, heiko@sntech.de, lee@kernel.org,
- rafael@kernel.org, efectn@protonmail.com, daniel.lezcano@linaro.org
-References: <cover.1746518265.git.efectn@protonmail.com>
- <16807e13e034f85adc91d131f6c5046ce7d98d9c.1746518265.git.efectn@protonmail.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <16807e13e034f85adc91d131f6c5046ce7d98d9c.1746518265.git.efectn@protonmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] arm64: dts: qcom: sm8550: Correct the min/max voltages
+ for vreg_l6n_3p3
+To: Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <neil.armstrong@linaro.org>
+References: <20250620-sm8550-correct-vreg_l6n_3p3-vol-v2-1-b397f3e91d7b@oss.qualcomm.com>
+ <aabcf5d1-7380-40c8-896f-6ce37944e97d@oss.qualcomm.com>
+ <CADhhZXYZGO7Ns6R4JEyrt43+HGBuVwKz8hRiA7cxeTfg6egVcg@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <CADhhZXYZGO7Ns6R4JEyrt43+HGBuVwKz8hRiA7cxeTfg6egVcg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=YYu95xRf c=1 sm=1 tr=0 ts=685d55cc cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8
+ a=5DgsPlyoPy4ad_e3mXsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=PEH46H7Ffwr30OY-TuGO:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: hpSHm56MmkYYrBrEtDOhSfEfcln3h7Ap
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDExOSBTYWx0ZWRfX6TXR6vrifVnh
+ Lk8exr+fzfdeHOHL5uJj6T5PDkusQIzJTsQpINV3ky+04bFwe/fvCWoHTwLDNDqJ/Yt8vEgPiFb
+ aNcT25Y/5cNw9pEwdazM8LoD42wFnkIWY+yu5MNmZXPizgOtyPIU4uJVqQgWl7Y6FMS7pD+52C0
+ boZrIugKtnPTzABFZuWuZXVuJNsFixYODAYTKkSD6MBpOq6b7WSJBaE5SCWM+Zm4bw8fCKNy/L4
+ POoAUuhDuBF/AU2Exquv/SQtsmnrmVW7xVxIUHxGz26GJnWNvCHEGY6nqKsqBYpUs+C+RcRCIwk
+ a+bCdo2gYNncl4dagVNgDaf7BHVnIWaHGEaPXCQV1EkfIVR/yIEcSygWp9D7ryc/49uNS6t3Duk
+ OUylsiKyOpQP26SBVmedwU67RotvBeaf/FnNQUqEITYrJcZOuRMDaASPKMBHZfPmQfhZ7R0g
+X-Proofpoint-ORIG-GUID: hpSHm56MmkYYrBrEtDOhSfEfcln3h7Ap
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_06,2025-06-26_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
+ clxscore=1015 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506260119
 
-On 26/06/2025 16:04, muhammed.efecetin.67@gmail.com wrote:
-> From: Muhammed Efe Cetin <efectn@protonmail.com>
+On 6/26/25 1:39 PM, Kamal Wadhwa wrote:
+> Hi Konrad,
 > 
-> Add Khadas Edge 2 MCU registers to khadas-mcu.h and adjust some properties.
-> Also, i've added some registers with V2 suffix,
-> as same addresses were already exist for previous boards.
+> On Mon, Jun 23, 2025 at 4:53 PM Konrad Dybcio
+> <konrad.dybcio@oss.qualcomm.com> wrote:
+>>
+>> On 6/20/25 5:29 PM, Kamal Wadhwa wrote:
+>>> Voltage regulator 'vreg_l6n_3p3' max-microvolt prop is currently
+>>> configured at 3304000uV in different sm8550 board files. However this
+>>> is not a valid voltage value for 'pmic5_pldo502ln' type voltage
+>>> regulators.
+>>>
+>>> Check below the max value(3200mV) in the regulator summary for min/max
+>>> used as 2800mV/3304mV in DT:-
+>>>
+>>> logs:
+>>>
+>>> [    0.294781] vreg_l6n_3p3: Setting 2800000-3304000uV
+>>>
+>>> regulator summary:
+>>>
+>>> regulator     use open bypass  opmode   voltage current  min     max
+>>> ---------------------------------------------------------------------
+>>> ..
+>>> vreg_l6n_3p3   0    0    0     normal   2800mV   0mA  2800mV  3200mV
+>>> ..
+>>>
+>>> Correct the min/max value to 3200000uV, as that is the closest valid
+>>> value to 3.3V and Hardware team has also confirmed that its good to
+>>> support the consumers(camera sensors) of this regulator.
+>>>
+>>> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+>>> Signed-off-by: Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>
+>>> ---
+>>
+>> FWIW it seems like 3.312v (which is slightly above the previous
+>> value) is also supported:
+>>
+>> static const struct rpmh_vreg_hw_data pmic5_pldo502ln = {
+>>         .regulator_type = VRM,
+>>         .ops = &rpmh_regulator_vrm_ops,
+>>         .voltage_ranges = (struct linear_range[]) {
+>>                 REGULATOR_LINEAR_RANGE(1800000, 0,  2,  200000),
+>>                 REGULATOR_LINEAR_RANGE(2608000, 3,  28, 16000),
+>>                 REGULATOR_LINEAR_RANGE(3104000, 29, 30, 96000),
+>>                 REGULATOR_LINEAR_RANGE(3312000, 31, 31, 0),
+>>         },
+>>         .n_linear_ranges = 4,
+>>         .n_voltages = 32,
+>>         .pmic_mode_map = pmic_mode_map_pmic5_ldo_hpm,
+>>         .of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
+>> };
 > 
-> Signed-off-by: Muhammed Efe Cetin <efectn@protonmail.com>
-> ---
->   drivers/mfd/khadas-mcu.c       |  8 ++++++--
->   include/linux/mfd/khadas-mcu.h | 25 +++++++++++++++++++++++++
->   2 files changed, 31 insertions(+), 2 deletions(-)
+> Yes, originally I was planning to share the change for 3304mV -> 3312mV.
+> However, while testing, I realized that I would also need changes in
+> firmware( to allow for a 3312mV max limit). so during internal discussion
+> it was clarified that all the consumers on L6N can work fine with 3.2v.
 > 
-> diff --git a/drivers/mfd/khadas-mcu.c b/drivers/mfd/khadas-mcu.c
-> index ca4bd6cf5..199ed4925 100644
-> --- a/drivers/mfd/khadas-mcu.c
-> +++ b/drivers/mfd/khadas-mcu.c
-> @@ -26,6 +26,10 @@ static bool khadas_mcu_reg_volatile(struct device *dev, unsigned int reg)
->   	case KHADAS_MCU_CHECK_USER_PASSWD_REG:
->   	case KHADAS_MCU_WOL_INIT_START_REG:
->   	case KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG:
-> +	case KHADAS_MCU_LED_ON_RAM_REG:
-> +	case KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG_V2:
-> +	case KHADAS_MCU_WDT_EN_REG:
-> +	case KHADAS_MCU_SYS_RST_REG:
->   		return true;
->   	default:
->   		return false;
-> @@ -69,14 +73,14 @@ static const struct regmap_config khadas_mcu_regmap_config = {
->   	.reg_bits	= 8,
->   	.reg_stride	= 1,
->   	.val_bits	= 8,
-> -	.max_register	= KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG,
-> +	.max_register	= KHADAS_MCU_SYS_RST_REG,
->   	.volatile_reg	= khadas_mcu_reg_volatile,
->   	.writeable_reg	= khadas_mcu_reg_writeable,
->   	.cache_type	= REGCACHE_MAPLE,
->   };
->   
->   static struct mfd_cell khadas_mcu_fan_cells[] = {
-> -	/* VIM1/2 Rev13+ and VIM3 only */
-> +	/* VIM1/2 Rev13+, VIM3 and Edge2 only */
->   	{ .name = "khadas-mcu-fan-ctrl", },
->   };
->   
-> diff --git a/include/linux/mfd/khadas-mcu.h b/include/linux/mfd/khadas-mcu.h
-> index a99ba2ed0..de570e159 100644
-> --- a/include/linux/mfd/khadas-mcu.h
-> +++ b/include/linux/mfd/khadas-mcu.h
-> @@ -35,26 +35,45 @@
->   #define KHADAS_MCU_FACTORY_TEST_REG		0x16 /* R */
->   #define KHADAS_MCU_BOOT_MODE_REG		0x20 /* RW */
->   #define KHADAS_MCU_BOOT_EN_WOL_REG		0x21 /* RW */
-> +#define KHADAS_MCU_BOOT_EN_DCIN_REG_V2		0x21 /* RW */
->   #define KHADAS_MCU_BOOT_EN_RTC_REG		0x22 /* RW */
->   #define KHADAS_MCU_BOOT_EN_EXP_REG		0x23 /* RW */
-> +#define KHADAS_MCU_LED_MODE_ON_REG_V2		0x23 /* RW */
-> +#define KHADAS_MCU_LED_MODE_OFF_REG_V2		0x24 /* RW */
->   #define KHADAS_MCU_BOOT_EN_IR_REG		0x24 /* RW */
->   #define KHADAS_MCU_BOOT_EN_DCIN_REG		0x25 /* RW */
-> +#define KHADAS_MCU_RGB_ON_R_REG			0x25 /* RW */
-> +#define KHADAS_MCU_RGB_ON_G_REG			0x26 /* RW */
->   #define KHADAS_MCU_BOOT_EN_KEY_REG		0x26 /* RW */
-> +#define KHADAS_MCU_RGB_ON_B_REG			0x27 /* RW */
->   #define KHADAS_MCU_KEY_MODE_REG			0x27 /* RW */
-> +#define KHADAS_MCU_RGB_OFF_R_REG		0x28 /* RW */
->   #define KHADAS_MCU_LED_MODE_ON_REG		0x28 /* RW */
-> +#define KHADAS_MCU_RGB_OFF_G_REG		0x29 /* RW */
->   #define KHADAS_MCU_LED_MODE_OFF_REG		0x29 /* RW */
-> +#define KHADAS_MCU_RGB_OFF_B_REG		0x2a /* RW */
-> +#define KHADAS_MCU_REST_CONF_REG		0x2c /* WO */
->   #define KHADAS_MCU_SHUTDOWN_NORMAL_REG		0x2c /* RW */
->   #define KHADAS_MCU_MAC_SWITCH_REG		0x2d /* RW */
->   #define KHADAS_MCU_MCU_SLEEP_MODE_REG		0x2e /* RW */
-> +#define KHADAS_MCU_BOOT_EN_IR_REG_V2		0x2f /* RW */
->   #define KHADAS_MCU_IR_CODE1_0_REG		0x2f /* RW */
->   #define KHADAS_MCU_IR_CODE1_1_REG		0x30 /* RW */
-> +#define KHADAS_MCU_IR1_CUST1_REG		0x30 /* RW */
->   #define KHADAS_MCU_IR_CODE1_2_REG		0x31 /* RW */
-> +#define KHADAS_MCU_IR1_CUST2_REG		0x31 /* RW */
->   #define KHADAS_MCU_IR_CODE1_3_REG		0x32 /* RW */
-> +#define KHADAS_MCU_IR1_ORDER1_REG		0x32 /* RW */
->   #define KHADAS_MCU_USB_PCIE_SWITCH_REG		0x33 /* RW */
-> +#define KHADAS_MCU_IR1_ORDER2_REG		0x33 /* RW */
-> +#define KHADAS_MCU_IR2_CUST1_REG		0x34 /* RW */
->   #define KHADAS_MCU_IR_CODE2_0_REG		0x34 /* RW */
->   #define KHADAS_MCU_IR_CODE2_1_REG		0x35 /* RW */
-> +#define KHADAS_MCU_IR2_CUST2_REG		0x35 /* RW */
->   #define KHADAS_MCU_IR_CODE2_2_REG		0x36 /* RW */
-> +#define KHADAS_MCU_IR2_ORDER1_REG		0x36 /* RW */
->   #define KHADAS_MCU_IR_CODE2_3_REG		0x37 /* RW */
-> +#define KHADAS_MCU_IR2_ORDER2_REG		0x36 /* RW */
->   #define KHADAS_MCU_PASSWD_USER_0_REG		0x40 /* RW */
->   #define KHADAS_MCU_PASSWD_USER_1_REG		0x41 /* RW */
->   #define KHADAS_MCU_PASSWD_USER_2_REG		0x42 /* RW */
-> @@ -69,6 +88,11 @@
->   #define KHADAS_MCU_SHUTDOWN_NORMAL_STATUS_REG	0x86 /* RO */
->   #define KHADAS_MCU_WOL_INIT_START_REG		0x87 /* WO */
->   #define KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG	0x88 /* WO */
-> +#define KHADAS_MCU_LED_ON_RAM_REG		0x89 /* WO */
-> +#define KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG_V2	0x8A /* WO */
-> +#define KHADAS_MCU_WDT_EN_REG			0x8B /* WO */
-> +#define KHADAS_MCU_SYS_RST_REG			0x91 /* WO */
-> +
->   
->   enum {
->   	KHADAS_BOARD_VIM1 = 0x1,
-> @@ -76,6 +100,7 @@ enum {
->   	KHADAS_BOARD_VIM3,
->   	KHADAS_BOARD_EDGE = 0x11,
->   	KHADAS_BOARD_EDGE_V,
-> +	KHADAS_BOARD_EDGE2,
->   };
->   
->   /**
+> 
+>>
+>> but if the hw folks say we can do with the lower value, it's probably
+>> even better
+> 
+> Yes. Thanks for affirming.
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+Konrad
