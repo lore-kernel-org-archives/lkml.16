@@ -1,142 +1,253 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6C24A33;
-	Thu, 26 Jun 2025 17:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B1E13AA2F;
+	Thu, 26 Jun 2025 17:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750960658; cv=none; b=GzZdpuurolmTMCafaqY2VFX1tp/kiYx5EZT4Tfel/2gGFmk1yyzWAMdOSzgYUukL3lyYo3DRcGIR4cAbxxv3RylH57XEi8F5mVhYz0fOZGCNSC3U2M7D7NshazhllwkGkzozoTsmLZMiP0OAGNORJLC+BZtKJ9Y5IwWT7AnVysc=
+	t=1750960712; cv=none; b=Sc3Mpfs22Nr87n3QZqYNRafZChzHfxWxlYffM2yRmyAW4zurQV84bxl3k79+Ffl3MjFmCncokGmV6f1ylojoFNZ1PmKUxc5Qm6YxMhapcUkwhzmJjvYS59D8eMZKwiT4c7uCp19nO6CIY3pIP+VGaGZ2TB8RBZP25W3TOcTDWVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750960658; c=relaxed/simple;
-	bh=nAsTYlNlsKoQoRIBxmtqCsE8i3UtjyaiMo3nR3fH1kY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nrKx5qcsYtIsCCx+xmRfi0XOkZhE4TTMQylIXzUsDgAns0hw/g5SLrwmGYyAPbWwFU7ul5aBjHItqcKvkBrDjegHP4rr5A81zLH9SIIFzXDSHnSbVSCp7Vlq+pOD94pc9y0dvH0bw4M9B7M3FgxAz3fIAusIE+OuOLAZnc4wDTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lN52fw08; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750960712; c=relaxed/simple;
+	bh=9kSgYJslI9669W5ZX/ZizxoETZvyBzl6RRzfWIJiGB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QHTk1QX1mxyEBGIv0zquE+XCttJVa0cAOLqfq4+fIDSnwjY/IcgIV2CeE0B4q1/q8b0OpblP8kY/A8q2Solt7iEVlpStDRUgHlc1tvKpuLY3YY+u80IqVKmPKIS9UfzpGNf34HiwE4aCrK8vNTMrg2eN+Qfqf54cqXM+Z2FkT/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6ZuqU0A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lN52fw08"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-453398e90e9so9327865e9.1;
-        Thu, 26 Jun 2025 10:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750960655; x=1751565455; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A/JMMKJYJJnaalmSUe6TK9/m1Tf4VynpgQ2NjLenDxQ=;
-        b=lN52fw08dhj42h8qKvJO91vxnJSTy0RnXJryfL1HI7iUtaxoYSP1lHCicWxlIQgrf2
-         q9fBXt0uPY8SoM9QxSsg790hgNtt1mAjCw5Di6Y/wD6ikpTGk2lyNxiQk43CzIR5UpX1
-         EJ+bY+q2m5Oh+lRB32viB7d7h8sD3hZIJS2+cIbBfBL5CdHBTwBs2e9RuxvATFZHSEEU
-         ivxugxXEoC6D0cbbuozfqJNuguz4udgYuVvw/F54wbpRDXhdA2ZB++B2jQwU5WONrIdQ
-         JW/7hhndmqMZUd1VRS9Pr0ZMeyLzQsjUxNDPyjj2ivre5ZXb+ZPH9cthJkdpL+bU/lLK
-         kJDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750960655; x=1751565455;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=A/JMMKJYJJnaalmSUe6TK9/m1Tf4VynpgQ2NjLenDxQ=;
-        b=UTGv5FaAJNByQTxJoAZrZB8v8S1C37W40D3Qg7A6WycrkYCMDuufQZpXqbdpnF2Jw5
-         SBenm/rlFnq+RYwc/RypKzvKjIoyPgPOcdatIZl3VcSuPwIJrtPg0N99SSpFe22ZcufJ
-         gwoNJYX5LMGtYfS2V1qydzqDhg3S5jcOwXOnTbAWUeEpGGHluU6sJ7wIWHVQXvbQPzbP
-         Zfu+MvLXDM3n+vpKydysnowWjcdwS0JgnFguUbOig0p42RWuIz14sOHLMcYqtF7x+if4
-         YlgtkJJI9BwM7zkBYekPABwxnkW7JQxq2ggW4HkD5Z16J63VHKOb6mtPz7G7c0NKAThX
-         /O5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV+PyblhOoknqoo0xa/S9qCeaTHnz8HszKlT9f3Yk+7fIxw4/fUYFZ0o50Ll5k1AQN4p/5xC0hbN8BhebOce/Q=@vger.kernel.org, AJvYcCXDaI2T7fBgoHgw4M9ooeaBX11IsCT25DSqgr4q8dXZliQjmsGjK7COqCptwulG3ubF3DqKpfh2sIeyfByS@vger.kernel.org, AJvYcCXv+dy//4K7pp4Vy1OW3teOz/T1sPimDMKeJLuE3dxx1lk/tb5QNpPAKKqVPgnl+p887InQeoTd8/g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6pa4DW2ygoTvDReGMEgoRBA+Ja+2htyweSrEBDmqW0Jiu3PSG
-	sPHVDtcoZVHK7JHUgCXnWAY/ZNy4kMLDJLEw78QmFlCCuRB8gYWNafa1
-X-Gm-Gg: ASbGnctnatFmZ3KXY+5J0T0Sij6amEJPvwQqNlXuwPXp72MMARrNGhxMojNs1lbI1hs
-	f/t9LT9Nufri5mmHxqm55R08HTi7ZsfDS3VJfCe0/um6ZEsYMTqp4Nhm6LKsWSUVwYYrwqolsps
-	QvDG2po2scqcUnaEiUd67Zh2sejngGbBD/pw907nEvxhA82a3jWbzqMjy6eIfmx4ftUK6zwNFB4
-	c8kNvelvCcHsj9898djK0jN43bBViTUk6+AsrkOlWahre6b4sQJqa4Q/G9VuuBdo6vmUYDt51n5
-	DR/bNaocMsSKL35CAxsnj+9arZp2apy6IlmgEUMp8Htqu01OkOFeSIk4GyHhGJ/LbljQa2+9j1E
-	aEajiUkF86+3MASBeEWum1g0IiC53vhvh+0/TiqP5QguzbxU=
-X-Google-Smtp-Source: AGHT+IF+L5+lFftiKxjMEYMZ+2kfG8sBKVLw/AlWLt7CRtqKdtY0gU2Rq1RqhRFd2kLjCo44YjAIlg==
-X-Received: by 2002:a05:600c:6745:b0:43c:f513:9591 with SMTP id 5b1f17b1804b1-4538ee41d76mr2736045e9.14.1750960654976;
-        Thu, 26 Jun 2025 10:57:34 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ba553sm55198365e9.31.2025.06.26.10.57.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 10:57:34 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Asahi Lina <lina+kernel@asahilina.net>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Alex Hung <alex.hung@amd.com>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: [PATCH v1 4/4] samples: rust: show ACPI ID-table in I2C sample driver
-Date: Thu, 26 Jun 2025 18:55:32 +0100
-Message-ID: <20250626175532.909732-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250626174623.904917-1-igor.korotin.linux@gmail.com>
-References: <20250626174623.904917-1-igor.korotin.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6ZuqU0A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 736EDC4CEEB;
+	Thu, 26 Jun 2025 17:58:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750960712;
+	bh=9kSgYJslI9669W5ZX/ZizxoETZvyBzl6RRzfWIJiGB8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q6ZuqU0AhMSVruGouu0fykiZUjYFBqnqPMY7yrwYikDukfBzc6r1l9K4ybVUugEIN
+	 6CvVcyh5euPloItJxGwUVtgghYi17OJYPIIgNrzx/N8tn9j6LNdGbCcLyY+GgEmDdy
+	 OC4VCDAOEaYpGxASwwKQSUnVuJXTQo/rjLzqaWWoOkV23OemTpHxO7qLvUH+9s4dhW
+	 gntSwkv9pHypP0O8HI6M749L3HKZ5v+mIxFxRnhIdMl5Tf+9MjSnWaMnmOy5sw7F+F
+	 UdkwFEyvXl+MKPLGnU6pkFIINh1A6qYQtrtj6mhmapCcOuz0prj3v2AI+l25LFGqJ0
+	 SeG2/nMYA0bnA==
+Date: Thu, 26 Jun 2025 19:58:27 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Vitaly Wool <vitaly.wool@konsulko.se>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v4 3/4] rust: support large alignments in allocations
+Message-ID: <aF2KQyUZRVNDPf-y@cassiopeiae>
+References: <20250626083516.3596197-1-vitaly.wool@konsulko.se>
+ <20250626083642.3596388-1-vitaly.wool@konsulko.se>
+ <aF0-tYomGe7nB5vX@pollux>
+ <72365C10-D984-4BC5-A081-B058C1619D06@konsulko.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <72365C10-D984-4BC5-A081-B058C1619D06@konsulko.se>
 
-Add an `acpi_device_table!` example and set
-`SampleDriver::ACPI_ID_TABLE` to demonstrate ACPI usage.
+On Thu, Jun 26, 2025 at 06:29:24PM +0200, Vitaly Wool wrote:
+> 
+> 
+> > On Jun 26, 2025, at 2:36 PM, Danilo Krummrich <dakr@kernel.org> wrote:
+> > 
+> > On Thu, Jun 26, 2025 at 10:36:42AM +0200, Vitaly Wool wrote:
+> >> void * __must_check __realloc_size(2)
+> >> -rust_helper_krealloc(const void *objp, size_t new_size, gfp_t flags)
+> >> +rust_helper_krealloc(const void *objp, size_t new_size, unsigned long align, gfp_t flags)
+> >> {
+> >> return krealloc(objp, new_size, flags);
+> >> }
+> >> 
+> >> void * __must_check __realloc_size(2)
+> >> -rust_helper_kvrealloc(const void *p, size_t size, gfp_t flags)
+> >> +rust_helper_kvrealloc(const void *p, size_t size, unsigned long align, gfp_t flags)
+> >> {
+> >> return kvrealloc(p, size, flags);
+> >> }
+> > 
+> > I think you forgot to add comments explaining why we have the additional
+> > discarded align argument.
+> > 
+> > Also please keep those helpers as they are. You can write an identical inline
+> > function in Rust that discards the align argument and calls bindings::krealloc,
+> > etc.
+> > 
+> > For instance:
+> > 
+> > unsafe extern "C" fn krealloc_align(
+> >    ptr: *const c_void,
+> >    size: usize,
+> >    _align: c_ulong
+> >    flags: u32,
+> > ) -> *mut c_void {
+> >    bindings::krealloc(ptr, size, flags)
+> > }
+> > 
+> 
+> Ugh. This is indeed a mistake from my side but I don’t quite agree with your variant here too.
+> The thing is that the new patchset has a patch #2 which adds kvrealloc_node and realloc_node so this chunk IMO should have looked like
+> 
+> -rust_helper_kvrealloc(const void *p, size_t size, gfp_t flags)
+> +rust_helper_kvrealloc(const void *p, size_t size, unsigned long align, gfp_t flags)
+>  {
+>  -      return kvrealloc(p, size, flags);
+>  +      return kvrealloc_node(p, size, align, flags, NUMA_NO_NODE);
+> 
+>  }
 
-Depends-on: <20250620152425.285683-1-igor.korotin.linux@gmail.com>
-Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
----
- samples/rust/rust_driver_i2c.rs | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+No for two reasons:
 
-diff --git a/samples/rust/rust_driver_i2c.rs b/samples/rust/rust_driver_i2c.rs
-index 7c5def930fe0..98bda18fd098 100644
---- a/samples/rust/rust_driver_i2c.rs
-+++ b/samples/rust/rust_driver_i2c.rs
-@@ -2,12 +2,19 @@
- 
- //! Rust I2C driver sample.
- 
--use kernel::{c_str, device::Core, i2c, of, prelude::*, types::ARef};
-+use kernel::{acpi, c_str, device::Core, i2c, of, prelude::*, types::ARef};
- 
- struct SampleDriver {
-     pdev: ARef<i2c::Device>,
- }
- 
-+kernel::acpi_device_table! {
-+    ACPI_TABLE,
-+    MODULE_ACPI_TABLE,
-+    <SampleDriver as i2c::Driver>::IdInfo,
-+    [(acpi::DeviceId::new(b"TST0001"), 0)]
-+}
-+
- kernel::i2c_device_table! {
-     I2C_TABLE,
-     MODULE_I2C_TABLE,
-@@ -25,6 +32,7 @@ struct SampleDriver {
- impl i2c::Driver for SampleDriver {
-     type IdInfo = u32;
- 
-+    const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
-     const I2C_ID_TABLE: Option<i2c::IdTable<Self::IdInfo>> = Some(&I2C_TABLE);
-     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
- 
--- 
-2.43.0
+  1) Rust helpers are transparent wrappers for  C functions / macros slipping
+     through bindgen. We don't add any logic to them, as you do here.
 
+  2) This patch is only about supporting large alignments for VMALLOC. There's
+     no need to introduce kvrealloc_node() (yet).
+
+The only thing you want here is to keep the signature common between all realloc
+functions. Hence, you want
+
+	unsafe extern "C" fn krealloc_align(
+	   ptr: *const c_void,
+	   size: usize,
+	   _align: c_ulong
+	   flags: u32,
+	) -> *mut c_void {
+	   bindings::krealloc(ptr, size, flags)
+	}
+
+on the Rust side of things. And in the next patch you want
+
+	unsafe extern "C" fn krealloc_node_align(
+	   ptr: *const c_void,
+	   size: usize,
+	   _align: c_ulong
+	   flags: u32,
+	   c_int: nid,
+	) -> *mut c_void {
+	   bindings::krealloc_node(ptr, size, flags, nid)
+	}
+
+> …exactly like for vmalloc, see also my comment below.
+> 
+> >> diff --git a/rust/helpers/vmalloc.c b/rust/helpers/vmalloc.c
+> >> index 80d34501bbc0..4618c0b79283 100644
+> >> --- a/rust/helpers/vmalloc.c
+> >> +++ b/rust/helpers/vmalloc.c
+> >> @@ -3,7 +3,7 @@
+> >> #include <linux/vmalloc.h>
+> >> 
+> >> void * __must_check __realloc_size(2)
+> >> -rust_helper_vrealloc(const void *p, size_t size, gfp_t flags)
+> >> +rust_helper_vrealloc(const void *p, size_t size, unsigned long align, gfp_t flags)
+> >> {
+> >> - return vrealloc(p, size, flags);
+> >> + return vrealloc_node(p, size, align, flags, NUMA_NO_NODE);
+> >> }
+> > 
+> > Same here, just make this a "real" helper for vrealloc_node() and create a Rust
+> > function vrealloc_align() like in the example above.
+> 
+> Wait, why? What’s the use of vrealloc() if it doesn’t provide the align functionality that we need?
+
+That's fine, then this should be
+
+	void * __must_check __realloc_size(2)
+	rust_helper_vrealloc_node(const void *p, size_t size,
+				  unsigned long align,
+				  gfp_t flags, int nid)
+	{
+		return vrealloc_node(p, size, align, flags, nid);
+	}
+
+and on the Rust side, for this patch, you want:
+
+	unsafe extern "C" fn vrealloc_align(
+	   ptr: *const c_void,
+	   size: usize,
+	   align: c_ulong
+	   flags: u32,
+	   c_int: nid,
+	) -> *mut c_void {
+	   bindings::vrealloc_node(ptr, size, align, flags, bindings::NUMA_NO_NODE)
+	}
+
+The diff between the patches may come out nicer if you do it the other way
+around though, i.e. first support node IDs and then support larger alignments
+than PAGE_SIZE for VMALLOC.
+
+> > 
+> >> diff --git a/rust/kernel/alloc/allocator.rs b/rust/kernel/alloc/allocator.rs
+> >> index aa2dfa9dca4c..a0d78c497974 100644
+> >> --- a/rust/kernel/alloc/allocator.rs
+> >> +++ b/rust/kernel/alloc/allocator.rs
+> >> @@ -58,7 +58,7 @@ fn aligned_size(new_layout: Layout) -> usize {
+> >> ///
+> >> /// One of the following: `krealloc`, `vrealloc`, `kvrealloc`.
+> >> struct ReallocFunc(
+> >> -    unsafe extern "C" fn(*const crate::ffi::c_void, usize, u32) -> *mut crate::ffi::c_void,
+> >> +    unsafe extern "C" fn(*const crate::ffi::c_void, usize, usize, u32) -> *mut crate::ffi::c_void,
+> > 
+> > Should be c_ulong instead of usize.
+> > 
+> 
+> Noted.
+> 
+> >> );
+> >> 
+> >> impl ReallocFunc {
+> >> @@ -110,7 +110,7 @@ unsafe fn call(
+> >>         // - Those functions provide the guarantees of this function.
+> >>         let raw_ptr = unsafe {
+> >>             // If `size == 0` and `ptr != NULL` the memory behind the pointer is freed.
+> >> -            self.0(ptr.cast(), size, flags.0).cast()
+> >> +            self.0(ptr.cast(), size, layout.align(), flags.0).cast()
+> >>         };
+> >> 
+> >>         let ptr = if size == 0 {
+> >> @@ -152,12 +152,6 @@ unsafe fn realloc(
+> >>         old_layout: Layout,
+> >>         flags: Flags,
+> >>     ) -> Result<NonNull<[u8]>, AllocError> {
+> >> -        // TODO: Support alignments larger than PAGE_SIZE.
+> >> -        if layout.align() > bindings::PAGE_SIZE {
+> >> -            pr_warn!("Vmalloc does not support alignments larger than PAGE_SIZE yet.\n");
+> >> -            return Err(AllocError);
+> >> -        }
+> >> -
+> >>         // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
+> >>         // allocated with this `Allocator`.
+> >>         unsafe { ReallocFunc::VREALLOC.call(ptr, layout, old_layout, flags) }
+> >> @@ -176,12 +170,6 @@ unsafe fn realloc(
+> >>         old_layout: Layout,
+> >>         flags: Flags,
+> >>     ) -> Result<NonNull<[u8]>, AllocError> {
+> >> -        // TODO: Support alignments larger than PAGE_SIZE.
+> >> -        if layout.align() > bindings::PAGE_SIZE {
+> >> -            pr_warn!("KVmalloc does not support alignments larger than PAGE_SIZE yet.\n");
+> >> -            return Err(AllocError);
+> >> -        }
+> > 
+> > Didn't you propose to use VREALLOC if layout.align() > bindings::PAGE_SIZE?
+> > 
+> 
+> I did, and this is what happens on the C side now, please see the #2 patch in series.
+
+I'm fine doing it on the C side if the C side maintainers agree.
+
+However, I don't see you doing it. kvrealloc_node_noprof() does not even have an
+align argument AFAICS.
+
+> I think it’s better this way because of uniformity but I don’t have a strong opinion on this.
+
+I agree, but again, I don't think you do it yet. :)
+
+> 
+> >>         // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
+> >>         // allocated with this `Allocator`.
+> >>         unsafe { ReallocFunc::KVREALLOC.call(ptr, layout, old_layout, flags) }
+> > 
+> 
