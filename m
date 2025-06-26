@@ -1,113 +1,112 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8D44A33
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 01:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5449E126C17;
+	Thu, 26 Jun 2025 02:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750902761; cv=none; b=QoSysx8MLGzturSxvwKprfuboDdZ1LEi+ObGsSnzykv9L0EQrbnMQlEhHPFjNrDfjvRizfqYuBD+tuQA0F1Ze1q+WiG3DtSaE8fVMD3DnIOaq0Raunls00E6j2XjFhf0MMtXUJKIxqthTB3Q/5ElwoagDvLxQgb4jFP6o+xN4wk=
+	t=1750903682; cv=none; b=mnyIijm9MfAkeECLcZ7QUrLUhrifLO9F5FZFOZaZdSSv8mpq+pw/K7yxYtpEkoDL8t7XZRczFF66aVmuRfE9aI5BkPQ4NOOGo9qU8j6M2a9bPTy59QSIhd7tNVUsYa6E9fwmlWILyU5Ha+aiA9DlANjEybmjqsy7BxVA/SH08vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750902761; c=relaxed/simple;
-	bh=DK/40bCabHXs2I84Wr6OZyYn8141pAMFIO448i66QLs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ON4zGN7fKEQuJj+r+mmWNHRV8kFNLV/kRfYlgCZzD5TkJUvwqzzEpa8TcZo5K/RC22muFcHnM6Nxoj8XW1wAufazlHBvrkbAFeDV/nmIpfIcn8/2ryE0+LCPnwsVhGjmvOnn7PW7vJhhHnaQcBdVoSXgCfhzHz5SUmTWHsShKIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JwO0Z58S; arc=none smtp.client-ip=209.85.222.41
+	s=arc-20240116; t=1750903682; c=relaxed/simple;
+	bh=fGBdLx43ZNKtIbzyx9QYwr/HXAxnuOX+RmyAX3dJ02Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UaQZg0FQk5eE8XNqtyXS0IFwDYLwFkogo2w7EctrvKOdJA72mTd+byX9OdoIxCAcohmG0TSGMqSSfl9skhKWWbsEIHzX+9AOVTTlIdchw/5fQO/4kqvyiy7IVOQuQ8JZTEw83uLIkhcMhb6zxzhWXlKbs7JRidsmOzTKNCv7d5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ddwrAKAv; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwO0Z58S"
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-87edd8f4e9fso139048241.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:52:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ddwrAKAv"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b34c068faf8so506333a12.2;
+        Wed, 25 Jun 2025 19:08:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750902758; x=1751507558; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nmZGy30yttm+82gl6o86G0X0Vv/KuB1NPu4aLHsi0GI=;
-        b=JwO0Z58SAVf5B2xi3Ns1FpnhBJdG+6cEXdeA+34CV+m+/D/ugHAXR5DASCHAmaV2/B
-         I8BN9kpcMphn9zyna6lgdlkowXHXs2/UW6I48G01KVMWPLIPTibtQ8ZjIWEd+vjGFKpG
-         VzFiVpE6++UbSTe4hKl4AfwkaTxnRjo/919XCYgGYTqnRrKAvXgghegMPvPXw0xZuJW9
-         2crUKBs998zoGCW9cODw1eOmd2ciZ91kM31mO9LV5RQPhKWN/VNhpWcUZmSIacK4IpVX
-         iBxxBXHSQNElekZMp1MqM+5on5WDXkemdJEcJNUZkD/NEN+kRh3ZQUd6iPumpC9gzUaE
-         56tw==
+        d=gmail.com; s=20230601; t=1750903680; x=1751508480; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2QqGYjD8NV1Lz9h53E/xb2YOnYvPPC++UyYL3ZPC24Q=;
+        b=ddwrAKAvdzYtRaE6wP6cG1rdAJbNTymqS4v80hSHcX5wY7Tt+3PsVLGjTNb6Pspsnq
+         LJS2zbSVvhxav3Aoof1J+AUs+VWBUH2Z12UbyYc7txbZz3501u7g7REjYDMVIBp1p7TJ
+         PJuqyeYOaQpmkQSPYNivVgT5hENHEjJofhpvua7EfcmDwewejWCK/zTunxDKnGZXmt9H
+         AEWpcGZx0RoZZLMcAvd7z+qPuAzONOdJ4OeUI84U13FZR4W60p+XTgPynjwQCWBEg9/V
+         LjH0oYGN1o8kiCXy21uyN1lO9mjYdl5rpycxpFSFTm5CmLc0I09Ztgt3hRXUOaOK+C/h
+         HUNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750902758; x=1751507558;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nmZGy30yttm+82gl6o86G0X0Vv/KuB1NPu4aLHsi0GI=;
-        b=PbXtU2epBvXYaicyfd5FiubbL/Af6bl/EU9aWpAy1doiAln1Q45dIc//SLn7MYW/6I
-         eOz+fzDW0GZFuBHhyuVPeHb57Sj78z5W6tQzQLLX55ZKhw+ZXPnyyLIJkIJAEK5xJQpU
-         eVtrk2S6505kK4rMF14BQ5qsPOc3vAcbuvyE4gJ4SoseKsHu38hJAnAq/meuCTQ/QyAQ
-         FwQPqo4klknPbNVV99L9C3jKpHE/HUwRiT1pDplFCkFjXI5JvFn57BgrAOr0mJY5uz7n
-         V7u9aioK5IJiRYhk/PvtgmoF/pCA4+OJGzi3oLbGPATalNKSr7ukQmAY5gYEUCILLzx8
-         QjgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcwd4JLlBNxtzHvmUMahmtZpazakgPRhZoiuz/syu77zw9yr8pcKn1n0zbEcmbswGkt7L19sorsqG6fRc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlqtHtKs7t3BWTSHedSWdpVKvgaw7dr3/kRgUYrMK9a+Sb27G5
-	tTWzkK85jPPVmLXcjC+hqTaNd2ruU89G0aT8N1sWGYcX0pG2CL0UZ6mZowE6+FQxF/cyWwY9XMK
-	QdsKZVZMRznBIYm7N22QQoC6P8cai1Ug=
-X-Gm-Gg: ASbGncsmmkEVPCB+hZyFps3LVkD0vs//G1c9eVXivl39WPVvygpW4vB9Xsgu8cqrjHb
-	Ws1ThyASaVtpGdK0Tuq6Mooe4xhF4BsFy4AqSp6kFR04crNzNPAUjbb/h2+IwIh4gICwd0kWXf4
-	QTAe8khargKgxWw42QmX7BmUsA9aI/h2WD1MA/ecjsn+s=
-X-Google-Smtp-Source: AGHT+IHin6avqSFx/xLdpJP6F6J39jPWGki2780uHuWGO//x6dIZiYY7vmgIzTTWF/GP/G5q+zws2XZGe370+FO96Xs=
-X-Received: by 2002:a05:6122:1e03:b0:531:1904:203a with SMTP id
- 71dfb90a1353d-532ef436f69mr4001388e0c.0.1750902757788; Wed, 25 Jun 2025
- 18:52:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750903680; x=1751508480;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2QqGYjD8NV1Lz9h53E/xb2YOnYvPPC++UyYL3ZPC24Q=;
+        b=bMYlFMwq5btE1PrixT1S2BrCkv68ABUKJeG51800e66O11NsFdyzOMMl1+e1PwqJPH
+         GDZJhWEOuOg2gxI2b4Cx8DMQ+iqrOwW6pXKOGdNJNj+rAGd5aU0QbHvrb2UJa8FsJBwG
+         yGLc2+ku8TfgnbGKkiUKK2RdcuNlDd4ZLgrsJDYADQMO5VS75yH6tXI6riIptIYICTtu
+         usQqp5oKWN5yj0mpFqXBtMRvR3fm8OXlRG3NMD8eG6/350OJtE/sHb1sG873Q3uMaeke
+         EOdzFFWFCEJqy2LZ2DvN4AahPi3X06daNLh8AiKiZJt4hpVEZ6BS0UL9BLOG9ldIEnCp
+         Hjdg==
+X-Forwarded-Encrypted: i=1; AJvYcCW06jcdlw5MG2O9C2w/6HEqgkVzritDErMqLZ1JKWcyveWBU/OSKzeYn7ZtSW8CMCqSKNbrHvw66gQTc/A=@vger.kernel.org, AJvYcCXjNM3snd3+9/qIDxoatnbg92NDzt7oALp3vV6NOc+7as5DEj8i/rviAVjAYbCNvfP2o3qr+u57J6ZKjqbSFgZa@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXXT6i5Z8GnKFG+iyy/H2wMEGxCjZxBhS3SXq/DkhaOYP20c8F
+	CaLYhjCD89hCc/7k3luWn1ooFDlwozNQJUB+7asMjlr1ZTddTOqnV37K
+X-Gm-Gg: ASbGncu6Cv3nRh7wcXqFs+stf/R53U9DyQ5BaXSLnrQkgPpH+M3LpojVqv0RgSE493/
+	t73pN/k7uz7fHvUO1TGgS75zh9e2rGIZDH8fXtZza+jjwOczExnTdv8xzVKtbdPHeCc3Jzgh2EL
+	dr9ewKAbpVaajiqA8kNoj3GBX3yqX7WLTFsyoG31XRjcEW6bgKsxBOYxIhBjZRGUuOWDC4Tiz/G
+	BJiNUgWZYu22yz74DnrSLQTUNsWNv/aFWZ4ksRho+L7J8aGXmonlOlOj24U8iPs2opM5CTUihdw
+	nULd52tBefAR/fY5pGiXNznbFz9U/H04DxX/rCRu493SGtkpyDk2cI34C0fLr1d1jzJIld5uBLY
+	=
+X-Google-Smtp-Source: AGHT+IFw3FQlZnA+EvUsNN1IOB3BlWRZTtCRZlRlVSj2VO/QZ0xMVRH5KO8rzFZ0phgpRnx8AufnAQ==
+X-Received: by 2002:a17:903:2bcc:b0:235:5a9:976f with SMTP id d9443c01a7336-23824030ccdmr110775315ad.24.1750903680502;
+        Wed, 25 Jun 2025 19:08:00 -0700 (PDT)
+Received: from p920.. ([2001:569:799a:1600:cc0b:584a:7d31:4a04])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34c4318a27sm388110a12.28.2025.06.25.19.08.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 19:08:00 -0700 (PDT)
+From: Moon Hee Lee <moonhee.lee.ca@gmail.com>
+To: akpm@linux-foundation.org,
+	shuah@kernel.org
+Cc: linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Moon Hee Lee <moonhee.lee.ca@gmail.com>
+Subject: [PATCH] selftests/mm: remove duplicate .gitignore entries
+Date: Wed, 25 Jun 2025 19:07:58 -0700
+Message-ID: <20250626020758.163243-1-moonhee.lee.ca@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625095231.42874-1-lorenzo.stoakes@oracle.com>
-In-Reply-To: <20250625095231.42874-1-lorenzo.stoakes@oracle.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Thu, 26 Jun 2025 13:52:26 +1200
-X-Gm-Features: Ac12FXw83U6kzxH7ipKIb-3Hzq_WTXVVwht84qjR0OcUXn5MiWb31MjCxOdAZD4
-Message-ID: <CAGsJ_4zfPV2p7GSPdE=2+dyiEPFxQJKpbjmVro2VnJ4YXNoyMA@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: add myself as THP co-maintainer
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 25, 2025 at 9:52=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> I am doing a great deal of review and getting ever more involved in THP
-> with intent to do more so in future also, so add myself as co-maintainer =
-to
-> help David with workload.
->
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Remove redundant entries in .gitignore confirmed by:
 
-Acked-by: Barry Song <baohua@kernel.org>
+$ sort tools/testing/selftests/mm/.gitignore | uniq -d
+hugetlb_dio
+pkey_sighandler_tests_32
+pkey_sighandler_tests_64
 
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4b9a4fa905e1..a8a963e530a4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15945,9 +15945,9 @@ F:      mm/swapfile.c
->  MEMORY MANAGEMENT - THP (TRANSPARENT HUGE PAGE)
->  M:     Andrew Morton <akpm@linux-foundation.org>
->  M:     David Hildenbrand <david@redhat.com>
-> +M:     Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->  R:     Zi Yan <ziy@nvidia.com>
->  R:     Baolin Wang <baolin.wang@linux.alibaba.com>
-> -R:     Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->  R:     Liam R. Howlett <Liam.Howlett@oracle.com>
->  R:     Nico Pache <npache@redhat.com>
->  R:     Ryan Roberts <ryan.roberts@arm.com>
-> --
-> 2.50.0
+These entries were originally added by [1], and later duplicated by [2].
 
-Thanks
-Barry
+[1] https://lore.kernel.org/all/20240924185911.117937-1-lorenzo.stoakes@oracle.com/
+[2] https://lore.kernel.org/all/20241125064036.413536-1-lizhijian@fujitsu.com/
+
+Signed-off-by: Moon Hee Lee <moonhee.lee.ca@gmail.com>
+---
+ tools/testing/selftests/mm/.gitignore | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/selftests/mm/.gitignore
+index 824266982aa3..f2dafa0b700b 100644
+--- a/tools/testing/selftests/mm/.gitignore
++++ b/tools/testing/selftests/mm/.gitignore
+@@ -38,9 +38,6 @@ map_fixed_noreplace
+ write_to_hugetlbfs
+ hmm-tests
+ memfd_secret
+-hugetlb_dio
+-pkey_sighandler_tests_32
+-pkey_sighandler_tests_64
+ soft-dirty
+ split_huge_page_test
+ ksm_tests
+-- 
+2.43.0
+
