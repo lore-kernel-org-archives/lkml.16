@@ -1,61 +1,63 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B5B1AC88B;
-	Thu, 26 Jun 2025 20:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE1D2F0E59;
+	Thu, 26 Jun 2025 20:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750969977; cv=none; b=Vva0gSMlyBuqs4kA2EWYAqUmH1+zPg/d0rMbUMb1NYutgp4Lh40n/jVK6yeCt+9u9CbSj6tPJrzOZDvgSBRY99tcDfA9riggrZQnrHbV71GBx4++ElLtgPrp+a7IkSGEGzNvvXnhw/TFv0uZ1IuYfP9rsYrB7NYsrGR4piFqL1c=
+	t=1750969981; cv=none; b=qo3cIWoxDyPysycsHkZZABcqBct7jD0yQu+1x89uun4UWIqKR6rUfzMa7r7HHqXTRa/yl8QP9GE00YsoY+m0kh03MKmoEti6ePb12cbc7wGp3N9eZRxfL91WCQeAVgDnPmjUl5faOloa2+vO6cj+pGgTa83Wv+A6avWG9DzLeqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750969977; c=relaxed/simple;
-	bh=NxaoikWWKYzV5QejK8n9/JfhoZy983I+9kYK9QzYnMM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AL3wAbF6B6R3naTe88Ac+uFNqmQXqXAGP7vI8zEpWnAGswAFzUzb/qeA4MD4kTi8D209vnr6RvmVLmBYIhjL6Kf6RP2wt6GnKvBlbzBXHxkXXKQCNOM4oZnUwF4Z3PAQ5q7QnGPB+cbPorZtABuUioDo1kwytr2BcYPIXOcnq/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jNBYj7v6; arc=none smtp.client-ip=209.85.167.54
+	s=arc-20240116; t=1750969981; c=relaxed/simple;
+	bh=N16eX1TgT89kfpHG9PYWXoAMefgvBMCfuB8Mx8Ad8LM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=t4X+CHVVdh8wDuAUKhwxbZvGojxZ3SscWKe5s1AYtw1CR4unzxTcJoELsqkOnS65U0IqBfI1jAO9hbXoj5lXsGgv/tbExHr1jvKeWb1Mko1Sr5OBvPMianhEjg0iRHIBO5Bfe09FAmeonBfetepwv0IfwXHTgavs62XcxL6gMIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DXhfvMt4; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jNBYj7v6"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553cf020383so1594536e87.2;
-        Thu, 26 Jun 2025 13:32:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXhfvMt4"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-555024588b1so1790413e87.1;
+        Thu, 26 Jun 2025 13:32:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750969973; x=1751574773; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=L5s++U0umyHNoKeAuC41JGj9b55juJR9+534lcM7ZpA=;
-        b=jNBYj7v68nc9Rtu6MY8m5arB0MoyBNWBIa5kf7BBVb8lMe25vrOBqW5T9JlfhgsTgf
-         4BazIejxWc5TuW4CI2CMI5ojUtkfxW02rp52BCwUp+uYf18bLF6ts5nb0KFyv4NUDbCc
-         9fj2Bot1J4smqRfijMESppbcyqlPEKaM//OoK8FjEBsGg+8gXFhm0R5vxywlV+krfxRh
-         bk9DcOuLSVa/b5TebBBEQdytHoCG5LVWM7w58goP0HBQ3nyCMI2SPv2QzP2l0eMeP7Q8
-         k6vQhvvcwfKtJyTBn2Q9D96mCX25p6FkRZq0kcAPkGCTNWWl7TkSa5bN1iY4G0HN/bdp
-         wSUQ==
+        d=gmail.com; s=20230601; t=1750969978; x=1751574778; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DxKCMMODcsFDUMNOQiqlz6WxnPiyIIv3UbzjwD0C5UY=;
+        b=DXhfvMt49iaowMm1gDJIL/caMnppSGFZFSM8cavidN/SyRP1d6xWJDZKH4NXT/rHGB
+         nJNWbxPBzEnhsa3rbu99WstvW0DfW+ex887tFa11RNuMUXnW5ZcY73lMzR/kki/Kf5FN
+         qlxoLUEbkUCq1C126RCY6Yr5p2U0INoJ+venSoDrdXZU9i+x/v8MuX7Qjdwkd2wusGWp
+         27Uu+sdeBFLTCXnqAue4vih5MVjilvkudEbH0vfdB7obLp6jRKRjgoaicUnnY34LLZcw
+         Sv9vIscnnNLrUbZ7U1uSLgwQPwKxzM9zvTeTDqRI/ZcL5wmd/kRsUoCggJ6Jc+2D9lgA
+         tAfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750969973; x=1751574773;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=L5s++U0umyHNoKeAuC41JGj9b55juJR9+534lcM7ZpA=;
-        b=MoB1iL5bsW8RmBMfts2Wl8BDubvk8ExcKhZl9CrmbpvEtTHoRCMFsg81TgymhdCQb8
-         rYjXbzgx4TJp8NJehSLkF5HQRX5uG2OBzCw+1/E59iTa5hDRVgGH8kdsCs3ZO4r1g9fC
-         MbSjoFrVes+uI4VBsTT6FFSfd2WoG4J9KxEHfOAMgyiZZrM9UqfoBhCXteWgsvnVSa5h
-         SYmVbb5UK6uel4amZr0ehLcZ/gGkBLADfaS/Wep3NA6WyBPo1P46ieUAZcj7JfBj2oKj
-         j9ODLgj71+iVFAfil4/meWES4FqKYqb12GJ3bXXgizVtL21NjUF6iA1DfmJvDFkEkRCR
-         MWdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDFXfCmP2SUIZZwbpf1E9xy1b95DK2g33sfeqITEynQMOxQnPlmNCr8xbTJekazgXd197hpJdteUMfYuw=@vger.kernel.org, AJvYcCVJjlpx6h/GpZTJiTcLiEiZlR03YJjXhi/ejYi0bx26XWfZtba17qOdy6pEkSqTz5EjS5hs/Anwhb8fZrahVBs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxa6g1rjKruC/IZRtdzxHi8Y+/61Lv89WvzgUZc7PaUOg8MPUFj
-	urfHvJtNyn7vf4ZGv/RSNe0Z0F0GTAVBHseUxJVtrNC6bpTilvVduUw6
-X-Gm-Gg: ASbGncuPksLwzzmpwz3Krn32jQMghYdwCp2rHWb7Z05/Zu/LhRTJe6PiLyVUfGRVSFe
-	I7PYBVsKOXjANThxSACYlzuJ6pKWMMLprOe23GmpKY0H6xl9bQncuKQoRx86lpzpEOCL9UaJoGC
-	LPjY1m9lbv1LsdoxE8eMfCTjAdqW6FEyMeqRdoPanx0Db2JLcB+13T/nssAtlFaydzcE2efVe17
-	h7F51+y4OM2eG22BvSa2hIB+PH919TK5PkGdSdyfHzyhYJrunJozd5PsseYcq8MrsolAnSfI2hs
-	/Aaf1CJ7Z5fpY8ZuJ8K6eT8353Pi3tkUdBB2tO4tdl4REF+/Ex3AVQxpONULCg1ZpkacMqmuQRY
-	gAZled4j9eXHLxXFC+BINMcDmPK+Nkh9BWO1RmE0=
-X-Google-Smtp-Source: AGHT+IGP7ZuwCDqeZjCBxqR5XKarIbFCcj5/SQroX+zbJQ0cmAChrym66sKvNxs2Vb5InXRZDBfTAw==
-X-Received: by 2002:a05:6512:3b9a:b0:553:a77f:9c45 with SMTP id 2adb3069b0e04-5550ba16fe9mr316348e87.39.1750969973335;
-        Thu, 26 Jun 2025 13:32:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750969978; x=1751574778;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DxKCMMODcsFDUMNOQiqlz6WxnPiyIIv3UbzjwD0C5UY=;
+        b=mZvoUXsKYyg37HO1Dgb9Fc1AEP/wV7m2LLrkl/dlBrnq5opUvIHzHToWRW1pNdGZhG
+         ABKM6fX7f65zvsnHIOAmg/HwWg26z2aqRNRAnHidl2mfFqGw1Nz5LHL/gqHvhlXy9Cpq
+         2hZGGhOISA00BqK3sKkxjbpBY4IEP4lArfbosSLUpPfpxTl/YDwnBvysuyK9dmG2VENL
+         11AxX2umTkfkKBVgtzwARK/BSFPV6BhGdhEqHUOBStq3voQdG9Hfe5Mn4S2uLZJSXrJ5
+         e8ziyuh4xo70seQPe8L8zEnJlrj6/o2nCUklmAwoj9Zel4A9HQYlfdhHO0ja+LKI7xVJ
+         OYyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+sRVxYOUBKdRBjxtPAg2soBPd0MjipDAy5z4hwaDK7ez1hvvT794yDOIRSqOQySTunp605rEV9QZAByWz9cE=@vger.kernel.org, AJvYcCWgGKnBxEuvbtNL2Hfi1cPDaY1fTLWwdflFUb3ulSX0Mw5kT09NDFrk8oOhQde2gCX3gbHG/fkA7y2oJ/4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxiHvZg2+Jabu28Lo3q1JS4MSRwaWL4pZPr46niwHeWgTK7Pz7
+	ks9cN6qlNSEdxxnEo6UJQipnkKyis9idoc7n0gqgFNEa3cfBajaoJ6XR
+X-Gm-Gg: ASbGncubdUt3w/LkYVC83k9sg9c6jRZpz4er0pAFifsvHvo9IiKzs7Ah39ec5+MqNaL
+	wGNvcYIjbqp17p+jA50h5E/2kCHoFmziaacGJ4YYjbPvEUPlWpsdyr+fh8bkEBtxQQfa1LhJOIG
+	WFaOFJkP0uxe4zysAUBQOHDdJpIDgaObCaJINqgbmLqCUz1b37RVUCpBvr8PGFwpNAI6gXnXvB2
+	mXzhh7Z6icrdYi98oqJpSrx39HV3xRCnDLENG6AD48PSTxbTJxZlt6J4pS7bDnmRtwuEXH2VIDx
+	8YJ8zh7Oo+gt0BSHOO4Wb1GCwaKUyS5fFIG1PgXt0OnfzedyweLV3zNzY1XKnWU+AUrcdCWi1vB
+	pDAzv0/xKaNoQPM26J1sIvhbcRFU5CtlkVCsUQQc=
+X-Google-Smtp-Source: AGHT+IHhelbMccE1wyl4JQIW3n1qUc3KDLpVaSCWUrNmeE2bWUgrgC7Z2IhEY0d3dBUVv2Hf43R4rQ==
+X-Received: by 2002:a05:6512:3d2a:b0:553:2ef3:f73d with SMTP id 2adb3069b0e04-5550b82effcmr315925e87.14.1750969977823;
+        Thu, 26 Jun 2025 13:32:57 -0700 (PDT)
 Received: from abj-NUC9VXQNX.. (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2401f7sm142363e87.30.2025.06.26.13.32.52
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2401f7sm142363e87.30.2025.06.26.13.32.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 13:32:52 -0700 (PDT)
+        Thu, 26 Jun 2025 13:32:56 -0700 (PDT)
 From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
 To: acourbot@nvidia.com,
 	jgg@ziepe.ca,
@@ -84,10 +86,12 @@ Cc: Miguel Ojeda <ojeda@kernel.org>,
 	Randy Dunlap <rdunlap@infradead.org>,
 	Michael Kelley <mhklinux@outlook.com>,
 	Abdiel Janulgue <abdiel.janulgue@gmail.com>
-Subject: [PATCH v2 0/2] rust: add initial scatterlist abstraction
-Date: Thu, 26 Jun 2025 23:30:06 +0300
-Message-ID: <20250626203247.816273-1-abdiel.janulgue@gmail.com>
+Subject: [PATCH v2 2/2] samples: rust: add sample code for scatterlist bindings
+Date: Thu, 26 Jun 2025 23:30:08 +0300
+Message-ID: <20250626203247.816273-3-abdiel.janulgue@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250626203247.816273-1-abdiel.janulgue@gmail.com>
+References: <20250626203247.816273-1-abdiel.janulgue@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -96,67 +100,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi
+Add simple excercises to test the scatterlist bindings.
 
-Took some time to re-work this after the initial feedback but here is
-v2 of the scatterlist abstraction.
+Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+---
+ samples/rust/rust_dma.rs | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
-Basically what this version accomplishes is attempt to enforce proper
-use of the scatterlist api for device drivers in Rust. This comes down
-to a couple of things:
-
-(1) Ensure ownership of the backing pages is moved to the sg table.
-
-This is done via the SGTablePages trait. By allowing users to implement
-this trait, we allow users flexibility in how the list of pages are
-stored and organised. During construction, the sg table takes ownership
-of an object implementing the SGTablePages trait to build and allocate
-the sg table.
-
-(2) Prevent invalid use of the API such as retrieving the DMA address of
-entries of an sg table which is not yet mapped for DMA. Another invalid
-use is setting the page entries of an sg table which is already mapped
-for DMA.
-
-Safe use is enforced using Rust's newtype pattern which allows us to
-ensure that only specific variants of `SGTable` objects are allowed to
-safely return an iterator. For example a `DeviceSGTable` (a sg table that
-is mapped for DMA operation) is the only object allowed to safely iterate
-and retrieve the DMA address for sg entries. A `DeviceSGTable` object
-likewise is returned only by the safe variant of the dma_map function.
-Also, the set_pages interface is now hidden from users of the API and is
-only internally called when building the table.
-
-Lastly, a glue layer provides unsafe interfaces to help in writing
-Rust abstractions for other kernel subsystems is provided (currently
-targeting Lyude's gem shmem work).
-
-I'd like to acknowledge Alexandre Courbot for providing the feedback and
-initial idea for the SGTablePages trait approach.
-
-Changes since v2:
-- Drop typestate pattern. Introduce SGTablePages trait to enforce ownership
-  of the pages to SGTable.
-
-Link to v1: https://lore.kernel.org/lkml/20250528221525.1705117-1-abdiel.janulgue@gmail.com/
-
-Abdiel Janulgue (2):
-  rust: add initial scatterlist bindings
-  samples: rust: add sample code for scatterlist bindings
-
- rust/bindings/bindings_helper.h |   1 +
- rust/helpers/helpers.c          |   1 +
- rust/helpers/scatterlist.c      |  30 +++
- rust/kernel/dma.rs              |  18 ++
- rust/kernel/lib.rs              |   1 +
- rust/kernel/scatterlist.rs      | 390 ++++++++++++++++++++++++++++++++
- samples/rust/rust_dma.rs        |  29 ++-
- 7 files changed, 469 insertions(+), 1 deletion(-)
- create mode 100644 rust/helpers/scatterlist.c
- create mode 100644 rust/kernel/scatterlist.rs
-
-
-base-commit: 0303584766b7bdb6564c7e8f13e0b59b6ef44984
+diff --git a/samples/rust/rust_dma.rs b/samples/rust/rust_dma.rs
+index 874c2c964afa..c4d44e5a45b8 100644
+--- a/samples/rust/rust_dma.rs
++++ b/samples/rust/rust_dma.rs
+@@ -4,11 +4,15 @@
+ //!
+ //! To make this driver probe, QEMU must be run with `-device pci-testdev`.
+ 
+-use kernel::{bindings, device::Core, dma::CoherentAllocation, pci, prelude::*, types::ARef};
++use kernel::{
++    bindings, device::Core, dma::CoherentAllocation, page::*, pci, prelude::*, scatterlist::*,
++    types::ARef,
++};
+ 
+ struct DmaSampleDriver {
+     pdev: ARef<pci::Device>,
+     ca: CoherentAllocation<MyStruct>,
++    sgt: DeviceSGTable<PagesArray>,
+ }
+ 
+ const TEST_VALUES: [(u32, u32); 5] = [
+@@ -34,6 +38,18 @@ unsafe impl kernel::transmute::AsBytes for MyStruct {}
+ // SAFETY: Instances of `MyStruct` have no uninitialized portions.
+ unsafe impl kernel::transmute::FromBytes for MyStruct {}
+ 
++struct PagesArray(KVec<Page>);
++
++impl SGTablePages for PagesArray {
++    fn iter<'a>(&'a self) -> impl Iterator<Item = (&'a Page, usize, usize)> {
++        self.0.iter().map(|page| (page, kernel::page::PAGE_SIZE, 0))
++    }
++
++    fn entries(&self) -> usize {
++        self.0.len()
++    }
++}
++
+ kernel::pci_device_table!(
+     PCI_TABLE,
+     MODULE_PCI_TABLE,
+@@ -62,10 +78,20 @@ fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> Result<Pin<KBox<Self
+             Ok(())
+         }()?;
+ 
++        let mut pages = KVec::new();
++        for _ in TEST_VALUES.into_iter() {
++            let _ = pages.push(Page::alloc_page(GFP_KERNEL)?, GFP_KERNEL);
++        }
++
++        let sgt = SGTable::alloc_table(PagesArray(pages), GFP_KERNEL)?;
++        let sgt = sgt.dma_map(pdev.as_ref(), kernel::dma::DmaDataDirection::DmaToDevice)?;
++
+         let drvdata = KBox::new(
+             Self {
+                 pdev: pdev.into(),
+                 ca,
++                // Save object to excercise the destructor.
++                sgt,
+             },
+             GFP_KERNEL,
+         )?;
+@@ -77,6 +103,7 @@ fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> Result<Pin<KBox<Self
+ impl Drop for DmaSampleDriver {
+     fn drop(&mut self) {
+         dev_info!(self.pdev.as_ref(), "Unload DMA test driver.\n");
++        assert_eq!(self.sgt.iter().count(), TEST_VALUES.len());
+ 
+         let _ = || -> Result {
+             for (i, value) in TEST_VALUES.into_iter().enumerate() {
 -- 
 2.43.0
 
