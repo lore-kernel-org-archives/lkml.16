@@ -1,111 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FB62F1FF0;
-	Thu, 26 Jun 2025 14:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D6BE218858;
+	Thu, 26 Jun 2025 14:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750948289; cv=none; b=uZSDtLXrGvDryWzIoV5whtpRAfHmtVkLL4BaInN75B2kfbvbct4Kk8oUKucu1XIQC7UriRnUkElHzSvgDeFMnaT7P26e06hU/r/9JCOXHOiDSzh+MI17JaWxQAjrDYm51RVl0T/QTvr3GbBzQcrfFqrK+eF43rWGNjAxcAOwS5A=
+	t=1750948301; cv=none; b=creoeUnSIWUrUVXGU4Nvc+8m5eabkFUnjNP6cyZIrRDfF5+b+UumEviFMwistEXHPU1mIkYHSnR5ME4KNH2DrO/7sHwzMz0e/a/AvCHC7YXSRJIS8d1uOAxzQyNFZZgWaisCa9ekSxRH/78krg8uk7YFCFYMOjl1jvxfSzevX8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750948289; c=relaxed/simple;
-	bh=U5ICrpyiR4bA8dcmlzmWK23XdE586puy7xMo5vIe3zs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nkxbJRY1aN/g0c6hIQZKHKVi6SeRw8oeKWEHNPsZjsBEw8CJdKsX1NnySk9j4rp6lbW1culDHRa6sfMlJB4v85LAI8CvrmLtD4RArJuS/phM631Zw3SNwjcgN/BScTSt33lBD5mj+Y7yHYOwsUvHkgagnh7UP1uhVDOGPhfJ0Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L/ZUMFdB; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750948301; c=relaxed/simple;
+	bh=CDNeUhcwn1fieliy8eQB03EGAGSjSxhhMohngzPXcZ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FG2e9gePyimhDSIYZSnR2UWioZ+Uiqzza4Z8ds2Lu8/zDQag93Bins/Uyk7akuCUCMCIPvZYeIGecdxwbgzvhhoQxrjO2RhhH145spclgxp5aKOc15wZxvP19myilM6hhLuDkHZzqHi7e9v+dQXUogGD6itfunz6UuSMS9l/Rhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=lm0jVkFQ; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L/ZUMFdB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750948288; x=1782484288;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=U5ICrpyiR4bA8dcmlzmWK23XdE586puy7xMo5vIe3zs=;
-  b=L/ZUMFdBoN3bQaSG/uneu+6Fm+Pya7t+mIi/OtOd7EwPOYtD5XY/EsMa
-   J2kyGhiPP8dcnA5+eZxwvNSxi37zjvZ6WSC6grRQ6NFyzGb1EnjK+4106
-   t6hJvGsj+qwjD3S+jTfZhFSQi276OIf+iNjZUyDPWPxMrIJiBinPy5OaM
-   0oG3KuBFQNNTFCbbYt1aVhcx9ocYOeKo1Bn3yxVQvOwQAfF6GZMEJX1zh
-   1xqjJZhRBWXUNp9Fg0oZ1P9/u2BpdG07zkFowVbucII7yC+TurICVyLgy
-   dyVESbD9NVLIhimw2Om+uZ9stZBRs85mpJl/8fXlEjpgcvsxn/A5/74fw
-   g==;
-X-CSE-ConnectionGUID: F0Ka+eSnSEGTmEk+xnNyRA==
-X-CSE-MsgGUID: GxQA7cJmRWmS1nQ/OjLB8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="70676029"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="70676029"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 07:31:27 -0700
-X-CSE-ConnectionGUID: Be/jHUObS2WHzTSOfG8Crw==
-X-CSE-MsgGUID: HMGY6vjTShaQ8a/b3Rgc2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="157096650"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 07:31:24 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uUndJ-0000000ACV4-0Lf0;
-	Thu, 26 Jun 2025 17:31:21 +0300
-Date: Thu, 26 Jun 2025 17:31:20 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
-	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v3 2/4] gpiolib: acpi: Program debounce when finding GPIO
-Message-ID: <aF1ZuGJgXK7IW__-@smile.fi.intel.com>
-References: <20250625215813.3477840-1-superm1@kernel.org>
- <20250625215813.3477840-3-superm1@kernel.org>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="lm0jVkFQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=EjJBTW04LPLIj6Zf1fAybOyEQnJQi1pQai76WohOpG8=;
+	b=lm0jVkFQazYTCcDVZF0kPG7gzO5FjSIj7expSny1aplQt4s69nQk830XN+oMh5
+	1ODR0AFWev1Ls8z5fo3kdqm916ckrf2jkJUVNEjO4QDd8IesV7WUNqy2uRA/CIt5
+	RkMX+ijYoUrYx0R90hmAmR4L4GwcpQM0/czxefcxH/pz4=
+Received: from [IPV6:240e:b8f:919b:3100:5951:e2f3:d3e5:8d13] (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD3N7e1WV1oh9b0Ag--.56579S2;
+	Thu, 26 Jun 2025 22:31:18 +0800 (CST)
+Message-ID: <55158500-73b4-4715-87f5-94b872357391@163.com>
+Date: Thu, 26 Jun 2025 22:31:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625215813.3477840-3-superm1@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 13/13] PCI: tegra194: Refactor code by using
+ dw_pcie_clear_and_set_dword()
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org,
+ robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250618152112.1010147-1-18255117159@163.com>
+ <20250618152112.1010147-14-18255117159@163.com>
+ <ci3ojmiiuajwedx3desa7vf5lkk35meaj4kdqnunf3f66knvm5@gtgxoagzl7ek>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <ci3ojmiiuajwedx3desa7vf5lkk35meaj4kdqnunf3f66knvm5@gtgxoagzl7ek>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wD3N7e1WV1oh9b0Ag--.56579S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZw1rZF1UJr4xtF1xGF4xtFb_yoW5urW8pF
+	WUJa9YkF1UJw42vF10ka48ZFW5Z3ZakF9rurs7GF1xZFnrA347WayFqryUKFsxCFW2qF1I
+	kw48tayfW3W5AFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UaAp5UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQwd4o2hdUjK9UAAAsn
 
-On Wed, Jun 25, 2025 at 04:58:11PM -0500, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
+
+
+On 2025/6/26 04:57, Manivannan Sadhasivam wrote:
+> On Wed, Jun 18, 2025 at 11:21:12PM +0800, Hans Zhang wrote:
+>> Tegra194 PCIe driver contains extensive manual bit manipulation across
+>> interrupt handling, ASPM configuration, and controller initialization.
+>> The driver implements complex read-modify-write sequences with explicit
+>> bit masking, leading to verbose and hard-to-maintain code.
+>>
+>> Refactor interrupt handling, ASPM setup, capability configuration, and
+>> controller initialization using dw_pcie_clear_and_set_dword(). Replace
+>> multi-step register modifications with single helper calls, eliminating
+>> intermediate variables and reducing code size by ~100 lines. For CDMA
+>> error handling, initialize the value variable to zero before setting
+>> status bits.
+>>
+>> This comprehensive refactoring significantly improves code readability
+>> and maintainability. Standardizing on the helper ensures consistent
+>> register access patterns across all driver components and reduces the
+>> risk of bit manipulation errors in this complex controller driver.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-tegra194.c | 155 +++++++++------------
+>>   1 file changed, 64 insertions(+), 91 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+>> index 4f26086f25da..c6f5c35a4be4 100644
+>> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+>> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+>> @@ -378,9 +378,8 @@ static irqreturn_t tegra_pcie_rp_irq_handler(int irq, void *arg)
+>>   			val |= APPL_CAR_RESET_OVRD_CYA_OVERRIDE_CORE_RST_N;
+>>   			appl_writel(pcie, val, APPL_CAR_RESET_OVRD);
+>>   
+>> -			val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+>> -			val |= PORT_LOGIC_SPEED_CHANGE;
+>> -			dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+>> +			dw_pcie_clear_and_set_dword(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
+>> +						    0, PORT_LOGIC_SPEED_CHANGE);
+>>   		}
+>>   	}
+>>   
+>> @@ -412,7 +411,7 @@ static irqreturn_t tegra_pcie_rp_irq_handler(int irq, void *arg)
+>>   
+>>   	if (status_l0 & APPL_INTR_STATUS_L0_CDM_REG_CHK_INT) {
+>>   		status_l1 = appl_readl(pcie, APPL_INTR_STATUS_L1_18);
+>> -		val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
+>> +		val = 0;
+>>   		if (status_l1 & APPL_INTR_STATUS_L1_18_CDM_REG_CHK_CMPLT) {
+>>   			dev_info(pci->dev, "CDM check complete\n");
+>>   			val |= PCIE_PL_CHK_REG_CHK_REG_COMPLETE;
+>> @@ -425,7 +424,8 @@ static irqreturn_t tegra_pcie_rp_irq_handler(int irq, void *arg)
+>>   			dev_err(pci->dev, "CDM Logic error\n");
+>>   			val |= PCIE_PL_CHK_REG_CHK_REG_LOGIC_ERROR;
+>>   		}
+>> -		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
+>> +		dw_pcie_clear_and_set_dword(pci, PCIE_PL_CHK_REG_CONTROL_STATUS,
+>> +					    PORT_LOGIC_SPEED_CHANGE, val);
 > 
-> When soc-button-array looks up the GPIO to use it calls acpi_find_gpio()
-> which will parse _CRS.
+> I don't know why you are clearing PORT_LOGIC_SPEED_CHANGE here which is not part
+> of PCIE_PL_CHK_REG_CONTROL_STATUS. Typo?
 > 
-> acpi_find_gpio.cold (drivers/gpio/gpiolib-acpi-core.c:953)
-> gpiod_find_and_request (drivers/gpio/gpiolib.c:4598 drivers/gpio/gpiolib.c:4625)
-> gpiod_get_index (drivers/gpio/gpiolib.c:4877)
+Dear Mani,
+
+Thank you very much for your reply and reminder.
+
+This is copied from the first change of this patch and will be fixed in 
+the next version.
+
+Best regards,
+Hans
+
+
+> - Mani
 > 
-> The GPIO is setup basically, but the debounce information is discarded.
-> The platform will assert what debounce should be in _CRS, so program it
-> at the time it's available.
-
-No objections, just a style nit-pick.
-
-...
-
->  	acpi_gpio_update_gpiod_flags(dflags, &info);
->  	acpi_gpio_update_gpiod_lookup_flags(lookupflags, &info);
-
-+ blank line
-
-> +	acpi_set_debounce_timeout(desc, info.debounce);
-
-+ blank line (this one I'm not sure, need to check the other function style).
-
->  	return desc;
-
--- 
-With Best Regards,
-Andy Shevchenko
-
 
