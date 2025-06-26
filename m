@@ -1,40 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8612727F0;
-	Thu, 26 Jun 2025 11:06:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA811A5BBE;
+	Thu, 26 Jun 2025 11:07:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750935983; cv=none; b=LYMqzMLeiiXQhr4HrlrvaVByB1aEnHfyKndbAzB/EJlTdhVXQ89w0vdd33jjXzCy48PkavlLfrCu8cREmSTQ00G3uX6xBGbqoX9SUXPWnocRv4p/Z9+OsFCpJrRJ4sfnapaBB004FLsxP9vz6jfoO0lGNocg+xSVvhZeZwLVcWo=
+	t=1750936046; cv=none; b=L0E+9LdD+YcVxkqprZYg4wd0vkD9X6SAeDnltudCOhb0yPH1MdgSaUIOXwFb+ciL2ChtUlHFxK5iinKw7ueudU8WlGelhatIjZHfJNGzNiVreWMIQsizmQrNR0xt1nu3aezes8/rgD1WzLr59Sjb3W9X2sHMEsV+DNKPBjbPZgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750935983; c=relaxed/simple;
-	bh=x7q5skRjz1OVgPcEtm4Z3B1dc5BXdbgM2Msi2ETyg6U=;
+	s=arc-20240116; t=1750936046; c=relaxed/simple;
+	bh=H3NtjDQKMRud6AxOd8vIbeE02iNl7L2m8PqYMVpRcD4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g1ROYI/1V8mqfWh0sOCtThDtja4RM+ZJAYCt/o3WXXa8A4F+XCoQucx6MCaChswQP/ZfM1NyOBeNG/R8bsqw3OrnrYtzBha3pMXQWAh6X07t+c97dMsXjR9vUurfro0QcidFpnthVl9B4KW94NN+VzKR53jWIs0hr6hlgRFoXDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icYoqMhn; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=J0bdQxfYp9VnSZGFRaOCBuZz9Qw0zW0uMIBVfQj2b2j6wFrwokuY2/9lEkIjhASPNP/HT2dWlu5OIQLKxkXSYYLDEImuT+jvn3CLUEwHMTCzLCwVdsCi3v+muD7EbnhOtsgL3B9ZEs+HnCEy1N0BYeudDfdtkF2mUWEJrgFEYgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EDKSfYvA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icYoqMhn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76C07C4CEEB;
-	Thu, 26 Jun 2025 11:06:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EDKSfYvA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6F93C4CEEB;
+	Thu, 26 Jun 2025 11:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750935982;
-	bh=x7q5skRjz1OVgPcEtm4Z3B1dc5BXdbgM2Msi2ETyg6U=;
+	s=k20201202; t=1750936045;
+	bh=H3NtjDQKMRud6AxOd8vIbeE02iNl7L2m8PqYMVpRcD4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=icYoqMhnqYMQnSt4bSPYDHPDWBr6x5oglxgY9OfIgYI/cdFz6wOfqAHwP+0WA3d2v
-	 X2FdQnArtRzcfWU7Dk0qFmLh/QISndbDXnCAV1IxxjE1cyozVD0c3EbsDR/zROPkUc
-	 /c4QMKrgIzKuY8CcNywNZte7YdxR0aXEigfw0hVWFzpA7KahkOqS7WrG1dx+uk3i/l
-	 2k2JGhJA8Zzc5JDjJmROP4L8XEqpphC2if+YgYWzUGsyz2s/BTdRd5dGMeaXB/kz2N
-	 YgQ+wrOhtvEXn0JzZti5d4Pe3TePvTMhFivE9hSGUaPT3znloIlERLamqLKvFkDhH4
-	 Fwny1X2zfHAgA==
-Date: Thu, 26 Jun 2025 12:06:19 +0100
-From: Simon Horman <horms@kernel.org>
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: Chas Williams <3chas3@gmail.com>,
-	linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] atm: idt77252: Use sb_pool_remove()
-Message-ID: <20250626110619.GW1562@horms.kernel.org>
-References: <20250626075317.191931-2-fourier.thomas@gmail.com>
+	b=EDKSfYvAxPwNyRbvDmcpN4bsRkt1xUXXuRwATpncZnD/rBmZy4qXhzdEg6iDmPCcp
+	 rXmgd9jYziqd2Yqq5AtPtjVmYdKSBN5AzJWFvaLq9H5K5eMOt1Zli9CCjxfJTQHrrn
+	 4w1dw/PFWE1e4ea6pw/WpYQJfZsc1q3wAA07lz2Jp5e2MPuYBXRQ0khkGqsVuHNYJj
+	 InHV3aYAf8G2trsolWLNc7FKQlpKObcaya7Zh7Ts1pkZGSvQ7kzYPomgqbMrkM6+mg
+	 XmcgxR45aaZ9r1zYn/ELJFo0YYaU7bGv2bDWh9E4FH4IZf1nyoitbl2NF+MryavDn9
+	 7YddblOSBWXNQ==
+Date: Thu, 26 Jun 2025 13:07:18 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, gregkh@linuxfoundation.org,
+	rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
+	aliceryhl@google.com, tmgross@umich.edu, david.m.ertman@intel.com,
+	ira.weiny@intel.com, leon@kernel.org, kwilczynski@kernel.org,
+	bhelgaas@google.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] rust: devres: get rid of Devres' inner Arc
+Message-ID: <aF0p5vIcL_4PBJCG@pollux>
+References: <20250624215600.221167-1-dakr@kernel.org>
+ <20250624215600.221167-4-dakr@kernel.org>
+ <aFzI5L__OcB9hqdG@Mac.home>
+ <aF0aiHhCuHjLFIij@pollux>
+ <DAWE690DWP9A.10I5FIJSZDSR6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,25 +51,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250626075317.191931-2-fourier.thomas@gmail.com>
+In-Reply-To: <DAWE690DWP9A.10I5FIJSZDSR6@kernel.org>
 
-On Thu, Jun 26, 2025 at 09:53:16AM +0200, Thomas Fourier wrote:
-> Replacing the manual pool remove with the dedicated function.
+On Thu, Jun 26, 2025 at 12:27:18PM +0200, Benno Lossin wrote:
+> On Thu Jun 26, 2025 at 12:01 PM CEST, Danilo Krummrich wrote:
+> > On Wed, Jun 25, 2025 at 09:13:24PM -0700, Boqun Feng wrote:
+> >> On Tue, Jun 24, 2025 at 11:54:01PM +0200, Danilo Krummrich wrote:
+> >> [...]
+> >> > +#[pin_data(PinnedDrop)]
+> >> > +pub struct Devres<T> {
+> >> 
+> >> It makes me realize: I think we need to make `T` being `Send`? Because
+> >> the devm callback can happen on a different thread other than
+> >> `Devres::new()` and the callback may drop `T` because of revoke(), so we
+> >> are essientially sending `T`. Alternatively we can make `Devres::new()`
+> >> and its friend require `T` being `Send`.
+> >> 
+> >> If it's true, we need a separate patch that "Fixes" this.
+> >
+> > Indeed, that needs a fix.
 > 
-> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+> Oh and we have no `'static` bound on `T` either... We should require
+> that as well.
 
-Hi Thomas,
+I don't think we actually need that, The Devres instance can't out-live a &T
+passed into it. And the &T can't out-live the &Device<Bound>, hence we're
+guaranteed that devres_callback() is never called because Devres::drop() will be
+able successfully unregister the callback given that we're still in the
+&Device<Bound> scope.
 
-Unfortunately this patch doesn't apply cleanly on net-next,
-which is a pre-requisite for our CI to process it.
+The only thing that could technically out-live the &Device<Bound> would be
+&'static T, but that would obviously be fine.
 
-I suggest reposting this patch once your other patch to this file [1]
-has been accepted.
-
-[1] [PATCH v2] atm: idt77252: Add missing `dma_map_error()`
-    https://lore.kernel.org/all/20250624064148.12815-3-fourier.thomas@gmail.com/
-
-The code change itself looks good to me.
-
--- 
-pw-bot: deferred
+Do I miss anything?
