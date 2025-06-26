@@ -1,117 +1,87 @@
-Received: from glittertind.blackshift.org (glittertind.blackshift.org [116.203.23.228])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680FE2AD11
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.23.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9972AD11;
+	Thu, 26 Jun 2025 13:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943160; cv=none; b=DQHZTuKegjHFHQRs4OLAEdO3jicLEB2PCFPIgsZMLLXAkJg9hYzmxWJ3pYwHY1goinv9PcJFXthinrrDgL6ZMuSqw7yIXk0PN1AsN3oEZyZS/8CeB2ZIyRpGpJeZYyf1ncON+CgYBGEwpccXwWZBKn0B0X77uAWl15tjiLzMqlo=
+	t=1750943245; cv=none; b=kRYjxBsprp2enVkdb165N3u4nCDI4Y4PuErCeFl0Cba/ZhX1e8KaqwHqoUezO4eiq1fk+ttbs8Xx6d4Ky/T4TSobu4yVSKbnnNG+xRJbQqA4o3wamg2OB2eZSA37g1KZnovAt/2Ps8iSAeQnvngYVgID1I6OQ3CwU8FDVI8dk8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943160; c=relaxed/simple;
-	bh=mg4SwQNbvzeE2sj3wCDg1tjz/VjheXExlZOnS8rGJFM=;
+	s=arc-20240116; t=1750943245; c=relaxed/simple;
+	bh=oN0tXWyd2Pl7Qho5xOU8PktHj9C10fwN6NEZn0c0cK8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gAuelUT1lDcfBTlGsxkrk5KpNkF1DCkmIumHEPCFXtEtC2q5hQcuy6q3eGemkR39fDnMynyyoPqEyLN3sXAB5+97qLUi2Nebqyhaf4PUXgUTTGIVOklWcPRmJxeWs9nSTIsZnlp9nftaTzvc5INBDaGbU24jlEOtqi/3RybkzNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardanger.blackshift.org; spf=none smtp.mailfrom=hardanger.blackshift.org; arc=none smtp.client-ip=116.203.23.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardanger.blackshift.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=hardanger.blackshift.org
-Received: from bjornoya.blackshift.org (unknown [IPv6:2003:e3:7f3d:bb00:dea6:32ff:feb1:177a])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1)
-	 client-signature RSA-PSS (4096 bits))
-	(Client CN "bjornoya.blackshift.org", Issuer "R10" (verified OK))
-	by glittertind.blackshift.org (Postfix) with ESMTPS id 31A52678AD0
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:59:37 +0000 (UTC)
-Received: from dspam.blackshift.org (localhost [127.0.0.1])
-	by bjornoya.blackshift.org (Postfix) with SMTP id DDC0443114B
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:59:36 +0000 (UTC)
-Received: from hardanger.blackshift.org (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bjornoya.blackshift.org (Postfix) with ESMTPS id 05D47431147;
-	Thu, 26 Jun 2025 12:59:36 +0000 (UTC)
-Received: from localhost (hardanger.blackshift.org [local])
-	by hardanger.blackshift.org (OpenSMTPD) with ESMTPA id 42c87de3;
-	Thu, 26 Jun 2025 12:59:35 +0000 (UTC)
-Date: Thu, 26 Jun 2025 14:59:35 +0200
-From: Marc Kleine-Budde <frogger@hardanger.blackshift.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>, 
-	Guenter Roeck <linux@roeck-us.net>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] spi: Raise limit on number of chip selects
-Message-ID: <pulc4xhdpqfseyugxloid6vvjeducuxghfuh7qre67k5v2zie3@wfpiyoyzalmf>
-References: <20240124-spi-multi-cs-max-v2-1-df6fc5ab1abc@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=IyOa65+Zk46Dzp1Xq1sU5IhAKvprN1REgBI949CQGOe97IoF97rPsLpvn+fk5mzevS7aRjTVUqwUmsc4tVO7BJFOjI40LEsUamEZiANi/AX2uXAlc94o2S/V7pmbqRPqzngUJaZyORpMdjXZE4IfDxtrMzEDM4zGzWmuTCJJ+Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Wd46GmJc; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wd46GmJc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=J4mM+Th2cNmMlS1OHaD0inVbssW+LOr+GAf200cBoM0=; b=Wd46GmJc2meXibKUN2+7aJ1XgO
+	gdm1xyUL40dpG7E4vIBavoPQOq/5TEdm/CNnKeSMOh8/7yKpLAprgQqrGHHF0y4NCstFzjZW8v52m
+	w7uHVWe1/H7GC+r+rvoqYddFl9B+8XwE2U+8vbTsVgWz8DXIH2/2flAlq+IvulzSv4rIHpLPi17ka
+	sHhGf7iJTh/RryhXm/hezQ6Ju6ONyoI1gB9DKuUFmuX+Pn1XhT8qCTqPzi4USvv/aUkLRgOFVeyZL
+	PvDKhOg27hri5+pW+t7dhJw5dSy3GKO0eSN8zr83owni1Gy2Ddg1czrjTiYkE+NjhfzFRzUbAoDrP
+	8hy3avDw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uUmJn-000000066Hi-1MXi;
+	Thu, 26 Jun 2025 13:07:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E415630BDA9; Thu, 26 Jun 2025 15:07:05 +0200 (CEST)
+Date: Thu, 26 Jun 2025 15:07:05 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v11 13/14] perf/x86: Rename and move get_segment_base()
+ and make it global
+Message-ID: <20250626130705.GG1613200@noisy.programming.kicks-ass.net>
+References: <20250625225600.555017347@goodmis.org>
+ <20250625225717.016385736@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wqkdkixsemn3jz2k"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240124-spi-multi-cs-max-v2-1-df6fc5ab1abc@kernel.org>
+In-Reply-To: <20250625225717.016385736@goodmis.org>
 
+On Wed, Jun 25, 2025 at 06:56:13PM -0400, Steven Rostedt wrote:
+> From: Josh Poimboeuf <jpoimboe@kernel.org>
+> 
+> get_segment_base() will be used by the unwind_user code, so make it
+> global and rename it to segment_base_address() so it doesn't conflict with
+> a KVM function of the same name.
+> 
+> As the function is no longer specific to perf, move it to ptrace.c as that
+> seems to be a better location for a generic function like this.
+> 
+> Also add a lockdep_assert_irqs_disabled() to make sure it's always called
+> with interrupts disabled.
 
---wqkdkixsemn3jz2k
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] spi: Raise limit on number of chip selects
-MIME-Version: 1.0
+FWIW, I recently found we have a second 'copy' of all this in
+insn_get_seg_base() / get_desc().
 
-On 24.01.2024 13:24:24, Mark Brown wrote:
-> As reported by Guenter the limit we've got on the number of chip selects =
-is
-> set too low for some systems, raise the limit. We should really remove the
-> hard coded limit but this is needed as a fix so let's do the simple thing
-> and raise the limit for now.
+Its all subtly different, but largely the same.
 
-We currently have a use case for 24 chip selects.
-
-> Fixes: 4d8ff6b0991d ("spi: Add multi-cs memories support in SPI core")
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Suggested-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
-> Changes in v2:
-> - Raise the limit further, the highest I've seen thus far is 12.
-> - Link to v1: https://lore.kernel.org/r/20240122-spi-multi-cs-max-v1-1-a7=
-e98cd5f6c7@kernel.org
-> ---
->  include/linux/spi/spi.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-> index 471fe2ff9066..600fbd5daf68 100644
-> --- a/include/linux/spi/spi.h
-> +++ b/include/linux/spi/spi.h
-> @@ -21,7 +21,7 @@
->  #include <uapi/linux/spi/spi.h>
-> =20
->  /* Max no. of CS supported per spi device */
-> -#define SPI_CS_CNT_MAX 4
-> +#define SPI_CS_CNT_MAX 16
-
-Just further increase the limit to 24? Add a Kconfig symbol?
-
-regards,
-Marc
-
---wqkdkixsemn3jz2k
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmhdRDQACgkQDHRl3/mQ
-kZyyOwf+OXLwobSDwvA5qRpH1KP1AEORA/RtlDzudGtBpnaxtppG+/nc5YI1+icd
-/pozE0gF+623mhD2iA/IeNc74OHUHNnDdsHSa6LzHUZfdFjCkcs/lJWBPlMgoyGB
-U9Ewsf9Zu/4oCHYRLyxNWQKBwCfQ7EAkxYqryKvDeFh5+jiqFiQecKuv77EnH9c+
-Ffa7qk3bWX3Cn4zypT8a0Huih8kNygUP9/MMKylY3gKIMD5bXjsZX96uaXSylllu
-Nw8m0NbvkedOpLILA5crJm21gXWZV8IXALy2dvCKq7/9ArHtFgl668G78GDSJ4xb
-KdmZ+QRQS2HWOtdZZQYVmG3AGgJMNA==
-=TG5b
------END PGP SIGNATURE-----
-
---wqkdkixsemn3jz2k--
 
