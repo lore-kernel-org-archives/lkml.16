@@ -1,420 +1,120 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC882EB5B3
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC9D2EBDEA
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750948830; cv=none; b=nkxvyKNSBjpaUIm2Wz12b2F3h2r6v/jVJEBfIn+28oTzB5R7ymmPitHj9FLoUyq+GOPzw4USxY30vZQRmZswoNV3RO6mPVjhGoLDgJyctKDTCsvWbZvc3P/Weng5V3d2dAqgCrR2a3zz5Sm8dNFhJ0o0zajP9SNFNYXhGv/3Phc=
+	t=1750948836; cv=none; b=GFm/3WrRTEb07wSnIJjN6RQgCqMtSFTQKmJU55jE/h6C6Um5QSco1AzNqvpKra0d/q/PFq8r34Pzyx8icH0ooXgc78/7p14JWA+t8qvmLho5PXiETyXsRMYzVNTpeRDY093VVXPZYNCT0u8HfeJwk2QqJ6hjSRJw/xSbRbiayRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750948830; c=relaxed/simple;
-	bh=aHV1jI1fkhodloHyH4Cmzv72r5jWv5VROLncg/taXkU=;
+	s=arc-20240116; t=1750948836; c=relaxed/simple;
+	bh=AI8QyK5VbmzODrK/iLx119zZFzi6+nVsa4oz+0yWfvc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oz5AGZb2cKRyAkbcroCOP20ChUzvizo0XvTZKwnPkVyi+zNKQc/XAgirGTHu+hGjRM2aH4mPGzrUrXjrEmuF+kQmaO7HI+IFdRaQdPSeyaDuyKdRZjyaMG9xsDmx/gu3xpfRmyzRXimRFnPdfckU23G4XdjFmHHa0yh4SYuAnKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vWaN82d/; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=Z4jytjjoJ2FRpQUv5dYKtYgSr0tS2KDqjB6l3Ptpv0NkDLHJ2xGFLrp1cS2R7+VHWBF73i73mFCAk4VKhLDBeHu6GHuhLwd3OIeLIMNJtN/KqE8HsspIoO97hpNOP1WS+PicGvUx1TJzD/bn4zdc+qTZ39SqCWYc9eT3Gfu9/7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RTh+bAmd; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vWaN82d/"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-40ab5bd9088so744738b6e.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:40:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RTh+bAmd"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234d366e5f2so15226265ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:40:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750948828; x=1751553628; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mxnJ+JMAeXEe0tFyoruENV/4pmqUfnDATYgkfRCTwwk=;
-        b=vWaN82d/4v3L7a5QEPbqqEo3ZXz8m8USzJkGZUPOHQExRr6EYc+iBSFKsFj0sEpcSv
-         gzTT5/fC3f7tClqcIX8HaAnMM4JknybP6zerMsS0nbdbNV/S2o84bS7XaYHAM+XV81g5
-         iP7vb+GZ3Q7YW4DZsulR1m2y1zH0EwMhvOFtUH9PwF65GPi1aZ2goqzLhORHJZ8RI2Ow
-         joIkLKa6UFPbwH60ybf+rXR+4kguQQ9HlbbFJywAdr8MPIJa+RkfVbh1eQqjPPsmXvAw
-         YWmvPaEs++leM6XSAQTyauO0YsHHr37uCbCJEB0iPah9j4eYm/kdoVd2cWWvi5XE9/es
-         BhOQ==
+        d=chromium.org; s=google; t=1750948830; x=1751553630; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ktVHpVwkar6BpRFpT2c0I23iBcQUDcPsZbqMOUPU8EM=;
+        b=RTh+bAmd9Rs/1F9YaSUEgoE6AZWmfWbo0A8c+Z+//hSXCBfFL0aEPu02QkIcWR8xhV
+         7EF/nv2fkg5Q2LBFsEUDOf1alTswnJxUPoIHC323WrBFoKzvzMWk0K9CzlqGTcsWwIJj
+         n6wIiF8jcquai5QEJid2Y4sFn1XcImLh5stdc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750948828; x=1751553628;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mxnJ+JMAeXEe0tFyoruENV/4pmqUfnDATYgkfRCTwwk=;
-        b=T8xqktEOg/imPM/c8wQCP3+oQ1/NeGG8xxw1H/mtGSa1E8SHvDl4wgeFk21jR+LPXH
-         kOvk/baQA71meTpzz9YgXVq8s0a7KgrWCSvxQ4j6CaSYt07da1jJaPFLF4KC6BiX01lV
-         ajkVLu9ziXkWArI879C8GPIn8FHWhyjnrOqp85mYK5Wubfcy6ViqndRVfumOhdVdXMqH
-         65KHr8P7FJrTT+rndqQTq7s4TKzMLu74w/nzwSF9lPn6xqbLZRtMw/mIT9ttNxHCytiz
-         b95t3BY/ZUoGc+AetaIbFBHVDD32ZqaxPTu/A2mVd5bQwqZvAhACbIB9pvy/mkD437sY
-         Dx+w==
-X-Forwarded-Encrypted: i=1; AJvYcCX+RPNbvEOs1v2Iho46ljfcN3nb4IiyYGxy6nimrmOYVkgWDqij/AnymkVSbxKpV/MQozpYvk7mBD5d22w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzl8dmUVOF4IAljFVErLHtEtZn37nNFJ/dhK7XVRoFmtjElxjc3
-	DhhtMuLSkprtR2rFNg0qyXAq8KeRO1YGubUG0Km+hJFwWFN3jgxTquuar5rO0gv/044D00mBGa3
-	wdfy43ZRplERuCQj6myckfohV+1In/8NsBlJq8a+olw==
-X-Gm-Gg: ASbGncuD3lpoxQ/MCIfnEGwPVVr5MZXZvjcDhpQd73QNEvRt6DeApFuFyfSs0iMxmlF
-	6F1NBxfNHitZcQZwHAjev1A7Bu7miG3eNXKo3mshhOE4MH3wwiKt5wrJzAjrYmp0rtbjj3LTQgu
-	H/qXUzBtrPHhh3e5ZGWMUmI9CfpEckUrbI+48eAzSlv1g2
-X-Google-Smtp-Source: AGHT+IGHmBJjuI+jjZm5dEoJCIPgYdOyi9w4BnG28G9e5pmpEj5kPuV2QO71c3KUdTEVfpTi32Y/zFwNrd073ovM1Nk=
-X-Received: by 2002:a05:6808:4fe3:b0:401:e67c:b3be with SMTP id
- 5614622812f47-40b31c96519mr95767b6e.4.1750948827854; Thu, 26 Jun 2025
- 07:40:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750948830; x=1751553630;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ktVHpVwkar6BpRFpT2c0I23iBcQUDcPsZbqMOUPU8EM=;
+        b=C6hh3SjKX6SU5SQiGDij76pb2E9fDG0hX3QoJUhw7tKjOhy9OwSMY5XNgiwFvL2plH
+         qcQdpBtcgY8b9ejff4EvZeqHN6bJqzANwAyZFkO5vrCefcTqqe7DF2PK2rjHoO80M/En
+         nv+hxAnGgow2oV63mElNijE/oUHA30sSisw8yZJ+OM7fVdPAHCIrBhetgEYiQbaLMT7t
+         PbfCnhy6bDH+TJbFBglKfhvcHnUrUYxSta/VzJJVFQXh0eJQTRhtBmawc4BxmK4Ir7Zy
+         ISJq3KBW2M6tvdhJE4/7gvZtxI0jJCAb/wJyKpZQDAvOwCAKyMq/u1GVh+5KoBgPA3vi
+         p/bA==
+X-Forwarded-Encrypted: i=1; AJvYcCVm40NbpChs8Cs7ORVLQbHaLjZ+mJLTUCputurGEtopCA4CVTycVlE/ngBFfAasUcM6i6dJ4BTbqtfYDGc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJnhhRCASGbhpqzPExHUqr/F5qnkC9znjGQnMeGRZiztU7BGOz
+	zVshkZiEz0sQiMJUx0i9JDsY+grn4HENmm8Vune05U+q7vjIc2C4Lyxn9ykeuXMHhQpDeBv8pqo
+	N4rmKk+k4
+X-Gm-Gg: ASbGncvn8ez3l2VlRAzhJfLbXNmNDTWOBSr10eEaPZ+fQuetTNIiYZQq26pCaJU90cC
+	BC2Dr2DCABLbUEdYx/oTQYoJsrIq1y9HYuT2U0hucr0Nq6wLwNvg1uHk53S/R4Zp+mYH7dqaDwa
+	vzZ/F6XTei13KsMP2U+MTOlKvrdZ29c9zVubuzVmNEre4nmHlMEulCpmZttHZdSjLCZZy3/EC1Y
+	8K3BaqNz0iXO3PEgigO4TpCNIM5GEcQzi51NUSNm7Vw2pYDsgRMui38iEkqZ/ibK8nOjYtAVFZC
+	9lRarRTuEzy7tNL0Wldu6mikapN6gpFKY33qga5dfgYu1h0ep6zfxosE8Qjdx6+NA+7l5hIzgsZ
+	OK1vD8EPP/F3qcvJ9VYeb/C/HCA==
+X-Google-Smtp-Source: AGHT+IHqR1YhFPNbRzG8oLnT4mjq7svhC4i6FLFMulTftv75vhwEF7H1Js0HL5HY8FP0VxF1S2D4Lw==
+X-Received: by 2002:a17:903:2292:b0:237:ed38:a5b3 with SMTP id d9443c01a7336-23823f98035mr90301855ad.8.1750948830631;
+        Thu, 26 Jun 2025 07:40:30 -0700 (PDT)
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com. [209.85.216.42])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23abe312922sm140205ad.23.2025.06.26.07.40.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 07:40:25 -0700 (PDT)
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-315c1b0623cso1262668a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:40:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUQ8heEfjeObvtdXRXe3aqc61wOD39NlUdpxb80yWhgaZV4HvwbEaRamWXuc43ZsgC0DqFaPQ3wlp/m6Ns=@vger.kernel.org
+X-Received: by 2002:a17:90b:2c84:b0:311:e9ac:f5ce with SMTP id
+ 98e67ed59e1d1-315f26965camr9459965a91.21.1750948825200; Thu, 26 Jun 2025
+ 07:40:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611-gs101-cpuidle-v2-0-4fa811ec404d@linaro.org>
- <20250611-gs101-cpuidle-v2-2-4fa811ec404d@linaro.org> <4e827037-1bde-4eb3-a6f2-6416dace10b5@kernel.org>
-In-Reply-To: <4e827037-1bde-4eb3-a6f2-6416dace10b5@kernel.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Thu, 26 Jun 2025 15:40:16 +0100
-X-Gm-Features: Ac12FXyqVtwDD2H_scgEAaexOZMihIpWC1bKrXvc2_bGE_Q9OwsMvGA0M86meco
-Message-ID: <CADrjBPrWZ4JkNJ-c9Qiw=5mmMKePqg6ZW=ATwi8g-1F8Qekn=Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] soc: samsung: exynos-pmu: Enable CPU Idle for gs101
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
-	Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, William Mcvicker <willmcvicker@google.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-team@android.com
+References: <20250620074951.32758-1-brgl@bgdev.pl> <CAD=FV=XD1bfz4e=JOscqa3pGL_Z1RBRjQdDh31yfxac9ZPX6YQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=XD1bfz4e=JOscqa3pGL_Z1RBRjQdDh31yfxac9ZPX6YQ@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Thu, 26 Jun 2025 07:40:13 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V-XPij=ztJprp3O0eo3Xe80vS59+bAP_nERobEBNPXxw@mail.gmail.com>
+X-Gm-Features: Ac12FXy9GKHhd2g2BMUwILWpLqK8s1l4nJf-UsGjEGsCX_D33Z1nSU4jBJCrYPI
+Message-ID: <CAD=FV=V-XPij=ztJprp3O0eo3Xe80vS59+bAP_nERobEBNPXxw@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: remove unnecessary GPIO line
+ direction check
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof,
+Hi,
 
-Thanks a lot for your review feedback!
-
-On Wed, 18 Jun 2025 at 11:22, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Wed, Jun 25, 2025 at 11:25=E2=80=AFAM Doug Anderson <dianders@chromium.o=
+rg> wrote:
 >
-> On 11/06/2025 11:34, Peter Griffin wrote:
-> > Register cpu pm notifiers for gs101 which call the
-> > gs101_cpu_pmu_online/offline callbacks which in turn
-> > program the ACPM hint. This is required to actually
-> > enter the idle state.
-> >
-> > A couple of corner cases are handled, namely when the
-> > system is rebooting or suspending we ignore the request.
-> > Additionally the request is ignored if the CPU is in
-> > CPU hot plug.
-> >
-> > Note: this patch has a runtime dependency on adding
-> > 'local-timer-stop' dt property to the CPU nodes. This
-> > informs the time framework to switch to a broadcast timer
-> > as the local timer will be shutdown. Without that DT
-> > property specified the system hangs in early boot with
-> > this patch applied.
+> Hi,
 >
-> Please wrap commit message according to Linux coding style / submission
-> process (neither too early nor over the limit):
-> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
-
-Noted, will fix
-
->
+> On Fri, Jun 20, 2025 at 12:50=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.=
+pl> wrote:
 > >
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > As of commit 92ac7de3175e3 ("gpiolib: don't allow setting values on inp=
+ut
+> > lines"), the GPIO core makes sure values cannot be set on input lines.
+> > Remove the unnecessary check.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > > ---
-> > Changes in v2
-> >  * Add ifdef CONFIG_PM_SLEEP to avoid
-> >    Fix warning: unused variable 'cpupm_pm_ops' [-Wunused-const-variable] (0-day)
-> > ---
-> >  drivers/soc/samsung/exynos-pmu.c | 137 +++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 133 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/soc/samsung/exynos-pmu.c b/drivers/soc/samsung/exynos-pmu.c
-> > index a77288f49d249f890060c595556708334383c910..7f72ecd60994f18bb639dd8e09e1c6ff6158066b 100644
-> > --- a/drivers/soc/samsung/exynos-pmu.c
-> > +++ b/drivers/soc/samsung/exynos-pmu.c
-> > @@ -8,6 +8,7 @@
-> >  #include <linux/array_size.h>
-> >  #include <linux/arm-smccc.h>
-> >  #include <linux/cpuhotplug.h>
-> > +#include <linux/cpu_pm.h>
-> >  #include <linux/of.h>
-> >  #include <linux/of_address.h>
-> >  #include <linux/mfd/core.h>
-> > @@ -15,6 +16,7 @@
-> >  #include <linux/of_platform.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/delay.h>
-> > +#include <linux/reboot.h>
-> >  #include <linux/regmap.h>
-> >
-> >  #include <linux/soc/samsung/exynos-regs-pmu.h>
-> > @@ -35,6 +37,10 @@ struct exynos_pmu_context {
-> >       const struct exynos_pmu_data *pmu_data;
-> >       struct regmap *pmureg;
-> >       struct regmap *pmuintrgen;
-> > +     spinlock_t cpupm_lock;  /* serialization lock */
+> >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 5 -----
+> >  1 file changed, 5 deletions(-)
 >
-> serialization of what? Or rather, can it be not a serialization lock? Is
-> it possible? It's as useful as saying "protection against concurrent
-> accesses lock". No, you need to be explicit which members and/or code
-> are protected.
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-I can update the comment to be more verbose, but the lock is used to
-ensure the cpu online/offline sequence called from CPU hotplug
-callbacks and cpu pm notifiers are serialized.
+Pushed to drm-misc-next:
 
->
-> > +     bool __percpu *hotplug_ing;
-> > +     atomic_t sys_suspended;
->
-> Why re-implementing own refcnt of pm suspend status?
-> pm_runtime_suspended() and others?
-
-sys_suspended is being used to detect whether a *system* wide sleep
-state is happening. I see a bunch of different drivers using a similar
-approach in the kernel to set a flag from their suspend/resume
-callback. Grep for things like system_suspending, is_suspending etc.
-An alternative approach could be to use register_pm_notifier() and set
-the flag from the callback there.
-
-pm_runtime_suspended() tells me the runtime pm status, which is not
-what I want here.
-
-> > +     atomic_t sys_rebooting;
-> >  };
-> >
-> >  void __iomem *pmu_base_addr;
-> > @@ -336,7 +342,7 @@ EXPORT_SYMBOL_GPL(exynos_get_pmu_regmap_by_phandle);
-> >  #define CPU_INFORM_CLEAR     0
-> >  #define CPU_INFORM_C2                1
-> >
-> > -static int gs101_cpuhp_pmu_online(unsigned int cpu)
-> > +static int gs101_cpu_pmu_online(unsigned int cpu)
-> >  {
-> >       unsigned int cpuhint = smp_processor_id();
-> >       u32 reg, mask;
-> > @@ -358,10 +364,26 @@ static int gs101_cpuhp_pmu_online(unsigned int cpu)
-> >       return 0;
-> >  }
-> >
-> > -static int gs101_cpuhp_pmu_offline(unsigned int cpu)
-> > +static int gs101_cpuhp_pmu_online(unsigned int cpu)
->
-> This needs either renaming or comments. One is cpu_pmu_online other is
-> cpuhp_pmu_online. Sounds the same to me.
-
-I can add some comments, but one function is specifically for CPU Hot
-Plug, which is what the 'cpuhp' part was trying to convey.
-
->
->
-> > +{
-> > +     gs101_cpu_pmu_online(cpu);
-> > +
-> > +     /*
-> > +      * Mark this CPU as having finished the hotplug.
-> > +      * This means this CPU can now enter C2 idle state.
-> > +      */
-> > +     *per_cpu_ptr(pmu_context->hotplug_ing, cpu) = false;
->
-> Quoting docs: "Per cpu data structures are designed to be used by one
-> cpu exclusively".
->
-> ... and further about write access. Adding standard driver code using
-> "highly discouraged" practice is not something expected.
-
-I'll update this to dynamically allocate based on num_possible_cpus()
-and then read/write the flag with cpupm lock held. I didn't realize
-the docs described the per_cpu remote writes as "highly discouraged
-unless absolutely necessary", so thanks for highlighting that. The
-per_cpu variables with remote writes seem quite widely used in the
-downstream exynos-cpupm driver, but then it takes all sorts of locks
-through all the different cal layers.
-
->
->
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int gs101_cpu_pmu_offline(unsigned int cpu)
-> >  {
-> >       u32 reg, mask;
-> > -     unsigned int cpuhint = smp_processor_id();
-> > +     unsigned int cpuhint;
-> > +
-> > +     spin_lock(&pmu_context->cpupm_lock);
->
-> This does not disable interrupts...
->
-> > +     cpuhint = smp_processor_id();
->
-> ... which is a requirement here, according to docs, no? Maybe the
-> original code had an issue, though.
-
-CPU notifiers are called with interrupts disabled. We do use a similar
-pattern in the CPU hot plug path which isn't called with IRQs disabled
-though, so I'll add some locking there in the next version.
-
-Thanks,
-
-Peter
-
-
-
->
-> >
-> >       /* set cpu inform hint */
-> >       regmap_write(pmu_context->pmureg, GS101_CPU_INFORM(cpuhint),
-> > @@ -379,16 +401,89 @@ static int gs101_cpuhp_pmu_offline(unsigned int cpu)
-> >       regmap_read(pmu_context->pmuintrgen, GS101_GRP1_INTR_BID_UPEND, &reg);
-> >       regmap_write(pmu_context->pmuintrgen, GS101_GRP1_INTR_BID_CLEAR,
-> >                    reg & mask);
-> > +
-> > +     spin_unlock(&pmu_context->cpupm_lock);
-> >       return 0;
-> >  }
-> >
-> > +static int gs101_cpuhp_pmu_offline(unsigned int cpu)
-> > +{
-> > +     /*
-> > +      * Mark this CPU as entering hotplug. So as not to confuse
-> > +      * ACPM the CPU entering hotplug should not enter C2 idle state.
-> > +      */
-> > +     *per_cpu_ptr(pmu_context->hotplug_ing, cpu) = true;
-> > +
-> > +     gs101_cpu_pmu_offline(cpu);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int gs101_cpu_pm_notify_callback(struct notifier_block *self,
-> > +                                     unsigned long action, void *v)
-> > +{
-> > +     int cpu = smp_processor_id();
-> > +
-> > +     switch (action) {
-> > +     case CPU_PM_ENTER:
-> > +             /*
-> > +              * Ignore CPU_PM_ENTER event in reboot or
-> > +              * suspend sequence.
-> > +              */
-> > +
-> > +             if (atomic_read(&pmu_context->sys_suspended) ||
-> > +                 atomic_read(&pmu_context->sys_rebooting))
-> > +                     return NOTIFY_OK;
-> > +
-> > +             if (*per_cpu_ptr(pmu_context->hotplug_ing, cpu))
-> > +                     return NOTIFY_BAD;
-> > +
-> > +             gs101_cpu_pmu_offline(cpu);
-> > +
-> > +             break;
-> > +     case CPU_PM_EXIT:
-> > +
-> > +             if (atomic_read(&pmu_context->sys_rebooting))
-> > +                     return NOTIFY_OK;
-> > +
-> > +             gs101_cpu_pmu_online(cpu);
-> > +
-> > +             break;
-> > +     }
-> > +
-> > +     return NOTIFY_OK;
-> > +}
-> > +
-> > +static struct notifier_block gs101_cpu_pm_notifier = {
-> > +     .notifier_call = gs101_cpu_pm_notify_callback,
-> > +     .priority = INT_MAX     /* we want to be called first */
->
-> You should say why. Everyone wants to be the first.
->
-> > +};
-> > +
-> > +static int exynos_cpupm_reboot_notifier(struct notifier_block *nb,
-> > +                                     unsigned long event, void *v)
-> > +{
-> > +     switch (event) {
-> > +     case SYS_POWER_OFF:
-> > +     case SYS_RESTART:
-> > +             atomic_set(&pmu_context->sys_rebooting, 1);
-> > +             break;
-> > +     }
-> > +
-> > +     return NOTIFY_OK;
-> > +}
-> > +
-> > +static struct notifier_block exynos_cpupm_reboot_nb = {
-> > +     .priority = INT_MAX,
-> > +     .notifier_call = exynos_cpupm_reboot_notifier,
-> > +};
-> > +
-> >  static int exynos_pmu_probe(struct platform_device *pdev)
-> >  {
-> >       struct device *dev = &pdev->dev;
-> >       struct regmap_config pmu_regmcfg;
-> >       struct regmap *regmap;
-> >       struct resource *res;
-> > -     int ret;
-> > +     int ret, cpu;
-> >
-> >       pmu_base_addr = devm_platform_ioremap_resource(pdev, 0);
-> >       if (IS_ERR(pmu_base_addr))
-> > @@ -444,6 +539,12 @@ static int exynos_pmu_probe(struct platform_device *pdev)
-> >                        */
-> >                       dev_warn(&pdev->dev, "pmu-intr-gen syscon unavailable\n");
-> >               } else {
-> > +                     pmu_context->hotplug_ing = alloc_percpu(bool);
-> > +
-> > +                     /* set PMU to power on */
-> > +                     for_each_online_cpu(cpu)
-> > +                             gs101_cpuhp_pmu_online(cpu);
-> > +
-> >                       cpuhp_setup_state(CPUHP_BP_PREPARE_DYN,
-> >                                         "soc/exynos-pmu:prepare",
-> >                                         gs101_cpuhp_pmu_online, NULL);
-> > @@ -451,6 +552,12 @@ static int exynos_pmu_probe(struct platform_device *pdev)
-> >                       cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
-> >                                         "soc/exynos-pmu:online",
-> >                                         NULL, gs101_cpuhp_pmu_offline);
-> > +
-> > +                     cpu_pm_register_notifier(&gs101_cpu_pm_notifier);
-> > +                     spin_lock_init(&pmu_context->cpupm_lock);
-> > +                     atomic_set(&pmu_context->sys_rebooting, 0);
-> > +                     atomic_set(&pmu_context->sys_suspended, 0);
-> > +                     register_reboot_notifier(&exynos_cpupm_reboot_nb);
-> >               }
-> >       }
-> >
-> > @@ -471,10 +578,32 @@ static int exynos_pmu_probe(struct platform_device *pdev)
-> >       return 0;
-> >  }
-> >
-> > +#ifdef CONFIG_PM_SLEEP
-> > +static int exynos_cpupm_suspend_noirq(struct device *dev)
-> > +{
-> > +     atomic_set(&pmu_context->sys_suspended, 1);
-> > +     return 0;
-> > +}
-> > +
-> > +static int exynos_cpupm_resume_noirq(struct device *dev)
-> > +{
-> > +     atomic_set(&pmu_context->sys_suspended, 0);
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct dev_pm_ops cpupm_pm_ops = {
-> > +     .suspend_noirq = exynos_cpupm_suspend_noirq,
-> > +     .resume_noirq = exynos_cpupm_resume_noirq,
->
-> SET_LATE_SYSTEM_SLEEP_PM_OPS or one of other wrappers.
->
-> > +};
-> > +#endif
-> > +
-> >  static struct platform_driver exynos_pmu_driver = {
-> >       .driver  = {
-> >               .name   = "exynos-pmu",
-> >               .of_match_table = exynos_pmu_of_device_ids,
-> > +#ifdef CONFIG_PM_SLEEP
-> > +             .pm = &cpupm_pm_ops,
->
-> pm_ptr
-> > +#endif
-> >       },
-> >       .probe = exynos_pmu_probe,
-> >  };
-> >
->
->
-> Best regards,
-> Krzysztof
+[1/1] drm/bridge: ti-sn65dsi86: remove unnecessary GPIO line direction chec=
+k
+      commit: bffc0692359f8d06d989657c00b274802a791692
