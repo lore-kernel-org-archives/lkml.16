@@ -1,81 +1,46 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152862C3246
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE732D3EC2;
+	Thu, 26 Jun 2025 08:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750927577; cv=none; b=ncPyhaUNdx2bnToIGAV9Szjlcz3lx3Z/Ikn7TZkiVpzv89e9gJRkyGJfcX7HZJE4kpmZ4dQFQkdMN8kE+xMIIm9oFF7i52biVclOrTy+U5w+BlwsNmGuyf2NcpN89LKwfsa5UqdaOoeNJ0uNP9YFTqcNUcI6PcP8RnmE5lVbqmc=
+	t=1750927583; cv=none; b=qiXCmojySQgcilso6kVa0dVx830ev17Pf2Hxj7+MCAPh8G0k4QYYKJ5yMhsikDamjZxM2I3XXjOoZ7prPnvh108UVQK1GrKhGFXdCAhjBFifBcF+6O/wlvmiemNHOPOl525wqEOVirtJhnJWkFoynp6J6cfbMlgMmaKgX0dQeqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750927577; c=relaxed/simple;
-	bh=3vl6QDP6/oKInQpbUd/mwtNJqKOcafNUpwPOeaBo8Z0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gPo19soU6kPXErFmg/xJJ9VwAHbAj4UA7owF2GqbvZ+JfnaRaosNYbDEz3FJKAdLEl2qI+kc5Qpkrh+ck8Zvm1+7IWFh6yClcnZHG8qQ9caxfvTifTQNriSahE4rOUtsjyR2jqJ7QbEV3Jh3IvwNWEqz7jG+YuZMIu2ZCwSaKlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=NDid7yVP; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NDid7yVP"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-236192f8770so6759755ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 01:46:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1750927575; x=1751532375; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jZ8ourLzAapYlWvSPc5AJIM32EfKtOVtF0mK8gd87tE=;
-        b=NDid7yVPhTMKsu0sDcC+AiW8iGLm/nUpdBg0dYnyMcq1k7rBVI8oiv/Oa+SnfGZMe9
-         dm9H4B3Tukd+M1DnzKp3XWy5Ssx2chbGqHggBQI07hduLpv4UmsRQXld5OeGV27K9BKu
-         YsPPMeq8qkKCNsgaq+kX3ur5gYDWdOqaGm6YU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750927575; x=1751532375;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jZ8ourLzAapYlWvSPc5AJIM32EfKtOVtF0mK8gd87tE=;
-        b=XQJDhy5nYXhiIOIoA59zbRy2P0/wWuiuqzzKLH4ICNGk9yi0m3L8wQauRNSIqutt5X
-         lWtobuIPzWkxBm2IklLc9CZ4jdIFvvjKP9ly9rGWUcOonbZUoaH1yHMGzKGDeprftt0Q
-         sh8RJNKu8cq3A+wAMB3KwGNZ5S2qqGH1/BTrSx7S6RUkW334REtSmEHF46TtABNy2UDl
-         k93u74caWaBwa+uT6lWnBTyGkLQ2ZFxvCnEAP6RflBiJERUnRehpo5qs02eosb8DmXil
-         BduEPleIHcE9BNKxUXlMN1aGCByWWLGGRxDZX6mcdEiJ7Yr3hAUq4K+yCVhBVIDWS/L2
-         VwAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWm+cm1yFBPGLowpp28yB+2ABuXsul+QjbndWRgbSponNmR2S+OL8rC9+LFnRFKDk7bU2eyjLBtV1IochM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+QeEH7YttB5/Y7hUgBm2EgpdNb765lnfOfqIBdVqcf/urfEc9
-	5gLAz8CGXxahhGpCfPzeHsxbDL/Iymr+y1IP0wiJag7ZI10aYB6WEu140GAM59MDqw==
-X-Gm-Gg: ASbGncvKM5SKHt483c3PIfFHhwlSx6S2Roxpcz/jpIVIK+65riFajFZF+hvZkFjnIm7
-	3xcuEtSb8guPy8V7BNpqYa+AR69bHpf4qwRCrYR9eE6W6UnnX6pRFzW7M1pcbzXQq9fIxehDnAH
-	c7IYu1oAvPrFC25g7rHauE/HEsI9r1iDqkeuIkAXuV/uwI/lenTUSSWA3FJvMskHXLLz6lN2Gej
-	goSnM/sw3OgPtIGaelJWBfvVUzQFMwlTtJ1GSG9fIzbuMtho9bBBIX8Q6mZFrwuvtLzrgysXXg6
-	qG4QWwA3vJ2oP2m9OgYYJJJyqHDxAWssZjpa1uCbUwIo5+ubgoSbgnsWO7qppjksAAitKtiqlFH
-	f/2QwDIMWBp3J1Txx52/azORXxtvt
-X-Google-Smtp-Source: AGHT+IFVOLV6VekWqM/Em28se4PNDCMbgX1p1HPJJegLB4lEXE/BqgyZt7HKxNIInIGT8UqUdIGAtQ==
-X-Received: by 2002:a17:903:3c6b:b0:237:f757:9ad8 with SMTP id d9443c01a7336-238e9e06b68mr38751125ad.1.1750927575355;
-        Thu, 26 Jun 2025 01:46:15 -0700 (PDT)
-Received: from localhost.localdomain ([192.19.203.250])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83fbe94sm152524875ad.86.2025.06.26.01.46.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 01:46:15 -0700 (PDT)
-From: Vikas Gupta <vikas.gupta@broadcom.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	andrew+netdev@lunn.ch,
-	horms@kernel.org
-Cc: netdev@vger.kernel.org,
+	s=arc-20240116; t=1750927583; c=relaxed/simple;
+	bh=EBIMriXYLknyxbuxf7NSXkhKwNDOPZ5by7UkqYR9Al4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sDkz3QwKRRK3vKUuVP6Z1XT0deFO7x09GF1DMKIneriaW3wNoztSC0PU25YRY/Ae32k/wDqxQoxwAdhkKf3aYKutVbRTfEMtDelUBQEqXhrpzA169Fqjap2D/yVA3VfBEmj4dwdI9n5a6fTSiH4jqgpEq4U6/imqDeoqHf5RygE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bSXNB4JLyzYQvMC;
+	Thu, 26 Jun 2025 16:46:18 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 7AAF71A0A0F;
+	Thu, 26 Jun 2025 16:46:17 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgD3Wl_WCF1oD6HNQg--.23903S4;
+	Thu, 26 Jun 2025 16:46:16 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: axboe@kernel.dk,
+	hare@suse.de,
+	hch@infradead.org,
+	yukuai3@huawei.com,
+	john.g.garry@oracle.com
+Cc: linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	michael.chan@broadcom.com,
-	pavan.chebbi@broadcom.com,
-	vsrama-krishna.nemani@broadcom.com,
-	Vikas Gupta <vikas.gupta@broadcom.com>,
-	Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
-	Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
-Subject: [net-next, v2 05/10] bng_en: Add ring memory allocation support
-Date: Thu, 26 Jun 2025 14:08:14 +0000
-Message-ID: <20250626140844.266456-6-vikas.gupta@broadcom.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250626140844.266456-1-vikas.gupta@broadcom.com>
-References: <20250626140844.266456-1-vikas.gupta@broadcom.com>
+	yi.zhang@redhat.com,
+	calvin@wbinvd.org,
+	david@fromorbit.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [PATCH] block: fix false warning in bdev_count_inflight_rw()
+Date: Thu, 26 Jun 2025 16:39:27 +0800
+Message-Id: <20250626083927.576207-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,182 +48,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgD3Wl_WCF1oD6HNQg--.23903S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4rJFWUAFWrXFykWFyUZFb_yoW8ZFWfpF
+	4UGws8JFyUWr93ta1jgwn7XFy3ta1kJryxur17Zw13AFWkAr1Uu34vvr4Dtr9Fq393Gry0
+	9F1akFyxKa4v937anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUonmRUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Add ring allocation/free mechanism which help
-to allocate rings (TX/RX/Completion) and backing
-stores memory on the host for the device.
-Future patches will use these functions.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
-Reviewed-by: Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>
-Reviewed-by: Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+While bdev_count_inflight is interating all cpus, if some IOs are issued
+from traversed cpu and then completed from the cpu that is not traversed
+yet:
+
+cpu0
+		cpu1
+		bdev_count_inflight
+		 //for_each_possible_cpu
+		 // cpu0 is 0
+		 infliht += 0
+// issue a io
+blk_account_io_start
+// cpu0 inflight ++
+
+				cpu2
+				// the io is done
+				blk_account_io_done
+				// cpu2 inflight --
+		 // cpu 1 is 0
+		 inflight += 0
+		 // cpu2 is -1
+		 inflight += -1
+		 ...
+
+In this case, the total inflight will be -1, causing lots of false
+warning. Fix the problem by removing the warning.
+
+Noted there is still a valid warning for nvme-mpath(From Yi) that is not
+fixed yet.
+
+Fixes: f5482ee5edb9 ("block: WARN if bdev inflight counter is negative")
+Reported-by: Yi Zhang <yi.zhang@redhat.com>
+Closes: https://lore.kernel.org/linux-block/aFtUXy-lct0WxY2w@mozart.vkv.me/T/#mae89155a5006463d0a21a4a2c35ae0034b26a339
+Reported-and-tested-by: Calvin Owens <calvin@wbinvd.org>
+Closes: https://lore.kernel.org/linux-block/aFtUXy-lct0WxY2w@mozart.vkv.me/T/#m1d935a00070bf95055d0ac84e6075158b08acaef
+Reported-by: Dave Chinner <david@fromorbit.com>
+Closes: https://lore.kernel.org/linux-block/aFuypjqCXo9-5_En@dread.disaster.area/
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/net/ethernet/broadcom/bnge/Makefile   |   3 +-
- .../net/ethernet/broadcom/bnge/bnge_rmem.c    | 101 ++++++++++++++++++
- .../net/ethernet/broadcom/bnge/bnge_rmem.h    |  35 ++++++
- 3 files changed, 138 insertions(+), 1 deletion(-)
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_rmem.c
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_rmem.h
+ block/genhd.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnge/Makefile b/drivers/net/ethernet/broadcom/bnge/Makefile
-index b8dbbc2d5972..1144594fc3f6 100644
---- a/drivers/net/ethernet/broadcom/bnge/Makefile
-+++ b/drivers/net/ethernet/broadcom/bnge/Makefile
-@@ -5,4 +5,5 @@ obj-$(CONFIG_BNGE) += bng_en.o
- bng_en-y := bnge_core.o \
- 	    bnge_devlink.o \
- 	    bnge_hwrm.o \
--	    bnge_hwrm_lib.o
-+	    bnge_hwrm_lib.o \
-+	    bnge_rmem.o
-diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_rmem.c b/drivers/net/ethernet/broadcom/bnge/bnge_rmem.c
-new file mode 100644
-index 000000000000..ef232c4217bc
---- /dev/null
-+++ b/drivers/net/ethernet/broadcom/bnge/bnge_rmem.c
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2025 Broadcom.
-+
-+#include <linux/etherdevice.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/mm.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/vmalloc.h>
-+#include <linux/crash_dump.h>
-+
-+#include "bnge.h"
-+#include "../bnxt/bnxt_hsi.h"
-+#include "bnge_hwrm_lib.h"
-+#include "bnge_rmem.h"
-+
-+void bnge_free_ring(struct bnge_dev *bd, struct bnge_ring_mem_info *rmem)
-+{
-+	struct pci_dev *pdev = bd->pdev;
-+	int i;
-+
-+	if (!rmem->pg_arr)
-+		goto skip_pages;
-+
-+	for (i = 0; i < rmem->nr_pages; i++) {
-+		if (!rmem->pg_arr[i])
-+			continue;
-+
-+		dma_free_coherent(&pdev->dev, rmem->page_size,
-+				  rmem->pg_arr[i], rmem->dma_arr[i]);
-+
-+		rmem->pg_arr[i] = NULL;
-+	}
-+skip_pages:
-+	if (rmem->pg_tbl) {
-+		size_t pg_tbl_size = rmem->nr_pages * 8;
-+
-+		if (rmem->flags & BNGE_RMEM_USE_FULL_PAGE_FLAG)
-+			pg_tbl_size = rmem->page_size;
-+		dma_free_coherent(&pdev->dev, pg_tbl_size,
-+				  rmem->pg_tbl, rmem->dma_pg_tbl);
-+		rmem->pg_tbl = NULL;
-+	}
-+	if (rmem->vmem_size && *rmem->vmem) {
-+		vfree(*rmem->vmem);
-+		*rmem->vmem = NULL;
-+	}
-+}
-+
-+int bnge_alloc_ring(struct bnge_dev *bd, struct bnge_ring_mem_info *rmem)
-+{
-+	struct pci_dev *pdev = bd->pdev;
-+	u64 valid_bit = 0;
-+	int i;
-+
-+	if (rmem->flags & (BNGE_RMEM_VALID_PTE_FLAG | BNGE_RMEM_RING_PTE_FLAG))
-+		valid_bit = PTU_PTE_VALID;
-+
-+	if ((rmem->nr_pages > 1 || rmem->depth > 0) && !rmem->pg_tbl) {
-+		size_t pg_tbl_size = rmem->nr_pages * 8;
-+
-+		if (rmem->flags & BNGE_RMEM_USE_FULL_PAGE_FLAG)
-+			pg_tbl_size = rmem->page_size;
-+		rmem->pg_tbl = dma_alloc_coherent(&pdev->dev, pg_tbl_size,
-+						  &rmem->dma_pg_tbl,
-+						  GFP_KERNEL);
-+		if (!rmem->pg_tbl)
-+			return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < rmem->nr_pages; i++) {
-+		u64 extra_bits = valid_bit;
-+
-+		rmem->pg_arr[i] = dma_alloc_coherent(&pdev->dev,
-+						     rmem->page_size,
-+						     &rmem->dma_arr[i],
-+						     GFP_KERNEL);
-+		if (!rmem->pg_arr[i])
-+			return -ENOMEM;
-+
-+		if (rmem->nr_pages > 1 || rmem->depth > 0) {
-+			if (i == rmem->nr_pages - 2 &&
-+			    (rmem->flags & BNGE_RMEM_RING_PTE_FLAG))
-+				extra_bits |= PTU_PTE_NEXT_TO_LAST;
-+			else if (i == rmem->nr_pages - 1 &&
-+				 (rmem->flags & BNGE_RMEM_RING_PTE_FLAG))
-+				extra_bits |= PTU_PTE_LAST;
-+			rmem->pg_tbl[i] =
-+				cpu_to_le64(rmem->dma_arr[i] | extra_bits);
-+		}
-+	}
-+
-+	if (rmem->vmem_size) {
-+		*rmem->vmem = vzalloc(rmem->vmem_size);
-+		if (!(*rmem->vmem))
-+			return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_rmem.h b/drivers/net/ethernet/broadcom/bnge/bnge_rmem.h
-new file mode 100644
-index 000000000000..56de31ed6613
---- /dev/null
-+++ b/drivers/net/ethernet/broadcom/bnge/bnge_rmem.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2025 Broadcom */
-+
-+#ifndef _BNGE_RMEM_H_
-+#define _BNGE_RMEM_H_
-+
-+#define PTU_PTE_VALID             0x1UL
-+#define PTU_PTE_LAST              0x2UL
-+#define PTU_PTE_NEXT_TO_LAST      0x4UL
-+
-+struct bnge_ring_mem_info {
-+	/* Number of pages to next level */
-+	int			nr_pages;
-+	int			page_size;
-+	u16			flags;
-+#define BNGE_RMEM_VALID_PTE_FLAG	1
-+#define BNGE_RMEM_RING_PTE_FLAG		2
-+#define BNGE_RMEM_USE_FULL_PAGE_FLAG	4
-+
-+	u16			depth;
-+
-+	void			**pg_arr;
-+	dma_addr_t		*dma_arr;
-+
-+	__le64			*pg_tbl;
-+	dma_addr_t		dma_pg_tbl;
-+
-+	int			vmem_size;
-+	void			**vmem;
-+};
-+
-+int bnge_alloc_ring(struct bnge_dev *bd, struct bnge_ring_mem_info *rmem);
-+void bnge_free_ring(struct bnge_dev *bd, struct bnge_ring_mem_info *rmem);
-+
-+#endif /* _BNGE_RMEM_H_ */
+diff --git a/block/genhd.c b/block/genhd.c
+index 8171a6bc3210..680fa717082f 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -141,9 +141,14 @@ static void bdev_count_inflight_rw(struct block_device *part,
+ 		}
+ 	}
+ 
+-	if (WARN_ON_ONCE((int)inflight[READ] < 0))
++	/*
++	 * While iterating all cpus, some IOs might issued from traversed cpu
++	 * and then completed from the cpu that is not traversed yet, causing
++	 * the inflight number to be negative.
++	 */
++	if ((int)inflight[READ] < 0)
+ 		inflight[READ] = 0;
+-	if (WARN_ON_ONCE((int)inflight[WRITE] < 0))
++	if ((int)inflight[WRITE] < 0)
+ 		inflight[WRITE] = 0;
+ }
+ 
 -- 
-2.47.1
+2.39.2
 
