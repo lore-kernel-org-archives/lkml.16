@@ -1,96 +1,140 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA741F5828;
-	Thu, 26 Jun 2025 17:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D195202C50;
+	Thu, 26 Jun 2025 17:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750959722; cv=none; b=P+skOKn5EGabNUPn1G8vO4DkPoDstjhweZhBIa4dazKN9rusfX+vjP5Kh2UhrlDOBUfeZE01k8bcE//nUNgqVSL7Aj+eu866vTKJJmowilVU3w08Y7v3+mtmcvpbj8U7E6MI8DNtdR8mSIJ/0azuXSfpoYS8u2MeZ65Fnj98w1o=
+	t=1750959747; cv=none; b=nv6yDgWgjORShhWRF0nayMc6uQrc9pCJqUCP0gMNQ+6jbkkHEYXRFe+yHdOp/o191cnPSqX29bVhIbTnRisUKt25DdqwgkWENHh38K58SHPTawa59K/ZXm5lMb2UQVTJWGyjaMWYqzCW1YEz3cduyxJUr2x6y3M+J4cCNMWLPJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750959722; c=relaxed/simple;
-	bh=qmFia7iLnoS8TBPc4/gOMbKi6Y0VoHv/lRWuxR/OWO8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Env5EdsO7ALXXm8p0zyGznwM3fjHoaU1heGYjt6ognRoeSoAoFJ1KIGKHU1zsiA6DjekuEh3VxcG6NCNEhttFkOvZT9eg7ciQJXBAz1zYyRUzyB8OCXqJXtyTnHXAGyl42f8MkJevT3GwVZCfG7rpj3Jf9X51O9uCUDiVU9Jaw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ttJbr47F; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KYFarEOM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750959747; c=relaxed/simple;
+	bh=d/uFaFpLqxiJWZje950XRpP9HEjDy0svn2RVhXaZP6w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WQGjZ/0Dd4WJ3OO0HaurlrTPdpanp1qwQGjJmi284VlNLX6UHuuaOwZNHENcFB2SqBYRg7WuWem1g0e7KitRAPPqJ3pyUmxyqXoUHIAbUmoePXtyCdZuYUm+E951DzXdAc7S+I+y0VwCwFmWCgrlhI8G2+jf354kfYAVaYfQCQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZIBBs1PB; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ttJbr47F";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KYFarEOM"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750959718;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qmFia7iLnoS8TBPc4/gOMbKi6Y0VoHv/lRWuxR/OWO8=;
-	b=ttJbr47FZ+mSn3WE4r7U6rE1dykVY2ZwPoSPrQCD/hJNdGKK8qiIiup+QjCkCP7J4upEsE
-	16DVRnNUScDLY659ullrPpgeSiti7OzqQIClFT3U2tIXMbrzrd8OJrswh2UNed3jUKYn2X
-	umTlaTx/5+JMKs2k8D+5LNNzRTNszhS+9F8ReCnVP2W69LOBnixWz47/gSZkykfZpswfcB
-	F+n3U5ZkRWrC+szrH93p1FC+pgPb2BiIIwDP0rvHjNkto8hlOpuQxsD7MPCDges7c/lOQQ
-	zzdLe4s7NDctmym7jyhdhNwqu6H0QkSSO3YT/zJwbzjIZXLYTTZ9sskhx73gaA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750959718;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qmFia7iLnoS8TBPc4/gOMbKi6Y0VoHv/lRWuxR/OWO8=;
-	b=KYFarEOMxmbi1dQP6DBsMWOIh2AFW1e8t5aXBW1PffSL9Zl3teizjvL0S3v6WTkwvL1chx
-	E8h3wSSiZEq5DaAA==
-To: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Gabriele Monaco <gmonaco@redhat.com>
-Subject: Re: [PATCH] tracing: Remove pointless memory barriers
-In-Reply-To: <20250626123445.5b01849d@gandalf.local.home>
-References: <20250626151940.1756398-1-namcao@linutronix.de>
- <20250626113520.315db641@gandalf.local.home>
- <20250626160459.soHxOROG@linutronix.de>
- <20250626123445.5b01849d@gandalf.local.home>
-Date: Thu, 26 Jun 2025 19:47:57 +0206
-Message-ID: <84o6uatn6i.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZIBBs1PB"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso765258f8f.2;
+        Thu, 26 Jun 2025 10:42:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750959744; x=1751564544; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9it6V+UE5SX4dDhUGK283b/ucph+OC15b+uAeGnEJBc=;
+        b=ZIBBs1PBblxWhuOkkVY84zVzw+nDZXUNniuDYQJrzSs87JGWyf38MmJKRMJi+4ibMg
+         lJ97AGpaiwQtd6A41uD7hS2Y7KOtTHc/266lRKvEiOaHhw+Ttm0aJhA99t2r0Ydv5/5T
+         gK+/lo4ILYWIZYDWxSYYc3J87Se1jSD7dmnihwMiBy7SFLmxO/EQtJ1q/+fnqCmGEnCv
+         SD5FbiGEy9T5SlkJkTtUMEJrGqtjfPds8zz9ftCfHP4gFwad00KTPTSHspm5GdgrpLYk
+         eKe7RYvOa1DYR3qdPLfuwwl1azOlsWHtZ80tPmCZhiBzQa35ksU6o4oo8MW71LxTzFqB
+         1HnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750959744; x=1751564544;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9it6V+UE5SX4dDhUGK283b/ucph+OC15b+uAeGnEJBc=;
+        b=uNAesVnoZuko4vb/M73twto/y090a/c8TDn2/l2a8LYAV8rQHMv7lFzBVui3WGzcnw
+         At4tneR7Xv8BuR+JENHtyII98/8BvoIxrz89na1xKqSoNlI54/bKDTR2b7pkDURxSjBE
+         ktqdA53ExHzcjS/1QApuOWSvV35i5i+xgx7xxQRW56iAXM6DDFzGlstTkFc4iceMvFv9
+         l+j7TePq6h3sowqcr8AQyWz41XDtjVyoN/al0e5fpAX8E40PG8avC5cWZCBfj/P/L84e
+         JYtpXeK5GOJrXJe8inmr0eZ2Cj5f8Nqjv54AHRWlWaGQx2mIqS/R7ibW9ng/v1mUJKdx
+         YR1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUPWTQUVFe8x8U+x4iVpwa0LMugiqFDU/ln52bYoPct5/V0ZkX/p35WFibUG9AQyfyfo0BNahSH5c1P@vger.kernel.org, AJvYcCVejSgnGeESX6WBOJ4qUEHK8aVcBr95/tr0Z29mXVc99Cyl0eBN7Za395DUmdoFoNWy/0uY+CM9/TIvh7X5@vger.kernel.org, AJvYcCWWvErnrz0tBlDz+BVeqkIucAUA8SlfhgbIsXzDVYxULGSr6ta6fY2VhROlu4mroOLF77mVje4Ic/BrRA==@vger.kernel.org, AJvYcCXKcC/CwnU4JsIzSybjBRnusWdO7F2P7FMy6DxG2IG3QL3LRpdy5pE8ygiVBVP9pM1ZpglG0A0fFUM24qTjnwE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQbjJ0dKqWWY3B6jAy3iyuAiIDhgrtWzzt0KnGDaX0Dz6xRSOi
+	sJ60ZbdpQEFGPI91zBMXtp47JvGhNF2AF01W/1OusebBuWBXjr0DjMkP
+X-Gm-Gg: ASbGncs2VTMqLbhLVxWs5xE9QU92vub5t8FZIvyAmwnoLTrRaMDs8FkGxMz3o8zuGTh
+	yyGNNoICDb/UztkzEUI4uXb1CCsM53PfZnCxRz/zlzLcMuXjMP8wCgUPHPXha3JCQXv+CjbfxvT
+	g0v3SFKshhaYlN/tPtNCsxzhjGNZKO31LwRX62H6qBzP91d6AlsfiUlYvT7CZo1xi4PMMTxn1a9
+	A0RxyBsO1YidlmV9eeKuA9eYWeu1bGZw/kxzGHpjxegkwX0bveOBV0f7rQEtFgta84rGwZ/d3Ml
+	56hHnrk4O0Nsi5Q6dfdma1rn5EzSHZhWXVt5v6OHK2iGMe/trCBHfoMBf6sqEsgeg2KkOLU=
+X-Google-Smtp-Source: AGHT+IGr2M9MxH/JfMsZ07lpE1ikbaPFCtQUD7frnfdUMbPRMyzGWfcYKWrr5HHz3Nw1g/Fqcy5Sag==
+X-Received: by 2002:a05:6000:2082:b0:3a3:7ba5:93a5 with SMTP id ffacd0b85a97d-3a8feb85191mr466394f8f.26.1750959743398;
+        Thu, 26 Jun 2025 10:42:23 -0700 (PDT)
+Received: from [10.38.1.85] ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823b6c21sm56282555e9.29.2025.06.26.10.42.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 10:42:23 -0700 (PDT)
+Message-ID: <31804bbf-1a0b-4312-8db6-532a008528a2@gmail.com>
+Date: Thu, 26 Jun 2025 18:40:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 4/9] rust: acpi: add `acpi::DeviceId` abstraction
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>,
+ Saravana Kannan <saravanak@google.com>, Alex Hung <alex.hung@amd.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jakub Kicinski <kuba@kernel.org>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ Remo Senekowitsch <remo@buenzli.dev>, Tamir Duberstein <tamird@gmail.com>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>,
+ Xiangfei Ding <dingxiangfei2009@gmail.com>, devicetree@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Benno Lossin <lossin@kernel.org>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ Len Brown <lenb@kernel.org>, Trevor Gross <tmgross@umich.edu>
+References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
+ <20250620152425.285683-1-igor.korotin.linux@gmail.com>
+ <c5d750fd-ffcf-4d07-bfff-ebe206faa41a@kernel.org>
+Content-Language: en-US
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+In-Reply-To: <c5d750fd-ffcf-4d07-bfff-ebe206faa41a@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Steven,
 
-On 2025-06-26, Steven Rostedt <rostedt@goodmis.org> wrote:
->> Your scenario can still happen despite the memory barrier:
->
-> Yes, but the point isn't really to prevent the race. It's more about making
-> the race window smaller.
->
-> When we disable it, if something is currently using it then it may or may
-> not get in. That's fine as this isn't critical.
->
-> But from my understanding, without the barriers, some architectures may
-> never see the update. That is, the write from one CPU may not get to memory
-> for a long time and new incoming readers will still see the old data. I'm
-> more concerned with new readers than ones that are currently racing with
-> the updates.
 
-Memory barriers do not affect visibility. They only affect ordering. And
-ordering implies that there are at least 2 pieces of data involved. A
-memory barrier has no meaning when you are only talking about 1 piece of
-data (in this case @buffer_disabled).
+On 6/26/25 16:25, Danilo Krummrich wrote:
+> On 6/20/25 5:24 PM, Igor Korotin wrote:
+>> +impl DeviceId {
+>> +    const ACPI_ID_LEN: usize = 16;
+>> +
+>> +    /// Create a new device id from an ACPI 'id' string.
+>> +    pub const fn new<const N: usize>(id: &[u8; N]) -> Self {
+> 
+> Didn't notice before, but why was this silently changed from &CStr to
+> &[u8; N]
+> from v6 to v7?
+> 
+>> +        build_assert!(N <= Self::ACPI_ID_LEN, "ID exceeds 16 bytes");
+>> +        // Replace with `bindings::acpi_device_id::default()` once
+>> stabilized for `const`.
+>> +        // SAFETY: FFI type is valid to be zero-initialized.
+>> +        let mut acpi: bindings::acpi_device_id = unsafe
+>> { core::mem::zeroed() };
+>> +        let mut i = 0;
+>> +        while i < N {
+>> +            acpi.id[i] = id[i];
+>> +            i += 1;
+>> +        }
+>> +
+>> +        Self(acpi)
+>> +    }
+>> +}
 
-For example, update_traceon_count() has an smp_rmb()/smp_wmb() pair to
-make sure @count updates are ordered to be after @buffer_disabled
-updates.
+In v6 I was asked to change assert! (runtime) to build_assert! (build time)
+It was as follows:
 
-read(count)
-smp_rmb()
-read(buffer_disabled)
+> +    pub const fn new(id: &'static CStr) -> Self {
+> +        assert!(id.len() <= Self::ACPI_ID_LEN, "ID exceeds 16 bytes");
 
-write(buffer_disabled)
-smp_wmb()
-write(count)
+but id.len() breaks const context and so build_assert! triggers
+assertion. If I needed to explicitly describe change from CStr to
+[u8;20], then it's my bad.
 
-But what exactly are the memory barriers removed in this patch ordering?
-
-John Ogness
+Thanks,
+Igor
