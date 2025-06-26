@@ -1,121 +1,288 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022113.outbound.protection.outlook.com [40.107.75.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1533597E
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 03:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750909130; cv=none; b=K6dHwdcv3TLUDnOitv6F3WdrWnmWXDcgIEXHIv/Z2tof18mTBMm5IFB3OCEgyBZeIS50sk06i6vIccpjGWnkbNsEOY5L75LoJKeVUT4G/O4TNF+mdpLiFecYBuBRth1ci/w4zSHKBeMb9SEVglpPFeDFtgRfycuagww7eyPQjl4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750909130; c=relaxed/simple;
-	bh=qsb+gqnjKhUuAhN7Z7oyO9sPPXSOXU/jB3r2Fqw2FHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dZS4hi54d/iiHLCc2fFAV1Hbg/WOBq6DHQ0KERsOxC/qHGnGygwWfqomE7b8jjPgrYdsd71qwSInWqEWcfFtSG0ExqnRx7HYcKgURVtgKdOQmuVB9tDYfoY7sft3dArCiNW/7V7ZP18PE51kXKKdBHR2nnbcTIh75DTGl44sidM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h8s4+H5p; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290233597E;
+	Thu, 26 Jun 2025 03:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.113
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750909311; cv=fail; b=TBETjnnMB0Z7caXjuwcTmAPFKxpRdQvBY+/XC+rLVibwq9qGtCnFbSnI7DjBuHMVPMh0hRdXXji1hUuI50r8VuSZkW37kDvYWpKN43UwlJmutmFEtYCPw9Z6ls+CQXEx0lwGsFAr3OToepGPiXP0PfbCPkSENYtK28UCF2lDkKM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750909311; c=relaxed/simple;
+	bh=MfvsEUCciz7NvqZr7J3X1HsS2uZWpw40uTWHPKmWYvk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=tx6NzgYMCmf3xTuxUefR9qpjYh67sn6y7SNl5hF9byhpainOR1pCPDZ/NZ1HPfVnB1nWubFWDPcx/0QvDtl+KdY8l1/sfaHtM7LTeOSk2s4qj+C+uX3cdxtWJRH3PuYCA40+QuIcTjvChr1ce9os6HrrcF/lj+a7gc5XMzEw1pA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=dkUh+Fw8; arc=fail smtp.client-ip=40.107.75.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h8s4+H5p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750909129; x=1782445129;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qsb+gqnjKhUuAhN7Z7oyO9sPPXSOXU/jB3r2Fqw2FHU=;
-  b=h8s4+H5pdwJbPSqBhAKNYNrF/zOyHw1NYA+3WdfmL0oppLayqVJJ7Bvt
-   /SsBo3QlpzaScxVp02QBEnWqR9pEPd1NaUeqfwasCZaqjPI5lYjuLcynT
-   TkcvkLx++PUomw3dN+nfcgqpLzqGmLM58wY40M9fbpry+vdv6qxd0yQXi
-   8uwoI9qMW3TjO1rwKkSjm+XQE3/04P9dEKODPkTX5tv2iX62KW5f9aQus
-   M0KBO+IdAfly0KnIGAUWEoHBsctkIJfJ0R2Jf+CCDU8mjvBe+t1PMQejG
-   FfYwpBM0nXT2CreG1+TTsjzeLBQivTohmVi0hfJTYWcyyP6N9dTQVt+Mp
-   w==;
-X-CSE-ConnectionGUID: BFs0WdpsTLCFmAzq3UEnXw==
-X-CSE-MsgGUID: AZnjPRAUT6O0U/m7zFrvnA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="75735520"
-X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
-   d="scan'208";a="75735520"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 20:38:48 -0700
-X-CSE-ConnectionGUID: 7VMGBjGrQFCQzhMD7SVYgA==
-X-CSE-MsgGUID: ElzvkcQWTgWMxRDG1dks8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
-   d="scan'208";a="156431983"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa003.fm.intel.com with ESMTP; 25 Jun 2025 20:38:45 -0700
-Date: Thu, 26 Jun 2025 11:31:06 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: kevin.tian@intel.com, will@kernel.org, aneesh.kumar@kernel.org,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	joro@8bytes.org, robin.murphy@arm.com, shuah@kernel.org,
-	nicolinc@nvidia.com, aik@amd.com, dan.j.williams@intel.com,
-	baolu.lu@linux.intel.com, yilun.xu@intel.com
-Subject: Re: [PATCH v2 3/4] iommufd: Destroy vdevice on idevice destroy
-Message-ID: <aFy++lne6X+1bFlM@yilunxu-OptiPlex-7050>
-References: <20250623094946.1714996-1-yilun.xu@linux.intel.com>
- <20250623094946.1714996-4-yilun.xu@linux.intel.com>
- <20250624145346.GC150753@nvidia.com>
- <aFvKCEt6FadGtYr+@yilunxu-OptiPlex-7050>
- <20250625123832.GF167785@nvidia.com>
+	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="dkUh+Fw8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oD2J2bQ3oV0ttSpzkCYxtNzf46UjEfF+VOoT6uidBAY4q2WCnvBATYtM1P3CKUUr85CByqOZgFu732hQf5C+1Y++JIny8hyA8YOWTcOf4UoD/5Mql0NQUBe1gKpc6iMtGzPfBtyk8VCUn+XJko9mg+aIVI6cfq5pj4vmYNVS943B4GwCUvW+lJoY364oKxANJRzPsfkETfXKa/EUWtKPkECK3onmmh1DYPJx2HlU+Cn9EygLSbgqs29mNHzwnbXMhW0qgajH/B6wzEnE0mQ1ZTC9JG1dAr7B/txe5bJyWcR3+z6l9wQPUIbHq9IzQ4xOYqO6UBRekeSuuAS5ScPyYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bzyJ1RvP48bQ0cboGHTX0OG3xga66fbEztzQ6sqmVnw=;
+ b=lYQXG0BWyJHeHjog1ZeJzUsa5VImzX6OLDSbAqANuk8XT+nvQ4fNY1ITe4vGWg5na18Tbix5u2HhbGHk9QHijSv5ytMmodpq2A35CezdB3cnMeyOoJtmrYm9nRy0WRmvhvOO0XIqzTuj3WU+cHKG1qUXL44Rowug0HFVn/+ztohApw8an/lHFNaZX3szOrpuDexkPwSLC+uIegea30QqO3Gx2QEkGwJ3qvxe2BV6ODSMeEWxlzu3jJJ7PAhIGbG/YZ6C+ZToJyOxjDzyxsb3FrNLeE5Hvon0hLsPJgDTN/G1yT1olxibz78hY/hmyorYnrBSVkxP/4XfLDULnVdD6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bzyJ1RvP48bQ0cboGHTX0OG3xga66fbEztzQ6sqmVnw=;
+ b=dkUh+Fw8vXVV3DMv4pk9g1BLLelemI1+kIhjQgqEauU5eutt3i9ckeUMt8EciMmJo9zEmrd4Bd5t8W/GNCnWJDdhrTQt6c9AyNUXtL3bVPQRdOrwn4H0IVgQy4KOcXWrlx3PRdmDfqzvlmctP4Y+K9Lu+PDTjlHujuxLQE9FLw4eelLRiczEhjQXhcmGij/PA5wDrjTVnqmadlB53tPllCCcB9TIfYTihIijfw96vPPH6VTArDk6m1PzsA32N6u0zR9VDb2MMbNaJqEIgNmcUNuhHFPMtRFBl/8+CFZeyBTC/itggwFdemoOE5aTgl5KGyWUL31REAAyt/akN7Nikg==
+Received: from TYZPR06MB6568.apcprd06.prod.outlook.com (2603:1096:400:45f::6)
+ by SEZPR06MB5200.apcprd06.prod.outlook.com (2603:1096:101:74::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Thu, 26 Jun
+ 2025 03:41:42 +0000
+Received: from TYZPR06MB6568.apcprd06.prod.outlook.com
+ ([fe80::72b8:dce5:355b:e84b]) by TYZPR06MB6568.apcprd06.prod.outlook.com
+ ([fe80::72b8:dce5:355b:e84b%4]) with mapi id 15.20.8857.026; Thu, 26 Jun 2025
+ 03:41:42 +0000
+From: Jammy Huang <jammy_huang@aspeedtech.com>
+To: Rob Herring <robh@kernel.org>
+CC: "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "joel@jms.id.au" <joel@jms.id.au>,
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
+	<linux-aspeed@lists.ozlabs.org>
+Subject: RE: [PATCH v5 1/2] dt-bindings: mailbox: Add ASPEED AST2700 series
+ SoC
+Thread-Topic: [PATCH v5 1/2] dt-bindings: mailbox: Add ASPEED AST2700 series
+ SoC
+Thread-Index: AQHb5ejXM1vEEl7n4Euw0osJMHWsTLQUwIRA
+Date: Thu, 26 Jun 2025 03:41:42 +0000
+Message-ID:
+ <TYZPR06MB6568CA1AD00A1D749CD06C8BF17AA@TYZPR06MB6568.apcprd06.prod.outlook.com>
+References: <20250625073417.2395037-1-jammy_huang@aspeedtech.com>
+ <20250625073417.2395037-2-jammy_huang@aspeedtech.com>
+ <20250625155007.GA1489062-robh@kernel.org>
+In-Reply-To: <20250625155007.GA1489062-robh@kernel.org>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYZPR06MB6568:EE_|SEZPR06MB5200:EE_
+x-ms-office365-filtering-correlation-id: aa64760c-7a26-482f-c298-08ddb4635dce
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?KGKcIBfF2phGlLAScvjveOZzui16x1S/yPh4zvmD/Nx1NhOaXcoeYCzPEHRr?=
+ =?us-ascii?Q?NbiIki7p0EnZ76ftrr3T9JTbNC1wVMm9PWILlFfPcs4rGVno/oCU2fmmoVLP?=
+ =?us-ascii?Q?LZv7VomxU8tRgFLUr7VH0hraJ5v5E903+CbwTr942dSJSoQafCpmOiS5mcU1?=
+ =?us-ascii?Q?B3NvG0xSBt5ygSNg8HSJZXdbRjwdXyKQE3mki0t2AE4Ew7qMELNmlqndp/vG?=
+ =?us-ascii?Q?ZnxaQwcS+3CJ1t1GjCX+7p00AVG58/nnYdTMzUl7GxN3R9DhPluV35iAUGIu?=
+ =?us-ascii?Q?4RED2z8DgIFXxseSDFn3RWD6+k43SZV+gO7VRinbbLi4ehPlrWCkNurm7UvF?=
+ =?us-ascii?Q?ayPHsWAGdTxFcnAKe5SCtjTo4yxk++Z31wkPuD+OMzlid4HbylTFZVq4ItJs?=
+ =?us-ascii?Q?zHOLM4K07pvpr8Ovh/XyNWGF5wWicTPlD8RD2bPKunbBjUllgWgyhnP/ozlh?=
+ =?us-ascii?Q?zME2Mhf7uMwXG0BG93uhmPwWCyFb5R1YSOBAyoUP/puunstPvO48PfZs9mqe?=
+ =?us-ascii?Q?Hz4stEBnnUIbYz3Zsbur3VgFIEvF+hUnZi+QVxDnnq5Pl3u855wWsN9JJgeY?=
+ =?us-ascii?Q?HHCfz1+dnU5Bp6g+YRxy9F4M7wAHDJHzOQNAJuHWRdkqj+jarwpnp9EF1bhj?=
+ =?us-ascii?Q?ZkeZUMHzuh5zzm49AU/NUOaZf+ztUMIKUCEwMminbZ4c/G64NjQgD7yWjcFK?=
+ =?us-ascii?Q?xwZiYPJUXUjY4PBXUcXa4gMvj+J+U62+iPDUnI7R8xN6qUfcAsmpWwFTziwB?=
+ =?us-ascii?Q?4k+Y56f4eQnVn1ohjEvisYU/Ebh4ZoBANHHdQXxSBOVwA6ZMnAz5KI8b5NY8?=
+ =?us-ascii?Q?7ourrTbMGotf8FtJwm+YK0TrEbrKkPtsj85rGRLOWrand7YVOGaHBQMT7MLb?=
+ =?us-ascii?Q?VHaH1cH9op87aXc8lTcjraJB3JgNehrRpawga3xFjib34j19yqQPrQ0eHnLy?=
+ =?us-ascii?Q?+il0qX0dSPmGv3Xlfw88dlYDLVfV4Hr+LeD5iUGu72U3lHbYT5IQb6Z98Iw6?=
+ =?us-ascii?Q?94DPdsSC7rpDF34eNoP5A4Fl0MprUTLahRGSj5k/JQSdExlE1+pc7udHIkV3?=
+ =?us-ascii?Q?BdKkobixieSk4sn0wiGkvRXFy8lUtupusPatBk18pWB0MeeW/bmfLabpZFxE?=
+ =?us-ascii?Q?YUX5zviTrT4aKkqIc0vy8QvSEGpdJK1VhelqwjaVwTmlajJUhmRmtl831yCw?=
+ =?us-ascii?Q?5kcB+a8aYyyKNHT6IRyO+XYEPTD62/x+58c8MH8JnFY9DGRU4qXj7emKToAZ?=
+ =?us-ascii?Q?yNj7daRd87zyojeku7OQDOrCClIgzFVT6r5dxN3nkDv8MwK0Wn5Z3tmgiYl8?=
+ =?us-ascii?Q?SvJI09bzN6iE0TrZulJryUrX0yTnAxD+AIIDZEmHGE3VG8w/1wLa975e8KLy?=
+ =?us-ascii?Q?tD9C4TzSGmziXW2+KKx4oWI6yphD/ao6ae+CEaTCQ8b3NK+qWxqMMHRP8E3K?=
+ =?us-ascii?Q?O7db65Z7i6zY96CgPBWznuepsnrC4474?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB6568.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?pvP+2znu/daHfcX3ACcFkeIB6Twd00ZcmObGRXkV3o6V4RmdalBD2P2Pzc5o?=
+ =?us-ascii?Q?LVAjRn796Xkk0OmjnarfEJGDD2aRnoimrfJ3LDlRwHKGx8spbaEwQJLozvpC?=
+ =?us-ascii?Q?VR50pOAtwfpDOMdxXGvmUX3mO1vK/WcAX/NAbsQMszMN2RcqQeY/uhzqfDab?=
+ =?us-ascii?Q?nqaEwiine11bnDL3EPg5T0mg0xdji+9hVa7tKKZz+p9B4phRez51QBWuBzIe?=
+ =?us-ascii?Q?3SFuBrHgbjItTBXim2SGNpAaIPyHIRHGMDIfe6+C0QgpFvGuBnRB9QVaHi6q?=
+ =?us-ascii?Q?aNlMWKZ9JEsnhjrqBHytGXP8+rJYl75+wc6sQek7Wgz3mYXEFgNqh3FrM3D1?=
+ =?us-ascii?Q?lDUZSQNEPi9Iq1rKWQgSsDf0UScbEV3p25OwCQl6CK38fnonoIPraT9K4/dX?=
+ =?us-ascii?Q?v+ne6KgIf4RNDePKDI4uq7zy3KPor8U6nwQabkBlSyYFkzdFutsFTwohdwXC?=
+ =?us-ascii?Q?J21aqxDVwbh56l3WPtY9LSLjjzmdcMKH15zMX/TPFRs3pbuEd12eneXr56ke?=
+ =?us-ascii?Q?7bJMH6+3LLbwRCCusoxKQG1oNMSL5/iv9iIExaQbtd1pJzy2+UOhDKT0wo4A?=
+ =?us-ascii?Q?CixvcLPYC/pUvJuuN+6gljTgYd9gVKr+jUB9XgzvhOAbcvfc5WkFn25/CJRt?=
+ =?us-ascii?Q?jbzmaoLnilzTUUnvh9/08ODAbU2p+VS3XFuo0hiQos6EpVPgzKQ22RP7RvHD?=
+ =?us-ascii?Q?ivu4zKhSIfzLXodmKqtYwXSpGEIYPAfTrvJ9//hXpaFEkYKQBe2iEKVAymiy?=
+ =?us-ascii?Q?2shvjGuqgpuhhQ22cKgX9dghD5xXiZWm7fPfeUp8+dXwP8Ep0I46QuhewD9N?=
+ =?us-ascii?Q?ZhkPwfkC7q68ZsCHGe6edxRTixIm4GF1YE6t+WpWCWTK9ecJ0aS8wUiQHaRS?=
+ =?us-ascii?Q?angrwXZTVtsKl+y9NxaRlnNBb64Z6hV5WGBoDWUKmaEkZ8tv8ubTgfFzYY+g?=
+ =?us-ascii?Q?xBaoJR17fPfD5XtYu+Oyq7TYEy9FERIsOw/T5XzB4xpzCxlb1vP2bkPVCyHZ?=
+ =?us-ascii?Q?KJgZHWl/ZOQQxfMLUZyxF/V3A/MPMiLK1EM0R11JBTEe6gUmf4IVoK/F3AWJ?=
+ =?us-ascii?Q?CdVwTIMEGn+cdex2Pqj9RHDIruC74xr8ccYOuBONc0pZB/gRazwMx6eQez+B?=
+ =?us-ascii?Q?rezuYMinLKGuU9feW/pltnxtNI8gBTls53iQyXAtc+Zacsq0IF0WI8xF6NL5?=
+ =?us-ascii?Q?ofcKc0O8TxGRqH/f09FLQ0tVhdA6NmuqFvHdfqbIQp6A6wl5YRCS10zPxdnc?=
+ =?us-ascii?Q?OrSRo9cwWyCg2fXJiDeGQJhVRaZ66Wda/2YrvL4KhDduQ08RL9kLlbcfjrQ0?=
+ =?us-ascii?Q?GwRsh/gni1CUxlKCfJ/eaJulqfDaYrM6eyJiUAKqbhPiB59i2v4/1ezygrAR?=
+ =?us-ascii?Q?AXOesG/x0Nuf4pXYDW4jQV0hl6lsXkwSi921ahLAcOLL3rh7yIiHxvMEao3G?=
+ =?us-ascii?Q?R0ORG8N4KI5Dc6gAFMkhVte39UyAN0vb2l4VeeXoM6g01xC4n7lpTFBLRQPW?=
+ =?us-ascii?Q?PEtaBqstvkkBvYXKFXnKx5RmUx7HwZbIPKOujnOseV57Acl7H1XyE2WX7Oez?=
+ =?us-ascii?Q?TJLxk8ULTO2jTbCSWYMVZu9cF9DXHjVwOSfymDk4F8N3TRJofhoAMIkwjjph?=
+ =?us-ascii?Q?qg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625123832.GF167785@nvidia.com>
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB6568.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa64760c-7a26-482f-c298-08ddb4635dce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2025 03:41:42.4942
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Au63j8az63MRfR5GlA8W6yaAE+l7t2y8EKMLOzMk4xwgOsROu1B4mMo0XRR+7kK8YQl/Umc1mtehDC3FToJ53OinmqQALhQAhb8bWn47bQA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB5200
 
-On Wed, Jun 25, 2025 at 09:38:32AM -0300, Jason Gunthorpe wrote:
-> On Wed, Jun 25, 2025 at 06:06:00PM +0800, Xu Yilun wrote:
-> > > 	/*
-> > > 	 * We don't know what thread is actually going to destroy the vdev, but
-> > > 	 * once the vdev is destroyed the pointer is NULL'd. At this
-> > > 	 * point idev->users is 0 so no other thread can set a new vdev.
-> > > 	 */
-> > > 	if (!wait_event_timeout(idev->ictx->destroy_wait,
-> > > 				!READ_ONCE(idev->vdev),
-> > > 				msecs_to_jiffies(60000)))
-> > > 		pr_crit("Time out waiting for iommufd vdevice removed\n");
-> > > }
-> > > 
-> > > Though there is a cleaner option here, you could do:
-> > > 
-> > > 	mutex_lock(&idev->igroup->lock);
-> > > 	if (idev->vdev)
-> > > 		iommufd_vdevice_abort(&idev->vdev->obj);
-> > > 	mutex_unlock(&idev->igroup->lock);
-> > > 
-> > > And make it safe to call abort twice, eg by setting dev to NULL and
-> > > checking for that. First thread to get to the igroup lock, either via
-> > > iommufd_vdevice_destroy() or via the above will do the actual abort
-> > > synchronously without any wait_event_timeout. That seems better??
-> > 
-> > I'm good to both options, but slightly tend not to make vdevice so
-> > special from other objects, so still prefer the wait_event option.
-> 
-> The wait_event is a ugly hack though, even in its existing code. The
-> above version is better because it doesn't have any failure mode and
-> doesn't introduce any unlocked use of the idev->vdev which is easier
-> to reason about, no READ_ONCE/WRITE_ONCE/etc
-> 
-> It sounds like you should largely leave the existing other parts the
-> same as this v2, though can you try reorganize it to look a little
-> more like the version I shared?
+> On Wed, Jun 25, 2025 at 03:34:16PM +0800, Jammy Huang wrote:
+> > Introduce the mailbox module for AST27XX series SoC, which is
+> > responsible for interchanging messages between asymmetric processors.
+> >
+> > Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+>=20
+> You didn't add Krzysztof's Reviewed-by...
+Hi Rob,
 
-Sure. But may I confirm that your only want reentrant
-iommufd_vdevice_abort() but not your iommufd_object_remove_tombstone()
-changes?
+I checked submitting patches' guide, and it says that if the patch has chan=
+ged
+substantially in following version, these tags might not be applicable anym=
+ore
+and thus should be removed. I also mentioned this in changelog on the cover=
+.
 
-To me, grab a shortterm_users but not a user is a new operation model. I
-hesitate to add it when the existing refcount_inc(&obj->user) works for
-this case.
+I am not sure about this, so may I keep Krzk's Reviewed-by tag?
+If it's OK, I will add it back on next patch.
 
-Thanks,
-Yilun
+>=20
+> > ---
+> >  .../mailbox/aspeed,ast2700-mailbox.yaml       | 60
+> +++++++++++++++++++
+> >  1 file changed, 60 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yam
+> > l
+> > b/Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yam
+> > l
+> > new file mode 100644
+> > index 000000000000..0a5f43de5f28
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox
+> > +++ .yaml
+> > @@ -0,0 +1,60 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause) %YAML 1.2
+> > +---
+> > +$id:
+> > +http://devicetree.org/schemas/mailbox/aspeed,ast2700-mailbox.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: ASPEED AST2700 mailbox controller
+> > +
+> > +maintainers:
+> > +  - Jammy Huang <jammy_huang@aspeedtech.com>
+> > +
+> > +description:
+>=20
+> You need '>' to preserve paragraphs.
+OK
 
-> 
-> Jason
-> 
+>=20
+> > +  ASPEED AST2700 has multiple processors that need to communicate
+> > + with each  other. The mailbox controller provides a way for these
+> > + processors to send  messages to each other. It is a hardware-based
+> > + inter-processor communication  mechanism that allows processors to
+> > + send and receive messages through  dedicated channels.
+>=20
+> And a blank line between paragraphs.
+>=20
+OK
+
+> > +  The mailbox's tx/rx are independent, meaning that one processor can
+> > + send a  message while another processor is receiving a message
+> simultaneously.
+> > +  There are 4 channels available for both tx and rx operations. Each
+> > + channel  has a FIFO buffer that can hold messages of a fixed size
+> > + (32 bytes in this  case).
+>=20
+> And here.
+>=20
+Sure.
+
+> > +  The mailbox controller also supports interrupt generation, allowing
+> > + processors to notify each other when a message is available or when
+> > + an event  occurs.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: aspeed,ast2700-mailbox
+> > +
+> > +  reg:
+> > +    maxItems: 2
+> > +    description:
+> > +      Contains the base addresses and sizes of the mailbox controller.=
+ 1st
+> one
+> > +      is for TX control register; 2nd one is for RX control register.
+>=20
+> Instead, just:
+>=20
+> items:
+>   - description: TX control register
+>   - description: RX control register
+>=20
+Agree.
+
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  "#mbox-cells":
+> > +    const: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - "#mbox-cells"
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +    mailbox@12c1c200 {
+> > +        compatible =3D "aspeed,ast2700-mailbox";
+> > +        reg =3D <0x12c1c200 0x100>, <0x12c1c300 0x100>;
+> > +        interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+> > +        #mbox-cells =3D <1>;
+> > +    };
+> > --
+> > 2.25.1
+> >
+Thanks for your help.
+
+Regards
+Jammy
