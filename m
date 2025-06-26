@@ -1,236 +1,106 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDC51A0728;
-	Thu, 26 Jun 2025 03:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC7543159;
+	Thu, 26 Jun 2025 03:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750910077; cv=none; b=DSxZzROvhg/NNx9Xt0VQqsJBzgUYJoQpZ34DIP7UHZfcQgC7oIPirUYv762HV3BtHvoWfVDEs/CUbHyj+PukuyPeJa78XyxQKFkssSkwpJ4v+FJLEfjIcUy1rh+j0m8q9J7LxrKFSdD/QSiI0Tu2aaLDlSan5JRWZa9CU/hOwys=
+	t=1750910229; cv=none; b=YQeP6scYDBCXvbhYptboUI49CSvWCI8swPIDrrbfa4jKy/Um1TOgkW2USawnrEfZKZ5d5D7yVp5lMku/mcDyHLJFNrVPE7ZCZed47NsbBU2K6dNzkJ2DF97/hrbN646DvgBTjWN19FhAR3fHDjZEPiGvjV2wNzSAauUD6tuYlBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750910077; c=relaxed/simple;
-	bh=W69Sh8U89J7pQtIt0QufN1Tq/U+T0/SmKCjwqwczS5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PRBSSb4UONoQrT8iw7hvtOp22vi9dWEk3uAg8xQmaBKsMa8233UpY3c0FEMbrEvvM9Z4RPInKLtdkd6jcllsjm94NjJklc51BQiNLUCHV5BUULOT0s9OXFAM0CSRtC+peRfWITOoXuyCPhFrUNu3pZkcVJ5gCJwuzikVAhYooBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 41cb6cd8524111f0b29709d653e92f7d-20250626
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_TXT, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT
-	HR_TO_DOMAIN_COUNT, HR_TO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED
-	SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
-	AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:c2cb00be-2c47-4fa5-bfe6-0d7233a87b8a,IP:0,U
-	RL:0,TC:0,Content:6,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:1
-X-CID-INFO: VERSION:1.1.45,REQID:c2cb00be-2c47-4fa5-bfe6-0d7233a87b8a,IP:0,URL
-	:0,TC:0,Content:6,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:1
-X-CID-META: VersionHash:6493067,CLOUDID:1dff51c8eff28d8923e87fb0fe31e4c9,BulkI
-	D:250626093924HZVC9G85,BulkQuantity:2,Recheck:0,SF:17|19|64|66|78|80|81|82
-	|83|102|841,TC:nil,Content:4|50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:4
-	0,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE
-	:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-UUID: 41cb6cd8524111f0b29709d653e92f7d-20250626
-X-User: duanchenghao@kylinos.cn
-Received: from localhost [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1415082984; Thu, 26 Jun 2025 11:54:27 +0800
-Date: Thu, 26 Jun 2025 11:54:24 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	yangtiezhu@loongson.cn, chenhuacai@kernel.org, martin.lau@linux.dev,
-	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
-	haoluo@google.com, jolsa@kernel.org, kernel@xen0n.name,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	bpf@vger.kernel.org, guodongtai@kylinos.cn, youling.tang@linux.dev,
-	jianghaoran@kylinos.cn, Youling Tang <tangyouling@kylinos.cn>
-Subject: Re: [PATCH v2 1/4] LoongArch: BPF: The operation commands needed to
- add a trampoline
-Message-ID: <20250626035424.GA436557@chenghao-pc>
-References: <20250618105048.1510560-1-duanchenghao@kylinos.cn>
- <20250618105048.1510560-2-duanchenghao@kylinos.cn>
- <CAEyhmHTA+6RdD4CbQuMn2E887Z3E6RudJQb3Wnmqosj1ozrXPw@mail.gmail.com>
+	s=arc-20240116; t=1750910229; c=relaxed/simple;
+	bh=mI97DoNHfliJSkCCHYtjbCbgIWRPVfu2RIWFNqdlMCo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=u51QYgTgtzZbe7jUASe0bVGicSYFF1vdn+JuaMNqTc6PcJNkX6sMQu7Mvfj4XfNcJ48FYf1NaKLOiKecx1lg7yMlqlZlyxkMDChmMDg//Tealt5XvWx5CqxrIFN2PjOgWSFNHT/H4UIv/ygR1J1sPMOrKTpZrRPLamp3/9S42Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=yYB9fGhR; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yYB9fGhR"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55Q3uuYx2300854;
+	Wed, 25 Jun 2025 22:56:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750910216;
+	bh=vBKAcBpn6IE4UyuR5btcSfdmtxt26FB5KnEyD1oJXTM=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=yYB9fGhRRjMCBTrb+Ke6q6aksP5H9IGdnGqK6J4lZfLvFTbMaKrN0hK/YDHwZMcfn
+	 jkLG5y1ff+6GF/RtokvY2hnglLeMysa2n7LyoArxLqg1FDKJ1Dn5WG0j94eiDiBvVF
+	 yfHhP4VCVBMGe1861JrFpTA8u0z6wkAum+YiuwMA=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55Q3uupd3271443
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 25 Jun 2025 22:56:56 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 25
+ Jun 2025 22:56:56 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Wed, 25 Jun 2025 22:56:56 -0500
+Received: from [172.24.227.245] (uda0132425.dhcp.ti.com [172.24.227.245])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55Q3upeZ588826;
+	Wed, 25 Jun 2025 22:56:52 -0500
+Message-ID: <0bf7ccf4-26ae-42f6-b679-d7840e42efc5@ti.com>
+Date: Thu, 26 Jun 2025 09:26:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEyhmHTA+6RdD4CbQuMn2E887Z3E6RudJQb3Wnmqosj1ozrXPw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] Workaround for Errata i2312
+To: Judith Mendez <jm@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian
+ Hunter <adrian.hunter@intel.com>
+CC: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+References: <20250624221230.1952291-1-jm@ti.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Content-Language: en-US
+In-Reply-To: <20250624221230.1952291-1-jm@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, Jun 26, 2025 at 09:39:04AM +0800, Hengqi Chen wrote:
-> On Wed, Jun 18, 2025 at 6:51 PM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
-> >
-> > Add branch jump function:
-> > larch_insn_gen_beq
-> > larch_insn_gen_bne
-> >
-> > Add instruction copy function: larch_insn_text_copy
-> >
-> 
-> Please rewrite the commit message properly.
-> These functions are generic, so you can drop the `BPF` prefix from subject line.
-> 
-Okay, I will make the changes in the next version.
 
-> > Co-developed-by: George Guo <guodongtai@kylinos.cn>
-> > Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> > Co-developed-by: Youling Tang <tangyouling@kylinos.cn>
-> > Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
-> > ---
-> >  arch/loongarch/include/asm/inst.h |  3 ++
-> >  arch/loongarch/kernel/inst.c      | 57 +++++++++++++++++++++++++++++++
-> >  2 files changed, 60 insertions(+)
-> >
-> > diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-> > index 3089785ca..88bb73e46 100644
-> > --- a/arch/loongarch/include/asm/inst.h
-> > +++ b/arch/loongarch/include/asm/inst.h
-> > @@ -497,6 +497,7 @@ void arch_simulate_insn(union loongarch_instruction insn, struct pt_regs *regs);
-> >  int larch_insn_read(void *addr, u32 *insnp);
-> >  int larch_insn_write(void *addr, u32 insn);
-> >  int larch_insn_patch_text(void *addr, u32 insn);
-> > +int larch_insn_text_copy(void *dst, void *src, size_t len);
-> >
-> >  u32 larch_insn_gen_nop(void);
-> >  u32 larch_insn_gen_b(unsigned long pc, unsigned long dest);
-> > @@ -511,6 +512,8 @@ u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int imm);
-> >  u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
-> >  u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
-> >  u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
-> > +u32 larch_insn_gen_beq(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
-> > +u32 larch_insn_gen_bne(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
-> >
-> >  static inline bool signed_imm_check(long val, unsigned int bit)
-> >  {
-> > diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-> > index 14d7d700b..7423b0772 100644
-> > --- a/arch/loongarch/kernel/inst.c
-> > +++ b/arch/loongarch/kernel/inst.c
-> > @@ -4,6 +4,7 @@
-> >   */
-> >  #include <linux/sizes.h>
-> >  #include <linux/uaccess.h>
-> > +#include <linux/set_memory.h>
-> >
-> >  #include <asm/cacheflush.h>
-> >  #include <asm/inst.h>
-> > @@ -218,6 +219,34 @@ int larch_insn_patch_text(void *addr, u32 insn)
-> >         return ret;
-> >  }
-> >
-> > +int larch_insn_text_copy(void *dst, void *src, size_t len)
-> > +{
-> > +       unsigned long flags;
-> 
-> Initialize flags ?
 
-To be precise, it saves the IRQ (Interrupt Request) status. My
-understanding is that it involves passing parameters between the lock
-and unlock operations.
-
+On 25/06/25 03:42, Judith Mendez wrote:
+> This patch series includes fix for Errata i2312 [0].
 > 
-> > +       size_t wlen = 0;
-> > +       size_t size;
-> > +       void *ptr;
-> > +       int ret = 0;
-> > +
-> > +       set_memory_rw((unsigned long)dst, round_up(len, PAGE_SIZE) / PAGE_SIZE);
-> > +       raw_spin_lock_irqsave(&patch_lock, flags);
-> > +       while (wlen < len) {
-> > +               ptr = dst + wlen;
-> > +               size = min_t(size_t, PAGE_SIZE - offset_in_page(ptr),
-> > +                            len - wlen);
-> > +
-> > +               ret = copy_to_kernel_nofault(ptr, src + wlen, size);
+> Also include fixes for removing eMMC HS DDR support for am62
+> SK which has been descoped as per datasheet [1] and enabling internal
+> pullups for AM62 SK and AM62SIP SK, as per JESD84 spec recommendations.
 > 
-> I am not familiar with this mm thing, but looking at other callsites
-> of copy_to_kernel_nofault(),
-> it seems like you can do this copy cross page boundaries.
+> [0] https://www.ti.com/lit/pdf/sprz487
+> [1] https://www.ti.com/lit/gpn/am625
+> 
+> Judith Mendez (3):
+>   mmc: sdhci_am654: Workaround for Errata i2312
+>   arm64: dts: ti: k3-am62-main: Remove eMMC High Speed DDR support
+>   arm64: dts: ti: k3-am62*: Move eMMC pinmux to top level board file
 > 
 
-I didn't understand your point. May I ask if there's any issue with
-using it this way?
+2/3 and 3/3 have no relation to 1/3 and they need to go via different
+trees. Please post them separately.
 
-> > +               if (ret) {
-> > +                       pr_err("%s: operation failed\n", __func__);
-> > +                       break;
-> > +               }
-> > +               wlen += size;
-> > +       }
-> > +       raw_spin_unlock_irqrestore(&patch_lock, flags);
-> > +       set_memory_rox((unsigned long)dst, round_up(len, PAGE_SIZE) / PAGE_SIZE);
-> > +
-> 
-> Do we need flush_icache_range() here ?
+>  arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts      | 25 +++++++++++++++++++
+>  arch/arm64/boot/dts/ti/k3-am62-main.dtsi      |  1 -
+>  arch/arm64/boot/dts/ti/k3-am625-sk.dts        | 25 +++++++++++++++++++
+>  .../arm64/boot/dts/ti/k3-am62x-sk-common.dtsi | 24 ------------------
+>  drivers/mmc/host/sdhci_am654.c                |  9 ++++---
+>  5 files changed, 56 insertions(+), 28 deletions(-)
 > 
 
-I understand it is necessary. After all, the trampoline code needs to
-be fetched by the PC (Program Counter) for instruction fetching, and
-flushing the I-cache (Instruction Cache) is required for the code to
-go through the I-cache.
+-- 
+Regards
+Vignesh
+https://ti.com/opensource
 
-> > +       return ret;
-> > +}
-> > +
-> >  u32 larch_insn_gen_nop(void)
-> >  {
-> >         return INSN_NOP;
-> > @@ -336,3 +365,31 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
-> >
-> >         return insn.word;
-> >  }
-> > +
-> > +u32 larch_insn_gen_beq(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
-> > +{
-> > +       union loongarch_instruction insn;
-> > +
-> > +       if ((imm & 3) || imm < -SZ_128K || imm >= SZ_128K) {
-> > +               pr_warn("The generated beq instruction is out of range.\n");
-> > +               return INSN_BREAK;
-> > +       }
-> > +
-> > +       emit_beq(&insn, rd, rj, imm >> 2);
-> > +
-> 
-> This does NOT match emit_beq's signature, should be:
->     emit_beq(&insn, rj, rd, imm >> 2);
-
-Okay, I will make the changes and conduct testing in the next version.
-
-> 
-> > +       return insn.word;
-> > +}
-> > +
-> > +u32 larch_insn_gen_bne(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
-> > +{
-> > +       union loongarch_instruction insn;
-> > +
-> > +       if ((imm & 3) || imm < -SZ_128K || imm >= SZ_128K) {
-> > +               pr_warn("The generated bne instruction is out of range.\n");
-> > +               return INSN_BREAK;
-> > +       }
-> > +
-> > +       emit_bne(&insn, rj, rd, imm >> 2);
-> > +
-> > +       return insn.word;
-> > +}
-> > --
-> > 2.43.0
-> >
