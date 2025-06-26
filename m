@@ -1,111 +1,39 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B612F2701;
-	Thu, 26 Jun 2025 20:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60C71DEFE9
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 20:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750968903; cv=none; b=Scil+J9cS3nwxDSETwhvpEJ1KfRWbazW5ayI81WVtNf1aUt6iRQQk94+a7YfyfFnUw2j7zTXvBRWbx2wsNtyNlJyGQPzeBJZPBwwfjnQzoJKkEdFMRMyqIJNGOLS1D1/AHYNGOYclP/be8e683g5mwMvK6L8eYw0/a7RGTOMcXc=
+	t=1750969093; cv=none; b=EfKPGgp053NXqaEvxotiJQ+MTKreiCCiDuJ8TpMUHzbYuHiIFcaBpJsfK9pBzNJw3tR56sBShDyPlArwSLmlCKTlR2QUEFKofkWvDSt7ZanfeCYnQ31p4vqCXoQP0WCVWajXZ7ujDhEE7zzOxAp5OEp5BjYJrQT/0Tra28M1h+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750968903; c=relaxed/simple;
-	bh=cpAuonRarh3V/5AZzHmJhohOs3ZPe+MF471SUSLwCUQ=;
+	s=arc-20240116; t=1750969093; c=relaxed/simple;
+	bh=aIRf0oseyZrQI43Sg+44ZR1Mrl8CCGzfg6802gOD/T4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GtLeYGRg42ow1GZv5mtpJl4VZ46Sy2HpG2OlcGYyxNKgZMiLUBs3hdxnF2l7jFV/dH3aQxXiCTRYxq7Yw+CARwHMEvGblmN4mwpZFwKyC8s5NAnkR0nt7v1MAOYwRwzfksIfEVZDuDk1rLi38kG0uabNwtOT5dDX8c/zbckWMFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C6eBVjKJ; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sg0q2Qw9ATyCDbuYL7yUSNbiHUI0JTuSFc0Gu+1SkV1kKmbM2E4uEHbNZopOYe5sg+7YRQMArh+0yyvepLGO9H3SMShBkzfJDY/ZDOAbe2bjxn4CW4pHKWNhPUib+QUd72cYYJiMJYtTCP5ys/RddE07a4jxhqETog9D0jRzHaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=l6quOM6g; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C6eBVjKJ"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6fd0a7d3949so21658426d6.0;
-        Thu, 26 Jun 2025 13:15:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750968901; x=1751573701; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FRDEmi54S6LjnrBjZVa4DLbUJlXZIMr6dV6Euspeu5w=;
-        b=C6eBVjKJ84GAt4zdaISpnVkucoppPf0iV1WO4iP63TagvDy/RRXXRiOpL5hbG3Ec9g
-         sAzh5ijnefOxvujiqNqKSDzA9boWerjTG0R5UJ2SmhqiSeACLIcMUyqecr/UxExF6cad
-         zXR7CI9/aKrYNKmp2QKB5yddTY0aOv0PspxklTJ+zdxpd25XGLOZH0GjTXrihHQRVxtn
-         6IAFfYnjMwAmCu4GZQ7qfpuK9TKa6GcRqcRlh6bNplwcTlngkRrGQRePSAm8SswI4k8o
-         1JiItobaB/xaOMA/XdywyssaqFr+vF+4EobOHmbwcEvP3DGv1xwF5OsnGkfhqo1CsnYA
-         YpYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750968901; x=1751573701;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FRDEmi54S6LjnrBjZVa4DLbUJlXZIMr6dV6Euspeu5w=;
-        b=Y51r60dKC46zSROqhEMGONjpvMIGAig0xejiV+jEHOUm5YxghXYPJ/u6v5TUPZd23s
-         cdAQTWaFwZBv717/XPYO4TDxhe8jznBtkc1H4Z0DdAELumtlrC2pFLp93ku8yymjwq7T
-         8BJHnYoc1weiyuNMoOCVKHZqkG8BCLS+4w3jR+2HhEooWcLu5QGkmS9Y2HLuVnKJbUqN
-         WLwhktLayYYSVWDoS1i+iIV0U0CMkWC0Dd5ajm93qkfmlPX+j851EpWDyxPman2Ro+jr
-         j5ggHNqv9jTmOWVgqHgcD/NxraKYn6Bz5OShvkMh1YOH4zexuiNtVkVIjOxvtYNM3Y42
-         hsNg==
-X-Forwarded-Encrypted: i=1; AJvYcCUsUCpuO0wGlMvk9etmQqoAH9FlCSANYwnnWVWF4+nOhMQqtq43+jJaZhELixc2mvf91o6hHZNmPXoTCUk=@vger.kernel.org, AJvYcCXQIHog1af6qc0JJmJkeyK44KAk1DBjA7l6e82ifCZcMysAmiKVM3KS06I0y/FZjKzL+dMC6Mt+G6Q6@vger.kernel.org, AJvYcCXSyRXZtL1g+PGeWrADgbBPSAOqcZOhnf2Y3xsYXY34fWvmYGWIr3q4pSFHk4A1unyICQPiPEcsm+GzwPeXtGY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGjNBJfJRJByzATVodJVYfZ8Nn2uHXFVOqQA2WJhgLcPEpSq7t
-	5p2FjvOvsJ0WhGTc27LzuBi3Nqvy/31w56k0qYhg39xPFJOnPt070HNJ
-X-Gm-Gg: ASbGncs817Jj3p9ul56l/ZJ5hVXqbwAmQmeh5WU+oRLDQEZDzIDD7WNVsKD6Zi4wU1C
-	da2l/txDfhrcOMRzq5GzKAYyFjY2obPV9mb09pA32SGzqzbZ0lYnqWljwhatEHN0Ig9fsTk/r3x
-	f9O4vHeMF7qHosG7XCySSCpCjBErFla2/kS2pL2gJsBaQ3VM/SZY7t7z9h472kzuAXHaXo6GVGH
-	utRKjzj2V2VL59n/FSmUSnfu89ozw2KhAVPnbylvtRyejmpYdNDEM4PQ0RFwQ5xRwF2bbfEVcZn
-	z78ekGE7cNCuqMgod7Ere2UWfSZGagj1eBb4KeunwkxsnN4aEkM87e60eT703SozPqouGMruUUJ
-	vo4b0jgeKn5Qu1yf0gF594bc4Kb7nwXZFgQBqF4MoK3Yp4nBZPlTn
-X-Google-Smtp-Source: AGHT+IEANItfJ+pbqeBQO9zwWycA6QYr37LnE7rpJ76vkzhiuapAzbecZpIvlqbfzXpn4d+I1bbk1w==
-X-Received: by 2002:ad4:5f45:0:b0:6f5:38a2:52dd with SMTP id 6a1803df08f44-7000291700fmr16852486d6.31.1750968900853;
-        Thu, 26 Jun 2025 13:15:00 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd771d9b90sm11303106d6.47.2025.06.26.13.15.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 13:15:00 -0700 (PDT)
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfauth.phl.internal (Postfix) with ESMTP id E3F23F40067;
-	Thu, 26 Jun 2025 16:14:59 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Thu, 26 Jun 2025 16:14:59 -0400
-X-ME-Sender: <xms:Q6pdaCFvUPD0RHCFio9KJ9_8SmnRa6EZEjitXaODhWBsPpYdue3WPg>
-    <xme:Q6pdaDUTee5HY1z5j3I0fBp6lWCxpXdfipx3S0F7v2MAPlCdII2vy8ppD_PBBD_a5
-    Cy1R38UuHkbfdyKHw>
-X-ME-Received: <xmr:Q6pdaMIjC_NMg4gupZQQBgEFPS9vES_l000JIP9nNu1wJQ_hwWagZdu8lQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgv
-    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
-    hnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueevieduffeivden
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquh
-    hnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudej
-    jeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrd
-    hnrghmvgdpnhgspghrtghpthhtohepvddtpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlih
-    hnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtph
-    htthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgr
-    rhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhroh
-    htohhnmhgrihhlrdgtohhmpdhrtghpthhtoheplhhoshhsihhnsehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:Q6pdaMHxmfVow-BgZppwkhXcy-rOii4jzc4YQSbNSDERCQc3uKdlsw>
-    <xmx:Q6pdaIUZ71mHC69yScigDCEqRKfd0NeZX43RPMvdGZtTCj-34A5QWg>
-    <xmx:Q6pdaPP3PXnMM6xqfrz5MeSrcnx1u1wbr_jbXo6ovbavxO88ROqfWw>
-    <xmx:Q6pdaP11yAx7qVlXO-XTcMNXESRSjpeWEP3qwe4Y2bmlyOZ6j_QNqw>
-    <xmx:Q6pdaJVXSL-IDbBt1k4PNPpzaAHv7ymXnHVDFfoH2JNUEsFM0Ac2rvVY>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 26 Jun 2025 16:14:59 -0400 (EDT)
-Date: Thu, 26 Jun 2025 13:14:58 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
-	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 3/5] rust: devres: get rid of Devres' inner Arc
-Message-ID: <aF2qQu3pP6WOPE5P@tardis.local>
-References: <20250626200054.243480-1-dakr@kernel.org>
- <20250626200054.243480-4-dakr@kernel.org>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="l6quOM6g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1750969082;
+	bh=aIRf0oseyZrQI43Sg+44ZR1Mrl8CCGzfg6802gOD/T4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l6quOM6gzsLWg/lcI7yrOn1zwXhVzDiSEk2xCijsM/Tg2nkJFAlhwylTW6+dK7f65
+	 cl6vNLnK5OLHXH/gn7BEnGMoy+nuG2sQKeY2aTcEBooyK9QtrilE1B1eoJr8QMeqsd
+	 h4p8RtxGIFgC4lnJGj+VAlcuMOh3MdpjVwwa4LjM=
+Date: Thu, 26 Jun 2025 22:18:01 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Willy Tarreau <w@1wt.eu>
+Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	linux-kernel@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 3/3] tools/nolibc: add a new "install_all_archs"
+ target
+Message-ID: <92eda9ff-116e-4ec1-930c-7474da9652fc@t-8ch.de>
+References: <20250620103705.10208-1-w@1wt.eu>
+ <20250620103705.10208-4-w@1wt.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -114,33 +42,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250626200054.243480-4-dakr@kernel.org>
+In-Reply-To: <20250620103705.10208-4-w@1wt.eu>
 
-On Thu, Jun 26, 2025 at 10:00:41PM +0200, Danilo Krummrich wrote:
-> So far Devres uses an inner memory allocation and reference count, i.e.
-> an inner Arc, in order to ensure that the devres callback can't run into
-> a use-after-free in case where the Devres object is dropped while the
-> devres callback runs concurrently.
+On 2025-06-20 12:37:05+0200, Willy Tarreau wrote:
+> This installs all supported archs together, both from nolibc and kernel
+> headers. The arch-specific asm/ subdirs are renamed to asm-arch-$arch,
+> and asm/ is rebuilt from all these files in order to include the right
+> one depending on the build architecture.
 > 
-> Instead, use a completion in order to avoid a potential UAF: In
-> Devres::drop(), if we detect that we can't remove the devres action
-> anymore, we wait for the completion that is completed from the devres
-> callback. If, in turn, we were able to successfully remove the devres
-> action, we can just go ahead.
+> This allows to use a single unified sysroot for all archs, and to only
+> change the compiler or the target architecture. This way, a complete
+> sysroot is much easier to use (a single directory is needed) and much
+> smaller.
 > 
-> This, again, allows us to get rid of the internal Arc, and instead let
-> Devres consume an `impl PinInit<T, E>` in order to return an
-> `impl PinInit<Devres<T>, E>`, which enables us to get away with less
-> memory allocations.
+> Signed-off-by: Willy Tarreau <w@1wt.eu>
+> ---
+>  tools/include/nolibc/Makefile | 39 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
 > 
-> Additionally, having the resulting explicit synchronization in
-> Devres::drop() prevents potential subtle undesired side effects of the
-> devres callback dropping the final Arc reference asynchronously within
-> the devres callback.
-> 
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
+> index 8de6ac5cec425..b6ed11d0b5419 100644
+> --- a/tools/include/nolibc/Makefile
+> +++ b/tools/include/nolibc/Makefile
+> @@ -88,6 +88,7 @@ help:
+>  	@echo "  headers_all_archs   prepare a multi-arch sysroot in \$${OUTPUT}sysroot"
+>  	@echo "  headers_standalone  like \"headers\", and also install kernel headers"
+>  	@echo "  help                this help"
+> +	@echo "  install_all_archs   install a multi-arch sysroot + kernel headers in \$${OUTPUT}sysroot"
+>  	@echo ""
+>  	@echo "These targets may also be called from tools as \"make nolibc_<target>\"."
+>  	@echo ""
+> @@ -120,6 +121,44 @@ headers_all_archs:
+>  	$(Q)cp --parents $(all_files) arch.h "$(OUTPUT)sysroot/include/"
+>  	$(Q)cp $(addsuffix .h,$(addprefix arch-,$(nolibc_supported_archs))) "$(OUTPUT)sysroot/include/"
+>  
+> +install_all_archs: headers_all_archs
+> +	@# install common headers for any arch, take them all. This will clear everything.
+> +	$(Q)$(MAKE) -C $(srctree) ARCH=x86 mrproper
+> +	$(Q)$(MAKE) -C $(srctree) ARCH=x86 headers_install no-export-headers= INSTALL_HDR_PATH="$(OUTPUT)sysroot"
+> +	@# remove the contents of the unused asm dir which we will rebuild from the arch ones
+> +	$(Q)rm -rf "$(OUTPUT)sysroot/include/asm"
+> +	$(Q)mkdir -p "$(OUTPUT)sysroot/include/asm"
+> +	@# Now install headers for all archs
+> +	$(Q)for arch in $(patsubst aarch64,arm64,$(nolibc_supported_archs)); do \
+> +		echo "# installing $$arch"; \
+> +		if ! [ -d $(OUTPUT)sysroot/include/asm-arch-$$arch ]; then \
+> +			$(MAKE) -C $(srctree) ARCH=$$arch mrproper; \
+> +			$(MAKE) -C $(srctree) ARCH=$$arch headers_install no-export-headers= \
+> +				INSTALL_HDR_PATH="$(OUTPUT)sysroot/include/$$arch" >/dev/null; \
+> +			mv "$(OUTPUT)sysroot/include/$$arch/include/asm" "$(OUTPUT)sysroot/include/asm-arch-$$arch"; \
+> +			rm -rf "$(OUTPUT)sysroot/include/$$arch"; \
+> +			case "$$arch" in \
+> +				arm)       cond="defined(__ARM_EABI__)" ;; \
+> +				arm64)     cond="defined(__aarch64__)" ;; \
+> +				loongarch) cond="defined(__loongarch__)" ;; \
+> +				m68k)      cond="defined(__m68k__)" ;; \
+> +				mips)      cond="defined(__mips__)" ;; \
+> +				powerpc)   cond="defined(__powerpc__)" ;; \
+> +				riscv)     cond="defined(__riscv__)" ;; \
+> +				s390)      cond="defined(__s390__) || defined(__s390x__)" ;; \
+> +				sparc)     cond="defined(__sparc__)" ;; \
+> +				x86)       cond="defined(__i386__) || defined(__i486__) || defined(__i586__) || defined(__i686__) || defined(__x86_64__)";; \
+> +				*)         echo "Unsupported arch" >&2; exit 1;; \
+> +			esac;\
+> +			for file in "$(OUTPUT)sysroot/include/asm-arch-$$arch/"*.h; do \
+> +				base="$${file##*/}"; \
+> +				( echo "#if $$cond"; \
+> +				  echo "#include \"../asm-arch-$$arch/$$base\""; \
+> +				  echo "#endif" ) >> "$(OUTPUT)sysroot/include/asm/$$base"; \
+> +			done; \
 
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+I'm not a fan of the loop to build the ifdeffery. It is a duplication
+of what we have in tools/include/nolibc/arch.h and horrible to look at.
+Can we stick this into a reusable header file?
+Something along the lines of this:
 
-Regards,
-Boqun
+	/* asm/foo.h */
+	#define _NOLIBC_PER_ARCH_HEADER "foo.h"
+	#include "_nolibc_include_per_arch_header.h"
+
+
+	/* _nolibc_include_per_arch_header.h */
+	#if defined(__i386__)
+	#include CONCAT("asm-arch-x86/", _NOLIBC_PER_ARCH_HEADER)
+	#elif
+	...
+
+However, so far I couldn't get it to work.
+Also it would be great if we can use it for the current arch.h, too.
+
+> +		fi;\
+> +	done
+> +
+>  # GCC uses "s390", clang "systemz"
+>  CLANG_CROSS_FLAGS := $(subst --target=s390-linux,--target=systemz-linux,$(CLANG_CROSS_FLAGS))
+>  
+> -- 
+> 2.17.5
