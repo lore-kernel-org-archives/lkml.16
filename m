@@ -1,43 +1,63 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD671C84D6;
-	Thu, 26 Jun 2025 02:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3911B1C84D6
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750903988; cv=none; b=hrAl96lyWDGxOOvf7DRezfk8d4348fU7OYtGRU15jFOxLx9v+dA00jChaJvevNZPMrCIlICsjE80/dIwTxekdgPqKBFrMQ4SH2AerxS7tOLMU+mPQJUtbYX/B8FwyuzexyOLe6JNwTJQnyUIuwUWh32fzRAJ10THHdUkBZqix6c=
+	t=1750904104; cv=none; b=YQwuUJB7CnkQ2qBQLDwnRClA0+jxwTONN+cO/LshYGtBjLCY5JysPlv0LCBIhVI2eJB+qxx4Z7Z93XjysASuqENP3+qlq2Rj8lrdixn9xT7G3d2cbdtPK+O51wK1DIXvkb39nbmHUdsGAA70O3DfAXV5yG+yqisKqhpUI45ZsLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750903988; c=relaxed/simple;
-	bh=79gwy6F162XlYXbiRy31Ddi31QrxrM7O6owWgaoMte4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jq/LxE8EDDViLvVxfauUM5dAm611ez6nX4BJ/W+86N6J8lrJ9ry5Ba+UTs/x/2d3ER6qQnurCu6whFFKbNCPiQxhWigkHgWcY7oNcCjtQKi44qlcZUpMo6Wlt58Bmrrw7zFWmHmCo/SLlLYZoyhVPOaGjkiTcM6Ljz7S6WGCiLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4bSMYn1xnFzdbD9;
-	Thu, 26 Jun 2025 10:09:01 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 59347140137;
-	Thu, 26 Jun 2025 10:12:59 +0800 (CST)
-Received: from localhost.localdomain (10.90.31.46) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 26 Jun 2025 10:12:58 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
-CC: <shenjian15@huawei.com>, <liuyonglong@huawei.com>,
-	<chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<shaojijie@huawei.com>
-Subject: [PATCH v3 net-next 2/3] net: hibmcge: adjust the burst len configuration of the MAC controller to improve TX performance.
-Date: Thu, 26 Jun 2025 10:06:12 +0800
-Message-ID: <20250626020613.637949-3-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20250626020613.637949-1-shaojijie@huawei.com>
-References: <20250626020613.637949-1-shaojijie@huawei.com>
+	s=arc-20240116; t=1750904104; c=relaxed/simple;
+	bh=6iYqwF9X96MHxRdDZpSpOo/+4Mc6oLjjuGizrHod4WA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M+cF0Cla6NNO1dEHaEsoGjTm3D6C5rovo2JmwqVew8sKUlxMrwWTyGBnQf7KygeTGUEGHeg6+jtqRQ6JRW30SuIQzvf4N4HStfaisP+DiQ010W771y1VjXWX03djtJXL7BYBtYTFwLVzrqjQzTBKHz0fY4/3MDBB1JzoS/5ePO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b6VMFsyF; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b6VMFsyF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750904099;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/2NKQ3CqFIITeYZPqoYmcZLIRzlMcydotc+VS4n7FN8=;
+	b=b6VMFsyF1Sk4pwXEVMxp3bqJlQBy2i57UrPM3cMv6wB2IJRr2PbvsyHeLGB5x1jBBEak5F
+	XQ0Q925ly8mgDJaSwg0A5Jks3cp+2xg7lENCKX+wl7ATwkw6/9b1YeGg/AUis/orLctJhq
+	b3uZxbaMzAO8WH8gPnY/nCPvaUOmY5U=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-602-RfRaDFI3PqiHCWK7QSfebg-1; Wed,
+ 25 Jun 2025 22:14:57 -0400
+X-MC-Unique: RfRaDFI3PqiHCWK7QSfebg-1
+X-Mimecast-MFC-AGG-ID: RfRaDFI3PqiHCWK7QSfebg_1750904096
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AF87519560AA;
+	Thu, 26 Jun 2025 02:14:55 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.72.112.68])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F306B19560A3;
+	Thu, 26 Jun 2025 02:14:48 +0000 (UTC)
+From: Jason Wang <jasowang@redhat.com>
+To: willemdebruijn.kernel@gmail.com,
+	jasowang@redhat.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: mst@redhat.com,
+	eperezma@redhat.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	Willem de Bruijn <willemb@google.com>
+Subject: [PATCH V2 net-next 1/2] tun: remove unnecessary tun_xdp_hdr structure
+Date: Thu, 26 Jun 2025 10:14:44 +0800
+Message-ID: <20250626021445.49068-1-jasowang@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,59 +65,112 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Adjust the burst len configuration of the MAC controller
-to improve TX performance.
+With f95f0f95cfb7("net, xdp: Introduce xdp_init_buff utility routine"),
+buffer length could be stored as frame size so there's no need to have
+a dedicated tun_xdp_hdr structure. We can simply store virtio net
+header instead.
 
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
 ---
- drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c  | 8 ++++++++
- drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h | 2 ++
- 2 files changed, 10 insertions(+)
+ drivers/net/tap.c      | 5 ++---
+ drivers/net/tun.c      | 5 ++---
+ drivers/vhost/net.c    | 8 ++------
+ include/linux/if_tun.h | 5 -----
+ 4 files changed, 6 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
-index 9b65eef62b3f..6e5602591554 100644
---- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
-+++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
-@@ -168,6 +168,11 @@ static void hbg_hw_set_mac_max_frame_len(struct hbg_priv *priv,
+diff --git a/drivers/net/tap.c b/drivers/net/tap.c
+index bdf0788d8e66..d82eb7276a8b 100644
+--- a/drivers/net/tap.c
++++ b/drivers/net/tap.c
+@@ -1044,9 +1044,8 @@ static const struct file_operations tap_fops = {
  
- void hbg_hw_set_mtu(struct hbg_priv *priv, u16 mtu)
+ static int tap_get_user_xdp(struct tap_queue *q, struct xdp_buff *xdp)
  {
-+	/* burst_len BIT(29) set to 1 can improve the TX performance.
-+	 * But packet drop occurs when mtu > 2000.
-+	 * So, BIT(29) reset to 0 when mtu > 2000.
-+	 */
-+	u32 burst_len_bit = (mtu > 2000) ? 0 : 1;
- 	u32 frame_len;
+-	struct tun_xdp_hdr *hdr = xdp->data_hard_start;
+-	struct virtio_net_hdr *gso = &hdr->gso;
+-	int buflen = hdr->buflen;
++	struct virtio_net_hdr *gso = xdp->data_hard_start;
++	int buflen = xdp->frame_sz;
+ 	int vnet_hdr_len = 0;
+ 	struct tap_dev *tap;
+ 	struct sk_buff *skb;
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index f8c5e2fd04df..447c37959504 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -2356,13 +2356,12 @@ static int tun_xdp_one(struct tun_struct *tun,
+ 		       struct tun_page *tpage)
+ {
+ 	unsigned int datasize = xdp->data_end - xdp->data;
+-	struct tun_xdp_hdr *hdr = xdp->data_hard_start;
+-	struct virtio_net_hdr *gso = &hdr->gso;
++	struct virtio_net_hdr *gso = xdp->data_hard_start;
+ 	struct bpf_prog *xdp_prog;
+ 	struct sk_buff *skb = NULL;
+ 	struct sk_buff_head *queue;
+ 	u32 rxhash = 0, act;
+-	int buflen = hdr->buflen;
++	int buflen = xdp->frame_sz;
+ 	int metasize = 0;
+ 	int ret = 0;
+ 	bool skb_xdp = false;
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index 7cbfc7d718b3..777eb6193985 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -668,7 +668,6 @@ static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
+ 	struct socket *sock = vhost_vq_get_backend(vq);
+ 	struct virtio_net_hdr *gso;
+ 	struct xdp_buff *xdp = &nvq->xdp[nvq->batched_xdp];
+-	struct tun_xdp_hdr *hdr;
+ 	size_t len = iov_iter_count(from);
+ 	int headroom = vhost_sock_xdp(sock) ? XDP_PACKET_HEADROOM : 0;
+ 	int buflen = SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+@@ -691,15 +690,13 @@ static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
+ 	if (unlikely(!buf))
+ 		return -ENOMEM;
  
- 	frame_len = mtu + VLAN_HLEN * priv->dev_specs.vlan_layers +
-@@ -175,6 +180,9 @@ void hbg_hw_set_mtu(struct hbg_priv *priv, u16 mtu)
+-	copied = copy_from_iter(buf + offsetof(struct tun_xdp_hdr, gso),
+-				sock_hlen, from);
++	copied = copy_from_iter(buf, sock_hlen, from);
+ 	if (copied != sock_hlen) {
+ 		ret = -EFAULT;
+ 		goto err;
+ 	}
  
- 	hbg_hw_set_pcu_max_frame_len(priv, frame_len);
- 	hbg_hw_set_mac_max_frame_len(priv, frame_len);
-+
-+	hbg_reg_write_field(priv, HBG_REG_BRUST_LENGTH_ADDR,
-+			    HBG_REG_BRUST_LENGTH_B, burst_len_bit);
- }
+-	hdr = buf;
+-	gso = &hdr->gso;
++	gso = buf;
  
- void hbg_hw_mac_enable(struct hbg_priv *priv, u32 enable)
-diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h b/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
-index a6e7f5e62b48..d40880beb2f8 100644
---- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
-+++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
-@@ -185,6 +185,8 @@
- #define HBG_REG_TX_CFF_ADDR_2_ADDR		(HBG_REG_SGMII_BASE + 0x0490)
- #define HBG_REG_TX_CFF_ADDR_3_ADDR		(HBG_REG_SGMII_BASE + 0x0494)
- #define HBG_REG_RX_CFF_ADDR_ADDR		(HBG_REG_SGMII_BASE + 0x04A0)
-+#define HBG_REG_BRUST_LENGTH_ADDR		(HBG_REG_SGMII_BASE + 0x04C4)
-+#define HBG_REG_BRUST_LENGTH_B			BIT(29)
- #define HBG_REG_RX_BUF_SIZE_ADDR		(HBG_REG_SGMII_BASE + 0x04E4)
- #define HBG_REG_RX_BUF_SIZE_M			GENMASK(15, 0)
- #define HBG_REG_BUS_CTRL_ADDR			(HBG_REG_SGMII_BASE + 0x04E8)
+ 	if (!sock_hlen)
+ 		memset(buf, 0, pad);
+@@ -727,7 +724,6 @@ static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
+ 
+ 	xdp_init_buff(xdp, buflen, NULL);
+ 	xdp_prepare_buff(xdp, buf, pad, len, true);
+-	hdr->buflen = buflen;
+ 
+ 	++nvq->batched_xdp;
+ 
+diff --git a/include/linux/if_tun.h b/include/linux/if_tun.h
+index 043d442994b0..80166eb62f41 100644
+--- a/include/linux/if_tun.h
++++ b/include/linux/if_tun.h
+@@ -19,11 +19,6 @@ struct tun_msg_ctl {
+ 	void *ptr;
+ };
+ 
+-struct tun_xdp_hdr {
+-	int buflen;
+-	struct virtio_net_hdr gso;
+-};
+-
+ #if defined(CONFIG_TUN) || defined(CONFIG_TUN_MODULE)
+ struct socket *tun_get_socket(struct file *);
+ struct ptr_ring *tun_get_tx_ring(struct file *file);
 -- 
-2.33.0
+2.34.1
 
