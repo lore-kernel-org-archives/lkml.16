@@ -1,168 +1,105 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAFA2ED165;
-	Thu, 26 Jun 2025 15:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63512ECE84;
+	Thu, 26 Jun 2025 15:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750951940; cv=none; b=ZkEL1fYFmjr2jeI/OIZ3HPlhBFA6nHHDjsVuGlA13Qw2iiQLVSPdSk/fcfCPsoQVJ5juxbnQj2z/jkhzrO27doGZEsmlw1A5mj3nVwKD7lfsjF/bvohAqa6kZt9uuHxoFel1ifdEp6CKlHSLe4wxhXawSxT4vEVov8Z43boJaLg=
+	t=1750951945; cv=none; b=cIf8n3jIpXVOF+fhV7bTh5am7MXsTfkQ4U8/cXhyqqZomoGvdimaG1+H4Drn5O5Y5yld+7kQ4+BodDzHgLPqKRZZEosZ/9G0Jd+yLmSmfGGwUBnl8O5AqeR48vb9XP6IfzHB6TDTBmWpU7gnUjXKEzTDzWLtlIA29hpkQQ0l7pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750951940; c=relaxed/simple;
-	bh=sGXp482ePzEbOSqj6Oo7pSTRt0qdWiaHv14lzRVBHx8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=u9CpAT8S2SyWpZamPZBEKphwjrZb18pu0QE1IyUlZaRXhrx+lEeMSq0r1pBkuVZl4D0aHwMW+IFARcWElW2k6geYr+eFnebRHcBj5RDLHA7w76xYKR4N62fkB0LCDM5K/w/bcf4HltSfIZ4QRSodfsvtX99WGHU7MvrSOcaKELw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RzoukCrr; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750951945; c=relaxed/simple;
+	bh=Z4w4SwI3CVBuuj3ceuPnUBHFUEnyZH5LepuOTbMQWBk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WHpCSYPuHZvhWIVZBkYukMs1I8VycX2qABOQ3y6fNmBpt+5+JbLBsd5FtRbNztADK5N5boWKNf/eiMFIzZoRwkSUb2P3tpUj4YEhJP4Crrl76gP/LxR9gJ2vVAp2v7ZTHjBHMU2NG2HnaAWjSDxXMFA6NgajsvsbZtpH5kAGZwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Un47jTgR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RzoukCrr"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553d52cb80dso1357477e87.1;
-        Thu, 26 Jun 2025 08:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750951937; x=1751556737; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m8+Li4ZqAZW0QY7sIIldmBLFf6VQ+4AeP6Iv95ugt8g=;
-        b=RzoukCrrVTFKW8tYIs0PLj/Y9sverFKPG+BBJjKifGhvBuiSLogYYMZXLfeIgth4h7
-         Bb+PIEC4NePLvx+P6T81z6PL5nE9NnePgkbhv0Zy3G2MpAw59qtODoIHn/08X8T1gnmK
-         75HuUswvVNOQnUhfdmDokrEdYtgJ13vCRttHVRmi+DeosN15fR4jQ55kvVPaNh7seZON
-         OWrCdmXIf9Ii+TWiKaoS6NxrUF85EL4eCBov5zpI/6r7k/JA+2Q64ZrGSb8SmYLKmNA1
-         6+g0i1mXUGux7srOPoW4nfRCn07sQyZxVSHSzemGvyG+kplW0h1WfzkhIb/wuf0QftXW
-         x9vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750951937; x=1751556737;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m8+Li4ZqAZW0QY7sIIldmBLFf6VQ+4AeP6Iv95ugt8g=;
-        b=GA/2vNtwwVdWsYJNY+J32oN6hUzMTNouJ+mCgJwivcuNx3Jr4+UVsdeOECRQhE/W2E
-         z+8Tfaut1uS7EIvISj/wxyiXRzusCfr9DaHbdz9H/xOcQL9deWRGBOCf32qIdmowPFi4
-         UvBKC/1HKkb5R4pPaVk+92o4gzFMTO8ZlNRUHiKe8db64RM1xJolqbTztMbQ7S8LlqMz
-         lUF4hZOo/eaHDhRT1ASxuE//UB+wRfN+LKoZk6unDD3n/Wugduf7nfnir/Ity+8GLvGw
-         Tf9kwhH6grKXnl4bgJgjHnRpF076QAw3rNZ+ag5RFnb/eyjoYdTbJWnay2KzHKPG3lFy
-         CgqA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7gF8s44vkpk8t+Gf7Bfk1GSFAEdMnF62Hx+u3ZsvW/ts3mU6qcYEaPkoBx030kfE6O/ZV4XGkWAVp/f8=@vger.kernel.org, AJvYcCVoGqWo8mbnCVLzh+yYJArNSUuC7/UYA9WMgFd42a2DJ/IlHRm9HfeBNq6lCsTCcy4yDL+d33K3WWd5eA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSVKPqcM+QV9HVMMjfOSBNTLyvOiVPV9E+QlQya7SdENsHESwl
-	QsxZzwCjJpbM3SqLOOyf8VQ0b/yNyBpdxpu3Irj3PxCDIOYcTsiWvkiV
-X-Gm-Gg: ASbGnctuXYOEEX88pMtgfxCOXwmtE6gmfHwWHQyWQOPQUi9Hbac5W1/atQ452evAk4t
-	kTnI2hQ1KP5xpQ8vebZHdRHPpzpEgg79mPsYp14w/AObWHCgzLdRt/ZkJbs+xwcpJ4ICdsIQBu3
-	BBmQZIZxbFYa0Jg+aSmJgivGb+75fPfi64K0vhsEqNB1bjZy3OQ80EBmMhJE9iJQQVHx6z5TqZJ
-	QHXZITQRzBEhVajO2esWu0baajWWIrT+TSB+0YRtug+BxVLDLYR96qADPGx+E/zcgp+Jd4V2aBK
-	tPqp6nYkrvyQ+xMiE/WlWjWtxe7rH9aDM6mhXoAUvCpGsfDCJ5Rf9dYiPrv1X+RJTwqMHYZrHAl
-	L+FHPL9O+6kdJF+wYHHKJIf2B7A8MUw==
-X-Google-Smtp-Source: AGHT+IFV82PjQkEQV8pwkpgH+uEG2XxjLf7tDKt0/XCF6qX83TTzJXquCdeUIk26UtVJ1dwuwllM0A==
-X-Received: by 2002:a05:6512:3e0f:b0:553:cab0:3800 with SMTP id 2adb3069b0e04-55502c95046mr1480652e87.14.1750951936982;
-        Thu, 26 Jun 2025 08:32:16 -0700 (PDT)
-Received: from localhost.localdomain (2.135.54.165.dynamic.telecom.kz. [2.135.54.165])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2ce1fasm42792e87.174.2025.06.26.08.32.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 08:32:16 -0700 (PDT)
-From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-To: ryabinin.a.a@gmail.com,
-	glider@google.com,
-	andreyknvl@gmail.com,
-	dvyukov@google.com,
-	vincenzo.frascino@arm.com,
-	linux@armlinux.org.uk,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	maddy@linux.ibm.com,
-	mpe@ellerman.id.au,
-	npiggin@gmail.com,
-	christophe.leroy@csgroup.eu,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	hca@linux.ibm.com,
-	gor@linux.ibm.com,
-	agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com,
-	svens@linux.ibm.com,
-	richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net,
-	dave.hansen@linux.intel.com,
-	luto@kernel.org,
-	peterz@infradead.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	x86@kernel.org,
-	hpa@zytor.com,
-	chris@zankel.net,
-	jcmvbkbc@gmail.com,
-	akpm@linux-foundation.org,
-	nathan@kernel.org,
-	nick.desaulniers+lkml@gmail.com,
-	morbo@google.com,
-	justinstitt@google.com
-Cc: arnd@arndb.de,
-	rppt@kernel.org,
-	geert@linux-m68k.org,
-	mcgrof@kernel.org,
-	guoweikang.kernel@gmail.com,
-	tiwei.btw@antgroup.com,
-	kevin.brodsky@arm.com,
-	benjamin.berg@intel.com,
-	kasan-dev@googlegroups.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	linux-mm@kvack.org,
-	llvm@lists.linux.dev,
-	snovitoll@gmail.com
-Subject: [PATCH v2 02/11] kasan/arm64: call kasan_init_generic in kasan_init
-Date: Thu, 26 Jun 2025 20:31:38 +0500
-Message-Id: <20250626153147.145312-3-snovitoll@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250626153147.145312-1-snovitoll@gmail.com>
-References: <20250626153147.145312-1-snovitoll@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Un47jTgR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2A26C4CEEB;
+	Thu, 26 Jun 2025 15:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750951945;
+	bh=Z4w4SwI3CVBuuj3ceuPnUBHFUEnyZH5LepuOTbMQWBk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Un47jTgRJpjiWJDSi7p/FawFvtKYLTzdSABtv+RRC1JW6fahBhEtiERIv7OSiNS50
+	 RFzJYj852Y8saOmhJllXuQDnB3ptSpjtQ5moZyg66dIBGGOdHYru29tNfeXqgXhOHC
+	 uNyB0d7JFdlmzmDoDG9lsNbXIgPdLzLsdIM7E4cjKOKqfUn0bt+qG9hEB6ROi4FTSc
+	 ds41pWVpr+MvdK0+RviJncZwLteWDZE4nMrzsmgSAZ3VX0HMFC2t0e4UI2TxsOFibE
+	 H8grKbUXic1llhP7D6yhoHZANIACaOM/xL6cf49Y8WgmrKlOH8rDXn70Ax2VZD5vgV
+	 +BUuX23Ffy/bg==
+Date: Thu, 26 Jun 2025 17:32:19 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
+	aliceryhl@google.com, tmgross@umich.edu, david.m.ertman@intel.com,
+	ira.weiny@intel.com, leon@kernel.org, kwilczynski@kernel.org,
+	bhelgaas@google.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] rust: devres: implement register_release()
+Message-ID: <aF1oA8jYZGjTs9U4@cassiopeiae>
+References: <20250624215600.221167-1-dakr@kernel.org>
+ <20250624215600.221167-5-dakr@kernel.org>
+ <DAWED7BIC32G.338MXRHK4NSJG@kernel.org>
+ <aF0rzzlKgwopOVHV@pollux>
+ <aF1TEuotIIwcKODM@cassiopeiae>
+ <DAWJL7B9577H.3HY4CULLAHGCU@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DAWJL7B9577H.3HY4CULLAHGCU@kernel.org>
 
-Call kasan_init_generic() which enables the static flag to mark KASAN
-initialized in CONFIG_KASAN_GENERIC mode, otherwise it's an inline stub,
-and the flag is enabled in kasan_init_sw_tags() or kasan_init_hw_tags().
+On Thu, Jun 26, 2025 at 04:41:55PM +0200, Benno Lossin wrote:
+> On Thu Jun 26, 2025 at 4:02 PM CEST, Danilo Krummrich wrote:
+> > On Thu, Jun 26, 2025 at 01:15:34PM +0200, Danilo Krummrich wrote:
+> >> On Thu, Jun 26, 2025 at 12:36:23PM +0200, Benno Lossin wrote:
+> >> > Or, we could change `Release` to be:
+> >> > 
+> >> >     pub trait Release {
+> >> >         type Ptr: ForeignOwnable;
+> >> > 
+> >> >         fn release(this: Self::Ptr);
+> >> >     }
+> >> > 
+> >> > and then `register_release` is:
+> >> > 
+> >> >     pub fn register_release<T: Release>(dev: &Device<Bound>, data: T::Ptr) -> Result
+> >> > 
+> >> > This way, one can store a `Box<T>` and get access to the `T` at the end.
+> >> 
+> >> I think this was also the case before? Well, it was P::Borrowed instead.
+> >> 
+> >> > Or if they store the value in an `Arc<T>`, they have the option to clone
+> >> > it and give it to somewhere else.
+> >> 
+> >> Anyways, I really like this proposal of implementing the Release trait.
+> >
+> > One downside seems to be that the compiler cannot infer T anymore with this
+> > function signature.
+> 
+> Yeah... That's a bit annoying.
+> 
+> We might be able to add an associated type to `ForeignOwnable` like
+> `Target` or `Inner` or whatever.
 
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218315
-Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
----
- arch/arm64/mm/kasan_init.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+I think we already have `PointedTo` [1]? But I remember that I've seen a patch
+to remove it again [2].
 
-diff --git a/arch/arm64/mm/kasan_init.c b/arch/arm64/mm/kasan_init.c
-index d541ce45dae..abeb81bf6eb 100644
---- a/arch/arm64/mm/kasan_init.c
-+++ b/arch/arm64/mm/kasan_init.c
-@@ -399,14 +399,12 @@ void __init kasan_init(void)
- {
- 	kasan_init_shadow();
- 	kasan_init_depth();
--#if defined(CONFIG_KASAN_GENERIC)
-+	kasan_init_generic();
- 	/*
- 	 * Generic KASAN is now fully initialized.
- 	 * Software and Hardware Tag-Based modes still require
- 	 * kasan_init_sw_tags() and kasan_init_hw_tags() correspondingly.
- 	 */
--	pr_info("KernelAddressSanitizer initialized (generic)\n");
--#endif
- }
- 
- #endif /* CONFIG_KASAN_GENERIC || CONFIG_KASAN_SW_TAGS */
--- 
-2.34.1
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/rust/kernel/types.rs#n32
+[2] https://lore.kernel.org/all/20250612-pointed-to-v3-1-b009006d86a1@kernel.org/
 
+> Then we could do:
+> 
+>     pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
+>     where
+>         P: ForeignOwnable,
+>         P::Inner: Release<Ptr = P>,
+> 
+> ---
+> Cheers,
+> Benno
