@@ -1,86 +1,267 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E4F2E336E;
-	Thu, 26 Jun 2025 13:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA53E2E5426;
+	Thu, 26 Jun 2025 13:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943139; cv=none; b=o7QPTr042ooWqa9Bs8Pq2/A113jc+hZfqjughPd+RYzZx4t7YlgkxeMxaq8mYlrrl1iJpvQugz0Hhm/ydD2My7B9mVNcYGh4SMoj5JWmCMv7G3513AwM1oPg2uwWvYJFg3D1Kepxq0u/+BhOlBYaNNIahddpuOHEbkVlB8NKZDM=
+	t=1750943141; cv=none; b=n3D+2kLkQE7MV3aW7Il08mCj4cI71Be7quhmYnWQ8+14IGnM+PL5yPE475wQlN699qez+zzaTgAdGNQ1uxbYJkBGjUwt6o34LI+nHDfZTB6PO+lFCP7VYr716Y9Mm0XPvrgHImQFh7DKlcxqiyBFNbx2PTE18HFrG3gQp/29Vn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943139; c=relaxed/simple;
-	bh=CtzJ5WcdsZlmH2RXR3VO2Lm2ckUhYmCb1bLgc+ZEk5g=;
+	s=arc-20240116; t=1750943141; c=relaxed/simple;
+	bh=DpGBPizqI39r8mTEdIiOyt3eB4mXDzhbE/IEJOZzF0A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DxoNfR7op4Gn90xLagQlvPBFoAp1mojmi+OaqWv2mSb1kCzwKBzb05tP8Pv/hyx+T3/pdoLV86pY8z8inYH6br5zeX7Y0aHZc2Z/cuUelTsnDajrTg318lnF8OSTqAbUHBh4T6lHnTNLxKDOGoUo4edli65E1N3H1wE1UVOc/yE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=DWmlsh7J; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=fzHkYL+Wt0xxVYE2+L57dhSvQ+SjbzcJ7srXdTe0ZKY6rc/XLP7cKfn3JsuJ5OIv8qrFS62Q1Zsi1vGBdXq6TEh0C/nQ6zZ69ZBDWyCORwy25oZhjsayeTfDUYHLSaiGVRtuumXgf9IEADH3MxBnV5w0YSI+veYb4MpJa59s1LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGfxAgDz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="DWmlsh7J"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ElWZ1fSEwqvTXBCwEfcGjVCwQ3tn4ietRl4UHzKkIUY=; b=DWmlsh7JFrm9JSBLNuQYOMyVob
-	vigqfOdGdVlg3MGphpfb8qvZSNg54lGI3gZ1Ip6hbRj3sBXTrhxtYQXoLZg9fQsEu67kj5rjJIhKg
-	7qidIvgyB64gJ8hpbPdy4GAQer5T22WkHhyRBH/hrp0+gner3Vkh/+rnewhegD+xDOrEri+qmgVUX
-	kewO/dGSxM/cURmChU5nAi506jqRR6s6jxhWKrY99BM7ZCUGKwcWfvC2k79VofykjWTFq2WpQwuWL
-	3ne/CoxUI3cbfk/JCNjmn4HvflWn/BpATTxXeAT2veV0lXfGLq0tns4abzIcHALNROdokUiWX6Tc7
-	F5lEVb4w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37656)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uUmID-0008V8-2Z;
-	Thu, 26 Jun 2025 14:05:29 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uUmIC-0006X9-19;
-	Thu, 26 Jun 2025 14:05:28 +0100
-Date: Thu, 26 Jun 2025 14:05:28 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Kamil =?iso-8859-1?Q?Hor=E1k?= - 2N <kamilh@axis.com>
-Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	andrew@lunn.ch, hkallweit1@gmail.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	f.fainelli@gmail.com, robh@kernel.org, andrew+netdev@lunn.ch
-Subject: Re: [PATCH 3/3] net: phy: bcm54811: Fix the PHY initialization
-Message-ID: <aF1FmEBzO1_-HOfD@shell.armlinux.org.uk>
-References: <20250626115619.3659443-1-kamilh@axis.com>
- <20250626115619.3659443-4-kamilh@axis.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGfxAgDz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4192C4CEF0;
+	Thu, 26 Jun 2025 13:05:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750943141;
+	bh=DpGBPizqI39r8mTEdIiOyt3eB4mXDzhbE/IEJOZzF0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eGfxAgDzzRqOtClrx7FlwSf2lx5m2SzNkhrlnPhjR7u0ofzjwXWMD5mKQ3AhCy8hq
+	 mVX/aWSRTcsGPspsm9zZQb2Jl/KWBcWR1vbC646JRQXpMDsHvDbvo3ujHt98A5fA/z
+	 edAprThG+Lqrd0bTYrTXxSp3DDWpscEWn7i9y4iLwXOLklN6WVtML+6gpQp7loCkU+
+	 +iICkJwX7MXCSBHgb4oN017O34FwCe7AI0EwQ+/pApq8vdMByfko45sTpw2Hbswvl0
+	 ppKHAqsu10JsuvVoug2M/GZ3+5ZB2L2ePaCk241MzgBhC5iR8E14r+Rjp1ygsKFDFF
+	 IxyLHCAOxwsJw==
+Date: Thu, 26 Jun 2025 14:05:36 +0100
+From: Lee Jones <lee@kernel.org>
+To: Nam Tran <trannamatk@gmail.com>
+Cc: pavel@kernel.org, rdunlap@infradead.org, christophe.jaillet@wanadoo.fr,
+	krzk+dt@kernel.org, robh@kernel.org, conor+dt@kernel.org,
+	corbet@lwn.net, linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v10 3/4] docs: ABI: Document LP5812 LED sysfs interfaces
+Message-ID: <20250626130536.GC10134@google.com>
+References: <20250618183205.113344-1-trannamatk@gmail.com>
+ <20250618183205.113344-4-trannamatk@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250626115619.3659443-4-kamilh@axis.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20250618183205.113344-4-trannamatk@gmail.com>
 
-On Thu, Jun 26, 2025 at 01:56:19PM +0200, Kamil Hor�k - 2N wrote:
-> +		/* BCM54811 is not capable of LDS but the corresponding bit
-> +		 * in LRESR is set to 1 and marked "Ignore" in the datasheet.
-> +		 * So we must read the bcm54811 as unable to auto-negotiate
-> +		 * in BroadR-Reach mode.
-> +		 */
-> +		aneg = (BRCM_PHY_MODEL(phydev) != PHY_ID_BCM54811) ?
-> +			(val & LRESR_LDSABILITY) : 0;
+On Thu, 19 Jun 2025, Nam Tran wrote:
 
-Wouldn't:
+> The LP5812 is a 4x3 matrix RGB LED driver with autonomous animation
+> engine control.
+> 
+> The driver provides interfaces to configure LED modes manual/autonomous,
+> set PWM/DC values, and manage autonomous animation engines.
 
-		if (BRCM_PHY_MODEL(phydev) == PHY_ID_BCM54811)
-			aneg = 0;
-		else
-			aneg = val & LRESR_LDSABILITY;
+How many of these can be swapped out for already existing sysfs
+attributes, I wonder.
 
-be more readable?
+Let's start with the basics first.  Just to get the device working.
+This is a huge change with massive impact and it all needs to be well
+thought through before we start doing anything drastic like introducing
+massive amounts of stable ABI !!
+
+> Signed-off-by: Nam Tran <trannamatk@gmail.com>
+> ---
+>  .../ABI/testing/sysfs-bus-i2c-devices-lp5812  |  40 ++++++
+>  .../ABI/testing/sysfs-class-led-lp5812        | 120 ++++++++++++++++++
+>  MAINTAINERS                                   |   2 +
+>  3 files changed, 162 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-led-lp5812
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812 b/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
+> new file mode 100644
+> index 000000000000..a8b1d5c52a82
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
+> @@ -0,0 +1,40 @@
+> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/dev_config
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		Configures drive mode and scan order. (WO)
+> +		Some valid values: tcmscan:4:0:1:2:3 (default), tcmscan:3:0:1:2, mixscan:2:2:0:3, mixscan:3:0:1:2:3
+> +
+> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/device_command
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		Issues device-level commands. (WO)
+> +		Valid values: "update", "start", "stop", "pause", "continue"
+> +
+> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/sw_reset
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		Triggers a software reset of the device. (WO)
+> +		1 - resets device
+> +		0 - does not reset device
+> +
+> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/fault_clear
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		Clears fault status. (WO)
+> +		1 - clears fault status
+> +		0 - does not clear fault status
+> +
+> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/tsd_config_status
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		Report the current thermal shutdown config status. (RO)
+> diff --git a/Documentation/ABI/testing/sysfs-class-led-lp5812 b/Documentation/ABI/testing/sysfs-class-led-lp5812
+> new file mode 100644
+> index 000000000000..a6cb49fb523f
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-class-led-lp5812
+> @@ -0,0 +1,120 @@
+> +What:		/sys/class/leds/led_<id>/activate
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		Activate or deactivate the specified LED channel. (WO)
+> +		1 - Activate
+> +		0 - Deactivate
+> +
+> +What:		/sys/class/leds/led_<id>/mode
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		Selects LED operation mode. (WO)
+> +		Valid values: "manual", "autonomous"
+> +
+> +What:		/sys/class/leds/led_<id>/led_current
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		DC current level. (WO)
+> +		Valid values: 0 - 255
+> +
+> +What:		/sys/class/leds/led_<id>/max_current
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		Shows maximum DC current bit setting. (RO)
+> +		0 (default) means the LED maximum current is set to 25.5 mA.
+> +		1 means the LED maximum current is set to 51 mA.
+> +
+> +What:		/sys/class/leds/led_<id>/pwm_dimming_scale
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		PWM dimming scale type. (WO)
+> +		Valid values: "linear", "exponential"
+> +
+> +What:		/sys/class/leds/led_<id>/pwm_phase_align
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		Configures PWM phase alignment. (WO)
+> +		Valid values: "forward", "middle", "backward"
+> +
+> +What:		/sys/class/leds/led_<id>/auto_time_pause_at_start
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		Controls start pause time. (WO)
+> +		Valid values: 0 - 15
+> +
+> +What:		/sys/class/leds/led_<id>/auto_time_pause_at_stop
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		Controls stop pause time. (WO)
+> +		Valid values: 0 - 15
+> +
+> +What:		/sys/class/leds/led_<id>/auto_playback_eau_number
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		Active AEU number of led_<id> selection. (WO)
+> +		Valid values: 0 - 3
+> +		0 - only use AEU1
+> +		1 - use AEU1 and AEU2
+> +		2 - use AEU1, AEU2 and AEU3
+> +		3 - use AEU1, AEU2 and AEU3 (the same as 2)
+> +
+> +What:		/sys/class/leds/led_<id>/auto_playback_time
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		Animation pattern playback times of led_<id>. (WO)
+> +		Valid values: 0 - 15
+> +		0 - 14 means 0 - 14 times, 15 means infinite times
+> +
+> +What:		/sys/class/leds/led_<id>/aeu_playback_time
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		AEU pattern playback times of led_<id>. (WO)
+> +		Format: aeu<x>:<y> where x (1 - 3) indicates the AEU number,
+> +		y (0 - 3) indicates the number of playback times.
+> +
+> +What:		/sys/class/leds/led_<id>/aeu_pwm_<pwm_id>
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		AEU PWM duty cycle setting. (WO)
+> +		Format: aeu<x>:<y> where x (1 - 3) indicates the AEU number,
+> +		y (0 - 255) indicates pwm value.
+> +
+> +What:		/sys/class/leds/led_<id>/aeu_slop_time_<st_id>
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		AEU slop time setting. (WO)
+> +		Format: aeu<x>:<y> where x (1 - 3) indicates the AEU number,
+> +		y (0 - 15) indicates the slop time value.
+> +
+> +What:		/sys/class/leds/led_<id>/lod_lsd
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +		0 0 mean no lod and lsd fault detected, 1 1 mean lod and lsd fault detected (RO)
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b4eb3265c800..cdba86f1768b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -24565,6 +24565,8 @@ TEXAS INSTRUMENTS' LP5812 RGB LED DRIVER
+>  M:	Nam Tran <trannamatk@gmail.com>
+>  L:	linux-leds@vger.kernel.org
+>  S:	Maintained
+> +F:	Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
+> +F:	Documentation/ABI/testing/sysfs-class-led-lp5812
+>  F:	Documentation/devicetree/bindings/leds/ti,lp5812.yaml
+>  F:	drivers/leds/rgb/Kconfig
+>  F:	drivers/leds/rgb/Makefile
+> -- 
+> 2.25.1
+> 
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Lee Jones [李琼斯]
