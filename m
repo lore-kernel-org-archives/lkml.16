@@ -1,95 +1,120 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D9F17C219;
-	Thu, 26 Jun 2025 16:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0962CCC0;
+	Thu, 26 Jun 2025 16:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750955665; cv=none; b=IZdh+6Pek9abXXDKknvBbQsq0rvMessc/U/ZvxkoLRByUtv8TAvBs2lIs3Y1A0kUBOCm4sJtKo+wPmXxneIWPW6Xsam3fYHG1z58EHY5d6IwKeicidEFi/t9s8t/LachyyBzIpvxuy8sE4qsq+bvBWG4ElTLcW05N9acrhkOCD0=
+	t=1750955740; cv=none; b=LVfc6XujxdrBjoMI26baCbTDL6wH3V87oF/yuljnzXSVSqC6iDiWcOzy0seUuzWCRZoPdkkMpkNE9noI+UvrcFju7AXh3vkyS5gHKyhcQ0MLMjHIUfeVJs2zaLV+FcvHpR09SwZNpEzcjbxfHG2tvnFC3yO1zDm8Cybtxtrh9qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750955665; c=relaxed/simple;
-	bh=JYE5pcEbbQ7PexQD5Qqy3qPqvYjgWviF0W373vmEc1Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qgIqeCZI2Fb8pQCYnxwaVvRsiZaV5EbOyGH0WdDAoxU3D34MsIFTH2uhDbil8Kb61eVA+KyIulYzqmOSF2W3TBjT/rBnEKL91MpPlxweYA4cAHV+hehwJXwhnywVsNUyu4T3ZEYZf1RiglIyfjRcVeHCoIGau8QfN3ETjB8fMP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 4FDA11214B7;
-	Thu, 26 Jun 2025 16:34:21 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 577BF35;
-	Thu, 26 Jun 2025 16:34:19 +0000 (UTC)
-Date: Thu, 26 Jun 2025 12:34:45 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Gabriele Monaco <gmonaco@redhat.com>,
- john.ogness@linutronix.de
-Subject: Re: [PATCH] tracing: Remove pointless memory barriers
-Message-ID: <20250626123445.5b01849d@gandalf.local.home>
-In-Reply-To: <20250626160459.soHxOROG@linutronix.de>
-References: <20250626151940.1756398-1-namcao@linutronix.de>
-	<20250626113520.315db641@gandalf.local.home>
-	<20250626160459.soHxOROG@linutronix.de>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750955740; c=relaxed/simple;
+	bh=wCbmMUfYuBUun3CeeJIDrLKEeED82fEYjdia+QOR/Ng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rdlxf5aX8gOMmwuWaQ1AwKXj9FZxrDTXKj2GI+mUYEDIp+PlEUVpMGJUYMob1aX+opiFY3snsSntensr7hQnN3PaXSm0wtRv2N5mQWBH14qHstrMknbNvCSw1YoEpkAkUo2XlcHh9nVnP2qb1g4/hajZGbn19dlHh2C/sOn2HTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UpRnWyUs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UpRnWyUs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA350C4CEEB;
+	Thu, 26 Jun 2025 16:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750955739;
+	bh=wCbmMUfYuBUun3CeeJIDrLKEeED82fEYjdia+QOR/Ng=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UpRnWyUsDt/6Bm1WS2q7jSb3hxiZostCdoFgPSZc4/EejwiOrpdxVQojHspcOM1pA
+	 LMBJibUqxJz/eRwGVXF7Cbr/KPrUiQjrjqNlikXa6haTBS/QtEKkxIqztTDpoTMgka
+	 OUTJ/eT2qKgSSUXSsb25uSqpAWTA2Cknp30256T8I9ByJykqWMW6EjoKBkkhEsrznd
+	 d6UeWtxnL4wx+mCxsjCj4oywjbaX3ESm2W3sW0w8UKWUoy8hQ3sq/CPfjcI5O+OjCm
+	 CrSK3FH7cjFL82QPtZvSc1pBWVdluOwz+gHbfhq4244dC912uIa5xx+xFahfFrnVAz
+	 ZQXfLD2oLW8XQ==
+Date: Thu, 26 Jun 2025 17:35:34 +0100
+From: Conor Dooley <conor@kernel.org>
+To: aleksa.paunovic@htecgroup.com
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Palmer Dabbelt <palmer@sifive.com>, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 1/7] dt-bindings: riscv: Add xmipsexectl ISA extension
+ description
+Message-ID: <20250626-scratch-numbness-cbf36f77d296@spud>
+References: <20250625-p8700-pause-v4-0-6c7dd7f85756@htecgroup.com>
+ <20250625-p8700-pause-v4-1-6c7dd7f85756@htecgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: ni1jw18jkg4prw3mndxhtffzm3wfigec
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 577BF35
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/b2JM2aeyr08bwnM39TYmxS3CKt1qrqTw=
-X-HE-Tag: 1750955659-626339
-X-HE-Meta: U2FsdGVkX19kpHORzFaT2SOLZyYQZLkmaBnDkJV0j7piw4tcdgUp0NgSnUHy3cQtSgv3ItzdlnZtMH6DKLqsyAbrflQlDoLTfCKslDS/CxA9izbhAswxw6fQZBicp/CVYiIc9mQTUDLEHzUj9wc+48d3lJxNXCsTCwz/q7TOmBI89Ga+oWmiYr4A13dJ8iuDj9ypi9PkBpKjCIZX6UYS4Lrp0d7KqLyWTRyfa1BrQVrmdK8LNTeYq2Yz9sMVLEZ5uN0SgbH33IpXd7YtDluc+Ztq7vh9fuMIWFJg3FMat1LkAvnqQTjCN+NVgKELZqG9
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5ZI8rYN+BJWGMnAI"
+Content-Disposition: inline
+In-Reply-To: <20250625-p8700-pause-v4-1-6c7dd7f85756@htecgroup.com>
 
-On Thu, 26 Jun 2025 18:04:59 +0200
-Nam Cao <namcao@linutronix.de> wrote:
 
-> I think you have it inverted? I assume you meant:
-> 
-> "Without the barriers, the tr->buffer_disabled = 1 can be set on one CPU,
-> and the other CPU can think the buffer is still enabled and do work that
-> will end up doing nothing."
-> 
-> Your scenario can still happen despite the memory barrier:
+--5ZI8rYN+BJWGMnAI
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, but the point isn't really to prevent the race. It's more about making
-the race window smaller.
+On Wed, Jun 25, 2025 at 04:20:56PM +0200, Aleksa Paunovic via B4 Relay wrot=
+e:
+> From: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+>=20
+> The xmipsexectl extension is described in the MIPS RV64 P8700/P8700-F
+> Multiprocessing System Programmer=E2=80=99s Guide linked at [1].
+>=20
+> Link: https://mips.com/wp-content/uploads/2025/06/P8700_Programmers_Refer=
+ence_Manual_Rev1.84_5-31-2025.pdf
+>=20
+> Signed-off-by: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+> ---
+>  Documentation/devicetree/bindings/riscv/extensions.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Do=
+cumentation/devicetree/bindings/riscv/extensions.yaml
+> index ede6a58ccf5347d92785dc085a011052c1aade14..de41a6f074d3af2ceaf5293df=
+e75d16f43d416d6 100644
+> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+> @@ -662,6 +662,12 @@ properties:
+>              Registers in the AX45MP datasheet.
+>              https://www.andestech.com/wp-content/uploads/AX45MP-1C-Rev.-=
+5.0.0-Datasheet.pdf
+> =20
+> +        # MIPS
+> +        - const: xmipsexectl
+> +          description:
+> +            The MIPS extension for execution control as documented in
+> +            https://mips.com/wp-content/uploads/2025/06/P8700_Programmer=
+s_Reference_Manual_Rev1.84_5-31-2025.pdf
 
-When we disable it, if something is currently using it then it may or may
-not get in. That's fine as this isn't critical.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-But from my understanding, without the barriers, some architectures may
-never see the update. That is, the write from one CPU may not get to memory
-for a long time and new incoming readers will still see the old data. I'm
-more concerned with new readers than ones that are currently racing with
-the updates.
+> +
+>          # SiFive
+>          - const: xsfvqmaccdod
+>            description:
+>=20
+> --=20
+> 2.34.1
+>=20
+>=20
+>=20
 
-> 
-> CPU1                          CPU2
->                               smp_rb()
->                               read buffer_disabled, see 0 --> let's do work!
-> buffer_disabled=1
-> smp_wb()
->                               do work -> end up doing nothing
-> 
-> >From my understanding, smp_wb()'s purpose is ensuring the ordering of one  
-> write and another write, e.g.:
->     write(a)
->     smp_wb()
->     write(b)
-> 
-> For our case, there is only a single write. Therefore I don't think
-> smp_wb() is useful.
+--5ZI8rYN+BJWGMnAI
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Well, it does make it visible for other CPUs that do not have strong cache
-coherency.
+-----BEGIN PGP SIGNATURE-----
 
--- Steve
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaF121gAKCRB4tDGHoIJi
+0qDXAP9lFJBJpCas9VE4K4zGjowGNe7GTpkhDOuvy/r+gT3FdwEAtdQbwRROiODf
+HVzgWtWY4uzVByx9neOWS/Wu2utllAI=
+=8x/c
+-----END PGP SIGNATURE-----
+
+--5ZI8rYN+BJWGMnAI--
