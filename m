@@ -1,120 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7545A17BA5;
-	Thu, 26 Jun 2025 11:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3215917BA5;
+	Thu, 26 Jun 2025 11:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750937590; cv=none; b=eI4dL4bPTsMeQi2RlUkqE++HX+zMWA7OZRAuJyFX6h0nKAEpOd7+uJVzxPV2Ky7xlSoyuamJkT/Tb5p+xdh+NbSM9pXdM6v0GT/kZUpOF65Wfywvur4GBiiXT72EuJSrKkxu1mS7LNqRrZsX5kX4IVWmZRx2LrZsPxETXZP12DQ=
+	t=1750937629; cv=none; b=Z9qHkNDDo9mPukxlYulBRBfpaddU0lnISMFMD+ZW1+dh/g/3yyJd+H+WbzyEdQpL6XGTPeLpoGmHONgTHOM7B8UvnB39u72bpgHfacmXZiJWOS94KBpgIlTuv3JYVJ4p6cHNSAqLE3nEiC9Tl45Mv31ge/bKuvLzICGpwtVBBHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750937590; c=relaxed/simple;
-	bh=xNNGbFh2wsJes74tor0RiVvoVzoUaZ9XjJ4mHjEG10o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rAJFwsdXLxNrVspwnLD47sgpYTO9Qm8wlx3VYVWI/NOz2YaCT0MNCnFpCQ+KBWys4y933UzF5KZBv9OjPXTQ2GoOpoczYbwB6VVQSZvy4nVYr9wNIZ4n5pgX2E/0mx1mNDKsYO1DLf/RMl/Bd7Ng0hA3j0Cig/SFYtOAnvHzn+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RtSe9HZf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750937629; c=relaxed/simple;
+	bh=15rPUvqiNAzMi56U9xwGLzB7c72QUtMMe+pEi8XBIIA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AQLfPegxEFNk1kBJV5PiGWsHVX9K52PBDKAqWWFedhcQv0w8UvW6HVwQBobLNfZVDWdFqRUfNT7uoUQetcB3Y4qUHifcQHgBidGsLmOQSTzZhyHCBzTw61/O1Aajx043UHtt/GTWc9DjXfGkVCR6vfuL7S4wBNVIJXfi+TAEb3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Z5cbikEM; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtSe9HZf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14517C4CEEB;
-	Thu, 26 Jun 2025 11:33:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750937590;
-	bh=xNNGbFh2wsJes74tor0RiVvoVzoUaZ9XjJ4mHjEG10o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RtSe9HZfMvfkJBx7YBgx9Oq9DqpdzUgG6gfBEUK4kGGwBB4sitcig369ayeEGvPnh
-	 7krEeAUt7B9cf9MsxMDeGZ0BrOdkjXACLLUkuGuXzoeoDVu0mNXsJWbuVghHvg4Wvc
-	 j5A170qvNf2nt1mp5lQHDMp4abpNMh/H/XRGjxJy3q8O+yIReT2A9VBG5Yf39m4LeD
-	 XMdlpHz3VfwmxRrp4OppnZXkfo6TIv5DAiwgz3qHRK06U7ElLlf9t+i4lvrQbUog/8
-	 7NYp4VWnsj4ogZs7nynth1Vkd/sJEamcYmCmY5jZ3vux/6XGv9QMCB2PNb3svHvGcg
-	 h5xkGOV4TJm5w==
-Message-ID: <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
-Date: Thu, 26 Jun 2025 06:33:08 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z5cbikEM"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55QBXXfP1726243;
+	Thu, 26 Jun 2025 06:33:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750937613;
+	bh=qKODjalj5kWtfmO+5KSaCR9DAAEHsE9UFI8k3zNPZfk=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=Z5cbikEMwGFBcMUDjwggH6FA0xT1LLslRV8AiVMoP4RfHy0HFANN/7C7AxIduqI5S
+	 DTaHy0BeQLqXvX4E8d+yM3BWfpfhgAsRcXzWl2sgipAJ5vMOepG81zoHADrbgCYBKT
+	 9QWC9SoE45BUNWtfrbOAXln8I+XAHJTzdL8fyoa4=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55QBXX5X3583205
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 26 Jun 2025 06:33:33 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
+ Jun 2025 06:33:33 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 26 Jun 2025 06:33:32 -0500
+Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55QBXWOf1187721;
+	Thu, 26 Jun 2025 06:33:32 -0500
+Date: Thu, 26 Jun 2025 06:33:32 -0500
+From: Bryan Brattlof <bb@ti.com>
+To: Vignesh Raghavendra <vigneshr@ti.com>
+CC: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: ti: k3-am62: copy bootph flags to Linux
+Message-ID: <20250626113332.dlz7uje35wu7aiwj@bryanbrattlof.com>
+X-PGP-Fingerprint: D3D1 77E4 0A38 DF4D 1853 FEEF 41B9 0D5D 71D5 6CE0
+References: <20250624-62-uboot-cleanup-v1-1-c36230ab0375@ti.com>
+ <02a85bf3-0c2e-48b6-9938-c4f8a50d662b@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
- system
-To: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <20250625215813.3477840-1-superm1@kernel.org>
- <20250625215813.3477840-5-superm1@kernel.org>
- <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <02a85bf3-0c2e-48b6-9938-c4f8a50d662b@ti.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-
-
-On 6/26/25 3:35 AM, Hans de Goede wrote:
-> Hi Mario,
+On June 26, 2025 thus sayeth Vignesh Raghavendra:
 > 
-> On 25-Jun-25 23:58, Mario Limonciello wrote:
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> Sending an input event to wake a system does wake it, but userspace picks
->> up the keypress and processes it.  This isn't the intended behavior as it
->> causes a suspended system to wake up and then potentially turn off if
->> userspace is configured to turn off on power button presses.
->>
->> Instead send a PM wakeup event for the PM core to handle waking the system.
->>
->> Cc: Hans de Goede <hansg@kernel.org>
->> Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing key press event in resume phase")
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->>   drivers/input/keyboard/gpio_keys.c | 7 +------
->>   1 file changed, 1 insertion(+), 6 deletions(-)
->>
->> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
->> index 773aa5294d269..4c6876b099c43 100644
->> --- a/drivers/input/keyboard/gpio_keys.c
->> +++ b/drivers/input/keyboard/gpio_keys.c
->> @@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
->>   		pm_stay_awake(bdata->input->dev.parent);
->>   		if (bdata->suspended  &&
->>   		    (button->type == 0 || button->type == EV_KEY)) {
->> -			/*
->> -			 * Simulate wakeup key press in case the key has
->> -			 * already released by the time we got interrupt
->> -			 * handler to run.
->> -			 */
->> -			input_report_key(bdata->input, button->code, 1);
->> +			pm_wakeup_event(bdata->input->dev.parent, 0);
->>   		}
->>   	}
->>   
 > 
-> Hmm, we have the same problem on many Bay Trail / Cherry Trail
-> windows 8 / win10 tablets, so  this has been discussed before and e.g.
-> Android userspace actually needs the button-press (evdev) event to not
-> immediately go back to sleep, so a similar patch has been nacked in
-> the past.
+> On 24/06/25 20:20, Bryan Brattlof wrote:
+> > To keep things as organized as possible, copy the bootph-all properties
+> > from U-Boot for the packet DMA controller to indicate it should be
+> > available during all phases of bootup.
+> > 
 > 
-> At least for GNOME this has been fixed in userspace by ignoring
-> power-button events the first few seconds after a resume from suspend.
-> 
+> Above isn't a valid reason to add bootph-all properties to a node. You
+> would need to say why this DMA controller is needed during all phases of
+> boot, does this enable a certain boot-mode? Fix $subject to reflect the
+> same.
 
-The default behavior for logind is:
+Ok will do
 
-HandlePowerKey=poweroff
-
-Can you share more about what version of GNOME has a workaround?
-This was actually GNOME (on Ubuntu 24.04) that I found this issue.
-
-Nonetheless if this is dependent on an Android userspace problem could 
-we perhaps conditionalize it on CONFIG_ANDROID_BINDER_DEVICES?
-
-Most people not using Android would be compiling with that enabled in 
-their kernel I'd expect.
+~Bryan
