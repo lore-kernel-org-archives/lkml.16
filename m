@@ -1,95 +1,309 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DEE2F1FC9;
-	Thu, 26 Jun 2025 22:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4402F1FC9;
+	Thu, 26 Jun 2025 22:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750977362; cv=none; b=mNXc1Uso0p8VIgkjuhjrP8F6bLqc2pLxaNVGowrLPIgVxMj3YrY1Vkl0piCr4cKVRLvhRqcrxjm1KHp0wpejGNPtJXkBDlRHnmwdMrY/jKV0zxG4sLplQrH0PfKTnx94HqBIMx2KYBnoETv2tVjPfmzkfrDo4PD4DvoX5OFYV6s=
+	t=1750977402; cv=none; b=RWPwJsDtC4DYW2XjlqWsrj5j8U0hA+6+SYM4Hbi0XGNhNR2EdRpr6DV760RD3DluAPZUGxS3MTiCBo4/pYx0DzQb8G+ly9DsR9Fc3F6PWQFVfLLv4RiBQQmV4N2hZb1oDDLs2IFDQxWLJyFUdXYStgtywFibGd3gpFq/GqSNRs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750977362; c=relaxed/simple;
-	bh=H1rfMDwf9pZjSftI60w8pVVvv8SLrC7CTgYtTp0yft0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DcpRpYe251rG9GkziKBboD+7PpxNICuya48f71n5sGVRMzV5RRaTDQwAbSFneekCP5PEM76Yssxvu5+E0AC//kJWH+Jr+9pgTkK70lwYJIiFX4NVFI/rnsjyk9dkeCMSWMnC5yUjksnRDbBEUS5d4fZjtN+7qtyPOGxg6zaGfa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HX+eokZn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750977402; c=relaxed/simple;
+	bh=g1nr1RQJdKJGzlLvHbH+jFPReG/gFndlCIo1Z0q8/vQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tcJ/dyICJPflVO5GITXtwgAlTB9N3t9ng9QkH/52Ms+aDBKDChYBBjcWbGIDXd9eTr1AzM14SUzaB50nyeVt3E4aazZlA4F6Xyzha4oyOAMDIXxsj0Tc89u/akMnvGwE0IS+0/Jr6JiKvn3wqj9BoB9dey0JoFxJsyTLliplgww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bTwKMKCH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nnw69UHB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HX+eokZn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18F2AC4CEEB;
-	Thu, 26 Jun 2025 22:36:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750977361;
-	bh=H1rfMDwf9pZjSftI60w8pVVvv8SLrC7CTgYtTp0yft0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HX+eokZntsqP0VcgXZBS6TfN95r9PfAMWyWcXOlK4FzVTWb1kA7RPcqgEEjUvksDu
-	 00wyRrqXFqmZiLXjlsxT7hrDX5ZTERnVHUflQnzA01fO9ntKlTgLurEFxS3GuY1nLY
-	 qgh5TjReihiDJOf3TteVgZnjtf/ah4LbmAoJGTZMmyG3bSlo1Z+prZomTUfwnaX2PV
-	 bXhYGMuBVnnLAW/BPBhyi/AaW4cpGhDNvHfv2gEtoJ72JQ+CF4ZTZwRv7vEBB+YqO8
-	 EFfmNrXRXs0ZjUVlmu9Npol1zjZsMdAS+OiuIWIFmhT4yISqaVasAQGwK9VPG+a5AC
-	 OsKagqRrjko5w==
-Date: Fri, 27 Jun 2025 01:35:57 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-	Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	"open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH v2] tpm: Cleanup class for tpm_buf
-Message-ID: <aF3LTXgI2uV6k2js@kernel.org>
-References: <20250626101935.1007898-1-jarkko@kernel.org>
- <6a70dbdba3cef9f7ec580ce0147b1c89feb28074.camel@HansenPartnership.com>
- <aF2NNHilFfZwBoxA@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bTwKMKCH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nnw69UHB"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750977398;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e+jpGnqin1i3+54YImqxOfu2HSwmKyS0FMIyMjN326w=;
+	b=bTwKMKCHqUz4pvZEUpPHFVpb2gomBtqPHPaCG9DxPOitEdzsygHiNdZP6v2mZ9FR07I6Lv
+	98NkvSLp6FxoPVzUKqMoD+nlif4YYo7BqNT/wqxoaqZ9SJr6t3B3PhwzU9VaD/QllTGX/F
+	jxSQLLkZqAWDtlqYZqpTQPeVAeDIW2F3SItVK+ZvfcM6nStRmlU5bZUfSSJKEHfEJ9zOl5
+	HZQCpB+9jf6fwzuoov1E5rzg0JLZV3a8ROytkmBuTw5PWY0bwV7h3GYD/0jCg2733Wbi8Y
+	2yXvwn65Z0RzZqYIByoCjXZLW7hJw08dnnkvRSKvB5jJ9W2vkNZzs9U/BQYgfQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750977398;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e+jpGnqin1i3+54YImqxOfu2HSwmKyS0FMIyMjN326w=;
+	b=nnw69UHB02qcikFMfUq+idSGgErSwJY8lnjIWdmENYp9YGDRu0gln5c2+aMJbfqeVeLxcV
+	vetJb9qYDTV0ABCQ==
+To: =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@igalia.com>, Ingo Molnar
+ <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Waiman Long <longman@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-api@vger.kernel.org, kernel-dev@igalia.com, =?utf-8?Q?Andr=C3=A9?=
+ Almeida
+ <andrealmeid@igalia.com>
+Subject: Re: [PATCH v5 2/7] selftests/futex: Create test for robust list
+In-Reply-To: <20250626-tonyk-robust_futex-v5-2-179194dbde8f@igalia.com>
+References: <20250626-tonyk-robust_futex-v5-0-179194dbde8f@igalia.com>
+ <20250626-tonyk-robust_futex-v5-2-179194dbde8f@igalia.com>
+Date: Fri, 27 Jun 2025 00:36:37 +0200
+Message-ID: <878qlep1u2.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aF2NNHilFfZwBoxA@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 09:11:05PM +0300, Jarkko Sakkinen wrote:
-> On Thu, Jun 26, 2025 at 10:50:22AM -0400, James Bottomley wrote:
-> > On Thu, 2025-06-26 at 13:19 +0300, Jarkko Sakkinen wrote:
-> > > From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
-> > > 
-> > > Create a cleanup class for struct tpm_buf using DEFINE_CLASS(), which
-> > > will guarantee that the heap allocated memory will be freed
-> > > automatically for the transient instances of this structure, when
-> > > they go out of scope.
-> > > 
-> > > Wrap this all into help macro CLASS_TPM_BUF().
-> > > 
-> > > A TPM buffer can now be declared trivially:
-> > > 
-> > >     CLASS_TPM_BUF(buf, buf_size);
-> > 
-> > Well, that's not all ... you're also adding a size to the API that we
-> > didn't have before, which should at least be documented in the commit
-> > message and probably be a separate patch.
-> > 
-> > What is the reason for this, though?  The reason we currently use a
-> > page is that it's easy for the OS to manage (no slab fragmentation
-> > issues).  The TCG reference platform defines this to be just under 4k
-> > (actually 4096-0x80) precisely because TPM implementations don't do
-> > scatter gather, so they don't want it going over an ARM page, so
-> > there's no danger of us ever needing more than a page.
-> 
-> Thanks for the valuable feedback.
-> 
-> I can drop "buf_size" parameter. It is not a priority, and I also
-> agree with your comments.
+On Thu, Jun 26 2025 at 14:11, Andr=C3=A9 Almeida wrote:
+> +
+> +int set_robust_list(struct robust_list_head *head, size_t len)
 
-I also noticed that I had changed one log message in tpm2-sessions.c. It
-was unintended i.e. a spurious change. I'll revert that one too.
+This function and the get() counterpart are global because they can?
 
-I'll split this into more reasonable portions for next version so these
-should be easier to review then.
+> +{
+> +	return syscall(SYS_set_robust_list, head, len);
+> +}
+> +/*
+> + * Basic lock struct, contains just the futex word and the robust list e=
+lement
+> + * Real implementations have also a *prev to easily walk in the list
+> + */
+> +struct lock_struct {
+> +	_Atomic(unsigned int) futex;
+> +	struct robust_list list;
 
-BR, Jarkko
+tabular arrangement please.
+
+> +	pthread_barrier_wait(&barrier);
+> +
+> +	/*
+> +	 * There's a race here: the parent thread needs to be inside
+> +	 * futex_wait() before the child thread dies, otherwise it will miss the
+> +	 * wakeup from handle_futex_death() that this child will emit. We wait a
+> +	 * little bit just to make sure that this happens.
+> +	 */
+> +	sleep(1);
+
+One second is quite a little bit. :)
+
+> +	/*
+> +	 * futex_wait() should return 0 and the futex word should be marked with
+> +	 * FUTEX_OWNER_DIED
+> +	 */
+> +	ASSERT_EQ(ret, 0);
+> +	if (ret !=3D 0)
+> +		printf("futex wait returned %d", errno);
+
+What's the purpose of the extra printf() after the assert here? This
+code is not even reached when ret !=3D 0, no?
+
+> +	ASSERT_TRUE(*futex | FUTEX_OWNER_DIED);
+
+That's always true no matter what the content of the futex variable is, no?
+
+> +/*
+> + * The only valid value for len is sizeof(*head)
+> + */
+> +static void test_set_robust_list_invalid_size(void)
+> +{
+> +	struct robust_list_head head;
+> +	size_t head_size =3D sizeof(struct robust_list_head);
+
+Groan. You already define the robust_list_head variable ahead of
+head_size and violate the reverse fir tree ordering, so why don't you
+use the obvious and actually robust 'sizeof(head)'?
+
+> +/*
+> + * Test get_robust_list with pid =3D 0, getting the list of the running =
+thread
+> + */
+> +static void test_get_robust_list_self(void)
+> +{
+> +	struct robust_list_head head, head2, *get_head;
+> +	size_t head_size =3D sizeof(struct robust_list_head), len_ptr;
+
+Ditto.
+
+> +static int child_list(void *arg)
+> +{
+> +	struct robust_list_head *head =3D (struct robust_list_head *) arg;
+
+void pointers really don't require type casts
+
+> +	int ret;
+> +
+> +	ret =3D set_robust_list(head, sizeof(struct robust_list_head));
+
+sizeof(*head)
+
+> +	if (ret)
+> +		ksft_test_result_fail("set_robust_list error\n");
+> +
+> +	pthread_barrier_wait(&barrier);
+> +	pthread_barrier_wait(&barrier2);
+
+Lacks a comment what this waits for
+
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Test get_robust_list from another thread. We use two barriers here to=
+ ensure
+> + * that:
+> + *   1) the child thread set the list before we try to get it from the
+> + * parent
+> + *   2) the child thread still alive when we try to get the list from it
+> + */
+> +static void test_get_robust_list_child(void)
+> +{
+> +	pid_t tid;
+> +	int ret;
+> +	struct robust_list_head head, *get_head;
+> +	size_t len_ptr;
+
+Reverse fir tree ordering please.
+
+> +	ret =3D pthread_barrier_init(&barrier, NULL, 2);
+> +	ret =3D pthread_barrier_init(&barrier2, NULL, 2);
+> +	ASSERT_EQ(ret, 0);
+> +
+> +	tid =3D create_child(&child_list, &head);
+> +	ASSERT_NE(tid, -1);
+> +
+> +	pthread_barrier_wait(&barrier);
+> +
+> +	ret =3D get_robust_list(tid, &get_head, &len_ptr);
+> +	ASSERT_EQ(ret, 0);
+> +	ASSERT_EQ(&head, get_head);
+> +
+> +	pthread_barrier_wait(&barrier2);
+> +
+> +	wait(NULL);
+> +	pthread_barrier_destroy(&barrier);
+> +	pthread_barrier_destroy(&barrier2);
+> +
+> +	ksft_test_result_pass("%s\n", __func__);
+> +}
+> +
+> +static int child_fn_lock_with_error(void *arg)
+> +{
+> +	struct lock_struct *lock =3D (struct lock_struct *) arg;
+
+See above
+
+> +	struct robust_list_head head;
+> +	int ret;
+> +
+> +	ret =3D set_list(&head);
+> +	if (ret)
+> +		ksft_test_result_fail("set_robust_list error\n");
+
+So you fail the test and continue to produce more fails or what? Why
+does this not use one of these ASSERT thingies or return?
+
+> +	ret =3D mutex_lock(lock, &head, true);
+> +	if (ret)
+> +		ksft_test_result_fail("mutex_lock error\n");
+> +
+> +	pthread_barrier_wait(&barrier);
+> +
+> +	sleep(1);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Same as robustness test, but inject an error where the mutex_lock() e=
+xits
+> + * earlier, just after setting list_op_pending and taking the lock, to t=
+est the
+> + * list_op_pending mechanism
+> + */
+> +static void test_set_list_op_pending(void)
+> +{
+> +	struct lock_struct lock =3D { .futex =3D 0 };
+> +	struct robust_list_head head;
+> +	_Atomic(unsigned int) *futex =3D &lock.futex;
+> +	int ret;
+
+See above
+
+> +	ASSERT_EQ(ret, 0);
+> +	if (ret !=3D 0)
+> +		printf("futex wait returned %d", errno);
+
+The random insertion of completely pointless printf()'s is stunning.
+
+> +	ASSERT_TRUE(*futex | FUTEX_OWNER_DIED);
+
+Yet another always true assert which is happily optimized out by the
+compiler.
+
+> +	wait(NULL);
+> +	pthread_barrier_destroy(&barrier);
+> +
+> +	ksft_test_result_pass("%s\n", __func__);
+> +}
+
+> +static int child_wait_lock(void *arg)
+> +{
+> +	struct lock_struct *lock =3D (struct lock_struct *) arg;
+> +	struct robust_list_head head;
+> +	int ret;
+> +
+> +	pthread_barrier_wait(&barrier2);
+> +	ret =3D mutex_lock(lock, &head, false);
+> +
+> +	if (ret)
+> +		ksft_test_result_fail("mutex_lock error\n");
+> +
+> +	if (!(lock->futex | FUTEX_OWNER_DIED))
+> +		ksft_test_result_fail("futex not marked with FUTEX_OWNER_DIED\n");
+
+Now I kinda understand this insanity. The child emits a fail and
+exits. Then the parent ...
+
+> +	for (i =3D 0; i < CHILD_NR; i++)
+> +		create_child(&child_wait_lock, &locks[i]);
+> +
+> +	/* Wait for all children to return */
+> +	while (wait(NULL) > 0);
+> +
+> +	pthread_barrier_destroy(&barrier);
+> +	pthread_barrier_destroy(&barrier2);
+> +
+> +	ksft_test_result_pass("%s\n", __func__);
+
+... happily claims that the test passed.
+
+Seriously?
+
+Thread functions have a return value for a reason and wait(2) has a
+wstatus argument for the very same reason.
+
+> +static int child_circular_list(void *arg)
+> +{
+> +	static struct robust_list_head head;
+> +	struct lock_struct a, b, c;
+> +	int ret;
+> +
+> +	ret =3D set_list(&head);
+> +	if (ret)
+> +		ksft_test_result_fail("set_list error\n");
+
+Yet another instance of the same ....
+
+Thanks,
+
+        tglx
