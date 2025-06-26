@@ -1,128 +1,90 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F8E2E5418
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98EB2E540B;
+	Thu, 26 Jun 2025 13:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943577; cv=none; b=UoZgjfrJS2y021GIlok1pjpvTCt6s9HFu3Vib44SHTjNoXB/zasccJmSMnj+o8e3RkrG+EJu4LrQH+12ttFbsrPP/innr3giwqK+s4lEO/EKs1AAcXiEzBU24Y0UG9SdPi5hHHVujD9ceY84zLoPffvF8LlYRQ26WIwkUzLv2HU=
+	t=1750943592; cv=none; b=rLLDT/GT+5BRJyzBwC+h92xDGwRUJEwd+AO0VgRYKxy7/nxIgCPsmhlLJh0mf6YqmSuHZ8DhA8045D8mdejE0bRB60Eev/HOt2a+mDAPFrgL+ISn8CyzArVWXkaRUDiawcezT9hEitmzR2lidbsFJyT0qn7cKPyvlKBdnNOBf/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943577; c=relaxed/simple;
-	bh=UakOI/WvFkgeH35/JbanD0jEC3cwT/gOCqsa2NorhOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E9OE1EKLk3XJpdy/z5ao8Dp+1uViqq3SN47bbN33ILqZJWyrHIe/g4wWXL0CDdg4xxfPsT5diqM4AMAnOIuJ5qyq0YnS24T3Nfo5JZtZ1kXQp+p1BDWYl80ZV/d2BdrioxSc9NebJKMfVtKntu2CfqN2n44cdEIDsgqPLnpobaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uUmPI-00079D-S2; Thu, 26 Jun 2025 15:12:48 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uUmPI-005SFg-0h;
-	Thu, 26 Jun 2025 15:12:48 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id DE551431176;
-	Thu, 26 Jun 2025 13:12:47 +0000 (UTC)
-Date: Thu, 26 Jun 2025 15:12:47 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Mark Brown <broonie@kernel.org>
-Cc: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>, 
-	Guenter Roeck <linux@roeck-us.net>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel@pengutronix.de
-Subject: Re: [PATCH v2] spi: Raise limit on number of chip selects
-Message-ID: <20250626-practical-heavenly-pony-af7296-mkl@pengutronix.de>
-References: <20240124-spi-multi-cs-max-v2-1-df6fc5ab1abc@kernel.org>
+	s=arc-20240116; t=1750943592; c=relaxed/simple;
+	bh=PreKZtSoyeCQQgE0MXWcjP/5/bBwOnNbclzp2Oj3YyU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=NOE/IQHmuapzYQUyrPcTDg/1GUxAI//0E+7llRJGZfl9hE5T0knyECfWwSCcBG7IKjVIlconIObjRibetXCiwu/cIspKYvemTOKWwAWuJ5efpXFtQ1Ez5a2AlH06BgauEO1mtQHVPGiDvHaJodUv/SiwcOTdbLOCkURwVLXMAXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UyFvx/SC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UyFvx/SC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E96CAC4CEEB;
+	Thu, 26 Jun 2025 13:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750943591;
+	bh=PreKZtSoyeCQQgE0MXWcjP/5/bBwOnNbclzp2Oj3YyU=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=UyFvx/SCp+HbuN3e7GecTnhWCE7ctRhui/g5helDTlWYPRD4bG+aPKUeDeXOx8Ka+
+	 WV2yxI0wSQq6FLkQpp6ixke8+Iev9J/1RCKzdZvd0a+jRbC4MXMe8qKF5lFxwyTxGt
+	 eWrpN4MpEuJL24yBQywXDis+xgOOe3QXAOwlMpRSoW3JawpmD6N1+iWtdPx+krUsc7
+	 2RQJ3UPWVNjVmt8IHrIgT7sFwPdMP1lXrpOCA+6AJfMhGGm491cB2TTF9D+cfh8yX2
+	 G66cRqz8q46jtptaNrp3gJkNi+AOAi1Gjmweq4jkAe8r5sFg5tjVH04aAA81GNurxW
+	 62E/6LlKRB4Gg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="exd2capfccwaslk5"
-Content-Disposition: inline
-In-Reply-To: <20240124-spi-multi-cs-max-v2-1-df6fc5ab1abc@kernel.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
-
-
---exd2capfccwaslk5
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] spi: Raise limit on number of chip selects
-MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 26 Jun 2025 15:13:06 +0200
+Message-Id: <DAWHP7292ZGD.2SQDBIZOUA4AB@kernel.org>
+Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+ <bjorn3_gh@protonmail.com>, <a.hindborg@kernel.org>,
+ <aliceryhl@google.com>, <tmgross@umich.edu>, <david.m.ertman@intel.com>,
+ <ira.weiny@intel.com>, <leon@kernel.org>, <kwilczynski@kernel.org>,
+ <bhelgaas@google.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 4/4] rust: devres: implement register_release()
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250624215600.221167-1-dakr@kernel.org>
+ <20250624215600.221167-5-dakr@kernel.org>
+ <DAWED7BIC32G.338MXRHK4NSJG@kernel.org> <aF0rzzlKgwopOVHV@pollux>
+In-Reply-To: <aF0rzzlKgwopOVHV@pollux>
 
-(sorry my mail setup had a glitch in my previous mail)
+On Thu Jun 26, 2025 at 1:15 PM CEST, Danilo Krummrich wrote:
+> On Thu, Jun 26, 2025 at 12:36:23PM +0200, Benno Lossin wrote:
+>> Or, we could change `Release` to be:
+>>=20
+>>     pub trait Release {
+>>         type Ptr: ForeignOwnable;
+>>=20
+>>         fn release(this: Self::Ptr);
+>>     }
+>>=20
+>> and then `register_release` is:
+>>=20
+>>     pub fn register_release<T: Release>(dev: &Device<Bound>, data: T::Pt=
+r) -> Result
+>>=20
+>> This way, one can store a `Box<T>` and get access to the `T` at the end.
+>
+> I think this was also the case before? Well, it was P::Borrowed instead.
 
-On 24.01.2024 13:24:24, Mark Brown wrote:
-> As reported by Guenter the limit we've got on the number of chip selects =
-is
-> set too low for some systems, raise the limit. We should really remove the
-> hard coded limit but this is needed as a fix so let's do the simple thing
-> and raise the limit for now.
+Well you had access to a `&T`, but not the `T` directly.
 
-We currently have a use case for 24 chip selects.
+>> Related questions:
+>>=20
+>> * should we implement `ForeignOwnable` for `&'static T`?
+>
+> There's already a patch on the list doing this in the context of DebugFS =
+[1].
+>
+> [1] https://lore.kernel.org/lkml/20250624-debugfs-rust-v7-3-9c8835a7a20f@=
+google.com/
 
-> Fixes: 4d8ff6b0991d ("spi: Add multi-cs memories support in SPI core")
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Suggested-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
-> Changes in v2:
-> - Raise the limit further, the highest I've seen thus far is 12.
-> - Link to v1: https://lore.kernel.org/r/20240122-spi-multi-cs-max-v1-1-a7=
-e98cd5f6c7@kernel.org
-> ---
->  include/linux/spi/spi.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-> index 471fe2ff9066..600fbd5daf68 100644
-> --- a/include/linux/spi/spi.h
-> +++ b/include/linux/spi/spi.h
-> @@ -21,7 +21,7 @@
->  #include <uapi/linux/spi/spi.h>
-> =20
->  /* Max no. of CS supported per spi device */
-> -#define SPI_CS_CNT_MAX 4
-> +#define SPI_CS_CNT_MAX 16
+Ah, I'm not following that series at the moment.
 
-Just further increase the limit to 24? Add a Kconfig symbol?
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---exd2capfccwaslk5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmhdR0wACgkQDHRl3/mQ
-kZy41Af9HwbbqTmrPAMa/9ziw5fz9I7Hw8XSOK6Mm/qDudl/8K+aqecCP8zL2j6a
-P/YjPQFYFh/HLUTL8XXbDI7bcn1vMZwSTM/1cHD0hkBEaLSeiXRvqkNasePuW8ia
-kwnX5TuBWUFQEqAxfPiJ8TsGLVsyDTEgeSFGxj4ha0eQfNWlXSnYQoCNbasrwXRe
-dioG4QY7Y8PJIk77PcvA1HWFCfSPhEe3r+ryweOSGELsq42nlVOMO0uhMyenkF4O
-pVV5WliQEQ2egocNvKLzuJGH9hKH3GJrOqrO99IJYpNRDdlxgGAJ9c/vm5MR6Z0S
-fvCuWaZ/o6Wjn47rVHIj8fLH6/BDmQ==
-=3Xka
------END PGP SIGNATURE-----
-
---exd2capfccwaslk5--
+---
+Cheers,
+Benno
