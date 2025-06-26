@@ -1,147 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9C817A5BE;
-	Thu, 26 Jun 2025 08:26:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F11206F23;
+	Thu, 26 Jun 2025 08:27:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750926415; cv=none; b=dzmPHQls5vS+Zdzsp0TA+JSvpyOHb8fBbv+szrONgwJNJvykncoAmUXzDN2yIfFPWmLrCqz5kcqar1jZqSyogLuoUAnqXadi1gWTh9xW1r7wbPnlTEyHLt84DIjp2AvL8Va0TZOyfdagBJu+H0syF6quhK0HWYB+4S4p5IbP28I=
+	t=1750926427; cv=none; b=fRDo3bztdjdEyt+f7NfTgn6sHJtgkQQUwRIsaxtfk1Ox67NWyH9IZ24WJlzhtd9gz7O1HWCR4lm5AWcQlNK4x7ZSARCphwX93Uux5Q7dZorhLxgm3vlLUeyQ6Qz5TsmxrXolFRVqD4Fypjzp1R8xt0BMVNW0k9f1264RMe4589s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750926415; c=relaxed/simple;
-	bh=4mkRXRBS9NyHpAI7suiC6dJfUOy/CaSWSLhmLqYaAMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IhwRXzFVWuNYZhA9/tWVxGdTH5l/nFwTCphUiYot+t5gkp2M3jkEjEatuKvDotVjh7+cQHTV9yoczsrGflEG6FtMXtIqJhdV+Yv6rJeoIiipB9GXbXz1MkoZAF6/hIrIeR5uQbBW3jNE8nXQadPeWr87uUQiK0kzFXxhYQZ+hk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWmc4kw6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750926427; c=relaxed/simple;
+	bh=S7XC0tUcCHKvkT+Ed0WOUsQ6fokGOML9A7PYuyOW2Js=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oWMFpAOxw8ey4b7R3VWlA3nMtCmDcvW03zzZyThE0XJKVunhsRxDIPzyRg5ehCArh0E7YhCmfqhp76clY2pYnfMGZc6cDU+beHxmD0ohwRBwIuOYv+w1uIVithFccqckooVxzq1v90JgQHEYtvwBYR1A/YGXo2GqDKjKCEFUvQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSnP3GMD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWmc4kw6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6449BC4CEEB;
-	Thu, 26 Jun 2025 08:26:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSnP3GMD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4973AC4CEEB;
+	Thu, 26 Jun 2025 08:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750926414;
-	bh=4mkRXRBS9NyHpAI7suiC6dJfUOy/CaSWSLhmLqYaAMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BWmc4kw62O8r6c8o/R0NHh6IaqRnvVZ2xhDRZcr6s1YZ+MObVGhOjKpPOYuTHPdE7
-	 Fu3iEJNMnvaqdwI34wSW2L3ZSrZgIZw8tFjU7AhfhXr2H9u8HCja1kT3lvQYdtvQmh
-	 9DWF4iH51sH6Agb3iWlFtyA04/iz3EUL5OU+NZ5PkcEBxsscXSPUYiMMW1NJRMtkJy
-	 7b59qwRXx61WAhrh2Gv9ryhqG9LTmk4V6awW5UB6WT0lp7GRdSGPjqYLjlowih3VIU
-	 CkMWBs+OF5Jug2p7wr1QX7vxbEheKxLGdzXBh9bcSTOTUZI9pwTnVrPoxnp+23E9vp
-	 rlMxzo5dFmHIQ==
-Date: Thu, 26 Jun 2025 10:26:50 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Nikunj A Dadhania <nikunj@amd.com>
-Cc: linux-kernel@vger.kernel.org, bp@alien8.de, x86@kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	thomas.lendacky@amd.com, aik@amd.com, dionnaglaze@google.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] x86/sev: Use TSC_FACTOR for Secure TSC frequency
- calculation
-Message-ID: <aF0ESlmxi1uOHkrc@gmail.com>
-References: <20250626060142.2443408-1-nikunj@amd.com>
+	s=k20201202; t=1750926426;
+	bh=S7XC0tUcCHKvkT+Ed0WOUsQ6fokGOML9A7PYuyOW2Js=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XSnP3GMD0cNxXVox/QwHFndk0tVEsnIBiJSb/MkTiDKTc0rn69/+3Q/YS9Brvun73
+	 637vfIkKFfd/6j7jMcmLHlqGYn5IlQqgC4h6wIjAerTblRWu1YBvGM+jQzNiqOuAtY
+	 K1SzHvcR+nKc3HfJK4YionNXMtDavQ4BrChdt2hp6qopr0V+heN0T1JTiyM3bjCYn7
+	 DpWEe9kAS8r/KCA4M/5/ZTMVCarDS+VZwZmCU7pR821lfGJ7le3fOV3x0ScBvP4j2g
+	 A/A2M6x4L1LUX/9UlzDCNCrncH2fG5n+QOgM/dUXe/kBDJrOE36eq+3XErdgacayBb
+	 KFIa8yGMmhQJw==
+Message-ID: <61843beb-263d-475b-9876-fb273dd8d7fe@kernel.org>
+Date: Thu, 26 Jun 2025 10:27:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626060142.2443408-1-nikunj@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/4] Input: Don't program hw debounce for
+ soc_button_array devices
+To: Mario Limonciello <superm1@kernel.org>,
+ Mika Westerberg <westeri@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <20250625215813.3477840-1-superm1@kernel.org>
+ <20250625215813.3477840-4-superm1@kernel.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250625215813.3477840-4-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hi,
+
+On 25-Jun-25 23:58, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> Programming a hardware debounce of 50ms causes problems where a button
+> doesn't work properly anymore on some systems.  This debounce is intended
+> for compatibility with systems with a mechanical switch so soc_button_array
+> devices should only be using a sofware debounce.
+> 
+> Add support for indicating that a driver is only requesting gpio_keys
+> to use software debounce support and mark that in soc_button_array
+> accordingly.
+> 
+> Suggested-by: Hans de Goede <hansg@kernel.org>
+> Fixes: 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+
+Regards,
+
+Hans
 
 
-* Nikunj A Dadhania <nikunj@amd.com> wrote:
 
-> When using Secure TSC, the GUEST_TSC_FREQ MSR reports a frequency based on
-> the nominal P0 frequency, which deviates slightly (typically ~0.2%) from
-> the actual mean TSC frequency due to clocking parameters. Over extended VM
-> uptime, this discrepancy accumulates, causing clock skew between the
-> hypervisor and SEV-SNP VM, leading to early timer interrupts as perceived
-> by the guest.
-> 
-> The guest kernel relies on the reported nominal frequency for TSC-based
-> timekeeping, while the actual frequency set during SNP_LAUNCH_START may
-> differ. This mismatch results in inaccurate time calculations, causing the
-> guest to perceive hrtimers as firing earlier than expected.
-> 
-> Utilize the TSC_FACTOR from the SEV firmware's secrets page (see "Secrets
-> Page Format" in the SNP Firmware ABI Specification) to calculate the mean
-> TSC frequency, ensuring accurate timekeeping and mitigating clock skew in
-> SEV-SNP VMs.
-> 
-> Use early_ioremap_encrypted() to map the secrets page as
-> ioremap_encrypted() uses kmalloc() which is not available during early TSC
-> initialization and causes a panic.
-> 
-> Fixes: 73bbf3b0fbba ("x86/tsc: Init the TSC for Secure TSC guests")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Nikunj A Dadhania <nikunj@amd.com>
-> 
 > ---
-> v2:
-> * Move the SNP TSC scaling constant to the header (Dionna)
-> * Drop the unsigned long cast and add in securetsc_get_tsc_khz (Tom)
-> * Drop the RB from Tom as the code has changed
-> ---
->  arch/x86/include/asm/sev.h | 18 +++++++++++++++++-
->  arch/x86/coco/sev/core.c   | 16 ++++++++++++++--
->  2 files changed, 31 insertions(+), 3 deletions(-)
+>  drivers/input/keyboard/gpio_keys.c    | 7 +++++--
+>  drivers/input/misc/soc_button_array.c | 1 +
+>  include/linux/gpio_keys.h             | 2 ++
+>  3 files changed, 8 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-> index fbb616fcbfb8..869355367210 100644
-> --- a/arch/x86/include/asm/sev.h
-> +++ b/arch/x86/include/asm/sev.h
-> @@ -223,6 +223,19 @@ struct snp_tsc_info_resp {
->  	u8 rsvd2[100];
->  } __packed;
+> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+> index f9db86da0818b..773aa5294d269 100644
+> --- a/drivers/input/keyboard/gpio_keys.c
+> +++ b/drivers/input/keyboard/gpio_keys.c
+> @@ -552,8 +552,11 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+>  		bool active_low = gpiod_is_active_low(bdata->gpiod);
 >  
-> +
-> +/*
-> + * Obtain the mean TSC frequency by decreasing the nominal TSC frequency with
-> + * TSC_FACTOR as documented in the SNP Firmware ABI specification:
-> + *
-> + * GUEST_TSC_FREQ * (1 - (TSC_FACTOR * 0.00001))
-> + *
-> + * which is equivalent to:
-> + *
-> + * GUEST_TSC_FREQ -= (GUEST_TSC_FREQ * TSC_FACTOR) / 100000;
-> + */
-> +#define SNP_SCALE_TSC_FREQ(freq, factor) ((freq) - ((freq) * (factor)) / 100000)
-
-Nit: there's really no need to use parentheses in this expression,
-'x * y / z' is equivalent and fine.
-
-> +
->  struct snp_guest_req {
->  	void *req_buf;
->  	size_t req_sz;
-> @@ -283,8 +296,11 @@ struct snp_secrets_page {
->  	u8 svsm_guest_vmpl;
->  	u8 rsvd3[3];
+>  		if (button->debounce_interval) {
+> -			error = gpiod_set_debounce(bdata->gpiod,
+> -					button->debounce_interval * 1000);
+> +			if (ddata->pdata->no_hw_debounce)
+> +				error = -EINVAL;
+> +			else
+> +				error = gpiod_set_debounce(bdata->gpiod,
+> +							   button->debounce_interval * 1000);
+>  			/* use timer if gpiolib doesn't provide debounce */
+>  			if (error < 0)
+>  				bdata->software_debounce =
+> diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+> index b8cad415c62ca..dac940455bea8 100644
+> --- a/drivers/input/misc/soc_button_array.c
+> +++ b/drivers/input/misc/soc_button_array.c
+> @@ -232,6 +232,7 @@ soc_button_device_create(struct platform_device *pdev,
+>  	gpio_keys_pdata->buttons = gpio_keys;
+>  	gpio_keys_pdata->nbuttons = n_buttons;
+>  	gpio_keys_pdata->rep = autorepeat;
+> +	gpio_keys_pdata->no_hw_debounce = TRUE;
 >  
-> +	/* The percentage decrease from nominal to mean TSC frequency. */
-> +	u32 tsc_factor;
-> +
->  	/* Remainder of page */
-> -	u8 rsvd4[3744];
-> +	u8 rsvd4[3740];
->  } __packed;
+>  	pd = platform_device_register_resndata(&pdev->dev, "gpio-keys",
+>  					       PLATFORM_DEVID_AUTO, NULL, 0,
+> diff --git a/include/linux/gpio_keys.h b/include/linux/gpio_keys.h
+> index 80fa930b04c67..c99f74467fda6 100644
+> --- a/include/linux/gpio_keys.h
+> +++ b/include/linux/gpio_keys.h
+> @@ -48,6 +48,7 @@ struct gpio_keys_button {
+>   * @enable:		platform hook for enabling the device
+>   * @disable:		platform hook for disabling the device
+>   * @name:		input device name
+> + * @no_hw_debounce:	avoid programming hardware debounce
+>   */
+>  struct gpio_keys_platform_data {
+>  	const struct gpio_keys_button *buttons;
+> @@ -57,6 +58,7 @@ struct gpio_keys_platform_data {
+>  	int (*enable)(struct device *dev);
+>  	void (*disable)(struct device *dev);
+>  	const char *name;
+> +	bool no_hw_debounce;
+>  };
 >  
->  struct snp_msg_desc {
-> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-> index 8375ca7fbd8a..36f419ff25d4 100644
-> --- a/arch/x86/coco/sev/core.c
-> +++ b/arch/x86/coco/sev/core.c
-> @@ -2156,20 +2156,32 @@ void __init snp_secure_tsc_prepare(void)
->  
->  static unsigned long securetsc_get_tsc_khz(void)
->  {
-> -	return snp_tsc_freq_khz;
-> +	return (unsigned long)snp_tsc_freq_khz;
+>  #endif
 
-This forced type cast is a signature of poor type choices. Please 
-harmonize the types of snp_tsc_freq_khz and securetsc_get_tsc_khz() to 
-avoid the type cast altogether. Does this code even get built and run 
-on 32-bit kernels?
-
-Thanks,
-
-	Ingo
