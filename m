@@ -1,99 +1,139 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC1D2957AD;
-	Thu, 26 Jun 2025 08:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55B24A33;
+	Thu, 26 Jun 2025 08:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750928250; cv=none; b=MNlrSzcANQlKcslqi9PjtnqwUfSp6HCU5ZTcyhwWj4I5TqcQyji+7aGh5OyR4iEunQPcB1zg/AHozrxgKxi/mMISirZrX0yUZVuWDBgJZ0Q5H24qwS80twMMGPrlp4Npxsqd7Tw8SCtvhwLFsr6bYwjhvtfQ/drvBtcatco2W2c=
+	t=1750928350; cv=none; b=CLZy//o9T+Man48Tb860FLRRSObbiTHcwR3m4sXk+HQpnxzv3h0O2Z3XrJaJff/aga1r/AEoEPz47XA13my+fxswQcxkcCTklfRNWwtr3R7nP7oALM479lD+gHvI77rBkbZy4RkxdaxhQnBpjhlQOziFmsJUs5zsKsrxkuD9itg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750928250; c=relaxed/simple;
-	bh=iexAl4IZBdK0K86HpFD/b/If8pH2fw4n5Z9QnMksSUo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YUshYpn+iA05Q6F02dIb2GYsiZye7wBUFzUWzRx32e+9iODhnnIuoccJqoUJMeY3/CyPnUgqehgIihbgoPcWljANeZYZIBOJuhBLJs22uQLR75fg7R3wS79jtHkfkBwS0Liptct0+WvQoAPyi4TrujIbQZ5srl8u56hiVx/EQ0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=YXtdF63C; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1750928350; c=relaxed/simple;
+	bh=vz8yrG7TsUr+PK7JlGaU9k8zdE+Zt3hQF4t9uML7Scs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ror/VajWSG0VGTlTtbl3IkvhcBKeXz7lOopNKkgM7dQhZaBa+NFAQk/zSaXWkpqoe/qlu8qnXSGDf6YNNqwKf7tYXhteo2SvtAb981B+M6tAjrp5USJuwE2TaJoy/3BvFTgf2Z9nHxmmYaaahHElHvFPqdQPhBoa4JEnriWso50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iJhUcXn6; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="YXtdF63C"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=fVmE/YiM+9C7jTD9oWg38lCkPD2nzPFS2EHGoqNAdeI=; b=YXtdF63CS4XTioz7pSvXGoJsWU
-	vi/CmOrqzYmLVJBFpW39RM9JpzGVI37KoO45IBc/DAxH1Oek+1HzAQtA/ES8t/V4TMFnC/MEIlP5E
-	5lNRnigiEccxo0z0X3ezV3BAkwBinCmgSkzZnUvZzKyIhNtLbWmLOjJ1NxtL+rW9XDAQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uUiQ2-00H1gg-H5; Thu, 26 Jun 2025 10:57:18 +0200
-Date: Thu, 26 Jun 2025 10:57:18 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Paul Geurts <paul.geurts@prodrive-technologies.com>
-Cc: mgreer@animalcreek.com, krzk@kernel.org, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, robh@kernel.org, conor+dt@kernel.org,
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	martijn.de.gouw@prodrive-technologies.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: net/nfc: ti,trf7970a: Add
- ti,rx-gain-reduction option
-Message-ID: <ddb9a1a9-7070-416c-848e-00d151846999@lunn.ch>
-References: <20250626082953.3963992-1-paul.geurts@prodrive-technologies.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iJhUcXn6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750928348; x=1782464348;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vz8yrG7TsUr+PK7JlGaU9k8zdE+Zt3hQF4t9uML7Scs=;
+  b=iJhUcXn6nGwDWEBHZTIjWu0ece+aBVTNpIDw5Q5K0UTu0jxeWp6HEgtf
+   6I1iOY2xfsEvWLK/e40jTKz5Wgq5+Bm7sgza0uHlqBEpS828sgw1nciDc
+   mZXCnrFYT/omJRfIv10rpRIeLJ88QHQgiDCS0NmJtN8XvSRZb+zDkW0fh
+   E7UvPgrHoUC1SbH7/q18IiYi8wQgU9LbdJxU+O8CKxXeyAqYjMPx0tcz2
+   hHmAjyEwi/O4YdZbIjFNO9crcMREAtwFGWgOPhwnbIsnTWwf9OXCkhDUo
+   J9eYAlWQv4Rks6bLz6E5WdpwkMYIXEpcYfJ6hJVV6Vj60EyTTvC2VgOAd
+   A==;
+X-CSE-ConnectionGUID: BuUJ1mjNRVCXsxW93Fn34w==
+X-CSE-MsgGUID: X73oQGbSTF2/vMbPt60n6A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64649966"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="64649966"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 01:59:08 -0700
+X-CSE-ConnectionGUID: PSt5q9rgRv23Z+qWHnxY4g==
+X-CSE-MsgGUID: 1ZRIWUhETUuNPdnq4pMsGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="152632462"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 01:59:05 -0700
+Message-ID: <bc7aea45-f254-4cbc-8dc0-5435417d8577@intel.com>
+Date: Thu, 26 Jun 2025 16:59:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626082953.3963992-1-paul.geurts@prodrive-technologies.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/5] KVM: x86: Provide a capability to disable
+ APERF/MPERF read intercepts
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>
+Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Jim Mattson <jmattson@google.com>
+References: <20250626001225.744268-1-seanjc@google.com>
+ <20250626001225.744268-3-seanjc@google.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20250626001225.744268-3-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> > You should include the units, "ti,rx-gain-reduction-db"
+On 6/26/2025 8:12 AM, Sean Christopherson wrote:
+> From: Jim Mattson <jmattson@google.com>
 > 
-> Well, Currently it's not really a dB value (see below).
+> Allow a guest to read the physical IA32_APERF and IA32_MPERF MSRs
+> without interception.
 > 
-> > 
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description: |
-> > > +      Specify a RX gain reduction to reduce antenna sensitivity with 5dB per
-> > > +      increment, with a maximum of 15dB.
-> > 
-> > Given that description i think you can provide a list of values, [0,
-> > 5, 10, 15] and the tools will validate values in .dts files.
-> > 
-> > > +
-> > >  required:
-> > >    - compatible
-> > >    - interrupts
-> > > @@ -95,5 +101,6 @@ examples:
-> > >              irq-status-read-quirk;
-> > >              en2-rf-quirk;
-> > >              clock-frequency = <27120000>;
-> > > +            ti,rx-gain-reduction = <3>;
-> > 
-> > Err, how does 3 fit into 5dB increments?
+> The IA32_APERF and IA32_MPERF MSRs are not virtualized. Writes are not
+> handled at all. The MSR values are not zeroed on vCPU creation, saved
+> on suspend, or restored on resume. No accommodation is made for
+> processor migration or for sharing a logical processor with other
+> tasks. No adjustments are made for non-unit TSC multipliers. The MSRs
+> do not account for time the same way as the comparable PMU events,
+> whether the PMU is virtualized by the traditional emulation method or
+> the new mediated pass-through approach.
 > 
-> I implemented it in a way that the value of ti,rx-gain-reduction is programmed
-> directly into the RX_GAIN reduction register, and there it means 5 dB/LSB. My
-> description probably was not clear enough about that. So a value of 3 here actually
-> means 15dB.
-> So I could either improve the description here that this is the case, or make the
-> value in here in actual dB, and do some calculations in the driver. What has your
-> preference?
+> Nonetheless, in a properly constrained environment, this capability
+> can be combined with a guest CPUID table that advertises support for
+> CPUID.6:ECX.APERFMPERF[bit 0] to induce a Linux guest to report the
+> effective physical CPU frequency in /proc/cpuinfo. Moreover, there is
+> no performance cost for this capability.
+> 
+> Signed-off-by: Jim Mattson <jmattson@google.com>
+> Link: https://lore.kernel.org/r/20250530185239.2335185-3-jmattson@google.com
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   Documentation/virt/kvm/api.rst | 23 +++++++++++++++++++++++
+>   arch/x86/kvm/svm/nested.c      |  4 +++-
+>   arch/x86/kvm/svm/svm.c         |  5 +++++
+>   arch/x86/kvm/vmx/nested.c      |  6 ++++++
+>   arch/x86/kvm/vmx/vmx.c         |  4 ++++
+>   arch/x86/kvm/x86.c             |  6 +++++-
+>   arch/x86/kvm/x86.h             |  5 +++++
+>   include/uapi/linux/kvm.h       |  1 +
+>   tools/include/uapi/linux/kvm.h |  1 +
+>   9 files changed, 53 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index 43ed57e048a8..27ced3ee2b53 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -7844,6 +7844,7 @@ Valid bits in args[0] are::
+>     #define KVM_X86_DISABLE_EXITS_HLT              (1 << 1)
+>     #define KVM_X86_DISABLE_EXITS_PAUSE            (1 << 2)
+>     #define KVM_X86_DISABLE_EXITS_CSTATE           (1 << 3)
+> +  #define KVM_X86_DISABLE_EXITS_APERFMPERF       (1 << 4)
+>   
+>   Enabling this capability on a VM provides userspace with a way to no
+>   longer intercept some instructions for improved latency in some
+> @@ -7854,6 +7855,28 @@ all such vmexits.
+>   
+>   Do not enable KVM_FEATURE_PV_UNHALT if you disable HLT exits.
+>   
+> +Virtualizing the ``IA32_APERF`` and ``IA32_MPERF`` MSRs requires more
+> +than just disabling APERF/MPERF exits. While both Intel and AMD
+> +document strict usage conditions for these MSRs--emphasizing that only
+> +the ratio of their deltas over a time interval (T0 to T1) is
+> +architecturally defined--simply passing through the MSRs can still
+> +produce an incorrect ratio.
+> +
+> +This erroneous ratio can occur if, between T0 and T1:
+> +
+> +1. The vCPU thread migrates between logical processors.
+> +2. Live migration or suspend/resume operations take place.
+> +3. Another task shares the vCPU's logical processor.
+> +4. C-states lower thean C0 are emulated (e.g., via HLT interception).
 
-DT should use SI units, Volts, Amps, degrees C, meters, etc. The
-driver then should do whatever conversion is needed to convert to
-hardware register values.
+s/thean/than/
 
-Less important, but i'm also wondering if this should be negative,
-ti,rx-gain-db, with a value of -15. You say this receiver is overly
-sensitive, so you need to reduce the gain. But are there TI devices
-where you can actually increase the gain? Ideally the property should
-be generic and be able to cover that use case as well.
-
-    Andrew
-
----
-pw-bot: cr
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
