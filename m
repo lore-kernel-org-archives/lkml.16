@@ -1,94 +1,157 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A191A202C46;
-	Thu, 26 Jun 2025 09:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B90529C35F;
+	Thu, 26 Jun 2025 09:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750931733; cv=none; b=IPsp82BM+4oYPNAB3OQC6N35c9eTDeDfmH8kxAAd5Vxp+l/S+fzc/kl6r1VuYDDdRDyXRsUNKHHyNprTwRwhAOAeBtmG8q8uAJfIfUEnG+mnhdbmAVpc7GqbEX/p+g96zRxz4x2E9+VpLkKj5gb5t/x17f8BOCBTnNdlMCdPb2A=
+	t=1750931762; cv=none; b=YtDzeVGFKfAbIFdw3Z+4cNN9mO1t7CPy8RIEwPEdtZRmgqCt2CR7Twjx0QzVMEy1DDJBfuwa+ZGZDOZlv3HgQ4myzJJyiNCBsoovFEyZD/zlbDbCSyXB1LSQcUKe0260WchSL5M45fH1EKdRs4gKUhEGvyi0PXVwNoySaY+ys+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750931733; c=relaxed/simple;
-	bh=Pl3DbRJOh3EPOC28gCvS6+Vd+hF9nKKs9fb4+dHJijI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HR5vuQcOQ8Eot/PXRtZ+3tyoA9XMH1YbzJzzLk8rcK/Xym2hgVlVkGfItWgjGdbyBGbpZzuAZZuLTiVHue8F2OKYRJOu9R13C6J7Lm7lyt+76nvaeN7ruohMNwvRfCSOqi6fFLGo9KkjQciifFr6PvMUIJV5NH4GC3VQhQy0tJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwC3Dpf7GF1o43VPBA--.62245S2;
-	Thu, 26 Jun 2025 17:55:07 +0800 (CST)
-Received: from phytium.com.cn (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwB3CyXzGF1olRFeAA--.236S3;
-	Thu, 26 Jun 2025 17:55:00 +0800 (CST)
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chenbaozi@phytium.com.cn,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Subject: [PATCH] cxl: Add CONFIG_CXL_DEBUG to drivers/cxl
-Date: Thu, 26 Jun 2025 17:54:42 +0800
-Message-Id: <20250626095442.1254840-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1750931762; c=relaxed/simple;
+	bh=NIdi9vkSfJQtqbtgSmTPBIUYBGUucA44r7jAMoBWtrk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I+lzrRUm/gh4bbyYP9drzsaKM4m95/Z9P2MrLRWF7FL+h/IBUUSdudIL7NePZAGVpjBfBMCiKZcI8di/fX5NolY+1TwkAlfHOS2fbwXW+Yiv2APpj40KeGswCCMFBKOLndp6o/Ht1j055Zah4WqQhBRxI1kQGDPxFvxEIqDG/Fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HnENumIZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HnENumIZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91818C4CEF1;
+	Thu, 26 Jun 2025 09:56:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750931761;
+	bh=NIdi9vkSfJQtqbtgSmTPBIUYBGUucA44r7jAMoBWtrk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HnENumIZ1fVJVgXx+uIFkAExIWrr/yFkI5BgCQKsBLrcN0eNG0YjWT+DYcEaq98qa
+	 x3AICdrkpFbiul9hG1ulv7WFcbaG7YPqRFhkVVygDubPbLK8ZIJkE0MRP2A+ztSqiC
+	 1OkvauffDOxDlz1F0jlM5d8Nsn6d8AXmVUL9Wd5srmTqkJsI9GKJ/SCZWe1fbiYpWw
+	 XOxfdxgwQUTg+IsIyE+gmMY+ED/RbUWNmriWmqNm8eQSwzoJPv/hNKWO+7n8aI6NP1
+	 HNVeHrfPWl1Wecdj3GCXVtM6QfbkP6IE4tSLWf4nOCnY0aNbLGCWpjZva42jpV+HvE
+	 56YSqi4fqJ0+A==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uUjKr-000000007WP-1woe;
+	Thu, 26 Jun 2025 11:56:01 +0200
+Date: Thu, 26 Jun 2025 11:56:01 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Steev Klimaszewski <steev@kali.org>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v4 7/8] firmware: qcom: scm: rework QSEECOM allowlist
+Message-ID: <aF0ZMcVcgHpqsKoG@hovoldconsulting.com>
+References: <20250625-more-qseecom-v4-0-aacca9306cee@oss.qualcomm.com>
+ <20250625-more-qseecom-v4-7-aacca9306cee@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwB3CyXzGF1olRFeAA--.236S3
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAMAWhbAiIFpQArsU
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvdXoWruFyxAr43XFyfCryftrW8JFb_yoWkKFcEka
-	ykAryxG34j9ryqgFWIvF4fZryFv3Z5Zr4xZF1Sq343Xa429F13Gr4v9rn7Zw1rta4jgF1D
-	J34rZrnYvr18tjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrnU
-	Uv73VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRUUUUU
-	UUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625-more-qseecom-v4-7-aacca9306cee@oss.qualcomm.com>
 
-CONFIG_CXL_DEBUG=y adds -DDEBUG to CFLAGS, which enables pr_debug()
-and dev_dbg(). Users can use this config to open all cxl debug
-messages.
+On Wed, Jun 25, 2025 at 01:53:26AM +0300, Dmitry Baryshkov wrote:
+> From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> 
+> Listing individual machines in qcom_scm_qseecom_allowlist doesn't scale.
+> Allow it to function as allow and disallow list at the same time by the
+> means of the match->data and list the SoC families instead of devices.
+> 
+> In case a particular device has buggy or incompatible firmware user
+> still can disable QSEECOM by specifying qcom_scm.qseecom=off kernel
+> param and (in the longer term) adding machine-specific entry to the
+> qcom_scm_qseecom_allowlist table.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
----
- drivers/cxl/Kconfig  | 10 ++++++++++
- drivers/cxl/Makefile |  2 ++
- 2 files changed, 12 insertions(+)
+>  /*
+>   * We do not yet support re-entrant calls via the qseecom interface. To prevent
+> - * any potential issues with this, only allow validated machines for now. Users
+> + * any potential issues with this, only allow validated platforms for now. Users
+>   * still can manually enable or disable it via the qcom_scm.qseecom modparam.
+> + *
+> + * To disable QSEECOM for a particular machine, add compatible entry and set
+> + * data to &qcom_qseecom_disable.
+>   */
+>  static const struct of_device_id qcom_scm_qseecom_allowlist[] __maybe_unused = {
+> -	{ .compatible = "asus,vivobook-s15" },
+> -	{ .compatible = "asus,zenbook-a14-ux3407qa" },
+> -	{ .compatible = "asus,zenbook-a14-ux3407ra" },
+> -	{ .compatible = "dell,xps13-9345" },
+> -	{ .compatible = "hp,elitebook-ultra-g1q" },
+> -	{ .compatible = "hp,omnibook-x14" },
+> -	{ .compatible = "huawei,gaokun3" },
+> -	{ .compatible = "lenovo,flex-5g" },
+> -	{ .compatible = "lenovo,thinkpad-t14s" },
+> -	{ .compatible = "lenovo,thinkpad-x13s", },
+>  	{ .compatible = "lenovo,yoga-c630", .data = &qcom_qseecom_ro_uefi, },
+> -	{ .compatible = "lenovo,yoga-slim7x" },
+> -	{ .compatible = "microsoft,arcata", },
+> -	{ .compatible = "microsoft,blackrock" },
+> -	{ .compatible = "microsoft,romulus13", },
+> -	{ .compatible = "microsoft,romulus15", },
+> -	{ .compatible = "qcom,sc8180x-primus" },
+> +	{ .compatible = "qcom,sc8180x", },
+> +	{ .compatible = "qcom,sc8280xp", },
+>  	{ .compatible = "qcom,sc8280xp-crd", .data = &qcom_qseecom_ro_uefi, },
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 48b7314afdb8..b7e5225e9d7c 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -233,4 +233,14 @@ config CXL_MCE
- 	def_bool y
- 	depends on X86_MCE && MEMORY_FAILURE
- 
-+config CXL_DEBUG
-+	bool "CXL Debugging"
-+	depends on DEBUG_KERNEL
-+	help
-+	  Say Y here if you want the CXL core to produce a bunch of debug
-+	  messages to the system log.  Select this if you are having a
-+	  problem with CXL support and want to see more of what is going on.
-+
-+	  When in doubt, say N.
-+
- endif
-diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-index 2caa90fa4bf2..9c0151a2b201 100644
---- a/drivers/cxl/Makefile
-+++ b/drivers/cxl/Makefile
-@@ -19,3 +19,5 @@ cxl_acpi-y := acpi.o
- cxl_pmem-y := pmem.o security.o
- cxl_mem-y := mem.o
- cxl_pci-y := pci.o
-+
-+subdir-ccflags-$(CONFIG_CXL_DEBUG) := -DDEBUG
--- 
-2.34.1
+You need to have the machine specific entries before the SoC fallbacks
+for this to work.
 
+Perhaps this should be made more clear in the table by adding a
+separator comment before the SoC entries or similar.
+
+> -	{ .compatible = "qcom,x1e001de-devkit" },
+> -	{ .compatible = "qcom,x1e80100-crd" },
+> -	{ .compatible = "qcom,x1e80100-qcp" },
+> -	{ .compatible = "qcom,x1p42100-crd" },
+> +	{ .compatible = "qcom,sdm845", .data = &qcom_qseecom_disable, },
+> +	{ .compatible = "qcom,x1e80100", },
+> +	{ .compatible = "qcom,x1p42100", },
+>  	{ }
+>  };
+>  
+> @@ -2046,12 +2035,22 @@ static bool qcom_scm_qseecom_machine_is_allowed(struct device *scm_dev,
+>  	match = of_match_node(qcom_scm_qseecom_allowlist, np);
+>  	of_node_put(np);
+>  
+> -	if (match && match->data)
+> +	if (!match) {
+> +		dev_info(scm_dev, "qseecom: untested machine, skipping\n");
+> +		return false;
+> +	}
+> +
+> +	if (match->data)
+>  		*quirks = *(unsigned long *)(match->data);
+>  	else
+>  		*quirks = 0;
+>  
+> -	return match;
+> +	if (*quirks & QCOM_QSEECOM_QUIRK_DISABLE) {
+> +		dev_info(scm_dev, "qseecom: disabled by the quirk\n");
+
+Not sure this is needed since it presumably has been disabled because it
+has been tested and found not to work. No need to spam the logs with
+that on every boot.
+
+In any case I don't think you should be referring to "the quirk" which
+makes little sense without looking at the implementation.
+
+> +		return false;
+> +	}
+> +
+> +	return true;
+>  }
+
+Johan
