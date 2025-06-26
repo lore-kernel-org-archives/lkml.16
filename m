@@ -1,163 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C32238141
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0720B238141;
+	Thu, 26 Jun 2025 21:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750974785; cv=none; b=S4XqtOEfVRqhYcQRG2QpWyWclB+3E7JLp1S8J9oiOLfFArFAXcAKqsulNgelFKGfCTgXCe0xPC6eD16ynNt4kZCv/5cG64fiHrje5Ql/ewwhjq9OSGJox/pm0KQISg3/tKK4Yna9fTipqnstNQAdB8g/l9ppQdX1iH4XnKIS67c=
+	t=1750974947; cv=none; b=uhnhF8CePdkPiLMjGzRUMVwutua+8m3WQJyJjirOpZYfKUGms1OnItfte5QULYmEYPXCWg7QB7402xB8m97uBwqet5BEntaTvmswWj1Z4f1OyvvoBDRv8cjzaFFtrLmrZAHI289lzr3ZwSmgWziiQxfn85XyQCqXqCv7+k1SA1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750974785; c=relaxed/simple;
-	bh=o7K3daCETc7Hk9qO3dHBm7IS1cCBPEx9re6HNbpJPIY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h+XeO8PPU7XwRklqy5b00R4p9ssjISiKjMZraTiSWYB80y1zg7O063+TO2EtaZDe3yEXosa3K0/YbSuVrCMFHXyLUdMgs7Ew2TxHfalqFezuBFMHohEK2QLWUapBtGjcbmmkzUDkZ9yHoi10JgS+Q9m1A9QVze5ynx8vOJpyxlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A+oK8Owh; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750974947; c=relaxed/simple;
+	bh=tqQfAg0tUAA+uv27cHcOCVa/hjDub859ShH6nww2Hik=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=CPypBpcDKyQ94KwqPePksmR0Ix2r3e4sb2QqLXzsdkRq7q97JHuFJoeYVunvETLh9U0jBLj5vt2AgjK+Gyp12vxhvsaIXuAzf5iJ0vgE/+3VqPJpX7Qm5Xe/ir4GtTQVo+vwiBFJuXiIAoWa8UI6xOs+b1AeJf75wMGwwRTIsjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BP9HrZTS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iMyzVJFL; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A+oK8Owh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750974782;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BP9HrZTS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iMyzVJFL"
+Date: Thu, 26 Jun 2025 21:55:42 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750974943;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Sds+EnePYO1cZCHbAHOJn503ulI/pwm3RK5XFeMRA7A=;
-	b=A+oK8OwhDDjk1ZIpY/GmClNu+li9P7YpgJTIK/Df5CAC4LcrU+hJvt59PzojWGlR00fcla
-	NRkNDt4xyyc9MY+LuRT+MgXb1oRZVNJNkQX+EPa8VqWXFczx0SYcOBq0CXnC5efOVs+ssC
-	PskomFyGwh3z0gbCqC82vNBxK0t1RZo=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-689-GvevK6VTN2ej5LeodJre3w-1; Thu, 26 Jun 2025 17:52:54 -0400
-X-MC-Unique: GvevK6VTN2ej5LeodJre3w-1
-X-Mimecast-MFC-AGG-ID: GvevK6VTN2ej5LeodJre3w_1750974774
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-451d3f03b74so7809665e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:52:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750974773; x=1751579573;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Sds+EnePYO1cZCHbAHOJn503ulI/pwm3RK5XFeMRA7A=;
-        b=JGbbYD0BHBLC6bVsqNTBZTe6xGaSvi2qa1eA1QSS7lFuCCTHoyyVRh/nnrRN5iSUjA
-         1cbGNA0+EKB9MNee9a6IwU75Ifivctyf1sS/fb6dwKTb3LBoYqORDLU+USA8Db4r53i3
-         5xtj2SMQE2OcVhHe+XKmbs9BQOLax96betFwgYSHgm/11P5UVMMLn7zdORlyaElI4NPz
-         T8ONnDi5R/kWZuJIAA0w+dGf3+q38DQ2JDH5Mhk5XgexK7EstMfCkxNcNJOmfdxxmF+D
-         ezAdLkn0SlyBVvU+owMRh+uiYzrnrVE9PatFM5khz4p44leX9//KUsnVcLKQ5sDWTKYY
-         HaZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV4s6UuKree6T9o6OX7Oq+ncknGa7moIAKx/zSSfAgX1EHetzc44oEOVR/Fzpv6/6nnA8p99QFVnyypXTM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOu/PYHvGIHF3pxV1wNOctZSh5wmkuWMzauRYZ5a27aH9GO29I
-	+d8HD4LRiLjY/TNP1FFXFHz/oOregb50/Ve8zSeLy6DqYAplHEcqN97WadW6Qz+EaFtGqyphV67
-	I8QjEjoUmVnQPIJUFDjYZDFCJ+/3KtbOMniZ3PNyu4wxIQlcOP3M7PSOMvDfHk7QjrQ==
-X-Gm-Gg: ASbGncuJzU0HmoGxL68k8mFstRjoTPWDQlQKhJrXjADKpEjjcFSUgOCm+R83hpUyYPI
-	VaA1jYryA4qqGzyYSX1ky7a/6gK5SjSSbK5X6XfuG7YTBTprD33EL6wjbExpmzDhp57QrzGJgNj
-	TZmvfYgTgE+5DjzLY2AUnYP9ZW9bQlvRICytXQCcGOk/6hjnWbabXgf9gGhXCBOgsy/G4TYA6VF
-	kiSbjN4BH7wcDwvDVGdYtk1OKXM3dCsksYG0NuD5qWOBR6ODqNVFesJoxXECXUaV3SU5Yicnmpx
-	JwuLiHwcqNnz3bbJk+2jJ3iDl/IJ0T/+6y6w3+/MSMLsZZqRbc25usXDbvyPKXaWw4lR1q39UD5
-	gqkwr8AMdBlhG/Kg2rCuI26M/R2okV/Z+BugnLRpqbTU32GZrhg==
-X-Received: by 2002:adf:b60f:0:b0:3a6:d296:feaf with SMTP id ffacd0b85a97d-3a8fe985feamr656662f8f.24.1750974773621;
-        Thu, 26 Jun 2025 14:52:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF91pFzkN010jPQk8nO4iHG/+bQ0g3gbQdu1CsS5nqxXRrx9a1rGPo2RPO9VipXGBPN3oatgg==
-X-Received: by 2002:adf:b60f:0:b0:3a6:d296:feaf with SMTP id ffacd0b85a97d-3a8fe985feamr656645f8f.24.1750974773213;
-        Thu, 26 Jun 2025 14:52:53 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f3c:2f00:8afc:23fe:3813:776c? (p200300d82f3c2f008afc23fe3813776c.dip0.t-ipconnect.de. [2003:d8:2f3c:2f00:8afc:23fe:3813:776c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fadf3sm958775f8f.34.2025.06.26.14.52.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 14:52:52 -0700 (PDT)
-Message-ID: <4856517e-fb68-436f-8130-b7eb5749b7c0@redhat.com>
-Date: Thu, 26 Jun 2025 23:52:51 +0200
+	 in-reply-to:in-reply-to:references:references;
+	bh=yi+mpT/sGFQjoC2roEaMlU8g+SJkc8gxupCRM4CuUZI=;
+	b=BP9HrZTSVyJEGAaNqMe666GLh5RLSzY/XbIC1Hziea6mFUUNU3G7gzLd52wq0LNZDiJafJ
+	Liqk4aqC2KHm99nGxsQav6QwzWlyOrcvLgx9Ssc0ickIyeteTiDRgsg4H40HpIBUEkgfiU
+	yEJQ6CdiMVhlfuqYOdd/QOBfK/K+UfhvOYCHr0V3AFAcrAj2Cn/0Br/uA2Aez/igwIEexp
+	Pdigwn7HN8qo62ldOACNF9YHWr4Qj7E7LhusWkbyuWl8k/4zJ0Trnq1B7FfcDybWTomr5u
+	Nd627RJuPfndt9wPEVm0Ri1I4YSgP1uss8qa5tqGhVJHHr5gxiPIgN5uxu0OsA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750974943;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yi+mpT/sGFQjoC2roEaMlU8g+SJkc8gxupCRM4CuUZI=;
+	b=iMyzVJFLHkhicU2ZfWM79b59Of3bchouPPKDZZfiHWL4WsPckYO9ZxVeCdhG1vsxaMM4Kh
+	6uiMGBfAZauiF9Cw==
+From: "tip-bot2 for Yury Norov [NVIDIA]" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: smp/core] smp: Defer check for local execution in
+ smp_call_function_many_cond()
+Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250623000010.10124-5-yury.norov@gmail.com>
+References: <20250623000010.10124-5-yury.norov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
- folios during reclamation
-To: Barry Song <21cnbao@gmail.com>, Lance Yang <ioworker0@gmail.com>
-Cc: akpm@linux-foundation.org, baolin.wang@linux.alibaba.com,
- chrisl@kernel.org, kasong@tencent.com, lance.yang@linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-riscv@lists.infradead.org,
- lorenzo.stoakes@oracle.com, ryan.roberts@arm.com, v-songbaohua@oppo.com,
- x86@kernel.org, ying.huang@intel.com, zhengtangquan@oppo.com
-References: <a5b5b0aa-21c4-4abf-b323-63af96aabcd5@redhat.com>
- <20250626092905.31305-1-ioworker0@gmail.com>
- <CAGsJ_4w5Obx9=P0wkrbLaDzKpG0e-7xs7jgHRa91KO7e92MO8g@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <CAGsJ_4w5Obx9=P0wkrbLaDzKpG0e-7xs7jgHRa91KO7e92MO8g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Message-ID: <175097494203.406.12944175640042495059.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On 26.06.25 23:46, Barry Song wrote:
-> On Thu, Jun 26, 2025 at 9:29 PM Lance Yang <ioworker0@gmail.com> wrote:
->>
-> [...]
->> +
->> +               /*
->> +                * If we are sure that we batched the entire folio and cleared
->> +                * all PTEs, we can just optimize and stop right here.
->> +                */
->> +               if (nr_pages == folio_nr_pages(folio))
-> 
-> David also mentioned if (nr_pages > 1 && nr_pages == folio_nr_pages(folio)).
-> I assume it’s still fine when nr_pages == 1 for small folios? No?
+The following commit has been merged into the smp/core branch of tip:
 
-Yeah, as raised I think it is fine. We should never have any folio page 
-mapped multiple times into the same VMA in any case. (excluding KSM 
-pages, but they are handled differenty, using a specialized rmap walk)
+Commit-ID:     b4d6510684bf040c24dead879cce29035ef45826
+Gitweb:        https://git.kernel.org/tip/b4d6510684bf040c24dead879cce29035ef45826
+Author:        Yury Norov [NVIDIA] <yury.norov@gmail.com>
+AuthorDate:    Sun, 22 Jun 2025 20:00:09 -04:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 26 Jun 2025 23:46:35 +02:00
 
--- 
-Cheers,
+smp: Defer check for local execution in smp_call_function_many_cond()
 
-David / dhildenb
+Defer check for local execution to the actual place where it is needed,
+which removes the extra local variable.
 
+Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250623000010.10124-5-yury.norov@gmail.com
+
+---
+ kernel/smp.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 7151906..8456125 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -779,7 +779,6 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+ 	bool wait = scf_flags & SCF_WAIT;
+ 	int nr_cpus = 0;
+ 	bool run_remote = false;
+-	bool run_local = false;
+ 
+ 	lockdep_assert_preemption_disabled();
+ 
+@@ -801,11 +800,6 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+ 	 */
+ 	WARN_ON_ONCE(!in_task());
+ 
+-	/* Check if we need local execution. */
+-	if ((scf_flags & SCF_RUN_LOCAL) && cpumask_test_cpu(this_cpu, mask) &&
+-	    (!cond_func || cond_func(this_cpu, info)))
+-		run_local = true;
+-
+ 	/* Check if we need remote execution, i.e., any CPU excluding this one. */
+ 	if (cpumask_any_and_but(mask, cpu_online_mask, this_cpu) < nr_cpu_ids) {
+ 		run_remote = true;
+@@ -853,7 +847,9 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+ 			run_remote = false;
+ 	}
+ 
+-	if (run_local) {
++	/* Check if we need local execution. */
++	if ((scf_flags & SCF_RUN_LOCAL) && cpumask_test_cpu(this_cpu, mask) &&
++	    (!cond_func || cond_func(this_cpu, info))) {
+ 		unsigned long flags;
+ 
+ 		local_irq_save(flags);
