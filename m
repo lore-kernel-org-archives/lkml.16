@@ -1,132 +1,187 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370F91B043C
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC6216A94A
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750923819; cv=none; b=RZHt8ne9iDYCCn8q0xXD/f7wwD6aX57Bmg+2hisN5ZPPW96fN4Gd8wYQ5d/crayk7kjCipoWsKScnkZoPw2lTfy5udnZ/+EDzS+Z2QBeEjxGjPWy7349YGvQmuYs6fu994ObzDS+n442LmtCh7WQuwbmjA90EKWr2VKKYSH0ZN0=
+	t=1750923900; cv=none; b=YGdecun/Elj4VW1HM5WZPuD+oAXOtKyz5rPKGSUUfELxX3a9kiUQN8XEDnKhoqlk6hk4y1+jyKDS1SkOiT1bZb+YxzmRrZta85RkUhXR6Lgd2/xHHXi0g3NmSAfY90s45MH1nA9214UzsEG1K/3lsf1Ly/S7m6o64ANiED+xexU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750923819; c=relaxed/simple;
-	bh=XAlmZE5sqJznz1ZOVmY23rTj5suSZitJAP3G+ySumjg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=euc+e4h/OZFIPmOi8eS9lCY14KdArb1JjKjNOmnrR9UWrhzIicrf4o6dUAJeho+WZoMgySd1/IDS2hhct89KxPyVJd41UtDQJYwHbTMPtu+TP42stkc2Z8uxt0RVZpL5yo7jCZQxVbuWHcYFJ2cr2AK/n4PFf5VzU5b5iuxT7qE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=bIyahW5m; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1750923900; c=relaxed/simple;
+	bh=/ThMzEMq97yGV+ecJ1/9X4Vs0dTb64spbfgajo6uLvQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m1o0WpW3/rZBvXj4pK6Z2WspTx2O0J2IiUf0v0cmjVK5VtElOnBX4MzWxGVvWpWlMgW4kgvEDBt3iQn8Jf8QTiR1b3LJe7tmNs4TA7PEEpgKpWjn0FI7n2N9zBalxjU2JWSPQxrCJe3tQaOx6c2Xdna8Yt1UpKRei7a79vO7FWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ghu/PUM+; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="bIyahW5m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1750923798; x=1751528598; i=markus.elfring@web.de;
-	bh=XAlmZE5sqJznz1ZOVmY23rTj5suSZitJAP3G+ySumjg=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=bIyahW5mm2qpE8AFH5gjK/utL2agq9Z0N5YZDciofzckFEqc1P485V+T75hcIKN6
-	 wP/BuhvfviuPSQPnxp/1cWTuo4QPkUul3fbcjQrml+SXPP26iou4aI22qujorODvc
-	 +Crua7nLC+E0hSPzVaYFOVv4VibX2q9YZeUDba+H3gzpYOYO2GPX80uRILWXdMMdf
-	 7Qc2+mtc189dG8afRHYHwyicBl/jEA9zRYz3uhV0259jFIhbSgiU60apnOrad5Czn
-	 rFf+RQUXgAtblZIG6EzQRMSUDByyvMxFc5d6JKRCyv6QoLunw5w9qkmWSbpqi36PS
-	 2EBM+umcUW8HhBJ27g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.69.202]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N7QUJ-1unPVg3bhN-00yIXx; Thu, 26
- Jun 2025 09:43:17 +0200
-Message-ID: <e52cb86b-01be-4560-a1da-a6b07108d651@web.de>
-Date: Thu, 26 Jun 2025 09:43:12 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ghu/PUM+"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ade33027bcfso114538266b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 00:44:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750923897; x=1751528697; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cD0VqvSELG0J+uuPBKmhH7qSYefO2Euw2tyQWF1Fj8w=;
+        b=ghu/PUM+KgSWa1ldcjQAk/grnaqnUOz25+V7BGLrD3gDRdQbnLSd/SGqaIBg0WMR2m
+         1Hx2ys6Nq/QiAKl3c2nuL1RxMhQl6cSeBRF48Oai5j+uJ9dW+8TBzhRL4NEXQ5lXlaR5
+         RriQhaF1uHBOTNbZKNXDaojlTjkfXRBbykcpDQt9/Ucc411rfVJWvyCGavpjJqPi+9DP
+         AuJHRdmLzgTkVSHpAy7INY3ftGSH/cJNByVAyl5aFSYRIcJNvMbDFlEmbZR14r7L7B5u
+         iPvQkZFYC7st/6dQTGAivdqf/Om8yjWdXhktaMxqDpeVeVsNsZIQzGBcfMyRqqtA7qdU
+         e+cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750923897; x=1751528697;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cD0VqvSELG0J+uuPBKmhH7qSYefO2Euw2tyQWF1Fj8w=;
+        b=BQRO23lXlBIBvFi2T/XCjhVSBPCJbk4D+Q6vZu+A79gJF+9OctvE6bWG2oq97E/APr
+         68PmLCMeHSbBshX6BUQF9FVMLHgGxL65iR13CBuVZGEYuXPcvl6Rv0NmFpeOJYUmKLDb
+         p7+93NB4OmfaFRBWdYnQI/qxEg2TwzJtOWR3uQxMv//20zQfcgrgaP5lowj+6yrod/Df
+         kl6Patin2ugwy2NcAtNgamnmifZF+n9iIi0UjEGdGqQw65CBMv+5AmfXKPGzoTiyX7jg
+         dIulPVsQB3FtYVr8BzmSKyo/IXl7cFKfWIKSIMr5VBP7l9H70kDPf5q7rSz/QV3GGwnR
+         K5jw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNLOb7bzIytgvsV9yXsrsvsu2bDDQT+GKdqSwGRKUtTiI/kOcam8c1AsX5iAX09/AJ6Ekn3+L2oTeGnOI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWsNr2irlSB45SzGnx3/wFjdSqJq6dNE9mugvco8647XJ3gEy7
+	cNIgd/T0fuhwZ7HdzrDi5r81fjLi3VhztNCRwU+NVY5/cr8K4mrS3Ibka9H4oFo/Pmlk92/e07k
+	czK0DfvpmyptO4fxmr5AozDT43PVdyV+7WOM6IB3NKkgQMN06EXCHu8KhAA==
+X-Gm-Gg: ASbGnctcX/orf3wxwl+9QUpD4YTk0uaWST9Ci8cGyPmWadx+4cQiPRDvoZaFwXtXis9
+	gQ+V4ZeSYlsPkMDUUlAkBN+Dj1+EiHiL3eQ/iiXLCe5VfxGgeTSWllTZ2qN24aH183J0oD5lTdq
+	snrWyW8wUTLbP8ux2fHi28ksMPaqBCMeCXX48BGNnElYw24AiDIhJu0XRtT63kW20A6cK6VqDl
+X-Google-Smtp-Source: AGHT+IHV5x1l+i6ovi8IgyzkXGTwuj2NaXpeuQ5LwePqg7X8Sxfr/UNel6gRJhihPDbSTZHV3IX4k1p3+TmwEZRLDC8=
+X-Received: by 2002:a17:907:7e92:b0:ad2:313f:f550 with SMTP id
+ a640c23a62f3a-ae0bee4e4dbmr674850366b.29.1750923896979; Thu, 26 Jun 2025
+ 00:44:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] coccinelle: misc: Add field_modify script
-To: Luo Jie <quic_luoj@quicinc.com>, cocci@inria.fr,
- Catalin Marinas <catalin.marinas@arm.com>, Joey Gouly <joey.gouly@arm.com>,
- Julia Lawall <Julia.Lawall@inria.fr>, Marc Zyngier <maz@kernel.org>,
- Nicolas Palix <nicolas.palix@imag.fr>, Oliver Upton
- <oliver.upton@linux.dev>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Suzuki Poulose <suzuki.poulose@arm.com>, Will Deacon <will@kernel.org>,
- Yury Norov <yury.norov@gmail.com>, Zenghui Yu <yuzenghui@huawei.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- Andrew Lunn <andrew@lunn.ch>, "Kiran Kumar C.S.K"
- <quic_kkumarcs@quicinc.com>, Lei Wei <quic_leiwei@quicinc.com>,
- Pavithra R <quic_pavir@quicinc.com>,
- Suruchi Agarwal <quic_suruchia@quicinc.com>, quic_linchen@quicinc.com
-References: <20250626-field_modify-v6-1-200dffa38a07@quicinc.com>
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250626-field_modify-v6-1-200dffa38a07@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:0cV8rpMonBMa03MwBG5b9wDd3SivW48JmY+eNd/HyLgmaL/AP8S
- iAXAH9Uq8D9vY9wt+wRclCy3ivXE4uV8zlGCzmw7ySKxlkZP/2I270005Yy7gHXFEU78AMY
- U6qFt30HM15TWA6DjLuv3XHaVAf74gmX1iCyAsd9H+//EyH7lW/TK1UYSxD7B2+VZrCkgOe
- kJvCOI98NladPaZ9nhTWQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MJqKDaA6sIU=;pJ+ZZbo0sKDE1wfR4GV5UWpoSAE
- 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
- Z9jDK7UGhwdiWoeiQlzDyLgvT4Lu4mvA=
+References: <20250624204942.715206-1-clm@fb.com> <20250626070057.GE1613200@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250626070057.GE1613200@noisy.programming.kicks-ass.net>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Thu, 26 Jun 2025 09:44:45 +0200
+X-Gm-Features: Ac12FXwFBJLhvX_rpxcmPVdEmG2P03pw4xPEqeZFQ_w5vvPEjlfOVnBIXz8LNSg
+Message-ID: <CAKfTPtCiyXCxAiU8YZUq6fVOY5MmKN7wXeW8Jm1=GWOEghcVBw@mail.gmail.com>
+Subject: Re: [PATCH RFC] sched/fair: bump sd->max_newidle_lb_cost when newidle
+ balance fails
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Chris Mason <clm@fb.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-> +coccilib.report.print_report(p[0], "WARNING: Consider using FIELD_MODIF=
-Y helper on %s" % (x))
+On Thu, 26 Jun 2025 at 09:00, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Tue, Jun 24, 2025 at 01:48:08PM -0700, Chris Mason wrote:
+> > schbench (https://github.com/masoncl/schbench.git) is showing a
+> > regression from previous production kernels that bisected down to:
+> >
+> > sched/fair: Remove sysctl_sched_migration_cost condition (c5b0a7eefc)
+> >
+> > The schbench command line was:
+> >
+> > schbench -L -m 4 -M auto -t 256 -n 0 -r 0 -s 0
+> >
+> > This creates 4 message threads pinned to CPUs 0-3, and 256x4 worker
+> > threads spread across the rest of the CPUs.  Neither the worker threads
+> > or the message threads do any work, they just wake each other up and go
+> > back to sleep as soon as possible.
+> >
+> > The end result is the first 4 CPUs are pegged waking up those 1024
+> > workers, and the rest of the CPUs are constantly banging in and out of
+> > idle.  If I take a v6.9 Linus kernel and revert that one commit,
+> > performance goes from 3.4M RPS to 5.4M RPS.
+> >
+> > schedstat shows there are ~100x  more new idle balance operations, and
+> > profiling shows the worker threads are spending ~20% of their CPU time
+> > on new idle balance.  schedstats also shows that almost all of these new
+> > idle balance attemps are failing to find busy groups.
+> >
+> > The fix used here is to crank up the cost of the balance whenever it
+> > fails to find a busy group or busy queue.
+> >
+> > Signed-off-by: Chris Mason <clm@fb.com>
+> > ---
+> >  kernel/sched/fair.c | 52 ++++++++++++++++++++++++---------------------
+> >  1 file changed, 28 insertions(+), 24 deletions(-)
+> >
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 7a14da5396fb2..0c4701564ce01 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -11744,6 +11744,32 @@ static void update_lb_imbalance_stat(struct lb_env *env, struct sched_domain *sd
+> >       }
+> >  }
+> >
+> > +static inline bool update_newidle_cost(struct sched_domain *sd, u64 cost)
+> > +{
+> > +     if (cost > sd->max_newidle_lb_cost) {
+> > +             /*
+> > +              * Track max cost of a domain to make sure to not delay the
+> > +              * next wakeup on the CPU.   Add a bit to the min so we don't
+> > +              * have to worry about <= vs <, and to handle the sysctl set at
+> > +              * zero.
+> > +              */
+> > +             sd->max_newidle_lb_cost = min(cost, sysctl_sched_migration_cost + 200);
+> > +             sd->last_decay_max_lb_cost = jiffies;
+> > +     } else if (time_after(jiffies, sd->last_decay_max_lb_cost + HZ)) {
+> > +             /*
+> > +              * Decay the newidle max times by ~1% per second to ensure that
+> > +              * it is not outdated and the current max cost is actually
+> > +              * shorter.
+> > +              */
+> > +             sd->max_newidle_lb_cost = (sd->max_newidle_lb_cost * 253) / 256;
+> > +             sd->last_decay_max_lb_cost = jiffies;
+> > +
+> > +             return true;
+> > +     }
+> > +
+> > +     return false;
+> > +}
+> > +
+>
+> For the non-RFC version, please split this into a code move and a code
+> change -- I had to stare waaay to long to spot the difference (if we
+> keep this code movement at all).
+>
+> >  /*
+> >   * Check this_cpu to ensure it is balanced within domain. Attempt to move
+> >   * tasks if there is an imbalance.
+> > @@ -11782,12 +11808,14 @@ static int sched_balance_rq(int this_cpu, struct rq *this_rq,
+> >
+> >       group = sched_balance_find_src_group(&env);
+> >       if (!group) {
+> > +             update_newidle_cost(sd, sd->max_newidle_lb_cost + sd->max_newidle_lb_cost / 2);
+> >               schedstat_inc(sd->lb_nobusyg[idle]);
+> >               goto out_balanced;
+> >       }
+> >
+> >       busiest = sched_balance_find_src_rq(&env, group);
+> >       if (!busiest) {
+> > +             update_newidle_cost(sd, sd->max_newidle_lb_cost + sd->max_newidle_lb_cost / 2);
+> >               schedstat_inc(sd->lb_nobusyq[idle]);
+> >               goto out_balanced;
+> >       }
+>
+> So sched_balance_rq() is used for pretty much all load-balancing, not
+> just newidle.
+>
+> Either make this conditional like:
+>
+>         if (idle == CPU_NEWLY_IDLE)
+>                 update_newidle_cost(...);
+>
+> or do it all the callsite, where we find !pulled_task (ie failure).
+>
+> Specifically, we already do update_newidle_cost() there, perhaps inflate
+> the cost there instead?
+>
+>         if (!pulled_tasks)
+>                 domain_cost += sysctl_sched_migration_cost;
 
-Would you find it a bit nicer to use also another formatted string literal
-as a function call parameter?
-(The recent code adjustment indicated something for the operation mode =E2=
-=80=9Corg=E2=80=9D.)
-https://docs.python.org/3/reference/lexical_analysis.html#f-strings
+yeah, sched_balance_newidle() looks like a better place to
+artificially increase the cost
 
-Regards,
-Markus
+>
+> or whatever.
+>
