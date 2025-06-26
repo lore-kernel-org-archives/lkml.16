@@ -1,93 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-bc0e.mail.infomaniak.ch (smtp-bc0e.mail.infomaniak.ch [45.157.188.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640D818035;
-	Thu, 26 Jun 2025 09:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEBE218AB4
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750930972; cv=none; b=O16fOA5Gn9tXfjWTbq1w33+Yfbi6pl8kwBG/ThjddR77nyNL/UohUrJZnWH0v+vAgqmXAKVE9QrGtMmTsJAN2tKBIVo+mTsPyd/xVG30Ueg8Qonf+Imj5dC+htGXaKuIcCp29ny7V/t83e8Agma6MpxSAuoB8eaI92Ape8xAUE4=
+	t=1750931042; cv=none; b=XLKg4xiM/W9BJ2Rtb2hr8iPZyVRIFRjOSysSUywCttpRCxGZGvw3UySKmY8tI5qB2YhIhf1mZK4T/acr+eXsSwq9VzdYck9HzdOLYJ32CISBdIQYOgyiCn245/XJGZtmZWPfPzQlcZBV3rRDgSRFUPkDVdoKNrVMYhFxHQ9caZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750930972; c=relaxed/simple;
-	bh=yxr8jkkGpgSkf59PSayEt3iCwdXnKO9NB8pyouoEjO0=;
+	s=arc-20240116; t=1750931042; c=relaxed/simple;
+	bh=jxrqVWlNu9OTIwE5HUzDPcHmbqs+mlSWJ9SdYDE/kkQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AUMqYqorh/UnVNyGrq9dj+XszysQsy6F5+SOpqE6cut0lfZqIt49W/vePwlJLPvhLk3hCoUKK8Rr+9xQ9RZtTiAWdWJSWiXFqcbjhKB5XYfNDJ+WWA0AtPLE0jM2aRowhMHvicNwBuhHb1z09nhDpr1G8OD5sAcnWt0czmBvp94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ALxxWE+O; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LVhfUcLG1Rz1BK4nWu9K8KS6pSWmiBTJvy/YC+VmAlHoaLKu/gD9OFgybp5BoXEJscFnl7DBZZjQLvk2VLKWAhn/apEOS3DnMe8pvZQcYip3gvYln7xibVK3ofpI2vVL6dil9T0prmS9LYZ5nU5aKT5HAMnIwHIrizGjWCZS64o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=Es/nqOpR; arc=none smtp.client-ip=45.157.188.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ALxxWE+O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA8EDC4CEF4;
-	Thu, 26 Jun 2025 09:42:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750930971;
-	bh=yxr8jkkGpgSkf59PSayEt3iCwdXnKO9NB8pyouoEjO0=;
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="Es/nqOpR"
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bSYfb3HJLzhXX;
+	Thu, 26 Jun 2025 11:43:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1750931031;
+	bh=Z/uNTZquS++80fsem6ySxdoivWSYkihrZf+FpIs4Vc0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ALxxWE+OyyAEN793dNZxPXlaxUD8qWsejSbr9+ou0JUjszr/243/supU2Py/r+KNY
-	 i1Svuh2TpEGu9EWb6C3+PqB8AR1UCIkEthUTs+mh5mfBA1LAY7qoYdQwbTlLLfJO6o
-	 0kL/STpOX0HcoLJxGj9Mfy4MqCK+2hqycG9v+n6DX88CZ8xVsRzdREzsA7B2W6P8tT
-	 WCFLUvn4Ppk/vOJuKzzwhXfKftv4YDHEwDCi6YbhGF875zelOtMU9MopfJZl8gYwiH
-	 XS58g8spscSzHdcb38yyfP4JMvW5XSJvEZA1EySh378JR2RhZFditbRHz1yaRXOwxt
-	 upQDK3bt5Yt5g==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uUj86-000000007Kg-2oNt;
-	Thu, 26 Jun 2025 11:42:51 +0200
-Date: Thu, 26 Jun 2025 11:42:50 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] firmware: qcom: uefisecapp: add support for R/O
- UEFI vars
-Message-ID: <aF0WGmnN_8rvI9n1@hovoldconsulting.com>
-References: <20250621-more-qseecom-v2-0-6e8f635640c5@oss.qualcomm.com>
- <20250621-more-qseecom-v2-2-6e8f635640c5@oss.qualcomm.com>
- <aFloifxONXnQbVg6@hovoldconsulting.com>
- <aFlps9iUcD42vN4w@hovoldconsulting.com>
- <diarijcqernpm4v5s6u22jep3gzdrzy7o4dtw5wzmlec75og6y@wlbyjbtvnv3s>
+	b=Es/nqOpRPK/X1DZtD1Gki12xHc9rguh5Tr/5wSoWATCvAdcpwUj3sD1lOKTUluF5A
+	 64ftEmAcWVYq1zaSH8n3Lt90Nzvkm5fwKfciI3XCP2n3ocopQ7l1la8Acyr19ljcu9
+	 mbE74nvsOmrC1MEW70Jjmitphhon/2VSjabNGBQs=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4bSYfZ1m9czlKv;
+	Thu, 26 Jun 2025 11:43:50 +0200 (CEST)
+Date: Thu, 26 Jun 2025 11:43:49 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Song Liu <songliubraving@meta.com>
+Cc: NeilBrown <neil@brown.name>, Tingmao Wang <m@maowtm.org>, 
+	Song Liu <song@kernel.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "brauner@kernel.org" <brauner@kernel.org>, 
+	Kernel Team <kernel-team@meta.com>, "andrii@kernel.org" <andrii@kernel.org>, 
+	"eddyz87@gmail.com" <eddyz87@gmail.com>, "ast@kernel.org" <ast@kernel.org>, 
+	"daniel@iogearbox.net" <daniel@iogearbox.net>, "martin.lau@linux.dev" <martin.lau@linux.dev>, 
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "jack@suse.cz" <jack@suse.cz>, 
+	"kpsingh@kernel.org" <kpsingh@kernel.org>, "mattbobrowski@google.com" <mattbobrowski@google.com>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
+Subject: Re: [PATCH v5 bpf-next 0/5] bpf path iterator
+Message-ID: <20250626.eifo4iChohWo@digikod.net>
+References: <4577db64-64f2-4102-b00e-2e7921638a7c@maowtm.org>
+ <175089992300.2280845.10831299451925894203@noble.neil.brown.name>
+ <9BD19ABC-08B8-4976-912D-DFCC06C29CAA@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <diarijcqernpm4v5s6u22jep3gzdrzy7o4dtw5wzmlec75og6y@wlbyjbtvnv3s>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9BD19ABC-08B8-4976-912D-DFCC06C29CAA@meta.com>
+X-Infomaniak-Routing: alpha
 
-On Tue, Jun 24, 2025 at 04:13:34AM +0300, Dmitry Baryshkov wrote:
-> On Mon, Jun 23, 2025 at 04:50:27PM +0200, Johan Hovold wrote:
-> > On Mon, Jun 23, 2025 at 04:45:30PM +0200, Johan Hovold wrote:
-
-> > > Also not sure how useful it is to only be able to read variables,
-> > > including for the RTC where you'll end up with an RTC that's always
-> > > slightly off due to drift (even if you can set it when booting into
-> > > Windows or possibly from the UEFI setup).
-> > > 
-> > > Don't you have any SDAM blocks in the PMICs that you can use instead for
-> > > a proper functioning RTC on these machines?
+On Thu, Jun 26, 2025 at 05:52:50AM +0000, Song Liu wrote:
 > 
-> I'd rather not poke into an SDAM, especially since we don't have docs
-> which SDAM blocks are used and which are not.
+> 
+> > On Jun 25, 2025, at 6:05 PM, NeilBrown <neil@brown.name> wrote:
+> 
+> [...]
+> 
+> >> 
+> >> I can't speak for Mickaël, but a callback-based interface is less flexible
+> >> (and _maybe_ less performant?).  Also, probably we will want to fallback
+> >> to a reference-taking walk if the walk fails (rather than, say, retry
+> >> infinitely), and this should probably use Song's proposed iterator.  I'm
+> >> not sure if Song would be keen to rewrite this iterator patch series in
+> >> callback style (to be clear, it doesn't necessarily seem like a good idea
+> >> to me, and I'm not asking him to), which means that we will end up with
+> >> the reference walk API being a "call this function repeatedly", and the
+> >> rcu walk API taking a callback.  I think it is still workable (after all,
+> >> if Landlock wants to reuse the code in the callback it can just call the
+> >> callback function itself when doing the reference walk), but it seems a
+> >> bit "ugly" to me.
+> > 
+> > call-back can have a performance impact (less opportunity for compiler
+> > optimisation and CPU speculation), though less than taking spinlock and
+> > references.  However Al and Christian have drawn a hard line against
+> > making seq numbers visible outside VFS code so I think it is the
+> > approach most likely to be accepted.
+> > 
+> > Certainly vfs_walk_ancestors() would fallback to ref-walk if rcu-walk
+> > resulted in -ECHILD - just like all other path walking code in namei.c.
+> > This would be largely transparent to the caller - the caller would only
+> > see that the callback received a NULL path indicating a restart.  It
+> > wouldn't need to know why.
 
-You're with Qualcomm now so you should be able to dig up this
-information like we did for the X13s (even if I'm quite aware that it
-may still be easier said than done).
+Given the constraints this looks good to me.  Here is an updated API
+with two extra consts, an updated walk_cb() signature, and a new
+"flags" and without @root:
 
-> I think the slightly drifted RTC is still much better than ending up
-> with an RTC value which is significantly off, because it was set via the
-> file modification time.
+int vfs_walk_ancestors(struct path *path,
+                       bool (*walk_cb)(const struct path *ancestor, void *data),
+                       void *data, int flags)
 
-I measured drift of 1 second every 3.5 h on the X13s, so having an
-almost correct time with massive drift that cannot be corrected for may
-not necessarily be better.
+The walk continue while walk_cb() returns true.  walk_cb() can then
+check if @ancestor is equal to a @root, or other properties.  The
+walk_cb() return value (if not bool) should not be returned by
+vfs_walk_ancestors() because a walk stop doesn't mean an error.
 
-> Anyway, let me pick up some more patches in the next revision, maybe it
-> would be more obvious why I'd like to get R/O support.
+@path would be updated with latest ancestor path (e.g. @root).
+@flags could contain LOOKUP_RCU or not, which enables us to have
+walk_cb() not-RCU compatible.
 
-I'll try to take a look.
+When passing LOOKUP_RCU, if the first call to vfs_walk_ancestors()
+failed with -ECHILD, the caller can restart the walk by calling
+vfs_walk_ancestors() again but without LOOKUP_RCU.
 
-Johan
+> 
+> I guess I misunderstood the proposal of vfs_walk_ancestors() 
+> initially, so some clarification:
+> 
+> I think vfs_walk_ancestors() is good for the rcu-walk, and some 
+> rcu-then-ref-walk. However, I don’t think it fits all use cases. 
+> A reliable step-by-step ref-walk, like this set, works well with 
+> BPF, and we want to keep it. 
+
+The above updated API should work for both use cases: if the caller wants
+to walk only one level, walk_cb() can just always return false (and
+potentially save that it was called) and then stop the walk the first
+time it is called.  This makes it possible to write an eBPF helper with
+the same API as path_walk_parent(), while making the kernel API more
+flexible.
+
+> 
+> Can we ship this set as-is (or after fixing the comment reported
+> by kernel test robot)? I really don’t think we need figure out 
+> all details about the rcu-walk here. 
+> 
+> Once this is landed, we can try implementing the rcu-walk
+> (vfs_walk_ancestors or some variation). If no one volunteers, I
+> can give it a try. 
+
+My understanding is that Christian only wants one helper (that should
+handle both use cases).  I think this updated API should be good enough
+for everyone.  Most of your code should stay the same.  What do you
+think?
+
+> 
+> Thanks,
+> Song
+> 
