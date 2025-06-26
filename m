@@ -1,87 +1,48 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FCF21771C
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B1C1459FA;
+	Thu, 26 Jun 2025 23:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750981690; cv=none; b=vBW6uv2Tf2pi9gCVNUzsHjtf+oMQZCVxyrfYdvZGvAJYv7iBitZzViob1VavzZ1fGRjlOuLpN5kRlA07EI62l6DNdBCAqIx9tOPBoBMbW+Uz8/EbNbODT6y9ZmvIKSikiBEwbKQ7mQ45s2Tz0wOLxe0nSkK+Kzr6MKrQnI3+m5E=
+	t=1750981698; cv=none; b=ce+Dv8WK2X793d7kV/JHZX0jYfwBtBe94TWALZ9YeAuUloviPF0DBMlO7GBZeFJcQgq1+9tJsPOlFOC7ryGNTwTGCE3N+dJNqWMBKuzT/NPTQxwFgjhIsgGfmuDHrz3JJKJnDvaaHIJwmZKQdCDJKLiylUlt6RQVuP8bHqIw5Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750981690; c=relaxed/simple;
-	bh=GJeEEk2k+9QDO4GRwoK8rdidT7Hui7V7SG1hw9vaPec=;
+	s=arc-20240116; t=1750981698; c=relaxed/simple;
+	bh=UtT4R14YmcZBQdtbiQF4aYA0gAR4Kg/4hgZsKCZzdjU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mXNABNoGqGg1KM6emz+LwRKwjeTWyQMPSImRY3exVweRuLfglxmH+INSNPXrSgoVUTKgxllDUz3jJqUqom22OrR7yd0KYTHQW5ib2gp/AuIBbwCm4dOW/hsLT1czRobKwQlWlujsbPM0xzCG/or7RkZrSL7FjlU5c+Qs4fgp5fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZSSzIlaz; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RcDlIbpEKtumTkJwX343feZVHCS7b7I2csFm8yPfLBdtGRkCnqVfpg3EUmnR1+rT25yg/m9I604i9irru9yHod1gbXtS6Y+Rb2joc6SOdDuwjQ0OOnG0P8HAfJUVY8ZVtGqSG05koEPIFT4/prZ4sP+ufwMP/PDoKHRKq9gJxic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egyGcd2X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZSSzIlaz"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QIpxHb031206
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:48:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=Jcqp3+hst16YWzvGdkkJ7rEp
-	8MCwqlwyZH1HL9EQbcw=; b=ZSSzIlazO7dpLTO4uSjFpg7YD4GcFkAhKwAyuZIH
-	8WrWmXgW1TLFGI4nEwZUHc54LLaU6TRdXObY+7C3k7VpXGVcsDjm4TfpKOGzjI5n
-	YZyccFObOU3rlxP5ibsv71XourvsqCTEB5WYPJuxk0Zk67F8Yge2LmfqBjdbMHE3
-	gC76Jz66379TiHtY7jhr/95qXos7HvU24jw6ofabRfQ1iSL+EKcPm9G6V7MiVmZZ
-	v1xFih6iEd0KTnl3ri4VumAXXRi7AKinj5MFt5s+2fyW9stn1YEwZ6+MF7VFJKiG
-	/CbuT0b1ZVil5KY4ggIWZsIOgiHM7HPKmFKi68rI/eIvKg==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f4b44spg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:48:07 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c760637fe5so250165585a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:48:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750981686; x=1751586486;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jcqp3+hst16YWzvGdkkJ7rEp8MCwqlwyZH1HL9EQbcw=;
-        b=PYEWRvG1gjfMpTJSofMUu3nNEdBIM8K5vJe5CT8ywNln0spD11k24WztPbbShpodbQ
-         WOZ+71Q8z4z1ER8LY+dzLAryIHvJkOVjeRPMoObOIDSaQ+pLuHXPM7MpWQHizxlqWBL8
-         Chuc+GYdQa2qhIW4Mu6bMmjkMWpB/wv2Zj15KR/vCijd2cqd04bWghQFwvufiAQ549AE
-         padlh84hJGKVlpm1joityNiVDDxfCeC8S/nQ1NKKr5SOCCXkf3hS2/C5eGclx9U1K6Ie
-         8D+xVJg5kK9Dt5JchGejMMOCFSzDbRQfN3icRk3lWf4+y97kgeCT4+HtO/Cv8lQgJiXL
-         FcEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxTjBQqTjbnhWGcFTRvvD5sVdQUDBre9/34KcIuUgpseeE2svTYweLEJivKMFmxMDPrM8py8X4bTpL5Oo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydtcySFD4FyHOf4W8IU6zKtWVYv/IK/Zt9oltIY18PouZ8NoZt
-	38k8c6QyG9jvNJi95+b5AjmLQNlH2j9VkjW1EEsisTjMmT/bH8OifDgywXjuRldX++HWUyB2wSb
-	0cliDi5QN2p/3r7lv4Ma0Sw4CMS7oDk5abX/VhT9KePmsUdNFVZRkveWqjALiwzzUdd8=
-X-Gm-Gg: ASbGncvDo/1J78JdadWMlst12KAH2ftzRAAghaxQfNxRAUDUWMpdP71IZ9LYBCQfFeq
-	qTL1hz8o3tbQqZgFQZvuf4AtYb4fBkXVA90J7GrOMiRsi/jf+YFBmRA18H6MVPchVTi3MVWyaa5
-	7vzsmRoJZafa2UdPbY0XInpYAN8hJeLYcSK9u4LOlgg6S1wOxIB6wHzspRImI9ck+Kw08tbmeCg
-	x2yvobj0kks1aqoAWfCpykwV3mpiBmy7oW2XX2iAOK54neYjGbRwogom0TkJ7cnvcONED1CWV/w
-	91i4hDFnAGRgNPI6W97lYepasy2hwG5P+wo7GhwrXSC+VCcjUz9HzV4a7uC3+MiHm0GvcsUOprs
-	MCJ5nNKZWtpl+uZE4nw2kxsBsppHODfQEzKw=
-X-Received: by 2002:a05:620a:708a:b0:7ca:f2cf:eb8b with SMTP id af79cd13be357-7d443950f18mr219894785a.34.1750981685910;
-        Thu, 26 Jun 2025 16:48:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF8LImz54AwYU8qJ3uD+qw0ctbfw33heYi7sSbh/STbsvQec9M5PenlZbd9yKarCy9GjAAvFQ==
-X-Received: by 2002:a05:620a:708a:b0:7ca:f2cf:eb8b with SMTP id af79cd13be357-7d443950f18mr219891785a.34.1750981685435;
-        Thu, 26 Jun 2025 16:48:05 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550be2a0bfsm126329e87.153.2025.06.26.16.48.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 16:48:04 -0700 (PDT)
-Date: Fri, 27 Jun 2025 02:48:02 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Johan Hovold <johan@kernel.org>, Steev Klimaszewski <steev@kali.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-efi@vger.kernel.org
-Subject: Re: [PATCH v4 5/8] firmware; qcom: scm: enable QSEECOM on SC8280XP
- CRD
-Message-ID: <wqmnh7x7pi3tg5ascnfmy7lzjbe4wbmcf4ycjndtovbxkxajsf@ghayhqaixhnj>
-References: <20250625-more-qseecom-v4-0-aacca9306cee@oss.qualcomm.com>
- <20250625-more-qseecom-v4-5-aacca9306cee@oss.qualcomm.com>
- <e5e3e8f1-4328-4929-825a-3d8e836cf072@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egyGcd2X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1600DC4CEEB;
+	Thu, 26 Jun 2025 23:48:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750981697;
+	bh=UtT4R14YmcZBQdtbiQF4aYA0gAR4Kg/4hgZsKCZzdjU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=egyGcd2Xu5wFL2I1FrhAsH0nN/UgK8xH+EBSmS7M8miRrBVxsvIukhXLc4hjfcXsX
+	 Ru4UQ6T5VlSdW1GhnvDIBclPtH2vniV0FISYBM3xJmFnHof6lqS6JBym6u8mVRYw5b
+	 caY1tvjODHzkgq6knazcBlHINp40vc3UQZvyNEQjFdy+wV+ckrfGWoyelEF8w2VPRc
+	 D/sLoMOkFomuh9fMYO5bwN8RlUieIA6L7YBECdwhgbul7N2O2jgzrwCQVHIBVX4puL
+	 0QK4kSeQV+Qzxv8D7S6F9DAbudxvslIHhaGQhukiwTVtjNnTdE0csQ6wOOl/Ee7/UN
+	 aVLBhF1vbR32w==
+Date: Thu, 26 Jun 2025 18:48:16 -0500
+From: Rob Herring <robh@kernel.org>
+To: Matthew Gerlach <matthew.gerlach@altera.com>,
+	Dinh Nguyen <dinguyen@kernel.org>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, maxime.chevallier@bootlin.com,
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+	richardcochran@gmail.com, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	Mun Yew Tham <mun.yew.tham@altera.com>
+Subject: Re: [PATCH v6] dt-bindings: net: Convert socfpga-dwmac bindings to
+ yaml
+Message-ID: <20250626234816.GB1398428-robh@kernel.org>
+References: <20250613225844.43148-1-matthew.gerlach@altera.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,60 +51,380 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e5e3e8f1-4328-4929-825a-3d8e836cf072@oss.qualcomm.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDIwMyBTYWx0ZWRfX8vIRHl4USQa1
- Ytn9RBjbmbqLwZDGLsCqxM7UMWS5KW9MNVpSOtwc4cHyxPXNzHDcvxu0G9KKo3ee9BJoShQbiiN
- JIus3LFS4unc7CXEdxMj0s+GhrN08GM1Du5hZYrFsubyX5F/RqYqe3xOq6J7FYgStNh3K8N/H7q
- 8BPPE5lhmKDnU+CfarhTQUsV3ize/Ckj1uFQ3MudJ2+2ZJFrGa6asHMQ/qt5XpebbsUKDUD+tnq
- 8i88VH2a/gG+8KlxTwX+gtlJVzva5ZqrY+lAb4Sqm1FgmStgrviI2qkeh1jX1Fb5n6ppGDczGCT
- uBiL6e1lv3TZbLr/tZ+a44W3BhkXeiAjUbpc2tBT2A9xafI0a/ZiX0etcpeAVlQbpodbX7QS4uz
- 6bFec+b0uk9JoSuqZ6PrUYl7ZG3//B5RQVSW2e/WOlrQv/w+QRAZtAUgh+ABda1AOqqUygZE
-X-Proofpoint-ORIG-GUID: Jyf81UJD1ZuGLbQAzex1wnDMt9VGZvdM
-X-Proofpoint-GUID: Jyf81UJD1ZuGLbQAzex1wnDMt9VGZvdM
-X-Authority-Analysis: v=2.4 cv=A8BsP7WG c=1 sm=1 tr=0 ts=685ddc37 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=Xm4G249AS8QJ8kFCN1QA:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_07,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0
- phishscore=0 adultscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506260203
+In-Reply-To: <20250613225844.43148-1-matthew.gerlach@altera.com>
 
-On Fri, Jun 27, 2025 at 01:34:56AM +0200, Konrad Dybcio wrote:
-> On 6/25/25 12:53 AM, Dmitry Baryshkov wrote:
-> > As reported by Johan, this platform also doesn't currently support
-> > updating of the UEFI variables. In preparation to reworking match list
-> > for QSEECOM mark this platform as supporting QSEECOM with R/O UEFI
-> > variables.
-> > 
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> > ---
-> >  drivers/firmware/qcom/qcom_scm.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-> > index dbb77c3f69ddaa931e7faa73911207a83634bda1..27ef2497089e11b5a902d949de2e16b7443a2ca4 100644
-> > --- a/drivers/firmware/qcom/qcom_scm.c
-> > +++ b/drivers/firmware/qcom/qcom_scm.c
-> > @@ -2005,6 +2005,7 @@ static const struct of_device_id qcom_scm_qseecom_allowlist[] __maybe_unused = {
-> >  	{ .compatible = "microsoft,romulus13", },
-> >  	{ .compatible = "microsoft,romulus15", },
-> >  	{ .compatible = "qcom,sc8180x-primus" },
-> > +	{ .compatible = "qcom,sc8280xp-crd", .data = &qcom_qseecom_ro_uefi, },
-> 
-> R/W works for me (tm).. the META version may be (inconclusive) 2605
+On Fri, Jun 13, 2025 at 03:58:44PM -0700, Matthew Gerlach wrote:
+> Convert the bindings for socfpga-dwmac to yaml. Since the original
+> text contained descriptions for two separate nodes, two separate
+> yaml files were created.
 
-I'd let you sort this out with Johan. He wrote that variables didn't
-persist across reboots.
+Sigh I just reviewed a conversion from Dinh:
+
+https://lore.kernel.org/all/20250624191549.474686-1-dinguyen@kernel.org/
+
+I prefer this one as it has altr,gmii-to-sgmii-2.0.yaml, but I see some 
+issues compared to Dinh's.
 
 > 
-> Konrad
+> Signed-off-by: Mun Yew Tham <mun.yew.tham@altera.com>
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
+> Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> ---
+> v6:
+>  - Fix reference to altr,gmii-to-sgmii-2.0.yaml in MAINTAINERS.
+>  - Add Reviewed-by:
+> 
+> v5:
+>  - Fix dt_binding_check error: comptabile.
+>  - Rename altr,gmii-to-sgmii.yaml to altr,gmii-to-sgmii-2.0.yaml
+> 
+> v4:
+>  - Change filename from socfpga,dwmac.yaml to altr,socfpga-stmmac.yaml.
+>  - Updated compatible in select properties and main properties.
+>  - Fixed clocks so stmmaceth clock is required.
+>  - Added binding for altr,gmii-to-sgmii.
+>  - Update MAINTAINERS.
+> 
+> v3:
+>  - Add missing supported phy-modes.
+> 
+> v2:
+>  - Add compatible to required.
+>  - Add descriptions for clocks.
+>  - Add clock-names.
+>  - Clean up items: in altr,sysmgr-syscon.
+>  - Change "additionalProperties: true" to "unevaluatedProperties: false".
+>  - Add properties needed for "unevaluatedProperties: false".
+>  - Fix indentation in examples.
+>  - Drop gmac0: label in examples.
+>  - Exclude support for Arria10 that is not validating.
+> ---
+>  .../bindings/net/altr,gmii-to-sgmii-2.0.yaml  |  49 ++++++
+>  .../bindings/net/altr,socfpga-stmmac.yaml     | 162 ++++++++++++++++++
+>  .../devicetree/bindings/net/socfpga-dwmac.txt |  57 ------
+>  MAINTAINERS                                   |   7 +-
+>  4 files changed, 217 insertions(+), 58 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/altr,gmii-to-sgmii-2.0.yaml
+>  create mode 100644 Documentation/devicetree/bindings/net/altr,socfpga-stmmac.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/altr,gmii-to-sgmii-2.0.yaml b/Documentation/devicetree/bindings/net/altr,gmii-to-sgmii-2.0.yaml
+> new file mode 100644
+> index 000000000000..aafb6447b6c2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/altr,gmii-to-sgmii-2.0.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +# Copyright (C) 2025 Altera Corporation
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/altr,gmii-to-sgmii-2.0.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Altera GMII to SGMII Converter
+> +
+> +maintainers:
+> +  - Matthew Gerlach <matthew.gerlach@altera.com>
+> +
+> +description:
+> +  This binding describes the Altera GMII to SGMII converter.
+> +
+> +properties:
+> +  compatible:
+> +    const: altr,gmii-to-sgmii-2.0
+> +
+> +  reg:
+> +    items:
+> +      - description: Registers for the emac splitter IP
+> +      - description: Registers for the GMII to SGMII converter.
+> +      - description: Registers for TSE control.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: hps_emac_interface_splitter_avalon_slave
+> +      - const: gmii_to_sgmii_adapter_avalon_slave
+> +      - const: eth_tse_control_port
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    phy@ff000240 {
+> +        compatible = "altr,gmii-to-sgmii-2.0";
+> +        reg = <0xff000240 0x00000008>,
+> +              <0xff000200 0x00000040>,
+> +              <0xff000250 0x00000008>;
+> +        reg-names = "hps_emac_interface_splitter_avalon_slave",
+> +                    "gmii_to_sgmii_adapter_avalon_slave",
+> +                    "eth_tse_control_port";
+> +    };
+> diff --git a/Documentation/devicetree/bindings/net/altr,socfpga-stmmac.yaml b/Documentation/devicetree/bindings/net/altr,socfpga-stmmac.yaml
+> new file mode 100644
+> index 000000000000..ccbbdb870755
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/altr,socfpga-stmmac.yaml
+> @@ -0,0 +1,162 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/altr,socfpga-stmmac.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Altera SOCFPGA SoC DWMAC controller
+> +
+> +maintainers:
+> +  - Matthew Gerlach <matthew.gerlach@altera.com>
+> +
+> +description:
+> +  This binding describes the Altera SOCFPGA SoC implementation of the
+> +  Synopsys DWMAC for the Cyclone5, Arria5, Stratix10, and Agilex7 families
+> +  of chips.
+> +  # TODO: Determine how to handle the Arria10 reset-name, stmmaceth-ocp, that
+> +  # does not validate against net/snps,dwmac.yaml.
+> +
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - altr,socfpga-stmmac
+> +          - altr,socfpga-stmmac-a10-s10
+> +
+> +  required:
+> +    - compatible
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - const: altr,socfpga-stmmac
+> +          - const: snps,dwmac-3.70a
+> +          - const: snps,dwmac
+> +      - items:
+> +          - const: altr,socfpga-stmmac-a10-s10
+> +          - const: snps,dwmac-3.74a
+> +          - const: snps,dwmac
 
--- 
-With best wishes
-Dmitry
+You are missing the snps,dwmac-3.72a version.
+
+
+> +
+> +  clocks:
+> +    minItems: 1
+> +    items:
+> +      - description: GMAC main clock
+> +      - description:
+> +          PTP reference clock. This clock is used for programming the
+> +          Timestamp Addend Register. If not passed then the system
+> +          clock will be used and this is fine on some platforms.
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    items:
+> +      - const: stmmaceth
+> +      - const: ptp_ref
+> +
+> +  iommus:
+> +    maxItems: 1
+
+Dinh's says there can be 2?
+
+> +
+> +  phy-mode:
+> +    enum:
+> +      - gmii
+> +      - mii
+> +      - rgmii
+> +      - rgmii-id
+> +      - rgmii-rxid
+> +      - rgmii-txid
+> +      - sgmii
+> +      - 1000base-x
+
+Dinh's says only rgmii, gmii, and mii supported?
+
+> +
+> +  rxc-skew-ps:
+> +    description: Skew control of RXC pad
+> +
+> +  rxd0-skew-ps:
+> +    description: Skew control of RX data 0 pad
+> +
+> +  rxd1-skew-ps:
+> +    description: Skew control of RX data 1 pad
+> +
+> +  rxd2-skew-ps:
+> +    description: Skew control of RX data 2 pad
+> +
+> +  rxd3-skew-ps:
+> +    description: Skew control of RX data 3 pad
+> +
+> +  rxdv-skew-ps:
+> +    description: Skew control of RX CTL pad
+> +
+> +  txc-skew-ps:
+> +    description: Skew control of TXC pad
+> +
+> +  txen-skew-ps:
+> +    description: Skew control of TXC pad
+> +
+> +  altr,emac-splitter:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Should be the phandle to the emac splitter soft IP node if DWMAC
+> +      controller is connected an emac splitter.
+> +
+> +  altr,f2h_ptp_ref_clk:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Phandle to Precision Time Protocol reference clock. This clock is
+> +      common to gmac instances and defaults to osc1.
+> +
+> +  altr,gmii-to-sgmii-converter:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Should be the phandle to the gmii to sgmii converter soft IP.
+> +
+> +  altr,sysmgr-syscon:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description:
+> +      Should be the phandle to the system manager node that encompass
+> +      the glue register, the register offset, and the register shift.
+> +      On Cyclone5/Arria5, the register shift represents the PHY mode
+> +      bits, while on the Arria10/Stratix10/Agilex platforms, the
+> +      register shift represents bit for each emac to enable/disable
+> +      signals from the FPGA fabric to the EMAC modules.
+> +    items:
+> +      - items:
+> +          - description: phandle to the system manager node
+> +          - description: offset of the control register
+> +          - description: shift within the control register
+> +
+> +patternProperties:
+> +  "^mdio[0-9]$":
+> +    type: object
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - clock-names
+> +  - altr,sysmgr-syscon
+> +
+> +allOf:
+> +  - $ref: snps,dwmac.yaml#
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    soc {
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        ethernet@ff700000 {
+> +            compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a",
+> +            "snps,dwmac";
+> +            altr,sysmgr-syscon = <&sysmgr 0x60 0>;
+> +            reg = <0xff700000 0x2000>;
+> +            interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+> +            interrupt-names = "macirq";
+> +            mac-address = [00 00 00 00 00 00]; /* Filled in by U-Boot */
+> +            clocks = <&emac_0_clk>;
+> +            clock-names = "stmmaceth";
+> +            phy-mode = "sgmii";
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> deleted file mode 100644
+> index 612a8e8abc88..000000000000
+> --- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> +++ /dev/null
+> @@ -1,57 +0,0 @@
+> -Altera SOCFPGA SoC DWMAC controller
+> -
+> -This is a variant of the dwmac/stmmac driver an inherits all descriptions
+> -present in Documentation/devicetree/bindings/net/stmmac.txt.
+> -
+> -The device node has additional properties:
+> -
+> -Required properties:
+> - - compatible	: For Cyclone5/Arria5 SoCs it should contain
+> -		  "altr,socfpga-stmmac". For Arria10/Agilex/Stratix10 SoCs
+> -		  "altr,socfpga-stmmac-a10-s10".
+> -		  Along with "snps,dwmac" and any applicable more detailed
+> -		  designware version numbers documented in stmmac.txt
+> - - altr,sysmgr-syscon : Should be the phandle to the system manager node that
+> -   encompasses the glue register, the register offset, and the register shift.
+> -   On Cyclone5/Arria5, the register shift represents the PHY mode bits, while
+> -   on the Arria10/Stratix10/Agilex platforms, the register shift represents
+> -   bit for each emac to enable/disable signals from the FPGA fabric to the
+> -   EMAC modules.
+> - - altr,f2h_ptp_ref_clk use f2h_ptp_ref_clk instead of default eosc1 clock
+> -   for ptp ref clk. This affects all emacs as the clock is common.
+> -
+> -Optional properties:
+> -altr,emac-splitter: Should be the phandle to the emac splitter soft IP node if
+> -		DWMAC controller is connected emac splitter.
+> -phy-mode: The phy mode the ethernet operates in
+> -altr,sgmii-to-sgmii-converter: phandle to the TSE SGMII converter
+> -
+> -This device node has additional phandle dependency, the sgmii converter:
+> -
+> -Required properties:
+> - - compatible	: Should be altr,gmii-to-sgmii-2.0
+> - - reg-names	: Should be "eth_tse_control_port"
+> -
+> -Example:
+> -
+> -gmii_to_sgmii_converter: phy@100000240 {
+> -	compatible = "altr,gmii-to-sgmii-2.0";
+> -	reg = <0x00000001 0x00000240 0x00000008>,
+> -		<0x00000001 0x00000200 0x00000040>;
+> -	reg-names = "eth_tse_control_port";
+> -	clocks = <&sgmii_1_clk_0 &emac1 1 &sgmii_clk_125 &sgmii_clk_125>;
+> -	clock-names = "tse_pcs_ref_clk_clock_connection", "tse_rx_cdr_refclk";
+> -};
+> -
+> -gmac0: ethernet@ff700000 {
+> -	compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
+> -	altr,sysmgr-syscon = <&sysmgr 0x60 0>;
+> -	reg = <0xff700000 0x2000>;
+> -	interrupts = <0 115 4>;
+> -	interrupt-names = "macirq";
+> -	mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
+> -	clocks = <&emac_0_clk>;
+> -	clock-names = "stmmaceth";
+> -	phy-mode = "sgmii";
+> -	altr,gmii-to-sgmii-converter = <&gmii_to_sgmii_converter>;
+> -};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c2b570ed5f2f..d308789d9877 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3262,10 +3262,15 @@ M:	Dinh Nguyen <dinguyen@kernel.org>
+>  S:	Maintained
+>  F:	drivers/clk/socfpga/
+>  
+> +ARM/SOCFPGA DWMAC GLUE LAYER BINDINGS
+> +M:	Matthew Gerlach <matthew.gerlach@altera.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/net/altr,gmii-to-sgmii-2.0.yaml
+> +F:	Documentation/devicetree/bindings/net/altr,socfpga-stmmac.yaml
+> +
+>  ARM/SOCFPGA DWMAC GLUE LAYER
+>  M:	Maxime Chevallier <maxime.chevallier@bootlin.com>
+>  S:	Maintained
+> -F:	Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+>  F:	drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+>  
+>  ARM/SOCFPGA EDAC BINDINGS
+> -- 
+> 2.35.3
+> 
