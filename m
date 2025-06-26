@@ -1,58 +1,110 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB412139C9;
-	Thu, 26 Jun 2025 10:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4017F21A444;
+	Thu, 26 Jun 2025 10:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750932720; cv=none; b=kA1S+a3ZSORMyIh74u1yaLyW+H0qZ2M7GXIg+xq/tjFK811gNx+aZiD9DT7lCYMgW2dl/Y8ZzGPB9I7X6eUZtSrfbMayJSn3Es/LLq/DcOARY8IOtYVBLQaQoJ8PFumdKIcCiWENJd1otuuRAnypeolk/Uzb8Da1/fjceuFGH30=
+	t=1750932799; cv=none; b=G5bxbyyUYOD3IJ1ClqP9z/d0hVx37RdQ+Q+brcub9q8e8nesHarxXe+N5aR7MPnR1+co8dNlpJhifK2+Sac1TvdNube3xr+wL02IaZck3lhl2tsF930pth8hS8L9Uhi/YFWrSvIC4b/1zfFLQ266QnVxxqsDcPLyxONylFz1QFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750932720; c=relaxed/simple;
-	bh=hzy5yEV8hkRk2qbsiJBSxT26MDWVIO+96KZ6jKG+fCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rCGM/HNKHmi0PxPnXU4TedRP+q3212nTDkUYNSUlXCjfs32b+HePHArY+WoZYhdQXLZSIXHEzBXPivKlBGzbpH4bIf4i62fFSrEcTD8ylQJVNKK75QjSf9X5pF6pVbwzEdBSHNhRp4sqqBbxQVA6yGDSty7NV5a1IjgjTXuZdBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Lr/svb4y; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1750932799; c=relaxed/simple;
+	bh=H3Hm8ZwhG9stnp9URv+WVSn+KcRnfYN98pKgcSAUiNc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d+fzX12eC0JqFGZIpJCqotvGLO+gKu5nwCY//eyr2jrl7fS1Ps6RPhzXgsdBDH5MbvpPfY7/RFtRlsHebEV3RfC78h4n7cDTT+Bkgw1dWJH3JkMliBZN+NH5EflPuk2u6acE0LXOrDfcXFXzmjpwdI7i2lWHZC/vZTzSt/nduVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DvkBjQ7a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lr/svb4y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=2odAZD/Bf6Z8HgX3d/nEDv01jfMZQjNxKDduDZAzWOg=; b=Lr/svb4yeAjjMdEp4PrPwLa2Tl
-	kBTf0pcEGILwcllbR4aVzKrl8FX7MTOnRaswtrmfCmzTs6/bSek8PGh9Iw7Z+4ltwSzZk7/zsuZQp
-	aIJd0yRDgt+oF4fJVdgWdIb17tzgud8UpIRHGpDNbc4cAvHiq2uklJzZRXRI3opV+lXlQrKYcGfzz
-	mEv2e6UkQNZUAGO3qfK+86WlPLLWHXmoSQr9NUglr5cQZoXMLikk+58V7b8a7DlEkxOtAHWokgjGy
-	52S3S1CLo3Hv46Qan8pdreBAx/sL4fMPAGF6kAZhm+dTLwGDIzlIzoF6Me1OqchjpWfs1KToZk03E
-	Y3fKgzJQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uUjaE-0000000BFiz-3kr0;
-	Thu, 26 Jun 2025 10:11:54 +0000
-Date: Thu, 26 Jun 2025 03:11:54 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, hare@suse.de, hch@infradead.org, yukuai3@huawei.com,
-	john.g.garry@oracle.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, yi.zhang@redhat.com,
-	calvin@wbinvd.org, david@fromorbit.com, yi.zhang@huawei.com,
-	yangerkun@huawei.com, johnny.chenyi@huawei.com
-Subject: Re: [PATCH] block: fix false warning in bdev_count_inflight_rw()
-Message-ID: <aF0c6nqRwpyCFuAq@infradead.org>
-References: <20250626083927.576207-1-yukuai1@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DvkBjQ7a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D322FC4CEEE;
+	Thu, 26 Jun 2025 10:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750932798;
+	bh=H3Hm8ZwhG9stnp9URv+WVSn+KcRnfYN98pKgcSAUiNc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DvkBjQ7ahSIoOADN2NmitD8McDEZktbk/DI2+1z5CsnABCFzdLmMkTRFH5XmGTSlh
+	 4TCNR8Ow1PgBWzzwEvyTIQDEtcHInnkSMD9935CBnPthrOJ30PMAFOdzG268rxD+Qq
+	 ZcBfxciOTh77AZCGwTcEaSEtb9HmHldLIkT6jFprxnN7uz2YUcHeKB7qDQmNV1/Ign
+	 ZwUJYFk79X8ap2xhpAxDbKl38acfV/FHM8S912RdEOpiD307WvsSlZDgLLhA37NEgE
+	 AY7RrQVZ7mR4mxOKXLHyfTM3zDuLlo7q+63o4WgvddMVISddMQ443RAh+KIwSu5GKH
+	 rAoe/uqAGGJFA==
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-6119b103132so558094eaf.1;
+        Thu, 26 Jun 2025 03:13:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU9o1jaBdwHsOoHJVY1V7b0k9/3Xyt/CHqg/SGvye7nKjTSzrXYTcJk15/LGE9UJS56pJ1UHx8F/+SY@vger.kernel.org, AJvYcCV4KEOWiud24TS+9ZxMWfbamccDhouGTh/68CZIj8CMudEELUj8S2oauYXRDe3qX2UfufvXWBgkrH0=@vger.kernel.org, AJvYcCVz2CnuPmt6XS/1MhY6uBOyk0e4/OTI/kQqOntULxlmXv0cqerhiDhypwdqf1XPsSV2z22wHuYvqDxR+zkY@vger.kernel.org, AJvYcCXCF1eMLB1j9jlA0Scn/OnFYboK49TfCFwhpGUwPCoCt0XJJQFheMa+jZ+SfNZJq0L4n66rhKmWOVBV@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrmYmYRjTOdxU6geRe8+qZVaj4DJ2zYQEx7PAhmPE7adwOLyrq
+	h3l4mSo+48gxJv802NHbktqKMGwEr/KyHAKf5iP3RubQkVvpgwopG4TtxLoKbnjTH6isUTxzyya
+	iVF5if+WVBr3aq5u/KCpqfUzRjHv7wU8=
+X-Google-Smtp-Source: AGHT+IGmhhhTDTjzyUv7QYbeYPIjCPkSILNhAIbvZ55Xi9zhPPB+Su9YIRAsDQyg5mxjTNENArO3f70aGbVVhe2zxHM=
+X-Received: by 2002:a4a:e908:0:b0:611:3e54:8d0a with SMTP id
+ 006d021491bc7-611aaedb632mr2107247eaf.1.1750932798132; Thu, 26 Jun 2025
+ 03:13:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626083927.576207-1-yukuai1@huaweicloud.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <22759968.EfDdHjke4D@rjwysocki.net> <2045419.usQuhbGJ8B@rjwysocki.net>
+ <CAPDyKFq8ea+YogkAExUOBc2TEqi1z9WZswqgP29bLbursFUApg@mail.gmail.com>
+ <CAJZ5v0h-9UnvhrQ7YaaYPG5CktwV-i+ZeqAri8OhJQb4TVp82w@mail.gmail.com> <CAPDyKFoW5ag69LBnxvP5oGH1VAErBn17CAOzh=MX2toxAHwLxA@mail.gmail.com>
+In-Reply-To: <CAPDyKFoW5ag69LBnxvP5oGH1VAErBn17CAOzh=MX2toxAHwLxA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 26 Jun 2025 12:13:06 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jx643Os_hvAwoOvYbP3VPhAhgWBqQJk+Rp8zn=w49w9Q@mail.gmail.com>
+X-Gm-Features: Ac12FXzA6Z2qh0lnHk5PDayOdrQi_SOG4nvj4QW4gomZsHlPCKtdeNrrZ7uMipg
+Message-ID: <CAJZ5v0jx643Os_hvAwoOvYbP3VPhAhgWBqQJk+Rp8zn=w49w9Q@mail.gmail.com>
+Subject: Re: [PATCH v1 4/9] PM: Move pm_runtime_force_suspend/resume() under CONFIG_PM_SLEEP
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux ACPI <linux-acpi@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I think you want to make the inflight array a signed type instead,
-so that if the earlier CPUs have negative counts due to migration
-that gets even out later on.  Which should also make the
-counter not trigger normally.
+On Thu, Jun 26, 2025 at 12:05=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.or=
+g> wrote:
+>
+> On Thu, 26 Jun 2025 at 11:41, Rafael J. Wysocki <rafael@kernel.org> wrote=
+:
+> >
+> > On Thu, Jun 26, 2025 at 11:38=E2=80=AFAM Ulf Hansson <ulf.hansson@linar=
+o.org> wrote:
+> > >
+> > > On Wed, 25 Jun 2025 at 21:25, Rafael J. Wysocki <rjw@rjwysocki.net> w=
+rote:
+> > > >
+> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > >
+> > > > Since pm_runtime_force_suspend/resume() and pm_runtime_need_not_res=
+ume()
+> > > > are only used during system-wide PM transitions, there is no reason=
+ to
+> > > > compile them in if CONFIG_PM_SLEEP is unset.
+> > > >
+> > > > Accordingly, move them all under CONFIG_PM_SLEEP and make the stati=
+c
+> > > > inline stubs for pm_runtime_force_suspend/resume() return an error
+> > > > to indicate that they should not be used outside CONFIG_PM_SLEEP.
+> > > >
+> > >
+> > > Just realized that there seems to be some drivers that actually make
+> > > use of pm_runtime_force_suspend() from their ->remove() callbacks.
+> > >
+> > > To not break them, we probably need to leave this code to stay under =
+CONFIG_PM.
+> >
+> > OK, pm_runtime_force_suspend() need not be under CONFIG_PM_SLEEP.
+> > That's not the case for the other two functions though AFAICS.
+>
+> Right, but maybe better to keep them to avoid confusion?
 
+There really is no point holding pm_runtime_need_not_resume() outside
+CONFIG_PM_SLEEP and pm_runtime_force_resume() really should not be
+used anywhere outside system resume flows.
+
+> At least the corresponding flag is needed.
+
+What flag do you mean?  If pm_runtime_force_suspend() does not go
+under CONFIG_PM_SLEEP, needs_force_resume will not go under it either
+(so I'll drop the next patch altogether).
+
+Cheers, Rafael
