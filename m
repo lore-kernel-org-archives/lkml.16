@@ -1,96 +1,107 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82342ECEA0
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FD82063F3
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750953530; cv=none; b=FvITpE6E4ZJNd495Q0sajPcFQEVU9o6gjTa6O1XNZIKljJqFXeKe9tSRT8eIXQNVO4yWIP1qz2SpCohRupM6iBdOnAH3BXLGxO2GAhjlP1939Q8P3LfhImaStIq9PPuhH12bjGYpZcKrtE5SCGPQ+LfIT5fEPl+Qp/3kFaFwmTs=
+	t=1750953597; cv=none; b=qxlvAfw7o3GKanKves1+AiteElhn7aac2/N15+ZeMwFlq0o8vD2ZsxNxjVShOIZhgclrPXeLT5JzavwHzGKK+ojBxBRviAesMXzsIGLRF1F7KxzOl80gqr1L7RJpCxMKmkyVBh+sJCmXNJY2WXrw8dFsuZyZniktyxnXw5nrObA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750953530; c=relaxed/simple;
-	bh=el/AG+soar+8I0TkRmmfkfbYJbFh89tUJ6cdwZ/nYww=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=j31tqqKd+b0CxBSA8kJqh+tW6Qe4xj9NxtcvpPc3E5xJ+rVp/4QBWWkF9e10tlrFjmMnIXaE5hhPGQbvDRlp55Qz25Im33H4zXjVQMjyHwYHaD5o9vOQY1NfrOyFN8rQktkbY2p2iKGndOGxfel+gjiKoR5BOCrUwSkEZ/DD9pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zxI8NzZn; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750953597; c=relaxed/simple;
+	bh=i+PnXgZHUy1dh1KadTWyaeBxUpB76/YggpM37ia6WM0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ERa/gX2u47FYVNfqf1O8T3ivD/YgYp2rtoiM9tba3cTQnToVT5seTG4Gz0hrCLXobbhpt6WFEtAE8Dav/bCpy5DX+Ai2QYycUM0MonV2Oc0qRILOdVgH58pfJ2LiPfCb1T90++X7z0nLKQL4Q9HIbPWAUpvth0WDP1znYb7/4KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bhS463ZI; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zxI8NzZn"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3138e64b3f1so1335881a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:58:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750953528; x=1751558328; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=S/uf9wxm2c0Qk14PYx/6WTgRiWmVdUxxJWQlP8qvxog=;
-        b=zxI8NzZnGmfEfLhQnnjqAHkZi3Nr4rFE5qdZSyaFUGVxYAFHlwxBX0WLkqHLDaQ9vZ
-         GegpeKQC+jg298Jjhshtsbs5vlWW6zSJy30ikRri+OR7bbqtweHtn1yF8lgEIjsTNFaf
-         06U2F3SVYcTLTecKodYX6LcIiOdKCYSUVSyLBsUzzUYKr98AX0QQQnsevwBj5NKZZyUR
-         nvtVPytXiyabSt84Vww+0WsXO7RCmr0WQ48YHdXyZSgsMcNWz9B+rgl0sfiG4bn0Tbyz
-         IrB4AymM2cHUqeXJmE9DNB+255vEPRiXuCf8x2Yy/0SMUYmSfAXM/P78en3TyO8xushg
-         SwNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750953528; x=1751558328;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S/uf9wxm2c0Qk14PYx/6WTgRiWmVdUxxJWQlP8qvxog=;
-        b=knCrJuRwjJiYqzVSat/t/gtUDv0Dfrs/pVQsnJsn8ftERr6j/C+L6kTboeq7p1mzip
-         KAeA7hu2sjNdwwK31ZlZcVAklfCgpQ9ZgQQ4n4qf4c5exRV1gXiUhZZ5/0FAVapme89C
-         xBlcms/5uaBX2Psm3C2cGhNE4fjelc8rCmlInnWeE7p/4A5OTaI4dmBQs0JD76J7Ga60
-         GKK1qmvA/+IZVKstqDUpbtVsonPn2JNSXvhQVuZPJ3gdBrVrwi37baBl+RmgJ6B2wvo0
-         yFf4n5beAG7yJtrZi9rRd84e7tapjJKIgN61pWP2r1CxRcgkTzGvR1S6dVji5gdiRD5U
-         tsNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyRlLKlqZN82IlYAqSfL26NICnTq3oXN6hFrGjlM1gtUcO7NndmeSpiskMNAh2YKdThv5Hv6BES6NAcT8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybXIMc3x1Q2JYyc3LCuN+llK6fwBStgukKEtAhf4Cnllx14lcY
-	nEUcVhoGl8Cwp4cY0fQOTeEOx7KJwja9lktfx/7aEIdK/NHvCPXGaln1zNBsYOLc9OK4iVwx9rO
-	+4/ulRA==
-X-Google-Smtp-Source: AGHT+IH50WR3atcLhwQ0vlBEx5F+Lmgv4Ol+UjK2rPEhZgeL6Il1fIW2Is6Y4r3eWAeV+oa9gEEziLGMYo4=
-X-Received: from pjbsv14.prod.google.com ([2002:a17:90b:538e:b0:312:fb53:41c0])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2642:b0:311:ffe8:20e2
- with SMTP id 98e67ed59e1d1-315f25edc7fmr10523268a91.4.1750953528194; Thu, 26
- Jun 2025 08:58:48 -0700 (PDT)
-Date: Thu, 26 Jun 2025 08:58:46 -0700
-In-Reply-To: <175088949072.720373.4112758062004721516.b4-ty@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bhS463ZI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750953596; x=1782489596;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=i+PnXgZHUy1dh1KadTWyaeBxUpB76/YggpM37ia6WM0=;
+  b=bhS463ZIU1o0RW6bjWEk1BxN7zNgiOwTDC/If+khoU+tSPq2/po/vY5N
+   /FcnFSPGVD/gJ4YWrTjl5HYs9y9K5i+Ni6ufH/mR7nyIgD8kvb1psllK+
+   7vLg33fwq9+qcNv0u+jRCYlgYhpdoQJufL7C0uQxBS71pDdeXMlJ1og6o
+   jFVOOVTw6tPmR7P5akpARZo/Qnjcxr/hw/0nsjjdzzmHF9/9gsR/tcO2X
+   kUnDNbEyTuyI62oQ0u4AmrbsLp/50viVHYaZPLFOcIELNVzuQIo6h7+Lj
+   KPRecV86GuyMR7YI/4DRMIBinxP17025smQriVrUbJmYOYB4ruvxgoaas
+   A==;
+X-CSE-ConnectionGUID: g8vIj1AiS1uIqEHvmGiftw==
+X-CSE-MsgGUID: DzGXy/mtRsOWfOOJDjAfnA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53223989"
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="53223989"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:59:55 -0700
+X-CSE-ConnectionGUID: 4E1GHJ0jQYWWetKCp+/kvg==
+X-CSE-MsgGUID: yQxunmKhR+G6Wh/r9mabLA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="176218889"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa002.fm.intel.com with ESMTP; 26 Jun 2025 08:59:53 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 656852AD; Thu, 26 Jun 2025 18:59:52 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	patches@opensource.cirrus.com,
+	linux-kernel@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>
+Subject: [PATCH v1 1/1] mfd: wm8350-core: Don't use "proxy" headers
+Date: Thu, 26 Jun 2025 18:59:51 +0300
+Message-ID: <20250626155951.325683-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250611095158.19398-1-adrian.hunter@intel.com> <175088949072.720373.4112758062004721516.b4-ty@google.com>
-Message-ID: <aF1uNonhK1rQ8ViZ@google.com>
-Subject: Re: [PATCH V4 0/1] KVM: TDX: Decrease TDX VM shutdown time
-From: Sean Christopherson <seanjc@google.com>
-To: pbonzini@redhat.com, Adrian Hunter <adrian.hunter@intel.com>
-Cc: kvm@vger.kernel.org, rick.p.edgecombe@intel.com, 
-	kirill.shutemov@linux.intel.com, kai.huang@intel.com, 
-	reinette.chatre@intel.com, xiaoyao.li@intel.com, 
-	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
-	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 25, 2025, Sean Christopherson wrote:
-> On Wed, 11 Jun 2025 12:51:57 +0300, Adrian Hunter wrote:
-> > Changes in V4:
-> > 
-> > 	Drop TDX_FLUSHVP_NOT_DONE change.  It will be done separately.
-> > 	Use KVM_BUG_ON() instead of WARN_ON().
-> > 	Correct kvm_trylock_all_vcpus() return value.
-> > 
-> > Changes in V3:
-> > 	Refer:
-> >             https://lore.kernel.org/r/aAL4dT1pWG5dDDeo@google.com
-> > 
-> > [...]
-> 
-> Applied to kvm-x86 vmx, thanks!
-> 
-> [1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
->       https://github.com/kvm-x86/linux/commit/111a7311a016
+Update header inclusions to follow IWYU (Include What You Use)
+principle.
 
-Fixed up to address a docs goof[*], new hash:
+Note that kernel.h is discouraged to be included as it's written
+at the top of that file.
 
-      https://github.com/kvm-x86/linux/commit/e4775f57ad51
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/mfd/wm8350/core.h | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-[*] https://lore.kernel.org/all/20250626171004.7a1a024b@canb.auug.org.au
+diff --git a/include/linux/mfd/wm8350/core.h b/include/linux/mfd/wm8350/core.h
+index a3241e4d7548..5f70d3b5d1b1 100644
+--- a/include/linux/mfd/wm8350/core.h
++++ b/include/linux/mfd/wm8350/core.h
+@@ -8,11 +8,12 @@
+ #ifndef __LINUX_MFD_WM8350_CORE_H_
+ #define __LINUX_MFD_WM8350_CORE_H_
+ 
+-#include <linux/kernel.h>
+-#include <linux/mutex.h>
+-#include <linux/interrupt.h>
+ #include <linux/completion.h>
++#include <linux/errno.h>
++#include <linux/interrupt.h>
++#include <linux/mutex.h>
+ #include <linux/regmap.h>
++#include <linux/types.h>
+ 
+ #include <linux/mfd/wm8350/audio.h>
+ #include <linux/mfd/wm8350/gpio.h>
+@@ -21,6 +22,9 @@
+ #include <linux/mfd/wm8350/supply.h>
+ #include <linux/mfd/wm8350/wdt.h>
+ 
++struct device;
++struct platform_device;
++
+ /*
+  * Register values.
+  */
+-- 
+2.47.2
+
