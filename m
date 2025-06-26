@@ -1,163 +1,411 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 036611922F6;
-	Thu, 26 Jun 2025 13:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBF21922F6;
+	Thu, 26 Jun 2025 13:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750946073; cv=none; b=VmssgL4lRIj04Jfo8UB2Do2TAPnx4vQeLeON838heUZxpqTQRscCmvym9eiiKhKdYuTFY87wfrFTNUP/1fZ0MScjPcoRdFgpyfM4VHFCRSlTbYJqKXCFymsqWMfgThKI/eUa1/1X3lx1F7jiMsBXtE4YrkYJTI//D+pFKtKdH5Q=
+	t=1750946089; cv=none; b=GjfyvDjEkakQHQKLsyuaAz09BccZYBXft7wBoxwtioSeGVnsFHxhep4Fr7PSpAShZKFWVbluRzKsAmCu3+8nDAUlc9hr4+yDs2rjMNz7oX5q1i9WETyK5+zBDrYREA1LK16LkduPcXYQsDenhdE0c875+lFX5Ud+7pwwYEs5fYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750946073; c=relaxed/simple;
-	bh=vGdG2KgJYgg71pcFHeAXtJsfxhvB+yb6bY/1UFHNcP0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=up1QpF//ceIvJRmv5CQHBdGQFmUkujMLCsLih9aplS0rERV+iP6Mqni625YfTKSahzZCBPJaHIJUsyP95k4jW3fHi1Izp93T9AkvE+MCsc8+6tArM4jyPsF3Bt8fICkxpjuxxzyagKUqE+cTqSHSS/ol0SwbyvRMP6pzea2A4XU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZVtjbxY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750946089; c=relaxed/simple;
+	bh=n8K7BjgUayWBLFvVAFSIS3u6eapQ2dFQhGg4Vt/DuFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hIBb666tsqp5Ww0S7EM11p4HOs1tNXdAqQ4nYfdmtDpIrn3QqXfHMNhGbRloxU/54GqE9q2MZp3nJOsOr9Jo9nmNhMUmVQVGq7Y0X9vU+MZpMYlnDXR78ymmvjg83NR0y87INPwZZ2j9szLtrflB0x4S991QedXuoeDNEQRsglg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n8Se9j3o; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZVtjbxY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5A5DC4CEEB;
-	Thu, 26 Jun 2025 13:54:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750946071;
-	bh=vGdG2KgJYgg71pcFHeAXtJsfxhvB+yb6bY/1UFHNcP0=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=aZVtjbxYUppazWi1Kl594qJXtIKAnKuxBWJ2ttOrO9rnEChu7QJl6OOOn8JbpISGD
-	 Pe4wkh6UlZLXWeXcgC7EaUdmZR5JMcWiUqCS9gjqPn6QhqD0uRcH3IjKXuZvu68rUx
-	 EF3gyLORB9Guw5UGEBBymx/sOZ7IAYOTgncWrNey7SLvhGSxFalRWdfukConx1xeva
-	 Slnhow1Tq5YGBV7Mj3Q6GyL2c8T0Za1V6wvifA3V9yx+v4fAWHR1+luRN3LRosukVx
-	 YX5q/7xRK2LWSbnmNbl947p94BnyPxEtPWm17y11aQIPHWKDaA/TDthtD4LjlXLhf6
-	 MMWENojMgUqhg==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n8Se9j3o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750946088; x=1782482088;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=n8K7BjgUayWBLFvVAFSIS3u6eapQ2dFQhGg4Vt/DuFc=;
+  b=n8Se9j3oXjPrcTdO8MGG5HVbb41HPpt/kiqELLwhAmm+n8B14XYpt4m4
+   EalU2jCj6Lap7VgTHQQCbFU7YPE5f9qwy76JyIWe6IJ25C22BF8NYqT1Z
+   G5iqOTUviF6xChZBRL+f7tXn2ddIEnYCsPn49GCjUQWLSkQVWrhgf7ac9
+   gKJ3BYhNldu0T+44ZH5DNZysywB7HKtnabVGM87grRaDVFU2/seAFyZ0v
+   CuOXEziPxFubYXhg7ptqNH2I8Y6/iOWTRNlmK/DyXgQeMj0kpT++X+VGr
+   FGmnqql6YSSHoO+uAOIJC3ehbaR+dJDX1j/NHT1MQu4nxd4LOqy6b0aJR
+   A==;
+X-CSE-ConnectionGUID: f/umjALOQaGQCuYaWpZa5w==
+X-CSE-MsgGUID: FrJGssgOT5CWS1/+Jsr5mQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="55867842"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="55867842"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 06:54:47 -0700
+X-CSE-ConnectionGUID: A7hq6bzMS0G4QeFpwDLlCw==
+X-CSE-MsgGUID: EmIq/DG5T4aDdWHIBYnurQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="152683801"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 06:54:45 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uUn3q-0000000AC0F-0pmS;
+	Thu, 26 Jun 2025 16:54:42 +0300
+Date: Thu, 26 Jun 2025 16:54:41 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v17] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <aF1RIVzVNcdsU1DB@smile.fi.intel.com>
+References: <20250625194919.94214-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 26 Jun 2025 15:54:24 +0200
-Message-Id: <DAWIKTODZ3FT.2LGX1H8ZFDONN@kernel.org>
-Cc: "Gary Guo" <gary@garyguo.net>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <lkmm@lists.linux.dev>,
- <linux-arch@vger.kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
- Gaynor" <alex.gaynor@gmail.com>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "Will Deacon" <will@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>, "Mark Rutland"
- <mark.rutland@arm.com>, "Wedson Almeida Filho" <wedsonaf@gmail.com>,
- "Viresh Kumar" <viresh.kumar@linaro.org>, "Lyude Paul" <lyude@redhat.com>,
- "Ingo Molnar" <mingo@kernel.org>, "Mitchell Levy"
- <levymitchell0@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Linus Torvalds"
- <torvalds@linux-foundation.org>, "Thomas Gleixner" <tglx@linutronix.de>
-Subject: Re: [PATCH v5 04/10] rust: sync: atomic: Add generic atomics
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Boqun Feng" <boqun.feng@gmail.com>
-X-Mailer: aerc 0.20.1
-References: <20250618164934.19817-1-boqun.feng@gmail.com>
- <20250618164934.19817-5-boqun.feng@gmail.com>
- <20250621123212.66fb016b.gary@garyguo.net> <aFjj8AV668pl9jLN@Mac.home>
- <20250623193019.6c425467.gary@garyguo.net> <aFmmYSAyvxotYfo7@tardis.local>
- <DAUAW2Y0HYLY.3CDC9ZW0BUKI4@kernel.org> <aFrTyXcFVOjWa2o-@Mac.home>
-In-Reply-To: <aFrTyXcFVOjWa2o-@Mac.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625194919.94214-1-ansuelsmth@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue Jun 24, 2025 at 6:35 PM CEST, Boqun Feng wrote:
-> On Tue, Jun 24, 2025 at 01:27:38AM +0200, Benno Lossin wrote:
->> On Mon Jun 23, 2025 at 9:09 PM CEST, Boqun Feng wrote:
->> > On Mon, Jun 23, 2025 at 07:30:19PM +0100, Gary Guo wrote:
->> >> cannot just transmute between from pointers to usize (which is its
->> >> Repr):
->> >> * Transmuting from pointer to usize discards provenance
->> >> * Transmuting from usize to pointer gives invalid provenance
->> >>=20
->> >> We want neither behaviour, so we must store `usize` directly and
->> >> always call into repr functions.
->> >>=20
->> >
->> > If we store `usize`, how can we support the `get_mut()` then? E.g.
->> >
->> >     static V: i32 =3D 32;
->> >
->> >     let mut x =3D Atomic::new(&V as *const i32 as *mut i32);
->> >     // ^ assume we expose_provenance() in new().
->> >
->> >     let ptr: &mut *mut i32 =3D x.get_mut(); // which is `&mut self.0.g=
-et()`.
->> >
->> >     let ptr_val =3D *ptr; // Does `ptr_val` have the proper provenance=
-?
->>=20
->> If `get_mut` transmutes the integer into a pointer, then it will have
->> the wrong provenance (it will just have plain invalid provenance).
->>=20
->
-> The key topic Gary and I have been discussing is whether we should
-> define Atomic<T> as:
->
-> (my current implementation)
->
->     pub struct Atomic<T: AllowAtomic>(Opaque<T>);
->
-> or
->
-> (Gary's suggestion)
->
->     pub struct Atomic<T: AllowAtomic>(Opaque<T::Repr>);
->
-> `T::Repr` is guaranteed to be the same size and alignment of `T`, and
-> per our discussion, it makes sense to further require that `transmute<T,
-> T::Repr>()` should also be safe (as the safety requirement of
-> `AllowAtomic`), or we can say `T` bit validity can be preserved by
-> `T::Repr`: a valid bit combination `T` can be transumated to `T::Repr`,
-> and if transumated back, it's the same bit combination.
->
-> Now as I pointed out, if we use `Opaque<T::Repr>`, then `.get_mut()`
-> would be unsound for `Atomic<*mut T>`. And Gary's concern is that in
-> the current implementation, we directly cast a `*mut T` (from
-> `Opaque::get()`) into a `*mut T::Repr`, and pass it directly into C/asm
-> atomic primitives. However, I think with the additional safety
-> requirement above, this shouldn't be a problem: because the C/asm atomic
-> primitives would just pass the address to an asm block, and that'll be
-> out of Rust abstract machine, and as long as the C/primitives atomic
-> primitives are implemented correctly, the bit representation of `T`
-> remains valid after asm blocks.
->
-> So I think the current implementation still works and is better.
+On Wed, Jun 25, 2025 at 09:49:01PM +0200, Christian Marangi wrote:
+> From: Benjamin Larsson <benjamin.larsson@genexis.eu>
+> 
+> Introduce driver for PWM module available on EN7581 SoC.
 
-I don't think there is a big difference between=C2=A0`Opaque<T>`=C2=A0and
-`Opaque<T::Repr>`=C2=A0if we have the transmute equivalence between the two=
-.
-From a safety perspective, you don't gain or lose anything by using the
-first over the second one. They both require the invariant that they are
-valid (as=C2=A0`Opaque`=C2=A0removes that... we should really be using
-`UnsafeCell`=C2=A0here instead... why aren't we doing that?).
+Almost from my perspective.
+If you address the below as suggested, feel free to add
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Where their differences do play a role is in the implementation of the
-various operations on the atomic. If you need to pass=C2=A0`*mut T::Repr`=
-=C2=A0to
-the C side, it's better if you store=C2=A0`Opaque<T::Repr>`=C2=A0and if you=
- want
-to give=C2=A0`&mut T`=C2=A0back to the user, then it's better to
-store=C2=A0`Opaque<T>`.
+...
 
-I would choose the one that results in overall less code. It's probably
-going to be=C2=A0`Opaque<T::Repr>`, since we will have more operations that
-need=C2=A0`*mut T::Repr`=C2=A0than=C2=A0`*mut T`.
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2022 Markus Gothe <markus.gothe@genexis.eu>
 
-Now I don't understand why you value=C2=A0`Opaque<T>`=C2=A0over=C2=A0`Opaqu=
-e<T::Repr>`,
-they are (up to transmute-equivalence) the same.
+On my calendar 2025 is. Also MODULE_AUTHOR() list disagrees with this
+(you should add yourself somewhere here).
 
-I think that you said at one point that=C2=A0`Opaque<T>`=C2=A0makes more se=
-nse
-from a conceptual view, since we're building=C2=A0`Atomic<T>`. I think that
-doesn't really matter, since it's implementation detail. The same
-argument could be made about casing=C2=A0`u64`=C2=A0to=C2=A0`i64`=C2=A0for =
-implementing the
-atomics: just implement atomics in C also for=C2=A0`u64`=C2=A0and then use =
-that
-instead...
+> + *  Limitations:
+> + *  - Only 8 concurrent waveform generators are available for 8 combinations of
+> + *    duty_cycle and period. Waveform generators are shared between 16 GPIO
+> + *    pins and 17 SIPO GPIO pins.
+> + *  - Supports only normal polarity.
+> + *  - On configuration the currently running period is completed.
+> + *  - Minimum supported period is 4ms
+> + *  - Maximum supported period is 1s
+> + */
 
----
-Cheers,
-Benno
+...
+
+> +#define AIROHA_PWM_SGPIO_CLK_DIVR_32		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 0x3)
+> +#define AIROHA_PWM_SGPIO_CLK_DIVR_16		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 0x2)
+> +#define AIROHA_PWM_SGPIO_CLK_DIVR_8		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 0x1)
+> +#define AIROHA_PWM_SGPIO_CLK_DIVR_4		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 0x0)
+
+Remove 0x:s, they are just noise and moreover the list here is plain numbers,
+not bit combinations or so. In such cases we use decimal numbers.
+
+...
+
+> +/* Cycle cfg handles 4 generators in one register */
+
+I am a bit lost in the meaning of "cycle cfg". Can you elaborate in
+the comment that it's readable in plain English?
+
+> +#define AIROHA_PWM_BUCKET_PER_CYCLE_CFG		4
+
+...
+
+> +static u32 airoha_pwm_get_duty_ticks_from_ns(u32 period_ns, u32 duty_ns)
+> +{
+> +	return mul_u64_u32_div(duty_ns, AIROHA_PWM_DUTY_FULL,
+> +			       period_ns);
+
+It's less than 80 if put on one line!
+
+> +}
+
+...
+
+> +static int airoha_pwm_get_bucket(struct airoha_pwm *pc, int bucket,
+> +				 u64 *period_ns, u64 *duty_ns)
+> +{
+> +	u32 period_tick, duty_tick;
+> +	unsigned int offset;
+> +	u32 shift, val;
+> +	int ret;
+> +
+> +	offset = bucket / AIROHA_PWM_BUCKET_PER_CYCLE_CFG;
+> +	shift = bucket % AIROHA_PWM_BUCKET_PER_CYCLE_CFG;
+> +	shift = AIROHA_PWM_REG_CYCLE_CFG_SHIFT(shift);
+> +
+> +	ret = regmap_read(pc->regmap, AIROHA_PWM_REG_CYCLE_CFG_VALUE(offset),
+> +			  &val);
+
+You may shorten the line and the code (as below the same can be applied)
+by introducing
+
+	struct regmap *map = pc->regmap;
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	period_tick = FIELD_GET(AIROHA_PWM_WAVE_GEN_CYCLE, val >> shift);
+> +	*period_ns = period_tick * AIROHA_PWM_PERIOD_TICK_NS;
+> +
+> +	offset = bucket / AIROHA_PWM_BUCKET_PER_FLASH_PROD;
+> +	shift = bucket % AIROHA_PWM_BUCKET_PER_FLASH_PROD;
+> +	shift = AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(shift);
+> +
+> +	ret = regmap_read(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
+> +			  &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	duty_tick = FIELD_GET(AIROHA_PWM_GPIO_FLASH_PRD_HIGH, val >> shift);
+> +	/*
+> +	 * Overflow can't occur in multiplication as duty_tick is just 8 bit
+> +	 * and period_ns is clamped to AIROHA_PWM_PERIOD_MAX_NS and fit in a
+> +	 * u64.
+> +	 */
+> +	*duty_ns = DIV_U64_ROUND_UP(duty_tick * *period_ns, AIROHA_PWM_DUTY_FULL);
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static int airoha_pwm_get_generator(struct airoha_pwm *pc, u32 duty_ticks,
+> +				    u32 period_ticks)
+> +{
+> +	int best = -ENOENT, unused = -ENOENT;
+> +	u32 best_period_ticks = 0;
+> +	u32 best_duty_ticks = 0;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(pc->buckets); i++) {
+
+You want array_size.h.
+
+> +		struct airoha_pwm_bucket *bucket = &pc->buckets[i];
+> +		u32 bucket_period_ticks = bucket->period_ticks;
+> +		u32 bucket_duty_ticks = bucket->duty_ticks;
+
+> +		/* If found, save an unused bucket to return it later */
+> +		if (refcount_read(&bucket->used) == 0) {
+> +			unused = i;
+> +			continue;
+> +		}
+> +
+> +		/* We found a matching bucket, exit early */
+> +		if (duty_ticks == bucket_duty_ticks &&
+> +		    period_ticks == bucket_period_ticks)
+> +			return i;
+> +
+> +		/*
+> +		 * Unlike duty cycle zero, which can be handled by
+> +		 * disabling PWM, a generator is needed for full duty
+> +		 * cycle but it can be reused regardless of period
+> +		 */
+> +		if (duty_ticks == AIROHA_PWM_DUTY_FULL &&
+> +		    bucket_duty_ticks == AIROHA_PWM_DUTY_FULL)
+> +			return i;
+> +
+> +		/*
+> +		 * With an unused bucket available, skip searching for
+> +		 * a bucket to recycle (closer to the requested period/duty)
+> +		 */
+> +		if (unused != -ENOENT)
+
+Can unused be negative and have different error code or so?
+If not, simplify here (and in return below) to
+
+		if (unused >= 0)
+
+> +			continue;
+> +
+> +		/* Ignore bucket with invalid configs */
+> +		if (bucket_period_ticks > period_ticks ||
+> +		    bucket_duty_ticks > duty_ticks)
+> +			continue;
+> +
+> +		/*
+> +		 * Search for a bucket closer to the requested period/duty
+> +		 * that has the maximal possible period that isn't bigger
+> +		 * than the requested period. For that period pick the maximal
+> +		 * duty_cycle that isn't bigger than the requested duty_cycle.
+
+duty cycle
+
+(with underscore I haven't found a variable in this function the comment refers to)
+
+> +		 */
+> +		if (bucket_period_ticks > best_period_ticks ||
+> +		    (bucket_period_ticks == best_period_ticks &&
+> +		     bucket_duty_ticks > best_duty_ticks)) {
+> +			best_period_ticks = bucket_period_ticks;
+> +			best_duty_ticks = bucket_duty_ticks;
+> +			best = i;
+> +		}
+> +	}
+> +
+> +	/* With no unused bucket, return the best one found (if ever) */
+> +	return unused == -ENOENT ? best : unused;
+> +}
+
+...
+
+> +static int airoha_pwm_consume_generator(struct airoha_pwm *pc,
+> +					u32 duty_ticks, u32 period_ticks,
+> +					unsigned int hwpwm)
+> +{
+> +	int bucket, ret;
+> +
+> +	/*
+> +	 * Search for a bucket that already satisfies duty and period
+> +	 * or an unused one.
+> +	 * If not found, -ENOENT is returned.
+> +	 */
+> +	bucket = airoha_pwm_get_generator(pc, duty_ticks, period_ticks);
+> +	if (bucket < 0)
+> +		return bucket;
+> +
+> +	/* Release previous used bucket (if any) */
+> +	airoha_pwm_release_bucket_config(pc, hwpwm);
+
+> +	if (refcount_read(&pc->buckets[bucket].used) == 0) {
+> +		pc->buckets[bucket].period_ticks = period_ticks;
+> +		pc->buckets[bucket].duty_ticks = duty_ticks;
+> +		ret = airoha_pwm_apply_bucket_config(pc, bucket,
+> +						     duty_ticks,
+> +						     period_ticks);
+> +		if (ret)
+> +			return ret;
+> +
+> +		refcount_set(&pc->buckets[bucket].used, 1);
+
+What happens if refcount is updated in between? This is wrong use of atomics.
+
+> +	} else {
+> +		refcount_inc(&pc->buckets[bucket].used);
+
+Ditto.
+
+You probably wanted _inc_and_test() variant.
+
+> +	}
+> +
+> +	return bucket;
+> +}
+
+...
+
+> +static int airoha_pwm_config(struct airoha_pwm *pc, struct pwm_device *pwm,
+> +			     u32 duty_ticks, u32 period_ticks)
+> +{
+> +	unsigned int hwpwm = pwm->hwpwm;
+> +	int bucket, ret;
+> +
+> +	bucket = airoha_pwm_consume_generator(pc, duty_ticks, period_ticks,
+> +					      hwpwm);
+> +	if (bucket < 0)
+> +		return bucket;
+> +
+> +	ret = airoha_pwm_config_flash_map(pc, hwpwm, bucket);
+> +	if (ret) {
+> +		refcount_dec(&pc->buckets[bucket].used);
+> +		return ret;
+> +	}
+
+> +	set_bit(hwpwm, pc->initialized);
+
+Does it need to be atomic? (Just asking) If not, use non-atomic variant, i.e.
+__set_bit().
+
+> +	pc->channel_bucket[hwpwm] = bucket;
+> +
+> +	/*
+> +	 * SIPO are special GPIO attached to a shift register chip. The handling
+> +	 * of this chip is internal to the SoC that takes care of applying the
+> +	 * values based on the flash map. To apply a new flash map, it's needed
+> +	 * to trigger a refresh on the shift register chip.
+> +	 * If a SIPO is getting configuring , always reinit the shift register
+> +	 * chip to make sure the correct flash map is applied.
+> +	 * Skip reconfiguring the shift register if the related hwpwm
+> +	 * is disabled (as it doesn't need to be mapped).
+> +	 */
+> +	if (hwpwm >= AIROHA_PWM_NUM_GPIO) {
+> +		ret = airoha_pwm_sipo_init(pc);
+> +		if (ret) {
+> +			airoha_pwm_release_bucket_config(pc, hwpwm);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static void airoha_pwm_disable(struct airoha_pwm *pc, struct pwm_device *pwm)
+> +{
+> +	/* Disable PWM and release the bucket */
+> +	airoha_pwm_config_flash_map(pc, pwm->hwpwm, -1);
+> +	airoha_pwm_release_bucket_config(pc, pwm->hwpwm);
+
+> +	clear_bit(pwm->hwpwm, pc->initialized);
+
+As per above.
+
+> +	/* If no SIPO is used, disable the shift register chip */
+> +	if (find_next_bit(pc->initialized, AIROHA_PWM_MAX_CHANNELS,
+> +			  AIROHA_PWM_NUM_GPIO) >= AIROHA_PWM_NUM_GPIO)
+> +		regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
+> +				  AIROHA_PWM_SERIAL_GPIO_FLASH_MODE);
+> +}
+
+...
+
+> +static int airoha_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct airoha_pwm *pc;
+> +	struct pwm_chip *chip;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	chip = devm_pwmchip_alloc(dev, AIROHA_PWM_MAX_CHANNELS, sizeof(*pc));
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +
+> +	chip->ops = &airoha_pwm_ops;
+> +	pc = pwmchip_get_drvdata(chip);
+> +
+> +	pc->regmap = device_node_to_regmap(dev->parent->of_node);
+
+Please, use dev_of_node(dev->parent).
+
+> +	if (IS_ERR(pc->regmap))
+> +		return dev_err_probe(dev, PTR_ERR(pc->regmap), "Failed to get PWM regmap\n");
+> +
+> +	for (i = 0; i < ARRAY_SIZE(pc->buckets); i++)
+> +		refcount_set(&pc->buckets[i].used, 0);
+> +
+> +	ret = devm_pwmchip_add(&pdev->dev, chip);
+
+Seems you have dev, why not use it?
+
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
+> +
+> +	return 0;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
