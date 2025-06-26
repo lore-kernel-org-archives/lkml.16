@@ -1,89 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06EED2750E8;
-	Thu, 26 Jun 2025 11:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2647B21171B
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 11:08:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750936121; cv=none; b=Q4NFeHzQBpe9gadPMpC1d444v+ivgebmhfXpTB3zc7Gwup8+k51sj2rtuNk+n1JXqRV84yJsq3IQSjyvcZLbfkKhkSTXOPQiWGE1Fq/PU2bBUcRleaHn6KqUrO6GhlhvC++RQqwJIFPivtX3tg9vX+lyo4hR/xfLKtvn0BOWmo0=
+	t=1750936142; cv=none; b=tLoIZ24AQwlHT2A7FdMLylrzW+PigBYgzU2A8vGJr9p414fici0J13c63abBElBTGQ1UVr3Z2CwrutxoHxgFGTCiPR3CLBDURzkkz3fj2TqaZYOuk7QSZA4eZ0GzUhTSBRl6yXXhjU2xqNPRQGu5WSR6CCjTgHDsUqLgpgrQQZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750936121; c=relaxed/simple;
-	bh=up7Cs0PRFSAEYYIexNfbEfm+HjdkJ76x55E+y+QPstQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N1ylW4uaVnoejLVvg3q2hUHKrEzzSMvvG+drWa1UC6YEHcGNDfiE+Xuf95TpGE9BWmwI4bk9F2s32HOhOSGx+QRihnk/5DB6V3f82XM62dLkV53K4/P/1DdkzCgQvSOi1L1PjKwiGzPnsg6Pg7OW2KH66fNXHvy6VICAlseiB9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+U7zJV4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750936142; c=relaxed/simple;
+	bh=Jfn0fS2LI3pBix9K0aM+ywu2YM+BVe8pJsIOOMevAyY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=dkvr4T3k3u26fWweX0V0m/3gXcoCbh5ihnuzQOYbAfmhz1QAR1D8J8WMquDDoAz7ezVIzwWbc/qCDcaVX5jihn/JAOQjDGt8/pG5oRDXVT9CWwmnVJkkDJYVpmpqHlR7+K/SdfIqg1mZ2ELZDoOAYQztU9oI0ZVMEzplzGOosFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D7FIelBi; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+U7zJV4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D660C4CEEB;
-	Thu, 26 Jun 2025 11:08:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750936120;
-	bh=up7Cs0PRFSAEYYIexNfbEfm+HjdkJ76x55E+y+QPstQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D+U7zJV4idWqfEM5gHGt2o+1C8t3tdx721UpgwtU0Epu+pjEbBa/VYRHV4BgrIm6w
-	 M2mgTtV9FZBMNJBbr0Rx5DjdOp9959VO0YIOAF5LnubCdJS8y042DbxBUQ+6T9SZdh
-	 R4zHirpioV7wBuwXZq6w0kNJj0yi5c+v6iV9nb6Tbv/9F87MhbWj6t9S4LD2ybC8ow
-	 nFP3OFc+en+AEx90oX0A5tl1tsRm3xSXJtLXZeIbygEt+5prQ2veyML7Y6qy4SK9Nh
-	 vb3klNPsdusKJEZgoIbURxCD3/ZRFqTDJ//uhBXGDrukPsV12gwFizFLhcBNQ1MzuU
-	 suCHxygB/oGPw==
-Date: Thu, 26 Jun 2025 12:08:34 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Arun Raghavan <arun@arunraghavan.net>
-Cc: Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Nicolin Chen <nicoleotsuka@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Pieterjan Camerlynck <p.camerlynck@televic.com>,
-	linux-sound@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, Arun Raghavan <arun@asymptotic.io>
-Subject: Re: [PATCH v2] ASoC: fsl_sai: Force a software reset when starting
- in consumer mode
-Message-ID: <aF0qMiPiNfDBXZld@finisterre.sirena.org.uk>
-References: <20250625130648.201331-1-arun@arunraghavan.net>
- <20250625235757.68058-3-arun@arunraghavan.net>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D7FIelBi"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-45363645a8eso5601335e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 04:08:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750936138; x=1751540938; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L47FMmq/heBHOm6gQHtGzqnF4x9Cl2uyNAnRXAGiwmw=;
+        b=D7FIelBiZ3Hm3+LTCyuURHsgZpIEjay5r+e1ThraOFBaJASP+es927Ydqu6Q+ob0wn
+         jcch+eeR2/cwORQiufg1xN/ZvZgydLvD9iiH0R+5puFJgpZJ9hyFY8IecgI6kuVp5Yub
+         EKDx18upmAPBClNs2kGYy8ZwfXpB5dIffoMwMWP1qHkSe6dB7/zBYzOt8suOx2xbh4uo
+         R72uF97skIr9m4/fn9WR9z8VNykciYtG8X72TCl/1DEX0rTJ6sv6mQGHeGrjdIXZn6UH
+         UmdbYQRfFDIysKg5dR1Hc+4Yd7TBhCg1qCAhHi/RReugjouzr6l43xWXERhRHlwVKBct
+         TbUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750936138; x=1751540938;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=L47FMmq/heBHOm6gQHtGzqnF4x9Cl2uyNAnRXAGiwmw=;
+        b=fMDImlFJTDv0kofr/2ieVlItXm4rtNnYG9P7vQFby6Eo/ZUPjxiKR6LeR5so8diVH6
+         ZnvsBZ9+snthWotsT8KNke5H8QkGJta58EQCsfKsHQO2+GpkSm/fw+dSgUEMwL5WHCge
+         xkD6Y/jVw+1vB8q7+t1AH/Y3GsllJYRdfBHTOy2UZnOmrldFG7fKU+EPPbR+ldeCbr+E
+         +emkRULCAcv32+sqja2o5dGaoaSxx6koTTDSWsPqsg1sn6qfa77GOnqtLgfpTT34p7nS
+         rrVaXYs1G0XEogtlagHRNoywLlotXNs5PhQA3fm2eKOl9m4oXnUU3Q1khqCQZ4Tb7uB0
+         QJ/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV7H8YemlpG6TyehKeWnLw2cSNGox6H1BfSbBVo4c7qrN3tWPZ3VpI01AerNWG9kPMvmSQct/3NhUhSGGY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyPBGf2GH4KoJriiCDhjpuJdu55JoZ80reF2P3dT6aZSuDtsMM
+	LhwI/yDKve1NaFo6m+M5ZOekPxCDGMvOpyNXBMbd63dOxr5xvN8ldBOYJeu/8NG4n+Y=
+X-Gm-Gg: ASbGncskVzzXbR8NoUIYlReKHbPPLRK0sp1zgkl1O0J9GtBb8yVTsSGMJ1XvbgopGDe
+	w5adxBqSkNONnSlUOPkikk6ZJ4BM8ywIBbvp+OL45QnDre6UK2/mcCQr0palHX+lt3IqCOjbizh
+	hMgnpNw66mrhQUGy4aXeYXtcPVtIUCs65LC9UvCZIyjNr51Y0JnIOdPYK9ToHULuneerI3HTfme
+	yDwrLtrigkHkhGzIjkPOOHfGLsUVdfblM0ZhU3CwsmUWu5vL8jmmosCE7fRxDBkyd13HeZ+bI/X
+	F5n8nzE7pJmeZisL0ith51vHe56u4SqTbF2CdEXp7WaSbURlLqmwjN90SO4cZw7z+84=
+X-Google-Smtp-Source: AGHT+IELxnFr+7S8k465yXgeM0nKFIFmu+MciekB6iPH5ORG6jBuwjyOj4litHeUFKiMBlazAykM6w==
+X-Received: by 2002:a05:600c:1e1e:b0:43c:f3e4:d6f6 with SMTP id 5b1f17b1804b1-45381b0632dmr72455385e9.31.1750936138307;
+        Thu, 26 Jun 2025 04:08:58 -0700 (PDT)
+Received: from localhost ([2a00:2381:fd67:101:6c39:59e6:b76d:825])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a390c88sm17336235e9.8.2025.06.26.04.08.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 04:08:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="K5z5oGHyWYUf3RoG"
-Content-Disposition: inline
-In-Reply-To: <20250625235757.68058-3-arun@arunraghavan.net>
-X-Cookie: Do not cut switchbacks.
-
-
---K5z5oGHyWYUf3RoG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 26 Jun 2025 12:08:56 +0100
+Message-Id: <DAWF24I1XW5Q.3FDHE6CS3DZBB@linaro.org>
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: "Srinivas Kandagatla" <srinivas.kandagatla@oss.qualcomm.com>,
+ <devicetree@vger.kernel.org>, "Jaroslav Kysela" <perex@perex.cz>,
+ <linux-arm-msm@vger.kernel.org>, "Srinivas Kandagatla" <srini@kernel.org>,
+ "Takashi Iwai" <tiwai@suse.com>, "Mark Brown" <broonie@kernel.org>,
+ <linux-kernel@vger.kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Stephen Boyd" <sboyd@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Lee Jones" <lee@kernel.org>, <linux-sound@vger.kernel.org>, "Liam
+ Girdwood" <lgirdwood@gmail.com>, "Dmitry Baryshkov"
+ <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH 1/3] dt-bindings: sound: add bindings for pm4125 audio
+ codec
+X-Mailer: aerc 0.20.0
+References: <20250626-pm4125_audio_codec_v1-v1-0-e52933c429a0@linaro.org>
+ <20250626-pm4125_audio_codec_v1-v1-1-e52933c429a0@linaro.org>
+ <175090145961.2702141.17071553013552846812.robh@kernel.org>
+In-Reply-To: <175090145961.2702141.17071553013552846812.robh@kernel.org>
 
-On Wed, Jun 25, 2025 at 07:56:16PM -0400, Arun Raghavan wrote:
-> From: Arun Raghavan <arun@asymptotic.io>
->=20
-> In a setup with an external clock provider, when running the receiver
-> (arecord) and triggering an xrun with xrun_injection, we see a channel
-> swap/offset. This happens sometimes when running only the receiver, but
-> occurs reliably if a transmitter (aplay) is also concurrently running.
+On Thu Jun 26, 2025 at 2:30 AM BST, Rob Herring (Arm) wrote:
+>
+> On Thu, 26 Jun 2025 00:50:29 +0100, Alexey Klimov wrote:
+>> The audio codec IC is found on Qualcomm PM4125/PM2250 PMIC.
+>> It has TX and RX soundwire slave devices hence two files
+>> are added.
+>>=20
+>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+>> ---
+>>  .../bindings/sound/qcom,pm4125-codec.yaml          | 147 ++++++++++++++=
++++++++
+>>  .../devicetree/bindings/sound/qcom,pm4125-sdw.yaml |  86 ++++++++++++
+>>  2 files changed, 233 insertions(+)
+>>=20
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> yamllint warnings/errors:
+>
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/s=
+ound/qcom,pm4125-codec.example.dtb: pmic@0 (qcom,pm8916): audio-codec@f000:=
+ 'qcom,micbias1-microvolt', 'qcom,micbias2-microvolt', 'qcom,micbias3-micro=
+volt', 'qcom,rx-device', 'qcom,tx-device', 'vdd-cp-supply', 'vdd-io-supply'=
+, 'vdd-mic-bias-supply', 'vdd-pa-vpos-supply' do not match any of the regex=
+es: '^pinctrl-[0-9]+$'
+> 	from schema $id: http://devicetree.org/schemas/mfd/qcom,spmi-pmic.yaml#
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/s=
+ound/qcom,pm4125-codec.example.dtb: pmic@0 (qcom,pm8916): audio-codec@f000:=
+compatible:0: 'qcom,pm8916-wcd-analog-codec' was expected
+> 	from schema $id: http://devicetree.org/schemas/mfd/qcom,spmi-pmic.yaml#
+>
+> doc reference errors (make refcheckdocs):
+>
+> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/202506=
+26-pm4125_audio_codec_v1-v1-1-e52933c429a0@linaro.org
 
-Please don't send new patches or versions in reply to old threads, it
-makes it harder to follow what's going on.
+The second patch in the series deals with that. Reordering these two patche=
+s
+doesn't seem to make a lot of sense so I guess squashing it in here is
+a way to go.
 
---K5z5oGHyWYUf3RoG
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Alexey
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhdKi8ACgkQJNaLcl1U
-h9A28wf+LigIwA5J/nqjjSzl5OykFKzStn0zkkz7CjEoM0S32nzT/hU7vMdAhhVl
-0e9wF5rySlYduxZXG3Dhfw/4yPAPG/EudUxyaVw6Lpu7WjofNMQKZeDJgkpFp+nv
-dsvj34UtK/HmHsE9EiuZfmbxWT9Mdk6q4EcZ6Fto/A17pYM177GMDXZcKir/+SWA
-kzqN7tWuILE/thdnhkda9mKcmdm7kVh1cMI/qPt7NVNTcf+IrQBoIrxj02O+QqSr
-4LyFMdg5OfMAUAslWpNgdvm2z7O+71PS6nFYGvxVeMuWc3L2qN8bG1WixPSjuMO/
-11JrR/ldTRYL80Qgzz8+k6QYI3VIew==
-=IlG0
------END PGP SIGNATURE-----
-
---K5z5oGHyWYUf3RoG--
