@@ -1,206 +1,228 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FDB2E6D12;
-	Thu, 26 Jun 2025 13:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210642E1C7E;
+	Thu, 26 Jun 2025 13:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750945974; cv=none; b=ooGNGI2VB/kkHDjrg0+UcfLPjjzso0mleksvLizILi+d/73gs03JglUwuHkRmp3nEW4OAxeBEQi1R1DhMMxNVkLKNt2f0VVF54sSLJNO+5mgZHgRntIq34bZV7vX8NX+tyQcjDJvm6H+LQPZlOMePwmQLaWLCWnTKKnzaSO7GK0=
+	t=1750945995; cv=none; b=p1y1JZ11XayzUhQu4rTKElH7rSoYU6PywJJhAoA+r1/eS1rgu8cYEh6QvveY9r/P52QwPV+4dmJyn+Sdjl/5nbKgDi2Uev8nv35a/tztLAyjTkCBBL2MKWX3b1HTJZQMO4vBfjNs+xn3fFnPbksZ4dc8YVQiB6Z4KnqzM0shEto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750945974; c=relaxed/simple;
-	bh=x68XQbmxD04swoDpoM6dxDOIxoHUVAwMJ406X3MvhU8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iYndEqkx04YExWWS4hyQLGTmyxuPoKik0N+TzP7Y/ZURO95q0Bk3ePsrRMeR0qZKzeHJb2c5UpnFiG6nz7RXFLWPov27fjSKz0yXwuVT2Qf9grgNCtpR8Yap19SEuDZCs6Qguyn8jeLVizyCJxWLm/N/xzMyiP/QcYWgfUMayOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bSg9t6FJMzKHMyr;
-	Thu, 26 Jun 2025 21:52:50 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 3DCC91A1343;
-	Thu, 26 Jun 2025 21:52:49 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgBHq1+rUF1oDavjQg--.29464S3;
-	Thu, 26 Jun 2025 21:52:45 +0800 (CST)
-Message-ID: <2dbc199b-ef22-4c22-9dbd-5e5876e9f9b4@huaweicloud.com>
-Date: Thu, 26 Jun 2025 21:52:43 +0800
+	s=arc-20240116; t=1750945995; c=relaxed/simple;
+	bh=Br/k6gepM6isXrVyNOBC8je6Df6XarIs+ifkHTw16TM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FiUKVpEcsaxLbH2QDTDkLRnWHSr7wOSYcVd4vGn2U3GgsXPbgwxd9ZWd6q6F+44jWC/6g10f5IS1g6zk32BFTe/TTzR2Neow2O6TeqqLC5nvi73cRXWxMyD3YCoR8nL6fOfjXW+rbKTrLHzuJZgOsJ09ijLFwwhwQF9HHekfhlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KtilLKOV; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KtilLKOV"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32b5226e6beso8638751fa.2;
+        Thu, 26 Jun 2025 06:53:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750945992; x=1751550792; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zlpUNKK3G9db+EdwcDWwBbzYx+1GRPZcFPyn0Q/NIe0=;
+        b=KtilLKOVoYUG5u73KYaSdEVcFvFVt5qv0qJrb1oRwOlHjbApFbEj9EB6JyDHPMGnfX
+         0UqP5B+rKaeHkl8VJuOpO7cThbzQUmdRtMzJOcI1ZsBLWinJFLAWzNj9UkSMUMgj7m9j
+         C1HXyKYRIyzJ/Waah8A0HTrM+aLTie+ze2a+fRo5buF++yEM2isPq4hUpgHuiNmtq+Md
+         Dl/FpaMtsdZb9sxDOVkxRZjXk8sJ2G5oa6IiZjwLi04ZfKPKOMiC8mRW6+EZI8AqvMqj
+         M4ouV24IeVfnHvwTEbxJ869Xc+fOmL3X+Cp16f5Gcpk09R2g04SUX+4lg6cJ4hn7CTyR
+         qcDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750945992; x=1751550792;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zlpUNKK3G9db+EdwcDWwBbzYx+1GRPZcFPyn0Q/NIe0=;
+        b=Tu6B7dKE0FbRBCw5iYpBJy0ITma1jKwex1bUFM+YIXGSCsUriRpzn6HKTIOGHQ5jGE
+         IqbCIAK/wHpQln918DJvXJicFmkxhfzb4hE6wsojp/eXkvcsRHzWYXvH2wbUkIou5iAS
+         pPt4VWIv87D5n2wlIdVllRQrL97RgbOgXQv1w/b5g5ELeVPPaPBfNwGfJsVDL1+mDwgH
+         Rm6cOd3R9VX73n+VUofUS5hTQLHdENS6/UKojsko0vrDwtPJ+HIWAQgSq0ItwdcevAHA
+         +9m3Z293xAusQfdm8RCXLG9eYzyLr3ahTlU8XjTaDbe7lVKUDyiW/06eYJdCSVqRolBA
+         OVsg==
+X-Forwarded-Encrypted: i=1; AJvYcCUyDkjjQjBy5lrRgv/vj/KNfBiYv4y+GEW9wRk2Im+xgpv9x/nysyqOaIwkAMxSjlsGUsEJBaaJNDv+qHo=@vger.kernel.org, AJvYcCVtA+Uw75L+cmwoRK6B1j7nL81bLlnbOFt9lAnvYtkLhnkk5KDdqE84e/EJbkyGgeKJDeKmBp/2MkCwOQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXBXVW0naDe4aQij9V1hmdEQK1AMBAVDJGH8VXk+ZiW+gHf+WR
+	62HLfNxwX7w7rrlFqTcMRxgsOsC5SMGtMm44ADrH1jSWxLiU3hrfxWqNciPZfwIK93JcVAI8F0a
+	gCHWsJWDwnaNoiMekl6QRrYc8x2Vv9aQ=
+X-Gm-Gg: ASbGncvIC0vfwKy/s9oIrOzeWm5uhO7unbPyxC3kp6bS7q7TzFbv+Eo60S9hqK+3Srq
+	i+EXjhKnwp7DLJNqZhc3WZGof61/ZeEujJd9/+vHl6vKPszk7OCjrJRdGEBPeXuS3hJhkgXJRa0
+	L4H2ULg7Qh2ygryL1YsTw/JJH8sEm68z+b4L9BVjt9WQ==
+X-Google-Smtp-Source: AGHT+IFp5i/0Kq3rabH9rf2kY42MbESDKtULRW6uJMn5QRZ8/Z9H2i8ntSIcRhBigiGO2NXAKYlXjXFM6g03B8Baa18=
+X-Received: by 2002:a05:651c:f0b:b0:32b:7284:88 with SMTP id
+ 38308e7fff4ca-32cc6497155mr12421921fa.7.1750945991880; Thu, 26 Jun 2025
+ 06:53:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: next-20250626: WARNING fs jbd2 transaction.c start_this_handle
- with ARM64_64K_PAGES
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
- linux-ext4 <linux-ext4@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
- open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- Linux Regressions <regressions@lists.linux.dev>,
- LTP List <ltp@lists.linux.it>
-Cc: Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
- Anders Roxell <anders.roxell@linaro.org>,
- Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-References: <CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgBHq1+rUF1oDavjQg--.29464S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3Wr15Kr43tr4xAFWrXr1DWrg_yoW7Kw4xpF
-	yaqFn8KrW8Zry8JFWkZ3WIvryUtr4qyFyxJrnFqr1rG3W2vF18JF1Ig34rtr9rX34Uu34I
-	vr4qk34kKr10y3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+References: <20250625095224.118679-1-snovitoll@gmail.com> <20250625095224.118679-6-snovitoll@gmail.com>
+ <20250626132943.GJ1613200@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250626132943.GJ1613200@noisy.programming.kicks-ass.net>
+From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+Date: Thu, 26 Jun 2025 18:52:53 +0500
+X-Gm-Features: Ac12FXynXHan9NKB65s06xjAcLer_ajNs_gE1LBlTEt_pC6nGG6YTexJKgab6gM
+Message-ID: <CACzwLxj3WLTK+A7YLcYvg5ZwvQdvoBuZL3bmEF+ELinFZgU=Pg@mail.gmail.com>
+Subject: Re: [PATCH 5/9] kasan/loongarch: call kasan_init_generic in kasan_init
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com, 
+	dvyukov@google.com, vincenzo.frascino@arm.com, catalin.marinas@arm.com, 
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
+	christophe.leroy@csgroup.eu, hca@linux.ibm.com, gor@linux.ibm.com, 
+	agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com, 
+	richard@nod.at, anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net, 
+	dave.hansen@linux.intel.com, luto@kernel.org, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, 
+	chris@zankel.net, jcmvbkbc@gmail.com, akpm@linux-foundation.org, 
+	guoweikang.kernel@gmail.com, geert@linux-m68k.org, rppt@kernel.org, 
+	tiwei.btw@antgroup.com, richard.weiyang@gmail.com, benjamin.berg@intel.com, 
+	kevin.brodsky@arm.com, kasan-dev@googlegroups.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Naresh!
+On Thu, Jun 26, 2025 at 6:29=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Wed, Jun 25, 2025 at 02:52:20PM +0500, Sabyrzhan Tasbolatov wrote:
+> > Call kasan_init_generic() which enables the static flag
+> > to mark generic KASAN initialized, otherwise it's an inline stub.
+> >
+> > Replace `kasan_arch_is_ready` with `kasan_enabled`.
+> > Delete the flag `kasan_early_stage` in favor of the global static key
+> > enabled via kasan_enabled().
+> >
+> > printk banner is printed earlier right where `kasan_early_stage`
+> > was flipped, just to keep the same flow.
+> >
+> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218315
+> > Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+> > ---
+> >  arch/loongarch/include/asm/kasan.h | 7 -------
+> >  arch/loongarch/mm/kasan_init.c     | 7 ++-----
+> >  2 files changed, 2 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/arch/loongarch/include/asm/kasan.h b/arch/loongarch/includ=
+e/asm/kasan.h
+> > index 7f52bd31b9d..b0b74871257 100644
+> > --- a/arch/loongarch/include/asm/kasan.h
+> > +++ b/arch/loongarch/include/asm/kasan.h
+> > @@ -66,7 +66,6 @@
+> >  #define XKPRANGE_WC_SHADOW_OFFSET    (KASAN_SHADOW_START + XKPRANGE_WC=
+_KASAN_OFFSET)
+> >  #define XKVRANGE_VC_SHADOW_OFFSET    (KASAN_SHADOW_START + XKVRANGE_VC=
+_KASAN_OFFSET)
+> >
+> > -extern bool kasan_early_stage;
+> >  extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
+> >
+> >  #define kasan_mem_to_shadow kasan_mem_to_shadow
+> > @@ -75,12 +74,6 @@ void *kasan_mem_to_shadow(const void *addr);
+> >  #define kasan_shadow_to_mem kasan_shadow_to_mem
+> >  const void *kasan_shadow_to_mem(const void *shadow_addr);
+> >
+> > -#define kasan_arch_is_ready kasan_arch_is_ready
+> > -static __always_inline bool kasan_arch_is_ready(void)
+> > -{
+> > -     return !kasan_early_stage;
+> > -}
+> > -
+> >  #define addr_has_metadata addr_has_metadata
+> >  static __always_inline bool addr_has_metadata(const void *addr)
+> >  {
+> > diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_i=
+nit.c
+> > index d2681272d8f..cf8315f9119 100644
+> > --- a/arch/loongarch/mm/kasan_init.c
+> > +++ b/arch/loongarch/mm/kasan_init.c
+> > @@ -40,11 +40,9 @@ static pgd_t kasan_pg_dir[PTRS_PER_PGD] __initdata _=
+_aligned(PAGE_SIZE);
+> >  #define __pte_none(early, pte) (early ? pte_none(pte) : \
+> >  ((pte_val(pte) & _PFN_MASK) =3D=3D (unsigned long)__pa(kasan_early_sha=
+dow_page)))
+> >
+> > -bool kasan_early_stage =3D true;
+> > -
+> >  void *kasan_mem_to_shadow(const void *addr)
+> >  {
+> > -     if (!kasan_arch_is_ready()) {
+> > +     if (!kasan_enabled()) {
+> >               return (void *)(kasan_early_shadow_page);
+> >       } else {
+> >               unsigned long maddr =3D (unsigned long)addr;
+> > @@ -298,7 +296,7 @@ void __init kasan_init(void)
+> >       kasan_populate_early_shadow(kasan_mem_to_shadow((void *)VMALLOC_S=
+TART),
+> >                                       kasan_mem_to_shadow((void *)KFENC=
+E_AREA_END));
+> >
+> > -     kasan_early_stage =3D false;
+> > +     kasan_init_generic();
+> >
+> >       /* Populate the linear mapping */
+> >       for_each_mem_range(i, &pa_start, &pa_end) {
+> > @@ -329,5 +327,4 @@ void __init kasan_init(void)
+> >
+> >       /* At this point kasan is fully initialized. Enable error message=
+s */
+> >       init_task.kasan_depth =3D 0;
+> > -     pr_info("KernelAddressSanitizer initialized.\n");
+> >  }
+>
+> This one is weird because its the only arch that does things after
+> marking early_state false.
+>
+> Is that really correct, or should kasan_init_generic() be last, like all
+> the other architectures?
 
-On 2025/6/26 20:31, Naresh Kamboju wrote:
-> Regressions noticed on arm64 devices while running LTP syscalls mmap16
-> test case on the Linux next-20250616..next-20250626 with the extra build
-> config fragment CONFIG_ARM64_64K_PAGES=y the kernel warning noticed.
-> 
-> Not reproducible with 4K page size.
-> 
-> Test environments:
-> - Dragonboard-410c
-> - Juno-r2
-> - rk3399-rock-pi-4b
-> - qemu-arm64
-> 
-> Regression Analysis:
-> - New regression? Yes
-> - Reproducibility? Yes
-> 
-> Test regression: next-20250626 LTP mmap16 WARNING fs jbd2
-> transaction.c start_this_handle
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+It really differs from other arch kasan_init(). I can't verify that
+kasan_init_generic()
+can be placed at the end of kasan_init() because right after
+switching the KASAN flag, there's kasan_enabled() check in
+kasan_mem_to_shadow().
 
-Thank you for the report. The block size for this test is 1 KB, so I
-suspect this is the issue with insufficient journal credits that we
-are going to resolve.
+In arch/loongarch/mm/kasan_init.c:
 
-https://lore.kernel.org/linux-ext4/20250611111625.1668035-1-yi.zhang@huaweicloud.com/
+void *kasan_mem_to_shadow(const void *addr)
+{
+        if (!kasan_enabled()) {
+                return (void *)(kasan_early_shadow_page);
+        } else {
+...
+}
 
-Thanks,
-Yi.
+void __init kasan_init(void)
+{
+...
+        kasan_populate_early_shadow(kasan_mem_to_shadow((void *)VMALLOC_STA=
+RT),
+        kasan_mem_to_shadow((void *)KFENCE_AREA_END));
 
-> 
-> ## Test log
-> <6>[   89.498969] loop0: detected capacity change from 0 to 614400
-> <3>[   89.609561] operation not supported error, dev loop0, sector
-> 20352 op 0x9:(WRITE_ZEROES) flags 0x20000800 phys_seg 0 prio class 0
-> <6>[   89.707795] EXT4-fs (loop0): mounted filesystem
-> 6786a191-5e0d-472b-8bce-4714e1a4fb44 r/w with ordered data mode. Quota
-> mode: none.
-> <3>[   90.023985] JBD2: kworker/u8:2 wants too many credits
-> credits:416 rsv_credits:21 max:334
-> <4>[   90.024973] ------------[ cut here ]------------
-> <4>[ 90.025062] WARNING: fs/jbd2/transaction.c:334 at
-> start_this_handle+0x4c0/0x4e0, CPU#0: 2/42
-> <4>[   90.026661] Modules linked in: btrfs blake2b_generic xor
-> xor_neon raid6_pq zstd_compress sm3_ce sha3_ce fuse drm backlight
-> ip_tables x_tables
-> <4>[   90.027952] CPU: 0 UID: 0 PID: 42 Comm: kworker/u8:2 Not tainted
-> 6.16.0-rc3-next-20250626 #1 PREEMPT
-> <4>[   90.029043] Hardware name: linux,dummy-virt (DT)
-> <4>[   90.029524] Workqueue: writeback wb_workfn (flush-7:0)
-> <4>[   90.030050] pstate: 63402009 (nZCv daif +PAN -UAO +TCO +DIT
-> -SSBS BTYPE=--)
-> <4>[ 90.030311] pc : start_this_handle (fs/jbd2/transaction.c:334
-> (discriminator 1))
-> <4>[ 90.030481] lr : start_this_handle (fs/jbd2/transaction.c:334
-> (discriminator 1))
-> <4>[   90.030656] sp : ffffc000805cb650
-> <4>[   90.030785] x29: ffffc000805cb690 x28: fff00000dd1f5000 x27:
-> ffffde2ec0272000
-> <4>[   90.031097] x26: 00000000000001a0 x25: 0000000000000015 x24:
-> 0000000000000002
-> <4>[   90.031360] x23: 0000000000000015 x22: 0000000000000c40 x21:
-> 0000000000000008
-> <4>[   90.031618] x20: fff00000c231da78 x19: fff00000c231da78 x18:
-> 0000000000000000
-> <4>[   90.031875] x17: 0000000000000000 x16: 0000000000000000 x15:
-> 0000000000000000
-> <4>[   90.032859] x14: 0000000000000000 x13: 00000000ffffffff x12:
-> 0000000000000000
-> <4>[   90.033225] x11: 0000000000000000 x10: ffffde2ebfba8bd0 x9 :
-> ffffde2ebd34e944
-> <4>[   90.033607] x8 : ffffc000805cb278 x7 : 0000000000000000 x6 :
-> 0000000000000001
-> <4>[   90.033971] x5 : ffffde2ebfb29000 x4 : ffffde2ebfb293d0 x3 :
-> 0000000000000000
-> <4>[   90.034294] x2 : 0000000000000000 x1 : fff00000c04dc080 x0 :
-> 000000000000004c
-> <4>[   90.034772] Call trace:
-> <4>[ 90.035068] start_this_handle (fs/jbd2/transaction.c:334
-> (discriminator 1)) (P)
-> <4>[ 90.035366] jbd2__journal_start (fs/jbd2/transaction.c:501)
-> <4>[ 90.035586] __ext4_journal_start_sb (fs/ext4/ext4_jbd2.c:117)
-> <4>[ 90.035807] ext4_do_writepages (fs/ext4/ext4_jbd2.h:242
-> fs/ext4/inode.c:2846)
-> <4>[ 90.036004] ext4_writepages (fs/ext4/inode.c:2953)
-> <4>[ 90.036233] do_writepages (mm/page-writeback.c:2636)
-> <4>[ 90.036406] __writeback_single_inode (fs/fs-writeback.c:1680)
-> <4>[ 90.036616] writeback_sb_inodes (fs/fs-writeback.c:1978)
-> <4>[ 90.036891] wb_writeback (fs/fs-writeback.c:2156)
-> <4>[ 90.037122] wb_workfn (fs/fs-writeback.c:2303 (discriminator 1)
-> fs/fs-writeback.c:2343 (discriminator 1))
-> <4>[ 90.037318] process_one_work (kernel/workqueue.c:3244)
-> <4>[ 90.037517] worker_thread (kernel/workqueue.c:3316 (discriminator
-> 2) kernel/workqueue.c:3403 (discriminator 2))
-> <4>[ 90.037752] kthread (kernel/kthread.c:463)
-> <4>[ 90.037903] ret_from_fork (arch/arm64/kernel/entry.S:863)
-> <4>[   90.038217] ---[ end trace 0000000000000000 ]---
-> <2>[   90.039950] EXT4-fs (loop0): ext4_do_writepages: jbd2_start:
-> 9223372036854775807 pages, ino 14; err -28
-> <3>[   90.040291] JBD2: kworker/u8:2 wants too many credits
-> credits:416 rsv_credits:21 max:334
-> <4>[   90.040374] ------------[ cut here ]------------
-> <4>[ 90.040386] WARNING: fs/jbd2/transaction.c:334 at
-> start_this_handle+0x4c0/0x4e0, CPU#1: 2/42
-> 
-> 
-> ## Source
-> * Kernel version: 6.16.0-rc3-next-20250626
-> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-> * Git sha: ecb259c4f70dd5c83907809f45bf4dc6869961d7
-> * Git describe: 6.16.0-rc3-next-20250626
-> * Project details:
-> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250626/
-> * Architectures: arm64
-> * Toolchains: gcc-13
-> * Kconfigs: gcc-13-lkftconfig-64k_page_size
-> 
-> ## Build arm64
-> * Test log: https://qa-reports.linaro.org/api/testruns/28894530/log_file/
-> * Test LAVA log 1:
-> https://lkft.validation.linaro.org/scheduler/job/8331353#L6841
-> * Test LAVA log 2:
-> https://lkft.validation.linaro.org/scheduler/job/8331352#L8854
-> * Test details:
-> https://regressions.linaro.org/lkft/linux-next-master/next-20250626/log-parser-test/exception-warning-fsjbd2transaction-at-start_this_handle/
-> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2z2V7LhiJecGzINkU7ObVQTwoR1/
-> * Kernel config:
-> https://storage.tuxsuite.com/public/linaro/lkft/builds/2z2V7LhiJecGzINkU7ObVQTwoR1/config
-> 
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
-> 
+        kasan_init_generic();
 
+        /* Populate the linear mapping */
+        for_each_mem_range(i, &pa_start, &pa_end) {
+....
+        kasan_map_populate((unsigned long)kasan_mem_to_shadow(start),
+}
+
+>
+> Also, please move init_task.kasan_depth =3D 0 into the generic thing.
+> ARM64 might have fooled you with the wrapper function, but they all do
+> this right before that pr_info you're taking out.
+
+Please check "[PATCH 1/9] kasan: unify static kasan_flag_enabled across mod=
+es",
+where I've replied to Christophe:
+https://lore.kernel.org/all/CACzwLxj3KWdy-mBu-te1OFf2FZ8eTp5CieYswF5NVY4qPW=
+D93Q@mail.gmail.com/
+
+I can try to put `init_task.kasan_depth =3D 0;` in kasan_init_generic(),
+but in ARM64 kasan_init() we'll still need to have this line for
+HW_TAGS, SW_TAGS mode.
