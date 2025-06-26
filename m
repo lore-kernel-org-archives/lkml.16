@@ -1,265 +1,106 @@
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164D02F1FEC;
-	Thu, 26 Jun 2025 11:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB72C2FB;
+	Thu, 26 Jun 2025 11:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750939096; cv=none; b=DFanh/jB2Qg2RvHTcy8Uq5ZOcVKIgR6dNJthBjGfOVOrMw7QHtrMerTT7kBw4Cbm2t0hCEiU5d7OT92rU7TQ1fjBY/dWvEqXoBABOHij105NFCvAzgQ/IsGQCFBUybPsmgOSkPWXFmV+qwTR0E3kTSgv/RX3e1NPRMlC9qKrw9s=
+	t=1750939096; cv=none; b=fUmZvFqgU+ZMakjwEzurKVCPytrG8QLZAE2ZFIMifSZp51e+0kjGLyukP1Uk4JtdmrTZVo4Enm7rE2XxIF7DKpat2CXNpmTe/V4I4Omc1cOR4i42WaYiK3dO2MKALVd6LmftgFT+Ur+xfX+k+Kawk0iuoFN2hgZg44ZJcmlYOtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750939096; c=relaxed/simple;
-	bh=fbs1q+JsuaSJKXWhauDT9K8vAUjLhnIklFMIMSl/P+E=;
+	bh=VlanypWYi6DkuZeH7DXWPijDtve33MpM2UftEXp/Xnk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PSu4RGu3iOSLUbLUoK0Jnc5102GQjMSf2b0Lmrt5+6MNDSevKEFI8f23lE3HMPa5QPVxWpYh0XjGw+EBaTeEa7IXI3h2hPfLzgYFq5ADZkj6/s/VkHMaDnCHtiMKzMtasH3j/dj6xp6XxD5jsA9Gp6fQUIQhM0sWdDoLemuTL/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=qReBpx5gq3dC4EX8wLeccjbFIAUA5M5PmhzlET17N04iYBlEBN24H8NFOR4Yy1/27LE8WQYO9nxIUoHZ7LnsMd989Fu6YvMKxjSv6uBWQSCl/00xM8XZ7icvHWONr7R1EZowuH8SAy9l4FoRul2ROoyYxhE4FC54Qno7eyH1JwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BWe/PbSN; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4e79dde8511so196520137.0;
-        Thu, 26 Jun 2025 04:58:13 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWe/PbSN"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-553b60de463so1013357e87.3;
+        Thu, 26 Jun 2025 04:58:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750939093; x=1751543893; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VlanypWYi6DkuZeH7DXWPijDtve33MpM2UftEXp/Xnk=;
+        b=BWe/PbSNEMiIrbIolifWtbIrtMBeR8vpTEnlJy3pIyBMx1w98vdlsKAoyKHNk8nzCT
+         7kwap2ZgH+AYx4Er51Oc+5okcSjzp5gE31BVi57EB6OxhkVbiy0IxV5OBJVrkKei0Mlb
+         72ZCs82BQVVwcMZRjRW/Tkjhbam+0nfQUa/6Mb4ScjdLLhwt+0pMf5puOvAyIuLK1FWb
+         TxlZf8JKbUsfphSEFjW1C7VjTz9u4hAGH1UbrTvfkenA8rcVNUF3vonnrIAOXyoC6qCZ
+         PRjyH4aVa6UAishkppbOvoK12i6zo4eZhe7tcWridPXcYXzA9ze39yQWRwAxDakS+eyj
+         KMEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750939092; x=1751543892;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B5D+86CEEwzC4+/VJmAWquleszRXVYD3WE2XTmHeq9A=;
-        b=gm+iReD90ppHCdzuPBB+Gg7IxUEc5grPYNNkH/WHcIjZ0W6a+OkAmdYJVNaBvgQvav
-         1aWtg8x5+U5qL132bZAGverCmavMfFDY/CORFgQhsHZOzqwupwxrBMgiNv+gPWR+2jwB
-         MzjQwvMbFMgLCg7XhVQsXTwu43xKFIEQbvc6etAlaArHLcZlKRH6OVAmdpAYoadZNzVu
-         jkcP56hwot1Onm8p9V+hU47wk2/w3wtAdw701s2OZ6HQVpeA0HwI3xPlnD/B0GVlgCxG
-         ni1h4K6aDqRZdE+nj5xWgaP8ZCais8dHatjRav1taHjHQ5kgyZ6OZgtprORE782eWjGI
-         aYaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKX1RQii/hHqzF+QKJbtyWiuwIHhzbMeCj4Ft8ciMIYCzVKVr/mPCuVA2bQJnXkxUFWN1vicmcDjKS@vger.kernel.org, AJvYcCXN29P/KoI7Y43ljimgZ1S0ZtvD0IdquyRSleGdazt3ghZqoMB6Tt4nLenHfclTngb9kobXwd3v8DwfVVqK9x+/8KE=@vger.kernel.org, AJvYcCXVtGjuXcEz/mShGMeLV2TivFNxH9NdaqRHKM2ntRAsFgq15Dv1XWXHldQ2fLJAQxsNR8AuCiDz/u2K2QR0@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP1EcN017/nTR17jZ0d+oHv5s0/QkvXpvGuzZGBsve2A3F7v/t
-	HrodVIHj+e+/syJsIPz+vVs/XDpJwNaYVLNRWT7wPm4Sl2nsMWPNsQifQJUsrA5H
-X-Gm-Gg: ASbGnctHxEeGZp9uNxz207zMis2BFMSQ+kSqgAz8P9e42voNvt48JnGgILQTK55zi6J
-	jRBX6N1XyjKGuONH4A7xz0kOIe7eyCDD+j9qdBW/vuTuui0mYeZENbX7Bl4hGs6HqTMfoM80zLe
-	e0qUDqMzW7qlvIDG1Ps2CPlEalldjagSbBAFMVOKN4gXd9PMwdDIwFdCGHincVl48ai1RAxKwMS
-	i7Sw308nRGu66B+dUstYJnl3DvBNR2DtW1VX/7iXrClfJ1VkLeL9V2qnvQpmY0J46b+MXDshMxx
-	NQ7+LEkLhbegFay2jLGPcIClArlA8XwQj7hu+9xDl87LkPv1mVrQqckeOscvL6rpniU/N0XLplX
-	s707LrX79WMbeIcH3nXPSzbwA
-X-Google-Smtp-Source: AGHT+IE9lsdK8q4AcG0YMa9tINPYrYjS67hM7RqqbEo9bNmUzBEzC2T4fophGsPk9RiUEM/5wMF4IQ==
-X-Received: by 2002:a05:6102:1610:b0:4eb:efc6:740 with SMTP id ada2fe7eead31-4ecc7688ef2mr4639546137.18.1750939092038;
-        Thu, 26 Jun 2025 04:58:12 -0700 (PDT)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e9c2e8158csm2340693137.11.2025.06.26.04.58.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 04:58:11 -0700 (PDT)
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4dfa2aeec86so276911137.1;
-        Thu, 26 Jun 2025 04:58:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWR7MfLJ0hig21u9aYRyO+SM+xc+QGHpfCYZ80VV01Ln88v8Ar3UwOdlKPiNtMxB0X5ZF1b7aDPzaC9@vger.kernel.org, AJvYcCWwK5kQ+RlDZL49Pq4vrk5uB17zWOPzUSzDODP4pWRnXqtGn3Usd6tvBKbFbw1IaKaMpw3szMTb6GL0W1qBDm7BmDI=@vger.kernel.org, AJvYcCXmtRzNDhSpZiD3CX4RhQTd7hmCGILA48AQ/5irtO2TWf2oZ+uE4ltI0UXiosHxHuhzbm/z19/G0pTuHc0U@vger.kernel.org
-X-Received: by 2002:a05:6102:2909:b0:4e9:c7c8:5dff with SMTP id
- ada2fe7eead31-4ecc766bedcmr5187924137.15.1750939091232; Thu, 26 Jun 2025
- 04:58:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750939093; x=1751543893;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VlanypWYi6DkuZeH7DXWPijDtve33MpM2UftEXp/Xnk=;
+        b=WgYTtLsmjFiXM/Cs1qIzLcBdVOT8aLyilIXmcyM3yWXAjEDBJVjmyNl+tV+vcYERG9
+         Wd9n20H1i85ilca3E7e1+KhNeKKZPf/9NkVmDBkM3i4NkLkhFd3Fyz9LOBDtuNvchIj6
+         2ZUhiPsO/USfFIwq3H0RURyT7zBgZpDIWXzjZsFSRj5Z3kIpQK6YRBd8no3AsZvCNzRA
+         7yyTOqNaf2Pos7oLOfKDAYS6qxLg0MmUb6ki6BfsG3XVTcQztOyrpaL5pTBI9wTA+SuQ
+         dYP476X5lvj8gLPTk6K1CEvtl8EiiZ3xo9+tOOM/ugybwJ730CtHO0RRZjF41VQZRAAm
+         L/oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpW/mnaSGV505FD0qIt9syFgno3yQiUsNvvwz1OzRnq7dDZKoqf/IcAESlUbeBttnL8DVhSep72LGHP84=@vger.kernel.org, AJvYcCXmfl/SWfbd3QywhC6uTUNEkdnSROugqAf+ozZmKxnQpCkjCBRODHW0wyUeReHfGCOZUrEvOVTQC6S6KWI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKy7BMXIizVRvsSLSa8zPbVOxydOidH7hs++VGVF/FI8fmWx44
+	BuI6kIU43J+be4X/iJdXcIFpg5o+lCdDuFTToUUSkzvgRzirIswfk2J3UbWnfpN7X6NCGWstl6f
+	OuU+dD8t56M/UDcf98hasSY8iTCLYswvtaA==
+X-Gm-Gg: ASbGnctmSs/0XvLH93b1hcMKAlJO0aL5x5+vm44m/aq80wnW18RColo7ldHWqrsmPD/
+	2KvoIUMuCzNE73mkEI3w920kOz+xu8d2xh2LlSI7UDdOHDrflXYoRLzLg4t68bgARBzsz8TKBe2
+	jrUMMA/6TgNP/P3T4+nPCNb9SnvlxUO5qb67H9KopaIYs0ufuJbX2XWear7J2Myjl1TYSC0HDna
+	IY=
+X-Google-Smtp-Source: AGHT+IGvTmFBk5nT2DVIEmz05QGopwwqxq0TAa5dvxo3BGqE6HCnql9lFMU54ewp377mYOo49nC8A4/0Gx1muG1AmSU=
+X-Received: by 2002:a05:6512:3b22:b0:553:3486:1d9b with SMTP id
+ 2adb3069b0e04-554fdd2e9ccmr2177274e87.30.1750939092502; Thu, 26 Jun 2025
+ 04:58:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620121045.56114-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250620121045.56114-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250620121045.56114-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 26 Jun 2025 13:57:59 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXP95AsuS2E=SWvzfo89y_VtyXPWoZUKT6mjj_xeLb=Eg@mail.gmail.com>
-X-Gm-Features: Ac12FXzRz_hjrthcj_xKPSNqDepD5CqeREFVrqO6uKI-zZQfrqwm2e12re8273g
-Message-ID: <CAMuHMdXP95AsuS2E=SWvzfo89y_VtyXPWoZUKT6mjj_xeLb=Eg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] arm64: dts: renesas: Add CN15 eMMC and SD overlays
- for RZ/V2N EVK
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250626115218.141874-1-arun@arunraghavan.net>
+In-Reply-To: <20250626115218.141874-1-arun@arunraghavan.net>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Thu, 26 Jun 2025 08:58:01 -0300
+X-Gm-Features: Ac12FXwhZEuK0fXt-9AZx9DOhPYa85XcfkJGgo_W0bWwT9VIbQev5B9sZrKJyn4
+Message-ID: <CAOMZO5BgsU0ijdoaZs5e=qwb2PYZsEnx_RxfgQ+dosL8hPRKyA@mail.gmail.com>
+Subject: Re: [PATCH v3] ASoC: fsl_sai: Force a software reset when starting in
+ consumer mode
+To: Arun Raghavan <arun@arunraghavan.net>
+Cc: Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, 
+	Nicolin Chen <nicoleotsuka@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Pieterjan Camerlynck <p.camerlynck@televic.com>, linux-sound@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+	Arun Raghavan <arun@asymptotic.io>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar,
+Hi Arun,
 
-On Fri, 20 Jun 2025 at 14:10, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu, Jun 26, 2025 at 8:52=E2=80=AFAM Arun Raghavan <arun@arunraghavan.ne=
+t> wrote:
 >
-> Introduce device tree overlays to support the eMMC (RTK0EF0186B02000BJ)
-> and microSD (RTK0EF0186B01000BJ) sub-boards via the CN15 connector on the
-> RZ/V2N EVK. These overlays enable SDHI0 with appropriate pinctrl settings,
-> regulator configurations, and GPIO handling.
+> From: Arun Raghavan <arun@asymptotic.io>
 >
-> Shared DTSI fragments (rzv2-evk-cn15-emmc-common.dtsi and
-> rzv2-evk-cn15-sd-common.dtsi) provide reusable configurations for both
-> RZ/V2N and RZ/V2H EVKs, as both support the same CN15 sub-boards.
+> On an imx8mm platform with an external clock provider, when running the
+> receiver (arecord) and triggering an xrun with xrun_injection, we see a
+> channel swap/offset. This happens sometimes when running only the
+> receiver, but occurs reliably if a transmitter (aplay) is also
+> concurrently running.
 >
-> Additionally, the base board DTS is updated to define an `mmc0` alias
-> pointing to `&sdhi0`, and to add a fixed 1.8V regulator node (`reg_1p8v`)
-> intended for use by the optional eMMC sub-board and, in the future, the
-> ADV7535 HDMI encoder (not yet enabled in the DTS).
+> It seems that the SAI loses track of frame sync during the trigger stop
+> -> trigger start cycle that occurs during an xrun. Doing just a FIFO
+> reset in this case does not suffice, and only a software reset seems to
+> get it back on track.
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> This looks like the same h/w bug that is already handled for the
+> producer case, so we now do the reset unconditionally on config disable.
+>
+> Signed-off-by: Arun Raghavan <arun@asymptotic.io>
+> Reported-by: Pieterjan Camerlynck <p.camerlynck@televic.com>
 
-Thanks for your patch!
-
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk-cn15-emmc.dtso
-> @@ -0,0 +1,15 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree overlay for the RZ/V2N EVK with the eMMC sub-board
-> + * (RTK0EF0186802000BJ) connected to the CN15 connector.
-> + *
-> + * Copyright (C) 2025 Renesas Electronics Corp.
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +#define RZV2N_PA               10
-
-This is duplicated from r9a09g056.dtsi, but unused?
-
-> +#define EMMC_GPIO(port, pin)   RZG2L_GPIO(RZV2N_P##port, pin)
-
-Unused?
-
-> +
-> +#include "rzv2-evk-cn15-emmc-common.dtsi"
-
-Hence you can just have a single rzv2-evk-cn15-emmc.dtso that works
-on both RZ/V2H and RZ/V2N.
-
-> diff --git a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk-cn15-sd.dtso b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk-cn15-sd.dtso
-> new file mode 100644
-> index 000000000000..6268dda138ab
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk-cn15-sd.dtso
-> @@ -0,0 +1,16 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree overlay for the RZ/V2N EVK with the SD sub-board
-> + * (RTK0EF0186B01000BJ) connected to the CN15 connector.
-> + *
-> + * Copyright (C) 2025 Renesas Electronics Corp.
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +#define RZV2N_PA               10
-
-This is duplicated from r9a09g056.dtsi. Can we avoid that?
-If not, I think we found the justification for moving these definitions
-to include/dt-bindings/pinctrl/renesas,r9a09g056-pinctrl.h...
-
-> +#define SD_GPIO(port, pin)     RZG2L_GPIO(RZV2N_P##port, pin)
-> +#define SD_PORT_PINMUX(b, p, f)        RZG2L_PORT_PINMUX(RZV2N_P##b, p, f)
-> +
-> +#include "rzv2-evk-cn15-sd-common.dtsi"
-> diff --git a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-> index b63ee1ff18d5..795d9f6b9651 100644
-> --- a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-> +++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-> @@ -24,6 +24,7 @@ aliases {
->                 i2c6 = &i2c6;
->                 i2c7 = &i2c7;
->                 i2c8 = &i2c8;
-> +               mmc0 = &sdhi0;
-
-While (out-of-tree) dynamic DT overlays do not support updating aliases
-yet, this logically belongs in the overlay, so please move it there.
-
->                 mmc1 = &sdhi1;
->                 serial0 = &scif;
->         };
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/rzv2-evk-cn15-emmc-common.dtsi
-> @@ -0,0 +1,46 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Shared DT include for the eMMC Sub Board (RTK0EF0186B02000BJ), which
-> + * is connected to the CN15 connector on the RZ/V2H and RZ/V2N EVKs.
-> + *
-> + * Contains common pinctrl and SDHI0 definitions.
-> + *
-> + * Copyright (C) 2025 Renesas Electronics Corp.
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-
-These two directives belong in the .dtso files (and you already have
-them there).
-
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/rzv2-evk-cn15-sd-common.dtsi
-> @@ -0,0 +1,67 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Shared DT include for the microSD Sub Board (RTK0EF0186B01000BJ), which
-> + * is connected to the CN15 connector on the RZ/V2H and RZ/V2N EVKs.
-> + *
-> + * Contains common pinctrl and SDHI0 definitions.
-> + *
-> + * Copyright (C) 2025 Renesas Electronics Corp.
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-
-Likewise.
-
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
-> +
-> +&{/} {
-> +       vqmmc_sdhi0: regulator-vqmmc-sdhi0 {
-> +               compatible = "regulator-gpio";
-> +               regulator-name = "SDHI0 VqmmC";
-> +               gpios = <&pinctrl SD_GPIO(A, 0) GPIO_ACTIVE_HIGH>;
-
-If you use a macro to abstract the GPIO number, please include the
-bank and port number in the abstraction.
-
-Alternatively, as both RZ/V2H and RZ/V2N use PA0, you can use
-RZG2L_GPIO(10, 10) directly.  That just leaves us with a desire to
-express "A" instead of 10...
-
-Note that you end up with the exact same .dtbo for RZ/V2H and RZ/V2N
-again...
-
-> +               regulator-min-microvolt = <1800000>;
-> +               regulator-max-microvolt = <3300000>;
-> +               gpios-states = <0>;
-> +               states = <3300000 0>, <1800000 1>;
-> +       };
-> +};
-> +
-> +&pinctrl {
-> +       sdhi0-pwr-en-hog {
-> +               gpio-hog;
-> +               gpios = <SD_GPIO(A, 1) GPIO_ACTIVE_HIGH>;
-
-Likewise.
-
-> +               output-high;
-> +               line-name = "sd0_pwr_en";
-> +       };
-> +
-> +       sdhi0_pins: sd0 {
-> +               sd0-cd {
-> +                       pinmux = <SD_PORT_PINMUX(A, 5, 15)>; /* SD0_CD */
-
-Likewise.
-
-> +               };
-
-The rest LGTM.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+What about adding a Fixes tag and Cc stable so that it gets backported
+to the stable trees?
