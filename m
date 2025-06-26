@@ -1,148 +1,102 @@
-Received: from smtp-bc0e.mail.infomaniak.ch (smtp-bc0e.mail.infomaniak.ch [45.157.188.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEBE218AB4
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2A02153ED
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750931042; cv=none; b=XLKg4xiM/W9BJ2Rtb2hr8iPZyVRIFRjOSysSUywCttpRCxGZGvw3UySKmY8tI5qB2YhIhf1mZK4T/acr+eXsSwq9VzdYck9HzdOLYJ32CISBdIQYOgyiCn245/XJGZtmZWPfPzQlcZBV3rRDgSRFUPkDVdoKNrVMYhFxHQ9caZE=
+	t=1750931236; cv=none; b=FUAdQyG5Xqk6g6n6bI1waVUZj2/HalkaILkuvcwqzX/pfBfpLozgav1NwnPBT7AZV+uUQ04s/k03/slFLelMqm7ZtnDeBgOFRDMZTgm76V+Afhm3JTVdeQMB9cIOMIbrn3amrOEZ4zgGOHBhRlT03ZJ8ObYnLUDEPwmve+eH+ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750931042; c=relaxed/simple;
-	bh=jxrqVWlNu9OTIwE5HUzDPcHmbqs+mlSWJ9SdYDE/kkQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LVhfUcLG1Rz1BK4nWu9K8KS6pSWmiBTJvy/YC+VmAlHoaLKu/gD9OFgybp5BoXEJscFnl7DBZZjQLvk2VLKWAhn/apEOS3DnMe8pvZQcYip3gvYln7xibVK3ofpI2vVL6dil9T0prmS9LYZ5nU5aKT5HAMnIwHIrizGjWCZS64o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=Es/nqOpR; arc=none smtp.client-ip=45.157.188.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1750931236; c=relaxed/simple;
+	bh=VMtWGZQmlxRjsBfICY6WknhUm1dc+SAzCwKYbEHznNU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HgtpXpwBGW/6jP71yAHIWKtYqihYSO2IC6sy+gEmQBv7kjJPkNW6Liw53YmHLJPMe2sFf1QWNqcNdSByyPQ6SGCVTmFxjul15Dq9ofLAkn4l2p189JxfMP1XpFdlBNrxqJB9zO166FQqPZ/BBbI4FaMY3kFUuvSBqvIIg+KC6xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fGBv9h7C; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="Es/nqOpR"
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bSYfb3HJLzhXX;
-	Thu, 26 Jun 2025 11:43:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1750931031;
-	bh=Z/uNTZquS++80fsem6ySxdoivWSYkihrZf+FpIs4Vc0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Es/nqOpRPK/X1DZtD1Gki12xHc9rguh5Tr/5wSoWATCvAdcpwUj3sD1lOKTUluF5A
-	 64ftEmAcWVYq1zaSH8n3Lt90Nzvkm5fwKfciI3XCP2n3ocopQ7l1la8Acyr19ljcu9
-	 mbE74nvsOmrC1MEW70Jjmitphhon/2VSjabNGBQs=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4bSYfZ1m9czlKv;
-	Thu, 26 Jun 2025 11:43:50 +0200 (CEST)
-Date: Thu, 26 Jun 2025 11:43:49 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Song Liu <songliubraving@meta.com>
-Cc: NeilBrown <neil@brown.name>, Tingmao Wang <m@maowtm.org>, 
-	Song Liu <song@kernel.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "brauner@kernel.org" <brauner@kernel.org>, 
-	Kernel Team <kernel-team@meta.com>, "andrii@kernel.org" <andrii@kernel.org>, 
-	"eddyz87@gmail.com" <eddyz87@gmail.com>, "ast@kernel.org" <ast@kernel.org>, 
-	"daniel@iogearbox.net" <daniel@iogearbox.net>, "martin.lau@linux.dev" <martin.lau@linux.dev>, 
-	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "jack@suse.cz" <jack@suse.cz>, 
-	"kpsingh@kernel.org" <kpsingh@kernel.org>, "mattbobrowski@google.com" <mattbobrowski@google.com>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
-Subject: Re: [PATCH v5 bpf-next 0/5] bpf path iterator
-Message-ID: <20250626.eifo4iChohWo@digikod.net>
-References: <4577db64-64f2-4102-b00e-2e7921638a7c@maowtm.org>
- <175089992300.2280845.10831299451925894203@noble.neil.brown.name>
- <9BD19ABC-08B8-4976-912D-DFCC06C29CAA@meta.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fGBv9h7C"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e82314f9a51so567123276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:47:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750931234; x=1751536034; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fj2QHa6OnGmzpYNyiPz5gZAKWryswlaFrYyygxh/pJQ=;
+        b=fGBv9h7CXiGSscqe+y7pRZblpGDx/6tflIHILwTB7AWm2O1yjKSEfQi+S57cClKZyF
+         HnaRczzacEiEHMWegPCwu8MS4T8njsN8HkucPxOfIVGnxS1mbQ+U5TBlEG4vh0nxlfVh
+         2s1ocqR/hADjmY5ihkj2wUkZ56QXO3+jbO+ZCUThHF9v3r0bBv5xVMsGLHdvat6kNJEv
+         UbenpHgs7NTg1JcUOlT7ITUIyRrQFLDb9NIJNSzXBf38RGtpZTA6UCOq/E9k88JL8CSX
+         YeVFyGWEInpwWJimbiiv0anm4pFc45rntyfyfe3Or+mKkbPd+hm6h0XFQMoug6s57HeF
+         ct1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750931234; x=1751536034;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Fj2QHa6OnGmzpYNyiPz5gZAKWryswlaFrYyygxh/pJQ=;
+        b=qR4+44tP9CiBUnenNyUAxamVk05CR7JJwEvehBYKIKXwiC5DtucpJRtCtsIH4g8IhN
+         8jXyM4ocgpZl0lfYR86wyI3t2pwgGV9Hf9K2kPe88aQOsRT1NBd1R3tmBv/2F2QvCI1P
+         sc3tUDGBfx2wlnaU3jmWytl090/neKSqdKLZ13+3fVcfuB4ycsnqpGlDXewRO9uvZKw/
+         TKNg97FsiNOOTWlcf5OikkA/owt/iEDOgoPkEC4ODLk5ng+cK5qm0zWJNZLAHog6q3EL
+         Vl8EcOufvjwega3cRkMO2lNM30GqkKWfy9T6ctQC/TvkA3v+VQe/LNMKrDykzqAjTg4k
+         GJNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVz5IVNtTa5Mbu1CDOz/lpVCxDGtGCRWR+oTaVQC2NsuWAkgkBU32imvlqGBzAK7vh6e8qy6Bzbql0ZM7k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6TTS2NY4e8atZvH9lgo2HE2ZXVpUeR1worP/1X9cm870dixHZ
+	iN/g7G232lNyFA38W59Ddcmsa1v3SfD3OPYdhSKmYDb8nXqLsicbQCu+gYDkyW3or3uUzetM8ik
+	XnxsMLjst+cSNVeliNkTMnIFtKJvsuVm14bdXAMQCIA==
+X-Gm-Gg: ASbGncs2BMAnpcUVjWlRhACltkRqOyruy0BRVNtbry2NfpfvGxSOOY2SqEK09g/dvd3
+	+ugCmFpGmYdbHwwz9bFyHsbEXlIhXle/R3YgLHmgfQ6ncNuyCjDYJkWcYW/TE7gZwegk7eQ741v
+	TAqKFfoMb1j8jnY9ES9Z7DFJtjupcIIt9NMV43DEznxwG1
+X-Google-Smtp-Source: AGHT+IEHwERgRwCBzB6vbsL1sIE76j7GbjeXErZ4zJp9hup79xC50wEIXLcWf5xeAXwh2fM3WvRP1rlkAgqjvq3ixUI=
+X-Received: by 2002:a05:6902:2b91:b0:e84:2cec:1c9d with SMTP id
+ 3f1490d57ef6-e860177f71bmr7997438276.41.1750931233869; Thu, 26 Jun 2025
+ 02:47:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9BD19ABC-08B8-4976-912D-DFCC06C29CAA@meta.com>
-X-Infomaniak-Routing: alpha
+References: <5011988.GXAFRqVoOG@rjwysocki.net>
+In-Reply-To: <5011988.GXAFRqVoOG@rjwysocki.net>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 26 Jun 2025 11:46:37 +0200
+X-Gm-Features: Ac12FXyIi7-z5quv_0KDUCEzalPBWfhqotEQ2Vp_aGtEe5qy39ECa_ySIUN3UIo
+Message-ID: <CAPDyKFpBTz0M8DmWHLLm7x4c8G5PpQNv0Zj7mrZ9BewTBi1skg@mail.gmail.com>
+Subject: Re: [RFT][PATCH v4 0/2] PM: sleep: Handle async suppliers like
+ parents and async consumers like children
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Chris Bainbridge <chris.bainbridge@gmail.com>, 
+	Saravana Kannan <saravanak@google.com>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 26, 2025 at 05:52:50AM +0000, Song Liu wrote:
-> 
-> 
-> > On Jun 25, 2025, at 6:05 PM, NeilBrown <neil@brown.name> wrote:
-> 
-> [...]
-> 
-> >> 
-> >> I can't speak for Mickaël, but a callback-based interface is less flexible
-> >> (and _maybe_ less performant?).  Also, probably we will want to fallback
-> >> to a reference-taking walk if the walk fails (rather than, say, retry
-> >> infinitely), and this should probably use Song's proposed iterator.  I'm
-> >> not sure if Song would be keen to rewrite this iterator patch series in
-> >> callback style (to be clear, it doesn't necessarily seem like a good idea
-> >> to me, and I'm not asking him to), which means that we will end up with
-> >> the reference walk API being a "call this function repeatedly", and the
-> >> rcu walk API taking a callback.  I think it is still workable (after all,
-> >> if Landlock wants to reuse the code in the callback it can just call the
-> >> callback function itself when doing the reference walk), but it seems a
-> >> bit "ugly" to me.
-> > 
-> > call-back can have a performance impact (less opportunity for compiler
-> > optimisation and CPU speculation), though less than taking spinlock and
-> > references.  However Al and Christian have drawn a hard line against
-> > making seq numbers visible outside VFS code so I think it is the
-> > approach most likely to be accepted.
-> > 
-> > Certainly vfs_walk_ancestors() would fallback to ref-walk if rcu-walk
-> > resulted in -ECHILD - just like all other path walking code in namei.c.
-> > This would be largely transparent to the caller - the caller would only
-> > see that the callback received a NULL path indicating a restart.  It
-> > wouldn't need to know why.
+On Mon, 23 Jun 2025 at 14:55, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> Hi Everyone,
+>
+> These two patches complement the recently made PM core changes related to
+> the async suspend and resume of devices.  They should apply on top of
+> 6.16-rc3.
+>
+> They were sent along with the other changes mentioned above:
+>
+> https://lore.kernel.org/linux-pm/2229735.Mh6RI2rZIc@rjwysocki.net/
+> https://lore.kernel.org/linux-pm/2651185.Lt9SDvczpP@rjwysocki.net/
+>
+> (and this is v4 because they have been rebased in the meantime), but they don't
+> make any difference on my test-bed x86 systems, so I'd appreciate a confirmation
+> that they are actually needed on ARM (or another architecture using DT).
+>
+> Thanks!
 
-Given the constraints this looks good to me.  Here is an updated API
-with two extra consts, an updated walk_cb() signature, and a new
-"flags" and without @root:
+Hi Rafael,
 
-int vfs_walk_ancestors(struct path *path,
-                       bool (*walk_cb)(const struct path *ancestor, void *data),
-                       void *data, int flags)
+I haven't yet got the time to test these, but the code looks good to
+me, so feel free to add for the series:
 
-The walk continue while walk_cb() returns true.  walk_cb() can then
-check if @ancestor is equal to a @root, or other properties.  The
-walk_cb() return value (if not bool) should not be returned by
-vfs_walk_ancestors() because a walk stop doesn't mean an error.
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-@path would be updated with latest ancestor path (e.g. @root).
-@flags could contain LOOKUP_RCU or not, which enables us to have
-walk_cb() not-RCU compatible.
-
-When passing LOOKUP_RCU, if the first call to vfs_walk_ancestors()
-failed with -ECHILD, the caller can restart the walk by calling
-vfs_walk_ancestors() again but without LOOKUP_RCU.
-
-> 
-> I guess I misunderstood the proposal of vfs_walk_ancestors() 
-> initially, so some clarification:
-> 
-> I think vfs_walk_ancestors() is good for the rcu-walk, and some 
-> rcu-then-ref-walk. However, I don’t think it fits all use cases. 
-> A reliable step-by-step ref-walk, like this set, works well with 
-> BPF, and we want to keep it. 
-
-The above updated API should work for both use cases: if the caller wants
-to walk only one level, walk_cb() can just always return false (and
-potentially save that it was called) and then stop the walk the first
-time it is called.  This makes it possible to write an eBPF helper with
-the same API as path_walk_parent(), while making the kernel API more
-flexible.
-
-> 
-> Can we ship this set as-is (or after fixing the comment reported
-> by kernel test robot)? I really don’t think we need figure out 
-> all details about the rcu-walk here. 
-> 
-> Once this is landed, we can try implementing the rcu-walk
-> (vfs_walk_ancestors or some variation). If no one volunteers, I
-> can give it a try. 
-
-My understanding is that Christian only wants one helper (that should
-handle both use cases).  I think this updated API should be good enough
-for everyone.  Most of your code should stay the same.  What do you
-think?
-
-> 
-> Thanks,
-> Song
-> 
+Kind regards
+Uffe
