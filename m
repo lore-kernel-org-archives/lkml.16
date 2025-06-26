@@ -1,83 +1,86 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF091EFFA6
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:15:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76DC2264B2
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750979719; cv=none; b=FpyJye++wFrNoI1LjhpF97U941P/OaI7eKYcN5qRC9G2Jr58ffw5dv8+KwlbscY9ZxLmGiFK8boxOWRcf33L38+JtXOfe7cfN8PfNSAGuNj2HTZx//HHOTcP6rcyIwfoYR9sQOtpA8bGXjOQwkHt5dwncmwVtDdVvOY+UI+9RE0=
+	t=1750979720; cv=none; b=Lx6GpEcUIwb7ACGGmXFu/aEX/wzfoBEcdZHlqConNewqLAobiTABfrXC4NeiKldRSuFxTMD7wpjcLyMy29Try7kE0HG75iq4IXziDskp0FrDLA7BSUR7fd0pKt9xyJmbADyKh1C7u6Jt+zBijM53Rol2y2HQ4AgI2Q9wIBvCRDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750979719; c=relaxed/simple;
-	bh=aveueRTbQdMdrNGSej3joup9HDcIGAK8ibNMHhk22ow=;
+	s=arc-20240116; t=1750979720; c=relaxed/simple;
+	bh=vW15Jg4ggX9gIZnwDizIV0mWZcRQyLuyRNHdO55b2Kg=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kYz9OkJ9SBytTbrNlA6NGMypBJ3Cd6FNyfoGYe9chNk8umep+6sQraEZ38PSBt45yF1rIyl1eStTh0TWW6+AWsTpBu2jQZLC//Li4ra7iGiiieqKNM6TTLba9YE6RejIZD8vR6DuwZjn4Io7zjOiu1ONoeaWoGTJwRUZFdEERFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jb6U9TMX; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=C2XVK7SAkUelYWZT0WG/CIp2tkrge4T6l4/MsUAEFFkvb7NYVNLtXVavTVfRDCu2VZAXJG7BF1PpBZbHMjLeBeKu6Uzcy0v/vJ4k4Q6JtKnL9pG94gCyjD0neJVJdI8uwBUhafRw8sP3foF+NMJzIjIw181IJYiPQ47NKQWyH6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ktnzspxm; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jb6U9TMX"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QJ2ocW029528
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:15:16 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ktnzspxm"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QHkcFA002540
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:15:17 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	QNf6psQuaYs1sV2z+eOJEJrYUuj36k6T3cjWzvS/EFE=; b=jb6U9TMXB/Q497gK
-	Bvw5kweEaXJVciSI5cJvzQb/BbH0h0Xv3YQY3O1jEHHBUbp5wr5GZ++hoeISz9bn
-	EeMf3iWV1T+Pd0/YstoItKt/meYED6KT6EPFFkWAFhuelQ8XU1RPvFryh9AYk6uc
-	xb4TMSHn6fIoOYZTn1qUSmmbDEGc2TmcRpLDKZyai2COAwANKcs+YpCer4gTKzOu
-	UMB0cuUk3ajzFe58oy0P/m0BCYfebuSdO/k7a4Vi5RuY5+3CqWbhVo/LUxXHiiuw
-	356jThXVgYow9WtEivIToWvLDwOCdwyphdzK8WiFfKCinbGc22NJ8Q637AEX4ZIu
-	mcuM4Q==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47esa4x3ns-1
+	S/H0Qgqe8Ttzr2u9kRhRfs75EuPnlrJgM/cVTTvn1kM=; b=ktnzspxmAA6ZEndD
+	OGt5QqK6dizC9ot5Yo2VIBXMQnNmkWOqulXMADMg3YQvVOBcsE8iqPzynOU1P4a2
+	EHQZgV+yKf+0cvFa7cxPZ40cK5CnFJNLoR4Ng5ra2ROqM03TeXtDytopLLHfeUr7
+	SMXq6+f1HISuM0SEG0mazodDIlGpGdaOQlRSNiuTPAKL1o30OBpj5Vp3TJGYDgyL
+	cn9gXJMqP8n421Thmm34Q9+EhyNS0LECXmVYOuhFvjdGrAlSVIF0m+ZcYw7zhBy+
+	R0SvmkGE6lzLrrTX9XEIeX1a05niQTJKGUYXWJAL36qe9EfRPyxrL+K/ECdfhtjY
+	/DuvQA==
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47emcmxjpg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:15:16 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2369dd58602so11742025ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:15:16 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:15:17 +0000 (GMT)
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-b1ffc678adfso926109a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:15:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750979715; x=1751584515;
+        d=1e100.net; s=20230601; t=1750979710; x=1751584510;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QNf6psQuaYs1sV2z+eOJEJrYUuj36k6T3cjWzvS/EFE=;
-        b=YpMGvtBx0sh23yvus2XfWOGVOcT3iRJgO6PHusb9uVvG2WfuiZQLqtXhN0IwnBn0T5
-         /Fp1yEGD2BCzFJm+fxRKODs7Disbl6FsL/nRYFGgc0DfNZ4Tf9+SxVp7cgDXyWm+/J4j
-         Y3xZxMGHnSj/sfT7V8SG1Sz1cA41sumiJMZ88nIsgJaa7809oDqPvJK211hTtjjg/j0p
-         GC/pAF1Rgw6BXwYKfllvWmaPvnXl6D0JXq6W6R2pDHr8lXkW/RLMBBdb4f6VlBlL9Xx6
-         BU5+AP8u6CHd1QfdxW35HS4YVq6VTswTdEeuwm8wMklyOHaRtRjY9NVHtcGoA3iwIa9s
-         m5iw==
-X-Forwarded-Encrypted: i=1; AJvYcCXaYNp6tgP8oOoC2NVofgTVEFAnOhDhIlDYEDNTW/3ntkQ/0SXcRURTAHUssJ/5lDaG0zC9jD5nSEA2sWU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpsbteVdc21bAUgwmozv3lXdxNnixBSaMcvKITwMaUP2UKnqXo
-	SFtaWtOUH3hP/Wg1pgNoZMwsVUF25ggkAdRi8olgwMNeYqxB6cestZfVHs6ZeKMxVy9O7hz4Eab
-	xtgqO/kI6hg1U+TavWGT33q1EsfItyGENfnFkQpO2QLN5LUEr0mwcoBXbFI+3rS9VT7NLxbJeQk
-	4=
-X-Gm-Gg: ASbGncuKclCIQeDVWOuLVdInEms3gxtS3o60tqDGSJH1gbRoAq4epdYT0avxnypHa5O
-	CCnfYBO8inFclTqoHpfiLth5NtrutWM0VGTtV3IH7eSNLhTSwrx7Rdmk+PJAm2J6T0/Al6/gFth
-	uiftGDL/eo5qPx57JrSGQHEokc0fUQ8ELdBjAlafcJcH7AzWZHMlHm1RV1HnyLoZq9CqsMwsJtX
-	4+C/nrCtKLLF1TLoyEyWstDd6oF8NfYvpRJrCTLc+ch0CWQc2JmrUHXUlj0dGTw9du3flTG12nU
-	f7132+fGCI6JS2BqLT3XKK6ssmRH+AGjUcmT14g5/cvZiAua+K4ImHAfMnU=
-X-Received: by 2002:a17:903:2c5:b0:234:bca7:2920 with SMTP id d9443c01a7336-23ac45e262dmr20098895ad.24.1750979715403;
-        Thu, 26 Jun 2025 16:15:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH3UyoHUikHjCEajXKJptSGnRA5N5qfhMM6/xXUltul0UA71goc5dUnQg2TIU9Lxbb/GwXUeQ==
-X-Received: by 2002:a17:903:2c5:b0:234:bca7:2920 with SMTP id d9443c01a7336-23ac45e262dmr20098145ad.24.1750979714949;
-        Thu, 26 Jun 2025 16:15:14 -0700 (PDT)
+        bh=S/H0Qgqe8Ttzr2u9kRhRfs75EuPnlrJgM/cVTTvn1kM=;
+        b=lSr7YPaaFhTliNNdN8ch1SLIw5cEzIiVw3v9ok863tz4wEucf+kV5n2oJMQVI+SIGA
+         xTamvo9bCYwSPwXddH39vSQYjYIjh2ITgCAWYiLZun9jp7y3zsKUwrGJ7LKAa43Tqhdu
+         yuGar/NBsuA+yCQtpKVygQn6V1thAb5nPYZjLPbkWf4zdMNkzufpWjMEPCv7R6sIqwcW
+         NDvO5yOL3wBO6yeGjXMQvfFUrdYX7xN0UWWHtqV5Djls17M22cNyQSYmgO6xaggwqHEK
+         DhVEQk1lLhXFHGz+IIuWZ3SKiDPEHc2DkPTaROoUiQ6mk8QAV+cwExKQ+6Rx3eHQWBiV
+         1uLg==
+X-Forwarded-Encrypted: i=1; AJvYcCXXpx7bXMJ4x81P9WiIvwVRjE8o5ziK8mnOCJy3ua0cavSxt2oPrnU29CZy7sOPNMiDx3PRUTVZxqKWcFo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yysr0D1DlJF5GuyvXYxA+7JJzxanlTO5YGgrPW/51OJLSHUWTe+
+	OSMgbX9Ixm1et1lAcjEM0sAMbbuTUZgbNzG2HSGYu7+OFdt+dfmIYAjoeMhkbupcm5CWGDu+ta+
+	ewQuFwgxaz3EfPD3fMABuHO1dzEVBWa8L8liPoWJjqbulKA7LVOQNLlXz4ES148hjSFVu2Jrd/9
+	0=
+X-Gm-Gg: ASbGncua8bRA7nMn6gb5SrWMaZGOj4MBNQHhwXlrU9OHfMGfqxEd8+7PkUTebjz+TK9
+	1Kfu6s05vwn6AQFDJByUKtQhjPIGz4apYwpaeNCj85NGCj92hVXge0bAde2F8LCJLXCxC1acIMG
+	G4oFzTbaWgicliN8gghRtVWTNMCWFdm8K4f48ymf1SSaHV5lok9nsb2aW8JLfITQ6qC1vIg2Uwu
+	gZTraWbArTZ4iIS3swPlYs6Jdz5WUvOBZqBKF0smBhkQW1R+h+Kgbxw5D//C9P59aYZABh42dkQ
+	hx+PfglV5LOk5bWYcEQ/gfzGo+gOv8IXmJMFydNfIEGzQsxRgqTcU+r3iD8=
+X-Received: by 2002:a17:902:c950:b0:22e:6cc6:cf77 with SMTP id d9443c01a7336-23ac4892b49mr13020605ad.53.1750979710306;
+        Thu, 26 Jun 2025 16:15:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEkESQ640EkWWC8nNRcJBp88S/Bs4Yykcr1wceJ0RysJiVGp4qVVD1GJLszezOxPjlkSG5Fnw==
+X-Received: by 2002:a17:902:c950:b0:22e:6cc6:cf77 with SMTP id d9443c01a7336-23ac4892b49mr13020155ad.53.1750979709822;
+        Thu, 26 Jun 2025 16:15:09 -0700 (PDT)
 Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3adeeasm1548105ad.156.2025.06.26.16.15.14
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3adeeasm1548105ad.156.2025.06.26.16.15.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 16:15:14 -0700 (PDT)
+        Thu, 26 Jun 2025 16:15:09 -0700 (PDT)
 From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-To: Jeff Johnson <jjohnson@kernel.org>,
-        Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
-Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-In-Reply-To: <20250623-support_real_noise_floor-v2-0-974bbafa317e@oss.qualcomm.com>
-References: <20250623-support_real_noise_floor-v2-0-974bbafa317e@oss.qualcomm.com>
-Subject: Re: [PATCH ath-next v2 0/2] wifi: ath12k: use real noise floor
- value
-Message-Id: <175097971429.153431.7513339241294145921.b4-ty@oss.qualcomm.com>
-Date: Thu, 26 Jun 2025 16:15:14 -0700
+To: linux-wireless@vger.kernel.org, Rosen Penev <rosenp@gmail.com>
+Cc: =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>, nbd@nbd.name,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+In-Reply-To: <20250609030851.17739-1-rosenp@gmail.com>
+References: <20250609030851.17739-1-rosenp@gmail.com>
+Subject: Re: (subset) [PATCHv5 0/5] wifi: ath9k: add ahb OF support
+Message-Id: <175097970896.153431.14153254117038791906.b4-ty@oss.qualcomm.com>
+Date: Thu, 26 Jun 2025 16:15:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,51 +90,53 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
-X-Authority-Analysis: v=2.4 cv=eLYTjGp1 c=1 sm=1 tr=0 ts=685dd484 cx=c_pps
- a=IZJwPbhc+fLeJZngyXXI0A==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=-iIeHy2jdy7NZ5vI0E0A:9
- a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22
-X-Proofpoint-GUID: VW6pizTTAI2wEFt5NzxdtktWXcNZJUZe
-X-Proofpoint-ORIG-GUID: VW6pizTTAI2wEFt5NzxdtktWXcNZJUZe
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDE5OSBTYWx0ZWRfX/bTNiGwCeyas
- vrQ7ZFlU2JUuHjSClqMBEucw+ECKgTl7t8SqbBndUfD1p18kaVV4eUMh63rag8DK9sWznRJnoof
- b5iiMdBti0UkJnSDk+olfozPsJgx19bO7hWJIC7R1++/ycNob8zSuwyx9fpznSfO3Mh0LXkl4mA
- RO69T392wFpu442tOuIfwQ5nyehguwYd7lOlrDcz4HiNKq30tKCd9omBRyBppz98OSgPQP4Vofd
- nsM/McHYgtLTh29GiJ6RnzKfF0VQ/uYtshocR6CPv6oiEF8yvylLl2AaqayWk4f97+i/KHbGR1Q
- L7jzmL5WHnhZWF4fHOOTf6H+QRfizmBRFkDnZroX/XNmH4yYmOC8qCQO3NuOwLrX78SG3X0mlsU
- z1WG4Bame4OrrFRTcXGD1O/PPTNuNDR9gJlwlG3Y0sl0Yxfbo0JAmWd+4UALgPYqz+hMTXW6
+X-Proofpoint-GUID: GcdKeBrrKi1YBqgY_sVM6w-Uq16p_89O
+X-Proofpoint-ORIG-GUID: GcdKeBrrKi1YBqgY_sVM6w-Uq16p_89O
+X-Authority-Analysis: v=2.4 cv=J+eq7BnS c=1 sm=1 tr=0 ts=685dd485 cx=c_pps
+ a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=aMoWnUFRsw3tUzfFL3sA:9
+ a=QEXdDO2ut3YA:10 a=_Vgx9l1VpLgwpw_dHYaR:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDIwMCBTYWx0ZWRfX5U3qkThJOWo1
+ atEBqvF9VZwQaD/ylyqBNszItp+kqQ8Fa8KedSYIipFSm4bAH7nS+yzQQZnlU3nRjKDmDf2ZdR2
+ iBvrAzoumfYd7dn3JHMFu9ABIvv4ZyozJh5Znn6BLVuhyJxZmSw/eUIja/kJNTXUaPM1e7oKNB6
+ 8qt4BVWrxqEFvNYSJeczWdS/uS78hVLBr2lFUzj3KPUwOLuB8APGA3W5cHlH1nlzP7aBhKCSo6A
+ pcH//LYM2fP2iXFjrij4Fu/4aFIcBw8JDZ5qBcYRkbxVkus/keW/K1y0+b/8aoq5OVRCEOsCVKD
+ XleFspXthU6fHiVaKJufIs3oJR6cQBD0lnlvoLTOksKSYIlE9BvkXB/HaIJsUyd1hJutBtuCI+l
+ L48DZ+sxbRSsrlyyZR4spt8eQOOQDyGF2kBmgsKc7D+GrsaYbbrP6pFPdsMLlPQyUL65UY8H
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-06-26_07,2025-06-26_05,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 mlxlogscore=999
- suspectscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ bulkscore=0 mlxlogscore=724 adultscore=0 impostorscore=0 clxscore=1015
+ spamscore=0 malwarescore=0 phishscore=0 priorityscore=1501 suspectscore=0
+ mlxscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506260199
+ definitions=main-2506260200
 
 
-On Mon, 23 Jun 2025 21:19:08 +0530, Aditya Kumar Singh wrote:
-> At present, the ATH12K_DEFAULT_NOISE_FLOOR (-95) is used to calculate RSSI
-> value, providing an estimated noise floor value. Consequently, the RSSI
-> value is also approximate. This works but however, using actual noise floor
-> value will enable the reporting of the true RSSI value.
+On Sun, 08 Jun 2025 20:08:46 -0700, Rosen Penev wrote:
+> First two commits are small cleanups to make the changes of the third
+> simpler. The fourth actually adds dts definitions to use ahb.
 > 
-> The firmware possesses the necessary data to determine the actual noise
-> floor. This data is provided to the host via the WMI event
-> WMI_PDEV_RSSI_DBM_CONVERSION_PARAMS_INFO_EVENTID, which includes the
-> runtime parameters needed for calculating the real noise floor in dBm. This
-> event is triggered by the firmware during channel changes, temperature
-> offset adjustments, and hardware chainmask modifications.
+> v2: Add documentation, use kernel_ulong_t, and of_device_get_match_data
+> v3: Use qcom prefix and wifi suffix as in other ath drivers.
+> v4: fix up dts example in Documentation
+> v5: move back to using qca prefix. It makes no sense to diverge between
+> all the other drivers for MIPS based qualcomm devices. qcom as a prefix
+> is used for Quallcomm's ARM(64) stuff.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/2] wifi: ath12k: handle WMI event for real noise floor calculation
-      commit: 0314ee81a91d22366e8ec6f5a993d75b246cbea8
-[2/2] wifi: ath12k: use real noise floor instead of default value
-      commit: 662e9032140fd92662142d4bf394916cf48e426f
+[1/5] wifi: ath9k: ahb: reorder declarations
+      commit: 5cbfef9039f61691c87f522f8761d628033bc392
+[2/5] wifi: ath9k: ahb: reorder includes
+      commit: c8123302c01936d297e22adbd75cad38c5049f92
+[3/5] dt-bindings: net: wireless: ath9k: add WIFI bindings
+      commit: f902f2c39a807382353b4c6b8d8d4ac1f03aade9
+[4/5] wifi: ath9k: ahb: replace id_table with of
+      commit: 2fa490c0d7591918bed267059700f1c9e505e881
 
 Best regards,
 -- 
