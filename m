@@ -1,356 +1,256 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F23E2F22
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750944808; cv=fail; b=d1yvhuzGlflWX25TAsOpYrltuLQlpDL3y5frc29ndhP4dL2AyJzkptrq+ZUhk78NY2e95+GaTxUvYrHX9/CewHQJXCW8Id4L0Sbt/k0DqYHqHDR1hPSX9I4qOD770QEUM9BgDu1XfzY5qVSjQ/mlnB+lF//eGLG7cCUGYQnzCEc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750944808; c=relaxed/simple;
-	bh=EiMFUc8Ry3EBJbbtVR/zpzkrBVtMSBmGd2MGP6UrJo4=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=DqBItn+Sf2vv+5PPkuYZwRO+TqL6TPxZ7dBSd+/cG/I2fAUuaRO8W8t2hBrh3zcuKURymrxZkwzU1NHtgp2YAAJv4hssdnbUxrtfBQeQvMgqEOJyOuhLPwxnbyiR+vpwNB4R0rUPDnOG8xNrE+w6rN90ypU8b8tFWBZwIyxJTMA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j6yawvpn; arc=fail smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j6yawvpn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750944805; x=1782480805;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=EiMFUc8Ry3EBJbbtVR/zpzkrBVtMSBmGd2MGP6UrJo4=;
-  b=j6yawvpnsjjQSFuGjOKzk0P1UnbBbdDzTXbk2Xpfchjo4d+VwjBKMQEK
-   gMMKuzqNYnXH+S2lJVLs4frskkK+nmjwrTopIMi+l2lKuv4+h66EqJPzx
-   IEraBPnky6NQB9k/MKMuenfWpCVZwEWL3kwIL2IrdY+RTwbPIajFLaCwJ
-   CwwW5tTi/Nye0pd/4wx+odJKMcvh9Z2r2J5NLftnurvEp/1nXkVi2J38n
-   E4oH1ek53E9vlQvwPwxNSLsOyb/8qtAyvZCceB3bNi42q8ifQHyXKCY8a
-   0LmqdGsYrsAMfT1sm4zJB0yTRWIp8EYOYJwWiErVJQ3F8Cp9sP5zcuMB2
-   A==;
-X-CSE-ConnectionGUID: P+AgUMPsTx6yQtvyrZ2pDw==
-X-CSE-MsgGUID: kB8IFByUTcCHonOS38x5Fg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="57046685"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="57046685"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 06:33:24 -0700
-X-CSE-ConnectionGUID: DnMN75/ERcGCMPkJmBEhsg==
-X-CSE-MsgGUID: wK6Y2CozQm2mq7b0G9wWBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="152280285"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 06:33:25 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 26 Jun 2025 06:33:24 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 26 Jun 2025 06:33:24 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (40.107.243.48)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 26 Jun 2025 06:33:23 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O5wpL9e2h0tLYInuo1np1y3wTPEi4iK9br939deV2qSMqNqagFA3wVJKmyOslAi3VcoHfQaLED4ohH4I5LOap4VthlUniMrnaLMxBSr+N1fEAr6QnI4zyTm0awfEHyZG1tp61CIEZzDCONcup1iovkXcX55Hcs1U3ry7LJ+M+9CSLb4gM2kdsPMCXaw88BRD1FUf5c54Ld5myFFb+sVUi5XxaYh9qI/0eDtBahYoLZdb6dpn8CSjbvQuwIpZHEYoFysZxvhwr+6TTyUV1U5fiiPpXuXOjBpwL1uyCiqh3S08yOrpCvDXWJ6o9p0yNzY38IcMREk1befncm2vVRvPBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Y8bSiHsw/SgetdpmiPJ/Nc4j5Nn+Mj5F9GYiGPGuauE=;
- b=Gp3gb4KnztGXaYIAninPMbYJx1yWxMA0E7+bZvUJYc/TxOCh6WcMIP112d8E0gIbzmz2PyRkV2I16Hn326MTOrG7Q66rjw8hpGlaaLue/tjhLD+VkXQKFdDbbDfabT66DlSxFoQNkVscmLVETVccAffsV1sjlgf4NnkSTqHGxH6Jqxhg+d72XZ/m8CN8XXGoeiGpaQwEUr7ifhEpUlsKlDOYeQA2LbgyzsrfKstDIBDmPG2tCRwot7yWkBnCjFdYKufx9osEi22RMpPCN6yoekaWB+B0hrqpXiK6cuUkI1SPLHtX4t2XQzO0M5bSpVbY5v4J4WptwSKW+urn8QdCLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6020.namprd11.prod.outlook.com (2603:10b6:8:61::19) by
- IA4PR11MB9441.namprd11.prod.outlook.com (2603:10b6:208:569::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.26; Thu, 26 Jun
- 2025 13:33:08 +0000
-Received: from DM4PR11MB6020.namprd11.prod.outlook.com
- ([fe80::4af6:d44e:b6b0:fdce]) by DM4PR11MB6020.namprd11.prod.outlook.com
- ([fe80::4af6:d44e:b6b0:fdce%6]) with mapi id 15.20.8857.026; Thu, 26 Jun 2025
- 13:33:08 +0000
-Message-ID: <b3062fe0-da79-4f5f-8361-e2002dae9a35@intel.com>
-Date: Thu, 26 Jun 2025 21:32:55 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC patch v3 01/20] sched: Cache aware load-balancing
-To: Jianyong Wu <jianyong.wu@outlook.com>
-CC: Juri Lelli <juri.lelli@redhat.com>, Dietmar Eggemann
-	<dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben Segall
-	<bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin Schneider
-	<vschneid@redhat.com>, Tim Chen <tim.c.chen@intel.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Libo Chen <libo.chen@oracle.com>, Abel Wu
-	<wuyun.abel@bytedance.com>, Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
-	Hillf Danton <hdanton@sina.com>, Len Brown <len.brown@intel.com>,
-	<linux-kernel@vger.kernel.org>, "Gautham R . Shenoy"
-	<gautham.shenoy@amd.com>, Ingo Molnar <mingo@redhat.com>, Tim Chen
-	<tim.c.chen@linux.intel.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
-	"Peter Zijlstra" <peterz@infradead.org>
-References: <cover.1750268218.git.tim.c.chen@linux.intel.com>
- <cbe56cb89cca4c3ddcbc9956a82bda23f5b81c57.1750268218.git.tim.c.chen@linux.intel.com>
- <SI2PR04MB4931D866229A4F148F26CD72E37AA@SI2PR04MB4931.apcprd04.prod.outlook.com>
-Content-Language: en-US
-From: "Chen, Yu C" <yu.c.chen@intel.com>
-In-Reply-To: <SI2PR04MB4931D866229A4F148F26CD72E37AA@SI2PR04MB4931.apcprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SGBP274CA0008.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::20)
- To DM4PR11MB6020.namprd11.prod.outlook.com (2603:10b6:8:61::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD4B2E54B9
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750944813; cv=none; b=LFrPDwbUQV+0Z3LABy3IM1fGj6VUXy2CH1c09sBnv4royZLPZdGSIqhN/oYRq8D5VseUupni1F0ovE6/HPB97aQKdwwTSniDf9Py2CXmICEdz9fdYhpLLOsDOHDGJ8JcCD48GIRX0Tz3ntF/Mv0qoO2g2l5hux6QdXNgkvZ+gbA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750944813; c=relaxed/simple;
+	bh=v01uEnPZNFuwIhQpYvDDHT0RyQYE6ARQrYMccQw3PeU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MMIkgj6SbA+MtBRmkEzIKH1TJEpjKH53PQwYmCQLGDJ5AVvkxkun9rr2fKZV4N3pLMoOvD7htozj+ZJxyKYKHkvC1oAcGvDANEYRWvkGplbxf0zCz1FewVCdHXN2T/P8f6hNLU38rTxKGysSP8uqz5McaGFFsQFda3CnGtNnkvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3df40226ab7so17947265ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:33:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750944811; x=1751549611;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZcGrDK8kr1Uh+Iy3TORmHc3k2JAnLxWd/SYreTk4gvU=;
+        b=ugPEzrrI0Fm0rtnM0KdBen60g+OrwbPbasv+arqI0pm2yKQYUxaKVVv4byXHizLQVJ
+         niedsRnM2QEKwgOLuN5MCv31lGs7Hhxs8BI49KvdPYh6bmXvQskxtBIBLEXi8UXkYpAE
+         iVfPlbv9z9ycQUYmJ3Uh4NiYwmPrxbLY/UCdBkzs2w8aixrUdydwYovoW+il2T1ZIZXf
+         aTUHy0haMsuzth3Nr4W0Ss9ptjcuGro5DYAnRuMBGylhW1c8UGiyjwv7CLOEFHbp0RBk
+         98bS2/DIvpGbcVQuydiYfBfg9hAF+kvLgmm9k5alEsHLqk8iojYwaVl4tAV0iRuUsbIo
+         b5Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCWdPhnbUaSgXUHKVZccr19RRS41KuGFNw2t6m583jRSpJBA+AS7VT0GEKpoamkT4lClmtYwS/RvMl1o3TU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyikJvc4TWfnLGjB4eKfJiqQm+NuGrY3Dt7KXTLQUgRIlA8RGOC
+	a44hCVjmKBOE8J6puG3C2PxFMVU2VC+PVmtejr2RQUz4NT9QXxwsGrFeCPxK3eN66Et98MIpk5F
+	hEeV8qbKZWcR7Nda2yWVF3HzKXdmePbe9ToNsc9cLUw3YIAknI3eg6/FgQhQ=
+X-Google-Smtp-Source: AGHT+IHyMyilehOJv29/LoTNchEqwPGWT6vNOXljXaNhAtvIDikBotXU4vJDPGa2QYN8+qFKpUJrOk6PHggw/klNbksElNfhF//U
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB6020:EE_|IA4PR11MB9441:EE_
-X-MS-Office365-Filtering-Correlation-Id: f3b6bee5-75d3-4bdf-aa51-08ddb4b5fca2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?RzVCbUZDR2pTY2ZOZTlpNHpFN0dEWXFwTHdZMkMvNUVNcHM3THRxamttREhY?=
- =?utf-8?B?ZDJJRy9Lb0xzelJwNFV6TG1CanFJbk11Q2RWWGhvVEJuYjcxZmNCUVUrZXk0?=
- =?utf-8?B?K2xGWTR2VXZvNnI0WXY2a2FTOUJvczhBNkhoQTlaZmRvc25sV0luRm9scHl3?=
- =?utf-8?B?bWgrY3M0SGhtK2hUZEd5VVFDQkFYeERFQWw3M1RDY3JQQmQwbEVrUGxjOHRm?=
- =?utf-8?B?bnQrT3NwN3lFY1NMUERETzYvZmtqOVA0djFjVFp4RE85VkNIYysrZXZvbWxt?=
- =?utf-8?B?NitHMFArbjhZM2JEUE1VblY1andvOU5mVTFTU3Zwakd0WkdnUzBSamd0Z0tE?=
- =?utf-8?B?VW1QVTVMUEJKMU5pOEpqekNrTWJVRG1ZV0VlYkN4MXV2Sk5tQTJOTmVIdEZX?=
- =?utf-8?B?NzBVNk1DbDVFcXppN1RiUDlzbmlUSGtGRFM1VGh3UGs0UkdUMi9zckZnd0RS?=
- =?utf-8?B?YjVLMnU0SmRsTHNMekJqbVA0RE1RWk05UEVlL2VEQ3VqMHM2U1FlcURQdmEw?=
- =?utf-8?B?V1hUSHpHWEhBc3oyQjlCTjJoVlV1SDA1OHVVejgydzVGeTUxa2RtOFVyMVAz?=
- =?utf-8?B?bjhmelJFOVNsd21nOU5YL09ORlNPaHFqT0puWnJqRnVRVkI5SDVsYmh3QkNW?=
- =?utf-8?B?UThBdTdrOWFRRGlRTEVMYnNBbGExSWZJem1DYTVLc1o5cFF6cXk3Sk5IN1dF?=
- =?utf-8?B?Z2dBTTdhemRkSUFpTExkRzBBMkhKRDJzS0M3WDFLSks3d2l1UDUwZ29PejV6?=
- =?utf-8?B?V3RucWIvUCtreEZoVXRnWWw0UkpnUkJ0Z0EvUDROVHhad3RuMThwTExnM1pK?=
- =?utf-8?B?TXZFeDVwL2hyNFFhUUhvRDBGRGNOSjVaNXFQSTBuZld4TWZVZ0w2Y0UxRVl2?=
- =?utf-8?B?bklmSnJjNHdqT05MVUwrOUNHRStzLzh0V1Y1NkUyTk9ydnBMeE5iZUJqeVZ2?=
- =?utf-8?B?NnJQang3RXBEN25NNGs0dldiWU1oZFRPTjZyQ3dIcDM5SUt2RzRFeS9Wb28r?=
- =?utf-8?B?Njg3MnlCa2UvS25WcW4rRTEwZUlFelNwcmlvZGQrMzBLdzZUZzd4THkvWUU3?=
- =?utf-8?B?akl4MTlvaGt5S1BZbmptblh6bjh1dTNtOEdybk1CZ2tCbVM5RkJWcnRicWR3?=
- =?utf-8?B?bU9zZkEvSjlzQWg5K1hscCtEbWo3K2ZjVTkwTWJOU2c2clIwbDZicHcrZWhJ?=
- =?utf-8?B?eUhuTU8wOXErbWlIdEZtdjM0YnRVWXZudG5iOWFveTQ5dXdGWjhQSzQ3L3l2?=
- =?utf-8?B?S0Q1RXE0NElPcnNJSFJPZnJBVHcwOGVzTEx4aW45S1NmZHJaQkhpdVduUjF1?=
- =?utf-8?B?cEdNMlFDbWdYK3c1YlRVcGN5ek5wY0hIMjdxRWlxckdONENlR1ZTcXVFTzFW?=
- =?utf-8?B?bFhsbmRweWhwbEpkb3VKS05iUXNJdUhPTDg3WVJBT2ltNVV1NEpETWVsbTJi?=
- =?utf-8?B?blRvWVVFMjlYQXljNUVEbWQ4RWhKd0Y5cTV2ck00a3orRlZDRXdjU3hjYVh4?=
- =?utf-8?B?UmtvMlRVQ0NCVWlpK3AxOXM0T0NNb2o3WDU2djhQUFBqQUlDYnl3azcxcHhT?=
- =?utf-8?B?OHVkZjErb3R2UHJVWHhGRzdXYVB1NGI4Ui9MRlV2d3FNM2R2VHlubjFaNlBr?=
- =?utf-8?B?WDk0blFsNnJWNVdPT1hUS0RxR0tVeExwQVZoZmUvMWlOa3k1TStPSGNTamlX?=
- =?utf-8?B?MUc4b3krT2dXWXQ3UDBweFNUSzZod0RCWXA1VW1hNzhpeG9RemF6MHE3UWVn?=
- =?utf-8?B?SmF1U0pMYjR6NFMvdkh2M293alM5emtYR1VWdWJnTC9TT3ZNMmVYUXI5WHFx?=
- =?utf-8?B?N3VEYmVBNUNIYzUrTTZvc21FamgvSVQ2NFliVU5sa3JQRVdXNXk2dXI2YmdZ?=
- =?utf-8?B?bmIzdzlZa01mWHVKV1lpNkZBdk9seXRHNUJwcXFIR0IwYmZUNEExajJ4UDN0?=
- =?utf-8?Q?Ew+pLj8NPgA=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6020.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VWNwVkZnTEs5amhDaHlEZXBxMG1BcXArb1Y3TlBpRU1kSFFCZWdHVXdNSUM3?=
- =?utf-8?B?amNIeURFMFlQT1ZueFJ4MzdLUG9iMVBWWGxWam1sMWxkMEJ0OWs3RjJ5OVFj?=
- =?utf-8?B?a2huTGlWMmhleUxmcGJTTWlZOWppK05nL05aZ2xDMU1Gc0FIb0ZzTFRDbE82?=
- =?utf-8?B?NkVDNUgvYXcyUFVlQzVFT0hQV203QkdURlNFNHlhQlpRNC9jWkZPays5T2tx?=
- =?utf-8?B?elltbStKSG1qVGlOSHk0Y2l3RGJobGpObzVka0R3WmJ3aXl5YmcwZG15YnZk?=
- =?utf-8?B?ZE5rN0J4N2lPby9NNVAvbENBWkdQa0hFYTIrZGNRaXUyTktnUTUzQy96Q2hy?=
- =?utf-8?B?Q3o5UlN0NWdUaEtkSmMwR0thcnY4ajdqbDducmluQi8xZ1pOelQxSnNtbStD?=
- =?utf-8?B?U3diVnhCd0xkUnZyV2tzMUxXSDJjdHNDL0ZBSFE0KzhBVGhRU1ZNTmxvN1Y4?=
- =?utf-8?B?QVF1Mm15VzNHRjV0bFZBdjV3U0VhcU8raDc5V0dFbVIxMWwzT2UycFA4cVVx?=
- =?utf-8?B?Z0c2MGRqNVBUSU9VNDhRbVlTLzRxUUM4dG0yS21BTkhHeVBrdzZya09LeTQy?=
- =?utf-8?B?NEdZckRKQVlCSnhVdGFPOXdMbER4b1YzV1JhQ05uaXJlMGdyNkxBb3AxYlFw?=
- =?utf-8?B?ZCszMTU2YkpXa0paNWVuS084Q1lJNnVhTmpaWXNpbFV0ZzZJRXdXYXgzUDRS?=
- =?utf-8?B?QUdVa1lXcTV4VmxPWUhLM0xGVG1XMXk5c3ZiNlBNaEdjbVdpTFh2SEdIVUd0?=
- =?utf-8?B?c0krblFad3J2Z3JZVE5hZGRyeU1rVS8yV3JDbmhFcnVKeWxVaUFQRTdCa2RZ?=
- =?utf-8?B?b0xnaE5Qb0RrSHFReXR3NUF3VEhXNjM3ZUI5dDh5bWpTS3lLUkR5Q2xiejRx?=
- =?utf-8?B?NmZqUXJQUk12dWV1bEt2Zm9JOEgyeXY0aTA1TE8zRnRRWDJFaVBieWFaL1FP?=
- =?utf-8?B?bkRDVFUvY25iMW11N3VTNUVRRGdaWEFFWWV1dzlqZmFrUW5rYU5sZElmL05P?=
- =?utf-8?B?MmI1WXR0R0FFdk93emgyR2x3c0p3eW1uRWJRLzBhTEVLR1ZrVnR1RWtZdnA4?=
- =?utf-8?B?RmlJZ0VBeWRSS3RiTnJuOHBmc1R2dlJETG1ISmdCNHN4STVpSUdzVWRXUFE1?=
- =?utf-8?B?SnYyazJoS0c5OUpKZFArQnFDazZ1ZkF6OFB4Q3UrSDh2N3VYVkxHVnpkOTdq?=
- =?utf-8?B?SFNzaVkxYmxsN0Jka1NDdzZGVHdkT3FBS2o1RlpLcWcxV2hYVmQwVFBvRFNx?=
- =?utf-8?B?ZW9lM3BmUmZFNVA4ZVZjeFdVa1hPVE5tMTNRY2JWUW1yckl0WXB6a0tJUEx2?=
- =?utf-8?B?aFpYV0s2YjJZMkwxZVRJZWpKdEFPR2hFaFViL0JYUWxxa0E5d1BDZzdLMWxj?=
- =?utf-8?B?OHNhM0lqZko5QXB2SE5kenhvVWZmMVpLQmlTUTd3V0JWeFVPOWkzamZLS2x6?=
- =?utf-8?B?VHhiZEptQkk5Rkd4RTRwK255OGNSY1BmQzVTR3hvV2dueWt0YW9jOEk2S3Np?=
- =?utf-8?B?aWlSQ3RiMmx6empMSHNmeS9sS2lKOU1yQlVYQzRXZldjM2tTbWdMV2lDeW9o?=
- =?utf-8?B?cmFGRlNhMUNYQWttalpHWDlZVVpiQVpXa1RyTUZ2KzNuSWZmMlI0aGhlTkR0?=
- =?utf-8?B?em13d1FONFpRbVBVeFJqVGxNVWZYWXZPZUIvZDlOWnFqQkRabXNjbzBvUlNX?=
- =?utf-8?B?UDRxUnNaL3A5dEhWOStROWRPNFo0NyszN3dSK3ZTODZ5cU9wZnZCZVN5OVFB?=
- =?utf-8?B?TGxtZlpQb0F6NjRhaU1JMnplQ3NuUHZOQUZCWnY3Znl1eGlESkc0djA3VWNz?=
- =?utf-8?B?QTJmU1hnTXhrTWR6eUFmTE50T2lrS3hKeEtZL2lnN1kxSkh2YXByLzNBQ2Rz?=
- =?utf-8?B?QXJxNWdPaVNuZzVRdEZIREYxYjJ5QUpFK2tPVVlmYy83V2NNZ1hubGxiOEtj?=
- =?utf-8?B?UHVhK0VQbEdTdlFaSXdsYVp1d3JnY1FZMENDaWRaN1FJQVJheFBzMTFON0RX?=
- =?utf-8?B?M3pGLzFtY0tHUHRhYWVOYXNRb09SZStwZ2FvMmpteVExS3QvVXNhM20vbGtz?=
- =?utf-8?B?YnRIbDVVUTltZ1NWaElSbDhPM2x3NHl5SktxOWZXamtPWlN1NGhITW5LclZk?=
- =?utf-8?Q?QGNmOGrRhOGO93OEb7K///EcV?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3b6bee5-75d3-4bdf-aa51-08ddb4b5fca2
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6020.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 13:33:08.2229
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bWlrp8Si2Ne5YcSdqQYQYJIYk4cWDCaMr1D4bn7wF+lFWCxmlmRnHYwyaDhSoSBjTRSovzIbQvRsLe8a3KprJg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB9441
-X-OriginatorOrg: intel.com
+X-Received: by 2002:a05:6e02:248a:b0:3dd:ce9b:aa17 with SMTP id
+ e9e14a558f8ab-3df3292bebfmr99052815ab.20.1750944810724; Thu, 26 Jun 2025
+ 06:33:30 -0700 (PDT)
+Date: Thu, 26 Jun 2025 06:33:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685d4c2a.a00a0220.2e5631.028c.GAE@google.com>
+Subject: [syzbot] [hams?] possible deadlock in nr_rt_ioctl (2)
+From: syzbot <syzbot+14afda08dc3484d5db82@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	kuba@kernel.org, linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/26/2025 8:23 PM, Jianyong Wu wrote:
-> Hi Tim,
-> 
-> On 6/19/2025 2:27 AM, Tim Chen wrote:
->> From: Peter Zijlstra <peterz@infradead.org>
->>
->> Hi all,
->>
->> One of the many things on the eternal todo list has been finishing the
->> below hackery.
->>
->> It is an attempt at modelling cache affinity -- and while the patch
->> really only targets LLC, it could very well be extended to also apply to
->> clusters (L2). Specifically any case of multiple cache domains inside a
->> node.
->>
->> Anyway, I wrote this about a year ago, and I mentioned this at the
->> recent OSPM conf where Gautham and Prateek expressed interest in playing
->> with this code.
->>
->> So here goes, very rough and largely unproven code ahead :-)
->>
->> It applies to current tip/master, but I know it will fail the __percpu
->> validation that sits in -next, although that shouldn't be terribly hard
->> to fix up.
->>
->> As is, it only computes a CPU inside the LLC that has the highest recent
->> runtime, this CPU is then used in the wake-up path to steer towards this
->> LLC and in task_hot() to limit migrations away from it.
->>
->> More elaborate things could be done, notably there is an XXX in there
->> somewhere about finding the best LLC inside a NODE (interaction with
->> NUMA_BALANCING).
->>
->> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->> ---
->>   include/linux/mm_types.h |  44 ++++++
->>   include/linux/sched.h    |   4 +
->>   init/Kconfig             |   4 +
->>   kernel/fork.c            |   5 +
->>   kernel/sched/core.c      |  13 +-
->>   kernel/sched/fair.c      | 330 +++++++++++++++++++++++++++++++++++++--
->>   kernel/sched/sched.h     |   8 +
->>   7 files changed, 388 insertions(+), 20 deletions(-)
->>
->> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
->> index 56d07edd01f9..013291c6aaa2 100644
->> --- a/include/linux/mm_types.h
->> +++ b/include/linux/mm_types.h
->> @@ -893,6 +893,12 @@ struct mm_cid {
->>   };
->>   #endif
-> 
->> +static void task_cache_work(struct callback_head *work)
->> +{
->> +    struct task_struct *p = current;
->> +    struct mm_struct *mm = p->mm;
->> +    unsigned long m_a_occ = 0;
->> +    int cpu, m_a_cpu = -1;
->> +    cpumask_var_t cpus;
->> +
->> +    WARN_ON_ONCE(work != &p->cache_work);
->> +
->> +    work->next = work;
->> +
->> +    if (p->flags & PF_EXITING)
->> +        return;
->> +
->> +    if (!alloc_cpumask_var(&cpus, GFP_KERNEL))
->> +        return;
->> +
->> +    scoped_guard (cpus_read_lock) {
->> +        cpumask_copy(cpus, cpu_online_mask);
->> +
->> +        for_each_cpu(cpu, cpus) {
->> +            /* XXX sched_cluster_active */
->> +            struct sched_domain *sd = per_cpu(sd_llc, cpu);
->> +            unsigned long occ, m_occ = 0, a_occ = 0;
->> +            int m_cpu = -1, nr = 0, i;
->> +
->> +            for_each_cpu(i, sched_domain_span(sd)) {
->> +                occ = fraction_mm_sched(cpu_rq(i),
->> +                            per_cpu_ptr(mm->pcpu_sched, i));
->> +                a_occ += occ;
->> +                if (occ > m_occ) {
->> +                    m_occ = occ;
->> +                    m_cpu = i;
->> +                }
->> +                nr++;
->> +                trace_printk("(%d) occ: %ld m_occ: %ld m_cpu: %d nr: 
->> %d\n",
->> +                         per_cpu(sd_llc_id, i), occ, m_occ, m_cpu, nr);
->> +            }
->> +
->> +            a_occ /= nr;
->> +            if (a_occ > m_a_occ) {
->> +                m_a_occ = a_occ;
->> +                m_a_cpu = m_cpu;
->> +            }
->> +
->> +            trace_printk("(%d) a_occ: %ld m_a_occ: %ld\n",
->> +                     per_cpu(sd_llc_id, cpu), a_occ, m_a_occ);
->> +
->> +            for_each_cpu(i, sched_domain_span(sd)) {
->> +                /* XXX threshold ? */
->> +                per_cpu_ptr(mm->pcpu_sched, i)->occ = a_occ;
->> +            }
->> +
->> +            cpumask_andnot(cpus, cpus, sched_domain_span(sd));
->> +        }
->> +    }
->> +
->> +    /*
->> +     * If the max average cache occupancy is 'small' we don't care.
->> +     */
->> +    if (m_a_occ < (NICE_0_LOAD >> EPOCH_OLD))
->> +        m_a_cpu = -1;
->> +
->> +    mm->mm_sched_cpu = m_a_cpu;
->> +
->> +    free_cpumask_var(cpus);
->> +}
->> +
-> 
-> This task work may take a long time for the system with large number 
-> cpus which increacing the delay for process back to userspace. It may be 
-> the reason that schbench benchmark regressed so much.
-> 
+Hello,
 
-Thanks for the insight Jianyong, yes, the scan on all online CPUs would
-be costly.
+syzbot found the following issue on:
 
-> To avoid searching the whole system, what about just searching the 
-> preferred numa node provided by numa balancing if there is one. If not, 
-> then fallback to search the whole system or just search the numa node 
-> where the main process locates as there is a high probability it 
-> contains the preferred LLC. In other words, we can opt for a suboptimal 
-> LLC location to prioritize speed.
-> 
-> WDYT?
-> 
+HEAD commit:    09a0fa92e5b4 Merge tag 'selinux-pr-20250107' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=122714b0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7bdfbaac3fbb90d6
+dashboard link: https://syzkaller.appspot.com/bug?extid=14afda08dc3484d5db82
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17b8db0f980000
 
-This is a good idea. Previously, Tim had a version that dealt with a
-similar scenario, which only scanned the CPUs within p's preferred node.
-  However, it seems to cause bouncing of the mm->mm_sched_cpu because we
-set a 2X threshold for switching the mm->mm_sched_cpu in patch 5. If the
-old mm_sched_cpu is not in p's current preferred node, last_m_a_occ is
-always 0, which makes the switching of mm->mm_sched_cpu always succeed
-due to the condition if (m_a_occ > (2 * last_m_a_occ)). Anyway, since it
-is a software issue, we can find a way to address it.
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-09a0fa92.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/38215ac79538/vmlinux-09a0fa92.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/117da94a1c81/bzImage-09a0fa92.xz
 
-Maybe we also following Abel's suggestion that only one thread of
-the process is allowed to perform the statistic calculation, this
-could minimal the negative impact to the whole process.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+14afda08dc3484d5db82@syzkaller.appspotmail.com
 
-thanks,
-Chenyu
+======================================================
+WARNING: possible circular locking dependency detected
+6.13.0-rc6-syzkaller-00038-g09a0fa92e5b4 #0 Not tainted
+------------------------------------------------------
+syz.3.32/6172 is trying to acquire lock:
+ffffffff9012a4f8 (nr_neigh_list_lock){+...}-{3:3}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
+ffffffff9012a4f8 (nr_neigh_list_lock){+...}-{3:3}, at: nr_remove_neigh net/netrom/nr_route.c:307 [inline]
+ffffffff9012a4f8 (nr_neigh_list_lock){+...}-{3:3}, at: nr_del_node net/netrom/nr_route.c:342 [inline]
+ffffffff9012a4f8 (nr_neigh_list_lock){+...}-{3:3}, at: nr_rt_ioctl+0x207f/0x29e0 net/netrom/nr_route.c:678
+
+but task is already holding lock:
+ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
+ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: nr_node_lock include/net/netrom.h:152 [inline]
+ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: nr_del_node net/netrom/nr_route.c:335 [inline]
+ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: nr_rt_ioctl+0x2aa/0x29e0 net/netrom/nr_route.c:678
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #2 (&nr_node->node_lock){+...}-{3:3}:
+       __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
+       _raw_spin_lock_bh+0x33/0x40 kernel/locking/spinlock.c:178
+       spin_lock_bh include/linux/spinlock.h:356 [inline]
+       nr_node_lock include/net/netrom.h:152 [inline]
+       nr_rt_device_down+0x188/0x7f0 net/netrom/nr_route.c:519
+       nr_device_event+0x126/0x170 net/netrom/af_netrom.c:126
+       notifier_call_chain+0xb7/0x410 kernel/notifier.c:85
+       call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:1996
+       call_netdevice_notifiers_extack net/core/dev.c:2034 [inline]
+       call_netdevice_notifiers net/core/dev.c:2048 [inline]
+       __dev_notify_flags+0x1f9/0x2e0 net/core/dev.c:8992
+       dev_change_flags+0x10c/0x160 net/core/dev.c:9028
+       dev_ifsioc+0x9c8/0x10b0 net/core/dev_ioctl.c:526
+       dev_ioctl+0x224/0x10c0 net/core/dev_ioctl.c:783
+       sock_do_ioctl+0x19e/0x280 net/socket.c:1223
+       sock_ioctl+0x228/0x6c0 net/socket.c:1328
+       vfs_ioctl fs/ioctl.c:51 [inline]
+       __do_sys_ioctl fs/ioctl.c:906 [inline]
+       __se_sys_ioctl fs/ioctl.c:892 [inline]
+       __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #1 (nr_node_list_lock){+...}-{3:3}:
+       __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
+       _raw_spin_lock_bh+0x33/0x40 kernel/locking/spinlock.c:178
+       spin_lock_bh include/linux/spinlock.h:356 [inline]
+       nr_rt_device_down+0xd5/0x7f0 net/netrom/nr_route.c:517
+       nr_device_event+0x126/0x170 net/netrom/af_netrom.c:126
+       notifier_call_chain+0xb7/0x410 kernel/notifier.c:85
+       call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:1996
+       call_netdevice_notifiers_extack net/core/dev.c:2034 [inline]
+       call_netdevice_notifiers net/core/dev.c:2048 [inline]
+       __dev_notify_flags+0x1f9/0x2e0 net/core/dev.c:8992
+       dev_change_flags+0x10c/0x160 net/core/dev.c:9028
+       dev_ifsioc+0x9c8/0x10b0 net/core/dev_ioctl.c:526
+       dev_ioctl+0x224/0x10c0 net/core/dev_ioctl.c:783
+       sock_do_ioctl+0x19e/0x280 net/socket.c:1223
+       sock_ioctl+0x228/0x6c0 net/socket.c:1328
+       vfs_ioctl fs/ioctl.c:51 [inline]
+       __do_sys_ioctl fs/ioctl.c:906 [inline]
+       __se_sys_ioctl fs/ioctl.c:892 [inline]
+       __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #0 (nr_neigh_list_lock){+...}-{3:3}:
+       check_prev_add kernel/locking/lockdep.c:3161 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3280 [inline]
+       validate_chain kernel/locking/lockdep.c:3904 [inline]
+       __lock_acquire+0x249e/0x3c40 kernel/locking/lockdep.c:5226
+       lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5849
+       __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
+       _raw_spin_lock_bh+0x33/0x40 kernel/locking/spinlock.c:178
+       spin_lock_bh include/linux/spinlock.h:356 [inline]
+       nr_remove_neigh net/netrom/nr_route.c:307 [inline]
+       nr_del_node net/netrom/nr_route.c:342 [inline]
+       nr_rt_ioctl+0x207f/0x29e0 net/netrom/nr_route.c:678
+       nr_ioctl+0x19a/0x2e0 net/netrom/af_netrom.c:1254
+       sock_do_ioctl+0x116/0x280 net/socket.c:1209
+       sock_ioctl+0x228/0x6c0 net/socket.c:1328
+       vfs_ioctl fs/ioctl.c:51 [inline]
+       __do_sys_ioctl fs/ioctl.c:906 [inline]
+       __se_sys_ioctl fs/ioctl.c:892 [inline]
+       __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+Chain exists of:
+  nr_neigh_list_lock --> nr_node_list_lock --> &nr_node->node_lock
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&nr_node->node_lock);
+                               lock(nr_node_list_lock);
+                               lock(&nr_node->node_lock);
+  lock(nr_neigh_list_lock);
+
+ *** DEADLOCK ***
+
+2 locks held by syz.3.32/6172:
+ #0: ffffffff9012a558 (nr_node_list_lock){+...}-{3:3}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
+ #0: ffffffff9012a558 (nr_node_list_lock){+...}-{3:3}, at: nr_del_node net/netrom/nr_route.c:334 [inline]
+ #0: ffffffff9012a558 (nr_node_list_lock){+...}-{3:3}, at: nr_rt_ioctl+0x22e/0x29e0 net/netrom/nr_route.c:678
+ #1: ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
+ #1: ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: nr_node_lock include/net/netrom.h:152 [inline]
+ #1: ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: nr_del_node net/netrom/nr_route.c:335 [inline]
+ #1: ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: nr_rt_ioctl+0x2aa/0x29e0 net/netrom/nr_route.c:678
+
+stack backtrace:
+CPU: 3 UID: 0 PID: 6172 Comm: syz.3.32 Not tainted 6.13.0-rc6-syzkaller-00038-g09a0fa92e5b4 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_circular_bug+0x419/0x5d0 kernel/locking/lockdep.c:2074
+ check_noncircular+0x31a/0x400 kernel/locking/lockdep.c:2206
+ check_prev_add kernel/locking/lockdep.c:3161 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3280 [inline]
+ validate_chain kernel/locking/lockdep.c:3904 [inline]
+ __lock_acquire+0x249e/0x3c40 kernel/locking/lockdep.c:5226
+ lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5849
+ __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
+ _raw_spin_lock_bh+0x33/0x40 kernel/locking/spinlock.c:178
+ spin_lock_bh include/linux/spinlock.h:356 [inline]
+ nr_remove_neigh net/netrom/nr_route.c:307 [inline]
+ nr_del_node net/netrom/nr_route.c:342 [inline]
+ nr_rt_ioctl+0x207f/0x29e0 net/netrom/nr_route.c:678
+ nr_ioctl+0x19a/0x2e0 net/netrom/af_netrom.c:1254
+ sock_do_ioctl+0x116/0x280 net/socket.c:1209
+ sock_ioctl+0x228/0x6c0 net/socket.c:1328
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl fs/ioctl.c:892 [inline]
+ __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fbff7985d29
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fbff8769038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fbff7b75fa0 RCX: 00007fbff7985d29
+RDX: 0000000020000180 RSI: 000000000000890c RDI: 0000000000000005
+RBP: 00007fbff7a01b08 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fbff7b75fa0 R15: 00007ffd23708838
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
