@@ -1,140 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E380B2E06EA;
-	Thu, 26 Jun 2025 10:29:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C13226B97F;
+	Thu, 26 Jun 2025 10:29:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750933745; cv=none; b=u/tj6ZIYcMHcbBtLJI3LMZL6SssydfT92J4cji15mS8OX1hF6Sc0CebPhoZKz241Q3tZFzOJNXWKTAOtWwZZGSo+RLcc5T6GbpvByvuDEzbBSBEsKcHukCxD7zLs0mM+oC4wC2SqemNMozff7gvLL2MJuNrXHCFOchukFT/hXYc=
+	t=1750933746; cv=none; b=j8G+EqqoAw4YVzjDzEYbGe7YKhVrWHHqmCdkjqOmpZZtmo092s2Kpj6pJopm/bkFa2jekl1UJDmyzh0MKmr4OypUc38AKsaSqopk57Q7cnudQLuHGgq6qyX8kVotSqZ7qgdPobtTlCCdUmosvXEjKhvgJTMmSW3dMNM9/WYrSWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750933745; c=relaxed/simple;
-	bh=G5ybaN75pAel1FxnSt/1K7ti6SyLbaLmGmBlE6NQkY4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f8ebPY2KoYUfXMPSFYc9+9HAMTjDv/cYkC2g1nelv9malyiuzdoobYQO0AufCFGr8l7zS6IEc7pUOK97+2AO6vmi6vuVP48f/3shN/7M2YHzAQA2HKS7hu+6P21PMcnWPJ8sMdQmsFD3H9T2d0yAus20cVDsXW7+1b6njqVto3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oi7VIXxn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750933746; c=relaxed/simple;
+	bh=NxD1GAupdFUe2UjdbUAMvLXm1bj4jITeGOSzkPUL8FI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DHI4+RdT0leAjGTWXpvQFo4gKIzQ/XtlesBUQF1eF2fDwCeVzf5+oorHGXlG8Gz7EAqaI0cGiOlpXKYdgxxtvWJ8/FswAk9ttgI2PyN43Nj0SEQhLpIL1uD3ozqhWcBdlkj1JS/ZGwRcJnUFKyX1T4USSBHYKCfyh7HE9g+OI6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lb0+Auz8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oi7VIXxn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BF55C4CEEB;
-	Thu, 26 Jun 2025 10:28:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lb0+Auz8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62057C4CEF1;
+	Thu, 26 Jun 2025 10:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750933744;
-	bh=G5ybaN75pAel1FxnSt/1K7ti6SyLbaLmGmBlE6NQkY4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oi7VIXxn29z7R8O8P8c9fQZnkn5IDAMaBnv8A0nbr4CLZlfHsf3gDQ2BzBmPN6HCT
-	 Z1EBjkyAw2UicwTc9q/WzN03EQPEZyP7Xm21/eINdIlByYbHKbQoRo7SJTsHWqLqI/
-	 Q+PKXAp8KLYBwTI3rgWQ8EZSyWMcGGwSdjJ+KTx+UoqW7Xfm+ewsxenLGuooSforAT
-	 qtQ2xU8C7apJslZEGMFqfyCekIOafvgNGwuAW6a9SjIP2aq3VjeP9VLgIFBZFg3O3r
-	 2EKUQiV+j5oIYpfXGG4mRw+OxjYJFDM2H4il8Cr8wcNNsbVtExmGL3gQMmoGpFFUUP
-	 Ar0xBVDZvD9AQ==
-Message-ID: <0e030c09-0a89-4883-b958-85ddd6831407@kernel.org>
-Date: Thu, 26 Jun 2025 12:28:56 +0200
+	s=k20201202; t=1750933746;
+	bh=NxD1GAupdFUe2UjdbUAMvLXm1bj4jITeGOSzkPUL8FI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=lb0+Auz87vvhfHj3YKKiYYZftgzmzNa0hh/KmPVZE/uxxeEGRVbWJ8ZvDSDgVKMXG
+	 l0h8Hx3RRRSWKKDYKmPu/BZMDbh9nJRAFDGO0hKUPkKb5sCQW1ICyEtqiWMg8Q671C
+	 pOcSBjTjelu8BjEGx1RewSUOStNPtt4XryzDyeg4eyhpgLa2hgjJ2piZhkvX3EM0s0
+	 HSEK5g0/ugfFtKLsckCx0bHA57RLM5Cff2uGf/tk+HnSII+dGgyuCd+VEfKGSY6FaU
+	 YpHz+M4zGz6lhTTJUuaimRS9Umu1MGBgWrbEcPQdaFpaaMWgh145B/YNfT1dskyjuS
+	 IdZoSFHzA5QGQ==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Date: Thu, 26 Jun 2025 12:26:21 +0200
+Subject: [PATCH v6 30/31] docs: arm64: gic-v5: Document booting
+ requirements for GICv5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/4] media: dt-bindings: Add qcom,msm8939-camss
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, vincent.knecht@mailoo.org,
- Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250613-camss-8x39-vbif-v5-0-a002301a7730@mailoo.org>
- <20250613-camss-8x39-vbif-v5-3-a002301a7730@mailoo.org>
- <50fa344c-d683-420c-a3b5-837ec6d8e93e@kernel.org>
- <e928a7c5-56d5-4f2b-b667-bdbefb506d1f@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <e928a7c5-56d5-4f2b-b667-bdbefb506d1f@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250626-gicv5-host-v6-30-48e046af4642@kernel.org>
+References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+In-Reply-To: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Sascha Bischoff <sascha.bischoff@arm.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Timothy Hayes <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Peter Maydell <peter.maydell@linaro.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>
+X-Mailer: b4 0.15-dev-6f78e
 
-On 26/06/2025 12:19, Bryan O'Donoghue wrote:
-> On 26/06/2025 11:00, Krzysztof Kozlowski wrote:
->>> +  reg-names:
->>> +    items:
->>> +      - const: csi_clk_mux
->> No, I already provided arguments in two lengthy discussions - this is
->> not sorted by name.
->>
->> Keep the same order as in previous device, so msm8916 for example. Or
->> any other, but listen to some requests to sort it by some arbitrary rule
->> which was never communicated by DT maintainers.
-> 
-> I don't think if you look through the history that you can find a 
-> consistent rule that was used to arrange the registers.
-> 
-> So we are trying to have a consistent way of doing that. Thats why the 
-> last number of additions have been sort by name, because it seemed to be 
-> the most consistent.
+Document the requirements for booting a kernel on a system implementing
+a GICv5 interrupt controller.
 
+Specifically, other than DT/ACPI providing the required firmware
+representation, define what traps must be disabled if the kernel is
+booted at EL1 on a system where EL2 is implemented.
 
-Why are we discussing it again? You asked me the same here:
-https://lore.kernel.org/all/8f11c99b-f3ca-4501-aec4-0795643fc3a9@kernel.org/
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>
+---
+ Documentation/arch/arm64/booting.rst | 41 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-and I already said - not sorting by name. You take the same order as
-previous.
+diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
+index dee7b6de864f..4b1d416c6016 100644
+--- a/Documentation/arch/arm64/booting.rst
++++ b/Documentation/arch/arm64/booting.rst
+@@ -223,6 +223,47 @@ Before jumping into the kernel, the following conditions must be met:
+ 
+     - SCR_EL3.HCE (bit 8) must be initialised to 0b1.
+ 
++  For systems with a GICv5 interrupt controller to be used in v5 mode:
++
++  - If the kernel is entered at EL1 and EL2 is present:
++
++      - ICH_HFGRTR_EL2.ICC_PPI_ACTIVERn_EL1 (bit 20) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_PPI_PRIORITYRn_EL1 (bit 19) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_PPI_PENDRn_EL1 (bit 18) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_PPI_ENABLERn_EL1 (bit 17) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_PPI_HMRn_EL1 (bit 16) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_IAFFIDR_EL1 (bit 7) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_ICSR_EL1 (bit 6) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_PCR_EL1 (bit 5) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_HPPIR_EL1 (bit 4) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_HAPR_EL1 (bit 3) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_CR0_EL1 (bit 2) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_IDRn_EL1 (bit 1) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_APR_EL1 (bit 0) must be initialised to 0b1.
++
++      - ICH_HFGWTR_EL2.ICC_PPI_ACTIVERn_EL1 (bit 20) must be initialised to 0b1.
++      - ICH_HFGWTR_EL2.ICC_PPI_PRIORITYRn_EL1 (bit 19) must be initialised to 0b1.
++      - ICH_HFGWTR_EL2.ICC_PPI_PENDRn_EL1 (bit 18) must be initialised to 0b1.
++      - ICH_HFGWTR_EL2.ICC_PPI_ENABLERn_EL1 (bit 17) must be initialised to 0b1.
++      - ICH_HFGWTR_EL2.ICC_ICSR_EL1 (bit 6) must be initialised to 0b1.
++      - ICH_HFGWTR_EL2.ICC_PCR_EL1 (bit 5) must be initialised to 0b1.
++      - ICH_HFGWTR_EL2.ICC_CR0_EL1 (bit 2) must be initialised to 0b1.
++      - ICH_HFGWTR_EL2.ICC_APR_EL1 (bit 0) must be initialised to 0b1.
++
++      - ICH_HFGITR_EL2.GICRCDNMIA (bit 10) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICRCDIA (bit 9) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDDI (bit 8) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDEOI (bit 7) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDHM (bit 6) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDRCFG (bit 5) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDPEND (bit 4) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDAFF (bit 3) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDPRI (bit 2) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDDIS (bit 1) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDEN (bit 0) must be initialised to 0b1.
++
++  - The DT or ACPI tables must describe a GICv5 interrupt controller.
++
+   For systems with a GICv3 interrupt controller to be used in v3 mode:
+   - If EL3 is present:
+ 
 
-If you ever want to sort by name, answer to yourself:
-NO. Take the same order as other existing device.
+-- 
+2.48.0
 
-If you ever want to sort by value, answer to yourself:
-NO.
-
-You both came with some new, invented rules of sorting, applied it, and
-now you claim that "existing devices were sorted like that". What? NO!
-
-Best regards,
-Krzysztof
