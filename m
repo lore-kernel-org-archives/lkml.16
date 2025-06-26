@@ -1,272 +1,319 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2041.outbound.protection.outlook.com [40.107.223.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504F8339A8;
-	Thu, 26 Jun 2025 18:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750962120; cv=none; b=Wz1uW5hiBxJjLAWZ0YpMYewNHvltb56HaSp1Gvi7lYr8eqsCCNzwcvxrHMb8t2FJcOA+uy91+kvyM+uC8s0YLhuU6MNPFtPryY9xeOWqGDfJmI5EJCOy9lfW+2782sUuE9BoBvCcZXjAvdS/dMI3hd9veYSpOf56V7qdXtGEx4k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750962120; c=relaxed/simple;
-	bh=6vq6JVu6NcqJTw809vRqKDMRA9357KPANxyf1TFbEx4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W9OzIj36TWilVqwSn7HDCAOv6u8LPTJXA93IguoeYEF4JjtQk/29D263/Hq1OIJHr8spwSnxBJRgQ91nmPvosq61AoB6oWGM0EcTSge2yLlt0kBfePp4QA03zQu+mSzaO3Az2pbEh/Fs8TTHiWNgYR+JWT6lLKhD5j+Ciznqsyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OTB1GOsm; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5A8339A8;
+	Thu, 26 Jun 2025 18:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750962128; cv=fail; b=cAuNYS23HiUDCHhsHRhG/G+MnblzT5R/BvhiTfGcnH6v2qv0vLQUW3cKJrlmSoVTeUW/Q3o7/094Wn1Ts5qOmgLdcvrag0GaYpRFPfmgRdmp2WmKbBzWJ2nAgB00Oi0EDwgDkDxKZhvu8OTEkajbhByAMARZJvv468rjw4pKVrA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750962128; c=relaxed/simple;
+	bh=Y+sfUMPNLsdADZw1pvgZA8b9K1nae+ZHBhtLTgbn8L0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=GKz+ecXuAJnXM6Lm1pxJpcAsUoNPwHIbXFBJPIwo4eh56YGJH7lt7YGRRWxKQS15Bnz78hzZDAL1f60onGjaVL0jJ5TTRQpRTQ0vLdjnKx4BCXNEg/57v0D4r80VoWMIFG9fbI8LCbdc+aiWgIQf+eWVYNieKXIuXvpLw1muxo0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=V7xFuwdt; arc=fail smtp.client-ip=40.107.223.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OTB1GOsm"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ae0ccfd5ca5so218789766b.3;
-        Thu, 26 Jun 2025 11:21:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750962116; x=1751566916; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o3+DMoHHGIgy/vebIi3Jk4k7xIG+hyANlJEXNLYgE3w=;
-        b=OTB1GOsmlbI3BzPpoH1R7aG1w0UAPz0acgFttYN7kxYfUHJLkTDBy/JKvSe6ucgMXy
-         XuwnAQI1tnhEzDGEjIaFSbgLfkFJlvWh9wekVgyciDQ47eipqsD2Q0WcIvnv1/Z4/sIm
-         FAujXs7EcxshzL6GlAAQoz9iihmA/RAir1yHm/Jg0JMgwB1WQmpb9lZ1u0F7D0q9Vt5s
-         xsjjzmSLvtV/LTh8w88V0ANUadbDQvqSb84KcdvzcyK7EbkjBdqs9Z/BHQjkI49zLgie
-         A07E2TAJ6SJt6VaNYhy8ekTvItm0YCcg6hXwl7uy8gGvMcnAlo3pFjOaxDdndveYpvkN
-         1v4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750962116; x=1751566916;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o3+DMoHHGIgy/vebIi3Jk4k7xIG+hyANlJEXNLYgE3w=;
-        b=E7C1zQ6Nkk0Iskqfv4XDlOLApnNA2Zu+Te/bDcByo3j6sHKMbcxtZ3X5rkRsp/LEsl
-         y5qLnRVir3elr32xX+Syi61+U5YvcwCUsQ7VFSwcts/KTtErLCZlCNyvLBv2CzfVAdFt
-         GEj3dpvTaQG9AZSjCWDH1X0SVjZbbNSlUPIb53Vc4z/NbEI2ID3rjAlCjJevmUTEo0aI
-         Mr+qBSeWUmXnORKhgyPawrU/D3gmbuLaZ63T2jm+IwkoIqaKGBwlYyU4gHcJzq1zQ7W6
-         dfUZuLZvNtfGc4rRrVWeUv9PALvWZNAZcxNdbs+KAsBqqvI2N6wqipAtsJogShGFrbTe
-         3PjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVO0aoMPM2ruep6MTKO9NfN+75neHREnHIzI7/SFfWmjFCjDttMV+EmnLN96IeiHbWZb6cenJC8uHTUWv9S4bYygqw=@vger.kernel.org, AJvYcCWMhJEYrPVzMQ/k272o2k1hg5ceBDdigOlvML/O0hU+nz1YLemr/3iCDre+4xrtNxeAJePpvpyR/Ee1uZc=@vger.kernel.org, AJvYcCWux2mB/mv/0QO7Kl7fBRBN7+k5WDp3Sh+WDADRBAdyWxIqs+m9gTFP+s62MJaMbLycVbyANv7sa24=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziW7xv8X23QakSdMm5xSPslohOw0RRF3ro/ZEuXIM3vxBupquy
-	aIBy2XttblKVcRRy8fd01x4Sw2VZC/hxKSx9JXPK3cIbl5SqBiBcKW05gec0r4FvEv2j4eFFluc
-	PUSp2siMp0lQ7u1OcLJ0oImW9A16MN+Y=
-X-Gm-Gg: ASbGncsSxGVymhNSbc0xZnE4QFXsUA/4Ibjrkp+5bo3UbowP+iICnD8BmZ9avVSPJ/y
-	D4y1AH7Wzc4rVp2iIftanqo5co5o2J4/TkPZD7N4cemKwLERr+TeDtRneB3yz9jD8Q9m28ZE7sV
-	2zx5dLT7sNYbNGkpK7cjAGd0FsUvC56ACZ7Bmkrseh
-X-Google-Smtp-Source: AGHT+IEsqtj8v2bEovOjiG46CLJ7UL5bwYCV8gHZttkfNpv1pJvRdrPCilDlgYCTp69vYR0Wg+ubr4UgooPkLo5BW/k=
-X-Received: by 2002:a17:907:3da5:b0:ad8:9257:571b with SMTP id
- a640c23a62f3a-ae34fd3c530mr13268566b.16.1750962116235; Thu, 26 Jun 2025
- 11:21:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="V7xFuwdt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=k/ND1rnWyY7ocHdBkcEJmvqNMFTWe5mZhU7sgJhwd7vzTNY++LLTpK/cuVPGEFG1XQPo8T1QMVISBgKdfFvJGKse18Ryu9Qjm5T9X8SQwiYzzbx3Xxm3UoahsWzHwjgOftrzgjfVqlRdJ22AplhIEH9ig2H4TaiOZfZ9MEUl1fSBDvo7+WQAsFnb2KgF9IE9AQch/r6v8Z8cPEupr0AGtccTnZjmOuQma5Cb6DCJC6j8pqe20wckSnF1uCZ9+9GsgmCkHrUrVS9fzFFpH5Gy/9ISTymfDsfS/Jr+dwUwjcTZtywd2puYgnbNhnPoHu+rDpym3SxUbUcQuqdT6bnWiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CqWaS1X+W1Y7RebMyJXfv0yNsndEgTaAPJvQ+wCJDBI=;
+ b=YAmw2uUSqQfyjCMya8x8Uv9QXBeWkcY5pZESvZnizYYoZga7E9F1ITlOFylHgsJoXcjAqYi6CMw1smhBkaJHgJ0XiOOgGhnLpztVSii4GsvHmRiYnR87Ymvv0+wSWxUy8gmHQfdQfv+VIPZ2a6Pj96GVEe6W0z6nqUktMbXuGoAB5zWFUlrXEUqZ9Iy0jY+Ytl2XExUdgg//xSmO73Nc1cha0Djc5dqVUld+LcUMXRPM9Kka9NlkCOagzWtWC5ZKhmAtdT+qeecLNCSe/SSy+jFQt6te0h+HrcZKcjXuC6HzkLp8qx97uBMW/nv1uyzgnYPERzhv2Y4AU52+818tsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CqWaS1X+W1Y7RebMyJXfv0yNsndEgTaAPJvQ+wCJDBI=;
+ b=V7xFuwdtJoMuKetqhnhigMtckv+gq/36Bn36zhfPnAhPxrmU5AcWbVEQTGtfQeCrW+pWQEPEb/4siPWBkOIQt6uFt3l6w20PUioPp9qNlM74ich8fS34JZzZXX/+4zKqs5MLUfJOnj+rYafw/JX0WJItDc/md5KmFyzTBpnKBME=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16)
+ by BY5PR12MB4164.namprd12.prod.outlook.com (2603:10b6:a03:207::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.17; Thu, 26 Jun
+ 2025 18:22:03 +0000
+Received: from CY5PR12MB6429.namprd12.prod.outlook.com
+ ([fe80::1b40:2f7f:a826:3fa0]) by CY5PR12MB6429.namprd12.prod.outlook.com
+ ([fe80::1b40:2f7f:a826:3fa0%6]) with mapi id 15.20.8857.026; Thu, 26 Jun 2025
+ 18:22:03 +0000
+Message-ID: <f59e0cdd-e41a-4865-8f11-9508b598e6b7@amd.com>
+Date: Thu, 26 Jun 2025 14:22:00 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+Content-Language: en-GB
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Hao Yao <hao.yao@intel.com>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
+ hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
+ dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
+ jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com, king.li@amd.com,
+ dantony@amd.com, vengutta@amd.com, dongcheng.yan@intel.com,
+ jason.z.chen@intel.com, jimmy.su@intel.com, Svetoslav.Stoilov@amd.com,
+ Yana.Zheleva@amd.com
+References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
+ <6a49eb11-d434-4315-8ee9-0f8aa7347de2@intel.com>
+ <aEygCdk-zEqRwfoF@kekkonen.localdomain>
+ <3e8364e8-22e4-42ad-a0f0-017f86fd6bf9@amd.com>
+ <20250623120929.GE826@pendragon.ideasonboard.com>
+ <aFlU-E_GCHWBXErq@kekkonen.localdomain>
+ <20250623134200.GB29597@pendragon.ideasonboard.com>
+ <b6425dbe-44e6-47b4-a06b-b9a172a8cac4@amd.com>
+ <fb719113-513f-44d9-82ae-63ff6aaca142@amd.com>
+ <175093628786.4005407.10292502794888309807@ping.linuxembedded.co.uk>
+ <20250626122306.GI8738@pendragon.ideasonboard.com>
+From: "Nirujogi, Pratap" <pnirujog@amd.com>
+In-Reply-To: <20250626122306.GI8738@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YT4PR01CA0159.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:ac::21) To CY5PR12MB6429.namprd12.prod.outlook.com
+ (2603:10b6:930:3b::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250624075847eucas1p2db6e908f78aa603bdf6aec38b653e9af@eucas1p2.samsung.com>
- <CANAwSgQ=G1yJXOg1LdeEf-J56epyNiohCSdNYUvs2AHNv90Hkg@mail.gmail.com> <20250624075815.132207-1-m.majewski2@samsung.com>
-In-Reply-To: <20250624075815.132207-1-m.majewski2@samsung.com>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Thu, 26 Jun 2025 23:51:38 +0530
-X-Gm-Features: Ac12FXwpXJBzgkh-OwnIhYXUzqm4zOFzScYoLTs9xrNJZHdZ2chXs_WiTmxz6v0
-Message-ID: <CANAwSgT2ROe77FVgk41s3xB-a+2SNwo5XWRZzrgxtC_SiooTXA@mail.gmail.com>
-Subject: Re: [RRC v1 2/3] thermal/drivers/exynos: Handle temperature threshold
- interrupts and clear corresponding IRQs
-To: Mateusz Majewski <m.majewski2@samsung.com>
-Cc: alim.akhtar@samsung.com, bzolnier@gmail.com, daniel.lezcano@linaro.org, 
-	krzk@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, lukasz.luba@arm.com, rafael@kernel.org, 
-	rui.zhang@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6429:EE_|BY5PR12MB4164:EE_
+X-MS-Office365-Filtering-Correlation-Id: 081b3e19-51ff-4a09-d8df-08ddb4de594e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eldZamRxTmt4UGZuQkVsazd1V1MwM2pvSDF3d3FmeDl4UEhDUGVnazk1c1JO?=
+ =?utf-8?B?Zm9aazM0N0MyV05CM3p5MFhvbDU3NklHNGVkWE1icmhNRDQyd05RVFRPNWFM?=
+ =?utf-8?B?K3o4a0JHekpoSHZkeEs4RmhkejFoUXU3by8vRHdTNG4rcmdQQk1lYjhkL2o2?=
+ =?utf-8?B?SnZmaWpsNjZ1empPT1hHVmI4eDZmbkZpYzBPT1Y1d2dnV3JWSm8rZnJSRE9m?=
+ =?utf-8?B?RVV0UnNpRVJ2RjFEcDJ5dGRwTlZ6NW1sa1FidE54dG1JN203R1h3UFg3eExL?=
+ =?utf-8?B?REovclB6ZTZ6YTBzS3hLR0w4N0tycEpCTEUyUXo1WDlOL0tXRU5PVWM3OGw5?=
+ =?utf-8?B?TDRzOU5rRXdURStvamV1SWNGYk1HZmxDenRUNm5hYzRMT1lYYTJmWEJpVFBK?=
+ =?utf-8?B?V3Q0UVprYmxoSVpBVmQwOE56bzVUVHZBL3YxQ05nalkwMU1YZkdpQ1FjWDVr?=
+ =?utf-8?B?SEFHcjMrQU1FSWVjaTVYUlJSOWwyb1UyejFNWnRwd2NhSEdGTzhrSEVaME8z?=
+ =?utf-8?B?YkZBSWJYM1hXZmZIWGVadjNBR0xmZjNWa2RsZ3B4c2R2OUs0M2RMOHRwTzVN?=
+ =?utf-8?B?RzFWTFY1Y3c4VUdTT2hBRkVQYnZUMmtWSXNKNzRFSVdEYlUvZlJWbUFCa2k1?=
+ =?utf-8?B?a0dONkllTWJBTHRyWlBZYWVCZWsxRGhuSDhqUy9OeXpFQmV4dEFUbUd5ZWt5?=
+ =?utf-8?B?di9vZktXTHBsQSt1aTcwdk1IWDZiandLQjhuYlNkRUw3UFd1V1gzbUFHQXNm?=
+ =?utf-8?B?cVFhRzVrZVZmRXFRc084aTNzUGMxeFVHVGNLVWtjbWo4QnlvQ2YvN1ZRcVdB?=
+ =?utf-8?B?RUwxbjlMY2QyQ0pRRWlXaDU2UXBiMFd3eDlFTjZ4blRjM2lWRDRTTzZuMlc4?=
+ =?utf-8?B?aVNkTTBkRUs0M3g3Wllqd1hWQ2cxMFd6VDhXbmJBRis5Uy8zWjJnck51YTNZ?=
+ =?utf-8?B?ZDBvZ2pVQ2FJY2tQYk42QzF1TURWeTZzcWRHUTRmcHpEbFlrQWMxWnoveVRv?=
+ =?utf-8?B?ekZtTmtuZzNPeFNVTmcyemxUVlU2RWQ4OXlpbzBOVk1BNjJGdnQxdDNJWnh1?=
+ =?utf-8?B?dVZyZ1BWSTgwTE1VcXFXaUhkZzVwN0dYQi84TnhZOGVRYWV0QlhFSVhKbHdk?=
+ =?utf-8?B?RzE1bVNPU1cvK1lOeDAxdG96cGYxMUR0YWFNR2x3TmdoaTFXWkhsRDhpbkg1?=
+ =?utf-8?B?OGhHMnRPWDg3czdxMlVQQmVsZjBFeGR6OC95bTF2MzdQcml6MFNZalRZZGlL?=
+ =?utf-8?B?S29VSFZpSExzSm8veTNmZEtOL01HdkJpdklUK0ZKcmI1c0k4RFBmbEE0Ull1?=
+ =?utf-8?B?TWd3NGRwRSthZG5KU0daNnlIa01RcmMyc1QxbGdxS3ZKL3V4Vm9tMm1oUW4w?=
+ =?utf-8?B?R21xVW1RNTF1VmpVbSt3Tm9odzhUSWxtRWJPL1p0eVlEb1BJRzhQOFBnc2dv?=
+ =?utf-8?B?SjRxclNPeFJPYmx3U0NBbE5mZVg3YWJhanhCZnI2b0VhTk92NitHSWk5WU9R?=
+ =?utf-8?B?RlZJc0dxbVk4S0lFQ0ljL2FvVDZXZ1hQcVc1UzZuaUtPTk1hVVBTL05Jb2tH?=
+ =?utf-8?B?V2JSbEV0QStPMmdtY0d4a2RKN0htSHN6ZkxXTnRjSXJHNlY0YU5rMCtzcjha?=
+ =?utf-8?B?Wnp4ZHd3eGt2d2NyNmdnb1IrNnk1TG0yK0pIOU1KQTRJbUZZSUYwMldqdnZt?=
+ =?utf-8?B?SURvZlBySVBBZmloakdXZTlSZlRqSTJRMS9xSUtIcGl4U3pCRUN2d0h0cHFW?=
+ =?utf-8?B?RlBRaWdsM3AyQUl1WXh0dzcvZDNBZHNPU241OE1VWkZTY0RoSnhQUGVQUTZI?=
+ =?utf-8?B?Z0lxVlV0UzZjT3JtbXlKVmdjYUhDL3doNEpqWVdqSWZUd1JWSmFwbGZ3cFhH?=
+ =?utf-8?B?eFp2YkpQYVNwQU9lSVBUWWdSUGJ0QWJoQ3gvS1hDWFpEWHQrd2ZmWVFWVEgw?=
+ =?utf-8?Q?l9NnXxHexhI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6429.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dzJ2dXRqUUdaRC8zTkZmdmhyd0hGUlVrTXIxdUxvQlNJWEJYMzZGeVV6MUFt?=
+ =?utf-8?B?aSt1UU01TUZRaXFhTi9hRCt4MFp1VHkwMnZadFY5SlV1NmM3VGJ3R29kQ0lV?=
+ =?utf-8?B?L2kxMzZVdjM2Rk1rV3RxTVNKL293SFRJZWh6OGo5MDBjaHl6Z2RaQ3Z3NGp1?=
+ =?utf-8?B?bGdqQ0tRenp4V0JPUlpiN0JJY1FEU0NBdzloOVJGOXZxald6VExsMEV5Ymda?=
+ =?utf-8?B?SU4wYTlCY28zOEJsOWpER1p2TlQ0UUdidlJxd0JNM0lEdWE4ZjBCNXYzckYr?=
+ =?utf-8?B?blpOditySTRzd0xmLzVYTzJpNGI4VjhTK0U1V3p4clYyOUt0WjVOdkJkekRY?=
+ =?utf-8?B?NjhxbzBIUWMzL3dFelVQUllobkMvZVJ5MXdNSGYrS1luUGcvQUVhNG9peXhv?=
+ =?utf-8?B?eE9veDhpTWZ2Ti9XYVRrd3l2K3RxTU9EVmZjZWhJblRHWjNjczBlUkVjZk1p?=
+ =?utf-8?B?aFR3UnRlb3VGaTJUZmlIdk9sQU1uY0ZNcVBVSDlhYTRybWtKMCs1R0pSVlFU?=
+ =?utf-8?B?cWc4c0MxSDhlNGNjdDk5ejR2SnA0eHRHT1hxYW51OStOUGxDNmRjaHdoR21n?=
+ =?utf-8?B?dlJMTjRFaXZCdDhXWS9yN3g4NkRldENJRFRpc2lnMDYvS2U0N1NFa1cwbENY?=
+ =?utf-8?B?ZTRTdzdkVEJoeml0SnNJSldIZTJpVkw5eGh4Q0l0QjJSaHFmUzFWNkNUZ1dr?=
+ =?utf-8?B?SnJ6dXRPK0lnUHB2dGF5UStkb1g5MEl4eGUyTFpHMTlSWE8zaWRkSkx2UllG?=
+ =?utf-8?B?SlRHMStkYXlmTDZGMlRXUEczekYzTGQ1aGJqSjk5TmJib0wzTzhuM2FhY3BN?=
+ =?utf-8?B?UkZ5dUhKbVVSTVA5OW16N25PQlZTNVlkdXJYMFBaQW10UHgxUlpMVUJRNzQy?=
+ =?utf-8?B?Z3ZPaEZGbVRhaTc1VURlT1prWFZHanpqaTQ2NlRLU3lQZXlyQWExZk1lQllT?=
+ =?utf-8?B?aDhYazdpSVlWN05BNXFhekUyUUtkVk53dUw4cXR2cTZqSit3Wkd3dHU4eTU1?=
+ =?utf-8?B?Qy9aSW1iK3U4SUJtTHZwc2N2eVJBRWJOQTUwQThxRnZHdkRYVlRiV3FDK09n?=
+ =?utf-8?B?MExyT1BKeDRiODhFc1RCR2craG85THdydndPMFA0cEdhR3pQR0dKS1IwTkRB?=
+ =?utf-8?B?d1l2REdadVVHL3hsc3JIU3V4K3pEQ3FFWllCUXBmdUNYNGJEQ3lseGEyOHpV?=
+ =?utf-8?B?UU5Ib3VHVllUekpWK0NBS244dmNkSy9TZnhEN2RhUzBrRmUrYnU3eGxud1Ju?=
+ =?utf-8?B?NlR1bjlCYTBvV3IzcmdOUlgvQW9wN1dab3pteXdDL2drSUo5NlJVVDV4S0RG?=
+ =?utf-8?B?KzBoNVdtNGp4RlIwcHltaVhGU1NqakxKTGJGMEgwY3g1SFcrL1c1bzNZODFR?=
+ =?utf-8?B?emM5RWM2RzU4SE1HZS9wbWZwYUNyRmc3cjhhZ01VNWZCN2lHUXRzaENsTGNM?=
+ =?utf-8?B?OThDbVpIT0haYThUY05qaUJNZUM0S0RCbnhxR3MyK2Z4UUR5UXFoakpjUkVQ?=
+ =?utf-8?B?MDVyYklMZjJGMUNObWRseXlMOWI2cHVWZDJ3ZnRmcXpMWkhnK1NPSklKdEI0?=
+ =?utf-8?B?TmhvY1d2Snl6SGpiNmIydDhwOXpITzB5R3ZzTWlZbnFqeUZxbk1yV2lvaFhl?=
+ =?utf-8?B?UzgzN1VWQTBBNGpaNTQwMHQ4ZmJSOVhVTHM1bFBYdC90QmNrdWMxcTNocjdJ?=
+ =?utf-8?B?eEc4K1phVzNMQ25kWHhFNVBVcmliUW5HcGFlZm8xTmZJcFhHOHVsWnI0SXgv?=
+ =?utf-8?B?RUt1ZDF4Q2xPUXhTSmdpc2NiaHFpMzAzMGtZMC9RMEVBTXFvdnIwM25lZS9V?=
+ =?utf-8?B?Y21mUGNrSytkbS9TelozQSswVlpET2pjQmN4WFNYVndDSklpdlVFdjVjbmxy?=
+ =?utf-8?B?aitTZXNreXNMc25uWlU2YWJyTjhYbGRKWjJBS0Q1M08vczJkc2F6Z0w0Yk1l?=
+ =?utf-8?B?UHdhaUt1dzUxUjJpNzh2bHkxL0FSaHhmcEdBcHQza09JajZIb3JsdjFoRCt4?=
+ =?utf-8?B?K0JtL2gxZ0NWdzRsaVlRUWdtaDFCNE9Ua0Z1SFg5bXpKdklReFZJSDg4RHh0?=
+ =?utf-8?B?aVlPVjNqc0FVTHRnb0FybzNLcFZxbGdxakxwQ0ZGdVdVd3B6bDdzL0gyNFlL?=
+ =?utf-8?Q?RwdJvM/hHFWjWTsvpCPWr0p19?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 081b3e19-51ff-4a09-d8df-08ddb4de594e
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6429.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 18:22:03.2574
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ebJH16dNmqqm5oPcLGCo7xlFAF0+Qo4GphW47e3R4uABDJ2RrzHEgKOUFzl9Y94+tFafjlSUpVoOulGSQAf3QQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4164
 
-Hi Mateusz
+Hi Laurent,
 
-On Tue, 24 Jun 2025 at 13:28, Mateusz Majewski <m.majewski2@samsung.com> wr=
-ote:
->
-> > I tried to configure this, referring to the comment in the driver
-> >         /*
-> >          * Clear the interrupts.  Please note that the documentation fo=
-r
-> >          * Exynos3250, Exynos4412, Exynos5250 and Exynos5260 incorrectl=
-y
-> >          * states that INTCLEAR register has a different placing of bit=
-s
-> >          * responsible for FALL IRQs than INTSTAT register.  Exynos5420
-> >          * and Exynos5440 documentation is correct (Exynos4210 doesn't
-> >          * support FALL IRQs at all).
-> >          */
-> >
-> > By the way, I don't see Exynos5433 and Exynos7 support
-> > INTSTAT and INTCLEAR registers. We are using TMU_REG_INTPEND
-> >  to read and update the same register.
-> >
-> >         if (data->soc =3D=3D SOC_ARCH_EXYNOS5260) {
-> >                 tmu_intstat =3D EXYNOS5260_TMU_REG_INTSTAT;
-> >                 tmu_intclear =3D EXYNOS5260_TMU_REG_INTCLEAR;
-> >         } else if (data->soc =3D=3D SOC_ARCH_EXYNOS7) {
-> >                 tmu_intstat =3D EXYNOS7_TMU_REG_INTPEND;
-> >                 tmu_intclear =3D EXYNOS7_TMU_REG_INTPEND;
-> >         } else if (data->soc =3D=3D SOC_ARCH_EXYNOS5433) {
-> >                 tmu_intstat =3D EXYNOS5433_TMU_REG_INTPEND;
-> >                 tmu_intclear =3D EXYNOS5433_TMU_REG_INTPEND;
-> >         } else {
-> >                 tmu_intstat =3D EXYNOS_TMU_REG_INTSTAT;
-> >                 tmu_intclear =3D EXYNOS_TMU_REG_INTCLEAR;
-> >         }
->
-> My understanding of this comment and the situation in general is like
-> this:
->
-Thanks for clarifying this in such detail.
-> 1. On 5420, whenever there is edge interrupt, no matter if rise or fall,
->    a bit gets set to 1 inside INTSTAT, and we clear it by setting the
->    same bit to 1 inside INTCLEAR. The current code does not rely on the
->    concrete bit index, it will just check the temperature after the
->    interrupt.
-Correct
-> 2. On 4210, there is no falling edge interrupts (so
->    exynos4210_tmu_set_low_temp is empty, we enable polling in DT etc).
->    This is what the "Exynos4210 doesn't support FALL IRQs at all" means.
->    However, rising edge interrupts work exactly the same as on 5420:
->    a bit gets set to 1 inside INTSTAT, and we clear it by setting the
->    same bit to 1 inside INTCLEAR.
-For Exynos4210, I am skipping this in the next patch.
-> 3. On 3250, 4412, 5250, 5260, it again works the same way as 5420.
->    However, somebody had a copy of documentation that was incorrect: it
->    said that bit indices does not match somehow, which is not true.
+On 6/26/2025 8:23 AM, Laurent Pinchart wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> 
+> 
+> On Thu, Jun 26, 2025 at 12:11:27PM +0100, Kieran Bingham wrote:
+>> Quoting Nirujogi, Pratap (2025-06-25 23:06:01)
+>>> Hi Sakari, Hi Laurent,
+>>>
+>>> On 6/23/2025 5:55 PM, Nirujogi, Pratap wrote:
+>>> [...]
+>>>>>>> I think it can live in the driver for now. Given that the device uses
+>>>>>>> only 8 bits of register address, I would store the page number in bits
+>>>>>>> 15:8 instead of bits 31:24, as the CCI helpers do not make bits 27:24
+>>>>>>> available for driver-specific purpose.
+>>>>>>
+>>>>>> I'd use the CCI private bits, the driver uses page numbers up to 4 so 4
+>>>>>> bits are plenty for that. If we add pages to CCI later, this may be
+>>>>>> refactored then.
+>>>>>
+>>>>> That works too.
+>>>>>
+>>>> Thanks for your support. We will add the page number in the register
+>>>> address 15:8 or 11:8 and will update the implementation accordingly in
+>>>> the next version.
+>>>>
+>>> I would like to share the approach we are taking to implement the CCI
+>>> helpers that support page value. Could you please review the steps and
+>>> let us know if they make sense or if any adjustments are needed?
+>>>
+>>> 1: Add new macros to embed page value into the register address.
+>>>
+>>> Ex:
+>>> #define CCI_PAGE_REG8(x, p)             ((1 << CCI_REG_WIDTH_SHIFT) | (p <<
+>>> CCI_REG_PRIVATE_SHIFT) | (x))
+>>> #define CCI_PAGE_REG16(x, p)            ((2 << CCI_REG_WIDTH_SHIFT) | (p <<
+>>> CCI_REG_PRIVATE_SHIFT) | (x))
+>>>
+>>> 2: Create V4L2 CCI context. Initialize page control reg, current_page,
+>>> regmap etc.
+>>>
+>>> Ex:
+>>> struct v4l2_cci_ctx {
+>>>          struct mutex lock;
+>>>          struct regmap *map;
+>>>          s16 current_page;
+>>>          u8 page_ctrl_reg;
+>>> }
+>>>
+>>> 3: Introduce new CCI helpers - cci_pwrite() and cci_pread() to handle
+>>> register read-writes updating the page control register as necessary.
+>>
+>> Out of curiosity - but couldn't the existing cci_write and cci_read
+>> already be used by the users - and then the default behaviour is that
+>> the page isn't modified if there is no page_ctrl_reg - and by default
+>> CCI_REG() will simply have (initilised) as page 0 - so the pages will
+>> never change on those calls?
+>>
+>> Then the users can indeed define
+>>
+>> #define TEST_PATTERN_PAGE 5
+>> #define TEST_PATTERN_COLOUR_BARS BIT(3)
+>>
+>> #define MY_TEST_PATTERN_REG CCI_PAGE_REG8(0x33, TEST_PATTERN_PAGE)
+>>
+>> and can call
+>>   cci_write(regmap, MY_TEST_PATTERN_REG, TEST_PATTERN_COLOUR_BARS, &ret);
+>>
+>> with everything handled transparently ?
+>>
+>>
+>> Or do you envisage more complications with the types of pages that might
+>> be supportable ?
+>>
+>> (I perfectly understand if I'm wishing for an unreachable utopia -
+>> because I haven't considered something implicit about the page handling
+>> that I haven't yet used :D)
+> 
+> I don't think we should implement page support in the CCI helpers
+> themselves yet. We have too few drivers to look at to understand the
+> requirements. Instead, I would store the page number in the driver
+> private bits of the 32-bit address (that's bits 31:28), and add wrappers
+> around cci_read() and cci_write() to the OV05C10 driver that handles the
+> page configuration.
+> 
+> Once we'll have multiple drivers doing the same, it will be easier to
+> see what requirements they share, and move the feature to the CCI
+> helpers.
+> 
+Thanks for clarifying. I agree it would be simple and safer approach too 
+to handle this way. We will add the following macros in v4l2-cci.h and 
+update the existing wrappers ov05c10_reg_write() / ov05c10_reg_read() in 
+the driver to retrieve the page and register values to call cci_write() 
+/ cci_read(). We will add new wrappers too wherever necessary in the 
+driver (ex: wrapper for cci_multi_reg_write() on replacing CCI_REG8 with 
+CCI_PAGE_REG8)
 
-> 4. On 5433 and 7, it one more time works the same way as 5420, with a
->    single change: a bit gets set to 1 inside INTPEND, and we clear it
->    by setting it to 1 inside the same INTPEND.
->
-> So, all we need to do to support existing SoCs is to read the 1 bit from
-> one register, and set the bit with the same index in another register
-> (which on some SoCs is the same register). We could interpret the index
-> to see what kind of interrupt is this, but we read the temperature to
-> get similar information.
->
-> So in the end, is it helpful to interpret the INTSTAT bit index, only to
-> reset the exact same index inside INTCLEAR? I guess it could be valuable
-> if we also used the information about which interrupt it is and somehow
-> used it elsewhere (which could actually help with some issues), but that
-> is another thing to do.
->
-correct.
-> > If you have details on how INTSTAT and INTCLEAR are used
-> > particularly regarding the update bits, please share them.
-> > Specifically, I'm interested in how bits [7:0] correspond to rising edg=
-e
-> > interrupts and bits [23:16] to falling edge interrupts
-> > I feel it's the same as Exynos54222.
->
-> Regarding concrete indices on 5433:
-> - the 0th bit corresponds to RISE0,
-> - the 1st bit corresponds to RISE1,
-> - ...
-> - the 7th bit corresponds to RISE7,
-> - the 16th bit corresponds to FALL0,
-> - the 17th bit corresponds to FALL1,
-> - ...
-> - the 23th bit corresponds to FALL7.
->
-Thanks, I will update this in the next version.
+#define CCI_PAGE_REG8(x, p)		((1 << CCI_REG_WIDTH_SHIFT) | (p << 
+CCI_REG_PAGE_SHIFT) | (x))
+#define CCI_PAGE_REG16(x, p)		((2 << CCI_REG_WIDTH_SHIFT) | (p << 
+CCI_REG_PAGE_SHIFT) | (x))
+#define CCI_PAGE_REG24(x, p)		((3 << CCI_REG_WIDTH_SHIFT) | (p << 
+CCI_REG_PAGE_SHIFT) | (x))
+#define CCI_PAGE_REG32(x, p)		((4 << CCI_REG_WIDTH_SHIFT) | (p << 
+CCI_REG_PAGE_SHIFT) | (x))
+#define CCI_PAGE_REG64(x, p)		((8 << CCI_REG_WIDTH_SHIFT) | (p << 
+CCI_REG_PAGE_SHIFT) | (x))
+#define CCI_PAGE_REG16_LE(x, p)		(CCI_REG_LE | (2U << 
+CCI_REG_WIDTH_SHIFT) | (p << CCI_REG_PAGE_SHIFT) | (x))
+#define CCI_PAGE_REG24_LE(x, p)		(CCI_REG_LE | (3U << 
+CCI_REG_WIDTH_SHIFT) | (p << CCI_REG_PAGE_SHIFT) | (x))
+#define CCI_PAGE_REG32_LE(x, p)		(CCI_REG_LE | (4U << 
+CCI_REG_WIDTH_SHIFT) | (p << CCI_REG_PAGE_SHIFT) | (x))
+#define CCI_PAGE_REG64_LE(x, p)		(CCI_REG_LE | (8U << 
+CCI_REG_WIDTH_SHIFT) | (p << CCI_REG_PAGE_SHIFT) | (x))
+#define CCI_PAGE_GET(x)			FIELD_GET(CCI_REG_PAGE_MASK, x)
 
-> That is probably because this SoC supports more interrupts than others.
-> Though do note that currently, we only use part of them (one RISE, one
-> FALL if supported, and another RISE for critical temperature (one
-> supporting hardware thermal tripping if possible)). Also note that the
-> indices in INTSTAT/INTCLEAR/INTPEND match the ones in INTEN, though I
-> have not checked thoroughly if that is true for all the SoCs.
->
-As per the manuals, we have to enable each corresponding bit for RISE and F=
-ALL
+Thanks,
+Pratap
 
-INTEN          0x0070    Interrupt enable register
-INTSTAT      0x0074    Interrupt status register
-INTCLEAR   0x0078    Interrupt clear register
+>>> int cci_pwrite(void *data, u32 reg, u64 val, int *err)
+>>> {
+>>>          /* get v4l2_cci_ctx context from data */
+>>>
+>>>          /* get page value from reg */
+>>>
+>>>          /* acquire mutex */
+>>>
+>>>          /* update cci page control reg, save current page value */
+>>>
+>>>          /* do cci_write */
+>>>
+>>>          /* release mutex */
+>>> }
+>>>
+>>> Similar steps for cci_pread() as well.
+> 
+> --
+> Regards,
+> 
+> Laurent Pinchart
 
-When current temperature exceeds a threshold rise temperature, then
-it generates corresponding interrupt (INTREQ_RISE[2:0]).
-When current temperature goes below a threshold fall temperature, then
-it generates corresponding interrupt (INTREQ_FALL[2:0].
-
-If we correctly configure the mapping of the RISE and FALL bits along with
-INTEN, INTSTAT, and INTCLEAR, the interrupt behavior should function
-as expected.
-
-The following outlines the interrupt flow as described in the user manual
-
-[1} https://usermanual.wiki/Document/Exynos20441220SCPUsers20ManualVer01000=
-Preliminary0.167615881
-
-/* Read the measured data from e-fuse */
-Triminfo_25 =3D TRIMINFO[7:0]
-/* Calibrated threshold temperature is written into THRES_TEMP_RISE
-and THRES_TEMP_FALL */
-/* Refer to 1.6.1 */
-THRES_TEMP_RISE0 =3D 0x40;
-THRES_TEMP_RISE1 =3D 0x50;
-THRES_TEMP_RISE2 =3D 0x60;
-THRES_TEMP_RISE3 =3D 0x70;
-THRES_TEMP_FALL0 =3D 0x3A;
-THRES_TEMP_FALL1 =3D 0x4A;
-THRES_TEMP_FALL2 =3D 0x5A;
-/* Parameter for sampling interval is set */
-SAMPLING_INTERVAL =3D 0x1;
-/* Interrupt enable */
-INTEN[24] =3D0x1; // for INTEN_FALL2
-INTEN[20] =3D0x1; // for INTEN_FALL1
-INTEN[16] =3D0x1; // for INTEN_FALL0
-INTEN[8] =3D0x1; // for INTEN_RISE2
-INTEN[4] =3D0x1; // for INTEN_RISE1
-INTEN[0] =3D0x1; // for INTEN_RISE0
-/* Thermal tripping mode selection */
-THERM_TRIP_MODE =3D 0x4;
-/* Thermal tripping enable */
-THERM_TRIP_EN =3D 0x1;
-/* Check sensing operation is idle */
-tmu_idle =3D 0;
-while(tmu_idle&1) {
-    tmu_idle =3D TMU_STATUS[0];
-}
-/* Start sensing operation */
-TMU_CONTROL |=3D 1;
-
-ISR_INTREQ_TMU () {
-/* Read interrupt status register */
-int_status =3D INTSTAT;
-if(int_status[24]) {
-    ISR_INT_FALL2();
-}
-else if(int_status[20]) {
-    ISR_INT_FALL1();
-}
-else if(int_status[16]) {
-    ISR_INT_FALL0();
-}
-Else if(int_status[8]) {
-    ISR_INT_RISE2();
-}
-else if(int_status[4]) {
-    ISR_INT_RISE1();
-}
-else if(int_status[0]) {
-    ISR_INT_RISE0();
-}
-else {
-    $display("Some error occurred..!");
-}
-ISR_INT0 () {
-   /* Perform proper task for decrease temperature */
-    INTCLEAR[0] =3D 0x1;
-}
-
-Hey, if you=E2=80=99ve got a bit of time, could you take a look at these ch=
-anges?
-[2]  https://lore.kernel.org/all/20250430123306.15072-2-linux.amoon@gmail.c=
-om/
-
-
-> Thank you,
-> Mateusz Majewski
-Thanks
--Anand
