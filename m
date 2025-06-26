@@ -1,181 +1,135 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FE112DDA1
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA444224228;
+	Thu, 26 Jun 2025 23:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750980814; cv=none; b=AZyhU7qyWSctMgtgPnjxP+/33S06Jofo/GAoZtO/K4qokpdi0LjNDYyy9GhFbqaIRDwG283ymn4YldxDxV58oO5D+VeDGLa9gEb30TCaiIsVIoMU9RCPd3TpPdYDRbYoz6JkeNETUlGUt+3vKKmTmdwEzgncqnEO8jJcfCfV77I=
+	t=1750980826; cv=none; b=WjQNOkBs8u4jnS6uX+75Wzs6udpUUZ/R+7bUKM5sAAR6z3e2JAZxvB+Im5LuWvHnEeqS/uT88LPhXM4ZsSo613u3/fb8FyJYSEzAMyXfNhfJy3+9OCHZZJh/giUuTl/LSLbr+DQEgZJlsIpeDXSQwRfeMzhJ9bwkH+uuE4uC0Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750980814; c=relaxed/simple;
-	bh=9DRHyKEn3LgdNudaN2dAIvpVac1tRIy6t8Yc8Bw5peA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XUeXoRBM6o9MWXqcRteJkzhzARhcA8FpJRyCM0JC+8mR0u0y6/sLhGrqMJARdAdm5/rZ3ih8+f/oI/oB5+smaeYY/vtiAtmSFJ3pbXv8Hphk+F7Ts0GvRUFQMCgc5CWWDz3sDav4MjAm/1dyPQmz/LcoVAzvbN8c1lvUeV8ocGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=l1yy9XhS; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750980826; c=relaxed/simple;
+	bh=LKw9ZjvUtBOniKomanSgvb3piQT6FZcqgxkJakUQCwU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=qUp4ozACyA4pku/gicMswKM81Cz8yZSwVZ4qxIEETU3/oBXh6FnylN6pS+IMC+jj32T/LNxu30eq1kzI6Zd0tns+cKiGIenI1OR//8ht405eHC9xdkjHA5DDGQEpfDF0rXt8MDMiYNO4eM6Ox5TuVZSPuQzC188IlMS/K9n3yp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hm8+br9h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="l1yy9XhS"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QKaoMb008315
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:33:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=p2pcURoybL3Y8aXTxu2NYraS
-	kKyVcrAYks/QDQsGU1k=; b=l1yy9XhSO/vVbL3e3265u9OwW8VX+jhvZgqiDZ/V
-	gpfOu//TDT0C1ZxgewWKyfN/LxW3dbLHU+CVG3syHehitFaqGSCnOGX9xYmyBCuw
-	6wOfBeSWoyMH8djKRVtN/ELUHTysoKVDeBl41X14/mC7pztTX4dQC44vjLFe2O5h
-	6X452Nt4S6FqEDVvnAnHAZLGlmwr7yqK6RW/fgPaKL3aKvirlfrF0gtRdwcc2SXZ
-	lU2ZweOrtb9Fp/YrfWOor1/L4x3fx7hOg6XPTrzl8SykgmwyvY8Gpc+RJVUTDqBx
-	KrDppIreTE7tQ/ZtSThVyWcySibZeA6A2195E9+uB6edkw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbhqu9g8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:33:30 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7cf6c53390eso114403485a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:33:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750980810; x=1751585610;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p2pcURoybL3Y8aXTxu2NYraSkKyVcrAYks/QDQsGU1k=;
-        b=D74bv8/svTehQoam/4Sek5j2keMYUD0LLjgvmNBCizWNqxOmHbVq7aAqBF3rf3b0su
-         YuibHo8JrUgPjYbwcizGceFf3J3XewIdds2Btcjk+dIOiB+seJBjUiGc5LGG2YU2qIPY
-         c4e2ccsG9Gu163TPBODfK6KlgXU18BHCKmYH/mtN3sr1jaq1+XxNaYvnR6t7BsYKUCCs
-         KVQWbMlVHXRRv+4Ij3jFcPApbRkHXApRE0HcgoF+JqXvXB8ceGPXTMA2V307lxfAfVeJ
-         kHA3y0X8wUycsJ7odhd/VspXfnMu/CTS0Bl9YdwARX5j4cwUjp+GkpNh70Qgam89PeCK
-         DoNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWUIk+5VPcDrS5dQz9Qb+uNuXotK3SRApjCpdMqcgXDC2ojQkex8rFH4HeBa93Ly2RQl2qbdJONz2Mbt4Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywoo8FnyIU1fdNvcGqK16Uvj7zwjz/G0lDd+t91h3oWYky1KNaA
-	l6JyWbbhtm54IpFSCUH0fwpQSE+uDIEbUUzDywZPVRCZ42xdyefYNBCU69ZL7h4f/uzXSPpzeGP
-	G0xl5FcDAUTp+6yLDtw/pD3/L5dsjswpvwZ4sU3HfcaBe7XBnRehDQa13vvNqqxMloME=
-X-Gm-Gg: ASbGncvhah58goQi7klId3mYGIJy+CISL8hyAyvvYrWUP/Vdx35rnSLm4Vn/SvDvqwQ
-	NMc2T2YbgJaE/7h85wxxIBKP9nTinDLG98/xK4rQ5csVXNPPwu1UInhLjjTWL4wkg7FPoIK+ynt
-	JimKU44HsymECTuPNMVcIlcsn7mAs1oCClb5459oCkfjkggV7AB13h2gUqjQ3ZFgqQHbxDVWbpR
-	U0/GIkR9ExVhWqfhqvEGmH7cXl+Na/n40LMPNwZd6ehvrVUyJwi0Z7ltj9YOGR+/iDdYu3w1B5Q
-	9KiqqJUg/YsKySjim65aIhJR1QV8JQK9eHyx/sUXbw9MhBmQF2zB/o8xPbic5UyrNanszBxnM8Z
-	akJKAFvep2H6NzyZFdEAwWbAwzMxYMn05sS8=
-X-Received: by 2002:a05:620a:27c1:b0:7d4:3bf1:b1f0 with SMTP id af79cd13be357-7d44398e3e1mr233340085a.18.1750980810086;
-        Thu, 26 Jun 2025 16:33:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEIbx430OqgmF+GQnggSARqLbLWDAsCCU6kWI1oFpMQKp6uZB7h+OTCcp2g2ALy/bF+tlAVHw==
-X-Received: by 2002:a05:620a:27c1:b0:7d4:3bf1:b1f0 with SMTP id af79cd13be357-7d44398e3e1mr233335285a.18.1750980809603;
-        Thu, 26 Jun 2025 16:33:29 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2b95acsm195077e87.115.2025.06.26.16.33.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 16:33:28 -0700 (PDT)
-Date: Fri, 27 Jun 2025 02:33:27 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Johan Hovold <johan@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Steev Klimaszewski <steev@kali.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-efi@vger.kernel.org,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v4 6/8] firmware: qcom: scm: add modparam to control
- QSEECOM enablement
-Message-ID: <cjinqyqn7qgvdoltoywxa2lq6bjyfrotmon3iv24tqt3bpdlpe@3xb2k42ffegj>
-References: <20250625-more-qseecom-v4-0-aacca9306cee@oss.qualcomm.com>
- <20250625-more-qseecom-v4-6-aacca9306cee@oss.qualcomm.com>
- <aF0cyOpkjUI4R3bv@hovoldconsulting.com>
- <gqoba4uu62sh4qxapqkhlufxnliatevnsqcxvijvb74tposf2b@iyonh347aext>
- <aF1EDMsw1KQTlteX@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hm8+br9h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 412B2C4CEEB;
+	Thu, 26 Jun 2025 23:33:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750980826;
+	bh=LKw9ZjvUtBOniKomanSgvb3piQT6FZcqgxkJakUQCwU=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=hm8+br9hJIjap6cvt5Nsi/5ZOy4+7fqdTOeeXkk8GiBk+LdFIssA7GF+NPmRHK0Qc
+	 s2p+PqZx3Q1rTSMjXx5kPPhGE/jpa3WYtVAEfvaEIeJJ36uDFmWeqEun8ga1GEYFqV
+	 ZfoJASmwrzlj2YoK4StZc/cQE5ULHckChEBC/93iCaaNA7X8rYTx5nCOpODyTp1chS
+	 i6WmoxJSUv+Sldb3uVaxIPPBz3NflpGHpUTbXat15rLVMUo6Kf1ArNTOP7TeWIbSex
+	 55QStVUWdk0YJgAKsxCJLicLxT2f/wfzV9CFmR5Iuz38Ahn4RDzQJ7tFloIzTuQLnH
+	 dZQPQPBvXrYpA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aF1EDMsw1KQTlteX@hovoldconsulting.com>
-X-Proofpoint-ORIG-GUID: dHtM1_DeH683gV0Xc4o3902Qz5fk9QaA
-X-Authority-Analysis: v=2.4 cv=Id+HWXqa c=1 sm=1 tr=0 ts=685dd8cb cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=NVsCH3EOgwMYIqYMOGoA:9 a=CjuIK1q_8ugA:10
- a=PEH46H7Ffwr30OY-TuGO:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: dHtM1_DeH683gV0Xc4o3902Qz5fk9QaA
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDIwMiBTYWx0ZWRfXw9iYHmG21m5i
- a0Cus1NmBShJI3VK6BvDO0J2XBdKm8FXyTgNieNmW38Cui1FjuIyvBgHs3nD02S0Ecx9K/EFUfP
- 3OLE7yU6PZl+w+d0xBVy4sVoKhXrExUIvTSi9JgxQREf9QrGpHD/CRIssYRJiCDyhyMvAYcwjEr
- KQMFDYTZN0Pugpvjt6ZoAdnswOnF+WGeKBt4kdJcZ7GWHVUI9zSp63Po9TDGbtlwINeQWFCvh2g
- sR4H3Xmlmd9hEBMogA18SD4UaFq1syRoDWOaBSrwAy08qwrg5hKZyQTS/QEd87Mo+1ayIkToRdf
- 9dnm4ILRitelb9ZxIIcy/ujvTUu76TYoE0KZsHv03TGVOIgapIneK3pB8pxLcH3EA1ZiagC5B/Z
- cTN4qWOueyLw0WitEWcpjqerAnxIcf2plRUmlCe7ClP45scQKbEAx7H1ilIFkNATRXjhUvPG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_07,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0 bulkscore=0
- clxscore=1015 impostorscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506260202
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 27 Jun 2025 01:33:41 +0200
+Message-Id: <DAWUWCQCW7WD.29U1POJFXTLXS@kernel.org>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v4 3/5] rust: devres: get rid of Devres' inner Arc
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
+ <kwilczynski@kernel.org>, <bhelgaas@google.com>
+X-Mailer: aerc 0.20.1
+References: <20250626200054.243480-1-dakr@kernel.org>
+ <20250626200054.243480-4-dakr@kernel.org>
+In-Reply-To: <20250626200054.243480-4-dakr@kernel.org>
 
-On Thu, Jun 26, 2025 at 02:58:52PM +0200, Johan Hovold wrote:
-> On Thu, Jun 26, 2025 at 02:08:23PM +0300, Dmitry Baryshkov wrote:
-> > On Thu, Jun 26, 2025 at 12:11:20PM +0200, Johan Hovold wrote:
-> > > On Wed, Jun 25, 2025 at 01:53:25AM +0300, Dmitry Baryshkov wrote:
-> > > > From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > > 
-> > > > In preparation to enabling QSEECOM for the platforms rather than
-> > > > individual machines provide a mechanism for the user to override default
-> > > > selection. Allow users to use qcom_scm.qseecom modparam.
-> > > > 
-> > > > Setting it to 'force' will enable QSEECOM even if it disabled or not
-> > > > handled by the allowlist.
-> > > > 
-> > > > Setting it to 'off' will forcibly disable the QSEECOM interface,
-> > > > allowing incompatible machines to function.
-> > > > 
-> > > > Setting it to 'roefivars' will enable the QSEECOM interface, making UEFI
-> > > > variables read-only.
-> > > > 
-> > > > All other values mean 'auto', trusting the allowlist in the module.
-> > > 
-> > > I don't see the need for this. The kernel should just provide sensible
-> > > defaults.
-> > 
-> > It does provide _defaults_. However with the next commit we mass-enable
-> > QSEECOM for SoC families, which includes untested WoA devices. If the
-> > user observes a misbehaviour of the UEFI vars or any other
-> > QSEECOM-related driver on those platforms, it is much easier to let
-> > users test and workaround UEFI misbehaviour.
-> 
-> You basically know by now which machines supports qseecom and which do
-> not, right (e.g. UFS storage means non-persistent EFI vars)?
-> 
-> And it's a pretty bad user experience to have people trying to write
-> efivariables when setting up a machine and then spend hours trying to
-> debug why they don't persist after a reboot.
-> 
-> I don't think that's fair to users.
+On Thu Jun 26, 2025 at 10:00 PM CEST, Danilo Krummrich wrote:
+> diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
+> index 60b86f370284..47653c14838b 100644
+> --- a/drivers/gpu/nova-core/gpu.rs
+> +++ b/drivers/gpu/nova-core/gpu.rs
 
-So, is it a user or a developer, trying to port Linux to a new hardware?
-Also, R/O implementation makes it obvious, that the variables do not
-persist.
+> @@ -161,14 +161,14 @@ fn new(bar: &Bar0) -> Result<Spec> {
+>  pub(crate) struct Gpu {
+>      spec: Spec,
+>      /// MMIO mapping of PCI BAR 0
+> -    bar: Devres<Bar0>,
+> +    bar: Arc<Devres<Bar0>>,
 
-> 
-> Let whoever brings up a new machine figure this out. It's just one
-> entry, no scaling issues, and we get accurate information (unless
-> Qualcomm, who sits on the documentation, is willing to provide it
-> upfront).
+Can't you store it inline, given that you return an `impl PinInit<Self>`
+below?
 
-And that's not really scallable. All other parts of a particular device
-are described by the DT only (that's especially true on the PMIC GLINK
-machines). If we are to support new laptop in e.g. distro kernel, we
-need to provide a DT... and a patch for qcom-scm driver. I'd very much
-prefer to do it other way around: provide a DT and patch qcom-scm if the
-laptop is any way different from other laptops. E.g. we know that all
-X1Elite laptops support R/W EFI variables. Except for X1-CRD, which
-deserves an entry in the driver.
+>      fw: Firmware,
+>  }
+> =20
+>  impl Gpu {
+>      pub(crate) fn new(
+>          pdev: &pci::Device<device::Bound>,
+> -        devres_bar: Devres<Bar0>,
+> +        devres_bar: Arc<Devres<Bar0>>,
+>      ) -> Result<impl PinInit<Self>> {
 
--- 
-With best wishes
-Dmitry
+While I see this code, is it really necessary to return `Result`
+wrapping the initializer here? I think it's probably better to return
+`impl PinInit<Self, Error>` instead. (of course in a different patch/an
+issue)
+
+>          let bar =3D devres_bar.access(pdev.as_ref())?;
+>          let spec =3D Spec::new(bar)?;
+
+> @@ -44,6 +49,10 @@ struct DevresInner<T: Send> {
+>  /// [`Devres`] users should make sure to simply free the corresponding b=
+acking resource in `T`'s
+>  /// [`Drop`] implementation.
+>  ///
+> +/// # Invariants
+> +///
+> +/// [`Self::inner`] is guaranteed to be initialized and is always access=
+ed read-only.
+> +///
+
+Let's put this section below the examples, I really ought to write the
+safety docs one day and let everyone vote on this kind of stuff...
+
+>  /// # Example
+>  ///
+>  /// ```no_run
+
+> @@ -213,44 +233,63 @@ pub fn new(dev: &Device<Bound>, data: T, flags: Fla=
+gs) -> Result<Self> {
+>      /// }
+>      /// ```
+>      pub fn access<'a>(&'a self, dev: &'a Device<Bound>) -> Result<&'a T>=
+ {
+> -        if self.0.dev.as_raw() !=3D dev.as_raw() {
+> +        if self.dev.as_raw() !=3D dev.as_raw() {
+>              return Err(EINVAL);
+>          }
+> =20
+>          // SAFETY: `dev` being the same device as the device this `Devre=
+s` has been created for
+> -        // proves that `self.0.data` hasn't been revoked and is guarante=
+ed to not be revoked as
+> -        // long as `dev` lives; `dev` lives at least as long as `self`.
+> -        Ok(unsafe { self.0.data.access() })
+> +        // proves that `self.data` hasn't been revoked and is guaranteed=
+ to not be revoked as long
+> +        // as `dev` lives; `dev` lives at least as long as `self`.
+
+What if the device has been unbound and a new device has been allocated
+in the exact same memory?
+
+---
+Cheers,
+Benno
+
+> +        Ok(unsafe { self.data().access() })
+>      }
