@@ -1,221 +1,127 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CBC25E477;
-	Thu, 26 Jun 2025 21:34:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF73442C;
+	Thu, 26 Jun 2025 21:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750973645; cv=none; b=Mg3KQ5i4iqlmPW1sa7PTjtqnmiQw+twUqP1bPf0gFZ6hR3XajitpIlhyHiwMjLFfz3hz5x9Hv6lqI4I37nq7j6Dw1uXQv/G13TJVI6mAQQZMsWLFFcxVBInvpupBx4Dta//LoBZ7E1N0uN8cBLESobn0h69JnI+VhiflXj4vfsw=
+	t=1750973800; cv=none; b=YOSML8d/oZotMAE8MwuxbAtlRnkA59sUsnS/gNLPlxcfgOdLzhu+wUSJaVQV8QkpMCh2eqEPoU/XxTAyMDZIvkPlTfjntqXQqwMTtM9EgpsReHiYOi/8xTf4MpyqG+SlfGUXDxv7NFWEt6dtRIvw10gjcCE/OJ+1zl4zkvBWoQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750973645; c=relaxed/simple;
-	bh=UqwVh0VzHPjDoOcfLqeUhiCeDs12oOBqFDk7yOKVZ+k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uBUU25AcQrCPZlgvM2B7novq9DE3gv4sdWqkcVtQXcxElFbzBYA4FVuJCpALcyxAavZ/8RMzW/RDSP9k5hM38O2nM7Gyed0oeJAm4rWVc5VgFiewl/RKAq/yqzAOFkvvNFZTyIpncDrPzfCQNtUfQFNjhPLSOdKSRwWQtgmYaQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gtWbIZdl; arc=none smtp.client-ip=209.85.128.181
+	s=arc-20240116; t=1750973800; c=relaxed/simple;
+	bh=qKsu2noZU/EIGAmtGzAdXhRFiQccwtgUcV+JBtHihDM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KJvlQLwKh/OoKmS2aZktaSKes0kaXaK6JmuM5ScMFp0WNudvneYdpqj/T7p1Sd3jlhC4mqTadn6Jqs2TgPcJ/rJ0RsZ7665XM7HGLFxOofYDMQY1B61mx4HGaFrhI/u1IeUR0uJAIc3AxWuEsPy1COQlDs0FnkssfTUOOI+rMlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tx2yrzbm; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gtWbIZdl"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-7111c6b0f1dso1968547b3.1;
-        Thu, 26 Jun 2025 14:34:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tx2yrzbm"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-749068b9b63so1140093b3a.0;
+        Thu, 26 Jun 2025 14:36:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750973643; x=1751578443; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=quWoYzJCcSriVdkCnPfzLQECG4bIA9g0dURyf59YLC8=;
-        b=gtWbIZdl96Ec3Lr7FlAHDSOvbUxTRCbB/Zpyz7X990Qy8J+TGWKzWnABMR3YpDV3qh
-         Xvab0UUFYl3Z82tRBUEhR4HtQ1p7N6ThMYMiubZZD+wRt+P5Rtcr+4hyL/aTAYYzFyPN
-         pdLSoDonuIG9Y5Z6sGG1ueGl5FqWXamnUHSEeJrYXHmWP73EiOhNh155BOSIROs0r53n
-         Xa9KElFCXk0RBaXJrmJPz5wFOeMXQfLV1cfN+KUaEkCv3NIgeQ33WE/3DYmgxddgRw1J
-         ed8peRh4h8MFS6cWqOyv2Keow7NDBekmjY0vibEtxWgCQ5A8DijXDoAU55Yp+w2TZnWo
-         gE6w==
+        d=gmail.com; s=20230601; t=1750973796; x=1751578596; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=W+j37i1fQJjEw0H1aSmJvBx2p5eupo53+UaTsk0vY6U=;
+        b=Tx2yrzbm9N44snxQDUN1nf54tVQZj9QHogqlKZg7oGVoaghaBnNEPXPHNjzzxXh80O
+         LgSlhYIM7CEnYHBB/xbag6t6ZFkzpbpRdc8AsDofZGc1G/DQE320/V5lB7Jie4ohMcYy
+         youp/YDDTLhi1wfFiXT90cyix9B5W8rPey3hWBr8963Fb2RQeCZ/IPQY/XYkGrI3ePyu
+         VBm8qdu/tBHsvMziqvoX43iwXJJZbScv23ojF1s7nnda4qSUoCHZpD7xt8cMETHrN7pA
+         CCpGiixy1rISAAW0aZ5/jfkQCauS53oxVO+3pdATQcy18YS8AwIHjPd/+SS0S6KGcJXI
+         7zaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750973643; x=1751578443;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=quWoYzJCcSriVdkCnPfzLQECG4bIA9g0dURyf59YLC8=;
-        b=c/hw4vve5XUrdeLzCEq8UjIWgpsz4dztLEDpg9p+6YI+huT2qJ8Cxf/EE3BAnU20Qv
-         gYJYalCFQUEsPoqSiDUjRga55E0FiP949fqJ8jRVCXw6xFfyBDE5vL/OawKlthFNlrjM
-         AOEcXOQzwp6sT9eegY8ICKotz0hajm2vryORi4UQ+wMyDZSZ+XBu+P1/PKCfZsdKAi7H
-         rWqQlIPNBe5coJdeeX4viPtXBsopUUruS5T80vHmrEj9y7UUgRdiOypoQO3VDH+lMo8D
-         RKa+WeD3SqwVV52/4dLqvoswZ7Evn8Xz1Zr8Emopd7esQr3S4mUmG6lkphJiTMggXsaV
-         RGeA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqxtI6wMosHQ58jvxs/IMPopxaOfQ2h2Ti8u29sRhRdylDO34KvkruRZIVXmbv3sWWb3PqVwJcc3SZtzo6@vger.kernel.org, AJvYcCVAWOakg8OsdObNGzjdbR3HAYYVWugXgEzJABZzOJBUQDMnxbxUuOIuYbYHcb/QBwQfRnjA5hPr5dQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzYxaOwK/Ga9+pEmAARmZSf4teTIbMlxCMYQ6ndk2LB5M/8uzn
-	WGZjBeh/HGzVuJOPs4p2wvES7xS2xMJ9ri/CzimDQASwnj23gMtXSH7tMWrB/CSBd2alJD7rrEU
-	vS91aWkZxOCm31C6Ik1+B8GmkNXSu8nY=
-X-Gm-Gg: ASbGncumXMz5MXluUIzasLz1QcxrQlRkwx8z3fJ929PjyKMZTjFsm7v308n/N3s39nH
-	s9TqZmGWTJyvf5rbOMZLu5Q9pn+W1clzwrH09d0Bq7t0ZE185CVxXFG3lMgzWiWyfaVkX7jmsJN
-	YLc6LgQJcPsO8pdWl5t9BSFc8r44AlDpr1anx7Fe2z4kw=
-X-Google-Smtp-Source: AGHT+IFEOnHnywGMqHgq36/2c4omUJAsLuMvqZI+biAtd0YlYQ4nHxtzi0X0hTJhHdAL1m0L+TSQM99Rp3RMHXeWIpc=
-X-Received: by 2002:a05:690c:5506:10b0:70f:9fcd:2eb8 with SMTP id
- 00721157ae682-71517150767mr4449327b3.1.1750973643064; Thu, 26 Jun 2025
- 14:34:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750973796; x=1751578596;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W+j37i1fQJjEw0H1aSmJvBx2p5eupo53+UaTsk0vY6U=;
+        b=HVY+2Q5DMDsaDjM3KODMmabuwC//EtyYyYU8+j2oAUseac7Yuk2cCKd8KgOTyYKF2J
+         jX5K31ZD2fxq5Jr06CxSAkmOBPzdz9Ulp4y16GgdhqxTxU0IpsNCOmSvy20FKZrFp5ZO
+         w+LgXsHG737UdkDBtAJ5gb7LZRAuw6ScysRKPemPbcZPpe8a6z2SGHB9kJGvu82dBkTi
+         5Y37XEvDJeNBJVZ0GYVVfTh7Nb2VMOukGuHEbqMQUBlu6392oEhq79MPlDTaOLuwmIJC
+         M8jxIypylnI+X8qO06iD34uuS8Bvpr7snGGMqGTGiWyx+J1GtpQfNX1oz4KHUFfKUOmU
+         17fg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9CJjWZX3AZuiW23uF63w7emWgs8lzES/r5Kqsu54LWCt/qddbgBFJTZdu8zgu1MikJxotcfXDzOPXpcQ=@vger.kernel.org, AJvYcCVxttK8b4OO1PfivWAyP4ynw4IpTBWsGDDMpuR6P33CtFAumGLwgqclWaUamzi7COYsFWpmMN4aIrI1OYw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykOBLtuP9TPVCVK2axA2kAmhJQCkgiAISMLNd8mLS5g8nnaosU
+	2Kv4toRHfMNKhG/a7PPe7M4ryLbxag1LuIp+oGQxxZrY0k48MAx3IaEWgFkSOj5LFVo=
+X-Gm-Gg: ASbGnctvl8SGpFrdv9yqDvuo5Jft65AeXY4vINug6nyTE72bCuQCkLDVaA0NPx49JVa
+	CBPTsw9e0WACXrWidFixQE9RCGmM4rDFm/+WCZFNR0XimYLa0UeO7o5jw+ZZ2/1wQ5l7+23OB7X
+	U2T5WYojV+de3J9XIPmE5FkXYo78RNN0bm4IwWXMjYklzURuW4SBPVD0C13If8ZyiD8GNV5WzwS
+	WKwdC6wAF3XT6h9p2DRL6lL1FvbDlY3Mu5KQ+dVjsjKvm7ehpoIyKAAwotDY+D3DqNF1VzSBUhC
+	oBCLAa7Nda6HBcuFrQzyIu/LhPGTi2tS4MBbKmtFliffUdJVmXWQYVX7SLkBmqgIcQW6HbjJCWv
+	Rru+R8aFUTi992YYD6iw=
+X-Google-Smtp-Source: AGHT+IFPc79JkbG4o0IdxkbE02KBcKRJMbsd81LuOuehcXEKd0pKWVQWLlvKM5he1p0S/1+1IZmNKg==
+X-Received: by 2002:a05:6a00:1a8f:b0:748:f6a0:7731 with SMTP id d2e1a72fcca58-74af6fcd495mr946707b3a.23.1750973795702;
+        Thu, 26 Jun 2025 14:36:35 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14d:4c64:81ec:4ff:1626:32b1:712a])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af57ee760sm535661b3a.155.2025.06.26.14.36.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 14:36:35 -0700 (PDT)
+From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+To: vkoul@kernel.org,
+	yung-chuan.liao@linux.intel.com,
+	pierre-louis.bossart@linux.dev,
+	sanyog.r.kale@intel.com
+Cc: ~lkcamp/patches@lists.sr.ht,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] soundwire: debugfs: move debug statement outside of error handling
+Date: Thu, 26 Jun 2025 18:33:14 -0300
+Message-ID: <20250626213628.9575-1-rodrigo.gobbi.7@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625170218.545654-1-l.rubusch@gmail.com> <20250625170218.545654-2-l.rubusch@gmail.com>
- <8eb80697-e76e-412d-82a9-5a95d4ca4f2a@gmail.com> <20250626192802.0079d579@jic23-huawei>
-In-Reply-To: <20250626192802.0079d579@jic23-huawei>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Thu, 26 Jun 2025 23:33:25 +0200
-X-Gm-Features: Ac12FXxUxKxWoNM9LYSC-0yDaqFLVCO8AQYpvZo-XuCNf2T_QtZ61Qn_mKaSh7E
-Message-ID: <CAFXKEHZ8zDEXLT57BD5Dg1mTN-Gj0Z7uhxX5Xx=XH0wFeAhe6g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] iio: adc: ti-adc128s052: add support for adc121s021
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Sukrut Bellary <sbellary@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi guys,
+The start_t and finish_t variables are not properly initialized
+if errors happens over request_firmware actions.
+This was also detected by smatch:
 
-I absolutely agree and won't send further versions of this.
+drivers/soundwire/debugfs.c:301 cmd_go() error: uninitialized symbol 'finish_t'.
+drivers/soundwire/debugfs.c:301 cmd_go() error: uninitialized symbol 'start_t'.
 
-Hi Sukrut, if you find some possibility to use it, great. If not, nevermind=
-.
+Move the debug statement outside of firmware error handling.
 
-Thank you all, for the feedback. One small question below.
+Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/linux-sound/0db6d0bf-7bac-43a7-b624-a00d3d2bf829@stanley.mountain/
+Fixes: bb5cb09eedce ("soundwire: debugfs: add interface for BPT/BRA transfers")
+---
+Changelog:
+v3: removed superfluous initialization of ktime_t vars
+v2: https://lore.kernel.org/linux-sound/aF2Em76RGWVpJfg-@vaman/T/#mb875b96a6dc1bd18a939caf1d3288b3b3b5e78c3
+v1: https://lore.kernel.org/linux-sound/20250617015230.54981-1-rodrigo.gobbi.7@gmail.com/#t
+---
+ drivers/soundwire/debugfs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On Thu, Jun 26, 2025 at 8:28=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
- wrote:
->
-> On Thu, 26 Jun 2025 08:24:41 +0300
-> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
->
-> > Hi Lothar,
-> >
-> > On 25/06/2025 20:02, Lothar Rubusch wrote:
-> > > Add support for the single channel variant(s) of this ADC.
-> > >
-> > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> >
-> > Thanks for this addition. In principle, this looks good to me but I am
-> > afraid there is another colliding series being worked on:
-> >
-> > https://lore.kernel.org/all/20250614091504.575685-3-sbellary@baylibre.c=
-om/
-> >
-> > Maybe you can align the effort with Sukrut?
-> +CC Sukrut.
->
+diff --git a/drivers/soundwire/debugfs.c b/drivers/soundwire/debugfs.c
+index 3099ea074f10..230a51489486 100644
+--- a/drivers/soundwire/debugfs.c
++++ b/drivers/soundwire/debugfs.c
+@@ -291,6 +291,9 @@ static int cmd_go(void *data, u64 value)
+ 
+ 	finish_t = ktime_get();
+ 
++	dev_dbg(&slave->dev, "command completed, num_byte %zu status %d, time %lld ms\n",
++		num_bytes, ret, div_u64(finish_t - start_t, NSEC_PER_MSEC));
++
+ out:
+ 	if (fw)
+ 		release_firmware(fw);
+@@ -298,9 +301,6 @@ static int cmd_go(void *data, u64 value)
+ 	pm_runtime_mark_last_busy(&slave->dev);
+ 	pm_runtime_put(&slave->dev);
+ 
+-	dev_dbg(&slave->dev, "command completed, num_byte %zu status %d, time %lld ms\n",
+-		num_bytes, ret, div_u64(finish_t - start_t, NSEC_PER_MSEC));
+-
+ 	return ret;
+ }
+ DEFINE_DEBUGFS_ATTRIBUTE(cmd_go_fops, NULL,
+-- 
+2.49.0
 
-Hi Matti,
-
-Perhaps just one little question here to you. You used the regulator
-name "vdd" where others
-before used "vref". At the end, this seems to be pretty free,
-depending on how it is set in the
-DT or how you name it in the DT (in my case it was "5v0", but I wanted
-to keep the convention,
-if so).
-
-So, my question is, is there a naming convention what to take for a,
-say, default
-regulator naming or fixed 5V regulator?
-
-Best,
-L
-
-
-
-> >
-> > What I specifically like (and think is the right thing to do) in
-> > Sukrut's series is replacing the 'adc122s021_channels' -array with
-> > individual structures. In my opinion the array is just unnecessary
-> > complexity and individual structures are simpler.
-> >
-> > Other than that, this looks good to me.
->
->
-> Sukrut, perhaps you could add this to the end of your series, rebased
-> to those changes?  Would save a synchronization step for your v5 (and
-> later if needed)
->
-> No problem if not, but I agree with Matti that we should take your
-> series first.
->
-> Jonathan
->
->
-> >
-> > Yours,
-> >       -- Matti
-> >
-> >
-> > > ---
-> > >   drivers/iio/adc/ti-adc128s052.c | 17 ++++++++++++++++-
-> > >   1 file changed, 16 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc=
-128s052.c
-> > > index 1b46a8155803..cf271c39e663 100644
-> > > --- a/drivers/iio/adc/ti-adc128s052.c
-> > > +++ b/drivers/iio/adc/ti-adc128s052.c
-> > > @@ -7,6 +7,7 @@
-> > >    * https://www.ti.com/lit/ds/symlink/adc128s052.pdf
-> > >    * https://www.ti.com/lit/ds/symlink/adc122s021.pdf
-> > >    * https://www.ti.com/lit/ds/symlink/adc124s021.pdf
-> > > + * https://www.ti.com/lit/ds/symlink/adc121s021.pdf
-> > >    */
-> > >
-> > >   #include <linux/cleanup.h>
-> > > @@ -110,6 +111,10 @@ static const struct iio_chan_spec adc128s052_cha=
-nnels[] =3D {
-> > >     ADC128_VOLTAGE_CHANNEL(7),
-> > >   };
-> > >
-> > > +static const struct iio_chan_spec adc121s021_channels[] =3D {
-> > > +   ADC128_VOLTAGE_CHANNEL(0),
-> > > +};
-> > > +
-> > >   static const struct iio_chan_spec adc122s021_channels[] =3D {
-> > >     ADC128_VOLTAGE_CHANNEL(0),
-> > >     ADC128_VOLTAGE_CHANNEL(1),
-> > > @@ -143,6 +148,10 @@ static const struct adc128_configuration adc128_=
-config[] =3D {
-> > >             .refname =3D "vdd",
-> > >             .other_regulators =3D &bd79104_regulators,
-> > >             .num_other_regulators =3D 1,
-> > > +   }, {
-> > > +           .channels =3D adc121s021_channels,
-> > > +           .num_channels =3D ARRAY_SIZE(adc121s021_channels),
-> > > +           .refname =3D "vref",
-> > >     },
-> > >   };
-> >
-> > I'd love seeing this array split to individual structs.
-> >
-> > >
-> > > @@ -207,7 +216,10 @@ static const struct of_device_id adc128_of_match=
-[] =3D {
-> > >     { .compatible =3D "ti,adc124s051", .data =3D &adc128_config[2] },
-> > >     { .compatible =3D "ti,adc124s101", .data =3D &adc128_config[2] },
-> > >     { .compatible =3D "rohm,bd79104", .data =3D &adc128_config[3] },
-> > > -   { }
-> > > +   { .compatible =3D "ti,adc121s021", .data =3D &adc128_config[4] },
-> > > +   { .compatible =3D "ti,adc121s051", .data =3D &adc128_config[4] },
-> > > +   { .compatible =3D "ti,adc121s101", .data =3D &adc128_config[4] },
-> > > +   { },
-> > >   };
-> > >   MODULE_DEVICE_TABLE(of, adc128_of_match);
-> > >
-> > > @@ -220,6 +232,9 @@ static const struct spi_device_id adc128_id[] =3D=
- {
-> > >     { "adc124s051", (kernel_ulong_t)&adc128_config[2] },
-> > >     { "adc124s101", (kernel_ulong_t)&adc128_config[2] },
-> > >     { "bd79104", (kernel_ulong_t)&adc128_config[3] },
-> > > +   { "adc121s021", (kernel_ulong_t)&adc128_config[4] },
-> > > +   { "adc121s051", (kernel_ulong_t)&adc128_config[4] },
-> > > +   { "adc121s101", (kernel_ulong_t)&adc128_config[4] },
-> > >     { }
-> > >   };
-> > >   MODULE_DEVICE_TABLE(spi, adc128_id);
-> >
->
