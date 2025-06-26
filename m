@@ -1,67 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABBD25F78D;
-	Thu, 26 Jun 2025 08:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13526256C73;
+	Thu, 26 Jun 2025 08:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750925637; cv=none; b=EelqM2QuVh2DlpSTj2HQnCbqOaT8q2iL2tXkBq3zPDEDr9901AV5aAAflYNmqtPE4IpuMX1OZg0ezLojGoho9XMdMHf8dsvnuDN4XkXktiE9cv8hdkGUTLq1XmmVRPOCuz/nK3YYQPXZHwfcXkVZaXQQlxYjoUIPmMpzPtEQJjw=
+	t=1750925671; cv=none; b=M9B7wZaQw4dSUgcZuJTD/aSq2I/WMkkB9/iz1wgdHrWgEcbOAmbV9tNpIVmynb5FYBkF3atHL0srUTe74qr3VraGF1pYOU0j52vaWS8gwp+waFPJPBTGjuuQ7vwfbDhVfb6HB0K3+Mg6iZABCciZW/2Wygl8ODxN8nRTs2oW0H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750925637; c=relaxed/simple;
-	bh=RtMlJEGnwJcXwbx5tmVTpg7dpV3ohe25eAqzrcO2vOE=;
+	s=arc-20240116; t=1750925671; c=relaxed/simple;
+	bh=bKBKj/g6dLdmBtJ1nKja2cElFDqCQJuZbjQv2dPcf0k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KN0/icCD05Xbvukl1vEKGGM6PCoJbeR6e1qxX9CIV8t73Tvlu8xq4cOrCUVhCtdbuCVRq0cp/2vNpt+1rBCtpfsj40Nep4Pi/OVyUjKEMITWf2TJ+zcdWnnjPlXXjQDdGhQDrBZHGVdikvB5Co+LnKtejA5EGfKO1SSAyBfpl6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gf4RJEbh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gf4RJEbh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 517DAC4CEEF;
-	Thu, 26 Jun 2025 08:13:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750925637;
-	bh=RtMlJEGnwJcXwbx5tmVTpg7dpV3ohe25eAqzrcO2vOE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Gf4RJEbh1bU6CjFcqFyfrh1BM6hLKCj/Ki4yBrZXB7u8EsthzzTwr8QM4uHmD0pUG
-	 YUvZc0lPp+5xUuUVjq0iQoqlWTbzQ7MP57eK221NHaxFfoW8SReKJn1HLA0E8XQo/N
-	 M9KAUnkhjyumg/HK8E6v+6aoIekQTpFC63wyuSQA39Oux9NoO5Vkl/mcOwV7aUEytO
-	 xxTenjKFlrj/2k4v0o+NLY76txtDDhhLPCw4O82PC1JIUwgo8XXDw/gZd7h1z5qOzb
-	 U26VNPcA/BBM9mVYVPo0g2nZ+Ty5faotVIMZ9guMWFk9kLaw4iQu0x1IacQKYlroBH
-	 3GOACjN+j2g7g==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uUhjT-00000004svu-1oUW;
-	Thu, 26 Jun 2025 10:13:19 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Akira Yokosawa" <akiyks@gmail.com>,
-	"Breno Leitao" <leitao@debian.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	"Donald Hunter" <donald.hunter@gmail.com>,
-	"Eric Dumazet" <edumazet@google.com>,
-	"Ignacio Encinas Rubio" <ignacio@iencinas.com>,
-	"Jan Stancek" <jstancek@redhat.com>,
-	"Marco Elver" <elver@google.com>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	"Paolo Abeni" <pabeni@redhat.com>,
-	"Randy Dunlap" <rdunlap@infradead.org>,
-	"Ruben Wauters" <rubenru09@aol.com>,
-	"Shuah Khan" <skhan@linuxfoundation.org>,
-	Jakub Kicinski <mchehab+huawei@kernel.org>,
-	Simon Horman <mchehab+huawei@kernel.org>,
-	joel@joelfernandes.org,
-	linux-kernel-mentees@lists.linux.dev,
+	 MIME-Version; b=d+e/AqS8YKpvX8moWUlm3Qr3pJf++yRkmWCN/WQH4a2yyj46wJ9+1XrLDdyZ8sAUMzfaBgS7asGfR9k3VK8AJKEV5VPqPMWDj0QHyfVw6knG7bgUwxJMVPyYkzMJKRDKJ85vMP2bldkPTX/Wh8Uba5s89CzOnhf2n4kEOc7IFz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id 02B2E1F0004B;
+	Thu, 26 Jun 2025 08:14:27 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id 6B57DAC7F8A; Thu, 26 Jun 2025 08:14:27 +0000 (UTC)
+X-Spam-Level: *
+Received: from localhost.localdomain (unknown [192.168.1.65])
+	by laika.paulk.fr (Postfix) with ESMTP id B8B27AC7F74;
+	Thu, 26 Jun 2025 08:09:41 +0000 (UTC)
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	lkmm@lists.linux.dev,
-	netdev@vger.kernel.org,
-	peterz@infradead.org,
-	stern@rowland.harvard.edu
-Subject: [PATCH v8 08/13] tools: ynl_gen_rst.py: drop support for generating index files
-Date: Thu, 26 Jun 2025 10:13:04 +0200
-Message-ID: <95d1ed00026acbe425f036f860f7bcd1a18ce98b.1750925410.git.mchehab+huawei@kernel.org>
+	linux-gpio@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Paul Kocialkowski <paulk@sys-base.io>
+Subject: [PATCH 4/5] arm64: dts: allwinner: a100: Add EMAC support
+Date: Thu, 26 Jun 2025 10:09:22 +0200
+Message-ID: <20250626080923.632789-5-paulk@sys-base.io>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1750925410.git.mchehab+huawei@kernel.org>
-References: <cover.1750925410.git.mchehab+huawei@kernel.org>
+In-Reply-To: <20250626080923.632789-1-paulk@sys-base.io>
+References: <20250626080923.632789-1-paulk@sys-base.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,69 +57,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-As we're now using an index file with a glob, there's no need
-to generate index files anymore.
+The Allwinner A100/A133 Ethernet MAC (EMAC) is compatible with the A64
+one and needs access to the syscon register for control of the
+top-level integration of the unit.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
 ---
- tools/net/ynl/pyynl/ynl_gen_rst.py | 28 ----------------------------
- 1 file changed, 28 deletions(-)
+ .../arm64/boot/dts/allwinner/sun50i-a100.dtsi | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/tools/net/ynl/pyynl/ynl_gen_rst.py b/tools/net/ynl/pyynl/ynl_gen_rst.py
-index 010315fad498..90ae19aac89d 100755
---- a/tools/net/ynl/pyynl/ynl_gen_rst.py
-+++ b/tools/net/ynl/pyynl/ynl_gen_rst.py
-@@ -31,9 +31,6 @@ def parse_arguments() -> argparse.Namespace:
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+index 1c4e71b32911..205faa90d37b 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+@@ -420,6 +420,26 @@ i2c3: i2c@5002c00 {
+ 			#size-cells = <0>;
+ 		};
  
-     # Index and input are mutually exclusive
-     group = parser.add_mutually_exclusive_group()
--    group.add_argument(
--        "-x", "--index", action="store_true", help="Generate the index page"
--    )
-     group.add_argument("-i", "--input", help="YAML file name")
- 
-     args = parser.parse_args()
-@@ -63,27 +60,6 @@ def write_to_rstfile(content: str, filename: str) -> None:
-         rst_file.write(content)
- 
- 
--def generate_main_index_rst(parser: YnlDocGenerator, output: str) -> None:
--    """Generate the `networking_spec/index` content and write to the file"""
--    lines = []
--
--    lines.append(parser.fmt.rst_header())
--    lines.append(parser.fmt.rst_label("specs"))
--    lines.append(parser.fmt.rst_title("Netlink Family Specifications"))
--    lines.append(parser.fmt.rst_toctree(1))
--
--    index_dir = os.path.dirname(output)
--    logging.debug("Looking for .rst files in %s", index_dir)
--    for filename in sorted(os.listdir(index_dir)):
--        base, ext = os.path.splitext(filename)
--        if filename == "index.rst" or ext not in [".rst", ".yaml"]:
--            continue
--        lines.append(f"   {base}\n")
--
--    logging.debug("Writing an index file at %s", output)
--    write_to_rstfile("".join(lines), output)
--
--
- def main() -> None:
-     """Main function that reads the YAML files and generates the RST files"""
- 
-@@ -102,10 +78,6 @@ def main() -> None:
- 
-         write_to_rstfile(content, args.output)
- 
--    if args.index:
--        # Generate the index RST file
--        generate_main_index_rst(parser, args.output)
--
- 
- if __name__ == "__main__":
-     main()
++		emac: ethernet@5020000 {
++			compatible = "allwinner,sun50i-a100-emac",
++				     "allwinner,sun50i-a64-emac";
++			reg = <0x5020000 0x10000>;
++			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++			clocks = <&ccu CLK_BUS_EMAC>;
++			clock-names = "stmmaceth";
++			resets = <&ccu RST_BUS_EMAC>;
++			reset-names = "stmmaceth";
++			syscon = <&syscon>;
++			status = "disabled";
++
++			mdio: mdio {
++				compatible = "snps,dwmac-mdio";
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
+ 		ths: thermal-sensor@5070400 {
+ 			compatible = "allwinner,sun50i-a100-ths";
+ 			reg = <0x05070400 0x100>;
 -- 
 2.49.0
 
