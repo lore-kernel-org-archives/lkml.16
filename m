@@ -1,113 +1,172 @@
-Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80082264B3;
-	Thu, 26 Jun 2025 07:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23AB2367BA
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750922200; cv=none; b=hkZvQGP8SyLU7oZgWR6m3aKuqKnWPXmH3SbVCUZstVbDlbzjRVGkZdCIkvVAS3jB1QimvtXoK6va7wHW6YpU2j2Ny3tgM9iXP6Y5ZT2KkV0Ryt+BVLrdTZ2fXXd/pVmLKUSHiKBwSjO2NEV3khgACSa1SthH33JQZE3pRwJRqyQ=
+	t=1750922390; cv=none; b=FfTeUMLIJ1O/B8kFvI28hboEBN7NafLHo07EMVTTw1JlmC83LPravlMeGMIuiiIhy6r97pGgrIsCNwmlp9h3LPZCBq/tL8leK+MotHwaM3MtNaCKL0f+pKak0TgvmX9pOrTOHOvrwEjkrBZpCH2tqy7bYlAZ65Zf0MH+yDWmXts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750922200; c=relaxed/simple;
-	bh=0q2JKjk5rlpL1746jH/ubWzmc6KZ+IZsAj+d8WcyzPk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y/cNVh5fAKA2vRDcWU5WgRBXjVDPuGQ0U2cfvJLBb4EgWibYtEujG0JYLE4nvnbBfQRkXawqOLU7Hx7GZTgPNwa2ecy/p9Y2jEFou2qmnMO2WGOxSdC8Gh5RImjTCreWZ884fwFIX12xjQysZFbdRSiHi+2ziKQXO1Nl+99rueg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=WDgrXAck; arc=none smtp.client-ip=46.19.9.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
+	s=arc-20240116; t=1750922390; c=relaxed/simple;
+	bh=XEZqvWn7zIRA7zYRRi4aNQ2t9vdPXJsQBrABnusBxsk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OBzeCJyXmvJBOqgye2FD9SzwOzQRshj1yQ0VZueMLClTuaZMVb+1Z9ry+8Vx/MLLFJsQfhAukrigAvQCfRKS/aDp6H2PlvBc3MUqto3j7D2WkAoA1OAogFSQNXS06KF7Kb1pN77Fxq8423EatOLgYipCe5RiNlfTEgIRBw3bXPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WBAnZyhN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kTzYRbPB; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WN7/bq4o; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+lyEmxJR; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="WDgrXAck"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
-	s=default; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Op03+qucqVF+nZEGn/AJUKWrnarNtLlz6bXQbzmKHKo=; b=WDgrXAck+b+Fb89P+1pfJvOa7o
-	hkmcyJOlDNvaik2y7zg4BIznyeoU9Q/YtKp2tiFkrZ4F4K5NjBZy/g35m4TcKR3yTQ1lncUjCc3Ht
-	8U44m50bQiR7evULsQRTR3QdY7cQJZcLTcFveMPQV7z9DqZTRxV6b6QDTd2t3O2UpHd96SplZ5jnM
-	gLM9oHvNOaat6fwSKMVV+tl0nj39o9WKEJ9nq3ZP52FekEmiRyY0ns5Vm0d82dJKI1guYi//iIuXh
-	hgyTd9n2oX5IfLy4I+SwCPtX8KCrhidrJbpKiD7TqIQs3SnA+jg/NYn7wYiqNrrDO1GQKbVKbTugO
-	PYucaynw==;
-Received: from [89.212.21.243] (port=34404 helo=localhost.localdomain)
-	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <primoz.fiser@norik.com>)
-	id 1uUgqU-00D1LJ-2V;
-	Thu, 26 Jun 2025 09:16:29 +0200
-From: Primoz Fiser <primoz.fiser@norik.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	upstream@lists.phytec.de
-Subject: [PATCH v2] arm64: dts: freescale: imx93-phycore-som: Add watchdog ext-reset-output pin
-Date: Thu, 26 Jun 2025 09:16:29 +0200
-Message-Id: <20250626071629.3380656-1-primoz.fiser@norik.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WBAnZyhN";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kTzYRbPB";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WN7/bq4o";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+lyEmxJR"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id AE1F421192;
+	Thu, 26 Jun 2025 07:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750922387; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=98T2iTFRy6OGY3MA6c3ijODx7Lf2ZjSGvky10urQJjU=;
+	b=WBAnZyhNyB5IDnZk/gCcalA6K3+HBb+45GAZDm/NIyax5R5omSwbV0xgZzYex9r6e+ZFLo
+	gSn2dNGXmO9oN1oAR73h4bs5QOZI8xJKkJEDlzyL5dnzTxcRZGkjpS83k5iaoTxoL6h+vb
+	pcQk0m4XVdcx4oMYU9E9WCLTwA3Up0Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750922387;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=98T2iTFRy6OGY3MA6c3ijODx7Lf2ZjSGvky10urQJjU=;
+	b=kTzYRbPB+Wm/2lvRrkCeZ+qXxD7+OCmEj67eLrq58gFoZqFbip1zSz7fLXh/KQ04C52Osr
+	L1TAgHmVsvbvHrAw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="WN7/bq4o";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=+lyEmxJR
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750922385; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=98T2iTFRy6OGY3MA6c3ijODx7Lf2ZjSGvky10urQJjU=;
+	b=WN7/bq4ouRPZR98HO4fEWl0wHTYQUAW2NhWSeWiUt/xxBnIw2pB8YLCWM79KjEVDnHWxRk
+	c1tzuWylwsfSJlVdNz9UmvT88exUSRmarsfP03yF6ECW3AnclDPgAIRkwIhE3+TFhx69Kb
+	Gv1aZHUu5IUe66qAE3FiHZMMAb6H+Bs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750922385;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=98T2iTFRy6OGY3MA6c3ijODx7Lf2ZjSGvky10urQJjU=;
+	b=+lyEmxJRN1MpTZ7uUyrEb/VQ5QimSor3OkzEgr1430XiU3HGgi3dSY02lYZM1kcijDZzWd
+	qMXDGxRUQe0FmpBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9CAA313188;
+	Thu, 26 Jun 2025 07:19:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id R7wyJpH0XGihJwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 26 Jun 2025 07:19:45 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 57852A0953; Thu, 26 Jun 2025 09:19:45 +0200 (CEST)
+Date: Thu, 26 Jun 2025 09:19:45 +0200
+From: Jan Kara <jack@suse.cz>
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+Cc: Jan Kara <jack@suse.cz>, Pankaj Raghav <p.raghav@samsung.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, mcgrof@kernel.org, Christian Brauner <brauner@kernel.org>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, gost.dev@samsung.com, 
+	Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v3] fs/buffer: remove the min and max limit checks in
+ __getblk_slow()
+Message-ID: <lpf4hlxv2e3dd527xmbueuquvo37c23e7mfuiedrjaullr3ilk@6ifh3tkjgyp2>
+References: <20250625083704.167993-1-p.raghav@samsung.com>
+ <u7fadbfaq5wm7nqhn4yewbn43h3ahxuqm536ly473uch2v5qfl@hpgo2dfg77jp>
+ <jbtntrppqjzaq6tdfzvwojjsnpacrdmg74vcvab4dc2z6hlhnl@ntotjsab5ice>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel.siel.si
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - norik.com
-X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
-X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <jbtntrppqjzaq6tdfzvwojjsnpacrdmg74vcvab4dc2z6hlhnl@ntotjsab5ice>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: AE1F421192
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DWL_DNSWL_BLOCKED(0.00)[suse.cz:dkim];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,samsung.com:email,suse.cz:dkim,suse.cz:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:email];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Score: -4.01
+X-Spam-Level: 
 
-On phyCORE-i.MX93 SoM, the SoC WDOG_ANY output line is connected to the
-external pca9451a PMIC WDOG_B input. Apply pinctrl and set the property
-"fsl,ext-reset-output" for watchdog to trigger board reset via PMIC on
-timeout/reset.
+On Wed 25-06-25 12:53:54, Pankaj Raghav (Samsung) wrote:
+> On Wed, Jun 25, 2025 at 12:16:49PM +0200, Jan Kara wrote:
+> > On Wed 25-06-25 10:37:04, Pankaj Raghav wrote:
+> > > All filesystems will already check the max and min value of their block
+> > > size during their initialization. __getblk_slow() is a very low-level
+> > > function to have these checks. Remove them and only check for logical
+> > > block size alignment.
+> > > 
+> > > Suggested-by: Matthew Wilcox <willy@infradead.org>
+> > > Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+> > 
+> > I know this is a bikeshedding but FWIW this is in the should never trigger
+> > territory so I'd be inclined to just make it WARN_ON_ONCE() and completely
+> > delete it once we refactor bh apis to make sure nobody can call bh
+> > functions with anything else than sb->s_blocksize.
+> > 
+> Something like this:
+> 
+> diff --git a/fs/buffer.c b/fs/buffer.c
+> index a1aa01ebc0ce..a49b4be37c62 100644
+> --- a/fs/buffer.c
+> +++ b/fs/buffer.c
+> @@ -1122,10 +1122,9 @@ __getblk_slow(struct block_device *bdev, sector_t block,
+>  {
+>         bool blocking = gfpflags_allow_blocking(gfp);
+>  
+> -       if (unlikely(size & (bdev_logical_block_size(bdev) - 1))) {
+> +       if (WARN_ON_ONCE(size & (bdev_logical_block_size(bdev) - 1))) {
+>                 printk(KERN_ERR "getblk(): block size %d not aligned to logical block size %d\n",
+>                        size, bdev_logical_block_size(bdev));
+> -               dump_stack();
+>                 return NULL;
+>         }
+> 
+> I assume we don't need the dump_stack() anymore as we will print them
+> with WARN_ON_ONCE anyway?
 
-Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
----
-Changes in v2:
-- reword commit title as suggested by Frank Li in v1
+Correct. Thanks! Feel free to add:
 
-Link to v1: https://lore.kernel.org/all/20250624061323.601550-1-primoz.fiser@norik.com/
+Reviewed-by: Jan Kara <jack@suse.cz>
 
- arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-index 5ee52774e7bf..729c26f9ac94 100644
---- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-@@ -191,6 +191,9 @@ &usdhc1 {
- 
- /* Watchdog */
- &wdog3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
- 	status = "okay";
- };
- 
-@@ -279,4 +282,10 @@ MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x400013be
- 			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
- 		>;
- 	};
-+
-+	pinctrl_wdog: wdoggrp {
-+		fsl,pins = <
-+			MX93_PAD_WDOG_ANY__WDOG1_WDOG_ANY	0x31e
-+		>;
-+	};
- };
+								Honza
 -- 
-2.34.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
