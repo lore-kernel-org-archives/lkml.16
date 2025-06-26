@@ -1,91 +1,197 @@
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E56E19F41C;
-	Thu, 26 Jun 2025 16:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A51C18871F
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750954586; cv=none; b=B6ffwTgC2BaaJtCVdBnCqb3Wh8nFONdxTgRbR0YBUbofe0NSMImv6dB430oGXeXDXCztySQc7lITMR/V3zaWLrFj/PvhGkI17RhbeACB9Xnn/c/ALGNglhKtyxDvgG6KhpVLHOgDC/Svz+ZB9WUdxeXZ3AnThM6YkcfGBAvWGT0=
+	t=1750954657; cv=none; b=DMMouy+QZzVAzetNorNIFXA/BDQMP7av7Z8OubV3crWsGQRDwqWH7tltruf1soOxV/Tm7xnsrHvBgx6Q6vbzv5VmQ0rK4MiLA5Hk/gNNy90c4TdxkYxPA9506iPVE73mt/CNbeWuEfnTUKKk80JtSGF/4Ky18BkHV1ZBhsB+lVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750954586; c=relaxed/simple;
-	bh=P+DQ3JT86pgMk/0nGBuZXsHt2n8S/5pukRAkqwLdVZg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tf07KtThOZhBoFA1DXM5vhO4X1MMcDvO91wiYAgVSCL0zKZhq7FFjJTj1BFB33mOo6xRdOFFeyOeZsSQnjLZTcpFQ36+FAwH69ZWbBxEsDDPo/mn6nPZ24GFcJTJVpwDvinPoTkgqQxni2bRebdR7uDiamjR6mscflkEOyK6YzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=gUI/M8XQ; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1750954657; c=relaxed/simple;
+	bh=H49TY38qk7RAZjC4aU5etaH/Yaa+mCiifkqAhIxkVnI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ZeWM41Ax9fsFWFv7pyupOr6/rTKqCwKzvh3ERNKMU4V8jlwDwbLn2XSSPdD/cUzZW2IYIQYghj1q1NdopMAbzPBT9N2qO+hSNeY+6abJfKSLQVz1wgyB+gu6f2wU38fLgGAWKoZGASSzRS0pKY968TVZ9u9Zi8Fwc8aJnK70Vro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=25kOulNA; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="gUI/M8XQ"
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4bSkMX0g6czlvfGx;
-	Thu, 26 Jun 2025 16:16:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1750954582; x=1753546583; bh=jRugcoVYqOz0MeUr2LfYYHnP
-	iwWrfuZlPKBUG26FCi4=; b=gUI/M8XQBKpjZYBOlc9pbYdFH6gtOGwBBVJWPxVD
-	oE9SK2G5Oli9e9jrmNeZ17tfaScWCTU4goFLXNmN/8Ddv72mSoY3ySXajk8VzOWU
-	sgAMOXpwgon16qiDyfJAztW6iihWh52M+BGnFD6zvnkhN3WjdL5zKCd2oTXnYnUz
-	B35RwrLB231yoNM8jxiqjY9OTkbR2DmVX2qAxKXB0phBw4/IP9fjShPwz5JxHXZZ
-	5TE4m9bUA3RInXSM4PyUZPWRHF80VJ8Vs5NQ72JObHZJiO3rU76laHcgFL4MNNdL
-	SLg6dMKfm8gw0WB5cA9reOzOa9Osv6IdzUXsrTzTkMn7cg==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id s0ysEJHGUDHd; Thu, 26 Jun 2025 16:16:22 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4bSkMQ53vqzlvfGp;
-	Thu, 26 Jun 2025 16:16:17 +0000 (UTC)
-Message-ID: <159d1b84-665f-4bc7-865c-59b15232a477@acm.org>
-Date: Thu, 26 Jun 2025 09:16:16 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="25kOulNA"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-31202bbaafaso1111511a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:17:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750954656; x=1751559456; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OUSYF6uddg/J1Cph/NK/Hlbf5Ti8UhmhK3Dy5+MrM/c=;
+        b=25kOulNA3deSEVqD6F+y0T/+2utypCCnW17h6hK54xQO+c1UWTSPWIOwOtNvyfYHCp
+         tBDSmBGr0OWkdej5r/b6uT1OHtvdGWEKOSjJZebMYsk89+itYIrfsDbugujVaUz6NXM4
+         dQKqsOOam7ihSEeGxVxIZ/oM6W4ZzzE3/sjEuTCA4UMVAeL3pJo2oCC+2a/p3/WyMGPx
+         o5AZX6nJY1crvmvoiRtPsf8tg0945KRQ/IF9qHfKQC3kQyE2BZGhokP9LO8dLHNnUxRg
+         t6ddU2lypt1aMJRpqGi5bjNzeW410K3CsJPE/Lq4aWmNH/mBlg0bXu6oS5tWJqe+ufBU
+         fs6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750954656; x=1751559456;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=OUSYF6uddg/J1Cph/NK/Hlbf5Ti8UhmhK3Dy5+MrM/c=;
+        b=sEI3dCzkg8XVEyzozp8MGSNERpnwok9vOAqiHPikEIA2DCpxbE2SfHUj5ZuEWyDZKO
+         3VsHEW8o36rq+t041mVlOxgTaojdfhBknVjtRxgh+YYszU7odFkMCbRe+pr3diPX8se4
+         2CoNuQudo1JkG7tot7hNgqweS4Lt3FO1pRAkbVLF0ZIlsxmU/A1l68o4tkByw3XX1Xt+
+         44hpQXWgCKuMrhdlOjABJWTtxCCjbcqagmzXQ5qoF8am7b4jivkbZeWodTqq6lv+BwB0
+         /pzHmOl15b21yqsjuZp8oYy0RKwzijfYn/dubyggI+Z7JpwBQCHHeQpWVmzMBUkXjl+w
+         jzPg==
+X-Forwarded-Encrypted: i=1; AJvYcCWbmrRf2YJIFj/Md3BHvQxdbVvMsYhkc1WeJIX4j2k8Oe9UK/dYURShrllqYlRk2X02l4L/1wYNKYxNfY8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/tYIccRIxedhU+KHvnJaIdgauEwpLzEfVKHYAZYsjx+gcW0Xz
+	TVhfFG3ynK0g0np1iqGRY6fioNsC5DW8QrKCOB1+o1J7FEADnyrdDVJWnUIIhQ6lSeZB+AkYcMk
+	WB0IlMg==
+X-Google-Smtp-Source: AGHT+IEL84+fyvijfqFOjED5E3i8DGwaB2WKlidAkoQbRibNM2YrvFmpQ+5rdiMhDDBywhNyf/wsjOgGjp4=
+X-Received: from pjbsw14.prod.google.com ([2002:a17:90b:2c8e:b0:312:4b0b:a94])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2790:b0:312:1c83:58e7
+ with SMTP id 98e67ed59e1d1-315f25e3043mr10261950a91.1.1750954655843; Thu, 26
+ Jun 2025 09:17:35 -0700 (PDT)
+Date: Thu, 26 Jun 2025 09:17:34 -0700
+In-Reply-To: <17b45add9debcc226f515e5d8bb31c508576fa1e.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scsi: Format scsi_track_queue_full() return values as
- bullet list
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux SCSI <linux-scsi@vger.kernel.org>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Rob Landley <rob@landley.net>
-References: <20250626041857.44259-2-bagasdotme@gmail.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250626041857.44259-2-bagasdotme@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250610232010.162191-1-seanjc@google.com> <20250610232010.162191-9-seanjc@google.com>
+ <17b45add9debcc226f515e5d8bb31c508576fa1e.camel@redhat.com>
+Message-ID: <aF1yni8U6XNkyfRf@google.com>
+Subject: Re: [PATCH v6 8/8] KVM: VMX: Preserve host's DEBUGCTLMSR_FREEZE_IN_SMM
+ while running the guest
+From: Sean Christopherson <seanjc@google.com>
+To: mlevitsk@redhat.com
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Adrian Hunter <adrian.hunter@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/25/25 9:18 PM, Bagas Sanjaya wrote:
-> - * Returns:	0 - No change needed, >0 - Adjust queue depth to this new depth,
-> - * 		-1 - Drop back to untagged operation using host->cmd_per_lun
-> - * 			as the untagged command depth
-> + * Returns:	* 0 - No change needed
-> + *		* >0 - Adjust queue depth to this new depth,
-> + * 		* -1 - Drop back to untagged operation using host->cmd_per_lun
-> + * 		  as the untagged command depth
->    *
->    * Lock Status:	None held on entry
->    *
+On Tue, Jun 24, 2025, mlevitsk@redhat.com wrote:
+> On Tue, 2025-06-10 at 16:20 -0700, Sean Christopherson wrote:
+> > diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> > index c20a4185d10a..076af78af151 100644
+> > --- a/arch/x86/kvm/vmx/vmx.h
+> > +++ b/arch/x86/kvm/vmx/vmx.h
+> > @@ -419,12 +419,25 @@ bool vmx_is_valid_debugctl(struct kvm_vcpu *vcpu,=
+ u64 data, bool host_initiated)
+> > =C2=A0
+> > =C2=A0static inline void vmx_guest_debugctl_write(struct kvm_vcpu *vcpu=
+, u64 val)
+> > =C2=A0{
+> > +	WARN_ON_ONCE(val & DEBUGCTLMSR_FREEZE_IN_SMM);
+> > +
+> > +	val |=3D vcpu->arch.host_debugctl & DEBUGCTLMSR_FREEZE_IN_SMM;
+> > =C2=A0	vmcs_write64(GUEST_IA32_DEBUGCTL, val);
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0static inline u64 vmx_guest_debugctl_read(void)
+> > =C2=A0{
+> > -	return vmcs_read64(GUEST_IA32_DEBUGCTL);
+> > +	return vmcs_read64(GUEST_IA32_DEBUGCTL) & ~DEBUGCTLMSR_FREEZE_IN_SMM;
+> > +}
+> > +
+> > +static inline void vmx_reload_guest_debugctl(struct kvm_vcpu *vcpu)
+> > +{
+> > +	u64 val =3D vmcs_read64(GUEST_IA32_DEBUGCTL);
+> > +
+> > +	if (!((val ^ vcpu->arch.host_debugctl) & DEBUGCTLMSR_FREEZE_IN_SMM))
+> > +		return;
+> > +
+> > +	vmx_guest_debugctl_write(vcpu, val & ~DEBUGCTLMSR_FREEZE_IN_SMM);
+> > =C2=A0}
+>=20
+>=20
+> Wouldn't it be better to use kvm_x86_ops.HOST_OWNED_DEBUGCTL here as well
+> to avoid logic duplication?
 
-Here is an example from Documentation/doc-guide/kernel-doc.rst:
+Hmm, yeah.  I used DEBUGCTLMSR_FREEZE_IN_SMM directly to avoid a memory loa=
+d
+just to get at a constant literal.
 
-       * Return:
-       * * %0		- OK to runtime suspend the device
-       * * %-EBUSY	- Device should not be runtime suspended
+What about this?  It doesn't completely dedup the logic, but I think it get=
+s us
+close enough to a single source of truth.
 
-Wouldn't it be better to follow that example and to move the list under
-'Returns:' and to move it more to the left?
+--
+From: Sean Christopherson <seanjc@google.com>
+Date: Thu, 26 Jun 2025 09:14:20 -0700
+Subject: [PATCH] KVM: VMX: Add a macro to track which DEBUGCTL bits are
+ host-owned
 
-Thanks,
+Add VMX_HOST_OWNED_DEBUGCTL_BITS to track which bits are host-owned, i.e.
+need to be preserved when running the guest, to dedup the logic without
+having to incur a memory load to get at kvm_x86_ops.HOST_OWNED_DEBUGCTL.
 
-Bart.
+No functional change intended.
+
+Suggested-by: Maxim Levitsky <mlevitsk@redhat.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/vmx/main.c |  2 +-
+ arch/x86/kvm/vmx/vmx.h  | 12 +++++++-----
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
+index 8c6435fdda18..dbab1c15b0cd 100644
+--- a/arch/x86/kvm/vmx/main.c
++++ b/arch/x86/kvm/vmx/main.c
+@@ -883,7 +883,7 @@ struct kvm_x86_ops vt_x86_ops __initdata =3D {
+ 	.vcpu_load =3D vt_op(vcpu_load),
+ 	.vcpu_put =3D vt_op(vcpu_put),
+=20
+-	.HOST_OWNED_DEBUGCTL =3D DEBUGCTLMSR_FREEZE_IN_SMM,
++	.HOST_OWNED_DEBUGCTL =3D VMX_HOST_OWNED_DEBUGCTL_BITS,
+=20
+ 	.update_exception_bitmap =3D vt_op(update_exception_bitmap),
+ 	.get_feature_msr =3D vmx_get_feature_msr,
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 87174d961c85..d3389baf3ab3 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -410,27 +410,29 @@ void vmx_update_cpu_dirty_logging(struct kvm_vcpu *vc=
+pu);
+ u64 vmx_get_supported_debugctl(struct kvm_vcpu *vcpu, bool host_initiated)=
+;
+ bool vmx_is_valid_debugctl(struct kvm_vcpu *vcpu, u64 data, bool host_init=
+iated);
+=20
++#define VMX_HOST_OWNED_DEBUGCTL_BITS	(DEBUGCTLMSR_FREEZE_IN_SMM)
++
+ static inline void vmx_guest_debugctl_write(struct kvm_vcpu *vcpu, u64 val=
+)
+ {
+-	WARN_ON_ONCE(val & DEBUGCTLMSR_FREEZE_IN_SMM);
++	WARN_ON_ONCE(val & VMX_HOST_OWNED_DEBUGCTL_BITS);
+=20
+-	val |=3D vcpu->arch.host_debugctl & DEBUGCTLMSR_FREEZE_IN_SMM;
++	val |=3D vcpu->arch.host_debugctl & VMX_HOST_OWNED_DEBUGCTL_BITS;
+ 	vmcs_write64(GUEST_IA32_DEBUGCTL, val);
+ }
+=20
+ static inline u64 vmx_guest_debugctl_read(void)
+ {
+-	return vmcs_read64(GUEST_IA32_DEBUGCTL) & ~DEBUGCTLMSR_FREEZE_IN_SMM;
++	return vmcs_read64(GUEST_IA32_DEBUGCTL) & ~VMX_HOST_OWNED_DEBUGCTL_BITS;
+ }
+=20
+ static inline void vmx_reload_guest_debugctl(struct kvm_vcpu *vcpu)
+ {
+ 	u64 val =3D vmcs_read64(GUEST_IA32_DEBUGCTL);
+=20
+-	if (!((val ^ vcpu->arch.host_debugctl) & DEBUGCTLMSR_FREEZE_IN_SMM))
++	if (!((val ^ vcpu->arch.host_debugctl) & VMX_HOST_OWNED_DEBUGCTL_BITS))
+ 		return;
+=20
+-	vmx_guest_debugctl_write(vcpu, val & ~DEBUGCTLMSR_FREEZE_IN_SMM);
++	vmx_guest_debugctl_write(vcpu, val & ~VMX_HOST_OWNED_DEBUGCTL_BITS);
+ }
+=20
+ /*
+
+base-commit: 6c7ecd725e503bf2ca69ff52c6cc48bb650b1f11
+--
