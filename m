@@ -1,80 +1,77 @@
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE44238141
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8698238141;
+	Thu, 26 Jun 2025 21:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750975029; cv=none; b=W4L+xeixd7VCV+fN7fzTlEqHQONsxcQS98Ktlwffg/r67IaXs/r7iQe1lDk3pBgN3BX0zriskhaStLsKGlYq1Ka2yCm7M4wjfFKVIxy9gCUWOj7BinpkrZc4YzLN+q4RJmc06peVs2ePqaxGIyt24sEE20DqnCOY7qmly/y+r6c=
+	t=1750975071; cv=none; b=NSR2PoYH3CfiM5z+ydvsRAFzwJwaAKP9xVHU/Fpi3StNk6pWT1NIansSD/OMi5o+obK5+JMwzAYgNvLl2HsCGhEdnhr10KclypYT8qdSi+xdKqEadfg/NcYAz8TPN/RIehPy5e1lcLpnPanW3OAoy7x0ITfzhfNMqJGYKyNU08c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750975029; c=relaxed/simple;
-	bh=Js1/egzHau8cSrZDfwFjSH4T2I0dLiLhlUWEZZFXbB8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NyFmCpMzHg+V1Iaj+wumUEOQGG5R92UaXZM5xvNtWdvrQJzRAvS56Gr0Tyj6jDgcOV0v+PVe774wfC5korWmzgVGyYhV3lMPwxlGhXPYxL5AVqPxUkWEoRD8Y4VhGGiefWLmRi6C6PonndamWZEL+avPEXdsxRsFp8pHUU+hMhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
-	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
-	id 7adf1deb-52d8-11f0-a5c4-005056bdf889;
-	Fri, 27 Jun 2025 00:56:58 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 27 Jun 2025 00:56:57 +0300
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v1 1/1] libnvdimm: Don't use "proxy" headers
-Message-ID: <aF3CKcVoO4aebaaG@surfacebook.localdomain>
-References: <20250626153523.323447-1-andriy.shevchenko@linux.intel.com>
- <685dbdfb80651_2ce8302947e@iweiny-mobl.notmuch>
+	s=arc-20240116; t=1750975071; c=relaxed/simple;
+	bh=xesDUzy5KFg8MgFwzfjLZ6Rzxtks1lLbUr4/8Nzwl2I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hYGh90RDyHZx96mJVJ+xErPbjt7oLZGTUqp1ejUyX9NpuiCp3TfvjYmpFv79ae0cHItShgJpZHXguk9ne5PlEKVDOK+aUHJy+GZy9npqdeeMm3DA4BdEKQ4xFME47HLgjLn4HeKqFaznJTJKYttTomo1aJh+LQkKgbDD1zkm7Cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WCaLtdU1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Cqtg9Jxa; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WCaLtdU1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Cqtg9Jxa"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750975068;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=otIwEUD4MnfA+ApsQ6g3fYceIHcbh7sTqwImrXm2izI=;
+	b=WCaLtdU1QlYxmHtrLu0z/tkeaSHoGJ0UYeLPWzhXA3D+ISV9eSYZWmIi5iyYM0PGenQPCh
+	ZzRD5MevlnlhtMoNbJzOSKBzZmzfxbUOGHeiniyE5Lon4nTRHXnKh1Yt1pIu1r0BnJDXaV
+	Uo9W0wZiLAukoOMDL91wxsfd8Xi2xT3qv75sLf6uD1fgKJtUyblP4h2C7u8TUUl/OhEBx1
+	H3t7VB4U/CazSArc2YXb9eInuJBAiIZmLQeWtVln3PT5+FBSLYmnlDvFwE/V9F9T+1gICr
+	NhN6nBH4NQUNNEwijpoD2q6K+5blIQ8/on0LPZ/DO02J6QwKAmDM5hSiJMumrA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750975068;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=otIwEUD4MnfA+ApsQ6g3fYceIHcbh7sTqwImrXm2izI=;
+	b=Cqtg9JxaYNfSfSRrBjVcw9/tnU37FOnETGr/ezE3fMdC8XX5nz1XN1/YgBHwqGv5j/wkeD
+	OUpjiY+H9579yeBg==
+To: Ben Zong-You Xie <ben717@andestech.com>
+Cc: mingo@redhat.com, peterz@infradead.org, dvhart@infradead.org,
+ dave@stgolabs.net, andrealmeid@igalia.com, shuah@kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ tim609@andestech.com, Ben Zong-You Xie <ben717@andestech.com>, Cynthia
+ Huang <cynthia@andestech.com>
+Subject: Re: [PATCH] selftests: futex: define SYS_futex on 32-bit
+ architectures with 64-bit time_t
+In-Reply-To: <20250527093536.3646143-1-ben717@andestech.com>
+References: <20250527093536.3646143-1-ben717@andestech.com>
+Date: Thu, 26 Jun 2025 23:57:47 +0200
+Message-ID: <87h602p3ms.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <685dbdfb80651_2ce8302947e@iweiny-mobl.notmuch>
+Content-Type: text/plain
 
-Thu, Jun 26, 2025 at 04:39:07PM -0500, Ira Weiny kirjoitti:
-> Andy Shevchenko wrote:
+On Tue, May 27 2025 at 17:35, Ben Zong-You Xie wrote:
+> glibc does not define SYS_futex for 32-bit architectures using 64-bit
+> time_t e.g. riscv32, therefore this test fails to compile since it does not
+> find SYS_futex in C library headers. Define SYS_futex as SYS_futex_time64
+> in this situation to ensure successful compilation and compatibility.
+>
+> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
+> Signed-off-by: Cynthia Huang <cynthia@andestech.com>
 
-...
+This Signed-off-by chain is broken. See
 
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
 
-> > +#include <linux/ioport.h>
-> 
-> If we are going in this direction why include ioport vs forward declaring
-> struct resource?
+and the following chapters.
 
+Thanks,
 
-I don't know where I looked when added this. This should be io.h.
-And yes, we need forward declarations for struct resource and struct kobject.
-
-...
-
-
-> > -#include <linux/spinlock.h>
-> > -#include <linux/bio.h>
-> 
-> I'm leaning toward including bio, module, and sysfs rather than do the
-> forward declarations.
-
-Header already uses forward declarations.
-
-> Are forward declarations preferred these days?
-
-Always with the dependency hell we have. For example, if we go your way we
-would need to include of.h which is yet another monsteur. I prefer to use
-this patch as provided.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+        tglx
