@@ -1,122 +1,84 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A90A2E427B
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3268BA53;
+	Thu, 26 Jun 2025 13:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943383; cv=none; b=A6dtBPAjuCK3LloY4lLimFj5lJYWKpLXkV72RehRQ2N5RyOuFAohVQxFVL0QTEJmni18Z/MIp+N1+pEXAvm15h9TiOKbnyLwyrNaUM5K+u/F46zluWP/GShCpGGbTnIpSH6wuRB/r5H9d7vdWqOFfrTllUUsfUTgbIrdHi93PjA=
+	t=1750943504; cv=none; b=saTfguPLV5u+1Wz5SZUe+iadbEDw/6fpUlt+/pN7h4FZhqugCNabet45gvKMHrebmfgxwtCJ2tshCXvvR7d/UbhoetpudYgIpJmxKPgcy0AhueZNdyJCXvogh05HFOZlt6ZfYyOUL0ayqEYB8OyUqw5oKy32A1cxySluaQ9pd+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943383; c=relaxed/simple;
-	bh=WwkYMB2zZ9yX2Tkk8lFoELVwvL+EOjMVlpZO+CYoShk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IK/85Tbq7O2OYnqhME5W4+s1MHWGxRt4cl7JZtl3hX5RiSps5kcTH/HGI9p3ZxnMvSRt8mUvy0lYRAjl1BrMgyU5id7cOtEfPSrNE4tLIW/1UFuh8xy5rsI3qjRsS9KLSO040+HFjTpsizwVleW4rTN+LH1Y+oUk0g1juwHGI38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=LC2zYPaS; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LC2zYPaS"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QCaWlZ027580;
-	Thu, 26 Jun 2025 13:09:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=sALiUtyxcN1wQ6o0j5MGblPljhcbJ
-	5JqrksgOESEDdQ=; b=LC2zYPaSNf8z5AiEEiZShPR8K6QCvFIjGMnPFU61yPNLS
-	uoWOYAudy5fQUV3jv7Z2bFb3SprGSXu0ZC4DCnQvD9zx7ypcshTBrAGUyRyzdT+4
-	UUXqIj4/enJihRD/dFH05+93ShkPxeAbh5iR7ng26EDCUs+g//RwffX4xDEXqg0A
-	EnYfLxTTYLpP1Li9/zz7vXaABs7uPTo5BKblDFg/VJr7kVJ/N9KtVYDAO90Aip7u
-	6xiPhHVGzzNqxga73xQvZIo57iitgEaCEQGkplZBS1flHtQToQuSH9oYJ/TCshGY
-	W+QDF7qyPj6Yy7CVaP9hwxJcLo4tz75S30y4pX/SQ==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47egumrrcv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 26 Jun 2025 13:09:22 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55QBePCk034324;
-	Thu, 26 Jun 2025 13:09:21 GMT
-Received: from aruramak-dev.osdevelopmeniad.oraclevcn.com (aruramak-dev.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.253.155])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 47ehktfjua-1;
-	Thu, 26 Jun 2025 13:09:21 +0000
-From: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-To: linux-kernel@vger.kernel.org
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        vschneid@redhat.com
-Subject: [PATCH] sched: Change nr_uninterruptible type to unsigned long
-Date: Thu, 26 Jun 2025 13:09:20 +0000
-Message-ID: <20250626130920.4019152-1-aruna.ramakrishna@oracle.com>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1750943504; c=relaxed/simple;
+	bh=w4R8iE9Etaj8vE0EPRYSb20owInwjnYMQe4bxjHwmNE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CKy7uxldQOFrKM0YmIU1I/bmZxZWVfyC9cnLscayMYtHzz2cbUbYJjowJrFZJfHUC8O3xapxEYfzMQJX2fPi8tigjX0ayxmanxYhRd9FU33J15VK+OFZ7/jgbYbHeaFtw/IXHmEjhp7VftPZNYb9BQI2BgJj3XiWuV4xzaKQuqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ae0d11bb2a7so134713866b.3;
+        Thu, 26 Jun 2025 06:11:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750943501; x=1751548301;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YKrijvnpltMRSzKIoATVRkabKx2dUSossfMtdJuR1Dw=;
+        b=OitYZ4InaBy4PBdMdLc5vRFCBUV+HpiXYto5OKaOFAtTqWy2E+BqiE3amD00b5OabN
+         2cstV+S/48KF8cfNnoG9pdt4fGW03gotiwNFqgyI0GvK/UtvTHJbrK+6UiwA0gIXC6ZE
+         UbRnNqcr3KWvxG43xBoMt6pQ6OiNbK2//llBJRZwfuprrs23zPtwRfwELpfZiLUqgATr
+         9hmMkM+elSRKHq5SWJnwgMQsCcPr+bSLA/Lwm/3/jLIdE8zXZG/LSMdLxrz6/unh7zMm
+         IMV6RiML3uT4ol+35Ix91mUj+8H7ueo0E6NxDARTxy7jxiu8t/l8S80Fxv2Cv66qoJNb
+         TPZg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlNNBTMc8PUHz/W1YHorJ73uO8wk/DXulwh8Im4By0s+yD3++z/SGwVQvOn393g4WFSVE=@vger.kernel.org, AJvYcCWAeezN0FHuuDFejIxdB2Eocmv0tjUW9e2dmTM77z/LtZgZ2pDwKEoRl866+Olq796YayKSFhMUS8nQdXdkTLGM@vger.kernel.org, AJvYcCXPcw3JK7maDSG224z015L/an8rVILhbPEZw7A/vHyDiHg/F3Qj1j2hEeTaFgGZMvmDzORm7zMB@vger.kernel.org, AJvYcCXY3wbXDlaCJFuKT/LD85kPWYW/w0zXHHjd9zAfFNRPY3MhueOWX0VEXieNJuTUaukKDZT/7OL6pwLnzy/A@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyoj/vAlt101PUjZke4/AJ8GfNiSLl7AlMqjTMtLCFb5ix1wRwa
+	725hghBNisvr9ndllsWnBWbqasvDJ4XiyPO/D5+lK690jwQtY7N1QhHp
+X-Gm-Gg: ASbGncue7k2YXv/h84b/0WsJmK3d9OJk+UxYztx/s5cf8IxBEYqZXzZ1jkH8MJAF05I
+	M6VcIr4qhWbyWS5AzGeJQslXHf+rQXrY8gjLhTS4FezEgNnMoAPR2OQV4ANcspmCzlCdI6EX7oT
+	jvFpJr9yjR48UxLeV8AVe74OlQSadz8TNez3wVr0ezFO63yizBiAs1yymnhfPn31N9jPEONhOL3
+	7zMGlaG6o13MAkydl0fx6ucIU4y1CJ23o6HzD2YFKRMlFyPHByuYCJFtLJoptI6ArJCcfkBPW8U
+	xkRG2TQMLmL71jZnvzb3KCun3NIulsrKMNDQSRjRgxFdxKXKJt2H
+X-Google-Smtp-Source: AGHT+IGSuadEaVgkagUU75lLfEPDaKFCaLC8s8d5gy+Oc1jGkZNRizV4QSXoUdUJXH14S4b0PXQF7g==
+X-Received: by 2002:a17:907:fdc1:b0:ae0:cae0:cb35 with SMTP id a640c23a62f3a-ae0cae0cc63mr488065766b.37.1750943500846;
+        Thu, 26 Jun 2025 06:11:40 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:4::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0bccb4379sm340925466b.8.2025.06.26.06.11.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 06:11:40 -0700 (PDT)
+Date: Thu, 26 Jun 2025 06:11:38 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	bpf@vger.kernel.org, gustavold@gmail.com
+Subject: Re: [PATCH net-next v2 2/4] selftests: drv-net: Improve bpftrace
+ utility error handling
+Message-ID: <aF1HCmA0KHG/Gb62@gmail.com>
+References: <20250625-netpoll_test-v2-0-47d27775222c@debian.org>
+ <20250625-netpoll_test-v2-2-47d27775222c@debian.org>
+ <20250625144816.5cbc9298@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_05,2025-06-26_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- suspectscore=0 adultscore=0 malwarescore=0 mlxscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506260110
-X-Proofpoint-ORIG-GUID: jt5Q9_r0VfzdH_qC-CF7FBkjG-Zz51SS
-X-Proofpoint-GUID: jt5Q9_r0VfzdH_qC-CF7FBkjG-Zz51SS
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDExMSBTYWx0ZWRfX+2pYL63MTaFA neRdc90/WAs+lzTp54pMLrLXcE0CEhcqzVirT64zoEM9nYDrT79PRRWf33CA1KDX4vI7To+RPF6 sRYLj5pPtLpj8fz2wxDuLxi21rJqo+zlz4YCzZ33PL+ZOeK4u2gICg+i5XluFpCiTce/gBt0jaN
- WJThrPOI37P39P2IXEjqM4P0UVifjyPX83w/Qh8KoDSsX6TyoVO968Pwop3JsfnzxVwj2nA8Sfg o7qo7O+2r4CIGQKD0ZL/eBgZZSw8ZiMsxn5xI1Bhvj0lwcyYSG1+QNvWbXxUw07myAcxSRXsrR5 NZcbuEY9staps9vdKIkeC43H7Rus9hIgWyE41Y3xbWym98BKKenFO8oExJnpmJQ0rcD02b/Mf/U
- Ursw9aSlC+8EjYmrYXAbGZg65xwrTI9i3yGZEaeqTYBDQcfxnsoGthssfXaZ1+VDrivWBitf
-X-Authority-Analysis: v=2.4 cv=S5rZwJsP c=1 sm=1 tr=0 ts=685d4682 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=3hMAoP2lnyBJ8C0jIBMA:9 cc=ntf awl=host:13216
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625144816.5cbc9298@kernel.org>
 
-The commit e6fe3f422be1 ("sched: Make multiple runqueue task counters
-32-bit") changed nr_uninterruptible to an unsigned int. But the
-nr_uninterruptible values for each of the CPU runqueues can grow to
-large numbers, sometimes exceeding INT_MAX. This is valid, if, over
-time, a large number of tasks are migrated off of one CPU after going
-into an uninterruptible state. Only the sum of all nr_interruptible
-values across all CPUs yields the correct result, as explained in a
-comment in kernel/sched/loadavg.c.
+On Wed, Jun 25, 2025 at 02:48:16PM -0700, Jakub Kicinski wrote:
+> On Wed, 25 Jun 2025 04:39:47 -0700 Breno Leitao wrote:
+> >      cmd_obj = cmd(cmd_arr, ns=ns, host=host, shell=False)
+> > +    if cmd_obj.ret != 0:
+> > +        raise Exception("Warning: bpftrace command returned a non-zero exit code.")
+> 
+> cmd should already raise CmdExitFailure, unless fail=False / fail=None
+> is specified.
 
-Change the type of nr_uninterruptible back to unsigned long to prevent
-overflows, and thus the miscalculation of load average.
-
-Fixes: e6fe3f422be1 ("sched: Make multiple runqueue task counters 32-bit")
-
-Signed-off-by: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
----
- kernel/sched/loadavg.c | 2 +-
- kernel/sched/sched.h   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/loadavg.c b/kernel/sched/loadavg.c
-index c48900b856a2..52ca8e268cfc 100644
---- a/kernel/sched/loadavg.c
-+++ b/kernel/sched/loadavg.c
-@@ -80,7 +80,7 @@ long calc_load_fold_active(struct rq *this_rq, long adjust)
- 	long nr_active, delta = 0;
- 
- 	nr_active = this_rq->nr_running - adjust;
--	nr_active += (int)this_rq->nr_uninterruptible;
-+	nr_active += (long)this_rq->nr_uninterruptible;
- 
- 	if (nr_active != this_rq->calc_load_active) {
- 		delta = nr_active - this_rq->calc_load_active;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 475bb5998295..83e3aa917142 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1149,7 +1149,7 @@ struct rq {
- 	 * one CPU and if it got migrated afterwards it may decrease
- 	 * it on another CPU. Always updated under the runqueue lock:
- 	 */
--	unsigned int		nr_uninterruptible;
-+	unsigned long 		nr_uninterruptible;
- 
- 	union {
- 		struct task_struct __rcu *donor; /* Scheduler context */
-
-base-commit: 86731a2a651e58953fc949573895f2fa6d456841
-prerequisite-patch-id: dd6db7012c5094dec89e689ba56fd3551d2b4a40
--- 
-2.43.5
+Oh yea, even easier. I found the code, and it is much easier to just set
+fail=True for this case. This will avoid hidden errors.
 
