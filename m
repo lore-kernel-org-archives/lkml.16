@@ -1,140 +1,232 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D613422DA1F;
-	Thu, 26 Jun 2025 06:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DEF22F76C;
+	Thu, 26 Jun 2025 06:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750919284; cv=none; b=WGo1rtm9jUEdxGdn7skVqLwgGtVz3QT6eLw/2MbexetEIaVSW3V/RRfCTO9fzhKQqTJFjUSSbgbm0K+yRAWK3tdH0SLKWEJpXVIXSSJf16SUFEZOk2FQTUtk0rA9AZS7+QJrdTMEQKCSBpAKBS8ulHDVWn1i8GVWVQ1uZyk7FOY=
+	t=1750919292; cv=none; b=dnpCnNp5PW+iZfnrslYG3ePV874tanCciz3NtULPzhKGmQ90vio5KI6kWtkDYXsxP8tX2UxovehcftEXI0YQEq/Co1gG6IInhh8VhilIgARmTJKS59k5kxiyDFvwr5ZZ9OQQNtJEII2b29X9B9SBFEt1k6RIVy05CBN2/yhVMfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750919284; c=relaxed/simple;
-	bh=/PCeusqfJJty0TGQN+muWHUI9Rd+Wus1EVo/E+R5IJ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MSXheZsDc0Kyl3q7yYNhf9K37fkOH2mUi8p8hbCJwr7hEQT12m7WSJWIzH2jovUi8IUwGbRI5rkqMAQDANcgl8RbZKaQkgTSdT1kOw4joRJ2itzTNkEFK7wSROEUhKtlRfzIvFdvyhCTEIgrEq2JNLXaiUT12urhPptZ+sw3WRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tR/E59jX; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750919292; c=relaxed/simple;
+	bh=N4+EBStamH18yC84cVsW43kn3FrOjyeb1A697dQXwBo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NkXriOd1+/DWFFW+DkJrnd6DJtzCvQ/Aju9WKpeHIamFx4JhznmcLGQG7nIFTicSugfKucZId86VldJ0BcpWUFWije+m0MWuxU4uXpuX2aR3Id2Wec9G960OYwku9iGnaXdmYQGxFvr+5MXH+x31xlRUTZdCFBnILHCnHkpFfxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=JmX9FPpJ; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tR/E59jX"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55Q6RvsK1660212;
-	Thu, 26 Jun 2025 01:27:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750919278;
-	bh=3EDX4H5WxxN56BaDRD3fEcV20AEstU4Q3AaPPTiQsak=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=tR/E59jXh1lZmQ+On0WGiCRCCxtMqCLw0C8kCZQiXrIyPx11l8s0XtKVFwEPQsEd6
-	 lYUT6HaF6OkB9UtLqfIisM4MM5W86k5gKp47+R6fdl4OAevdDfBlkDlq4d+phdkIDI
-	 fuqWg1H0MaWDn88+jVmd2goZ5luI3NXeJ9KaMb9g=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55Q6RvJV3375310
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 26 Jun 2025 01:27:57 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
- Jun 2025 01:27:57 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 26 Jun 2025 01:27:57 -0500
-Received: from [172.24.227.245] (uda0132425.dhcp.ti.com [172.24.227.245])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55Q6RrJb521448;
-	Thu, 26 Jun 2025 01:27:54 -0500
-Message-ID: <8c7f70eb-b64c-408d-816f-9adc997e42ec@ti.com>
-Date: Thu, 26 Jun 2025 11:57:54 +0530
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="JmX9FPpJ"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CE4E410397285;
+	Thu, 26 Jun 2025 08:28:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1750919287; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=aOywoeS6URIUGte85xuUw45vaQaD6qm7x5c4nv66H4c=;
+	b=JmX9FPpJWXh0V6wVKXgTn1rrkOMjdlo3mghi+sU4xfc0lg96Y2zMko9v1SQu7DiAedAPsv
+	hHNKZa41SyQks1DP2iTPrQESRjPDxXErLICpQr4fWrp7Gura9dlDBWONhNmGbGpWIBAiz9
+	HUqcLh+NzuNLWEs6tT5entH5znqhMtaRyRaAbu/NxfpeZcpYBX1L6XtxlYTDVfxYh99s7X
+	gtFkiM3JeUs5kTguNZsKluVbETKbaFOevHmqgj5pqFA+6z/FBnf9gw4AFibJOXh1Ydtjvy
+	tpGQ5SxfzKNP2z6Qtv4hvZrjDxj3/cZdgeqWir80bhGiVdd8ZRM91+bfvGTG1w==
+Date: Thu, 26 Jun 2025 08:28:00 +0200
+From: Lukasz Majewski <lukma@denx.de>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Richard Cochran
+ <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Stefan Wahren
+ <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>, Andrew Lunn
+ <andrew@lunn.ch>
+Subject: Re: [net-next v13 04/11] net: mtip: The L2 switch driver for imx287
+Message-ID: <20250626082800.5ddca021@wsk>
+In-Reply-To: <20159d14-7d6b-4c16-9f00-ae993cc16f90@redhat.com>
+References: <20250622093756.2895000-1-lukma@denx.de>
+	<20250622093756.2895000-5-lukma@denx.de>
+	<b31793de-e34f-438c-aa37-d68f3cb42b80@redhat.com>
+	<20250624230437.1ede2bcb@wsk>
+	<20159d14-7d6b-4c16-9f00-ae993cc16f90@redhat.com>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/7] arm64: dts: ti: k3-j721s2-main: add DSI & DSI PHY
-To: Jayesh Choudhary <j-choudhary@ti.com>, <nm@ti.com>,
-        <devicetree@vger.kernel.org>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devarsht@ti.com>, <u-kumar1@ti.com>
-References: <20250624082619.324851-1-j-choudhary@ti.com>
- <20250624082619.324851-4-j-choudhary@ti.com>
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Content-Language: en-US
-In-Reply-To: <20250624082619.324851-4-j-choudhary@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: multipart/signed; boundary="Sig_/Fx83fi2=ba.0dUz7yta_/mB";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
+
+--Sig_/Fx83fi2=ba.0dUz7yta_/mB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Paolo,
+
+> On 6/24/25 11:04 PM, Lukasz Majewski wrote:
+> >> On 6/22/25 11:37 AM, Lukasz Majewski wrote: =20
+> >>> +static void mtip_aging_timer(struct timer_list *t)
+> >>> +{
+> >>> +	struct switch_enet_private *fep =3D timer_container_of(fep,
+> >>> t,
+> >>> +
+> >>> timer_aging); +
+> >>> +	fep->curr_time =3D mtip_timeincrement(fep->curr_time);
+> >>> +
+> >>> +	mod_timer(&fep->timer_aging,
+> >>> +		  jiffies +
+> >>> msecs_to_jiffies(LEARNING_AGING_INTERVAL)); +}   =20
+> >>
+> >> It's unclear to me why you decided to maintain this function and
+> >> timer while you could/should have used a macro around jiffies
+> >> instead. =20
+> >=20
+> > This is a bit more tricky than just getting value from jiffies.
+> >=20
+> > The current code provides a monotonic, starting from 0 time "base"
+> > for learning and managing entries in internal routing tables for
+> > MTIP.
+> >=20
+> > To be more specific - the fep->curr_time is a value incremented
+> > after each ~10ms.
+> >=20
+> > Simple masking of jiffies would not provide such features. =20
+>=20
+> I guess you can get the same effect storing computing the difference
+> from an initial jiffies value and using jiffies_to_msecs(<delta>)/10.
+
+With some coding assuring only 10 bit width of the resulting clock
+(based on jiffies) I can have a monotonic clock which will not start
+from 0.
+
+>=20
+> >> [...] =20
+> >>> +static int mtip_sw_learning(void *arg)
+> >>> +{
+> >>> +	struct switch_enet_private *fep =3D arg;
+> >>> +
+> >>> +	while (!kthread_should_stop()) {
+> >>> +		set_current_state(TASK_INTERRUPTIBLE);
+> >>> +		/* check learning record valid */
+> >>> +		mtip_atable_dynamicms_learn_migration(fep,
+> >>> fep->curr_time,
+> >>> +						      NULL,
+> >>> NULL);
+> >>> +		schedule_timeout(HZ / 100);
+> >>> +	}
+> >>> +
+> >>> +	return 0;
+> >>> +}   =20
+> >>
+> >> Why are you using a full blown kernel thread here?  =20
+> >=20
+> > The MTIP IP block requires the thread for learning. It is a HW based
+> > switching accelerator, but the learning feature must be performed by
+> > SW (by writing values to its registers).
+> >  =20
+> >> Here a timer could
+> >> possibly make more sense. =20
+> >=20
+> > Unfortunately, not - the code (in
+> > mtip_atable_dynamicms_learn_migration() must be called). This
+> > function has another role - it updates internal routing table with
+> > timestamps (provided by timer mentioned above). =20
+>=20
+> Why a periodic timer can't call such function?
+
+Yes, the kthread can be replaced with timer with 100ms period.
+
+Just to explain - the mtip_atable_dynamicms_learn_migration(), which
+requires monotonic value incremented once per 10ms, is called at two
+places:
+
+1. mtip_switch_rx() -> the dynamic table is examined if required (i.e.
+new frame arrives). In this place the counter requires 10ms resolution
+(can be extracted from jiffies).
+
+2. The mtip_sw_learning() - which now is run from kthread, but it can
+be replaced with timer (100ms resolution).
+
+>=20
+> >  =20
+> >> Why are checking the table every 10ms, while
+> >> the learning intervall is 100ms?  =20
+> >=20
+> > Yes, this is correct. In 10ms interval the internal routing table is
+> > updated. 100 ms is for learning.
+> >  =20
+> >> I guess you could/should align the
+> >> frequency here with such interval. =20
+> >=20
+> > IMHO learning with 10ms interval would bring a lot of overhead.
+> >=20
+> > Just to mention - the MTIP IP block can generate interrupt for
+> > learning event. However, it has been advised (bu NXP support), that
+> > a thread with 100ms interval shall be used to avoid too many
+> > interrupts. =20
+>=20
+> FTR, my suggestion is to increase the
+> mtip_atable_dynamicms_learn_migration's call period to 100ms
+
+As mentioned above - it is called in two places. One is in kthread
+started at 100ms period, another one is asynchronous when frame arrives.
+
+>=20
+> >> Side note: I think you should move the buffer management to a later
+> >> patch: this one is still IMHO too big. =20
+> >=20
+> > And this is problematic - the most time I've spent for v13 to
+> > separate the code - i.e. I exclude one function, then there are
+> > warnings that other function is unused (and of course WARNINGS in a
+> > separate patches are a legitimate reason to call for another patch
+> > set revision). =20
+>=20
+> A trick to break that kind of dependencies chain is to leave a
+> function implementation empty.
+>=20
+> On the same topic, you could have left mtip_rx_napi() implementation
+> empty up to patch 6 or you could have introduced napi initialization
+> and cleanup only after such patch.
+>=20
+> In a similar way, you could introduce buffer managements in a later
+> patch and add the relevant calls afterwards.
+
+I get your point.
+
+>=20
+> /P
+>=20
 
 
 
-On 24/06/25 13:56, Jayesh Choudhary wrote:
-> From: Rahul T R <r-ravikumar@ti.com>
-> 
-> Add DT nodes for DPI to DSI Bridge and DSI Phy.
-> The DSI bridge is Cadence DSI and the PHY is a
-> Cadence DPHY with TI wrapper.
-> 
-> Signed-off-by: Rahul T R <r-ravikumar@ti.com>
-> [j-choudhary@ti.com: disable dsi and dphy nodes, rename dphy node]
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
-> index 83cf0adb2cb7..e17fffc36248 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
-> @@ -1795,6 +1795,43 @@ main_spi7: spi@2170000 {
->  		status = "disabled";
->  	};
->  
-> +	dphy_tx0: phy@4480000 {
-> +		compatible = "ti,j721e-dphy";
-> +		reg = <0x0 0x04480000 0x0 0x1000>;
-> +		clocks = <&k3_clks 363 8>, <&k3_clks 363 14>;
-> +		clock-names = "psm", "pll_ref";
-> +		#phy-cells = <0>;
-> +		power-domains = <&k3_pds 363 TI_SCI_PD_EXCLUSIVE>;
-> +		assigned-clocks = <&k3_clks 363 14>;
-> +		assigned-clock-parents = <&k3_clks 363 15>;
-> +		assigned-clock-rates = <19200000>;
-> +		status = "disabled";
-> +	};
-> +
-> +	dsi0: dsi@4800000 {
-> +		compatible = "ti,j721e-dsi";
-> +		reg = <0x0 0x04800000 0x0 0x100000>, <0x0 0x04710000 0x0 0x100>;
-> +		clocks = <&k3_clks 154 4>, <&k3_clks 154 1>;
-> +		clock-names = "dsi_p_clk", "dsi_sys_clk";
-> +		power-domains = <&k3_pds 154 TI_SCI_PD_EXCLUSIVE>;
-> +		interrupt-parent = <&gic500>;
-> +		interrupts = <GIC_SPI 600 IRQ_TYPE_LEVEL_HIGH>;
-> +		phys = <&dphy_tx0>;
-> +		phy-names = "dphy";
-> +		status = "disabled";
-> +
-> +		dsi0_ports: ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			port@0 {
-> +				reg = <0>;
-> +			};
-> +			port@1 {
-> +				reg = <1>;
-> +			};
 
-Messed up indentation
+Best regards,
 
-> +		};
-> +	};
-> +
->  	dss: dss@4a00000 {
->  		compatible = "ti,j721e-dss";
->  		reg = <0x00 0x04a00000 0x00 0x10000>, /* common_m */
+Lukasz Majewski
 
--- 
-Regards
-Vignesh
-https://ti.com/opensource
+--
 
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/Fx83fi2=ba.0dUz7yta_/mB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmhc6HAACgkQAR8vZIA0
+zr0Q6ggAhP76zLQCcS7yPIT4oJTgBppnruWfx1DIYSqVAPc72wii+bwG2zw3wD9P
+zWluiinx+cLcfhysEy4jYVBnrJx0lZRwaISWGByo3/DHcjHxKxlYP6dNO0YdcuWS
+JuE3k8RXNRImfH74zo7HpbXjClU4htBIwJgKH0YsztnqpjPA6Vjlj6MEQdkAefXv
+29Y9mXxloNMt6kmRey8a6i4hoqKUtnQKAK9BjZHYMHecCPhcyDwhF/dIP26yJpS7
+mg2kO096B9sosW3w3AN0GC/poDi2OohgoYq4Yf5DmfVosHTtBXnsTGcNql33Uyct
+qj4aoXLChq3ztyZMeNecCr3QGG8MQQ==
+=Raoa
+-----END PGP SIGNATURE-----
+
+--Sig_/Fx83fi2=ba.0dUz7yta_/mB--
