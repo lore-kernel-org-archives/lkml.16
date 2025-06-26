@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D5E2EAB7F;
-	Thu, 26 Jun 2025 19:53:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363572F0055;
+	Thu, 26 Jun 2025 19:53:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750967601; cv=none; b=mCwlP8UTw+ekl/E9ov8OIyCNs72QP01/is4Tw8pOuLMGBd70+X/K3ZEQAhL9iY+r2YUc+kscOMch5kikEj2grYx8kOuwpgfnACBd66OfWy46wFZHyfBE3oMn1zspfqgvw0i/U2S0kspUUGiIeEcBfrj5EqBnsj2t5pUZqseM3lQ=
+	t=1750967602; cv=none; b=KE+71AAZS49g+Qw4JTJLqWlK4Rim92mKHTLteVduPLJhtXHn/zus+aMjf83I3A8pzhpYCyp134p7SFsxAtZkDoEAPla1zWTec0xYcBjxU7jRjo41L5zYhQc4I/Zbs+FvHz7vt3pRHhGFL6TIbO5quSvwpgOy2mYKRcI8K0VyH5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750967601; c=relaxed/simple;
-	bh=gP/lLAielMQ0FzJZoQVZVvW32nn5aVh+e1xIp7tL+5Y=;
+	s=arc-20240116; t=1750967602; c=relaxed/simple;
+	bh=3102csKV0qk6voV51MLhEB4N+SYWBLbDze9z6LLrQTY=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Zm0ZzXauQTv6slLo+WkEDYmJg4vhBR7BBXtuAYpGhAgDY+NmwHliBSz7n69VehgyUJYAhpsiQhKoDWVXcaUTMZD2zDOPa5jS5EQC53reLlWm/c5RXzrU4EYm0D2ICbgDlhZSSrg+H3tNnbPraLBV05DYVdN/zzpn5YAjDK2oEHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdJgSNJl; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=gX0046dEqoQslQA9vR0ownFPosL1r4ahzhRrvNa1Q2XQ3j2RUHNxR8+d2aY8hHanEn0JAquUNckhW3/vHcvQWNzOZFgJFEi1mnLJ+aCCbpAPcgo7rmvec5Ht56ndUTc8S/rS8eEEbBn02FbmyGfsBlGTXQqJlQ8dVwdWWrNwbcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lPaB/mxw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdJgSNJl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93113C4CEEB;
-	Thu, 26 Jun 2025 19:53:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lPaB/mxw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D454C4CEF0;
+	Thu, 26 Jun 2025 19:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750967600;
-	bh=gP/lLAielMQ0FzJZoQVZVvW32nn5aVh+e1xIp7tL+5Y=;
+	s=k20201202; t=1750967601;
+	bh=3102csKV0qk6voV51MLhEB4N+SYWBLbDze9z6LLrQTY=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=mdJgSNJlTCiBsgp1QvD08F4fcua2wPsC395F4cWUyYK5vhobW4WMrk+HNckMyVVnv
-	 SyBNxW8pmK1kHZyq62uSz+dqrTw1gWvGDX0uHKIZ95/VXLbqpGGbwJG74X91Vnjsi9
-	 +lQzSu24MxCmAgiA8BskBo3XspT8PnF1p1j3naF6V3QQpXBRto/8rg8B0pXSV1nxy/
-	 PS9dPFp7nBnSwxPAIaY4YnH4KsI93PilBkhbzyeokHcCVyvvCaYEyHKzk5JbxcnpQU
-	 w7YqCokzH58UfMS+MSYQhnF//W+DCn8cHiJPcbX/eUqFZ0koRzligdhE7BpIk9cWlA
-	 nEVqcKieCsypQ==
-Date: Thu, 26 Jun 2025 14:53:19 -0500
+	b=lPaB/mxwZsS3UmvJMcbgXPS2qNa6wiA1EJFZDjqHTdz/53VQZXTRxKnNUwfqwTp4G
+	 c/XA1T0jBjRx+neRvXbfmuZ9/yB6gP6T6U5rEiejOiJqXl/aSb0+Xvpgfbn+M9Bgi/
+	 YpTyjhm8NpmUkoYwK0Hsyak4qwA4vidpDjfe8vVqIcg8VTOPOstl/xyo9+aVqcl+ef
+	 yjgUpVAgeV+1f4JZv/GqKY9WpRqJCCLYbsuA8FvLDiPPQP0oqCliztZTV5Fblg37z1
+	 j+AU8Z4CHtVAd2RWcI8Jsp9xuL42nf9O2YZgsNR0wUdzx39ts/kfjdyDYe2uMfg6qT
+	 r4k5LVm9ANgwQ==
+Date: Thu, 26 Jun 2025 14:53:20 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,74 +36,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- linux-mediatek@lists.infradead.org, Guenter Roeck <linux@roeck-us.net>, 
- linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@mediatek.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org, 
- Wim Van Sebroeck <wim@linux-watchdog.org>
-To: Max Shevchenko <wctrl@proton.me>
-In-Reply-To: <20250626-mt6572-v2-0-f7f842196986@proton.me>
-References: <20250626-mt6572-v2-0-f7f842196986@proton.me>
-Message-Id: <175096753913.717927.14601371478727547482.robh@kernel.org>
-Subject: Re: [PATCH v2 00/11] ARM: Add support for MediaTek MT6572 SoC
+Cc: devicetree@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org
+To: Cristian Cozzolino <cristian_ci@protonmail.com>
+In-Reply-To: <20250626-rimob-initial-devicetree-v3-0-4017ac9fd93d@protonmail.com>
+References: <20250626-rimob-initial-devicetree-v3-0-4017ac9fd93d@protonmail.com>
+Message-Id: <175096753958.717956.3150907167726764280.robh@kernel.org>
+Subject: Re: [PATCH v3 0/3] Add initial device tree for Billion Capture+
 
 
-On Thu, 26 Jun 2025 11:53:53 +0300, Max Shevchenko wrote:
-> This series of patches adds support for the MT6572 SoC and
-> the JTY D101 tablet and Lenovo A369i smartphone based on it.
+On Thu, 26 Jun 2025 00:04:25 +0200, Cristian Cozzolino wrote:
+> Billion Capture+ is a handset using the MSM8953 SoC released in 2017
+> and sold by Flipkart.
 > 
-> Signed-off-by: Max Shevchenko <wctrl@proton.me>
+> Add a device tree with initial support for:
+> 
+> - GPIO keys
+> - SDHCI (internal and external storage)
+> - USB Device Mode
+> - Regulators
+> - Simple framebuffer
+> 
+> Signed-off-by: Cristian Cozzolino <cristian_ci@protonmail.com>
 > ---
+> Changes in v3:
+> - (patch 3/3): pick up tag (Konrad);
+> - Link to v2: https://lore.kernel.org/r/20250624-rimob-initial-devicetree-v2-0-34f6045ebc30@protonmail.com
+> 
 > Changes in v2:
-> - Drop the status property for the board devicetrees
-> - Add an soc node for the MT6572 and reorder the nodes and properties
-> - Change the commit title to a more descriptive one
-> - Change the cover title to the correct one
-> - Link to v1: https://lore.kernel.org/r/20250620-mt6572-v1-0-e2d47820f042@proton.me
+> - (patch 3/3):
+>   - add unit address and label to qseecom (Luca);
+>   - reorder properties alphabetically in gpio-keys node (Konrad);
+>   - fix hex values in reg address and size cells: from 0x00 to 0x0 (Konrad);
+>   - add regulator-allow-set-load property to regulators supplying sdhc1/sdhc2.
+> - Link to v1: https://lore.kernel.org/r/20250620-rimob-initial-devicetree-v1-0-8e667ea21f82@protonmail.com
 > 
 > ---
-> Max Shevchenko (11):
->       dt-bindings: serial: mediatek,uart: add MT6572
->       dt-bindings: interrupt-controller: mediatek,mt6577-sysirq: add MT6572
->       dt-bindings: timer: mediatek: add MT6572
->       dt-bindings: watchdog: mediatek,mtk-wdt: add MT6572
->       dt-bindings: vendor-prefixes: add JTY
->       dt-bindings: arm: mediatek: add boards based on the MT6572 SoC
->       ARM: mediatek: add board_dt_compat entry for the MT6572 SoC
->       ARM: mediatek: add MT6572 smp bring up code
->       ARM: dts: mediatek: add basic support for MT6572 SoC
->       ARM: dts: mediatek: add basic support for JTY D101 board
->       ARM: dts: mediatek: add basic support for Lenovo A369i board
+> Cristian Cozzolino (3):
+>       dt-bindings: vendor-prefixes: Add Flipkart
+>       dt-bindings: arm: qcom: Add Billion Capture+
+>       arm64: dts: qcom: msm8953: Add device tree for Billion Capture+
 > 
->  .../devicetree/bindings/arm/mediatek.yaml          |   5 +
->  .../mediatek,mt6577-sysirq.yaml                    |   1 +
->  .../devicetree/bindings/serial/mediatek,uart.yaml  |   1 +
->  .../devicetree/bindings/timer/mediatek,timer.yaml  |   1 +
+>  Documentation/devicetree/bindings/arm/qcom.yaml    |   1 +
 >  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
->  .../bindings/watchdog/mediatek,mtk-wdt.yaml        |   1 +
->  arch/arm/boot/dts/mediatek/Makefile                |   2 +
->  arch/arm/boot/dts/mediatek/mt6572-jty-d101.dts     |  61 ++++++++++++
->  arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts |  56 +++++++++++
->  arch/arm/boot/dts/mediatek/mt6572.dtsi             | 109 +++++++++++++++++++++
->  arch/arm/mach-mediatek/Kconfig                     |   4 +
->  arch/arm/mach-mediatek/mediatek.c                  |   1 +
->  arch/arm/mach-mediatek/platsmp.c                   |   7 ++
->  13 files changed, 251 insertions(+)
+>  arch/arm64/boot/dts/qcom/Makefile                  |   1 +
+>  .../arm64/boot/dts/qcom/msm8953-flipkart-rimob.dts | 255 +++++++++++++++++++++
+>  4 files changed, 259 insertions(+)
 > ---
 > base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-> change-id: 20250619-mt6572-ef78a3d45168
+> change-id: 20250620-rimob-initial-devicetree-da86a5bffc8b
 > 
 > Best regards,
 > --
-> Max Shevchenko <wctrl@proton.me>
+> Cristian Cozzolino <cristian_ci@protonmail.com>
 > 
 > 
 > 
@@ -129,24 +118,10 @@ This patch series was applied (using b4) to base:
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/mediatek/' for 20250626-mt6572-v2-0-f7f842196986@proton.me:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250626-rimob-initial-devicetree-v3-0-4017ac9fd93d@protonmail.com:
 
-arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dtb: / (lenovo,a369i): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[2147483648, 536870912]]}
-	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-arch/arm/boot/dts/mediatek/mt6572-jty-d101.dtb: / (jty,d101): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[2147483648, 1073741824]]}
-	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-arch/arm/boot/dts/mediatek/mt7623a-rfb-nand.dtb: spi@1100a000 (mediatek,mt7623-spi): compatible: 'oneOf' conditional failed, one must be fixed:
-	['mediatek,mt7623-spi', 'mediatek,mt2701-spi'] is too long
-	'mediatek,mt7623-spi' is not one of ['mediatek,mt7629-spi', 'mediatek,mt8365-spi']
-	'mediatek,mt7623-spi' is not one of ['mediatek,mt8516-spi']
-	'mediatek,mt7623-spi' is not one of ['mediatek,mt6779-spi', 'mediatek,mt8186-spi', 'mediatek,mt8192-spi', 'mediatek,mt8195-spi']
-	'mediatek,mt7623-spi' is not one of ['mediatek,mt7981-spi-ipm', 'mediatek,mt7986-spi-ipm', 'mediatek,mt7988-spi-quad', 'mediatek,mt7988-spi-single', 'mediatek,mt8188-spi-ipm']
-	'mediatek,mt7623-spi' is not one of ['mediatek,mt2701-spi', 'mediatek,mt2712-spi', 'mediatek,mt6589-spi', 'mediatek,mt6765-spi', 'mediatek,mt6893-spi', 'mediatek,mt7622-spi', 'mediatek,mt8135-spi', 'mediatek,mt8173-spi', 'mediatek,mt8183-spi']
-	'mediatek,mt7622-spi' was expected
-	'mediatek,mt2712-spi' was expected
-	'mediatek,mt6765-spi' was expected
-	'mediatek,spi-ipm' was expected
-	from schema $id: http://devicetree.org/schemas/spi/mediatek,spi-mt65xx.yaml#
+arch/arm64/boot/dts/qcom/msm8953-flipkart-rimob.dtb: gpu@1c00000 (qcom,adreno-506.0): clock-names:5: 'alwayson' is not one of ['core', 'iface', 'mem', 'mem_iface', 'alt_mem_iface', 'gfx3d', 'rbbmtimer', 'rbcpr']
+	from schema $id: http://devicetree.org/schemas/display/msm/gpu.yaml#
 
 
 
