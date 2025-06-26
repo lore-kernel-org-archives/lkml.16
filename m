@@ -1,36 +1,59 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18DC32EB5B4;
-	Thu, 26 Jun 2025 15:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5DE2EE260;
+	Thu, 26 Jun 2025 15:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750952105; cv=none; b=MQizZPjKxBU3bEftJp4/kv2VeRZ93U+Q7Q3NbtmD7Jh+hjoIaAhvffm2w5TKCbz1LEb/Jo68nugXcz4jshRjs0sZHm3wDntQUdW75eA+Zq4JOUibm9HhDVKAB1ipQTQPMS4tVGT6ZrQq8/zUYnVwwvfjKhquTRDfFE3alvmeF7g=
+	t=1750952109; cv=none; b=bc+mPqNu2BeCU5xSJ5K5QRUSVfNESsORXiwdvqzriV5L3HwXdTp4CIkEiDQAp6GJXaxjFCu8W+lLDnIywSOxdEJmnyav5WnszNZnoipLnVGnA/HfaBiUN5VrTSsIfHBxCWVWZNhwNX2FdSYzcdWyOQIHyVwPLYvRwHua7yw892Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750952105; c=relaxed/simple;
-	bh=Mm62k2XasOS+s2Wom0/lDqlqaISmC/ws1fOPSwt/rAg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ReqGAjZJMcZC1tPZWe713UNeAl52qW6bH/PT8JIU39p8AE6HZvI59otDMtJI733hRoQaBXaEm2wD5T3ltzs2uIF1OQ6UYZHHoG8TFrbrMF6590fPNEIo/YHbmC8TJXjfhQlIcHlVdISmLbWsAJ7Rd6VLPJTthja+lcSrlPDdmDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 69B4380286;
-	Thu, 26 Jun 2025 15:35:01 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 730E820016;
-	Thu, 26 Jun 2025 15:34:59 +0000 (UTC)
-Date: Thu, 26 Jun 2025 11:35:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Gabriele Monaco <gmonaco@redhat.com>,
- john.ogness@linutronix.de
-Subject: Re: [PATCH] tracing: Remove pointless memory barriers
-Message-ID: <20250626113520.315db641@gandalf.local.home>
-In-Reply-To: <20250626151940.1756398-1-namcao@linutronix.de>
-References: <20250626151940.1756398-1-namcao@linutronix.de>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750952109; c=relaxed/simple;
+	bh=O0L8FVvB///Na6bAs2bAIq/uTQnDv1eoHSfh3JhHjGE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Sh/bcowNEVsJe2wgALq8MQUbTlH2JtZPsEhaZiqxC70/KRC09F2qEWOP8539l13xyiKLFPdVF3L5ybj2Wxbe55FEkIdH7HSg9Yuaun3PjxTQV3iFTtVl+EqXwuKv/aTNDT5bWEP7fpxwRgyjbYIjJ0GAv4hVVwLVtXoLI3GYXec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mq+k1Do2; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mq+k1Do2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750952108; x=1782488108;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=O0L8FVvB///Na6bAs2bAIq/uTQnDv1eoHSfh3JhHjGE=;
+  b=Mq+k1Do2oGWJTUxevyvQziyhSen9IwvB88JPjpQJF5rrtRKr9rMTIE2+
+   8agrcyHTXaLGSXx9dZ6gwLnmP/YzkDi1OhLw9cgkTdfK0LKq+eyjPu4Zl
+   7jXsKfuwp6+owtx3UsaQpiKY/LYFKVc0/IrvEyjw+OLsZXjulJsrVZPN0
+   tgLKIJx46BhAg6FrI275suNo9Rq/7FevTsluEqfVOJLdSrYavbH4JTg2U
+   SMMNhB6UMB06xo3hDn6lXyhdII/unTHzra+jNOoFAl+iQv8paACVGbNJS
+   4FcG6MHtreZFxUvuiNiXWcRQnjntsoUcO55PYxRCqNZ/OI9Rf4pwcTfyq
+   Q==;
+X-CSE-ConnectionGUID: QEB3xeQpR1iCCyzpiaN9PA==
+X-CSE-MsgGUID: xKBKwQ9+QBW1gRsNflwgNg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="55879163"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="55879163"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:35:07 -0700
+X-CSE-ConnectionGUID: da1akKF+TPKt+KsLuRnorA==
+X-CSE-MsgGUID: eSf8IE2iRhyFFzHiXvif7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="156587108"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:35:05 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 26 Jun 2025 18:35:02 +0300 (EEST)
+To: Shravan Kumar Ramani <shravankr@nvidia.com>
+cc: Vadim Pasternak <vadimp@nvidia.com>, 
+    David Thompson <davthompson@nvidia.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] platform/mellanox: mlxbf-pmc: Validate event/enable
+ input
+In-Reply-To: <7936743cf4d6b20c4ed25dc03722e3a7277aed70.1750245955.git.shravankr@nvidia.com>
+Message-ID: <d9c09ceb-1492-f323-352d-4e8899e30ea2@linux.intel.com>
+References: <cover.1750245955.git.shravankr@nvidia.com> <7936743cf4d6b20c4ed25dc03722e3a7277aed70.1750245955.git.shravankr@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,81 +61,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: r3f3kb31c494bit8r9mpjnc6989ha1yz
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 730E820016
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/E56kneddSyxlwBYewPNePiT05QtFmRJE=
-X-HE-Tag: 1750952099-920767
-X-HE-Meta: U2FsdGVkX1+l/0Ie1xFcwA/qm4MKjh5VyaeKDkQGZAMEPRuxtjHIsBA6BA2d0UXzW1XG+BySH5rSinJuyTAj+53s5LwQ/Q19wlkJlFwhHMETqQ3+qpPXSILY18OLswUtGywed+m90HNOBYCJHwSISYPXVu5HDueHz2i8JNSwkbn6WfxhcijbmYrU6pG4s5kWMRPMIJUDmUEPEtTrWZzGgxQUkQvqamg9iyHzJrmrixlGoHt5aoavAX5ueCChuZUIQu1snpl6br9G3ByIO/NycdiyO3cS/ln1UJAN5+xO775ASwEwiXFjiwZUvArCkpov
 
-On Thu, 26 Jun 2025 17:19:40 +0200
-Nam Cao <namcao@linutronix.de> wrote:
+On Wed, 18 Jun 2025, Shravan Kumar Ramani wrote:
 
-
-> However, the memory barriers I see in kernel/trace/ do not resemble the
-> above pattern. Therefore I think they are redundant.
-
-I'll focus my comments on the trace code as that's what I understand more.
-
+> Before programming the event info, validate the event number received as input
+> by checking if it exists in the event_list. Also fix a typo in the comment for
+> the mlxbf_pmc_get_event_name routine to correctly mention that it returns the
+> event name when taking the event number as input, and not the other way round.
+> For the enable setting, the value should be only 0 or 1. Make this check common
+> for all scenarios in enable store.
 > 
-> Please let me know if there is an unobvious reason for them.
-
-Sure!
-
-
->  static void turn_monitoring_on_with_reset(void)
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 95ae7c4e58357..0dff4298fc0e5 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -936,7 +936,6 @@ int tracing_is_enabled(void)
->  	 * return the mirror variable of the state of the ring buffer.
->  	 * It's a little racy, but we don't really care.
->  	 */
-> -	smp_rmb();
->  	return !global_trace.buffer_disabled;
+> Fixes: 423c3361855c ("platform/mellanox: mlxbf-pmc: Add support for BlueField-3")
+> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+> Reviewed-by: David Thompson <davthompson@nvidia.com>
+> ---
+>  drivers/platform/mellanox/mlxbf-pmc.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+> index 366c0cba447f..fcc3392ff150 100644
+> --- a/drivers/platform/mellanox/mlxbf-pmc.c
+> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
+> @@ -1222,7 +1222,7 @@ static int mlxbf_pmc_get_event_num(const char *blk, const char *evt)
+>  	return -ENODEV;
 >  }
 >  
-> @@ -1107,8 +1106,6 @@ void tracer_tracing_on(struct trace_array *tr)
->  	 * important to be fast than accurate.
->  	 */
->  	tr->buffer_disabled = 0;
-> -	/* Make the flag seen by readers */
-> -	smp_wmb();
->  }
->  
->  /**
-> @@ -1640,8 +1637,6 @@ void tracer_tracing_off(struct trace_array *tr)
->  	 * important to be fast than accurate.
->  	 */
->  	tr->buffer_disabled = 1;
-> -	/* Make the flag seen by readers */
-> -	smp_wmb();
->  }
-
-The above three interact with each other. Without the barriers, the
-tr->buffer_disabled = 0, can be set on one CPU, and the other CPU can think
-the buffer is still enabled and do work that will end up doing nothing. Or
-it can be set to 1, and the other CPU still sees it disabled and will not
-do work when it can.
-
->  
->  /**
-> @@ -2710,8 +2705,6 @@ void trace_buffered_event_enable(void)
->  
->  static void enable_trace_buffered_event(void *data)
+> -/* Get the event number given the name */
+> +/* Get the event name given the number */
+>  static char *mlxbf_pmc_get_event_name(const char *blk, u32 evt)
 >  {
-> -	/* Probably not needed, but do it anyway */
-> -	smp_rmb();
-
-As the comment says, this one actually isn't needed, and yes, it can be
-removed.
-
--- Steve
-
->  	this_cpu_dec(trace_buffered_event_cnt);
->  }
+>  	const struct mlxbf_pmc_events *events;
+> @@ -1799,6 +1799,9 @@ static ssize_t mlxbf_pmc_event_store(struct device *dev,
+>  		err = kstrtouint(buf, 0, &evt_num);
+>  		if (err < 0)
+>  			return err;
+> +
+> +		if (!mlxbf_pmc_get_event_name(pmc->block_name[blk_num], evt_num))
+> +			return -EINVAL;
+>  	}
 >  
+>  	if (strstr(pmc->block_name[blk_num], "l3cache"))
+> @@ -1889,6 +1892,9 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+>  	if (err < 0)
+>  		return err;
+>  
+> +	if (en != 0 && en != 1)
+> +		return -EINVAL;
+
+This is using kstrtouint() but there's also kstrtobool() which would do 
+this check for you.
+
+> +
+>  	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE) {
+>  		err = mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+>  			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+> @@ -1905,9 +1911,6 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+>  			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+>  			MLXBF_PMC_WRITE_REG_32, word);
+>  	} else {
+> -		if (en && en != 1)
+> -			return -EINVAL;
+> -
+>  		err = mlxbf_pmc_config_l3_counters(blk_num, false, !!en);
+>  		if (err)
+>  			return err;
+> 
+
+-- 
+ i.
 
