@@ -1,155 +1,172 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755012DD60C;
-	Thu, 26 Jun 2025 10:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB63225B678;
+	Thu, 26 Jun 2025 10:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750933720; cv=none; b=l0FHZVVibPpZBENFlqD3AUCRhHZt71VcY3DogVewRDvZsjRzHpogoB+Ejl6yOCYVDKlvIm8+Ta3Vp4c20mkpVcw/5zKoVlkIQ9iTU6mONmkYJOQ21EecP3B/f4qvMR5tMIdWqg4UuPQtlidTQZaXY01xmbGT+/EWIpMQj1KaZkI=
+	t=1750933724; cv=none; b=dD2d5UeylG3AhKn2rsyHslGRNHWhpX/yrPUK5QYz+WAEw77GqA+YWWU6l90p8XotwUgseU+dkRjeDE7j9Q8DpBbPbkfbSj4Czp71c1qw5J6SJO/CoMcq3VSdzcD/gxQjKms38SzFj3Ie4zaGoub7M1/vbfcNojisTS8aYp4sRWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750933720; c=relaxed/simple;
-	bh=bvpOkAMpzHS8oh7L3wWFi/ltw7jkDSBZk8sItDcmbAY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=awt366ahcSwBDBUuXD8IzsvQ5zlErhxcS4cSaS4v3WbCBb0So4e5FjcDJub3qRwI063e5mRrA9pHEH2WmEQQxm7ksTxtq1xpk96bmIaG7ZblTbiXlpnunrv/wdyrQ6h2WHWZ1qbKTED58OeTgpp0uzmAwc6bPn2sMV4gfFcXKFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=n1r/ohTW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1750933724; c=relaxed/simple;
+	bh=pWG1G2mBTD+N9l/FGUOM8XrO+5AgWTZQPiXtRYYjjvE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mdbt4XsRRfgjd2Q7DAsjpq4/wOQ12SKcFJOx4VY4j1c3ZDEiTn+PEJCT4IQDISPUAFuN278Mzsn3gk7EtQCjYvUUfYkiOhBoj0l2qIW+M5b3jM7zKDKTWL3u8sk2xYTL/J2a6P8bCUgqnFgXROF91ewKmTM7JfPhewqptAUr9k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YDsVvSZl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="n1r/ohTW"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q9jU0N008621;
-	Thu, 26 Jun 2025 10:28:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=P9H9I0Zid2ElxZzG9nHIoJCCkbfatFdEgx7
-	axb/TZ/w=; b=n1r/ohTW4bo6LGt0tyiUCdJ0/iZN1FW5OHz1hT3yF7WoYfAmJdc
-	FUXRxFPnuZm3TMXAYp5akc0/dzCs4JmIbZE9lZIsqzInWKsvsktIQ5SvCZ4Jrntk
-	0vD4qY02xvJC8qflS7Mw+TINfACfxgibtMPxnaIv3QYUJh+qgHLMZn9YFuFasWPP
-	eNot2umQIGcZjzDJX2vULiVGCGT53JSxqAiQOS6fU9X8NH8kNVJt2phpu4S7KWb0
-	wB4lQTGWtqbpRqb2XzRyAwTN+K5su686yClLHREcgEYF4qrHby5WJzwO1Sc2L+0x
-	zvTarX7HkY/F1xKvCMAb8IL21YcJI1bKxMA==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbhqsd7q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 10:28:34 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55QASTGG024436;
-	Thu, 26 Jun 2025 10:28:29 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 47gph7tebp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 10:28:29 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55QASScs024431;
-	Thu, 26 Jun 2025 10:28:28 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com ([10.213.97.252])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 55QASSr6024429
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 10:28:28 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4047106)
-	id 764EE513; Thu, 26 Jun 2025 15:58:27 +0530 (+0530)
-From: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
-To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com,
-        Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
-Subject: [PATCH 1/1] arm64: dts: qcom: qcs615: add missing dt property in QUP SEs
-Date: Thu, 26 Jun 2025 15:58:26 +0530
-Message-Id: <20250626102826.3422984-1-viken.dadhaniya@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YDsVvSZl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A78F8C4CEEE;
+	Thu, 26 Jun 2025 10:28:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750933724;
+	bh=pWG1G2mBTD+N9l/FGUOM8XrO+5AgWTZQPiXtRYYjjvE=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=YDsVvSZlgg78GVAhC+REHedyDVzMQly+m4N3CooaOplbs6stvLgG6bpThma18YmqU
+	 9xLZscLQ3Aa4K0r9BEexCgX6HtRofXGULKwiPyV4QAiUMj5CL/lZL361N5oDo+Jg9r
+	 ZXyJXWlS78Z1OUVC7A2ad/dIDQ0hfrtBPTL7tHKog5R2NX71XuXW0kpZ0+xAs5zHXJ
+	 oZzDVcyc81nprI6rR6wDncWy4usiE4vAYib6nDKcyOkx9B1Xycy/YRVO22tXKe/SMT
+	 QUkzrvBtHdLlJqfCCytQKhpYBsINnpvxiEY6OJle8gReI6l54JvkYlgqmI+wPdpemx
+	 PPY73CSPa+zDA==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Date: Thu, 26 Jun 2025 12:26:17 +0200
+Subject: [PATCH v6 26/31] irqchip/gic-v3: Rename GICv3 ITS MSI parent
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: gQXf_YexrHdA1x2wpDeQWhWqMIzYxZSG
-X-Authority-Analysis: v=2.4 cv=Id+HWXqa c=1 sm=1 tr=0 ts=685d20d2 cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=606z3SnXk7aKuM2rapkA:9
-X-Proofpoint-GUID: gQXf_YexrHdA1x2wpDeQWhWqMIzYxZSG
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA4NyBTYWx0ZWRfX8tnHkpHTgZjb
- snah0ShFoqw9yHNiI5F4pKuCwYFShwsKhnPv8AZ2Uj847kKQG0rM4+1YwT1HDfTa9AlObMkrzbv
- QyXoxsDKxh5VzS2jb7YzXUJV2F5KYHpIlVlX6VwPqmpsKkxUl3ijK8yQpS5iTZKhVwn0fJ6Q5aY
- lfDg8VSEmm7ZWZ3RSSkvHiEiniYjfD9xc23lSE89pFEtkxNEYumkMKdeSHZ/Zf2Hw02FpvkusaL
- F5mqNqDkEGN+anUz9ML/LER/VQl7an29CcB2YoNmcqb4Pe+tpTF/i9f2m9kL+KgFCcePFfiKsSI
- 8GdNh3j//Tayxc7NFy7m3wjh91lZ2MIdUXNm2w6Gda0YpjTYtjucgQRWOdp8CCuechim1DxbZDh
- 4n+42WWzTGWizBLqEdoNB8WB3x4zeP2FNDmggQ0hmS8X6OzfwMaaTRApJOPKCwz2/IM8QnEJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_05,2025-06-25_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 priorityscore=1501 mlxlogscore=932 phishscore=0 bulkscore=0
- clxscore=1015 impostorscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506260087
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250626-gicv5-host-v6-26-48e046af4642@kernel.org>
+References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+In-Reply-To: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Sascha Bischoff <sascha.bischoff@arm.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Timothy Hayes <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Peter Maydell <peter.maydell@linaro.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>
+X-Mailer: b4 0.15-dev-6f78e
 
-Add the missing required-opps and operating-points-v2 properties to
-several I2C, SPI, and UART nodes in the QUP SEs.
+The GICv5 ITS will reuse some GICv3 ITS MSI parent functions therefore
+it makes sense to keep the code functionality in a compilation unit
+shared by the two drivers.
 
-Signed-off-by: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
+Rename the GICv3 ITS MSI parent file and update the related
+Kconfig/Makefile entries to pave the way for code sharing.
+
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Zyngier <maz@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/qcs615.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/irqchip/Kconfig                                       |  4 ++++
+ drivers/irqchip/Makefile                                      |  3 ++-
+ drivers/irqchip/irq-gic-common.h                              |  2 --
+ .../{irq-gic-v3-its-msi-parent.c => irq-gic-its-msi-parent.c} |  2 +-
+ drivers/irqchip/irq-gic-its-msi-parent.h                      | 11 +++++++++++
+ drivers/irqchip/irq-gic-v3-its.c                              |  1 +
+ 6 files changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-index bfbb21035492..e033b53f0f0f 100644
---- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-@@ -631,6 +631,7 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
- 				interconnect-names = "qup-core",
- 						     "qup-config";
- 				power-domains = <&rpmhpd RPMHPD_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 3e4fb08b7a4d..f9eae1a645c9 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -41,10 +41,14 @@ config ARM_GIC_V3
+ 	select HAVE_ARM_SMCCC_DISCOVERY
+ 	select IRQ_MSI_IOMMU
  
-@@ -654,6 +655,7 @@ &config_noc SLAVE_QUP_0 QCOM_ICC_TAG_ALWAYS>,
- 						     "qup-config",
- 						     "qup-memory";
- 				power-domains = <&rpmhpd RPMHPD_CX>;
-+				required-opps = <&rpmhpd_opp_low_svs>;
- 				dmas = <&gpi_dma0 0 1 QCOM_GPI_I2C>,
- 				       <&gpi_dma0 1 1 QCOM_GPI_I2C>;
- 				dma-names = "tx",
-@@ -681,6 +683,7 @@ &config_noc SLAVE_QUP_0 QCOM_ICC_TAG_ALWAYS>,
- 						     "qup-config",
- 						     "qup-memory";
- 				power-domains = <&rpmhpd RPMHPD_CX>;
-+				required-opps = <&rpmhpd_opp_low_svs>;
- 				dmas = <&gpi_dma0 0 2 QCOM_GPI_I2C>,
- 				       <&gpi_dma0 1 2 QCOM_GPI_I2C>;
- 				dma-names = "tx",
-@@ -703,6 +706,7 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
- 				interconnect-names = "qup-core",
- 						     "qup-config";
- 				power-domains = <&rpmhpd RPMHPD_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				dmas = <&gpi_dma0 0 2 QCOM_GPI_SPI>,
- 				       <&gpi_dma0 1 2 QCOM_GPI_SPI>;
- 				dma-names = "tx",
-@@ -728,6 +732,7 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
- 				interconnect-names = "qup-core",
- 						     "qup-config";
- 				power-domains = <&rpmhpd RPMHPD_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
++config ARM_GIC_ITS_PARENT
++	bool
++
+ config ARM_GIC_V3_ITS
+ 	bool
+ 	select GENERIC_MSI_IRQ
+ 	select IRQ_MSI_LIB
++	select ARM_GIC_ITS_PARENT
+ 	default ARM_GIC_V3
+ 	select IRQ_MSI_IOMMU
  
-@@ -751,6 +756,7 @@ &config_noc SLAVE_QUP_0 QCOM_ICC_TAG_ALWAYS>,
- 						     "qup-config",
- 						     "qup-memory";
- 				power-domains = <&rpmhpd RPMHPD_CX>;
-+				required-opps = <&rpmhpd_opp_low_svs>;
- 				dmas = <&gpi_dma0 0 3 QCOM_GPI_I2C>,
- 				       <&gpi_dma0 1 3 QCOM_GPI_I2C>;
- 				dma-names = "tx",
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index 7a0e6cee09e1..3ce6ea9a371b 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -33,7 +33,8 @@ obj-$(CONFIG_ARCH_REALVIEW)		+= irq-gic-realview.o
+ obj-$(CONFIG_IRQ_MSI_LIB)		+= irq-msi-lib.o
+ obj-$(CONFIG_ARM_GIC_V2M)		+= irq-gic-v2m.o
+ obj-$(CONFIG_ARM_GIC_V3)		+= irq-gic-v3.o irq-gic-v3-mbi.o irq-gic-common.o
+-obj-$(CONFIG_ARM_GIC_V3_ITS)		+= irq-gic-v3-its.o irq-gic-v4.o irq-gic-v3-its-msi-parent.o
++obj-$(CONFIG_ARM_GIC_ITS_PARENT)	+= irq-gic-its-msi-parent.o
++obj-$(CONFIG_ARM_GIC_V3_ITS)		+= irq-gic-v3-its.o irq-gic-v4.o
+ obj-$(CONFIG_ARM_GIC_V3_ITS_FSL_MC)	+= irq-gic-v3-its-fsl-mc-msi.o
+ obj-$(CONFIG_PARTITION_PERCPU)		+= irq-partition-percpu.o
+ obj-$(CONFIG_ARM_GIC_V5)		+= irq-gic-v5.o irq-gic-v5-irs.o
+diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
+index 020ecdf16901..710cab61d919 100644
+--- a/drivers/irqchip/irq-gic-common.h
++++ b/drivers/irqchip/irq-gic-common.h
+@@ -29,8 +29,6 @@ void gic_enable_quirks(u32 iidr, const struct gic_quirk *quirks,
+ void gic_enable_of_quirks(const struct device_node *np,
+ 			  const struct gic_quirk *quirks, void *data);
+ 
+-extern const struct msi_parent_ops gic_v3_its_msi_parent_ops;
+-
+ #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING    (1 << 0)
+ #define RDIST_FLAGS_RD_TABLES_PREALLOCATED     (1 << 1)
+ #define RDIST_FLAGS_FORCE_NON_SHAREABLE        (1 << 2)
+diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/irq-gic-its-msi-parent.c
+similarity index 99%
+rename from drivers/irqchip/irq-gic-v3-its-msi-parent.c
+rename to drivers/irqchip/irq-gic-its-msi-parent.c
+index a5e110ffdd88..8beecfed2b84 100644
+--- a/drivers/irqchip/irq-gic-v3-its-msi-parent.c
++++ b/drivers/irqchip/irq-gic-its-msi-parent.c
+@@ -7,7 +7,7 @@
+ #include <linux/acpi_iort.h>
+ #include <linux/pci.h>
+ 
+-#include "irq-gic-common.h"
++#include "irq-gic-its-msi-parent.h"
+ #include <linux/irqchip/irq-msi-lib.h>
+ 
+ #define ITS_MSI_FLAGS_REQUIRED  (MSI_FLAG_USE_DEF_DOM_OPS |	\
+diff --git a/drivers/irqchip/irq-gic-its-msi-parent.h b/drivers/irqchip/irq-gic-its-msi-parent.h
+new file mode 100644
+index 000000000000..75e223e673ce
+--- /dev/null
++++ b/drivers/irqchip/irq-gic-its-msi-parent.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2024 ARM Limited, All Rights Reserved.
++ */
++
++#ifndef _IRQ_GIC_ITS_MSI_PARENT_H
++#define _IRQ_GIC_ITS_MSI_PARENT_H
++
++extern const struct msi_parent_ops gic_v3_its_msi_parent_ops;
++
++#endif /* _IRQ_GIC_ITS_MSI_PARENT_H */
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index d54fa0638dc4..467cb78435a9 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -41,6 +41,7 @@
+ #include <asm/exception.h>
+ 
+ #include "irq-gic-common.h"
++#include "irq-gic-its-msi-parent.h"
+ #include <linux/irqchip/irq-msi-lib.h>
+ 
+ #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
+
 -- 
-2.34.1
+2.48.0
 
