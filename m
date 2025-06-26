@@ -1,907 +1,476 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD86214A94;
-	Thu, 26 Jun 2025 22:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D999519DF48
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750978123; cv=none; b=sx3iHu0qbfu3A+ly3YHo3jMjgWVq6D2cBtMrL3yLkkLuqg9GWUCYt3Z7yZB1X5x3U/jJ0zl+H9zZ67e+39fsacXGpQ9I4tvI498euA9HtKHfO1Jg/Tk8dvQSYbRRHkvfxERGT7aPxoY5J0uWszZnRtEAefgQhprUJYMXwBZCA38=
+	t=1750978267; cv=none; b=PaUK6WvbrnBu/cxoVq9gz999DtcMj+UrIVV192YeMvhvGZOeePEg5VDJVga9A5viKDK9FzcMy+xgREgLA7Kivf8ZaNfQGFMf1sI5aJI8c/CUs44x2xomC8Tmg71Q3HEKYfoAyNflxcUOJhweWZ44h4GlBfdRrXrVsU0euC7DAwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750978123; c=relaxed/simple;
-	bh=soULZlXK14ui2ZLA+x7QLahMaDvw2vVZ3szUDh0KkWU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iR3uK9CsiRgL7T6DjL0gTJeyf8F1gGVZzi0X/vxm1t5zqAerd/TgRl+jz3UMq0eJtvNY3pRxrrM3dvkzyZgck5/jTbHKegu/M4EKcnbVKLu2ozXoG5gSNlGs5G7VJ6WdUiqWiCbyuGzA3kRaXiRQyJVwYl6rK09YubbUtfu1/0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jD4oCWpG; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750978267; c=relaxed/simple;
+	bh=DcLiR3fZNkN2Nuc2HpqBA9XZP3XG6e7TgAPHBFmLJ7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kWHaZNhSqBseQeLrW1OXHim8nKvuCTag7krlhUcb1jV3WWw0TrCetCtqJswq6y8uosou8CxtZHJr8WK7IOahDo/bIu3B095cKiYU2hFe3BTIx2FzRPed2OJb+o0xGYB9EIbZNTA7TBlfC8v1bm5ab/IAs7KzsMLjEsR+VtehtV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=gmcMBkg7; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jD4oCWpG"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-45377776935so16398805e9.3;
-        Thu, 26 Jun 2025 15:48:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="gmcMBkg7"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2350b1b9129so11964755ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:51:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750978119; x=1751582919; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fQIjP3R83pMaIkf9kIVI3mqiniBM44kym+NJCsfC6+I=;
-        b=jD4oCWpGTcypOEumfVd9/MYyepmKOABCPJ1aKdENMpOlFnTUPx/J2HYl5w1mWUk1FG
-         bL3vYtfx0cqDx9o/PpHf+EPebIPaqwDWHzeo6oz6Gkyhgx89QoS92lOsWZ+yHpUb/QXy
-         1uhF4ak5Rly6K0hztqPTSG/HuvvNeG84Z01Eb2wnHoXAu5+yN5H4mRASs2h9LjHxDchv
-         8L+l3aZwXMDniVXbL0739WF6P0glMGpFcCM8yTLcNG07tbMMGct29C+dwDNccsh16uJ8
-         bNMjDXju/4uvKymIZmOEVu14jTs1fB/Q3Z6VxG6jp2zHfKBauXXgBAnauiwLG+ZxAw03
-         pyIw==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1750978264; x=1751583064; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AEnbe9pZhpI1K6vrxMSYleXTttDFS5F3fDukSEShxfY=;
+        b=gmcMBkg7y364RIEPp3Hk14w7hkN0pxglY5PzdhvZZJm8yExuOnNwsZme12nYuN7st+
+         /LUHeGRsJYDd89AwKsrxGj+PgmviGTRD3DV0C9FxyE0FCep8QTjkkrEI3c/qcuJvXO0Y
+         N+iEV7YnjDyKT3b8HkYDtTDOjW6G/QtbaTvZiJ3d2e6KL+kO9Tt66yeAsKkirOkk6deL
+         vXU6RnK4VoegC3TuBGaW9XTEQhRRYdEQ24G/ZGl8olTJl/OpufijHO8F+Nq2Pf4/msZO
+         /zWwLd3ven8Q5SoI0CB6cBDXb0xl8B78ZzIMTNFCBFBTKe4s6iiWiAQxJtXgT5J+dT40
+         AH0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750978119; x=1751582919;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fQIjP3R83pMaIkf9kIVI3mqiniBM44kym+NJCsfC6+I=;
-        b=lKNUVtxNCJwh0cApVSXnvYL700VBAOHc+zpcvDW9dBITUTp0ZbQns8+1L7t/yoD/7f
-         LUuxQZmTfndH3aOaSyvvfiJH2xunRxbyrOx3W+qzyVBHFqX/JKp0Y+5tLKAZ0y10uBp9
-         vBPgqTVFpn9UPNzw7psVBFgh9zXlDS+0Qf8NxX0/JH7EBL9Hpxu2whVWfYHHd0Pm684F
-         4fVsk3rHjQ2lPMifaOkGa+sVBt1WMFTq4k9srkiT5rrSwzav3IePAsOS7VVYxMmRwDCK
-         4EhbcHH9W6nadEYgOf+tbNjVZD4NiA7cFgMyRXdmEUuL5Hlc0PzyRzs5HzsAhqCWkuha
-         4Obw==
-X-Forwarded-Encrypted: i=1; AJvYcCVHFUHPFvs/PZ/b337dy5jDshP176OHLY1dLtBORJWQe6zQ4mZJcyS5nIz5XEWugfdw0c9lEeEe30JbFaY=@vger.kernel.org, AJvYcCX/fpl/dZ8ycgzxoDKbj/ZCnjV0G6PyY0RwKf+UbT4uLGSOvSY/ULJ+cNQ0arhvpr7HepTpPBb5NJTg@vger.kernel.org
-X-Gm-Message-State: AOJu0YwG7okXUc1xmJUUK5f5cPGcosE08Sa1nhGZ84gNMM251Wq+t9Ue
-	zwZUhFNDFh5QD7/JVQi/ae0jHGIeje6i9KYSzSfL1Nl4+MtUhjvCl33S
-X-Gm-Gg: ASbGncs+4En6bZKWUnT+1galEMS7cKhAgTjv09/XpjEjNb4NCIsOX2ynu8PbI7JoPRg
-	iMJm2SweA4gVkiFx8y4CXQlGIvXhy0BAbRycifEbFW+iVd1S05u9x4Wi+Gh/XVY1WhC1/kgvY5e
-	kASykuxexEYloC18JQFWCK4DXkQcX1t4ugV57xP6QzRbRU0s9I3uFpqZmwso+jnzYBxttSe4XeB
-	6/BsCOnWdzcKx2Fn8MkkV4MYkjlgVYK2qj1oXQd5FwsTjh0buTugcozabup4bgSTNquLvMMBfol
-	Q2b6DfYdlkKOPc13u8caiPmxjPeadbDLLkf0D4fzB/akWO2Ou6nhY32/PtwwHmXT5Vx1WqVM4U7
-	AGYOA8VQQZzRDWT0D4aMhX/Rubk0xtHI=
-X-Google-Smtp-Source: AGHT+IEM7NmE5aajKEmusaLFKeuPfb+CZYzNxGALJu0Kra8TB5PzU4buF0Q6tm6shBilfqSnrTJ+cw==
-X-Received: by 2002:a05:600c:5249:b0:450:cfe1:a827 with SMTP id 5b1f17b1804b1-4538ee95284mr12284075e9.31.1750978118892;
-        Thu, 26 Jun 2025 15:48:38 -0700 (PDT)
-Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-453823c3a96sm61879685e9.35.2025.06.26.15.48.37
+        d=1e100.net; s=20230601; t=1750978264; x=1751583064;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AEnbe9pZhpI1K6vrxMSYleXTttDFS5F3fDukSEShxfY=;
+        b=WswbliggQ8myBRLZbgZ3JWr6wydXFpcF1p80/8FA26kZviESquaM4zv8sMPoCz25Je
+         p8ocjorVFmXqklR3S0TIMrHEx54ZLU4r1d3Teuu0W6JRUbvCruj6kIK9vQSTLooI0TTi
+         jcLyVKmUyUb+OnWsiN1MfPZkadX2bBsbXmehc6w2GpF507No4NoqmBPi9JGbx84Ct0Gr
+         0GwBASNDsV3zHeAoA6SmRqkfq4MiIFSRX5zQIB5R8vMRDJgYz+xiPHC1Nn7KsCKHJJrL
+         pLq7gqvPWBWv9VM2CM9gXJ5x/y122VNhEOjMDH0FkT2c3Y596atm3UgfLC+4/PFMjwbT
+         Xk5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWJlSPFal9zq1A2dOu3gOPeYKg7bH+/oNzNKV5HJZsMVlKKrNgazSVEjis95MK7TrLzYKGQUtwfnLBmd2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqzUdOhoJWlY2V8r0lxmZlz6ncu0h1snj6EnfUahHcNFP0fVIe
+	w6j092zR5ZGniH6eQ0JEtepkYjNl6c0cRwevsN+tJE6pSEjpHJKNovJY1I/M1nGMHuM=
+X-Gm-Gg: ASbGncvuZgdFYfPSzicH2Wyw6ISMemtT6m0W+2DCOtFbV3/d8Rzc2CAUfkuwJs33H6m
+	gJfRLEtLyuHA60mYOJ6PpE2Yz9FNonAgtotpxUzp9aUVed5S6AZ8mB9YTFvktxQwwqOLb1fJOw8
+	ocWuZ8Ux6qdVqXjR2/btUHeKKmpFUKlfNF2TrzKbWIVTaBcNSCFASJx7NJ0D5jqzv/OjXE1TiaK
+	QE3jBzkUJsVOcHLub1+fntvig48A5DHZffWKHyBnXJko2SwEZrXWmXzqpHbAQGyQfn4K6hRjceJ
+	4+vhT/8fDXKnPjStRefyRMPpOa0sjRtMHDTQegIWDMpD5Rty7x6KnteIl7XMejzeGSGaWXYR
+X-Google-Smtp-Source: AGHT+IF9pZAM3AyIObkxYVNdUrFcRsBrOefpD8ZRTDy6dPjoRKmU5cA1eZAOa2yQ85ik9Cv6JN4o6A==
+X-Received: by 2002:a17:903:2351:b0:238:2990:6382 with SMTP id d9443c01a7336-23ac19a7938mr15760395ad.0.1750978264113;
+        Thu, 26 Jun 2025 15:51:04 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3b7f5dsm1104235ad.179.2025.06.26.15.51.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 15:48:37 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Christian Marangi <ansuelsmth@gmail.com>
-Subject: [PATCH v18] pwm: airoha: Add support for EN7581 SoC
-Date: Fri, 27 Jun 2025 00:47:53 +0200
-Message-ID: <20250626224805.9034-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.48.1
+        Thu, 26 Jun 2025 15:51:03 -0700 (PDT)
+Date: Thu, 26 Jun 2025 15:51:01 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Vineet Gupta <vineetg@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Yunhui Cui <cuiyunhui@bytedance.com>,
+	Atish Patra <atish.patra@linux.dev>, bjorn@kernel.org
+Subject: Re: [PATCH] RISC-V: avoid using t6/x31 in hand asm
+Message-ID: <aF3O1brBEq1bospS@debug.ba.rivosinc.com>
+References: <20250626214455.285086-1-vineetg@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250626214455.285086-1-vineetg@rivosinc.com>
 
-From: Benjamin Larsson <benjamin.larsson@genexis.eu>
+On Thu, Jun 26, 2025 at 02:44:55PM -0700, Vineet Gupta wrote:
+>This is technically NFC as nothing functional changes, except for usage
+>of different regs in some of the asm code.
+>
+>This paves the way for using t6 as a global reg for say hoisting percpu
+>base address (with further compiler toggles suh as -ffixed-t6.
+>
+>Lightly tested on QEMU: survives boot/hachbench (thx Atish for the
+>testing).
 
-Introduce driver for PWM module available on EN7581 SoC.
+Do we care about 32 bit? I see that bpf jitting for 32bit uses t6 in
+codegen. Doesn't look like 64-bit uses t6 in codegen (but take a closer
+look). CC: bjorn
 
-Signed-off-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Co-developed-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Co-developed-by: Christian Marangi <ansuelsmth@gmail.com>
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
-Changes v18:
-- Fix not inizialized period_ns
-- Update copyright name
-- Improve define and comments
-- Add array_size.h
-- Better handle refcount in airoha_pwm_consume_generator
-
-Changes v17:
-- Drop math64.h patch
-- Move to rounddown()
-- Use u32 for period_ns (after clamp)
-- Use ticks in inner function and for buckets
-
-Changes v16:
-- Always check regmap return
-- Add missing header
-- Use bitmask APIs
-- Use refcount instead of raw u64
-- Fix spelling mistake and improve text
-- Drop OF dependency
-- Drop redundant always true if condition
-- Add myself as Author
-
-Changes v15:
-- Fix compilation error for 64bit division on 32bit (patch 01)
-- Add prefer async probe
-
-Changes v14:
-- Fix logic for bucket recycle
-  (was tested by not releasing the bucket and observing
-   the best one gets used)
-- Assign bucket period and duty only if not used
-- Skip bucket period/duty calculation if already used
-- Permit disable also if inversed polarity is asked
-- Normalize duty similar to period
-
-Changes v13:
-- Reorder include
-- Split ticks_from_ns function
-- Add additional comments for shift register chip clock
-- Address suggested minor optimization (Uwe)
-
-Changes v12:
-- Make shift function more readable
-- Use unsigned int where possible
-- Better comment some SIPO strangeness
-- Move SIPO init after flash map config
-- Retrun real values in get_state instead of the
-  one saved in bucket
-- Improve period_ns parsing so we can better share generators
-
-Changes v11:
-- Fix wrong calculation of period and duty
-- Use AIROHA_PWM prefix for each define
-- Drop set/get special define in favour of BITS and GENMASK
-- Correctly use dev_err_probe
-- Init bucket with initial values
-- Rework define to make use of FIELD_PREP and FIELD_GET
-
-Changes in v10:
-- repost just patch 6/6 (pwm driver) since patches {1/6-5/6} have been
-  already applied in linux-pinctrl tree
-- pwm: introduce AIROHA_PWM_FIELD_GET and AIROHA_PWM_FIELD_SET macros to
-  get/set field with non-const mask
-- pwm: simplify airoha_pwm_get_generator() to report unused generator
-  and remove double lookup
-- pwm: remove device_node pointer in airoha_pwm struct since this is
-  write-only field
-- pwm: cosmetics
-- Link to v9: https://lore.kernel.org/r/20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org
-
-Changes in v9:
-- pwm: remove unused properties
-- Link to v8: https://lore.kernel.org/r/20241018-en7581-pinctrl-v8-0-b676b966a1d1@kernel.org
-
-Changes in v8:
-- pwm: add missing properties documentation
-- Link to v7: https://lore.kernel.org/r/20241016-en7581-pinctrl-v7-0-4ff611f263a7@kernel.org
-
-Changes in v7:
-- pinctrl: cosmetics
-- pinctrl: fix compilation warning
-- Link to v6: https://lore.kernel.org/r/20241013-en7581-pinctrl-v6-0-2048e2d099c2@kernel.org
-
-Changes in v6:
-- pwm: rely on regmap APIs
-- pwm: introduce compatible string
-- pinctrl: introduce compatible string
-- remove airoha-mfd driver
-- add airoha,en7581-pinctrl binding
-- add airoha,en7581-pwm binding
-- update airoha,en7581-gpio-sysctl binding
-- Link to v5: https://lore.kernel.org/r/20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org
-
-Changes in v5:
-- use spin_lock in airoha_pinctrl_rmw instead of a mutex since it can run
-  in interrupt context
-- remove unused includes in pinctrl driver
-- since the irq_chip is immutable, allocate the gpio_irq_chip struct
-  statically in pinctrl driver
-- rely on regmap APIs in pinctrl driver but keep the spin_lock local to the
-  driver
-- rely on guard/guard_scope APIs in pinctrl driver
-- improve naming convention pinctrl driver
-- introduce airoha_pinconf_set_pin_value utility routine
-- Link to v4: https://lore.kernel.org/r/20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org
-
-Changes in v4:
-- add 'Limitation' description in pwm driver
-- fix comments in pwm driver
-- rely on mfd->base __iomem pointer in pwm driver, modify register
-  offsets according to it and get rid of sgpio_cfg, flash_cfg and
-  cycle_cfg pointers
-- simplify register utility routines in pwm driver
-- use 'generator' instead of 'waveform' suffix for pwm routines
-- fix possible overflow calculating duty cycle in pwm driver
-- do not modify pwm state in free callback in pwm driver
-- cap the maximum period in pwm driver
-- do not allow inverse polarity in pwm driver
-- do not set of_xlate callback in the pwm driver and allow the stack to
-  do it
-- fix MAINTAINERS file for airoha pinctrl driver
-- fix undefined reference to __ffsdi2 in pinctrl driver
-- simplify airoha,en7581-gpio-sysctl.yam binding
-- Link to v3: https://lore.kernel.org/r/20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org
-
-Changes in v3:
-- introduce airoha-mfd driver
-- add pwm driver to the same series
-- model pinctrl and pwm drivers as childs of a parent mfd driver.
-- access chip-scu memory region in pinctrl driver via syscon
-- introduce a single airoha,en7581-gpio-sysctl.yaml binding and get rid
-  of dedicated bindings for pinctrl and pwm
-- add airoha,en7581-chip-scu.yaml binding do the series
-- Link to v2: https://lore.kernel.org/r/20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org
-
-Changes in v2:
-- Fix compilation errors
-- Collapse some register mappings for gpio and irq controllers
-- update dt-bindings according to new register mapping
-- fix some dt-bindings errors
-- Link to v1: https://lore.kernel.org/all/cover.1723392444.git.lorenzo@kernel.org/
-
- drivers/pwm/Kconfig      |  10 +
- drivers/pwm/Makefile     |   1 +
- drivers/pwm/pwm-airoha.c | 626 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 637 insertions(+)
- create mode 100644 drivers/pwm/pwm-airoha.c
-
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index c866ed388da9..4aa7d94cd680 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -54,6 +54,16 @@ config PWM_ADP5585
- 	  This option enables support for the PWM function found in the Analog
- 	  Devices ADP5585.
- 
-+config PWM_AIROHA
-+	tristate "Airoha PWM support"
-+	depends on ARCH_AIROHA || COMPILE_TEST
-+	select REGMAP_MMIO
-+	help
-+	  Generic PWM framework driver for Airoha SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-airoha.
-+
- config PWM_APPLE
- 	tristate "Apple SoC PWM support"
- 	depends on ARCH_APPLE || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 5c782af8f49b..cd3e6de2e44a 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_PWM)		+= core.o
- obj-$(CONFIG_PWM_AB8500)	+= pwm-ab8500.o
- obj-$(CONFIG_PWM_ADP5585)	+= pwm-adp5585.o
-+obj-$(CONFIG_PWM_AIROHA)	+= pwm-airoha.o
- obj-$(CONFIG_PWM_APPLE)		+= pwm-apple.o
- obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
- obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+= pwm-atmel-hlcdc.o
-diff --git a/drivers/pwm/pwm-airoha.c b/drivers/pwm/pwm-airoha.c
-new file mode 100644
-index 000000000000..14885f765116
---- /dev/null
-+++ b/drivers/pwm/pwm-airoha.c
-@@ -0,0 +1,626 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2025 Markus Gothe <markus.gothe@genexis.eu>
-+ *		  Christian Marangi <ansuelsmth@gmail.com>
-+ *
-+ *  Limitations:
-+ *  - Only 8 concurrent waveform generators are available for 8 combinations of
-+ *    duty_cycle and period. Waveform generators are shared between 16 GPIO
-+ *    pins and 17 SIPO GPIO pins.
-+ *  - Supports only normal polarity.
-+ *  - On configuration the currently running period is completed.
-+ *  - Minimum supported period is 4ms
-+ *  - Maximum supported period is 1s
-+ */
-+
-+#include <linux/array_size.h>
-+#include <linux/bitfield.h>
-+#include <linux/bitmap.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/math64.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/refcount.h>
-+#include <linux/regmap.h>
-+#include <linux/types.h>
-+
-+#define AIROHA_PWM_REG_SGPIO_LED_DATA		0x0024
-+#define AIROHA_PWM_SGPIO_LED_DATA_SHIFT_FLAG	BIT(31)
-+#define AIROHA_PWM_SGPIO_LED_DATA_DATA		GENMASK(16, 0)
-+
-+#define AIROHA_PWM_REG_SGPIO_CLK_DIVR		0x0028
-+#define AIROHA_PWM_SGPIO_CLK_DIVR		GENMASK(1, 0)
-+#define AIROHA_PWM_SGPIO_CLK_DIVR_32		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 3)
-+#define AIROHA_PWM_SGPIO_CLK_DIVR_16		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 2)
-+#define AIROHA_PWM_SGPIO_CLK_DIVR_8		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 1)
-+#define AIROHA_PWM_SGPIO_CLK_DIVR_4		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 0)
-+
-+#define AIROHA_PWM_REG_SGPIO_CLK_DLY		0x002c
-+
-+#define AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG	0x0030
-+#define AIROHA_PWM_SERIAL_GPIO_FLASH_MODE	BIT(1)
-+#define AIROHA_PWM_SERIAL_GPIO_MODE_74HC164	BIT(0)
-+
-+#define AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(_n)	(0x003c + (4 * (_n)))
-+#define AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(_n) (16 * (_n))
-+#define AIROHA_PWM_GPIO_FLASH_PRD_LOW		GENMASK(15, 8)
-+#define AIROHA_PWM_GPIO_FLASH_PRD_HIGH		GENMASK(7, 0)
-+
-+#define AIROHA_PWM_REG_GPIO_FLASH_MAP(_n)	(0x004c + (4 * (_n)))
-+#define AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(_n) (4 * (_n))
-+#define AIROHA_PWM_GPIO_FLASH_EN		BIT(3)
-+#define AIROHA_PWM_GPIO_FLASH_SET_ID		GENMASK(2, 0)
-+
-+/* Register map is equal to GPIO flash map */
-+#define AIROHA_PWM_REG_SIPO_FLASH_MAP(_n)	(0x0054 + (4 * (_n)))
-+
-+#define AIROHA_PWM_REG_CYCLE_CFG_VALUE(_n)	(0x0098 + (4 * (_n)))
-+#define AIROHA_PWM_REG_CYCLE_CFG_SHIFT(_n)	(8 * (_n))
-+#define AIROHA_PWM_WAVE_GEN_CYCLE		GENMASK(7, 0)
-+
-+/* GPIO/SIPO flash map handles 8 pins in one register */
-+#define AIROHA_PWM_PINS_PER_FLASH_MAP		8
-+/* Cycle(Period) registers handles 4 generators in one 32-bit register */
-+#define AIROHA_PWM_BUCKET_PER_CYCLE_CFG		4
-+/* Flash(Duty) producer handles 2 generators in one 32-bit register */
-+#define AIROHA_PWM_BUCKET_PER_FLASH_PROD	2
-+
-+#define AIROHA_PWM_NUM_BUCKETS			8
-+/*
-+ * The first 16 GPIO pins, GPIO0-GPIO15, are mapped into 16 PWM channels, 0-15.
-+ * The SIPO GPIO pins are 17 pins which are mapped into 17 PWM channels, 16-32.
-+ * However, we've only got 8 concurrent waveform generators and can therefore
-+ * only use up to 8 different combinations of duty cycle and period at a time.
-+ */
-+#define AIROHA_PWM_NUM_GPIO			16
-+#define AIROHA_PWM_NUM_SIPO			17
-+#define AIROHA_PWM_MAX_CHANNELS			(AIROHA_PWM_NUM_GPIO + AIROHA_PWM_NUM_SIPO)
-+
-+struct airoha_pwm_bucket {
-+	/* Track concurrent usage of the bucket */
-+	refcount_t used;
-+	u32 period_ticks;
-+	u32 duty_ticks;
-+};
-+
-+struct airoha_pwm {
-+	struct regmap *regmap;
-+	/* Global mutex to protect bucket used refcount_t */
-+	struct mutex mutex;
-+
-+	DECLARE_BITMAP(initialized, AIROHA_PWM_MAX_CHANNELS);
-+
-+	struct airoha_pwm_bucket buckets[AIROHA_PWM_NUM_BUCKETS];
-+
-+	/* Cache bucket used by each pwm channel */
-+	u8 channel_bucket[AIROHA_PWM_MAX_CHANNELS];
-+};
-+
-+/* The PWM hardware supports periods between 4 ms and 1 s */
-+#define AIROHA_PWM_PERIOD_TICK_NS	(4 * NSEC_PER_MSEC)
-+#define AIROHA_PWM_PERIOD_MAX_NS	(1 * NSEC_PER_SEC)
-+/* It is represented internally as 1/250 s between 1 and 250. Unit is ticks. */
-+#define AIROHA_PWM_PERIOD_MIN		1
-+#define AIROHA_PWM_PERIOD_MAX		250
-+/* Duty cycle is relative with 255 corresponding to 100% */
-+#define AIROHA_PWM_DUTY_FULL		255
-+
-+static void airoha_pwm_get_flash_map_addr_and_shift(unsigned int hwpwm,
-+						    u32 *addr, u32 *shift)
-+{
-+	unsigned int offset, hwpwm_bit;
-+
-+	if (hwpwm >= AIROHA_PWM_NUM_GPIO) {
-+		unsigned int sipohwpwm = hwpwm - AIROHA_PWM_NUM_GPIO;
-+
-+		offset = sipohwpwm / AIROHA_PWM_PINS_PER_FLASH_MAP;
-+		hwpwm_bit = sipohwpwm % AIROHA_PWM_PINS_PER_FLASH_MAP;
-+
-+		/* One FLASH_MAP register handles 8 pins */
-+		*shift = AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(hwpwm_bit);
-+		*addr = AIROHA_PWM_REG_SIPO_FLASH_MAP(offset);
-+	} else {
-+		offset = hwpwm / AIROHA_PWM_PINS_PER_FLASH_MAP;
-+		hwpwm_bit = hwpwm % AIROHA_PWM_PINS_PER_FLASH_MAP;
-+
-+		/* One FLASH_MAP register handles 8 pins */
-+		*shift = AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(hwpwm_bit);
-+		*addr = AIROHA_PWM_REG_GPIO_FLASH_MAP(offset);
-+	}
-+}
-+
-+static u32 airoha_pwm_get_period_ticks_from_ns(u32 period_ns)
-+{
-+	return period_ns / AIROHA_PWM_PERIOD_TICK_NS;
-+}
-+
-+static u32 airoha_pwm_get_duty_ticks_from_ns(u32 period_ns, u32 duty_ns)
-+{
-+	return mul_u64_u32_div(duty_ns, AIROHA_PWM_DUTY_FULL, period_ns);
-+}
-+
-+static int airoha_pwm_get_bucket(struct airoha_pwm *pc, int bucket,
-+				 u64 *period_ns, u64 *duty_ns)
-+{
-+	struct regmap *map = pc->regmap;
-+	u32 period_tick, duty_tick;
-+	unsigned int offset;
-+	u32 shift, val;
-+	int ret;
-+
-+	offset = bucket / AIROHA_PWM_BUCKET_PER_CYCLE_CFG;
-+	shift = bucket % AIROHA_PWM_BUCKET_PER_CYCLE_CFG;
-+	shift = AIROHA_PWM_REG_CYCLE_CFG_SHIFT(shift);
-+
-+	ret = regmap_read(map, AIROHA_PWM_REG_CYCLE_CFG_VALUE(offset), &val);
-+	if (ret)
-+		return ret;
-+
-+	period_tick = FIELD_GET(AIROHA_PWM_WAVE_GEN_CYCLE, val >> shift);
-+	*period_ns = period_tick * AIROHA_PWM_PERIOD_TICK_NS;
-+
-+	offset = bucket / AIROHA_PWM_BUCKET_PER_FLASH_PROD;
-+	shift = bucket % AIROHA_PWM_BUCKET_PER_FLASH_PROD;
-+	shift = AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(shift);
-+
-+	ret = regmap_read(map, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
-+			  &val);
-+	if (ret)
-+		return ret;
-+
-+	duty_tick = FIELD_GET(AIROHA_PWM_GPIO_FLASH_PRD_HIGH, val >> shift);
-+	/*
-+	 * Overflow can't occur in multiplication as duty_tick is just 8 bit
-+	 * and period_ns is clamped to AIROHA_PWM_PERIOD_MAX_NS and fit in a
-+	 * u64.
-+	 */
-+	*duty_ns = DIV_U64_ROUND_UP(duty_tick * *period_ns, AIROHA_PWM_DUTY_FULL);
-+
-+	return 0;
-+}
-+
-+static int airoha_pwm_get_generator(struct airoha_pwm *pc, u32 duty_ticks,
-+				    u32 period_ticks)
-+{
-+	int best = -ENOENT, unused = -ENOENT;
-+	u32 best_period_ticks = 0;
-+	u32 best_duty_ticks = 0;
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(pc->buckets); i++) {
-+		struct airoha_pwm_bucket *bucket = &pc->buckets[i];
-+		u32 bucket_period_ticks = bucket->period_ticks;
-+		u32 bucket_duty_ticks = bucket->duty_ticks;
-+
-+		/* If found, save an unused bucket to return it later */
-+		if (refcount_read(&bucket->used) == 0) {
-+			unused = i;
-+			continue;
-+		}
-+
-+		/* We found a matching bucket, exit early */
-+		if (duty_ticks == bucket_duty_ticks &&
-+		    period_ticks == bucket_period_ticks)
-+			return i;
-+
-+		/*
-+		 * Unlike duty cycle zero, which can be handled by
-+		 * disabling PWM, a generator is needed for full duty
-+		 * cycle but it can be reused regardless of period
-+		 */
-+		if (duty_ticks == AIROHA_PWM_DUTY_FULL &&
-+		    bucket_duty_ticks == AIROHA_PWM_DUTY_FULL)
-+			return i;
-+
-+		/*
-+		 * With an unused bucket available, skip searching for
-+		 * a bucket to recycle (closer to the requested period/duty)
-+		 */
-+		if (unused >= 0)
-+			continue;
-+
-+		/* Ignore bucket with invalid configs */
-+		if (bucket_period_ticks > period_ticks ||
-+		    bucket_duty_ticks > duty_ticks)
-+			continue;
-+
-+		/*
-+		 * Search for a bucket closer to the requested period/duty
-+		 * that has the maximal possible period that isn't bigger
-+		 * than the requested period. For that period pick the maximal
-+		 * duty cycle that isn't bigger than the requested duty_cycle.
-+		 */
-+		if (bucket_period_ticks > best_period_ticks ||
-+		    (bucket_period_ticks == best_period_ticks &&
-+		     bucket_duty_ticks > best_duty_ticks)) {
-+			best_period_ticks = bucket_period_ticks;
-+			best_duty_ticks = bucket_duty_ticks;
-+			best = i;
-+		}
-+	}
-+
-+	/* Return an unused bucket or the best one found (if ever) */
-+	return unused >= 0 ? unused : best;
-+}
-+
-+static void airoha_pwm_release_bucket_config(struct airoha_pwm *pc,
-+					     unsigned int hwpwm)
-+{
-+	int bucket;
-+
-+	/* Nothing to clear, PWM channel never used */
-+	if (!test_bit(hwpwm, pc->initialized))
-+		return;
-+
-+	bucket = pc->channel_bucket[hwpwm];
-+	refcount_dec(&pc->buckets[bucket].used);
-+}
-+
-+static int airoha_pwm_apply_bucket_config(struct airoha_pwm *pc, int bucket,
-+					  u32 duty_ticks, u32 period_ticks)
-+{
-+	u32 mask, shift, val;
-+	u64 offset;
-+	int ret;
-+
-+	offset = bucket;
-+	shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
-+	shift = AIROHA_PWM_REG_CYCLE_CFG_SHIFT(shift);
-+
-+	/* Configure frequency divisor */
-+	mask = AIROHA_PWM_WAVE_GEN_CYCLE << shift;
-+	val = FIELD_PREP(AIROHA_PWM_WAVE_GEN_CYCLE, period_ticks) << shift;
-+	ret = regmap_update_bits(pc->regmap, AIROHA_PWM_REG_CYCLE_CFG_VALUE(offset),
-+				 mask, val);
-+	if (ret)
-+		return ret;
-+
-+	offset = bucket;
-+	shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
-+	shift = AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(shift);
-+
-+	/* Configure duty cycle */
-+	mask = AIROHA_PWM_GPIO_FLASH_PRD_HIGH << shift;
-+	val = FIELD_PREP(AIROHA_PWM_GPIO_FLASH_PRD_HIGH, duty_ticks) << shift;
-+	ret = regmap_update_bits(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
-+				 mask, val);
-+	if (ret)
-+		return ret;
-+
-+	mask = AIROHA_PWM_GPIO_FLASH_PRD_LOW << shift;
-+	val = FIELD_PREP(AIROHA_PWM_GPIO_FLASH_PRD_LOW,
-+			 AIROHA_PWM_DUTY_FULL - duty_ticks) << shift;
-+	return regmap_update_bits(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
-+				  mask, val);
-+}
-+
-+static int airoha_pwm_consume_generator(struct airoha_pwm *pc,
-+					u32 duty_ticks, u32 period_ticks,
-+					unsigned int hwpwm)
-+{
-+	bool config_bucket = false;
-+	int bucket, ret;
-+
-+	/*
-+	 * Search for a bucket that already satisfies duty and period
-+	 * or an unused one.
-+	 * If not found, -ENOENT is returned.
-+	 */
-+	bucket = airoha_pwm_get_generator(pc, duty_ticks, period_ticks);
-+	if (bucket < 0)
-+		return bucket;
-+
-+	/* Release previous used bucket (if any) */
-+	airoha_pwm_release_bucket_config(pc, hwpwm);
-+
-+	mutex_lock(&pc->mutex);
-+	if (refcount_read(&pc->buckets[bucket].used) == 0) {
-+		config_bucket = true;
-+		refcount_set(&pc->buckets[bucket].used, 1);
-+	} else {
-+		refcount_inc(&pc->buckets[bucket].used);
-+	}
-+	mutex_unlock(&pc->mutex);
-+
-+	if (config_bucket) {
-+		pc->buckets[bucket].period_ticks = period_ticks;
-+		pc->buckets[bucket].duty_ticks = duty_ticks;
-+		ret = airoha_pwm_apply_bucket_config(pc, bucket,
-+						     duty_ticks,
-+						     period_ticks);
-+		if (ret) {
-+			refcount_dec(&pc->buckets[bucket].used);
-+			return ret;
-+		}
-+	}
-+
-+	return bucket;
-+}
-+
-+static int airoha_pwm_sipo_init(struct airoha_pwm *pc)
-+{
-+	u32 val;
-+	int ret;
-+
-+	ret = regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
-+				AIROHA_PWM_SERIAL_GPIO_MODE_74HC164);
-+	if (ret)
-+		return ret;
-+
-+	/* Configure shift register chip clock timings, use 32x divisor */
-+	ret = regmap_write(pc->regmap, AIROHA_PWM_REG_SGPIO_CLK_DIVR,
-+			   AIROHA_PWM_SGPIO_CLK_DIVR_32);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Configure the shift register chip clock delay. This needs
-+	 * to be configured based on the chip characteristics when the SoC
-+	 * apply the shift register configuration.
-+	 * This doesn't affect actual PWM operation and is only specific to
-+	 * the shift register chip.
-+	 *
-+	 * For 74HC164 we set it to 0.
-+	 *
-+	 * For reference, the actual delay applied is the internal clock
-+	 * feed to the SGPIO chip + 1.
-+	 *
-+	 * From documentation is specified that clock delay should not be
-+	 * greater than (AIROHA_PWM_REG_SGPIO_CLK_DIVR / 2) - 1.
-+	 */
-+	ret = regmap_write(pc->regmap, AIROHA_PWM_REG_SGPIO_CLK_DLY, 0);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * It is necessary to explicitly shift out all zeros after muxing
-+	 * to initialize the shift register before enabling PWM
-+	 * mode because in PWM mode SIPO will not start shifting until
-+	 * it needs to output a non-zero value (bit 31 of led_data
-+	 * indicates shifting in progress and it must return to zero
-+	 * before led_data can be written or PWM mode can be set)
-+	 */
-+	ret = regmap_read_poll_timeout(pc->regmap, AIROHA_PWM_REG_SGPIO_LED_DATA, val,
-+				       !(val & AIROHA_PWM_SGPIO_LED_DATA_SHIFT_FLAG),
-+				       10, 200 * USEC_PER_MSEC);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SGPIO_LED_DATA,
-+				AIROHA_PWM_SGPIO_LED_DATA_DATA);
-+	if (ret)
-+		return ret;
-+	ret = regmap_read_poll_timeout(pc->regmap, AIROHA_PWM_REG_SGPIO_LED_DATA, val,
-+				       !(val & AIROHA_PWM_SGPIO_LED_DATA_SHIFT_FLAG),
-+				       10, 200 * USEC_PER_MSEC);
-+	if (ret)
-+		return ret;
-+
-+	/* Set SIPO in PWM mode */
-+	return regmap_set_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
-+			       AIROHA_PWM_SERIAL_GPIO_FLASH_MODE);
-+}
-+
-+static int airoha_pwm_config_flash_map(struct airoha_pwm *pc,
-+				       unsigned int hwpwm, int index)
-+{
-+	unsigned int addr;
-+	u32 shift;
-+	int ret;
-+
-+	airoha_pwm_get_flash_map_addr_and_shift(hwpwm, &addr, &shift);
-+
-+	/* negative index means disable PWM channel */
-+	if (index < 0) {
-+		/*
-+		 * If we need to disable the PWM, we just put low the
-+		 * GPIO. No need to setup buckets.
-+		 */
-+		return regmap_clear_bits(pc->regmap, addr,
-+					 AIROHA_PWM_GPIO_FLASH_EN << shift);
-+	}
-+
-+	ret = regmap_update_bits(pc->regmap, addr,
-+				 AIROHA_PWM_GPIO_FLASH_SET_ID << shift,
-+				 FIELD_PREP(AIROHA_PWM_GPIO_FLASH_SET_ID, index) << shift);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_set_bits(pc->regmap, addr, AIROHA_PWM_GPIO_FLASH_EN << shift);
-+}
-+
-+static int airoha_pwm_config(struct airoha_pwm *pc, struct pwm_device *pwm,
-+			     u32 duty_ticks, u32 period_ticks)
-+{
-+	unsigned int hwpwm = pwm->hwpwm;
-+	int bucket, ret;
-+
-+	bucket = airoha_pwm_consume_generator(pc, duty_ticks, period_ticks,
-+					      hwpwm);
-+	if (bucket < 0)
-+		return bucket;
-+
-+	ret = airoha_pwm_config_flash_map(pc, hwpwm, bucket);
-+	if (ret) {
-+		refcount_dec(&pc->buckets[bucket].used);
-+		return ret;
-+	}
-+
-+	set_bit(hwpwm, pc->initialized);
-+	pc->channel_bucket[hwpwm] = bucket;
-+
-+	/*
-+	 * SIPO are special GPIO attached to a shift register chip. The handling
-+	 * of this chip is internal to the SoC that takes care of applying the
-+	 * values based on the flash map. To apply a new flash map, it's needed
-+	 * to trigger a refresh on the shift register chip.
-+	 * If a SIPO is getting configuring , always reinit the shift register
-+	 * chip to make sure the correct flash map is applied.
-+	 * Skip reconfiguring the shift register if the related hwpwm
-+	 * is disabled (as it doesn't need to be mapped).
-+	 */
-+	if (hwpwm >= AIROHA_PWM_NUM_GPIO) {
-+		ret = airoha_pwm_sipo_init(pc);
-+		if (ret) {
-+			airoha_pwm_release_bucket_config(pc, hwpwm);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void airoha_pwm_disable(struct airoha_pwm *pc, struct pwm_device *pwm)
-+{
-+	/* Disable PWM and release the bucket */
-+	airoha_pwm_config_flash_map(pc, pwm->hwpwm, -1);
-+	airoha_pwm_release_bucket_config(pc, pwm->hwpwm);
-+
-+	clear_bit(pwm->hwpwm, pc->initialized);
-+
-+	/* If no SIPO is used, disable the shift register chip */
-+	if (find_next_bit(pc->initialized, AIROHA_PWM_MAX_CHANNELS,
-+			  AIROHA_PWM_NUM_GPIO) >= AIROHA_PWM_NUM_GPIO)
-+		regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
-+				  AIROHA_PWM_SERIAL_GPIO_FLASH_MODE);
-+}
-+
-+static int airoha_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    const struct pwm_state *state)
-+{
-+	struct airoha_pwm *pc = pwmchip_get_drvdata(chip);
-+	u32 period_ticks, duty_ticks;
-+	u32 period_ns, duty_ns;
-+
-+	if (!state->enabled) {
-+		airoha_pwm_disable(pc, pwm);
-+		return 0;
-+	}
-+
-+	/* Only normal polarity is supported */
-+	if (state->polarity == PWM_POLARITY_INVERSED)
-+		return -EINVAL;
-+
-+	/* Exit early if period is less than minimum supported */
-+	if (state->period < AIROHA_PWM_PERIOD_TICK_NS)
-+		return -EINVAL;
-+
-+	/* Clamp period to MAX supported value */
-+	if (state->period > AIROHA_PWM_PERIOD_MAX_NS)
-+		period_ns = AIROHA_PWM_PERIOD_MAX_NS;
-+	else
-+		period_ns = state->period;
-+
-+	/* Validate duty to configured period */
-+	if (state->duty_cycle > period_ns)
-+		duty_ns = period_ns;
-+	else
-+		duty_ns = state->duty_cycle;
-+
-+	/*
-+	 * Period goes at 4ns step, normalize it to check if we can
-+	 * share a generator.
-+	 */
-+	period_ns = rounddown(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
-+
-+	/*
-+	 * Duty is divided in 255 segment, normalize it to check if we
-+	 * can share a generator.
-+	 */
-+	duty_ns = DIV_U64_ROUND_UP(duty_ns * AIROHA_PWM_DUTY_FULL,
-+				   AIROHA_PWM_DUTY_FULL);
-+
-+	/* Convert ns to ticks */
-+	period_ticks = airoha_pwm_get_period_ticks_from_ns(period_ns);
-+	duty_ticks = airoha_pwm_get_duty_ticks_from_ns(period_ns, duty_ns);
-+
-+	return airoha_pwm_config(pc, pwm, period_ticks, duty_ticks);
-+}
-+
-+static int airoha_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				struct pwm_state *state)
-+{
-+	struct airoha_pwm *pc = pwmchip_get_drvdata(chip);
-+	int ret, hwpwm = pwm->hwpwm;
-+	u32 addr, shift, val;
-+	u8 bucket;
-+
-+	airoha_pwm_get_flash_map_addr_and_shift(hwpwm, &addr, &shift);
-+
-+	ret = regmap_read(pc->regmap, addr, &val);
-+	if (ret)
-+		return ret;
-+
-+	state->enabled = FIELD_GET(AIROHA_PWM_GPIO_FLASH_EN, val >> shift);
-+	if (!state->enabled)
-+		return 0;
-+
-+	state->polarity = PWM_POLARITY_NORMAL;
-+
-+	bucket = FIELD_GET(AIROHA_PWM_GPIO_FLASH_SET_ID, val >> shift);
-+	return airoha_pwm_get_bucket(pc, bucket, &state->period,
-+				     &state->duty_cycle);
-+}
-+
-+static const struct pwm_ops airoha_pwm_ops = {
-+	.apply = airoha_pwm_apply,
-+	.get_state = airoha_pwm_get_state,
-+};
-+
-+static int airoha_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct airoha_pwm *pc;
-+	struct pwm_chip *chip;
-+	unsigned int i;
-+	int ret;
-+
-+	chip = devm_pwmchip_alloc(dev, AIROHA_PWM_MAX_CHANNELS, sizeof(*pc));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+
-+	chip->ops = &airoha_pwm_ops;
-+	pc = pwmchip_get_drvdata(chip);
-+
-+	pc->regmap = device_node_to_regmap(dev_of_node(dev->parent));
-+	if (IS_ERR(pc->regmap))
-+		return dev_err_probe(dev, PTR_ERR(pc->regmap), "Failed to get PWM regmap\n");
-+
-+	mutex_init(&pc->mutex);
-+	for (i = 0; i < ARRAY_SIZE(pc->buckets); i++)
-+		refcount_set(&pc->buckets[i].used, 0);
-+
-+	ret = devm_pwmchip_add(dev, chip);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id airoha_pwm_of_match[] = {
-+	{ .compatible = "airoha,en7581-pwm" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, airoha_pwm_of_match);
-+
-+static struct platform_driver airoha_pwm_driver = {
-+	.driver = {
-+		.name = "pwm-airoha",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+		.of_match_table = airoha_pwm_of_match,
-+	},
-+	.probe = airoha_pwm_probe,
-+};
-+module_platform_driver(airoha_pwm_driver);
-+
-+MODULE_AUTHOR("Lorenzo Bianconi <lorenzo@kernel.org>");
-+MODULE_AUTHOR("Markus Gothe <markus.gothe@genexis.eu>");
-+MODULE_AUTHOR("Benjamin Larsson <benjamin.larsson@genexis.eu>");
-+MODULE_AUTHOR("Christian Marangi <ansuelsmth@gmail.com>");
-+MODULE_DESCRIPTION("Airoha EN7581 PWM driver");
-+MODULE_LICENSE("GPL");
--- 
-2.48.1
-
+>
+>Cc: Yunhui Cui <cuiyunhui@bytedance.com>
+>Cc: Atish Patra <atish.patra@linux.dev>
+>Signed-off-by: Vineet Gupta <vineetg@rivosinc.com>
+>---
+> arch/riscv/kernel/entry.S       | 14 +++----
+> arch/riscv/kernel/mcount.S      |  4 +-
+> arch/riscv/lib/memcpy.S         | 66 ++++++++++++++++-----------------
+> arch/riscv/lib/memmove.S        | 20 +++++-----
+> arch/riscv/lib/strncmp.S        |  6 +--
+> arch/riscv/lib/uaccess.S        | 24 ++++++------
+> arch/riscv/lib/uaccess_vector.S | 12 +++---
+> 7 files changed, 73 insertions(+), 73 deletions(-)
+>
+>diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+>index 75656afa2d6b..0b5791feae5f 100644
+>--- a/arch/riscv/kernel/entry.S
+>+++ b/arch/riscv/kernel/entry.S
+>@@ -285,13 +285,13 @@ ASM_NOKPROBE(ret_from_exception)
+> #ifdef CONFIG_VMAP_STACK
+> SYM_CODE_START_LOCAL(handle_kernel_stack_overflow)
+> 	/* we reach here from kernel context, sscratch must be 0 */
+>-	csrrw x31, CSR_SCRATCH, x31
+>-	asm_per_cpu sp, overflow_stack, x31
+>-	li x31, OVERFLOW_STACK_SIZE
+>-	add sp, sp, x31
+>-	/* zero out x31 again and restore x31 */
+>-	xor x31, x31, x31
+>-	csrrw x31, CSR_SCRATCH, x31
+>+	csrrw x30, CSR_SCRATCH, x30
+>+	asm_per_cpu sp, overflow_stack, x30
+>+	li x30, OVERFLOW_STACK_SIZE
+>+	add sp, sp, x30
+>+	/* zero out x30 again and restore x30 */
+>+	xor x30, x30, x30
+>+	csrrw x30, CSR_SCRATCH, x30
+>
+> 	addi sp, sp, -(PT_SIZE_ON_STACK)
+>
+>diff --git a/arch/riscv/kernel/mcount.S b/arch/riscv/kernel/mcount.S
+>index da4a4000e57e..d7e4303a18a4 100644
+>--- a/arch/riscv/kernel/mcount.S
+>+++ b/arch/riscv/kernel/mcount.S
+>@@ -89,8 +89,8 @@ SYM_FUNC_START(_mcount)
+>
+> 	la	t3, ftrace_graph_entry
+> 	REG_L	t2, 0(t3)
+>-	la	t6, ftrace_graph_entry_stub
+>-	bne	t2, t6, .Ldo_ftrace_graph_caller
+>+	la	t5, ftrace_graph_entry_stub
+>+	bne	t2, t5, .Ldo_ftrace_graph_caller
+> #endif
+> 	la	t3, ftrace_trace_function
+> 	REG_L	t5, 0(t3)
+>diff --git a/arch/riscv/lib/memcpy.S b/arch/riscv/lib/memcpy.S
+>index 44e009ec5fef..37ebe9f2b355 100644
+>--- a/arch/riscv/lib/memcpy.S
+>+++ b/arch/riscv/lib/memcpy.S
+>@@ -8,13 +8,13 @@
+>
+> /* void *memcpy(void *, const void *, size_t) */
+> SYM_FUNC_START(__memcpy)
+>-	move t6, a0  /* Preserve return value */
+>+	move t5, a0  /* Preserve return value */
+>
+> 	/* Defer to byte-oriented copy for small sizes */
+> 	sltiu a3, a2, 128
+> 	bnez a3, 4f
+> 	/* Use word-oriented copy only if low-order bits match */
+>-	andi a3, t6, SZREG-1
+>+	andi a3, a0, SZREG-1
+> 	andi a4, a1, SZREG-1
+> 	bne a3, a4, 4f
+>
+>@@ -30,8 +30,8 @@ SYM_FUNC_START(__memcpy)
+> 1:
+> 	lb a5, 0(a1)
+> 	addi a1, a1, 1
+>-	sb a5, 0(t6)
+>-	addi t6, t6, 1
+>+	sb a5, 0(t5)
+>+	addi t5, t5, 1
+> 	bltu a1, a3, 1b
+> 	sub a2, a2, a4  /* Update count */
+>
+>@@ -49,31 +49,31 @@ SYM_FUNC_START(__memcpy)
+> 	REG_L t2, 6*SZREG(a1)
+> 	REG_L t3, 7*SZREG(a1)
+> 	REG_L t4, 8*SZREG(a1)
+>-	REG_L t5, 9*SZREG(a1)
+>-	REG_S a4,       0(t6)
+>-	REG_S a5,   SZREG(t6)
+>-	REG_S a6, 2*SZREG(t6)
+>-	REG_S a7, 3*SZREG(t6)
+>-	REG_S t0, 4*SZREG(t6)
+>-	REG_S t1, 5*SZREG(t6)
+>-	REG_S t2, 6*SZREG(t6)
+>-	REG_S t3, 7*SZREG(t6)
+>-	REG_S t4, 8*SZREG(t6)
+>-	REG_S t5, 9*SZREG(t6)
+>-	REG_L a4, 10*SZREG(a1)
+>-	REG_L a5, 11*SZREG(a1)
+>-	REG_L a6, 12*SZREG(a1)
+>-	REG_L a7, 13*SZREG(a1)
+>-	REG_L t0, 14*SZREG(a1)
+>-	REG_L t1, 15*SZREG(a1)
+>+	REG_S a4,       0(t5)
+>+	REG_S a5,   SZREG(t5)
+>+	REG_S a6, 2*SZREG(t5)
+>+	REG_S a7, 3*SZREG(t5)
+>+	REG_S t0, 4*SZREG(t5)
+>+	REG_S t1, 5*SZREG(t5)
+>+	REG_S t2, 6*SZREG(t5)
+>+	REG_S t3, 7*SZREG(t5)
+>+	REG_S t4, 8*SZREG(t5)
+>+	REG_L a4, 9*SZREG(a1)
+>+	REG_L a5, 10*SZREG(a1)
+>+	REG_L a6, 11*SZREG(a1)
+>+	REG_L a7, 12*SZREG(a1)
+>+	REG_L t0, 13*SZREG(a1)
+>+	REG_L t1, 14*SZREG(a1)
+>+	REG_L t2, 15*SZREG(a1)
+> 	addi a1, a1, 16*SZREG
+>-	REG_S a4, 10*SZREG(t6)
+>-	REG_S a5, 11*SZREG(t6)
+>-	REG_S a6, 12*SZREG(t6)
+>-	REG_S a7, 13*SZREG(t6)
+>-	REG_S t0, 14*SZREG(t6)
+>-	REG_S t1, 15*SZREG(t6)
+>-	addi t6, t6, 16*SZREG
+>+	REG_S a4, 9*SZREG(t5)
+>+	REG_S a5, 10*SZREG(t5)
+>+	REG_S a6, 11*SZREG(t5)
+>+	REG_S a7, 12*SZREG(t5)
+>+	REG_S t0, 13*SZREG(t5)
+>+	REG_S t1, 14*SZREG(t5)
+>+	REG_S t2, 15*SZREG(t5)
+>+	addi t5, t5, 16*SZREG
+> 	bltu a1, a3, 3b
+> 	andi a2, a2, (16*SZREG)-1  /* Update count */
+>
+>@@ -83,15 +83,15 @@ SYM_FUNC_START(__memcpy)
+> 	add a3, a1, a2
+>
+> 	/* Use word-oriented copy if co-aligned to word boundary */
+>-	or a5, a1, t6
+>+	or a5, a1, t5
+> 	or a5, a5, a3
+> 	andi a5, a5, 3
+> 	bnez a5, 5f
+> 7:
+> 	lw a4, 0(a1)
+> 	addi a1, a1, 4
+>-	sw a4, 0(t6)
+>-	addi t6, t6, 4
+>+	sw a4, 0(t5)
+>+	addi t5, t5, 4
+> 	bltu a1, a3, 7b
+>
+> 	ret
+>@@ -99,8 +99,8 @@ SYM_FUNC_START(__memcpy)
+> 5:
+> 	lb a4, 0(a1)
+> 	addi a1, a1, 1
+>-	sb a4, 0(t6)
+>-	addi t6, t6, 1
+>+	sb a4, 0(t5)
+>+	addi t5, t5, 1
+> 	bltu a1, a3, 5b
+> 6:
+> 	ret
+>diff --git a/arch/riscv/lib/memmove.S b/arch/riscv/lib/memmove.S
+>index cb3e2e7ef0ba..5fbd84c2cf18 100644
+>--- a/arch/riscv/lib/memmove.S
+>+++ b/arch/riscv/lib/memmove.S
+>@@ -35,7 +35,7 @@ SYM_FUNC_START(__memmove)
+> 	 *      Forward Copy: t3 - Index counter of dest
+> 	 *      Reverse Copy: t4 - Index counter of dest
+> 	 *   Both Copy Modes: t5 - Inclusive first multibyte/aligned of dest
+>-	 *   Both Copy Modes: t6 - Non-Inclusive last multibyte/aligned of dest
+>+	 *   Both Copy Modes: a3 - Non-Inclusive last multibyte/aligned of dest
+> 	 *   Both Copy Modes: t0 - Link / Temporary for load-store
+> 	 *   Both Copy Modes: t1 - Temporary for load-store
+> 	 *   Both Copy Modes: t2 - Temporary for load-store
+>@@ -47,7 +47,7 @@ SYM_FUNC_START(__memmove)
+>
+> 	/*
+> 	 * Solve for some register values now.
+>-	 * Byte copy does not need t5 or t6.
+>+	 * Byte copy does not need t5 or a3.
+> 	 */
+> 	mv   t3, a0
+> 	add  t4, a0, a2
+>@@ -62,10 +62,10 @@ SYM_FUNC_START(__memmove)
+> 	beqz t0, .Lbyte_copy
+>
+> 	/*
+>-	 * Now solve for t5 and t6.
+>+	 * Now solve for t5 and a3.
+> 	 */
+> 	andi t5, t3, -SZREG
+>-	andi t6, t4, -SZREG
+>+	andi a3, t4, -SZREG
+> 	/*
+> 	 * If dest(Register t3) rounded down to the nearest naturally
+> 	 * aligned SZREG address, does not equal dest, then add SZREG
+>@@ -99,7 +99,7 @@ SYM_FUNC_START(__memmove)
+> 	slli a6, a5, 3 /* Multiply by 8 to convert that to bits to shift */
+> 	sub  a5, a1, t3 /* Find the difference between src and dest */
+> 	andi a1, a1, -SZREG /* Align the src pointer */
+>-	addi a2, t6, SZREG /* The other breakpoint for the unrolled loop*/
+>+	addi a2, a3, SZREG /* The other breakpoint for the unrolled loop*/
+>
+> 	/*
+> 	 * Compute The Inverse Shift
+>@@ -147,9 +147,9 @@ SYM_FUNC_START(__memmove)
+> 	or    t2, t1, t2
+> 	REG_S t2, ((1 * SZREG) - (2 * SZREG))(t3)
+>
+>-	bne   t3, t6, 1b
+>+	bne   t3, a3, 1b
+> 	2:
+>-	mv    t3, t6 /* Fix the dest pointer in case the loop was broken */
+>+	mv    t3, a3 /* Fix the dest pointer in case the loop was broken */
+>
+> 	add  a1, t3, a5 /* Restore the src pointer */
+> 	j .Lbyte_copy_forward /* Copy any remaining bytes */
+>@@ -232,7 +232,7 @@ SYM_FUNC_START(__memmove)
+> 	addi  a1, a1, SZREG
+> 	addi  t3, t3, SZREG
+> 	REG_S t1, (-1 * SZREG)(t3)
+>-	bne   t3, t6, 1b
+>+	bne   t3, a3, 1b
+>
+> 	j .Lbyte_copy_forward /* Copy any remaining bytes */
+>
+>@@ -269,13 +269,13 @@ SYM_FUNC_START(__memmove)
+> 	jalr zero, 0x0(t0) /* Return to multibyte copy loop */
+>
+> .Lbyte_copy_until_aligned_reverse:
+>-	beq  t4, t6, 2f
+>+	beq  t4, a3, 2f
+> 	1:
+> 	lb   t1, -1(a4)
+> 	addi a4, a4, -1
+> 	addi t4, t4, -1
+> 	sb   t1,  0(t4)
+>-	bne  t4, t6, 1b
+>+	bne  t4, a3, 1b
+> 	2:
+> 	jalr zero, 0x0(t0) /* Return to multibyte copy loop */
+>
+>diff --git a/arch/riscv/lib/strncmp.S b/arch/riscv/lib/strncmp.S
+>index 062000c468c8..536d8ba8caa1 100644
+>--- a/arch/riscv/lib/strncmp.S
+>+++ b/arch/riscv/lib/strncmp.S
+>@@ -63,7 +63,7 @@ strncmp_zbb:
+> 	 *   a2 - number of characters to compare
+> 	 *
+> 	 * Clobbers
+>-	 *   t0, t1, t2, t3, t4, t5, t6
+>+	 *   t0, t1, t2, t3, t4, t5
+> 	 */
+>
+> 	or	t2, a0, a1
+>@@ -73,12 +73,12 @@ strncmp_zbb:
+> 	bnez	t2, 3f
+>
+> 	/* Adjust limit for fast-path.  */
+>-	andi	t6, t4, -SZREG
+>+	andi	t0, t4, -SZREG
+>
+> 	/* Main loop for aligned string.  */
+> 	.p2align 3
+> 1:
+>-	bge	a0, t6, 3f
+>+	bge	a0, t0, 3f
+> 	REG_L	t0, 0(a0)
+> 	REG_L	t1, 0(a1)
+> 	orc.b	t3, t0
+>diff --git a/arch/riscv/lib/uaccess.S b/arch/riscv/lib/uaccess.S
+>index 4efea1b3326c..25fdedc0efdb 100644
+>--- a/arch/riscv/lib/uaccess.S
+>+++ b/arch/riscv/lib/uaccess.S
+>@@ -27,16 +27,16 @@ EXPORT_SYMBOL(__asm_copy_from_user)
+>
+> SYM_FUNC_START(fallback_scalar_usercopy)
+> 	/* Enable access to user memory */
+>-	li	t6, SR_SUM
+>-	csrs 	CSR_STATUS, t6
+>-	mv 	t6, ra
+>+	li	a7, SR_SUM
+>+	csrs 	CSR_STATUS, a7
+>+	mv 	a7, ra
+>
+> 	call 	fallback_scalar_usercopy_sum_enabled
+>
+> 	/* Disable access to user memory */
+>-	mv 	ra, t6
+>-	li 	t6, SR_SUM
+>-	csrc 	CSR_STATUS, t6
+>+	mv 	ra, a7
+>+	li 	a7, SR_SUM
+>+	csrc 	CSR_STATUS, a7
+> 	ret
+> SYM_FUNC_END(fallback_scalar_usercopy)
+>
+>@@ -117,7 +117,7 @@ SYM_FUNC_START(fallback_scalar_usercopy_sum_enabled)
+> 	fixup REG_L   a4,        0(a1), 10f
+> 	fixup REG_L   a5,    SZREG(a1), 10f
+> 	fixup REG_L   a6,  2*SZREG(a1), 10f
+>-	fixup REG_L   a7,  3*SZREG(a1), 10f
+>+	fixup REG_L   a2,  3*SZREG(a1), 10f
+> 	fixup REG_L   t1,  4*SZREG(a1), 10f
+> 	fixup REG_L   t2,  5*SZREG(a1), 10f
+> 	fixup REG_L   t3,  6*SZREG(a1), 10f
+>@@ -125,7 +125,7 @@ SYM_FUNC_START(fallback_scalar_usercopy_sum_enabled)
+> 	fixup REG_S   a4,        0(a0), 10f
+> 	fixup REG_S   a5,    SZREG(a0), 10f
+> 	fixup REG_S   a6,  2*SZREG(a0), 10f
+>-	fixup REG_S   a7,  3*SZREG(a0), 10f
+>+	fixup REG_S   a2,  3*SZREG(a0), 10f
+> 	fixup REG_S   t1,  4*SZREG(a0), 10f
+> 	fixup REG_S   t2,  5*SZREG(a0), 10f
+> 	fixup REG_S   t3,  6*SZREG(a0), 10f
+>@@ -217,8 +217,8 @@ SYM_FUNC_END(fallback_scalar_usercopy_sum_enabled)
+> SYM_FUNC_START(__clear_user)
+>
+> 	/* Enable access to user memory */
+>-	li t6, SR_SUM
+>-	csrs CSR_STATUS, t6
+>+	li t5, SR_SUM
+>+	csrs CSR_STATUS, t5
+>
+> 	add a3, a0, a1
+> 	addi t0, a0, SZREG-1
+>@@ -240,7 +240,7 @@ SYM_FUNC_START(__clear_user)
+>
+> 3:
+> 	/* Disable access to user memory */
+>-	csrc CSR_STATUS, t6
+>+	csrc CSR_STATUS, t5
+> 	li a0, 0
+> 	ret
+> 4: /* Edge case: unalignment */
+>@@ -257,7 +257,7 @@ SYM_FUNC_START(__clear_user)
+> 	/* Exception fixup code */
+> 11:
+> 	/* Disable access to user memory */
+>-	csrc CSR_STATUS, t6
+>+	csrc CSR_STATUS, t5
+> 	sub a0, a3, a0
+> 	ret
+> SYM_FUNC_END(__clear_user)
+>diff --git a/arch/riscv/lib/uaccess_vector.S b/arch/riscv/lib/uaccess_vector.S
+>index 03b5560609a2..401fde708c77 100644
+>--- a/arch/riscv/lib/uaccess_vector.S
+>+++ b/arch/riscv/lib/uaccess_vector.S
+>@@ -22,16 +22,16 @@
+>
+> SYM_FUNC_START(__asm_vector_usercopy)
+> 	/* Enable access to user memory */
+>-	li	t6, SR_SUM
+>-	csrs	CSR_STATUS, t6
+>-	mv	t6, ra
+>+	li	a7, SR_SUM
+>+	csrs	CSR_STATUS, a7
+>+	mv	a7, ra
+>
+> 	call 	__asm_vector_usercopy_sum_enabled
+>
+> 	/* Disable access to user memory */
+>-	mv 	ra, t6
+>-	li 	t6, SR_SUM
+>-	csrc	CSR_STATUS, t6
+>+	mv 	ra, a7
+>+	li 	a7, SR_SUM
+>+	csrc	CSR_STATUS, a7
+> 	ret
+> SYM_FUNC_END(__asm_vector_usercopy)
+>
+>-- 
+>2.43.0
+>
+>
