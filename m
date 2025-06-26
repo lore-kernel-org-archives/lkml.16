@@ -1,37 +1,63 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D0FF2ED14B
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 17:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2580078F2F
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 17:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750958373; cv=none; b=Q5qr3TNHKVYT37liLHPeGISfP+JolNX4gnbYnUaUZ+VjD+axi35G+MFv0FVL601vbLrUij3KCvJIGJOx2AOl782bmBm/tHB3/sbM1mI7pEtnXNoAZQxmYkuY/L7/9R5h4JVUVvecX9StspugdKTm7kigHvVBO4SyfCvMfzlLI5I=
+	t=1750958448; cv=none; b=Kwb4MGLHd1ZprhfYwPRWLkrTi97/qddNibVxb4lWFlk6jKWw4g90Mfp6y79jHSjfwGxt7n3YJ3Z5lOH/KAa5ZDiXHt5fELTD/bPBBECfQOxdKTDuINUzwXBy06VCi2N8gQPWXxhDoW+77DoOF2+/TPHKini0EDBwP2eD7Ru/p2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750958373; c=relaxed/simple;
-	bh=qKm4Msl3Cem+MEjo6MbTNbgxxMFgQbL2TfBbT6L4aIA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=miJypJGi+mqREtLPJaCwzRPDsYso9+CBmmxJalK92A7ofoCChd4fzkhfq/s5A64gp2zpnJS0IpEL3o+oBG+3AlBFj1hvpol9Z/R8qbDBbZSwb6l5w/+7MBC2fQhgc6NxgFglQvHzigvBeOp5c903WLz3Uxp/9do6K+Dc0C34C7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BAD771E8D;
-	Thu, 26 Jun 2025 10:19:13 -0700 (PDT)
-Received: from localhost.localdomain (unknown [10.163.88.58])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9B9B33F762;
-	Thu, 26 Jun 2025 10:19:28 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: akpm@linux-foundation.org,
-	Liam.Howlett@oracle.com
-Cc: richard.weiyang@gmail.com,
-	maple-tree@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH 2/2] maple tree: Add and fix some comments
-Date: Thu, 26 Jun 2025 22:49:18 +0530
-Message-Id: <20250626171918.17261-2-dev.jain@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20250626171918.17261-1-dev.jain@arm.com>
-References: <20250626171918.17261-1-dev.jain@arm.com>
+	s=arc-20240116; t=1750958448; c=relaxed/simple;
+	bh=FwSp1hIralzZz9Gl3ECBPbfrrWrGPsrVZIMRNQJ9Bgs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oW21K9cRMaHCdDlzO9fhK7Iao8Ce+I6+xmMnXJ5tBfPcP7ML32N9tLSMC+cE9jTpMCjLaaLv79ghnug96y0u3fm+bfvzRgsnNQkY4zV+Yy24Dbz/qK4RCKZitUopgrd5equPcPpjjIhkmwKKPXUSjOjUnuu5rbQ4brb7gs43WW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=haKBfUFg; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="haKBfUFg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750958447; x=1782494447;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=FwSp1hIralzZz9Gl3ECBPbfrrWrGPsrVZIMRNQJ9Bgs=;
+  b=haKBfUFgXEQeLSwUQIc7ZJYAlxsDzJCFIp+zBTotc+jbWZYLMhzpsXgv
+   MXwehibeNK2dhKDeCLXxTSKje8Yy+Yti5Zht6dCEgFlFOyneyqgR/1ucJ
+   Id+6INjuhIxdHKy5+1l0xhchK1WiF4IW6UQj4Hu0YIYFlK8ABlRkB8xkh
+   eCnm0CncApkk/mHIa/ue8Xa/Rrx2uxbBipuSJ//OZWOub7Hn4yvBtvytL
+   q5Knv5H+ES7QBqqWfT2pPT56hpbu6n16n4OKwp3xf3BjokghquFUdy6w6
+   RG6GQ3MJldPQAbe0hbGqcYn6yXEI8XDW+PDAiWpWOk7JFW4ETxUeif2QK
+   Q==;
+X-CSE-ConnectionGUID: Rt32/QIjSNKDztngWKAJtw==
+X-CSE-MsgGUID: HyG0s6QoS3a8n3adsTQTMw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="55890573"
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="55890573"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 10:20:45 -0700
+X-CSE-ConnectionGUID: 1ThpD108RYCdf3M6h7aR8g==
+X-CSE-MsgGUID: qC/D7bpaSyi07P5n7yDAsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="158068525"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa004.fm.intel.com with ESMTP; 26 Jun 2025 10:20:43 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 5850C345; Thu, 26 Jun 2025 20:20:42 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 2/2] firmware: sysfb: Don't use "proxy" headers
+Date: Thu, 26 Jun 2025 20:19:01 +0300
+Message-ID: <20250626172039.329052-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250626172039.329052-1-andriy.shevchenko@linux.intel.com>
+References: <20250626172039.329052-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,73 +66,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add comments explaining the fields for maple_metadata, since "end" is
-ambiguous and "gap" can be confused as the largest gap, whereas it
-is actually the offset of the largest gap.
+Update header inclusions to follow IWYU (Include What You Use)
+principle.
 
-MAPLE_ROOT_NODE is used for mt_mk_root() and mt_safe_root(), indicating
-that it is used to mark the node as root. So fix the comment.
+Note that kernel.h is discouraged to be included as it's written
+at the top of that file.
 
-Add comment for mas_ascend() to explain, whose min and max we are
-trying to find. Explain that, for example, if we are already on offset
-zero, then the parent min is mas->min, otherwise we need to walk up
-to find the implied pivot min.
-
-Signed-off-by: Dev Jain <dev.jain@arm.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/maple_tree.h | 4 ++--
- lib/maple_tree.c           | 9 +++++++--
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ include/linux/sysfb.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/maple_tree.h b/include/linux/maple_tree.h
-index 9ef129038224..bafe143b1f78 100644
---- a/include/linux/maple_tree.h
-+++ b/include/linux/maple_tree.h
-@@ -75,8 +75,8 @@
-  * searching for gaps or any other code that needs to find the end of the data.
+diff --git a/include/linux/sysfb.h b/include/linux/sysfb.h
+index 07cbab516942..b449665c686a 100644
+--- a/include/linux/sysfb.h
++++ b/include/linux/sysfb.h
+@@ -7,9 +7,13 @@
+  * Copyright (c) 2012-2013 David Herrmann <dh.herrmann@gmail.com>
   */
- struct maple_metadata {
--	unsigned char end;
--	unsigned char gap;
-+	unsigned char end;	/* end of data */
-+	unsigned char gap;	/* offset of largest gap */
- };
  
- /*
-diff --git a/lib/maple_tree.c b/lib/maple_tree.c
-index 6c89e6790fb5..e4735ccd06f2 100644
---- a/lib/maple_tree.c
-+++ b/lib/maple_tree.c
-@@ -338,7 +338,7 @@ static inline void mte_set_node_dead(struct maple_enode *mn)
- 	smp_wmb(); /* Needed for RCU */
- }
- 
--/* Bit 1 indicates the root is a node */
-+/* Bit 1 indicates the node is the root */
- #define MAPLE_ROOT_NODE			0x02
- /* maple_type stored bit 3-6 */
- #define MAPLE_ENODE_TYPE_SHIFT		0x03
-@@ -1053,7 +1053,7 @@ static inline void mte_set_gap(const struct maple_enode *mn,
-  * mas_ascend() - Walk up a level of the tree.
-  * @mas: The maple state
-  *
-- * Sets the @mas->max and @mas->min to the correct values when walking up.  This
-+ * Sets the @mas->max and @mas->min for the parent node of mas->node.  This
-  * may cause several levels of walking up to find the correct min and max.
-  * May find a dead node which will cause a premature return.
-  * Return: 1 on dead node, 0 otherwise
-@@ -1098,6 +1098,11 @@ static int mas_ascend(struct ma_state *mas)
- 
- 	min = 0;
- 	max = ULONG_MAX;
+-#include <linux/kernel.h>
++#include <linux/err.h>
++#include <linux/types.h>
 +
-+	/*
-+	 * !mas->offset => parent node min == mas->min. mas->offset => need
-+	 * to walk up to find the implied pivot min.
-+	 */
- 	if (!mas->offset) {
- 		min = mas->min;
- 		set_min = true;
+ #include <linux/platform_data/simplefb.h>
+ 
++struct device;
++struct platform_device;
+ struct screen_info;
+ 
+ enum {
 -- 
-2.30.2
+2.47.2
 
