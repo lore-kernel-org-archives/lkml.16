@@ -1,199 +1,163 @@
-Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95BCD25E47E;
-	Thu, 26 Jun 2025 21:52:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C32238141
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750974722; cv=none; b=SZzrg4vDCyzHKwJUIiRfb5P0Yh0q9V1KVEdFg2WModMWc3z9EATBmMgizWdvaB8pnlDYhXJoThIAsC3mSllOEMQWiwTYoSy9+DWm6RqSJ6+4VkRugZahKq60NAN2XZnyKFl0QlIEq3D95BHJeV0mGLawnZyzY5BfLxJgLo0chUc=
+	t=1750974785; cv=none; b=S4XqtOEfVRqhYcQRG2QpWyWclB+3E7JLp1S8J9oiOLfFArFAXcAKqsulNgelFKGfCTgXCe0xPC6eD16ynNt4kZCv/5cG64fiHrje5Ql/ewwhjq9OSGJox/pm0KQISg3/tKK4Yna9fTipqnstNQAdB8g/l9ppQdX1iH4XnKIS67c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750974722; c=relaxed/simple;
-	bh=bnz1Bb7o+gzldkFLngzW6l31QB4WnvlWMZjBoOExqS8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=as77i60IFZq8hsURfUsV2mRTGZuMxxlz+Ic8E95f1skGZqMwny4ako6kLBc227CooTkkYiOYRt1Ta+OeQIC4/NGs7avyN4W45x/giSGawC4t9HsJPUInYsn1JI/FM9Ewi1xo+9BxxStgT5BJ3gBxgGAVJQW47XwGu9LhYpskPk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 55QLdUFG018871;
-	Thu, 26 Jun 2025 16:39:31 -0500
-Received: (from segher@localhost)
-	by gate.crashing.org (8.14.1/8.14.1/Submit) id 55QLdRb4018869;
-	Thu, 26 Jun 2025 16:39:27 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date: Thu, 26 Jun 2025 16:39:27 -0500
-From: Segher Boessenkool <segher@kernel.crashing.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Andre Almeida <andrealmeid@igalia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 0/5] powerpc: Implement masked user access
-Message-ID: <20250626213927.GQ17294@gate.crashing.org>
-References: <cover.1750585239.git.christophe.leroy@csgroup.eu> <20250622172043.3fb0e54c@pumpkin> <ff2662ca-3b86-425b-97f8-3883f1018e83@csgroup.eu> <20250624131714.GG17294@gate.crashing.org> <20250624175001.148a768f@pumpkin> <20250624182505.GH17294@gate.crashing.org> <20250624220816.078f960d@pumpkin>
+	s=arc-20240116; t=1750974785; c=relaxed/simple;
+	bh=o7K3daCETc7Hk9qO3dHBm7IS1cCBPEx9re6HNbpJPIY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h+XeO8PPU7XwRklqy5b00R4p9ssjISiKjMZraTiSWYB80y1zg7O063+TO2EtaZDe3yEXosa3K0/YbSuVrCMFHXyLUdMgs7Ew2TxHfalqFezuBFMHohEK2QLWUapBtGjcbmmkzUDkZ9yHoi10JgS+Q9m1A9QVze5ynx8vOJpyxlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A+oK8Owh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A+oK8Owh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750974782;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Sds+EnePYO1cZCHbAHOJn503ulI/pwm3RK5XFeMRA7A=;
+	b=A+oK8OwhDDjk1ZIpY/GmClNu+li9P7YpgJTIK/Df5CAC4LcrU+hJvt59PzojWGlR00fcla
+	NRkNDt4xyyc9MY+LuRT+MgXb1oRZVNJNkQX+EPa8VqWXFczx0SYcOBq0CXnC5efOVs+ssC
+	PskomFyGwh3z0gbCqC82vNBxK0t1RZo=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-689-GvevK6VTN2ej5LeodJre3w-1; Thu, 26 Jun 2025 17:52:54 -0400
+X-MC-Unique: GvevK6VTN2ej5LeodJre3w-1
+X-Mimecast-MFC-AGG-ID: GvevK6VTN2ej5LeodJre3w_1750974774
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-451d3f03b74so7809665e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:52:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750974773; x=1751579573;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Sds+EnePYO1cZCHbAHOJn503ulI/pwm3RK5XFeMRA7A=;
+        b=JGbbYD0BHBLC6bVsqNTBZTe6xGaSvi2qa1eA1QSS7lFuCCTHoyyVRh/nnrRN5iSUjA
+         1cbGNA0+EKB9MNee9a6IwU75Ifivctyf1sS/fb6dwKTb3LBoYqORDLU+USA8Db4r53i3
+         5xtj2SMQE2OcVhHe+XKmbs9BQOLax96betFwgYSHgm/11P5UVMMLn7zdORlyaElI4NPz
+         T8ONnDi5R/kWZuJIAA0w+dGf3+q38DQ2JDH5Mhk5XgexK7EstMfCkxNcNJOmfdxxmF+D
+         ezAdLkn0SlyBVvU+owMRh+uiYzrnrVE9PatFM5khz4p44leX9//KUsnVcLKQ5sDWTKYY
+         HaZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4s6UuKree6T9o6OX7Oq+ncknGa7moIAKx/zSSfAgX1EHetzc44oEOVR/Fzpv6/6nnA8p99QFVnyypXTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOu/PYHvGIHF3pxV1wNOctZSh5wmkuWMzauRYZ5a27aH9GO29I
+	+d8HD4LRiLjY/TNP1FFXFHz/oOregb50/Ve8zSeLy6DqYAplHEcqN97WadW6Qz+EaFtGqyphV67
+	I8QjEjoUmVnQPIJUFDjYZDFCJ+/3KtbOMniZ3PNyu4wxIQlcOP3M7PSOMvDfHk7QjrQ==
+X-Gm-Gg: ASbGncuJzU0HmoGxL68k8mFstRjoTPWDQlQKhJrXjADKpEjjcFSUgOCm+R83hpUyYPI
+	VaA1jYryA4qqGzyYSX1ky7a/6gK5SjSSbK5X6XfuG7YTBTprD33EL6wjbExpmzDhp57QrzGJgNj
+	TZmvfYgTgE+5DjzLY2AUnYP9ZW9bQlvRICytXQCcGOk/6hjnWbabXgf9gGhXCBOgsy/G4TYA6VF
+	kiSbjN4BH7wcDwvDVGdYtk1OKXM3dCsksYG0NuD5qWOBR6ODqNVFesJoxXECXUaV3SU5Yicnmpx
+	JwuLiHwcqNnz3bbJk+2jJ3iDl/IJ0T/+6y6w3+/MSMLsZZqRbc25usXDbvyPKXaWw4lR1q39UD5
+	gqkwr8AMdBlhG/Kg2rCuI26M/R2okV/Z+BugnLRpqbTU32GZrhg==
+X-Received: by 2002:adf:b60f:0:b0:3a6:d296:feaf with SMTP id ffacd0b85a97d-3a8fe985feamr656662f8f.24.1750974773621;
+        Thu, 26 Jun 2025 14:52:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF91pFzkN010jPQk8nO4iHG/+bQ0g3gbQdu1CsS5nqxXRrx9a1rGPo2RPO9VipXGBPN3oatgg==
+X-Received: by 2002:adf:b60f:0:b0:3a6:d296:feaf with SMTP id ffacd0b85a97d-3a8fe985feamr656645f8f.24.1750974773213;
+        Thu, 26 Jun 2025 14:52:53 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f3c:2f00:8afc:23fe:3813:776c? (p200300d82f3c2f008afc23fe3813776c.dip0.t-ipconnect.de. [2003:d8:2f3c:2f00:8afc:23fe:3813:776c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fadf3sm958775f8f.34.2025.06.26.14.52.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 14:52:52 -0700 (PDT)
+Message-ID: <4856517e-fb68-436f-8130-b7eb5749b7c0@redhat.com>
+Date: Thu, 26 Jun 2025 23:52:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624220816.078f960d@pumpkin>
-User-Agent: Mutt/1.4.2.3i
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
+ folios during reclamation
+To: Barry Song <21cnbao@gmail.com>, Lance Yang <ioworker0@gmail.com>
+Cc: akpm@linux-foundation.org, baolin.wang@linux.alibaba.com,
+ chrisl@kernel.org, kasong@tencent.com, lance.yang@linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+ lorenzo.stoakes@oracle.com, ryan.roberts@arm.com, v-songbaohua@oppo.com,
+ x86@kernel.org, ying.huang@intel.com, zhengtangquan@oppo.com
+References: <a5b5b0aa-21c4-4abf-b323-63af96aabcd5@redhat.com>
+ <20250626092905.31305-1-ioworker0@gmail.com>
+ <CAGsJ_4w5Obx9=P0wkrbLaDzKpG0e-7xs7jgHRa91KO7e92MO8g@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAGsJ_4w5Obx9=P0wkrbLaDzKpG0e-7xs7jgHRa91KO7e92MO8g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi!
-
-On Tue, Jun 24, 2025 at 10:08:16PM +0100, David Laight wrote:
-> On Tue, 24 Jun 2025 13:25:05 -0500
-> Segher Boessenkool <segher@kernel.crashing.org> wrote:
-> > On Tue, Jun 24, 2025 at 05:50:01PM +0100, David Laight wrote:
-> > > On Tue, 24 Jun 2025 08:17:14 -0500
-> > > Segher Boessenkool <segher@kernel.crashing.org> wrote:
-> > >   
-> > > > On Tue, Jun 24, 2025 at 07:27:47AM +0200, Christophe Leroy wrote:  
-> > > > > Ah ok, I overlooked that, I didn't know the cmove instruction, seem 
-> > > > > similar to the isel instruction on powerpc e500.    
-> > > > 
-> > > > cmove does a move (register or memory) when some condition is true.  
-> > > 
-> > > The destination of x86 'cmov' is always a register (only the source can be
-> > > memory - and is probably always read).  
-> > 
-> > Both source operands can be mem, right?  But probably not both at the
-> > same time.
+On 26.06.25 23:46, Barry Song wrote:
+> On Thu, Jun 26, 2025 at 9:29 PM Lance Yang <ioworker0@gmail.com> wrote:
+>>
+> [...]
+>> +
+>> +               /*
+>> +                * If we are sure that we batched the entire folio and cleared
+>> +                * all PTEs, we can just optimize and stop right here.
+>> +                */
+>> +               if (nr_pages == folio_nr_pages(folio))
 > 
-> It only has one 'real' source, but the implementation could easily
-> read the destination register and then decide which value to write
-> back - rather than doing a conditional write to the register file.
+> David also mentioned if (nr_pages > 1 && nr_pages == folio_nr_pages(folio)).
+> I assume it’s still fine when nr_pages == 1 for small folios? No?
 
-Yeah, in x86 many (most insns?) can read any reg that they write.  Not
-a great design, but heh.
+Yeah, as raised I think it is fine. We should never have any folio page 
+mapped multiple times into the same VMA in any case. (excluding KSM 
+pages, but they are handled differenty, using a specialized rmap walk)
 
-> A conditional write would be a right PITA for the alu result
-> forwarding logic
+-- 
+Cheers,
 
-Depends.  An implementation can always do the register forwarding etc.,
-just annul the actual store where appropriate (and not put it in the
-various store queues either, heh -- annul all the effects of the store).
+David / dhildenb
 
-> > x86 is not a RISC architecture, or more generally, a load/store
-> > architecture.
-> 
-> It sort of is these days.
-
-Not at all.  Most *implementations* are, the uarchs, but the
-architecture (which determines the required visible semantics) is not.
-That impedance difference is quite painful, yes, for code generation
-more than for the processor implementation even -- as usual the
-compilers have to save the day!
-
-> The memory transfers are separate u-ops, so a 'reg += mem' instruction
-> is split into two be the decoder.
-
-Yup.  Very expensive.  Both for the implementation, and for the
-performance of eventual code running on it.
-
-> Although some u-ops get merged together and executed in one clock,
-> obvious example is some 'compare+branch' pairs.
-
-On many other architectures such things run in 0 cycles anyway :-)
-
-> > A computational instruction is one that doesn't touch memory or does a
-> > branch, or some system function, some supervisor or hypervisor
-> > instruction maybe.
-> > 
-> > x86 does not have many computational insns, most insns can touch
-> > memory :-)
-> 
-> Except that the memory 'bit' is executed separately from any alu 'stuff'.
-
-On many uarchs, yes.  But not in the arch.  No uarch can decide to just
-not implement these difficult and expensive insns :-)
-
-> > > There is a planned new instruction that would do a conditional write
-> > > to memory - but not on any cpu yet.  
-> > 
-> > Interesting!  Instructions like the atomic store insns we got for p9,
-> > maybe?  They can do minimum/maximum and various kinds of more generic
-> > reductions and similar.
-> 
-> I think they are only conditional stores.
-> But they do save a conditional branch.
-
-Yeah, but those are not ever executed *anyway*, there is branch
-prediction and we require that to be pretty good to get reasonable
-performance anyway.
-
-A branch around the store insns is just fine if it can be predicted
-correctly.  If it cannot be predicted correctly, you can do the store
-always, just have the address that is stored to depend on the condition
-(such the data is stored to some dummy memory if it "should not be
-done").  Source code gets such a transform done manually in the
-performance critical paths not infrequently, already.
-
-GCC does not currently do such a transformation AFAIK, but it is a
-pretty basic thing to do.  Conditional stores are not often written in
-source code programs, or there would probably be an implementation for
-this already :-)
-
-> A late disable of a memory write is far less problematic than a disabled
-> register file write. No one minds (too much) about slight delays between
-> writes and reads of the same location (reduced by a store to load forwarder)
-> but you don't want to lose clocks between adjacent simple alu instructions.
-
-Writes to memory take tens of cycles *anyway*, but all of that is hidden
-by the various memory load and store queues (which let you do forwarding
-in just a few cycles).
-
-> For my sins I re-implemented a soft cpu last year...
-
-Ouch :-)  But it was fun to do I hope?
-
-> Which doesn't have a 'cmov' :-(
-
-The x86 flag register bits are so limited and complicated in the first
-place, cmov is the easier part there ;-) 
-
-> > But ancient things do not.  Both 970 (Apple G5) and Cell BE do not yet
-> > have it (they are ISA 2.01 and 2.02 respectively).  And the older p5's
-> > do not have it yet either, but the newer ones do.
-> > 
-> > And all classic PowerPC is ISA 1.xx of course.  Medieval CPUs :-)
-> 
-> That make more sense than the list in patch 5/5.
-
-Not sure what list that is.  I'll find it :-)
-
-> > > > But sure, seen from very far off both isel and cmove can be used to
-> > > > implement the ternary operator ("?:"), are similar in that way :-)  
-> > > 
-> > > Which is exactly what you want to avoid speculation.  
-> > 
-> > There are cheaper / simpler / more effective / better ways to get that,
-> > but sure, everything is better than a conditional branch, always :-)
-> 
-> Everything except a TLB miss :-)
-
-Heh.  TLBa are just a tiny part of translation on Power.  We mostly care
-about the ERATs.  Look it up, if you want to be introduced to another
-level of pain :-)
-
-> And for access_ok() avoiding the conditional is a good enough reason
-> to use a 'conditional move' instruction.
-> Avoiding speculation is actually free.
-
-*Assuming* that avoiding speculation is actually free, you mean?
-
-
-Segher
