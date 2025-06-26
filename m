@@ -1,258 +1,158 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BF02E11BF
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070A12E11C0
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750942424; cv=none; b=NL24dItI7oxbY1RZog2OfJN/00QVEh78Z2i/GqknJ+ArONhnEgZf2dit/nEWoZguQDVt0PcEI9QqOGoxd/mtdKVZeM48OfEfgJMm0+OdCaExXVlt8bImDoXlmJHjyXQQpxRdVkNcQodb7TCZbJm9UTyQIAVmlvmNMder0rUY83Y=
+	t=1750942474; cv=none; b=b/Dc71OAQc7OJDERdB30KS3ixV5BDOHKeiWo0G6Aa+x7Qi8Fsp9S1qWVtraTpnD1zOFXQ2hNPA3/2khQee0HeOpWmU7iVMOxevqNwQANXRrtGDXDEEOKZwNAxPN2LZGhO9o5KJ6NSOTo1pUvUMzcl5jeZEvAD40pQ73qW1xQTA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750942424; c=relaxed/simple;
-	bh=4UbaF7UJNuqJ/NGv2r+anNWGMicRdp4ab8TOZLSQfVg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aW2xrcvfihjGLq3R+N/0hpWKX7euhvYQ/xCCd7GTzel4aEJXvLlXcsDoSHIgxoJTFRFvFpMWrWTvSH9QObxc5xLUzLKOmiyExh9rjJHW1yTRnMa7jc2aaDMvv5hKEqNdusweCYFwnSZ3Jy0kjRTREZ5RNq8tT0IzF+GziCvUdkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=H+NmZjA1; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750942474; c=relaxed/simple;
+	bh=asdumluxlys5mpuCyqM+5LtmRLFjUYo4X/pjky7in7A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fCurHUuJf1CDjZkpVw2BBAvD7FjrGrzjK4+LCUgVyX6CJSBtyn77qFwgqlsLNsAF6m4OvaCkPQPM9Aaz8B4f7K0oG0bkeSACldOrEjxHnyTk37mKagvB4DAeDgPYWm+Z6ZYIzy6NTFLBFGAKO8C14IDkLnlBK1sfoeRp2IpsMcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bZ9KGKBE; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H+NmZjA1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JtsXPN/EbRnRkfVDVnd5VwLOIbO3iMF7jQ9dJCcE/5o=; b=H+NmZjA1tEsnemrw7hUwwDUwOi
-	tiQFQW6fUGUtMPGKy55K10q7oKvJRHrYmja6F+Bc71MYDwFDS1tofC+CcDeQrPjYplfVTrEZJcf/c
-	8rPzdI/Ig+bFUT0HfULp3Ym6RRejJuVo3HGcdmuQ/hd/hwKV6EK6Cf82g7vtPblvymIiETFOru9wl
-	2FjKEe/IoTIVkRLgTAeLxKqZQUcrTPlPkGtTlkdtvR21vCkLJkCXy2yf2NAYt0kFaNfUkhtiC9z3C
-	kswjA/yIXwkUz3fUDB4qlHDMAkgVhWW6+zWJctw271vJyzq72V9HafqVdDsx1UqZdomeihH0Gxhem
-	N0Fcla7w==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uUm6X-0000000BfW9-0YYx;
-	Thu, 26 Jun 2025 12:53:25 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CFF5030BDA9; Thu, 26 Jun 2025 14:53:23 +0200 (CEST)
-Date: Thu, 26 Jun 2025 14:53:23 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kuyo Chang <kuyo.chang@mediatek.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 1/1] sched/core: Fix migrate_swap() vs. hotplug
-Message-ID: <20250626125323.GG1613376@noisy.programming.kicks-ass.net>
-References: <20250602072242.1839605-1-kuyo.chang@mediatek.com>
- <20250605100009.GO39944@noisy.programming.kicks-ass.net>
- <8e1018116ad7c5c325eced2cb17b65c73ca2ceca.camel@mediatek.com>
- <20250606082834.GM30486@noisy.programming.kicks-ass.net>
- <c32fcf451dad1cac40ad827e53ac6c027403b07e.camel@mediatek.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bZ9KGKBE"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q9WLKp013378
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:54:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=3x6shSd/yrF34vsnt1iiXfA6
+	5GCU1AJJcNwTtSBnT2Q=; b=bZ9KGKBEnFFtGiR31CkiHufZWZC58eaxbW20N4DF
+	B9YElwL7IPI63Q7O9LelBe1Uit11W+diCIaE2aMzdaMe2z77KxVdevvDbhty/aPd
+	Ft84E0co7UN1TAD69k13W7MvWF+5ZMUfhEsX03rorFY32TaYGbu+nG3qnmkohMWm
+	HrqdfJix/VIPHbl85zdJK6d+zSv6vrViOSYBOaKgFr1R6QgRjlF+eK/Beh8DouKc
+	R6ShdJb802EcI3rFkdzB9wdWor7rfNi4jFK+HPDWtDrO+ZbH9PExQ7RQyoKgCshn
+	rPBrBEvqDmfTf190r14j7Ldgu755rGfff3ppSsvXrSR15w==
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbm21wq0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:54:25 +0000 (GMT)
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-31366819969so861713a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:54:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750942464; x=1751547264;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3x6shSd/yrF34vsnt1iiXfA65GCU1AJJcNwTtSBnT2Q=;
+        b=rwRvdsXQleMb1vf6jo0l6piPtuMdhxsFSyeHRUu/Ma0AuHFuSkb8d0D0zB2H96X7oy
+         Nf27J7BUs6H2gdZtX9DVpTihW9MXzVDnZjr7GurG3HDmsXYQyTWHMi8b+uqhvRDWhL0j
+         Dih5kK+6GWBM2iu7V04nfGw4ehwUH0ava1jMHgjSYwySFrnRHn1DB/CB/f4CExbvtrYP
+         pQ1yHLiHUT0haBgo9zYSBFykK6drux3Ba8vSzPJxAtAOM9oGDFLYE0OzUJd68Fc1MDfr
+         WqJT0/9C9S9h4WOoVPSrVOnx/14bTRRMwQ/+XrKr8mGzM/+5hJkkAdfN3/oAHZxgn2hF
+         fXqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVfcfdrqLeGoWTZuLCPsK+zYy/pmkmdr+7uqQGmKtcpoNy1yG68pL+vfM3Myy2LdAjLSlomQceImV6mBLs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjuSBd+HdLryuKQf56NRNykGaWynWQyy10FGUCM/YnHhhhQ1Ls
+	3KyqzT5HFd7+U6yOncF+xzGTaICfTIp572HEpauViVOGAFAE3sIHff2sTjajhl9wtPZa3AX57gw
+	G6+71aScZ36b9phFdPM3HWyGhidscwh46Nz9b0vKMWIppzB1F4nZV2L2V6XKQ7mLFbmTXCQftXX
+	fdz02k9CeA7V8J1tuRjop79ZB+1nIflOkmN5ap37ZoWHF5qlloxg==
+X-Gm-Gg: ASbGncs6Iy/sXx/8nrOtvWvlb8XjaoP7TkwRDly2Y51OvZTmaWCS6mFOUgLBuyB0Enu
+	6nH4KxzcZGCekxMVHGHwGCVxJVH0sX2JpIGxBdXhuofqgKWxZtQeBjsLAReRu4oE+xKo9P0FSJV
+	mmEJ1w8qvNM+rdSDkANQ==
+X-Received: by 2002:a17:90b:4c4e:b0:30e:5c7f:5d26 with SMTP id 98e67ed59e1d1-31615961004mr5428794a91.24.1750942464339;
+        Thu, 26 Jun 2025 05:54:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGuAIj1aEqYNeOoxb9nP2pAN+XuVJjT0xlC2v4akSLt4zynbmjMB91F5msiUFqnswgOqwnZpMRyUbkvjb89yQU=
+X-Received: by 2002:a17:90b:4c4e:b0:30e:5c7f:5d26 with SMTP id
+ 98e67ed59e1d1-31615961004mr5428759a91.24.1750942463905; Thu, 26 Jun 2025
+ 05:54:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c32fcf451dad1cac40ad827e53ac6c027403b07e.camel@mediatek.com>
+References: <20250625-more-qseecom-v4-0-aacca9306cee@oss.qualcomm.com>
+ <20250625-more-qseecom-v4-1-aacca9306cee@oss.qualcomm.com>
+ <aF0bLtnABcGTi0wM@hovoldconsulting.com> <zw5u5c2itmpxq34d22y5wmtr32d4zsmjj5clf77ryeqs5jgd4v@t3wjfyj43yra>
+ <aF1CX2uWZ_KaMDVR@hovoldconsulting.com>
+In-Reply-To: <aF1CX2uWZ_KaMDVR@hovoldconsulting.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Thu, 26 Jun 2025 15:54:11 +0300
+X-Gm-Features: Ac12FXxVTG1v8Nw68lgTtYQ3zkEFEeO_qii9xMXVu692vfF36NTvJZSjEsoMVSY
+Message-ID: <CAO9ioeWwyxSgG9DNYpW-Z_SU_Scv+4sSBs8UeZnxFz+tOaESEQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/8] efi: efivars: don't crash in efivar_set_variable{,_locked}
+ in r/o case
+To: Johan Hovold <johan@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Steev Klimaszewski <steev@kali.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-efi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Authority-Analysis: v=2.4 cv=YYu95xRf c=1 sm=1 tr=0 ts=685d4301 cx=c_pps
+ a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=VwQbUJbxAAAA:8 a=9OOZl2ZXbS4rxasUFm0A:9 a=QEXdDO2ut3YA:10
+ a=uKXjsCUrEbL0IQVhDsJ9:22
+X-Proofpoint-GUID: do2X3bOGsekqD1LBk0hK7Qd-QhQ4Sz1v
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDEwOCBTYWx0ZWRfXyj29g7YYu1NF
+ 91eToVNwZUkMn/M6SZO+dPVitfwIw1P7jrnN+GJSKYmKTqIqqe4Au9/4l/7HcSsbkzcUfECig/w
+ I3sqTo0b/HBJr+ZG68GF1cwfOn1wNHLgEYS3xCDklbGAwsREA+JQTVZ4yZjwPq/tL7+KenCRig2
+ e4UbVbV0+cNAVmPf27GCz3wIwFc88ys2JgL7OH+q2cKyTQm8Yf0+YxAToKE1LDPvYXy89O0nNkZ
+ kyiyKsIKjLVp+aUbSBeizPJnO4ZyZ7Bfvi65lSmVO2F2yLiJHVy2GHTUFAGN58jw7+o+6Fw4uwj
+ emrF4JVPT492OGcIOfpvuKCi1BtZAC2jFTlpiEK1vXHyxImOVIxz7mWGiW/cC2KNQNS9F8OpUTB
+ /zDcYPzxPSc6EjdQGrImkCc3+WBTF3p9NYjDsvDWEXaB9ldLQtyBjo9Lz8wPoPLYU9yIMWQR
+X-Proofpoint-ORIG-GUID: do2X3bOGsekqD1LBk0hK7Qd-QhQ4Sz1v
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_05,2025-06-26_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
+ clxscore=1015 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506260108
 
-On Fri, Jun 13, 2025 at 03:47:47PM +0800, Kuyo Chang wrote:
-> On Fri, 2025-06-06 at 10:28 +0200, Peter Zijlstra wrote:
-> > 
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
-> > 
-> > 
-> > On Fri, Jun 06, 2025 at 11:46:57AM +0800, Kuyo Chang wrote:
-> > 
-> > > Thank you for your patch.
-> > > I believe this patch also effectively addresses this race
-> > > condition.
-> > > I will queue it in our test pool for testing.
-> > 
-> > Thank you; I shall await the results!
-> > 
-> It works well during both regular and hotplug tests(one week).
-> I believe the patch is workable.
-
-Thanks!, I'll queue the below in tip/sched/urgent
-
----
-Subject: sched/core: Fix migrate_swap() vs. hotplug
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Thu, 5 Jun 2025 12:00:09 +0200
-
-On Mon, Jun 02, 2025 at 03:22:13PM +0800, Kuyo Chang wrote:
-
-> So, the potential race scenario is:
+On Thu, 26 Jun 2025 at 15:51, Johan Hovold <johan@kernel.org> wrote:
 >
-> 	CPU0							CPU1
-> 	// doing migrate_swap(cpu0/cpu1)
-> 	stop_two_cpus()
-> 							  ...
-> 							 // doing _cpu_down()
-> 							      sched_cpu_deactivate()
-> 								set_cpu_active(cpu, false);
-> 								balance_push_set(cpu, true);
-> 	cpu_stop_queue_two_works
-> 	    __cpu_stop_queue_work(stopper1,...);
-> 	    __cpu_stop_queue_work(stopper2,..);
-> 	stop_cpus_in_progress -> true
-> 		preempt_enable();
-> 								...
-> 							1st balance_push
-> 							stop_one_cpu_nowait
-> 							cpu_stop_queue_work
-> 							__cpu_stop_queue_work
-> 							list_add_tail  -> 1st add push_work
-> 							wake_up_q(&wakeq);  -> "wakeq is empty.
-> 										This implies that the stopper is at wakeq@migrate_swap."
-> 	preempt_disable
-> 	wake_up_q(&wakeq);
-> 	        wake_up_process // wakeup migrate/0
-> 		    try_to_wake_up
-> 		        ttwu_queue
-> 		            ttwu_queue_cond ->meet below case
-> 		                if (cpu == smp_processor_id())
-> 			         return false;
-> 			ttwu_do_activate
-> 			//migrate/0 wakeup done
-> 		wake_up_process // wakeup migrate/1
-> 	           try_to_wake_up
-> 		    ttwu_queue
-> 			ttwu_queue_cond
-> 		        ttwu_queue_wakelist
-> 			__ttwu_queue_wakelist
-> 			__smp_call_single_queue
-> 	preempt_enable();
+> On Thu, Jun 26, 2025 at 02:03:44PM +0300, Dmitry Baryshkov wrote:
+> > On Thu, Jun 26, 2025 at 12:04:30PM +0200, Johan Hovold wrote:
+> > > On Wed, Jun 25, 2025 at 01:53:20AM +0300, Dmitry Baryshkov wrote:
+> > > > If efivar implementation doesn't provide write support, then calling
+> > > > efivar_set_variable() (e.g. when PM8xxx RTC driver tries to update the
+> > > > RTC offset) will crash the system. Prevent that by checking that
+> > > > set_variable callback is actually provided and fail with an
+> > > > EFI_WRITE_PROTECTED if it is not.
+> > > >
+> > > > Fixes: 472831d4c4b2 ("efi: vars: Add thin wrapper around EFI get/set variable interface")
+> > >
+> > > I don't think a fixes tag is warranted here as it currently appears to
+> > > be expected that the callers check if setvar is supported before calling
+> > > this helper (e.g. by calling efivar_supports_writes() as efivarfs does).
+> >
+> > It is not documented as such. So, I think, we'd better not crash the
+> > callers.
 >
-> 							2nd balance_push
-> 							stop_one_cpu_nowait
-> 							cpu_stop_queue_work
-> 							__cpu_stop_queue_work
-> 							list_add_tail  -> 2nd add push_work, so the double list add is detected
-> 							...
-> 							...
-> 							cpu1 get ipi, do sched_ttwu_pending, wakeup migrate/1
+> You need to look at the backstory to determine that before jumping to
+> conclusions (e.g. start by looking at f88814cc2578 ("efi/efivars: Expose
+> RT service availability via efivars abstraction")).
+
+_documented_. I'll update documentation for efivar_set_variable() in
+the next iteration and add a check to the RTC driver. However I still
+think that this patch is valid.
+
 >
+> > > So should perhaps be fixed in the RTC driver if we agree that supporting
+> > > read-only offsets is indeed something we want.
+> > >
+> > > Are there any other current user that may possibly benefit from
+> > > something like this?
+> >
+> > efi-pstore comes to my mind.
+>
+> No, that driver is also disabled when efivar_supports_writes() returns
+> false.
 
-So this balance_push() is part of schedule(), and schedule() is supposed
-to switch to stopper task, but because of this race condition, stopper
-task is stuck in WAKING state and not actually visible to be picked.
+Good.
 
-Therefore CPU1 can do another schedule() and end up doing another
-balance_push() even though the last one hasn't been done yet.
 
-This is a confluence of fail, where both wake_q and ttwu_wakelist can
-cause crucial wakeups to be delayed, resulting in the malfunction of
-balance_push.
-
-Since there is only a single stopper thread to be woken, the wake_q
-doesn't really add anything here, and can be removed in favour of
-direct wakeups of the stopper thread.
-
-Then add a clause to ttwu_queue_cond() to ensure the stopper threads
-are never queued / delayed.
-
-Of all 3 moving parts, the last addition was the balance_push()
-machinery, so pick that as the point the bug was introduced.
-
-Fixes: 2558aacff858 ("sched/hotplug: Ensure only per-cpu kthreads run during hotplug")
-Reported-by: Kuyo Chang <kuyo.chang@mediatek.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: Kuyo Chang <kuyo.chang@mediatek.com>
-Link: https://lkml.kernel.org/r/20250605100009.GO39944@noisy.programming.kicks-ass.net
----
- kernel/sched/core.c   |    5 +++++
- kernel/stop_machine.c |   20 ++++++++++----------
- 2 files changed, 15 insertions(+), 10 deletions(-)
-
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3943,6 +3943,11 @@ static inline bool ttwu_queue_cond(struc
- 	if (!scx_allow_ttwu_queue(p))
- 		return false;
- 
-+#ifdef CONFIG_SMP
-+	if (p->sched_class == &stop_sched_class)
-+		return false;
-+#endif
-+
- 	/*
- 	 * Do not complicate things with the async wake_list while the CPU is
- 	 * in hotplug state.
---- a/kernel/stop_machine.c
-+++ b/kernel/stop_machine.c
-@@ -82,18 +82,15 @@ static void cpu_stop_signal_done(struct
- }
- 
- static void __cpu_stop_queue_work(struct cpu_stopper *stopper,
--					struct cpu_stop_work *work,
--					struct wake_q_head *wakeq)
-+				  struct cpu_stop_work *work)
- {
- 	list_add_tail(&work->list, &stopper->works);
--	wake_q_add(wakeq, stopper->thread);
- }
- 
- /* queue @work to @stopper.  if offline, @work is completed immediately */
- static bool cpu_stop_queue_work(unsigned int cpu, struct cpu_stop_work *work)
- {
- 	struct cpu_stopper *stopper = &per_cpu(cpu_stopper, cpu);
--	DEFINE_WAKE_Q(wakeq);
- 	unsigned long flags;
- 	bool enabled;
- 
-@@ -101,12 +98,13 @@ static bool cpu_stop_queue_work(unsigned
- 	raw_spin_lock_irqsave(&stopper->lock, flags);
- 	enabled = stopper->enabled;
- 	if (enabled)
--		__cpu_stop_queue_work(stopper, work, &wakeq);
-+		__cpu_stop_queue_work(stopper, work);
- 	else if (work->done)
- 		cpu_stop_signal_done(work->done);
- 	raw_spin_unlock_irqrestore(&stopper->lock, flags);
- 
--	wake_up_q(&wakeq);
-+	if (enabled)
-+		wake_up_process(stopper->thread);
- 	preempt_enable();
- 
- 	return enabled;
-@@ -264,7 +262,6 @@ static int cpu_stop_queue_two_works(int
- {
- 	struct cpu_stopper *stopper1 = per_cpu_ptr(&cpu_stopper, cpu1);
- 	struct cpu_stopper *stopper2 = per_cpu_ptr(&cpu_stopper, cpu2);
--	DEFINE_WAKE_Q(wakeq);
- 	int err;
- 
- retry:
-@@ -300,8 +297,8 @@ static int cpu_stop_queue_two_works(int
- 	}
- 
- 	err = 0;
--	__cpu_stop_queue_work(stopper1, work1, &wakeq);
--	__cpu_stop_queue_work(stopper2, work2, &wakeq);
-+	__cpu_stop_queue_work(stopper1, work1);
-+	__cpu_stop_queue_work(stopper2, work2);
- 
- unlock:
- 	raw_spin_unlock(&stopper2->lock);
-@@ -316,7 +313,10 @@ static int cpu_stop_queue_two_works(int
- 		goto retry;
- 	}
- 
--	wake_up_q(&wakeq);
-+	if (!err) {
-+		wake_up_process(stopper1->thread);
-+		wake_up_process(stopper2->thread);
-+	}
- 	preempt_enable();
- 
- 	return err;
+-- 
+With best wishes
+Dmitry
