@@ -1,90 +1,390 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951FF800;
-	Thu, 26 Jun 2025 10:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84680800;
+	Thu, 26 Jun 2025 10:26:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750933522; cv=none; b=SrV0IZ+ChCbVSLRGiYcY1+WDJL+9ab9sYFl2gnwnco/pCqgPzGLHq7hSZaVXRvUwJ4AqWZk8NlDT9GfDm9XXIR/athckFbk7/RvNjeHpTjyMXVJkXBBM9rulgGu6WitAjZzvEtR32XKEW6uNmX1bn1q1zZ3KfSxIes+fmz4+opM=
+	t=1750933587; cv=none; b=DV4A9+iyJxdCmS7pZbAsYXTL/0AOrazrqmArP9vLmFWaFh/gh5NI+dSUDD743kI7kouIy39Vt9iAdObk80aRwpczk+4HQVuSp2f0VmsgygRv1wewresAmyvzLsWxkg2GpPfdHlWs4KZvl15+42bt/bguEhQyOH/JfWt46LnMFlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750933522; c=relaxed/simple;
-	bh=Gx06JMDSopyJ7pbFWSl7UigEcRh/jUspF/asLoozNcM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tSUfgOofZMGhQXHowA0dwlq1VUlLTp9Z+JZn/ahwivKpDlCDHrp7VbisKUieQ78d03UL6VQtJXuzj//1KaKvdQiNy3wtH/TGmFJamRSSgIaaZ1jkoREjIbdP+31X9z68nufIJt1fmMlfp1INPafXYWVTUWKRtk4GsEaT9peE8eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XE0BK+4u; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1750933587; c=relaxed/simple;
+	bh=4sd7sPEofJu3L61VtmmBQap4znjrUw8t5RWmHBzEl84=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gp9I15SY6qEaOEKNKDZJwcN9BTGVRqpAeP/JcQmW9zJhA2hvGTe2vbuFR8/6V259cPB+mX1k7rMPIGPlKE9sAVgvT1M9XwBw6NqIhnp1ELd1MRNojERAPj80kQYT+oUqzR8KJQOR2DJZpJU8mX3AglxpHShjiIPj+9/3zQdfl+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pO5TfFwc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XE0BK+4u"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=0z8VxbTUym1H07H34+Tq2p9LTx6bEUnk5amgzOtXLWc=; b=XE0BK+4ua7lsobC+vYQwrTfYNt
-	g5TwyhtRN9mRjyfVN3f1R8/e6jU58c271ru9MXREUSYug0uKq+qjTV8Zt+/uW3+G3q2jAPdhNKsTi
-	2GTuI5iW/D2evuvAXNWoj463Nm5C2dmSaxpRBAy6RsNak4SOXXDCjoU2G6kbBr+Wrpi5DYf4mbHlZ
-	5dgdvCo1SaBDjczlztpzJ1oJ/6/M4/md16av0Bhi4ZYkERJ+rEbZYNmwjpFa7ZH6nwR5NrMCsi6A/
-	0v7wODBYPIPMPCJPTkMBfC8We/5WU0B0Vd/So+pg+wgcHe5PI/0pHB+L1VULngphzE/60K5yJfB8u
-	UM9Z3HhQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uUjnF-0000000BGpI-0WkA;
-	Thu, 26 Jun 2025 10:25:21 +0000
-Date: Thu, 26 Jun 2025 03:25:21 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Yafang Shao <laoar.shao@gmail.com>, Jeff Layton <jlayton@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>, djwong@kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, yc1082463@gmail.com
-Subject: Re: [PATCH] xfs: report a writeback error on a read() call
-Message-ID: <aF0gEWcA6bX1eNzU@infradead.org>
-References: <aFqyyUk9lO5mSguL@infradead.org>
- <51cc5d2e-b7b1-4e48-9a8c-d6563bbc5e2d@gmail.com>
- <aFuezjrRG4L5dumV@infradead.org>
- <88e4b40b61f0860c28409bd50e3ae5f1d9c0410b.camel@kernel.org>
- <aFvbr6H3WUyix2fR@infradead.org>
- <6ac46aa32eee969d9d8bc55be035247e3fdc0ac8.camel@kernel.org>
- <aFvkAIg4pAeCO3PN@infradead.org>
- <11735cf2e1893c14435c91264d58fae48be2973d.camel@kernel.org>
- <CALOAHbDtFh5P_P0aTzaKRcwGfQmkrhgmk09BQ1tu9ZdXvKi8vQ@mail.gmail.com>
- <aFzFR6zD7X1_9bWj@dread.disaster.area>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pO5TfFwc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B611C4CEEE;
+	Thu, 26 Jun 2025 10:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750933587;
+	bh=4sd7sPEofJu3L61VtmmBQap4znjrUw8t5RWmHBzEl84=;
+	h=From:Subject:Date:To:Cc:From;
+	b=pO5TfFwcXMM7swl7ipaIkZIJJgA5CZPr5ZotLi27eyuIemCqxYBpaUjpE3TSGdjdg
+	 5ggp8ptl+s129oqidAAxcWbL791oeX7QA6wxdLLsf1pVtQrZu9klAbpoUPn+Sng6nw
+	 SGOJ2Q4wTFCVwUO4t2U9THMQ8f6+Le5O0ykuicaPokjyaXdPPWl61yiFMEUGzW/npw
+	 3jl2qjm6g7lb9BN/aGuKWXDEh9J8v95+oAjZcmOmLbThUQBX8yV2O8xaqiCMZ1vLBk
+	 ITghY21eCSe4T8FQoOS1Hmpf6XNC+PzqFXCPS0meYKX3owYn33bCqRT0WnMcTjpyUf
+	 gflyCy5VukkkQ==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: [PATCH v6 00/31] Arm GICv5: Host driver implementation
+Date: Thu, 26 Jun 2025 12:25:51 +0200
+Message-Id: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFzFR6zD7X1_9bWj@dread.disaster.area>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC8gXWgC/23RwU7EIBAG4FfZcBYDA4OtJ99j44HC0BJNq9Alm
+ k3fXXY12SX1+E/y/WSGM8uUImX2fDizRCXmuMw1mIcDc5OdR+LR18xAAAotOj5GV5BPS175k+6
+ DksYG6jSr4CNRiF/XsuNrzVPM65K+r91FXqb/1hTJBZcBjB+0wdD5lzdKM70/Lmlkl54CdxZ0Y
+ 6Fa1Eje2SAkDDurbhaFaayq1pD3aHsIXvQ7q++sVI3V1Q7KUD9ItMapncWbNbLdF6v1PRkA6xB
+ V++72e8hEn6f6GevfNbftB0ABW/GqAQAA
+X-Change-ID: 20250408-gicv5-host-749f316afe84
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Sascha Bischoff <sascha.bischoff@arm.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Timothy Hayes <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Peter Maydell <peter.maydell@linaro.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>
+X-Mailer: b4 0.15-dev-6f78e
 
-On Thu, Jun 26, 2025 at 01:57:59PM +1000, Dave Chinner wrote:
-> writeback errors. Because scientists and data analysts that wrote
-> programs to chew through large amounts of data didn't care about
-> persistence of their data mid-processing. They just wanted what they
-> wrote to be there the next time the processing pipeline read it.
+Implement the irqchip kernel driver for the Arm GICv5 architecture,
+as described in the GICv5 beta0 specification, available at:
 
-That's only going to work if your RAM is as large as your permanent
-storage :)
+https://developer.arm.com/documentation/aes0070
 
-> IOWs, checking for a past writeback IO error is as simple as:
-> 
-> 	if (sync_file_range(fd, 0, 0, SYNC_FILE_RANGE_WAIT_BEFORE) < 0) {
-> 		/* An unreported writeback error was pending on the file */
-> 		wb_err = -errno;
-> 		......
-> 	}
-> 
-> This does not cause new IO to be issued, it only blocks on writeback
-> that is currently in progress, and it has no data integrity
-> requirements at all. If the writeback has already been done, all it
-> will do is sweep residual errors out to userspace.....
+The GICv5 architecture is composed of multiple components:
 
-Not quite.
+- one or more IRS (Interrupt Routing Service)
+- zero or more ITS (Interrupt Translation Service)
+- zero or more IWB (Interrupt Wire Bridge)
 
-This will still wait for all I/O on the range, and given that
-sync_file_range treats a 0 length as the entire file that might actually
-do a significant amount of waiting.  But yes, it's the closest we get
-right now.
+The GICv5 host kernel driver is organized into units corresponding
+to GICv5 components.
+
+The GICv5 architecture defines the following interrupt types:
+
+- PPI (PE-Private Peripheral Interrupt)
+- SPI (Shared Peripheral Interrupt)
+- LPI (Logical Peripheral Interrupt)
+
+This series adds sysreg entries required to automatically generate
+GICv5 registers handling code, one patch per-register.
+
+This patch series is split into patches matching *logical* entities,
+to make the review easier.
+
+Logical entities:
+
+- PPI
+- IRS/SPI
+- LPI/IPI
+- SMP enablement
+- ITS
+
+The salient points of the driver are summarized below.
+
+=============
+1. Testing
+=============
+
+Patchset tested with an architecturally compliant FVP model with
+the following setup:
+
+- 1 IRS
+- 1 and 2 ITSes
+- 1 and 2 IWBs
+
+configured with different parameters that vary the IRS(IST) and
+ITS(DT/ITT) table levels and INTID/DEVICEID/EVENTID bits.
+
+Trusted-Firmware (TF-A) was used for device tree bindings and component
+initializations.
+
+Guidelines to set-up the FVP model, kernel and TF-A in order to
+bootstrap the GICv5 software stack are outlined in this wikipage,
+it will be kept up-to-date with the latest developments:
+
+https://linaro.atlassian.net/wiki/x/CQAF-wY
+
+================
+2. Driver design
+================
+
+=====================
+2.1 GICv5 DT bindings
+=====================
+
+The DT bindings attempt to map directly to the GICv5 component
+hierarchy, with a top level node corresponding to the GICv5 "system",
+having IRS child nodes, that have in turn ITS child nodes.
+
+The IWB is defined in a separate schema; its relationship with the ITS
+is explicit through the msi-parent property required to define the IWB
+deviceID.
+
+===================
+2.2 GICv5 top level
+===================
+
+The top-level GICv5 irqchip driver implements separate IRQ
+domains - one for each interrupt type, PPI (PE-Private Peripheral
+Interrupt), SPI (Shared Peripheral Interrupt) and LPI (Logical
+Peripheral Interrupt).
+
+The top-level exception handler routes the IRQ to the relevant IRQ
+domain for handling according to the interrupt type detected when the
+IRQ is acknowledged.
+
+All IRQs are set to the same priority value.
+
+The driver assumes that the GICv5 components implement enough
+physical address bits to address the full system RAM, as required
+by the architecture; it does not check whether the physical address
+ranges of memory allocated for IRS/ITS tables are within the GICv5
+physical address range.
+
+Components are probed by relying on the early DT irqchip probing
+scheme. The probing is carried out hierarchically, starting from
+the top level.
+
+The IWB driver has been reworked to match an MBIgen like interface.
+
+Power management and Kexec are not yet supported at this stage.
+
+=============
+2.3 GICv5 IRS
+=============
+
+The GICv5 IRS driver probes and manages SPI interrupts by detecting their
+presence and by providing the top-level driver the information required
+to set up the SPI interrupt domain.
+
+The GICv5 IRS driver also parses from firmware Interrupt AFFinity ID
+(IAFFID) IDs identifying cores and sets up IRS IRQ routing.
+
+The GICv5 IRS driver allocates memory to handle the IRS tables.
+
+The IRS LPI interrupts state is kept in an Interrupt State Table (IST)
+and it is managed through CPU instructions.
+
+The IRS driver allocates the IST table that, depending on available HW
+features can be either 1- or 2-level.
+
+If the IST is 2-level, memory for the level-2 table entries
+is allocated on demand (ie when LPIs are requested), using an IRS
+mechanism to make level-1 entry valid on demand after the IST
+has already been enabled.
+
+Chunks of memory allocated for IST entries can be smaller or larger than
+PAGE_SIZE and are required to be physically contiguous within an IST level
+(i.e. a linear IST is a single memory block, a 2-level IST is made up of a
+block of memory for the L1 table, whose entries point at different L2 tables
+that are in turn allocated as memory chunks).
+
+LPI INTIDs are allocated in software using an IDA. IDA does not support
+allocating ranges, which is a bit cumbersome because this forces us
+to allocate IDs one by one where the LPIs could actually be allocated
+in chunks.
+
+An IDA was chosen because basically it is a dynamic bitmap, which
+carries out memory allocation automatically.
+
+Other drivers/subsystems made different choices to allocate ranges,
+an IDA was chosen since it is part of the core kernel and an IDA
+range API is in the making.
+
+IPIs are implemented using LPIs and a hierarchical domain is created
+specifically for IPIs using the LPI domain as a parent.
+
+arm64 IPI management core code is augmented with a new API to handle
+IPIs that are not per-cpu interrupts and force the affinity of the LPI
+backing an IPI to a specific and immutable value.
+
+=============
+2.4 GICv5 ITS
+=============
+
+The ITS driver partially reuses the existing GICv3/v4 MSI-parent
+infrastructure and on top builds an IRQ domain needed to enable message
+based IRQs.
+
+ITS tables - DT (device table) and ITT (Interrupt Translation Table) are
+allocated according to the number of required deviceIDs and eventIDs on
+a per device basis. The ITS driver relies on the kmalloc() interface
+because memory pages must be physically contiguous within a table level
+and can be < or > than PAGE_SIZE.
+
+=============
+2.5 GICv5 IWB
+=============
+
+The IWB driver has been reworked to match an MBIgen like interface.
+
+A new MSI flag (MSI_ALLOC_FLAGS_FIXED_MSG_DATA) had to be added for MSI
+allocation in that the IWB has a fixed eventID per-wire and the ITS driver
+code is not allowed to allocate eventIDs dynamically for events backing IWB
+wires.
+
+===================
+3. Acknowledgements
+===================
+
+The patchset was co-developed with T.Hayes and S.Bischoff from
+Arm - thank you so much for your help.
+
+A big thank you to M.Zyngier for his fundamental help/advice.
+
+If you have some time to help us review this series and get it into
+shape, thank you very much.
+
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+---
+Changes in v6:
+- Reworked arm64 IPIs on non-SGI systems code according to review
+- Fixed msi-map management, added helper function to map ID and retrieve
+  controller node pointer at the same time
+- Added IRQ domain flag for IRQdomain selection on GICv5
+- Split ITS patch according to review - smaller helper/clean-up first
+- Added review tag
+- Tidied-up error labels return code
+- Link to v5: https://lore.kernel.org/r/20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org
+
+Changes in v5:
+- Added support for ITS multiple translate frame registers
+- Added DT/PCI support function to retrieve msi controller from
+  msi-parent and msi-map properties
+- Updated DT bindings to add interrupt-domains
+- Fixed request_irq() IPI parameter sparse error
+- Forced __always_inline to fix gcc build error on patch 20
+- Fixed trivial sysreg typo
+- Applied review tags
+- Added arm64 gic-v5 booting requirements patch
+- Rebased on v6.16-rc2
+- Link to v4: https://lore.kernel.org/r/20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org
+
+Changes in v4:
+- Added IWB new driver version based on MBIgen interface
+- Added MSI alloc flag
+- Rebased against git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/msi-prepare-teardown
+- Made more coding style updates to comply with tip-maintainer
+  guidelines
+- Updated PPI type handling
+- Updated devicetree bindings
+- Fixed includecheck warning
+- Link to v3: https://lore.kernel.org/r/20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org
+
+Changes in v3:
+- Reintroduced v1 patch split to simplify review
+- Reworked IRS/ITS iopoll loop, split in atomic/non-atomic
+- Cleaned-up IRS/ITS code with macros addressing review comments
+- Dropped IWB driver waiting for IRQ core code to be fixed for DOMAIN_BUS_WIRED_TO_MSI
+  https://lore.kernel.org/lkml/87tt6310hu.wl-maz@kernel.org/
+- Moved headers to arch/arm64 and include/linux/irqchip
+- Reworked GSB barriers definition
+- Added extensive GSB/ISB barriers comments
+- Limited error checking on IRS/ITS code - introduced couple of fatal
+  BUG_ON checks
+- Link to v2: https://lore.kernel.org/r/20250424-gicv5-host-v2-0-545edcaf012b@kernel.org
+
+Changes in v2:
+- Squashed patches [18-21] into a single logical entity
+- Replaced maple tree with IDA for LPI IDs allocation
+- Changed coding style to tip-maintainer guidelines
+- Tried to consolidate poll wait mechanism into fewer functions
+- Added comments related to _relaxed accessors, barriers and kmalloc
+  limitations
+- Removed IPI affinity check hotplug callback
+- Applied DT schema changes requested, moved IWB into a separate schema
+- Fixed DT examples
+- Fixed guard() usage
+- Link to v1: https://lore.kernel.org/r/20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org
+
+---
+Lorenzo Pieralisi (30):
+      dt-bindings: interrupt-controller: Add Arm GICv5
+      arm64/sysreg: Add GCIE field to ID_AA64PFR2_EL1
+      arm64/sysreg: Add ICC_PPI_PRIORITY<n>_EL1
+      arm64/sysreg: Add ICC_ICSR_EL1
+      arm64/sysreg: Add ICC_PPI_HMR<n>_EL1
+      arm64/sysreg: Add ICC_PPI_ENABLER<n>_EL1
+      arm64/sysreg: Add ICC_PPI_{C/S}ACTIVER<n>_EL1
+      arm64/sysreg: Add ICC_PPI_{C/S}PENDR<n>_EL1
+      arm64/sysreg: Add ICC_CR0_EL1
+      arm64/sysreg: Add ICC_PCR_EL1
+      arm64/sysreg: Add ICC_IDR0_EL1
+      arm64/sysreg: Add ICH_HFGRTR_EL2
+      arm64/sysreg: Add ICH_HFGWTR_EL2
+      arm64/sysreg: Add ICH_HFGITR_EL2
+      arm64: Disable GICv5 read/write/instruction traps
+      arm64: cpucaps: Rename GICv3 CPU interface capability
+      arm64: cpucaps: Add GICv5 CPU interface (GCIE) capability
+      arm64: Add support for GICv5 GSB barriers
+      irqchip/gic-v5: Add GICv5 PPI support
+      irqchip/gic-v5: Add GICv5 IRS/SPI support
+      irqchip/gic-v5: Add GICv5 LPI/IPI support
+      irqchip/gic-v5: Enable GICv5 SMP booting
+      of/irq: Add of_msi_xlate() helper function
+      PCI/MSI: Add pci_msi_map_rid_ctlr_node() helper function
+      irqchip/gic-v3: Rename GICv3 ITS MSI parent
+      irqchip/msi-lib: Add IRQ_DOMAIN_FLAG_FWNODE_PARENT handling
+      irqchip/gic-v5: Add GICv5 ITS support
+      irqchip/gic-v5: Add GICv5 IWB support
+      docs: arm64: gic-v5: Document booting requirements for GICv5
+      arm64: Kconfig: Enable GICv5
+
+Marc Zyngier (1):
+      arm64: smp: Support non-SGIs for IPIs
+
+ Documentation/arch/arm64/booting.rst               |   41 +
+ .../interrupt-controller/arm,gic-v5-iwb.yaml       |   78 ++
+ .../bindings/interrupt-controller/arm,gic-v5.yaml  |  267 +++++
+ MAINTAINERS                                        |   10 +
+ arch/arm64/Kconfig                                 |    1 +
+ arch/arm64/include/asm/barrier.h                   |    3 +
+ arch/arm64/include/asm/el2_setup.h                 |   45 +
+ arch/arm64/include/asm/smp.h                       |   24 +-
+ arch/arm64/include/asm/sysreg.h                    |   71 +-
+ arch/arm64/kernel/cpufeature.c                     |   17 +-
+ arch/arm64/kernel/smp.c                            |  144 ++-
+ arch/arm64/tools/cpucaps                           |    3 +-
+ arch/arm64/tools/sysreg                            |  495 +++++++-
+ drivers/irqchip/Kconfig                            |   12 +
+ drivers/irqchip/Makefile                           |    5 +-
+ drivers/irqchip/irq-gic-common.h                   |    2 -
+ ...3-its-msi-parent.c => irq-gic-its-msi-parent.c} |  168 ++-
+ drivers/irqchip/irq-gic-its-msi-parent.h           |   12 +
+ drivers/irqchip/irq-gic-v3-its.c                   |    1 +
+ drivers/irqchip/irq-gic-v5-irs.c                   |  822 +++++++++++++
+ drivers/irqchip/irq-gic-v5-its.c                   | 1228 ++++++++++++++++++++
+ drivers/irqchip/irq-gic-v5-iwb.c                   |  284 +++++
+ drivers/irqchip/irq-gic-v5.c                       | 1078 +++++++++++++++++
+ drivers/irqchip/irq-gic.c                          |    2 +-
+ drivers/irqchip/irq-msi-lib.c                      |    5 +-
+ drivers/of/irq.c                                   |   22 +-
+ drivers/pci/msi/irqdomain.c                        |   20 +
+ include/asm-generic/msi.h                          |    1 +
+ include/linux/irqchip/arm-gic-v5.h                 |  394 +++++++
+ include/linux/irqdomain.h                          |    3 +
+ include/linux/msi.h                                |    1 +
+ include/linux/of_irq.h                             |    5 +
+ 32 files changed, 5191 insertions(+), 73 deletions(-)
+---
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+change-id: 20250408-gicv5-host-749f316afe84
+
+Best regards,
+-- 
+Lorenzo Pieralisi <lpieralisi@kernel.org>
 
