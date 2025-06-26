@@ -1,113 +1,163 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82091216E1B
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06905214A6A
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750940430; cv=none; b=B7RHZiy8UPu+jSNYTCPNBzC2QwITTbGeMQg4XhdePUFEZo76uEQ1BKbQdqKudTpVV4MZZXu6Sl9qfaqmTyVMtP309OEXiwRHX1LE2dy4N0jRicj/uZP9+ZnpGRWgWZwi/h7HoMPYq2jZcsumIPO0ooEu9bB8Qg5icxkQH29FAaE=
+	t=1750940465; cv=none; b=pSvtKCHLvuVAK4sLSb21RRNy2czljicwFYQby0JZQfukql2fBYVUZS2LZzGVq1Iij7gWbHPGiakEmFChL1i931s8uegt14VH/kqU35moS7LkFxjIsEea02gv4EfHLeqHyPIA6BwwnoaPxbQT3QG6RNHG4eZPx/DHXCzbjJVmxkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750940430; c=relaxed/simple;
-	bh=qkXCd+Bbs8QNW+Fx/2Wzm1gDcAzwRQw/k1gMr+d9PHg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s4J2RfWw2G1mjCBHiaALCwgyDTI8FMaCMp32batmkIRdqGKAq2ZzK2nT8dvjHh8ofpLzothrLYItp+N9HHmfY8tg+kDMjTLQKf6+cBp0tOO42x4Bvf6ao7wh6p3eW/tz6/F01W07x8foufSc8Z7rHJSQHMWOgTPt5u3Oa2AM73M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jBu51d0W; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jBu51d0W"
-Message-ID: <f95f6777-7445-46dc-be53-b3ae5594bf39@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750940426;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9sABBcbcL1qfYZGfdc7T7gO/5yx4mDv09tlOoXIb1QU=;
-	b=jBu51d0WSApZ0RPmF9+mPKKzznqbNDKG0kwcAOOaoQs5nhl99f/cLxLukllRjP0zH2gyLV
-	3038LhaqIgRmGXdzHS1QqbEyPeFBPRzIrJIdyVG0tH481mJBrb88wTdKrUR0mVKCF/VcO8
-	cZmmYNAqrpoCIk9gBN155n96upldt54=
-Date: Thu, 26 Jun 2025 14:19:18 +0200
+	s=arc-20240116; t=1750940465; c=relaxed/simple;
+	bh=UfIaVjPR+dlZRMg3kV5PE/TLrn4vs2+ACMaK/AXQ0f0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GjEDxUsnb+l6sIfOJqHTiYUzMVjfGe54d5dzc6kCytz+Ayb9WSNktWmuuwnY12nI+pxTDw2tdUdpmceGOjN27d9W0677Ot/0oQbqPU49f9uP1J8lMfeSUE3XG2yNaVFKVoy3S0Lmx9cZ5fvup0D8o32beXX3Lz3hKjFFcJSuS+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uUlb3-0008Io-1q; Thu, 26 Jun 2025 14:20:53 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uUlb1-005RgD-2A;
+	Thu, 26 Jun 2025 14:20:51 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uUlb1-001Zfo-1l;
+	Thu, 26 Jun 2025 14:20:51 +0200
+Date: Thu, 26 Jun 2025 14:20:51 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de, Russell King <linux@armlinux.org.uk>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next v2 1/1] phy: micrel: add Signal Quality
+ Indicator (SQI) support for KSZ9477 switch PHYs
+Message-ID: <aF07I-QtyH8hbupf@pengutronix.de>
+References: <20250625124127.4176960-1-o.rempel@pengutronix.de>
+ <5a094e3b95f1219435056d87ca4f643398bcb1d3.camel@pengutronix.de>
+ <aFzWiZ9ohbE_Unuz@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 00/15] ASoC/soundwire: Realtek codecs: wait codec init in
- hw_params
-To: Bard Liao <yung-chuan.liao@linux.intel.com>, broonie@kernel.org,
- tiwai@suse.de, linux-sound@vger.kernel.org, vkoul@kernel.org
-Cc: vinod.koul@linaro.org, linux-kernel@vger.kernel.org, bard.liao@intel.com
-References: <20250626115625.536423-1-yung-chuan.liao@linux.intel.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
-In-Reply-To: <20250626115625.536423-1-yung-chuan.liao@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aFzWiZ9ohbE_Unuz@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi Bard,
-
-> The current code waits for the codec initialization in the resume
-> callback. It could cause the resume takes a long time while waiting for
-> the codec being attached and initialized. Move the waiting to the
-> hw_params callback when the driver really needs it and shorten the
-> resume time.
-> The change is mainly on the ASoC tree. Let's go through the ASoC tree.
-
-While I certainly understand the desire to make the resume time lower, is this approach desirable in all cases?
-
-My main worry is this: not all functionality in a codec is related to the hw_params. One counter example would be register settings related to jack detection. You would want the regmap settings to be correctly applied in hardware registers even in the absence of any streaming request, no?
-
-The other weird thing is that historically the codec initialization was never on the critical path, it was several orders of magnitude faster than the controller. It wouldn't hurt to provide broad-brush information on what a 'long' time means for a codec resume, so that we can really see the pros/cons of moving all the regmap initialization.
-
-Another open is that SDCA defines the notion of 'blind writes' which would typically be done during a resume if context was lost. If we start moving some parts of the initialization to the hw_params and others remain in the resume flow, that will quickly lead to complexity in managing configuration.
-
-The last point is that this is a change for Realtek codecs only, would other drivers for other vendors require this change? And if I may ask is there any merit in speeding-up resume times even for 'legacy' non-sdca parts?
-
-> Bard Liao (15):
->   soundwire: add sdw_slave_wait_for_initialization helper
->   ASoC: rt722: wait codec init in hw_params
->   ASoC: rt712: wait codec init in hw_params
->   ASoC: rt1320: wait codec init in hw_params
->   ASoC: rt721: wait codec init in hw_params
->   ASoC: rt715-sdca: wait codec init in hw_params
->   ASoC: rt711-sdca: wait codec init in hw_params
->   ASoC: rt711: wait codec init in hw_params
->   ASoC: rt715: wait codec init in hw_params
->   ASoC: rt700: wait codec init in hw_params
->   ASoC: rt1316: wait codec init in hw_params
->   ASoC: rt1318: wait codec init in hw_params
->   ASoC: rt1308: wait codec init in hw_params
->   ASoC: rt5682: wait codec init in hw_params
->   ASoC: rt1017: wait codec init in hw_params
+On Thu, Jun 26, 2025 at 07:11:38AM +0200, Oleksij Rempel wrote:
+> On Wed, Jun 25, 2025 at 08:06:32PM +0200, Lucas Stach wrote:
+> > Hi Oleksij,
+> > 
+> > Am Mittwoch, dem 25.06.2025 um 14:41 +0200 schrieb Oleksij Rempel:
+> > > Add support for the Signal Quality Index (SQI) feature on KSZ9477 family
+> > > switches. This feature provides a relative measure of receive signal
+> > > quality.
+> > > 
+> > > The KSZ9477 PHY provides four separate SQI values for a 1000BASE-T link,
+> > > one for each differential pair (Channel A-D). Since the current get_sqi
+> > > UAPI only supports returning a single value per port, this
+> > > implementation reads the SQI from Channel A as a representative metric.
+> > 
+> > I wonder if it wouldn't be more useful to report the worst SQI from all
+> > the channels instead.
 > 
->  drivers/soundwire/slave.c          | 17 ++++++++++++++
->  include/linux/soundwire/sdw.h      |  1 +
->  sound/soc/codecs/rt1017-sdca-sdw.c | 32 ++++++++++++++++----------
->  sound/soc/codecs/rt1308-sdw.c      | 32 ++++++++++++++++----------
->  sound/soc/codecs/rt1316-sdw.c      | 32 ++++++++++++++++----------
->  sound/soc/codecs/rt1318-sdw.c      | 30 ++++++++++++++++--------
->  sound/soc/codecs/rt1320-sdw.c      | 32 ++++++++++++++++++--------
->  sound/soc/codecs/rt5682-sdw.c      | 29 +++++++++++++++--------
->  sound/soc/codecs/rt700-sdw.c       | 27 ++++++++++++----------
->  sound/soc/codecs/rt700.c           |  6 +++++
->  sound/soc/codecs/rt711-sdca-sdw.c  | 28 ++++++++++++----------
->  sound/soc/codecs/rt711-sdca.c      |  6 +++++
->  sound/soc/codecs/rt711-sdw.c       | 26 +++++++++++++--------
->  sound/soc/codecs/rt711.c           |  6 +++++
->  sound/soc/codecs/rt712-sdca-sdw.c  | 28 ++++++++++++----------
->  sound/soc/codecs/rt712-sdca.c      |  6 +++++
->  sound/soc/codecs/rt715-sdca-sdw.c  | 37 ++++++++++++++++++++----------
->  sound/soc/codecs/rt715-sdca.c      |  6 +++++
->  sound/soc/codecs/rt715-sdw.c       | 27 ++++++++++++----------
->  sound/soc/codecs/rt715.c           |  6 +++++
->  sound/soc/codecs/rt721-sdca-sdw.c  | 29 ++++++++++++-----------
->  sound/soc/codecs/rt721-sdca.c      |  6 +++++
->  sound/soc/codecs/rt722-sdca-sdw.c  | 26 +++++++++++----------
->  sound/soc/codecs/rt722-sdca.c      |  6 +++++
->  24 files changed, 320 insertions(+), 161 deletions(-)
+> It was my first idea too, just to report the worst SQI from all
+> channels. But this makes it impossible to report SQI for each pair
+> later. If we ever want to support SQI per pair, the current code would
+> suddenly start to show only SQI for pair A, not the worst one, so the
+> SQI interface would change meaning without warning.
 > 
+> There is another problem if we want to extend the SQI UAPI for per-pair
+> support: with 100Mbit/s links, we can't know which pair is used. The PHY
+> reports SQI only for the RX pair, which can change depending on MDI-X
+> resolution, and with auto MDI-X mode, this PHY doesn't tell us which
+> pair it is.
+> 
+> That means, at this point, we have hardware which in some modes can't
+> provide pair-related information. So, it is better to keep the already
+> existing UAPI explicitly per link instead of per pair. This matches the
+> current hardware limits and avoids confusion for users and developers.
+> If we want per-pair SQI in the future, the API must handle these cases
+> clearly.
 
+...
+
+> > This ends up spending a sizable amount of time just spinning the CPU to
+> > collect the samples for the averaging. Given that only very low values
+> > seem to indicate a working link, I wonder how significant the
+> > fluctuations in reported link quality are in reality. Is it really
+> > worth spending 120us of CPU time to average those values?
+> > 
+> > Maybe a running average updated with a new sample each time this
+> > function is called would be sufficient?
+> 
+> Hm. Good point. I'l try it. We already have proper interface for this
+> case :)
+
+After some more testing with a signal generator, I started to doubt the
+usability of our SQI hardware implementation in this case.
+
+The problem is: the signal issue can only be detected if data transfer is
+ongoing - more specifically, if data is being received (for example, when
+running iperf). The SQI register on this hardware is updated every 3 µs. This
+means if any data is received within this window, we can detect noise on the
+wire. But if there is no transfer, the SQI register always shows perfect link
+quality.
+
+On the other hand, as long as noise or a sine wave is injected into the twisted
+pair, it is possible to see bandwidth drops in iperf, but no other error
+counters indicate problems. Even the RxErr counter on the PHY side stays silent
+(it seems to detect only other kinds of errors). If SQI is actively polled
+during this time, it will show a worse value - so in general, SQI seems to be
+usable.
+
+At an early stage of the SQI implementation, I didn’t have a strong opinion
+about the need to differentiate these interfaces. But now, based on practical
+experience, I see that the difference is very important.
+
+It looks like we have two types of SQI hardware implementations:
+
+- Hardware which provides the worst value since last read
+
+- Hardware which automatically updates the value every N microseconds
+
+- Hardware which provides both values
+
+Both types are recommended by the Open Alliance as:
+
+- "worst case SQI value since last read"
+
+- "current SQI value"
+
+My question is: do we really need both interfaces? The "current SQI value"
+seems impractical if it only reflects quality during active data transfer.
+
+What do you think?
+
+Best Regards,
+Oleksij
+--- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
