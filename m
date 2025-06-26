@@ -1,99 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9A418871F;
-	Thu, 26 Jun 2025 16:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E56E19F41C;
+	Thu, 26 Jun 2025 16:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750954554; cv=none; b=m4PMVaz92Zkh7hdKQAdPPtK7qTlRccLNyIU7/EIMi3Fmzsjehn6FVZDTjlsS7P6WYfdiOUdzkAajciiFa2U/GIgUERBDtwa7naG1ug/8tHQ7UOdKcEw4N3aJ2irL3unv9ZRdapVsoZZBJ4aU5A5t/ejiarrDA/BSbCGQStWJ8pA=
+	t=1750954586; cv=none; b=B6ffwTgC2BaaJtCVdBnCqb3Wh8nFONdxTgRbR0YBUbofe0NSMImv6dB430oGXeXDXCztySQc7lITMR/V3zaWLrFj/PvhGkI17RhbeACB9Xnn/c/ALGNglhKtyxDvgG6KhpVLHOgDC/Svz+ZB9WUdxeXZ3AnThM6YkcfGBAvWGT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750954554; c=relaxed/simple;
-	bh=UPQJ9/ySRx9F4mbgx74DfVVygNUzL3PE4kp8RxE//NU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PhJ0+r0Q5MkkG7KdQuIs3Moz8uftiXE9R5htlBTSbxFnboR/9yYW/8UFeCsmOTRih2DF9o44jo6V1imMbka6Z/2ZsvI62ZWk8Xm9OjeA7Ax2irpbbv4nLsHxz4hrzzG46hJ0b4ehnEQPdcJ9CbEjeYKD+Tz46l2N3Iste51nlX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=koMlh+GG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750954586; c=relaxed/simple;
+	bh=P+DQ3JT86pgMk/0nGBuZXsHt2n8S/5pukRAkqwLdVZg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Tf07KtThOZhBoFA1DXM5vhO4X1MMcDvO91wiYAgVSCL0zKZhq7FFjJTj1BFB33mOo6xRdOFFeyOeZsSQnjLZTcpFQ36+FAwH69ZWbBxEsDDPo/mn6nPZ24GFcJTJVpwDvinPoTkgqQxni2bRebdR7uDiamjR6mscflkEOyK6YzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=gUI/M8XQ; arc=none smtp.client-ip=199.89.3.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="koMlh+GG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD6C0C4CEEB;
-	Thu, 26 Jun 2025 16:15:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750954554;
-	bh=UPQJ9/ySRx9F4mbgx74DfVVygNUzL3PE4kp8RxE//NU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=koMlh+GG8pnpzcrs9A188ovv6igw1vOowrVM5Si6dNUVyjyxM6gx2eQKaXNxgRhfE
-	 cmsgMTuESvXtR5UZt/cL6LIlHMRzsJkMRwERrL4QJEsT+r0SkRRUZXP/88aoV0u39k
-	 96EXhCTcAKIpZo7qu6PX+og9gcSUBF5s74WUIR68nIpbIDP0UvFNW9kH91VJNnd+Uj
-	 o2mHDI0fx5/Aa6tvH08qj9UXARlYY+koX/0q7j8bgxvRT3ItJ+fmROH1Ok4wiZ1gXQ
-	 DfpPzqBGuRjvc9lnMQbNv4ZNFIkrP7D8PFjapljtYZmBnAuJLGYrfGSdAcXSk1Qc1P
-	 GBx7NycqqPncQ==
-From: Conor Dooley <conor@kernel.org>
-To: linux-i2c@vger.kernel.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] i2c: microchip-core: re-fix fake detections w/ i2cdetect
-Date: Thu, 26 Jun 2025 17:15:39 +0100
-Message-ID: <20250626-unusable-excess-da94ebc218e8@spud>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="gUI/M8XQ"
+Received: from localhost (localhost [127.0.0.1])
+	by 003.mia.mailroute.net (Postfix) with ESMTP id 4bSkMX0g6czlvfGx;
+	Thu, 26 Jun 2025 16:16:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1750954582; x=1753546583; bh=jRugcoVYqOz0MeUr2LfYYHnP
+	iwWrfuZlPKBUG26FCi4=; b=gUI/M8XQBKpjZYBOlc9pbYdFH6gtOGwBBVJWPxVD
+	oE9SK2G5Oli9e9jrmNeZ17tfaScWCTU4goFLXNmN/8Ddv72mSoY3ySXajk8VzOWU
+	sgAMOXpwgon16qiDyfJAztW6iihWh52M+BGnFD6zvnkhN3WjdL5zKCd2oTXnYnUz
+	B35RwrLB231yoNM8jxiqjY9OTkbR2DmVX2qAxKXB0phBw4/IP9fjShPwz5JxHXZZ
+	5TE4m9bUA3RInXSM4PyUZPWRHF80VJ8Vs5NQ72JObHZJiO3rU76laHcgFL4MNNdL
+	SLg6dMKfm8gw0WB5cA9reOzOa9Osv6IdzUXsrTzTkMn7cg==
+X-Virus-Scanned: by MailRoute
+Received: from 003.mia.mailroute.net ([127.0.0.1])
+ by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id s0ysEJHGUDHd; Thu, 26 Jun 2025 16:16:22 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4bSkMQ53vqzlvfGp;
+	Thu, 26 Jun 2025 16:16:17 +0000 (UTC)
+Message-ID: <159d1b84-665f-4bc7-865c-59b15232a477@acm.org>
+Date: Thu, 26 Jun 2025 09:16:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1799; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=fIvtvwMYYl6tUpwOuz+kFd2uiocO78d237zD4bZ8dPI=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDBmxRdpLdfJMi96+CqsSUPWaoFcxUez17qMBrAvt8vZZb bJUatnTUcrCIMbBICumyJJ4u69Fav0flx3OPW9h5rAygQxh4OIUgIm0L2D4p3D607zEft7PaUvT 3E5ITn6hNuOZbVXOf+mjNV21uy4d3MLwh+PE4n0mP59cvsWy8QbPBz+N+T+3GphLpvfMmPYxSSP DlBUA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: Format scsi_track_queue_full() return values as
+ bullet list
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux SCSI <linux-scsi@vger.kernel.org>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Rob Landley <rob@landley.net>
+References: <20250626041857.44259-2-bagasdotme@gmail.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250626041857.44259-2-bagasdotme@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On 6/25/25 9:18 PM, Bagas Sanjaya wrote:
+> - * Returns:	0 - No change needed, >0 - Adjust queue depth to this new depth,
+> - * 		-1 - Drop back to untagged operation using host->cmd_per_lun
+> - * 			as the untagged command depth
+> + * Returns:	* 0 - No change needed
+> + *		* >0 - Adjust queue depth to this new depth,
+> + * 		* -1 - Drop back to untagged operation using host->cmd_per_lun
+> + * 		  as the untagged command depth
+>    *
+>    * Lock Status:	None held on entry
+>    *
 
-Introducing support for smbus re-broke i2cdetect, causing it to detect
-devices at every i2c address, just as it did prior to being fixed in
-commit 49e1f0fd0d4cb ("i2c: microchip-core: fix "ghost" detections").
-This was caused by an oversight, where the new smbus code failed to
-check the return value of mchp_corei2c_xfer(). Check it, and propagate
-any errors.
+Here is an example from Documentation/doc-guide/kernel-doc.rst:
 
-Fixes: d6ceb40538263 ("i2c: microchip-corei2c: add smbus support")
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
-v2:
-- replace "if (ret)" with "if (ret < 0)" because the xfer callback,
-  which the smbus code re-uses, can return positive numbers in success
-  cases.
+       * Return:
+       * * %0		- OK to runtime suspend the device
+       * * %-EBUSY	- Device should not be runtime suspended
 
-CC: Conor Dooley <conor.dooley@microchip.com>
-CC: Daire McNamara <daire.mcnamara@microchip.com>
-CC: Andi Shyti <andi.shyti@kernel.org>
-CC: linux-i2c@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
----
- drivers/i2c/busses/i2c-microchip-corei2c.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Wouldn't it be better to follow that example and to move the list under
+'Returns:' and to move it more to the left?
 
-diff --git a/drivers/i2c/busses/i2c-microchip-corei2c.c b/drivers/i2c/busses/i2c-microchip-corei2c.c
-index 492bf4c34722c..7505bce3a06cd 100644
---- a/drivers/i2c/busses/i2c-microchip-corei2c.c
-+++ b/drivers/i2c/busses/i2c-microchip-corei2c.c
-@@ -435,6 +435,7 @@ static int mchp_corei2c_smbus_xfer(struct i2c_adapter *adap, u16 addr, unsigned
- 	u8 tx_buf[I2C_SMBUS_BLOCK_MAX + 2];
- 	u8 rx_buf[I2C_SMBUS_BLOCK_MAX + 1];
- 	int num_msgs = 1;
-+	int ret;
- 
- 	msgs[CORE_I2C_SMBUS_MSG_WR].addr = addr;
- 	msgs[CORE_I2C_SMBUS_MSG_WR].flags = 0;
-@@ -506,6 +507,9 @@ static int mchp_corei2c_smbus_xfer(struct i2c_adapter *adap, u16 addr, unsigned
- 	}
- 
- 	mchp_corei2c_xfer(&idev->adapter, msgs, num_msgs);
-+	if (ret < 0)
-+		return ret;
-+
- 	if (read_write == I2C_SMBUS_WRITE || size <= I2C_SMBUS_BYTE_DATA)
- 		return 0;
- 
--- 
-2.45.2
+Thanks,
 
+Bart.
