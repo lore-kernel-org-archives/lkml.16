@@ -1,101 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA07C16A94A;
-	Thu, 26 Jun 2025 10:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C513215075
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750932271; cv=none; b=ApsiUOLtPW+3IPmmHe/G33NJx4LSuTDFntezzFFSWSwuWwu9wck86OWTJF6PzrgBoVOfBlyjfmHZ12056mhehXNuN4cltpFi3/IQLOWhusXZHLrNvlMEHwqZJB1Kn0LNPT3lApPVV9dQ9cfp0xIuxT4wTMuRu1G7ZF3mJV6gNcQ=
+	t=1750932295; cv=none; b=KHcL3tc6WZYHE1ovGpsghTwUmwp5bs2uhGT8czYlXHQxkA7ZqcI9YN5mHaT30o/fVFzioefP8ElVbdKKy0lXV3CXdF+bWTt28IZvfKAiRgSChzl0U+bpEOjPUxZ1oAeanWH1h1VTHwZnFIQfvNd7IaUGe59lz5zTa4Wsrpwuun8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750932271; c=relaxed/simple;
-	bh=j3ClOqqsBFvAvHSWSgDWUNz0vIVgAMLhB/5Jvn9F5CI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NJ63pNJcYmU1gsvW64KURUHnA3ViRoEvrN8WLyiM33SpAJ0293ZG82xCR0jIdu0JmuZvqrw5k9TqsksAdjXla1HkGF5mNtuoc/btk7zcMcOfViAIoxh9wofJyCHdYmILm2zVzsqDmTVuX+Pb4oZnxWxzQNVHogc26dFhOF9VXVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBYx7pDJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750932295; c=relaxed/simple;
+	bh=WQ/9cxE5gGmXPpCJKlnLFbBEfplrIztKZyWOvmdN1kE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QOhaZeRy4RzY7woAoTPGS3dX7DixdLk8TiX/eubikFA9VOAEg3fRtJ2SAOKlhluxX0RRGxJ01c4I7Cd30MbDDR6ocvjx3/M0zKK8mHP+MxuUqQ0mzdbWOeW7+7cLhW1LM/Pcem0iyM/f3aLJn+576aZGxpnmjkmTywH9hCrmmns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FJps2vbN; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBYx7pDJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 555E9C4CEEB;
-	Thu, 26 Jun 2025 10:04:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750932271;
-	bh=j3ClOqqsBFvAvHSWSgDWUNz0vIVgAMLhB/5Jvn9F5CI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aBYx7pDJuz4HhzKdOi/VJQB+dwkfOqCJ65aU5xCToT75uUA0mW6f7noRWQ2kRPaz2
-	 09ZFrjQiYFprAyQRZ/z4lLMC/b5IMhsHbUrybowxO+FTJ4LtEA7/HZqJOy5Y7K8x2n
-	 ppRJF+Nb2TpB6sZglvfeQ/ZjJTnrAhOf9UkhhG3gl8q695QAoJiFgawDMlJJdrRCS9
-	 jquNF6rai3o4zGJD9NqmPUGjjJNWAfEMmYJ2CjprIHCHv8OTE/efMOqBqRiQs/KfLG
-	 00mpm3C2XGyvifTubVrnrgKuuipIclwgb0EYi954PhV9yeev3jOxv+1GX76fd32Dgl
-	 0TnkbVhmnsryw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uUjT5-000000007f2-00K4;
-	Thu, 26 Jun 2025 12:04:31 +0200
-Date: Thu, 26 Jun 2025 12:04:30 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Steev Klimaszewski <steev@kali.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH v4 1/8] efi: efivars: don't crash in
- efivar_set_variable{,_locked} in r/o case
-Message-ID: <aF0bLtnABcGTi0wM@hovoldconsulting.com>
-References: <20250625-more-qseecom-v4-0-aacca9306cee@oss.qualcomm.com>
- <20250625-more-qseecom-v4-1-aacca9306cee@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FJps2vbN"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-453608ed113so7435965e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 03:04:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750932292; x=1751537092; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZjxAnOS8rNH0+1NZmQ65jb9c6BDRmhT9+YPsn9/ebwI=;
+        b=FJps2vbNxsKQb7TNcoFrbqsozCOpL1GsKKwO6SQOk3Gq/rWmUC1DxLPZ/B87cqT/Aa
+         9Cvd4fWrbJFeanIsflqXv5xQD6w/TzJIU03uVrr4gitgs0NTNeh6ZoJDYs60pUfX9JNK
+         Xgi6Gd2I+JZLqJ1WenEY0z24hiD65aO06dYbl1WxuwWP9SBeqwnwUBGzwLHqgJqb8rbU
+         iQf37ygXzJ9DHWPnYHHUM5lO1D1fxl3oM+aU1ewKmVVzl/5OE1B4OZUuIhmJr3MXTAXO
+         s7beSXkRaWR8SNRdnOnM3XD4xobNEqC9J8EIt796qhUs2lhwvTKCWHRsUyjiMdfRFbls
+         PL+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750932292; x=1751537092;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZjxAnOS8rNH0+1NZmQ65jb9c6BDRmhT9+YPsn9/ebwI=;
+        b=K5hw+Lyo6FyewYH5SZiWfxD0Au4Idusxzb/rNTd0L5jREZt444V0iu3NpnFkodRUX/
+         a45RW6+q648aG7Cuh7lbAWfq3Yu1z/r1q3MbFR8L9eIcVSd7Yp75RUrc08S8LBnDL9Sa
+         1U7xfBFGCFzinwagpKohJocN15Uhe0y8S6ayvPqoJqoPp4+dqxR/T3O6XhV/bpPFaHzP
+         BsnTpBAzS7NVdoALBDr9dc1PVMIH+lDn29Ur3ZGzO57+vKHi08IyDe5J4savXrS8vXVJ
+         SmMQZ93rI/1QeRt041fUWdE2CMACSThq5OVIK8mRvtw3ZTN02km2Jn+hd/tRzrgoEz5H
+         nEVg==
+X-Forwarded-Encrypted: i=1; AJvYcCXO2kPRU8Rt4Jjxpp7lch3o2EIScnzxSyIJEA5OYVyVjZB9X+ei9SkrahwMw6dZtndhNs5alj10avLK0MU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/Nr0rwYrF7kcapJgeVEad8jrsCG8eGIV81PsbmDkzWKaVl0hU
+	S9S+tyi9XBxKxv9HwtH3q0ifOby3kaKWzR/BUVM7DeV8KaQEsmVDAhyoAYOBugGpf+o=
+X-Gm-Gg: ASbGncsdvjJUBabvdBfuaOS4slx8UODKCDLw6WNGl51eqXvTYgPqiVWxO0EqoupCvJJ
+	ijfh2Doo8aN2cQkZ59bUOfd+k/V2XR8pwN5kuExVTCD+V+2qHgpWsFmabUe1BzgIrA55tx6Q0Wk
+	e4vrX0MBAuSucd0hmvJeaVNHkJ8VXhsZqSGHg/v//PebCSqSBxcKRbFl3NkOLy2yniMt09mw17s
+	mK/O6Ja7seN0HDaIYWhnUvGwxd03MNiZar4DTHJV1S4/qQpK0ws0S6Z5Zvvx0Qii5EioZSGfzMd
+	8+zWWNhA1l2uLtyggSz0f8+hZprpp1d6/oG7ODWcvQLIxsg/E78xl3VqoaRYTE8KNt8=
+X-Google-Smtp-Source: AGHT+IFCIAdj1Md0jSwbK4WcI3GRDjT0JPNkwOFSc+l7/qC5ZuHylf2IYZ0En0415K5jiUPMuSKnLQ==
+X-Received: by 2002:a05:600c:1c25:b0:442:f8e7:25ef with SMTP id 5b1f17b1804b1-45383371376mr51561945e9.11.1750932291936;
+        Thu, 26 Jun 2025 03:04:51 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453814a6275sm33518135e9.1.2025.06.26.03.04.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 03:04:51 -0700 (PDT)
+Message-ID: <faf23c39-af14-40ae-ad22-849aea87a4bd@linaro.org>
+Date: Thu, 26 Jun 2025 11:04:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625-more-qseecom-v4-1-aacca9306cee@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/6] spi: spi-fsl-dspi: Stub out DMA functions
+To: Arnd Bergmann <arnd@arndb.de>, Frank Li <Frank.li@nxp.com>,
+ Vladimir Oltean <olteanv@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, Larisa Grigore <larisa.grigore@nxp.com>,
+ Christoph Hellwig <hch@lst.de>, linux-spi@vger.kernel.org,
+ imx@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org>
+ <20250624-james-nxp-spi-dma-v3-3-e7d574f5f62c@linaro.org>
+ <aFrSgJ5xZfccEX9x@lizhi-Precision-Tower-5810>
+ <290fc244-e88f-47a3-8dd3-0ec27eb5c60b@app.fastmail.com>
+ <0c6c78da-575a-4d29-a79a-3903aa801b42@linaro.org>
+ <0f904f12-295c-48fe-96c7-c64c461cdbbd@app.fastmail.com>
+ <884e86be-112b-44dd-a827-30355a5fdba6@linaro.org>
+ <82824032-26d4-42a6-8a92-3e4a410741c5@app.fastmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <82824032-26d4-42a6-8a92-3e4a410741c5@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 25, 2025 at 01:53:20AM +0300, Dmitry Baryshkov wrote:
-> If efivar implementation doesn't provide write support, then calling
-> efivar_set_variable() (e.g. when PM8xxx RTC driver tries to update the
-> RTC offset) will crash the system. Prevent that by checking that
-> set_variable callback is actually provided and fail with an
-> EFI_WRITE_PROTECTED if it is not.
+
+
+On 25/06/2025 11:54 am, Arnd Bergmann wrote:
+> On Wed, Jun 25, 2025, at 12:19, James Clark wrote:
+>> On 25/06/2025 11:00 am, Arnd Bergmann wrote:
+>>> On Wed, Jun 25, 2025, at 11:19, James Clark wrote:
+>>>> On 24/06/2025 6:16 pm, Arnd Bergmann wrote:
+>>
+>> Wouldn't that allow someone to break it by disabling (or not enabling)
+>> that option? The driver won't fall back to the other modes if DMA isn't
+>> configured, it just won't work. In this case it seems like it's better
+>> to depend directly on DMA_ENGINE because that fixes the randconfig
+>> issues, which is the whole reason for the discussion.
 > 
-> Fixes: 472831d4c4b2 ("efi: vars: Add thin wrapper around EFI get/set variable interface")
-
-I don't think a fixes tag is warranted here as it currently appears to
-be expected that the callers check if setvar is supported before calling
-this helper (e.g. by calling efivar_supports_writes() as efivarfs does).
-
-So should perhaps be fixed in the RTC driver if we agree that supporting
-read-only offsets is indeed something we want.
-
-Are there any other current user that may possibly benefit from
-something like this?
-
-> Reported-by: Johan Hovold <johan@kernel.org>
-> Closes: https://lore.kernel.org/r/aFlps9iUcD42vN4w@hovoldconsulting.com
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->  drivers/firmware/efi/vars.c | 2 ++
->  1 file changed, 2 insertions(+)
+> It would be the same as disabling DMA_ENGINE today when running on an
+> SoC that supports DMA mode in DSPI. Ideally that should fall back
+> to non-accelerated mode. I see a lot of checks for
+> trans_mode == DSPI_DMA_MODE, and I it's probably best to change
+> them to a function call like
 > 
-> diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
-> index 3700e98697676d8e6f04f061f447391503f9abba..11c5f785c09364f61642d82416822cb2e1a027fd 100644
-> --- a/drivers/firmware/efi/vars.c
-> +++ b/drivers/firmware/efi/vars.c
-> @@ -227,6 +227,8 @@ efi_status_t efivar_set_variable_locked(efi_char16_t *name, efi_guid_t *vendor,
->  	setvar = __efivars->ops->set_variable_nonblocking;
->  	if (!setvar || !nonblocking)
->  		 setvar = __efivars->ops->set_variable;
-> +	if (!setvar)
-> +		return EFI_WRITE_PROTECTED;
->  
->  	return setvar(name, vendor, attr, data_size, data);
->  }
+> static inline bool dsp_dma_mode(struct fsl_dspi *dspi)
+> {
+>       if (!IS_ENABLED(CONFIG_DMA_ENGINE)) // or CONFIG_FSL_DSPI_USE_DMA
+>            return false;
+> 
+>       return dspi->devtype_data->trans_mode == DSPI_DMA_MODE;
+> }
+> 
 
-Johan
+I think we'd have to check with Vladimir on that. He said that he didn't 
+change some devices that use DMA to use XSPI because he couldn't verify 
+that they would still work [1]. So by adding this fallback we would be 
+making that decision now, which I'm not sure we can do. It would 
+probably be better to add the stubs that make the probe fail rather than 
+register a driver with a fallback that we don't know works.
+
+>> Would someone really want an option to disable compilation of two
+>> functions if their DSPI device is one that doesn't use DMA? Seems like
+>> this option would always be on anyway.
+> 
+> It's probably mainly relevant if they want to completely turn off
+> CONFIG_DMA_ENGINE, which is substantially bigger. Using a check
+> for that symbol in the driver is certainly simpler for the user,
+> as they can't accidentally turn it off the custom symbol.
+
+That was my thinking.
+
+> 
+> In theory you may also want to turn off DMA mode for testing,
+> which is supported by at least the DW_DMA driver.
+> 
+> I see that SPI_TEGRA114 has a dependency on TEGRA20_APB_DMA,
+> which is yet another variation. This is clearly done for
+> usability purposes since that SPI driver only ever works with
+> the specific DMA driver in practice, but it seems worse
+> conceptually.
+> 
+>       Arnd
+
+I can add it, I'm just questioning the usefulness of adding a new 
+config option that's unlikely to be used in reality. It only achieves 
+the same thing as doing #if CONFIG_DMA_ENGINE in one place in the code.
+
+Ultimately we're just trying to fix some randconfig error, if we start 
+adding new knobs for people to turn just do that, there's a risk they 
+won't get used and we'll make configuring more complicated for people.
+
+Testing might be a partial justification, but that config wouldn't allow 
+you to force DMA mode where XSPI is used. You would almost certainly be 
+doing that too if you are doing that kind of testing, and you'd have to 
+hack the driver anyway to do that.
+
+[1]: https://lkml.org/lkml/2025/6/12/1385
+
