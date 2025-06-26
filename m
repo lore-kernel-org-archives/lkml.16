@@ -1,154 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailhub11-fb.kaspersky-labs.com (mailhub11-fb.kaspersky-labs.com [81.19.104.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28CEA2E5412;
-	Thu, 26 Jun 2025 13:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6C3BA53;
+	Thu, 26 Jun 2025 13:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.104.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943544; cv=none; b=eEY1QzUkrw1XF7pzX0FGP/LrFiTLQepnP7E5J6p0ic0beeGth8dQKqCcZx+lSOZMErEMSrCydynUMMU1RJtc0pqWCB4DShj7JUy/dXSVq52BvVhOuMtuVW+/7DqdesV8yVoyfqZcQMezQlfFh9ZgLjOLH2/n2BTB0IXGLzlmaY0=
+	t=1750943574; cv=none; b=u+bZ/vzbKpmZmSpY9TD7ueajzZiEnEudIu9TT3ZWtrQ6iZ9awt5VlM6n1pzJdQNRNXrPWzJwW+5RfNftOL8misYoFDCWQ6ZVXhvU8rVrkUJjhk1dVdC8cQdtCgixIHfv1q3+8jSQ5GNSaRKigXxCkDB0FVMQfPwXGPPBn6MPjoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943544; c=relaxed/simple;
-	bh=6WoBhCawDr2/q9QTjDOrhN78tjcCQb59Az1jMjyMNes=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JrBO3Aw39DZ7YWd7cBNPzVE93aqiAAa+i1Pgy5y670rVt/6PGt/zUxNDqhsP7sfssTbUa/q4zPuq95uDUWQtKxJTjCIZ9Iy0As0Gen96TJCDMBcFrjnzKZVsxbNvNXxhj7W27IhuG5Ps4petr2tuo8lmWH02U1N9aqt8IO4ul3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qnDhrNTI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750943574; c=relaxed/simple;
+	bh=Lpiun+e9hghwKOdC+LoX+vFUp0uDxWgQNx2ZIGK2jyk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uAkXGRvz+9ZX2AWNTr2ZZoBf1YeDEcPBPSfXadKq+cGd4GepeHDi83HUy8kPa6uRmKKzN6TsCesPsuihQ4D89nkJDJlfkliVTOJlCDUekKYYhKNpdpTc6eL3sci6AE5vf58q5aXrx3WSyapQkcoqEgcOvlHeXKeHb7U2n6FZVbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaspersky.com; spf=pass smtp.mailfrom=kaspersky.com; dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b=sg3hSkEe; dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b=DwpE1x7J; arc=none smtp.client-ip=81.19.104.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaspersky.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaspersky.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qnDhrNTI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F250DC4CEF0;
-	Thu, 26 Jun 2025 13:12:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750943543;
-	bh=6WoBhCawDr2/q9QTjDOrhN78tjcCQb59Az1jMjyMNes=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=qnDhrNTIfp+SM3B2zLBk3qIttbKsKa1Us2ef4HbgVXoTiUJo7vwKEpRkZ1NuXpbpF
-	 fvtOin+klWJKLTggpH9eYM8j6EoUU03CnCltZvhP6y4So0eF8sqPZwyi4sJzlBcQQa
-	 PObACkruEeL57kJ6+ksbaD1e4BIpcHa0q1sT6bLKqVtvGlZSBnyvnAL1n6Q/Le0OM1
-	 0NhK3NF809MNz4nS7W/iHOcK8Zb9SF+DfJTye47fVm9DnxvK7JAMFTwLVak20Jr1EJ
-	 dWGYBHlR/xCew3+wzio4X0N8o2+p7PfqZqJP/4qq2W6PwuVv0ZgRbTC2BJCpvr0Sts
-	 eBZjGnRnP7n2Q==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Boqun Feng" <boqun.feng@gmail.com>
-Cc: <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
-  <lkmm@lists.linux.dev>,  <linux-arch@vger.kernel.org>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <lossin@kernel.org>,  "Alice Ryhl" <aliceryhl@google.com>,
-  "Trevor Gross" <tmgross@umich.edu>,  "Danilo Krummrich"
- <dakr@kernel.org>,  "Will Deacon" <will@kernel.org>,  "Peter Zijlstra"
- <peterz@infradead.org>,  "Mark Rutland" <mark.rutland@arm.com>,  "Wedson
- Almeida Filho" <wedsonaf@gmail.com>,  "Viresh Kumar"
- <viresh.kumar@linaro.org>,  "Lyude Paul" <lyude@redhat.com>,  "Ingo
- Molnar" <mingo@kernel.org>,  "Mitchell Levy" <levymitchell0@gmail.com>,
-  "Paul E. McKenney" <paulmck@kernel.org>,  "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>,  "Linus Torvalds"
- <torvalds@linux-foundation.org>,  "Thomas Gleixner" <tglx@linutronix.de>
-Subject: Re: [PATCH v5 05/10] rust: sync: atomic: Add atomic {cmp,}xchg
- operations
-In-Reply-To: <20250618164934.19817-6-boqun.feng@gmail.com> (Boqun Feng's
-	message of "Wed, 18 Jun 2025 09:49:29 -0700")
-References: <20250618164934.19817-1-boqun.feng@gmail.com>
-	<jBAtISwM9LKkR7KuCHEnym75NfGOM4z408pMuDfk4U8VzN8PQuk9JJfBc33Usre3YSjbgtFRj8c0ZNeeQMpZsA==@protonmail.internalid>
-	<20250618164934.19817-6-boqun.feng@gmail.com>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Thu, 26 Jun 2025 15:12:12 +0200
-Message-ID: <87a55uzlxv.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b="sg3hSkEe";
+	dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b="DwpE1x7J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaspersky.com;
+	s=mail202505; t=1750942966;
+	bh=KwM5ykq3ZGPECVovJGENXdxG2avNxU0cDbAyYbVt4F4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=sg3hSkEeCbmFwzz2UblXUxdicySLu/nhUuejBixKIACIp/7f/nr31AEIrdSbixe6x
+	 ETbYxhLTL/IWrH6SXulI26yWWP7lIg9fOFaMleFiJYtwavZHJ17zPpX9/ICXFeadS/
+	 MvPKvp2AtqjDSdjNaUuHmvq5PI8R1kIPFZdxcV4KEt1JdLxw+lA5A4SYvkkGqlpAKx
+	 gN2yEzwkRIG7VWTp8wQ2cmEiOE9bco11k/Wa7LUkGXG2nK+5x+DzAJ2DJnzO5+1rZ7
+	 xtKyXqS4ZzzQA9tr6WGhdxAYBhOA3FB1Pd7eT/glyhny9wHFCzilTirPrZ9TZZlXrU
+	 WgO9nkezotxBg==
+Received: from mailhub11-fb.kaspersky-labs.com (localhost [127.0.0.1])
+	by mailhub11-fb.kaspersky-labs.com (Postfix) with ESMTP id 98EC2E8EAF0;
+	Thu, 26 Jun 2025 16:02:46 +0300 (MSK)
+Received: from mx12.kaspersky-labs.com (mx12.kaspersky-labs.com [91.103.66.155])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "mx12.kaspersky-labs.com", Issuer "Kaspersky MailRelays CA G3" (verified OK))
+	by mailhub11-fb.kaspersky-labs.com (Postfix) with ESMTPS id 73803E8EADE;
+	Thu, 26 Jun 2025 16:02:46 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaspersky.com;
+	s=mail202505; t=1750942957;
+	bh=KwM5ykq3ZGPECVovJGENXdxG2avNxU0cDbAyYbVt4F4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=DwpE1x7JamPzdSwaU/Mj/ZGZVYmT9AUCjLLsD+BTS2O8/GjkAn1mTFyAEy9qVpmwC
+	 e6OBcYqHU+YCeYUKVNsugMvP7L0xjxFQTJFzckNfRgdyXxHrn/i0Aa9Qr9k5PQ4Tu0
+	 vx7jJZeLIsvY+DPGCxmVya+U0RS2Vzn8DeUWWng9AIBNH11y75Al0XOVgdBtmZFyhw
+	 fj8T18pd+XMyNst2NVPp59J8sPL2MdaFKX1hhIqCWVOpBdYF+GkVEUH3+nXtAVhyx2
+	 60Bp4xm220Itp+Qbw5EY1C/hCuVt/ulbgAO2tPZFQZ4CJDuIYXUMSm4UVjHSMQ1SL2
+	 4yWMy0rJF70IA==
+Received: from relay12.kaspersky-labs.com (localhost [127.0.0.1])
+	by relay12.kaspersky-labs.com (Postfix) with ESMTP id B67265A2083;
+	Thu, 26 Jun 2025 16:02:37 +0300 (MSK)
+Received: from mail-hq2.kaspersky.com (unknown [91.103.66.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "mail-hq2.kaspersky.com", Issuer "Kaspersky MailRelays CA G3" (verified OK))
+	by mailhub12.kaspersky-labs.com (Postfix) with ESMTPS id 3C3755A258D;
+	Thu, 26 Jun 2025 16:02:37 +0300 (MSK)
+Received: from moskovkin-pc.avp.ru (10.16.49.191) by HQMAILSRV1.avp.ru
+ (10.64.57.51) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 26 Jun
+ 2025 16:02:36 +0300
+From: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+CC: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>, Bartosz Golaszewski
+	<brgl@bgdev.pl>, <linux-gpio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH] gpio: kempld: Remove redundant check in kempld_gpio_probe()
+Date: Thu, 26 Jun 2025 16:02:18 +0300
+Message-ID: <20250626130219.676866-1-Vladimir.Moskovkin@kaspersky.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: HQMAILSRV3.avp.ru (10.64.57.53) To HQMAILSRV1.avp.ru
+ (10.64.57.51)
+X-KSE-ServerInfo: HQMAILSRV1.avp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 06/26/2025 12:50:36
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 0
+X-KSE-AntiSpam-Info: Lua profiles 194364 [Jun 26 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: Vladimir.Moskovkin@kaspersky.com
+X-KSE-AntiSpam-Info: LuaCore: 62 0.3.62
+ e2af3448995f5f8a7fe71abf21bb23519d0f38c3
+X-KSE-AntiSpam-Info: {Tracking_cluster_exceptions}
+X-KSE-AntiSpam-Info: {Tracking_real_kaspersky_domains}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: 127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;kaspersky.com:5.0.1,7.1.1;moskovkin-pc.avp.ru:5.0.1,7.1.1
+X-KSE-AntiSpam-Info: {Tracking_white_helo}
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: Rate: 0
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Deterministic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 06/26/2025 12:52:00
+X-KSE-AttachmentFiltering-Interceptor-Info: no applicable attachment filtering
+ rules found
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 6/26/2025 11:01:00 AM
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+X-KSE-AttachmentFiltering-Interceptor-Info: no applicable attachment filtering
+ rules found
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Interceptor-Info: not scanned
+X-KSMG-AntiSpam-Status: not scanned, disabled by settings
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/06/26 11:20:00 #27592830
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 52
 
-"Boqun Feng" <boqun.feng@gmail.com> writes:
+In kempld_gpio_probe() function 'pdata' pointer is compared to NULL.
+But in subsequent call to kempld_gpio_pincount() it is dereferenced inside
+kempld_get_mutex() function. kempld-core module ensures that
+kempld_platform_data is not NULL for corresponding device, see
+kempld_acpi_table[]. So 'if (pdata)' check looks illogical and worsens
+code readability.
 
-> xchg() and cmpxchg() are basic operations on atomic. Provide these based
-> on C APIs.
->
-> Note that cmpxchg() use the similar function signature as
-> compare_exchange() in Rust std: returning a `Result`, `Ok(old)` means
-> the operation succeeds and `Err(old)` means the operation fails.
->
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> ---
->  rust/kernel/sync/atomic/generic.rs | 154 +++++++++++++++++++++++++++++
->  1 file changed, 154 insertions(+)
->
-> diff --git a/rust/kernel/sync/atomic/generic.rs b/rust/kernel/sync/atomic/generic.rs
-> index 73c26f9cf6b8..bcdbeea45dd8 100644
-> --- a/rust/kernel/sync/atomic/generic.rs
-> +++ b/rust/kernel/sync/atomic/generic.rs
-> @@ -256,3 +256,157 @@ pub fn store<Ordering: ReleaseOrRelaxed>(&self, v: T, _: Ordering) {
->          };
->      }
->  }
-> +
-> +impl<T: AllowAtomic> Atomic<T>
-> +where
-> +    T::Repr: AtomicHasXchgOps,
-> +{
-> +    /// Atomic exchange.
-> +    ///
-> +    /// # Examples
-> +    ///
-> +    /// ```rust
-> +    /// use kernel::sync::atomic::{Atomic, Acquire, Relaxed};
-> +    ///
-> +    /// let x = Atomic::new(42);
-> +    ///
-> +    /// assert_eq!(42, x.xchg(52, Acquire));
-> +    /// assert_eq!(52, x.load(Relaxed));
-> +    /// ```
-> +    #[doc(alias("atomic_xchg", "atomic64_xchg"))]
-> +    #[inline(always)]
-> +    pub fn xchg<Ordering: All>(&self, v: T, _: Ordering) -> T {
-> +        let v = T::into_repr(v);
-> +        let a = self.as_ptr().cast::<T::Repr>();
-> +
-> +        // SAFETY:
-> +        // - For calling the atomic_xchg*() function:
-> +        //   - `self.as_ptr()` is a valid pointer, and per the safety requirement of `AllocAtomic`,
+Remove this check.
 
-Typo: `AllowAtomic`.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-> +        //      a `*mut T` is a valid `*mut T::Repr`. Therefore `a` is a valid pointer,
-> +        //   - per the type invariants, the following atomic operation won't cause data races.
-> +        // - For extra safety requirement of usage on pointers returned by `self.as_ptr():
-> +        //   - atomic operations are used here.
-> +        let ret = unsafe {
-> +            match Ordering::TYPE {
-> +                OrderingType::Full => T::Repr::atomic_xchg(a, v),
-> +                OrderingType::Acquire => T::Repr::atomic_xchg_acquire(a, v),
-> +                OrderingType::Release => T::Repr::atomic_xchg_release(a, v),
-> +                OrderingType::Relaxed => T::Repr::atomic_xchg_relaxed(a, v),
-> +            }
-> +        };
-> +
-> +        T::from_repr(ret)
-> +    }
-> +
-> +    /// Atomic compare and exchange.
-> +    ///
-> +    /// Compare: The comparison is done via the byte level comparison between the atomic variables
-> +    /// with the `old` value.
-> +    ///
-> +    /// Ordering: When succeeds, provides the corresponding ordering as the `Ordering` type
-> +    /// parameter indicates, and a failed one doesn't provide any ordering, the read part of a
-> +    /// failed cmpxchg should be treated as a relaxed read.
+Signed-off-by: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>
+---
+ drivers/gpio/gpio-kempld.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Rust `core::ptr` functions have this sentence on success ordering for
-compare_exchange:
-
-  Using Acquire as success ordering makes the store part of this
-  operation Relaxed, and using Release makes the successful load
-  Relaxed.
-
-Does this translate to LKMM cmpxchg operations? If so, I think we should
-include this sentence. This also applies to `Atomic::xchg`.
-
-
-Best regards,
-Andreas Hindborg
-
+diff --git a/drivers/gpio/gpio-kempld.c b/drivers/gpio/gpio-kempld.c
+index e38e604baa22..61c4a53865b9 100644
+--- a/drivers/gpio/gpio-kempld.c
++++ b/drivers/gpio/gpio-kempld.c
+@@ -161,7 +161,7 @@ static int kempld_gpio_probe(struct platform_device *pdev)
+ 	chip->owner = THIS_MODULE;
+ 	chip->parent = dev;
+ 	chip->can_sleep = true;
+-	if (pdata && pdata->gpio_base)
++	if (pdata->gpio_base)
+ 		chip->base = pdata->gpio_base;
+ 	else
+ 		chip->base = -1;
+-- 
+2.34.1
 
