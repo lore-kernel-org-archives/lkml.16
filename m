@@ -1,103 +1,98 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4262BCF6C;
-	Thu, 26 Jun 2025 09:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5998929C35F;
+	Thu, 26 Jun 2025 09:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750929946; cv=none; b=NwN94kt4XpzyY2jBJg4pI1kMN4JMjR1hfm0Ojdf02FIMw/QROAIid1rcSz/bODbMyzRYr5diURMFQjSNmJWn3esDE61v2IaAsrI4vRcyMUd8RH9F+fzzyPZ9mo7laovkf1YmKNzwJlvcgIBLE5wATwACDoPrFmJHGl5BrBOOgJE=
+	t=1750929962; cv=none; b=gUnZKxbIGDCp/2wiRS0B2Ld11POKUvhWAaQomxwYhy4nCvxGUXLmkdzt3PvviT2KdqayzXqS5zKULC281BKi1lqn8nXJTgvCq44EwyOsmsVxH9YjDxVqCoVHtcvLit3yTLHcrRMRSD9ccq1l+hOBFe2ifU2xL9NmGuvThewnakc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750929946; c=relaxed/simple;
-	bh=gmtwgNmC0ct+DGWCQvjETu9hUvje8913IPDT8CmHbJY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TwGf1YP973yhtYDl4K+VExKymq4CkvqrPn+dNEBOhxcjsttfltjxYeuOcRzWblmJHSvBUu9jdAekf2JrBBllhsRE4OoZiyiG/U5TJgEJT3bW3ZDkY4WGZd9uHJlq/apfTrF8AFcpLq01VlWQj5ZGKBaGoGxwddckbryh10RLzCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=eQEPzhgN; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750929962; c=relaxed/simple;
+	bh=A/CEx477K3LlyVUW20pN2gjB1RVa27uz7N3H7Xae94g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YW/ThyBUOWHgIVGeic0i0S3Saz2REDoTRZ4v1mIMFkujxLXCpTyI56+MDHftnZx8frRXATJ3/nqO5poV/khUr1gwn4eDbkpI3RsqUoAc+rspdcRTDLyu6kq1H/j3UAy9oFUjGYZw/zogA+WjUgx1JrCYRYRdY1gP8iri5fJ2LOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZRBT229D; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eQEPzhgN"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55Q9PCtQ2377545;
-	Thu, 26 Jun 2025 04:25:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750929912;
-	bh=SC24rkJhrOuvR4HR3GY1MEPqIDgsZohL/XcstsIANIc=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=eQEPzhgNVP6/OZ2HPLvWacS+FyEV72T9MxM70/D1Fc0X279H5HCoO9gTn18n+YEKH
-	 wpJqiEO2c7tpQxZOgjPMDQ/P0ir51+l1Zva+yb7uBWWtYeV3aOtjD/sVqF3mTNe/Go
-	 Hx/+25BrJ5qo7U6Z0toWwuxTEYxWrnwa7WyuI4pA=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55Q9PCI11853260
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 26 Jun 2025 04:25:12 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
- Jun 2025 04:25:11 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 26 Jun 2025 04:25:11 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.169])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55Q9PARl767875;
-	Thu, 26 Jun 2025 04:25:11 -0500
-Date: Thu, 26 Jun 2025 14:55:10 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Andy Whitcroft <apw@canonical.com>,
-        Dwaipayan Ray
-	<dwaipayanray1@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Joe
- Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
-        Nishanth Menon
-	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Siddharth Vadapalli
-	<s-vadapalli@ti.com>,
-        Roger Quadros <rogerq@kernel.org>, Tero Kristo
-	<kristo@kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux@ew.tq-group.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v2 1/3] dt-bindings: net: ti:
- k3-am654-cpsw-nuss: update phy-mode in example
-Message-ID: <cca90cf2-9b9d-4186-b546-ff8968071ac2@ti.com>
-References: <cover.1750756583.git.matthias.schiffer@ew.tq-group.com>
- <f9b5e84fcaf565506ed86cf1838444c2bc47334f.1750756583.git.matthias.schiffer@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZRBT229D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750929961; x=1782465961;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=A/CEx477K3LlyVUW20pN2gjB1RVa27uz7N3H7Xae94g=;
+  b=ZRBT229DhSXkPoLOdWlSK4HLI2cxwsCAlkMoxW2yHTyWWb8NtOxWGbTN
+   A4F5Sn45KE8zq4AnI1OsZJks+Bd+NUAHp50+sJJNBf5qh31/aqsaTu2ui
+   Oyf/DFcHT/Zpez1OFvPxkkNB+KZhODNb6u1QaggdEaHi5qN2OFf+OMXJa
+   46PUKpeyMqaZcr14yO+MgyOWKDONLERo7xBs2X87y4a6ljRAs14vi3iUG
+   KAguOBFrrYJpZ2SNp++ytJ3V8tGXKZWapOE5qxG+YHEg1/LSobkgRHjG/
+   R2c5ojp5Yx3frstRiheKf+ErP9sfMDiL9LG8R8CD0dOCb4rceprFNExpC
+   Q==;
+X-CSE-ConnectionGUID: 6QnXSmtLT+OJNCUIhDDavQ==
+X-CSE-MsgGUID: zRwLBmV6Sq2gyjdWgIEqUw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="70648820"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="70648820"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 02:26:01 -0700
+X-CSE-ConnectionGUID: ceBA2M4yQme6XKoN5U9fSw==
+X-CSE-MsgGUID: n20N+WilQXeThZKjmSdySQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="156500523"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa003.fm.intel.com with ESMTP; 26 Jun 2025 02:25:57 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id D5B2121E; Thu, 26 Jun 2025 12:25:55 +0300 (EEST)
+Date: Thu, 26 Jun 2025 12:25:55 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, dave.hansen@linux.intel.com, 
+	rick.p.edgecombe@intel.com, isaku.yamahata@intel.com, kai.huang@intel.com, 
+	yan.y.zhao@intel.com, chao.gao@intel.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, kvm@vger.kernel.org, x86@kernel.org, linux-coco@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 02/12] x86/virt/tdx: Allocate page bitmap for Dynamic
+ PAMT
+Message-ID: <x2cuthbn54u2bqxr7sr2pt2zalvuhd3kpovrgzx42xp23wq6mw@pnvgcxs5zm45>
+References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
+ <20250609191340.2051741-3-kirill.shutemov@linux.intel.com>
+ <c3f77974-f1d6-4a22-bd1d-2678427a9fb1@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f9b5e84fcaf565506ed86cf1838444c2bc47334f.1750756583.git.matthias.schiffer@ew.tq-group.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <c3f77974-f1d6-4a22-bd1d-2678427a9fb1@intel.com>
 
-On Tue, Jun 24, 2025 at 12:53:32PM +0200, Matthias Schiffer wrote:
-> k3-am65-cpsw-nuss controllers have a fixed internal TX delay, so RXID
-> mode is not actually possible and will result in a warning from the
-> driver going forward.
+On Wed, Jun 25, 2025 at 11:06:16AM -0700, Dave Hansen wrote:
+> >  /*
+> >   * Locate a NUMA node which should hold the allocation of the @tdmr
+> >   * PAMT.  This node will have some memory covered by the TDMR.  The
+> > @@ -522,7 +534,16 @@ static int tdmr_set_up_pamt(struct tdmr_info *tdmr,
+> >  	 * and the total PAMT size.
+> >  	 */
+> >  	tdmr_pamt_size = 0;
+> > -	for (pgsz = TDX_PS_4K; pgsz < TDX_PS_NR; pgsz++) {
+> > +	pgsz = TDX_PS_4K;
+> > +
+> > +	/* With Dynamic PAMT, PAMT_4K is replaced with a bitmap */
+> > +	if (tdx_supports_dynamic_pamt(&tdx_sysinfo)) {
+> > +		pamt_size[pgsz] = tdmr_get_pamt_bitmap_sz(tdmr);
+> > +		tdmr_pamt_size += pamt_size[pgsz];
+> > +		pgsz++;
+> > +	}
 > 
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> This is the wrong place to do this.
+> 
+> Hide it in tdmr_get_pamt_sz(). Don't inject it in the main code flow
+> here and complicate the for loop.
 
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Okay, makes sense.
 
-Regards,
-Siddharth.
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
