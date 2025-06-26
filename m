@@ -1,281 +1,118 @@
-Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D9B2F0C5A
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 20:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB582EE607
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 20:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750968379; cv=none; b=XosHSYF88S8QRsvEN5f9CMjeZnHPhW1e7j6lW4G1Iwas6JEcQ8niCp82uwPvvH+7DXNcj3X5I1M7LDYzohypU+6KyLyTho0ob46sWkv70U8w88F5gO2ujYoafhpOcAszRPHpuBH0+oycbC1puyp92b2ORghcVbzcZcQHeYaAzME=
+	t=1750968580; cv=none; b=qUcn3o4cFh67YQ4BApSaBk1evIw5ptM6PjfzfLmj6n180Mf47p6HOvxRIIYxtHsqYKYoy/v7E8hKcZNn4E4bqnGLp2vt90ZbeHuqtvZO7btuSZPhzMP5IkNYt9n0tJ9Mg05cUaPyBsgaP1h8Sg4C/5WM08npw8chNn1MnV1CPzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750968379; c=relaxed/simple;
-	bh=9eSwVawIpIf46LRehZWFLyWPO8/7v6TDvCTZI7UPgOU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=m7rm2sEjOTJn//2yKJ78bqK9SFFMSToLcTUb+i4wLweSEWUecl/in8TRva3LqrjiwOjHb2ymB2hXB76wRt+79j6UNJS16+blyZFYUxVpsLhwWwBabN4uIFUQjlhXLh8Nk2hiU6MMuI/kh7fbOmXtLZ2rvI2tsel8EubQ3oj157k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SaK5HvjV; arc=none smtp.client-ip=209.85.166.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1750968580; c=relaxed/simple;
+	bh=HkPQis1Dt4ouyTuYhnRNzIy+pryxNwshbwjK5ApfU7M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pu7idWPAWCIwQW/cDN3JvSu6euS1ri3ImOPTJQVBs23T0iRvQO9MJaeBi0nb9t7WIP1p0ZGElmosWSaibjFIejnZQNFIcHyi211Z3gvQJFyvvRO5+hi42N/T6/8xwlFSaHGONCEcwtuGMbHHCEou8u2mdNa+uPE9OEBJotDnBYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AHjx1d3v; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SaK5HvjV"
-Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3ddc0a6d4bdso17351015ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:06:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AHjx1d3v"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70f94fe1e40so28821897b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:09:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750968374; x=1751573174; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xdZdMkXachOTBLhsNs+TRwK+/iArlUH+VMAh4h7bRTc=;
-        b=SaK5HvjVeUvC5HS6nMm9H5aUeUHasza9Rtv0idWuVRX2BqRDJSKrAXN8mqGPsU3RNd
-         m9lKKk/bV2OtnM7N7VTaFh+kQDBIADLJX6PfltT0hHB8lIWJlFMQ7a59rEcC56DNUjM+
-         40Z3W/THkWV9W4GzhHoku0u8OJVy8CNp9lJ0NAwPEo4wzrF1a2VHtEG+sfwXwSikk9ac
-         bWcOo02i09V+CN2mNSIUFpF23QEhooDlQKTG03TvlDnDWqoWokPetpmUm2HgN4msx9TH
-         64RGy9jPQnN0/KvAOc/O1+23mU0tS/lL56WyGunjeWxUxuZJbl4SJPXlvbLNDQVRCuKI
-         78zQ==
+        d=gmail.com; s=20230601; t=1750968577; x=1751573377; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jIMOx5cGmleXM2fMTx03wz+aj/K6cEb/ocYWuMPGis0=;
+        b=AHjx1d3vCPepKb2aUYfAYalzbDI4sxGPrC+BwjItlVLDcsonoe3rwSjJf8RdS6v1xF
+         37v9Ri1JEOqL3BRPuYJS9IWWjBhimEif0MLUy1EArnt/tRFbzEpDfdnjZd/gdOzEtXG2
+         aNMC9hiv+SXjvKihbmduTAm/eSrMnce7ctunv4FvI6leq3fOsgLG0cpaLBsSlamlcRag
+         vclmNkd7UsL5IxyTgL4Zyf9cz2Y8Uni4whp1UdzpwITJwZNOTkhMt7nIXYSoZdUeDM/P
+         vZPSgZQyQ7ooU/iCdp9lZEQpov6VIEb5QjbtHswjVYYOd+pNAwHgZwbL06ii51FQqwvk
+         Nw9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750968374; x=1751573174;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xdZdMkXachOTBLhsNs+TRwK+/iArlUH+VMAh4h7bRTc=;
-        b=szI2d7gCsoomjWehJAqFvXB67vypcke7NCJOQRcloGQMgeavhFQFQ6WnK3t9pYkQKH
-         ip+iNtVTTRn6KoJJcqBOEekYOFIamGUENMGuEn2KUlQJuzoi4ffVrq2tGFqJ2J/kbUTr
-         wL9+UHQKWD1pmsb9iLLTWoXLg+FS7i+AtGCrlzncruwb2PGmZeWMfdS+1j7NFaNIx+TW
-         NunHYar6odybZCuKp5GsjIo2GORe0SOFClRY9GT1ndrshYxsT6QKdcYN0fUG0Qj+7gfq
-         ganeyYuruZx6SXdm44mGutpCGGVsqIoGQJOdzYfot63wPeuxf1YrLbe+S8pKf0HfImTS
-         W6ew==
-X-Forwarded-Encrypted: i=1; AJvYcCU1d+I2mvAooN/Nf1iYg1kbSCmZGlTJ86NlQh9YlBI2/MeeD3Alvy7H7m+VyWs8UUCBefmZ5yUyA1ajQvU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHkBtU8miOtW+xhAfwdeTfCRUM+rrS9OXfe1YQPnG6S/hLMzZ1
-	n2jG2x2vseeVO43NM59y6RpgvD07LXQTg3RMCE5BGemU6clOXxHzusVQHXgteGS/ywdxAf257KC
-	fvgrQ5qmMY70F/tbnk/Luz++oQA==
-X-Google-Smtp-Source: AGHT+IGarWfmYd/DUQimhQezHE2YXV7tgZKjgPA1cETPrxi7OiBglxyD0Fcw3dSMp14kty4kT+yi3FezNyuiQsd4uQ==
-X-Received: from ilbbs16.prod.google.com ([2002:a05:6e02:2410:b0:3df:30df:d2c4])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6e02:1c23:b0:3dd:dd39:324c with SMTP id e9e14a558f8ab-3df4ab6d058mr11318515ab.9.1750968374502;
- Thu, 26 Jun 2025 13:06:14 -0700 (PDT)
-Date: Thu, 26 Jun 2025 20:04:58 +0000
-In-Reply-To: <20250626200459.1153955-1-coltonlewis@google.com>
+        d=1e100.net; s=20230601; t=1750968577; x=1751573377;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jIMOx5cGmleXM2fMTx03wz+aj/K6cEb/ocYWuMPGis0=;
+        b=MAkih6MSIskuu3a0k5WE+FL+94AngkJvnm/vc5YNUTdD32ujpgzde5wTsdRbiJC94U
+         CBsLPKxuVZdLGhutD2lwvu2UuM7w+NCONCpsTFapgXYgPaZ0OGqz8bAgEpEhS4tDM/eP
+         hVNvg+T6/reIp2ETibAnsfxxAoeCwlrEhjVHIl9kbJ24O2fO1ZSxABz+hvOpNcE7jWT3
+         TcuDyHm12vSx/963/J6Ba/p/MBSaNEje6Zi00MRUgpdJSwOzDkqXyRHCC2//Yh9uVwrQ
+         MpwoZfDqjxBv7+xp1VaNmPvtaWcue5VA8f9egQ86v7L0IK83Sr4gv4SsnEdZZ0zbLA8y
+         Tv5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXMCcG4WqYDJ6UzfHU2gxkB2gBioCbrBEl1aHO6rqZ72MdkhOmFeK1znqmcM3zEUg6ZLiC4CVldNh90mKM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBXkN8p8fSq/xaNHh6Doy5nyBUYzwd8V/peuJ+NPACZkdzo3IU
+	QN4aXRXbNcW+JV6jN5wodMn94jVS8Lk2LjcmXploNbyucMbJ1o57xtj3
+X-Gm-Gg: ASbGncutpz5L7La0FmvxtRhVPWLSLpN2Erq/M1G7fFxeFpPA82ajRuKO0SICinPUXmP
+	u2o3CNqhbKUdCgrYSwcLTX9/Rn/Jc/KlsB1aAcnKMrZaWdRWKcnZXaZkPgd6iRoJQ7oYkWsA0Sl
+	44wNhPA3SPTLpYKIOGPtAtAgo+oYCIRd7jUoZ8tpsLh3GjWWXivKnOFss57FTeOc2GhuEb5iEEv
+	gQU05qByUSRBux0uvGLdS5Gyt5pqDDAPVEMpe1zPAK6AwD/LrarUELAnPAPNCdyY7+lCTHTh+r8
+	QVg8qJD+2Crt1yO5rZZUG9G45ZQ0N/v4CftfVThGeAua5b30fm+X8kSLIeEWNA==
+X-Google-Smtp-Source: AGHT+IGH5/FWGAvbSRuHvuVPzNK/EoQBtG2taFatS0UGzbGcfgd1ZDJkPBU/YBA74mhvL3a5H5bxtw==
+X-Received: by 2002:a05:690c:6906:b0:70e:77df:f2f9 with SMTP id 00721157ae682-715095acaacmr75179577b3.15.1750968577087;
+        Thu, 26 Jun 2025 13:09:37 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:4b::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-71515c90f65sm1321087b3.78.2025.06.26.13.09.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 13:09:36 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Byungchul Park <byungchul@sk.com>,
+	David Hildenbrand <david@redhat.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Zi Yan <ziy@nvidia.com>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel-team@meta.com
+Subject: [PATCH 0/2] mm/mempolicy: Cleanup and optimization for weighted interleave
+Date: Thu, 26 Jun 2025 13:09:32 -0700
+Message-ID: <20250626200936.3974420-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250626200459.1153955-1-coltonlewis@google.com>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250626200459.1153955-23-coltonlewis@google.com>
-Subject: [PATCH v3 22/22] KVM: arm64: selftests: Add test case for partitioned PMU
-From: Colton Lewis <coltonlewis@google.com>
-To: kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Colton Lewis <coltonlewis@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Run separate a test case for a partitioned PMU in vpmu_counter_access.
+Two small patches for weighted interleave bulk allocaton.
 
-An enum is created specifying whether we are testing the emulated or
-partitioned PMU and all the test functions are modified to take the
-implementation as an argument and make the difference in setup
-appropriately.
+The first patch simplifies the delta calculation needed for the allocations,
+removing an if-else and performing unconditional additions instead.
 
-Because the test should still succeed even if we are on a machine
-where we have the capability but the ioctl fails because the driver
-was never configured properly, use __vcpu_ioctl to avoid checking the
-return code.
+The second patch makes a minor improvement to the weighted interleave bulk
+allocation function by skipping a call to __alloc_pages_bulk.
 
-Signed-off-by: Colton Lewis <coltonlewis@google.com>
----
- tools/include/uapi/linux/kvm.h                |  2 +
- .../selftests/kvm/arm64/vpmu_counter_access.c | 62 +++++++++++++------
- 2 files changed, 46 insertions(+), 18 deletions(-)
+Running a quick benchmark by compiling the kernel shows a small increase
+in performance. These experiments were run on a machine with 2 nodes, each
+with 125GB memory and 40 CPUs.
 
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index b6ae8ad8934b..21a2c37528c8 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -930,6 +930,7 @@ struct kvm_enable_cap {
- #define KVM_CAP_X86_APIC_BUS_CYCLES_NS 237
- #define KVM_CAP_X86_GUEST_MODE 238
- #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
-+#define KVM_CAP_ARM_PARTITION_PMU 244
- 
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
-@@ -1356,6 +1357,7 @@ struct kvm_vfio_spapr_tce {
- #define KVM_S390_SET_CMMA_BITS      _IOW(KVMIO, 0xb9, struct kvm_s390_cmma_log)
- /* Memory Encryption Commands */
- #define KVM_MEMORY_ENCRYPT_OP      _IOWR(KVMIO, 0xba, unsigned long)
-+#define KVM_ARM_PARTITION_PMU	_IOWR(KVMIO, 0xce, bool)
- 
- struct kvm_enc_region {
- 	__u64 addr;
-diff --git a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-index f16b3b27e32e..92e665516bc8 100644
---- a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-+++ b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-@@ -25,6 +25,16 @@
- /* The cycle counter bit position that's common among the PMU registers */
- #define ARMV8_PMU_CYCLE_IDX		31
- 
-+enum pmu_impl {
-+	EMULATED,
-+	PARTITIONED
-+};
-+
-+const char *pmu_impl_str[] = {
-+	"Emulated",
-+	"Partitioned"
-+};
-+
- struct vpmu_vm {
- 	struct kvm_vm *vm;
- 	struct kvm_vcpu *vcpu;
-@@ -405,7 +415,7 @@ static void guest_code(uint64_t expected_pmcr_n)
- }
- 
- /* Create a VM that has one vCPU with PMUv3 configured. */
--static void create_vpmu_vm(void *guest_code)
-+static void create_vpmu_vm(void *guest_code, enum pmu_impl impl)
- {
- 	struct kvm_vcpu_init init;
- 	uint8_t pmuver, ec;
-@@ -419,6 +429,7 @@ static void create_vpmu_vm(void *guest_code)
- 		.group = KVM_ARM_VCPU_PMU_V3_CTRL,
- 		.attr = KVM_ARM_VCPU_PMU_V3_INIT,
- 	};
-+	bool partition = (impl == PARTITIONED);
- 
- 	/* The test creates the vpmu_vm multiple times. Ensure a clean state */
- 	memset(&vpmu_vm, 0, sizeof(vpmu_vm));
-@@ -449,6 +460,9 @@ static void create_vpmu_vm(void *guest_code)
- 	/* Initialize vPMU */
- 	vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &irq_attr);
- 	vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &init_attr);
-+
-+	if (kvm_has_cap(KVM_CAP_ARM_PARTITION_PMU))
-+		__vcpu_ioctl(vpmu_vm.vcpu, KVM_ARM_PARTITION_PMU, &partition);
- }
- 
- static void destroy_vpmu_vm(void)
-@@ -475,12 +489,12 @@ static void run_vcpu(struct kvm_vcpu *vcpu, uint64_t pmcr_n)
- 	}
- }
- 
--static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, bool expect_fail)
-+static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, enum pmu_impl impl, bool expect_fail)
- {
- 	struct kvm_vcpu *vcpu;
- 	uint64_t pmcr, pmcr_orig;
- 
--	create_vpmu_vm(guest_code);
-+	create_vpmu_vm(guest_code, impl);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	pmcr_orig = vcpu_get_reg(vcpu, KVM_ARM64_SYS_REG(SYS_PMCR_EL0));
-@@ -508,7 +522,7 @@ static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, bool expect_fail)
-  * Create a guest with one vCPU, set the PMCR_EL0.N for the vCPU to @pmcr_n,
-  * and run the test.
-  */
--static void run_access_test(uint64_t pmcr_n)
-+static void run_access_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
- 	uint64_t sp;
- 	struct kvm_vcpu *vcpu;
-@@ -516,7 +530,7 @@ static void run_access_test(uint64_t pmcr_n)
- 
- 	pr_debug("Test with pmcr_n %lu\n", pmcr_n);
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, false);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, false);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	/* Save the initial sp to restore them later to run the guest again */
-@@ -550,14 +564,14 @@ static struct pmreg_sets validity_check_reg_sets[] = {
-  * Create a VM, and check if KVM handles the userspace accesses of
-  * the PMU register sets in @validity_check_reg_sets[] correctly.
-  */
--static void run_pmregs_validity_test(uint64_t pmcr_n)
-+static void run_pmregs_validity_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
- 	int i;
- 	struct kvm_vcpu *vcpu;
- 	uint64_t set_reg_id, clr_reg_id, reg_val;
- 	uint64_t valid_counters_mask, max_counters_mask;
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, false);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, false);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	valid_counters_mask = get_counters_mask(pmcr_n);
-@@ -607,11 +621,11 @@ static void run_pmregs_validity_test(uint64_t pmcr_n)
-  * the vCPU to @pmcr_n, which is larger than the host value.
-  * The attempt should fail as @pmcr_n is too big to set for the vCPU.
-  */
--static void run_error_test(uint64_t pmcr_n)
-+static void run_error_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
--	pr_debug("Error test with pmcr_n %lu (larger than the host)\n", pmcr_n);
-+	pr_debug("Error test with pmcr_n %lu (larger than the host allows)\n", pmcr_n);
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, true);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, true);
- 	destroy_vpmu_vm();
- }
- 
-@@ -619,30 +633,42 @@ static void run_error_test(uint64_t pmcr_n)
-  * Return the default number of implemented PMU event counters excluding
-  * the cycle counter (i.e. PMCR_EL0.N value) for the guest.
-  */
--static uint64_t get_pmcr_n_limit(void)
-+static uint64_t get_pmcr_n_limit(enum pmu_impl impl)
- {
- 	uint64_t pmcr;
- 
--	create_vpmu_vm(guest_code);
-+	create_vpmu_vm(guest_code, impl);
- 	pmcr = vcpu_get_reg(vpmu_vm.vcpu, KVM_ARM64_SYS_REG(SYS_PMCR_EL0));
- 	destroy_vpmu_vm();
- 	return get_pmcr_n(pmcr);
- }
- 
--int main(void)
-+void test_pmu(enum pmu_impl impl)
- {
- 	uint64_t i, pmcr_n;
- 
--	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
-+	pr_info("Testing PMU: Implementation = %s\n", pmu_impl_str[impl]);
-+
-+	pmcr_n = get_pmcr_n_limit(impl);
-+	pr_debug("PMCR_EL0.N: Limit = %lu\n", pmcr_n);
- 
--	pmcr_n = get_pmcr_n_limit();
- 	for (i = 0; i <= pmcr_n; i++) {
--		run_access_test(i);
--		run_pmregs_validity_test(i);
-+		run_access_test(i, impl);
-+		run_pmregs_validity_test(i, impl);
- 	}
- 
- 	for (i = pmcr_n + 1; i < ARMV8_PMU_MAX_COUNTERS; i++)
--		run_error_test(i);
-+		run_error_test(i, impl);
-+}
-+
-+int main(void)
-+{
-+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
-+
-+	test_pmu(EMULATED);
-+
-+	if (kvm_has_cap(KVM_CAP_ARM_PARTITION_PMU))
-+		test_pmu(PARTITIONED);
- 
- 	return 0;
- }
+time numactl -w 0,1 make -j$(nproc)
+
++----------+---------+------------+---------+
+| Time (s) |  6.16   | With patch | % Delta |
++----------+---------+------------+---------+
+| Real     |  88.374 |    88.3356 | -0.2019 |
+| User     |  3631.7 |   3636.263 |  0.0631 |
+| Sys      | 366.029 |    363.792 | -0.7534 |
++----------+---------+------------+---------+
+
+Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+
+Joshua Hahn (2):
+  mm/mempolicy: Simplify weighted interleave bulk alloc calculations
+  mm/mempolicy: Skip extra call to __alloc_pages_bulk in weighted
+    interleave
+
+ mm/mempolicy.c | 52 ++++++++++++++++++++++++--------------------------
+ 1 file changed, 25 insertions(+), 27 deletions(-)
+
+
+base-commit: bf8761eda0930400291552bd314c9d59b720e899
 -- 
-2.50.0.727.gbf7dc18ff4-goog
-
+2.47.1
