@@ -1,176 +1,124 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE56B2EACF5
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5B22F362D
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750949353; cv=none; b=sJ1w+NOBOQ83TqXOZCm1C5xLBezcZ7Kiqi7DVAHBu9JtW8FAX84+7Y5T7i7bC7KlsblZgx861GOqIMP7hLB5ArlfADR53UstNsSIxxVXV4lI/5S2TgAg+hK21wrVy3w9fMWLOYNfoKRvyXirOye9cGjxKYxvOyQrMCbNNsbNg0s=
+	t=1750949361; cv=none; b=M/JCg7231zdn/pIXr5GPbgv7ZUB1F4rRc4J11sSLotgQayRohHpMdiWqI+sWFBa/6r51k/NUyIr6sKifPKg0oa/D0kTFq7JhC/EqhL0Z9+OTDPQq7Jc14iJ5AOuiEngWHUpMYDa+w6dg547npAx8Xx8zQ8gqWDyT01n6RJnq+cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750949353; c=relaxed/simple;
-	bh=C0IP1ldijdRmaS+puKQkDDZEbW3+UTuiddetXdu9lN0=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dCIJET3CHyRWrUXohnlIc4geFofhoNRrLuJtQgHDaQAzMRxZEU8IF7PGUjiufyZ6Ec6PcnilgG1uJUY7CwEb3zzo8XDGmNnC/KxjpxR5v2nbPcViACJpts+YAmIzGrgRefkxsugTisK7eHiV+YEulWVDNOGbKrLeZL9YxOQnEN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IzbHoiGj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=S6eZxFlM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750949361; c=relaxed/simple;
+	bh=e+p1u3bjk72DZ4xXV4yRymVTRZjUSFmGtt4UT1KJy4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p8u+qVqq/8HBjFAuTIHOtl8z5k3a6eKYjvW554bcpi28LwzRcNwYF7KZtLoIoNjAIwNeoe2Q7z8dp7w9UpXjksgNCM6BkMwYwRuTgImi16FfsAKBfMZL31/d86HzYqCT6Mnci/MMteDA4OBkizsNKPixAS9h31r8Qxc2lK89Bi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=OoE0pHQk; arc=none smtp.client-ip=209.85.167.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IzbHoiGj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S6eZxFlM"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750949348;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RK/wtTylOOst3NoQPmbj1UZ1alu1ISJX0ZCcg+3yGNk=;
-	b=IzbHoiGj+9g+AeqRYueTLqqKo2pzmdJzwlgXQAHhiXT5JpRZtBUa6j8rblYJXWcewvc4f1
-	/ejYslBo+r17GkM80uKZrqEBG3aN5FYaq1oqep4V3yCp/4KOkoKKPx+8mOj9JSrhu/zHMR
-	IdGs1R407AuQr1IWKDpbVKpOQdJMjFZvegTh5DxQUkfiR0Qwq4XlJ0NMX2Hg20cWpL0WpR
-	3W6xn1zh5mqtrgWPN2BveBWINIECilb01H4D1CvgDBFO1k+/7Asvs5BHBHkhS7U/v9jblQ
-	n78g1A01ZeHnHMdK3dfgu5o28DeUaacG7RqyqCBnzhx6PrQT/HowQs8rYe9QOA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750949348;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RK/wtTylOOst3NoQPmbj1UZ1alu1ISJX0ZCcg+3yGNk=;
-	b=S6eZxFlMNrrRZ8j7VzqgbsByaj9JBTsLHnPMjQcFcFh3J3oi5xgNUOCXu/twS7APcQCbup
-	HMxYSTYfsZRZOlDQ==
-To: Marc Zyngier <maz@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] iommu/intel: Convert to msi_create_parent_irq_domain() helper
-Date: Thu, 26 Jun 2025 16:48:55 +0200
-Message-Id: <169c793c50be8493cfd9d11affb00e9ed6341c36.1750858125.git.namcao@linutronix.de>
-In-Reply-To: <cover.1750858125.git.namcao@linutronix.de>
-References: <cover.1750858125.git.namcao@linutronix.de>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="OoE0pHQk"
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-40b31468da3so38619b6e.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:49:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1750949357; x=1751554157; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eDTHGKJ7PRnQtifJssL8JUIIPtKYbrBYEt3PvsupNKg=;
+        b=OoE0pHQkKhw4hvO00e7lyvZUJjgpBMreXb6Jk35+vlUH2IE5UYZqaqLSQHU/nibg6v
+         ruXqxLbVMqM1vytrKhJtNrqEDD6h6rXPgBiryqmNYLC3IQnZIhuOS7TcPwGr5R7ygKs1
+         lWTtvGDk6W0KewJgH+hGGwveddIggSzeYH22jvTTUIxPsmaKjGdaoU/MlO0VHJ95ibm8
+         knVzbKenulkmq7F+9uZ5iBaho2oUTnB1Fx9YeiEBCInT5w6yq1OERaErbJt1TU1W9RXL
+         JVbdr/2nbDQR2i1Zix/oN3aQ7XelMgfOCuorezM/K2rl/XlBSx5xdT0WppNl72JmrNT7
+         FlqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750949357; x=1751554157;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eDTHGKJ7PRnQtifJssL8JUIIPtKYbrBYEt3PvsupNKg=;
+        b=sx1wnVerxz+OcWXaFMzLuFfVxupdEj4/VzaRD+fbjUOrgrRZoDB+rsYpNyAR4weUos
+         Sy19i2d/vzN2vc55G3TfdQhcKnH7nEy1KTzzKMQyi0HheaYVrUgBZmzyrN8ppY9mOIc8
+         OH09X0sZ7FyaUw0q8quu/R9nwcTmRiAbx2qVI8v1JQjq6CNIacbqe6fjTVp1jafBOey4
+         KGrviKuo0KHoCFX4unx3o7YIENgLa77xeDwxNjE1xBxN5oe/ZNQDzUw4vU823a//iCt1
+         89o+FGDUs40B8PsllpYZGjPmOZq767rFWvFMXLquq5qjD/eibt3fWQWAB40DvmiazfWr
+         Z0hQ==
+X-Gm-Message-State: AOJu0Yx/NyLUqPk5VxHgD9JBJP4sK0YJOJoKTk7rsDG4iahoDTUvAc54
+	fmddbwCinsVO71xbjoUxfz79skYKcEqpc/ahACgvWr5BQFl25Eh3kCZtyFZMiCp0xR0=
+X-Gm-Gg: ASbGncutxeTcKCnsezMW+GTexyW3AX8H5NR5YTWxb/i1MObL3hNIw9Xwrn819HItuhQ
+	p0lvvTzg3L184NbprfL8Nru9IM3nlgUJQQq2Xx1Tdk5kHkhhIBDK0HCaRLEFNh/xbhE+0yrs0QI
+	6zVms5cS0FJZYK6FKN95OJ8zZC+O6SVjGtx35HQdqZ+E3jXNxXvjT6aK5ybbnQff+4Nqu7ZjRcL
+	Ke3LFEKz9qqpNW00AAwESYRjf72aCQ18SgM2H1zJjNiOvGAG65BT6PeJSE8WMM4CXGXV7sLD9mF
+	4lOgs8f46xJWQ9UX0L4ZY5nBlczaeuHrCcrTp0q/B0cBSkI=
+X-Google-Smtp-Source: AGHT+IEk1fuPkxL2WLgf9P7Tgn7/Q5tUITHrfb7oE7/rJ7NBa+jsmVtdMJzdRWUlmWV91MQIQpsO/Q==
+X-Received: by 2002:a05:6808:50ac:b0:406:7186:5114 with SMTP id 5614622812f47-40b05c73cf1mr5460261b6e.36.1750949357253;
+        Thu, 26 Jun 2025 07:49:17 -0700 (PDT)
+Received: from ziepe.ca ([130.41.10.202])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40ac6c136ecsm2593994b6e.6.2025.06.26.07.49.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 07:49:16 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uUnud-00000001WeQ-0wX2;
+	Thu, 26 Jun 2025 11:49:15 -0300
+Date: Thu, 26 Jun 2025 11:49:15 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+	Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	"open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH] tpm: Create cleanup class for tpm_buf
+Message-ID: <20250626144915.GD213144@ziepe.ca>
+References: <20250625213757.1236570-1-jarkko@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625213757.1236570-1-jarkko@kernel.org>
 
-From: Marc Zyngier <maz@kernel.org>
+On Thu, Jun 26, 2025 at 12:37:56AM +0300, Jarkko Sakkinen wrote:
+> @@ -323,7 +323,7 @@ unsigned long tpm1_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal)
+>   */
+>  static int tpm1_startup(struct tpm_chip *chip)
+>  {
+> -	struct tpm_buf buf;
+> +	CLASS(tpm_buf, buf)();
+>  	int rc;
+>  
+>  	dev_info(&chip->dev, "starting up the TPM manually\n");
+> @@ -335,7 +335,6 @@ static int tpm1_startup(struct tpm_chip *chip)
+>  	tpm_buf_append_u16(&buf, TPM_ST_CLEAR);
+>  
+>  	rc = tpm_transmit_cmd(chip, &buf, 0, "attempting to start the TPM");
+> -	tpm_buf_destroy(&buf);
+>  	return rc;
+>  }
 
-Now that we have a concise helper to create an MSI parent domain,
-switch the Intel IOMMU remapping over to that.
+So, Linus has spoken negatively about just converting existing code to
+use cleanup.h, fearful it would introduce more bugs.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Nam Cao <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20241204124549.607054-10-maz@kernel.org
----
- drivers/iommu/Kconfig               |  1 +
- drivers/iommu/intel/irq_remapping.c | 28 ++++++++++++++--------------
- 2 files changed, 15 insertions(+), 14 deletions(-)
+I would certainly split this into more patches, and it would be nice
+if something mechanical like coccinelle could do the change.
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 0a33d995d15dd..c5ce712a37b9f 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -200,6 +200,7 @@ source "drivers/iommu/riscv/Kconfig"
- config IRQ_REMAP
- 	bool "Support for Interrupt Remapping"
- 	depends on X86_64 && X86_IO_APIC && PCI_MSI && ACPI
-+	select IRQ_MSI_LIB
- 	help
- 	  Supports Interrupt remapping for IO-APIC and MSI devices.
- 	  To use x2apic mode in the CPU's which support x2APIC enhancements or
-diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/irq_=
-remapping.c
-index cf7b6882ec755..2ef71ba696b1f 100644
---- a/drivers/iommu/intel/irq_remapping.c
-+++ b/drivers/iommu/intel/irq_remapping.c
-@@ -10,6 +10,7 @@
- #include <linux/hpet.h>
- #include <linux/pci.h>
- #include <linux/irq.h>
-+#include <linux/irqchip/irq-msi-lib.h>
- #include <linux/acpi.h>
- #include <linux/irqdomain.h>
- #include <linux/crash_dump.h>
-@@ -518,8 +519,14 @@ static void iommu_enable_irq_remapping(struct intel_io=
-mmu *iommu)
-=20
- static int intel_setup_irq_remapping(struct intel_iommu *iommu)
- {
-+	struct irq_domain_info info =3D {
-+		.ops		=3D &intel_ir_domain_ops,
-+		.parent		=3D arch_get_ir_parent_domain(),
-+		.domain_flags	=3D IRQ_DOMAIN_FLAG_ISOLATED_MSI,
-+		.size		=3D INTR_REMAP_TABLE_ENTRIES,
-+		.host_data	=3D iommu,
-+	};
- 	struct ir_table *ir_table;
--	struct fwnode_handle *fn;
- 	unsigned long *bitmap;
- 	void *ir_table_base;
-=20
-@@ -544,25 +551,16 @@ static int intel_setup_irq_remapping(struct intel_iom=
-mu *iommu)
- 		goto out_free_pages;
- 	}
-=20
--	fn =3D irq_domain_alloc_named_id_fwnode("INTEL-IR", iommu->seq_id);
--	if (!fn)
-+	info.fwnode =3D irq_domain_alloc_named_id_fwnode("INTEL-IR", iommu->seq_i=
-d);
-+	if (!info.fwnode)
- 		goto out_free_bitmap;
-=20
--	iommu->ir_domain =3D
--		irq_domain_create_hierarchy(arch_get_ir_parent_domain(),
--					    0, INTR_REMAP_TABLE_ENTRIES,
--					    fn, &intel_ir_domain_ops,
--					    iommu);
-+	iommu->ir_domain =3D msi_create_parent_irq_domain(&info, &dmar_msi_parent=
-_ops);
- 	if (!iommu->ir_domain) {
- 		pr_err("IR%d: failed to allocate irqdomain\n", iommu->seq_id);
- 		goto out_free_fwnode;
- 	}
-=20
--	irq_domain_update_bus_token(iommu->ir_domain,  DOMAIN_BUS_DMAR);
--	iommu->ir_domain->flags |=3D IRQ_DOMAIN_FLAG_MSI_PARENT |
--				   IRQ_DOMAIN_FLAG_ISOLATED_MSI;
--	iommu->ir_domain->msi_parent_ops =3D &dmar_msi_parent_ops;
--
- 	ir_table->base =3D ir_table_base;
- 	ir_table->bitmap =3D bitmap;
- 	iommu->ir_table =3D ir_table;
-@@ -608,7 +606,7 @@ static int intel_setup_irq_remapping(struct intel_iommu=
- *iommu)
- 	irq_domain_remove(iommu->ir_domain);
- 	iommu->ir_domain =3D NULL;
- out_free_fwnode:
--	irq_domain_free_fwnode(fn);
-+	irq_domain_free_fwnode(info.fwnode);
- out_free_bitmap:
- 	bitmap_free(bitmap);
- out_free_pages:
-@@ -1530,6 +1528,8 @@ static const struct irq_domain_ops intel_ir_domain_op=
-s =3D {
-=20
- static const struct msi_parent_ops dmar_msi_parent_ops =3D {
- 	.supported_flags	=3D X86_VECTOR_MSI_FLAGS_SUPPORTED | MSI_FLAG_MULTI_PCI_=
-MSI,
-+	.bus_select_token	=3D DOMAIN_BUS_DMAR,
-+	.bus_select_mask	=3D MATCH_PCI_MSI,
- 	.prefix			=3D "IR-",
- 	.init_dev_msi_info	=3D msi_parent_init_dev_msi_info,
- };
---=20
-2.39.5
+At least I would add the class and drop the tpm_buf_destroy() as one
+patch, and another would be to cleanup any empty gotos.
 
+Also, I think the style guide for cleanup.h is to not use the
+variable block, so it should be more like:
+
+CLASS(tpm_buf, buf)();
+if (!tpm_buf)
+   return -ENOMEM;
+
+AFAICT, but that seems to be some kind of tribal knowledge.
+
+Jason
