@@ -1,81 +1,91 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664BE1C84A5
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AE32EB5CA
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750951360; cv=none; b=uyR37hTpMWkDQJoJGNDIEkO9T+9hCt4AQY6PS5qhx1aVYlnscnAWos6cXToCK1ht9nYAybrB7Ckr3BU3nsYKdPfWnHRUngxBGYbYo8zV+xz/BK6bIaF5XyF0+HDihojXh2T29pVNxE1eQ7IRy2DG5DdBoaBa9EnV35dYquXryEw=
+	t=1750951393; cv=none; b=koL8R83MbTVdY8Zj9ki75dsr8gTHgLL9gXXt9xW83B6fWUprUvsf2y5V6JjeHH8CBCzhWiu+VJ12GREdBYD/qadmMOoYGx5CyFQyOf5QAW746deva1kZirLJ88HvuZcB/q18lcPuzAghUjM1Gb+VxNlGgnQTfWUaqXdfGBdV6Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750951360; c=relaxed/simple;
-	bh=4zHzQ+izDp1vj74rfR0zKODzsyQdw3lWIvnDbFenFtM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=bpFZVrcl7DC3j5bTGGV6G6bzpdxQp+K8dE0K4e5qGgBWyxztqZM4cDSaZfl7WatKwtX9/L2aE5yzMaT0vt8xs1rg2Kxw2Sdiogdm9SoPTUnAdoJBhXkC6gMvBahguxMUIbfob10SnOcK4jnoODvrfgFV2vW+MIrRv+ltZsLst44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kUYa13Up; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gjI75jPY; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750951393; c=relaxed/simple;
+	bh=i6XIwfrmqqyD44a9t3N13e4CHHC6SNOoZlcuVE+DCxo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QBKY90BrVijEC8GTSJE6M8TWEBd66J+dXninzCsqYlsp+r19z4euREK9a6wRyzIv5zDsU8kfBVBKc348Ow3ERIEFuwR/cUhFAgzEtDTMVdn70y948Eq9/mG36raPgLyUNnsoYlEQRPw7VWyFzIIw0SjpTjV7ihmjfquHmr6/wR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VGjr12/6; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kUYa13Up";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gjI75jPY"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750951357;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ONXrsCxkDDT3Yh5OojaO/sgqdxQZlo/vYJ7GIt4D45M=;
-	b=kUYa13UpIh98Ml+fI+ZDYKfE8ltEdnF++Uqtnr3468B6lZxQPL0IMbU1nElYaLVtG1AZC/
-	f1U+ihVSi+WUKV2T7QhQ1ari+yXRJ0cH++F0k2kegsdmvoB9bVB/2faAzusWF7OFHcPFJO
-	4AyG2nohRI62/vcKvL6MOn7vIOGJanlTff0PiHCwAZOpZ2a7+PN3w8PP72Q9FmSI41v9OI
-	vbB6FGefJk2G0IzH7RSBHxqumuHcteRkz62bTHWWeOXglaRKD5IduLbpP2VAdqcPezxFeN
-	G66Sq262Qs+zNNY04/mm1+lEsjzjO/keQuz7slBg/08rmbR3U6J9GTgUiQhqLQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750951357;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ONXrsCxkDDT3Yh5OojaO/sgqdxQZlo/vYJ7GIt4D45M=;
-	b=gjI75jPYYtnOmn3h+6zByPFDOaAWh77xcZt6vjD4/ZeHaKlqfmakryogxAnUSEHFCaITkf
-	HRd8dVghvE0PVjCA==
-To: Waiman Long <longman@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v3 2/2] debugobjects: Allow object pool refill mostly in
- non-atomic context
-In-Reply-To: <20250617053527.1223411-3-longman@redhat.com>
-References: <20250617053527.1223411-1-longman@redhat.com>
- <20250617053527.1223411-3-longman@redhat.com>
-Date: Thu, 26 Jun 2025 17:22:36 +0200
-Message-ID: <871pr6r0hv.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VGjr12/6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750951392; x=1782487392;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=i6XIwfrmqqyD44a9t3N13e4CHHC6SNOoZlcuVE+DCxo=;
+  b=VGjr12/6dPR+Hv2wPLqs8aQt1WHcyO4uIAjTg+uSNM8RaGh3fY3Wf2Io
+   EuVin58iNx+TJGAJpbSnlZ7QH7TpXWCupEVAg+l0T8HCiFlfWdedky3Bw
+   ThGoNPLdL2oQRcAhuWdha6TvIor6QOhLyJTaZFnpMhrupXS/S9wCL/W/f
+   Vcmg0n+5d4mP0czVC9MjyMt+2LyfJO2309wMzOUBQ40mUxUgN4s3U/ZZD
+   mJRj9yAouA5gi3ly8DR9GiGJ6lmjzA7xZx+zgigiYPZFbm8tIj3rQReiW
+   c5AXMR5iA9+rYoE1xsKzM04NBFGYZhe+R+SdFyTBlk7cDdeifnoOQTAch
+   Q==;
+X-CSE-ConnectionGUID: Mw8R3pFySj+GQ12XXJkG/A==
+X-CSE-MsgGUID: KWif+pxYQaiTRiATudQTSw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53194155"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="53194155"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:23:11 -0700
+X-CSE-ConnectionGUID: ztUFUrDURcCBnFsHryDMDQ==
+X-CSE-MsgGUID: 4/ntBjmaR7CnoOBrquX5EQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="152169075"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 26 Jun 2025 08:23:10 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 81DB42E2; Thu, 26 Jun 2025 18:23:08 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>
+Subject: [PATCH v1 1/1] regulator: core: Don't use "proxy" headers
+Date: Thu, 26 Jun 2025 18:23:07 +0300
+Message-ID: <20250626152307.322627-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 17 2025 at 01:35, Waiman Long wrote:
-> Removing the pool refill call from the other two may make pool
-> exhaustion happen more easily leading to the disabling of the debug
-> object tracking.
+Update header inclusions to follow IWYU (Include What You Use)
+principle.
 
-May is not a technical argument. Why would that happen?
+Note that kernel.h is discouraged to be included as it's written
+at the top of that file.
 
-As we established before the only reason why activate() or assert() can
-consume an object from the pool is when the object was statically
-initialized.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/regulator/coupler.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Are there really enough statically initialized objects to actually lead
-to pool depletion without that activate/assert hackery?
+diff --git a/include/linux/regulator/coupler.h b/include/linux/regulator/coupler.h
+index 73291f280a23..5e314a4294fb 100644
+--- a/include/linux/regulator/coupler.h
++++ b/include/linux/regulator/coupler.h
+@@ -8,7 +8,8 @@
+ #ifndef __LINUX_REGULATOR_COUPLER_H_
+ #define __LINUX_REGULATOR_COUPLER_H_
+ 
+-#include <linux/kernel.h>
++#include <linux/errno.h>
++#include <linux/types.h>
+ #include <linux/suspend.h>
+ 
+ struct regulator_coupler;
+-- 
+2.47.2
 
-> As a middle ground, we will allow pool refill from the
-> activate and assert_init functions if they are called from a non-atomic
-> context which is roughly half of the times depending on the workloads.
-
-Which brings you back to the square one on RT enabled kernels because
-the held locks in this circular lock chain scenario do _NOT_ disable
-preemption, so in_atomic() evaluates to false ....
-
-Thanks,
-
-        tglx
