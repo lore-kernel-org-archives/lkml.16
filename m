@@ -1,243 +1,143 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4162BB17
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 19:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248D8194AD5;
+	Thu, 26 Jun 2025 19:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750965941; cv=none; b=GvGAyMCBzp9O8RbVZgkxSSh8CxqXPgfpl9bYPyacX8fIyhjR/8N9t/SNxrwSYp17s16UwC9Ob/wZkhxuENCFaTmIyXC1IFoRE5HmQBNkQoIPiKY8KvSwfKazKy44vmHmEspDRaPmsIjhjZRN5/ub73YyAKYpA+eJDVpB9nETv20=
+	t=1750966112; cv=none; b=jxn9ChULJurSkVPqxyTTXXswRAGqmas7pKgnlK4Pl3F7ZCtrRKjPcjbC+tlKLUW6Z5uXJW87Oza99H0tEq6VDo0twNYHprdHB4K+HAvf4vhKtUz5G844QKE0StTVxiSkAMeevUuCPPcC+YDxmGR3Yo/uAGr1xpogLt6LvOJpyYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750965941; c=relaxed/simple;
-	bh=Umg9+xD0kUpefrULO9831amcm/kvWphY/2gpXmp9WX8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=A8NHiPnEnPU2QY7xU3bQXd0zA2HWrUpN8FPqYBZtOBcs862PB4pSgT/Qp0+QyWFL91LfyZdqRMtaZdonDfdUqvCM8s16NFoE0eGOTzdbBsurPvHIAmtclE8nL8HTB7Th0JDSf7fe1behbe99RwHsEGIeSKC07MNa/tpVOZLTWg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddb4dcebfaso36551985ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:25:38 -0700 (PDT)
+	s=arc-20240116; t=1750966112; c=relaxed/simple;
+	bh=Q2wS+pyzzf5tK6D5i4KqNnpqLK3Yy5WfdmsA064hS2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=geSWcSVEzaNNDKL4uqWDuYOZole75iSaZ1SIJx+Wp9dtTyyxWvczbhaFCjRdvILMsYY0eREDvQYpRaOBodaQfrHYozrY4NdIyyzEO2GSZhDI26X2w+CUZjQ36xRZYrfdzky2LEslgLzBSmhBT6lsgs32Dt9VA88LfEadwKCVFiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JMadZVOW; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JMadZVOW"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-23636167afeso15951825ad.3;
+        Thu, 26 Jun 2025 12:28:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750966110; x=1751570910; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=n+KI9xuy7BCM400uV+MvV1zpA9Alzbfuo6WtynbJu1s=;
+        b=JMadZVOWomps4CcBggh+PlStncaxa6uDu/8QzsAloeVN7ooclLMIWC55bH+CE30h2F
+         aPsCayTzFO074Tgd3R2PRbznEUdifrZgK6VtRMt5guyADvOmOcF0qcMjdu3Jfo67bK3V
+         kZ8otunw/o9y9zDHHDgIzplxYDahf5LdzKAEV3FZW2u+0e1LXVoUsyPmJM+FtpHHfXb2
+         shUJkWk5jabUc5UWQ3K8QOyTYV/QrR+fgM7YqHRGrpNNH6rI7mxtpxT5o9mboKDjcfcJ
+         UAeeTQeG7VL/RXUuABLgqqPRT4YnDtPdUVLMOLrpalw/hWvyxLPbRKjPfMS/ValV9pha
+         sCIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750965937; x=1751570737;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3ITL/fXLs649CrWs1OxmddlKSg0ISConOPnCKE3Uc0g=;
-        b=gxJKZsd+rHekTpF0YPLBugJFZQj2stGEsQ/Fk8B4sQzR6kPqGbrjhS4rOlFNt6EgBk
-         ECnFT3HR69kiDyf+/EwtUXyMC92dLIpr1788qTc55PysCMg35wBIJAwehNtJc04W0tdh
-         AQeFVTW/fja4ic+rIEDHeeyll6nne+6TFzV3HvgPZhR0X0VGdjlY/BVmgaZq9gDLy8nT
-         GUncBtVLcbA36NQTOgLxCSRCict1m2jIt+T95qVtwMyRD+F7R+9mZLX/R/729wRJ1Iin
-         QVAfkWH5Nz23exynPtHM4AkTMiKyakPvKIoqdrv/PO9Gxl4Oc0/2Glt8YITVi5kw1/uE
-         kXgw==
-X-Forwarded-Encrypted: i=1; AJvYcCXNUh4nrUQ6ekFdGiuuOIaI7+01VfwR30js0mkcj11vHfNbsk8dUjKIjHQHDUfXVbM1GtvSbJsVGivO+I4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxg7TTck9DoDyOyWfQ3gYXTWf4KPhbVCtnpc8QdQjv6wj5MoqKY
-	DufhIKHsEzFC53jJhhFnXtHuP+irVsLcd9xazxGiwOfkwczy+GnSIKmFhcFTBtZRZNPTCs9JNEN
-	fnG1oxs6dZ84iex/abFXxQ6kyxR7vsigPy/+/jI4GXebgCpAitrIViqvClEM=
-X-Google-Smtp-Source: AGHT+IEJN4dCnr7Yao52pOFWF+7HitZJ86CXiJ62npUrAP/MiC1G18NaAytAFBNKFR5Jb9TrredgrLEYmVQn9OY/eEzaevPxhIdj
+        d=1e100.net; s=20230601; t=1750966110; x=1751570910;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=n+KI9xuy7BCM400uV+MvV1zpA9Alzbfuo6WtynbJu1s=;
+        b=oEsFhUProcWCQDX1GIMYTYIkV7BctgOlDiN6QwsdUyzGgoftZWn5x6xWWg4IPhK/DO
+         cs7m9Gsyny/1TW2fH/NkiKaYLJEGcWLgnLmYl7kKJr4I3w20mpuEbJpUfwwUj/iXl7p7
+         IjU5pQHqSWCHMU3ccC2E2wvW3DM+iQi0m+AtUN/mTYCLB2JRXRFKvKBqy+LPELfOdhwM
+         d150ZDaohgtW1krImbu6q3l5LYsIdDwKdpJWC0cXooweH8ZrKmQTBHc+V1zdYFoiXw6H
+         vl5GM4Ghdiqh9CBL/pB0OXLn6XckigKrhjfHAMQ6AEaGmco1g6wlY0cVRDDSIYFgkzFC
+         Xg2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUJHasRtNg3SycfPYKKUD6ngSwAKvfUJzLoRIMeEDkKaYuo1XnW5dO3xeQ57dn5/bCsLFEqtw9Qz8pee4t8@vger.kernel.org, AJvYcCUy+g0zNaB5QaxtgmmzBwgKuUq0xPa38rJuCH0nXRDKUOhwNFXvN23A14fOCpdwvnVRTiBkE+HR+SmUOYE=@vger.kernel.org, AJvYcCVAROKcARMappmdsC43lP3W8fbqs2ccFSnHJBl+zYNAv226jQfL6WB911FPzMv/v4HEEo5+3xIXtuSBVA==@vger.kernel.org, AJvYcCXu+gXk1h5nTX27P6B4d4GyQR06+zfVTkjE9v3b4A/QSSZvDNIo6HdglSu4LGxPt2/GJo46N9Th633A@vger.kernel.org
+X-Gm-Message-State: AOJu0YzULMHEwx3yOxBkjdbEGAET0bUBVAu7pWED2VG2AuVQQEhk68IE
+	+eSthIuNw8BMtFWJTjxU7Pi4kVgnfyVTtHtlhy/lXBIY6COrfFDXYgJM
+X-Gm-Gg: ASbGncveLJVb79c8CbFIcHL+ucUWn2n1jFYAogpsTRGX/sF/zgE1iqNZ12K1eB2Fffm
+	fi1QRACQz/sm91xxEYCUvC8FhPkTtTuF7K2HzurKhYQe4SzmM5HP35eTovjgj2x2PvgvUpZEq4e
+	YtKfw6Z8FkcXH6Vy1sY2Zayb1umEcn1P4QAP4vw4vFm1bzvRC2dkNRJjGsXSJeD8SHmvyoUxWQx
+	UZw+F7Er38UCM2vizcuQ+iWK5N0Sd4jAWl0wuhLVlj5TSY5VkLmDYtOdOkq5Ki/F6b31ubUanwi
+	ruhc8RVYb289xj1s8ltmmbV2GPldS4AoYSs5fD51YiA3ohsGs7imlw3s2NwDK2A=
+X-Google-Smtp-Source: AGHT+IGpoY7/fquEMZwaVCEOwMvBYCe+srIwXynJUatqOx7vcebaPxrZE/1T5lKcEHVx9k3XRV8sfQ==
+X-Received: by 2002:a17:903:2c5:b0:234:bca7:2920 with SMTP id d9443c01a7336-23ac45e262dmr8776225ad.24.1750966110350;
+        Thu, 26 Jun 2025 12:28:30 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:9c8f:acd3:efcb:bc3d])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34c429b436sm2317446a12.7.2025.06.26.12.28.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 12:28:29 -0700 (PDT)
+Date: Thu, 26 Jun 2025 12:28:27 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Hans de Goede <hansg@kernel.org>, 
+	Mario Limonciello <superm1@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>, 
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
+ system
+Message-ID: <exmgckzoakt2ncsdphqvymcadon7k6tl36a3zvrj2pv23dffps@znq23v3qbcm2>
+References: <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
+ <rn2kp5tog2agvswva2ipqq2ytiqdcgccnocudsg6ckwfh4roei@provk2g6dita>
+ <363c2b92-4bfc-4537-9fca-025eef09526f@kernel.org>
+ <nxticocp26r5mmpkttritw76h5igw7bdpus6zaf5krkso2h5xy@wna6m2quekfi>
+ <cbbf0caf-82ce-4427-9844-b11e0f5cacdb@kernel.org>
+ <obpakvzyludc4jskqzyxf65dhqds7ie3jkbfsqdve32ouuaili@xvogkmwvbmbf>
+ <284ea5c0-dca5-4e9e-a3e7-705eca794010@kernel.org>
+ <vkau25ybcx3bcoa2jmxlukumunzii5h6em43anh6mmzk2kyiv7@kyych4kxc4zo>
+ <0d71a686-da67-4686-8976-a17d0d1ca923@kernel.org>
+ <CAJZ5v0gKUN1OdqAHnXNcFUAOfhpdRfa_o=L6TA2GZTpe1bMaNQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:318f:b0:3dc:7d57:30a8 with SMTP id
- e9e14a558f8ab-3df4aba4e14mr8321715ab.10.1750965937642; Thu, 26 Jun 2025
- 12:25:37 -0700 (PDT)
-Date: Thu, 26 Jun 2025 12:25:37 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685d9eb1.050a0220.2303ee.02a7.GAE@google.com>
-Subject: [syzbot] [net?] KASAN: slab-out-of-bounds Read in pause_parse_request
-From: syzbot <syzbot+430f9f76633641a62217@syzkaller.appspotmail.com>
-To: andrew@lunn.ch, danieller@nvidia.com, davem@davemloft.net, 
-	edumazet@google.com, horms@kernel.org, kory.maincent@bootlin.com, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, maxime.chevallier@bootlin.com, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0gKUN1OdqAHnXNcFUAOfhpdRfa_o=L6TA2GZTpe1bMaNQ@mail.gmail.com>
 
-Hello,
+On Thu, Jun 26, 2025 at 09:18:56PM +0200, Rafael J. Wysocki wrote:
+> On Thu, Jun 26, 2025 at 9:16 PM Hans de Goede <hansg@kernel.org> wrote:
+> >
+> > Hi,
+> >
+> > On 26-Jun-25 21:14, Dmitry Torokhov wrote:
+> > > On Thu, Jun 26, 2025 at 08:57:30PM +0200, Hans de Goede wrote:
+> > >> Hi,
+> > >>
+> > >> On 26-Jun-25 20:48, Dmitry Torokhov wrote:
+> > >>> On Thu, Jun 26, 2025 at 01:20:54PM -0500, Mario Limonciello wrote:
+[...]
+> > >>>> I want to note this driver works quite differently than how ACPI power
+> > >>>> button does.
+> > >>>>
+> > >>>> You can see in acpi_button_notify() that the "keypress" is only forwarded
+> > >>>> when not suspended [1].  Otherwise it's just wakeup event (which is what my
+> > >>>> patch was modeling).
+> > >>>>
+> > >>>> https://github.com/torvalds/linux/blob/v6.16-rc3/drivers/acpi/button.c#L461
+> > >>>> [1]
+> > >>>
+> > >>> If you check acpi_button_resume() you will see that the events are sent
+> > >>> from there. Except that for some reason they chose to use KEY_WAKEUP and
+> > >>> not KEY_POWER, oh well. Unlike acpi button driver gpio_keys is used on
+> > >>> multiple other platforms.
+> > >>
+> > >> Interesting, but the ACPI button code presumably only does this on resume
+> > >> for a normal press while the system is awake it does use KEY_POWER, right ?
+> > >
+> > > Yes. It is unclear to me why they chose to mangle the event on wakeup,
+> > > it does not seem to be captured in the email discussions or in the patch
+> > > description.
+> >
+> > I assume they did this to avoid the immediate re-suspend on wakeup by
+> > power-button issue. GNOME has a workaround for this, but I assume that
+> > some userspace desktop environments are still going to have a problem
+> > with this.
+> 
+> It was done for this reason IIRC, but it should have been documented
+> more thoroughly.
 
-syzbot found the following issue on:
+I assert that it should not have been done and instead dealt with in
+userspace. There are numerous drivers in the kernel emitting
+KEY_POWER. Let userspace decide how to handle this, what keys to ignore,
+what keys to process and when.
 
-HEAD commit:    a9b24b3583ae net: phy: realtek: add error handling to rtl8..
-git tree:       net-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=15d50f0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fab0bcec5be1995b
-dashboard link: https://syzkaller.appspot.com/bug?extid=430f9f76633641a62217
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17d1b182580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120bff0c580000
+Thanks.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/9205e4571dc2/disk-a9b24b35.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/9a698a98f3a1/vmlinux-a9b24b35.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/5964c8e14f44/bzImage-a9b24b35.xz
-
-The issue was bisected to:
-
-commit 963781bdfe2007e062e05b6b8a263ae9340bd523
-Author: Jakub Kicinski <kuba@kernel.org>
-Date:   Mon Jun 23 23:17:15 2025 +0000
-
-    net: ethtool: call .parse_request for SET handlers
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=101f208c580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=121f208c580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=141f208c580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+430f9f76633641a62217@syzkaller.appspotmail.com
-Fixes: 963781bdfe20 ("net: ethtool: call .parse_request for SET handlers")
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in pause_parse_request+0x40/0x160 net/ethtool/pause.c:37
-Read of size 8 at addr ffff888034301530 by task syz-executor369/5848
-
-CPU: 1 UID: 0 PID: 5848 Comm: syz-executor369 Not tainted 6.16.0-rc2-syzkaller-00867-ga9b24b3583ae #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xd2/0x2b0 mm/kasan/report.c:521
- kasan_report+0x118/0x150 mm/kasan/report.c:634
- pause_parse_request+0x40/0x160 net/ethtool/pause.c:37
- ethnl_default_parse net/ethtool/netlink.c:456 [inline]
- ethnl_default_set_doit+0x2c1/0xa40 net/ethtool/netlink.c:881
- genl_family_rcv_msg_doit+0x215/0x300 net/netlink/genetlink.c:1115
- genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
- genl_rcv_msg+0x60e/0x790 net/netlink/genetlink.c:1210
- netlink_rcv_skb+0x205/0x470 net/netlink/af_netlink.c:2534
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:714 [inline]
- __sock_sendmsg+0x21c/0x270 net/socket.c:729
- ____sys_sendmsg+0x505/0x830 net/socket.c:2614
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2668
- __sys_sendmsg net/socket.c:2700 [inline]
- __do_sys_sendmsg net/socket.c:2705 [inline]
- __se_sys_sendmsg net/socket.c:2703 [inline]
- __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2703
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f99cc8969d9
-Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffdf8e93908 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f99cc8e44ad RCX: 00007f99cc8969d9
-RDX: 0000000000000040 RSI: 0000200000000000 RDI: 0000000000000003
-RBP: 00007f99cc8e447d R08: 0000000000000000 R09: 0000555500000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f99cc8e43e5
-R13: 0000000000000001 R14: 00007ffdf8e93950 R15: 0000000000000003
- </TASK>
-
-Allocated by task 5848:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __do_kmalloc_node mm/slub.c:4328 [inline]
- __kmalloc_noprof+0x27a/0x4f0 mm/slub.c:4340
- kmalloc_noprof include/linux/slab.h:909 [inline]
- kmalloc_array_noprof include/linux/slab.h:948 [inline]
- genl_family_rcv_msg_attrs_parse+0xa3/0x2a0 net/netlink/genetlink.c:940
- genl_family_rcv_msg_doit+0xb8/0x300 net/netlink/genetlink.c:1093
- genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
- genl_rcv_msg+0x60e/0x790 net/netlink/genetlink.c:1210
- netlink_rcv_skb+0x205/0x470 net/netlink/af_netlink.c:2534
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:714 [inline]
- __sock_sendmsg+0x21c/0x270 net/socket.c:729
- ____sys_sendmsg+0x505/0x830 net/socket.c:2614
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2668
- __sys_sendmsg net/socket.c:2700 [inline]
- __do_sys_sendmsg net/socket.c:2705 [inline]
- __se_sys_sendmsg net/socket.c:2703 [inline]
- __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2703
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff888034301500
- which belongs to the cache kmalloc-64 of size 64
-The buggy address is located 8 bytes to the right of
- allocated 40-byte region [ffff888034301500, ffff888034301528)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x34301
-ksm flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000000 ffff88801a4418c0 ffffea00009e8e40 dead000000000003
-raw: 0000000000000000 0000000080200020 00000000f5000000 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 1153, tgid 1153 (kworker/u8:6), ts 27371323863, free_ts 0
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x240/0x2a0 mm/page_alloc.c:1704
- prep_new_page mm/page_alloc.c:1712 [inline]
- get_page_from_freelist+0x21e4/0x22c0 mm/page_alloc.c:3669
- __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:4959
- alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2419
- alloc_slab_page mm/slub.c:2451 [inline]
- allocate_slab+0x8a/0x3b0 mm/slub.c:2619
- new_slab mm/slub.c:2673 [inline]
- ___slab_alloc+0xbfc/0x1480 mm/slub.c:3859
- __slab_alloc mm/slub.c:3949 [inline]
- __slab_alloc_node mm/slub.c:4024 [inline]
- slab_alloc_node mm/slub.c:4185 [inline]
- __do_kmalloc_node mm/slub.c:4327 [inline]
- __kmalloc_noprof+0x305/0x4f0 mm/slub.c:4340
- kmalloc_noprof include/linux/slab.h:909 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- lsm_blob_alloc security/security.c:684 [inline]
- lsm_task_alloc security/security.c:771 [inline]
- security_task_alloc+0x4d/0x360 security/security.c:3160
- copy_process+0x1530/0x3c00 kernel/fork.c:2151
- kernel_clone+0x21e/0x870 kernel/fork.c:2599
- user_mode_thread+0xdd/0x140 kernel/fork.c:2677
- call_usermodehelper_exec_work+0x5c/0x230 kernel/umh.c:171
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3f9/0x770 arch/x86/kernel/process.c:148
-page_owner free stack trace missing
-
-Memory state around the buggy address:
- ffff888034301400: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff888034301480: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->ffff888034301500: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
-                                     ^
- ffff888034301580: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff888034301600: 00 00 00 00 00 00 05 fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+Dmitry
