@@ -1,145 +1,146 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D97D2EFD8C;
-	Thu, 26 Jun 2025 20:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B612F2701;
+	Thu, 26 Jun 2025 20:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750968883; cv=none; b=JyywXdQscM8/PbgKjjhQcmyTyDJneODfFljsRitL+Alu1AVlRGs1+etHZdbzK8jHyeE4sY9lw/zApFYoV15TvGxlr950+vxxqkAKGuNj/U7I9RqnT0ymQ1TBTDaxZUNezjqCF/hX6qTeta1FFYzJVUPt2XcKsYyy85uV34w7AgE=
+	t=1750968903; cv=none; b=Scil+J9cS3nwxDSETwhvpEJ1KfRWbazW5ayI81WVtNf1aUt6iRQQk94+a7YfyfFnUw2j7zTXvBRWbx2wsNtyNlJyGQPzeBJZPBwwfjnQzoJKkEdFMRMyqIJNGOLS1D1/AHYNGOYclP/be8e683g5mwMvK6L8eYw0/a7RGTOMcXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750968883; c=relaxed/simple;
-	bh=cg7s6ZiVvmErjdj1DTXd7oxh6Zhi0Y1dn8W/u4K8qBE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YVP2Vv+xY9FAzUUpmRukQ3ZeHvLst/RUqpPd9SLAoDdEIJczyBUfCt5WK0qvKGfDQbl+wnvvUr3S941BGXEmTbgHh8J8rP9rokyy17pVRb23/KxxfuCN7o21kQrdUG89OobnEUPrDtqGoDyqhP+e72wBE3g/uT7/1ByctgOl3/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=UVaRZlgG; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1750968903; c=relaxed/simple;
+	bh=cpAuonRarh3V/5AZzHmJhohOs3ZPe+MF471SUSLwCUQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GtLeYGRg42ow1GZv5mtpJl4VZ46Sy2HpG2OlcGYyxNKgZMiLUBs3hdxnF2l7jFV/dH3aQxXiCTRYxq7Yw+CARwHMEvGblmN4mwpZFwKyC8s5NAnkR0nt7v1MAOYwRwzfksIfEVZDuDk1rLi38kG0uabNwtOT5dDX8c/zbckWMFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C6eBVjKJ; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="UVaRZlgG"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id F33CC25F8C;
-	Thu, 26 Jun 2025 22:14:39 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id ROlUM-guIM2E; Thu, 26 Jun 2025 22:14:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1750968879; bh=cg7s6ZiVvmErjdj1DTXd7oxh6Zhi0Y1dn8W/u4K8qBE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=UVaRZlgG9nWYsZtd+jxjqxzTwkGvROfDUUMR780HiuU6G3dbVIKviaEvSMWhypouh
-	 OOfzEMv/cCmp+ozPpOGlea0q4rIcFlnTA6eAGKxt0Z4ePRRsdI0NNGwZaCy5RCmVuA
-	 NGBrY6nJK2vxE8A986TmFZBXVZRvnlURjE9nxMbfHozyB1dY5iXGQ+2qpn4VCbLX5H
-	 m29Mu9QLBoaioXBXAqoSg82dcU76oo7i7tU87tCGadL7uElhTfZX5SMKqkbV9DeWvF
-	 0EF7b/TMv18b93fE9rmw0IAsuWLVQDxEDQwVVhPpsBCIhtoz2L1Fzd9hK+S+x7oqQt
-	 1Zhu1Rkduaf/Q==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Fri, 27 Jun 2025 01:43:29 +0530
-Subject: [PATCH v2 6/6] arm64: dts: exynos7870-j6lte: enable display panel
- support
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C6eBVjKJ"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6fd0a7d3949so21658426d6.0;
+        Thu, 26 Jun 2025 13:15:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750968901; x=1751573701; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FRDEmi54S6LjnrBjZVa4DLbUJlXZIMr6dV6Euspeu5w=;
+        b=C6eBVjKJ84GAt4zdaISpnVkucoppPf0iV1WO4iP63TagvDy/RRXXRiOpL5hbG3Ec9g
+         sAzh5ijnefOxvujiqNqKSDzA9boWerjTG0R5UJ2SmhqiSeACLIcMUyqecr/UxExF6cad
+         zXR7CI9/aKrYNKmp2QKB5yddTY0aOv0PspxklTJ+zdxpd25XGLOZH0GjTXrihHQRVxtn
+         6IAFfYnjMwAmCu4GZQ7qfpuK9TKa6GcRqcRlh6bNplwcTlngkRrGQRePSAm8SswI4k8o
+         1JiItobaB/xaOMA/XdywyssaqFr+vF+4EobOHmbwcEvP3DGv1xwF5OsnGkfhqo1CsnYA
+         YpYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750968901; x=1751573701;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FRDEmi54S6LjnrBjZVa4DLbUJlXZIMr6dV6Euspeu5w=;
+        b=Y51r60dKC46zSROqhEMGONjpvMIGAig0xejiV+jEHOUm5YxghXYPJ/u6v5TUPZd23s
+         cdAQTWaFwZBv717/XPYO4TDxhe8jznBtkc1H4Z0DdAELumtlrC2pFLp93ku8yymjwq7T
+         8BJHnYoc1weiyuNMoOCVKHZqkG8BCLS+4w3jR+2HhEooWcLu5QGkmS9Y2HLuVnKJbUqN
+         WLwhktLayYYSVWDoS1i+iIV0U0CMkWC0Dd5ajm93qkfmlPX+j851EpWDyxPman2Ro+jr
+         j5ggHNqv9jTmOWVgqHgcD/NxraKYn6Bz5OShvkMh1YOH4zexuiNtVkVIjOxvtYNM3Y42
+         hsNg==
+X-Forwarded-Encrypted: i=1; AJvYcCUsUCpuO0wGlMvk9etmQqoAH9FlCSANYwnnWVWF4+nOhMQqtq43+jJaZhELixc2mvf91o6hHZNmPXoTCUk=@vger.kernel.org, AJvYcCXQIHog1af6qc0JJmJkeyK44KAk1DBjA7l6e82ifCZcMysAmiKVM3KS06I0y/FZjKzL+dMC6Mt+G6Q6@vger.kernel.org, AJvYcCXSyRXZtL1g+PGeWrADgbBPSAOqcZOhnf2Y3xsYXY34fWvmYGWIr3q4pSFHk4A1unyICQPiPEcsm+GzwPeXtGY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGjNBJfJRJByzATVodJVYfZ8Nn2uHXFVOqQA2WJhgLcPEpSq7t
+	5p2FjvOvsJ0WhGTc27LzuBi3Nqvy/31w56k0qYhg39xPFJOnPt070HNJ
+X-Gm-Gg: ASbGncs817Jj3p9ul56l/ZJ5hVXqbwAmQmeh5WU+oRLDQEZDzIDD7WNVsKD6Zi4wU1C
+	da2l/txDfhrcOMRzq5GzKAYyFjY2obPV9mb09pA32SGzqzbZ0lYnqWljwhatEHN0Ig9fsTk/r3x
+	f9O4vHeMF7qHosG7XCySSCpCjBErFla2/kS2pL2gJsBaQ3VM/SZY7t7z9h472kzuAXHaXo6GVGH
+	utRKjzj2V2VL59n/FSmUSnfu89ozw2KhAVPnbylvtRyejmpYdNDEM4PQ0RFwQ5xRwF2bbfEVcZn
+	z78ekGE7cNCuqMgod7Ere2UWfSZGagj1eBb4KeunwkxsnN4aEkM87e60eT703SozPqouGMruUUJ
+	vo4b0jgeKn5Qu1yf0gF594bc4Kb7nwXZFgQBqF4MoK3Yp4nBZPlTn
+X-Google-Smtp-Source: AGHT+IEANItfJ+pbqeBQO9zwWycA6QYr37LnE7rpJ76vkzhiuapAzbecZpIvlqbfzXpn4d+I1bbk1w==
+X-Received: by 2002:ad4:5f45:0:b0:6f5:38a2:52dd with SMTP id 6a1803df08f44-7000291700fmr16852486d6.31.1750968900853;
+        Thu, 26 Jun 2025 13:15:00 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd771d9b90sm11303106d6.47.2025.06.26.13.15.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 13:15:00 -0700 (PDT)
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfauth.phl.internal (Postfix) with ESMTP id E3F23F40067;
+	Thu, 26 Jun 2025 16:14:59 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Thu, 26 Jun 2025 16:14:59 -0400
+X-ME-Sender: <xms:Q6pdaCFvUPD0RHCFio9KJ9_8SmnRa6EZEjitXaODhWBsPpYdue3WPg>
+    <xme:Q6pdaDUTee5HY1z5j3I0fBp6lWCxpXdfipx3S0F7v2MAPlCdII2vy8ppD_PBBD_a5
+    Cy1R38UuHkbfdyKHw>
+X-ME-Received: <xmr:Q6pdaMIjC_NMg4gupZQQBgEFPS9vES_l000JIP9nNu1wJQ_hwWagZdu8lQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgv
+    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
+    hnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueevieduffeivden
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquh
+    hnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudej
+    jeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrd
+    hnrghmvgdpnhgspghrtghpthhtohepvddtpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlih
+    hnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghr
+    nhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgr
+    rhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhroh
+    htohhnmhgrihhlrdgtohhmpdhrtghpthhtoheplhhoshhsihhnsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:Q6pdaMHxmfVow-BgZppwkhXcy-rOii4jzc4YQSbNSDERCQc3uKdlsw>
+    <xmx:Q6pdaIUZ71mHC69yScigDCEqRKfd0NeZX43RPMvdGZtTCj-34A5QWg>
+    <xmx:Q6pdaPP3PXnMM6xqfrz5MeSrcnx1u1wbr_jbXo6ovbavxO88ROqfWw>
+    <xmx:Q6pdaP11yAx7qVlXO-XTcMNXESRSjpeWEP3qwe4Y2bmlyOZ6j_QNqw>
+    <xmx:Q6pdaJVXSL-IDbBt1k4PNPpzaAHv7ymXnHVDFfoH2JNUEsFM0Ac2rvVY>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 26 Jun 2025 16:14:59 -0400 (EDT)
+Date: Thu, 26 Jun 2025 13:14:58 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 3/5] rust: devres: get rid of Devres' inner Arc
+Message-ID: <aF2qQu3pP6WOPE5P@tardis.local>
+References: <20250626200054.243480-1-dakr@kernel.org>
+ <20250626200054.243480-4-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250627-exynos7870-drm-dts-v2-6-d4a59207390d@disroot.org>
-References: <20250627-exynos7870-drm-dts-v2-0-d4a59207390d@disroot.org>
-In-Reply-To: <20250627-exynos7870-drm-dts-v2-0-d4a59207390d@disroot.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750968815; l=1916;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=cg7s6ZiVvmErjdj1DTXd7oxh6Zhi0Y1dn8W/u4K8qBE=;
- b=pqzZ0zpa9IlCWMHbS2c9JInserNn+o8T+yBmHd8KRENeWQfhVP3CCni/c0jioa1iZn/kjJvHg
- 0BO5isJX0MOD5qO3IqlUcew7aAyB/kk8e0ROSIrMxEQenW54uhd6Nxq
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626200054.243480-4-dakr@kernel.org>
 
-Enable DECON and DSI nodes, and add the compatible display panel and
-appropriate panel timings for this device. Also, remove the
-simple-framebuffer node in favor of the panel.
+On Thu, Jun 26, 2025 at 10:00:41PM +0200, Danilo Krummrich wrote:
+> So far Devres uses an inner memory allocation and reference count, i.e.
+> an inner Arc, in order to ensure that the devres callback can't run into
+> a use-after-free in case where the Devres object is dropped while the
+> devres callback runs concurrently.
+> 
+> Instead, use a completion in order to avoid a potential UAF: In
+> Devres::drop(), if we detect that we can't remove the devres action
+> anymore, we wait for the completion that is completed from the devres
+> callback. If, in turn, we were able to successfully remove the devres
+> action, we can just go ahead.
+> 
+> This, again, allows us to get rid of the internal Arc, and instead let
+> Devres consume an `impl PinInit<T, E>` in order to return an
+> `impl PinInit<Devres<T>, E>`, which enables us to get away with less
+> memory allocations.
+> 
+> Additionally, having the resulting explicit synchronization in
+> Devres::drop() prevents potential subtle undesired side effects of the
+> devres callback dropping the final Arc reference asynchronously within
+> the devres callback.
+> 
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
-This device has a 720x1480 AMOLED Samsung S6E8AA5X01 display panel.
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
----
- arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts | 49 ++++++++++++++++++-------
- 1 file changed, 36 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts b/arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts
-index 61eec1aff32ef397c69ee3f0cba8050755f74fc6..6d57f583d687003850f0b03bd19fa9e2f6e33332 100644
---- a/arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts
-@@ -27,20 +27,7 @@ aliases {
- 	};
- 
- 	chosen {
--		#address-cells = <2>;
--		#size-cells = <1>;
--		ranges;
--
- 		stdout-path = &serial2;
--
--		framebuffer@67000000 {
--			compatible = "simple-framebuffer";
--			reg = <0x0 0x67000000 (720 * 1480 * 4)>;
--			width = <720>;
--			height = <1480>;
--			stride = <(720 * 4)>;
--			format = "a8r8g8b8";
--		};
- 	};
- 
- 	gpio-hall-effect-sensor {
-@@ -133,6 +120,42 @@ vibrator {
- 	};
- };
- 
-+&decon {
-+	status = "okay";
-+};
-+
-+&dsi {
-+	status = "okay";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	samsung,burst-clock-frequency = <500000000>;
-+	samsung,esc-clock-frequency = <16000000>;
-+	samsung,pll-clock-frequency = <26000000>;
-+
-+	panel@0 {
-+		compatible = "samsung,s6e8aa5x01";
-+		reg = <0>;
-+
-+		width-mm = <62>;
-+		height-mm = <128>;
-+
-+		panel-timing {
-+			clock-frequency = <73094400>;
-+
-+			hactive = <720>;
-+			hsync-len = <2>;
-+			hfront-porch = <62>;
-+			hback-porch = <26>;
-+
-+			vactive = <1480>;
-+			vsync-len = <2>;
-+			vfront-porch = <12>;
-+			vback-porch = <10>;
-+		};
-+	};
-+};
-+
- &gpu {
- 	status = "okay";
- };
-
--- 
-2.49.0
-
+Regards,
+Boqun
