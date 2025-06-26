@@ -1,70 +1,70 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712522E92DC
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:59:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4873E2E8DF0
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:59:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750946387; cv=none; b=snLEZimtFq03foh0fvqwlcGU6FmN+vZFVPlEbsQWU+NrRsRPoHIysIYK3Uzf5kfqLPYSOzRylkw8wF+32onewKxXN/+/PSnz9f0CfyX4yQ8XgWQ+1Reevz/G52o/b30J0CIAUTrh+cQSZ61eyVe2aRhAdZ1+7a9px2sfNor++sA=
+	t=1750946389; cv=none; b=Eq4KZlBqmcW0tpVMfsyCvtIYSXqOOJ5CxPxlnZ+LsubH4wDIO0PLMeeCuHmPEDp3LmFtiYIVPpqecWUfI8hOTDs60VbdB5paGajahJ2EYwKBmPLf4hbxyAzpfMCRdQZaLEXZhZjC1jRcKDR82z7tJOEL5e0kfX3RnGRg8dSIzU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750946387; c=relaxed/simple;
-	bh=chjuspMWXk8eI76Jp3Mq4yhHE0boTd39JW8qGPEIFpw=;
+	s=arc-20240116; t=1750946389; c=relaxed/simple;
+	bh=vqofARolJ/XDK2RNgQtOyM8rhX1PFh5KD7Q09TedVbA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=thrJSQ1bEu2pLyRxWhN6nZmXACNngpzXtsKs74j0LDp3fHlGHcPAT9QacGIhyoW8lqbXhPOJX9NnzN+Bg0d6XirsVUCj4wSBkhZyTdkYZyyHnLZrfePj9SMmy+jaC1okPheNDoXmhxRTJp3Oja1YpuhUzrjGek+ENDlrH7yNWDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PSMeo9jt; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version; b=d0ib/DplhZrG2S59iCmcV8lqGapDB7rVdxWBFZQGqL1DI/jTx8sK8uSRfNtxf7zZJWIJIYqxecvVqSeIgNrb2bQ197Xil6N9Xvu3m0+ByeysK9RRwJAnsORR8yYYEIyFR1/KMbMatWIlyanvJom0ziHW8ug3hjVRrL16yUZhZAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YOZXQFKC; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PSMeo9jt"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QA1nIE015352
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:59:44 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YOZXQFKC"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q9ca71021541
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:59:46 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=P1Inwr+v5AJ
-	OSvWCpAeDJxxnBzKcgTqyCl0dEEMlzt4=; b=PSMeo9jtVwztSE0ncTrXJ1WY4ZV
-	GCWYOKqRGb2yVUn/V2NkSMchQvIO/2rHTHKBjda8NIsyEp8x0cz9aoXTWAmK26p+
-	BBZjUgjuy009DRHOEn8QDc8n9E8Zs6Nfki4A+9Ym68PrlYv2plWMdGaOgqFcffhu
-	0TekwIm936q79E9+859bF7zlzAZxypkP5nTGz83j6DMMNfyRfio05McBCp5wQekM
-	X+U4ERSZW7/QUMyfBo2vBgvzt/eiEgGRt7mzoRzIuEWO+xx2R6aqouTtaTlWR3CL
-	W3VU4wTxTgUOmcRurf+J4J1yQfDTVXeX/iT0kEDPRWGvMPBOGM5KxB0wjQw==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g88fd992-1
+	:mime-version:references:subject:to; s=qcppdkim1; bh=cxjSBOB7dOA
+	jDuryO4CiO/8WxVjVs2GPsdC3lrPF1ig=; b=YOZXQFKCYIbLMY8UhnU7qI2/Gp7
+	tUICRtNjXKc1SgnO1ugf2Oq48Jilc7DlhWIkso0sf8Rlfib3+VkhWDu0c1rNgffd
+	8JKhTaOzvpx5uxNRNKGPyJ5D+Aswig5TWTLKD+mKvjpiiwjzZHjUvuXD+eWF41vr
+	OskXrkkWmBLRsZ/924FdHdDJgnei74OwhBN0AzrZ9GY4W5YzrFHOWAo6vZBlWUxJ
+	hJ+vOuNKcVJzClAk2Q5GAZteNi1VyEKzR1D4RIoCOnbE06iWK9zgEJl41u6FqJD2
+	2xPjVNI1XMTrRoVG+RM1Pbr7k48vqeYioXGSWXd6U39bu5nE9wAh+t4aJXg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fdfx1txw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:59:44 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d15c975968so171637485a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:59:44 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:59:45 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d4133a2081so136491585a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:59:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750946383; x=1751551183;
+        d=1e100.net; s=20230601; t=1750946385; x=1751551185;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=P1Inwr+v5AJOSvWCpAeDJxxnBzKcgTqyCl0dEEMlzt4=;
-        b=kRL5L4+uJBr1X6YzaMKn6Vo64QN4abE5z35sbQrPW0G5Ndau2wPJlbiO6j5eaJxXNy
-         mDapd1LKZDx7rO+SKMJUhcRVaFRLVDIy7Eh6qM+PYtLIjzSnPWi+Ye3ZYtL9+owSAWTk
-         HgnpOhXbshee+rUeeIrF7bqFYSjzHN+DVMW0zYMnOw9N5F/7ckqYAHarmsrUAw4sr9fl
-         vTM4dtRrrS2c8nGRL1Ev1aG90emegTIwehzzboAMvSF+LzpLYSes0Wx5iDX90Y+xNtQf
-         UINeBKkjr9/ObZckfvfBmjo4CJF1h6DyNIAuS5aHYV5GZosagTeilLUFY1txJcC2SCWq
-         gwCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQZhik8tCoNMv/ovLTTEkgFF4rcCwA4ky+TxD/RyjnvN7o/+LdjEoJqD+e1vUMSKzOoh7aZNUZfALWRvI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRflukP/s5iV186EtteNOHv4PXLiOqgRhpO4cf1BSr/tGpwgjS
-	BcxT8n0pylSFUq98dnd92Ln8WXY0IzJ4g23sRZmtCNnN6nkk8bG/qNaHcR8iTWNS03294I1WDOs
-	s/oFpj+V+1FSwkVm1R3Ui26Uauq1j2JXZP08wWEV2JXrUYJN1w2dIY9/t5uZoDAHg41c=
-X-Gm-Gg: ASbGnctmfZm9f1aXqveH/PElnph3UCZHv6OpLSBxKBbvop9GFDDXQoClIc5vY2Ye10H
-	k1rMVAha5wEgW5/NZEmLCJk7QRbcdnjXbKlgeXJIGugOy7XI+/IpAf9hhm/7vAYQdK12nw87Okz
-	7qTbOKryH7qyQNJen/r0D1yLjZnJLnfpbKQGalkE7V11q/Gore6ciC3NS2OAMV5Rns1Lxxtf6sD
-	xkLdOrnCtvcJjlJSVvh9qUyjsgGcIOB0wWKit1mhKUPdgi0irtyskkiDZiVtA+4SclYSCFTlqor
-	HlhMj5DQWbdMVHo/OUAy//eLc6q4qMoOwlYt/e6niE8SoPqjZimi7844dQ6meznOVYzaH1wo3/K
-	L
-X-Received: by 2002:a05:620a:4153:b0:7c5:6a35:81c1 with SMTP id af79cd13be357-7d42974b38fmr1137983185a.48.1750946383375;
-        Thu, 26 Jun 2025 06:59:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFF3lEab+MhnjBuMmiLUDuDSZ0Flwzk3O0Rv44A3LR/pbAhVimij8UTmYIC2fFRlCNqjiINkg==
-X-Received: by 2002:a05:620a:4153:b0:7c5:6a35:81c1 with SMTP id af79cd13be357-7d42974b38fmr1137978485a.48.1750946382927;
-        Thu, 26 Jun 2025 06:59:42 -0700 (PDT)
+        bh=cxjSBOB7dOAjDuryO4CiO/8WxVjVs2GPsdC3lrPF1ig=;
+        b=f1swcRwYPMqYTT6F6xN6pXB+0f3Lp3+Ek2CF36dMLzCRyTFVtXU+mWggkaIC5p89eL
+         uw5vNsutfx6El/cmFkmtuNZSA/CnlWHkvBaau8SYvyDKUnIbCf+VMg8pDJiQMR5+Uswf
+         ZY/8pfCqApnIwwMfoArt3igT9JTw3shTIYSHXP+uv5TGLe2UViv3+L8CxIUG/PO3/ws0
+         +UDpfCu/2t542JZBl7/urqsbxtKtgQkU0C50QbQJcsxkKRpn5+1GqkB69IFErtnBqg+x
+         t+GogabNB62tFYis0ezM0rDRnh2QKjFmW+XHb79uGTDhQdQhSq0MkhqyidKv476ySxDR
+         eWPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVD6pWfIr2+EmJ4W/Mqc5q1pcqopma/Y9Tc7lkpnc+sj31jzLktI/tnerI/xLuQ9cHBjCppv49NWR3DmIQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnitME++NMHV2fTp4ELwtpEmDPqFj9DTB+0g3ZJ9DTnIi4MZWc
+	rs0bsaejl3YP0HRZpQdVdatpbApaR9muI37o95iqOe2Q+C3oKz53FayInYjEoPmYrM43JHjfAHJ
+	hR6+9ecwqEBoodyuHpyKkh4b5v+C08Pk3kexVXK05Vu/PB9pAcebUN9xjPvXFq1+GZjg=
+X-Gm-Gg: ASbGnctVMNT+2Kn3cR5T5qL14kPHnzCT3YSjIti+eheY39EXbwZcpilnBbxIsD9Ch2C
+	iHWtQbiVVduSMCxC3k1SfoHxlfWK2y4ReS+10CbYu9zPTLaauBxnZINjVqgp0pMn+C5BRXA78iM
+	4vExB32FJ9bu7eZ2abk89x6lAdMQNnQf+wokpbhADSmbHxPurm6Tq3A96ued5W30YIgDgpXpve2
+	eSFwdaQbUStSjcNA5vRzxWeuTsgeJ6W87/mUVSnbA4b/NJIEpWHE2bFeMoMSxUUI1i3+nU8BfoW
+	hfRHKSbfqSnRExFhegyjWAa5EYaUe9QUWwmUELsUsuuk+A1PrHtzPSfUP4oaM5scNfOSCPamVkl
+	0
+X-Received: by 2002:a05:620a:4113:b0:7cd:45ed:c4a5 with SMTP id af79cd13be357-7d43b9a7dfbmr428118885a.0.1750946385035;
+        Thu, 26 Jun 2025 06:59:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGmHdJs0VODNI2DNF+i7tJxFF+pbAlbZUVszbtQeaawx864hlmNY4CDrw7PLSGwgkT+UeOxxA==
+X-Received: by 2002:a05:620a:4113:b0:7cd:45ed:c4a5 with SMTP id af79cd13be357-7d43b9a7dfbmr428115785a.0.1750946384541;
+        Thu, 26 Jun 2025 06:59:44 -0700 (PDT)
 Received: from trex.. (132.red-79-144-190.dynamicip.rima-tde.net. [79.144.190.132])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823c57d7sm53723365e9.40.2025.06.26.06.59.41
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823c57d7sm53723365e9.40.2025.06.26.06.59.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 06:59:42 -0700 (PDT)
+        Thu, 26 Jun 2025 06:59:43 -0700 (PDT)
 From: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
 To: jorge.ramirez@oss.qualcomm.com, krzk+dt@kernel.org,
         bryan.odonoghue@linaro.org, quic_vgarodia@quicinc.com,
@@ -72,9 +72,9 @@ To: jorge.ramirez@oss.qualcomm.com, krzk+dt@kernel.org,
         conor+dt@kernel.org, konradybcio@kernel.org, andersson@kernel.org
 Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/5] media: venus: core: Add qcm2290 DT compatible and resource data
-Date: Thu, 26 Jun 2025 15:59:30 +0200
-Message-Id: <20250626135931.700937-5-jorge.ramirez@oss.qualcomm.com>
+Subject: [PATCH v5 5/5] arm64: dts: qcom: qcm2290: Add venus video node
+Date: Thu, 26 Jun 2025 15:59:31 +0200
+Message-Id: <20250626135931.700937-6-jorge.ramirez@oss.qualcomm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250626135931.700937-1-jorge.ramirez@oss.qualcomm.com>
 References: <20250626135931.700937-1-jorge.ramirez@oss.qualcomm.com>
@@ -85,98 +85,106 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDExOCBTYWx0ZWRfX8CQ7NcR+cRgf
- vGp5z91jZI4pRCb+SyREvakKEHw19vmAHCco+QgGBLx5YYsAkcdqVLPdN8nBLskTfqY+7jZH7Q9
- UMei1gUr2qFVQFUwsBxCdP9E4XCy91kCCyb4p6cEHD9QumuGTdRb/h0JzWSCo4J4Rr7BtFyIgS0
- EHm1T0Lph1lfOOJUGcUznysY3jgbRfUrFK3rBu3nAEAHmBz6bOSLLdi23OlKD1FmLM190p9D+xi
- 04LMjK026k8sIfitC7VNzx/T/Ts7ERDP5uJQyweOWBUeNLTp/QpP5LT4aKzEay4nNXGzbpNJ0X4
- Ju4z1EaDI27vrCuwmGlYNvaE9JzcF0MO6t8QZyzpa9kxutPKyXURkVMHxau84nzFF19HBahRbHT
- +toihRVeI1P/P1w3oO1ohib7+ktf915662LCHHG22YIXHVJtNf3NtHRo8EcEk6ixEjAz2d7d
-X-Proofpoint-ORIG-GUID: uHlYCXamwtjTqb53h_5BR4itZb8aY1DS
-X-Proofpoint-GUID: uHlYCXamwtjTqb53h_5BR4itZb8aY1DS
-X-Authority-Analysis: v=2.4 cv=LNNmQIW9 c=1 sm=1 tr=0 ts=685d5250 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=wjE3nLva0YkvARyJ+Gfmxg==:17
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=6h1BjrdT-BD1Ylfs7NgA:9
- a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-GUID: -We_bfvuwVkQj5p7oe-vxPut30S8RhGM
+X-Proofpoint-ORIG-GUID: -We_bfvuwVkQj5p7oe-vxPut30S8RhGM
+X-Authority-Analysis: v=2.4 cv=MtZS63ae c=1 sm=1 tr=0 ts=685d5251 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=wjE3nLva0YkvARyJ+Gfmxg==:17
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=4i77JlrBmBHsL2Ry5jEA:9
+ a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDExOCBTYWx0ZWRfX7+jWL2/hkQtD
+ Uo/WvCdrQWECb0EfTME0L/wRQbymVNPvrvfpUy4n/ELI2/CzM+PsAhtn/+PObYKoZu246O93l9K
+ DXikeFmMfRSEUqrAy0Mm60pDmom5kaO3dzmqpk5LRbYYNV2q2K8hDVsneNEoyKd1XFKEFqaOF6u
+ JDMddwMzvG7j0WBzEuSmi9GZQDinmtraoN2dkcxIpAPFCheqguI1p1M1bnl87F+rLmVvXuRKt9l
+ nlhvCAwjYd3LbakmA5J11lzS/T+uz+DFtekDQDsYEtsmz2XgAo/55ltzleXBPTUrTNlKHuQM1oB
+ ByShiozCI/kcHUPnBOtFHDaDJcc/ZpZL7W/s9Ns65ZH71qBqIt5/VdTyDWMDjkncy43jYHYWDfB
+ 2IPB77Ulyz9t2Y3fFfDgp1K/081iFtVra35wnp8vomRdPC3P7o1u5IZMYR+wW/8PDIN0mcv2
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-06-26_06,2025-06-26_04,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
- impostorscore=0 mlxscore=0 clxscore=1015 adultscore=0 priorityscore=1501
- lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
+ bulkscore=0 impostorscore=0 suspectscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 malwarescore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1015 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2505280000 definitions=main-2506260118
 
-Add a qcm2290 compatible binding to the venus core.
-
-Video encoding support is not exposed until the relevant hardware
-capabilities are enabled.
+Add DT entries for the qcm2290 venus encoder/decoder.
 
 Co-developed-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
 Signed-off-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
 ---
- drivers/media/platform/qcom/venus/core.c | 39 ++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/arm64/boot/dts/qcom/qcm2290.dtsi | 57 +++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index 736ef53d988d..f1f211ca1ce2 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -1062,6 +1062,44 @@ static const struct venus_resources sc7280_res = {
- 	.enc_nodename = "video-encoder",
- };
+diff --git a/arch/arm64/boot/dts/qcom/qcm2290.dtsi b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
+index f49ac1c1f8a3..5326c91a0ff0 100644
+--- a/arch/arm64/boot/dts/qcom/qcm2290.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
+@@ -1628,6 +1628,63 @@ adreno_smmu: iommu@59a0000 {
+ 			#iommu-cells = <2>;
+ 		};
  
-+static const struct freq_tbl qcm2290_freq_table[] = {
-+	{ 352800, 240000000 },	/* 1920x1088 @ 30 + 1280x720 @ 30 */
-+	{ 244800, 133000000 },	/* 1920x1088 @ 30 */
-+};
++		venus: video-codec@5a00000 {
++			compatible = "qcom,qcm2290-venus";
++			reg = <0 0x5a00000 0 0xf0000>;
++			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
 +
-+static const struct bw_tbl qcm2290_bw_table_dec[] = {
-+	{ 244800, 2128000, 0, 2128000, 0}, /* 1920x1088 @ 30 */
-+};
++			power-domains = <&gcc GCC_VENUS_GDSC>,
++					<&gcc GCC_VCODEC0_GDSC>,
++					<&rpmpd QCM2290_VDDCX>;
++			power-domain-names = "venus",
++					     "vcodec0",
++					     "cx";
++			operating-points-v2 = <&venus_opp_table>;
 +
-+static const struct venus_resources qcm2290_res = {
-+	.freq_tbl = qcm2290_freq_table,
-+	.freq_tbl_size = ARRAY_SIZE(qcm2290_freq_table),
-+	.bw_tbl_dec = qcm2290_bw_table_dec,
-+	.bw_tbl_dec_size = ARRAY_SIZE(qcm2290_bw_table_dec),
-+	.clks = { "core", "iface", "bus", "throttle" },
-+	.clks_num = 4,
-+	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
-+	.vcodec_clks_num = 2,
-+	.vcodec_pmdomains = (const char *[]) { "venus", "vcodec0" },
-+	.vcodec_pmdomains_num = 2,
-+	.opp_pmdomain = (const char *[]) { "cx" },
-+	.vcodec_num = 1,
-+	.hfi_version = HFI_VERSION_6XX_LITE,
-+	.vpu_version = VPU_VERSION_AR50_LITE,
-+	.max_load = 352800,
-+	.num_vpp_pipes = 1,
-+	.vmem_id = VIDC_RESOURCE_NONE,
-+	.vmem_size = 0,
-+	.vmem_addr = 0,
-+	.cp_start = 0,
-+	.cp_size = 0x70800000,
-+	.cp_nonpixel_start = 0x1000000,
-+	.cp_nonpixel_size = 0x24800000,
-+	.dma_mask = 0xe0000000 - 1,
-+	.fwname = "qcom/venus-6.0/venus.mbn",
-+	.dec_nodename = "video-decoder",
-+};
++			clocks = <&gcc GCC_VIDEO_VENUS_CTL_CLK>,
++				 <&gcc GCC_VIDEO_AHB_CLK>,
++				 <&gcc GCC_VENUS_CTL_AXI_CLK>,
++				 <&gcc GCC_VIDEO_THROTTLE_CORE_CLK>,
++				 <&gcc GCC_VIDEO_VCODEC0_SYS_CLK>,
++				 <&gcc GCC_VCODEC0_AXI_CLK>;
++			clock-names = "core",
++				      "iface",
++				      "bus",
++				      "throttle",
++				      "vcodec0_core",
++				      "vcodec0_bus";
 +
- static const struct of_device_id venus_dt_match[] = {
- 	{ .compatible = "qcom,msm8916-venus", .data = &msm8916_res, },
- 	{ .compatible = "qcom,msm8996-venus", .data = &msm8996_res, },
-@@ -1072,6 +1110,7 @@ static const struct of_device_id venus_dt_match[] = {
- 	{ .compatible = "qcom,sc7180-venus", .data = &sc7180_res, },
- 	{ .compatible = "qcom,sc7280-venus", .data = &sc7280_res, },
- 	{ .compatible = "qcom,sm8250-venus", .data = &sm8250_res, },
-+	{ .compatible = "qcom,qcm2290-venus", .data = &qcm2290_res, },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, venus_dt_match);
++			memory-region = <&pil_video_mem>;
++			iommus = <&apps_smmu 0x860 0x0>,
++				 <&apps_smmu 0x880 0x0>,
++				 <&apps_smmu 0x861 0x04>,
++				 <&apps_smmu 0x863 0x0>,
++				 <&apps_smmu 0x804 0xe0>;
++
++			interconnects = <&mmnrt_virt MASTER_VIDEO_P0 RPM_ALWAYS_TAG
++					 &bimc SLAVE_EBI1 RPM_ALWAYS_TAG>,
++					<&bimc MASTER_APPSS_PROC RPM_ACTIVE_TAG
++					 &config_noc SLAVE_VENUS_CFG RPM_ACTIVE_TAG>;
++			interconnect-names = "video-mem",
++					     "cpu-cfg";
++
++			status = "okay";
++
++			venus_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-133000000 {
++					opp-hz = /bits/ 64 <133000000>;
++					required-opps = <&rpmpd_opp_low_svs>;
++				};
++
++				opp-240000000 {
++					opp-hz = /bits/ 64 <240000000>;
++					required-opps = <&rpmpd_opp_svs>;
++				};
++			};
++		};
++
+ 		mdss: display-subsystem@5e00000 {
+ 			compatible = "qcom,qcm2290-mdss";
+ 			reg = <0x0 0x05e00000 0x0 0x1000>;
 -- 
 2.34.1
 
