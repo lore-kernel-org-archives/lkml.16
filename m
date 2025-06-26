@@ -1,191 +1,76 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D7A26E707
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCBC20487E;
+	Thu, 26 Jun 2025 22:43:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750977822; cv=none; b=OzpRfuLySB5Ai+ZCEDGY2s1vFbjIzUdamnmopjAlaRTmr642ZqA5DR1smKqYSCR12SvbFPAE5WN5YhZynGKbW8tlmSENGxgvXiyLD+YPB6bpazp9XASxUuv7NrpyGvLc+eI1ic10Mv1NiDYofsYH6BgZj7CLlAKt+tB4V2B++pk=
+	t=1750977829; cv=none; b=RbKCcfMNxAfJ60JeBp33+amGhcZQ8Bv9ooFjP1QrNe/XCSbMy3KWxIf6PkaGXZmyCKYThBSt1OZqkX9SQPWdE9NQGPvOS7wizxuAaWA1CX/JXholrSbEQhgdsnMmC36/6UXUB8t994fuMYoT9azUFgEYUOwcO7cEIbMBxQeWrDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750977822; c=relaxed/simple;
-	bh=SAOGsbHcFwt1RIPCltcbSOYs2IVPDVh8pHbL4j2k0RY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=CaDERaxvBXvhidsqVpRFAhOaiQmzbmHG+PH55MHwca3+KeyrkZLQDNGXO+xJVDCB1hDQ+Ed2c0R72ndAZmB3C68XR675HR4WnnDQROVBi90MlQL9t5CMTlogv9detkUgg2UxEzVLcQSMsxX4syDfLMGLInCd+roxfh8/GwOmy3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iUZdMufG; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750977829; c=relaxed/simple;
+	bh=KujrlBwbFUmz+hkWeoLZkVTYSDc5jUXDnX81zf8Cu4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gQ886GXVxZOntri+H2r0wBPaBepFYSDR+gdschleGAWy6Xngh+VPXvfQsgbT6kkpO6b6IjH493ccBqwF0LRNwa4REkyabTtxbOP4lLfJmW0Ami1/iRdnApiJNnNTC7QZfHB7VEHSrSjjyyejECl8eXu/vycyFX1XPlHJQwrPVlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SvMg+MZ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iUZdMufG"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74927be2ec0so2152204b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:43:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750977821; x=1751582621; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D+aNfx32rCA8ptyZuXuy/RXxrC6yFTb63LaStdM2TSw=;
-        b=iUZdMufG+YuYoMJgk8LSoEa432xOuOPORY8MIBKuroWu848KKSXGhk0mNWXcEjULeF
-         pzRcrI04hyKKY4RYsMmFDsaB6Dy/TlX5zzF6BztGB/er8nLgzvrLMNCzsUjGYPtrQmxe
-         mMRmJZyHL3Ka8ioqmQqwp3TY+X45mErD9hUJ1Ws/Yb9kFmuSi1YEGkatFE/4Kdmq+kLy
-         BIN8127YUoPQRsU8B8tf/QXi8lkrPSqSJVpnePqIrp52+YLs9jf50LJe6nMuSx8HLSAU
-         zsPtEL5g4ZU5Z9I54r1wX80tKW3EpT3qm5uBRXnDEMCluVr0qeI5bfrfXjAOXSyOdY51
-         AocQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750977821; x=1751582621;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D+aNfx32rCA8ptyZuXuy/RXxrC6yFTb63LaStdM2TSw=;
-        b=aNCxtXQSKzVRWCKIkp/NdSPsMhpNSNSgn2O/jCABX9qKTWV2PcevOUtQMCxcRWelwW
-         9WnTPmAM5gXoHmwsYfEznabOP3ZYQN32xh3AxgzBieoIn6YV87h2CtOXNKdLfiGCXv2M
-         dpc5i1P3cXvMXIsbfcofB4gvZ6wGHDOuihXSxHMFcC/A6EqPvtOgrPCC8QMYyy3MDu8a
-         sCFujiZVVehO/CRzbP3UVlJRpjjxbDZY09ex56xBnqaBL8ZvfI5veRUGBOtW/K7GZ51u
-         0fWpICLkuZE2WXXqp1y77w1igoALNkn5WbunHCz+Adyl6SDwVgCmGXHBx169mp0Pl1lf
-         jslg==
-X-Forwarded-Encrypted: i=1; AJvYcCWmzDIKVvaJTuDx6h5wSNtvxFQqSZD3Q9igzIeWH8n21snXnEGxanFpwDFaXTZGcIbqDeCW8YuwAbNBcfk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6VZh4jNccpeC1u0KELgwJF5w3ZAX12EYdCW5wYRwydoJ/aq1B
-	2pzqOl/mThcF0NVuh/X36N4stoDmXTfFqbl0+vsknNUcyQOuSjkZmuaKpPPPGcgoB/Snk4Ggz4P
-	BqIHnQQ==
-X-Google-Smtp-Source: AGHT+IF+I3hj6sD+7mRVKugWfwkI8uGSKayYGM8ET1hZ//75fEERgX12/UwIpz5Ec/SzX4PUw0wWAN3iqZU=
-X-Received: from pgcy10.prod.google.com ([2002:a63:7d0a:0:b0:b31:c667:9fce])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6d8f:b0:216:1ea0:a51a
- with SMTP id adf61e73a8af0-220a16ca805mr1016548637.38.1750977820750; Thu, 26
- Jun 2025 15:43:40 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 26 Jun 2025 15:43:36 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SvMg+MZ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16CFBC4CEEB;
+	Thu, 26 Jun 2025 22:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750977828;
+	bh=KujrlBwbFUmz+hkWeoLZkVTYSDc5jUXDnX81zf8Cu4M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SvMg+MZ85HL4ZOmKeyLaBm4/1FbUvKqJpMECoJqnTDjFtkUdig25AvzF4JOMoJBY7
+	 jqfKhsV1l5ONk8m9GV+l+JejQ2Pn/wd6faWVLiHeiTXdwNwQeiSlUGK6de2/7jTFMA
+	 48ZMQgwumb5rixriPREOPAT7YS8ZEvJTj7JtHI//aNNJLumOQZXz+h3ZxqpfrQzM0M
+	 dMt/PKti6b6iHMijt0ecdhWcpG9vBcM3YiNkgo9oGA3Esfu6BeHtZwLDPyT/k/PsZt
+	 BtPeI5oenz7UGXGgvQ/VyMDigUwlkKEADmvtCLKQmyEP1bH1WcPE2QqbOxUn/mN4e5
+	 widoxgrghCYQA==
+Date: Thu, 26 Jun 2025 15:43:45 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, 
+	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, Song Liu <song@kernel.org>, 
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
+	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
+	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 29/62] objtool: Mark prefix functions
+Message-ID: <tqdgtgqfokasfqqzbn4by6oaphxtwzg75egnq4lj76xjr6eabj@7idrvpy72xux>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <c4233972de0b0f2e6c94d4a225c953748d7c446b.1746821544.git.jpoimboe@kernel.org>
+ <20250526104355.GM24938@noisy.programming.kicks-ass.net>
+ <e2hv6jkitxvbtaqj377dvpwtn5tyaoux53ofkkegxcn3fapbcx@kfqxactn4ogj>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250626224336.867412-1-seanjc@google.com>
-Subject: [kvm-unit-tests GIT PULL] x86: Fixes, cleanups, and new testcases
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Sean Christopherson <seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <e2hv6jkitxvbtaqj377dvpwtn5tyaoux53ofkkegxcn3fapbcx@kfqxactn4ogj>
 
-Please pull a self-centered set of KUT changes.
+On Wed, Jun 04, 2025 at 05:04:33PM -0700, Josh Poimboeuf wrote:
+> On Mon, May 26, 2025 at 12:43:55PM +0200, Peter Zijlstra wrote:
+> > > +++ b/tools/objtool/elf.c
+> > > @@ -442,6 +442,11 @@ static void elf_add_symbol(struct elf *elf, struct symbol *sym)
+> > >  	elf_hash_add(symbol, &sym->hash, sym->idx);
+> > >  	elf_hash_add(symbol_name, &sym->name_hash, str_hash(sym->name));
+> > >  
+> > > +	if (is_func_sym(sym) && sym->len == 16 &&
+> > 
+> > Where did that 'sym->len == 16' thing come from? I mean, they are, but
+> > the old code didn't assert that.
+> > 
+> > I would rather objtool issue a warn if not 16, but still consider these
+> > as prefix.
+> 
+> Ok:
 
-The following changes since commit 507612326c9417b6330b91f7931678a4c6866395:
+Turns out there are kCFI cases with prefixes != 16, so I omitted the
+size check altogether.
 
-  travis.yml: Remove the aarch64 job (2025-06-05 10:07:07 +0200)
-
-are available in the Git repository at:
-
-  https://github.com/kvm-x86/kvm-unit-tests.git tags/kvm-x86-2025.06.26
-
-for you to fetch changes up to 525bdb5d65d51a367341f471eb1bcd505d73c51f:
-
-  x86/pmu: Verify all available GP counters in check_counters_many() (2025-06-25 14:20:34 -0700)
-
-----------------------------------------------------------------
-x86 fixes, cleanups, and new test coverage
-
- - Ensure APIC is xAPIC mode for APIC MMIO tests.
-
- - Expand the I/O APIC routing reconfiguration vs. EOI interception testcase
-   to validate multiple in-flight interrupts.
-
- - Fix a variety of minor PMU/PEBS bugs and warts.
-
- - Fix the nSVM MSR interception test to actually detect failures, and expand
-   its coverage to validate more scenarios.
-
- - Add X86_PROPERTY_xxx macros (stolen from KVM selftests) and use them to
-   clean up related code.
-
- - Add testcases for MSR_SPEC_CTRL, and an msr64 config to validate negative
-   testcases (i.e. when MSRs aren't supposed to exist).
-
- - Disable PIT re-injection for all tests so that (x2)AVIC isn't inhibited due
-   to enabling in-kernel PIT emulation.
-
- - Play nice with QEMU builds that disable VNX support.
-
-----------------------------------------------------------------
-Dapeng Mi (2):
-      x86/pmu_pebs: Initalize and enable PMU interrupt (PMI_VECTOR)
-      x86/pmu: Verify all available GP counters in check_counters_many()
-
-Sean Christopherson (41):
-      x86: apic: Move helpers for querying APIC state to library code
-      x86: nSVM: Ensure APIC MMIO tests run with APIC in xAPIC mode
-      x86: ioapic: Expand routing reconfiguration => EOI interception testcase
-      runtime: Skip tests if the target "kernel" file doesn't exist
-      x86/pks: Actually skip the PKS test if PKS isn't support
-      x86/pmu: Explicitly zero PERF_GLOBAL_CTRL at start of PMU test
-      x86/run: Specify "-vnc none" for QEMU if and only if QEMU supports VNC
-      lib: Add and use static_assert() convenience wrappers
-      x86: Call setup_idt() from start{32,64}(), not from smp_init()
-      x86: Drop protection against setup_idt() being called multiple times
-      x86: Move call to load_idt() out of setup_tr_and_percpu macro
-      x86: Load IDT on BSP as part of setup_idt()
-      x86: Cache availability of forced emulation during setup_idt()
-      nVMX: Force emulation of LGDT/LIDT in iff FEP is available
-      x86: nSVM: Actually report missed MSR intercepts as failures
-      x86: nSVM: Test MSRs just outside the ranges of the MSR Permissions Map
-      x86: nSVM: Clean up variable types and names in test_msr_intercept()
-      x86: Expand the suite of bitops to cover all set/clear operations
-      x86: nVMX: Use set_bit() instead of test_and_set_bit() when return is ignored
-      x86: nSVM: Set MSRPM bit on-demand when testing interception
-      x86: nSVM: Verify disabling {RD,WR}MSR interception behaves as expected
-      x86: nSVM: Verify L1 and L2 see same MSR value when interception is disabled
-      x86: Disable PIT re-injection for all tests to play nice with (x2)AVIC
-      x86: Delete split IRQ chip variants of apic and ioapic tests
-      x86: Encode X86_FEATURE_* definitions using a structure
-      x86: Add X86_PROPERTY_* framework to retrieve CPUID values
-      x86: Use X86_PROPERTY_MAX_VIRT_ADDR in is_canonical()
-      x86: Implement get_supported_xcr0() using X86_PROPERTY_SUPPORTED_XCR0_{LO,HI}
-      x86: Add and use X86_PROPERTY_INTEL_PT_NR_RANGES
-      x86/pmu: Mark all arch events as available on AMD, and rename fields
-      x86/pmu: Mark Intel architectural event available iff X <= CPUID.0xA.EAX[31:24]
-      x86/pmu: Use X86_PROPERTY_PMU_* macros to retrieve PMU information
-      x86/sev: Use VC_VECTOR from processor.h
-      x86/sev: Skip the AMD SEV test if SEV is unsupported/disabled
-      x86/sev: Define and use X86_FEATURE_* flags for CPUID 0x8000001F
-      x86/sev: Use X86_PROPERTY_SEV_C_BIT to get the AMD SEV C-bit location
-      x86/sev: Use amd_sev_es_enabled() to detect if SEV-ES is enabled
-      x86: Move SEV MSR definitions to msr.h
-      x86/msr: Treat PRED_CMD as support if CPU has SBPB
-      x86/msr: Add a testcase to verify SPEC_CTRL exists (or not) as expected
-      x86/msr: Add an "msr64" test configuration to validate negative cases
-
- lib/riscv/asm/isa.h      |   4 +-
- lib/s390x/asm/arch_def.h |   6 +-
- lib/s390x/fault.c        |   3 +-
- lib/util.h               |   3 +
- lib/x86/amd_sev.c        |  48 ++-----
- lib/x86/amd_sev.h        |  29 -----
- lib/x86/apic.h           |  21 +++
- lib/x86/asm/bitops.h     |  86 +++++++++++-
- lib/x86/desc.c           |  29 ++++-
- lib/x86/desc.h           |  14 +-
- lib/x86/msr.h            |  14 +-
- lib/x86/pmu.c            |  25 ++--
- lib/x86/pmu.h            |   8 +-
- lib/x86/processor.h      | 332 +++++++++++++++++++++++++++++++++--------------
- lib/x86/setup.c          |   1 -
- lib/x86/smp.c            |   1 -
- scripts/runtime.bash     |   5 +
- x86/access.c             |   2 +-
- x86/amd_sev.c            |  63 ++-------
- x86/apic.c               |  20 ---
- x86/cstart.S             |   3 +-
- x86/cstart64.S           |   2 +-
- x86/emulator.c           |  11 +-
- x86/emulator64.c         |   2 +-
- x86/ioapic.c             |  52 +++++++-
- x86/la57.c               |   4 +-
- x86/lam.c                |   6 +-
- x86/msr.c                |  36 ++++-
- x86/pks.c                |   2 +-
- x86/pmu.c                |  37 ++++--
- x86/pmu_pebs.c           |   3 +
- x86/run                  |  15 ++-
- x86/svm_npt.c            |  27 ++++
- x86/svm_tests.c          | 240 ++++++++++++++++++++++++++--------
- x86/unittests.cfg        |  30 ++---
- x86/vmx_tests.c          |  11 +-
- x86/xsave.c              |  11 +-
- 37 files changed, 792 insertions(+), 414 deletions(-)
+-- 
+Josh
