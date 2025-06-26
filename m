@@ -1,108 +1,85 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F7078F2F;
-	Thu, 26 Jun 2025 17:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A3E20127B
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 17:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750958578; cv=none; b=swg5Xp5HF8pU9m7Eeek4wMqkUKgJHK2zgM31nNT59nl9kpHcH0lhI+hrphk0XO03e33o1hLIrxIl5xnDFzlubDf5Q4CiOT5L2R9bY9LvXlCCPDmAq2pTXpOzyOkjbLGKjPHJM7xS0svAevhS+tU7JcTDLWefKpHDDXna0JGf0WM=
+	t=1750958638; cv=none; b=O6CNNpM8+ctTmQYDFuh/dlo4UcCncajU3IeyyTODtLSw0YhCu1w5Z6hfqfHY7AJZgy86aWb0fjxzzmaYtA5vARiB+/IxSJkd3afuWen13l1pS/k+I0pZc7Qm31GIxyqzISgxJAToGLIcDD4FpRlTC+C77khgkSLBz7PRhPlW5ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750958578; c=relaxed/simple;
-	bh=y/kydqGcDbhV2no6o8yAZMHv4iNAAD6//19ub6EWmfs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BytPAkBzVTt3dmTy2eOM1Y2AxK/gV4lo0nS/G21299SMfpIv4o4EB2kPVX2TmIKfnWVcfIZ3X1IjawNajjL+EroCPff6EP+MLk/6RdgBmssnzlDGytFlIT12eEYMQCqT5Sv5s6ORZgqyvB9e5MgvjlCZNn8KtSzt5HqfUrj+q3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=j0mnwAf+; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1750958638; c=relaxed/simple;
+	bh=kVSLceRpYBij/by0D8xxXHAgukzMQXLQRvK+pxse7H4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C+iVK9eh637O+QWhcDqjV5O8Et9KS5TBH77aOwbnYy/teIrf0WLz+sdBCIcRRvRSEXG5ltc8Hxl/a3OLbisrIb+i/kvgCwx+1bnvppIJSAHAYFyoQCi9W6abDADXUG97AtIxjzpJ4hMxkHYdI9h//WwC5y7sHv4hvkKwl/S1ihg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GBNg0FYu; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="j0mnwAf+"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55QHMLhq2295546
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 26 Jun 2025 10:22:21 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55QHMLhq2295546
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025062101; t=1750958542;
-	bh=ir1BQBrVU1UOZzpJlxroj0+JUmdPsjvaSkS3+mol76g=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=j0mnwAf+LUix6iylg4AsnWIv0MfbNFT1+ZextclcGXm7itWlHDK1baFjD/8UWUQcD
-	 fFKNXsJ+QEx5WYR1HZ2pOK+2Fzo0e/w3zaQ1uGBYrphVb+EZ1Vg0kuO8TmJTmHUepw
-	 TzycP8i135f0Rv0maMABD5JSLugldIJjBE7jvPRsKYDjUYV1NBLJaU2GuyyUxEm8nD
-	 rEZMia/8dmHUHtJ+7dGSmDmjCeGA+L3rVAmEgplmSiywRgqUBYlq97Sinl2Cnm/Ba/
-	 FfaQeprQ5z6CgWP8VDouo142wzDqRIi8+269BIUCExCnbPiROl8EIRWYY5P1Z8Q2a8
-	 OKbJ3lB0ObQqA==
-Message-ID: <003b5de7-502c-47ba-ae46-0905ee467384@zytor.com>
-Date: Thu, 26 Jun 2025 10:22:20 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GBNg0FYu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750958637; x=1782494637;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kVSLceRpYBij/by0D8xxXHAgukzMQXLQRvK+pxse7H4=;
+  b=GBNg0FYu6kvNSWVEIsGqjnNnvU7ub9QBsniAmZGJDOeDqcBLuN6WJqy5
+   /8+BUEAWiFr+h+TXjHDqE4KBjjYy+Z5JB21cbp4j9xkut/DCgUT5nw52K
+   03Phf+P/Lx8Bs4IHpq9vX//uQO9rRWedg49Kcr6u9GwLTDRXgGvm8aV/E
+   JaDL7ma8Kx+OpWOV8aQ4eogYgAfmEgYqHnSkNR8eaWj7ODY4OdIAm5ozS
+   dI2HUOIj3WlE+i15dEnM1AZyig1Lath1BOStos9L+PxVsHi0LZicnU9Z0
+   Gsdcz5vtgv1rkJyceIJopO/Zvfte46XdGvsD0uf/QUETusPBx6ceZKcqJ
+   w==;
+X-CSE-ConnectionGUID: Qo95Udy6TXOdbe1kpyXc2A==
+X-CSE-MsgGUID: 36hTSPbWQfK72o2OygHVUA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="40882441"
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="40882441"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 10:23:57 -0700
+X-CSE-ConnectionGUID: kk77XfOzT2qdnbP/01bXEA==
+X-CSE-MsgGUID: TnrUiKOIRCuETUiU3ZHKGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="156865698"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 26 Jun 2025 10:23:56 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 5F7122AD; Thu, 26 Jun 2025 20:23:54 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [resend, PATCH v1 1/1] logic_pio: Use RESOURCE_SIZE_MAX definition
+Date: Thu, 26 Jun 2025 20:23:28 +0300
+Message-ID: <20250626172348.329297-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 08/19] KVM: VMX: Add support for FRED context
- save/restore
-From: Xin Li <xin@zytor.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: pbonzini@redhat.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, corbet@lwn.net, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, andrew.cooper3@citrix.com,
-        luto@kernel.org, peterz@infradead.org, chao.gao@intel.com,
-        xin3.li@intel.com
-References: <20250328171205.2029296-1-xin@zytor.com>
- <20250328171205.2029296-9-xin@zytor.com> <aFrR5Nk1Ge3_ApWy@google.com>
- <858a3c30-08ab-4b9b-b74c-a3917a247841@zytor.com>
-Content-Language: en-US
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <858a3c30-08ab-4b9b-b74c-a3917a247841@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 6/25/2025 10:18 AM, Xin Li wrote:
->>
->> Maybe add helpers to deal with the preemption stuff?  Oh, never mind, 
->> FRED
-> 
-> This is a good idea.
-> 
-> Do you want to upstream the following patch?
+Use a predefined limit instead of hardcoding it.
 
-As I have almost done addressing your comments in my local repo, just
-sent out the patch.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ lib/logic_pio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It's based on the latest kvm-x86/vmx branch.
+diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+index e29496a38d06..6d6a7498dbe5 100644
+--- a/lib/logic_pio.c
++++ b/lib/logic_pio.c
+@@ -175,7 +175,7 @@ resource_size_t logic_pio_to_hwaddr(unsigned long pio)
+ 	if (range)
+ 		return range->hw_start + pio - range->io_start;
+ 
+-	return (resource_size_t)~0;
++	return RESOURCE_SIZE_MAX;
+ }
+ 
+ /**
+-- 
+2.47.2
+
