@@ -1,90 +1,147 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40C01FF7DC;
-	Thu, 26 Jun 2025 08:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9C817A5BE;
+	Thu, 26 Jun 2025 08:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750926410; cv=none; b=Bc+fftYZsyplU6GgAy7uHYqXgzkWTV376Y6I/MjxEc+OVQ0mCSTBDmugcrbwcC0ZfmacK24q6j6tVAvwQtVobwuMcCQqqi0hcmaFa4BWE+GPMGzLSCv668JjhOHi7uuAM8T8j0AEtRjjOYvMbKRsgXliAKWmDvrR3JUL470oXpc=
+	t=1750926415; cv=none; b=dzmPHQls5vS+Zdzsp0TA+JSvpyOHb8fBbv+szrONgwJNJvykncoAmUXzDN2yIfFPWmLrCqz5kcqar1jZqSyogLuoUAnqXadi1gWTh9xW1r7wbPnlTEyHLt84DIjp2AvL8Va0TZOyfdagBJu+H0syF6quhK0HWYB+4S4p5IbP28I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750926410; c=relaxed/simple;
-	bh=9YirAqnMLiDLkmtiBwL36pK7a4tyq9TH23A4yQwG4v4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=nIkqNaRm88qmjxREqGHiUwyc1BWg9DAiFrPIVGEceEY2RKbtrBK1Nplfd0rIy3r4B4El4zYWN+q9M3TbKeYC+DzPikSYlSECVV7Hpq37YQ+1Js4PhGXKJJ9GIslOt1AgZQczQNZbaWYx95jeiEp4/PeIlVsMcxd6liXM9sbE/fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=YV6l0oRI; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1750926415; c=relaxed/simple;
+	bh=4mkRXRBS9NyHpAI7suiC6dJfUOy/CaSWSLhmLqYaAMc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IhwRXzFVWuNYZhA9/tWVxGdTH5l/nFwTCphUiYot+t5gkp2M3jkEjEatuKvDotVjh7+cQHTV9yoczsrGflEG6FtMXtIqJhdV+Yv6rJeoIiipB9GXbXz1MkoZAF6/hIrIeR5uQbBW3jNE8nXQadPeWr87uUQiK0kzFXxhYQZ+hk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWmc4kw6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YV6l0oRI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1750926402;
-	bh=XQhlw9hW1V4xH49QUIqIX2PzzH3zHe1L+j1DjnPGyJg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=YV6l0oRIH97Qvo49QuEVyzeVZhiTQuXc60LxRsdgHCMSFwjTfqGiCZTRL5hxR8YYv
-	 NOIBzmCkpkhMr1CrF8hXiKUjiqkocaScbN8AxsQHuzlHC6IOPKflBr6VpyeuCjTKIq
-	 76J+FJTP4FZXVNqStXeINxDDP722+57CyVMJmJytKXTK3ebG0sMwqEVq6UL7rok4mi
-	 hEEX1MobtI55j1ngh5kL5FNez9oNVgjkxmORXG1DBlE1Jy5F0ezGBPD8kg7n78t6sc
-	 6CEQAy64eFtfzlatbInxYG8azVJFTjxnepi+Qd7MdB3l+jxFIILzy0566i5I76kjXl
-	 Sx4lauJ4HKn+Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bSWxZ2vGNz4wcm;
-	Thu, 26 Jun 2025 18:26:42 +1000 (AEST)
-Date: Thu, 26 Jun 2025 18:26:41 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Jason Gunthorpe <jgg@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>
-Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the rdma tree
-Message-ID: <20250626182641.6020e11e@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWmc4kw6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6449BC4CEEB;
+	Thu, 26 Jun 2025 08:26:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750926414;
+	bh=4mkRXRBS9NyHpAI7suiC6dJfUOy/CaSWSLhmLqYaAMc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BWmc4kw62O8r6c8o/R0NHh6IaqRnvVZ2xhDRZcr6s1YZ+MObVGhOjKpPOYuTHPdE7
+	 Fu3iEJNMnvaqdwI34wSW2L3ZSrZgIZw8tFjU7AhfhXr2H9u8HCja1kT3lvQYdtvQmh
+	 9DWF4iH51sH6Agb3iWlFtyA04/iz3EUL5OU+NZ5PkcEBxsscXSPUYiMMW1NJRMtkJy
+	 7b59qwRXx61WAhrh2Gv9ryhqG9LTmk4V6awW5UB6WT0lp7GRdSGPjqYLjlowih3VIU
+	 CkMWBs+OF5Jug2p7wr1QX7vxbEheKxLGdzXBh9bcSTOTUZI9pwTnVrPoxnp+23E9vp
+	 rlMxzo5dFmHIQ==
+Date: Thu, 26 Jun 2025 10:26:50 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Nikunj A Dadhania <nikunj@amd.com>
+Cc: linux-kernel@vger.kernel.org, bp@alien8.de, x86@kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	thomas.lendacky@amd.com, aik@amd.com, dionnaglaze@google.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] x86/sev: Use TSC_FACTOR for Secure TSC frequency
+ calculation
+Message-ID: <aF0ESlmxi1uOHkrc@gmail.com>
+References: <20250626060142.2443408-1-nikunj@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/TTeCn_zqdUEivs5h4sLopj+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626060142.2443408-1-nikunj@amd.com>
 
---Sig_/TTeCn_zqdUEivs5h4sLopj+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+* Nikunj A Dadhania <nikunj@amd.com> wrote:
 
-Commits
+> When using Secure TSC, the GUEST_TSC_FREQ MSR reports a frequency based on
+> the nominal P0 frequency, which deviates slightly (typically ~0.2%) from
+> the actual mean TSC frequency due to clocking parameters. Over extended VM
+> uptime, this discrepancy accumulates, causing clock skew between the
+> hypervisor and SEV-SNP VM, leading to early timer interrupts as perceived
+> by the guest.
+> 
+> The guest kernel relies on the reported nominal frequency for TSC-based
+> timekeeping, while the actual frequency set during SNP_LAUNCH_START may
+> differ. This mismatch results in inaccurate time calculations, causing the
+> guest to perceive hrtimers as firing earlier than expected.
+> 
+> Utilize the TSC_FACTOR from the SEV firmware's secrets page (see "Secrets
+> Page Format" in the SNP Firmware ABI Specification) to calculate the mean
+> TSC frequency, ensuring accurate timekeeping and mitigating clock skew in
+> SEV-SNP VMs.
+> 
+> Use early_ioremap_encrypted() to map the secrets page as
+> ioremap_encrypted() uses kmalloc() which is not available during early TSC
+> initialization and causes a panic.
+> 
+> Fixes: 73bbf3b0fbba ("x86/tsc: Init the TSC for Secure TSC guests")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Nikunj A Dadhania <nikunj@amd.com>
+> 
+> ---
+> v2:
+> * Move the SNP TSC scaling constant to the header (Dionna)
+> * Drop the unsigned long cast and add in securetsc_get_tsc_khz (Tom)
+> * Drop the RB from Tom as the code has changed
+> ---
+>  arch/x86/include/asm/sev.h | 18 +++++++++++++++++-
+>  arch/x86/coco/sev/core.c   | 16 ++++++++++++++--
+>  2 files changed, 31 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+> index fbb616fcbfb8..869355367210 100644
+> --- a/arch/x86/include/asm/sev.h
+> +++ b/arch/x86/include/asm/sev.h
+> @@ -223,6 +223,19 @@ struct snp_tsc_info_resp {
+>  	u8 rsvd2[100];
+>  } __packed;
+>  
+> +
+> +/*
+> + * Obtain the mean TSC frequency by decreasing the nominal TSC frequency with
+> + * TSC_FACTOR as documented in the SNP Firmware ABI specification:
+> + *
+> + * GUEST_TSC_FREQ * (1 - (TSC_FACTOR * 0.00001))
+> + *
+> + * which is equivalent to:
+> + *
+> + * GUEST_TSC_FREQ -= (GUEST_TSC_FREQ * TSC_FACTOR) / 100000;
+> + */
+> +#define SNP_SCALE_TSC_FREQ(freq, factor) ((freq) - ((freq) * (factor)) / 100000)
 
-  185e34e8f249 ("RDMI: hfi1: drop cpumask_empty() call in hfi1/affinity.c")
-  7c2c2f3a205b ("RDMA: hfi1: simplify hfi1_get_proc_affinity()")
-  9370795029d4 ("RDMA: hfi1: use rounddown in find_hw_thread_mask()")
-  9c965445a636 ("RDMA: hfi1: simplify init_real_cpu_mask()")
-  f2c2afbba77c ("RDMA: hfi1: simplify find_hw_thread_mask()")
-  37b3cba54b40 ("RDMA: hfi1: fix possible divide-by-zero in find_hw_thread_=
-mask()")
-  c15d5e70db96 ("cpumask: add cpumask_clear_cpus()")
+Nit: there's really no need to use parentheses in this expression,
+'x * y / z' is equivalent and fine.
 
-are missing a Signed-off-by from their author.
+> +
+>  struct snp_guest_req {
+>  	void *req_buf;
+>  	size_t req_sz;
+> @@ -283,8 +296,11 @@ struct snp_secrets_page {
+>  	u8 svsm_guest_vmpl;
+>  	u8 rsvd3[3];
+>  
+> +	/* The percentage decrease from nominal to mean TSC frequency. */
+> +	u32 tsc_factor;
+> +
+>  	/* Remainder of page */
+> -	u8 rsvd4[3744];
+> +	u8 rsvd4[3740];
+>  } __packed;
+>  
+>  struct snp_msg_desc {
+> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+> index 8375ca7fbd8a..36f419ff25d4 100644
+> --- a/arch/x86/coco/sev/core.c
+> +++ b/arch/x86/coco/sev/core.c
+> @@ -2156,20 +2156,32 @@ void __init snp_secure_tsc_prepare(void)
+>  
+>  static unsigned long securetsc_get_tsc_khz(void)
+>  {
+> -	return snp_tsc_freq_khz;
+> +	return (unsigned long)snp_tsc_freq_khz;
 
---=20
-Cheers,
-Stephen Rothwell
+This forced type cast is a signature of poor type choices. Please 
+harmonize the types of snp_tsc_freq_khz and securetsc_get_tsc_khz() to 
+avoid the type cast altogether. Does this code even get built and run 
+on 32-bit kernels?
 
---Sig_/TTeCn_zqdUEivs5h4sLopj+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhdBEIACgkQAVBC80lX
-0GxUeAf9Hc6d/dQfFyzMxow08xLMyxjGRMo4jW05sf7/Q/eZe/+XZ5E1y/Rl0PZy
-C/MstmpbSy5wMSlh6zTx464EA6DDejMO/BpEQfLFZWnWLEZDMqbNQh2L8aZy6AhH
-QAEYMc0Cc7dZEc9zof12pYz6v7IISXWcaOZm7xuEuVQi4tXB2v5Wcq3A3n8NLxpW
-dnxvV/8smwkYTN38nh9PT570Owag3v9Unyj0XjlzqWOm7J8kXtoAqNDxyzTRRLTy
-ro6olVHbE2zETlyWa/pj4XP/obpg35xDjTY3wIhxVuTshC4eIOrtOnZwXXQlPxki
-IECZ0NPpWoJ29FhojFu3BXwG0fSFCw==
-=mLTG
------END PGP SIGNATURE-----
-
---Sig_/TTeCn_zqdUEivs5h4sLopj+--
+	Ingo
