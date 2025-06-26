@@ -1,112 +1,92 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56DC2E5411;
-	Thu, 26 Jun 2025 14:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD0D48CFC
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750947548; cv=none; b=aLOeg9PNxZTollRrM0ukG3Xk+RQyYcd+1Zaz/rXVpAAHxYPQ7jH/kUUb6h+3+2yMYmCNErqWOKIio3sbkSMZX+xKIj73CuH5NzehDuzl0jgNn7bteSie0beb3d1baJZYigYauiZVEjdOH+m9d17mZZhVqIFXfobTCbW1QCRbYSI=
+	t=1750947547; cv=none; b=Z32FwV31kDyIvBeLPWn2teipKaot4009Culq1SMpAFmtHLQ3HdJ3bbRic871rm0HWMWonDx3r/yiEoYb+wjgaUOXIGkisx3l93xkHPhOJm02v+PzIhPssv7q36xnUCVZfNg/B9/a0Su2rktxMlrawZhPILoWcxHj6pPlcy9hofE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750947548; c=relaxed/simple;
-	bh=gd5wsOvo6eYcw7FYl9OPfbJCOvOhsKfh7GYlKa8F2QI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AUji4cUQDBiHEitPx6O0s5zue5o+XshMgxcrlGwMjHG6yP1/0VzIzFHlcJdp1hFzpGIU/r13kiAunK+jdnq87yue5hdYmDmzw6J5VeCqSFPoI2/FfC5VsmstWCvLx73QN/e20FKCDmTbKrrsCzZDE74zGXi5nuColzngSpQC66M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dAF6pKi4; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750947547; c=relaxed/simple;
+	bh=HZEzg3Q2bjSrdQvPDm1yk3ZDCLzFX3UJlJoxfh9exJ8=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=qWq/szZox7Vn+bSQfdE76CLrN+2lDqoKOCPADZu4Ktz5owuEfDFFAR0CSjryZwaXYAbGg18xA9zMakXpxhLa2nU9+1sS74lUwqcteGjdDPz81v9AN7ZtDWCaOI5s5aOKTXlsJl50o186ds+esBZ0cjV9/GTXcqOjjgZCgFrXoxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=fdyAu5v3; arc=none smtp.client-ip=203.205.221.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dAF6pKi4"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55QEIvQM1757161;
-	Thu, 26 Jun 2025 09:18:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750947537;
-	bh=LEpiTYfrKQjJZ0APtPysPfd88bdBjGszmoPLyAL9M+g=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=dAF6pKi4p4zZmoNuM4NJTMa6nVYijZNpgEAvIBPG3wLPLM1/JC2mFzbggocG7z0S5
-	 tFUJYk3EeC85DNynYB9eSPVwVbYPP5hGoc0UcALeP6DmOSyuRHeNyiX5rQblSOwA1b
-	 gkg4aKNvQ3cYvItw2V2zb3gRg1bhl0As6PZx07co=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55QEIvpX3694908
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 26 Jun 2025 09:18:57 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
- Jun 2025 09:18:56 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 26 Jun 2025 09:18:56 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55QEIuul1133313;
-	Thu, 26 Jun 2025 09:18:56 -0500
-Message-ID: <ba694996-0a17-480f-b286-4cfed81165f0@ti.com>
-Date: Thu, 26 Jun 2025 09:18:56 -0500
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="fdyAu5v3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1750947234; bh=ewOYaFn/YbNsNyAVYZ0rM7QtjbVbZw6+tIkpAJTQ4YY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=fdyAu5v3cbDRidA/ekmxk977wNq6wnJz4chxw8VnsBBgrps+zius5C7zaCZQc4iMr
+	 bxtZkfLNTo7bTsOmss1+wiCgouZps8Gica9CuSw+sVC7ayKMkukh0Qva4xyzCa/qs/
+	 rOU/snv245A7/82i2xxbLBrphSYoVgnJ01kvpWzg=
+Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
+	by newxmesmtplogicsvrszgpuc5-0.qq.com (NewEsmtp) with SMTP
+	id 3742FE1E; Thu, 26 Jun 2025 22:13:52 +0800
+X-QQ-mid: xmsmtpt1750947232tfjokjh5w
+Message-ID: <tencent_26A1A453D76CD76066C3D37FE3604966C305@qq.com>
+X-QQ-XMAILINFO: NMCsm0XXqhsSLFjjIbf8u8tnweg87YwJ/AfR34YK+YBGYYigKaN9OEOVwxtEje
+	 jdL7rGpcUfz9wBXtC5zFSlso+xBNEqKM+cw9b+i3Eb8+zApZZkWL0RsFDkjLiLbWIoW+l/ELWBgp
+	 RNEcmV4l5Jty1yMqJeNuj+zWlP9yw+dxAGH7UCsZ25SfdC9k1ShwwHO8+T7qpWTqztkWxydkLeWP
+	 A9V8xzZBozWFRMC/XymVA1FiZ7MjgSzcE5OXGsptjDMxUZA15JOm0EmnGyZP9IIFRopK0qH2yxiZ
+	 1GX+ZULyJ+zk9oY8a79IFU5vN+UQlCw/vDdWoEqeiZdHysp/XWtp6bqxsJ+mUkN9L8NE1rafXzLE
+	 wR7SdG3iFRwum/tGltJWo5Vvcyhdbf9F68t/Tudz/vdk6I++xrdaOIfeUNVkuF+Fi6p46cTTwBdS
+	 Kwe85fc60nK7WU1pjW9CQamwW+9Nov1tuuNTfSaR2r/g0rndF6NTOtnyh6H1p/c+ilHu754iffSH
+	 MxRBJ16DuoiSEj4E9AkbuoDUSSZ9f914rhJC+J5g9VNHr3c9avecCVEtEM6U+zufcilEILbqPUgr
+	 RN4+RN+swq6MSpNXmzSGF3vdCPnnawRW63DN7TIJJfMWK9rzin/HpWIVaEXpMzObTKmxcLDBhLnf
+	 0ypZZZ+0IEDmVS1RUOMId5MGQiVQtdPwPglGT4ppI5pA4qyTsJeKE7eShCzSnYZYIKmHYoqD+26K
+	 jci1K+C+bgxmXg0pDf++HAFibRcWj1dM6cglWehPUIQ1Ig+LHrfRYqIBtXLkahfCV3v0RSQwHHpL
+	 IMt6P4+sdd8blIRSminKCvokgMMGh7yaSjv7JR2q9VKhFA7TwG4XNM9PffcsHb6SILNjGpOWqkD4
+	 +exSyDOq7LUoYk+0J5poBuCvSqUpqnEc2tSQ6LDi22tqNWCTBVO47Gn7FKtHZZMJKqTs9EH8Tpcz
+	 bJmrRFqd4=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+14afda08dc3484d5db82@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [hams?] possible deadlock in nr_rt_ioctl (2)
+Date: Thu, 26 Jun 2025 22:13:50 +0800
+X-OQ-MSGID: <20250626141349.1360680-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <685d4c2a.a00a0220.2e5631.028c.GAE@google.com>
+References: <685d4c2a.a00a0220.2e5631.028c.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Workaround for Errata i2312
-To: Vignesh Raghavendra <vigneshr@ti.com>,
-        Ulf Hansson
-	<ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-CC: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-References: <20250624221230.1952291-1-jm@ti.com>
- <0bf7ccf4-26ae-42f6-b679-d7840e42efc5@ti.com>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <0bf7ccf4-26ae-42f6-b679-d7840e42efc5@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
 
-Hi Vignesh,
+#syz test
 
-On 6/25/25 10:56 PM, Vignesh Raghavendra wrote:
-> 
-> 
-> On 25/06/25 03:42, Judith Mendez wrote:
->> This patch series includes fix for Errata i2312 [0].
->>
->> Also include fixes for removing eMMC HS DDR support for am62
->> SK which has been descoped as per datasheet [1] and enabling internal
->> pullups for AM62 SK and AM62SIP SK, as per JESD84 spec recommendations.
->>
->> [0] https://www.ti.com/lit/pdf/sprz487
->> [1] https://www.ti.com/lit/gpn/am625
->>
->> Judith Mendez (3):
->>    mmc: sdhci_am654: Workaround for Errata i2312
->>    arm64: dts: ti: k3-am62-main: Remove eMMC High Speed DDR support
->>    arm64: dts: ti: k3-am62*: Move eMMC pinmux to top level board file
->>
-> 
-> 2/3 and 3/3 have no relation to 1/3 and they need to go via different
-> trees. Please post them separately.
-
-Will separate the patches, thanks (:
-
-~ Judith
-
-> 
->>   arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts      | 25 +++++++++++++++++++
->>   arch/arm64/boot/dts/ti/k3-am62-main.dtsi      |  1 -
->>   arch/arm64/boot/dts/ti/k3-am625-sk.dts        | 25 +++++++++++++++++++
->>   .../arm64/boot/dts/ti/k3-am62x-sk-common.dtsi | 24 ------------------
->>   drivers/mmc/host/sdhci_am654.c                |  9 ++++---
->>   5 files changed, 56 insertions(+), 28 deletions(-)
->>
-> 
+diff --git a/net/netrom/nr_route.c b/net/netrom/nr_route.c
+index b94cb2ffbaf8..cf49d5c78805 100644
+--- a/net/netrom/nr_route.c
++++ b/net/netrom/nr_route.c
+@@ -331,7 +331,6 @@ static int nr_del_node(ax25_address *callsign, ax25_address *neighbour, struct n
+ 		return -EINVAL;
+ 	}
+ 
+-	spin_lock_bh(&nr_node_list_lock);
+ 	nr_node_lock(nr_node);
+ 	for (i = 0; i < nr_node->count; i++) {
+ 		if (nr_node->routes[i].neighbour == nr_neigh) {
+@@ -360,14 +359,12 @@ static int nr_del_node(ax25_address *callsign, ax25_address *neighbour, struct n
+ 				nr_node_put(nr_node);
+ 			}
+ 			nr_node_unlock(nr_node);
+-			spin_unlock_bh(&nr_node_list_lock);
+ 
+ 			return 0;
+ 		}
+ 	}
+ 	nr_neigh_put(nr_neigh);
+ 	nr_node_unlock(nr_node);
+-	spin_unlock_bh(&nr_node_list_lock);
+ 	nr_node_put(nr_node);
+ 
+ 	return -EINVAL;
 
