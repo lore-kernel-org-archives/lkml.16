@@ -1,312 +1,158 @@
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022115.outbound.protection.outlook.com [52.101.126.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294521922FB;
-	Thu, 26 Jun 2025 05:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.115
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750917264; cv=fail; b=goCsICBehRuTuzy/3b2e+kpiv2LkdmkCIZ8x7ByVVPqU2LSVywxPJqymgM+r4YhNy3y6oUZDeirHL4d3CWGPNEkVWuofRYC4RSTjNaj+qYRwhF8FPLpfIwwVcO6O+23Y65uu4Swz1mBliKcgob9Z5J/1IP2wcu6GvLGWbAFoYK0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750917264; c=relaxed/simple;
-	bh=MswKia+H+xLtWHcnD6B0zw1Vt4oSFbkwenJHlik687c=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ElXv5zsLd/WhB1B9N7vkRy1lHDo40NP2dWAm744jrljR7vIp9B0sz5bp8SBG/wBEOxhc7hJvp/jIl4K9tIk6RkzllE3wTRLrNHBiTr+2Do8y8Mh8sZEdgwkxABbYjfRHX2npH5ZkoMe8khyr0WgMJyUsAf3gRhHv8/oBFKbt2qc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=DFDR/7/a; arc=fail smtp.client-ip=52.101.126.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972BE1A316C
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750917298; cv=none; b=VYcMU+yLXOzQPvGag/MXGeDVyLDH56wy+O9Yue6lI5djiAmrXDR6YQEUeX093QmvPu8FtnjLaCPyqIy3Lf2tgZYbzmUcxL0vIWkrOq57BIC38A5PUv4me14g3NVRGGrn8+9c2rJ0dGztF1Cvi0C36c8dywHdq9Fz05d3IYBcPCQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750917298; c=relaxed/simple;
+	bh=31M3xpw7EncWsxNC4fymQYCkV2uAZxtqDe3BzGziPDU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F6feHj1K5T00jtXAHpMUSxo+qK6wpMGOdgG3lmfq6JO1dZsMjiQKue16FAhWBnIyQhSVBRvrzaNxZMBUQq1vNhwDtxOjSpKhQxAKu9cBxmEQud+P+GqkW0fvv/Q24z1USEkKaHubHzbRDgljN/pJgEnrSzkaTwdgJDucWLI8L+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.ntu.edu.tw; spf=pass smtp.mailfrom=csie.ntu.edu.tw; dkim=pass (2048-bit key) header.d=csie.ntu.edu.tw header.i=@csie.ntu.edu.tw header.b=HuEUgeUb; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.ntu.edu.tw
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csie.ntu.edu.tw
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="DFDR/7/a"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KglrdJNPc3AY7rKtbeDMzf7zXFPQJB2qjsbR5PUx9n8TIaoXw0SRgu02V2iIKjHwtX+w6GcyYYj/DPijZzBBkfKUCw9tcZEmo0m5Wx/K1+d7qjn9yeg7ufP81zFzew8zGAhsZmszgRusnPRmDLW9fCxKfR2BWSwL28mgXyUG5UxDmAMtbcEQC/G144Usx74U7llimjlpanaqyNLBhqTikDXu3NmDpiIybhVFwowQJgO+E5LOCK2IzJeEAUWL6E4FWtGNckbMGokv3GO7jpjzzt8Z3ndg6IqoKYr+lj/7Bm5852zGVafYr1Y3+xR+O8dbDbY6S9lcB1vpzXwveX4Z3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CiSi62jw2/RJ8vh4/SXtvMj2MadV0ZiHulqD/26NFA0=;
- b=HMr5Vp+480m64SdnajMs+HvBaoj1zKMVB/bqJ6wrBWZeWQO080XX6DwaNQ2skmPqRv/6G80lPO20xFD+rUZ2KziR5RyKgkOB4GrXth8q57VudwAO1OPWhEdvrylX5eMpvrZCkWxk3MdE4wicxfPplVWlo7Siva0SXpPtn8pHxT6gq4mRGfBAQBx/HJIcqHkdYmchwuzbddXX5SiqnOit/Tvbjb3YSrOKXgkiR0UA5dQnmCNZdigrnpkT+zhP2yzUTt7/cIdYG4n4qzmQEFd5wnr+34nX+gxgZZEni2DkXrA2UwJKaVt3+iK/lebBrh7D3fZPC+pk51keiz+B4rp64w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CiSi62jw2/RJ8vh4/SXtvMj2MadV0ZiHulqD/26NFA0=;
- b=DFDR/7/ayczDy833QfcXL84zq6E/LOrxZt/Yw/Ts+2dAV43t5GNTieFAzafGX5zf/ZFnluCZy2npgfGdW6aFAHJePX2XQ8qkfaN9iXUFxqTFWXVYbAeOGiL1WAmE1qHuMpcA7i2ETacnP0qWx0cO5pISbJ0Oeyodq8XOVDWM/dyJJV9Uw1VxwdGgsNUXq1BzKKKudAFA/FSEEWvjwrzG1LtNZtxqjCPAYwCHSFAOhRz8R5h8tL2OYsRS/Z4IBi9Lmc0+RQbVwtmHjN85TtLJJfTxIXUWXgOAS4+OA89k7EezOBg7iqXh+q+MloQQ4mEElpdZLSK4ex7BqhLWXEH4hg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from JH0PR03MB7468.apcprd03.prod.outlook.com (2603:1096:990:16::12)
- by JH0PR03MB7880.apcprd03.prod.outlook.com (2603:1096:990:34::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Thu, 26 Jun
- 2025 05:54:16 +0000
-Received: from JH0PR03MB7468.apcprd03.prod.outlook.com
- ([fe80::4128:9446:1a0f:11fd]) by JH0PR03MB7468.apcprd03.prod.outlook.com
- ([fe80::4128:9446:1a0f:11fd%6]) with mapi id 15.20.8835.023; Thu, 26 Jun 2025
- 05:54:15 +0000
-Message-ID: <1842c694-045e-4014-9521-e95718f32037@amlogic.com>
-Date: Thu, 26 Jun 2025 13:53:53 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Bluetooth: hci_event: Add support for handling LE BIG
- Sync Lost event
-To: Pauli Virtanen <pav@iki.fi>, Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250625-handle_big_sync_lost_event-v2-1-81f163057a21@amlogic.com>
- <1306a61f39fd92565d1e292517154aa3009dbd11.camel@iki.fi>
-Content-Language: en-US
-From: Yang Li <yang.li@amlogic.com>
-In-Reply-To: <1306a61f39fd92565d1e292517154aa3009dbd11.camel@iki.fi>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI2P153CA0033.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:190::21) To JH0PR03MB7468.apcprd03.prod.outlook.com
- (2603:1096:990:16::12)
+	dkim=pass (2048-bit key) header.d=csie.ntu.edu.tw header.i=@csie.ntu.edu.tw header.b="HuEUgeUb"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b34a71d9208so413437a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:54:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=csie.ntu.edu.tw; s=google; t=1750917295; x=1751522095; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rm0OfZ7AaG27+skvHa9GB/aO3szvxFuyhu1AGBEZrgc=;
+        b=HuEUgeUb4zz5efTlXs61bdbZzjAU4LBMxT4305tqO4VmcGRX4rFTfsmz2brpDsHMip
+         GBfNLaB2OCJNutvzoqqjr7T7/k25J7vqBL4mtOasNrTJ4g+ALj/z7sF5R64oLW9kh9GZ
+         3acx3HVbpXqPAri2WonKjmXj3KduU6XNQGJoXeK8EA3qUUrc4XvCS5IWF4y8fkG9IR3x
+         PMUq5FbAv5wmaBLAI0XUZNnIySxR6L9pfFj9V+3eivynyEh//9/qut0U7RvTsGDtMA1o
+         QArJYMFq74mj/j6D9txw8VfQwocy3ueJZl6UJbkxX8wEO2DV75NgqPpDyX7OpxvL0CCg
+         59wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750917295; x=1751522095;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rm0OfZ7AaG27+skvHa9GB/aO3szvxFuyhu1AGBEZrgc=;
+        b=SCKnHhGEGs9+ltreeKUHztdwF8IP1Cbi+DSAF48EN7HiBnEi0LsV8AqdJtRwLZU3rn
+         yrq4V/4LaRD6Wk6MsiEHY++/TSkSv9+N4SXzepnMWyMrKpnvFMLtJdgMteQDiPyU29hJ
+         V/2Bs0EFsaO/SwuumxDSXaBWej5SxLHqk87pkr5xSWsPu6n/YuLvCcayyALlww6qrGs+
+         T9VElJo5wfUMo0HFOLY6xasDHqMMZ8cK+GpmKNeVOMmvzWewP53SJSROnCnSqLc6FwHn
+         27kasSBd6mjjX22hA4u5xOaQQm6qt7P0TeVyVj7Bs4xwsjAXWy2DQuvGpVz26qWXptka
+         dk6A==
+X-Forwarded-Encrypted: i=1; AJvYcCXx6QzFN+KC1B/JTVj5HOMRjiVhs3hyW/vNp8+jZQbjGpq3k9Z/Cxk9uPV4FYxFt8DX7TTdSHad1MHxK8E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNBjj3oU/telbNxg8CjybuLfXd8qXqDKzzPaJyFCRGFxiazbGE
+	2+/TL7sGXGnIhQ22/B7WuME0qu2p8qXmP2M0Vv5decx2vYygW/3GEm96DFkEWWffOAZeI98wkCa
+	U/38g4VYQHi4fRG5REgBj9HM+C34CwgEAHl/y1QIO0aQLucCs0Pi3qW7JYjY=
+X-Gm-Gg: ASbGncsFQRmdZBOOOc38biQPbqkfHclE/GtZVy00/l38b8zTc+980RcXh1941lVlI80
+	hmG491iFvHt654IQgpxaeSPiOVV9mZtZUhcoU3MhrOFmcLxtJlY08GKfa4nXoZVnnqdyXUkVgKl
+	J9VtKzjKFtb+GSMTuv/LGf6iM+wLp6RmyGtgrB4gpiKrSBDqYdgRTQz4/VOtJrXLiho3K2MfbLK
+	r9pKmI3lpp6B+ATG/HLtrRFr2jJ0Hw+H6+rRe8uyHaxf7yNmiDV7AiV5q0MAkueat9z4w52rUuQ
+	XGRTDeJZ7J122n/oqhtnfx1WR4j8+HApxn0BODMI2tJg5HmMRURHQf/LtZbFtdiPjivYljpTFSL
+	MBjKYd5iBbZwHdpjCtn1pY6cO
+X-Google-Smtp-Source: AGHT+IErD6u0GnnyBjjoDbBvoZW5tms9xrqBq7DEY79r1vA3q8cM8NFq9ggAKD/BsmxJillbjalycg==
+X-Received: by 2002:a17:903:41c1:b0:234:c8ec:51b5 with SMTP id d9443c01a7336-2382409b0eemr108270405ad.53.1750917294720;
+        Wed, 25 Jun 2025 22:54:54 -0700 (PDT)
+Received: from zenbook (118-163-61-247.hinet-ip.hinet.net. [118.163.61.247])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d87182c8sm152907285ad.232.2025.06.25.22.54.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 22:54:54 -0700 (PDT)
+Date: Thu, 26 Jun 2025 13:57:17 +0800
+From: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>, 
+	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Jintack Lim <jintack@cs.columbia.edu>, 
+	Christoffer Dall <christoffer.dall@arm.com>
+Subject: Re: [PATCH] KVM: arm64: nv: Fix MI line level calculation in
+ vgic_v3_nested_update_mi()
+Message-ID: <w6yfzeynleghp7sxwscbrq6ko4244c5iphtqw6e4ar5dndqs3m@37jouplavkpw>
+References: <20250625084709.3968844-1-r09922117@csie.ntu.edu.tw>
+ <864iw3db3h.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: JH0PR03MB7468:EE_|JH0PR03MB7880:EE_
-X-MS-Office365-Filtering-Correlation-Id: 69323f84-2d13-437f-05a6-08ddb475e217
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YzFtdkVtNmVKT2NrRjc5d2o2QTNHNEtHVTBlU0ZGam5pQ0RPTGd0cGN4ZWFq?=
- =?utf-8?B?VVJiSUhIZ0IvdGtoQ2pabjJtYVZOUWw1VGtsUHVPMUg4clRvd0Vid3ZqRC94?=
- =?utf-8?B?eVFrcExVRWU1eTFRY1dFZFJ3b3EvZW5yV3loNFhvcXBvMXJFSHJtREw4d21W?=
- =?utf-8?B?alJGU3dDRk5jbkhtS1Q3VUFWR2dFbGJ5SUhOMWV6V2JOZFNOT3VicmJwSGVt?=
- =?utf-8?B?a3UzYXl2Qmw2dDVKdEFvTXBnRkxoK2dOaWZIUFZJZWFoOUluVms3Mmx5ekdU?=
- =?utf-8?B?Y0F6Qi9ESnZRUk9ha3pXMmt3VGYzdUZwZTZEUGlWTmxVOWFjWGRxb3JCU3ZP?=
- =?utf-8?B?N1NBL3JkazVKbU02djBpejdXcU5UOVZRdCt0NzdPbWZaWEkzN3ZFYTdTdFNX?=
- =?utf-8?B?Y0U1NWIzN3dpWEhhK2lzL2hzMmxoQ3NUaGVyUjBadENiR0FtUjg5VTl0Qy9j?=
- =?utf-8?B?UTR2dHBteGhITDJTdS9qN3lBWU1vanhZZE9NVTBReVBmazcwODU4bERUVDZ2?=
- =?utf-8?B?QWZoZmRDamc5eGxqb2NFS2JMQ1N5TlVTV3hudi9WZmNobmJoRW93Wjd5cXNM?=
- =?utf-8?B?UW4zUTlsN2htMTRETzhMN0lUWEh4UndGaDJ4Smt1bkx1S054aU94MnV3Vzg2?=
- =?utf-8?B?eStWRUJGbmhROWE5cXRlZjhQU3B1Z2Zjc3pUTythb3A3SmNmQkx6N2ZOUWhB?=
- =?utf-8?B?YnArM0Q3U0dDTkZpY1FTMjRvYlVCS3JBQUV6bWRWdStrVWUyTHU2QjFTbDRO?=
- =?utf-8?B?ZlIxZmw1elk3ZlpMc3dYQXVaRHA2Wkd4UGxPbUxEenJqa1pnU3Q0d21WNDZm?=
- =?utf-8?B?SkI1anlSVW5sc0phd05yUzJRb3VOSTN2YUtLbWZLNnNwVW1DRkw0UUhIODNh?=
- =?utf-8?B?N1U5R2xaOU00Q3BOVkhRZk84dWpOQmFKTkE1eU10Zld4RkJMUUY3dHlJOTNm?=
- =?utf-8?B?NFpQcTE2YStlSk9mbHlBWURFU0RCVmEvVzdQQ1hXZ3BkOWhDMnJxZTZ2V2lq?=
- =?utf-8?B?b21ad1lmTGhBd1Vqd2dPV1ZqeEVjTEdXbXJKVWVKeHdRY2MvRk9VTlQzRy9w?=
- =?utf-8?B?b3UyNVdGMWwrdmxuNEpmelZ0T3BmK0RiRFRncjFnSzR5bSs4bElLWTNLbzd3?=
- =?utf-8?B?T2tJeXFtbmhoZUdVdEZUNXQxa09tTFNscHo5YVJBM1JwbFhiKzhCZkh1R0Yr?=
- =?utf-8?B?NW5PeDZBV3lobzByY2h0SkRwOExxT3dnd0l0OVlDbG5pSWlvTkc5OG5BbHBO?=
- =?utf-8?B?NFpzenlHYTVuaURVdFIzS1B3TDlJRXBMVWFGRmozdkE1eDJ4U1VJcWF2Mml3?=
- =?utf-8?B?MktJQSt1VWpQRitzRVpNOGUrWE1pRnlKdG5qS2YrNDZLTU1jdzRvd3RoVXYw?=
- =?utf-8?B?RU1Ydi9aNHFLNUlFaWc4S1J0QVI4UzZHbW9qOWdFRFlBZkRjSzlkMVh0cXdL?=
- =?utf-8?B?TGRzeUFwUE1Fblp5RWNaVGN0TXFsa0NIWCs2aDVUbDI5ZHkrY1lyQXg5WXVV?=
- =?utf-8?B?Tm1GOHoydWNmNVorUjI0dW9MaG4rZVJGQmg1MGtibTVoUHBtbWdwUnp2MDlI?=
- =?utf-8?B?NWlWUVBEVGUraXhpOXYzRGd6SzF1alVkeHIwUnRUZEM0Qzl3TkRkRjZLTmZp?=
- =?utf-8?B?bmtpc3lBdVVrbjZLWWgzQ0pQR09wQS94K0Z5bkErcWdtU2hhdDBBbGc3eTl5?=
- =?utf-8?B?UnNTY3JFWThyUUNaZ2pKRGFjb09mWTNaNmIyNzZpVFVJK0ViTE1Zc3hSL1hr?=
- =?utf-8?B?K2ZXNTk1ZEUrRUE5b2t4eklyN1JSZjM0NFEvZkpLZERMalpSdUkxK2d2M2Fi?=
- =?utf-8?B?QzJWbE5DYVFJU1Z6L28vZ3JzOWFsbHp6RWQ4RVN1bGkyR3JiUEVMR2sxRmxW?=
- =?utf-8?B?Vlo1dTBCWVA5cXl0WGZYVzBGOHo3QmhmcC96VnRSRlQvUVBiTWd6MHhDa0hR?=
- =?utf-8?Q?tNnYaSBY9tM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:JH0PR03MB7468.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SGo5dTNtNHRqQXZHSENoQzMxZ3Y1UEZUYjNnNW1TU0tXTE4zMzJtcjluMmda?=
- =?utf-8?B?dUtKMHlneEx4VXlpOFBnbnBmdkthYnNEL3o5M1o4TWJkc3ljc3VnQjVUbUVI?=
- =?utf-8?B?cWNxL2phRERTa3BYaWZMWFJxeDh5ZGhHRlc0Y2l3T0F0TUFLcDcwSkVSMENy?=
- =?utf-8?B?bjVYSDBjdk81aGlBZUljTzZBUy90TGJxUmxmcmhkNU0zUXpZV0hJSFA2Vmhv?=
- =?utf-8?B?ZFhEaWVGQTZIWXRZRTJpN1FKaldLRFRscnBOcUl6ZUdqZ3Y1WDVwVnhDSmYw?=
- =?utf-8?B?bkFBM1RBY2hSaDdORlVEMzM2SkFoUmMvbVYrZ1BIV3FodjdHa3lSb0pHb1NU?=
- =?utf-8?B?dHBhcXVIQktRNU10eHlNaUtaRDIwbzl1WWI0SjZSUXNVNTRHVHpDVERLbkhu?=
- =?utf-8?B?WnRnbnluR2x5UTBZYXdaQ2pLTE4zcFVqUGdDaGV5azF0dlZ6TlRxdTd1RWJx?=
- =?utf-8?B?eTZpNmMvOGJZSmFhZGdBMzZDZzFYNU1zNzVRZG4zd0JOVElXNS8zRlRBWHlT?=
- =?utf-8?B?MFVJbGdOSEJOc1hYbnptbnFVOURxWEhVSzNpSGs4WWtDamlTUTYrTWUzOGVR?=
- =?utf-8?B?L1p6RGJvNys2c2VHV3RNanRKa0pudWtsbmtjOE5LeDU5K1FyVE9UdkFJRFR1?=
- =?utf-8?B?S0s4dVF0ZXIzZXZrNW9EczNKSWMzSG4zNkF6UTQ3SHFMQmIvMy8wVmIwQzRs?=
- =?utf-8?B?U2pWSDhocytqNjFMU3c3RWNpeCt4V3VRN2tpOTdYeFB2V1o1Z01CWEFuWDNt?=
- =?utf-8?B?cEdheHQxTG10d0FPaUNtcE9GUEdQYXdlUmp2Q2FBTkNydDE3dEhzbXc0SzBi?=
- =?utf-8?B?bjQ3alAzUHliYmFFS2RNVTh1NHkyVGxYVldRU0l2dmRiSysrUmhTRi96QUdr?=
- =?utf-8?B?QWR3ZTJ1QS8vRXg0YStwb3hsZEJFRmV1dTE0S0RycStYZy9NTDVkRUxDakpZ?=
- =?utf-8?B?akZPVDlSMlNkSEg5djVxbUpvNC9USU81RGthc3JWTjJicjhTNWVRNG5rQ2pL?=
- =?utf-8?B?S25taXFOZGFGamNzd29NbS90ZWhiNFZkMDl4MzJLRG4zOHBpM2crVVpkOGx4?=
- =?utf-8?B?K0JZb0czamwvUG9TRXVsbjk5dGV2czJQZWUwbzdRNnBzM1oxL1RWUmYvRlNm?=
- =?utf-8?B?cTYyZnJEcUZKaEtmVnV3dFgyaDRzcHlBeUFLeS9ZWU5Kek5QaFd4Zzh3b3BM?=
- =?utf-8?B?UkFCYWkyUXl1Zm9pV2E3SCtaM2E5SFcvS3V1YmVjWC9GdUNKWVcvZ1gyYkh2?=
- =?utf-8?B?WVpBaXJ4bnl2eWU0WnFKV1JneXJ4RVNmTW5kOFJiVkpqTHBzcjR3Mis5MDdy?=
- =?utf-8?B?NS93YWxJYzNNU3drZWdqOXE5dFRhZjlDUytRcmlvNklzRnVNTHRTUkhDWDl5?=
- =?utf-8?B?eDQyYWdnczNoODVhNW14Q1Nyd1BrR2ZSb0Y3NXA3Zzk0YXo2aVExTytobnJo?=
- =?utf-8?B?cjJkL25mc2NEampCT2thaWRLVGVVRFA3TW1wSzMvRlZNRDlkZTFTckdFVGxD?=
- =?utf-8?B?bVJyMXRSL1ZzOXJkL0lPektISFJlVnRuQjZBSUYycG00RmIwZlF0bEhIRTU4?=
- =?utf-8?B?NE9LRWYrVUNZMVM5UFlSTWQrNzdUQ3Q3ZkZaL3BYTVVHY0ExbGpsUi9zZkJv?=
- =?utf-8?B?YUF2Q0tpcXhhbjl6bjNSamJaVFh3RjFRQVhwUnBxbHdFNHVJNDNRa0dWUnhi?=
- =?utf-8?B?Y0dybjhVOGxKQzZrN3ZBUHlRMHZRcjY3YS9MQk1EMHI0Y0hCc3oySjg0cWRO?=
- =?utf-8?B?cEJ4N1UweG5lZlhqbks5T2JXZU5xQk5tekYzSXg3VmVBcERLOG1nZmtoRmNs?=
- =?utf-8?B?YTBuaXIvS012NU9Ud040ZG9RNFFQVFZoTmlSbmpUekV0TEVDOVhCMm0vbUxn?=
- =?utf-8?B?WHVlM3NlNE1GVXFxaFYzSHloeENOc1lweEp2WXpKazMwUUNkbjJ4cXVGdmtO?=
- =?utf-8?B?OCtrNExPRU9PcGVBbDE5THBpajc4anovZDg2VW02YlNkR3dXMEJFamtTL3My?=
- =?utf-8?B?a3BmcGRGWTlJVy9zVmRWdnR6OFR2UDFjVnBNV0p3OGJnODVUQ0VvVzZzZjhj?=
- =?utf-8?B?b2JpV3l3ampUNFJHNGtOOE5NaXM2Y2xKR3laZ2xVNnBEZmZiWndIcFBZcCs5?=
- =?utf-8?Q?ic6m+DzaHzanV3BwBonhlttlN?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69323f84-2d13-437f-05a6-08ddb475e217
-X-MS-Exchange-CrossTenant-AuthSource: JH0PR03MB7468.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 05:54:15.6898
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gQO/hBfE2wxnRi8jL5VXlbrpstbVL53+6ST39rMjvN6KaM9hNBViZzsGwohVmoFSUsExnmV6xAlu2MPWiDb6Lw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR03MB7880
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <864iw3db3h.wl-maz@kernel.org>
+X-Gm-Spam: 0
+X-Gm-Phishy: 0
 
-Hi Pauli,
-> [ EXTERNAL EMAIL ]
->
-> Hi,
->
-> ke, 2025-06-25 kello 16:42 +0800, Yang Li via B4 Relay kirjoitti:
->> From: Yang Li <yang.li@amlogic.com>
->>
->> When the BIS source stops, the controller sends an LE BIG Sync Lost
->> event (subevent 0x1E). Currently, this event is not handled, causing
->> the BIS stream to remain active in BlueZ and preventing recovery.
->>
->> Signed-off-by: Yang Li <yang.li@amlogic.com>
->> ---
->> Changes in v2:
->> - Matching the BIG handle is required when looking up a BIG connection.
->> - Use ev->reason to determine the cause of disconnection.
->> - Call hci_conn_del after hci_disconnect_cfm to remove the connection entry
->> - Delete the big connection
->> - Link to v1: https://lore.kernel.org/r/20250624-handle_big_sync_lost_event-v1-1-c32ce37dd6a5@amlogic.com
->> ---
->>   include/net/bluetooth/hci.h |  6 ++++++
->>   net/bluetooth/hci_event.c   | 31 +++++++++++++++++++++++++++++++
->>   2 files changed, 37 insertions(+)
->>
->> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
->> index 82cbd54443ac..48389a64accb 100644
->> --- a/include/net/bluetooth/hci.h
->> +++ b/include/net/bluetooth/hci.h
->> @@ -2849,6 +2849,12 @@ struct hci_evt_le_big_sync_estabilished {
->>        __le16  bis[];
->>   } __packed;
->>
->> +#define HCI_EVT_LE_BIG_SYNC_LOST 0x1e
->> +struct hci_evt_le_big_sync_lost {
->> +     __u8    handle;
->> +     __u8    reason;
->> +} __packed;
->> +
->>   #define HCI_EVT_LE_BIG_INFO_ADV_REPORT       0x22
->>   struct hci_evt_le_big_info_adv_report {
->>        __le16  sync_handle;
->> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
->> index 66052d6aaa1d..d0b9c8dca891 100644
->> --- a/net/bluetooth/hci_event.c
->> +++ b/net/bluetooth/hci_event.c
->> @@ -7026,6 +7026,32 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
->>        hci_dev_unlock(hdev);
->>   }
->>
->> +static void hci_le_big_sync_lost_evt(struct hci_dev *hdev, void *data,
->> +                                         struct sk_buff *skb)
->> +{
->> +     struct hci_evt_le_big_sync_lost *ev = data;
->> +     struct hci_conn *bis, *conn;
->> +
->> +     bt_dev_dbg(hdev, "big handle 0x%2.2x", ev->handle);
->> +
->> +     hci_dev_lock(hdev);
->> +
->> +     list_for_each_entry(bis, &hdev->conn_hash.list, list) {
-> This should check bis->type == BIS_LINK too.
-Will do.
->
->> +             if (test_and_clear_bit(HCI_CONN_BIG_SYNC, &bis->flags) &&
->> +                 (bis->iso_qos.bcast.big == ev->handle)) {
->> +                     hci_disconn_cfm(bis, ev->reason);
->> +                     hci_conn_del(bis);
->> +
->> +                     /* Delete the big connection */
->> +                     conn = hci_conn_hash_lookup_pa_sync_handle(hdev, bis->sync_handle);
->> +                     if (conn)
->> +                             hci_conn_del(conn);
-> Problems:
->
-> - use after free
->
-> - hci_conn_del() cannot be used inside list_for_each_entry()
->    of the connection list
->
-> - also list_for_each_entry_safe() allows deleting only the iteration
->    cursor, so some restructuring above is needed
+On Wed, Jun 25, 2025 at 05:45:06PM +0100, Marc Zyngier wrote:
+> On Wed, 25 Jun 2025 09:47:09 +0100,
+> Wei-Lin Chang <r09922117@csie.ntu.edu.tw> wrote:
+> > 
+> > The state of the vcpu's MI line should be asserted when its
+> > ICH_HCR_EL2.En is set and ICH_MISR_EL2 is non-zero. Using bitwise AND
+> > (&=) directly for this calculation will not give us the correct result
+> > when the LSB of the vcpu's ICH_MISR_EL2 isn't set. Correct this by first
+> > adjusting the return value of vgic_v3_get_misr() into 1 if it is
+> > non-zero.
+> > 
+> > Signed-off-by: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
+> > ---
+> >  arch/arm64/kvm/vgic/vgic-v3-nested.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm64/kvm/vgic/vgic-v3-nested.c b/arch/arm64/kvm/vgic/vgic-v3-nested.c
+> > index 4f6954c30674..ebffad632fd2 100644
+> > --- a/arch/arm64/kvm/vgic/vgic-v3-nested.c
+> > +++ b/arch/arm64/kvm/vgic/vgic-v3-nested.c
+> > @@ -400,7 +400,7 @@ void vgic_v3_nested_update_mi(struct kvm_vcpu *vcpu)
+> >  
+> >  	level  = __vcpu_sys_reg(vcpu, ICH_HCR_EL2) & ICH_HCR_EL2_En;
+> >  	if (level)
+> > -		level &= vgic_v3_get_misr(vcpu);
+> > +		level &= !!vgic_v3_get_misr(vcpu);
+> >  	kvm_vgic_inject_irq(vcpu->kvm, vcpu,
+> >  			    vcpu->kvm->arch.vgic.mi_intid, level, vcpu);
+> >  }
+> 
+> Very well spotted, once more. Where were you when I posted all these
+> patches? ;-)
 
-Following your suggestion, I updated the hci_le_big_sync_lost_evt function.
+Thanks ;)
 
-+static void hci_le_big_sync_lost_evt(struct hci_dev *hdev, void *data,
-+                                           struct sk_buff *skb)
-+{
-+       struct hci_evt_le_big_sync_lost *ev = data;
-+       struct hci_conn *bis, *conn, *n;
-+
-+       bt_dev_dbg(hdev, "big handle 0x%2.2x", ev->handle);
-+
-+       hci_dev_lock(hdev);
-+
-+       /* Delete the pa sync connection */
-+       bis = hci_conn_hash_lookup_pa_sync_big_handle(hdev, ev->handle);
-+       if (bis) {
-+               conn = hci_conn_hash_lookup_pa_sync_handle(hdev, 
-bis->sync_handle);
-+               if (conn)
-+                       hci_conn_del(conn);
-+       }
-+
-+       /* Delete each bis connection */
-+       list_for_each_entry_safe(bis, n, &hdev->conn_hash.list, list) {
-+               if (bis->type == BIS_LINK &&
-+                   bis->iso_qos.bcast.big == ev->handle &&
-+                   test_and_clear_bit(HCI_CONN_BIG_SYNC, &bis->flags)) {
-+                       hci_disconn_cfm(bis, ev->reason);
-+                       hci_conn_del(bis);
-+               }
-+       }
-+
-+       hci_dev_unlock(hdev);
-+}
+> 
+> We could make it even clearer with this:
+> 
+> diff --git a/arch/arm64/kvm/vgic/vgic-v3-nested.c b/arch/arm64/kvm/vgic/vgic-v3-nested.c
+> index a50fb7e6841f7..679aafe77de2e 100644
+> --- a/arch/arm64/kvm/vgic/vgic-v3-nested.c
+> +++ b/arch/arm64/kvm/vgic/vgic-v3-nested.c
+> @@ -401,9 +401,7 @@ void vgic_v3_nested_update_mi(struct kvm_vcpu *vcpu)
+>  {
+>  	bool level;
+>  
+> -	level  = __vcpu_sys_reg(vcpu, ICH_HCR_EL2) & ICH_HCR_EL2_En;
+> -	if (level)
+> -		level &= vgic_v3_get_misr(vcpu);
+> +	level = (__vcpu_sys_reg(vcpu, ICH_HCR_EL2) & ICH_HCR_EL2_En) && vgic_v3_get_misr(vcpu);
+>  	kvm_vgic_inject_irq(vcpu->kvm, vcpu,
+>  			    vcpu->kvm->arch.vgic.mi_intid, level, vcpu);
+>  }
+> 
+> If you're OK with it, I'll use this, keeping your authorship of
+> course.
 
->
->> +             }
->> +     }
->> +
->> +     hci_dev_unlock(hdev);
->> +}
->> +
->>   static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, void *data,
->>                                           struct sk_buff *skb)
->>   {
->> @@ -7149,6 +7175,11 @@ static const struct hci_le_ev {
->>                     hci_le_big_sync_established_evt,
->>                     sizeof(struct hci_evt_le_big_sync_estabilished),
->>                     HCI_MAX_EVENT_SIZE),
->> +     /* [0x1e = HCI_EVT_LE_BIG_SYNC_LOST] */
->> +     HCI_LE_EV_VL(HCI_EVT_LE_BIG_SYNC_LOST,
->> +                  hci_le_big_sync_lost_evt,
->> +                  sizeof(struct hci_evt_le_big_sync_lost),
->> +                  HCI_MAX_EVENT_SIZE),
->>        /* [0x22 = HCI_EVT_LE_BIG_INFO_ADV_REPORT] */
->>        HCI_LE_EV_VL(HCI_EVT_LE_BIG_INFO_ADV_REPORT,
->>                     hci_le_big_info_adv_report_evt,
->>
->> ---
->> base-commit: bd35cd12d915bc410c721ba28afcada16f0ebd16
->> change-id: 20250612-handle_big_sync_lost_event-4c7dc64390a2
->>
->> Best regards,
-> --
-> Pauli Virtanen
+Yes this is more straightforward, with this the commit message should be
+rephrased too. I'm ok with keeping my authorship but really feel free to
+adjust if you think some other credit is more appropriate.
+I'm just glad that I'm able to help a little :)
+
+Thanks,
+Wei-Lin Chang
+
+> 
+> Thanks,
+> 
+> 	M.
+> 
+> -- 
+> Without deviation from the norm, progress is not possible.
