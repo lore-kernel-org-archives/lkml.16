@@ -1,108 +1,135 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F461DF99C;
-	Thu, 26 Jun 2025 09:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8140218AAA;
+	Thu, 26 Jun 2025 09:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750928706; cv=none; b=Vd2fiumt9xIDxMGiWvT1tTcIB6HQGxKik8Xu5qjFylmMWp+lQPPC0gvgYvhBs8coaJb2D+L0nox4DJJlTjMits18AGvEAZKSDyUcvQu4S7MSmCR6idacOwJaH6hkAeTR7cG8VsN0mt7fFg/WqhB/URUuPQiRueflaWfgIdslkd4=
+	t=1750928802; cv=none; b=O3QnjN/k2NylH4uF6W48OVaX/j7SGt4VyJgzUuEshhin/OBP+8lNdbnHlzOlfMXnWEAyTjUzQDwLHnIMF2NCUGsVqT5AL8JqbP2jyPN0NaclYsTZ/NlClLGleUMt4DnQzzvBGQhVHpQGOlxpa10aCgpUfJePenvd9Tr8VovzJLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750928706; c=relaxed/simple;
-	bh=JnFsgXspVjKa1rNS5RtYOsRh0fSxuour6+9sS+lpfco=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K0kZBKnXm4IV5rdRuwi6t7m3GBJ9qoZb2B16jW+Q1BTnc5XqIHUtSjVbPgL7Wh2RqSp61WQct5QWigLs43PV4QXtM0TFv10DAgsGlf+x7ayLP96hK6hdddBE45JH6hb1E7j2XIAJIhW3PMrLDgzMb1a2j9tcLHYFsJsYN/nb7vQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=J+tIHJZK; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1750928802; c=relaxed/simple;
+	bh=tG/5cNlLK/kXqFJS1cRXWXvsOfAAbi28sGdlXX21KZ8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fj9xw2GWPBYelWDZDQulsXSH2SEFiwMgDJx6atlr/Z3ZoW3RfNvRdMwU2TmRdQh7pX8F9hT8y94ms8cDdNqO0jijR/2BtvKT+VZKAFxc0MopytqtI8O+Lv7nXR/cF5+CK+lnphD610TbhBY+M/yu8QTy1XZDKHjEbo+E5aB4n24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Ua/0wZiz; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="J+tIHJZK"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1DBD940E00DC;
-	Thu, 26 Jun 2025 09:05:00 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id y14xr2C5g0xI; Thu, 26 Jun 2025 09:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750928695; bh=1VkhzI0/iZpiDzjB4lyKYYG4z33A7c2AtxjeF5dgRJI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J+tIHJZKqjgT4woD1+qxtEX+lcbtmqTlw9YEnn+bwYeaJ3YI/t6F4xnYiPrmnNTCn
-	 60p0ZcYFncvoEpc3qjUkRR75GQryN5G52EGImdN5oFOfZWgPVvuqmje+QuJBoj89vT
-	 nWdlNKeNTJeSVNZy9SijD8UspU8frF1LuZesET5JpdtVRJgOed/nnlf/imlw4PnHRq
-	 Ufqbs5CLHIA/Y88mj3P+I0ukMGEMlHZ0SWGFZ/eY4EUD64h5kAD/o+Sn6hlIPU0did
-	 BLSXp8aCpCt4snw7h4WvXpTh2/Xf/RWO14QVSKmi/1+Zh27ACoK8HbzFQ6OHttXb6M
-	 38OdxeGkxE1944D7fan/chrp0XHZNxUgimAeHCcPNECWDRm27CoHHkQ1aLMzzn9tmQ
-	 cPW74gwEe3FnEG7NtFXO5kf/fZ5rN8tGVIZjtIfQ5Xc90A5MTWUfkk+t4YOqW6JoL8
-	 sYGWnwLEmEvSczSuZHGw2Kw21LIrwPF1ruUxb2tUM+dyUreixxk9uILfgtcBCbZx2N
-	 9LRM+niwkmb18cFWN51fwmVGkMmJfDKBr0dbPfTlqpP6wJHSkxKm37EJAe1X+eDhq/
-	 58IZIKTnG8K/VOnU4wG9GXL5o2zcBiEGXQ+Kat1XV38acugxsQR47raLvGORKRQIR7
-	 kpXpPHijerfJnPKD7WMtURBY=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B006C40E00DE;
-	Thu, 26 Jun 2025 09:04:45 +0000 (UTC)
-Date: Thu, 26 Jun 2025 11:04:39 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin (Intel)" <hpa@zytor.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>, stable@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [tip: x86/urgent] x86/traps: Initialize DR7 by writing its
- architectural reset value
-Message-ID: <20250626090439.GBaF0NJ34n065_4vb-@fat_crate.local>
-References: <175079732220.406.9335430223954818839.tip-bot2@tip-bot2>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Ua/0wZiz"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q8TXu5002736;
+	Thu, 26 Jun 2025 11:06:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	yzHnsmLTewRsBfKjcqS7Ovd/FClDc2H6W6if0kL0/KE=; b=Ua/0wZizeUaayLiM
+	sXZv4jngLUekGFY86nIQFCWLKslebcuvBKzdPrea+yMDtXzzxzxfyhX5LMbZRH+P
+	oOGTBIo9bXUT/cp/J6+IO77mhvsWjHXC6ZKvqXwUB/ogCZj11EQ+kN2PE3dqc9gz
+	RE0nKR6sNtNgyQf/PLFfA092pxu9hfeHkvHwIpWynI8puTlTi/K5dbd9CuVUo06m
+	8TazMhhD/mLbcgaqPMYVdja6IEsIM4QVwslyBxSK1q000NUQgrfHLF260QvrwVeY
+	yue7Q5r14Mqgvx90T+BPa5zALMXGv0HEjMXtSHHCx4om84GLlhcC7lYmoqdntUZK
+	ZFoV2Q==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dhvbwk1y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 11:06:24 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B3AA14002D;
+	Thu, 26 Jun 2025 11:03:57 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 241D0B2F98C;
+	Thu, 26 Jun 2025 11:03:03 +0200 (CEST)
+Received: from gnbcxd0016.gnb.st.com (10.130.77.119) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 26 Jun
+ 2025 11:03:02 +0200
+Date: Thu, 26 Jun 2025 11:03:01 +0200
+From: Alain Volmat <alain.volmat@foss.st.com>
+To: =?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
+CC: Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
+        Andi Shyti
+	<andi.shyti@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Sumit Semwal
+	<sumit.semwal@linaro.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?=
+	<christian.koenig@amd.com>,
+        M'boumba Cedric Madianga
+	<cedric.madianga@gmail.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        "Pierre-Yves
+ MORDRET" <pierre-yves.mordret@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>
+Subject: Re: [PATCH 2/3] i2c: stm32f7: unmap DMA mapped buffer
+Message-ID: <20250626090301.GC348766@gnbcxd0016.gnb.st.com>
+References: <20250616-i2c-upstream-v1-0-42d3d5374e65@foss.st.com>
+ <20250616-i2c-upstream-v1-2-42d3d5374e65@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <175079732220.406.9335430223954818839.tip-bot2@tip-bot2>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250616-i2c-upstream-v1-2-42d3d5374e65@foss.st.com>
+X-Disclaimer: ce message est personnel / this message is private
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_04,2025-06-25_01,2025-03-28_01
 
-On Tue, Jun 24, 2025 at 08:35:22PM -0000, tip-bot2 for Xin Li (Intel) wrote:
-> The following commit has been merged into the x86/urgent branch of tip:
+Hi Clément,
+
+thanks for the patch.
+
+On Mon, Jun 16, 2025 at 10:53:55AM +0200, Clément Le Goffic wrote:
+> Fix an issue where the mapped DMA buffer was not unmapped.
 > 
-> Commit-ID:     fa7d0f83c5c4223a01598876352473cb3d3bd4d7
-> Gitweb:        https://git.kernel.org/tip/fa7d0f83c5c4223a01598876352473cb3d3bd4d7
-> Author:        Xin Li (Intel) <xin@zytor.com>
-> AuthorDate:    Fri, 20 Jun 2025 16:15:04 -07:00
-> Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-> CommitterDate: Tue, 24 Jun 2025 13:15:52 -07:00
+> Fixes: 7ecc8cfde553 ("i2c: i2c-stm32f7: Add DMA support")
+> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> ---
+>  drivers/i2c/busses/i2c-stm32f7.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> x86/traps: Initialize DR7 by writing its architectural reset value
+> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+> index 973a3a8c6d4a..a05cac5ee9db 100644
+> --- a/drivers/i2c/busses/i2c-stm32f7.c
+> +++ b/drivers/i2c/busses/i2c-stm32f7.c
+> @@ -1622,6 +1622,8 @@ static irqreturn_t stm32f7_i2c_isr_event_thread(int irq, void *data)
+>  		if (i2c_dev->use_dma) {
+>  			stm32f7_i2c_disable_dma_req(i2c_dev);
+>  			dmaengine_terminate_async(dma->chan_using);
+> +			dma_unmap_single(i2c_dev->dev, dma->dma_buf, dma->dma_len,
+> +					 dma->dma_data_dir);
+>  		}
+>  		f7_msg->result = -ENXIO;
+>  	}
+> @@ -1642,6 +1644,8 @@ static irqreturn_t stm32f7_i2c_isr_event_thread(int irq, void *data)
+>  				dev_dbg(i2c_dev->dev, "<%s>: Timed out\n", __func__);
+>  				stm32f7_i2c_disable_dma_req(i2c_dev);
+>  				dmaengine_terminate_async(dma->chan_using);
+> +				dma_unmap_single(i2c_dev->dev, dma->dma_buf, dma->dma_len,
+> +						 dma->dma_data_dir);
+>  				f7_msg->result = -ETIMEDOUT;
+>  			}
+>  		}
 > 
-> Initialize DR7 by writing its architectural reset value to always set
-> bit 10, which is reserved to '1', when "clearing" DR7 so as not to
-> trigger unanticipated behavior if said bit is ever unreserved, e.g. as
-> a feature enabling flag with inverted polarity.
 
-OMG, who wrote that "text"? 
+Sounds good to me, however there might be an additional place to fix
+within the function stm32f7_i2c_handle_isr_errs:
+Could you also take care of the unmap in the error ITs handling ?
 
-I asked AI to simplify it:
+Regards,
+Alain
 
-"Set DR7 to its standard reset value and always make sure bit 10 is set to 1.
-This prevents unexpected issues if bit 10 later becomes a feature flag that is
-active when cleared."
-
-It sure does read better and I can understand what you're trying to say.
-
-So can we *please* use simple, declarative sentences in our commit messages
-and not perpetuate the SDM?
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> -- 
+> 2.43.0
+> 
