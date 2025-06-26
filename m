@@ -1,70 +1,93 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3975D2ECE81;
-	Thu, 26 Jun 2025 14:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37FA2F2737
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750949347; cv=none; b=PPd/WwtjfL+fcTKmhGlWm15tVpl0PRUI36TulMwcZiye7JnDOeQtlB0VBRk+3NQJvlpHN/aQZ7s460VpjDt+aJFe0hFiW9RncwTMc3h+HKyRHcvgmrZTd59/+mYLuov6o8AIoHvhc2v9REPXn99NVHl78FK95PIbyvaoHySSdqo=
+	t=1750949350; cv=none; b=mlsw7awwl+LtGQy8s6ccuH+p/IM9pEGLBUXdJJZY9lMCe70iRUhxu+Sc78k7MPP7u5JpW6MmtJhSegcWwkJpj1Q9e+STN0/i0tZYm84L04pojTxLtB1HLK8oamPLrUm7m3KO6K0IUVKK+j6TjSPbmvhB8Ps11ektXTLqOykSi14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750949347; c=relaxed/simple;
-	bh=ALLIIAA++rbzUWCk9xIGTTo6bFs8gHSw2AvD9wAHFDk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VfQPDD4AnvB/h7B/LPDnIkS9wK4/qHKO4+9sS1bb4zEtMhdeLQDRjdHGZS9PgA2rjFV18Lcl80duJmKK7ambqdXmspNoIp4cqF+rNksh3YhsMISvxIdv8PZ+bXQIN3mTscGFCOH+huJ8UXj5dla7OsjosCViuzBAhzSejHoOFhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 1F96E80265;
-	Thu, 26 Jun 2025 14:49:02 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 154C820028;
-	Thu, 26 Jun 2025 14:48:57 +0000 (UTC)
-Date: Thu, 26 Jun 2025 10:49:19 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
- Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v11 00/11] perf: Support the deferred unwinding
- infrastructure
-Message-ID: <20250626104919.6591c2b9@gandalf.local.home>
-In-Reply-To: <20250625231541.584226205@goodmis.org>
-References: <20250625231541.584226205@goodmis.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750949350; c=relaxed/simple;
+	bh=P57Mm725L5SPEV08pQH67xytCGylGZyn9IkhBqAcSlo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WPEL1xHPZQEh3vR3KVnn1pnZGAD3oJzvqXsp4wOxM5XrCIs75dNkl/TcVIB9e6a9smjkwEpT8GZJHtXSmDFSEHxIS1FlGFMckdpJVUxcgA+BDdWVa2/pNVvd/RJPgtsmttnXyVr3D3yGf9Ru9M4plbS372ov05gt/XB4oDfpKms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SAjvDf8x; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=To1NwsfA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SAjvDf8x";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="To1NwsfA"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750949347;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=t9D/Ii3iU3sfaHnChN1LJ+jxjfUEG57+0qTukBk27a8=;
+	b=SAjvDf8xY2wJ033CU3jln2Xn6FlyT6P1v2ANUKdNizuHhkqKya/0w8cH+IP2dFRsqT3Fyh
+	9sjTbSWu8GglRbFcZ4Z43F/W6A1fyg7Rzs3Qrx2muFpbjebyi6rIFHbNl8/YDjurTLhSeC
+	mXUmAa08gXGoswtIUawwT4GYSVSWWKaU6+Vw7FCHj6qyO7OxfC9RIm08TVRBUp9YneUREx
+	98IDXAToJesUZsHlzeUbkdc4jqoT6YZyS3XhmZSaCkxhX+KSbuBroQOwHTO5XYVFVa0cKS
+	Deeu7W0rCrDvxCJBSz1rvf/tLjF99dkCEY80eYqdM4qRcX63Ux8ZMLQ+/E1LPQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750949347;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=t9D/Ii3iU3sfaHnChN1LJ+jxjfUEG57+0qTukBk27a8=;
+	b=To1NwsfAmWGmULnKy4f4JhSY207XjCC+OoRcTLyGHhVnKwZYNhwuisDETVdNMzJCoE7UHu
+	zZkRvLz04WwwuBDQ==
+To: Marc Zyngier <maz@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: [PATCH 0/2] iommu: MSI parent domain conversion
+Date: Thu, 26 Jun 2025 16:48:53 +0200
+Message-Id: <cover.1750858125.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 5mfy4rbrug9wco81dhw73a8hmxt1ozgt
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 154C820028
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/m+Nr0XPIxU/L+9sJu4DhD9Lf9WaHGuCg=
-X-HE-Tag: 1750949337-214274
-X-HE-Meta: U2FsdGVkX19FnPyiZUCeDf4tox13wQA/4MuEEERmjaxMRF2fxYTjZBpAlIYUfigWaE7cZtZwfKmwcL2NoHGZ4joH/QI67TAdUeVczRJCIc/Dhhj+9hMorn278r/qJ/uxtJK3V0KvOU2GcLeVefBgZf9mN4lDOSbBh1HczVAtA7NHsjhwgROvYU2DyQlbkEx6cyYzJR5U57fUFuUzh59q+Sq+WAYmJy5uRM6kIN7Vij2Pt9WGitr0Pki+t10w3tAmqGjqimfTOMoPyKgyaVEDIUMTbbug7xzov2ERSxU/n0A4pwKsKpx48ORKqr9ZLM/71MVjD8nfAzc5tXNnPCk/X/rBCD8/41J6rRPodXD26umoJt+N/KLxDqdUt/aoEs5U
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 25 Jun 2025 19:15:41 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+The initial implementation of PCI/MSI interrupt domains in the hierarchical
+interrupt domain model used a shortcut by providing a global PCI/MSI
+domain.
 
-> Namhyung Kim (4):
->       perf tools: Minimal CALLCHAIN_DEFERRED support
->       perf record: Enable defer_callchain for user callchains
->       perf script: Display PERF_RECORD_CALLCHAIN_DEFERRED
->       perf tools: Merge deferred user callchains
+This works because the PCI/MSI[X] hardware is standardized and uniform, but
+it violates the basic design principle of hierarchical interrupt domains:
+Each hardware block involved in the interrupt delivery chain should have a
+separate interrupt domain.
 
-For some reason, quilt send mail dropped the last two patches.
+For PCI/MSI[X], the interrupt controller is per PCI device and not a global
+made-up entity.
 
-I'll send them manually.
+Unsurprisingly, the shortcut turned out to have downsides as it does not
+allow dynamic allocation of interrupt vectors after initialization and it
+prevents supporting IMS on PCI. For further details, see:
 
--- Steve
+https://lore.kernel.org/lkml/20221111120501.026511281@linutronix.de/
+
+The solution is implementing per device MSI domains, this means the
+entities which provide global PCI/MSI domain so far have to implement MSI
+parent domain functionality instead.
+
+This series convert the IOMMU drivers to implement MSI parent domain.
+
+ drivers/iommu/Kconfig               |  1 +
+ drivers/iommu/amd/Kconfig           |  1 +
+ drivers/iommu/amd/iommu.c           | 26 ++++++++++++++------------
+ drivers/iommu/intel/irq_remapping.c | 28 ++++++++++++++--------------
+ 4 files changed, 30 insertions(+), 26 deletions(-)
+
+--=20
+2.39.5
+
