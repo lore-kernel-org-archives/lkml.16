@@ -1,170 +1,70 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3398C2F1FDA;
-	Thu, 26 Jun 2025 19:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161CD2F1FF9;
+	Thu, 26 Jun 2025 19:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750964988; cv=none; b=E39XEO9vKq4EXRXnyVbyRUo9fbI8kt9f6c4QSClz7Hf1HTiqzL8CQWqkpuLghz6O2VX6JWQi23Ow8bV3rjVhQ93weRSr62kX2eYLOf3b8gBxVW/q2Wn0EF8W2C3oDOS4j5q6v1wMlGcQtaptXvMaIgcEjG5Rw3utv5DzDw/ibxA=
+	t=1750965040; cv=none; b=bivuahxhlHr+CUklj58aN00n20v4ZIZC47bwTT7qtu5r6yslbwKvRAr5JSc1u2JMharXeINLF3IhY3FX+fl77hfimpk0GnozNpnXxtCT5dlxuhZW1lLtpw9c8ba6TVrW8G4tH6ixwRuCb5MHS6seYUiwfc3g91KS64vfVdtpTvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750964988; c=relaxed/simple;
-	bh=l7EDQVT0SJKGylYNXzHGYLXTLSFmgtku9oGrEbj3J/M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cfW4+jaFp7d0A3ncPueaU/rFb3XJ5+WQkfbz7vdJ2bk/sEZn9n5JtUEJGN0Bd6//1xNC29I7IjF1VX26LCF8h6y4cqa3IOFdszXsl3+nde95IMsY8NAQkQCZlmNlvmp3ezFa7tawtglUwhSmA3tXP50OW1CD4+eKaNqDZRCuptw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=D8BCQ7oP; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1750965040; c=relaxed/simple;
+	bh=XmDYRAp6BuOpP4bpcfmam3eGYJQ/2OiIuKHCyXBaPNw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GvdRe1Ph2o+nBqLyJ3OHWMXL2rEJa+IJi6Sqaop+g2gfC6wUxauqpMvmRL5CtSUIC0mJ4iTSP2wq3JZlsTYFF8fbmP5UlLGDgKzqnLa9tsd+37O0lN5NXcRy3FiNb+tM6wUwzr/dPTyQJ6uoL2cXqmipGPlQHsPjOvyHT5pDNkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDNoOTZB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="D8BCQ7oP"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 610A56A6;
-	Thu, 26 Jun 2025 21:09:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750964966;
-	bh=l7EDQVT0SJKGylYNXzHGYLXTLSFmgtku9oGrEbj3J/M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D8BCQ7oPvhWGMEE+DLalhWjT4PAF38zvbm9wDGwjy92h3r3IVVZdbyauAJ2uq7YXU
-	 o5msoQe4aKbZ3RoWZqnzD8xxAB3GTwXS0Rzd3wUaOCQZRnb+HTB2lt+aEAVR4CiZ/e
-	 V4ywWmhqYbLZ3l+dlGMOkKUicE+FBgSyx8lw9Bcg=
-Date: Thu, 26 Jun 2025 22:09:22 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kumar M <anil.mamidala@xilinx.com>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, "Guoniu.zhou" <guoniu.zhou@nxp.com>,
-	Stefan Hladnik <stefan.hladnik@gmail.com>,
-	Florian Rebaudo <frebaudo@witekio.com>
-Subject: Re: [PATCH v3 2/2] media: i2c: Add ON Semiconductor AP1302 ISP driver
-Message-ID: <20250626190922.GC30016@pendragon.ideasonboard.com>
-References: <20250623-ap1302-v3-0-c9ca5b791494@nxp.com>
- <20250623-ap1302-v3-2-c9ca5b791494@nxp.com>
- <20250623224701.GE15951@pendragon.ideasonboard.com>
- <aFryrpyDByI6wu5b@lizhi-Precision-Tower-5810>
- <20250624185643.GE20757@pendragon.ideasonboard.com>
- <aFr6Ehpl5Kk+nt7m@lizhi-Precision-Tower-5810>
- <20250626124224.GK8738@pendragon.ideasonboard.com>
- <aF1gKGjpbEPZYBr2@lizhi-Precision-Tower-5810>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDNoOTZB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AEECC4CEEB;
+	Thu, 26 Jun 2025 19:10:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750965039;
+	bh=XmDYRAp6BuOpP4bpcfmam3eGYJQ/2OiIuKHCyXBaPNw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qDNoOTZBlCx+zYQ7I9zrvS5EY8SyllnG1Qvy6vcUyT7cl+ceufgmG+ngE+D1laRTd
+	 RF/Pjjz71XbM7O7HpxJp2GZvmVrcqBcp363/uG4phklogaE/0/qoEpn23UwVWndBRs
+	 j0qDGNLFgLEj/IBfnHcgjQOO5EgrSzjBqW85vbHCkQrJcPrWLzD13TPNJwQzfu5nPq
+	 bD0v0VIMqxI/JvRYht6C/DIq3LzFBO1hW3qAsufyhH6sCZnxpnAMJIZe2Cno9/4m+E
+	 PYg41QjSJ4q/+jxCr3c2kcgaDFMyTxo2MqLk6hRr9glETZRmMtm/4Nj0OcpqEl9yIv
+	 LNLjq1SqLB33w==
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-4080548891fso629423b6e.3;
+        Thu, 26 Jun 2025 12:10:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXaSY93ICebYg/vlS4TOUW80/soUs5ulS5keyJieM4QumyfyCML1r6ILUtcutuBttOemhUpO/5POX002S0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+ifEXtAm1uYyMGVkqO4mfZaznbRQnRvL+zMT87MpWA8mUdUOx
+	SjBPB9ho8DVdoTZL6B4lfr4/xM4lFQM5DgXn2BGlOSPpo2UFH3tzSXqEY9LMWmOYbTxEYg6qeAO
+	j3dyrf5gOpo96i8yWwCUfaWycz2ISUxo=
+X-Google-Smtp-Source: AGHT+IHD1qmk9pk5B4edgltcIvzD7SMsJJDJK9GTvJZ/7K09X3FZBvZtU7hInMMNNpa59I8HOFbDIrFtBYWyFhGSZNs=
+X-Received: by 2002:a05:6871:82a:b0:2c7:6f57:3645 with SMTP id
+ 586e51a60fabf-2efed67879emr130739fac.18.1750965038879; Thu, 26 Jun 2025
+ 12:10:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aF1gKGjpbEPZYBr2@lizhi-Precision-Tower-5810>
+References: <20250612201321.3536493-1-andriy.shevchenko@linux.intel.com> <aFqwWToG3HBe3rEo@smile.fi.intel.com>
+In-Reply-To: <aFqwWToG3HBe3rEo@smile.fi.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 26 Jun 2025 21:10:27 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iLvnCto-UQVdRP-JpbmfRC=Z7i3HnDxobWeRdTNsaNUA@mail.gmail.com>
+X-Gm-Features: Ac12FXyy2znWc7gcTqJKDAVrB7Tde1FeBdkVhuF4VFkKrysTyrUw5XnYHaOHH5o
+Message-ID: <CAJZ5v0iLvnCto-UQVdRP-JpbmfRC=Z7i3HnDxobWeRdTNsaNUA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/5] ACPI: proc: A few cleanups
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 10:58:48AM -0400, Frank Li wrote:
-> On Thu, Jun 26, 2025 at 03:42:24PM +0300, Laurent Pinchart wrote:
-> > On Tue, Jun 24, 2025 at 03:18:42PM -0400, Frank Li wrote:
-> > > On Tue, Jun 24, 2025 at 09:56:43PM +0300, Laurent Pinchart wrote:
-> > > > On Tue, Jun 24, 2025 at 02:47:10PM -0400, Frank Li wrote:
-> > > > > On Tue, Jun 24, 2025 at 01:47:01AM +0300, Laurent Pinchart wrote:
-> > > > > > On Mon, Jun 23, 2025 at 03:17:38PM -0400, Frank Li wrote:
-> > > > > > > From: Anil Kumar Mamidala <anil.mamidala@xilinx.com>
-> > > > > > >
-> > > > > > > The AP1302 is a standalone ISP for ON Semiconductor sensors.
-> > > > > > > AP1302 ISP supports single and dual sensor inputs. The driver
-> > > > > > > code supports AR1335, AR0144 and AR0330 sensors with single and
-> > > > > > > dual mode by loading the corresponding firmware.
-> > > > > > >
-> > > > > > > Signed-off-by: Anil Kumar Mamidala <anil.mamidala@xilinx.com>
-> > > > > > > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > > > > > Signed-off-by: Stefan Hladnik <stefan.hladnik@gmail.com>
-> > > > > > > Signed-off-by: Florian Rebaudo <frebaudo@witekio.com>
-> > > > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > > > > ---
-> > > > > > > Change in v3:
-> > > > > > > - add extra empty line between difference register define
-> > > > > > > - add bits.h
-> > > > > > > - use GEN_MASK and align regiser bit define from 31 to 0.
-> > > > > > > - add ap1302_sensor_supply
-> > > > > > > - add enable gpio
-> > > > > > > - update firmware header format
-> > > > > >
-> > > > > > One of the main issues with this driver is that we need to standardize
-> > > > > > the header format. The standardized format will need to be approved by
-> > > > > > onsemi as we will need to provide not just a driver, but also a
-> > > > > > toolchain that will produce firmwares in the right format. Furthermore,
-> > > > > > some time ago the AP1302 firmware was extended with the ability to
-> > > > > > dynamically compute PLL parameters IIRC. This needs to be taken into
-> > > > > > account.
-> > > > >
-> > > > > It is quite common when work with firmwares. Generally, it need version
-> > > > > information at header.
-> > > > >
-> > > > > The driver need check firmware's API version, if miss match or incompatible,
-> > > > > just return and report error.
-> > > > >
-> > > > > we can't assume firmware always align driver code because many user just
-> > > > > update kernel without update rootfs or firmware package.
-> > > >
-> > > > Sure, but that's not the point. The point is that there are multiple
-> > > > out-of-tree ap1302 driver versions, developed or adapted by different
-> > > > SoC vendors. Those variants use firmware files produced by those SoC
-> > > > vendors, and they not standard.
-> > >
-> > > I am not sure if firwmare is open source. Most like not.
-> >
-> > The firmware is not open-source, but I don't think that's relevant.
-> >
-> > > We need create
-> > > difference compatible string for difference Soc vendor.
-> >
-> > No, that we must absolutely not do :-) If it's the same AP1302 and same
-> > camera sensor, we must not have different compatible strings when the
-> > AP1302 is connected to an NXP SoC or a MediaTek SoC.
-> 
-> After read code, firwmare header only used for sanity checks. can remove
-> it for initialization version?
+On Tue, Jun 24, 2025 at 4:04=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Jun 12, 2025 at 11:11:24PM +0300, Andy Shevchenko wrote:
+> > While looking into warning related to export.h inclusion, I took
+> > the opportunity to make the module up-to-date to the modern APIs.
+> > Hence this mini-series. Note, the first patch is to make the used
+> > type consistent across the files.
+>
+> Hmm... Any comments on this? Do I need to do anything?
 
-No, quite the contrary. We need to standardize a firmware header that
-will give us forward compatibility. Versioning of the firmware is a
-missing feature for that, and we also need to consider the issue of the
-AP1302 clock tree configuration.
-
-> > > > We need to standardize on a firmware
-> > > > format to upstream a driver, and that standardization needs to involve
-> > > > the device manufacturer.
-> > >
-> > > we need workable version (easy extend) firstly, when let other vendor follow.
-> > >
-> > > Frank Li
-> > > >
-> > > > > > I want to resuscitate this driver and get it merged. There's more work
-> > > > > > to do, in collaboration with onsemi, and I haven't had time to tackle
-> > > > > > it. If you want to propose a proper design for firmware handling I would
-> > > > > > be happy to participate in the discussion.
-> > > > >
-> > > > > who is onsemi contact windows.
-> > > > >
-> > > > > > > - update raw sensor supply delay time
-> > > > > > > - use gpiod_set_value_cansleep() insteand gpiod_set_value()
-> > > > > > > - update use latest v4l2 api
-> > > > > > > - use ctrl_to_sd() helper function
-> > > > > > > - add ap1302_g_volatile_ctrl()
-> > > > > > > - remove ap1302_get_fmt()
-> > > > > > > - use guard for mutex.
-> > > > > > > - use dev_err_probe
-> > > > > > > - use devm_add_action_or_reset to simple error handle at probe.
-> > > > > > > - use read_poll_timeout() simple dma idle polling.
-> > > > > > >
-> > > > > > > previous upstream:
-> > > > > > > https://lore.kernel.org/linux-media/1631091372-16191-1-git-send-email-anil.mamidala@xilinx.com/
-> > > > > > > ---
-> > > > > > >  MAINTAINERS                |    1 +
-> > > > > > >  drivers/media/i2c/Kconfig  |    9 +
-> > > > > > >  drivers/media/i2c/Makefile |    1 +
-> > > > > > >  drivers/media/i2c/ap1302.c | 2838 ++++++++++++++++++++++++++++++++++++++++++++
-> > > > > > >  4 files changed, 2849 insertions(+)
-> > > > > >
-> > > > > > [snip]
-
--- 
-Regards,
-
-Laurent Pinchart
+Nope.  All queued up for 6.17, thanks!
