@@ -1,134 +1,110 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE48C205502
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A911E7C03;
+	Thu, 26 Jun 2025 16:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750954201; cv=none; b=Z2rzOQd1PJHDNOrXv3WWpphok1G5/FhRMH9EJh6/YFnYW2DyS7WVyYaWcfI7sop+4mGSM28fG35owPl1noWpn3PGM2ltywoMuRd2fQc76T4hzl+MgMFA6SsT1lty9cNfVFhaBDW0t1BnTlCzxGW+T38Eu+npwh48F1P+K9euvas=
+	t=1750954224; cv=none; b=GJ07VYLfmw7aWqn9ruzFwI77t65ERm8lWbWqqfrIhsnvfe+eJ0GbytJ7/4L1tzEa2kaA37PSVmPCx1SSb52sYff+CXllzxrXrWdTvHFXv0jl5ntkHxsKxIGbR2ysvKcreq4iPOoWuRF6QpSeus1uVtpHTLaKo3KJQEeOjEAvOAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750954201; c=relaxed/simple;
-	bh=3dK9igG34LPxdpMV5UVh61EIuQaT+1ajbcjtbc7qkR0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ptSK+RpRTyt1GFGGyDZl8qqnK/oUasVmXDLLCCecNaywhmjQ8aCc0d46GBRCi7SWSSG1qgUR9efvtodjR4evFYCaF3mqV6iGLcO7AZMrk3IKwXS0qIHT8NDoJbUM4+JNXa8C7eN/NTPpA1YD4oKj9zfCUa4GTBWTJmHKcB+DGfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ga7WPov+; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750954224; c=relaxed/simple;
+	bh=AQiq4z0xA88o3HSFvbhcfQRTGqMXtRqE6hPl7TrS0QA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GqnO4I/liU0shZv9mg4Rt1ao1ZSWi+PgwsWpSk3DBCBhG24k8u/fsqvlplY3GYNllj7rPgQI8aVv/dqCjdploM13Kgb9WfW6mxssWWmpzadkB7MrV0EWbJ57FsrnJi7N7xIY4ezGnVLyN0vLL3brXG3FvjC9TQs+poOO12eUhpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=entpwaOy; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ga7WPov+"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-313ff01d2a6so1155107a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:09:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="entpwaOy"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-748ece799bdso917686b3a.1;
+        Thu, 26 Jun 2025 09:10:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750954199; x=1751558999; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E3koCSQ+MjDFXN15L8H0SZR0G6VhYzkxm2MTypvzZIY=;
-        b=ga7WPov+qkOcBlFX11xGR2LYmqEeB1vcNWy2DNJz0MyqjwyJlRS2vWQ9oKON9WIzrv
-         577dB+figq6cWHFiGI0LsDL5hLbZSFAkKssAPNrQ18ZQNSQHarP6hbT1Qvjz7Pl+0gHg
-         gOhZkgsx1izb2wZow/T3XPMeipGczZKtKbFHmqFccWtDlcTyiZE8FlggIjEwYBhb4CS+
-         CAD2biHlheBisBbQYUcFFaEcXd3MiUneQ34BajfR1UUGo+QO3CQSqIYQGELkwS4sqKps
-         FFV1mA141m3ybxoukc4B/m7imgRlWqPOF9tHA1GjHOpZ1GqeRTeUFdVwDPCJT9rGS4nP
-         q/lg==
+        d=gmail.com; s=20230601; t=1750954223; x=1751559023; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RO2tN+aSoxvaSEMRq7XEvMbHrJsjG9xLguEP52powFc=;
+        b=entpwaOy+Brf64flOPLBp1+MRfOfxAlCA7AiKaRoha2FXM21NyCV21E6GkPIKSY0Li
+         jPPPTV/AarleDeD7mcbNQRXZMYlKrFSqycsvt5waiFjpQuS9FgWKuS66/1+KWnJoBTVx
+         UxfTdDFjMIZX9EzG78A+8zvvqcSNItKIgtFIgwfWH9zBoAAdJCaho7ZGgZMen+GSLlYe
+         xy4wtE8sYXGw091kThakEBP9VB8EavFnH1FBj60wRPs3W/W2OD772UsVThT0ndEg3fMT
+         oDR1G7XiR8Qrz2ZSRqqzqBPe3YVYTQl5XiT/CKJu6+IdFHoZm0IfG1yMmb1rOghirrX/
+         hGPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750954199; x=1751558999;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E3koCSQ+MjDFXN15L8H0SZR0G6VhYzkxm2MTypvzZIY=;
-        b=qSusSW6xUxNfFXi1Wl5Hk9xGDxcbtlH4L9y7rZOPcfzUU+EuZSOSiZogNBZalVim2Q
-         prj1HbryF8icsu3jDppOs0P/bwrG/iVs82PfdB7tdr/BSjW7FOJeDCfqChl+rmZimYvL
-         dRlbF6jBI3EvRXwd1U8Zzp/fY97rIH7XeGtUen38RbI2RxzEFljVmTPOBk/G2pgZx4yJ
-         kn4Nncqe28HLEiHJqrhHbx2g2T+wd55w7E5GFsT2UTDgZlH0wwHlrDZNPAgmgx4V0PC9
-         iH7mOJGsZutizhtxJy4pgplevYdSE8ARF7Z369/ojGIdESRXycC4P0KY3EobVDZbncbA
-         0m+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVSjjbU09Du/DafXCUIJKBwxCFS8lmWcFuwFcCKEUUeKLx8LLI5mVcm9myqQIYH0Jph7JfpJYaFxS3wXiI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv8YxCs94jg5xVFPVV2k7y975eCXS+kNymQ2cYuf0mIjhTdki+
-	UDTZc6HRWtCRmr59MMH3mgd9swOOwb7q4sy0Vfd5ql7Pxu3Q4y/rCRW+B6oSRFnOlf7iNGFKaFC
-	v7/+LhA==
-X-Google-Smtp-Source: AGHT+IE7rsD7356Nl+vRDhGo8NRkVod7EnT+hBgAUIZ+abYCwm7vR4tFPCrzIC8Kmhqp/KsxB8p468JM0aQ=
-X-Received: from pjbnb6.prod.google.com ([2002:a17:90b:35c6:b0:311:8076:14f1])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5201:b0:311:fde5:c4c2
- with SMTP id 98e67ed59e1d1-315f261389emr9800147a91.1.1750954199184; Thu, 26
- Jun 2025 09:09:59 -0700 (PDT)
-Date: Thu, 26 Jun 2025 09:09:57 -0700
-In-Reply-To: <mqeuxn4in7pscni5odii2qvzoils5ce3jdzvmp45w3bg462buj@4elenf2mxaro>
+        d=1e100.net; s=20230601; t=1750954223; x=1751559023;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RO2tN+aSoxvaSEMRq7XEvMbHrJsjG9xLguEP52powFc=;
+        b=HopQIPOdimiduEPVfhm3IBRfEJxY8Za5nRzuqCLlLDgy/cLebcTmZvll12gGA0nM0t
+         gt6SKfEK2aZ7Y+o8x/iRy7IrN4sTA955uzkEeO4oHk3Brg9GgvtimJjL0qv3Mo4/tY0I
+         u96ro24r2LT0NU1hOFqwX/gbbafj7RMi/yLxny3Y2PGF08xLrX7tFZgj27hMsrv3+rQX
+         t3Tt1oO6EQ750g4wS/+OC32V/gIk/hgd2EbiKb1EmvqKhrGuhkBN3grEnnrs6GgqV/AZ
+         gXSEv5mfAYX3HfavRpeqCzlQ+8Sz6v2eqPVMZ6V909h2Zvd5Nw5FPqAe0HgzfeWOXdQs
+         hsdg==
+X-Forwarded-Encrypted: i=1; AJvYcCWA2rA584RrelwGIKKdko5FkJksenaBIvpUkHB054d0z/giduf8pu6Y7j2ZI6C/Ek61KWIagCqhSolPq5U=@vger.kernel.org, AJvYcCWcmnqCgSmO6nspYqfTrLg+Lp5V/8BHMK0VAiEgOrx7eA7QaSS4nSM+iauxsXiGAMdIxpbbLSB9qQ7D9Mc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynI44GD0fmivr7J3Ocrs6Yn0y8ydChqSFZitLdusz7/DSWtDcI
+	0zc8FzmtLveAYMh/fqyKhc2jam7PmQ0v94yO8qWtVyiBEefiJGaPlOIS
+X-Gm-Gg: ASbGnctQxv6Nf4UYwlXjJfOnkKd7Aq1YnWcDozKOWS+X/ggMDOZWj5mROyVS7IGmEO+
+	EDxChl0ofFyVTm1C0+RH5Q7EiSJ1iAdru+tQpmQHwMJLAVGy5PItP/KgGRZKTJfx3yiMDTEoKko
+	yB1lrOJh1rSjelNaUFE2Zmcq++Sagx3R6Ua76+hyWS/+K5SE9e7aKRqQ4s+R65AWVEVGr9OACw6
+	0lfOU156zM8LAT/n2CG7yIcthtQk3YBAbwfiMXC2cOo3U+fJb7Ub95DPlX2Plk+OQO6BJLy9Ciw
+	pJWh2JAhZ9I5jkhoHGK6eJVxMyYWjfmW9TBtjdxjGS+vvzuD9FVAMGBYx5CF6y50RA==
+X-Google-Smtp-Source: AGHT+IF9+/ylR0X0zs3Ub5Nxn8yMQupY0tyd0iZN0NmSeaDh2qSacydKHfMjG6bR6+uLmMbB2VYVHw==
+X-Received: by 2002:a05:6a00:3c90:b0:748:3485:b99d with SMTP id d2e1a72fcca58-74ad45abe59mr11562215b3a.18.1750954222499;
+        Thu, 26 Jun 2025 09:10:22 -0700 (PDT)
+Received: from icarus.. ([45.64.160.138])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af540ae36sm114168b3a.14.2025.06.26.09.10.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 09:10:22 -0700 (PDT)
+From: Pratibimba Khadka <pratibimbakhadka@gmail.com>
+To: mchehab@kernel.org
+Cc: Pratibimba Khadka <pratibimbakhadka@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)),
+	linux-staging@lists.linux.dev (open list:STAGING SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] staging: av7110: Replace msleep() with usleep_range() in tuner function
+Date: Thu, 26 Jun 2025 21:53:50 +0545
+Message-ID: <20250626160853.8772-1-pratibimbakhadka@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250619200442.1694583-1-riel@surriel.com> <20250619200442.1694583-5-riel@surriel.com>
- <mqeuxn4in7pscni5odii2qvzoils5ce3jdzvmp45w3bg462buj@4elenf2mxaro>
-Message-ID: <aF1w1RLgA9w7tRUg@google.com>
-Subject: Re: [RFC PATCH v4 4/8] x86/apic: Introduce Remote Action Request Operations
-From: Sean Christopherson <seanjc@google.com>
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org, kernel-team@meta.com, 
-	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, 
-	bp@alien8.de, x86@kernel.org, nadav.amit@gmail.com, tglx@linutronix.de, 
-	mingo@kernel.org, Yu-cheng Yu <yu-cheng.yu@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 26, 2025, Kirill A. Shutemov wrote:
-> On Thu, Jun 19, 2025 at 04:03:56PM -0400, Rik van Riel wrote:
-> > From: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> > 
-> > RAR TLB flushing is started by sending a command to the APIC.
-> > This patch adds Remote Action Request commands.
-> > 
-> > Because RAR_VECTOR is hardcoded at 0xe0, POSTED_MSI_NOTIFICATION_VECTOR
-> > has to be lowered to 0xdf, reducing the number of available vectors by
-> > 13.
-> > 
-> > [riel: refactor after 6 years of changes, lower POSTED_MSI_NOTIFICATION_VECTOR]
-> 
-> But why? Because it is used as FIRST_SYSTEM_VECTOR?
+Replace msleep(10) with usleep_range(10000, 12000) in the PLL lock
+waiting loop of nexusca_stv0297_tuner_set_params().
 
-The Posted MSI Notifications vector should be the lowest of the system vectors
-so that device IRQs are NOT prioritized over "real" system vectors.
+usleep_range() is preferred over msleep() for short delays (< 20ms) as
+it provides better accuracy and allows the scheduler flexibility for
+power management optimizations. The 10-12ms range maintains the same
+timing behavior while giving the kernel scheduler room to optimize.
 
-> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> > Signed-off-by: Rik van Riel <riel@surriel.com>
-> > ---
-> >  arch/x86/include/asm/apicdef.h     | 1 +
-> >  arch/x86/include/asm/irq_vectors.h | 7 ++++++-
-> >  arch/x86/include/asm/smp.h         | 1 +
-> >  arch/x86/kernel/apic/ipi.c         | 5 +++++
-> >  arch/x86/kernel/apic/local.h       | 3 +++
-> >  5 files changed, 16 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/include/asm/apicdef.h b/arch/x86/include/asm/apicdef.h
-> > index 094106b6a538..b152d45af91a 100644
-> > --- a/arch/x86/include/asm/apicdef.h
-> > +++ b/arch/x86/include/asm/apicdef.h
-> > @@ -92,6 +92,7 @@
-> >  #define		APIC_DM_LOWEST		0x00100
-> >  #define		APIC_DM_SMI		0x00200
-> >  #define		APIC_DM_REMRD		0x00300
-> > +#define		APIC_DM_RAR		0x00300
-> 
-> Hm. Do we conflict with APIC_DM_REMRD here?
+This change improves timing precision during the PLL lock detection
+phase without affecting the overall functionality of the tuner
+configuration process.
 
-Yes and no.  Yes, it literally conflicts, but it's easy enough to define the behavior
-of APIC_DM_{REMRD,RAR} based on feature support.  E.g. KVM is likely going to add
-support for Remote Read, which would conflict with KVM's bastardization of
-APIC_DM_REMRD for PV kicks.  But as Paolo pointed out[*], KVM's PV unhalt/kick
-can simply be gated on KVM_FEATURE_PV_UNHALT.  Any code that cares should be able
-to do the same thing for RAR.  E.g. KVM's code could end up being something like:
+Signed-off-by: Pratibimba Khadka <pratibimbakhadka@gmail.com>
+---
+ drivers/staging/media/av7110/av7110.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	case APIC_DM_REMRD:
-		if (guest_pv_has(vcpu, KVM_FEATURE_PV_UNHALT)) {
-			result = 1;
-			vcpu->arch.pv.pv_unhalted = 1;
-			kvm_make_request(KVM_REQ_EVENT, vcpu);
-			kvm_vcpu_kick(vcpu);
-		} else if (guest_has_rar(vcpu)) {
-			<magic!>
-		} else {
-			<emulate legacy Remote Read>;
-		}
-		break;
+diff --git a/drivers/staging/media/av7110/av7110.c b/drivers/staging/media/av7110/av7110.c
+index bc9a2a40afcb..7f6c610579c8 100644
+--- a/drivers/staging/media/av7110/av7110.c
++++ b/drivers/staging/media/av7110/av7110.c
+@@ -1827,7 +1827,7 @@ static int nexusca_stv0297_tuner_set_params(struct dvb_frontend *fe)
+ 		if (i2c_transfer(&av7110->i2c_adap, &readmsg, 1) == 1)
+ 			if (data[0] & 0x40)
+ 				break;
+-		msleep(10);
++		usleep_range(10000, 12000);
+ 	}
+ 
+ 	return 0;
+-- 
+2.49.0
 
-For the kernel itself, there's nothing to do, because Linux doesn't use Remote Read.
-
-[*] https://lore.kernel.org/all/CABgObfadZZ5sXYB0xR5OcLDw_eVUmXTOTFSWkVpkgiCJmNnFRQ@mail.gmail.com
