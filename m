@@ -1,94 +1,101 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439832EB5B4;
-	Thu, 26 Jun 2025 14:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3442EB5B4;
+	Thu, 26 Jun 2025 14:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750948433; cv=none; b=Weg5rklaH/a5xeQI4er1DlpMkE5QmFLL8VTDRpPlRA/ruI1e6cdqtE24TVDKN2BiNglNBNFqk7CvQq88f/RpfkGKDm5F2Y0XQdF+DcrlwIi8jNZyzKpbqW0bA0vYtWm3/zWZ7UHvuD+BViIhV8vP6QBIzFcCVHuXZEQlQl8QW0k=
+	t=1750948442; cv=none; b=FBIv7OuRLKiPTfv9ATAXS0SyRdfTXkIC7C/pKjExM2KrGVGJ20Sf0jKfGxFedkiagu5WRpCl4AiQn9zLNcv+RhzBFde5n0N0jnbMyZIUMoE7EJ6ntfxjeZLEEs+EBwarqmrxAzXrsMpS8lOWzUw0vNIvSzqHysmO5Ty1NY1FIMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750948433; c=relaxed/simple;
-	bh=8feoRMJ5oxsKFFa8/zVv2n9uVgBaK6FEl7Xfk5TBVHs=;
+	s=arc-20240116; t=1750948442; c=relaxed/simple;
+	bh=xej6AQs5tkI/jQAFxSeQKq+f2GY61NJLaNlLTM9NbVw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r8k3MnvbEXQMXd/meLrD68HhQe18TOcakIoALv7tS6BuljUSTuRq9tEARsFCKc3LHsETMuJfz/yK4o7okCBPvKdGcw7t9gP39OpxaqMblQvdjGw7pWew4mIHkmw2hai1i6GQ03ZMsZxdzA2R6mx9RhcWNfiCKglqHPl1/jiRMe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=fw/J9A8N; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=pO6PzgTqfwJ0pMRFliu9a2J1HQWq2dVWptUYL8gy1LFF2RwKphwx21pNqnfzwGoPS6z0d8qQDoWBhcV5UD0HnudVJfeqPKL+sdqNfvKmNCPhSwMAXxe3OeLhVtl8BfyEvsMsy0gkrT9CRkJSFvpiJWgV54ibY7HXSN3FApHuO9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rxqy48p1; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="fw/J9A8N"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1252240E0198;
-	Thu, 26 Jun 2025 14:33:49 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 7bDul_4rMhY9; Thu, 26 Jun 2025 14:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750948424; bh=9pTq08EIkAmh3CEKCUfS921OI6gbM0ntltJPkDq6elg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fw/J9A8N3Js/IC2yv3FufO/fxWnEONZC7aIAkwfVJUReOMwBQF4KkU+7j5azf0Pf5
-	 x0TKIzQU1Yow4zDVIm0uUM3vKEN7d5zqFEeluI/yHTwl/WjUJQcEltOXNWGZVTgN2Y
-	 +R1dhm/gHpwzx7ccuP2EUhf1jyFgMD72mM7CEw/hc+ZjeTtAQp3AYw7pghlLH0DOt2
-	 QJBAtDfBmke9MXgkQXNqD0NaU8mFa0Y+SJF5kbiBzcAxuxm7y3FbUslJvh0lmSUb5/
-	 30DnImadeOAZdPK0ByQ1HWrz5Op7wB1SLNBNT3a4Q4bu2vRKuwkq0TBhf2luou0lPb
-	 34Tm5tnEOfGV7Jqs9xombhmvvSzeVdHJ/AU81rzohoYreS9iGu0FYgMIfB2ZQ92pY9
-	 NhZMk4GuOrTaToutnzQgrey4oIxEE48IC1KGKUgJoWffgkCKr0oJ0c4pi9s8nRwhbi
-	 qyMcfN0+aGZQP3ePyt7No6WR1IEAgwO90Shz90vTY5qYqWC/qbzMabu2SU+tlo+tuc
-	 NlwAeTKLgMGgMcsxAyGcvBuBAClnFiXOKmHwp4Gg1SuKR5JY6lKB6QDIPgZY+HfcoO
-	 hLFZpYqZGNAulK+5qY155jx4mJQZSxVX3cESd3kIyT7lsCmz7nlbGbpeiVkqfTrCpi
-	 My96a/gmvlcUPolQEwFpbVBY=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 720F640E0169;
-	Thu, 26 Jun 2025 14:33:33 +0000 (UTC)
-Date: Thu, 26 Jun 2025 16:33:26 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>, Shiju Jose <shiju.jose@huawei.com>,
-	Arnd Bergmann <arnd@arndb.de>, James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] EDAC: mem_repair: reduce stack usage in
- edac_mem_repair_get_desc()
-Message-ID: <20250626143326.GDaF1aNlhXCRvNK43n@fat_crate.local>
-References: <20250620114135.4017183-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rxqy48p1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750948438; x=1782484438;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xej6AQs5tkI/jQAFxSeQKq+f2GY61NJLaNlLTM9NbVw=;
+  b=Rxqy48p1yGnEzhysYicVNB+dyrki4/qopCOHqZBRi3rdlrKJj/d4Pye5
+   sX0ZWoh2zcTuT8saEczyJkv81ejXCyC+YjkKNx7ElB4ZFWyjioxbwIKGI
+   gIbYcRPMhPvgcrksIKn578wn11RPcmrNqO0FVPbQnmrI2NpcBDq1FdKWD
+   HKtg0PHiVG4ePPj9B9hnV+YKt7LY04EDbkkY6sj9KX6f2n6jhFtN4OW7e
+   wSgocsZZmXRl9neFI+es6G3EW+O7nGXmNXr3Q6LR3Ex/u1sudbPUx5Ysz
+   Q28qiCRVj7Cm9KhaCphW+mmdsaAPrlc7ukaCEoRBnThqD700+V6LevzZp
+   A==;
+X-CSE-ConnectionGUID: QLD26Q+aS5qjHUGs5DV/Iw==
+X-CSE-MsgGUID: NT4hwiMjReGuV1VkSLtuvg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53119200"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="53119200"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 07:33:57 -0700
+X-CSE-ConnectionGUID: +1QKEstmTVuOGFn0EnpavA==
+X-CSE-MsgGUID: /8qtWYBtQrGuIeO1r3TJEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="183561957"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 07:33:53 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uUnfj-0000000ACX3-0ebO;
+	Thu, 26 Jun 2025 17:33:51 +0300
+Date: Thu, 26 Jun 2025 17:33:50 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3 3/4] Input: Don't program hw debounce for
+ soc_button_array devices
+Message-ID: <aF1aThiXUFhHxlZO@smile.fi.intel.com>
+References: <20250625215813.3477840-1-superm1@kernel.org>
+ <20250625215813.3477840-4-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250620114135.4017183-1-arnd@kernel.org>
+In-Reply-To: <20250625215813.3477840-4-superm1@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, Jun 20, 2025 at 01:41:28PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Wed, Jun 25, 2025 at 04:58:12PM -0500, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> Constructing an array on the stack adds complexity and can exceed the
-> warning limit for per-function stack usage:
+> Programming a hardware debounce of 50ms causes problems where a button
+> doesn't work properly anymore on some systems.  This debounce is intended
+> for compatibility with systems with a mechanical switch so soc_button_array
+> devices should only be using a sofware debounce.
 > 
-> drivers/edac/mem_repair.c:361:5: error: stack frame size (1296) exceeds limit (1280) in 'edac_mem_repair_get_desc' [-Werror,-Wframe-larger-than]
-> 
-> Change this to have the actual attribute array allocated statically
-> and then just add the instance number on the per-instance copy.
-> 
-> Fixes: 699ea5219c4b ("EDAC: Add a memory repair control feature")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/edac/mem_repair.c | 56 +++++++++++++++------------------------
->  1 file changed, 22 insertions(+), 34 deletions(-)
+> Add support for indicating that a driver is only requesting gpio_keys
+> to use software debounce support and mark that in soc_button_array
+> accordingly.
 
-Applied, thanks.
+...
+
+> +	gpio_keys_pdata->no_hw_debounce = TRUE;
+
+true
 
 -- 
-Regards/Gruss,
-    Boris.
+With Best Regards,
+Andy Shevchenko
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
