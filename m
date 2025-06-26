@@ -1,137 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4083B274FED;
-	Thu, 26 Jun 2025 15:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D9F2EBDEF;
+	Thu, 26 Jun 2025 15:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750950020; cv=none; b=ddyGLdgX3kqmRZzsA3Z3JG4maTucAhjcOS3JHaqCdJtNPgkCDH1SYdmMew5ya6bnOCpHM3N/X//AkcTX5Dowp9xEk3Lom3UyCqLmi4ged1Zo1VNbcXZah+FRdgkMyO6ZwbBKLJPsyVqloIEr/npbNT8kYDmml5leK0y59FET6zs=
+	t=1750950046; cv=none; b=allt3I/49GttzuKl218VyqRyD+CVThWTeA8lY9rbRlrd613TggMU/CJ61He7Q6O9kwox+Ck3KjwsYos/dOWMa2aN1N5kRazNUfMg4avGj0slLcujpz9FMMPkXH3mVtBKcN9AQAQ0XHpDXdlsAhKMlsg0rNG3Jf5jXga9f2IebFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750950020; c=relaxed/simple;
-	bh=NCW1/aOIcerxFsXM9RKk0cIz5hyj78/lxy0fK07wt7U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DKwpARzI708w2fMw469If5hQZ1BhqoDUgmLAZdjUXxnE0NVoRtVqkWsI/pvzFZxEHQkP/BpsaEVPWt54GKHcNiO7iK8ja+8/DX3eA4V3za7hQJEjfpkdT1j1QX4Pf1ltwOpdFam0ZQa9WaHZLKAfTnxGFdrcZbldIerPmzZMP6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jY6WFcOd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750950046; c=relaxed/simple;
+	bh=/gT8heUBQ3Z05xBH4vV12d5Lb//+FEkn0bNpbdFYKx4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cSokV8he8hAV+nWkgNZQR/dDchMtrlcVm72EmBslnLr+baQQ1aLhqKSTDWoaUbg0Y0WnLG1TNbe7T+C7c52a2ulLq1xz4XoKdIYcOXsuvRJRk+iLnfk3IeibhHzeVVExgsZ9BKcgxwjaDq5AlTqxRmJ6FnQXJPoM+jXl13SEdW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ME0xteVo; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jY6WFcOd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6497BC4CEEB;
-	Thu, 26 Jun 2025 15:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750950019;
-	bh=NCW1/aOIcerxFsXM9RKk0cIz5hyj78/lxy0fK07wt7U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=jY6WFcOd1SGKGpGDrERjXC29gPUIPrTazpGKNCvI1U2hS6aC6UCUWA4CHC4AUp/K0
-	 cb/rAlF5yM0g7vlYXFrQfkrVnTz0ZfuKZH5eUcnTisj1nTuDU4ZNq8jM8K7UrFc+D8
-	 omjNMO0uJTdIJzDNPshyXS3AwgYRhXSGAYUSctH+0ncoS5EIsmcED122FfdUd4rf2u
-	 KN2QZTQghyPHBhwVcfTKWU4JLRgzXgM8wHbU6jySSpe7x/elurMAd474kJziO/rPp1
-	 6weQwqZwzYO7ApU/aGQaHb/24sRQxNHeqgMvDzGOLTq4LBsjFSqpQ1YOmpdKs84I1S
-	 MPtVLzhyi//9w==
-From: "Naveen N Rao (AMD)" <naveen@kernel.org>
-To: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>
-Cc: <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	Vasant Hegde <vasant.hegde@amd.com>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Subject: [EARLY RFC] KVM: SVM: Enable AVIC by default from Zen 4
-Date: Thu, 26 Jun 2025 20:21:22 +0530
-Message-ID: <20250626145122.2228258-1-naveen@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ME0xteVo"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so6216015e9.2;
+        Thu, 26 Jun 2025 08:00:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750950042; x=1751554842; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LBGyUPVtexsma6QWRBZRifNwyFeoUzD3AR8JqwIxFIE=;
+        b=ME0xteVokNXKXsHvB9qkgdcgo20nFz081fY8OR5I7eZz+gKbmJmuljQf67w65WWQmK
+         fn7/tC75SEFSrUKUmdF8y/yzPCsj2DrdioSVvzP6na1OzM1Iq3JBP27Xkmdupk19LJqT
+         NM0b2iuapnUDWhD3ZI3sWS2gXAsBUux6E/WXVjevmYEMjzxxMYmkBmLdCbH6dbdaN3DG
+         Dz79A7X7PbJNEcNJSHCcW1CjHamsInV0H6+NvnNSYubxsmVSyzXWXX/frRsJ/QcyTf6h
+         18ztZ8BsB5JtBsdNP+z7GsTg4i373CBW5bDbQv9M2eOjtcTvWqbvbAcLhlH6aEjVmj6l
+         CHKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750950042; x=1751554842;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LBGyUPVtexsma6QWRBZRifNwyFeoUzD3AR8JqwIxFIE=;
+        b=S8XaLTZWq4ocAWt6jeFYbwj/BHlj4QC654+QlJoDVx+mOm2VXwYGRVzJjbfUDKk82V
+         767LnJIBm9xgzYZZbC6Gl1huYKZxIfjUTWuu6SEJoxio4QBWiWDZWBwa28RTjACNAVah
+         OBbhrL7NE4sHHRKrZggdaYTRSc2mCKlKwNXFz9B6dfEl7rSJCsM6X2VH7J8HoKPQARnj
+         W7Xl7uLPQsPmi/BecU3OzMmF2A/qyPfN0mrcE/TGLmGEsciAQOH+hDcQLPkFCzzxMsH9
+         H028a4FPYOJ+8qbedZ2SbGpXZjLFrBSKHZZ39h74nQk06gcNzLxF7ZYkyi7S3/fBif5W
+         63zw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+UXr1oM9b75IGXw70MAK71EMoHqTgkArNYP4uSJqIaHoesW6eiF7stlgPk/W5xf1DEzzr7VNJRB9/6tXw@vger.kernel.org, AJvYcCWRxJ8YuwkFdZKFzLPqAj9kzTqkOCLCaOOxDtPNrxwBq1FVflpu0yV+l4tiSc9QdpD+o7gDzpKY0eCKaj2v@vger.kernel.org, AJvYcCX5fu4G3CSLNvtyJ7cYHJCZdw+lXxWz18gkfnh5mqY6oWjREafuojuD5GsKoTijb8sW7/IFpAF2F4Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFistn9qyS6wGQIMT9Z/9ElTERkkXABKO1P03ODMH/soSGsSAJ
+	o7epi4MIF0yClG8sH0m5ozXUSJthUSy1ohlhk4sFv9VGXt5SPMl6djWI
+X-Gm-Gg: ASbGncs3qk6uUIAQIxAXOFuoQJyoWmhl7GPoDWkhUxnEV3NpHms1dnU/H65B1/gQAqu
+	0pdLJPpIqJLxvRLmM3ENVKwAKTltdclpkIf6XfXfth93Pbw1UScmf/u0PF3QGG4pv2rn42sZah5
+	2USqxMxdXeXRB3IGXJA3Tb8ddiwsuZYrnsDhAeNyQ+p6ICdvkxFFoZCpG1kWYp3wq1Jzkze9Bhf
+	rqTPgCxc4jJBJN+8cCzq1YIkLEjEyzZF5YcZ8bhbbpLD39mwpipjTT2zykSkzmeZJzj+dnqDdgZ
+	/VcDstX1/7lfTnLZ0zPgzHUbuQvtOls2PpkAARBkUXsx3lGxh9Nj3VEA1woSNHfnSGSEGTbWWt4
+	X9fUs8EiKJr+RnWCveucJqrqvosTEE6goB5CAbA==
+X-Google-Smtp-Source: AGHT+IFzXXD0K2hy8zfMgy/bRNcrMH3XjipsA0in5du/DiH+ioT3nihHoLTw08S4Ydosgwh/XQ17Vg==
+X-Received: by 2002:a05:600c:8b23:b0:453:8042:ba9a with SMTP id 5b1f17b1804b1-4538eaafe29mr99505e9.28.1750950042008;
+        Thu, 26 Jun 2025 08:00:42 -0700 (PDT)
+Received: from [192.168.20.170] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a4064b1sm23079715e9.29.2025.06.26.08.00.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 08:00:41 -0700 (PDT)
+Message-ID: <3b90caec-b4c0-47d8-bdd7-1a7abd5e69d9@gmail.com>
+Date: Thu, 26 Jun 2025 17:00:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] interconnect: avoid memory allocation when
+ 'icc_bw_lock' is held
+Content-Language: hu
+To: Johan Hovold <johan@kernel.org>
+Cc: Georgi Djakov <djakov@kernel.org>,
+ Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
+ Johan Hovold <johan+linaro@kernel.org>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, linux-pm@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250625-icc-bw-lockdep-v3-1-2b8f8b8987c4@gmail.com>
+ <aFvr1zSkf4KmIcMT@hovoldconsulting.com>
+ <aFvuiVX0kMIqXQtZ@hovoldconsulting.com>
+ <84b94649-a248-46b0-a401-772aeb8777a2@gmail.com>
+ <aFwBYRF0wJwVDdeX@hovoldconsulting.com>
+ <ac5ba192-b538-457e-acc4-c2d358b1fd0e@gmail.com>
+ <aF0TIWfDI4M1azzc@hovoldconsulting.com>
+From: Gabor Juhos <j4g8y7@gmail.com>
+In-Reply-To: <aF0TIWfDI4M1azzc@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This is early RFC to understand if there are any concerns with enabling
-AVIC by default from Zen 4. There are a few issues related to irq window
-inhibits (*) that will need to be addressed before we can enable AVIC,
-but I wanted to understand if there are other issues that I may not be
-aware of. I will split up the changes and turn this into a proper patch
-series once there is agreement on how to proceed.
+2025. 06. 26. 11:30 keltezéssel, Johan Hovold írta:
 
-AVIC (and x2AVIC) is fully functional since Zen 4, and has so far been
-working well in our tests across various workloads. So, enable AVIC by
-default from Zen 4.
+...
 
-CPUs prior to Zen 4 are affected by hardware errata related to AVIC and
-workaround for those (erratum #1235) is only just landing upstream. So,
-it is unlikely that anyone was using AVIC on those CPUs. Start requiring
-users on those CPUs to pass force_avic=1 to explicitly enable AVIC going
-forward. This helps convey that AVIC isn't fully enabled (so users are
-aware of what they are signing up for), while allowing us to make
-kvm_amd module parameter 'avic' as an alias for 'enable_apicv'
-simplifying the code.  The only downside is that force_avic taints the
-kernel, but if this is otherwise agreeable, the taint can be restricted
-to the AVIC feature bit not being enabled.
+>> Nevertheless, I think that we can have a simpler solution. We can create a
+>> wrapper around icc_node_add(), and allocate the name from there. I mean
+>> something like this:
+>>
+>> int icc_node_add_dyn(struct icc_node *node, struct icc_provider *provider)
+>> {
+>> 	if (node->id >= ICC_DYN_ID_START) {
+>> 		node->name = devm_kasprintf(provider->dev, GFP_KERNEL, "%s@%s",
+>> 					    node->name, dev_name(provider->dev));
+>> 		if (!node->name)
+>> 			return -ENOMEM;
+>> 	}
+>>
+>> 	icc_node_add(node, provider);
+>> 	return 0;
+>> }
+>>
+>> Then we can change the qcom_icc_rpmh_probe() and qcom_osm_l3_probe() to use the
+>> wrapper instead of the plain version. Since the wrapper can return an error
+>> code, it can be handled in the callers. And as a bonus, we don't have to touch
+>> other users of icc_node_add() at all.
+> 
+> That would be a smaller change indeed, but I don't think we should
+> change the current model of:
+> 
+> 	node = icc_node_create()
+> 	<manual initialisation of the node>
+> 	icc_node_add(node)
+> 
+> So given that we need to add some new helper (or export the internal ID
+> define), I think we might as well add that icc_node_set_name() helper I
+> suggested might be the long term solution here directly.
 
-Finally, stop complaining that x2AVIC CPUID feature bit is present
-without basic AVIC feature bit, since that looks to be the way AVIC is
-being disabled on certain systems and enabling AVIC by default will
-start printing this warning on systems that have AVIC disabled.
+Ok, I see the reason behind that.
 
-(*) http://lkml.kernel.org/r/Z6JoInXNntIoHLQ8@google.com
+> 
+> I also don't like hiding device managed allocations (those should be done
+> explicitly with devm_ prefix helpers so that the callers can reason
+> about ordering) so I dropped that as well.
+> 
+> So something like the below. 
 
-Signed-off-by: Naveen N Rao (AMD) <naveen@kernel.org>
----
- arch/x86/kvm/svm/avic.c | 11 +++++------
- arch/x86/kvm/svm/svm.c  | 10 +++-------
- 2 files changed, 8 insertions(+), 13 deletions(-)
+It seems to be a cleaner solution indeed.
 
-diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-index a34c5c3b164e..bf7f91f41a6e 100644
---- a/arch/x86/kvm/svm/avic.c
-+++ b/arch/x86/kvm/svm/avic.c
-@@ -1101,12 +1101,11 @@ bool avic_hardware_setup(void)
- 	if (!npt_enabled)
- 		return false;
- 
--	/* AVIC is a prerequisite for x2AVIC. */
--	if (!boot_cpu_has(X86_FEATURE_AVIC) && !force_avic) {
--		if (boot_cpu_has(X86_FEATURE_X2AVIC)) {
--			pr_warn(FW_BUG "Cannot support x2AVIC due to AVIC is disabled");
--			pr_warn(FW_BUG "Try enable AVIC using force_avic option");
--		}
-+	if (!boot_cpu_has(X86_FEATURE_AVIC) && !force_avic)
-+		return false;
-+
-+	if (!force_avic && (boot_cpu_data.x86 < 0x19 || boot_cpu_has(X86_FEATURE_ZEN3))) {
-+		pr_warn("AVIC disabled due to hardware errata. Use force_avic=1 if you really want to enable AVIC.\n");
- 		return false;
- 	}
- 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index ab11d1d0ec51..9b5356e74384 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -158,12 +158,7 @@ module_param(lbrv, int, 0444);
- static int tsc_scaling = true;
- module_param(tsc_scaling, int, 0444);
- 
--/*
-- * enable / disable AVIC.  Because the defaults differ for APICv
-- * support between VMX and SVM we cannot use module_param_named.
-- */
--static bool avic;
--module_param(avic, bool, 0444);
-+module_param_named(avic, enable_apicv, bool, 0444);
- module_param(enable_ipiv, bool, 0444);
- 
- module_param(enable_device_posted_irqs, bool, 0444);
-@@ -5404,7 +5399,8 @@ static __init int svm_hardware_setup(void)
- 			goto err;
- 	}
- 
--	enable_apicv = avic = avic && avic_hardware_setup();
-+	if (enable_apicv)
-+		enable_apicv = avic_hardware_setup();
- 
- 	if (!enable_apicv) {
- 		enable_ipiv = false;
+> Note that this could be extended with a
+> name-allocated flag and an appropriate warning somewhere later if anyone
+> is worried about drivers failing to use the helper.
+> 
+> Note that we can't use kfree_const() unconditionally as I initially
+> intended as apparently some interconnect providers already allocate
+> names for non-dynamic nodes.
 
-base-commit: 7ee45fdd644b138e7a213c6936474161b28d0e1a
--- 
-2.49.0
+Not that I want to worry about anything, but for the sake of completeness I have
+to note something. Theoretically, freeing the name in icc_node_destroy() could
+cause the following on IPQ9574 under some circumstances:
+
+  [    4.003692] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffffff80047e4180 pfn:0x447e4
+  [    4.008439] flags: 0x0(zone=0)
+  [    4.017545] raw: 0000000000000000 fffffffec0000448 ffffff803fdbb518 0000000000000000
+  [    4.020480] raw: ffffff80047e4180 0000000000150000 00000000ffffffff 0000000000000000
+  [    4.028413] page dumped because: Not a kmalloc allocation
+
+It is not a problem of your patch though. The root cause of this is the same
+as why I saw the lockdep warning on the platform originally. The reason is
+that the static node ids used by the 'nsscc-ipq9574' driver are within the
+range of dynamic ids. Nevertheless, I have sent a patch [1] to fix that
+already.
+
+Despite the note above, your proposal looks good to me. Would you like to
+send it as a formal patch, or shall I do it?
+
+[1] https://lore.kernel.org/r/20250625-icc-dyn-id-fix-v1-1-127cb5498449@gmail.com
+
+Regards,
+Gabor
 
