@@ -1,302 +1,191 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2067.outbound.protection.outlook.com [40.107.236.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FE122173F;
-	Thu, 26 Jun 2025 22:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750977819; cv=fail; b=Gejbe2tyMwAjwch2SuMVcqys4O/5jPKvHLySQ5ZjfVNjtCcFzOTouxHtOe6Xb86gaNG7jfhVtldMyNSQF4gcG+I4528XUemfK3ZMyBFT4yxzbi0tzacpMpgp/WK6yOfLyhTNGeZHJb3I4l9CaPvrFBWmrcxiDzWv9yIVo1+O4mM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750977819; c=relaxed/simple;
-	bh=47onKdiJ/3fE53T8nINxP6oaKa78gPNyWxFnSsfqfSI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gy0VfLIXbuT8O5ZRcS802IApdqwku+ovwXfG90hOuekF/SWgORvxi0jM98fmhvCm+wOoQCXW5XbZ67pK1b5IIA8Hyq5+6dMD4HODWYP9t4GjDKxy3uX8tlUCzci75kIMehrba6ObFVt1BLgzySlFYT3S4FRt4MsBZpg2ryZ9m2s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eJVJUkLo; arc=fail smtp.client-ip=40.107.236.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D7A26E707
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750977822; cv=none; b=OzpRfuLySB5Ai+ZCEDGY2s1vFbjIzUdamnmopjAlaRTmr642ZqA5DR1smKqYSCR12SvbFPAE5WN5YhZynGKbW8tlmSENGxgvXiyLD+YPB6bpazp9XASxUuv7NrpyGvLc+eI1ic10Mv1NiDYofsYH6BgZj7CLlAKt+tB4V2B++pk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750977822; c=relaxed/simple;
+	bh=SAOGsbHcFwt1RIPCltcbSOYs2IVPDVh8pHbL4j2k0RY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=CaDERaxvBXvhidsqVpRFAhOaiQmzbmHG+PH55MHwca3+KeyrkZLQDNGXO+xJVDCB1hDQ+Ed2c0R72ndAZmB3C68XR675HR4WnnDQROVBi90MlQL9t5CMTlogv9detkUgg2UxEzVLcQSMsxX4syDfLMGLInCd+roxfh8/GwOmy3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iUZdMufG; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eJVJUkLo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oGvJNcDhiJqlmMFIr5adglR4uCKpphNNGkBpAP5t4AGf8ga+S7hIouN8ui+F2U7ZwDRouqlz2ydvu//7VKkoTEFXhX4ta59USs+GGwaDgxEQuDBYoo/1IlXuQkJNq5cGYFM9HEqqMbPaKYpdZ2/K6VNymKgsCqxKDBBWr4vy5BmG5saajydnitqfdtkfF+cEZFFlBwImqd6VlqO8l+t5DEAdWRyhhourb/Sru8MB3OLBfoS11lOZtcLTDuVP3kQmSNY3r2WKnAAhZ0FS2V/7BoI1RWI2RfIbmZWNqLITLs/jy9Ow5aoEIRaua/BpHVE25iIboHSS87EjRflbELvnLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=648ZKREPExPVk8GZhp+esCp2YSUftAO6AiocWIHQUbo=;
- b=MPiSB9fJNJV+EGAMBDXUex3TPERfcuTQGfEi4lKbyrms7X3x7KHCbAMuOp5QTORusQfRKauBOFBC9mQVUcJFbWEMj38YQoAIbsQcmqiFrbaG36v66lXpWsluD+vEk0k0xRC5ysNh8jIlN2r12lFkhIxJq/YxigxMY5qwkApmCHGMOkcN7LD4oeHReITIZ/2v9qAILBYprQI3qdM1OtMVIN4rCqACoEXcW6wByuxP8hbFU72oeTh6w2K3ASzDncJQ2e4v1fbEz3oIbROZvWF1Ii2nC6ltCfHS7qnFg9HW/A6nbD/dP/jylvsoTeJ2yFoeQAP/hIdCaMvi4Lg74GZkxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=648ZKREPExPVk8GZhp+esCp2YSUftAO6AiocWIHQUbo=;
- b=eJVJUkLodVBnVOVc7BxXx31zvBED7uqFb2yL8FpJgd/F1m/i0Ghj5Du/TN/LdfwIbq3hQBKDQHmEGtcSZFKvHEwj3FspeZTpujR5mi/CoIgbFACTZZ3apPETPkROohMV6CNx6V9gTCkMP7Cq+wF8MPaGCaz5JfWi/TamY6A2frA=
-Received: from CH2PR05CA0027.namprd05.prod.outlook.com (2603:10b6:610::40) by
- PH8PR12MB7157.namprd12.prod.outlook.com (2603:10b6:510:22b::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8792.41; Thu, 26 Jun 2025 22:43:33 +0000
-Received: from DS3PEPF000099D8.namprd04.prod.outlook.com
- (2603:10b6:610:0:cafe::90) by CH2PR05CA0027.outlook.office365.com
- (2603:10b6:610::40) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.7 via Frontend Transport; Thu,
- 26 Jun 2025 22:43:32 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099D8.mail.protection.outlook.com (10.167.17.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8880.14 via Frontend Transport; Thu, 26 Jun 2025 22:43:32 +0000
-Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 26 Jun
- 2025 17:43:31 -0500
-From: Terry Bowman <terry.bowman@amd.com>
-To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<terry.bowman@amd.com>, <linux-cxl@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: [PATCH v10 03/17] PCI/AER: Report CXL or PCIe bus error type in trace logging
-Date: Thu, 26 Jun 2025 17:42:38 -0500
-Message-ID: <20250626224252.1415009-4-terry.bowman@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250626224252.1415009-1-terry.bowman@amd.com>
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iUZdMufG"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74927be2ec0so2152204b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:43:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750977821; x=1751582621; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D+aNfx32rCA8ptyZuXuy/RXxrC6yFTb63LaStdM2TSw=;
+        b=iUZdMufG+YuYoMJgk8LSoEa432xOuOPORY8MIBKuroWu848KKSXGhk0mNWXcEjULeF
+         pzRcrI04hyKKY4RYsMmFDsaB6Dy/TlX5zzF6BztGB/er8nLgzvrLMNCzsUjGYPtrQmxe
+         mMRmJZyHL3Ka8ioqmQqwp3TY+X45mErD9hUJ1Ws/Yb9kFmuSi1YEGkatFE/4Kdmq+kLy
+         BIN8127YUoPQRsU8B8tf/QXi8lkrPSqSJVpnePqIrp52+YLs9jf50LJe6nMuSx8HLSAU
+         zsPtEL5g4ZU5Z9I54r1wX80tKW3EpT3qm5uBRXnDEMCluVr0qeI5bfrfXjAOXSyOdY51
+         AocQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750977821; x=1751582621;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=D+aNfx32rCA8ptyZuXuy/RXxrC6yFTb63LaStdM2TSw=;
+        b=aNCxtXQSKzVRWCKIkp/NdSPsMhpNSNSgn2O/jCABX9qKTWV2PcevOUtQMCxcRWelwW
+         9WnTPmAM5gXoHmwsYfEznabOP3ZYQN32xh3AxgzBieoIn6YV87h2CtOXNKdLfiGCXv2M
+         dpc5i1P3cXvMXIsbfcofB4gvZ6wGHDOuihXSxHMFcC/A6EqPvtOgrPCC8QMYyy3MDu8a
+         sCFujiZVVehO/CRzbP3UVlJRpjjxbDZY09ex56xBnqaBL8ZvfI5veRUGBOtW/K7GZ51u
+         0fWpICLkuZE2WXXqp1y77w1igoALNkn5WbunHCz+Adyl6SDwVgCmGXHBx169mp0Pl1lf
+         jslg==
+X-Forwarded-Encrypted: i=1; AJvYcCWmzDIKVvaJTuDx6h5wSNtvxFQqSZD3Q9igzIeWH8n21snXnEGxanFpwDFaXTZGcIbqDeCW8YuwAbNBcfk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6VZh4jNccpeC1u0KELgwJF5w3ZAX12EYdCW5wYRwydoJ/aq1B
+	2pzqOl/mThcF0NVuh/X36N4stoDmXTfFqbl0+vsknNUcyQOuSjkZmuaKpPPPGcgoB/Snk4Ggz4P
+	BqIHnQQ==
+X-Google-Smtp-Source: AGHT+IF+I3hj6sD+7mRVKugWfwkI8uGSKayYGM8ET1hZ//75fEERgX12/UwIpz5Ec/SzX4PUw0wWAN3iqZU=
+X-Received: from pgcy10.prod.google.com ([2002:a63:7d0a:0:b0:b31:c667:9fce])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6d8f:b0:216:1ea0:a51a
+ with SMTP id adf61e73a8af0-220a16ca805mr1016548637.38.1750977820750; Thu, 26
+ Jun 2025 15:43:40 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Thu, 26 Jun 2025 15:43:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D8:EE_|PH8PR12MB7157:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9a42e907-84aa-4bc7-3c7c-08ddb502e0fe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|7416014|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5Kd+xTL3n7xwKq4cmT7IE+Ea3hEaovophGVT0tC6G0x524WRr01RVWvo7xiU?=
- =?us-ascii?Q?5t6H7hGS9u6zEe4YWmrHnqKaWIPqtcVj7STPgw7Ix1UhOClPjpErGyAQ+oAR?=
- =?us-ascii?Q?1cXKpuVwZvoMoWBalUYcqhGU49P+A5TKPG/7O74sQfi6tK83hBubq2IHatmw?=
- =?us-ascii?Q?4ZRyzolSZR6FHwCyuwLkbNxpgtga7e8Fzm/RnR9fWgUTtuHyCU1qTcL+4lyF?=
- =?us-ascii?Q?qtNecoYxzFbQy9BT+RIZcBOv5olxC/qinvxrSVzTZtM8tDuAbScyI0SB34BL?=
- =?us-ascii?Q?LcbY0fwbleXVTjAL7EdHeEfG8BKwgRLk7uApGTj37Puvyof99Bwwnr5MqHMW?=
- =?us-ascii?Q?JrTrzjsluzXX0ILZSo6wp/xZxTsjs9S1Ki1fQPVHpslYnp3Xipcq0NHYsAMQ?=
- =?us-ascii?Q?0+KKmKbSytlKohiBDHw8DEdjlvyh5C7zT1IGNGlicSEEyJqOmjSqFdepvjS/?=
- =?us-ascii?Q?a35mLUQTHfw0e4Ds+Gx68ADgG1rogcwwvrQU4WB4sVcinxpNpuai6knYHqto?=
- =?us-ascii?Q?wg1HWdArFVk4f9VMmcJsWKEmFrc5YR/nlFXb4Gt/rxgM0u4msNPbAHgvFRaf?=
- =?us-ascii?Q?fcebl/xm/EGWn5F2vcnsjdzOs1yuYdwwAhDG7bP/hO18yUoqpNZ1DaKL3f84?=
- =?us-ascii?Q?+0qlYVCB6NwuZSmJ4TCdj8KPKxwYuUUW/gyzs1zUAzrkfp4il1Ml+ZTQd/sK?=
- =?us-ascii?Q?vMviK2F2oXSZFluiBb5VsRTP3jDLi5rSErWSY7KZ50JhGlGxpzQg1nKInfRW?=
- =?us-ascii?Q?Xj65Klr5JZkIY91EdUKuFitkEJwxjukjVBBpJ+HNjpA9obwkUYPi/db10pHA?=
- =?us-ascii?Q?VuAxe56Rhx9MN6Ikr3bFl9gjiiRHmIrsNNUaf1Oz18s253Qy1AdQAZyyQAh4?=
- =?us-ascii?Q?X9Pobvr4ifaNdSH8b84Xd/dkmq5h9I3gdAxRQVdnzbZTx3AjSfzRbQGLFvXr?=
- =?us-ascii?Q?o5Ke8iThH0gmLpH0WmAFji0izBUvbrqz26sCh+VUuMaXLT6fP6shjbMJ+dtQ?=
- =?us-ascii?Q?LU4HS8qaQGTnD2ArS8nn7ZCyyOV9AtTPG+40sqcMnYMQWNKLU0WLW7bei/+E?=
- =?us-ascii?Q?sRFDGbhIafS1jIy53N3vdeS2D0H8lEWiHWTVjU46LrJOXMKOLXITW+ism6BJ?=
- =?us-ascii?Q?ShmTNtYQ0q0Og4YLdNwuCIyB/37lTSUplFho1XZ6uNAIfcMBI8cWx/u27Ctw?=
- =?us-ascii?Q?GLUGnOwcL/UeuVx6UdraG7+fmYer/hjB6KWdQmwhndTxg7/yRUSspujLBWgj?=
- =?us-ascii?Q?4ChECM+lVDLEtQA3fnS6gWrPcsW5uo7AknH62NrsVD+WvlpDawp3MOIyQYPr?=
- =?us-ascii?Q?TpRcheSNQhDXcgzziVqXwrrezcpyhbCp7N11Zu0QcMuIF9gqfb9zYi3QABNY?=
- =?us-ascii?Q?tQ/Usa7MDKwLIJvBtV07fIN74ZSqy3DdHdXPDtjupLl8ObM5c8QCBNQmNYap?=
- =?us-ascii?Q?VJxnuWxlueUavCNDGuNGjhlTnGZ4rH1STD1lSMjyQPma1shAPHhWMHPndqIO?=
- =?us-ascii?Q?jidkw/ffvc/irpgqKOy00b7d2va5cT9HKYV/zcHx8sq9RAjzxZHl0X4JDA?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 22:43:32.5001
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a42e907-84aa-4bc7-3c7c-08ddb502e0fe
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D8.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7157
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250626224336.867412-1-seanjc@google.com>
+Subject: [kvm-unit-tests GIT PULL] x86: Fixes, cleanups, and new testcases
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Sean Christopherson <seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The AER service driver and aer_event tracing currently log 'PCIe Bus Type'
-for all errors. Update the driver and aer_event tracing to log 'CXL Bus
-Type' for CXL device errors.
+Please pull a self-centered set of KUT changes.
 
-This requires the AER can identify and distinguish between PCIe errors and
-CXL errors.
+The following changes since commit 507612326c9417b6330b91f7931678a4c6866395:
 
-Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
-aer_get_device_error_info() and pci_print_aer().
+  travis.yml: Remove the aarch64 job (2025-06-05 10:07:07 +0200)
 
-Update the aer_event trace routine to accept a bus type string parameter.
+are available in the Git repository at:
 
-Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
----
- drivers/pci/pci.h       |  6 ++++++
- drivers/pci/pcie/aer.c  | 21 +++++++++++++++------
- include/ras/ras_event.h |  9 ++++++---
- 3 files changed, 27 insertions(+), 9 deletions(-)
+  https://github.com/kvm-x86/kvm-unit-tests.git tags/kvm-x86-2025.06.26
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 12215ee72afb..a0d1e59b5666 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -608,6 +608,7 @@ struct aer_err_info {
- 	int ratelimit_print[AER_MAX_MULTI_ERR_DEVICES];
- 	int error_dev_num;
- 	const char *level;		/* printk level */
-+	bool is_cxl;
- 
- 	unsigned int id:16;
- 
-@@ -628,6 +629,11 @@ struct aer_err_info {
- int aer_get_device_error_info(struct aer_err_info *info, int i);
- void aer_print_error(struct aer_err_info *info, int i);
- 
-+static inline const char *aer_err_bus(struct aer_err_info *info)
-+{
-+	return info->is_cxl ? "CXL" : "PCIe";
-+}
-+
- int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
- 		      unsigned int tlp_len, bool flit,
- 		      struct pcie_tlp_log *log);
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 70ac66188367..a2df9456595a 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -837,6 +837,7 @@ void aer_print_error(struct aer_err_info *info, int i)
- 	struct pci_dev *dev;
- 	int layer, agent, id;
- 	const char *level = info->level;
-+	const char *bus_type = aer_err_bus(info);
- 
- 	if (WARN_ON_ONCE(i >= AER_MAX_MULTI_ERR_DEVICES))
- 		return;
-@@ -845,23 +846,23 @@ void aer_print_error(struct aer_err_info *info, int i)
- 	id = pci_dev_id(dev);
- 
- 	pci_dev_aer_stats_incr(dev, info);
--	trace_aer_event(pci_name(dev), (info->status & ~info->mask),
-+	trace_aer_event(pci_name(dev), bus_type, (info->status & ~info->mask),
- 			info->severity, info->tlp_header_valid, &info->tlp);
- 
- 	if (!info->ratelimit_print[i])
- 		return;
- 
- 	if (!info->status) {
--		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
--			aer_error_severity_string[info->severity]);
-+		pci_err(dev, "%s Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-+			bus_type, aer_error_severity_string[info->severity]);
- 		goto out;
- 	}
- 
- 	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
- 	agent = AER_GET_AGENT(info->severity, info->status);
- 
--	aer_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
--		   aer_error_severity_string[info->severity],
-+	aer_printk(level, dev, "%s Bus Error: severity=%s, type=%s, (%s)\n",
-+		   bus_type, aer_error_severity_string[info->severity],
- 		   aer_error_layer[layer], aer_agent_string[agent]);
- 
- 	aer_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-@@ -895,6 +896,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
- void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 		   struct aer_capability_regs *aer)
- {
-+	const char *bus_type;
- 	int layer, agent, tlp_header_valid = 0;
- 	u32 status, mask;
- 	struct aer_err_info info = {
-@@ -915,9 +917,12 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 
- 	info.status = status;
- 	info.mask = mask;
-+	info.is_cxl = pcie_is_cxl(dev);
-+
-+	bus_type = aer_err_bus(&info);
- 
- 	pci_dev_aer_stats_incr(dev, &info);
--	trace_aer_event(pci_name(dev), (status & ~mask),
-+	trace_aer_event(pci_name(dev), bus_type, (status & ~mask),
- 			aer_severity, tlp_header_valid, &aer->header_log);
- 
- 	if (!aer_ratelimit(dev, info.severity))
-@@ -939,6 +944,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 	if (tlp_header_valid)
- 		pcie_print_tlp_log(dev, &aer->header_log, info.level,
- 				   dev_fmt("  "));
-+
-+	trace_aer_event(dev_name(&dev->dev), bus_type, (status & ~mask),
-+			aer_severity, tlp_header_valid, &aer->header_log);
- }
- EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
- 
-@@ -1371,6 +1379,7 @@ int aer_get_device_error_info(struct aer_err_info *info, int i)
- 	/* Must reset in this function */
- 	info->status = 0;
- 	info->tlp_header_valid = 0;
-+	info->is_cxl = pcie_is_cxl(dev);
- 
- 	/* The device might not support AER */
- 	if (!aer)
-diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-index 14c9f943d53f..080829d59c36 100644
---- a/include/ras/ras_event.h
-+++ b/include/ras/ras_event.h
-@@ -297,15 +297,17 @@ TRACE_EVENT(non_standard_event,
- 
- TRACE_EVENT(aer_event,
- 	TP_PROTO(const char *dev_name,
-+		 const char *bus_type,
- 		 const u32 status,
- 		 const u8 severity,
- 		 const u8 tlp_header_valid,
- 		 struct pcie_tlp_log *tlp),
- 
--	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
-+	TP_ARGS(dev_name, bus_type, status, severity, tlp_header_valid, tlp),
- 
- 	TP_STRUCT__entry(
- 		__string(	dev_name,	dev_name	)
-+		__string(	bus_type,	bus_type	)
- 		__field(	u32,		status		)
- 		__field(	u8,		severity	)
- 		__field(	u8, 		tlp_header_valid)
-@@ -314,6 +316,7 @@ TRACE_EVENT(aer_event,
- 
- 	TP_fast_assign(
- 		__assign_str(dev_name);
-+		__assign_str(bus_type);
- 		__entry->status		= status;
- 		__entry->severity	= severity;
- 		__entry->tlp_header_valid = tlp_header_valid;
-@@ -325,8 +328,8 @@ TRACE_EVENT(aer_event,
- 		}
- 	),
- 
--	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
--		__get_str(dev_name),
-+	TP_printk("%s %s Bus Error: severity=%s, %s, TLP Header=%s\n",
-+		__get_str(dev_name), __get_str(bus_type),
- 		__entry->severity == AER_CORRECTABLE ? "Corrected" :
- 			__entry->severity == AER_FATAL ?
- 			"Fatal" : "Uncorrected, non-fatal",
--- 
-2.34.1
+for you to fetch changes up to 525bdb5d65d51a367341f471eb1bcd505d73c51f:
 
+  x86/pmu: Verify all available GP counters in check_counters_many() (2025-06-25 14:20:34 -0700)
+
+----------------------------------------------------------------
+x86 fixes, cleanups, and new test coverage
+
+ - Ensure APIC is xAPIC mode for APIC MMIO tests.
+
+ - Expand the I/O APIC routing reconfiguration vs. EOI interception testcase
+   to validate multiple in-flight interrupts.
+
+ - Fix a variety of minor PMU/PEBS bugs and warts.
+
+ - Fix the nSVM MSR interception test to actually detect failures, and expand
+   its coverage to validate more scenarios.
+
+ - Add X86_PROPERTY_xxx macros (stolen from KVM selftests) and use them to
+   clean up related code.
+
+ - Add testcases for MSR_SPEC_CTRL, and an msr64 config to validate negative
+   testcases (i.e. when MSRs aren't supposed to exist).
+
+ - Disable PIT re-injection for all tests so that (x2)AVIC isn't inhibited due
+   to enabling in-kernel PIT emulation.
+
+ - Play nice with QEMU builds that disable VNX support.
+
+----------------------------------------------------------------
+Dapeng Mi (2):
+      x86/pmu_pebs: Initalize and enable PMU interrupt (PMI_VECTOR)
+      x86/pmu: Verify all available GP counters in check_counters_many()
+
+Sean Christopherson (41):
+      x86: apic: Move helpers for querying APIC state to library code
+      x86: nSVM: Ensure APIC MMIO tests run with APIC in xAPIC mode
+      x86: ioapic: Expand routing reconfiguration => EOI interception testcase
+      runtime: Skip tests if the target "kernel" file doesn't exist
+      x86/pks: Actually skip the PKS test if PKS isn't support
+      x86/pmu: Explicitly zero PERF_GLOBAL_CTRL at start of PMU test
+      x86/run: Specify "-vnc none" for QEMU if and only if QEMU supports VNC
+      lib: Add and use static_assert() convenience wrappers
+      x86: Call setup_idt() from start{32,64}(), not from smp_init()
+      x86: Drop protection against setup_idt() being called multiple times
+      x86: Move call to load_idt() out of setup_tr_and_percpu macro
+      x86: Load IDT on BSP as part of setup_idt()
+      x86: Cache availability of forced emulation during setup_idt()
+      nVMX: Force emulation of LGDT/LIDT in iff FEP is available
+      x86: nSVM: Actually report missed MSR intercepts as failures
+      x86: nSVM: Test MSRs just outside the ranges of the MSR Permissions Map
+      x86: nSVM: Clean up variable types and names in test_msr_intercept()
+      x86: Expand the suite of bitops to cover all set/clear operations
+      x86: nVMX: Use set_bit() instead of test_and_set_bit() when return is ignored
+      x86: nSVM: Set MSRPM bit on-demand when testing interception
+      x86: nSVM: Verify disabling {RD,WR}MSR interception behaves as expected
+      x86: nSVM: Verify L1 and L2 see same MSR value when interception is disabled
+      x86: Disable PIT re-injection for all tests to play nice with (x2)AVIC
+      x86: Delete split IRQ chip variants of apic and ioapic tests
+      x86: Encode X86_FEATURE_* definitions using a structure
+      x86: Add X86_PROPERTY_* framework to retrieve CPUID values
+      x86: Use X86_PROPERTY_MAX_VIRT_ADDR in is_canonical()
+      x86: Implement get_supported_xcr0() using X86_PROPERTY_SUPPORTED_XCR0_{LO,HI}
+      x86: Add and use X86_PROPERTY_INTEL_PT_NR_RANGES
+      x86/pmu: Mark all arch events as available on AMD, and rename fields
+      x86/pmu: Mark Intel architectural event available iff X <= CPUID.0xA.EAX[31:24]
+      x86/pmu: Use X86_PROPERTY_PMU_* macros to retrieve PMU information
+      x86/sev: Use VC_VECTOR from processor.h
+      x86/sev: Skip the AMD SEV test if SEV is unsupported/disabled
+      x86/sev: Define and use X86_FEATURE_* flags for CPUID 0x8000001F
+      x86/sev: Use X86_PROPERTY_SEV_C_BIT to get the AMD SEV C-bit location
+      x86/sev: Use amd_sev_es_enabled() to detect if SEV-ES is enabled
+      x86: Move SEV MSR definitions to msr.h
+      x86/msr: Treat PRED_CMD as support if CPU has SBPB
+      x86/msr: Add a testcase to verify SPEC_CTRL exists (or not) as expected
+      x86/msr: Add an "msr64" test configuration to validate negative cases
+
+ lib/riscv/asm/isa.h      |   4 +-
+ lib/s390x/asm/arch_def.h |   6 +-
+ lib/s390x/fault.c        |   3 +-
+ lib/util.h               |   3 +
+ lib/x86/amd_sev.c        |  48 ++-----
+ lib/x86/amd_sev.h        |  29 -----
+ lib/x86/apic.h           |  21 +++
+ lib/x86/asm/bitops.h     |  86 +++++++++++-
+ lib/x86/desc.c           |  29 ++++-
+ lib/x86/desc.h           |  14 +-
+ lib/x86/msr.h            |  14 +-
+ lib/x86/pmu.c            |  25 ++--
+ lib/x86/pmu.h            |   8 +-
+ lib/x86/processor.h      | 332 +++++++++++++++++++++++++++++++++--------------
+ lib/x86/setup.c          |   1 -
+ lib/x86/smp.c            |   1 -
+ scripts/runtime.bash     |   5 +
+ x86/access.c             |   2 +-
+ x86/amd_sev.c            |  63 ++-------
+ x86/apic.c               |  20 ---
+ x86/cstart.S             |   3 +-
+ x86/cstart64.S           |   2 +-
+ x86/emulator.c           |  11 +-
+ x86/emulator64.c         |   2 +-
+ x86/ioapic.c             |  52 +++++++-
+ x86/la57.c               |   4 +-
+ x86/lam.c                |   6 +-
+ x86/msr.c                |  36 ++++-
+ x86/pks.c                |   2 +-
+ x86/pmu.c                |  37 ++++--
+ x86/pmu_pebs.c           |   3 +
+ x86/run                  |  15 ++-
+ x86/svm_npt.c            |  27 ++++
+ x86/svm_tests.c          | 240 ++++++++++++++++++++++++++--------
+ x86/unittests.cfg        |  30 ++---
+ x86/vmx_tests.c          |  11 +-
+ x86/xsave.c              |  11 +-
+ 37 files changed, 792 insertions(+), 414 deletions(-)
