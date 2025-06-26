@@ -1,195 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3577423B634;
-	Thu, 26 Jun 2025 22:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A3023B634;
+	Thu, 26 Jun 2025 22:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750975621; cv=none; b=dUh0Of/lIDKKpN8fLvmQHBVO+ZBSBr06/pCLjXsJCYukLWO3/qnF5vFX0ALiP+8Fc/OR6k7Pr7tgG3qq4DxSyNx0BQ4qNqb6idLWlUb3eR9VQJIJxK/+55rc9dy98XzjPX9ipSoioXe9rn26zFGHDTul9sapZWzbndhpTgBA1Gs=
+	t=1750975672; cv=none; b=ftVnhJ9OgS1TQSd6eqc27s+5Yjk/N7WqazTkukrpqq8Og95S/fD3U1UizHCyPm3gbsm9WmLMzaS0nsPvV+Eu+Pt62nlD9j1wpGAhjsIebKlA21pzdcsneBSqxS0hDnaWqe//1CtLKZGFBq+8AHm9+fCg4scgM/GFt5rUv8nxTac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750975621; c=relaxed/simple;
-	bh=jcDmlXlPtyzdOIJ5SLX8GV0/QYmp1r6I5Va/AUcO+BE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PoPm56mk3Z/Tm7NN0iLkZnoUFZ9mJ/bYCeoR8FAvT5m1vyq/bTIRMse8dXHbFGcHP1tQIkdPsoM3RUIagEafuA/FDaRXKcDxtY6Xc63ZQ5fEKTA5VlC9WOxC5KSVI9SR0LkwfF+0BX1H5lvQ03DRKJh+L5nA+dH6ubX6z/w55xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nknxJ0lE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750975672; c=relaxed/simple;
+	bh=bUTpjLkfsFNOyjEtEopr5we1x3Roxq22HlCVo4NPojg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fE4fBLCowK+WBJogZPSWQ7l7VW/jFsULdUiK0c82H2u5xJsNwjBeBQn7iRZ4Bwz+CLA3Md9ICDLNRav6VovDOXNm+5n8Cl19aTR/H3AnG5zoQ8olTKmJ0PsMhJ7xJOpySVw513RZ52Z7wTb5Zrkk8qw7NHuup4FstLLF0rQF3SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Lf/H7SPI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GH86Pf0x; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nknxJ0lE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91B98C4CEEB;
-	Thu, 26 Jun 2025 22:07:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750975620;
-	bh=jcDmlXlPtyzdOIJ5SLX8GV0/QYmp1r6I5Va/AUcO+BE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nknxJ0lE3sEgU97T8OXZUN5dotQCkRISDueEJ5SV/Qb6IjJB5ltBwRfyHvuBl9znB
-	 zLLjgrnJldnWtt37Qb09bTMFZDAZ/NB+EaUJa7hDDTxeTynZN6C8UzIoJ0cUxawG/H
-	 XBpWKGo6rTUiFU03jCR/1NQhyRL5nmVQscG/cM/Nr+6gOB5SH8ZEowXf7OONHm8e2t
-	 YXJ/wY6cDGmPE4BYg6VbqhB4XG40eDATJSjwpIzSmBif5vkq8osFKk2Sw9TKro/HJx
-	 d/JuqgzciX6bLviW5mnsB6cBCdhG1cl0bEH0i3Ei7YT5yWnCqOoHKdWDKQxcOll3Ac
-	 MgC4GMKgEICWg==
-Date: Thu, 26 Jun 2025 15:06:59 -0700
-From: Vinod Koul <vkoul@kernel.org>
-To: Devendra K Verma <devverma@amd.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mani@kernel.org
-Subject: Re: [RESEND PATCH] dmaengine: dw-edma: Add Simple Mode Support
-Message-ID: <aF3Eg_xtxZjZTEop@vaman>
-References: <20250623061733.1864392-1-devverma@amd.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Lf/H7SPI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GH86Pf0x"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750975668;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HC18m67HnK1X7lBUoyKEQKdHSun378qI4UuLYILh+NY=;
+	b=Lf/H7SPI9D1X41sl8/1PmcSDXSU+nBDjIp75Y8ag9fGOojziddK0AyFpAalXGu3vIbVxCA
+	XdE8ndUKS9SqPYuGgbBHs9yfM+pVczvyz/10yu1TfFDUF6CG1DYJKv0M5JqMJEgTPswQ51
+	I4e1doPL7tEQq4MViRBvq6YtpKV3dSBkfw6g5e6U1Gp27j3tOJJqBiukeC5uKq1avDA2b5
+	qzG/5SeV6IPNSTKgfOgsL0ByG8NQ5YHS+g7uTmQWVmYQQobRn0l0lf6myNo4hf5GQCyK+e
+	rig5SKzFcjIU0kJopQxB/s1r7D/9eTUMzC8yg/b46Wk8KZgepzxIthvKTO5L1Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750975668;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HC18m67HnK1X7lBUoyKEQKdHSun378qI4UuLYILh+NY=;
+	b=GH86Pf0xVcsQMuaOc7ow/3xdfB1Ix9yyJQEkxG1NLTStZfk85b0HXAsHlgduJf47xXELdh
+	/GrYTgk9Z0qckhCw==
+To: =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@igalia.com>, Ingo Molnar
+ <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Waiman Long <longman@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-api@vger.kernel.org, kernel-dev@igalia.com, =?utf-8?Q?Andr=C3=A9?=
+ Almeida
+ <andrealmeid@igalia.com>
+Subject: Re: [PATCH v5 1/7] selftests/futex: Add ASSERT_ macros
+In-Reply-To: <20250626-tonyk-robust_futex-v5-1-179194dbde8f@igalia.com>
+References: <20250626-tonyk-robust_futex-v5-0-179194dbde8f@igalia.com>
+ <20250626-tonyk-robust_futex-v5-1-179194dbde8f@igalia.com>
+Date: Fri, 27 Jun 2025 00:07:47 +0200
+Message-ID: <87ecv6p364.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623061733.1864392-1-devverma@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 23-06-25, 11:47, Devendra K Verma wrote:
-> The HDMA IP supports the simple mode (non-linked list).
-> In this mode the channel registers are configured to initiate
-> a single DMA data transfer. The channel can be configured in
-> simple mode via peripheral param of dma_slave_config param.
-> 
-> Signed-off-by: Devendra K Verma <devverma@amd.com>
-> ---
->  drivers/dma/dw-edma/dw-edma-core.c    | 10 +++++
->  drivers/dma/dw-edma/dw-edma-core.h    |  2 +
->  drivers/dma/dw-edma/dw-hdma-v0-core.c | 53 ++++++++++++++++++++++++++-
->  include/linux/dma/edma.h              |  8 ++++
->  4 files changed, 72 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index c2b88cc99e5d..4dafd6554277 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -235,9 +235,19 @@ static int dw_edma_device_config(struct dma_chan *dchan,
->  				 struct dma_slave_config *config)
->  {
->  	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
-> +	struct dw_edma_peripheral_config *pconfig = config->peripheral_config;
-> +	unsigned long flags;
-> +
-> +	if (WARN_ON(config->peripheral_config &&
-> +		    config->peripheral_size != sizeof(*pconfig)))
-> +		return -EINVAL;
->  
-> +	spin_lock_irqsave(&chan->vc.lock, flags);
->  	memcpy(&chan->config, config, sizeof(*config));
-> +
-> +	chan->non_ll_en = pconfig ? pconfig->non_ll_en : false;
->  	chan->configured = true;
-> +	spin_unlock_irqrestore(&chan->vc.lock, flags);
->  
->  	return 0;
->  }
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-> index 71894b9e0b15..c0266976aa22 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.h
-> +++ b/drivers/dma/dw-edma/dw-edma-core.h
-> @@ -86,6 +86,8 @@ struct dw_edma_chan {
->  	u8				configured;
->  
->  	struct dma_slave_config		config;
-> +
-> +	bool				non_ll_en;
+On Thu, Jun 26 2025 at 14:11, Andr=C3=A9 Almeida wrote:
 
-why do you need this? What is the decision to use non ll vs ll one?
+> Create ASSERT_{EQ, NE, TRUE, FALSE} macros to make test creation easier.
 
->  };
->  
->  struct dw_edma_irq {
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> index e3f8db4fe909..3237c807a18e 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> @@ -225,7 +225,7 @@ static void dw_hdma_v0_sync_ll_data(struct dw_edma_chunk *chunk)
->  		readl(chunk->ll_region.vaddr.io);
->  }
->  
-> -static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> +static void dw_hdma_v0_ll_start(struct dw_edma_chunk *chunk, bool first)
->  {
->  	struct dw_edma_chan *chan = chunk->chan;
->  	struct dw_edma *dw = chan->dw;
-> @@ -263,6 +263,57 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
->  	SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
->  }
->  
-> +static void dw_hdma_v0_non_ll_start(struct dw_edma_chunk *chunk)
-> +{
-> +	struct dw_edma_chan *chan = chunk->chan;
-> +	struct dw_edma *dw = chan->dw;
-> +	struct dw_edma_burst *child;
-> +	u32 val;
-> +
-> +	list_for_each_entry(child, &chunk->burst->list, list) {
-> +		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
-> +
-> +		/* Source address */
-> +		SET_CH_32(dw, chan->dir, chan->id, sar.lsb, lower_32_bits(child->sar));
-> +		SET_CH_32(dw, chan->dir, chan->id, sar.msb, upper_32_bits(child->sar));
-> +
-> +		/* Destination address */
-> +		SET_CH_32(dw, chan->dir, chan->id, dar.lsb, lower_32_bits(child->dar));
-> +		SET_CH_32(dw, chan->dir, chan->id, dar.msb, upper_32_bits(child->dar));
-> +
-> +		/* Transfer size */
-> +		SET_CH_32(dw, chan->dir, chan->id, transfer_size, child->sz);
-> +
-> +		/* Interrupt setup */
-> +		val = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
-> +				HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
-> +				HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
-> +
-> +		if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL))
-> +			val |= HDMA_V0_REMOTE_STOP_INT_EN | HDMA_V0_REMOTE_ABORT_INT_EN;
-> +
-> +		SET_CH_32(dw, chan->dir, chan->id, int_setup, val);
-> +
-> +		/* Channel control setup */
-> +		val = GET_CH_32(dw, chan->dir, chan->id, control1);
-> +		val &= ~HDMA_V0_LINKLIST_EN;
-> +		SET_CH_32(dw, chan->dir, chan->id, control1, val);
-> +
-> +		/* Ring the doorbell */
-> +		SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
-> +	}
-> +}
-> +
-> +static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> +{
-> +	struct dw_edma_chan *chan = chunk->chan;
-> +
-> +	if (!chan->non_ll_en)
-> +		dw_hdma_v0_ll_start(chunk, first);
-> +	else
-> +		dw_hdma_v0_non_ll_start(chunk);
-> +}
-> +
->  static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
->  {
->  	struct dw_edma *dw = chan->dw;
-> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> index 3080747689f6..82d808013a66 100644
-> --- a/include/linux/dma/edma.h
-> +++ b/include/linux/dma/edma.h
-> @@ -101,6 +101,14 @@ struct dw_edma_chip {
->  	struct dw_edma		*dw;
->  };
->  
-> +/**
-> + * struct dw_edma_peripheral_config - peripheral spicific configurations
-> + * @non_ll_en:		 enable non-linked list mode of operations
-> + */
-> +struct dw_edma_peripheral_config {
-> +	bool			non_ll_en;
-> +};
-> +
->  /* Export to the platform drivers */
->  #if IS_REACHABLE(CONFIG_DW_EDMA)
->  int dw_edma_probe(struct dw_edma_chip *chip);
-> -- 
-> 2.43.0
+What's so futex special about this that it can't use the same muck in
 
--- 
-~Vinod
+tools/testing/selftests/kselftest_harness.h
+
+or at least share the implementation in some way?
+
+Thanks,
+
+        tglx
