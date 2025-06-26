@@ -1,102 +1,104 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFAD2EBBB7;
-	Thu, 26 Jun 2025 15:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE932EBB94;
+	Thu, 26 Jun 2025 15:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750953001; cv=none; b=TNVWjX+TvILBaegfei6t7N2QD5eVFUrkIpHgpLvss2ng0lFgnQwtWNLfZTiv8PwQUW3B7CvZEWBdpzcRAc8oc7AiqL35jZFlnVtftvKyryMhsl0k8GoJhZZU+R38BtgUHSb3zR3ERQemjmEvs7h27hJEvHuJP8+XLguQ4arvuuI=
+	t=1750953016; cv=none; b=Cn3IW3mGpf+J5+/xyEaGN2hsu7EIej/wP7ITQiIGKmtXjyUSCOsFhLO17146lA2YuLBCzlmQ2zayVk9CqFLbKM5S4WZVSNO5Ea7ZmGvsfqegrB91lo4L+FVBh30WYAuy1Ruc3nzKRWjXrLtvPOpHqelbiI4TGriZ4shHdvgpTKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750953001; c=relaxed/simple;
-	bh=Mpi5liKjyiDncbXlQSUN5m41aQloT3tVm9OabwEOvYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K79BoxzgtpjmZXmg0Ox82FqPpX73HuakOfdx+aBmA0YvWrkswnMHOFR4eRPuNLb3UBHuE+AiBSxj1pNmtweOAogRSUxGXjms0Xf9JCRmVHdRP1SKaYuQ5VLDgqVNI1m1mUn9AzETIOX0e1v2dUlEqxL8lMgk87hahtCpFpt01kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YkCVOwiW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L1+HqzXN; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750953016; c=relaxed/simple;
+	bh=IKyNrNO05dxmhNUJyWkxJMbolc2ZnJKiV6fh31BcteQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Ib6DdkFgNo5bhEsFxaxrZG4uY2Lt0oDi9RN+TW477kq2JiS6NhtKRRQG+WU/JUaEYkm0Fk9YoqS3Xz/G6M0RyqjuvQ4JTbk2H2jowY4Si1vk29L1lgVCeWIRF+cLMGmf5/+yw8wKLt5cF7jKwFcUyKsSkJWWUsUyeO+xqiVbIYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IEFugxIX; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YkCVOwiW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L1+HqzXN"
-Date: Thu, 26 Jun 2025 17:49:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750952996;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SZA23onas5n4B09dCvBkdk+b6pfrOmlq+EopDm/BmP0=;
-	b=YkCVOwiWQSz/zQsWs8NjbsXOY4f36xUq/3yuKyRYBF7mthALXB1sTb+OqMvEZYQo2F/NHv
-	v3RYujSu5+03ArJGLSSQIbn7ZtzKOHus/j879dVfNiFVDo+ExtLiRYZj+eYfv2sgc4n0p4
-	BKsG87GRClfb1NdRBfjXCyJRCR7dYn62Xjnt6cuA4Nb3uEivkxspTucqGWsc2iJOT3FMFN
-	L7ZQJMZ8lQRxIw/xsDqvokCSJqJp0TpLAcIiUEzhrrOs//RbAANi7vD44QhTZpxcckxxOT
-	77oif/ku8R6GBghxw8pWwQaQRGLjyE8ySjKgt+MN3s7RVox/f/ztalWYb4fKUQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750952996;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SZA23onas5n4B09dCvBkdk+b6pfrOmlq+EopDm/BmP0=;
-	b=L1+HqzXNd+Bj8avf6MduLQ8qq7mxtyC+oQmhlzi+om4KOidY7K/whfDEQ3Ihv82ZGiIyhq
-	yGZR1jmzlOTgt5Cw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Nam Cao <namcao@linutronix.de>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>,
-	Martin Karsten <mkarsten@uwaterloo.ca>,
-	Jens Axboe <axboe@kernel.dk>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH v3] eventpoll: Fix priority inversion problem
-Message-ID: <20250626154954.NH9L0mtz@linutronix.de>
-References: <20250527090836.1290532-1-namcao@linutronix.de>
- <841pr6msql.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IEFugxIX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750953015; x=1782489015;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=IKyNrNO05dxmhNUJyWkxJMbolc2ZnJKiV6fh31BcteQ=;
+  b=IEFugxIXqCvyB4YvPRKMqsf2q0TCa1K32BHR89DK6qwnjHC4NZ1A+WCn
+   UTZVrSJrV16MRoIWZlY8tzZbZo2KXmAui+BGTSeKMOR969an99+C52nUB
+   h5I06mtkMuXXPr0dToe4yVwX6BUCZhNntgH4AxGerKthS2P5NLZwJBGhg
+   frf1eLpQTl26qiH6hCl565MyXHwe38KFi5a0dxlV9ytXPCnTSOHHZig4n
+   wo44ito81UXlBZzxxaUn3lIwitmoNaOj7tWZRN/M13fgh3E23TodyVTbR
+   hgs15wq5meBbsESGFSILyuy9j06HPUzZYm72F1r+2TuYp5kwfbYvRYpiz
+   A==;
+X-CSE-ConnectionGUID: 25eOgMDDTO2/3gcndKCqRg==
+X-CSE-MsgGUID: PtYWQzD6TMCfCUcLPxRpMQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="63513101"
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="63513101"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:50:14 -0700
+X-CSE-ConnectionGUID: n8tPLJOzSA+l7H/xENT91Q==
+X-CSE-MsgGUID: r2uyqN55TPqeCRZzCnVDRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="152068186"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:50:12 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 26 Jun 2025 18:50:07 +0300 (EEST)
+To: Shravan Kumar Ramani <shravankr@nvidia.com>
+cc: Vadim Pasternak <vadimp@nvidia.com>, 
+    David Thompson <davthompson@nvidia.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    David Thompson <davthomspson@nvidia.com>
+Subject: Re: [PATCH v2 1/2] platform/mellanox: mlxbf-pmc: Replace strcmp with
+ strncmp
+In-Reply-To: <fbb8ab5fd566369cc47e9f23b9f4ac25dde009b8.1750245955.git.shravankr@nvidia.com>
+Message-ID: <f8437991-2688-33f8-3843-4e5ffe72a308@linux.intel.com>
+References: <cover.1750245955.git.shravankr@nvidia.com> <fbb8ab5fd566369cc47e9f23b9f4ac25dde009b8.1750245955.git.shravankr@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <841pr6msql.fsf@jogness.linutronix.de>
+Content-Type: text/plain; charset=US-ASCII
 
-On 2025-06-26 17:29:46 [+0206], John Ogness wrote:
-> > @@ -361,10 +348,14 @@ static inline int ep_cmp_ffd(struct epoll_filefd *p1,
-> >  	        (p1->file < p2->file ? -1 : p1->fd - p2->fd));
-> >  }
-> >  
-> > -/* Tells us if the item is currently linked */
-> > -static inline int ep_is_linked(struct epitem *epi)
-> > +/*
-> > + * Add the item to its container eventpoll's rdllist; do nothing if the item is already on rdllist.
-> > + */
-> > +static void epitem_ready(struct epitem *epi)
-> >  {
-> > -	return !list_empty(&epi->rdllink);
-> > +	if (&epi->rdllink == cmpxchg(&epi->rdllink.next, &epi->rdllink, NULL))
+On Wed, 18 Jun 2025, Shravan Kumar Ramani wrote:
+
+> Since the input string passed via the command line appends a newline char,
+> comparison using strcmp is not correct. Use the string length of the
+> event_list entries to match the string using strncmp instead.
+
+Please include () after any function name (don't forget those in the 
+shortlog).
+
+> Fixes: 1a218d312e65 ("platform/mellanox: mlxbf-pmc: Add Mellanox BlueField PMC driver")
+> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+> Reviewed-by: David Thompson <davthomspson@nvidia.com>
+> ---
+>  drivers/platform/mellanox/mlxbf-pmc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Perhaps:
+> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+> index 900069eb186e..366c0cba447f 100644
+> --- a/drivers/platform/mellanox/mlxbf-pmc.c
+> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
+> @@ -1215,7 +1215,7 @@ static int mlxbf_pmc_get_event_num(const char *blk, const char *evt)
+>  		return -EINVAL;
+>  
+>  	for (i = 0; i < size; ++i) {
+> -		if (!strcmp(evt, events[i].evt_name))
+> +		if (!strncmp(evt, events[i].evt_name, strlen(events[i].evt_name)))
+
+So if there's extra garbage behind the input, it will also match 
+spuriously? So store the len and reduce it if there's a trailing newline 
+to make it more robust?
+
+>  			return events[i].evt_num;
+>  	}
+>  
 > 
-> 	if (try_cmpxchg(&epi->rdllink.next, &epi->rdllink, NULL))
 
-Not sure this is the same.
-This will write back the current value of epi->rdllink.next to
-epi->rdllink if epi->rdllink.next is not &epi->rdllink.
+-- 
+ i.
 
-The intention is to check if epi->rdllink.next is set to &epi->rdllink
-(pointing to itself) and if so set it NULL just to avoid to ensure
-further cmpxchg() will fail here.
-
-> > +		llist_add(&epi->rdllink, &epi->ep->rdllist);
-> > +
-> >  }
-> >  
-> >  static inline struct eppoll_entry *ep_pwq_from_wait(wait_queue_entry_t *p)
-> 
-> John Ogness
-
-Sebastian
