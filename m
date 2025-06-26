@@ -1,129 +1,157 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB83321CC4D
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756C721CC4D
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750932620; cv=none; b=MX8jTxnE7WaymKGf+P2FAhJY6zCJDDdcANaL4gC6VL/8u30Pz7W3YBPfsx6Z+mOO74y13zjc+yHKszb6YJYcYL7KxejSWhAOyf/oaHd0lhuTyI1oGIaCwPftylY/Ura3rUQAtTyKJs/13mpwErU5PwoTWDxgXfEBwyzzJRHHHrg=
+	t=1750932647; cv=none; b=Sa/x6UyYsxdhNxftXRv+QZdlIUDRGNVMZUyZmOQcII5/0G5eKwgLydQ959m/AGtz5hHaEDjsBb7QRcm+dtNPAEOTx0H05k4qienECmXYsf3tmI1T7SnKSNTXC0ZOefMmwQ9eYqpbnv5dzZW0D2YY7C1ndtgUfV9Iw6gjfKvmjWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750932620; c=relaxed/simple;
-	bh=DKVjNysQiPg44WHFvqc/jybFh9qT2hEaqcBWlu8MgG4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=SQy4l8VeUNXjnsrEDkvz2bqQPJB4znIxaHg8Bls+bzHt6A4MYhuLKtPTCo5A7M7fBbwuk3i0Nd4fmxgb7/xAXJ3JGhAulfaDmBEtXhhTuf3GTYBUKNF7aV7l6jjzMBnGuLzyNJao71xu1AYj6kjnJQ5qzgSbgGMas5FhQJRVkjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=amihLVRP; arc=none smtp.client-ip=209.85.208.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com
+	s=arc-20240116; t=1750932647; c=relaxed/simple;
+	bh=B8L42uYW7SBVGI49Vdor/dHyRQyBsuPa0eVEeRQde+0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cWOkC3UJTjqEf19kd7PPfEOzHS76yb9Fyb0ysIntLuno6M5LRpWimDumRlmCb8HlgUlDBG4qNEQ96+iMmHe/8iPPXj8vXOnfUdpjttZDtWawID2mGncWzoziN0vA2ouHbxsMunRE7jTYGMDCdtmAvKQ0W3x6GTdFAwBgg7NDN2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xNhqTy26; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="amihLVRP"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-60995aa5417so646462a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 03:10:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xNhqTy26"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e740a09eae0so690799276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 03:10:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750932617; x=1751537417; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TP7OERsBD0AIL6q0/hWWV2FPerGoaJHuU25B69zEssI=;
-        b=amihLVRPYmGOb+7AQvPfqjsMjviHpcJpXTVajK3rMu3eMqM1DjKcS7hUq1hrcJ5Bd7
-         eRWdPhFl8B9de3xw3vP4t/M0gvupYV9QUlgMrDnwIgwK6FyWcED2cjX8zJ4ZchyyJOm2
-         o8jiujvewxCceK0nszQKNQbgWnCDc1z0Waf1dAfPHioPOJPaIpEP5hLAdZfaDrIwzypW
-         hYlbzu9GIrLJIR0dJNMfxMdDCqOYBebtlHTiUa6ZTIWrNfdDj4sGenTASMSjadhWpWy8
-         gaQTXBnzIJZdu1jkzFM1HhokXX0teTVIyol1dcdTiZEThFXWbMPU7fTaUQbjzn8r6VeK
-         hh6w==
+        d=linaro.org; s=google; t=1750932644; x=1751537444; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=RGpPhbuPUiSKZV2cLRZKatSz/MduhYBSX2W+AJmzppM=;
+        b=xNhqTy26NqMOtI0l/BaqO+24iM5Y/HMAyoiTybTwe/cquVyjO9sHaB2tLwwNCJdtZJ
+         kDr+VSDWYX+EHhyUlXvt9C/4G3emIDBIPaqDLFQzIZ3eIWlnPDMyEgsSvJ5lNcfdJk7o
+         f6Z7Mt3HvokUk74v/gg8NVURwq/pApa3iMcIpBAJUSVKInMjNxo6WvbIhyNrTRjGsuu1
+         W6T/9ljDPEm6TXthjCUuOyxo8Fv74qbgfo/Bb6PaZn6Erxyz3XqyvpsORDRLrV7iUmRb
+         3dJVsa0CgRgutrMloxPmWRNF7VsPvIo9EU3qSQu/alyh5YMSoifbnguFMvmVMoE0Zrmi
+         QxTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750932617; x=1751537417;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TP7OERsBD0AIL6q0/hWWV2FPerGoaJHuU25B69zEssI=;
-        b=uMrYNVPZ0x5Yw0jii8IaEUFdsFfziahP8Zk3/4YyMBY1/IWI27fG0Tbk/Pra4BlA+J
-         +eYOJ1HmCJ6EZE/uf3yDOyRQFHyHBZwzMwEgXvEB4cknd+phQp0ldW2Q1cTNfJnLYGkA
-         BCHder81JFqMQog2H80+OjyUB23juLBmXtUQJSkHlkj6Ha/m9gFTdUTtLMahi//rcjq6
-         978YDJt6eh66eGWXmwvX63czFSqnIYxugyWPLngtUgTUKItTPGiDmoujbDesYZKSm1dr
-         ApUB8ja9xG77QrQAyXqKPRV2DQfGhyMcYHuuXgqMhGdl0V9kU6gXzZCuRnyaCkLoS2kr
-         Xs6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWKkgNZV+S+KWnPXUAF4d1m3c1uNIKhGnNy2AJm3Gg3y/WsnhmEcCwHkq4w0LEVo6uIqbLhihcZOg4wIeY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhZYA/E2RRKz//BzyK8Zjb6SxOxbcfws3+I8CcN/V6HI3T8ZPq
-	oun4wwGjk0pv/pVR3sIlE0RJfUFJLPvm+0FeZ73x28Rsvd64MecscEtv8/J1KJTE6OnimqS6o4u
-	qcz7gKnIt/g==
-X-Google-Smtp-Source: AGHT+IEep39DiT0nAnVXFppD+aWUwOIVpbsw7STELNO8ls+qxpoksuLe5NaSudBMyzv7SiB61C4OREGYZWCw
-X-Received: from edvo20.prod.google.com ([2002:a05:6402:394:b0:606:e3fd:b317])
- (user=qperret job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:4309:b0:608:48b0:5e88
- with SMTP id 4fb4d7f45d1cf-60c4dd42daamr6239997a12.18.1750932617018; Thu, 26
- Jun 2025 03:10:17 -0700 (PDT)
-Date: Thu, 26 Jun 2025 10:10:14 +0000
+        d=1e100.net; s=20230601; t=1750932644; x=1751537444;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RGpPhbuPUiSKZV2cLRZKatSz/MduhYBSX2W+AJmzppM=;
+        b=cPTAk5Yo116mMMtvE48Pl1PSKDHIk1Zv96uQyut5qNYiM/y+j4rkuqObjPxb4tCUIe
+         RQYjhAOYWRFy5qf8wiuPWk5ZkQ4zXGXEeNSMB9xLOwsdzHw8bTIQOlzCJgMIZEMjaCHT
+         PME+WcZzBl27wrA6bN3D1bYi1rIOCxtFbbelJJPEsZvo8akkVAsb01h+7xPpLmaUA9wz
+         Ucte908XXYhz+FOPCxdIaptcVD9ffz04KYo6O1tkL2J3biwiw18ACtYfHsL6eDxhvhpZ
+         2dHCnJ33SfGDKvhtXfBrPGZm6A8+DIFHf2/9yC6ZRrmxHLwwwcKI3xuoyIMC1LR2twC1
+         ve4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUns0eI/42BLyn8Ag9zh9jZs4zudi65R3JsICxYE8CvmQVGFGUjLMuYSzIYUUin/9exbZIbO9sJ8II5sPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKihC5YlkhwmCR9rhVK0rRXSZKEgDt0sf8P+siHE5x9JQmIDS7
+	WX6KvEwCJdlJz87MfRw3hu4vBY1C6GSnGIUSoXffd4ZWMZwbZY4QiSGMTL0XPLsw8ttZ8DDE3lW
+	8cVZz6l/IUAChEkNAzpbUDHF1mVTtfHlLHTHP1V39GA==
+X-Gm-Gg: ASbGncuo2wXdAZMKrte9Toa8RkZA9zHhTgfcuVSCJxuyPdgUWHFhWVzTdnc4paWVlfQ
+	xLpcjjeaZLYibTE5v/4YWAsUo0L7y+B9G5mVcaFvs7G/G5M/gO75ECjpRmBut/KGXFXaAtWWBF4
+	auU1fww02Xe19J9a/rQrXFej2OECyQKoyYWsUCY7Sq8TLa
+X-Google-Smtp-Source: AGHT+IH7V0BHGImGWUq2RO4C48YNB3kmbkrWJ44nvQyWOyJ0pUkhrpvVs4zkHxSn5wG/qh/yfZkJEJHOsJHa3ZprjII=
+X-Received: by 2002:a05:6902:2e0f:b0:e84:1dd0:45a2 with SMTP id
+ 3f1490d57ef6-e860177f40fmr7990971276.40.1750932644320; Thu, 26 Jun 2025
+ 03:10:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250626101014.1519345-1-qperret@google.com>
-Subject: [PATCH] KVM: arm64: Don't free hyp pages with pKVM on GICv2
-From: Quentin Perret <qperret@google.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>
-Cc: Mostafa Saleh <smostafa@google.com>, Quentin Perret <qperret@google.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <22759968.EfDdHjke4D@rjwysocki.net> <3306233.5fSG56mABF@rjwysocki.net>
+In-Reply-To: <3306233.5fSG56mABF@rjwysocki.net>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 26 Jun 2025 12:10:08 +0200
+X-Gm-Features: Ac12FXwF7Q7jxkXkEaRsyFNpxSklkmW_lcm577wfPtPxTWlGaikqzxB0LYBa_fQ
+Message-ID: <CAPDyKForsegoD+J6rumvnhHna7W+DVdb5zdKGiRB-TFv27sy7A@mail.gmail.com>
+Subject: Re: [PATCH v1 0/9] PM: Check power.needs_force_resume in pm_runtime_force_suspend()
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux ACPI <linux-acpi@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Marc reported that enabling protected mode on a device with GICv2
-doesn't fail gracefully as one would expect, and leads to a host
-kernel crash.
+On Wed, 25 Jun 2025 at 21:25, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Add a power.needs_force_resume check to pm_runtime_force_suspend() so
+> it need not rely on the runtime PM status of the device when deciding
+> whether or not to return early.
+>
+> With the new check in place, pm_runtime_force_suspend() will also skip
+> devices with the runtime PM status equal to RPM_ACTIVE if they have
+> power.needs_force_resume set, so it won't need to change the RPM
+> status of the device to RPM_SUSPENDED in addition to setting
+> power.needs_force_resume in the case when pm_runtime_need_not_resume()
+> return false.
+>
+> This allows the runtime PM status update to be removed from
+> pm_runtime_force_resume(), so the runtime PM status remains unchanged
+> between the pm_runtime_force_suspend() and pm_runtime_force_resume()
+> calls.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/base/power/runtime.c |   21 ++++++++-------------
+>  1 file changed, 8 insertions(+), 13 deletions(-)
+>
+> --- a/drivers/base/power/runtime.c
+> +++ b/drivers/base/power/runtime.c
+> @@ -1975,7 +1975,7 @@
+>         int ret;
+>
+>         pm_runtime_disable(dev);
+> -       if (pm_runtime_status_suspended(dev))
+> +       if (pm_runtime_status_suspended(dev) || dev->power.needs_force_resume)
+>                 return 0;
+>
+>         callback = RPM_GET_CALLBACK(dev, runtime_suspend);
+> @@ -1990,15 +1990,16 @@
+>         /*
+>          * If the device can stay in suspend after the system-wide transition
+>          * to the working state that will follow, drop the children counter of
+> -        * its parent, but set its status to RPM_SUSPENDED anyway in case this
+> -        * function will be called again for it in the meantime.
+> +        * its parent and the usage counters of its suppliers.  Otherwise, set
+> +        * power.needs_force_resume to let pm_runtime_force_resume() know that
+> +        * the device needs to be taken care of and to prevent this function
+> +        * from handling the device again in case the device is passed to it
+> +        * once more subsequently.
+>          */
+> -       if (pm_runtime_need_not_resume(dev)) {
+> +       if (pm_runtime_need_not_resume(dev))
+>                 pm_runtime_set_suspended(dev);
+> -       } else {
+> -               __update_runtime_status(dev, RPM_SUSPENDED);
+> +       else
+>                 dev->power.needs_force_resume = true;
+> -       }
+>
+>         return 0;
+>
+> @@ -2029,12 +2030,6 @@
+>         if (!dev->power.needs_force_resume)
+>                 goto out;
+>
+> -       /*
+> -        * The value of the parent's children counter is correct already, so
+> -        * just update the status of the device.
+> -        */
+> -       __update_runtime_status(dev, RPM_ACTIVE);
+> -
+>         callback = RPM_GET_CALLBACK(dev, runtime_resume);
+>
+>         dev_pm_disable_wake_irq_check(dev, false);
+>
 
-As it turns out, the first half of pKVM init happens before the vgic
-probe, and so by the time we find out we have a GICv2 we're already
-committed to keeping the pKVM vectors installed at EL2 -- pKVM rejects
-stub HVCs for obvious security reasons. However, the error path on KVM
-init leads to teardown_hyp_mode() which unconditionally frees hypervisor
-allocations (including the EL2 stacks and per-cpu pages) under the
-assumption that a previous cpu_hyp_uninit() execution has reset the
-vectors back to the stubs, which is false with pKVM.
+As I mentioned for patch4, pm_runtime_force_suspend() is being used
+from driver's ->remove() callback too.
 
-Interestingly, host stage-2 protection is not enabled yet at this point,
-so this use-after-free may go unnoticed for a while. The issue becomes
-more obvious after the finalize_pkvm() call.
+If such a driver/device gets probed again, we need a fresh start. It
+seems like we need to clear the needs_force_resume flag in
+pm_runtime_reinit(). In fact, that looks like an existing bug, even
+before $subject patch, right?
 
-Fix this by keeping track of the CPUs on which pKVM is initialized in
-the kvm_hyp_initialized per-cpu variable, and use it from
-teardown_hyp_mode() to skip freeing pages that are in fact used.
-
-Fixes: a770ee80e662 ("KVM: arm64: pkvm: Disable GICv2 support")
-Reported-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Quentin Perret <qperret@google.com>
----
-
-This patch depends on Mostafa's recent fix for teardown_hyp_mode():
-
-  https://lore.kernel.org/kvmarm/20250625123058.875179-1-smostafa@google.com/
----
- arch/arm64/kvm/arm.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index 6bdf79bc5d95..b223d21c063c 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -2129,7 +2129,7 @@ static void cpu_hyp_init(void *discard)
- 
- static void cpu_hyp_uninit(void *discard)
- {
--	if (__this_cpu_read(kvm_hyp_initialized)) {
-+	if (!is_protected_kvm_enabled() && __this_cpu_read(kvm_hyp_initialized)) {
- 		cpu_hyp_reset();
- 		__this_cpu_write(kvm_hyp_initialized, 0);
- 	}
-@@ -2345,6 +2345,9 @@ static void __init teardown_hyp_mode(void)
- 
- 	free_hyp_pgds();
- 	for_each_possible_cpu(cpu) {
-+		if (per_cpu(kvm_hyp_initialized, cpu))
-+			continue;
-+
- 		free_pages(per_cpu(kvm_arm_hyp_stack_base, cpu), NVHE_STACK_SHIFT - PAGE_SHIFT);
- 
- 		if (!kvm_nvhe_sym(kvm_arm_hyp_percpu_base)[cpu])
--- 
-2.50.0.727.gbf7dc18ff4-goog
-
+Kind regards
+Uffe
