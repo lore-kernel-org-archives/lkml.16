@@ -1,121 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8825D2ED14D;
-	Thu, 26 Jun 2025 17:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F194A33;
+	Thu, 26 Jun 2025 17:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750960112; cv=none; b=D9VScjTGL/L5uQPVQk/yh2SckrKt6BvPDLES43tILZghbLplcCeTjPWZsxa0G2setigk9PQfConCLB6ad4Qqkn5MURCT6v1z7bboYuQez89Wy33n52FvQu2TXjZpRl3e7oE1iEyue/q6gmpIpR55vvfK+Q/2nZYsAxq/ky+z3ws=
+	t=1750960168; cv=none; b=t/8XNFc2nkqUrhLXM79bLeI81r5eiUa1vd2djpcTbTkZ2WiQInNW5yZsJcAO1ePlQBjoTbyfMlx+Ca5CVgd4Ir8fY4jGfeX0Yipgw8iFrouvz2CSiXDzTr3AgqxXIdEaykDqaTMrnWpN2A1WS05hqbtQy06BhKVB6TUKeCAZElk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750960112; c=relaxed/simple;
-	bh=YZ5cD0XYLp6jAG9cUymbGe/Ueae78yYfbyTuSWozd6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sl+F4+8ff9xUs/VTAtvttbkWMn63cQca1xCIxNdfGjIzX++QEFH2FKyDv5UXgqZkTP7ErR3N/6eydc+zOJisJP2LvcFQ+KVB3JZiWET6ulxqFAByZ7Z3a27k5/e4sGcwKQeI0BMnQi8WkVLJ7fMkEYQ6iHBB4kE3afLMBovJWIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DnuwWcL1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750960168; c=relaxed/simple;
+	bh=pA/HumsEb3FbACANSoie7ksQi0PxTKJgmxzGlNGc7Zc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=p1F+FASy5cHLJeHz1EosMjg0VxMFBvcSOqqi7exsy3r9tMCPywgoLwR8FprT6SytWGg4+xp7YtVK4/Ia28wUtWj8cQ/y7XL1LaJMRguFuphuzwPy9vpce0TLOdnBRGtCnirkOWdh/LTLD5m4h+4/h2SdAuHZZc5VX3jC95o6eGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VMVBBBtn; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DnuwWcL1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95362C4CEF2;
-	Thu, 26 Jun 2025 17:48:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750960112;
-	bh=YZ5cD0XYLp6jAG9cUymbGe/Ueae78yYfbyTuSWozd6o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DnuwWcL11oU8M+h60jeJAVlw+k43t9Ao13H99Oq82z2SHURPM1N6avtUgQlJ/V0Oi
-	 UboqX5+GJG/I6NmLiAj5PsLUpzsJpM5aq0CUya8vvS4m3cfn1MlzrxBwpjOr6npEUu
-	 bVEq+cNPIV5EjPHm4hwpaPOqfZtBccfBuU8Ecn+Q5syifZG8IIvjWGibjho+gpm5qO
-	 5OjqQTffaJGMYypYAqBKN6NgLn6IrgQGLg5P9WEnVRCY/iL/ogoEaOD3bPRtzImSuA
-	 m/9Bebj5SnauamRTS857J8dePvHgikENZiJ2TEporsBwLlxhCaVnizxtPfsuSJpj7d
-	 nxYRJcT5rIcrQ==
-Date: Thu, 26 Jun 2025 10:48:30 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: "Falcon, Thomas" <thomas.falcon@intel.com>
-Cc: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"acme@kernel.org" <acme@kernel.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"Hunter, Adrian" <adrian.hunter@intel.com>,
-	"irogers@google.com" <irogers@google.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH v4 2/2] perf top: populate PMU capabilities data in
- perf_env
-Message-ID: <aF2H7vICRvqqx8kQ@google.com>
-References: <20250612163659.1357950-1-thomas.falcon@intel.com>
- <20250612163659.1357950-2-thomas.falcon@intel.com>
- <6680ed82adc3a2528c7587138d90dcca0d3558f3.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VMVBBBtn"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a52874d593so1055725f8f.0;
+        Thu, 26 Jun 2025 10:49:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750960165; x=1751564965; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EGVko47bYwkqeRQ8uopxpBSob9deDBlIVisawEmMxXM=;
+        b=VMVBBBtnPHFEgrJJMm+eduOEp7NtCc6faPsdqextLJ2hEYmBoiXZ9fvrONfWc3iG6E
+         lyjC6WcgaoaFpfpQBGCMjrcWIRXmzPSGyFnp4wRoDnMP4diaR0UoCHwqtEVTrNwm7jx7
+         7XxG4xRpC4MUB7rWyEqJ5Sw/Mqh1DjiQSUwjlojeQDATvZMFI2v2M50iNT/8alVWDhfS
+         xJHm50Kfd7++b/+7BoiTwJPT/ym0Ca9hSX4zKXUYd9txcyvwDuCKXCxqDjQz+5jthUpY
+         LqBkKViw/Wk4s5aCHebgd8KYVHB88UxCIC/KCdvY27mKRl1MMytC2ir2vO+6OVvYsL52
+         +Beg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750960165; x=1751564965;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EGVko47bYwkqeRQ8uopxpBSob9deDBlIVisawEmMxXM=;
+        b=Eh9hoIPpWUZFcQFkZfFyXE/yQwgp7d1hEdJaotN3fLsfXBpkd/PHfzRJuGmLay4yd5
+         RY0d21WJGJ8CFMdKFfoCSlJMAy0889IH7b+Pg0nGlyOtyveY9m8y8F8jqDEFYAZzjQNW
+         gu40ow/Yz1LmGBAzo0Ka4tC/5oQbynHSbs3J/qf/F2zcKk5L74JWz+CNiuaNQChpWlMK
+         4ZXNxAqYC52m6Wm0KwRgXQ4EiajagAESCzmZ4XvNXtQ8vv9EKUtV1wynSJsdXcORSsni
+         5kb5/dG0lptYh1c6gk9BrZ3dU0LNe02DFCCSF/qcp6DoZXV7W6uH+ZgFSjP/YRyRz4yN
+         JMuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8FkFxWHV5aULANrBe/Qx356Vq6wDFUhqZajN+8BYxHEyXJnFlD9ol/YNUCISjLH3XyNv8ZWywyP85uQR5h0Y=@vger.kernel.org, AJvYcCWYGuRb4K3G8GIDEh4jcPCxRPoEV+0FK3fM6HBK1IQlzWE9F/Qv+UAqnYZlJ3iiu68CwvHPPy0aFcQ=@vger.kernel.org, AJvYcCXrbhCTEw+4bx1xkLG7VFUN2YfLcDM+SGFZTU/aX/mkWWUt7nxhpRcvPqPyoOlXqUcHyTMQMC9/TKyX++V4@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxHJ2GV4TS9AuZUGuonMiPsHIbQdhkkF4a6MbAZxeslD6o1pd+
+	qmldOpGJJ1kGUZ29i1Ur9W+92m4mdyKfG4csxqXfcsegPZpPPNb+Cmqi
+X-Gm-Gg: ASbGnct34fduGMJCIfzpTg5GvT5vjoywuvh209iPfL0hSO3FVWTes5cVeXry4ZJpHVx
+	+qIF1ILuj342j56rljKis9SyPHdt6pcyl0iWU51kWrjErYXAnALOrjgrJ9F2y1/RPyRROnLNln+
+	6okrP8prQ7dnXZ2wTRZ1PybvWtCwsclzz4uxbEhxkGT+AvJBNs9nsOAmWIE5dd7dRGp7576QgXx
+	rO15Gad+jWVq7h2+O0ZaKVHLKWTznlGmg0JjkBbNJVbQYusBbjnnTLQVCgmCXglVNCJ1q2R3zjg
+	+Vs7KGyEkL5M5jXlJdnh3OUKsgplsVLSXF7Y1/QOE/zR9vTsQjlHQ3XYBQHZa79ysv7RlMw=
+X-Google-Smtp-Source: AGHT+IGMkg6j1sln3NzDGxo1GLe9xtRdjm3U/0ZlalidTdk2/enJr007E5WTmxKqgGIlcwekSqrSug==
+X-Received: by 2002:a05:6000:2905:b0:3a4:de02:208 with SMTP id ffacd0b85a97d-3a8fda34e30mr463230f8f.25.1750960164761;
+        Thu, 26 Jun 2025 10:49:24 -0700 (PDT)
+Received: from [10.38.1.85] ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e591d7sm495948f8f.67.2025.06.26.10.49.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 10:49:24 -0700 (PDT)
+Message-ID: <ca7b2f6e-1195-4c6f-b45d-799496277b31@gmail.com>
+Date: Thu, 26 Jun 2025 18:47:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <6680ed82adc3a2528c7587138d90dcca0d3558f3.camel@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/4] rust: Add basic I2C driver abstractions
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Asahi Lina <lina+kernel@asahilina.net>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>, Alex Hung <alex.hung@amd.com>,
+ Tamir Duberstein <tamird@gmail.com>,
+ Xiangfei Ding <dingxiangfei2009@gmail.com>, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-i2c@vger.kernel.org
+References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
+ <20250626173333.897333-1-igor.korotin.linux@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20250626173333.897333-1-igor.korotin.linux@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-On Thu, Jun 26, 2025 at 04:47:18PM +0000, Falcon, Thomas wrote:
-> Hi, is there anything still needed from me before this can be accepted?
- 
-Sorry I just missed it.  I'll add it to the tmp branch for testing.
 
-Thanks,
-Namhyung
-
+On 6/26/25 18:33, Igor Korotin wrote:
+> This patch series introduces basic Rust I2C driver abstractions 
+> and optional ACPI match-table support and provides a sample driver 
+> demonstrating both OF and ACPI binding
 > 
-> On Thu, 2025-06-12 at 11:36 -0500, Thomas Falcon wrote:
-> > Calling perf top with branch filters enabled on Intel CPU's
-> > with branch counters logging (A.K.A LBR event logging [1]) support
-> > results in a segfault.
-> > 
-> > $ perf top  -e '{cpu_core/cpu-cycles/,cpu_core/event=0xc6,umask=0x3,frontend=0x11,name=frontend_retired_dsb_miss/}' -j any,counter
-> > ...
-> > Thread 27 "perf" received signal SIGSEGV, Segmentation fault.
-> > [Switching to Thread 0x7fffafff76c0 (LWP 949003)]
-> > perf_env__find_br_cntr_info (env=0xf66dc0 <perf_env>, nr=0x0, width=0x7fffafff62c0) at util/env.c:653
-> > 653			*width = env->cpu_pmu_caps ? env->br_cntr_width :
-> > (gdb) bt
-> >  #0  perf_env__find_br_cntr_info (env=0xf66dc0 <perf_env>, nr=0x0, width=0x7fffafff62c0) at util/env.c:653
-> >  #1  0x00000000005b1599 in symbol__account_br_cntr (branch=0x7fffcc3db580, evsel=0xfea2d0, offset=12, br_cntr=8) at util/annotate.c:345
-> >  #2  0x00000000005b17fb in symbol__account_cycles (addr=5658172, start=5658160, sym=0x7fffcc0ee420, cycles=539, evsel=0xfea2d0, br_cntr=8) at util/annotate.c:389
-> >  #3  0x00000000005b1976 in addr_map_symbol__account_cycles (ams=0x7fffcd7b01d0, start=0x7fffcd7b02b0, cycles=539, evsel=0xfea2d0, br_cntr=8) at util/annotate.c:422
-> >  #4  0x000000000068d57f in hist__account_cycles (bs=0x110d288, al=0x7fffafff6540, sample=0x7fffafff6760, nonany_branch_mode=false, total_cycles=0x0, evsel=0xfea2d0) at util/hist.c:2850
-> >  #5  0x0000000000446216 in hist_iter__top_callback (iter=0x7fffafff6590, al=0x7fffafff6540, single=true, arg=0x7fffffff9e00) at builtin-top.c:737
-> >  #6  0x0000000000689787 in hist_entry_iter__add (iter=0x7fffafff6590, al=0x7fffafff6540, max_stack_depth=127, arg=0x7fffffff9e00) at util/hist.c:1359
-> >  #7  0x0000000000446710 in perf_event__process_sample (tool=0x7fffffff9e00, event=0x110d250, evsel=0xfea2d0, sample=0x7fffafff6760, machine=0x108c968) at builtin-top.c:845
-> >  #8  0x0000000000447735 in deliver_event (qe=0x7fffffffa120, qevent=0x10fc200) at builtin-top.c:1211
-> >  #9  0x000000000064ccae in do_flush (oe=0x7fffffffa120, show_progress=false) at util/ordered-events.c:245
-> >  #10 0x000000000064d005 in __ordered_events__flush (oe=0x7fffffffa120, how=OE_FLUSH__TOP, timestamp=0) at util/ordered-events.c:324
-> >  #11 0x000000000064d0ef in ordered_events__flush (oe=0x7fffffffa120, how=OE_FLUSH__TOP) at util/ordered-events.c:342
-> >  #12 0x00000000004472a9 in process_thread (arg=0x7fffffff9e00) at builtin-top.c:1120
-> >  #13 0x00007ffff6e7dba8 in start_thread (arg=<optimized out>) at pthread_create.c:448
-> >  #14 0x00007ffff6f01b8c in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
-> > 
-> > The cause is that perf_env__find_br_cntr_info tries to access a
-> > null pointer pmu_caps in the perf_env struct. A similar issue exists
-> > for homogeneous core systems which use the cpu_pmu_caps structure.
-> > 
-> > Fix this by populating cpu_pmu_caps and pmu_caps structures with
-> > values from sysfs when calling perf top with branch stack sampling
-> > enabled.
-> > 
-> > [1], LBR event logging introduced here:
-> > https://lore.kernel.org/all/20231025201626.3000228-5-kan.liang@linux.intel.com/
-> > 
-> > Reviewed-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> > ---
-> > v4: prefer calloc and zfree operations in addition to other
-> >     cleanups suggested by Namhyung and Arnaldo
-> > 
-> > v3: constify struct perf_pmu *pmu in __perf_env__read_core_pmu_caps()
-> >     use perf_pmus__find_core_pmu() instead of perf_pmus__scan_core(NULL)
-> > 
-> > v2: update commit message with more meaningful stack trace from
-> >     gdb and indicate that affected systems are limited to CPU's
-> >     with LBR event logging support and that both hybrid and
-> >     non-hybrid core systems are affected.
+> Currently Rust I2C abstractions support only Open Firmware OF device 
+> matching. This series splits the work into four patches so that the 
+> core abstractions and sample driver can land immediately while ACPI 
+> integration may be reviewed once the ACPI macros are upstream
+> 
+> Changes include
+>  - core I2C abstractions `i2c::Device` `i2c::Driver` `i2c::Adapter` 
+>    built on `struct i2c_client` and `struct i2c_driver`
+>  - a standalone Rust sample driver exercising Legacy I2C ID and OF ID
+>    matching
+>  - optional ACPI ID-table support in the `i2c::Driver` abstraction
+>  - ACPI-enabled sample driver showing `kernel::acpi_device_table!` 
+>    usage
+> 
+> This separation lets maintainers review and merge the non-ACPI portions
+> immediately while patches 3 and 4 both depending on the ACPI 
+> infrastructure can be queued once the ACPI macros are upstream
+> 
+> Patch series:
+> 
+> 1 rust: i2c: add basic I2C device and driver abstractions
+> 2 samples: rust: add I2C sample driver (OF only)
+> 3 rust: i2c: support ACPI match-table in driver abstractions
+> Depends-on: 20250620152425.285683-1-igor.korotin.linux@gmail.com
+> 4 samples: rust: show ACPI ID-table in I2C sample driver
+> Depends-on: 20250620152425.285683-1-igor.korotin.linux@gmail.com
+> 
+> Igor Korotin (4):
+>   rust: i2c: add basic I2C device and driver abstractions
+>   samples: rust: add Rust I2C sample driver
+>   rust: i2c: ACPI ID-table support for I2C abstractions
+>   samples: rust: show ACPI ID-table in I2C sample driver
+> 
+>  MAINTAINERS                     |   3 +
+>  rust/bindings/bindings_helper.h |   1 +
+>  rust/helpers/helpers.c          |   1 +
+>  rust/helpers/i2c.c              |  15 ++
+>  rust/kernel/i2c.rs              | 386 ++++++++++++++++++++++++++++++++
+>  rust/kernel/lib.rs              |   2 +
+>  samples/rust/Kconfig            |  11 +
+>  samples/rust/Makefile           |   1 +
+>  samples/rust/rust_driver_i2c.rs |  69 ++++++
+>  9 files changed, 489 insertions(+)
+>  create mode 100644 rust/helpers/i2c.c
+>  create mode 100644 rust/kernel/i2c.rs
+>  create mode 100644 samples/rust/rust_driver_i2c.rs
+> 
+> 
+> base-commit: 63dafeb392139b893a73b6331f347613f0929702
+
+Please ignore. Was sent by mistake.
+
+Thanks
+Igor
