@@ -1,199 +1,186 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD2E20DD49
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034AA20DD49
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750915218; cv=none; b=nt1hBVpCdCdyMqMLvjDpvHxRDLT5EqP/yaAPayPym5GohsKLbkeAQ7P0YA2TMbgFPn4ISZXGD6vGeBX7mfShF0faOcrRcne+piVKC5048oCBSx9d3kP/VZ9ad6cRw+HdjMv78Vv0ELIWRGZdUT9d35+y9EAQi0p9wlyDdi2wHvY=
+	t=1750915224; cv=none; b=Q1RKJbuNYz/98cyBJU6L5tVGsTaK0k9szYMcBLwE5P8XzgwYhSmzYGcHIRH3xzkjYrOFeKi40aiWKCyE3GKfMibUjib8oSUvL6jz0PdGmwDoXeboHIOh1ffncoEAkRirhvgPzUzs0zfVMBLwmwI5DsMaSNj2ico21z2KGMDEtyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750915218; c=relaxed/simple;
-	bh=DpTmJWZ18VeKb2Nj+dzk4Ksw6DvHAg3Aggvo2SpFkvI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=riCLX/wn6Wq8nXC/k0IMw8/DTj9peXwl4jVK0L+pJ+mPNQ62P+MoLKzn4mLFkJWTcZDkLPf+vJ6PWNjCZUn+ePCELAi8iaFTlbKQnNIGSjVNvuw1+WWq7Bd2guqdYJyjR/OSOB3fu+x4FM2Gn0YVF001YWi8zxjn9hrNPUCTr7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=b4AzxaZb; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750915224; c=relaxed/simple;
+	bh=xNUTea3Mht0lRiD8ut2jokocfbZbFj8RuSELVmXk+iw=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=PIFzpPHYwoIlelf8kAk+P/VB4a/P33WH7xvCh/haaPg2KeNjvg0IlMqoTKzfbo7s7a+iuplvcOewYuVg/acxvaUWrzKA6HHKNTCAHrvtfqLyJUraI/W0cP/7M23tsCYv8Ez70NJkNPn5MlEaoG0MCKNc5fPR8/dx0/66LuDphl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VZiNqSuO; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="b4AzxaZb"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q0Dre5018662
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:20:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=6pAx5/ZkLCjLuDmzrc9Yzj
-	agLIhF1++aZj4s/ojWJSs=; b=b4AzxaZbRb2WLrMUh4SQhZq38y6W45cka69ETY
-	xqOUxEtwBDGc5dRzpGJqSZ6WjjM5MlOKJQrgmBsOHkM4pV0/yziS7zzS3aY/r9Ku
-	T0NTc7lgWFPjbOLjoSPPmBQPAy6CnJ5W+aGerDSkp4Rg9+WQjF6QZlt1pb0VVpUX
-	BxAjphrN5SE6goz6tmbIC+sL7tPYen82fQzDVXFzlBcloffdR9EswzH5tYL8G88l
-	2bUl5vkx4iGkWSaUOnAmlHuOq/0yN62cOyJqEZ8Jrtl07zH0f8J8DwIza2Ect9HT
-	2qx/eaohsM6N3p+L+oSy+JIJeJQjtYG2f2FLuAUPTAC4pV4w==
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ec26cat6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:20:15 +0000 (GMT)
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b31c38d4063so328269a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:20:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750915214; x=1751520014;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6pAx5/ZkLCjLuDmzrc9YzjagLIhF1++aZj4s/ojWJSs=;
-        b=KUq/B2DhZyQpOuPlu38JPIkBCfGCguGxlYSdagsuhJjzfCtSLc/3Ez5iQxFAibZtRR
-         pNTX5CysVxejoljq/K53Fc8UH/+OXicK44/XIx0kMWFRFP4b6f30Hl9qJhSxwtYuQyGa
-         xvWTzVylZgjbCnbzyJ42f4+oBaOE6oOYi8cXeJ6qVcmSRrIVm9lrIH5OnhrYWvvKLsLh
-         FdFGfR+g6WEBzJrq/KZzrv4xVQkav3BXmIsmJrfVHVXe9wtSA0bPEFY1S9uOkCuwWheG
-         k+Ge0AZ52woJ/FCEfNn3vyEm0Fh61fyryWTHvHeTw0dEY4nP/BmoGG7+axGBH3AaZByR
-         J62Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX/ap90niYv7XKGn9LrrtvbSqbTSfN4zxBHdatGH7HhyKm2yk3skUEEk2BQeisdq2oz2Gxx+qkDHRlO0dk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqT8mkwmqH+OVH1sopP6GFFELmrA6IaZfTwzGn0BOa2IHgrObJ
-	ZCoxPTqK0rxZ43mmKeTNS7r3e/+SIXoI6M6DVXeRhyNQS1J5Ck+bh3Q1tl//kl/FJHGktZM8zht
-	qRoZgU3IvJnFlZvAPFMX9+G0u6dqGFfhpCgMl802eT9aQUtYFPnsALcdUGhxeBkbYplk=
-X-Gm-Gg: ASbGncvSXHeOj25SOAI6vtL6J+UHHjn/oqWkiVgbwIUP3nv62d2bO3hXcr2YG+7fo+0
-	Lf6EMPgBv/zM1ZYVlI1HZquItYJf0TnOTzrJpWK2fdPhMS1ZwnieV4hGNdNEhbNTtV38ruWfdp1
-	KP9IjyezfAMmV5e0VRibwQPKuLZokH9dptO01Tpgd/6n10XJdWmIfLWSGlOhOvg1oJZGJDfgYd7
-	OBX0c7PjsT+sk2SO2caMyaOpG6qCduBUhx+a0V6zJ6RQU9QgdGRFpSjLd1vtdNhY6fN+QtgjWD9
-	vqr/OpXabmbojIpe6cmSxKBwlfiFCT0ZqVliLbXbzQAHtP9j0G4VmT7aFeRq9+D4b64j1IAwMy5
-	43JFP1+/vA/k7SqQ00myeTJmvWJjKEi94THQegRl7n06VsJs=
-X-Received: by 2002:a17:90b:2ed0:b0:312:def0:e2dc with SMTP id 98e67ed59e1d1-315f25c9b3fmr8638729a91.7.1750915214190;
-        Wed, 25 Jun 2025 22:20:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH89OoOzXSimx5HnW6QRCbmh5jHDwsaTiPcchec/GXWmTxIjZHrwzQ00PiGT6UVndyuC4fweA==
-X-Received: by 2002:a17:90b:2ed0:b0:312:def0:e2dc with SMTP id 98e67ed59e1d1-315f25c9b3fmr8638690a91.7.1750915213684;
-        Wed, 25 Jun 2025 22:20:13 -0700 (PDT)
-Received: from hu-adisi-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f53c2f28sm3443612a91.28.2025.06.25.22.20.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 22:20:13 -0700 (PDT)
-From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
-Date: Thu, 26 Jun 2025 10:49:56 +0530
-Subject: [PATCH ath-current] wifi: ath12k: fix timeout while waiting for
- regulatory update during interface creation
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VZiNqSuO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750915223; x=1782451223;
+  h=date:from:to:cc:subject:message-id;
+  bh=xNUTea3Mht0lRiD8ut2jokocfbZbFj8RuSELVmXk+iw=;
+  b=VZiNqSuOZ8JtgDc26WGWN338p6R1/DnJIzv/TylpZX/h0g3Htos4WIOV
+   X7TihODluxWOq8jCaDanCPTW5LmcJ1L/5y5YvmsKcoyaujrLcSWDgvX7S
+   7JAkuUyiiBEXSCTQWwNTRDwqFborDRorlPQRFGupqtC7rcjGrmg9M7hbh
+   IY0qMaHy7WxgBwtX8shLszCa6YMNc0VQG3x63Oiimuehw0k3dFSwhm846
+   kak0p6O+zgcumQ6iC4CrkhoTo+QZzhv0fGSiEFrHsuFXYb8RTPWlvUt4i
+   qK5MLkAEcoRq/zEC5dp/CW3lsWaKfg9tPUJGUEUutod2Ne5Mllrzq0Km4
+   g==;
+X-CSE-ConnectionGUID: vrcNya3ERv2d4xNEmK67mw==
+X-CSE-MsgGUID: ECvX5DJZScCv51hWQd3R0A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="56878290"
+X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
+   d="scan'208";a="56878290"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 22:20:23 -0700
+X-CSE-ConnectionGUID: TZMb/zHYRf62ro2jZ5xkKA==
+X-CSE-MsgGUID: UcVpPmVoQdmM9J+MOSBHJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
+   d="scan'208";a="189597581"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 25 Jun 2025 22:20:22 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uUf23-000Tl7-16;
+	Thu, 26 Jun 2025 05:20:19 +0000
+Date: Thu, 26 Jun 2025 13:19:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:tip/urgent] BUILD SUCCESS
+ 2cd8a89048a2d10de4774f65673e5eb948547a7c
+Message-ID: <202506261344.0mGLTs5V-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250626-fix_timeout_during_interface_creation-v1-1-90a7fdc222d4@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAHvYXGgC/5VOSwqDMBC9isy6EX+x2lXvUSSEZNSBmrSTKC3i3
- Ru8QTcPHu+7Q0AmDHDLdmDcKJB3iZSXDMys3YSCbOJQFZUs2kqKkT4q0oJ+jcquTG5S5CLyqA0
- qw6hjahAam6ozV1u3XQOp68WYgufOA3SchVmZ0UUYkjhTiJ6/54etPC1/zm2lKIWUdW/7pu4M2
- rsPIX+v+mn8suQJYDiO4wfwV0FB7gAAAA==
-X-Change-ID: 20250625-fix_timeout_during_interface_creation-ae428c7d3684
-To: Jeff Johnson <jjohnson@kernel.org>,
-        Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
-        Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
-Cc: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Kang Yang <kang.yang@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA0MSBTYWx0ZWRfX/5vCjSLFj+91
- 0EfaXLqgM8fAMbIfV9ymGvmomIhFUgfSzTKGO/oazavFo1Vlp/DWxdFBraw9EtlW0QYZFWtREKe
- cW81e7NOfVOxNvrgmRwk4MQrlEB71LuImyx1fAia8jKV21j3cjJnheHvLxo7sGFys9eGx4/c6bv
- Lvjdyd9CdSUb8VyBAaVEz+Om6TfgX6erJAHjP21YMywtL3C/v35JUoQXU/PP+uxn/eE7OzAP8HJ
- JfdD2iHw7glu3NQXLcpn5gvqgxpeb4tkAxeeEiaj26jbCbP9fn+mOBys3luJ67Z7hHapK62fTMO
- FnXCRiqkMQOBLpxIOfFxt9PGucWNcEAGeiTn4rqdtyFkTtz+9CesheiREdOdqYJRAhJbaqyK6N1
- G1rr8LZlzD4maZ6gUGEh8HXF2Apuu1OhG04DQu9PKmlCUVQipq5dzM7W+GtRL96pg1KFJ4Ej
-X-Authority-Analysis: v=2.4 cv=XPQwSRhE c=1 sm=1 tr=0 ts=685cd88f cx=c_pps
- a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=JrXYcSkjSHDmVXoFp08A:9
- a=QEXdDO2ut3YA:10 a=3WC7DwWrALyhR5TkjVHa:22
-X-Proofpoint-GUID: o8O4b-TlqHkpnCQ4Ue8nVmznbSU7kV0Z
-X-Proofpoint-ORIG-GUID: o8O4b-TlqHkpnCQ4Ue8nVmznbSU7kV0Z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_02,2025-06-25_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 impostorscore=0 clxscore=1015 suspectscore=0 mlxscore=0
- spamscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
- priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506260041
 
-During interface creation, following print is observed on the console -
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
+branch HEAD: 2cd8a89048a2d10de4774f65673e5eb948547a7c  Merge branch into tip/master: 'x86/urgent'
 
-  Timeout while waiting for regulatory update
+elapsed time: 1164m
 
-This occurs due to commit 906619a00967 ("wifi: ath12k: handle regulatory
-hints during mac registration"), which introduced a completion mechanism to
-synchronize the regulatory update process. The intent behind this change is
-to coordinate the timing between when the firmware sends regulatory data to
-the driver and when the driver processes that data.
+configs tested: 109
+configs skipped: 2
 
-However, during interface addition, if the 6 GHz band is active, the driver
-invokes ath12k_regd_update() to apply the appropriate 6 GHz power mode
-regulatory settings. At this point, there is no interaction with the
-firmware, so the completion object is not reinitialized. As a result,
-wait_for_completion() eventually times out, leading to the observed error
-log message.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Hence to fix this, move all complete() on regd_update_completed to
-complete_all().
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    clang-19
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    clang-19
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    clang-19
+arc                   randconfig-001-20250625    gcc-11.5.0
+arc                   randconfig-001-20250626    clang-20
+arc                   randconfig-002-20250625    gcc-12.4.0
+arc                   randconfig-002-20250626    clang-20
+arm                              allmodconfig    clang-19
+arm                               allnoconfig    clang-21
+arm                               allnoconfig    gcc-15.1.0
+arm                              allyesconfig    clang-19
+arm                   randconfig-001-20250625    clang-21
+arm                   randconfig-001-20250626    clang-20
+arm                   randconfig-002-20250625    gcc-11.5.0
+arm                   randconfig-002-20250626    clang-20
+arm                   randconfig-003-20250625    gcc-13.3.0
+arm                   randconfig-003-20250626    clang-20
+arm                   randconfig-004-20250625    gcc-15.1.0
+arm                   randconfig-004-20250626    clang-20
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250625    gcc-11.5.0
+arm64                 randconfig-001-20250626    clang-20
+arm64                 randconfig-002-20250625    clang-20
+arm64                 randconfig-002-20250626    clang-20
+arm64                 randconfig-003-20250625    gcc-12.3.0
+arm64                 randconfig-003-20250626    clang-20
+arm64                 randconfig-004-20250625    clang-20
+arm64                 randconfig-004-20250626    clang-20
+csky                              allnoconfig    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    clang-21
+hexagon                           allnoconfig    gcc-15.1.0
+hexagon                          allyesconfig    clang-19
+hexagon                          allyesconfig    clang-21
+i386                             allmodconfig    clang-20
+i386                              allnoconfig    clang-20
+i386                             allyesconfig    clang-20
+i386        buildonly-randconfig-001-20250625    clang-20
+i386        buildonly-randconfig-002-20250625    gcc-12
+i386        buildonly-randconfig-003-20250625    gcc-12
+i386        buildonly-randconfig-004-20250625    gcc-12
+i386        buildonly-randconfig-005-20250625    clang-20
+i386        buildonly-randconfig-006-20250625    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-15.1.0
+openrisc                          allnoconfig    clang-21
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    clang-21
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    clang-21
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    gcc-15.1.0
+riscv                            allmodconfig    gcc-15.1.0
+riscv                             allnoconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    gcc-15.1.0
+s390                             allmodconfig    gcc-15.1.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-19
+um                               allyesconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250625    gcc-12
+x86_64      buildonly-randconfig-001-20250626    clang-20
+x86_64      buildonly-randconfig-002-20250625    clang-20
+x86_64      buildonly-randconfig-002-20250626    clang-20
+x86_64      buildonly-randconfig-003-20250625    clang-20
+x86_64      buildonly-randconfig-003-20250626    clang-20
+x86_64      buildonly-randconfig-004-20250625    clang-20
+x86_64      buildonly-randconfig-004-20250626    clang-20
+x86_64      buildonly-randconfig-005-20250625    clang-20
+x86_64      buildonly-randconfig-005-20250626    clang-20
+x86_64      buildonly-randconfig-006-20250625    clang-20
+x86_64      buildonly-randconfig-006-20250626    clang-20
+x86_64                              defconfig    clang-20
+x86_64                                  kexec    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-12
+x86_64                         rhel-9.4-kunit    gcc-12
+x86_64                           rhel-9.4-ltp    gcc-12
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
 
-The complete() function signals only once, causing any subsequent waits
-without reinitialization to timeout. In this scenario, since waiting is
-unnecessary, complete_all() can be used instead, ensuring that subsequent
-calls to wait without reinitialization will simply bail out and not
-actually wait. This approach is ideal because if the firmware is not
-involved, there is no need to wait for the completion event. However, if
-the firmware is involved, it is guaranteed that the completion will be
-reinitialized, and thus, it would wait.
-
-Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.5-01651-QCAHKSWPL_SILICONZ-1
-Tested-by: Kang Yang <kang.yang@oss.qualcomm.com>
-Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
-
-Fixes: 906619a00967 ("wifi: ath12k: handle regulatory hints during mac registration")
-Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
----
- drivers/net/wireless/ath/ath12k/core.c | 2 +-
- drivers/net/wireless/ath/ath12k/mac.c  | 2 +-
- drivers/net/wireless/ath/ath12k/wmi.c  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath12k/core.c b/drivers/net/wireless/ath/ath12k/core.c
-index 83caba3104d6c0bca40dd1166de335aabc8b74e5..ffc19a6b948539dddf3f6f21f2799f1b661347f7 100644
---- a/drivers/net/wireless/ath/ath12k/core.c
-+++ b/drivers/net/wireless/ath/ath12k/core.c
-@@ -1475,7 +1475,7 @@ static void ath12k_core_pre_reconfigure_recovery(struct ath12k_base *ab)
- 			complete(&ar->vdev_setup_done);
- 			complete(&ar->vdev_delete_done);
- 			complete(&ar->bss_survey_done);
--			complete(&ar->regd_update_completed);
-+			complete_all(&ar->regd_update_completed);
- 
- 			wake_up(&ar->dp.tx_empty_waitq);
- 			idr_for_each(&ar->txmgmt_idr,
-diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
-index 32519666632d1877eb48a31e94e5eb47f2b33880..d5f41f0fceee23710d2d775bb4d6f7451e15a55b 100644
---- a/drivers/net/wireless/ath/ath12k/mac.c
-+++ b/drivers/net/wireless/ath/ath12k/mac.c
-@@ -12755,7 +12755,7 @@ static int ath12k_mac_hw_register(struct ath12k_hw *ah)
- 	 * proceeding with registration.
- 	 */
- 	for_each_ar(ah, ar, i)
--		complete(&ar->regd_update_completed);
-+		complete_all(&ar->regd_update_completed);
- 
- 	ret = ieee80211_register_hw(hw);
- 	if (ret) {
-diff --git a/drivers/net/wireless/ath/ath12k/wmi.c b/drivers/net/wireless/ath/ath12k/wmi.c
-index b38f22118d732aa182f9fd6dda376b0d41de65e2..2fb262d13a586bbf354a74be8e509df2b4905f30 100644
---- a/drivers/net/wireless/ath/ath12k/wmi.c
-+++ b/drivers/net/wireless/ath/ath12k/wmi.c
-@@ -6764,7 +6764,7 @@ static int ath12k_reg_chan_list_event(struct ath12k_base *ab, struct sk_buff *sk
- 	 * before registering the hardware.
- 	 */
- 	if (ar)
--		complete(&ar->regd_update_completed);
-+		complete_all(&ar->regd_update_completed);
- 
- 	return ret;
- }
-
----
-base-commit: aa555da8266715e52e5dd74360f3b4c866ddcb64
-change-id: 20250625-fix_timeout_during_interface_creation-ae428c7d3684
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
