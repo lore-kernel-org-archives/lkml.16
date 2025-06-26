@@ -1,149 +1,150 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12392F1FF9;
-	Thu, 26 Jun 2025 16:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CC01C4A24
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750955474; cv=none; b=LiKSUAEl7FD7JZpQPKwkEZa1OQYPInAFqOzd3Rx5gayc+O9JYL6IHTMV6+rDN5h5dwdBoxyyWf6mVq0K41fwM2NNmW25d9nKz95/rlyjEbEGgvrgCNzUz8qzKh9QdeiJM8L2q4CfyNrJrzt9Ht5H6Bq1zCQsWjpdOZ87/WyF1JI=
+	t=1750955501; cv=none; b=BCDIydjzripX9Lp0PS2MD2QUX19Ec4wsz7bH2xNy3+oIt1GSEJl3nt+rWjbqLV7ta8TNM1XpIpiLs3Q3DBf7XC8g5f/ZWE7rnGpSlIvMo4Si9ClXTbLBVBebLwq+XIMsImUrkzyekDstd/3jx29SFD9ZDHYYpfw9xgyErNavNAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750955474; c=relaxed/simple;
-	bh=HT7TrT+9RAo9P1265OpuBOUxaqxI8OngOWZcR/hl21A=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=AXtnBE3Djt/GS0ZoBIdwST20ELldEF5oeBTa3LpzOAJWq4/oBHlJWOOjNmlB1X942zxgQtxFV6R3mcYKmY/KCMO9QYt6npEPd/pniqnT5zspSKhAVqRQBmJgyaiu/IoLJEShJK9cBQyjRhKj3kQgV9EFfRJFFTu6Z1xW/FauglM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y0pJdBkO; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750955501; c=relaxed/simple;
+	bh=4vhY6njRa9Rl8vz7fB5BjME1Ai3VboLm3lxRlFY1PYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=STAlpWI4H38u2/JeeGW1ME3EEsa3bs0WFgOwGcoCw2KB2EZ+w9Y6vCBK9UzhXls+XjYo/SXsUoL7KgkzcyKdu+ik3UCdnMcN5kH8dfaCXz36XOaoEE7ZW+vHvrD7Kbb5T1Mztg2sgFxlrshuDhmVG1MvCXUvf0ICEYHTd2V6JCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cCbGxZ08; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y0pJdBkO"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e7387d4a336so1078278276.2;
-        Thu, 26 Jun 2025 09:31:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750955472; x=1751560272; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sU907uMABVIuqhXrvaDd1M5r5o0uDZff62vwsqKDZWA=;
-        b=Y0pJdBkOmarrN+IHFZDGP1iCHN3ett7qeY3sikhuq5Tb6PTJgR6Pd75I9Bm4O6aWWa
-         tTQcZotisrw9Zn5owJmMvvmF0LzIldVxybU2S95vAIbR3LRYbWZVE8WnmtYIO4EaJI5B
-         jV46nPYnywr0Kv3a2kJJOgDZV8CipTN3KJlvR9YM6dQlalDqTP2p51DE1iKxZHwsIvUy
-         c9yHEdeEY7XXgu+LwvQEZft8V+vH9VSaEA+utcSlVGdkakfb/hIABa58WWnQpRyaTvKu
-         YdYXccSZKZOI7DdNRgkixQhCr8RBukJGa7x9wuAiYKPMlv0lgWtfpucON7kFzv0r0veC
-         uDXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750955472; x=1751560272;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=sU907uMABVIuqhXrvaDd1M5r5o0uDZff62vwsqKDZWA=;
-        b=LYoZMxa/l05giENjb2ZFg30TgxNYjqfZDNhbVLW4eot2mUNLvFBYKoCa4f5sJ89t1y
-         a0DvFiASkaVQrKN93V2oLAQp9BFcIY7fOZjWJbRPR5V2pxE9f912HoP/QU5eSes4K35f
-         u8NHcvIhreYT/Z/sHNhMxl6LF0rCXnhBtT+6AZMQfzKEGwTQFdIlcwRRCjjrvxBMqSXr
-         ahkEk/+IOIsljzlcVh2NAkYqDfzxG2pGO4qSdBsLKGVnqvyYmyJSQmnPUQ/RzO7Hgfnl
-         fNQbxR1cpVYtvyFJQJ1wUfmYY6X+cDKw7rPeG389GN5dfjRWBEACssgm/cE70UlBtT+0
-         d0AA==
-X-Forwarded-Encrypted: i=1; AJvYcCUO5+T+v7aDBPq0LST+APP+XxeOY7cOZIJnM2Po4+5kClYOmFWDSkE3Aw3H8RHI7HN6L84=@vger.kernel.org, AJvYcCVQDccJMls02/QWF0Il5/wZw6Ro0+WSs+S4VU1hcHlS5MVgsrrunrqPC5F0X2N/AsVWTM4UQ/OLeOlUg3uYZxGN@vger.kernel.org, AJvYcCWuUvNckAs/bD4IBzyiN696nimzmRr0et09Z2G+TGDkWvQjBh/FwpmmAlbvO/Mtm27Zs7kTuWi6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1x4FuylZOjKf298XBBrPL+zrPXHpqlDfQZTs0x/ZeeVLjgp4Q
-	8yLYW7YSGMxk8f5jL6POY2w/y6nXqeYzjQMnnc/KZ+HJ9h10Dfy0Fuf2
-X-Gm-Gg: ASbGncvYWRsAvmdCQHu5cpt/0ZLbN+5t3w4HClg9ycGRyHBI9F7jNDPjq8WFl/veT27
-	VV2hQYljb2wY7dpt5xuocfvuqER2/lQIjFSCax2jRbiIbAA/3WyFvJFNOFVWfmU99IaV80mFB9W
-	Qgawmpa77qAiW0r1jILNcW1dfejLDfVfcmwDkaLaP23Iq9FWbp/+k6LuWtllGokMdgiDAvGNknT
-	zLm7kR0Ga4PV8XCvykvf8kBDwWzvGJDmPyFjzE73RAtNHvY5H2IMWKM9SyDRSdfOy8zRm6ZGHjU
-	JlgZSXFnOpE6LerfxC0cBjU1wAxYpbrdoeEId8DqjjqyiXuA8o5zNPLRTAhMFevBLULxz2D6Eo1
-	cQGHv3QYapt5AUp4jUkF7MZB3qyKifZVAcrEwQSU1lw==
-X-Google-Smtp-Source: AGHT+IFrPsJ7ocFnnJXVD1xPpmy2Gbr6SdxJFVUck73u2UFAzH256ovImqgekymICTAG/orEeonCbQ==
-X-Received: by 2002:a05:6902:5086:b0:e87:985c:d69f with SMTP id 3f1490d57ef6-e87985cd8c8mr5729673276.41.1750955471718;
-        Thu, 26 Jun 2025 09:31:11 -0700 (PDT)
-Received: from localhost (141.139.145.34.bc.googleusercontent.com. [34.145.139.141])
-        by smtp.gmail.com with UTF8SMTPSA id 3f1490d57ef6-e87a6bd0559sm85077276.32.2025.06.26.09.31.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 09:31:11 -0700 (PDT)
-Date: Thu, 26 Jun 2025 12:31:10 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Breno Leitao <leitao@debian.org>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>, 
- Simon Horman <horms@kernel.org>
-Cc: linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- bpf@vger.kernel.org, 
- gustavold@gmail.com, 
- Breno Leitao <leitao@debian.org>
-Message-ID: <685d75ceb113c_2e676c294d1@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20250625-netpoll_test-v2-4-47d27775222c@debian.org>
-References: <20250625-netpoll_test-v2-0-47d27775222c@debian.org>
- <20250625-netpoll_test-v2-4-47d27775222c@debian.org>
-Subject: Re: [PATCH net-next v2 4/4] selftests: net: add netpoll basic
- functionality test
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cCbGxZ08"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750955500; x=1782491500;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4vhY6njRa9Rl8vz7fB5BjME1Ai3VboLm3lxRlFY1PYc=;
+  b=cCbGxZ08Ss77Y6WPRrUZYoILJ6NxhTtTPmwDmXBvAp7evgjHwEoclJIY
+   feXIyZX7eVYh7AoqwLTRLhx/8P226K+MgBaEMctcnto+gmxSp+MsjY3/h
+   Nf3BF97t9mb8ogRevJAgvp4bJGwyEp+nnaiC4sYm6qNtZNrjBaZG4m1OU
+   kW3kFJzKv+70lhhbLmNGO6KhnDD71l8DpUqrjlhlACvm2V3XRD1M4wpfb
+   dUCnqA4R1JfIWJHOAsuun6PWu7cl9BjoFx4eCnVmfCghzdCOPlEKEEgrB
+   soLP1ZZHjrAbvg3+oldgxF0EnMRK6NqSsdVn4J/hPyoEIjefqRcZNp/rh
+   A==;
+X-CSE-ConnectionGUID: +b78+EqESWmPTQUeG2IGVg==
+X-CSE-MsgGUID: XOXX1FeUQcy+EB88zE1hEw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="64614198"
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="64614198"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:31:37 -0700
+X-CSE-ConnectionGUID: m7HO+CcBToas/7kyx6GJmQ==
+X-CSE-MsgGUID: W4gpHGpBQ9OusFjWdq2Pig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="152074764"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 26 Jun 2025 09:31:33 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uUpVa-000UGo-0H;
+	Thu, 26 Jun 2025 16:31:30 +0000
+Date: Fri, 27 Jun 2025 00:31:29 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bo Liu <liubo03@inspur.com>, phillip@squashfs.org.uk
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Bo Liu <liubo03@inspur.com>
+Subject: Re: [PATCH] Squashfs: add page cache share support
+Message-ID: <202506270024.FPuaCoE9-lkp@intel.com>
+References: <20250626003644.3675-1-liubo03@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626003644.3675-1-liubo03@inspur.com>
 
-Breno Leitao wrote:
-> Add a basic selftest for the netpoll polling mechanism, specifically
-> targeting the netpoll poll() side.
-> 
-> The test creates a scenario where network transmission is running at
-> maximum speed, and netpoll needs to poll the NIC. This is achieved by:
-> 
->   1. Configuring a single RX/TX queue to create contention
->   2. Generating background traffic to saturate the interface
->   3. Sending netconsole messages to trigger netpoll polling
->   4. Using dynamic netconsole targets via configfs
->   5. Delete and create new netconsole targets after some messages
->   6. Start a bpftrace in parallel to make sure netpoll_poll_dev() is
->      called
->   7. If bpftrace exists and netpoll_poll_dev() was called, stop.
-> 
-> The test validates a critical netpoll code path by monitoring traffic
-> flow and ensuring netpoll_poll_dev() is called when the normal TX path
-> is blocked.
-> 
-> This addresses a gap in netpoll test coverage for a path that is
-> tricky for the network stack.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+Hi Bo,
 
-> +def bpftrace_call() -> None:
-> +    """Call bpftrace to find how many times netpoll_poll_dev() is called.
-> +    Output is saved in the global variable `maps`"""
-> +
-> +    # This is going to update the global variable, that will be seen by the
-> +    # main function
-> +    global MAPS  # pylint: disable=W0603
-> +
-> +    # This will be passed to bpftrace as in bpftrace -e "expr"
-> +    expr = "BEGIN{ @hits = 0;} kprobe:netpoll_poll_dev { @hits += 1; }"
+kernel test robot noticed the following build warnings:
 
-Is that BEGIN statement needed? I generally just use count().
+[auto build test WARNING on v6.16-rc3]
+[also build test WARNING on linus/master next-20250626]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> +
-> +    MAPS = bpftrace(expr, timeout=BPFTRACE_TIMEOUT, json=True)
-> +    logging.debug("BPFtrace output: %s", MAPS)
-> +
-> +
-> +def bpftrace_start():
-> +    """Start a thread to call `call_bpf` in parallel for 2 seconds."""
+url:    https://github.com/intel-lab-lkp/linux/commits/Bo-Liu/Squashfs-add-page-cache-share-support/20250626-084010
+base:   v6.16-rc3
+patch link:    https://lore.kernel.org/r/20250626003644.3675-1-liubo03%40inspur.com
+patch subject: [PATCH] Squashfs: add page cache share support
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20250627/202506270024.FPuaCoE9-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250627/202506270024.FPuaCoE9-lkp@intel.com/reproduce)
 
-Stale comment? BPFTRACE_TIMEOUT is set to 15.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506270024.FPuaCoE9-lkp@intel.com/
 
-> +    global BPF_THREAD  # pylint: disable=W0603
-> +
-> +    BPF_THREAD = threading.Thread(target=bpftrace_call)
-> +    BPF_THREAD.start()
-> +    if not BPF_THREAD.is_alive():
-> +        raise KsftSkipEx("BPFtrace thread is not alive. Skipping test")
-> +
-> +
+All warnings (new ones prefixed by >>):
+
+   In file included from fs/squashfs/pagecache_share.c:18:
+>> fs/squashfs/squashfs.h:25:40: warning: 'struct squashfs_page_actor' declared inside parameter list will not be visible outside of this definition or declaration
+      25 |                                 struct squashfs_page_actor *);
+         |                                        ^~~~~~~~~~~~~~~~~~~
+>> fs/squashfs/squashfs.h:49:33: warning: 'struct squashfs_sb_info' declared inside parameter list will not be visible outside of this definition or declaration
+      49 |         void * (*create)(struct squashfs_sb_info *msblk, void *comp_opts);
+         |                                 ^~~~~~~~~~~~~~~~
+   fs/squashfs/squashfs.h:50:32: warning: 'struct squashfs_sb_info' declared inside parameter list will not be visible outside of this definition or declaration
+      50 |         void (*destroy)(struct squashfs_sb_info *msblk);
+         |                                ^~~~~~~~~~~~~~~~
+   fs/squashfs/squashfs.h:52:58: warning: 'struct squashfs_page_actor' declared inside parameter list will not be visible outside of this definition or declaration
+      52 |                           int offset, int length, struct squashfs_page_actor *output);
+         |                                                          ^~~~~~~~~~~~~~~~~~~
+   fs/squashfs/squashfs.h:51:34: warning: 'struct squashfs_sb_info' declared inside parameter list will not be visible outside of this definition or declaration
+      51 |         int (*decompress)(struct squashfs_sb_info *msblk, struct bio *bio,
+         |                                  ^~~~~~~~~~~~~~~~
+
+
+vim +25 fs/squashfs/squashfs.h
+
+f5cc08737507f2 Phillip Lougher 2024-12-29  22  
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  23  /* block.c */
+846b730e99518a Phillip Lougher 2013-11-18  24  extern int squashfs_read_data(struct super_block *, u64, int, u64 *,
+846b730e99518a Phillip Lougher 2013-11-18 @25  				struct squashfs_page_actor *);
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  26  
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  27  /* cache.c */
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  28  extern struct squashfs_cache *squashfs_cache_init(char *, int, int);
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  29  extern void squashfs_cache_delete(struct squashfs_cache *);
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  30  extern struct squashfs_cache_entry *squashfs_cache_get(struct super_block *,
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  31  				struct squashfs_cache *, u64, int);
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  32  extern void squashfs_cache_put(struct squashfs_cache_entry *);
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  33  extern int squashfs_copy_data(void *, struct squashfs_cache_entry *, int, int);
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  34  extern int squashfs_read_metadata(struct super_block *, void *, u64 *,
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  35  				int *, int);
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  36  extern struct squashfs_cache_entry *squashfs_get_fragment(struct super_block *,
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  37  				u64, int);
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  38  extern struct squashfs_cache_entry *squashfs_get_datablock(struct super_block *,
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  39  				u64, int);
+82de647e1f81fd Phillip Lougher 2011-05-20  40  extern void *squashfs_read_table(struct super_block *, u64, int);
+ffae2cd73a9e82 Phillip Lougher 2009-01-05  41  
+4c0f0bb2351bee Phillip Lougher 2009-10-06  42  /* decompressor.c */
+4c0f0bb2351bee Phillip Lougher 2009-10-06  43  extern const struct squashfs_decompressor *squashfs_lookup_decompressor(int);
+9508c6b90b3f57 Phillip Lougher 2013-11-13  44  extern void *squashfs_decompressor_setup(struct super_block *, unsigned short);
+9508c6b90b3f57 Phillip Lougher 2013-11-13  45  
+9508c6b90b3f57 Phillip Lougher 2013-11-13  46  /* decompressor_xxx.c */
+80f784098ff44e Xiaoming Ni     2022-10-19  47  
+80f784098ff44e Xiaoming Ni     2022-10-19  48  struct squashfs_decompressor_thread_ops {
+80f784098ff44e Xiaoming Ni     2022-10-19 @49  	void * (*create)(struct squashfs_sb_info *msblk, void *comp_opts);
+80f784098ff44e Xiaoming Ni     2022-10-19  50  	void (*destroy)(struct squashfs_sb_info *msblk);
+80f784098ff44e Xiaoming Ni     2022-10-19  51  	int (*decompress)(struct squashfs_sb_info *msblk, struct bio *bio,
+80f784098ff44e Xiaoming Ni     2022-10-19  52  			  int offset, int length, struct squashfs_page_actor *output);
+80f784098ff44e Xiaoming Ni     2022-10-19  53  	int (*max_decompressors)(void);
+80f784098ff44e Xiaoming Ni     2022-10-19  54  };
+80f784098ff44e Xiaoming Ni     2022-10-19  55  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
