@@ -1,142 +1,118 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6842EB5A4;
-	Thu, 26 Jun 2025 15:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73A428934F;
+	Thu, 26 Jun 2025 15:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750951187; cv=none; b=Bd6QMANLklSEigt4U9QaP9mHLFw1ZGlovF63l67lGDhrthKglRj5kv/QpfR/J7X3kPqmrj0glPAQf3WxGXBeCD4R/6Fpw/GrPZxCJ/WuMZmW5m9LHFsO5V5QjzQORFU9gr//Jaapq929SFgqeqTKodV7U+gv667Q69+k0bYuq84=
+	t=1750951194; cv=none; b=a3b433ckQVchAu/L9PD7Y6pPe/pJFR2rSiAV2EaSNNjwI6OvpDMbV/GgAorE70S0pkHiBGbqDxtivsqlc/rw+xR2o4V7Wjugwc4qxvprCE9LnMTkR2fJq3FZMgwV6YZlh19Seo/3p5Pew9RXdTTQQV9VxhHrklMUSOP1qR/ZbyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750951187; c=relaxed/simple;
-	bh=o51B7iNjd+U5WK/gVXXyYCMg+WKgROXXkbE4f+qmvug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MKdgO//VFoW+kuVdeJnKJ7Wn81EM6YSfGQ8vq8FeKXONNBeEwzSLq//TBYB9S0r4oI/eEBW85aOMOTlCaKR/h9QazZfQ7TASVnB+F8QDaczLErL6rMCxwO90e1y8r2NtqWI6XltV35ZifkovGGuKRdNPXK4yKb/xYfrHykAGpy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=hf8qa8VF; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1750951194; c=relaxed/simple;
+	bh=R+c2qSbTSKIC0tT9gkvNPds08WjRbxM6PibZWtchYDQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bTr/HIRSqtuYhk4cm9izajXqKwi2DntmLHcFBhs7SviWUp4BkcxwxotlAVKl0idsTQ7wh1D5aeqhs++xa1Ls5JIHnw77rsCTPTXpwTCIkC8D+6zOMFaGvn5EJ2RAdt7dlHh3n93DTZKxQTpxj+4/dI2TlXWmmCYzGPGR8sC6Pk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TW4qFg3n; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="hf8qa8VF"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 462C940E0198;
-	Thu, 26 Jun 2025 15:19:41 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id PqW44RiQH6Jz; Thu, 26 Jun 2025 15:19:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750951175; bh=aEy0xE6/1EEIexhyZkFY9aUxJdMhziDSaDkTlnv5w6g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hf8qa8VF8orYwOKOUtgJkEYmsjkfQbalTSkc7wTAYA2jJ/CzAYCPQlNROgWOEUfMw
-	 VoeBHB5cEOMQDXEeKlqlakJFcsF8PK+GVoXJ0V7783kMDwKpbmq16/OFswms2stkHY
-	 UpWy6FuRtYdBacDNGp3lNp+ddT5PqRkYVrX4nbhXbQ3gOvG1hoKC5tlw2mFZfhtvsH
-	 NzZIW58fmTp/A0AmCkZnv66tlzfUNR+bhj7hErzYxRbs/IIOt8aDey6Klcr+AaEC8t
-	 qAGQ40bce3WW/qTrPFphAV1ohLkxc13JTAT5pGZrj3E+TNdmn5PbgmNw79tv/qcTO8
-	 miE8es+ZbHY1nsfYEFJHgk9v24neXCjLlg0ceLMxWIUnrBgeYRdnTSUM0/oW92tArv
-	 kSJvVYarRjwBM6zS8jooty0pw0N845TGyAB0F0l8J/Yq0Vo0hox3/dE8WiH2JQ80JT
-	 fmARjkYr+ofaimfaXPYo2VPZ4haf+Gg9y08Y45QhyJnHH9085m/BN2a1KzNAgkbjY+
-	 80SGmS9MENlf+p0WZ4MNdEicxFGxV88gidcNae0lvaCoPtfVDC5GiAMURROJEmkfsW
-	 p7K3WRFb8W1qGEZOoM8CusnNriv0PQWtyqixF67QK4Pi0AyZdp7VxZvR0spEk05bVC
-	 O2Vl1I4mvMThn66Ll3gWP0a8=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2E57C40E0169;
-	Thu, 26 Jun 2025 15:18:43 +0000 (UTC)
-Date: Thu, 26 Jun 2025 17:18:37 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Xiongwei Song <xiongwei.song@windriver.com>,
-	Xin Li <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Brijesh Singh <brijesh.singh@amd.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Breno Leitao <leitao@debian.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>,
-	Juergen Gross <jgross@suse.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Yuntao Wang <ytcoode@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>,
-	Huang Shijie <shijie@os.amperecomputing.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-mm@kvack.org,
-	Yian Chen <yian.chen@intel.com>
-Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
-Message-ID: <20250626151837.GFaF1kzfLtesXLqaAQ@fat_crate.local>
-References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
- <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
- <20250620163504.GCaFWNuI-8QFqAM0yI@fat_crate.local>
- <6y2iqv6c2idn7yebaec7tyhzl5zcsrwqq4lcsokumlqeophzaf@ljnmxorblgcj>
- <20250620182943.GDaFWolxhwogB2tTxb@fat_crate.local>
- <tmd5llufitosphzhiik2tlemjuwyi7xkcjlhbqhibrgjjhsqcj@b3xtgub42p45>
- <20250623102105.GCaFkqkatFSbyl1YeN@fat_crate.local>
- <ztkgdk72p2z3q6z4hslfg4gj6pejirh7cnssxhd7u72mo4enn4@viqrwrycderf>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TW4qFg3n"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70cb9ae5479so1059627b3.2;
+        Thu, 26 Jun 2025 08:19:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750951192; x=1751555992; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1JJKqMrEaML+dwFM/EI98+cWAy1tTBYyBi2gNj/iDEY=;
+        b=TW4qFg3nmfLHuwAup57tF9TA1VkJVIjV0M+jCX0dB+A+BCvrhsRDivMDoecAWL2Onb
+         69UL6I6LN4c4Np4KEdcMgwBQOqil3ACAbhFFplU1TkVy1Wa7xW4jElxJpwcAassV0xet
+         XVa2LnXI0U7BwI2YKmlxJD+gZohpQxdTelaIZDN8jiyqN7wGI9PwovZr9An7ZjRbQqCR
+         aRXZhxibXpoTfXQFjlT1qCNBPFGoRCbY9i5Cr75tRCg2rwyp+Ke71blLGIR1hpU9Bu9q
+         77JaSQzYe3EsoChbtklwRy+BCRjl5qKxX3eGaAWwIHpqk/O7izHuZRjwSDkY3dKM+6kn
+         EJGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750951192; x=1751555992;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1JJKqMrEaML+dwFM/EI98+cWAy1tTBYyBi2gNj/iDEY=;
+        b=c9x2G30cp7AzAM9l9Thr9Xi0IWSHoxrMrdtqPui40N5LyJT0b8I6iSPAucn7oDoBV9
+         XQG3j6R/r40WK+Inaqm7culul/Q5EIBxdtSRcpAJE8Joq71nmh4nlhjO9fsmNSYE4bkd
+         1bU55PXQwn+0qKPIXICmT9eb6qxHRbgu6oBrBXRTGX+oh5THFhcrJo2Pjg+1ihkCbHus
+         oUJLgY5NsfjVbMRSJ56GKcLFoRPjp0t2ZzwduSbL8xTQjQBjWXSdIXBOzrzRv8KvoP35
+         GJuEpUFHWc6PxgxFp0a+s9ObwbPvwCyUyMIEi5g15WadtPy8RkBys5TFKk+/E5qFMEXt
+         2wtw==
+X-Forwarded-Encrypted: i=1; AJvYcCUfAorICBgkGlJdbisrTFqJejMZmqpEozAizupOCg8ElDMJnITRZcdMvoQsIXTp961HulGnd94iq+onqQw=@vger.kernel.org, AJvYcCXyZEwsfCRgJ1sLbvPCV2ogPUWcj46uPjKa20tDEmaWcMZLID9+l6hLw1wc6wQCGR052xrIuS3FnUJ1fY4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypVUaq6IhlkQGPlInCmQKKnfc/ucdcew2Eeu2X9ed/Z2mcikyi
+	//MMJQ6HJWeTW6D95gnotKa35sBztT4s9C7PDjJRIDlGNb39vdhqzzOHI0QTBCsK8ugWz1WiHxc
+	dFN+NQfwPF9TDG+oLXu8ib3sRudrwfBM=
+X-Gm-Gg: ASbGncu9DAN9NPQa2HzMn1R8tfi1XV21fB7jvgVn6DWsE718Neq5c5YX2mFX/DKT9Wg
+	vqYBYTxv6Tss7pG+T5f73gbP/YiuXvfgz79w1OzUyjEY/TI7Fv99Y+zLtkfR0Zsst0fWb5qudhm
+	GbjsWCcsdkrdgIXIOu7/CO3O9Y0KKBDONexlIAKDgYQrzw279R/vPp
+X-Google-Smtp-Source: AGHT+IFOnJmKn+JJ2frYecHk4EE6Fmul0pWhubm7itDVDM5Ubw/30TpmRooTP07goDGc31er/cpoSSsTxEwrFRlC4XA=
+X-Received: by 2002:a05:690c:6f84:b0:70f:7bea:5dd with SMTP id
+ 00721157ae682-71406e1368emr44684307b3.9.1750951191557; Thu, 26 Jun 2025
+ 08:19:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ztkgdk72p2z3q6z4hslfg4gj6pejirh7cnssxhd7u72mo4enn4@viqrwrycderf>
+References: <20250624144943.39297-1-abdelrahmanfekry375@gmail.com>
+ <cef03d37-715c-47a8-81d4-0872d505c39b@suswa.mountain> <CAGn2d8ML8eTcN2G18B7FYkapROnOeAKJir5fJvOXDdXTLY43aQ@mail.gmail.com>
+ <5ce9dac3-0b7a-45d1-8313-2f65165b50e7@suswa.mountain> <CAGn2d8N8GrRR0FnaB7S2BsPs0HXHhwHfg+q55HbfkMqy1kMGTw@mail.gmail.com>
+ <5d579b8c-0676-46d8-a020-77ee91e1e7d3@suswa.mountain>
+In-Reply-To: <5d579b8c-0676-46d8-a020-77ee91e1e7d3@suswa.mountain>
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Date: Thu, 26 Jun 2025 18:19:40 +0300
+X-Gm-Features: Ac12FXwpty1WwCsHouZ9sWJvvTacKyf47jvNYTt5mDohhxxtLmxfkIn5JlmFx3U
+Message-ID: <CAGn2d8PdiBRN09L__XEsH=cNYz4rDR2A-GnSqCM6Y5TmtT+wcw@mail.gmail.com>
+Subject: Re: [PATCH v2] staging: media: atomisp: remove debug sysfs attributes
+ active_bo and free_bo
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org, 
+	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-staging@lists.linux.dev, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 23, 2025 at 04:42:41PM +0300, Kirill A. Shutemov wrote:
-> Due to SLAM, we decided to postpone LAM enabling, until LASS is landed.
-> 
-> I am not sure if we want to add static
-> /sys/devices/system/cpu/vulnerabilities/slam with "Mitigation: LASS".
-> 
-> There might be other yet-to-be-discovered speculative attacks that LASS
-> mitigates. Security features have to visible to userspace independently of
-> known vulnerabilities.
+Hello Dan , Thanks for your review
 
-... and the fact that a vuln is being mitigated by stating that in
-/sys/devices/system/cpu/vulnerabilities/ needs to happen too.
+On Tue, Jun 24, 2025 at 9:31=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
+> Yes.  Nothing is checking for if hmm_init() fails.  Step through the
+> code and verify that nothing crashes or bad happens as a result.
+>
+> For example, I think hmm_bo_alloc() will print "hmm_bo_device not inited
+> yet." and return.  So that's kind of annoying but it's not a crash.
+> Search through the rest of the driver and verify how it will behave.
+>
 
-I'm not talking about LAM enablement - I'm talking about adding a
+So, I have been searching through the code as you suggested,
+and found a couple of interesting things to look at.
 
-SPECTRE_V1_MITIGATION_LASS
+Firstly, no function that calls hmm_init() checks its return code,
+and it doesn=E2=80=99t crash anywhere because of this, so it's not a proble=
+m.
+But the thing is, the hmm_initialized flag inside the hmm_init() function
+is set even if hmm_bo_device_init() fails, and this can be misleading for
+functions like __hm_alloc() that check this flag later.
 
-and setting that when X86_FEATURE_LASS is set so that luserspace gets told
-that
+Secondly, the function hmm_bo_alloc() and others don=E2=80=99t check
+the return code of hmm_init(). Instead, they check the flag
+HMM_BO_DEVICE_INITED inside bdev, which is set by the function
+hmm_bo_device_init(). The problem is, if we inspect hmm_bo_device_init(),
+we find that the HMM_BO_DEVICE_INITED flag is set before the calls to
+kmem_cache_create(), kmem_cache_alloc(), and __bo_init().
+This means that if any of these functions fail, the flag will still be set,
+which can lead to misbehavior in functions that rely on it, like hmm_bo_all=
+oc().
 
-"Spectre V1 : Mitigation: LASS"
+Should I tackle these problems after submitting the original patch of
+removing the debug sysfs attr. ?
 
-or so.
-
-Makes more sense?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Best Regards,
+Abdelrahman Fekry
