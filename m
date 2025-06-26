@@ -1,272 +1,161 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010057.outbound.protection.outlook.com [52.101.84.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2949715278E;
-	Thu, 26 Jun 2025 22:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750976255; cv=fail; b=sXQARTE2756jTl/3cVYifundGMXb8F8EozYVub8M8PDiTREABkPaV1MWlWma91FCN1eOFqGNZkSsQgf3i+qs8YAce4jLyBLFzn0Y2DYwsInGehcsua7c0bFuZZEqRuZ0kosCTTP1pHCvoehw+6ww0e40mLcf6QAKDkJb45GgqpY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750976255; c=relaxed/simple;
-	bh=8dftbfOeZdEd3kH5vdwb6gllDd7kceEg9EP+m/3bseM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=EjaZY/oc0GRpu9JmmgwkQnTriX+AsI5+3/+fBh3PzTb34AW1hpJQQUeUg1ktNR+54TV7xKEZdzBVjrXrPIO7pf4Tio/anCMPNmwjQRnbnQmvhmJEMpzEVfquXCwvpcQN0I+yUUuKfTS8egGQr91MnYO98fReHdby//oqdiqMQTI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=XKEpTVHL; arc=fail smtp.client-ip=52.101.84.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B452153C1
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750976272; cv=none; b=MIom34Vc41MWwztOjGpaXj2GzBFeTAySclgL8daP08tT980MGpYRb2q3npCEHC0jXnvH1P6fTKvFzK3nRN9mhO2e60cn4r7q78ozdY9uoAdlBxl1ZuDc15S+4bXFHpqmh/y2uFPMC3NpdPYYgJqoA/sBDPTjvxO5SrH4kwpUUyk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750976272; c=relaxed/simple;
+	bh=MYtDdVYd0y1Ci0JlvX7groRfhkR30Cjj8br4lYV6ZGM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=PoE4MXYFnarPupXPnySLsMTSYgXQ6ErSFjUNYRsWZdy7xWYvXjuoEXmXIID0RvaBsmvy6bsCGxErFz7fj3dyjylz3H27anK9twtvQuJAcrv056htuIZjySuW5K2VH9ZFUd0TkbjN7EmxQTWulQWk7ZzCOHGUze1AtstcLa9cyOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HGOXiSZb; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="XKEpTVHL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vooPderr3imHb8gXCPZ+4ZSZjyfFcgqvS9jegbpspB5zdt4xvpXj05wWtULLYHsurVSA6+6lZ5+aT/+RQ8Wtkwlb1Ckl3nNhiINiLzo2xYN0KmVPLJQk3pd9fuUm8uHdZ+rbAQBLg0woNp782656i0yUsMNpWLO8eUaJnsKJr2jtOvK6FTrrahAF5naHLu+TQcl2ZIgQkh6FHO3zBqJ9B44Q0KvIOKMxzXHP5uq4haHp+m9AZgqwYMR5gfM31incc31VHTfRMLqm4gUNelROv2tvAQeEj/UONZ2c6KY60gvmJh+OmJPJeX4l6dksxV5Ue5ez/zbMV2dmYf5zQXc9Yw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=figoTJPyV/p59ly25DYI6SfKMrYNK61OSOSTKWdVJzk=;
- b=nmgcJqiq0vdU7LsNBKmZ8zUVafAuR142Dk3GZN2bLF5br5EmUIE8RkvRqBXkO2j2zb5J+lhl0KnphtyYL4px74ScMrb1ih30WIZTtsZCG2Tyc7bc0Hjt+56TgNAToaDI7fUygT57SId539egwS6PyXDIb1/+YxAsHrbrD1QsC65Bsoy6yLC/GciQ/CEDK4fe1wmcY0cCChrCWk38HumXYya7OC8JiRzu9gZhrLUG6PHkAb/sBgQ8u0d7Om7oj1Pt/2K9EM8gsPPIWah9eipXlLSpe1KvRZUTNmeND9NNs4d20YOx6tTIR9EHIGATp35oZWcIgXDGF1+D/hCoAEof6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=figoTJPyV/p59ly25DYI6SfKMrYNK61OSOSTKWdVJzk=;
- b=XKEpTVHL7aYq/vT36OFLzSmu4iXywj6ebQIqLo+uZQrTH8/43X+O6z+B1OvAEZhe6OIV6KlShDWMhNdbuztepQoNsiY3l5RBa+iDmRkN3CCyQzgyWU6nJOovw136XcKdPVG5o+8Sqx0Fm17Jw7Gu2flyM9HRMCwvmsYqDIUaGX9JkKA9ewaaWDfdr4mH5hxLUJZNKkcRXsAHbMoUlCiyne+2/Tx/7v1+TenyiW2BUEYlKvR3n7GLaCW3v5Lr9Bj0aJVvJoK1TzPJwcNai+vn/0XUsWdVpo+/9QM3PZEVFYM0/nn9H2a+j86mkFhYf2bWLgkQN/MPt1MBhAIv6g5Gag==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DB9PR04MB9354.eurprd04.prod.outlook.com (2603:10a6:10:36c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.21; Thu, 26 Jun
- 2025 22:17:30 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.015; Thu, 26 Jun 2025
- 22:17:29 +0000
-Date: Thu, 26 Jun 2025 18:17:24 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kumar M <anil.mamidala@xilinx.com>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, "Guoniu.zhou" <guoniu.zhou@nxp.com>,
-	Stefan Hladnik <stefan.hladnik@gmail.com>,
-	Florian Rebaudo <frebaudo@witekio.com>
-Subject: Re: [PATCH v3 2/2] media: i2c: Add ON Semiconductor AP1302 ISP driver
-Message-ID: <aF3G9LoVOqPcQXLR@lizhi-Precision-Tower-5810>
-References: <20250623-ap1302-v3-0-c9ca5b791494@nxp.com>
- <20250623-ap1302-v3-2-c9ca5b791494@nxp.com>
- <20250623224701.GE15951@pendragon.ideasonboard.com>
- <aFryrpyDByI6wu5b@lizhi-Precision-Tower-5810>
- <20250624185643.GE20757@pendragon.ideasonboard.com>
- <aFr6Ehpl5Kk+nt7m@lizhi-Precision-Tower-5810>
- <20250626124224.GK8738@pendragon.ideasonboard.com>
- <aF1gKGjpbEPZYBr2@lizhi-Precision-Tower-5810>
- <20250626190922.GC30016@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626190922.GC30016@pendragon.ideasonboard.com>
-X-ClientProxiedBy: AM0P190CA0016.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:208:190::26) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HGOXiSZb"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-747dd44048cso1644560b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750976270; x=1751581070; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8zJT2nyBD/ZES/bgHq4ennx8G+2QIzbohvYjrsQZiSA=;
+        b=HGOXiSZb+p1uUk2bsN/GeXzyvWY5xc79lNt5+ggSgEE1LO/TBHi4qEpzag9IDp/yr6
+         0VZSoJSNVnYsK6MT2B7uwXM8nbLp+jxC4EFoXcgiXN2c6Vev7zHUHZ5m+C28JKvwBnsW
+         zxG5BEVzLffsdmf+8cViQJHK7T9bvjh3bksG+2a1fXo6l7IDJK8Gat0wPkLhpREyqfOw
+         1savsADuZOUmdzDWeHjnxv9iq1knPwvytLt90jIPKxyX6fjxKZHDmVJu68wGItulQoLT
+         7uPBCkH3SliBCmUGO+a9Q0KnWUlhug5Kmol0RTuv3vf68YPDxOBg+pbJ/g7w/yLrD8wQ
+         hWgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750976270; x=1751581070;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8zJT2nyBD/ZES/bgHq4ennx8G+2QIzbohvYjrsQZiSA=;
+        b=KJiI6mMxcPB62FV1l+pmGsTwpwZ6vAaxgIGRk+eD5qQrlp/DJ2b6RFHgRz5eSimk3b
+         rBxAGoIF8ukzJa4XVaLIZ2PoI4K01ZkFUSZ0Q7sgh/Z43+vp6do2pnWaHpBQ9Pk4GH79
+         iBaivfkMemem6DkeCKIv0QyUXxwTK9qJoj95MiMlKVLFCkWD26PlEOYiddae3LyVVUlk
+         Np2orBCO4v/brRyXre4VG3NzdLpzVcoDCnkMjV/wgDIhDBewK0p73R5+GQ4PsYPZnBXQ
+         7XvEL4pffY5Dl9hiUgTTBCFEFLNSS3poh97afpBjDM2LEVhv7taXlARdackQhhWK4JA+
+         VL9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW2XW9DkTK291PcqXj7uVqO8urJIFixqC/tONBD9lbnlUfLjDrfOFfhdlwzThWekuX43kLATptOf1ypwwQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzM1qGEX8gpYM7dVVjSlf0E5vJcBi0Ki8w/fLCuh2YWr2AvodBt
+	nFG86rE1euFeE6RRXs7TwolNOMeQSyhf9tLtvZYhyVb0B5wqNp3l1oe2AfEKQRGkhyIQFiorzmW
+	jGzqbEA==
+X-Google-Smtp-Source: AGHT+IHY/EPT/zmKG1i7jacrdolpL1ToMgnL7IztE9rUDP/sr/QX/ddMHlpECos0ZSbpr8h5AgefkNdMO+4=
+X-Received: from pgg8.prod.google.com ([2002:a05:6a02:4d88:b0:b2f:5d02:68e9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6da8:b0:21f:568c:712c
+ with SMTP id adf61e73a8af0-220a12e39c1mr960899637.14.1750976270374; Thu, 26
+ Jun 2025 15:17:50 -0700 (PDT)
+Date: Thu, 26 Jun 2025 15:17:48 -0700
+In-Reply-To: <20250625230313.GA1593493@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB9354:EE_
-X-MS-Office365-Filtering-Correlation-Id: 72c3af09-74fc-4db7-3a57-08ddb4ff3d0d
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014|52116014|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
- =?us-ascii?Q?OC0EaYb4tdB/4S/0znInswE2q1ywbQNGRDc8250GkaZcPLTw9lDF0oD66F7D?=
- =?us-ascii?Q?TwkPwwcZPaPzzjbrKrRAatDactXt+/AswPoKUJUVzWzweUJP3BGRKqlLd4w+?=
- =?us-ascii?Q?M0eHmLqLAVzgwCoIxS/QuHDkQf45/yIUG9xr4qdBIixt0hq5hKFua5+V2Oe1?=
- =?us-ascii?Q?wSfE2QRMXc0OHvNUsBSU2P6UVG0K/pPt0hLenaeM2vM2sN7LS9l9HkPC1oaL?=
- =?us-ascii?Q?d7WSWYd6un+h5SYoBWFnCvu3lCQnBuLXMm/zBE9Pp3HDq98ffwWBbQkmc7Vz?=
- =?us-ascii?Q?CYWVOqcKzWRcaXRAE6+lQu+0hufn4tSSFbcC/+2wrXQ8695MQU7JJWSqMi/O?=
- =?us-ascii?Q?NlPQd0qJLF7vmnM1JZPqh1v+TUlivXFM3DWJTRYjtS3baK1d6LD1Gasm6Xf+?=
- =?us-ascii?Q?t+JxGJ5L2hmrpWSY4kRPitYcjOGprPuffHlRcFMleEpHc895KcSoroSb6jV7?=
- =?us-ascii?Q?nBpomkg0KP4/oHBochCj5CsqMllr/iRy3ZgVPGBFrwro7F6KYQud3lzGtZ8b?=
- =?us-ascii?Q?WzjRRlQeFvY/lJR4zVI1VsR3929vwgNjLXgnrgrSYe8f/AB4Xu8/vgITNAjw?=
- =?us-ascii?Q?Nj7/JYYiUtEW3gGot2wGd+WIGXfK8rfAjnt4sci7llmL1EA7xkG7EJBHMusG?=
- =?us-ascii?Q?QTwhFzd9q+29xXqteWKdTWJY2kFdbS8ar/eNww0Jg6mr0ZARsWT+2Sth5Qw3?=
- =?us-ascii?Q?CuSM9VBPbfOE7L9dOKpkw2qKQ6uDsTxoK1dROvgKi9L5SmWk+M3BB5rB9I/C?=
- =?us-ascii?Q?1xmigpCCY1i3HwAXJAwZM0SOaB2P1Ullapvt8KBTRE27Y6EdiIrY5jFt1yO2?=
- =?us-ascii?Q?gmlbXC2sn3KGnSIYaOIoXGX7yG+gX1E4GCog6vHzJByV3Vab+6hXSCt5p8Go?=
- =?us-ascii?Q?vncWin498HsypIVrEM9j6iTiyoTsbKNMmFVkVdw27yXvXjMkMt+F2QSuGLq2?=
- =?us-ascii?Q?eCRN/4H+nLNXbKfoGVeJCgllcUZ5V8mAN9LmjnTfEU3mGAim/O0hF6BNpo4D?=
- =?us-ascii?Q?D/F96wBU6Rd7SWn+Sk+tH2RM74PTCEngOX+sSi+fIwOVqbrZ7T3Xvoc/FTv/?=
- =?us-ascii?Q?dw+MnJVfc2Hh7djsIM87/e5h5Pjjbht5ipEZi4J4sRQtICYdqW4KKARMpw9y?=
- =?us-ascii?Q?e/cCS7WmQ/HBe6CMK/oMBUmkC7YMCrspfYE1wCxLAdzBGd42uVbtg1HxKr6G?=
- =?us-ascii?Q?A9ju3qn+kxJebGiX3VyUqGcZP/Ol4fJ+Mep12APO07Kk2SmSOBBpMCFWex8g?=
- =?us-ascii?Q?68TiB2IU6NbhKuyqZPM4kW0QBFCirAu3w3xwr/rM34/wsmGO0FQdjGZ7nHg8?=
- =?us-ascii?Q?BOlI+okJCHjJb+SVSwVOwoerwqqdTodUTEGtOHMMA4jumkxYxfj/mMzrgYWq?=
- =?us-ascii?Q?cQqnvH2J4gTNK0JVhQSA5ZPdGZ6xJt2PQrfW3X4TWmKPRZFPZErODeWnomiA?=
- =?us-ascii?Q?NcoeuDCzp00HpMgeTxHbtQfd8YpO5Q70+w5z4oJNBlz+a2bYcQS+5A=3D=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(52116014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?ML6zqQV4muUpksjD1aKx4Td2wjI33/zN+qx4Gan2ynGiUdsVOeURfmiAUjaz?=
- =?us-ascii?Q?PWr/TX/Hy13iqyppvgTcEZS/PxLPeYu1dwmM6HMU3/Qd8NDIfN+LcbZ2S9up?=
- =?us-ascii?Q?8fG8OcaDzcgXaqqijevmzrOGHJRFo/GcW3uIIFOP79XZoE+h/u63okvO3Kwp?=
- =?us-ascii?Q?KEw/AcLHWytu0ntce27XrXSnPxiWgs7PwQ4ln4h8lSmkMB4/FtWplljVtQcY?=
- =?us-ascii?Q?pJYCZHnv5RweIioJYQPazOL2jVz9+W7v8xeJES2F8RZI1tqKyGWmJi2iBHyx?=
- =?us-ascii?Q?trqkMLcneu0W+XtoTeXOE8ZXGXvkrpyWfT+tLCXfDeiFxB7/CG0JM/U3KbRg?=
- =?us-ascii?Q?n/1Fb/uiUDEGkyA47DS++e3IQANEP0YmYumrnd8SNydCgUwu+GH5D5illH0X?=
- =?us-ascii?Q?kiNRm2uHZ/9mO4NBIoQ0okw3/vgyNCULPCKesBX/nmEY0o+y4QMN+lqAosyc?=
- =?us-ascii?Q?p/Ywn9tlOM/3SKc2NOMS+1uPa1pfyoBt7iVM3VQFOW/Ixu5Z77mgu5xAerM/?=
- =?us-ascii?Q?cAwdJLto3VJj5OvegblwYon+JUKPbtRuD5wUMfdHV3w+CCHZBsCJ+IrT+meq?=
- =?us-ascii?Q?v90TGDzAAzbUMIMI9DSkV3f5gYF/NX+M8quVFPbzCWsvF3dSRO9WoJTanQ31?=
- =?us-ascii?Q?nEEUN+Cs+B0odmZUYOjkhGSiSKGF0ABDyFtL59tqA7P2UYh46TOaC/GRTIO8?=
- =?us-ascii?Q?R+xq4lj2pJ+m75izdlWEIKqz25N7HvlOmWKGoZ/HH0NOCwvNWf3VIzQLqPPj?=
- =?us-ascii?Q?Kr26ANxo467L4Ycf2lBj8j3/ebQO1aL1xvl5sAE93nAivNAFH0Ptv4+iYPzZ?=
- =?us-ascii?Q?nzbI0H2ZH3O5VXaaekqrnV+FO0WhjRpopUAlZLndSi2DVDcPWb0rDk1F8uF1?=
- =?us-ascii?Q?5bRPqC8uKPwGVG8kOYYIl32DLvXYYn6Tn3E6+I3YNBy0qD2OH0if16R0iTjA?=
- =?us-ascii?Q?AsCJ9++qb65ny5PlYQhe13qxwWWj0+f9ViO8jH9WFU1M1uYzjQ/i2iGS+7P+?=
- =?us-ascii?Q?0Qc03JY7KZ5r0JmgjS2lBDttAl2briVu4rz+p986gusZiFwvM8xL0zkP3g/1?=
- =?us-ascii?Q?Fa81NXbmAsdk4W0hNDwVeAk9vglEgMKa9GjEPUk3lVtaZvMfYqRkl54GOpu4?=
- =?us-ascii?Q?7LQr+Vq/IVUxIG5XFdFv8BSSx64XersTqFKbj9WUn1VVPAhm3KDVbBcwFQ81?=
- =?us-ascii?Q?NtaivPK+X+EwaSntnN2jrXzBNsxQcEBupvYQQDf3NJWjdrW4xahT3xlKWkhC?=
- =?us-ascii?Q?U6mu8n/6khRNBtaJ/lqf8g/nCcFm2onimK+10aqJ5ZtDRRQIOXCD5vuVvz7F?=
- =?us-ascii?Q?9lFXqwHIJ8htBcc0bNUrFePt7RTuM1nEDBwYra5HT5PIIA7CLh5S5Ua+H2Zd?=
- =?us-ascii?Q?JggHRICYzOUznxSn/B3yJto0xl1fBJ0vSCrtfyFEMXVbN0fn9swYGc52nk3a?=
- =?us-ascii?Q?12KB83hRZeVhfL9nW42tnNBnayhHlhNQ7IFZo5egvmmvYD97tyHJTaLUtaHm?=
- =?us-ascii?Q?1iXzsnN0sG5EbN6V4KoyXIhd9+U18KtY4YIo9RW4uHb2BN5g6clh/WsTWvDg?=
- =?us-ascii?Q?9u0Ny3QRXRa+RvUatg9NNnVtngJD5dk6LJi63l55?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72c3af09-74fc-4db7-3a57-08ddb4ff3d0d
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 22:17:29.3243
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8J9wvmBxY/QrwqTt11Q8AJdwyDPbHFeu3zk4bQD8OngsRt7cOQl+jxdIA0MY4x3L0Wm45uMWsWO87GLWkb4yDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9354
+Mime-Version: 1.0
+References: <20250624171637.485616-1-seanjc@google.com> <20250625230313.GA1593493@bhelgaas>
+Message-ID: <aF3HDIzpe3vnpBdj@google.com>
+Subject: Re: [RFC PATCH] PCI: Support Immediate Readiness on devices without
+ PM capabilities
+From: Sean Christopherson <seanjc@google.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>, 
+	Vipin Sharma <vipinsh@google.com>, Aaron Lewis <aaronlewis@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Jun 26, 2025 at 10:09:22PM +0300, Laurent Pinchart wrote:
-> On Thu, Jun 26, 2025 at 10:58:48AM -0400, Frank Li wrote:
-> > On Thu, Jun 26, 2025 at 03:42:24PM +0300, Laurent Pinchart wrote:
-> > > On Tue, Jun 24, 2025 at 03:18:42PM -0400, Frank Li wrote:
-> > > > On Tue, Jun 24, 2025 at 09:56:43PM +0300, Laurent Pinchart wrote:
-> > > > > On Tue, Jun 24, 2025 at 02:47:10PM -0400, Frank Li wrote:
-> > > > > > On Tue, Jun 24, 2025 at 01:47:01AM +0300, Laurent Pinchart wrote:
-> > > > > > > On Mon, Jun 23, 2025 at 03:17:38PM -0400, Frank Li wrote:
-> > > > > > > > From: Anil Kumar Mamidala <anil.mamidala@xilinx.com>
-> > > > > > > >
-> > > > > > > > The AP1302 is a standalone ISP for ON Semiconductor sensors.
-> > > > > > > > AP1302 ISP supports single and dual sensor inputs. The driver
-> > > > > > > > code supports AR1335, AR0144 and AR0330 sensors with single and
-> > > > > > > > dual mode by loading the corresponding firmware.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Anil Kumar Mamidala <anil.mamidala@xilinx.com>
-> > > > > > > > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > > > > > > Signed-off-by: Stefan Hladnik <stefan.hladnik@gmail.com>
-> > > > > > > > Signed-off-by: Florian Rebaudo <frebaudo@witekio.com>
-> > > > > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > > > > > ---
-> > > > > > > > Change in v3:
-> > > > > > > > - add extra empty line between difference register define
-> > > > > > > > - add bits.h
-> > > > > > > > - use GEN_MASK and align regiser bit define from 31 to 0.
-> > > > > > > > - add ap1302_sensor_supply
-> > > > > > > > - add enable gpio
-> > > > > > > > - update firmware header format
-> > > > > > >
-> > > > > > > One of the main issues with this driver is that we need to standardize
-> > > > > > > the header format. The standardized format will need to be approved by
-> > > > > > > onsemi as we will need to provide not just a driver, but also a
-> > > > > > > toolchain that will produce firmwares in the right format. Furthermore,
-> > > > > > > some time ago the AP1302 firmware was extended with the ability to
-> > > > > > > dynamically compute PLL parameters IIRC. This needs to be taken into
-> > > > > > > account.
-> > > > > >
-> > > > > > It is quite common when work with firmwares. Generally, it need version
-> > > > > > information at header.
-> > > > > >
-> > > > > > The driver need check firmware's API version, if miss match or incompatible,
-> > > > > > just return and report error.
-> > > > > >
-> > > > > > we can't assume firmware always align driver code because many user just
-> > > > > > update kernel without update rootfs or firmware package.
-> > > > >
-> > > > > Sure, but that's not the point. The point is that there are multiple
-> > > > > out-of-tree ap1302 driver versions, developed or adapted by different
-> > > > > SoC vendors. Those variants use firmware files produced by those SoC
-> > > > > vendors, and they not standard.
-> > > >
-> > > > I am not sure if firwmare is open source. Most like not.
-> > >
-> > > The firmware is not open-source, but I don't think that's relevant.
-> > >
-> > > > We need create
-> > > > difference compatible string for difference Soc vendor.
-> > >
-> > > No, that we must absolutely not do :-) If it's the same AP1302 and same
-> > > camera sensor, we must not have different compatible strings when the
-> > > AP1302 is connected to an NXP SoC or a MediaTek SoC.
-> >
-> > After read code, firwmare header only used for sanity checks. can remove
-> > it for initialization version?
->
-> No, quite the contrary. We need to standardize a firmware header that
-> will give us forward compatibility. Versioning of the firmware is a
-> missing feature for that, and we also need to consider the issue of the
-> AP1302 clock tree configuration.
+On Wed, Jun 25, 2025, Bjorn Helgaas wrote:
+> On Tue, Jun 24, 2025 at 10:16:37AM -0700, Sean Christopherson wrote:
+> > +void pci_pm_init(struct pci_dev *dev)
+> > +{
+> > +	u16 status;
+> > +
+> > +	device_enable_async_suspend(&dev->dev);
+> > +	dev->wakeup_prepared = false;
+> > +
+> > +	dev->pm_cap = 0;
+> > +	dev->pme_support = 0;
+> > +
+> > +	/*
+> > +	 * Note, support for the PCI PM spec is optional for legacy PCI devices
+> > +	 * and for VFs.  Continue on even if no PM capabilities are supported.
+> > +	 */
+> > +	__pci_pm_init(dev);
+> >  
+> >  	pci_read_config_word(dev, PCI_STATUS, &status);
+> >  	if (status & PCI_STATUS_IMM_READY)
+> >  		dev->imm_ready = 1;
+> 
+> I would rather just move this PCI_STATUS read to somewhere else.  I
+> don't think there's a great place to put it.  We could put it in
+> set_pcie_port_type(), which is sort of a grab bag of PCIe-related
+> things.
+> 
+> I don't know if it's necessarily even a PCIe-specific thing, but it
+> would be unexpected if somebody made a conventional PCI device that
+> set it, since the bit was reserved (and should be zero) in PCI r3.0
+> and defined in PCIe r4.0.
+> 
+> Maybe we should put it in pci_setup_device() close to where we call
+> pci_intx_mask_broken()?
 
-How to move forwards? firmware is binary and not open source and we can't
-change it.
+Any reason not to throw it in pci_init_capabilities()?  That has the advantage
+of minimizing the travel distance, e.g. to avoid introducing a goof similar to
+what happened with 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when initializing").
 
-Frank
+E.g. something silly like this?  Or maybe pci_misc_init() or so?
 
->
-> > > > > We need to standardize on a firmware
-> > > > > format to upstream a driver, and that standardization needs to involve
-> > > > > the device manufacturer.
-> > > >
-> > > > we need workable version (easy extend) firstly, when let other vendor follow.
-> > > >
-> > > > Frank Li
-> > > > >
-> > > > > > > I want to resuscitate this driver and get it merged. There's more work
-> > > > > > > to do, in collaboration with onsemi, and I haven't had time to tackle
-> > > > > > > it. If you want to propose a proper design for firmware handling I would
-> > > > > > > be happy to participate in the discussion.
-> > > > > >
-> > > > > > who is onsemi contact windows.
-> > > > > >
-> > > > > > > > - update raw sensor supply delay time
-> > > > > > > > - use gpiod_set_value_cansleep() insteand gpiod_set_value()
-> > > > > > > > - update use latest v4l2 api
-> > > > > > > > - use ctrl_to_sd() helper function
-> > > > > > > > - add ap1302_g_volatile_ctrl()
-> > > > > > > > - remove ap1302_get_fmt()
-> > > > > > > > - use guard for mutex.
-> > > > > > > > - use dev_err_probe
-> > > > > > > > - use devm_add_action_or_reset to simple error handle at probe.
-> > > > > > > > - use read_poll_timeout() simple dma idle polling.
-> > > > > > > >
-> > > > > > > > previous upstream:
-> > > > > > > > https://lore.kernel.org/linux-media/1631091372-16191-1-git-send-email-anil.mamidala@xilinx.com/
-> > > > > > > > ---
-> > > > > > > >  MAINTAINERS                |    1 +
-> > > > > > > >  drivers/media/i2c/Kconfig  |    9 +
-> > > > > > > >  drivers/media/i2c/Makefile |    1 +
-> > > > > > > >  drivers/media/i2c/ap1302.c | 2838 ++++++++++++++++++++++++++++++++++++++++++++
-> > > > > > > >  4 files changed, 2849 insertions(+)
-> > > > > > >
-> > > > > > > [snip]
->
-> --
-> Regards,
->
-> Laurent Pinchart
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 9e42090fb108..4a1ba5c017cd 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3205,7 +3205,6 @@ void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev)
+ void pci_pm_init(struct pci_dev *dev)
+ {
+        int pm;
+-       u16 status;
+        u16 pmc;
+ 
+        device_enable_async_suspend(&dev->dev);
+@@ -3266,9 +3265,6 @@ void pci_pm_init(struct pci_dev *dev)
+                pci_pme_active(dev, false);
+        }
+ 
+-       pci_read_config_word(dev, PCI_STATUS, &status);
+-       if (status & PCI_STATUS_IMM_READY)
+-               dev->imm_ready = 1;
+ poweron:
+        pci_pm_power_up_and_verify_state(dev);
+        pm_runtime_forbid(&dev->dev);
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 4b8693ec9e4c..d33b8af37247 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2595,6 +2595,15 @@ void pcie_report_downtraining(struct pci_dev *dev)
+        __pcie_print_link_status(dev, false);
+ }
+ 
++static void pci_imm_ready_init(struct pci_dev *dev)
++{
++       u16 status;
++
++       pci_read_config_word(dev, PCI_STATUS, &status);
++       if (status & PCI_STATUS_IMM_READY)
++               dev->imm_ready = 1;
++}
++
+ static void pci_init_capabilities(struct pci_dev *dev)
+ {
+        pci_ea_init(dev);               /* Enhanced Allocation */
+@@ -2604,6 +2613,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
+        /* Buffers for saving PCIe and PCI-X capabilities */
+        pci_allocate_cap_save_buffers(dev);
+ 
++       pci_imm_ready_init(dev);        /* Immediate Ready */
+        pci_pm_init(dev);               /* Power Management */
+        pci_vpd_init(dev);              /* Vital Product Data */
+        pci_configure_ari(dev);         /* Alternative Routing-ID Forwarding */
