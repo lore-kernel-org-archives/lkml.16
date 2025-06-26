@@ -1,130 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC672E11B3;
-	Thu, 26 Jun 2025 12:34:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387D52E06DC;
+	Thu, 26 Jun 2025 12:36:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750941275; cv=none; b=WhJS0Yks4ea6T241Mm3IDPHLY3MGM0NvLFaJWsxMrR2qvGUC4R2HHDl18PbjS6BBSuMHemQKkWuw5IMqjhU8vBvB5UOFO2/svffdID5oucxLF/gkthz4NBuCRrHblY6gsDMYbTJLG9/+MsOA6w9vYXQslMT/hpm3hh3jNhZwiKc=
+	t=1750941370; cv=none; b=jGuezSQtTfnJUzfAm2b+7k2/1RZ3C0ytWe3AEoqAsabIRylRovRmT26OWKIIRxt6P4Oc/mlgfNBA4zmnm1xfn4DveZiYe8kijxRjdt+uoCt1B6gR1BvwJyXzPyCglXod6TNTZj2zjmwHClENllBR4XcrzF4JgtUPLdeHbZ0MNW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750941275; c=relaxed/simple;
-	bh=hcQ6uyRoZdEeGK6Ue+aMRUyXS514RKes3MWuq/gg04A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dV9pSHZ0Hq0F6AF6MsrfpIOCKbPU+rab5wGT6Vu3XWkRBQjcjyrkKjRqglaAfG9pvoImgnQZr+pavHWDcqNETxs8+aROooxyexY0BeDRyDZE2VcCRZ5hQinjrJev0prtJxElhckXCPFSbPdUE/ct/6XOVAsYtVMIHK/Lajb/KyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3qKMOTo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750941370; c=relaxed/simple;
+	bh=jkStiqdbqvgUGXirSUwGLlQ14O9y2yDoXve1z9ZZLrc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SUL6altk7gX0uTc5DNcWuIsG+gl7qJeLwpxo1AYtVWYERmR4+r+RiVyPwxk2GM2VjM2H17lZkxEDtThbLh2dr5LfXSenfnnN6eq/J4RiRxMuy/gomCJSFFz6zxu7g06WbrZiokB/Rhm65BD55bIBtj2DvAMjFg5WvOHYphpGKIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btwmvuk+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3qKMOTo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD90DC4CEEB;
-	Thu, 26 Jun 2025 12:34:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btwmvuk+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31622C4CEEB;
+	Thu, 26 Jun 2025 12:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750941274;
-	bh=hcQ6uyRoZdEeGK6Ue+aMRUyXS514RKes3MWuq/gg04A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=P3qKMOToBvXmZ18EDXVLHHbD8r9WYfa9DQyIULHWBxyCGqq+gp6LmU3bJVgbPVHYy
-	 ACyskFizMsRsnOeAEq8Lq6avpvQ7GptTWTYwlZun1KTg0kzLjueVIePmLuGx6AzoIW
-	 0J+vq1kRjkh7ShIBmTcOjS7/jeymDKE48rZrNJFtBAJsIm0+wiSMRjeUnDzpdGAUMA
-	 EgSaycyxf0PJ6us6EoylKTGidAGvQPKYvYOiIyAt2cCT+y02qZUyNZxu/bQ5q8Tsw+
-	 LypZ/mZIDNfd2VpxsBZbDCThvWPoLGji6TKbnF9ZoPIjzSp8fIyluGRBhPdz+PHK05
-	 TBzFjvsvItlKg==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-60bf5a08729so1808236a12.0;
-        Thu, 26 Jun 2025 05:34:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUs/e7kziYCIEEY03kVYuUqhmA8ygWV17JximH575wk0OIsCUFWlnTSyTDEJDFwdjdOuofJYa0qMvX7gd4D@vger.kernel.org, AJvYcCV0MAE/eWMbkxQIp6l7LBZNduRWOUlo+VoxHbjdldyL3tDfhtBo7266C02nAZ1JZ65iLZz+kTtz+n8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTMAdbFAMexEnNKRcaMKoaE5JagexqZz0Q4h1pGlnuiqggTLRf
-	a6MGOcqzbLhgjDwgITLH4XkIn3Up4d28+dZskPI/M2TxspeixKfTC89qrrx7U0c088Tr7vXGTX1
-	H3mXreA4OODuLJltISRWA3K8XK0v3WR8=
-X-Google-Smtp-Source: AGHT+IHWYEFD7FhNFKe3vMe2MLiQzW6HtnNAGBb2VkYvPZzV8A//gU2qepXD36L8XdzwuDTZK3mZkCULBCl9iXk/ViI=
-X-Received: by 2002:a05:6402:26c3:b0:606:eb8e:d975 with SMTP id
- 4fb4d7f45d1cf-60c4d10f679mr6018333a12.0.1750941273373; Thu, 26 Jun 2025
- 05:34:33 -0700 (PDT)
+	s=k20201202; t=1750941369;
+	bh=jkStiqdbqvgUGXirSUwGLlQ14O9y2yDoXve1z9ZZLrc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=btwmvuk+bO9gLYGz+YI78oe3GQAdzrtVOFrnJ+7VpTuBgU3XriDWEyFilP20Dfwff
+	 RvsOeFtSvwhyAFH2PLYxk+o+bIkHR8htzLZLIBRNjMfT6xF83FWSSIRF43h6er7wfl
+	 Zv2vFPY0Pid0UvAH+qL5nX7zzQg3AY+U+g7ihFrfuMjYYkeI9yUrbHVctfA+TBUS+d
+	 j51s/34aOiCU4L7TVyEP7uTFRhKRbLDUdzjjFAhtcLzj+XddOI48odU0jumgah7RT7
+	 R7V8nmlbdSFsV8S/7DG6UaN1FxAxuyC6tKVayouA2hSWo4nRUEzAyRAaI3dxYWv0A5
+	 CzyPtIZVWv5pA==
+Date: Thu, 26 Jun 2025 14:36:05 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Vitaly Wool <vitaly.wool@konsulko.se>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v4 3/4] rust: support large alignments in allocations
+Message-ID: <aF0-tYomGe7nB5vX@pollux>
+References: <20250626083516.3596197-1-vitaly.wool@konsulko.se>
+ <20250626083642.3596388-1-vitaly.wool@konsulko.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624081852.1563985-1-wangming01@loongson.cn>
-In-Reply-To: <20250624081852.1563985-1-wangming01@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 26 Jun 2025 20:34:21 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5xc_Lp2=71goHF1nT4gHoavVKHPLuXRykU=7EMPS_QfQ@mail.gmail.com>
-X-Gm-Features: Ac12FXwYs6C6bmyJVDxgUYr-kMO9to9KHAfTEDDKscaPoHTt09w5r3dn5a7lmCg
-Message-ID: <CAAhV-H5xc_Lp2=71goHF1nT4gHoavVKHPLuXRykU=7EMPS_QfQ@mail.gmail.com>
-Subject: Re: [PATCH] efi/loongarch: Reserve EFI memory map region
-To: Ming Wang <wangming01@loongson.cn>
-Cc: Ard Biesheuvel <ardb@kernel.org>, WANG Xuerui <kernel@xen0n.name>, linux-efi@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	lixuefeng@loongson.cn, chenhuacai@loongson.cn, gaojuxin@loongson.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626083642.3596388-1-vitaly.wool@konsulko.se>
 
-Applied with some modifications, thanks.
+On Thu, Jun 26, 2025 at 10:36:42AM +0200, Vitaly Wool wrote:
+>  void * __must_check __realloc_size(2)
+> -rust_helper_krealloc(const void *objp, size_t new_size, gfp_t flags)
+> +rust_helper_krealloc(const void *objp, size_t new_size, unsigned long align, gfp_t flags)
+>  {
+>  	return krealloc(objp, new_size, flags);
+>  }
+>  
+>  void * __must_check __realloc_size(2)
+> -rust_helper_kvrealloc(const void *p, size_t size, gfp_t flags)
+> +rust_helper_kvrealloc(const void *p, size_t size, unsigned long align, gfp_t flags)
+>  {
+>  	return kvrealloc(p, size, flags);
+>  }
 
-https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.g=
-it/commit/?h=3Dloongarch-next&id=3D39503fc84b4ea94f2bedca481de5e225e0df729d
+I think you forgot to add comments explaining why we have the additional
+discarded align argument.
 
-Huacai
+Also please keep those helpers as they are. You can write an identical inline
+function in Rust that discards the align argument and calls bindings::krealloc,
+etc.
 
-On Tue, Jun 24, 2025 at 4:19=E2=80=AFPM Ming Wang <wangming01@loongson.cn> =
-wrote:
->
-> The EFI memory map at 'boot_memmap' is crucial for kdump to understand
-> the primary kernel's memory layout. This memory region, typically part
-> of EFI Boot Services (BS) data, can be overwritten after ExitBootServices
-> if not explicitly preserved by the kernel.
->
-> This commit addresses this by:
-> 1. Calling memblock_reserve() to reserve the entire physical region
->    occupied by the EFI memory map (header + descriptors). This prevents
->    the primary kernel from reallocating and corrupting this area.
-> 2. Setting the EFI_PRESERVE_BS_REGIONS flag in efi.flags. This indicates
->    that efforts have been made to preserve critical BS data regions,
->    which can be useful for other kernel subsystems or debugging.
->
-> These changes ensure the original EFI memory map data remains intact,
-> improving kdump reliability and potentially aiding other EFI-related
-> functionalities that might rely on preserved BS data.
->
-> Signed-off-by: Ming Wang <wangming01@loongson.cn>
-> ---
->  arch/loongarch/kernel/efi.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
-> index de21e72759ee..98b1f0c030fc 100644
-> --- a/arch/loongarch/kernel/efi.c
-> +++ b/arch/loongarch/kernel/efi.c
-> @@ -135,6 +135,7 @@ void __init efi_init(void)
->         tbl =3D early_memremap_ro(boot_memmap, sizeof(*tbl));
->         if (tbl) {
->                 struct efi_memory_map_data data;
-> +               phys_addr_t reserve_size =3D sizeof(*tbl) + tbl->map_size=
-;
->
->                 data.phys_map           =3D boot_memmap + sizeof(*tbl);
->                 data.size               =3D tbl->map_size;
-> @@ -144,6 +145,18 @@ void __init efi_init(void)
->                 if (efi_memmap_init_early(&data) < 0)
->                         panic("Unable to map EFI memory map.\n");
->
-> +               /*
-> +                * Reserve the physical memory region occupied by the EFI
-> +                * memory map table (header + descriptors). This is cruci=
-al
-> +                * for kdump, as the kdump kernel relies on this original
-> +                * memmap passed by the bootloader. Without reservation,
-> +                * this region could be overwritten by the primary kernel=
-.
-> +                * Also, set the EFI_PRESERVE_BS_REGIONS flag to indicate=
- that
-> +                * critical boot services data regions like this are pres=
-erved.
-> +                */
-> +               memblock_reserve((phys_addr_t)boot_memmap, reserve_size);
-> +               set_bit(EFI_PRESERVE_BS_REGIONS, &efi.flags);
-> +
->                 early_memunmap(tbl, sizeof(*tbl));
->         }
->
-> --
-> 2.43.0
->
+For instance:
+
+	unsafe extern "C" fn krealloc_align(
+	    ptr: *const c_void,
+	    size: usize,
+	    _align: c_ulong
+	    flags: u32,
+	) -> *mut c_void {
+	    bindings::krealloc(ptr, size, flags)
+	}
+
+> diff --git a/rust/helpers/vmalloc.c b/rust/helpers/vmalloc.c
+> index 80d34501bbc0..4618c0b79283 100644
+> --- a/rust/helpers/vmalloc.c
+> +++ b/rust/helpers/vmalloc.c
+> @@ -3,7 +3,7 @@
+>  #include <linux/vmalloc.h>
+>  
+>  void * __must_check __realloc_size(2)
+> -rust_helper_vrealloc(const void *p, size_t size, gfp_t flags)
+> +rust_helper_vrealloc(const void *p, size_t size, unsigned long align, gfp_t flags)
+>  {
+> -	return vrealloc(p, size, flags);
+> +	return vrealloc_node(p, size, align, flags, NUMA_NO_NODE);
+>  }
+
+Same here, just make this a "real" helper for vrealloc_node() and create a Rust
+function vrealloc_align() like in the example above.
+
+> diff --git a/rust/kernel/alloc/allocator.rs b/rust/kernel/alloc/allocator.rs
+> index aa2dfa9dca4c..a0d78c497974 100644
+> --- a/rust/kernel/alloc/allocator.rs
+> +++ b/rust/kernel/alloc/allocator.rs
+> @@ -58,7 +58,7 @@ fn aligned_size(new_layout: Layout) -> usize {
+>  ///
+>  /// One of the following: `krealloc`, `vrealloc`, `kvrealloc`.
+>  struct ReallocFunc(
+> -    unsafe extern "C" fn(*const crate::ffi::c_void, usize, u32) -> *mut crate::ffi::c_void,
+> +    unsafe extern "C" fn(*const crate::ffi::c_void, usize, usize, u32) -> *mut crate::ffi::c_void,
+
+Should be c_ulong instead of usize.
+
+>  );
+>  
+>  impl ReallocFunc {
+> @@ -110,7 +110,7 @@ unsafe fn call(
+>          // - Those functions provide the guarantees of this function.
+>          let raw_ptr = unsafe {
+>              // If `size == 0` and `ptr != NULL` the memory behind the pointer is freed.
+> -            self.0(ptr.cast(), size, flags.0).cast()
+> +            self.0(ptr.cast(), size, layout.align(), flags.0).cast()
+>          };
+>  
+>          let ptr = if size == 0 {
+> @@ -152,12 +152,6 @@ unsafe fn realloc(
+>          old_layout: Layout,
+>          flags: Flags,
+>      ) -> Result<NonNull<[u8]>, AllocError> {
+> -        // TODO: Support alignments larger than PAGE_SIZE.
+> -        if layout.align() > bindings::PAGE_SIZE {
+> -            pr_warn!("Vmalloc does not support alignments larger than PAGE_SIZE yet.\n");
+> -            return Err(AllocError);
+> -        }
+> -
+>          // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
+>          // allocated with this `Allocator`.
+>          unsafe { ReallocFunc::VREALLOC.call(ptr, layout, old_layout, flags) }
+> @@ -176,12 +170,6 @@ unsafe fn realloc(
+>          old_layout: Layout,
+>          flags: Flags,
+>      ) -> Result<NonNull<[u8]>, AllocError> {
+> -        // TODO: Support alignments larger than PAGE_SIZE.
+> -        if layout.align() > bindings::PAGE_SIZE {
+> -            pr_warn!("KVmalloc does not support alignments larger than PAGE_SIZE yet.\n");
+> -            return Err(AllocError);
+> -        }
+
+Didn't you propose to use VREALLOC if layout.align() > bindings::PAGE_SIZE?
+
+>          // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
+>          // allocated with this `Allocator`.
+>          unsafe { ReallocFunc::KVREALLOC.call(ptr, layout, old_layout, flags) }
