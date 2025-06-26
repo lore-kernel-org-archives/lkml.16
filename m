@@ -1,159 +1,112 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59909267F59;
-	Thu, 26 Jun 2025 13:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5894F2E4260
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750944851; cv=none; b=ZlR7BUX9mM7NC1wdDq46YeQLKYw7B/pLwb7dl8E7X3hsl6C1IW2RC2WftTDSuLeX7nJqgZaf6RrQK5FsD9vC1vPX2VvAYC6MSNUVMyrs/g4kbjB0RcJfY2HlO7CGKrjYtg4BBMvT61OV/2FxhfKAC6/p0UIfGFj/HpFGHmlrm7A=
+	t=1750944939; cv=none; b=JhHXcH6sMF/lfy8mQmFRWdMACnFmY0CrTuTA2D4Kf8KVD+T4AMYzqfoaT50aQfB2Ihok2OClt2zDGE2P/hxfSTz3TbKg+lBl9oIIRm7xxFeJDPIxjvfLt4fBf6IlqiAGVUIQ/keNcKRN2K+koQFKK1L5LLM7kw4iY2mOi2l+gKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750944851; c=relaxed/simple;
-	bh=MTfufscCs55245yA3t2uLj7ZB0URFKvgjXsaLoyy3XA=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PvvZncFwngox63vnziiXKE3EvJ+wYWApjSN7sZ0LGpKYy4gQXAdGfqrFWaKeGhxsZEzQgNiTLG52Z/tSRXNGz2XBdDfgO6GBRSPl0d7yooLGNvm1F/vEffqcBT9RJqkxLC8kxGgynxmYq0kNFEmSHUO+33ZH+PwcznNQw/5NjTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZPVVsuOv; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750944939; c=relaxed/simple;
+	bh=1UbVy/RYpG9ong/Mdlmi033HkEmNEofwguj2VKz77OM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=lgk2L9YEs/JPSaVIhNtmfRJ0qIPt/pT52eBti/YtGog2g6tzWiQr+bD3fCBY4xns44EoxRr1h0QyfYOatCuyUTDUTDPspBpLyR2iQxvcaZrRHkEr8r7V3XfajM48LWi+rQvOmme7wl5oqiIXWkktOFVrcg0eTP88HuFEB/xWFyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=1MdL3vaH; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZPVVsuOv"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55QDXtJ12434115;
-	Thu, 26 Jun 2025 08:33:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750944835;
-	bh=L+HNIO6gQFtowO13mUz9/yujQ4NufV5X6l/IZVQUHrw=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date;
-	b=ZPVVsuOvBUrnmrwQhRMGy331+A4qzclgdS0oMzNijrX83d4lvwTD5AlHuLchHsc2i
-	 OHGS1iKXJPpVQHR+9NZIk9ZBYFFkziFSBBwbIW+S90f5GHoBaqsaHcLr0sxITCe9eO
-	 /CMbsNCfOBt9EfCR1zFwDEnXJLMm8m+Nc//Qmhp4=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55QDXtdQ3666006
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 26 Jun 2025 08:33:55 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
- Jun 2025 08:33:54 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 26 Jun 2025 08:33:55 -0500
-Received: from localhost (kamlesh.dhcp.ti.com [172.24.227.123])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55QDXsHX1076756;
-	Thu, 26 Jun 2025 08:33:54 -0500
-From: Kamlesh Gurudasani <kamlesh@ti.com>
-To: Eric Biggers <ebiggers@kernel.org>
-CC: T Pratham <t-pratham@ti.com>, Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-crypto@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Vignesh Raghavendra" <vigneshr@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        "Manorit Chawdhry" <m-chawdhry@ti.com>
-Subject: Re: [PATCH v5 0/2] Add support for Texas Instruments DTHE V2 crypto
- accelerator
-In-Reply-To: <20250618175847.GA1639822@google.com>
-References: <20250603124217.957116-1-t-pratham@ti.com>
- <20250617042755.GG8289@sol>
- <87ikktgx57.fsf@kamlesh.mail-host-address-is-not-set>
- <20250618175847.GA1639822@google.com>
-Date: Thu, 26 Jun 2025 19:03:53 +0530
-Message-ID: <8734bmsk3i.fsf@kamlesh.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="1MdL3vaH"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-23636167afeso10729205ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1750944937; x=1751549737; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S5FkoSkJCzwjOUrZnCicv7j2S+UOLKD4I0+5496OYCs=;
+        b=1MdL3vaHDPhAfN4GjpaHewVIpYLE421w97vFJprC3fyv7CNSoqvc8y0nfOyz8y8too
+         pHBNjTawQjW5vDycLRXcG56Ol3oR3dFl40tI31Y51hMGUR4Oo26BzcnV2CXUXKSgMjc8
+         XSzxhDwjToxfNl7BmJvPlTcCfQQkjrRsRAH8d4FJnvTfJ6D9Z1k5XVwJh4bLl+i7tiL1
+         k1jU8s7lV5aqedYf3cFruW+AGQyPq47NPQlWAJuWHa/prun8DXTjS3BT1V5rsOFNHkj1
+         SmQI5M1fRaVxZc0/O4jUC+DhDC1aBvVoWjTjogjWnPtm7MyTQl1APT5DGKFpZYnns/zl
+         KAUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750944937; x=1751549737;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S5FkoSkJCzwjOUrZnCicv7j2S+UOLKD4I0+5496OYCs=;
+        b=JrZDAkV9qmeaxuFkVS9eeUv0FE6viRslwL5WPWhHgs4Urv/ypP7WDTlRn/Hg4sCUnU
+         zN3ESn8RR2AEj3O2O4mh/ioju5Myl1YTD6X7kBNiqEC0BG5521I3dX1o3et1HoGerW3H
+         F6wTB/TpYM2xgNO9cx+EHIcv7x2XrF/73HhIwo7LQHGfTE2VzNGCdz+SNfcUNfACEdBq
+         a9K4xGCk31mImkDMD9owAlMVWizj6sdrVejqJPl7GBkCWNpXcqupF0n7JR9NO9gk4nN+
+         kLizGnwG0IbuL71kioLK8yTpMAzVGmxleeNoSI3U1aLWnbGoztc3CGrf4T/3FYBbp1sY
+         eW2w==
+X-Forwarded-Encrypted: i=1; AJvYcCXmW2Fo6jYbROTDV0rKxNFzBarUqzZNRFhIUJ6GZdLEwqBQW22LZXti2erf13ryH0sbRjY1Kb3hUUm/4Aw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCJNP8c0bdxtL10EWFDZSBuH+qN0aiIlYPKZlmg0XJ0meynH5X
+	enpI5/fe+De/eHGWKmz+hvJ2f2/FST9ZpCpMCYvrq5HEOWNtqeIQMDkptUhhN8F3x6wajQvkuIP
+	0enKw
+X-Gm-Gg: ASbGncsYNk6CqB+krBB0wtL6sdG3mKG9UxVAFdo4gCprsVPr4meNJYrBYtKf1jdfW9x
+	DrhEcEb5L6EdRGoPFYhQPfrrDcikKH8PXZZJY62J1EiBABJ4P4KAZYRQU1JRjdchMA/ODv8vrNg
+	nVaXjLiRD2Q8nCevnby/HvxVZkxmBJ4VcPxWcEycsGe97zJIqiS/Wlj4p+q6BTPfF2O+3x4VbgF
+	pgslMvA3TyLNHcTULY7hP3qqwEJJgAcTPZjk8uVupFWtItv/nwNXIh0J3XC5mrC+zskJasvhAhM
+	/bcUGZLMUpSyYHb1k4i/XjwEyPNfhUGyYUJtDz7AV+1kOSDYjebcPbp4uiomwjIy
+X-Google-Smtp-Source: AGHT+IF5Uf5pf+UNggE64dI/LHtG8EE8QAxrgFSHws8yjCwdfNuacGWJPVN9G1vMDi39wJPuCdtcKw==
+X-Received: by 2002:a17:903:350b:b0:237:d192:ac4a with SMTP id d9443c01a7336-238240984c3mr108548585ad.51.1750944937419;
+        Thu, 26 Jun 2025 06:35:37 -0700 (PDT)
+Received: from [127.0.0.1] ([12.48.65.201])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8651b47sm162695205ad.153.2025.06.26.06.35.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 06:35:36 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: hare@suse.de, hch@infradead.org, john.g.garry@oracle.com, 
+ Yu Kuai <yukuai3@huawei.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ yi.zhang@redhat.com, calvin@wbinvd.org, david@fromorbit.com, 
+ yukuai1@huaweicloud.com, yi.zhang@huawei.com, yangerkun@huawei.com, 
+ johnny.chenyi@huawei.com
+In-Reply-To: <20250626115743.1641443-1-yukuai3@huawei.com>
+References: <20250626115743.1641443-1-yukuai3@huawei.com>
+Subject: Re: [PATCH v2] block: fix false warning in
+ bdev_count_inflight_rw()
+Message-Id: <175094493620.208798.522979576401700817.b4-ty@kernel.dk>
+Date: Thu, 26 Jun 2025 07:35:36 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-d7477
 
-Eric Biggers <ebiggers@kernel.org> writes:
 
->
-> Okay, so you admit that your "accelerator" is much slower than the CPU.  So (1)
-> does not apply.
->
-> As for (2), it's not clear that applies here.  Sure, your AES engine *by itself*
-> may be more power-efficient than the AES instructions on the CPU.  However,
-> using the offload requires all the additional work associated with offloading
-> the operation from the CPU.  Since it's much slower, it will also cause the
-> operation to be dragged out over much a longer period of time, keeping the
-> system awake for longer when it could have gone into suspend earlier.
->
-> Thus, using the "accelerator" could actually increase power usage.
->
-> As for (3), a couple issues.  First, you're just making an argument from
-> generalities and are not claiming that it's actually true in this case.  ARMv8
-> CE instructions are in fact constant time.
->
-> Sure, ARMv8 CE is generally not hardened against power analysis attacks.  But
-> you haven't actually claimed that your crypto engine is either.
-1. AES/PKE engine inside DTHEv2 is DPA and EMA resistant.
+On Thu, 26 Jun 2025 19:57:43 +0800, Yu Kuai wrote:
+> While bdev_count_inflight is interating all cpus, if some IOs are issued
+> from traversed cpu and then completed from the cpu that is not traversed
+> yet:
+> 
+> cpu0
+> 		cpu1
+> 		bdev_count_inflight
+> 		 //for_each_possible_cpu
+> 		 // cpu0 is 0
+> 		 infliht += 0
+> // issue a io
+> blk_account_io_start
+> // cpu0 inflight ++
+> 
+> [...]
 
->
-> Second, these side channels, especially the ones other than timing, just aren't
-> part of the threat model of most users.
-2. Certification like SESIP, PSA and
-IEC62443(being certified for CIP kernel- LFX [1])
-All these have requirements for sidechannel attacks resistance.(check
-lvl 3+)
-Most of our users have these requirements and they don't even care about
-performance in terms of speed.
+Applied, thanks!
 
->
-> Meanwhile, a security issue we do have is that the hardware drivers tend not to
-> be tested before the kernel is released, and often are released in a broken
-> state where they don't even do the en/decryption correctly.  Furthermore,
-> unprivileged userspace programs may use AF_ALG to exploit buggy drivers.
-3. We have devices in kerneCI and we have regular testing and engineers
-working on acceleratprs internally too, we can be more careful about
-that these drivers are going through prescribed testing for all
-revisions.
+[1/1] block: fix false warning in bdev_count_inflight_rw()
+      commit: c007062188d8e402c294117db53a24b2bed2b83f
 
-We can reduce the prority for hw Accelerator by default if that's what
-you're trying to imply and let users decide.
->
-> It seems implausible that this patch is more helpful than harmful.
->
-I don't understand why you call it harmful when it is providing the
-security against side channel attacks.
+Best regards,
+-- 
+Jens Axboe
 
-If ARM itself prescribing to use crypto acclerators if they are
-avialable, then it is beyond my understanding why would you push towards
-using CE extensions.[3]
 
-Are we not serious about the security than the performance itself?
 
-For us,
-Point 1 and 2 is at top priority and being a SOC vendor we want to make
-sure that we provide all support that is needed by end customers for
-their threat modeling.  
-
-For embedded systems, resource utilization is also very important,
-I can use crypto accelerator and save CPU for other activities
-
-But lets look at numbers, They are not 50x worse as you have mentioned in
-earlier mail, they are just 2x bad. These a system with one core cpu
-833Mhz and DTHEv2 at 400Mhz
-
-root@am62lxx-evm:~# cryptsetup benchmark --cipher aes-cbc
-cryptsetup benchmark --cipher aes-cbc
-# Tests are approximate using memory only (no storage IO).
-# Algorithm |       Key |      Encryption |      Decryption
-    aes-cbc        256b        77.7 MiB/s        77.5 MiB/s
-root@am62lxx-evm:~# modprobe -r dthev2
-modprobe -r dthev2
-root@am62lxx-evm:~# cryptsetup benchmark --cipher aes-cbc
-cryptsetup benchmark --cipher aes-cbc
-# Tests are approximate using memory only (no storage IO).
-# Algorithm |       Key |      Encryption |      Decryption
-    aes-cbc        256b       150.4 MiB/s       163.8 MiB/s
-
-[1]https://dashboard.kernelci.org/hardware?hs=ti
-[2]https://www.cip-project.org/about/security-iec-62443-4-2
-[3]https://www.trustedfirmware.org/docs/Introduction_to_Physical_protection_for_MCU_developers_final.pdf
-
-Cheers,
-Kamlesh
