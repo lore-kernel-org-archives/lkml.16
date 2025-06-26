@@ -1,119 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD372EB5C0;
-	Thu, 26 Jun 2025 15:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFCA2EB5BC
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750950983; cv=none; b=gCXjbyFib2ViJIy1KsyaU8EEuj/JU11m/+dcBKUsAauZcQ7kY8+3zsQe4N0WP5c7QmRrtBlGRJ/rJ8B/V/H3HM9rbFulX6RTw7GuBoAKlqXNd57wTVYLHSiEPOX+A7CIkdonvBG2y7sy2r0u5ibGz/32VEBtoNesorov1gWMyqw=
+	t=1750950990; cv=none; b=qbPOc5u3IqvU+WYQolyBVFWDgLR24sOSMPMmb/Sg2bWKOQj2lbeUltGOQiwpIRHXbp7ne9kMfCEylwkahRWL+169R3tir7GpO3n80moHvTYZIAeRX6WqvUuF9Jepf2WG6bjmCBHwEQPqd6CcMDVS2QS2uWPchn47NG8bY897yAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750950983; c=relaxed/simple;
-	bh=lqI8pD0+c/MWdmXxoqGaSXV4hXF1azOl9AOSOyUxWwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nvbDxY3PNtABnV3gTDtIxz5HSJ2rwdFLI7n9NLn5krtXSHS0Je/Zkc5qkogr7TT/+snMbALPktKON6rHNV0lMTKlYudFThEFQeYRofCGJOAnlJeKUfhko2tIVTG0lilUPBchPD8drvl7RZwOO55GOWquWfcwB5a8zVNJGrW1DSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kPpnDvKy; arc=none smtp.client-ip=192.198.163.9
+	s=arc-20240116; t=1750950990; c=relaxed/simple;
+	bh=vzjk8bGrqWez7QWvHDgN5uqasr79Gx9gG7/5GusfDUk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=M5vGZmbZ7otyS2HcEIwxUqWIpbEkdbPEtGEHc54adEBUg/Hwq+yFhiGw5pvF+AkK4tkc0/KmwlEjn0xbs+LsGBTSIT720mjtu/1Q/0uoi+rQsk/RkPdkmRVT3ibIciCTkGdypVPukwUCQSDouFvbKH09v3BZkLZAhlKYWhHU71Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LSp781j5; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kPpnDvKy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LSp781j5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750950982; x=1782486982;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lqI8pD0+c/MWdmXxoqGaSXV4hXF1azOl9AOSOyUxWwg=;
-  b=kPpnDvKyO9H6K4RShJo0OPc0AeLSJ5vH92ADSn+58ieNRFHggD1ylvw3
-   dO27ZvfMhGg2t+8kV/1TGiDTCz2Wl9u9RMdN1eg+6+BQanXusqcKblaCZ
-   CvReZcFpVDHJc6knkRAuoIvGNQZYv1xrTFFBw43WfTdOHyhOHLxlT+ffz
-   GEfIWAyLXhb/Ruwsw5uMrouqq9UJBIAHgY8LH7Edgx5pifrO23CV5z207
-   YgGbW2H7tK9YjvReQt0WZDzxo4WXRk1QKd2eN/xhXUxsKrvinR/0CNxEn
-   Y5w58fcFdfJYgyujpUNA+eK8pyT++EiIUI6R3eLsb0IU+WFQ2v9Y6HAKo
-   w==;
-X-CSE-ConnectionGUID: QowX8NwpQkCmJ9w3gz371w==
-X-CSE-MsgGUID: LGkTOnJbTWq0lnZWI1pAIg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="63941012"
+  t=1750950989; x=1782486989;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=vzjk8bGrqWez7QWvHDgN5uqasr79Gx9gG7/5GusfDUk=;
+  b=LSp781j5oCng3G9Qsn5GcNBLpfXP26dztjvaIuFIwA3a8sWlrZVUXDLm
+   r+hcLRQ4VEs2AvgTebtqV2cxPdbeW/tFmRdPG/UeUhi9Yrq6PL6xKwiwW
+   3GEsRVRKrN9KxY+Nvy77FKpO3uFqGpAtNUFsz+MibSTs977yTOuK0mEYb
+   fPUs0pnh0+U4KFiSDtX08I9TqnRIFtPPZZdf7RkoFGtgwIKBOT8Akg4RM
+   oQGBAM4KmTpLXhHqF+vr8q3DI88efZUOqh36kA4ypzd1vPxJgEN8NLHcD
+   vBJwmUmw1zdE7avUefhQjiPmb3xBylh3jOIFNBISUa0lS/s4t5ZRCvqGs
+   A==;
+X-CSE-ConnectionGUID: l++SZ9xySdK9E4v9wlf2lg==
+X-CSE-MsgGUID: pYOKyk3mTLepPFkLtjp+HQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53396821"
 X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="63941012"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:16:21 -0700
-X-CSE-ConnectionGUID: SCa4oxn5S2S4n7Q6JQlhBw==
-X-CSE-MsgGUID: KJHAXsf4QcObKmd0B9hfMg==
+   d="scan'208";a="53396821"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:16:29 -0700
+X-CSE-ConnectionGUID: EUMIUsY8SN6rCmTrXjA1Tw==
+X-CSE-MsgGUID: Mc5IxZpcSHeLGNSyRgdihg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="152299473"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa009.jf.intel.com with ESMTP; 26 Jun 2025 08:16:15 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 3D25C2E2; Thu, 26 Jun 2025 18:16:14 +0300 (EEST)
-Date: Thu, 26 Jun 2025 18:16:14 +0300
-From: "Shutemov, Kirill" <kirill.shutemov@intel.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc: "ackerleytng@google.com" <ackerleytng@google.com>, 
-	"Zhao, Yan Y" <yan.y.zhao@intel.com>, "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, 
-	"Li, Xiaoyao" <xiaoyao.li@intel.com>, "Du, Fan" <fan.du@intel.com>, 
-	"Hansen, Dave" <dave.hansen@intel.com>, "david@redhat.com" <david@redhat.com>, 
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "tabba@google.com" <tabba@google.com>, 
-	"vbabka@suse.cz" <vbabka@suse.cz>, "michael.roth@amd.com" <michael.roth@amd.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
-	"Peng, Chao P" <chao.p.peng@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, 
-	"Weiny, Ira" <ira.weiny@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"Annapurve, Vishal" <vannapurve@google.com>, "jroedel@suse.de" <jroedel@suse.de>, 
-	"Miao, Jun" <jun.miao@intel.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>, 
-	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge
- pages
-Message-ID: <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
-References: <aFIGFesluhuh2xAS@yzhao56-desk.sh.intel.com>
- <0072a5c0cf289b3ba4d209c9c36f54728041e12d.camel@intel.com>
- <aFkeBtuNBN1RrDAJ@yzhao56-desk.sh.intel.com>
- <draft-diqzh606mcz0.fsf@ackerleytng-ctop.c.googlers.com>
- <diqzy0tikran.fsf@ackerleytng-ctop.c.googlers.com>
- <c69ed125c25cd3b7f7400ed3ef9206cd56ebe3c9.camel@intel.com>
- <diqz34bolnta.fsf@ackerleytng-ctop.c.googlers.com>
- <a3cace55ee878fefc50c68bb2b1fa38851a67dd8.camel@intel.com>
- <diqzms9vju5j.fsf@ackerleytng-ctop.c.googlers.com>
- <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
+   d="scan'208";a="153282513"
+Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.246.120])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:16:26 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, Thomas
+ Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] iopoll: use fsleep() instead of usleep_range()
+In-Reply-To: <CAMuHMdU+tgMqHcU8Fwr_XVE9RfNEGHnbEYHQ1DraE=YRvQxJuw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250626145119.2048423-1-jani.nikula@intel.com>
+ <CAMuHMdU+tgMqHcU8Fwr_XVE9RfNEGHnbEYHQ1DraE=YRvQxJuw@mail.gmail.com>
+Date: Thu, 26 Jun 2025 18:16:23 +0300
+Message-ID: <7875cadfb12b1d2e8def412346d61716a6a98107@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
+Content-Type: text/plain
 
-On Thu, Jun 26, 2025 at 02:19:36AM +0300, Edgecombe, Rick P wrote:
-> On Wed, 2025-06-25 at 16:09 -0700, Ackerley Tng wrote:
-> > > I do think that these threads have gone on far too long. It's probably about
-> > > time to move forward with something even if it's just to have something to
-> > > discuss that doesn't require footnoting so many lore links. So how about we
-> > > move
-> > > forward with option e as a next step. Does that sound good Yan?
-> > > 
-> > 
-> > Please see my reply to Yan, I'm hoping y'all will agree to something
-> > between option f/g instead.
-> 
-> I'm not sure about the HWPoison approach, but I'm not totally against it. My
-> bias is that all the MM concepts are tightly interlinked. If may fit perfectly,
-> but every new use needs to be checked for how fits in with the other MM users of
-> it. Every time I've decided a page flag was the perfect solution to my problem,
-> I got informed otherwise. Let me try to flag Kirill to this discussion. He might
-> have some insights.
+On Thu, 26 Jun 2025, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> Hi Jani,
+>
+> Thanks for your patch!
+>
+> On Thu, 26 Jun 2025 at 16:51, Jani Nikula <jani.nikula@intel.com> wrote:
+>> Sometimes it's necessary to poll with long sleeps, and the accuracy of
+>> usleep_range() is overkill. Use the flexible sleep helper fsleep() for
+>> sleeping in the read_poll_timeout() family of macros to automatically
+>> choose the appropriate method of waiting.
+>>
+>> Functionally there are a few consequences for existing users:
+>>
+>> - 10 us and shorter sleeps will use usleep() instead of
+>
+> s/usleep/udelay/.
 
-We chatted with Rick about this.
+D'oh!
 
-If I understand correctly, we are discussing the situation where the TDX
-module failed to return a page to the kernel.
+>
+>>   usleep_range(). Presumably this will not be an issue.
+>
+> Note that udelay() does not sleep, but loops.
 
-I think it is reasonable to use HWPoison for this case. We cannot
-guarantee that we will read back whatever we write to the page. TDX module
-has creative ways to corrupt it. 
+Quite right. IIUC this is because for short delays it's more efficient.
 
-The memory is no longer functioning as memory. It matches the definition
-of HWPoison quite closely.
+BR,
+Jani.
+
+>
+>>
+>> - When it leads to a slack of less than 25%, msleep() will be used
+>>   instead of usleep_range(). Presumably this will not be an issue, given
+>>   the sleeps will be longer in this case.
+>>
+>> - Otherwise, the usleep_range() slack gets switched from the begin of
+>>   the range to the end of the range, i.e. [sleep/2+1..sleep] ->
+>>   [sleep..sleep+sleep/2]. In theory, this could be an issue in some
+>>   cases, but difficult to determine before this hits the real world.
+>>
+>> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+>
+>> Not really sure who to Cc, given MAINTAINERS doesn't match this. Adding
+>> some past committers.
+>
+> Oh well ;-)
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Jani Nikula, Intel
