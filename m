@@ -1,286 +1,229 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421ED2E11C2
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667F32E11B1
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750941889; cv=none; b=TOGzV8kMiwJRQaUyuJJj+Rq3YnKV3FVS9bk9rkkFz/jYpuBX4bjT6gbTugcUW9uS1pVq1BPXDkE1PKas+Fs36J6lElN2xh/3Yxsr4PxMwRCTZkH4zX3GoLmJtA+r/fBlPeIsBqRxCouiNHeYGj/cmBI87owBmOmsTdcY91FlorQ=
+	t=1750941896; cv=none; b=SB0/DbN7L/OrFphftzIkvbSmsRUn0HB4vPjB327HL4IYQmtChZtq97PNUIHjMc6hM63HYWFDZcW7fSpRlWxSqU0dE9s8ob3V4kiQei670DpwUTUGKc1EFCuuPAqH+VzjkrbBGIH23+paZzzxo0C0Qj/N2ZhXGvryq/Wk98WCLWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750941889; c=relaxed/simple;
-	bh=c4XYvSotZZ1FzLtX0U0KD0tABl7m2IlcHYxYvccy0Ww=;
-	h=From:In-Reply-To:References:Cc:Subject:MIME-Version:Content-Type:
-	 Date:Message-ID; b=C9Hcv6uV2dzXSv7v33wyIY5tsLuJtFVtjXut5MeFgeXepIkaX82M3NpuNF8FS+3SF2xQLp5JMXI0gjoUfq+ERuuyGvsOiPUKMT22/j7I9CDKEGrMRIApbhUVhgarQXZJCgD0bu27gSu/UYA5heXrY9+hRFdEz7h76sci2K31do0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FjRrApVj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750941896; c=relaxed/simple;
+	bh=Y19BnNLdcd6JtxmLP8VGGY8VGVrhI8XndDrOn27+sGk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XOvClG/ectep9tmE+qmXkw0FHCgc7WxoTPW8sF6FK66fev2ITStJZ2UlTE/O5Ag70WC3m7aj5wEX+QUBnfK6457HlwxQStA2j+yEhDhwQPGaDJqWz1lWVCym1fW8qe1lIa48W8Aqk/7Y0PMYPs0iH07jEL7c1PJjZJ7wPOUs8KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YHVwv/5s; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FjRrApVj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750941887;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Am4Qfwr6+rKCR3jYF9USP6nGypEhphTHlkFTYuyX0uw=;
-	b=FjRrApVjCqiOgjB1ifxBMC2jc0Eaij9a5312L/8elUcHPOapMOqYGr3Dj7JB3Nc4DbdwMm
-	dsiayZ8+2xtuZj4ojPLU4YpC4URnoeRQC8ZGJ5N97vxqMLQxxHejATejOy8D5ZDWlonWGi
-	S+jV0qx7jWevbZa6AKlEhZDrLNubBIg=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-182-vGo7d88LMeSsDJf-JncBxA-1; Thu,
- 26 Jun 2025 08:44:42 -0400
-X-MC-Unique: vGo7d88LMeSsDJf-JncBxA-1
-X-Mimecast-MFC-AGG-ID: vGo7d88LMeSsDJf-JncBxA_1750941880
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 767BD1956086;
-	Thu, 26 Jun 2025 12:44:40 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.81])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 526C419560AF;
-	Thu, 26 Jun 2025 12:44:38 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <1576470.1750941177@warthog.procyon.org.uk>
-References: <1576470.1750941177@warthog.procyon.org.uk>
-Cc: dhowells@redhat.com, Christian Brauner <brauner@kernel.org>,
-    Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>,
-    linux-cifs@vger.kernel.org, netfs@lists.linux.dev,
-    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] netfs: Merge i_size update functions
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YHVwv/5s"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso524617f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:44:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750941893; x=1751546693; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W9Q6vWQMAD+pyX5yU0mYRqo1CgBOlEkw6ZKpgSd/AcU=;
+        b=YHVwv/5sgoTv03K1QqcGjCCs+tfjmf3a2gj53JQMFrbgOUDXYUTq0cyLc+jMRh0LIz
+         /iLV3bdyQtUYbXjViWNA7+LvfHP03jrk8SNPW/uZHzubWYL0FE03PYxxp6kVGv2TfT1M
+         N/LCwm/X12ZVeq53i9wVDuFIUEjYN0W199NvCjte5WsHN2j8ij+OoUe10mZA/eAnL3HR
+         euMHlhY6JCbBQtHdTHRWo0Hedg9jYQGEAE/VIlFO/1gzzXNtobH1wpebVBJ3q2CY5L5F
+         wnIck2o8DSZuAHoY4rVcP22vxtTctOVWChUpGsV8oOd0yGx96bgLcFSBJgPnVWdEOoO1
+         EHbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750941893; x=1751546693;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W9Q6vWQMAD+pyX5yU0mYRqo1CgBOlEkw6ZKpgSd/AcU=;
+        b=Ko4aIEAv2IlMYZVb5TtkpYrpSgaNTqEluAbVsHivcY2mr4Di+kqexuLmn5GQDRFENw
+         +cjdrKNu91Hh8milZhhELWN4pbxvxmPS+okjqlj3B+dY3CQ3M8WD3rKnbMkO5T3hHV49
+         C1eCfdw8lITlCwg2Y6Wd3Rc8RPuvMFNn8STF9iksDVJjg0/ovBVBRlCHfbTa/A+aQL+9
+         AI1Xh6x2MIrk4xExrZTm4x1s6zTtJrXpOUa/gy5fSL72ijBGUo1XTsBM+FNrfrEqYPb5
+         b+hwGomx1jCWB5egPM5VhU+JyzTh+nfssniUCIBt9T85Hp188pOY/HrjNTO8dr7h0ROg
+         C7OA==
+X-Forwarded-Encrypted: i=1; AJvYcCWyrKmzD5JcOqhBZ1m0ojObkqC7ViAy2PAE6GfdenTqcBnvDkTASlN0c0gDM3XSXNsi0mxeErh7sOPCtrg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQ7B44oPcdAXvACWmJIkaH07M8LETNGjW96G8myAganhKwimdE
+	YN2jxZk6HTb9fksKRdAd575CMjMxFLaDywcDEXRO/kjie5vJYW6BBvDG
+X-Gm-Gg: ASbGncvbncS6Iaq76pierOdQTHyMRgC1EeINYpvlmsjD0xb1vr8bKR3BDeS4pUFCfyj
+	f3eBL+xV91y1StK2bR52r5WF1ZiOXjsCoDRx3GMiyKhdMNrqDf3SdwNc8Myr06030pDGsofCRhc
+	1bhNSl3Fx24eCpQKegkJbYM5RMJqASm7yz5c+DaNGFAPmSeuaReBMzysvKSUG1LCfi3hAW4COUa
+	ZO/el8KBLhM37TEB2ADtPzFarCf2rvZ5MQDUXNRBW5T8Ue+N92G7YMh5UE1XNuiOddEztJkW9p3
+	UhQIqamrTdAcOeu3ewlsRHrvBf7Dv+hbvMS2RyjjG4wzZlA=
+X-Google-Smtp-Source: AGHT+IHK9z/BBG/9EKAw7EpO3uOD6zjU0SI80m4T9S7pG+NIa80Str49cvuzTLt7WfihJvvYhpI4ug==
+X-Received: by 2002:a5d:5847:0:b0:3a3:7593:818b with SMTP id ffacd0b85a97d-3a6ed62eb62mr6202221f8f.21.1750941892202;
+        Thu, 26 Jun 2025 05:44:52 -0700 (PDT)
+Received: from EBJ9932692.tcent.cn ([2a09:0:1:2::3086])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a831051c49sm161455f8f.30.2025.06.26.05.44.47
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 26 Jun 2025 05:44:51 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+To: ioworker0@gmail.com
+Cc: 21cnbao@gmail.com,
+	akpm@linux-foundation.org,
+	baolin.wang@linux.alibaba.com,
+	chrisl@kernel.org,
+	david@redhat.com,
+	kasong@tencent.com,
+	lance.yang@linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-riscv@lists.infradead.org,
+	lorenzo.stoakes@oracle.com,
+	ryan.roberts@arm.com,
+	v-songbaohua@oppo.com,
+	x86@kernel.org,
+	ying.huang@intel.com,
+	zhengtangquan@oppo.com
+Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large folios during reclamation
+Date: Thu, 26 Jun 2025 20:44:45 +0800
+Message-ID: <20250626124445.77865-1-ioworker0@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250626092905.31305-1-ioworker0@gmail.com>
+References: <20250626092905.31305-1-ioworker0@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1587238.1750941876.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 26 Jun 2025 13:44:36 +0100
-Message-ID: <1587239.1750941876@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
 
-Here's a follow up patch to the previous one, though this would be for nex=
-t -
-and assuming it's okay to do the i_blocks update in the DIO case which it
-currently lacks.
 
-David
----
-Netfslib has two functions for updating the i_size after a write: one for
-buffered writes into the pagecache and one for direct/unbuffered writes.
-However, what needs to be done is much the same in both cases, so merge
-them together.
+On 2025/6/26 17:29, Lance Yang wrote:
+> Before I send out the real patch, I'd like to get some quick feedback to
+> ensure I've understood the discussion correctly ;)
+> 
+> Does this look like the right direction?
+> 
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index fb63d9256f09..5ebffe2137e4 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1845,23 +1845,37 @@ void folio_remove_rmap_pud(struct folio *folio, struct page *page,
+>   #endif
+>   }
+>   
+> -/* We support batch unmapping of PTEs for lazyfree large folios */
+> -static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
+> -			struct folio *folio, pte_t *ptep)
+> +static inline unsigned int folio_unmap_pte_batch(struct folio *folio,
+> +			struct page_vma_mapped_walk *pvmw,
+> +			enum ttu_flags flags, pte_t pte)
+>   {
+>   	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+> -	int max_nr = folio_nr_pages(folio);
+> -	pte_t pte = ptep_get(ptep);
+> +	unsigned long end_addr, addr = pvmw->address;
+> +	struct vm_area_struct *vma = pvmw->vma;
+> +	unsigned int max_nr;
+> +
+> +	if (flags & TTU_HWPOISON)
+> +		return 1;
+> +	if (!folio_test_large(folio))
+> +		return 1;
+>   
+> +	/* We may only batch within a single VMA and a single page table. */
+> +	end_addr = pmd_addr_end(addr, vma->vm_end);
+> +	max_nr = (end_addr - addr) >> PAGE_SHIFT;
+> +
+> +	/* We only support lazyfree batching for now ... */
+>   	if (!folio_test_anon(folio) || folio_test_swapbacked(folio))
+> -		return false;
+> +		return 1;
+>   	if (pte_unused(pte))
+> -		return false;
+> -	if (pte_pfn(pte) != folio_pfn(folio))
+> -		return false;
+> +		return 1;
+> +
+> +	/* ... where we must be able to batch the whole folio. */
+> +	if (pte_pfn(pte) != folio_pfn(folio) || max_nr != folio_nr_pages(folio))
+> +		return 1;
+> +	max_nr = folio_pte_batch(folio, addr, pvmw->pte, pte, max_nr, fpb_flags,
+> +				 NULL, NULL, NULL);
+>   
+> -	return folio_pte_batch(folio, addr, ptep, pte, max_nr, fpb_flags, NULL,
+> -			       NULL, NULL) == max_nr;
+> +	return (max_nr != folio_nr_pages(folio)) ? 1 : max_nr;
+>   }
+>   
+>   /*
+> @@ -2024,9 +2038,7 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   			if (pte_dirty(pteval))
+>   				folio_mark_dirty(folio);
+>   		} else if (likely(pte_present(pteval))) {
+> -			if (folio_test_large(folio) && !(flags & TTU_HWPOISON) &&
+> -			    can_batch_unmap_folio_ptes(address, folio, pvmw.pte))
+> -				nr_pages = folio_nr_pages(folio);
+> +			nr_pages = folio_unmap_pte_batch(folio, &pvmw, flags, pteval);
+>   			end_addr = address + nr_pages * PAGE_SIZE;
+>   			flush_cache_range(vma, address, end_addr);
+>   
+> @@ -2206,13 +2218,16 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   			hugetlb_remove_rmap(folio);
+>   		} else {
+>   			folio_remove_rmap_ptes(folio, subpage, nr_pages, vma);
+> -			folio_ref_sub(folio, nr_pages - 1);
+>   		}
+>   		if (vma->vm_flags & VM_LOCKED)
+>   			mlock_drain_local();
+> -		folio_put(folio);
+> -		/* We have already batched the entire folio */
+> -		if (nr_pages > 1)
+> +		folio_put_refs(folio, nr_pages);
+> +
+> +		/*
+> +		 * If we are sure that we batched the entire folio and cleared
+> +		 * all PTEs, we can just optimize and stop right here.
+> +		 */
+> +		if (nr_pages == folio_nr_pages(folio))
+>   			goto walk_done;
+>   		continue;
+>   walk_abort:
+> --
 
-This does raise one question, though: should updating the i_size after a
-direct write do the same estimated update of i_blocks as is done for
-buffered writes.
+Oops ... Through testing on my machine, I found that the logic doesn't
+behave as expected because I messed up the meaning of max_nr (the available
+scan room in the page table) with folio_nr_pages(folio) :(
 
-Also get rid of the cleanup function pointer from netfs_io_request as it's
-only used for direct write to update i_size; instead do the i_size setting
-directly from write collection.
+With the following change:
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Steve French <sfrench@samba.org>
-cc: Paulo Alcantara <pc@manguebit.org>
-cc: linux-cifs@vger.kernel.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/netfs/buffered_write.c |   36 +++++++++++++++++++++---------------
- fs/netfs/direct_write.c   |   19 -------------------
- fs/netfs/internal.h       |    6 ++++++
- fs/netfs/write_collect.c  |    6 ++++--
- include/linux/netfs.h     |    1 -
- 5 files changed, 31 insertions(+), 37 deletions(-)
-
-diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
-index b87ef3fe4ea4..f27ea5099a68 100644
---- a/fs/netfs/buffered_write.c
-+++ b/fs/netfs/buffered_write.c
-@@ -53,30 +53,38 @@ static struct folio *netfs_grab_folio_for_write(struct=
- address_space *mapping,
-  * data written into the pagecache until we can find out from the server =
-what
-  * the values actually are.
-  */
--static void netfs_update_i_size(struct netfs_inode *ctx, struct inode *in=
-ode,
--				loff_t i_size, loff_t pos, size_t copied)
-+void netfs_update_i_size(struct netfs_inode *ctx, struct inode *inode,
-+			 loff_t pos, size_t copied)
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 5ebffe2137e4..b1407348e14e 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1850,9 +1850,9 @@ static inline unsigned int folio_unmap_pte_batch(struct folio *folio,
+ 			enum ttu_flags flags, pte_t pte)
  {
-+	loff_t i_size, end =3D pos + copied;
- 	blkcnt_t add;
- 	size_t gap;
- =
-
-+	if (end <=3D i_size_read(inode))
-+		return;
+ 	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
++	unsigned int max_nr, nr_pages = folio_nr_pages(folio);
+ 	unsigned long end_addr, addr = pvmw->address;
+ 	struct vm_area_struct *vma = pvmw->vma;
+-	unsigned int max_nr;
+ 
+ 	if (flags & TTU_HWPOISON)
+ 		return 1;
+@@ -1870,12 +1870,13 @@ static inline unsigned int folio_unmap_pte_batch(struct folio *folio,
+ 		return 1;
+ 
+ 	/* ... where we must be able to batch the whole folio. */
+-	if (pte_pfn(pte) != folio_pfn(folio) || max_nr != folio_nr_pages(folio))
++	if (pte_pfn(pte) != folio_pfn(folio) || max_nr < nr_pages)
+ 		return 1;
+-	max_nr = folio_pte_batch(folio, addr, pvmw->pte, pte, max_nr, fpb_flags,
+-				 NULL, NULL, NULL);
+ 
+-	return (max_nr != folio_nr_pages(folio)) ? 1 : max_nr;
++	max_nr = folio_pte_batch(folio, addr, pvmw->pte, pte, nr_pages,
++				 fpb_flags, NULL, NULL, NULL);
 +
- 	if (ctx->ops->update_i_size) {
--		ctx->ops->update_i_size(inode, pos);
-+		ctx->ops->update_i_size(inode, end);
- 		return;
- 	}
- =
-
- 	spin_lock(&inode->i_lock);
--	i_size_write(inode, pos);
-+
-+	i_size =3D i_size_read(inode);
-+	if (end > i_size) {
-+		i_size_write(inode, end);
- #if IS_ENABLED(CONFIG_FSCACHE)
--	fscache_update_cookie(ctx->cache, NULL, &pos);
-+		fscache_update_cookie(ctx->cache, NULL, &end);
- #endif
- =
-
--	gap =3D SECTOR_SIZE - (i_size & (SECTOR_SIZE - 1));
--	if (copied > gap) {
--		add =3D DIV_ROUND_UP(copied - gap, SECTOR_SIZE);
-+		gap =3D SECTOR_SIZE - (i_size & (SECTOR_SIZE - 1));
-+		if (copied > gap) {
-+			add =3D DIV_ROUND_UP(copied - gap, SECTOR_SIZE);
- =
-
--		inode->i_blocks =3D min_t(blkcnt_t,
--					DIV_ROUND_UP(pos, SECTOR_SIZE),
--					inode->i_blocks + add);
-+			inode->i_blocks =3D min_t(blkcnt_t,
-+						DIV_ROUND_UP(end, SECTOR_SIZE),
-+						inode->i_blocks + add);
-+		}
- 	}
- 	spin_unlock(&inode->i_lock);
++	return (max_nr != nr_pages) ? 1 : max_nr;
  }
-@@ -113,7 +121,7 @@ ssize_t netfs_perform_write(struct kiocb *iocb, struct=
- iov_iter *iter,
- 	struct folio *folio =3D NULL, *writethrough =3D NULL;
- 	unsigned int bdp_flags =3D (iocb->ki_flags & IOCB_NOWAIT) ? BDP_ASYNC : =
-0;
- 	ssize_t written =3D 0, ret, ret2;
--	loff_t i_size, pos =3D iocb->ki_pos;
-+	loff_t pos =3D iocb->ki_pos;
- 	size_t max_chunk =3D mapping_max_folio_size(mapping);
- 	bool maybe_trouble =3D false;
- =
-
-@@ -346,10 +354,8 @@ ssize_t netfs_perform_write(struct kiocb *iocb, struc=
-t iov_iter *iter,
- 		flush_dcache_folio(folio);
- =
-
- 		/* Update the inode size if we moved the EOF marker */
-+		netfs_update_i_size(ctx, inode, pos, copied);
- 		pos +=3D copied;
--		i_size =3D i_size_read(inode);
--		if (pos > i_size)
--			netfs_update_i_size(ctx, inode, i_size, pos, copied);
- 		written +=3D copied;
- =
-
- 		if (likely(!wreq)) {
-diff --git a/fs/netfs/direct_write.c b/fs/netfs/direct_write.c
-index 9df297a555f1..a16660ab7f83 100644
---- a/fs/netfs/direct_write.c
-+++ b/fs/netfs/direct_write.c
-@@ -9,24 +9,6 @@
- #include <linux/uio.h>
- #include "internal.h"
- =
-
--static void netfs_cleanup_dio_write(struct netfs_io_request *wreq)
--{
--	struct inode *inode =3D wreq->inode;
--	unsigned long long end =3D wreq->start + wreq->transferred;
--
--	if (wreq->error || end <=3D i_size_read(inode))
--		return;
--
--	spin_lock(&inode->i_lock);
--	if (end > i_size_read(inode)) {
--		if (wreq->netfs_ops->update_i_size)
--			wreq->netfs_ops->update_i_size(inode, end);
--		else
--			i_size_write(inode, end);
--	}
--	spin_unlock(&inode->i_lock);
--}
--
+ 
  /*
-  * Perform an unbuffered write where we may have to do an RMW operation o=
-n an
-  * encrypted file.  This can also be used for direct I/O writes.
-@@ -102,7 +84,6 @@ ssize_t netfs_unbuffered_write_iter_locked(struct kiocb=
- *iocb, struct iov_iter *
- 	if (async)
- 		wreq->iocb =3D iocb;
- 	wreq->len =3D iov_iter_count(&wreq->buffer.iter);
--	wreq->cleanup =3D netfs_cleanup_dio_write;
- 	ret =3D netfs_unbuffered_write(wreq, is_sync_kiocb(iocb), wreq->len);
- 	if (ret < 0) {
- 		_debug("begin =3D %zd", ret);
-diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
-index e13ed767aec0..d4f16fefd965 100644
---- a/fs/netfs/internal.h
-+++ b/fs/netfs/internal.h
-@@ -27,6 +27,12 @@ void netfs_cache_read_terminated(void *priv, ssize_t tr=
-ansferred_or_error);
- int netfs_prefetch_for_write(struct file *file, struct folio *folio,
- 			     size_t offset, size_t len);
- =
+--
 
-+/*
-+ * buffered_write.c
-+ */
-+void netfs_update_i_size(struct netfs_inode *ctx, struct inode *inode,
-+			 loff_t pos, size_t copied);
-+
- /*
-  * main.c
-  */
-diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
-index dedfdf80eccc..0f3a36852a4d 100644
---- a/fs/netfs/write_collect.c
-+++ b/fs/netfs/write_collect.c
-@@ -393,8 +393,10 @@ bool netfs_write_collection(struct netfs_io_request *=
-wreq)
- 		ictx->ops->invalidate_cache(wreq);
- 	}
- =
-
--	if (wreq->cleanup)
--		wreq->cleanup(wreq);
-+	if ((wreq->origin =3D=3D NETFS_UNBUFFERED_WRITE ||
-+	     wreq->origin =3D=3D NETFS_DIO_WRITE) &&
-+	    !wreq->error)
-+		netfs_update_i_size(ictx, &ictx->inode, wreq->start, wreq->transferred)=
-;
- =
-
- 	if (wreq->origin =3D=3D NETFS_DIO_WRITE &&
- 	    wreq->mapping->nrpages) {
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index 8b5bf6e393f6..f43f075852c0 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -279,7 +279,6 @@ struct netfs_io_request {
- #define NETFS_RREQ_USE_PGPRIV2		31	/* [DEPRECATED] Use PG_private_2 to ma=
-rk
- 						 * write to cache on read */
- 	const struct netfs_request_ops *netfs_ops;
--	void (*cleanup)(struct netfs_io_request *req);
- };
- =
-
- /*
-
+... then things work as expected for the lazyfree case, without any
+splitting.
