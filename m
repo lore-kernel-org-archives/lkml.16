@@ -1,69 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F5B2F3625
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59402E4262;
+	Thu, 26 Jun 2025 16:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750956615; cv=none; b=s56m3i7cN9wluxLQvjkhjJNHEwq04XR5ojf4c5iKkgW09JqHmgvMt5Z7rSon5NP00ZJoLqXxGPNWyhtj5wPpEnqM1jfF2Q3j9VOtqYZxe2+hT6cGB8fYgoszN261YCfTbIXT54BXvaks7vyvoxjnkeIHZKbKFv4RhlHWUEaGVts=
+	t=1750956711; cv=none; b=nrjlVa99rzsADl8Jl5jt+16/L630SDidnmi/SmORms0L2ryZ97rd9a0VVhEexX6j50fPffJ2SDD/UJglQId4Momp75rj8PUvzQ1WmSH/y+O7r7B4wAf01PAJh/1VGbFKA+VEFBoHE1QGDFOcuAPIxTvgqVbzMIriTzbK7djL0cQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750956615; c=relaxed/simple;
-	bh=/krivHDJi4SFWsGi67ebg0mEW1Vx99a74/Iz9fin3WI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rmexo/A5y7jF5bMdR+FCLwxMWVy3KyzGcsGj46WBt66Vg1FZvrCsURux6xSmgfwGKs6am8ePBgcKwue58Z6MvWxLTVWv0akoJKPuz1nhB3ElnuVFGT8zF/Bb7mePHN6W++hyiJ3vPxRH1xeEcFil3nZ1sr/DWz97TlfZIML8/3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PSxPLwa3; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750956711; c=relaxed/simple;
+	bh=wqBh7X5xKktV9DzTlUGgy5dCWpsRDu8oey1YYIW7dXQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qY3d0Ro402I3FzuahmnsxeVAgwFPRCEieiCS3EjdsDTalFUVYrSmBKjtJBJair8mORGEqYSRET53oSMvU859d6S17XiOeow+CK1TuaPr+hVtM25y12GVI0ptX2ywxl8PYTj3RdaPi1bEHgIsxr3qOwHi0oUg5zeuWYmlzak2QGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PXqY4ne+; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PSxPLwa3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PXqY4ne+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750956614; x=1782492614;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/krivHDJi4SFWsGi67ebg0mEW1Vx99a74/Iz9fin3WI=;
-  b=PSxPLwa3Eg2yLnDuB5qSph9aSVjsmBAHQLhMTcadX9Ieytxy+x5ee3Tb
-   Mgw6WgHnxBk9aOeCll7Mm1FjLYPh7kl5mTzn/kvQr9kn5hpD/ol5nCO+b
-   NqUtxzkD4wcj9Wet/al/NycQnd+zGF1AGfwychfts9ponZUsxG18PiVbW
-   QXrCS4Ck+MaQdGhDYOlozVabyoRMSEQgczk55hLDMM0v/knT4V/mGJk7c
-   dBU7i0G/Qb1nB/lxc5RzEE70+W+ipXuiE1lE9owKRVN60X89FwUlCEYtx
-   W172DUcX63wH5IIaYLghq9J4WhreB1r4wFw1g2iCniiLBPJ+jLS0aU3rP
-   Q==;
-X-CSE-ConnectionGUID: ZBV2eXU3Th2S3VnM9ucg9w==
-X-CSE-MsgGUID: bmZZlSFyQQGbhbNeZO96lg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53136560"
+  t=1750956710; x=1782492710;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wqBh7X5xKktV9DzTlUGgy5dCWpsRDu8oey1YYIW7dXQ=;
+  b=PXqY4ne+TDNdRdp5QiTGV/1d0V5pRiObolwyAfM4wvBe97yX7i8Fws77
+   If/Fot0NLlplG+D6daHksS1e3Xq+/zu145YbZ10Bkn0cUrgx4CxcCIlgO
+   BHJWqX0LM9S9ygjT4FDlWFodyK+MIxubs//l7jlJndi+1sfFq/wTd9//M
+   dALcT3xS+YxOqJsTeOXkCkX17tjkrdikgU/D8x94nTPLmTPhWXK/WtGOd
+   X5O+GbXDAm6Yf0UWvG91eM+d2wTOgzFWwPQHfCDx3A12fTEn7/PmRWt+b
+   5H1RqKbrfysWMyewGS8w7Dx/LfvIiIy0l+4m6SJ+MOYIxGoAQihsVUDUv
+   w==;
+X-CSE-ConnectionGUID: JXcIeWEzTqG/+e2gpLXU/w==
+X-CSE-MsgGUID: lrMFUO+aQ12uI5mihCAK/g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53126376"
 X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="53136560"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:50:05 -0700
-X-CSE-ConnectionGUID: oADTCWivTweAW5jdw+hpZA==
-X-CSE-MsgGUID: LUfpINFiSaKLFJ7G1Kf/SA==
+   d="scan'208";a="53126376"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:51:50 -0700
+X-CSE-ConnectionGUID: 2uH59PzYQKiYi3aXAPTtrw==
+X-CSE-MsgGUID: ST9AsRyOTL6uXjlTB3Tz7A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="153069375"
-Received: from agluck-desk3.sc.intel.com ([172.25.103.51])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:50:04 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Fenghua Yu <fenghuay@nvidia.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>,
-	Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v6 30/30] x86,fs/resctrl: Update Documentation for package events
-Date: Thu, 26 Jun 2025 09:49:39 -0700
-Message-ID: <20250626164941.106341-31-tony.luck@intel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250626164941.106341-1-tony.luck@intel.com>
-References: <20250626164941.106341-1-tony.luck@intel.com>
+   d="scan'208";a="152673554"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 26 Jun 2025 09:51:47 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 96CF42AD; Thu, 26 Jun 2025 19:51:46 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-watchdog@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH v1 1/1] watchdog: Don't use "proxy" headers
+Date: Thu, 26 Jun 2025 19:51:45 +0300
+Message-ID: <20250626165145.327685-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,94 +62,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Each "mon_data" directory is now divided between L3 events and package
-events.
+Update header inclusions to follow IWYU (Include What You Use)
+principle.
 
-The "info/PERF_PKG_MON" directory contains parameters for perf events.
+Note that kernel.h is discouraged to be included as it's written
+at the top of that file.
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- Documentation/filesystems/resctrl.rst | 53 ++++++++++++++++++++++-----
- 1 file changed, 43 insertions(+), 10 deletions(-)
+ include/linux/watchdog.h | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/filesystems/resctrl.rst b/Documentation/filesystems/resctrl.rst
-index c7949dd44f2f..a452fd54b3ae 100644
---- a/Documentation/filesystems/resctrl.rst
-+++ b/Documentation/filesystems/resctrl.rst
-@@ -167,7 +167,7 @@ with respect to allocation:
- 			bandwidth percentages are directly applied to
- 			the threads running on the core
+diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
+index 99660197a36c..8c60687a3e55 100644
+--- a/include/linux/watchdog.h
++++ b/include/linux/watchdog.h
+@@ -9,14 +9,18 @@
+ #ifndef _LINUX_WATCHDOG_H
+ #define _LINUX_WATCHDOG_H
  
--If RDT monitoring is available there will be an "L3_MON" directory
-+If L3 monitoring is available there will be an "L3_MON" directory
- with the following files:
+-
+ #include <linux/bitops.h>
+-#include <linux/cdev.h>
+-#include <linux/device.h>
+-#include <linux/kernel.h>
++#include <linux/limits.h>
+ #include <linux/notifier.h>
++#include <linux/printk.h>
++#include <linux/types.h>
++
+ #include <uapi/linux/watchdog.h>
  
- "num_rmids":
-@@ -261,6 +261,23 @@ with the following files:
- 		bytes) at which a previously used LLC_occupancy
- 		counter can be considered for re-use.
- 
-+If telemetry monitoring is available there will be an "PERF_PKG_MON" directory
-+with the following files:
++struct attribute_group;
++struct device;
++struct module;
 +
-+"num_rmids":
-+		The number of telemetry RMIDs supported. If this is different
-+		from the number reported in the L3_MON directory the limit
-+		on the number of "CTRL_MON" + "MON" directories is the
-+		minimum of the values.
-+
-+"mon_features":
-+		Lists the telemetry monitoring events that are enabled on this system.
-+
-+When the filesystem is mounted with the debug option each subdirectory
-+for a monitor resource of the "info" directory will contain a "status"
-+file. Resources may use this to supply debug information about the status
-+of the hardware implementing the resource.
-+
- Finally, in the top level of the "info" directory there is a file
- named "last_cmd_status". This is reset with every "command" issued
- via the file system (making new directories or writing to any of the
-@@ -366,15 +383,31 @@ When control is enabled all CTRL_MON groups will also contain:
- When monitoring is enabled all MON groups will also contain:
- 
- "mon_data":
--	This contains a set of files organized by L3 domain and by
--	RDT event. E.g. on a system with two L3 domains there will
--	be subdirectories "mon_L3_00" and "mon_L3_01".	Each of these
--	directories have one file per event (e.g. "llc_occupancy",
--	"mbm_total_bytes", and "mbm_local_bytes"). In a MON group these
--	files provide a read out of the current value of the event for
--	all tasks in the group. In CTRL_MON groups these files provide
--	the sum for all tasks in the CTRL_MON group and all tasks in
--	MON groups. Please see example section for more details on usage.
-+	This contains a set of directories, one for each instance
-+	of an L3 cache, or of a processor package. The L3 cache
-+	directories are named "mon_L3_00", "mon_L3_01" etc. The
-+	package directories "mon_PERF_PKG_00", "mon_PERF_PKG_01" etc.
-+
-+	Within each directory there is one file per event. In
-+	the L3 directories: "llc_occupancy", "mbm_total_bytes",
-+	and "mbm_local_bytes". In the PERF_PKG directories: "core_energy",
-+	"activity", etc.
-+
-+	"core_energy" reports a floating point number for the energy
-+	(in Joules) used by cores for each RMID.
-+
-+	"activity" also reports a floating point value (in Farads).
-+	This provides an estimate of work done independent of the
-+	frequency that the cores used for execution.
-+
-+	All other events report decimal integer values.
-+
-+	In a MON group these files provide a read out of the current
-+	value of the event for all tasks in the group. In CTRL_MON groups
-+	these files provide the sum for all tasks in the CTRL_MON group
-+	and all tasks in MON groups. Please see example section for more
-+	details on usage.
-+
- 	On systems with Sub-NUMA Cluster (SNC) enabled there are extra
- 	directories for each node (located within the "mon_L3_XX" directory
- 	for the L3 cache they occupy). These are named "mon_sub_L3_YY"
+ struct watchdog_ops;
+ struct watchdog_device;
+ struct watchdog_core_data;
 -- 
-2.49.0
+2.47.2
 
