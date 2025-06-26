@@ -1,134 +1,79 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE971A254E
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A62F1F5828;
+	Thu, 26 Jun 2025 02:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750905423; cv=none; b=INMytP6ZRPk2mg9keddKRWHwhBKsG5tUP/tWsUT1HuirCI5cc1y/b1jA+GqRC2isf7Lw8XH0OhSfQ4kUtnKThgNDENnLHAiQSREbgDQbwi8/b5V8aj0BHfBlxmWiKhidWrKwwJdOcSQec1934Xq36G/D5DpYUJR/d6qkQECZxVo=
+	t=1750905425; cv=none; b=cfu47cwqjP6mBj/Yj8PGL9nPbxPeBYy8LHdzssAWKkUsF02mnUbPkHzKwE481DEc7KFbJ+p85TPUwwldtoQ/9TfNl67xo1je3bYqseQO+2J9mXloHFM1WpI/D0FGNX1cjlLFffBy7HU9gPS8B9cKClVRNk4pPRZWM+z451DTrHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750905423; c=relaxed/simple;
-	bh=7fkpDVXhr5mCKUsy3ewXya/3bUrPWvyCh1WjxnDKQwo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 References; b=JqrKnJWEpi0QcJ6IxyKP46r1hcn19ouRifL6yzxA6YvPhVvNb95BF3CLesXUVkHgpftGT9jeAqY+oF/DKIxIaIdy+RtRsANx48FhdFOkX9NZyjp0h2OmauRJNVjk7GfTTM5PngWwFDfi2n7LNexv/ZlFWZ8ge8lkN32q6OydCWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=LFbSOWBd; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750905425; c=relaxed/simple;
+	bh=3JMG6iB8TJvIJcGTwj3LS7AOTxOpDIfMUVTPuJlJB1k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tkiMFP23rCTekDqivtAGhR6huFQn4fscOv0sbu6lyEsrrqyZK9JYHZ5n2aHarjHetEp37VE6XsZ8CM9XzyXkdLFyJAPsQ7w7VkjIODYxeRnf78onDqCJnRYAufevfq6Qtqs/wGkmHCqFgU2u8RrMH/jThjV8QFWdtfI/8Wsk7jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q5khl0MZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LFbSOWBd"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250626023658epoutp0458ef49896cacb0a87b655a1665b9afd5~MdzOEvOqO2535225352epoutp04R
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:36:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250626023658epoutp0458ef49896cacb0a87b655a1665b9afd5~MdzOEvOqO2535225352epoutp04R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750905418;
-	bh=uDMB1Z9AjVBe8c2zXxGE4Co7kt+hAiHK3QF5M3qdFBQ=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=LFbSOWBdPiv/5Afw4wRBYQ5xMdOgj7HY4Kd2lrrBUIQLvbHXm8DgL8SUU19H7OvDv
-	 S4Z+ZWdfxahT7zGXF8uhFrdphvPuEmYY5mtkKCOuCG07z16Y4WpWAv4hv/mGY+QXFI
-	 i9YcQhaqMfrzMbDHU/uOvsAcZki2a8dwoIXL9NRY=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250626023657epcas5p4a4a1cf57a1aa0c4c264120eec35ec18a~MdzNWH9ju2563825638epcas5p4e;
-	Thu, 26 Jun 2025 02:36:57 +0000 (GMT)
-Received: from epcas5p4.samsung.com (unknown [182.195.38.183]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4bSN9z4Sl6z6B9mC; Thu, 26 Jun
-	2025 02:36:55 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250625165241epcas5p471ca039a776513c4da7ee2a0955de5c2~MV1EnqnFE0913509135epcas5p4d;
-	Wed, 25 Jun 2025 16:52:41 +0000 (GMT)
-Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250625165238epsmtip2a96f05e6c212ccb6164b2e3fc64e727e~MV1B4OmR01741117411epsmtip2L;
-	Wed, 25 Jun 2025 16:52:38 +0000 (GMT)
-From: Shradha Todi <shradha.t@samsung.com>
-To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-fsd@tesla.com
-Cc: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
-	vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de,
-	m.szyprowski@samsung.com, jh80.chung@samsung.com, pankaj.dubey@samsung.com,
-	Shradha Todi <shradha.t@samsung.com>
-Subject: [PATCH v2 00/10] Add PCIe support for Tesla FSD SoC
-Date: Wed, 25 Jun 2025 22:22:19 +0530
-Message-ID: <20250625165229.3458-1-shradha.t@samsung.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q5khl0MZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54BE1C4CEEA;
+	Thu, 26 Jun 2025 02:37:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750905424;
+	bh=3JMG6iB8TJvIJcGTwj3LS7AOTxOpDIfMUVTPuJlJB1k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q5khl0MZs0YrWvdZchwUX1U8I1eBplhj+0tYpxr8rentRjTAoVs7bPlp+FAbfTRvL
+	 JhCVPANA5DFDFgLXppQGBuXsjHW7Xz7xWcK709Ocg2i1mh1rJyUgd601mvbHuidnOs
+	 J988JDLYvhXyk48jfkHfr9MRohCkHot3o8lP0zemiipe4KzF9cFFy42mBjU+DsGfHq
+	 O69fJjbacyWap17eWJ+Grp8TQ/miRrSE6LaMds95gGAynho5fbgUfqKzSvfhd6EExi
+	 uvpSKAP/X3v6eXj9pxZTQA2xDOoqO19oLIYkdNjy7/Ij3KwUmEdHlwUSHVxEc19mOf
+	 p7iABbX9Eblrw==
+Date: Wed, 25 Jun 2025 19:36:29 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Maxime MERE <maxime.mere@foss.st.com>
+Cc: linux-fscrypt@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+	ceph-devel@vger.kernel.org
+Subject: Re: [PATCH] fscrypt: don't use hardware offload Crypto API drivers
+Message-ID: <20250626023629.GA4797@sol>
+References: <20250611205859.80819-1-ebiggers@kernel.org>
+ <8f4c2f36-71af-4c84-bcee-2554cea991d0@foss.st.com>
+ <20250613144239.GA1287@sol>
+ <c1671c5e-d824-4131-861e-470d09371e05@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250625165241epcas5p471ca039a776513c4da7ee2a0955de5c2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-541,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250625165241epcas5p471ca039a776513c4da7ee2a0955de5c2
-References: <CGME20250625165241epcas5p471ca039a776513c4da7ee2a0955de5c2@epcas5p4.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c1671c5e-d824-4131-861e-470d09371e05@foss.st.com>
 
-FSD platform has three instances of DesignWare based PCIe IP,
-one is in FSYS0 block and other two in FSYS1 block.
-This patch series add required DT binding, DT file modifications,
-Controller driver support and PHY driver support for the same.
+On Wed, Jun 25, 2025 at 06:29:17PM +0200, Maxime MERE wrote:
+> Regarding robustness and maintenance, ST ensures regular updates of its
+> drivers and can fix any reported bugs. We have conducted internal tests with
+> dm-crypt that demonstrate the proper functioning of these drivers for this
+> type of application.
 
-To keep single PCIe controller driver for all Samsung
-manufactured SoC, we have made changes to Exynos file to extend
-support for FSD platform and other Samsung manufactured SoCs which
-shall be upstreamed soon.
+In addition to the bug I mentioned earlier where the STM32 crypto driver
+produced incorrect ciphertext (https://github.com/google/fscryptctl/issues/32),
+the following fix shows that the STM32 crypto driver computed incorrect hash
+values for years (2017 through 2023):
 
-First a version was posted as a separate driver file:
-https://lore.kernel.org/lkml/20221121105210.68596-1-shradha.t@samsung.com/
-This was rejected and request was made to add the support in exynos file
-itself.
+    https://git.kernel.org/linus/e6af5c0c4d32a27e
 
-Then another patchset was posted to refactor existing exynos file:
-https://lore.kernel.org/lkml/649a8d88-0504-5aa9-d167-d25d394f3f26@linaro.org/T/
-This requested some major changes
+While these bugs may be fixed now, they show a serious lack of testing.  They
+also show that these sorts of drivers are really hard to get right.
 
-Taking both these reviews into consideration, I have posted a fresh
-patchset where both changes to exynos framework and addition of new FSD
-support is present.
+I absolutely do not want fscrypt using anything like this.  I want the crypto to
+be done correctly.
 
-v2:
- - Reordered patches for removing unused MACROs and renaming them
- - Fixed all incomplete DT bindings
- - Modified PHY driver code to adopt better design
- - Removed patch to add alignment data in PCI endpoint test driver
- - Added dts changes in the patchset itself
+(And also efficiently, which clearly these offloads don't actually do either.)
 
-v1: https://lore.kernel.org/lkml/20250518193152.63476-1-shradha.t@samsung.com/ 
+BTW, it seems all the hardware offload crypto drivers have quality issues like
+this.  I gave other examples in the thread, for example the Intel QAT driver
+causing data corruption.  So my intent isn't to single out the STM32 driver per
+se.  (And of course this patch applies to all drivers.)  I'm just responding to
+STM32 because of the people pushing it in this thread for some reason.
 
-Shradha Todi (10):
-  PCI: exynos: Remove unused MACROs in exynos PCI file
-  PCI: exynos: Change macro names to exynos specific
-  PCI: exynos: Reorder MACROs to maintain consistency
-  PCI: exynos: Add platform device private data
-  PCI: exynos: Add structure to hold resource operations
-  dt-bindings: PCI: Add bindings support for Tesla FSD SoC
-  dt-bindings: phy: Add PHY bindings support for FSD SoC
-  phy: exynos: Add PCIe PHY support for FSD SoC
-  PCI: exynos: Add support for Tesla FSD SoC
-  arm64: dts: fsd: Add PCIe support for Tesla FSD SoC
-
- .../bindings/pci/samsung,exynos-pcie.yaml     | 121 ++--
- .../bindings/pci/tesla,fsd-pcie-ep.yaml       |  91 +++
- .../bindings/phy/samsung,exynos-pcie-phy.yaml |  25 +-
- arch/arm64/boot/dts/tesla/fsd-evb.dts         |  36 ++
- arch/arm64/boot/dts/tesla/fsd-pinctrl.dtsi    |  65 ++
- arch/arm64/boot/dts/tesla/fsd.dtsi            | 147 +++++
- drivers/pci/controller/dwc/pci-exynos.c       | 568 +++++++++++++++---
- drivers/phy/samsung/phy-exynos-pcie.c         | 317 +++++++++-
- 8 files changed, 1240 insertions(+), 130 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/tesla,fsd-pcie-ep.yaml
-
--- 
-2.49.0
-
+- Eric
