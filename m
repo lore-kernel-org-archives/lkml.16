@@ -1,241 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C13239E88
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4171DE2DC;
+	Thu, 26 Jun 2025 10:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750934007; cv=none; b=pvdzhf2LVga3U4Ohi6YRxHsqKfblfptpmt48xCBxSPiLptOEnx6povmrDuH777II4UNvIOo+GphnOcMX47swlUJ1bTQkJxEIGQj761WEk1jgcvGptzSGZ2W1XYaRUkok3SpTdSSlKCX+IM9lOGOJ7qOmG6HsjY8dXh0UfKL6pD4=
+	t=1750934092; cv=none; b=AMI7MfDZI2M9FcXoyt+jsZhnP+h30ch0MO4PGQyYj5CUowIy9LEtIaezq9Krjq3bYSEkmAEKD9OCu623529kATymWpyK8tsDyvs2qSJOmrKv8/WjCUgBndsQJQ5AVMahjBVJUJQD2WNOZXoQtzl8MomAUqV1FsL4XlxluufTJFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750934007; c=relaxed/simple;
-	bh=xKtsGgpfYQFfhIZi3MjRFhPG5N7rtYzmk6pZhFtUwI4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GGKQ2x25E2oDcFFXMQDQHTmocMGyttw1Pnqnk0VAy3D3SN7uoCugdppORH1nYL56Uz4bbcZRUtAfoqvhuw550yRkvrPPuRZ4sVT9o8C+AS9XBenZaIj6Bsb+cYef8G9ycj543WLba7Xy39Nm0L2kxBqyCDHrKAJwyaZPMkiELFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J8Xl2KU+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750934092; c=relaxed/simple;
+	bh=fQ/XbLvD72nwOUfQaPR2P/p2TKLVGSXc50fMucTNdag=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L8dEJPYFNFdMZJRkzf+XlL8y/hhatQXwEZpb67nbTzmtj/rZlEDTHcKWtLUO0aeKD1LTGtx8eCSzOoe91A0PAlNdGxNcRhFbYR68fS0TBIRD326/5iqfV2d3FTAbIIAFyyrolQF3oBVTI01XiY9w+DhdP4drCfXovZxj7KJH0Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QU2g5u8F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J8Xl2KU+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750934003;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=O6gBQsT5UkWJkcWaEI3s9eNYubAhl1ADsukjZ0FPhXo=;
-	b=J8Xl2KU+30PMsUBUpe4/hpFTofKcgSETbE3/fWot2zFHZeY3aLJjS3V/3S+vXKDyoBvkCt
-	WvkmS8Lh3CRGXGyHgxZyqUxCQMInQOKX8xTw8cuu0z2NTgNyjYhV17psDn6RHkEedN1sOS
-	ckObrVaC2jMw0LKfvsFdPhRtrTRKo4U=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-78-diXXN65iOZOQHYz15U4psQ-1; Thu,
- 26 Jun 2025 06:33:20 -0400
-X-MC-Unique: diXXN65iOZOQHYz15U4psQ-1
-X-Mimecast-MFC-AGG-ID: diXXN65iOZOQHYz15U4psQ_1750933999
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 256F2195F175;
-	Thu, 26 Jun 2025 10:33:19 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.224.225])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B24FE196BAD8;
-	Thu, 26 Jun 2025 10:33:16 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: torvalds@linux-foundation.org
-Cc: kuba@kernel.org,
-	davem@davemloft.net,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Networking for v6.16-rc4
-Date: Thu, 26 Jun 2025 12:33:02 +0200
-Message-ID: <20250626103302.22358-1-pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QU2g5u8F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 509D2C4CEF2;
+	Thu, 26 Jun 2025 10:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750934092;
+	bh=fQ/XbLvD72nwOUfQaPR2P/p2TKLVGSXc50fMucTNdag=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QU2g5u8FGumzsmgsyH0udDDJkdWEH2IjLSP8ahmTd2a3QIV42+xyFu5V7dbpFmmr4
+	 wZo59XyqVrJSwihUAAs+2Hye8ZCukN7wU6cyId6zAVvqN+/yB6WsJsfoN2HpcTu278
+	 ZZUF8hk764o6aR7MGfk7p9Lhp99/uIjBW4kpCLg4lUPz2/P2cNAmhv6TbKorY12vuE
+	 HPzhkAQt6PAmj/pgvzw1A03n6WA16rm/oZfgQoBM/x+74mJ9XjyOpFoma1Prkd69Qc
+	 YEzKS8gLhm2s7MXJmYycrmpLPychzU61A5ZKsqsCJq6fNSBTvA4Dro5pkCUu0fquSj
+	 6TE6A0C5iAXyQ==
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-735b2699d5dso428149a34.0;
+        Thu, 26 Jun 2025 03:34:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUYtFQM2wGbClhaVd25zbzHsA3YZMsbwk9Q/QP44jAGbz634oz2G4lQvVRROO02tgxSdyMTBbXGT4k=@vger.kernel.org, AJvYcCWQ8DsBG4tOONuUAkMVFM4OHssccbI/GHJIv2/GY7t5iPiz8n/YMOFhEzdLlelYpf6lsqbdhaMiKdE4I7Sc@vger.kernel.org, AJvYcCWfmWbRkZGb5Mys2fxkNQWEGJdLw92dqJNxmpLwmrsDdAm4tpMtNY9Czd/R73Zlq7xMJ1qP1/P6nWlA@vger.kernel.org, AJvYcCWiweZdkXJon61N9vwUWKxWcLL81wYvbvRHW3Qs0XHD6vmBOnd9t6dwkuzgdFTDS/MsH953OQKDVxMz@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYTCArJTy19McSBTLfqPZYZj/b1FFS88JX02/CxRlniDDppB2d
+	SgcHfIl6EOd2WS+qNJxv/FOdBcufd1jXjr0P6nTOejZq4YUDxfiIjXaCqxwAeDIaL8PHZyP+GMk
+	sXId13kxYiFD/WkzTDHIlSYc9hOerWNs=
+X-Google-Smtp-Source: AGHT+IF/iWU0o68x6cZFZd7gsXItqIYob+JGTWj341oWXWNuZH1p9Bx23klyYar2h1tAxBLPKDeRh8LxAvTOgk0Jx70=
+X-Received: by 2002:a05:6830:700f:b0:739:fe86:9dfc with SMTP id
+ 46e09a7af769-73adc88c2aemr3976885a34.23.1750934091510; Thu, 26 Jun 2025
+ 03:34:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+References: <22759968.EfDdHjke4D@rjwysocki.net> <CAPDyKFpZVdf2EnZE_u1xDKB7=Nd98a_ajYimQhLBu6jYwJhJFA@mail.gmail.com>
+In-Reply-To: <CAPDyKFpZVdf2EnZE_u1xDKB7=Nd98a_ajYimQhLBu6jYwJhJFA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 26 Jun 2025 12:34:40 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0irk8n0MzRm=u8k=+Mtq84r7JsazS10DsvHO4ktgW=AMQ@mail.gmail.com>
+X-Gm-Features: Ac12FXzeLUnMKr4aqmOzzSM5O2l38MZgj4oviZI0kCWjAqe7ClG9HIZZxSLibKA
+Message-ID: <CAJZ5v0irk8n0MzRm=u8k=+Mtq84r7JsazS10DsvHO4ktgW=AMQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/9] PM: Reconcile different driver options for runtime
+ PM integration with system sleep
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus!
+On Thu, Jun 26, 2025 at 12:31=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.or=
+g> wrote:
+>
+> On Wed, 25 Jun 2025 at 21:25, Rafael J. Wysocki <rjw@rjwysocki.net> wrote=
+:
+> >
+> > Hi Everyone,
+> >
+> > This series addresses a couple of issues related to the integration of =
+runtime
+> > PM with system sleep I was talking about at the OSMP-summit 2025:
+> >
+> > https://lwn.net/Articles/1021332/
+> >
+> > Most importantly, DPM_FLAG_SMART_SUSPEND cannot be used along with
+> > pm_runtime_force_suspend/resume() due to some conflicting expectations
+> > about the handling of device runtime PM status between these functions
+> > and the PM core.
+> >
+> > Also pm_runtime_force_suspend/resume() currently cannot be used in PCI
+> > drivers and in drivers that collaborate with the general ACPI PM domain
+> > because they both don't expect their mid-layer runtime PM callbacks to
+> > be invoked during system-wide suspend and resume.
+> >
+> > Patch [1/9] is a preparatory cleanup changing the code to use 'true' an=
+d
+> > 'false' as needs_force_resume flag values for consistency.
+> >
+> > Patch [2/9] makes pm_runtime_force_suspend() check needs_force_resume a=
+long
+> > with the device's runtime PM status upfront, and bail out if it is set,
+> > which allows runtime PM status updates to be eliminated from both that =
+function
+> > and pm_runtime_force_resume().
+> >
+> > Patch [3/9] causes the smart_suspend flag to be taken into account by
+> > pm_runtime_force_resume() which allows it to resume devices with smart_=
+suspend
+> > set whose runtime PM status has been changed to RPM_ACTIVE by the PM co=
+re at
+> > the beginning of system resume.  After this patch, drivers that use
+> > pm_runtime_force_suspend/resume() can also set DPM_FLAG_SMART_SUSPEND w=
+hich
+> > may be useful, for example, if devices handled by them are involved in
+> > dependency chains with other devices setting DPM_FLAG_SMART_SUSPEND.
+> >
+> > The next two patches, [4-5/9], put pm_runtime_force_suspend/resume()
+> > and needs_force_resume under CONFIG_PM_SLEEP for consistency and also
+> > because using them outside system-wide PM transitions really doesn't ma=
+ke
+> > sense.
+> >
+> > Patch [6/9] makes the code for getting a runtime PM callback for a devi=
+ce
+> > a bit more straightforward in preparation for the subsequent changes.
+>
+> I can't find this one. Seems like you did not submit it.
+>
+> Perhaps make a resend and fixup the patch-numbering too?
 
-The following changes since commit 5c8013ae2e86ec36b07500ba4cacb14ab4d6f728:
+I'm going to send a v2, but the patch in question is here (wrong number):
 
-  Merge tag 'net-6.16-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2025-06-19 10:21:32 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.16-rc4
-
-for you to fetch changes up to 85720e04d9af0b77f8092b12a06661a8d459d4a0:
-
-  net: libwx: fix the creation of page_pool (2025-06-26 11:02:23 +0200)
-
-----------------------------------------------------------------
-Including fixes from bluetooth and wireless.
-
-Current release - regressions:
-
-  - bridge: fix use-after-free during router port configuration
-
-Current release - new code bugs:
-
-  - eth: wangxun: fix the creation of page_pool
-
-Previous releases - regressions:
-
-  - netpoll: initialize UDP checksum field before checksumming
-
-  - wifi: mac80211: finish link init before RCU publish
-
-  - bluetooth: fix use-after-free in vhci_flush()
-
-  - eth: ionic: fix DMA mapping test
-
-  - eth: bnxt: properly flush XDP redirect lists
-
-Previous releases - always broken:
-
-  - netlink: specs: enforce strict naming of properties
-
-  - unix: don't leave consecutive consumed OOB skbs.
-
-  - vsock: fix linux/vm_sockets.h userspace compilation errors
-
-  - selftests: fix TCP packet checksum
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-
-----------------------------------------------------------------
-Arnd Bergmann (2):
-      net: qed: reduce stack usage for TLV processing
-      wifi: iwlegacy: work around excessive stack usage on clang/kasan
-
-Breno Leitao (1):
-      net: netpoll: Initialize UDP checksum field before checksumming
-
-Eric Dumazet (1):
-      atm: clip: prevent NULL deref in clip_push()
-
-Faisal Bukhari (1):
-      Fix typo in marvell octeontx2 documentation
-
-Frédéric Danis (1):
-      Bluetooth: L2CAP: Fix L2CAP MTU negotiation
-
-Ido Schimmel (1):
-      bridge: mcast: Fix use-after-free during router port configuration
-
-Jakub Kicinski (13):
-      Merge tag 'wireless-2025-06-25' of https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless
-      netlink: specs: nfsd: replace underscores with dashes in names
-      netlink: specs: fou: replace underscores with dashes in names
-      netlink: specs: ethtool: replace underscores with dashes in names
-      netlink: specs: dpll: replace underscores with dashes in names
-      netlink: specs: devlink: replace underscores with dashes in names
-      netlink: specs: ovs_flow: replace underscores with dashes in names
-      netlink: specs: mptcp: replace underscores with dashes in names
-      netlink: specs: rt-link: replace underscores with dashes in names
-      netlink: specs: tc: replace underscores with dashes in names
-      netlink: specs: enforce strict naming of properties
-      Merge branch 'netlink-specs-enforce-strict-naming-of-properties'
-      net: selftests: fix TCP packet checksum
-
-Jiawen Wu (1):
-      net: libwx: fix the creation of page_pool
-
-Johannes Berg (2):
-      wifi: mac80211: finish link init before RCU publish
-      Merge tag 'iwlwifi-fixes-2025-06-25' of https://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/iwlwifi-next
-
-Kiran K (1):
-      Bluetooth: btintel_pcie: Fix potential race condition in firmware download
-
-Kuniyuki Iwashima (6):
-      Bluetooth: hci_core: Fix use-after-free in vhci_flush()
-      af_unix: Don't leave consecutive consumed OOB skbs.
-      af_unix: Add test for consecutive consumed OOB.
-      af_unix: Don't set -ECONNRESET for consumed OOB skb.
-      selftest: af_unix: Add tests for -ECONNRESET.
-      atm: Release atm_dev_mutex after removing procfs in atm_dev_deregister().
-
-Lachlan Hodges (1):
-      wifi: mac80211: fix beacon interval calculation overflow
-
-Long Li (1):
-      net: mana: Record doorbell physical address in PF mode
-
-Miri Korenblit (1):
-      wifi: iwlwifi: mvm: assume '1' as the default mac_config_cmd version
-
-Paolo Abeni (2):
-      Merge branch 'af_unix-fix-two-oob-issues'
-      Merge tag 'for-net-2025-06-23' of git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth
-
-Shannon Nelson (1):
-      CREDITS: Add entry for Shannon Nelson
-
-Shuai Zhang (1):
-      driver: bluetooth: hci_qca:fix unable to load the BT driver
-
-Simon Horman (1):
-      net: enetc: Correct endianness handling in _enetc_rd_reg64
-
-Stefano Garzarella (1):
-      vsock/uapi: fix linux/vm_sockets.h userspace compilation errors
-
-Thomas Fourier (2):
-      ethernet: ionic: Fix DMA mapping tests
-      atm: idt77252: Add missing `dma_map_error()`
-
-Xiaowei Li (1):
-      net: usb: qmi_wwan: add SIMCom 8230C composition
-
-Yan Zhai (1):
-      bnxt: properly flush XDP redirect lists
-
- CREDITS                                            |   5 +
- Documentation/netlink/genetlink-legacy.yaml        |  15 ++-
- Documentation/netlink/genetlink.yaml               |  17 ++-
- Documentation/netlink/netlink-raw.yaml             |  18 ++-
- Documentation/netlink/specs/devlink.yaml           |   8 +-
- Documentation/netlink/specs/dpll.yaml              |   2 +-
- Documentation/netlink/specs/ethtool.yaml           |   6 +-
- Documentation/netlink/specs/fou.yaml               |  36 +++---
- Documentation/netlink/specs/mptcp_pm.yaml          |   8 +-
- Documentation/netlink/specs/nfsd.yaml              |   4 +-
- Documentation/netlink/specs/ovs_flow.yaml          |   6 +-
- Documentation/netlink/specs/rt-link.yaml           |   4 +-
- Documentation/netlink/specs/tc.yaml                |   4 +-
- .../device_drivers/ethernet/marvell/octeontx2.rst  |   2 +-
- drivers/atm/idt77252.c                             |   5 +
- drivers/bluetooth/btintel_pcie.c                   |  33 ++++-
- drivers/bluetooth/hci_qca.c                        |  13 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt.c          |   5 +-
- drivers/net/ethernet/freescale/enetc/enetc_hw.h    |   2 +-
- drivers/net/ethernet/microsoft/mana/gdma_main.c    |   3 +
- drivers/net/ethernet/pensando/ionic/ionic_txrx.c   |  12 +-
- drivers/net/ethernet/qlogic/qed/qed_mng_tlv.c      |   8 +-
- drivers/net/ethernet/wangxun/libwx/wx_lib.c        |   2 +-
- drivers/net/usb/qmi_wwan.c                         |   1 +
- drivers/net/wireless/intel/iwlegacy/4965-rs.c      |   3 +-
- drivers/net/wireless/intel/iwlwifi/mvm/mld-mac.c   |   4 +-
- include/net/bluetooth/hci_core.h                   |   2 +
- include/uapi/linux/mptcp_pm.h                      |   6 +-
- include/uapi/linux/vm_sockets.h                    |   4 +
- net/atm/clip.c                                     |  11 +-
- net/atm/resources.c                                |   3 +-
- net/bluetooth/hci_core.c                           |  34 ++++-
- net/bluetooth/l2cap_core.c                         |   9 +-
- net/bridge/br_multicast.c                          |   9 ++
- net/core/netpoll.c                                 |   2 +-
- net/core/selftests.c                               |   5 +-
- net/mac80211/link.c                                |   6 +-
- net/mac80211/util.c                                |   2 +-
- net/unix/af_unix.c                                 |  31 +++--
- .../selftests/drivers/net/hw/rss_input_xfrm.py     |   2 +-
- tools/testing/selftests/net/af_unix/msg_oob.c      | 142 ++++++++++++++++++++-
- 41 files changed, 378 insertions(+), 116 deletions(-)
-
+https://lore.kernel.org/linux-acpi/3306233.5fSG56mABF@rjwysocki.net/
