@@ -1,84 +1,179 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C158156678
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 19:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D222CCA9;
+	Thu, 26 Jun 2025 19:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750965371; cv=none; b=orHu+V9HmG42b9E9Tk2prd+5t7nmMM9/g3uAvv3bux3PHM7MjYD1N7TCAmI2PwWskpYyuQqpCq1TKCXirccl5iYAFLXrUoCiWLckA5fTEbxcAnX+k6Afx3CUtcsxH5m5KybvEnw6fXSRaBRPpRpIG7/DwXgoFRoH0iwmFUU0LQY=
+	t=1750965391; cv=none; b=mVc820pMBnQgUlLPBJFiJyXmF5oSIGf19Sv9lkNYeEiP6+POTh89tkMH2C1zmbjFgXEWQhUlNyAn2E/PxyHvjpBL74CZilnAWDl83LraxDpkKFEHG53ewnov6VqLrH/QSDiEDQdUUaZkj8MxnvRWyWz6UcyK6RTIgoFAyqQ66yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750965371; c=relaxed/simple;
-	bh=IQ5Y9xKlQMDuOZ0bFX8LdFrsrUKqhytF9hxz6hFtHL8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lWoLtP8M8uUIB8m5aiMqrDQyCQUKMOXJciqsFZvXNLXGUYf+6OTjV14SvV+fj5Xo9uGm0PLxKUOdS0zYp+cYWr0pLV170gfr7yJXp0p83H9mzrQkUyC7n76UssMINW6kHlh/Whwgb8RJSmxEeiwaLT16axOUQAJCjn38snShPxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Yv222yez; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750965391; c=relaxed/simple;
+	bh=h3+wCYKb+e64nlS7ZiGvNL4qU/lPfezz6///qDSCFIs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J+tWyZEIybMYtjz+QRaBXI3AeOkhhCpNKYeM9Y//Vhnfbui255jxZcPcWa2w4aISmtKDxfpmIJuCnDparbEcrwcIj8A/JO78t2dbt0pcwgH344YqVZFw/aCFR9ZodsMIoAyfP7e6JO7UG71s6HVFGJMBpCNp7oDmByiCilEwiIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SbVi+jKC; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Yv222yez"
-Date: Thu, 26 Jun 2025 12:15:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750965358;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WsoK1nloP/OzwN9AIRjEVF3ypV5O0KTTf4bgrugiJbk=;
-	b=Yv222yezeQR7onrl97UjEf2o2CR998cMQF6TtPrpL926xSEOQQjgWNUhgL+Xp8tm6TrSyq
-	JS201xpksbv6rcxoedGPr6jmF5qTKSFGcnXnFJMzlTRYE8biUNLUiiD4hS2b6Ta+opO8P/
-	GSEeloZ6cdHLiwwiBJJHSVyk9OydUeo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>
-Cc: tj@kernel.org, hannes@cmpxchg.org, mkoutny@suse.com, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, inwardvessel@gmail.com
-Subject: Re: [PATCH v2] cgroup/rstat: change cgroup_base_stat to atomic
-Message-ID: <ykbwsq7xckhjaeoe6ba7tqm55vxrth74tmep4ey7feui3lblcf@vt43elwkqqf7>
-References: <20250624144558.2291253-1-bertrand.wlodarczyk@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SbVi+jKC"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-235a3dd4f0dso10795735ad.0;
+        Thu, 26 Jun 2025 12:16:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750965389; x=1751570189; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kEGLkVDliz6D9cLYESQeH89M3mbRzJDwNUogp0ZBAxw=;
+        b=SbVi+jKCW+QnSy2zK/mE1FD7qdiIbvphuJbq2azklufESSW764cyMSb+vj5Wck56ja
+         S6oezmhWV5tq/nAytzouaRV49lwsVVT2qtB6qAM/p8vVhfDBSLoRcSXI/HBo5p2cXiUg
+         ggG8Fbe5tAMCBZcVLoKTT46NSnqK92VCw9g6aLOIC8DB+G1pYJkSbcwa3QBeOYENPvsl
+         AjzHU2v5H5U0WUTzWTUgiKVbsS+PL1T7XlfWjJdyhKEPutGCCQfiiyIBxPJE2NjqmA+P
+         pyurnyr3yIj1CE3+O06uZQgbWdRT/Za4TjiH0aH4up4FsS/sKLZZhiE57PzZpFqJM1wi
+         ZpEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750965389; x=1751570189;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kEGLkVDliz6D9cLYESQeH89M3mbRzJDwNUogp0ZBAxw=;
+        b=FPzdbCiBd+35vRnft8XyovoZv8VsWTxEHUUfRxk7EEQ+WOCVGtNu4Z+BBB3k8WYp5c
+         JYk5UZu2sgrcMKhCQ6oqRKgyG13ivDimwYeoHEk2p5zPPEabMSSInhham5p5TlPfZ9N4
+         VyFTzn5vEg9TMLbzbvEmw9tiv3iKWasTV6Is4VO+qxtVbeF9MrFIq3QV7AXlin0xlZaM
+         V/8+puS7kBLD95LDFLx+wxuMra6AUGZP9aWPTebRLovshj3G+cIUeRy9bDEObjR8kgMQ
+         HcDpWa5aujdRFuOnGZwQl8eeST4ydA6U23jKv2Wk+ay5wbWMndQX61gTl4mfRij74+An
+         xUAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcEmFZTmH66NodX7yB/gKll8gAw8UnrohE3XaGmalyOapPulOxY2P6ZHLn6eepg9pyIWrxM6GTGQ8364s=@vger.kernel.org, AJvYcCW9u3yrgoJBT20F4MOoicyMxgfMsuyuGbdg5ts7tLww9klclqf1nZSKRYu1oqftDfwK0AVtFXTGOQ9NNcqfPJHw@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOq7ZNSmvAVtBM6FucO6R+Si2w7MIp/otUr8rUGLNfOQnnnBwz
+	KN/Ac61ovVHPUhoXmNie4m3kqwmGs6wgtsLuudCMl0DQzbhZvhX1sZPz
+X-Gm-Gg: ASbGncszNMNBGEaK+G0C34ZHXww1n8nZl13kOl3oHc3kY2nvTW6BDt+B4uROF9tgMeE
+	jMAht6sDYnJmH5p5v/LH3qXWiExqC4EMWPSOIYvi23TwRWrw7bU81QU+C4JUPF6NF+5rjbM1Mpq
+	aOxKMrZ4fMuENKtKxbx1q1ioQaYnzNjdVl86F+xYeZuC4zs0wcWneAirqoT9eFAnQeTSZxBwSE5
+	IwXqbLdHP/2HK1FnpD2vKHdCGTQp6L/mrq9bJXZXvwQasjLCmeX9qrFfgOtBb4rxdcv3rGvVoOR
+	XW+qSP11ptsY+ZmKQ318Rl2irmY7xZIYF+SZf+SJxh57WBoN1uz7GlkRP8K0Iio9
+X-Google-Smtp-Source: AGHT+IGZJiK7V87UN2yeGD2QBj1W9kV1b1WZgMlsenEy/ueEwohDtG/9+5bGugIvGv5i43iGmzj+jA==
+X-Received: by 2002:a17:902:ce8e:b0:223:4d7e:e52c with SMTP id d9443c01a7336-23ac3cf546dmr7602755ad.5.1750965389212;
+        Thu, 26 Jun 2025 12:16:29 -0700 (PDT)
+Received: from p920.. ([2001:569:799a:1600:203c:1dca:e60c:1243])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23abe4245d2sm4038765ad.199.2025.06.26.12.16.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 12:16:28 -0700 (PDT)
+From: Moon Hee Lee <moonhee.lee.ca@gmail.com>
+To: shuah@kernel.org
+Cc: yifei.l.liu@oracle.com,
+	zhujun2@cmss.chinamobile.com,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Moon Hee Lee <moonhee.lee.ca@gmail.com>
+Subject: [PATCH] selftests: breakpoints: use suspend_stats to reliably check suspend success
+Date: Thu, 26 Jun 2025 12:16:26 -0700
+Message-ID: <20250626191626.36794-1-moonhee.lee.ca@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624144558.2291253-1-bertrand.wlodarczyk@intel.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 24, 2025 at 04:45:58PM +0200, Bertrand Wlodarczyk wrote:
-> The kernel faces scalability issues when multiple userspace
-> programs attempt to read cgroup statistics concurrently.
-> 
-> The primary bottleneck is the css_cgroup_lock in cgroup_rstat_flush,
-> which prevents access and updates to the statistics
-> of the css from multiple CPUs in parallel.
-> 
-> Given that rstat operates on a per-CPU basis and only aggregates
-> statistics in the parent cgroup, there is no compelling reason
-> why these statistics cannot be atomic.
-> By eliminating the lock during CPU statistics access,
-> each CPU can traverse its rstat hierarchy independently, without blocking.
-> Synchronization is achieved during parent propagation through
-> atomic operations.
-> 
-> This change significantly enhances performance on commit
-> 8dcb0ed834a3ec03 ("memcg: cgroup: call css_rstat_updated irrespective of in_nmi()")
-> in scenarios where multiple CPUs accessCPU rstat within a
-> single cgroup hierarchy, yielding a performance improvement of around 40 times.
-> Notably, performance for memory and I/O rstats remains unchanged,
-> as the lock remains in place for these usages.
-> 
-> Additionally, this patch addresses a race condition detectable
-> in the current mainline by KCSAN in __cgroup_account_cputime,
-> which occurs when attempting to read a single hierarchy
-> from multiple CPUs.
-> 
-> Signed-off-by: Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>
+The step_after_suspend_test verifies that the system successfully
+suspended and resumed by setting a timerfd and checking whether the
+timer fully expired. However, this method is unreliable due to timing
+races.
 
-This patch breaks memory controller as explained in the comments on the
-previous version. Also the response to the tearing issue explained by JP
-is not satisfying. 
+In practice, the system may take time to enter suspend, during which the
+timer may expire just before or during the transition. As a result,
+the remaining time after resume may show non-zero nanoseconds, even if
+suspend/resume completed successfully. This leads to false test failures.
 
+Replace the timer-based check with a read from
+/sys/power/suspend_stats/success. This counter is incremented only
+after a full suspend/resume cycle, providing a reliable and race-free
+indicator.
 
-Please run scripts/faddr2line on css_rstat_flush+0x1b0/0xed0 and
-css_rstat_updated+0x8f/0x1a0 to see which field is causing the race.
+Also remove the unused file descriptor for /sys/power/state, which
+remained after switching to a system() call to trigger suspend [1].
+
+[1] https://lore.kernel.org/all/20240930224025.2858767-1-yifei.l.liu@oracle.com/
+
+Fixes: c66be905cda2 ("selftests: breakpoints: use remaining time to check if suspend succeed")
+Signed-off-by: Moon Hee Lee <moonhee.lee.ca@gmail.com>
+---
+ .../breakpoints/step_after_suspend_test.c     | 41 ++++++++++++++-----
+ 1 file changed, 31 insertions(+), 10 deletions(-)
+
+diff --git a/tools/testing/selftests/breakpoints/step_after_suspend_test.c b/tools/testing/selftests/breakpoints/step_after_suspend_test.c
+index 8d275f03e977..8d233ac95696 100644
+--- a/tools/testing/selftests/breakpoints/step_after_suspend_test.c
++++ b/tools/testing/selftests/breakpoints/step_after_suspend_test.c
+@@ -127,22 +127,42 @@ int run_test(int cpu)
+ 	return KSFT_PASS;
+ }
+ 
++/*
++ * Reads the suspend success count from sysfs.
++ * Returns the count on success or exits on failure.
++ */
++static int get_suspend_success_count_or_fail(void)
++{
++	FILE *fp;
++	int val;
++
++	fp = fopen("/sys/power/suspend_stats/success", "r");
++	if (!fp)
++		ksft_exit_fail_msg(
++			"Failed to open suspend_stats/success: %s\n",
++			strerror(errno));
++
++	if (fscanf(fp, "%d", &val) != 1) {
++		fclose(fp);
++		ksft_exit_fail_msg(
++			"Failed to read suspend success count\n");
++	}
++
++	fclose(fp);
++	return val;
++}
++
+ void suspend(void)
+ {
+-	int power_state_fd;
+ 	int timerfd;
+ 	int err;
++	int count_before;
++	int count_after;
+ 	struct itimerspec spec = {};
+ 
+ 	if (getuid() != 0)
+ 		ksft_exit_skip("Please run the test as root - Exiting.\n");
+ 
+-	power_state_fd = open("/sys/power/state", O_RDWR);
+-	if (power_state_fd < 0)
+-		ksft_exit_fail_msg(
+-			"open(\"/sys/power/state\") failed %s)\n",
+-			strerror(errno));
+-
+ 	timerfd = timerfd_create(CLOCK_BOOTTIME_ALARM, 0);
+ 	if (timerfd < 0)
+ 		ksft_exit_fail_msg("timerfd_create() failed\n");
+@@ -152,14 +172,15 @@ void suspend(void)
+ 	if (err < 0)
+ 		ksft_exit_fail_msg("timerfd_settime() failed\n");
+ 
++	count_before = get_suspend_success_count_or_fail();
++
+ 	system("(echo mem > /sys/power/state) 2> /dev/null");
+ 
+-	timerfd_gettime(timerfd, &spec);
+-	if (spec.it_value.tv_sec != 0 || spec.it_value.tv_nsec != 0)
++	count_after = get_suspend_success_count_or_fail();
++	if (count_after <= count_before)
+ 		ksft_exit_fail_msg("Failed to enter Suspend state\n");
+ 
+ 	close(timerfd);
+-	close(power_state_fd);
+ }
+ 
+ int main(int argc, char **argv)
+-- 
+2.43.0
+
