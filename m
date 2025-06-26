@@ -1,177 +1,149 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135AA1DF980
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1703E28507F;
+	Thu, 26 Jun 2025 14:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750947384; cv=none; b=uFs0AKgoMtIN9s7A8u0s1dXg7ZizPnF4WeY+51ZercdFEdQlYDB0ER0u2Ex+70hXE9XfzztM5tSIkpqF7c+s3ETEq3f99+HQblhoM/rML8svGX8elO0elO6PxQHCB3jLakI29gE9lIgXXMdK12wJ0PGHzHbSRZuyAGXg/jN4VMI=
+	t=1750947399; cv=none; b=ZJGzcgCDPOIHk1GDgMK11pmxWlj9J1L4S+kwgeqC/daganb59gKOZIFJABEb4k1uoj1L+tWlZGvbsFrbLIPY2ZlI8q4g/epB8jZE4gFcAed1rYyOUglSr+zV1deYIekLDXIXoQG9f+fzXYalnACXjEceLTpkq1s5/AgSamD1l7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750947384; c=relaxed/simple;
-	bh=O43jBg5PlGRgnYkcgpSnjSs8TPfPXwZr62jh2UkRjEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eWXcX9Hg/vZ9nk8q3NAtKzapkLN3mC6WLR9iomTCN26OtEV2tr/OkWOSxVN9UEXb1DFMoM7UtXK0DaWUI/hqvqyisLhuCOrPGCWmAku7qLvJK5jJYUCT+LWhOnNkSsDwCdol9PjByrgJYHOYB9R1Tfq/DdV3Gr3gT1M/cYJz3Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PORqX+LL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=XNxV2O9a; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PORqX+LL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=XNxV2O9a; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1750947399; c=relaxed/simple;
+	bh=GwBi4n0JlW43cz36R/qfINrSWt1USAJ/uXPLyybQO+s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nSCPbKzLCXOZam7UZf/Wzv5pReK31/jVDnFQR8jycsP5A3AW3V16HFAO48AHLrL17ub7zOagCJZlxFdBI0dRj403V+53TooDSTPAhDr8Hgoi9gm4Buh47JL0Qx/J/9kT6WvvzxieIY/T86t8Z6Hc18GU7GBlwOUV3RmA5mdLfTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QuLC9237; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PORqX+LL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="XNxV2O9a";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PORqX+LL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="XNxV2O9a"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 09FD7210ED;
-	Thu, 26 Jun 2025 14:16:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750947381;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4M2Ga9haPuULBwaCbUgMwDmG09jGfbVce6iaCePM0qA=;
-	b=PORqX+LLi/Bk87YTOc9N0tTmUSZD1oY6DZr5mdDZzcVDSe5T6GuY9FARTeUimCwj9fA9I5
-	FT+tR2EmyIhvY4hQ297Iqu0xZ4kufANbJL1OgSxtUqGdX4nLt3ryO5lUFD//b1KPK20FiR
-	8xCCnPVbA3XxI0KdYsDGiYEkslaAinw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750947381;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4M2Ga9haPuULBwaCbUgMwDmG09jGfbVce6iaCePM0qA=;
-	b=XNxV2O9ahOY6MDB6oIN+tTY/zyV9m+Td7YQWP24WTqwyZlay3hMLinsrQF0ev5h8pWAvCb
-	qALtCttcXNOyIoAA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=PORqX+LL;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=XNxV2O9a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750947381;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4M2Ga9haPuULBwaCbUgMwDmG09jGfbVce6iaCePM0qA=;
-	b=PORqX+LLi/Bk87YTOc9N0tTmUSZD1oY6DZr5mdDZzcVDSe5T6GuY9FARTeUimCwj9fA9I5
-	FT+tR2EmyIhvY4hQ297Iqu0xZ4kufANbJL1OgSxtUqGdX4nLt3ryO5lUFD//b1KPK20FiR
-	8xCCnPVbA3XxI0KdYsDGiYEkslaAinw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750947381;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4M2Ga9haPuULBwaCbUgMwDmG09jGfbVce6iaCePM0qA=;
-	b=XNxV2O9ahOY6MDB6oIN+tTY/zyV9m+Td7YQWP24WTqwyZlay3hMLinsrQF0ev5h8pWAvCb
-	qALtCttcXNOyIoAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D5B8E138A7;
-	Thu, 26 Jun 2025 14:16:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 83u4MzRWXWjMKQAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Thu, 26 Jun 2025 14:16:20 +0000
-Date: Thu, 26 Jun 2025 16:16:15 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Cc: cen zhang <zzzccc427@gmail.com>, clm@fb.com, josef@toxicpanda.com,
-	dsterba@suse.com, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, baijiaju1990@gmail.com,
-	zhenghaoran154@gmail.com
-Subject: Re: [BUG] btrfs: Assertion failed in btrfs_exclop_balance on balance
- ioctl
-Message-ID: <20250626141615.GC31241@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <CAFRLqsVDimnqBx0_pDF-bqEQ3epha2d3r6cKm-0b6UdzkkE42Q@mail.gmail.com>
- <bbe21da7-eed3-4fb9-afd9-6f1c70c0eaed@gmx.com>
- <20250626141151.GB31241@suse.cz>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QuLC9237"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q9Uusn031185;
+	Thu, 26 Jun 2025 14:16:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	bfGS8hpzciiHwx/PSRhY0YfVUjjIVFBig3eSfl/wbao=; b=QuLC9237ZNIuiNAX
+	wMSvWImxFQ0JUZVCeXLRx0c4W03pyyo0vgDf3bzmOOpOQ0TAciuIox8Wp75g56bU
+	o/9XHkjlhtVvpCy8qWPQMkBrbiRfqDUZ9Zf61F505cbI3KtHiOfM9Jd9fgOF4Mmt
+	5uWy67nENIuoYddIXYrW7qX62oX9YQGproIt1vbA4awYCoaYjMujALf7GOLFw6/N
+	j935sP7bj9yLkQ95tIrxgDNqDVrL8lODo6Xvv0U0j+r7zWxVGoGSxl1I/594MHCi
+	ra+t3asi1Noe7YMG4ppWvKQlhtUe8tLXyQdsT1bDVdi8H/MuZbAA0AR13eQlyzeX
+	nfNfFw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f4b43fw5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 14:16:32 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55QEGUh9013653
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 14:16:30 GMT
+Received: from [10.216.48.74] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 26 Jun
+ 2025 07:16:25 -0700
+Message-ID: <379e9199-4a9e-cd38-20cb-0fbd76fa33b3@quicinc.com>
+Date: Thu, 26 Jun 2025 19:46:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250626141151.GB31241@suse.cz>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 09FD7210ED
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[gmx.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.com];
-	FREEMAIL_CC(0.00)[gmail.com,fb.com,toxicpanda.com,suse.com,vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:dkim,suse.cz:replyto]
-X-Spam-Score: -4.21
-X-Spam-Level: 
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH V3 1/4] dt-bindings: mmc: Add dll-hsr-list for HS400 and
+ HS200 modes
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Sachin Gupta
+	<quic_sachgupt@quicinc.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>, "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bhupesh Sharma <bhupesh.sharma@linaro.org>
+CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
+        <quic_bhaskarv@quicinc.com>, <quic_mapa@quicinc.com>,
+        <quic_narepall@quicinc.com>, <quic_nitirawa@quicinc.com>,
+        <quic_sartgarg@quicinc.com>
+References: <20250122094707.24859-1-quic_sachgupt@quicinc.com>
+ <20250122094707.24859-2-quic_sachgupt@quicinc.com>
+ <72b02fd1-5195-4bb0-b01d-5481b49a5680@kernel.org>
+From: Ram Prakash Gupta <quic_rampraka@quicinc.com>
+In-Reply-To: <72b02fd1-5195-4bb0-b01d-5481b49a5680@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDEyMSBTYWx0ZWRfX04S0ZwAErbug
+ 1LGiGvFp9cGI3qEB/0h/aeSfPASH/N96d7fBx3R8VLeKUD6bN57hc8eG/KbFUPqqSfIMPUWxR/d
+ aKcyVVoWdezq8qJZysfLjeyxx+b+rz/eYJM+r6JxwU0857FZaGWepNZ7NIcaZpCNdhorJ/Ut3Le
+ 8FlHTHOCx4slo6H36XhqtSLaYHhAqwBA21byzJn5uV//cPcTbBWLx1CeurBeUfH1JPnuMInLFIJ
+ AOUJ2lBTk816j8hWXtZqrmcJghNEGuQqLK4MRvUPFfVg+D032gO64WGUsYrnm5kO8QMI7D2QN4j
+ BBnsjYgfN3696cRavzXbcpU2B45Ib4C/wcjmKvxlptbyQ9lJ4epnhu+Hne5cqOQaJ9pqrhuLROO
+ CtPD7ZEqgdz4slt698FaXRkhA28iN+5V3zHDz+v0CU7zQ55JfYSzz9AVltkXtRtoTCtW8CEj
+X-Proofpoint-ORIG-GUID: QOgtJn9LSxAAE1l36YIN931YlvunmJAy
+X-Proofpoint-GUID: QOgtJn9LSxAAE1l36YIN931YlvunmJAy
+X-Authority-Analysis: v=2.4 cv=A8BsP7WG c=1 sm=1 tr=0 ts=685d5640 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=ikfpGsmVBwgCooMSvQQA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_06,2025-06-26_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0
+ phishscore=0 adultscore=0 impostorscore=0 suspectscore=0 mlxscore=0
+ clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506260121
 
-On Thu, Jun 26, 2025 at 04:11:51PM +0200, David Sterba wrote:
-> On Thu, Jun 26, 2025 at 06:50:17PM +0930, Qu Wenruo wrote:
-> > 
-> > 
-> > 在 2025/6/26 17:37, cen zhang 写道:
-> > > Hello Btrfs maintainers,
-> > > 
-> > > I would like to report a kernel BUG, which appears to be a state
-> > > management issue in the balance ioctl path.
-> > > 
-> > > The kernel panics due to a failed assertion in btrfs_exclop_balance()
-> > > at fs/btrfs/fs.c:127. The assertion fs_info->exclusive_operation ==
-> > > BTRFS_EXCLOP_BALANCE_PAUSED fails, indicating that the function was
-> > > called with an unexpected exclusive operation state.
-> > > 
-> > > Here are the relevant details:
-> > > 
-> > > Kernel Version: 6.16.0-rc1-g7f6432600434-dirty
-> > > Hardware: QEMU Ubuntu 24.04 PC (i440FX + PIIX, 1996)
-> > 
-> > Reproducer please?
-> > 
-> > I guess you guys are running syzbot, then please provide the usual 
-> > syzbot assets.
-> 
-> This might be the but that was once reported, I'll try to look it up,
-> some edge case of the exclusive ops and the convoluted balance states.
+On 1/22/2025 3:56 PM, Krzysztof Kozlowski wrote:
+> On 22/01/2025 10:47, Sachin Gupta wrote:
+>> Document the 'dll-hsr-list' property for MMC device tree bindings.
+>> The 'dll-hsr-list' property defines the DLL configurations for HS400
+>> and HS200 modes.
+>>
+>> Signed-off-by: Sachin Gupta <quic_sachgupt@quicinc.com>
+>> ---
+>>  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+>> index 8b393e26e025..65dc3053df75 100644
+>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+>> @@ -133,6 +133,11 @@ properties:
+>>      $ref: /schemas/types.yaml#/definitions/uint32
+>>      description: platform specific settings for DLL_CONFIG reg.
+>>  
+>> +  qcom,dll-hsr-list:
+>> +    maxItems: 10
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+> uint32 has only one item. Anyway, there is already DLL there, so don't
+> duplicate or explain why this is different. Explain also why this is not
+> deducible from the compatible.
 
-There were several reports and proposed fixes, some of them got merged
-https://lore.kernel.org/linux-btrfs/?q=xiaoshoukui
+I will change it to reflect array from uint32.
+There is change with artanis DLL hw addition where it need total of 5 entries
+(dll_config, dll_config_2, dll_config_3, dll_usr_ctl, ddr_config)
+for each HS400 and HS200 modes, hence the new addition in dt. And these values
+are not fixed and varies for every SoC, hence this needs to be passed through
+dt like it was passed earlier for qcom,dll-config & qcom,ddr-config.
 
-The possible and not merged fix is
-https://lore.kernel.org/linux-btrfs/20230810034810.23934-1-xiaoshoukui@gmail.com/
+And backward compatibility would be taken care by check for qcom,dll-hsr-list,
+where new settings would apply for soc where qcom,dll-hsr-list is added into
+dt.
 
-it's adding more balance state bits, this just adds to the number of
-possible states and maybe adds more unhandled cases.
+>
+> Please provide here link to DTS user so we can validate how you use it.
+>
+>
+> Best regards,
+> Krzysztof
