@@ -1,104 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B36C202F87
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54CE224F6;
+	Thu, 26 Jun 2025 02:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750905544; cv=none; b=fMvoJLuizs1jQdRVh/AUYj6H9iWDZ4O4U6q1EuoVISDf+6QBFoYvsBe6CUOX+QhKn94dxf5ZxKzYnA4jykDycxEwfC3jBMBQsFaDTBZvKFTmtEEaqLauAsz+4wWHE8ap9DQxm2s3kWaPx0RRR2SWow5/XmJA7EG5sPxWm7sSxIk=
+	t=1750905746; cv=none; b=T4OUixTJqmQur2yeT9EJL4pDzEz44aBp/Qr2mXYQZztYuRqNOveArjU74Uqih0evGnCJ9jI1egC02wzsrg9PVHaFmKfldtbdu6vrJ0OgxGBHoNBtxLnZhRrrZ2sKR2UIacMejVVNg1QP1J1HK2xe0/ZMnuSwryp4Oi9h8XeoyVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750905544; c=relaxed/simple;
-	bh=PtV+hGmWzCGGAq8XJTGqpjrx3hzHcShvqveug29QiX8=;
+	s=arc-20240116; t=1750905746; c=relaxed/simple;
+	bh=od6P6pmOSXxNT727X5ed5nqh/+UXRwgTwbz0gpLU9MQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RkTUCbhiuUYkCZnpxIPFHjj1/82X70/6G0FqqZ8eFihzIqSTOcGtMS8eIXCqf+D6zTU2ODULoBTO3mJuCKNrbrfc9ENC8GZOtqUeCewdbWrrvU6Jb8iL1mxAgP4MDoVSy4CtMZkhS05GNqiwWCzRQh6UGT+muk9mouxLw00Jj50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GpGg4q8K; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=YY5DwyacTgnCI8HtFEVMRzC0DzNg8DhvcD+9Qm5wl9rEjPdOJwwuYWRhAVbN3wQ8+imn7T6CNqyiCIg99JWV784j0s0I7vLfBKC4B4HWHKTvOFX19qznFiI7/9R2y/l932Av1NKEApbyDX9HbAAx5aMgl1Uq6zAR0xb5mYVK6Rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bPQfaBWE; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GpGg4q8K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750905542;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PtV+hGmWzCGGAq8XJTGqpjrx3hzHcShvqveug29QiX8=;
-	b=GpGg4q8Kh3LzKa6ebCOrgqW09cOh2AscACGseimvPM96zHYB1N4qfCkNF2y9M7IKyx4HB5
-	kHa5THA3lZvi3x10bMhFH6HNow44wccE9RivR80ptOT1FsuT6wCg23mrkmap0UAj64xYsB
-	mN2oaLnsN5E8MsHWE2n1ech8npHOalw=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-70-SUTl34slMtmySRrE4lY9Rg-1; Wed, 25 Jun 2025 22:39:00 -0400
-X-MC-Unique: SUTl34slMtmySRrE4lY9Rg-1
-X-Mimecast-MFC-AGG-ID: SUTl34slMtmySRrE4lY9Rg_1750905539
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-235196dfc50so5001105ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 19:39:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bPQfaBWE"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7d412988b14so53158385a.3;
+        Wed, 25 Jun 2025 19:42:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750905744; x=1751510544; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=od6P6pmOSXxNT727X5ed5nqh/+UXRwgTwbz0gpLU9MQ=;
+        b=bPQfaBWEmiYT075vpsvayhgbkldu7kh5H84jRZtMAEc2TOgzESLihptGUyA7vAukd4
+         ZAg1Lu/dS4nxDs/8HRHXWyBIgqWL3k/9i3wcZgTKWd/UICKuW1hMfoRAES7hQedXi8Z2
+         L51ojSsdvEyE+eTryIW5HOgOyt8uywUPz8B5jaXz7imb7MvjDYZWmmuqe5MPMsr1HSoC
+         pSJKKllCmXmYwk86uMqCEW5qft+RVaCd5VUEazBxvq438U488RAk3lZV+9fpN1URg/Yi
+         7My/a5Jv0ts9Jrsn1z582PsCWGeCwjllsZWgo+SqmkpPlhJLKn8a0CpVM+pdUdfRqxsc
+         Bkcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750905539; x=1751510339;
+        d=1e100.net; s=20230601; t=1750905744; x=1751510544;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PtV+hGmWzCGGAq8XJTGqpjrx3hzHcShvqveug29QiX8=;
-        b=HLXk9cNKKpx+rauAi954imh9s9oymrR7eSQP/aWplILgeLPatz3yDBGZIvoK9mfe2j
-         Y2q8eh7yWh/qCBGddHeWvcawc8Gk/JBqw86MH6n/O7nSuQVe0L+QqKtFCagdM+mK+ICA
-         aSs4JiWx0HNgQYzoqZZijOrEdxv7JRv91GpNB6mvS5BGXhHgFT5ObotuxvvuBADYT06S
-         r7862LNCC8WwR0Q0oJvFHgiekag0HuUX2MqByn0kAss7ukBQIcQOT58z4b4OpWOKt5i7
-         N1AI86ArqnfZ8ZWo/8orVKtEqxO8kJPs0kOHW6+qwPyiSvcyfNt83Q4BFwwe8PHFab2G
-         jLGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUs4TrcuEeJ4gIuNYbaVbtLbrF4BrtwXapBDMCY21jkGw2Pu0decocQzMa4EAUj9KJvDRn2lRHjD2gWNng=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+iLYgEZ2UmaBGC8MpYu4qYpNs0CVUNjBlqNVgYTEdtU7myrTu
-	SZSSIc+/8W3yeBGZroyVAREZKTXhIMzti18exyIIXiWUw3uQPC/vC1Ko2Cj7lo8+/NwUeEvmgNU
-	5dxEJdN3o5JNO0gQuHdI5c//GM8KRyt9UVPyYhRnmJlojApnqmiDyU9+s/MJD1TZH/3dhYU0KX+
-	Ix1oq09PqboSLRqj4WkzFyU8ecD/hPizkceLcetzd+
-X-Gm-Gg: ASbGnctoQsFoJrzrT8fx/yo6EwcE2+qexV9/wjTtJaZJPG1eJCp1G4A8TThAGnKJ01Q
-	N0TWlwfkIxi0NSqaRwuaRhy75j22MOqswxjhtQLD3XpOwGX6mrvnGTOfHtGccAgLDyCtQUqX88g
-	viEZHW
-X-Received: by 2002:a17:903:3c6b:b0:237:f757:9ad8 with SMTP id d9443c01a7336-238e9e06b68mr26264465ad.1.1750905539244;
-        Wed, 25 Jun 2025 19:38:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEeb7cSsXZgQCsbZuX3BxI9ea2eoF1dmzDHFHzV2vn7oWQ24AkuEOzAXNT7eLnpup8aMyphvstnn6ceEBYA5HM=
-X-Received: by 2002:a17:903:3c6b:b0:237:f757:9ad8 with SMTP id
- d9443c01a7336-238e9e06b68mr26264205ad.1.1750905538830; Wed, 25 Jun 2025
- 19:38:58 -0700 (PDT)
+        bh=od6P6pmOSXxNT727X5ed5nqh/+UXRwgTwbz0gpLU9MQ=;
+        b=BwLKVsERe5TnIhe0MSjOC5d/UHGQQXM76I0x0oDA8ZLI/ms/2rTtQ/KORcd/nLV8uy
+         4/eNtCpPprieDaR0DwdZ5c9lBLaLrqVQLGq+sdOmD+q6jo6rEOY9R+ceNMhVOq7qNURK
+         Dgdz+9DZl0GextdoauUrW8KEYz0iC+PWEC27YwGwk6LT/zq6QHZG91ZG/TkyT+h7bpfs
+         2Icy28267GERctm48vsBNxyEmxuKgdjPAHRtq3UN/bKz6yiTRgW2Jk77umo475/SUb6j
+         Db4qio1YI0pMTBiKOxU3UkNQRKBe1wmVZsL/fibXdUYUDf5y3RIepUmsua56rspo8nU7
+         4R7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUbqYaezGl2yxstNRsoUP+ultkI5vn1lI3nwLky2ic7rMsDRIVdLj6iW/QiM7WZE9vZ1ASmv7FNjxewhWIV@vger.kernel.org, AJvYcCWiEAowxCRMKT3ccL2BmGPu8wa61/qzptbdsa6WCfv8S5p1lrhOSSZ4z+FB0J6AoiT5CQ+tpvt6YtmrHs5m@vger.kernel.org, AJvYcCWtkJB0OXvKkZwLhu58Vit3vVUpuyUY1Ox0k5tivZBGs2NjXrNgtgeZxUvbAg+6Bvn3Pt3HQg36BZSz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxmj1lz+GFt290SuVHIcFLVxktkxCiVok5wVKj0sa9kyuUcsSrq
+	w1Q5NJWv4EBRH2TCFfS6bQPovJB5lyKq+FHA24qC4baT2rin6MbKlx55yv/IRWDTqTkEyg2ubV8
+	/E/tePAXcgIGzWQGZ2rozMsXytyk5cy0=
+X-Gm-Gg: ASbGncsJcW5G9jD19BqwYHVk60VTwRwKYp3ynT1QpKyzctT90Cwk5W6050DhGk5QGkg
+	5S5PSwDjjzq6k4xjC+yfsuCljeF5Y5xIzyF+Yweo2W5MwKsp7B6VsSADGZXOgi7FyJBK9gp0L44
+	gnxeb2bup3uSlLXpGa9Xw09mahOH/A+eGuJgPdC6hK+si4
+X-Google-Smtp-Source: AGHT+IESVy3V/n5VkLw86F20P5j1fnT7XdSirSPKlNbvL+IPuoLHuUJiiWnuFFgJTKm0pqp4XqQwdE2Y+JeaDXYNWNE=
+X-Received: by 2002:a05:620a:6844:b0:7d0:9c51:498a with SMTP id
+ af79cd13be357-7d4296d2f5amr667522985a.13.1750905743658; Wed, 25 Jun 2025
+ 19:42:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625160849.61344-1-minhquangbui99@gmail.com> <20250625160849.61344-4-minhquangbui99@gmail.com>
-In-Reply-To: <20250625160849.61344-4-minhquangbui99@gmail.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Thu, 26 Jun 2025 10:38:47 +0800
-X-Gm-Features: Ac12FXzGBspfM0xNLFV6s_nJRqcVgjaFcF2_Hcvm4OR2ygauzrYWua0l6j8T7wo
-Message-ID: <CACGkMEvY9pvvfq3Ok=55O1t3+689RCfqQJqaWjLcduHJ79CDWA@mail.gmail.com>
-Subject: Re: [PATCH net 3/4] virtio-net: create a helper to check received
- mergeable buffer's length
-To: Bui Quang Minh <minhquangbui99@gmail.com>
-Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	Stanislav Fomichev <sdf@fomichev.me>, virtualization@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <aFqyyUk9lO5mSguL@infradead.org> <51cc5d2e-b7b1-4e48-9a8c-d6563bbc5e2d@gmail.com>
+ <aFuezjrRG4L5dumV@infradead.org> <88e4b40b61f0860c28409bd50e3ae5f1d9c0410b.camel@kernel.org>
+ <aFvbr6H3WUyix2fR@infradead.org> <6ac46aa32eee969d9d8bc55be035247e3fdc0ac8.camel@kernel.org>
+ <aFvkAIg4pAeCO3PN@infradead.org> <11735cf2e1893c14435c91264d58fae48be2973d.camel@kernel.org>
+In-Reply-To: <11735cf2e1893c14435c91264d58fae48be2973d.camel@kernel.org>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Thu, 26 Jun 2025 10:41:47 +0800
+X-Gm-Features: Ac12FXwGQp7NN8Rq2OfqUZAlxy-GMLdddRaKYMN-0KtPUqnI-UrmaksSbjAnY6U
+Message-ID: <CALOAHbDtFh5P_P0aTzaKRcwGfQmkrhgmk09BQ1tu9ZdXvKi8vQ@mail.gmail.com>
+Subject: Re: [PATCH] xfs: report a writeback error on a read() call
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, david@fromorbit.com, djwong@kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, yc1082463@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 12:10=E2=80=AFAM Bui Quang Minh
-<minhquangbui99@gmail.com> wrote:
+On Wed, Jun 25, 2025 at 10:06=E2=80=AFPM Jeff Layton <jlayton@kernel.org> w=
+rote:
 >
-> Currently, we have repeated code to check the received mergeable buffer's
-> length with allocated size. This commit creates a helper to do that and
-> converts current code to use it.
+> On Wed, 2025-06-25 at 04:56 -0700, Christoph Hellwig wrote:
+> > On Wed, Jun 25, 2025 at 07:49:31AM -0400, Jeff Layton wrote:
+> > > Another idea: add a new generic ioctl() that checks for writeback
+> > > errors without syncing anything. That would be fairly simple to do an=
+d
+> > > sounds like it would be useful, but I'd want to hear a better
+> > > description of the use-case before we did anything like that.
+
+As you mentioned earlier, calling fsync()/fdatasync() after every
+write() blocks the thread, degrading performance=E2=80=94especially on HDDs=
+.
+However, this isn=E2=80=99t the main issue in practice.
+The real problem is that users typically don=E2=80=99t understand "writebac=
+k
+errors". If you warn them, "You should call fsync() because writeback
+errors might occur," their response will likely be: "What the hell is
+a writeback error?"
+
+For example, our users (a big data platform) demanded that we
+immediately shut down the filesystem upon writeback errors. These
+users are algorithm analysts who write Python/Java UDFs for custom
+logic=E2=80=94often involving temporary disk writes followed by reads to pa=
+ss
+data downstream. Yet, most have no idea how these underlying processes
+work.
+
+> >
+> > That's what I mean with my above proposal, except that I though of an
+> > fcntl or syscall and not an ioctl.
 >
-> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+> Yeah, a fcntl() would be reasonable, I think.
+>
+> For a syscall, I guess we could add an fsync2() which just adds a flags
+> field. Then add a FSYNC_JUSTCHECK flag that makes it just check for
+> errors and return.
+>
+> Personally, I like the fcntl() idea better for this, but maybe we have
+> other uses for a fsync2().
 
-I think it would be better to introduce this as patch 1, so a
-mergeable XDP path can use that directly.
+What do you expect users to do with this new fcntl() or fsync2()? Call
+fsync2() after every write()? That would still require massive
+application refactoring.
 
-This will have a smaller changeset.
+Writeback errors are fundamentally bugs in the filesystem/block
+layer/driver stack. It makes no sense to expose kernel implementation
+flaws to userspace, forcing developers to compensate for kernel-level
+issues with additional syscalls.
 
-Thanks
+Most users neither have the patience nor should they need to
+understand the deepest intricacies of Linux kernel internals. The
+proper fix should happen in the kernel=E2=80=94not by pushing workarounds o=
+nto
+applications.
 
+--=20
+Regards
+Yafang
