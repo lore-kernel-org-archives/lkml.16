@@ -1,113 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F3825B30F;
-	Thu, 26 Jun 2025 08:48:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11B6295517;
+	Thu, 26 Jun 2025 08:50:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750927736; cv=none; b=OuyUKYxsf7rh8fnJWVw9fIC6LvU5hREOCYiJDqyN3GMnf2q2qPbwrpVYFe3akNxbFKFHaM4P/C7rDVuz7EZ/sXLuvqzlCc6SHV5L/1y9KJSw+P7nsjrICrpIo9v9VgHCP6ampNKjb6em5z/WJf2+K/JHko8TCKgjzWoWZmLPJ5c=
+	t=1750927817; cv=none; b=i6Orrpe3Bk6aIVZcgW3T8m5me7noRCVi/VILs7cw1QCAY97ovgEGPPiYl6QVZ3y9X7miJB1c9RIIJPN/QyCJp+6juTEzTUAZNggRESxrdjxnmLOwVsm1QIKMO/QnxvHV+H826snDOmLlMpKIq26aijFnppNb8KLygtbOEBcmbNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750927736; c=relaxed/simple;
-	bh=Uwt3NsX0GNfYi5o7KvMJmNAuuFirfChPcaC6V4I9kis=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EeU9RsgnQ58VDD+n7O6tv0UUTYh7LMEVrxRWzmVa3Urea7InjoxFl4O64l3NevmQpnBs9f8111day2YMmtq+sgAETLM/FsokfxkAuAmfUpjrN/XdKaSzT57hmM3TocsCgvLzz+EPXSufmZLwmrdXgroEqHY2WEyy3V34LJ13xys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfVPpkIX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750927817; c=relaxed/simple;
+	bh=uNjYg/ewMnvuysPUDDt3GNwngbDKWv/d6y88QcyM828=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HomILCLm1Wx9yJgESI4gKnoxOPSfMAc8gSjenUpwnyvFOUY0MDkR+BhSkfRynSVGvvWEIN41J9ul/funD9r6vYitMxEMmVDaTU92ISeWOkfuweWS1vmGsqnbuBDUWdNqkWNN+5kTbkWm0E4li4wyZ36kiua5CBt+deOSWAJCfKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOhhkIfL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfVPpkIX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE2C3C4CEF1;
-	Thu, 26 Jun 2025 08:48:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOhhkIfL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7F46C4CEEB;
+	Thu, 26 Jun 2025 08:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750927736;
-	bh=Uwt3NsX0GNfYi5o7KvMJmNAuuFirfChPcaC6V4I9kis=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QfVPpkIX+jWUbuSczOWZ9NquDlgSzicGyHu84P5TiIWRYK43fK2fCiQ0YD/8dchij
-	 2RG4mqh3aUQVg571PhDWOQD/Ct7Mdw3MxJagG0/wzVlzOjxc+3gcMIpOv4u2m0qjRC
-	 E/IH4GtjIRSHHmzyC/CxOpJTzHkr+NrdCP/boNCsIs4qlx66SvO7Fp3U98/u3kEahA
-	 u6I0VE/78chhSv3zqKB2ftZcUwW9pykj/BkeUeQBhNgr38j4LwDYeqq2fakt10pisc
-	 s6i+mEW49MAiRZVVwfm0ioQTVWqOS1um15eHVqcddUtqoDOr/aQpAI/NXjOpYy2ju3
-	 0rFy1oDVdoZmA==
-Message-ID: <eb5cdcb6-7e40-4ed2-9cc6-6eff43da353d@kernel.org>
-Date: Thu, 26 Jun 2025 10:48:48 +0200
+	s=k20201202; t=1750927817;
+	bh=uNjYg/ewMnvuysPUDDt3GNwngbDKWv/d6y88QcyM828=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=JOhhkIfLeUb/1k+YlF7KmQ523EzcBnhPSfMFabFy6OK2jnxUH+XUvha116XgcYTL/
+	 HcMy3j7E+c+TWI/ybPfxIbvckH8+QTu3EzQ0TCzIZwum1qIWiJAU+tuEs9MSkLosTv
+	 8JING4oCuOrCFmOxRX2L4ANPg70PQF4bGKshiC7lOo9oifJ5e1eNDviTO34+pbvEWK
+	 n5QfQHhfZNUNCY1M84xxo8ASkFnqCBJcwVaAAikCS+XBVa9HLeGpbdp0IKNrWC0hQT
+	 vRgRyxJXQTgqykAbCiS/chxZFB8DC+By73PTWuVrDTTjJI3UcJTuHR6znHBo+KfgU4
+	 8sgxqTA7JRaQw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+Cc: <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
+  <lkmm@lists.linux.dev>,  <linux-arch@vger.kernel.org>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <lossin@kernel.org>,  "Alice Ryhl" <aliceryhl@google.com>,
+  "Trevor Gross" <tmgross@umich.edu>,  "Danilo Krummrich"
+ <dakr@kernel.org>,  "Will Deacon" <will@kernel.org>,  "Peter Zijlstra"
+ <peterz@infradead.org>,  "Mark Rutland" <mark.rutland@arm.com>,  "Wedson
+ Almeida Filho" <wedsonaf@gmail.com>,  "Viresh Kumar"
+ <viresh.kumar@linaro.org>,  "Lyude Paul" <lyude@redhat.com>,  "Ingo
+ Molnar" <mingo@kernel.org>,  "Mitchell Levy" <levymitchell0@gmail.com>,
+  "Paul E. McKenney" <paulmck@kernel.org>,  "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>,  "Linus Torvalds"
+ <torvalds@linux-foundation.org>,  "Thomas Gleixner" <tglx@linutronix.de>
+Subject: Re: [PATCH v5 02/10] rust: sync: Add basic atomic operation mapping
+ framework
+In-Reply-To: <20250618164934.19817-3-boqun.feng@gmail.com> (Boqun Feng's
+	message of "Wed, 18 Jun 2025 09:49:26 -0700")
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+	<CUuSJ1MRuO5_kQUQw69PENREVroAdiGBE0Rfy5-G7AD2Z5TNu1FUYRME9kvZZHT0GSIqtYK3yID0jB8xvfg2Qw==@protonmail.internalid>
+	<20250618164934.19817-3-boqun.feng@gmail.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Thu, 26 Jun 2025 10:50:07 +0200
+Message-ID: <87ecv628g0.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dt-bindings: mfd: qcom,spmi-pmic: add pm4125 audio
- codec
-To: Alexey Klimov <alexey.klimov@linaro.org>,
- Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-References: <20250626-pm4125_audio_codec_v1-v1-0-e52933c429a0@linaro.org>
- <20250626-pm4125_audio_codec_v1-v1-2-e52933c429a0@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250626-pm4125_audio_codec_v1-v1-2-e52933c429a0@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 26/06/2025 01:50, Alexey Klimov wrote:
-> PM4125 has audio codec hardware block. Add pattern for respecive node
-> so the devicetree for those blocks can be validated properly.
-> 
-> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+"Boqun Feng" <boqun.feng@gmail.com> writes:
 
-Remember to ALWAYS explain the dependencies between patches (merging
-strategy), because this now creates impression is independent patch. It
-is not and should be squashed into previous.
+> Preparation for generic atomic implementation. To unify the
+> implementation of a generic method over `i32` and `i64`, the C side
+> atomic methods need to be grouped so that in a generic method, they can
+> be referred as <type>::<method>, otherwise their parameters and return
+> value are different between `i32` and `i64`, which would require using
+> `transmute()` to unify the type into a `T`.
+>
+> Introduce `AtomicImpl` to represent a basic type in Rust that has the
+> direct mapping to an atomic implementation from C. This trait is sealed,
+> and currently only `i32` and `i64` impl this.
+>
+> Further, different methods are put into different `*Ops` trait groups,
+> and this is for the future when smaller types like `i8`/`i16` are
+> supported but only with a limited set of API (e.g. only set(), load(),
+> xchg() and cmpxchg(), no add() or sub() etc).
+>
+> While the atomic mod is introduced, documentation is also added for
+> memory models and data races.
+>
+> Also bump my role to the maintainer of ATOMIC INFRASTRUCTURE to reflect
+> my responsiblity on the Rust atomic mod.
+>
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  MAINTAINERS                    |   4 +-
+>  rust/kernel/sync.rs            |   1 +
+>  rust/kernel/sync/atomic.rs     |  19 ++++
+>  rust/kernel/sync/atomic/ops.rs | 199 +++++++++++++++++++++++++++++++++
+>  4 files changed, 222 insertions(+), 1 deletion(-)
+>  create mode 100644 rust/kernel/sync/atomic.rs
+>  create mode 100644 rust/kernel/sync/atomic/ops.rs
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0c1d245bf7b8..5eef524975ca 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3894,7 +3894,7 @@ F:	drivers/input/touchscreen/atmel_mxt_ts.c
+>  ATOMIC INFRASTRUCTURE
+>  M:	Will Deacon <will@kernel.org>
+>  M:	Peter Zijlstra <peterz@infradead.org>
+> -R:	Boqun Feng <boqun.feng@gmail.com>
+> +M:	Boqun Feng <boqun.feng@gmail.com>
+>  R:	Mark Rutland <mark.rutland@arm.com>
+>  L:	linux-kernel@vger.kernel.org
+>  S:	Maintained
+> @@ -3903,6 +3903,8 @@ F:	arch/*/include/asm/atomic*.h
+>  F:	include/*/atomic*.h
+>  F:	include/linux/refcount.h
+>  F:	scripts/atomic/
+> +F:	rust/kernel/sync/atomic.rs
+> +F:	rust/kernel/sync/atomic/
+>
+>  ATTO EXPRESSSAS SAS/SATA RAID SCSI DRIVER
+>  M:	Bradley Grove <linuxdrivers@attotech.com>
+> diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
+> index 36a719015583..b620027e0641 100644
+> --- a/rust/kernel/sync.rs
+> +++ b/rust/kernel/sync.rs
+> @@ -10,6 +10,7 @@
+>  use pin_init;
+>
+>  mod arc;
+> +pub mod atomic;
+>  mod condvar;
+>  pub mod lock;
+>  mod locked_by;
+> diff --git a/rust/kernel/sync/atomic.rs b/rust/kernel/sync/atomic.rs
+> new file mode 100644
+> index 000000000000..65e41dba97b7
+> --- /dev/null
+> +++ b/rust/kernel/sync/atomic.rs
+> @@ -0,0 +1,19 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Atomic primitives.
+> +//!
+> +//! These primitives have the same semantics as their C counterparts: and the precise definitions of
+> +//! semantics can be found at [`LKMM`]. Note that Linux Kernel Memory (Consistency) Model is the
+> +//! only model for Rust code in kernel, and Rust's own atomics should be avoided.
+> +//!
+> +//! # Data races
+> +//!
+> +//! [`LKMM`] atomics have different rules regarding data races:
+> +//!
+> +//! - A normal write from C side is treated as an atomic write if
+> +//!   CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=y.
+> +//! - Mixed-size atomic accesses don't cause data races.
+> +//!
+> +//! [`LKMM`]: srctree/tools/memory-mode/
+
+Typo in the link destination.
+
 
 Best regards,
-Krzysztof
+Andreas Hindborg
+
+
