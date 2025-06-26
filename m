@@ -1,170 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5912F0E4D;
-	Thu, 26 Jun 2025 20:01:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D442063F3;
+	Thu, 26 Jun 2025 20:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750968084; cv=none; b=T8QD6UDq2JCsJs7buvSvIQENv7/LQLleecFBe6YRqe7eaQBqErAaMUKOJsJRbsj1w8eIWDl9RzHBffZmiSHkgQgFd0CurcQ2bhhz0IHD/n8h1U90nHvie2kHtXZJq44pmZpmLwTFBFb383gdKcNpU3D2qTDxE+uXcwaJ009Yt6o=
+	t=1750968136; cv=none; b=Im8qBol7vuVVRfTFRRS2NHHHf9vQWwntboe1yLNx5slmvnJLsk+a71r7yA/sKBfyJjJVa8L1gSHFJ6mD90jp+RC0L9ZxQXCtzJRriFtLt5DuKG/3r05yOKk6MbVJWJFkjglsC52hyIF/zLonZXaHc9VJ8gAed2DsIA4BX0hk6lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750968084; c=relaxed/simple;
-	bh=4TQ9IPTgKMt3xedIjC4FAr1Kkj8BMJZaabqz8iQUEgs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OTvzWe1Cl3UuUxwmBiX5iR9C01onTBx9zk0usXx8DHtUR9gEhCZ6FtlrO5Ue8JORuorBNO1wg9t5Lg5j1rpW9r7vScvyd2AffX9CI+xbhsqbklskUOuOj7uYvS5fz2crXVGljrl7UQ5qMGQvZcM8IZCyBVZXzxNezJMnMmVn2HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ko6VVeNj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750968136; c=relaxed/simple;
+	bh=oLEQGcXfmwkTXW2635WHw9QtoP6OjHr6Fdq+O046/X0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=G6F70co+kHoIH56hU3tSlKfNreyq1e0/+Y1v7zbwD57u9uUJaKHAEE0F2azzS/ssjuQUZsfYtY4O9OzYwvScDCsVdMMFTNM+lPX1W23qzKA/cLfhm4b2FxEVgjuo7vgtw1EtWFYE2FFhT3wGZWSPzKNSXi+TC+6HoTsFMrrA0Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=QvPbf8Yb; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ko6VVeNj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4973C4CEEB;
-	Thu, 26 Jun 2025 20:01:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750968083;
-	bh=4TQ9IPTgKMt3xedIjC4FAr1Kkj8BMJZaabqz8iQUEgs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ko6VVeNjjltedZWWEr9JHf3QkUmh01r1yUn9E3XF+Li18su0PKFM+PqTpgghPLqpz
-	 CxhzeRJwLv3AEpk8nZKwLOl/rVw0YWvqrJ/sy9IUb/P2TfWuB0Rd+we08iX7EZQvCI
-	 BNEjsZ+VSwIYdPK8K+ndN+CgdwCxsFeisHTm9AATI1svKMl+Bs1lw7Z5qNIlxZp17e
-	 sLl/YrZRGw9mlhOzFAFFYqEosQrVr4BgP/RUYquAbeygkuoDxfcrK3RD4Dw3tQxeBS
-	 swjl1S4UDvZx5w07eeF01ICNsr6qVfd1mQSmuflP3CChBlXIVFQnt/fybWZV2RvkdV
-	 srfxv/LtrmdRA==
-From: Danilo Krummrich <dakr@kernel.org>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	david.m.ertman@intel.com,
-	ira.weiny@intel.com,
-	leon@kernel.org,
-	kwilczynski@kernel.org,
-	bhelgaas@google.com
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v4 5/5] rust: devres: implement register_release()
-Date: Thu, 26 Jun 2025 22:00:43 +0200
-Message-ID: <20250626200054.243480-6-dakr@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250626200054.243480-1-dakr@kernel.org>
-References: <20250626200054.243480-1-dakr@kernel.org>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="QvPbf8Yb"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 7239A25DB0;
+	Thu, 26 Jun 2025 22:02:13 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id lwtKvea1B_oe; Thu, 26 Jun 2025 22:02:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1750968132; bh=oLEQGcXfmwkTXW2635WHw9QtoP6OjHr6Fdq+O046/X0=;
+	h=From:Subject:Date:To:Cc;
+	b=QvPbf8YbZqK/yody6Z1qtcnZxwQlfA2RV3+DKL32vyJwah3Bf17Pl8q+iPF7Z53Rf
+	 vGg+fQVTJjmXffgBWM7zFDm7COawfFwQ4AeEpigJMZaOFWG3y/CevzfmaVw+nXUF2t
+	 4zSwCEJ4ZQCT0n31YKCCnrhJLpJfIHjak5XoxUQx2vaB5CGhpUASUeSMP71CZmMlp7
+	 occC0/HOJ5MvN3GmKZrrGoYT+DQjzSGY6AOjHL3SVIkxkiZmEjkj+oTq513ozQ4VPO
+	 o3yoDerMQka7mUGPqWs2R3s25GfyYNE9Kz9Huf8eXSb35jbiN3yEQob3MEbs9lem+2
+	 EgYS36pjHq3tw==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH 0/2] Fixes for Exynos7870 MIPI PHY support
+Date: Fri, 27 Jun 2025 01:31:53 +0530
+Message-Id: <20250627-exynos7870-mipi-phy-fix-v1-0-2eefab8b50df@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADGnXWgC/x2MQQqAIBAAvxJ7bmEzzOor0SFyrT1kohBJ9Pek4
+ wzMPJA4CicYqwciX5Lk9AWauoJ1X/zGKLYwKFKaOqWR7+zPZHpDeEgQDHtGJzealkmz6wdLK5Q
+ 6RC76P0/z+36p8aziaQAAAA==
+X-Change-ID: 20250625-exynos7870-mipi-phy-fix-73e05ef89d0c
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+Cc: linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750968126; l=853;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=oLEQGcXfmwkTXW2635WHw9QtoP6OjHr6Fdq+O046/X0=;
+ b=l22ARppv4FdNrrIxIPioB4sYgrfvPuIUVxz3PSz9MWQNbePyQ/HGHSZf9esAQAadMmMpw2lkz
+ hhA6aww7qUjD17J5bF2XGxVfjdolANncv2/o1ygEsRwSTYz71O0SV8J
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-register_release() is useful when a device resource has associated data,
-but does not require the capability of accessing it or manually releasing
-it.
+A few issues have been realized after Exynos7870 MIPI PHY support got
+merged [1], this patch series aims to address them.
 
-If we would want to be able to access the device resource and release the
-device resource manually before the device is unbound, but still keep
-access to the associated data, we could implement it as follows.
+More information about the fixes is provided in respective commit
+descriptions.
 
-	struct Registration<T> {
-	   inner: Devres<RegistrationInner>,
-	   data: T,
-	}
+[1] https://lore.kernel.org/r/20250612-exynos7870-mipi-phy-v1-0-3fff0b62d9d3@disroot.org
 
-However, if we never need to access the resource or release it manually,
-register_release() is great optimization for the above, since it does not
-require the synchronization of the Devres type.
-
-Suggested-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
 ---
- rust/kernel/devres.rs | 73 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
+Kaustabh Chakraborty (2):
+      phy: exynos-mipi-video: correct cam0 sysreg compatible for exynos7870
+      phy: exynos-mipi-video: allow skipping absent PHYs
 
-diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-index 3ce8d6161778..92aca78874ff 100644
---- a/rust/kernel/devres.rs
-+++ b/rust/kernel/devres.rs
-@@ -353,3 +353,76 @@ pub fn register<T, E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flag
- 
-     register_foreign(dev, data)
- }
-+
-+/// [`Devres`]-releaseable resource.
-+///
-+/// Register an object implementing this trait with [`register_release`]. Its `release`
-+/// function will be called once the device is being unbound.
-+pub trait Release {
-+    /// The [`ForeignOwnable`] pointer type consumed by [`register_release`].
-+    type Ptr: ForeignOwnable;
-+
-+    /// Called once the [`Device`] given to [`register_release`] is unbound.
-+    fn release(this: Self::Ptr);
-+}
-+
-+/// Consume the `data`, [`Release::release`] and [`Drop::drop`] `data` once `dev` is unbound.
-+///
-+/// # Examples
-+///
-+/// ```no_run
-+/// use kernel::{device::{Bound, Device}, devres, devres::Release, sync::Arc};
-+///
-+/// /// Registration of e.g. a class device, IRQ, etc.
-+/// struct Registration;
-+///
-+/// impl Registration {
-+///     fn new() -> Result<Arc<Self>> {
-+///         // register
-+///
-+///         Ok(Arc::new(Self, GFP_KERNEL)?)
-+///     }
-+/// }
-+///
-+/// impl Release for Registration {
-+///     type Ptr = Arc<Self>;
-+///
-+///     fn release(this: Arc<Self>) {
-+///        // unregister
-+///     }
-+/// }
-+///
-+/// fn from_bound_context(dev: &Device<Bound>) -> Result {
-+///     let reg = Registration::new()?;
-+///
-+///     devres::register_release(dev, reg.clone())
-+/// }
-+/// ```
-+pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
-+where
-+    P: ForeignOwnable,
-+    P::Target: Release<Ptr = P> + Send,
-+{
-+    let ptr = data.into_foreign();
-+
-+    #[allow(clippy::missing_safety_doc)]
-+    unsafe extern "C" fn callback<P>(ptr: *mut kernel::ffi::c_void)
-+    where
-+        P: ForeignOwnable,
-+        P::Target: Release<Ptr = P>,
-+    {
-+        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked above and hence valid.
-+        let data = unsafe { P::from_foreign(ptr.cast()) };
-+
-+        P::Target::release(data);
-+    }
-+
-+    // SAFETY:
-+    // - `dev.as_raw()` is a pointer to a valid and bound device.
-+    // - `ptr` is a valid pointer the `ForeignOwnable` devres takes ownership of.
-+    to_result(unsafe {
-+        // `devm_add_action_or_reset()` also calls `callback` on failure, such that the
-+        // `ForeignOwnable` is released eventually.
-+        bindings::devm_add_action_or_reset(dev.as_raw(), Some(callback::<P>), ptr.cast())
-+    })
-+}
+ drivers/phy/samsung/phy-exynos-mipi-video.c | 102 ++++++++++++++++------------
+ 1 file changed, 58 insertions(+), 44 deletions(-)
+---
+base-commit: 1b152eeca84a02bdb648f16b82ef3394007a9dcf
+change-id: 20250625-exynos7870-mipi-phy-fix-73e05ef89d0c
+
+Best regards,
 -- 
-2.49.0
+Kaustabh Chakraborty <kauschluss@disroot.org>
 
