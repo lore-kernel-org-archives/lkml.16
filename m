@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D04238141;
-	Thu, 26 Jun 2025 20:57:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A4925A2B3;
+	Thu, 26 Jun 2025 20:57:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750971435; cv=none; b=L9fLWkrp3d6nuHh3gm4YLrlf8+2OUOkeWvL1pX3DgMhlFdT0wcor9iZK0LgLyAtc1mZ9X/ve+4thm+dhcLFnD4Bd+CKc5ddvTeyCJTz+xLXqofRSvmudxdE6hAY8+fNRSMk4b4jBrpMfzah+TD6Bu+Eig1IuO7fCDTeKCFAY+KE=
+	t=1750971436; cv=none; b=U3mpVFoZTwTtbVpWM8TEtAwoKkwhzRBN13FJitqwSG4ooTq0WYLRnFS531HGr8swWghKtMaP2qT4BJpuBx3R7UIFBq4Yt22QZ9trRcmvG53vOsTAvOZnbizssiThWg1F+V6fKqBc2JJ+kL5NwURGeEuWNqqS5EvxPrtLc18QqFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750971435; c=relaxed/simple;
-	bh=y+I3wvSFJie1KbTB1qaDSKpuCbBStfymZluyOJOzXjk=;
+	s=arc-20240116; t=1750971436; c=relaxed/simple;
+	bh=mvgwb75/wsqsPPpZl+CuS3VKj97ALV/tQGv34pfvXQ0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GhA39EhnT6VmN3FVdtV73ZvCbFqSMCbXDF678ar0C3eKkasUC9KYNI734KKqlX+eRy9t8SjY15uS2TBuGnd4YtVJ8gPh/NQ+JO0dJquzXXFOSRzELS6XTwJ+F/SjEd6WyHk3mjQv4Pq1YQXIIA5VEJsy5WFhU3B/Gk+SNjjt3KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=giK+k8ld; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=RV5VU2x/5oIh1OvIdy7lTXIh7F/4PaOCDY243eSM4x5Asrr7tVWpMGQlfC553hZEAKfLTuMPJu1ua9wRx2vnFk1TJxrpMvPOyJPJlKpBHu/dLez6ef0hWPdfdwT/AIkoOgBOxvqft0u1hkdDftFfRc7+t6FhOQq2VmnawIjnzoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jqrHnvde; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="giK+k8ld"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16B61C4CEEB;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jqrHnvde"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C788AC4CEF1;
 	Thu, 26 Jun 2025 20:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750971435;
-	bh=y+I3wvSFJie1KbTB1qaDSKpuCbBStfymZluyOJOzXjk=;
+	s=k20201202; t=1750971436;
+	bh=mvgwb75/wsqsPPpZl+CuS3VKj97ALV/tQGv34pfvXQ0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=giK+k8ld5Xi2maVQuSgSdTLIxCt64I3ZXLyzWmUA1pYErAp2REflslxyqE4356ITk
-	 eIjUbKNoru3G5msVRsKIFdp7bEFXh1agUwozRIIdze5uekl8AceD9jdwrEq8kJCzC/
-	 RObRamMmYR+6RX79VfXOAR3Owmhxy5M75YHIVtT16U1lCrsVBUwAy8AuKRKlkIrpob
-	 uJ/Iij1LJKvl/3yt+/L+Z2xt4yzfKk9CP7CdG1QplOJ8W62GZCIPXlivR/h2AfvJha
-	 cMuLj7cAO/0+QwO8qPgyPjy8JB+nju1ojcMfBstEPHNGkOSYEPFtXO9/t3tf3kaNZc
-	 aOkjUZwf1hvlg==
+	b=jqrHnvdezfQW8wKFy9GzDzKAi1KbMOEJdrb22EaRyR0+mS7gVywosk/VnV/MS4zsC
+	 elCROPGNtlHObb2Mi3Bpr/1DPtEvCSiHVuptvGbIIZNn9C/GISJh2GKFLxV9/loWcL
+	 DY9cF1Y3fAzrwHSLjvHRKecIwkheGBus/6XTISiaLnlOmeKj3ZbQtrO3d1Ue8V+aFe
+	 G0q+Fk02MtZT6s4VQy/qxsvCehDcPaPyWN/NfvB7DuJR1B7sys9954ZY64al8kj60S
+	 4dMrrcfqFMIlLtGM43pQrh9F4OgJnGCR4LHBTyx/aJrUwADItWA+/qIpoI6mueS52P
+	 LOW1xSbj7+6aQ==
 From: Vinod Koul <vkoul@kernel.org>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
 Cc: yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev, 
- peter.ujfalusi@linux.intel.com, patches@opensource.cirrus.com, 
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250624125507.2866346-1-ckeepax@opensource.cirrus.com>
-References: <20250624125507.2866346-1-ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH] soundwire: Correct some property names
-Message-Id: <175097143504.44160.17127007052966518976.b4-ty@kernel.org>
+ Basavaraj.Hiregoudar@amd.com, Sunil-kumar.Dommati@amd.com, 
+ venkataprasad.potturu@amd.com, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250620102617.73437-1-Vijendar.Mukunda@amd.com>
+References: <20250620102617.73437-1-Vijendar.Mukunda@amd.com>
+Subject: Re: (subset) [PATCH 1/2] soundwire: amd: fix for clearing command
+ status register
+Message-Id: <175097143577.44160.142605369217423066.b4-ty@kernel.org>
 Date: Thu, 26 Jun 2025 13:57:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -47,23 +49,17 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Tue, 24 Jun 2025 13:55:07 +0100, Charles Keepax wrote:
-> The DisCo properties should be mipi-sdw-paging-supported and
-> mipi-sdw-bank-delay-supported, with an 'ed' on the end. Correct the
-> property names used in sdw_slave_read_prop().
+On Fri, 20 Jun 2025 15:55:19 +0530, Vijendar Mukunda wrote:
+> To clear the valid result status, 1 should be written to
+> ACP_SDW_IMM_CMD_STS register. Update the ACP_SW_IMM_CMD_STS register value
+> as 1.
 > 
-> The internal flag bank_delay_support is currently unimplemented, so that
-> being read wrong does not currently affect anything. The two existing
-> users for this helper and the paging_support flag rt1320-sdw.c and
-> rt721-sdca-sdw.c both manually set the flag in their slave properties,
-> thus are not affected by this bug either.
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] soundwire: Correct some property names
-      commit: ae6a0f5b8a5b0ca2e4bf1c0380267ad83aca8401
+[2/2] soundwire: amd: add check for status update registers
+      commit: 72bbf6e866a7911aaa0b4d0e9bb03109c7c046f2
 
 Best regards,
 -- 
