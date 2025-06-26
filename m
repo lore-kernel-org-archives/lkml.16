@@ -1,89 +1,117 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08491922F6;
-	Thu, 26 Jun 2025 13:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354292E762E
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750946241; cv=none; b=sd2eZAyEaj2lhaf0Pwtn0XQXFoon4mRof2tFtjiYAfZLdNH1jsqGd+Le7RAVgZ9rv8yIgCc+TM6doyDK+rjS4XWzV6j6sMfhFyZQYe1Q21yfKhVBakMO9Cgzp4ZgtislYAIQE2ofOCiwOvLfZj/QN8/nzcB0rAMxh6Fj0lBbIuM=
+	t=1750946261; cv=none; b=R2oQU5viA9sE0YfLvTr31ZYp5HuhmNGoc2lmUZz8QzQ09lUTwu2u91W6B5X8HfcWRBcMUoikbgV5dBhsnx7Ogom4KCem1J2+gY3KmSz+lUHRWr4guqEKiAtCqIn4XsINJo+ospjerHBG/zxAoS4Vn+aXIeMPWWSqpcMk+W1lMqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750946241; c=relaxed/simple;
-	bh=0c7ZHZLsdl7RngXjNl2NpX2L2Tdel9+PLaSBG+/n1XA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cu1w5KznyGw1a1CS4xnBWTUrzlk176gNs+l6rXVviwoMN0cua/ZFk9eJwci9Q8WEjNIFax1L6D9BExIE3VuCWsC78Mwbyxd78WIoq0MEeS2hrvJDZ8Nb3MfgVf0ImOKi9kXw8NuxEC6VbIiWTpXyIKpr0Zjj6O1R3J3wTB0YQM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bSgH11TkwzYQv0F;
-	Thu, 26 Jun 2025 21:57:17 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 164801A236D;
-	Thu, 26 Jun 2025 21:57:16 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgD3W2C6UV1ofP7jQg--.28741S3;
-	Thu, 26 Jun 2025 21:57:15 +0800 (CST)
-Message-ID: <e2fe408c-23be-4cb4-9cb2-04178fad947f@huaweicloud.com>
-Date: Thu, 26 Jun 2025 21:57:14 +0800
+	s=arc-20240116; t=1750946261; c=relaxed/simple;
+	bh=p3pmOFZqG2foxfhTMDICNAFt3FpMHKfFAZ7apfgJC4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JdgWqLRauS7yQRfTUil4yumMkQ0dbw9gZ63yILrBLcJHMqSnsO76w7XWCBYD7iSGRrQvdd6xsDtd7l4wcEQ9qskfDbRpkIcpHwmI301wUBkDvBJKLqQDkw8aq9GAz1rqG2Peu/3DHCu84sVhKdaol48sH+shNDDaLrMIRkVUXj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uUn6M-0006uy-3x; Thu, 26 Jun 2025 15:57:18 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uUn6K-005SOl-1l;
+	Thu, 26 Jun 2025 15:57:16 +0200
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 2AFE9431201;
+	Thu, 26 Jun 2025 13:57:16 +0000 (UTC)
+Date: Thu, 26 Jun 2025 15:57:14 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Sean Nyekjaer <sean@geanix.com>
+Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+	linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Chandrasekar Ramakrishnan <rcsekar@samsung.com>, Fengguang Wu <fengguang.wu@intel.com>, 
+	Varka Bhadram <varkabhadram@gmail.com>, Dong Aisheng <b29396@freescale.com>
+Subject: Re: [PATCH] can: m_can: apply rate-limiting to lost msg in rx
+Message-ID: <20250626-rigorous-gentle-foxhound-d864c1-mkl@pengutronix.de>
+References: <20250620-mcan_ratelimit-v1-1-e747ee30f71f@geanix.com>
+ <d855c26a-1982-4fc6-9333-93df4a5a98d9@wanadoo.fr>
+ <wldhiihvxg42yqaccizms4xfupfv2c7w7jec7jy6iht6dbnr7k@os6f2gyrr45m>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/9] fallocate: introduce FALLOC_FL_WRITE_ZEROES flag
-To: "Martin K. Petersen" <martin.petersen@oracle.com>, hch@lst.de
-Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
- linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
- djwong@kernel.org, john.g.garry@oracle.com, bmarzins@redhat.com,
- chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com, brauner@kernel.org,
- yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com,
- yangerkun@huawei.com
-References: <20250619111806.3546162-1-yi.zhang@huaweicloud.com>
- <yq11praqywi.fsf@ca-mkp.ca.oracle.com>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <yq11praqywi.fsf@ca-mkp.ca.oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgD3W2C6UV1ofP7jQg--.28741S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYV7kC6x804xWl14x267AKxVW5JVWrJwAF
-	c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
-	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xv
-	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
-	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
-	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r
-	1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kI
-	c2xKxwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AKxVW8ZVWrXwCFx2IqxVCFs4
-	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
-	MI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
-	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
-	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
-	BIdaVFxhVjvjDU0xZFpf9x07UdxhLUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gjc6jtpqapf4k5xt"
+Content-Disposition: inline
+In-Reply-To: <wldhiihvxg42yqaccizms4xfupfv2c7w7jec7jy6iht6dbnr7k@os6f2gyrr45m>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 2025/6/23 23:08, Martin K. Petersen wrote:
-> 
-> Zhang,
-> 
->> This series implements the BLK_FEAT_WRITE_ZEROES_UNMAP feature and
->> BLK_FLAG_WRITE_ZEROES_UNMAP_DISABLED flag for SCSI, NVMe and
->> device-mapper drivers, and add the FALLOC_FL_WRITE_ZEROES and
->> STATX_ATTR_WRITE_ZEROES_UNMAP support for ext4 and raw bdev devices.
->> Any comments are welcome.
-> 
-> This looks OK to me.
-> 
-> Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-> 
 
-Thank you, Martin and Christoph, for the patient review. I will update
-my test patches next.
+--gjc6jtpqapf4k5xt
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] can: m_can: apply rate-limiting to lost msg in rx
+MIME-Version: 1.0
 
-Best regards,
-Yi.
+On 26.06.2025 13:45:09, Sean Nyekjaer wrote:
+> Hi,
+>=20
+> On Sat, Jun 21, 2025 at 11:13:33AM +0100, Vincent Mailhol wrote:
+> > On 20/06/2025 at 19:00, Sean Nyekjaer wrote:
+> > > Wrap the "msg lost in rxf0" error in m_can_handle_lost_msg() with
+> > > a call to net_ratelimit() to prevent flooding the kernel log
+> > > with repeated error messages.
+> >=20
+> > Note that another solution is to simply remove the error message. The u=
+sers can
+> > use the CAN error frames or the netstasts instead to see if lost messag=
+es occurred.
+> >=20
+> > That said, I am OK with your proposed patch. See above comment as a sim=
+ple FYI.
+>=20
+> I'm up for both solutions :)
+>=20
+> @Marc what would you prefer?
 
+If it is my call, then make it a netdev_dbg();
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--gjc6jtpqapf4k5xt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmhdUbcACgkQDHRl3/mQ
+kZy2ugf/Ybp8xPyZ5wBEXgtHwORfcRr5f6ee7M1D47DJiiGxWWzKMxkcODxpdzmL
+biItBK1YE5o5ert4jfCMyElJIQKiu872lhnxOLGigFg10spbWRWDyF9BJAYt7q3t
+Mf2aBdgs70R4Mt+6Kz43SasRUQbEw0kYEPHeoE5+t/6glKZuf4ICBjKu7XDWP24C
+MTW8sjhH1gpEAcBrksvYM2qaRXjADTzAnKD/Frd1s1F//1PmKMkC0vWBk6pzKQeR
+wqu9h5mUSTICfXYHakEMU5N8omBa49S7Qz3BxIGUE7JSk2W7Vv+CLSQfCFSIiQSF
+2/3zxAVHCPlUJ5p4fWNcO+cJpu+/Ag==
+=uPcY
+-----END PGP SIGNATURE-----
+
+--gjc6jtpqapf4k5xt--
