@@ -1,153 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C3C2185AC;
-	Thu, 26 Jun 2025 22:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CB3265CDD
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750976498; cv=none; b=jJzS73F9Rt2O3l2J4tN6+HaVav7clkwYM1ZPhXzs49PhvPGbiDGlOLdm3gLE+DSL/25WabwY5WGg9/3cKMlcfpjAVUZwqpu8OpM3JEoquUmIcmNaHfukxGy4vp5qNg2cVZbHatqdGnWbyvT87AScF2KMQT1VxCQorRrkXp8h+pA=
+	t=1750976570; cv=none; b=YmdGpkNY4SgeYbB3DJKt6PazZ18z/Sy+iJ/Id1PLj4Ho2Y6qGE1FRaGRxBlaHJkjGdSl652UHXuoxXF7+7j96Y/mjBVxz00g+TdtDapSWO+QDAb6qh6cC6PqH9hg99hbs5Z0HVjqR6Zh2O8ToZHSAANy8wHdZF0xNfu28mJThEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750976498; c=relaxed/simple;
-	bh=S4MQ+wCspDRAXFvPxNkjxgXfaczwIPQ46HAjeRIjCq4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TFyViSp40makklYOZuQtOVkhJGpdrxTtjFJLoQBYlglvkypDP9zZbrmhaNLWRn/DmVxag79QtKiC74LZXRen/XmuvRf0mDPanREgLw5Nax4S9s1YDXn8eiLyJptqXNKvK3+u70jwkZy/zN1xUjJWKXGtsgyBLJj/nXTtumVkZFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTrt4WkV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750976570; c=relaxed/simple;
+	bh=fBdqLi2zh8cgE2smZ2prRBWP5Fb7RYAI+pYgkD2qyFE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=o3sWlRzWFnt4vIZ2WXSdO/8/VBj8V8UIBETKk5sQzWZ8S9Bt7mdCIe6IxjiqgKYKMlZNm6UXkK825aQa6OnbcYH57zrBTr26yx1qq3It7/G5yi45S+CHWXtnqEJS6rHCtY+SMjiMaKsYQs9ouZbho/W5SCzKrtQSKV7+PAonFGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RgG1P6iD; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTrt4WkV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F778C4CEEB;
-	Thu, 26 Jun 2025 22:21:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750976498;
-	bh=S4MQ+wCspDRAXFvPxNkjxgXfaczwIPQ46HAjeRIjCq4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CTrt4WkVJKOL0eSc1X21mUYuVtrkxMBdcEjoCNAmbsmyoMWFkKbdFDlNqDDc6s5FZ
-	 iuproVump4dstGukb02DSUrq7f6BkEjdBkd8JBUILPB4M2Z6rHZKIub3M+avK011W7
-	 YRUPGu4pKS/dtuJ6gOaeLzuSnBW1pvmKTajcunoD8NhqQMHwrPNFkzXjqAeEDETgu6
-	 hs0oILjp6poL1wZwYYCn5lWH6rzwsGNtZwbFTrpz3Z21Ubi3NL+R+L07BsgfSUMimX
-	 4qsijFyNhKs5oMA9C+nq5GzPxhySYJ3or8hI46ElNzrqp61OvkXE/bf0SAfJ6gc6Wo
-	 3IPvaCXKRTowg==
-Message-ID: <de548b27-4c43-4f30-af9d-b060101e6fd8@kernel.org>
-Date: Thu, 26 Jun 2025 17:21:35 -0500
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RgG1P6iD"
+Message-ID: <c6528a69-f229-470c-aa60-012049d7287f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750976554;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LgMWyO64jmjwOX0CQ6au9/Uu+T+Vqow9qeNtLOchaqw=;
+	b=RgG1P6iDuXQQAvlB4p3BTRPgCb+smEyIxB+aYsPWlaX1O+kR2v9ZANpp2p+4pmVHsGw2o3
+	Pg7ansE5Snfd5kria53L8YLR7j7bQ/jNXcEtA27OZEoGTDlaci43iLe6HVk5AlHluPToVV
+	noIP3LbELFgFNZZ6sKoZylk1lIV/+lU=
+Date: Thu, 26 Jun 2025 15:22:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
- system
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <363c2b92-4bfc-4537-9fca-025eef09526f@kernel.org>
- <nxticocp26r5mmpkttritw76h5igw7bdpus6zaf5krkso2h5xy@wna6m2quekfi>
- <cbbf0caf-82ce-4427-9844-b11e0f5cacdb@kernel.org>
- <obpakvzyludc4jskqzyxf65dhqds7ie3jkbfsqdve32ouuaili@xvogkmwvbmbf>
- <284ea5c0-dca5-4e9e-a3e7-705eca794010@kernel.org>
- <vkau25ybcx3bcoa2jmxlukumunzii5h6em43anh6mmzk2kyiv7@kyych4kxc4zo>
- <0d71a686-da67-4686-8976-a17d0d1ca923@kernel.org>
- <CAJZ5v0gKUN1OdqAHnXNcFUAOfhpdRfa_o=L6TA2GZTpe1bMaNQ@mail.gmail.com>
- <exmgckzoakt2ncsdphqvymcadon7k6tl36a3zvrj2pv23dffps@znq23v3qbcm2>
- <CAJZ5v0j3ZyuEqSKQ+3K8M3BwPCxn5Z6KOwjyjt4cJW6HfxjPDw@mail.gmail.com>
- <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
+Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
+To: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>,
+ jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+ zyjzyj2000@gmail.com
+References: <685db3be.a00a0220.2e5631.0362.GAE@google.com>
 Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Yanjun.Zhu" <yanjun.zhu@linux.dev>
+In-Reply-To: <685db3be.a00a0220.2e5631.0362.GAE@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 6/26/2025 2:40 PM, Dmitry Torokhov wrote:
-> On Thu, Jun 26, 2025 at 09:31:12PM +0200, Rafael J. Wysocki wrote:
->> On Thu, Jun 26, 2025 at 9:28 PM Dmitry Torokhov
->> <dmitry.torokhov@gmail.com> wrote:
->>>
->>> On Thu, Jun 26, 2025 at 09:18:56PM +0200, Rafael J. Wysocki wrote:
->>>> On Thu, Jun 26, 2025 at 9:16 PM Hans de Goede <hansg@kernel.org> wrote:
->>>>>
->>>>> Hi,
->>>>>
->>>>> On 26-Jun-25 21:14, Dmitry Torokhov wrote:
->>>>>> On Thu, Jun 26, 2025 at 08:57:30PM +0200, Hans de Goede wrote:
->>>>>>> Hi,
->>>>>>>
->>>>>>> On 26-Jun-25 20:48, Dmitry Torokhov wrote:
->>>>>>>> On Thu, Jun 26, 2025 at 01:20:54PM -0500, Mario Limonciello wrote:
->>> [...]
->>>>>>>>> I want to note this driver works quite differently than how ACPI power
->>>>>>>>> button does.
->>>>>>>>>
->>>>>>>>> You can see in acpi_button_notify() that the "keypress" is only forwarded
->>>>>>>>> when not suspended [1].  Otherwise it's just wakeup event (which is what my
->>>>>>>>> patch was modeling).
->>>>>>>>>
->>>>>>>>> https://github.com/torvalds/linux/blob/v6.16-rc3/drivers/acpi/button.c#L461
->>>>>>>>> [1]
->>>>>>>>
->>>>>>>> If you check acpi_button_resume() you will see that the events are sent
->>>>>>>> from there. Except that for some reason they chose to use KEY_WAKEUP and
->>>>>>>> not KEY_POWER, oh well. Unlike acpi button driver gpio_keys is used on
->>>>>>>> multiple other platforms.
->>>>>>>
->>>>>>> Interesting, but the ACPI button code presumably only does this on resume
->>>>>>> for a normal press while the system is awake it does use KEY_POWER, right ?
->>>>>>
->>>>>> Yes. It is unclear to me why they chose to mangle the event on wakeup,
->>>>>> it does not seem to be captured in the email discussions or in the patch
->>>>>> description.
->>>>>
->>>>> I assume they did this to avoid the immediate re-suspend on wakeup by
->>>>> power-button issue. GNOME has a workaround for this, but I assume that
->>>>> some userspace desktop environments are still going to have a problem
->>>>> with this.
->>>>
->>>> It was done for this reason IIRC, but it should have been documented
->>>> more thoroughly.
->>>
->>> I assert that it should not have been done and instead dealt with in
->>> userspace. There are numerous drivers in the kernel emitting
->>> KEY_POWER. Let userspace decide how to handle this, what keys to ignore,
->>> what keys to process and when.
->>
->> Please see my last message in this thread (just sent) and see the
->> changelog of commit 16f70feaabe9 ("ACPI: button: trigger wakeup key
->> events").
->>
->> This appears to be about cases when no event would be signaled to user
->> space at all (power button wakeup from ACPI S3).
-> 
-> Ahh, in S3 we do not know if we've been woken up with Sleep or Power
-> button, right? So we can not send the "right" event code and use
-> "neutral" KEY_WAKEUP for both. Is this right?
-> 
-> Thanks.
-> 
+#syz test: git@github.com:zhuyj/linux.git linux-6.15-rc4-fix-rxe_skb_tx_dtor
 
-I did some more experiments with this affected system that started this 
-thread (which uses s2idle).
-
-I only applied patch 3 in this series to help the debounce behavior and 
-figure out impacts from patch 4 with existing Linux userspace.
-
-If suspended using systemd in GNOME (click the GUI button) on Ubuntu 
-24.04 the GNOME workaround mitigates this problem and no visible impact.
-
-If I suspend by hand using the kernel interface and then press power 
-button to wake:
-
-# echo mem | sudo tee /sys/power/state:
-
-* When GNOME is running:
-I get the shutdown popup and it eventually shuts down.
-
-* When GNOME isn't running (just on a VT):
-System shuts down.
-
-
+On 6/26/25 1:55 PM, syzbot wrote:
+> syzbot has found a reproducer for the following issue on:
+>
+> HEAD commit:    ee88bddf7f2f Merge tag 'bpf-fixes' of git://git.kernel.org..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14367182580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
+> dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e9008c580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10c12f0c580000
+>
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-ee88bddf.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/258fe65055ba/vmlinux-ee88bddf.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/06b784a6d799/bzImage-ee88bddf.xz
+> mounted in repro: https://storage.googleapis.com/syzbot-assets/59084afab8b5/mount_2.gz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com
+>
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 1088 at drivers/infiniband/sw/rxe/rxe_net.c:357 rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
+> Modules linked in:
+> CPU: 0 UID: 0 PID: 1088 Comm: kworker/u4:9 Not tainted 6.16.0-rc3-syzkaller-00072-gee88bddf7f2f #0 PREEMPT(full)
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+> Workqueue: rxe_wq do_work
+> RIP: 0010:rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
+> Code: 80 3c 20 00 74 08 4c 89 ff e8 61 65 81 f9 4d 8b 37 44 89 f6 83 e6 01 31 ff e8 71 e6 1d f9 41 f6 c6 01 75 0e e8 86 e1 1d f9 90 <0f> 0b 90 e9 b4 01 00 00 4c 89 ff e8 75 89 fd 01 48 89 c7 be 0e 00
+> RSP: 0018:ffffc900000079e8 EFLAGS: 00010246
+> RAX: ffffffff88a26cea RBX: ffff888048886000 RCX: ffff8880330b4880
+> RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff887bc1c4
+> R10: dffffc0000000000 R11: ffffffff88a26c60 R12: dffffc0000000000
+> R13: 1ffff11009110c0b R14: 0000000000025820 R15: ffff888033430000
+> FS:  0000000000000000(0000) GS:ffff88808d251000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007ffd7005cfa8 CR3: 0000000047588000 CR4: 0000000000352ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   <IRQ>
+>   skb_release_head_state+0xfe/0x250 net/core/skbuff.c:1139
+>   napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
+>   e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
+>   e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
+>   e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
+>   __napi_poll+0xc4/0x480 net/core/dev.c:7414
+>   napi_poll net/core/dev.c:7478 [inline]
+>   net_rx_action+0x707/0xe30 net/core/dev.c:7605
+>   handle_softirqs+0x286/0x870 kernel/softirq.c:579
+>   do_softirq+0xec/0x180 kernel/softirq.c:480
+>   </IRQ>
+>   <TASK>
+>   __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
+>   local_bh_enable include/linux/bottom_half.h:33 [inline]
+>   rcu_read_unlock_bh include/linux/rcupdate.h:910 [inline]
+>   __dev_queue_xmit+0x1cd7/0x3a70 net/core/dev.c:4740
+>   neigh_output include/net/neighbour.h:539 [inline]
+>   ip6_finish_output2+0x11fb/0x16a0 net/ipv6/ip6_output.c:141
+>   __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
+>   ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
+>   rxe_send drivers/infiniband/sw/rxe/rxe_net.c:391 [inline]
+>   rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:450
+>   rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
+>   rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
+>   do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
+>   do_work+0x1b1/0x6c0 drivers/infiniband/sw/rxe/rxe_task.c:187
+>   process_one_work kernel/workqueue.c:3238 [inline]
+>   process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
+>   worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
+>   kthread+0x70e/0x8a0 kernel/kthread.c:464
+>   ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+>   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+>   </TASK>
+>
+>
+> ---
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
