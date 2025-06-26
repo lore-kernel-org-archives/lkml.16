@@ -1,106 +1,72 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3ACD282EB;
-	Thu, 26 Jun 2025 03:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF59282EB
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 03:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750908860; cv=none; b=Omn5LSUjIKtw+L8R6YEOrW8rY6fScp1l9iYukyDmYIbDwccSemgTG7rx9+vEWN64xYQcgvJEgtHlxBW2XeQ0CQ/m49OjX2k7CVCRv7A8eW+JA4FFftFprEs9PnxeK8eM4TQ8VVPVE9CggdHHvA1vYIREe1fJW9lUyOrkrhMi16k=
+	t=1750908904; cv=none; b=sm88u/X7zcM3/RjLnXJPzMuFlNy4LWCe9cQgDtjw2WCLxgeTuuSkCt5qgXIEnBaclu6oi8Bijo0nuKafBKZ4A8FTxQbc/y/KExXOo1PFjyCQj5Zs7c9CDPcen25RKYa1hm2HPgmuwijOmmYewbIG7qdnRKwSPEaevBnl/RJpZpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750908860; c=relaxed/simple;
-	bh=JdFL+DurqCH71s/6ds1Pl9Z4B1ZcvOyBExK7IPWkSxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZaRF+n3M7Bl96GA/Qe5Lg2oShX1fvA/rbLU8kTEPBAWnWNeQmi6JVRbz2FdVz7DPUUIrICfxojb90HalFaCm5lndotAjfmnpN/33TXFmQtnNLlJJAOyGVxkYfMvMdwGhYP/9TIoa6VVP1pDoeF4potxiKgNVvguLsjSaE38s04k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=syGYz0q1; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="syGYz0q1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xjFDA2GkJiXpWNrvkJ64etUEx2N5io25QFzgQ0wijOM=; b=syGYz0q177vJXqMXDy0hAzhc+a
-	TLcaB0r9spkI4eQJi/VE79xl8AMD/rXV7mfvqSp0SVKra/nqqxpxox4bTAJZTHklFbaimO8JBSFmj
-	bdbp4r5HfV1lxPaCPTR2Q1QUbFCvllySeDeoGzzVxxQlE6zMTqjPRTEuRxmVv33yRS+LIMLuWMZMc
-	8DMCgSgCGQq4wxRuTgVKBmZ/9Dma+0m1k68mVD1T9TNbrf3w4uGpU3qgNlmVuKLjqo+7Jlr/HjmvW
-	D9BUka2OpLEbCnjfHZTQO2k5v9zje8ikXEW2YiSBOk2si4DlLZQ1SHij358LNWiP8ndX/rFz4l/h5
-	SzbGEOnQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uUdNL-0000000B2G8-0WRT;
-	Thu, 26 Jun 2025 03:34:11 +0000
-Date: Thu, 26 Jun 2025 04:34:11 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc: Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Richard Weinberger <richard@nod.at>, ocfs2-devel@lists.linux.dev,
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] ocfs2: update d_splice_alias() return code checking
-Message-ID: <20250626033411.GU1880847@ZenIV>
-References: <d689279f-03ed-4f9b-8fde-713b2431f303@I-love.SAKURA.ne.jp>
+	s=arc-20240116; t=1750908904; c=relaxed/simple;
+	bh=iiEuxtPMysmS4QlK83yylTwNj8qbTIREBQF1Vb2nwdI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=F4xOPBTzrRjVojXAwVeFr0hgb49o4ZQlQGTlzT4H9G3N89W+s2KFcrIs8gH5ZK15wWn8tt8DaoQNqElWB7pOI2SHxM2wT3hhVWhnkewA/8UU8G4enOpBeQuK4wZnjkBZtjoCgR4PlUXX5I2kcX/YptepyGnWzEfkaECxtmgWBnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddd97c04f4so6827465ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:35:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750908902; x=1751513702;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FDY8PR8gWnHBIr4iJHH5a2bxsHeqpKj4ORkUhs0LETk=;
+        b=J8Wdp59nLB7liUVZNBdK9fiIg8vQkalXEpv0311Lrg9WbNLs7dSonkgCnpAGnh5NYz
+         mndXDTrTLm50kkTVXudPRALSr0LMIA5OLD+DxRCqJSV+T0yotCSiPONCyZ/+qJ2NL3dY
+         WY/2AtxKHU4g4s4eS3vWk1Afwr0EVZ7L2SnHefVTlxwK02s18xSOeWlhWszHatP+ugj3
+         N9Gr7YWm+hsnYcRlLEixO63U8HDh3rakGvRPUcB7SxAT8VeoxQUSrGd0pd4jlFWB4F+X
+         OdYpRuow/K1IF26eKmnxV4RcC8UbaLKYrEFEOpiJpo2fMN+gKoyR3Hn+IGJZR3feB0WV
+         jqNA==
+X-Gm-Message-State: AOJu0Yz9RliW0fqDL8rE5EYCWidaJv25KgPsSlTM4keZUn4v52pGVM9q
+	7FUvtNqgN9SijbYscDOP3046OFAk43aOvTCScLH2bmt+i7XoUPBU/7obW0VBXJzN7/O5E91kfje
+	c6enKeNtK8jpWf52jmqtLEVBfgkKp9H7Uk+OLGRVciEkvbmi0sHhGyfGYBLY=
+X-Google-Smtp-Source: AGHT+IFXLiD+6dCBzPCRiDYprDpw4+FwK/nvOXorEhpv9XEUDtwFfLhmfXsfJjm2oAs6EUmevv3ARQecTu7GNPPPKPi6MAeJqXMh
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d689279f-03ed-4f9b-8fde-713b2431f303@I-love.SAKURA.ne.jp>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Received: by 2002:a05:6e02:1a04:b0:3de:281b:d0e4 with SMTP id
+ e9e14a558f8ab-3df3dfd182bmr27264565ab.2.1750908902735; Wed, 25 Jun 2025
+ 20:35:02 -0700 (PDT)
+Date: Wed, 25 Jun 2025 20:35:02 -0700
+In-Reply-To: <20250626021712.2842722-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685cbfe6.050a0220.2303ee.0118.GAE@google.com>
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
+ (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 26, 2025 at 11:14:59AM +0900, Tetsuo Handa wrote:
+Hello,
 
-> But when commit b5ae6b15bd73 ("merge d_materialise_unique() into
-> d_splice_alias()") was merged into v3.19-rc1, d_splice_alias() started
-> returning -ELOOP as one of ERR_PTR values.
-> 
-> As a result, when syzkaller mounts a crafted ocfs2 filesystem image that
-> hits d_splice_alias() == -ELOOP case from ocfs2_lookup(), ocfs2_lookup()
-> fails to handle -ELOOP case and generic_shutdown_super() hits "VFS: Busy
-> inodes after unmount" message.
-> 
-> Don't call ocfs2_dentry_attach_lock() nor ocfs2_dentry_attach_gen()
-> when d_splice_alias() returned -ELOOP.
-> 
-> Reported-by: syzbot <syzbot+1134d3a5b062e9665a7a@syzkaller.appspotmail.com>
-> Closes: https://syzkaller.appspot.com/bug?extid=1134d3a5b062e9665a7a
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> ---
-> This patch wants review from maintainers. I'm not familiar with this change.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Not the right fix.  If nothing else, -ELOOP is not the only possible value
-there.
+Reported-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
+Tested-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
 
-This
-                status = ocfs2_dentry_attach_lock(dentry, inode,
-                                                  OCFS2_I(dir)->ip_blkno);
-                if (status) {
-                        mlog_errno(status);
-                        ret = ERR_PTR(status);
-                        goto bail_unlock;
-                }
-looks like pretty obvious leak in its own right?  What's more, on IS_ERR(ret)
-we should stop playing silly buggers and just return the damn error.
+Tested on:
 
-So basically
-        ret = d_splice_alias(inode, dentry);
-	if (IS_ERR(ret))
-		goto bail_unlock;
-	if (inode) {
-		if (ret)
-			dentry = ret;
-                status = ocfs2_dentry_attach_lock(dentry, inode,
-                                                  OCFS2_I(dir)->ip_blkno);
-		if (unlikely(status)) {
-			if (ret)
-				dput(ret);
-			ret = ERR_PTR(status);
-		}
-	} else {
-                ocfs2_dentry_attach_gen(dentry);
-	}
-bail_unlock:
+commit:         c4dce0c0 Merge tag 'spi-fix-v6.16-rc3' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=155df70c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=595d344ff0b23ac5
+dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=178acf0c580000
+
+Note: testing is done by a robot and is best-effort only.
