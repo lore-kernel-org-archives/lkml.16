@@ -1,79 +1,72 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A3023B634;
-	Thu, 26 Jun 2025 22:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5562720C024
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750975672; cv=none; b=ftVnhJ9OgS1TQSd6eqc27s+5Yjk/N7WqazTkukrpqq8Og95S/fD3U1UizHCyPm3gbsm9WmLMzaS0nsPvV+Eu+Pt62nlD9j1wpGAhjsIebKlA21pzdcsneBSqxS0hDnaWqe//1CtLKZGFBq+8AHm9+fCg4scgM/GFt5rUv8nxTac=
+	t=1750975744; cv=none; b=pysMEpFazODGsi/SgWOu8NPXbl5L/Qd60sxT3tj4+MHzIks4kQyjQ+buxOrPyY2jk7vt7JU9kzcmQRZRhwRJINzaZwh5JesevPeuz6hdpo7OHNedvCXgbCkYzcxD9R6jJ3GVjlEiUHXHy59wqEw8bdRFDD34ZSIwKw0Npn6U+Y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750975672; c=relaxed/simple;
-	bh=bUTpjLkfsFNOyjEtEopr5we1x3Roxq22HlCVo4NPojg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fE4fBLCowK+WBJogZPSWQ7l7VW/jFsULdUiK0c82H2u5xJsNwjBeBQn7iRZ4Bwz+CLA3Md9ICDLNRav6VovDOXNm+5n8Cl19aTR/H3AnG5zoQ8olTKmJ0PsMhJ7xJOpySVw513RZ52Z7wTb5Zrkk8qw7NHuup4FstLLF0rQF3SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Lf/H7SPI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GH86Pf0x; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Lf/H7SPI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GH86Pf0x"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750975668;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HC18m67HnK1X7lBUoyKEQKdHSun378qI4UuLYILh+NY=;
-	b=Lf/H7SPI9D1X41sl8/1PmcSDXSU+nBDjIp75Y8ag9fGOojziddK0AyFpAalXGu3vIbVxCA
-	XdE8ndUKS9SqPYuGgbBHs9yfM+pVczvyz/10yu1TfFDUF6CG1DYJKv0M5JqMJEgTPswQ51
-	I4e1doPL7tEQq4MViRBvq6YtpKV3dSBkfw6g5e6U1Gp27j3tOJJqBiukeC5uKq1avDA2b5
-	qzG/5SeV6IPNSTKgfOgsL0ByG8NQ5YHS+g7uTmQWVmYQQobRn0l0lf6myNo4hf5GQCyK+e
-	rig5SKzFcjIU0kJopQxB/s1r7D/9eTUMzC8yg/b46Wk8KZgepzxIthvKTO5L1Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750975668;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HC18m67HnK1X7lBUoyKEQKdHSun378qI4UuLYILh+NY=;
-	b=GH86Pf0xVcsQMuaOc7ow/3xdfB1Ix9yyJQEkxG1NLTStZfk85b0HXAsHlgduJf47xXELdh
-	/GrYTgk9Z0qckhCw==
-To: =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@igalia.com>, Ingo Molnar
- <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
- Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>, Arnd
- Bergmann <arnd@arndb.de>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Waiman Long <longman@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-api@vger.kernel.org, kernel-dev@igalia.com, =?utf-8?Q?Andr=C3=A9?=
- Almeida
- <andrealmeid@igalia.com>
-Subject: Re: [PATCH v5 1/7] selftests/futex: Add ASSERT_ macros
-In-Reply-To: <20250626-tonyk-robust_futex-v5-1-179194dbde8f@igalia.com>
-References: <20250626-tonyk-robust_futex-v5-0-179194dbde8f@igalia.com>
- <20250626-tonyk-robust_futex-v5-1-179194dbde8f@igalia.com>
-Date: Fri, 27 Jun 2025 00:07:47 +0200
-Message-ID: <87ecv6p364.ffs@tglx>
+	s=arc-20240116; t=1750975744; c=relaxed/simple;
+	bh=Jif/8na3lNSPGoolv3lSZ9wK+yU4rZRbBgFnv4gHOmU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=JjxdA9AsyEh80IlZOMxdIjoJ5aL9sKRRc0wG2vFkSWc+NsHuYx9prwDYP9jtQeYaFCXmBtI87aHyN0jLv2nNK+kqRXwzsc+mlEu2j828gAZPk8tJ15fOuv7rSGGWudZjmiZw63fGj6LmF8Twcg+VMGlVjc87I1HXnl7nmAZNoto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3df2e9e6146so9429375ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:09:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750975742; x=1751580542;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vRK3+FlO6ljf6Oh4ZKjAGMcGWuiyrN9PqcQuforqMbs=;
+        b=GVJd6gOtFYL4VLOADNdIdThSaH4hlZGYJANxy1fGmYaxdJ2F+TEcpv2fqZ+o6H4ZAh
+         NprwyZcnrsrRSjHtwabZYQp8yzVrkd2ymHfImgVOwUny7mgWbT3JFlnwArlR18DN2t9b
+         sLi/Fh+kjr9v9pt+OsDESpDPfN3RosCPG2MAkv/rIlVAFMoeuemewJ6+YprbRB7eAUpu
+         DlfWsyRoxJcn2nslkADVtc9qC/HrUmcsPqvTas34jxxh6Qylyi+jCnPI245lcI9DKI/9
+         rbPXkJ9RTh+jiQAacgMXY9/UrsQId51PgIf2j4lsJHcE0H+dp1PbW9HVVV3woqVKnNUG
+         ylFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXqFrMF6h4v8rc1PGa+jGmmLRDMzyAGfF4TUJSHZjWpQ/qgQ0vgwkoVuceFVzjc8CcIFqWkLdkcUcKMX+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhegnhACbyx0IsSWS+TcsSUVhkFxNlDpasUUc/6E+53ROfX059
+	dhRnlr8+orEhm8wsaaOVXPDJlSG2+lJkFj8A30REYmVub6zEOwKjxqgsf/D+9N9SE7B/ozcfh42
+	tLfjF++jVpJL+oA9xa47v8K0SuROgYKZGvT1rfTZYaP0aPhv8dRSQ6eHcOME=
+X-Google-Smtp-Source: AGHT+IF9YvS84oqf7D+CeogSq7dl7RAVSYc0jAEbPkuxd2ULtnVpcAkttTSqGPIEZhVUQozKSpavvnpe/mx6JUe9cshg1bA3Ujbl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a05:6e02:214a:b0:3df:3926:88b7 with SMTP id
+ e9e14a558f8ab-3df4ab5672cmr14674705ab.5.1750975742346; Thu, 26 Jun 2025
+ 15:09:02 -0700 (PDT)
+Date: Thu, 26 Jun 2025 15:09:02 -0700
+In-Reply-To: <20250626214902.1880-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685dc4fe.a00a0220.2e5631.037b.GAE@google.com>
+Subject: Re: [syzbot] [hams?] possible deadlock in nr_rt_ioctl (2)
+From: syzbot <syzbot+14afda08dc3484d5db82@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 26 2025 at 14:11, Andr=C3=A9 Almeida wrote:
+Hello,
 
-> Create ASSERT_{EQ, NE, TRUE, FALSE} macros to make test creation easier.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-What's so futex special about this that it can't use the same muck in
+Reported-by: syzbot+14afda08dc3484d5db82@syzkaller.appspotmail.com
+Tested-by: syzbot+14afda08dc3484d5db82@syzkaller.appspotmail.com
 
-tools/testing/selftests/kselftest_harness.h
+Tested on:
 
-or at least share the implementation in some way?
+commit:         f02769e7 Merge tag 'devicetree-fixes-for-6.16-1' of gi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14217182580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=644a0493ff5118b1
+dashboard link: https://syzkaller.appspot.com/bug?extid=14afda08dc3484d5db82
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=127e7182580000
 
-Thanks,
-
-        tglx
+Note: testing is done by a robot and is best-effort only.
