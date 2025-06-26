@@ -1,265 +1,252 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE522226D18;
-	Thu, 26 Jun 2025 06:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750920093; cv=none; b=XH8eRNZJp+AjmY+1+qUSqFzr/y3UxhbPYG7suP8n30kR4rQ9o20LncNgW2dBG7w2tGJxH8G9mRS9wUsDiGobYxYAfKbJ/TQnAEYH4iqcdBFnZaJFQlB3ufFSMLjJDBcnGfdZ8l/8gPfzKB+k/3SOnpWgTLmnW6ctZlCtEDpa9G8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750920093; c=relaxed/simple;
-	bh=IBU45ngT/QcLkfOFXGQS3B/xyXruqk6nhJNIpi8dvPo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dUFMZ+AWwPKNArEn6+LF8vuqeVYK6+VB2to7a6Uu6UJ+UtKY78nvg6RNiF85micRQvOj2jGwxIHu/Dt9eDo+nKtj1sAIHcYisORw9E2aYZP6c4oDLqJvxrm9FMi4LGkokB5xMvyq98ZV+A73NSL5w6CzHLckwLPGK6vK4zqHJRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-a7-685ceb94fdf3
-Date: Thu, 26 Jun 2025 15:41:19 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: willy@infradead.org, netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
-	akpm@linux-foundation.org, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
-	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
-	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-	david@redhat.com, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, horms@kernel.org,
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	vishal.moola@gmail.com, hannes@cmpxchg.org, ziy@nvidia.com,
-	jackmanb@google.com
-Subject: Re: [PATCH net-next v7 0/7] Split netmem from struct page
-Message-ID: <20250626064119.GB28653@system.software.com>
-References: <20250625043350.7939-1-byungchul@sk.com>
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0F6219E0;
+	Thu, 26 Jun 2025 06:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750920723; cv=fail; b=ut0xx1Ff1Sm3j1fg/ZjGHQffsoUKprnMxLI5uFnNZVTU9toL+OGSJwaDASE1s/lYvRJj2FNEA3Vv/yjpBwP/TEEzH6UDLkPfkwAomVU+uOllEFDOAjJxlXEjazwyeAHeKdfG6EV+F5fT0giR2CWXblIfE62p0pLcrllOijwoFF4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750920723; c=relaxed/simple;
+	bh=2PAdhgBdnGKCJD68gy4hwn2GvsDGyKVf6wNv08H6GYY=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=h0zEP7kAT4Om5L+JXqL+AXSJf93NDiaCrdzDSPWfs8sEwQYzfx8qAApbipP8p7tQSi49J6pe168zTQDmg0fsXSl9hP6wuMv5Ah8AY5o46QGud0vekl8xkPJskZazkul3hTwIuomv79ZpMmmI94kmqG2cCasYFU5Ou1VRkkJ3/4c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QEHBUHfq; arc=fail smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QEHBUHfq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750920722; x=1782456722;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=2PAdhgBdnGKCJD68gy4hwn2GvsDGyKVf6wNv08H6GYY=;
+  b=QEHBUHfqJL7omFlnWa2cvpTWUt4ZYLTXk+qFEFPYLasLdUctlpjsOhbw
+   Z7sLW86MFaQpT03+Sn+ij4E9rBpt4skZcp4Oifmj2rthBsLVSGlVaAvKA
+   yBjqomRzM25REqU8OVtG1hh4LuCjMEMGMTD2Hns2Zh/g/VlQZ6fxrqeJa
+   hNWX+n/rF5IwzB1SO2orYtV6RCaZn6IZdn0fLd8EYtcze+Ih0NbjMGSnG
+   UI3x2NDliwGzcBqxStNT256oduCI85MYDkb32Shn/lOpOaV+BhN+RvCyJ
+   LgtNmnNgP3/q6wy/Fss6p6/80nnNvxQCpuZoJAv+c8lrpVaKgj5Zhax+E
+   Q==;
+X-CSE-ConnectionGUID: o/AQlqA8Tam1eoeVRCg1+w==
+X-CSE-MsgGUID: 4OBHCFj6Szmw7oNz6Ff2ww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="57011316"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="57011316"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 23:51:52 -0700
+X-CSE-ConnectionGUID: nbE3MnNcTxGQYtZ+SawHtA==
+X-CSE-MsgGUID: AL5WU9roRweIvzzMtmXV1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="151947805"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 23:51:52 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 25 Jun 2025 23:51:51 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 25 Jun 2025 23:51:51 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.56)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 25 Jun 2025 23:51:51 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=W5R3jDTIIGKiCvRYjlvkejsJpgbhX5s1gIukkhnZuYobtrXzYJsGm7cpKeDHHNVeFHpe5TXvfoYoACnCwFFK/CP0zicc16A6+NmtysvIwizi2BlHsn0eZ+/rEkwjK6X/3waDksDcYLCNpV11HEZLd4VeHzfqtp9P0L0p+VzZdnZrka7nd2K+H9/dI7h3O7AteEVpX7NWo1t8hqw2iSFJkGpWz3Rn0NGXoe3VM6My33iy1xOo62eB1zqX7zgs2AHGca9oDZxEmEfV5/gaBVWwEBVDnAoL6l0ywXgVXI1cTIXUJDbyP36BoDAIljV/INtLRpqb7b5+fAPPBPJkMfu6aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aR4C6yQECsWVisJKQMipZAirWurqIkTHv+BxqytxM/4=;
+ b=f2oZ9YOc/eWw3+eO/pzfTDjTRTn6ou2dWG/KjWwOvNvTwKGLqlxAMA+2hS/kzIBwz1HYxHzxEK9AgXNSHzEKYjvhqg8loul9YksD8j+UfVdEzb1y3Gsnjm51+d3NxR38tBR/KgT+QXaC4KEjYWeRJhiUci96cSFloPjIfQIPRsglGcx/XxTX8yruxA6i1YR5msPKkPlRt94FbwkXud4MaZw/jKQBmJYtYc3P+p4GjLehoOdul3mEH0nNNSfgiezGQHFMB+wSPpapn3MxdMtTjruNmw8vDJVUz+Bp+LgUBVmdfRYwVgzHe0Z3dDN09DgOtqvDmvQwopc/jDkuykHaNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BN7PR11MB2708.namprd11.prod.outlook.com (2603:10b6:406:a9::11)
+ by DS0PR11MB7577.namprd11.prod.outlook.com (2603:10b6:8:142::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.26; Thu, 26 Jun
+ 2025 06:51:34 +0000
+Received: from BN7PR11MB2708.namprd11.prod.outlook.com
+ ([fe80::6790:e12f:b391:837d]) by BN7PR11MB2708.namprd11.prod.outlook.com
+ ([fe80::6790:e12f:b391:837d%5]) with mapi id 15.20.8857.026; Thu, 26 Jun 2025
+ 06:51:34 +0000
+Message-ID: <b473517d-3a59-4554-9673-a49b9e3a84f7@intel.com>
+Date: Thu, 26 Jun 2025 09:51:28 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] mmc: sdhci_am654: Workaround for Errata i2312
+To: Judith Mendez <jm@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, "Vignesh
+ Raghavendra" <vigneshr@ti.com>
+CC: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mmc@vger.kernel.org>
+References: <20250624221230.1952291-1-jm@ti.com>
+ <20250624221230.1952291-2-jm@ti.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
+ 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
+ 4, Domiciled in Helsinki
+In-Reply-To: <20250624221230.1952291-2-jm@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0521.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:272::22) To BN7PR11MB2708.namprd11.prod.outlook.com
+ (2603:10b6:406:a9::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625043350.7939-1-byungchul@sk.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHefeenXNcTo6zy5sJ1UpCSbtQ9EQR0ZdeKiHqUxeylac2mhqb
-	Li0qdUYkbYVJ2VyxCLelwWKFzkir6bxQpBmuZV5q3S8mZYnTqDxW1Lcf/+fP73k+PDxWnZPH
-	87qsHNGQpdGrWQWjGIi+lFL2Ybt2YcQ9G+yeqyxUj+SB65lPDvaqGgRfI085GGpqYeHypWEM
-	9vZiBr55RjG8ag5zUO1Ng37nawZuHa/FED7VyoKleAxDfeQTB0U+tww6aqxyKButxFBb8IyD
-	RzftLPRd/SmH134LA222Kwz0W1dDs2MqDN/7iKDJUyuD4ZMXWDjT6WDhRXE/gs7GMAMVhVYE
-	noaQHMZGxh0VgT5u9Vza+HEQ0xtXnshona2Xow5vLr3uTqYloU5MvVUnWOr9UsrRnuAtlraW
-	jzG0zjckoxbzJ5Z+ftXN0MGGLpZ6bnQx9L6jidsYu1WxMkPU60yiYcGqnQptqy2A99etyCt6
-	E1eA+lJLUBRPhCXEbBmVlyB+gsu/ZksxIySS+nApKzErzCOhUARLlcnCAhIs3VKCFDwWzCwp
-	7YowUidOWEPefQ9giZUCEGt1ISexalx5LFj4J48lbedfTvSxkExCP97JJCcWZhDXD16Ko4Sl
-	xB42T1SmCHPInZoWmbSLCD6eXPQG5L9Pnk7uukPMaSTY/tPa/tPa/mkdCFchlS7LlKnR6Zek
-	avOzdHmpu7MzvWj8XZyHv2/zoS8dm/1I4JE6WnktuE2rkmtMxvxMPyI8Vk9Wnl22VatSZmjy
-	D4qG7HRDrl40+tEMnlFPUy4ePpChEvZqcsR9orhfNPydyvio+AK0PCFlE00yPcxACYH7Nv1u
-	xUB9M26c+2h7yqSA/tpeZ3fHoaPsnqePBwaNqvai+auc1tMxb6uIv/3iurS1ceu3mNe4Zz+4
-	/N6UGMs3BWNcR27vmll/4Vt58t2Xn4dyK2/2eNN9Y2V0lsU10JvUEJvp9D3fsGHjDt3OhKQp
-	qPt4hUvNGLWaRcnYYNT8AtbzIgcqAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG+Z//2dlxtDpNrYN+m4xASCsq3zDCiuoQFH5IowvU0lMbzgtb
-	iUbJ5jRLcplZ2pywiqy0Wi2bM7yE5mVaGIprrdxkpd0sS81aC8tJUd8envf3/D69NJb4yQha
-	mXGYV2fIVVJKRIq2x+uXln/Yq1jWE5gPJstNCuq+58C1YbsATLU2BFP+F0KYfNRFwZVL0xhM
-	fQUkfLX8wDDS6RNCnXUbeGtGSWgqasDgO9NNQUlBAEOz/5MQ8u3XCWivdgjgqc0ggPIfVzE0
-	aIeFMPDARIHn5i8BjLaVkOAw3iDBa0iATvMimO4dQ/DI0kDA9OlqCs71myl4VeBF0N/uI6FK
-	Z0BgaXEJIPB91lHV4REmyLj2sXHM1d94TnCNxiEhZ7Ye4e5dj+aKXf2Ys9aeojjrRJmQe+ls
-	orjuygDJNdonCa5E/4nivoy4SW68ZZDirrz9THCW+kEyUbJbtDaVVymzeXXsuv0iRbexA2c1
-	xufkvwnVIk9MMaJpllnJVk5lFqMQmmRkbLOvjApmilnCulx+HETCmFjWWbarGIlozOgptmzQ
-	TwaZUGYD++5nBw5mMQOsoU4nDGbJrLLQqfvTL2QdF1/P8ZiJZl0z74igEzOR7LUZOliHMKtY
-	k08/h4QzUexDWxdRisTG/9bG/9bGf2szwrUoTJmRnS5XqlbFaNIUuRnKnJiUzHQrmn2ImuM/
-	z9rR1MCWNsTQSDpPfMe5RyERyLM1ueltiKWxNEx8IW63QiJOlece5dWZ+9RHVLymDUXSpHSx
-	eOtOfr+EOSQ/zKfxfBav/nsl6JAILUqoQaXvN3n7+mxJ90NjI+/nKZ1g92xMlqwYV3oLK2S3
-	n8WnHLLkB9yOAV0aHpyYCe/9eH7NpsQoxb6i1rxYWUtqlv0EDLWOxHh5jXRsJT5z98CKx3fX
-	h95DrLop9+OxWxtkcSdH3dRRg64nuSJi4UHtgs2rd+StT3J/e5J4eY+U1Cjky6OxWiP/DaLH
-	RgQMAwAA
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN7PR11MB2708:EE_|DS0PR11MB7577:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3eb97752-88ba-4efa-11d6-08ddb47de33d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?eForb3dCZEFaa2MwWWppZjR0OFRYUldVa01zT3BvK2tTUndqbGhReWZJMGVi?=
+ =?utf-8?B?OG5FcTFuM25uZkdwWDRDaWpjKy83ZGNaZFdCRUp6RVo2MVErL1FUcUcyMHh1?=
+ =?utf-8?B?dXJ5aUFGMDNPS3ZOdUQxZEFUTk1md1BTcjF4c25Xc1dzOEtNYTVGYkVlbXc2?=
+ =?utf-8?B?NFNNbEtNSVQ2dHFHNk03UjJ1cFFKRnhVL0hjeWxxclI5TWM5VjFCYjg2eWVE?=
+ =?utf-8?B?U1BDRUEzZ25saFRQVHlpN3NyM3ZIQ0JnZS91MlNtY2lXbFpzR0puLzlqY2lv?=
+ =?utf-8?B?VFdhTzdZUHBCaDlEQUFGNU9OdjBjV0xMMnQ1MEdQUk5nU3RXODVRMlRlTEZR?=
+ =?utf-8?B?amU3NVo0WFhEVmZsUTQ2L0xTZE45dGZwYnRzZFZhMFZLSXhMeVc3RDE4Z0hx?=
+ =?utf-8?B?b2dSQitiUlV5ejk4MnR5RUQvM2pSWEF5Q2lnYWwrbkVNSzNaS3pKaDBRaTE0?=
+ =?utf-8?B?QUptVjY3b1lBU2xWSloxanJ3SkkxRkplUzVwNEEvTy80L3RXSE44YU9NQ3Fh?=
+ =?utf-8?B?YXEybklTek40YWRnd2F2Q25wK0gvZUZkcEtqU3NyOGlJM25LMVFHQUdyZWtJ?=
+ =?utf-8?B?Q2ZCaWRhTnJhMWNpMXcyamxFWURkNEhJKzBQMW1XRlBXRHpsTVl4TW5HdnZr?=
+ =?utf-8?B?UGZGaGxBdWluSTRKaDJHSzN0bU1CVEoxSHhKMEdnNHJQVm9hL2FnK2JIdG8v?=
+ =?utf-8?B?WHMvN0ZoYmJRVU1hb1BBRWdhWGRibzMrUkNLbHJJUCtrbHVSWHE5QWFpYzgr?=
+ =?utf-8?B?YndSR2NLRHJkWTdpQUtHeVpaTkIzSUk1WThXbm1oTXF6M0pXWEI4TC9aMVFZ?=
+ =?utf-8?B?aW9RNlNKWHNmTFFrdG55VmVHRFN1bm5IOE52MzdnK25VNWVac3dtMmx4aDIz?=
+ =?utf-8?B?Mi9pd1dXWUsyNmROV29Lbm0wbjJxcTJTNlNRQS9mK3A5SmVVenlWUzMwMGJY?=
+ =?utf-8?B?MmlGQWZLUWN5ZVNLOHdsSFNsVGQ1UWlJRlZBckd6K0EzUmNtcmFmR2g3em9G?=
+ =?utf-8?B?MCtURDNtaEgyVFovQ2NXQzJvSHR5V2I4N3ZGZW1WaE5DQ3hjZEo1Q1FmaW4r?=
+ =?utf-8?B?MFZhVnV1dUxuMU9acTBPQ3YxRktNNGtNTUI2cmVpTDUvSlBHWWxhUnhXTFl2?=
+ =?utf-8?B?d2pETDFydnRwYUdDcUg3andId2NFOUlweEUyVWRCYVBZT2FuWWdadjVubmVX?=
+ =?utf-8?B?VUNDdHQ1Nk04Qzhib1RSYm9YTGdBbjNOcW5uZG4ram5hU1k2bXJmRCtVQUxv?=
+ =?utf-8?B?U3ZwU2dGZGw0djhhcGNnRm1aVTlaOFcxY0hkQURBb0pHSm1HcXJSQi9rTnZE?=
+ =?utf-8?B?c09QVHB0ZzJzakNicTluMkdYL25kcjIyRWc1QmNRYTNlNzk0bUFFaWxxeG1T?=
+ =?utf-8?B?dDhSVFRVUGZZT3l6enByT3N0VjZFaXM3ZHVyQ1pDRkE4Q1QrQ2xYZzRXYVBC?=
+ =?utf-8?B?UmZ1WjcvVS94b29vTW1xVmN4RmIvTTQ3c1F4RTI3QVI5dDdWNXNUbjY5UEJs?=
+ =?utf-8?B?dGp1MFRnb1ZzaVl4Qnp3dk1NUUhrcWJFOENlRnk1S3B6SFJNcEtsQm91STZZ?=
+ =?utf-8?B?ZmVsTVV0VU42bDNzOEsxcjJXNEhocy9jVW1JaDQxZW9wM2J0NVRXSHg0T2JQ?=
+ =?utf-8?B?a0dPcmozWnloUXJPV3JwSTdtTG5TQzNYZ0xDWk1LdEVGVlhRQ0xvTHFWTW1O?=
+ =?utf-8?B?N0cwYTZCTVFvU3RoYWtTZnk0MktUV0h6MFBHblVTNGNyc1FFcnp5akpOcm0r?=
+ =?utf-8?B?SEZ5cTBvYUloV1JZY3E5ckFBVzkyN2dsNWJoY0tOc2M5YnQ4TThJOExSNWZa?=
+ =?utf-8?B?OFdJd08veDVGWUQ4S0lIbU1JY3ptekZ0blVwVjY3bE5IVzNtYnplVEx6eXNx?=
+ =?utf-8?B?QWpQYnMzY2pua0k4S3lKR20vNThMTWxOUHhiemZ3S2Y3RmU2T09pKzV2NnJ0?=
+ =?utf-8?Q?NBZqxDlSFEI=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR11MB2708.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RGFkUklVc25YSGRnL1FHNmErMC8rTVFPOHphVEJMeGZFNVJvdFdmWmxyTGhw?=
+ =?utf-8?B?aWtYK0tVcFhXakROOUQ1SHYrWXpmTDlpTFVFRk1OSDI4Z2tFemd3Z0VXR1Nu?=
+ =?utf-8?B?c1ZnSzMzNWZ2YW00SkRGbFNleUNlUmp1YnZwQnFDUUpxcFF6NjRhazVFc0Jw?=
+ =?utf-8?B?Sm5YQU53bHhoeXdqSmxXeU1HMkJVa2VhMmZFMWJTbEZzQ1BQMHZ1TVlxR2lT?=
+ =?utf-8?B?cW0xL2NjRFVHV3JBNW1qUHVpTXBpWllpYlhZcDF3bWJHeEFIdVZPK0lsd1M5?=
+ =?utf-8?B?ekxWSW9qVXFZRWtQUHdsNWd5M3ZtTWNLTndRMk5Nb1M5ZGtXTHd0TzRvd2F3?=
+ =?utf-8?B?SDh1bXdlQTVYVk82SlowMUJURzBHYnpsZURzb3dMWVVEV3ZXaHZXaXNKTUJs?=
+ =?utf-8?B?VW1BZjlYN2NNQVZPaFFXanpFamhiVUVmTHBVRWRyK28zTUJxampUUktPRWly?=
+ =?utf-8?B?bVd4M0xBUFg0NTBSdkF0RFhRVUQ5cW1GY0IxNGhaaEduSkVsbkJKN1RobVBo?=
+ =?utf-8?B?OTdUVjc4SzdGREk3M1JoRyt1aEk4aDE3L2NZQUhWQUZrVTNCeDVtcERnS2NC?=
+ =?utf-8?B?RGdkZC9uVHZJZHNmWmxjTVhDeEJWK2FnVysxL2ROd2tuK1BiN1J5VlppZ21Y?=
+ =?utf-8?B?ZDVVS1FNakViSUJwMTN2ZVRhUWZrSHlTUlcrdkdxMGY2SXNDVWw4K3o5R0I1?=
+ =?utf-8?B?SEM4T0k0RnBYRUpxbnA0UklpQmFEYmlhbHI5VzNnaEtZZmxJTEYwL1hxdG5m?=
+ =?utf-8?B?dCs4NThBZU81TG9Oc0ZNMk9RSnpKdFRlSFM0WmQzWmh3MzVGYWF2Z0twc1JQ?=
+ =?utf-8?B?Nk0xcFNaRXZCNFNENFhpVEw0K3NWMUIzMklUNkU0emRYdDh5MlJqNHFJdkpx?=
+ =?utf-8?B?K0xYOXhrNkdQRnF2RDJVQy9oaEUxUmgrYVpnS0dmSFhtSEtlc1k1VHYrQUl0?=
+ =?utf-8?B?QXJHRkd3SEpDQkROM01VeFFpUGJ4Vzl6TmZNbURCSlVaV1NmRXhwTi9kMUR2?=
+ =?utf-8?B?SmlQWTNCbGNCVm82RzJYMzczbjh1bXVZcW80c0lhdlFjV25TbzFBSnhIRzgy?=
+ =?utf-8?B?M0ZGUTEvdFJCQUFpSVB0RDVuL3pIaGRwQ3dCZTY2QjlHNTdYL2NsM3FsVTdX?=
+ =?utf-8?B?UGxNcEtyNkRBMjVaTG40dHd5c2pmTW83NlVHMkUrMEIvSm5pRmh3MnFBZmFP?=
+ =?utf-8?B?RnlvQ0R6YWNLQXZ1TTVIdXUwTDI1TFp5akpQQTJhS2s0bjQvSE8rZnRYdTAx?=
+ =?utf-8?B?UElIdk1hS2hDRWFCMXlyQnptS2Exdi84MzQ5SUVOQUF6SXA1S2dzSDFSclNr?=
+ =?utf-8?B?SE5namVlcy82dWJnU3dwMmlkSC9Pbms0SmpBSitNT3JlQlIybGQvcEY5enl0?=
+ =?utf-8?B?V3Rma2tNcHMyM2M5Q2pjeVlTK1hQYUg4cW1ucE4zQ05ENkl0SUx4dzVETXdK?=
+ =?utf-8?B?VmxSb3dmQWx1SjVmZzJ3T2k2S0k1MUV4RHQ3N3RGMkc1aGlSVzFHb3d5K05S?=
+ =?utf-8?B?NEZESFF1Myt4cTRBbzRBOGpVNGpvZCtXMXU3Q2dqaTFUM0V1VExqemJxT3BX?=
+ =?utf-8?B?d3lpWldrRFVESitPWmZsNTBmT1ZIWjhUZy9MWWMrbVRWdGx1YVNBenFHZVZV?=
+ =?utf-8?B?bnB0SFJaMFNFbXJyUTVvTkJMNnlXc0dqT2UxWURPNm81TzlDL2JlMlhTdHcz?=
+ =?utf-8?B?R0lFV0NnbllkcFNNcDBIVmY5WXBhMWRkUHdCWTUzd0h5VDIrNHZOd0o1SHly?=
+ =?utf-8?B?dnN0dDI5VVdKN1p1THZRMXVjR3dhN01mVTJZd01VdnA4S3drak8vMEJxNFZs?=
+ =?utf-8?B?dk0vR1VpbGZKRFBWbkVTTFBTMkcxK2lxSkVMS2FVNXlaTWZydFhBOW5CTE1I?=
+ =?utf-8?B?VDdaQ2ZkczYrRUs5RUhEVkhkWmtENi9RNTVLYktXVjFzOTg0bGNSMHN2ZmVL?=
+ =?utf-8?B?S2tJNGRqRUlFb2tYUDZ5SnpCVCtsSE42ZmpzckhNd21ycUNCa2xoN3hyaE1w?=
+ =?utf-8?B?WGI3Nk1wNlR0RStUSXgvOUg4QVJhV2I4Sm5Rdm55bXRUMmVlWDRxOTI4WDE0?=
+ =?utf-8?B?OXlEdTZ1Y29OMFJ5eXE5cXdGNXNTbXB6cXozUS9LZ2VQUDRxOVNLbEFBVjB6?=
+ =?utf-8?B?RW1PMzZRdE1qdzNyUGVtRHNwTWZ6QTdsN2g2ejVzR0RjK2EvMGNnd0tJNkk2?=
+ =?utf-8?B?V3c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3eb97752-88ba-4efa-11d6-08ddb47de33d
+X-MS-Exchange-CrossTenant-AuthSource: BN7PR11MB2708.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 06:51:33.9938
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RjjZvUrlFrWegv9FiRz6JSUvwuriaW2KISwsgX0+y6Yp2VnGMuW4N1lMYDeYsFmCP6oxlUpTtiaFdtuTps0z2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7577
+X-OriginatorOrg: intel.com
 
-On Wed, Jun 25, 2025 at 01:33:43PM +0900, Byungchul Park wrote:
-> Hi all,
+On 25/06/2025 01:12, Judith Mendez wrote:
+> Errata i2312 [0] for K3 silicon mentions the maximum obtainable
+> timeout through MMC host controller is 700ms. And for commands taking
+> longer than 700ms, hardware timeout should be disabled and software
+> timeout should be used.
 > 
-> In this version, I'm posting non-controversial patches first since there
+> The workaround for Errata i2312 can be achieved by adding
+> SDHCI_QUIRK2_DISABLE_HW_TIMEOUT quirk in sdhci_am654.
+> 
+> [0] https://www.ti.com/lit/pdf/sprz487
+> 
+> Signed-off-by: Judith Mendez <jm@ti.com>
 
-To Jakub and net folks,
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-I believe v7 doesn't include any controversial patches.  It'd be
-appreciated to lemme know if any.
-
-	Byungchul
-
-> are pending works that should be based on this series so that those can
-> be started shortly.  I will post the rest later.
-> 
-> The MM subsystem is trying to reduce struct page to a single pointer.
-> The first step towards that is splitting struct page by its individual
-> users, as has already been done with folio and slab.  This patchset does
-> that for netmem which is used for page pools.
-> 
-> Matthew Wilcox tried and stopped the same work, you can see in:
-> 
->    https://lore.kernel.org/linux-mm/20230111042214.907030-1-willy@infradead.org/
-> 
-> Mina Almasry already has done a lot fo prerequisite works by luck.  I
-> stacked my patches on the top of his work e.i. netmem.
-> 
-> I focused on removing the page pool members in struct page this time,
-> not moving the allocation code of page pool from net to mm.  It can be
-> done later if needed.
-> 
-> The final patch removing the page pool fields will be submitted once
-> all the converting work of page to netmem are done:
-> 
->    1. converting of libeth_fqe by Tony Nguyen.
->    2. converting of mlx5 by Tariq Toukan.
->    3. converting of prueth_swdata.
->    4. converting of freescale driver.
-> 
-> For our discussion, I'm sharing what the final patch looks like the
-> following.
-> 
-> 	Byungchul
-> --8<--
-> commit 1847d9890f798456b21ccb27aac7545303048492
-> Author: Byungchul Park <byungchul@sk.com>
-> Date:   Wed May 28 20:44:55 2025 +0900
-> 
->     mm, netmem: remove the page pool members in struct page
->     
->     Now that all the users of the page pool members in struct page have been
->     gone, the members can be removed from struct page.
->     
->     However, since struct netmem_desc still uses the space in struct page,
->     the important offsets should be checked properly, until struct
->     netmem_desc has its own instance from slab.
->     
->     Remove the page pool members in struct page and modify static checkers
->     for the offsets.
->     
->     Signed-off-by: Byungchul Park <byungchul@sk.com>
-> 
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 32ba5126e221..db2fe0d0ebbf 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -120,17 +120,6 @@ struct page {
->  			 */
->  			unsigned long private;
->  		};
-> -		struct {	/* page_pool used by netstack */
-> -			/**
-> -			 * @pp_magic: magic value to avoid recycling non
-> -			 * page_pool allocated pages.
-> -			 */
-> -			unsigned long pp_magic;
-> -			struct page_pool *pp;
-> -			unsigned long _pp_mapping_pad;
-> -			unsigned long dma_addr;
-> -			atomic_long_t pp_ref_count;
-> -		};
->  		struct {	/* Tail pages of compound page */
->  			unsigned long compound_head;	/* Bit zero is set */
->  		};
-> diff --git a/include/net/netmem.h b/include/net/netmem.h
-> index 8f354ae7d5c3..3414f184d018 100644
-> --- a/include/net/netmem.h
-> +++ b/include/net/netmem.h
-> @@ -42,11 +42,8 @@ struct netmem_desc {
->  	static_assert(offsetof(struct page, pg) == \
->  		      offsetof(struct netmem_desc, desc))
->  NETMEM_DESC_ASSERT_OFFSET(flags, _flags);
-> -NETMEM_DESC_ASSERT_OFFSET(pp_magic, pp_magic);
-> -NETMEM_DESC_ASSERT_OFFSET(pp, pp);
-> -NETMEM_DESC_ASSERT_OFFSET(_pp_mapping_pad, _pp_mapping_pad);
-> -NETMEM_DESC_ASSERT_OFFSET(dma_addr, dma_addr);
-> -NETMEM_DESC_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
-> +NETMEM_DESC_ASSERT_OFFSET(lru, pp_magic);
-> +NETMEM_DESC_ASSERT_OFFSET(mapping, _pp_mapping_pad);
->  #undef NETMEM_DESC_ASSERT_OFFSET
->  
->  /*
 > ---
-> Changes from v5 (no actual updates):
-> 	1. Rebase on net-next/main as of Jun 25.
-> 	2. Supplement a comment describing struct net_iov.
-> 	3. Exclude a controversial patch, "page_pool: access ->pp_magic
-> 	   through struct netmem_desc in page_pool_page_is_pp()".
-> 	4. Exclude "netmem: remove __netmem_get_pp()" since the API
-> 	   started to be used again by libeth.
+>  drivers/mmc/host/sdhci_am654.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-> Changes from v5 (no actual updates):
-> 	1. Rebase on net-next/main as of Jun 20.
-> 	2. Add given 'Reviewed-by's and 'Acked-by's, thanks to all.
-> 	3. Add missing cc's.
-> 
-> Changes from v4:
-> 	1. Add given 'Reviewed-by's, thanks to all.
-> 	2. Exclude potentially controversial patches.
-> 
-> Changes from v3:
-> 	1. Relocates ->owner and ->type of net_iov out of netmem_desc
-> 	   and make them be net_iov specific.
-> 	2. Remove __force when casting struct page to struct netmem_desc.
-> 
-> Changes from v2:
-> 	1. Introduce a netmem API, virt_to_head_netmem(), and use it
-> 	   when it's needed.
-> 	2. Introduce struct netmem_desc as a new struct and union'ed
-> 	   with the existing fields in struct net_iov.
-> 	3. Make page_pool_page_is_pp() access ->pp_magic through struct
-> 	   netmem_desc instead of struct page.
-> 	4. Move netmem alloc APIs from include/net/netmem.h to
-> 	   net/core/netmem_priv.h.
-> 	5. Apply trivial feedbacks, thanks to Mina, Pavel, and Toke.
-> 	6. Add given 'Reviewed-by's, thanks to Mina.
-> 
-> Changes from v1:
-> 	1. Rebase on net-next's main as of May 26.
-> 	2. Check checkpatch.pl, feedbacked by SJ Park.
-> 	3. Add converting of page to netmem in mt76.
-> 	4. Revert 'mlx5: use netmem descriptor and APIs for page pool'
-> 	   since it's on-going by Tariq Toukan.  I will wait for his
-> 	   work to be done.
-> 	5. Revert 'page_pool: use netmem APIs to access page->pp_magic
-> 	   in page_pool_page_is_pp()' since we need more discussion.
-> 	6. Revert 'mm, netmem: remove the page pool members in struct
-> 	   page' since there are some prerequisite works to remove the
-> 	   page pool fields from struct page.  I can submit this patch
-> 	   separatedly later.
-> 	7. Cancel relocating a page pool member in struct page.
-> 	8. Modify static assert for offests and size of struct
-> 	   netmem_desc.
-> 
-> Changes from rfc:
-> 	1. Rebase on net-next's main branch.
-> 	   https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/
-> 	2. Fix a build error reported by kernel test robot.
-> 	   https://lore.kernel.org/all/202505100932.uzAMBW1y-lkp@intel.com/
-> 	3. Add given 'Reviewed-by's, thanks to Mina and Ilias.
-> 	4. Do static_assert() on the size of struct netmem_desc instead
-> 	   of placing place-holder in struct page, feedbacked by
-> 	   Matthew.
-> 	5. Do struct_group_tagged(netmem_desc) on struct net_iov instead
-> 	   of wholly renaming it to strcut netmem_desc, feedbacked by
-> 	   Mina and Pavel.
-> 
-> Byungchul Park (7):
->   netmem: introduce struct netmem_desc mirroring struct page
->   page_pool: rename page_pool_return_page() to page_pool_return_netmem()
->   page_pool: rename __page_pool_release_page_dma() to
->     __page_pool_release_netmem_dma()
->   page_pool: rename __page_pool_alloc_pages_slow() to
->     __page_pool_alloc_netmems_slow()
->   netmem: use _Generic to cover const casting for page_to_netmem()
->   page_pool: make page_pool_get_dma_addr() just wrap
->     page_pool_get_dma_addr_netmem()
->   netmem: introduce a netmem API, virt_to_head_netmem()
-> 
->  include/net/netmem.h            | 130 ++++++++++++++++++++++++++------
->  include/net/page_pool/helpers.h |   7 +-
->  net/core/page_pool.c            |  36 ++++-----
->  3 files changed, 124 insertions(+), 49 deletions(-)
-> 
-> 
-> base-commit: 8dacfd92dbefee829ca555a860e86108fdd1d55b
-> -- 
-> 2.17.1
+> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
+> index ea14d56558c4..86d87d8e0675 100644
+> --- a/drivers/mmc/host/sdhci_am654.c
+> +++ b/drivers/mmc/host/sdhci_am654.c
+> @@ -613,7 +613,8 @@ static const struct sdhci_ops sdhci_am654_ops = {
+>  static const struct sdhci_pltfm_data sdhci_am654_pdata = {
+>  	.ops = &sdhci_am654_ops,
+>  	.quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
+> -	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+> +	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+> +		   SDHCI_QUIRK2_DISABLE_HW_TIMEOUT,
+>  };
+>  
+>  static const struct sdhci_am654_driver_data sdhci_am654_sr1_drvdata = {
+> @@ -643,7 +644,8 @@ static const struct sdhci_ops sdhci_j721e_8bit_ops = {
+>  static const struct sdhci_pltfm_data sdhci_j721e_8bit_pdata = {
+>  	.ops = &sdhci_j721e_8bit_ops,
+>  	.quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
+> -	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+> +	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+> +		   SDHCI_QUIRK2_DISABLE_HW_TIMEOUT,
+>  };
+>  
+>  static const struct sdhci_am654_driver_data sdhci_j721e_8bit_drvdata = {
+> @@ -667,7 +669,8 @@ static const struct sdhci_ops sdhci_j721e_4bit_ops = {
+>  static const struct sdhci_pltfm_data sdhci_j721e_4bit_pdata = {
+>  	.ops = &sdhci_j721e_4bit_ops,
+>  	.quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
+> -	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+> +	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+> +		   SDHCI_QUIRK2_DISABLE_HW_TIMEOUT,
+>  };
+>  
+>  static const struct sdhci_am654_driver_data sdhci_j721e_4bit_drvdata = {
+
