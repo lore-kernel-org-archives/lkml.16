@@ -1,183 +1,250 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90952EE964;
-	Thu, 26 Jun 2025 18:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15BC2EE60A;
+	Thu, 26 Jun 2025 18:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750963725; cv=none; b=gs1Dur1EMOlo2/c3sp2EZR1S+xeJsymdBePmuLEtlY+nvGnBdW0cw9vdYy6ilU8aVmGsWWOGJyZIAkARVs6CMOwNW/21hAjJ1kGRMXs9yuzbL8HEPytNsBAyDRS5ZALv5prA2rQbhVsUG7Ctld2u+tHKwLaBG/Ig0vl6WjLxHK0=
+	t=1750963731; cv=none; b=t0Am8GR4rtBmh54a0Ec7+0Yz6osAta/MXHHHfUTRNhuqh9fuBmS5brlKB5/xT+0Wl7Pl+m+0rMLXhPSpnjWKvyCMO0ioNftSXgGLihxS6vgFpbYKrYC6jqrwcn5sbSgRSQygYhRZy0W+kMGf1vyNvBGxYByt3FRmRptYqW5oevs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750963725; c=relaxed/simple;
-	bh=tpLRBSCjneDmF1eFX7eChBL/ZaxqApabiv+eASamzO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HpCq0jyILOX3on6SRHLwxACd4qgCnAGd5Cul9JRzgXO0y9F4fhDySSoJcSdrhaqedI1Iu8YMfBpGIvpHTfmTutcBOuu3VKRH5wyMvQ8yR1gUmqKjjjOk0dc6TRaVHKl9b4ZHd6kfp149P6uY6rVF1BmqR6esU95M5k4ceGOwyF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D9pFx+l1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750963731; c=relaxed/simple;
+	bh=8JnaB0rfLbBXBkMhNJJQ5vAg0PVGnPbCYHgb3DK5wXM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YdqEl3glQI3ZOLBBArrlJDLvVztoxSRCjZkjPDumj3myTFk9TPB9+bCkWGgud6Attk72VNsNzRK+FJX12JJ3xSzBVquxW1f1LZElngeblPmetv5gfbwdiWSLsajX9aHM982HKd7L+yKSgYGVxaKzvAL4udsbXagUVTlRb9yrSnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nlf5WGJK; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D9pFx+l1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AD27C4CEEB;
-	Thu, 26 Jun 2025 18:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750963725;
-	bh=tpLRBSCjneDmF1eFX7eChBL/ZaxqApabiv+eASamzO4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=D9pFx+l1kCNLOuTwZZ6KW5zNt9XKfcCWbcs5EguWde+bMNojwnNUmM6aFQxB5oUR8
-	 NU0SPx2415wpfOsE6h8JZRlqH7/wHkyaKY5QEJfSv9sPuiqjRRhnrhh5r6/Pbrq9Eg
-	 Fj8NBv4JsWOyB1TVOXUpz/QMdquE6+TJsJvQACvu0RQK230M1BmD1uvgBg0NTC0Zga
-	 nfRhbaYSrFra52wUEtg32rwKz8Xl5dWqNVfFgyqBvUd10XcXmERbrNUytPwUFyWRZS
-	 NA876gFdqCGySVIiYNICwJXY6HESQIdI4Ua6ip/u6RvgDGCBfzNLqnQdm1KsrFG/6W
-	 bVGwxIIUpgj6A==
-Date: Thu, 26 Jun 2025 19:48:38 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
-Cc: David Lechner <dlechner@baylibre.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>, "linux-iio@vger.kernel.org"
- <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 1/3] iio: imu: inv_icm42600: move structure DMA
- buffers at the end
-Message-ID: <20250626194838.55c5eca4@jic23-huawei>
-In-Reply-To: <FR3P281MB175703F651131703019D7295CE78A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-References: <20250623-losd-3-inv-icm42600-add-wom-support-v5-0-4b3b33e028fe@tdk.com>
-	<20250623-losd-3-inv-icm42600-add-wom-support-v5-1-4b3b33e028fe@tdk.com>
-	<CAMknhBEpkWrZdWSrhQS6E1GnENCipf+LxNNSNUyZrm8Gme2f_Q@mail.gmail.com>
-	<FR3P281MB175703F651131703019D7295CE78A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlf5WGJK"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-235ef62066eso17866245ad.3;
+        Thu, 26 Jun 2025 11:48:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750963729; x=1751568529; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jeqaBHn7aHDNdEDuhpEe0nw9AeD4qrwgeY8YNWwNdQM=;
+        b=nlf5WGJKvVW/Q6087rL47vg1hrqC4xCgwc6Nr5tksV598rgCGx7Ztls3V3A4Zq/D0K
+         wYGRTxMh1hK86iYSNsI9OMYH8ChRzmSX2iidbP8bU/jr6K+U0LVzaystUr9AqEB65XpU
+         dqHnnO70T0P7bmuzxNW4vTXfXap5inOoqP/78vfnBtptlkLwF/TrJ7RyJADzeNFNSgJk
+         SPLU8oQ2aNNhg9IwLv4mW2aqNqVJBLEuwTV4lqPxU0VofEZVG8sQww0U8XdQilCO0t5X
+         YO8JfbLvyAtnXCuKOwCu7/ES2cAFfbZb6G31EM7EheXnpVPaWDqPejbAb15mguzTRvAw
+         3e3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750963729; x=1751568529;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jeqaBHn7aHDNdEDuhpEe0nw9AeD4qrwgeY8YNWwNdQM=;
+        b=YxyFP+PafjCrZ4OHwvx81Z4mGpq8JVLuxq8c44R1oZ1UeQibpy2tMmrCRMdO/IWC8F
+         OhBeg6wNyhrtxy8gPDMnMKtghKjH5urAtX3Vea9Hc28XOogmcnTCxX8XhMvozkeN+CS1
+         iFuh+2iqZX9pRFyYumECLNuiLLYXoAZ4DUpO18XTOxDX5Oxzu/YS8C2cfTDMPq6sm4Rx
+         E7Q5SmjVHzSxtBE/snVgtlQoDFZtFw1shIskzznCKAlZ1dFoSOtrqlGw2Ps3CWFaqDuK
+         7jDZ5DVrDuMJkZ2ZBR9YQNQTi0gu9yS8Zf378zwTlhq7NgHl42OxZCaKRoURPcKzAYuJ
+         GuKA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlAldvEUKAGnOfTTPdaQFc9e+WySCz6ln00Y0aYuRaPzDyQpHPhKAnbICMgM4KyLmXPNp+M2YtaXm7@vger.kernel.org, AJvYcCW4QFSErfh36fVhAB85kMcHyLpBEy8JjimdzoFbCMAh6iXx/HZLcww5MD2KAqL+rL1dkaC7LNyr2UUTdw==@vger.kernel.org, AJvYcCWsZSVD9d+7fPKRMuqs5ofJpQoOkflg/TLXjxC0xh6JglmW+pqnsyBXivAOB3ZoyK3PwNJyxF9C6/twTRo=@vger.kernel.org, AJvYcCXeOATJHaMJs4x9rydUXV3qMdYEXaAZ7TUdu0St2dCoWj39G9oX9zA36/3ptenrV3FrzXSQEQlOxWH5rQEb@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHCIv2PpzMVb8HRz86sj3dsAEdCNAsuuSN9rWbw8GyIPTiSElI
+	ECla05fCLE6djTEnkWzmqOjjkhCkc2VhS30o3aalJwFU6ABKX8NV6CHU
+X-Gm-Gg: ASbGnct0M+VJXqhIC7MNydBkP7HeKlzFE4A1SgiWFvqDTOWBbKKmbCFwPeqcGklP+dS
+	g0JXifKpUBoFI/6uEXrE1JrOL8+/lPGX6/JZ0mID8aViDtd3kZmRxp9PK1OojG1FgdUFlzhL0wH
+	ggLs6jdZdttoVclxkS/CXSFuYHHNC+vgkxUnkAlIWVypNKs6J8xWJLKVEbyCsPhRfSe+7T7ozJQ
+	yFuiyg6f6/Zlwc6e/p5X8cuuJ4F/nNfXbh8TB3LVDMZPYyWaAZa1W0PnYP46/pg+uQNdVaJzTmb
+	UxxjIrmUzqKtpeohfuf9Mqr0qZPig5lsgoKCAxIYFjJCoK5Q7Q8LAJs09NpwkTE=
+X-Google-Smtp-Source: AGHT+IH19pgfYZHrnfg5h1FUlWuYD+Rh58wv4yiuNmbvc9Kyq7TEpgHKBn33CfxyyQiHy88nU/Hm+w==
+X-Received: by 2002:a17:903:17c7:b0:235:c9ef:c9e1 with SMTP id d9443c01a7336-23ac3bffdb2mr6579285ad.5.1750963728715;
+        Thu, 26 Jun 2025 11:48:48 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:9c8f:acd3:efcb:bc3d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23abe3daf4csm3944385ad.112.2025.06.26.11.48.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 11:48:48 -0700 (PDT)
+Date: Thu, 26 Jun 2025 11:48:45 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>, 
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
+ system
+Message-ID: <obpakvzyludc4jskqzyxf65dhqds7ie3jkbfsqdve32ouuaili@xvogkmwvbmbf>
+References: <20250625215813.3477840-1-superm1@kernel.org>
+ <20250625215813.3477840-5-superm1@kernel.org>
+ <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
+ <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
+ <rn2kp5tog2agvswva2ipqq2ytiqdcgccnocudsg6ckwfh4roei@provk2g6dita>
+ <363c2b92-4bfc-4537-9fca-025eef09526f@kernel.org>
+ <nxticocp26r5mmpkttritw76h5igw7bdpus6zaf5krkso2h5xy@wna6m2quekfi>
+ <cbbf0caf-82ce-4427-9844-b11e0f5cacdb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cbbf0caf-82ce-4427-9844-b11e0f5cacdb@kernel.org>
 
-On Tue, 24 Jun 2025 08:43:37 +0000
-Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com> wrote:
+On Thu, Jun 26, 2025 at 01:20:54PM -0500, Mario Limonciello wrote:
+> On 6/26/2025 1:07 PM, Dmitry Torokhov wrote:
+> > On Thu, Jun 26, 2025 at 12:53:02PM -0500, Mario Limonciello wrote:
+> > > 
+> > > 
+> > > On 6/26/25 12:44 PM, Dmitry Torokhov wrote:
+> > > > Hi Mario,
+> > > > 
+> > > > On Thu, Jun 26, 2025 at 06:33:08AM -0500, Mario Limonciello wrote:
+> > > > > 
+> > > > > 
+> > > > > On 6/26/25 3:35 AM, Hans de Goede wrote:
+> > > > > > Hi Mario,
+> > > > > > 
+> > > > > > On 25-Jun-25 23:58, Mario Limonciello wrote:
+> > > > > > > From: Mario Limonciello <mario.limonciello@amd.com>
+> > > > > > > 
+> > > > > > > Sending an input event to wake a system does wake it, but userspace picks
+> > > > > > > up the keypress and processes it.  This isn't the intended behavior as it
+> > > > > > > causes a suspended system to wake up and then potentially turn off if
+> > > > > > > userspace is configured to turn off on power button presses.
+> > > > > > > 
+> > > > > > > Instead send a PM wakeup event for the PM core to handle waking the system.
+> > > > > > > 
+> > > > > > > Cc: Hans de Goede <hansg@kernel.org>
+> > > > > > > Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing key press event in resume phase")
+> > > > > > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> > > > > > > ---
+> > > > > > >     drivers/input/keyboard/gpio_keys.c | 7 +------
+> > > > > > >     1 file changed, 1 insertion(+), 6 deletions(-)
+> > > > > > > 
+> > > > > > > diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+> > > > > > > index 773aa5294d269..4c6876b099c43 100644
+> > > > > > > --- a/drivers/input/keyboard/gpio_keys.c
+> > > > > > > +++ b/drivers/input/keyboard/gpio_keys.c
+> > > > > > > @@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
+> > > > > > >     		pm_stay_awake(bdata->input->dev.parent);
+> > > > > > >     		if (bdata->suspended  &&
+> > > > > > >     		    (button->type == 0 || button->type == EV_KEY)) {
+> > > > > > > -			/*
+> > > > > > > -			 * Simulate wakeup key press in case the key has
+> > > > > > > -			 * already released by the time we got interrupt
+> > > > > > > -			 * handler to run.
+> > > > > > > -			 */
+> > > > > > > -			input_report_key(bdata->input, button->code, 1);
+> > > > > > > +			pm_wakeup_event(bdata->input->dev.parent, 0);
+> > > > 
+> > > > There is already pm_stay_awake() above.
+> > > 
+> > > But that doesn't help with the fact that userspace gets KEY_POWER from this
+> > > and reacts to it.
+> > > 
+> > > > 
+> > > > > > >     		}
+> > > > > > >     	}
+> > > > > > 
+> > > > > > Hmm, we have the same problem on many Bay Trail / Cherry Trail
+> > > > > > windows 8 / win10 tablets, so  this has been discussed before and e.g.
+> > > > > > Android userspace actually needs the button-press (evdev) event to not
+> > > > > > immediately go back to sleep, so a similar patch has been nacked in
+> > > > > > the past.
+> > > > > > 
+> > > > > > At least for GNOME this has been fixed in userspace by ignoring
+> > > > > > power-button events the first few seconds after a resume from suspend.
+> > > > > > 
+> > > > > 
+> > > > > The default behavior for logind is:
+> > > > > 
+> > > > > HandlePowerKey=poweroff
+> > > > > 
+> > > > > Can you share more about what version of GNOME has a workaround?
+> > > > > This was actually GNOME (on Ubuntu 24.04) that I found this issue.
+> > > > > 
+> > > > > Nonetheless if this is dependent on an Android userspace problem could we
+> > > > > perhaps conditionalize it on CONFIG_ANDROID_BINDER_DEVICES?
+> > > > 
+> > > > No it is not only Android, other userspace may want to distinguish
+> > > > between normal and "dark" resume based on keyboard or other user
+> > > > activity.
+> > > > 
+> > > > Thanks.
+> > > > 
+> > > In this specific case does the key passed up to satisfy this userspace
+> > > requirement and keep it awake need to specifically be a fabricated
+> > > KEY_POWER?
+> > > 
+> > > Or could we find a key that doesn't require some userspace to ignore
+> > > KEY_POWER?
+> > > 
+> > > Maybe something like KEY_RESERVED, KEY_FN, or KEY_POWER2?
+> > 
+> > The code makes no distinction between KEY_POWER and KEY_A or KEY_B, etc.
+> > It simply passes event to userspace for processing.
+> 
+> Right.  I don't expect a problem with most keys, but my proposal is to
+> special case KEY_POWER while suspended.  If a key press event must be sent
+> to keep Android and other userspace happy I suggest sending something
+> different just for that situation.
 
-> >
-> >________________________________________
-> >From:=C2=A0David Lechner <dlechner@baylibre.com>
-> >Sent:=C2=A0Tuesday, June 24, 2025 00:13
-> >To:=C2=A0Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
-> >Cc:=C2=A0Jonathan Cameron <jic23@kernel.org>; Lars-Peter Clausen <lars@m=
-etafoo.de>; Nuno S=C3=A1 <nuno.sa@analog.com>; Andy Shevchenko <andy@kernel=
-.org>; linux-iio@vger.kernel.org <linux-iio@vger.kernel.org>; linux-kernel@=
-vger.kernel.org <linux-kernel@vger.kernel.org>
-> >Subject:=C2=A0Re: [PATCH v5 1/3] iio: imu: inv_icm42600: move structure =
-DMA buffers at the end
-> >=C2=A0
-> >This Message Is From an External Sender
-> >This message came from outside your organization.
-> >=C2=A0
-> >On Mon, Jun 23, 2025 at 6:56=E2=80=AFAM Jean-Baptiste Maneyrol via B4 Re=
-lay
-> ><devnull+jean-baptiste.maneyrol.tdk.com@kernel.org> wrote: =20
-> >>
-> >> From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-> >>
-> >> Move DMA buffers at the end of the structure to avoid overflow
-> >> bugs with unexpected effect. =20
-> >
-> >If there is an overflow bug, we should fix that rather than hiding it.
-> >
-> >If I misunderstood the problem and timestamp and fifo should not be in
-> >the DMA aligned area and there is a problem with DMA cache writing
-> >over them, then I think we should reword the commit message.
-> > =20
-> Hello David,
->=20
-> this change was asked by Jonathan so that potential DMA overflow would be=
- more
-> easily caught by writing outside of the structure rather than writing ins=
-ide
-> and do unexpected behavior.
->=20
-> >>
-> >> struct inv_icm42600_fifo has a DMA buffer at the end.
-> >>
-> >> Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-> >> ---
-> >>  drivers/iio/imu/inv_icm42600/inv_icm42600.h | 8 ++++----
-> >>  1 file changed, 4 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio=
-/imu/inv_icm42600/inv_icm42600.h
-> >> index 55ed1ddaa8cb5dd410d17db3866fa0f22f18e9d2..9b2cce172670c5513f18d5=
-979a5ff563e9af4cb3 100644
-> >> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-> >> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-> >> @@ -148,9 +148,9 @@ struct inv_icm42600_suspended {
-> >>   *  @suspended:                suspended sensors configuration.
-> >>   *  @indio_gyro:       gyroscope IIO device.
-> >>   *  @indio_accel:      accelerometer IIO device.
-> >> - *  @buffer:           data transfer buffer aligned for DMA.
-> >> - *  @fifo:             FIFO management structure.
-> >>   *  @timestamp:                interrupt timestamps.
-> >> + *  @fifo:             FIFO management structure.
-> >> + *  @buffer:           data transfer buffer aligned for DMA.
-> >>   */
-> >>  struct inv_icm42600_state {
-> >>         struct mutex lock;
-> >> @@ -164,12 +164,12 @@ struct inv_icm42600_state {
-> >>         struct inv_icm42600_suspended suspended;
-> >>         struct iio_dev *indio_gyro;
-> >>         struct iio_dev *indio_accel;
-> >> -       u8 buffer[2] __aligned(IIO_DMA_MINALIGN);
-> >> -       struct inv_icm42600_fifo fifo;
-> >>         struct {
-> >>                 s64 gyro;
-> >>                 s64 accel;
-> >>         } timestamp;
-> >> +       struct inv_icm42600_fifo fifo; =20
-> >
-> >I didn't look at how the drivers use timestamp and fifo, but if they
-> >are passed as a buffer to SPI, then they need to stay in the DMA
-> >aligned area of the struct. =20
->=20
-> struct inv_icm42600_fifo has a buffer at its end that is passed to SPI.
-> Same things for buffer below. That's why both buffers are DMA
-> aligned.
+I do not know if userspace specifically looks for KEY_POWER or if it
+looks for user input in general, and I'd rather be on safe side and not
+mangle user input.
 
-It's a tiny bit esoteric that this is relying on structure alignment rules
-that says (iirc) the structure element will be aligned to maximum of it's
-elements and there is tail padding to that size as well.  Thus the whole
-struct inv_icm42600 is __aligned(IIO_DMA_MINALIGN) and the buffer in there
-is itself after padding to ensure that it is __aligned(IIO_DMA_MINALIGN)
+As Hans mentioned, at least some userspace already prepared to deal with
+this issue. And again, this only works if by the time ISR/debounce
+runs the key is already released. What if it is still pressed? You still
+going to observe KEY_POWER and need to suppress turning off the screen.
 
+> 
+> Like this:
+> 
+> diff --git a/drivers/input/keyboard/gpio_keys.c
+> b/drivers/input/keyboard/gpio_keys.c
+> index 773aa5294d269..66e788d381956 100644
+> --- a/drivers/input/keyboard/gpio_keys.c
+> +++ b/drivers/input/keyboard/gpio_keys.c
+> @@ -425,7 +425,10 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void
+> *dev_id)
+>                          * already released by the time we got interrupt
+>                          * handler to run.
+>                          */
+> -                       input_report_key(bdata->input, button->code, 1);
+> +                       if (button->code == KEY_POWER)
+> +                               input_report_key(bdata->input, KEY_WAKEUP,
+> 1);
 
-Anyhow, all I think this actually does is avoid one lot of padding
-(as well as making it slightly easier to reason about!)
+Just FYI: Here your KEY_WAKEUP is stuck forever.
 
-outer struct {
-stuff
-padding to align #1
-fifo {
-	stuff
-	padding to align
-	buffer
-	padding to fill up align
-}
-struct timestamp;
-///this bit will go away as it can fit in the padding #1 (probably)
-Padding to align
-////
-u8 buffer[2] __ailgned(IIO_DMA_MINALIGN)
+> +                       else
+> +                               input_report_key(bdata->input, button->code,
+> 1);
+>                 }
+>         }
+> 
+> 
+> 
+> > 
+> > You need to fix your userspace. Even with your tweak it is possible for
+> > userspace to get a normal key event "too early" and turn off the screen
+> > again, so you still need to handle this situation.
+> > 
+> > Thanks.
+> > 
+> 
+> I want to note this driver works quite differently than how ACPI power
+> button does.
+> 
+> You can see in acpi_button_notify() that the "keypress" is only forwarded
+> when not suspended [1].  Otherwise it's just wakeup event (which is what my
+> patch was modeling).
+> 
+> https://github.com/torvalds/linux/blob/v6.16-rc3/drivers/acpi/button.c#L461
+> [1]
 
+If you check acpi_button_resume() you will see that the events are sent
+from there. Except that for some reason they chose to use KEY_WAKEUP and
+not KEY_POWER, oh well. Unlike acpi button driver gpio_keys is used on
+multiple other platforms.
 
-=09
->=20
-> > =20
-> >> +       u8 buffer[2] __aligned(IIO_DMA_MINALIGN);
-> >>  };
-> >>
-> >>
-> >>
-> >> --
-> >> 2.49.0
-> >>
-> >> =20
-> > =20
->=20
-> Thanks,
-> JB
+Thanks.
+
+-- 
+Dmitry
