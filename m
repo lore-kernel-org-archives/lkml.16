@@ -1,44 +1,49 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C73612DDA1
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4E11C84A5;
+	Thu, 26 Jun 2025 23:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750981124; cv=none; b=ONNZnQixK5oSs4vvix9NdwWOa2M5NU0Dx+eLHuS0a+lMU1A+k72Y3iW9rGYXCpTZYrrTmQyvSaJ8C+CJXEM5QiSezvKU6QXj4DQjySLNntdeKcS8qWG8cAmbn19rkZ0/ePlKHStXE7K+qGUO+i94nsOCZe9/OeAX2mF36bIc5F8=
+	t=1750981281; cv=none; b=VxveBqEVGur+RYQPUWig1JwEnIWgVYSMMhg2k6EGwaKGMcT87u9o0PX0mI+DwFNGOdNT5j5DANZLGZAF6HRfiS2IHfkQVSznVzjDbDmQMrq63FEi++saWLWIK+ZHEx062MPISKSK+2zHAdqZyFNGxl34tpESSVe7XM2EWxCViGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750981124; c=relaxed/simple;
-	bh=IHkXWKg1D5MCQg9GrBN5Djp17CQbGWPWj7dvSe0jvts=;
+	s=arc-20240116; t=1750981281; c=relaxed/simple;
+	bh=nufpK4Nake12iu3u9jfr0M9zStpbPBpxmbakfnPf704=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S9NAqYCoQvgsy8HXDU+4A9sO10lRh3oiJuHvUro4974gr53hyh+V7E2TWsxA3ojsnYmWiXv9WFUzqLNVUHHqevcVSWnEI80WfvVsfNq/aMBTMiL6rwi7upz9YEt6GV0xlI5Ew5BQK8oc6MOJplowUij4LG0/a92urW5YKg1o0Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Xlm/+sHJ; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=OBV/LZDonKHjIvSFQqOmW/hXeVDGdrKHxi5YpmAIZNY0OGjoV4aIwrqJMlnyBOWYMmShXStyI/27skTI66CIiDR1dWxeGsE+GHZ2HgWUmzMOpUK878Q7OkzmjyifY85b6al73KFsUM0ayXrV1slsb4UqHDuvbRbccaksZuZsSpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJ/QpE2B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Xlm/+sHJ"
-Date: Thu, 26 Jun 2025 16:38:18 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750981109;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x+p1GkYHskRpx352iokJ2/ibgcF8JqaS68YqWzxLlIw=;
-	b=Xlm/+sHJ9a9AvjfJxvljezL9tKVFP6Hw7NIxfinr8LnTmmjWSVV0Lmf5HOIoclE4Y0QD0Q
-	95G06zuBU+BPZInr+tIAOEQpETahHM0iwa71DHp5wUuoxB/PzjQeZ7pyZSNRIS91f6I1zR
-	J4ctzmswx4CBctLkhdeHLeneRGyqEh4=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Tejun Heo <tj@kernel.org>
-Cc: "Paul E . McKenney" <paulmck@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, JP Kobryn <inwardvessel@gmail.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Ying Huang <huang.ying.caritas@gmail.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Alexei Starovoitov <ast@kernel.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
-	bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] llist: add [READ|WRITE]_ONCE tags for llist_node
-Message-ID: <fyyks2xnzytr5hybzxeb4srrmrr64dxacwrcjd7v7anttjdy3s@hgp2s2th2t5m>
-References: <20250626190550.4170599-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJ/QpE2B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4146C4CEEB;
+	Thu, 26 Jun 2025 23:41:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750981280;
+	bh=nufpK4Nake12iu3u9jfr0M9zStpbPBpxmbakfnPf704=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WJ/QpE2B/GzkordjchYV5m/4fLjACW4smPYxkk8ImwOTXwMWGGPxz6uEiv3PwbUZH
+	 V6GWQdR82jvw+2fXaBrODv6QK/cP/lMIAlUy9JXcZjzyhPGnmTMX7JBirCVLcKUflN
+	 eAy65iQfvYpkokLNo60qeAO3rBrRyvIwTgytXObbPOdp4xpPKNxFEYIMSo7TwxurzX
+	 BmRRkjlFrEJP52q/9YP+wqHGvDPwVXkrPuXIY1jAg1BYrTHelcaf/EvbgJl3WWzbSH
+	 7dCCdwMmerDHMV5pk3XxH6VZcv1URgGmeMOBE5T6hKw2MxUHTBuUx4rbpJkWqMWPmG
+	 V9gfwJKXzXpEA==
+Date: Thu, 26 Jun 2025 18:41:19 -0500
+From: Rob Herring <robh@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: krzk+dt@kernel.org, conor+dt@kernel.org,
+	Matthew Gerlach <matthew.gerlach@altera.com>, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	maxime.chevallier@bootlin.com, mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com, richardcochran@gmail.com,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	Mun Yew Tham <mun.yew.tham@altera.com>
+Subject: Re: [PATCH v6] dt-bindings: net: Convert socfpga-dwmac bindings to
+ yaml
+Message-ID: <20250626234119.GA1398428-robh@kernel.org>
+References: <20250613225844.43148-1-matthew.gerlach@altera.com>
+ <20250623111913.1b387b90@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,121 +52,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250626190550.4170599-1-shakeel.butt@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250623111913.1b387b90@kernel.org>
 
-On Thu, Jun 26, 2025 at 12:05:50PM -0700, Shakeel Butt wrote:
-> Before the commit 36df6e3dbd7e ("cgroup: make css_rstat_updated nmi
-> safe"), the struct llist_node is expected to be private to the one
-> inserting the node to the lockless list or the one removing the node
-> from the lockless list. After the mentioned commit, the llist_node in
-> the rstat code is per-cpu shared between the stacked contexts i.e.
-> process, softirq, hardirq & nmi.
+On Mon, Jun 23, 2025 at 11:19:13AM -0700, Jakub Kicinski wrote:
+> On Fri, 13 Jun 2025 15:58:44 -0700 Matthew Gerlach wrote:
+> > Convert the bindings for socfpga-dwmac to yaml. Since the original
+> > text contained descriptions for two separate nodes, two separate
+> > yaml files were created.
 > 
-> KCSAN reported the following race:
-> 
->  Reported by Kernel Concurrency Sanitizer on:
->  CPU: 60 UID: 0 PID: 5425 ... 6.16.0-rc3-next-20250626 #1 NONE
->  Tainted: [E]=UNSIGNED_MODULE
->  Hardware name: ...
->  ==================================================================
->  ==================================================================
->  BUG: KCSAN: data-race in css_rstat_flush / css_rstat_updated
->  write to 0xffffe8fffe1c85f0 of 8 bytes by task 1061 on cpu 1:
->   css_rstat_flush+0x1b8/0xeb0
->   __mem_cgroup_flush_stats+0x184/0x190
->   flush_memcg_stats_dwork+0x22/0x50
->   process_one_work+0x335/0x630
->   worker_thread+0x5f1/0x8a0
->   kthread+0x197/0x340
->   ret_from_fork+0xd3/0x110
->   ret_from_fork_asm+0x11/0x20
->  read to 0xffffe8fffe1c85f0 of 8 bytes by task 3551 on cpu 15:
->   css_rstat_updated+0x81/0x180
->   mod_memcg_lruvec_state+0x113/0x2d0
->   __mod_lruvec_state+0x3d/0x50
->   lru_add+0x21e/0x3f0
->   folio_batch_move_lru+0x80/0x1b0
->   __folio_batch_add_and_move+0xd7/0x160
->   folio_add_lru_vma+0x42/0x50
->   do_anonymous_page+0x892/0xe90
->   __handle_mm_fault+0xfaa/0x1520
->   handle_mm_fault+0xdc/0x350
->   do_user_addr_fault+0x1dc/0x650
->   exc_page_fault+0x5c/0x110
->   asm_exc_page_fault+0x22/0x30
->  value changed: 0xffffe8fffe18e0d0 -> 0xffffe8fffe1c85f0
-> 
-> $ ./scripts/faddr2line vmlinux css_rstat_flush+0x1b8/0xeb0
-> css_rstat_flush+0x1b8/0xeb0:
-> init_llist_node at include/linux/llist.h:86
-> (inlined by) llist_del_first_init at include/linux/llist.h:308
-> (inlined by) css_process_update_tree at kernel/cgroup/rstat.c:148
-> (inlined by) css_rstat_updated_list at kernel/cgroup/rstat.c:258
-> (inlined by) css_rstat_flush at kernel/cgroup/rstat.c:389
-> 
-> $ ./scripts/faddr2line vmlinux css_rstat_updated+0x81/0x180
-> css_rstat_updated+0x81/0x180:
-> css_rstat_updated at kernel/cgroup/rstat.c:90 (discriminator 1)
-> 
-> These are expected race and a simple READ_ONCE/WRITE_ONCE resolves these
-> reports.
+> Hi DT Maintainers! Thanks for reviewing the IPQ5018 bindings!
+> In case my pings are helpful, this is the next oldest patch in netdev
+> queue. The v4 seem to have gotten some feedback:
+> https://lore.kernel.org/all/20250609163725.6075-1-matthew.gerlach@altera.com/
 
-Tejun privately communicated that though the race is benign, we should
-document it better instead of just silencing kcsan.
+No need to ping us. Like netdev, you can check the PW queue:
 
-More specifically the llist_on_list() check on the update side and the
-init_llist_node() reset on the flush side needs to coornidate to
-guarantee that either the updater should get false from llist_on_list()
-and it adds the node to the lockless list or the flush side get the
-updated stats from concurrent updaters.
+https://patchwork.ozlabs.org/project/devicetree-bindings/list/
 
-To guarantee that, on the update side we need a barrier between stats
-update and llist_on_list() check and on the flush side, a barrier in
-between init_llist_node() and the actual stats flush.
+In any case, we're a bit behind ATM.
 
-However do we really need such a guarantee and can we be fine with the
-race? Particularly the update side is very performance critical path and
-adding a barrier might be very costly. I think this race is benign and
-we can just document it and then ignore it.
 
-Tejun, is something like following acceptable? I know you mentioned to
-add the barrier on the flush but I am wondering if we are not adding
-barrier on the update side, what's the point to add it on the flush
-side. Let me know if you still prefer to add the barrier on the flush
-side.
+It looks like we have 2 competing conversions of this binding. This one 
+and this one which I reviewed:
 
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index c8a48cf83878..02258b43abb3 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -86,8 +86,12 @@ __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
- 		return;
- 
- 	rstatc = css_rstat_cpu(css, cpu);
--	/* If already on list return. */
--	if (llist_on_list(&rstatc->lnode))
-+	/*
-+	 * If already on list return.
-+	 *
-+	 * TODO: add detailed comment on the potential race.
-+	 */
-+	if (data_race(llist_on_list(&rstatc->lnode)))
- 		return;
- 
- 	/*
-@@ -145,9 +149,13 @@ static void css_process_update_tree(struct cgroup_subsys *ss, int cpu)
- 	struct llist_head *lhead = ss_lhead_cpu(ss, cpu);
- 	struct llist_node *lnode;
- 
--	while ((lnode = llist_del_first_init(lhead))) {
-+	while ((lnode = data_race(llist_del_first_init(lhead)))) {
- 		struct css_rstat_cpu *rstatc;
- 
-+		/*
-+		 * TODO: add detailed comment and maybe smp_mb().
-+		 */
-+
- 		rstatc = container_of(lnode, struct css_rstat_cpu, lnode);
- 		__css_process_update_tree(rstatc->owner, cpu);
- 	}
+https://lore.kernel.org/all/20250624191549.474686-1-dinguyen@kernel.org/
+
+Looks like there are some differences which need resolving, so I revoke 
+my review. Will follow-up separately on both.
+
+Rob
