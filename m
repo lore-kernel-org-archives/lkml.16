@@ -1,116 +1,158 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F982EB5A6
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 17:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0329A202C50;
+	Thu, 26 Jun 2025 17:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750959825; cv=none; b=ZwPU5AQGYuKJzeCIPbTw+DFHSRds0Kek1R1KClg4abFhY1q/IzshyccD9yrwFXGdAquCcwIn3bv6HAx9uqqGkrQWsNmANsTn0uL5caawpUSc2HCMdMt6btFfyPnZU5IH9lp+B3Vqmq1nQ0NXdGfQ04YvugkbRh3g6QLspJzrEpk=
+	t=1750959862; cv=none; b=LU7PzPVMELlfabuxNc0LjrpwQohZfnorGGtZ0dV9IYOU5BiPguFLsJDaHbmG8VFuDETuhFpg0BAuQBANh0ncCMF15apam6BcEB+OlVo4+KRVqcLHz8ndn7vg99xD5dMRlDM1mwg9Kwl9F37BvRb/bZ1vbAUgF95/MU/kycEegwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750959825; c=relaxed/simple;
-	bh=wzwuJqhyKPA6pFtaKqL29WQiBrCe4P+CAFqirUycMO4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ca+kBfIo74DOyg7xmFiRiBb6aHT35t8zMvNTY3WBHAZPBE49kpXSSoyyCzhzXE9stIvD3/r5ZOUJv+q2dMND4LzkoKdFLBAQBttO+Jrw/kJMkx77WhTm7vBC6hRDfpvUKxkE2Mjr+I30nEeUIfq3m9+jBlq497ssK+yy5W9+8BY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uRrzxsZG; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750959862; c=relaxed/simple;
+	bh=ebZvQEOJOdrHVeM5gSV7fQQB052guVx3TdrknM+JY+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vBoA8vK/kHZytuo1XOcPrrajZpNl6sR4VcQ2jdnpLn33J+b24uO9G7OKRrNAZwfVEdh2ywnwHG1Z1LXdLU6yuyZLEC6COl6tLwjLFUg5mds6dRgW6BYhg5N1bJiaHjzCMuIRR3lQb30oK0FD/PdjBBIEx0X4DhQ88L06AiuTHFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NPoTIyio; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uRrzxsZG"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6facc3b9559so19246226d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:43:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPoTIyio"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2350fc2591dso13488005ad.1;
+        Thu, 26 Jun 2025 10:44:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750959823; x=1751564623; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wzwuJqhyKPA6pFtaKqL29WQiBrCe4P+CAFqirUycMO4=;
-        b=uRrzxsZG44G6eDnDIhl0c8BBQFpP+FPrPF7DTbhiUZRh/b4LXNOFAHXQav1PkJByrK
-         qSTAP+IOM7gZP1/GDF+v194ozXfpnRIHmNItppCvJJ0AHYuO6jeZy0t4sjl7VlJ0A9cK
-         w1Ds+40PB2CNyYoPyPaMYkZCFp+WOG/zEpOLM1/ZP+BTXEHwKafrArBUg7+T1dZ2jN/d
-         eq5s3CMK6cocfL79zK3G1tnFenNtyr5Yl9LTZj2+6PGp3TlkUwsFN+RYZ4J5deFWY8GA
-         oBEBua9ZKaiWqSbHQYmi8Ncr8S+8IS8bZeOHviN2iLFt1wIKtH0Ae5oh22CK9f3IYgwK
-         8Hnw==
+        d=gmail.com; s=20230601; t=1750959860; x=1751564660; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XOqApDlDtKek45u/dybzXv0bCsKoiI2y3znxRwW87ck=;
+        b=NPoTIyiou6NRJ4Hfy5BF8zGazNLl8drR0TSC7XoQgOl0JXVXfBkSjX+b4eCUrLl6sl
+         sFsGsu48bwrQcFWj+k7RWpfRys6eb8yvfVJOTy5yhPl+rCjLFuYN3/vgcVFTkj/41Q8o
+         zSUONSY1Z7gQHWhb/Q3VsTxCRj/mF/PQTweFEyA/XxjfV/U5TPRuHzW9XVrv61NSLLh6
+         VcvXaaJVMpexrl2zZung/zoLxfm3cZwiawKRkqSpekoAySfGK4yCNQdb6KLz0sA4Hj0U
+         Yi0jDlzb19RbH6A4+d0k6u+pC8dtp5BVXLX16pBMWh+myvRnKGpq71UDzIW93HNzIkOS
+         XjsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750959823; x=1751564623;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wzwuJqhyKPA6pFtaKqL29WQiBrCe4P+CAFqirUycMO4=;
-        b=edLWrNaovenvdn/InON1MeFnucN0WnCIzDOhLKSNuhcJlgFV1AK9g+kWcQNJC89TXp
-         Anc2glONb1QlrNAtMsE0RpXL2IgAx/jKV9tTCKzBbnpsjLcyQETzVUpWE/L+VQSPilM0
-         NcdMxBqn4v0wKubtPec0ElHY9DxCNZlKA3+GqRD5xodTBGBTvIFplcKSOEnrELH7rjs6
-         SXe8EiNGLTBsLx6HCTqT81bHPMVhZ17C/q37b7WXiwa8+Lhqhi3OICDaR7X3SvlvP5D5
-         d2mab13snU/6CLhegzRWo+b8vSOLnyCGKPK9OHTVdkwJH+/Z9CLGBY2cJCGbZbOtsXPp
-         DgFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEGeHKP2nVbNDcErHe5JGqyuW261mkgd6h3FyPkqoDdD9Iyeip5vuUwC9ZppSGk6a1fod9CkyEfiYKkVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxA6DTfDZinS3x3kha6Wp7t5nZiNlx970pG55NvUrGmOgP9tR+A
-	/Rnzo0qM/22ccU84D4kKhNtVZ+IgyJfztMiN0l40i+2eRwDfFYXp6xTh2t+fvAwVRpqmq7bRV/9
-	BgdaocjiWnL1tTfxIAiRUd8vheaKWlegrVe1Mr0/z
-X-Gm-Gg: ASbGnct107eEtGT6sFCtIdfzLyOauYGMzHj2N0j50kXRYnV4flMipH4O1YqcXzs2CxR
-	ZFo4CkeZP391EFVo4Oq7uK92m3mXle0wktDXHDliXlPv+5pZNxLpw2PeQ668M9d3PC6Pl9DsuSd
-	ngerhHkvbLfnixsDhH76dI8a9b0X5yKWNo4KR+KBlrrxR/sAHGgz0sKbq4RF7rsmBgPT0/3yAQU
-	g==
-X-Google-Smtp-Source: AGHT+IGdh/IJuNTnlJ5wP1tLYohn6WiFRhrAxLVoOATEeK6niUOWXM6UN14DbuitTFowPzRbNWX5WutFoxjvCZRzqB8=
-X-Received: by 2002:a05:6214:2aa1:b0:6fb:5f1d:bf8c with SMTP id
- 6a1803df08f44-6fffdcff5c9mr6100526d6.11.1750959822639; Thu, 26 Jun 2025
- 10:43:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750959860; x=1751564660;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XOqApDlDtKek45u/dybzXv0bCsKoiI2y3znxRwW87ck=;
+        b=UPAs9idXlB7BpoVs3fOR0IRecLjdURLhxElSVEYXu3WPjOxw8438tAUUa2LbSoBE6W
+         q2CkolYWIE6ZTipxFBZETlkD8kU2xwKbutV585s8WTdRHVwtjjEyvhBiArO9Zq5Kb3Mp
+         NtgjaB4yebQIrX2dwwWUK7JnNBo0izSwVn8rstF8h0ZmPnLhCc9o5KBee/ctsBg0k1eh
+         01tfYEPtkzEXm8MCAmQx9snlayGY7mzbXdzK10SfH0ylm5JnFN+1TWpPjljFR0z4B3C5
+         xUZC28eQUYpyuUS/fi7yJk/JVk5iyaWbFaUMnpnBzjqGSe59Q6TXPhWGBXlmNk+pe6dY
+         teJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUEvn0JQJCODs+afInVizC0E4s8JxQqWlCTUoXpQTcK8RPpNfyBjFEEG3djmEq3b8sJvVY+NpduOZ+MjHzH@vger.kernel.org, AJvYcCUF2+sjUuN0pQCTqH2mfMkI8t4IwTf7iWSQmO+CbIyjhqz4h193UBIZqEOWw9stBUbuUh0FfkECfSa5@vger.kernel.org, AJvYcCVAOg7HiApxodEKJ7auOA4tJFZvXl6qUS9QOzFDizyx0emQujtCzsQ4H4eCFXq0aWVOInq2qtFTABNgdA==@vger.kernel.org, AJvYcCWjd4fRJanqIXM35chXubrPkapCAaAyQiNhTnSYyFfL19Z1zxIvvcU2zSHY44wRmZFl9KGb+qxyDz/Y3mk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPH99cBq3vQjtqFftgb08IDzJmZ1WR4745PeLebNWtC+km7U1B
+	KfUQ/aCanGU4LFStwZTohUOjSk2mhoHeWQSyJZq/XSMm+RYWXrj2r+Fe+i4+qQ==
+X-Gm-Gg: ASbGnctxLls2UF57DBHwGL3azOfDtwjM6GJ7B5KsKlQ9/AexIk4nvd5ZHiHu/boMUjg
+	dDa+WQ0n0tb4yok3+E+ZXpKuITN+XEh2gNqjLqkTpLYgdkIcP2zrnD6lRZxyX70QWCrfeY8EqWY
+	/e9hj76PgdoUQO97tdOwe3y3JmUbkFvkSWaEzZo4J/hbpC21wUxKu9Ah16rq48oEZ2XzBy0OHvU
+	cTV9jiWlCl/AE78JrhmBHfz6vhFFL3FN8iP+xeYomD7GWMWFSlLJfhbVAlnpRjPsX/BQs2jkDCc
+	aplI7AQCTkpjxVXpHhHM9nt4eLlU39PZhPMHybX5bjLJzliZ/F1ekcBMLVRhxh0payz5DMsVVQ=
+	=
+X-Google-Smtp-Source: AGHT+IERpA/42F7+ID3nTxnW60mmdpQabBUjkL6LiXoHhp6te1jwac5vSBt8lZPIf3XYVILMRgCeJw==
+X-Received: by 2002:a17:903:584:b0:234:325:500b with SMTP id d9443c01a7336-2390a51a598mr46561055ad.22.1750959860234;
+        Thu, 26 Jun 2025 10:44:20 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:9c8f:acd3:efcb:bc3d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23abe3f4551sm3139535ad.144.2025.06.26.10.44.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 10:44:19 -0700 (PDT)
+Date: Thu, 26 Jun 2025 10:44:16 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>, 
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
+ system
+Message-ID: <rn2kp5tog2agvswva2ipqq2ytiqdcgccnocudsg6ckwfh4roei@provk2g6dita>
+References: <20250625215813.3477840-1-superm1@kernel.org>
+ <20250625215813.3477840-5-superm1@kernel.org>
+ <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
+ <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1750854543.git.leon@kernel.org> <cabe5b75fe1201baa6ecd209546c1f0913fc02ef.1750854543.git.leon@kernel.org>
-In-Reply-To: <cabe5b75fe1201baa6ecd209546c1f0913fc02ef.1750854543.git.leon@kernel.org>
-From: Alexander Potapenko <glider@google.com>
-Date: Thu, 26 Jun 2025 19:43:06 +0200
-X-Gm-Features: Ac12FXyaDZROOxurpvkcs9ZXthsb5DglqUebhn0NTWwPhDYnIEGQjkQ7oqhUUFw
-Message-ID: <CAG_fn=XWP-rpV-D2nV-a3wMbzqLn2T-43tyGnoS2AhVGU8oZMw@mail.gmail.com>
-Subject: Re: [PATCH 5/8] kmsan: convert kmsan_handle_dma to use physical addresses
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Leon Romanovsky <leonro@nvidia.com>, 
-	Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Robin Murphy <robin.murphy@arm.com>, 
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	=?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	iommu@lists.linux.dev, virtualization@lists.linux.dev, 
-	kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
 
-On Wed, Jun 25, 2025 at 3:19=E2=80=AFPM Leon Romanovsky <leon@kernel.org> w=
-rote:
->
-> From: Leon Romanovsky <leonro@nvidia.com>
+Hi Mario,
 
-Hi Leon,
+On Thu, Jun 26, 2025 at 06:33:08AM -0500, Mario Limonciello wrote:
+> 
+> 
+> On 6/26/25 3:35 AM, Hans de Goede wrote:
+> > Hi Mario,
+> > 
+> > On 25-Jun-25 23:58, Mario Limonciello wrote:
+> > > From: Mario Limonciello <mario.limonciello@amd.com>
+> > > 
+> > > Sending an input event to wake a system does wake it, but userspace picks
+> > > up the keypress and processes it.  This isn't the intended behavior as it
+> > > causes a suspended system to wake up and then potentially turn off if
+> > > userspace is configured to turn off on power button presses.
+> > > 
+> > > Instead send a PM wakeup event for the PM core to handle waking the system.
+> > > 
+> > > Cc: Hans de Goede <hansg@kernel.org>
+> > > Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing key press event in resume phase")
+> > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> > > ---
+> > >   drivers/input/keyboard/gpio_keys.c | 7 +------
+> > >   1 file changed, 1 insertion(+), 6 deletions(-)
+> > > 
+> > > diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+> > > index 773aa5294d269..4c6876b099c43 100644
+> > > --- a/drivers/input/keyboard/gpio_keys.c
+> > > +++ b/drivers/input/keyboard/gpio_keys.c
+> > > @@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
+> > >   		pm_stay_awake(bdata->input->dev.parent);
+> > >   		if (bdata->suspended  &&
+> > >   		    (button->type == 0 || button->type == EV_KEY)) {
+> > > -			/*
+> > > -			 * Simulate wakeup key press in case the key has
+> > > -			 * already released by the time we got interrupt
+> > > -			 * handler to run.
+> > > -			 */
+> > > -			input_report_key(bdata->input, button->code, 1);
+> > > +			pm_wakeup_event(bdata->input->dev.parent, 0);
 
->
-> Convert the KMSAN DMA handling function from page-based to physical
-> address-based interface.
->
-> The refactoring renames kmsan_handle_dma() parameters from accepting
-> (struct page *page, size_t offset, size_t size) to (phys_addr_t phys,
-> size_t size).
+There is already pm_stay_awake() above.
 
-Could you please elaborate a bit why this is needed? Are you fixing
-some particular issue?
+> > >   		}
+> > >   	}
+> > 
+> > Hmm, we have the same problem on many Bay Trail / Cherry Trail
+> > windows 8 / win10 tablets, so  this has been discussed before and e.g.
+> > Android userspace actually needs the button-press (evdev) event to not
+> > immediately go back to sleep, so a similar patch has been nacked in
+> > the past.
+> > 
+> > At least for GNOME this has been fixed in userspace by ignoring
+> > power-button events the first few seconds after a resume from suspend.
+> > 
+> 
+> The default behavior for logind is:
+> 
+> HandlePowerKey=poweroff
+> 
+> Can you share more about what version of GNOME has a workaround?
+> This was actually GNOME (on Ubuntu 24.04) that I found this issue.
+> 
+> Nonetheless if this is dependent on an Android userspace problem could we
+> perhaps conditionalize it on CONFIG_ANDROID_BINDER_DEVICES?
 
-> A PFN_VALID check is added to prevent KMSAN operations
-> on non-page memory, preventing from non struct page backed address,
->
-> As part of this change, support for highmem addresses is implemented
-> using kmap_local_page() to handle both lowmem and highmem regions
-> properly. All callers throughout the codebase are updated to use the
-> new phys_addr_t based interface.
+No it is not only Android, other userspace may want to distinguish
+between normal and "dark" resume based on keyboard or other user
+activity.
 
-KMSAN only works on 64-bit systems, do we actually have highmem on any of t=
-hese?
+Thanks.
+
+-- 
+Dmitry
