@@ -1,151 +1,139 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A426A2ECD3E;
-	Thu, 26 Jun 2025 16:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EE02ED16C;
+	Thu, 26 Jun 2025 16:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750957187; cv=none; b=sczz4REtwekSrvOAu77unL3SFiHTVHqL+KTQQ1RZU5hRmySYa3/WH8fyqs5YnoNSP3LAOZzEZ2/A1QSz7ALnaLrelpi/NAq6RKZsZBDmbY2Qn41ZYZrlpNzTSumRwucKRFxKASJKgeZa2loHHrccVB/2btWPXkgeM30U9E9TX30=
+	t=1750957190; cv=none; b=ah5y/r40ORhlvNMTXSafSX1Tzj/QVXJzmWayvdJ7GWR8cHNpH5wSd14ShqpGFDAin9o4NdHRDby3NFLbQfsZ2R8zQ6mo6q09LcYPOpbYLSYJ9Kf+JwpJBypazXgM6vjXLBjnwxhb0KxziPC+y2uotYeMpQ2bxBQr24rQuY0K/d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750957187; c=relaxed/simple;
-	bh=woQ7Ps6zyvRtD+WlXLhl9749tSlqBMx5iIjummqWtGk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IYinjoGZlu+Qb9tY2wvf/wHlkQvk7e8Ldo0bIYhgrxREBVy3juQOx4u0AZpvHiyiU4MQw1qp6yFAeXoqUUnOZ4aW4f3aIfR2dEf8b/6rqxAnFQHW+uXeblS1TILfWnVDP66Yfrl+i3jyeYRW0dGg2+99EZJjTYKxVnG72l/VsKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DU0myxNS; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750957190; c=relaxed/simple;
+	bh=XDZrZwxwxUIuc0jfolFJs79wYj64E78GgF4qSIDssKs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oV/jScGO3/iJ/GR0ybFErU+jbJVIcC/XWNPRUsEjZctypx5c9VVF9iQlfdjyUjo4vW+xkVRJxHJw70KUkhC4gowe6HRbNaq1Shs48bGJMug7gcu0oqCZdwiPMAcLH5ysX+FPq/2JEuFgjepGThGqyCQIk2PazIP2yHlcRzAs2/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cDhHALsY; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DU0myxNS"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-23508d30142so19783965ad.0;
-        Thu, 26 Jun 2025 09:59:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750957185; x=1751561985; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+MqwhnBeaC4XpPLUvW23OFmerSzldciI6gEbfm50iZM=;
-        b=DU0myxNSCINfx2KHmFKj7V8FG5IIsMsysgbN3K/838LAORudHEW7gs7/DIgIxEkrhN
-         pzX7LZeOjMja24mv0zXqfV7byvm5b0FlBFUw2LfLc5fq7PtmWWFQUoWrd/1HlM7qhzPK
-         WSbWjuIdJa3FPXa70rdCcgNAZfdrmyrjWs5smfvxsGDuaE/IjxPLhdMR+DRIzWBCBPWX
-         TJPgwu1s8uMdY4AHen6LYTZIY7tS3BTqFoWvLfVeyHZh94OllYiuBlZaTJQFNZj7WbG5
-         4xzgGPNCf5hl2G0dwdiYjPcjoxsGh4xxnXVFvcCMzgtVrHBSC/WbC61UDdS9C6Gry7qw
-         X3mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750957185; x=1751561985;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+MqwhnBeaC4XpPLUvW23OFmerSzldciI6gEbfm50iZM=;
-        b=GiV/ODCo1RRzKmSbmBmZ9CgdYjsRoj7CX1F8bkTAItFyhdc3gnTNghaIN++FvyGFmL
-         /wFCir0MNllIlpiQJXbbSgfi0TTOOeEYnB06Svl3MX+mFYcC5B+YAmzc7My15WQHcwht
-         LURaUs+fQEkjFvtqZ1dzmgtfXqm+dOGvY/ihaCAMhYN+9YrWgeqBCDhXaSAmAFfOkNPc
-         h27Xo686n9bBKOs1l5zFb1kwJCdCtOL5w4xPG8sY5cvPaqFjB0dEQQ8Eh+s2tZ1/hUYm
-         qvvycQqkwUBN5CkDWJXHm3CCBBhZPvdqj4QUq+YfGdVlrbFQo08U9+9kaCqfYTgZP6K6
-         qTUw==
-X-Gm-Message-State: AOJu0YwV2iDEM34A4UYnQU7PcUvTCztIp9CrimtB4N4eDOeLhVLx87Dk
-	I8zwOsi2PbKrQkN2N45GYLpBdty7X7k0ZXSCEXOYVU35KdAcnZhZJUYnfimeNEMF
-X-Gm-Gg: ASbGncv6n+nkyR80ZAPMjhddyaNtA9pF478Himhotu4KqsJznztMFIwrNNdgVdztFba
-	1q2nc5p4nJ47vWxmzCOX+Hy0SWKfvCUR2i8kYF3V7l44lxHRJ5s97AgyU9Ja5+X3gX5lV3qhKQR
-	n2Wnt2od2DbqV0khFrkbbOwPhuirAhhAl1JKk/toDM7O6aMj0R86WxIuh/dQS+YllzG6/voZIcG
-	CjHCM0iDSDdBMOwclvB//+FWrKfFKkHTlCKBDO/vclYQoMZvaQ44Nh8M9vyXcDtb5f/KUlIK0Ey
-	RudNL0i+DZiEVrnHZ3+Yn72SxpdGWdNPl3lD6tIS85CQmu4U
-X-Google-Smtp-Source: AGHT+IHx8R2JoJQnCwEUerphA5k8Y45YgrDDxrho1BCyWHdxn0mxwmrAutPMVaNzv7a2UBc5e1GwIQ==
-X-Received: by 2002:a17:903:18c:b0:235:ca87:37ae with SMTP id d9443c01a7336-23ac4637152mr742295ad.41.1750957184779;
-        Thu, 26 Jun 2025 09:59:44 -0700 (PDT)
-Received: from fedora ([2804:14c:64:af90::1001])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23abe329b72sm2615195ad.80.2025.06.26.09.59.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 09:59:44 -0700 (PDT)
-From: Marcelo Moreira <marcelomoreira1905@gmail.com>
-To: rust-for-linux@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	lossin@kernel.org,
-	dakr@kernel.org,
-	ojeda@kernel.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	~lkcamp/patches@lists.sr.ht
-Subject: [PATCH v5 2/2] rust: revocable: Clarify write invariant and update safety comments
-Date: Thu, 26 Jun 2025 13:59:27 -0300
-Message-ID: <20250626165927.66498-3-marcelomoreira1905@gmail.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250626165927.66498-1-marcelomoreira1905@gmail.com>
-References: <20250626165927.66498-1-marcelomoreira1905@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cDhHALsY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750957189; x=1782493189;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=XDZrZwxwxUIuc0jfolFJs79wYj64E78GgF4qSIDssKs=;
+  b=cDhHALsY0H1iNykZcIiifaxu2dchjYKF7u19ut1gpkowrWTxspUXE/f9
+   ZQEc1SyFg/27qfrsJX5oJ5W44R4+XAJghIG5V6UJ4SfkLhq72jUVTl9Jx
+   fnJrGUPuWrzJNXVTHEcE2u7Zn0izUUqVUUdenswNVVu7vR8qDAQ8ni+io
+   JF4cbvL9WtuqfET9CIlqV5Eqd7AUhutyJh02x8XUKGnIvSCK2+DQFZvSC
+   5sz20M5biWm3yeFuDA0XYtmIwpzqIg/UNPXZnbeq0RKb97tE/NfZktlZG
+   eLgSY/VCXXZFryQTCXei1rr1obHuZfpezg/+vhFkjmEs0915jIgWLlK5L
+   A==;
+X-CSE-ConnectionGUID: uwEtla1dTzeLSBkyVPfQBg==
+X-CSE-MsgGUID: FHOkYa7GQ/Sw8DvHBOP3tA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="55887735"
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="55887735"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:59:48 -0700
+X-CSE-ConnectionGUID: J+uphDd+TlqC0dcbXL4H5w==
+X-CSE-MsgGUID: sbLwaa6ITd6slQ3Ps7cfVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="158066056"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.109.42]) ([10.125.109.42])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:59:48 -0700
+Message-ID: <1fbdfffa-ac43-419c-8d96-c5bb1bdac73f@intel.com>
+Date: Thu, 26 Jun 2025 09:59:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2 01/12] x86/tdx: Consolidate TDX error handling
+To: Sean Christopherson <seanjc@google.com>
+Cc: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+ Rick P Edgecombe <rick.p.edgecombe@intel.com>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ Chao Gao <chao.gao@intel.com>, "bp@alien8.de" <bp@alien8.de>,
+ Kai Huang <kai.huang@intel.com>, "x86@kernel.org" <x86@kernel.org>,
+ "mingo@redhat.com" <mingo@redhat.com>, Yan Y Zhao <yan.y.zhao@intel.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+ Isaku Yamahata <isaku.yamahata@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
+ <20250609191340.2051741-2-kirill.shutemov@linux.intel.com>
+ <5cfb2e09-7ecb-4144-9122-c11152b18b5e@intel.com>
+ <d897ab70d48be4508a8a9086de1ff3953041e063.camel@intel.com>
+ <aFxpuRLYA2L6Qfsi@google.com>
+ <vgk3ql5kcpmpsoxfw25hjcw4knyugszdaeqnzur6xl4qll73xy@xi7ttxlxot2r>
+ <3e55fd58-1d1c-437a-9e0a-72ac92facbb5@intel.com>
+ <aF1sjdV2UDEbAK2h@google.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
+ LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
+ lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
+ MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
+ IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
+ aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
+ I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
+ E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
+ F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
+ CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
+ P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
+ 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
+ GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
+ MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
+ Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
+ lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
+ 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
+ qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
+ BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
+ 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
+ vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
+ FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
+ l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
+ yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
+ +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
+ asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
+ WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
+ sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
+ KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
+ MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
+ hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
+ vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
+In-Reply-To: <aF1sjdV2UDEbAK2h@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Clarifies the write invariant of the `Revocabl` type and
-updates associated `SAFETY` comments. The write invariant now precisely
-states that `data` is valid for writes after `is_available` transitions
-from true to false, provided no thread holding an RCU read-side lock
-(acquired before the change) still has access to `data`.
+On 6/26/25 08:51, Sean Christopherson wrote:
+> No, I was thinking:
+> 
+> 	if (IS_TDX_ERR_OPERAND_BUSY(err))
+> 
+> e.g. to so that it looks like IS_ERR(), which is a familiar pattern.
 
-The `SAFETY` comment in `try_access_with_guard` is updated to reflect
-this invariant, and the `PinnedDrop` `drop` implementation's `SAFETY`
-comment is refined to clearly state the guarantees provided by the `&mut Self`
-context regarding exclusive access and `data`'s validity for dropping.
+That would be a more more compelling if IS_ERR() worked on integers. It
+works on pointers, so I'm not sure it's a pattern we want to apply to
+integers here.
 
-Reported-by: Benno Lossin <lossin@kernel.org>
-Closes: https://github.com/Rust-for-Linux/linux/issues/1160
-Suggested-by: Benno Lossin <lossin@kernel.org>
-Suggested-by: Danilo Krummrich <dakr@kernel.org>
-Reviewed-by: Benno Lossin <lossin@kernel.org>
-Reviewed-by: Danilo Krummrich <dakr@kernel.org>
-Signed-off-by: Marcelo Moreira <marcelomoreira1905@gmail.com>
----
- rust/kernel/revocable.rs | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
-
-diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
-index f10ce5c1ed77..88976c62e1ef 100644
---- a/rust/kernel/revocable.rs
-+++ b/rust/kernel/revocable.rs
-@@ -61,6 +61,15 @@
- /// v.revoke();
- /// assert_eq!(add_two(&v), None);
- /// ```
-+///
-+/// # Invariants
-+///
-+/// - `data` is valid for reads in two cases:
-+///   - while `is_available` is true, or
-+///   - while the RCU read-side lock is taken and it was acquired while `is_available` was `true`.
-+/// - `data` is valid for writes when `is_available` was atomically changed from `true` to `false`
-+///   and no thread that has access to `data` is holding an RCU read-side lock that was acquired prior to
-+///   the change in `is_available`.
- #[pin_data(PinnedDrop)]
- pub struct Revocable<T> {
-     is_available: AtomicBool,
-@@ -115,8 +124,8 @@ pub fn try_access(&self) -> Option<RevocableGuard<'_, T>> {
-     /// object.
-     pub fn try_access_with_guard<'a>(&'a self, _guard: &'a rcu::Guard) -> Option<&'a T> {
-         if self.is_available.load(Ordering::Relaxed) {
--            // SAFETY: Since `self.is_available` is true, data is initialised and has to remain
--            // valid because the RCU read side lock prevents it from being dropped.
-+            // SAFETY: `self.data` is valid for reads because of `Self`'s type invariants,
-+            // as `self.is_available` is true and `_guard` holds the RCU read-side lock.
-             Some(unsafe { &*self.data.get() })
-         } else {
-             None
-@@ -208,9 +217,10 @@ fn drop(self: Pin<&mut Self>) {
-         // SAFETY: We are not moving out of `p`, only dropping in place
-         let p = unsafe { self.get_unchecked_mut() };
-         if *p.is_available.get_mut() {
--            // SAFETY: We know `self.data` is valid because no other CPU has changed
--            // `is_available` to `false` yet, and no other CPU can do it anymore because this CPU
--            // holds the only reference (mutable) to `self` now.
-+            // SAFETY:
-+            // - `self.data` is valid for writes because of `Self`'s type invariants:
-+            //   `&mut Self` guarantees exclusive access, so no other thread can concurrently access `data`.
-+            // - this function is a drop function, thus this code is at most executed once.
-             unsafe { drop_in_place(p.data.get()) };
-         }
-     }
--- 
-2.50.0
-
+I kind of hate all of this. I'd kinda prefer that we just shove the TDX
+error codes as far up into the helpers as possible rather than making
+them easier to deal with in random code.
