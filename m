@@ -1,140 +1,107 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E19A28C009;
-	Thu, 26 Jun 2025 13:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9581A28B7CC;
+	Thu, 26 Jun 2025 13:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750944375; cv=none; b=ksoa58Fp1sbhSqEpEHbiVJ68+RZ+EAdnjrIqwp8iIMkjPQTguHVWbohtG5b+dpjqm+OhXKTs3QtAHT7bF4AsHK2Xly2hEKKWrvG6FV5ni4+JKoMkGu2HdpecxXJlWFaunjHYc6phrqv9X9lHEzRwIZbm5vEeDl+WSKncnir1ies=
+	t=1750944402; cv=none; b=lDtLijoXyH7UCnXnOSJLxelxsP9joLJ7o+nvwLBiM+IWv9SRu98mFdSBEN5RR4rhX9J88fiwACbtQ3KeTk3TKbS48ew1oQtk7p37F5W73pXQjYLvq1oznRUUNSzcxlcbMhcY0cjMvTU2CKDhKRMbT9eM6dvEx1/XEYsPbJErfgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750944375; c=relaxed/simple;
-	bh=WrztCgo/u9U/MdwKZA9o7yX+ZBLJewFK4uNbWKPb1fw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BjgQ9YWyajm1g4wSSIako+FYaK9zLoCraNPPtR1YOyz4lE5K+V4if/9im06HRulyBbuM1LIXP9fuPR0mbxz9IQseO2EYF5mD3U+2Ee4Q6QqR60+4+u8zDAiuom6CnPk3jKVhXLkgYU/l6Wny8vM14o/IGEl9okHQYUA8AQKJBu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mBhj5Ean; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750944402; c=relaxed/simple;
+	bh=On1ai4dZklsJYuX9vQzfB1wETLIETlbz6WbH81Mp3hg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lroag9zpZuBsZtEGrF9vXJc2Ci4sq6JSTtmjXspisP9Il2mD0ww/564pWLK1AAl3BZqdpUZ/i/QlLWvtr7AZ3vzmWt629cuJkDp8D61GrpOn4ZffZs+Pc11gRntreaXD+wpzO39J69QU1ZyMHLdtMCp5dvxSoHeLIQRTDgHGxoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GwY0jOjB; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mBhj5Ean"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QBTrMb019605;
-	Thu, 26 Jun 2025 13:25:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=KIhS+X
-	0s3emxbkTkmLwZ1E9uauCzQCnaacBuXWC4txA=; b=mBhj5Eanlu3oE/dcWEXSON
-	bs+nUNHFhj52nhZTNcBcQnD8w4MOqR1APPdKOy/2Z4xqo7W+AlfHq5zcimMH/p7M
-	SPoerEsOmWn7EMwali96VcM/n0hJ419D/uqK2I1GxGpeeHHrKz2oUjDKeX2IDvQR
-	e8DyC2Z8/a7sMAlTqrOgwjayce/JIKNykjPEnik4k+QyBvx3ICHSumvr835me32j
-	pw6sRI5KW1QXWeKspVOSszhIPBkgyV6zT72qSrYqYXuxku+hPfdBeXAEMFgzToNk
-	gebjadwYVFjSnB1a30iBWmt+TtehjXzXfa6GDOZ6GcmIL/TAyooEzyV6KSgnwg8g
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dmf3eb8h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 13:25:41 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55QDG2ji007108;
-	Thu, 26 Jun 2025 13:25:40 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dmf3eb8b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 13:25:40 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55QD932l003994;
-	Thu, 26 Jun 2025 13:25:39 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e99kxu6v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 13:25:39 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55QDPce926018338
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 26 Jun 2025 13:25:38 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 27C3E58056;
-	Thu, 26 Jun 2025 13:25:38 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C24AB5803F;
-	Thu, 26 Jun 2025 13:25:31 +0000 (GMT)
-Received: from [9.43.40.242] (unknown [9.43.40.242])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 26 Jun 2025 13:25:31 +0000 (GMT)
-Message-ID: <59f869f7-586b-4021-b44d-dfd5df36d17a@linux.ibm.com>
-Date: Thu, 26 Jun 2025 18:55:30 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GwY0jOjB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750944401; x=1782480401;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=On1ai4dZklsJYuX9vQzfB1wETLIETlbz6WbH81Mp3hg=;
+  b=GwY0jOjBXr7PgWb5GZFz1znO18GoOf0XNcQsQAj5pOPOqbL/f19f/MfS
+   /odN/EWkpc8oSOKJbCqhVRwZpA9Lq/bfFbJYGKIwAsoyjZwQlP2OTNW2z
+   MLScFw69zzHRgwgOsowmFNyKFKbsYmicnQD4R/ZUuCZe1g8qsl3opcTgz
+   zrJzSJldiEDCDJMcuxM1waWgcR1rH6u2LnABO3y2qX9nx+Pg3cnM6bN+0
+   RpS2DNxnS+wQiMv07jcVi2kwgIMt4SG/J6nOhnAotIyHAY25RUZC9C1Dv
+   fqfoMNXcBIods1Qk5xFHyD712lULTPd5ZxNUwQzlt8ALP3JkB0/SSbTP8
+   g==;
+X-CSE-ConnectionGUID: LS36jmZGQieryh9/O4Q3uw==
+X-CSE-MsgGUID: Fdg/GCWsTa+TOvuctnzuRw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="70809836"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="70809836"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 06:26:40 -0700
+X-CSE-ConnectionGUID: aMX5AkRNQr+L8NUyedp/Xw==
+X-CSE-MsgGUID: VvngBVbmTFm1/1+imcMX4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="153048528"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP; 26 Jun 2025 06:26:38 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id C2641345; Thu, 26 Jun 2025 16:26:36 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Cezary Rojewski <cezary.rojewski@intel.com>
+Subject: [PATCH v2 1/1] ACPI: LPSS: Remove AudioDSP related ID
+Date: Thu, 26 Jun 2025 16:26:05 +0300
+Message-ID: <20250626132635.221064-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 7/9] net/smc: Drop nr_pages_max initialization
-To: Michal Luczaj <mhal@rbox.co>, "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-        Neal Cardwell <ncardwell@google.com>,
-        Kuniyuki Iwashima <kuniyu@google.com>,
-        David Ahern <dsahern@kernel.org>, Boris Pismenny <borisp@nvidia.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ayush Sawal <ayush.sawal@chelsio.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
-        "D. Wythe" <alibuda@linux.alibaba.com>,
-        Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org
-References: <20250626-splice-drop-unused-v2-0-3268fac1af89@rbox.co>
- <20250626-splice-drop-unused-v2-7-3268fac1af89@rbox.co>
-Content-Language: en-US
-From: Sidraya Jayagond <sidraya@linux.ibm.com>
-In-Reply-To: <20250626-splice-drop-unused-v2-7-3268fac1af89@rbox.co>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=M5FNKzws c=1 sm=1 tr=0 ts=685d4a55 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=WDAXKTNUUXuyYHq0jyUA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDExMiBTYWx0ZWRfXy3bcL4KxEbLd qBpE+zXX99M5NXGzAZREjCuHb+lSyQK/AuEmVpmsTwmc6w3jMPFpoS6yLoICU6wkS+ebCvSdM2P yIgGPCsQPpD7KZoLsgjUGqbHDqHqNTLXr/yY5zc4JP5jrc6NPNAkyoZB1ZEiAuOLXPZZG8v7UOS
- x3Wh8HgNZnewlgj/ZIAg4bB9sEtlP09rKfcXucJbpKqLrRxHEfcgkAdlOAYu3Sg0bPcwR42/SQK kPAUfm1RVb7a6I66nG14rCcSleb1Te1++q1TeGJOxa2zVOvXsyaTT5rKIVdrL8mX1fOoFr7M7kz +tOkqOsr9ue6Ql7vrQRm9oUb1rnBoUuNvrGsrxMOwwYxay1tP+50OuJF1FZo7ME76DCujjM/HnJ
- hwMcproKNFhT195vJbBB4Hc4pLCusxWDl5P43/Rbo/TIW/DAbWWnWhYppko8zmbuHrGlVZcY
-X-Proofpoint-GUID: mXg7mT2CW3aKLbyhfQI2l7s2PzaJ7Rh8
-X-Proofpoint-ORIG-GUID: ib18akj9XBROQCGZlfP3AB-I4y3i0s5P
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_05,2025-06-26_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 malwarescore=0 impostorscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 spamscore=0 clxscore=1011 adultscore=0
- mlxscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506260112
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+The AudioDSP drivers are in control for all functions of the hardware
+they have (they are multi-functional devices). The LPSS driver prepares
+for enumeration only single devices, such as DMA, UART, SPI, I²C. Hence
+the registration of AudioDSP should not be covered. Moreover, the very
+same ACPI _HID has been added by the catpt driver a few years ago.
 
+And even more serious issue with this, is that the register window at
+offset 0x800 is actually D-SRAM0 in case of AudioDSP and writing to it
+is a data corruption.
 
-On 26/06/25 2:03 pm, Michal Luczaj wrote:
-> splice_pipe_desc::nr_pages_max was initialized unnecessarily in
-> commit b8d199451c99 ("net/smc: Allow virtually contiguous sndbufs or RMBs
-> for SMC-R"). Struct's field is unused in this context.
-> 
-> Remove the assignment. No functional change intended.
-> 
-> Suggested-by: Simon Horman <horms@kernel.org>
-> Signed-off-by: Michal Luczaj <mhal@rbox.co>
-> ---
->   net/smc/smc_rx.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/net/smc/smc_rx.c b/net/smc/smc_rx.c
-> index e7f1134453ef40dd81a9574d6df4ead95acd8ae5..bbba5d4dc7eb0dbb31a9800023b0caab33e87842 100644
-> --- a/net/smc/smc_rx.c
-> +++ b/net/smc/smc_rx.c
-> @@ -202,7 +202,6 @@ static int smc_rx_splice(struct pipe_inode_info *pipe, char *src, size_t len,
->   			offset = 0;
->   		}
->   	}
-> -	spd.nr_pages_max = nr_pages;
->   	spd.nr_pages = nr_pages;
->   	spd.pages = pages;
->   	spd.partial = partial;
-> 
-LGTM.
-Reviewed-by: Sidraya Jayagond <sidraya@linux.ibm.com>
+That all being said, remove the AudioDSP ID from the LPSS driver,
+where it doesn't belong to.
+
+Fixes: c2f8783fa2d0 ("ASoC: Intel: Add common SST driver loader on ACPI systems")
+Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Tested-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+
+v2: fixed Fixes (Cezary), added tags (Cezary)
+
+ drivers/acpi/x86/lpss.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/acpi/x86/lpss.c b/drivers/acpi/x86/lpss.c
+index 258440b899a9..6daa6372f980 100644
+--- a/drivers/acpi/x86/lpss.c
++++ b/drivers/acpi/x86/lpss.c
+@@ -387,9 +387,6 @@ static const struct acpi_device_id acpi_lpss_device_ids[] = {
+ 	{ "INT3435", LPSS_ADDR(lpt_uart_dev_desc) },
+ 	{ "INT3436", LPSS_ADDR(lpt_sdio_dev_desc) },
+ 
+-	/* Wildcat Point LPSS devices */
+-	{ "INT3438", LPSS_ADDR(lpt_spi_dev_desc) },
+-
+ 	{ }
+ };
+ 
+-- 
+2.47.2
+
