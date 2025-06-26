@@ -1,32 +1,55 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B573327584E;
-	Thu, 26 Jun 2025 11:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62CA218AB9;
+	Thu, 26 Jun 2025 11:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750936743; cv=none; b=g0a7XWE3hhhtwLGJ3fbHmGnTvm8A4q3rNqLoB6OPBcCwRQjfqqsuoZ8vKPKEeZDaJ6b82BDqeFzR2z7op078noxt/xK5kH+zMI9ERSTBiszV8oWqlvAPjzRCictBGh6Y1w1RO2D6kkbkbWvOphpL/WUKb6gioQ5yIaY/1394mIc=
+	t=1750936764; cv=none; b=q+8C3ZxEDpNHkLhTNt6G5TUXTtZCZdwW9ZI7ozWbgVQXf+QVOkH8ynD/vybXGn+aBI6ba/lnd+R82HtiefMfByzmcuGVk1UfQleN5gOnij55K+0lFB/cIEek4qE+lut6xFGbpEYrYyZGWWaLKZ6mWeAbaKQvJxLMHptZyZJCQrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750936743; c=relaxed/simple;
-	bh=t8TKtX8+1z8+FgOghcUw4tz/UUo1RHZst3BBTMNbWMQ=;
+	s=arc-20240116; t=1750936764; c=relaxed/simple;
+	bh=74yECaydFrAAaG+GBuofMEjkzPEW7SI+Ti8lcdiSM4k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lx8jR+xsdtKJqZaoWpghtNvSLqT+CEsxnMMoLQuhegbCgpio+mZFYsWftKQUUqi8YGVDia4FcIQtMrtOCr+Ihq0GSghDB57ZpebBKgAvShTosXr/bt1IJNDEBYRVTBSfxSTkodauLpCVb514CXJpGQtigGxG/Ho3PX4dkJNeOE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50BC21758;
-	Thu, 26 Jun 2025 04:18:43 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C5C8A3F63F;
-	Thu, 26 Jun 2025 04:18:59 -0700 (PDT)
-Date: Thu, 26 Jun 2025 12:18:57 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Philip Radford <philip.radford@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
-	cristian.marussi@arm.com, luke.parkin@arm.com
-Subject: Re: [PATCH 0/4] firmware: arm_scmi: Add xfer inflight debug and trace
-Message-ID: <aF0soSDaBE7-1UnA@pluto>
-References: <20250619122004.3705976-1-philip.radford@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=l8Da3l0FORMZ3egHOqUcNlB9ZRM1KwHUBuz7/i1yU+2eqXTp1fcqb7A58sUv8vJVHt6d2W5jVyGOshcgr5X/OigG7gT94X80dh+N541hnLltYFw/JEermNYE25YMgzNESgvahDphO1dGkmiAYxTtW40xWZz7oE8WzeWH+4QMhW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUqtnhnz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUqtnhnz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E774C4CEEB;
+	Thu, 26 Jun 2025 11:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750936764;
+	bh=74yECaydFrAAaG+GBuofMEjkzPEW7SI+Ti8lcdiSM4k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bUqtnhnzxEh+k9Pg+wpcE7A1G8OWKnsTDtSCCjIAsDhtG7mN8BDigFE8lYJVE9R6R
+	 BQxoPhtxNQ1RpT90zIzl64rDWLuQ4yb20/IR23oq6ub0+Q+7Xws+TAbK6BJEZR/81I
+	 SDPXxKNHkpO2Xo3zZA+pcXCmgTIGYGo95YZng6xLow5lFlqOexqH61cI37BN35else
+	 cLHxLYB1OB0GWhPxjw5vrdHG5ULrXOYwftuS9xacKtFU7n+e7yQplFtt4pycvjF3KY
+	 bULQYFyD9hfibXVS2gEeSZZwP57WenHFhrxPe8lzf7M7F8aDIn8wkA4N7gXfGUg/Kp
+	 4pQmKq9SmFmqg==
+Date: Thu, 26 Jun 2025 12:19:18 +0100
+From: Simon Horman <horms@kernel.org>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	David Ahern <dsahern@kernel.org>,
+	Boris Pismenny <borisp@nvidia.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Ayush Sawal <ayush.sawal@chelsio.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	Jan Karcher <jaka@linux.ibm.com>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-s390@vger.kernel.org
+Subject: Re: [PATCH net-next v2 9/9] net: skbuff: Drop unused @skb
+Message-ID: <20250626111918.GX1562@horms.kernel.org>
+References: <20250626-splice-drop-unused-v2-0-3268fac1af89@rbox.co>
+ <20250626-splice-drop-unused-v2-9-3268fac1af89@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,15 +58,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250619122004.3705976-1-philip.radford@arm.com>
+In-Reply-To: <20250626-splice-drop-unused-v2-9-3268fac1af89@rbox.co>
 
-On Thu, Jun 19, 2025 at 12:20:00PM +0000, Philip Radford wrote:
-> Hi all,
+On Thu, Jun 26, 2025 at 10:33:42AM +0200, Michal Luczaj wrote:
+> Since its introduction in commit 6fa01ccd8830 ("skbuff: Add pskb_extract()
+> helper function"), pskb_carve_frag_list() never used the argument @skb.
+> Drop it and adapt the only caller.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Michal Luczaj <mhal@rbox.co>
 
-Hi,
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-as mentioned offline, please rebase V2 on sudeep/for-next/scmi/updates
-and add proper version diffs summary all-over.
-
-Thanks,
-Cristian
