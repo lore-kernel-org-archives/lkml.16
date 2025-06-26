@@ -1,39 +1,111 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60C71DEFE9
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 20:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2BA1DEFE9;
+	Thu, 26 Jun 2025 20:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750969093; cv=none; b=EfKPGgp053NXqaEvxotiJQ+MTKreiCCiDuJ8TpMUHzbYuHiIFcaBpJsfK9pBzNJw3tR56sBShDyPlArwSLmlCKTlR2QUEFKofkWvDSt7ZanfeCYnQ31p4vqCXoQP0WCVWajXZ7ujDhEE7zzOxAp5OEp5BjYJrQT/0Tra28M1h+Y=
+	t=1750969260; cv=none; b=rE/iITLucd4gHZAJMYMRjw3/jLCf6SbuCbYAxqaNuY4gAZubwbXKjFk1y7JAhCVult4yPUc1dj2eYjMJ1RYHQKTzX3+z30iEGpCO0eHTQIA/3WenlTn7NTKcrs3bEa6a/SnYX1x1QhpbYr8RJww6XwKMF8/16sVSF+uDYtPedEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750969093; c=relaxed/simple;
-	bh=aIRf0oseyZrQI43Sg+44ZR1Mrl8CCGzfg6802gOD/T4=;
+	s=arc-20240116; t=1750969260; c=relaxed/simple;
+	bh=zuYYb/svee76Q0/Y0zJae78b8I8+Z0dvNVyE4ndS0fk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sg0q2Qw9ATyCDbuYL7yUSNbiHUI0JTuSFc0Gu+1SkV1kKmbM2E4uEHbNZopOYe5sg+7YRQMArh+0yyvepLGO9H3SMShBkzfJDY/ZDOAbe2bjxn4CW4pHKWNhPUib+QUd72cYYJiMJYtTCP5ys/RddE07a4jxhqETog9D0jRzHaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=l6quOM6g; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=vA9gSU5/rptyvafpyR6toS9E95NMWyoP0tv5bu8flFeIHzCsnGUEiEalRBDcUbe0P8VsYTAaqMD5oVbKQBcV2JKZvEZXk85aXESfhv8EVVRfjNnD/aQyEM1BmI5hv1eteV8ZFnS6OiptYu1YE484RjaDO6wuzC6t4U8hZ/3e598=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DRlNPTCq; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="l6quOM6g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1750969082;
-	bh=aIRf0oseyZrQI43Sg+44ZR1Mrl8CCGzfg6802gOD/T4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l6quOM6gzsLWg/lcI7yrOn1zwXhVzDiSEk2xCijsM/Tg2nkJFAlhwylTW6+dK7f65
-	 cl6vNLnK5OLHXH/gn7BEnGMoy+nuG2sQKeY2aTcEBooyK9QtrilE1B1eoJr8QMeqsd
-	 h4p8RtxGIFgC4lnJGj+VAlcuMOh3MdpjVwwa4LjM=
-Date: Thu, 26 Jun 2025 22:18:01 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Willy Tarreau <w@1wt.eu>
-Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	linux-kernel@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 3/3] tools/nolibc: add a new "install_all_archs"
- target
-Message-ID: <92eda9ff-116e-4ec1-930c-7474da9652fc@t-8ch.de>
-References: <20250620103705.10208-1-w@1wt.eu>
- <20250620103705.10208-4-w@1wt.eu>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRlNPTCq"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6fad8b4c927so14004116d6.0;
+        Thu, 26 Jun 2025 13:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750969258; x=1751574058; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cq2sD7Val+E8B0RYM+I5xro1zxh/kLt1yENekp/Stac=;
+        b=DRlNPTCqselPE2hcJqrWylrHaRzAsPxQN8cjVpv9s4wicfDlRUi8H+Kmd6ff9varyF
+         kP/smKgAHnVpXk82QSSSNgTIrTleKC8tkAP7jdWrfMog1g527ygiKDO8voOs2j6fmppo
+         Bh8fdl8AvCpAxa6pqOFAYbf0+0mMVTCCmdx+sblInKySX5vbog35Rd7KHyf4PstGKdzh
+         UADVLiLm0O01tzW4ODo2IpwSjBkqWkj4XdxZz6E8nn36F/xnIrnDhdMAl9RGEuemzByV
+         mT0iXzDQXYO3Ra5Z+GzsA3tezNvE4XJCFLrjdUYSeZBi9wMrZfg/+n2bWs66QD9KAEUz
+         KHWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750969258; x=1751574058;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cq2sD7Val+E8B0RYM+I5xro1zxh/kLt1yENekp/Stac=;
+        b=b/8LPTRuTBXnYGsvprBtYX/tMpTn3lnTwCMbKUMPgGG8UXI03GcrjWx9RE1ZnAaPQo
+         hP14VyIraDoGWokrnfUCh+PdEU4KW/2mwRpNKkwTTPrUy99cPPRXlpyqlbNlDc1dDvwk
+         WRcMnXRFbSj5a3Eg5yzTRG1nrBh/kEoYcbJt4gm6tKVgRROwaaYs/3JgzJtBhXSXqL5Y
+         krJNYe8TDRYJo3hS6QWzjS3RHrm5PQNiihFeDUUZwM9G48KYIajCPWl+7xVdFJ1AOhfa
+         nWEAS/d5VJx7HFbK9EtILrfymt7Urau4kb3Ra0RqqC3/tXOegwAqx9UYSsXBuC7WOe8o
+         XCpg==
+X-Forwarded-Encrypted: i=1; AJvYcCVqOPZWcCJA3cK4OqT5DdAj4s184Oq9Nmq0Wo2IfvCjCq+MYemmfmukHbRo1vD2YSrxJS/FLx2j/JhzSfyxQWE=@vger.kernel.org, AJvYcCWp8pbf6OPto7dbR+EKNLMU2zx0G5/eBQsAclK+suOo+l6/AIsCvM+q1d/n8oBD+G/LQ7qzcjNUWD6dNP4=@vger.kernel.org, AJvYcCX4SpurQ36ukSqgmH7lcNOBh+ruNglbPIvv5gpWrLTT4xIlcChEyFavQFdlynPD8WN+cMfz0h0GmSfv@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUixZfLT1LtfTv5fsC27KPyyVb77vWT5OnSv/Khw+7/r0wNiM7
+	e5nJeCZ7/yeEczU7Zx44HVvjYNiKYCB4jQtLwWZN+cROFsIBnzj9pIDf
+X-Gm-Gg: ASbGncvSzXzeKFSH6zKiuVGfM7E97++lo4KxwO2O8wMnx4YPGQVWVRcB7aOxIcQU6fy
+	Aa4vMw61eLxIK4PQSIqJuS6lGb4FgbgnqvdohskWKh+vyc6dN+l9ns9M8d7U+VGAAuBCXE6Ja9n
+	wQzzhbn2KM8mg0GTU79yFDHyOLcVxOpVyanb7zPmNH4bDO50Wy6ZElRY50CrY5cYLr9UzQoMvY5
+	8rUenYdUAuFoSwNa698RaxglibGlmizwC3vuIGkAAjP6+tvKbW1/QQbl9nm791S+ZCLaQQBC8Zp
+	gKV3ZTMMGK1wzGl1Des+FfX3p5dLkvOKZBUHSnILVwonQzqUmuIEDF/KAjw47sCYqa85kNecgVS
+	Lhvd0M3FmGQRQFInTLbAjZGrT4wxBtQ10EKA/hg66hWYqOWR+CsAC1y7/URzxFtY=
+X-Google-Smtp-Source: AGHT+IFpIAq+fBVXqNCfPRHUyR2fuak4GTubSopHufh3JvkJxpJ/6pY2qFrOxr513xCe/NEH4yKIqg==
+X-Received: by 2002:a05:6214:2e43:b0:6fb:6114:1034 with SMTP id 6a1803df08f44-700131c4812mr15208706d6.39.1750969257910;
+        Thu, 26 Jun 2025 13:20:57 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd7718d048sm11578466d6.21.2025.06.26.13.20.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 13:20:57 -0700 (PDT)
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 00834F40066;
+	Thu, 26 Jun 2025 16:20:57 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Thu, 26 Jun 2025 16:20:57 -0400
+X-ME-Sender: <xms:qKtdaHIft1jfJYRilxsfCKnUv44zBDlAGlb6Q5kKSvg21ISNJZr9Eg>
+    <xme:qKtdaLLrRm3eo3GLnW8t9SJ3u6_Uz7_17UbV5OuHu0-8iALLBfg_lm3liB_by2Ql8
+    n9BjaNqe_-ZEF33yQ>
+X-ME-Received: <xmr:qKtdaPuebNrI3OCejZ07SJyWAvYvVgYHZ1HE1005ZdknKO9YbQCVbq03AA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduuddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgv
+    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
+    hnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueevieduffeivden
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquh
+    hnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudej
+    jeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrd
+    hnrghmvgdpnhgspghrtghpthhtohepvddtpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlih
+    hnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghr
+    nhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgr
+    rhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhroh
+    htohhnmhgrihhlrdgtohhmpdhrtghpthhtoheplhhoshhsihhnsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:qKtdaAafXBUPSa9pDkEftAWmSO2xMYtbWtg-idP4P9GHRMMPXMqH8g>
+    <xmx:qKtdaObdGlmk0SHsDAL5fuipyQcU8FfanAgzpvGBhB04EhDxd4bLLQ>
+    <xmx:qKtdaEC7u5i3yulpRCLiuH0LspT4Rnk_qPQBvyLX1qt1ylXDml20Eg>
+    <xmx:qKtdaMbLx0Pd4VgOpLGw8fdPOVZ17ZcZuicSpZ7k8LwEncusFhL94Q>
+    <xmx:qKtdaCp0XvRLlFHrYEbTmXoBU9ObGiZu_s1GDBaxJHz_mnZqOhERDIOw>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 26 Jun 2025 16:20:56 -0400 (EDT)
+Date: Thu, 26 Jun 2025 13:20:55 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 4/5] rust: types: ForeignOwnable: Add type Target
+Message-ID: <aF2rpzSccqgoVvn0@tardis.local>
+References: <20250626200054.243480-1-dakr@kernel.org>
+ <20250626200054.243480-5-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,100 +114,95 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250620103705.10208-4-w@1wt.eu>
+In-Reply-To: <20250626200054.243480-5-dakr@kernel.org>
 
-On 2025-06-20 12:37:05+0200, Willy Tarreau wrote:
-> This installs all supported archs together, both from nolibc and kernel
-> headers. The arch-specific asm/ subdirs are renamed to asm-arch-$arch,
-> and asm/ is rebuilt from all these files in order to include the right
-> one depending on the build architecture.
+On Thu, Jun 26, 2025 at 10:00:42PM +0200, Danilo Krummrich wrote:
+> ForeignOwnable::Target defines the payload data of a ForeignOwnable. For
+> Arc<T> for instance, ForeignOwnable::Target would just be T.
 > 
-> This allows to use a single unified sysroot for all archs, and to only
-> change the compiler or the target architecture. This way, a complete
-> sysroot is much easier to use (a single directory is needed) and much
-> smaller.
+> This is useful for cases where a trait bound is required on the target
+> type of the ForeignOwnable. For instance:
 > 
-> Signed-off-by: Willy Tarreau <w@1wt.eu>
+> 	fn example<P>(data: P)
+> 	   where
+> 	      P: ForeignOwnable,
+> 	      P::Target: MyTrait,
+> 	{}
+> 
+> Suggested-by: Benno Lossin <lossin@kernel.org>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+
+One nit below:
+
 > ---
->  tools/include/nolibc/Makefile | 39 +++++++++++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
+>  rust/kernel/alloc/kbox.rs | 2 ++
+>  rust/kernel/sync/arc.rs   | 1 +
+>  rust/kernel/types.rs      | 4 ++++
+>  3 files changed, 7 insertions(+)
 > 
-> diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
-> index 8de6ac5cec425..b6ed11d0b5419 100644
-> --- a/tools/include/nolibc/Makefile
-> +++ b/tools/include/nolibc/Makefile
-> @@ -88,6 +88,7 @@ help:
->  	@echo "  headers_all_archs   prepare a multi-arch sysroot in \$${OUTPUT}sysroot"
->  	@echo "  headers_standalone  like \"headers\", and also install kernel headers"
->  	@echo "  help                this help"
-> +	@echo "  install_all_archs   install a multi-arch sysroot + kernel headers in \$${OUTPUT}sysroot"
->  	@echo ""
->  	@echo "These targets may also be called from tools as \"make nolibc_<target>\"."
->  	@echo ""
-> @@ -120,6 +121,44 @@ headers_all_archs:
->  	$(Q)cp --parents $(all_files) arch.h "$(OUTPUT)sysroot/include/"
->  	$(Q)cp $(addsuffix .h,$(addprefix arch-,$(nolibc_supported_archs))) "$(OUTPUT)sysroot/include/"
+> diff --git a/rust/kernel/alloc/kbox.rs b/rust/kernel/alloc/kbox.rs
+> index c386ff771d50..66fad9777567 100644
+> --- a/rust/kernel/alloc/kbox.rs
+> +++ b/rust/kernel/alloc/kbox.rs
+> @@ -403,6 +403,7 @@ unsafe impl<T: 'static, A> ForeignOwnable for Box<T, A>
+>  where
+>      A: Allocator,
+>  {
+> +    type Target = T;
+>      type PointedTo = T;
+>      type Borrowed<'a> = &'a T;
+>      type BorrowedMut<'a> = &'a mut T;
+> @@ -435,6 +436,7 @@ unsafe impl<T: 'static, A> ForeignOwnable for Pin<Box<T, A>>
+>  where
+>      A: Allocator,
+>  {
+> +    type Target = T;
+>      type PointedTo = T;
+>      type Borrowed<'a> = Pin<&'a T>;
+>      type BorrowedMut<'a> = Pin<&'a mut T>;
+> diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
+> index c7af0aa48a0a..24fb63597d35 100644
+> --- a/rust/kernel/sync/arc.rs
+> +++ b/rust/kernel/sync/arc.rs
+> @@ -374,6 +374,7 @@ pub fn into_unique_or_drop(self) -> Option<Pin<UniqueArc<T>>> {
 >  
-> +install_all_archs: headers_all_archs
-> +	@# install common headers for any arch, take them all. This will clear everything.
-> +	$(Q)$(MAKE) -C $(srctree) ARCH=x86 mrproper
-> +	$(Q)$(MAKE) -C $(srctree) ARCH=x86 headers_install no-export-headers= INSTALL_HDR_PATH="$(OUTPUT)sysroot"
-> +	@# remove the contents of the unused asm dir which we will rebuild from the arch ones
-> +	$(Q)rm -rf "$(OUTPUT)sysroot/include/asm"
-> +	$(Q)mkdir -p "$(OUTPUT)sysroot/include/asm"
-> +	@# Now install headers for all archs
-> +	$(Q)for arch in $(patsubst aarch64,arm64,$(nolibc_supported_archs)); do \
-> +		echo "# installing $$arch"; \
-> +		if ! [ -d $(OUTPUT)sysroot/include/asm-arch-$$arch ]; then \
-> +			$(MAKE) -C $(srctree) ARCH=$$arch mrproper; \
-> +			$(MAKE) -C $(srctree) ARCH=$$arch headers_install no-export-headers= \
-> +				INSTALL_HDR_PATH="$(OUTPUT)sysroot/include/$$arch" >/dev/null; \
-> +			mv "$(OUTPUT)sysroot/include/$$arch/include/asm" "$(OUTPUT)sysroot/include/asm-arch-$$arch"; \
-> +			rm -rf "$(OUTPUT)sysroot/include/$$arch"; \
-> +			case "$$arch" in \
-> +				arm)       cond="defined(__ARM_EABI__)" ;; \
-> +				arm64)     cond="defined(__aarch64__)" ;; \
-> +				loongarch) cond="defined(__loongarch__)" ;; \
-> +				m68k)      cond="defined(__m68k__)" ;; \
-> +				mips)      cond="defined(__mips__)" ;; \
-> +				powerpc)   cond="defined(__powerpc__)" ;; \
-> +				riscv)     cond="defined(__riscv__)" ;; \
-> +				s390)      cond="defined(__s390__) || defined(__s390x__)" ;; \
-> +				sparc)     cond="defined(__sparc__)" ;; \
-> +				x86)       cond="defined(__i386__) || defined(__i486__) || defined(__i586__) || defined(__i686__) || defined(__x86_64__)";; \
-> +				*)         echo "Unsupported arch" >&2; exit 1;; \
-> +			esac;\
-> +			for file in "$(OUTPUT)sysroot/include/asm-arch-$$arch/"*.h; do \
-> +				base="$${file##*/}"; \
-> +				( echo "#if $$cond"; \
-> +				  echo "#include \"../asm-arch-$$arch/$$base\""; \
-> +				  echo "#endif" ) >> "$(OUTPUT)sysroot/include/asm/$$base"; \
-> +			done; \
+>  // SAFETY: The `into_foreign` function returns a pointer that is well-aligned.
+>  unsafe impl<T: 'static> ForeignOwnable for Arc<T> {
+> +    type Target = T;
+>      type PointedTo = ArcInner<T>;
+>      type Borrowed<'a> = ArcBorrow<'a, T>;
+>      type BorrowedMut<'a> = Self::Borrowed<'a>;
+> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> index 3958a5f44d56..74c787b352a9 100644
+> --- a/rust/kernel/types.rs
+> +++ b/rust/kernel/types.rs
+> @@ -27,6 +27,9 @@
+>  /// [`into_foreign`]: Self::into_foreign
+>  /// [`PointedTo`]: Self::PointedTo
+>  pub unsafe trait ForeignOwnable: Sized {
+> +    /// The payload type of the foreign-owned value.
+> +    type Target;
 
-I'm not a fan of the loop to build the ifdeffery. It is a duplication
-of what we have in tools/include/nolibc/arch.h and horrible to look at.
-Can we stick this into a reusable header file?
-Something along the lines of this:
+I think `ForeignOwnable` also implies a `T` maybe get dropped via a
+pointer from `into_foreign()`. Not sure it's worth mentioning though.
 
-	/* asm/foo.h */
-	#define _NOLIBC_PER_ARCH_HEADER "foo.h"
-	#include "_nolibc_include_per_arch_header.h"
+Regards,
+Boqun
 
-
-	/* _nolibc_include_per_arch_header.h */
-	#if defined(__i386__)
-	#include CONCAT("asm-arch-x86/", _NOLIBC_PER_ARCH_HEADER)
-	#elif
-	...
-
-However, so far I couldn't get it to work.
-Also it would be great if we can use it for the current arch.h, too.
-
-> +		fi;\
-> +	done
 > +
->  # GCC uses "s390", clang "systemz"
->  CLANG_CROSS_FLAGS := $(subst --target=s390-linux,--target=systemz-linux,$(CLANG_CROSS_FLAGS))
+>      /// Type used when the value is foreign-owned. In practical terms only defines the alignment of
+>      /// the pointer.
+>      type PointedTo;
+> @@ -128,6 +131,7 @@ unsafe fn try_from_foreign(ptr: *mut Self::PointedTo) -> Option<Self> {
 >  
+>  // SAFETY: The `into_foreign` function returns a pointer that is dangling, but well-aligned.
+>  unsafe impl ForeignOwnable for () {
+> +    type Target = ();
+>      type PointedTo = ();
+>      type Borrowed<'a> = ();
+>      type BorrowedMut<'a> = ();
 > -- 
-> 2.17.5
+> 2.49.0
+> 
