@@ -1,477 +1,194 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA1BB2E0B65
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C742E336A
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750941078; cv=none; b=YmNh19TaGUXfBelZp0Z9HUp/UouRIKrFsoSRt4OVCA20DlLKzvasYRO9HzFAwGA5zE4tlJ8Xbg540iYgZNJXxVzz7+V1KmseNApiQZUukl4w/DOWrC/wsxkXu9It/5HUY/q7NetjrFggHhxgIWouV5sFNJ2MBIygV0MO9IRiFy8=
+	t=1750941089; cv=none; b=lSoyMvZvhxeMCXFYkG54yUzO+W5AzTo9sesP/Wpr6qBslVIUmtgwr5o7UwVCJ5HiD/3IWvhrCyy/BI4AenkIH2IIZNwhKiqzlNPj9Fz3dhMZZ7ygH0IxT8Zj1Xcl1RopAXrUWnunPJRw0ubZXbvHF9xjK7tB7F6Y5to9MZWiuPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750941078; c=relaxed/simple;
-	bh=aHzak93XBJEE/njo1YnjXbaNTRGyAXGUzu5ADh/DDCo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L589ll4TqFLhOtq0npiD7eliQDzfpdHDTB3E1RQDUcAUz23DsZH9CUh9nAQeM+wmA+7B264gaHzx5Bx9pjh1h/9Zp0+Xkc/PoszQ+5Oe8wMpf9QXPyP2keRogh6z8Iva9M5g0thENOHxokRFwrSUg5bdqQ+mDhG8sBeAtkJTryM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.149])
-	by gateway (Coremail) with SMTP id _____8DxDeOMPV1oI5gdAQ--.30351S3;
-	Thu, 26 Jun 2025 20:31:08 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.149])
-	by front1 (Coremail) with SMTP id qMiowMCx7xt8PV1ohncrAQ--.65009S4;
-	Thu, 26 Jun 2025 20:31:07 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Lee Jones <lee@kernel.org>,
-	Corey Minyard <minyard@acm.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	jeffbai@aosc.io,
-	kexybiscuit@aosc.io,
-	wangyao@lemote.com,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Chong Qiao <qiaochong@loongson.cn>,
-	Corey Minyard <corey@minyard.net>
-Subject: [PATCH v6 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function support
-Date: Thu, 26 Jun 2025 20:30:41 +0800
-Message-ID: <78b06d1c7ae0677868e0c7498b589af163313c8d.1750939357.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <cover.1750939357.git.zhoubinbin@loongson.cn>
-References: <cover.1750939357.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1750941089; c=relaxed/simple;
+	bh=ikAqrARMintdfzIAiwBkaBMZza4NhrCDSZUeSTVgGWs=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=LFYn5qyglSSjRID23w5nthINiVD3NWdREQiLJu5xpVYlCmG1e8byW1BETtPHZBWUSL1iH9e5O/eQSVEsEha1RoHCneEZ57IaX+v7EVmPaLRqwvtOIZGts4i6SGcxp3+tM+5j8NZMgbtn/jdJZyIjfzqZzxb+iXeWFSW4OejmrUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nm3+NQf9; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nm3+NQf9"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-74ad4533ac5so1487074b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:31:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750941087; x=1751545887; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EIOkAUyi7+ujarkTFH99WxEnz3RnUsZ9Cfbw2lKPPMg=;
+        b=nm3+NQf9udfxsZJejIAQPsJi5CxS+rYJHelMMKvkk7uOr4qoSpq5W9MI/jnDCjeARu
+         oNF8HU5zr6dcWkINvognL0ywu7k8Vd/LfMu0ZvMN13c5IZnH2TTSyqnwor983BZw4jcO
+         b/MmJbJqJmugTm1yUSTaRG8BnSJeGN7pfMD4c7Ect7ZMHgwyTwQKU5eKH4xIX4ZurHGh
+         hpfNVwFA12JCSae/GY3urD75W7LoQ5sqb7kHIJs6jUWy5tctIerzmsnEa2735wLWZmMr
+         arW9lV7mDsjQG3HHoIN1z4u1aPkAMJJbCaTL1y0GXoCrD6MBO4fnyIrPNG5OVJYTsE03
+         33rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750941087; x=1751545887;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EIOkAUyi7+ujarkTFH99WxEnz3RnUsZ9Cfbw2lKPPMg=;
+        b=DrPd/AB/1p0HTg3z14lX2zju3KqeRPVEWx+iyH6mDn1jXoHdSlZFUL5XtmGk/19nFO
+         e1k75DiDHcDLKZtZCoOu3Hxt1ch62lWb5/2GYlBm2dLGlsWy5hCiPuiX0fWfgzaphDpq
+         HW8O5tOlvJ8UTiJCyRucxdDhlpwiPAjCv38qVBwrTJsx+h9ZuvNC1NsCARFrqk7WfwMB
+         HElG/9jJN3ECUdDdDAWXfZ1Nq61Sj+HllcD+ng6CGweh/pPxYc9kfRjTnfiR/8ZK8pVa
+         brBCawz/NoD4+ZgNdw8OU1GyLfvnBT8UJsgkzz9QNXf01IhmirBnMFye5CiFPY80YY0f
+         DM5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVdbzzGNYKqV22TDV1d8PRQ5+f5mA67dLckwsYMedPrMUb7ErvUpuM+qfUp1/idDLxynQKqWaCsRiAEINI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu6YewxSVs0p7X+sBFinlLPGfV7rNU8gqX+YARMEYV16rU8xKv
+	WalvSIMpu2yRDTh8WnbAr1p7es15iBckKZH7TwQ09+zqcITpUzktyUBA3E0helGfwXRnlkg+gjJ
+	pxcP4AZsGXxikivUIv6JXApxbQm88r2tHPfWGvVMBcw==
+X-Gm-Gg: ASbGnctbT4pnmuQqaycLb68Y0uZnA1E23YDR3ypDNrmP7heTYe4D+ZFzVdxFFZUzjoM
+	ulZXO2LbbsWN1DMdMQslW41SkQt45zebdGtRNg6qMTVwD/lNeFZeEes8F2mNjuBv7XNG3m5bGSW
+	Hy01kN9UpfvAoGnP35b3mrI9UrrPtK4uwPduQ3miBTh10eqScvKMLBwmFrl7vJTNaOp7X0K2GPp
+	/CtP0/PMGufqkE=
+X-Google-Smtp-Source: AGHT+IGA5Lld9l17rfBeRi3J6RtVhUs8VMLhujLLvSb8uLda4du0G2dKBSQALBMM1VCCHZPZuj94xiQrzmJCa/zGAg8=
+X-Received: by 2002:a17:90a:ec8f:b0:30e:3737:7c87 with SMTP id
+ 98e67ed59e1d1-316d69c8e39mr4270600a91.5.1750941087313; Thu, 26 Jun 2025
+ 05:31:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx7xt8PV1ohncrAQ--.65009S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9fXoW3tF4DXrW3KFWDJF47tw17twc_yoW8GFWruo
-	WfuFyfZw18Jr17AayftF17Ka4UW3yvqas3Cws7Cr9FgFyxAasrJFy5GanrAw1fZr4fK345
-	Zr95W3WxAFW3tr17l-sFpf9Il3svdjkaLaAFLSUrUUUUeb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUYG7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8XTm3UUUUU==
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 26 Jun 2025 18:01:16 +0530
+X-Gm-Features: Ac12FXzu4alDLey0mZeuA43OiDuuxMWqb_ya1XrTviNkqYaW1clUM_UZCxNwuVM
+Message-ID: <CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com>
+Subject: next-20250626: WARNING fs jbd2 transaction.c start_this_handle with ARM64_64K_PAGES
+To: linux-ext4 <linux-ext4@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, LTP List <ltp@lists.linux.it>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>, 
+	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
-Since the display is a sub-function of the Loongson-2K BMC, when the
-BMC reset, the entire BMC PCIe is disconnected, including the display
-which is interrupted.
+Regressions noticed on arm64 devices while running LTP syscalls mmap16
+test case on the Linux next-20250616..next-20250626 with the extra build
+config fragment CONFIG_ARM64_64K_PAGES=y the kernel warning noticed.
 
-Quick overview of the entire LS2K BMC reset process:
+Not reproducible with 4K page size.
 
-There are two types of reset methods: soft reset (BMC-initiated reboot
-of IPMI reset command) and BMC watchdog reset (watchdog timeout).
+Test environments:
+- Dragonboard-410c
+- Juno-r2
+- rk3399-rock-pi-4b
+- qemu-arm64
 
-First, regardless of the method, an interrupt is generated (PCIe interrupt
-for soft reset/GPIO interrupt for watchdog reset);
+Regression Analysis:
+- New regression? Yes
+- Reproducibility? Yes
 
-Second, during the interrupt process, the system enters bmc_reset_work,
-clears the bus/IO/mem resources of the LS7A PCI-E bridge, waits for the BMC
-reset to begin, then restores the parent device's PCI configuration space,
-waits for the BMC reset to complete, and finally restores the BMC PCI
-configuration space.
+Test regression: next-20250626 LTP mmap16 WARNING fs jbd2
+transaction.c start_this_handle
 
-Display restoration occurs last.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
-Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-Acked-by: Corey Minyard <corey@minyard.net>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- drivers/mfd/ls2k-bmc-core.c | 328 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 328 insertions(+)
+## Test log
+<6>[   89.498969] loop0: detected capacity change from 0 to 614400
+<3>[   89.609561] operation not supported error, dev loop0, sector
+20352 op 0x9:(WRITE_ZEROES) flags 0x20000800 phys_seg 0 prio class 0
+<6>[   89.707795] EXT4-fs (loop0): mounted filesystem
+6786a191-5e0d-472b-8bce-4714e1a4fb44 r/w with ordered data mode. Quota
+mode: none.
+<3>[   90.023985] JBD2: kworker/u8:2 wants too many credits
+credits:416 rsv_credits:21 max:334
+<4>[   90.024973] ------------[ cut here ]------------
+<4>[ 90.025062] WARNING: fs/jbd2/transaction.c:334 at
+start_this_handle+0x4c0/0x4e0, CPU#0: 2/42
+<4>[   90.026661] Modules linked in: btrfs blake2b_generic xor
+xor_neon raid6_pq zstd_compress sm3_ce sha3_ce fuse drm backlight
+ip_tables x_tables
+<4>[   90.027952] CPU: 0 UID: 0 PID: 42 Comm: kworker/u8:2 Not tainted
+6.16.0-rc3-next-20250626 #1 PREEMPT
+<4>[   90.029043] Hardware name: linux,dummy-virt (DT)
+<4>[   90.029524] Workqueue: writeback wb_workfn (flush-7:0)
+<4>[   90.030050] pstate: 63402009 (nZCv daif +PAN -UAO +TCO +DIT
+-SSBS BTYPE=--)
+<4>[ 90.030311] pc : start_this_handle (fs/jbd2/transaction.c:334
+(discriminator 1))
+<4>[ 90.030481] lr : start_this_handle (fs/jbd2/transaction.c:334
+(discriminator 1))
+<4>[   90.030656] sp : ffffc000805cb650
+<4>[   90.030785] x29: ffffc000805cb690 x28: fff00000dd1f5000 x27:
+ffffde2ec0272000
+<4>[   90.031097] x26: 00000000000001a0 x25: 0000000000000015 x24:
+0000000000000002
+<4>[   90.031360] x23: 0000000000000015 x22: 0000000000000c40 x21:
+0000000000000008
+<4>[   90.031618] x20: fff00000c231da78 x19: fff00000c231da78 x18:
+0000000000000000
+<4>[   90.031875] x17: 0000000000000000 x16: 0000000000000000 x15:
+0000000000000000
+<4>[   90.032859] x14: 0000000000000000 x13: 00000000ffffffff x12:
+0000000000000000
+<4>[   90.033225] x11: 0000000000000000 x10: ffffde2ebfba8bd0 x9 :
+ffffde2ebd34e944
+<4>[   90.033607] x8 : ffffc000805cb278 x7 : 0000000000000000 x6 :
+0000000000000001
+<4>[   90.033971] x5 : ffffde2ebfb29000 x4 : ffffde2ebfb293d0 x3 :
+0000000000000000
+<4>[   90.034294] x2 : 0000000000000000 x1 : fff00000c04dc080 x0 :
+000000000000004c
+<4>[   90.034772] Call trace:
+<4>[ 90.035068] start_this_handle (fs/jbd2/transaction.c:334
+(discriminator 1)) (P)
+<4>[ 90.035366] jbd2__journal_start (fs/jbd2/transaction.c:501)
+<4>[ 90.035586] __ext4_journal_start_sb (fs/ext4/ext4_jbd2.c:117)
+<4>[ 90.035807] ext4_do_writepages (fs/ext4/ext4_jbd2.h:242
+fs/ext4/inode.c:2846)
+<4>[ 90.036004] ext4_writepages (fs/ext4/inode.c:2953)
+<4>[ 90.036233] do_writepages (mm/page-writeback.c:2636)
+<4>[ 90.036406] __writeback_single_inode (fs/fs-writeback.c:1680)
+<4>[ 90.036616] writeback_sb_inodes (fs/fs-writeback.c:1978)
+<4>[ 90.036891] wb_writeback (fs/fs-writeback.c:2156)
+<4>[ 90.037122] wb_workfn (fs/fs-writeback.c:2303 (discriminator 1)
+fs/fs-writeback.c:2343 (discriminator 1))
+<4>[ 90.037318] process_one_work (kernel/workqueue.c:3244)
+<4>[ 90.037517] worker_thread (kernel/workqueue.c:3316 (discriminator
+2) kernel/workqueue.c:3403 (discriminator 2))
+<4>[ 90.037752] kthread (kernel/kthread.c:463)
+<4>[ 90.037903] ret_from_fork (arch/arm64/kernel/entry.S:863)
+<4>[   90.038217] ---[ end trace 0000000000000000 ]---
+<2>[   90.039950] EXT4-fs (loop0): ext4_do_writepages: jbd2_start:
+9223372036854775807 pages, ino 14; err -28
+<3>[   90.040291] JBD2: kworker/u8:2 wants too many credits
+credits:416 rsv_credits:21 max:334
+<4>[   90.040374] ------------[ cut here ]------------
+<4>[ 90.040386] WARNING: fs/jbd2/transaction.c:334 at
+start_this_handle+0x4c0/0x4e0, CPU#1: 2/42
 
-diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
-index 50d560a4611c..1ae673f6a196 100644
---- a/drivers/mfd/ls2k-bmc-core.c
-+++ b/drivers/mfd/ls2k-bmc-core.c
-@@ -10,8 +10,12 @@
-  */
- 
- #include <linux/aperture.h>
-+#include <linux/bitfield.h>
-+#include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/init.h>
-+#include <linux/iopoll.h>
-+#include <linux/kbd_kern.h>
- #include <linux/kernel.h>
- #include <linux/mfd/core.h>
- #include <linux/module.h>
-@@ -19,6 +23,8 @@
- #include <linux/pci_ids.h>
- #include <linux/platform_data/simplefb.h>
- #include <linux/platform_device.h>
-+#include <linux/stop_machine.h>
-+#include <linux/vt_kern.h>
- 
- /* LS2K BMC resources */
- #define LS2K_DISPLAY_RES_START		(SZ_16M + SZ_2M)
-@@ -29,6 +35,48 @@
- #define LS2K_IPMI3_RES_START		(LS2K_IPMI2_RES_START + LS2K_IPMI_RES_SIZE)
- #define LS2K_IPMI4_RES_START		(LS2K_IPMI3_RES_START + LS2K_IPMI_RES_SIZE)
- 
-+#define LS7A_PCI_CFG_SIZE		0x100
-+
-+/* LS7A bridge registers */
-+#define LS7A_PCIE_PORT_CTL0		0x0
-+#define LS7A_PCIE_PORT_STS1		0xC
-+#define LS7A_GEN2_CTL			0x80C
-+#define LS7A_SYMBOL_TIMER		0x71C
-+
-+/* Bits of LS7A_PCIE_PORT_CTL0 */
-+#define LS2K_BMC_PCIE_LTSSM_ENABLE	BIT(3)
-+
-+/* Bits of LS7A_PCIE_PORT_STS1 */
-+#define LS2K_BMC_PCIE_LTSSM_STS		GENMASK(5, 0)
-+#define LS2K_BMC_PCIE_CONNECTED		0x11
-+
-+#define LS2K_BMC_PCIE_DELAY_US		1000
-+#define LS2K_BMC_PCIE_TIMEOUT_US	1000000
-+
-+/* Bits of LS7A_GEN2_CTL */
-+#define LS7A_GEN2_SPEED_CHANG		BIT(17)
-+#define LS7A_CONF_PHY_TX		BIT(18)
-+
-+/* Bits of LS7A_SYMBOL_TIMER */
-+#define LS7A_MASK_LEN_MATCH		BIT(26)
-+
-+/* Interval between interruptions */
-+#define LS2K_BMC_INT_INTERVAL		(60 * HZ)
-+
-+/* Maximum time to wait for U-Boot and DDR to be ready with ms. */
-+#define LS2K_BMC_RESET_WAIT_TIME	10000
-+
-+/* It's an experience value */
-+#define LS7A_BAR0_CHECK_MAX_TIMES	2000
-+
-+#define LS2K_BMC_RESET_GPIO		14
-+#define LOONGSON_GPIO_REG_BASE		0x1FE00500
-+#define LOONGSON_GPIO_REG_SIZE		0x18
-+#define LOONGSON_GPIO_OEN		0x0
-+#define LOONGSON_GPIO_FUNC		0x4
-+#define LOONGSON_GPIO_INTPOL		0x10
-+#define LOONGSON_GPIO_INTEN		0x14
-+
- static struct resource ls2k_display_resources[] = {
- 	DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledrm-res"),
- };
-@@ -62,6 +110,273 @@ static struct mfd_cell ls2k_bmc_cells[] = {
- 	MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi4_resources),
- };
- 
-+/* Index of the BMC PCI configuration space to be restored at BMC reset. */
-+struct ls2k_bmc_pci_data {
-+	u32 pci_command;
-+	u32 base_address0;
-+	u32 interrupt_line;
-+};
-+
-+/* Index of the parent PCI configuration space to be restored at BMC reset. */
-+struct ls2k_bmc_bridge_pci_data {
-+	u32 pci_command;
-+	u32 base_address[6];
-+	u32 rom_addreess;
-+	u32 interrupt_line;
-+	u32 msi_hi;
-+	u32 msi_lo;
-+	u32 devctl;
-+	u32 linkcap;
-+	u32 linkctl_sts;
-+	u32 symbol_timer;
-+	u32 gen2_ctrl;
-+};
-+
-+struct ls2k_bmc_pdata {
-+	struct device *dev;
-+	struct work_struct bmc_reset_work;
-+	struct ls2k_bmc_pci_data bmc_pci_data;
-+	struct ls2k_bmc_bridge_pci_data bridge_pci_data;
-+};
-+
-+static bool ls2k_bmc_bar0_addr_is_set(struct pci_dev *ppdev)
-+{
-+	u32 addr;
-+
-+	pci_read_config_dword(ppdev, PCI_BASE_ADDRESS_0, &addr);
-+
-+	return addr & PCI_BASE_ADDRESS_MEM_MASK ? true : false;
-+}
-+
-+static bool ls2k_bmc_pcie_is_connected(struct pci_dev *parent, struct ls2k_bmc_pdata *priv)
-+{
-+	void __iomem *base;
-+	int sts, ret;
-+
-+	base = pci_iomap(parent, 0, LS7A_PCI_CFG_SIZE);
-+	if (!base)
-+		return false;
-+
-+	writel(readl(base + LS7A_PCIE_PORT_CTL0) | LS2K_BMC_PCIE_LTSSM_ENABLE,
-+	       base + LS7A_PCIE_PORT_CTL0);
-+
-+	ret = readl_poll_timeout_atomic(base + LS7A_PCIE_PORT_STS1, sts,
-+					(sts & LS2K_BMC_PCIE_LTSSM_STS) == LS2K_BMC_PCIE_CONNECTED,
-+					LS2K_BMC_PCIE_DELAY_US, LS2K_BMC_PCIE_TIMEOUT_US);
-+	if (ret) {
-+		pci_iounmap(parent, base);
-+		dev_err(priv->dev, "PCIE train failed status=0x%x\n", sts);
-+		return false;
-+	}
-+
-+	pci_iounmap(parent, base);
-+	return true;
-+}
-+
-+static void ls2k_bmc_restore_bridge_pci_data(struct pci_dev *parent, struct ls2k_bmc_pdata *priv)
-+{
-+	int base, i = 0;
-+
-+	pci_write_config_dword(parent, PCI_COMMAND, priv->bridge_pci_data.pci_command);
-+
-+	for (base = PCI_BASE_ADDRESS_0; base <= PCI_BASE_ADDRESS_5; base += 4, i++)
-+		pci_write_config_dword(parent, base, priv->bridge_pci_data.base_address[i]);
-+
-+	pci_write_config_dword(parent, PCI_ROM_ADDRESS, priv->bridge_pci_data.rom_addreess);
-+	pci_write_config_dword(parent, PCI_INTERRUPT_LINE, priv->bridge_pci_data.interrupt_line);
-+
-+	pci_write_config_dword(parent, parent->msi_cap + PCI_MSI_ADDRESS_LO,
-+			       priv->bridge_pci_data.msi_lo);
-+	pci_write_config_dword(parent, parent->msi_cap + PCI_MSI_ADDRESS_HI,
-+			       priv->bridge_pci_data.msi_hi);
-+	pci_write_config_dword(parent, parent->pcie_cap + PCI_EXP_DEVCTL,
-+			       priv->bridge_pci_data.devctl);
-+	pci_write_config_dword(parent, parent->pcie_cap + PCI_EXP_LNKCAP,
-+			       priv->bridge_pci_data.linkcap);
-+	pci_write_config_dword(parent, parent->pcie_cap + PCI_EXP_LNKCTL,
-+			       priv->bridge_pci_data.linkctl_sts);
-+
-+	pci_write_config_dword(parent, LS7A_GEN2_CTL, priv->bridge_pci_data.gen2_ctrl);
-+	pci_write_config_dword(parent, LS7A_SYMBOL_TIMER, priv->bridge_pci_data.symbol_timer);
-+}
-+
-+static int ls2k_bmc_recover_pci_data(void *data)
-+{
-+	struct ls2k_bmc_pdata *priv = data;
-+	struct pci_dev *pdev = to_pci_dev(priv->dev);
-+	struct pci_dev *parent = pdev->bus->self;
-+	u32 i;
-+
-+	/*
-+	 * Clear the bus, io and mem resources of the PCI-E bridge to zero, so that
-+	 * the processor can not access the LS2K PCI-E port, to avoid crashing due to
-+	 * the lack of return signal from accessing the LS2K PCI-E port.
-+	 */
-+	pci_write_config_dword(parent, PCI_BASE_ADDRESS_2, 0);
-+	pci_write_config_dword(parent, PCI_BASE_ADDRESS_3, 0);
-+	pci_write_config_dword(parent, PCI_BASE_ADDRESS_4, 0);
-+
-+	/*
-+	 * When the LS2K BMC is reset, the LS7A PCI-E port is also reset, and its PCI
-+	 * BAR0 register is cleared. Due to the time gap between the GPIO interrupt
-+	 * generation and the LS2K BMC reset, the LS7A PCI BAR0 register is read to
-+	 * determine whether the reset has begun.
-+	 */
-+	for (i = LS7A_BAR0_CHECK_MAX_TIMES; i > 0 ; i--) {
-+		if (!ls2k_bmc_bar0_addr_is_set(parent))
-+			break;
-+		mdelay(1);
-+	};
-+
-+	if (i == 0)
-+		return false;
-+
-+	ls2k_bmc_restore_bridge_pci_data(parent, priv);
-+
-+	/* Check if PCI-E is connected */
-+	if (!ls2k_bmc_pcie_is_connected(parent, priv))
-+		return false;
-+
-+	/* Waiting for U-Boot and DDR ready */
-+	mdelay(LS2K_BMC_RESET_WAIT_TIME);
-+	if (!ls2k_bmc_bar0_addr_is_set(parent))
-+		return false;
-+
-+	/* Restore LS2K BMC PCI-E config data */
-+	pci_write_config_dword(pdev, PCI_COMMAND, priv->bmc_pci_data.pci_command);
-+	pci_write_config_dword(pdev, PCI_BASE_ADDRESS_0, priv->bmc_pci_data.base_address0);
-+	pci_write_config_dword(pdev, PCI_INTERRUPT_LINE, priv->bmc_pci_data.interrupt_line);
-+
-+	return 0;
-+}
-+
-+static void ls2k_bmc_events_fn(struct work_struct *work)
-+{
-+	struct ls2k_bmc_pdata *priv = container_of(work, struct ls2k_bmc_pdata, bmc_reset_work);
-+
-+	/*
-+	 * The PCI-E is lost when the BMC resets, at which point access to the PCI-E
-+	 * from other CPUs is suspended to prevent a crash.
-+	 */
-+	stop_machine(ls2k_bmc_recover_pci_data, priv, NULL);
-+
-+#ifdef CONFIG_VT
-+	/* Re-push the display due to previous PCI-E loss. */
-+	set_console(vt_move_to_console(MAX_NR_CONSOLES - 1, 1));
-+#endif
-+}
-+
-+static irqreturn_t ls2k_bmc_interrupt(int irq, void *arg)
-+{
-+	struct ls2k_bmc_pdata *priv = arg;
-+	static unsigned long last_jiffies;
-+
-+	if (system_state != SYSTEM_RUNNING)
-+		return IRQ_HANDLED;
-+
-+	/* Skip interrupt in LS2K_BMC_INT_INTERVAL */
-+	if (time_after(jiffies, last_jiffies + LS2K_BMC_INT_INTERVAL)) {
-+		schedule_work(&priv->bmc_reset_work);
-+		last_jiffies = jiffies;
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/*
-+ * Saves the BMC parent device (LS7A) and its own PCI configuration space registers
-+ * that need to be restored after BMC reset.
-+ */
-+static void ls2k_bmc_save_pci_data(struct pci_dev *pdev, struct ls2k_bmc_pdata *priv)
-+{
-+	struct pci_dev *parent = pdev->bus->self;
-+	int base, i = 0;
-+
-+	pci_read_config_dword(parent, PCI_COMMAND, &priv->bridge_pci_data.pci_command);
-+
-+	for (base = PCI_BASE_ADDRESS_0; base <= PCI_BASE_ADDRESS_5; base += 4, i++)
-+		pci_read_config_dword(parent, base, &priv->bridge_pci_data.base_address[i]);
-+
-+	pci_read_config_dword(parent, PCI_ROM_ADDRESS, &priv->bridge_pci_data.rom_addreess);
-+	pci_read_config_dword(parent, PCI_INTERRUPT_LINE, &priv->bridge_pci_data.interrupt_line);
-+
-+	pci_read_config_dword(parent, parent->msi_cap + PCI_MSI_ADDRESS_LO,
-+			      &priv->bridge_pci_data.msi_lo);
-+	pci_read_config_dword(parent, parent->msi_cap + PCI_MSI_ADDRESS_HI,
-+			      &priv->bridge_pci_data.msi_hi);
-+
-+	pci_read_config_dword(parent, parent->pcie_cap + PCI_EXP_DEVCTL,
-+			      &priv->bridge_pci_data.devctl);
-+	pci_read_config_dword(parent, parent->pcie_cap + PCI_EXP_LNKCAP,
-+			      &priv->bridge_pci_data.linkcap);
-+	pci_read_config_dword(parent, parent->pcie_cap + PCI_EXP_LNKCTL,
-+			      &priv->bridge_pci_data.linkctl_sts);
-+
-+	pci_read_config_dword(parent, LS7A_GEN2_CTL, &priv->bridge_pci_data.gen2_ctrl);
-+	priv->bridge_pci_data.gen2_ctrl |= FIELD_PREP(LS7A_GEN2_SPEED_CHANG, 0x1)
-+					| FIELD_PREP(LS7A_CONF_PHY_TX, 0x0);
-+
-+	pci_read_config_dword(parent, LS7A_SYMBOL_TIMER, &priv->bridge_pci_data.symbol_timer);
-+	priv->bridge_pci_data.symbol_timer |= LS7A_MASK_LEN_MATCH;
-+
-+	pci_read_config_dword(pdev, PCI_COMMAND, &priv->bmc_pci_data.pci_command);
-+	pci_read_config_dword(pdev, PCI_BASE_ADDRESS_0, &priv->bmc_pci_data.base_address0);
-+	pci_read_config_dword(pdev, PCI_INTERRUPT_LINE, &priv->bmc_pci_data.interrupt_line);
-+}
-+
-+static int ls2k_bmc_pdata_initial(struct pci_dev *pdev, struct ls2k_bmc_pdata *priv)
-+{
-+	int gsi = 16 + (LS2K_BMC_RESET_GPIO & 7);
-+	void __iomem *gpio_base;
-+	int irq, ret;
-+
-+	ls2k_bmc_save_pci_data(pdev, priv);
-+
-+	INIT_WORK(&priv->bmc_reset_work, ls2k_bmc_events_fn);
-+
-+	ret = devm_request_irq(&pdev->dev, pdev->irq, ls2k_bmc_interrupt,
-+			       IRQF_SHARED | IRQF_TRIGGER_FALLING, "ls2kbmc pcie", priv);
-+	if (ret) {
-+		dev_err(priv->dev, "LS2KBMC PCI-E request_irq(%d) failed\n", pdev->irq);
-+		return ret;
-+	}
-+
-+	/*
-+	 * Since gpio_chip->to_irq is not implemented in the Loongson-3 GPIO driver,
-+	 * acpi_register_gsi() is used to obtain the GPIO irq. The GPIO interrupt is a
-+	 * watchdog interrupt that is triggered when the BMC resets.
-+	 */
-+	irq = acpi_register_gsi(NULL, gsi, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW);
-+	if (irq < 0)
-+		return irq;
-+
-+	gpio_base = ioremap(LOONGSON_GPIO_REG_BASE, LOONGSON_GPIO_REG_SIZE);
-+	if (!gpio_base) {
-+		ret = PTR_ERR(gpio_base);
-+		goto acpi_failed;
-+	}
-+
-+	writel(readl(gpio_base + LOONGSON_GPIO_OEN) | BIT(LS2K_BMC_RESET_GPIO),
-+	       gpio_base + LOONGSON_GPIO_OEN);
-+	writel(readl(gpio_base + LOONGSON_GPIO_FUNC) & ~BIT(LS2K_BMC_RESET_GPIO),
-+	       gpio_base + LOONGSON_GPIO_FUNC);
-+	writel(readl(gpio_base + LOONGSON_GPIO_INTPOL) & ~BIT(LS2K_BMC_RESET_GPIO),
-+	       gpio_base + LOONGSON_GPIO_INTPOL);
-+	writel(readl(gpio_base + LOONGSON_GPIO_INTEN) | BIT(LS2K_BMC_RESET_GPIO),
-+	       gpio_base + LOONGSON_GPIO_INTEN);
-+
-+	ret = devm_request_irq(priv->dev, irq, ls2k_bmc_interrupt,
-+			       IRQF_SHARED | IRQF_TRIGGER_FALLING, "ls2kbmc gpio", priv);
-+	if (ret)
-+		dev_err(priv->dev, "LS2KBMC GPIO request_irq(%d) failed\n", irq);
-+
-+	iounmap(gpio_base);
-+
-+acpi_failed:
-+	acpi_unregister_gsi(gsi);
-+	return ret;
-+}
-+
- /*
-  * Currently the Loongson-2K BMC hardware does not have an I2C interface to adapt to the
-  * resolution. We set the resolution by presetting "video=1280x1024-16@2M" to the BMC memory.
-@@ -101,6 +416,7 @@ static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_platform_da
- static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device_id *id)
- {
- 	struct simplefb_platform_data pd;
-+	struct ls2k_bmc_pdata *priv;
- 	resource_size_t base;
- 	int ret;
- 
-@@ -108,6 +424,18 @@ static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if (ret)
- 		return ret;
- 
-+	priv = devm_kzalloc(&dev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (IS_ERR(priv)) {
-+		ret = -ENOMEM;
-+		goto disable_pci;
-+	}
-+
-+	priv->dev = &dev->dev;
-+
-+	ret = ls2k_bmc_pdata_initial(dev, priv);
-+	if (ret)
-+		goto disable_pci;
-+
- 	ret = ls2k_bmc_parse_mode(dev, &pd);
- 	if (ret)
- 		goto disable_pci;
--- 
-2.47.1
 
+## Source
+* Kernel version: 6.16.0-rc3-next-20250626
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: ecb259c4f70dd5c83907809f45bf4dc6869961d7
+* Git describe: 6.16.0-rc3-next-20250626
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250626/
+* Architectures: arm64
+* Toolchains: gcc-13
+* Kconfigs: gcc-13-lkftconfig-64k_page_size
+
+## Build arm64
+* Test log: https://qa-reports.linaro.org/api/testruns/28894530/log_file/
+* Test LAVA log 1:
+https://lkft.validation.linaro.org/scheduler/job/8331353#L6841
+* Test LAVA log 2:
+https://lkft.validation.linaro.org/scheduler/job/8331352#L8854
+* Test details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250626/log-parser-test/exception-warning-fsjbd2transaction-at-start_this_handle/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2z2V7LhiJecGzINkU7ObVQTwoR1/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2z2V7LhiJecGzINkU7ObVQTwoR1/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
