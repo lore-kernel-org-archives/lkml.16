@@ -1,111 +1,129 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B012E6133;
-	Thu, 26 Jun 2025 15:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CA97081E
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750952268; cv=none; b=KCsPUqmcuUHoFFwQtDX9X+SyhdxSTCVJRmMsZFiX4fuUD8+I4ktTwrWHBQige6UAtZ6Fvnmg96hvCZ31M0Sc6tCPQ7cM9fb9tUClwyMFK7ZhQt6SpxF/0MiQ8KnKIPz6gg5+nx/L565AzxRMf5UjSq76VIuChhKgkcT6j6/rwJE=
+	t=1750952310; cv=none; b=XSTYOyg9vYosvCBYeJGvmc7b2TxZlbZ+2v6NKoxcj8qjBPbl7lL7N3k3LNM+rc8r2HorkASuTaRs4tJq0lWV0g14JJ2PwV/T2efQROuWLcpX4bwpiIAVsnZ/JjZHIv+894egrq9z8z+eyjUJMwKoTfnaaO45v542Bdok9HnQsTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750952268; c=relaxed/simple;
-	bh=1kTchX7hydmdDHaIeR4b7vCB4DidJo22IPgQr6l+BIw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hkys7LPlGDpx/Kj7YQnebrw+0wEu/f2b+frm4MtXL+0+P6Rt+OvdTYDKU27XBs1Y5CS/OSD3LJg52atnaHJH4dKU8umbV20Tlrw+OUOeJlgUtdlrJkyjVuHZUKH0DlH0ai5RtvcGIeaYE2i684dakld6om6EL9VVadulilV/jsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hugWI0Qt; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750952310; c=relaxed/simple;
+	bh=jcRyQyoHFXZTXy637shBXrGAv2EhK0gTzTWgtuJpAWo=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=adye6qzU1OMTisWDpc8mcBt8jf+3aivm77XW5EjzI7CJER5IghMYluy7BrFrqwvySiA8GzwgedQ+D3irMr9HQhLmU8140Mroc0mchygdH72Y3x828McZh7UX07BwPa0MrRxjwOz6e9XzkMLc7Y50uEHM60rM6y9nV0g4C+L82sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IQeGMyN9; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hugWI0Qt"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-235d6de331fso16367055ad.3;
-        Thu, 26 Jun 2025 08:37:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750952266; x=1751557066; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WBS6+tGrLYEgP8XOrgQa7cC9L5XmsRCAXvGJg8Wcsyc=;
-        b=hugWI0QtJs7EZAmjASty5aAOx9U73zagwL1RVxlL+GvrSb2ssIsXCnw7wM1ln9Gf6V
-         GXeKPSMJF/0M2VqXx+aRZePH/9ujW/dttis2x7Zl8/jj4dfP8oY2ScVOR8dlhrQcSWeU
-         oofnABbm8deyChDcdX/96+Fzs6t0ztAwShP8p9rvYkzBH49O90vf+C1tZ/PTvGUSEC2O
-         yJoikCcH7lylEbXomx9bBZQ6Wg8lMhS3Ac+8vhDJqdRuXygOruhNeMhlfcrtWzphQFgA
-         cKzgwfvMG6Y5enZlABlRfcNKwrASAI9j49NVBAIJfnkwEHsPM26rY2DEP4gx01rcgdp3
-         EK8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750952266; x=1751557066;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WBS6+tGrLYEgP8XOrgQa7cC9L5XmsRCAXvGJg8Wcsyc=;
-        b=Eiqz/wfl89uyAHuaZus5ScrIyI/tUGOiD48M8K0RuF1eE2gxWMFCY6Ivb73kMyDWcE
-         /UWh9jZxgbTqrV2qorkKRDg/C7A1pgOgr+oeVF1MGtIbtzHvrT9EJJqjSOc0H5bjZ8Pf
-         VWeGLNkg3yjXxDYnDCC/RmbDdboa1I1WIg/o7EFZErOQLVC6GfyXFwiukPlfSMvC6bQc
-         OQ/WOoQC4Ar4sDoS/FTzIVpuf7Ymnp/4vM4bFirp2EQn9gleWpW5noeyMPGzBC6fGyO5
-         zxLdMtw9Vr8WYZiceF2x/QNhhNgVeXGDUABJ3KfdoBv48y9F0OPd1C7i0MJRWjHHyQge
-         O8ig==
-X-Forwarded-Encrypted: i=1; AJvYcCUagjCGwrnRBhK/vkq9XtykoTsc/NcG0wYqvyQ2wg/HGEQ9EgjChXXyr3PphCWyd7ftwhj7LD8jyKCrhDZM@vger.kernel.org, AJvYcCXYZSn5jpadhBti387g9vSdRUVzQxQf74ovJKP0OwMtZSzn0T6Ce8SHY1tz2jgPaD/MlL4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBNrI0rdwIg4kZhsd/mX+6bclRv81xHdZm7t01J3EBUQKA5coA
-	fGHLMMKxHdKrcQmwH9sLh+vL2zzsX1inQDol06420amxassCwEjSt0iqCbUY5w==
-X-Gm-Gg: ASbGnctq527zRL49oznA5gr324Uoc3S/7DUeLbR2TGy2cBi7khaTVNyUgNxeM6cOqmJ
-	6GS8l2YjPojPCZkl9MTmkM9CpNa2gH93QHu5ePa+Q04ueDB7Gu2zXO+zyrMYse7GExBezeByycr
-	T5APvheDuslPE5Lcg23LXPQYvBc4Zkfn5ORSLdsaVJaDjQY95eFRg6zVoq7mrtCIkN76JREzNbB
-	erg5Fpe9o9FZYr1T7PmUjjmHJE8lGqad8naky2a5gUBq+Eu/tZ287JOI2SZkTrKzpnNf8XqisMJ
-	BU0ypq9nI08TCP8WFD2wLFio322DPUrYAugVnjHvoGc+hVqofnNnLJ7BLLGo+xn44GDcdvgI77W
-	bb9TzHtKDtjLLAqTt+MoSxRWmV05FIkpZQNSKEnk=
-X-Google-Smtp-Source: AGHT+IE9HZQVIg9J0bGTauaoFxunVzdT6LAv+3ddjqizR0AY608ymj/oowE40lSal+PsH63zgCKDHQ==
-X-Received: by 2002:a17:903:2a87:b0:235:711:f810 with SMTP id d9443c01a7336-23823fe4dd9mr121698455ad.23.1750952266162;
-        Thu, 26 Jun 2025 08:37:46 -0700 (PDT)
-Received: from ?IPV6:2001:ee0:4f0e:fb30:2b9f:aa14:497d:25f1? ([2001:ee0:4f0e:fb30:2b9f:aa14:497d:25f1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23abe329d23sm1164745ad.54.2025.06.26.08.37.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 08:37:45 -0700 (PDT)
-Message-ID: <8f0927bf-dc2f-4a20-887a-6d8529623dd7@gmail.com>
-Date: Thu, 26 Jun 2025 22:37:38 +0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IQeGMyN9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750952309; x=1782488309;
+  h=date:from:to:cc:subject:message-id;
+  bh=jcRyQyoHFXZTXy637shBXrGAv2EhK0gTzTWgtuJpAWo=;
+  b=IQeGMyN9IICI0b9EF55U+Vzw9KYDynIdVVwK2uZkwUfmtDMO/4Oxnmz/
+   nyj8MMHcaCXQLkeIGYKhZZtVD2TxzCIJwd6nicleO1cMMsJ/FDZve+47P
+   pZYYYI3UJm+EJXj+q7Axz5COTUz67allEi+O3dSCjYdPhvJ+BCyBUNCCk
+   3IZPJFPDo5QGbZqDz72YQOMyFVOQJDF1/JveYi+yMG6VGIhwacvkjQ4Vp
+   u9Ysv3TRFhODp/oWTZpR5x3E+X8fJ/+OyuJJ4Nt6MLKKQGr4TItQvMnlH
+   wtRwvsQqNeGl/bjpOYqOQoQcIxEphqNB/yvcgzYqYcy08Dxk1CtM4rorz
+   Q==;
+X-CSE-ConnectionGUID: bI1b4/T8S9a1w8m3WL21Jg==
+X-CSE-MsgGUID: hAc/wfPwTLy73G5t6+kCAw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="52482149"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="52482149"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:38:28 -0700
+X-CSE-ConnectionGUID: nylp8k6BSZa5dwhTKrYBPg==
+X-CSE-MsgGUID: AsWv3F5/RPW4G+5t1UVIgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="183578711"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 26 Jun 2025 08:38:27 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uUogD-000UDP-0R;
+	Thu, 26 Jun 2025 15:38:25 +0000
+Date: Thu, 26 Jun 2025 23:37:37 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/fpu] BUILD SUCCESS
+ 1cec9ac2d071cfd2da562241aab0ef701355762a
+Message-ID: <202506262327.Y2CCsChK-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 3/4] virtio-net: create a helper to check received
- mergeable buffer's length
-To: Jason Wang <jasowang@redhat.com>
-Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Stanislav Fomichev <sdf@fomichev.me>, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20250625160849.61344-1-minhquangbui99@gmail.com>
- <20250625160849.61344-4-minhquangbui99@gmail.com>
- <CACGkMEvY9pvvfq3Ok=55O1t3+689RCfqQJqaWjLcduHJ79CDWA@mail.gmail.com>
-Content-Language: en-US
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-In-Reply-To: <CACGkMEvY9pvvfq3Ok=55O1t3+689RCfqQJqaWjLcduHJ79CDWA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 6/26/25 09:38, Jason Wang wrote:
-> On Thu, Jun 26, 2025 at 12:10 AM Bui Quang Minh
-> <minhquangbui99@gmail.com> wrote:
->> Currently, we have repeated code to check the received mergeable buffer's
->> length with allocated size. This commit creates a helper to do that and
->> converts current code to use it.
->>
->> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
-> I think it would be better to introduce this as patch 1, so a
-> mergeable XDP path can use that directly.
->
-> This will have a smaller changeset.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/fpu
+branch HEAD: 1cec9ac2d071cfd2da562241aab0ef701355762a  x86/fpu: Delay instruction pointer fixup until after warning
 
-I'm just concerned that it might make backporting the fix harder because 
-the fix depends on this refactor and this refactor touches some function 
-that may create conflict.
+elapsed time: 926m
 
-Thanks,
-Quang Minh.
+configs tested: 52
+configs skipped: 58
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                   randconfig-001-20250626    clang-20
+arc                   randconfig-002-20250626    clang-20
+arm                               allnoconfig    gcc-15.1.0
+arm                   randconfig-001-20250626    clang-20
+arm                   randconfig-002-20250626    clang-20
+arm                   randconfig-003-20250626    clang-20
+arm                   randconfig-004-20250626    clang-20
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250626    clang-20
+arm64                 randconfig-002-20250626    clang-20
+arm64                 randconfig-003-20250626    clang-20
+arm64                 randconfig-004-20250626    clang-20
+csky                              allnoconfig    gcc-15.1.0
+hexagon                           allnoconfig    gcc-15.1.0
+i386                             allmodconfig    clang-20
+i386                              allnoconfig    clang-20
+i386                             allyesconfig    clang-20
+i386        buildonly-randconfig-001-20250626    clang-20
+i386        buildonly-randconfig-002-20250626    clang-20
+i386        buildonly-randconfig-003-20250626    clang-20
+i386        buildonly-randconfig-004-20250626    clang-20
+i386        buildonly-randconfig-005-20250626    clang-20
+i386        buildonly-randconfig-006-20250626    clang-20
+i386                                defconfig    clang-20
+loongarch                         allnoconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-15.1.0
+openrisc                          allnoconfig    clang-21
+parisc                            allnoconfig    clang-21
+powerpc                           allnoconfig    clang-21
+riscv                             allnoconfig    clang-21
+s390                              allnoconfig    clang-21
+sh                                allnoconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+um                                allnoconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250626    clang-20
+x86_64      buildonly-randconfig-002-20250626    clang-20
+x86_64      buildonly-randconfig-003-20250626    clang-20
+x86_64      buildonly-randconfig-004-20250626    clang-20
+x86_64      buildonly-randconfig-005-20250626    clang-20
+x86_64      buildonly-randconfig-006-20250626    clang-20
+x86_64                              defconfig    clang-20
+x86_64                                  kexec    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
