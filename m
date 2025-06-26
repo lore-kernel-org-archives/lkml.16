@@ -1,94 +1,220 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0352D2391;
-	Thu, 26 Jun 2025 09:59:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E0C1891A9;
+	Thu, 26 Jun 2025 10:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750931981; cv=none; b=njtQLk6FGCDTHsRJuGaNMDI+naTTFsbYsuf5jxp0KGBkKYxmHAv9eg359NrBdUcDhyF15bQXIGf4v5UgS1yueBvhzUf31j92PfEZ49jRtsui/QSgcfd799BExvwVuAwdcq4c7lYEWyb0BBASgXrffeYiF5ziGgUtIqaYZF5wKeU=
+	t=1750932033; cv=none; b=N6zNoHdFcHQBrfv8jISIgV9RpxI3tIhuhwdkpZcoxL4LulYLUzEmDXoMYWVAmNUKrBelgtrLNlpFEI2ljRvusr86+7lJh4B7WLLFLGIejJvfu8/GkoyPtVI8CLiCVjbyRTQIlQql7jKP+SfKMuTOdgqKNKZcHq3KBf5Y8WOqQus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750931981; c=relaxed/simple;
-	bh=Bpq9o8eUwss/BaTqZOzEf6o42mVPU3/LRRVIvXJEbnA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TgaoXOdzvm2tmT3s6K9mI3fMELcbNlBMoRUNAjU52DzOclOLJh9NyXCTOQx+w/WrYmP4VGjd5MCfi/oljpC+TO7Omj7SobPR3VUDqwrho83ny+C8QgoD/zn6iu3ZSfLWWPHHRhXcg+bWVOO92Vi2QRmDEh802VfoTmBA9pR/zaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hi35t+rc; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750932033; c=relaxed/simple;
+	bh=ztHG0MpcdbBlHhSE3ZNvUzBLdwqtfGKtg90w7ScL/pk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JhZp0q8EArCWApCa1SlKOlnIp/4rFH25KsWu8AixmUjL5KH9NbQLG2GbUBFZMgUbJGU0QOYBRt5V1Ko40YzzOjIaKycADB72yYDUNWpgyXxXlUrdh88UhsT1bSQ6MtRtphZ2g/Lywn82UR5/x3EWw+gxczTOq+tyhR+W5XZiRpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MozhqSKD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hi35t+rc"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-313862d48e7so125027a91.1;
-        Thu, 26 Jun 2025 02:59:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750931980; x=1751536780; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bpq9o8eUwss/BaTqZOzEf6o42mVPU3/LRRVIvXJEbnA=;
-        b=hi35t+rcWbOfU4mBoP40lWnBwYMX9PSKzXKsbmGDY8LoZCLFKaP4Kmn17nVqeaDRWA
-         LgwFvu2EqScX5f5pW6qv8ZwX9JvwAnpLO1NrxJx93E/m3SQ956G1q3s+rz5Kq6lqO/ad
-         h3qXwzViwexkCNkNoJnO6k0vGL5Cx5zyZV5xYP9IE1WnXFf9YAR2mY3CgYGaf9fEo1g+
-         RTffIASkNl5RYIgW4eUQmDOIwCxZwfG/Q8+PfYBShvahgx7w2g6BmNF/P1ihuWwtjDKF
-         qXrBRRr5R8jL/uVEvjM2uNZ1QZbiFIK530L3i15xkZaiHWUu6XxNFgckJWc2AG3U89hp
-         ungg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750931980; x=1751536780;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bpq9o8eUwss/BaTqZOzEf6o42mVPU3/LRRVIvXJEbnA=;
-        b=cdLdzyannHaXpxKgOxs/HDTtOm/r7BqKBT7gkcbaCyoLZkwYx/7z8HXPx/qy9QpysJ
-         PeBjQOA4+R+rkL4P6+v6nOhNOinPV2hH6Etd0Os24mOAFoC433Cgdz1UpJ/hEUSxBJw9
-         HmLbW3VlRCEj8+0Uz6J8/9sIuNvyegm89jopWrLz520UbtXUW+Aa2v6u/Wb9q0iqGjuB
-         joxjEsifAOMWjlWxJgZhmB2hWAuNswKnQkxo337NGw6up1khRb27m/1WdbI5JcVAe1Zz
-         qaj1c1t35HxoYZ3YopiFLzMufQiBEZe5W7uHex/dU5ULR1IizRVQm1ol8q+nrBqO7zVB
-         hmyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV9vyxZM6krlU93kGwKXOrm1v7B9TMCmTEZCSS7LyxnuKC0LEJ1h8iWw3RvBxx3GRjJuRtahp7ovuvhEhxMevw=@vger.kernel.org, AJvYcCXZ9ZXgrtdjJd4D1MGB0+R5GxY/QWj+GW0+W96M6HGGB39vLRESXl7qZncgPXRtBiXKVs0DMl94TavsUAU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLG2FOA1x3GTap8DSZ5JcWYhmbjorF0DkGTucRVexpIKgyLhNM
-	aaE+pBMIiDBr4BfYqBaRXFhZryZlqF+GB89EPaLTslybpawteHyij6nfxABhF/6f+49g0tBuM1N
-	32FWuVzKdRViXCnnabndRV+pSDqBm5VI=
-X-Gm-Gg: ASbGncuhVz+YUV/kc3ZDanT+uAGtfe61wXaunLZpf8H5X2iFxRbJgkXLGj9s67ql017
-	1InREpOpmw/cpZoGLDjwGz45ljzlOs5pYF1vRyRCG5Hyf3sZOGH4ZeTyEHwKAPPQl/gRg/95Aue
-	0lfdcqGC8Pq5Q3ZHTPL86rjgIhboaXikVHK1ZLc9H9fVE=
-X-Google-Smtp-Source: AGHT+IEUPRSreZyNR4k1We+vGp6J76QnTlOZXRU+JCQcRvcuo3Ny4sxSBFZh2aPsYfZFAt97vpXJt5mq3TljFZT/9Mo=
-X-Received: by 2002:a17:90b:3845:b0:312:1ae9:1537 with SMTP id
- 98e67ed59e1d1-315f2526b31mr3932419a91.0.1750931979878; Thu, 26 Jun 2025
- 02:59:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MozhqSKD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 119BDC4CEEE;
+	Thu, 26 Jun 2025 10:00:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750932033;
+	bh=ztHG0MpcdbBlHhSE3ZNvUzBLdwqtfGKtg90w7ScL/pk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MozhqSKDFZ+NssA18e3FYHq21/3we0D4O+FYHMCeHOLifX9P0K30dQvLReNmsfOgi
+	 UhJ9h2X6sAShdeXhxmOemEd7I6o2BpWXYs3BbdzvBCa3VvrXmZp+Tje2pzib+PxScl
+	 iqXJEYe4jDVKXSGD5oMIjUnFf7eAlNlEOW7vDfbgVJ+9LqQ8yPQd5X9dVZQ47FS+ob
+	 bGkCf7OnQ1v2jk2/nhm9xJgQH3zzAaRzttU2t7yDFAs7BUmjcykywrpB9rXMzGCcur
+	 lPgLas4OJW7dXkhew6mkP/EfE9G2CFVzDTJTmBo2tlJHTzIYalGNqEY1wzs1iTmfiD
+	 mLZ5iTlxsxfYA==
+Message-ID: <50fa344c-d683-420c-a3b5-837ec6d8e93e@kernel.org>
+Date: Thu, 26 Jun 2025 12:00:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625043630.7677-1-work@onurozkan.dev> <aFux2MUDAGEYY49I@pollux>
- <20250625113604.21a6ec4a@nimda> <aFu10-dGkoyi0I2T@cassiopeiae>
- <20250626111045.2c90a402@nimda> <CANiq72nsQzCje3167G_4YSJ_he02Czr4NveLOf13zYj-DO_gsw@mail.gmail.com>
- <aF0XhFUkdQNLNwef@pollux>
-In-Reply-To: <aF0XhFUkdQNLNwef@pollux>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 26 Jun 2025 11:59:25 +0200
-X-Gm-Features: Ac12FXxlITAJAosYeQh1GQFYtM5ErCxfI8u90WR6MDiQKiwkosuUcDaglPqa1V4
-Message-ID: <CANiq72n5EMj3vFJO61wJ=JTGpockZjBshTMcbeDYhAmj+bYt1g@mail.gmail.com>
-Subject: Re: [PATCH] rust: simplify `Adapter::id_info`
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Onur <work@onurozkan.dev>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org, 
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/4] media: dt-bindings: Add qcom,msm8939-camss
+To: vincent.knecht@mailoo.org, Robert Foss <rfoss@kernel.org>,
+ Todor Tomov <todor.too@gmail.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250613-camss-8x39-vbif-v5-0-a002301a7730@mailoo.org>
+ <20250613-camss-8x39-vbif-v5-3-a002301a7730@mailoo.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250613-camss-8x39-vbif-v5-3-a002301a7730@mailoo.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 26, 2025 at 11:48=E2=80=AFAM Danilo Krummrich <dakr@kernel.org>=
- wrote:
->
-> It's a temporary branch containing patches that are staged for applying t=
-hem to
-> the driver-core tree.
+On 13/06/2025 11:33, Vincent Knecht via B4 Relay wrote:
+> From: Vincent Knecht <vincent.knecht@mailoo.org>
+> 
+> Add bindings for qcom,msm8939-camss in order to support the camera
+> subsystem for MSM8939.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Ah, that explains it -- I checked driver-core but didn't see anything there=
-.
+Drop, you did here some unusual changes.
 
-Thanks!
+> Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+> ---
+>  .../bindings/media/qcom,msm8939-camss.yaml         | 254 +++++++++++++++++++++
+>  1 file changed, 254 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml b/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..9fbb4b204ac8728b822864ad8336aa9d826d6b5b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml
+> @@ -0,0 +1,254 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/qcom,msm8939-camss.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm MSM8939 Camera Subsystem (CAMSS)
+> +
+> +maintainers:
+> +  - Vincent Knecht <vincent.knecht@mailoo.org>
+> +
+> +description:
+> +  The CAMSS IP is a CSI decoder and ISP present on Qualcomm platforms
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,msm8939-camss
+> +
+> +  reg:
+> +    maxItems: 11
+> +
+> +  reg-names:
+> +    items:
+> +      - const: csi_clk_mux
 
-Cheers,
-Miguel
+No, I already provided arguments in two lengthy discussions - this is
+not sorted by name.
+
+Keep the same order as in previous device, so msm8916 for example. Or
+any other, but listen to some requests to sort it by some arbitrary rule
+which was never communicated by DT maintainers.
+
+
+> +      - const: csid0
+> +      - const: csid1
+> +      - const: csid2
+> +      - const: csiphy0
+> +      - const: csiphy0_clk_mux
+> +      - const: csiphy1
+> +      - const: csiphy1_clk_mux
+> +      - const: ispif
+> +      - const: vfe0
+> +      - const: vfe0_vbif
+> +
+> +  clocks:
+> +    maxItems: 24
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ahb
+> +      - const: csi0
+> +      - const: csi0_ahb
+> +      - const: csi0_phy
+> +      - const: csi0_pix
+> +      - const: csi0_rdi
+> +      - const: csi1
+> +      - const: csi1_ahb
+> +      - const: csi1_phy
+> +      - const: csi1_pix
+> +      - const: csi1_rdi
+> +      - const: csi2
+> +      - const: csi2_ahb
+> +      - const: csi2_phy
+> +      - const: csi2_pix
+> +      - const: csi2_rdi
+> +      - const: csi_vfe0
+> +      - const: csiphy0_timer
+> +      - const: csiphy1_timer
+> +      - const: ispif_ahb
+> +      - const: top_ahb
+> +      - const: vfe0
+> +      - const: vfe_ahb
+> +      - const: vfe_axi
+> +
+
+Also messed up order.
+
+
+> +  interrupts:
+> +    maxItems: 7
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: csid0
+> +      - const: csid1
+> +      - const: csid2
+> +      - const: csiphy0
+> +      - const: csiphy1
+> +      - const: ispif
+> +      - const: vfe0
+
+As well.
+
+
+
+Best regards,
+Krzysztof
