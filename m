@@ -1,119 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2952E18C332;
-	Thu, 26 Jun 2025 09:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4262BCF6C;
+	Thu, 26 Jun 2025 09:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750929939; cv=none; b=ST2IXytfz+jWLQ2CpQSOymz5OYQa/No+EpEwBlpVCfnw69eBCJVryPqvB1mKPpJWUfK87WvnpnVrle1TDWo44qu+RzmC6hKWgqIx2liSGWK5t5LI7ZBcAKvbiUlE9qyZHv/LhhcVgWmF2DfLtSMvX2IX8SxlPv22jyBwGESdnVQ=
+	t=1750929946; cv=none; b=NwN94kt4XpzyY2jBJg4pI1kMN4JMjR1hfm0Ojdf02FIMw/QROAIid1rcSz/bODbMyzRYr5diURMFQjSNmJWn3esDE61v2IaAsrI4vRcyMUd8RH9F+fzzyPZ9mo7laovkf1YmKNzwJlvcgIBLE5wATwACDoPrFmJHGl5BrBOOgJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750929939; c=relaxed/simple;
-	bh=xVxhsp9WJPwQPCXZFwvJKu5uUvkY6LGeigTfbmZtgn0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RSKs2m/FkruP7YQcLNPeRYjajS+5OmpqpwZDDKJsIJCnN+sfCB1WFnD44q419a4G/R2QaflM1qZgQR+CXPCzQok80QoFOqyVSnhtwZZVmZ014tqM92VAcCMLrAXWN7/YaKGaaEa7b0llHncPGXKQvr/ZpYJKNhKtMziZsDhWpF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hg205bmN; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750929946; c=relaxed/simple;
+	bh=gmtwgNmC0ct+DGWCQvjETu9hUvje8913IPDT8CmHbJY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TwGf1YP973yhtYDl4K+VExKymq4CkvqrPn+dNEBOhxcjsttfltjxYeuOcRzWblmJHSvBUu9jdAekf2JrBBllhsRE4OoZiyiG/U5TJgEJT3bW3ZDkY4WGZd9uHJlq/apfTrF8AFcpLq01VlWQj5ZGKBaGoGxwddckbryh10RLzCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=eQEPzhgN; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hg205bmN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750929937; x=1782465937;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=xVxhsp9WJPwQPCXZFwvJKu5uUvkY6LGeigTfbmZtgn0=;
-  b=Hg205bmN7kdu7OJtFny9cVHrS/NlKUu/A2E6bp1hyQef3FlKq9FzSaqD
-   iqHut4QvS7U5meYNJ6NHfnIUfyRj5RLwavFMqWQiARqIALs+qSuYJV6iH
-   z/kCHju5gsm5/IysDJscCOpXFOoN4zXee8vw+DQUygJ1PAM9grlcR3e5c
-   xAE+oO+2Ut7O1cHGPxlu0hoXtesurA26Lq8R6Qr2Ybq2aTqWYEPlHkKOo
-   FKEkK5isSgSV7B+qjQIZEJAZxR/rI71EPd9G+PH0PX0o7f8Bn2kPpOMbm
-   RfOmQi5b/iTuc5BZwpFbJxe6GxIqN48DFoAKM4cSzlU2B/Rlh6c0n/b6l
-   g==;
-X-CSE-ConnectionGUID: smBY5ltDStW6sE8zSi/iQg==
-X-CSE-MsgGUID: +//fv9XRQ9Sm65w8FoGnvQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="52942027"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="52942027"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 02:25:37 -0700
-X-CSE-ConnectionGUID: LBzYSVR0SY+K2h1P+OlghQ==
-X-CSE-MsgGUID: eNqeFQRPSR2gVgy1xtUziw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="152980614"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 26 Jun 2025 02:25:33 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 9586721E; Thu, 26 Jun 2025 12:25:31 +0300 (EEST)
-Date: Thu, 26 Jun 2025 12:25:31 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Rick P Edgecombe <rick.p.edgecombe@intel.com>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, Dave Hansen <dave.hansen@intel.com>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, Chao Gao <chao.gao@intel.com>, "bp@alien8.de" <bp@alien8.de>, 
-	Kai Huang <kai.huang@intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, Yan Y Zhao <yan.y.zhao@intel.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, Isaku Yamahata <isaku.yamahata@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2 01/12] x86/tdx: Consolidate TDX error handling
-Message-ID: <vgk3ql5kcpmpsoxfw25hjcw4knyugszdaeqnzur6xl4qll73xy@xi7ttxlxot2r>
-References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
- <20250609191340.2051741-2-kirill.shutemov@linux.intel.com>
- <5cfb2e09-7ecb-4144-9122-c11152b18b5e@intel.com>
- <d897ab70d48be4508a8a9086de1ff3953041e063.camel@intel.com>
- <aFxpuRLYA2L6Qfsi@google.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eQEPzhgN"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55Q9PCtQ2377545;
+	Thu, 26 Jun 2025 04:25:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750929912;
+	bh=SC24rkJhrOuvR4HR3GY1MEPqIDgsZohL/XcstsIANIc=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=eQEPzhgNVP6/OZ2HPLvWacS+FyEV72T9MxM70/D1Fc0X279H5HCoO9gTn18n+YEKH
+	 wpJqiEO2c7tpQxZOgjPMDQ/P0ir51+l1Zva+yb7uBWWtYeV3aOtjD/sVqF3mTNe/Go
+	 Hx/+25BrJ5qo7U6Z0toWwuxTEYxWrnwa7WyuI4pA=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55Q9PCI11853260
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 26 Jun 2025 04:25:12 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
+ Jun 2025 04:25:11 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 26 Jun 2025 04:25:11 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.169])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55Q9PARl767875;
+	Thu, 26 Jun 2025 04:25:11 -0500
+Date: Thu, 26 Jun 2025 14:55:10 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+CC: Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Andy Whitcroft <apw@canonical.com>,
+        Dwaipayan Ray
+	<dwaipayanray1@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Joe
+ Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
+        Nishanth Menon
+	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Siddharth Vadapalli
+	<s-vadapalli@ti.com>,
+        Roger Quadros <rogerq@kernel.org>, Tero Kristo
+	<kristo@kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux@ew.tq-group.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next v2 1/3] dt-bindings: net: ti:
+ k3-am654-cpsw-nuss: update phy-mode in example
+Message-ID: <cca90cf2-9b9d-4186-b546-ff8968071ac2@ti.com>
+References: <cover.1750756583.git.matthias.schiffer@ew.tq-group.com>
+ <f9b5e84fcaf565506ed86cf1838444c2bc47334f.1750756583.git.matthias.schiffer@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aFxpuRLYA2L6Qfsi@google.com>
+In-Reply-To: <f9b5e84fcaf565506ed86cf1838444c2bc47334f.1750756583.git.matthias.schiffer@ew.tq-group.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Jun 25, 2025 at 02:27:21PM -0700, Sean Christopherson wrote:
-> On Wed, Jun 25, 2025, Rick P Edgecombe wrote:
-> > On Wed, 2025-06-25 at 10:58 -0700, Dave Hansen wrote:
-> > > > --- a/arch/x86/kvm/vmx/tdx.c
-> > > > +++ b/arch/x86/kvm/vmx/tdx.c
-> > > > @@ -202,12 +202,6 @@ static DEFINE_MUTEX(tdx_lock);
-> > > >   
-> > > >   static atomic_t nr_configured_hkid;
-> > > >   
-> > > > -static bool tdx_operand_busy(u64 err)
-> > > > -{
-> > > > -	return (err & TDX_SEAMCALL_STATUS_MASK) == TDX_OPERAND_BUSY;
-> > > > -}
-> > > > -
-> > > > -
-> > > 
-> > > Isaku, this one was yours (along with the whitespace damage). What do
-> > > you think of this patch?
-> > 
-> > I think this actually got added by Paolo, suggested by Binbin. I like these
-> > added helpers a lot. KVM code is often open coded for bitwise stuff, but since
-> > Paolo added tdx_operand_busy(), I like the idea of following the pattern more
-> > broadly. I'm on the fence about tdx_status() though.
+On Tue, Jun 24, 2025 at 12:53:32PM +0200, Matthias Schiffer wrote:
+> k3-am65-cpsw-nuss controllers have a fixed internal TX delay, so RXID
+> mode is not actually possible and will result in a warning from the
+> driver going forward.
 > 
-> Can we turn them into macros that make it super obvious they are checking if the
-> error code *is* xyz?  E.g.
-> 
-> #define IS_TDX_ERR_OPERAND_BUSY
-> #define IS_TDX_ERR_OPERAND_INVALID
-> #define IS_TDX_ERR_NO_ENTROPY
-> #define IS_TDX_ERR_SW_ERROR
-> 
-> As is, it's not at all clear that things like tdx_success() are simply checks,
-> as opposed to commands.
+> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-I remember Dave explicitly asked for inline functions over macros where
-possible.
+Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 
-Can we keep them as functions, but give the naming scheme you proposing
-(but lowercase)?
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Regards,
+Siddharth.
