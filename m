@@ -1,119 +1,156 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9991B6D08
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CAC2139C9
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750934262; cv=none; b=f39Y+ei3JsthpzoIzIrXwgLKUWbrRFKH0/TRvp4n90PhiGVPVSV1siI/0BLgQILmdHT6Soyzs8dw32yS8szmpqhyTBD4o6rD8U8/jbmEgCKqHKIxQfopbH5WiC9lpkStRpS0OgFp4IFhDi5dcuXCPvkx34WudcysHmjgQV78qP0=
+	t=1750934509; cv=none; b=qnHSo/T2oNzKtS84oZqlALK7E9w/HMeo+xA9n8nEMspu1Kc6wCqJ/R8ZOYqggRPqz+T6BdBHGUt/+LnmGlKVTC0wWaAL6L59bLcEgT2tXdlbhgPFLbcYJC2JTAjpdaizBu/jq11Wef8hJkvXBst0uC+xsONwXn0jvuQ8sV/ewOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750934262; c=relaxed/simple;
-	bh=Ru4cJwVwT+dUhkwZmjint5XdqI947nBRVkM7H0g4IwA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oM3nL+uOwmq2jlCNUYXPPiZq8oSQ29WAgPyNlWN530dw0bD/eOxcPJcM267XUlYSKlhVNFZbAQiNbDe883e0IRatztIVQZsNJ6T7mdG1qPwSrPa3KkH8Ni6IqIJam/iogJjWwgacm7uKxrSwXAYk93rmAPJ8/p6qKw0nSbQrcZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uUjz3-0002jU-B0; Thu, 26 Jun 2025 12:37:33 +0200
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uUjz2-005Qtx-2B;
-	Thu, 26 Jun 2025 12:37:32 +0200
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uUjz2-00Gj5S-1v;
-	Thu, 26 Jun 2025 12:37:32 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
-	Rengarajan Sundararajan <Rengarajan.S@microchip.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com,
-	Phil Elwell <phil@raspberrypi.org>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next v1 1/1] net: usb: lan78xx: fix possible NULL pointer dereference in lan78xx_phy_init()
-Date: Thu, 26 Jun 2025 12:37:31 +0200
-Message-Id: <20250626103731.3986545-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1750934509; c=relaxed/simple;
+	bh=nMga8Hlx1d8YQZxYJQUUac9Ug2xf3AsX8cJdwsg9p94=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ldCvSvA9qurVvBZgasDAo2XuVe2UuK55HhdqLAEDSrJIxLuv+q+Es9B7I43LFNSD4D50cP/dgm9Hz3oTu+pOGdc6Fei35WnxrHghroe7Ey5jzOmjCNQ0hCO3L1qbkriX/bPOsmbxpeNilUxxz4ViXCNhr/07doOp9AoznID44qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LfiOy7XV; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LfiOy7XV"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e81877c1ed6so1880511276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 03:41:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750934507; x=1751539307; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6smS0W1Hv8ri7J2+gsifIwuwqRILJtZpojLMB8JtnBs=;
+        b=LfiOy7XVCmWcTaJlHS0w5LwsI5UBxOkMXgpkK06HXte0uj+hX0bRsYnLhLzhTWsbjt
+         oOHLsNWw35cqRdKLIZNDHyS1iPF/sj9ltxfTTRsaHynCz4xjyBdn3Rq8GhfM/rpc5DDp
+         lFDCDJv9N8a9kaj07XPnmGkD0W/uV9plIjYLrKlfKHg7jh4Kdx2qREaFbCErR5qdeKCI
+         /htZoScJmRMjvRnnjnreuQVs+qLtBp+8JgeBM8FXO0DI5aoNIx8UcRjpAx2m4U9dB/mQ
+         gnC2Ac/PZ0gM1PsolHYNP08fsAr5d/VSlDbWJYWr2Vecj+QDMEDHxcX4tzfjULz8Olgf
+         FDyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750934507; x=1751539307;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6smS0W1Hv8ri7J2+gsifIwuwqRILJtZpojLMB8JtnBs=;
+        b=QK6jtv+KD1b4lomC6vpJ8NxwQzriRw+PB4lCTzguxgVfvoVeQIqXDjx7hSlvPLvNhg
+         TSgMJ8lQUyUtvvyn5yNczmi6N4ytYm9FE8kg9s90pg3ThhpORcoZJMju8PMxZzXwPM39
+         WWw4sASXZp7WKi4yStya5vTbnK0qVOjQuvzU5sq9iAowQ/VjmqwuJgKU9rt4Kuc49DaW
+         JwEZ/Onjy+yfS2yWbURAgu8sNaNW8rYyIrHnMGJDZgce3hJqZPggva3ixIrfTiwGYNwl
+         keCfJKlIJdlK6Lz+LQAzcL8eiA6LdQGx4NOysYVWoTRdFrsy2oa70zEm/a4tvGPiTQkA
+         0ObQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVfKBIJDdG7NSsFrIicsB25s0rhUw7wUJhNfmJ0T7F9T2P8hcXg6kKkm/005eaijx+5CyHR/Cb3XD93CdM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxonWAVSyLNVEpCjRXL7VCqCukU2NhgwvcTS57MYDgIQyV1454e
+	Pcz84Hs01N3V4Zg10Sc07n2+1y89z54XSUB7Sl7enFcLCnDQpye144GKdrg64FSZmh8IKhV0yc7
+	h9t3DL6agg0yRlGXQh+LF8AggNOiGpUDtGGdKhiimMA==
+X-Gm-Gg: ASbGncvMvMThJxgzgsQMQqr2XEKTNY1Q1oJYynO6lbRyFgp21nLhpmPfytfcLcFXfig
+	gZ+kiLk1yyGz59dUb98zu2osQnFFMxyk04AzsZDxmhaxVcGSr7vHknlu52mRvULZ5k91hmpJAZP
+	JoNmXh+SphigoZ7G4MPwGQnQ5mFblvZNTH4qo1BzSMhA+Q
+X-Google-Smtp-Source: AGHT+IHlcCR9Jque2M5f7A2Se7ACxnVKmY2chOHS36SADEkUcKjizS/3bQ31EnnCoHr4T6PMwYyajw8366/m4yuUyAY=
+X-Received: by 2002:a05:6902:1893:b0:e87:a1f2:5ccb with SMTP id
+ 3f1490d57ef6-e87a1f25e37mr1038329276.19.1750934506681; Thu, 26 Jun 2025
+ 03:41:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <22759968.EfDdHjke4D@rjwysocki.net> <CAPDyKFpZVdf2EnZE_u1xDKB7=Nd98a_ajYimQhLBu6jYwJhJFA@mail.gmail.com>
+ <CAJZ5v0irk8n0MzRm=u8k=+Mtq84r7JsazS10DsvHO4ktgW=AMQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0irk8n0MzRm=u8k=+Mtq84r7JsazS10DsvHO4ktgW=AMQ@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 26 Jun 2025 12:41:10 +0200
+X-Gm-Features: Ac12FXylM7_NHVK9qHL5zh8NJNZgaIJfq0i5vr57JOQ0VZWL8G55_18t0MWABxQ
+Message-ID: <CAPDyKFq7gydO0uioA53LqXk-N+Bjp4bwkaRRzMeWv+F=zpy2Jw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/9] PM: Reconcile different driver options for runtime
+ PM integration with system sleep
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If no PHY device is found (e.g., for LAN7801 in fixed-link mode),
-lan78xx_phy_init() may proceed to dereference a NULL phydev pointer,
-leading to a crash.
+On Thu, 26 Jun 2025 at 12:34, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Thu, Jun 26, 2025 at 12:31=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.=
+org> wrote:
+> >
+> > On Wed, 25 Jun 2025 at 21:25, Rafael J. Wysocki <rjw@rjwysocki.net> wro=
+te:
+> > >
+> > > Hi Everyone,
+> > >
+> > > This series addresses a couple of issues related to the integration o=
+f runtime
+> > > PM with system sleep I was talking about at the OSMP-summit 2025:
+> > >
+> > > https://lwn.net/Articles/1021332/
+> > >
+> > > Most importantly, DPM_FLAG_SMART_SUSPEND cannot be used along with
+> > > pm_runtime_force_suspend/resume() due to some conflicting expectation=
+s
+> > > about the handling of device runtime PM status between these function=
+s
+> > > and the PM core.
+> > >
+> > > Also pm_runtime_force_suspend/resume() currently cannot be used in PC=
+I
+> > > drivers and in drivers that collaborate with the general ACPI PM doma=
+in
+> > > because they both don't expect their mid-layer runtime PM callbacks t=
+o
+> > > be invoked during system-wide suspend and resume.
+> > >
+> > > Patch [1/9] is a preparatory cleanup changing the code to use 'true' =
+and
+> > > 'false' as needs_force_resume flag values for consistency.
+> > >
+> > > Patch [2/9] makes pm_runtime_force_suspend() check needs_force_resume=
+ along
+> > > with the device's runtime PM status upfront, and bail out if it is se=
+t,
+> > > which allows runtime PM status updates to be eliminated from both tha=
+t function
+> > > and pm_runtime_force_resume().
+> > >
+> > > Patch [3/9] causes the smart_suspend flag to be taken into account by
+> > > pm_runtime_force_resume() which allows it to resume devices with smar=
+t_suspend
+> > > set whose runtime PM status has been changed to RPM_ACTIVE by the PM =
+core at
+> > > the beginning of system resume.  After this patch, drivers that use
+> > > pm_runtime_force_suspend/resume() can also set DPM_FLAG_SMART_SUSPEND=
+ which
+> > > may be useful, for example, if devices handled by them are involved i=
+n
+> > > dependency chains with other devices setting DPM_FLAG_SMART_SUSPEND.
+> > >
+> > > The next two patches, [4-5/9], put pm_runtime_force_suspend/resume()
+> > > and needs_force_resume under CONFIG_PM_SLEEP for consistency and also
+> > > because using them outside system-wide PM transitions really doesn't =
+make
+> > > sense.
+> > >
+> > > Patch [6/9] makes the code for getting a runtime PM callback for a de=
+vice
+> > > a bit more straightforward in preparation for the subsequent changes.
+> >
+> > I can't find this one. Seems like you did not submit it.
+> >
+> > Perhaps make a resend and fixup the patch-numbering too?
+>
+> I'm going to send a v2, but the patch in question is here (wrong number):
+>
+> https://lore.kernel.org/linux-acpi/3306233.5fSG56mABF@rjwysocki.net/
 
-Update the logic to perform MAC configuration first, then check for the presence
-of a PHY. For the fixed-link case, set up the fixed link and return early,
-bypassing any code that assumes a valid phydev pointer.
+No, that's patch2 (which was named pacth0). :-) Nevermind, I think we
+made some progress so I am awaiting a v2 before continuing my reviews.
 
-It is safe to move lan78xx_mac_prepare_for_phy() earlier because this function
-only uses information from dev->interface, which is configured by
-lan78xx_get_phy() beforehand. The function does not access phydev or any data
-set up by later steps.
-
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/usb/lan78xx.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index ae37cd235526..6e9dc30b50f9 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -2831,6 +2831,10 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = lan78xx_mac_prepare_for_phy(dev);
-+	if (ret < 0)
-+		goto phylink_uninit;
-+
- 	/* If no PHY is found, set up a fixed link. It is very specific to
- 	 * the LAN7801 and is used in special cases like EVB-KSZ9897-1 where
- 	 * LAN7801 acts as a USB-to-Ethernet interface to a switch without
-@@ -2840,11 +2844,12 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
- 		ret = lan78xx_set_fixed_link(dev);
- 		if (ret < 0)
- 			goto phylink_uninit;
--	}
- 
--	ret = lan78xx_mac_prepare_for_phy(dev);
--	if (ret < 0)
--		goto phylink_uninit;
-+		/* No PHY found, so set up a fixed link and return early.
-+		 * No need to configure PHY IRQ or attach to phylink.
-+		 */
-+		return 0;
-+	}
- 
- 	/* if phyirq is not set, use polling mode in phylib */
- 	if (dev->domain_data.phyirq > 0)
--- 
-2.39.5
-
+Kind regards
+Uffe
