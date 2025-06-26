@@ -1,152 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387D52E06DC;
-	Thu, 26 Jun 2025 12:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0C22E11C0
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750941370; cv=none; b=jGuezSQtTfnJUzfAm2b+7k2/1RZ3C0ytWe3AEoqAsabIRylRovRmT26OWKIIRxt6P4Oc/mlgfNBA4zmnm1xfn4DveZiYe8kijxRjdt+uoCt1B6gR1BvwJyXzPyCglXod6TNTZj2zjmwHClENllBR4XcrzF4JgtUPLdeHbZ0MNW8=
+	t=1750941372; cv=none; b=FXmlyRm4NEYBfHDL7VNDOODyuQayj0kWP+FRPW1q+RZYzKbBaz3kcrzaEiNkfXRliNEndgFGBGJYQ1dsiE9VqaOi0bwrYHEuIVnuxZdzfnipLC8ReEQ+WHtdBwzVa5ZHkPKiARdfqDbVTJQO4qcBVLxFanEY3X2m71utIrNEjwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750941370; c=relaxed/simple;
-	bh=jkStiqdbqvgUGXirSUwGLlQ14O9y2yDoXve1z9ZZLrc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SUL6altk7gX0uTc5DNcWuIsG+gl7qJeLwpxo1AYtVWYERmR4+r+RiVyPwxk2GM2VjM2H17lZkxEDtThbLh2dr5LfXSenfnnN6eq/J4RiRxMuy/gomCJSFFz6zxu7g06WbrZiokB/Rhm65BD55bIBtj2DvAMjFg5WvOHYphpGKIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btwmvuk+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750941372; c=relaxed/simple;
+	bh=EldGwDwLj9lbQI5sLAfG3j4GNA2ETgNSDZ40/lKfj2k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mWiFMHIJUx8zaTP05CjmKzLM7L/qDZ6xnIMUEeWufDi/J+SuifUJ+54M3l9LcM43uA3IxgmwkT4AlqnSZq81I9s1iFp8ohYf3ApUt89JFpO0uSQ0xzcImZYwOimNZSIjgEhDGB5LU+M6ZIzq8OuWD8GTXxJnMAyAspSmAR2JJ9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UCXfsYLj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btwmvuk+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31622C4CEEB;
-	Thu, 26 Jun 2025 12:36:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750941369;
-	bh=jkStiqdbqvgUGXirSUwGLlQ14O9y2yDoXve1z9ZZLrc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=btwmvuk+bO9gLYGz+YI78oe3GQAdzrtVOFrnJ+7VpTuBgU3XriDWEyFilP20Dfwff
-	 RvsOeFtSvwhyAFH2PLYxk+o+bIkHR8htzLZLIBRNjMfT6xF83FWSSIRF43h6er7wfl
-	 Zv2vFPY0Pid0UvAH+qL5nX7zzQg3AY+U+g7ihFrfuMjYYkeI9yUrbHVctfA+TBUS+d
-	 j51s/34aOiCU4L7TVyEP7uTFRhKRbLDUdzjjFAhtcLzj+XddOI48odU0jumgah7RT7
-	 R7V8nmlbdSFsV8S/7DG6UaN1FxAxuyC6tKVayouA2hSWo4nRUEzAyRAaI3dxYWv0A5
-	 CzyPtIZVWv5pA==
-Date: Thu, 26 Jun 2025 14:36:05 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Vitaly Wool <vitaly.wool@konsulko.se>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>,
-	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v4 3/4] rust: support large alignments in allocations
-Message-ID: <aF0-tYomGe7nB5vX@pollux>
-References: <20250626083516.3596197-1-vitaly.wool@konsulko.se>
- <20250626083642.3596388-1-vitaly.wool@konsulko.se>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UCXfsYLj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750941369;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6C4BdrJF7WIpqXdFpP6dYYZvXiO0SgJqw+aD3tRKE3Q=;
+	b=UCXfsYLjB52w9u5Vi0dFG4RLUrYJck+8YoiZXOxT1pvZBlDTiGZhr8sZ62ZM0eovQWqwJW
+	MYmU4FKJkRnEHFtCgrRn5e8V8FpqLHLhhtmoIUoNqxZQkR4hWqWjBJBKuUMedIT0Q+rPQG
+	eOEfvc3dCOaO5VY07Oic06bw7Xwn8eM=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-196-B10s7GLmMveRAgPs2aXqFw-1; Thu,
+ 26 Jun 2025 08:36:06 -0400
+X-MC-Unique: B10s7GLmMveRAgPs2aXqFw-1
+X-Mimecast-MFC-AGG-ID: B10s7GLmMveRAgPs2aXqFw_1750941365
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DCB4D1944AA9;
+	Thu, 26 Jun 2025 12:36:04 +0000 (UTC)
+Received: from fedora.brq.redhat.com (unknown [10.43.17.241])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 57DAB18003FC;
+	Thu, 26 Jun 2025 12:36:01 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Chang Yin <cyin@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH v2 0/9] rtla/timerlat: Support actions on threshold and on end
+Date: Thu, 26 Jun 2025 14:33:56 +0200
+Message-ID: <20250626123405.1496931-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626083642.3596388-1-vitaly.wool@konsulko.se>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Thu, Jun 26, 2025 at 10:36:42AM +0200, Vitaly Wool wrote:
->  void * __must_check __realloc_size(2)
-> -rust_helper_krealloc(const void *objp, size_t new_size, gfp_t flags)
-> +rust_helper_krealloc(const void *objp, size_t new_size, unsigned long align, gfp_t flags)
->  {
->  	return krealloc(objp, new_size, flags);
->  }
->  
->  void * __must_check __realloc_size(2)
-> -rust_helper_kvrealloc(const void *p, size_t size, gfp_t flags)
-> +rust_helper_kvrealloc(const void *p, size_t size, unsigned long align, gfp_t flags)
->  {
->  	return kvrealloc(p, size, flags);
->  }
+This series adds a feature that allows to user to specify certain
+kinds of "actions" to be executed at one of two places in the rtla
+measurement: when tracing is stopped on latency threshold, and at the
+end of tracing.
 
-I think you forgot to add comments explaining why we have the additional
-discarded align argument.
+Two new options are added: --on-threshold, and --on-end, taking
+the action as an argument. For example:
 
-Also please keep those helpers as they are. You can write an identical inline
-function in Rust that discards the align argument and calls bindings::krealloc,
-etc.
+$ rtla timerlat hist -T 10 \
+--on-threshold shell,command="echo Threshold"
+--on-end shell,command="echo Tracing stopped"
 
-For instance:
+will print "Threshold" if a thread latency higher than 10 microseconds
+is reached, and "Tracing stopped" always at the end.
 
-	unsafe extern "C" fn krealloc_align(
-	    ptr: *const c_void,
-	    size: usize,
-	    _align: c_ulong
-	    flags: u32,
-	) -> *mut c_void {
-	    bindings::krealloc(ptr, size, flags)
-	}
+The list of possible actions is extensible and is covered in
+the commit messages. Later, a documentation patch series will be sent
+with clear explanation of every action and its syntax.
 
-> diff --git a/rust/helpers/vmalloc.c b/rust/helpers/vmalloc.c
-> index 80d34501bbc0..4618c0b79283 100644
-> --- a/rust/helpers/vmalloc.c
-> +++ b/rust/helpers/vmalloc.c
-> @@ -3,7 +3,7 @@
->  #include <linux/vmalloc.h>
->  
->  void * __must_check __realloc_size(2)
-> -rust_helper_vrealloc(const void *p, size_t size, gfp_t flags)
-> +rust_helper_vrealloc(const void *p, size_t size, unsigned long align, gfp_t flags)
->  {
-> -	return vrealloc(p, size, flags);
-> +	return vrealloc_node(p, size, align, flags, NUMA_NO_NODE);
->  }
+Notably, a special action "continue" resumes tracing. For example:
 
-Same here, just make this a "real" helper for vrealloc_node() and create a Rust
-function vrealloc_align() like in the example above.
+$ rtla timerlat hist -T 100 \
+--on-threshold shell,command="echo Threshold" \
+--on-threshold continue -d 10s
 
-> diff --git a/rust/kernel/alloc/allocator.rs b/rust/kernel/alloc/allocator.rs
-> index aa2dfa9dca4c..a0d78c497974 100644
-> --- a/rust/kernel/alloc/allocator.rs
-> +++ b/rust/kernel/alloc/allocator.rs
-> @@ -58,7 +58,7 @@ fn aligned_size(new_layout: Layout) -> usize {
->  ///
->  /// One of the following: `krealloc`, `vrealloc`, `kvrealloc`.
->  struct ReallocFunc(
-> -    unsafe extern "C" fn(*const crate::ffi::c_void, usize, u32) -> *mut crate::ffi::c_void,
-> +    unsafe extern "C" fn(*const crate::ffi::c_void, usize, usize, u32) -> *mut crate::ffi::c_void,
+will print "Threshold" as many times as tracing is stopped after
+thread latency reaches 100us.
 
-Should be c_ulong instead of usize.
+The feature was inspired by a case where collecting perf data on rtla
+latency overflow was required, which can be done by sending a signal
+to the perf process.
 
->  );
->  
->  impl ReallocFunc {
-> @@ -110,7 +110,7 @@ unsafe fn call(
->          // - Those functions provide the guarantees of this function.
->          let raw_ptr = unsafe {
->              // If `size == 0` and `ptr != NULL` the memory behind the pointer is freed.
-> -            self.0(ptr.cast(), size, flags.0).cast()
-> +            self.0(ptr.cast(), size, layout.align(), flags.0).cast()
->          };
->  
->          let ptr = if size == 0 {
-> @@ -152,12 +152,6 @@ unsafe fn realloc(
->          old_layout: Layout,
->          flags: Flags,
->      ) -> Result<NonNull<[u8]>, AllocError> {
-> -        // TODO: Support alignments larger than PAGE_SIZE.
-> -        if layout.align() > bindings::PAGE_SIZE {
-> -            pr_warn!("Vmalloc does not support alignments larger than PAGE_SIZE yet.\n");
-> -            return Err(AllocError);
-> -        }
-> -
->          // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
->          // allocated with this `Allocator`.
->          unsafe { ReallocFunc::VREALLOC.call(ptr, layout, old_layout, flags) }
-> @@ -176,12 +170,6 @@ unsafe fn realloc(
->          old_layout: Layout,
->          flags: Flags,
->      ) -> Result<NonNull<[u8]>, AllocError> {
-> -        // TODO: Support alignments larger than PAGE_SIZE.
-> -        if layout.align() > bindings::PAGE_SIZE {
-> -            pr_warn!("KVmalloc does not support alignments larger than PAGE_SIZE yet.\n");
-> -            return Err(AllocError);
-> -        }
+Example of this with Intel PT aux buffer:
 
-Didn't you propose to use VREALLOC if layout.align() > bindings::PAGE_SIZE?
+$ perf record --cpu 0 -e intel_pt// -S -- rtla timerlat top -q -T 100 \
+-c 0 --on-threshold signal,pid=parent,num=12 --on-theshold continue
 
->          // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
->          // allocated with this `Allocator`.
->          unsafe { ReallocFunc::KVREALLOC.call(ptr, layout, old_layout, flags) }
+In general, the feature is aiming to allow integration with external
+tooling. To implement even more flexibility, passing context to the
+shell through environmental variables, or even an entire scripting
+language with access to the rtla internals can be implemented if
+needed.
+
+Changes since v1:
+- Dropped short options on suggestion from Arnaldo.
+- Added documentation.
+
+Tomas Glozar (9):
+  rtla/timerlat: Introduce enum timerlat_tracing_mode
+  rtla/timerlat: Add action on threshold feature
+  rtla/timerlat_bpf: Allow resuming tracing
+  rtla/timerlat: Add continue action
+  rtla/timerlat: Add action on end feature
+  rtla/tests: Check rtla output with grep
+  rtla/tests: Add tests for actions
+  rtla/tests: Limit duration to maximum of 10s
+  Documentation/rtla: Add actions feature
+
+ .../tools/rtla/common_timerlat_options.rst    |  64 +++++
+ tools/tracing/rtla/src/Build                  |   1 +
+ tools/tracing/rtla/src/actions.c              | 260 ++++++++++++++++++
+ tools/tracing/rtla/src/actions.h              |  52 ++++
+ tools/tracing/rtla/src/timerlat.bpf.c         |  13 +-
+ tools/tracing/rtla/src/timerlat.c             |  24 +-
+ tools/tracing/rtla/src/timerlat.h             |  24 +-
+ tools/tracing/rtla/src/timerlat_bpf.c         |  13 +
+ tools/tracing/rtla/src/timerlat_bpf.h         |   3 +
+ tools/tracing/rtla/src/timerlat_hist.c        | 140 +++++++---
+ tools/tracing/rtla/src/timerlat_top.c         | 165 +++++++----
+ tools/tracing/rtla/tests/engine.sh            |  21 +-
+ tools/tracing/rtla/tests/hwnoise.t            |   8 +-
+ tools/tracing/rtla/tests/osnoise.t            |   4 +-
+ tools/tracing/rtla/tests/timerlat.t           |  36 ++-
+ 15 files changed, 712 insertions(+), 116 deletions(-)
+ create mode 100644 tools/tracing/rtla/src/actions.c
+ create mode 100644 tools/tracing/rtla/src/actions.h
+
+-- 
+2.49.0
+
