@@ -1,115 +1,106 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBFB28CF45
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 20:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750970513; cv=pass; b=dQ5fORXT+YQPFfU9JMlOJkVU/h7q83w4UILZ1epU4AA9resVYkTeo4Ve1h11oXOy1Io0NMLn02nwIObtu83Sch0IKNvZFORwbE9r3S0h6k2SbWZwxXNUfRGuQPD39NYNI/0ng5OXVeDNQUDwHgXMIPzNc4v318mtdmkaSbm/DhY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750970513; c=relaxed/simple;
-	bh=2OY8QbAt62MpG85IRsPpbfEEQZNinMH1pF7azZrtxQg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qTByHGS0tEtV3uga27/S4Q8u4VIdeZHFJ/NOudY6Tpm2DHQ/oUmav7A2IN932rkq/y6hOa+jzHfJjCgYLPsqywd9ZcE/p0f7XgFpGiLByFEPnPqgmABZCZRr/iMj/iNR2tI+RcDl28zGdyzWGtEaShx0TGVE/AsZSOXalCVBHtY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=a8VAvy4U; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A0F15A864;
+	Thu, 26 Jun 2025 20:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750970547; cv=none; b=ex8DfjjMvxsse3hrqltyidY1Cpc5vqT/lXB1IIj8yTeO/3oojSPY1cb4Frng42SkRfzsF3RxznhL37Cu7KpcinkiHoqMRVbyo84wMB8FHiDjJwZxKseyl1ZzvYoXyXBBWY67VnPlZSXnGKzD/R4zNjEiC8vX+RfE/tI8TcyOUwk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750970547; c=relaxed/simple;
+	bh=RLEx2xKefeSdsWRjJHhqob9J1C2xu4UA7PKJZEw1L2A=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=fbti4UZYKNc4Vm3N4nUGPdQXn9FLnfBTwEgUNZlKjckgTt6uOJilEoEUpBYNAHTL0Fwa8yFwEdB8gpi1lMrAbL9je7DiE5WCu+QoUQ9jHeQBGuh7jzdNC59ULNgGRE05AUmgiThDY3owgK2HHaESnJoa9ZNtmI8tZWujeox5VWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=NiOslNo7; arc=none smtp.client-ip=192.134.164.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="a8VAvy4U"
-ARC-Seal: i=1; a=rsa-sha256; t=1750970492; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Xzuv5RIGJbAVtnPxiaF9JBXuk3JuHEIA512h8aWZ6kjfjB1WsIe3/cJ8IVmpNBFTjyGBSWDFTNvESEKRSXOVKHNodapUmg/3a0+vGJNMc/Ux0FJdiNaj40ffrxCZwSYgpSoYUeFP4VurFtquyspaUEZTba+dfp9xcEWBMvfZQJw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750970492; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=dkvlEaVeP24Afh8UAYlk8YS7UckDMj2JtAwIeCxutOA=; 
-	b=jntwHK50ZZRME1c42JClO/uA2ru7WBxeFi1mgEl0k+KfRI/HC27xjCLn8tGUlEUoqxMH+IhcXc2msu1+tQ4zE63wxjJ44QS8nXVw27ySszSXWHw3Q+B/WNymm/4/BRT609Jy6EQO/jVfqi2tginAPnOuORkqMfBaUbLOsriIZWM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750970492;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
-	bh=dkvlEaVeP24Afh8UAYlk8YS7UckDMj2JtAwIeCxutOA=;
-	b=a8VAvy4UjAVxhsR9otGCvjC585gT6fWSrFuPTIik2klmIicNuSdas/2kkoVhUDci
-	A4/TNyi2qEmtRrD29OGcwHbdNA+3dycLB468F4kUCfzO33rXBtI2e8yQaYY3GXQ+uWQ
-	WNwfiOw749nJ16eMQ30dpAByi5mNGkZRGmMzpGQ0=
-Received: by mx.zohomail.com with SMTPS id 175097049056113.876333104436412;
-	Thu, 26 Jun 2025 13:41:30 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Thu, 26 Jun 2025 22:41:18 +0200
-Subject: [PATCH v2] arm64: defconfig: enable further Rockchip platform
- drivers
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="NiOslNo7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ooYxFu0ZWuS1WjbcYF5fd0/upAuSNVgkBMhhaiyiwhk=;
+  b=NiOslNo77VErKGfM1NgunJAVuq4Iq2LJEI3iSjlGwBpGVVssdUnZplDa
+   mhDK4TC/3HT2bpvb3G/vixPTSHjPTpQrD30uQIzqJk/bLrb4atAupEwz7
+   RVFNAp2MrJD9kC70QdcIYbVarb+J+BpI0dVFxbr2oi+pSmmH+IVuQnofD
+   s=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.16,268,1744063200"; 
+   d="scan'208";a="120085974"
+Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 22:41:12 +0200
+Date: Thu, 26 Jun 2025 22:41:11 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To: Dan Carpenter <dan.carpenter@linaro.org>
+cc: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+    jean-baptiste.maneyrol@tdk.com, Lars-Peter Clausen <lars@metafoo.de>, 
+    =?ISO-8859-15?Q?Nuno_S=E1?= <nuno.sa@analog.com>, 
+    Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] iio: imu: inv_icm42600: add WoM support
+In-Reply-To: <dcf86acc-567e-48e3-ad15-fd9522b46180@sabinyo.mountain>
+Message-ID: <alpine.DEB.2.22.394.2506262240440.3473@hadrien>
+References: <20250623-losd-3-inv-icm42600-add-wom-support-v5-0-4b3b33e028fe@tdk.com> <20250623-losd-3-inv-icm42600-add-wom-support-v5-2-4b3b33e028fe@tdk.com> <CAMknhBHaSBF-a9nLZ0ZxB2-9HzYkPMBqUr4Aa4TthNnJMwtFgg@mail.gmail.com> <20250626195323.6336820c@jic23-huawei>
+ <dcf86acc-567e-48e3-ad15-fd9522b46180@sabinyo.mountain>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250626-rk3588-defconfig-v2-1-ae6720964b01@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAG6wXWgC/3WOQQ6CMBBFr0JmbQ0tFJCV9zAsSplCI7TaVoIh3
- N0KcenyTfLenxU8Oo0e6mQFh7P22poI7JSAHITpkeguMrCU8bRgBXH3jFcV6VBJa5TuSUk5ZqX
- qOM8lRO3hUOllT96agx0+X7EcjiO0wiORdpp0qBODSyC/OnyFQftg3Xt/aaa78X99poSS7CLoR
- eRU0opepR1H0VonznECmm3bPittv47lAAAA
-X-Change-ID: 20250626-rk3588-defconfig-715e37fd554c
-To: Heiko Stuebner <heiko@sntech.de>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: kernel@collabora.com, linux-rockchip@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=US-ASCII
 
-Enable the rockchip-dfi driver as a module, which is used on RK3588 as
-well as RK3568 and RK3399 to measure memory bandwidth. For this, we also
-enable PM_DEVFREQ_EVENT, which is a requirement for this driver.
 
-Also enable the rockchip-rga driver as a module, which is used on
-various Rockchip SoCs, including RK3588 and RK3399, to provide 2d
-accelerated image transformations through a V4L2 interface.
 
-Suggested-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
-Changes in v2:
-- Drop explicit Rockchip Hantro enablement, as this should already be
-  autoselected as the Kconfig option's default if Hantro is enabled.
-- Also enable PM_DEVFREQ_EVENT, which is a prerequisite to rockchip-dfi.
-- Order the defconfig options at the correct locations, as per
-  `savedefconfig`.
-- Link to v1: https://lore.kernel.org/r/20250626-rk3588-defconfig-v1-1-39a19a41c181@collabora.com
----
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+On Thu, 26 Jun 2025, Dan Carpenter wrote:
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index e071f8f45607dbfd8e00b915b27999949ee0fc88..904b8a332f8cebd2f5ee0fe24d0aaf8b1860bfc6 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -867,6 +867,7 @@ CONFIG_VIDEO_RENESAS_FCP=m
- CONFIG_VIDEO_RENESAS_FDP1=m
- CONFIG_VIDEO_RENESAS_VSP1=m
- CONFIG_VIDEO_RCAR_DRIF=m
-+CONFIG_VIDEO_ROCKCHIP_RGA=m
- CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=m
- CONFIG_VIDEO_SAMSUNG_S5P_JPEG=m
- CONFIG_VIDEO_SAMSUNG_S5P_MFC=m
-@@ -1520,6 +1521,8 @@ CONFIG_TI_SCI_PM_DOMAINS=y
- CONFIG_ARM_IMX_BUS_DEVFREQ=y
- CONFIG_ARM_IMX8M_DDRC_DEVFREQ=m
- CONFIG_ARM_MEDIATEK_CCI_DEVFREQ=m
-+CONFIG_PM_DEVFREQ_EVENT=y
-+CONFIG_DEVFREQ_EVENT_ROCKCHIP_DFI=m
- CONFIG_EXTCON_PTN5150=m
- CONFIG_EXTCON_USB_GPIO=y
- CONFIG_EXTCON_USBC_CROS_EC=y
+> On Thu, Jun 26, 2025 at 07:53:23PM +0100, Jonathan Cameron wrote:
+> > > > +static int inv_icm42600_accel_disable_wom(struct iio_dev *indio_dev)
+> > > > +{
+> > > > +       struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
+> > > > +       struct device *pdev = regmap_get_device(st->map);
+> > > > +       struct inv_icm42600_sensor_conf conf = INV_ICM42600_SENSOR_CONF_INIT;
+> > > > +       unsigned int sleep_ms = 0;
+> > > > +       int ret;
+> > > > +
+> > > > +       scoped_guard(mutex, &st->lock) {
+> > > > +               /*
+> > > > +                * Consider that turning off WoM is always working to avoid
+> > > > +                * blocking the chip in on mode and prevent going back to sleep.
+> > > > +                * If there is an error, the chip will anyway go back to sleep
+> > > > +                * and the feature will not work anymore.
+> > > > +                */
+> > > > +               st->apex.wom.enable = false;
+> > > > +               st->apex.on--;
+> > > > +               ret = inv_icm42600_disable_wom(st);
+> > > > +               if (ret)
+> > > > +                       break;
+> > >
+> > > The fact that scoped_guard() uses a for loop is an implementation
+> > > detail so using break here makes this look like improper C code. I
+> > > think this would be better to split out the protected section to a
+> > > separate function and just use the regular guard() macro.
+> >
+> > Good catch.  This feels like something we should have some static analysis
+> > around as we definitely don't want code assuming that implementation.
+> >
+> > +CC Dan / Julia to see if they agree.
+> >
+>
+> I feel like the scoped_guard() macro is so complicated because they
+> wanted break statements to work as expected...  (As opposed to how I write
+> half my loop macros using nested for loops so that when I break it only
+> breaks from the inner loop and corrupts memory).
 
----
-base-commit: 7e5ee158886bb7c244a34623de6a410b62023d60
-change-id: 20250626-rk3588-defconfig-715e37fd554c
+How about a goto if making another function is not practical?
 
-Best regards,
--- 
-Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+julia
 
+>
+> regards,
+> dan carpenter
+>
+>
