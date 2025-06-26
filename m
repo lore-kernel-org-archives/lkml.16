@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE9327464A;
-	Thu, 26 Jun 2025 23:56:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD5D273D86;
+	Thu, 26 Jun 2025 23:56:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750982195; cv=none; b=sGU6bjcVSFRrh4Hfv9hJpS8sO72oi6s/itZMqoCvzGAERhOzQi2d4sTfxYYlu5ghGmWMBymoCxylTVAkKZMDEFraJYsxG9auuX5BkMYzE+XW4oAFkQoi+hDiDr6ixNJF86r1ANUb7Nce2ZqMGxL0VG82wuOvvu0sFgvWGLzJ/MI=
+	t=1750982196; cv=none; b=iQ9QO3FhdgIyQ9/F+IvZGY1+TrLWU4At2Dks+ftnSub9qL0SQpgqO4pxpFhe3s/+JWKtWcRYTZLQuAfRHsGsBUdkRYe3pgk9n9ZMydbYsVXQnG7RW0gtErHXJbx0queGnfnCBeux/Rj7YOLsLzeqVr9jZbZWHsI6tLy8RSBFtB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750982195; c=relaxed/simple;
-	bh=Ic6+bMmtv5ROHic7Z6jGxH1WIexazHtXrB0jcb/MbH0=;
+	s=arc-20240116; t=1750982196; c=relaxed/simple;
+	bh=g2ykIRJXn2F98taSetM8H8hBvjwsSmrWejMVYGnyZz8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e8M0o9Hng1Fp/J4yHXqmrhWwqymwyBstu5i1H4Ce2+0/4bQqbNR+E5ozY8L100s2JgiTaU7QbdIOJS8gDxwFTRYtHAp3izoXFnc1O09NAyTSpJw4onjT4WfLXPzDEGj7kn8WqUhv5F4k+3ZKmduqR4CdTHqu/zw0Y+jrpbDTftU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpZCisip; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=u7GF4vi5PS4bjEcE4fOibnZoKQTOQgiAakYXpSt+nDo4fabGUDL3r2kWAgfNHzV1r6r9rSkMItUK/uUblYS1TlqggjiGD0Jxfco6oKnHQmGr+0edknA8Ne06YHMsdKviDyTBWnb7uB4dkd1+TElzLk2R54/1gg7gHkc7t3IhCAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QA6W2fFf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpZCisip"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0722C4CEEB;
-	Thu, 26 Jun 2025 23:56:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QA6W2fFf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BDE9C4CEF1;
+	Thu, 26 Jun 2025 23:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750982195;
-	bh=Ic6+bMmtv5ROHic7Z6jGxH1WIexazHtXrB0jcb/MbH0=;
+	s=k20201202; t=1750982196;
+	bh=g2ykIRJXn2F98taSetM8H8hBvjwsSmrWejMVYGnyZz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gpZCisipr4ay+IWjgtgqBN2ZeczdoAmdBGXfprtLuvlTRtygti5Jicqqq6vNYBJaf
-	 SbYn59iQG5OQLXH/akxSpWNkYY3r9W8r+qQPHAb+e2dNPMKetjQ5Rxw91P013C6mgF
-	 cI5/gzWWu4W9FEKtb1tRflQWiLEPmJkuSNaMT7TW/63l4HEQsA32heOp7CObAGQYQ2
-	 fPViZ5/1TtkbAwvOZ5FmMl3TfM+MelsLwwpK64O8Y7v971OrBvIHNFRNH6LYYDU1aT
-	 RDVytqAWKXtd7Od4vrAXIUvWURDj730BaTqq7qcdp4xlDEMFBZzY1fSTeFNnF5GJHH
-	 IM8+mzQ5jcVSw==
+	b=QA6W2fFfr9Klaf4bbmQ9OMGW6A5qGndZv9YMy9JijdIi60OVEL2ysyegAptejZSgC
+	 iRweKK8QgvuoFhzH6sd97kzNU9AlAABTL3qgDeeslXrIzA4FadtFby0Z65ZbqLTmU8
+	 IIgsgS5ZrDpqo9t5n4vG1MF3JtBY8uPfNTSYfU5T8/v14dWsYN7Pa7/BJmKAipxxwd
+	 UxprnbV2sxwfMJ7SjRbZnJlApMgQQtmg0DwH0NOOmdpU/wBLgjfRk9u5WvlUBCurqf
+	 x5DIC1TQuJtIK6ndACn8DB8Cf9QJuXu4NRfX3UZGSr8vA47H8b1OKndMRhWr8YD16J
+	 kP99lmB6bOcQQ==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -42,9 +42,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Chen Zhongjin <chenzhongjin@huawei.com>,
 	Puranjay Mohan <puranjay@kernel.org>,
 	Dylan Hatch <dylanbhatch@google.com>
-Subject: [PATCH v3 34/64] objtool: Reindent check_options[]
-Date: Thu, 26 Jun 2025 16:55:21 -0700
-Message-ID: <bf399762027642d6b4a54741c6904e0cb5dd8ad0.1750980517.git.jpoimboe@kernel.org>
+Subject: [PATCH v3 36/64] objtool: Simplify special symbol handling in elf_update_symbol()
+Date: Thu, 26 Jun 2025 16:55:23 -0700
+Message-ID: <204ebb40c041782c0f0bd6b3d082028e158d054a.1750980517.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750980516.git.jpoimboe@kernel.org>
 References: <cover.1750980516.git.jpoimboe@kernel.org>
@@ -56,80 +56,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Bring the cmdline check_options[] array back into vertical alignment for
-better readability.
+!sym->sec isn't actually a thing: even STT_UNDEF and other special
+symbol types belong to NULL section 0.
+
+Simplify the initialization of 'shndx' accordingly.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- tools/objtool/builtin-check.c | 52 +++++++++++++++++------------------
- 1 file changed, 26 insertions(+), 26 deletions(-)
+ tools/objtool/elf.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
-index a8c349f2273d..86b1a05c9353 100644
---- a/tools/objtool/builtin-check.c
-+++ b/tools/objtool/builtin-check.c
-@@ -73,35 +73,35 @@ static int parse_hacks(const struct option *opt, const char *str, int unset)
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index 1bb86151243a..4e274197bcd6 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -634,7 +634,7 @@ static int elf_update_sym_relocs(struct elf *elf, struct symbol *sym)
+ static int elf_update_symbol(struct elf *elf, struct section *symtab,
+ 			     struct section *symtab_shndx, struct symbol *sym)
+ {
+-	Elf32_Word shndx = sym->sec ? sym->sec->idx : SHN_UNDEF;
++	Elf32_Word shndx;
+ 	Elf_Data *symtab_data = NULL, *shndx_data = NULL;
+ 	Elf64_Xword entsize = symtab->sh.sh_entsize;
+ 	int max_idx, idx = sym->idx;
+@@ -642,8 +642,7 @@ static int elf_update_symbol(struct elf *elf, struct section *symtab,
+ 	bool is_special_shndx = sym->sym.st_shndx >= SHN_LORESERVE &&
+ 				sym->sym.st_shndx != SHN_XINDEX;
  
- static const struct option check_options[] = {
- 	OPT_GROUP("Actions:"),
-+	OPT_BOOLEAN(0  ,	 "cfi", &opts.cfi, "annotate kernel control flow integrity (kCFI) function preambles"),
- 	OPT_CALLBACK_OPTARG('h', "hacks", NULL, NULL, "jump_label,noinstr,skylake", "patch toolchain bugs/limitations", parse_hacks),
--	OPT_BOOLEAN('i', "ibt", &opts.ibt, "validate and annotate IBT"),
--	OPT_BOOLEAN('m', "mcount", &opts.mcount, "annotate mcount/fentry calls for ftrace"),
--	OPT_BOOLEAN('n', "noinstr", &opts.noinstr, "validate noinstr rules"),
--	OPT_BOOLEAN(0,   "orc", &opts.orc, "generate ORC metadata"),
--	OPT_BOOLEAN('r', "retpoline", &opts.retpoline, "validate and annotate retpoline usage"),
--	OPT_BOOLEAN(0,   "rethunk", &opts.rethunk, "validate and annotate rethunk usage"),
--	OPT_BOOLEAN(0,   "unret", &opts.unret, "validate entry unret placement"),
--	OPT_INTEGER(0,   "prefix", &opts.prefix, "generate prefix symbols"),
--	OPT_BOOLEAN('l', "sls", &opts.sls, "validate straight-line-speculation mitigations"),
--	OPT_BOOLEAN('s', "stackval", &opts.stackval, "validate frame pointer rules"),
--	OPT_BOOLEAN('t', "static-call", &opts.static_call, "annotate static calls"),
--	OPT_BOOLEAN('u', "uaccess", &opts.uaccess, "validate uaccess rules for SMAP"),
--	OPT_BOOLEAN(0  , "cfi", &opts.cfi, "annotate kernel control flow integrity (kCFI) function preambles"),
--	OPT_CALLBACK_OPTARG(0, "dump", NULL, NULL, "orc", "dump metadata", parse_dump),
-+	OPT_BOOLEAN('i',	 "ibt", &opts.ibt, "validate and annotate IBT"),
-+	OPT_BOOLEAN('m',	 "mcount", &opts.mcount, "annotate mcount/fentry calls for ftrace"),
-+	OPT_BOOLEAN('n',	 "noinstr", &opts.noinstr, "validate noinstr rules"),
-+	OPT_BOOLEAN(0,		 "orc", &opts.orc, "generate ORC metadata"),
-+	OPT_BOOLEAN('r',	 "retpoline", &opts.retpoline, "validate and annotate retpoline usage"),
-+	OPT_BOOLEAN(0,		 "rethunk", &opts.rethunk, "validate and annotate rethunk usage"),
-+	OPT_BOOLEAN(0,		 "unret", &opts.unret, "validate entry unret placement"),
-+	OPT_INTEGER(0,		 "prefix", &opts.prefix, "generate prefix symbols"),
-+	OPT_BOOLEAN('l',	 "sls", &opts.sls, "validate straight-line-speculation mitigations"),
-+	OPT_BOOLEAN('s',	 "stackval", &opts.stackval, "validate frame pointer rules"),
-+	OPT_BOOLEAN('t',	 "static-call", &opts.static_call, "annotate static calls"),
-+	OPT_BOOLEAN('u',	 "uaccess", &opts.uaccess, "validate uaccess rules for SMAP"),
-+	OPT_CALLBACK_OPTARG(0,	 "dump", NULL, NULL, "orc", "dump metadata", parse_dump),
+-	if (is_special_shndx)
+-		shndx = sym->sym.st_shndx;
++	shndx = is_special_shndx ? sym->sym.st_shndx : sym->sec->idx;
  
- 	OPT_GROUP("Options:"),
--	OPT_BOOLEAN(0,   "backtrace", &opts.backtrace, "unwind on error"),
--	OPT_BOOLEAN(0,   "backup", &opts.backup, "create backup (.orig) file on warning/error"),
--	OPT_BOOLEAN(0,   "dry-run", &opts.dryrun, "don't write modifications"),
--	OPT_BOOLEAN(0,   "link", &opts.link, "object is a linked object"),
--	OPT_BOOLEAN(0,   "module", &opts.module, "object is part of a kernel module"),
--	OPT_BOOLEAN(0,   "mnop", &opts.mnop, "nop out mcount call sites"),
--	OPT_BOOLEAN(0,   "no-unreachable", &opts.no_unreachable, "skip 'unreachable instruction' warnings"),
--	OPT_STRING('o',  "output", &opts.output, "file", "output file name"),
--	OPT_BOOLEAN(0,   "sec-address", &opts.sec_address, "print section addresses in warnings"),
--	OPT_BOOLEAN(0,   "stats", &opts.stats, "print statistics"),
--	OPT_BOOLEAN('v', "verbose", &opts.verbose, "verbose warnings"),
--	OPT_BOOLEAN(0,   "werror", &opts.werror, "return error on warnings"),
-+	OPT_BOOLEAN(0,		 "backtrace", &opts.backtrace, "unwind on error"),
-+	OPT_BOOLEAN(0,		 "backup", &opts.backup, "create backup (.orig) file on warning/error"),
-+	OPT_BOOLEAN(0,		 "dry-run", &opts.dryrun, "don't write modifications"),
-+	OPT_BOOLEAN(0,		 "link", &opts.link, "object is a linked object"),
-+	OPT_BOOLEAN(0,		 "module", &opts.module, "object is part of a kernel module"),
-+	OPT_BOOLEAN(0,		 "mnop", &opts.mnop, "nop out mcount call sites"),
-+	OPT_BOOLEAN(0,		 "no-unreachable", &opts.no_unreachable, "skip 'unreachable instruction' warnings"),
-+	OPT_STRING('o',		 "output", &opts.output, "file", "output file name"),
-+	OPT_BOOLEAN(0,		 "sec-address", &opts.sec_address, "print section addresses in warnings"),
-+	OPT_BOOLEAN(0,		 "stats", &opts.stats, "print statistics"),
-+	OPT_BOOLEAN('v',	 "verbose", &opts.verbose, "verbose warnings"),
-+	OPT_BOOLEAN(0,		 "werror", &opts.werror, "return error on warnings"),
- 
- 	OPT_END(),
- };
+ 	s = elf_getscn(elf->elf, symtab->idx);
+ 	if (!s) {
 -- 
 2.49.0
 
