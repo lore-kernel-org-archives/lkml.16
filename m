@@ -1,96 +1,62 @@
-Received: from out.smtpout.orange.fr (out-71.smtpout.orange.fr [193.252.22.71])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3652F2C68;
-	Thu, 26 Jun 2025 14:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726F12F2C71;
+	Thu, 26 Jun 2025 14:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750949764; cv=none; b=UBjAKL+RYnNSnlYBoqPN0dGBU9lkQecfGoAIOVczFlr+dEEOO3OIEkzQTt+Gxw9XZxMSzt41GWjnPtFIY6aXEgqRd0UPMCA+Zc8CSd7siB4l96cMWM2Ybk+str2gSCOAOriZGecDb/nnT3ClT9MTTuSFqRFhNdWd2b4IGlqri2Y=
+	t=1750949764; cv=none; b=UcyGqtvpSL9j/ZHpYJ6oAJwn/tMz/w4+IFFEhSPw9uWGvcU/sC9Mo3c3SDbtdPjKiEPF7F7DWhZbLFfmfiDHlb3pvE8lT99iFC4/oc0ssiZ/VhvfM81TtFvBID6rsL7qrv3mjRqmIuEJCcDzG0sD61NaUekCheetc/fY04jeb5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750949764; c=relaxed/simple;
-	bh=+l25+Op5jJAkjiBkLDfgy+PH6MvcCFhwsbcfAsrGjLM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W5KMIcxGcAmAovMoWAy7DoV97Opx80mjcnhdACELAmVkjGGgoCXgpMixSk/17/ahqJNKZ5+vgc9lQQP3R9ninlGr2BA+OYHgvRvslqxX1SE1UZb9vcnx6Wf7wch4zQkK/JWa+8urC9yZ6QI37vMOqfSoqKNwnQXg2TltoS76w2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=rUAEo/aO; arc=none smtp.client-ip=193.252.22.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	bh=kwigQarPwdv7elUMeHsoAvAPGoqYiG3M/o1e8eBgb7I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BU6BCg4yPRX8A5c6VyjW+k6uYjKOiHi/B5dr0Iyl+F5KwSYxQZx3W6yh3iHzaUVJLy9ogZpU5tPJIVBdK5AVUfQNJv3OGjZEGqRPwH7HyFkEeBUK+BOf8K07cDD1Tl8rQYuZ/Qug/MupU388pGJ3TdQXa+lSg4mFDSdc9gSuFrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=x//+AGVh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="rUAEo/aO"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id UnsNuEGNIyAmSUnsOuG3Rz; Thu, 26 Jun 2025 16:47:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1750949220;
-	bh=m8PuYT5ontmtHo/xXQjB2LiSJfjPbmVQ8L3XGrqt1rs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=rUAEo/aO6tk0GIB73NQPKJWG57JZhvmpEwDDcB52Ty6TtXe+3jT0nO9MxmVMNQxh2
-	 Gjmqih+uLkn1iE70COh45OhmQ4rQNHdBo9w0ckgKr3Z1jVJtFGhMtmoSgsKoJjZwpd
-	 yyIYz75xRdwmFcr8MzqkUsKQixKVzFMEbyBvQTTpMFn9wlEZDwEeCHQ+tusiOGAAoV
-	 RchCUfr2/Jgf44ZIZU5rCoI87ohx5+pvNkVzC4+cr/BfgLId+GfrFC8YsWx+Nb9Jg6
-	 tChtChdyjmuPHZk5YZX/4UJbQ9Lvg5KUNi02DNx+fzfTAD8SD2s31lW2X2xAtOSSfZ
-	 kXPlkEEm1QoGQ==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 26 Jun 2025 16:47:00 +0200
-X-ME-IP: 124.33.176.97
-Message-ID: <d2447a4f-abcc-4d97-97d9-85737dd954c5@wanadoo.fr>
-Date: Thu, 26 Jun 2025 23:46:54 +0900
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="x//+AGVh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AC42C4CEEB;
+	Thu, 26 Jun 2025 14:56:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750949763;
+	bh=kwigQarPwdv7elUMeHsoAvAPGoqYiG3M/o1e8eBgb7I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=x//+AGVh46oucnoKR3oZDVxLSJV2P+EFPcreJlmNricURVE7IMsishL3Hq/KDX2NO
+	 3dQarzypIjQmZ11w16mxiTtVJAy1wH5ihIxcCN0GiAk1AJ//stJrND5ID64MHJOY/R
+	 T+sGbnpkKA2Rs5JNR0PPr87jgREl8JjZlN0gxwPA=
+Date: Thu, 26 Jun 2025 15:55:52 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Cc: Robert Richter <rrichter@amd.com>, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ming.li@zohomail.com, peterz@infradead.org,
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v2] cxl/memdev: automate cleanup with __free()
+Message-ID: <2025062615-footpath-plank-b84f@gregkh>
+References: <20250623083841.364002-1-pranav.tyagi03@gmail.com>
+ <aFrBeCn-j_AB1yzv@rric.localdomain>
+ <CAH4c4jLAfMTn6wN3wJSOQZ3mAoYC3uhswDu6c+c6v-wv8mSifQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] can: m_can: apply rate-limiting to lost msg in rx
-To: Marc Kleine-Budde <mkl@pengutronix.de>, Sean Nyekjaer <sean@geanix.com>
-Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
- Chandrasekar Ramakrishnan <rcsekar@samsung.com>,
- Fengguang Wu <fengguang.wu@intel.com>, Varka Bhadram
- <varkabhadram@gmail.com>, Dong Aisheng <b29396@freescale.com>
-References: <20250620-mcan_ratelimit-v1-1-e747ee30f71f@geanix.com>
- <d855c26a-1982-4fc6-9333-93df4a5a98d9@wanadoo.fr>
- <wldhiihvxg42yqaccizms4xfupfv2c7w7jec7jy6iht6dbnr7k@os6f2gyrr45m>
- <20250626-rigorous-gentle-foxhound-d864c1-mkl@pengutronix.de>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <20250626-rigorous-gentle-foxhound-d864c1-mkl@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH4c4jLAfMTn6wN3wJSOQZ3mAoYC3uhswDu6c+c6v-wv8mSifQ@mail.gmail.com>
 
-On 26/06/2025 at 22:57, Marc Kleine-Budde wrote:
-> On 26.06.2025 13:45:09, Sean Nyekjaer wrote:
->> Hi,
->>
->> On Sat, Jun 21, 2025 at 11:13:33AM +0100, Vincent Mailhol wrote:
->>> On 20/06/2025 at 19:00, Sean Nyekjaer wrote:
->>>> Wrap the "msg lost in rxf0" error in m_can_handle_lost_msg() with
->>>> a call to net_ratelimit() to prevent flooding the kernel log
->>>> with repeated error messages.
->>>
->>> Note that another solution is to simply remove the error message. The users can
->>> use the CAN error frames or the netstasts instead to see if lost messages occurred.
->>>
->>> That said, I am OK with your proposed patch. See above comment as a simple FYI.
->>
->> I'm up for both solutions :)
->>
->> @Marc what would you prefer?
-> 
-> If it is my call, then make it a netdev_dbg();
+On Thu, Jun 26, 2025 at 08:02:10PM +0530, Pranav Tyagi wrote:
+> Thank you for the feedback. I understand your concerns and completely
+> agree with your reasoning. Please pardon my misjudgment in sending this
+> patch. I am still a beginner with kernel development and learning to
+> better assess what makes a meaningful contribution.
 
-I am also OK with that :)
+I suggest you start in drivers/staging/ which is specifically designed
+for beginners to get involved without having to bother other maintainers :)
 
-Yours sincerely,
-Vincent Mailhol
+thanks,
 
+greg k-h
