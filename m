@@ -1,449 +1,282 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2049.outbound.protection.outlook.com [40.107.92.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7D17263E;
-	Thu, 26 Jun 2025 19:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750966322; cv=fail; b=ehyrfggOkPyLYU4xzXbTdW70o8hloQzEJGnTa4p1U+meqZtsm0QS5WySyIqRNYffPE0xxRw+9RWdFNxjYHPRoQLGoBwnby2bX8VT2o3WqssrKSkXdIR/7HMiTXjYeffAou0aKHiafEdM4EfD7Kd0uLan6/dtY3Wz7+DaqkUXKeM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750966322; c=relaxed/simple;
-	bh=jGuH6kVbTkUNgtyfWCrhrrM6BkgzkHxs4gWKfEOyOCw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ji9HVMgpabsTCAwyt45a2TxiXFxFCQTF04YsBIBqehANTsATL+XyXOEARBblTlBJ0NHlZbeFce/Gc/gSmT3zqpjfA2/U11E1bPWflcwJJJuBpazcaeEwbnGNVX3r2HTnKouJuG+xIAEgUI4NqpqJul0IuBBmoRFiTP287J8XnZU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=p+ZrurPI; arc=fail smtp.client-ip=40.107.92.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D71A7263E;
+	Thu, 26 Jun 2025 19:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750966382; cv=none; b=ZC017uaREfkUrw1VlddCxCLGtLzz5RO7ir9o8sFdFwaykMk8X6vUUxEYNZiKxkFixKOuZATzcNIMcn/41zZxRuKyQNDNwjlCkgr+5PqigeQi+bbDXhurSRxDIXCTb9ADKCrHMUvmir3v3IIFSrFu9+CyVKNXgipPxeBVqQcFw/Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750966382; c=relaxed/simple;
+	bh=GXLSQpyOSW8zkSqfRDb+zJwdI2C3UQxiIb7u8clYfiQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=INPVt38x9xKO9Yszw2sRewfmhD5dBSVuAsIor0IWy75RmpmOvPg7O5gwG+xQ5bVC/zSaRvxMMg4WZpMiCcj2G8kxFzPxNp1kLQ11jRljE39S13hLVy9YDbrBaitOFAqdvdu+/u8Nm5+X68SbWCPlTublUbJyrbEmxcGl7vxLgXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yxwk1fVw; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="p+ZrurPI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Z+Dhi89asTw8R6a8ONkkGXDxThDowNXOc30KIJvGemrVV//t5Zik1sv9jJqfLfjNa87GoCZm999mie7V+16yH9bBFDx7IhnIG6JJWNuRzYXPHnHo38q3jnKxGDqvpqHN9crER57KUF+wr6lEpKyJo5c0aX2jMsNuXPrBG9XMiDLzMF78TYU0k0WLG/dMCp9UF9vVUEgbXhsE2IN367E0mK1/PrvcSb57seJ7YN11hGTmfTyRFyZx57TNwCVe+ZwaQ+0qclNlE3/A/bAYJwdxFG355ehMW2m8IMPu/lCOroacWQK0OjDS4ZUR26msX9goE7xA0KFR5AG2qbjDEy8MUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5Vf1LgJQ//uY9I5O0dLM7v7gal2WsfC7kmNVxiu0qvU=;
- b=cQjDYfgbr2Wsp0AjOFndMmERp9GDZynJ+r1xkUQjdlDtaSd7da5jBRzcBNHBg8PPt9sk28AYPSLl+mLroSu9wjgutI6fiJJpdw40dHGthC6J1nrNmZnaXBpyVhx8+cWFG9/sPQnPJAH+m343nsyAQAuNey1C98FSV2shqktm8O56Otfwy9CQZGj6vwwsCpi6PbFG02w+EmuRKW5a3SPTCB52exPzHaYL2jOTwD8c8ZB6kKhrdmgfjbjmSH5/v4k5qYhSbjIerT2WY8NbfF718qmzxJLWFDTm7dF/9O+tHKIdKWQ+h35nhkTKXlimshKJElbZqASx3qLNkxXPVJXIeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5Vf1LgJQ//uY9I5O0dLM7v7gal2WsfC7kmNVxiu0qvU=;
- b=p+ZrurPI7DVfQLqg8deBl7J51EG6GxESxJ6MIef7CUXNI5Y7gY7lKh1hexjTkqI+H4fZUzX5+cRQDswCsGwh+my74lT16ZtgxvXsqw6JNIca5L0TtVFMEufH/Ov6asqoFA7iltg7ubtt2i2sxaXG2WNS4UzvwzhriSvtu+Ccvzs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by PH7PR12MB6719.namprd12.prod.outlook.com (2603:10b6:510:1b2::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.30; Thu, 26 Jun
- 2025 19:31:56 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%7]) with mapi id 15.20.8880.021; Thu, 26 Jun 2025
- 19:31:55 +0000
-Message-ID: <95e675a6-5cec-4f14-bb57-eebffb6024a5@amd.com>
-Date: Thu, 26 Jun 2025 14:31:50 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: babu.moger@amd.com
-Subject: Re: [PATCH v14 18/32] fs/resctrl: Add the functionality to assign MBM
- events
-To: Reinette Chatre <reinette.chatre@intel.com>, corbet@lwn.net,
- tony.luck@intel.com, Dave.Martin@arm.com, james.morse@arm.com,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com
-Cc: x86@kernel.org, hpa@zytor.com, akpm@linux-foundation.org,
- rostedt@goodmis.org, paulmck@kernel.org, thuth@redhat.com, ardb@kernel.org,
- gregkh@linuxfoundation.org, seanjc@google.com, thomas.lendacky@amd.com,
- pawan.kumar.gupta@linux.intel.com, manali.shukla@amd.com,
- perry.yuan@amd.com, kai.huang@intel.com, peterz@infradead.org,
- xiaoyao.li@intel.com, kan.liang@linux.intel.com, mario.limonciello@amd.com,
- xin3.li@intel.com, gautham.shenoy@amd.com, xin@zytor.com,
- chang.seok.bae@intel.com, fenghuay@nvidia.com, peternewman@google.com,
- maciej.wieczor-retman@intel.com, eranian@google.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1749848714.git.babu.moger@amd.com>
- <eea2cfb5b6231b322ab2194abfcd1ce335e2bdf5.1749848715.git.babu.moger@amd.com>
- <77ce3646-2213-4987-a438-a69f6d7c6cfd@intel.com>
-Content-Language: en-US
-From: "Moger, Babu" <babu.moger@amd.com>
-In-Reply-To: <77ce3646-2213-4987-a438-a69f6d7c6cfd@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0137.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c2::6) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yxwk1fVw"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3138e64b42aso1677066a91.0;
+        Thu, 26 Jun 2025 12:33:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750966379; x=1751571179; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=m/R9rN4rd3teIYtN33M/gD0Ro4+crAJV8M3wqmcxyoU=;
+        b=Yxwk1fVwBanbvOHulahzMgTCMhMwXLxxKZgLLmksiwEOwLqpMTviqIEuEOSXaF9PkU
+         yCWSDFCvTV76FOR7KxhyqU9pOQzMr8S3RkzINaZeZehftaFjQsx/EjSjyrskSKqkSZj9
+         JQ8PWoWpgVNZC394lIR8BDPIlYOAmZXUi/4IlE9bDZjeQsUUaeq6s2u/koiReoNHYulV
+         ohdDb/sow1zmIznm3pZawOPv8OL5GddEraRK35bScFZO4kiESkRcwht2g2LcS7BhBkvm
+         wbBGJbaBQPioRXndA4iosoJx1wDC9CTcsSpWkfEpZOOQZNdhPeXyejPh4GIC5ch6tRZW
+         jhiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750966379; x=1751571179;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m/R9rN4rd3teIYtN33M/gD0Ro4+crAJV8M3wqmcxyoU=;
+        b=IDekWviPhY/1St9F2uyHkgoHY4JELgV8d9KzxDaK/CeCUHOHV/30F508VZsBKlc2sR
+         1HIA/nYRj6Ulh4WJw1d0yUYtlsQD1SaHvJDh9eeC4lKfCBpubCna4KFihhookVKQUZUW
+         8xHgnjy4jLEFePXm7Ex3yndxiX7gF7aeOsN2OWs3kTLl0edKsXOXs5CHykMTsakr6IX7
+         eEQ5a3VJdJIWgH0HxfLzALZ66f2hk+l30rmWtKEIy4N+pF3hu9ayEEQzCSG55p6hQ2a8
+         1fog/rMCVX+qY49yQc2yFFYTDI2Gffe8HxD9EApCsV5TkYwdTN5AeYs3+RsExhqo4Q2c
+         c6hg==
+X-Forwarded-Encrypted: i=1; AJvYcCU4vwoiRWJxwlzmAEC6UR1ICwXdPqtln2mlP72/cip4oiWsE9lYECna6uYuIUX8nRpBUxCza99zAXd67pI=@vger.kernel.org, AJvYcCX3JHmBJN9jaZKWsTIZjaIB3uc6hgTr3z8yhDBfk+d/v0PlN7Fwf4bifT3u9nrVBQPeDIquzVTieecPrw==@vger.kernel.org, AJvYcCXOTIMSI4rw8LvdEKMV5JRX2420YFYT0hA6E6bfrGoZeSM2Ii8LMOarIPNJBufFi53CcfRdPyTQs6P8@vger.kernel.org, AJvYcCXjKe9Q7LYdcYcoiuyGj2LHh1K4uP/u6Mo/8mt81GY7is3tf1RuUJuak9K8pTd7BZJixjTTPmeGdkCk1Gma@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkIryJNStmTVFGIbyt1oUHOEcPBzuiLzjj7eMJafvitQNjXpws
+	v9NAj20eeDvkZSlt6n3YTxb/ZH02k0W/26p4kNnHFEb2SKY5tas0uj/G
+X-Gm-Gg: ASbGnctsm7jRzRR4BMcHStM5L5VlV5wdzM8EP7e/iBydc7dVX4rZRvOJMjkbV6uxIdD
+	uhKdahml5Y+SA4uEAbYrcvL5TSE5v0PVzT55xyFUWLrrnZpg/QDKW5cRIujrsDw/cs06+wUX3E9
+	au9FKSURqpXyU2p1KoGoOPynT88aP27vZLrommvV4LMOW9Iv67FfkO6bvPZ2FC05oU3ldr9yt8B
+	cHeSG+OG6srn9MhU8Y9lf1LqvMOS1lL+Uwfac0mDlztHclTvoA74oddXvrHoxQhby/bR0nQqGdm
+	jN6XHvLOgWEdOAngXztk08FnkGeQgKsPs6fIfY1zfwMFXuJPEzkVtbzGdfJG98fonayYG543wg=
+	=
+X-Google-Smtp-Source: AGHT+IGG3UhnUrMa1aMDwQjcY62uTP35ESZKA6oCm5GDfqxuyG+v/KrhK1orjEJRlWtJ4Q9X6noSMQ==
+X-Received: by 2002:a17:90b:3890:b0:313:1a8c:c2c6 with SMTP id 98e67ed59e1d1-318c92ec03emr327976a91.16.1750966379268;
+        Thu, 26 Jun 2025 12:32:59 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:9c8f:acd3:efcb:bc3d])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f54412c6sm4810148a91.43.2025.06.26.12.32.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 12:32:58 -0700 (PDT)
+Date: Thu, 26 Jun 2025 12:32:56 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Mario Limonciello <superm1@kernel.org>, 
+	Mika Westerberg <westeri@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>, "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v2 3/3] Input: soc_button_array: Only debounce cherryview
+ and baytrail systems
+Message-ID: <blkvhrhch4y7psjqi6mlpn4q2qqrggwosw47plwizbxnjvlh5o@dux3as52kbqd>
+References: <20250625181342.3175969-1-superm1@kernel.org>
+ <20250625181342.3175969-4-superm1@kernel.org>
+ <f5e1d50f-d85e-45a3-a131-f2da603c620c@kernel.org>
+ <57e9b1d5-faf1-4c7a-87fc-047e0dc102f9@kernel.org>
+ <a9bed0b4-b050-468b-91cb-bc4c81352046@kernel.org>
+ <8fc9051f-bef3-43fc-83a1-172a0eb599dc@kernel.org>
+ <du46jt3mmkvceestjadbqmxbztp5xcurg4pzwzmqavo3pnfmak@tcfnufcu6de5>
+ <55b4cd56-1812-4048-bf16-4b5b94a842d7@kernel.org>
+ <vmjnwfg2mqr2anugefjtzezimcep27gi64d4wsctiu476w73rl@oo6r4o33jk44>
+ <06ad432d-e138-4457-8180-bc35f08feed6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|PH7PR12MB6719:EE_
-X-MS-Office365-Filtering-Correlation-Id: 339c5772-c808-495a-dcf8-08ddb4e81c0b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OTZ2dWVHaTFEdGYvVTZvWFZtekNxaGRlR1haaDQ4OHN5ZHpZb2tXS1Jucysx?=
- =?utf-8?B?WW8rOTdZUWdKVmRzYllaRUI2M1ZGalJNeDIrUGYrK1kwWC92eUNvUVhuMjRV?=
- =?utf-8?B?ZGNsQ09kUDNFU0d1UDdOcXFKUFJsdW9kNUJ4MExFQUE2cWo2YUt2YkJTVHg3?=
- =?utf-8?B?eDlVcDhLNk9oaldJOXR4aHlQTTJXbUpYaUZXL1l3eE9scFFXMloxcitPenJk?=
- =?utf-8?B?UWtiTnN2TXFEdlA5WXBUWWhmTTBEQnZPa3VDeFNnMUwzT21KVGFoeHg1OFZo?=
- =?utf-8?B?MnJMMlhveEV2eWloanZVdEp1UUtWeEVQbiszaU1yVzcycVp2Y21mZkVNdllx?=
- =?utf-8?B?bzJwdHV5ODRQbVQ4N1dEYkY2ZGlONWg5aTZqS1VsZ3hNL2g5OTZMWkRVL09Q?=
- =?utf-8?B?VEkzcm94STFzSFRheCszc1IvSkJ4SEdUWkkvTk1kbHphVEttdEVkdjJsUDVW?=
- =?utf-8?B?a3M3ZXFTSGpXVFdySTFTMHgvTGdJTEdickorL0V0Y0JlU25JZTRZbWFIdkxF?=
- =?utf-8?B?U3R5amFUYUhlWXVBVk1WQ3J3aGZVVHpiQVVlTWppdDBaTE5wdlJaZlgzVzBu?=
- =?utf-8?B?ZHJSa05HWHkxalIvOE5HWkxNeXZtSndUdFA5L0hPc2IrRHJqUkcvbzdwVDcx?=
- =?utf-8?B?b1YxT0J5NTdTd25OaDcwOE5BMzU2d0lkdER0aVhuV2FzMFRkQWEzTUd3d3ZS?=
- =?utf-8?B?QUxBMEphNUpLREs3NWxHOUpMVjJzbGlPSWcxbzMvR1pieEVWOC80SzdWaE00?=
- =?utf-8?B?RWNtSEVGeFR0RTVCa0FxNTl3WlZNZmZhbVdSQlBLS1JmVGJSNzMxd2UrRlB4?=
- =?utf-8?B?bDFvb0xpR3VUUitSaUw2WHJGTnRFVm5KMzdZUXJGQXBEOGN0VE5iK1NGeDY2?=
- =?utf-8?B?TitqekFFRU9JVkJlL2xydFNZclAwVjF1M0RwKzh1a0MzbEl5SlNLeWN1TGlU?=
- =?utf-8?B?Qk1IekJ3aXpVRW0vNmlDV2hiZEZ4OGtzQlprNGMvN2FuL2Q1V0QzYVdkdDdk?=
- =?utf-8?B?endJZVdVTEJBQ3FPTUZPaS9RTTd5UUFNcjRpUFh1MUl4eUtVSDhEUk9OMDF4?=
- =?utf-8?B?Y1hKNDVKV3NhbWpqTEJ0OWVFVUR5ek5jb25TVi9NR0tiWjVtR0xjVTdQSXV3?=
- =?utf-8?B?QmtKME9oSTN4dExQZ3dwc0JTdzFFSTRHM0xRNytITTltem90ZWZ5a1E5S21o?=
- =?utf-8?B?RjNnUWt0c25OZUsxNjhKaERaRWhxOWwyRkJkbTBqWC9aSzdlNTJiYzZlbWFj?=
- =?utf-8?B?bXRGTU5mYlZlckdjWGx5ZGtJSDFQNnBXS00rY1ZhdU5pem55VG5MRjQ4dGZ5?=
- =?utf-8?B?VXIvdlAybnQzajUvSmhaTUpHcUwyTU0rKzF6YVJpRDIxYS92L3p0RWVpUXFM?=
- =?utf-8?B?dysza3JObFdPMjd2YitVSjgrR05lWC95VEZtenhXQklXZVpHdGQrZ1BkNE9Z?=
- =?utf-8?B?NkowM0Y1bmp1bUIvNVRwUEJzU3diOWpaVk9CeDF5bFNDVzlBMUlFbW9pakFa?=
- =?utf-8?B?a3JmYjBBY1l6eDV0UG9NejVaaTRXZG9GMkVnZk5sb0x6cHd4aTJjSDhiVlFY?=
- =?utf-8?B?Y1lHcFFKdFlsNnpWM3VMU1VCSmdXYm0xUEplc3AwOURiNUdTTXFkWGRyd0tI?=
- =?utf-8?B?V1VpMS9GdFF2ZTdzTlU0L29nM1VFZUdrdGM4bkFHODRtRWtmUjZVWlVCRlpG?=
- =?utf-8?B?NWRvNkdJSVpCaHVKdVNqcEVGYmNtbXlMc3VZMVBodmNjSzFDVVdVdFlNd2pV?=
- =?utf-8?B?RE83bzF6OW1lM2Z3b1luem8wVHpMeFMwbXVBOUNkaVMvQUhoOXl0dmppTmxz?=
- =?utf-8?B?NEpqQzJuODlkVHBORU9JYm52Y2JLRFRNcXVSNlFlNWdTMDFwTGV2WHR0RzFo?=
- =?utf-8?B?bWxTTmVsRldhM2djdko4OTF0aFcwNVdwUjhtNUdtMEc0bUNZRXpSZ2tHNmpn?=
- =?utf-8?Q?LKtNA0iIP5A=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OWxoa1FoVTVjaUlzcTNkdmJoSlRKSm9KUVkrVEkxNTR3bG9hYTkrY1ArLzhK?=
- =?utf-8?B?d3ErclBxZUxhM2RlYndNaGFpcWgzdVRuQmQ4QkpFUDk3K2dtclVtSkRDUDJa?=
- =?utf-8?B?M2ROSHljNVJ3a0s5V3F1TERZbUY1cTNZZnkyNnlDalJYbDMrTkJlcm1JaVNp?=
- =?utf-8?B?cjRPS0w5V3FibFNVYWVaRTFqQzdZZEN2MmRXNDJFSTZ4aDRXNzRUZTJLSlJm?=
- =?utf-8?B?YWhJNk1Ra2pJekRiNjJjY002MVpCOS9zYjdTemY2cTd4VEVlcW9mVklRWlFW?=
- =?utf-8?B?M2p5OVZWSHlGbGFrcVV5L1Z0NGlUWFdIR3YydlJUVlRXRnlhL2Yrd2NMS040?=
- =?utf-8?B?aWdRSExOcmtjQkhsQUlNTSttaDhrdys2SG9LZ3Ayb2NaYXJGdXJobzBTQVpo?=
- =?utf-8?B?WGRFWTV4SCtOM3A4NGFOMDYwU3RTWk5qZmV5cnZlSTByR0xGSkpYekMyQzB2?=
- =?utf-8?B?TTA3Q3RHVVlBSmozYkRTS3JkZ3JEVlBBRWFzQ0FCNGc1cnJZWXFneC9lbkJL?=
- =?utf-8?B?aE1ab1dwbGM5c3FvM3E3UnRZTWtOVDZqaXRwdFk2OWZIekZhNlhiSXJUOHVZ?=
- =?utf-8?B?Sm82N3RhWFN5SWNPWmtOYXJoc2Zhb1piN2prOFRaRFh0UlAyRWV3STh6Z1Nx?=
- =?utf-8?B?NUpidjNLVXU1SVplYzhnbVZBUFhYZWVSTjgweGxwWUd5RDJRWitVSXcrckpu?=
- =?utf-8?B?TWZlMTYwRFNubXRNbDhsNDRYeEdSYUtzMzNTTlpNSXRQVUNndGRWVWdYajRC?=
- =?utf-8?B?bmZzQmlsaHEzVGpPL1g3M0FYblR5R2oxaHNJQ3pOQVdYd1M2QkxzeFFkQ081?=
- =?utf-8?B?cmw4c3RBemtRakhmdjFrWi9MQk1kV25jVDduNzkxSE5neDlnVC90dFAvWlFB?=
- =?utf-8?B?Zm9QKzl2VE5DT3JYMlExV2xwU3NKUlE0OFF2NGdKeFU1WHR1UFlXeFZkTHhO?=
- =?utf-8?B?djNJWXp4TkNsQ0lhdjBRU1hZV2Z0YmJHNFhiNk90TDBTdVVqODBHN1JXWEd1?=
- =?utf-8?B?R1B1bGw2ajBrR1RCS0czVHgwYkh0R3A5czRaQTEveU5vbVR3VEU3YTlwU2JD?=
- =?utf-8?B?aGxPUjZBNjNsTGx6c1hMUlRURGhua1VnbWY2a3QrdzV6ZFJuSlBhVjVrTzhz?=
- =?utf-8?B?aWV5dmh0a3ZoenFUWElydHVQUXU3clFBZFlGNjZaOENJRWZZamFuWHFiY3BG?=
- =?utf-8?B?V2h4MXZ6a3JORmd0TCtGOXU5aEV3MTJER2pOSlV4UDI0alBVTjZTZzRCQzFx?=
- =?utf-8?B?aS9WakxDTHorSFlqY25TYWZqY1N3ZEtkdXgwclY1dWVkZDBNVktxSzNIejFP?=
- =?utf-8?B?ZHB4NTVJeTRYVlhyMDdCOUhZaHVLRUpKajNxWURCQkU2aUV3QTFTdzJnTW9W?=
- =?utf-8?B?OE9BNi9kMzBndzZVY1N2L1VFVWozc2FiWFFIcHJhMWdESzlDWmc5ZktibnlZ?=
- =?utf-8?B?M3Bkd3FwM2l0WDFQVjV3RnU5Wnhla0xJRCtkTU1kc3NYdUxzOXpDRzJRWEtx?=
- =?utf-8?B?L3pMOVpQMjd3Ukk0a05nT0VDYWx6Z0h0aTNlWUY1ZGxqNmhDQ2ZwMERvaGdL?=
- =?utf-8?B?V2FRa1d3bUNWT1Mzd0JwL3lFYXUrNzVkQ0FNOEJNbFROOEtJNGVQVlJpMklk?=
- =?utf-8?B?RlB1elZ6dFVZeXhLKzBhTlVGTDN6c2FrOUZmdkFLVVdHVm1pNkdycEh1d3ZZ?=
- =?utf-8?B?cnJuVFpjY29HaE1HdXpieU1iRUFMdDdRNjVuNnNWLzdzcnBPQ3RRYkp5NEJn?=
- =?utf-8?B?cFBYbVozRW1iVHBtWm5DaW15cHNSNUZDZjhQck9uZEtyV000N1RNTzdYdExk?=
- =?utf-8?B?Q0xrRXdYL3RhZUZrMjQrQVQzOTV2QUxuRW1rRUM2N1RQRmJXa1orV3NQMEdO?=
- =?utf-8?B?S3A0OVp1ekpveGkzdlBUeVJvY0dEVDFKR0FvdEYvYnVhSzlGQnJWSjV1bTE4?=
- =?utf-8?B?NGJFQ3NwdmtkT0VlY1h6c1hmTVlqQnFmTUhQNGNhNnYweU41R0Q0SmRWYTQ2?=
- =?utf-8?B?VGo1eThPWERTa1lQb01jcHVJYVBnQVlPR1VhUkpUTTV2eSs4WEY0K1R6WCs1?=
- =?utf-8?B?bXBLQWd1M2IyZ3FOMVFkV1pDU24xTzJSYU9tcWdva2UvbzNCem1MUXh2YURH?=
- =?utf-8?Q?05YI=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 339c5772-c808-495a-dcf8-08ddb4e81c0b
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 19:31:55.5469
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: H0/5zn4bOY1+Q81PYGiTyfPjaljpfO7IiecXmIYKnN0+/T2gYnYEqybzvdxV2For
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6719
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <06ad432d-e138-4457-8180-bc35f08feed6@kernel.org>
 
+On Thu, Jun 26, 2025 at 09:04:22PM +0200, Hans de Goede wrote:
+> Hi Dmitry,
+> 
+> On 26-Jun-25 20:53, Dmitry Torokhov wrote:
+> > On Thu, Jun 26, 2025 at 01:30:15PM -0500, Mario Limonciello wrote:
+> >> On 6/26/2025 1:27 PM, Dmitry Torokhov wrote:
+> >>> On Wed, Jun 25, 2025 at 03:34:07PM -0500, Mario Limonciello wrote:
+> >>>> On 6/25/25 2:42 PM, Hans de Goede wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>> On 25-Jun-25 9:23 PM, Mario Limonciello wrote:
+> >>>>>> On 6/25/25 2:03 PM, Hans de Goede wrote:
+> >>>>>>> Hi,
+> >>>>>>>
+> >>>>>>> On 25-Jun-25 8:13 PM, Mario Limonciello wrote:
+> >>>>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+> >>>>>>>>
+> >>>>>>>> commit 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
+> >>>>>>>> hardcoded all soc-button-array devices to use a 50ms debounce timeout
+> >>>>>>>> but this doesn't work on all hardware.  The hardware I have on hand
+> >>>>>>>> actually prescribes in the ASL that the timeout should be 0:
+> >>>>>>>>
+> >>>>>>>> GpioInt (Edge, ActiveBoth, Exclusive, PullUp, 0x0000,
+> >>>>>>>>             "\\_SB.GPIO", 0x00, ResourceConsumer, ,)
+> >>>>>>>> {   // Pin list
+> >>>>>>>>        0x0000
+> >>>>>>>> }
+> >>>>>>>>
+> >>>>>>>> Many cherryview and baytrail systems don't have accurate values in the
+> >>>>>>>> ASL for debouncing and thus use software debouncing in gpio_keys. The
+> >>>>>>>> value to use is programmed in soc_button_array.  Detect Cherry View
+> >>>>>>>> and Baytrail using ACPI HID IDs used for those GPIO controllers and apply
+> >>>>>>>> the 50ms only for those systems.
+> >>>>>>>>
+> >>>>>>>> Cc: Hans de Goede <hansg@kernel.org>
+> >>>>>>>> Fixes: 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
+> >>>>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> >>>>>>>
+> >>>>>>> I'm not a fan of this approach, I believe that we need to always debounce
+> >>>>>>> when dealing with mechanical buttons otherwise we will get unreliable /
+> >>>>>>> spurious input events.
+> >>>>>>>
+> >>>>>>> My suggestion to deal with the issue where setting up debouncing at
+> >>>>>>> the GPIO controller level is causing issues is to always use software
+> >>>>>>> debouncing (which I suspect is what Windows does).
+> >>>>>>>
+> >>>>>>> Let me copy and pasting my reply from the v1 thread with
+> >>>>>>> a bit more detail on my proposal:
+> >>>>>>>
+> >>>>>>> My proposal is to add a "no_hw_debounce" flag to
+> >>>>>>> struct gpio_keys_platform_data and make the soc_button_array
+> >>>>>>> driver set that regardless of which platform it is running on.
+> >>>>>>>
+> >>>>>>> And then in gpio_keys.c do something like this:
+> >>>>>>>
+> >>>>>>> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+> >>>>>>> index f9db86da0818..2788d1e5782c 100644
+> >>>>>>> --- a/drivers/input/keyboard/gpio_keys.c
+> >>>>>>> +++ b/drivers/input/keyboard/gpio_keys.c
+> >>>>>>> @@ -552,8 +552,11 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+> >>>>>>>             bool active_low = gpiod_is_active_low(bdata->gpiod);
+> >>>>>>>               if (button->debounce_interval) {
+> >>>>>>> -            error = gpiod_set_debounce(bdata->gpiod,
+> >>>>>>> -                    button->debounce_interval * 1000);
+> >>>>>>> +            if (ddata->pdata->no_hw_debounce)
+> >>>>>>> +                error = -EINVAL;
+> >>>>>>> +            else
+> >>>>>>> +                error = gpiod_set_debounce(bdata->gpiod,
+> >>>>>>> +                        button->debounce_interval * 1000);
+> >>>>>>>                 /* use timer if gpiolib doesn't provide debounce */
+> >>>>>>>                 if (error < 0)
+> >>>>>>>                     bdata->software_debounce =
+> >>>>>>>
+> >>>>>>> So keep debouncing, as that will always be necessary when dealing with
+> >>>>>>> mechanical buttons, but always use software debouncing to avoid issues
+> >>>>>>> like the issue you are seeing.
+> >>>>>>>
+> >>>>>>> My mention of the BYT/CHT behavior in my previous email was to point
+> >>>>>>> out that those already always use software debouncing for the 50 ms
+> >>>>>>> debounce-period. It was *not* my intention to suggest to solve this
+> >>>>>>> with platform specific quirks/behavior.
+> >>>>>>>
+> >>>>>>> Regards,
+> >>>>>>>
+> >>>>>>> Hans
+> >>>>>>
+> >>>>>> I mentioned on the v1 too, but let's shift conversation here.
+> >>>>>
+> >>>>> Ack.
+> >>>>>
+> >>>>>> So essentially all platforms using soc_button_array would always turn on software debouncing of 50ms?
+> >>>>>
+> >>>>> Yes that is what my proposal entails.
+> >>>>>
+> >>>>>> In that case what happens if the hardware debounce was ALSO set from the ASL?  You end up with double debouncing I would expect.
+> >>>>>
+> >>>>> A hardware debounce of say 25 ms would still report the button down
+> >>>>> immediately, it just won't report any state changes for 25 ms
+> >>>>> after that, at least that is how I would expect this to work.
+> >>>>>
+> >>>>> So the 50 ms ignore-button-releases for the sw debounce will start
+> >>>>> at the same time as the hw ignore-button-release window and basically
+> >>>>> the longest window will win. So having both active should not really
+> >>>>> cause any problems.
+> >>>>>
+> >>>>> Still only using one or the other as you propose below would
+> >>>>> be better.
+> >>>>>
+> >>>>>> Shouldn't you only turn on software debouncing when it's required?
+> >>>>>>
+> >>>>>> I'm wondering if considering the first two patches we should have gpio-keys look up if hardware can support debounce, and then "only if it can't" we program the value from soc button array.
+> >>>>>>
+> >>>>>> It can be done by having gpio_keys do a "get()" on debounce.  Iff the driver returns -ENOTSUPP /then/ program the software debounce.
+> >>>>>
+> >>>>> Any special handling here should be done in soc_button_array since
+> >>>>> this is specific to how with ACPI we have the GPIO resource
+> >>>>> descriptors setting up the hw-debounce and then the need to do
+> >>>>> software debounce when that was not setup.
+> >>>>>
+> >>>>> As for checking for -ENOTSUPP I would make soc_button_array
+> >>>>> do something like this.
+> >>>>>
+> >>>>> ret = debounce_get()
+> >>>>> if (ret <= 0)
+> >>>>> 	use-sw-debounce;
+> >>>>>
+> >>>>> If hw-debounce is supported but not setup, either because
+> >>>>> the exact debounce value being requested is not supported
+> >>>>> or because the DSDT specified 0, then sw-debouncing should
+> >>>>> also be used.
+> >>>>>
+> >>>>> Note this will still require the use of a new no_hw_debounce
+> >>>>> flag so that we don't end up enabling hw-debounce in
+> >>>>> the hw-debounce is supported but not setup case.
+> >>>>>
+> >>>>> Regards,
+> >>>>>
+> >>>>> Hans
+> >>>>>
+> >>>>
+> >>>> I did some experiments with your proposal (letting SW debounce get
+> >>>> programmed) and everything seems to work fine*.  I think you're right that
+> >>>> setting a double debounce would be worst one wins.
+> >>>
+> >>> I am confused, can you explain why do we need this new no_hw_debounce
+> >>> flag? If AMD gpio driver is unable to program 50 ms debounce for a given
+> >>> pin but does not return an error (or returns an error but leaves system
+> >>> in a bad state) that is the issue in that driver and needs to be fixed
+> >>> there? Why do we need to change soc_button_driver at all?
+> >>>
+> >>> Thanks.
+> >>>
+> >>
+> >> The requested 50ms HW debounce gets programmed to the hardware register
+> >> successfully.  It is within bound that the GPIO controller can support.
+> >>
+> >> The problem is the power button does not function with a 50ms debounce.
+> >> The firmware asserted that 0ms should have been programmed (by the _CRS
+> >> value in GpioInt).
+> > 
+> > I do not understand how debounce that is within the controller's
+> > supported range can not work. The button is a switch that reports on and
+> > off, there is nothing more to it, is there?
+> > 
+> > I feel there is a deeper problem that we simply trying to paper over.
+> 
+> Note that on x86 wakeup events and GPIO IRQs typically use a different
+> event mechanism / path under the hood (PME events to resume from suspend).
+> It is not just a case of marking the IRQ used while running as a wakeup
+> source.
+> 
+> So it is possible that setting the hw-debouncing is in some way interfering
+> with the reporting of x86 PME events while the system is suspended.
 
-
-On 6/24/25 22:32, Reinette Chatre wrote:
-> Hi Babu,
-> 
-> On 6/13/25 2:05 PM, Babu Moger wrote:
->> When supported "mbm_event" mode offers "num_mbm_cntrs" number of counters
-> 
-> "When supported, "mbm_event" counter assignment mode offers ..."?
-
-Sure.
-
-> 
->> that can be assigned to RMID, event pairs and monitor bandwidth usage as
->> long as it is assigned.
->>
->> Add the functionality to allocate and assign a counter ID to an RMID, event
->> pair in the domain.
->>
->> If all the counters are in use, kernel will log the error message "Unable
->> to allocate counter in domain" in /sys/fs/resctrl/info/last_cmd_status
->> when a new assignment is requested. Exit on the first failure when
->> assigning counters across all the domains.
->>
->> Signed-off-by: Babu Moger <babu.moger@amd.com>
->> ---
-> 
-> ...
-> 
->> ---
->>  fs/resctrl/internal.h |   3 +
->>  fs/resctrl/monitor.c  | 134 ++++++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 137 insertions(+)
->>
->> diff --git a/fs/resctrl/internal.h b/fs/resctrl/internal.h
->> index 71059c2cda16..0767a1c46f26 100644
->> --- a/fs/resctrl/internal.h
->> +++ b/fs/resctrl/internal.h
->> @@ -386,6 +386,9 @@ bool closid_allocated(unsigned int closid);
->>  
->>  int resctrl_find_cleanest_closid(void);
->>  
->> +int resctrl_assign_cntr_event(struct rdt_resource *r, struct rdt_mon_domain *d,
->> +			      struct rdtgroup *rdtgrp, struct mon_evt *mevt);
->> +
->>  #ifdef CONFIG_RESCTRL_FS_PSEUDO_LOCK
->>  int rdtgroup_locksetup_enter(struct rdtgroup *rdtgrp);
->>  
->> diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
->> index 3e1a8239b0d3..38800fe45931 100644
->> --- a/fs/resctrl/monitor.c
->> +++ b/fs/resctrl/monitor.c
->> @@ -950,3 +950,137 @@ void resctrl_mon_resource_exit(void)
->>  
->>  	dom_data_exit(r);
->>  }
->> +
->> +/**
->> + * resctrl_config_cntr() - Configure the counter ID for the event, RMID pair in
->> + * the domain.
->> + *
->> + * Assign the counter if @assign is true else unassign the counter. Reset the
->> + * associated non-architectural state.
-> 
-> A few reports came through about the kernel-doc issues but I did not see a
-> discussion finalize on how to resolve them. I do not think it is required for these
-> static functions to have full kernel-doc. Just having useful comments without
-> kernel-doc style is valuable. Some kernel-doc syntax can still be useful though, like
-> above when referring to the parameters. It is ok to keep doing so even if section
-> does not start with /**. 
-
-Sure. Thanks
-
-> 
-> Where I think kernel-doc is important is include/linux/resctrl.h.
-
-Sure.
-
-> 
->> + */
->> +static void resctrl_config_cntr(struct rdt_resource *r, struct rdt_mon_domain *d,
->> +				enum resctrl_event_id evtid, u32 rmid, u32 closid,
->> +				u32 cntr_id, bool assign)
-> 
-> If resctrl_arch_config_cntr() does not need a struct resource then resctrl_config_cntr()
-> may not either?
-> 
->> +{
->> +	struct mbm_state *m;
->> +
->> +	resctrl_arch_config_cntr(r, d, evtid, rmid, closid, cntr_id, assign);
->> +
->> +	m = get_mbm_state(d, closid, rmid, evtid);
->> +	if (m)
->> +		memset(m, 0, sizeof(struct mbm_state));
-> 
-> sizeof(*m).
-
-Sure.
+Still this looks like platform issue, not driver issue. Should GPIO
+driver refuse programming debounce if pin is configured as potential
+wakeup source then?
 
 > 
->> +}
->> +
->> +/**
->> + * mbm_cntr_get() - Return the counter ID for the matching @evtid and @rdtgrp.
->> + *
->> + * Return:
->> + * Valid counter ID on success, or -ENOENT on failure.
->> + */
->> +static int mbm_cntr_get(struct rdt_resource *r, struct rdt_mon_domain *d,
->> +			struct rdtgroup *rdtgrp, enum resctrl_event_id evtid)
->> +{
->> +	int cntr_id;
->> +
-> 
-> Since mbm_cntr_get() is called in regular flows, could you please also
-> add an explicit check to return -ENOENT if !r->mon.mbm_cntr_assignable?
-> Otherwise this is quite subtle with the assumption that
-> r->mon.num_mbm_cntrs is zero in this case.
+> Most systems where soc_button_array is used don't support hw-debouncing
+> in the first place, so on most systems this change is a no-op.
 
-Sure. Added the check.
+The change is not limited to soc_button_array driver, we need to add
+flags to gpio_keys as well... 
 
-if (!r->mon.mbm_cntr_assignable)
-                return -ENOENT;
-
-
-> 
->> +	if (!resctrl_is_mbm_event(evtid))
->> +		return -ENOENT;
->> +
->> +	for (cntr_id = 0; cntr_id < r->mon.num_mbm_cntrs; cntr_id++) {
->> +		if (d->cntr_cfg[cntr_id].rdtgrp == rdtgrp &&
->> +		    d->cntr_cfg[cntr_id].evtid == evtid)
->> +			return cntr_id;
->> +	}
->> +
->> +	return -ENOENT;
->> +}
->> +
->> +/**
->> + * mbm_cntr_alloc() - Initilialize and return a new counter ID in the domain @d.
-> 
-> "Initilialize" -> "Initialize"
-
-Sure.
-
-> 
->> + *
-> 
-> mbm_cntr_alloc() will allocate a counter to a RMID/event pair even
-> if that pair already has a counter assigned. The doc should note that caveat
-> here with documentation that the caller is responsible for checking that
-> a counter is not already assigned.
-Added the text.
-
-Caller must ensure that the specified event is not assigned already.
-
-> 
->> + * Return:
->> + * Valid counter ID on success, or -ENOSPC on failure.
->> + */
->> +static int mbm_cntr_alloc(struct rdt_resource *r, struct rdt_mon_domain *d,
->> +			  struct rdtgroup *rdtgrp, enum resctrl_event_id evtid)
->> +{
->> +	int cntr_id;
->> +
->> +	for (cntr_id = 0; cntr_id < r->mon.num_mbm_cntrs; cntr_id++) {
->> +		if (!d->cntr_cfg[cntr_id].rdtgrp) {
->> +			d->cntr_cfg[cntr_id].rdtgrp = rdtgrp;
->> +			d->cntr_cfg[cntr_id].evtid = evtid;
->> +			return cntr_id;
->> +		}
->> +	}
->> +
->> +	return -ENOSPC;
->> +}
->> +
->> +/**
->> + * resctrl_alloc_config_cntr() - Allocate a counter ID and configure it for the
->> + * event pointed to by @mevt and the resctrl group @rdtgrp within the domain @d.
->> + *
->> + * Return:
->> + * 0 on success, or a non-zero value on failure.
-> 
-> "or a non-zero value on failure." -> "<0 on failure"
-
-Sure.
-
-> 
->> + */
->> +static int resctrl_alloc_config_cntr(struct rdt_resource *r, struct rdt_mon_domain *d,
->> +				     struct rdtgroup *rdtgrp, struct mon_evt *mevt)
->> +{
->> +	int cntr_id;
->> +
->> +	/* No need to allocate a new counter if it is already assigned */
->> +	cntr_id = mbm_cntr_get(r, d, rdtgrp, mevt->evtid);
->> +	if (cntr_id >= 0)
->> +		goto cntr_configure;
->> +
->> +	cntr_id = mbm_cntr_alloc(r, d, rdtgrp, mevt->evtid);
->> +	if (cntr_id <  0) {
->> +		rdt_last_cmd_printf("Unable to allocate counter in domain %d\n",
->> +				    d->hdr.id);
->> +		return cntr_id;
->> +	}
->> +
->> +cntr_configure:
->> +	/*
->> +	 * Skip reconfiguration if the event setup is current; otherwise,
->> +	 * update and apply the new configuration to the domain.
-> 
-> When could "event setup" *not* be current? As mentioned in earlier patch
-> I do not see why mon_evt::evt_cfg as well as mbm_cntr_cfg::evt_cfg is
-> needed. There should be no need to keep these two "in sync" with
-> only mon_evt::evt_cfg as the source of configuration. I seem to be missing
-> something here, could you please detail this scenario?
-
-As discussed earlier, removed the following check. Return success if the
-counter is assigned already.
-
-https://lore.kernel.org/lkml/887bad33-7f4a-4b6d-95a7-fdfe0451f42b@intel.com/
-
-> 
->> +	 */
->> +	if (mevt->evt_cfg != d->cntr_cfg[cntr_id].evt_cfg) {
->> +		d->cntr_cfg[cntr_id].evt_cfg = mevt->evt_cfg;
->> +		resctrl_config_cntr(r, d, mevt->evtid, rdtgrp->mon.rmid,
->> +				    rdtgrp->closid, cntr_id, true);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * resctrl_assign_cntr_event() - Assign a hardware counter for the event in
->> + * @mevt to the resctrl group @rdtgrp. Assign counters to all domains if @d is
->> + * NULL; otherwise, assign the counter to the specified domain @d.
->> + *
->> + * If all counters in a domain are already in use, resctrl_alloc_config_cntr()
->> + * will fail. The assignment process will abort at the first failure encountered
->> + * during domain traversal, which may result in the event being only partially
->> + * assigned.
->> + *
->> + * Return:
->> + * 0 on success, or a non-zero value on failure.
-> 
-> "or a non-zero value on failure" -> "<0 on failure"
-> 
-
-Sure.
-
->> + */
->> +int resctrl_assign_cntr_event(struct rdt_resource *r, struct rdt_mon_domain *d,
->> +			      struct rdtgroup *rdtgrp, struct mon_evt *mevt)
->> +{
->> +	int ret = 0;
->> +
->> +	if (!d) {
->> +		list_for_each_entry(d, &r->mon_domains, hdr.list) {
->> +			ret = resctrl_alloc_config_cntr(r, d, rdtgrp, mevt);
->> +			if (ret)
->> +				return ret;
->> +		}
->> +	} else {
->> +		ret = resctrl_alloc_config_cntr(r, d, rdtgrp, mevt);
->> +	}
->> +
->> +	return ret;
->> +}
-> 
-> Reinette
-> 
+Thanks.
 
 -- 
-Thanks
-Babu Moger
+Dmitry
