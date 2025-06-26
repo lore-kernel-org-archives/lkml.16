@@ -1,244 +1,547 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBA3218AB4;
-	Thu, 26 Jun 2025 09:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750930631; cv=fail; b=NhJ0PL2K/+rrDY6S8/IUds/E8iFHhj5bLPGiyl9EEC6bXaX0fEX8DgVtjRxL0YF5VxBD7oi8ifDt+7zhgY+RTY9w58ijNPLvqFYPe+izxzLa+b6oL3SicWkNBOYyY3MzGzhF/9x4yLOWmGxd8+C0EKeOinSvEZaEuPA7rTglUtQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750930631; c=relaxed/simple;
-	bh=tnl4sNHzqaLbtQMMQzY3QdpuxTbyP7kucSuDBEt9uXQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=sIWDF7IX0zY5hnEqQzNbFgkFkwWAQbKomk5alWYf5W0liyD1hIyzxRpta/X1qGvARJXS7FIIt7CoyHUp5ytvusz0LeBadnNJjYyJCLEYEIEpBp8YJHDyU4XmzyS1cJ2HwUUYalD6QhmTNTQfyO++WSHo6ZuAsPnbEW1cW5Qi2ZY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Pk4H0qE9; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=cqqSf5XW; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B179191F7E
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750930724; cv=none; b=N57BxUdYaeHgKsGC3nVwzZ73uEYpNf227a7H3ffDhFPk9/QJv7+cGuWt0pDYtAGCNDfzFzUQSXb8yt5sVsFBNOQ+GXcOvCkCoiJfA77+p3n+ihqwK0fB299JfIGfQDloUvY2SGHa1hmmoWcMEgYHVWlKjcPNOmFrm0oSSkkioQM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750930724; c=relaxed/simple;
+	bh=mqKJRkq0W8ATPm0+Ew3Mj66KQihZADA+zEulpCV4erQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gf4jLz47pIiGApX4RkVkWH0PrAPTz2bxIUp5QCFVFK1U4jHpz3d+Oc8B/0Y6WXytUEHEqt5N4fxbecvVTR4DDLEpKAGiCoRyttYgppdcz4c8s6wRSaNtcpT3WA0G9BLniMxE6/O7r1VyLzBSYq3ctjAQKt1vr1rqXaiZtBIv5DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=ZZNGYrgJ; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pk4H0qE9";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="cqqSf5XW"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q9BcQt009745;
-	Thu, 26 Jun 2025 09:36:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=v3/iifnYXEI/kJm1XZoNVykvN5S4KhGmt2NI99LPuXo=; b=
-	Pk4H0qE9jzOFIudpn3Q9gr2uiVk+eoI5fyO8+6Vu7us2cr0QrHCQC4jm4aXd5l4l
-	X7TqMj53GDB/+Lo+maTajPjwys7XYI80zXZr3fx3UYbwwGxB3FeL2BE4InA0abA8
-	dUJgvIrnDG0WCaleYeZ1IdDYQH1vueHCBTagCmL9YMU/SQL6IgGxaGPPmSv0ibdO
-	ijZe/e69Tf1bLrrYkDm5WqqcHOZNAxDYUHaK99TKiduJG3U2SvTq4UdAO9Kq/hUy
-	WMUQdGtjz1eqpRZUYLd3zB7+cX0BmC0Ih5XsrV9cd4lzXStfkM8hP2i7PqIVQIPs
-	/3gH+2pSuDkJxpLzznHobQ==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47egt7g91a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 26 Jun 2025 09:36:54 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q90uaN034573;
-	Thu, 26 Jun 2025 09:36:53 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02on2063.outbound.protection.outlook.com [40.107.212.63])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47ehkt95rj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 26 Jun 2025 09:36:53 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HyMQVAN2yQlHI8r1hlMfrOs1R2iNRSubG0DRaZD4eUO+RIpT5Y+K9wsTo5wGIrQWuATPvp1RUFWvNYtLW3kHq+sVlrS+mvuKc0erOIjDcI6XQ42m9Ch7hkcU9JnKlPuPEPW3hl3P2EETRaVFLshLFf1/+PxrGLwGCH9VEuT8T+kj5L70rlsL8kDRwYqxSQbo1/veghra/K8jAnYQ67A2O0kN4gqYaTlRFl6j+SNSsQ6uzfGqPCPJ/d+PqVhOIwQu3vrNMOF9H9bgHD29x6zFGWo63w/VO/ggrt9IkDYnwNTdiQlYyCTLQ9ZKxV2A09/UitQf/FzVtRlNvp+fidjfbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v3/iifnYXEI/kJm1XZoNVykvN5S4KhGmt2NI99LPuXo=;
- b=yGlWu7W5o28H7PRrV8cL8QR2YZpyWdB0DGlsIeMujff547llhGhOL+BxsKZ3em09V9cqrDnSCMQ17vOfpQ/X3Mi8OKHJ6vjTGxcoZzoXji5gB6QNiB0cnn7XirjQnxAm7vuDnG31fF4r+RI2C9eA0qNSlazXpx8quwQXMOq7phKSh66Vqq+ArLsJHFmPegwWDve+y1lpW7lTzsszG+AvPQZTz/ibmgEAfzI7iHilpda5Wf6aSyG56LssYz3NBKwdRrLrWoCB0jeBBOYcD++ejiNGKp3uFrmBDdawK4pL6QuIMOCe8iKKx6eiMTA1Rbe/l9VNDu++YXh8bsgTYs0G2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v3/iifnYXEI/kJm1XZoNVykvN5S4KhGmt2NI99LPuXo=;
- b=cqqSf5XWBMq+K5S2qqVuDFmMDQQNHWbFwtZX755j36FKhdK+LxaE0p+lhjbHdY7xRX3Yr75MZUlIJwBKmNF4U8/PEftJGKeTvg0dehOiUcauF7q58usB2zCzTOWRLuuedGi0m+l35TtTJRScqqzYLtnPT9zKe336T0JkpPwnTJE=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by SA1PR10MB6342.namprd10.prod.outlook.com (2603:10b6:806:255::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.22; Thu, 26 Jun
- 2025 09:36:51 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%7]) with mapi id 15.20.8880.015; Thu, 26 Jun 2025
- 09:36:51 +0000
-Message-ID: <32a644b7-4f27-47b4-80ad-04026b2bfc7d@oracle.com>
-Date: Thu, 26 Jun 2025 10:36:45 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] block/md/dm: set chunk_sectors from stacked dev
- stripe size
-To: agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
-        yukuai3@huawei.com, hch@lst.de, nilay@linux.ibm.com, axboe@kernel.dk
-Cc: dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
-        ojaswin@linux.ibm.com, martin.petersen@oracle.com
-References: <20250618083737.4084373-1-john.g.garry@oracle.com>
-Content-Language: en-US
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <20250618083737.4084373-1-john.g.garry@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR01CA0139.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:168::44) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="ZZNGYrgJ"
+Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 6A58E1F967;
+	Thu, 26 Jun 2025 11:38:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1750930720;
+	bh=wL5rIYbk+FKuqfNm4dI1sNYrQVxIwIxEyY/Nl9/LMWo=;
+	h=Received:From:To:Subject;
+	b=ZZNGYrgJHCJZHnEVacbdbG7X3f71gFZQ+kW0y5VyBa1BlTy+ompsCzlq320PVUOYM
+	 ZMnssFH+XbuZpxZaWo/LqlfouqNqTJk8XMAZqREECvteKPsvF2fkl5gzwc48tHpQv9
+	 P0nG1Q+HXW9dLPFUb1MOWeGrkb4t/F/RMC6Nxysgzd3UQ19v3ua94Fc1MvzewkLHg+
+	 e5zszFNT9dBZoaP4PMf04NyyQcpTWq+yHsSsvpwZt+XeZLVOAZohO5NcaA1puAnLtn
+	 AdLeXZWQbeJet6IighkzpnVc9mM+6N3CTGZR1mcCQaSoos3nNq+Bc1a+QAmZXZgxBl
+	 XOC+3f7/nXk/A==
+Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
+	id 198357F9CF; Thu, 26 Jun 2025 11:38:40 +0200 (CEST)
+Date: Thu, 26 Jun 2025 11:38:40 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Anusha Srivatsa <asrivats@redhat.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	Francesco Dolcini <francesco@dolcini.it>
+Subject: Re: [PATCH 0/5] drm/panel: panel-simple: Fix panel-dpi probe error
+Message-ID: <aF0VIBqcLQSBZeNE@gaggiata.pivistrello.it>
+References: <20250625-drm-panel-simple-fixes-v1-0-c428494a86b8@kernel.org>
+ <aF0SBNGmTpgtBTC3@gaggiata.pivistrello.it>
+ <aF0UUBQFAu9GUde0@gaggiata.pivistrello.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|SA1PR10MB6342:EE_
-X-MS-Office365-Filtering-Correlation-Id: efa997fc-f85a-4af6-877d-08ddb494fa7c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?R0h0VEE4UXlEM214dWhLRmtZQlgrVzB0Wml6VlNJYTJQSGtmd2U4YkxkUWpZ?=
- =?utf-8?B?M2RzcWJmdUN2Z3R1bERYcFZ0YldERUxFaGZtWGpOZ3VVdkFIV09zbjFGMytB?=
- =?utf-8?B?TWVyc1pwMjB2NHh5b3RaUzl3SUZ5Vi9NWjh2YzM4enRDTFVFYXN1N1VXUEdJ?=
- =?utf-8?B?aTZFVFF5aEtMa0dLMFpEMnI5bWIrdG9KNGFMYnFEMldoUGhYQnBvaGMwV2Jz?=
- =?utf-8?B?ZWEzaEFFUk00eWtaTlg4SVRzOXB3L0J0M0VKaithK09Kc0dnTkNoYmpJZEVu?=
- =?utf-8?B?Y0RvYmFSYjByQjlKZlJXcFlxQTJwbU5hRWROUnZOYnpxOXoxcDU0cjkvbUNC?=
- =?utf-8?B?ZDFzYnVXeldyRmc2Z01ENjZUYk1CMWw5THNWVmw1V3diZEp4aEdXWEd3K3Ri?=
- =?utf-8?B?SjRGTExwNFo0ZS9WM3lpSlFvc3c5R3hoQ3BKRHN6bVMwc291WHB2ZTFhZVZB?=
- =?utf-8?B?OGEvY21BYy9iUXFsV0NVNnhaZTdEcGpSRHZyLzcyV3hxZmpEdmRncWpBVDc1?=
- =?utf-8?B?SXQyeHA1WklaS3IzSEo0N2VyTGVRRHp2cURXRHVuNHVXOTZWM09kbFlZTkpH?=
- =?utf-8?B?b2pWbVZEYXd6WHNyNXhQTExHUG5DQVdidk9hMWdSd0FObDVNZ2RMS2tNZ3R5?=
- =?utf-8?B?K1RrT3RONnhqQXNVUmVlQUcyQ01MOTJ6L3Y3WDlHanJXMWcrYkNEYXZwYUQ5?=
- =?utf-8?B?TlZBUG01ZUJEbzhZUHdXN01xMFZScmdrcW01SzE4bVV0RWNvZzhOUkx4RkM1?=
- =?utf-8?B?LzJQVGsxL0pKbnRYZUw3dXFTRVRIWHZkb01PaThZUTZHQ1lOL3dMTjFRZzNF?=
- =?utf-8?B?NXFtUjFwM0Z1MmpkMUkxV010dEt4VWR4UnNSdUk0NVBzNUJBTGtZd2Y0UnFm?=
- =?utf-8?B?TE5nRzBTc1NBQWovUDB3R2xnVTdkcjcrdDFIWlI2Mm1YcW5zRG9SZmEyNFp3?=
- =?utf-8?B?SkhKWVZhbHF6U1Biams5Yy9JbWlGalROdzMxd0x6Sm8vbFFsYWxtZkhtWUJB?=
- =?utf-8?B?RjVROWIzd0RtQ2hwd2hmQkZCSS9XRitUKzBZbDlSaEE0cnFWcnc2VEpTZHE2?=
- =?utf-8?B?MHRlemREaDZwVCs0WFVpcEEzdHFmODRscUdDY0pyY09pN0FWcHpsYjN4OWYy?=
- =?utf-8?B?TmFWWUozSCtOV0VzdjJNSWViZHlNbnhtR0pXb2k1QlBtK1cwRzY5cFd6Q1FZ?=
- =?utf-8?B?WmhRcWllTld4b0ZCYllyMmU2S1JHSEI4WVI1YkRaRENXSnQ5QTBYcVkwYTlm?=
- =?utf-8?B?TDFhV0lYenVpMENMK2xNRjhXY3M0VEhlY2lHYzVoNHZUSW52cVBKcTJESkxK?=
- =?utf-8?B?cTNodXBaZ1oxZG95dnJDMUF0dWcydlREOHdyazgvUTlEK1IySCtCSnd2Q2hU?=
- =?utf-8?B?RktoeURFcEw1NnRVbkNQdHZNM2pEalZlcm5RcDdLOWNoaHF4S0FyOHR4bWRs?=
- =?utf-8?B?SEdNWWtZSWlKYXo5M2wySExUYnVMZ2F6M3dNbkNzVjh2Qjk1VmVCcVhvakNY?=
- =?utf-8?B?VlU0UjZ3cDVBSUZ6bnpreXlVN0ZEZ1J1OFpYMUNkazFWTEdJQktJL1RkTm54?=
- =?utf-8?B?OVFub1c1c2kvQlJ3aUduc0VWRitCblFNaVNLMmVoVXhNcVZzWVIvSUx6RzFX?=
- =?utf-8?B?Sml2RGxYQmFmdHhWQ2htSlpTNG55ZFpuMElzaG1Fdmo5YUpIbFF5Zm9oK1hq?=
- =?utf-8?B?RWd3NHJ2Q1NTbWpzVHhXdXdkQUtIazkxaDh1NVFBQVRuMDlDb3Q0eWUvWUR1?=
- =?utf-8?B?MHJ0QmVBSUN1WEdSNjUveVUyeklUTnhNWDBleXowOE9GZHRLU2J2Zi9Ha2xS?=
- =?utf-8?B?TVdGVklFam1nbDRBRVQxNzQ0VE5YN0JIajYzb3FETmpoY3BTUDRaY3pHeDdB?=
- =?utf-8?B?YnZnMW5RcktnOWxybUh2dUZiM0hBVWRjenpleEVGaHBpY3NOTzE4bG83akpO?=
- =?utf-8?Q?YO6P94r+sjI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TmZGc1YzSmxyalN4c045UnNZZlJuazZ4RmRDNU0vc3BUZWFzOFZJZmEzRHpK?=
- =?utf-8?B?TDdLYWZLNDZzUlF2UTY4NkxGMmlSc3RPNHJDcitnMUcvcEt4b3lHRWR0TE83?=
- =?utf-8?B?Z3ZWN2t1ZmJpci9sMWZSdDBDZ1N2VHYyT1FWTFc2aFNaVjd6SUxOa0NQeStl?=
- =?utf-8?B?T2s1VTVmbkIveUlURXNlZFVtWlpDemJYUURCT0VKOVJvcm5HRTU1blZUaDhQ?=
- =?utf-8?B?UVdhTmt4UFQ1em9oTzlkYnlNOWhOZnR0VUE2R3F4Z0FITlFZb2k5Y284OXJC?=
- =?utf-8?B?ZE83YnRyZWliSHlPaE1YM0RDd2FiUWpuZ05Ha3ZQOFBDYlRtaS9sbHllS0cx?=
- =?utf-8?B?N2E5Zmh3ZEE0RG9wd3FuRkVzNjhPUEZ3QXlxRkNseXRiYzFHd21LTkFwYURm?=
- =?utf-8?B?TExNWEhhcE9IYnVYcUE2RVZNNlVkblB3U2pJaXBBU3BkaWJlTmxtd1QvVSt1?=
- =?utf-8?B?dUVicTJqdFFnaWpjejNJaEZsU0k5dWR5Y3pyVUlkM01aS1oyLzBNK3RKV3Iw?=
- =?utf-8?B?YVZ6TEtlMkI2bERqbXUzZ0twWjVpaE5GMFZuZ0U5U1RXOWdIUWRWN1JKRzJj?=
- =?utf-8?B?QjQzdTk1U2o1Z1JrbU9ZUzZNTklieHZNbkR6b3UxVndROERpblhwZ2F3Z3ZY?=
- =?utf-8?B?a3F6QTdUNzIyd2lkVFZkN1ZIaFhRblVRemlsVUEwOGJ6SjNObE5iWXhqaitn?=
- =?utf-8?B?M0lxdEs1VHNBNGZ3b1daWjM4My9NbjdaNk15NzQrR2tZN01QZlZEY1VxWjJS?=
- =?utf-8?B?MEpEd09VYnR1QUZEQUFjYzJ1WVBEMTZTaVpLZGN6RTBYTU1uTy95ZmFDZFUz?=
- =?utf-8?B?czJUcmVxaFZrbmhKYURJOHlObkVyWG5Ha2lxNWlxelo3Wm5qRkFtNFVzVy9F?=
- =?utf-8?B?NW1MTzdJTVorRExidkNVZ0YrRlhIRTlqeWk5RFJPbkU4L1JPcWllc3NvSi9S?=
- =?utf-8?B?SSs2WVcvNFFzVkJoeFp3dEl0TEN6aGJIM1ZOM2dQcXAvWUtzUGRBT3lUcGZJ?=
- =?utf-8?B?NUwrTXFqM2dBd29yV0NiVytwMjNyMEpVaTlpeG54VC9DNElucHRHNmdhcXpO?=
- =?utf-8?B?eHlpQjRHT1NyZkllK0hocjFCTlFEbDhVUEdsbVhNS0tlbHBXTjA5U3JHZkFM?=
- =?utf-8?B?c2ZrRWZIeHZVZDVBL1d1dzQ1b1B5V1pvUlBBYmhpMjV3dlRWV0hKVmRBTWNQ?=
- =?utf-8?B?QlhHT0IwdThPWi9QWWtMYWRyRWFIRGpVNmRmUHZ4N0pxWnZZckIzZU9BVmUz?=
- =?utf-8?B?M2xmMVo1WWFwOS9yN0FWQXBYb0dwN3B2V21Lbkl2SVJuaU1XckNOakNGVU9p?=
- =?utf-8?B?eExiNEd2bGMwZEtQWXB6L1ZuL2dVSGJhL0cwQ0dDU0RiV0VpMDFhcmptRWRm?=
- =?utf-8?B?TjdaMzhoM01LNUJycWxLaTA1djRNVE5xT0ZBbm5xU2xLdEl6NVA2ODJJSG04?=
- =?utf-8?B?L1RsZ25Id0tsOTFZRXRUNE9PZHRmZ1pPNnN4K2trR2tERS85YS9nSDc4dzdl?=
- =?utf-8?B?c2ZJaGxaSGdzbnc3cW1yNHRYaVRSNE1FR081TW9GR3BrZlQrUWxmTXAxZytp?=
- =?utf-8?B?NUdLYTJ0VjhZTjBuSmRrQTAzK1AvbFdzMVlBd1J1MEN3QjdXcUdMckNjL1lx?=
- =?utf-8?B?dUx0bTZDd09vSVpaYzZRZkNQek1Xb3RNeDJkajYyd2xnVnVoSHgwdlNDcVpZ?=
- =?utf-8?B?c1pHb2ZURzFLeTRUQ3hNT3cwT1VwNlJ6YXc3aFlCT25pbUwwRDNXR0RPN2I0?=
- =?utf-8?B?bXNUdVFVZzF4Wm9EemNHVVVVMVNYUlAyRHBrbEFFSlVvVS9paVpBQ2UzQWpj?=
- =?utf-8?B?SlZQMVlVUWhnZlE2ZEU2d1BUOCtLSzZqM3pCWnVxbGgzWG9ta1czaFQ3V2xi?=
- =?utf-8?B?TWxoay8vM29oNm9OQUtSaFYxSTFaM0drb0V5UmVYc1JVZFFSTDloSVpmalkw?=
- =?utf-8?B?ZzY3MmlyVGJPTjUrc3piUXcwelJ4dFhqVjkzWmlVOHEwZTlpV2FwbE5kSGx1?=
- =?utf-8?B?dXpPVEhXWjRrMFJhdWJKQURDTDdpS2dSNHVtSTJVOEY3Mm1PSDhHV0tzdWJL?=
- =?utf-8?B?R3YvaEcxaEYyMHZIMkFOTDlvMHIxdkg5cVMxaTA3YlJoQzNVMWhBVlFuVVNX?=
- =?utf-8?B?RjVHallZM0dPbnJBREkvcmliazBuTXlkRFlsL01WZERLUDZWT3FhYVRmYXBD?=
- =?utf-8?B?Y2c9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	aNmUkmXJsGhAsTQQXk927za9DUthqbs96GefesrydhrxqGlR3+wghOs0uqY5jEHn2nuZkxAIaoh19CVBI5/DD+i6MtyPhdBtsL1E0sHoiP2DSeTEz7iPUYFSphVliVDrgbeJEqssGo8kFzwCSxqTPz60OgqOBD3MxxwLbKuEP1dzxr7RYqLqcP5vCTCHktrCiwEYGvGl8iPSfQmPpThJJhE8pG39OzJkyZCoMFgqhMt3zgTbXnWHI+8C0kCwDdyw0R2noRd3LCTmPO/W+DDa7wmeAcsiQfYHGaVPBdEVRixWU7ipIgtCNMjHqIwpoLET1ewbIyXT4nSH6Uh0xn2DtK7eGRTe5iYrir/+AC6veX2M4DnKH5wdE4Ot/GofKZKnHMipF2FBci+rLc7fKyfzOBtNzhj3HVTRgK7taelecVeDJJOExYTV4jl+fzsDF1DhttjyaJdLkyuEyJhJC8gtXDNvoQlyHvhfT4hsVJ5Vv3UA7hUHONf8TBBrg9YA46w5FSu16Qh5aIW/yTH/472gaPLR1jNByU09TRj+2T1hwTWxfRa8uHHZe2OACE1jZeDp6Ihek0XRNlw5399y1Doo7B41ystWczpxsKc6XyawHXA=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: efa997fc-f85a-4af6-877d-08ddb494fa7c
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 09:36:50.9264
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KPIl8zGu/ulCCoHfiU5niQSCVPCRGKZGb6ca+4uhkJEse+2ot7e5xeOBO1K1j30nrH2P/qRCTWAydT+zhJTZXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6342
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_04,2025-06-25_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- suspectscore=0 adultscore=0 malwarescore=0 mlxscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506260079
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA3OSBTYWx0ZWRfX7hHCcQAG42jw l1sdYEWyj9tpZwgADgt2uARJbp7cswPlYP5AQSFzVATu8Gdi/otIKJl93DLuNnHuevHHk0TIeDO 7cEC1ltSDasb4oJ6M9hKSTuWmhKlwwifBRrvZHPjwXHIf5RUoVK0oK0JR+3ghxgOYTLxsGlu2Ck
- JF2xvSh1cGtRVcbwkLa4eYdbp+d7JI/A2X9RRxMQdmjIenMFd/hMdmw6LTW7NGcdk7FC0nW/98u /7V29BKroecpoTtBVfrLEY7HeBFeGOMGO0iWlGL0bh086SQSMHTwhXz7ZWeLbn8rLaspGYdiyx7 ZgauKTOV9jL65g9MP5m8zS9Ffh/9ihdA4NLYbhK/Ch+NtuLPfsANNIrBKJUg3GQJRWPvI+C4EID
- ZRRQqC/bEWmYb4DHzve8ub4qLfYkQuNi3yG39lqdK4RuR/QsRcQAiibgmQ+grSEfup7qyCt5
-X-Proofpoint-GUID: K-NzL8Cx4HpRH13HQPdDhuCesk_jpdNa
-X-Authority-Analysis: v=2.4 cv=QNpoRhLL c=1 sm=1 tr=0 ts=685d14b6 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=GA5c7RnSAOpnPb49pOgA:9 a=QEXdDO2ut3YA:10 cc=ntf awl=host:13216
-X-Proofpoint-ORIG-GUID: K-NzL8Cx4HpRH13HQPdDhuCesk_jpdNa
+Content-Type: multipart/mixed; boundary="GO8ZmcqGmxEQ4yIE"
+Content-Disposition: inline
+In-Reply-To: <aF0UUBQFAu9GUde0@gaggiata.pivistrello.it>
 
-On 18/06/2025 09:37, John Garry wrote:
-> This value in io_min is used to configure any atomic write limit for the
-> stacked device. The idea is that the atomic write unit max is a
-> power-of-2 factor of the stripe size, and the stripe size is available
-> in io_min.
-> 
-> Using io_min causes issues, as:
-> a. it may be mutated
-> b. the check for io_min being set for determining if we are dealing with
-> a striped device is hard to get right, as reported in [0].
-> 
-> This series now sets chunk_sectors limit to share stripe size.
 
-Any more comments here? It would be good to have the md/raid0 and 
-md/raid10 changes checked by the md maintainers.
+--GO8ZmcqGmxEQ4yIE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks
+On Thu, Jun 26, 2025 at 11:35:12AM +0200, Francesco Dolcini wrote:
+> On Thu, Jun 26, 2025 at 11:25:24AM +0200, Francesco Dolcini wrote:
+> > On Wed, Jun 25, 2025 at 08:48:37AM +0200, Maxime Ripard wrote:
+> > > Here's a series fixing (hopefully) the panel-simple regression for
+> > > panels with a panel-dpi compatible.
+> > > 
+> > > It's only build tested, so if you could give that series a try
+> > > Francesco, I'd really appreciate it.
+> > 
+> > It does not build for me, applied on top of commit ee88bddf7f2f ("Merge tag
+> > 'bpf-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf")
+> > 
+> >   SYNC    include/config/auto.conf.cmd
+> >   CALL    scripts/checksyscalls.sh
+> >   CC      drivers/gpu/drm/drm_of.o
+> >   CC [M]  drivers/gpu/drm/panel/panel-simple.o
+> >   AR      drivers/gpu/drm/built-in.a
+> >   AR      drivers/gpu/built-in.a
+> >   AR      drivers/built-in.a
+> >   AR      built-in.a
+> >   AR      vmlinux.a
+> >   LD      vmlinux.o
+> >   OBJCOPY modules.builtin.modinfo
+> >   GEN     modules.builtin
+> >   GEN     .vmlinux.objs
+> >   MODPOST Module.symvers
+> > ERROR: modpost: "mipi_dsi_bus_type" [drivers/gpu/drm/panel/panel-simple.ko] undefined!
+> > make[2]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
+> > make[1]: *** [/home/francesco/Toradex/sources/linux/Makefile:1953: modpost] Error 2
+> > make: *** [Makefile:248: __sub-make] Error 2
+> > [Exit 2]
+> > 
+> 
+> The issue is that I do not have CONFIG_DRM_MIPI_DSI. Adding it the build
+> finishes, and it also fixes the issue.
 
-> 
-> [0] https://lore.kernel.org/linux-block/888f3b1d-7817-4007-b3b3-1a2ea04df771@linux.ibm.com/T/#mecca17129f72811137d3c2f1e477634e77f06781
-> 
-> Based on v6.16-rc2
-> 
-> Differences to RFC:
-> - sanitize chunk_sectors for atomic write limits
-> - set chunk_sectors in stripe_io_hints()
-> 
-> John Garry (5):
->    block: sanitize chunk_sectors for atomic write limits
->    md/raid0: set chunk_sectors limit
->    md/raid10: set chunk_sectors limit
->    dm-stripe: limit chunk_sectors to the stripe size
->    block: use chunk_sectors when evaluating stacked atomic write limits
-> 
->   block/blk-settings.c   | 60 ++++++++++++++++++++++++++----------------
->   drivers/md/dm-stripe.c |  1 +
->   drivers/md/raid0.c     |  1 +
->   drivers/md/raid10.c    |  1 +
->   4 files changed, 40 insertions(+), 23 deletions(-)
-> 
+Please find attached the defconfig that trigger this build issue. ARCH=arm, the
+actual target I am testing on is an NXP i.MX6.
 
+Francesco
+
+
+--GO8ZmcqGmxEQ4yIE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename=defconfig
+
+# CONFIG_LOCALVERSION_AUTO is not set
+CONFIG_KERNEL_LZ4=y
+CONFIG_SYSVIPC=y
+CONFIG_POSIX_MQUEUE=y
+CONFIG_GENERIC_IRQ_DEBUGFS=y
+CONFIG_NO_HZ_IDLE=y
+CONFIG_HIGH_RES_TIMERS=y
+CONFIG_BPF_SYSCALL=y
+CONFIG_BPF_JIT=y
+CONFIG_PREEMPT=y
+CONFIG_IKCONFIG=y
+CONFIG_IKCONFIG_PROC=y
+CONFIG_CGROUPS=y
+CONFIG_MEMCG=y
+CONFIG_BLK_CGROUP=y
+CONFIG_CGROUP_SCHED=y
+CONFIG_CFS_BANDWIDTH=y
+CONFIG_CGROUP_PIDS=y
+CONFIG_CPUSETS=y
+CONFIG_CGROUP_DEVICE=y
+CONFIG_CGROUP_CPUACCT=y
+CONFIG_CGROUP_BPF=y
+CONFIG_CGROUP_MISC=y
+CONFIG_NAMESPACES=y
+CONFIG_USER_NS=y
+CONFIG_BLK_DEV_INITRD=y
+CONFIG_SYSFS_SYSCALL=y
+CONFIG_EXPERT=y
+CONFIG_PROFILING=y
+CONFIG_ARCH_MXC=y
+CONFIG_SOC_IMX6Q=y
+CONFIG_SOC_IMX6UL=y
+CONFIG_SOC_IMX7D=y
+CONFIG_SMP=y
+CONFIG_ARM_PSCI=y
+CONFIG_HIGHMEM=y
+CONFIG_ARCH_FORCE_MAX_ORDER=13
+CONFIG_CPU_FREQ=y
+CONFIG_CPU_FREQ_STAT=y
+CONFIG_CPU_FREQ_GOV_POWERSAVE=y
+CONFIG_CPU_FREQ_GOV_USERSPACE=y
+CONFIG_CPU_FREQ_GOV_ONDEMAND=y
+CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
+CONFIG_CPUFREQ_DT=y
+CONFIG_ARM_IMX6Q_CPUFREQ=y
+CONFIG_ARM_IMX_CPUFREQ_DT=y
+CONFIG_CPU_IDLE=y
+CONFIG_ARM_CPUIDLE=y
+CONFIG_ARM_PSCI_CPUIDLE=y
+CONFIG_VFP=y
+CONFIG_NEON=y
+CONFIG_PM_DEBUG=y
+CONFIG_PM_ADVANCED_DEBUG=y
+CONFIG_ENERGY_MODEL=y
+CONFIG_KPROBES=y
+CONFIG_JUMP_LABEL=y
+CONFIG_MODULES=y
+CONFIG_MODULE_UNLOAD=y
+CONFIG_MODVERSIONS=y
+CONFIG_BINFMT_MISC=m
+# CONFIG_COMPAT_BRK is not set
+CONFIG_CMA_DEBUGFS=y
+CONFIG_CMA_SYSFS=y
+CONFIG_CMA_AREAS=7
+CONFIG_LRU_GEN=y
+CONFIG_LRU_GEN_ENABLED=y
+CONFIG_NET=y
+CONFIG_PACKET=y
+CONFIG_UNIX=y
+CONFIG_INET=y
+CONFIG_IP_MULTICAST=y
+CONFIG_IP_PNP=y
+CONFIG_IP_PNP_DHCP=y
+CONFIG_IP_PNP_BOOTP=y
+CONFIG_IPV6=m
+CONFIG_NETFILTER=y
+CONFIG_BRIDGE_NETFILTER=m
+CONFIG_NF_CONNTRACK=m
+CONFIG_IP_NF_IPTABLES=m
+CONFIG_IP_NF_FILTER=m
+CONFIG_IP_NF_TARGET_REJECT=m
+CONFIG_IP_NF_NAT=m
+CONFIG_IP_NF_TARGET_MASQUERADE=m
+CONFIG_IP6_NF_IPTABLES=m
+CONFIG_IP6_NF_FILTER=m
+CONFIG_IP6_NF_TARGET_REJECT=m
+CONFIG_IP6_NF_NAT=m
+CONFIG_IP6_NF_TARGET_MASQUERADE=m
+CONFIG_BRIDGE=m
+CONFIG_BRIDGE_VLAN_FILTERING=y
+CONFIG_VLAN_8021Q=m
+CONFIG_VLAN_8021Q_GVRP=y
+CONFIG_VLAN_8021Q_MVRP=y
+CONFIG_CAN=m
+CONFIG_BT=m
+CONFIG_BT_RFCOMM=m
+CONFIG_BT_BNEP=m
+CONFIG_BT_HIDP=m
+CONFIG_BT_HCIBTUSB=m
+CONFIG_BT_HCIBTSDIO=m
+CONFIG_BT_HCIUART=m
+CONFIG_BT_HCIUART_MRVL=y
+CONFIG_BT_MRVL=m
+CONFIG_BT_MRVL_SDIO=m
+CONFIG_BT_NXPUART=m
+CONFIG_CFG80211=m
+CONFIG_CFG80211_WEXT=y
+CONFIG_MAC80211=m
+CONFIG_RFKILL=m
+CONFIG_RFKILL_GPIO=m
+CONFIG_PCI=y
+CONFIG_PCIEPORTBUS=y
+CONFIG_PCIEAER=y
+CONFIG_PCI_MSI=y
+# CONFIG_VGA_ARB is not set
+CONFIG_PCI_IMX6_HOST=y
+CONFIG_DEVTMPFS=y
+CONFIG_DEVTMPFS_MOUNT=y
+CONFIG_IMX_WEIM=y
+CONFIG_ARM_SCMI_PROTOCOL=y
+CONFIG_MTD=y
+CONFIG_MTD_CMDLINE_PARTS=y
+CONFIG_MTD_BLOCK=y
+CONFIG_MTD_CFI=y
+CONFIG_MTD_JEDECPROBE=y
+CONFIG_MTD_CFI_INTELEXT=y
+CONFIG_MTD_CFI_AMDSTD=y
+CONFIG_MTD_CFI_STAA=y
+CONFIG_MTD_PHYSMAP=y
+CONFIG_MTD_PHYSMAP_OF=y
+CONFIG_MTD_RAW_NAND=y
+CONFIG_MTD_NAND_GPMI_NAND=y
+CONFIG_MTD_SPI_NOR=m
+CONFIG_MTD_UBI=y
+CONFIG_MTD_UBI_FASTMAP=y
+CONFIG_MTD_UBI_BLOCK=y
+CONFIG_BLK_DEV_LOOP=m
+CONFIG_BLK_DEV_NVME=m
+CONFIG_EEPROM_AT24=y
+CONFIG_EEPROM_AT25=y
+CONFIG_SCSI=y
+CONFIG_BLK_DEV_SD=m
+CONFIG_SCSI_CONSTANTS=y
+CONFIG_ATA=m
+# CONFIG_SATA_PMP is not set
+CONFIG_SATA_AHCI=m
+CONFIG_SATA_MOBILE_LPM_POLICY=0
+CONFIG_AHCI_IMX=m
+# CONFIG_ATA_SFF is not set
+CONFIG_NETDEVICES=y
+CONFIG_R8169=m
+CONFIG_MICREL_PHY=y
+CONFIG_CAN_FLEXCAN=m
+CONFIG_CAN_MCP251X=m
+CONFIG_CAN_MCP251XFD=m
+CONFIG_USB_PEGASUS=m
+CONFIG_USB_RTL8150=m
+CONFIG_USB_RTL8152=m
+CONFIG_USB_USBNET=m
+CONFIG_USB_NET_DM9601=m
+CONFIG_USB_NET_SR9800=m
+CONFIG_USB_NET_SMSC75XX=m
+CONFIG_USB_NET_SMSC95XX=m
+CONFIG_USB_NET_PLUSB=m
+CONFIG_USB_NET_MCS7830=m
+CONFIG_ATH10K=m
+CONFIG_ATH10K_PCI=m
+CONFIG_ATH10K_SDIO=m
+CONFIG_ATH11K=m
+CONFIG_ATH11K_PCI=m
+CONFIG_ATH12K=m
+CONFIG_IWLWIFI=m
+CONFIG_MWIFIEX=m
+CONFIG_MWIFIEX_SDIO=m
+CONFIG_MWIFIEX_PCIE=m
+CONFIG_RTL8192CU=m
+CONFIG_RTL8XXXU=m
+CONFIG_INPUT_EVDEV=m
+# CONFIG_KEYBOARD_ATKBD is not set
+CONFIG_KEYBOARD_GPIO=m
+CONFIG_KEYBOARD_GPIO_POLLED=m
+CONFIG_KEYBOARD_SNVS_PWRKEY=m
+CONFIG_KEYBOARD_IMX=m
+# CONFIG_INPUT_MOUSE is not set
+CONFIG_INPUT_TOUCHSCREEN=y
+CONFIG_TOUCHSCREEN_AD7879=m
+CONFIG_TOUCHSCREEN_AD7879_I2C=m
+CONFIG_TOUCHSCREEN_ATMEL_MXT=m
+CONFIG_TOUCHSCREEN_STMPE=m
+CONFIG_TOUCHSCREEN_COLIBRI_VF50=m
+CONFIG_SERIAL_8250=y
+CONFIG_SERIAL_8250_CONSOLE=y
+CONFIG_SERIAL_8250_NR_UARTS=6
+CONFIG_SERIAL_8250_RUNTIME_UARTS=6
+CONFIG_SERIAL_OF_PLATFORM=y
+CONFIG_SERIAL_IMX=y
+CONFIG_SERIAL_IMX_CONSOLE=y
+CONFIG_SERIAL_FSL_LPUART=y
+CONFIG_SERIAL_FSL_LPUART_CONSOLE=y
+CONFIG_RPMSG_TTY=m
+CONFIG_SERIAL_DEV_BUS=y
+CONFIG_I2C_CHARDEV=y
+CONFIG_I2C_GPIO=m
+CONFIG_I2C_IMX=y
+CONFIG_SPI=y
+CONFIG_SPI_FSL_LPSPI=m
+CONFIG_SPI_FSL_QUADSPI=m
+CONFIG_SPI_IMX=m
+CONFIG_SPI_SPIDEV=m
+# CONFIG_PINCTRL_IMX8ULP is not set
+CONFIG_GPIO_SYSFS=y
+CONFIG_GPIO_MXC=y
+CONFIG_POWER_RESET=y
+CONFIG_POWER_RESET_GPIO=y
+CONFIG_POWER_RESET_GPIO_RESTART=y
+CONFIG_POWER_RESET_REGULATOR=y
+CONFIG_POWER_RESET_SYSCON_POWEROFF=y
+CONFIG_SENSORS_ARM_SCMI=y
+CONFIG_SENSORS_GPIO_FAN=m
+CONFIG_SENSORS_IIO_HWMON=m
+CONFIG_SENSORS_LM75=m
+CONFIG_SENSORS_PWM_FAN=m
+CONFIG_SENSORS_AMC6821=m
+CONFIG_SENSORS_INA2XX=m
+CONFIG_THERMAL_STATISTICS=y
+CONFIG_THERMAL_EMERGENCY_POWEROFF_DELAY_MS=10000
+CONFIG_THERMAL_GOV_USER_SPACE=y
+CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
+CONFIG_CPU_THERMAL=y
+CONFIG_IMX_THERMAL=y
+CONFIG_WATCHDOG=y
+CONFIG_WATCHDOG_SYSFS=y
+CONFIG_RN5T618_WATCHDOG=y
+CONFIG_IMX2_WDT=y
+CONFIG_MFD_RN5T618=y
+CONFIG_MFD_STMPE=y
+CONFIG_REGULATOR=y
+CONFIG_REGULATOR_FIXED_VOLTAGE=y
+CONFIG_REGULATOR_ANATOP=y
+CONFIG_REGULATOR_GPIO=y
+CONFIG_REGULATOR_PFUZE100=y
+CONFIG_REGULATOR_RN5T618=y
+CONFIG_MEDIA_SUPPORT=y
+CONFIG_MEDIA_SUPPORT_FILTER=y
+CONFIG_MEDIA_CAMERA_SUPPORT=y
+CONFIG_MEDIA_PLATFORM_SUPPORT=y
+CONFIG_MEDIA_USB_SUPPORT=y
+CONFIG_USB_VIDEO_CLASS=m
+CONFIG_V4L_PLATFORM_DRIVERS=y
+CONFIG_V4L_MEM2MEM_DRIVERS=y
+CONFIG_VIDEO_MUX=m
+CONFIG_VIDEO_CODA=m
+CONFIG_VIDEO_IMX7_CSI=m
+CONFIG_VIDEO_IMX_MIPI_CSIS=m
+CONFIG_VIDEO_IMX_PXP=m
+CONFIG_VIDEO_OV5640=m
+CONFIG_VIDEO_ADV7180=m
+CONFIG_IMX_IPUV3_CORE=y
+CONFIG_DRM=y
+CONFIG_DRM_LOAD_EDID_FIRMWARE=y
+CONFIG_DRM_PANEL_LVDS=m
+CONFIG_DRM_PANEL_EDP=m
+CONFIG_DRM_PANEL_SIMPLE=m
+CONFIG_DRM_CDNS_MHDP8546=m
+CONFIG_DRM_DW_HDMI_AHB_AUDIO=m
+CONFIG_DRM_DW_HDMI_GP_AUDIO=m
+CONFIG_DRM_DW_HDMI_CEC=m
+CONFIG_DRM_IMX=y
+CONFIG_DRM_IMX_PARALLEL_DISPLAY=y
+CONFIG_DRM_IMX_TVE=y
+CONFIG_DRM_IMX_LDB=y
+CONFIG_DRM_IMX_HDMI=y
+CONFIG_DRM_ETNAVIV=m
+CONFIG_DRM_MXSFB=m
+CONFIG_DRM_IMX_LCDIF=y
+CONFIG_FB=y
+CONFIG_BACKLIGHT_CLASS_DEVICE=y
+CONFIG_BACKLIGHT_PWM=m
+CONFIG_BACKLIGHT_GPIO=m
+CONFIG_LOGO=y
+CONFIG_SOUND=y
+CONFIG_SND=y
+CONFIG_SND_SOC=y
+CONFIG_SND_SOC_FSL_ASRC=m
+CONFIG_SND_IMX_SOC=m
+CONFIG_SND_SOC_IMX_SGTL5000=m
+CONFIG_SND_SOC_FSL_ASOC_CARD=m
+CONFIG_SND_SOC_IMX_AUDMIX=m
+CONFIG_SND_SOC_IMX_HDMI=m
+CONFIG_SND_SOC_SOF_TOPLEVEL=y
+CONFIG_SND_SOC_SOF_OF=m
+CONFIG_SND_SOC_SPDIF=m
+CONFIG_SND_SOC_NAU8822=m
+CONFIG_SND_SIMPLE_CARD=m
+CONFIG_SND_AUDIO_GRAPH_CARD=m
+CONFIG_SND_AUDIO_GRAPH_CARD2=m
+CONFIG_UHID=m
+CONFIG_HID_MULTITOUCH=m
+CONFIG_USB_HIDDEV=y
+CONFIG_USB_CONN_GPIO=m
+CONFIG_USB=y
+CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
+CONFIG_USB_OTG=y
+CONFIG_USB_MON=m
+CONFIG_USB_XHCI_HCD=y
+CONFIG_USB_XHCI_PLATFORM=y
+CONFIG_USB_EHCI_HCD=m
+CONFIG_USB_ACM=m
+CONFIG_USB_STORAGE=y
+CONFIG_USB_UAS=m
+CONFIG_USB_CHIPIDEA=m
+CONFIG_USB_CHIPIDEA_UDC=y
+CONFIG_USB_CHIPIDEA_HOST=y
+CONFIG_USB_SERIAL=m
+CONFIG_USB_SERIAL_OPTION=m
+CONFIG_USB_TEST=m
+CONFIG_USB_EHSET_TEST_FIXTURE=m
+CONFIG_USB_HUB_USB251XB=m
+CONFIG_USB_HSIC_USB3503=m
+CONFIG_NOP_USB_XCEIV=m
+CONFIG_USB_MXS_PHY=m
+CONFIG_USB_GADGET=y
+CONFIG_USB_CONFIGFS=y
+CONFIG_USB_CONFIGFS_SERIAL=y
+CONFIG_USB_CONFIGFS_ACM=y
+CONFIG_USB_CONFIGFS_NCM=y
+CONFIG_USB_CONFIGFS_ECM=y
+CONFIG_USB_CONFIGFS_ECM_SUBSET=y
+CONFIG_USB_CONFIGFS_EEM=y
+CONFIG_USB_CONFIGFS_MASS_STORAGE=y
+CONFIG_USB_CONFIGFS_F_LB_SS=y
+CONFIG_USB_CONFIGFS_F_FS=y
+CONFIG_USB_CONFIGFS_F_UAC1=y
+CONFIG_USB_CONFIGFS_F_UAC2=y
+CONFIG_USB_CONFIGFS_F_HID=y
+CONFIG_USB_CONFIGFS_F_UVC=y
+CONFIG_MMC=y
+CONFIG_MMC_SDHCI=y
+CONFIG_MMC_SDHCI_PLTFM=y
+CONFIG_MMC_SDHCI_ESDHC_IMX=y
+CONFIG_NEW_LEDS=y
+CONFIG_LEDS_CLASS=m
+CONFIG_LEDS_CLASS_MULTICOLOR=m
+CONFIG_LEDS_GPIO=m
+CONFIG_LEDS_PWM=m
+CONFIG_LEDS_TRIGGERS=y
+CONFIG_LEDS_TRIGGER_TIMER=m
+CONFIG_LEDS_TRIGGER_DISK=y
+CONFIG_LEDS_TRIGGER_HEARTBEAT=m
+CONFIG_LEDS_TRIGGER_BACKLIGHT=m
+CONFIG_LEDS_TRIGGER_DEFAULT_ON=m
+CONFIG_LEDS_TRIGGER_PANIC=y
+CONFIG_RTC_CLASS=y
+CONFIG_RTC_DRV_DS1307=y
+CONFIG_RTC_DRV_MXC=m
+CONFIG_RTC_DRV_SNVS=y
+CONFIG_DMADEVICES=y
+CONFIG_IMX_SDMA=m
+CONFIG_MXS_DMA=y
+CONFIG_STAGING=y
+CONFIG_STAGING_MEDIA=y
+CONFIG_VIDEO_IMX_MEDIA=m
+CONFIG_HWSPINLOCK=y
+CONFIG_IMX_MBOX=y
+CONFIG_REMOTEPROC=y
+CONFIG_REMOTEPROC_CDEV=y
+CONFIG_IMX_REMOTEPROC=y
+CONFIG_RPMSG_CHAR=m
+CONFIG_RPMSG_CTRL=m
+CONFIG_RPMSG_VIRTIO=m
+CONFIG_EXTCON_USB_GPIO=y
+CONFIG_IIO=y
+CONFIG_IIO_SW_TRIGGER=m
+CONFIG_IMX7D_ADC=m
+CONFIG_STMPE_ADC=m
+CONFIG_TI_ADS1015=m
+CONFIG_VF610_ADC=m
+CONFIG_IIO_RESCALE=m
+CONFIG_IIO_MUX=m
+CONFIG_IIO_HRTIMER_TRIGGER=m
+CONFIG_IIO_INTERRUPT_TRIGGER=m
+CONFIG_IIO_SYSFS_TRIGGER=m
+CONFIG_PWM=y
+CONFIG_PWM_FSL_FTM=m
+CONFIG_PWM_IMX27=m
+CONFIG_PHY_CAN_TRANSCEIVER=m
+CONFIG_NVMEM_IMX_OCOTP=y
+CONFIG_NVMEM_IMX_OCOTP_ELE=m
+CONFIG_NVMEM_SNVS_LPGPR=m
+CONFIG_TEE=m
+CONFIG_OPTEE=m
+CONFIG_MUX_GPIO=m
+CONFIG_MUX_MMIO=m
+CONFIG_EXT3_FS=m
+CONFIG_EXT3_FS_POSIX_ACL=y
+CONFIG_EXT3_FS_SECURITY=y
+CONFIG_EXT4_FS=y
+CONFIG_FANOTIFY=y
+CONFIG_AUTOFS_FS=m
+CONFIG_FUSE_FS=m
+CONFIG_VFAT_FS=y
+CONFIG_EXFAT_FS=y
+CONFIG_NTFS3_FS=m
+CONFIG_TMPFS_POSIX_ACL=y
+CONFIG_JFFS2_FS=m
+CONFIG_UBIFS_FS=y
+CONFIG_NFS_FS=y
+CONFIG_NFS_V2=y
+CONFIG_NFS_V4=y
+CONFIG_NFS_V4_1=y
+CONFIG_NFS_V4_2=y
+CONFIG_ROOT_NFS=y
+CONFIG_NLS_DEFAULT="cp437"
+CONFIG_NLS_CODEPAGE_437=m
+CONFIG_NLS_ASCII=m
+CONFIG_NLS_ISO8859_1=m
+CONFIG_NLS_ISO8859_15=m
+CONFIG_NLS_UTF8=m
+CONFIG_LSM="landlock,lockdown,yama,loadpin,safesetid,bpf"
+CONFIG_CRYPTO_NULL=m
+CONFIG_CRYPTO_SHA256=y
+CONFIG_CRYPTO_CRC32C=y
+CONFIG_CRYPTO_DEV_FSL_CAAM=m
+CONFIG_CRYPTO_DEV_MXS_DCP=m
+CONFIG_CMA_SIZE_MBYTES=256
+CONFIG_CMA_SIZE_PERCENTAGE=35
+CONFIG_CMA_SIZE_SEL_MIN=y
+CONFIG_PRINTK_TIME=y
+CONFIG_DYNAMIC_DEBUG=y
+CONFIG_MAGIC_SYSRQ=y
+CONFIG_DEBUG_FS=y
+CONFIG_DEBUG_MEMORY_INIT=y
+CONFIG_HARDLOCKUP_DETECTOR=y
+# CONFIG_FTRACE is not set
+
+--GO8ZmcqGmxEQ4yIE--
