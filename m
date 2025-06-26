@@ -1,73 +1,40 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5449E126C17;
-	Thu, 26 Jun 2025 02:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C171BC9F4;
+	Thu, 26 Jun 2025 02:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750903682; cv=none; b=mnyIijm9MfAkeECLcZ7QUrLUhrifLO9F5FZFOZaZdSSv8mpq+pw/K7yxYtpEkoDL8t7XZRczFF66aVmuRfE9aI5BkPQ4NOOGo9qU8j6M2a9bPTy59QSIhd7tNVUsYa6E9fwmlWILyU5Ha+aiA9DlANjEybmjqsy7BxVA/SH08vM=
+	t=1750903983; cv=none; b=OYp6j+0BorMRoCEDACft2KN558qqSExo9JsN/x+Ybd2TqILBsv3dfS70VIXkpRoildjaR5eL/jQwSFtPCkkptRJpiao4t6WlEQa4wzWYH433aagGr4ONL8fky3li9yev9VvEj9/bk35wzH7eQzkerouHHRpT2/m5Ajo4z76HS4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750903682; c=relaxed/simple;
-	bh=fGBdLx43ZNKtIbzyx9QYwr/HXAxnuOX+RmyAX3dJ02Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UaQZg0FQk5eE8XNqtyXS0IFwDYLwFkogo2w7EctrvKOdJA72mTd+byX9OdoIxCAcohmG0TSGMqSSfl9skhKWWbsEIHzX+9AOVTTlIdchw/5fQO/4kqvyiy7IVOQuQ8JZTEw83uLIkhcMhb6zxzhWXlKbs7JRidsmOzTKNCv7d5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ddwrAKAv; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ddwrAKAv"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b34c068faf8so506333a12.2;
-        Wed, 25 Jun 2025 19:08:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750903680; x=1751508480; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2QqGYjD8NV1Lz9h53E/xb2YOnYvPPC++UyYL3ZPC24Q=;
-        b=ddwrAKAvdzYtRaE6wP6cG1rdAJbNTymqS4v80hSHcX5wY7Tt+3PsVLGjTNb6Pspsnq
-         LJS2zbSVvhxav3Aoof1J+AUs+VWBUH2Z12UbyYc7txbZz3501u7g7REjYDMVIBp1p7TJ
-         PJuqyeYOaQpmkQSPYNivVgT5hENHEjJofhpvua7EfcmDwewejWCK/zTunxDKnGZXmt9H
-         AEWpcGZx0RoZZLMcAvd7z+qPuAzONOdJ4OeUI84U13FZR4W60p+XTgPynjwQCWBEg9/V
-         LjH0oYGN1o8kiCXy21uyN1lO9mjYdl5rpycxpFSFTm5CmLc0I09Ztgt3hRXUOaOK+C/h
-         HUNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750903680; x=1751508480;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2QqGYjD8NV1Lz9h53E/xb2YOnYvPPC++UyYL3ZPC24Q=;
-        b=bMYlFMwq5btE1PrixT1S2BrCkv68ABUKJeG51800e66O11NsFdyzOMMl1+e1PwqJPH
-         GDZJhWEOuOg2gxI2b4Cx8DMQ+iqrOwW6pXKOGdNJNj+rAGd5aU0QbHvrb2UJa8FsJBwG
-         yGLc2+ku8TfgnbGKkiUKK2RdcuNlDd4ZLgrsJDYADQMO5VS75yH6tXI6riIptIYICTtu
-         usQqp5oKWN5yj0mpFqXBtMRvR3fm8OXlRG3NMD8eG6/350OJtE/sHb1sG873Q3uMaeke
-         EOdzFFWFCEJqy2LZ2DvN4AahPi3X06daNLh8AiKiZJt4hpVEZ6BS0UL9BLOG9ldIEnCp
-         Hjdg==
-X-Forwarded-Encrypted: i=1; AJvYcCW06jcdlw5MG2O9C2w/6HEqgkVzritDErMqLZ1JKWcyveWBU/OSKzeYn7ZtSW8CMCqSKNbrHvw66gQTc/A=@vger.kernel.org, AJvYcCXjNM3snd3+9/qIDxoatnbg92NDzt7oALp3vV6NOc+7as5DEj8i/rviAVjAYbCNvfP2o3qr+u57J6ZKjqbSFgZa@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXXT6i5Z8GnKFG+iyy/H2wMEGxCjZxBhS3SXq/DkhaOYP20c8F
-	CaLYhjCD89hCc/7k3luWn1ooFDlwozNQJUB+7asMjlr1ZTddTOqnV37K
-X-Gm-Gg: ASbGncu6Cv3nRh7wcXqFs+stf/R53U9DyQ5BaXSLnrQkgPpH+M3LpojVqv0RgSE493/
-	t73pN/k7uz7fHvUO1TGgS75zh9e2rGIZDH8fXtZza+jjwOczExnTdv8xzVKtbdPHeCc3Jzgh2EL
-	dr9ewKAbpVaajiqA8kNoj3GBX3yqX7WLTFsyoG31XRjcEW6bgKsxBOYxIhBjZRGUuOWDC4Tiz/G
-	BJiNUgWZYu22yz74DnrSLQTUNsWNv/aFWZ4ksRho+L7J8aGXmonlOlOj24U8iPs2opM5CTUihdw
-	nULd52tBefAR/fY5pGiXNznbFz9U/H04DxX/rCRu493SGtkpyDk2cI34C0fLr1d1jzJIld5uBLY
-	=
-X-Google-Smtp-Source: AGHT+IFw3FQlZnA+EvUsNN1IOB3BlWRZTtCRZlRlVSj2VO/QZ0xMVRH5KO8rzFZ0phgpRnx8AufnAQ==
-X-Received: by 2002:a17:903:2bcc:b0:235:5a9:976f with SMTP id d9443c01a7336-23824030ccdmr110775315ad.24.1750903680502;
-        Wed, 25 Jun 2025 19:08:00 -0700 (PDT)
-Received: from p920.. ([2001:569:799a:1600:cc0b:584a:7d31:4a04])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34c4318a27sm388110a12.28.2025.06.25.19.08.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 19:08:00 -0700 (PDT)
-From: Moon Hee Lee <moonhee.lee.ca@gmail.com>
-To: akpm@linux-foundation.org,
-	shuah@kernel.org
-Cc: linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Moon Hee Lee <moonhee.lee.ca@gmail.com>
-Subject: [PATCH] selftests/mm: remove duplicate .gitignore entries
-Date: Wed, 25 Jun 2025 19:07:58 -0700
-Message-ID: <20250626020758.163243-1-moonhee.lee.ca@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1750903983; c=relaxed/simple;
+	bh=Ni+L1bRR+Fb+tAN9EZBMNNGO3y7Hf10H4g/51esIW0M=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LC9/YchZYBl2ZxaaKB3Cq6RQxFyA2Vhn8LrZOWmJX3RCTY9cvfVHqukZdgrud7qIejSX+K7BaXxB8jKRWAtL25QcI6mLPYpQouJ97tYkNocwRaXDaw9NW7EBFROW0u5hn9G46bsw6oCl+afRqgvSkq5wwvW+scCAtkXPEPCKZ5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bSMcS3Tswz2BdVJ;
+	Thu, 26 Jun 2025 10:11:20 +0800 (CST)
+Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 36E8D140109;
+	Thu, 26 Jun 2025 10:12:58 +0800 (CST)
+Received: from localhost.localdomain (10.90.31.46) by
+ kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 26 Jun 2025 10:12:57 +0800
+From: Jijie Shao <shaojijie@huawei.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
+CC: <shenjian15@huawei.com>, <liuyonglong@huawei.com>,
+	<chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<shaojijie@huawei.com>
+Subject: [PATCH v3 net-next 0/3] Support some features for the HIBMCGE driver
+Date: Thu, 26 Jun 2025 10:06:10 +0800
+Message-ID: <20250626020613.637949-1-shaojijie@huawei.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,38 +42,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemk100013.china.huawei.com (7.202.194.61)
 
-Remove redundant entries in .gitignore confirmed by:
+Support some features for the HIBMCGE driver
 
-$ sort tools/testing/selftests/mm/.gitignore | uniq -d
-hugetlb_dio
-pkey_sighandler_tests_32
-pkey_sighandler_tests_64
-
-These entries were originally added by [1], and later duplicated by [2].
-
-[1] https://lore.kernel.org/all/20240924185911.117937-1-lorenzo.stoakes@oracle.com/
-[2] https://lore.kernel.org/all/20241125064036.413536-1-lizhijian@fujitsu.com/
-
-Signed-off-by: Moon Hee Lee <moonhee.lee.ca@gmail.com>
 ---
- tools/testing/selftests/mm/.gitignore | 3 ---
- 1 file changed, 3 deletions(-)
+ChangeLog:
+v2 -> v3:
+  - Use fixed_phy to re-implement the no-phy scenario, suggested by Andrew Lunn
+  v2: https://lore.kernel.org/all/20250623034129.838246-1-shaojijie@huawei.com/
+v1 -> v2:
+  - Fix code formatting errors, reported by Jakub Kicinski
+  v1: https://lore.kernel.org/all/20250619144423.2661528-1-shaojijie@huawei.com/
+---
 
-diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/selftests/mm/.gitignore
-index 824266982aa3..f2dafa0b700b 100644
---- a/tools/testing/selftests/mm/.gitignore
-+++ b/tools/testing/selftests/mm/.gitignore
-@@ -38,9 +38,6 @@ map_fixed_noreplace
- write_to_hugetlbfs
- hmm-tests
- memfd_secret
--hugetlb_dio
--pkey_sighandler_tests_32
--pkey_sighandler_tests_64
- soft-dirty
- split_huge_page_test
- ksm_tests
+Jijie Shao (3):
+  net: hibmcge: support scenario without PHY
+  net: hibmcge: adjust the burst len configuration of the MAC controller
+    to improve TX performance.
+  net: hibmcge: configure FIFO thresholds according to the MAC
+    controller documentation
+
+ .../net/ethernet/hisilicon/hibmcge/hbg_hw.c   | 57 +++++++++++++++++++
+ .../net/ethernet/hisilicon/hibmcge/hbg_mdio.c | 38 +++++++++++++
+ .../net/ethernet/hisilicon/hibmcge/hbg_reg.h  |  8 +++
+ 3 files changed, 103 insertions(+)
+
 -- 
-2.43.0
+2.33.0
 
