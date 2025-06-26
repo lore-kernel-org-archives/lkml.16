@@ -1,75 +1,73 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2221525BF1F
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7549725C712;
+	Thu, 26 Jun 2025 08:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750925865; cv=none; b=FnhvP1QN47GvED1KG2AK4DAdYbCA+fFtYD8t1EOCqZxsJFrUVuRQhy/RdKdWA8IKheR4GjBHoxUtcub1RfPVq7XtUm5iAsXmzggiD6yhjGsqMo53gTgbnjJ8y0k6GYwrNwqYQNhV1J2n6wGzle17HX35Sq4JeMLqsvvB82lq75c=
+	t=1750925884; cv=none; b=DV3ezoSX5RhW9jifqNF7xl9TPmKvo7Al3uxsiTLDHTgiFANBJ7ztflNUYggwyX1DqnAH9KgCwMKGqq5D/ihy2bW1JK92x2AYRlBoMkJlVzQGskEUP8XnUNaEEk39Jg/psxstU9YeLetiuAdOQeuiDhb/h35RfrE6B7YyK8X+Zkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750925865; c=relaxed/simple;
-	bh=UB+TyR5m+U/crFbwM1WFMO4bbKXq3amGh5rWtRpdOoM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c87tzWd3SyM3SVBR/I82I5bhtG78h3iUQc2qvwsmGG/svy737mHk5xEWBUHGus/QHyRjOVk+RZ4iKMTMqVQRgIt6iNypojgRw9IAesIwTbREDRvvphL5218KgGOOUqklIJow5ZZ0NPiC3L36dXFw3Jz/uqh+FX68fO9RbQblPrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: uTUvvCebQ+qE+brYpPDDtg==
-X-CSE-MsgGUID: h2slAUOXS1i6yeDvzEYokg==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 26 Jun 2025 17:17:36 +0900
-Received: from REE-DUD04480.adwin.renesas.com (unknown [10.226.78.19])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 413F44017F3F;
-	Thu, 26 Jun 2025 17:17:34 +0900 (JST)
-From: Michael Dege <michael.dege@renesas.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Michael Dege <michael.dege@renesas.com>,
-	Uwe Kleine-Koenig <u.kleine-koenig@baylibre.com>,
-	linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/2 RESEND] phy: renesas: r8a779f0-ether-serdes: driver enhancement
-Date: Thu, 26 Jun 2025 10:17:23 +0200
-Message-Id: <20250626081723.1924070-1-michael.dege@renesas.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1750925884; c=relaxed/simple;
+	bh=nw32RVdX+sPxj5/rkp3fDWbgLPASW4ZNwW2EgR81hY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uwGi8u9Bnl5YtXCe4mLGci5ADeJahhAIXVDIARyRCIdc9yynXX9X2phujVY08uCRfAWClNe7XFPFc+NLqj57CzSxKc0i13qvnD19NzHG9Mzf4Bhklzdi3lJ41XeKOGuMiqgbPlKeoeUvhpTPXAzXxI/qo4957z6n/bOBbhZjLWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjFvrUMT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjFvrUMT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C91DC4CEEB;
+	Thu, 26 Jun 2025 08:18:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750925884;
+	bh=nw32RVdX+sPxj5/rkp3fDWbgLPASW4ZNwW2EgR81hY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QjFvrUMTZeqVFVWmPj6l/dNsJiepWMU78PBkVm726SNdtI5hGDmSJCu4+6RDkhLLn
+	 qqmfmOMY5rHyIZBG9WcKcjp5QlMB4gG5YNg7EV2HqA/kxAkvKJqnPhbZc3b1m2LHEY
+	 MU2F4I82+9A02ABknSba6WNFRG67ZpSwJ/aE0pzPxzCLDSCWe7tNnGAmXI0wDYTYHT
+	 bzRjJOEvsETaGkZTq/YH/rbSnRYoP1/U3BKem0TveGfDFuBV4QsFRMtxsOOz3wvEaz
+	 tbtD8siEMyDIS6Pwn/pEGZ3Y9sDvPUSyTdgXGqRsR8d3aZC0Mx/S1LtHgYWL80LvYp
+	 CIy98Nay2IitA==
+Date: Thu, 26 Jun 2025 09:17:59 +0100
+From: Simon Horman <horms@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	bpf@vger.kernel.org, gustavold@gmail.com,
+	Stanislav Fomichev <sdf@fomichev.me>
+Subject: Re: [PATCH net-next v2 0/4] selftest: net: Add selftest for netpoll
+Message-ID: <20250626081759.GS1562@horms.kernel.org>
+References: <20250625-netpoll_test-v2-0-47d27775222c@debian.org>
+ <20250625184346.GM1562@horms.kernel.org>
+ <20250625144604.3f60d09d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625144604.3f60d09d@kernel.org>
 
-Hi,
+On Wed, Jun 25, 2025 at 02:46:04PM -0700, Jakub Kicinski wrote:
+> On Wed, 25 Jun 2025 19:43:46 +0100 Simon Horman wrote:
+> > # # Exception| Traceback (most recent call last):
+> > # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/net/lib/py/ksft.py", line 243, in ksft_run
+> > # # Exception|     case(*args)
+> > # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/drivers/net/./netpoll_basic.py", line 308, in test_netpoll
+> > # # Exception|     do_netpoll_flush_monitored(cfg, netdevnl, ifname, target_name)
+> > # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/drivers/net/./netpoll_basic.py", line 243, in do_netpoll_flush_monitored
+> > # # Exception|     do_netpoll_flush(cfg, netdevnl, ifname, target_name)
+> > # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/drivers/net/./netpoll_basic.py", line 278, in do_netpoll_flush
+> > # # Exception|     if bpftrace_any_hit(join=False):
+> > # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/drivers/net/./netpoll_basic.py", line 230, in bpftrace_any_hit
+> > # # Exception|     raise KsftFailEx(f"bpftrace failed to run!?: {MAPS}")
+> > # # Exception| net.lib.py.ksft.KsftFailEx: bpftrace failed to run!?: {}
+> 
+> Looks like I haven't added bpftrace to the image before.
+> Fixed now.
 
-This patch set adds the following to the r8a779f0-ether-serdes driver:
-
- * USXGMII mode support for 2.5GBit/s ethernet Phys
- * A new configuration step suggested by the latest R-Car S4-8 users
-   manual V. 1.20.
-
-Changes in v3:
-- Fixed wrong macro (reported by kernel test bot).
-- Link to v2: https://lore.kernel.org/r/20250527-renesas-serdes-update-v2-0-ef17c71cd94c@renesas.com
-
-Changes from v1:
- - Modify this driver for the R-Car S4-8 only
- - So, this patch set drops the followings:
- -- any dt doc modification
- -- X5H support.
- -- 5GBASER support
- -- Registers' macros
-
-Thanks,
-
-Michael
-
-Michael Dege (2):
-  phy: renesas: r8a779f0-ether-serdes: add USXGMII mode
-  phy: renesas: r8a779f0-ether-serdes: add new step added to latest
-    datasheet
-
- drivers/phy/renesas/r8a779f0-ether-serdes.c | 97 ++++++++++++++++++---
- 1 file changed, 85 insertions(+), 12 deletions(-)
-
--- 
-2.25.1
-
+Thanks, it looks good now.
