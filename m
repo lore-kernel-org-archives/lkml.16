@@ -1,132 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C81222590;
-	Thu, 26 Jun 2025 10:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9991B6D08
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750934189; cv=none; b=dDO47fhPrOokNTKtjsg7maHX4Wzh8bx/AN9NcrXBF4vESNCjSpNRro4uyGa4Sf/L6EcEjE4LUMDtDnqKBdWk/hZ1ADcWxfU/6NGlRWekNt7HXZbLcnI98m6wkpaDGMP7wlG0h9DidbGb1hzdpj74oZMzxTObDo1gKwpvmM38Mlg=
+	t=1750934262; cv=none; b=f39Y+ei3JsthpzoIzIrXwgLKUWbrRFKH0/TRvp4n90PhiGVPVSV1siI/0BLgQILmdHT6Soyzs8dw32yS8szmpqhyTBD4o6rD8U8/jbmEgCKqHKIxQfopbH5WiC9lpkStRpS0OgFp4IFhDi5dcuXCPvkx34WudcysHmjgQV78qP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750934189; c=relaxed/simple;
-	bh=awgx4GCv+DU9O391SVRk/D4EEDX+wR3EWr3gJ0RVJZ4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=AsChr+hJ+18U0OO9FQ6ZSpUqswoZaRIvKa7aZJ6z4iYoABkWO75N6bTHvyzYPUaqA010EQFV1DtxkzYceuvi/7Kv70HRNroTChKHsFZaPJjCpKJL3/IgFtvL4vb9/PNFTMr1IXYZHqNI529XZAJgj3gSIwGoYLgZidKNyq7RP3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UIimtl2L; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UIimtl2L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2FF4C4CEEB;
-	Thu, 26 Jun 2025 10:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750934188;
-	bh=awgx4GCv+DU9O391SVRk/D4EEDX+wR3EWr3gJ0RVJZ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UIimtl2LFIMtv61BMJTLnOiyklJzr5y1r/gaLDPPDy+hHVsUj825W7EO1MpTh98KO
-	 Bfyys9ZRcY85iIqA4qvdHGYDdwwTtvocxo5GxYiUTuQ0MJHGxUZ3i6+ZEo+ip679gh
-	 I+5xTGkWfvVweJIaE7SkDYjnw0G5xI8evVeI6ErRSUeYMEgpLUU2jlyhg8iBek3GOP
-	 ya+du6Mw+aelhuVjgctRiT70B9Y5lfLkndKtGWm0ylBUJEWDsDMTs/Sqe8QvcSCIQm
-	 qzxDUiW3Gw3FBD4ZzpEK9xjNa3Yywu54oNlU5KvdNDYGj4ayDtY2lH9mEIplohJp53
-	 WLAbq0M+3A10g==
+	s=arc-20240116; t=1750934262; c=relaxed/simple;
+	bh=Ru4cJwVwT+dUhkwZmjint5XdqI947nBRVkM7H0g4IwA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oM3nL+uOwmq2jlCNUYXPPiZq8oSQ29WAgPyNlWN530dw0bD/eOxcPJcM267XUlYSKlhVNFZbAQiNbDe883e0IRatztIVQZsNJ6T7mdG1qPwSrPa3KkH8Ni6IqIJam/iogJjWwgacm7uKxrSwXAYk93rmAPJ8/p6qKw0nSbQrcZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uUjz3-0002jU-B0; Thu, 26 Jun 2025 12:37:33 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uUjz2-005Qtx-2B;
+	Thu, 26 Jun 2025 12:37:32 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uUjz2-00Gj5S-1v;
+	Thu, 26 Jun 2025 12:37:32 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
+	Rengarajan Sundararajan <Rengarajan.S@microchip.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com,
+	Phil Elwell <phil@raspberrypi.org>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH net-next v1 1/1] net: usb: lan78xx: fix possible NULL pointer dereference in lan78xx_phy_init()
+Date: Thu, 26 Jun 2025 12:37:31 +0200
+Message-Id: <20250626103731.3986545-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 26 Jun 2025 12:36:23 +0200
-Message-Id: <DAWED7BIC32G.338MXRHK4NSJG@kernel.org>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
- <kwilczynski@kernel.org>, <bhelgaas@google.com>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 4/4] rust: devres: implement register_release()
-X-Mailer: aerc 0.20.1
-References: <20250624215600.221167-1-dakr@kernel.org>
- <20250624215600.221167-5-dakr@kernel.org>
-In-Reply-To: <20250624215600.221167-5-dakr@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Tue Jun 24, 2025 at 11:54 PM CEST, Danilo Krummrich wrote:
-> +pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
-> +where
-> +    P: ForeignOwnable + 'static,
-> +    for<'a> P::Borrowed<'a>: Release,
-> +{
-> +    let ptr =3D data.into_foreign();
-> +
-> +    #[allow(clippy::missing_safety_doc)]
-> +    unsafe extern "C" fn callback<P>(ptr: *mut kernel::ffi::c_void)
-> +    where
-> +        P: ForeignOwnable,
-> +        for<'a> P::Borrowed<'a>: Release,
-> +    {
-> +        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked a=
-bove and hence valid.
-> +        unsafe { P::borrow(ptr.cast()) }.release();
-> +
-> +        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked a=
-bove and hence valid.
-> +        drop(unsafe { P::from_foreign(ptr.cast()) });
+If no PHY device is found (e.g., for LAN7801 in fixed-link mode),
+lan78xx_phy_init() may proceed to dereference a NULL phydev pointer,
+leading to a crash.
 
-Maybe this function should just be:
+Update the logic to perform MAC configuration first, then check for the presence
+of a PHY. For the fixed-link case, set up the fixed link and return early,
+bypassing any code that assumes a valid phydev pointer.
 
-    let p =3D unsafe { P::from_foreign(ptr.cast()) };
-    p.release();
+It is safe to move lan78xx_mac_prepare_for_phy() earlier because this function
+only uses information from dev->interface, which is configured by
+lan78xx_get_phy() beforehand. The function does not access phydev or any data
+set up by later steps.
 
-And we require `P: ForeignOwnable + Release + 'static`?
-
-We then need these impls instead:
-
-    impl<T: Release, A: Allocator> Release for Pin<Box<T, A>>;
-    impl<T: Release, A: Allocator> Release for Box<T, A>;
-    impl<T: Release> Release for Arc<T>;
-
-Or, we could change `Release` to be:
-
-    pub trait Release {
-        type Ptr: ForeignOwnable;
-
-        fn release(this: Self::Ptr);
-    }
-
-and then `register_release` is:
-
-    pub fn register_release<T: Release>(dev: &Device<Bound>, data: T::Ptr) =
--> Result
-
-This way, one can store a `Box<T>` and get access to the `T` at the end.
-Or if they store the value in an `Arc<T>`, they have the option to clone
-it and give it to somewhere else.
-
-Related questions:
-
-* should we implement `ForeignOwnable` for `&'static T`?
-* should we require `'static` in `ForeignOwnable`? At the moment we only
-  have those kinds supported and it only makes sense, a foreign owned
-  object can be owned for any amount of time (so it must stay valid
-  indefinitely).
-
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
-Cheers,
-Benno
+ drivers/net/usb/lan78xx.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-> +    }
-> +
-> +    // SAFETY:
-> +    // - `dev.as_raw()` is a pointer to a valid and bound device.
-> +    // - `ptr` is a valid pointer the `ForeignOwnable` devres takes owne=
-rship of.
-> +    to_result(unsafe {
-> +        // `devm_add_action_or_reset()` also calls `callback` on failure=
-, such that the
-> +        // `ForeignOwnable` is released eventually.
-> +        bindings::devm_add_action_or_reset(dev.as_raw(), Some(callback::=
-<P>), ptr.cast())
-> +    })
-> +}
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index ae37cd235526..6e9dc30b50f9 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -2831,6 +2831,10 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = lan78xx_mac_prepare_for_phy(dev);
++	if (ret < 0)
++		goto phylink_uninit;
++
+ 	/* If no PHY is found, set up a fixed link. It is very specific to
+ 	 * the LAN7801 and is used in special cases like EVB-KSZ9897-1 where
+ 	 * LAN7801 acts as a USB-to-Ethernet interface to a switch without
+@@ -2840,11 +2844,12 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
+ 		ret = lan78xx_set_fixed_link(dev);
+ 		if (ret < 0)
+ 			goto phylink_uninit;
+-	}
+ 
+-	ret = lan78xx_mac_prepare_for_phy(dev);
+-	if (ret < 0)
+-		goto phylink_uninit;
++		/* No PHY found, so set up a fixed link and return early.
++		 * No need to configure PHY IRQ or attach to phylink.
++		 */
++		return 0;
++	}
+ 
+ 	/* if phyirq is not set, use polling mode in phylib */
+ 	if (dev->domain_data.phyirq > 0)
+-- 
+2.39.5
 
