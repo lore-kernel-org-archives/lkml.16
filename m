@@ -1,101 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8892E427B;
-	Thu, 26 Jun 2025 13:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36892AD11
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943272; cv=none; b=LSeL+kOsuSTPjmQLBV9zLNihtlhZYrP6kD/Lv7FsUIpX4g33x6XLbA0rgGgIMR0t28GR9GF8VM5ChwtBI3wTb1dY1rthawhr3y2dtmb2cWJwRMWy+TGz4zieKubrHj+DVn1OF3HqM/gfu+nw1KMSq+dctlwKdCkwRa62wt4lbe0=
+	t=1750943321; cv=none; b=YNxYDCfj/F3/EYTxhuwHbJbg0W1LFtbklDmrhmWsgrqh3ci28VPIJDMhv61SZqFpvd7K0hi3G9pMzaP5tPxr70/Nhvv5qbUAmSDidfxBXf6kRv/M74ZLLxNeYb2Aaf0uHUki6kADqyaxVKWlH0CaaqGgDVuf8S7cvffpXZSXrow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943272; c=relaxed/simple;
-	bh=1cc6i/SKqjjHG+MY0TMZQTCnqXf1errPmHMvb0A9nAA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=PiOgzaEo50WbO53LYrdXUGWRAqXCObyIy8Zj8kHe5ndH9FuwKiUTK85fcNQ90Up5ELprke3vTLOd0ajX1XBjECKhVc9pUH6HE4cOgjrSvGZGJQb97ngS+3gdAL2ZHXlSXwOVeZO9rCEoizsL9zLMRYrPgXayCukXCIBkeXOtBHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGb508gb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750943321; c=relaxed/simple;
+	bh=wz4cMmpq1EicNyKcRE7LUubrXH3iHzmxXirobDrt1o8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=edDG8tVCux+zgfjEgfXGlz0xAV+I5i+H4cFlwqAVI+AlyD+55GV6GUqkYHIi1kiCwedhVNCQStgNP7doGRmSWoJDe9HxJyjnuSRVd9r/pXrk9GHSuUWK3PTt/jQaKjKyZHotXIKh5JdlX+voavxZVX7FAR/9YuXzZJrgPryKk0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=ZRxRqdrB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HKdu5GV1; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGb508gb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED3C9C4CEED;
-	Thu, 26 Jun 2025 13:07:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750943272;
-	bh=1cc6i/SKqjjHG+MY0TMZQTCnqXf1errPmHMvb0A9nAA=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=oGb508gb7TTQiKkHtPPIkIAEsJ2xdPsrVk4Wi1DqnojoECmpdKQ9Q/dzLvImPHCp8
-	 uyBHb9WalDwgJjpCuTmWv5cv/he/4k/K5xTfSxiEEldoQynXwg2g8vb9AYyAxaq4UI
-	 rzGBWITVDk//VmjeCjamHDb9GFeUnmxjKpVz2dziO0uMEgwdQGach3ev1vqezCwfCq
-	 4b4YZfRTk8LsACT1CJ8R5P8vo5VeJGgkkHobmAv4keft2nwIKl/5gOPhfiyKSP55Ni
-	 /3kQFhrxHwpxPvfCCrxSyTlVQWySxZlPGBR8ua4rxYC50n5UsuXCBEiqMzFpzUJTKX
-	 bmNqg9iCA5J1A==
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="ZRxRqdrB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HKdu5GV1"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.stl.internal (Postfix) with ESMTP id 9D59F1D00117;
+	Thu, 26 Jun 2025 09:08:36 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Thu, 26 Jun 2025 09:08:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1750943316; x=
+	1751029716; bh=GC6wCjzLugQpyX/JBZD8Gf0/3VKgEjS+1r1sT/9UcTQ=; b=Z
+	RxRqdrBIzMFB/nfo2MICSgPW+I4748DUSsxFtYunsjIWxcEJXB4ea/SDFnsT1B6f
+	xaRp0mFVOJH+93VWutLwanAHmJz+jOBRybt1CxbZSeTUxMNGT+6gg+5kOd1zzmGB
+	NNO8N1YELC87DfmswBnlTZ0FLkbsinRh/k37TW0fOTpe3ZcW3/69o4+GbkU0Ang3
+	0vSyLIckZ88FxovGg40EOqcg6mt58fLpG4tUZewILBs01G+/NwlwYfKmxJHJxdmm
+	IC7lbnOLQ8TvaEvQR3EpURaxzLmbRXX1vEGLGFeep2TQnH8Xo76sX980XUUQtjFd
+	ibPTb8FzMPQR6qjIaDaVw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1750943316; x=1751029716; bh=GC6wCjzLugQpyX/JBZD8Gf0/3VKgEjS+1r1
+	sT/9UcTQ=; b=HKdu5GV1Ccx8ZvdYFKwW6wo9lsliMK/n85ZXJqILqq83lnsEJIm
+	yxIi9ZCa7ue7is+ixbWXZGe8vQAxu14HUMm69fTXcFnR+/mMCL2iusaF8dBY8kRH
+	QcCL1Sd7AWMRjXXwCNVF0dXQTPTY+N/NKTgPfg+RVde6Dkcx+yha4HRQn46i4ZwL
+	I5Y/6JRCF1/8Znqc9er3LQ0yzanP5EYjr/d3zQVZoqaibiiO58rW47VUEZjtwDf7
+	UEjqHRtYtXIjr34nQkC8gJeNeQSqJ/bJYCU26CF1b7++z7D3lfEIDzIk9YWOPDOM
+	iIH608JpjyPvERdgDf8xu03Toq7YO9qVDOw==
+X-ME-Sender: <xms:U0ZdaCElqvLsG6GYYzxmHOyVTFca7V3eSSQLptwK25GwznvpIkct5w>
+    <xme:U0ZdaDWRL1Be1AqBMZlJwkR7nKCtXKFL1PM7KZKsGiSdcLXnNuRK8MM_t87VgOysb
+    rIq8kxC6zgZ3eKXoLw>
+X-ME-Received: <xmr:U0ZdaMLJ8qo2vCOSYYe5vkgaB9T_2_DSUWx7GoeVnivNHJRGMjyFAkLCOWC64UBZ-Zqr_g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddviecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegrihhl
+    ohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpe
+    ffhffvvefukfhfgggtuggjsehttdfstddttddvnecuhfhrohhmpedfmfhirhhilhhlucet
+    rdcuufhhuhhtvghmohhvfdcuoehkihhrihhllhesshhhuhhtvghmohhvrdhnrghmvgeqne
+    cuggftrfgrthhtvghrnhepffdvveeuteduhffhffevlefhteefveevkeelveejudduvedv
+    uddvleetudevhfeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdrnhgrmhgvpdhnsggprhgtphhtthho
+    pedufedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhivghlsehsuhhrrhhivg
+    hlrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtohepkhgvrhhnvghlqdhtvggrmhesmhgvthgrrdgtohhmpd
+    hrtghpthhtohepuggrvhgvrdhhrghnshgvnheslhhinhhugidrihhnthgvlhdrtghomhdp
+    rhgtphhtthhopehluhhtoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgvthgvrh
+    iisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepsghpsegrlhhivghnkedruggv
+    pdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgruggrvh
+    drrghmihhtsehgmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:U0ZdaMGfX2ruENJCB6xKynzG8EfXs1Jo8SrWy6Q87uPe1g8sgtVUsA>
+    <xmx:U0ZdaIUvbhR5T-VZlP_VABC0tMNZXVq8GJjnNhf797wGllEW2eM4Og>
+    <xmx:U0ZdaPNVHlc5ueEgzFNtfHvCz9CMwzU25_HkvBviBsD5UYB1OR2lkQ>
+    <xmx:U0ZdaP17xME3nlU2y65wNuqk3QDtSx92oV85DMEtqdzlc4IzZ9kupw>
+    <xmx:VEZdaLEs8OCX1bh_R8lm0mKwFIxCrHgV2X8qjDv6_D2qjFawrLkjEK80>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 26 Jun 2025 09:08:30 -0400 (EDT)
+Date: Thu, 26 Jun 2025 16:08:27 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Rik van Riel <riel@surriel.com>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, 
+	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, bp@alien8.de, 
+	x86@kernel.org, nadav.amit@gmail.com, seanjc@google.com, tglx@linutronix.de, 
+	mingo@kernel.org, Rik van Riel <riel@fb.com>
+Subject: Re: [RFC PATCH v4 2/8] x86/mm: enable BROADCAST_TLB_FLUSH on Intel,
+ too
+Message-ID: <5otrbzjvvz7zvqtfdoulm455jj4ut5fzjmsfzjyjkljcc2jp2s@2ealtckhzxow>
+References: <20250619200442.1694583-1-riel@surriel.com>
+ <20250619200442.1694583-3-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 26 Jun 2025 15:07:47 +0200
-Message-Id: <DAWHL4FKR25G.3PFDJX0SGX00E@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>
-Cc: "Boqun Feng" <boqun.feng@gmail.com>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <a.hindborg@kernel.org>,
- <aliceryhl@google.com>, <tmgross@umich.edu>, <david.m.ertman@intel.com>,
- <ira.weiny@intel.com>, <leon@kernel.org>, <kwilczynski@kernel.org>,
- <bhelgaas@google.com>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 3/4] rust: devres: get rid of Devres' inner Arc
-From: "Benno Lossin" <lossin@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250624215600.221167-1-dakr@kernel.org>
- <20250624215600.221167-4-dakr@kernel.org> <aFzI5L__OcB9hqdG@Mac.home>
- <aF0aiHhCuHjLFIij@pollux> <DAWE690DWP9A.10I5FIJSZDSR6@kernel.org>
- <aF0p5vIcL_4PBJCG@pollux>
-In-Reply-To: <aF0p5vIcL_4PBJCG@pollux>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619200442.1694583-3-riel@surriel.com>
 
-On Thu Jun 26, 2025 at 1:07 PM CEST, Danilo Krummrich wrote:
-> On Thu, Jun 26, 2025 at 12:27:18PM +0200, Benno Lossin wrote:
->> On Thu Jun 26, 2025 at 12:01 PM CEST, Danilo Krummrich wrote:
->> > On Wed, Jun 25, 2025 at 09:13:24PM -0700, Boqun Feng wrote:
->> >> On Tue, Jun 24, 2025 at 11:54:01PM +0200, Danilo Krummrich wrote:
->> >> [...]
->> >> > +#[pin_data(PinnedDrop)]
->> >> > +pub struct Devres<T> {
->> >>=20
->> >> It makes me realize: I think we need to make `T` being `Send`? Becaus=
-e
->> >> the devm callback can happen on a different thread other than
->> >> `Devres::new()` and the callback may drop `T` because of revoke(), so=
- we
->> >> are essientially sending `T`. Alternatively we can make `Devres::new(=
-)`
->> >> and its friend require `T` being `Send`.
->> >>=20
->> >> If it's true, we need a separate patch that "Fixes" this.
->> >
->> > Indeed, that needs a fix.
->>=20
->> Oh and we have no `'static` bound on `T` either... We should require
->> that as well.
->
-> I don't think we actually need that, The Devres instance can't out-live a=
- &T
-> passed into it. And the &T can't out-live the &Device<Bound>, hence we're
-> guaranteed that devres_callback() is never called because Devres::drop() =
-will be
-> able successfully unregister the callback given that we're still in the
-> &Device<Bound> scope.
+On Thu, Jun 19, 2025 at 04:03:54PM -0400, Rik van Riel wrote:
+> From: Rik van Riel <riel@fb.com>
+> 
+> Much of the code for Intel RAR and AMD INVLPGB is shared.
+> 
+> Place both under the same config option.
+> 
+> Signed-off-by: Rik van Riel <riel@surriel.com>
+> ---
+>  arch/x86/Kconfig.cpu | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
+> index f928cf6e3252..ab763f69f54d 100644
+> --- a/arch/x86/Kconfig.cpu
+> +++ b/arch/x86/Kconfig.cpu
+> @@ -360,7 +360,7 @@ menuconfig PROCESSOR_SELECT
+>  
+>  config BROADCAST_TLB_FLUSH
+>  	def_bool y
+> -	depends on CPU_SUP_AMD && 64BIT
+> +	depends on (CPU_SUP_AMD || CPU_SUP_INTEL) && 64BIT && SMP
 
-Yeah that's correct, I got confused.
+Maybe split it into few "depends on"?
 
-> The only thing that could technically out-live the &Device<Bound> would b=
-e
-> &'static T, but that would obviously be fine.
->
-> Do I miss anything?
+	depends on 64BIT
+	depends on SMP
+	depends on CPU_SUP_AMD || CPU_SUP_INTEL
 
-Nope :)
-
----
-Cheers,
-Benno
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
