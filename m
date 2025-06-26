@@ -1,152 +1,136 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9C22750F4
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3724D28934F
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750926333; cv=none; b=XwtYixJiQXBY7+NzZjFnk2wB+cLHSW6QxdvJ1TKhTw36KMlXYjg7nL6bqXPWWxE/jqlIHwB7KH/pWAH4A372dZea5pIcJ1nJNaIc+UynRme1wC/QbuiiZmJaZ3ApIKRq9No7scOy8a/Ps2MeJgIU+FXhb6c5Rd/sO+kGlV2dig0=
+	t=1750926339; cv=none; b=AJzaDf+voECrLhv8ZaSWOlyV917kWOxImiDT3LobYE9BglnlqNlr11Ty4ZzKy2Zx0LQRB7AHjiezpejVSYHvMQDVDK0FZmuxMXLpb+OQgMP2OJSOhHuWOVkfNGCun+vk/Q7q7+7x+dbnqucqjIH1VwIcBSnB+x4v0EAJ40AKaAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750926333; c=relaxed/simple;
-	bh=E6RxwVgu3vJOGn9XwWkokHd+a3MGchz9iKAQcu64ajw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cACGGfbZVOI8TVEkfS/RWS0I6hCtnuBbcw7eYHTUoU73PzOA13d8LUlNSU5OA5/R4dW5mrReHtTO4eEXPA7Ksj83JYj8GoscpSCjONNXVsNe1visYgcgdY9pO2jSy9l+zAPeaDXvn7ZO91RBpoPqW8zKH9Z3+0Dr426TI/6NG8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fIHvI5y9; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1750926339; c=relaxed/simple;
+	bh=tcbJ4dMHWa+h9imojMEcUHTRNC8LuPrUj/4HSqv1epI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SI7UWrjncOgpPNxkkO6cXnwQo0ciWMVGBps65r6x6/KwVaUvdlf+h3Un5AUAqkKuEx7hIbw/JG/ADMg7rKJoUBmT4fGb1iwkQI2NWWYEwhbi0CHK4Pqhua+lSEyZvilojKVxMAO3vDEAgIIwj0jNtUwRajO7K3/JE8VBFhle/3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vxnKb/Za; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fIHvI5y9"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4e62619afso85600f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 01:25:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vxnKb/Za"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553b584ac96so730971e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 01:25:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750926328; x=1751531128; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750926335; x=1751531135; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cCmPWaL2JK+cBGwDex8PVmJ2qL8B4VvzgJkSQY0fv8Q=;
-        b=fIHvI5y9uA7z+9SVCLSwjJNWJ31FldYS9TZ+oWsEpIjcbRMtf8JeuPBFSI7MXCo5fh
-         CEtTfyH1WG1a9Aj4whhRRn7jFXCKybbnJ8q6leh1D9vEBB6slRLx/1P+F9hVZKvwjkbC
-         8ffZGsPpXhN7JY8thi7NQDqYNgBeygmTn6KSlSwX1ToQK/tqclNlWAuAhMNg/kKuv9WU
-         fegoFtcxTsdSbWgP1vkZgTIg3pwEjeB9RqIxRZ2xpcTaOEpO/aMdee2f4+ByH0iqntVf
-         hGbjaJMjAGNX0fadYWjZf0yZAVrH3Xw/oVc8ZnjGIb7BDyn/GdJcNJehe7HCv6xYFtrF
-         opww==
+        bh=+KiWcI/ZEWKnAMfwKiluqNNZ9TMq7+QkURM7ieGMhCI=;
+        b=vxnKb/ZaUgxtnVa1WM2x2l6fxPib1MEdwgMostPsDxQV9aNZZ37OwVFkCIzCnMjaPm
+         iRzUvTNnM9Roh4wIK41jbK+b2h85ZtQr9iymbVuQ60Cq6wXDc++8GULEa35gtzjD7okJ
+         q+sbMMCqhSdn5DbXZUkO3AGBPrm1KnOfUHGU3EKTs5EidA2mBjrTEunnJs8uIRQ2hnif
+         F4eXuSFJ7sWZQN8eP2d+BK1CojcEJ+odw3l46WO/0uokHNnMDimoVG0eb8bMgwtSJpzH
+         4DXT10WM9Tir0+bO4uh36WLT9ACJIYziG6/iWoAumKV5T9mo0fVO1mFzlCgb/eUoyJNs
+         HgeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750926328; x=1751531128;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750926335; x=1751531135;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cCmPWaL2JK+cBGwDex8PVmJ2qL8B4VvzgJkSQY0fv8Q=;
-        b=Bglrvzx8IXMJJ8xcwiWVUOopzBqEhhKQNEvc+cdKWKe4jieGNsAyMfeiOd6jlOHeKw
-         Gxvz3JafXylu0DXD2Xmrhl0SPdIeeHllyg4lYhuDwUEdSQv3BaO+zY4PXULHV/YXuoqW
-         peeDTJzZGDgRwGYgaSg+ghEE0cM6bg+ugntA2Y0fb3P4T24+EUaVNaXaleXNSWwm4fVx
-         y9kPd4hMJ3nbEI2jQ3ARTvdBPXnXty27GA6e06GuZRX8sN5a0Od+qylsUPR+k6FPAGv5
-         9vRBjVNx2LKlZAT9laqy8ErXsz83BGr4l0mZTGDpQ+STXLquJKMs2cjG2ZiPtEjj6xlZ
-         S1lA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkHjilUqFOK15YWOnDL8wVs3Z48vcMaAIm57er9jjGpM1t2JDc2PgTaAwgGJwYZla4arX2LCHLVV1cfU4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrfPluP0KxyvoNn3q9B90tLNLsxXvqTFooxUySs3dZG6DHJ/aB
-	l8n0vK9T8/Q1IWuhFxWXptug/9H0jQ9B1Clgm9XLnkBk/IMZisx57NYnOlvrr+r6LYA=
-X-Gm-Gg: ASbGnctvIt2PNQKe/aJccayvhc/K3mJrLMXyvnACk5f/bfPQpROshwK4qcv+Yx0M6um
-	/DsdK5FF7tEP3lm5g5mDz+o7NaLy3LxvVGons2uhFJ3iGLgk2ndrwHV3pm0mnFQmLMrrcfW6a2Z
-	OWzeqEeq4tAg3L9B+WgMoLAx2cazp601OQYwKKOvUu6u24MInbmUVuRW2MrSUnobqBsf6xvJtgJ
-	6w8SYfRGP0CvnPOpC/U6xSsoyd3wWlYfsMnI3PrugIinbdkKmQgcckMlujjvEZEE0cjQX5ouB8K
-	Bp+4j8KjyBqfLeUszOSxLXzv0/ZnQ20MDA5eKDtqJjIT3+L9imoqk/5huggCXQ4H+U7aT6EJNal
-	CWwS+
-X-Google-Smtp-Source: AGHT+IEAZclUIfVDj/VGqSj8bLrUwvlFXbhpUIBVmE+AmsJhrhTCCer2N8+5GHrDmt4Q6t7t8SSboQ==
-X-Received: by 2002:adf:9d8b:0:b0:3a5:781c:6956 with SMTP id ffacd0b85a97d-3a6ed6206eamr1852279f8f.6.1750926328320;
-        Thu, 26 Jun 2025 01:25:28 -0700 (PDT)
-Received: from mordecai.tesarici.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34c429b3f1sm1005625a12.15.2025.06.26.01.25.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 01:25:27 -0700 (PDT)
-Date: Thu, 26 Jun 2025 10:25:12 +0200
-From: Petr Tesarik <ptesarik@suse.com>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton
- <akpm@linux-foundation.org>, Leon Romanovsky <leon@kernel.org>, Keith Busch
- <kbusch@kernel.org>, Caleb Sander Mateos <csander@purestorage.com>, Sagi
- Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>, John Garry
- <john.g.garry@oracle.com>, "open list:DOCUMENTATION"
- <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>, iommu@lists.linux.dev
-Subject: Re: [PATCH 7/8] docs: dma-api: update streaming DMA API physical
- address constraints
-Message-ID: <20250626102512.57ac20e5@mordecai.tesarici.cz>
-In-Reply-To: <1312ef41-1f7c-4b6a-9d04-aa49faaf9b17@samsung.com>
-References: <20250624133923.1140421-1-ptesarik@suse.com>
-	<20250624133923.1140421-8-ptesarik@suse.com>
-	<aFynHWAYtKPFT55P@archie.me>
-	<CGME20250626050612eucas1p166c9c423aa791a0f3f65ae6140e3e807@eucas1p1.samsung.com>
-	<20250626070602.3d42b607@mordecai.tesarici.cz>
-	<1312ef41-1f7c-4b6a-9d04-aa49faaf9b17@samsung.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-suse-linux-gnu)
+        bh=+KiWcI/ZEWKnAMfwKiluqNNZ9TMq7+QkURM7ieGMhCI=;
+        b=r3wWIfBDYzH8kMnn1oSrPfJ7Gn1Fx37BlRHLo+vXXurKMTqoqCcuzoyDGh4vj1yy31
+         CusHQA9cD/HEwsrrPl8wdHnb5X532HSWtd2DkSg0wg4yOhu7GXqz/2pZujJQg7Cycvcl
+         bNTmlBFWJLKe+x2W1lBFDjTTL6XmywzuzVZ1lBz+axsj6evv7y5AVlkMS2VWGD6cjoZc
+         mQMPp9LGdCJct8v81BlVy2HnBUX59HAPrDVQKFZ8whzsyRA4jPeOZBM8/JnrYoEQsCmR
+         K05i9cEhSXYJvnGqwk2lhWfK9msmgXeRwGHwxe3B1bGOI7J4hdaJA6OIyFjd1V21qxHe
+         +dDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpx/Rn89ZyynUV8EuQRmLRzX8BKsu56O7Kgaz267reuIK+ak3NtUrdma5SaJgQ9CBer93c6BVm+vHAlbU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXXiGff+ZQ3BvlfHL/j/2vVlbp2eXQJq562ousq0kAPHSHAiN3
+	vV5wEEy5gxtDNE/K8qbIl0m92dNQ8utCjKYL72eX7ZJnEjnKGZciZwKrM0hTFJOKCo2QsHbEh9A
+	3gMolh4ZBGN//kgTH3SKSc6Ryon8RzdxZnLyWUcRLi6GQBOSwZocwsmQ=
+X-Gm-Gg: ASbGncuVW7ZYGpdgPyPTZDr9WFxL3baaeCeG4Uu2kkYy1Ma/3Bz3Y8VCnn3HUgpqiDZ
+	l/lMloVyN5Wsacr5PEQgRBmk1r/7b7CCAnFORHx1Mb+hEEy6FE9VnQpXE/zBhFGTJuCOY8RiHMN
+	bOaCSfhAdDhhMpYN8e7w06TtENI7FqD8Umt0ovAE0QNHqQRVGTFqaJ4GuLf2lnJqsd+dpXTaHor
+	Q==
+X-Google-Smtp-Source: AGHT+IHiqTRhc98U7J30Q+L+jrTc1jmBUQy5Vyfvw1Z//zKbgr/TNUKjoi9hEvxXZFQA5uGpKkHKIMlulcDni5LExCA=
+X-Received: by 2002:a05:6512:2399:b0:553:35c4:db08 with SMTP id
+ 2adb3069b0e04-555029e70d5mr987473e87.30.1750926334687; Thu, 26 Jun 2025
+ 01:25:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250625-icc-clk-memleak-fix-v1-1-4151484cd24f@gmail.com>
+In-Reply-To: <20250625-icc-clk-memleak-fix-v1-1-4151484cd24f@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 26 Jun 2025 10:25:23 +0200
+X-Gm-Features: Ac12FXycIznnP1tC18vY9u2XdsRu_8gKuTWQBbtsSoPJ6qYsnL72hgxsDeWsTrU
+Message-ID: <CAMRc=Md5+pSxx3kxhrYpt_oMUOCUkzxeWEy=YXnhY_4053gqRA@mail.gmail.com>
+Subject: Re: [PATCH] interconnect: icc-clk: destroy nodes in case of memory
+ allocation failures
+To: Gabor Juhos <j4g8y7@gmail.com>
+Cc: Georgi Djakov <djakov@kernel.org>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Dmitry Baryshkov <lumag@kernel.org>, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 26 Jun 2025 09:09:34 +0200
-Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+On Wed, Jun 25, 2025 at 7:32=E2=80=AFPM Gabor Juhos <j4g8y7@gmail.com> wrot=
+e:
+>
+> When memory allocation fails during creating the name of the nodes in
+> icc_clk_register(), the code continues on the error path and it calls
+> icc_nodes_remove() to destroy the already created nodes. However that
+> function only destroys the nodes which were already added to the provider
+> and the newly created nodes are never destroyed in case of error.
+>
+> In order to avoid a memory leaks, change the code to destroy the newly
+> created nodes explicitly in case of memory allocation failures.
+>
+> Fixes: 44c5aa73ccd1 ("interconnect: icc-clk: check return values of devm_=
+kasprintf()")
+> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+> ---
+>  drivers/interconnect/icc-clk.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/interconnect/icc-clk.c b/drivers/interconnect/icc-cl=
+k.c
+> index 88f311c110207757f0609e5cec7d377a91133c6d..93c030608d3e0aad7d9c1ed81=
+a51dcde0d3f85ab 100644
+> --- a/drivers/interconnect/icc-clk.c
+> +++ b/drivers/interconnect/icc-clk.c
+> @@ -117,6 +117,7 @@ struct icc_provider *icc_clk_register(struct device *=
+dev,
+>
+>                 node->name =3D devm_kasprintf(dev, GFP_KERNEL, "%s_master=
+", data[i].name);
+>                 if (!node->name) {
+> +                       icc_node_destroy(node->id);
+>                         ret =3D -ENOMEM;
+>                         goto err;
+>                 }
+> @@ -135,6 +136,7 @@ struct icc_provider *icc_clk_register(struct device *=
+dev,
+>
+>                 node->name =3D devm_kasprintf(dev, GFP_KERNEL, "%s_slave"=
+, data[i].name);
+>                 if (!node->name) {
+> +                       icc_node_destroy(node->id);
+>                         ret =3D -ENOMEM;
+>                         goto err;
+>                 }
+>
+> ---
+> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> change-id: 20250625-icc-clk-memleak-fix-4462b5153970
+>
+> Best regards,
+> --
+> Gabor Juhos <j4g8y7@gmail.com>
+>
+>
 
-> On 26.06.2025 07:06, Petr Tesarik wrote:
-> > On Thu, 26 Jun 2025 08:49:17 +0700
-> > Bagas Sanjaya <bagasdotme@gmail.com> wrote:
-> >  
-> >> On Tue, Jun 24, 2025 at 03:39:22PM +0200, Petr Tesarik wrote:  
-> >>> diff --git a/Documentation/core-api/dma-api.rst b/Documentation/core-api/dma-api.rst
-> >>> index cd432996949c..65132ec88104 100644
-> >>> --- a/Documentation/core-api/dma-api.rst
-> >>> +++ b/Documentation/core-api/dma-api.rst
-> >>> @@ -210,18 +210,12 @@ DMA_BIDIRECTIONAL	direction isn't known
-> >>>   	this API should be obtained from sources which guarantee it to be
-> >>>   	physically contiguous (like kmalloc).
-> >>>   
-> >>> -	Further, the DMA address of the memory must be within the dma_mask of
-> >>> -	the device.  To ensure that the memory allocated by kmalloc is within
-> >>> -	the dma_mask, the driver may specify various platform-dependent flags
-> >>> -	to restrict the DMA address range of the allocation (e.g., on x86,
-> >>> -	GFP_DMA guarantees to be within the first 16MB of available DMA
-> >>> -	addresses, as required by ISA devices).
-> >>> -
-> >>> -	Note also that the above constraints on physical contiguity and
-> >>> -	dma_mask may not apply if the platform has an IOMMU (a device which
-> >>> -	maps an I/O DMA address to a physical memory address).  However, to be
-> >>> -	portable, device driver writers may *not* assume that such an IOMMU
-> >>> -	exists.
-> >>> +	Mapping may also fail if the memory is not within the DMA mask of the
-> >>> +	device.  However, this constraint does not apply if the platform has
-> >>> +	an IOMMU (a device which maps an I/O DMA address to a physical memory
-> >>> +	address), or the kernel is configured with SWIOTLB (bounce buffers).
-> >>> +	It is reasonable to assume that at least one of these mechanisms
-> >>> +	allows streaming DMA to any physical address.  
-> > Now I realize this last sentence may be contentious...
-> >
-> > @Marek, @Robin Do you agree that device drivers should not be concerned
-> > about the physical address of a buffer passed to the streaming DMA API?
-> >
-> > I mean, are there any real-world systems with:
-> >    * some RAM that is not DMA-addressable,
-> >    * no IOMMU,
-> >    * CONFIG_SWIOTLB is not set?
-> >
-> > FWIW if _I_ received a bug report that a device driver fails to submit
-> > I/O on such a system, I would politely explain the reporter that their
-> > kernel is misconfigured, and they should enable CONFIG_SWIOTLB.  
-> 
-> What about the systems with legacy 16/24bit ZONE_DMA (i.e. ISA bus)? 
-> AFAIR they don't use SWIOTLB and probably they won't be able to use 
-> streaming DMA API for all system RAM.
+Thanks for catching this.
 
-ISA is probably dead, but yeah, there may still be some systems with
-LPC, which inherits the same addressing limitations.
-
-I haven't really tested, but I believe these systems should be able to
-enable SWIOTLB. Is there a specific reason they can't use SWIOTLB?
-
-But if there is doubt, I can probably test such configuration.
-
-Petr T
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
