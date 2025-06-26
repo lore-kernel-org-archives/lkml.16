@@ -1,236 +1,240 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2062.outbound.protection.outlook.com [40.107.236.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D375021FF44
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750917798; cv=none; b=RtYqAQ9NWqZH/9bJmnRBjF5gUfuKgzkySulPEa2cKTcsrWV7Xxxp4CaZQRuRVpcO7klW3fepDvsFnhRsnTf9pX+o1TqnPQEW2UlBzrNGGUxc3SqjurDZnVGpMVJ3Zcy1ufU8dQVmDVX4TSwrH3q9D/8eS+8pIrj+FL8oI3o5wBA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750917798; c=relaxed/simple;
-	bh=ux/mTJ8E+wX+kajs9XBKrd9beBovgB6YKCu98nQUhUo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=YvJUF1txvJDnL4plOwenrbSayxNTtFIPivIO/pwWu+tCwWGH39MeJkoCFIegLqhmFx2aQ6rjGH9bReUqlmuKVMgPnKxZFdDFjYypbpaqPt4e1X1setQPIykrVGe+aDSCsIW8siIKgpSFrJcFYi4OM64hbYX9pX5X2hdOjl9VOJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UPbuRMVE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142401A0BF1;
+	Thu, 26 Jun 2025 06:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750917839; cv=fail; b=U+RROeGQ3W8rfoe+R6ej8vSDEY5gG+YxOIMRen9gxDCtqQui4EeC9gn74/lWydVSGV61RFRqEystafHOG0xNSsxwuGdU/O4kJfpTZbfLA7X0UknD4OFYiQFU/5DH0SbetMjnnuFzmAs804mUYH5rxmOFlhxjhQVW2mJ2UU+SSM8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750917839; c=relaxed/simple;
+	bh=saUBsKXa88QIuKJN0/aW/U7ABDwinK2l2zs3uZ99lw0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZPdZMIrVPAvKO6qEzXytFzks2mLK8rDG8h3wdDN3qjRXww4fAh3uMhP2/duNsNSHixlKmMITvObSAvtq5tObinzbbGquBglKXjt8IiGJ272vTH6HfG7blWqC8P2U1mmxKQNhsXDCgWhVXUngStFIGr5Oln7jf6OpByhwYoNfh0Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rgbs9cdg; arc=fail smtp.client-ip=40.107.236.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UPbuRMVE"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q4WonY010573;
-	Thu, 26 Jun 2025 06:02:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=MpPYhArlXmWCgYgW4qeCuw
-	s8Mpxw0BvsnQQWeZhvzM0=; b=UPbuRMVERhUxDEZzGrapMCXznkNIzr7w0yT8hW
-	svXcbwZ+1vjukeeO55jUVfUuJ3S3sZ5aJV5kIHMmUBNl7I44nKfeE8ksB2anT1pa
-	NCTO7jfz/So9qR72yn42knhuDxaNJcQ8xKKCmcGLqJsOnLFindpIrHCq+sLBNjuz
-	FxbISy0eI+60M7rR9JUdX3GhLc4mjgis/JtbeXkNqxJzL3NdJtqGdAPWLVfCZLOU
-	OrOtYzHpt8BjqVNRDmijQxhWSCM0JmV7kb67d91IxF/ZfTRi2QzOslZN6Cc+HCKP
-	T3vPIgAWjKLwxAh1fZNUbr7MsfTjBk5VG0dhuF7FS37H+IPQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g88fbw4c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 06:02:36 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55Q62ZbK014364
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 06:02:35 GMT
-Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 25 Jun 2025 23:02:30 -0700
-From: Luo Jie <quic_luoj@quicinc.com>
-Date: Thu, 26 Jun 2025 14:02:20 +0800
-Subject: [PATCH v6] coccinelle: misc: Add field_modify script
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rgbs9cdg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QpNNcZMiOFxh+HMRnwqDerXATlb9tzMghWq4+CyF8PN8hMnEZGz8TSHG2yEX5UTV+YLSQKEEQ2XFPxvl2/AVpLElxNXsqLNCb9yT4jnCs/rWKl2QLMO4QqCNhgOlTdwFDEpbeSDniWHS+5kXsaqELaAnaaHCc7/DPpJ3uiRKMjNDvNyeOD7jD9uMvLRf0hQVntZiuLo3dwy28RqUdGr1W+CMZhfaZMdv8p86+mTmO9dW9rV2GyJpvgt5PHksQ5Mfxfwk6q4vLekm+4/Q7K6TOyorTWKjqfLA4WqBsJINc1WthxgU06S2aFIW7skYsCB0U/ulYOxPzVSomCTKjjjfNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YxWkQx4J3TGSqTOUaO/knsQCJrl5g4OCmgHNKhJTbXI=;
+ b=jFBOwjikxe/3jf9+kjr4tBLYhE9AP7Aim93v+LhJ3xzTmDrv30f6KnkACx8UGK4WqxfhfO88LYCYebgKDd8BvSWSV0BxgRpCjRDczpJ+YMTmYUr0mxqnA8cdJ8NBt1tKP68k5t3V7MT8fa98bn2ROcAcVGMBTKUKtC1abrQ/oBOz1TSMayy3yl8DfIFRhc+UYqzFxKrt8aVA1u+G6av8e2Jokkf1gjzOabac0Bu+DPdPOCVFzskDcNHnxPCPY4R4xLA2KLn9YPj2NKYE7iHThe+1t5efg839JweZ/jhuTXc+baQOPFay7F4IxSN+HmawoEPDRVDgs4QW5ifEbSA5/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YxWkQx4J3TGSqTOUaO/knsQCJrl5g4OCmgHNKhJTbXI=;
+ b=rgbs9cdgr9aXnlKfITvcEJtC63sdVrXPvv/Xp5KZgsd+8V29ZDC0fJAOsCIsk7wrl3DWsX13l8owPxmpLVm4WSCH48XVBNqFI6MDRipvaz4fpurDKq46Eohyj2DW0aWPvmrG7VBAdKlmGhL6klaZUpJUbrWg1ylxUeJWWPRrVuk=
+Received: from SJ0PR03CA0337.namprd03.prod.outlook.com (2603:10b6:a03:39c::12)
+ by CY8PR12MB7514.namprd12.prod.outlook.com (2603:10b6:930:92::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Thu, 26 Jun
+ 2025 06:03:52 +0000
+Received: from CO1PEPF000066EC.namprd05.prod.outlook.com
+ (2603:10b6:a03:39c:cafe::5e) by SJ0PR03CA0337.outlook.office365.com
+ (2603:10b6:a03:39c::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.18 via Frontend Transport; Thu,
+ 26 Jun 2025 06:03:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000066EC.mail.protection.outlook.com (10.167.249.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8880.14 via Frontend Transport; Thu, 26 Jun 2025 06:03:52 +0000
+Received: from gomati.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 26 Jun
+ 2025 01:02:20 -0500
+From: Nikunj A Dadhania <nikunj@amd.com>
+To: <linux-kernel@vger.kernel.org>, <bp@alien8.de>, <x86@kernel.org>
+CC: <tglx@linutronix.de>, <mingo@redhat.com>, <dave.hansen@linux.intel.com>,
+	<thomas.lendacky@amd.com>, <aik@amd.com>, <dionnaglaze@google.com>, "Nikunj A
+ Dadhania" <nikunj@amd.com>, <stable@vger.kernel.org>
+Subject: [PATCH v2] x86/sev: Use TSC_FACTOR for Secure TSC frequency calculation
+Date: Thu, 26 Jun 2025 11:31:41 +0530
+Message-ID: <20250626060142.2443408-1-nikunj@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250626-field_modify-v6-1-200dffa38a07@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAGviXGgC/2XOSw6CMBSF4a2Qjq3pixYcuQ9jTO1DbiKgVBsJY
- e8WHCgyPDf5/twBBdeBC2iXDahzEQK0TRpykyFT6ebiMNi0ESMsJ5Iy7MFd7aluLfgeM0V56aX
- iRUFRIrfOeXjNucMx7QrCo+36uR7pdP2EBFXLUOSYYOlVWTKtvTmr/f0JBhqzNW2NplQUX776I
- 4rEtRNeCatFruWa5z+ciT+eY4qNlYoyRThxYsnHcXwDlLj04SgBAAA=
-To: Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes
-	<linux@rasmusvillemoes.dk>,
-        Julia Lawall <Julia.Lawall@inria.fr>,
-        "Nicolas
- Palix" <nicolas.palix@imag.fr>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Oliver Upton
-	<oliver.upton@linux.dev>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose
-	<suzuki.poulose@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>
-CC: <linux-kernel@vger.kernel.org>, <cocci@inria.fr>,
-        <linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-        <andrew@lunn.ch>, <quic_kkumarcs@quicinc.com>,
-        <quic_linchen@quicinc.com>, <quic_leiwei@quicinc.com>,
-        <quic_suruchia@quicinc.com>, <quic_pavir@quicinc.com>,
-        <Markus.Elfring@web.de>, Luo Jie
-	<quic_luoj@quicinc.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750917750; l=3872;
- i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
- bh=ux/mTJ8E+wX+kajs9XBKrd9beBovgB6YKCu98nQUhUo=;
- b=SeVIF7MxdkxmO2LE2JP0k/HUfsPK/T+wakKidgrx0NOm7aKMlpXxE9R7z5KxWkTvp24OxHmh6
- Qiyxud6avYeB9BngiBtHC1UwyTw3mxEhuf/qSKDCTlhD5eA/Iu23k0Q
-X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
- pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA0NiBTYWx0ZWRfX/msli3c7dzzA
- pQfUlU6zJZDj6mqYCP5F3geXzxrFBwq+d/e1m6IGN017415Pn2T+OywwLY/ZtXJ0a4hBFLqN63K
- uo2Q2erLY99EF8jwveTACksI+K+i3HwgaCjSPO5xCpaQ8MWVfRcwyKzvi7zFaC9ElTKO7A/sdmz
- WELOZfjuJucj6vnl73EyfTS7yN3SlwbLfcSpj8ycF/tkeRHRtsuJUeXBuN5Lu3FNg56rQbspAS6
- Vv85XUTy6TmuU5DdmK/o/8pUmyPap4/QGhPmzglIis6l8hfFIRyoJuHPYV3AlVDfduLA7dsgGJU
- lUX0wdZ0iQTK0odQSfDWIbsEI94OsSavOfGUbIzYyXAfbk4gUta/rdtW3HlSmstkWjnjT8H1qxa
- vG0mUe0pk5gJpE35ckH2YzOzBXfsMrYWxG/JwqVCnDr9/lXMT4muAtX2aZHupt/KbTbXKZuj
-X-Proofpoint-ORIG-GUID: zaYYXVueZahctmNJ9GD006cERxboO3-t
-X-Proofpoint-GUID: zaYYXVueZahctmNJ9GD006cERxboO3-t
-X-Authority-Analysis: v=2.4 cv=LNNmQIW9 c=1 sm=1 tr=0 ts=685ce27c cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=05oQ047nAAAA:8 a=S47agHus8KO1I0bcMDsA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22 a=vNAg3JWiabyzeNEprMgK:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_03,2025-06-25_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
- impostorscore=0 mlxscore=0 clxscore=1015 adultscore=0 priorityscore=1501
- lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506260046
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000066EC:EE_|CY8PR12MB7514:EE_
+X-MS-Office365-Filtering-Correlation-Id: 52e97113-2b62-4947-aabb-08ddb47739ec
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?6Ki3bc1Qs92rbv9xDXk6wNkwTIZFNzNxJDGb7dM6B8Y3pUyIYLP6qAt13h3V?=
+ =?us-ascii?Q?4urD9MTkFyAt3TQfxfJz3UnK6jTNtvQDGpd53SvrScHUQ5VXi8QQOKqNkxf9?=
+ =?us-ascii?Q?Kbil7WEmxEC+itUiuWpCu0Z1hgpPEvQ3PRGmkOPpPIwkEc17IlUx2eOO8567?=
+ =?us-ascii?Q?tsWBt5dteaEwkvqIXQG79ljW5jwb3ENJ8hhUXHUFSPSfZQRFRUcMrmCOSzrJ?=
+ =?us-ascii?Q?BSim3CPQyh+fS05EeJOsLZhH4trgg5W8UQVHMtQ354UPfmFMhPdqI/5BoJzL?=
+ =?us-ascii?Q?et6wUiftz4chKCVs1PirOVdn2GY+Jm0IW/iZ/CzTxFC0YwWhHtyHX2km4A95?=
+ =?us-ascii?Q?o1qOx3KcR91Jk1JvK7xfdNHgAK5OL3PPJkpEiNHjgcE/tcYOaiXHy2KP3j1Z?=
+ =?us-ascii?Q?N9CPrkJ9S88onlGNp2Tr1I2M4uBDpqjNZL3Uq7IJ5+MeLa9z6aY5IU7Zx9LT?=
+ =?us-ascii?Q?hkbkityo9+LcRWRJ1FUsUY7AveScvTBXjxx6RVMz/jZRtowCKp3GTdCV486C?=
+ =?us-ascii?Q?TjBRTG3xSYijYFhswd0TWEDWp4vbfQkeEmO9k+zBerh+s1cGWFWTCvUJEyTB?=
+ =?us-ascii?Q?GHYxTgtG+NDyn8RdBeJeBCuXJ6UUWehjlgdupQi+Dr61zjZ2tr5/wSBFWiQh?=
+ =?us-ascii?Q?0fPy1BUq2aQvqcpwXb8vboFJ9cj75eGmWArLCJ3iaQ3kf9Ad1A67F9vSd7op?=
+ =?us-ascii?Q?sLXscGbURNtIlXadj6jPkEY7RlFcQjzdOTVgokOo3lcPINCbdtv5bW/5J+Z2?=
+ =?us-ascii?Q?jl0lDj4v4y4OLnLp0lEJyBxbNeyJ5B+xtiutZF5+NaljrvsM8JZOytbe0tYE?=
+ =?us-ascii?Q?vSiiEWrmUKtagAbaPFWotfBfhUGxFPKtrAKf+7iGzXPZAtkknVByG+sMwFUw?=
+ =?us-ascii?Q?NjKFJtkjj6MXu6I4U76jObqykx2zk24zMMqDxbhwCIPmL23Qp2upCtND16IE?=
+ =?us-ascii?Q?jBhmszVQ6kVZKbKa2RSl7HBN1unpiPTeVR9ENsJzGKopU2AgRkkxO3J82Ek1?=
+ =?us-ascii?Q?BHKTVkOtZZiMlnisF16B6i06/vAT0b41nwHOxPHaBfirrlse2H9NLkKJ8y6w?=
+ =?us-ascii?Q?k+r/miRQQcjd1pGW7AwJJRvMFiUrL+u4idbiH8tia/mWROJv4LKRQ3i0vcqu?=
+ =?us-ascii?Q?XL5bAaIt/aotw8+qcptYvJrB4nI0jrT4dns3x3esqYiM43eGvaRR1foQA5PT?=
+ =?us-ascii?Q?zr7WDTJKAHAqa2xsRzjYRY7RKPlJCFu5SH5rZRjHvw6guvc0zASddwlPfxqf?=
+ =?us-ascii?Q?Fqhm5yaUVw6PcCI+82ALuMMH9J9v7PcISVECNu8bivANcvZFAaMyMJm60kxZ?=
+ =?us-ascii?Q?cMjbhkZSvRP3RJG8+CgzjMH1LKPzUxZuJT/XHjciJaC6hYZ0aypKZ51zGJEC?=
+ =?us-ascii?Q?5gn4NjG33vSzBj7QO6h4C989GsCMNrEPcpkZ0yn8709nvmT5PFgyKXMt3ziV?=
+ =?us-ascii?Q?vYrQX/bztgaIhK66EkKAfdv0gvLrfjKtF3GZYDVYzvLApXc9TO8MtQ+gzgHF?=
+ =?us-ascii?Q?bdP8KoB34R+K9fazQ9zQs0ABCvkMBMBmkSmV?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 06:03:52.0832
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52e97113-2b62-4947-aabb-08ddb47739ec
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000066EC.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7514
 
-Find and suggest conversions of opencoded field modify patterns with
-the wrapper FIELD_MODIFY() API defined in include/linux/bitfield.h
-for catching the possible parameter type error in the compile time.
+When using Secure TSC, the GUEST_TSC_FREQ MSR reports a frequency based on
+the nominal P0 frequency, which deviates slightly (typically ~0.2%) from
+the actual mean TSC frequency due to clocking parameters. Over extended VM
+uptime, this discrepancy accumulates, causing clock skew between the
+hypervisor and SEV-SNP VM, leading to early timer interrupts as perceived
+by the guest.
 
-Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
----
-Add the helper FIELD_MODIFY() to the FIELD_XXX family of bitfield
-macros. It is functionally similar as xxx_replace_bits(), but adds
-the compile time checking to catch incorrect parameter type errors.
+The guest kernel relies on the reported nominal frequency for TSC-based
+timekeeping, while the actual frequency set during SNP_LAUNCH_START may
+differ. This mismatch results in inaccurate time calculations, causing the
+guest to perceive hrtimers as firing earlier than expected.
 
-This series also converts the four instances of opencoded FIELD_MODIFY()
-that are found in the core kernel files, to instead use the new
-FIELD_MODIFY() macro. This is achieved with Coccinelle, by adding
-the script field_modify.cocci.
+Utilize the TSC_FACTOR from the SEV firmware's secrets page (see "Secrets
+Page Format" in the SNP Firmware ABI Specification) to calculate the mean
+TSC frequency, ensuring accurate timekeeping and mitigating clock skew in
+SEV-SNP VMs.
 
-The changes are validated on IPQ9574 SoC which uses ARM64 architecture.
----
-Changes in v6:
-- Adopt the suggested code variant for the org mode.
-- Link to v5: https://lore.kernel.org/r/20250624-field_modify-v5-1-cd67127030e4@quicinc.com
+Use early_ioremap_encrypted() to map the secrets page as
+ioremap_encrypted() uses kmalloc() which is not available during early TSC
+initialization and causes a panic.
 
-Changes in v5:
-- Remove ARM64 patches based on the discussion in v3 and v4 versions of
-  this series.
-- Simplify the condition selections in coccinelle script.
-- Link to v4: https://lore.kernel.org/r/20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com
-
-Changes in v4:
-- Add org, report and context mode for coccinelle script.
-- Fix other comments on coccinelle script patch.
-- Remove the FIELD_MODIFY patch as it is merged.
-- Link to v3: https://lore.kernel.org/r/20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com
-
-Changes in v3:
-- Correct the order of header files included.
-- Add the Coccinelle script field_modify.cocci..
-- Convert the opencoded FIELD_MODIFY() variants inside arm64 directory,
-  identified by field_modify.cocci.
-- Link to v2: https://lore.kernel.org/all/20250410131048.2054791-1-quic_luoj@quicinc.com/
-
-Changes in v2:
-- Update the documented example for FIELD_MODIFY().
-- Improve the commit message to describe the need for the change.
-- Link to v1: https://lore.kernel.org/all/20250318071526.1836194-1-quic_luoj@quicinc.com/
----
- scripts/coccinelle/misc/field_modify.cocci | 59 ++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
-
-diff --git a/scripts/coccinelle/misc/field_modify.cocci b/scripts/coccinelle/misc/field_modify.cocci
-new file mode 100644
-index 000000000000..bdc5a65a1b53
---- /dev/null
-+++ b/scripts/coccinelle/misc/field_modify.cocci
-@@ -0,0 +1,59 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/// Replace below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
-+/// - reg &= ~MASK;
-+/// - reg |= FIELD_PREP(MASK, val);
-+//
-+// Confidence: High
-+// Author: Luo Jie <quic_luoj@quicinc.com>
-+// Copyright: (C) 2025 Qualcomm Innovation Center, Inc.
-+// Keywords: FIELD_PREP, FIELD_MODIFY
-+// Options: --include-headers
-+
-+virtual context
-+virtual patch
-+virtual org
-+virtual report
-+
-+@depends on context@
-+identifier reg, val;
-+constant mask;
-+symbol FIELD_PREP;
-+@@
-+
-+*reg &= ~mask;
-+*reg |= FIELD_PREP(mask, val);
-+
-+@depends on patch@
-+identifier reg, val;
-+constant mask;
-+symbol FIELD_PREP, FIELD_MODIFY;
-+@@
-+
-+-reg &= ~mask;
-+-reg |= FIELD_PREP(mask, val);
-++FIELD_MODIFY(mask, &reg, val);
-+
-+@r depends on org || report@
-+identifier reg, val;
-+constant mask;
-+symbol FIELD_PREP;
-+position p;
-+@@
-+
-+reg &= ~mask;
-+reg |= FIELD_PREP@p(mask, val);
-+
-+@script:python depends on report@
-+p << r.p;
-+x << r.reg;
-+@@
-+
-+coccilib.report.print_report(p[0], "WARNING: Consider using FIELD_MODIFY helper on %s" % (x))
-+
-+@script:python depends on org@
-+p << r.p;
-+x << r.reg;
-+@@
-+
-+msg = f"WARNING: Consider using FIELD_MODIFY helper on {x}"
-+coccilib.org.print_todo(p[0], msg.replace("[","@(").replace("]",")"))
+Fixes: 73bbf3b0fbba ("x86/tsc: Init the TSC for Secure TSC guests")
+Cc: stable@vger.kernel.org
+Signed-off-by: Nikunj A Dadhania <nikunj@amd.com>
 
 ---
-base-commit: 0bb71d301869446810a0b13d3da290bd455d7c78
-change-id: 20250612-field_modify-27139f673881
+v2:
+* Move the SNP TSC scaling constant to the header (Dionna)
+* Drop the unsigned long cast and add in securetsc_get_tsc_khz (Tom)
+* Drop the RB from Tom as the code has changed
+---
+ arch/x86/include/asm/sev.h | 18 +++++++++++++++++-
+ arch/x86/coco/sev/core.c   | 16 ++++++++++++++--
+ 2 files changed, 31 insertions(+), 3 deletions(-)
 
-Best regards,
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index fbb616fcbfb8..869355367210 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -223,6 +223,19 @@ struct snp_tsc_info_resp {
+ 	u8 rsvd2[100];
+ } __packed;
+ 
++
++/*
++ * Obtain the mean TSC frequency by decreasing the nominal TSC frequency with
++ * TSC_FACTOR as documented in the SNP Firmware ABI specification:
++ *
++ * GUEST_TSC_FREQ * (1 - (TSC_FACTOR * 0.00001))
++ *
++ * which is equivalent to:
++ *
++ * GUEST_TSC_FREQ -= (GUEST_TSC_FREQ * TSC_FACTOR) / 100000;
++ */
++#define SNP_SCALE_TSC_FREQ(freq, factor) ((freq) - ((freq) * (factor)) / 100000)
++
+ struct snp_guest_req {
+ 	void *req_buf;
+ 	size_t req_sz;
+@@ -283,8 +296,11 @@ struct snp_secrets_page {
+ 	u8 svsm_guest_vmpl;
+ 	u8 rsvd3[3];
+ 
++	/* The percentage decrease from nominal to mean TSC frequency. */
++	u32 tsc_factor;
++
+ 	/* Remainder of page */
+-	u8 rsvd4[3744];
++	u8 rsvd4[3740];
+ } __packed;
+ 
+ struct snp_msg_desc {
+diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+index 8375ca7fbd8a..36f419ff25d4 100644
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@ -2156,20 +2156,32 @@ void __init snp_secure_tsc_prepare(void)
+ 
+ static unsigned long securetsc_get_tsc_khz(void)
+ {
+-	return snp_tsc_freq_khz;
++	return (unsigned long)snp_tsc_freq_khz;
+ }
+ 
+ void __init snp_secure_tsc_init(void)
+ {
++	struct snp_secrets_page *secrets;
+ 	unsigned long long tsc_freq_mhz;
++	void *mem;
+ 
+ 	if (!cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
+ 		return;
+ 
++	mem = early_memremap_encrypted(sev_secrets_pa, PAGE_SIZE);
++	if (!mem) {
++		pr_err("Unable to get TSC_FACTOR: failed to map the SNP secrets page.\n");
++		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_SECURE_TSC);
++	}
++
++	secrets = (__force struct snp_secrets_page *)mem;
++
+ 	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
+ 	rdmsrq(MSR_AMD64_GUEST_TSC_FREQ, tsc_freq_mhz);
+-	snp_tsc_freq_khz = (unsigned long)(tsc_freq_mhz * 1000);
++	snp_tsc_freq_khz = SNP_SCALE_TSC_FREQ(tsc_freq_mhz * 1000, secrets->tsc_factor);
+ 
+ 	x86_platform.calibrate_cpu = securetsc_get_tsc_khz;
+ 	x86_platform.calibrate_tsc = securetsc_get_tsc_khz;
++
++	early_memunmap(mem, PAGE_SIZE);
+ }
+
+base-commit: 49151ac6671fe0372261054daf5e4da3567b8271
 -- 
-Luo Jie <quic_luoj@quicinc.com>
+2.43.0
 
