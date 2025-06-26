@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671C6275B08;
-	Thu, 26 Jun 2025 11:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A3A275B1E;
+	Thu, 26 Jun 2025 11:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750939007; cv=none; b=NKy/cwHVIrP3Tu5Xs1SdH3GL7RB83WA+5JRN2q/M7pwm2QRt1OMwDV/X3oVwbqLPx74zwZhsCv6/F29TC1P3DsUPWu6Chwafov3Iuki7VuChjcQCtC2y6NXP3OcJqcAa46gc3qpj/G4hIG+2NQG67CZshfgZfFcDtCtdNhHJjN4=
+	t=1750939008; cv=none; b=vEZMllhza5LUQbIvgMobw8TDZHPOCbWAWCL/l3dQXuvQBYc57NQ8yRqwL/dc+xZxor8gE/5PsjtbUZ82QJ35tkUowEPDBPNmsGHR1uPK0svpnvnRhelrik9/enUTE37MP+3nrwDjXK5rEdjG1r67dfO0l/nkI6AFdFidc0B1sJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750939007; c=relaxed/simple;
-	bh=Yfr0P0vg7a2fWi2QizXPf/WipE7iGQ1sFhE5LDo3Jkk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QswuJaveXcadzKr12fpO0DW6H2rQ9uS4/B3ychgpO9Ez7kk5pmXO+IKQYg9OTzOu3Oq32+USXzstjjL6c3OPs/yhNg/MocfdEhpEGliTudnxftM/2uZxZ/Bp4qiqhcrmkr0BeBWSqwWTtJl+5hZLfUajSuYPPRBtSABhkESJTFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DckGpYfb; arc=none smtp.client-ip=192.198.163.14
+	s=arc-20240116; t=1750939008; c=relaxed/simple;
+	bh=/3RJJEQ2zBHSm6EY7rwA9SGnSiEM7Gbzc56YyGcdRaI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ngTcYwiHDhO2n4EdtqI2isvE1bOVJirB8/E3VBuS5DXf8dK/iZPF5lbtgCPH8k4+vKmf3PAZtFBu+cmVIUeVIEEzze4vXAy/wM46ZR9QwDnnBHibJOFWRiNnxY2UXqaARsw8lUW16IXm4t8Sq8ewCTHKrAPOFH/X+Uq/7+FB6Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z+p5L2Qi; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DckGpYfb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z+p5L2Qi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750939005; x=1782475005;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Yfr0P0vg7a2fWi2QizXPf/WipE7iGQ1sFhE5LDo3Jkk=;
-  b=DckGpYfbji7JCgO7aMqbuZOToXpDJ8PA6VQTq6I8pA2hVwKjLyyI4K4z
-   GDp/q6ESGzng558/jfDSuREaRhXr4+iaK+4yXe5yYdmHvZ3cKSOCgRY5g
-   Aunq/Pj+om3NpTCtQhoWWUSaE9EgbdFeRrDb1ao5pIOCX40GhdB/Vb1tQ
-   TjcAO5AhIqhi9Ww5OArLpFTHvCs2uKXqFPmrjIgw1hV0qEi8s0/rFh4gf
-   ev4YTBaDqtNzzbzmzGSsWX6VOnuXVktrmGi5L0yifNXiOYsyvI+yJQykx
-   XGBmAA08uasD6kTug5UZ7b7zXRQH8ifjGKr4UmeCGNrqZlnu+ZPHIKfZr
+  t=1750939006; x=1782475006;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=/3RJJEQ2zBHSm6EY7rwA9SGnSiEM7Gbzc56YyGcdRaI=;
+  b=Z+p5L2Qi7vxn8kfFbz+TNfeRZuMNucyMoclo+vvIDwIBHLStN1YA9/ZG
+   tQi7VNdnlpjRQWo8MLhi+EL4G/HUEGTkrz+LPDJ5bXeGfqX5Yz8IRtnjH
+   ppQ/Vmaj/iZvmpLzqyzGH5Sluo4WtiPRdy0K/hjxguta4odKywmEOaSC8
+   cYf24dSB/7zmCs3HyigV9SljuXBVcOVJtsqqnqJBOxAKk5WbvkkVsAtCw
+   OVcikihE/TzOEBeGH1nk35z9/9cSgy70rPxESeY+dVCl533OL/P39ROMQ
+   GSgN7jjIYzQzPzGuiDH2+JQkHHgvSG1QRgkchqKDpHBOEApLQ5lVZVFhW
    Q==;
-X-CSE-ConnectionGUID: 14XVvgXKSqmio0Whm9iLYw==
-X-CSE-MsgGUID: 2PMr7nH9QZeSqwuzVtjFRQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53304520"
+X-CSE-ConnectionGUID: eBB7PhjPQuSgnyYV4DvGHA==
+X-CSE-MsgGUID: qlnUjehYR1uKA6iu/eVTZA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53304529"
 X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="53304520"
+   d="scan'208";a="53304529"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 04:56:44 -0700
-X-CSE-ConnectionGUID: 9r4Zx2t7Sbensz7JUsccsg==
-X-CSE-MsgGUID: THIUErPGT+yHvyseXkv4bg==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 04:56:46 -0700
+X-CSE-ConnectionGUID: FeIBOcjaTuquBnGDWLT4Iw==
+X-CSE-MsgGUID: O3VK16BnSa6lqYeipo8mUQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="152800551"
+   d="scan'208";a="152800555"
 Received: from yungchua-desk.itwn.intel.com ([10.227.8.136])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 04:56:42 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 04:56:44 -0700
 From: Bard Liao <yung-chuan.liao@linux.intel.com>
 To: broonie@kernel.org,
 	tiwai@suse.de,
@@ -51,10 +52,12 @@ Cc: vinod.koul@linaro.org,
 	linux-kernel@vger.kernel.org,
 	pierre-louis.bossart@linux.dev,
 	bard.liao@intel.com
-Subject: [PATCH 00/15] ASoC/soundwire: Realtek codecs: wait codec init in hw_params
-Date: Thu, 26 Jun 2025 19:56:10 +0800
-Message-ID: <20250626115625.536423-1-yung-chuan.liao@linux.intel.com>
+Subject: [PATCH 01/15] soundwire: add sdw_slave_wait_for_initialization helper
+Date: Thu, 26 Jun 2025 19:56:11 +0800
+Message-ID: <20250626115625.536423-2-yung-chuan.liao@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250626115625.536423-1-yung-chuan.liao@linux.intel.com>
+References: <20250626115625.536423-1-yung-chuan.liao@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,56 +66,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The current code waits for the codec initialization in the resume
-callback. It could cause the resume takes a long time while waiting for
-the codec being attached and initialized. Move the waiting to the
-hw_params callback when the driver really needs it and shorten the
-resume time.
-The change is mainly on the ASoC tree. Let's go through the ASoC tree.
+waiting for slave->initialization_complete is commonly used by SoundWire
+codec drivers. Add a helper to reduce the duplicated code.
 
-Bard Liao (15):
-  soundwire: add sdw_slave_wait_for_initialization helper
-  ASoC: rt722: wait codec init in hw_params
-  ASoC: rt712: wait codec init in hw_params
-  ASoC: rt1320: wait codec init in hw_params
-  ASoC: rt721: wait codec init in hw_params
-  ASoC: rt715-sdca: wait codec init in hw_params
-  ASoC: rt711-sdca: wait codec init in hw_params
-  ASoC: rt711: wait codec init in hw_params
-  ASoC: rt715: wait codec init in hw_params
-  ASoC: rt700: wait codec init in hw_params
-  ASoC: rt1316: wait codec init in hw_params
-  ASoC: rt1318: wait codec init in hw_params
-  ASoC: rt1308: wait codec init in hw_params
-  ASoC: rt5682: wait codec init in hw_params
-  ASoC: rt1017: wait codec init in hw_params
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Reviewed-by: Shuming Fan <shumingf@realtek.com>
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ drivers/soundwire/slave.c     | 17 +++++++++++++++++
+ include/linux/soundwire/sdw.h |  1 +
+ 2 files changed, 18 insertions(+)
 
- drivers/soundwire/slave.c          | 17 ++++++++++++++
- include/linux/soundwire/sdw.h      |  1 +
- sound/soc/codecs/rt1017-sdca-sdw.c | 32 ++++++++++++++++----------
- sound/soc/codecs/rt1308-sdw.c      | 32 ++++++++++++++++----------
- sound/soc/codecs/rt1316-sdw.c      | 32 ++++++++++++++++----------
- sound/soc/codecs/rt1318-sdw.c      | 30 ++++++++++++++++--------
- sound/soc/codecs/rt1320-sdw.c      | 32 ++++++++++++++++++--------
- sound/soc/codecs/rt5682-sdw.c      | 29 +++++++++++++++--------
- sound/soc/codecs/rt700-sdw.c       | 27 ++++++++++++----------
- sound/soc/codecs/rt700.c           |  6 +++++
- sound/soc/codecs/rt711-sdca-sdw.c  | 28 ++++++++++++----------
- sound/soc/codecs/rt711-sdca.c      |  6 +++++
- sound/soc/codecs/rt711-sdw.c       | 26 +++++++++++++--------
- sound/soc/codecs/rt711.c           |  6 +++++
- sound/soc/codecs/rt712-sdca-sdw.c  | 28 ++++++++++++----------
- sound/soc/codecs/rt712-sdca.c      |  6 +++++
- sound/soc/codecs/rt715-sdca-sdw.c  | 37 ++++++++++++++++++++----------
- sound/soc/codecs/rt715-sdca.c      |  6 +++++
- sound/soc/codecs/rt715-sdw.c       | 27 ++++++++++++----------
- sound/soc/codecs/rt715.c           |  6 +++++
- sound/soc/codecs/rt721-sdca-sdw.c  | 29 ++++++++++++-----------
- sound/soc/codecs/rt721-sdca.c      |  6 +++++
- sound/soc/codecs/rt722-sdca-sdw.c  | 26 +++++++++++----------
- sound/soc/codecs/rt722-sdca.c      |  6 +++++
- 24 files changed, 320 insertions(+), 161 deletions(-)
-
+diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
+index d2d99555ec5a..5d45adb28491 100644
+--- a/drivers/soundwire/slave.c
++++ b/drivers/soundwire/slave.c
+@@ -104,6 +104,23 @@ int sdw_slave_add(struct sdw_bus *bus,
+ }
+ EXPORT_SYMBOL(sdw_slave_add);
+ 
++int sdw_slave_wait_for_initialization(struct sdw_slave *slave, unsigned int timeout)
++{
++	unsigned long time;
++
++	time = wait_for_completion_timeout(&slave->initialization_complete,
++					   msecs_to_jiffies(timeout));
++	if (!time) {
++		dev_err(&slave->dev, "%s: Initialization not complete, timed out\n", __func__);
++		sdw_show_ping_status(slave->bus, true);
++
++		return -ETIMEDOUT;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL(sdw_slave_wait_for_initialization);
++
+ #if IS_ENABLED(CONFIG_ACPI)
+ 
+ static bool find_slave(struct sdw_bus *bus,
+diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
+index 0832776262ac..961a10af12c1 100644
+--- a/include/linux/soundwire/sdw.h
++++ b/include/linux/soundwire/sdw.h
+@@ -1087,6 +1087,7 @@ int sdw_stream_remove_slave(struct sdw_slave *slave,
+ 			    struct sdw_stream_runtime *stream);
+ 
+ int sdw_slave_get_scale_index(struct sdw_slave *slave, u8 *base);
++int sdw_slave_wait_for_initialization(struct sdw_slave *slave, unsigned int timeout);
+ 
+ /* messaging and data APIs */
+ int sdw_read(struct sdw_slave *slave, u32 addr);
 -- 
 2.43.0
 
