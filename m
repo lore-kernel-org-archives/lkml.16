@@ -1,68 +1,105 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353E318035;
-	Thu, 26 Jun 2025 01:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AD6F50F
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 01:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750900352; cv=none; b=MtLOm2mJ5N282x+vkm7x0hQxCAFM1ch90tvIt0cYxwIZhiqy71TrpxitxLxD/oRTDoXbd1jacGEhmNHyevAuSjgWHr1xcriDZBbFaI2kE+AJI3cLDK0qbCkyIcDekoCbUiNNK/Q2Wi4xlpCo6zlKiRsWV+BAd7DLD5fP26PFFl8=
+	t=1750900670; cv=none; b=VilfjhS+MnW+qJKe5+oHV7ZNoFm2/9MDu0+Erqimmx1ltGeJdKJeVjfEVuzlsDzUL49PDPhzqVo/Ud4uGAj7tf0ZhViRL5D94l52oB5Pv3GaEZB/JTtMhcB6qfVlrw6iwSmq9xAeLxd/MflGWVgGzHQCJPYXgJ+DyQYo0CAWSiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750900352; c=relaxed/simple;
-	bh=H8XFOLm3w9x3qldoGQXykKndSSSvhlkE+OfO1aEGwm4=;
+	s=arc-20240116; t=1750900670; c=relaxed/simple;
+	bh=84xrWsFvThICZdecb9JC6xrJWRZz9tBF3YFNzgwPIYM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nO9GnP/Cf1dhufFzkkx1ESZZCHgY4HeanpZGj23X75toSbQO4H2/vRpI6NV20bEzIiCqAmq+of39TlrMMRR2DbGYUQrfSgsssqHlliGjVFGPTSHys9AA6SwjArXaoyVYIyIqMwh4k/xFjDVgHX5qtVwHYMfHe6yZN/NXERc2a3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XqCIrPLS; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=UNWssRaxWvTmfUjCbTce518QDmnWZ3KAz16aeARpPBvB2vAYO8nVl5A6erdZ/NRPWHPNcrfMkyx/oK6FLWPPW9UxdR2JI6B/OeYr26mI5gLQ53osDeGYMMqgQQuJcdAXu+w/P5JLJPaBtJDEQSzxatClv2D4HR6xyw0ZEiFQXbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eQC/N5AQ; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XqCIrPLS"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750900341; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=XkNAUQZsgTOYyEpp6DFNDFEm1Y8rPk4V1hWAnUJpQCA=;
-	b=XqCIrPLS8NVMkflbkLbfTqGHIGrbm0qsufim7MUZ9p+BNuyHzYt+SioGXkDCMGM7alSIvveeNU1ERrRFO0SE+jVv3+btRx6+g0CsnB4kiFM1jFfdHthB9kvVAAih6QDSdMwSWKNAwiC3nU59mRIWURkJ2UOQ5ps7Mus4yrQwy48=
-Received: from 30.74.144.111(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wf4LWO5_1750900339 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 26 Jun 2025 09:12:20 +0800
-Message-ID: <4a7606bc-8ab3-4026-8bf8-eb875bdcb00c@linux.alibaba.com>
-Date: Thu, 26 Jun 2025 09:12:18 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eQC/N5AQ"
+Message-ID: <42343413-7089-404e-8ce0-dd0025dca04c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750900666;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+/mKaCqAOOiAqgd0HRwof3OK6yOq5hDWh6JBXZFbX3c=;
+	b=eQC/N5AQvanuC7OqZCZ2wPmyrZ0ioxCa9JUW83LYLMRJAjmHovEfQEFsrT0ybVpqok1KVf
+	W8sl6sksNaJU2UyrQqwdsCkZ9XZzcI0M91ODFaE5+ns5n8ksfSxI1liRF/El6i+kpXAUkV
+	hSNMrXxp+B00xFNqxmEmvAlnPyxAvY8=
+Date: Thu, 26 Jun 2025 09:17:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/12] gpio: sprd: use new GPIO line value setter
- callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
- Ludovic Desroches <ludovic.desroches@microchip.com>,
- Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>,
- Thorsten Scherer <t.scherer@eckelmann.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250625-gpiochip-set-rv-gpio-round2-v1-0-bc110a3b52ff@linaro.org>
- <20250625-gpiochip-set-rv-gpio-round2-v1-7-bc110a3b52ff@linaro.org>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250625-gpiochip-set-rv-gpio-round2-v1-7-bc110a3b52ff@linaro.org>
+Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
+ folios during reclamation
+Content-Language: en-US
+To: Barry Song <21cnbao@gmail.com>, David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, baolin.wang@linux.alibaba.com,
+ chrisl@kernel.org, kasong@tencent.com, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-riscv@lists.infradead.org, lorenzo.stoakes@oracle.com,
+ ryan.roberts@arm.com, v-songbaohua@oppo.com, x86@kernel.org,
+ ying.huang@intel.com, zhengtangquan@oppo.com,
+ Lance Yang <ioworker0@gmail.com>
+References: <2c19a6cf-0b42-477b-a672-ed8c1edd4267@redhat.com>
+ <20250624162503.78957-1-ioworker0@gmail.com>
+ <27d174e0-c209-4851-825a-0baeb56df86f@redhat.com>
+ <938c4726-b93e-46df-bceb-65c7574714a6@linux.dev>
+ <CAGsJ_4y1GObH-C7R=FQL=UWe3kF6qhKoRqPxNPYx0k7uwocc+g@mail.gmail.com>
+ <5ba95609-302b-456a-a863-2bd5df51baf2@redhat.com>
+ <CAGsJ_4zSGT05GjxM1H6JwSa5MhgtxaiYVa1Wtvm8+SmYkm=jmQ@mail.gmail.com>
+ <6179dd30-5351-4a79-b0d6-f0e85650a926@redhat.com>
+ <CAGsJ_4yTH5ngM++e=c+P7g0fXs-QQsOk2oxd1RWa3Qww97Knrw@mail.gmail.com>
+ <5db6fb4c-079d-4237-80b3-637565457f39@redhat.com>
+ <42f1d84f-2d17-43b7-8fa2-83322fcca44f@linux.dev>
+ <9bb1e917-891d-4e1b-915f-98cdd5fc578b@redhat.com>
+ <CAGsJ_4woYd_TmZU94nedH=x_+HTwLxz94ih1jFmxoj4CxuhqzQ@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <CAGsJ_4woYd_TmZU94nedH=x_+HTwLxz94ih1jFmxoj4CxuhqzQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
 
 
-On 2025/6/25 18:33, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 2025/6/26 05:03, Barry Song wrote:
+> On Thu, Jun 26, 2025 at 12:25 AM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 25.06.25 14:20, Lance Yang wrote:
+> [...]
+>>> Hmm... I have a question about the reference counting here ...
+>>>
+>>>                if (vma->vm_flags & VM_LOCKED)
+>>>                        mlock_drain_local();
+>>>                folio_put(folio);
+>>>                /* We have already batched the entire folio */
+>>>
+>>> Does anyone else still hold a reference to this folio after folio_put()?
+>>
+>> The caller of the unmap operation should better hold a reference :)
+>>
+>> Also, I am not sure why we don't perform a
+>>
+>> folio_put_refs(folio, nr_pages);
 > 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
+> Because we've already called folio_ref_sub(folio, nr_pages - 1);
+> Looking back, it’s kind of ugly, huh.
 > 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> discard:
+>                  if (unlikely(folio_test_hugetlb(folio))) {
+>                          hugetlb_remove_rmap(folio);
+>                  } else {
+>                          folio_remove_rmap_ptes(folio, subpage, nr_pages, vma);
+>                          folio_ref_sub(folio, nr_pages - 1);
+>                  }
+> 
+> I assume Lance will send a patch? If so, remember to remove this
+> when switching to folio_put_refs(folio, nr_pages);
 
-Thanks.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Ah, got it. Thanks for pointing that out!
+
