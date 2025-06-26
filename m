@@ -1,136 +1,81 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54CA2609CC;
-	Thu, 26 Jun 2025 21:55:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4693725FA2A;
+	Thu, 26 Jun 2025 21:56:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750974949; cv=none; b=HG9K4RphXiB0F/gMmoNtzP4DfYKm5rhEj6S8hn4nCbFHuDHn1MDEp6+2KfpNkQoNOfrHSSJLO6aulwSb+fpxmcQF5/uYQdHVwSUqnBpSteASjfoU/rbO/Lrcx4k9Eyqn8WLz4EOccppGehWn/GmB/QvhRhUyMGsVMK/7GO5uTYk=
+	t=1750975002; cv=none; b=thRoG7co5v3+R9uImH8wv/8dekrAr8lP9jnQvXshZL6SLmmkCQnF2VMchF9NXUKqARSC50UX0PxBi4mqu/3eRgw/HzfUmF4JdwumEmbnM3+xgmb+IaH2uktZ1LvP60Mq9Vg+E+zJ6vnoylIaqX9wRr0AjE4wPoE5YzyuBE7+66M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750974949; c=relaxed/simple;
-	bh=44zLjyBrBTrqSEcxLxx0JKmO4LE26LPnAzbjp3r0+qk=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=VaUA+syQ8Dj/7vFNwV7ON9SxLmSL9CzDuI9dEM4VSBMCjnWbgTCFHCFoVJ0K+uz0jhvSEuQSr/0mE9GE4k15ZsKuZUWAsGFwAO/77y4OwIl5md1g6v3kVdv6yywWeicde1d8Aa+u0bN/A6qP64IiTE6ROAm+wf1EXqcvdd0WMCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XpQuh+fm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XHqi6Xpc; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1750975002; c=relaxed/simple;
+	bh=w4LB5IVBoNq8vucSbKbHBP/jocVrfObuHVEudF1BwRs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ftuNpgSk/PArZJqN1ScyoFf9mfYdFO6re3wC7fpLWbx25JUKBB1D9w4H5DajKhdmethQ7MNEiWGVU8Wy7slfbGgD0XLtGyNfLf4xqoNBwWrQGxmC6aMDUcFVKBOg4pOjlgqYNrduQoEjzH++/e+I/m2dhx0s5O7lC3qsVARWEEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AAeP/cuK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vjAoGFqf; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XpQuh+fm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XHqi6Xpc"
-Date: Thu, 26 Jun 2025 21:55:45 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AAeP/cuK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vjAoGFqf"
+From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750974946;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	s=2020; t=1750974999;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Pw+7rRd+WS2MBwzuOS8McUEU5JxO/trDXTNgqniF0m0=;
-	b=XpQuh+fmQ31h8z1XQ/RDM3HBpoAsfxpnbpmlqZAlRciTH4n/hQ/8IuCPyLGMfxgb/51N0x
-	Xl1p5egEF2okFZlI+mWMTwkF5Becrdx2ET1pLxNJB4KsgpmPawOept1YTCLH2punW6y696
-	bSsKlZ0gQi2oGRMxCi+9OCjYqCTQ4UkpKm7c1BX1KtYd+HLROb8YUvaY8fgWqhqu13Oe0N
-	g4jhrWhscOLJqqne3aLJd0aZDlBlR2mfL9Av9LHvksFACfHTpJ6P8oOF6q35suc9VVF/E7
-	OXmm1mf+t3+LWw2lAZcO7ukleAjGV+S+Nx/9dG57C+Y4FJGTf8Q0kKF74SRxyQ==
+	bh=RtgbyxoI+EsUygN4LGfgqt+wkR/WkYOJEHURHPuEX8E=;
+	b=AAeP/cuKKrxYrD8EJYdwaWAs5WFF4XtUXRfsrRthkMul3Kd7I+aV6Kqm7IwXZoId4Z8eIR
+	DNiS3CaEnrTcw/yKVQP6Uf8+tmF8EvmjSVek4ltsTUZygF/0soD6X05xdbOsSrekXebiJt
+	LvOtVlBSQ4uRYOucxDVI1Orf4SEdkpQhbtyKVkD1GUO7p5UzglVNibygu3JClLddLvL0jt
+	ByvtznSSPu8sot09sLqp2kPLDVQjPlJMNR+U6aM0nKKL6q8iJFWe0r7qqM/JwDMkNjIRek
+	3SMgyffOdWcPwnFurTmrsGnuqiwYNlXOQvlUXdhCt/pYGRZRjcMT4mqOXgJ5VA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750974946;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	s=2020e; t=1750974999;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Pw+7rRd+WS2MBwzuOS8McUEU5JxO/trDXTNgqniF0m0=;
-	b=XHqi6Xpcoiu9KlGN6drsYSZIE2AoChb8r04f9SUjOw49uvonN8OaX7loSdQnS03wfWKvp/
-	9baPsBShFUDVyWBA==
-From: "tip-bot2 for Yury Norov [NVIDIA]" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: smp/core] smp: Improve locality in smp_call_function_any()
-Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250623000010.10124-2-yury.norov@gmail.com>
-References: <20250623000010.10124-2-yury.norov@gmail.com>
+	bh=RtgbyxoI+EsUygN4LGfgqt+wkR/WkYOJEHURHPuEX8E=;
+	b=vjAoGFqfFnb4siZ0WHDWTTZ/lvvTKWXKQeMdmSS19cggaorpsaFN2Qkma4OwRa0QYud4cL
+	YpUjBQL8BmAeREAA==
+To: Terry Tritton <terry.tritton@linaro.org>, Shuah Khan <shuah@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@igalia.com>, Wei Gao
+ <wegao@suse.com>
+Cc: ttritton@google.com, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Terry Tritton <terry.tritton@linaro.org>
+Subject: Re: [PATCH] selftests/futex: Convert 32bit timespec struct to 64bit
+ version for 32bit compatibility mode
+In-Reply-To: <20250609131055.84547-1-terry.tritton@linaro.org>
+References: <20250609131055.84547-1-terry.tritton@linaro.org>
+Date: Thu, 26 Jun 2025 23:56:38 +0200
+Message-ID: <87jz4yp3op.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <175097494507.406.15997424702190501157.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-The following commit has been merged into the smp/core branch of tip:
+On Mon, Jun 09 2025 at 14:10, Terry Tritton wrote:
 
-Commit-ID:     5f295519b42f100c735a1e8e1a70060e26f30c3f
-Gitweb:        https://git.kernel.org/tip/5f295519b42f100c735a1e8e1a70060e26f30c3f
-Author:        Yury Norov [NVIDIA] <yury.norov@gmail.com>
-AuthorDate:    Sun, 22 Jun 2025 20:00:06 -04:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 26 Jun 2025 23:46:34 +02:00
+> Futex_waitv can not accept old_timespec32 struct, so userspace should
+> convert it from 32bit to 64bit before syscall in 32bit compatible mode.
+>
+> This fix is based off [1] 
+>
+> Link: https://lore.kernel.org/all/20231203235117.29677-1-wegao@suse.com/ [1]
+>
+> Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
+> Signed-off-by: Wei Gao <wegao@suse.com>
 
-smp: Improve locality in smp_call_function_any()
+This Signed-off-by chain is broken. See
 
-smp_call_function_any() tries to make a local call as it's the cheapest
-option, or switches to a CPU in the same node. If it's not possible, the
-algorithm gives up and searches for any CPU, in a numerical order.
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
 
-Instead, it can search for the best CPU based on NUMA locality, including
-the 2nd nearest hop (a set of equidistant nodes), and higher.
+and the following chapters.
 
-sched_numa_find_nth_cpu() does exactly that, and also helps to drop most
-of the housekeeping code.
+Thanks,
 
-Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250623000010.10124-2-yury.norov@gmail.com
-
----
- kernel/smp.c | 19 +++----------------
- 1 file changed, 3 insertions(+), 16 deletions(-)
-
-diff --git a/kernel/smp.c b/kernel/smp.c
-index 974f3a3..7c8cfab 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -741,32 +741,19 @@ EXPORT_SYMBOL_GPL(smp_call_function_single_async);
-  *
-  * Selection preference:
-  *	1) current cpu if in @mask
-- *	2) any cpu of current node if in @mask
-- *	3) any other online cpu in @mask
-+ *	2) nearest cpu in @mask, based on NUMA topology
-  */
- int smp_call_function_any(const struct cpumask *mask,
- 			  smp_call_func_t func, void *info, int wait)
- {
- 	unsigned int cpu;
--	const struct cpumask *nodemask;
- 	int ret;
- 
- 	/* Try for same CPU (cheapest) */
- 	cpu = get_cpu();
--	if (cpumask_test_cpu(cpu, mask))
--		goto call;
--
--	/* Try for same node. */
--	nodemask = cpumask_of_node(cpu_to_node(cpu));
--	for (cpu = cpumask_first_and(nodemask, mask); cpu < nr_cpu_ids;
--	     cpu = cpumask_next_and(cpu, nodemask, mask)) {
--		if (cpu_online(cpu))
--			goto call;
--	}
-+	if (!cpumask_test_cpu(cpu, mask))
-+		cpu = sched_numa_find_nth_cpu(mask, 0, cpu_to_node(cpu));
- 
--	/* Any online will do: smp_call_function_single handles nr_cpu_ids. */
--	cpu = cpumask_any_and(mask, cpu_online_mask);
--call:
- 	ret = smp_call_function_single(cpu, func, info, wait);
- 	put_cpu();
- 	return ret;
+        tglx
