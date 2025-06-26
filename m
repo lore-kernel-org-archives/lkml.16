@@ -1,73 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422E22E5438
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BF028A406;
+	Thu, 26 Jun 2025 14:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750947675; cv=none; b=T5Yu+t1LNMStx7nWuUAmX2IvabduXn58eD6d7FWIDe23bz+eUGwD58hZ4gsPVpVz/zJayuIrh5bdW1fB97hwIjmxoFtV8NQ9dKvVkp3JMpvgCdxcRzE5PPC4XM78dC1zDRleRYFB5iVJhzhHV4pB9307qmGMKWMpnaiigob0yhA=
+	t=1750947780; cv=none; b=VFwAOCj9pa7an+zBMA1IdTjQUp/YovWLtybS7sbDRkY7Fvlr8tZ0Co+QIZjM19Uxo8qZg7xvm90D6gqwhimaabUkVO8tVV13cDAgh48mZCz+g1xUbBeOdfIn7d0ANcW4SNqenq/30FHauslIOGVsIEw9LYVtDz4Hn+RUiomdIpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750947675; c=relaxed/simple;
-	bh=05qRlITEeVufiSoFd2KryeXWiRNzVpA6+iPegXXOeVA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JBsUbsU6HdIzFl/QuV04FQmMa/RtTClyVWUFRlVLA+DwnR2RChBLr0j2VxFYhgEopEl8HxVkKUN7QB6S2e7VfRQUSTd0X5o69gMFeAAfhmHfFsNmWKHNDs6/j5inEMO3tM7qyKdZ7yiXawpPBs7HBhyTQub0hZnChK7QOctMc9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LjDE0jgO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750947780; c=relaxed/simple;
+	bh=VnAzg56f+hysQJZPOLXhBXL0My2caz2gxoa80MYeNr8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UZvWkwpvBX9/oTrMw3iTfVlgOhg/nPzk9YBPWWM41+0Mogm/pQFGxL6BMxxDaBAAraf5hqzhaf+RZCsoYL6SB2jB1w5xnj+F/cJlL5Bk6wwFADtB4ik/2OcOJ71ucVPhaXTolQ/tpxfnX6hLbz7i6bLK3+xySxW7ujNP+lS8htQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R72cZiMr; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LjDE0jgO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750947673;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=w1ag8oa4qWQl60jCaAXgmy6offy0L6bYu4nDEDKkM/M=;
-	b=LjDE0jgOa86fpsUapGQdetZwMkgzY6dZAYxN4kaqX2Qk0he27xcSdjwvTSQ7iWd1QW3+Vb
-	f5HopnO2TClJckzjO+0J8e2fArBCFF9lPHNuCsZeKqRRaNjwutaeENT5G6nUvyPLr8gAS3
-	MTv9JXuBuUDz9mUiEdUGX88JHdEFhYE=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-648-o0fBIu3KPguISuhHfeOLQg-1; Thu,
- 26 Jun 2025 10:21:10 -0400
-X-MC-Unique: o0fBIu3KPguISuhHfeOLQg-1
-X-Mimecast-MFC-AGG-ID: o0fBIu3KPguISuhHfeOLQg_1750947667
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0085E1883815;
-	Thu, 26 Jun 2025 14:20:47 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.64.203])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7B4B618046C6;
-	Thu, 26 Jun 2025 14:20:39 +0000 (UTC)
-From: Wander Lairson Costa <wander@redhat.com>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Wander Lairson Costa <wander@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-trace-kernel@vger.kernel.org (open list:TRACING)
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Clark Williams <williams@redhat.com>,
-	Gabriele Monaco <gmonaco@redhat.com>
-Subject: [PATCH 1/2] trace/preemptirq: reduce overhead of irq_enable/disable tracepoints
-Date: Thu, 26 Jun 2025 11:20:09 -0300
-Message-ID: <20250626142017.26372-2-wander@redhat.com>
-In-Reply-To: <20250626142017.26372-1-wander@redhat.com>
-References: <20250626142017.26372-1-wander@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R72cZiMr"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-748ece799bdso803380b3a.1;
+        Thu, 26 Jun 2025 07:22:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750947777; x=1751552577; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FMM3xSjjvtkN9sNymINSQ4aTR9MjXM5qmSlYZv1dEyw=;
+        b=R72cZiMrUn1Yg46TQ01+OOADGD+vTSQNHOLq+DQ7S9X3AFM3yVCYjNK5du6a+zB4Iu
+         V/Qu8l+3Ca02Q1W1B7+IbLyUs9d68nAiUytxv2gsNwttHExbuEwfPURkPPaxx+tKZvzM
+         mJE8qktorpTLGZTE1Ba5+/bQOFILvj0KSkYqxc9+UVkAaUHp+5cbUBniYnO6fCMWuORE
+         6zpR+fS5beq70aC+97bcj3Tg2L6dxulv0xv9BXk4SyGMG1TgK4jABlDDAAtyAFi6knC7
+         p5X5ebbpUX1F+TWKGd0fqHeN2WcdOpSfeuphh/CgigGENyARawx+5MNfW3klFiIQaa3n
+         unNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750947777; x=1751552577;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FMM3xSjjvtkN9sNymINSQ4aTR9MjXM5qmSlYZv1dEyw=;
+        b=URpyLtsdBF3eEsvaoAOdmTo0u1Dwr37jdUgq+54WUoW65VZ38IXNunkmKjw+u4nG/w
+         BTpQiHCpZfDGQ45gZKSEwv8eZZ8YY9OEcNTqlOS7kXSTaIVzJ/Y+4ne4uv4uwDehmoyz
+         mx4Lez2NWoVyVMukOuiaxPcWOQ/3gZViyHUclbtwAGCiiRIdII8S/kwUdkllCyWFukBX
+         /h7mzoQg6kSuYYQCzYnFL1K27fsB01SpVHSacKqyEElJUnsEoSL9UIpPJqh89Wbp5giz
+         KkH39Zh115WHY+ZRk78vg/KqQceKXuXDxdjjTiIoObBKjiB6PiahrpoxuJ8Kmk6fFJ+v
+         LOKw==
+X-Forwarded-Encrypted: i=1; AJvYcCWPUOoQq+Zv/7rXY3pHCgu3/B9Qq+e6XRpjBkiP6ZFtdmK+FQ/8r5K013iUTMFcm8BMkePY/RY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEJynMYLTp8RTCu1g0I0TTa94VMhmV7duw7pnyM9vkD9GlBx6A
+	JYKWB0zWz0UUVVUB4Kt6G7rxMxRlbOc/de2+31DJdo0gZphWk9jbXqWuwGcfmE+0
+X-Gm-Gg: ASbGncvX1EXTeQt70hDIt+tOMHADwqfhGOR/nWSVb9LJ/+BGe/aWnqCA5bolKuLJCft
+	8XGG+st3n2h/QZqui+Gr/Pj45jhPnlW1MeR3rg9/9nKiEBfFEh3ceGMSG9xn2CePnBbpPUzcumm
+	/SKYmho/ZcdTV2nzdMY9cZlHm4uNTBX0qv+lhgexZU24Ny0ekOw/Monh0sKNmC9cPex7CGkX3lC
+	GjZFVCdnTK2UYAr/VSN9wYBOglepFEzCqnPySr/nIN2WnDxEdUCKssnH4KCm8OkAecwbZBD+tcy
+	cZwsewS1oYwrBlTRsAYq4pkefgANt8aC7XWLyX7CHOL7ha7TRMsJLUMw24cK/sRsIWthpjIzp0n
+	xxMoUn/DNmgoB7e0ecQ==
+X-Google-Smtp-Source: AGHT+IHvPgEXqKwWC3H8FLqec238NOxqpv7452gpGXmtMjCrr6s266Ccdd9P8x3NxP0Pg4hK8zFHVA==
+X-Received: by 2002:a05:6a21:3298:b0:1f5:591b:4f7a with SMTP id adf61e73a8af0-2207f31ac43mr11593474637.38.1750947777297;
+        Thu, 26 Jun 2025 07:22:57 -0700 (PDT)
+Received: from manjaro.domain.name ([2401:4900:1c67:6116:afb5:b6ab:2dc8:4a21])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c8872629sm7129288b3a.164.2025.06.26.07.22.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 07:22:56 -0700 (PDT)
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Cc: rodrigosiqueiramelo@gmail.com,
+	melissa.srw@gmail.com,
+	hamohammed.sa@gmail.com,
+	daniel@ffwll.ch,
+	airlied@linux.ie,
+	mcanal@igalia.com,
+	arthurgrillo@riseup.net,
+	mairacanal@riseup.net,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	stable@vger.kernel.org,
+	gregkh@linuxfoundation.org,
+	sashal@kernel.org,
+	Pranav Tyagi <pranav.tyagi03@gmail.com>
+Subject: [PATCH] drm/vkms: Fix race-condition between the hrtimer and the atomic commit
+Date: Thu, 26 Jun 2025 19:52:43 +0530
+Message-ID: <20250626142243.19071-1-pranav.tyagi03@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,112 +85,123 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-The irqsoff tracer is rarely enabled in production systems due to the
-non-negligible overhead it introduces—even when unused. This is caused
-by how trace_hardirqs_on/off() are always invoked in
-local_irq_enable/disable(), evaluate the tracepoint static key.
+From: Maíra Canal <mcanal@igalia.com>
 
-This patch reduces the overhead in the common case where the tracepoint
-is disabled by performing the static key check earlier, avoiding the
-call to trace_hardirqs_on/off() entirely.
+[ Upstream commit a0e6a017ab56936c0405fe914a793b241ed25ee0 ]
 
-This makes the impact of disabled preemptirq IRQ tracing negligible in
-performance-sensitive environments.
+Currently, it is possible for the composer to be set as enabled and then
+as disabled without a proper call for the vkms_vblank_simulate(). This
+is problematic, because the driver would skip one CRC output, causing CRC
+tests to fail. Therefore, we need to make sure that, for each time the
+composer is set as enabled, a composer job is added to the queue.
 
-Signed-off-by: Wander Lairson Costa <wander@redhat.com>
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Clark Williams <williams@redhat.com>
-Cc: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
+In order to provide this guarantee, add a mutex that will lock before
+the composer is set as enabled and will unlock only after the composer
+job is added to the queue. This way, we can have a guarantee that the
+driver won't skip a CRC entry.
+
+This race-condition is affecting the IGT test "writeback-check-output",
+making the test fail and also, leaking writeback framebuffers, as the
+writeback job is queued, but it is not signaled. This patch avoids both
+problems.
+
+[v2]:
+    * Create a new mutex and keep the spinlock across the atomic commit in
+      order to avoid interrupts that could result in deadlocks.
+
+[ Backport to 5.15: context cleanly applied with no semantic changes.
+Build-tested. ]
+
+Signed-off-by: Maíra Canal <mcanal@igalia.com>
+Reviewed-by: Arthur Grillo <arthurgrillo@riseup.net>
+Signed-off-by: Maíra Canal <mairacanal@riseup.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/20230523123207.173976-1-mcanal@igalia.com
+Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
 ---
- include/linux/irqflags.h        | 25 +++++++++++++++++--------
- kernel/trace/trace_preemptirq.c |  3 +++
- 2 files changed, 20 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/vkms/vkms_composer.c | 9 +++++++--
+ drivers/gpu/drm/vkms/vkms_crtc.c     | 9 +++++----
+ drivers/gpu/drm/vkms/vkms_drv.h      | 4 +++-
+ 3 files changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
-index 57b074e0cfbb..54f931db7e3b 100644
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -17,6 +17,7 @@
- #include <linux/cleanup.h>
- #include <asm/irqflags.h>
- #include <asm/percpu.h>
-+#include <linux/tracepoint-defs.h>
+diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+index 9e8204be9a14..77fced36af55 100644
+--- a/drivers/gpu/drm/vkms/vkms_composer.c
++++ b/drivers/gpu/drm/vkms/vkms_composer.c
+@@ -332,10 +332,15 @@ void vkms_set_composer(struct vkms_output *out, bool enabled)
+ 	if (enabled)
+ 		drm_crtc_vblank_get(&out->crtc);
  
- struct task_struct;
- 
-@@ -197,9 +198,13 @@ extern void warn_bogus_irq_restore(void);
-  */
- #ifdef CONFIG_TRACE_IRQFLAGS
- 
-+DECLARE_TRACEPOINT(irq_enable);
-+DECLARE_TRACEPOINT(irq_disable);
+-	spin_lock_irq(&out->lock);
++	mutex_lock(&out->enabled_lock);
+ 	old_enabled = out->composer_enabled;
+ 	out->composer_enabled = enabled;
+-	spin_unlock_irq(&out->lock);
 +
- #define local_irq_enable()				\
- 	do {						\
--		trace_hardirqs_on();			\
-+		if (tracepoint_enabled(irq_enable))	\
-+			trace_hardirqs_on();		\
- 		raw_local_irq_enable();			\
- 	} while (0)
++	/* the composition wasn't enabled, so unlock the lock to make sure the lock
++	 * will be balanced even if we have a failed commit
++	 */
++	if (!out->composer_enabled)
++		mutex_unlock(&out->enabled_lock);
  
-@@ -207,28 +212,32 @@ extern void warn_bogus_irq_restore(void);
- 	do {						\
- 		bool was_disabled = raw_irqs_disabled();\
- 		raw_local_irq_disable();		\
--		if (!was_disabled)			\
-+		if (tracepoint_enabled(irq_disable) &&	\
-+		    !was_disabled)			\
- 			trace_hardirqs_off();		\
- 	} while (0)
+ 	if (old_enabled)
+ 		drm_crtc_vblank_put(&out->crtc);
+diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+index 57bbd32e9beb..1b02dee8587a 100644
+--- a/drivers/gpu/drm/vkms/vkms_crtc.c
++++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+@@ -16,7 +16,7 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+ 	struct drm_crtc *crtc = &output->crtc;
+ 	struct vkms_crtc_state *state;
+ 	u64 ret_overrun;
+-	bool ret, fence_cookie;
++	bool ret, fence_cookie, composer_enabled;
  
- #define local_irq_save(flags)				\
- 	do {						\
- 		raw_local_irq_save(flags);		\
--		if (!raw_irqs_disabled_flags(flags))	\
-+		if (tracepoint_enabled(irq_disable) &&	\
-+		    !raw_irqs_disabled_flags(flags))	\
- 			trace_hardirqs_off();		\
- 	} while (0)
+ 	fence_cookie = dma_fence_begin_signalling();
  
- #define local_irq_restore(flags)			\
- 	do {						\
--		if (!raw_irqs_disabled_flags(flags))	\
-+		if (tracepoint_enabled(irq_enable) &&	\
-+		    !raw_irqs_disabled_flags(flags))	\
- 			trace_hardirqs_on();		\
- 		raw_local_irq_restore(flags);		\
- 	} while (0)
+@@ -25,15 +25,15 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+ 	if (ret_overrun != 1)
+ 		pr_warn("%s: vblank timer overrun\n", __func__);
  
--#define safe_halt()				\
--	do {					\
--		trace_hardirqs_on();		\
--		raw_safe_halt();		\
-+#define safe_halt()					\
-+	do {						\
-+		if (tracepoint_enabled(irq_enable))	\
-+			trace_hardirqs_on();		\
-+		raw_safe_halt();			\
- 	} while (0)
+-	spin_lock(&output->lock);
+ 	ret = drm_crtc_handle_vblank(crtc);
+ 	if (!ret)
+ 		DRM_ERROR("vkms failure on handling vblank");
  
+ 	state = output->composer_state;
+-	spin_unlock(&output->lock);
++	composer_enabled = output->composer_enabled;
++	mutex_unlock(&output->enabled_lock);
  
-diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
-index 0c42b15c3800..90ee65db4516 100644
---- a/kernel/trace/trace_preemptirq.c
-+++ b/kernel/trace/trace_preemptirq.c
-@@ -111,6 +111,9 @@ void trace_hardirqs_off(void)
- }
- EXPORT_SYMBOL(trace_hardirqs_off);
- NOKPROBE_SYMBOL(trace_hardirqs_off);
-+
-+EXPORT_TRACEPOINT_SYMBOL(irq_disable);
-+EXPORT_TRACEPOINT_SYMBOL(irq_enable);
- #endif /* CONFIG_TRACE_IRQFLAGS */
+-	if (state && output->composer_enabled) {
++	if (state && composer_enabled) {
+ 		u64 frame = drm_crtc_accurate_vblank_count(crtc);
  
- #ifdef CONFIG_TRACE_PREEMPT_TOGGLE
+ 		/* update frame_start only if a queued vkms_composer_worker()
+@@ -293,6 +293,7 @@ int vkms_crtc_init(struct drm_device *dev, struct drm_crtc *crtc,
+ 
+ 	spin_lock_init(&vkms_out->lock);
+ 	spin_lock_init(&vkms_out->composer_lock);
++	mutex_init(&vkms_out->enabled_lock);
+ 
+ 	vkms_out->composer_workq = alloc_ordered_workqueue("vkms_composer", 0);
+ 	if (!vkms_out->composer_workq)
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+index d48c23d40ce5..666997e2bcab 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.h
++++ b/drivers/gpu/drm/vkms/vkms_drv.h
+@@ -83,8 +83,10 @@ struct vkms_output {
+ 	struct workqueue_struct *composer_workq;
+ 	/* protects concurrent access to composer */
+ 	spinlock_t lock;
++	/* guarantees that if the composer is enabled, a job will be queued */
++	struct mutex enabled_lock;
+ 
+-	/* protected by @lock */
++	/* protected by @enabled_lock */
+ 	bool composer_enabled;
+ 	struct vkms_crtc_state *composer_state;
+ 
 -- 
-2.50.0
+2.49.0
 
