@@ -1,106 +1,142 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80F22957A7;
-	Thu, 26 Jun 2025 08:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658B828725E;
+	Thu, 26 Jun 2025 08:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750926882; cv=none; b=UpIOsSHKjed5+JOvO5Z+eM/qk47Wx7sxKTcPJn7OHEERfpKk1rcEg3CQtHus1PuuBJxABbMWRYn7wU8oFgY3dhA6wVUpzid+o+vOIR9Uvv+MJtNOKksJAJAV++K6yf+iHU9naR037pkZ4/XwMkRZ+E+60Fq9q9LgjH6jI2GcCNE=
+	t=1750926916; cv=none; b=CNewIsfKhNPpBHPWmetu00zymsEPOn6abHHjX2h/zSC/R2XCdQJmWSliL1ImOqt2rFr5HFiF56jD8l+chmqN5Lmyl+OT9SmEL8Dfo9k/AeN/yXZfoyE4Z6PYM9XIYCDIBHja2I2PT3oCdsQWJZISVeqiSzqZ5tPSYtRcvGR3ax8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750926882; c=relaxed/simple;
-	bh=7h+/r7ZtMJq1dvKCjGhVatzMhyp/ApkTbFKk+cSkUPk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NS//RILFmFB36VNM3CgRDL3hb/0zpYaqRvh/xvtshCTuP0//37vlQtH824U8A/JMgd8pBMeWpVmD1ZN6zvM6egkZmw1J9LmymternFVJVGAcaPW/wtXdeeQ2YOHlwrN+1HRwZXSAB27bdbq8IVaz3rNjZZQX9uLw5xjutcrTE84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=jHRd3wtQ; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1750926916; c=relaxed/simple;
+	bh=nHUZ668U+MnRs1YAZ7/aO4LbEwCxp+qT3jC3qnd47PU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ITVWJbBlunb3YXwKkLT3HCvqWiL2qUjrPdvJaRG0KTzm3VDZQ8eKrlAjb7QHdpNSJFiqlCSBHoLHdaeqtLPxZdKgCo2zYaOUCuSdIFdgS4OAMJWq0x1cI1rZLPMEfahJsSHk0d7vs0fHCm8C6DZ8fPeQRNDSHDVG/6NtZpQ9kQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FP0ISR/K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="jHRd3wtQ"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uUi42-00GcIE-HJ; Thu, 26 Jun 2025 10:34:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
-	bh=+2QJ2vK3aC9RmVaDqJqvoTd0vBNxxH4J4lY+mVdjibA=; b=jHRd3wtQoqHYsQcE5sg03XYmYi
-	QDKRMIK/Me3iH+8BurUMVt4whIybimNQP8R/VhBHY79zK3AX4GsGP0Dgj5Gc2ds0SCdDmRG1EdDRs
-	dfTLySNVofxPciNZrcLa2dIjQkkr1M1tify/2MeX8vsCW+qw4XpbWKQkfNokWWjE/0fLDUbNd9uMw
-	l6heAg8atTSfANajnruOOPrn9HszxzkfYw24y52aHM0rzo479kS26fZDdNdOEEPdW6+o389sGUXeP
-	jSEnr5vU1PuOxUHW5anrCl1EDKcv3YDg9VAQ5r+wHSB4ySGkjjZ066r5XTRtADnFmY4kLI68A2PBf
-	/v6CFrtg==;
-Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uUi42-0002Kq-6U; Thu, 26 Jun 2025 10:34:34 +0200
-Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uUi3T-009Fh5-9i; Thu, 26 Jun 2025 10:33:59 +0200
-From: Michal Luczaj <mhal@rbox.co>
-Date: Thu, 26 Jun 2025 10:33:42 +0200
-Subject: [PATCH net-next v2 9/9] net: skbuff: Drop unused @skb
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FP0ISR/K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B791C4CEEB;
+	Thu, 26 Jun 2025 08:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750926916;
+	bh=nHUZ668U+MnRs1YAZ7/aO4LbEwCxp+qT3jC3qnd47PU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FP0ISR/KkbU8MDlw/EEwLR9YHqsTvWvkgcUOdis6QPGmCj+MtHk8YcmUgNWTK8xaR
+	 gQufPOuWtEcSxcK/UOgDoO08S1DzoIes0S3W/yG7Z4lowW1VignwLyjz5f2+Av6sAM
+	 QmYJ8ocjop8hUzRjponRhMzL5Pmh2zUM5IUR2DG1bnyjzdJYbLnKMdDQZT8AUE/k6R
+	 Se3pc/EovVh51EioT0R926xbqAw/t9o4VN6mZC2tyD+SzWUjcNexRGIL7r0xO19A56
+	 f7hiMoVnJX2GB9cPH8DM6+zWqgupkCdFH65foBLsxda+1quxPQZA9xp4juoXnk4qMy
+	 SeaGOsa5TJugw==
+Date: Thu, 26 Jun 2025 09:35:12 +0100
+From: Simon Horman <horms@kernel.org>
+To: Malaya Kumar Rout <malayarout91@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests: net: fix resource leak  in napi_id_helper.c
+Message-ID: <20250626083512.GT1562@horms.kernel.org>
+References: <20250625153334.434747-1-malayarout91@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250626-splice-drop-unused-v2-9-3268fac1af89@rbox.co>
-References: <20250626-splice-drop-unused-v2-0-3268fac1af89@rbox.co>
-In-Reply-To: <20250626-splice-drop-unused-v2-0-3268fac1af89@rbox.co>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
- David Ahern <dsahern@kernel.org>, Boris Pismenny <borisp@nvidia.com>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Ayush Sawal <ayush.sawal@chelsio.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, 
- "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>, 
- Wen Gu <guwen@linux.alibaba.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
- Michal Luczaj <mhal@rbox.co>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625153334.434747-1-malayarout91@gmail.com>
 
-Since its introduction in commit 6fa01ccd8830 ("skbuff: Add pskb_extract()
-helper function"), pskb_carve_frag_list() never used the argument @skb.
-Drop it and adapt the only caller.
+On Wed, Jun 25, 2025 at 09:03:07PM +0530, Malaya Kumar Rout wrote:
+> Resolve minor resource leaks reported by cppcheck in napi_id_helper.c
+> 
+> cppcheck output before this patch:
+> tools/testing/selftests/drivers/net/napi_id_helper.c:37:3: error: Resource leak: server [resourceLeak]
+> tools/testing/selftests/drivers/net/napi_id_helper.c:46:3: error: Resource leak: server [resourceLeak]
+> tools/testing/selftests/drivers/net/napi_id_helper.c:51:3: error: Resource leak: server [resourceLeak]
+> tools/testing/selftests/drivers/net/napi_id_helper.c:59:3: error: Resource leak: server [resourceLeak]
+> tools/testing/selftests/drivers/net/napi_id_helper.c:67:3: error: Resource leak: server [resourceLeak]
+> tools/testing/selftests/drivers/net/napi_id_helper.c:76:3: error: Resource leak: server [resourceLeak]
+> 
+> cppcheck output after this patch:
+> No resource leaks found
+> 
+> Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
 
-No functional change intended.
+Thanks,
 
-Signed-off-by: Michal Luczaj <mhal@rbox.co>
----
- net/core/skbuff.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+I agree that it is nice to address these warnings.
+But for completeness doesn't client also need to be closed
+if an error occurs after it is accepted?
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index b5f685b6611c177c199f70bb16fd3940bce8cded..f8553c674fe5052e7c1ea53022e252a54a9d6c72 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -6756,8 +6756,7 @@ static int pskb_carve(struct sk_buff *skb, const u32 off, gfp_t gfp);
- /* carve out the first eat bytes from skb's frag_list. May recurse into
-  * pskb_carve()
-  */
--static int pskb_carve_frag_list(struct sk_buff *skb,
--				struct skb_shared_info *shinfo, int eat,
-+static int pskb_carve_frag_list(struct skb_shared_info *shinfo, int eat,
- 				gfp_t gfp_mask)
- {
- 	struct sk_buff *list = shinfo->frag_list;
-@@ -6862,7 +6861,7 @@ static int pskb_carve_inside_nonlinear(struct sk_buff *skb, const u32 off,
- 		skb_clone_fraglist(skb);
+Also, I'd suggest using a ladder of goto labels for error handling,
+as is common in (Neworking?) kernel code.
+
+E.g. (compile tested only!!)
+
+diff --git a/tools/testing/selftests/drivers/net/napi_id_helper.c b/tools/testing/selftests/drivers/net/napi_id_helper.c
+index eecd610c2109..105517dc315d 100644
+--- a/tools/testing/selftests/drivers/net/napi_id_helper.c
++++ b/tools/testing/selftests/drivers/net/napi_id_helper.c
+@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
  
- 	/* split line is in frag list */
--	if (k == 0 && pskb_carve_frag_list(skb, shinfo, off - pos, gfp_mask)) {
-+	if (k == 0 && pskb_carve_frag_list(shinfo, off - pos, gfp_mask)) {
- 		/* skb_frag_unref() is not needed here as shinfo->nr_frags = 0. */
- 		if (skb_has_frag_list(skb))
- 			kfree_skb_list(skb_shinfo(skb)->frag_list);
-
--- 
-2.49.0
-
+ 	if (setsockopt(server, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
+ 		perror("setsockopt");
+-		return 1;
++		goto err_close_server;
+ 	}
+ 
+ 	address.sin_family = AF_INET;
+@@ -43,12 +43,12 @@ int main(int argc, char *argv[])
+ 
+ 	if (bind(server, (struct sockaddr *)&address, sizeof(address)) < 0) {
+ 		perror("bind failed");
+-		return 1;
++		goto err_close_server;
+ 	}
+ 
+ 	if (listen(server, 1) < 0) {
+ 		perror("listen");
+-		return 1;
++		goto err_close_server;
+ 	}
+ 
+ 	ksft_ready();
+@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
+ 	client = accept(server, NULL, 0);
+ 	if (client < 0) {
+ 		perror("accept");
+-		return 1;
++		goto err_close_server;
+ 	}
+ 
+ 	optlen = sizeof(napi_id);
+@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
+ 			 &optlen);
+ 	if (ret != 0) {
+ 		perror("getsockopt");
+-		return 1;
++		goto err_close_client;
+ 	}
+ 
+ 	read(client, buf, 1024);
+@@ -73,11 +73,17 @@ int main(int argc, char *argv[])
+ 
+ 	if (napi_id == 0) {
+ 		fprintf(stderr, "napi ID is 0\n");
+-		return 1;
++		goto err_close_client;
+ 	}
+ 
+ 	close(client);
+ 	close(server);
+ 
+ 	return 0;
++
++err_close_client:
++	close(client);
++err_close_server:
++	close(server);
++	return 1;
+ }
