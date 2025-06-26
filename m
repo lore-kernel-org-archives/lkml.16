@@ -1,150 +1,199 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DF035972
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD2E20DD49
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750914977; cv=none; b=AAPlKr6e6Sp0tlGIE2gjld8h/sbRQvMOIIVu5bQ7NsEey3ScJH7cG2m7iDAcnM1sWWxIW1ScaMQgvkKNEbcnB7Lzu8T+VzX5znfGUqVtvcwXt7MEIdFixfJDo/RkHUrDzjnCn2S2Zfl8dKET0feFX3oJMH/F+6AyRI3HQBDiI+8=
+	t=1750915218; cv=none; b=nt1hBVpCdCdyMqMLvjDpvHxRDLT5EqP/yaAPayPym5GohsKLbkeAQ7P0YA2TMbgFPn4ISZXGD6vGeBX7mfShF0faOcrRcne+piVKC5048oCBSx9d3kP/VZ9ad6cRw+HdjMv78Vv0ELIWRGZdUT9d35+y9EAQi0p9wlyDdi2wHvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750914977; c=relaxed/simple;
-	bh=DGIscSfCziwlOv1P8QbTdNlq9sdRWlYurdgZqoUEpB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LWbTqxl8hXxRgdEf0Q9QOCc6puQgiM0Mzw2smxLaALAc4gGmyUEE7Gw51IxNSRV2Q4g1C8zWh4HcrQJK91zgoVIvz2FR2Djl56xOcxnUiFLytMgOKNcUCYWAtrQXj2gl8que0W98RrSiOwREweh9t81ipq9fhxmZvETvRMhucFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WamTXcIZ; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1750915218; c=relaxed/simple;
+	bh=DpTmJWZ18VeKb2Nj+dzk4Ksw6DvHAg3Aggvo2SpFkvI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=riCLX/wn6Wq8nXC/k0IMw8/DTj9peXwl4jVK0L+pJ+mPNQ62P+MoLKzn4mLFkJWTcZDkLPf+vJ6PWNjCZUn+ePCELAi8iaFTlbKQnNIGSjVNvuw1+WWq7Bd2guqdYJyjR/OSOB3fu+x4FM2Gn0YVF001YWi8zxjn9hrNPUCTr7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=b4AzxaZb; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WamTXcIZ"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q0EDLG016254
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:16:15 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="b4AzxaZb"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q0Dre5018662
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:20:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LY71DyKBMD5t9RNhRw/JYOoNO51ZSy07y5vbGuiOBVk=; b=WamTXcIZMQ8WxaBH
-	wlzoE4GqgHlTV9FknB5JMrW/KsaQzyAaIgZEk0DkT/Hoftwj9M4y+HbvEZQqyTQI
-	cYQecNR0NVYfjCx6yhR9lfnLqM8Mu3I82ZX9u2PUk64dgSJyXSO+TEvpMJtx3xuk
-	tTiWWXvTKEqvAaHaAez43By1nfthjJCM+kVqeu+V+vuFMjVabHG1tdGuh+n414Vf
-	IKQWQTLrzjVDojbeCg97njnjOt69X4qUaluLNSXMdPkFRU5zQkh3zbhJbcWg4y3G
-	CZASp0i3lwAXlJesgDaSL4OljDFLGo4J05zyqh3YrVm22qTV+7QPcIa6UUd37Tlr
-	ZR9Myg==
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g88fbstx-1
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=6pAx5/ZkLCjLuDmzrc9Yzj
+	agLIhF1++aZj4s/ojWJSs=; b=b4AzxaZbRb2WLrMUh4SQhZq38y6W45cka69ETY
+	xqOUxEtwBDGc5dRzpGJqSZ6WjjM5MlOKJQrgmBsOHkM4pV0/yziS7zzS3aY/r9Ku
+	T0NTc7lgWFPjbOLjoSPPmBQPAy6CnJ5W+aGerDSkp4Rg9+WQjF6QZlt1pb0VVpUX
+	BxAjphrN5SE6goz6tmbIC+sL7tPYen82fQzDVXFzlBcloffdR9EswzH5tYL8G88l
+	2bUl5vkx4iGkWSaUOnAmlHuOq/0yN62cOyJqEZ8Jrtl07zH0f8J8DwIza2Ect9HT
+	2qx/eaohsM6N3p+L+oSy+JIJeJQjtYG2f2FLuAUPTAC4pV4w==
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ec26cat6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:16:15 +0000 (GMT)
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b1ffc678adfso379307a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:16:14 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:20:15 +0000 (GMT)
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b31c38d4063so328269a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:20:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750914974; x=1751519774;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LY71DyKBMD5t9RNhRw/JYOoNO51ZSy07y5vbGuiOBVk=;
-        b=KhyRhJGoR96kFbhYSTjB5UudotiJUKkcL3ApNedloYU8qOXd+8XcNYEEAgkrocHqyt
-         HUxKaUHaCUAQqwU7tM39GD+Up2F/FVt5XtLvnMLe1fofBWfyqQsu2nAPEVEmVEuz4jqS
-         T28F0xjpTqE2QEWBOXxa+PIB8PlMa3HHYNsCApkn/2n4Wj4sa32I39cTEqnxKlTXafNd
-         1gSUdXS2yBbyWKP1w8nNiTRrjRAaBXX7saTWu9PJoLy4URRlZjS2DXedDB3YLHjWpbe9
-         ltIHiV8xiYXY1g55NSbwUOBuFRhqi4NjHZKlpZpgs1GXft1PSWlPcgRJP65logocaz5u
-         CHyA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcnVmzGET324+Y8Z9g0zdg75Z/7HBoua0icV6BqsZWUjKjoXarRDd4wyh23ArOwgJ93JJa+hYu18EsB5A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRt89/GwGEEN00YTYq2zyuXacZDB8Jd6DZu7QNHws97HYP9k4+
-	f9PIqSnlpBTe3xIuGRKoK7NSlzMQuucKcRD06yCsAKszW0ua6sJsisLhLnXEW2eB/9iScC34umF
-	N74xaKrSd9432BM7VXRPnnjfTTIWwqLtDV7cOQ4+lLYyr3tgMHv4Mi/UPXiO+klf4gxg=
-X-Gm-Gg: ASbGnctWwgDzZ4TGkg/AriqzpeUj0kp8O2ZIgCvVDdGieWolYl0XsXAJSFvlWeIrtRm
-	ay/NYarplj3cEhpaZjTxjZp8esbLbSnxx1T72fnDpx0Q9pME3Eo+KI+BjFvFGfEXlCAZWhaEd2X
-	brPTil4Iv6eL52SFfVsVIYSsQgyCneTPlDvVWoHVodd4Sj5+HRdzYigzvGY3VnwadM/v3GRlNK9
-	S16yM8OxcbxI4WzQ/e0OfLZzI8JXI/YPF4jxLmIwQnTvKP0qtKFm0aAq1JTEmiSSayENswcF760
-	Dc9dapGyNYuY4mrk9rdQeXGJqt4PTNsDQRLjGw9Lwyw+JlNUbSoGTOA5GvR0aLg=
-X-Received: by 2002:a17:902:c946:b0:234:9066:c857 with SMTP id d9443c01a7336-23823fda014mr93556365ad.21.1750914973618;
-        Wed, 25 Jun 2025 22:16:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF1J4U+ZM0bzuwizefQYFWAFIBA+Dan1+AA0/xNRtmYf7564YTHsnuN3w6c86htat1ivMpLSw==
-X-Received: by 2002:a17:902:c946:b0:234:9066:c857 with SMTP id d9443c01a7336-23823fda014mr93556165ad.21.1750914973097;
-        Wed, 25 Jun 2025 22:16:13 -0700 (PDT)
-Received: from [10.151.37.217] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86d1b74sm152989225ad.209.2025.06.25.22.16.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 22:16:12 -0700 (PDT)
-Message-ID: <5925b608-1251-4b73-b310-948b383f7b7b@oss.qualcomm.com>
-Date: Thu, 26 Jun 2025 10:46:07 +0530
+        d=1e100.net; s=20230601; t=1750915214; x=1751520014;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6pAx5/ZkLCjLuDmzrc9YzjagLIhF1++aZj4s/ojWJSs=;
+        b=KUq/B2DhZyQpOuPlu38JPIkBCfGCguGxlYSdagsuhJjzfCtSLc/3Ez5iQxFAibZtRR
+         pNTX5CysVxejoljq/K53Fc8UH/+OXicK44/XIx0kMWFRFP4b6f30Hl9qJhSxwtYuQyGa
+         xvWTzVylZgjbCnbzyJ42f4+oBaOE6oOYi8cXeJ6qVcmSRrIVm9lrIH5OnhrYWvvKLsLh
+         FdFGfR+g6WEBzJrq/KZzrv4xVQkav3BXmIsmJrfVHVXe9wtSA0bPEFY1S9uOkCuwWheG
+         k+Ge0AZ52woJ/FCEfNn3vyEm0Fh61fyryWTHvHeTw0dEY4nP/BmoGG7+axGBH3AaZByR
+         J62Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX/ap90niYv7XKGn9LrrtvbSqbTSfN4zxBHdatGH7HhyKm2yk3skUEEk2BQeisdq2oz2Gxx+qkDHRlO0dk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqT8mkwmqH+OVH1sopP6GFFELmrA6IaZfTwzGn0BOa2IHgrObJ
+	ZCoxPTqK0rxZ43mmKeTNS7r3e/+SIXoI6M6DVXeRhyNQS1J5Ck+bh3Q1tl//kl/FJHGktZM8zht
+	qRoZgU3IvJnFlZvAPFMX9+G0u6dqGFfhpCgMl802eT9aQUtYFPnsALcdUGhxeBkbYplk=
+X-Gm-Gg: ASbGncvSXHeOj25SOAI6vtL6J+UHHjn/oqWkiVgbwIUP3nv62d2bO3hXcr2YG+7fo+0
+	Lf6EMPgBv/zM1ZYVlI1HZquItYJf0TnOTzrJpWK2fdPhMS1ZwnieV4hGNdNEhbNTtV38ruWfdp1
+	KP9IjyezfAMmV5e0VRibwQPKuLZokH9dptO01Tpgd/6n10XJdWmIfLWSGlOhOvg1oJZGJDfgYd7
+	OBX0c7PjsT+sk2SO2caMyaOpG6qCduBUhx+a0V6zJ6RQU9QgdGRFpSjLd1vtdNhY6fN+QtgjWD9
+	vqr/OpXabmbojIpe6cmSxKBwlfiFCT0ZqVliLbXbzQAHtP9j0G4VmT7aFeRq9+D4b64j1IAwMy5
+	43JFP1+/vA/k7SqQ00myeTJmvWJjKEi94THQegRl7n06VsJs=
+X-Received: by 2002:a17:90b:2ed0:b0:312:def0:e2dc with SMTP id 98e67ed59e1d1-315f25c9b3fmr8638729a91.7.1750915214190;
+        Wed, 25 Jun 2025 22:20:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH89OoOzXSimx5HnW6QRCbmh5jHDwsaTiPcchec/GXWmTxIjZHrwzQ00PiGT6UVndyuC4fweA==
+X-Received: by 2002:a17:90b:2ed0:b0:312:def0:e2dc with SMTP id 98e67ed59e1d1-315f25c9b3fmr8638690a91.7.1750915213684;
+        Wed, 25 Jun 2025 22:20:13 -0700 (PDT)
+Received: from hu-adisi-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f53c2f28sm3443612a91.28.2025.06.25.22.20.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 22:20:13 -0700 (PDT)
+From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Date: Thu, 26 Jun 2025 10:49:56 +0530
+Subject: [PATCH ath-current] wifi: ath12k: fix timeout while waiting for
+ regulatory update during interface creation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: qcom: ipq5424: Describe the 4-wire UART SE
-Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
-        Viken Dadhaniya <quic_vdadhani@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250624-ipq5424_hsuart-v2-1-6566dabfe4a6@oss.qualcomm.com>
- <bdf7e3e4-f1d1-4f3f-aebe-ded7b8091884@oss.qualcomm.com>
- <3514a3af-ab7d-41e6-9e59-95defe9105b4@oss.qualcomm.com>
- <da6daf53-11de-4ca1-892d-73754adb435f@oss.qualcomm.com>
-From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-In-Reply-To: <da6daf53-11de-4ca1-892d-73754adb435f@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA0MCBTYWx0ZWRfX3QxxaADU+sbH
- FL64uElbjzfIf3O8IoFlpwHqBCpIfkRG5aQ0A9OW3unpr/ltp1m2q+dCE984b6TfceUB1hCFAJL
- fbQ18ghFflNW38Fu8SC3OSkA5xRaYlsVs1OZiPwqx09J5lAinve//JMXs5e1XJY3lhTlL0Od3nq
- wBL7s1GS/94jHehSbmaJ475AeFn61QmpRhLDf0ZEwYuCJ1zZTrlwsS0X4CAzJSBh/wGUJ3nabqB
- ZQzmu29YF8RUl6meHENSTXPDejgLNLuWoj7QCMC2y64sdMyBqhs+Svn4NB/Vx3IBjXd8JQJ6zIv
- be70xzuPsjPOZ/lSX9sbTt2B+L6La29tkLLKbtl7qHknQqYGsYes5pALXEdej1rNV6UkRrIsRLl
- x6XKwN26gLKSDvAnrHLmt0O3yk4pkIn+IupaE2geA3JBVti2fvmOzJ6O4OodN2wIsLAYcBD7
-X-Proofpoint-ORIG-GUID: ld64BnGS_pf8-fkJdD3aKM7et9c5UrK0
-X-Proofpoint-GUID: ld64BnGS_pf8-fkJdD3aKM7et9c5UrK0
-X-Authority-Analysis: v=2.4 cv=LNNmQIW9 c=1 sm=1 tr=0 ts=685cd79f cx=c_pps
- a=Qgeoaf8Lrialg5Z894R3/Q==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
- a=Dgig-iccZCONCpKWDfgA:9 a=QEXdDO2ut3YA:10 a=x9snwWr2DeNwDh03kgHS:22
+Message-Id: <20250626-fix_timeout_during_interface_creation-v1-1-90a7fdc222d4@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAHvYXGgC/5VOSwqDMBC9isy6EX+x2lXvUSSEZNSBmrSTKC3i3
+ Ru8QTcPHu+7Q0AmDHDLdmDcKJB3iZSXDMys3YSCbOJQFZUs2kqKkT4q0oJ+jcquTG5S5CLyqA0
+ qw6hjahAam6ozV1u3XQOp68WYgufOA3SchVmZ0UUYkjhTiJ6/54etPC1/zm2lKIWUdW/7pu4M2
+ rsPIX+v+mn8suQJYDiO4wfwV0FB7gAAAA==
+X-Change-ID: 20250625-fix_timeout_during_interface_creation-ae428c7d3684
+To: Jeff Johnson <jjohnson@kernel.org>,
+        Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
+        Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+Cc: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Kang Yang <kang.yang@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA0MSBTYWx0ZWRfX/5vCjSLFj+91
+ 0EfaXLqgM8fAMbIfV9ymGvmomIhFUgfSzTKGO/oazavFo1Vlp/DWxdFBraw9EtlW0QYZFWtREKe
+ cW81e7NOfVOxNvrgmRwk4MQrlEB71LuImyx1fAia8jKV21j3cjJnheHvLxo7sGFys9eGx4/c6bv
+ Lvjdyd9CdSUb8VyBAaVEz+Om6TfgX6erJAHjP21YMywtL3C/v35JUoQXU/PP+uxn/eE7OzAP8HJ
+ JfdD2iHw7glu3NQXLcpn5gvqgxpeb4tkAxeeEiaj26jbCbP9fn+mOBys3luJ67Z7hHapK62fTMO
+ FnXCRiqkMQOBLpxIOfFxt9PGucWNcEAGeiTn4rqdtyFkTtz+9CesheiREdOdqYJRAhJbaqyK6N1
+ G1rr8LZlzD4maZ6gUGEh8HXF2Apuu1OhG04DQu9PKmlCUVQipq5dzM7W+GtRL96pg1KFJ4Ej
+X-Authority-Analysis: v=2.4 cv=XPQwSRhE c=1 sm=1 tr=0 ts=685cd88f cx=c_pps
+ a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=JrXYcSkjSHDmVXoFp08A:9
+ a=QEXdDO2ut3YA:10 a=3WC7DwWrALyhR5TkjVHa:22
+X-Proofpoint-GUID: o8O4b-TlqHkpnCQ4Ue8nVmznbSU7kV0Z
+X-Proofpoint-ORIG-GUID: o8O4b-TlqHkpnCQ4Ue8nVmznbSU7kV0Z
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-06-26_02,2025-06-25_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=596
- impostorscore=0 mlxscore=0 clxscore=1015 adultscore=0 priorityscore=1501
- lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ lowpriorityscore=0 impostorscore=0 clxscore=1015 suspectscore=0 mlxscore=0
+ spamscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
+ priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
  authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506260040
+ engine=8.19.0-2505280000 definitions=main-2506260041
 
+During interface creation, following print is observed on the console -
 
-On 6/25/2025 5:44 PM, Konrad Dybcio wrote:
-> On 6/25/25 7:55 AM, Kathiravan Thirumoorthy wrote:
->> On 6/24/2025 8:08 PM, Konrad Dybcio wrote:
->>> On 6/24/25 11:00 AM, Kathiravan Thirumoorthy wrote:
->>>> QUPv3 in IPQ5424 consists of six Serial Engines (SEs). Describe the
->>>> first SE, which supports a 4-wire UART configuration suitable for
->>>> applications such as HS-UART.
->>>>
->>>> Note that the required initialization for this SE is not handled by the
->>>> bootloader. Therefore, add the SE node in the device tree but keep it
->>>> disabled. Enable it once Linux gains support for configuring the SE,
->>>> allowing to use in relevant RDPs.
->>> Do you mean fw loading support?
->> SE0 is minicore, so we don't need to load the FW. But apart from FW , protocol specific configurations to be done in the SE's Image Configuration registers, which is taken care in the patch[1]
->>
->> [1] [PATCH v5 0/5] Add support to load QUP SE firmware from <https://lore.kernel.org/linux-arm-msm/20250624095102.1587580-1-viken.dadhaniya@oss.qualcomm.com/T/#m37a6b739c66040cde5b6b0121a03da7ea6715842>
-> I've heard the 'minicore' or similar name before.. how does it differ
-> from a "normal" SE? (+Mukesh & Viken)
+  Timeout while waiting for regulatory update
 
-There are 2 types of SE. One is Minicore and another one is FW based.
+This occurs due to commit 906619a00967 ("wifi: ath12k: handle regulatory
+hints during mac registration"), which introduced a completion mechanism to
+synchronize the regulatory update process. The intent behind this change is
+to coordinate the timing between when the firmware sends regulatory data to
+the driver and when the driver processes that data.
 
-Minicore SE supports only I2C / SPI / UART protocols and it is fixed in 
-RTL. Depends on the protocol needed, we need to configure the "Image 
-Configuration registers".
+However, during interface addition, if the 6 GHz band is active, the driver
+invokes ath12k_regd_update() to apply the appropriate 6 GHz power mode
+regulatory settings. At this point, there is no interaction with the
+firmware, so the completion object is not reinitialized. As a result,
+wait_for_completion() eventually times out, leading to the observed error
+log message.
 
-FW based SE supports wide variety of protocols like I3C, CAN and so on. 
-This can be achieved by the loading the protocol specific FW image and 
-configuring the "Image Configuration registers".
+Hence to fix this, move all complete() on regd_update_completed to
+complete_all().
 
-> Konrad
+The complete() function signals only once, causing any subsequent waits
+without reinitialization to timeout. In this scenario, since waiting is
+unnecessary, complete_all() can be used instead, ensuring that subsequent
+calls to wait without reinitialization will simply bail out and not
+actually wait. This approach is ideal because if the firmware is not
+involved, there is no need to wait for the completion event. However, if
+the firmware is involved, it is guaranteed that the completion will be
+reinitialized, and thus, it would wait.
+
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.5-01651-QCAHKSWPL_SILICONZ-1
+Tested-by: Kang Yang <kang.yang@oss.qualcomm.com>
+Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
+
+Fixes: 906619a00967 ("wifi: ath12k: handle regulatory hints during mac registration")
+Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+---
+ drivers/net/wireless/ath/ath12k/core.c | 2 +-
+ drivers/net/wireless/ath/ath12k/mac.c  | 2 +-
+ drivers/net/wireless/ath/ath12k/wmi.c  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath12k/core.c b/drivers/net/wireless/ath/ath12k/core.c
+index 83caba3104d6c0bca40dd1166de335aabc8b74e5..ffc19a6b948539dddf3f6f21f2799f1b661347f7 100644
+--- a/drivers/net/wireless/ath/ath12k/core.c
++++ b/drivers/net/wireless/ath/ath12k/core.c
+@@ -1475,7 +1475,7 @@ static void ath12k_core_pre_reconfigure_recovery(struct ath12k_base *ab)
+ 			complete(&ar->vdev_setup_done);
+ 			complete(&ar->vdev_delete_done);
+ 			complete(&ar->bss_survey_done);
+-			complete(&ar->regd_update_completed);
++			complete_all(&ar->regd_update_completed);
+ 
+ 			wake_up(&ar->dp.tx_empty_waitq);
+ 			idr_for_each(&ar->txmgmt_idr,
+diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
+index 32519666632d1877eb48a31e94e5eb47f2b33880..d5f41f0fceee23710d2d775bb4d6f7451e15a55b 100644
+--- a/drivers/net/wireless/ath/ath12k/mac.c
++++ b/drivers/net/wireless/ath/ath12k/mac.c
+@@ -12755,7 +12755,7 @@ static int ath12k_mac_hw_register(struct ath12k_hw *ah)
+ 	 * proceeding with registration.
+ 	 */
+ 	for_each_ar(ah, ar, i)
+-		complete(&ar->regd_update_completed);
++		complete_all(&ar->regd_update_completed);
+ 
+ 	ret = ieee80211_register_hw(hw);
+ 	if (ret) {
+diff --git a/drivers/net/wireless/ath/ath12k/wmi.c b/drivers/net/wireless/ath/ath12k/wmi.c
+index b38f22118d732aa182f9fd6dda376b0d41de65e2..2fb262d13a586bbf354a74be8e509df2b4905f30 100644
+--- a/drivers/net/wireless/ath/ath12k/wmi.c
++++ b/drivers/net/wireless/ath/ath12k/wmi.c
+@@ -6764,7 +6764,7 @@ static int ath12k_reg_chan_list_event(struct ath12k_base *ab, struct sk_buff *sk
+ 	 * before registering the hardware.
+ 	 */
+ 	if (ar)
+-		complete(&ar->regd_update_completed);
++		complete_all(&ar->regd_update_completed);
+ 
+ 	return ret;
+ }
+
+---
+base-commit: aa555da8266715e52e5dd74360f3b4c866ddcb64
+change-id: 20250625-fix_timeout_during_interface_creation-ae428c7d3684
+
