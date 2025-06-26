@@ -1,252 +1,363 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0F6219E0;
-	Thu, 26 Jun 2025 06:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750920723; cv=fail; b=ut0xx1Ff1Sm3j1fg/ZjGHQffsoUKprnMxLI5uFnNZVTU9toL+OGSJwaDASE1s/lYvRJj2FNEA3Vv/yjpBwP/TEEzH6UDLkPfkwAomVU+uOllEFDOAjJxlXEjazwyeAHeKdfG6EV+F5fT0giR2CWXblIfE62p0pLcrllOijwoFF4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750920723; c=relaxed/simple;
-	bh=2PAdhgBdnGKCJD68gy4hwn2GvsDGyKVf6wNv08H6GYY=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=h0zEP7kAT4Om5L+JXqL+AXSJf93NDiaCrdzDSPWfs8sEwQYzfx8qAApbipP8p7tQSi49J6pe168zTQDmg0fsXSl9hP6wuMv5Ah8AY5o46QGud0vekl8xkPJskZazkul3hTwIuomv79ZpMmmI94kmqG2cCasYFU5Ou1VRkkJ3/4c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QEHBUHfq; arc=fail smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B212219E0;
+	Thu, 26 Jun 2025 06:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750920761; cv=none; b=EuOSNR05n88WOiWuPJulx0SG7KjPuTYtyz9NeW6w+e8dOnYMue5hpGicvvWurcwV06dffpSzwkZyAtEhsc8JO8aYpCnjn2ruIiTcNsFygIoVrU8jcoH/aqp2z6MtfV8DfzpCBrVeH2IvIinhk2GY/DSYGsekmU5qeO8cajhaA/w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750920761; c=relaxed/simple;
+	bh=93XROQxiGQHCKlPRwvuS45z/TicKFi6RuE8Dbot702c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LZ8f7AUkJXjFs3/yl8WW2aJsKgEa0XrWbpYiGjPcSf4OLaOuDroS9pRaRrq1DoTBGkIIDSHqg12aLi/WfbYfM6igpjv0qS7sNDUSSXGUdv4vEbDikEeCm61Gjrsf4o+/hEczSQPYg/BXS6Xj9pFH/0cGXkpIbhw3WhjmZXBpRrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oF0tJV/Y; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QEHBUHfq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750920722; x=1782456722;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=2PAdhgBdnGKCJD68gy4hwn2GvsDGyKVf6wNv08H6GYY=;
-  b=QEHBUHfqJL7omFlnWa2cvpTWUt4ZYLTXk+qFEFPYLasLdUctlpjsOhbw
-   Z7sLW86MFaQpT03+Sn+ij4E9rBpt4skZcp4Oifmj2rthBsLVSGlVaAvKA
-   yBjqomRzM25REqU8OVtG1hh4LuCjMEMGMTD2Hns2Zh/g/VlQZ6fxrqeJa
-   hNWX+n/rF5IwzB1SO2orYtV6RCaZn6IZdn0fLd8EYtcze+Ih0NbjMGSnG
-   UI3x2NDliwGzcBqxStNT256oduCI85MYDkb32Shn/lOpOaV+BhN+RvCyJ
-   LgtNmnNgP3/q6wy/Fss6p6/80nnNvxQCpuZoJAv+c8lrpVaKgj5Zhax+E
-   Q==;
-X-CSE-ConnectionGUID: o/AQlqA8Tam1eoeVRCg1+w==
-X-CSE-MsgGUID: 4OBHCFj6Szmw7oNz6Ff2ww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="57011316"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="57011316"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 23:51:52 -0700
-X-CSE-ConnectionGUID: nbE3MnNcTxGQYtZ+SawHtA==
-X-CSE-MsgGUID: AL5WU9roRweIvzzMtmXV1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="151947805"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 23:51:52 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 25 Jun 2025 23:51:51 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 25 Jun 2025 23:51:51 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.56)
- by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 25 Jun 2025 23:51:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=W5R3jDTIIGKiCvRYjlvkejsJpgbhX5s1gIukkhnZuYobtrXzYJsGm7cpKeDHHNVeFHpe5TXvfoYoACnCwFFK/CP0zicc16A6+NmtysvIwizi2BlHsn0eZ+/rEkwjK6X/3waDksDcYLCNpV11HEZLd4VeHzfqtp9P0L0p+VzZdnZrka7nd2K+H9/dI7h3O7AteEVpX7NWo1t8hqw2iSFJkGpWz3Rn0NGXoe3VM6My33iy1xOo62eB1zqX7zgs2AHGca9oDZxEmEfV5/gaBVWwEBVDnAoL6l0ywXgVXI1cTIXUJDbyP36BoDAIljV/INtLRpqb7b5+fAPPBPJkMfu6aw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aR4C6yQECsWVisJKQMipZAirWurqIkTHv+BxqytxM/4=;
- b=f2oZ9YOc/eWw3+eO/pzfTDjTRTn6ou2dWG/KjWwOvNvTwKGLqlxAMA+2hS/kzIBwz1HYxHzxEK9AgXNSHzEKYjvhqg8loul9YksD8j+UfVdEzb1y3Gsnjm51+d3NxR38tBR/KgT+QXaC4KEjYWeRJhiUci96cSFloPjIfQIPRsglGcx/XxTX8yruxA6i1YR5msPKkPlRt94FbwkXud4MaZw/jKQBmJYtYc3P+p4GjLehoOdul3mEH0nNNSfgiezGQHFMB+wSPpapn3MxdMtTjruNmw8vDJVUz+Bp+LgUBVmdfRYwVgzHe0Z3dDN09DgOtqvDmvQwopc/jDkuykHaNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BN7PR11MB2708.namprd11.prod.outlook.com (2603:10b6:406:a9::11)
- by DS0PR11MB7577.namprd11.prod.outlook.com (2603:10b6:8:142::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.26; Thu, 26 Jun
- 2025 06:51:34 +0000
-Received: from BN7PR11MB2708.namprd11.prod.outlook.com
- ([fe80::6790:e12f:b391:837d]) by BN7PR11MB2708.namprd11.prod.outlook.com
- ([fe80::6790:e12f:b391:837d%5]) with mapi id 15.20.8857.026; Thu, 26 Jun 2025
- 06:51:34 +0000
-Message-ID: <b473517d-3a59-4554-9673-a49b9e3a84f7@intel.com>
-Date: Thu, 26 Jun 2025 09:51:28 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] mmc: sdhci_am654: Workaround for Errata i2312
-To: Judith Mendez <jm@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, "Vignesh
- Raghavendra" <vigneshr@ti.com>
-CC: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mmc@vger.kernel.org>
-References: <20250624221230.1952291-1-jm@ti.com>
- <20250624221230.1952291-2-jm@ti.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
- 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
- 4, Domiciled in Helsinki
-In-Reply-To: <20250624221230.1952291-2-jm@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0521.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:272::22) To BN7PR11MB2708.namprd11.prod.outlook.com
- (2603:10b6:406:a9::11)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oF0tJV/Y"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q4AQad010332;
+	Thu, 26 Jun 2025 06:52:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=IeZtDq
+	wmz1khSscO8YzuYvN2wcU8GpIM6bDlf82eRaU=; b=oF0tJV/Y9gpoo4qiP4FVg4
+	mkF6s7XNy6SkB6RyGRQkq5WGA4CXwRfEnXtmkUrrVvTJD814DQAGuTNYbzM9zwSb
+	vGhYobRoDp7dj78E9WV2Ad4Q+551JNkSholmeEr1/Ni5h+ahii8QgHuH+cbaD1Ra
+	DeZm1sp4Ldb4sS7bUVaEhos9++qD2ha94m+7xvVkGoBk73ymzwSkEodlGOEga3Vd
+	H4cRHwYs7UggGK0WvxbL98iDfOJKxO6aOtwAMxzkGbyO9WGlmeqs5Ab8lQ6HkmHg
+	PFJxKAqoixsnIgnV3QZEHoOE0SkqIV8vOuWEZ5OHxQsIQb7QGxUD2bXBk8UOMKfQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47gsphjdy0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 06:52:19 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55Q6iBkH017987;
+	Thu, 26 Jun 2025 06:52:19 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47gsphjdxw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 06:52:19 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q4T0tt006513;
+	Thu, 26 Jun 2025 06:52:17 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e82pdm4k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 06:52:17 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55Q6qFp642271202
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 26 Jun 2025 06:52:15 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AFCDE20043;
+	Thu, 26 Jun 2025 06:52:15 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C0AA020040;
+	Thu, 26 Jun 2025 06:52:11 +0000 (GMT)
+Received: from li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com (unknown [9.39.20.202])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 26 Jun 2025 06:52:11 +0000 (GMT)
+Date: Thu, 26 Jun 2025 12:22:09 +0530
+From: Donet Tom <donettom@linux.ibm.com>
+To: Dev Jain <dev.jain@arm.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        Aboorva Devarajan <aboorvad@linux.ibm.com>, akpm@linux-foundation.org,
+        Liam.Howlett@oracle.com, shuah@kernel.org, pfalcato@suse.de,
+        david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
+        npache@redhat.com, ryan.roberts@arm.com, baohua@kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ritesh.list@gmail.com
+Subject: Re: [PATCH 1/6] mm/selftests: Fix virtual_address_range test issues.
+Message-ID: <aFzuGQqM4zQIM0wF@li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com>
+References: <c93110a4-19e4-4a1d-b044-6b7f521eaa0d@lucifer.local>
+ <815793f1-6800-4b9a-852e-f13d6308f50f@arm.com>
+ <2756fa2b-e8bf-4c66-bf9b-c85dc63dfc33@lucifer.local>
+ <41d9a70d-9791-4212-af23-5b13d8e4a47d@arm.com>
+ <aFPI_blZGhvKSbNJ@li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com>
+ <16fff6e9-98f5-4004-9906-feac49f0bbb4@arm.com>
+ <aFwvPj5AlCgTZsh2@li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com>
+ <3bc08930-06f3-443e-a267-ff02c2c053f6@arm.com>
+ <aFzdu8YGN_jDxV1u@li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com>
+ <f9b4f688-f498-48cf-b08c-25477bd7fc7d@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN7PR11MB2708:EE_|DS0PR11MB7577:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3eb97752-88ba-4efa-11d6-08ddb47de33d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?eForb3dCZEFaa2MwWWppZjR0OFRYUldVa01zT3BvK2tTUndqbGhReWZJMGVi?=
- =?utf-8?B?OG5FcTFuM25uZkdwWDRDaWpjKy83ZGNaZFdCRUp6RVo2MVErL1FUcUcyMHh1?=
- =?utf-8?B?dXJ5aUFGMDNPS3ZOdUQxZEFUTk1md1BTcjF4c25Xc1dzOEtNYTVGYkVlbXc2?=
- =?utf-8?B?NFNNbEtNSVQ2dHFHNk03UjJ1cFFKRnhVL0hjeWxxclI5TWM5VjFCYjg2eWVE?=
- =?utf-8?B?U1BDRUEzZ25saFRQVHlpN3NyM3ZIQ0JnZS91MlNtY2lXbFpzR0puLzlqY2lv?=
- =?utf-8?B?VFdhTzdZUHBCaDlEQUFGNU9OdjBjV0xMMnQ1MEdQUk5nU3RXODVRMlRlTEZR?=
- =?utf-8?B?amU3NVo0WFhEVmZsUTQ2L0xTZE45dGZwYnRzZFZhMFZLSXhMeVc3RDE4Z0hx?=
- =?utf-8?B?b2dSQitiUlV5ejk4MnR5RUQvM2pSWEF5Q2lnYWwrbkVNSzNaS3pKaDBRaTE0?=
- =?utf-8?B?QUptVjY3b1lBU2xWSloxanJ3SkkxRkplUzVwNEEvTy80L3RXSE44YU9NQ3Fh?=
- =?utf-8?B?YXEybklTek40YWRnd2F2Q25wK0gvZUZkcEtqU3NyOGlJM25LMVFHQUdyZWtJ?=
- =?utf-8?B?Q2ZCaWRhTnJhMWNpMXcyamxFWURkNEhJKzBQMW1XRlBXRHpsTVl4TW5HdnZr?=
- =?utf-8?B?UGZGaGxBdWluSTRKaDJHSzN0bU1CVEoxSHhKMEdnNHJQVm9hL2FnK2JIdG8v?=
- =?utf-8?B?WHMvN0ZoYmJRVU1hb1BBRWdhWGRibzMrUkNLbHJJUCtrbHVSWHE5QWFpYzgr?=
- =?utf-8?B?YndSR2NLRHJkWTdpQUtHeVpaTkIzSUk1WThXbm1oTXF6M0pXWEI4TC9aMVFZ?=
- =?utf-8?B?aW9RNlNKWHNmTFFrdG55VmVHRFN1bm5IOE52MzdnK25VNWVac3dtMmx4aDIz?=
- =?utf-8?B?Mi9pd1dXWUsyNmROV29Lbm0wbjJxcTJTNlNRQS9mK3A5SmVVenlWUzMwMGJY?=
- =?utf-8?B?MmlGQWZLUWN5ZVNLOHdsSFNsVGQ1UWlJRlZBckd6K0EzUmNtcmFmR2g3em9G?=
- =?utf-8?B?MCtURDNtaEgyVFovQ2NXQzJvSHR5V2I4N3ZGZW1WaE5DQ3hjZEo1Q1FmaW4r?=
- =?utf-8?B?MFZhVnV1dUxuMU9acTBPQ3YxRktNNGtNTUI2cmVpTDUvSlBHWWxhUnhXTFl2?=
- =?utf-8?B?d2pETDFydnRwYUdDcUg3andId2NFOUlweEUyVWRCYVBZT2FuWWdadjVubmVX?=
- =?utf-8?B?VUNDdHQ1Nk04Qzhib1RSYm9YTGdBbjNOcW5uZG4ram5hU1k2bXJmRCtVQUxv?=
- =?utf-8?B?U3ZwU2dGZGw0djhhcGNnRm1aVTlaOFcxY0hkQURBb0pHSm1HcXJSQi9rTnZE?=
- =?utf-8?B?c09QVHB0ZzJzakNicTluMkdYL25kcjIyRWc1QmNRYTNlNzk0bUFFaWxxeG1T?=
- =?utf-8?B?dDhSVFRVUGZZT3l6enByT3N0VjZFaXM3ZHVyQ1pDRkE4Q1QrQ2xYZzRXYVBC?=
- =?utf-8?B?UmZ1WjcvVS94b29vTW1xVmN4RmIvTTQ3c1F4RTI3QVI5dDdWNXNUbjY5UEJs?=
- =?utf-8?B?dGp1MFRnb1ZzaVl4Qnp3dk1NUUhrcWJFOENlRnk1S3B6SFJNcEtsQm91STZZ?=
- =?utf-8?B?ZmVsTVV0VU42bDNzOEsxcjJXNEhocy9jVW1JaDQxZW9wM2J0NVRXSHg0T2JQ?=
- =?utf-8?B?a0dPcmozWnloUXJPV3JwSTdtTG5TQzNYZ0xDWk1LdEVGVlhRQ0xvTHFWTW1O?=
- =?utf-8?B?N0cwYTZCTVFvU3RoYWtTZnk0MktUV0h6MFBHblVTNGNyc1FFcnp5akpOcm0r?=
- =?utf-8?B?SEZ5cTBvYUloV1JZY3E5ckFBVzkyN2dsNWJoY0tOc2M5YnQ4TThJOExSNWZa?=
- =?utf-8?B?OFdJd08veDVGWUQ4S0lIbU1JY3ptekZ0blVwVjY3bE5IVzNtYnplVEx6eXNx?=
- =?utf-8?B?QWpQYnMzY2pua0k4S3lKR20vNThMTWxOUHhiemZ3S2Y3RmU2T09pKzV2NnJ0?=
- =?utf-8?Q?NBZqxDlSFEI=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR11MB2708.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RGFkUklVc25YSGRnL1FHNmErMC8rTVFPOHphVEJMeGZFNVJvdFdmWmxyTGhw?=
- =?utf-8?B?aWtYK0tVcFhXakROOUQ1SHYrWXpmTDlpTFVFRk1OSDI4Z2tFemd3Z0VXR1Nu?=
- =?utf-8?B?c1ZnSzMzNWZ2YW00SkRGbFNleUNlUmp1YnZwQnFDUUpxcFF6NjRhazVFc0Jw?=
- =?utf-8?B?Sm5YQU53bHhoeXdqSmxXeU1HMkJVa2VhMmZFMWJTbEZzQ1BQMHZ1TVlxR2lT?=
- =?utf-8?B?cW0xL2NjRFVHV3JBNW1qUHVpTXBpWllpYlhZcDF3bWJHeEFIdVZPK0lsd1M5?=
- =?utf-8?B?ekxWSW9qVXFZRWtQUHdsNWd5M3ZtTWNLTndRMk5Nb1M5ZGtXTHd0TzRvd2F3?=
- =?utf-8?B?SDh1bXdlQTVYVk82SlowMUJURzBHYnpsZURzb3dMWVVEV3ZXaHZXaXNKTUJs?=
- =?utf-8?B?VW1BZjlYN2NNQVZPaFFXanpFamhiVUVmTHBVRWRyK28zTUJxampUUktPRWly?=
- =?utf-8?B?bVd4M0xBUFg0NTBSdkF0RFhRVUQ5cW1GY0IxNGhaaEduSkVsbkJKN1RobVBo?=
- =?utf-8?B?OTdUVjc4SzdGREk3M1JoRyt1aEk4aDE3L2NZQUhWQUZrVTNCeDVtcERnS2NC?=
- =?utf-8?B?RGdkZC9uVHZJZHNmWmxjTVhDeEJWK2FnVysxL2ROd2tuK1BiN1J5VlppZ21Y?=
- =?utf-8?B?ZDVVS1FNakViSUJwMTN2ZVRhUWZrSHlTUlcrdkdxMGY2SXNDVWw4K3o5R0I1?=
- =?utf-8?B?SEM4T0k0RnBYRUpxbnA0UklpQmFEYmlhbHI5VzNnaEtZZmxJTEYwL1hxdG5m?=
- =?utf-8?B?dCs4NThBZU81TG9Oc0ZNMk9RSnpKdFRlSFM0WmQzWmh3MzVGYWF2Z0twc1JQ?=
- =?utf-8?B?Nk0xcFNaRXZCNFNENFhpVEw0K3NWMUIzMklUNkU0emRYdDh5MlJqNHFJdkpx?=
- =?utf-8?B?K0xYOXhrNkdQRnF2RDJVQy9oaEUxUmgrYVpnS0dmSFhtSEtlc1k1VHYrQUl0?=
- =?utf-8?B?QXJHRkd3SEpDQkROM01VeFFpUGJ4Vzl6TmZNbURCSlVaV1NmRXhwTi9kMUR2?=
- =?utf-8?B?SmlQWTNCbGNCVm82RzJYMzczbjh1bXVZcW80c0lhdlFjV25TbzFBSnhIRzgy?=
- =?utf-8?B?M0ZGUTEvdFJCQUFpSVB0RDVuL3pIaGRwQ3dCZTY2QjlHNTdYL2NsM3FsVTdX?=
- =?utf-8?B?UGxNcEtyNkRBMjVaTG40dHd5c2pmTW83NlVHMkUrMEIvSm5pRmh3MnFBZmFP?=
- =?utf-8?B?RnlvQ0R6YWNLQXZ1TTVIdXUwTDI1TFp5akpQQTJhS2s0bjQvSE8rZnRYdTAx?=
- =?utf-8?B?UElIdk1hS2hDRWFCMXlyQnptS2Exdi84MzQ5SUVOQUF6SXA1S2dzSDFSclNr?=
- =?utf-8?B?SE5namVlcy82dWJnU3dwMmlkSC9Pbms0SmpBSitNT3JlQlIybGQvcEY5enl0?=
- =?utf-8?B?V3Rma2tNcHMyM2M5Q2pjeVlTK1hQYUg4cW1ucE4zQ05ENkl0SUx4dzVETXdK?=
- =?utf-8?B?VmxSb3dmQWx1SjVmZzJ3T2k2S0k1MUV4RHQ3N3RGMkc1aGlSVzFHb3d5K05S?=
- =?utf-8?B?NEZESFF1Myt4cTRBbzRBOGpVNGpvZCtXMXU3Q2dqaTFUM0V1VExqemJxT3BX?=
- =?utf-8?B?d3lpWldrRFVESitPWmZsNTBmT1ZIWjhUZy9MWWMrbVRWdGx1YVNBenFHZVZV?=
- =?utf-8?B?bnB0SFJaMFNFbXJyUTVvTkJMNnlXc0dqT2UxWURPNm81TzlDL2JlMlhTdHcz?=
- =?utf-8?B?R0lFV0NnbllkcFNNcDBIVmY5WXBhMWRkUHdCWTUzd0h5VDIrNHZOd0o1SHly?=
- =?utf-8?B?dnN0dDI5VVdKN1p1THZRMXVjR3dhN01mVTJZd01VdnA4S3drak8vMEJxNFZs?=
- =?utf-8?B?dk0vR1VpbGZKRFBWbkVTTFBTMkcxK2lxSkVMS2FVNXlaTWZydFhBOW5CTE1I?=
- =?utf-8?B?VDdaQ2ZkczYrRUs5RUhEVkhkWmtENi9RNTVLYktXVjFzOTg0bGNSMHN2ZmVL?=
- =?utf-8?B?S2tJNGRqRUlFb2tYUDZ5SnpCVCtsSE42ZmpzckhNd21ycUNCa2xoN3hyaE1w?=
- =?utf-8?B?WGI3Nk1wNlR0RStUSXgvOUg4QVJhV2I4Sm5Rdm55bXRUMmVlWDRxOTI4WDE0?=
- =?utf-8?B?OXlEdTZ1Y29OMFJ5eXE5cXdGNXNTbXB6cXozUS9LZ2VQUDRxOVNLbEFBVjB6?=
- =?utf-8?B?RW1PMzZRdE1qdzNyUGVtRHNwTWZ6QTdsN2g2ejVzR0RjK2EvMGNnd0tJNkk2?=
- =?utf-8?B?V3c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3eb97752-88ba-4efa-11d6-08ddb47de33d
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR11MB2708.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 06:51:33.9938
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RjjZvUrlFrWegv9FiRz6JSUvwuriaW2KISwsgX0+y6Yp2VnGMuW4N1lMYDeYsFmCP6oxlUpTtiaFdtuTps0z2g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7577
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f9b4f688-f498-48cf-b08c-25477bd7fc7d@arm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: fyKqlAs7kRepZgT4KWwEd2vRHKZh_qpi
+X-Proofpoint-ORIG-GUID: xjo9p56mQA51R81vGFWdIeAW4WB9lUIz
+X-Authority-Analysis: v=2.4 cv=Hul2G1TS c=1 sm=1 tr=0 ts=685cee24 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=yRzeS63Ns0XtCOZXxIcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA1NCBTYWx0ZWRfX8kGszTSPju7U WYsiv3J538aky1D1AjNGIbsAuOFw6yoZDUEhMzY4rixtMpXN8mi7jeetNnA1gshGDadZ4HLgMOU O69ydE+wbojfppwI6VTVgKurHblF4n7WXEXHikH/T6g/WldhXTwjOySdnJe/WhkW9x9mQt9Fi/5
+ +jUlajdKSOuwvKFbVLhJPAMEmXjZ8DPw3cftDcyXjhhIcG8q9bufiEDPbbIeJCuWrpESoDIjxMF srNpmU7clZwpfrC3BNFVj1aVX94Ht+dIx7cUGZrhYCbcfrgsN7g3x15jMdVIIfDnQSzfvA06N/C qBLg/vZucLAyixy61z3L+kEd7fznzj0dBltT/Tah64iydyLAfOa+twb6qvzd/b/1qqZYH5EaCe1
+ vFZJH5LyUBLceWT6ZDueJAcBtlL9pFHiugNyjEvG5oCWJrVXt89ip5w+U8gyjMXdaLYHpWf0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_03,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 mlxscore=0 adultscore=0 spamscore=0
+ impostorscore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
+ suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506260054
 
-On 25/06/2025 01:12, Judith Mendez wrote:
-> Errata i2312 [0] for K3 silicon mentions the maximum obtainable
-> timeout through MMC host controller is 700ms. And for commands taking
-> longer than 700ms, hardware timeout should be disabled and software
-> timeout should be used.
+On Thu, Jun 26, 2025 at 12:05:11PM +0530, Dev Jain wrote:
 > 
-> The workaround for Errata i2312 can be achieved by adding
-> SDHCI_QUIRK2_DISABLE_HW_TIMEOUT quirk in sdhci_am654.
+> On 26/06/25 11:12 am, Donet Tom wrote:
+> > On Thu, Jun 26, 2025 at 09:27:30AM +0530, Dev Jain wrote:
+> > > On 25/06/25 10:47 pm, Donet Tom wrote:
+> > > > On Wed, Jun 25, 2025 at 06:22:53PM +0530, Dev Jain wrote:
+> > > > > On 19/06/25 1:53 pm, Donet Tom wrote:
+> > > > > > On Wed, Jun 18, 2025 at 08:13:54PM +0530, Dev Jain wrote:
+> > > > > > > On 18/06/25 8:05 pm, Lorenzo Stoakes wrote:
+> > > > > > > > On Wed, Jun 18, 2025 at 07:47:18PM +0530, Dev Jain wrote:
+> > > > > > > > > On 18/06/25 7:37 pm, Lorenzo Stoakes wrote:
+> > > > > > > > > > On Wed, Jun 18, 2025 at 07:28:16PM +0530, Dev Jain wrote:
+> > > > > > > > > > > On 18/06/25 5:27 pm, Lorenzo Stoakes wrote:
+> > > > > > > > > > > > On Wed, Jun 18, 2025 at 05:15:50PM +0530, Dev Jain wrote:
+> > > > > > > > > > > > Are you accounting for sys.max_map_count? If not, then you'll be hitting that
+> > > > > > > > > > > > first.
+> > > > > > > > > > > run_vmtests.sh will run the test in overcommit mode so that won't be an issue.
+> > > > > > > > > > Umm, what? You mean overcommit all mode, and that has no bearing on the max
+> > > > > > > > > > mapping count check.
+> > > > > > > > > > 
+> > > > > > > > > > In do_mmap():
+> > > > > > > > > > 
+> > > > > > > > > > 	/* Too many mappings? */
+> > > > > > > > > > 	if (mm->map_count > sysctl_max_map_count)
+> > > > > > > > > > 		return -ENOMEM;
+> > > > > > > > > > 
+> > > > > > > > > > 
+> > > > > > > > > > As well as numerous other checks in mm/vma.c.
+> > > > > > > > > Ah sorry, didn't look at the code properly just assumed that overcommit_always meant overriding
+> > > > > > > > > this.
+> > > > > > > > No problem! It's hard to be aware of everything in mm :)
+> > > > > > > > 
+> > > > > > > > > > I'm not sure why an overcommit toggle is even necessary when you could use
+> > > > > > > > > > MAP_NORESERVE or simply map PROT_NONE to avoid the OVERCOMMIT_GUESS limits?
+> > > > > > > > > > 
+> > > > > > > > > > I'm pretty confused as to what this test is really achieving honestly. This
+> > > > > > > > > > isn't a useful way of asserting mmap() behaviour as far as I can tell.
+> > > > > > > > > Well, seems like a useful way to me at least : ) Not sure if you are in the mood
+> > > > > > > > > to discuss that but if you'd like me to explain from start to end what the test
+> > > > > > > > > is doing, I can do that : )
+> > > > > > > > > 
+> > > > > > > > I just don't have time right now, I guess I'll have to come back to it
+> > > > > > > > later... it's not the end of the world for it to be iffy in my view as long as
+> > > > > > > > it passes, but it might just not be of great value.
+> > > > > > > > 
+> > > > > > > > Philosophically I'd rather we didn't assert internal implementation details like
+> > > > > > > > where we place mappings in userland memory. At no point do we promise to not
+> > > > > > > > leave larger gaps if we feel like it :)
+> > > > > > > You have a fair point. Anyhow a debate for another day.
+> > > > > > > 
+> > > > > > > > I'm guessing, reading more, the _real_ test here is some mathematical assertion
+> > > > > > > > about layout from HIGH_ADDR_SHIFT -> end of address space when using hints.
+> > > > > > > > 
+> > > > > > > > But again I'm not sure that achieves much and again also is asserting internal
+> > > > > > > > implementation details.
+> > > > > > > > 
+> > > > > > > > Correct behaviour of this kind of thing probably better belongs to tests in the
+> > > > > > > > userland VMA testing I'd say.
+> > > > > > > > 
+> > > > > > > > Sorry I don't mean to do down work you've done before, just giving an honest
+> > > > > > > > technical appraisal!
+> > > > > > > Nah, it will be rather hilarious to see it all go down the drain xD
+> > > > > > > 
+> > > > > > > > Anyway don't let this block work to fix the test if it's failing. We can revisit
+> > > > > > > > this later.
+> > > > > > > Sure. @Aboorva and Donet, I still believe that the correct approach is to elide
+> > > > > > > the gap check at the crossing boundary. What do you think?
+> > > > > > > 
+> > > > > > One problem I am seeing with this approach is that, since the hint address
+> > > > > > is generated randomly, the VMAs are also being created at randomly based on
+> > > > > > the hint address.So, for the VMAs created at high addresses, we cannot guarantee
+> > > > > > that the gaps between them will be aligned to MAP_CHUNK_SIZE.
+> > > > > > 
+> > > > > > High address VMAs
+> > > > > > -----------------
+> > > > > > 1000000000000-1000040000000 r--p 00000000 00:00 0
+> > > > > > 2000000000000-2000040000000 r--p 00000000 00:00 0
+> > > > > > 4000000000000-4000040000000 r--p 00000000 00:00 0
+> > > > > > 8000000000000-8000040000000 r--p 00000000 00:00 0
+> > > > > > e80009d260000-fffff9d260000 r--p 00000000 00:00 0
+> > > > > > 
+> > > > > > I have a different approach to solve this issue.
+> > > > > > 
+> > > > > >    From 0 to 128TB, we map memory directly without using any hint. For the range above
+> > > > > > 256TB up to 512TB, we perform the mapping using hint addresses. In the current test,
+> > > > > > we use random hint addresses, but I have modified it to generate hint addresses linearly
+> > > > > > starting from 128TB.
+> > > > > > 
+> > > > > > With this change:
+> > > > > > 
+> > > > > > The 0–128TB range is mapped without hints and verified accordingly.
+> > > > > > 
+> > > > > > The 128TB–512TB range is mapped using linear hint addresses and then verified.
+> > > > > > 
+> > > > > > Below are the VMAs obtained with this approach:
+> > > > > > 
+> > > > > > 10000000-10010000 r-xp 00000000 fd:05 135019531
+> > > > > > 10010000-10020000 r--p 00000000 fd:05 135019531
+> > > > > > 10020000-10030000 rw-p 00010000 fd:05 135019531
+> > > > > > 20000000-10020000000 r--p 00000000 00:00 0
+> > > > > > 10020800000-10020830000 rw-p 00000000 00:00 0
+> > > > > > 1004bcf0000-1004c000000 rw-p 00000000 00:00 0
+> > > > > > 1004c000000-7fff8c000000 r--p 00000000 00:00 0
+> > > > > > 7fff8c130000-7fff8c360000 r-xp 00000000 fd:00 792355
+> > > > > > 7fff8c360000-7fff8c370000 r--p 00230000 fd:00 792355
+> > > > > > 7fff8c370000-7fff8c380000 rw-p 00240000 fd:00 792355
+> > > > > > 7fff8c380000-7fff8c460000 r-xp 00000000 fd:00 792358
+> > > > > > 7fff8c460000-7fff8c470000 r--p 000d0000 fd:00 792358
+> > > > > > 7fff8c470000-7fff8c480000 rw-p 000e0000 fd:00 792358
+> > > > > > 7fff8c490000-7fff8c4d0000 r--p 00000000 00:00 0
+> > > > > > 7fff8c4d0000-7fff8c4e0000 r-xp 00000000 00:00 0
+> > > > > > 7fff8c4e0000-7fff8c530000 r-xp 00000000 fd:00 792351
+> > > > > > 7fff8c530000-7fff8c540000 r--p 00040000 fd:00 792351
+> > > > > > 7fff8c540000-7fff8c550000 rw-p 00050000 fd:00 792351
+> > > > > > 7fff8d000000-7fffcd000000 r--p 00000000 00:00 0
+> > > > > > 7fffe9c80000-7fffe9d90000 rw-p 00000000 00:00 0
+> > > > > > 800000000000-2000000000000 r--p 00000000 00:00 0    -> High Address (128TB to 512TB)
+> > > > > > 
+> > > > > > diff --git a/tools/testing/selftests/mm/virtual_address_range.c b/tools/testing/selftests/mm/virtual_address_range.c
+> > > > > > index 4c4c35eac15e..0be008cba4b0 100644
+> > > > > > --- a/tools/testing/selftests/mm/virtual_address_range.c
+> > > > > > +++ b/tools/testing/selftests/mm/virtual_address_range.c
+> > > > > > @@ -56,21 +56,21 @@
+> > > > > >     #ifdef __aarch64__
+> > > > > >     #define HIGH_ADDR_MARK  ADDR_MARK_256TB
+> > > > > > -#define HIGH_ADDR_SHIFT 49
+> > > > > > +#define HIGH_ADDR_SHIFT 48
+> > > > > >     #define NR_CHUNKS_LOW   NR_CHUNKS_256TB
+> > > > > >     #define NR_CHUNKS_HIGH  NR_CHUNKS_3840TB
+> > > > > >     #else
+> > > > > >     #define HIGH_ADDR_MARK  ADDR_MARK_128TB
+> > > > > > -#define HIGH_ADDR_SHIFT 48
+> > > > > > +#define HIGH_ADDR_SHIFT 47
+> > > > > >     #define NR_CHUNKS_LOW   NR_CHUNKS_128TB
+> > > > > >     #define NR_CHUNKS_HIGH  NR_CHUNKS_384TB
+> > > > > >     #endif
+> > > > > > -static char *hint_addr(void)
+> > > > > > +static char *hint_addr(int hint)
+> > > > > >     {
+> > > > > > -       int bits = HIGH_ADDR_SHIFT + rand() % (63 - HIGH_ADDR_SHIFT);
+> > > > > > +       unsigned long addr = ((1UL << HIGH_ADDR_SHIFT) + (hint * MAP_CHUNK_SIZE));
+> > > > > > -       return (char *) (1UL << bits);
+> > > > > > +       return (char *) (addr);
+> > > > > >     }
+> > > > > >     static void validate_addr(char *ptr, int high_addr)
+> > > > > > @@ -217,7 +217,7 @@ int main(int argc, char *argv[])
+> > > > > >            }
+> > > > > >            for (i = 0; i < NR_CHUNKS_HIGH; i++) {
+> > > > > > -               hint = hint_addr();
+> > > > > > +               hint = hint_addr(i);
+> > > > > >                    hptr[i] = mmap(hint, MAP_CHUNK_SIZE, PROT_READ,
+> > > > > >                                   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+> > > > > Ah you sent it here, thanks. This is fine really, but the mystery is
+> > > > > something else.
+> > > > > 
+> > > > Thanks Dev
+> > > > 
+> > > > I can send out v2 with this patch included, right?
+> > > Sorry not yet :) this patch will just hide the real problem, which
+> > > is, after the hint addresses get exhausted, why on ppc the kernel
+> > > cannot find a VMA to install despite having such large gaps between
+> > > VMAs.
+> > 
+> > I think there is some confusion here, so let me clarify.
+> > 
+> > On PowerPC, mmap is able to find VMAs both with and without a hint.
+> > There is no issue there. If you look at the test, from 0 to 128TB we
+> > are mapping without any hint, and the VMAs are getting created as
+> > expected.
+> > 
+> > Above 256TB, we are mapping with random hint addresses, and with
+> > those hints, all VMAs are being created above 258TB. No mmap call
+> > is failing in this case.
+> > 
+> > The problem is with the test itself: since we are providing random
+> > hint addresses, the VMAs are also being created at random locations.
+> > 
+> > Below is the VMAs created with hint addreess
+> > 
+> > 1. 256TB hint address
+> > 
+> > 1000000000000-1000040000000 r--p 00000000 00:00 0                        [anon:virtual_address_range]
+> > 
+> > 2. 512TB hint address
+> > 2000000000000-2000040000000 r--p 00000000 00:00 0                        [anon:virtual_address_range]
+> > 
+> > 3. 1024TB Hint address
+> > 4000000000000-4000040000000 r--p 00000000 00:00 0                        [anon:virtual_address_range]
+> > 
+> > 4. 2048TB hint Address
+> > 8000000000000-8000040000000 r--p 00000000 00:00 0                        [anon:virtual_address_range]
+> > 
+> > 5. above 3096 Hint address
+> > eb95410220000-fffff90220000 r--p 00000000 00:00 0                        [anon:virtual_address_range].
+> > 
+> > 
+> > We support up to 4PB, and since the hint addresses are random,
+> > the VMAs are created at random locations.
+> > 
+> > With sequential hint addresses from 128TB to 512TB, we provide the
+> > hint addresses in order, and the VMAs are created at the hinted
+> > addresses.
+> > 
+> > Within 512TB, we were able to test both high and low addresses, so
+> > I thought sequential hinting would be a good approach. Since there
+> > has been a lot of confusion, I’m considering adding a complete 4PB
+> > allocation test — from 0 to 128TB we allocate without any hint, and
+> > from 128TB onward we use sequential hint addresses.
+> > 
+> > diff --git a/tools/testing/selftests/mm/virtual_address_range.c b/tools/testing/selftests/mm/virtual_address_range.c
+> > index e24c36a39f22..f2009d23f8b2 100644
+> > --- a/tools/testing/selftests/mm/virtual_address_range.c
+> > +++ b/tools/testing/selftests/mm/virtual_address_range.c
+> > @@ -50,6 +50,7 @@
+> >   #define NR_CHUNKS_256TB   (NR_CHUNKS_128TB * 2UL)
+> >   #define NR_CHUNKS_384TB   (NR_CHUNKS_128TB * 3UL)
+> >   #define NR_CHUNKS_3840TB  (NR_CHUNKS_128TB * 30UL)
+> > +#define NR_CHUNKS_3968TB  (NR_CHUNKS_128TB * 31UL)
+> >   #define ADDR_MARK_128TB  (1UL << 47) /* First address beyond 128TB */
+> >   #define ADDR_MARK_256TB  (1UL << 48) /* First address beyond 256TB */
+> > @@ -59,6 +60,11 @@
+> >   #define HIGH_ADDR_SHIFT 49
+> >   #define NR_CHUNKS_LOW   NR_CHUNKS_256TB
+> >   #define NR_CHUNKS_HIGH  NR_CHUNKS_3840TB
+> > +#elif defined(__PPC64__)
+> > +#define HIGH_ADDR_MARK  ADDR_MARK_128TB
+> > +#define HIGH_ADDR_SHIFT 47
+> > +#define NR_CHUNKS_LOW   NR_CHUNKS_128TB
+> > +#define NR_CHUNKS_HIGH  NR_CHUNKS_3968TB
+> >   #else
+> >   #define HIGH_ADDR_MARK  ADDR_MARK_128TB
+> >   #define HIGH_ADDR_SHIFT 48
+> > 
+> > 
+> > With this the test is passing.
 > 
-> [0] https://www.ti.com/lit/pdf/sprz487
-> 
-> Signed-off-by: Judith Mendez <jm@ti.com>
+> Ah okay this was the problem, PPC got extended for 52 bits and the
+> test was not updated. This is the correct fix, you can go ahead
+> with this one.
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-> ---
->  drivers/mmc/host/sdhci_am654.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+Thanks Dev
+ 
+> > 
+> > 
+> > 
+> > > It should be quite easy to trace which function is failing. Can you
+> > > please do some debugging for me? Otherwise I will have to go ahead
+> > > with setting up a PPC VM and testing myself :)
+> > > 
+> > > > > > Can we fix it this way?
 > 
-> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-> index ea14d56558c4..86d87d8e0675 100644
-> --- a/drivers/mmc/host/sdhci_am654.c
-> +++ b/drivers/mmc/host/sdhci_am654.c
-> @@ -613,7 +613,8 @@ static const struct sdhci_ops sdhci_am654_ops = {
->  static const struct sdhci_pltfm_data sdhci_am654_pdata = {
->  	.ops = &sdhci_am654_ops,
->  	.quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
-> -	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-> +	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-> +		   SDHCI_QUIRK2_DISABLE_HW_TIMEOUT,
->  };
->  
->  static const struct sdhci_am654_driver_data sdhci_am654_sr1_drvdata = {
-> @@ -643,7 +644,8 @@ static const struct sdhci_ops sdhci_j721e_8bit_ops = {
->  static const struct sdhci_pltfm_data sdhci_j721e_8bit_pdata = {
->  	.ops = &sdhci_j721e_8bit_ops,
->  	.quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
-> -	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-> +	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-> +		   SDHCI_QUIRK2_DISABLE_HW_TIMEOUT,
->  };
->  
->  static const struct sdhci_am654_driver_data sdhci_j721e_8bit_drvdata = {
-> @@ -667,7 +669,8 @@ static const struct sdhci_ops sdhci_j721e_4bit_ops = {
->  static const struct sdhci_pltfm_data sdhci_j721e_4bit_pdata = {
->  	.ops = &sdhci_j721e_4bit_ops,
->  	.quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
-> -	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-> +	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-> +		   SDHCI_QUIRK2_DISABLE_HW_TIMEOUT,
->  };
->  
->  static const struct sdhci_am654_driver_data sdhci_j721e_4bit_drvdata = {
-
