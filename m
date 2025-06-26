@@ -1,74 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763372E7184;
-	Thu, 26 Jun 2025 13:44:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520B32E762B;
+	Thu, 26 Jun 2025 13:45:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750945476; cv=none; b=HSZDYPEKIogS0BFPnMRenFQ7nS1y6Cg4o1cmqNFtNiBEjrBOwScjFSaHsYauSR7MO4IO6+brqNbWd+GseUXx9Ey8eosWS2yb11o4RkoeRf0fn6ln3/nNmOTPoRV53t6gHSi2NYgipg/7IVF5TbWeJ+TIzIYZUhFir/DJcsDMBis=
+	t=1750945509; cv=none; b=EZYl3w3lrksLYqVuvH9i5S9bNisbn7V499aMB2p5rNMyzqFiw+ino5dzo9fcTzA0YrQahiEEO7D2rgmeNTW6ATxAF+SwUidgDHkl9V/GZ5ekP6bj8HKT+YDdfZHHQhubpBjzJUpQjAEemj7WhHcHtrCOmv2f2w4VtJZ40SE6e+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750945476; c=relaxed/simple;
-	bh=Ny9Vbn7ZHK3/VxaosjUkWXgcjFp6Xt44e+2Vvdj2XCY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=FG9vhsS9k1j41wcz4M71iyIL+SMyn0wn7YHKy7oI4kQWf68Sfyq7jw2JF9unLRVCo3nT7x3Ma+nfcXe/8Vng3CjxsgcPTtiTprbfdE8ppnewEYTTfjNlv4g7iCRVdbAbJuGtQhO2h82n14mnoDv8wBrMQX5uaOil6NmMBwaKzb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IW1C3N2F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750945509; c=relaxed/simple;
+	bh=G279dACHtQvr3AjwMIYy7wmCNZM5C1w9YX3eXJKhFSs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dIZXHkjLI01hyFtIBqj9Q5GR1iU280dvDPiT1uE9BPX0k6rVw3DDHz307NOtRigadumgZ0Vsd+jmwzxWO9FvW+yBRx3gsX2AjiYN+m6kTXQcMaolJ0ysxAMWZYmgch3/xmt/bj1GOLOVghChvN4rUzjMlpKoubYbVGxnvXVbdUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JwNa5DVP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IW1C3N2F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D584C4CEEB;
-	Thu, 26 Jun 2025 13:44:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JwNa5DVP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65A88C4CEEB;
+	Thu, 26 Jun 2025 13:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750945476;
-	bh=Ny9Vbn7ZHK3/VxaosjUkWXgcjFp6Xt44e+2Vvdj2XCY=;
+	s=k20201202; t=1750945508;
+	bh=G279dACHtQvr3AjwMIYy7wmCNZM5C1w9YX3eXJKhFSs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IW1C3N2FcDR8ZzOhvR1V72f4Kii58ZFIEBwfyV4PdjP7Y7wzQg1IHCHRM1EpSET7V
-	 vz3IowCF9c/HF//9z/0vw0apychE2ggeqKg999BpxbmIN/t6UHH8U8cdOmQe6tb6FY
-	 fRbAwPTYaT21XJqg41VGO2y6+NN8O5l9yj0oDyj3FrXdX/N9zyMsDo8GZEBpuRGTIC
-	 MWzBGXMDMLapfybHAbGr4RhTOh5n0blNVHa9qRLE6eayr86RxyYqfxxoH8PI2bOXdQ
-	 nz+EP3koexb89FLQtsdRCyDsVfqIJIfDooBy8TWBQ659AGWBmFdSvb43OHyeXthy7S
-	 crYl5mBiUee6A==
+	b=JwNa5DVPovInvWtSyNR5k6Xt3oecX3INIfSI0xRQvnUup7AabTSxuAI7zvQRJKPDs
+	 FvbtobTvPIXqRM0Ct4N+WEYpGkXc8sFPMGuOvPfQ6Shj0oASPfzYRmoLpltIe5eJtC
+	 oyqnp80GFfqM2nJhrCvChKs/BdoDzfXq+cNxqgOBj3P9LA7G6aYUx3xxViPKQTNGvu
+	 SNAJ5SxHLYkCp5VSOdp73j0BGDtXgb5nkVs5gUXSxy9OMQL+cBMjghENAX+Vlk+eoK
+	 N6rGDBjryfheyn5rQAuXuE7LZofUTw1ZluFnUdzeORoGriYB6SDwoklM0KphSvpUiq
+	 Fi8rdbImiwtGg==
+Date: Thu, 26 Jun 2025 15:45:05 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org, lkmm@lists.linux.dev,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>, Breno Leitao <leitao@debian.org>,
+	aeh@meta.com, netdev@vger.kernel.org, edumazet@google.com,
+	jhs@mojatatu.com, kernel-team@meta.com,
+	Erik Lundgren <elundgren@meta.com>
+Subject: Re: [PATCH 4/8] shazptr: Avoid synchronize_shaptr() busy waiting
+Message-ID: <aF1O4aH7m43xAbCZ@localhost.localdomain>
+References: <20250625031101.12555-1-boqun.feng@gmail.com>
+ <20250625031101.12555-5-boqun.feng@gmail.com>
+ <aFv_9f9w_HdTj9Xj@localhost.localdomain>
+ <aFwUxblhRjh24JF1@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 26 Jun 2025 15:44:31 +0200
-Message-Id: <DAWID96TPD6Y.24T1VWNHUYYLN@kernel.org>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] rust: devres: require T: Send for Devres
-X-Mailer: aerc 0.20.1
-References: <20250626132544.72866-1-dakr@kernel.org>
-In-Reply-To: <20250626132544.72866-1-dakr@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aFwUxblhRjh24JF1@Mac.home>
 
-On Thu Jun 26, 2025 at 3:24 PM CEST, Danilo Krummrich wrote:
-> Due to calling Revocable::revoke() from Devres::devres_callback() T may
-> be dropped from Devres::devres_callback() and hence must be Send.
->
-> Fix this by adding the corresponding bound to Devres and DevresInner.
->
-> Reported-by: Boqun Feng <boqun.feng@gmail.com>
-> Closes: https://lore.kernel.org/lkml/aFzI5L__OcB9hqdG@Mac.home/
-> Fixes: 76c01ded724b ("rust: add devres abstraction")
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  rust/kernel/devres.rs | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+Le Wed, Jun 25, 2025 at 08:24:53AM -0700, Boqun Feng a écrit :
+> On Wed, Jun 25, 2025 at 03:56:05PM +0200, Frederic Weisbecker wrote:
+> > Le Tue, Jun 24, 2025 at 08:10:57PM -0700, Boqun Feng a écrit :
+> > > +static void synchronize_shazptr_normal(void *ptr)
+> > > +{
+> > > +	int cpu;
+> > > +	unsigned long blocking_grp_mask = 0;
+> > > +
+> > > +	smp_mb(); /* Synchronize with the smp_mb() in shazptr_acquire(). */
+> > > +
+> > > +	for_each_possible_cpu(cpu) {
+> > > +		void **slot = per_cpu_ptr(&shazptr_slots, cpu);
+> > > +		void *val;
+> > > +
+> > > +		/* Pair with smp_store_release() in shazptr_clear(). */
+> > > +		val = smp_load_acquire(slot);
+> > > +
+> > > +		if (val == ptr || val == SHAZPTR_WILDCARD)
+> > > +			blocking_grp_mask |= 1UL << (cpu / shazptr_scan.cpu_grp_size);
+> > > +	}
+> > > +
+> > > +	/* Found blocking slots, prepare to wait. */
+> > > +	if (blocking_grp_mask) {
+> > 
+> > synchronize_rcu() here would be enough since all users have preemption disabled.
+> > But I guess this defeats the performance purpose? (If so this might need a
+> > comment somewhere).
+> > 
+> 
+> synchronize_shazptr_normal() cannot wait for a whole grace period,
+> because the point of hazard pointers is to avoid waiting for unrelated
+> readers.
 
-It would be enough to require `Send` on all `impl` blocks and not on the
-struct itself. Normally, I recommend doing that, because then you can
-have types like `Foo<Invalid>` existing when they come up in some weird
-type. But in this case, I think it's fine to add it to the type
-definition.
+Fair enough!
 
-Reviewed-by: Benno Lossin <lossin@kernel.org>
+> 
+> > I guess blocking_grp_mask is to avoid allocating a cpumask (again for
+> > performance purpose? So I guess synchronize_shazptr_normal() has some perf
+> 
+> If we are talking about {k,v}malloc allocation:
+> synchronize_shazptr_normal() would mostly be used in cleanup/free path
+> similar to synchronize_rcu(), therefor I would like to avoid "allocating
+> memory to free memory".
 
----
-Cheers,
-Benno
+Good point!
+
+> 
+> > expectations?)
+> > 
+> > One possibility is to have the ptr contained in:
+> > 
+> > struct hazptr {
+> >        void *ptr;
+> >        struct cpumask scan_mask
+> > };
+> > 
+> 
+> You mean updaters passing a `struct hazptr *` into
+> synchronize_shazptr_normal()? That may be a good idea, if multiple
+> updaters can share the same `struct hazptr *`, we can add that later,
+> but...
+> 
+> > And then the caller could simply scan itself those remaining CPUs without
+> > relying on the kthread.
+> 
+> .. this is a bad idea, sure, we can always burn some CPU time to scan,
+> but local optimization doesn't mean global optimization, if in the
+> future, we have a lots of synchronize_shazptr_normal()s happening at
+> the same time, the self busy-waiting scan would become problematic.
+
+Ok.
+
+Thanks.
+
+-- 
+Frederic Weisbecker
+SUSE Labs
