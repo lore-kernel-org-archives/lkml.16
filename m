@@ -1,328 +1,258 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C231509AB;
-	Thu, 26 Jun 2025 01:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF6C1494A9;
+	Thu, 26 Jun 2025 01:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750901540; cv=none; b=cuXC5E7YgYy8dFYpH/UvRQc0rcSLMSbzPfPm60rzj8Z1ZaoxaFpGD37AcYWJxHGz0X8HRcVA3lGEXjCDsgiVdIOd62cekVs9fT7Tje/JVp9k+PVMaw0cMY6TOure08KPxE8ZRT/RT5bTfdOeAB7bdomi4WsatASLAMHBPYKByi8=
+	t=1750901673; cv=none; b=N7ePKYoAuRyV/SAWoX0l82+CiMI04PJ0EV3ryItejQjMA7WSPnjbTAzD/Y5dCL03VQkpeQmJfFGnxu7h9yJ9OzMNBeKw0cXLoEi7sYt1d1dTfN8Wp5Ja0GvsVREdXdbJXTsBRUOS/BY3XPwV1BdfD1Mgs6HX6oGLQXMusam0wHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750901540; c=relaxed/simple;
-	bh=RRk0bVfv69b98hbgb34JA+coRJKQ/hyCvbMrpI7vj40=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fEQUACNFMaGFOTZm0ksoTZd+lFXFb52TnkWQBF/m8resbwjzwv0559YuYRVUzyTj1Nvul7j5WmQwDtFSomaX93p3Lbgd0nCTnQmBw/Z0gjYDD6b7j3gDOEMC+bmhDDrfpozJxxNbURfMp7OYsIcS2lh5q6iik9RLxFrdzWvxdi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nPRmyr8+; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPRmyr8+"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3df2d111fefso4018995ab.1;
-        Wed, 25 Jun 2025 18:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750901538; x=1751506338; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h2EwLg93SXSSQVXZxXCP07cbUPvvbYIPUncv9vbnwSI=;
-        b=nPRmyr8+H35IzYOHx6UgbkZ7Tiv7ikvmMlq4YxzitAu2J3KZRJCJDpscCs7FKfGLWO
-         E2MiYUw4IqScIlFyrohE9mD9NVlddzBvlIxN1WVE203TNy50D868aKGWoVHxUNSiAw8f
-         lb2pGo7NgGkFTXit5SFUPL2DVTjKY7gpZ+dCNcPiEKc+/+8Em1pBKl1h6fzfHAe35czN
-         mIsagbQFm6pYOoF92FGgjQjePy7q6oshcowrv7GyW1Pp9hla/paVunwaJSvsexQZ4b+S
-         Jk9Z3YMH6N8h4oXk2PSRV8wGbEobd7LT2x8+w76nnhFTPR2HTM3L2PE3zhLI2nAr74ba
-         lC6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750901538; x=1751506338;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h2EwLg93SXSSQVXZxXCP07cbUPvvbYIPUncv9vbnwSI=;
-        b=BklhBnZia1MbFGWr4njGBkWR6gdWVmgp9Fux86bw3x+QjSTpwVfBj59kHbm+73zHOT
-         Ji+WrGoPH5U2t70RSpmecO78r/FagYJkvs0rnAtWwPv1mD42hWUnwBk62Ykp0gt6/BKE
-         bcjNLuw2MboX257I8MT2ECe9BLEmMP078iPFIrnQS/r+X/N9LhQt2QMNyuru75mRmuXK
-         V1ePXgkuxuMMwf3qVgjpIqd86zWdG6z+MEpQU4skw+ssQl9rgYEx5IRCA/wi7x/j3/U+
-         SPQ32nHMkufjqMyNWHnVCfAxrOqhYSyM2Uw3VOMRlSUOpUSIh3Fczvq77rkKj2L1Dv68
-         keZw==
-X-Forwarded-Encrypted: i=1; AJvYcCWlpAch0hwREOLEsE+PwjITwbda4cWI7TYGDjxpxza/Z+WNRMWFNxI8AnynZc9l4qvi9wGr3EssUR3ma3I=@vger.kernel.org, AJvYcCXp8mtnbvhmBNorHjeBYFOEpQOhm6CcyEamO71x6WssCgcQzygChPGv0rLKQ9gORur6bkeGtyn2k+yAiyde4kIrXw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIb0Qa9KJ9PpsAWiGNyHkZ4VtHJLT/aEeuuCYn5lIyNuA0u5fT
-	Vu9OU5eqol6vT5HaUTA6hMsa5Li7rbYoKvBtnS30EK5z/3ujNOqI1gGRD+lEymUauDdpI5qRA0g
-	ASeH0KmArzj8c/l5KjEM97z8F2ZpwbbQ0Cb5B
-X-Gm-Gg: ASbGncvn2SKtb4cLcswthQwz/c1Tm3EbhBkiMSD/SyVGdkV6UH5naOXdR28yyQKUOVl
-	D1+Xb+bfaAde9pB+p7u891TWIzsEhD4DRjYLJNCjaoxhqe92KTU7arB+t6LflrAShMXwPrPlsJ3
-	UMNOXC/tt7dnjiRMyXBmxY5IOZi6L/U+j+BuraDdWZHaE=
-X-Google-Smtp-Source: AGHT+IHz+VsrRavqFHcBYE4ToM940Svxo+zF/Y7cUyGrx0/zEzml+SYXAqKOyb1f1Bo8G4+cR0SQBG/7tugWWFi/fUA=
-X-Received: by 2002:a05:6e02:250f:b0:3df:43d1:6a58 with SMTP id
- e9e14a558f8ab-3df43d16cadmr1016265ab.20.1750901537921; Wed, 25 Jun 2025
- 18:32:17 -0700 (PDT)
+	s=arc-20240116; t=1750901673; c=relaxed/simple;
+	bh=Sze5LiyiLLQnYq4jp6G/3KXHUq2Jer/dJECFnSftYaE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VyE2AHmTal3SdLNB3qvA4SmCMpDbYsg9T3lNqw1sRvkbBIRhcqIjOfiSqmoBB8CbFvX+j6zpiDLwLtPLu5ts38ubVlsLwMx2HJ39PkmSBUmDd1ibOpxqTEHQy4C344IQr8wlo2EAs2RXHIUI0+Hv4V5UYLo7np1rUURMQxucHr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: b1520684522d11f0b29709d653e92f7d-20250626
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:b8690f9c-930e-4fdf-a37f-3d48761e6797,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-5
+X-CID-INFO: VERSION:1.1.45,REQID:b8690f9c-930e-4fdf-a37f-3d48761e6797,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6493067,CLOUDID:0f9cb000345e11a0c4ca7a113f1f1173,BulkI
+	D:250626092039VEVI8ELM,BulkQuantity:3,Recheck:0,SF:17|19|24|44|64|66|78|80
+	|81|82|83|102|841,TC:nil,Content:0|51,EDM:-3,IP:-2,URL:99|1,File:nil,RT:ni
+	l,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,B
+	RR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_ULS,TF_CID_SPAM_SNR,
+	TF_CID_SPAM_FAS
+X-UUID: b1520684522d11f0b29709d653e92f7d-20250626
+X-User: jianghaoran@kylinos.cn
+Received: from [192.168.31.67] [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <jianghaoran@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1659417453; Thu, 26 Jun 2025 09:34:25 +0800
+Message-ID: <078ba5da7510db3c7eca281c417cdf49cfa26f07.camel@kylinos.cn>
+Subject: =?gb2312?Q?=BB=D8=B8=B4=A3=BA=5BPATCH=5D?= LoongArch: BPF: Optimize
+ the calculation method of jmp_offset in the emit_bpf_tail_call function
+From: jianghaoran <jianghaoran@kylinos.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, 
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@xen0n.name, 
+ yangtiezhu@loongson.cn, haoluo@google.com, jolsa@kernel.org,
+ sdf@fomichev.me,  kpsingh@kernel.org, john.fastabend@gmail.com,
+ yonghong.song@linux.dev,  song@kernel.org, eddyz87@gmail.com,
+ martin.lau@linux.dev, andrii@kernel.org,  daniel@iogearbox.net
+Date: Thu, 26 Jun 2025 09:34:11 +0800
+In-Reply-To: <CAAhV-H5NrGb9ofaKdqUQ3Qc6RK3c=Ngy6KsxX2GaOqUb0SQRdw@mail.gmail.com>
+References: <20250528104032.1237415-1-jianghaoran@kylinos.cn>
+	 <CAEyhmHTg3xNMBrSxXQj96pvfD83t6_RHRT_GGtbBzOpAKztDpw@mail.gmail.com>
+	 <68ec5a7f3cc63dc19397b3ce0649716e0fac8d49.camel@kylinos.cn>
+	 <CAAhV-H5NrGb9ofaKdqUQ3Qc6RK3c=Ngy6KsxX2GaOqUb0SQRdw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2kord0k2.4.25.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618062644.3895785-1-shengjiu.wang@nxp.com>
- <20250618062644.3895785-2-shengjiu.wang@nxp.com> <aFltBpXuEXVZ5gKn@p14s>
- <CAA+D8AP47xyftzPZki8MXEeWEfbocug6e134uaJgFH+tx7mH2Q@mail.gmail.com> <CANLsYkz2JMMMhBAXjt9YSzU4n-0Ld6EvJHC=7Ospsefoxc6BGA@mail.gmail.com>
-In-Reply-To: <CANLsYkz2JMMMhBAXjt9YSzU4n-0Ld6EvJHC=7Ospsefoxc6BGA@mail.gmail.com>
-From: Shengjiu Wang <shengjiu.wang@gmail.com>
-Date: Thu, 26 Jun 2025 09:32:06 +0800
-X-Gm-Features: Ac12FXxhWHni_zYrB3Bk_G8eq5XhUuxIqHIxn2dIntxFypfP4zKffU6DWcZMA_E
-Message-ID: <CAA+D8AM47P7xw2Ppgcr9d=DB2eSkQg6uQ_F22Te_=HFuMCNXxw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] remoteproc: imx_dsp_rproc: Add support of recovery process
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, andersson@kernel.org, shawnguo@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 25, 2025 at 10:39=E2=80=AFPM Mathieu Poirier
-<mathieu.poirier@linaro.org> wrote:
->
-> On Tue, 24 Jun 2025 at 21:25, Shengjiu Wang <shengjiu.wang@gmail.com> wro=
-te:
-> >
-> > On Mon, Jun 23, 2025 at 11:11=E2=80=AFPM Mathieu Poirier
-> > <mathieu.poirier@linaro.org> wrote:
-> > >
-> > > Good day,
-> > >
-> > > On Wed, Jun 18, 2025 at 02:26:43PM +0800, Shengjiu Wang wrote:
-> > > > when recovery is triggered, rproc_stop() is called first then
-> > > > rproc_start(), but there is no rproc_unprepare_device() and
-> > > > rproc_prepare_device() in the flow.
-> > > >
-> > > > So power enablement needs to be moved from prepare callback to star=
-t
-> > > > callback, power disablement needs to be moved from unprepare callba=
-ck
-> > > > to stop callback, loading elf function also needs to be moved to st=
-art
-> > > > callback, the load callback only store the firmware handler.
-> > > >
-> > > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+
+
+
+
+在 2025-06-24星期二的 20:09 +0800，Huacai Chen写道：
+> Hi, Haoran,
+> 
+> On Fri, May 30, 2025 at 9:22 AM jianghaoran <
+> jianghaoran@kylinos.cn
+> > wrote:
+> > 
+> > 
+> > 
+> > 
+> > 在 2025-05-29星期四的 10:02 +0800，Hengqi Chen写道：
+> > > Hi Haoran,
+> > > 
+> > > On Wed, May 28, 2025 at 6:40 PM Haoran Jiang <
+> > > jianghaoran@kylinos.cn
+> > > 
+> > > > wrote:
+> > > > For a ebpf subprog JIT，the last call bpf_int_jit_compile
+> > > > function will
+> > > > directly enter the skip_init_ctx process. At this point,
+> > > > out_offset = -1,
+> > > > the jmp_offset in emit_bpf_tail_call is calculated
+> > > > by #define jmp_offset (out_offset - (cur_offset)) is a
+> > > > negative
+> > > > number,
+> > > > which does not meet expectations.The final generated
+> > > > assembly
+> > > > as follow.
+> > > > 
+> > > > 54:     bgeu            $a2, $t1, -8        # 0x0000004c
+> > > > 58:     addi.d          $a6, $s5, -1
+> > > > 5c:     bltz            $a6, -16            # 0x0000004c
+> > > > 60:     alsl.d          $t2, $a2, $a1, 0x3
+> > > > 64:     ld.d            $t2, $t2, 264
+> > > > 68:     beq             $t2, $zero, -28     # 0x0000004c
+> > > > 
+> > > > Before apply this patch, the follow test case will reveal
+> > > > soft
+> > > > lock issues.
+> > > > 
+> > > > cd tools/testing/selftests/bpf/
+> > > > ./test_progs --allow=tailcalls/tailcall_bpf2bpf_1
+> > > > 
+> > > > dmesg:
+> > > > watchdog: BUG: soft lockup - CPU#2 stuck for 26s!
+> > > > [test_progs:25056]
+> > > > 
+> > > 
+> > > This is a known issue. Does this change pass all tailcall
+> > > tests ?
+> > > If not, please refer to the tailcall hierarchy patchset([1]).
+> > > We should address it once and for all. Thanks.
+> 
+> Do you mean you will update this patch?
+> 
+> Huacai
+> 
+
+yes, I'm making revisions according to the suggestions.
+> 
+> > > 
+> > >   [1]:
+https://lore.kernel.org/bpf/20240714123902.32305-1-hffilwlqm@gmail.com/> > > 
+> > > 
+> > > Thanks,I'll keep looking into these patches.
+> > > > Signed-off-by: Haoran Jiang <
+jianghaoran@kylinos.cn> > > > 
+> > > > > 
 > > > > ---
-> > > >  drivers/remoteproc/imx_dsp_rproc.c | 58 ++++++++++++++++++--------=
-----
-> > > >  1 file changed, 36 insertions(+), 22 deletions(-)
-> > > >
-> > > > diff --git a/drivers/remoteproc/imx_dsp_rproc.c b/drivers/remotepro=
-c/imx_dsp_rproc.c
-> > > > index 5ee622bf5352..9b9cddb224b0 100644
-> > > > --- a/drivers/remoteproc/imx_dsp_rproc.c
-> > > > +++ b/drivers/remoteproc/imx_dsp_rproc.c
-> > > > @@ -122,6 +122,7 @@ enum imx_dsp_rp_mbox_messages {
-> > > >   * @ipc_handle: System Control Unit ipc handle
-> > > >   * @rproc_work: work for processing virtio interrupts
-> > > >   * @pm_comp: completion primitive to sync for suspend response
-> > > > + * @firmware: firmware handler
-> > > >   * @flags: control flags
-> > > >   */
-> > > >  struct imx_dsp_rproc {
-> > > > @@ -139,6 +140,7 @@ struct imx_dsp_rproc {
-> > > >       struct imx_sc_ipc                       *ipc_handle;
-> > > >       struct work_struct                      rproc_work;
-> > > >       struct completion                       pm_comp;
-> > > > +     const struct firmware                   *firmware;
-> > > >       u32                                     flags;
-> > > >  };
-> > > >
-> > > > @@ -211,6 +213,7 @@ static const struct imx_rproc_att imx_dsp_rproc=
-_att_imx8ulp[] =3D {
-> > > >
-> > > >  /* Initialize the mailboxes between cores, if exists */
-> > > >  static int (*imx_dsp_rproc_mbox_init)(struct imx_dsp_rproc *priv);
-> > > > +static int imx_dsp_rproc_elf_load_segments(struct rproc *rproc, co=
-nst struct firmware *fw);
-> > > >
-> > > >  /* Reset function for DSP on i.MX8MP */
-> > > >  static int imx8mp_dsp_reset(struct imx_dsp_rproc *priv)
-> > > > @@ -402,8 +405,24 @@ static int imx_dsp_rproc_start(struct rproc *r=
-proc)
-> > > >       const struct imx_dsp_rproc_dcfg *dsp_dcfg =3D priv->dsp_dcfg;
-> > > >       const struct imx_rproc_dcfg *dcfg =3D dsp_dcfg->dcfg;
-> > > >       struct device *dev =3D rproc->dev.parent;
-> > > > +     struct rproc_mem_entry *carveout;
-> > > >       int ret;
-> > > >
-> > > > +     pm_runtime_get_sync(dev);
-> > > > +
-> > > > +     /*
-> > > > +      * Clear buffers after pm rumtime for internal ocram is not
-> > > > +      * accessible if power and clock are not enabled.
-> > > > +      */
-> > > > +     list_for_each_entry(carveout, &rproc->carveouts, node) {
-> > > > +             if (carveout->va)
-> > > > +                     memset(carveout->va, 0, carveout->len);
-> > > > +     }
-> > > > +
-> > > > +     ret =3D imx_dsp_rproc_elf_load_segments(rproc, priv->firmware=
-);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +
-> > > >       switch (dcfg->method) {
-> > > >       case IMX_RPROC_MMIO:
-> > > >               ret =3D regmap_update_bits(priv->regmap,
-> > > > @@ -446,6 +465,7 @@ static int imx_dsp_rproc_stop(struct rproc *rpr=
-oc)
-> > > >
-> > > >       if (rproc->state =3D=3D RPROC_CRASHED) {
-> > > >               priv->flags &=3D ~REMOTE_IS_READY;
-> > > > +             pm_runtime_put_sync(dev);
-> > >
-> > > From this patch I understand that for a recovery to be successful, th=
-e
-> > > remote processor _has_ to go through a hard reset.  But here the PM r=
-untime API
-> > > is used, meaning the remote processor won't be switched off if anothe=
-r device in
-> > > the same power domain still neeeds power.  If that is the case, the s=
-olution in
-> > > tihs patch won't work.
-> >
-> > Thanks for reviewing.
-> > With the case you mentioned, there is software reset to make the
-> > recovery process work.
->
->
-> Are you talking about a manual software reset of some other mechanism?
->
-> If manual software reset, the recovery may or may not work and we
-> simply don't know when that might be.  If it's another mechanism, then
-> that mechanism should be used in all cases.  Either way, I don't see
-> how we can move forward with this patch.
-
-Not manual software reset,  in this driver we registered .reset() function.
-it has been called at imx_dsp_runtime_resume(),  I paste the function below=
-.
-
-And I have tested the case you mentioned, the recovery works.
-
-/* pm runtime functions */
-static int imx_dsp_runtime_resume(struct device *dev)
-{
-        struct rproc *rproc =3D dev_get_drvdata(dev);
-        struct imx_dsp_rproc *priv =3D rproc->priv;
-        const struct imx_dsp_rproc_dcfg *dsp_dcfg =3D priv->dsp_dcfg;
-        int ret;
-
-        /*
-         * There is power domain attached with mailbox, if setup mailbox
-         * in probe(), then the power of mailbox is always enabled,
-         * the power can't be saved.
-         * So move setup of mailbox to runtime resume.
-         */
-        ret =3D imx_dsp_rproc_mbox_init(priv);
-        if (ret) {
-                dev_err(dev, "failed on imx_dsp_rproc_mbox_init\n");
-                return ret;
-        }
-
-        ret =3D clk_bulk_prepare_enable(DSP_RPROC_CLK_MAX, priv->clks);
-        if (ret) {
-                dev_err(dev, "failed on clk_bulk_prepare_enable\n");
-                return ret;
-        }
-
-        /* Reset DSP if needed */
-        if (dsp_dcfg->reset)
-                dsp_dcfg->reset(priv);
-
-        return 0;
-}
-
->
-> >
-> >
-> > best regards
-> > Shengjiu Wang
-> >
-> > >
-> > > Thanks,
-> > > Mathieu
-> > >
-> > > >               return 0;
-> > > >       }
-> > > >
-> > > > @@ -472,6 +492,8 @@ static int imx_dsp_rproc_stop(struct rproc *rpr=
-oc)
-> > > >       else
-> > > >               priv->flags &=3D ~REMOTE_IS_READY;
-> > > >
-> > > > +     pm_runtime_put_sync(dev);
-> > > > +
-> > > >       return ret;
+> > > >  arch/loongarch/net/bpf_jit.c | 28 +++++++++-------------------
+> > > >  1 file changed, 9 insertions(+), 19 deletions(-)
+> > > > 
+> > > > diff --git a/arch/loongarch/net/bpf_jit.c
+> > > > b/arch/loongarch/net/bpf_jit.c
+> > > > index fa1500d4aa3e..d85490e7de89 100644
+> > > > --- a/arch/loongarch/net/bpf_jit.c
+> > > > +++ b/arch/loongarch/net/bpf_jit.c
+> > > > @@ -208,9 +208,7 @@ bool bpf_jit_supports_far_kfunc_call(void)
+> > > >         return true;
 > > > >  }
-> > > >
-> > > > @@ -774,7 +796,6 @@ static int imx_dsp_rproc_prepare(struct rproc *=
-rproc)
+> > > > 
+> > > > -/* initialized on the first pass of build_body() */
+> > > > -static int out_offset = -1;
+> > > > -static int emit_bpf_tail_call(struct jit_ctx *ctx)
+> > > > +static int emit_bpf_tail_call(int insn, struct jit_ctx *ctx)
 > > > >  {
-> > > >       struct imx_dsp_rproc *priv =3D rproc->priv;
-> > > >       struct device *dev =3D rproc->dev.parent;
-> > > > -     struct rproc_mem_entry *carveout;
-> > > >       int ret;
-> > > >
-> > > >       ret =3D imx_dsp_rproc_add_carveout(priv);
-> > > > @@ -783,25 +804,6 @@ static int imx_dsp_rproc_prepare(struct rproc =
-*rproc)
-> > > >               return ret;
-> > > >       }
-> > > >
-> > > > -     pm_runtime_get_sync(dev);
+> > > >         int off;
+> > > >         u8 tcc = tail_call_reg(ctx);
+> > > > @@ -220,9 +218,8 @@ static int emit_bpf_tail_call(struct
+> > > > jit_ctx *ctx)
+> > > >         u8 t2 = LOONGARCH_GPR_T2;
+> > > >         u8 t3 = LOONGARCH_GPR_T3;
+> > > >         const int idx0 = ctx->idx;
 > > > > -
-> > > > -     /*
-> > > > -      * Clear buffers after pm rumtime for internal ocram is not
-> > > > -      * accessible if power and clock are not enabled.
-> > > > -      */
-> > > > -     list_for_each_entry(carveout, &rproc->carveouts, node) {
-> > > > -             if (carveout->va)
-> > > > -                     memset(carveout->va, 0, carveout->len);
-> > > > -     }
+> > > > -#define cur_offset (ctx->idx - idx0)
+> > > > -#define jmp_offset (out_offset - (cur_offset))
+> > > > +       int tc_ninsn = 0;
+> > > > +       int jmp_offset = 0;
+> > > > 
+> > > >         /*
+> > > >          * a0: &ctx
+> > > > @@ -232,8 +229,11 @@ static int emit_bpf_tail_call(struct
+> > > > jit_ctx *ctx)
+> > > >          * if (index >= array->map.max_entries)
+> > > >          *       goto out;
+> > > >          */
+> > > > +       tc_ninsn = insn ? ctx->offset[insn+1] - ctx-
+> > > > > offset[insn] :
+> > > > +               ctx->offset[0];
+> > > >         off = offsetof(struct bpf_array, map.max_entries);
+> > > >         emit_insn(ctx, ldwu, t1, a1, off);
+> > > > +       jmp_offset = tc_ninsn - (ctx->idx - idx0);
+> > > >         /* bgeu $a2, $t1, jmp_offset */
+> > > >         if (emit_tailcall_jmp(ctx, BPF_JGE, a2, t1, jmp_offset)
+> > > > < 0)
+> > > >                 goto toofar;
+> > > > @@ -243,6 +243,7 @@ static int emit_bpf_tail_call(struct
+> > > > jit_ctx *ctx)
+> > > >          *       goto out;
+> > > >          */
+> > > >         emit_insn(ctx, addid, REG_TCC, tcc, -1);
+> > > > +       jmp_offset = tc_ninsn - (ctx->idx - idx0);
+> > > >         if (emit_tailcall_jmp(ctx, BPF_JSLT, REG_TCC,
+> > > > LOONGARCH_GPR_ZERO, jmp_offset) < 0)
+> > > >                 goto toofar;
+> > > > 
+> > > > @@ -254,6 +255,7 @@ static int emit_bpf_tail_call(struct
+> > > > jit_ctx *ctx)
+> > > >         emit_insn(ctx, alsld, t2, a2, a1, 2);
+> > > >         off = offsetof(struct bpf_array, ptrs);
+> > > >         emit_insn(ctx, ldd, t2, t2, off);
+> > > > +       jmp_offset = tc_ninsn - (ctx->idx - idx0);
+> > > >         /* beq $t2, $zero, jmp_offset */
+> > > >         if (emit_tailcall_jmp(ctx, BPF_JEQ, t2,
+> > > > LOONGARCH_GPR_ZERO, jmp_offset) < 0)
+> > > >                 goto toofar;
+> > > > @@ -263,22 +265,11 @@ static int emit_bpf_tail_call(struct
+> > > > jit_ctx *ctx)
+> > > >         emit_insn(ctx, ldd, t3, t2, off);
+> > > >         __build_epilogue(ctx, true);
+> > > > 
+> > > > -       /* out: */
+> > > > -       if (out_offset == -1)
+> > > > -               out_offset = cur_offset;
+> > > > -       if (cur_offset != out_offset) {
+> > > > -               pr_err_once("tail_call out_offset = %d,
+> > > > expected %d!\n",
+> > > > -                           cur_offset, out_offset);
+> > > > -               return -1;
+> > > > -       }
 > > > > -
-> > > > -     return  0;
-> > > > -}
-> > > > -
-> > > > -/* Unprepare function for rproc_ops */
-> > > > -static int imx_dsp_rproc_unprepare(struct rproc *rproc)
-> > > > -{
-> > > > -     pm_runtime_put_sync(rproc->dev.parent);
-> > > > -
-> > > >       return  0;
+> > > >         return 0;
+> > > > 
+> > > >  toofar:
+> > > >         pr_info_once("tail_call: jump too far\n");
+> > > >         return -1;
+> > > > -#undef cur_offset
+> > > > -#undef jmp_offset
 > > > >  }
-> > > >
-> > > > @@ -1022,13 +1024,25 @@ static int imx_dsp_rproc_parse_fw(struct rp=
-roc *rproc, const struct firmware *fw
-> > > >       return 0;
-> > > >  }
-> > > >
-> > > > +static int imx_dsp_rproc_load(struct rproc *rproc, const struct fi=
-rmware *fw)
-> > > > +{
-> > > > +     struct imx_dsp_rproc *priv =3D rproc->priv;
-> > > > +
-> > > > +     /*
-> > > > +      * Just save the fw handler, the firmware loading will be aft=
-er
-> > > > +      * power enabled
-> > > > +      */
-> > > > +     priv->firmware =3D fw;
-> > > > +
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > >  static const struct rproc_ops imx_dsp_rproc_ops =3D {
-> > > >       .prepare        =3D imx_dsp_rproc_prepare,
-> > > > -     .unprepare      =3D imx_dsp_rproc_unprepare,
-> > > >       .start          =3D imx_dsp_rproc_start,
-> > > >       .stop           =3D imx_dsp_rproc_stop,
-> > > >       .kick           =3D imx_dsp_rproc_kick,
-> > > > -     .load           =3D imx_dsp_rproc_elf_load_segments,
-> > > > +     .load           =3D imx_dsp_rproc_load,
-> > > >       .parse_fw       =3D imx_dsp_rproc_parse_fw,
-> > > >       .handle_rsc     =3D imx_dsp_rproc_handle_rsc,
-> > > >       .find_loaded_rsc_table =3D rproc_elf_find_loaded_rsc_table,
+> > > > 
+> > > >  static void emit_atomic(const struct bpf_insn *insn, struct
+> > > > jit_ctx *ctx)
+> > > > @@ -916,7 +907,7 @@ static int build_insn(const struct bpf_insn
+> > > > *insn, struct jit_ctx *ctx, bool ext
+> > > >         /* tail call */
+> > > >         case BPF_JMP | BPF_TAIL_CALL:
+> > > >                 mark_tail_call(ctx);
+> > > > -               if (emit_bpf_tail_call(ctx) < 0)
+> > > > +               if (emit_bpf_tail_call(i, ctx) < 0)
+> > > >                         return -EINVAL;
+> > > >                 break;
+> > > > 
+> > > > @@ -1342,7 +1333,6 @@ struct bpf_prog
+> > > > *bpf_int_jit_compile(struct bpf_prog *prog)
+> > > >         if (tmp_blinded)
+> > > >                 bpf_jit_prog_release_other(prog, prog ==
+> > > > orig_prog ? tmp : orig_prog);
+> > > > 
+> > > > -       out_offset = -1;
+> > > > 
+> > > >         return prog;
+> > > > 
 > > > > --
-> > > > 2.34.1
-> > > >
-> > >
+> > > > 2.43.0
+> > > > 
+> > 
+> > 
+
