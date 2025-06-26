@@ -1,106 +1,142 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB72C2FB;
-	Thu, 26 Jun 2025 11:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C6527587F;
+	Thu, 26 Jun 2025 11:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750939096; cv=none; b=fUmZvFqgU+ZMakjwEzurKVCPytrG8QLZAE2ZFIMifSZp51e+0kjGLyukP1Uk4JtdmrTZVo4Enm7rE2XxIF7DKpat2CXNpmTe/V4I4Omc1cOR4i42WaYiK3dO2MKALVd6LmftgFT+Ur+xfX+k+Kawk0iuoFN2hgZg44ZJcmlYOtY=
+	t=1750939109; cv=none; b=OWJ74MWKmkMu5wnuExKuVrJiHTVktYTr8ru6y3C2leJWa5pagWfCx7z+8FKmJxh0MvJml4flkNRq5h6adcEnbjBVGLdSla89Bsg/77vo5bDBLOEi1IogyBMz139Cebkys69LTk70mUe3OCTHAtJYM6nHXm3RcBnS0r9kdyDI/A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750939096; c=relaxed/simple;
-	bh=VlanypWYi6DkuZeH7DXWPijDtve33MpM2UftEXp/Xnk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qReBpx5gq3dC4EX8wLeccjbFIAUA5M5PmhzlET17N04iYBlEBN24H8NFOR4Yy1/27LE8WQYO9nxIUoHZ7LnsMd989Fu6YvMKxjSv6uBWQSCl/00xM8XZ7icvHWONr7R1EZowuH8SAy9l4FoRul2ROoyYxhE4FC54Qno7eyH1JwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BWe/PbSN; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750939109; c=relaxed/simple;
+	bh=Qx5wfOItoi1+VQTwbp4aWjc7EP/neC9kgAUf1miAZdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A+eWQuoVCmM/HDE9tyhUkjhXTu6JoA+BtHv3H0Z8q9Yt5kFOLLGrFFqjSRacQv3d86jnbkF6HY6AuHi7jJ6czlWD0V0n/vXEd096gGBJd4nGV+bLkSGoJe8gQkxT342onvVb0GXhUQYLEMTmbyHHVy31rHeJWsXPuWCQSIsmRTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=bLnAdtiI; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWe/PbSN"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-553b60de463so1013357e87.3;
-        Thu, 26 Jun 2025 04:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750939093; x=1751543893; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VlanypWYi6DkuZeH7DXWPijDtve33MpM2UftEXp/Xnk=;
-        b=BWe/PbSNEMiIrbIolifWtbIrtMBeR8vpTEnlJy3pIyBMx1w98vdlsKAoyKHNk8nzCT
-         7kwap2ZgH+AYx4Er51Oc+5okcSjzp5gE31BVi57EB6OxhkVbiy0IxV5OBJVrkKei0Mlb
-         72ZCs82BQVVwcMZRjRW/Tkjhbam+0nfQUa/6Mb4ScjdLLhwt+0pMf5puOvAyIuLK1FWb
-         TxlZf8JKbUsfphSEFjW1C7VjTz9u4hAGH1UbrTvfkenA8rcVNUF3vonnrIAOXyoC6qCZ
-         PRjyH4aVa6UAishkppbOvoK12i6zo4eZhe7tcWridPXcYXzA9ze39yQWRwAxDakS+eyj
-         KMEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750939093; x=1751543893;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VlanypWYi6DkuZeH7DXWPijDtve33MpM2UftEXp/Xnk=;
-        b=WgYTtLsmjFiXM/Cs1qIzLcBdVOT8aLyilIXmcyM3yWXAjEDBJVjmyNl+tV+vcYERG9
-         Wd9n20H1i85ilca3E7e1+KhNeKKZPf/9NkVmDBkM3i4NkLkhFd3Fyz9LOBDtuNvchIj6
-         2ZUhiPsO/USfFIwq3H0RURyT7zBgZpDIWXzjZsFSRj5Z3kIpQK6YRBd8no3AsZvCNzRA
-         7yyTOqNaf2Pos7oLOfKDAYS6qxLg0MmUb6ki6BfsG3XVTcQztOyrpaL5pTBI9wTA+SuQ
-         dYP476X5lvj8gLPTk6K1CEvtl8EiiZ3xo9+tOOM/ugybwJ730CtHO0RRZjF41VQZRAAm
-         L/oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUpW/mnaSGV505FD0qIt9syFgno3yQiUsNvvwz1OzRnq7dDZKoqf/IcAESlUbeBttnL8DVhSep72LGHP84=@vger.kernel.org, AJvYcCXmfl/SWfbd3QywhC6uTUNEkdnSROugqAf+ozZmKxnQpCkjCBRODHW0wyUeReHfGCOZUrEvOVTQC6S6KWI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKy7BMXIizVRvsSLSa8zPbVOxydOidH7hs++VGVF/FI8fmWx44
-	BuI6kIU43J+be4X/iJdXcIFpg5o+lCdDuFTToUUSkzvgRzirIswfk2J3UbWnfpN7X6NCGWstl6f
-	OuU+dD8t56M/UDcf98hasSY8iTCLYswvtaA==
-X-Gm-Gg: ASbGnctmSs/0XvLH93b1hcMKAlJO0aL5x5+vm44m/aq80wnW18RColo7ldHWqrsmPD/
-	2KvoIUMuCzNE73mkEI3w920kOz+xu8d2xh2LlSI7UDdOHDrflXYoRLzLg4t68bgARBzsz8TKBe2
-	jrUMMA/6TgNP/P3T4+nPCNb9SnvlxUO5qb67H9KopaIYs0ufuJbX2XWear7J2Myjl1TYSC0HDna
-	IY=
-X-Google-Smtp-Source: AGHT+IGvTmFBk5nT2DVIEmz05QGopwwqxq0TAa5dvxo3BGqE6HCnql9lFMU54ewp377mYOo49nC8A4/0Gx1muG1AmSU=
-X-Received: by 2002:a05:6512:3b22:b0:553:3486:1d9b with SMTP id
- 2adb3069b0e04-554fdd2e9ccmr2177274e87.30.1750939092502; Thu, 26 Jun 2025
- 04:58:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bLnAdtiI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=E7sAEgdd707TI8toifhEogagOBUn3n5FZn7TngN4ra8=; b=bLnAdtiIn4wQsxsNQ9E4g1vdj+
+	dzmL9IPFWW/ZMhnrr9WlYwj7N1V3Yk8elPHBYwDwSADNFMfaYKdAY8OL9xcwQft8P5YXlebsKs71F
+	IV52ILHh2KP0GqomfNcwhnB/a3I3oFOSaiXvVaiKOjsrjflriRqGVpKMnt6yVzJq4VBw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uUlF1-00H2Xz-3Z; Thu, 26 Jun 2025 13:58:07 +0200
+Date: Thu, 26 Jun 2025 13:58:07 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Whitcroft <apw@canonical.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
+	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next v2 2/3] net: ethernet: ti: am65-cpsw: fixup PHY
+ mode for fixed RGMII TX delay
+Message-ID: <8a99444a-a4e4-4c4f-8cec-225a10d5d418@lunn.ch>
+References: <cover.1750756583.git.matthias.schiffer@ew.tq-group.com>
+ <9b3fb1fbf719bef30702192155c6413cd5de5dcf.1750756583.git.matthias.schiffer@ew.tq-group.com>
+ <54d6cd05-65ef-4e1d-8041-3e4a2c50b443@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626115218.141874-1-arun@arunraghavan.net>
-In-Reply-To: <20250626115218.141874-1-arun@arunraghavan.net>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Thu, 26 Jun 2025 08:58:01 -0300
-X-Gm-Features: Ac12FXwhZEuK0fXt-9AZx9DOhPYa85XcfkJGgo_W0bWwT9VIbQev5B9sZrKJyn4
-Message-ID: <CAOMZO5BgsU0ijdoaZs5e=qwb2PYZsEnx_RxfgQ+dosL8hPRKyA@mail.gmail.com>
-Subject: Re: [PATCH v3] ASoC: fsl_sai: Force a software reset when starting in
- consumer mode
-To: Arun Raghavan <arun@arunraghavan.net>
-Cc: Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, 
-	Nicolin Chen <nicoleotsuka@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Pieterjan Camerlynck <p.camerlynck@televic.com>, linux-sound@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	Arun Raghavan <arun@asymptotic.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <54d6cd05-65ef-4e1d-8041-3e4a2c50b443@ti.com>
 
-Hi Arun,
+On Thu, Jun 26, 2025 at 03:10:50PM +0530, Siddharth Vadapalli wrote:
+> On Tue, Jun 24, 2025 at 12:53:33PM +0200, Matthias Schiffer wrote:
+> 
+> Hello Matthias,
+> 
+> > All am65-cpsw controllers have a fixed TX delay, so the PHY interface
+> > mode must be fixed up to account for this.
+> > 
+> > Modes that claim to a delay on the PCB can't actually work. Warn people
+> > to update their Device Trees if one of the unsupported modes is specified.
+> > 
+> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> > Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> > ---
+> >  drivers/net/ethernet/ti/am65-cpsw-nuss.c | 27 ++++++++++++++++++++++--
+> >  1 file changed, 25 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+> > index f20d1ff192efe..519757e618ad0 100644
+> > --- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+> > +++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+> > @@ -2602,6 +2602,7 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
+> >  		return -ENOENT;
+> >  
+> >  	for_each_child_of_node(node, port_np) {
+> > +		phy_interface_t phy_if;
+> >  		struct am65_cpsw_port *port;
+> >  		u32 port_id;
+> >  
+> > @@ -2667,14 +2668,36 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
+> >  
+> >  		/* get phy/link info */
+> >  		port->slave.port_np = of_node_get(port_np);
+> > -		ret = of_get_phy_mode(port_np, &port->slave.phy_if);
+> > +		ret = of_get_phy_mode(port_np, &phy_if);
+> >  		if (ret) {
+> >  			dev_err(dev, "%pOF read phy-mode err %d\n",
+> >  				port_np, ret);
+> >  			goto of_node_put;
+> >  		}
+> >  
+> > -		ret = phy_set_mode_ext(port->slave.ifphy, PHY_MODE_ETHERNET, port->slave.phy_if);
+> > +		/* CPSW controllers supported by this driver have a fixed
+> > +		 * internal TX delay in RGMII mode. Fix up PHY mode to account
+> > +		 * for this and warn about Device Trees that claim to have a TX
+> > +		 * delay on the PCB.
+> > +		 */
+> > +		switch (phy_if) {
+> > +		case PHY_INTERFACE_MODE_RGMII_ID:
+> > +			phy_if = PHY_INTERFACE_MODE_RGMII_RXID;
+> > +			break;
+> > +		case PHY_INTERFACE_MODE_RGMII_TXID:
+> > +			phy_if = PHY_INTERFACE_MODE_RGMII;
+> > +			break;
+> > +		case PHY_INTERFACE_MODE_RGMII:
+> > +		case PHY_INTERFACE_MODE_RGMII_RXID:
+> > +			dev_warn(dev,
+> > +				 "RGMII mode without internal TX delay unsupported; please fix your Device Tree\n");
+> 
+> Existing users designed boards and enabled Ethernet functionality using
+> "rgmii-rxid" in the device-tree and implementing the PCB traces in a
+> way that they interpret "rgmii-rxid". So their (mis)interpretation of
+> it is being challenged by the series. While it is true that we are updating
+> the bindings and driver to move towards the correct definition, I believe that
+> the above message would cause confusion. Would it be alright to update it to
+> something similar to:
+> 
+> "Interpretation of RGMII delays has been corrected; no functional impact; please fix your Device Tree"
 
-On Thu, Jun 26, 2025 at 8:52=E2=80=AFAM Arun Raghavan <arun@arunraghavan.ne=
-t> wrote:
->
-> From: Arun Raghavan <arun@asymptotic.io>
->
-> On an imx8mm platform with an external clock provider, when running the
-> receiver (arecord) and triggering an xrun with xrun_injection, we see a
-> channel swap/offset. This happens sometimes when running only the
-> receiver, but occurs reliably if a transmitter (aplay) is also
-> concurrently running.
->
-> It seems that the SAI loses track of frame sync during the trigger stop
-> -> trigger start cycle that occurs during an xrun. Doing just a FIFO
-> reset in this case does not suffice, and only a software reset seems to
-> get it back on track.
->
-> This looks like the same h/w bug that is already handled for the
-> producer case, so we now do the reset unconditionally on config disable.
->
-> Signed-off-by: Arun Raghavan <arun@asymptotic.io>
-> Reported-by: Pieterjan Camerlynck <p.camerlynck@televic.com>
+It is dev_warn() not dev_err(), so it should be read as a warning. And
+the device will continue to probe and work. So I think the message is
+O.K. What we don't want is DT developers thinking they can just ignore
+it. So i would keep it reasonably strongly worded.
 
-What about adding a Fixes tag and Cc stable so that it gets backported
-to the stable trees?
+	Andrew
