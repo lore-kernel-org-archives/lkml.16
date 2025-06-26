@@ -1,112 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE86D2264C5;
-	Thu, 26 Jun 2025 07:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8A638FB9;
+	Thu, 26 Jun 2025 07:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750924412; cv=none; b=ug7/q7CqAECMVE2zVcTJN+gBRwu5KMo1jWH94BrxE0RF63tQM6K0tRwZAdZ6UR95dHbbw791s9QKwqBRV1UQnuxDDLz+6hZsSAPwWP03I/57Fdxo3R9LQ/e0rXVkAcQeJaYzrhP3IVlZ+u/pGsTVOjf75vK/ed4VDmMISReRBJM=
+	t=1750924434; cv=none; b=tKLjW8xPU2A5eKOf8CaqZuNqXQHcy8AMkP8sZffWZiGbW2YaatO3+HmJxAkrder/8fWn4m9kTba1/F05HXgrBNuDIicRDDea6siRxL24nwEWToGD1nFEjHEWD+LmesDn44f12BjpiXDXn+VWllySCOGGwEmGGfoOjNnbA1yalwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750924412; c=relaxed/simple;
-	bh=Lt9OFHu6pgL3Xmje4MpYWTnla2Hs12OXB8URktFGWC8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NDcrDckdn7/pEDiB7vgotDs4cyvgwYBTfndkodcnexrCV+V7J6bd1Gji/y/aPFmaaBtVf/6yJHb6rvMrV43RSot0Rn+KB7WuuFlvozUnrkYLs3UidfiOVnk2kV4RrQhmpD7oO9YA4Ql9rHtAI+wNCk3yER6GoZBF0y+Y0qzv8j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vRQYzUlG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750924434; c=relaxed/simple;
+	bh=FnqrHBDnkXYFDp1T4K5G7I3G/5qKZlHts3NFEuwPA4o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jCvJ+nk8F8NjBy39Ow2KijFdlhhjeqOPQLt9NOPP+SKm3TK7rNsv4F86/K5NqlYt4is2vvIKuFY5ugEopDlCYTpfMDHMFXQWcF5lTQiWAcTUlwatci/RMTMbt41thalebHozs084VBT3bK4EznI1hVmAKEq7kmx9HIcWFKzwvj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fHJFEsEF; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vRQYzUlG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8940C4CEEB;
-	Thu, 26 Jun 2025 07:53:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750924412;
-	bh=Lt9OFHu6pgL3Xmje4MpYWTnla2Hs12OXB8URktFGWC8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vRQYzUlGmrZKYw+vT8bqUwSltgIAm5Ma1MAHXXJoWSNaZh8J69G6zYAI6IN4FEwc7
-	 aUSJiTKI3+lVhWPzOfKjg3knt1l+dJsVEGTAilByPXGsPP98XmcmrwMqlx7d1kmnYc
-	 CIAGEvr+S3GQ4CRc4Pmtz3rVxxlGMuKXUX2U5FeHQgv0/JjA68SFHnbQOMHV+VS5/7
-	 4YTDjYryN+mx6ycDO6uNfpbSmPk4xaL6mlQPaKjS9m0+wFHhhHo6q0q/mWM20lLWJK
-	 nQ/fCHwoMYYvyIIHkVnHnYvOP1D9o5en4Oi4zf9LqfuDmxDRAOkkhwbo1RiMQv9NtL
-	 9ZrLKj4XofnPw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uUhQI-00A8hT-Je;
-	Thu, 26 Jun 2025 08:53:30 +0100
-From: Marc Zyngier <maz@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	Mostafa Saleh <smostafa@google.com>
-Cc: oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	qperret@google.com
-Subject: Re: [PATCH v2] KVM: arm64: Fix error path in init_hyp_mode()
-Date: Thu, 26 Jun 2025 08:53:27 +0100
-Message-Id: <175092440336.8068.17654803423983782262.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250625123058.875179-1-smostafa@google.com>
-References: <20250625123058.875179-1-smostafa@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHJFEsEF"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a577f164c8so93950f8f.2;
+        Thu, 26 Jun 2025 00:53:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750924431; x=1751529231; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pd6bT6wJQiLnyABIdP4QbPF8bfvDog3aiJF+bv347cs=;
+        b=fHJFEsEFFC+WWElH7KiCxzgZCZHRgbtu1n18f8kXJj0LmQ5LZmWxxGo7LTyxMCpdu7
+         wUvuzHxkAHLTQ6j/jmzkj4gAf7Yzjqeh4P10TOBv82HAlp3mAK5TEIUBwh2iaOrqwDA0
+         NFJtFhw3axw58lgxCJ7zESG7buhRbZRR8XS877EYIZsQxivy8jvs8fGe1aomJeAq7Uju
+         /p7/Z7QDMKt4tBNi+3k40A8oIj3jMe11Xqd4i/fBggPEJLW9YIq49hXqDeYlgktiLgnF
+         OZyf4jRK5NTjooK8HAYLYI91AwRDTt3Opl7PqFDOvSPdnISAuO5FGnqJe8j6gdfsbnA1
+         DZVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750924431; x=1751529231;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pd6bT6wJQiLnyABIdP4QbPF8bfvDog3aiJF+bv347cs=;
+        b=BXJMX9aT3bbs97uUk7rVEJ3n8g7qo7IMjUAcrvKY9fDtSxRNukgsdQr8n9UXxFJemY
+         ci1MCHehHG/4afUjinZtGNb9mVezxhpyfSw7Bmoa9OagcSm6C0jhp9NT4IwgU6WltT4f
+         S06FgjiijFQOsJZjmMmR32Is7JpeO1xvzroxvtkBSDLwEsNU4MYl4SPAkjXwT2vm3aAn
+         /uUkQ0WSRvJmruv26AUOAATcpzLxF2Jq/WZviL8GeAU59NkVwnA4p4N3m0uJTWqLPLhZ
+         XaGDUG/aMNSbNumtldGp9KpyBCEgrxCh+f2YP+BvnAywgrPxNnk1gL3evlkxhUx2c45l
+         RCSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVolTqRuSSkItf/w+QVnhU1WUQfH6cn0rmcHwyBp7llFbBMzU4l5850Gbc19bEjPqa3578+Y8u@vger.kernel.org, AJvYcCVf0XNqZu2p0eOtXJozNWu4C1g4j15BZ97QKy0l0g4FOQe0InewGkPkemN6DxKnWjtqX9RHFIrH0G53ygI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJhRUG+fSZ6mT4QuM/VhtlNzGzAFENYh0FkDyrtNFLPJcVyqMH
+	4QObyOOpTVTeSHjTQCuUrztQAETLyNsk7f2tfnVPmJxB0LYy8uzBtbkf
+X-Gm-Gg: ASbGncuF+zL8z8KLDwnEXUF54cnLgpTt/6fz8uv3ZeNsFpgCYrESAE/7M0oqs528W7k
+	8gI87kR+lsCd3sZeCP9j2YC2+CHivNh2c4+HFNgiZ+1fRRFMeM7pYL0EInoSZjSg/SpJyE3p+Z4
+	EWBiayp240qJ7IfNxyraHr3DllyrbWVR+iuw4YRPjTH8x1X7ihHbNz3W9qOXhSKBSC+e/eGHP1i
+	0FRibC5Kcrg6OeLxylXQ5MBjumzvkL32ndFR7LFD0kFFOpW/vIC04IJoRYnQmH68cLYczhu1kdo
+	WG9sE5BIwj6qdAAHTKxC38QExt1ok1252WBxuYSLJUD5J3vhvCzU1MBzNeGDCm/pXtZ2/5ziE+w
+	zJ6YcwkxrT/V8jyo=
+X-Google-Smtp-Source: AGHT+IExWdPqbFfwV9gpo2qljF1loSdxR22c3Gl0rBYYoDqlQzmcfWSR38d7RykfD2ZdKlURvIuP0w==
+X-Received: by 2002:a05:6000:2d86:b0:3a6:d191:a834 with SMTP id ffacd0b85a97d-3a6ed650665mr1152721f8f.9.1750924431077;
+        Thu, 26 Jun 2025 00:53:51 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:cd14:15b8:23de:109b])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a6e8114697sm6742220f8f.98.2025.06.26.00.53.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 00:53:50 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Chas Williams <3chas3@gmail.com>,
+	linux-atm-general@lists.sourceforge.net,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] atm: idt77252: Use sb_pool_remove()
+Date: Thu, 26 Jun 2025 09:53:16 +0200
+Message-ID: <20250626075317.191931-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, smostafa@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, 25 Jun 2025 12:30:58 +0000, Mostafa Saleh wrote:
-> In the unlikely case pKVM failed to allocate carveout, the error path
-> tries to access NULL ptr when it de-reference the SVE state from the
-> uninitialized nVHE per-cpu base.
-> 
-> [    1.575420] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-> [    1.576010] pc : teardown_hyp_mode+0xe4/0x180
-> [    1.576920] lr : teardown_hyp_mode+0xd0/0x180
-> [    1.577308] sp : ffff8000826fb9d0
-> [    1.577600] x29: ffff8000826fb9d0 x28: 0000000000000000 x27: ffff80008209b000
-> [    1.578383] x26: ffff800081dde000 x25: ffff8000820493c0 x24: ffff80008209eb00
-> [    1.579180] x23: 0000000000000040 x22: 0000000000000001 x21: 0000000000000000
-> [    1.579881] x20: 0000000000000002 x19: ffff800081d540b8 x18: 0000000000000000
-> [    1.580544] x17: ffff800081205230 x16: 0000000000000152 x15: 00000000fffffff8
-> [    1.581183] x14: 0000000000000008 x13: fff00000ff7f6880 x12: 000000000000003e
-> [    1.581813] x11: 0000000000000002 x10: 00000000000000ff x9 : 0000000000000000
-> [    1.582503] x8 : 0000000000000000 x7 : 7f7f7f7f7f7f7f7f x6 : 43485e525851ff30
-> [    1.583140] x5 : fff00000ff6e9030 x4 : fff00000ff6e8f80 x3 : 0000000000000000
-> [    1.583780] x2 : 0000000000000000 x1 : 0000000000000002 x0 : 0000000000000000
-> [    1.584526] Call trace:
-> [    1.584945]  teardown_hyp_mode+0xe4/0x180 (P)
-> [    1.585578]  init_hyp_mode+0x920/0x994
-> [    1.586005]  kvm_arm_init+0xb4/0x25c
-> [    1.586387]  do_one_initcall+0xe0/0x258
-> [    1.586819]  do_initcall_level+0xa0/0xd4
-> [    1.587224]  do_initcalls+0x54/0x94
-> [    1.587606]  do_basic_setup+0x1c/0x28
-> [    1.587998]  kernel_init_freeable+0xc8/0x130
-> [    1.588409]  kernel_init+0x20/0x1a4
-> [    1.588768]  ret_from_fork+0x10/0x20
-> [    1.589568] Code: f875db48 8b1c0109 f100011f 9a8903e8 (f9463100)
-> [    1.590332] ---[ end trace 0000000000000000 ]---
-> 
-> [...]
+Replacing the manual pool remove with the dedicated function.
 
-Applied to fixes, thanks!
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/atm/idt77252.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-[1/1] KVM: arm64: Fix error path in init_hyp_mode()
-      commit: 9a2b9416fd1d18d97ce1b737a11fcbc521140e5d
-
-Cheers,
-
-	M.
+diff --git a/drivers/atm/idt77252.c b/drivers/atm/idt77252.c
+index f2e91b7d79f0..888695ccc2a7 100644
+--- a/drivers/atm/idt77252.c
++++ b/drivers/atm/idt77252.c
+@@ -1844,7 +1844,6 @@ add_rx_skb(struct idt77252_dev *card, int queue,
+ {
+ 	struct sk_buff *skb;
+ 	dma_addr_t paddr;
+-	u32 handle;
+ 
+ 	while (count--) {
+ 		skb = dev_alloc_skb(size);
+@@ -1876,8 +1875,7 @@ add_rx_skb(struct idt77252_dev *card, int queue,
+ 			 skb_end_pointer(skb) - skb->data, DMA_FROM_DEVICE);
+ 
+ outpoolrm:
+-	handle = IDT77252_PRV_POOL(skb);
+-	card->sbpool[POOL_QUEUE(handle)].skb[POOL_INDEX(handle)] = NULL;
++	sb_pool_remove(card, skb);
+ 
+ outfree:
+ 	dev_kfree_skb(skb);
 -- 
-Without deviation from the norm, progress is not possible.
-
+2.43.0
 
