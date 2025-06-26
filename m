@@ -1,125 +1,213 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D41210198;
-	Thu, 26 Jun 2025 10:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188B5218AD2
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750934743; cv=none; b=byNBNYhcpnAYnPt2aFR8Be49bLOwRIVJpAAdeCcNCIumrcI+mj1UyE5SB2WlP3hDaQ0xiPixhDipi05BlA9kPzPVNI13+xdKnAgFOIYBWn5UeA8O4mXy7k9fTe2LiZLLHXDagaDuv/HWURxezBzXi57C/+MWhoY20Sjn7xcHA34=
+	t=1750934897; cv=none; b=Pe1BcELxAY9GULk3I+6NzkhXkst+WGMQ8PdP7TnuN92LK0VMIK67vdltrPo6sCPCpGT/HhGpfRPXgLv3kfbIvDyUzDN+6rE/5DUbOz5AdRHzD1FIDgBHY90Zv+rbe5WoxmfYUbwNmUOE07nMrvI/sC7OaeVr97NXq/FItVP4QZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750934743; c=relaxed/simple;
-	bh=nOf8soMmRGmaMNZe0vd2LALZAHYkbrrvJnC7O2i9mbw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kuQlXNPC5A6uSxLLHMujg8WfcoQkLbA7yiz+cQ9W9D8wb6aQCbnRQmYkDsDkikqT0g0AYA50u11KQ/KDxw5LA9QAXp4Z22NRJr/V0cty2zVyQVMFRuo0mGV8gkruvvl9UZvym7vjmRvq22XnLFmfqV8xl9tmvXaIgs4G0sS5vGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gNHSK15X; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750934897; c=relaxed/simple;
+	bh=iDPYcXFSHqv1aXfl8/YJ053KuD2moVV4g3YDzQAcxtc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EGtW9LFNK+RPt4oa58OZRLmgy50TzAwgaRFZgioQyrPt8+UwnofijHf1Pt+TLlsHq+EKrTG7TEjuS44heecrvmpHTtI+aj7xOgS0/N5NOLlBVy4+5w4HfhpNdAbEjaCFinjCm+JKtydW3KBsrPjAncie7vAA0JRj85RRaEAwusg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z6YsGLt/; arc=none smtp.client-ip=209.85.128.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNHSK15X"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-23636167afeso8666525ad.3;
-        Thu, 26 Jun 2025 03:45:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z6YsGLt/"
+Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-4538bc1cffdso3343975e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 03:48:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750934741; x=1751539541; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=y1t9GLFsVKIrtONSeSIsYsMMcNJWR+ObNECrjbsPTbc=;
-        b=gNHSK15XWOMcbU0X2Hynfic+lyEabfR8chCSY6++f8OBh1/+cC0u/ZJYmwH9MAFPV0
-         jV7078W8IFiyoPC3i1pO2CKuI+i6WpUnPubMiu/lDn8AlCEAXEKghujuD/8Q7pOTqhrJ
-         KUSYBHCjI/v8LynicaqzXimv48DUJHLqc3fJ3rE82kj03p8PLZ7/E5usoRpEp29d02Im
-         D2+D3k1wazZt7vAPliDVnH8zilApzwWFSRPo8hAd1hhlfFONpoPyXFTA1FXouXpmxD0w
-         5gNXuMxBKmEL9Zg7/Ege40LIF+s0ZAk9+cHjCHPydXYb/PZY8SfheQMzaq/qhkSRkl+T
-         JGfA==
+        d=linaro.org; s=google; t=1750934894; x=1751539694; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HUjw7qBE83HsX3Aeqbgt73oRkerz87TNCfkEGmj2ZvU=;
+        b=Z6YsGLt/8q+q8W5vV82LSVtbDK5gha9W0hqjDhIcqeSh5Dh8k1Gh4R/hqRSdw94aHe
+         euJPuorv3vsF/0ZJBbE2Tt4whDpaKAyRZcR6NM+IxTHUk9+BOlJALFNlhcXi/xU2G5XG
+         VbHz8E7yjx7RRf/nO/mlB5Ulkgn7L+Ppa5wqmUSzYA/4YhI0DEMJIl52eSBL5e1S4ZlZ
+         1VjDRIv2HS7twWHKqsgt1EXFl8q4XP/m91MhVyEFPuPAF3Gk65SQcjW9//8k1nXIUeE0
+         2p+JkYglpuFS7IC2K7f8YQTWDfqIatptlsSMA8p0nO3WndzbOfFOfqOMX0phQ8s0GNvC
+         gzmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750934741; x=1751539541;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y1t9GLFsVKIrtONSeSIsYsMMcNJWR+ObNECrjbsPTbc=;
-        b=iIewbcPdnXI/q0Lu0VZeVkEpukvg7DB7xLPOLyKNvnH8uxPa2MYBUbdDiDvZgjIWX2
-         auWqrtu2//LsGRaYy2Nrwpp9Lc+KkeAHdKA8MhEpOqDWVV2Z7/0CBMkmRrN/MWBjG2MF
-         Qk51b9ND1CPgEc9Y9YV+u553HUDqhmD0S/4QzcLE5LGwTJLmEgkh9OUg9Vy0OaF2cqbb
-         0f9Th2bmaijIyNh3Mo1BBdR12arBpOtq2uxyTHesExwGmKF4z8Gxx6jrBNLQgB/y6THI
-         EipJzxDUf5tqTzo6/Go0BsEFvION6u/0Q323bBOidTmLvyZFz7rP88/dSPxRrZFwZ1C2
-         4n8A==
-X-Forwarded-Encrypted: i=1; AJvYcCVjtlCEGP/GhBg4wnGaIToE1smOpZvpnr0K2C4wnavj6iOZBeUyA9fbCIVASo0Nd3mlTv8Z3i1vE9veFVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCjf7cxiICQeeBEtjkAqetvRDaUE23CUEqlGt9xW2/H/MrkhHz
-	jwQ8iTHZoPk0SygD7i8W2gCEIYBMlcX/UcnWo481gqqdYMcsedR8NZoXnC8/DnOn
-X-Gm-Gg: ASbGncu3OcMuIg5+kWLinHy0qANUpQPZM5Gj3a99upzdk28fhbPQAzbaHd+cR1Ze32Z
-	VIyCfJj9VvOxXOhtOPSPyrCVFyofXbIpYpWF+ZzoPMeE4iRpk+vLxJhD3Py90IoVUWItn/9AAtS
-	zj2od8f/CEvXW1vcRcV/VWroEKlzZfbgcVTBpoAtIo4P5CvWLYDjfI2M9XwcuW5Pu43U662bvpd
-	6J+C3l9dqqK/AhH2ovG2v1o5982rF3SDDXwMkG23k6kIzlfj2NaC5mi5vE+xzs8lgb3XiMDi7Kh
-	RzJohaQ2AheprQYIBHNheZRW8JGpZ9b8XH0zNqO4hp2mHovJIbGIU5/ZT//mlB/gYvJkh52iX3Q
-	5x9A=
-X-Google-Smtp-Source: AGHT+IE0XuN41/0D9/Z/JjSpSQ3M7h6oJlOa7LHC9w7kONipaGHQbT5U68NF436XxElu5Jwkc2Xq0Q==
-X-Received: by 2002:a17:902:f644:b0:234:b430:cea7 with SMTP id d9443c01a7336-23823fda0cbmr115943075ad.22.1750934740997;
-        Thu, 26 Jun 2025 03:45:40 -0700 (PDT)
-Received: from shankari-IdeaPad.. ([49.128.169.113])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860a76esm154268995ad.107.2025.06.26.03.45.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 03:45:40 -0700 (PDT)
-From: Shankari Anand <shankari.ak0208@gmail.com>
-To: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Shankari Anand <shankari.ak0208@gmail.com>
-Subject: [PATCH v2] rust: miscdevice: clarify invariant for `MiscDeviceRegistration`
-Date: Thu, 26 Jun 2025 16:15:20 +0530
-Message-Id: <20250626104520.563036-1-shankari.ak0208@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1750934894; x=1751539694;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HUjw7qBE83HsX3Aeqbgt73oRkerz87TNCfkEGmj2ZvU=;
+        b=hHpMdGVDw4Yx/3pFtEyuGqYtK0klpD9nlsX/aX+SBLmIaDVzNojyhayanRD5JiP88y
+         +oW5PLf0hrLSN9M2u9Eg+8y4H9Z5bYt49Xk3RRLQ549Y9w4jCMwGPMQysRXoRrM1y4+D
+         IY7uObfMlOtMVQJJuw2Wlgxi5XOK7LxT9HUr62cSs8NvcITNOMjTALOLDD6iADDQ2rls
+         9/g1RQMTvII2NRcYjS/R78S5+PnWhDhjWPJ/IgFcwNX39TtsIyMMySYkSRin4USPv/Ai
+         RPoqXUUFb4vM7Fsv8vq9dCFTBUOSJ4zzI89mJqf3mLAuCTaBj3Z8t7kxJG+6cjs0is1p
+         BLAA==
+X-Gm-Message-State: AOJu0YyF3khYhyxrnHVnf0XfDBus2m32luJQYJvALwweTmLDCJ8/y5kz
+	LWJ1EoEACKm9lG0N36DVPJiaxQ0dFnewo6Ku3Y4Hwf4c5Cf/C2sfYhsmjVOEasrSLsY=
+X-Gm-Gg: ASbGncvPid0lzASng87oJRb8j6Gvs4RpeU569yCX5BYjUcOBQ3a63dhnFJWJXmpgAUp
+	gZ/ePK/NcywM5tvEIb+nLjQ+TVA8RGvWsrBTMh8xBx6kMu32Xqj3Xnp3qhPBUMh7c9Mz2rlQjNh
+	IfARPFKhdShF6p59DnOe6eGZoOO2CkJ8m46ad3ccTBGruRfiXHpymjly70q9Bi0rit/l+eY/ZTP
+	5NGIgnIaes4+ic85Rn+HXFNtNGAKdnQ0BvleBeN957YvBliPqdsRhwsP4GpOZ0W1oT3uAfRvh4c
+	VvORIUCFKrL7odveX8hClGy2aj2Iyyu0xRgRk6EFWOeN0vSvTNbxU6t7Ti3VprcLJrDHA7BA+Tv
+	n3fEwcJwCvD8gIH7i7sQG3f6XDhM=
+X-Google-Smtp-Source: AGHT+IGsQdj4iGv9FBGfoAWi9XRLBBqhbfDylK0ITEXpt4PSByT7nYhuvCMByEIesH6nO5RpBBlepQ==
+X-Received: by 2002:a05:600c:5490:b0:453:81a:2f3f with SMTP id 5b1f17b1804b1-45381afa899mr71269575e9.30.1750934894357;
+        Thu, 26 Jun 2025 03:48:14 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e8114774sm7141630f8f.94.2025.06.26.03.48.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 03:48:13 -0700 (PDT)
+Message-ID: <d1b0b5c1-a031-4429-bb4b-ad8bc914c971@linaro.org>
+Date: Thu, 26 Jun 2025 11:48:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/4] media: dt-bindings: Add qcom,msm8939-camss
+To: Krzysztof Kozlowski <krzk@kernel.org>, vincent.knecht@mailoo.org,
+ Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250613-camss-8x39-vbif-v5-0-a002301a7730@mailoo.org>
+ <20250613-camss-8x39-vbif-v5-3-a002301a7730@mailoo.org>
+ <50fa344c-d683-420c-a3b5-837ec6d8e93e@kernel.org>
+ <e928a7c5-56d5-4f2b-b667-bdbefb506d1f@linaro.org>
+ <0e030c09-0a89-4883-b958-85ddd6831407@kernel.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <0e030c09-0a89-4883-b958-85ddd6831407@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Reword and expand the invariant documentation for `MiscDeviceRegistration`
-to clarify what it means for the inner device to be "registered".
-It expands to explain:
-- `inner` points to a `miscdevice` registered via `misc_register`.
-- This registration stays valid for the entire lifetime of the object.
-- Deregistration is guaranteed on `Drop`, via `misc_deregister`.
+On 26/06/2025 11:28, Krzysztof Kozlowski wrote:
+> On 26/06/2025 12:19, Bryan O'Donoghue wrote:
+>> On 26/06/2025 11:00, Krzysztof Kozlowski wrote:
+>>>> +  reg-names:
+>>>> +    items:
+>>>> +      - const: csi_clk_mux
+>>> No, I already provided arguments in two lengthy discussions - this is
+>>> not sorted by name.
+>>>
+>>> Keep the same order as in previous device, so msm8916 for example. Or
+>>> any other, but listen to some requests to sort it by some arbitrary rule
+>>> which was never communicated by DT maintainers.
+>>
+>> I don't think if you look through the history that you can find a
+>> consistent rule that was used to arrange the registers.
+>>
+>> So we are trying to have a consistent way of doing that. Thats why the
+>> last number of additions have been sort by name, because it seemed to be
+>> the most consistent.
+> 
+> 
+> Why are we discussing it again? You asked me the same here:
+> https://lore.kernel.org/all/8f11c99b-f3ca-4501-aec4-0795643fc3a9@kernel.org/
+> 
+> and I already said - not sorting by name. You take the same order as
+> previous.
+> 
+> If you ever want to sort by name, answer to yourself:
+> NO. Take the same order as other existing device.
+> 
+> If you ever want to sort by value, answer to yourself:
+> NO.
+> 
+> You both came with some new, invented rules of sorting, applied it, and
+> now you claim that "existing devices were sorted like that". What? NO!
+> 
+> Best regards,
+> Krzysztof
 
-Reported-by: Benno Lossin <lossin@kernel.org>
-Closes: https://github.com/Rust-for-Linux/linux/issues/1168
-Fixes: f893691e7426 ("rust: miscdevice: add base miscdevice abstraction")
-Signed-off-by: Shankari Anand <shankari.ak0208@gmail.com>
+OK.
+
+Discussed this on Slack with Krzysztof.
+
+8939 should be like 8916 because these are devices of a similar class.
+
+x1e has a particular order if a new device x1e+1 comes along with a new 
+register then
+
+reg-names:
+  23     items:
+  24       - const: csid0
+  25       - const: csid1
+  26       - const: csid2
+  27       - const: csid_lite0
+  28       - const: csid_lite1
+  29       - const: csid_wrapper
+  30       - const: csiphy0
+  31       - const: csiphy1
+  32       - const: csiphy2
+  33       - const: csiphy4
+  34       - const: csitpg0
+  35       - const: csitpg1
+  36       - const: csitpg2
+  37       - const: vfe0
+  38       - const: vfe1
+  39       - const: vfe_lite0
+  40       - const: vfe_lite1
+
+reg-names:
+  23     items:
+  24       - const: csid0
+  25       - const: csid1
+  26       - const: csid2
+  27       - const: csid_lite0
+  28       - const: csid_lite1
+  29       - const: csid_wrapper
+  30       - const: csiphy0
+  31       - const: csiphy1
+  32       - const: csiphy2
+  33       - const: csiphy4
+  34       - const: csitpg0
+  35       - const: csitpg1
+  36       - const: csitpg2
+  37       - const: vfe0
+  38       - const: vfe1
+  39       - const: vfe_lite0
+  40       - const: vfe_lite1
+           - NEW ENTRY GOES HERE csid3
+
+A new SoC with a significantly different architecture could have 
+different ordering of regs.
+
+The main block should go first which means the above should look like:
+
+reg-names:
+  23     items:
+  24       - const: csid_wrapper
+  25       - const: csid0
+  26       - const: csid1
+  27       - const: csid2
+  28       - const: csid_lite0
+  29       - const: csid_lite1
+  30       - const: csiphy0
+  31       - const: csiphy1
+  32       - const: csiphy2
+  33       - const: csiphy4
+  34       - const: csitpg0
+  35       - const: csitpg1
+  36       - const: csitpg2
+  37       - const: vfe0
+  38       - const: vfe1
+  39       - const: vfe_lite0
+  40       - const: vfe_lite1
+
+I think I personally haven't understood what was meant by "devices of a 
+class" but its clearer now.
+
+Appreciate the explanation.
+
 ---
-v1 -> v2 : Added bullet points, changed the last point in the description and added intra-doc links.
----
- rust/kernel/miscdevice.rs | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
-index 288f40e79906..3fb118496958 100644
---- a/rust/kernel/miscdevice.rs
-+++ b/rust/kernel/miscdevice.rs
-@@ -45,7 +45,13 @@ pub const fn into_raw<T: MiscDevice>(self) -> bindings::miscdevice {
- ///
- /// # Invariants
- ///
--/// `inner` is a registered misc device.
-+/// - `inner` contains a `struct miscdevice` that is registered using
-+///   `misc_register()`.
-+/// - This registration remains valid for the entire lifetime of the
-+///   [`MiscDeviceRegistration`] instance.
-+/// - Deregistration occurs exactly once in [`Drop`] via `misc_deregister()`.
-+/// - `inner` wraps a valid, pinned `miscdevice` created using
-+///   [`MiscDeviceOptions::into_raw`].
- #[repr(transparent)]
- #[pin_data(PinnedDrop)]
- pub struct MiscDeviceRegistration<T> {
- 
-base-commit: 0303584766b7bdb6564c7e8f13e0b59b6ef44984
--- 
-2.34.1
-
+bod
