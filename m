@@ -1,105 +1,131 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D482264B7
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C682264A2;
+	Thu, 26 Jun 2025 05:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750916919; cv=none; b=IbmsjHn2muDJveCoVIveZFppH1LVRvn4x1sKTOvkcoVPZ78t91Lv12erQqLdK21tXXuurKCBFMO6WFAKVsrRKBxKzYyrDkHHUrmJh8mQekwc+KiYMs+V/IcUpPyhZfxKLMesB846puaaxcFVwhiv8Mt6ddlW/neef5pY+1nhKRw=
+	t=1750916919; cv=none; b=utOBob2U3D0Shqejs33h5ZJva61maJnJcP+mqHvPOSmTISmG7sUoM5vt0H0hekQlO+KWbnyH5vIvRuCIA/QO8WsZtHFsx2tKnjIFiBWhBZJEAwRhMXdi1qTeWCMuuXbwCTxBeMNgscDWreJZliy8OB+difuFtO7XSD5S2kie8mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750916919; c=relaxed/simple;
-	bh=Y9rAwk43R5Qu/XneIvtPPaxorqlg9IJwfPk0mko3rAw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=U9WD0uRdCpaoNiz36aUHSuMCb1h4AYU0GbpKAwOwnoFomcv4F/hP2HWoAY3kNHnFeVHlW9MEIaHtUj+WY+ww7AUac1JTE5fQQh5GdU9z6rfuzMdXgyKTg2QWfnAcCD2gW66T1gv0JdZueI+diJtm8QFqTJZUvvS/ZKm6beVDEls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1TLyXauv; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	bh=PvP7V4HS/UqCZN0yCYpQZ/ywmaPF5RpuzeumcsptQd8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PAx1qeqkbYwOGxsfc5Cu68nGm0OgcaJLnf7AJsuPDa2H3SHuqHB1tUFfCxMoXnatfCnM98M1zzoJjIo4Gg3MDNhlo3LGweKzQzBX0Q3ocxPvNgYciD8fi/c7YsFXZeMUNDdlauCZyU40OClrj1adWASKc88QUPeguaBKbpeNnYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ONUpuhQi; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1TLyXauv"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747cebffd4eso590922b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:48:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ONUpuhQi"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-714067ecea3so5392817b3.0;
+        Wed, 25 Jun 2025 22:48:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750916917; x=1751521717; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=06wlXYRsyscOOukfm0BoHmWOsjunsh8IZmbqRpcqtRo=;
-        b=1TLyXauv0hSwcmp0Hyyig6+luqbkAyysSytClcC/r+u+yUjI/pJZfvyDxVbU1LaoMs
-         7j+851Vb/z/Xw8//K31iveAZ6SqEXuoc6zu2pzLdjKwWicbSC5OwL9QvV3+JFgwf5nE0
-         gXRgP5EY8A8g7Rp22kpVKIBfM56ndTirXLSbYQXhvLydG65PXRxf8W/TLiRMeI+nhaC9
-         inZclZg8Kjo0ZwU0sJfWkRkWCkLIj4onIFaf28uaWD/XUTChrKIg3yh0haRijJ4CYZwl
-         /iNrb+wr+VVLRN8pQeDA97ZxwIK/1Yc4279e2vmN4K5Z7kYot7WlPlCq2lm9oZ59Cxq6
-         6Z8A==
+        d=gmail.com; s=20230601; t=1750916916; x=1751521716; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PVe6wGUug93MpyjkrNCWfM9sBMWoe0QRMhfdfW1sERg=;
+        b=ONUpuhQioCBaLCTrBoNsvlT05NH9s1IZZNdGIpZSo2Q/2SIZWW8u8Z8Yldmk1Bp/io
+         kU+FKW6YHI32ufXKMGnvKU6duRrw0zbgZ2FdGJqWwO2bn338gccWARznermPt2TEdFvb
+         ys6BwaHKRbSCkCZwQ5zcEnE35YH8Qi2pDSSjfAqJTQP6KsffaDs74x4sQxn4jf6kC1bR
+         a5F/0rd/q+TitExd8BqVh6KYaJWC63qBoZ+RRZZtJNY7m93i/CGao6odq4T7s4ZcecHc
+         v7VlJCpiGkjVdfipv/VFECF87SlPuHOSAhNNGGDLcnOMu9CjQ3ubWFOpyPYMgTiW69ou
+         w9dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750916917; x=1751521717;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=06wlXYRsyscOOukfm0BoHmWOsjunsh8IZmbqRpcqtRo=;
-        b=F7QYr5mlDHNbwqGTXQ/yfcAIC/j0aVQAyFksLj/U5MSsPU+qMbfwKlW4GFcNm9rRsu
-         jWNa0nNDr7Ltgb60eWsS9xEYft+eE7sV7Jnt7E0okFV/7TnZHY8N8gdt7xyKGMVy6eU/
-         6+32f0otMIQahuk1LJ+jWfjahYRG2PPjh4igjm3kR/YWQRsG0j7JXmsP3HWZA4u5eKnm
-         jTGKaArvpuBstgFwwnjsc1JTlmmZS5Dq99q6IUwgrBzfPVwslSciEbNLB7ULmqCsqunR
-         Ca91yWIkRzsSxwUrajtebYusEbkV2md9INymAVmmBkjZdjEL0VUSQlVO4PJKBHp98oU/
-         uEaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZNi3a0o2vHm4dptnh09NmD/ijO/Q7rnqnyRn5xvgYFX24ObiaLSE08dSnj/YnioOFxhWN/Ssvdc3IZsE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsBP09FCTDCsanB8pp+UFeQlbkFXCgo8Ge7agWxn9qjZd7X7OL
-	HBybgGqnicZoVKMp94KN61LJr3PQmBA6WPTli61wT2ys4wvfCKFpML1R1JtJjcDtVpEu4Pcgucz
-	d6P/7WN9IuQ==
-X-Google-Smtp-Source: AGHT+IH+oNNAMV2NVtWwXyNOB/xwSiYb7Vtrnxbr8iZKkclF7b16D26wDNw57BukJDxDJDBIx0CIDLYPgWdi
-X-Received: from pfbde4.prod.google.com ([2002:a05:6a00:4684:b0:741:8e1a:2d09])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d85:b0:220:193b:913
- with SMTP id adf61e73a8af0-2207f33227bmr11024525637.34.1750916917233; Wed, 25
- Jun 2025 22:48:37 -0700 (PDT)
-Date: Wed, 25 Jun 2025 22:48:26 -0700
-In-Reply-To: <20250626054826.433453-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1750916916; x=1751521716;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PVe6wGUug93MpyjkrNCWfM9sBMWoe0QRMhfdfW1sERg=;
+        b=EPb6g93FYF06XsXmEL2XMJraFt4NXJHdi619MpXV4JWA7JwAD54xC9jNlZfW1G4vAE
+         GGi0uE3n5KerDRltpV6/Pw4LwZcfWGFHhx3teVkI6vZxNjJI0tCxg/KW5JwTc4Fdqwrf
+         5DPRKhN6d6wvs6q5i+981G1T69Zsbzlw6hLOSp2NZnoWhLrjzjJBdyY11Pq8xjoHpbiS
+         ygicabPPqs5w+ZwtHsMuuSJKctFR/p4lGN48s1ScQR7LQftXyPNUVfJCyqClZe0vC/6A
+         xtGuif5cAiKg859163nxWh52QedTy8Rk/Ih1N3yJ/Z5koWI/7nXR/1BwXpIoIzYF/35/
+         qKvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXSLk4tgUXWZ7u3ExI4sW04BSPgc3wO7nio/OCX1Iq6w3mejG/8oHDYhQZ8t140zdJVZyOOc5wIPp49VtG@vger.kernel.org, AJvYcCXRu++swfeRYYoMNQ/PSEWM7HUNjjPJWolAYlslanFtROsyRD3HpB5fOKmAEBAqGf1GgPRxEJ+8Ng8w@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVv/uiel0soiYyKTm3Y6LwlnUgKmvPBv3ERm9W63IT7Q2/Nd9X
+	HAu2wplZV+unWlh3sat3foYVl1fmmKdw5b7l5uP1FEqScH/9X/1iZqFI
+X-Gm-Gg: ASbGncuXn+QhCDQyRKK6WLFJ03n/2Z8oQrNfXisyVQNedPt0yowQ2iloktylzpWElMj
+	2ABMe3A2wh3O+i+r+pzXx8WwZ1+w73qu0W9ZOXdrTfeZswnYDrJhmPMexTUWs1qdqsFsevThEpQ
+	RHpUy3UNOF+rjIiVs0JzjYMz7KLn1NEKaNmarXDwUVPqk6GcNuwD0m4kDBhOzIP1LE6YO6Fbg3A
+	H6PXrYcY06vdNYKnSS8/fEFBJeS/PQB8pJsTKc6BY5n0rJpctHOQGx/aRp3zJPV88AkhqAtJM9o
+	LvMYFwU3iVaH6Q2juZ7bu+X+8ObQaPMzoK0JEvQYeYOVwwrTNMUscSaZMWSZo/PnYOexp6JDJV3
+	xmKgvSw==
+X-Google-Smtp-Source: AGHT+IH9LKreUxvc3F5L5oWgirPyG5WU6cpWSWHJoSO7yLg9DvB+ScH57eawkJzLKyHLorJFXLN5zQ==
+X-Received: by 2002:a05:690c:6902:b0:70e:7882:ea97 with SMTP id 00721157ae682-71406ca14e7mr87220437b3.10.1750916916528;
+        Wed, 25 Jun 2025 22:48:36 -0700 (PDT)
+Received: from localhost.localdomain ([192.34.165.40])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-712c4b97299sm27323757b3.66.2025.06.25.22.48.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 22:48:36 -0700 (PDT)
+From: John Clark <inindev@gmail.com>
+To: heiko@sntech.de
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Clark <inindev@gmail.com>
+Subject: [PATCH v4 0/2] Add FriendlyElec NanoPi M5 support for Rockchip RK3576
+Date: Thu, 26 Jun 2025 01:47:26 -0400
+Message-Id: <20250626054728.4882-1-inindev@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250626054826.433453-1-irogers@google.com>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250626054826.433453-4-irogers@google.com>
-Subject: [PATCH v3 3/3] tools headers: Remove unneeded ignoring of warnings in unaligned.h
-From: Ian Rogers <irogers@google.com>
-To: Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Now the get/put unaligned use memcpy the -Wpacked and -Wattributes
-warnings don't need disabling.
+This series adds device tree support for the FriendlyElec NanoPi M5 board,
+powered by the Rockchip RK3576 SoC (4x Cortex-A72, 4x Cortex-A53, Mali-G52
+MC3 GPU, 6 TOPS NPU). The patches enable basic booting and connectivity,
+including dual 1Gbps Ethernet, USB 3.2, microSD, M.2 PCIe NVMe, and HDMI.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Changes in v4:
+ - Addressed Diederik's feedback:
+   - Renamed pinctrl nodes to align with schematic labels
+ - Moved pinctrl-0 and pinctrl-names into button-user sub-node
+
+Changes in v3:
+- Improved (even more) fspi1m1_pins comment for clarity, specifying
+  gpio1_d5, gpio1_c4-c7 (clk, d0-d4) for SPI NOR flash.
+- Removed redundant #address-cells and #size-cells from sfc1 node, as they
+  are inherited from rk3576.dtsi.
+
+Changes in v2:
+- Fixed DT schema warnings (Rob Herring):
+  - Renamed spi-nor@0 to flash@0
+  - Renamed pmic@23 pinctrl nodes to end with -pins
+  - Renamed hym8563@51 to rtc@51 and removed clock-frequency
+  - Renamed button@1 to button-user
+- Addressed Heiko Stuebner's feedback:
+  - Sorted non-addressed nodes alphabetically
+  - Added blank lines in regulator nodes
+  - Improved fspi1m1_pins comment to clarify SPI NOR flash pinmux
+  - Moved status property in saradc to last
+
+Patch 1: Updates DT bindings in rockchip.yaml
+Patch 2: Adds NanoPi M5 device tree and Makefile entry
+
+No MAINTAINERS update needed, as the new file is covered by the existing
+ARM/Rockchip SoC entry.
+
+Tested on NanoPi M5 with successful boot and feature validation.
+
+Signed-off-by: John Clark <inindev@gmail.com>
 ---
- tools/include/linux/unaligned.h | 4 ----
- 1 file changed, 4 deletions(-)
+John Clark (2):
+  dt-bindings: arm: rockchip: add FriendlyElec NanoPi M5 board
+  arm64: dts: rockchip: Add FriendlyElec NanoPi M5 support
 
-diff --git a/tools/include/linux/unaligned.h b/tools/include/linux/unaligned.h
-index 395a4464fe73..d51ddafed138 100644
---- a/tools/include/linux/unaligned.h
-+++ b/tools/include/linux/unaligned.h
-@@ -6,9 +6,6 @@
-  * This is the most generic implementation of unaligned accesses
-  * and should work almost anywhere.
-  */
--#pragma GCC diagnostic push
--#pragma GCC diagnostic ignored "-Wpacked"
--#pragma GCC diagnostic ignored "-Wattributes"
- #include <vdso/unaligned.h>
- 
- #define get_unaligned(ptr)	__get_unaligned_t(typeof(*(ptr)), (ptr))
-@@ -143,6 +140,5 @@ static inline u64 get_unaligned_be48(const void *p)
- {
- 	return __get_unaligned_be48(p);
- }
--#pragma GCC diagnostic pop
- 
- #endif /* __LINUX_UNALIGNED_H */
+ .../devicetree/bindings/arm/rockchip.yaml     |   6 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../boot/dts/rockchip/rk3576-nanopi-m5.dts    | 999 ++++++++++++++++++
+ 3 files changed, 1006 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3576-nanopi-m5.dts
+
 -- 
-2.50.0.727.gbf7dc18ff4-goog
+2.39.5
 
