@@ -1,179 +1,152 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06503295D95
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2536A2264CA;
+	Thu, 26 Jun 2025 08:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750927652; cv=none; b=nTTemGhTUZnoAg55WiAO7n555B6MP4VoI0j4SgCKV9ro/eVTFkUsv3hwbTRL8pzvmH+Ir3FsZHsfBpXtWmHiRBZYNF2nyjy2dz/IG7CjipNge/rLaGYsB/DPgJsD6HCT3WwxFjURIYA1g+B8EYQXIyqgkfsK7moIqyAEELdJAH8=
+	t=1750927664; cv=none; b=WTRSZZF9IwHUu4oJu9NOf5+PKGuxfJyigqnvh5iJdBHxiaJZ7Wb6LZzL3ue/vzkkXXVwSC9FdmQNyUEJJrOzyNghBqbOqd04gFRBzP00OOs8E2oCejwNVkkM30yNbBdqAEcpnPRjzxRS9FStwx+fQnMlVE/b0bx2vXNLc+KuPd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750927652; c=relaxed/simple;
-	bh=/mG2RUIJTlGVUACA5bit1D4qVSoQZZxNKk5ol9i5l1Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IOjhJVXfZnMi1rq+FqnF/YR7AcxH2WNB0Go2V50c9Ag6MubAfFIotHUqYlivmwhFz5kVDFj46ymHonQYHH3UB3ieZ/ofTrs81+tZgAUQjAIoDrE3OoD/DdsTKdTUWw7kTUIUSskL//l3QU5UKUXkxJOoCp+9g/1xiM7Ke8vrYa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AA101758;
-	Thu, 26 Jun 2025 01:47:11 -0700 (PDT)
-Received: from [10.57.84.221] (unknown [10.57.84.221])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E19A03F58B;
-	Thu, 26 Jun 2025 01:47:25 -0700 (PDT)
-Message-ID: <b0ef3756-2cd2-41d7-b757-0518332e1b54@arm.com>
-Date: Thu, 26 Jun 2025 09:47:24 +0100
+	s=arc-20240116; t=1750927664; c=relaxed/simple;
+	bh=9U5EJmrGekA99glFhmw1yFwAVYppR9L38j/mg1yJuPw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uz4w1iWj/cr1I7nLuwrjXMllo6BW3fO1ssfJ6ACagixmWdT9CF/FKnVrWeHVh/AMXqqHQAT2Om/nt9ZiJKhBefDCDEjC3AoJgObSHub0yfepmhtYPByTNaII4cV7CXmQSQPWg5j5bYTI4zaWtGI3VjXCJka/e+4FhOFcnOUssys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JMRfvtOA; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JMRfvtOA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750927663; x=1782463663;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9U5EJmrGekA99glFhmw1yFwAVYppR9L38j/mg1yJuPw=;
+  b=JMRfvtOAOK3I/bh6R/TJvazUUhPIhAHISun6Qmc1hNxdPOQ6bg4rFqrf
+   h7f5NwWKbNZBgCYiNmHT1zBhYzev6v2B+GFXnjrzKTw2l2hBaxAC4RE1B
+   NdObq84Z4rTZVnHEvnjjRGnWpCDz5PleMhuyIEoOX2N+8EHJ+dEJUvfRd
+   fv6XBApjaAsBQrnsrfWWhsdvgD3qGJmqGexsDUkiQQ6fNnwwMRFH1Cq4J
+   Dbe9QYBNWsKk+6rExREm1O9Uvxx2lfiBkGdjY7RjqApdJljv8msiQouof
+   VC3sRvqAuhnoaw/ieuY7Z2uVkrk8sKXTVTgdaSGxV0PdLz5ZNgNlOVa+j
+   A==;
+X-CSE-ConnectionGUID: MCRTK1owQCWWHr4j0tGstQ==
+X-CSE-MsgGUID: 4xj+5SZXTzupyQ4WgYcRkA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64275846"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="64275846"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 01:47:42 -0700
+X-CSE-ConnectionGUID: yntKr3jvRbe5ZE7vwaljQg==
+X-CSE-MsgGUID: vu6V/rAoSI+a7Oip97YJTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="176119027"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 26 Jun 2025 01:47:39 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uUiGf-000Ttq-08;
+	Thu, 26 Jun 2025 08:47:37 +0000
+Date: Thu, 26 Jun 2025 16:47:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Vikas Gupta <vikas.gupta@broadcom.com>, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	andrew+netdev@lunn.ch, horms@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, michael.chan@broadcom.com,
+	pavan.chebbi@broadcom.com, vsrama-krishna.nemani@broadcom.com,
+	Vikas Gupta <vikas.gupta@broadcom.com>,
+	Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
+	Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+Subject: Re: [net-next, 09/10] bng_en: Initialize default configuration
+Message-ID: <202506261600.oLXe1N0I-lkp@intel.com>
+References: <20250618144743.843815-10-vikas.gupta@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] arm64: pageattr: Use pagewalk API to change memory
- permissions
-Content-Language: en-GB
-To: Yang Shi <yang@os.amperecomputing.com>, Mike Rapoport <rppt@kernel.org>,
- Dev Jain <dev.jain@arm.com>
-Cc: akpm@linux-foundation.org, david@redhat.com, catalin.marinas@arm.com,
- will@kernel.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- vbabka@suse.cz, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, suzuki.poulose@arm.com, steven.price@arm.com,
- gshan@redhat.com, linux-arm-kernel@lists.infradead.org,
- anshuman.khandual@arm.com
-References: <20250613134352.65994-1-dev.jain@arm.com>
- <20250613134352.65994-2-dev.jain@arm.com> <aE53Jp7ZGgTxtxwG@kernel.org>
- <956f6ebe-606f-4575-a0a5-7841c95b5371@arm.com>
- <cab45bd6-8108-4a6f-816a-3f7b70a2902f@os.amperecomputing.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <cab45bd6-8108-4a6f-816a-3f7b70a2902f@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618144743.843815-10-vikas.gupta@broadcom.com>
 
-On 25/06/2025 21:40, Yang Shi wrote:
-> 
-> 
-> On 6/25/25 4:04 AM, Ryan Roberts wrote:
->> On 15/06/2025 08:32, Mike Rapoport wrote:
->>> On Fri, Jun 13, 2025 at 07:13:51PM +0530, Dev Jain wrote:
->>>> -/*
->>>> - * This function assumes that the range is mapped with PAGE_SIZE pages.
->>>> - */
->>>> -static int __change_memory_common(unsigned long start, unsigned long size,
->>>> +static int ___change_memory_common(unsigned long start, unsigned long size,
->>>>                   pgprot_t set_mask, pgprot_t clear_mask)
->>>>   {
->>>>       struct page_change_data data;
->>>> @@ -61,9 +140,28 @@ static int __change_memory_common(unsigned long start,
->>>> unsigned long size,
->>>>       data.set_mask = set_mask;
->>>>       data.clear_mask = clear_mask;
->>>>   -    ret = apply_to_page_range(&init_mm, start, size, change_page_range,
->>>> -                    &data);
->>>> +    arch_enter_lazy_mmu_mode();
->>>> +
->>>> +    /*
->>>> +     * The caller must ensure that the range we are operating on does not
->>>> +     * partially overlap a block mapping. Any such case should either not
->>>> +     * exist, or must be eliminated by splitting the mapping - which for
->>>> +     * kernel mappings can be done only on BBML2 systems.
->>>> +     *
->>>> +     */
->>>> +    ret = walk_kernel_page_table_range_lockless(start, start + size,
->>>> +                            &pageattr_ops, NULL, &data);
->>> x86 has a cpa_lock for set_memory/set_direct_map to ensure that there's on
->>> concurrency in kernel page table updates. I think arm64 has to have such
->>> lock as well.
->> We don't have a lock today, using apply_to_page_range(); we are expecting that
->> the caller has exclusive ownership of the portion of virtual memory - i.e. the
->> vmalloc region or linear map. So I don't think this patch changes that
->> requirement?
->>
->> Where it does get a bit more hairy is when we introduce the support for
->> splitting. In that case, 2 non-overlapping areas of virtual memory may share a
->> large leaf mapping that needs to be split. But I've been discussing that with
->> Yang Shi at [1] and I think we can handle that locklessly too.
-> 
-> If the split is serialized by a lock, changing permission can be lockless. But
-> if split is lockless, changing permission may be a little bit tricky,
-> particularly for CONT mappings. The implementation in my split patch assumes the
-> whole range has cont bit cleared if the first PTE in the range has cont bit
-> cleared because the lock guarantees two concurrent splits are serialized.
-> 
-> But lockless split may trigger the below race:
-> 
-> CPU A is splitting the page table, CPU B is changing the permission for one PTE
-> entry in the same table. Clearing cont bit is RMW, changing permission is RMW
-> too, but neither of them is atomic.
-> 
->                CPU A                                      CPU B
-> read the PTE read the PTE
-> clear the cont bit for the PTE
->                                    change the PTE permission from RW to RO
->                                    store the new PTE
-> 
-> store the new PTE <- it will overwrite the PTE value stored by CPU B and result
-> in misprogrammed cont PTEs
+Hi Vikas,
 
-Ahh yes, good point! I missed that. When I was thinking about this, I had
-assumed that *both* CPUs racing to split would (non-atomically) RMW to remove
-the cont bit on the whole block. That is safe as long as nothing else in the PTE
-changes. But of course you're right that the first one to complete that may then
-go on to modify the permissions in their portion of the now-split VA space. So
-there is definitely a problem.
+kernel test robot noticed the following build warnings:
 
-> 
-> 
-> We should need do one the of the follows to avoid the race off the top of my head:
-> 1. Serialize the split with a lock
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.16-rc3 next-20250625]
+[cannot apply to horms-ipvs/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I guess this is certainly the simplest as per your original proposal.
+url:    https://github.com/intel-lab-lkp/linux/commits/Vikas-Gupta/bng_en-Add-PCI-interface/20250618-173130
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250618144743.843815-10-vikas.gupta%40broadcom.com
+patch subject: [net-next, 09/10] bng_en: Initialize default configuration
+config: parisc-randconfig-r073-20250619 (https://download.01.org/0day-ci/archive/20250626/202506261600.oLXe1N0I-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 8.5.0
 
-> 2. Make page table RMW atomic in both split and permission change
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506261600.oLXe1N0I-lkp@intel.com/
 
-I don't think we would need atomic RMW for the permission change - we would only
-need it for removing the cont bit? My reasoning is that by the time a thread is
-doing the permission change it must have already finished splitting the cont
-block. The permission change will only be for PTEs that we know we have
-exclusive access too. The other CPU may still be "splitting" the cont block, but
-since we already won, it will just be reading the PTEs and noticing that cont is
-already clear? I guess split_contpte()/split_contpmd() becomes a loop doing
-READ_ONCE() to test if the bit is set, followed by atomic bit clear if it was
-set (avoid the atomic where we can)?
+New smatch warnings:
+drivers/net/ethernet/broadcom/bnge/bnge_resc.c:533 bnge_net_init_dflt_rings() warn: always true condition '(rc != -19) => (0-u16max != (-19))'
 
-> 3. Check whether PTE is cont or not for every PTEs in the range instead of the
-> first PTE, before clearing cont bit if they are
+Old smatch warnings:
+drivers/net/ethernet/broadcom/bnge/bnge_resc.c:372 bnge_alloc_irqs() warn: unsigned 'irqs_demand' is never less than zero.
+drivers/net/ethernet/broadcom/bnge/bnge_resc.c:542 bnge_net_init_dflt_rings() warn: always true condition '(rc != -19) => (0-u16max != (-19))'
 
-Ahh perhaps this is what I'm actually describing above?
+vim +533 drivers/net/ethernet/broadcom/bnge/bnge_resc.c
 
-> 4. Retry if cont bit is not cleared in permission change, but we need
-> distinguish this from changing permission for the whole CONT PTE range because
-> we keep cont bit for this case
+   511	
+   512	static int bnge_net_init_dflt_rings(struct bnge_dev *bd, bool sh)
+   513	{
+   514		u16 dflt_rings, max_rx_rings, max_tx_rings, rc;
+   515	
+   516		if (sh)
+   517			bd->flags |= BNGE_EN_SHARED_CHNL;
+   518	
+   519		dflt_rings = netif_get_num_default_rss_queues();
+   520	
+   521		rc = bnge_get_dflt_rings(bd, &max_rx_rings, &max_tx_rings, sh);
+   522		if (rc)
+   523			return rc;
+   524		bd->rx_nr_rings = min_t(u16, dflt_rings, max_rx_rings);
+   525		bd->tx_nr_rings_per_tc = min_t(u16, dflt_rings, max_tx_rings);
+   526		if (sh)
+   527			bnge_trim_dflt_sh_rings(bd);
+   528		else
+   529			bd->nq_nr_rings = bd->tx_nr_rings_per_tc + bd->rx_nr_rings;
+   530		bd->tx_nr_rings = bd->tx_nr_rings_per_tc;
+   531	
+   532		rc = bnge_reserve_rings(bd);
+ > 533		if (rc && rc != -ENODEV)
+   534			dev_warn(bd->dev, "Unable to reserve tx rings\n");
+   535		bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
+   536		if (sh)
+   537			bnge_trim_dflt_sh_rings(bd);
+   538	
+   539		/* Rings may have been reduced, re-reserve them again */
+   540		if (bnge_need_reserve_rings(bd)) {
+   541			rc = bnge_reserve_rings(bd);
+   542			if (rc && rc != -ENODEV)
+   543				dev_warn(bd->dev, "Fewer rings reservation failed\n");
+   544			bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
+   545		}
+   546		if (rc) {
+   547			bd->tx_nr_rings = 0;
+   548			bd->rx_nr_rings = 0;
+   549		}
+   550	
+   551		return rc;
+   552	}
+   553	
 
-I'd prefer to keep the splitting decoupled from the permission change if we can.
-
-
-Personally, I'd prefer to take the lockless approach. I think it has the least
-chance of contention issues. But if you prefer to use a lock, then I'm ok with
-that as a starting point. I'd prefer to use a new separate lock though (like x86
-does) rather than risking extra contention with the init_mm PTL.
-
-Thanks,
-Ryan
-
-
-> 
-> Thanks,
-> Yang
-> 
->>
->> Perhaps I'm misunderstanding something?
->>
->> [1] https://lore.kernel.org/all/f036acea-1bd1-48a7-8600-75ddd504b8db@arm.com/
->>
->> Thanks,
->> Ryan
->>
->>>> +    arch_leave_lazy_mmu_mode();
->>>> +
->>>> +    return ret;
->>>> +}
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
