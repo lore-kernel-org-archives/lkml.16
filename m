@@ -1,138 +1,105 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4FE28C039;
-	Thu, 26 Jun 2025 15:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75312E7F10;
+	Thu, 26 Jun 2025 15:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750950638; cv=none; b=FsUa/74Dp4kZWehon3QupC80+YGe2zI5KeaES2KnAG1OP7XXEtYjjiMtBvYqHboV61gfYf0ULaACcfzja65+zreZIYQJUkLBZ0E6ca9wSLS0xdjPw9wgKhJQ+Fhz4l3qGTsfWequGqS7tjIqbvamtbi0985wxlO+C3kVjlBfd7Q=
+	t=1750950758; cv=none; b=WJiJtAcXobrVypn2KHkE/xhuTmJuh0Bh9Rq7Y9u1uydE2sHCVwwEym/P1c+TJz5BnPjIj3oeGfzwEzZ3nEnmXaijoLLgnLKYwdrkhxYlmK+aqoEOJTTG1nEMGftpXi0bu4bbDvl6QS08XYxafVAGK/2+dXUD6eQmjXtH0Osj0xE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750950638; c=relaxed/simple;
-	bh=Fsz5f/99U5JBaQvbPVrImfkgU9hAjFN83v0YZEnzFrM=;
+	s=arc-20240116; t=1750950758; c=relaxed/simple;
+	bh=kAS/IOSk7LsBnAUgqtwuX4g9he1Zg4oVAbf4qm4DPmk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CO9mE09CmTqdMPzHVDwBWvIzdWXrk/fD2gt4QRrB91TFWsDKoXxklhSFJOqRwnOS/nKeHmvIY+SQG5rqJScNuysMcFalnRtVDum9S+xFePPITW1pUY3n6WlmeATBtoUvoLqaDCrBshFgRIC/TNKckvPh8KvqsOswqjZ4zBjKuEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=htA+xgCC; arc=none smtp.client-ip=209.85.167.49
+	 To:Cc:Content-Type; b=sEFip7XSQdBliJxBDzbmUxd65hmYzuFZsRt/B9nFHHgyxkFyNnqHputWlTNgnDi+XTjTnCGujtgBqH2hdc6+CLrMQMpzjCBnUCMPr8VHzn3+gLPL9NNHgm+pXPTN+S0EBkNcSCx54ETge3snhtZAU1nuwOQjnwEEMT6eEqo14HI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V+WYSSUg; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="htA+xgCC"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5532a30ac45so1078505e87.0;
-        Thu, 26 Jun 2025 08:10:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+WYSSUg"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32b5226e6beso9621611fa.2;
+        Thu, 26 Jun 2025 08:12:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750950634; x=1751555434; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750950755; x=1751555555; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=axf5NbpAUzrmzPpqLLrUEqqBeYpEBv2j8XoiaPjeVEQ=;
-        b=htA+xgCC5P+bdM5pRZAZunzSwqQ6LH42uACKcuIEzqOZ5HW7Ngf+WktrcD8AhpVudU
-         TTQyj8xoqOY05vSHekDT3/M0UGMQTItenJB8soADs8+cLFCDi8/fZXTXS4bIxib+a1Ux
-         /orC3o9hBGvoKPo0z6XPlzgtjRT5+Eo3lmvYd2VMYwoa+JY+oppJ3BVslR8tcvIUWl6T
-         izvVON4z9NL9O4RbN6XkLFLEhHUkYTnlz3rQbqTD+mZp0fNhK7zJQ7i8sh87K+5cxnne
-         YaynfJiTp/9yT9H+LM0CacoB7XHM+lmpTJTQ1Ys0Ude0UEhMC50+HvlKbR622eVbFUfl
-         gbHA==
+        bh=kAS/IOSk7LsBnAUgqtwuX4g9he1Zg4oVAbf4qm4DPmk=;
+        b=V+WYSSUgmywH5PkCiD0tdj0zYyT43StEKji/WblfZVRdG4okPL6vjC2kzbL2HVgCmM
+         /cA+N4YaFCexyg9ls4sOGRY2U82p68aSXV/ZZB9cz9nADX5ZKj3ovmLWIL1ZshjtoSDP
+         dkOAQiz5ZJGVbXC1gcRqg5Oj707ITUdE74Sa5OoiEVo+Lp18yN3DNv1I1hOxFT0udONg
+         OyuQ0sDLGvX69M0IVyui7n//yzBrmXxnlRykUwtYxGPr1g4OBoxQOP3uC5IuJfUeBpn/
+         avHj56WFrUITN5xZWx9gU4jCHPlnHRjc3uprgxL6Y9iY1PQYy6ZPd3A1T/GtjcCIJZfj
+         jXMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750950634; x=1751555434;
+        d=1e100.net; s=20230601; t=1750950755; x=1751555555;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=axf5NbpAUzrmzPpqLLrUEqqBeYpEBv2j8XoiaPjeVEQ=;
-        b=g4Dn6kdIVJ0ZpenuOs8qEP7I7aor30xYJf9LauFlBD6yIb5tdkHC75T2Ppe6eRn0Yy
-         pMGfLCn/jZTKbXhcJNF1wyOCXB6erjipB3l7GwMb9RZ68wpLnStNdZEmGRpuGDdBs6+w
-         fyDCmsijknbrLolcPWMWVtV3OZ+pTcdJG32oIt0aLbZEOghcAtBrO1tCRhUOa6tqyeyu
-         bVnVlTn7ySgjnN3UK9nhuh6odwc+ffFxtEHGecW3gwnGJvUuAG43FkIU0l7QYzRpz04g
-         OQWQ92Dks06n0dOj6mmVQy0kYN5KrwZjHQK0mvegWTEAUHBj7QIuSnjZORKRGUwfQDRH
-         vt6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWdc9bEfoXCF8JLe2fUtM08enXCNAXx9HLESvL3poS4Vi+Vdd4Bo53068Yvh/Q40EGT1LQvpnI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJoTHWb1o16/Iqi0JWG9GRgIPfkq/b3BsOV58mkeAD1/MOcYaG
-	UBEPQ6jL7jdp/5wTMY/S6Z4YvsM7b19Pi0QqQ/cUVpcc5w57/gfw3XaKvSLSFWwXzJ+0PWJMJ4p
-	7tYGlmCHkzKiHgC1LHXBwl0ioNtabCMY=
-X-Gm-Gg: ASbGnctCnDdhd61JN2NyT+kwDWr0gUmIjQ0IzypHnm35gmt6fCV3nOaSt8X/EYKGIdO
-	fJnlNEEv9N3myRyWby8ElgRvpszP4gf9Bi0/EKnl69cELJTl9Oy4BSSMRlExqFOdHuW/aHWu2Bt
-	V8beU3foY/SLhTkqkZSHOwLdCfKR4J107cDgx/v7fOy2PCI2onfPbR5Ala5NMMQpA9XSK3txdNH
-	bYJ1g==
-X-Google-Smtp-Source: AGHT+IG3aKdtoEX8k5XdMgWvxuQl/T0lmpkWTNORwe1brAkFFcnT7EjGtyotrt42fszQPUKuv/8ziotoOqBGlnuUj28=
-X-Received: by 2002:a05:6512:239e:b0:553:2159:8716 with SMTP id
- 2adb3069b0e04-55502caf1a4mr1616123e87.26.1750950633544; Thu, 26 Jun 2025
- 08:10:33 -0700 (PDT)
+        bh=kAS/IOSk7LsBnAUgqtwuX4g9he1Zg4oVAbf4qm4DPmk=;
+        b=ghxTc3eRTKUkPyPpSR9qcVqf51Q1+jUaedr3RX48Vu7l5Zq1pg8/XgDxZC3BrarhoK
+         ZKLdvo5CH3rz/WaOw5rZe10MCz1VOW3AsU38tAMkPT8wf/3OY5mlehCzms5VmQz3fHAB
+         NcqovT4Aa1NRVv5yzzHxi6bZKvgL9AWHu7E/WX4Wc+f5EyaTenRVZ+WZa2Z2CvoSOBBa
+         QiMK5t2N093xswcGaOCyINFlmKJOkFK7RrcHqjVDQvkWC+ilZAj1HG5yrU8c+QZDjNzr
+         IjIX4DwH2ZCsXVGhZYgBhfOCMcd0G4D68OMrh5o6hV9uDGJTMD3juZZ5oRGj1GT4prxc
+         yGVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVEbBneTYx8gkMwgmr3geYXio92pws2XkmR/82fbneNb5Jg3hDdwH7slirQdq/8T2JO4iCAbz4VGzU=@vger.kernel.org, AJvYcCVjDj4k+NCQJmV7wAm1GnQ8gqAam56s0GO1qzH/GsMFvY/RdN8kOZVWw3f6nlyiEXzHcmk82HXlXcIaliaz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1WFXPb26m/iMzkuNyJTTyVQJabPCnFXfmmpxEfnux4TqwpmLx
+	DTzOpwXLLis3s59mJyjmofN5W4I3ihstADet5rBW9fuLX3YP0SGaVHSLL88/G21hteVh1sJOJ/4
+	jjh4WMeIuv6gkzYgWSG9Ol52Bhz9uIX4=
+X-Gm-Gg: ASbGnctRyLcPWa7rh3pP2crGeVKwHNoULnvqCQXHtGarb/OOxzVzqLn+wiE3yMdvIqt
+	wSo9nAPnhj3Jhn9YkJbJNI0oQYx4R8wswoG3w01GLfC66MrZ17zUBNt/kfzytR10xy+Cfinzsg6
+	5TWHaDSYQAoZqplDiLa1TBTb+un0rvtjAkh422u5Ir+TL6IkIod2xOEln3dMnUjo8TJhCtnpsz2
+	718DA==
+X-Google-Smtp-Source: AGHT+IFDKoSkD2CJiWyVaF6kz2z7E/EJqhlSUVFS6EzXhXgn9q6Iom3W+1bxFqxhEyMbXQMlarVbh+wES6zPUtiA2VQ=
+X-Received: by 2002:a2e:8543:0:b0:32c:a006:2a36 with SMTP id
+ 38308e7fff4ca-32cc658247emr22139451fa.20.1750950754606; Thu, 26 Jun 2025
+ 08:12:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626142243.19071-1-pranav.tyagi03@gmail.com> <5baab2ed-c48d-41ae-819a-71ca195c4407@igalia.com>
-In-Reply-To: <5baab2ed-c48d-41ae-819a-71ca195c4407@igalia.com>
+References: <20250623083841.364002-1-pranav.tyagi03@gmail.com>
+ <aFrBeCn-j_AB1yzv@rric.localdomain> <CAH4c4jLAfMTn6wN3wJSOQZ3mAoYC3uhswDu6c+c6v-wv8mSifQ@mail.gmail.com>
+ <2025062615-footpath-plank-b84f@gregkh>
+In-Reply-To: <2025062615-footpath-plank-b84f@gregkh>
 From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Date: Thu, 26 Jun 2025 20:40:22 +0530
-X-Gm-Features: Ac12FXzNyUo0k5FLeYm1nQk0x2e9IyduCv2spuHDSlghF9NcaV2B_Em4IpBcyCY
-Message-ID: <CAH4c4jLqQORVWNLmNGAqevbSCnALtkfod6gTuXe-oae0izR9Bw@mail.gmail.com>
-Subject: Re: [PATCH] drm/vkms: Fix race-condition between the hrtimer and the
- atomic commit
-To: =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com, hamohammed.sa@gmail.com, 
-	daniel@ffwll.ch, airlied@linux.ie, arthurgrillo@riseup.net, 
-	mairacanal@riseup.net, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev, stable@vger.kernel.org, 
-	gregkh@linuxfoundation.org, sashal@kernel.org
+Date: Thu, 26 Jun 2025 20:42:22 +0530
+X-Gm-Features: Ac12FXwJLCSX-KjqBQhvdKlckWb8pRkvIb6E3hyGEXP7zXlxzlU_QTkv3i_OQzM
+Message-ID: <CAH4c4j+ahO6yREWAQbm3ZXykASmjyEh2dzPGE0Jhj+j71qT5vw@mail.gmail.com>
+Subject: Re: [PATCH v2] cxl/memdev: automate cleanup with __free()
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Robert Richter <rrichter@amd.com>, dave@stgolabs.net, jonathan.cameron@huawei.com, 
+	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com, 
+	ira.weiny@intel.com, dan.j.williams@intel.com, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ming.li@zohomail.com, peterz@infradead.org, 
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 8:32=E2=80=AFPM Ma=C3=ADra Canal <mcanal@igalia.com=
+On Thu, Jun 26, 2025 at 8:26=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
 > wrote:
 >
-> Hi Pranav,
+> On Thu, Jun 26, 2025 at 08:02:10PM +0530, Pranav Tyagi wrote:
+> > Thank you for the feedback. I understand your concerns and completely
+> > agree with your reasoning. Please pardon my misjudgment in sending this
+> > patch. I am still a beginner with kernel development and learning to
+> > better assess what makes a meaningful contribution.
 >
-> On 26/06/25 11:22, Pranav Tyagi wrote:
-> > From: Ma=C3=ADra Canal <mcanal@igalia.com>
-> >
-> > [ Upstream commit a0e6a017ab56936c0405fe914a793b241ed25ee0 ]
-> >
-> > Currently, it is possible for the composer to be set as enabled and the=
-n
-> > as disabled without a proper call for the vkms_vblank_simulate(). This
-> > is problematic, because the driver would skip one CRC output, causing C=
-RC
-> > tests to fail. Therefore, we need to make sure that, for each time the
-> > composer is set as enabled, a composer job is added to the queue.
-> >
-> > In order to provide this guarantee, add a mutex that will lock before
-> > the composer is set as enabled and will unlock only after the composer
-> > job is added to the queue. This way, we can have a guarantee that the
-> > driver won't skip a CRC entry.
-> >
-> > This race-condition is affecting the IGT test "writeback-check-output",
-> > making the test fail and also, leaking writeback framebuffers, as the
-> > writeback job is queued, but it is not signaled. This patch avoids both
-> > problems.
-> >
-> > [v2]:
-> >      * Create a new mutex and keep the spinlock across the atomic commi=
-t in
-> >        order to avoid interrupts that could result in deadlocks.
-> >
-> > [ Backport to 5.15: context cleanly applied with no semantic changes.
-> > Build-tested. ]
-> >
-> > Signed-off-by: Ma=C3=ADra Canal <mcanal@igalia.com>
-> > Reviewed-by: Arthur Grillo <arthurgrillo@riseup.net>
-> > Signed-off-by: Ma=C3=ADra Canal <mairacanal@riseup.net>
-> > Link: https://patchwork.freedesktop.org/patch/msgid/20230523123207.1739=
-76-1-mcanal@igalia.com
-> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+> I suggest you start in drivers/staging/ which is specifically designed
+> for beginners to get involved without having to bother other maintainers =
+:)
 >
-> This patch violates locking rules and it was reversed a while ago.
-> Please, check commit 7908632f2927 ("Revert "drm/vkms: Fix race-condition
-> between the hrtimer and the atomic commit"").
+> thanks,
 >
-> Best Regards,
-> - Ma=C3=ADra
+> greg k-h
 
-Thanks for pointing that out.
+Hi Greg,
 
-I missed the revert. I now see that commit 7908632f2927 reversed
-this due to locking issues. I=E2=80=99ll drop this backport from 5.15
-accordingly.
+Thank you for the suggestion. I=E2=80=99ll start looking into
+drivers/staging/ and focus my efforts there. I appreciate your
+patience and guidance.
 
 Regards
 Pranav Tyagi
