@@ -1,146 +1,83 @@
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793C02EA482
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FFA2EB5C8
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750948849; cv=none; b=EoDmXaeyjnU4GkGaZ15Dxj0OiLEWsc07+pnorTxSCSejVe/l1za1Hdk3yF/5R/bD+KEyJcUW5jvnnyFGU9nsD3I1hvK0W+4nV1u7B3r6mmWUlABFE28316mQkNrTBRJRPPix+v+g2yQFa9bKA17zxBgdlDew8K0YMGkhYqID3rU=
+	t=1750948856; cv=none; b=MjdWfBQldLT16MlGLu1nUc2G019fUJRXGTI3JOUOWnqBh5Jpm2Lrccd1IwQqUfz3CO6V1UcJjka5tiJlfHsC05kS5WlXAvKdMd7hb2Y0W65fc/dP/tl+VLL9ceGy+QKwxIUf9rw3S2nn/zOzGWBYK8IflTyYQbt7pXgNsNXP0iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750948849; c=relaxed/simple;
-	bh=I3Fbg4JvzGO/1YYcqzJZtepYrZGEVy3qIt1IJpuFATk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QDa2zlXoMx7Jd6IXy5MEtZYBRKJA1MkznDlawUbYei9cdPZENhlZA2+C1A1O27Y1yxQDbrJ9SwNTPjRfaxxYETR4cpM918UgVqwSxylYdYx82uQPPY/a4qUygDTDO1Lm/5GwSS+hD9YmfmnWPrPg0G7XIdX0KLeV/RT6fwVCJpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b=erFxkWeK; arc=none smtp.client-ip=67.231.153.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	s=arc-20240116; t=1750948856; c=relaxed/simple;
+	bh=We0yPi4iW1QBd5k8H/+F07RiSET+Bh91Cn/vLT2VPtU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YWegDSs52sHVBIJ7tK5AYXBv1cUM8J7B36N2/SZt+HSGEl+X9JVLVWKF+RFcuXFq9Slqx75a2bWl510LAEVO4KXLYPIDNEX+/VZ1PcuTR3yrpX0aEDy6UEQ7H91uYsLKNR47teAlPJasPpsiAnmb7Zu4lozB8KWIYLaQtFzMQh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eWv1OW82; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b="erFxkWeK"
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QCWHGN008635
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:40:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=s2048-2025-q2; bh=opt5/rfuYnmqv3Cl15
-	e1xgZx0di929Z6fUEOjQjNUOs=; b=erFxkWeKqL6itEtDwNXuQVksepo1q9q3dK
-	xFfibQn/aVrTOzB+f2qC3BsCD+jc86MhAPg8erLLXCORkHRAZpQVFz/OwYDc2u3R
-	PwJ3AFQnnxWsGb4E72EjKhQyz36yl4wZYSWHs7kw0IboBk4PqwMuEKTClGXggTl5
-	sJ8ejWJMF6MFp84eZ3DS204iibl0voTkwr6i6B5+AVJDNNMJgK2bZkNWBVBDE7Qt
-	La4QwYEcwTDg8NPPHHIQbaNBQYfdmTP0+Gz42bZVYXSrKS+b4rwlTVClO7Kl5+MI
-	zdm9mwrXS1vaKjZKW1JIwbCl7i0uFAMEtl/Pzuqb6JTZvF9fhCaQ==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 47guhnc126-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:40:46 -0700 (PDT)
-Received: from twshared26876.17.frc2.facebook.com (2620:10d:c085:208::7cb7) by
- mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1748.24; Thu, 26 Jun 2025 14:40:45 +0000
-Received: by devbig293.vll3.facebook.com (Postfix, from userid 8731)
-	id 093982CAA909; Thu, 26 Jun 2025 07:40:42 -0700 (PDT)
-From: Chris Mason <clm@fb.com>
-To: <peterz@infradead.org>, <vincent.guittot@linaro.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Chris Mason <clm@fb.com>
-Subject: [PATCH v2] sched/fair: bump sd->max_newidle_lb_cost when newidle balance fails
-Date: Thu, 26 Jun 2025 07:39:10 -0700
-Message-ID: <20250626144017.1510594-2-clm@fb.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eWv1OW82"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=+VJnhP1ZDqiXA8ePR33kMYc2RUpKx8geoz54YTdV0F4=; b=eWv1OW82poltdkQmKc2vKBM+XE
+	40mMljXvEctf1k7d2u8g0WNjn0V8jBRo8vOGidfVU9QN7w//rWpbkfgngy2EZEC2pzoIWM2Cmvy7v
+	VUwYh06u5G+c8BaYecl4NJowXKfMyKLzUJHqR4Mua76HQYf1ThIBk72quSOQbxxFlwNgBNhUosi8Z
+	EDC2INJ3lYWyeZ2Rh18kqkg5cOY7b/lYGgYu5HRyt2vrJ75smWdqHMbg+1rkJdOW+cOXxydpRMpUj
+	wWK5AvJjYa4ZDFIlLeAvTs5+nPryxSLZayHsgkE9OE4+IWoWF74pdJT3C2Ed78MWMJ8izqjSXIDG9
+	g6YPRivQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uUnmS-0000000BpXM-1GfD;
+	Thu, 26 Jun 2025 14:40:48 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 46E1430BDA9; Thu, 26 Jun 2025 16:40:47 +0200 (CEST)
+Date: Thu, 26 Jun 2025 16:40:47 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: David Kaplan <david.kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] x86/bugs: Remove 'force' options for retbleed/ITS
+Message-ID: <20250626144047.GN1613200@noisy.programming.kicks-ass.net>
+References: <20250626142703.716997-1-david.kaplan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDEyNCBTYWx0ZWRfX4ZTq9FJcH2hf 5Kf87kRKjknzq6oVrwX0AegZTQMGBRThWHTYstqPmMBu4gC+Al9HtvQVfe00+RA2sZ7WmltpQcN aNHZ7sbML1WAHO3fsfj2mfnmsCtOAGZVOU0EEUjH2pTZzmUjJsARb+NS8gEXRzPomqSXrc+Zoog
- nSpwjon4c8pZ2oCNzmkgRJa7EjZSbWdtLdei/zZxUyehBk9VHFXpcgU/r0vWMWOPJk6P0KUXNcF cVFBoskl7ypfmE4nVsRo/18XTIlNS9HmeYGcHE+wvPYo4LcluhsRAHus5aXrD0CKjpHuxg01MOy /bGnPjmKDsDCaNio0Ymxr4UKtlpFr3E5BG6laH16ErirAjUsaJ9Wgd3XRHXS/6vv6LWQN2wMqEE
- Z4xa+Yo6F7d70SgH2Jc1nLFC9B4NDvYAd9kqokwwtFSk7mE1Wc2N0m8oBX5I4kSUeY/HxnzD
-X-Authority-Analysis: v=2.4 cv=Peb/hjhd c=1 sm=1 tr=0 ts=685d5bee cx=c_pps a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17 a=6IFa9wvqVegA:10 a=NEAV23lmAAAA:8 a=FOH2dFAWAAAA:8 a=zY1a_J39g9qV8x1WtPkA:9
-X-Proofpoint-ORIG-GUID: cTnKHQlZhI8gotLPBtobX-QXp5OAU7bf
-X-Proofpoint-GUID: cTnKHQlZhI8gotLPBtobX-QXp5OAU7bf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_06,2025-06-26_04,2025-03-28_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626142703.716997-1-david.kaplan@amd.com>
 
-schbench (https://github.com/masoncl/schbench.git) is showing a
-regression from previous production kernels that bisected down to:
+On Thu, Jun 26, 2025 at 09:27:03AM -0500, David Kaplan wrote:
+> Command line options which force-enable a mitigation on an unaffected
+> processor provide arguably no security value but do create the potential
+> for problems due to the increased set of mitigation interactions.
+> 
+> For example, setting "indirect_target_selection=force" on an AMD
+> Retbleed-affected CPU (e.g., Zen2) results in a configuration where the
+> kernel reports that both ITS and Retbleed are mitigated, but Retbleed is
+> not in fact mitigated.  In this configuration, untraining of the retbleed
+> return thunk is enabled but the its_return_thunk is active, rendering the
+> untraining ineffective.
+> 
+> It is wrong for the kernel to report that a bug is mitigated when it is
+> not.  While this specific interaction could be directly fixed, the ability
+> to force-enable these bugs creates unneeded complexity, so remove it.
+> 
+> If removing these options entirely is unacceptable, perhaps for
+> compatibility reasons, another option could be to only allow forcing on the
+> affected vendor (i.e., only allow forcing ITS on Intel CPUs), which would
+> at least limit the potential interactions that need to be analyzed.
+> Tagging as RFC to prompt discussion on this point.
 
-sched/fair: Remove sysctl_sched_migration_cost condition (c5b0a7eefc)
+Testing; I use these things for testing. Makes I don't have to run on
+affected hardware, I can just force the feature on and inspect the code
+and ensures it runs.
 
-The schbench command line was:
-
-schbench -L -m 4 -M auto -t 256 -n 0 -r 0 -s 0
-
-This creates 4 message threads pinned to CPUs 0-3, and 256x4 worker
-threads spread across the rest of the CPUs.  Neither the worker threads
-or the message threads do any work, they just wake each other up and go
-back to sleep as soon as possible.
-
-The end result is the first 4 CPUs are pegged waking up those 1024
-workers, and the rest of the CPUs are constantly banging in and out of
-idle.  If I take a v6.9 Linus kernel and revert that one commit,
-performance goes from 3.4M RPS to 5.4M RPS.
-
-schedstat shows there are ~100x  more new idle balance operations, and
-profiling shows the worker threads are spending ~20% of their CPU time
-on new idle balance.  schedstats also shows that almost all of these new
-idle balance attemps are failing to find busy groups.
-
-The fix used here is to crank up the cost of the newidle balance whenever=
- it
-fails.  Since we don't want sd->max_newidle_lb_cost to grow out of
-control, this also changes update_newidle_cost() to use
-sysctl_sched_migration_cost as the upper limit on max_newidle_lb_cost.
-
-Signed-off-by: Chris Mason <clm@fb.com>
----
- kernel/sched/fair.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 7a14da5396fb2..042ab0863ccc0 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -12174,8 +12174,14 @@ static inline bool update_newidle_cost(struct sc=
-hed_domain *sd, u64 cost)
- 		/*
- 		 * Track max cost of a domain to make sure to not delay the
- 		 * next wakeup on the CPU.
-+		 *
-+		 * sched_balance_newidle() bumps the cost whenever newidle
-+		 * balance fails, and we don't want things to grow out of
-+		 * control.  Use the sysctl_sched_migration_cost as the upper
-+		 * limit, plus a litle extra to avoid off by ones.
- 		 */
--		sd->max_newidle_lb_cost =3D cost;
-+		sd->max_newidle_lb_cost =3D
-+			min(cost, sysctl_sched_migration_cost + 200);
- 		sd->last_decay_max_lb_cost =3D jiffies;
- 	} else if (time_after(jiffies, sd->last_decay_max_lb_cost + HZ)) {
- 		/*
-@@ -12867,10 +12873,17 @@ static int sched_balance_newidle(struct rq *thi=
-s_rq, struct rq_flags *rf)
-=20
- 			t1 =3D sched_clock_cpu(this_cpu);
- 			domain_cost =3D t1 - t0;
--			update_newidle_cost(sd, domain_cost);
--
- 			curr_cost +=3D domain_cost;
- 			t0 =3D t1;
-+
-+			/*
-+			 * Failing newidle means it is not effective;
-+			 * bump the cost so we end up doing less of it.
-+			 */
-+			if (!pulled_task)
-+				domain_cost =3D (3 * sd->max_newidle_lb_cost) / 2;
-+
-+			update_newidle_cost(sd, domain_cost);
- 		}
-=20
- 		/*
---=20
-2.47.1
-
+If you use force, you get to keep all pieces -- no warranties.
