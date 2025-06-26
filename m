@@ -1,48 +1,48 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F392E54AF
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E8628DF02
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750944188; cv=none; b=Q1NgbW8c5h+K9NbhFUBQrobyU/1ZvMf9jVt1JUprAV1KV0tG7ix3fGk+QOWSU5I8BDHsAsJL6FoFXMvQX7h+/MQTaq4TiCDQinrXwNbsxwyschUtQPuXypcJhWSZ6Azj6K9mBIxGAESmNPKrjPN6+o9wgtS/7tM+MS4nhvgF/3Q=
+	t=1750944188; cv=none; b=A2Y08qgG2c1VXHoxKnabaxC3YKLXVv440flMxmYXrg5wNdYxZAYARPwj/EZ4+xnHz1O6DAKz/bMLqxqM7LP7ec3cHt2E20cH18aT1JjQeFegiM7mN7DV5mqotysHwEJnTEJN8LMEiYI8El8Ly39q1XLZzhCUtgM/RUTyhrUEH/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750944188; c=relaxed/simple;
-	bh=7Y2bj4ER9YXKacIAP2XBw30W5Pr9HbBWHNoc0Lir4VY=;
+	bh=1TxYS5QvhfTlTRHri2ULUhlLp+H/1QHHdCx7jQ7oOq8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=mB3HMYvbSNHFN3xuiS5/94hlIEFdDX8JWW0zDlqnaJoPK0CPo40z2kUkE2tBYI6rd5N5IwuCcJqwbz5Z5D0Mb9dZcO+NLy9CDN4EYp0A+42U3kLDPPqA4lDgPVaAbGcbJNqHyNVzuMl88qEuB7ENxD9RrdjPRmy4BPhqv4n38Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=YDKaZGSH; arc=none smtp.client-ip=203.254.224.25
+	 Content-Type:References; b=HGsBQIHw0CoyQ1VR8O2O80rtH0VDDYXG08xScYZJVmVyIKeWPgf0eQIzA+INLQrl0POO081qTSFuXdEyASLvvQIE3o1s95up5rXqlhBkVzo4EFknw6onSDJmTrpD+B8fOdwag5W7flk9gC6eMpMMJu6PjQ6JMuAgXI2M15xa18E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=d9fipP0F; arc=none smtp.client-ip=203.254.224.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YDKaZGSH"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250626132304epoutp02a99c83c9c45b220d2bc4ffcff35075f2~MmnV1JNRO2033720337epoutp028
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:23:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250626132304epoutp02a99c83c9c45b220d2bc4ffcff35075f2~MmnV1JNRO2033720337epoutp028
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="d9fipP0F"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250626132303epoutp046eb175770dcd412294884d29ac153947~MmnVQ16xv2388223882epoutp04K
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:23:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250626132303epoutp046eb175770dcd412294884d29ac153947~MmnVQ16xv2388223882epoutp04K
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750944184;
-	bh=O4gzzQvCjicEghZFRZ7bl9raNTx0Ql0DKk+oqVx58Ts=;
+	s=mail20170921; t=1750944183;
+	bh=WwidYyhlb8xj8Tl8dra4sxOBjrQ5iJQDebbSbTXc+YQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YDKaZGSHlNtrMnSP9l6io1ycsTNQISCbSCttQ0IU6WepMke6nzsbARC4P1o+pM4nY
-	 imvSQALU8tRDTKDJoje3B5sOGtuID2McMVKZvJmMMZM38Oy8ox318zN2qxlERcb6DA
-	 muhlg8nDzKnImvf1coe2DyuTUges3HmzJZB575wU=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	b=d9fipP0FtH9exc/uWmhX10abAq4jRHPBLQJzD41LOcfCNSmDX9C2UPBN8TNgmfKqr
+	 h/cu+O6FCiSu6o12sWW2eLTiYgA4P/dLYUPAv8L5LhqFJSQmey1dXwk6RBTgYhqTvV
+	 aBYhNH/LoJCn7U7v9heu4HbwF1fwbby2Ef1XBI4E=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
 	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250626132303epcas5p44e87f11248249ad42fb03faeb78eba28~MmnVU0zoa2645726457epcas5p4B;
+	20250626132303epcas5p408d690ffa63ec0c7445430a45aa06b20~MmnUscPqi0583705837epcas5p45;
 	Thu, 26 Jun 2025 13:23:03 +0000 (GMT)
 Received: from epcpadp2new (unknown [182.195.40.142]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4bSfWW62zwz6B9m6; Thu, 26 Jun
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4bSfWW135fz3hhT3; Thu, 26 Jun
 	2025 13:23:03 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250626103847epcas5p4e08a66bb5823d3912da0a9477e0996df~MkX5wMw7-1565015650epcas5p4V;
-	Thu, 26 Jun 2025 10:38:47 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250626100219epcas5p2cb203ebffe437013766d5ef57ce6fa14~Mj4Ehz9Qa1788417884epcas5p2B;
+	Thu, 26 Jun 2025 10:02:19 +0000 (GMT)
 Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250626103844epsmtip1c4ed2997b1c8a761900877f32f6f90e5~MkX3V-dE01095110951epsmtip1I;
-	Thu, 26 Jun 2025 10:38:44 +0000 (GMT)
-Date: Thu, 26 Jun 2025 16:08:38 +0530
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250626100217epsmtip20bbef4af127abc08d30ef8d0772eda8b~Mj4B6vHHD3036430364epsmtip2H;
+	Thu, 26 Jun 2025 10:02:16 +0000 (GMT)
+Date: Thu, 26 Jun 2025 15:32:10 +0530
 From: Neeraj Kumar <s.neeraj@samsung.com>
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: dan.j.williams@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
@@ -52,108 +52,144 @@ Cc: dan.j.williams@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
 	alok.rathore@samsung.com, neeraj.kernel@gmail.com,
 	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
 	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
-Subject: Re: [RFC PATCH 15/20] cxl: Add a routine to find cxl root decoder
- on cxl bus
-Message-ID: <439928219.101750944183843.JavaMail.epsvc@epcpadp2new>
+Subject: Re: [RFC PATCH 12/20] nvdimm/namespace_label: Skip region label
+ during namespace creation
+Message-ID: <1931444790.41750944183140.JavaMail.epsvc@epcpadp2new>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250623104449.000069b3@huawei.com>
-X-CMS-MailID: 20250626103847epcas5p4e08a66bb5823d3912da0a9477e0996df
+In-Reply-To: <20250623101740.00004840@huawei.com>
+X-CMS-MailID: 20250626100219epcas5p2cb203ebffe437013766d5ef57ce6fa14
 X-Msg-Generator: CA
 Content-Type: multipart/mixed;
-	boundary="----h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_cdd2f_"
+	boundary="----ccPbqUR1b2FiTe9wDLZ4x.aheQWUm9HBntMNkAPxEtPuJZ0j=_6a20d_"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 X-CPGSPASS: Y
 X-Hop-Count: 3
-X-CMS-RootMailID: 20250617124049epcas5p1de7eeee3b5ddd12ea221ca3ebf22f6e8
+X-CMS-RootMailID: 20250617124040epcas5p3be044cbdc5b33b0b8465d84870a5b280
 References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124049epcas5p1de7eeee3b5ddd12ea221ca3ebf22f6e8@epcas5p1.samsung.com>
-	<1295226194.21750165382072.JavaMail.epsvc@epcpadp2new>
-	<20250623104449.000069b3@huawei.com>
+	<CGME20250617124040epcas5p3be044cbdc5b33b0b8465d84870a5b280@epcas5p3.samsung.com>
+	<2024918163.301750165206130.JavaMail.epsvc@epcpadp1new>
+	<20250623101740.00004840@huawei.com>
 
-------h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_cdd2f_
+------ccPbqUR1b2FiTe9wDLZ4x.aheQWUm9HBntMNkAPxEtPuJZ0j=_6a20d_
 Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Disposition: inline
 
-On 23/06/25 10:44AM, Jonathan Cameron wrote:
->On Tue, 17 Jun 2025 18:09:39 +0530
+On 23/06/25 10:17AM, Jonathan Cameron wrote:
+>On Tue, 17 Jun 2025 18:09:36 +0530
 >Neeraj Kumar <s.neeraj@samsung.com> wrote:
 >
->> Add cxl_find_root_decoder to find root decoder on cxl bus. It is used to
->> find root decoder during region creation
+>> During namespace creation skip presence of region label if present.
+>> Also preserve region label into labels list if present.
 >>
 >> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
 >> ---
->>  drivers/cxl/core/port.c | 26 ++++++++++++++++++++++++++
->>  drivers/cxl/cxl.h       |  1 +
->>  2 files changed, 27 insertions(+)
+>>  drivers/nvdimm/namespace_devs.c | 48 +++++++++++++++++++++++++++++----
+>>  1 file changed, 43 insertions(+), 5 deletions(-)
 >>
->> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index 2452f7c15b2d..94d9322b8e38 100644
->> --- a/drivers/cxl/core/port.c
->> +++ b/drivers/cxl/core/port.c
->> @@ -513,6 +513,32 @@ struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev)
->>  }
->>  EXPORT_SYMBOL_NS_GPL(to_cxl_switch_decoder, "CXL");
+>> diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+>> index b081661b7aaa..ca8f8546170c 100644
+>> --- a/drivers/nvdimm/namespace_devs.c
+>> +++ b/drivers/nvdimm/namespace_devs.c
+>> @@ -1976,6 +1976,10 @@ static struct device **scan_labels(struct nd_region *nd_region)
+>>  		if (!nd_label)
+>>  			continue;
 >>
->> +static int match_root_decoder(struct device *dev, void *data)
->> +{
->> +	return is_root_decoder(dev);
->> +}
+>> +		/* skip region labels if present */
+>> +		if (is_region_label(ndd, nd_label))
+>> +			continue;
 >> +
->> +/**
->> + * cxl_find_root_decoder() - find a cxl root decoder on cxl bus
->> + * @port: any descendant port in root-cxl-port topology
->> + */
->> +struct cxl_root_decoder *cxl_find_root_decoder(struct cxl_port *port)
->> +{
->> +	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
->> +	struct device *dev;
+>>  		/* skip labels that describe extents outside of the region */
+>>  		if (nsl_get_dpa(ndd, &nd_label->ns_label) < nd_mapping->start ||
+>>  		    nsl_get_dpa(ndd, &nd_label->ns_label) > map_end)
+>> @@ -2014,9 +2018,29 @@ static struct device **scan_labels(struct nd_region *nd_region)
+>>
+>>  	if (count == 0) {
+>>  		struct nd_namespace_pmem *nspm;
+>> +		for (i = 0; i < nd_region->ndr_mappings; i++) {
+>> +			struct nd_label_ent *le, *e;
+>> +			LIST_HEAD(list);
+>>
+>> -		/* Publish a zero-sized namespace for userspace to configure. */
+>> -		nd_mapping_free_labels(nd_mapping);
+>> +			nd_mapping = &nd_region->mapping[i];
+>> +			if (list_empty(&nd_mapping->labels))
+>> +				continue;
 >> +
->> +	if (!cxl_root)
->> +		return NULL;
+>> +			list_for_each_entry_safe(le, e, &nd_mapping->labels,
+>> +						 list) {
+>> +				struct nd_lsa_label *nd_label = le->label;
 >> +
->> +	dev = device_find_child(&cxl_root->port.dev, NULL, match_root_decoder);
+>> +				/* preserve region labels if present */
+>> +				if (is_region_label(ndd, nd_label))
+>> +					list_move_tail(&le->list, &list);
+>> +			}
 >> +
+>> +			/* Publish a zero-sized namespace for userspace
 >
->No blank line here.  Generally when we have a call then an error check
->it is easier to see how they are related if we keep them in one block.
->
-
-Thanks, Will fix it in V1
-
->> +	if (!dev)
->> +		return NULL;
->> +
->> +	return to_cxl_root_decoder(dev);
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_find_root_decoder, "CXL");
->> +
->>  static void cxl_ep_release(struct cxl_ep *ep)
->>  {
->>  	put_device(ep->ep);
->> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->> index 30c80e04cb27..2c6a782d0941 100644
->> --- a/drivers/cxl/cxl.h
->> +++ b/drivers/cxl/cxl.h
->> @@ -871,6 +871,7 @@ bool is_cxl_nvdimm_bridge(struct device *dev);
->>  int devm_cxl_add_nvdimm(struct cxl_port *parent_port, struct cxl_memdev *cxlmd);
->>  struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port *port);
->>  void cxl_region_discovery(struct cxl_port *port);
->> +struct cxl_root_decoder *cxl_find_root_decoder(struct cxl_port *port);
->>
->>  #ifdef CONFIG_CXL_REGION
->>  bool is_cxl_pmem_region(struct device *dev);
+>Comment syntax as before looks to be inconsistent with file.
 >
 
-------h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_cdd2f_
+Thanks, Will update it everywhere its inconsistent.
+
+>> +			 * to configure.
+>> +			 */
+>> +			nd_mapping_free_labels(nd_mapping);
+>> +			list_splice_init(&list, &nd_mapping->labels);
+>> +		}
+>>  		nspm = kzalloc(sizeof(*nspm), GFP_KERNEL);
+>>  		if (!nspm)
+>>  			goto err;
+>> @@ -2028,7 +2052,7 @@ static struct device **scan_labels(struct nd_region *nd_region)
+>>  	} else if (is_memory(&nd_region->dev)) {
+>>  		/* clean unselected labels */
+>>  		for (i = 0; i < nd_region->ndr_mappings; i++) {
+>> -			struct list_head *l, *e;
+>> +			struct nd_label_ent *le, *e;
+>>  			LIST_HEAD(list);
+>>  			int j;
+>>
+>> @@ -2039,10 +2063,24 @@ static struct device **scan_labels(struct nd_region *nd_region)
+>>  			}
+>>
+>>  			j = count;
+>> -			list_for_each_safe(l, e, &nd_mapping->labels) {
+>> +			list_for_each_entry_safe(le, e, &nd_mapping->labels,
+>> +						 list) {
+>> +				struct nd_lsa_label *nd_label = le->label;
+>> +
+>> +				/* preserve region labels */
+>> +				if (is_region_label(ndd, nd_label)) {
+>> +					list_move_tail(&le->list, &list);
+>> +					continue;
+>> +				}
+>> +
+>> +				/* Once preserving selected ns label done
+>Comment syntax.
+
+Sure, Will fix it up
+
+>> +				 * break out of loop
+>> +				 */
+>>  				if (!j--)
+>>  					break;
+>> -				list_move_tail(l, &list);
+>> +
+>> +				/* preserve selected ns label */
+>> +				list_move_tail(&le->list, &list);
+>>  			}
+>>  			nd_mapping_free_labels(nd_mapping);
+>>  			list_splice_init(&list, &nd_mapping->labels);
+>
+
+------ccPbqUR1b2FiTe9wDLZ4x.aheQWUm9HBntMNkAPxEtPuJZ0j=_6a20d_
 Content-Type: text/plain; charset="utf-8"
 
 
-------h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_cdd2f_--
+------ccPbqUR1b2FiTe9wDLZ4x.aheQWUm9HBntMNkAPxEtPuJZ0j=_6a20d_--
 
