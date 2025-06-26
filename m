@@ -1,125 +1,89 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03A023815D;
-	Thu, 26 Jun 2025 10:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2925823815D;
+	Thu, 26 Jun 2025 10:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750933594; cv=none; b=qECox5xJkL+Bp2a/O0fIMzdfwKkeqB66uRP4PPdYrLD9WZyYXKsFJKpa0FvqPo5RiP/7McvTJ+WnjQCT6uivwSs7uXfSYR5bRmeJQu+3kOj3aQM53YTBlmD13f5cYf1uwx7eL8VxlnTU5iAjTBOhN27JZ9IS7088sCYycxZDsSA=
+	t=1750933598; cv=none; b=WR76FVxFHR9zAA/FkAyDX3tXvtstYsIzh3vBI3NHZLeSp1THlciWD/PLeeCrz55+gH32qHGjtBgDNdiOGidCKb3pNrkhhYFGxzijGq4oz5KQk4Sv959/nAYPEoDEEIR6iCC0jRcLBx9D4uLg3xzC9D+W/vIf9nyAeVzl98U3nGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750933594; c=relaxed/simple;
-	bh=f4iGf7Q64J4LhrP3NYzSeEC4LwixPUQ+3cb4kLHOtGY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=p+IhrDNYlIt1Enmlr8Gzt4CjFAtHl1rUIwPLk//y6AG8YrfxpUwfdISooEnrgAxIj7Nn0WplFSf5suq86jrLy0v7gqI4IU0yI3K/FeunIjJQxhn/enRj5a7wdkHlgSGLU1S6M8+FdJWdXtO19zMwl0kh0ELi4e1twm/z7vUqgK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Dqr/FcpZ; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750933598; c=relaxed/simple;
+	bh=QNHkLfR6Ay7P8R1eJuPcNkSPmq37GNIrESv5YU/xMD0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VDHoGxCkoDnzF9Vn0fMCOW+BSgXE6iVonwKRQnyhnPeMliqXF+GX8m3+wYtpO3l8s18O8qVZwYzAwMZ3rXyVIKWC7VoBz7HaJyeNJqmN6wHSU61xpN5/ZdKQJMwDHSjN4qOyqGo/EKArDDXZ4GNyKqBIUzizfc3HnDfMsob7fJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVwNLxNn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Dqr/FcpZ"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55QAQKgr1717299;
-	Thu, 26 Jun 2025 05:26:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750933580;
-	bh=kRolmEIKli9p4hwGQbbTqvQScgVEcFqSWTOIe6ZE1zk=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Dqr/FcpZtcob14n36+suv1WrtLyCFM7my+SoTgaYneC/rWMNHD0nx4t74xxVlCBBG
-	 Yi4lAvl/CXg4E3v1FMPLCOJFlccduD9LdmFLkHm1td6mVCaZW9IhhPIo26z2QT6a2H
-	 h1TNPpXsYCyB+c5YjclgVOdMfaQZuzuSPjN3ckuw=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55QAQKaf1892556
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 26 Jun 2025 05:26:20 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
- Jun 2025 05:26:19 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 26 Jun 2025 05:26:19 -0500
-Received: from [172.24.31.248] (lt5cd2489kgj.dhcp.ti.com [172.24.31.248])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55QAQFXk1106020;
-	Thu, 26 Jun 2025 05:26:16 -0500
-Message-ID: <a5b61958-98fa-48a7-9499-b6e238c5945a@ti.com>
-Date: Thu, 26 Jun 2025 15:56:14 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVwNLxNn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD87CC4CEF4;
+	Thu, 26 Jun 2025 10:26:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750933597;
+	bh=QNHkLfR6Ay7P8R1eJuPcNkSPmq37GNIrESv5YU/xMD0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=QVwNLxNnhShbikBx2czV8ZnGv22dITUv4Lzzo8wqsD0qzVlRaLM76Wosqd9ttHQ0y
+	 SNreQlHOmgcpEXTYciVz4KCmSZg8GpLioEIP6hyGZpH0EuA9ERFJnC6Ipjx1+h6Faq
+	 cM2ReY9Kvy4anEtKJmVLrg5FMazHVjDFqtOdQrM4xjr0o3TwPA5w+qa30ZL/cV0+1S
+	 qgn4izM7esjgqy3vhWOll8c9fJ4JnuwMkhEBZuDLsarFQSnF6eOiV5Pqw2Ln31Woqo
+	 pkmWGRe/ffek7SAKNVRBIK8aWm1KhFeqZrjB67UIRmG3+fxQCit4l4cVNovusg4VLJ
+	 50EOU6ceCitYQ==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Date: Thu, 26 Jun 2025 12:25:53 +0200
+Subject: [PATCH v6 02/31] arm64/sysreg: Add GCIE field to ID_AA64PFR2_EL1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/7] arm64: dts: ti: k3-j721s2-common-proc-board: Add
- main_i2c4 instance
-To: Jayesh Choudhary <j-choudhary@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <devicetree@vger.kernel.org>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devarsht@ti.com>, <u-kumar1@ti.com>
-References: <20250624082619.324851-1-j-choudhary@ti.com>
- <20250624082619.324851-5-j-choudhary@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20250624082619.324851-5-j-choudhary@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Message-Id: <20250626-gicv5-host-v6-2-48e046af4642@kernel.org>
+References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+In-Reply-To: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Sascha Bischoff <sascha.bischoff@arm.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Timothy Hayes <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Peter Maydell <peter.maydell@linaro.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>
+X-Mailer: b4 0.15-dev-6f78e
 
+Add field reporting the GCIE feature to ID_AA64PFR2_EL1 sysreg.
 
-On 6/24/2025 1:56 PM, Jayesh Choudhary wrote:
-> Add dt node for main_i2c4 instance along with required pinmuxing.
-> Also add the gpio expander 'exp4' required by display connector.
->
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> ---
->   .../dts/ti/k3-j721s2-common-proc-board.dts    | 24 +++++++++++++++++++
->   1 file changed, 24 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
-> index e2fc1288ed07..793d50344fad 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
-> @@ -148,6 +148,13 @@ J721S2_IOPAD(0x060, PIN_INPUT_PULLUP, 13) /* (AC27) MCASP2_AXR1.I2C3_SDA */
->   		>;
->   	};
->   
-> +	main_i2c4_pins_default: main-i2c4-default-pins {
-> +		pinctrl-single,pins = <
-> +			J721S2_IOPAD(0x014, PIN_INPUT_PULLUP, 8) /* (AD25) I2C4_SCL */
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>
+---
+ arch/arm64/tools/sysreg | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Please check once for i2c clock, pin should be in input or output pull 
-up mode.
+diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
+index 8a8cf6874298..fb5bddc700b3 100644
+--- a/arch/arm64/tools/sysreg
++++ b/arch/arm64/tools/sysreg
+@@ -1314,7 +1314,10 @@ UnsignedEnum	19:16	UINJ
+ 	0b0000	NI
+ 	0b0001	IMP
+ EndEnum
+-Res0	15:12
++UnsignedEnum	15:12	GCIE
++	0b0000	NI
++	0b0001	IMP
++EndEnum
+ UnsignedEnum	11:8	MTEFAR
+ 	0b0000	NI
+ 	0b0001	IMP
 
+-- 
+2.48.0
 
-> +			J721S2_IOPAD(0x010, PIN_INPUT_PULLUP, 8) /* (AF28) I2C4_SDA */
-> +		>;
-> +	};
-> +
->   	main_i2c5_pins_default: main-i2c5-default-pins {
->   		pinctrl-single,pins = <
->   			J721S2_IOPAD(0x01c, PIN_INPUT, 8) /* (Y24) MCAN15_TX.I2C5_SCL */
-> @@ -370,6 +377,23 @@ exp2: gpio@22 {
->   	};
->   };
->   
-> +&main_i2c4 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&main_i2c4_pins_default>;
-> +	clock-frequency = <400000>;
-> +
-> +	exp4: gpio@20 {
-> +		compatible = "ti,tca6408";
-> +		reg = <0x20>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		gpio-line-names = "DP0_PWR_SW_EN", "DP1_PWR_SW_EN", "UB981_PDB",
-> +				  "UB981_GPIO0", "UB981_GPIO1", "UB981_GPIO2",
-> +				  "UB981_GPIO3", "PWR_SW_CNTL_DSI0#";
-> +	};
-> +};
-> +
->   &main_i2c5 {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&main_i2c5_pins_default>;
