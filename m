@@ -1,108 +1,95 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B135121A440;
-	Thu, 26 Jun 2025 22:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DEE2F1FC9;
+	Thu, 26 Jun 2025 22:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750977245; cv=none; b=OaM9Z83H8+/4z/WqhKAqNPaBHhZfFLXrIywe1KCMQMbF0Ji7G/QA5OIxvmyxIwYCwzgMnPe7AzIkXY8cr1CvV+nnowzMAxSbHCSfnJnuDZAYbmnDSN7n1/G8NnFMshOas5ZrtHAdhJWrQC6q3Bii114pZo0BO9DaBzvONgloua8=
+	t=1750977362; cv=none; b=mNXc1Uso0p8VIgkjuhjrP8F6bLqc2pLxaNVGowrLPIgVxMj3YrY1Vkl0piCr4cKVRLvhRqcrxjm1KHp0wpejGNPtJXkBDlRHnmwdMrY/jKV0zxG4sLplQrH0PfKTnx94HqBIMx2KYBnoETv2tVjPfmzkfrDo4PD4DvoX5OFYV6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750977245; c=relaxed/simple;
-	bh=Ml11YTIUf72xieq1cUkCUHiMB6pPlDArwfbYfvU7a1w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UI1OY9SGCuNO9tl4k0I989eXq4moVDs8L4h3OjdiWbbrasKWh8fI38Adyw7MulvMmsZ4cQ6fwBPbSqt+0HWWcF8u3Q64zC0tnaxSMHWx7jim3OfK2KzNPs69NveAb/Z1yg7153QqO2BMvE/Aq1Hb3iC7YgMPcNaYsvk3xAAgtOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=hA+Pb79p; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1750977362; c=relaxed/simple;
+	bh=H1rfMDwf9pZjSftI60w8pVVvv8SLrC7CTgYtTp0yft0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DcpRpYe251rG9GkziKBboD+7PpxNICuya48f71n5sGVRMzV5RRaTDQwAbSFneekCP5PEM76Yssxvu5+E0AC//kJWH+Jr+9pgTkK70lwYJIiFX4NVFI/rnsjyk9dkeCMSWMnC5yUjksnRDbBEUS5d4fZjtN+7qtyPOGxg6zaGfa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HX+eokZn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="hA+Pb79p"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a528243636so934306f8f.3;
-        Thu, 26 Jun 2025 15:34:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1750977242; x=1751582042; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WRr9Ckwsw7SMw3MOv9t/vxBNGytl36tGaFii8n1LWHA=;
-        b=hA+Pb79pIcKkLh+mbCYlZACVB9avJcfzMhKFScfEU/ix8Fa6pUYCO9BIg6NQZnbrr8
-         WoO5aw8XH0S8ML5RYx9RPwMPGVLWih4wp4Mj7SCKK64+9ScRVRDKjK9Lyhs9qgyCrHqe
-         6jheTHSQIkPxrt5ecBAQIA0omjIYZz5hhR19T2IG3xgmNDBhCFKd4gTFDpb0mT4daXLj
-         9aeq6tGeaHAdlfKxphN9Y4KnGyyQi8KUVzR20QyyEh9xIlmE1DpZcdiTK6m1CxKa8+BH
-         4Fruiu5YifNGgnOZRNqLQ9u2HP/+OCGDhkaI8RnifqX+DCqoPQg6moP5jRt0itLUAn5+
-         b6Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750977242; x=1751582042;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WRr9Ckwsw7SMw3MOv9t/vxBNGytl36tGaFii8n1LWHA=;
-        b=O+sVcWm+FuBMusZTsSGKdSuYaqlIQxEDNgicqXQCgCRnyqtgopvyYAUwcwQJcm1+TF
-         qe1aODsjwElrjKuJavezTZ0+RinsqH6pFHgJhwU2AwUVsFphr3WmAE2V6K3wg9IW7Y4S
-         +SlkNxaQb5a5jVpc/P/GSgoCprk72DFEFLoSYRBkoM9DBQPbK4xMrOB1KcI0RUHjC4hF
-         ZLwB2wJS113FNVZu8ud6968A5/+aJFKaNqMQz5QzGoVVvtFfR0U2mqsYw3R+dgtUkNmM
-         LDTlwIctyDYsPVITNdOvyv7x4GAkWZWonjaAK6VEuAzgI/BWE4AF67NtwB9h9cFLUtUB
-         aJuw==
-X-Forwarded-Encrypted: i=1; AJvYcCVQfs3RuUKtHAgdIXVr3jDUc4qs6FezuTWTmsTWcD7ZLwReIxC/9RXKnH1gWefj7dUh8B/dFR/EwqQRvwo=@vger.kernel.org, AJvYcCXe4V4ibqEYxEwGg5UqRkEHrhAJcSbUHhEGu/uRv3j/7neus1wiUjLIgWITKXb1rGwEV/aQQACT@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHHmPwFT6wA+kgamLwukme5HxgaKA02duniLaI1u8LdZ42UIOS
-	Ni//PR8oKZrLo4V25KRwUeMROTIFVL2bzx/C16eNd8QELKWJZ/kl1NQ=
-X-Gm-Gg: ASbGncvwymiArnuY1UXG/kIwFqixFOK8kJ423NU4ZSJiAIm+WzxQAmLBc3TGJM7Pz5k
-	cxZ5DnfP/MztDhnLTTgORUlVAl0SH5NImJl1sWQD5yqqwmrOjoQgMj6u1XqcIG7RFrFSrqGh9jo
-	9Rrjf/Vf7GoMxRFcZoucmQjExCMZv+0bJP3AkzxFh4Z3rdPMpdM3IBecHvwgnp2MEs9rjk8JriW
-	LgJhxTFEcXAR+UQxPuCoAzZPd6w0AVMUP4yZRB2nvUIPIbtjBpl6ilb6VsdBlVwRUjQMGjulaIT
-	BZYtw0dp2jp+aqvYeDZRpbj7Mhd4s1yv8LhfKWVkg/UWZyyMkoObsLgOo43VQrLax6nJPM3Rni3
-	AnCqlH63xoUHBqHYZ9B+k5NKK0ozYaCcnWY/j+Dvt
-X-Google-Smtp-Source: AGHT+IHE3mEWCOk2D7NMvKDWFa3ExDj855vpBsW8qfc7kytidjqXCeSA1XBf8xHQ9zw2M4DUiOWsUg==
-X-Received: by 2002:a5d:64e3:0:b0:3a8:6260:142c with SMTP id ffacd0b85a97d-3a90bba866cmr1146249f8f.59.1750977241795;
-        Thu, 26 Jun 2025 15:34:01 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2ac2b0.dip0.t-ipconnect.de. [91.42.194.176])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fb20esm1026644f8f.36.2025.06.26.15.34.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 15:34:01 -0700 (PDT)
-Message-ID: <0614617f-be49-4771-8bd1-1b227e6d11df@googlemail.com>
-Date: Fri, 27 Jun 2025 00:33:59 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HX+eokZn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18F2AC4CEEB;
+	Thu, 26 Jun 2025 22:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750977361;
+	bh=H1rfMDwf9pZjSftI60w8pVVvv8SLrC7CTgYtTp0yft0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HX+eokZntsqP0VcgXZBS6TfN95r9PfAMWyWcXOlK4FzVTWb1kA7RPcqgEEjUvksDu
+	 00wyRrqXFqmZiLXjlsxT7hrDX5ZTERnVHUflQnzA01fO9ntKlTgLurEFxS3GuY1nLY
+	 qgh5TjReihiDJOf3TteVgZnjtf/ah4LbmAoJGTZMmyG3bSlo1Z+prZomTUfwnaX2PV
+	 bXhYGMuBVnnLAW/BPBhyi/AaW4cpGhDNvHfv2gEtoJ72JQ+CF4ZTZwRv7vEBB+YqO8
+	 EFfmNrXRXs0ZjUVlmu9Npol1zjZsMdAS+OiuIWIFmhT4yISqaVasAQGwK9VPG+a5AC
+	 OsKagqRrjko5w==
+Date: Fri, 27 Jun 2025 01:35:57 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+	Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	"open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH v2] tpm: Cleanup class for tpm_buf
+Message-ID: <aF3LTXgI2uV6k2js@kernel.org>
+References: <20250626101935.1007898-1-jarkko@kernel.org>
+ <6a70dbdba3cef9f7ec580ce0147b1c89feb28074.camel@HansenPartnership.com>
+ <aF2NNHilFfZwBoxA@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.15 000/589] 6.15.4-rc3 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250626105243.160967269@linuxfoundation.org>
-Content-Language: de-DE
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250626105243.160967269@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aF2NNHilFfZwBoxA@kernel.org>
 
-Am 26.06.2025 um 12:55 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.15.4 release.
-> There are 589 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, Jun 26, 2025 at 09:11:05PM +0300, Jarkko Sakkinen wrote:
+> On Thu, Jun 26, 2025 at 10:50:22AM -0400, James Bottomley wrote:
+> > On Thu, 2025-06-26 at 13:19 +0300, Jarkko Sakkinen wrote:
+> > > From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+> > > 
+> > > Create a cleanup class for struct tpm_buf using DEFINE_CLASS(), which
+> > > will guarantee that the heap allocated memory will be freed
+> > > automatically for the transient instances of this structure, when
+> > > they go out of scope.
+> > > 
+> > > Wrap this all into help macro CLASS_TPM_BUF().
+> > > 
+> > > A TPM buffer can now be declared trivially:
+> > > 
+> > > ††† CLASS_TPM_BUF(buf, buf_size);
+> > 
+> > Well, that's not all ... you're also adding a size to the API that we
+> > didn't have before, which should at least be documented in the commit
+> > message and probably be a separate patch.
+> > 
+> > What is the reason for this, though?  The reason we currently use a
+> > page is that it's easy for the OS to manage (no slab fragmentation
+> > issues).  The TCG reference platform defines this to be just under 4k
+> > (actually 4096-0x80) precisely because TPM implementations don't do
+> > scatter gather, so they don't want it going over an ARM page, so
+> > there's no danger of us ever needing more than a page.
+> 
+> Thanks for the valuable feedback.
+> 
+> I can drop "buf_size" parameter. It is not a priority, and I also
+> agree with your comments.
 
-rc3 builds, boots and works fine on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No 
-dmesg oddities or regressions found.
+I also noticed that I had changed one log message in tpm2-sessions.c. It
+was unintended i.e. a spurious change. I'll revert that one too.
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+I'll split this into more reasonable portions for next version so these
+should be easier to review then.
 
-
-Beste Gr√º√üe,
-Peter Schneider
-
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
-
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+BR, Jarkko
