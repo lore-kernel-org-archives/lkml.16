@@ -1,67 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C782EAB7F;
-	Thu, 26 Jun 2025 14:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03111C84D6
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750948531; cv=none; b=rBUSf0FIqWazedSg87dw4dCOOy5ZsQeR+tqnyVJawmD3I9edAudLmILYHUxnks2V6jCOvjezZicCGY9h35+5oKEHrVmiKb/sFXEzCY1gbOd0udVL0GuSrTJ5Knx48VbX7an3PC8l641uxuulXDCxdsOynSYcIObtj6RVRvaBB+0=
+	t=1750948569; cv=none; b=Td5XwNcTLHKmVNMnuVatnoHT4LmS31QKICEPqj055QH6P2B3fmja1gTfBbJ+YtplHePfDgWMq3hfVGycEqsFQUyRLoTMidot9975adVnGljcHyMWB5ldf5oWVQja0hy3W3Hi/fwxGUuTk9Lk4+K+5e/1WHQbQ4GgZ9O0d5CkU1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750948531; c=relaxed/simple;
-	bh=u6Cb7btngty8OfoJXcvr5JbIB2Gkz2Muobtwau7/iPA=;
+	s=arc-20240116; t=1750948569; c=relaxed/simple;
+	bh=yD+jwp3XvOuIN+FbHxjIKxsde2qvmEkhMOFeyRmm4vo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n8SCSgl3EGOreVI5gekZbhS0CGRM8iHqR9BBJx3PoiTdgPuxOppRmtViSotwfO8koYQ3HXCD2BcSjUu5KzdCIExa6XX11cJ1g6xroGXu0cb9wkMT1XqggnMobZhBMYt18eOLU5r3Ajv8JkRCUv6RE+FRjnhZP0azf+6ccNt3uDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FWw6tdhY; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mmaE8/XqfwRBInao6Fy4d6NDa/u6ip8w824IZhsPEtAfhJM8DcBMCtZiWKDt6iREVroZrj7YDsMlZhg9NwT+l1wzX665CzGIS57fNziS0BZllTM0onhP0ejlKIRCaS8TQajRm+ZQfxXxO6Q6IoqliH7OlSLRsgshC7wKNS1h5uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FXaCLjI+; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FWw6tdhY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750948530; x=1782484530;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=u6Cb7btngty8OfoJXcvr5JbIB2Gkz2Muobtwau7/iPA=;
-  b=FWw6tdhYrNKGNUsmaan9435+8xPpcmQmAeFHc2kiUgMUKoHys6CqDaIG
-   4jEhmp5AEthusM+oTmwIaXUxChulg8r+MtLRxMzjqAr8mbBTo4SDQiJAa
-   2mHTUVfHS0vIXoGbR8kVG0o49caiPzQjlU6Cq+DoOk3Tgln0BIfxuljbj
-   I3mHswkxM1QT6elHyOjWpMAaoYScTqX92GdbIa6CEp+LfO+qRoF5mzZGm
-   2QCXniAfsl1Mjnx+TrNZ2K++e7KlBTcUu8K9qcRmX6mO6eOrTjKDFiDlx
-   VYIikUzBDc4mLX+i1Eo/ISfg7d8hbTElrhj33+c6L6diYPPvE8m+rqXQG
-   w==;
-X-CSE-ConnectionGUID: QmKYcQffRXy52f8mNnC5GA==
-X-CSE-MsgGUID: JG1aHA0ARf+ZgDxVPiJCEQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="70677000"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="70677000"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 07:35:16 -0700
-X-CSE-ConnectionGUID: lR/QX+sGR6Ovj9wQXhkGkA==
-X-CSE-MsgGUID: EcVsQynBTta7FfyFaRSPIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="152830571"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 07:35:13 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uUnh0-0000000ACXp-32dy;
-	Thu, 26 Jun 2025 17:35:10 +0300
-Date: Thu, 26 Jun 2025 17:35:10 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
-	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v3 0/4] Fix soc-button-array debounce
-Message-ID: <aF1anq07UAkHCfPO@smile.fi.intel.com>
-References: <20250625215813.3477840-1-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FXaCLjI+"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2360ff7ac1bso9277855ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:36:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750948566; x=1751553366; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cwfCb3HStzLYNemG0jhj9xtMv8KEqGsstQp467/a7+Q=;
+        b=FXaCLjI+oEOSPPDoiDuKPCrjIXfzGsUgYBcNY6Lfkboanek2aaGumUDVtULfGFcnA+
+         VWJD6uykdsglJXrvOO7s0ijzdKjg+bo3q7MldZjkjFyF7FaCgGEthrF+KMeaQ5mzE4kA
+         Jy9MxR42vj6IB86HFmRUlKNs4HKRITYPXQfSM04pwCJ3OglS7QqqcmsXfgm88C6Vb3M0
+         XgEV/ELbizq30ywqcPNTLSnQ3BsyrBPoNzlf0vZGfJZDGvyviNxnJMVpDGDGxveEx2G0
+         YQedV3fdoTW3JmQn9XdsX2DROgUqfad8VMaQq9eK4lDy7gWEEJZrNGhAl+PYY8KeOPB+
+         oYEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750948566; x=1751553366;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cwfCb3HStzLYNemG0jhj9xtMv8KEqGsstQp467/a7+Q=;
+        b=YWaTwVbmEK4kpjxhmMTVuBEsWynRMlgyWwesZB+ncuzOrlwmQLyPLDLH9JPe2fJICz
+         5XthED0Ib+vOUZH3rGbh4HG4LlEtuFWGPNzIQt+qugohb5b3NeHkrgx+4prTRVzJr3CJ
+         VskilYR16cRg9CG+OAI1T6FeU08NrXOtqvWGj6zsqBd878HI+5VkU7A6G9yynrIzVSbh
+         mLI6YxcsgDzOIAV1FZv2QeoWEv/jGkEEIDTHkICo7QWW0tjXwnqKKDeIa/oYGcYlwASK
+         VkSRExc92TyMdOXqmH9EDAQZNmYAmQ+Zeic8ze2TddimfgsiTPtBPiQLnT1qUd2/kbuV
+         kQ2g==
+X-Forwarded-Encrypted: i=1; AJvYcCXhoH/QXwYVPKXqvELv1KYoE+/QvmnOUmDKznOF1Tt2er1dBj6wytbinuyDIPAdMcFvGqcaaeLw3wb89Rc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT/d/kL1hrRp4tyEnG9Kc1ZyFO/GwPAMLCHa81gkhHCZC6w1V3
+	dyrORHHjEibdYwY5lIt73zY2LS6qdkIkIgEPaWJTOujka3aAbu5UQKyG
+X-Gm-Gg: ASbGncuiLT6NA3BU23/VvI8M2ku+aupTRvpBjnLFioJ1cvqijK1AQC4fAfCkZXtNvYC
+	ijpV62GbbGI2ySAptt5G1LxAOck+ylhTewVt4hB64J0YRZi8kmXbzldBPNGBARYu0v4PGB1fK55
+	HIppAcIiuabSSaPapnOyIU7Sf0PTofHi3u4Aspc4WMxUPR9mbQSvQJPg5c6AjCJm8kzJ5KzPRkN
+	JIqy0eVRfFxVpSSGTCyhMGdDW4E6H+BgLRrHCqMqbmmrddY2IxC6UuOXV12J/k0KDMkgkrgmD1/
+	88SWe3CvSpPwucwW19fXurkLK2gvf7c6C1YICYXaAB+5e7E5D5vv3eYv324P1w==
+X-Google-Smtp-Source: AGHT+IEVyDPp9k80VDuUCrLNKQmlEtSXfoludbY3B58xoY26SFn1xly7MqN+BYr/f4jui/IQUVyb7A==
+X-Received: by 2002:a17:902:d584:b0:236:7333:f183 with SMTP id d9443c01a7336-238c8741569mr50043525ad.19.1750948565864;
+        Thu, 26 Jun 2025 07:36:05 -0700 (PDT)
+Received: from localhost ([216.228.127.131])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23abe329bf2sm38555ad.64.2025.06.26.07.36.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 07:36:05 -0700 (PDT)
+Date: Thu, 26 Jun 2025 10:36:03 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Cheng Yu <serein.chengyu@huawei.com>
+Cc: linux@rasmusvillemoes.dk, akpm@linux-foundation.org, travis@sgi.com,
+	linux-kernel@vger.kernel.org, zhangqiao22@huawei.com,
+	tanghui20@huawei.com, chenweilong@huawei.com,
+	judy.chenhui@huawei.com, chenjun102@huawei.com
+Subject: Re: [PATCH] bitmap-str: Limit the size of ulen in
+ bitmap_parselist_user()
+Message-ID: <aF1a0w2scIR8zRnQ@yury>
+References: <20250626121903.3086789-1-serein.chengyu@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,35 +75,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250625215813.3477840-1-superm1@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20250626121903.3086789-1-serein.chengyu@huawei.com>
 
-On Wed, Jun 25, 2025 at 04:58:09PM -0500, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> I have some hardware in front of me that uses the soc-button-array
-> driver but the power button doesn't work.
-> 
-> Digging into it, it's because the ASL prescribes a debounce of 0 for
-> the power button, but the soc-button-array driver hardcodes 50ms.
-> 
-> Hardcoding it to what the ASL expects the power button works.
-> 
-> I looked at the callpath into the GPIO core and I believe it's
-> because the debounce value from _CRS is never programmed to the
-> hardware the way that the GPIO gets setup.
-> 
-> This series add that programming path and then sets the hardcoded
-> value on on some quirked systems.  Hopefully Hans can confirm this
-> continues to work on the hardware that he originally developed the
-> hardcoding for.
+On Thu, Jun 26, 2025 at 08:19:03PM +0800, Cheng Yu wrote:
+> Wu randomly sets the smp_affinity_list of the specified irq through a
 
-There is no a note about routing the patch in upstream. My proposal to take
-GPIO ACPI library patch and provide and immutable tag for others.
+Is this Wu a type of fuzzer, or a person? We don't put persons names
+in commit messages, other than in tags section.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> code on the linux-5.10.y kernel:
+>     ================================
+>     ...
+>     memcpy((void*)0x20000080, "/proc/irq/18/smp_affinity_list", 30);
+>     res = syscall(__NR_openat, /*fd=*/0xffffffffffffff9cul,
+>                   /*file=*/0x20000080ul, /*flags=*/1ul, /*mode=*/0ul);
+>     r[0] = res;
+>     ...
+>     syscall(__NR_write, /*fd=*/r[0], /*arg=*/0x20002100ul,
+>             /*len=*/0xfffffdfeul);
+>     ...
+>     ================================
+> 
+> Warning will be triggered and the call trace is as follows:
 
+So, can you show the warning itself?
 
+> [   69.732366] Call Trace:
+> [   69.732373]  ? show_trace_log_lvl+0x1c1/0x2d9
+> [   69.732374]  ? show_trace_log_lvl+0x1c1/0x2d9
+> [   69.732379]  ? kmalloc_order+0x28/0xf0
+> [   69.732389]  ? __alloc_pages_nodemask+0x287/0x300
+> [   69.732393]  ? __warn+0x80/0x100
+> [   69.732394]  ? __alloc_pages_nodemask+0x287/0x300
+> [   69.732397]  ? report_bug+0x9e/0xc0
+> [   69.732400]  ? handle_bug+0x41/0x90
+> [   69.732402]  ? exc_invalid_op+0x14/0x70
+> [   69.732403]  ? asm_exc_invalid_op+0x12/0x20
+> [   69.732405]  ? __alloc_pages_nodemask+0x287/0x300
+> [   69.732407]  ? bitmap_parselist+0x120/0x120
+> [   69.732409]  kmalloc_order+0x28/0xf0
+> [   69.732410]  kmalloc_order_trace+0x19/0x90
+> [   69.732414]  memdup_user_nul+0x22/0xa0
+> [   69.732415]  bitmap_parselist_user+0x35/0x80
+> [   69.732419]  write_irq_affinity.constprop.0.isra.0+0xb9/0x110
+> [   69.732422]  proc_reg_write+0x4e/0x90
+> [   69.732425]  vfs_write+0xbf/0x290
+> [   69.732426]  ksys_write+0x5f/0xe0
+> [   69.732428]  do_syscall_64+0x30/0x40
+> [   69.732430]  entry_SYSCALL_64_after_hwframe+0x67/0xd1
+> 
+> It is due to the lack of a check for the maximum value of ulen in
+> bitmap_parselist_user().
+> 
+> Fixes: 4b060420a596 ("bitmap, irq: add smp_affinity_list interface to /proc/irq")
+> Signed-off-by: Cheng Yu <serein.chengyu@huawei.com>
+> Signed-off-by: Wu Guanghao <wuguanghao3@huawei.com>
+> ---
+>  lib/bitmap-str.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/lib/bitmap-str.c b/lib/bitmap-str.c
+> index be745209507a..0b5d9ffe20c6 100644
+> --- a/lib/bitmap-str.c
+> +++ b/lib/bitmap-str.c
+> @@ -419,6 +419,9 @@ int bitmap_parselist_user(const char __user *ubuf,
+>  	char *buf;
+>  	int ret;
+>  
+> +	if (ulen > PAGE_SIZE)
+> +		return -ENOMEM;
+
+This is wrong. A valid cpulist can easily overflow the PAGE_SIZE
+limit, see the CPULIST_FILE_MAX_BYTES() macro.
+
+From general perspective, passing huge cpulists is not restricted now,
+and what you're proposing here is the change of UAPI. I generally
+agree that kernel should reject sizes like '(unsigned)-EINVAL', but the
+change should be broadly discussed and documented.
+
+Currently we don't reject huge sizes because users' scrips may
+concatenate cpulists from different sources, and we theoretically may
+end up with something like [0-1,3-4] x 1000 times, and it's a valid
+pattern.
+
+>  	buf = memdup_user_nul(ubuf, ulen);
+>  	if (IS_ERR(buf))
+>  		return PTR_ERR(buf);
+> -- 
+> 2.25.1
