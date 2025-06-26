@@ -1,55 +1,65 @@
-Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EB525C70D;
-	Thu, 26 Jun 2025 08:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2DA25A34F;
+	Thu, 26 Jun 2025 08:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750925561; cv=none; b=KrGgTLKlx2ynKB7qfbt0VBsOpqDtVy7ClXK+W+bdjUhf7WNbftdhKLCLVuq4wTmt2rVgyw6d2R36btvF3fjQnP7Lw0MECAo87fByGyYaxpToVXqQfF9Z/pXGUTa+7WvebNIdQ3Y9X40mmUt0nA2KTIY602vgFO2kNG6HSzXnifs=
+	t=1750925608; cv=none; b=Eg4Qntkac0wdvJiStsRc62/3+x9yvnJ5LfkgVXexkC7bJyudktz2YXq89cMQQkfoNcQggAabXhPsW1WSdjkJ9npk3Ml2KJjxKz/OKkjEITZtfFhu9w8Uy1JZh+Su4yWoDuv+3lzehXjhh35XYLBKxDVZt4qx2INDqde00eaS+zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750925561; c=relaxed/simple;
-	bh=VFiodgVBU+frCM31/xTGFTIbf1DYWZz32/4rKCb6CNM=;
+	s=arc-20240116; t=1750925608; c=relaxed/simple;
+	bh=v9oPQ++3T/oLHadwElBOCj5ha5V/O+Y96e7j6LLicng=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J4Fz3EacIBFKTxTyiz1rdnYAjDhepsw5ZRf73q6Lm3TcbwOE6hEoy6JySeSeGG62mHwVMgrYFMzUIjToVS/ssAvZA223IBtjUtldgum2xZdi6WogpFeAl9HU3XJr5wkEk05VNA/a5GDdCeTsaZeE4rIfcGJhFBpXIVG7I1tNNjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
-Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
-	by leonov.paulk.fr (Postfix) with ESMTPS id C37B21F0004B;
-	Thu, 26 Jun 2025 08:12:37 +0000 (UTC)
-Received: by laika.paulk.fr (Postfix, from userid 65534)
-	id 2B22DAC7F8A; Thu, 26 Jun 2025 08:12:37 +0000 (UTC)
-X-Spam-Level: *
-Received: from localhost.localdomain (unknown [192.168.1.65])
-	by laika.paulk.fr (Postfix) with ESMTP id 89D1EAC7F7A;
-	Thu, 26 Jun 2025 08:09:40 +0000 (UTC)
-From: Paul Kocialkowski <paulk@sys-base.io>
-To: netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
+	 MIME-Version; b=hrVy35HglUZHIZaku9fcThUyJSpHppKzVhbvd9wSwxa4nbgp6i9rsUlu8D39aLXHFvzS76Gfh+xBYjSmJYIeSyKGPXxx/7zKwwUddIfZJ8mBdMVj3VqKLSP+VqBCVj0w6PlelQ2nAOX8F0jBazx057HKLv7+eCoNef1ZvEKK8HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R2hlSv+9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R2hlSv+9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5827C4CEEB;
+	Thu, 26 Jun 2025 08:13:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750925607;
+	bh=v9oPQ++3T/oLHadwElBOCj5ha5V/O+Y96e7j6LLicng=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=R2hlSv+9dfCQPGwlVxYCIGjwbTFcgQ4z6XmcsZ2JPk1WWS5vfPluEOXC6sdTLIh99
+	 4frwL4/xpy0tnsMg8E1IwIpCS+rbSEU8NZgf/2b+6P0EXNgSTwf8fPAN9PzqGdFrjn
+	 CpxaRE1S/CeCrmtJaARNn/cTscPEv1NHuPIyEyIqNlDdzzTdw7BWIwg0sX0ws1473K
+	 jCmR7agEV2tQ8dbd09laT4eOZJmWamYODwqSV7sOlVeXF89H3xpS3RUlVK82Tm0nzR
+	 C1/0t54wyMRUIEuIa/1K5r+m4JDCrDjT03l0hUtZMF5Dx+6F0eFk9O1+xuPsJ1Pnrz
+	 rOlWWQfBXoeOg==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1uUhjT-00000004swE-2Qwb;
+	Thu, 26 Jun 2025 10:13:19 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	"Akira Yokosawa" <akiyks@gmail.com>,
+	"Breno Leitao" <leitao@debian.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	"Donald Hunter" <donald.hunter@gmail.com>,
+	"Eric Dumazet" <edumazet@google.com>,
+	"Ignacio Encinas Rubio" <ignacio@iencinas.com>,
+	"Jan Stancek" <jstancek@redhat.com>,
+	"Marco Elver" <elver@google.com>,
+	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+	"Paolo Abeni" <pabeni@redhat.com>,
+	"Randy Dunlap" <rdunlap@infradead.org>,
+	"Ruben Wauters" <rubenru09@aol.com>,
+	"Shuah Khan" <skhan@linuxfoundation.org>,
+	joel@joelfernandes.org,
+	linux-kernel-mentees@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Paul Kocialkowski <paulk@sys-base.io>
-Subject: [PATCH 2/5] arm64: dts: allwinner: a100: Add pin definitions for RGMII/RMII
-Date: Thu, 26 Jun 2025 10:09:20 +0200
-Message-ID: <20250626080923.632789-3-paulk@sys-base.io>
+	lkmm@lists.linux.dev,
+	netdev@vger.kernel.org,
+	peterz@infradead.org,
+	stern@rowland.harvard.edu
+Subject: [PATCH v8 13/13] docs: parser_yaml.py: fix backward compatibility with old docutils
+Date: Thu, 26 Jun 2025 10:13:09 +0200
+Message-ID: <d00a73776167e486a1804cf87746fa342294c943.1750925410.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250626080923.632789-1-paulk@sys-base.io>
-References: <20250626080923.632789-1-paulk@sys-base.io>
+In-Reply-To: <cover.1750925410.git.mchehab+huawei@kernel.org>
+References: <cover.1750925410.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,41 +67,33 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The Allwinner A100/A133 supports both RGMII and RMII for its Ethernet
-MAC (EMAC) controller. Add corresponding pin definitions.
+As reported by Akira, older docutils versions are not compatible
+with the way some Sphinx versions send tab_width. Add a code to
+address it.
 
-Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
+Closes: https://lore.kernel.org/linux-doc/598b2cb7-2fd7-4388-96ba-2ddf0ab55d2a@gmail.com/
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ Documentation/sphinx/parser_yaml.py | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
-index bd366389b238..1c4e71b32911 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
-@@ -236,6 +236,21 @@ mmc2_pins: mmc2-pins {
- 				bias-pull-up;
- 			};
+diff --git a/Documentation/sphinx/parser_yaml.py b/Documentation/sphinx/parser_yaml.py
+index 8288e2ff7c7c..1602b31f448e 100755
+--- a/Documentation/sphinx/parser_yaml.py
++++ b/Documentation/sphinx/parser_yaml.py
+@@ -77,6 +77,10 @@ class YamlParser(Parser):
  
-+			rgmii_pins: rgmii-pins {
-+				pins = "PH0", "PH1", "PH2", "PH3", "PH4",
-+				       "PH5", "PH6", "PH7", "PH9", "PH10",
-+				       "PH14", "PH15", "PH16", "PH17", "PH18";
-+				function = "emac";
-+				drive-strength = <40>;
-+			};
+                 result.append(line, document.current_source, lineoffset)
+ 
++            # Fix backward compatibility with docutils < 0.17.1
++            if "tab_width" not in vars(document.settings):
++                document.settings.tab_width = 8
 +
-+			rmii_pins: rmii-pins {
-+				pins = "PH0", "PH1", "PH2", "PH3", "PH4",
-+				       "PH5", "PH6", "PH7", "PH9", "PH10";
-+				function = "emac";
-+				drive-strength = <40>;
-+			};
-+
- 			uart0_pb_pins: uart0-pb-pins {
- 				pins = "PB9", "PB10";
- 				function = "uart0";
+             rst_parser = RSTParser()
+             rst_parser.parse('\n'.join(result), document)
+ 
 -- 
 2.49.0
 
