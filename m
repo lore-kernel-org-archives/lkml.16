@@ -1,290 +1,265 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94940442C
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBC21DF980
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750974385; cv=none; b=EFF940nBXIvFnd2W6J3WVdYuuIaAWcmyL9D7x0xu76cf3Ra6RUSZEfWzfG8Y4ueNkkstP6leIkrjvxv3yv2CMbZWkErg/Vjqq8recwz7yLuOXQbjgnuZIy/TPQeSvM6fAYCb+SpHaX4grla1F+oWTe4e7Z8+YxWtcTmbB90JUTQ=
+	t=1750974399; cv=none; b=Q/CLXm50tevQ4Q8AEF3Xm8/mIsBew/DyDW7Wulh4MANHvZGZXwE62AOdPnC2iVLeMFLhe2gsdNINzVQ+ZsvoNY7FtEkiFdC8M/VOMkITFsgQpG1mDY6v/V6M8AuSG+Ypc1J4purlV2Vbn1M1JAcAz2YDN6qNCC4TrzEgHtiKYGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750974385; c=relaxed/simple;
-	bh=SYggdW+Oj1ASw8OMt8WlVOU6zmWERR6Z4LKYAmO8i3s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rm7yYgT39XiWrieQUF6OeL92eOKyHSOx0QFALpSrKXosuVhmNFl5ApjIrU/80HGnEQunB/CdGsqR1zKwkzOLTqRAKCXe8NlpFkd45isiL2xMLvgrzVzsSLRUxMhFpwhPhKog9vNvQ8CM5DThH7OgrzImfN6HwyKw51v4aA1BWlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mKc/7BBI; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750974399; c=relaxed/simple;
+	bh=KW9Lfg+lbmjekAkAI4oT3QKKFoRIwb8Y49FbuyPcryI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=brcw+GzlBTrj+nvK7EY39wfjyx1sxqjQwHiEQtJF8GbCmsFu1YRuq52z51pKfHuGQ0KZZJ+otBVH0AfmveyDPFugNFqDVsK9sHbFdnHuECGHdVKiYnmU6rkZrKPdpfKc6jCqFtNUPC3K+3tVaO0HqM7R6luZWLkRnnstRcimGfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EVmskrAD; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKc/7BBI"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-453643020bdso13346745e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:46:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750974382; x=1751579182; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h9dFcHJ5wVOHpS+CSaHTpOD6sWwHW0LqFeFqBoQDNw0=;
-        b=mKc/7BBIzhBhuf5AP/9f/vUYXEZ9saF5bZvnWA+7gRtfgQH6i2PeTITuTxWxRYg/8F
-         LaqQUgZ8FZTlsvpwUxJ4+/zXn0wmUJZEBBAc0C/Xck8OfV2W9e9A2lZNwt2r437DHvgM
-         uNWyaHOYCQ+KNDSSVdIX4rYz7kwv/O2/tSpZCL5/j4X1PMiFt4eLNrY/PloMNiXpm4BB
-         3O0pgrpyirCD+UE3IxuD0SKgPWckCEkEdxsSctLTHUpLy8OmUD65Sw9jBdAmglEZjTAu
-         j20hDG1VI8x/QdzC3935wEZHG6nb5HpDup+p1bRQMmcTEg1WItXJEXAewKg0FaQJPKxB
-         c9EA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EVmskrAD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750974396;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QEIwcAh//bLSFr11N6r80UvFKVQIKaGAn37cyVp7eJA=;
+	b=EVmskrADvXwp3dsj3W0mpZzI4qi1iH0vunjrPTUautYBu8rr9Y6GODR2TbMEPFFzc3peWB
+	4qZ/vRQTuXfjHk3oz1kx/TOMYOjLEv2LmffnFcg3eCNNjUMav6VoZ8cSfTAWxW/SLWi/Ug
+	N7YYRySlj9PFcrmiRoxwfdl7S67fGzs=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-43-fGpD0pHlNRyPZz8Chtmq5g-1; Thu, 26 Jun 2025 17:46:34 -0400
+X-MC-Unique: fGpD0pHlNRyPZz8Chtmq5g-1
+X-Mimecast-MFC-AGG-ID: fGpD0pHlNRyPZz8Chtmq5g_1750974393
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-32b4a06b775so9352171fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:46:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750974382; x=1751579182;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750974393; x=1751579193;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h9dFcHJ5wVOHpS+CSaHTpOD6sWwHW0LqFeFqBoQDNw0=;
-        b=ujM/sG/4pXn3Jxv8QtwBMkuYddf9VhLfS51EblRxBF8KUAzl9/m85xF3mo+XOSqAf2
-         s89GiOWyLmhWf59jdbbAjNZBCM8WkETFupY6xAyT6hKgHYwSanxPX7zC8Vlry446XzMb
-         a71uqaR+TEyPdqmLdzwUZ/ktn/OoiwZHsq6MZpf/zI+P604Itgu2Fhdbimb3VhfAzPck
-         D/XrkCAQ4KckwSF9hCTGxl21CRvqlUKp3n+GMG/NyM8TR2cr3Nf9+ZzBzdcmqhGE3yZf
-         OtH0aEyDNxnWzeeCI7nO7tN6p7XwtF+0uI0qTp8BJYaRMIF2Jl2r2v1UKg2GVBXIjHV9
-         lzDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUDN8ejKjQLjl0/Rs7kUoF3zclY9jSGlyrrw1zUYujMq1QJg7AglXIEUTiEXgSo89aCeziHj/pQUQkEKo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxHjFrvH5bV+WXpxt5WmW11mAIlTCwo0kyNIQJ0tc94aSNWNQv
-	hF/hZXaEi9xnM8aTF+lv8PVIUKsNAkNjFFOUwmn/wlmYKGF8/xoFw6cV
-X-Gm-Gg: ASbGncsNHYHcihWShFOZOzRi1Ii4IXPk9QeoZPjaGwXQFkH+JkHXRe3PeQvWopHefyL
-	CNYFOadCRj6gjzhZvXFjCIAcx2F7oLESMzDVGPDzF/ZTEqjIgtd5dxfHi/0j55ycJ07PpXSXGUF
-	h+tVlvzj1tZyh6wPQQtXrtHMdI2CU/oP4uEgC45TEELNhOVdosOEKbv//i4F/jjBg5Pzcz3z35K
-	PLU5QgXEiMTYvk86UelOo/oswELuGD1YfaYl1c8ACB1jLhGX51h1prJkCDKeXPdy0u6+KSzdRAn
-	C6YPv2pyB47KMBdKc9a2y1xHdwPXSyQ9WluDrLBQjowbcVIKuPcm/+kgYb/HH/O2+C87VBbYxsH
-	c4vycvZr5aP3B6sDowhOJL/nX
-X-Google-Smtp-Source: AGHT+IGe4T0Kx3hD0mK8w2ivDGt+iTBk6RfAevX2l36+jyTqG3oeBQK3Hzfaa1JxC7CKI/iWUWyjhg==
-X-Received: by 2002:a05:600c:529b:b0:453:8042:ba9a with SMTP id 5b1f17b1804b1-4538ee8590bmr7446965e9.28.1750974381515;
-        Thu, 26 Jun 2025 14:46:21 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52ca4sm918182f8f.58.2025.06.26.14.46.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 14:46:21 -0700 (PDT)
-Date: Thu, 26 Jun 2025 22:46:18 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Nicolas Pitre <nico@fluxnic.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, Peter
- Zijlstra <peterz@infradead.org>, Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH v3 next 09/10] lib: mul_u64_u64_div_u64() Optimise the
- divide code
-Message-ID: <20250626224618.757dff9a@pumpkin>
-In-Reply-To: <7r88r006-o704-7q1q-21o2-6n62o864oo79@syhkavp.arg>
-References: <20250614095346.69130-1-david.laight.linux@gmail.com>
-	<20250614095346.69130-10-david.laight.linux@gmail.com>
-	<os452n92-2p25-2q4r-453r-0ps224s90r98@syhkavp.arg>
-	<7r88r006-o704-7q1q-21o2-6n62o864oo79@syhkavp.arg>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        bh=QEIwcAh//bLSFr11N6r80UvFKVQIKaGAn37cyVp7eJA=;
+        b=gqUVO9j4veLfIt8FQx3hWV37Zl2GKtgakNqWum4nxcSx0YfLxKGrHyzSwRcgG/jBX7
+         cbnwbNHbcMACizDJtZazbY59X9Xh9VOhnqsvkO+vEWuQin5S5Ip+8kKsubviGzyn2lEn
+         /5sgEYivORsGK5z61hhshv5RTqDWUkjaXayFFcCzCWm5IVEquPqTKig4iVJfC79GW3P4
+         sDljTuIKbMGnfds0Ejci23Zunn0vPm6F8ey7pvRPK8GMDjyBzdpMtZfJARYOFpZ8UXk+
+         CgZx1uKUy2Fyew06T6y+PVuyrGJS8yoAHOGzvKX4nojBlYDE7Huq/7Wt9TfMthQU+7xY
+         rEYA==
+X-Gm-Message-State: AOJu0Yy/eGTTRC4Ei704b8Ivq59aWeIxCjDEWMuntUA9uNXVKKX1kEBm
+	jfEf5EUZhnEpPBVHXZxii0kDbEgTIOOXMaa6eKseXQ+/6WYNJATMSYOn8Y1epu3b18nzCZ8i0CG
+	NKMGt3okfLYPRmgd+58sB4y4aM2QwBEEmHy/Kh3Jwlf4nSscU1O96IiIiPG3kPUmndGK4lFdos8
+	terJggHH0K68zrnVe0MjDIH4V7n7vlwgVE5gP7xwsP
+X-Gm-Gg: ASbGnct+QVUKiVz5thJkKze1CYQjiFWONlipxeD1kbQ910DTwH7DX2MVhjC9Vfr9zXi
+	R0iUqnFXY0BOE0iawVlN3Z+b9AKq+vst3s2bMbtLOdJKegH1kb6eUxHuVY/yxwGvKuBowWwWeHH
+	HZTP4j2+PYjHJO1UvHh7xullcBgoQjUMBrGOVYrw==
+X-Received: by 2002:a2e:a554:0:b0:30b:b987:b6a7 with SMTP id 38308e7fff4ca-32cdc34b9a8mr2496141fa.0.1750974392923;
+        Thu, 26 Jun 2025 14:46:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFLkCDPqfuAAv4VonXPu+OfJg/QtaT8+iN7fKBBKniZNSyJLL2MDx7tNa0FDO8wDTWGZLk3qFoakjaiOIojaZk=
+X-Received: by 2002:a2e:a554:0:b0:30b:b987:b6a7 with SMTP id
+ 38308e7fff4ca-32cdc34b9a8mr2496091fa.0.1750974392466; Thu, 26 Jun 2025
+ 14:46:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAE4VaGBLJxpd=NeRJXpSCuw=REhC5LWJpC29kDy-Zh2ZDyzQZA@mail.gmail.com>
+ <07D9F8BC-47A7-4E87-8655-C978C056E308@gmail.com> <CAE4VaGBQnMp953tsv13s=CiaaiW+EZNuvh6dCuRA7MWbyU_Hsw@mail.gmail.com>
+In-Reply-To: <CAE4VaGBQnMp953tsv13s=CiaaiW+EZNuvh6dCuRA7MWbyU_Hsw@mail.gmail.com>
+From: Jirka Hladky <jhladky@redhat.com>
+Date: Thu, 26 Jun 2025 23:46:20 +0200
+X-Gm-Features: Ac12FXz68Ok5RQxwZUtwTV1YryI-nh8ZzccmBrDaY9K7wbAsJEsem1q94-nvDxQ
+Message-ID: <CAE4VaGAak=U-oLwXvPZsiNRnRvNL_ROKL8AJCSkCm+zPOjf2qQ@mail.gmail.com>
+Subject: Re: [BUG] Kernel panic in __migrate_swap_task() on 6.16-rc2 (NULL
+ pointer dereference)
+To: Abhigyan ghosh <zscript.team.zs@gmail.com>, yu.c.chen@intel.com
+Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 17 Jun 2025 21:33:23 -0400 (EDT)
-Nicolas Pitre <nico@fluxnic.net> wrote:
+Hi Chen and all,
 
-> On Tue, 17 Jun 2025, Nicolas Pitre wrote:
-> 
-> > On Sat, 14 Jun 2025, David Laight wrote:
-> >   
-> > > Replace the bit by bit algorithm with one that generates 16 bits
-> > > per iteration on 32bit architectures and 32 bits on 64bit ones.
-> > > 
-> > > On my zen 5 this reduces the time for the tests (using the generic
-> > > code) from ~3350ns to ~1000ns.
-> > > 
-> > > Running the 32bit algorithm on 64bit x86 takes ~1500ns.
-> > > It'll be slightly slower on a real 32bit system, mostly due
-> > > to register pressure.
-> > > 
-> > > The savings for 32bit x86 are much higher (tested in userspace).
-> > > The worst case (lots of bits in the quotient) drops from ~900 clocks
-> > > to ~130 (pretty much independant of the arguments).
-> > > Other 32bit architectures may see better savings.
-> > > 
-> > > It is possibly to optimise for divisors that span less than
-> > > __LONG_WIDTH__/2 bits. However I suspect they don't happen that often
-> > > and it doesn't remove any slow cpu divide instructions which dominate
-> > > the result.
-> > > 
-> > > Signed-off-by: David Laight <david.laight.linux@gmail.com>  
-> > 
-> > Nice work. I had to be fully awake to review this one.
-> > Some suggestions below.  
-> 
-> Here's a patch with my suggestions applied to make it easier to figure 
-> them out. The added "inline" is necessary to fix compilation on ARM32. 
-> The "likely()" makes for better assembly and this part is pretty much 
-> likely anyway. I've explained the rest previously, although this is a 
-> better implementation.
+we have now verified that the following commit causes a kernel panic
+discussed in this thread:
 
-I've been trying to find time to do some more performance measurements.
-I did a few last night and managed to realise at least some of what
-is happening.
+ad6b26b6a0a79 sched/numa: add statistics of numa balance task
 
-I've dropped the responses in here since there is a copy of the code.
+Reverting this commit fixes the issue.
 
-The 'TLDR' is that the full divide takes my zen5 about 80 clocks
-(including some test red tape) provided the branch-predictor is
-predicting correctly.
-I get that consistently for repeats of the same division, and moving
-onto the next one - provided they take the same path.
-(eg for the last few 'random' value tests.)
-However if I include something that takes a different path (eg divisor
-doesn't have the top bit set, or the product has enough high zero bits
-to take the 'optimised' path then the first two or three repeats of the
-next division are at least 20 clocks slower.
-In the kernel these calls aren't going to be common enough (and with
-similar inputs) to train the branch predictor.
-So the mispredicted branches really start to dominate.
-This is similar to the issue that Linus keeps mentioning about kernel
-code being mainly 'cold cache'.
+I'm happy to help debug this further or test a proposed fix.
 
-> 
-> commit 99ea338401f03efe5dbebe57e62bd7c588409c5c
-> Author: Nicolas Pitre <nico@fluxnic.net>
-> Date:   Tue Jun 17 14:42:34 2025 -0400
-> 
->     fixup! lib: mul_u64_u64_div_u64() Optimise the divide code
-> 
-> diff --git a/lib/math/div64.c b/lib/math/div64.c
-> index 3c9fe878ce68..740e59a58530 100644
-> --- a/lib/math/div64.c
-> +++ b/lib/math/div64.c
-> @@ -188,7 +188,7 @@ EXPORT_SYMBOL(iter_div_u64_rem);
->  
->  #if !defined(mul_u64_add_u64_div_u64) || defined(test_mul_u64_add_u64_div_u64)
->  
-> -static u64 mul_add(u32 a, u32 b, u32 c)
-> +static inline u64 mul_add(u32 a, u32 b, u32 c)
+Thank you!
+Jirka
 
-If inline is needed, it need to be always_inline.
+On Wed, Jun 18, 2025 at 1:34=E2=80=AFPM Jirka Hladky <jhladky@redhat.com> w=
+rote:
+>
+> Hi Abhigyan,
+>
+> The testing is done on bare metal. The kernel panics occur after
+> several hours of benchmarking.
+>
+> Out of 20 servers, the problem has occurred on 6 of them:
+> intel-sapphire-rapids-gold-6448y-2s
+> intel-emerald-rapids-platinum-8558-2s
+> amd-epyc5-turin-9655p-1s
+> amd-epyc4-zen4c-bergamo-9754-1s
+> amd-epyc3-milan-7713-2s
+> intel-skylake-2s
+>
+> The number in the name is the CPU model. 1s: single socket, 2s: dual sock=
+et.
+>
+> We were not able to find a clear pattern. It appears to be a race
+> condition of some kind.
+>
+> We run various performance benchmarks, including Linpack, Stream, NAS
+> (https://www.nas.nasa.gov/software/npb.html), and Stress-ng. Testing
+> is conducted with various thread counts and settings. All benchmarks
+> together are running ~24 hours. One benchmark takes ~4 hours. Please
+> also note that we repeat the benchmarks to collect performance
+> statistics. In many cases, kernel panic has occurred when the
+> benchmark was repeated.
+>
+> Crash occurred while running these tests:
+> Stress_ng: Starting test 'fork' (#29 out of 41), number of threads 32,
+> iteration 1 out of 5
+> SPECjbb2005: Starting DEFAULT run with 4 SPECJBB2005 instances, each
+> with 24 warehouses, iteration 2 out of 3
+> Stress_ng: test 'sem' (#30 out of 41), number of threads 24, iteration
+> 2 out of 5
+> Stress_ng: test 'sem' (#30 out of 41), number of threads 64, iteration
+> 4 out of 5
+> SPECjbb2005: SINGLE run with 1 SPECJBB2005 instances, each with 128
+> warehouses, iteration 2 out of 3
+> Linpack: Benchmark-utils/linpackd, iteration 3, testType affinityRun,
+> number of threads 128
+> NAS: NPB_sources/bin/is.D.x
+>
+> There is no clear benchmark triggering the kernel panic. Looping
+> Stress_ng's sem test looks, however, like it's worth trying.
+>
+> I hope this helps. Please let me know if there's anything I can help
+> with to pinpoint the problem.
+>
+> Thanks
+> Jirka
+>
+>
+> On Wed, Jun 18, 2025 at 7:19=E2=80=AFAM Abhigyan ghosh
+> <zscript.team.zs@gmail.com> wrote:
+> >
+> > Hi Jirka,
+> >
+> > Thanks for the detailed report.
+> >
+> > I'm curious about the specific setup in which this panic was triggered.=
+ Could you share more about the exact configuration or parameters you used =
+for running `stress-ng` or Linpack? For instance:
+> >
+> > - How many threads/cores were used?
+> > - Was it running inside a VM, container, or bare-metal?
+> > - Was this under any thermal throttling or power-saving mode?
+> >
+> > I'd like to try reproducing it locally to study the failure further.
+> >
+> > Best regards,
+> > Abhigyan Ghosh
+> >
+> > On 18 June 2025 1:35:30=E2=80=AFam IST, Jirka Hladky <jhladky@redhat.co=
+m> wrote:
+> > >Hi all,
+> > >
+> > >I=E2=80=99ve encountered a reproducible kernel panic on 6.16-rc1 and 6=
+.16-rc2
+> > >involving a NULL pointer dereference in `__migrate_swap_task()` during
+> > >CPU migration. This occurred on various AMD and Intel systems while
+> > >running a CPU-intensive workload (Linpack, Stress_ng - it's not
+> > >specific to a benchmark).
+> > >
+> > >Full trace below:
+> > >---
+> > >BUG: kernel NULL pointer dereference, address: 00000000000004c8
+> > >#PF: supervisor read access in kernel mode
+> > >#PF: error_code(0x0000) - not-present page
+> > >PGD 4078b99067 P4D 4078b99067 PUD 0
+> > >Oops: Oops: 0000 [#1] SMP NOPTI
+> > >CPU: 74 UID: 0 PID: 466 Comm: migration/74 Kdump: loaded Not tainted
+> > >6.16.0-0.rc2.24.eln149.x86_64 #1 PREEMPT(lazy)
+> > >Hardware name: GIGABYTE R182-Z91-00/MZ92-FS0-00, BIOS M07 09/03/2021
+> > >Stopper: multi_cpu_stop+0x0/0x130 <- migrate_swap+0xa7/0x120
+> > >RIP: 0010:__migrate_swap_task+0x2f/0x170
+> > >Code: 41 55 4c 63 ee 41 54 55 53 48 89 fb 48 83 87 a0 04 00 00 01 65
+> > >48 ff 05 e7 14 dd 02 48 8b af 50 0a 00 00 66 90 e8 61 93 07 00 <48> 8b
+> > >bd c8 04 00 00 e8 85 11 35 00 48 85 c0 74 12 ba 01 00 00 00
+> > >RSP: 0018:ffffce79cd90bdd0 EFLAGS: 00010002
+> > >RAX: 0000000000000001 RBX: ffff8e9c7290d1c0 RCX: 0000000000000000
+> > >RDX: ffff8e9c71e83680 RSI: 000000000000001b RDI: ffff8e9c7290d1c0
+> > >RBP: 0000000000000000 R08: 00056e36392913e7 R09: 00000000002ab980
+> > >R10: ffff8eac2fcb13c0 R11: ffff8e9c77997410 R12: ffff8e7c2fcf12c0
+> > >R13: 000000000000001b R14: ffff8eac71eda944 R15: ffff8eac71eda944
+> > >FS:  0000000000000000(0000) GS:ffff8eac9db4a000(0000) knlGS:0000000000=
+000000
+> > >CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > >CR2: 00000000000004c8 CR3: 0000003072388003 CR4: 0000000000f70ef0
+> > >PKRU: 55555554
+> > >Call Trace:
+> > > <TASK>
+> > > migrate_swap_stop+0xe8/0x190
+> > > multi_cpu_stop+0xf3/0x130
+> > > ? __pfx_multi_cpu_stop+0x10/0x10
+> > > cpu_stopper_thread+0x97/0x140
+> > > ? __pfx_smpboot_thread_fn+0x10/0x10
+> > > smpboot_thread_fn+0xf3/0x220
+> > > kthread+0xfc/0x240
+> > > ? __pfx_kthread+0x10/0x10
+> > > ? __pfx_kthread+0x10/0x10
+> > > ret_from_fork+0xf0/0x110
+> > > ? __pfx_kthread+0x10/0x10
+> > > ret_from_fork_asm+0x1a/0x30
+> > > </TASK>
+> > >---
+> > >
+> > >**Kernel Version:**
+> > >6.16.0-0.rc2.24.eln149.x86_64 (Fedora rawhide)
+> > >https://koji.fedoraproject.org/koji/buildinfo?buildID=3D2732950
+> > >
+> > >**Reproducibility:**
+> > >Happened multiple times during routine CPU-intensive operations. It
+> > >happens with various benchmarks (Stress_ng, Linpack) after several
+> > >hours of performance testing. `migration/*` kernel threads hit a NULL
+> > >dereference in `__migrate_swap_task`.
+> > >
+> > >**System Info:**
+> > >- Platform: GIGABYTE R182-Z91-00 (dual socket EPYC)
+> > >- BIOS: M07 09/03/2021
+> > >- Config: Based on Fedora=E2=80=99s debug kernel (`PREEMPT(lazy)`)
+> > >
+> > >**Crash Cause (tentative):**
+> > >NULL dereference at offset `0x4c8` from a task struct pointer in
+> > >`__migrate_swap_task`. Possibly an uninitialized or freed
+> > >`task_struct` field.
+> > >
+> > >Please let me know if you=E2=80=99d like me to test a patch or if you =
+need
+> > >more details.
+> > >
+> > >Thanks,
+> > >Jirka
+> > >
+> > >
+> >
+> > aghosh
+> >
+>
+>
+> --
+> -Jirka
 
->  {
->  	return add_u64_u32(mul_u32_u32(a, b), c);
->  }
-> @@ -246,7 +246,7 @@ static inline u32 mul_u64_long_add_u64(u64 *p_lo, u64 a, u32 b, u64 c)
->  
->  u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
->  {
-> -	unsigned long d_msig, q_digit;
-> +	unsigned long n_long, d_msig, q_digit;
->  	unsigned int reps, d_z_hi;
->  	u64 quotient, n_lo, n_hi;
->  	u32 overflow;
-> @@ -271,36 +271,21 @@ u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
->  
->  	/* Left align the divisor, shifting the dividend to match */
->  	d_z_hi = __builtin_clzll(d);
-> -	if (d_z_hi) {
-> +	if (likely(d_z_hi)) {
-
-I don't think likely() helps much.
-But for 64bit this can be unconditional...
-
->  		d <<= d_z_hi;
->  		n_hi = n_hi << d_z_hi | n_lo >> (64 - d_z_hi);
-
-... replace 'n_lo >> (64 - d_z_hi)' with 'n_lo >> (63 - d_z_hi) >> 1'.
-The extra shift probably costs too much on 32bit though.
 
 
->  		n_lo <<= d_z_hi;
->  	}
->  
-> -	reps = 64 / BITS_PER_ITER;
-> -	/* Optimise loop count for small dividends */
-> -	if (!(u32)(n_hi >> 32)) {
-> -		reps -= 32 / BITS_PER_ITER;
-> -		n_hi = n_hi << 32 | n_lo >> 32;
-> -		n_lo <<= 32;
-> -	}
-> -#if BITS_PER_ITER == 16
-> -	if (!(u32)(n_hi >> 48)) {
-> -		reps--;
-> -		n_hi = add_u64_u32(n_hi << 16, n_lo >> 48);
-> -		n_lo <<= 16;
-> -	}
-> -#endif
-
-You don't want the branch in the loop.
-Once predicted correctly is makes little difference where you put
-the test - but that won't be 'normal'
-Unless it gets trained odd-even it'll get mispredicted at least once.
-For 64bit (zen5) the test outside the loop was less bad
-(IIRC dropped to 65 clocks - so probably worth it).
-I need to check an older cpu (got a few Intel ones).
-
-
-> -
->  	/* Invert the dividend so we can use add instead of subtract. */
->  	n_lo = ~n_lo;
->  	n_hi = ~n_hi;
->  
->  	/*
-> -	 * Get the most significant BITS_PER_ITER bits of the divisor.
-> +	 * Get the rounded-up most significant BITS_PER_ITER bits of the divisor.
->  	 * This is used to get a low 'guestimate' of the quotient digit.
->  	 */
-> -	d_msig = (d >> (64 - BITS_PER_ITER)) + 1;
-> +	d_msig = (d >> (64 - BITS_PER_ITER)) + !!(d << BITS_PER_ITER);
-
-For 64bit x64 that is pretty much zero cost
-(gcc manages to use the 'Z' flag from the '<< 32' in a 'setne' to get a 1
-I didn't look hard enough to find where the zero register came from
-since 'setne' of changes the low 8 bits).
-But it is horrid for 32bit - added quite a few clocks.
-I'm not at all sure it is worth it though.
-
-
->  
->  	/*
->  	 * Now do a 'long division' with BITS_PER_ITER bit 'digits'.
-> @@ -308,12 +293,17 @@ u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
->  	 * The worst case is dividing ~0 by 0x8000 which requires two subtracts.
->  	 */
->  	quotient = 0;
-> -	while (reps--) {
-> -		q_digit = (unsigned long)(~n_hi >> (64 - 2 * BITS_PER_ITER)) / d_msig;
-> +	for (reps = 64 / BITS_PER_ITER; reps; reps--) {
-> +		quotient <<= BITS_PER_ITER;
-> +		n_long = ~n_hi >> (64 - 2 * BITS_PER_ITER);
->  		/* Shift 'n' left to align with the product q_digit * d */
->  		overflow = n_hi >> (64 - BITS_PER_ITER);
->  		n_hi = add_u64_u32(n_hi << BITS_PER_ITER, n_lo >> (64 - BITS_PER_ITER));
->  		n_lo <<= BITS_PER_ITER;
-> +		/* cut it short if q_digit would be 0 */
-> +		if (n_long < d_msig)
-> +			continue;
-
-As I said above that gets misprediced too often
-
-> +		q_digit = n_long / d_msig;
-
-I fiddled with the order of the lines of code - changes the way the object
-code is laid out and change the clock count 'randomly' by one or two.
-Noise compared to mispredicted branches.
-
-I've not tested on an older system with a slower divide.
-I suspect older (Haswell and Broadwell) may benefit from the divide
-being scheduled earlier.
-
-If anyone wants of copy of the test program I can send you a copy.
-
-	David
-
->  		/* Add product to negated divisor */
->  		overflow += mul_u64_long_add_u64(&n_hi, d, q_digit, n_hi);
->  		/* Adjust for the q_digit 'guestimate' being low */
-> @@ -322,7 +312,7 @@ u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
->  			n_hi += d;
->  			overflow += n_hi < d;
->  		}
-> -		quotient = add_u64_long(quotient << BITS_PER_ITER, q_digit);
-> +		quotient = add_u64_long(quotient, q_digit);
->  	}
->  
->  	/*
+--=20
+-Jirka
 
