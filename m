@@ -1,148 +1,115 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward100d.mail.yandex.net (forward100d.mail.yandex.net [178.154.239.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E6C25C803
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34E625CC5B;
+	Thu, 26 Jun 2025 08:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750925453; cv=none; b=uZlGssKDrjN5ou0dm23/Nvmi0/71iEtHf8mQdzxW5GQk97kTG6slWLsga/CLO4yryC+0+XoaS0vPCWXACGyeb1/t0fA17/FuKRkv5GAiqa95Y9TCa/a0UIRKR/tPpi6HjcWRt+D/Fz3D/Fz77KecVu553ayj7C7eH7yA5MZHRLc=
+	t=1750925468; cv=none; b=tmIaZerFdsKkRZDGElNMOM2W54DIfqUpUEGSzPOj2pcq8lnRs5HTEhLgxzGLIMOAZtEq/+5MCX/d3wzY9nZl85s5qF3TuiBHDsZXTJX4nQ9Ss4ayCiDLyO7Wo9h6edVxix7zF80DU3DDUoqyIlgMDS9HTiZBg2N1qOCSdOsWsUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750925453; c=relaxed/simple;
-	bh=aPw+hx+PPvy6iSGn1SJS00R0mk91mLjleKyKR43Sttc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=PcWliaJcgLz3IQvOE/c7ft39AeMzJRuvJj808jcAiRwU2u0uAqB4MrDhR02Y4DHUkeDXZ04utpFSEWkk8GE5UdRxImoXSs4tn/hkwtpA6VRi6yFANkDvueVYvOSAZ1veZiB3zKqEUZ0d1qn/PVgzcxrM/B+H7xFyqRo0B70lXAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=gJmEhL/X; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1750925468; c=relaxed/simple;
+	bh=0qK7pgJcflU2S/1gkTA6x7GaoJekdCBu3N/L20K2kYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U8E238ukfHzp+ZkgN5XpYSSMaidGOviDRHUtLXizcqMN6gvYW0w5L2CUIFbioeVrUZ3673cYiJpcPhAFbVtMcUdzLVzrKWhkUO3jujwIVPnCm5alyHgrP817WiMZvWR5pD+QiufNFCLVoX93GjvR79s5JP95VFq6iijeeZmwuS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=gtJ+GglQ; arc=none smtp.client-ip=178.154.239.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="gJmEhL/X"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a4eb4dfd8eso99705f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 01:10:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1750925450; x=1751530250; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eqDcDFqVxxmfDYDp+n2CkhXfGQP/jzowgprIS5/mF4E=;
-        b=gJmEhL/X00m5iVmp9OZeBEFYtJ07BiknPloTW5yvCdx8e1jRP3r7pByLLic2SlSa80
-         n1Sd36XKad/yKTpjdDhL8m/pyylet5XUkJlOrnH+oZQXAo2zfxGOWrykjlL6Yl8PaTae
-         Uvo3UmHqdFfuwsNPq/DJpNiWi1cMaM0gm3MMzey7alvXP3r9wL+tGgavfP84RHzNh5W+
-         0ieN6h3igJtP2YVbzc1150LT/UTSPMEjWeeymwyqZUsUDz1uowektLnZORg83xKhPXP/
-         fThg9VoBRBo2HlTalUB+WQaQM3DuRW78nyuo17kQsEdG7h/q7L5wiMx+fHg6F8TLcSVR
-         PnYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750925450; x=1751530250;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eqDcDFqVxxmfDYDp+n2CkhXfGQP/jzowgprIS5/mF4E=;
-        b=L9gcARmEV5p7XIW5Z0JEVUATkZ3f9hNcyuNlg1GuS0gmdn/xpZayP7KROUByWtBPeE
-         P149VlnZ+yyPvrHhoj/SdIb8F2YUMVv1tz2bM6ig8bvMtQ7TvaIzejU8i/VIQZ5MpBPe
-         B6pZmtRujTLznN6Cf90i1IpDI6WdczP04T1Ywk2z7xZOSs9c8IQ4b4olHzxvFJHUMXXQ
-         bBCnOqMDLJhRIrErDX67NUq3jtHzdSsHkBRjwAZC6jR/YnKICW57qopELw++N2gUmpIR
-         u79qMVx+IpEaRLpx/t9PU/5e+09s4hFtwOGE2dTMdlobXIbw2UPbfBQRwixQSlNd280o
-         56Xg==
-X-Forwarded-Encrypted: i=1; AJvYcCVTwkJ1eOWbKTvHd1zEmMy8CJNtwxXUUNGgZewpZFlm1nN3rz8bQquR21Gp79UxvvctS/FMCcZfwIdTpME=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVGHQK/29nLZ8HDEBZjlAGqDIsBChZH9fsLamAae9odMQfZKxz
-	rNrAuRY+fHUzeJvpaALPjAqrsYnrtcbSNBdaASRoUk6Jb0D9oYCyacCLnCImVEvdkhc=
-X-Gm-Gg: ASbGncunhbyuOQqnNl5+wAzv+YazCbYD778bwbgFRLaWtKWXneSvQq0QBoan/ocGlFH
-	zBg3SZxdVewLcV1ZcdV1mvy5/iBkkv0QkFDM10a3xbjFdyKCQnipoiObAPZFenA0SlRh3byNHP+
-	hEcp5Aw42DB13qGSCvbOUeObROAVrBIIQTwcF15dkuti1P+nK9qsxoLtD2PysB5Zxxc945W2OQJ
-	srX40mFVr4rJ0CyJ7x++LhdfPiUzmmi0CZgswRK7Su+PSmwJJo9Yy70VFqGfXOVDEURbcwIy3jO
-	Q4RJQEws9SW05Brx68YPU4HERGHHHkuc1PyM/qlWKt78sLD145JyhMGooSVeCUd0lBegdMB1HLP
-	b77ohrN7dnladzzbF+gDYxA==
-X-Google-Smtp-Source: AGHT+IHSmCzUrd+nL3B2qqDTAaRyJLpa2weNsiFvKQJ1cPJjRjxohsfvUf3LU44ZAaoCQYUEjHLtJA==
-X-Received: by 2002:a05:600c:3b22:b0:43e:94fa:4aef with SMTP id 5b1f17b1804b1-45381af75f0mr24351205e9.8.1750925449799;
-        Thu, 26 Jun 2025 01:10:49 -0700 (PDT)
-Received: from localhost (ip-89-103-73-235.bb.vodafone.cz. [89.103.73.235])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e810977esm6616970f8f.83.2025.06.26.01.10.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 01:10:49 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="gtJ+GglQ"
+Received: from mail-nwsmtp-smtp-production-main-52.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-52.klg.yp-c.yandex.net [IPv6:2a02:6b8:c43:c90:0:640:54cb:0])
+	by forward100d.mail.yandex.net (Yandex) with ESMTPS id 06E806090C;
+	Thu, 26 Jun 2025 11:10:54 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-52.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id jAQpStTLmmI0-m7OVeu3S;
+	Thu, 26 Jun 2025 11:10:53 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
+	s=mail; t=1750925453;
+	bh=Yinnm7E77h8mES7qlr1gkasOuZ5UvgTpmubeiNbiEMA=;
+	h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
+	b=gtJ+GglQyobmFoiJoNhUHjIv789LxN8GxgZLLUOxlaFuh3WE1Mzucb2qbRx1DxrDh
+	 L1ed7Gjw1SV0VbZw30sNXf9MvEJaaFcWFfsyUhiT7xU6aiJdYXArKEQNSyF/8vvx02
+	 V15mhCKiD7TY/rUEzlL7Mf8rEEVWvhhp4/eksNWs=
+Authentication-Results: mail-nwsmtp-smtp-production-main-52.klg.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
+Date: Thu, 26 Jun 2025 11:10:45 +0300
+From: Onur <work@onurozkan.dev>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+ alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+ bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
+ aliceryhl@google.com, tmgross@umich.edu
+Subject: Re: [PATCH] rust: simplify `Adapter::id_info`
+Message-ID: <20250626111045.2c90a402@nimda>
+In-Reply-To: <aFu10-dGkoyi0I2T@cassiopeiae>
+References: <20250625043630.7677-1-work@onurozkan.dev>
+	<aFux2MUDAGEYY49I@pollux>
+	<20250625113604.21a6ec4a@nimda>
+	<aFu10-dGkoyi0I2T@cassiopeiae>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 26 Jun 2025 10:10:48 +0200
-Message-Id: <DAWB9QUQGPAZ.Z5454RAZXOF7@ventanamicro.com>
-Subject: Re: [PATCH v2 3/2] RISC-V: sbi: remove sbi_ecall tracepoints
-Cc: "Palmer Dabbelt" <palmer@dabbelt.com>,
- <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Paul
- Walmsley" <paul.walmsley@sifive.com>, <aou@eecs.berkeley.edu>, "Alexandre
- Ghiti" <alex@ghiti.fr>, "Atish Patra" <atishp@rivosinc.com>,
- <ajones@ventanamicro.com>, <cleger@rivosinc.com>,
- <apatel@ventanamicro.com>, <thomas.weissschuh@linutronix.de>, "Jeff Law"
- <jlaw@ventanamicro.com>
-To: "David Laight" <david.laight.linux@gmail.com>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250619190315.2603194-4-rkrcmar@ventanamicro.com>
- <mhng-516082EA-5A9A-4A76-9448-70828749F95F@palmerdabbelt-mac>
- <DAUSD38QIV6D.1YO5ASNI3EUGV@ventanamicro.com>
- <DAVG8M70SJ4Q.ZSTC5VSJWGSK@ventanamicro.com>
- <20250625093415.53fd21cf@pumpkin>
-In-Reply-To: <20250625093415.53fd21cf@pumpkin>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-2025-06-25T09:34:15+01:00, David Laight <david.laight.linux@gmail.com>:
-> On Wed, 25 Jun 2025 09:51:45 +0200
-> Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com> wrote:
->> 2025-06-24T15:09:09+02:00, Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanam=
-icro.com>:
->> > For another example, let's have the following function:
->> >
->> >   struct sbiret some_sbi_ecall(uintptr_t a0, uintptr_t a1)
->> >   {
->> >     return sbi_ecall(123, 456, a0, a1);
->> >   }
->> >
-> ...
->>=20
->> GCC 15.1 still leaves "mv" outside the branch, but at least seems to be
->> on the right track (undesired overhead is marked with leading stars):
->>=20
->>    0xffffffff800236e8 <+0>:	addi	sp,sp,-48
->>    0xffffffff800236ea <+2>:	sd	s0,32(sp)
->>    0xffffffff800236ec <+4>:	sd	ra,40(sp)
->>    0xffffffff800236ee <+6>:	addi	s0,sp,48
->> *  0xffffffff800236f0 <+8>:	mv	a4,a0
->> *  0xffffffff800236f2 <+10>:	mv	a5,a1
->>    0xffffffff800236f4 <+12>:	nop
->> *  0xffffffff800236f8 <+16>:	mv	a0,a4
->> *  0xffffffff800236fa <+18>:	mv	a1,a5
->>    0xffffffff800236fc <+20>:	li	a7,123
->>    0xffffffff80023700 <+24>:	li	a6,456
->>    0xffffffff80023704 <+28>:	ecall
->> *  0xffffffff80023708 <+32>:	mv	a5,a0
->> *  0xffffffff8002370a <+34>:	mv	a2,a1
->>    0xffffffff8002370c <+36>:	nop
->>    0xffffffff80023710 <+40>:	ld	ra,40(sp)
->>    0xffffffff80023712 <+42>:	ld	s0,32(sp)
->> *  0xffffffff80023714 <+44>:	mv	a0,a5
->> *  0xffffffff80023716 <+46>:	mv	a1,a2
->>    0xffffffff80023718 <+48>:	addi	sp,sp,48
->>    0xffffffff8002371a <+50>:	ret
->>    [Tracing goes to +126]
->
-> How much do a few register moves/spills matter compared to the
-> cost of the called code?
+On Wed, 25 Jun 2025 10:39:47 +0200
+Danilo Krummrich <dakr@kernel.org> wrote:
 
-I didn't do any serious analysis... In general, simpler functions are
-going to suffer a higher ratio of overhead from adding tracepoints, and
-the constant overhead per added tracepoint increases with the number of
-its arguments.
+> On Wed, Jun 25, 2025 at 11:36:04AM +0300, Onur wrote:
+> > Even with that, it can be something like this:
+> > 
+> > fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+> >     let id = Self::acpi_id_info(dev);
+> >     if id.is_some() {
+> >         return id;
+> >     }
+> > 
+> >     Self::of_id_info(dev)
+> > }
+> > 
+> > or maybe even this:
+> > 
+> > fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+> >     Self::acpi_id_info(dev).or_else(|| Self::of_id_info(dev))
+> > }
+> 
+> That's fair, can you please rebase your patch onto [1]?
+> 
+> [1]
+> https://lore.kernel.org/lkml/20250620153914.295679-1-igor.korotin.linux@gmail.com/
 
-For a trap to kernel mode that passes through a dozen tracepoint sites,
-we could save under a hundred instructions if disabled tracepoints had
-the minimal overhead.  I don't have a good idea how much of the total
-trap execution-time/instruction-count/entropy-increase that actually is.
+HEAD: e0b49ca268d4a0d2b97d5820420d5a78b67d2537 currently doesn't pass
+clippy. Should I send an additional change for the clippy fix or would
+you prefer to fix it yourself first?
 
-> There will but much worse things out there if you look.
+Here is the output of `make LLVM=1 -j $(nproc) CLIPPY=1`:
 
-Definitely, I am trying my best not to look, but I sometimes happen to
-stumble upon something, and try to understand it.
+```
+  DESCEND objtool
+  CALL    scripts/checksyscalls.sh
+  INSTALL libsubcmd_headers
+  CLIPPY L rust/kernel.o
+error: unneeded `return` statement
+   --> rust/kernel/driver.rs:188:13
+    |
+188 |             return None;
+    |             ^^^^^^^^^^^
+    |
+    = help: for further information visit
+https://rust-lang.github.io/rust-clippy/master/index.html#needless_return
+= note: `-D clippy::needless-return` implied by `-D warnings` = help:
+to override `-D warnings` add `#[allow(clippy::needless_return)]` help:
+remove `return` |
+188 -             return None;
+188 +             None
+    |
 
-Waiting till the tracepoint overhead resolves itself sounds fine to me.
+error: aborting due to 1 previous error
 
-Thanks.
+make[2]: *** [rust/Makefile:538: rust/kernel.o] Error 1
+make[1]: *** [/home/nimda/devspace/onur-ozkan/linux/Makefile:1280:
+prepare] Error 2 make: *** [Makefile:248: __sub-make] Error 2
+```
