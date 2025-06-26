@@ -1,129 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363572F0055;
-	Thu, 26 Jun 2025 19:53:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFBC2EFD96;
+	Thu, 26 Jun 2025 19:53:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750967602; cv=none; b=KE+71AAZS49g+Qw4JTJLqWlK4Rim92mKHTLteVduPLJhtXHn/zus+aMjf83I3A8pzhpYCyp134p7SFsxAtZkDoEAPla1zWTec0xYcBjxU7jRjo41L5zYhQc4I/Zbs+FvHz7vt3pRHhGFL6TIbO5quSvwpgOy2mYKRcI8K0VyH5U=
+	t=1750967609; cv=none; b=jC63GSvtRFUBxABIs5ittsY8vJHMdGvBnfOfceF3VbunBHooc5m4OkV0NqrGsFMc2BbVby/4wVzAeq4S7Hva1t+5gw4B+VfduLd8s2b5da3JDsh0PIYIDBa+oGOJvIpyn56PKGKxSvY5l9JhzkjfzbvCeyFUOd7eHkJlYxP4dZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750967602; c=relaxed/simple;
-	bh=3102csKV0qk6voV51MLhEB4N+SYWBLbDze9z6LLrQTY=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=gX0046dEqoQslQA9vR0ownFPosL1r4ahzhRrvNa1Q2XQ3j2RUHNxR8+d2aY8hHanEn0JAquUNckhW3/vHcvQWNzOZFgJFEi1mnLJ+aCCbpAPcgo7rmvec5Ht56ndUTc8S/rS8eEEbBn02FbmyGfsBlGTXQqJlQ8dVwdWWrNwbcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lPaB/mxw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750967609; c=relaxed/simple;
+	bh=zd6vb4QxveFon7B3CZSViiKsMHSBmEmxGp/d12jKjGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=MStTwTafcuokTgPOAu2CGKVY7PNedaQmte4afd1IJL6SieHN7JUkQ0K6Uup0FuH9veZMrkD89Es0gGHV44ZGWgPNPfn9m2L/rvJVHBHBmVUcMWJQyfECGhzPh0whj6tp0U4tQX1e0tpkTs4Puf6c47Y63gauTf7jxL+staIPcVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UoQ8oRIO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lPaB/mxw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D454C4CEF0;
-	Thu, 26 Jun 2025 19:53:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UoQ8oRIO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43B05C4CEEB;
+	Thu, 26 Jun 2025 19:53:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750967601;
-	bh=3102csKV0qk6voV51MLhEB4N+SYWBLbDze9z6LLrQTY=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=lPaB/mxwZsS3UmvJMcbgXPS2qNa6wiA1EJFZDjqHTdz/53VQZXTRxKnNUwfqwTp4G
-	 c/XA1T0jBjRx+neRvXbfmuZ9/yB6gP6T6U5rEiejOiJqXl/aSb0+Xvpgfbn+M9Bgi/
-	 YpTyjhm8NpmUkoYwK0Hsyak4qwA4vidpDjfe8vVqIcg8VTOPOstl/xyo9+aVqcl+ef
-	 yjgUpVAgeV+1f4JZv/GqKY9WpRqJCCLYbsuA8FvLDiPPQP0oqCliztZTV5Fblg37z1
-	 j+AU8Z4CHtVAd2RWcI8Jsp9xuL42nf9O2YZgsNR0wUdzx39ts/kfjdyDYe2uMfg6qT
-	 r4k5LVm9ANgwQ==
-Date: Thu, 26 Jun 2025 14:53:20 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1750967609;
+	bh=zd6vb4QxveFon7B3CZSViiKsMHSBmEmxGp/d12jKjGM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=UoQ8oRIOtm6VaeYcXpyBVvBFlGAN+pwKhCsQgDUiDuggZCagscyw39521OUr7Pux2
+	 ffn7FEqnSGLuCkb+V1BtIlowfA85y+EeXz9duCkBwsqMrjT7yHse4yb96qyOfEC/E0
+	 d96M3QND/xmtaEb8HcKmhWr0snojdcaOm0j6UweHemT0gLt57DuqjupNreSGwVMHhP
+	 7yROL7dmPzSE5x55MEWpDvg+XdeM7gj/caaKPdSr6jPfekhRoGadnE5MnyOEqs4+y6
+	 VaUz3llWeCuQqdB0WqCcZO82WSzD+4ZTyPFhAvoR+QleoaDBOKKt9UUjCfH5500pKt
+	 mgO6APepzwp/A==
+Date: Thu, 26 Jun 2025 14:53:27 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: liu.xuemei1@zte.com.cn, devel@lists.libvirt.org
+Cc: mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, liu.song13@zte.com.cn
+Subject: Re: [PATCH] remote/stream-event: Fix a memory leak in??
+ remoteStreamCallbackFree()
+Message-ID: <20250626195327.GA1634935@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org
-To: Cristian Cozzolino <cristian_ci@protonmail.com>
-In-Reply-To: <20250626-rimob-initial-devicetree-v3-0-4017ac9fd93d@protonmail.com>
-References: <20250626-rimob-initial-devicetree-v3-0-4017ac9fd93d@protonmail.com>
-Message-Id: <175096753958.717956.3150907167726764280.robh@kernel.org>
-Subject: Re: [PATCH v3 0/3] Add initial device tree for Billion Capture+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626141038445ZnnRRHX3QpBjC7RGFRlrw@zte.com.cn>
 
+[+to libvirt development list, since this looks like a libvirt patch,
+not a Linux kernel patch]
 
-On Thu, 26 Jun 2025 00:04:25 +0200, Cristian Cozzolino wrote:
-> Billion Capture+ is a handset using the MSM8953 SoC released in 2017
-> and sold by Flipkart.
+On Thu, Jun 26, 2025 at 02:10:38PM +0800, liu.xuemei1@zte.com.cn wrote:
+> From: Liu Song <liu.song13@zte.com.cn>
 > 
-> Add a device tree with initial support for:
+> The ff callback is never called in remoteStreamCallbackFree() because
+> cbdata->cb can not be NULL. This causes a leak of 'cbdata->opaque'.
 > 
-> - GPIO keys
-> - SDHCI (internal and external storage)
-> - USB Device Mode
-> - Regulators
-> - Simple framebuffer
+> The leak can be reproduced by attaching and detaching to the console of
+> an VM using `virsh console`.
 > 
-> Signed-off-by: Cristian Cozzolino <cristian_ci@protonmail.com>
+> ASAN reports the leak stack as:
+> Direct leak of 288 byte(s) in 1 object(s) allocated from:
+>     #0 0x7f6edf6ba0c7 in calloc (/lib64/libasan.so.8+0xba0c7)
+>     #1 0x7f6edf5175b0 in g_malloc0 (/lib64/libglib-2.0.so.0+0x615b0)
+>     #2 0x7f6ede6d0be3 in g_type_create_instance (/lib64/libgobject-2.0.so.0+0x3cbe3)
+>     #3 0x7f6ede6b82cf in g_object_new_internal (/lib64/libgobject-2.0.so.0+0x242cf)
+>     #4 0x7f6ede6b9877 in g_object_new_with_properties (/lib64/libgobject-2.0.so.0+0x25877)
+>     #5 0x7f6ede6ba620 in g_object_new (/lib64/libgobject-2.0.so.0+0x26620)
+>     #6 0x7f6edeb78138 in virObjectNew ../src/util/virobject.c:252
+>     #7 0x7f6edeb7a78b in virObjectLockableNew ../src/util/virobject.c:274
+>     #8 0x558251e427e1 in virConsoleNew ../tools/virsh-console.c:369
+>     #9 0x558251e427e1 in virshRunConsole ../tools/virsh-console.c:427
+> 
+> Signed-off-by: Liu Song <liu.song13@zte.com.cn>
 > ---
-> Changes in v3:
-> - (patch 3/3): pick up tag (Konrad);
-> - Link to v2: https://lore.kernel.org/r/20250624-rimob-initial-devicetree-v2-0-34f6045ebc30@protonmail.com
+>  src/remote/remote_daemon_stream.c | 2 +-
+>  src/remote/remote_driver.c        | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> Changes in v2:
-> - (patch 3/3):
->   - add unit address and label to qseecom (Luca);
->   - reorder properties alphabetically in gpio-keys node (Konrad);
->   - fix hex values in reg address and size cells: from 0x00 to 0x0 (Konrad);
->   - add regulator-allow-set-load property to regulators supplying sdhc1/sdhc2.
-> - Link to v1: https://lore.kernel.org/r/20250620-rimob-initial-devicetree-v1-0-8e667ea21f82@protonmail.com
+> diff --git a/src/remote/remote_daemon_stream.c b/src/remote/remote_daemon_stream.c
+> index 453728a66b..a5032f9a43 100644
+> --- a/src/remote/remote_daemon_stream.c
+> +++ b/src/remote/remote_daemon_stream.c
+> @@ -437,13 +437,13 @@ int daemonAddClientStream(virNetServerClient *client,
+>          return -1;
+>      }
 > 
-> ---
-> Cristian Cozzolino (3):
->       dt-bindings: vendor-prefixes: Add Flipkart
->       dt-bindings: arm: qcom: Add Billion Capture+
->       arm64: dts: qcom: msm8953: Add device tree for Billion Capture+
+> +    virObjectRef(client);
+>      if (virStreamEventAddCallback(stream->st, 0,
+>                                    daemonStreamEvent, client,
+>                                    virObjectUnref) < 0)
+>          return -1;
 > 
->  Documentation/devicetree/bindings/arm/qcom.yaml    |   1 +
->  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
->  arch/arm64/boot/dts/qcom/Makefile                  |   1 +
->  .../arm64/boot/dts/qcom/msm8953-flipkart-rimob.dts | 255 +++++++++++++++++++++
->  4 files changed, 259 insertions(+)
-> ---
-> base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-> change-id: 20250620-rimob-initial-devicetree-da86a5bffc8b
+>      virObjectRef(client);
+> -
+>      if ((stream->filterID = virNetServerClientAddFilter(client,
+>                                                          daemonStreamFilter,
+>                                                          stream)) < 0) {
+> diff --git a/src/remote/remote_driver.c b/src/remote/remote_driver.c
+> index 2690c05267..9ac13469e9 100644
+> --- a/src/remote/remote_driver.c
+> +++ b/src/remote/remote_driver.c
+> @@ -5336,7 +5336,7 @@ static void remoteStreamCallbackFree(void *opaque)
+>  {
+>      struct remoteStreamCallbackData *cbdata = opaque;
 > 
-> Best regards,
-> --
-> Cristian Cozzolino <cristian_ci@protonmail.com>
+> -    if (!cbdata->cb && cbdata->ff)
+> +    if (cbdata->ff)
+>          (cbdata->ff)(cbdata->opaque);
 > 
-> 
-> 
-
-
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: using specified base-commit 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250626-rimob-initial-devicetree-v3-0-4017ac9fd93d@protonmail.com:
-
-arch/arm64/boot/dts/qcom/msm8953-flipkart-rimob.dtb: gpu@1c00000 (qcom,adreno-506.0): clock-names:5: 'alwayson' is not one of ['core', 'iface', 'mem', 'mem_iface', 'alt_mem_iface', 'gfx3d', 'rbbmtimer', 'rbcpr']
-	from schema $id: http://devicetree.org/schemas/display/msm/gpu.yaml#
-
-
-
-
-
+>      virObjectUnref(cbdata->st);
+> -- 
+> 2.27.0
