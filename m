@@ -1,99 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3035275115;
-	Thu, 26 Jun 2025 11:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F9B275112
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 11:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750938030; cv=none; b=doH6R6t0FPAe1bB0JyoSwT8J4yPoIKK3H1AmS6cmY95nr9NwEeZ+VXGYvs/LIouVElPp9BAFqiscsr2pVCWf70jh4ZcA8EPo4Y86PQFWSdzkVhCbqEKenkod3HdzBjbiJoVb13a3Vso6xqXR0sdzhKYeJ6iSXKpHjlleedgkgiw=
+	t=1750938072; cv=none; b=PVD6WlT2alM3shzQAyQ7OXEhFbTozcqxOq5ISly3exJhA10iDvzPrJrX9CmjmlX3BkneQRqY0ML3mN0i+RadCTCI3qP/YrsBWZXTA0EfqOLEQ0vaH8NlovCRP9m87NRzFz1yWo6U0eMc/jDqF5W/L5kewxaFgkPYbnLLeuhXZ70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750938030; c=relaxed/simple;
-	bh=vpkGbqYUMukz6V9t3VsChBVMYanG+RJ4SeL/y9Rrtjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fsEQC9h6Xgbmli1f5wiu9e2JwUnms4ulRqrgT5h6MGKINVUW/ESVSk22dR5IoU6/YEJotw9Do2sHWar5ktu6nHZsAWQSSack+8YKtTtguqBsio/RqdYHFaXPnh6cKq/iHz07XHtDR+YHcG5DJWCaBaI6N9q/0dXeL4uOwDdkFtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/yoG0oj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750938072; c=relaxed/simple;
+	bh=23sqk4v2eqYQR4dH0ahZ30jSvULJQQx9I0FVKFqv0Hc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=II+pVO4RwrjRChng6BizrbI+ohw7T5NCU+kcs+/QvWdt32du62I76wFHypdNyxhUeLQpnTjHmjJXTLDJh6wHCdSrXJUorCPw8FjpzN4pNXiclHD2GTvPqRSMWCvFZGVzjBdSXBpk3axW+qmJYRsLANclD96fJfHc7M860kN0+vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k/bBJboM; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/yoG0oj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B645C4CEEB;
-	Thu, 26 Jun 2025 11:40:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750938030;
-	bh=vpkGbqYUMukz6V9t3VsChBVMYanG+RJ4SeL/y9Rrtjc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p/yoG0ojiYgvEaGMNpNsb81K5Qz7AtbdguTR/DY2uPDtibazqksDcGmDtscTLuP4G
-	 RpPicBuoMjJkSjkYf5kJfRJULHQbZp1gskeV8rc2JQniEmSIXPMPdyYINVsGMQYWcm
-	 1XHvS1QwlhB3i3aAnucJSkwP4nZGhOxNh76lqEYDkI5SGKGXCtYtBm0qyUMxwGOJSS
-	 g/4mBZpHKGdsk/4pvxhGEqShUIHT6AJvAwDAJSlcxV9gOKL7GbYIt4wCSeXbBaN3Bt
-	 ZGNtOYjZmOCwgkSwL3KemD9H65PuC9q66VglZp/eGQnYqtLGyyc36YVYfQAWiVnTDt
-	 n3GWOlX0MB98w==
-Date: Thu, 26 Jun 2025 13:40:23 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, gregkh@linuxfoundation.org,
-	rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
-	aliceryhl@google.com, tmgross@umich.edu, david.m.ertman@intel.com,
-	ira.weiny@intel.com, leon@kernel.org, kwilczynski@kernel.org,
-	bhelgaas@google.com, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] rust: devres: get rid of Devres' inner Arc
-Message-ID: <aF0xp4ZKP_a7cJsc@pollux>
-References: <20250624215600.221167-1-dakr@kernel.org>
- <20250624215600.221167-4-dakr@kernel.org>
- <aFzI5L__OcB9hqdG@Mac.home>
- <aF0aiHhCuHjLFIij@pollux>
- <DAWE690DWP9A.10I5FIJSZDSR6@kernel.org>
- <aF0p5vIcL_4PBJCG@pollux>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k/bBJboM"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a365a6804eso516855f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 04:41:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750938069; x=1751542869; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P84028oJYeMHhuu45/JE+9IuzDSe16FA2FfJuutHg1I=;
+        b=k/bBJboMSoALuPjjYq5/Itd8MYr70oapxNIzIRTF9Kyp2NiznggJN0g7q16l+XKPAX
+         U6oGdAhZOQWpNfHHmaUzOmz8Chw8DjLKb8/UAAWh1EjQ8RaoKKPFqrdBF007HAyWJk/J
+         kkTVf++od09pmO3GFCz88q8ECvlZ6V6zmZcozGG5NGlC0aHQRy9PuC3CVhlALgT+6Da0
+         NwsYbpS6N4TFC1jFEPOdUW2wFGyxthVz8FspVsOpMqDhhmhyzTLRHXGkgzGB/EOo/TdG
+         Bf6a8/VzCwqhNnPbCFrPJ14hvyAGYGfcb7I7/vlVCjVwVG3jylLTuTso1e9a+a9Zl5ID
+         7kKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750938069; x=1751542869;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P84028oJYeMHhuu45/JE+9IuzDSe16FA2FfJuutHg1I=;
+        b=F2bkaqvWdN61Ux+qrd3rl3vQoRAyeCrys1djqyko8GmhFOOLzxeOVYPhbp0ancyvW6
+         egdyygSyxYKFRj3tqCMqXKo/1FdHhxCQ04OO06CGJ1RMwzorB99lLCJ6uLGG1M9Chzz3
+         /a2dLFgEhzlS+PnkuHaErRG5pO+kkq8M/2A9FsSTe0uEBdD/uYcfrqvaWii1zpnLEP5P
+         qzmrIIfN5IXalhGj/4GOHtiJCQYm2A3RfOYWFslHsp2NvjqJkkvhR6G18J6tFReP/kUQ
+         02nw0/JdCJaug+cqx3m9Iu6M/dMo9+1Y0vkppYTuKUthrFkKZ0qb8jB/RDSFMMUR9WWF
+         GIEA==
+X-Gm-Message-State: AOJu0YzfCLGkltKh8zQbkUni9Nz9RyfpoR/IOAI1WjGbOrpoPkYVWkQQ
+	mBBdL7Bzv0mmNVRzrIlVlPtcytR6fjMqQmV61vLfqGe3vRj+4lElcM6VqQSHArLq990=
+X-Gm-Gg: ASbGnctduPcADZEKdvjhBdCmycrBiudIh7VGI99IjaGK8KP3yXXstlA86x7DrVHRK+7
+	4FlCwlxTn7kHeuq3SraTSVNJm4jUbMxf9PRGnGI+pcuSSWtrLhleXhN/Jg04GQNWFAvc//2OxRo
+	FXRFYmWeqE+H70ykeZvdkPO44vjosQJ2wY9PJflKIYj+1hLkx5LwbOIlUJlMPqtLSBlMP3QCddF
+	pVJr6V+awp9/IfQGKZz9KfMD1VJ9sJRUqZJLq97a9rx6WX0hYPtCt01Pdl5y7e7BnFck/OnBDIM
+	/7vHnFxDMkBP4g0gZOlU5CdZkiIaB6XaJ+QJcXcIoCkjYMtNjUJpCVGbzNX6Wj/iJJRRFidc5M3
+	a3S905s716EiQ9JE9HZTeOmPv7I8=
+X-Google-Smtp-Source: AGHT+IEAvEe3QKbPqlojOnT5cd4wj/eJjPvaq56kQ0jC31K9fVvjUgwpQpVgZdXHuSVMcKcEFAeyxA==
+X-Received: by 2002:a5d:64e5:0:b0:3a4:e844:745d with SMTP id ffacd0b85a97d-3a6ed675141mr5949708f8f.56.1750938068846;
+        Thu, 26 Jun 2025 04:41:08 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538233c523sm47204785e9.6.2025.06.26.04.41.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 04:41:08 -0700 (PDT)
+Message-ID: <8c83b5c1-b7ca-4fc8-9246-a950c356214c@linaro.org>
+Date: Thu, 26 Jun 2025 12:41:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aF0p5vIcL_4PBJCG@pollux>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/4] media: dt-bindings: Add qcom,msm8939-camss
+To: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, vincent.knecht@mailoo.org,
+ Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250613-camss-8x39-vbif-v5-0-a002301a7730@mailoo.org>
+ <20250613-camss-8x39-vbif-v5-3-a002301a7730@mailoo.org>
+ <50fa344c-d683-420c-a3b5-837ec6d8e93e@kernel.org>
+ <e928a7c5-56d5-4f2b-b667-bdbefb506d1f@linaro.org>
+ <0e030c09-0a89-4883-b958-85ddd6831407@kernel.org>
+ <d1b0b5c1-a031-4429-bb4b-ad8bc914c971@linaro.org>
+ <ea5d7622-ef9d-4bfc-af64-87bd19664333@linaro.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <ea5d7622-ef9d-4bfc-af64-87bd19664333@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 26, 2025 at 01:07:25PM +0200, Danilo Krummrich wrote:
-> On Thu, Jun 26, 2025 at 12:27:18PM +0200, Benno Lossin wrote:
-> > On Thu Jun 26, 2025 at 12:01 PM CEST, Danilo Krummrich wrote:
-> > > On Wed, Jun 25, 2025 at 09:13:24PM -0700, Boqun Feng wrote:
-> > >> On Tue, Jun 24, 2025 at 11:54:01PM +0200, Danilo Krummrich wrote:
-> > >> [...]
-> > >> > +#[pin_data(PinnedDrop)]
-> > >> > +pub struct Devres<T> {
-> > >> 
-> > >> It makes me realize: I think we need to make `T` being `Send`? Because
-> > >> the devm callback can happen on a different thread other than
-> > >> `Devres::new()` and the callback may drop `T` because of revoke(), so we
-> > >> are essientially sending `T`. Alternatively we can make `Devres::new()`
-> > >> and its friend require `T` being `Send`.
-> > >> 
-> > >> If it's true, we need a separate patch that "Fixes" this.
-> > >
-> > > Indeed, that needs a fix.
-> > 
-> > Oh and we have no `'static` bound on `T` either... We should require
-> > that as well.
+On 26/06/2025 12:17, Vladimir Zapolskiy wrote:
+
+> What's about MSM8953 then?
+
+Should be fixed up to match 8916. We don't have an upstream user and we, 
+I, did the wrong thing.
+> Please see commit c830aff08d51 ("media: dt-bindings: Add qcom,msm8953- 
+> camss").
 > 
-> I don't think we actually need that, The Devres instance can't out-live a &T
-> passed into it. And the &T can't out-live the &Device<Bound>, hence we're
-> guaranteed that devres_callback() is never called because Devres::drop() will be
-> able successfully unregister the callback given that we're still in the
-> &Device<Bound> scope.
+>> x1e has a particular order if a new device x1e+1 comes along with a new
+>> register then
+>>
 > 
-> The only thing that could technically out-live the &Device<Bound> would be
-> &'static T, but that would obviously be fine.
+>>
+>> I think I personally haven't understood what was meant by "devices of a
+>> class" but its clearer now.
+>>
 > 
-> Do I miss anything?
+> And I still didn't get it, how to read this "devices of a class"?
+> 
+> In particular why is MSM8939 a device of MSM8916 class and MSM8953 is
+> not?
+> 
+> For sake of simplicity I list only accepted CAMSS dt bindings:
+> 
+> qcom,msm8916-camss.yaml
+> qcom,msm8953-camss.yaml
+> qcom,msm8996-camss.yaml
+> qcom,sc7280-camss.yaml
+> qcom,sc8280xp-camss.yaml
+> qcom,sdm660-camss.yaml
+> qcom,sdm670-camss.yaml
+> qcom,sdm845-camss.yaml
+> qcom,sm8250-camss.yaml
+> qcom,sm8550-camss.yaml
+> qcom,x1e80100-camss.yaml
 
-Thinking a bit more about it, a similar argumentation is true for not needing
-T: Send. The only way to leave the &Device<Bound> scope and hence the thread
-would be to stuff the Devres into a ForeignOwnable container, no?
+I mean some old commits in Linux wouldn't make it through the 
+upstreaming process now.
 
-Analogous to Benno asking for ForeignOwnable: 'static, should we also require
-ForeignOwnable: Send + Sync?
+8953 is not right and can be changed.
 
-Alternatively, the safety requirements of ForeignOwnable:::from_foreign() and
-ForeignOwnable::borrow() would need to cover this, which they currently they
-are not.
+8250, 845 may have bindings we wouldn't accept now but they have users 
+so we live with them.
+
+> I kindly ask to select a number of class defining IPs from the list,
+> so that all next ones will derive from those only, and not from
+> "another class". It's a task for a DT maintainer I presume.
+> 
+> Before completing this and getting a common understanding all next
+> work to provide CAMSS suppor for new platforms is not directed by
+> any policy, because the policy "do as it's been done before" is
+> applied inconsistently.
+> 
+I think I personally am clear on the rule from the DT people, even if I 
+may not get it right on subsequient submissions.
+
+The sort order thing is a red herring, in simple terms. We should be 
+consistent in device classes.
+
+For example TITAN 680 and 690 should look pretty similar, TITAN 340 and 
+990 probably can have greater divergence.
+
+Either way the sort order thing is a dead end, anything upstream on that 
+basis like x1e is probably fine because it is of its particular class of 
+device.
+
+8953 and 8939 should match their device class of 8916.
+
+---
+bod
