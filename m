@@ -1,125 +1,181 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C94411713;
-	Thu, 26 Jun 2025 09:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62A1A295DAA;
+	Thu, 26 Jun 2025 09:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750930232; cv=none; b=gyQlle2x+L9+sD3H920JikoOw50TkBWCZYGjPMUMboXfO83nxG8xZhbjlHdWe4d+mEPAVlcECCOH0XVo+8pkLUNZ4lLOq0ltgLM0XbhJhfgSoQcJ0xgTAOO1iHZ9DJab3D9JjbNT/aOAfecocXbLtlPDRCAWaZ3h6+axQ0ZRFNA=
+	t=1750930249; cv=none; b=hqc8JfDcqQgehuS3XTH4RW2oLrdpxYlbz1R8Q+Z+ifcltWFuwTUADUg/B3N33NbjnbtePrPM8IblbEpq8FrOZZxcjoRWbUO16DcCMWWk+OnESLPdRZQruIHARDpI/p+m0S0lnobkiTojmM70ldqm3ZZ2tbkFNiJ37EhIJlZuyTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750930232; c=relaxed/simple;
-	bh=jSVIUjU+J/poTSdUN23GXuGpiPjk1GcoOf3OqnRCH00=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PF9JJ9ziqNEtk5AvE87avx3b4w44eTlGh6OzbNwvCQaoiXycyoxHBuFKOELKhNgpxC/DwZh0upCMbJ/IiUgKkaEn4XONBsMRFNRSVwgjb/0YAqiKm8uHD8yluaX9/GKQ4ZBNeypBt7OLs/5uQW7d9PpO/V1JGSNWd3IGt3s3QHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y3EUADHD; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y3EUADHD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750930232; x=1782466232;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jSVIUjU+J/poTSdUN23GXuGpiPjk1GcoOf3OqnRCH00=;
-  b=Y3EUADHD7OcDKizfhmZ6Vwg0RY0OhIAMVVgGftYN1IDUII4yo/YoEi0B
-   FgGBDq5t15crXfQAYhv6Xb+uofRG+NIhLKfmiVFbp/2qoF2zlNgz0P+d7
-   5saGtIlTTxY3q7O/NtqleqUGm5m+qGe1OUxdch1TNN69IVxvJUqpE+B44
-   4NQxF52ESgbfgotdo6oMTrGTKHwERByDIUwEB1kaeU1L60MJs74IIeajO
-   22AUgEt333IjcfYe6nEwXVWgd5jaBcqNgqyAGvo4eqCCIDWasUpaxESE7
-   i1ls+e9JUos/Q6ytwhx0hDvM9xATbtgNz8oX/Wpo48JdvKkWxTA1vBr88
-   g==;
-X-CSE-ConnectionGUID: 7L/UJJXjRPuLqo7vujSqxA==
-X-CSE-MsgGUID: Skvm+pN4T5Sf5Ii//KV6Jg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53184571"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="53184571"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 02:30:31 -0700
-X-CSE-ConnectionGUID: zM8mGyeLSOS3E8LKta81zg==
-X-CSE-MsgGUID: kIhc50xCQ36WGZItsSLfvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="152970913"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 26 Jun 2025 02:30:28 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id C252421E; Thu, 26 Jun 2025 12:30:26 +0300 (EEST)
-Date: Thu, 26 Jun 2025 12:30:26 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: zhangjianrong <zhangjianrong5@huawei.com>
-Cc: andreas.noever@gmail.com, michael.jamet@intel.com,
-	YehezkelShB@gmail.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, guhengsheng@hisilicon.com,
-	caiyadong@huawei.com, xuetao09@huawei.com, lixinghang1@huawei.com
-Subject: Re: [PATCH] thunderbolt: Confirm the necessity to configure asym
- link first
-Message-ID: <20250626093026.GJ2824380@black.fi.intel.com>
-References: <20250626084107.2710306-1-zhangjianrong5@huawei.com>
+	s=arc-20240116; t=1750930249; c=relaxed/simple;
+	bh=3s6usKiJD5sKkUXuZnQU8k249aZMs0i8lS5Xo2pslDQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DO+HSkwigcA+mDozpr2X6+lvkC3/NTbG7AMR4IA1pom4HhwFd2debcUTIoG2F5mwIvDmzLiIMfwvafNnCvTS4X0iS4QCMPxJWi14LuACSX/RwPYeoO3a7tgpQgv+OAQbpJwkH+X52QkzxR2GfRNQA7iDqJChq8kHHOrsBklqdzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FFDB1063;
+	Thu, 26 Jun 2025 02:30:28 -0700 (PDT)
+Received: from e125579.fritz.box (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 71B823F63F;
+	Thu, 26 Jun 2025 02:30:44 -0700 (PDT)
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Christian Loehle <christian.loehle@arm.com>
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Robin Murphy <robin.murphy@arm.com>,
+	Beata Michalska <beata.michalska@arm.com>,
+	zhenglifeng1@huawei.com
+Subject: [RFC PATCH] cpufreq,base/arch_topology: Calculate cpu_capacity according to boost
+Date: Thu, 26 Jun 2025 11:30:18 +0200
+Message-Id: <20250626093018.106265-1-dietmar.eggemann@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250626084107.2710306-1-zhangjianrong5@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-Hi,
+I noticed on my Arm64 big.Little platform (Juno-r0, scmi-cpufreq) that
+the cpu_scale values (/sys/devices/system/cpu/cpu*/cpu_capacity) of the
+little CPU changed in v6.14 from 446 to 505. I bisected and found that
+commit dd016f379ebc ("cpufreq: Introduce a more generic way to set
+default per-policy boost flag") (1) introduced this change.
+Juno's scmi FW marks the 2 topmost OPPs of each CPUfreq policy (policy0:
+775000 850000, policy1: 950000 1100000) as boost OPPs.
 
-On Thu, Jun 26, 2025 at 04:41:07PM +0800, zhangjianrong wrote:
-> Current implementation can cause allocation failures in
-> tb_alloc_dp_bandwidth() in some cases. For example:
-> allocated_down(30Gbps), allocated_up(50Gbps),
-> requested_down(10Gbps).
+The reason is that the 'policy->boost_enabled = true' is now done after
+'cpufreq_table_validate_and_sort() -> cpufreq_frequency_table_cpuinfo()'
+in cpufreq_online() so that 'policy->cpuinfo.max_freq' is set to the
+'highest non-boost' instead of the 'highest boost' frequency.
 
-I'm not sure I understand the above.
+This is before the CPUFREQ_CREATE_POLICY notifier is fired in
+cpufreq_online() to which the cpu_capacity setup code in
+[drivers/base/arch_topology.c] has registered.
 
-Can you describe in which real life situation this can happen?
+Its notifier_call init_cpu_capacity_callback() uses
+'policy->cpuinfo.max_freq' to set the per-cpu
+capacity_freq_ref so that the cpu_capacity can be calculated as:
 
-> 
-> Signed-off-by: zhangjianrong <zhangjianrong5@huawei.com>
-> ---
->  drivers/thunderbolt/tb.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-> index a7c6919fbf97..558455d9716b 100644
-> --- a/drivers/thunderbolt/tb.c
-> +++ b/drivers/thunderbolt/tb.c
-> @@ -1039,6 +1039,9 @@ static int tb_configure_asym(struct tb *tb, struct tb_port *src_port,
->  			break;
->  
->  		if (downstream) {
-> +			/* Does consumed + requested exceed the threshold */
-> +			if (consumed_down + requested_down < asym_threshold)
-> +				continue;
->  			/*
->  			 * Downstream so make sure upstream is within the 36G
->  			 * (40G - guard band 10%), and the requested is above
-> @@ -1048,20 +1051,17 @@ static int tb_configure_asym(struct tb *tb, struct tb_port *src_port,
->  				ret = -ENOBUFS;
->  				break;
->  			}
-> -			/* Does consumed + requested exceed the threshold */
-> -			if (consumed_down + requested_down < asym_threshold)
-> -				continue;
->  
->  			width_up = TB_LINK_WIDTH_ASYM_RX;
->  			width_down = TB_LINK_WIDTH_ASYM_TX;
->  		} else {
->  			/* Upstream, the opposite of above */
-> +			if (consumed_up + requested_up < asym_threshold)
-> +				continue;
->  			if (consumed_down + requested_down >= TB_ASYM_MIN) {
->  				ret = -ENOBUFS;
->  				break;
->  			}
-> -			if (consumed_up + requested_up < asym_threshold)
-> -				continue;
->  
->  			width_up = TB_LINK_WIDTH_ASYM_TX;
->  			width_down = TB_LINK_WIDTH_ASYM_RX;
-> -- 
-> 2.34.1
+cpu_capacity = raw_cpu_capacity (2) * capacity_freq_ref /
+				      'max system-wide cpu frequency'
+
+(2) Juno's little CPU has 'capacity-dmips-mhz = <578>'.
+
+So before (1) for a little CPU:
+
+cpu_capacity = 578 * 850000 / 1100000 = 446
+
+and after:
+
+cpu_capacity = 578 * 700000 / 800000 = 505
+
+This issue can also be seen on Arm64 boards with cpufreq-dt drivers
+using the 'turbo-mode' dt property for boosted OPPs.
+
+What's actually needed IMHO is to calculate cpu_capacity according to
+the boost value. I.e.:
+
+(a) The infrastructure to adjust cpu_capacity in arch_topology.c has to
+    be kept alive after boot.
+
+(b) There has to be some kind of notification from cpufreq.c to
+    arch_topology.c about the toggling of boost. I'm abusing
+    CPUFREQ_CREATE_POLICY for this right now. Could we perhaps add a
+    CPUFREQ_MOD_POLICY for this?
+
+(c) Allow unconditional set of policy->cpuinfo.max_freq in case boost
+    is set to 0 in cpufreq_frequency_table_cpuinfo().
+    This currently clashes with the commented feature that in case the
+    driver has set a higher value it should stay untouched.
+
+Tested on Arm64 Juno (scmi-cpufreq) and Hikey 960 (cpufreq-dt +
+added 'turbo-mode' to the topmost OPPs in dts file).
+
+This is probably related what Christian Loehle tried to address in
+https://lkml.kernel.org/r/3cc5b83b-f81c-4bd7-b7ff-4d02db4e25d8@arm.com .
+
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+---
+ drivers/base/arch_topology.c | 11 -----------
+ drivers/cpufreq/cpufreq.c    |  3 +++
+ drivers/cpufreq/freq_table.c |  8 +-------
+ 3 files changed, 4 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index 1c3221ff1d1f..0a3916dc9644 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -378,8 +378,6 @@ void acpi_processor_init_invariance_cppc(void)
+ 
+ #ifdef CONFIG_CPU_FREQ
+ static cpumask_var_t cpus_to_visit;
+-static void parsing_done_workfn(struct work_struct *work);
+-static DECLARE_WORK(parsing_done_work, parsing_done_workfn);
+ 
+ static int
+ init_cpu_capacity_callback(struct notifier_block *nb,
+@@ -408,10 +406,8 @@ init_cpu_capacity_callback(struct notifier_block *nb,
+ 		if (raw_capacity) {
+ 			topology_normalize_cpu_scale();
+ 			schedule_work(&update_topology_flags_work);
+-			free_raw_capacity();
+ 		}
+ 		pr_debug("cpu_capacity: parsing done\n");
+-		schedule_work(&parsing_done_work);
+ 	}
+ 
+ 	return 0;
+@@ -447,13 +443,6 @@ static int __init register_cpufreq_notifier(void)
+ }
+ core_initcall(register_cpufreq_notifier);
+ 
+-static void parsing_done_workfn(struct work_struct *work)
+-{
+-	cpufreq_unregister_notifier(&init_cpu_capacity_notifier,
+-					 CPUFREQ_POLICY_NOTIFIER);
+-	free_cpumask_var(cpus_to_visit);
+-}
+-
+ #else
+ core_initcall(free_raw_capacity);
+ #endif
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index d7426e1d8bdd..6fdfcb6815d7 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2798,6 +2798,9 @@ int cpufreq_boost_set_sw(struct cpufreq_policy *policy, int state)
+ 		return ret;
+ 	}
+ 
++	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
++				     CPUFREQ_CREATE_POLICY, policy);
++
+ 	ret = freq_qos_update_request(policy->max_freq_req, policy->max);
+ 	if (ret < 0)
+ 		return ret;
+diff --git a/drivers/cpufreq/freq_table.c b/drivers/cpufreq/freq_table.c
+index 35de513af6c9..06068a12ec53 100644
+--- a/drivers/cpufreq/freq_table.c
++++ b/drivers/cpufreq/freq_table.c
+@@ -51,13 +51,7 @@ int cpufreq_frequency_table_cpuinfo(struct cpufreq_policy *policy,
+ 	}
+ 
+ 	policy->min = policy->cpuinfo.min_freq = min_freq;
+-	policy->max = max_freq;
+-	/*
+-	 * If the driver has set its own cpuinfo.max_freq above max_freq, leave
+-	 * it as is.
+-	 */
+-	if (policy->cpuinfo.max_freq < max_freq)
+-		policy->max = policy->cpuinfo.max_freq = max_freq;
++	policy->max = policy->cpuinfo.max_freq = max_freq;
+ 
+ 	if (policy->min == ~0)
+ 		return -EINVAL;
+-- 
+2.34.1
+
