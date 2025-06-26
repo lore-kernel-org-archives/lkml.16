@@ -1,116 +1,135 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0170F19D087;
-	Thu, 26 Jun 2025 08:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4751D25CC5B;
+	Thu, 26 Jun 2025 08:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750927393; cv=none; b=gYGiEBljcYARq8OJNiOs/HaAxu8yxvcXGnSF2kIHuLXkcHF2A+yn+ij+cOksewZG4jrucimYgRXdF3LUXVlyGlDi5nbaACfasEluSpcOHIpJc+5/1O+kfKC5LpcGyKqNRi4XHpUg2nWnt5oyZBXUUU1dYDF/EpsQiqeoLXbUfik=
+	t=1750927414; cv=none; b=Au2IhYlSvZCCcIizL0nbCkI+PWm0kPzc6WkZv/63UudCXj0CCmr2d7F8LQnEN+/zAAE74HH5VrjkbK/eTcQo/Llc7ecXMBKkbOCOPzdAn3fX+v2688sD30sDy35fTYfKSAFZenVjLhXSThr90paVZjuqP5ZAqHQUOJtfdauqIxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750927393; c=relaxed/simple;
-	bh=DKrElHS/l9lkSY/LdvJgsJ229eH3cP1Pn2QsP3Kt0Wo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=f9bePWy6UYhwh7zGcpcQwlCQE9NemvrexjpW5C23Mpa45n+hmFQFvQ+5DVCD5TAABJ3uRXMzbI+KUYejg8WGsMpEteYMf8sS41++sOcfPtDGh2KMCmTOfSxITEdirth85f9+jYvsp41pqu1kgO4mQLxF+721OmlO6yQ/ff2M5LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tjA/Rnk+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zstK+Uwb; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750927414; c=relaxed/simple;
+	bh=B6e2stM+SZstMcO5jf4TpgACbVCAZdQTT6/x1vT1a2E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r6xNtbjwtjMO8jGKAo67MKpmz9OtIFAEvipZrHpchW54X3UV4HqKc/P2NKeyJ9JXh+vg3bnPnRm9SLIRHg6jY1kI9l05gkR6CrEcK1glL3JzRmJJEKMUAnIkO+cbPX4+g/x+E5X1kZMhySNkaNGPcSQwSy5l5k+KZzF/lnXQ+SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2AWwBk1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tjA/Rnk+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zstK+Uwb"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750927384;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lIEWFzd10izeW8NDAm48DU86YG8FHDrpuX4aNPjS3Jo=;
-	b=tjA/Rnk+7n4pUaOf3T/JaUV5OHu1PRc7GDWWXg+J1EyHmKjzmI1gEpTO1a7KpvtqQw5Ngh
-	eVLHzXA55XrWSxKkP1ESQMxAQ0+nb+G2M5bzeeUBwG5YKvfXF8jXGOX2BAn/Ln6HgbsctT
-	WHZIgftYRVJXnz0SdgxbfkVxMoxHTL5mVnhtBCfcvjrJrawUIPCo9nsUqbnBo3iYTRw0tB
-	cJvODXpp1ZWeMi7GHRQFRAChsSTWNMJOuDUe9vAvnliv9u8wvybWW5sNuKFWOtq6+QmeGH
-	BC8soDXGTlVyocY6ybkwsHHR/JKWQ9fFRwlBRvFDR28fwbOPFb3M3q5q5XCyyQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750927384;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lIEWFzd10izeW8NDAm48DU86YG8FHDrpuX4aNPjS3Jo=;
-	b=zstK+UwbcYeqabnmHcHIqX8YuOVYAcK6vi7cltYuSxry4c+lorPwei2yXB1bmLGacEeBnx
-	hM2RyTRUrOy58kDw==
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
- linux-kernel@vger.kernel.org
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Jan Kiszka
- <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph
- Lameter <cl@gentwo.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich
- <dakr@kernel.org>, Petr Mladek <pmladek@suse.com>, Steven Rostedt
- <rostedt@goodmis.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, Ulf
- Hansson <ulf.hansson@linaro.org>, Thomas Gleixner <tglx@linutronix.de>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko
- <glider@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Dmitry
- Vyukov <dvyukov@google.com>, Vincenzo Frascino
- <vincenzo.frascino@arm.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain
- <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
- <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Kent
- Overstreet <kent.overstreet@linux.dev>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Uladzislau Rezki
- <urezki@gmail.com>, Matthew Wilcox <willy@infradead.org>, Kuan-Ying Lee
- <kuan-ying.lee@canonical.com>, Ilya Leoshkevich <iii@linux.ibm.com>,
- Etienne Buira <etienne.buira@free.fr>, Antonio Quartulli
- <antonio@mandelbit.com>, Illia Ostapyshyn <illia@yshyn.com>, "open
- list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:PER-CPU
- MEMORY ALLOCATOR" <linux-mm@kvack.org>, "open list:GENERIC PM DOMAINS"
- <linux-pm@vger.kernel.org>, "open list:KASAN"
- <kasan-dev@googlegroups.com>, "open list:MAPLE TREE"
- <maple-tree@lists.infradead.org>, "open list:MODULE SUPPORT"
- <linux-modules@vger.kernel.org>, "open list:PROC FILESYSTEM"
- <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 12/16] MAINTAINERS: Include dmesg.py under PRINTK entry
-In-Reply-To: <20250625231053.1134589-13-florian.fainelli@broadcom.com>
-References: <20250625231053.1134589-1-florian.fainelli@broadcom.com>
- <20250625231053.1134589-13-florian.fainelli@broadcom.com>
-Date: Thu, 26 Jun 2025 10:49:02 +0206
-Message-ID: <84v7oic2qx.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2AWwBk1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6736AC4CEEB;
+	Thu, 26 Jun 2025 08:43:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750927413;
+	bh=B6e2stM+SZstMcO5jf4TpgACbVCAZdQTT6/x1vT1a2E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=h2AWwBk1dmqeasBI0pSHkn3bcMuesUk/GAszIk1ywgTctzIBmdax3ZDjNa+ptgc3s
+	 irdDO0YuZUSX/eE0mUwp6pXYnV6cLfIbCf31HOqfjYSYa33VYpVmMH98UyG+N2dk+8
+	 g+JmFfFazElHiPXdY2rhpfcgsm5DQx4PMoDH06fSPz9Qn8htypGRips8FdaKWycVDb
+	 Ojjk6Y+d6fZcFJPLJh4derNnAstXutB+xZtqju4a34MesOqDUSMPLUylF3JdLmiiPa
+	 EG+60U0mjrXFPzeudcPOP7yaUY9xTRo3MPqS8aocXQ+ZdRTvVWE14HMcSGRgu0zgXa
+	 k9srYrdm7rapQ==
+Message-ID: <0e632d8a-fdd3-4401-ae6e-a0ac6df61bfe@kernel.org>
+Date: Thu, 26 Jun 2025 10:43:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Add support for IQ-8275-evk board
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ "Rob Herring (Arm)" <robh@kernel.org>,
+ Umang Chheda <umang.chheda@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ linux-kernel@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>,
+ kernel@oss.qualcomm.com, Conor Dooley <conor+dt@kernel.org>,
+ devicetree@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>
+References: <20250623130420.3981916-1-umang.chheda@oss.qualcomm.com>
+ <175069348269.3797007.5540625905808833666.robh@kernel.org>
+ <bcfbfaed-e857-44be-86bd-d4e977fd4d27@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <bcfbfaed-e857-44be-86bd-d4e977fd4d27@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-06-25, Florian Fainelli <florian.fainelli@broadcom.com> wrote:
-> Include the GDB scripts file under scripts/gdb/linux/dmesg.py under the
-> PRINTK subsystem since it parses internal data structures that depend
-> upon that subsystem.
->
-> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 224825ddea83..0931440c890b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -19982,6 +19982,7 @@ S:	Maintained
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git
->  F:	include/linux/printk.h
->  F:	kernel/printk/
-> +F:	scripts/gdb/linux/dmesg.py
+On 23/06/2025 17:50, Konrad Dybcio wrote:
+> On 6/23/25 5:46 PM, 'Rob Herring (Arm)' via kernel wrote:
+>>
+>> On Mon, 23 Jun 2025 18:34:18 +0530, Umang Chheda wrote:
+>>> This series:
+>>>
+>>> Add support for Qualcomm's IQ-8275-evk board using QCS8275 SOC.
+> 
+> [...]
+> 
+>>>
+>>>  .../devicetree/bindings/arm/qcom.yaml         |   7 +
+>>>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>>>  .../boot/dts/qcom/qcs8275-iq-8275-evk.dts     | 241 ++++++++++++++++++
+>>>  3 files changed, 249 insertions(+)
+>>>  create mode 100644 arch/arm64/boot/dts/qcom/qcs8275-iq-8275-evk.dts
+>>>
+> 
+> [...]
+> 
+>>
+>> New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250623130420.3981916-1-umang.chheda@oss.qualcomm.com:
+>>
+>> arch/arm64/boot/dts/qcom/msm8916-samsung-gt58.dtb: panel@0 (samsung,lsl080al03): 'port' does not match any of the regexes: '^pinctrl-[0-9]+$'
+>> 	from schema $id: http://devicetree.org/schemas/display/panel/samsung,s6d7aa0.yaml#
+> 
+> Seems like a fluke..
+No, it is a correct report. Schema does not allow port and needs to be
+fixed.
 
-Note that Documentation/admin-guide/kdump/gdbmacros.txt also contains a
-similar macro (dmesg). If something needs fixing in
-scripts/gdb/linux/dmesg.py, it usually needs fixing in
-Documentation/admin-guide/kdump/gdbmacros.txt as well.
+What's more, this would be pointed out if contributor checked their DTS,
+so obviously this never happened.
 
-So perhaps while at it, we can also add here:
+Internal guideline already asks for it, we asked for it, so why this
+keeps happening?
 
-F:	Documentation/admin-guide/kdump/gdbmacros.txt
-
-John Ogness
+Best regards,
+Krzysztof
