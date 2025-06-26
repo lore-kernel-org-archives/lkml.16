@@ -1,203 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C429B2BF3DB;
-	Thu, 26 Jun 2025 08:53:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1C829617A;
+	Thu, 26 Jun 2025 08:54:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750928038; cv=none; b=b3q2JC/WvAjfv72wDtYmyotZ+Lae2DDN0KsQ3Z4G9V4ebPCB9qMN0d31uei7ggeu0NBnhGFmcmE+tPmNyDnmUEI2nOEqRGp9h+zkCZgi6PtIRH2j22PfCTP17Tg7srsRbOQvSL6A+ZaLqgO/b+vh/paFQmrEmgsoyJNH2rZ6L+Q=
+	t=1750928084; cv=none; b=U5YUpphbjFG+QQyuhJs4tQJdVhxSWqhtHiR7o+XvwiDcscW3TY1DYdq0a4Y/Yf5UMn1VGDGqhZRFkY58szLx87ilECEgWFD3Peuq6AymWwEKLuexbLzqh3STkq5CRkhnGTazNyW7LpgUU52t1k+DFpPSon8oh0Gp7E8lRMr4m4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750928038; c=relaxed/simple;
-	bh=Q/oC3zAG5KSN+jRgxPkjrdrrhA9oMSUJGmc6UdOHebg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DXAp7NV5l/6dMqOc8kfxvX/ObGKy2hmG5pQE++VgNm3O4yCLdJMx2tb+fQfKG4/qHCP/pwUFAtJL13E4rxxMNUELsjGRVKiFPV+3yHkJa8ISn1+Lav89wgcFJrGharYuxmw5ch5x3OTYcYQ+Qcd1I6b7Bl3zdIcsUYV5ELQ7Tiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uFQ4EGWW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750928084; c=relaxed/simple;
+	bh=0TH71Dhds5dtLv4EikA0QKrDx9Iy9bKdIp2ZGs2Ak/s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MAUd4YLeBIzYQn12UdkZlTYF55vke5lIFIm50i+F+5Zom1sgK8ByF0pZu04wsvCK1pQikIb2EhweWNgpZr8jiDPI+3Z/nk7c9IvsRgg3ARkiGb9DPKPsRCsfUznoB+z1e79aqrYg6YfgVOJesySHGzKQKBVVlJZHQT+C4AEjAlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EhDTPZwF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uFQ4EGWW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6600CC16AAE;
-	Thu, 26 Jun 2025 08:53:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EhDTPZwF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1113FC4CEEB;
+	Thu, 26 Jun 2025 08:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750928038;
-	bh=Q/oC3zAG5KSN+jRgxPkjrdrrhA9oMSUJGmc6UdOHebg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=uFQ4EGWWcpqmu3aL4iMLriMbueqRHnRdW64rh7ti3Ju1wFt2pwUUV8LgEKsvKg+CO
-	 bMDb01ENdoG7P0mUdQCOGs815y/aHeDR/9DvnEl9nzkbAPxBZ7zHNUQHu9+t/UDbxo
-	 njGO0JLqULpB1LJnMYWBG+NLsjqIdIVa4mJX5OEfKBQuoCnTq5p685G9aBbboyjZWG
-	 JDOCrf0dDSuF/oBjk+VpKBtbWqxkc1MHjfA+dAOKbaxxkOeIk0fT067mNmF77SqnAW
-	 r7fM07JWdqmDTwa9ACTDJ8Dlphqf/STHSwcY40cKLvYM4o3TWoXxxgbFWhEkDjwtI4
-	 171ytHOsZ+eiw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A93BC7EE3A;
-	Thu, 26 Jun 2025 08:53:58 +0000 (UTC)
-From: Max Shevchenko via B4 Relay <devnull+wctrl.proton.me@kernel.org>
-Date: Thu, 26 Jun 2025 11:54:02 +0300
-Subject: [PATCH v2 09/11] ARM: dts: mediatek: add basic support for MT6572
- SoC
+	s=k20201202; t=1750928083;
+	bh=0TH71Dhds5dtLv4EikA0QKrDx9Iy9bKdIp2ZGs2Ak/s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EhDTPZwFbQ+12IG9Do0UP3kDYNFDPmM7uBuCFjBR5kEUcMiKw65/QdNOEYccu8ovn
+	 CppZZZmRnsUgBAd3No2t9DD/30wnxxK+M7NiB3GqzGr1pOp3/YBmg76gQzlxCuzzBM
+	 spIxuqR6VXakFYox3e/F68aResjV6SdGqtpJ+zml+YRXI2BNP25ywbGEsa46UEL4Z6
+	 1e1AYWMh9QyRZbv1COCgVX6xUzfwkxAoTJfzkiqI9J9EJTeTDY1TJMrD9b18gTCSQv
+	 2c7d+JmcZ6V91PHWKmnMEZex2bymoM1yIg3ffAMs9XYNBnl/e7K0zRQpI+gkqJBANc
+	 z2P+NTfRqwSdQ==
+Message-ID: <2350a34d-2f7b-49c0-b286-2856c088131a@kernel.org>
+Date: Thu, 26 Jun 2025 17:54:40 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] block: fix false warning in bdev_count_inflight_rw()
+To: Yu Kuai <yukuai1@huaweicloud.com>, axboe@kernel.dk, hare@suse.de,
+ hch@infradead.org, yukuai3@huawei.com, john.g.garry@oracle.com
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yi.zhang@redhat.com, calvin@wbinvd.org, david@fromorbit.com,
+ yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com
+References: <20250626083927.576207-1-yukuai1@huaweicloud.com>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20250626083927.576207-1-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250626-mt6572-v2-9-f7f842196986@proton.me>
-References: <20250626-mt6572-v2-0-f7f842196986@proton.me>
-In-Reply-To: <20250626-mt6572-v2-0-f7f842196986@proton.me>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Guenter Roeck <linux@roeck-us.net>, Sean Wang <sean.wang@mediatek.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org, 
- Max Shevchenko <wctrl@proton.me>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750928035; l=3252;
- i=wctrl@proton.me; s=20250603; h=from:subject:message-id;
- bh=hAnQxIQ8SeGexEO8sfAsSw3VUgYtgiPEA7IZtJQPS8E=;
- b=fXRu+D73NvKFA1xTqPyyae1NO8hDozktu9LMwheATwyUV5SzQ/ph/3T+pZrlO7TcENUFf4iEk
- hfYp6CbwCM8B+0o54gtMuLtKn0xUVENMvE5l4AQbefaqeRKzHSENGgo
-X-Developer-Key: i=wctrl@proton.me; a=ed25519;
- pk=JXUx3mL/OrnRvbK57HXgugBjEBKq4QgDKJqp7BALm74=
-X-Endpoint-Received: by B4 Relay for wctrl@proton.me/20250603 with
- auth_id=421
-X-Original-From: Max Shevchenko <wctrl@proton.me>
-Reply-To: wctrl@proton.me
 
-From: Max Shevchenko <wctrl@proton.me>
+On 6/26/25 17:39, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> While bdev_count_inflight is interating all cpus, if some IOs are issued
+> from traversed cpu and then completed from the cpu that is not traversed
+> yet:
+> 
+> cpu0
+> 		cpu1
+> 		bdev_count_inflight
+> 		 //for_each_possible_cpu
+> 		 // cpu0 is 0
+> 		 infliht += 0
+> // issue a io
+> blk_account_io_start
+> // cpu0 inflight ++
+> 
+> 				cpu2
+> 				// the io is done
+> 				blk_account_io_done
+> 				// cpu2 inflight --
+> 		 // cpu 1 is 0
+> 		 inflight += 0
+> 		 // cpu2 is -1
+> 		 inflight += -1
+> 		 ...
+> 
+> In this case, the total inflight will be -1, causing lots of false
+> warning. Fix the problem by removing the warning.
+> 
+> Noted there is still a valid warning for nvme-mpath(From Yi) that is not
+> fixed yet.
+> 
+> Fixes: f5482ee5edb9 ("block: WARN if bdev inflight counter is negative")
+> Reported-by: Yi Zhang <yi.zhang@redhat.com>
+> Closes: https://lore.kernel.org/linux-block/aFtUXy-lct0WxY2w@mozart.vkv.me/T/#mae89155a5006463d0a21a4a2c35ae0034b26a339
+> Reported-and-tested-by: Calvin Owens <calvin@wbinvd.org>
+> Closes: https://lore.kernel.org/linux-block/aFtUXy-lct0WxY2w@mozart.vkv.me/T/#m1d935a00070bf95055d0ac84e6075158b08acaef
+> Reported-by: Dave Chinner <david@fromorbit.com>
+> Closes: https://lore.kernel.org/linux-block/aFuypjqCXo9-5_En@dread.disaster.area/
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>  block/genhd.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/block/genhd.c b/block/genhd.c
+> index 8171a6bc3210..680fa717082f 100644
+> --- a/block/genhd.c
+> +++ b/block/genhd.c
+> @@ -141,9 +141,14 @@ static void bdev_count_inflight_rw(struct block_device *part,
+>  		}
+>  	}
+>  
+> -	if (WARN_ON_ONCE((int)inflight[READ] < 0))
+> +	/*
+> +	 * While iterating all cpus, some IOs might issued from traversed cpu
+> +	 * and then completed from the cpu that is not traversed yet, causing
+> +	 * the inflight number to be negative.
 
-Add basic support for the MediaTek MT6572 SoC.
+Nit (grammar):
 
-Signed-off-by: Max Shevchenko <wctrl@proton.me>
----
- arch/arm/boot/dts/mediatek/mt6572.dtsi | 109 +++++++++++++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
+	 * While iterating all CPUs, some IOs may be issued from a CPU already
+	 * traversed and complete on a CPU that has not yet been traversed,
+	 * causing the inflight number to be negative.
 
-diff --git a/arch/arm/boot/dts/mediatek/mt6572.dtsi b/arch/arm/boot/dts/mediatek/mt6572.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..b4fa376619a58cacd33ef556f80c1a4f7126c4f5
---- /dev/null
-+++ b/arch/arm/boot/dts/mediatek/mt6572.dtsi
-@@ -0,0 +1,109 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2025 Max Shevchenko <wctrl@proton.me>
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "mediatek,mt6572";
-+	interrupt-parent = <&sysirq>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "mediatek,mt6589-smp";
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x0>;
-+		};
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x1>;
-+		};
-+	};
-+
-+	uart_clk: dummy26m {
-+		compatible = "fixed-clock";
-+		clock-frequency = <26000000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	system_clk: dummy13m {
-+		compatible = "fixed-clock";
-+		clock-frequency = <13000000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	rtc_clk: dummy32k {
-+		compatible = "fixed-clock";
-+		clock-frequency = <32000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges;
-+
-+		watchdog: watchdog@10007000 {
-+			compatible = "mediatek,mt6572-wdt", "mediatek,mt6589-wdt";
-+			reg = <0x10007000 0x100>;
-+			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_LOW>;
-+			timeout-sec = <15>;
-+			#reset-cells = <1>;
-+		};
-+
-+		timer: timer@10008000 {
-+			compatible = "mediatek,mt6572-timer", "mediatek,mt6577-timer";
-+			reg = <0x10008000 0x80>;
-+			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&system_clk>, <&rtc_clk>;
-+			clock-names = "system-clk", "rtc-clk";
-+		};
-+
-+		sysirq: interrupt-controller@10200100 {
-+			compatible = "mediatek,mt6572-sysirq", "mediatek,mt6577-sysirq";
-+			reg = <0x10200100 0x1c>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+		};
-+
-+		gic: interrupt-controller@10211000 {
-+			compatible = "arm,cortex-a7-gic";
-+			reg = <0x10211000 0x1000>,
-+			      <0x10212000 0x2000>,
-+			      <0x10214000 0x2000>,
-+			      <0x10216000 0x2000>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+		};
-+
-+		uart0: serial@11005000 {
-+			compatible = "mediatek,mt6572-uart", "mediatek,mt6577-uart";
-+			reg = <0x11005000 0x400>;
-+			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&uart_clk>;
-+			clock-names = "baud";
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@11006000 {
-+			compatible = "mediatek,mt6572-uart", "mediatek,mt6577-uart";
-+			reg = <0x11006000 0x400>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&uart_clk>;
-+			clock-names = "baud";
-+			status = "disabled";
-+		};
-+	};
-+};
+> +	 */
+> +	if ((int)inflight[READ] < 0)
+>  		inflight[READ] = 0;
+> -	if (WARN_ON_ONCE((int)inflight[WRITE] < 0))
+> +	if ((int)inflight[WRITE] < 0)
+>  		inflight[WRITE] = 0;
+>  }
+>  
+
 
 -- 
-2.50.0
-
-
+Damien Le Moal
+Western Digital Research
