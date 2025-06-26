@@ -1,106 +1,145 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E589F1BD9D3
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3AE1F9F7A
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750905435; cv=none; b=JyQsE7/heQKbNs0hQa8kWUSvCk0Xa9AhyOmJ/lBWqMPMP9JEiYtW67ahASL4nwOUbV0uF6O9CViaez9gVJnmItys+FRZlINKKJfqaTFgzb+Sr35KgNihBUo/B6yL186yxtzguWWbB68tTyhdbpENi0R9NOsWqFI6teOCvK2mE08=
+	t=1750905439; cv=none; b=dHLa+U9w1TND2syZsASR22Q2DqX1JG45NOPddQm7D6lH5hfNpSYbnfWyyqUg2Y2LN0JRPyZrBAnbsa14iLpjeyA+l4iydwDwa8noIfhcdWkrbIvCJTdwYzXYYNyJB/cGKE0OjkWI4y8g7FsYI0plR3sMNtj0EC14gmI0V6srUuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750905435; c=relaxed/simple;
-	bh=z2sOcS2GEXQg3M6WCfaMtB/l8eYFe3q4w1BRHq+Az2Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=QQZrGtFR+QMTMqKcgKFHf3ulsELMHuxRKDoUl+zwrnk+96egt7NozM4uSitsCkXwbKpRfO/Az/y9abKKd2CTjTloLYn4dBQBxWJn16+14OauSEaXNItnHOUI9+P5FYfXSm7yBjyufH1rIff8UejhDab/SPUlHYcH0dM1faDlH+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=T/Suh72r; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750905439; c=relaxed/simple;
+	bh=e5C9qrU3fsOpfaDgADgkrynMWd5GzhKtqGQzdriNJ3U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pasT++0yFHxCcnTZzkFQ7fPzYZQIKomixAHy89OjXE+WqqxuGqILpY9uiMkLCgYGO00JETSRJ5He8UqiGcGTDjbX83K7zn7gAda5C369RtGA5XScleEpH3JyV4mEZ4sLak5TLRbo776SM7WBfKgQJK7FrDNQQbfuRnnEAfVb6dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L+0itSvi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="T/Suh72r"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250626023711epoutp0367437668b92cd1986af94204feb1f55e~MdzaNCYTH1712717127epoutp03k
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:37:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250626023711epoutp0367437668b92cd1986af94204feb1f55e~MdzaNCYTH1712717127epoutp03k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750905431;
-	bh=3KKeY/NRtUPjv7gxdOOKLkL/mtVywZDtNKn8DXvJJT0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T/Suh72rNRMdN/m7/Trdq4p0hqwoQegpnlJVMlU9P3w6ocmuPbi2ts9YCZLcPw1tg
-	 6t/biCSwhfmgm1+B4fxeZljwctkaEL7DDDrO03J6fIsrv1dhHawWqAJMkBpQdyFGfA
-	 TtHuozUenW56VIXojOSU3u9MY40V0+pxhHY9Oihk=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250626023710epcas5p39d882046df964a98f0d8b617fd5ee19b~MdzZVCw8l0375103751epcas5p3P;
-	Thu, 26 Jun 2025 02:37:10 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4bSNBD4NG5z2SSKp; Thu, 26 Jun
-	2025 02:37:08 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250625165248epcas5p10eefe9e1f1a89806793c86decc63f232~MV1LrOioV0885408854epcas5p1q;
-	Wed, 25 Jun 2025 16:52:48 +0000 (GMT)
-Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250625165245epsmtip2600318736a6844f4c5dc7f7cecffc09a~MV1I11UW71750817508epsmtip2G;
-	Wed, 25 Jun 2025 16:52:45 +0000 (GMT)
-From: Shradha Todi <shradha.t@samsung.com>
-To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-fsd@tesla.com
-Cc: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
-	vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de,
-	m.szyprowski@samsung.com, jh80.chung@samsung.com, pankaj.dubey@samsung.com,
-	Shradha Todi <shradha.t@samsung.com>, Hrishikesh Dileep
-	<hrishikesh.d@samsung.com>
-Subject: [PATCH v2 01/10] PCI: exynos: Remove unused MACROs in exynos PCI
- file
-Date: Wed, 25 Jun 2025 22:22:20 +0530
-Message-ID: <20250625165229.3458-2-shradha.t@samsung.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250625165229.3458-1-shradha.t@samsung.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L+0itSvi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750905437;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EW+I1QQIKlTT7W9a4yuMAmimMoHXfs6dlaepoS7uBM4=;
+	b=L+0itSvi7S7RE2UyumHfj9k9c+e6ns43ANlRJb43K9G8m7BWEbPa0KNkk5Mky63WrEfNO6
+	p7hc/i10cJJY3C9hhNAN5qnrA/ftV6J6yBkmw5CUsfwGnjCSP1aitRTFktHpHGWSVXEeTj
+	YsdLNYMAA2yoAWIZyBsAA+cyorm1svU=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-596-HwcXpC30PJKdG6V0urrNCQ-1; Wed, 25 Jun 2025 22:37:15 -0400
+X-MC-Unique: HwcXpC30PJKdG6V0urrNCQ-1
+X-Mimecast-MFC-AGG-ID: HwcXpC30PJKdG6V0urrNCQ_1750905434
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-313fab41f4bso616439a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 19:37:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750905434; x=1751510234;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EW+I1QQIKlTT7W9a4yuMAmimMoHXfs6dlaepoS7uBM4=;
+        b=uQBsMbhkXFh9yv4BJVgGEH/plcA3MY4wZpi7jCfz7r/xL/8manN4JQnUW0Kq76i1D5
+         c5MXMd5j8GsPOJJeWEBl97Y4qj9aIdakpOtfvxfRaNa3y0h6IDLiaZbLzb0FTpIHpXJZ
+         Uo6aG/3FpRZFsN7xw84cx2b8sL4fs3VGz3Zm0NAL1TtgFM9vPIdPHyMDCOTO3NdOb5EY
+         2C1HRq4QZbjai4JItZ0pxYbgeU7s7cDi7+5CQQRPeCBVVSZj9gRTnupluaq2GWyiGBS4
+         cBCPphU4x4sVduCzRFMW+JXwkFWRBBYhQlEY/2ryAtg1nThy8Sk+J1KB7+CNRnItwdWe
+         szLw==
+X-Forwarded-Encrypted: i=1; AJvYcCXNrXQv5uN/KsrJ0JuyV6zZ6ZoeZNxD7EK2fPi95TxDqhTtgAzE3EDAp9FvWQZtG76nawLK0fxCHee0ExY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGSlOqXnv8xZWu1l71wO5BnvUUc8xRnls22sJ2NNs4NzUaf0ku
+	ixhZ9HEnPiqlzgUcldPVPCiVHtKTTNMTkmOEdFSR8SBsau5qN1Dc/FHG7pdhV00uTFfD7tisg4x
+	HAMvWa79kBMRX4ZOB8xIWL7Zp61eBJdvaOgnZNayajMPxnVaZb2m43sgZMIRgPn4EtIH8JMAzqI
+	qI/+Ng4JcqAHceF+STTY+xVq0kp6dnm1OGNU3aKWsS
+X-Gm-Gg: ASbGncu85YLkz983asOIlfGNpMleCIZTGWO/V07osz7OpzqIaqv0WsElxPuJG3IJL0H
+	eKsi6e0RTC79P33fVMWEqyIs/gWOFqbNoGWlpnQvEySBPtaRGj7olZ9z3ydoIEXiY7GXmS6J8Ve
+	ncc6c/
+X-Received: by 2002:a17:90b:2b4c:b0:313:fb08:4261 with SMTP id 98e67ed59e1d1-315f269fa56mr6541975a91.32.1750905433997;
+        Wed, 25 Jun 2025 19:37:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGnFq27uptoJBVoGMseNGObxmjNsAzQWtsl9oanE1SD186q54jLA9zURCaRw/XaQvClcZpVeAk2VlfUN6l6Dn8=
+X-Received: by 2002:a17:90b:2b4c:b0:313:fb08:4261 with SMTP id
+ 98e67ed59e1d1-315f269fa56mr6541958a91.32.1750905433553; Wed, 25 Jun 2025
+ 19:37:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250625165248epcas5p10eefe9e1f1a89806793c86decc63f232
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-541,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250625165248epcas5p10eefe9e1f1a89806793c86decc63f232
-References: <20250625165229.3458-1-shradha.t@samsung.com>
-	<CGME20250625165248epcas5p10eefe9e1f1a89806793c86decc63f232@epcas5p1.samsung.com>
+References: <20250625160849.61344-1-minhquangbui99@gmail.com> <20250625160849.61344-3-minhquangbui99@gmail.com>
+In-Reply-To: <20250625160849.61344-3-minhquangbui99@gmail.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Thu, 26 Jun 2025 10:37:01 +0800
+X-Gm-Features: Ac12FXzafcvLIIRlWLmpr_5VBnu8UJoZzPPLlWXuQNGXda7Uc4uun2EikZbgBz8
+Message-ID: <CACGkMEuZTP+xPCWuSGwiApWEj_PuOxb5yOeR3t-Bga1t+svawQ@mail.gmail.com>
+Subject: Re: [PATCH net 2/4] virtio-net: remove redundant truesize check with PAGE_SIZE
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	Stanislav Fomichev <sdf@fomichev.me>, virtualization@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Some MACROs are defined in the exynos PCI file but are
-not used anywhere within the file. Remove such unused
-MACROs.
+On Thu, Jun 26, 2025 at 12:10=E2=80=AFAM Bui Quang Minh
+<minhquangbui99@gmail.com> wrote:
+>
+> The truesize is guaranteed not to exceed PAGE_SIZE in
+> get_mergeable_buf_len(). It is saved in mergeable context, which is not
+> changeable by the host side,
 
-Suggested-by: Hrishikesh Dileep <hrishikesh.d@samsung.com>
-Signed-off-by: Shradha Todi <shradha.t@samsung.com>
----
- drivers/pci/controller/dwc/pci-exynos.c | 2 --
- 1 file changed, 2 deletions(-)
+This really depends on the security model.
 
-diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index 1f0e98d07109..f9140d1f1d19 100644
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -31,8 +31,6 @@
- #define IRQ_INTB_ASSERT			BIT(2)
- #define IRQ_INTC_ASSERT			BIT(4)
- #define IRQ_INTD_ASSERT			BIT(6)
--#define PCIE_IRQ_LEVEL			0x004
--#define PCIE_IRQ_SPECIAL		0x008
- #define PCIE_IRQ_EN_PULSE		0x00c
- #define PCIE_IRQ_EN_LEVEL		0x010
- #define PCIE_IRQ_EN_SPECIAL		0x014
--- 
-2.49.0
+> so the check in receive path is quite
+> redundant.
+>
+> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+> ---
+>  drivers/net/virtio_net.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index 2a130a3e50ac..6f9fedad4a5e 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -2144,9 +2144,9 @@ static int virtnet_build_xdp_buff_mrg(struct net_de=
+vice *dev,
+>  {
+>         struct virtio_net_hdr_mrg_rxbuf *hdr =3D buf;
+>         unsigned int headroom, tailroom, room;
+> -       unsigned int truesize, cur_frag_size;
+>         struct skb_shared_info *shinfo;
+>         unsigned int xdp_frags_truesz =3D 0;
+> +       unsigned int truesize;
+>         struct page *page;
+>         skb_frag_t *frag;
+>         int offset;
+> @@ -2194,9 +2194,8 @@ static int virtnet_build_xdp_buff_mrg(struct net_de=
+vice *dev,
+>                 tailroom =3D headroom ? sizeof(struct skb_shared_info) : =
+0;
+>                 room =3D SKB_DATA_ALIGN(headroom + tailroom);
+>
+> -               cur_frag_size =3D truesize;
+> -               xdp_frags_truesz +=3D cur_frag_size;
+> -               if (unlikely(len > truesize - room || cur_frag_size > PAG=
+E_SIZE)) {
+> +               xdp_frags_truesz +=3D truesize;
+> +               if (unlikely(len > truesize - room)) {
+>                         put_page(page);
+>                         pr_debug("%s: rx error: len %u exceeds truesize %=
+lu\n",
+>                                  dev->name, len, (unsigned long)(truesize=
+ - room));
+> --
+> 2.43.0
+>
+
+Acked-by: Jason Wang <jasowang@redhat.com>
+
+Thanks
 
