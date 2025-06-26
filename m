@@ -1,157 +1,141 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A4F1F2BB8;
-	Thu, 26 Jun 2025 18:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56F82EBDC8
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 18:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750962179; cv=none; b=u09vZJm9vegcvVtU20L6p7SDSWW4kEKZe8dr3ia2gpV2BREq0FVZDLyoXh+J36oOj55lrNsBPmGzbRuH6XM59qw/tUG4GJp+4nunuEKydG2+F8XNd7Ftffo3hQcINpDGEitt5ULsd5n6gjitg0rCytqUrxqTiMNtRymlDqvJ/DA=
+	t=1750962258; cv=none; b=trKxW0HJ2NnHFqJ1kTbnhAWR5O1WymFQuDAm3W2wNlv3sR5ewYDh0YU05OBLnR6n/s+4dl6RUyxnoABbFgV1tA8YL1hejO5Xg1qYdFwxMRxRWDjl90ArvpNwbXgJAPfzlLGo+25cGmGxdqA1C+FfI2M2f4uazcUYQnpz9kDe9wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750962179; c=relaxed/simple;
-	bh=9ewmGMSIgXOVup07/pmbXzUq2WXDS5wKKrQ444icgyE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qbcm6m7uRaY98GW6AfIq8rwMa2wgaYrxJXDzwJaI2s4A6VdBOHth2CFIZ7bcwAUbXG32DK86O1UvjrlRHzr10/wqFjQVS/BrBbG7fX7hiNHUyUbHLY2sPUz4d1c1EqHQEk0UKOpWcchkQOmm4TXiqy04mthBVxNR7+kymFhwmTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gRStpjhZ; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750962258; c=relaxed/simple;
+	bh=SEb7ufgzEXj8edBJyUUGHHko48ljKtRxkyisUqsSCAk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oHM6kr6bHs1aApubXrAHtz2R3hI2OZzv1vX6XpxtY6dcOkKMcPSxjUUOj9VqTV6qt0grR3mkb+9TS+FtXeX9RmbyBxFw1g9oL7nFfktHCqzrHJ2pkSzXgEt/tbtyb/WllhY8/dbIR3SgCG//JzmOKGFexjhosjDD8yi5jiM5p1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hSBjJ3DU; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gRStpjhZ"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ae223591067so51771066b.3;
-        Thu, 26 Jun 2025 11:22:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750962176; x=1751566976; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2jjFd06z6IyDDI66ky5VMT2OuzWH5udSZsV9RTM3AcA=;
-        b=gRStpjhZqIXWMAnBgdQUBJXmMgjF/6URhvrCwZ1mRZWtENOVNk78YHrAdovF50oeJ5
-         B4M9rQVi/kcG/avFJNHAeIV7IK/KeoqA58Ce38UUtQlF6OfWe49LVk6a3h7zoXpCKfTM
-         ZanLyqObAiaVx3ix675xhq+b+vRNAt+AqfQC0Ol5ktUBG/qTWHvosdPS4jhFtQ+Xplrm
-         MeRP6YDsDx84SZUrPt7RkRDdTwfCegBwomLjRQtDcl+EupKJb93L4BkZGt3jth0WOjU5
-         oDouDQ2x/D5gNWrb2F54kSmoWkTV0rhtFFT6dUtAGY2d922bH6HRqvKYEU3EICb5JHMW
-         /z/Q==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hSBjJ3DU"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QA1n56014014
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 18:24:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	SqrHJ7cfWfnQcM3hQMJMXiBTqi4dPan6flRx03S8nPI=; b=hSBjJ3DUYGlbVw4q
+	HFPnYfSqIRfncb3Fig25cbaMZSncGiPtDRaGmUOl6GRBzXszLU8wrv8Fg7FciVsY
+	7Q9gcgcAGGv28Vbud85ERBmTOrdWomtM/Zpib5Wk/gr8xkHBW7giZ544LOKmcwtr
+	TwFrX1UnCNLcGhDo005G8fUxjGhmUQEEb8rhqkoNa2O6XDtLNx5FP+8vONUNS4+M
+	aWkqi4kt/eo1BHM9uUtCcZWF0zpWi9pkEpCHzpetqo/pgl2FgAy23j3Mv4Vi3F49
+	zqa2x1swjQ66q8Ov+ecjzqEfyXfmq+kUE8fib15jLS49k/FYFh2O2xt7bKVEmBbU
+	AGiPBw==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbm22v9j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 18:24:14 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d09a3b806aso26035085a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 11:24:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750962176; x=1751566976;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2jjFd06z6IyDDI66ky5VMT2OuzWH5udSZsV9RTM3AcA=;
-        b=dG5kaszCRH1vG7r5Bq2pqIlJxIRXENjyqRIiGjWXJ9ELyKQ/DM0Nfw/c9TGlSumsFA
-         S8n9ZrChvtM8i3Aep1q+g+FawVbFXeCDNRKgBmgzGtfRLtIYL7/K1x6cyiYeXGR++CH5
-         TircsiYWYwux3L9zK13bB0Aux/0qERpaZ0vh1dfTaOzlYgbi8fo65JC+943WYnTaGKri
-         DqQSpWB88ijN0/b/zfvJvoqyCvJUr4Obxls0slD5vQxbbWCd2rBk3bd6cCgOj0mTmex+
-         XpmcJDoSHQuDjHVyzbKsF6VjVkzub8oG9U/85wYo+ArxbnHLIAP7z27+FfqeERG3bN/H
-         /LdA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQdSlmw8bHhfBDxO0FiRapW/0SYemgrhTzg97w1JWVaYYJPAHjgskbttdu93Pv6rFaUzWPosuDZgk=@vger.kernel.org, AJvYcCWtsR3lYdf4T2lLwxHA/fpWd11A4v8iGN3oBS32dWt36T1ZFOyHH2zy3rNRiJ7gQMaltc3ATRrvKt9c7fQhYRuxOMo=@vger.kernel.org, AJvYcCXWIbY+/GKMHAqC5wLnatVNuzJxP/FPogQESJ5dKj5K8gAdF5g6ZAIVBx1vbYN7Coo7okXgZkJGvTADXb4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJBK2mm2vpjKeTQLm8VYpQ9RA8Ifeu54YFOl+H0GL1OCc7ASi/
-	TK3VTGT6rKwd+0ovKF+nh0UT/32RgZICvzJQpbqik/XFZ1T5rFWmVT1qesZZDKN1qQycFPVxALo
-	9SsCAuhOSDcc4Y97bYksh9/AEo3Z0Vrk=
-X-Gm-Gg: ASbGnct6SZGEe+dZJxmza6XEo6c5RVnIL3pa8nUNWN3nSRbxSMJqWZ9IJt5OC2O/BOi
-	nPgYlPLwT8V2hoCmEhX7EFbbSgGYu62+wfQ7e48EQJRQ5B3PrRXbDd6b8+w9WMZ/0oFMRI/8Mme
-	EHYGuTOLvC6skv4cCfpXZTTf0hM7TeOLDq2HcVlugj
-X-Google-Smtp-Source: AGHT+IG/HBm4E++R0k9lVC/+RTAtOGgRPzPIB8sRecM543yqweD9y/t71VbdBQVT8JhWrXiQVwMv9oGAJcReShdI/Vc=
-X-Received: by 2002:a17:907:d78b:b0:ae0:af6c:680 with SMTP id
- a640c23a62f3a-ae34fd3311fmr10304266b.2.1750962175894; Thu, 26 Jun 2025
- 11:22:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750962253; x=1751567053;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SqrHJ7cfWfnQcM3hQMJMXiBTqi4dPan6flRx03S8nPI=;
+        b=G7VUMpQe3QsKYTZthgo4VHQs6OoT2xjJTLNt57wqm5HZhzGP6L6UXQE/fn7TOpuJH2
+         Ii2cNsnO7ven6l2HRUJP5qRZOmsXiX0XoAaGZ4SiK9KShctwdIGeegg3HOdF0hKtdCGU
+         hhyj26p3u57k4EJgCkIG1jgZrvU2gVdsGP27iJL9T/xMtCYt/75ihzS+0QAzRti7oyLX
+         ZGvyggL1N34NYc3n852j49x07dHPsj48SEkEkAD/2SAxV61fdzvmI6x163cNSjgTUG9q
+         m2Qx+QXy3YBKK+sW+Dk2lDnzEz14ooqMmWMOfaYepDBShoBxlFX4fTVmV5SiEFCVYFNQ
+         IRrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3QluprwmCjeEhyQ6cLU56k4nGJqMq7qhOtM6rFjmPFOkjZqkPGL994arkxFjqkaa7NdwBjvIgtW15ud8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygH+P8GOT8YVQ1BuNsL4Z6uh+bz2ysyah89i1haRRqAMssM7qA
+	sdGbxH0AKiNuJPG8DWIhLmDYniHtMfPhiiruujzhKWSHrAYAZ8h/t8GVwv3chZDjxGA1nBFSYyc
+	Qxi21izkCfk8OMN+FGpRiTFJBjuY0H+IjGGrPslm42xTuQF/T9OV1kV0TcsRYCPBAL5TudjEQsJ
+	M=
+X-Gm-Gg: ASbGnctyR0GVA757YapqlugSQl5x2WWkguJNzvBzloDpnQLsdJeew7z/Uj65FmscCK4
+	mUMd5fo68fv6MjGvNqgvR1T3pmo7d7KGHPe4/uwVFVNEvvo83pIWrPJh3lATv8OMnClHxaFY+7+
+	e3IbolyfUCiVVsap6l/Ondj6nzFIKH5mYygZNN1xMU/pu/7gNV/4x0+5bcNYzxdBisAjIx9FmJ3
+	DLzosi4TIW4rbUN2EEz46mdnrgdkR5GokJMy+h053Uf/KbK3121fMuaPHbMJsxxx4TrNRzsK3tn
+	tXAs2U+23spqQ6zL95H4HFjOSa8ZlrNr+sM2HBGl4WhNU5VfU69BPxsdbh+5jjPZ6pbMuz+9oAq
+	TdPw=
+X-Received: by 2002:a05:620a:28c4:b0:7c5:79e8:412a with SMTP id af79cd13be357-7d44390daa2mr30490285a.2.1750962253604;
+        Thu, 26 Jun 2025 11:24:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGeXgRbD/zpz06rGqRZPcG9OMXst6AVLMv8E1zNjKgi9yDWIHZ6FRqknPqbMJXd0Mnx0ebTew==
+X-Received: by 2002:a05:620a:28c4:b0:7c5:79e8:412a with SMTP id af79cd13be357-7d44390daa2mr30487285a.2.1750962252950;
+        Thu, 26 Jun 2025 11:24:12 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c8290e37csm323341a12.31.2025.06.26.11.24.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 11:24:11 -0700 (PDT)
+Message-ID: <8680b702-7890-4abc-a4c0-49bce5a11177@oss.qualcomm.com>
+Date: Thu, 26 Jun 2025 20:24:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250625143825eucas1p2e95ba80552cd289b6e05db33f32ec14a@eucas1p2.samsung.com>
- <CANAwSgTBzpL+XMJGhG=38A7GOzeayZaG_2LTvsaE2=mF-pn5mg@mail.gmail.com> <20250625143816.1146123-1-m.majewski2@samsung.com>
-In-Reply-To: <20250625143816.1146123-1-m.majewski2@samsung.com>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Thu, 26 Jun 2025 23:52:38 +0530
-X-Gm-Features: Ac12FXzSOcbN1qjL1eCS7VucajWs0aI1NpEXfUMgJBZoyRlg-bsb2m048szqtZE
-Message-ID: <CANAwSgTdOyOxhBuFypyJpwjBVa+uKO9R3+6DMYOrnjsC5xvUZw@mail.gmail.com>
-Subject: Re: [RRC v1 1/3] thermal/drivers/exynos: Remove unused base_second
- mapping and references
-To: Mateusz Majewski <m.majewski2@samsung.com>
-Cc: alim.akhtar@samsung.com, bzolnier@gmail.com, daniel.lezcano@linaro.org, 
-	krzk@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, lukasz.luba@arm.com, rafael@kernel.org, 
-	rui.zhang@intel.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 5/5] arm64: dts: qcom: qcm2290: Add venus video node
+To: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc: krzk+dt@kernel.org, bryan.odonoghue@linaro.org, quic_vgarodia@quicinc.com,
+        quic_dikshita@quicinc.com, mchehab@kernel.org, robh@kernel.org,
+        conor+dt@kernel.org, konradybcio@kernel.org, andersson@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250626135931.700937-1-jorge.ramirez@oss.qualcomm.com>
+ <20250626135931.700937-6-jorge.ramirez@oss.qualcomm.com>
+ <08e3c707-3b39-4b67-ae9d-f9fe65ad210e@kernel.org> <aF1YTmxF0pAVDFYe@trex>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <aF1YTmxF0pAVDFYe@trex>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=YYu95xRf c=1 sm=1 tr=0 ts=685d904e cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=kIY5E4sY9iMOqdOJmHYA:9
+ a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-GUID: j5R3PhcRVgi-E_BsoHEytqzg4aEDqIr1
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDE1NiBTYWx0ZWRfX0Sh3T/axpH6i
+ 1/KrAxvAPf0p62i5NAaEzfkVOwvOkFLlr0S4dEeyQb6MIHI+pQT0BPKoFHw/70WpBD32e6zkNu/
+ BnoZ5xkaFoCsNKjpZoMaLzBGSj/sWIBXK7WmtUvkw5LziJt60BCvwwuw5ux9ExrB4ErMzxOM8py
+ pUVvfTAJIq5tcRlN8vbljuOqOuXn0Hn1YRE+jupXAQNjXnaqrRDRu6t/2SxkDmsQ4NyFclxB1/v
+ 5vwEscq1vIWXsMlwHDunpd8DpOpwVsPRwN7TeCy0/naUBpGu+NAnfU8abK3WQbZ4PqdeRelNTaL
+ c80jCmLgfcenDlHM6eTt0Oi30+8NLcIdMg4oMcQllVhi81FBOwBIG4s+a9Z6vZLu/lFOaPynrFH
+ CjDJyqsfsCzBlYiqgj0I9fSbwGKOIXiFGuxHkFR9MlnV67nuIj52ei3RbT79dWR3zMeWxnAB
+X-Proofpoint-ORIG-GUID: j5R3PhcRVgi-E_BsoHEytqzg4aEDqIr1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_06,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxlogscore=880
+ clxscore=1015 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506260156
 
-Hi Mateusz,
+On 6/26/25 4:25 PM, Jorge Ramirez wrote:
+> On 26/06/25 16:05:00, Krzysztof Kozlowski wrote:
+>> On 26/06/2025 15:59, Jorge Ramirez-Ortiz wrote:
+>>> +
+>>> +			interconnects = <&mmnrt_virt MASTER_VIDEO_P0 RPM_ALWAYS_TAG
+>>> +					 &bimc SLAVE_EBI1 RPM_ALWAYS_TAG>,
+>>> +					<&bimc MASTER_APPSS_PROC RPM_ACTIVE_TAG
+>>> +					 &config_noc SLAVE_VENUS_CFG RPM_ACTIVE_TAG>;
+>>> +			interconnect-names = "video-mem",
+>>> +					     "cpu-cfg";
+>>> +
+>>> +			status = "okay";
+>>
+>> Drop, unless you override existing node, but then this should follow
+>> standard override-label/phandle syntax.
+>>
+> 
+> yep
 
-On Wed, 25 Jun 2025 at 20:08, Mateusz Majewski <m.majewski2@samsung.com> wrote:
->
-> > Can you check with with following changes
-> >
-> > diff --git a/drivers/thermal/samsung/exynos_tmu.c
-> > b/drivers/thermal/samsung/exynos_tmu.c
-> > index 9fc085f4ea1a..0776801fafea 100644
-> > --- a/drivers/thermal/samsung/exynos_tmu.c
-> > +++ b/drivers/thermal/samsung/exynos_tmu.c
-> > @@ -469,14 +469,11 @@ static void exynos4412_tmu_initialize(struct
-> > platform_device *pdev)
-> >         ctrl = readl(data->base + EXYNOS_TMU_TRIMINFO_CON2);
-> >         ctrl = EXYNOS_TRIMINFO_RELOAD_ENABLE;
-> >         writel(ctrl, data->base + EXYNOS_TMU_TRIMINFO_CON2);
-> > +       return;
-> >     }
-> >
-> > -   /* On exynos5420 the triminfo register is in the shared space */
-> > -   if (data->soc == SOC_ARCH_EXYNOS5420
-> > -           data->soc == SOC_ARCH_EXYNOS5420_TRIMINFO) {
-> > -       trim_info = readl(data->base + EXYNOS_TMU_REG_TRIMINFO);
-> > -       sanitize_temp_error(data, trim_info);
-> > -   }
-> > +   trim_info = readl(data->base + EXYNOS_TMU_REG_TRIMINFO);
-> > +   sanitize_temp_error(data, trim_info);
-> > }
->
-Thanks for the feedback,
-> This does seem to work (tested on 3250 and on 5420) in the sense that I
-> can read the temperatures, when they increase the state of the cooling
-> device gets increased, and the values look reasonable and stay in a
-> reasonable range. Hard to say if the trim and the temperature values are
-> correct, though.
->
-The driver should read the EXYNOS_TMU_REG_TRIMINFO register
-after setting the RELOAD bit to 0x1 in the TRIMINFO_CONTROL (0x14) register.
+With that taken care of:
 
-RELOAD Trim information
-Before read TRIMINFO, you shall set RELOAD to 1.
-1 = Reload
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-> (FYI I will probably have a harder time regarding the drivers from
-> GitHub you linked in 2/3, so no promises on testing them.)
->
-It's just a reference point for gathering information - a few things
-are missing in the driver.
-
-> > As per my Exynos5422 user manual and DTS mapping
-> > thermal-sensor tmu@10060000 is mapped to CPU0 with tmu_apbif clock
-> > thermal-sensor tmu@10064000 is mapped to CPU1 with tmu_apbif clock
-> > thermal-sensor tmu@10068000 is mapped to CPU2 with tmu_apbif clock
-> > thermal-sensor tmu@1006c000 is mapped to CPU3 with tmu_apbif clock
-> > thermal-sensor tmu@100a0000 is mapped to GPU with tmu_triminfo_apbif clock.
->
-> Hmm, I might be missing something, but I think the DTS does link to two
-> adresses and two clocks, for instance for GPU (in
-> arch/arm/boot/dts/samsung/exynos5420.dtsi):
->
->                 tmu_gpu: tmu@100a0000 {
->                         compatible = "samsung,exynos5420-tmu-ext-triminfo";
->                         reg = <0x100a0000 0x100>, <0x10068000 0x4>;
->                         interrupts = <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
->                         clocks = <&clock CLK_TMU_GPU>, <&clock CLK_TMU>;
->                         clock-names = "tmu_apbif", "tmu_triminfo_apbif";
->                         #thermal-sensor-cells = <0>;
->                 };
->
-> The manual does indeed not say anything about this, but I feel like the
-> current code in essence states that the manual is not correct. We
-> probably should have some evidence that the current code is wrong and
-> the manual was correct all along?
-Well, I tried to fix the DTS, but it didn't work.
->
-> Thank you,
-> Mateusz Majewski
-
-Thanks
--Anand
+Konrad
