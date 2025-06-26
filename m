@@ -1,316 +1,613 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE2B25BF1C;
-	Thu, 26 Jun 2025 08:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CD1C25D539
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750925403; cv=none; b=X59ggkJwTbAsNl7HWWW3TYXV9SFeltEe1dtqoLuZrX1Ry7UMCber0NIquCgKvMMvYyn+UqdeNWEUEbRC4gsizQgxWQ8OUI1QLV4fjBbxrdUGHz4ZOrEJ5a84iGQ0GvAD6VJcIoMnhdtwSCIl0rKYBN796mg6agFFNlWxEPuKCYk=
+	t=1750925403; cv=none; b=KG+61cPRcVARP1+a9Sw15M6TN01nc7NapKjLJ88x/QaublAlfQy1oECIgOjOTyOoBuEgsDBTx0WJqXjO62K+yiYEu46jolsSaHQfuSLR7QTmcX4QJgchvS7GV2OTLtWP5oMLc1Vj9HdRP9i/4OOkLadvy7tCGG6cjgMse40o9oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750925403; c=relaxed/simple;
-	bh=6xLWJoz3VeRkXsiyJaJ5ixbUYcWMaGoFyyNQOwAcwJM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O0bjVHRdcP7zl+rRmc6NLP8OOg1z/KTEuH62s8xvkeim14MbXRhitbjAAvDwSd1OXAR69NBEfbnaoT1RMfBEUNr5kzCbpHGTjcW5U8PT4MsSQdTRjhz3PXl/8ulQI0QiQZJ5hi4Gf06+7mlPI1vsEzDv5xlufvu2MbWG883sJjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bAY1Nfu3; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bAY1Nfu3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDCDCC4CEEE;
-	Thu, 26 Jun 2025 08:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750925403;
-	bh=6xLWJoz3VeRkXsiyJaJ5ixbUYcWMaGoFyyNQOwAcwJM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bAY1Nfu3ry+pGWDTpHSMCMLCTYcDYnP7HM4sU8EY63ZklsybPXUb+Sw59Kc6goRoj
-	 oxWjKgb4dwcEFCEd4cYtVvWii+kPPJO4Kbejp/m1BZBna4zEJA1wXrH4JRJGVCRE4s
-	 vH60PKTJ8jZxh/omdo8u3hV6rqZxF9cPRVnv2BUb/8HBNP9x3Zwk37vD3cYfRhDoyA
-	 mziq40Dj6XIe8niW1fxxsWUfbHk+V71hBdx3kHKMETToW9AfPlGaSw4RT1NOUS7nti
-	 sVowOSeRWhjAqOmgNfHkiq+eMp9cNlWu7nfGGY2d2kVySYZmJfINs6Y+vevhFZ33ER
-	 7ephEXM70QfYw==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uUhcz-00000004slF-2s0s;
-	Thu, 26 Jun 2025 10:06:37 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Sai Vishnu M <saivishnu725@gmail.com>
-Subject: [PATCH 0/3] Translate sphinx-pre-install to Python
-Date: Thu, 26 Jun 2025 10:06:28 +0200
-Message-ID: <cover.1750924501.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	bh=rbf7NcYNSvmx/Ni/SeqY48yTPHdtmyXnQWxatNNiQZI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bybAc0bbNeX/V++JZXjL1uOFPscnbMQZCibNBM6/DdOZuCcu1KEIWyz4zaTvykM+xkyWNWyTSBIVS6aAiZHMRuDSzN2hFEL9WGM1NTF74YsYjOm5NaW5ddTZQK4PUAOWrzNywriUClQA2E4foxSsMjKOf2Lc4KuXGdHVkc7qgKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97A4F1063;
+	Thu, 26 Jun 2025 01:09:41 -0700 (PDT)
+Received: from [10.57.84.221] (unknown [10.57.84.221])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD67A3F58B;
+	Thu, 26 Jun 2025 01:09:54 -0700 (PDT)
+Message-ID: <6379442c-9abb-4996-831a-aea7f9f30403@arm.com>
+Date: Thu, 26 Jun 2025 09:09:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/5] mm: Optimize mprotect() by PTE batching
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
+ joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
+ kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250519074824.42909-1-dev.jain@arm.com>
+ <20250519074824.42909-4-dev.jain@arm.com>
+ <b3064b82-dcea-4b88-940b-9419d869a39a@arm.com>
+ <1c6a7220-5bf8-44f3-8602-ece207aa1a83@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <1c6a7220-5bf8-44f3-8602-ece207aa1a83@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-As part of my efforts to make the doc build system more modern, it
-follows a patch series converting sphinx-pre-install to python.
-
-The first patch contains a small fix to the Perl version. It is
-interesting to have, as otherwise regression tests fail.
-
-The conversion itself was not hard. Most of the time I spent writing
-scripts to test it.
-
-The new version is meant to be bug-compatible with the previous
-version, with some exceptions:
-
-- I dropped support for too old Fedora distros. They're OOL;
-- as it runs on Python, the tests for python could be bogus. I 
-  added some FIXME entries to remember about that.;
-- The package lists are now alphabetically sorted, whith alters
-   the warning/eror order.
-- It supports additional variants that I could install via lxc download
-   template.
-- I didn't test a couple of distro variants (OpenMandriva, RHEL,
-  and Scientific Linux.
-
-I did regression tests. Those are the test results summary:
-
-+-----------------+---------+-------+-------------+----------------------------------------+
-| distro          | status  | stage | return code | log file                               |
-+-----------------+---------+-------+-------------+----------------------------------------+
-| almalinux       | N/A     | Tests | 0           | ./test_logs/almalinux_report.log       |
-| amazonlinux     | N/A     | Tests | 0           | ./test_logs/amazonlinux_report.log     |
-| archlinux       | SUCCESS | Tests | 0           | ./test_logs/archlinux_report.log       |
-| centos          | SUCCESS | Tests | 0           | ./test_logs/centos_report.log          |
-| debian          | SUCCESS | Tests | 0           | ./test_logs/debian_report.log          |
-| devuan          | N/A     | Tests | 0           | ./test_logs/devuan_report.log          |
-| fedora          | SUCCESS | Tests | 0           | ./test_logs/fedora_report.log          |
-| gentoo          | FAILED  | Tests | 3           | ./test_logs/gentoo_report.log          |
-| kali            | N/A     | Tests | 0           | ./test_logs/kali_report.log            |
-| mageia          | SUCCESS | Tests | 0           | ./test_logs/mageia_report.log          |
-| mint            | N/A     | Tests | 0           | ./test_logs/mint_report.log            |
-| openeuler       | N/A     | Tests | 0           | ./test_logs/openeuler_report.log       |
-| opensuse        | SUCCESS | Tests | 0           | ./test_logs/opensuse_report.log        |
-| oracle          | SUCCESS | Tests | 0           | ./test_logs/oracle_report.log          |
-| rockylinux      | N/A     | Tests | 0           | ./test_logs/rockylinux_report.log      |
-| springdalelinux | N/A     | Tests | 0           | ./test_logs/springdalelinux_report.log |
-| ubuntu          | SUCCESS | Tests | 0           | ./test_logs/ubuntu_report.log          |
-| ubuntu-lts      | SUCCESS | Tests | 0           | ./test_logs/ubuntu-lts_report.log      |
-+-----------------+---------+-------+-------------+----------------------------------------+
-
-N/A means that the version were not supported originally, so it can't be
-properly compared.
-
-The only one marked as failed is gentoo. This is actually a false positive.
-That's the test output:
-
-TEST REPORT: GENTOO
-
-Generated: 2025-06-26 10:02:57
-Stage: Tests
-
-ERROR DETAILS:
-
-CustomError: 6 of 9 validate commands succeeded
-  File "/home/mchehab/bin/container_tests.py", line 1779, in <module>
-    asyncio.run(main())
-  File "/usr/lib64/python3.13/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-  File "/usr/lib64/python3.13/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-  File "/usr/lib64/python3.13/asyncio/base_events.py", line 706, in run_until_complete
-    self.run_forever()
-  File "/usr/lib64/python3.13/asyncio/base_events.py", line 677, in run_forever
-    self._run_once()
-  File "/usr/lib64/python3.13/asyncio/base_events.py", line 2034, in _run_once
-    handle._run()
-  File "/usr/lib64/python3.13/asyncio/events.py", line 89, in _run
-    self._context.run(self._callback, *self._args)
-  File "/home/mchehab/bin/container_tests.py", line 1773, in main
-    await manager.run()
-  File "/home/mchehab/bin/container_tests.py", line 1625, in run
-    await self.run_distro(distro)
-  File "/home/mchehab/bin/container_tests.py", line 1605, in run_distro
-    await self.run_test(distro)
-  File "/home/mchehab/bin/container_tests.py", line 1434, in run_test
-    self.record_status(
-
-
-TEST RESULTS:
-
-Status: FAILED
-Return Code: 3
-
-STANDARD OUTPUT:
-
-$ cd /root && LC_ALL=C ./scripts/sphinx-pre-install.py
--------------------------------------------------------
-
-Detected OS: Gentoo Base System release 2.17.
-Warning: better to also install "convert".
-Warning: better to also install "dot".
-Warning: better to also install "latexmk".
-Warning: better to also install "media-fonts/dejavu".
-Warning: better to also install "media-fonts/noto-cjk".
-Warning: better to also install "rsvg-convert".
-Warning: better to also install "xelatex".
-ERROR: please install "yaml", otherwise, build won't work.
-You should run:
 
-
-	sudo su -c 'echo "media-gfx/imagemagick svg png" > /etc/portage/package.use/imagemagick'
-	sudo su -c 'echo "media-gfx/graphviz cairo pdf" > /etc/portage/package.use/graphviz'
-	sudo emerge --ask media-gfx/imagemagick media-gfx/graphviz latexmk media-fonts/dejavu media-fonts/noto-cjk gnome-base/librsvg dev-texlive/texlive-xetex media-fonts/dejavu dev-python/pyyaml
-
-Sphinx needs to be installed either:
-1) via pip/pypi with:
-
-	/usr/sbin/python3 -m venv sphinx_latest
-	. sphinx_latest/bin/activate
-	pip install -r ./Documentation/sphinx/requirements.txt
-
-    If you want to exit the virtualenv, you can use:
-	deactivate
-
-2) As a package with:
-
-
-	sudo su -c 'echo "media-gfx/imagemagick svg png" > /etc/portage/package.use/imagemagick'
-	sudo su -c 'echo "media-gfx/graphviz cairo pdf" > /etc/portage/package.use/graphviz'
-	sudo emerge --ask python-sphinx
-
-    Please note that Sphinx >= 3.0 will currently produce false-positive
-   warning when the same name is used for more than one type (functions,
-   structs, enums,...). This is known Sphinx bug. For more details, see:
-	https://github.com/sphinx-doc/sphinx/pull/8313
-Can't build as 2 mandatory dependencies are missing
-
-$ cd /root && LC_ALL=C ./scripts/sphinx-pre-install
-----------------------------------------------------
-
-Detected OS: Gentoo Base System release 2.17.
-Warning: better to also install "convert".
-Warning: better to also install "dot".
-Warning: better to also install "latexmk".
-Warning: better to also install "media-fonts/dejavu".
-Warning: better to also install "media-fonts/noto-cjk".
-Warning: better to also install "rsvg-convert".
-Warning: better to also install "xelatex".
-ERROR: please install "yaml", otherwise, build won't work.
-You should run:
-
-	sudo su -c 'echo "media-gfx/imagemagick svg png" > /etc/portage/package.use/imagemagick'
-	sudo su -c 'echo "media-gfx/graphviz cairo pdf" > /etc/portage/package.use/graphviz'
-	sudo emerge --ask media-gfx/imagemagick media-gfx/graphviz latexmk media-fonts/dejavu media-fonts/noto-cjk gnome-base/librsvg dev-texlive/texlive-xetex media-fonts/dejavu dev-python/pyyaml
-
-Sphinx needs to be installed either:
-1) via pip/pypi with:
-
-	/usr/sbin/python3 -m venv sphinx_latest
-	. sphinx_latest/bin/activate
-	pip install -r ./Documentation/sphinx/requirements.txt
-
-    If you want to exit the virtualenv, you can use:
-	deactivate
-
-2) As a package with:
-
-	sudo su -c 'echo "media-gfx/imagemagick svg png" > /etc/portage/package.use/imagemagick'
-	sudo su -c 'echo "media-gfx/graphviz cairo pdf" > /etc/portage/package.use/graphviz'
-	sudo emerge --ask python-sphinx
-
-    Please note that Sphinx >= 3.0 will currently produce false-positive
-   warning when the same name is used for more than one type (functions,
-   structs, enums,...). This is known Sphinx bug. For more details, see:
-	https://github.com/sphinx-doc/sphinx/pull/8313
-Can't build as 2 mandatory dependencies are missing at ./scripts/sphinx-pre-install line 990.
-
-$ cd /root && LC_ALL=C ./scripts/sphinx-pre-install >/tmp/perl_venv
---------------------------------------------------------------------
-
-Can't build as 2 mandatory dependencies are missing at ./scripts/sphinx-pre-install line 990.
-
-$ cd /root && LC_ALL=C ./scripts/sphinx-pre-install.py >/tmp/python_venv
--------------------------------------------------------------------------
-
-Can't build as 2 mandatory dependencies are missing
-
-$ cd /root && LC_ALL=C ./scripts/sphinx-pre-install --no-virtualenv >/tmp/perl_no_venv
----------------------------------------------------------------------------------------
-
-Can't build as 2 mandatory dependencies are missing at ./scripts/sphinx-pre-install line 990.
-
-$ cd /root && LC_ALL=C ./scripts/sphinx-pre-install.py --no-virtualenv >/tmp/python_no_venv
---------------------------------------------------------------------------------------------
-
-Can't build as 2 mandatory dependencies are missing
-
-$ cd /root && LC_ALL=C ./scripts/sphinx-pre-install --no-pdf >/tmp/perl_no_pdf
--------------------------------------------------------------------------------
-
-Can't build as 2 mandatory dependencies are missing at ./scripts/sphinx-pre-install line 990.
-
-$ cd /root && LC_ALL=C ./scripts/sphinx-pre-install.py --no-pdf >/tmp/python_no_pdf
-------------------------------------------------------------------------------------
-
-Can't build as 2 mandatory dependencies are missing
-
-$ sort /tmp/perl_venv -o /tmp/perl_venv.sorted
------------------------------------------------
-
-
-$ sort /tmp/python_venv -o /tmp/python_venv.sorted
----------------------------------------------------
-
-
-$ sort /tmp/perl_no_venv -o /tmp/perl_no_venv.sorted
------------------------------------------------------
-
-
-$ sort /tmp/python_no_venv -o /tmp/python_no_venv.sorted
----------------------------------------------------------
-
-
-$ sort /tmp/perl_no_pdf -o /tmp/perl_no_pdf.sorted
----------------------------------------------------
-
-
-$ sort /tmp/python_no_pdf -o /tmp/python_no_pdf.sorted
--------------------------------------------------------
-
-
-$ diff -q /tmp/perl_venv.sorted /tmp/python_venv.sorted
---------------------------------------------------------
-
-Files /tmp/perl_venv.sorted and /tmp/python_venv.sorted differ
-
-$ diff -q /tmp/perl_no_venv.sorted /tmp/python_no_venv.sorted
---------------------------------------------------------------
-
-Files /tmp/perl_no_venv.sorted and /tmp/python_no_venv.sorted differ
-
-$ diff -q /tmp/perl_no_pdf.sorted /tmp/python_no_pdf.sorted
-------------------------------------------------------------
-
-Files /tmp/perl_no_pdf.sorted and /tmp/python_no_pdf.sorted differ
-
-
-
-ERROR OUTPUT:
-6 of 9 validate commands succeeded
-
-
-
-
-
-Mauro Carvalho Chehab (3):
-  scripts: : fix version check for Fedora
-  scripts: : Convert script to Python
-  scripts: sphinx-pre-install: replace it by a Python version
-
- scripts/sphinx-pre-install | 2144 ++++++++++++++++++------------------
- 1 file changed, 1095 insertions(+), 1049 deletions(-)
-
--- 
-2.49.0
-
+On 16/06/2025 12:24, Dev Jain wrote:
+> 
+> On 21/05/25 6:56 pm, Ryan Roberts wrote:
+>> On 19/05/2025 08:48, Dev Jain wrote:
+>>> Use folio_pte_batch to batch process a large folio. Reuse the folio from
+>>> prot_numa
+>>> case if possible. Since modify_prot_start_ptes() gathers access/dirty bits,
+>>> it lets us batch around pte_needs_flush() (for parisc, the definition includes
+>>> the access bit).
+>> parisc's pte_needs_flush() is a different (static) function, just coincidentally
+>> named - it takes different arguments.
+>>
+>> But powerpc and x86 both specialize it and they consider the dirty bit. Both
+>> implementations look to me like they will function correctly but it is a bit
+>> ugly. They both conclude that if there is no change or if dirty has gone from
+>> clear to set, then no flush is needed. (flush only needed when dirty goes from
+>> set to clear). Given after your change, oldpte may have dirty set when it wasn't
+>> really set for the pte in question that means the function could detect no
+>> change when really its a clear -> set change; it gives the same answer in both
+>> cases so it's safe. Perhaps a bit fragile though...
+>>
+>>> For all cases other than the PageAnonExclusive case, if the case holds true
+>>> for one pte in the batch, one can confirm that that case will hold true for
+>>> other ptes in the batch too; for pte_needs_soft_dirty_wp(), we do not pass
+>>> FPB_IGNORE_SOFT_DIRTY. modify_prot_start_ptes() collects the dirty and access
+>>> bits
+>>> across the batch, therefore batching across pte_dirty(): this is correct since
+>>> the dirty bit on the PTE really is just an indication that the folio got written
+>>> to, so even if the PTE is not actually dirty (but one of the PTEs in the
+>>> batch is),
+>>> the wp-fault optimization can be made.
+>>> The crux now is how to batch around the PageAnonExclusive case; we must check
+>>> the corresponding condition for every single page. Therefore, from the large
+>>> folio batch, we process sub batches of ptes mapping pages with the same
+>>> PageAnonExclusive
+>>> condition, and process that sub batch, then determine and process the next
+>>> sub batch,
+>>> and so on. Note that this does not cause any extra overhead; if suppose the
+>>> size of
+>>> the folio batch is 512, then the sub batch processing in total will take 512
+>>> iterations,
+>>> which is the same as what we would have done before.
+>> This commit log could do with some reformatting; blank lines between paragraphs
+>> and break at whatever the usual git commit log char limit is (72 chars?).
+>>
+>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>> ---
+>>>   include/linux/mm.h |   7 ++-
+>>>   mm/mprotect.c      | 126 +++++++++++++++++++++++++++++++++++----------
+>>>   2 files changed, 104 insertions(+), 29 deletions(-)
+>>>
+>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>>> index 43748c8f3454..7d5b96f005dc 100644
+>>> --- a/include/linux/mm.h
+>>> +++ b/include/linux/mm.h
+>>> @@ -2542,8 +2542,11 @@ int get_cmdline(struct task_struct *task, char
+>>> *buffer, int buflen);
+>>>   #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
+>>>                           MM_CP_UFFD_WP_RESOLVE)
+>>>   -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+>>> -                 pte_t pte);
+>>> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned long addr,
+>>> +                 pte_t pte, int max_len, int *len);
+>>> +#define can_change_pte_writable(vma, addr, pte)    \
+>>> +    can_change_ptes_writable(vma, addr, pte, 1, NULL)
+>> nit: add an extra tab for readability:
+>>
+>> #define can_change_pte_writable(vma, addr, pte)    \
+>>         can_change_ptes_writable(vma, addr, pte, 1, NULL)
+>>
+>>> +
+>>>   extern long change_protection(struct mmu_gather *tlb,
+>>>                     struct vm_area_struct *vma, unsigned long start,
+>>>                     unsigned long end, unsigned long cp_flags);
+>>> diff --git a/mm/mprotect.c b/mm/mprotect.c
+>>> index 124612ce3d24..6cd8cdc168fa 100644
+>>> --- a/mm/mprotect.c
+>>> +++ b/mm/mprotect.c
+>>> @@ -40,25 +40,36 @@
+>>>     #include "internal.h"
+>>>   -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+>>> -                 pte_t pte)
+>>> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned long addr,
+>>> +                 pte_t pte, int max_len, int *len)
+>>>   {
+>>>       struct page *page;
+>>> +    bool temp_ret;
+>>> +    bool ret;
+>>> +    int i;
+>>>   -    if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE)))
+>>> -        return false;
+>>> +    if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE))) {
+>>> +        ret = false;
+>>> +        goto out;
+>>> +    }
+>>>         /* Don't touch entries that are not even readable. */
+>>> -    if (pte_protnone(pte))
+>>> -        return false;
+>>> +    if (pte_protnone(pte)) {
+>>> +        ret = false;
+>>> +        goto out;
+>>> +    }
+>>>         /* Do we need write faults for softdirty tracking? */
+>>> -    if (pte_needs_soft_dirty_wp(vma, pte))
+>>> -        return false;
+>>> +    if (pte_needs_soft_dirty_wp(vma, pte)) {
+>>> +        ret = false;
+>>> +        goto out;
+>>> +    }
+>>>         /* Do we need write faults for uffd-wp tracking? */
+>>> -    if (userfaultfd_pte_wp(vma, pte))
+>>> -        return false;
+>>> +    if (userfaultfd_pte_wp(vma, pte)) {
+>>> +        ret = false;
+>>> +        goto out;
+>>> +    }
+>>>         if (!(vma->vm_flags & VM_SHARED)) {
+>>>           /*
+>>> @@ -68,7 +79,19 @@ bool can_change_pte_writable(struct vm_area_struct *vma,
+>>> unsigned long addr,
+>>>            * any additional checks while holding the PT lock.
+>>>            */
+>>>           page = vm_normal_page(vma, addr, pte);
+>>> -        return page && PageAnon(page) && PageAnonExclusive(page);
+>>> +        ret = (page && PageAnon(page) && PageAnonExclusive(page));
+>>> +        if (!len)
+>>> +            return ret;
+>>> +
+>>> +        /* Check how many consecutive pages are AnonExclusive or not */
+>>> +        for (i = 1; i < max_len; ++i) {
+>>> +            ++page;
+>>> +            temp_ret = (page && PageAnon(page) && PageAnonExclusive(page));
+>>> +            if (temp_ret != ret)
+>>> +                break;
+>>> +        }
+>>> +        *len = i;
+>>> +        return ret;
+>>>       }
+>>>         VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
+>>> @@ -80,21 +103,55 @@ bool can_change_pte_writable(struct vm_area_struct *vma,
+>>> unsigned long addr,
+>>>        * FS was already notified and we can simply mark the PTE writable
+>>>        * just like the write-fault handler would do.
+>>>        */
+>>> -    return pte_dirty(pte);
+>>> +    ret = pte_dirty(pte);
+>>> +
+>>> +out:
+>>> +    /* The entire batch is guaranteed to have the same return value */
+>>> +    if (len)
+>>> +        *len = max_len;
+>>> +    return ret;
+>>>   }
+>>>     static int mprotect_batch(struct folio *folio, unsigned long addr, pte_t
+>>> *ptep,
+>>> -        pte_t pte, int max_nr_ptes)
+>>> +        pte_t pte, int max_nr_ptes, bool ignore_soft_dirty)
+>> We'll almost certainly want more flags here in future. I wonder if it's cleaner
+>> just to pass "fpb_t extra_flags" here instead of the bool, then OR them in. You
+>> can pass 0 or FPB_IGNORE_SOFT_DIRTY at your 2 callsites. No strong opinion
+>> though.
+>>
+>>>   {
+>>> -    const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>>> +    fpb_t flags = FPB_IGNORE_DIRTY;
+>>>   -    if (!folio_test_large(folio) || (max_nr_ptes == 1))
+>>> +    if (ignore_soft_dirty)
+>>> +        flags |= FPB_IGNORE_SOFT_DIRTY;
+>>> +
+>>> +    if (!folio || !folio_test_large(folio) || (max_nr_ptes == 1))
+>>>           return 1;
+>>>         return folio_pte_batch(folio, addr, ptep, pte, max_nr_ptes, flags,
+>>>                      NULL, NULL, NULL);
+>>>   }
+>>>   +/**
+>>> + * modify_sub_batch - Identifies a sub-batch which has the same return value
+>>> + * of can_change_pte_writable(), from within a folio batch. max_len is the
+>>> + * max length of the possible sub-batch. sub_batch_idx is the offset from
+>>> + * the start of the original folio batch.
+>>> + */
+>>> +static int modify_sub_batch(struct vm_area_struct *vma, struct mmu_gather *tlb,
+>>> +        unsigned long addr, pte_t *ptep, pte_t oldpte, pte_t ptent,
+>>> +        int max_len, int sub_batch_idx)
+>>> +{
+>>> +    unsigned long new_addr = addr + sub_batch_idx * PAGE_SIZE;
+>>> +    pte_t new_oldpte = pte_advance_pfn(oldpte, sub_batch_idx);
+>>> +    pte_t new_ptent = pte_advance_pfn(ptent, sub_batch_idx);
+>>> +    pte_t *new_ptep = ptep + sub_batch_idx;
+>>> +    int len = 1;
+>>> +
+>>> +    if (can_change_ptes_writable(vma, new_addr, new_ptent, max_len, &len))
+>>> +        new_ptent = pte_mkwrite(new_ptent, vma);
+>>> +
+>>> +    modify_prot_commit_ptes(vma, new_addr, new_ptep, new_oldpte, new_ptent,
+>>> len);
+>>> +    if (pte_needs_flush(new_oldpte, new_ptent))
+>>> +        tlb_flush_pte_range(tlb, new_addr, len * PAGE_SIZE);
+>>> +    return len;
+>>> +}
+>>> +
+>>>   static long change_pte_range(struct mmu_gather *tlb,
+>>>           struct vm_area_struct *vma, pmd_t *pmd, unsigned long addr,
+>>>           unsigned long end, pgprot_t newprot, unsigned long cp_flags)
+>>> @@ -106,7 +163,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>>       bool prot_numa = cp_flags & MM_CP_PROT_NUMA;
+>>>       bool uffd_wp = cp_flags & MM_CP_UFFD_WP;
+>>>       bool uffd_wp_resolve = cp_flags & MM_CP_UFFD_WP_RESOLVE;
+>>> -    int nr_ptes;
+>>> +    int sub_batch_idx, max_len, len, nr_ptes;
+>>>         tlb_change_page_size(tlb, PAGE_SIZE);
+>>>       pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
+>>> @@ -121,10 +178,12 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>>       flush_tlb_batched_pending(vma->vm_mm);
+>>>       arch_enter_lazy_mmu_mode();
+>>>       do {
+>>> +        sub_batch_idx = 0;
+>>>           nr_ptes = 1;
+>>>           oldpte = ptep_get(pte);
+>>>           if (pte_present(oldpte)) {
+>>>               int max_nr_ptes = (end - addr) >> PAGE_SHIFT;
+>>> +            struct folio *folio = NULL;
+>>>               pte_t ptent;
+>>>                 /*
+>>> @@ -132,7 +191,6 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>>                * pages. See similar comment in change_huge_pmd.
+>>>                */
+>>>               if (prot_numa) {
+>>> -                struct folio *folio;
+>>>                   int nid;
+>>>                   bool toptier;
+>>>   @@ -180,7 +238,8 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>>                       toptier) {
+>>>   skip_batch:
+>>>                       nr_ptes = mprotect_batch(folio, addr, pte,
+>>> -                                 oldpte, max_nr_ptes);
+>>> +                                 oldpte, max_nr_ptes,
+>>> +                                 true);
+>>>                       continue;
+>>>                   }
+>>>                   if (folio_use_access_time(folio))
+>>> @@ -188,6 +247,11 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>>                           jiffies_to_msecs(jiffies));
+>>>               }
+>>>   +            if (!folio)
+>>> +                folio = vm_normal_folio(vma, addr, oldpte);
+>>> +
+>>> +            nr_ptes = mprotect_batch(folio, addr, pte, oldpte,
+>>> +                         max_nr_ptes, false);
+>>>               oldpte = modify_prot_start_ptes(vma, addr, pte, nr_ptes);
+>>>               ptent = pte_modify(oldpte, newprot);
+>>>   @@ -209,15 +273,23 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>>                * example, if a PTE is already dirty and no other
+>>>                * COW or special handling is required.
+>>>                */
+>>> -            if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
+>>> -                !pte_write(ptent) &&
+>> Don't you need to keep the !pte_write(ptent) condition here? No need to sub-
+>> batch if write is already set.
+>>
+>>> -                can_change_pte_writable(vma, addr, ptent))
+>>> -                ptent = pte_mkwrite(ptent, vma);
+>>> -
+>>> -            modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent, nr_ptes);
+>>> -            if (pte_needs_flush(oldpte, ptent))
+>>> -                tlb_flush_pte_range(tlb, addr, PAGE_SIZE);
+>>> -            pages++;
+>>> +            if (cp_flags & MM_CP_TRY_CHANGE_WRITABLE) {
+>>> +                max_len = nr_ptes;
+>>> +                while (sub_batch_idx < nr_ptes) {
+>>> +
+>>> +                    /* Get length of sub batch */
+>>> +                    len = modify_sub_batch(vma, tlb, addr, pte,
+>>> +                                   oldpte, ptent, max_len,
+>>> +                                   sub_batch_idx);
+>>> +                    sub_batch_idx += len;
+>>> +                    max_len -= len;
+>>> +                }
+>>> +            } else {
+>>> +                modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent,
+>>> nr_ptes);
+>>> +                if (pte_needs_flush(oldpte, ptent))
+>>> +                    tlb_flush_pte_range(tlb, addr, nr_ptes * PAGE_SIZE);
+>>> +            }
+>> This if/else block and modify_sub_block() is all pretty ugly. I wonder if
+>> something like this would be neater:
+>>
+>>             use_sub_batch = (cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
+>>                     !pte_write(ptent) &&
+>>                     LIKE_can_change_pte_writable(vma, addr, ptent, folio);
+>>
+>>             while (nr_ptes) {
+>>                 if (use_sub_batch)
+>>                     sub_nr_ptes = sub_batch(...);
+>>                 else
+>>                     sub_nr_ptes = nr_ptes;
+>>
+>>                 modify_prot_commit_ptes(vma, addr, pte, oldpte,
+>>                             ptent, sub_nr_ptes);
+>>                 if (pte_needs_flush(oldpte, ptent))
+>>                     tlb_flush_pte_range(tlb, addr,
+>>                         sub_nr_ptes * PAGE_SIZE);
+>>
+>>                 addr += sub_nr_ptes * PAGE_SIZE;
+>>                 pte += sub_nr_ptes;
+>>                 oldpte = pte_advance_pfn(oldpte, sub_nr_ptes);
+>>                 ptent = pte_advance_pfn(ptent, sub_nr_ptes);
+>>                 nr_ptes -= sub_nr_ptes;
+>>                 pages += sub_nr_ptes;
+>>             }
+>>
+>> Where:
+>>
+>>   - LIKE_can_change_pte_writable() is similar to can_change_pte_writable() but
+>>     does everything except checking the per-page exclusive flag. Note that we
+>>     already have the folio so can pass that rather than calling vm_normal_page()
+>>     again.
+>>
+>>   - sub_batch() can be passed the folio and the index of the first page within
+>>     the folio and the max number of pages to check (nr_ptes). Then returns the
+>>     number of pages where exclusive flag is the same.
+>>
+>> Obviously they both need better names...
+> 
+> I cannot figure a nice way of implementing your suggestion. We need to get the
+> length
+> of the sub batch and the true/false return value from can_change_ptes_writable, and
+> we also need to call pte_mkwrite in case the ret is true. Doing that in your
+> suggested
+> way seems harder to me, along with the fact that it is causing indentation
+> problem by
+> one extra tab compared to my current implementation.
+> 
+> I don't know, my method looks pretty neat to me : )
+
+
+How about something like this (compile-tested only)? Personally I find this
+easier to follow:
+
+---8<---
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 124612ce3d24..97ccc2a92a7b 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -40,35 +40,47 @@
+
+ #include "internal.h"
+
+-bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+-			     pte_t pte)
+-{
+-	struct page *page;
++enum tristate {
++	TRI_FALSE = 0,
++	TRI_TRUE = 1,
++	TRI_MAYBE = -1,
++};
+
++/*
++ * Returns enum tristate indicating whether the pte can be changed to writable.
++ * If TRI_MAYBE is returned, then the folio is anonymous and the user must
++ * additionally check PageAnonExclusive() for every page in the desired range.
++ */
++static int maybe_change_pte_writable(struct vm_area_struct *vma,
++				     unsigned long addr, pte_t pte,
++				     struct folio *folio)
++{
+ 	if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE)))
+-		return false;
++		return TRI_FALSE;
+
+ 	/* Don't touch entries that are not even readable. */
+ 	if (pte_protnone(pte))
+-		return false;
++		return TRI_FALSE;
+
+ 	/* Do we need write faults for softdirty tracking? */
+ 	if (pte_needs_soft_dirty_wp(vma, pte))
+-		return false;
++		return TRI_FALSE;
+
+ 	/* Do we need write faults for uffd-wp tracking? */
+ 	if (userfaultfd_pte_wp(vma, pte))
+-		return false;
++		return TRI_FALSE;
+
+ 	if (!(vma->vm_flags & VM_SHARED)) {
+ 		/*
+ 		 * Writable MAP_PRIVATE mapping: We can only special-case on
+ 		 * exclusive anonymous pages, because we know that our
+ 		 * write-fault handler similarly would map them writable without
+-		 * any additional checks while holding the PT lock.
++		 * any additional checks while holding the PT lock. So if the
++		 * folio is not anonymous, we know we cannot change pte
++		 * writable. If it is anonymous then the caller must further
++		 * check that the page is AnonExclusive().
+ 		 */
+-		page = vm_normal_page(vma, addr, pte);
+-		return page && PageAnon(page) && PageAnonExclusive(page);
++		return (!folio || folio_test_anon(folio)) ? TRI_MAYBE : TRI_FALSE;
+ 	}
+
+ 	VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
+@@ -80,15 +92,60 @@ bool can_change_pte_writable(struct vm_area_struct *vma,
+unsigned long addr,
+ 	 * FS was already notified and we can simply mark the PTE writable
+ 	 * just like the write-fault handler would do.
+ 	 */
+-	return pte_dirty(pte);
++	return pte_dirty(pte) ? TRI_TRUE : TRI_FALSE;
++}
++
++/*
++ * Returns the number of pages within the folio, starting from the page
++ * indicated by pgidx and up to pgidx + max_nr, that have the same value of
++ * PageAnonExclusive(). Must only be called for anonymous folios. Value of
++ * PageAnonExclusive() is returned in *exclusive.
++ */
++static int anon_exclusive_batch(struct folio *folio, int pgidx, int max_nr,
++				bool *exclusive)
++{
++	VM_WARN_ON_FOLIO(!folio_test_anon(folio), folio);
++	VM_WARN_ON_FOLIO(folio_nr_pages(folio) < pgidx + max_nr, folio);
++
++	struct page *page = folio_page(folio, pgidx++);
++	int nr = 1;
++
++	*exclusive = PageAnonExclusive(page);
++
++	while (nr < max_nr) {
++		page = folio_page(folio, pgidx++);
++		if (*exclusive != PageAnonExclusive(page))
++			break;
++		nr++;
++	}
++
++	return nr;
++}
++
++bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
++			     pte_t pte)
++{
++	int ret;
++	struct page *page;
++
++	ret = maybe_change_pte_writable(vma, addr, pte, NULL);
++	if (ret == TRI_MAYBE) {
++		page = vm_normal_page(vma, addr, pte);
++		ret = page && PageAnon(page) && PageAnonExclusive(page);
++	}
++
++	return ret;
+ }
+
+ static int mprotect_batch(struct folio *folio, unsigned long addr, pte_t *ptep,
+-		pte_t pte, int max_nr_ptes)
++		pte_t pte, int max_nr_ptes, bool ignore_soft_dirty)
+ {
+-	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
++	fpb_t flags = FPB_IGNORE_DIRTY;
+
+-	if (!folio_test_large(folio) || (max_nr_ptes == 1))
++	if (ignore_soft_dirty)
++		flags |= FPB_IGNORE_SOFT_DIRTY;
++
++	if (!folio || !folio_test_large(folio) || (max_nr_ptes == 1))
+ 		return 1;
+
+ 	return folio_pte_batch(folio, addr, ptep, pte, max_nr_ptes, flags,
+@@ -125,14 +182,17 @@ static long change_pte_range(struct mmu_gather *tlb,
+ 		oldpte = ptep_get(pte);
+ 		if (pte_present(oldpte)) {
+ 			int max_nr_ptes = (end - addr) >> PAGE_SHIFT;
+-			pte_t ptent;
++			struct folio *folio = NULL;
++			int sub_nr_ptes, pgidx;
++			pte_t ptent, newpte;
++			bool sub_set_write;
++			int set_write;
+
+ 			/*
+ 			 * Avoid trapping faults against the zero or KSM
+ 			 * pages. See similar comment in change_huge_pmd.
+ 			 */
+ 			if (prot_numa) {
+-				struct folio *folio;
+ 				int nid;
+ 				bool toptier;
+
+@@ -180,7 +240,8 @@ static long change_pte_range(struct mmu_gather *tlb,
+ 				    toptier) {
+ skip_batch:
+ 					nr_ptes = mprotect_batch(folio, addr, pte,
+-								 oldpte, max_nr_ptes);
++								 oldpte, max_nr_ptes,
++								 true);
+ 					continue;
+ 				}
+ 				if (folio_use_access_time(folio))
+@@ -188,6 +249,11 @@ static long change_pte_range(struct mmu_gather *tlb,
+ 						jiffies_to_msecs(jiffies));
+ 			}
+
++			if (!folio)
++				folio = vm_normal_folio(vma, addr, oldpte);
++
++			nr_ptes = mprotect_batch(folio, addr, pte, oldpte,
++						 max_nr_ptes, false);
+ 			oldpte = modify_prot_start_ptes(vma, addr, pte, nr_ptes);
+ 			ptent = pte_modify(oldpte, newprot);
+
+@@ -209,15 +275,38 @@ static long change_pte_range(struct mmu_gather *tlb,
+ 			 * example, if a PTE is already dirty and no other
+ 			 * COW or special handling is required.
+ 			 */
+-			if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
+-			    !pte_write(ptent) &&
+-			    can_change_pte_writable(vma, addr, ptent))
+-				ptent = pte_mkwrite(ptent, vma);
+-
+-			modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent, nr_ptes);
+-			if (pte_needs_flush(oldpte, ptent))
+-				tlb_flush_pte_range(tlb, addr, PAGE_SIZE);
+-			pages++;
++			set_write = (cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
++				    !pte_write(ptent) &&
++				    maybe_change_pte_writable(vma, addr, ptent, folio);
++
++			while (nr_ptes) {
++				if (set_write == TRI_MAYBE) {
++					pgidx = folio_pfn(folio) - pte_pfn(ptent);
++					sub_nr_ptes = anon_exclusive_batch(folio,
++						pgidx, nr_ptes, &sub_set_write);
++				} else {
++					sub_nr_ptes = nr_ptes;
++					sub_set_write = set_write == TRI_TRUE;
++				}
++
++				if (sub_set_write)
++					newpte = pte_mkwrite(ptent, vma);
++				else
++					newpte = ptent;
++
++				modify_prot_commit_ptes(vma, addr, pte, oldpte,
++							newpte, sub_nr_ptes);
++				if (pte_needs_flush(oldpte, newpte))
++					tlb_flush_pte_range(tlb, addr,
++						sub_nr_ptes * PAGE_SIZE);
++
++				addr += sub_nr_ptes * PAGE_SIZE;
++				pte += sub_nr_ptes;
++				oldpte = pte_advance_pfn(oldpte, sub_nr_ptes);
++				ptent = pte_advance_pfn(ptent, sub_nr_ptes);
++				nr_ptes -= sub_nr_ptes;
++				pages += sub_nr_ptes;
++			}
+ 		} else if (is_swap_pte(oldpte)) {
+ 			swp_entry_t entry = pte_to_swp_entry(oldpte);
+ 			pte_t newpte;
+---8<---
+
+Thanks,
+Ryan
 
