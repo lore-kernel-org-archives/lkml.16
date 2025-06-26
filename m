@@ -1,69 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4567719EED3;
-	Thu, 26 Jun 2025 16:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D9F17C219;
+	Thu, 26 Jun 2025 16:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750955575; cv=none; b=dviv4DE3y72fJYvXrTiDhnTBZ4JGAELNShN7IqCdU6c/3foRB1RZHrWOeTZdXBZ+co0NGuNCIOmJheP+sUt8jcjyh7K2SNxEY3BBywkFrkORb5MXnLAQwHdG7lVOy4qK8Yd3iRXo9qiEuLAA8khQ2jb+2YytCZJT9s9n0RWiG1Y=
+	t=1750955665; cv=none; b=IZdh+6Pek9abXXDKknvBbQsq0rvMessc/U/ZvxkoLRByUtv8TAvBs2lIs3Y1A0kUBOCm4sJtKo+wPmXxneIWPW6Xsam3fYHG1z58EHY5d6IwKeicidEFi/t9s8t/LachyyBzIpvxuy8sE4qsq+bvBWG4ElTLcW05N9acrhkOCD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750955575; c=relaxed/simple;
-	bh=prN19SSoG97W0Mrft7RZVsIatb8SGPHXr+Fhn9Km1Yc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PfQOeHVcPGh4t0iSDwl33vellOIN+S8kmxNNf56X1KrSF/WXzfxiDE5m0P1bPFcuQduUiLfQyL1V2dIQzxy6YITOe4LyZdR0nn/z5NhD06ZJrNe9uQw1wMobZp2Qc6GebQsRJU7cgvfEJMa0Uy74PgdEAu+3Bn762uB+FhtzKT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TNY30jJb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TNY30jJb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9335AC4CEEB;
-	Thu, 26 Jun 2025 16:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750955575;
-	bh=prN19SSoG97W0Mrft7RZVsIatb8SGPHXr+Fhn9Km1Yc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TNY30jJbuTH59vzkw4dmQsPZ7ZH++BpiToEzrNB+KgSoj+83y97dFxRyBUK8gXONa
-	 gi23JM6XjEaMk9KKL+Lfvjz44x5/TwVyvEfVyP+3xPryhBo1U4tgCMmjoDPHslwbgf
-	 fWtgOtG4Hy00p8VkEahQuDaiIXlfUDjDvIMW0PeW94v2A4BtYV91AbypxOurrTlCQ4
-	 WuLShYwbqu06LRmVTiAGnnL1hildxCo30IJH+BXS+upYgmJZN4qIBPVTYCOn+67Ctm
-	 wXSgUnumP3cQ6AbObQfN9FWu302ELStuUzzZczkaXlSD/20uGOO9H9HtVE83p/L4oR
-	 wbLBtvb7lzcew==
-Date: Thu, 26 Jun 2025 17:32:51 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Raymond Mao <raymond.mao@linaro.org>
-Cc: linux-doc@vger.kernel.org, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: devicetree: overlay-notes: recommend top-level
- compatible in DTSO
-Message-ID: <20250626-providing-debug-6d31e54fd229@spud>
-References: <20250624181320.2810521-1-raymond.mao@linaro.org>
+	s=arc-20240116; t=1750955665; c=relaxed/simple;
+	bh=JYE5pcEbbQ7PexQD5Qqy3qPqvYjgWviF0W373vmEc1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qgIqeCZI2Fb8pQCYnxwaVvRsiZaV5EbOyGH0WdDAoxU3D34MsIFTH2uhDbil8Kb61eVA+KyIulYzqmOSF2W3TBjT/rBnEKL91MpPlxweYA4cAHV+hehwJXwhnywVsNUyu4T3ZEYZf1RiglIyfjRcVeHCoIGau8QfN3ETjB8fMP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 4FDA11214B7;
+	Thu, 26 Jun 2025 16:34:21 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 577BF35;
+	Thu, 26 Jun 2025 16:34:19 +0000 (UTC)
+Date: Thu, 26 Jun 2025 12:34:45 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Gabriele Monaco <gmonaco@redhat.com>,
+ john.ogness@linutronix.de
+Subject: Re: [PATCH] tracing: Remove pointless memory barriers
+Message-ID: <20250626123445.5b01849d@gandalf.local.home>
+In-Reply-To: <20250626160459.soHxOROG@linutronix.de>
+References: <20250626151940.1756398-1-namcao@linutronix.de>
+	<20250626113520.315db641@gandalf.local.home>
+	<20250626160459.soHxOROG@linutronix.de>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dcUwdSgaHuCD+gQp"
-Content-Disposition: inline
-In-Reply-To: <20250624181320.2810521-1-raymond.mao@linaro.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: ni1jw18jkg4prw3mndxhtffzm3wfigec
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 577BF35
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/b2JM2aeyr08bwnM39TYmxS3CKt1qrqTw=
+X-HE-Tag: 1750955659-626339
+X-HE-Meta: U2FsdGVkX19kpHORzFaT2SOLZyYQZLkmaBnDkJV0j7piw4tcdgUp0NgSnUHy3cQtSgv3ItzdlnZtMH6DKLqsyAbrflQlDoLTfCKslDS/CxA9izbhAswxw6fQZBicp/CVYiIc9mQTUDLEHzUj9wc+48d3lJxNXCsTCwz/q7TOmBI89Ga+oWmiYr4A13dJ8iuDj9ypi9PkBpKjCIZX6UYS4Lrp0d7KqLyWTRyfa1BrQVrmdK8LNTeYq2Yz9sMVLEZ5uN0SgbH33IpXd7YtDluc+Ztq7vh9fuMIWFJg3FMat1LkAvnqQTjCN+NVgKELZqG9
 
+On Thu, 26 Jun 2025 18:04:59 +0200
+Nam Cao <namcao@linutronix.de> wrote:
 
---dcUwdSgaHuCD+gQp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> I think you have it inverted? I assume you meant:
+> 
+> "Without the barriers, the tr->buffer_disabled = 1 can be set on one CPU,
+> and the other CPU can think the buffer is still enabled and do work that
+> will end up doing nothing."
+> 
+> Your scenario can still happen despite the memory barrier:
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Yes, but the point isn't really to prevent the race. It's more about making
+the race window smaller.
 
---dcUwdSgaHuCD+gQp
-Content-Type: application/pgp-signature; name="signature.asc"
+When we disable it, if something is currently using it then it may or may
+not get in. That's fine as this isn't critical.
 
------BEGIN PGP SIGNATURE-----
+But from my understanding, without the barriers, some architectures may
+never see the update. That is, the write from one CPU may not get to memory
+for a long time and new incoming readers will still see the old data. I'm
+more concerned with new readers than ones that are currently racing with
+the updates.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaF12MwAKCRB4tDGHoIJi
-0pWPAQCrMKJdik84OqZ5h9CNO7zYsDoKEWNYaLWhXzDDNlCVigD/UEI+lHswHMxd
-ZvbRcCdAvJg00ufXxEzni7CNqmt+wAQ=
-=Kxi2
------END PGP SIGNATURE-----
+> 
+> CPU1                          CPU2
+>                               smp_rb()
+>                               read buffer_disabled, see 0 --> let's do work!
+> buffer_disabled=1
+> smp_wb()
+>                               do work -> end up doing nothing
+> 
+> >From my understanding, smp_wb()'s purpose is ensuring the ordering of one  
+> write and another write, e.g.:
+>     write(a)
+>     smp_wb()
+>     write(b)
+> 
+> For our case, there is only a single write. Therefore I don't think
+> smp_wb() is useful.
 
---dcUwdSgaHuCD+gQp--
+Well, it does make it visible for other CPUs that do not have strong cache
+coherency.
+
+-- Steve
