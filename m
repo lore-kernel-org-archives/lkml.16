@@ -1,83 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFDBC1DED7B;
-	Thu, 26 Jun 2025 23:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD26921FF47;
+	Thu, 26 Jun 2025 23:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750980170; cv=none; b=eS3nWcNNSIRu2onAkfpF1YUj1+lJ6oTLzrfGfspEXSOzfY7mB2XRAs0/BLFI7V36klbDt1r2cyoOVzTNk2k6j/Asxrdb/qtFBJKJWJ8y32MPLSaLXBzpfstXchipVe28EmjFEIFZREgB1OFlAIUGgZ0bIbXJOsE7oqmNNbU7Bbs=
+	t=1750980186; cv=none; b=Z8SaWjPafU1TCVFcMWPiW7tlRiB8jexIgrXUKxoxYOSEsWI5dJy0A+0pNWSBGRioBIQGhbqzVHw32HjRynNCNrpbp+fgNmcFciNPB61Qsbb16cU43RdT/la0pf2UmT/cQMZuTkg83k53dkXhxYchMhYh8ZL3TmWO7H6aVUoA4TI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750980170; c=relaxed/simple;
-	bh=HCpZZ2kIgwrcphOaysvAn9jGJPKkVlzJsoz19ZBQ4FI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=m4QzMLHNzF1MSkKnAXfN4sa4unNEkvrAfCeNpjoHeGwga7bjVPi8sJdQ3I5atU+groNSBJpSZiubb51YHcSzug9+jIuIvzMFixKlKJyHNJaIqIWZ/ZbkfcraFLFJZfA+QRCN7FWNeXECn6VRoqeJhryUa4bM+/Heueqa3IjQ/Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z6hNP3Yf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750980186; c=relaxed/simple;
+	bh=dM3fad0aYF7xhw5qhluTNSyTBUUZhxy+O6kv065vpZs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UYu6MI/QrSOpcUQBDhXkfDLOxyW0R8+jPOjCRu+0xnEN77zP9mRwEpyddF/Xa8XgxDMlkFdNLAjqJX8uiKmEXIJP0Sdf9ME5Mb1YLm6vI8bY5G3RCv2aDKUJl7K5oUJKMy/SaNJvlN/tg/RPAf4cGA15j4eKoEYoXbGS2v3UsC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Q9rqQSRh; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z6hNP3Yf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3BBEC4CEEB;
-	Thu, 26 Jun 2025 23:22:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750980170;
-	bh=HCpZZ2kIgwrcphOaysvAn9jGJPKkVlzJsoz19ZBQ4FI=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=Z6hNP3YfoTR8AkAh2bzoDcPYK+4oZ3WCUFQAsMhpqA8GlzxH0fiy3Yb7aGLzxfa7H
-	 V36wG5MMAEKAoPQtHYLCW/B9Y5a9I6LoNUxNMCY1RaNtT4Qd9fiYRhYnOwNcRlW8KR
-	 DyPDYaCYX04Vb7z6Ewa5++/fA2YNZ92PjGjZhZ0gFQX2lTDDpOKbs7VsoKPL3mpufP
-	 hJrqHQVYGGXqRfcj7qlb1bvy1bL6CX0CmHdkBqEW7Ebzk7V9ITu7rKvUmWWepcS3Yc
-	 G7XI9F9jJ0+RB9qToOqI9aVKAZFHu5QYWGvxVfDI8mO9kuq7mkc5Z1h2w+jGZT1j6i
-	 tARpnaWBqQ2Uw==
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Q9rqQSRh"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55QNMJug2580697;
+	Thu, 26 Jun 2025 18:22:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750980139;
+	bh=/LQM2y0c1hypruTZ0kUlI64jy128/WyN5WOrBAa7oaU=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=Q9rqQSRhDPnDsODGwL4CGAzbDJ7RnHulNsnAq1BepY5QqUb7TQCGXWV+YFPW8OE8u
+	 SzweOksJp2+vpInqroBecKAIll/JhqJXSpt7OD49WPbqYQq9jT5/XljLK20TkdGi66
+	 n5+/eNLZSI2PFOguDirq5pGbntdao2ee5C5vsgI0=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55QNMIun2412991
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 26 Jun 2025 18:22:18 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
+ Jun 2025 18:22:18 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 26 Jun 2025 18:22:18 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55QNMINR1805323;
+	Thu, 26 Jun 2025 18:22:18 -0500
+Message-ID: <e49a3fff-8a50-44aa-aa0c-1ba1bf478eb6@ti.com>
+Date: Thu, 26 Jun 2025 18:22:18 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 27 Jun 2025 01:22:45 +0200
-Message-Id: <DAWUNZ33A0DJ.1RCZSO3S0Q1JB@kernel.org>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v4 4/5] rust: types: ForeignOwnable: Add type Target
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
- <kwilczynski@kernel.org>, <bhelgaas@google.com>
-X-Mailer: aerc 0.20.1
-References: <20250626200054.243480-1-dakr@kernel.org>
- <20250626200054.243480-5-dakr@kernel.org>
-In-Reply-To: <20250626200054.243480-5-dakr@kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/5] Add support for BeagleBone Green Eco board
+To: Kory Maincent <kory.maincent@bootlin.com>,
+        Tony Lindgren
+	<tony@atomide.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Aaro Koskinen
+	<aaro.koskinen@iki.fi>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Kevin Hilman
+	<khilman@baylibre.com>,
+        Roger Quadros <rogerq@kernel.org>,
+        Russell King
+	<linux@armlinux.org.uk>,
+        Paul Barker <paul.barker@sancloud.com>,
+        Marc Murphy
+	<marc.murphy@sancloud.com>
+CC: Jason Kridner <jkridner@gmail.com>, Andrew Davis <afd@ti.com>,
+        Bajjuri
+ Praneeth <praneeth@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+	<broonie@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+        Romain Gantois
+	<romain.gantois@bootlin.com>,
+        Conor Dooley <conor.dooley@microchip.com>
+References: <20250620-bbg-v5-0-84f9b9a2e3a8@bootlin.com>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <20250620-bbg-v5-0-84f9b9a2e3a8@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu Jun 26, 2025 at 10:00 PM CEST, Danilo Krummrich wrote:
-> ForeignOwnable::Target defines the payload data of a ForeignOwnable. For
-> Arc<T> for instance, ForeignOwnable::Target would just be T.
->
-> This is useful for cases where a trait bound is required on the target
-> type of the ForeignOwnable. For instance:
->
-> 	fn example<P>(data: P)
-> 	   where
-> 	      P: ForeignOwnable,
-> 	      P::Target: MyTrait,
-> 	{}
->
-> Suggested-by: Benno Lossin <lossin@kernel.org>
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+Hi Kory,
 
-Reviewed-by: Benno Lossin <lossin@kernel.org>
+On 6/20/25 3:15 AM, Kory Maincent wrote:
+> SeeedStudio BeagleBone Green Eco (BBGE) is a clone of the BeagleBone Green
+> (BBG). It has minor differences from the BBG, such as a different PMIC,
+> a different Ethernet PHY, and a larger eMMC.
 
-We might also be able to add a `Deref<Target =3D Self::Target>` bound on
-`Borrowed` and `BorrowedMut`, but we should only do that when necessary.
+Thanks for the patches.
+I was testing against next and noticed a kernel paging request error:
+https://gist.github.com/jmenti/d861528f98035b07259c29e76e5fae8b
 
----
-Cheers,
-Benno
+Did you see this by chance?
 
+I will double check that I tested correctly and come back, but was just
+curious to see if this is expected.
+
+~ Judith
+
+> 
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 > ---
->  rust/kernel/alloc/kbox.rs | 2 ++
->  rust/kernel/sync/arc.rs   | 1 +
->  rust/kernel/types.rs      | 4 ++++
->  3 files changed, 7 insertions(+)
+> Changes in v5:
+> - Split the patch series. As the cleaning process faced some pushback,
+>    I prefer to first get this support accepted and separately work on the
+>    devicetree and binding cleaning process.
+> - Link to v4: https://lore.kernel.org/r/20250617-bbg-v4-0-827cbd606db6@bootlin.com
+> 
+> Changes in v4:
+> - Drop model value change to avoid conflict with script based on this
+>    value like:
+>    https://salsa.debian.org/installer-team/flash-kernel/-/blob/master/db/all.db?ref_type=heads
+> - Rename ti,am335x-shc to bosch,am335x-shc
+> - Forgot to change to "Seeed" in BeagleBone Green Eco model description.
+> - Link to v3: https://lore.kernel.org/r/20250613-bbg-v3-0-514cdc768448@bootlin.com
+> 
+> Changes in v3:
+> - Update multi_v7_defconfig with TPS65219 config.
+> - Remove extraneous compatible strings.
+> - Replace BeagleBone compatible board name vendor to use "beagle" instead
+>    of "ti".
+> - Link to v2: https://lore.kernel.org/r/20250609-bbg-v2-0-5278026b7498@bootlin.com
+> 
+> Changes in v2:
+> - Add patch 1 to 3 to fix binding and devicetree inconsistencies.
+> - Rename tps node name to generic pmic node name in am335x-bone-common.
+> - Link to v1: https://lore.kernel.org/r/20250523-bbg-v1-0-ef4a9e57eeee@bootlin.com
+> 
+> ---
+> Kory Maincent (5):
+>        arm: dts: omap: am335x-bone-common: Rename tps to generic pmic node
+>        dt-bindings: omap: Add Seeed BeagleBone Green Eco
+>        arm: dts: omap: Add support for BeagleBone Green Eco board
+>        arm: omap2plus_defconfig: Enable TPS65219 regulator
+>        arm: multi_v7_defconfig: Enable TPS65219 regulator
+> 
+>   Documentation/devicetree/bindings/arm/ti/omap.yaml |   1 +
+>   arch/arm/boot/dts/ti/omap/Makefile                 |   1 +
+>   arch/arm/boot/dts/ti/omap/am335x-bone-common.dtsi  |   2 +-
+>   arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts | 169 +++++++++++++++++++++
+>   arch/arm/configs/multi_v7_defconfig                |   3 +
+>   arch/arm/configs/omap2plus_defconfig               |   3 +
+>   6 files changed, 178 insertions(+), 1 deletion(-)
+> ---
+> base-commit: e22b9ddaf3afd031abc350c303c7c07a51c569d8
+> change-id: 20250523-bbg-769018d1f2a7
+> 
+> Best regards,
+> --
+> Köry Maincent, Bootlin
+> Embedded Linux and kernel engineering
+> https://bootlin.com
+> 
+> 
+
