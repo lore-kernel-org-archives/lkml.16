@@ -1,41 +1,50 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D2C2EACE3;
-	Thu, 26 Jun 2025 14:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7B42EACFE;
+	Thu, 26 Jun 2025 14:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750949207; cv=none; b=Unc1Od4NE/Uqkm1IxFVeE40F322oOOvhEYqDi7L1d2sJ3w9Pz6+NDQrhYORvpPEb9JoZGXh+vTSbIUNfArot4EhF9bBXCzAstKwXJJCzLiA6VZvEmobNRLrRusHVakSw9COny0AXmw/KSFf/hITQDjngJL1H0NmWE3l8uMlGB4A=
+	t=1750949218; cv=none; b=NZyQGCTk9qZY5LxC/yf8cyxAZJTtpOP8mGK5BtHBSW57m5D/KshEISkXyhc8CQD6yLxnLgklfDjAEJtNkYVuzhXeRyWKiy4sXVcmYJW9Et94ckQ6ek1mWxEWXWL5Q/ojUcdIBe+PFxS5fPU4RUYX9bswJBB4TWGGA4ISu1HD6P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750949207; c=relaxed/simple;
-	bh=0TXAeuIr72M1E3iccaZNVuj4v2u5X5A6qlrnq/rmSW8=;
+	s=arc-20240116; t=1750949218; c=relaxed/simple;
+	bh=wuNLjw7eRkBNUxbK+tbcIm3Smq+1f+s5sxGIuvTbvyc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uGWlnYwRy6Hm27AUpfjIRTMf5h9Qicd+FD+ujqk6AszIcTJTzYWDMxvhzGbqheaciGTpKiQMI1j2jdBlxNLzop6+tgb1cALbkaXB9M/SlTC1eZpaR7hG8in2LYh1EGE15pqoAEc0aLymZMZHSnCZHXq8in0zCPrl0/LoG7DOEnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=sYN13UTn; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	 In-Reply-To:Content-Type; b=bzYOyrCjvguM2lPy+fUkxheSefIQS4okx9HAbh71er5/Ht0AVqI2uy+MFoTdt7QVNcOUJeQpqqcvfMAuCyYNuzY7CVih6o2bPr+TBGWHYhl3DvYUQp4pAjvzmwhRNb104MbiD0Bubf7njEeudaHoHh6BlUhCKPZhK51OqLPUqv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=knBMKVpk; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="sYN13UTn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1750949194; x=1751553994; i=markus.elfring@web.de;
-	bh=u5P7/QcsjF0uH++GL6EuasjuGVlJ0QeuR+X4QWr8wRE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=sYN13UTn9e54NVwnsWr9eJi4R4RFta8Ms2dA0ZJTTG7x3FuKYKsT3qS6yxuiy43M
-	 tyUuTSUsA1IV99lLunUXOgULwZQNvOyzuKRAjTbxeDdwvpReApRVwR57OQxhhC1qo
-	 s9e4pHdORHtm9TA/fkoXESJAbN88699Lzuw6Z8CSWQvZri2vTpzugkoQejPUWU1pO
-	 BlTwjRtS7TCan5wnW+w03sIvC5Wit+GGqI5JBZlGNd/fzKS2gLKZU++8x1Z82462J
-	 AwWo3u3lx6+mdybSRy7VY1G5xLnjGJB1oGPIt7vcjCkdk5Cl4hs3h3OzNxkkX8O3v
-	 ueJ7HbFSD9p3xzdvmw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.69.202]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MDdyH-1ucoEI45LT-003ryP; Thu, 26
- Jun 2025 16:46:34 +0200
-Message-ID: <e70a929f-a5c5-487e-9231-61b5423115db@web.de>
-Date: Thu, 26 Jun 2025 16:46:32 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="knBMKVpk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750949217; x=1782485217;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wuNLjw7eRkBNUxbK+tbcIm3Smq+1f+s5sxGIuvTbvyc=;
+  b=knBMKVpkTy9WpwcAFs8hkfGwn0TPziWsb0HbKhpV+mr0Rc2HpkNEZgDI
+   SOFf98dDub0X0aAUkj3sUp3wPgGG7JjkuCsSauoCXq08lECjP+ghm+xOj
+   ee0Gtf8P3T6AdIovwM0CwculYFtGLgrc477E5lGHmySnNrMR97/6ypE5s
+   nPFYn6j+CR3l6tLfAMPL0+jUAXWZ99zx7Mx2ObBkXKHIz3k8QBZQtWPzw
+   6T37WAiYCoLsJR7q4Oc65YL1guki2J8an/uJzqXgSvEvOt6VEjry/n+nU
+   OtPID/jD05lAv1FhG7GLMziDMuBlCWzZlDCGsKQ684N87bQGaR+Ku3IAF
+   Q==;
+X-CSE-ConnectionGUID: ZJMuvWbDSNyC9P/QB0fTmw==
+X-CSE-MsgGUID: 1rbQYLVbRFqb6Qqxx86uwA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53380637"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="53380637"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 07:46:56 -0700
+X-CSE-ConnectionGUID: 8+rRqYoXR/yClCRd1+gTtQ==
+X-CSE-MsgGUID: DzhWelVySNmH0eJh8vyXAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="151959823"
+Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.109.24]) ([10.125.109.24])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 07:46:57 -0700
+Message-ID: <3e55fd58-1d1c-437a-9e0a-72ac92facbb5@intel.com>
+Date: Thu, 26 Jun 2025 07:46:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,132 +52,127 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: [PATCH v2] can: ucan: Use two USB endpoint API functions rather than
- duplicating their implementations
-To: linux-can@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
- Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
- Chen Ni <nichen@iscas.ac.cn>
-References: <48e217a7-b90e-4af3-b535-812c449dd3ba@web.de>
- <bf5442d1-34e0-495f-8a56-4e47f53ca4ad@wanadoo.fr>
- <a7a00125-b393-4283-a7dc-6c80ced8e7e6@web.de>
- <c96a5d2c-0ee1-4e3e-a95d-d38a8f668feb@wanadoo.fr>
- <0768a008-d4a9-41ec-bc47-1e7c63362296@web.de>
- <c04376f2-6ab7-4256-8bdc-aa6ff3ea88b4@wanadoo.fr>
- <7e6f8929-6665-45af-b01b-167a1aa80305@web.de>
- <CAMZ6Rq+PEZWzxNYDODq-Rz_Y8T_XEihyZKoY-MYo6bn5ATaGLQ@mail.gmail.com>
- <1e64bcef-33f1-4295-b91f-d4598b32b866@web.de>
- <57815326-740d-4053-8b85-c5e57d7cec90@wanadoo.fr>
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <57815326-740d-4053-8b85-c5e57d7cec90@wanadoo.fr>
+Subject: Re: [PATCHv2 01/12] x86/tdx: Consolidate TDX error handling
+To: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+ Sean Christopherson <seanjc@google.com>
+Cc: Rick P Edgecombe <rick.p.edgecombe@intel.com>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ Chao Gao <chao.gao@intel.com>, "bp@alien8.de" <bp@alien8.de>,
+ Kai Huang <kai.huang@intel.com>, "x86@kernel.org" <x86@kernel.org>,
+ "mingo@redhat.com" <mingo@redhat.com>, Yan Y Zhao <yan.y.zhao@intel.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+ Isaku Yamahata <isaku.yamahata@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
+ <20250609191340.2051741-2-kirill.shutemov@linux.intel.com>
+ <5cfb2e09-7ecb-4144-9122-c11152b18b5e@intel.com>
+ <d897ab70d48be4508a8a9086de1ff3953041e063.camel@intel.com>
+ <aFxpuRLYA2L6Qfsi@google.com>
+ <vgk3ql5kcpmpsoxfw25hjcw4knyugszdaeqnzur6xl4qll73xy@xi7ttxlxot2r>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <vgk3ql5kcpmpsoxfw25hjcw4knyugszdaeqnzur6xl4qll73xy@xi7ttxlxot2r>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:cnPnYvywW0Sg0h/Oo/SyHrXxHQjrPfUXY0VJpiYBVL3/J8/xwlx
- 0VKM9cd0kGSfGuUhopVuPfA+g6faXVh8soKIEKZndwVjYWu5+9+AE6e6b3mifhDXIXc0mRi
- luPHTFZK6WuPrrC1oSWPCQe8vTgvYevacYfgvwh9KERDeAzWyBREN6sy2WfQa+GpBp3GzHY
- KbHl/EagUdEk14XpoysOA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:A5dZRsET5LM=;5kwEyO8yLuStl8gyET5/1AbHFoP
- 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
+Content-Transfer-Encoding: 7bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Thu, 26 Jun 2025 16:34:26 +0200
+On 6/26/25 02:25, kirill.shutemov@linux.intel.com wrote:
+>> Can we turn them into macros that make it super obvious they are checking if the
+>> error code *is* xyz?  E.g.
+>>
+>> #define IS_TDX_ERR_OPERAND_BUSY
+>> #define IS_TDX_ERR_OPERAND_INVALID
+>> #define IS_TDX_ERR_NO_ENTROPY
+>> #define IS_TDX_ERR_SW_ERROR
+>>>> As is, it's not at all clear that things like tdx_success() are
+>> simply checks, as opposed to commands.
+> I remember Dave explicitly asked for inline functions over macros
+> where possible.
+> 
+> Can we keep them as functions, but give the naming scheme you
+> proposing (but lowercase)?
 
-* Reuse existing functionality from usb_endpoint_is_bulk_in()
-  and usb_endpoint_is_bulk_out() instead of keeping duplicate source code.
+Macros versus function isn't super important. I think Sean was asking if
+we could do:
 
-* Omit two comment lines which became redundant with this refactoring.
+	if (err == IS_TDX_ERR_OPERAND_BUSY)
+		...
 
-The source code was transformed by using the Coccinelle software.
+instead of:
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
+	if (tdx_operand_busy(err))
+		...
 
-V2:
-Further change possibilities were taken better into account for
-the USB endpoint API with the help of Vincent Mailhol.
+We can do that, bu we first need to know that the whole bottom of the
+return code register is empty. Unfortunately, a quick grep of the TDX
+module source shows a bunch of these:
 
+>     return_val = api_error_with_operand_id(TDX_OPERAND_BUSY, OPERAND_ID_MIGSC);
 
- drivers/net/can/usb/ucan.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+I'll refrain from casting judgement on why the TDX module needs such
+fancy, fine-grained error codes and our little hobby kernel over here
+mostly gets by on a couple errno's ... but I digress.
 
-diff --git a/drivers/net/can/usb/ucan.c b/drivers/net/can/usb/ucan.c
-index 07406daf7c88..0935a9b540d6 100644
-=2D-- a/drivers/net/can/usb/ucan.c
-+++ b/drivers/net/can/usb/ucan.c
-@@ -1351,19 +1351,11 @@ static int ucan_probe(struct usb_interface *intf,
- 	out_ep_size =3D 0;
- 	for (i =3D 0; i < iface_desc->desc.bNumEndpoints; i++) {
- 		ep =3D &iface_desc->endpoint[i].desc;
--
--		if (((ep->bEndpointAddress & USB_ENDPOINT_DIR_MASK) !=3D 0) &&
--		    ((ep->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) =3D=3D
--		     USB_ENDPOINT_XFER_BULK)) {
--			/* In Endpoint */
-+		if (usb_endpoint_is_bulk_in(ep)) {
- 			in_ep_addr =3D ep->bEndpointAddress;
- 			in_ep_addr &=3D USB_ENDPOINT_NUMBER_MASK;
- 			in_ep_size =3D le16_to_cpu(ep->wMaxPacketSize);
--		} else if (((ep->bEndpointAddress & USB_ENDPOINT_DIR_MASK) =3D=3D
--			    0) &&
--			   ((ep->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) =3D=3D
--			    USB_ENDPOINT_XFER_BULK)) {
--			/* Out Endpoint */
-+		} else if (usb_endpoint_is_bulk_out(ep)) {
- 			out_ep_addr =3D ep->bEndpointAddress;
- 			out_ep_addr &=3D USB_ENDPOINT_NUMBER_MASK;
- 			out_ep_size =3D le16_to_cpu(ep->wMaxPacketSize);
-=2D-=20
-2.50.0
+Those fancy pants error codes are why we need:
 
+static inline u64 tdx_status(u64 err)
+{
+	return err & TDX_STATUS_MASK;
+}
 
+and can't just check the err directly. We need to mask out the fancy
+pants bits first.
+
+To get to what Sean is asking for, we'd have to do the tdx_status()
+masking in the low-level SEAMCALL helpers and have them all return a
+masked error code. Or maybe just bite the bullet and mostly move over to
+errno's.
+
+That wouldn't be horrible. For errno's or a masked TDX-format err,
+callers could always go digging in tdx_module_args if they need the bits
+that got masked out. But it would take some work.
