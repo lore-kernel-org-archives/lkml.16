@@ -1,95 +1,201 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7591A316C;
-	Thu, 26 Jun 2025 18:20:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1979194AD5;
+	Thu, 26 Jun 2025 18:20:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750962022; cv=none; b=ASBT+wm+ot827MARCtV/k8St6wz96+3LnOwHs1tGDRTwz4NTJe6LJbiuAxKp5EleRahLbrCqF14cvSeuIKFJhK0lKANnBurzHf0Vje22nSN3nn2IwVqGzcoAzsxYnLBlnSC75sVm9zj91dcu/ZDeB5Nr99m0i6kup88QGN0aBVc=
+	t=1750962058; cv=none; b=a39NczTYOexXEhEg3WY9rhUwGZEM6KYI4sClGYX4kaHRG2WJxqxwWpJvPCjQLTZAX51xefv4EelC93ERrPoFmK+wDavjpwcryPoAzPStQc/DZkBeXz5bZpncvC+G3i4xmlfUZGtrFHhh7vvKlfbrbYw8QD127mgNU9tV+Mjj2sE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750962022; c=relaxed/simple;
-	bh=ojxtrCSlAxBab3aqEdaoBxwo2pv44yPWbPAbxh2oCzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BbuTJ8MuVY5Zczb1ZEEBCZ9Y98lSP9Hl2ZbYJOiNWh0rTBtwcZQ6FWXRoENiyZAbhaRRb5e60SO1InGGagKoUe/wVe++ZONT0wULeGR47eFI3CwofpNDtxNCB6TU4HcQoDEDgJxmGrJ6uZLCAtJQK/KmdAdFLrXiPsYiGjo7Kus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j1TSmmKa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750962058; c=relaxed/simple;
+	bh=wfIlpLMZLEp7iEI0/9yZjuSwtSYUGXsKA3C6nGksKZA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z3oPoTy7eu2Hi4PuGZhmGocG3062CcHIGz4it06S7u4H4S1RQskzCVV8CULtOUC31tID4mxZZeQbeXRYLFeai2oKWVkj6EhShuJHDOeMu/+iUQcvKpHVPQPiKSeD5ZpySrw7MkNxc+TrfLQgbCkLEn8E9xCnVsZ9jcu+YOm7CA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PxJyu2GI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j1TSmmKa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0FEEC4CEEB;
-	Thu, 26 Jun 2025 18:20:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PxJyu2GI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5A41C4CEEB;
+	Thu, 26 Jun 2025 18:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750962022;
-	bh=ojxtrCSlAxBab3aqEdaoBxwo2pv44yPWbPAbxh2oCzM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=j1TSmmKawOFir+mO9EHc15u/sZGKkncgNtQ8/BsyXg7aASmkemxG/soApRH+/F3TB
-	 Vi+b2MKNLlOKBVjirUwCIIQ7QvP3+RGS0nd9qVZjCCIa1+/rM5fR9C1u1aKG5MSEsC
-	 5m3TEWvQaabaq6PPJ78q9V/IACAkhY7lNIwnk9j6kqZw4ODJEdk0AjP6PaR/3gCGwI
-	 8i7iopo5xBVjKxj22Xp/6BQvEqDcO9qbO0F7WXE+wgPpPSVklI5m72zvnZbL/YNCdG
-	 zqyEeHCqx+cyKweWXFt8eXYpXEOVGquszGNn9s7TqcFSD4IJDdOi/xjGS8/hYcy/1v
-	 S3daq7Em6oQfA==
-Date: Thu, 26 Jun 2025 19:20:14 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Lothar Rubusch <l.rubusch@gmail.com>, dlechner@baylibre.com,
- nuno.sa@analog.com, andy@kernel.org, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] iio: adc: ti-adc128s052: replace literal by unit
- expression
-Message-ID: <20250626192014.4dd4a270@jic23-huawei>
-In-Reply-To: <c97e840e-fe8e-40e9-baef-0a18103848fd@gmail.com>
-References: <20250625170218.545654-1-l.rubusch@gmail.com>
-	<20250625170218.545654-3-l.rubusch@gmail.com>
-	<c97e840e-fe8e-40e9-baef-0a18103848fd@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1750962056;
+	bh=wfIlpLMZLEp7iEI0/9yZjuSwtSYUGXsKA3C6nGksKZA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PxJyu2GIGhPRAH6dE+pDZmNZXOtkj9toMN5pOarveVaVI8dLP9SnRN4sDeiPMocST
+	 3b89QJhvwFDJ0BafbAfX2DoDIYi3TqQmo9ZhfbHKTj9GC1tXFxB2y35DVMOqpkSCpi
+	 RgLeQBUYzvyuHlvzI2jAphGsYSLkfoXyoLVM6zLvI7sVk36bqKBcCFhrtkpMMgbc2P
+	 9Nt+0ZKBBMq1CNb84qgJgOzOQGstckj/dXRhh1zUbkppzD6yoYCxcEUBOIRRinT2Ae
+	 ker2RR3fa/G1/3DivxomVJ+9fKVwHmnxLCMO2xVxDVPTixiH79T2B2ZoyRyxkfHsRQ
+	 euOHV13x2fcNQ==
+Message-ID: <cbbf0caf-82ce-4427-9844-b11e0f5cacdb@kernel.org>
+Date: Thu, 26 Jun 2025 13:20:54 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
+ system
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <20250625215813.3477840-1-superm1@kernel.org>
+ <20250625215813.3477840-5-superm1@kernel.org>
+ <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
+ <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
+ <rn2kp5tog2agvswva2ipqq2ytiqdcgccnocudsg6ckwfh4roei@provk2g6dita>
+ <363c2b92-4bfc-4537-9fca-025eef09526f@kernel.org>
+ <nxticocp26r5mmpkttritw76h5igw7bdpus6zaf5krkso2h5xy@wna6m2quekfi>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <nxticocp26r5mmpkttritw76h5igw7bdpus6zaf5krkso2h5xy@wna6m2quekfi>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Thu, 26 Jun 2025 08:07:19 +0300
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+On 6/26/2025 1:07 PM, Dmitry Torokhov wrote:
+> On Thu, Jun 26, 2025 at 12:53:02PM -0500, Mario Limonciello wrote:
+>>
+>>
+>> On 6/26/25 12:44 PM, Dmitry Torokhov wrote:
+>>> Hi Mario,
+>>>
+>>> On Thu, Jun 26, 2025 at 06:33:08AM -0500, Mario Limonciello wrote:
+>>>>
+>>>>
+>>>> On 6/26/25 3:35 AM, Hans de Goede wrote:
+>>>>> Hi Mario,
+>>>>>
+>>>>> On 25-Jun-25 23:58, Mario Limonciello wrote:
+>>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>>>
+>>>>>> Sending an input event to wake a system does wake it, but userspace picks
+>>>>>> up the keypress and processes it.  This isn't the intended behavior as it
+>>>>>> causes a suspended system to wake up and then potentially turn off if
+>>>>>> userspace is configured to turn off on power button presses.
+>>>>>>
+>>>>>> Instead send a PM wakeup event for the PM core to handle waking the system.
+>>>>>>
+>>>>>> Cc: Hans de Goede <hansg@kernel.org>
+>>>>>> Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing key press event in resume phase")
+>>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>>>> ---
+>>>>>>     drivers/input/keyboard/gpio_keys.c | 7 +------
+>>>>>>     1 file changed, 1 insertion(+), 6 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+>>>>>> index 773aa5294d269..4c6876b099c43 100644
+>>>>>> --- a/drivers/input/keyboard/gpio_keys.c
+>>>>>> +++ b/drivers/input/keyboard/gpio_keys.c
+>>>>>> @@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
+>>>>>>     		pm_stay_awake(bdata->input->dev.parent);
+>>>>>>     		if (bdata->suspended  &&
+>>>>>>     		    (button->type == 0 || button->type == EV_KEY)) {
+>>>>>> -			/*
+>>>>>> -			 * Simulate wakeup key press in case the key has
+>>>>>> -			 * already released by the time we got interrupt
+>>>>>> -			 * handler to run.
+>>>>>> -			 */
+>>>>>> -			input_report_key(bdata->input, button->code, 1);
+>>>>>> +			pm_wakeup_event(bdata->input->dev.parent, 0);
+>>>
+>>> There is already pm_stay_awake() above.
+>>
+>> But that doesn't help with the fact that userspace gets KEY_POWER from this
+>> and reacts to it.
+>>
+>>>
+>>>>>>     		}
+>>>>>>     	}
+>>>>>
+>>>>> Hmm, we have the same problem on many Bay Trail / Cherry Trail
+>>>>> windows 8 / win10 tablets, so  this has been discussed before and e.g.
+>>>>> Android userspace actually needs the button-press (evdev) event to not
+>>>>> immediately go back to sleep, so a similar patch has been nacked in
+>>>>> the past.
+>>>>>
+>>>>> At least for GNOME this has been fixed in userspace by ignoring
+>>>>> power-button events the first few seconds after a resume from suspend.
+>>>>>
+>>>>
+>>>> The default behavior for logind is:
+>>>>
+>>>> HandlePowerKey=poweroff
+>>>>
+>>>> Can you share more about what version of GNOME has a workaround?
+>>>> This was actually GNOME (on Ubuntu 24.04) that I found this issue.
+>>>>
+>>>> Nonetheless if this is dependent on an Android userspace problem could we
+>>>> perhaps conditionalize it on CONFIG_ANDROID_BINDER_DEVICES?
+>>>
+>>> No it is not only Android, other userspace may want to distinguish
+>>> between normal and "dark" resume based on keyboard or other user
+>>> activity.
+>>>
+>>> Thanks.
+>>>
+>> In this specific case does the key passed up to satisfy this userspace
+>> requirement and keep it awake need to specifically be a fabricated
+>> KEY_POWER?
+>>
+>> Or could we find a key that doesn't require some userspace to ignore
+>> KEY_POWER?
+>>
+>> Maybe something like KEY_RESERVED, KEY_FN, or KEY_POWER2?
+> 
+> The code makes no distinction between KEY_POWER and KEY_A or KEY_B, etc.
+> It simply passes event to userspace for processing.
 
-> On 25/06/2025 20:02, Lothar Rubusch wrote:
-> > Replace the literal number 1000 by MILLI from linux/units.h
-> > 
-> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> > ---
-> >   drivers/iio/adc/ti-adc128s052.c | 3 ++-
-> >   1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-> > index cf271c39e663..67bc7fbd52bc 100644
-> > --- a/drivers/iio/adc/ti-adc128s052.c
-> > +++ b/drivers/iio/adc/ti-adc128s052.c
-> > @@ -18,6 +18,7 @@
-> >   #include <linux/property.h>
-> >   #include <linux/regulator/consumer.h>
-> >   #include <linux/spi/spi.h>
-> > +#include <linux/units.h>
-> >   
-> >   struct adc128_configuration {
-> >   	const struct iio_chan_spec	*channels;
-> > @@ -189,7 +190,7 @@ static int adc128_probe(struct spi_device *spi)
-> >   				     "failed to read '%s' voltage",
-> >   				     config->refname);
-> >   
-> > -	adc->vref_mv = ret / 1000;
-> > +	adc->vref_mv = ret / MILLI;  
+Right.  I don't expect a problem with most keys, but my proposal is to 
+special case KEY_POWER while suspended.  If a key press event must be 
+sent to keep Android and other userspace happy I suggest sending 
+something different just for that situation.
+
+Like this:
+
+diff --git a/drivers/input/keyboard/gpio_keys.c 
+b/drivers/input/keyboard/gpio_keys.c
+index 773aa5294d269..66e788d381956 100644
+--- a/drivers/input/keyboard/gpio_keys.c
++++ b/drivers/input/keyboard/gpio_keys.c
+@@ -425,7 +425,10 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void 
+*dev_id)
+                          * already released by the time we got interrupt
+                          * handler to run.
+                          */
+-                       input_report_key(bdata->input, button->code, 1);
++                       if (button->code == KEY_POWER)
++                               input_report_key(bdata->input, 
+KEY_WAKEUP, 1);
++                       else
++                               input_report_key(bdata->input, 
+button->code, 1);
+                 }
+         }
+
+
+
 > 
-> This makes no sense to me. What does it mean we divide the micro volts 
-> by 'milli'? It is clear when we divide micro volts by 1000 that we get 
-> milli volts. Also, the mv suffix in variable makes units clear already, 
-> division by MILLI just obfuscates things. I'd keep it as 1000.
+> You need to fix your userspace. Even with your tweak it is possible for
+> userspace to get a normal key event "too early" and turn off the screen
+> again, so you still need to handle this situation.
+> 
+> Thanks.
 > 
 
-ret / (MICRO / MILLI) would be more descriptive as indicates
-we are converting form microvolts to milivolts.
- 
-> I would just drop this unless Jonathan disagrees.
-> 
-> Yours,
-> 	-- Matti
+I want to note this driver works quite differently than how ACPI power 
+button does.
+
+You can see in acpi_button_notify() that the "keypress" is only 
+forwarded when not suspended [1].  Otherwise it's just wakeup event 
+(which is what my patch was modeling).
+
+https://github.com/torvalds/linux/blob/v6.16-rc3/drivers/acpi/button.c#L461 
+[1]
 
