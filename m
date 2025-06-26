@@ -1,130 +1,184 @@
-Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C0E13A3F7;
-	Thu, 26 Jun 2025 06:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF06713A3F7;
+	Thu, 26 Jun 2025 06:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750919712; cv=none; b=P8uTkIEZ7Sg9WKCIDtrhb1h5qSF9gCJgw7EEl6D5mDFZRID7F5066JSPzh76E1hPkVqV/ojT5dJn1qTkhSDS9u3Vd/tFUSdxFH0Xwco43RQm3ZsCludn0DuLKLPKoj//okSYzCSuJ8WuI5aUqbzMyzAd253D202sW30y/tpsdSw=
+	t=1750919718; cv=none; b=BbL7IjbMB56e4GJsuhEFZxdhJReE2pn3BIeMscH1MtrpWAytvhdLsylgbpmawx+wpAaeZAE7YGqQFb/7ccpYm29JicBwxrNv0dz56A+Dq8AzgIeFaoZsu/yY6X+ypTVv9EDpNZ3yVYncJAYFo4uKwhreRV6UsAO4jYR3vO0hvEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750919712; c=relaxed/simple;
-	bh=kXEwt3IRU2NN6XR4T29MvS381DWcfgzy/ExFUQTFHXc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jwM1xhA3gsxrAxEp7JbBQ0f98jMOpZd1osm7i/AdXzz+I+MgED3WZY+8GGHa9WH6DKeqY+s27WidyWRa3lwiFtL0tMHhikn1nkki88HXu1fuQ9LkDk/CXnFnrLBrIx6PrFqsd4FIU6hrsXnLyZGBiQ7vlrH7YyAVcHm0K5HPw9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=g0m/wFnB; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="g0m/wFnB"
-Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PI6RxZ019763;
-	Wed, 25 Jun 2025 23:34:44 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=/6+WkD4QKS5qw/KRv6OC76vlR
-	Djj+Bgyl5FuINvA4tI=; b=g0m/wFnBbrUp46kQzthTvmNcQYmJSXvVQKnDUA8zl
-	V6x3qXfQQC1fmAQ3f6Z6Ovp1EQsOjcW/RL6Xanmjbx0HpCyLAL6Uarm0kdu+zEiT
-	bGPUvhTq/sVGqmIvrnjMqRLt+j3FfJ7Co7+TvrXBp2t8s/KdoGZzsL5A2//rQxhE
-	TfRa3gBopk55a+C0uNRDR6ObESX3x83YcOCAdkLuP/dPan9FBi35fEVNC4WCUEo6
-	Hr4+MFcv8xVjqh2pYId1WDG+YvBCjJEo84kKMO4vb+wPf1PSHLyyH0ZoOic7JN9C
-	2d/eT+oImf8+Kp95CpvsE64RgC1y/CLHHU9NrOlatAYVg==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 47gp3q95v7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 23:34:43 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+	s=arc-20240116; t=1750919718; c=relaxed/simple;
+	bh=NoDoMsfHYCqcprv512VLDt+K36FKTmgXXZpW8wGRg+w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OoWa8oekviDQuslyYuA6Ds1y4qkSz0pZFKHKOB0SlJE7gk95q8So3XouFiicCG2+0KsNVNH4/GJVzv5+FmcRQ/wQ5qnpQc1REOZHWxmp7f90kkqphv64tvcsjngrsA50U+k4RcMNeI4AX5WPSZOYdWyohsEkm+r0HtaMymS5tNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4bSTQw3LT2z1QBl6;
+	Thu, 26 Jun 2025 14:33:28 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8738D1800B2;
+	Thu, 26 Jun 2025 14:35:07 +0800 (CST)
+Received: from [10.174.179.155] (10.174.179.155) by
+ kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 25 Jun 2025 23:34:28 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 25 Jun 2025 23:34:28 -0700
-Received: from 822c91e11a5c (HY-LT91368.marvell.com [10.29.24.116])
-	by maili.marvell.com (Postfix) with SMTP id 360CC3F7077;
-	Wed, 25 Jun 2025 23:34:23 -0700 (PDT)
-Date: Thu, 26 Jun 2025 06:34:23 +0000
-From: Subbaraya Sundeep <sbhatta@marvell.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-CC: Sai Krishna <saikrishnag@marvell.com>,
-        Sunil Goutham
-	<sgoutham@marvell.com>,
-        Linu Cherian <lcherian@marvell.com>,
-        Geetha sowjanya
-	<gakula@marvell.com>,
-        Jerin Jacob <jerinj@marvell.com>, hariprasad
-	<hkelam@marvell.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH net-next] octeontx2-af: Fix error code in rvu_mbox_init()
-Message-ID: <aFzp70LaPoO0ukw8@822c91e11a5c>
-References: <ee7944ae-7d7d-480d-af33-b77f2aa15500@sabinyo.mountain>
+ 15.2.1544.11; Thu, 26 Jun 2025 14:35:06 +0800
+Message-ID: <f9233508-2dda-4909-a3a2-bb61ec6921ee@huawei.com>
+Date: Thu, 26 Jun 2025 14:35:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ee7944ae-7d7d-480d-af33-b77f2aa15500@sabinyo.mountain>
-X-Authority-Analysis: v=2.4 cv=AemxH2XG c=1 sm=1 tr=0 ts=685cea03 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=M5GUcnROAAAA:8 a=BdBXECxqI82sMXVekp8A:9
- a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22 a=OBjm3rFKGHvpk9ecZwUJ:22 a=yGmsW_zf-WRfUAWRrVPH:22
-X-Proofpoint-ORIG-GUID: rr-0S0kE2nnZrOVJiDy2RL4GxNgV0ymn
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA1MiBTYWx0ZWRfX4hOtyfPTcBMi jtnd7kv0aVeZF+b8wCmCoLgKkaObtcZ5Er6sS9SKl8sDnGgC5Yz5WftEXCLRZLsTdIR+R9DoiMt 8TxxFvJs+FNThxbMb/QzOeVxQrQV7ThY6w4av1nSPkBrl2CBWG3g7ABC+45jhy2mVLM+QZqOTq/
- IH3C+biTBk/h5dG6SifF7mtXtB0B/zjtatYRerDEDtL3AZrWQHywwfX9OV69jMvVSn84HNVySbH GpvUEwEyiuOK3b9AYiL1+ZLsRbN5yUSNmFXIQ8D6EKWJ175dx1McANSXAYo81a+pu8rzcAu2VtA jm9RVmJhsROZ/cEyDNv5R9wIIpsKzWekEhT5gktLlYhH6NOPu3loQ9EnIKkvgn1sUnbr/k7b6Kf
- 5V7Kezg+ptIsEL3NweP8CGDzeavdGWx/SVDwrAidq5hPJbgRIQk3g8cUXMpuRrnKFj/ZiTIJ
-X-Proofpoint-GUID: rr-0S0kE2nnZrOVJiDy2RL4GxNgV0ymn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_03,2025-06-25_01,2025-03-28_01
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH] nfs: fix the race of lock/unlock and open
+To: <trondmy@kernel.org>, <anna@kernel.org>, <jlayton@kernel.org>,
+	<bcodding@redhat.com>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>
+References: <20250419085709.1452492-1-lilingfeng3@huawei.com>
+ <b023bb1f-4c1c-49dc-8842-0b2f1cfbbee0@huawei.com>
+From: Li Lingfeng <lilingfeng3@huawei.com>
+In-Reply-To: <b023bb1f-4c1c-49dc-8842-0b2f1cfbbee0@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
-On 2025-06-25 at 15:23:05, Dan Carpenter (dan.carpenter@linaro.org) wrote:
-> The error code was intended to be -EINVAL here, but it was accidentally
-> changed to returning success.  Set the error code.
-> 
-> Fixes: e53ee4acb220 ("octeontx2-af: CN20k basic mbox operations and structures")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Ping again...
 
- Reviewed-by: Subbaraya Sundeep <sbhatta@marvell.com>
+Thanks.
 
- Thanks for the patch. This has been pointed by Simon earlier:
- https://lore.kernel.org/all/20250618194301.GA1699@horms.kernel.org/
-
- Thanks,
- Sundeep
-
-> ---
->  drivers/net/ethernet/marvell/octeontx2/af/rvu.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-> index 7e538ee8a59f..c6bb3aaa8e0d 100644
-> --- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-> +++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-> @@ -2458,9 +2458,9 @@ static int rvu_mbox_init(struct rvu *rvu, struct mbox_wq_info *mw,
->  			 void (mbox_handler)(struct work_struct *),
->  			 void (mbox_up_handler)(struct work_struct *))
->  {
-> -	int err = -EINVAL, i, dir, dir_up;
->  	void __iomem **mbox_regions;
->  	struct ng_rvu *ng_rvu_mbox;
-> +	int err, i, dir, dir_up;
->  	void __iomem *reg_base;
->  	struct rvu_work *mwork;
->  	unsigned long *pf_bmap;
-> @@ -2526,6 +2526,7 @@ static int rvu_mbox_init(struct rvu *rvu, struct mbox_wq_info *mw,
->  			goto free_regions;
->  		break;
->  	default:
-> +		err = -EINVAL;
->  		goto free_regions;
->  	}
->  
-> -- 
-> 2.47.2
-> 
+在 2025/6/5 14:51, Li Lingfeng 写道:
+> Friendly ping..
+>
+> Thanks
+>
+> 在 2025/4/19 16:57, Li Lingfeng 写道:
+>> LOCK may extend an existing lock and release another one and UNLOCK may
+>> also release an existing lock.
+>> When opening a file, there may be access to file locks that have been
+>> concurrently released by lock/unlock operations, potentially triggering
+>> UAF.
+>> While certain concurrent scenarios involving lock/unlock and open
+>> operations have been safeguarded with locks – for example,
+>> nfs4_proc_unlckz() acquires the so_delegreturn_mutex prior to invoking
+>> locks_lock_inode_wait() – there remain cases where such protection is 
+>> not
+>> yet implemented.
+>>
+>> The issue can be reproduced through the following steps:
+>> T1: open in read-only mode with three consecutive lock operations 
+>> applied
+>>      lock1(0~100) --> add lock1 to file
+>>      lock2(120~200) --> add lock2 to file
+>>      lock3(50~150) --> extend lock1 to cover range 0~200 and release 
+>> lock2
+>> T2: restart nfs-server and run state manager
+>> T3: open in write-only mode
+>>      T1 T2                                T3
+>>                              start recover
+>> lock1
+>> lock2
+>>                              nfs4_open_reclaim
+>>                              clear_bit // NFS_DELEGATED_STATE
+>> lock3
+>>   _nfs4_proc_setlk
+>>    lock so_delegreturn_mutex
+>>    unlock so_delegreturn_mutex
+>>    _nfs4_do_setlk
+>>                              recover done
+>>                                                  lock 
+>> so_delegreturn_mutex
+>> nfs_delegation_claim_locks
+>>                                                  get lock2
+>>     rpc_run_task
+>>     ...
+>>     nfs4_lock_done
+>>      locks_lock_inode_wait
+>>      ...
+>>       locks_dispose_list
+>>       free lock2
+>>                                                  use lock2
+>>                                                  // UAF
+>>                                                  unlock 
+>> so_delegreturn_mutex
+>>
+>> Get so_delegreturn_mutex before calling locks_lock_inode_wait to fix 
+>> this
+>> issue.
+>>
+>> Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be 
+>> atomic with the stateid update")
+>> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+>> ---
+>>   fs/nfs/nfs4proc.c | 19 +++++++++++++++----
+>>   1 file changed, 15 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>> index 970f28dbf253..297ee2442c02 100644
+>> --- a/fs/nfs/nfs4proc.c
+>> +++ b/fs/nfs/nfs4proc.c
+>> @@ -7112,13 +7112,16 @@ static void nfs4_locku_done(struct rpc_task 
+>> *task, void *data)
+>>           .inode = calldata->lsp->ls_state->inode,
+>>           .stateid = &calldata->arg.stateid,
+>>       };
+>> +    struct nfs4_state_owner *sp = calldata->ctx->state->owner;
+>>         if (!nfs4_sequence_done(task, &calldata->res.seq_res))
+>>           return;
+>>       switch (task->tk_status) {
+>>           case 0:
+>>               renew_lease(calldata->server, calldata->timestamp);
+>> +            mutex_lock(&sp->so_delegreturn_mutex);
+>> locks_lock_inode_wait(calldata->lsp->ls_state->inode, &calldata->fl);
+>> +            mutex_unlock(&sp->so_delegreturn_mutex);
+>>               if (nfs4_update_lock_stateid(calldata->lsp,
+>>                       &calldata->res.stateid))
+>>                   break;
+>> @@ -7375,6 +7378,7 @@ static void nfs4_lock_done(struct rpc_task 
+>> *task, void *calldata)
+>>   {
+>>       struct nfs4_lockdata *data = calldata;
+>>       struct nfs4_lock_state *lsp = data->lsp;
+>> +    struct nfs4_state_owner *sp = data->ctx->state->owner;
+>>         if (!nfs4_sequence_done(task, &data->res.seq_res))
+>>           return;
+>> @@ -7386,8 +7390,12 @@ static void nfs4_lock_done(struct rpc_task 
+>> *task, void *calldata)
+>>                   data->timestamp);
+>>           if (data->arg.new_lock && !data->cancelled) {
+>>               data->fl.c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
+>> -            if (locks_lock_inode_wait(lsp->ls_state->inode, 
+>> &data->fl) < 0)
+>> +            mutex_lock(&sp->so_delegreturn_mutex);
+>> +            if (locks_lock_inode_wait(lsp->ls_state->inode, 
+>> &data->fl) < 0) {
+>> +                mutex_unlock(&sp->so_delegreturn_mutex);
+>>                   goto out_restart;
+>> +            }
+>> +            mutex_unlock(&sp->so_delegreturn_mutex);
+>>           }
+>>           if (data->arg.new_lock_owner != 0) {
+>>               nfs_confirm_seqid(&lsp->ls_seqid, 0);
+>> @@ -7597,11 +7605,14 @@ static int _nfs4_proc_setlk(struct nfs4_state 
+>> *state, int cmd, struct file_lock
+>>       int status;
+>>         request->c.flc_flags |= FL_ACCESS;
+>> -    status = locks_lock_inode_wait(state->inode, request);
+>> -    if (status < 0)
+>> -        goto out;
+>>       mutex_lock(&sp->so_delegreturn_mutex);
+>>       down_read(&nfsi->rwsem);
+>> +    status = locks_lock_inode_wait(state->inode, request);
+>> +    if (status < 0) {
+>> +        up_read(&nfsi->rwsem);
+>> +        mutex_unlock(&sp->so_delegreturn_mutex);
+>> +        goto out;
+>> +    }
+>>       if (test_bit(NFS_DELEGATED_STATE, &state->flags)) {
+>>           /* Yes: cache locks! */
+>>           /* ...but avoid races with delegation recall... */
