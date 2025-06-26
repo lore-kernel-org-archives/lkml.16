@@ -1,173 +1,168 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB98D169AE6;
-	Thu, 26 Jun 2025 12:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFD327815D;
+	Thu, 26 Jun 2025 12:01:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750939297; cv=none; b=EOr86xLK0pRfTZbwyrJteR5eyusCdxCrWyay0uCtBMvQbHZ78xkVYkPIw6KpQ3ksMThm67XIGLUVUL86+Q9wxhSeGEL+E461YQSQlNjuF/1rzGKaAMoN+JdKU7nOi6V+UULpJfkUGIhCHggxjT8KlKz12qMF6Pi54mEY2nEUMkE=
+	t=1750939306; cv=none; b=WBqqHPnkCTz7k+9zZsuQUp3sJNfn+oteaTbfC+H1h1LU0RrtHBDSGpw3nPT5tcteDYsCbqpv7SWS2QIMJEpeRtzYFCYh1D9gmAwzUj2/x3uiOWKvhJmufBd9lbGSh5caWiMoOgVa2Pl/2L5q+qAFrsso33SkYBIloRrj/8/hjGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750939297; c=relaxed/simple;
-	bh=lTKtD7L6LHV8mLDA71ahF7hH1+dc0Mv7gmcLi7RJKWc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lWhXuIS6In5Nybg1GBNKN4RP8P30rG0BNjEgpn/xEwi+da1CoQ4D/zg+cC/kHuRIpodo9wpbqNc+GogjVtregNhGVSwJnyVz92HQwigs4eERKG/jco8MrZZsG7fhM4tAnsPj946xOEApUEeBll9QIV9Ve+NJ17TS0oJ36FVoc0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WtJAt8ZV; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WtJAt8ZV"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55QC0xLL1729730;
-	Thu, 26 Jun 2025 07:00:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750939259;
-	bh=8q5ed43rGmQnihxTQTBsvH8EfbT3GuiTb8x+Xb4Mdl0=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=WtJAt8ZVQ4M1Ncn++K+/pxnbtakt1hndCKZokghxuKvUh/3KzLXi4MN+khm7b5OX2
-	 HqnjM4pCkNm7NOiUapeNYvX3wughlqkY1VnJO/UsOMYUvxxZHwGi+TegJfN67V9IOH
-	 EDvvVwFpmWcBcMLRHYs9jawXXKP4+Vcq0wp8PCc4=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55QC0xXm3601113
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 26 Jun 2025 07:00:59 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
- Jun 2025 07:00:59 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 26 Jun 2025 07:00:59 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.169])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55QC0wxM961069;
-	Thu, 26 Jun 2025 07:00:58 -0500
-Date: Thu, 26 Jun 2025 17:30:58 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>,
-        Matthias Schiffer
-	<matthias.schiffer@ew.tq-group.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob
- Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor
- Dooley <conor+dt@kernel.org>,
-        Andy Whitcroft <apw@canonical.com>,
-        Dwaipayan
- Ray <dwaipayanray1@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Joe
- Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
-        Nishanth Menon
-	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Roger Quadros
-	<rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux@ew.tq-group.com>,
-        Maxime
- Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next v2 2/3] net: ethernet: ti: am65-cpsw: fixup PHY
- mode for fixed RGMII TX delay
-Message-ID: <3928de74-2266-42db-91bc-354832a94518@ti.com>
-References: <cover.1750756583.git.matthias.schiffer@ew.tq-group.com>
- <9b3fb1fbf719bef30702192155c6413cd5de5dcf.1750756583.git.matthias.schiffer@ew.tq-group.com>
- <54d6cd05-65ef-4e1d-8041-3e4a2c50b443@ti.com>
- <8a99444a-a4e4-4c4f-8cec-225a10d5d418@lunn.ch>
+	s=arc-20240116; t=1750939306; c=relaxed/simple;
+	bh=ccTV9NggQKAjyM9bPmK/gvP/ZB7aG0OIyHo3E+Z/Pdc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qpp6gSJboVXhp6LUPYu0DENRc78VSKgONQV9ooRisjb8IGYF3s6iLPDCxFotxsrt75bprFYiWBBSHmKJyUveDYRz25SGBy8JWRMOEK3n/FQ7q60BKbRb4SM39rfU1XlKYtpneu3vbZ3kMqEgca7eL231zQNC02TN5gkj6zICJbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6fad3400ea3so8974496d6.0;
+        Thu, 26 Jun 2025 05:01:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750939301; x=1751544101;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9i4SKmaIffANqlW0D6lxspqaOtmcTJXmduEkrd8XVLE=;
+        b=EXiPQstOQNImXbNQHhI4A9auaGvVVcZobZr0siGkC/GMuBcYz4Ymz5E9JHaOQNd5Z0
+         fhLQyJLlm5xqqWK3jhkeA2BmFy9yXOnOEYx3YKG1F7EjVPJzRr7J9KMnMc/w/TynEZgn
+         T5pGiKfa2cKLQqdro1QRl6u2Q4yx/3s4yTvTe0t1bo6EjppPJ5Y2QHaqYdt7AWYl/Vv1
+         EnbrtksLUOsP+XluERR7aLCaOhVn9sxcrh/lw8deAn3qWHdZUEP3c1rovnT4zTx7NKLo
+         m9IUaGLz9+Kwi6GLrSkbqyk917bIkOn7Jawh5BbAfotg8tJmb5Cu5I06+CIXaedGOrV0
+         a8IA==
+X-Forwarded-Encrypted: i=1; AJvYcCWdBYb79x5+cyMqq9rx4mBgSiVQY1/1fdmZYOs0Xh5cvXZsOfmRTL1GMZCHqCC8PwYEUuigm0LNfGjW@vger.kernel.org, AJvYcCWkxHNqmdNZ3twy4nFCUjbhQ3WXH0NpT7tL6p1EHYM7Scs7jTyGvrrB1tWrx2GIc3ibC/6pBQHrboZwh4Wy@vger.kernel.org, AJvYcCXbh1+00xrR2S+91eSWtOY+IDGyxQ9GKyCdTm2ElMVg2fQI3gvo4nmDYLhXyaq7OIEtn/hHvCQyFACIELOAfqLlONk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH9gbz1XFOICr0YkhaS3VT/lnFZ0EGpSu8zJ6DCVLwIfQCqJ72
+	2ZFaN00f7ONRQY36+uX84j5Y35BlXxIVXkKPxfXGSneDuTFq8i1ELC68MEBNpyin
+X-Gm-Gg: ASbGnctQenGZ6YwJzeHzCfdq3hXaOj+hmInkcqmnWKLB7zk6pkKkIAnmAmg2xUozJO4
+	4fO0yoq/3wPttvVYBZFjAzylxe2jZmV2qJ8imD0k2SCRRJBsHxcQ1qywVpYhPVwskCGloVuEhSl
+	ewT01Gi+TxyybjMZs5CHuqAj1T8vbwZ8EY0+WnG+ZgZ8Gl1GcWd3bRDPsXDxOo/+WX/k46izlyP
+	EDm00I0mll2reZrL//+2LheREC8UyYwp3iMehVpT/wFOVgPpFPqV6lh8gKfS0cSHrKPCNgWeg42
+	NtExgjh23Q5yOg4jgoWsljD4asfGcE/HGxPlUlDJBbuzApDRDTOptYat+odI+hNFhJSqAqt0+C9
+	P+63lCgj7s7grJPMszwt2oqL55wp2
+X-Google-Smtp-Source: AGHT+IH8F6T3pSt4b8Iz2Cd+gpXCdkjmY7sPGojh10558iCx8zJK4Br6lshcz/1GXywHHfRgpJK7Tw==
+X-Received: by 2002:a05:6214:19ce:b0:6f9:201a:c05d with SMTP id 6a1803df08f44-6fd5efc90e6mr92198706d6.33.1750939300318;
+        Thu, 26 Jun 2025 05:01:40 -0700 (PDT)
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com. [209.85.222.182])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f99a5782sm709391585a.26.2025.06.26.05.01.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 05:01:40 -0700 (PDT)
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7d3f192a64eso84978185a.2;
+        Thu, 26 Jun 2025 05:01:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXTxD/xTVBv5FERV6dWqOBCQWN8Z1gVYxuaHyssUf+/qVLQPKdqPv1xGtnKiRg1bzK1NsBI9LaQzepV@vger.kernel.org, AJvYcCXVGzoUWoDUeoO5zA+NT2pdmx2DnSQUzgGBwqZFloFpicUy/M2SO73Qq75RYNfdi3t3k+xa80EozcRn+AUo@vger.kernel.org, AJvYcCXY2MPI0q+zAWuVfdR7xynDQ2r+DDDj6GyE3umTArMnYt5vekQUgTwNN2CXi+/uIfwhJiwm3LlMOFod3SauI37PbFU=@vger.kernel.org
+X-Received: by 2002:a05:6102:3054:b0:4e5:9867:14fb with SMTP id
+ ada2fe7eead31-4ecc76b6d4cmr5243277137.24.1750939288180; Thu, 26 Jun 2025
+ 05:01:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <8a99444a-a4e4-4c4f-8cec-225a10d5d418@lunn.ch>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250620121045.56114-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250620121045.56114-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250620121045.56114-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 26 Jun 2025 14:01:16 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXKBwL2OOLMajVp35BfbKA7PXLP4tER9OE_LKM=VjPq8A@mail.gmail.com>
+X-Gm-Features: Ac12FXzZ6yod9dodFBSBqO2RJbcMejU3LoEJnqqQrw9WQiGXb2I_hA9FF1sQjdk
+Message-ID: <CAMuHMdXKBwL2OOLMajVp35BfbKA7PXLP4tER9OE_LKM=VjPq8A@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: dts: renesas: Add CN15 eMMC and SD overlays
+ for RZ/V2H EVK
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 26, 2025 at 01:58:07PM +0200, Andrew Lunn wrote:
-> On Thu, Jun 26, 2025 at 03:10:50PM +0530, Siddharth Vadapalli wrote:
-> > On Tue, Jun 24, 2025 at 12:53:33PM +0200, Matthias Schiffer wrote:
-> > 
-> > Hello Matthias,
-> > 
-> > > All am65-cpsw controllers have a fixed TX delay, so the PHY interface
-> > > mode must be fixed up to account for this.
-> > > 
-> > > Modes that claim to a delay on the PCB can't actually work. Warn people
-> > > to update their Device Trees if one of the unsupported modes is specified.
-> > > 
-> > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> > > Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> > > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> > > ---
-> > >  drivers/net/ethernet/ti/am65-cpsw-nuss.c | 27 ++++++++++++++++++++++--
-> > >  1 file changed, 25 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> > > index f20d1ff192efe..519757e618ad0 100644
-> > > --- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> > > +++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> > > @@ -2602,6 +2602,7 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
-> > >  		return -ENOENT;
-> > >  
-> > >  	for_each_child_of_node(node, port_np) {
-> > > +		phy_interface_t phy_if;
-> > >  		struct am65_cpsw_port *port;
-> > >  		u32 port_id;
-> > >  
-> > > @@ -2667,14 +2668,36 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
-> > >  
-> > >  		/* get phy/link info */
-> > >  		port->slave.port_np = of_node_get(port_np);
-> > > -		ret = of_get_phy_mode(port_np, &port->slave.phy_if);
-> > > +		ret = of_get_phy_mode(port_np, &phy_if);
-> > >  		if (ret) {
-> > >  			dev_err(dev, "%pOF read phy-mode err %d\n",
-> > >  				port_np, ret);
-> > >  			goto of_node_put;
-> > >  		}
-> > >  
-> > > -		ret = phy_set_mode_ext(port->slave.ifphy, PHY_MODE_ETHERNET, port->slave.phy_if);
-> > > +		/* CPSW controllers supported by this driver have a fixed
-> > > +		 * internal TX delay in RGMII mode. Fix up PHY mode to account
-> > > +		 * for this and warn about Device Trees that claim to have a TX
-> > > +		 * delay on the PCB.
-> > > +		 */
-> > > +		switch (phy_if) {
-> > > +		case PHY_INTERFACE_MODE_RGMII_ID:
-> > > +			phy_if = PHY_INTERFACE_MODE_RGMII_RXID;
-> > > +			break;
-> > > +		case PHY_INTERFACE_MODE_RGMII_TXID:
-> > > +			phy_if = PHY_INTERFACE_MODE_RGMII;
-> > > +			break;
-> > > +		case PHY_INTERFACE_MODE_RGMII:
-> > > +		case PHY_INTERFACE_MODE_RGMII_RXID:
-> > > +			dev_warn(dev,
-> > > +				 "RGMII mode without internal TX delay unsupported; please fix your Device Tree\n");
-> > 
-> > Existing users designed boards and enabled Ethernet functionality using
-> > "rgmii-rxid" in the device-tree and implementing the PCB traces in a
-> > way that they interpret "rgmii-rxid". So their (mis)interpretation of
-> > it is being challenged by the series. While it is true that we are updating
-> > the bindings and driver to move towards the correct definition, I believe that
-> > the above message would cause confusion. Would it be alright to update it to
-> > something similar to:
-> > 
-> > "Interpretation of RGMII delays has been corrected; no functional impact; please fix your Device Tree"
-> 
-> It is dev_warn() not dev_err(), so it should be read as a warning. And
-> the device will continue to probe and work. So I think the message is
-> O.K. What we don't want is DT developers thinking they can just ignore
-> it. So i would keep it reasonably strongly worded.
+Hi Prabhakar,
 
-Thank you for the clarification. I have no further concerns and the
-patch looks good to me.
+On Fri, 20 Jun 2025 at 14:10, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Introduce device tree overlays to support the eMMC (RTK0EF0186B02000BJ)
+> and microSD (RTK0EF0186B01000BJ) sub-boards via the CN15 connector on the
+> RZ/V2H EVK. These overlays make use of shared DTSI fragments
+> (`rzv2-evk-cn15-emmc-common.dtsi` and `rzv2-evk-cn15-sd-common.dtsi`)
+> that encapsulate common CN15-specific configurations, including pinctrl
+> settings, SDHI0 setup, and required regulators.
+>
+> Additionally, the base board DTS is updated to define an `mmc0` alias
+> pointing to `&sdhi0`, and to add a fixed 1.8V regulator node (`reg_1p8v`)
+> intended for use by the optional eMMC sub-board and, in the future, the
+> ADV7535 HDMI encoder (not yet enabled in the DTS).
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Thanks for your patch!
 
-Regards,
-Siddharth.
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk-cn15-emmc.dtso
+> @@ -0,0 +1,15 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Device Tree overlay for the RZ/V2H EVK with the eMMC sub-board
+> + * (RTK0EF0186802000BJ) connected to the CN15 connector.
+> + *
+> + * Copyright (C) 2025 Renesas Electronics Corp.
+> + */
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +#define RZV2H_PA               10
+> +#define EMMC_GPIO(port, pin)   RZG2L_GPIO(RZV2H_P##port, pin)
+> +
+> +#include "rzv2-evk-cn15-emmc-common.dtsi"
+> diff --git a/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk-cn15-sd.dtso b/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk-cn15-sd.dtso
+> new file mode 100644
+> index 000000000000..47cb581c1add
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk-cn15-sd.dtso
+> @@ -0,0 +1,16 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Device Tree overlay for the RZ/V2H EVK with the SD sub-board
+> + * (RTK0EF0186B01000BJ) connected to the CN15 connector.
+> + *
+> + * Copyright (C) 2025 Renesas Electronics Corp.
+> + */
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +#define RZV2H_PA               10
+> +#define SD_GPIO(port, pin)     RZG2L_GPIO(RZV2H_P##port, pin)
+> +#define SD_PORT_PINMUX(b, p, f)        RZG2L_PORT_PINMUX(RZV2H_P##b, p, f)
+> +
+> +#include "rzv2-evk-cn15-sd-common.dtsi"
+
+These two generate the exact same .dtbo as for RZ/V2N.
+
+> diff --git a/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts b/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
+> index 01b2e0c7c7db..219347d73753 100644
+> --- a/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
+> +++ b/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
+> @@ -25,6 +25,7 @@ aliases {
+>                 i2c6 = &i2c6;
+>                 i2c7 = &i2c7;
+>                 i2c8 = &i2c8;
+> +               mmc0 = &sdhi0;
+
+Please move to the (common) .dtso in patch 1.
+
+>                 mmc1 = &sdhi1;
+>                 serial0 = &scif;
+>         };
+
+The rest LGTM.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
