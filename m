@@ -1,133 +1,129 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CB3265CDD
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B22A264A83
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750976570; cv=none; b=YmdGpkNY4SgeYbB3DJKt6PazZ18z/Sy+iJ/Id1PLj4Ho2Y6qGE1FRaGRxBlaHJkjGdSl652UHXuoxXF7+7j96Y/mjBVxz00g+TdtDapSWO+QDAb6qh6cC6PqH9hg99hbs5Z0HVjqR6Zh2O8ToZHSAANy8wHdZF0xNfu28mJThEw=
+	t=1750976579; cv=none; b=BsL0piikWwrezXlGgcjesqWTLe0Ddq7sRFbB7dtcZe8vXo4khIM5hB9TWlcMj6Mkj/ruAuTCio6Gu/KmBjq1Vo5Lx3NaM+o83XsidzbhN3YFLwhQlyJLOGcG48RCYbsHyjOk8Hd+JwYwa1z7Mp8GkYhgEUj5a7jwH08bEkR0UoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750976570; c=relaxed/simple;
-	bh=fBdqLi2zh8cgE2smZ2prRBWP5Fb7RYAI+pYgkD2qyFE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=o3sWlRzWFnt4vIZ2WXSdO/8/VBj8V8UIBETKk5sQzWZ8S9Bt7mdCIe6IxjiqgKYKMlZNm6UXkK825aQa6OnbcYH57zrBTr26yx1qq3It7/G5yi45S+CHWXtnqEJS6rHCtY+SMjiMaKsYQs9ouZbho/W5SCzKrtQSKV7+PAonFGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RgG1P6iD; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750976579; c=relaxed/simple;
+	bh=a4jHsPRr5enaP3Vr+DhkEerO8CUTIgG6L5ox3Cj8o0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AFhlmnz/Koa01BdPcamanfxbdGVDMcK9t5ys2Zz04CBDyv8z1homO+OXjTr/obM8hD6nFRluIfPXwyVmoWABBDArPnkfsIQyOmnS5pN4mKBfw7kbHmmkE1WCcwYWDtFKgxv/Q5zkQQWOx7BE5k16FO8pdnWD8pzLYIOfIQIae8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=VAFFwuGD; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RgG1P6iD"
-Message-ID: <c6528a69-f229-470c-aa60-012049d7287f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750976554;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LgMWyO64jmjwOX0CQ6au9/Uu+T+Vqow9qeNtLOchaqw=;
-	b=RgG1P6iDuXQQAvlB4p3BTRPgCb+smEyIxB+aYsPWlaX1O+kR2v9ZANpp2p+4pmVHsGw2o3
-	Pg7ansE5Snfd5kria53L8YLR7j7bQ/jNXcEtA27OZEoGTDlaci43iLe6HVk5AlHluPToVV
-	noIP3LbELFgFNZZ6sKoZylk1lIV/+lU=
-Date: Thu, 26 Jun 2025 15:22:25 -0700
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="VAFFwuGD"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-748e81d37a7so1083300b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:22:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1750976577; x=1751581377; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ah/vUtoe84nETT7QauJ1wYRip4EoEebv4kUDWBtoCmM=;
+        b=VAFFwuGDD8bY3oRCBCUfGf8jbQlV6rpsv1wd2H1JPRkGo947DKeybg2sB+Nd3/FAGw
+         3fKXZ4eRVjyRs6LVwVNCWzk9W3lxv6xQc6c/Ijds1xKt2p3l5arUuz6B12mhuhBNknm+
+         1D9Chjl09QUyd0uU2m62y5+KsKw/rrjqHx/kZ90UsHi6qngAF640VQXR2TAkFoCc1ofI
+         URyGpTBmzq4EvsDnPi21aDkJJPkWVSQInJQ+/YhI9YfRconUlrqFL/sdOYi6r77cAr8N
+         /BXaisFG4uw25fIXJLQerGg3hJlgAWw84FtThfoNHUwmNZVSPv2fGhijEExwYQyPMMtK
+         Me6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750976577; x=1751581377;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ah/vUtoe84nETT7QauJ1wYRip4EoEebv4kUDWBtoCmM=;
+        b=q9tzn2IDhgIrso1bRqwruK/bDfyl72ME7PQ9LlSoyj/nEVZYaWoPeGOhkEXk9rE+o/
+         fcfZaLu5ms19gQCPdD2uGaUBZC37b2VVxpnPMn5ubYuqH0E5MPQdHh4/JfKnuaYAYrrp
+         QldDxb2E3Pmw1fFxhSqO2z74ldSRftMjWXOMfwRdjK8NLq2QClqQh31qG+eypZeH7EPU
+         21JqoZa34/Hf9it9BSQlZroixA3lrYlQggmNjgu3qKR0o4YnrjZISLxzg0z+igFtfQmV
+         ALUal8DO/PLf9IVKOr1NpxY3ONf0co15MMSV/EbxCiXJT2HAqzd2/7lEBuXsXEMqjAAs
+         Poaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxTUaQ2T0tHIHIBW5TQ2ymdSB/asm0KTCFqHlZ5A1tAT7ZUG4m+qP0Xaf54D8bNE3WD2mP7gHAGHru2+I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUKewtItl1VIFwM9hbaafdETGWD92bR6aToWFOZO+CS2EW1rGU
+	jRoJIv11y2Y2l2+WuhEv/bN0JgO1yUAz0KFIE4JU0RDttsW0NsN1GAaqLYs4dS+6KuY=
+X-Gm-Gg: ASbGncvtcKThCAHnzgT1sYLD76zXW9s6S20kKfHVwbnUKJ/6mmFjBsDICTtsQNdmScM
+	gB5lfS8w0fliamFvig/hXxMMm65Ebvqk4BUYbFPjN+45OXTZ4i6pL6u6+7VelZomX1SMqWL3QhF
+	vNRGa4MEKh7Fw7NBibWXFFdssiQUE+zXvK7EGYulsNwzeUEeXZy5XSOYb7wJhJso3BHDZNeKcp0
+	rGlVuQ/ZNXt6rhkCQLhY2CutOQ8ZplcQbQnk9amL5cknd0DKWvsMq3hOyGr//13Rvc1U62ZbuYk
+	NwrbfH5+ZyzRfTzmN9A2Ali/c7DAAEQTiFV5PKP09wqwVsxkNkjGh08a3qaY1dV97o0qugg6OoN
+	AXs4tq22eJ8FScxW4vnqi7we8SQekYFuxnKFa4OEnXoIf9P3P
+X-Google-Smtp-Source: AGHT+IGZqxbYMtRvgBqsBbXs9pkjdt0WrMR6P1AO8ewf1WoamoQJAJslXOV5lUTFgbrAr4tvqgyCnQ==
+X-Received: by 2002:a05:6a00:2294:b0:740:9a4b:fb2a with SMTP id d2e1a72fcca58-74af6f2fb92mr1155053b3a.20.1750976576844;
+        Thu, 26 Jun 2025 15:22:56 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-184-88.pa.nsw.optusnet.com.au. [49.180.184.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af55786efsm645858b3a.82.2025.06.26.15.22.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 15:22:56 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.98.2)
+	(envelope-from <david@fromorbit.com>)
+	id 1uUuzd-00000003eTL-2bwB;
+	Fri, 27 Jun 2025 08:22:53 +1000
+Date: Fri, 27 Jun 2025 08:22:53 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Yafang Shao <laoar.shao@gmail.com>, Jeff Layton <jlayton@kernel.org>,
+	djwong@kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	yc1082463@gmail.com
+Subject: Re: [PATCH] xfs: report a writeback error on a read() call
+Message-ID: <aF3IPcneKbUe9IdH@dread.disaster.area>
+References: <51cc5d2e-b7b1-4e48-9a8c-d6563bbc5e2d@gmail.com>
+ <aFuezjrRG4L5dumV@infradead.org>
+ <88e4b40b61f0860c28409bd50e3ae5f1d9c0410b.camel@kernel.org>
+ <aFvbr6H3WUyix2fR@infradead.org>
+ <6ac46aa32eee969d9d8bc55be035247e3fdc0ac8.camel@kernel.org>
+ <aFvkAIg4pAeCO3PN@infradead.org>
+ <11735cf2e1893c14435c91264d58fae48be2973d.camel@kernel.org>
+ <CALOAHbDtFh5P_P0aTzaKRcwGfQmkrhgmk09BQ1tu9ZdXvKi8vQ@mail.gmail.com>
+ <aFzFR6zD7X1_9bWj@dread.disaster.area>
+ <aF0gEWcA6bX1eNzU@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
-To: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>,
- jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com,
- zyjzyj2000@gmail.com
-References: <685db3be.a00a0220.2e5631.0362.GAE@google.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Yanjun.Zhu" <yanjun.zhu@linux.dev>
-In-Reply-To: <685db3be.a00a0220.2e5631.0362.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aF0gEWcA6bX1eNzU@infradead.org>
 
-#syz test: git@github.com:zhuyj/linux.git linux-6.15-rc4-fix-rxe_skb_tx_dtor
+On Thu, Jun 26, 2025 at 03:25:21AM -0700, Christoph Hellwig wrote:
+> On Thu, Jun 26, 2025 at 01:57:59PM +1000, Dave Chinner wrote:
+> > writeback errors. Because scientists and data analysts that wrote
+> > programs to chew through large amounts of data didn't care about
+> > persistence of their data mid-processing. They just wanted what they
+> > wrote to be there the next time the processing pipeline read it.
+> 
+> That's only going to work if your RAM is as large as your permanent
+> storage :)
 
-On 6/26/25 1:55 PM, syzbot wrote:
-> syzbot has found a reproducer for the following issue on:
->
-> HEAD commit:    ee88bddf7f2f Merge tag 'bpf-fixes' of git://git.kernel.org..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14367182580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
-> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e9008c580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10c12f0c580000
->
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-ee88bddf.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/258fe65055ba/vmlinux-ee88bddf.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/06b784a6d799/bzImage-ee88bddf.xz
-> mounted in repro: https://storage.googleapis.com/syzbot-assets/59084afab8b5/mount_2.gz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com
->
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 1088 at drivers/infiniband/sw/rxe/rxe_net.c:357 rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
-> Modules linked in:
-> CPU: 0 UID: 0 PID: 1088 Comm: kworker/u4:9 Not tainted 6.16.0-rc3-syzkaller-00072-gee88bddf7f2f #0 PREEMPT(full)
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> Workqueue: rxe_wq do_work
-> RIP: 0010:rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
-> Code: 80 3c 20 00 74 08 4c 89 ff e8 61 65 81 f9 4d 8b 37 44 89 f6 83 e6 01 31 ff e8 71 e6 1d f9 41 f6 c6 01 75 0e e8 86 e1 1d f9 90 <0f> 0b 90 e9 b4 01 00 00 4c 89 ff e8 75 89 fd 01 48 89 c7 be 0e 00
-> RSP: 0018:ffffc900000079e8 EFLAGS: 00010246
-> RAX: ffffffff88a26cea RBX: ffff888048886000 RCX: ffff8880330b4880
-> RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff887bc1c4
-> R10: dffffc0000000000 R11: ffffffff88a26c60 R12: dffffc0000000000
-> R13: 1ffff11009110c0b R14: 0000000000025820 R15: ffff888033430000
-> FS:  0000000000000000(0000) GS:ffff88808d251000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007ffd7005cfa8 CR3: 0000000047588000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   <IRQ>
->   skb_release_head_state+0xfe/0x250 net/core/skbuff.c:1139
->   napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
->   e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
->   e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
->   e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
->   __napi_poll+0xc4/0x480 net/core/dev.c:7414
->   napi_poll net/core/dev.c:7478 [inline]
->   net_rx_action+0x707/0xe30 net/core/dev.c:7605
->   handle_softirqs+0x286/0x870 kernel/softirq.c:579
->   do_softirq+0xec/0x180 kernel/softirq.c:480
->   </IRQ>
->   <TASK>
->   __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
->   local_bh_enable include/linux/bottom_half.h:33 [inline]
->   rcu_read_unlock_bh include/linux/rcupdate.h:910 [inline]
->   __dev_queue_xmit+0x1cd7/0x3a70 net/core/dev.c:4740
->   neigh_output include/net/neighbour.h:539 [inline]
->   ip6_finish_output2+0x11fb/0x16a0 net/ipv6/ip6_output.c:141
->   __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
->   ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
->   rxe_send drivers/infiniband/sw/rxe/rxe_net.c:391 [inline]
->   rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:450
->   rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
->   rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
->   do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
->   do_work+0x1b1/0x6c0 drivers/infiniband/sw/rxe/rxe_task.c:187
->   process_one_work kernel/workqueue.c:3238 [inline]
->   process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
->   worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
->   kthread+0x70e/0x8a0 kernel/kthread.c:464
->   ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
->   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
->   </TASK>
->
->
-> ---
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
+No, the old behaviour worked just fine with data sets larger than
+RAM. When there is a random writeback error in a big data stream,
+only those pages remained dirty and so never get tossed out of RAM. Hence
+when a re-read of that file range occurred, the data was already in
+RAM and the read succeeded, regardless of the fact that writeback
+has been failing.
+
+IOWs the behavioural problems that the user is reporting are present
+because we got rid of the historic XFS writeback error handling
+(leave the dirty pages in RAM and retry again later) and replaced it
+with the historic Linux behaviour (toss the data out and mark the
+mapping with an error).
+
+The result of this change is exactly what the OP is having problems
+with - reread of a range that had a writeback failure returns zeroes
+or garbage, not the original data. If we kept the original XFS
+behaviour, the user applications would handle these flakey writeback
+failures just fine...
+
+Put simply: we used to have more robust writeback failure handling
+than we do now. That could (and probably should) be considered a
+regression....
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
