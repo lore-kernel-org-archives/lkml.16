@@ -1,111 +1,175 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43091FFC41;
-	Thu, 26 Jun 2025 14:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318B51FFC41
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750947639; cv=none; b=dW4urIVcmzXwhEoQ8NowZEO1gxdSu1M5lloGp9zUaFzPV9QxOn7XMDvS2KkfeO8L1E/REgzHPgSykUGsLhS18WVZAAGYi8ZwTO6PCs+R+yxsKPGO7ejGD5Pc2JYg4tiEIDBbYkHOZ4gWHtBMP5qQEdP90qL0OUr/n7JOeHd8L7s=
+	t=1750947650; cv=none; b=cJCPe9jx/5NorAErEAsxI58YcibqlrP/YSOnWYQ9/ffc+DcuO7WghoJiNI9WY5XDXRuPCzVze/zl+5Mwn13ujohqp7n+yv7KMd4fo7QDZ1Wd0ZyYdYyQWaCG1O+IErN7GHRsTZiGXGKHgiyXt1BOtZTIN3DB/INrdB5HyH9Z49Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750947639; c=relaxed/simple;
-	bh=yxN2RrdCi+oF75J4+SNsoBdRHTZ0fryD0gPR4jugiYI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=REvL08YDYgmxTt42aJ+g4/eVd98NcbFCHbkvPD1aLlxb7lYErqWlIuS/o6r0t1LKuWTy4r1uwpilasijoJ+I42/X+m2fIITyFQRT3P3S4WkPeL+wDK4etEfd++gGPqE6aLzcz1/v3Ausk3pTqJJlc5fKOgCDT6jp+Vj1D5VAMqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Um9jdZEC; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750947650; c=relaxed/simple;
+	bh=bclxeXv0n/JZRrzO5RtoRO8C6M2nw+tu77BU7PQ5Up8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=F86YaFcn6HS39s+sBL/HRmFywmQCkXRnx4A96BDxTjcdDcbwAh7iBHg/6sxcA5MFcVody91RXtH1ZB940aEjSS2AVKySw4mXzixQevNsrL6hAsB8u5c1H8h+geLTRTITlf+XZcpyL8jVWRs+lnhJtfDF6DrVl4SFxiz8vjickWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VzGLtaD8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Um9jdZEC"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55QEILMu2480443;
-	Thu, 26 Jun 2025 09:18:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750947501;
-	bh=wFsFiLH1AC8uaOEAXzwfhn+J6kmqxAKDCggsNNyWAkM=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Um9jdZECWIV0e9EakqymbBQVn/y22bAgmlwIMh7BrwDp1eSY+Jw0Spcn38rvaRLgK
-	 e6pzZhrYMic51XSVuJrW1UJddRUkZmyKs2egFV+STbr+Uuh1h04GhqWKfgKLm/YDC5
-	 L9g0TCz9PAFbcJo6i3tjyRPFmt8JQae2OytW9GOs=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55QEILfC2053280
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 26 Jun 2025 09:18:21 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
- Jun 2025 09:18:20 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 26 Jun 2025 09:18:20 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55QEIKGq1132823;
-	Thu, 26 Jun 2025 09:18:20 -0500
-Message-ID: <44649612-ea42-43af-b07a-f2f504a199fa@ti.com>
-Date: Thu, 26 Jun 2025 09:18:20 -0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VzGLtaD8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750947648;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fpjZ7Ix+hSftMvcLs9udwlSD+jACUpMj3pQyikQ0cME=;
+	b=VzGLtaD8ax5FE6I9zKyGQDZvPawp93m5EBy5eaAwDSovYt9Dub9oOHrAi0w0zmjdsRgkYM
+	lH5nR+Zb4hELZFXlPLYYEt7Gj/88NpnhNNyAGKdDJ7f/EEcbHCGVV0hpJCewypHADxqHiP
+	MjeG5gF4+porIovkdN/W2fIp5SwbSZA=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-605-Ee7nGeq4NKO0P7RyMkatVA-1; Thu,
+ 26 Jun 2025 10:20:44 -0400
+X-MC-Unique: Ee7nGeq4NKO0P7RyMkatVA-1
+X-Mimecast-MFC-AGG-ID: Ee7nGeq4NKO0P7RyMkatVA_1750947638
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4237D193F069;
+	Thu, 26 Jun 2025 14:20:37 +0000 (UTC)
+Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.64.203])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 063D818002B9;
+	Thu, 26 Jun 2025 14:20:24 +0000 (UTC)
+From: Wander Lairson Costa <wander@redhat.com>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Clark Williams <williams@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: [PATCH 0/2] tracing/preemptirq: Optimize disabled tracepoint overhead
+Date: Thu, 26 Jun 2025 11:20:08 -0300
+Message-ID: <20250626142017.26372-1-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] arm64: dts: ti: k3-am62-main: Remove eMMC High Speed
- DDR support
-To: Vignesh Raghavendra <vigneshr@ti.com>,
-        Ulf Hansson
-	<ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-CC: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-References: <20250624221230.1952291-1-jm@ti.com>
- <20250624221230.1952291-3-jm@ti.com>
- <5428ecbd-8154-43b1-a77c-9eda550c47e7@ti.com>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <5428ecbd-8154-43b1-a77c-9eda550c47e7@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Hi Vignesh,
 
-On 6/25/25 10:58 PM, Vignesh Raghavendra wrote:
-> 
-> 
-> On 25/06/25 03:42, Judith Mendez wrote:
->> For eMMC, High Speed DDR mode is not supported [0], so remove
->> mmc-ddr-1_8v flag which adds the capability.
->>
-> 
-> Needs a Fixes tag.
+This series addresses unnecessary overhead introduced by the
+preempt/irq tracepoints when they are compiled into the kernel
+but are not actively enabled (i.e., when tracing is disabled).
 
-Ok, will add fixes tag and send in a separate series.
+These optimizations ensure that when tracing is inactive, the kernel
+can largely bypass operations that would otherwise incur a passive
+performance penalty. This makes the impact of disabled preemptirq
+IRQ and preempt tracing negligible in performance-sensitive environments.
 
-> 
->> [0] https://www.ti.com/lit/gpn/am625
->> Signed-off-by: Judith Mendez <jm@ti.com>
->> ---
->>   arch/arm64/boot/dts/ti/k3-am62-main.dtsi | 1 -
->>   1 file changed, 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
->> index 9e0b6eee9ac7..120ba8f9dd0e 100644
->> --- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
->> +++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
->> @@ -553,7 +553,6 @@ sdhci0: mmc@fa10000 {
->>   		clocks = <&k3_clks 57 5>, <&k3_clks 57 6>;
->>   		clock-names = "clk_ahb", "clk_xin";
->>   		bus-width = <8>;
->> -		mmc-ddr-1_8v;
->>   		mmc-hs200-1_8v;
->>   		ti,clkbuf-sel = <0x7>;
->>   		ti,otap-del-sel-legacy = <0x0>;
-> 
+Wander Lairson Costa (2):
+  trace/preemptirq: reduce overhead of irq_enable/disable tracepoints
+  tracing/preemptirq: Optimize preempt_disable/enable() tracepoint
+    overhead
+
+---
+Performance Measurements
+
+Measurements were taken using a specialized kernel module [1] to benchmark
+`local_irq_disable/enable()` and `preempt_disable/enable()` call pairs.
+The kernel used for benchmarking was version 6.16.0-rc2. "Max Average"
+represents the average of the 1000 highest samples, used to reduce noise
+from single highest samples.
+
+Each benchmark run collected 10^7 samples in parallel from each CPU
+for each call pair (used for average, max_avg, and median calculations).
+The 99th percentile was measured in a separate benchmark run, focused
+on a single CPU.
+
+The results show that compiling with tracers (Kernel Build:
+`-master-trace`) introduced significant overhead compared to a base
+kernel without tracers (Kernel Build: `-master`). After applying these
+patches (Kernel Build: `-patched-trace`), the overhead is
+substantially reduced, approaching the baseline.
+
+x86-64 Metrics
+
+Tests were run on a system equipped with an Intel(R) Xeon(R) Silver 4310 CPU.
+
+IRQ Metrics
+
+Combined Metric            average  max_avg  median  percentile
+Kernel Build
+6.16.0-rc2-master               28     5587      29          23
+6.16.0-rc2-master-trace         46     7895      48          32
+6.16.0-rc2-patched-trace        30     6030      31          27
+
+Preempt Metrics
+
+Combined Metric            average  max_avg  median  percentile
+Kernel Build
+6.16.0-rc2-master               26     5748      27          20
+6.16.0-rc2-master-trace         45     7526      48          26
+6.16.0-rc2-patched-trace        27     5479      27          21
+
+AArch64 Metrics
+
+Tests were also conducted on an AArch64 platform.
+
+IRQ Metrics
+
+Combined Metric             average  max_avg  median  percentile
+Kernel Build
+aarch64-6.16.0-rc2-master        28     3298      32          64
+aarch64-6.16.0-rc2-master-trace 105     5769      96         128
+aarch64-6.16.0-rc2-patched-trace 29     3192      32          64
+
+Preempt Metrics
+
+Combined Metric             average  max_avg  median  percentile
+Kernel Build
+aarch64-6.16.0-rc2-master        27     3371      32          32
+aarch64-6.16.0-rc2-master-trace  32     3000      32          64
+aarch64-6.16.0-rc2-patched-trace 28     3132      32          64
+
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+
+---
+References:
+[1] https://github.com/walac/tracer-benchmark
+
+Wander Lairson Costa (2):
+  trace/preemptirq: reduce overhead of irq_enable/disable tracepoints
+  tracing/preemptirq: Optimize preempt_disable/enable() tracepoint
+    overhead
+
+ include/linux/irqflags.h        | 25 +++++++++++++++--------
+ include/linux/preempt.h         | 35 ++++++++++++++++++++++++++++++---
+ kernel/sched/core.c             | 12 +----------
+ kernel/trace/trace_preemptirq.c | 22 +++++++++++++++++++++
+ 4 files changed, 72 insertions(+), 22 deletions(-)
+
+-- 
+2.50.0
 
