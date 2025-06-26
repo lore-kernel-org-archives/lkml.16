@@ -1,207 +1,106 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BF028A406;
-	Thu, 26 Jun 2025 14:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018861DE4CE;
+	Thu, 26 Jun 2025 14:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750947780; cv=none; b=VFwAOCj9pa7an+zBMA1IdTjQUp/YovWLtybS7sbDRkY7Fvlr8tZ0Co+QIZjM19Uxo8qZg7xvm90D6gqwhimaabUkVO8tVV13cDAgh48mZCz+g1xUbBeOdfIn7d0ANcW4SNqenq/30FHauslIOGVsIEw9LYVtDz4Hn+RUiomdIpo=
+	t=1750947795; cv=none; b=c7pwshreYRlY15iHUwmACW+55WkJtpWHLqsg5ccDm5XMisLc8E1gMKLpT1aycAUiRc7uhNr1wHwjD9lA94nroJ3RemY+NeYzZqpEg1SOUyPF5/ijlQox0OIrby5zaFaanXGcbqACRS8ZO5GpojcgBaOiT5JRnAq0PxAbFeLeWGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750947780; c=relaxed/simple;
-	bh=VnAzg56f+hysQJZPOLXhBXL0My2caz2gxoa80MYeNr8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UZvWkwpvBX9/oTrMw3iTfVlgOhg/nPzk9YBPWWM41+0Mogm/pQFGxL6BMxxDaBAAraf5hqzhaf+RZCsoYL6SB2jB1w5xnj+F/cJlL5Bk6wwFADtB4ik/2OcOJ71ucVPhaXTolQ/tpxfnX6hLbz7i6bLK3+xySxW7ujNP+lS8htQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R72cZiMr; arc=none smtp.client-ip=209.85.210.172
+	s=arc-20240116; t=1750947795; c=relaxed/simple;
+	bh=3PmJhzf1sJs2FN8a0RHNKuha/3rAM6VtFHnWa30sHCs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u+ikNFcCblfIn/2osd1fcZKRkg40Vn8H5uPhnIuHAC1fnmgtT/SNoItZ5EWGrnrNRlyNUwFwRf8oe/36aumao0LzoHbGvrOjGuoL1phyvBXApm3bsG5UbS6DDI+OH44FyJWoo31Khqxx3b8Ozn4bj3mpRHz4dcbaj69Yy86CG3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gquLyRvd; arc=none smtp.client-ip=209.85.166.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R72cZiMr"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-748ece799bdso803380b3a.1;
-        Thu, 26 Jun 2025 07:22:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gquLyRvd"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3de252f75d7so10760215ab.3;
+        Thu, 26 Jun 2025 07:23:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750947777; x=1751552577; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FMM3xSjjvtkN9sNymINSQ4aTR9MjXM5qmSlYZv1dEyw=;
-        b=R72cZiMrUn1Yg46TQ01+OOADGD+vTSQNHOLq+DQ7S9X3AFM3yVCYjNK5du6a+zB4Iu
-         V/Qu8l+3Ca02Q1W1B7+IbLyUs9d68nAiUytxv2gsNwttHExbuEwfPURkPPaxx+tKZvzM
-         mJE8qktorpTLGZTE1Ba5+/bQOFILvj0KSkYqxc9+UVkAaUHp+5cbUBniYnO6fCMWuORE
-         6zpR+fS5beq70aC+97bcj3Tg2L6dxulv0xv9BXk4SyGMG1TgK4jABlDDAAtyAFi6knC7
-         p5X5ebbpUX1F+TWKGd0fqHeN2WcdOpSfeuphh/CgigGENyARawx+5MNfW3klFiIQaa3n
-         unNA==
+        d=gmail.com; s=20230601; t=1750947793; x=1751552593; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3PmJhzf1sJs2FN8a0RHNKuha/3rAM6VtFHnWa30sHCs=;
+        b=gquLyRvdTDE+fLFEPlGJVrAffLxcaHk5QYiRy9+lSmqhoDF3TUhR1X5kwsKy7K6PmS
+         7IjdJA7JxpH5lEG/q2uQj7U1y0YRld8NE/dwR6twrYsmF6wtG17ZNtIuEozFqi3GSKRp
+         U7h+NoSmCw7mLNICgPSbUu4uNCs07cxYQyLqYSYFeq3DlEOTr8rYvhAkwH/dDDqbGuVi
+         zp6fok8632tGvd0matk7LSwYrv9kZQtFsjSo5R8Ht0caYZgYmQCAf4DfXqTjTohM+Xvs
+         H7/CFj52Oy6Zgc7t1NBOnluPUzpuFzfWLDEA/Owuh4i0WSB4YX19a0+hq3kl3pfvE30k
+         4vDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750947777; x=1751552577;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FMM3xSjjvtkN9sNymINSQ4aTR9MjXM5qmSlYZv1dEyw=;
-        b=URpyLtsdBF3eEsvaoAOdmTo0u1Dwr37jdUgq+54WUoW65VZ38IXNunkmKjw+u4nG/w
-         BTpQiHCpZfDGQ45gZKSEwv8eZZ8YY9OEcNTqlOS7kXSTaIVzJ/Y+4ne4uv4uwDehmoyz
-         mx4Lez2NWoVyVMukOuiaxPcWOQ/3gZViyHUclbtwAGCiiRIdII8S/kwUdkllCyWFukBX
-         /h7mzoQg6kSuYYQCzYnFL1K27fsB01SpVHSacKqyEElJUnsEoSL9UIpPJqh89Wbp5giz
-         KkH39Zh115WHY+ZRk78vg/KqQceKXuXDxdjjTiIoObBKjiB6PiahrpoxuJ8Kmk6fFJ+v
-         LOKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPUOoQq+Zv/7rXY3pHCgu3/B9Qq+e6XRpjBkiP6ZFtdmK+FQ/8r5K013iUTMFcm8BMkePY/RY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEJynMYLTp8RTCu1g0I0TTa94VMhmV7duw7pnyM9vkD9GlBx6A
-	JYKWB0zWz0UUVVUB4Kt6G7rxMxRlbOc/de2+31DJdo0gZphWk9jbXqWuwGcfmE+0
-X-Gm-Gg: ASbGncvX1EXTeQt70hDIt+tOMHADwqfhGOR/nWSVb9LJ/+BGe/aWnqCA5bolKuLJCft
-	8XGG+st3n2h/QZqui+Gr/Pj45jhPnlW1MeR3rg9/9nKiEBfFEh3ceGMSG9xn2CePnBbpPUzcumm
-	/SKYmho/ZcdTV2nzdMY9cZlHm4uNTBX0qv+lhgexZU24Ny0ekOw/Monh0sKNmC9cPex7CGkX3lC
-	GjZFVCdnTK2UYAr/VSN9wYBOglepFEzCqnPySr/nIN2WnDxEdUCKssnH4KCm8OkAecwbZBD+tcy
-	cZwsewS1oYwrBlTRsAYq4pkefgANt8aC7XWLyX7CHOL7ha7TRMsJLUMw24cK/sRsIWthpjIzp0n
-	xxMoUn/DNmgoB7e0ecQ==
-X-Google-Smtp-Source: AGHT+IHvPgEXqKwWC3H8FLqec238NOxqpv7452gpGXmtMjCrr6s266Ccdd9P8x3NxP0Pg4hK8zFHVA==
-X-Received: by 2002:a05:6a21:3298:b0:1f5:591b:4f7a with SMTP id adf61e73a8af0-2207f31ac43mr11593474637.38.1750947777297;
-        Thu, 26 Jun 2025 07:22:57 -0700 (PDT)
-Received: from manjaro.domain.name ([2401:4900:1c67:6116:afb5:b6ab:2dc8:4a21])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c8872629sm7129288b3a.164.2025.06.26.07.22.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 07:22:56 -0700 (PDT)
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Cc: rodrigosiqueiramelo@gmail.com,
-	melissa.srw@gmail.com,
-	hamohammed.sa@gmail.com,
-	daniel@ffwll.ch,
-	airlied@linux.ie,
-	mcanal@igalia.com,
-	arthurgrillo@riseup.net,
-	mairacanal@riseup.net,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	stable@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	sashal@kernel.org,
-	Pranav Tyagi <pranav.tyagi03@gmail.com>
-Subject: [PATCH] drm/vkms: Fix race-condition between the hrtimer and the atomic commit
-Date: Thu, 26 Jun 2025 19:52:43 +0530
-Message-ID: <20250626142243.19071-1-pranav.tyagi03@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1750947793; x=1751552593;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3PmJhzf1sJs2FN8a0RHNKuha/3rAM6VtFHnWa30sHCs=;
+        b=eCSOp1SbmHnJunhL/VDU0lfLKq/uDpC+lyJjn7/gBTUbk5EKLmOKjznZxqsVfnDKIx
+         5Zfdy1HVsDw/CZGwpVqkUieYR5ArY4MxY7nZ+dUGO5O0mFGxId4Qbfs1GtQ3P6QcxBGC
+         3ax0aKXa26DkhO1Is55XFjJqI5grqEGFXypqecFjsg5upqWVdsJiGXSxFknzoL+aQxg0
+         8PJ7pzAfsLkQhI2nkDC5DoN104yKWQLfxc9i6PhGxj3HI2mCftHy/pDWSUkPNQ1bwZyW
+         iS6Ll6DCRGloYlsWSweRDphnNeRP48KklFJikX2XSnbSS30BV5/CRQRIFAxZoHR5BlSI
+         JvjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUjQjCwPS3sN4zRNw5j2DXcdq7EfrORF0/QpIRoL60ERaAvc/xns73FWuiAaxXGCnEU05aVEq6A++Yuqci5MQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0RGl803hTJKKbYLAQoGBs31ymwQ5klyJeI5UXVcKD+zGKR0qW
+	719jqlDWmZPuZeon3oNWW7ksUn7pUxcZgNM29XWKos2dVkMIm9/fc/4hD6rbUaFRdQs2BrRxCPQ
+	JrXDlYs2C4h4VW6XePInlShJEwQbDuJY=
+X-Gm-Gg: ASbGnctUz8KtD/VE5whEmi7SVoyAnxne5T1ERwXoOCBWzV75Z7Ji1WAQIV660yDhYBn
+	h1WXZKFTp8mFPaRSphGpuQx252WaK3VPfa90fGnScUWDPTbHE7bfoQk5qxNyKK13qHtJuPP3e48
+	p4UHYSM3KlJELCMW7f1WKZ7lntw9ME7Fc3QPEWuXJtnUM=
+X-Google-Smtp-Source: AGHT+IF3rE0mC2CPX+Ugvjxi6nBUgivlndxS0obHPchi2LG/zWvKMmmAwuBdqywvKq+VzZiCw1orp74px1+xkgYq9ik=
+X-Received: by 2002:a05:6e02:378c:b0:3dc:8b2c:4bc7 with SMTP id
+ e9e14a558f8ab-3df32852952mr95072965ab.1.1750947792809; Thu, 26 Jun 2025
+ 07:23:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1750689857.git.y.j3ms.n@gmail.com> <DAVO878E49AN.1L5TPHANBBHE6@nvidia.com>
+In-Reply-To: <DAVO878E49AN.1L5TPHANBBHE6@nvidia.com>
+From: Jesung Yang <y.j3ms.n@gmail.com>
+Date: Thu, 26 Jun 2025 23:23:01 +0900
+X-Gm-Features: Ac12FXzfN9fk03al47GYWZapf9guorVxLElMTuSPKfESyeSLvx8gJf-MiJnO3vM
+Message-ID: <CA+tqQ4Ji486i=Gzy5oEsdZLOFDmGHpxT=Wkng2cyZpJ=u14FPA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] rust: add `FromPrimitive` support
+To: Alexandre Courbot <acourbot@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	nouveau@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Maíra Canal <mcanal@igalia.com>
+On Wed, Jun 25, 2025 at 11:07=E2=80=AFPM Alexandre Courbot <acourbot@nvidia=
+.com> wrote:
+>
+> If you add an associated type, I guess this means the derive macro
+> should have a helper attribute to specify it?
 
-[ Upstream commit a0e6a017ab56936c0405fe914a793b241ed25ee0 ]
+The current implementation tries to detect the enum's representation
+(e.g., `#[repr(u8)]`) and falls back to `isize` if nothing is provided,
+since it's the default [1]. However, when `#[repr(C)]` is used, the
+internal representation is not controlled on the Rust side. To quote
+the reference [2]:
 
-Currently, it is possible for the composer to be set as enabled and then
-as disabled without a proper call for the vkms_vblank_simulate(). This
-is problematic, because the driver would skip one CRC output, causing CRC
-tests to fail. Therefore, we need to make sure that, for each time the
-composer is set as enabled, a composer job is added to the queue.
+For field-less enums, the C representation has the size and
+alignment of the default enum size and alignment for the target
+platform's C ABI.
 
-In order to provide this guarantee, add a mutex that will lock before
-the composer is set as enabled and will unlock only after the composer
-job is added to the queue. This way, we can have a guarantee that the
-driver won't skip a CRC entry.
+Given this, it would definitely help with determinism if users provided
+an explicit attribute. Being explicit also often improves clarity and
+makes the intent more obvious.
 
-This race-condition is affecting the IGT test "writeback-check-output",
-making the test fail and also, leaking writeback framebuffers, as the
-writeback job is queued, but it is not signaled. This patch avoids both
-problems.
+[1]: https://doc.rust-lang.org/reference/items/enumerations.html#r-items.en=
+um.discriminant.repr-rust
+[2]: https://doc.rust-lang.org/reference/type-layout.html?highlight=3Drepr#=
+r-layout.repr.c.enum
 
-[v2]:
-    * Create a new mutex and keep the spinlock across the atomic commit in
-      order to avoid interrupts that could result in deadlocks.
-
-[ Backport to 5.15: context cleanly applied with no semantic changes.
-Build-tested. ]
-
-Signed-off-by: Maíra Canal <mcanal@igalia.com>
-Reviewed-by: Arthur Grillo <arthurgrillo@riseup.net>
-Signed-off-by: Maíra Canal <mairacanal@riseup.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/20230523123207.173976-1-mcanal@igalia.com
-Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
----
- drivers/gpu/drm/vkms/vkms_composer.c | 9 +++++++--
- drivers/gpu/drm/vkms/vkms_crtc.c     | 9 +++++----
- drivers/gpu/drm/vkms/vkms_drv.h      | 4 +++-
- 3 files changed, 15 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index 9e8204be9a14..77fced36af55 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.c
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -332,10 +332,15 @@ void vkms_set_composer(struct vkms_output *out, bool enabled)
- 	if (enabled)
- 		drm_crtc_vblank_get(&out->crtc);
- 
--	spin_lock_irq(&out->lock);
-+	mutex_lock(&out->enabled_lock);
- 	old_enabled = out->composer_enabled;
- 	out->composer_enabled = enabled;
--	spin_unlock_irq(&out->lock);
-+
-+	/* the composition wasn't enabled, so unlock the lock to make sure the lock
-+	 * will be balanced even if we have a failed commit
-+	 */
-+	if (!out->composer_enabled)
-+		mutex_unlock(&out->enabled_lock);
- 
- 	if (old_enabled)
- 		drm_crtc_vblank_put(&out->crtc);
-diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-index 57bbd32e9beb..1b02dee8587a 100644
---- a/drivers/gpu/drm/vkms/vkms_crtc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-@@ -16,7 +16,7 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
- 	struct drm_crtc *crtc = &output->crtc;
- 	struct vkms_crtc_state *state;
- 	u64 ret_overrun;
--	bool ret, fence_cookie;
-+	bool ret, fence_cookie, composer_enabled;
- 
- 	fence_cookie = dma_fence_begin_signalling();
- 
-@@ -25,15 +25,15 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
- 	if (ret_overrun != 1)
- 		pr_warn("%s: vblank timer overrun\n", __func__);
- 
--	spin_lock(&output->lock);
- 	ret = drm_crtc_handle_vblank(crtc);
- 	if (!ret)
- 		DRM_ERROR("vkms failure on handling vblank");
- 
- 	state = output->composer_state;
--	spin_unlock(&output->lock);
-+	composer_enabled = output->composer_enabled;
-+	mutex_unlock(&output->enabled_lock);
- 
--	if (state && output->composer_enabled) {
-+	if (state && composer_enabled) {
- 		u64 frame = drm_crtc_accurate_vblank_count(crtc);
- 
- 		/* update frame_start only if a queued vkms_composer_worker()
-@@ -293,6 +293,7 @@ int vkms_crtc_init(struct drm_device *dev, struct drm_crtc *crtc,
- 
- 	spin_lock_init(&vkms_out->lock);
- 	spin_lock_init(&vkms_out->composer_lock);
-+	mutex_init(&vkms_out->enabled_lock);
- 
- 	vkms_out->composer_workq = alloc_ordered_workqueue("vkms_composer", 0);
- 	if (!vkms_out->composer_workq)
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index d48c23d40ce5..666997e2bcab 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -83,8 +83,10 @@ struct vkms_output {
- 	struct workqueue_struct *composer_workq;
- 	/* protects concurrent access to composer */
- 	spinlock_t lock;
-+	/* guarantees that if the composer is enabled, a job will be queued */
-+	struct mutex enabled_lock;
- 
--	/* protected by @lock */
-+	/* protected by @enabled_lock */
- 	bool composer_enabled;
- 	struct vkms_crtc_state *composer_state;
- 
--- 
-2.49.0
-
+Best regards,
+Jesung
