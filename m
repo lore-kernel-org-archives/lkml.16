@@ -1,105 +1,68 @@
-Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC362F1FDA;
-	Thu, 26 Jun 2025 12:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA902F1FDA;
+	Thu, 26 Jun 2025 12:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750939359; cv=none; b=gi/YdfhSvjW0xvc1Sr5Ip6WPMzBSrFESPI01O5/e8kPcwx2vfGmhr66EeF8Sm9NwInsSaKCVmEFwg07UmbpsEOizKWqDbx+7KIqgR7/nZRWTuLIeJ+pr1F3MFyhqRIYHTQlxGph9vfHVXBFIaYOPFI2HFcP6p6wShNVB9phP2WY=
+	t=1750939432; cv=none; b=WEPW0P77x8ErcaandYyk/mioQfQwDoIcY4g7VMJ4UTWk6CGrle2Dockz4VUD9nOc52OaFPOnxs80sGD6vNCRf5lwEZ8I+xrXgkZaREkNQ6Zw3BI7fYV2eoSOilb91ibR1bwoacZZqIOwp9z5OnJHwD81b6fkF8xiIEe3uvdhkYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750939359; c=relaxed/simple;
-	bh=wmnasIyPxehdxLNIHSKhKpOToo640MSxNeoWG1PR6tw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BN/S/TsmHzo5ZbP2qa/cjcfnPrwarE+v9heLS8e7ge9+R6MdN0BQl4M4WgUeCP0lp6e27E/G6loFvtD7pBpT0uIvBo+VbmvYFkoIRykaV8Rlz67/xEA5Xr7E5adui1QN+9FmoGMcrfKXlt8isC/Z9vSE7yRdD4P0VHh6UgwArXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; dkim=pass (2048-bit key) header.d=aladdin.ru header.i=@aladdin.ru header.b=ns8VGIYS; arc=none smtp.client-ip=91.199.251.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
+	s=arc-20240116; t=1750939432; c=relaxed/simple;
+	bh=4hnWVm/WUKrVcAQs3GScuoi2DpfD6MZHWSrLCp87cMU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=c5mZjBDzbhUE05bCgbTPWdNRAc+Vv8ok3rRbhcabUc3MYwGyaIdDVagd2OObtSU0PCzUfaoWIvgkRlAaFfuGncSvRBPBuO24Ts8e6CHm/eOGtXeJRtoWwnaOBsLYvTcWnGc9KOvd1Y7lsJ1P4XvQzJogPuHFtGegwtrXsOtBQS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGbCeBRE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aladdin.ru header.i=@aladdin.ru header.b="ns8VGIYS"
-DKIM-Signature: v=1; a=rsa-sha256; d=aladdin.ru; s=mail; c=simple/simple;
-	t=1750938406; h=from:subject:to:date:message-id;
-	bh=wmnasIyPxehdxLNIHSKhKpOToo640MSxNeoWG1PR6tw=;
-	b=ns8VGIYSWsUJBF63yP/4S3anVqeG0fexbzzX+6E8g46NiJZt8RvDT3j/FtEgYcgOCr7/sd0bzWs
-	jVJPqkUNXjYDn1RBVbExm4W/WBXAmv+WiyOeR3oTHMo+Z5Fej4Kw/VapqiKz5wgkvqCeXZ8vNbjix
-	hZG+qvOroXIzA/JZDTK/JImJzybJ754PoiMHwFEWaqSQUy2OHgOeS/TdhibCc7hZ7TNjR+7CMtYst
-	bUVE4j5M4ditUMZE4xVX6DuXuOdmiAL6WSKoLbId5oqzqj3xSJLUh4KiFdKefhVTavUOXh9bVeHVv
-	3N3Bts80i6FgX4V+jR+BQ7ylZQHxuPffr7dQ==
-From: Daniil Dulov <d.dulov@aladdin.ru>
-To: Johannes Berg <johannes@sipsolutions.net>
-CC: Daniil Dulov <d.dulov@aladdin.ru>, <linux-wireless@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH v2] wifi: zd1211rw: Fix potential NULL pointer dereference in zd_mac_tx_to_dev()
-Date: Thu, 26 Jun 2025 14:46:19 +0300
-Message-ID: <20250626114619.172631-1-d.dulov@aladdin.ru>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGbCeBRE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F90AC4CEED;
+	Thu, 26 Jun 2025 12:03:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750939432;
+	bh=4hnWVm/WUKrVcAQs3GScuoi2DpfD6MZHWSrLCp87cMU=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=nGbCeBREC5eH1u5LoXmzBL/KyhNMgjcwCqBdp4VdTIiAPPhxf0igOOfG1q8sKILbB
+	 rjqtIZZfEJtiR4pE0nED5VcTVLpfFwRRcybg7U/wD9It/vIp1T9grEuJGWyYVeEw0c
+	 uiK17aLdxBZ7+Gherpbb0j752P5rVT0xpduFeR1ACZK0LbzIEHsrT3jct9rOvhx+ku
+	 6SGou8vV75LAtsu4aq1wb/UWy9rGafJK6zWeCcPkovfedTu/J5TnQ5KN2/2snXpzIs
+	 LaeW0byiRY8HQUJI5Z0qRQr0Vj0rH8d3WP0jFIdgKKb1HQQy6zsyStwmDAxl7TgOL2
+	 ZnG8sFtnnp9yQ==
+Message-ID: <e038c70c-e7ce-41c5-9b6e-f7d5ca04b600@kernel.org>
+Date: Thu, 26 Jun 2025 07:03:48 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EXCH-2016-03.aladdin.ru (192.168.1.103) To
- EXCH-2016-01.aladdin.ru (192.168.1.101)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: altera: socfpga_stratix10: update internal
+ oscillators
+To: Matthew Gerlach <matthew.gerlach@altera.com>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250625151442.42191-1-matthew.gerlach@altera.com>
+Content-Language: en-US
+From: Dinh Nguyen <dinguyen@kernel.org>
+In-Reply-To: <20250625151442.42191-1-matthew.gerlach@altera.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-There is a potential NULL pointer dereference in zd_mac_tx_to_dev(). For
-example, the following is possible:
+On 6/25/25 10:14, Matthew Gerlach wrote:
+> Add the clock-frequency property to the cb_intosc_ls_clk and
+> cb_intosc_hs_div2_clk device tree nodes.
+> 
+> The f2s_free_clk is implemented by custom logic in the FPGA; so it
+> should be disabled in the dtsi by default and enabled by a
+> dts for a specific FPGA design on a specific board.
+> 
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
+> ---
+>   arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
 
-    	T0			    		T1
-zd_mac_tx_to_dev()
-  /* len == skb_queue_len(q) */ 	   				  
-  while (len > ZD_MAC_MAX_ACK_WAITERS) {
+Applied!
 
-					  filter_ack()
-					    spin_lock_irqsave(&q->lock, flags);
-					    /* position == skb_queue_len(q) */
-					    for (i=1; i<position; i++)
-				    	      skb = __skb_dequeue(q)
-
-					    if (mac->type == NL80211_IFTYPE_AP)
-					      skb = __skb_dequeue(q);
-					    spin_unlock_irqrestore(&q->lock, flags);
-
-    skb_dequeue() -> NULL
-
-Since there is a small gap between checking skb queue length and skb being
-unconditionally dequeued in zd_mac_tx_to_dev(), skb_dequeue() can return NULL.
-Then the pointer is passed to zd_mac_tx_status() where it is dereferenced.
-				   				
-In order to avoid potential NULL pointer dereference due to situations like
-above, check if skb is not NULL before passing it to zd_mac_tx_status().
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: 459c51ad6e1f ("zd1211rw: port to mac80211")
-Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
----
-v2: Replace locking changes with a check for NULL since it has more determined
-behavior compared to changing locking logic and might be less harmful in terms
-of old code.
-
-Link to v1: https://lore.kernel.org/linux-wireless/20250604101356.6292-1-d.dulov@aladdin.ru/T/#u
-
- drivers/net/wireless/zydas/zd1211rw/zd_mac.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-index 9653dbaac3c0..21205568374e 100644
---- a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-+++ b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-@@ -583,7 +583,11 @@ void zd_mac_tx_to_dev(struct sk_buff *skb, int error)
- 
- 		skb_queue_tail(q, skb);
- 		while (skb_queue_len(q) > ZD_MAC_MAX_ACK_WAITERS) {
--			zd_mac_tx_status(hw, skb_dequeue(q),
-+			skb = skb_dequeue(q);
-+			if (!skb)
-+				break;
-+
-+			zd_mac_tx_status(hw, skb,
- 					 mac->ack_pending ? mac->ack_signal : 0,
- 					 NULL);
- 			mac->ack_pending = 0;
--- 
-2.34.1
+Dinh
 
