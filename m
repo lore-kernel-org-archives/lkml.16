@@ -1,392 +1,132 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A77237180
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9490224F6
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750905482; cv=none; b=sNgzCctPrN/bTOxk4wbzZ67SV+fZCK3YVUrrxIrJPp889VHtPH2ArA0q7QEVF7qmashLhQvW6i0CWim1cvEkJqRkQmnzOcQiqSC/E0hWAmoQRfN9x0vEg1oXVNR3793p64Vco9Xen2EdzCQHjZIpqEQ1omkthYcWyB/tZzc1Un8=
+	t=1750905520; cv=none; b=dyyOwfpbbZrljvhgA7fOpAJIvENz0gseR6QayNs5JvLrlewLBALzSIDJOdnyCJ8O1Dhr2BgU/8VA4kj7xRf8uodJ0JHpx4u/QRNGnIfqRdkN95SyyXryambQ/270VSwxaAZWzO0mNJT+/j9HBtNsIjwUPciaoxTN4o6FAlM5IQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750905482; c=relaxed/simple;
-	bh=FKLQu0+uWVlKGUZ1wJN/GzcsmbKVFDMojnxvBYfT7v8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=X09784v/NqpZwOXP6gKRoBHmS7GqWWzM0LRog01KSdj8GUf8p090byhbtrEvv79EhFidM6n3Knm2as+Y6LLJdxrNJwIJiiUtEWcpWPBg4lk3PraMi9x92Yi+rdV36+a1B3p5dFc5myohdPbjNVYhV85xmFipFQoIW1dCpqlfQJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=QjzfzeDz; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750905520; c=relaxed/simple;
+	bh=ZyDp82KCRlSHuCEPLpsxX1AlbNKLH6w0nwFm++2Pqzg=;
+	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CTB7TZlymssyrpG5jOfRh7fQiUUKPMoHRNpl2wKlJ6ishi8OLILz5sZsVwIT6xe5+dgysTQQNCuM8pZOV2/TxK06v/BGzahL1dqGfAK3FdmnAh7g9/lkMBSerS9+PKRCGAljiz6TN0rLpcb0SxN5aCGNkBo9C7uBz6Opy/wmZb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=ldvoke6y; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QjzfzeDz"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250626023759epoutp01edfaa9d7dea67416b8a7f01a8517fb3f~Md0GyF6zF0837608376epoutp014
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:37:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250626023759epoutp01edfaa9d7dea67416b8a7f01a8517fb3f~Md0GyF6zF0837608376epoutp014
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750905479;
-	bh=g/dIw6y8kcmo8LyyHZHnCh5ijJd2K5kh6Hh1rXMgcz4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QjzfzeDzSu11dJtU03IFmwks7HTQtYobUEFeMtWjMBlywO7uzes2YYd8QVLSOtzNb
-	 xV3gy+hvjB0DJKC2xaOC5CiHMR0USNCj4my89vu8oW/lGZV6DXFJOcx5t/xV0GagR1
-	 Cv6i/jA1JK+cEm5e/HubiGjbaefCAAWMcli237Uw=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250626023758epcas5p4b32b1be235660e5c1f067356e4728958~Md0GSjQ4W0510205102epcas5p44;
-	Thu, 26 Jun 2025 02:37:58 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4bSNC838BWz6B9m5; Thu, 26 Jun
-	2025 02:37:56 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250625165332epcas5p4e138b7f7c8ebb938dc526c5dc29412bb~MV1z_GoE62849628496epcas5p4H;
-	Wed, 25 Jun 2025 16:53:32 +0000 (GMT)
-Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250625165329epsmtip2fc6e559e500702fdd2b1ad06ee61e433~MV1xNmFnm1255612556epsmtip2e;
-	Wed, 25 Jun 2025 16:53:28 +0000 (GMT)
-From: Shradha Todi <shradha.t@samsung.com>
-To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-fsd@tesla.com
-Cc: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
-	vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de,
-	m.szyprowski@samsung.com, jh80.chung@samsung.com, pankaj.dubey@samsung.com,
-	Shradha Todi <shradha.t@samsung.com>
-Subject: [PATCH v2 10/10] arm64: dts: fsd: Add PCIe support for Tesla FSD
- SoC
-Date: Wed, 25 Jun 2025 22:22:29 +0530
-Message-ID: <20250625165229.3458-11-shradha.t@samsung.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250625165229.3458-1-shradha.t@samsung.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ldvoke6y"
+X-UUID: 86ab1fb8523411f0b910cdf5d4d8066a-20250626
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ZyDp82KCRlSHuCEPLpsxX1AlbNKLH6w0nwFm++2Pqzg=;
+	b=ldvoke6y4aLhExvCAcLJZTVNh5E9UVdOKUhdxXdz2QGvZvXDfl2nh0klGLHObobnCjChtzGknDw0vmMWSnpp3Re2kdfnJYHAO3yxtVvc1GFqsvlAdCgSYLJ8Ni05Bv/c/KwYCoHBcWuwC9O9HwQ3/b7fzFHdD84LD3wwCjlnQ+U=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.2,REQID:3ded2082-b489-40c3-9bf9-4e06d6447499,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:9eb4ff7,CLOUDID:2c2da55f-2aa0-4c76-8faa-804d844c7164,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|50,
+	EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
+	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 86ab1fb8523411f0b910cdf5d4d8066a-20250626
+Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw01.mediatek.com
+	(envelope-from <kuyo.chang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1211599256; Thu, 26 Jun 2025 10:23:19 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Thu, 26 Jun 2025 10:23:18 +0800
+Received: from [10.233.130.16] (10.233.130.16) by mtkmbs11n2.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.2.1258.39 via Frontend
+ Transport; Thu, 26 Jun 2025 10:23:18 +0800
+Message-ID: <78d351cf981255e48cdf7f5da79ba1eb54dcb42e.camel@mediatek.com>
+Subject: Re: [SPAM]Re: [PATCH 1/1] sched/core: Fix migrate_swap() vs. hotplug
+From: Kuyo Chang <kuyo.chang@mediatek.com>
+To: Peter Zijlstra <peterz@infradead.org>
+CC: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, "Ben
+ Segall" <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, "Valentin
+ Schneider" <vschneid@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>
+Date: Thu, 26 Jun 2025 10:23:18 +0800
+In-Reply-To: <20250606082834.GM30486@noisy.programming.kicks-ass.net>
+References: <20250602072242.1839605-1-kuyo.chang@mediatek.com>
+	 <20250605100009.GO39944@noisy.programming.kicks-ass.net>
+	 <8e1018116ad7c5c325eced2cb17b65c73ca2ceca.camel@mediatek.com>
+	 <20250606082834.GM30486@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250625165332epcas5p4e138b7f7c8ebb938dc526c5dc29412bb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-541,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250625165332epcas5p4e138b7f7c8ebb938dc526c5dc29412bb
-References: <20250625165229.3458-1-shradha.t@samsung.com>
-	<CGME20250625165332epcas5p4e138b7f7c8ebb938dc526c5dc29412bb@epcas5p4.samsung.com>
 
-Add the support for PCIe controller driver and phy driver for Tesla FSD.
-It includes support for both RC and EP.
+On Fri, 2025-06-06 at 10:28 +0200, Peter Zijlstra wrote:
+>=20
+> External email : Please do not click links or open attachments until
+> you have verified the sender or the content.
+>=20
+>=20
+> On Fri, Jun 06, 2025 at 11:46:57AM +0800, Kuyo Chang wrote:
+>=20
+> > Thank you for your patch.
+> > I believe this patch also effectively addresses this race
+> > condition.
+> > I will queue it in our test pool for testing.
+>=20
+> Thank you; I shall await the results!
+>=20
+>=20
+Gentle ping if forgotten.
 
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-Signed-off-by: Shradha Todi <shradha.t@samsung.com>
----
- arch/arm64/boot/dts/tesla/fsd-evb.dts      |  36 +++++
- arch/arm64/boot/dts/tesla/fsd-pinctrl.dtsi |  65 +++++++++
- arch/arm64/boot/dts/tesla/fsd.dtsi         | 147 +++++++++++++++++++++
- 3 files changed, 248 insertions(+)
+It works well during both regular and hotplug tests(more than two
+week).
 
-diff --git a/arch/arm64/boot/dts/tesla/fsd-evb.dts b/arch/arm64/boot/dts/tesla/fsd-evb.dts
-index 9ff22e1c8723..c8f2019e6abf 100644
---- a/arch/arm64/boot/dts/tesla/fsd-evb.dts
-+++ b/arch/arm64/boot/dts/tesla/fsd-evb.dts
-@@ -19,6 +19,8 @@ / {
- 	aliases {
- 		serial0 = &serial_0;
- 		serial1 = &serial_1;
-+		pciephy0 = &pciephy0;
-+		pciephy1 = &pciephy1;
- 	};
- 
- 	chosen {
-@@ -130,3 +132,37 @@ &serial_0 {
- &ufs {
- 	status = "okay";
- };
-+
-+&pcierc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie1_clkreq>, <&pcie1_wake>, <&pcie1_preset>,
-+			<&pcie0_slot1>;
-+};
-+
-+&pcieep2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie1_clkreq>, <&pcie1_wake>, <&pcie1_preset>,
-+			<&pcie0_slot1>;
-+};
-+
-+&pcierc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie0_clkreq>, <&pcie0_wake0>, <&pcie0_preset0>,
-+			 <&pcie0_slot0>;
-+};
-+
-+&pcieep0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie0_clkreq>, <&pcie0_wake0>, <&pcie0_preset0>,
-+			 <&pcie0_slot0>;
-+};
-+
-+&pcierc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie0_clkreq>, <&pcie0_wake1>, <&pcie0_preset0>;
-+};
-+
-+&pcieep1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie0_clkreq>, <&pcie0_wake1>, <&pcie0_preset0>;
-+};
-diff --git a/arch/arm64/boot/dts/tesla/fsd-pinctrl.dtsi b/arch/arm64/boot/dts/tesla/fsd-pinctrl.dtsi
-index 6f4658f57453..fa99aa4b9906 100644
---- a/arch/arm64/boot/dts/tesla/fsd-pinctrl.dtsi
-+++ b/arch/arm64/boot/dts/tesla/fsd-pinctrl.dtsi
-@@ -120,6 +120,27 @@ eth0_mdio: eth0-mdio-pins {
- 		samsung,pin-pud = <FSD_PIN_PULL_NONE>;
- 		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
- 	};
-+
-+	pcie1_clkreq: pcie1-clkreq-pins {
-+		samsung,pins = "gpf6-0";
-+		samsung,pin-function = <FSD_PIN_FUNC_2>;
-+		samsung,pin-pud = <FSD_PIN_PULL_UP>;
-+		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
-+	};
-+
-+	pcie1_wake: pcie1-wake-pins {
-+		samsung,pins = "gpf6-1";
-+		samsung,pin-function = <FSD_PIN_FUNC_2>;
-+		samsung,pin-pud = <FSD_PIN_PULL_UP>;
-+		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
-+	};
-+
-+	pcie1_preset: pcie1-preset-pins {
-+		samsung,pins = "gpf6-2";
-+		samsung,pin-function = <FSD_PIN_FUNC_2>;
-+		samsung,pin-pud = <FSD_PIN_PULL_UP>;
-+		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
-+	};
- };
- 
- &pinctrl_peric {
-@@ -493,6 +514,50 @@ eth1_mdio: eth1-mdio-pins {
- 		samsung,pin-pud = <FSD_PIN_PULL_UP>;
- 		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
- 	};
-+
-+	pcie0_clkreq: pcie0-clkreq-pins {
-+		samsung,pins = "gpc8-0";
-+		samsung,pin-function = <FSD_PIN_FUNC_2>;
-+		samsung,pin-pud = <FSD_PIN_PULL_UP>;
-+		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
-+	};
-+
-+	pcie0_wake0: pcie0-wake0-pins {
-+		samsung,pins = "gpc8-1";
-+		samsung,pin-function = <FSD_PIN_FUNC_2>;
-+		samsung,pin-pud = <FSD_PIN_PULL_UP>;
-+		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
-+	};
-+
-+	pcie0_preset0: pcie0-preset0-pins {
-+		samsung,pins = "gpc8-2";
-+		samsung,pin-function = <FSD_PIN_FUNC_2>;
-+		samsung,pin-pud = <FSD_PIN_PULL_UP>;
-+		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
-+	};
-+
-+	pcie0_wake1: pcie0-wake1-pins {
-+		samsung,pins = "gpc8-3";
-+		samsung,pin-function = <FSD_PIN_FUNC_2>;
-+		samsung,pin-pud = <FSD_PIN_PULL_UP>;
-+		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
-+	};
-+
-+	pcie0_slot0: pcie0-gpio22-pins {
-+		samsung,pins = "gpg2-6";
-+		samsung,pin-function = <FSD_PIN_FUNC_OUTPUT>;
-+		samsung,pin-pud = <FSD_PIN_PULL_UP>;
-+		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
-+		samsung,pin-val = <1>;
-+	};
-+
-+	pcie0_slot1: pcie0-gpio23-pins {
-+		samsung,pins = "gpg2-7";
-+		samsung,pin-function = <FSD_PIN_FUNC_OUTPUT>;
-+		samsung,pin-pud = <FSD_PIN_PULL_UP>;
-+		samsung,pin-drv = <FSD_PIN_DRV_LV4>;
-+		samsung,pin-val = <1>;
-+	};
- };
- 
- &pinctrl_pmu {
-diff --git a/arch/arm64/boot/dts/tesla/fsd.dtsi b/arch/arm64/boot/dts/tesla/fsd.dtsi
-index a5ebb3f9b18f..9e2d095546fa 100644
---- a/arch/arm64/boot/dts/tesla/fsd.dtsi
-+++ b/arch/arm64/boot/dts/tesla/fsd.dtsi
-@@ -1009,6 +1009,16 @@ ethernet1: ethernet@14300000 {
- 			status = "disabled";
- 		};
- 
-+		pciephy0: pcie-phy@15080000 {
-+			compatible = "tesla,fsd-pcie-phy";
-+			#phy-cells = <0>;
-+			reg = <0x0 0x15080000 0x0 0x2000>,
-+			      <0x0 0x150a0000 0x0 0x1000>;
-+			samsung,pmu-syscon = <&pmu_system_controller>;
-+			samsung,fsys-sysreg = <&sysreg_fsys0>;
-+			status = "disabled";
-+		};
-+
- 		ufs: ufs@15120000 {
- 			compatible = "tesla,fsd-ufs";
- 			reg = <0x0 0x15120000 0x0 0x200>,  /* 0: HCI standard */
-@@ -1057,6 +1067,143 @@ ethernet0: ethernet@15300000 {
- 			iommus = <&smmu_fsys0 0x0 0x1>;
- 			status = "disabled";
- 		};
-+
-+		pcierc2: pcie@15400000 {
-+			compatible = "tesla,fsd-pcie";
-+			reg = <0x0 0x15400000 0x0 0x2000>,
-+			      <0x0 0x15090000 0x0 0x1000>,
-+			      <0x0 0x15800000 0x0 0x1000>;
-+			reg-names = "dbi", "elbi", "config";
-+			ranges =  <0x82000000 0 0x15801000 0 0x15801000 0 0xffefff>;
-+			clocks = <&clock_fsys0 PCIE_SUBCTRL_INST0_AUX_CLK_SOC>,
-+				 <&clock_fsys0 PCIE_SUBCTRL_INST0_DBI_ACLK_SOC>,
-+				 <&clock_fsys0 PCIE_SUBCTRL_INST0_MSTR_ACLK_SOC>,
-+				 <&clock_fsys0 PCIE_SUBCTRL_INST0_SLV_ACLK_SOC>;
-+			clock-names = "aux", "dbi", "mstr", "slv";
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			dma-coherent;
-+			device_type = "pci";
-+			interrupts = <GIC_SPI 93 IRQ_TYPE_EDGE_RISING>;
-+			num-lanes = <4>;
-+			samsung,syscon-pcie = <&sysreg_fsys0 0x434>;
-+			phys = <&pciephy0>;
-+			iommu-map = <0x0 &smmu_fsys0 0x4 0x10000>;
-+			iommu-map-mask = <0x0>;
-+			status = "disabled";
-+		};
-+
-+		pcieep2: pcie-ep@15400000 {
-+			compatible = "tesla,fsd-pcie-ep";
-+			reg = <0x0 0x15090000 0x0 0x1000>,
-+			      <0x0 0x15400000 0x0 0x2000>,
-+			      <0x0 0x15402000 0x0 0x80>,
-+			      <0x0 0x15800000 0x0 0xff0000>;
-+			reg-names = "elbi", "dbi", "dbi2", "addr_space";
-+			clocks = <&clock_fsys0 PCIE_SUBCTRL_INST0_AUX_CLK_SOC>,
-+				 <&clock_fsys0 PCIE_SUBCTRL_INST0_DBI_ACLK_SOC>,
-+				 <&clock_fsys0 PCIE_SUBCTRL_INST0_MSTR_ACLK_SOC>,
-+				 <&clock_fsys0 PCIE_SUBCTRL_INST0_SLV_ACLK_SOC>;
-+			clock-names = "aux", "dbi", "mstr", "slv";
-+			num-lanes = <4>;
-+			samsung,syscon-pcie = <&sysreg_fsys0 0x434>;
-+			phys = <&pciephy0>;
-+			status = "disabled";
-+		};
-+
-+		pciephy1: pcie-phy@16880000 {
-+			compatible = "tesla,fsd-pcie-phy";
-+			#phy-cells = <0>;
-+			reg = <0x0 0x16880000 0x0 0x2000>,
-+			      <0x0 0x16860000 0x0 0x1000>;
-+			samsung,pmu-syscon = <&pmu_system_controller>;
-+			samsung,fsys-sysreg = <&sysreg_fsys1>;
-+			status = "disabled";
-+		};
-+
-+		pcierc0: pcie@16a00000 {
-+			compatible = "tesla,fsd-pcie";
-+			reg = <0x0 0x16a00000 0x0 0x2000>,
-+			      <0x0 0x168b0000 0x0 0x1000>,
-+			      <0x0 0x17000000 0x0 0x1000>;
-+			reg-names = "dbi", "elbi", "config";
-+			ranges =  <0x82000000 0 0x17001000 0 0x17001000 0 0xffefff>;
-+			clocks = <&clock_fsys1 PCIE_LINK0_IPCLKPORT_AUX_ACLK>,
-+				 <&clock_fsys1 PCIE_LINK0_IPCLKPORT_DBI_ACLK>,
-+				 <&clock_fsys1 PCIE_LINK0_IPCLKPORT_MSTR_ACLK>,
-+				 <&clock_fsys1 PCIE_LINK0_IPCLKPORT_SLV_ACLK>;
-+			clock-names = "aux", "dbi", "mstr", "slv";
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			dma-coherent;
-+			device_type = "pci";
-+			interrupts = <GIC_SPI 115 IRQ_TYPE_EDGE_RISING>;
-+			num-lanes = <4>;
-+			samsung,syscon-pcie = <&sysreg_fsys1 0x50c>;
-+			phys = <&pciephy1>;
-+			iommu-map = <0x0 &smmu_imem 0x0 0x10000>;
-+			iommu-map-mask = <0x0>;
-+			status = "disabled";
-+		};
-+
-+		pcieep0: pcie-ep@16a00000 {
-+			compatible = "tesla,fsd-pcie-ep";
-+			reg = <0x0 0x168b0000 0x0 0x1000>,
-+			      <0x0 0x16a00000 0x0 0x2000>,
-+			      <0x0 0x16a02000 0x0 0x80>,
-+			      <0x0 0x17000000 0x0 0xff0000>;
-+			reg-names = "elbi", "dbi", "dbi2", "addr_space";
-+			clocks = <&clock_fsys1 PCIE_LINK0_IPCLKPORT_AUX_ACLK>,
-+				 <&clock_fsys1 PCIE_LINK0_IPCLKPORT_DBI_ACLK>,
-+				 <&clock_fsys1 PCIE_LINK0_IPCLKPORT_MSTR_ACLK>,
-+				 <&clock_fsys1 PCIE_LINK0_IPCLKPORT_SLV_ACLK>;
-+			clock-names = "aux", "dbi", "mstr", "slv";
-+			num-lanes = <4>;
-+			samsung,syscon-pcie = <&sysreg_fsys1 0x50c>;
-+			phys = <&pciephy1>;
-+			status = "disabled";
-+		};
-+
-+		pcierc1: pcie@16b00000 {
-+			compatible = "tesla,fsd-pcie";
-+			reg = <0x0 0x16b00000 0x0 0x2000>,
-+			      <0x0 0x168c0000 0x0 0x1000>,
-+			      <0x0 0x18000000 0x0 0x1000>;
-+			reg-names = "dbi", "elbi", "config";
-+			ranges =  <0x82000000 0 0x18001000 0 0x18001000 0 0xffefff>;
-+			clocks = <&clock_fsys1 PCIE_LINK1_IPCLKPORT_AUX_ACLK>,
-+				 <&clock_fsys1 PCIE_LINK1_IPCLKPORT_DBI_ACLK>,
-+				 <&clock_fsys1 PCIE_LINK1_IPCLKPORT_MSTR_ACLK>,
-+				 <&clock_fsys1 PCIE_LINK1_IPCLKPORT_SLV_ACLK>;
-+			clock-names = "aux", "dbi", "mstr", "slv";
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			dma-coherent;
-+			device_type = "pci";
-+			interrupts = <GIC_SPI 117 IRQ_TYPE_EDGE_RISING>;
-+			num-lanes = <4>;
-+			samsung,syscon-pcie = <&sysreg_fsys1 0x510>;
-+			phys = <&pciephy1>;
-+			status = "disabled";
-+		};
-+
-+		pcieep1: pcie-ep@16b00000 {
-+			compatible = "tesla,fsd-pcie-ep";
-+			reg = <0x0 0x168c0000 0x0 0x1000>,
-+			      <0x0 0x16b00000 0x0 0x2000>,
-+			      <0x0 0x16b02000 0x0 0x80>,
-+			      <0x0 0x18000000 0x0 0xff0000>;
-+			reg-names = "elbi", "dbi", "dbi2", "addr_space";
-+			clocks = <&clock_fsys1 PCIE_LINK1_IPCLKPORT_AUX_ACLK>,
-+				 <&clock_fsys1 PCIE_LINK1_IPCLKPORT_DBI_ACLK>,
-+				 <&clock_fsys1 PCIE_LINK1_IPCLKPORT_MSTR_ACLK>,
-+				 <&clock_fsys1 PCIE_LINK1_IPCLKPORT_SLV_ACLK>;
-+			clock-names = "aux", "dbi", "mstr", "slv";
-+			num-lanes = <4>;
-+			samsung,syscon-pcie = <&sysreg_fsys1 0x510>;
-+			phys = <&pciephy1>;
-+			status = "disabled";
-+		};
- 	};
- };
- 
--- 
-2.49.0
+May I know if this patch can be merged into the mainline?
+
+Thanks!
+
+> > > @@ -101,12 +98,12 @@ static bool cpu_stop_queue_work(unsigned int
+> > > cpu, struct cpu_stop_work *work)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raw_spin_lock_irqsave(&sto=
+pper->lock, flags);
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enabled =3D stopper->enabl=
+ed;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (enabled)
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 __cpu_stop_queue_work(stopper, work, &wakeq);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 __cpu_stop_queue_work(stopper, work);
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else if (work->done)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 cpu_stop_signal_done(work->done);
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raw_spin_unlock_irqrestore=
+(&stopper->lock, flags);
+> > >=20
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wake_up_q(&wakeq);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wake_up_process(stopper->thread=
+);
+> >=20
+> > BTW, should we add enabled check here?
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (enabled)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 wake_up_process(stopper->thread);
+>=20
+> Ah yes. Spuriously waking the stopper thread is harmless, but
+> wasteful.
+>=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 preempt_enable();
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return enabled;
 
