@@ -1,99 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1F72ECD0B
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649611DD877;
+	Thu, 26 Jun 2025 15:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750953281; cv=none; b=BamAGWMDQ605rJBopcwGiwqHKEIJRFPkOBDF2FL4DR/DDRqqP1mKVDpZa2vX/4qkn1ik/i4C3zj+pJkmXq1XnCC2zDcJsdSon73c9qIK31g9G84MjELoftfkOQTg1MxPKhwQ+VmqNjoLw+OptFPVIGe6aCCXLX70lv7+MgKaaIE=
+	t=1750953408; cv=none; b=Woe2OzQryOj9D8MfdDExPh02sgeHU0ZGvpoT4GhMxwXbBQpmXgLpZywNqb5LvoY3Nkhw1jPLrGDcVleVDYhQzv2um5vAXeg+t/8LyKERzc63q6ouPHoOJD6tQ0EtDmatQK50m+0XYJOozQXdATduM6WeSObMx5jo+7V4X52lyUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750953281; c=relaxed/simple;
-	bh=rr7naJ8D39trASGJNx8p2aZIXHv/0lnvvY69U2XEs1U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FbXGA7D/VOgcuG/PIkjTBUlb+HIrHECtGeBRZX0QnrWVwbNnJJac34hbcqWLOf/nhZ4e/xrE3vbNOE9eZ5NKBwKXsdAHtqJGLHivNYySK7eEifVOJyfbzzur+Uh6ky/EnzHZxZ1iD1XHWBID3wA/OKgWNwBf5G95TsI0F+otwiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ql60f1od; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750953408; c=relaxed/simple;
+	bh=rybJN06mgv13zdPiHHr7i1lOk1LsqKXQE/QFVRIo3W4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xw1UqTlulVlDfjdh/Ky3MxDOutPUEAnH+2Aza4X/oh+vGD6CTF9F4JTlz3T09E5jLzmnx8mSUI5mfPsgcSCIQLfJdxyEA03WXzA46npUYfs8P1NFaA8oPUMyzxGYG/SdKPUmQZNM6eDfa9ddKolbjFuD2eI3Un0lz1QZKVHiswo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=S03IpRZy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0ZniZOsd; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ql60f1od"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750953280; x=1782489280;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=rr7naJ8D39trASGJNx8p2aZIXHv/0lnvvY69U2XEs1U=;
-  b=Ql60f1odU1P/wV3lurad6hqKWAAosprtt1q3WSnYo4Q+Y0Tu6qqB7kdu
-   Nbi5vrXWnFAWajMr7plbNv8My8b5/VByQAuqPRBY5u0jL239XTYvlBOaR
-   mBaoSLQA/6pgRednCX8+ndYAepMWLAPbvQeesjqCpofd3HMNDsOh5/Cja
-   xa5H7cG+qlxnfIQusRJJUc3kYlIgnPYjqO42gXk+f7sfZOZX54LqmLBT+
-   yRWBAi1lzF/dKxBDAJmAJiwyw+LDv4apZ/cPxxQhTUSyyhm0n5p1R26YA
-   HHPFovykKbz8qHT5U9sJ1F8JIq1PwO1iE06FyFdnbphcJKwdiOjVcmzPm
-   A==;
-X-CSE-ConnectionGUID: 1yZmv0bnRkKmjl10yPT0mA==
-X-CSE-MsgGUID: uH5a8HnQQuSwVjH1XCr7JQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="40873555"
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="40873555"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:54:39 -0700
-X-CSE-ConnectionGUID: Bez/RQZwRBqXF5dnB4L9lg==
-X-CSE-MsgGUID: Rkbpn1nCTKqqvzB7pds8Hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="153085029"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 26 Jun 2025 08:54:37 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 29AE32AD; Thu, 26 Jun 2025 18:54:36 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Subject: [PATCH v1 1/1] mfd: syscon: atmel-smc: Don't use "proxy" headers
-Date: Thu, 26 Jun 2025 18:54:35 +0300
-Message-ID: <20250626155435.325336-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S03IpRZy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0ZniZOsd"
+Date: Thu, 26 Jun 2025 17:56:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750953405;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CodcwG6/9zB1OloXEa4wLT73oaQphHh7S1TbMwPPLgo=;
+	b=S03IpRZyOvD9X0dEIRWKWTDzsd8obfRxF9hpgysuvqYdEGzFrT83beOPgC/xHhijF85IIV
+	+e+vCeK1LFmpc3bwuhitHe9idDRjBedeLWJmiUsEfbUSb3jZxIULMvRWohx/YlYIaroiQU
+	Yckb1LaEKScYirKyNvqNvVQYGo4/RjMZncxvg3+CIi1/V58FQvoc1O8o0xwtI1BJTU14qF
+	xM0+fVo77wSWn/NOS3DWhKonDfggeMj4cL2PjxYZIx7VtiRPisJnCziPLGJHlJ3T+VSJBC
+	04+lW1tGo9RbdIzfnWHSVtPm11VnlVRe4D3MFgQ5PukuNSYvwmKg8YWs85+bVA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750953405;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CodcwG6/9zB1OloXEa4wLT73oaQphHh7S1TbMwPPLgo=;
+	b=0ZniZOsd029mDmTdhfI7TFTg+t6muQle+KJuI9j67bbNxvAntpTSiH8mIKM/H/2autdodf
+	csGWhKKJZL+HjiDA==
+From: Nam Cao <namcao@linutronix.de>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: John Ogness <john.ogness@linutronix.de>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>,
+	Martin Karsten <mkarsten@uwaterloo.ca>,
+	Jens Axboe <axboe@kernel.dk>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH v3] eventpoll: Fix priority inversion problem
+Message-ID: <20250626155640.q8tGTFT-@linutronix.de>
+References: <20250527090836.1290532-1-namcao@linutronix.de>
+ <841pr6msql.fsf@jogness.linutronix.de>
+ <20250626154954.NH9L0mtz@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626154954.NH9L0mtz@linutronix.de>
 
-Update header inclusions to follow IWYU (Include What You Use)
-principle.
+On Thu, Jun 26, 2025 at 05:49:54PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2025-06-26 17:29:46 [+0206], John Ogness wrote:
+> > > @@ -361,10 +348,14 @@ static inline int ep_cmp_ffd(struct epoll_filefd *p1,
+> > >  	        (p1->file < p2->file ? -1 : p1->fd - p2->fd));
+> > >  }
+> > >  
+> > > -/* Tells us if the item is currently linked */
+> > > -static inline int ep_is_linked(struct epitem *epi)
+> > > +/*
+> > > + * Add the item to its container eventpoll's rdllist; do nothing if the item is already on rdllist.
+> > > + */
+> > > +static void epitem_ready(struct epitem *epi)
+> > >  {
+> > > -	return !list_empty(&epi->rdllink);
+> > > +	if (&epi->rdllink == cmpxchg(&epi->rdllink.next, &epi->rdllink, NULL))
+> > 
+> > Perhaps:
+> > 
+> > 	if (try_cmpxchg(&epi->rdllink.next, &epi->rdllink, NULL))
+> 
+> Not sure this is the same.
+> This will write back the current value of epi->rdllink.next to
+> epi->rdllink if epi->rdllink.next is not &epi->rdllink.
+> 
+> The intention is to check if epi->rdllink.next is set to &epi->rdllink
+> (pointing to itself) and if so set it NULL just to avoid to ensure
+> further cmpxchg() will fail here.
 
-Note that kernel.h is discouraged to be included as it's written
-at the top of that file.
+Exactly, thanks Sebastian.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/mfd/syscon/atmel-smc.h | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+I tested the suggestion, and systemd blew up.
 
-diff --git a/include/linux/mfd/syscon/atmel-smc.h b/include/linux/mfd/syscon/atmel-smc.h
-index e9e24f4c4578..9b9119c742a2 100644
---- a/include/linux/mfd/syscon/atmel-smc.h
-+++ b/include/linux/mfd/syscon/atmel-smc.h
-@@ -11,9 +11,11 @@
- #ifndef _LINUX_MFD_SYSCON_ATMEL_SMC_H_
- #define _LINUX_MFD_SYSCON_ATMEL_SMC_H_
- 
--#include <linux/kernel.h>
--#include <linux/of.h>
--#include <linux/regmap.h>
-+#include <linux/bits.h>
-+#include <linux/types.h>
-+
-+struct device_node;
-+struct regmap;
- 
- #define ATMEL_SMC_SETUP(cs)			(((cs) * 0x10))
- #define ATMEL_HSMC_SETUP(layout, cs)		\
--- 
-2.47.2
-
+Nam
