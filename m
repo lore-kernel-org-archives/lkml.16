@@ -1,93 +1,229 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373D4C8EB
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162E83F9D2
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750978729; cv=none; b=RsnfRq0zSqzdv9qQbWxgQi/j2UmvYPriuwigH8eu2QZ7+7jwzQ0k+0XVJ2EUhcaBu+O8DxdHYZsE5kCpGlv+7PHFuhs2kdNYWnQjuF89vGhztm7tGRuE1T6YKeTj/7It4m2RfJu38G3/2/Kps1c0uiGoWGsXHGa8fi6z/DQQeDk=
+	t=1750978893; cv=none; b=s3M4J5Css2YHLgZiwu+gYrUDyhBqEwHDOXMl6vz4Z8sGvECus5ce7snoTlgjFUl1WW2ZIr5S99bkBoles0Q+iDHDeY0X6zCxpoA85I5VPBEvujolkF99iBibi5O2VoqA77xDbfFOTmH8Stsewjkd0ZM0CVvVBjVps0izbGyGWl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750978729; c=relaxed/simple;
-	bh=FNCnQJMtGBc1Bo5uRWoSDLrtdiU75nfOcOk5CROnpxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j9RxMq9qw26NCjwhGPL/5k0Q+l82kwpO4wVbHMxIzS5bvQH2xSDXvYmDQ4AU30iyyHrtJY2DuPpErDnU5yVqRY3Yi9FOy6ewQq6ggS7qVBpGlFUuMoSivGWkNgkyFSFnmPLvSaRkUoF6JUHZss/QNS57cq4TR33K6W4L1nbmtSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aI+1XuFq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750978893; c=relaxed/simple;
+	bh=Njtvv62TwFD2FO9ja1TttxQBspzkyAo9PMUt8l2UV+o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h8Y1tQSJuTs/XIJzRNEzHDWlaU4Pu6QCYFkR9YlOmJ7GHBJpVmR59FqgbIMkuNYo+HyRkcyPcelYRhCOowJWKfVyJZtTy17U5XObtgOpRTS4BgZbNZNl/2UwwrVKi2FJItHGgvZrMeSlEAW0scl9HQJOTya/pm6hFEccGF2WLoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e94YzAJS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aI+1XuFq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4871C4CEEB;
-	Thu, 26 Jun 2025 22:58:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750978728;
-	bh=FNCnQJMtGBc1Bo5uRWoSDLrtdiU75nfOcOk5CROnpxs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aI+1XuFqNCRM9yQ+XMdbaJKlAN5ieAC0T3Ga9EF2pMznUQQOm8gguPknMffxHojF7
-	 yCOZ8NnCJzL44Na/pLOiHtMLRjsisQoi8BY4BjbwYD8PuMaFw5VvVOILHpdo1e4G8L
-	 5EH9b2So+wfDSmObeQhUrCjU3ed9AtSrat0vIv57BgdQOfPzTpdBq0+8s/ysq6Yjur
-	 B8veBiBfApow32yPLYetKZpzY/PWfBSe/6UOn8NWMmWDnzPV8XcBp9+YKn2KY6L60W
-	 BXT5N0oxXwnIO/83zrJd9koXc7x7TaqL9m7Px3RlvTrTUtl2zeDAkmFi4SaCkHe3Nz
-	 8YJmR5mO0cSTg==
-Date: Thu, 26 Jun 2025 15:58:47 -0700
-From: Vinod Koul <vkoul@kernel.org>
-To: Michael Dege <michael.dege@renesas.com>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Uwe Kleine-Koenig <u.kleine-koenig@baylibre.com>,
-	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2 RESEND] phy: renesas: r8a779f0-ether-serdes:
- driver enhancement
-Message-ID: <aF3Qp730y_Vusb-z@vaman>
-References: <20250626081723.1924070-1-michael.dege@renesas.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e94YzAJS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750978890;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=PW5ylyMhizoTAAErzVcgZ0ur8RtKhfjtmnfn782xCWw=;
+	b=e94YzAJSPOFJGeLzKI8d45hH8g2euXqat5jhld2eZcrHmEFSP1ztnMRJu8Gtf7yQCCxOzk
+	D7X8KGOPVRI0C1qPUDyVxZidnsoBchke3F28a1A7ivCI4z4aavKi2POxzvw/E5G6cNDY8g
+	jstEN78vWsHpqMH8cGjTF2LlU2tqNsw=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-682-CT5BToppOdqVT2sSwpd_Nw-1; Thu, 26 Jun 2025 19:01:27 -0400
+X-MC-Unique: CT5BToppOdqVT2sSwpd_Nw-1
+X-Mimecast-MFC-AGG-ID: CT5BToppOdqVT2sSwpd_Nw_1750978887
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d097fd7b32so387290285a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:01:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750978887; x=1751583687;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PW5ylyMhizoTAAErzVcgZ0ur8RtKhfjtmnfn782xCWw=;
+        b=hwyMYQ1UkfcpgY6y8+gUnz6G9WlXkWAACR0xUIRJfefqGno2+w/Y9XoKpoqeLo1H2b
+         /HJ0eohBZ56ooayAxY/Ov0KbgXljx0Ymqny27RuNwYxrGaDShlt6KJSTT7Tz/pPjvHAZ
+         /FGHJeH9usXXv46inp6JQrFdPcxN8mdb0xaOcUFMTWTYEX2nTX9qfgeFV5Xd2zGyifu7
+         21XKK7L8RYEfFNRqyP78PLh8Cb/t5nAnnTC6C+DyxPTnq2JwSp8LBBMT43e7GSlSAacj
+         RuELAW1iediFObSskXqG7JVfw9aNjE2/jNZsH+7GAni6paHnBBTsQCGeuasOjYrQc5tt
+         e2nw==
+X-Forwarded-Encrypted: i=1; AJvYcCWOFlsdmxwKSkSPE3g5PXCnqX/Ydqxbel6LrrA5rs0sFAxM+Ni0VmMMYcUPur+MqRJe/O+Fbdv4ighwP+s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCM6jExKnAsROXpV27SNZ+u2qqOJjimHDx4LbkULhPyugra7LK
+	Y6gb43qAJRGcXOWwlwo/dYSVrIjxJI1Krtz4jeYjcHvPixK8+GWbX3TGzy2oJ18ybv5VmkqkTLt
+	pA43mU8gwoB08/Eo5gVXVZUr9PiyMGmrabEetHkV3ZKxTK/eIJmxLcL7MboX0T3xm6g==
+X-Gm-Gg: ASbGncvuy/XaNAgBfrPauUanj+KAKY0noSXb9GCbf5ydR2qXUGg7G3RabDcFIfe6HpZ
+	2vcV5y9x4oFGb+W5KBZ/xMniQrA7T6NuzJUwBMv0DTJ1QYOEsmM2DIfZtOscnMmT6yABcMbESe8
+	15SMQH4fYQcalVSbSr2HVPFQqO/qqMfYEkWOJE9N5bCt3lftv0V9x/EEEt/i+8AF6B9/zTrUMin
+	kFRuNS05GRTzvqyFwAEEoHBRhK7Ift0JoVm1n9CtwnF1L57EMdc6ycixrmY1UQ+65P8kSozw/Jz
+	c99uS/76XU4AUWlLFtQS3SM=
+X-Received: by 2002:a05:620a:6281:b0:7cd:ca60:7bdc with SMTP id af79cd13be357-7d44398f32cmr213735785a.48.1750978886670;
+        Thu, 26 Jun 2025 16:01:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEOibmE52XHUpjT6grdJtlIFuquz3A2Zc+qUcKxnr6mCl/cNP63g9Epzf3QztPPI1gDgOxwhg==
+X-Received: by 2002:a05:620a:6281:b0:7cd:ca60:7bdc with SMTP id af79cd13be357-7d44398f32cmr213727985a.48.1750978885968;
+        Thu, 26 Jun 2025 16:01:25 -0700 (PDT)
+Received: from [192.168.0.241] ([198.48.244.52])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44324bda7sm52077685a.115.2025.06.26.16.01.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 16:01:25 -0700 (PDT)
+Message-ID: <42dad79f-e0f2-4731-ac14-0189f5d278a0@redhat.com>
+Date: Thu, 26 Jun 2025 19:01:24 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626081723.1924070-1-michael.dege@renesas.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: man-pages-6.14 released
+To: Alejandro Colomar <alx@kernel.org>
+Cc: "Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org,
+ linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
+References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
+ <20250509112627.GA924923@if>
+ <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
+ <20250509121454.GA952723@if>
+ <3e82680d-149c-4a67-b838-bc73c0be3e4e@redhat.com>
+ <e363mzanav4inu3wtk5pmyzfwlquxr5kwh7ytk5emtayizi7qi@dqxritlnl22g>
+Content-Language: en-US
+From: Carlos O'Donell <carlos@redhat.com>
+Autocrypt: addr=carlos@redhat.com; keydata=
+ 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
+ O0FatDMfJw==
+Organization: Red Hat
+In-Reply-To: <e363mzanav4inu3wtk5pmyzfwlquxr5kwh7ytk5emtayizi7qi@dqxritlnl22g>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 6/26/25 5:04 PM, Alejandro Colomar wrote:
+> Hi Carlos,
+> 
+> On Thu, Jun 26, 2025 at 04:41:16PM -0400, Carlos O'Donell wrote:
+>> On 5/9/25 8:14 AM, Andries E. Brouwer wrote:
+>>> Hi Alejandro,
+>>>
+>>>>> I wonder about the legal status of such a change.
+>>>>> There is ownership of the pages, and a license that allows
+>>>>> others to do certain things.
+>>>>
+>>>> I also wonder about it.  We discussed it for several (~3) months, and I
+>>>> documented links to the discussion in the commit message:
+>>>>
+>>>> commit 9f2986c34166085225bb5606ebfd4952054e1657
+>>>> Author: Alejandro Colomar <alx@kernel.org>
+>>>> Date:   Fri Apr 11 02:19:48 2025 +0200
+>>>>
+>>>>       *, CREDITS: Unify copyright notices
+>>>>       Link: <https://lore.kernel.org/linux-man/jpin2dbnp5vpitnh7l4qmvkamzq3h3xljzsznrudgioox3nn72@57uybxbe3h4p/T/#u>
+>>>>       Link: <https://www.linuxfoundation.org/blog/blog/copyright-notices-in-open-source-software-projects>
+>>>
+>>> So I read this last link, and see
+>>>
+>>> "Don’t change someone else’s copyright notice without their permission
+>>> You should not change or remove someone else’s copyright notice unless
+>>> they have expressly (in writing) permitted you to do so. This includes
+>>> third parties’ notices in pre-existing code."
+>>>
+>>> The main topic of that link is how one should document new contributions,
+>>> and writing "by the contributors of the foo project" is OK for new stuff,
+>>> of course provided the new contributor agrees.
+>>> In my opinion it is illegal to change existing copyright notices,
+>>> unless you get permission from all people involved, which seems unlikely.
+>>
+>> I agree with Andries.
+>>
+>> This is also my interpretation, you cannot remove these entries without
+>> express permission from the copyright holder.
+> 
+> Well, we got express permission for a third of the copyright holders in
+> the last few months.  Also, we got no express notices in the contrary,
+> so around two thirds have remained silent.
 
-Hi,
+You should track down the copyright holders and get written approval,
+or restore the copyright notices.
 
-On 26-06-25, 10:17, Michael Dege wrote:
-> Hi,
-> 
-> This patch set adds the following to the r8a779f0-ether-serdes driver:
+This is exactly the difficulty in maintaining such written notices.
 
-I have a v3 and v3 resend and both are not threaded properly, Please post
-properly as a series which is threaded and not broken... 
-> 
->  * USXGMII mode support for 2.5GBit/s ethernet Phys
->  * A new configuration step suggested by the latest R-Car S4-8 users
->    manual V. 1.20.
-> 
-> Changes in v3:
-> - Fixed wrong macro (reported by kernel test bot).
-> - Link to v2: https://lore.kernel.org/r/20250527-renesas-serdes-update-v2-0-ef17c71cd94c@renesas.com
-> 
-> Changes from v1:
->  - Modify this driver for the R-Car S4-8 only
->  - So, this patch set drops the followings:
->  -- any dt doc modification
->  -- X5H support.
->  -- 5GBASER support
->  -- Registers' macros
-> 
-> Thanks,
-> 
-> Michael
-> 
-> Michael Dege (2):
->   phy: renesas: r8a779f0-ether-serdes: add USXGMII mode
->   phy: renesas: r8a779f0-ether-serdes: add new step added to latest
->     datasheet
-> 
->  drivers/phy/renesas/r8a779f0-ether-serdes.c | 97 ++++++++++++++++++---
->  1 file changed, 85 insertions(+), 12 deletions(-)
-> 
-> -- 
-> 2.25.1
+And why they are no longer recommended.
+
+> We could restore those that haven't expressely granted permission...
+
+Yes please.
+
+May I suggest doing a new release with the copyrights restored?
+
+> The thing is, as someone else mentioned, removals happen also implicitly
+> by moving text from one page to another and not copying copyright
+> notices, so how much does it matter an intentional rewrite of the
+> copyright notices into a different form (but which keeps their
+> copyright, as part of the AUTHORS file), compared to an unintentional
+> removal of copyright by moving the text (these do actually remove
+> copyright, so these are the problematic ones).
+
+Both are legally mistakes.
+
+The common utterance is "As compliance approaches 100% cost approaches
+infinity" :-)
+
+However, you should not deny anyone the right to have their copyright
+directly noted in the file, but you can encourage the generic use of
+"Copyright the Foo Authors." You can deny the contribution entirely if
+you wish on grounds that maintaining copyright statements is too much
+work.
+
+> By rewriting the copyright notices, we'd actually be honoring the
+> copyright, even when text is moved from page to page.  I think that is
+> more important.  And since all explicit notices have granted us
+> permission, even if some have remained silent (in some cases, their
+> email probably isn't monitored anymore), I think we should go forward.
+
+I agree, but you need permission from the authors.
+
+I disagree that man-pages should go forward with the current changes.
+
+May you please restore the copyright notices and cut a new release?
 
 -- 
-~Vinod
+Cheers,
+Carlos.
+
