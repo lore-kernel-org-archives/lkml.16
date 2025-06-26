@@ -1,116 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1821D21CA0E
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1426217716
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750932312; cv=none; b=kRw4ZAMv/eJDtXUf0r6toDkvX6HTL/7n2w4/pokRH+QlQcqnG0LdS+9urCoVc2SuNr1RdjD3GRNGAmv+pxDUeMMqkAEIY9KFQ387HIqgS/VD8kOpfWZJ9PLis6gblGLjz3hnJ43604g9kGF+/ER6Jf/vNR0lSLYBW9/N+/75ysQ=
+	t=1750932311; cv=none; b=P1zWExK7OFWr3QJRr7EoGNAuJlaq1xufdzDKJM5C0Owit/9lWA1BPs9UCqXr6AbLTRuu66TNd3VoVGn2Q7c5U9PkiLsAx1F2GTKhWjcVtH+D2JpGfk9xFwLHhj9E7whas5dRkLviMUMPQHOyYyBzhs+099s+DYnUHSW6U9tm9ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750932312; c=relaxed/simple;
-	bh=3k4h3hHEk7NoxoOrxbmYWfStsX8RNDzQCxVAQ8vhmp4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DSsIGJb44Pbf/+hc55v4nciZH72Kf7aNPa6a8OzrqpmM/Pd98n1qTFF+PCFvAy26jMCid+fvP/ggDZJTxO16rWYeFnLvTT/2N1qbuhzgC77XsrmUBlPg+7/nfZLnqO2kN64E8nQ4QVq5fi/POb54OV3yxNHogRlfpId0vpkcEwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2GmHgjn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750932311; c=relaxed/simple;
+	bh=dqhmiv/jrw4EXl4UG21c/emO5d4PlM9K6RNlISK2dIU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PKNqzSDjFw9S+ncSQGfPv1ZZF74Vje+V6eoN3I8h5+CsmqL9aG6Bld2MAXUUH8Sxy1R6f9BHQ9tqfggX/j8jJs72tVdWeo1B2Q/+Xx4corN5JqzrRGSeMSd2h4d+MBqY4VWssTxD4KlAsw4dqwGcUvU7oEKLPp6XP1gfjJPS1vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zGz7Le59; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2GmHgjn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93A81C4CEEF;
-	Thu, 26 Jun 2025 10:05:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750932311;
-	bh=3k4h3hHEk7NoxoOrxbmYWfStsX8RNDzQCxVAQ8vhmp4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=l2GmHgjnAsJeXxSAfGAU6kLeVg9VNE7t4zaaxjBpQh7L4YbnwXYPSCXXCtuhCPba6
-	 i7ys+XBB/zN4hpe+Q/4O47xHVsC0viNL2iPaVMOM4H76x5vFaKQnWUWKgxEaVWTEye
-	 dP0CdnIzCs4GJBROUdYqJAJkQPWJFZRfkdfTEcP2Lzc5KyJbKPigYqzys+wrhOcGog
-	 qAFDN0bSR+ryZ51U11qMrSoPdcqgNyLGhHswT8LO+vHq0E4DpyaCudc6nx9oTtJJnA
-	 xa68nMlIaJPZN0GUFPNdM3OLb4hP7KTQRpMBwW4gMs08SvPKG5jgdKjzJUyIOw7eS0
-	 xxHn3pX+U5AzQ==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Thu, 26 Jun 2025 12:04:59 +0200
-Subject: [PATCH v2 1/5] drm/mipi-dsi: Add dev_is_mipi_dsi function
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zGz7Le59"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e82278e3889so486068276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 03:05:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750932309; x=1751537109; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ef52RvSy9XhGGhE8oWCY3Xw5VEy2HnHxn8942Y4DhVA=;
+        b=zGz7Le59KlLp8uhVP4c8kwKnCfxyfnVL7Tm7MrDqe7zF+LGtaw/xaFo75A1kdtkDf4
+         Bf/OPvT70sGzZ1fT4+nCIYIlcfH0ib3GZyvRfNwDSoEtpxws5AxtLoqe9Sw1y/oXCevw
+         FGzSDx8viD/zCLj3BM5eCM63dtl3EzstzyLwn3zRuT20eMnLyJmM04bB3eYI8W/CrzTm
+         NSF2FrY3FtGPtp+YlCgeccZEsazKPDhyZ++WTYlTUO+cYtlgYX2AZUdvU5WGhahwJZ4U
+         VLjKJ4ZlDaOEZqZCAhh83PjCJuFNAdf5whbpR3Wph/Iyj8e0+NxP7+lIo0/ov9y7wRr8
+         Htpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750932309; x=1751537109;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ef52RvSy9XhGGhE8oWCY3Xw5VEy2HnHxn8942Y4DhVA=;
+        b=tAfQ+6Y2k+dsC250Xi43+xxiG+TQ01ZBNYr0eb145TWv+4x4GAbynTehgBv0KdJ1CS
+         /XQF0h1ghxZALxXyh6Ji2XQvvjjFnvGHZuh9CLkc+q21xQaqQMGP6FKlJ3D9PFFtOVe8
+         x40Bl5v7DWwHbdA7tdi/QHKlOfjqV2Ha2QhTPGtZgIyJ2m/7SbX4GF0MXTJfQCJu4ZT4
+         AxCu7DVd5aIRvSEJLmt1m7gRqbCpcLY9GhYDI1HuvDHq/OshhEVXXTsYaAQlr8nSF/4O
+         mQocZAZI0caYbmG52ThQufIH7BQGm5P57V5KcwojVhQMtadyoeBOzusv3gExnkkYqq9l
+         CmAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWYVpI7lr4yq7cyH4ermiNF1rZOulpyBEXe4vvf6WrnXDIZuFpC2wEZoE0/DTYn0wdxCqzBh6dUrOzbVds=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ56ErP/l0MoSTyax84Bt9pvEIjzsGW3LxEP3ijJZsIxboNwQ3
+	N38Y6fUpuIPM+bjzDr0wvf5w+CSjeAy0lxgKD5I23u0i377Mna5YY8tDueMuGIsahgJBvwoKVf6
+	Yc4KVUG4jbK/cKelacnfvlW4PkXn8J7GMEl3KRNUvOQ==
+X-Gm-Gg: ASbGncsiyT5XOLWZyjEa/w8qAR4dQQNIQOMJNY2eVn9L+3ATezJmqP3DvBD68wZkXGx
+	n70JPNhoLlGQCJmGqOYn2u8gE5yOGhdI0U6ze1zz02tvWxLllRWv74DPdvwwSszESKD/PvOR5qB
+	HOgMjJxOVOB9ecJLn6uOPLZnB++L2hjsEGPVKK3uGOffeU
+X-Google-Smtp-Source: AGHT+IF7NPAj4Z0CZFURC7bo9oEf2t9Aj4FR2LgmBRt7AfszBVvGJ/ZF2nnBKEqjrDtJWKPfIQqisqh3ixSWLzu82bc=
+X-Received: by 2002:a05:6902:1386:b0:e81:28d6:ed5 with SMTP id
+ 3f1490d57ef6-e879b88783fmr4524514276.8.1750932308884; Thu, 26 Jun 2025
+ 03:05:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250626-drm-panel-simple-fixes-v2-1-5afcaa608bdc@kernel.org>
-References: <20250626-drm-panel-simple-fixes-v2-0-5afcaa608bdc@kernel.org>
-In-Reply-To: <20250626-drm-panel-simple-fixes-v2-0-5afcaa608bdc@kernel.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
- Anusha Srivatsa <asrivats@redhat.com>, 
- Francesco Dolcini <francesco@dolcini.it>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Maxime Ripard <mripard@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2020; i=mripard@kernel.org;
- h=from:subject:message-id; bh=3k4h3hHEk7NoxoOrxbmYWfStsX8RNDzQCxVAQ8vhmp4=;
- b=owGbwMvMwCmsHn9OcpHtvjLG02pJDBmx0gHZ6o8/Je6+fHa2yrtogwvnrhzKfL07aUf7iY9/z
- s5e+/vhj46pLAzCnAyyYoosT2TCTi9vX1zlYL/yB8wcViaQIQxcnAIwkfIQxvqMTReXn9SQ8LAW
- 3MhdWLXFVvT+WgbP5Adqlz/v/9tZ+vFSeIsLT+T3lCaHSmXLx0VruBgbOnb4f/KvznzL//gVz97
- 2yRkvfh0LuiwqL8K57UKNg1azSVK4klSNurbwlycNUtz334QDAA==
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+References: <22759968.EfDdHjke4D@rjwysocki.net> <2045419.usQuhbGJ8B@rjwysocki.net>
+ <CAPDyKFq8ea+YogkAExUOBc2TEqi1z9WZswqgP29bLbursFUApg@mail.gmail.com> <CAJZ5v0h-9UnvhrQ7YaaYPG5CktwV-i+ZeqAri8OhJQb4TVp82w@mail.gmail.com>
+In-Reply-To: <CAJZ5v0h-9UnvhrQ7YaaYPG5CktwV-i+ZeqAri8OhJQb4TVp82w@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 26 Jun 2025 12:04:33 +0200
+X-Gm-Features: Ac12FXyAJDJvyhpucU5vdfApDbdiWQJG4l_jYuOIpSNd9YClkqba7MNA8LQyvF4
+Message-ID: <CAPDyKFoW5ag69LBnxvP5oGH1VAErBn17CAOzh=MX2toxAHwLxA@mail.gmail.com>
+Subject: Re: [PATCH v1 4/9] PM: Move pm_runtime_force_suspend/resume() under CONFIG_PM_SLEEP
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This will be especially useful for generic panels (like panel-simple)
-which can take different code path depending on if they are MIPI-DSI
-devices or platform devices.
+On Thu, 26 Jun 2025 at 11:41, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Thu, Jun 26, 2025 at 11:38=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.=
+org> wrote:
+> >
+> > On Wed, 25 Jun 2025 at 21:25, Rafael J. Wysocki <rjw@rjwysocki.net> wro=
+te:
+> > >
+> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > >
+> > > Since pm_runtime_force_suspend/resume() and pm_runtime_need_not_resum=
+e()
+> > > are only used during system-wide PM transitions, there is no reason t=
+o
+> > > compile them in if CONFIG_PM_SLEEP is unset.
+> > >
+> > > Accordingly, move them all under CONFIG_PM_SLEEP and make the static
+> > > inline stubs for pm_runtime_force_suspend/resume() return an error
+> > > to indicate that they should not be used outside CONFIG_PM_SLEEP.
+> > >
+> >
+> > Just realized that there seems to be some drivers that actually make
+> > use of pm_runtime_force_suspend() from their ->remove() callbacks.
+> >
+> > To not break them, we probably need to leave this code to stay under CO=
+NFIG_PM.
+>
+> OK, pm_runtime_force_suspend() need not be under CONFIG_PM_SLEEP.
+> That's not the case for the other two functions though AFAICS.
 
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
----
- drivers/gpu/drm/drm_mipi_dsi.c | 3 ++-
- include/drm/drm_mipi_dsi.h     | 3 +++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Right, but maybe better to keep them to avoid confusion? At least the
+corresponding flag is needed.
 
-diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
-index e5184a0c24651756ee0b1eb27d94083d63eb35a7..21fd647f8ce1a6a862e2f8fb5320e701f26f614f 100644
---- a/drivers/gpu/drm/drm_mipi_dsi.c
-+++ b/drivers/gpu/drm/drm_mipi_dsi.c
-@@ -89,16 +89,17 @@ static const struct dev_pm_ops mipi_dsi_device_pm_ops = {
- 	.thaw = pm_generic_thaw,
- 	.poweroff = pm_generic_poweroff,
- 	.restore = pm_generic_restore,
- };
- 
--static const struct bus_type mipi_dsi_bus_type = {
-+const struct bus_type mipi_dsi_bus_type = {
- 	.name = "mipi-dsi",
- 	.match = mipi_dsi_device_match,
- 	.uevent = mipi_dsi_uevent,
- 	.pm = &mipi_dsi_device_pm_ops,
- };
-+EXPORT_SYMBOL_GPL(mipi_dsi_bus_type);
- 
- /**
-  * of_find_mipi_dsi_device_by_node() - find the MIPI DSI device matching a
-  *    device tree node
-  * @np: device tree node
-diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
-index b37860f4a895c25ef8ba1c5b3f44827ef53aa100..6d2c08e8110151a97620389197f1ef79c058329d 100644
---- a/include/drm/drm_mipi_dsi.h
-+++ b/include/drm/drm_mipi_dsi.h
-@@ -221,10 +221,13 @@ struct mipi_dsi_multi_context {
- 
- #define MIPI_DSI_MODULE_PREFIX "mipi-dsi:"
- 
- #define to_mipi_dsi_device(__dev)	container_of_const(__dev, struct mipi_dsi_device, dev)
- 
-+extern const struct bus_type mipi_dsi_bus_type;
-+#define dev_is_mipi_dsi(dev)	((dev)->bus == &mipi_dsi_bus_type)
-+
- /**
-  * mipi_dsi_pixel_format_to_bpp - obtain the number of bits per pixel for any
-  *                                given pixel format defined by the MIPI DSI
-  *                                specification
-  * @fmt: MIPI DSI pixel format
+Kind regards
+Uffe
 
--- 
-2.49.0
-
+>
+> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > ---
+> > >  drivers/base/power/runtime.c |    4 ++++
+> > >  include/linux/pm_runtime.h   |   20 ++++++++++++++------
+> > >  2 files changed, 18 insertions(+), 6 deletions(-)
+> > >
+> > > --- a/drivers/base/power/runtime.c
+> > > +++ b/drivers/base/power/runtime.c
+> > > @@ -1941,6 +1941,8 @@
+> > >         pm_request_idle(link->supplier);
+> > >  }
+> > >
+> > > +#ifdef CONFIG_PM_SLEEP
+> > > +
+> > >  bool pm_runtime_need_not_resume(struct device *dev)
+> > >  {
+> > >         return atomic_read(&dev->power.usage_count) <=3D 1 &&
+> > > @@ -2063,3 +2065,5 @@
+> > >         return ret;
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(pm_runtime_force_resume);
+> > > +
+> > > +#endif /* CONFIG_PM_SLEEP */
+> > > --- a/include/linux/pm_runtime.h
+> > > +++ b/include/linux/pm_runtime.h
+> > > @@ -66,9 +66,6 @@
+> > >
+> > >  extern int pm_generic_runtime_suspend(struct device *dev);
+> > >  extern int pm_generic_runtime_resume(struct device *dev);
+> > > -extern bool pm_runtime_need_not_resume(struct device *dev);
+> > > -extern int pm_runtime_force_suspend(struct device *dev);
+> > > -extern int pm_runtime_force_resume(struct device *dev);
+> > >
+> > >  extern int __pm_runtime_idle(struct device *dev, int rpmflags);
+> > >  extern int __pm_runtime_suspend(struct device *dev, int rpmflags);
+> > > @@ -257,9 +254,6 @@
+> > >
+> > >  static inline int pm_generic_runtime_suspend(struct device *dev) { r=
+eturn 0; }
+> > >  static inline int pm_generic_runtime_resume(struct device *dev) { re=
+turn 0; }
+> > > -static inline bool pm_runtime_need_not_resume(struct device *dev) {r=
+eturn true; }
+> > > -static inline int pm_runtime_force_suspend(struct device *dev) { ret=
+urn 0; }
+> > > -static inline int pm_runtime_force_resume(struct device *dev) { retu=
+rn 0; }
+> > >
+> > >  static inline int __pm_runtime_idle(struct device *dev, int rpmflags=
+)
+> > >  {
+> > > @@ -330,6 +324,20 @@
+> > >
+> > >  #endif /* !CONFIG_PM */
+> > >
+> > > +#ifdef CONFIG_PM_SLEEP
+> > > +
+> > > +extern bool pm_runtime_need_not_resume(struct device *dev);
+> > > +extern int pm_runtime_force_suspend(struct device *dev);
+> > > +extern int pm_runtime_force_resume(struct device *dev);
+> > > +
+> > > +#else /* !CONFIG_PM_SLEEP */
+> > > +
+> > > +static inline bool pm_runtime_need_not_resume(struct device *dev) {r=
+eturn true; }
+> > > +static inline int pm_runtime_force_suspend(struct device *dev) { ret=
+urn -ENXIO; }
+> > > +static inline int pm_runtime_force_resume(struct device *dev) { retu=
+rn -ENXIO; }
+> > > +
+> > > +#endif /* CONFIG_PM_SLEEP */
+> > > +
+> > >  /**
+> > >   * pm_runtime_idle - Conditionally set up autosuspend of a device or=
+ suspend it.
+> > >   * @dev: Target device.
+> > >
+> > >
+> > >
+> >
