@@ -1,246 +1,104 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mail.prodrive-technologies.com (mail.prodrive-technologies.com [212.61.153.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0462F1FF1
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A106D1AAA1B;
+	Thu, 26 Jun 2025 13:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.61.153.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943887; cv=none; b=Ad7GiiDUcZGzQih0FIoDSmMGjd3jpa5NDdSd7vIjjO3Fo44SJNcWrBNjMcgjN4T7XYa3WI84jkCL3AGWxiwV13mpMgcvh/jtzn89G3VqIbIcJFUVKk4n7KhKJpoSoAb51ZsMhwEkpxu/nGse5rs+0wx8Azp19hIWOSFZh/Aa+08=
+	t=1750943980; cv=none; b=P38uyRcxbsbG5X+MWK19L3KAeV3IucX7QqpbPBRAisMSZeZCfdsFoh/JE0+p4iZZjpj9pcgWDqhD44911vxJ1Pk0YprhgFpzpJv+S50TcsKaQXtMz8ReeQ7jCm6ElNxdgTtIge/BBpa7uxbKIZ2nOdcsXkbL2KATcYuzdmIc+vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943887; c=relaxed/simple;
-	bh=gdHRAPCR2r4khXIU/2+b0agzD87RBrgBe2cwJNDm0og=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=BAq9KVbcVk7NS1xwiAS4XwMdZo/lbdLAmLw51AUceX39LDRIVgye6o4CfTqzBwSLu8lFP1PELfD7MH4xbELxWCITsP8nHVGlgP+xRvo71vOR53Ay76jtQrS64040J+Ha1Gfsja2c9IBK7q7aNf7J7jAZHm5jTa/j6lFT1hfPOA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=OKf+7O9h; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OKf+7O9h"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250626131803epoutp01ad91a025ed699999b9f93556702ea25d~Mmi9TY9IC2105921059epoutp01f
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:18:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250626131803epoutp01ad91a025ed699999b9f93556702ea25d~Mmi9TY9IC2105921059epoutp01f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750943883;
-	bh=ythS3sbNf2mknAFjxNnd+FScRcLh2N9GtIXEqTszrus=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OKf+7O9hPVsTLaoXlBec6djHDHIuNHI1w9xI+tiX1bEkkXOKpva1PgkGToqUfE5qv
-	 IcGtSDjePPyvYuPUrDDlbfRWjFmADQUz06RneuFyhd3vhmtXCkguKD+8RZEAmgPzMv
-	 joTsrDEK8A6PGKEbOcVwKZOa92OQGOhREmLFmER0=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250626131802epcas5p362264936fdc7c86ecdf7b0be52b02338~Mmi8ezFj40321203212epcas5p30;
-	Thu, 26 Jun 2025 13:18:02 +0000 (GMT)
-Received: from epcpadp2new (unknown [182.195.40.142]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4bSfPk1wG7z2SSKd; Thu, 26 Jun
-	2025 13:18:02 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250626095415epcas5p115fda1fb35f95dfc96172f4b98634b36~MjxBfsbXD2328523285epcas5p1s;
-	Thu, 26 Jun 2025 09:54:15 +0000 (GMT)
-Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250626095413epsmtip1ee663fd5599060a3321ad9ce8f18d7d4~Mjw-F1S031620116201epsmtip1U;
-	Thu, 26 Jun 2025 09:54:12 +0000 (GMT)
-Date: Thu, 26 Jun 2025 15:24:07 +0530
-From: Neeraj Kumar <s.neeraj@samsung.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: dan.j.williams@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
-	a.manzanares@samsung.com, nifan.cxl@gmail.com, anisa.su@samsung.com,
-	vishak.g@samsung.com, krish.reddy@samsung.com, arun.george@samsung.com,
-	alok.rathore@samsung.com, neeraj.kernel@gmail.com,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
-Subject: Re: [RFC PATCH 05/20] nvdimm/region_label: Add region label
- updation routine
-Message-ID: <1983025922.01750943882252.JavaMail.epsvc@epcpadp2new>
+	s=arc-20240116; t=1750943980; c=relaxed/simple;
+	bh=75mkrs7dNrjFqYbU96pjzxClIJ/jiib6Uq9QOKp4sF8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GsWdQ1UxRfaoDDGuIBfKdqdFp7pyZRZymwzB6+RVMnXkjtvUfS8Tcoub/Gwo4Yoh4gQXjdy8Ao1wnaIt1bvJ8dhepeIiNMfc99y5xVfGF0/mKjdRi9Mu8bmGC8S1KkSfz9ewCaqhnZVaySWA44iuO6hV3See/WVK89gjXJB7Fy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com; spf=pass smtp.mailfrom=prodrive-technologies.com; arc=none smtp.client-ip=212.61.153.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prodrive-technologies.com
+Received: from EXCOP01.bk.prodrive.nl (10.1.0.22) by EXCOP01.bk.prodrive.nl
+ (10.1.0.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 26 Jun
+ 2025 15:19:34 +0200
+Received: from lnxdevrm02.bk.prodrive.nl (10.1.1.121) by
+ EXCOP01.bk.prodrive.nl (10.1.0.22) with Microsoft SMTP Server id 15.2.1544.4
+ via Frontend Transport; Thu, 26 Jun 2025 15:19:34 +0200
+Received: from paugeu by lnxdevrm02.bk.prodrive.nl with local (Exim 4.96)
+	(envelope-from <paul.geurts@prodrive-technologies.com>)
+	id 1uUmVq-00Gq2g-29;
+	Thu, 26 Jun 2025 15:19:34 +0200
+From: Paul Geurts <paul.geurts@prodrive-technologies.com>
+To: <andrew@lunn.ch>
+CC: <andrew+netdev@lunn.ch>, <conor+dt@kernel.org>, <davem@davemloft.net>,
+	<devicetree@vger.kernel.org>, <edumazet@google.com>, <krzk@kernel.org>,
+	<kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-wireless@vger.kernel.org>,
+	<martijn.de.gouw@prodrive-technologies.com>, <mgreer@animalcreek.com>,
+	<netdev@vger.kernel.org>, <pabeni@redhat.com>,
+	<paul.geurts@prodrive-technologies.com>, <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: net/nfc: ti,trf7970a: Add ti,rx-gain-reduction option
+Date: Thu, 26 Jun 2025 15:19:34 +0200
+Message-ID: <20250626131934.4013096-1-paul.geurts@prodrive-technologies.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <ddb9a1a9-7070-416c-848e-00d151846999@lunn.ch>
+References: <ddb9a1a9-7070-416c-848e-00d151846999@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250623100520.00003f34@huawei.com>
-X-CMS-MailID: 20250626095415epcas5p115fda1fb35f95dfc96172f4b98634b36
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_cd465_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20250617124019epcas5p39815cc0f2b175aee40c194625166695c
-References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124019epcas5p39815cc0f2b175aee40c194625166695c@epcas5p3.samsung.com>
-	<1690859824.141750165204442.JavaMail.epsvc@epcpadp1new>
-	<20250623100520.00003f34@huawei.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_cd465_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+> > > You should include the units, "ti,rx-gain-reduction-db"
+> > 
+> > Well, Currently it's not really a dB value (see below).
+> > 
+> > > 
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > +    description: |
+> > > > +      Specify a RX gain reduction to reduce antenna sensitivity with 5dB per
+> > > > +      increment, with a maximum of 15dB.
+> > > 
+> > > Given that description i think you can provide a list of values, [0, 
+> > > 5, 10, 15] and the tools will validate values in .dts files.
+> > > 
+> > > > +
+> > > >  required:
+> > > >    - compatible
+> > > >    - interrupts
+> > > > @@ -95,5 +101,6 @@ examples:
+> > > >              irq-status-read-quirk;
+> > > >              en2-rf-quirk;
+> > > >              clock-frequency = <27120000>;
+> > > > +            ti,rx-gain-reduction = <3>;
+> > > 
+> > > Err, how does 3 fit into 5dB increments?
+> > 
+> > I implemented it in a way that the value of ti,rx-gain-reduction is 
+> > programmed directly into the RX_GAIN reduction register, and there it 
+> > means 5 dB/LSB. My description probably was not clear enough about 
+> > that. So a value of 3 here actually means 15dB.
+> > So I could either improve the description here that this is the case, 
+> > or make the value in here in actual dB, and do some calculations in 
+> > the driver. What has your preference?
+> 
+> DT should use SI units, Volts, Amps, degrees C, meters, etc. The driver then should do whatever conversion is needed to convert to hardware register values.
+> 
+> Less important, but i'm also wondering if this should be negative, ti,rx-gain-db, with a value of -15. You say this receiver is overly sensitive, so you need to reduce the gain. But are there TI devices where you can actually increase the gain? Ideally the property should be generic and be able to cover that use case as well.
 
-On 23/06/25 10:05AM, Jonathan Cameron wrote:
->On Tue, 17 Jun 2025 18:09:29 +0530
->Neeraj Kumar <s.neeraj@samsung.com> wrote:
->
->Add region label update routine
->
->
->> Added __pmem_region_label_update region label update routine to update
->> region label
->>
->> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
->A few trivial comments inline.
->
->Jonathan
->
->> ---
->>  drivers/nvdimm/label.c          | 142 ++++++++++++++++++++++++++++++++
->>  drivers/nvdimm/label.h          |   2 +
->>  drivers/nvdimm/namespace_devs.c |  12 +++
->>  drivers/nvdimm/nd.h             |  20 +++++
->>  include/linux/libnvdimm.h       |   8 ++
->>  5 files changed, 184 insertions(+)
->>
->> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
->> index d5cfaa99f976..7f33d14ce0ef 100644
->> --- a/drivers/nvdimm/label.c
->> +++ b/drivers/nvdimm/label.c
->> @@ -381,6 +381,16 @@ static void nsl_calculate_checksum(struct nvdimm_drvdata *ndd,
->>  	nsl_set_checksum(ndd, nd_label, sum);
->>  }
->>
->> +static void rgl_calculate_checksum(struct nvdimm_drvdata *ndd,
->> +				   struct cxl_region_label *rg_label)
->> +{
->> +	u64 sum;
->> +
->> +	rgl_set_checksum(rg_label, 0);
->> +	sum = nd_fletcher64(rg_label, sizeof_namespace_label(ndd), 1);
->> +	rgl_set_checksum(rg_label, sum);
->> +}
->> +
->>  static bool slot_valid(struct nvdimm_drvdata *ndd,
->>  		struct nd_lsa_label *nd_label, u32 slot)
->>  {
->> @@ -1117,6 +1127,138 @@ int nd_pmem_namespace_label_update(struct nd_region *nd_region,
->>  	return 0;
->>  }
->>
->> +static int __pmem_region_label_update(struct nd_region *nd_region,
->> +		struct nd_mapping *nd_mapping, int pos, unsigned long flags)
->> +{
->> +	struct nd_interleave_set *nd_set = nd_region->nd_set;
->> +	struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
->> +	struct nd_lsa_label *nd_label;
->> +	struct cxl_region_label *rg_label;
->> +	struct nd_namespace_index *nsindex;
->> +	struct nd_label_ent *label_ent;
->> +	unsigned long *free;
->> +	u32 nslot, slot;
->> +	size_t offset;
->> +	int rc;
->> +	uuid_t tmp;
->> +
->> +	if (!preamble_next(ndd, &nsindex, &free, &nslot))
->> +		return -ENXIO;
->> +
->> +	/* allocate and write the label to the staging (next) index */
->> +	slot = nd_label_alloc_slot(ndd);
->> +	if (slot == UINT_MAX)
->> +		return -ENXIO;
->> +	dev_dbg(ndd->dev, "allocated: %d\n", slot);
->> +
->> +	nd_label = to_label(ndd, slot);
->> +
->> +	memset(nd_label, 0, sizeof_namespace_label(ndd));
->> +	rg_label = &nd_label->rg_label;
->> +
->> +	/* Set Region Label Format identification UUID */
->> +	uuid_parse(CXL_REGION_UUID, &tmp);
->> +	export_uuid(nd_label->rg_label.type, &tmp);
->> +
->> +	/* Set Current Region Label UUID */
->> +	export_uuid(nd_label->rg_label.uuid, &nd_set->uuid);
->> +
->> +	rg_label->flags = __cpu_to_le32(flags);
->> +	rg_label->nlabel = __cpu_to_le16(nd_region->ndr_mappings);
->> +	rg_label->position = __cpu_to_le16(pos);
->> +	rg_label->dpa = __cpu_to_le64(nd_mapping->start);
->> +	rg_label->rawsize = __cpu_to_le64(nd_mapping->size);
->> +	rg_label->hpa = __cpu_to_le64(nd_set->res->start);
->> +	rg_label->slot = __cpu_to_le32(slot);
->> +	rg_label->ig = __cpu_to_le32(nd_set->interleave_granularity);
->> +	rg_label->align = __cpu_to_le16(0);
->> +
->> +	/* Update fletcher64 Checksum */
->> +	rgl_calculate_checksum(ndd, rg_label);
->> +
->> +	/* update label */
->> +	offset = nd_label_offset(ndd, nd_label);
->> +	rc = nvdimm_set_config_data(ndd, offset, nd_label,
->> +			sizeof_namespace_label(ndd));
->> +	if (rc < 0) {
->> +		nd_label_free_slot(ndd, slot);
->> +		return rc;
->> +	}
->> +
->> +	/* Garbage collect the previous label */
->> +	mutex_lock(&nd_mapping->lock);
->
->Perhaps use
->
->	guard(mutex)(&nd_mapping->lock);
->
->so you can directly return in the error path below and simplify the flow
->a tiny bit.
->
+As far as I am aware, I cannot put a negative number in a dts property. I can interpret the property as s32, but that would mean I need to put it in the dts like
 
-Sure, Let me look at the gaurd(mutex). I will update it in V1
+ti,rx-gain = <0xfffffff1>;
 
->> +	list_for_each_entry(label_ent, &nd_mapping->labels, list) {
->> +		if (!label_ent->label)
->> +			continue;
->> +		if (rgl_uuid_equal(&label_ent->label->rg_label, &nd_set->uuid))
->> +			reap_victim(nd_mapping, label_ent);
->> +	}
->> +
->> +	/* update index */
->> +	rc = nd_label_write_index(ndd, ndd->ns_next,
->> +			nd_inc_seq(__le32_to_cpu(nsindex->seq)), 0);
->> +
->With guard this can be
->	if (rc)
->		return rec;
->
->	list_for_each...
->
+which looks like a bad idea. I will just convert it to a dB value for v3.
 
-Sure, I will update it in V1
+> 
+>     Andrew
+> 
+> ---
+> pw-bot: cr
+> 
 
->> +	if (rc == 0) {
->> +		list_for_each_entry(label_ent, &nd_mapping->labels, list)
->> +			if (!label_ent->label) {
->> +				label_ent->label = nd_label;
->> +				nd_label = NULL;
->> +				break;
->> +			}
->> +		dev_WARN_ONCE(&nd_region->dev, nd_label,
->> +				"failed to track label: %d\n",
->> +				to_slot(ndd, nd_label));
->> +		if (nd_label)
->> +			rc = -ENXIO;
->> +	}
->> +	mutex_unlock(&nd_mapping->lock);
->> +
->> +	return rc;
->> +}
->
+Thanks!
 
-------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_cd465_
-Content-Type: text/plain; charset="utf-8"
-
-
-------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_cd465_--
-
+Paul
