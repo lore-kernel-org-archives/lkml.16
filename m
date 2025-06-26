@@ -1,109 +1,115 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025AC28C016
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F99C28BAB1;
+	Thu, 26 Jun 2025 13:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750944322; cv=none; b=NIDlDBR8dsS0NwEdKYBeLDUVVju3fPbHj2Xzh7bUn3/UVQHceLv+Bt9OImqBuDnLY0g8Bx0Tj07YlcVeyTcoERhv/4MS2GponGQTvpfIBmw6FAh6Kb78+/WjOz1/xENQWjZbcHOeki+Cqn5rC6DPjJR6rHuUQq7135/ITM9erNY=
+	t=1750944350; cv=none; b=ozQz6aeSF7YgO7ycswFLuZhoMmHa6mQ5ZH5IWKGSWkF1rkJ+/xsk/fWwVT9Ngd6Q3z6Z83LfzQNUzigW1uOCqnt+G5KcyKqmWmrRR21yEATPCSwHsgdyA2/DYj5eoYzMfECjtfCDpIpGiTLA4Rh5Pmy7+f33PzcyZ8rBmIaJEik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750944322; c=relaxed/simple;
-	bh=enT5vO2ALcAa/LZ/Y3Lm+uixPZpZ0NB8EkbAOpe//TU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jN5LQAy+R6QUGKz9o8u7le73mWojp4BWzNyh+4xvAG8ykWpWaRZLra8C1WWa/scLoTWIieu9ffT3Unzvnch7CtJS41dx4uL37qA38zNdnTThqtVn+LisGqRmZrUMrVKPci3R0b2T1ElsvDC4XN47WWOGexvFTlpPJFArlAiNfbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=B2URa0mm; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750944350; c=relaxed/simple;
+	bh=X8oqV9/hrJLm7FxNpugISZbe6ORT3aK7Xh1y/oYOuEk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DYET2xS/gNhCsiflA6b5HnUt6P5JIeKXQHOj++jVDq7BRmUofczPRGgKfhNUfKQbHmJMMN/TrSIJJs/utUaRvW0t0s/xeVrcUmL+XYSdx+WNfYcP/Plz6FJBENj3mIDpvNjrTssbjCniAAw5Bao04CnTSku3vfUN7Ld+kbrgEcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rycJ7FKl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="B2URa0mm"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-553be4d2fbfso1150503e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:25:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750944318; x=1751549118; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mLwSjoUY7m1Ln7Qu4AWMnTKuJMVdB5FurphkXRXpBRw=;
-        b=B2URa0mmUHhnUjza7rK4696DHHQRqzZPsZe5TYKZKfgX+wCd+wRPV2jMDwS/ZdKSLd
-         GG29e4E2LuL+S6ctn/2NS4m/6ZIE2g0iPL6B8QpKy3nOO5WwKcDTr8e1HuUw2uq42BYs
-         VwDUidPE0YGep05ZnMAO/6qTkLMKYq6p4E1qlVkEwyO4CkhyfQSXd88NMQDxTBba7RWJ
-         D5CmwT6dZt+QP4retuQYMnXxS26f5thUFxNkgLK4Odj+9rxPKwiziZ0xMnrF9a75+8aH
-         7x2ei/oncy3TeryRSUA3mkUn6WU37Lr9LqHWN9rimDXlFPf9y4NV9WSUoJgn5+gYBKG5
-         ic5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750944318; x=1751549118;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mLwSjoUY7m1Ln7Qu4AWMnTKuJMVdB5FurphkXRXpBRw=;
-        b=RO8PXD6AOtYBnut41ATcP42pcYiB1Gxjjej84nAXss6tYVNu50PWmn4Z4Ada8zVlYq
-         q3S+U697uV0WM7IGcWje2LNZ6D75PE1cm2v/zQEGgg0jZJFRWmmN5Y7T/oKTfzH1Js8o
-         Fx4l5kmxLdorHmR4//7M5wL7xiHiW7C5VGH3JSnLEejZrQTcmC+uItnybwhofRavYXg2
-         wBmbi0+v0KAfOeiiHhmsfTMl/5gFNvauuqL3zrgpGVjUk9RCgVuiTj/Df23KffxrU66D
-         eOjwMsXk5YK3ZOplRdxA+6GtXUgM8t6o3kNuHZzoAzEzSo6VZMaGrfa3OYY4K68/YzEE
-         kCPA==
-X-Forwarded-Encrypted: i=1; AJvYcCXHa5B0t4wmP1276BN5D+LeAZ8HRAEDtYossqmdsiNknfp7BhnAqQ8szXOmtcqPUCGrP0c0b1byHFmXfwI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDNGu9q7ssRCXblfQ7FA2aOpyv2jmwTxOHYO4MAelBUsHEo25i
-	fbhD6tMWQWPWC+l2aZhnoOl7WtryAwSfSssYSadb1i+JPBUh5KXOwfID5uTm1waXITKS9NW8GSE
-	L+DzO49vOmreZrNxHGAFluPfmgWj70ym14Kd3dXAzSw==
-X-Gm-Gg: ASbGncuzfp7fpEEpikjR15+Isftgo91vvw/EEk80stTIA6Uei4s2XdX/2RiJ+kxFUuv
-	akD0rBCS+31mHr1rNM+llMfAJm1Dl7SyP6xA7sq9CPSRcgue3Zf03KYk+P+1roh7rVBnY3EQ57R
-	MY+OMalT8DOxYUqZN39uNojlTd5xGv1tuSuaqm6mFscSJQnmzsXPOhgvxx5HfEJ0fKpDGHOIi5F
-	Q==
-X-Google-Smtp-Source: AGHT+IFZCHpg6dN8jQOP4LGMeE8N6TdaxL+CR37n8aEWMLkZ46xkrupRdz8U89iquKgLZ75BaGxTbVJfXxSWy4Rbayg=
-X-Received: by 2002:a05:6512:691:b0:553:aed7:9807 with SMTP id
- 2adb3069b0e04-554fdcc531fmr2571744e87.9.1750944317960; Thu, 26 Jun 2025
- 06:25:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rycJ7FKl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5077BC4CEEB;
+	Thu, 26 Jun 2025 13:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750944350;
+	bh=X8oqV9/hrJLm7FxNpugISZbe6ORT3aK7Xh1y/oYOuEk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rycJ7FKl8OUvefVTh9Q5Y6nkQPQaDzp0iy1GGqKaxV0gHJqTRfRb9IjumxKRgP6d+
+	 OZG4/rQQXlDfR4KrhYsUy+a1NS/vEAt5N78btw5XgOlsQB/ugilvUmNyRvjPV4ngeU
+	 aGXhRT4kx3vffTtygk7OUO+/Le+c9Yg46zCle7FRBgwX5+iptLLiBpPMIxVGU0IJzB
+	 Z1zRUiOrs7B+WRpnZQNUnQwfolHHIsacUvB1KlMO4rp4MX8dTQ/A7yssnblN7e+Sqw
+	 3DQjk73tzA++u1YDbk+tGJzxf47ZT2x9yEJa7Yu0StFd8qi7XFuKM9srNRYdvWPV69
+	 6MHHN1ON/n4jQ==
+From: Danilo Krummrich <dakr@kernel.org>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu
+Cc: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH] rust: devres: require T: Send for Devres
+Date: Thu, 26 Jun 2025 15:24:46 +0200
+Message-ID: <20250626132544.72866-1-dakr@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624-gpio-mmio-pdata-v1-0-a58c72eb556a@linaro.org>
- <20250624-gpio-mmio-pdata-v1-3-a58c72eb556a@linaro.org> <20250626132257.GE10134@google.com>
-In-Reply-To: <20250626132257.GE10134@google.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 26 Jun 2025 15:25:06 +0200
-X-Gm-Features: Ac12FXw9b1Ua2nskF_gKsApdHRnQVgOC-Rscq226tK5vt_NGX_5zRRRras-l-hs
-Message-ID: <CAMRc=MdBipydUjEKXDufMAWNZjMA18RKj0XcNofrn1oR7bXTZA@mail.gmail.com>
-Subject: Re: [PATCH RFT 3/6] mfd: vexpress-sysreg: set-up software nodes for gpio-mmio
-To: Lee Jones <lee@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
-	Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-omap@vger.kernel.org, patches@opensource.cirrus.com, 
-	linux-samsung-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 26, 2025 at 3:23=E2=80=AFPM Lee Jones <lee@kernel.org> wrote:
->
-> On Tue, 24 Jun 2025, Bartosz Golaszewski wrote:
->
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Replace struct bgpio_pdata - that we plan to remove - with software
-> > nodes containing properties encoding the same values thatr can now be
->
-> Spelling.
->
-> > parsed by gpio-mmio.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >  drivers/mfd/vexpress-sysreg.c | 46 ++++++++++++++++++++++++++---------=
---------
-> >  1 file changed, 28 insertions(+), 18 deletions(-)
->
-> Can this go in on its own, or does it have depend{encies,ants}?
+Due to calling Revocable::revoke() from Devres::devres_callback() T may
+be dropped from Devres::devres_callback() and hence must be Send.
 
-It will break the MFD GPIO sub-driver without patch 1/6 from this
-series. It would be best if you could Ack it and I can set up an
-immutable branch for v6.17 if you need it.
+Fix this by adding the corresponding bound to Devres and DevresInner.
 
-Bartosz
+Reported-by: Boqun Feng <boqun.feng@gmail.com>
+Closes: https://lore.kernel.org/lkml/aFzI5L__OcB9hqdG@Mac.home/
+Fixes: 76c01ded724b ("rust: add devres abstraction")
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+---
+ rust/kernel/devres.rs | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+index 57502534d985..8ede607414fd 100644
+--- a/rust/kernel/devres.rs
++++ b/rust/kernel/devres.rs
+@@ -18,7 +18,7 @@
+ };
+ 
+ #[pin_data]
+-struct DevresInner<T> {
++struct DevresInner<T: Send> {
+     dev: ARef<Device>,
+     callback: unsafe extern "C" fn(*mut c_void),
+     #[pin]
+@@ -95,9 +95,9 @@ struct DevresInner<T> {
+ /// # Ok(())
+ /// # }
+ /// ```
+-pub struct Devres<T>(Arc<DevresInner<T>>);
++pub struct Devres<T: Send>(Arc<DevresInner<T>>);
+ 
+-impl<T> DevresInner<T> {
++impl<T: Send> DevresInner<T> {
+     fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
+         let inner = Arc::pin_init(
+             pin_init!( DevresInner {
+@@ -175,7 +175,7 @@ fn remove_action(this: &Arc<Self>) -> bool {
+     }
+ }
+ 
+-impl<T> Devres<T> {
++impl<T: Send> Devres<T> {
+     /// Creates a new [`Devres`] instance of the given `data`. The `data` encapsulated within the
+     /// returned `Devres` instance' `data` will be revoked once the device is detached.
+     pub fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Self> {
+@@ -247,7 +247,7 @@ pub fn try_access_with_guard<'a>(&'a self, guard: &'a rcu::Guard) -> Option<&'a
+     }
+ }
+ 
+-impl<T> Drop for Devres<T> {
++impl<T: Send> Drop for Devres<T> {
+     fn drop(&mut self) {
+         // SAFETY: When `drop` runs, it is guaranteed that nobody is accessing the revocable data
+         // anymore, hence it is safe not to wait for the grace period to finish.
+
+base-commit: 86731a2a651e58953fc949573895f2fa6d456841
+-- 
+2.49.0
+
