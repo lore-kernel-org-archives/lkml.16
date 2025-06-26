@@ -1,49 +1,52 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ADC25C838;
-	Thu, 26 Jun 2025 08:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A66A25B693;
+	Thu, 26 Jun 2025 08:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750925412; cv=none; b=g4bMOvm+F43egCmrnDyJJM026x+gTY22KSJ77/bpendQrcgddlNCBNe2q6GhayQfuXkiMtebw08IrxyWpItwI4aWaMBzspliUKEZ6yk4gmWMP3n20De24ey3G8r3UgSSQ5wwB+poU3x3yfRgfInlCl2JRDji1TjGf9CkQLtExoA=
+	t=1750925451; cv=none; b=DWNoIqqqBdD/aRn0fRW4HAJf8iCSiE18uGmtpUHCLJCRVSvOohFmg90bDMexX5TcDutaRorMG6WV2cgwOeZJE3NSCde+aOKQ3kdbBtWSQqdEu7nTkWwLj/uPXaJsN2iq+yRB6wyvo0U6n5JTrQ0I7/yVA0uoMQoEK8ayv6PcuRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750925412; c=relaxed/simple;
-	bh=uqL7Npn6nD9bQK26qpQdsjFctfUmYoahBmjchL/UNkU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TDxAJLS5beEEuKIpu1eQY3CaH+0zfZtStEVF/rsxcvJcg01V/RgpwD59mk3V81O4Dnb9SeT5Pm+g5FqCodekp3NXA2fwvj/k6bP54Jqw0ra5MfppxW5KgcSPRBBlbcykNZTpkefZ0FXiVd2n1klq25tN6G8T+oR+6hqpAMAMbtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KczPKHv2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KczPKHv2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9688AC4CEEB;
-	Thu, 26 Jun 2025 08:10:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750925411;
-	bh=uqL7Npn6nD9bQK26qpQdsjFctfUmYoahBmjchL/UNkU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KczPKHv2OqtlVt9g9SlienJuF7N2hL85CliDbCjck70g51kzw+6vUY8ZAZaH6M6fh
-	 P7yg+wbAn5bfKbPG1zUyhleSkkWYk7ylZQi/AdOIn6eIqVAMfoLuN1EBAVQzafDAUX
-	 8ZoCw7bffZtYSbDUlen4PXtbGU/0RYwJgt6kXzlF7yJ3bmel28k/S2GjSrLBrweV4g
-	 dPiQedgew8djLpWBQgxM6jJxIhw+07zU2uePVhOxuV5RPRQEU8vupjEfeIy17GJBrU
-	 KAlwzO4cujlDfYOlahEZkjuQLJ6fnngA4ymdOAkS6Qu9ufpEAkt1Lle4agnFigCXVU
-	 a2FaZPLJM8BbQ==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uUhcz-00000004slI-2z0U;
-	Thu, 26 Jun 2025 10:06:37 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Akira Yokosawa" <akiyks@gmail.com>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	"Sai Vishnu M" <saivishnu725@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] scripts: sphinx-pre-install: fix version check for Fedora
-Date: Thu, 26 Jun 2025 10:06:29 +0200
-Message-ID: <35fde8948e478e02a10143d4b905405c97cc9cc6.1750924501.git.mchehab+huawei@kernel.org>
+	s=arc-20240116; t=1750925451; c=relaxed/simple;
+	bh=5kPFPNPSF57v8asqh+vVTCyktQ+xIYKtEmLuOa6VCVQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YjWjq7V9sW5/LtW+BrMGPIdDm5U7gqYphtmHsZi0mZONE7n/Naz4gIwTcIrY1L9+SVZdUHhIguK00E3blwCOn6lGNGAhzmezwk8MJ7dN5AstqzfWk7f/jDxKitdtckWnNat88e2OqkQdRXfmxnGVPVUldk/FLiw172+oew5+96k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id 366481F0004B;
+	Thu, 26 Jun 2025 08:10:47 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id 84E01AC7F75; Thu, 26 Jun 2025 08:10:46 +0000 (UTC)
+X-Spam-Level: *
+Received: from localhost.localdomain (unknown [192.168.1.65])
+	by laika.paulk.fr (Postfix) with ESMTP id EA652AC7F75;
+	Thu, 26 Jun 2025 08:09:37 +0000 (UTC)
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Paul Kocialkowski <paulk@sys-base.io>
+Subject: [PATCH 0/5] Allwinner A100/A133 Ethernet MAC (EMAC) Support
+Date: Thu, 26 Jun 2025 10:09:18 +0200
+Message-ID: <20250626080923.632789-1-paulk@sys-base.io>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1750924501.git.mchehab+huawei@kernel.org>
-References: <cover.1750924501.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,28 +54,23 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The script is now picking the wrong version. Fix it.
+This series adds support for the Alwinner A100/A133 Ethernet MAC (EMAC)
+and uses it in the Liontron H-A133L board.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- scripts/sphinx-pre-install | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Paul Kocialkowski (5):
+  pinctrl: sunxi: Fix a100 emac pin function name
+  arm64: dts: allwinner: a100: Add pin definitions for RGMII/RMII
+  dt-bindings: net: sun8i-emac: Add A100 EMAC compatible
+  arm64: dts: allwinner: a100: Add EMAC support
+  arm64: dts: allwinner: a133-liontron-h-a133l: Add Ethernet support
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 3f8d6925e896..07234d482fa8 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -413,7 +413,7 @@ sub give_redhat_hints()
- 	my $old = 0;
- 	my $rel;
- 	my $noto_sans_redhat = "google-noto-sans-cjk-ttc-fonts";
--	$rel = $1 if ($system_release =~ /(release|Linux)\s+(\d+)/);
-+	$rel = $2 if ($system_release =~ /(release|Linux)\s+(\d+)/);
- 
- 	if (!($system_release =~ /Fedora/)) {
- 		$map{"virtualenv"} = "python-virtualenv";
+ .../net/allwinner,sun8i-a83t-emac.yaml        |  1 +
+ .../arm64/boot/dts/allwinner/sun50i-a100.dtsi | 35 +++++++++++++++++++
+ .../sun50i-a133-liontron-h-a133l.dts          | 19 ++++++++++
+ drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c   | 32 ++++++++---------
+ 4 files changed, 71 insertions(+), 16 deletions(-)
+
 -- 
 2.49.0
 
