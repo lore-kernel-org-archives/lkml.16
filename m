@@ -1,444 +1,189 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECD321B185;
-	Thu, 26 Jun 2025 23:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA4E2264BA
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750981334; cv=none; b=iCjFsL0oL2Y7W0rfi03SXAFTR3+/rxdrpFulYc+e4L5vdqft0xWo8SyjGMwi5LuvALtUiWmtcHNdU7dUOUfZsa+cApofX0ZWlv4/AJViSI5teIKh4gD1YpW5eaaPcFtoGOYwg0vLXvgFjjw715MSG3CnC7NPSf7nQqqZNPgkMs4=
+	t=1750981386; cv=none; b=VkpMN3AoD5HIXJpCaVZz8EXHNognUz/4oLZgtftswIZmmpbHSQmdR44DEHbbzH+eNzxEQm5tGc3BaV1P7/LDb84UsOl9d7VKamXusRdx2EsG71bzZ+7WvAQuf3hgF7eySCtui583imbixkvGZItnEfivOVx1anuy9Uns7Dn/GFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750981334; c=relaxed/simple;
-	bh=20ENUKKaDhBTcuSnX7PmINtzXdNnRUJdtMRJtu470JM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D1VJvPF8BJR+nSzcvUK7VHKo3JmxR1R/F9jcKeu5nCVTkPa2a2zU0peGNqXnc2lHsmhaYAY+4XVR2IqTmIrGcPELr9u19DAb2KFPwTwnkvxDegjzmB8epd9Xv2wg9Cysz4h8tBFENENxxhD1ZBlNWr3od3TDYPS75efNeJ1OCc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NTSAqt2R; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750981386; c=relaxed/simple;
+	bh=urZl6JTvJf0apVJYt9mU6sqER8QXulKfZ2pqNl0VDWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oKNJFNHeaxK13qzqyOeLTCZSpM04lVOVCy06wOKUfSTiJlfVlkEu/ivuONWTdIQJ0H+pNPe/CEmuk3MO78sBPA8g486YJ3eIO6M+7j2zmg/4hYXkUXwcWi79uVtXCSaqBpmfnpUyPLzbXI692NoafoL4ggVeV3kQOegDjhpzgYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SIapqrbI; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NTSAqt2R"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SIapqrbI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750981333; x=1782517333;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=20ENUKKaDhBTcuSnX7PmINtzXdNnRUJdtMRJtu470JM=;
-  b=NTSAqt2RPMNKaNiQrb+aW9olh4f/slux+COl7ixwMGvRFkm6OqrqdiKI
-   +u71ETl6Bol3L8lpOFP47ZBnk8Px4P5RkHOaW65T1qNjnjMMMaxb4h9WG
-   JMUIk3vLFVudwpQPVFP+LdVH9RKvMTuj5ydFSYPx/fm4G2xeJf8JcWIgS
-   tQagVKmavZHALBbB2oR2XvCDP8V3pbCwEapX83NUXLEYMNteqtooOa6Bl
-   qvO8eeQUxEljvIeBY3oWHzOu/g0/5xnudg7AsykADsmwSp3OoX+FSLCJc
-   WXAK7g3yg3uezjppLugH9/32cCdjAymor20+uMYV9QIf15+kesBQM4IuC
-   A==;
-X-CSE-ConnectionGUID: joLh5jZiR0q2glvKjv80hw==
-X-CSE-MsgGUID: ck0LQyFFR9K6bAruwQdHmg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53257953"
+  t=1750981385; x=1782517385;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=urZl6JTvJf0apVJYt9mU6sqER8QXulKfZ2pqNl0VDWg=;
+  b=SIapqrbICbV3NHPx+A9A0XKKdAdQm/QWPo9rwDA63alRDCYx4Knz3bpo
+   +4tixDDD/EwoEnCCrWu0j67IcJVNm0dGCGn/u8dC6PEZZCesWkCYl/TJx
+   30cNyjH5Z8bfjeVT6HkdFlgVZidqPbuemXMaD+HQKtiVqR0fSF7om69lQ
+   vozDeCXjcSm1ru5XJ+8UGoeh7KkckSH2ws83K5FWM/+XYvRDpfh6xnwg7
+   g18EJglSyQxbBcX5rWQrhtDeqcULFoenYKRY+Shy69dvwvWv5RyzneLa8
+   i5Fs5fVVUe7a4u7PqtjhLA93DvoTJ7keOYYP4gdWtxQeapOGtHbCkly9I
+   g==;
+X-CSE-ConnectionGUID: JzAAXKuQSEC4Tzxk+a+nng==
+X-CSE-MsgGUID: WFekVcLcRxKSRLMM+Q9HtA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53373329"
 X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="53257953"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 16:42:12 -0700
-X-CSE-ConnectionGUID: twthP8X7RPemcSyZIMFBSA==
-X-CSE-MsgGUID: buXNv0jRRn2jGOY36Dm6dQ==
+   d="scan'208";a="53373329"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 16:43:04 -0700
+X-CSE-ConnectionGUID: m2O60cNASlipTnztUvc2bg==
+X-CSE-MsgGUID: 4k/IXgdbQv6+NtWf8J3f4A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="153368384"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 16:42:10 -0700
-Received: from [10.124.220.215] (unknown [10.124.220.215])
-	by linux.intel.com (Postfix) with ESMTP id 7106420B5736;
-	Thu, 26 Jun 2025 16:42:09 -0700 (PDT)
-Message-ID: <214c9b73-6e62-40c0-a805-56127269941a@linux.intel.com>
-Date: Thu, 26 Jun 2025 16:42:09 -0700
+   d="scan'208";a="156946019"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 26 Jun 2025 16:42:59 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uUwF7-000Vde-0V;
+	Thu, 26 Jun 2025 23:42:57 +0000
+Date: Fri, 27 Jun 2025 07:42:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Inki Dae <inki.dae@samsung.com>,
+	Jagan Teki <jagan@amarulasolutions.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Dmitry Baryshkov <lumag@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Hui Pu <Hui.Pu@gehealthcare.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-sunxi@lists.linux.dev,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH 22/32] drm: renesas: rz-du: rzg2l_mipi_dsi: convert to
+ the .attach_new op
+Message-ID: <202506270718.iCW6cHYD-lkp@intel.com>
+References: <20250625-drm-dsi-host-no-device-ptr-v1-22-e36bc258a7c5@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 04/17] CXL/AER: Introduce CXL specific AER driver file
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
- shiju.jose@huawei.com, ming.li@zohomail.com,
- Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
- dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
- lukas@wunner.de, Benjamin.Cheatham@amd.com, linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
- <20250626224252.1415009-5-terry.bowman@amd.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250626224252.1415009-5-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625-drm-dsi-host-no-device-ptr-v1-22-e36bc258a7c5@bootlin.com>
+
+Hi Luca,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 1174bf15bd601f17556f721798cd9183e169549a]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Luca-Ceresoli/drm-mipi-dsi-add-sanity-check-of-lane-number-in-mipi_dsi_attach/20250626-005002
+base:   1174bf15bd601f17556f721798cd9183e169549a
+patch link:    https://lore.kernel.org/r/20250625-drm-dsi-host-no-device-ptr-v1-22-e36bc258a7c5%40bootlin.com
+patch subject: [PATCH 22/32] drm: renesas: rz-du: rzg2l_mipi_dsi: convert to the .attach_new op
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20250627/202506270718.iCW6cHYD-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250627/202506270718.iCW6cHYD-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506270718.iCW6cHYD-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/device.h:15,
+                    from include/linux/dma-mapping.h:5,
+                    from drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c:11:
+   drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c: In function 'rzg2l_mipi_dsi_host_attach':
+>> drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c:712:33: error: 'device' undeclared (first use in this function)
+     712 |                                 device->format);
+         |                                 ^~~~~~
+   include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                                     ^~~~~~~~~~~
+   drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c:711:25: note: in expansion of macro 'dev_err'
+     711 |                         dev_err(dsi->dev, "Unsupported format 0x%04x\n",
+         |                         ^~~~~~~
+   drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c:712:33: note: each undeclared identifier is reported only once for each function it appears in
+     712 |                                 device->format);
+         |                                 ^~~~~~
+   include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                                     ^~~~~~~~~~~
+   drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c:711:25: note: in expansion of macro 'dev_err'
+     711 |                         dev_err(dsi->dev, "Unsupported format 0x%04x\n",
+         |                         ^~~~~~~
 
 
-On 6/26/25 3:42 PM, Terry Bowman wrote:
-> The CXL AER error handling logic currently resides in the AER driver file,
-> drivers/pci/pcie/aer.c. CXL specific changes are conditionally compiled
-> using #ifdefs.
->
-> Improve the AER driver maintainability by separating the CXL specific logic
-> from the AER driver's core functionality and removing the #ifdefs.
-> Introduce drivers/pci/pcie/cxl_aer.c and move the CXL AER logic into the
-> new file.
->
-> Update the makefile to conditionally compile the CXL file using the
-> existing CONFIG_PCIEAER_CXL Kconfig.
->
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
+vim +/device +712 drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
 
-After moving the code , you seem to have updated it with your own
-changes. May be you split it into two patches.
-
->   drivers/pci/pci.h          |   8 +++
->   drivers/pci/pcie/Makefile  |   1 +
->   drivers/pci/pcie/aer.c     | 138 -------------------------------------
->   drivers/pci/pcie/cxl_aer.c | 138 +++++++++++++++++++++++++++++++++++++
->   include/linux/pci_ids.h    |   2 +
->   5 files changed, 149 insertions(+), 138 deletions(-)
->   create mode 100644 drivers/pci/pcie/cxl_aer.c
->
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index a0d1e59b5666..91b583cf18eb 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -1029,6 +1029,14 @@ static inline void pci_save_aer_state(struct pci_dev *dev) { }
->   static inline void pci_restore_aer_state(struct pci_dev *dev) { }
->   #endif
->   
-> +#ifdef CONFIG_PCIEAER_CXL
-> +void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info);
-> +void cxl_rch_enable_rcec(struct pci_dev *rcec);
-> +#else
-> +static inline void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info) { }
-> +static inline void cxl_rch_enable_rcec(struct pci_dev *rcec) { }
-> +#endif
-> +
->   #ifdef CONFIG_ACPI
->   bool pci_acpi_preserve_config(struct pci_host_bridge *bridge);
->   int pci_acpi_program_hp_params(struct pci_dev *dev);
-> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-> index 173829aa02e6..cd2cb925dbd5 100644
-> --- a/drivers/pci/pcie/Makefile
-> +++ b/drivers/pci/pcie/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o bwctrl.o
->   
->   obj-y				+= aspm.o
->   obj-$(CONFIG_PCIEAER)		+= aer.o err.o tlp.o
-> +obj-$(CONFIG_PCIEAER_CXL)	+= cxl_aer.o
->   obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
->   obj-$(CONFIG_PCIE_PME)		+= pme.o
->   obj-$(CONFIG_PCIE_DPC)		+= dpc.o
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index a2df9456595a..0b4d721980ef 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1094,144 +1094,6 @@ static bool find_source_device(struct pci_dev *parent,
->   	return true;
->   }
->   
-> -#ifdef CONFIG_PCIEAER_CXL
-> -
-> -/**
-> - * pci_aer_unmask_internal_errors - unmask internal errors
-> - * @dev: pointer to the pci_dev data structure
-> - *
-> - * Unmask internal errors in the Uncorrectable and Correctable Error
-> - * Mask registers.
-> - *
-> - * Note: AER must be enabled and supported by the device which must be
-> - * checked in advance, e.g. with pcie_aer_is_native().
-> - */
-> -static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
-> -{
-> -	int aer = dev->aer_cap;
-> -	u32 mask;
-> -
-> -	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
-> -	mask &= ~PCI_ERR_UNC_INTN;
-> -	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, mask);
-> -
-> -	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
-> -	mask &= ~PCI_ERR_COR_INTERNAL;
-> -	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
-> -}
-> -
-> -static bool is_cxl_mem_dev(struct pci_dev *dev)
-> -{
-> -	/*
-> -	 * The capability, status, and control fields in Device 0,
-> -	 * Function 0 DVSEC control the CXL functionality of the
-> -	 * entire device (CXL 3.0, 8.1.3).
-> -	 */
-> -	if (dev->devfn != PCI_DEVFN(0, 0))
-> -		return false;
-> -
-> -	/*
-> -	 * CXL Memory Devices must have the 502h class code set (CXL
-> -	 * 3.0, 8.1.12.1).
-> -	 */
-> -	if ((dev->class >> 8) != PCI_CLASS_MEMORY_CXL)
-> -		return false;
-> -
-> -	return true;
-> -}
-> -
-> -static bool cxl_error_is_native(struct pci_dev *dev)
-> -{
-> -	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-> -
-> -	return (pcie_ports_native || host->native_aer);
-> -}
-> -
-> -static bool is_internal_error(struct aer_err_info *info)
-> -{
-> -	if (info->severity == AER_CORRECTABLE)
-> -		return info->status & PCI_ERR_COR_INTERNAL;
-> -
-> -	return info->status & PCI_ERR_UNC_INTN;
-> -}
-> -
-> -static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
-> -{
-> -	struct aer_err_info *info = (struct aer_err_info *)data;
-> -	const struct pci_error_handlers *err_handler;
-> -
-> -	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
-> -		return 0;
-> -
-> -	/* Protect dev->driver */
-> -	device_lock(&dev->dev);
-> -
-> -	err_handler = dev->driver ? dev->driver->err_handler : NULL;
-> -	if (!err_handler)
-> -		goto out;
-> -
-> -	if (info->severity == AER_CORRECTABLE) {
-> -		if (err_handler->cor_error_detected)
-> -			err_handler->cor_error_detected(dev);
-> -	} else if (err_handler->error_detected) {
-> -		if (info->severity == AER_NONFATAL)
-> -			err_handler->error_detected(dev, pci_channel_io_normal);
-> -		else if (info->severity == AER_FATAL)
-> -			err_handler->error_detected(dev, pci_channel_io_frozen);
-> -	}
-> -out:
-> -	device_unlock(&dev->dev);
-> -	return 0;
-> -}
-> -
-> -static void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
-> -{
-> -	/*
-> -	 * Internal errors of an RCEC indicate an AER error in an
-> -	 * RCH's downstream port. Check and handle them in the CXL.mem
-> -	 * device driver.
-> -	 */
-> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
-> -	    is_internal_error(info))
-> -		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
-> -}
-> -
-> -static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
-> -{
-> -	bool *handles_cxl = data;
-> -
-> -	if (!*handles_cxl)
-> -		*handles_cxl = is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
-> -
-> -	/* Non-zero terminates iteration */
-> -	return *handles_cxl;
-> -}
-> -
-> -static bool handles_cxl_errors(struct pci_dev *rcec)
-> -{
-> -	bool handles_cxl = false;
-> -
-> -	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
-> -	    pcie_aer_is_native(rcec))
-> -		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
-> -
-> -	return handles_cxl;
-> -}
-> -
-> -static void cxl_rch_enable_rcec(struct pci_dev *rcec)
-> -{
-> -	if (!handles_cxl_errors(rcec))
-> -		return;
-> -
-> -	pci_aer_unmask_internal_errors(rcec);
-> -	pci_info(rcec, "CXL: Internal errors unmasked");
-> -}
-> -
-> -#else
-> -static inline void cxl_rch_enable_rcec(struct pci_dev *dev) { }
-> -static inline void cxl_rch_handle_error(struct pci_dev *dev,
-> -					struct aer_err_info *info) { }
-> -#endif
->   
->   /**
->    * pci_aer_handle_error - handle logging error into an event log
-> diff --git a/drivers/pci/pcie/cxl_aer.c b/drivers/pci/pcie/cxl_aer.c
-> new file mode 100644
-> index 000000000000..b2ea14f70055
-> --- /dev/null
-> +++ b/drivers/pci/pcie/cxl_aer.c
-> @@ -0,0 +1,138 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright(c) 2025 AMD Corporation. All rights reserved. */
-> +
-> +#include <linux/pci.h>
-> +#include <linux/aer.h>
-> +#include "../pci.h"
-> +
-> +/**
-> + * pci_aer_unmask_internal_errors - unmask internal errors
-> + * @dev: pointer to the pci_dev data structure
-> + *
-> + * Unmask internal errors in the Uncorrectable and Correctable Error
-> + * Mask registers.
-> + *
-> + * Note: AER must be enabled and supported by the device which must be
-> + * checked in advance, e.g. with pcie_aer_is_native().
-> + */
-> +static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
-> +{
-> +	int aer = dev->aer_cap;
-> +	u32 mask;
-> +
-> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
-> +	mask &= ~PCI_ERR_UNC_INTN;
-> +	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, mask);
-> +
-> +	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
-> +	mask &= ~PCI_ERR_COR_INTERNAL;
-> +	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
-> +}
-> +
-> +static bool is_cxl_mem_dev(struct pci_dev *dev)
-> +{
-> +	/*
-> +	 * The capability, status, and control fields in Device 0,
-> +	 * Function 0 DVSEC control the CXL functionality of the
-> +	 * entire device (CXL 3.2, 8.1.3).
-> +	 */
-> +	if (dev->devfn != PCI_DEVFN(0, 0))
-> +		return false;
-> +
-> +	/*
-> +	 * CXL Memory Devices must have the 502h class code set (CXL
-> +	 * 3.2, 8.1.12.1).
-> +	 */
-> +	if (FIELD_GET(PCI_CLASS_CODE_MASK, dev->class) != PCI_CLASS_MEMORY_CXL)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +static bool cxl_error_is_native(struct pci_dev *dev)
-> +{
-> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-> +
-> +	return (pcie_ports_native || host->native_aer);
-> +}
-> +
-> +static bool is_internal_error(struct aer_err_info *info)
-> +{
-> +	if (info->severity == AER_CORRECTABLE)
-> +		return info->status & PCI_ERR_COR_INTERNAL;
-> +
-> +	return info->status & PCI_ERR_UNC_INTN;
-> +}
-> +
-> +static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
-> +{
-> +	struct aer_err_info *info = (struct aer_err_info *)data;
-> +	const struct pci_error_handlers *err_handler;
-> +
-> +	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
-> +		return 0;
-> +
-> +	/* Protect dev->driver */
-> +	device_lock(&dev->dev);
-> +
-> +	err_handler = dev->driver ? dev->driver->err_handler : NULL;
-> +	if (!err_handler)
-> +		goto out;
-> +
-> +	if (info->severity == AER_CORRECTABLE) {
-> +		if (err_handler->cor_error_detected)
-> +			err_handler->cor_error_detected(dev);
-> +	} else if (err_handler->error_detected) {
-> +		if (info->severity == AER_NONFATAL)
-> +			err_handler->error_detected(dev, pci_channel_io_normal);
-> +		else if (info->severity == AER_FATAL)
-> +			err_handler->error_detected(dev, pci_channel_io_frozen);
-> +	}
-> +out:
-> +	device_unlock(&dev->dev);
-> +	return 0;
-> +}
-> +
-> +void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
-> +{
-> +	/*
-> +	 * Internal errors of an RCEC indicate an AER error in an
-> +	 * RCH's downstream port. Check and handle them in the CXL.mem
-> +	 * device driver.
-> +	 */
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
-> +	    is_internal_error(info))
-> +		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
-> +}
-> +
-> +static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
-> +{
-> +	bool *handles_cxl = data;
-> +
-> +	if (!*handles_cxl)
-> +		*handles_cxl = is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
-> +
-> +	/* Non-zero terminates iteration */
-> +	return *handles_cxl;
-> +}
-> +
-> +static bool handles_cxl_errors(struct pci_dev *rcec)
-> +{
-> +	bool handles_cxl = false;
-> +
-> +	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
-> +	    pcie_aer_is_native(rcec))
-> +		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
-> +
-> +	return handles_cxl;
-> +}
-> +
-> +void cxl_rch_enable_rcec(struct pci_dev *rcec)
-> +{
-> +	if (!handles_cxl_errors(rcec))
-> +		return;
-> +
-> +	pci_aer_unmask_internal_errors(rcec);
-> +	pci_info(rcec, "CXL: Internal errors unmasked");
-> +}
-> +
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index e2d71b6fdd84..31b3935bf189 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -12,6 +12,8 @@
->   
->   /* Device classes and subclasses */
->   
-> +#define PCI_CLASS_CODE_MASK             0xFFFF00
-> +
->   #define PCI_CLASS_NOT_DEFINED		0x0000
->   #define PCI_CLASS_NOT_DEFINED_VGA	0x0001
->   
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  686  
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  687  /* -----------------------------------------------------------------------------
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  688   * Host setting
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  689   */
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  690  
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  691  static int rzg2l_mipi_dsi_host_attach(struct mipi_dsi_host *host,
+e8120e232c40c1 drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Luca Ceresoli 2025-06-25  692  				      const struct mipi_dsi_bus_fmt *bus_fmt)
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  693  {
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  694  	struct rzg2l_mipi_dsi *dsi = host_to_rzg2l_mipi_dsi(host);
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  695  	int ret;
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  696  
+e8120e232c40c1 drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Luca Ceresoli 2025-06-25  697  	if (bus_fmt->lanes > dsi->num_data_lanes) {
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  698  		dev_err(dsi->dev,
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  699  			"Number of lines of device (%u) exceeds host (%u)\n",
+e8120e232c40c1 drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Luca Ceresoli 2025-06-25  700  			bus_fmt->lanes, dsi->num_data_lanes);
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  701  		return -EINVAL;
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  702  	}
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  703  
+e8120e232c40c1 drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Luca Ceresoli 2025-06-25  704  	switch (mipi_dsi_pixel_format_to_bpp(bus_fmt->format)) {
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  705  	case 24:
+a56a6b81d80fdf drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Lad Prabhakar 2025-06-09  706  		break;
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  707  	case 18:
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  708  		break;
+a56a6b81d80fdf drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Lad Prabhakar 2025-06-09  709  	case 16:
+a56a6b81d80fdf drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Lad Prabhakar 2025-06-09  710  		if (!(dsi->info->features & RZ_MIPI_DSI_FEATURE_16BPP)) {
+a56a6b81d80fdf drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Lad Prabhakar 2025-06-09  711  			dev_err(dsi->dev, "Unsupported format 0x%04x\n",
+a56a6b81d80fdf drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Lad Prabhakar 2025-06-09 @712  				device->format);
+a56a6b81d80fdf drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Lad Prabhakar 2025-06-09  713  			return -EINVAL;
+a56a6b81d80fdf drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Lad Prabhakar 2025-06-09  714  		}
+a56a6b81d80fdf drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Lad Prabhakar 2025-06-09  715  		break;
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  716  	default:
+e8120e232c40c1 drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Luca Ceresoli 2025-06-25  717  		dev_err(dsi->dev, "Unsupported format 0x%04x\n", bus_fmt->format);
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  718  		return -EINVAL;
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  719  	}
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  720  
+e8120e232c40c1 drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Luca Ceresoli 2025-06-25  721  	dsi->lanes = bus_fmt->lanes;
+e8120e232c40c1 drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Luca Ceresoli 2025-06-25  722  	dsi->format = bus_fmt->format;
+e8120e232c40c1 drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c Luca Ceresoli 2025-06-25  723  	dsi->mode_flags = bus_fmt->mode_flags;
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  724  
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  725  	dsi->next_bridge = devm_drm_of_get_bridge(dsi->dev, dsi->dev->of_node,
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  726  						  1, 0);
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  727  	if (IS_ERR(dsi->next_bridge)) {
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  728  		ret = PTR_ERR(dsi->next_bridge);
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  729  		dev_err(dsi->dev, "failed to get next bridge: %d\n", ret);
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  730  		return ret;
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  731  	}
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  732  
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  733  	drm_bridge_add(&dsi->bridge);
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  734  
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  735  	return 0;
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  736  }
+7a043f978ed143 drivers/gpu/drm/rcar-du/rzg2l_mipi_dsi.c       Biju Das      2022-09-20  737  
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
