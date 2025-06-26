@@ -1,109 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01F52EB5CA;
-	Thu, 26 Jun 2025 15:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6842EB5A4;
+	Thu, 26 Jun 2025 15:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750951098; cv=none; b=D7HL23AWNh4cnYPPQDCgqeGmDgvpyV/slrWehFVVMAPgBU8PGjStuXlEqUyZYIY2/0MViwtxwRIY2kQmiNcU0Wuvxr0X8T5RB/ivEr/OMfo5PH+AtgUsJ6bg/gaNswIow9aHA6ZqJKj1B24JmCG2fl+YBgkZ4H9Z20MOY7zYIeg=
+	t=1750951187; cv=none; b=Bd6QMANLklSEigt4U9QaP9mHLFw1ZGlovF63l67lGDhrthKglRj5kv/QpfR/J7X3kPqmrj0glPAQf3WxGXBeCD4R/6Fpw/GrPZxCJ/WuMZmW5m9LHFsO5V5QjzQORFU9gr//Jaapq929SFgqeqTKodV7U+gv667Q69+k0bYuq84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750951098; c=relaxed/simple;
-	bh=O/PahS6LrdahoJgUmBA8HOvNulGcN+KpvOPWLplfST4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=N8oOMOafFQwFFzINxV+LyiheQURE15Xhg6JvgX8iXg5udgJ0G+SfZdhnj96XnJUlXTr7u5O5zTqzEPb/Sw09jp9Kew1NdozV3YmM/O8Q4IrRJQdvwGjBBIXFpTeUOZsSyT0gi39z8y7D3IyOg3f5nUsgnTROyBh1s89zKIVU4TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ui2NLhQ5; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750951187; c=relaxed/simple;
+	bh=o51B7iNjd+U5WK/gVXXyYCMg+WKgROXXkbE4f+qmvug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MKdgO//VFoW+kuVdeJnKJ7Wn81EM6YSfGQ8vq8FeKXONNBeEwzSLq//TBYB9S0r4oI/eEBW85aOMOTlCaKR/h9QazZfQ7TASVnB+F8QDaczLErL6rMCxwO90e1y8r2NtqWI6XltV35ZifkovGGuKRdNPXK4yKb/xYfrHykAGpy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=hf8qa8VF; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ui2NLhQ5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750951097; x=1782487097;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=O/PahS6LrdahoJgUmBA8HOvNulGcN+KpvOPWLplfST4=;
-  b=Ui2NLhQ5cctMxhuO+NkSMPx/tQz13lDHbI6yu/vn5czITopoRulRmUTr
-   NJ+sjCohPVyd40x8ZTA5i8eObsumAjOsZq7aOcbm8kiqXzDw44mfiIbto
-   0kuR9C7kvEFebef96ZrgrSCcH4DR8Vt+UqikAazJovaewAUOi7T+mUi+l
-   SQYTDmvPmPGgB2dy/jVeayJgaNk9ruSuYkLEFskuuJePopMccbWes290u
-   PLm86uYt8NI0EKCTBnvWgA7UWlpXMsDFIZSCYrdfxvXbn8WrxkxjExsUN
-   /1g1Ga7dXaX5Ml+JlVHM3x9go9fPKIU3TW8oa25jp+g1ID533a/ntpdIZ
-   A==;
-X-CSE-ConnectionGUID: hKmQa6LkS1CXAYavPeKaiQ==
-X-CSE-MsgGUID: qmNxp4ouTliF7f7eiz9yig==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="78688262"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="78688262"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:18:16 -0700
-X-CSE-ConnectionGUID: +TsuNq6pRkeISQ6zV4HevQ==
-X-CSE-MsgGUID: QhoFw5F/Q66u4O/fZY9sbQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="183576678"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:18:12 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 26 Jun 2025 18:18:07 +0300 (EEST)
-To: Arnd Bergmann <arnd@kernel.org>
-cc: Hans de Goede <hansg@kernel.org>, 
-    Pratap Nirujogi <pratap.nirujogi@amd.com>, 
-    Benjamin Chan <benjamin.chan@amd.com>, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>, 
-    Armin Wolf <W_Armin@gmx.de>, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
-    Suma Hegde <suma.hegde@amd.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86/amd_isp4: prevent built-in configuration
-In-Reply-To: <20250620115448.202425-1-arnd@kernel.org>
-Message-ID: <49a6a302-8660-5072-27b9-abc61253f608@linux.intel.com>
-References: <20250620115448.202425-1-arnd@kernel.org>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="hf8qa8VF"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 462C940E0198;
+	Thu, 26 Jun 2025 15:19:41 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id PqW44RiQH6Jz; Thu, 26 Jun 2025 15:19:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1750951175; bh=aEy0xE6/1EEIexhyZkFY9aUxJdMhziDSaDkTlnv5w6g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hf8qa8VF8orYwOKOUtgJkEYmsjkfQbalTSkc7wTAYA2jJ/CzAYCPQlNROgWOEUfMw
+	 VoeBHB5cEOMQDXEeKlqlakJFcsF8PK+GVoXJ0V7783kMDwKpbmq16/OFswms2stkHY
+	 UpWy6FuRtYdBacDNGp3lNp+ddT5PqRkYVrX4nbhXbQ3gOvG1hoKC5tlw2mFZfhtvsH
+	 NzZIW58fmTp/A0AmCkZnv66tlzfUNR+bhj7hErzYxRbs/IIOt8aDey6Klcr+AaEC8t
+	 qAGQ40bce3WW/qTrPFphAV1ohLkxc13JTAT5pGZrj3E+TNdmn5PbgmNw79tv/qcTO8
+	 miE8es+ZbHY1nsfYEFJHgk9v24neXCjLlg0ceLMxWIUnrBgeYRdnTSUM0/oW92tArv
+	 kSJvVYarRjwBM6zS8jooty0pw0N845TGyAB0F0l8J/Yq0Vo0hox3/dE8WiH2JQ80JT
+	 fmARjkYr+ofaimfaXPYo2VPZ4haf+Gg9y08Y45QhyJnHH9085m/BN2a1KzNAgkbjY+
+	 80SGmS9MENlf+p0WZ4MNdEicxFGxV88gidcNae0lvaCoPtfVDC5GiAMURROJEmkfsW
+	 p7K3WRFb8W1qGEZOoM8CusnNriv0PQWtyqixF67QK4Pi0AyZdp7VxZvR0spEk05bVC
+	 O2Vl1I4mvMThn66Ll3gWP0a8=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2E57C40E0169;
+	Thu, 26 Jun 2025 15:18:43 +0000 (UTC)
+Date: Thu, 26 Jun 2025 17:18:37 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Xiongwei Song <xiongwei.song@windriver.com>,
+	Xin Li <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Breno Leitao <leitao@debian.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>,
+	Juergen Gross <jgross@suse.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>,
+	Huang Shijie <shijie@os.amperecomputing.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-mm@kvack.org,
+	Yian Chen <yian.chen@intel.com>
+Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
+Message-ID: <20250626151837.GFaF1kzfLtesXLqaAQ@fat_crate.local>
+References: <20250620135325.3300848-1-kirill.shutemov@linux.intel.com>
+ <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
+ <20250620163504.GCaFWNuI-8QFqAM0yI@fat_crate.local>
+ <6y2iqv6c2idn7yebaec7tyhzl5zcsrwqq4lcsokumlqeophzaf@ljnmxorblgcj>
+ <20250620182943.GDaFWolxhwogB2tTxb@fat_crate.local>
+ <tmd5llufitosphzhiik2tlemjuwyi7xkcjlhbqhibrgjjhsqcj@b3xtgub42p45>
+ <20250623102105.GCaFkqkatFSbyl1YeN@fat_crate.local>
+ <ztkgdk72p2z3q6z4hslfg4gj6pejirh7cnssxhd7u72mo4enn4@viqrwrycderf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ztkgdk72p2z3q6z4hslfg4gj6pejirh7cnssxhd7u72mo4enn4@viqrwrycderf>
 
-On Fri, 20 Jun 2025, Arnd Bergmann wrote:
+On Mon, Jun 23, 2025 at 04:42:41PM +0300, Kirill A. Shutemov wrote:
+> Due to SLAM, we decided to postpone LAM enabling, until LASS is landed.
+> 
+> I am not sure if we want to add static
+> /sys/devices/system/cpu/vulnerabilities/slam with "Mitigation: LASS".
+> 
+> There might be other yet-to-be-discovered speculative attacks that LASS
+> mitigates. Security features have to visible to userspace independently of
+> known vulnerabilities.
 
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Checking the module owner of the device only works when modules are
-> enabled, and the device is created from a module:
-> 
-> drivers/platform/x86/amd/amd_isp4.c:154:28: error: incomplete definition of type 'struct module'
-> 
-> Building the driver as a loadable module avoids the build failure,
-> though this should probably be fixed in a different way that still
-> works if the device was created from built-in code.
-> 
-> Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV05C10")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506150313.UHoIoVhR-lkp@intel.com/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/platform/x86/amd/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-> index 63e4bd985699..9e150500e37e 100644
-> --- a/drivers/platform/x86/amd/Kconfig
-> +++ b/drivers/platform/x86/amd/Kconfig
-> @@ -36,6 +36,7 @@ config AMD_WBRF
->  config AMD_ISP_PLATFORM
->  	tristate "AMD ISP4 platform driver"
->  	depends on I2C && X86_64 && ACPI
-> +	depends on m
->  	help
->  	  Platform driver for AMD platforms containing image signal processor
->  	  gen 4. Provides camera sensor module board information to allow
-> 
+... and the fact that a vuln is being mitigated by stating that in
+/sys/devices/system/cpu/vulnerabilities/ needs to happen too.
 
-The fix series should finally be on its way to Linus through i2c tree. 
-I'm sorry for the unexpected delay in getting the real fix applied.
+I'm not talking about LAM enablement - I'm talking about adding a
+
+SPECTRE_V1_MITIGATION_LASS
+
+and setting that when X86_FEATURE_LASS is set so that luserspace gets told
+that
+
+"Spectre V1 : Mitigation: LASS"
+
+or so.
+
+Makes more sense?
 
 -- 
- i.
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
