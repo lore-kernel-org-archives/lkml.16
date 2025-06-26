@@ -1,51 +1,61 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DAD190664
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 00:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD0E2F1FDE
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 00:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750899323; cv=none; b=oKR4QOxFkOiL6QMBfYwRIOdMgq82ZkQJKrX3SAWvShajA8LxH8ou50xIJlzHWoqT85dkUFdoFG8v4Io6u8q9Fa9XAPIZpmLJM9oE9ko9Kyj/vYNxB0qTN4IW3zXGMe7ASbM7jLSKMDlnbsTBFzEDeElom1tqc/ugpAn2InOOkB8=
+	t=1750899593; cv=none; b=J5Fi7NucjhCqQCpjFmfLsUJsaRUE6oBXRY8JbIh7BQIsf/cG/KweAAsahkwT68IjOuVvwRV9+KsDdgJsClOTItF9DouiVAJel9KIF5TgK6XSbgvTbZVs3LMS8voAXqRJWKuABioRttI392nXtVXKAaW9QQQjqC6k8kGdoNepHXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750899323; c=relaxed/simple;
-	bh=oihTkeYSM3F2FJv2FCUK9bfx7uScQ8QpK4/Isp4GQeY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CnPzQjGfN+i7Du8Z4DgCDVHxPAJP3fx29kNHiiwZfMIR6QQYenoQo8DmXQR4xT5BqyEWdTJ10/GI12PeLkMC3kZt1vrB2IrL+8TQTJpUtctVIvzLxiERiCIHkmADU2nLjiLLTC8IYJyFZ9jm/cpERAbdB1L5c5MFFtAhHe0+QNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=c6lo9Rup; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750899593; c=relaxed/simple;
+	bh=1g6viRrj9kcWFZzmaCX5ijC1e4JJFvw7EVRPQMaIY6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=t8TRPQ+2A07SpRJhpKDeqtNSpJJMyhUFoVE8M4dONjxU7tEQu8kF5i9vW6SIy9RXhlI5EqSHlzXhXQMNrUBpHwNRsGgzkNDC3Em5b4gVFlwVyojRYkxAKQFl2GySXCbEccH/QmdNTCaPlLrchk9qLWg1XkHwZS6G1E8UNs3yxS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h2mDlk84; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="c6lo9Rup"
-Date: Wed, 25 Jun 2025 20:55:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750899309;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5q54Sayz71e1LNZ1+orW1d57JU8r4ylgMOb6QLaulnM=;
-	b=c6lo9Rup2DNUlQEiGvgzY65qQXV3X1mQ0bz3PU15ucLOnOsJwfLnKd8TUtt0I1ilI6GdYj
-	VpMC2XHvFWwXM35xA9llh2WLBqMdKUwxwpWfGbGD4cZHGLUO/NYFjTo5N8fXNnELSFiQrT
-	A6qSJI5rXPReqtE8NMA/dCGAe2W5lYg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Marc Herbert <marc.herbert@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Greg KH <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, Benjamin.Cheatham@amd.com, 
-	Jonathan.Cameron@huawei.com, dakr@kernel.org, linux-acpi@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com, 
-	rafael@kernel.org, sudeep.holla@arm.com, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH] driver core: faux: fix Undefined Behavior in
- faux_device_destroy()
-Message-ID: <p66tblbusj2uw4q35nytnangb7z5ziyrkenl67hjgfsatw3fdj@odgdtnzk7at6>
-References: <2025061313-theater-surrender-944c@gregkh>
- <20250614105037.1441029-1-ojeda@kernel.org>
- <2025061446-wriggle-modulator-f7f3@gregkh>
- <a3a08e5d-bfea-4569-8d13-ed0a42d81b2a@linux.intel.com>
- <2025061546-exile-baggage-c231@gregkh>
- <bcd3848d-54dd-453e-b0b5-91cb72160645@linux.intel.com>
- <6853586e9d366_1f9e10087@dwillia2-xfh.jf.intel.com.notmuch>
- <206ebae8-4e2d-4e04-8872-fa3a56b3e398@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h2mDlk84"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750899592; x=1782435592;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=1g6viRrj9kcWFZzmaCX5ijC1e4JJFvw7EVRPQMaIY6Y=;
+  b=h2mDlk84oweZkJ8WgtwTzxUkUHMne8gofD7EWIkXqewvaqtzQIiY8luS
+   WcxBNKCU8ioC7QF6eicSPyobuLAy5rUNLcN2RGgukBBsw6NU6cv5nTov0
+   3BkaRovwRDNiAVBLf/rE3/gNzbBD+ssv7xILUxcOlYjHeF5l2oMvwe6pC
+   RVoFbsMF1HF97iITcZHQAAv1/ZHewj8pOUNw5VAAu2Rm6pSKj5Ix05H0o
+   vmnEWqwY8qmQ9dcK91qLHpZ/7ni21HSRGzyIWWDppzNvI3QE35LL/sKwh
+   ht6WxmgKVSsLvOcDeZFzHEXZJnSD2yuQaD3ZheeoKnSGh6zfVAZ75jy7O
+   A==;
+X-CSE-ConnectionGUID: 9i7CYKUXQEC3rFaQ1Wdi4g==
+X-CSE-MsgGUID: 9r/layYgSpWJjxfbnajSkQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="55811854"
+X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
+   d="scan'208";a="55811854"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 17:59:51 -0700
+X-CSE-ConnectionGUID: wStyQmh3QfeCPKR9xCo90Q==
+X-CSE-MsgGUID: cmNs/mbfSDKJxwcdoRlxAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
+   d="scan'208";a="151985787"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 25 Jun 2025 17:59:50 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uUaxv-000TaY-2r;
+	Thu, 26 Jun 2025 00:59:47 +0000
+Date: Thu, 26 Jun 2025 08:59:29 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [gustavoars:testing/wfamnae-next20250616 19/19] Warning:
+ drivers/gpu/drm/xlnx/zynqmp_disp.c:103 Excess struct member 'xt' description
+ in 'zynqmp_disp_layer_dma'
+Message-ID: <202506260858.2DTGYCvK-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,31 +64,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <206ebae8-4e2d-4e04-8872-fa3a56b3e398@linux.intel.com>
-X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jun 18, 2025 at 08:33:27PM -0700, Marc Herbert wrote:
-> 2. Are C99 declarations acceptable.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250616
+head:   78f053980ba50a0becae798ab7d07527d97e790d
+commit: 78f053980ba50a0becae798ab7d07527d97e790d [19/19] treewide: Avoid -Wflex-array-member-not-at-end warnings
+config: arm64-randconfig-004-20250626 (https://download.01.org/0day-ci/archive/20250626/202506260858.2DTGYCvK-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project e04c938cc08a90ae60440ce22d072ebc69d67ee8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250626/202506260858.2DTGYCvK-lkp@intel.com/reproduce)
 
-To comment on this one, since I was linked - I'd say there's definite
-pros and cons to C99 declarations to be aware of
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506260858.2DTGYCvK-lkp@intel.com/
 
-pros:
-- not separating the definition and the assignment is better style, and
-  does lead to a reduction in bugs
-- discourages reusing the same variable for multiple purposes, better
-  and more readable code
+All warnings (new ones prefixed by >>):
 
-the big con:
-- they interact badly with gotos, you can get undefined behaviour from
-  using a variable that wasn't actually defined _and the compiler will
-  not warn you_
+>> Warning: drivers/gpu/drm/xlnx/zynqmp_disp.c:103 Excess struct member 'xt' description in 'zynqmp_disp_layer_dma'
 
-So, same issue as __cleanup.
-
-There are no downsides to c99 style for loop declations that I've ever
-seen, and we have seen definite cases where using those would have
-prevented bugs.
-
-But the issue with gotos is worth highlighting. Be careful when using
-them in code that hasn't been converted to __cleanup.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
