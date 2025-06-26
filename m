@@ -1,81 +1,134 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2056.outbound.protection.outlook.com [40.107.244.56])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BD42EF9B1;
-	Thu, 26 Jun 2025 19:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961BA18A6DB;
+	Thu, 26 Jun 2025 19:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750965710; cv=fail; b=qAXLEsVsYIjAL+cHNeKiqXtwuKKRdgM6DKi2/ZiQNpx6qkIBY2XW3mJSwIOss+MQILH16D8jWbGZk/cqD4H9Lld4wnupE6sADERRx/BZHcFggyKfMZttbuL5BQ1ckJ4Anma/QQOMxHrCJWXGeHtCmwsFsu/SGAR5LJ1SnlvtAPU=
+	t=1750965744; cv=fail; b=AAdpFqMypJj/WD/vZN96y7p+RXMxJzbWus9PPXcGjZAnOJ96rF3b28uov/1MHzE2gZq+1fJXLUaWZ4cjVjg3wC1J38WQRwNV8E/dFoCO1p1VeDB3F0tvw+Iw2CXJfAoeCfmjfT/ZkPlyQyq6tDPWKTLDcNNLmqeDvEjG0MXrto8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750965710; c=relaxed/simple;
-	bh=aBkZmy5wQVNGOvKZMfyc0ty2+tW+s6heIv0nexsKxJc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MbuSj+YbQZEsbrh4yAWC7pwzT6tgso8oub2MNFHlBSxd1zl2JsLOu01X1E05Fn5W6y369AIiASDZW64ZpOYao41JP1Fk+7YSAmU6Cf/2n3KpTXU6j56GbnYjuiajBmU9O+MMaEQzGZ1Rjt7YbsI6+D+cfj8+c+IXK/QLI3j2HMM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aZZRAVh/; arc=fail smtp.client-ip=40.107.244.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1750965744; c=relaxed/simple;
+	bh=jGMYuG3hJn+KQcH80HSdFkObKMhlBXDR3l7myXKiD0U=;
+	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=TTe62pf8mf7NMxPKqkYGAXJvXMSuJAPU9IuCHCRqPGG9r7KwbH4Fl0NFAGYUbv5aYQbU7tZ25ySJZCNmkW/3vfPH05OBnIc199e3ni1zRp6lkjoH+Rcr7cg6MsyxfYGm9o3OUV27RN5RVQfVg3Jx1lv7NFWLNxn8Wf7SgnXlgPU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=eSuFc16K; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=pG7to3IA; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aZZRAVh/"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eSuFc16K";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="pG7to3IA"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QFu0fP009471;
+	Thu, 26 Jun 2025 19:22:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=cudb5GFVKR5Ts7THwMUgzeaVV/nPnIa08Z0E3P3cjbo=; b=
+	eSuFc16KXhN4X9Ti+Z0RB2rO3n2g90Hz/XgjNssGeaGFLm5e4tUGDg+Xd3Vq+9wL
+	hX7M+5hF/cA05cD23N8IPecYQ1AhWJwS+CKsTNTPks2sw0taKcK53LnEUb0/hw4L
+	Y+4QMsIILxZjfNQroIyK4zzpb0pYkHLAVbWmstZ+s7d9iHOwjXpBLf5z/k5XKbVi
+	33uT0X/cg/KtxPOAP0wxFTKKYri6MniboOVt73BkfQCd5TqH+UQIvH3h4S57nDJP
+	Wct/5exS671l/9lAUis5IZzWvb4THHTSuBULWbAYg9wdKQPz2qrDPBjjdQUsj1sX
+	3qXNfIXdZO0Uak5pHdz8CA==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47egt7heex-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 26 Jun 2025 19:22:15 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55QJ1CQn018018;
+	Thu, 26 Jun 2025 19:22:14 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11on2069.outbound.protection.outlook.com [40.107.220.69])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47ehw0er1m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 26 Jun 2025 19:22:14 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=d9XKyuGekwkVyxM4erBYQZAVGHMQ8iTgPyy44DI0h2+vB7fCtVnMR1QDAt+Vq0bJp6Lu/4+XIDuDvF0E7CRTlYDLivCATR7eEKzjSPaOLUvMPXiQBWlQsjNh5pntzalqv4A7xE0MxpW0+zNO6gFVzQpCpsdTqJ06Rwh5v/NTyzlyKxOo3i6YlzFLxGWPNQ21m4lqpos3ulzOtWLpi737FlC57AVEBRgex08/LrdUHw0+rpEGuiRucOcj6vJMGZbRFDAXjn7uMcNVI7ARjZo/rCqZm6bw5MS9JnVPj8QENne/dIEsDxogJzQHlrtLT5joLPyToP1A81XK4qRQF+48ig==
+ b=bQTDJEI9ha0MUVZiqipZ23rdzxHq8B7tXBboE8Bj6Wx6/WcB0+cIvRZUVXNkn9I906tPdwNC7XaE0JseE5Saf/c55PV1dCNNQ7fnxmshm/0FGtIGa70gbvEWuectBHu885zx0lxOcRrmVZx43m2PNLaudVIe6BS2r/d2ez9F1nU8AqdHXpSmj0wLzaS19E4hhk3rFO5RS8Xo53gwxGvloTcSGmIejq4vucB+LYwvTGLn1uGoD5V0qPvBQHFN+hH7Eq9DO0R9TliuTzGjUCBpQ14CceE1iK2yiNBx1kGONLG6jGnrTpBqUiKze9tiKZg10IGPwTZrp1PY+sH3TKsmEQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ulD4xeTDK+99jo9tZaLJt5MFZOOQtsIXPBdyjTfcaB4=;
- b=iINZbFjCC3U+sfmzjbCqWwHnHrufeNTQA4dFwDvvw+Vb8N9Wbmo1ooRkWvA06g95xUC9ERxgZ0jM97uED/5j5wdYNct+I5we6CXZ+CeF9PdzikkuAq2qUxft6viV0nQ7XMI4Y3StiWgUs3/0uX7XSFG8Ua/JNhylJ9jA/kVedLFFVM388CdQLYJX5M8AALGbrZIwlgmDfZqJRbSpPQCZKbr03jDigabHAPCBIdttmOQvgECJI/sx5GiTh0+sAC6OISLMfi4vQcBtnrnDmjsOb2IEDDNNtBBZ50xnf2xQk+cgugVo2N3g9L2C1xFmmiL8fzlmvxZYo7k1cIbwhN9+aQ==
+ bh=cudb5GFVKR5Ts7THwMUgzeaVV/nPnIa08Z0E3P3cjbo=;
+ b=WVdGDc0SOepCpYssTUk+Z5etCU1q7eH3FeRZz4q5MEM1/eVhjGSBZLjZUpfY2XxXMv7TW/8NHq1+giBuxEPyKNwq8i918pvlMqc0BSQW9v5GiZ0T7AkP7gprzJjLddBGscz73dBjoRQNFOrWGJ+eYFVYDhEljjj6U4EdVXVoP6c2SmBTdLUrZoce9uzwMaJCGND3yHDlRykapSUTPTJ0w3pXvvTffeJB7f2NVqY1AI3yi9QtfxZVNARAOpa0Nrft0Yv+c0KJsHvkPPUBhoftropw5twMVlLJVFVJrw1iyJGVLDuWJ+ExN9g5x50JLUmp/0btlr1tPYCobzIcn7MDww==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ulD4xeTDK+99jo9tZaLJt5MFZOOQtsIXPBdyjTfcaB4=;
- b=aZZRAVh/J882qTqtONBxQbt1Wk6DUkixkHCtVdiJ4xNHNBHxA5h01D71DDfFi/xu4N1tVmuxHpvtJqIBSein+bJoXEmT4dbTZtARB4nAkUCAYVmCNyj71NkcH5kM/gV/5bPVXLihFKdUBqsCshQbbvknijVa+gkiA697H8dOWTs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16)
- by CY3PR12MB9607.namprd12.prod.outlook.com (2603:10b6:930:103::15) with
+ bh=cudb5GFVKR5Ts7THwMUgzeaVV/nPnIa08Z0E3P3cjbo=;
+ b=pG7to3IAkpys1QXKJJWHzp3Gkz3nfzAHuhipulgGREeaSj6gAyAxw3MylgEfN/QhBNqsRpA3xfyS6HV7TYpC+j7Y1j4Be+5VaXiMbiZTr2xZecBqltfE4s3rdA0mc8/+3kFBYSDrqXNArabt2ZvSQ/SOWps62aLiDnTsZfOXkp8=
+Received: from SN4PR10MB5622.namprd10.prod.outlook.com (2603:10b6:806:209::18)
+ by MW5PR10MB5875.namprd10.prod.outlook.com (2603:10b6:303:191::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Thu, 26 Jun
- 2025 19:21:46 +0000
-Received: from CY5PR12MB6429.namprd12.prod.outlook.com
- ([fe80::1b40:2f7f:a826:3fa0]) by CY5PR12MB6429.namprd12.prod.outlook.com
- ([fe80::1b40:2f7f:a826:3fa0%6]) with mapi id 15.20.8857.026; Thu, 26 Jun 2025
- 19:21:45 +0000
-Message-ID: <4402c585-5cc2-428c-be3f-5f08eb53e97a@amd.com>
-Date: Thu, 26 Jun 2025 15:21:42 -0400
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.21; Thu, 26 Jun
+ 2025 19:22:10 +0000
+Received: from SN4PR10MB5622.namprd10.prod.outlook.com
+ ([fe80::6bce:37ef:d1de:d084]) by SN4PR10MB5622.namprd10.prod.outlook.com
+ ([fe80::6bce:37ef:d1de:d084%7]) with mapi id 15.20.8880.015; Thu, 26 Jun 2025
+ 19:22:10 +0000
+Message-ID: <8ea6276e-5a89-4e8b-a18a-55aa7d007fc4@oracle.com>
+Date: Thu, 26 Jun 2025 21:22:06 +0200
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
-Content-Language: en-GB
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Hao Yao <hao.yao@intel.com>,
- Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
- hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
- dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
- jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com, king.li@amd.com,
- dantony@amd.com, vengutta@amd.com, dongcheng.yan@intel.com,
- jason.z.chen@intel.com, jimmy.su@intel.com, Svetoslav.Stoilov@amd.com,
- Yana.Zheleva@amd.com
-References: <aEygCdk-zEqRwfoF@kekkonen.localdomain>
- <3e8364e8-22e4-42ad-a0f0-017f86fd6bf9@amd.com>
- <20250623120929.GE826@pendragon.ideasonboard.com>
- <aFlU-E_GCHWBXErq@kekkonen.localdomain>
- <20250623134200.GB29597@pendragon.ideasonboard.com>
- <b6425dbe-44e6-47b4-a06b-b9a172a8cac4@amd.com>
- <fb719113-513f-44d9-82ae-63ff6aaca142@amd.com>
- <175093628786.4005407.10292502794888309807@ping.linuxembedded.co.uk>
- <20250626122306.GI8738@pendragon.ideasonboard.com>
- <f59e0cdd-e41a-4865-8f11-9508b598e6b7@amd.com>
- <20250626185647.GA30016@pendragon.ideasonboard.com>
-From: "Nirujogi, Pratap" <pnirujog@amd.com>
-In-Reply-To: <20250626185647.GA30016@pendragon.ideasonboard.com>
+Cc: alexandre.chartre@oracle.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, pbonzini@redhat.com, xiaoyao.li@intel.com,
+        x86@kernel.org, konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH] kvm/x86: ARCH_CAPABILITIES should not be advertised on
+ AMD
+To: Sean Christopherson <seanjc@google.com>
+References: <20250626125720.3132623-1-alexandre.chartre@oracle.com>
+ <aF1S2EIJWN47zLDG@google.com>
+Content-Language: en-US
+From: Alexandre Chartre <alexandre.chartre@oracle.com>
+Autocrypt: addr=alexandre.chartre@oracle.com; keydata=
+ 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
+ swLliy6PdpST
+In-Reply-To: <aF1S2EIJWN47zLDG@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YT4P288CA0020.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:b01:d4::19) To CY5PR12MB6429.namprd12.prod.outlook.com
- (2603:10b6:930:3b::16)
+X-ClientProxiedBy: AS4PR09CA0029.eurprd09.prod.outlook.com
+ (2603:10a6:20b:5d4::18) To SN4PR10MB5622.namprd10.prod.outlook.com
+ (2603:10b6:806:209::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,239 +136,223 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6429:EE_|CY3PR12MB9607:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8c0da79c-9b5c-4640-1af2-08ddb4e6b060
+X-MS-TrafficTypeDiagnostic: SN4PR10MB5622:EE_|MW5PR10MB5875:EE_
+X-MS-Office365-Filtering-Correlation-Id: f8fb2520-b9e4-4ab7-0608-08ddb4e6bf59
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|10070799003|1800799024|366016|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RHlpMXN6UXZnRFhsaFZuWTQvQkRSL28yWUNEN1FGSFkzclNlbGJHcHcxeWQ5?=
- =?utf-8?B?RXl2VzBDVlB2Z3RuNnY0SUxDd1pHY0NJUkZ0dkFPMXppZ0xGd1BVMDNHWmhq?=
- =?utf-8?B?RjE3YytiVDFEdGdyRFJKTVZ4M1F0cDdPK21PNW1pMmthMUVEckJQK1MxT0di?=
- =?utf-8?B?NnpUTSt2K0FmdkZGWjhYUVRkbGdRUkkzS05oQnc1ZGdqcUtvNXFIZkRUd0RY?=
- =?utf-8?B?OS9peDlLd0FXYWtnM2QrZ3Z3OGdZUjhuU2h5STM5WGVOOUZJR2VRaDNmWmV3?=
- =?utf-8?B?OU5TcjhJRUJUa0dYNmc4QzZXbXNYdFM0dGNYbkUvRU1RcUZzc2RWSnVicTN0?=
- =?utf-8?B?bFpsbUJhVEQ5aDhnT3F1UG1lcDlpUisxUkV1WmVGU2R4ZzQvdXJCK2xGZDVI?=
- =?utf-8?B?c001QWtmZGFxeVdyblNZVzh6RjVmcDh3ZVBTcEkxMVd1UTlNTUlVTEhiL25w?=
- =?utf-8?B?ZHgvVEsrWWZkTzZ5d2wwSW41WTNvU2I3bnRYQ1pMZjVqSUE5WTY2cndSV1dt?=
- =?utf-8?B?RTBBNm5NZTN0MWJNUG40a3pEUjRodUM4Wm1yb3ZaVVgzbmVyUlBsOFFFbmM5?=
- =?utf-8?B?dnlPVzZPNlpaU0hoK0g3dlhXdXRXLzZTd3UyQ3JUaVEvN3dzUExWcTFjOWdu?=
- =?utf-8?B?WWEveHZ2bDI1Q0dBNTJxd2s2eHdnUklZQTZmOHl3S1VBUkROQmZLZWNxQ00w?=
- =?utf-8?B?bTlFRGo5aHh0Rjlucmw0MWdTaEE3MlpyeGlyMGxycnljajNweVZ0UWN3dlAr?=
- =?utf-8?B?Z25aOVZnU1F0Y3UvaXNHWU5qNDNERVdLdzdOUjUwMHM5N1JFQkhORHlKRlpV?=
- =?utf-8?B?MDhnQXJHYnlhS3BTcWZsQWZOdmVVQWJZMHE3NVQrS3JzbzRERmI0RVNHdUo2?=
- =?utf-8?B?NUNGdlJyWmV2UVFxY1V0V2Z6VWlYdGdUNmRYejY0U3BCTjM5aitsejZnbHk5?=
- =?utf-8?B?YWo4Q29SMTlRNEpSeERscEJqaGZuaWF3cU5OK2toSGtyRDVrZWh3UUdVUUlj?=
- =?utf-8?B?NmR4Z3BwaDhLQXczQjJPMld6aitUa2s0ZjRvb3JKMk1oUmgwM1RqSkdYalJw?=
- =?utf-8?B?UnJnSVkveVE2ZnBQVDB4TXo4dDZSekhZY25SNm9uTUdzcERXZVFjVWUzUElK?=
- =?utf-8?B?OW5qYXZUTTl3aGVBQ1d0eVlXdnJGWUlTdTVtYjBUSk4xdXBQQTFNVVBwM1ZR?=
- =?utf-8?B?UVR4MkdWYmNaT0lrQ3dCYnJBRGtWKy9EdzJFUUE2R0FTdCt3cjhnTUpJNTF5?=
- =?utf-8?B?SE13QzF6anNFY1NCZEVNZlhHWUVZVzRMVGQzZ2JISFNPVkp2Q0NXNEdmb2k5?=
- =?utf-8?B?QnJIdjJUWGhjSGs3YldqazRFSFVUZTdQUGovYkFIQWFnTkluL09BZVIvSVFV?=
- =?utf-8?B?eVVTRFc0MW5qVzhCYnpvL3ZjbFAyRHhncU1QZUJNR2JOQzdzTU4vT0hiS2pt?=
- =?utf-8?B?Q3lzTXZxaUs1YW9ZWjdWSGd6cTdmVXJpWE1aYm5EQlhacXU5SVd5WXJzNVJ3?=
- =?utf-8?B?eUk5TTB2aEtBSUpKMjg4L3hkZkU3SjJQU0trR0xlUkZXT0VHMW9HcEJZa3hr?=
- =?utf-8?B?d1VzMGViZ1d6MzVoQzZxZ3h3Y0R6STk0aDRENVRTcnlMRFVKUUtNSXpPSE9I?=
- =?utf-8?B?L3hWS2JQdytITjFWVm9MSkpqWi9MMVg2SENJaG1sb0VkeUhEQ0h6dlhZclBY?=
- =?utf-8?B?Y0RWM0FWek5vT0UxZVFxQmRGYlFzeDVSRTgrNFF5M2VRKzV6eXo1V1BLOXQw?=
- =?utf-8?B?TEordUlNcmVJbUVuQUludm84ZjhQVG9sVllFQWl3RCtTdXJzaXZkdkFhcVdM?=
- =?utf-8?B?TGZxTFFXc1hzL0FSQkV0cFY2UEY4S1IxY21KQnRiSDk4eG9rVTJ4d09OVFFZ?=
- =?utf-8?B?aXhxVHI1dDgwY1hjbzY2cUJzQ1lLL3JPK21wTHVnbVpucU1teG1ySkdLUUpx?=
- =?utf-8?Q?37dXiuoLlaQ=3D?=
+	=?utf-8?B?bXU3ZFdKVWFkQ3MySDRrd1hwS2VoRFYrTjh0cEtXNC9iTzNYK2xEajd0QzRG?=
+ =?utf-8?B?S0ZkSSs2dVpBYm5ya0c1bmNHeG96bm9vS01HekR6TXZ3NXJtWTcwN0NUZXZi?=
+ =?utf-8?B?VUhVMFlSbTM4bWVvZEdPVzljbUtNRGI2RmQ1NkgySmpwdWtoTWdOK0JFa2ds?=
+ =?utf-8?B?KzlxcUJSWk1PVFQ1clJleWovRnI1emptc2k2emo4aTNtVFQ0aFNScWFWQ0V3?=
+ =?utf-8?B?cXIwZ3BMVGVMQlFURy9EUTFnNExTNVNZQmRsdGVUUVR1aThOWXdnN1Evc3l6?=
+ =?utf-8?B?bEFoTXBtaHFJWUNxTU5xaFpMZzJ6Q3pXTzRGalcwWitOWWNDV3ZYWUJyVk40?=
+ =?utf-8?B?dlpnZ3JZRjh3WjlxNzFuaFVoRU9DMUpUUUNzT2x2RGxHOEFTRjhGaEhQZ0dN?=
+ =?utf-8?B?MFFCUmtLdDl1U1FkcXhMYTlCRWxqNFZwUVRtVWNybFlUVzlxZXMwSDBLajA2?=
+ =?utf-8?B?ekwvMHBIQ0xMNHcySHh3U1hTc3RqN1hVSmpKMWNkVksveEVwWWVlRHlROU9t?=
+ =?utf-8?B?TUY5VDE5RGZ4VGEvTVVkYlZPVy9yYnNrNlA1WEpQQkFzdWNBc3BiSnVPenlH?=
+ =?utf-8?B?MWlDSFJyTUJSYUNvcFdYb1FENThEZkFEelFmSDlTdTdVK05iSDgySlUrUGZW?=
+ =?utf-8?B?VEhGM1VId0dFR2grWkhjRDdPY3ZldFVSQzloSnZJNUJ6WG9VUGZGWlVaWGVq?=
+ =?utf-8?B?TmxNMURienVwSFNXN0RBVFNKcm9IMXZadTlwelFLYjMwMlBnVE1rSk1VY0dR?=
+ =?utf-8?B?QWdlRGUxemI3YVI5L3J0YWFXdkNSa0dRMkp1Y0w1TlpJRmd1V2dNZlk5U01l?=
+ =?utf-8?B?K2NSV2RERkV6MkZzdjR4V2ZSTG1vYUNkNDkyajNnSEJIdU1Mb3RDN0R1SGk0?=
+ =?utf-8?B?MHZrdWFVVkNOM1RuQWdZaVRmREgwaEVOUjNrM1N0NmtBTnJwaUdvUlRtYm5Z?=
+ =?utf-8?B?RUd4aUtaemZLZUt0WXJrcjN4VzdMQ2p5K0Vla0w5VTRBMlZxWW5ncTVzc0tx?=
+ =?utf-8?B?VExoQ2pFc2NKZHA3aXlxRmJabHVuVDlyWSt1WjkxaGlhQ1pkQ1dEY3ZQMFMx?=
+ =?utf-8?B?dUdXTHc3QmpqZTNtUTU0V21aajRXZzhpOGVZdHUvYmprTnFYZit2cGZWbUQr?=
+ =?utf-8?B?ZlY5Qy9wM1p2SG9lS1hCSkMxeWhVSHlxaXNOTVJNSUtSQWVBbFNSWDc5VGww?=
+ =?utf-8?B?ME5sanhSNlRSaUZQZ1lFY0NxOGE0aEI2NVprOFZHczJpSFVwUXFiaFE5QWhY?=
+ =?utf-8?B?WjV6UTdZd29XeFljRnZsczk3K0lnUXE0cXVTUktlcHk5R21WU1JyL0xROW9v?=
+ =?utf-8?B?anlQbHF3Yjg1SnRkTEw4d0pvK296QmRyVUlGamxvZjF4YjBkSkZpaVcwaDQ3?=
+ =?utf-8?B?S0RrRGwyUmN6MUdHOEJGMnRvMk9YZTZCVldDdE5TZEUrRkJKaXRaWmVCNkxJ?=
+ =?utf-8?B?aEVSUkllellCN0o3L1Z0QmFKZTBsTlMySGNOYjNHVjRKWmF0UklSaGd0ak1H?=
+ =?utf-8?B?Z1I4UDh1T3AwZXlSZ3pyNzR0c1RUNEk3UzMvSk5IVG9XQVlKaUtSaXcwWmJr?=
+ =?utf-8?B?TFU0MzJnQi9KcTMrTnh0Zm5qbjlDdU1iOVJYNFBIQTZXT3NNeUJ6dTNNZ1E2?=
+ =?utf-8?B?ZGMxYzdvS0dOdHE0RDlCMHA0SGpXOG5JOHQraHhaeXZQQ25HQklCLzY5ZFFT?=
+ =?utf-8?B?WU9WQlZmZEQydjlvQkIrS0o1MUNWK0VXMTVFS2cybDl4OHNTbmpEelNRRldM?=
+ =?utf-8?B?MGg1MFQ3VWhWNDhZMDZIN3lPTFh3YjEveHBwazBSRVcxYlRqS3ROeG4vK1hw?=
+ =?utf-8?B?cFErZHFYc0NvbUNSTlJVa2RGcW5MdThNUVBGZXNIclhtVGJhYW1ydFA1cnIx?=
+ =?utf-8?B?cUF5elhsSmUreGNXZUFIM2t1K1FwWlFCMFkwWGpUbWdVT1hiQ3ZjZUJyTkZm?=
+ =?utf-8?Q?3c6LlpjwCSU=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6429.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR10MB5622.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cGxCMUp6OFlKTC8velYzYVZETlhCc1gzMTNNYUo0SEFCZW5HNGJiSnNXMzYv?=
- =?utf-8?B?NXdxUldkZzlTRkdRSE5WQWcydGN0MzRDM21mWWQyN0tVaEtsbDVMNVdqMDdv?=
- =?utf-8?B?ZDNXajdNWTNzTy9oRkdBTUhmVXhZbEhjVlRzWmxsbHBDV2c2ZUpZMloxNC93?=
- =?utf-8?B?SUc3RTdtdGNmaStCVm56d0o3OStiUVdHZUtqbGE3RFNDYTFCblZVczlzcDVs?=
- =?utf-8?B?NHVRZ21oMmhIVDB3NHh4eFdPQUNaSHpKWFplclFsTjltNGVMN1VOdGRpcVZk?=
- =?utf-8?B?SkxCYk5aL080MXRmdk9mYnZNMHpLbHpOZkt2cHdNRFg3MDRsZmhXWUMvT2wx?=
- =?utf-8?B?dkxNVGVCMkp1eWxmSkVxc3VYOUlMWlVvZ05UV1VaSjQ5VUNDNHBEZ0xCQmdN?=
- =?utf-8?B?ZytWQjJhd0srSWJTdUlCSld2TnlYUytXU05UVVBhTFdTaXh0Qm5MRnJVUVB4?=
- =?utf-8?B?T0IwSzFyVS9JdE1VRkRCSmlmYnF4MjJHS0hqcUtFaW43akpqWG9GSC9xbmY3?=
- =?utf-8?B?VGM0TXhzaWdjN0RoUEJJRmxzcEYwOGxyTjBFb1Y5V2NuNGRCQ0lnam04Z1BU?=
- =?utf-8?B?eDNZUlVFZGFRSkxQS3NuUlprakpheE9ESWg1YzdJek54TWh5cy8ybEZGWkth?=
- =?utf-8?B?UjQrSjNubFk0WFVVYUVFQlF0a0sxTXVLZ2ViRWtBOEFWVmRFekdBTDN1SFlr?=
- =?utf-8?B?K2I4QSt0MlFvSTBOanBXTkRsWXhNWElUbnhtc0VaeXMzWlMwNzJmakNRd280?=
- =?utf-8?B?R3pMaXVWOXNFMURCTWV5aWxZMnJhcGF2azllTjZJYm9GNVgwMWVrdHpwbXFU?=
- =?utf-8?B?MmFiekg4TUM5Nkk2NHZFd1NteFU4TTBRdFVPcmNXRWl6eTBac3lKbXBoS2lM?=
- =?utf-8?B?SGJvUXU2ZWJpeFVRLzNhNm1Fd3F2UVFya3BaSmlHT3llYlcraFlBSkVyTHRt?=
- =?utf-8?B?em9tYWQrcC9DQlVtem1lL3R1UDk0aTBWMFFXcklscnRoZXAydVNaSVE4aTM4?=
- =?utf-8?B?UmprcGxQdVh0dDR0ZlFLaEt5MzNhWm1JU2dNemM0SW9lZXpWTlJsRTR3bXJS?=
- =?utf-8?B?V2xKR0RMK3h4UnNCa2VHVEVUT2lrMTlvMHc3MkZORWRBelNvNzFMbisrR2Zp?=
- =?utf-8?B?ZWRxdktTamFFalFqcUlhKzRCYjN0KzlYL2Y4VWVDTVNQc3Bsb2p6Wmo5R2Rn?=
- =?utf-8?B?MFNZenp4NlUyWE5ocEFCMkZhSFphZFhjL0FDdVFmNXVNOGRhQklRV1ZJOGxq?=
- =?utf-8?B?K2Z4dW00OWxDckl3V2FUUVViMkFzZDNxM0oyVnR2bVhVTlZUWkxLNS9VQTg3?=
- =?utf-8?B?ZnhHQVdTb1UzL1VzZWNzU0hIWTBuOTlOcTB3SG41ZVQwQVVOM0svdEJzdkF2?=
- =?utf-8?B?UWpWZTRHNVNsTW1sb001bGRHZXFoUkpIcEFVZFR4bDhtN3R5Mk50MFJkU0xP?=
- =?utf-8?B?R2pXVFE2M1RjTXpjcmwwSlRMZmNiNHpVdTNaNjc1RFhkd256RkxjM2FPK2R1?=
- =?utf-8?B?bWt2K0dHSTRpYlhIbWR6QjZPMVBvcnlYVjNyR0pFNmwwNWtOaE9kdVk5YWlX?=
- =?utf-8?B?SjhLc2tKSHMyVjlwTWxQVnRyK1I2SXFwRjdndWdnMGg1TnJEZFVvY2hua053?=
- =?utf-8?B?bUZXYWNnd0gzbmk5SEhTTFNYbDRJcW5pOTdKazlUYmRnY3U5bk9uZmwxRWFy?=
- =?utf-8?B?MjRhL2pJS3VBbHdDSThVeTF5WmhSbjRBam51UWs2aDVReFFRUm1adlpGNEw2?=
- =?utf-8?B?WmMvUEx5U1FsUWJCekRWd1d2UmdiSGRNT05hQVRZc2Nudm05Y1dpK3ozVzZm?=
- =?utf-8?B?ZHhmNnkzbkpHVVdzS1AzeVZyeWdESThUM0V6S0xuZHlZUWk3bFdITS9EZ0hN?=
- =?utf-8?B?MnM3STdWNlQwc0djYzhpM1FyYTUvZzFZcVJQRXNTOWNwVS9Id2VCblc1aG5I?=
- =?utf-8?B?M1g2MUdHck52YUdTc0V4THJhU3hlalBvdUJiWGt3TWh3WVhuMVE0a1RPWktM?=
- =?utf-8?B?Y1pJaTVYNk9uTXNUd1IyS0l3VTZOM2FqVC9FQVdKRENIUXo4RTAxeW52SlZR?=
- =?utf-8?B?TVNBWm90WU05L3VJNU5pejJjS04zRTkwNkZSQTQvR015U1JXV01aVmxOV0Nx?=
- =?utf-8?Q?Hsz7Qmra2Y0xzbgmPRAKsqKU1?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c0da79c-9b5c-4640-1af2-08ddb4e6b060
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6429.namprd12.prod.outlook.com
+	=?utf-8?B?NUFPeWErd21NSEM0UGlnNmRHaEpCYUo5VHhoYjFDMmlDSy9DSUMrMVBDOGJp?=
+ =?utf-8?B?SytRbGNIbHFtOEdpM3ozQlJUd2tpR3R6alRmSVU2bWN1QWRSRmM5anRvS09G?=
+ =?utf-8?B?MDVxV2ZDNXJYN3VlL0lvWGtYaUlNVUhOTTB3Z0YyNkJMaDQ0dk5oakQ3citB?=
+ =?utf-8?B?NVZvWDJ1SWhjQmRFSGtVcXVNNlc5WWpEWTdXa2xxQXdKRGFQVmxTUS91SHRi?=
+ =?utf-8?B?SUhuZThKZ2lFOXNjUzRISjQrRHlkVWJOWVRNeklyVE9XWnJlazcramVtUFVY?=
+ =?utf-8?B?bzR6SXg1REUyd2R0NEdPcHkwQzBNVzkybzZpbWo3bC9ZeW5TUittdU1EYUdu?=
+ =?utf-8?B?VUozKzFzZGN5UnE1dXcyL2QyYTY1SEFsTWtnUGJCb3hBeXNIdkRrTkd2bEtB?=
+ =?utf-8?B?VFlMODJoa1B3QkN5elE5aGlseWlmbnlCNHdWVld0MVV4aEdFNVRHSHBIM2tS?=
+ =?utf-8?B?ZThPRHlKUlh2OE1PQmpIT1hVcVJTMTd3dXhtZzVLK0Y4b2hMVkxwUis1RUlQ?=
+ =?utf-8?B?Y3pKUXlGQjRYZlJ3b3phbDY4cXRxT0ZnT2MzZ1RQYTZqRjJEOHhWWFVMTTdy?=
+ =?utf-8?B?OGhpRmJqNzBtR2lLSlM0STdQY0hMd1ArNzluMU96eVBrKy9Fd2tSZlEzUllz?=
+ =?utf-8?B?WlVpbkVhNzRPb2VsYllVa3BrUm1oaldHb3ZMTUtsclo3SENyclkvZkR3RGhl?=
+ =?utf-8?B?R0loYysvZTR5U1lkckFoN3VkOXdUWHZNU3d4eEMvbnBKTkZmTGZlSWJ4eEtW?=
+ =?utf-8?B?S25mYUdKOHdzeVg3TWovOFlLTGVXSTJISXVma2VSNkVOcjZzZlA3Z3Z0aXgw?=
+ =?utf-8?B?TlJmT0VIOXhPRzVyMURlZ05ubkxpSGxwVTVDQ0tFVXFXK2h2eWxvVDVTMjRJ?=
+ =?utf-8?B?ZlprNjcrd0hYWVpIZEwrQVFtYWZieVMreHFKNlBtUEtYamtuSk9uVUZtL05I?=
+ =?utf-8?B?a0N3aGcwM0ZpRXJJSjN4QVFMZWpBV2JOUThWWkZRaEppNmxEejJDMEE0T0M0?=
+ =?utf-8?B?WlBzRE5jNzgzQnJpZlRVbkFXaFI2VU1BSDArUTB4Tm9vTlBUSzdQK1QzbXFz?=
+ =?utf-8?B?VUE3UVlrRkR1UElvZE5kNjVHK21wV2dzaWM4N2JsMElaeHlJcDFuMkJIVVU2?=
+ =?utf-8?B?THdyVzhFbjNHZnhQMkdJamVDdENlWnI3ZVdZMit1REk3RVZkVU0zaDh5Qnhj?=
+ =?utf-8?B?NzVDcitvaW9HZEFuTHVORUV2OHFTakxSejhzZzFWYXpRSWpFdFdhcDhMNjBK?=
+ =?utf-8?B?N29weEcxM09UYjN6NmhqT0hHdVJNTExqb2g0ak5oV1JncWNPVURIa2ZzbDRH?=
+ =?utf-8?B?NWVhZmEvMmVQRjRMWWVTODZHMmRaandLa3lOTDNqWXlxWCsvSVI5aEZ0eVFr?=
+ =?utf-8?B?SVhOWE1jNjdBZVRiZ1M2S0htaG1UUE5SZTRYcHVXbUYvU0J5QTNZdVEyTG9E?=
+ =?utf-8?B?L3FaRkxoRWNmRjV1RE8yV1BWdGd4a3NpYzVIaFRmK1J2QWdSWEZjdjhNYUh5?=
+ =?utf-8?B?eDBuR1hMV3p4OU1ITG1wOFgvYUt5ZnF5dlI0amFtTW5tbjhEK09zT05meDND?=
+ =?utf-8?B?WGxSVVpmYmpYdDk5MWlMVnRPKzh1T1VWYUpKaWhURzhvMUVybU1TVEd6NTdP?=
+ =?utf-8?B?UW1SY2hhQURYZ1UwNlRaV00zWkl3V1BTTlAxWDRPcU1CK0tWeHNkVitrZmJr?=
+ =?utf-8?B?UzFzQXB1eDljcnNhZGxoMnFLNUM2WlQvbEd4aTJCcTlNRE1wS2dUQjErVVVo?=
+ =?utf-8?B?dDBNY2MvbGEvTU8xSU1mR1lnUnlyQVVxS2llMHQ3M21lUWdsaUFtYVJqZ0M4?=
+ =?utf-8?B?ME5Td2ZDaCt6aHVzRGZ3Ulg0dWNRd1FaMmdOc2tOZEFjcnpkUzNJM0RYUUlm?=
+ =?utf-8?B?UTJXSjNtQTJ2YUtQbkhjeW9Fcnl3blBzeFFSYkxJa3NaK3pXRkdDUTlIMks2?=
+ =?utf-8?B?RFdXdkVuTlVQR3ZwMURmS1pSNFRYRWt5MzQ4WnBTcFlmS3A1VmUxMGhMNHlQ?=
+ =?utf-8?B?YUF6K3ZsQ1NvS2kyNTM5NjhpQ2hPTlFVU3FaQW9uOWRCQU9OTG1xRjl3SHVp?=
+ =?utf-8?B?eVRLVzRZUzZXYVlsQ2tYVUpERDdSdUpDdGFjSXpZa1NrWXdCVUZBdExIRmRa?=
+ =?utf-8?B?K1I5SmZEVlpkclJoR3pkSXR5aFlmZ0UxN0pJcDJlQUxRdTdHVjhvL05hbE4x?=
+ =?utf-8?B?aWJqbVIwc0J0MFBjYjRIaHhXN1h2c0M0a0FkZmxoeHlqTG5PRXNNTlhOYTd3?=
+ =?utf-8?B?ci9BUjRQYTFPdGlIRnI2bHFCeDVnPT0=?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	32khzB50yx6z2Xq9Sq3BwktOID0LDjO0icAyJn0VvA0gP6qgK/+2wmLRP2feCqFDSgqb4Ccv2y/NbQu+MG7JMIk5noXJKHQ9TOsZdmzjMdQVcViJGjJ+QipPrAdrFWxAgrMzUuEJKX74CCxUYX2f67tIjacAawAn+/VlWj/2OXIEeOACbGC+ROqLoPU/QgmmvFAD+jAAkPiJqRrmYQjfB39y3tUXXSrubtyutifPWrdgMYvIliTecu8X0uBliNWIFrjSdP6qv6Z6LfrfSLZeYljjsM8bpeqk43AUvSEiJPFDfkDGqoL7G9U1vxmvdq/GdoRhFq7vO4qcqdDGxcUkIy+skHfRgA35Sl/cFvCbt9VDnb0ZprAiaEO3qmFa5dyo3tLQkN0Y0Ci4tfeJsBaXdbFU3Gg6A+4Ag0MyGKv1DneXBpmIYMNEctjP3SLxq2j0rBrA59LEqoSi5pVUndCjpvxUFH+collTpHyteWxx2jKB0oelInt0Atco8VI49K4aRj/dCp8frNgaCowtgE7DTiCORaahzHaY42JtjvUKfvU99A9YhjR6K38J0tojEJKHNUpusU7Ggmr52uSmuERiXIqY3vInergqa3cP0kTzvY4=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8fb2520-b9e4-4ab7-0608-08ddb4e6bf59
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR10MB5622.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 19:21:45.2857
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 19:22:10.4762
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZeTJi28o+kVg/DIIR1It8aTmoKfmqq/wNFxSZwpgyvs478fcLogUlHaztj6ncjSdyW/fLjK5tYQTiTcX1ircpA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9607
+X-MS-Exchange-CrossTenant-UserPrincipalName: qTUMYPXhALpt84PgT9kfuezhMk8MVfJ9ONK1dBDmSfjvSqbr099+T1OkpcvabEJ0XwCxWxFJL5p6xtC/2G8n5csI8qH7vNHBLDsAg11v+nQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR10MB5875
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_06,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 spamscore=0
+ phishscore=0 adultscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506260164
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDE2NCBTYWx0ZWRfX07phhGJUoYfp T4slW3FkP8ZVkFv9hAlV5HTauJaM28ogDMmpeKlmoo2KXFLC17aZkASbqe7lRePrsD+qxodfWzd XY2M+Mymaz8UajUP7p+VzquMq2Ls5fCgnuXXCz5Qo4Q0LlS2X4tdfy8zbbDYHI2/lrkQOUTyckP
+ v3s2Zkscq1V5As3bbqE6woNZIAyK1271yXsoqAo2HSg++QD16Ay63C1ogp+EENVI/6SBx7/mTzb unjXUbg1h4RWcmDcV20urcinejfQTGanU7sJwVCHQ3ROoOxhc6A/ffFoe6trDDA/FZV/LCpfMKb 0jDSgZgB8xN7tbqe4PsXefEOZjGP4WeoJGEluiW60gSYBU1uJCMKN0F8WzERtPli2RyfCe7toyR
+ PCdbWRoU+iMf35xYthThV/xD87TqlQxueJWGGUQUTucpU+ORiCQK9oQ7z+xkCvr0bHRXTfq2
+X-Proofpoint-GUID: -97sXIdkq7RfneUb4R66f6jzb6qcsa2O
+X-Authority-Analysis: v=2.4 cv=QNpoRhLL c=1 sm=1 tr=0 ts=685d9de7 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=yPCof4ZbAAAA:8 a=QH-YIIke1X8NFttTr18A:9 a=QEXdDO2ut3YA:10 cc=ntf awl=host:14723
+X-Proofpoint-ORIG-GUID: -97sXIdkq7RfneUb4R66f6jzb6qcsa2O
 
 
-
-On 6/26/2025 2:56 PM, Laurent Pinchart wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+On 6/26/25 16:02, Sean Christopherson wrote:
+> +Jim
 > 
+> For the scope, "KVM: x86:"
 > 
-> On Thu, Jun 26, 2025 at 02:22:00PM -0400, Nirujogi, Pratap wrote:
->> On 6/26/2025 8:23 AM, Laurent Pinchart wrote:
->>> On Thu, Jun 26, 2025 at 12:11:27PM +0100, Kieran Bingham wrote:
->>>> Quoting Nirujogi, Pratap (2025-06-25 23:06:01)
->>>>> Hi Sakari, Hi Laurent,
->>>>>
->>>>> On 6/23/2025 5:55 PM, Nirujogi, Pratap wrote:
->>>>> [...]
->>>>>>>>> I think it can live in the driver for now. Given that the device uses
->>>>>>>>> only 8 bits of register address, I would store the page number in bits
->>>>>>>>> 15:8 instead of bits 31:24, as the CCI helpers do not make bits 27:24
->>>>>>>>> available for driver-specific purpose.
->>>>>>>>
->>>>>>>> I'd use the CCI private bits, the driver uses page numbers up to 4 so 4
->>>>>>>> bits are plenty for that. If we add pages to CCI later, this may be
->>>>>>>> refactored then.
->>>>>>>
->>>>>>> That works too.
->>>>>>>
->>>>>> Thanks for your support. We will add the page number in the register
->>>>>> address 15:8 or 11:8 and will update the implementation accordingly in
->>>>>> the next version.
->>>>>>
->>>>> I would like to share the approach we are taking to implement the CCI
->>>>> helpers that support page value. Could you please review the steps and
->>>>> let us know if they make sense or if any adjustments are needed?
->>>>>
->>>>> 1: Add new macros to embed page value into the register address.
->>>>>
->>>>> Ex:
->>>>> #define CCI_PAGE_REG8(x, p)             ((1 << CCI_REG_WIDTH_SHIFT) | (p <<
->>>>> CCI_REG_PRIVATE_SHIFT) | (x))
->>>>> #define CCI_PAGE_REG16(x, p)            ((2 << CCI_REG_WIDTH_SHIFT) | (p <<
->>>>> CCI_REG_PRIVATE_SHIFT) | (x))
->>>>>
->>>>> 2: Create V4L2 CCI context. Initialize page control reg, current_page,
->>>>> regmap etc.
->>>>>
->>>>> Ex:
->>>>> struct v4l2_cci_ctx {
->>>>>           struct mutex lock;
->>>>>           struct regmap *map;
->>>>>           s16 current_page;
->>>>>           u8 page_ctrl_reg;
->>>>> }
->>>>>
->>>>> 3: Introduce new CCI helpers - cci_pwrite() and cci_pread() to handle
->>>>> register read-writes updating the page control register as necessary.
->>>>
->>>> Out of curiosity - but couldn't the existing cci_write and cci_read
->>>> already be used by the users - and then the default behaviour is that
->>>> the page isn't modified if there is no page_ctrl_reg - and by default
->>>> CCI_REG() will simply have (initilised) as page 0 - so the pages will
->>>> never change on those calls?
->>>>
->>>> Then the users can indeed define
->>>>
->>>> #define TEST_PATTERN_PAGE 5
->>>> #define TEST_PATTERN_COLOUR_BARS BIT(3)
->>>>
->>>> #define MY_TEST_PATTERN_REG CCI_PAGE_REG8(0x33, TEST_PATTERN_PAGE)
->>>>
->>>> and can call
->>>>    cci_write(regmap, MY_TEST_PATTERN_REG, TEST_PATTERN_COLOUR_BARS, &ret);
->>>>
->>>> with everything handled transparently ?
->>>>
->>>>
->>>> Or do you envisage more complications with the types of pages that might
->>>> be supportable ?
->>>>
->>>> (I perfectly understand if I'm wishing for an unreachable utopia -
->>>> because I haven't considered something implicit about the page handling
->>>> that I haven't yet used :D)
->>>
->>> I don't think we should implement page support in the CCI helpers
->>> themselves yet. We have too few drivers to look at to understand the
->>> requirements. Instead, I would store the page number in the driver
->>> private bits of the 32-bit address (that's bits 31:28), and add wrappers
->>> around cci_read() and cci_write() to the OV05C10 driver that handles the
->>> page configuration.
->>>
->>> Once we'll have multiple drivers doing the same, it will be easier to
->>> see what requirements they share, and move the feature to the CCI
->>> helpers.
+> On Thu, Jun 26, 2025, Alexandre Chartre wrote:
+>> KVM emulates the ARCH_CAPABILITIES on x86 for both vmx and svm.
+>> However the IA32_ARCH_CAPABILITIES MSR is an Intel-specific MSR
+>> so it makes no sense to emulate it on AMD.
 >>
->> Thanks for clarifying. I agree it would be simple and safer approach too
->> to handle this way. We will add the following macros in v4l2-cci.h and
+>> The AMD documentation specifies that this MSR is not defined on
+>> the AMD architecture. So emulating this MSR on AMD can even cause
+>> issues (like Windows BSOD) as the guest OS might not expect this
+>> MSR to exist on such architecture.
+>>
+>> Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+>> ---
+>>
+>> A similar patch was submitted some years ago but it looks like it felt
+>> through the cracks:
+>> https://lore.kernel.org/kvm/20190307093143.77182-1-xiaoyao.li@linux.intel.com/
 > 
-> Please add the macros to the driver instead, not to v4l2-cci.h. Once
-> multiple drivers will implement a similar mechanism we can study how to
-> generalize it.
+> It didn't fall through the cracks, we deliberately elected to emulate the MSR in
+> common code so that KVM's advertised CPUID support would match KVM's emulation.
 > 
-Thanks Laurent. That makes it even easier - all changes can be included 
-in the same patch. Its clear now, we will finalize the changes and work 
-toward submitting v4.
+>    On Thu, 2019-03-07 at 19:15 +0100, Paolo Bonzini wrote:
+>    > On 07/03/19 18:37, Sean Christopherson wrote:
+>    > > On Thu, Mar 07, 2019 at 05:31:43PM +0800, Xiaoyao Li wrote:
+>    > > > At present, we report F(ARCH_CAPABILITIES) for x86 arch(both vmx and svm)
+>    > > > unconditionally, but we only emulate this MSR in vmx. It will cause #GP
+>    > > > while guest kernel rdmsr(MSR_IA32_ARCH_CAPABILITIES) in an AMD host.
+>    > > >
+>    > > > Since MSR IA32_ARCH_CAPABILITIES is an intel-specific MSR, it makes no
+>    > > > sense to emulate it in svm. Thus this patch chooses to only emulate it
+>    > > > for vmx, and moves the related handling to vmx related files.
+>    > >
+>    > > What about emulating the MSR on an AMD host for testing purpsoes?  It
+>    > > might be a useful way for someone without Intel hardware to test spectre
+>    > > related flows.
+>    > >
+>    > > In other words, an alternative to restricting emulation of the MSR to
+>    > > Intel CPUS would be to move MSR_IA32_ARCH_CAPABILITIES handling into
+>    > > kvm_{get,set}_msr_common().  Guest access to MSR_IA32_ARCH_CAPABILITIES
+>    > > is gated by X86_FEATURE_ARCH_CAPABILITIES in the guest's CPUID, e.g.
+>    > > RDMSR will naturally #GP fault if userspace passes through the host's
+>    > > CPUID on a non-Intel system.
+>    >
+>    > This is also better because it wouldn't change the guest ABI for AMD
+>    > processors.  Dropping CPUID flags is generally not a good idea.
+>    >
+>    > Paolo
+> 
+> I don't necessarily disagree about emulating ARCH_CAPABILITIES being pointless,
+> but Paolo's point about not changing ABI for existing setups still stands.  This
+> has been KVM's behavior for 6 years (since commit 0cf9135b773b ("KVM: x86: Emulate
+> MSR_IA32_ARCH_CAPABILITIES on AMD hosts"); 7 years, if we go back to when KVM
+> enumerated support without emulating the MSR (commit 1eaafe91a0df ("kvm: x86:
+> IA32_ARCH_CAPABILITIES is always supported").
+> 
+> And it's not like KVM is forcing userspace to enumerate support for
+> ARCH_CAPABILITIES, e.g. QEMU's named AMD configs don't enumerate support.  So
+> while I completely agree KVM's behavior is odd and annoying for userspace to deal
+> with, this is probably something that should be addressed in userspace.
+
+I understand, no one likes to break ABI. However one can argue that any AMD code
+(and even Intel) is supposed to work without ARCH_CAPABILITIES (AMD cpus never have
+this capability and some Intel cpus don't either). Also if code running on AMD rely
+on ARCH_CAPABILITIES then it's probably wrong. We can also imagine that exposing
+this capability can induce incorrect behaviors in the guest like "the ARCH_CAPABILITIES
+is present so that's an Intel cpu".
+
+
+>> I am resurecting this change because some recent Windows updates (like OS Build
+>> 26100.4351) crashes on AMD KVM guests (BSOD with Stop code: UNSUPPORTED PROCESSOR)
+>> just because the ARCH_CAPABILITIES is available.
+>>
+>> ---
+>>   arch/x86/kvm/svm/svm.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+>> index ab9b947dbf4f..600d2029156e 100644
+>> --- a/arch/x86/kvm/svm/svm.c
+>> +++ b/arch/x86/kvm/svm/svm.c
+>> @@ -5469,6 +5469,9 @@ static __init void svm_set_cpu_caps(void)
+>>   
+>>   	/* Don't advertise Bus Lock Detect to guest if SVM support is absent */
+>>   	kvm_cpu_cap_clear(X86_FEATURE_BUS_LOCK_DETECT);
+>> +
+>> +	/* Don't advertise ARCH_CAPABILITIES on AMD */
+>> +	kvm_cpu_cap_clear(X86_FEATURE_ARCH_CAPABILITIES);
+> 
+> Strictly speaking, I think we'd want to update svm_has_emulated_msr() as well.
+> 
+
+Yes, that would be cleaner. even though the access to the MSR is prevented by
+KVM when the ARCH_CAPABILITIES is cleared.
 
 Thanks,
-Pratap
 
->> update the existing wrappers ov05c10_reg_write() / ov05c10_reg_read() in
->> the driver to retrieve the page and register values to call cci_write()
->> / cci_read(). We will add new wrappers too wherever necessary in the
->> driver (ex: wrapper for cci_multi_reg_write() on replacing CCI_REG8 with
->> CCI_PAGE_REG8)
+alex.
+
+>>   }
+>>   
+>>   static __init int svm_hardware_setup(void)
+>> -- 
+>> 2.43.5
 >>
->> #define CCI_PAGE_REG8(x, p)           ((1 << CCI_REG_WIDTH_SHIFT) | (p << CCI_REG_PAGE_SHIFT) | (x))
->> #define CCI_PAGE_REG16(x, p)          ((2 << CCI_REG_WIDTH_SHIFT) | (p << CCI_REG_PAGE_SHIFT) | (x))
->> #define CCI_PAGE_REG24(x, p)          ((3 << CCI_REG_WIDTH_SHIFT) | (p << CCI_REG_PAGE_SHIFT) | (x))
->> #define CCI_PAGE_REG32(x, p)          ((4 << CCI_REG_WIDTH_SHIFT) | (p << CCI_REG_PAGE_SHIFT) | (x))
->> #define CCI_PAGE_REG64(x, p)          ((8 << CCI_REG_WIDTH_SHIFT) | (p << CCI_REG_PAGE_SHIFT) | (x))
->> #define CCI_PAGE_REG16_LE(x, p)               (CCI_REG_LE | (2U << CCI_REG_WIDTH_SHIFT) | (p << CCI_REG_PAGE_SHIFT) | (x))
->> #define CCI_PAGE_REG24_LE(x, p)               (CCI_REG_LE | (3U << CCI_REG_WIDTH_SHIFT) | (p << CCI_REG_PAGE_SHIFT) | (x))
->> #define CCI_PAGE_REG32_LE(x, p)               (CCI_REG_LE | (4U << CCI_REG_WIDTH_SHIFT) | (p << CCI_REG_PAGE_SHIFT) | (x))
->> #define CCI_PAGE_REG64_LE(x, p)               (CCI_REG_LE | (8U << CCI_REG_WIDTH_SHIFT) | (p << CCI_REG_PAGE_SHIFT) | (x))
->> #define CCI_PAGE_GET(x)                       FIELD_GET(CCI_REG_PAGE_MASK, x)
->>
->>>>> int cci_pwrite(void *data, u32 reg, u64 val, int *err)
->>>>> {
->>>>>           /* get v4l2_cci_ctx context from data */
->>>>>
->>>>>           /* get page value from reg */
->>>>>
->>>>>           /* acquire mutex */
->>>>>
->>>>>           /* update cci page control reg, save current page value */
->>>>>
->>>>>           /* do cci_write */
->>>>>
->>>>>           /* release mutex */
->>>>> }
->>>>>
->>>>> Similar steps for cci_pread() as well.
-> 
-> --
-> Regards,
-> 
-> Laurent Pinchart
 
