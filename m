@@ -1,115 +1,208 @@
-Received: from forward100d.mail.yandex.net (forward100d.mail.yandex.net [178.154.239.211])
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34E625CC5B;
-	Thu, 26 Jun 2025 08:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A64325BF02;
+	Thu, 26 Jun 2025 08:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750925468; cv=none; b=tmIaZerFdsKkRZDGElNMOM2W54DIfqUpUEGSzPOj2pcq8lnRs5HTEhLgxzGLIMOAZtEq/+5MCX/d3wzY9nZl85s5qF3TuiBHDsZXTJX4nQ9Ss4ayCiDLyO7Wo9h6edVxix7zF80DU3DDUoqyIlgMDS9HTiZBg2N1qOCSdOsWsUk=
+	t=1750925495; cv=none; b=olXEnGKBiOYt2i6cNQOTFxm6bhw8GoYyvPUMojP4pS/+CAtfRBQKTnSsJUrdTHMhjV46/B0J5yjlxZca8mC2ZUb+v8VXai5KxU9CSwamig4tubYJy26wHOFsjA8OFQoEYNiT9SSGpoF6umhi0/FxWIvfkWS56mvIla5AiTpJVps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750925468; c=relaxed/simple;
-	bh=0qK7pgJcflU2S/1gkTA6x7GaoJekdCBu3N/L20K2kYw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U8E238ukfHzp+ZkgN5XpYSSMaidGOviDRHUtLXizcqMN6gvYW0w5L2CUIFbioeVrUZ3673cYiJpcPhAFbVtMcUdzLVzrKWhkUO3jujwIVPnCm5alyHgrP817WiMZvWR5pD+QiufNFCLVoX93GjvR79s5JP95VFq6iijeeZmwuS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=gtJ+GglQ; arc=none smtp.client-ip=178.154.239.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="gtJ+GglQ"
-Received: from mail-nwsmtp-smtp-production-main-52.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-52.klg.yp-c.yandex.net [IPv6:2a02:6b8:c43:c90:0:640:54cb:0])
-	by forward100d.mail.yandex.net (Yandex) with ESMTPS id 06E806090C;
-	Thu, 26 Jun 2025 11:10:54 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-52.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id jAQpStTLmmI0-m7OVeu3S;
-	Thu, 26 Jun 2025 11:10:53 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
-	s=mail; t=1750925453;
-	bh=Yinnm7E77h8mES7qlr1gkasOuZ5UvgTpmubeiNbiEMA=;
-	h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
-	b=gtJ+GglQyobmFoiJoNhUHjIv789LxN8GxgZLLUOxlaFuh3WE1Mzucb2qbRx1DxrDh
-	 L1ed7Gjw1SV0VbZw30sNXf9MvEJaaFcWFfsyUhiT7xU6aiJdYXArKEQNSyF/8vvx02
-	 V15mhCKiD7TY/rUEzlL7Mf8rEEVWvhhp4/eksNWs=
-Authentication-Results: mail-nwsmtp-smtp-production-main-52.klg.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
-Date: Thu, 26 Jun 2025 11:10:45 +0300
-From: Onur <work@onurozkan.dev>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
- alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
- aliceryhl@google.com, tmgross@umich.edu
-Subject: Re: [PATCH] rust: simplify `Adapter::id_info`
-Message-ID: <20250626111045.2c90a402@nimda>
-In-Reply-To: <aFu10-dGkoyi0I2T@cassiopeiae>
-References: <20250625043630.7677-1-work@onurozkan.dev>
-	<aFux2MUDAGEYY49I@pollux>
-	<20250625113604.21a6ec4a@nimda>
-	<aFu10-dGkoyi0I2T@cassiopeiae>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-unknown-linux-gnu)
+	s=arc-20240116; t=1750925495; c=relaxed/simple;
+	bh=68iU4rFxQXzhPtCcQD9kNnXutQRyeZXsCzXowxuXzSc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=j8jUskWr/FhKvbs57FYZgRdHlmuo3u4OteaEH4nvGU/QaZaWzI5xCAZnNUzpXD5N38S5/tzdgBUs/093JV4g/CxFbbz6OsY+d+lRZVCDN88laAt7BuRIzJUEXxjQwri5ubc+1rWp1LuYEIH3b586KGj4HhZIrN3kfBtASVjidk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id A17721F0004F;
+	Thu, 26 Jun 2025 08:11:31 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id 15893AC7F82; Thu, 26 Jun 2025 08:11:30 +0000 (UTC)
+X-Spam-Level: **
+Received: from localhost.localdomain (unknown [192.168.1.65])
+	by laika.paulk.fr (Postfix) with ESMTP id 0002BAC7F79;
+	Thu, 26 Jun 2025 08:09:39 +0000 (UTC)
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Paul Kocialkowski <paulk@sys-base.io>
+Subject: [PATCH 1/5] pinctrl: sunxi: Fix a100 emac pin function name
+Date: Thu, 26 Jun 2025 10:09:19 +0200
+Message-ID: <20250626080923.632789-2-paulk@sys-base.io>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250626080923.632789-1-paulk@sys-base.io>
+References: <20250626080923.632789-1-paulk@sys-base.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 25 Jun 2025 10:39:47 +0200
-Danilo Krummrich <dakr@kernel.org> wrote:
+The Allwinner A100/A133 only has a single emac instance, which is
+referred to as "emac" everywhere. Fix the pin names to drop the
+trailing "0" that has no reason to be.
 
-> On Wed, Jun 25, 2025 at 11:36:04AM +0300, Onur wrote:
-> > Even with that, it can be something like this:
-> > 
-> > fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
-> >     let id = Self::acpi_id_info(dev);
-> >     if id.is_some() {
-> >         return id;
-> >     }
-> > 
-> >     Self::of_id_info(dev)
-> > }
-> > 
-> > or maybe even this:
-> > 
-> > fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
-> >     Self::acpi_id_info(dev).or_else(|| Self::of_id_info(dev))
-> > }
-> 
-> That's fair, can you please rebase your patch onto [1]?
-> 
-> [1]
-> https://lore.kernel.org/lkml/20250620153914.295679-1-igor.korotin.linux@gmail.com/
+Fixes: 473436e7647d ("pinctrl: sunxi: add support for the Allwinner A100 pin controller")
+Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
+---
+ drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c | 32 ++++++++++-----------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-HEAD: e0b49ca268d4a0d2b97d5820420d5a78b67d2537 currently doesn't pass
-clippy. Should I send an additional change for the clippy fix or would
-you prefer to fix it yourself first?
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+index b97de80ae2f3..95b764ee1c0d 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+@@ -546,33 +546,33 @@ static const struct sunxi_desc_pin a100_pins[] = {
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "i2c0"),		/* SCK */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXD1 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* RXD1 */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 0)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 1),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "i2c0"),		/* SDA */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXD0 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* RXD0 */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 1)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 2),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "i2c1"),		/* SCK */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXCTL */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* RXCTL */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 2)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 3),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "i2c1"),		/* SDA */
+ 		  SUNXI_FUNCTION(0x3, "cir0"),		/* OUT */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* CLKIN */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* CLKIN */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 3)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 4),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "uart3"),		/* TX */
+ 		  SUNXI_FUNCTION(0x3, "spi1"),		/* CS */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXD1 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* TXD1 */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 4)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 5),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+@@ -580,14 +580,14 @@ static const struct sunxi_desc_pin a100_pins[] = {
+ 		  SUNXI_FUNCTION(0x2, "uart3"),		/* RX */
+ 		  SUNXI_FUNCTION(0x3, "spi1"),		/* CLK */
+ 		  SUNXI_FUNCTION(0x4, "ledc"),
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXD0 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* TXD0 */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 5)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 6),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x2, "uart3"),		/* RTS */
+ 		  SUNXI_FUNCTION(0x3, "spi1"),		/* MOSI */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXCK */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* TXCK */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 6)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 7),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+@@ -595,7 +595,7 @@ static const struct sunxi_desc_pin a100_pins[] = {
+ 		  SUNXI_FUNCTION(0x2, "uart3"),		/* CTS */
+ 		  SUNXI_FUNCTION(0x3, "spi1"),		/* MISO */
+ 		  SUNXI_FUNCTION(0x4, "spdif"),		/* OUT */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXCTL */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* TXCTL */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 7)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 8),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+@@ -611,7 +611,7 @@ static const struct sunxi_desc_pin a100_pins[] = {
+ 		  SUNXI_FUNCTION(0x2, "dmic"),		/* DATA0 */
+ 		  SUNXI_FUNCTION(0x3, "spi2"),		/* CLK */
+ 		  SUNXI_FUNCTION(0x4, "i2s2"),		/* BCLK */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* MDC */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* MDC */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 9)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 10),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+@@ -619,7 +619,7 @@ static const struct sunxi_desc_pin a100_pins[] = {
+ 		  SUNXI_FUNCTION(0x2, "dmic"),		/* DATA1 */
+ 		  SUNXI_FUNCTION(0x3, "spi2"),		/* MOSI */
+ 		  SUNXI_FUNCTION(0x4, "i2s2"),		/* LRCK */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* MDIO */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* MDIO */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 10)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 11),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+@@ -642,33 +642,33 @@ static const struct sunxi_desc_pin a100_pins[] = {
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x3, "i2c3"),		/* SCK */
+ 		  SUNXI_FUNCTION(0x4, "i2s3"),		/* MCLK */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* EPHY */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* EPHY */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 13)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 14),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x4, "i2s3"),		/* BCLK */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXD3 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* RXD3 */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 14)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 15),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x4, "i2s3"),		/* LRCK */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXD2 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* RXD2 */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 15)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 16),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x3, "i2s3_dout0"),	/* DOUT0 */
+ 		  SUNXI_FUNCTION(0x4, "i2s3_din1"),	/* DIN1 */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* RXCK */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* RXCK */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 16)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 17),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+ 		  SUNXI_FUNCTION(0x3, "i2s3_dout1"),	/* DOUT1 */
+ 		  SUNXI_FUNCTION(0x4, "i2s3_din0"),	/* DIN0 */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXD3 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* TXD3 */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 17)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 18),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+@@ -676,7 +676,7 @@ static const struct sunxi_desc_pin a100_pins[] = {
+ 		  SUNXI_FUNCTION(0x2, "cir0"),		/* OUT */
+ 		  SUNXI_FUNCTION(0x3, "i2s3_dout2"),	/* DOUT2 */
+ 		  SUNXI_FUNCTION(0x4, "i2s3_din2"),	/* DIN2 */
+-		  SUNXI_FUNCTION(0x5, "emac0"),		/* TXD2 */
++		  SUNXI_FUNCTION(0x5, "emac"),		/* TXD2 */
+ 		  SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 18)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 19),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+-- 
+2.49.0
 
-Here is the output of `make LLVM=1 -j $(nproc) CLIPPY=1`:
-
-```
-  DESCEND objtool
-  CALL    scripts/checksyscalls.sh
-  INSTALL libsubcmd_headers
-  CLIPPY L rust/kernel.o
-error: unneeded `return` statement
-   --> rust/kernel/driver.rs:188:13
-    |
-188 |             return None;
-    |             ^^^^^^^^^^^
-    |
-    = help: for further information visit
-https://rust-lang.github.io/rust-clippy/master/index.html#needless_return
-= note: `-D clippy::needless-return` implied by `-D warnings` = help:
-to override `-D warnings` add `#[allow(clippy::needless_return)]` help:
-remove `return` |
-188 -             return None;
-188 +             None
-    |
-
-error: aborting due to 1 previous error
-
-make[2]: *** [rust/Makefile:538: rust/kernel.o] Error 1
-make[1]: *** [/home/nimda/devspace/onur-ozkan/linux/Makefile:1280:
-prepare] Error 2 make: *** [Makefile:248: __sub-make] Error 2
-```
