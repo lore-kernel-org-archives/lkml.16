@@ -1,131 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B56D13AF2
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 11:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062292F1FCB;
+	Thu, 26 Jun 2025 11:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750938329; cv=none; b=Rxu7fB0xCa9QMiFl5AKF+72JKe1GDxKWpNV2Vrl6I7t7iT3MgqPxwPM9ICt4WZv1hk7z+EDaa9weqVk3fvXsMYI5ajbXCXjaK0nDgOHYhsesB+rNJqq64nMUEW4o8axbQryxk2Z2fDIeSDEwUGjp7Ti3wrvUl4YV1TGf5HGGap8=
+	t=1750938351; cv=none; b=auVtaPWp+PY1wshkFVd8MMNaubo+5i68KICc4r8+ZyC5Yqj8ly3gFfWZBXcWsaKzLSrP8Uhll2pkaAvJsAMq2/YvnCGxK3EbNAhcnDCaXDZQo1wplaK0jEpGTD/VC7Ymd0PfnYayk+vSidtec00nRX85aFtzPmdzH/JH9BKPQZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750938329; c=relaxed/simple;
-	bh=2TQSgvPLFAjkK5aamynpET+MsFs7w6QX7YOD445+2MU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fX+PYhY/WH+KbfckSuS/3LqU0nbrB9UTn7v6N7has8VzjD8lytFdWDGNbZGdD229Ng0ABCnyEEWmKRS8Uy80d+9AKxoiRx3Pn27M9eqCPaUZ3EOEorr8XwG8BGKbrf7qtbUslLrAqUs+6uhGy6cau84hLqylYLdfgBMfpLnqvBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TYAwqPuM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750938351; c=relaxed/simple;
+	bh=W5ID3OY7yfWGGgbtnZevjVWj3uINdDq2sxdewYF9kdo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gVo/hObM7p7rIQKSctjCePee2xZa1+m862cch/AXYroV+Nt8S7Ni6A22K3vm9eGNcwcHr504+6xr3aPOj0T5HDYE/PBavPyJ7qYcGS4hjTukomU/aIDwjDwX+TY1ixHNWon5JMVKy/1I9rNmdHe5R/9oGTBacB840WDpIhzsZMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=JjiI4V83; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TYAwqPuM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750938325;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VuoFEKCsbRX53p5DNB7jHlEcmyNue0LfFnIhnZM9CJs=;
-	b=TYAwqPuMva6NubsIZINc1GvU5mbx1JcRy/79JloY9hYeWcCr5Sej95tTcNuviFTRg3LGNb
-	cnn9o/7r1RF+RvtfUXx3bN3vxi/cCgZIGUFQqSko+CDKdMLptBgIr6e6knEQB2Ps5ijcP4
-	KHzW2IWCKzpT7ATnJXWHzunTCXO3Iuw=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-362-LY453ydRMO6FQOftgrK3zg-1; Thu, 26 Jun 2025 07:45:24 -0400
-X-MC-Unique: LY453ydRMO6FQOftgrK3zg-1
-X-Mimecast-MFC-AGG-ID: LY453ydRMO6FQOftgrK3zg_1750938323
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-45311704d22so5362305e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 04:45:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750938323; x=1751543123;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VuoFEKCsbRX53p5DNB7jHlEcmyNue0LfFnIhnZM9CJs=;
-        b=S+A2j8JCFcN/I/qh6hV7s0RyHhftgybxv0yIlYDPgRzHZg7wRKVhijAqgzcwbjoL4P
-         HsOIg8wZK1SRARGNyO9+eVIkKMkcAaqyu+uTLSLcBwGRwEytwlce/MAmWhl1CbN3qp4z
-         ynhwSuntE2ISpA+qILV5Im8X8t4hpI+QQHRVLVvJ3heADXj+1/8p+dfUvzJbCyJSOCch
-         fNRBCPPyTieWK6Bn//6GFjiYmiVTemqab5TOymcf/4NA5OT3XDfh8oHuk6mdsms43Ah4
-         X9PpkZRRff2rDEf2MsRfL9gNTuRgxaMvEiQPcvppwe6PuIsbicwr3WfK5l1EgjG/0n5m
-         zR6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWxNAq7+Nz+MmyVMSxCkdSDWGVOv8xQQYptSpov0h7CVy3CRN/uGma3nIoZAxDtRUXyLKpS9QgQdTO9U4o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBrADS6Z3r14lT0B9sEB/3k+A8MDlzlX6siU3rPipEOYgGvxuM
-	7gi2PWLccUaPSPI4oelI1n621u8VZ0ayGztXYpocThNYOlUxt6Ffb3uY08FUvNbSwYUmUSAyNd8
-	qkoQf4SoAVmwgeraUWnrupXKhrJj17ior9OBsIXMybS7dabU+7QkwwumVevu5SOglNQ==
-X-Gm-Gg: ASbGncsF9eoB4HI8Ydu4IPAAvZxpboPwvlDD/8Dlby36twy+X1EYRYJ1143kJG25K5a
-	zwHykyzk1msE3hJfK+PzQYKsVXt4KZgSzAKQqodpTwzJcJ8MF3FwQoZNtz4RkUjUUnoOokYI+3E
-	naJHrsEMBRi4E3vgpcsAGIZGKNu/itpQAwfb4mR7dJi/ra/zhC0DSN0W4fR4E/io8+zMet4AetL
-	NaCYrsEbS9j3qtvCTYzTr5Sb+UWjFixjVrIHTzYuIqR+lvq6OiBilK2YD37Bxt+s9W97jeEEtCi
-	qjj/nnnWwJmB4CbplJGh+uurWjPgp3WPg1O9QoXqlEHiRi9qgHLc
-X-Received: by 2002:a05:600c:444c:b0:43d:160:cd97 with SMTP id 5b1f17b1804b1-45381b1366emr63916385e9.25.1750938323255;
-        Thu, 26 Jun 2025 04:45:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFJ+2/Alx77fQuVYxk65rY8Ce18JLV17E1gGvWy6VbK7kWB1blblZGorXQzOSKk8/yLc344WQ==
-X-Received: by 2002:a05:600c:444c:b0:43d:160:cd97 with SMTP id 5b1f17b1804b1-45381b1366emr63916095e9.25.1750938322753;
-        Thu, 26 Jun 2025 04:45:22 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([176.206.11.85])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a4215dbsm17251465e9.35.2025.06.26.04.45.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 04:45:22 -0700 (PDT)
-Date: Thu, 26 Jun 2025 13:45:20 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>
-Cc: luca abeni <luca.abeni@santannapisa.it>, linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vineeth Pillai <vineeth@bitbyteword.org>
-Subject: Re: SCHED_DEADLINE tasks missing their deadline with
- SCHED_FLAG_RECLAIM jobs in the mix (using GRUB)
-Message-ID: <aF0y0G4eJZtnMALp@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250620161606.2ff81fb1@nowhere>
- <aFV-HEwOTq0a37ax@jlelli-thinkpadt14gen4.remote.csb>
- <20250620185248.634101cc@nowhere>
- <aFpYl53ZMThWjQai@jlelli-thinkpadt14gen4.remote.csb>
- <aFqhId-qMFNyPD1s@jlelli-thinkpadt14gen4.remote.csb>
- <20250624170030.4e5b440a@nowhere>
- <aFvBvxhw6ubpBefm@jlelli-thinkpadt14gen4.remote.csb>
- <aFvLYv0xSXxoyZZ8@jlelli-thinkpadt14gen4.remote.csb>
- <20250625145001.7709b647@nowhere>
- <d70bdffe973d1d4b951af3f12d3a5a1e77c879c6.camel@codethink.co.uk>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="JjiI4V83"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1750938343; x=1751543143; i=rwarsow@gmx.de;
+	bh=W5ID3OY7yfWGGgbtnZevjVWj3uINdDq2sxdewYF9kdo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=JjiI4V83jcvlm940sKHsBpqhWUuO6tFH59PyDGZntop1La6tDffzGmhUqUS5ddjJ
+	 nwfwDYsYag3jwuIw8U9JVeJXdEiOhQ80+Y3KRzlndM6aseJvlNSI48ejwHZWFIPPQ
+	 fUNahBEEdJVJ6QXgJ7lBdKFbJDWmx9a3YyaXwce7lJHrYW1ub2T4jyrB8p496rslS
+	 1hzaoo2U16U+iKt22jlDsfoLEs9/hK2Xa/efLF6Hc7qnFzUl5lfrHkAQrrEKcQaxe
+	 fT6ZqNpalXHqcpk0AWhEd8LYM9lzmsqh3CZzk5/XWvIWeRxowtIe5vwrsqc87oY/y
+	 PJqJ3zp6kjwVO5nz5A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.200.20] ([46.142.32.180]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MAwbz-1ub3dO0C41-009RmA; Thu, 26
+ Jun 2025 13:45:43 +0200
+Message-ID: <c5c91a92-df67-4e0a-8a15-408d0d3ab4fd@gmx.de>
+Date: Thu, 26 Jun 2025 13:45:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d70bdffe973d1d4b951af3f12d3a5a1e77c879c6.camel@codethink.co.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.15 000/589] 6.15.4-rc3 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250626105243.160967269@linuxfoundation.org>
+From: Ronald Warsow <rwarsow@gmx.de>
+Content-Language: de-DE, en-US
+In-Reply-To: <20250626105243.160967269@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:UOwBZrQxvJYyw1/LbqDehl4nv74I6cjMoZzKXySH47/Q20oudwd
+ T4HSg2V6lz/gGFx9m2jzg2TrnMa//AcfJMS+Rf4+W/CRQ0mTXU6tbZz/ORjNlnsuN+7GTat
+ xV4b0iguwz3HaaSCoWQBbfRx2Mj3/9GI8jKwf8sIF04irMyFKNIGxX188vfmsf8bVbHPS9U
+ yVkfUIctnfs5GAOUWaz6g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:f8om3O8eITA=;Ry667Rq4hget0Z/bwkbGVCEAxEH
+ 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
+ f8dm2x7WZUA01n2Yq2Ng==
 
-On 26/06/25 04:59, Marcel Ziswiler wrote:
-> Hi Luca and Juri
-> 
-> On Wed, 2025-06-25 at 14:50 +0200, luca abeni wrote:
-> > Hi Juri,
-> > 
-> > On Wed, 25 Jun 2025 12:11:46 +0200
-> > Juri Lelli <juri.lelli@redhat.com> wrote:
-> > [...]
-> > > I pushed another fixup adding a check for dl_server_active in
-> > > dl_server_stop(). It seems to cure the WARN here.
-> > > 
-> > > Could you please pull and re-test?
-> > 
-> > I added your last 2 commits, and tested again; it seems to me that
-> > everything looks fine, now... Marcel, can you confirm?
-> 
-> Indeed, our CI run now close to 220 mio. tests on NUCs and 190 mio. on ROCK 5B and so far it didn't miss any
-> single beat! Also the statistics around those tests look very good. With reclaim enabled one can now truly get
-> very good real-time performance. Thank you very much!
-> 
-> We will continue to exercise the Linux kernel scheduler to the fullest and report any inconsistencies we are
-> seeing.
-> 
-> Just let me know if there is anything else we may help you with. Thanks again!
+Hi
 
-Great! Thanks a lot for testing and the patience. :-)
+no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-I will be sending out a polished version of the set soon. Please take a
-look and add your reviewed/tested-by to that if you can. The changes are
-the same you have been testing already, just with changelogs etc. Let's
-see if people spot problems with the actual implementation of the fixes.
+Thanks
 
-Best,
-Juri
-
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
