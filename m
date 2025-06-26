@@ -1,411 +1,233 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBF21922F6;
-	Thu, 26 Jun 2025 13:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7181922F6
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750946089; cv=none; b=GjfyvDjEkakQHQKLsyuaAz09BccZYBXft7wBoxwtioSeGVnsFHxhep4Fr7PSpAShZKFWVbluRzKsAmCu3+8nDAUlc9hr4+yDs2rjMNz7oX5q1i9WETyK5+zBDrYREA1LK16LkduPcXYQsDenhdE0c875+lFX5Ud+7pwwYEs5fYQ=
+	t=1750946147; cv=none; b=rAUbriYaqhWsHMte49KmxoM1TNH+otXOF65mCzoCHBxhomoLyS1k24yPyyw9c+7zRwedAvZf7enuwZFRH18W40RnfAWaEljAEsbDjQscCtdor7ZhG0uQgzqp+b4WR7Ct7m74jlrQA+/ldRJfCfef+NRj2DMCGFYinm9NTYApHOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750946089; c=relaxed/simple;
-	bh=n8K7BjgUayWBLFvVAFSIS3u6eapQ2dFQhGg4Vt/DuFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hIBb666tsqp5Ww0S7EM11p4HOs1tNXdAqQ4nYfdmtDpIrn3QqXfHMNhGbRloxU/54GqE9q2MZp3nJOsOr9Jo9nmNhMUmVQVGq7Y0X9vU+MZpMYlnDXR78ymmvjg83NR0y87INPwZZ2j9szLtrflB0x4S991QedXuoeDNEQRsglg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n8Se9j3o; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750946147; c=relaxed/simple;
+	bh=p8dTFwOXaJolnPKKZxBvR0kA3vRQTNDo779L0Xg/S4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J9puI3fnyJc2yoVdJPmrVmUWjdbTV8dmWPra1hn6p38yn1WYq3w5gZtSOfpvFNh6fwWJ/kB/zPLYutKFqnRMzT8mlarn4DNN79rbFRvmLsNPYslJu/KHP7U2S9VzTstWBWyMHUkKEyEDerLCX20JekG3NVWiONjQsOScR71TDFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=dLm84g3i; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n8Se9j3o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750946088; x=1782482088;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=n8K7BjgUayWBLFvVAFSIS3u6eapQ2dFQhGg4Vt/DuFc=;
-  b=n8Se9j3oXjPrcTdO8MGG5HVbb41HPpt/kiqELLwhAmm+n8B14XYpt4m4
-   EalU2jCj6Lap7VgTHQQCbFU7YPE5f9qwy76JyIWe6IJ25C22BF8NYqT1Z
-   G5iqOTUviF6xChZBRL+f7tXn2ddIEnYCsPn49GCjUQWLSkQVWrhgf7ac9
-   gKJ3BYhNldu0T+44ZH5DNZysywB7HKtnabVGM87grRaDVFU2/seAFyZ0v
-   CuOXEziPxFubYXhg7ptqNH2I8Y6/iOWTRNlmK/DyXgQeMj0kpT++X+VGr
-   FGmnqql6YSSHoO+uAOIJC3ehbaR+dJDX1j/NHT1MQu4nxd4LOqy6b0aJR
-   A==;
-X-CSE-ConnectionGUID: f/umjALOQaGQCuYaWpZa5w==
-X-CSE-MsgGUID: FrJGssgOT5CWS1/+Jsr5mQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="55867842"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="55867842"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 06:54:47 -0700
-X-CSE-ConnectionGUID: A7hq6bzMS0G4QeFpwDLlCw==
-X-CSE-MsgGUID: EmIq/DG5T4aDdWHIBYnurQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="152683801"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 06:54:45 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uUn3q-0000000AC0F-0pmS;
-	Thu, 26 Jun 2025 16:54:42 +0300
-Date: Thu, 26 Jun 2025 16:54:41 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCH v17] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <aF1RIVzVNcdsU1DB@smile.fi.intel.com>
-References: <20250625194919.94214-1-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="dLm84g3i"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7d38b84984dso146670385a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:55:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1750946144; x=1751550944; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+KY6uoWqFt+gH5qFF/7TA+aeZmO9qstem/kfCaD0HTU=;
+        b=dLm84g3ivfuQWL2r12ELv7h52SvlKvyzA3gAyTGQ2jJR0KGpFnnX6bWX34Cl9O3nSN
+         DeCHv6Fz9Nf0dtw+Sek7glBwFOoTgbq0jqp7SF4vtJht8+ZNqaDyp62tRUkBeqQaiG8n
+         3Y6y7hndWDVH83rG9FSZ98EqHliUM2CtcUupkFNB1Q2I6940CJYxAXQbARA1jBLgkJwZ
+         pL+LYKVPlKcrjgg+CYu4Se4PSIUwR4rHbvGcHTKnY8lAWvglDp2yBvuXBJXm/CebYRZV
+         vj49/d8tICu153jRw2v7ly/vfIZI1BrKPpzWtUWN1QbUTG4d4ETQDZzMcura2/zYrymb
+         3j/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750946144; x=1751550944;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+KY6uoWqFt+gH5qFF/7TA+aeZmO9qstem/kfCaD0HTU=;
+        b=EQE2eNpzfgv4j/Y+1GavZged6QIfLNOslQVybefrd7gzDaAU+hx5TMBPC3BkRzDjoj
+         FFQWCZrgitxtyZGzWFdjKUowCDe5sVpsVAmpvg+oI1xU1piyjpluyoNyuuAvHFGVsfHd
+         mShdkZCaQMB49anzX+W0tJUaIVQPF8FOgSH3SfeA5KlAb4SHZCV7eTsExtOy5xVRcHI4
+         ldZlT9EEnCuK8nJL0w79avGJxIhevQC6KPQFkRCaHPBk+AOmsHlPzo/7HnWEA16GxT/N
+         mBz0WqIt+RdSePoWHcsGBWTWaiQFVdSuD1T7omZtfGYM/0VsDXCw667YryFulZ2R0oYs
+         gT6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUV3r8dGVCgfp6JKdXLaUnv32hik4igu7JsJ78AS8ixasjpmRZYDGomVu2zqZD5Asm4ITAsFSrqi1ZA4hQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZRrivu2eqK0WqRHB9pYeGikJb8B8V9Mjqj84jEXAKqsvg/OfD
+	ia32ZAhCMvnzaCyFj/ctxQTQPl5/GGigVgmLkHuzBr3fUKAuFN08AoMRZJyv7Llk5d0=
+X-Gm-Gg: ASbGncuXHC8PSZriunXP57Tkqy8GvDSJjv0XKQOPzG1v6dYRJ23U2Y8HmWMUMQooX6/
+	ikXXJrOaWoN+Bac5FpDJobg6GWHon5Eicqqv08MSpgcCuzGTSqRHQ1wFoFAeyJnvAmn7YOwk3Lo
+	9M6cZ3r3WAV2GsXavXVOsLTN1Gnz3CtgBPFJy4ChhWrtPvRh6sCK1ilVsd5Pbm8OGkXljrRrCSA
+	KV/5HEdENNm3bsF8mhTjnaEAzBdg0OSKJ+THO6QyArumaSLaeSL32nDd0vg/lzfnP0GM1YTsOyC
+	YYtlWrT3Vzrueu3sOc5BwmqNBXWWL76/N6zXuTQsTBoD0MbANoVRbqfqcyD6+tHngetofKrutrj
+	ggcg1oCL9X91t8cgtvuhHBIy4K9+tuf5gMVpEZKVmTpxUUqSWRQ==
+X-Google-Smtp-Source: AGHT+IGF/axsm6TCoasMp3dJRYEbfjzn0cVauHe6eM7reaEROspM7hrYNsrohQKzR2Mdxe6cc1rxiA==
+X-Received: by 2002:a05:6214:ca8:b0:6fa:ccb6:602a with SMTP id 6a1803df08f44-6fd5ef83730mr118879916d6.20.1750946144137;
+        Thu, 26 Jun 2025 06:55:44 -0700 (PDT)
+Received: from hermes.local (204-195-96-226.wavecable.com. [204.195.96.226])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd7718a750sm7634076d6.8.2025.06.26.06.55.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 06:55:44 -0700 (PDT)
+Date: Thu, 26 Jun 2025 06:55:41 -0700
+From: Stephen Hemminger <stephen@networkplumber.org>
+To: z30015464 <zhongxuan2@huawei.com>
+Cc: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <dsahern@gmail.com>, <gaoxingwang1@huawei.com>, <yanan@huawei.com>,
+ <tangce1@huawei.com>
+Subject: Re: [Issue] iproute2: coredump problem with command ip link xstats
+Message-ID: <20250626065519.753de723@hermes.local>
+In-Reply-To: <20250619074552.1775627-1-zhongxuan2@huawei.com>
+References: <20250619074552.1775627-1-zhongxuan2@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625194919.94214-1-ansuelsmth@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 25, 2025 at 09:49:01PM +0200, Christian Marangi wrote:
-> From: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> 
-> Introduce driver for PWM module available on EN7581 SoC.
+On Thu, 19 Jun 2025 15:45:52 +0800
+z30015464 <zhongxuan2@huawei.com> wrote:
 
-Almost from my perspective.
-If you address the below as suggested, feel free to add
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Hello everyone,
+>=20
+> I having an issues while using iprute2 6.15.0. When I created a bond and =
+intended to use 'ip link xstats' command to query extended information, a s=
+tack overflow occurred, followed by a coredump. I couldn't identify the roo=
+t cause through the code and need some help.
+>=20
+> Example:
+> ifconfig eth1 up
+> modprobe bonding mode=3D4 max_bonds=3D1 lacp_rate=3D1 miimon=3D100
+> ip addr add 7.7.0.100/24 dev bond0
+> ip link xstats type bond dev bond0
+>=20
+> Here is the result:
+> [root@localhost /]# ip link xstats type bond
+> bond0
+>                     LACPDU Rx 0
+>                     LACPDU Tx 0
+>                     LACPDU Unknown type Rx 0
+>                     LACPDU Illegal Rx 0
+>                     Marker Rx 0
+>                     Marker Tx 0
+>                     Marker response Rx 0
+>                     Marker response Tx 0
+>                     Marker unknown type Rx 0
+> *** stack smashing detected ***: terminated
+> Aborted (core dumped)
+>=20
+> Here is the result with valgrind:
+> [root@localhost /]# valgrind ip link xstats type bond dev bond0
+> =3D=3D242893=3D=3D Memcheck, a memory error detector
+> =3D=3D242893=3D=3D Copyright (C) 2002-2022, and GNU GPL'd, by Julian Sewa=
+rd et al.
+> =3D=3D242893=3D=3D Using Valgrind-3.22.0 and LibVEX; rerun with -h for co=
+pyright info
+> =3D=3D242893=3D=3D Command: ip link xstats type bond dev bond0
+> =3D=3D242893=3D=3D
+> bond0
+>                     LACPDU Rx 0
+>                     LACPDU Tx 0
+>                     LACPDU Unknown type Rx 0
+>                     LACPDU Illegal Rx 0
+>                     Marker Rx 0
+>                     Marker Tx 0
+>                     Marker response Rx 0
+>                     Marker response Tx 0
+>                     Marker unknown type Rx 0
+> *** stack smashing detected ***: terminated
+> =3D=3D242893=3D=3D
+> =3D=3D242893=3D=3D Process terminating with default action of signal 6 (S=
+IGABRT)
+> =3D=3D242893=3D=3D    at 0x498AB5C: __pthread_kill_implementation (pthrea=
+d_kill.c:44)
+> =3D=3D242893=3D=3D    by 0x493CF45: raise (raise.c:26)
+> =3D=3D242893=3D=3D    by 0x492733B: abort (abort.c:79)
+> =3D=3D242893=3D=3D    by 0x49281A8: __libc_message.cold (libc_fatal.c:152)
+> =3D=3D242893=3D=3D    by 0x4A1621A: __fortify_fail (fortify_fail.c:24)
+> =3D=3D242893=3D=3D    by 0x4A17435: __stack_chk_fail (stack_chk_fail.c:24)
+> =3D=3D242893=3D=3D    by 0x157A81: bond_print_stats_attr (iplink_bond.c:8=
+77)
+> =3D=3D242893=3D=3D    by 0x157B02: bond_print_xstats (iplink_bond.c:895)
+> =3D=3D242893=3D=3D    by 0x1846A9: rtnl_dump_filter_l (libnetlink.c:926)
+> =3D=3D242893=3D=3D    by 0x185A01: rtnl_dump_filter_nc (libnetlink.c:969)
+> =3D=3D242893=3D=3D    by 0x16B0BF: iplink_ifla_xstats (iplink_xstats.c:71)
+> =3D=3D242893=3D=3D    by 0x118C3C: do_cmd (ip.c:131)
+> =3D=3D242893=3D=3D
+> =3D=3D242893=3D=3D HEAP SUMMARY:
+> =3D=3D242893=3D=3D     in use at exit: 33,878 bytes in 4 blocks
+> =3D=3D242893=3D=3D   total heap usage: 8 allocs, 4 frees, 66,755 bytes al=
+located
+> =3D=3D242893=3D=3D
+> =3D=3D242893=3D=3D LEAK SUMMARY:
+> =3D=3D242893=3D=3D    definitely lost: 0 bytes in 0 blocks
+> =3D=3D242893=3D=3D    indirectly lost: 0 bytes in 0 blocks
+> =3D=3D242893=3D=3D      possibly lost: 0 bytes in 0 blocks
+> =3D=3D242893=3D=3D    still reachable: 33,878 bytes in 4 blocks
+> =3D=3D242893=3D=3D         suppressed: 0 bytes in 0 blocks
+> =3D=3D242893=3D=3D Rerun with --leak-check=3Dfull to see details of leake=
+d memory
+> =3D=3D242893=3D=3D
+> =3D=3D242893=3D=3D For lists of detected and suppressed errors, rerun wit=
+h: -s
+> =3D=3D242893=3D=3D ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0=
+ from 0)
+> Aborted (core dumped)
+>=20
+> Through gdb debugging, __stack_chk_fail was triggered after the end of fu=
+nction bond_print_stats_attr function.
+> I first found this issue in version 6.6.0. After replacing package 6.15.0=
+, the issue still persists.=20
+> I also tried version 5.15.0 but there was no abnormality.
+> Maybe some modifications triggered this issue, but I cannot found the cau=
+se. I hope to get some helps.
+>=20
+> Thank you very much.
+>=20
+>=20
+>=20
 
-...
+Thanks, fixed it with:
 
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2022 Markus Gothe <markus.gothe@genexis.eu>
+=46rom e4d10d064f5dbc64e4d2d73074c33b54d06b4514 Mon Sep 17 00:00:00 2001
+From: Stephen Hemminger <stephen@networkplumber.org>
+Date: Thu, 26 Jun 2025 06:50:17 -0700
+Subject: [PATCH] bond: fix stack smash in xstats
 
-On my calendar 2025 is. Also MODULE_AUTHOR() list disagrees with this
-(you should add yourself somewhere here).
+Building with stack smashing detection finds an off by one
+in the bond xstats attribute parsing.
 
-> + *  Limitations:
-> + *  - Only 8 concurrent waveform generators are available for 8 combinations of
-> + *    duty_cycle and period. Waveform generators are shared between 16 GPIO
-> + *    pins and 17 SIPO GPIO pins.
-> + *  - Supports only normal polarity.
-> + *  - On configuration the currently running period is completed.
-> + *  - Minimum supported period is 4ms
-> + *  - Maximum supported period is 1s
-> + */
+$ ip link xstats type bond dev bond0
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+bond0
+                    LACPDU Rx 0
+                    LACPDU Tx 0
+                    LACPDU Unknown type Rx 0
+                    LACPDU Illegal Rx 0
+                    Marker Rx 0
+                    Marker Tx 0
+                    Marker response Rx 0
+                    Marker response Tx 0
+                    Marker unknown type Rx 0
+*** stack smashing detected ***: terminated
 
-...
+Program received signal SIGABRT, Aborted.
 
-> +#define AIROHA_PWM_SGPIO_CLK_DIVR_32		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 0x3)
-> +#define AIROHA_PWM_SGPIO_CLK_DIVR_16		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 0x2)
-> +#define AIROHA_PWM_SGPIO_CLK_DIVR_8		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 0x1)
-> +#define AIROHA_PWM_SGPIO_CLK_DIVR_4		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 0x0)
+Reported-by: z30015464 <zhongxuan2@huawei.com>
+Fixes: 440c5075d662 ("ip: bond: add xstats support")
+Cc: nikolay@cumulusnetworks.com
+Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+---
+ ip/iplink_bond.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Remove 0x:s, they are just noise and moreover the list here is plain numbers,
-not bit combinations or so. In such cases we use decimal numbers.
-
-...
-
-> +/* Cycle cfg handles 4 generators in one register */
-
-I am a bit lost in the meaning of "cycle cfg". Can you elaborate in
-the comment that it's readable in plain English?
-
-> +#define AIROHA_PWM_BUCKET_PER_CYCLE_CFG		4
-
-...
-
-> +static u32 airoha_pwm_get_duty_ticks_from_ns(u32 period_ns, u32 duty_ns)
-> +{
-> +	return mul_u64_u32_div(duty_ns, AIROHA_PWM_DUTY_FULL,
-> +			       period_ns);
-
-It's less than 80 if put on one line!
-
-> +}
-
-...
-
-> +static int airoha_pwm_get_bucket(struct airoha_pwm *pc, int bucket,
-> +				 u64 *period_ns, u64 *duty_ns)
-> +{
-> +	u32 period_tick, duty_tick;
-> +	unsigned int offset;
-> +	u32 shift, val;
-> +	int ret;
-> +
-> +	offset = bucket / AIROHA_PWM_BUCKET_PER_CYCLE_CFG;
-> +	shift = bucket % AIROHA_PWM_BUCKET_PER_CYCLE_CFG;
-> +	shift = AIROHA_PWM_REG_CYCLE_CFG_SHIFT(shift);
-> +
-> +	ret = regmap_read(pc->regmap, AIROHA_PWM_REG_CYCLE_CFG_VALUE(offset),
-> +			  &val);
-
-You may shorten the line and the code (as below the same can be applied)
-by introducing
-
-	struct regmap *map = pc->regmap;
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	period_tick = FIELD_GET(AIROHA_PWM_WAVE_GEN_CYCLE, val >> shift);
-> +	*period_ns = period_tick * AIROHA_PWM_PERIOD_TICK_NS;
-> +
-> +	offset = bucket / AIROHA_PWM_BUCKET_PER_FLASH_PROD;
-> +	shift = bucket % AIROHA_PWM_BUCKET_PER_FLASH_PROD;
-> +	shift = AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(shift);
-> +
-> +	ret = regmap_read(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
-> +			  &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	duty_tick = FIELD_GET(AIROHA_PWM_GPIO_FLASH_PRD_HIGH, val >> shift);
-> +	/*
-> +	 * Overflow can't occur in multiplication as duty_tick is just 8 bit
-> +	 * and period_ns is clamped to AIROHA_PWM_PERIOD_MAX_NS and fit in a
-> +	 * u64.
-> +	 */
-> +	*duty_ns = DIV_U64_ROUND_UP(duty_tick * *period_ns, AIROHA_PWM_DUTY_FULL);
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static int airoha_pwm_get_generator(struct airoha_pwm *pc, u32 duty_ticks,
-> +				    u32 period_ticks)
-> +{
-> +	int best = -ENOENT, unused = -ENOENT;
-> +	u32 best_period_ticks = 0;
-> +	u32 best_duty_ticks = 0;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(pc->buckets); i++) {
-
-You want array_size.h.
-
-> +		struct airoha_pwm_bucket *bucket = &pc->buckets[i];
-> +		u32 bucket_period_ticks = bucket->period_ticks;
-> +		u32 bucket_duty_ticks = bucket->duty_ticks;
-
-> +		/* If found, save an unused bucket to return it later */
-> +		if (refcount_read(&bucket->used) == 0) {
-> +			unused = i;
-> +			continue;
-> +		}
-> +
-> +		/* We found a matching bucket, exit early */
-> +		if (duty_ticks == bucket_duty_ticks &&
-> +		    period_ticks == bucket_period_ticks)
-> +			return i;
-> +
-> +		/*
-> +		 * Unlike duty cycle zero, which can be handled by
-> +		 * disabling PWM, a generator is needed for full duty
-> +		 * cycle but it can be reused regardless of period
-> +		 */
-> +		if (duty_ticks == AIROHA_PWM_DUTY_FULL &&
-> +		    bucket_duty_ticks == AIROHA_PWM_DUTY_FULL)
-> +			return i;
-> +
-> +		/*
-> +		 * With an unused bucket available, skip searching for
-> +		 * a bucket to recycle (closer to the requested period/duty)
-> +		 */
-> +		if (unused != -ENOENT)
-
-Can unused be negative and have different error code or so?
-If not, simplify here (and in return below) to
-
-		if (unused >= 0)
-
-> +			continue;
-> +
-> +		/* Ignore bucket with invalid configs */
-> +		if (bucket_period_ticks > period_ticks ||
-> +		    bucket_duty_ticks > duty_ticks)
-> +			continue;
-> +
-> +		/*
-> +		 * Search for a bucket closer to the requested period/duty
-> +		 * that has the maximal possible period that isn't bigger
-> +		 * than the requested period. For that period pick the maximal
-> +		 * duty_cycle that isn't bigger than the requested duty_cycle.
-
-duty cycle
-
-(with underscore I haven't found a variable in this function the comment refers to)
-
-> +		 */
-> +		if (bucket_period_ticks > best_period_ticks ||
-> +		    (bucket_period_ticks == best_period_ticks &&
-> +		     bucket_duty_ticks > best_duty_ticks)) {
-> +			best_period_ticks = bucket_period_ticks;
-> +			best_duty_ticks = bucket_duty_ticks;
-> +			best = i;
-> +		}
-> +	}
-> +
-> +	/* With no unused bucket, return the best one found (if ever) */
-> +	return unused == -ENOENT ? best : unused;
-> +}
-
-...
-
-> +static int airoha_pwm_consume_generator(struct airoha_pwm *pc,
-> +					u32 duty_ticks, u32 period_ticks,
-> +					unsigned int hwpwm)
-> +{
-> +	int bucket, ret;
-> +
-> +	/*
-> +	 * Search for a bucket that already satisfies duty and period
-> +	 * or an unused one.
-> +	 * If not found, -ENOENT is returned.
-> +	 */
-> +	bucket = airoha_pwm_get_generator(pc, duty_ticks, period_ticks);
-> +	if (bucket < 0)
-> +		return bucket;
-> +
-> +	/* Release previous used bucket (if any) */
-> +	airoha_pwm_release_bucket_config(pc, hwpwm);
-
-> +	if (refcount_read(&pc->buckets[bucket].used) == 0) {
-> +		pc->buckets[bucket].period_ticks = period_ticks;
-> +		pc->buckets[bucket].duty_ticks = duty_ticks;
-> +		ret = airoha_pwm_apply_bucket_config(pc, bucket,
-> +						     duty_ticks,
-> +						     period_ticks);
-> +		if (ret)
-> +			return ret;
-> +
-> +		refcount_set(&pc->buckets[bucket].used, 1);
-
-What happens if refcount is updated in between? This is wrong use of atomics.
-
-> +	} else {
-> +		refcount_inc(&pc->buckets[bucket].used);
-
-Ditto.
-
-You probably wanted _inc_and_test() variant.
-
-> +	}
-> +
-> +	return bucket;
-> +}
-
-...
-
-> +static int airoha_pwm_config(struct airoha_pwm *pc, struct pwm_device *pwm,
-> +			     u32 duty_ticks, u32 period_ticks)
-> +{
-> +	unsigned int hwpwm = pwm->hwpwm;
-> +	int bucket, ret;
-> +
-> +	bucket = airoha_pwm_consume_generator(pc, duty_ticks, period_ticks,
-> +					      hwpwm);
-> +	if (bucket < 0)
-> +		return bucket;
-> +
-> +	ret = airoha_pwm_config_flash_map(pc, hwpwm, bucket);
-> +	if (ret) {
-> +		refcount_dec(&pc->buckets[bucket].used);
-> +		return ret;
-> +	}
-
-> +	set_bit(hwpwm, pc->initialized);
-
-Does it need to be atomic? (Just asking) If not, use non-atomic variant, i.e.
-__set_bit().
-
-> +	pc->channel_bucket[hwpwm] = bucket;
-> +
-> +	/*
-> +	 * SIPO are special GPIO attached to a shift register chip. The handling
-> +	 * of this chip is internal to the SoC that takes care of applying the
-> +	 * values based on the flash map. To apply a new flash map, it's needed
-> +	 * to trigger a refresh on the shift register chip.
-> +	 * If a SIPO is getting configuring , always reinit the shift register
-> +	 * chip to make sure the correct flash map is applied.
-> +	 * Skip reconfiguring the shift register if the related hwpwm
-> +	 * is disabled (as it doesn't need to be mapped).
-> +	 */
-> +	if (hwpwm >= AIROHA_PWM_NUM_GPIO) {
-> +		ret = airoha_pwm_sipo_init(pc);
-> +		if (ret) {
-> +			airoha_pwm_release_bucket_config(pc, hwpwm);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static void airoha_pwm_disable(struct airoha_pwm *pc, struct pwm_device *pwm)
-> +{
-> +	/* Disable PWM and release the bucket */
-> +	airoha_pwm_config_flash_map(pc, pwm->hwpwm, -1);
-> +	airoha_pwm_release_bucket_config(pc, pwm->hwpwm);
-
-> +	clear_bit(pwm->hwpwm, pc->initialized);
-
-As per above.
-
-> +	/* If no SIPO is used, disable the shift register chip */
-> +	if (find_next_bit(pc->initialized, AIROHA_PWM_MAX_CHANNELS,
-> +			  AIROHA_PWM_NUM_GPIO) >= AIROHA_PWM_NUM_GPIO)
-> +		regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
-> +				  AIROHA_PWM_SERIAL_GPIO_FLASH_MODE);
-> +}
-
-...
-
-> +static int airoha_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct airoha_pwm *pc;
-> +	struct pwm_chip *chip;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	chip = devm_pwmchip_alloc(dev, AIROHA_PWM_MAX_CHANNELS, sizeof(*pc));
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +
-> +	chip->ops = &airoha_pwm_ops;
-> +	pc = pwmchip_get_drvdata(chip);
-> +
-> +	pc->regmap = device_node_to_regmap(dev->parent->of_node);
-
-Please, use dev_of_node(dev->parent).
-
-> +	if (IS_ERR(pc->regmap))
-> +		return dev_err_probe(dev, PTR_ERR(pc->regmap), "Failed to get PWM regmap\n");
-> +
-> +	for (i = 0; i < ARRAY_SIZE(pc->buckets); i++)
-> +		refcount_set(&pc->buckets[i].used, 0);
-> +
-> +	ret = devm_pwmchip_add(&pdev->dev, chip);
-
-Seems you have dev, why not use it?
-
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
-> +
-> +	return 0;
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+diff --git a/ip/iplink_bond.c b/ip/iplink_bond.c
+index 19af67d0..62dd907c 100644
+--- a/ip/iplink_bond.c
++++ b/ip/iplink_bond.c
+@@ -852,7 +852,7 @@ static void bond_print_stats_attr(struct rtattr *attr, =
+int ifindex)
+ 	const char *ifname =3D "";
+ 	int rem;
+=20
+-	parse_rtattr(bondtb, LINK_XSTATS_TYPE_MAX+1, RTA_DATA(attr),
++	parse_rtattr(bondtb, LINK_XSTATS_TYPE_MAX, RTA_DATA(attr),
+ 	RTA_PAYLOAD(attr));
+ 	if (!bondtb[LINK_XSTATS_TYPE_BOND])
+ 		return;
+--=20
+2.47.2
 
