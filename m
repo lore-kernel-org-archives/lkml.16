@@ -1,83 +1,122 @@
-Received: from relay16.mail.gandi.net (relay16.mail.gandi.net [217.70.178.236])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0077B23B60E;
-	Thu, 26 Jun 2025 07:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.236
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F941A8F94;
+	Thu, 26 Jun 2025 07:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750922759; cv=none; b=RonrqPsCJNSvD1EjFC5LT2ieIEg3FpUDlXLHP+NYpkob7PJ4jS1T+IQ+X0YbaBRoBixy2UO438tUsVW1pT1tmmQ0GWV747X29rNu90buTtQN+5BBWfvNIXeoa6IO3WzeNLR4AbXakUmkUjYIZIwdYpNwntrhRsokuU2GwrSm8yk=
+	t=1750922818; cv=none; b=Ow5eSJTP1wgS6h5j9QZsXdQ9oKsivcEeiTKw+G4zU6ME6kTJXuOxC3uJCBqWUoER71A0QuYCbDH1XMNpsJjq39DWpHxp3TXUqv7mbTF9i+mqOFvBeXyi08y6f0Qlp16v9xTrLw29TCI0nzgM/+kNGmjK04XrBeEbOwMQdkQSLiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750922759; c=relaxed/simple;
-	bh=cP+LS+JT48xAm+OMUAjyBYcTGTWWmH6uA1TAjVp0oik=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZYdXmdNTj24BYwkotJIA8BY/+XSCjSVhUeTf01oqRCNmjOSWk1C+jCXTjfpvgNHt26r3xb3Rz4/Q55Fq4r50ZYkRYlx6ZHVLPMfdNkSCaOqt2GdNDZXJRJUp13T1x3iLZPgGb0WhE2jyFk21vgUW9AlNMKy8EYxlyVHVx3m9CSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Tf9KD+6H; arc=none smtp.client-ip=217.70.178.236
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750922818; c=relaxed/simple;
+	bh=kh8PTnqwdXVM33XrWSHg6xtxFJcL8XC9586i9CBGYu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JeGlRv2z3fjCGB2rkkmJ4jGe9GX18VRNdzLqnS/6dxSEnfGZ1umCBd6/Z0PuHiGwcJSykKsThyhVBCPUjjTKmSDDuZxobSN4w1lvKr0hwlHkYwzNumltUNd/la5IeCpmduE8k8/20NeXaP8q8cik3lRBGRRhLRf+35oTPPDJ140=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OFJcrwcH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Tf9KD+6H"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6541044A0C;
-	Thu, 26 Jun 2025 07:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750922755;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cP+LS+JT48xAm+OMUAjyBYcTGTWWmH6uA1TAjVp0oik=;
-	b=Tf9KD+6HR5QRq1KpbRFlU6OXd/2oZFt2nMpY3dRF2jQlBntgE/uXldQe4ASkyQuEFeGFpU
-	x54Kx+uyFahHqD3gLmlKtEeKISIFQ3cFUyziK87YXTImfrxfbju0VCXhTsvDnQf8BdN7O8
-	G+zSkknpujMQcnwoCAGu3wP0+pY75y1JNixyG/vHrgLA+Xz2GjaglsXBYqN65JcNmkJ2IG
-	CHr/pRPQ8jqPg5GqRIOY8ZPudj3lLBUSn3TIOdglIrwN8v5Vv1JujssPROvaReJZsZkxOD
-	dkBbPLZ+LpAu3fgJ86CilDjP0TbjiVkr+5k4q4FmlPID1oN06B+OH98gZbKc7w==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Gabor Juhos <j4g8y7@gmail.com>,  Md Sadre Alam
- <quic_mdalam@quicinc.com>,  Varadarajan Narayanan
- <quic_varada@quicinc.com>,  Sricharan Ramabadhran
- <quic_srichara@quicinc.com>,  Richard Weinberger <richard@nod.at>,
-  Vignesh Raghavendra <vigneshr@ti.com>,  linux-spi@vger.kernel.org,
-  linux-mtd@lists.infradead.org,  linux-arm-msm@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  Lakshmi Sowjanya D
- <quic_laksd@quicinc.com>
-Subject: Re: [PATCH v3 0/2] spi: spi-qpic-snand: avoid memory corruption
-In-Reply-To: <aFx7ix0uikB8dkm4@finisterre.sirena.org.uk> (Mark Brown's message
-	of "Wed, 25 Jun 2025 23:43:23 +0100")
-References: <20250618-qpic-snand-avoid-mem-corruption-v3-0-319c71296cda@gmail.com>
-	<aFx7ix0uikB8dkm4@finisterre.sirena.org.uk>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Thu, 26 Jun 2025 09:25:53 +0200
-Message-ID: <8734bnx8u6.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OFJcrwcH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D4ADC4CEEB;
+	Thu, 26 Jun 2025 07:26:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750922818;
+	bh=kh8PTnqwdXVM33XrWSHg6xtxFJcL8XC9586i9CBGYu0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OFJcrwcHsR3vRlPb5zeQb0wmJV97Y0VzvDRKVWvGRvXqemb3qwG7lgO65EHa9dnWv
+	 Yd6PSiLKll8Tg2LCOQQmUvbHZwMrMGSstGEBcnUi5aa6LvoA/cBB4y+5snQNwG7+O4
+	 U/uyxpH7T7wkvkLjULDufr8wdCnRmHdbIja+TflMrNrU4+dkHX5O4PGWNC0Yn1ZAQu
+	 clVmgL1xPgPi6M4EAgPP6+TWiEVYz8Vbb/PIQJUMyAId/LItwXUKLgmj8MqZcTwpcs
+	 SvoHM9Dl/9nZLau8ArZdCRdouyZaNMiBAP8Hwd430OOUvkh5blvSsCPz3+VJ+waSVv
+	 J5PtZ7MWVsM7A==
+Date: Thu, 26 Jun 2025 10:26:53 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Abhijit Gangurde <abhijit.gangurde@amd.com>
+Cc: shannon.nelson@amd.com, brett.creeley@amd.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	corbet@lwn.net, jgg@ziepe.ca, andrew+netdev@lunn.ch,
+	allen.hubbe@amd.com, nikhil.agarwal@amd.com,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andrew Boyer <andrew.boyer@amd.com>
+Subject: Re: [PATCH v3 08/14] RDMA/ionic: Register auxiliary module for ionic
+ ethernet adapter
+Message-ID: <20250626072653.GI17401@unreal>
+References: <20250624121315.739049-1-abhijit.gangurde@amd.com>
+ <20250624121315.739049-9-abhijit.gangurde@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvhedtgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhegghekhiejsehgmhgrihhlrdgtohhmpdhrtghpthhtohepqhhuihgtpghmuggrlhgrmhesqhhuihgtihhntgdrtghomhdprhgtphhtthhopehquhhitggpvhgrrhgruggrsehquhhitghinhgtrdgtohhmpdhrtghpthhtohepqhhuihgtpghsrhhitghhrghrrgesqhhuihgtihhntgdrtghomhdprhgtphhtt
- hhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtoheplhhinhhugidqshhpihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624121315.739049-9-abhijit.gangurde@amd.com>
 
-Hi Mark,
+On Tue, Jun 24, 2025 at 05:43:09PM +0530, Abhijit Gangurde wrote:
+> Register auxiliary module to create ibdevice for ionic
+> ethernet adapter.
+> 
+> Co-developed-by: Andrew Boyer <andrew.boyer@amd.com>
+> Signed-off-by: Andrew Boyer <andrew.boyer@amd.com>
+> Co-developed-by: Allen Hubbe <allen.hubbe@amd.com>
+> Signed-off-by: Allen Hubbe <allen.hubbe@amd.com>
+> Signed-off-by: Abhijit Gangurde <abhijit.gangurde@amd.com>
+> ---
+> v1->v2
+>   - Removed netdev references from ionic RDMA driver
+>   - Moved to ionic_lif* instead of void* to convey information between
+>     aux devices and drivers.
+> 
+>  drivers/infiniband/hw/ionic/ionic_ibdev.c   | 133 ++++++++++++++++++++
+>  drivers/infiniband/hw/ionic/ionic_ibdev.h   |  21 ++++
+>  drivers/infiniband/hw/ionic/ionic_lif_cfg.c | 118 +++++++++++++++++
+>  drivers/infiniband/hw/ionic/ionic_lif_cfg.h |  65 ++++++++++
+>  4 files changed, 337 insertions(+)
+>  create mode 100644 drivers/infiniband/hw/ionic/ionic_ibdev.c
+>  create mode 100644 drivers/infiniband/hw/ionic/ionic_ibdev.h
+>  create mode 100644 drivers/infiniband/hw/ionic/ionic_lif_cfg.c
+>  create mode 100644 drivers/infiniband/hw/ionic/ionic_lif_cfg.h
 
-On 25/06/2025 at 23:43:23 +01, Mark Brown <broonie@kernel.org> wrote:
+<...>
 
-> On Wed, Jun 18, 2025 at 10:22:48PM +0200, Gabor Juhos wrote:
->> The 'spi-qpic-nand' driver may cause memory corruption under some
->> circumstances. The first patch in the series changes the driver to
->> avoid that, whereas the second adds some sanity checks to the common
->> QPIC code in order to make detecting such errors easier in the future.
->>=20
->> Preferably, the two patches should go along in via the SPI tree.
->> It is not a strict requirement though, in the case the second patch
->> gets included separately through the MTD tree it reveals the bug
->> which is fixed in the first patch.
->
-> Miquel, are you OK with this plan for merging via the SPI tree?
+> +	rc = ionic_version_check(&ionic_adev->adev.dev, ionic_adev->lif);
+> +	if (rc)
+> +		return ERR_PTR(rc);
 
-Absolutely, my Ack is already there, thanks for asking.
+<...>
 
-Miqu=C3=A8l
+> +struct net_device *ionic_lif_netdev(struct ionic_lif *lif)
+> +{
+> +	return lif->netdev;
+> +}
+
+Why do you need to store netdev pointer?
+Why can't you use existing ib_device_get_netdev/ib_device_set_netdev?
+
+> +
+> +int ionic_version_check(const struct device *dev, struct ionic_lif *lif)
+> +{
+> +	union ionic_lif_identity *ident = &lif->ionic->ident.lif;
+> +
+> +	if (ident->rdma.version < IONIC_MIN_RDMA_VERSION ||
+> +	    ident->rdma.version > IONIC_MAX_RDMA_VERSION) {
+> +		dev_err_probe(dev, -EINVAL,
+> +			      "ionic_rdma: incompatible version, fw ver %u\n",
+> +			      ident->rdma.version);
+> +		dev_err_probe(dev, -EINVAL,
+> +			      "ionic_rdma: Driver Min Version %u\n",
+> +			      IONIC_MIN_RDMA_VERSION);
+> +		dev_err_probe(dev, -EINVAL,
+> +			      "ionic_rdma: Driver Max Version %u\n",
+> +			      IONIC_MAX_RDMA_VERSION);
+> +	}
+> +
+> +	return 0;
+> +}
+
+Upstream code has all subsystems in sync, and RDMA driver is always
+compatible with its netdev counterpart. Please remove this part.
+
+This is not full review yet, please wait till next week, so we will
+review more deeply.
+
+Thanks
