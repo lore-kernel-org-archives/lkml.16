@@ -1,110 +1,90 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660BF2264B0;
-	Thu, 26 Jun 2025 06:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67C1B217F40;
+	Thu, 26 Jun 2025 06:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750918282; cv=none; b=o1+W4X7znlsy4/56gQUiYLh6wbGfzUkS7CyfIOeYfYAy5Qr7rPMrQgPCN+qUR75VxoGTm+2ixmVT7Ttsjz2IHjNufZwRZE260BhY8WEmOZOt6ldUgHgDLXbBtciOXAcFHy3iB0HDLTrZ9zbh4VY3U1KWQuqZGiSUzkOP96i+TFA=
+	t=1750918371; cv=none; b=t3zkeeHIvc5QAR7XFSKLVpb3y2xHLsq7Tv44e+9MRTTNYJz/0kfVdGgpFSPZoLxfdQmRNHTsI4+Pn4PprqsOg6fHdytkT8BntBVHPUqzjybskqbJPN8fnDZHVZl1MMz299GwgfntGJDx1umvmdywTSkjIfXOCLoD9yzCkyDsB8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750918282; c=relaxed/simple;
-	bh=YjBNwjuDDGIEARDlIG3mMEgJiZszeROBIi4mjqVfmi0=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=S8AGcIlnK+dO6iqCQDiXYMU4CI6m0iy45Chc5lmP5/gsQWuWxaUyi0Q/jpje2nHmHrGUwt6bK0BueJjFoN+YPil248Rxq7wcLzeSYQt/mkPs3R/W5Ab7dKr7SBM2RtwO6CTO4xrxsCS2bgVX8EPYyP4mLrvurEfDrBmvoaD5InY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bSSx91gNRz8RVF9;
-	Thu, 26 Jun 2025 14:11:09 +0800 (CST)
-Received: from xaxapp05.zte.com.cn ([10.99.98.109])
-	by mse-fl2.zte.com.cn with SMTP id 55Q6AaTi045249;
-	Thu, 26 Jun 2025 14:10:36 +0800 (+08)
-	(envelope-from liu.xuemei1@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Thu, 26 Jun 2025 14:10:38 +0800 (CST)
-Date: Thu, 26 Jun 2025 14:10:38 +0800 (CST)
-X-Zmail-TransId: 2af9685ce45e5dd-13d4a
-X-Mailer: Zmail v1.0
-Message-ID: <20250626141038445ZnnRRHX3QpBjC7RGFRlrw@zte.com.cn>
+	s=arc-20240116; t=1750918371; c=relaxed/simple;
+	bh=LNDVWqKnANqaLDSLCVZPh2blBQFLB8dawnJf9/+U74Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XDVpKxniQIm21ppgn9trptqN59U6uscSOI1k2zSG/oN10b2MqoxgvHKCgDKdD6Xr/2HFofHiJJdnjttRGdwfe93YE0eX+C1aC8JO0Y7FpnUJN1WcHC9mj8C9qG348jx9UWGibaGcAfcF7lhmuEJIGfcHw8wLuJdhuZhNM/SXWhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=bmnVH+7L; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bmnVH+7L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=t7
+	a61QuJVKBLezRRUhEoBCMadWsQdpjNWHXS0MLyvd0=; b=bmnVH+7LJTYBppwurX
+	ntcjhVnrur1Guvh2ba1YSBXYF70alUCOEkRbKfKUBRIFR8rWXRxRguytzKABnWwz
+	VDltr7N1V4uVsyWVvac3C0zTy9LDG5VJiKUpaTdxzukyrR95obIlkTHauU9/cOwL
+	DO87Bj2G5rGMAqjj+a1GL4NkI=
+Received: from 163.com (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDXMM+05FxohS2TAg--.58321S2;
+	Thu, 26 Jun 2025 14:12:06 +0800 (CST)
+From: Yuan Chen <chenyuan_fl@163.com>
+To: ast@kernel.org,
+	qmo@qmon.net
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chenyuan_fl@163.com,
+	chenyuan <chenyuan@kylinos.cn>
+Subject: [PATCH] bpftool: Add CET-aware symbol matching for x86_64 architectures
+Date: Thu, 26 Jun 2025 14:11:58 +0800
+Message-Id: <20250626061158.29702-1-chenyuan_fl@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <liu.xuemei1@zte.com.cn>
-To: <mani@kernel.org>, <kwilczynski@kernel.org>, <kishon@kernel.org>,
-        <bhelgaas@google.com>
-Cc: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <liu.song13@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIXSByZW1vdGUvc3RyZWFtLWV2ZW50OiBGaXggYSBtZW1vcnkgbGVhayBpbgoKIHJlbW90ZVN0cmVhbUNhbGxiYWNrRnJlZSgp?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 55Q6AaTi045249
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 685CE47D.000/4bSSx91gNRz8RVF9
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDXMM+05FxohS2TAg--.58321S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7AF47uF1fAF4xAF4kKw48JFb_yoW8Wr1rp3
+	93AFs5KFWUXr43Wan7ua1ayFW3WFs2v3yDZF9rG34Y9r45Xwn2vr17CF40yF1avr1kJw17
+	Z34avrs0gryvvrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piw0ekUUUUU=
+X-CM-SenderInfo: xfkh05pxdqswro6rljoofrz/1tbiURp2vWha87d2dgABs3
 
-From: Liu Song <liu.song13@zte.com.cn>
+From: chenyuan <chenyuan@kylinos.cn>
 
-The ff callback is never called in remoteStreamCallbackFree() because
-cbdata->cb can not be NULL. This causes a leak of 'cbdata->opaque'.
+Adjust symbol matching logic to account for Control-flow Enforcement
+Technology (CET) on x86_64 systems. CET prefixes functions with a 4-byte
+'endbr' instruction, shifting the actual entry point to symbol + 4.
 
-The leak can be reproduced by attaching and detaching to the console of
-an VM using `virsh console`.
-
-ASAN reports the leak stack as:
-Direct leak of 288 byte(s) in 1 object(s) allocated from:
-    #0 0x7f6edf6ba0c7 in calloc (/lib64/libasan.so.8+0xba0c7)
-    #1 0x7f6edf5175b0 in g_malloc0 (/lib64/libglib-2.0.so.0+0x615b0)
-    #2 0x7f6ede6d0be3 in g_type_create_instance (/lib64/libgobject-2.0.so.0+0x3cbe3)
-    #3 0x7f6ede6b82cf in g_object_new_internal (/lib64/libgobject-2.0.so.0+0x242cf)
-    #4 0x7f6ede6b9877 in g_object_new_with_properties (/lib64/libgobject-2.0.so.0+0x25877)
-    #5 0x7f6ede6ba620 in g_object_new (/lib64/libgobject-2.0.so.0+0x26620)
-    #6 0x7f6edeb78138 in virObjectNew ../src/util/virobject.c:252
-    #7 0x7f6edeb7a78b in virObjectLockableNew ../src/util/virobject.c:274
-    #8 0x558251e427e1 in virConsoleNew ../tools/virsh-console.c:369
-    #9 0x558251e427e1 in virshRunConsole ../tools/virsh-console.c:427
-
-Signed-off-by: Liu Song <liu.song13@zte.com.cn>
+Signed-off-by: chenyuan <chenyuan@kylinos.cn>
 ---
- src/remote/remote_daemon_stream.c | 2 +-
- src/remote/remote_driver.c        | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/bpf/bpftool/link.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/src/remote/remote_daemon_stream.c b/src/remote/remote_daemon_stream.c
-index 453728a66b..a5032f9a43 100644
---- a/src/remote/remote_daemon_stream.c
-+++ b/src/remote/remote_daemon_stream.c
-@@ -437,13 +437,13 @@ int daemonAddClientStream(virNetServerClient *client,
-         return -1;
-     }
-
-+    virObjectRef(client);
-     if (virStreamEventAddCallback(stream->st, 0,
-                                   daemonStreamEvent, client,
-                                   virObjectUnref) < 0)
-         return -1;
-
-     virObjectRef(client);
--
-     if ((stream->filterID = virNetServerClientAddFilter(client,
-                                                         daemonStreamFilter,
-                                                         stream)) < 0) {
-diff --git a/src/remote/remote_driver.c b/src/remote/remote_driver.c
-index 2690c05267..9ac13469e9 100644
---- a/src/remote/remote_driver.c
-+++ b/src/remote/remote_driver.c
-@@ -5336,7 +5336,7 @@ static void remoteStreamCallbackFree(void *opaque)
- {
-     struct remoteStreamCallbackData *cbdata = opaque;
-
--    if (!cbdata->cb && cbdata->ff)
-+    if (cbdata->ff)
-         (cbdata->ff)(cbdata->opaque);
-
-     virObjectUnref(cbdata->st);
+diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
+index 189bf312c206..96c62d8aff8e 100644
+--- a/tools/bpf/bpftool/link.c
++++ b/tools/bpf/bpftool/link.c
+@@ -744,8 +744,21 @@ static void show_kprobe_multi_plain(struct bpf_link_info *info)
+ 
+ 	printf("\n\t%-16s %-16s %s", "addr", "cookie", "func [module]");
+ 	for (i = 0; i < dd.sym_count; i++) {
+-		if (dd.sym_mapping[i].address != data[j].addr)
++		if (dd.sym_mapping[i].address != data[j].addr) {
++#if defined(__x86_64__) || defined(__amd64__)
++			/*
++			 * On x86_64 architectures with CET (Control-flow Enforcement Technology),
++			 * function entry points have a 4-byte 'endbr' instruction prefix.
++			 * This causes the actual function address = symbol address + 4.
++			 * Here we check if this symbol matches the target address minus 4,
++			 * indicating we've found a CET-enabled function entry point.
++			 */
++			if (dd.sym_mapping[i].address == data[j].addr - 4)
++				goto found;
++#endif
+ 			continue;
++		}
++found:
+ 		printf("\n\t%016lx %-16llx %s",
+ 		       dd.sym_mapping[i].address, data[j].cookie, dd.sym_mapping[i].name);
+ 		if (dd.sym_mapping[i].module[0] != '\0')
 -- 
-2.27.0
+2.25.1
+
