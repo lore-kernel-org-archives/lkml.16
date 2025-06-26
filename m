@@ -1,168 +1,79 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370A82E336E;
-	Thu, 26 Jun 2025 13:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBFE1D5CD7;
+	Thu, 26 Jun 2025 13:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750942883; cv=none; b=QXC0kWaDzbMg74yNujXxIpQJfvR7C0kBERp76nPB+LEtv1lhlN56nY8KiSl8/iUc/SGcmhGPTrYBgCjSix4ol1CrcZUKsoIPGItUSePb1wGBsF93VwVHlixCKP57pxdjO088A7BZnCuPvLGSUu/CjmqpdkUY+E2G7ZSL1GyNo5Y=
+	t=1750942955; cv=none; b=hHv65hFzkVF2IuQNMEhq0KMDGcB2MEkUhWlBFmLhUGpgJjfWk4N0b1eK1xrDbZ2up9vCKnQgekQhb2FW1BJpDIMZsZXNR5Hwz6mi9jz9pOJHLasLUj1XjOS7bcsmvCei1bjcQyLxAxER9wE8rl/dGGMiwMGrbBtu7+kxcSPZkqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750942883; c=relaxed/simple;
-	bh=8E+3n1QtwchzZWQx5O5Q/cKJIfNTzXwQQ9R2UsIGlOo=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=I97fkkWK1KxdiWL0oD5o/PNHsd1I7XFwpvI3ON5Yo1a/7xh6hn2wNzrvM7oM5OoIuORNehdnriG5uXEstg2eGcJ6U0XQRjJ5r9DGPq1cfQJPXlRABwI3+iLjOuKi1eDzDJvM/bX+ZZVP6uM5aZn80LR1yH2zWhslKWeUKfLqHDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o+ZMS2of; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XqNMV6hD; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750942955; c=relaxed/simple;
+	bh=B9wUOZTtzw7U+McrdNxlBvk4qao6W70+MTISb8uB31E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fZxsCbGUSiK8Z2bYv4b8Uu919bJ/wD+XWGd9xMuxaXV0fUOSvAQCHX4FUyt33bg1IUtidDGIkDyohQCICIjOh3Y2PiG0jd33A5V1p+dODm47FcYNq4n7bIh3DPHldZSjxuZyHEjjpPhHnX/vhXCk5euKcNETjd1j7Dnr5K8q1IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d97u/9rd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o+ZMS2of";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XqNMV6hD"
-Date: Thu, 26 Jun 2025 13:01:17 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750942879;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f41wVf+xOCYKXJ2qv7Qx7MXNwZzykuwtDlgdJhUhcCY=;
-	b=o+ZMS2ofRvZ/WX9R3I1kS+Xsuds3yZiAjVYwP/pHASQgZcbbCFtlURyheGXMxOQL+joeap
-	ENlWGQluCJuKPTuzs4x9Gd2aRl6zsDYy2pSqF05Z9CJANlDc4fLdhCojVPT2mUdTSJFpGM
-	LZz8Nhrp9Iz48kwf2FY3VJIxgqzptpOj3yAoZCQI8nUOW3QNIFYGwhGP16Dk/+2F6u0Q82
-	gFPsiz9pxkTMNq76d/JwW6bV2zalFB+H69mSNWpSc5lP/hWVeVoo7ZJdcwYi+mmRuo387L
-	G8i8jFSgaNF8CsJ+kxXizZ7s0lrTZSRcd7EBf4gce8zzL4cUlr6pA9iPJUVk6w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750942879;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f41wVf+xOCYKXJ2qv7Qx7MXNwZzykuwtDlgdJhUhcCY=;
-	b=XqNMV6hDREXnuOI/FIbB1izUJdxAOlJ0d1gKy25CoqffHBficgFNssme/N6Y9J1/P9WcXY
-	wNgzIHceuxrMvSAg==
-From: "tip-bot2 for David Kaplan" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/bugs] x86/bugs: Clean up SRSO microcode handling
-Cc: David Kaplan <david.kaplan@amd.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250625155805.600376-4-david.kaplan@amd.com>
-References: <20250625155805.600376-4-david.kaplan@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d97u/9rd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9553CC4CEEE;
+	Thu, 26 Jun 2025 13:02:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750942953;
+	bh=B9wUOZTtzw7U+McrdNxlBvk4qao6W70+MTISb8uB31E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d97u/9rd4UUJdL+gccU/JkXG8I08gH5sa2Gy0tHeIYgPl6AE2mXqoaIehOQf4lpUo
+	 hoKDlOkTwuqXTjtjP8Ljgc1Jeeb3WHOb8qOnyjKBvF+upRFoA+B8/T1SxagvN6l16x
+	 q6HD3TEq8fZUr4vyL5Ewl9uh5N/XftHmmbRkXG0z3bToIXvdpie7Kj7x9fEoACjJco
+	 7hzQPzrqzrcFkGHNxVTmqa9AncMmVOcFRLN0SNoH02yKKbtAdDB9TpWBMx4k3M1+k2
+	 Vs53yvWGuzl/Hr0vIKRZ3uMmBis/cSAEUXbKOX1ZiJ5iOaHipnjHdbd6pjbjJlbDC4
+	 cjHdEjd6q/V+g==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uUmFN-000000002Qu-3bt6;
+	Thu, 26 Jun 2025 15:02:33 +0200
+Date: Thu, 26 Jun 2025 15:02:33 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Steev Klimaszewski <steev@kali.org>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v4 7/8] firmware: qcom: scm: rework QSEECOM allowlist
+Message-ID: <aF1E6VfnYMydhib8@hovoldconsulting.com>
+References: <20250625-more-qseecom-v4-0-aacca9306cee@oss.qualcomm.com>
+ <20250625-more-qseecom-v4-7-aacca9306cee@oss.qualcomm.com>
+ <aF0ZMcVcgHpqsKoG@hovoldconsulting.com>
+ <3jrz5dtblgmacp32zda6yai76qkp3wxzj5axj7cwnzpdgk3uxr@5tnwyayvzlyu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <175094287763.406.9381570505281070631.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3jrz5dtblgmacp32zda6yai76qkp3wxzj5axj7cwnzpdgk3uxr@5tnwyayvzlyu>
 
-The following commit has been merged into the x86/bugs branch of tip:
+On Thu, Jun 26, 2025 at 02:09:08PM +0300, Dmitry Baryshkov wrote:
+> On Thu, Jun 26, 2025 at 11:56:01AM +0200, Johan Hovold wrote:
+> > On Wed, Jun 25, 2025 at 01:53:26AM +0300, Dmitry Baryshkov wrote:
 
-Commit-ID:     98b5dab4d22181c931f2bf63c060416badbb49ab
-Gitweb:        https://git.kernel.org/tip/98b5dab4d22181c931f2bf63c060416badbb49ab
-Author:        David Kaplan <david.kaplan@amd.com>
-AuthorDate:    Wed, 25 Jun 2025 10:58:05 -05:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Thu, 26 Jun 2025 13:32:31 +02:00
+> > > +	{ .compatible = "qcom,sc8180x", },
+> > > +	{ .compatible = "qcom,sc8280xp", },
+> > >  	{ .compatible = "qcom,sc8280xp-crd", .data = &qcom_qseecom_ro_uefi, },
+> > 
+> > You need to have the machine specific entries before the SoC fallbacks
+> > for this to work.
+> 
+> I don't think so. It's not how OF matching works.
 
-x86/bugs: Clean up SRSO microcode handling
+Ah, right, too used to USB matching.
 
-SRSO microcode only exists for Zen3/Zen4 CPUs.  For those CPUs, the microcode
-is required for any mitigation other than Safe-RET to be effective.  Safe-RET
-can still protect user->kernel and guest->host attacks without microcode.
-
-Clarify this in the code and ensure that SRSO_MITIGATION_UCODE_NEEDED is
-selected for any mitigation besides Safe-RET if the required microcode isn't
-present.
-
-Signed-off-by: David Kaplan <david.kaplan@amd.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/20250625155805.600376-4-david.kaplan@amd.com
----
- arch/x86/kernel/cpu/bugs.c | 37 ++++++++++++++++++-------------------
- 1 file changed, 18 insertions(+), 19 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index b263419..e2a8a21 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -2902,8 +2902,6 @@ early_param("spec_rstack_overflow", srso_parse_cmdline);
- 
- static void __init srso_select_mitigation(void)
- {
--	bool has_microcode;
--
- 	if (!boot_cpu_has_bug(X86_BUG_SRSO) || cpu_mitigations_off())
- 		srso_mitigation = SRSO_MITIGATION_NONE;
- 
-@@ -2913,23 +2911,30 @@ static void __init srso_select_mitigation(void)
- 	if (srso_mitigation == SRSO_MITIGATION_AUTO)
- 		srso_mitigation = SRSO_MITIGATION_SAFE_RET;
- 
--	has_microcode = boot_cpu_has(X86_FEATURE_IBPB_BRTYPE);
--	if (has_microcode) {
--		/*
--		 * Zen1/2 with SMT off aren't vulnerable after the right
--		 * IBPB microcode has been applied.
--		 */
--		if (boot_cpu_data.x86 < 0x19 && !cpu_smt_possible()) {
--			srso_mitigation = SRSO_MITIGATION_NOSMT;
--			return;
--		}
--	} else {
-+	/* Zen1/2 with SMT off aren't vulnerable to SRSO. */
-+	if (boot_cpu_data.x86 < 0x19 && !cpu_smt_possible()) {
-+		srso_mitigation = SRSO_MITIGATION_NOSMT;
-+		return;
-+	}
-+
-+	if (!boot_cpu_has(X86_FEATURE_IBPB_BRTYPE)) {
- 		pr_warn("IBPB-extending microcode not applied!\n");
- 		pr_warn(SRSO_NOTICE);
-+
-+		/*
-+		 * Safe-RET provides partial mitigation without microcode, but
-+		 * other mitigations require microcode to provide any
-+		 * mitigations.
-+		 */
-+		if (srso_mitigation == SRSO_MITIGATION_SAFE_RET)
-+			srso_mitigation = SRSO_MITIGATION_SAFE_RET_UCODE_NEEDED;
-+		else
-+			srso_mitigation = SRSO_MITIGATION_UCODE_NEEDED;
- 	}
- 
- 	switch (srso_mitigation) {
- 	case SRSO_MITIGATION_SAFE_RET:
-+	case SRSO_MITIGATION_SAFE_RET_UCODE_NEEDED:
- 		if (boot_cpu_has(X86_FEATURE_SRSO_USER_KERNEL_NO)) {
- 			srso_mitigation = SRSO_MITIGATION_IBPB_ON_VMEXIT;
- 			goto ibpb_on_vmexit;
-@@ -2939,9 +2944,6 @@ static void __init srso_select_mitigation(void)
- 			pr_err("WARNING: kernel not compiled with MITIGATION_SRSO.\n");
- 			srso_mitigation = SRSO_MITIGATION_NONE;
- 		}
--
--		if (!has_microcode)
--			srso_mitigation = SRSO_MITIGATION_SAFE_RET_UCODE_NEEDED;
- 		break;
- ibpb_on_vmexit:
- 	case SRSO_MITIGATION_IBPB_ON_VMEXIT:
-@@ -2956,9 +2958,6 @@ ibpb_on_vmexit:
- 			pr_err("WARNING: kernel not compiled with MITIGATION_IBPB_ENTRY.\n");
- 			srso_mitigation = SRSO_MITIGATION_NONE;
- 		}
--
--		if (!has_microcode)
--			srso_mitigation = SRSO_MITIGATION_UCODE_NEEDED;
- 		break;
- 	default:
- 		break;
+Johan
