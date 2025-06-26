@@ -1,165 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCC8239E79
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A191A202C46;
+	Thu, 26 Jun 2025 09:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750931575; cv=none; b=NnylIdauwLY2fJQ2Ubh0/tpKwfmZMzdkD4RwjZy3nxCVakKsxpHVu+bIbuNUfQMnISAwfeOuZnnYm4me4MqmzJsXIUcnHsOLKamk4o30LIbb/L+eCWNiSw3eSiJLlKt7zwZkTyg3Iuv50ifJ2WY96djyjhSjMYyxgHv/HCd6Q9c=
+	t=1750931733; cv=none; b=IPsp82BM+4oYPNAB3OQC6N35c9eTDeDfmH8kxAAd5Vxp+l/S+fzc/kl6r1VuYDDdRDyXRsUNKHHyNprTwRwhAOAeBtmG8q8uAJfIfUEnG+mnhdbmAVpc7GqbEX/p+g96zRxz4x2E9+VpLkKj5gb5t/x17f8BOCBTnNdlMCdPb2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750931575; c=relaxed/simple;
-	bh=2AIE+LkdiujG5ji7loxoRS9NHD2gQlKzMyQaLL826Kk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P6UMBax4Re+0rRKLtTWYzJScHnhm3I2zWbcQ8iXWTa0HMIQ5t04cIL7sV0QPdAPC1DXjOfbki7RriRpc8e4c42fbUNwTgHdis26FoxzJ0ogkYzSx4Y6eKS0VTppqBHcDVodnjyCFpfnIxkSUMC4tDNH4WFGvW0U5zTWZPdP3k0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BB+VHb9g; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BB+VHb9g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750931572;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=maigbIGpFa40uB5iR2z3omILy1pW0Pv0zv0NfF/hTkQ=;
-	b=BB+VHb9g/Gqd6cUpbViUIXRg3C4ikHW92Ji/sx8K/DPBJ+agHVHif9wpUGFxDmo9cR0PNp
-	HBOrU38jPmcf1VdlQSzg5LwV5LB+pwEs/JbYKBDDMR7Ta3PlyXY/QJ4/AoqNSYPKVN0D9C
-	+wL8DZL8dhJuekd3BDvTAHq+nampYw4=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-211-LeF5gsmwOrK0kvTK3vRPQA-1; Thu,
- 26 Jun 2025 05:52:48 -0400
-X-MC-Unique: LeF5gsmwOrK0kvTK3vRPQA-1
-X-Mimecast-MFC-AGG-ID: LeF5gsmwOrK0kvTK3vRPQA_1750931567
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2FCD118DA5C2;
-	Thu, 26 Jun 2025 09:52:47 +0000 (UTC)
-Received: from gshan-thinkpadx1nanogen2.rmtau.csb (unknown [10.64.136.50])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 971D630002C0;
-	Thu, 26 Jun 2025 09:52:43 +0000 (UTC)
-From: Gavin Shan <gshan@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: james.morse@arm.com,
-	sdonthineni@nvidia.com,
-	rohit.mathew@arm.com,
-	carl@os.amperecomputing.com,
-	gshan@redhat.com,
-	shan.gavin@gmail.com
-Subject: [PATCH MPAM 6.16.rc1] arm_mpam: Enforce to recalculate mbw_min on configuration
-Date: Thu, 26 Jun 2025 19:52:08 +1000
-Message-ID: <20250626095208.1008871-1-gshan@redhat.com>
+	s=arc-20240116; t=1750931733; c=relaxed/simple;
+	bh=Pl3DbRJOh3EPOC28gCvS6+Vd+hF9nKKs9fb4+dHJijI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HR5vuQcOQ8Eot/PXRtZ+3tyoA9XMH1YbzJzzLk8rcK/Xym2hgVlVkGfItWgjGdbyBGbpZzuAZZuLTiVHue8F2OKYRJOu9R13C6J7Lm7lyt+76nvaeN7ruohMNwvRfCSOqi6fFLGo9KkjQciifFr6PvMUIJV5NH4GC3VQhQy0tJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwC3Dpf7GF1o43VPBA--.62245S2;
+	Thu, 26 Jun 2025 17:55:07 +0800 (CST)
+Received: from phytium.com.cn (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwB3CyXzGF1olRFeAA--.236S3;
+	Thu, 26 Jun 2025 17:55:00 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chenbaozi@phytium.com.cn,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Subject: [PATCH] cxl: Add CONFIG_CXL_DEBUG to drivers/cxl
+Date: Thu, 26 Jun 2025 17:54:42 +0800
+Message-Id: <20250626095442.1254840-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-CM-TRANSID:AQAAfwB3CyXzGF1olRFeAA--.236S3
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAMAWhbAiIFpQArsU
+Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvdXoWruFyxAr43XFyfCryftrW8JFb_yoWkKFcEka
+	ykAryxG34j9ryqgFWIvF4fZryFv3Z5Zr4xZF1Sq343Xa429F13Gr4v9rn7Zw1rta4jgF1D
+	J34rZrnYvr18tjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrnU
+	Uv73VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRUUUUU
+	UUUU=
 
-mpam_feat_mbw_max is exposed to user by resctrlfs, but mpam_feat_mbw_min
-should be recalculated based on the maximal memory bandwidth in every
-configuration, which has been missed unfortunately. When a new group is
-created, the default and maximal memory bandwidth percentage (100%) is
-configured, the configuration instance (struct mpam_config) on the stack
-is updated, including the minimal and maximal memory bandwidth. It's
-copied to the domain's configuration instance. On next time when user
-tries to configure by writing 'schemata', the minimal memory bandwidth
-isn't never recalculated because mpam_feat_mbw_min has been seen in the
-configuration, which inherits from the domain's instance.
+CONFIG_CXL_DEBUG=y adds -DDEBUG to CFLAGS, which enables pr_debug()
+and dev_dbg(). Users can use this config to open all cxl debug
+messages.
 
-For example, the value of register MPAMCFG_MBW_MIN is never changed no
-matter what configuration is set.
-
-  # uname -r
-  6.16.0-rc1-gavin
-  # mount -tresctrl none /sys/fs/resctrl
-  # mkdir -p /sys/fs/resctrl/test
-  # cd /sys/fs/resctrl/test
-  # echo "MB:1=2" > schemata
-  MAPMF_MBW_IDR               00000c07
-  MPAMCFG_MBW_MAX             000005ff
-  MPAMCFG_MBW_MIN             0000f000
-  # echo "MB:1=100" > schemata
-  MAPMF_MBW_IDR               00000c07
-  MPAMCFG_MBW_MAX             0000ffff
-  MPAMCFG_MBW_MIN             0000f000
-
-Fix the issue by enforcing the calculation of the minimal memory bandwidth
-in very configuration. With this applied, The register MPAMCFG_MBW_MIN
-is updated with the expected value in every configuration.
-
-  # cd /sys/fs/resctrl/test
-  # echo "MB:1=2" > schemata
-  MAPMF_MBW_IDR               00000c07
-  MPAMCFG_MBW_MAX             000005ff
-  MPAMCFG_MBW_MIN             00000200
-  # echo "MB:1=100" > schemata
-  MAPMF_MBW_IDR               00000c07
-  MPAMCFG_MBW_MAX             0000ffff
-  MPAMCFG_MBW_MIN             0000f000
-
-Fixes: 75f4101bb338 ("arm_mpam: Generate a configuration for min controls")
-Signed-off-by: Gavin Shan <gshan@redhat.com>
+Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
 ---
-Appliable to James Morse's latest MPAM branch
-https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git
-(branch: mpam/snapshot/v6.16-rc1)
----
- drivers/platform/arm64/mpam/mpam_devices.c | 27 ++++++++++------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
+ drivers/cxl/Kconfig  | 10 ++++++++++
+ drivers/cxl/Makefile |  2 ++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/drivers/platform/arm64/mpam/mpam_devices.c b/drivers/platform/arm64/mpam/mpam_devices.c
-index df8730491de2..4845dcb8e601 100644
---- a/drivers/platform/arm64/mpam/mpam_devices.c
-+++ b/drivers/platform/arm64/mpam/mpam_devices.c
-@@ -3192,6 +3192,9 @@ static void mpam_extend_config(struct mpam_class *class, struct mpam_config *cfg
- 	u16 min, min_hw_granule, delta;
- 	u16 max_hw_value, res0_bits;
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index 48b7314afdb8..b7e5225e9d7c 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -233,4 +233,14 @@ config CXL_MCE
+ 	def_bool y
+ 	depends on X86_MCE && MEMORY_FAILURE
  
-+	if (!mpam_has_feature(mpam_feat_mbw_max, cfg))
-+		return;
++config CXL_DEBUG
++	bool "CXL Debugging"
++	depends on DEBUG_KERNEL
++	help
++	  Say Y here if you want the CXL core to produce a bunch of debug
++	  messages to the system log.  Select this if you are having a
++	  problem with CXL support and want to see more of what is going on.
 +
- 	/*
- 	 * Calculate the values the 'min' control can hold.
- 	 * e.g. on a platform with bwa_wd = 8, min_hw_granule is 0x00ff because
-@@ -3211,23 +3214,17 @@ static void mpam_extend_config(struct mpam_class *class, struct mpam_config *cfg
- 	 *
- 	 * Resctrl can only configure the MAX.
- 	 */
--	if (mpam_has_feature(mpam_feat_mbw_max, cfg) &&
--	    !mpam_has_feature(mpam_feat_mbw_min, cfg)) {
--		delta = ((5 * MPAMCFG_MBW_MAX_MAX) / 100) - 1;
--		if (cfg->mbw_max > delta)
--			min = cfg->mbw_max - delta;
--		else
--			min = 0;
-+	delta = ((5 * MPAMCFG_MBW_MAX_MAX) / 100) - 1;
-+	if (cfg->mbw_max > delta)
-+		min = cfg->mbw_max - delta;
-+	else
-+		min = 0;
- 
--		cfg->mbw_min = max(min, min_hw_granule);
--		mpam_set_feature(mpam_feat_mbw_min, cfg);
--	}
-+	cfg->mbw_min = max(min, min_hw_granule);
-+	mpam_set_feature(mpam_feat_mbw_min, cfg);
-+	if (mpam_has_quirk(T241_FORCE_MBW_MIN_TO_ONE, class))
-+		cfg->mbw_min = max(cfg->mbw_min, min_hw_granule + 1);
- 
--	if (mpam_has_quirk(T241_FORCE_MBW_MIN_TO_ONE, class) &&
--	    cfg->mbw_min <= min_hw_granule) {
--		cfg->mbw_min = min_hw_granule + 1;
--		mpam_set_feature(mpam_feat_mbw_min, cfg);
--	}
- }
- 
- /* TODO: split into write_config/sync_config */
++	  When in doubt, say N.
++
+ endif
+diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+index 2caa90fa4bf2..9c0151a2b201 100644
+--- a/drivers/cxl/Makefile
++++ b/drivers/cxl/Makefile
+@@ -19,3 +19,5 @@ cxl_acpi-y := acpi.o
+ cxl_pmem-y := pmem.o security.o
+ cxl_mem-y := mem.o
+ cxl_pci-y := pci.o
++
++subdir-ccflags-$(CONFIG_CXL_DEBUG) := -DDEBUG
 -- 
-2.49.0
+2.34.1
 
