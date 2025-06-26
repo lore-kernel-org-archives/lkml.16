@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1E927814F;
-	Thu, 26 Jun 2025 23:56:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B3528504E;
+	Thu, 26 Jun 2025 23:56:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750982200; cv=none; b=WF9Fx2hF1/E3pIGaJ/bDoCRYgOowstqhsWNgwjH2DGgKkP8GasbR8TcYsrOObHeJ3yb8Q1Kk4IeZGPHdHO9psqiPMGKo8tZZwunTEh2sddTzW6BHnCkN1XBwQTSLk/lLRvRy2xStuPona1BV0oF4M3EQY088a0Rl0i8Qqt0IKF0=
+	t=1750982201; cv=none; b=qFOv4T9mApOzon3G81DFTAzUMigIQGyWQ0RgD/UsjVnPN4BXztBdIpj+HPp0Z7b6lzpohzl+bw/xc5guTtr3CjgeW2HUza10LMlmzQV38KZrkjqMCNMN6jTWdSwEMFrVVhQT5o6jRng5STOALuXfVQYdAhlNyUQ7llvrSkiZCNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750982200; c=relaxed/simple;
-	bh=ZQdHrtvLDERCGJxK7kndLOryOSth6EpE24Kv/FPD/3o=;
+	s=arc-20240116; t=1750982201; c=relaxed/simple;
+	bh=cDSDfPuFviJZI1Tb44QI/RSgrjC4wn64JVLGOdgLNnQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VV8H9sXyH1zR2A9rDFDtTOVzCO8GX7r5NYRFCSYra6Q3+hT+rYU0Qt8EZgP+ICmnW8ybZiy85IXdgBoBPzZvO8HKv1PI58sjMEvQHtZwBabaS11lBBYNxqYmPR5bCfK1pYRKuYkgTKaU9RZ9reS/bu8goIny6VY29VX+C7KSvgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T80YUVuU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=t7q8WynlwaeUrhE6D0aSJnmbqHkrO6c3qVmzrDdjQ4fSIh9ocjBpQaNLItuS6ceieODqB3RD0dF/9t8a9a53mDcspX771QV5lMY73sgiJM+rovp+VZTfrkgD/BQJ5O2JgY+fvXMH6HeGUyXVG5qIAGfcnfNiaIax28mA1G7GkI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I8JkOOXO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T80YUVuU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F423FC4AF0B;
-	Thu, 26 Jun 2025 23:56:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I8JkOOXO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 614ACC4CEF1;
+	Thu, 26 Jun 2025 23:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750982199;
-	bh=ZQdHrtvLDERCGJxK7kndLOryOSth6EpE24Kv/FPD/3o=;
+	s=k20201202; t=1750982201;
+	bh=cDSDfPuFviJZI1Tb44QI/RSgrjC4wn64JVLGOdgLNnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T80YUVuUuchJodLH/7BdJ5S7sACD0kAxNbfgImC2480UxvLvn72X58p850Sy7XuV0
-	 KZaHRaCpWox7miMdMdZsKOucFqQvKZZIdYTccBY0ggtdL2DI3/TbwrU8zn6eA3fC2W
-	 IU48+lVyaOZb+RT3qDuXVUnDHLc84LEMMNIViTTze5/fXOOEA6MfVvU1zFxtiROZIO
-	 YIPXCsC7epi+cJqk7PAEQ1S3giYAyBZ7zr9jMlgg2LUIuRgZoXO6tUwdrwkkK3HVjQ
-	 tagjg5evpw5oYtIzNdKnrOmMWv2T52DiKuULOow775gm4JBko6gUdiHFkIusn69WyM
-	 7rV6a9oCDB6jg==
+	b=I8JkOOXOEsBVgbhrpHwfSzQxNn6mtCytNelvI2G8RNCxWEEEPkK739NslK7NbYE6/
+	 2dud3RmW9U0M+GTkzerMx4paG2zbFrFsdHEGLDUxBIVclkPt/YQQqloDnTfPJTMj8T
+	 ugRabkl+S4Y8eCVCQgB/qnqwIzKBbtXDf1tA0IrW0l+fslwEAXhjvLAeYep79+qEkX
+	 zaP+Yz7DtdMIMB8yKxrqohlMDwtRWOkiRZ5jHDBcPDyUT0I1mDNBk0Qlt0i/qVK9tK
+	 GpuNWAfU1hu4yF/MMiqapE+YnRnmOF7kTMz0hd66M1lxa+RUAmkrfSx13L5M0VR8wt
+	 PbdsA0UPS83vA==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -41,10 +41,11 @@ Cc: linux-kernel@vger.kernel.org,
 	Fazla Mehrab <a.mehrab@bytedance.com>,
 	Chen Zhongjin <chenzhongjin@huawei.com>,
 	Puranjay Mohan <puranjay@kernel.org>,
-	Dylan Hatch <dylanbhatch@google.com>
-Subject: [PATCH v3 40/64] objtool: Add elf_create_reloc() and elf_init_reloc()
-Date: Thu, 26 Jun 2025 16:55:27 -0700
-Message-ID: <28472bc6f2c7e25cd034d1ba6d591ba1c0252933.1750980517.git.jpoimboe@kernel.org>
+	Dylan Hatch <dylanbhatch@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH v3 42/64] kbuild,x86: Fix special section module permissions
+Date: Thu, 26 Jun 2025 16:55:29 -0700
+Message-ID: <cf1cfb9042005be7bf0a1c3f2bdbeebc769e3ee4.1750980517.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750980516.git.jpoimboe@kernel.org>
 References: <cover.1750980516.git.jpoimboe@kernel.org>
@@ -56,269 +57,135 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-elf_create_rela_section() is quite limited in that it requires the
-caller to know how many relocations need to be allocated up front.
+An upcoming patch will add the SHF_MERGE flag to x86 __jump_table and
+__bug_table so their entry sizes can be defined in inline asm.
 
-In preparation for the objtool klp diff subcommand, allow an arbitrary
-number of relocations to be created and initialized on demand after
-section creation.
+However, those sections have SHF_WRITE, which the Clang linker (lld)
+explicitly forbids combining with SHF_MERGE.
 
+Those sections are modified at runtime and must remain writable.  While
+SHF_WRITE is ignored by vmlinux, it's still needed for modules.
+
+To work around the linker interference, remove SHF_WRITE during
+compilation and restore it after linking the module.
+
+Cc: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- tools/objtool/elf.c                 | 151 +++++++++++++++++++++++++---
- tools/objtool/include/objtool/elf.h |   9 ++
- 2 files changed, 145 insertions(+), 15 deletions(-)
+ arch/Kconfig                      |  3 +++
+ arch/x86/Kconfig                  |  1 +
+ arch/x86/include/asm/bug.h        |  4 ++--
+ arch/x86/include/asm/jump_label.h |  2 +-
+ scripts/Makefile.modfinal         | 19 ++++++++++++++-----
+ 5 files changed, 21 insertions(+), 8 deletions(-)
 
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 535bdcf077d0..0e98cf2ab533 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -22,6 +22,8 @@
- #include <objtool/warn.h>
+diff --git a/arch/Kconfig b/arch/Kconfig
+index a3308a220f86..350ea5df5e8d 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -1314,6 +1314,9 @@ config HAVE_NOINSTR_HACK
+ config HAVE_NOINSTR_VALIDATION
+ 	bool
  
- #define ALIGN_UP(x, align_to) (((x) + ((align_to)-1)) & ~((align_to)-1))
-+#define ALIGN_UP_POW2(x) (1U << ((8 * sizeof(x)) - __builtin_clz((x) - 1U)))
-+#define MAX(a, b) ((a) > (b) ? (a) : (b))
++config NEED_MODULE_PERMISSIONS_FIX
++	bool
++
+ config HAVE_UACCESS_VALIDATION
+ 	bool
+ 	select OBJTOOL
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 71019b3b54ea..62faa62b5959 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -310,6 +310,7 @@ config X86
+ 	select HOTPLUG_SPLIT_STARTUP		if SMP && X86_32
+ 	select IRQ_FORCED_THREADING
+ 	select LOCK_MM_AND_FIND_VMA
++	select NEED_MODULE_PERMISSIONS_FIX
+ 	select NEED_PER_CPU_EMBED_FIRST_CHUNK
+ 	select NEED_PER_CPU_PAGE_FIRST_CHUNK
+ 	select NEED_SG_DMA_LENGTH
+diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+index 8593976b32cb..59e155ee3c76 100644
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -42,7 +42,7 @@
+ #define _BUG_FLAGS(cond_str, ins, flags, extra)				\
+ do {									\
+ 	asm_inline volatile("1:\t" ins "\n"				\
+-		     ".pushsection __bug_table,\"aw\"\n"		\
++		     ".pushsection __bug_table,\"a\"\n"			\
+ 		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
+ 		     "\t"  __BUG_REL(%c0) "\t# bug_entry::file\n"	\
+ 		     "\t.word %c1"        "\t# bug_entry::line\n"	\
+@@ -60,7 +60,7 @@ do {									\
+ #define _BUG_FLAGS(cond_str, ins, flags, extra)				\
+ do {									\
+ 	asm_inline volatile("1:\t" ins "\n"				\
+-		     ".pushsection __bug_table,\"aw\"\n"		\
++		     ".pushsection __bug_table,\"a\"\n"			\
+ 		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
+ 		     "\t.word %c0"        "\t# bug_entry::flags\n"	\
+ 		     "\t.org 2b+%c1\n"					\
+diff --git a/arch/x86/include/asm/jump_label.h b/arch/x86/include/asm/jump_label.h
+index 61dd1dee7812..cd21554b3675 100644
+--- a/arch/x86/include/asm/jump_label.h
++++ b/arch/x86/include/asm/jump_label.h
+@@ -13,7 +13,7 @@
+ #include <linux/types.h>
  
- static inline u32 str_hash(const char *str)
- {
-@@ -896,10 +898,9 @@ elf_create_prefix_symbol(struct elf *elf, struct symbol *orig, size_t size)
- 				 offset, size);
- }
+ #define JUMP_TABLE_ENTRY(key, label)			\
+-	".pushsection __jump_table,  \"aw\" \n\t"	\
++	".pushsection __jump_table,  \"a\"\n\t"		\
+ 	_ASM_ALIGN "\n\t"				\
+ 	".long 1b - . \n\t"				\
+ 	".long " label " - . \n\t"			\
+diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+index 542ba462ed3e..7a888e1ff70f 100644
+--- a/scripts/Makefile.modfinal
++++ b/scripts/Makefile.modfinal
+@@ -28,12 +28,24 @@ ccflags-remove-y := $(CC_FLAGS_CFI)
+ .module-common.o: $(srctree)/scripts/module-common.c FORCE
+ 	$(call if_changed_rule,cc_o_c)
  
--static struct reloc *elf_init_reloc(struct elf *elf, struct section *rsec,
--				    unsigned int reloc_idx,
--				    unsigned long offset, struct symbol *sym,
--				    s64 addend, unsigned int type)
-+struct reloc *elf_init_reloc(struct elf *elf, struct section *rsec,
-+			     unsigned int reloc_idx, unsigned long offset,
-+			     struct symbol *sym, s64 addend, unsigned int type)
- {
- 	struct reloc *reloc, empty = { 0 };
++ifdef CONFIG_NEED_MODULE_PERMISSIONS_FIX
++cmd_fix_mod_permissions =						\
++	$(OBJCOPY) --set-section-flags __jump_table=alloc,data		\
++		   --set-section-flags __bug_table=alloc,data $@	\
++		   --set-section-flags .static_call_sites=alloc,data $@
++endif
++
+ quiet_cmd_ld_ko_o = LD [M]  $@
+       cmd_ld_ko_o =							\
+ 	$(LD) -r $(KBUILD_LDFLAGS)					\
+ 		$(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)		\
+ 		-T $(objtree)/scripts/module.lds -o $@ $(filter %.o, $^)
  
-@@ -1001,12 +1002,14 @@ static int read_relocs(struct elf *elf)
++define rule_ld_ko_o
++	$(call cmd_and_savecmd,ld_ko_o)
++	$(call cmd,fix_mod_permissions)
++endef
++
+ quiet_cmd_btf_ko = BTF [M] $@
+       cmd_btf_ko = 							\
+ 	if [ ! -f $(objtree)/vmlinux ]; then				\
+@@ -46,14 +58,11 @@ quiet_cmd_btf_ko = BTF [M] $@
+ # Same as newer-prereqs, but allows to exclude specified extra dependencies
+ newer_prereqs_except = $(filter-out $(PHONY) $(1),$?)
  
- 		rsec->base->rsec = rsec;
+-# Same as if_changed, but allows to exclude specified extra dependencies
+-if_changed_except = $(if $(call newer_prereqs_except,$(2))$(cmd-check),      \
+-	$(cmd);                                                              \
+-	printf '%s\n' 'savedcmd_$@ := $(make-cmd)' > $(dot-target).cmd, @:)
++if_changed_rule_except = $(if $(call newer_prereqs_except,$(2))$(cmd-check),$(rule_$(1)),@:)
  
--		nr_reloc = 0;
--		rsec->relocs = calloc(sec_num_entries(rsec), sizeof(*reloc));
-+		rsec->nr_alloc_relocs = sec_num_entries(rsec);
-+		rsec->relocs = calloc(rsec->nr_alloc_relocs, sizeof(*reloc));
- 		if (!rsec->relocs) {
- 			ERROR_GLIBC("calloc");
- 			return -1;
- 		}
-+
-+		nr_reloc = 0;
- 		for (i = 0; i < sec_num_entries(rsec); i++) {
- 			reloc = &rsec->relocs[i];
- 
-@@ -1255,8 +1258,99 @@ struct section *elf_create_section(struct elf *elf, const char *name,
- 	return sec;
- }
- 
-+static int elf_alloc_reloc(struct elf *elf, struct section *rsec)
-+{
-+	struct reloc *old_relocs, *old_relocs_end, *new_relocs;
-+	unsigned int nr_relocs_old = sec_num_entries(rsec);
-+	unsigned int nr_relocs_new = nr_relocs_old + 1;
-+	unsigned long nr_alloc;
-+	struct symbol *sym;
-+
-+	if (!rsec->data) {
-+		rsec->data = elf_newdata(elf_getscn(elf->elf, rsec->idx));
-+		if (!rsec->data) {
-+			ERROR_ELF("elf_newdata");
-+			return -1;
-+		}
-+
-+		rsec->data->d_align = 1;
-+		rsec->data->d_type = ELF_T_RELA;
-+		rsec->data->d_buf = NULL;
-+	}
-+
-+	rsec->data->d_size = nr_relocs_new * elf_rela_size(elf);
-+	rsec->sh.sh_size   = rsec->data->d_size;
-+
-+	nr_alloc = MAX(64, ALIGN_UP_POW2(nr_relocs_new));
-+	if (nr_alloc <= rsec->nr_alloc_relocs)
-+		return 0;
-+	rsec->nr_alloc_relocs = nr_alloc;
-+
-+	rsec->data->d_buf = realloc(rsec->data->d_buf,
-+				    nr_alloc * elf_rela_size(elf));
-+	if (!rsec->data->d_buf) {
-+		ERROR_GLIBC("realloc");
-+		return -1;
-+	}
-+
-+	old_relocs = rsec->relocs;
-+	new_relocs = calloc(nr_alloc, sizeof(struct reloc));
-+	if (!new_relocs) {
-+		ERROR_GLIBC("calloc");
-+		return -1;
-+	}
-+
-+	if (!old_relocs)
-+		goto done;
-+
-+	/*
-+	 * The struct reloc's address has changed.  Update all the symbols and
-+	 * relocs which reference it.
-+	 */
-+
-+	old_relocs_end = &old_relocs[nr_relocs_old];
-+	for_each_sym(elf, sym) {
-+		struct reloc *reloc;
-+
-+		reloc = sym->relocs;
-+		if (!reloc)
-+			continue;
-+
-+		if (reloc >= old_relocs && reloc < old_relocs_end)
-+			sym->relocs = &new_relocs[reloc - old_relocs];
-+
-+		while (1) {
-+			struct reloc *next_reloc = sym_next_reloc(reloc);
-+
-+			if (!next_reloc)
-+				break;
-+
-+			if (next_reloc >= old_relocs && next_reloc < old_relocs_end)
-+				set_sym_next_reloc(reloc, &new_relocs[next_reloc - old_relocs]);
-+
-+			reloc = next_reloc;
-+		}
-+	}
-+
-+	memcpy(new_relocs, old_relocs, nr_relocs_old * sizeof(struct reloc));
-+
-+	for (int i = 0; i < nr_relocs_old; i++) {
-+		struct reloc *old = &old_relocs[i];
-+		struct reloc *new = &new_relocs[i];
-+		u32 key = reloc_hash(old);
-+
-+		elf_hash_del(reloc, &old->hash, key);
-+		elf_hash_add(reloc, &new->hash, key);
-+	}
-+
-+	free(old_relocs);
-+done:
-+	rsec->relocs = new_relocs;
-+	return 0;
-+}
-+
- struct section *elf_create_rela_section(struct elf *elf, struct section *sec,
--					unsigned int reloc_nr)
-+					unsigned int nr_relocs)
- {
- 	struct section *rsec;
- 	char *rsec_name;
-@@ -1269,34 +1363,61 @@ struct section *elf_create_rela_section(struct elf *elf, struct section *sec,
- 	strcpy(rsec_name, ".rela");
- 	strcat(rsec_name, sec->name);
- 
--	rsec = elf_create_section(elf, rsec_name, reloc_nr * elf_rela_size(elf),
-+	rsec = elf_create_section(elf, rsec_name, nr_relocs * elf_rela_size(elf),
- 				  elf_rela_size(elf), SHT_RELA, elf_addr_size(elf),
- 				  SHF_INFO_LINK);
- 	free(rsec_name);
- 	if (!rsec)
- 		return NULL;
- 
--	rsec->sh.sh_link = find_section_by_name(elf, ".symtab")->idx;
--	rsec->sh.sh_info = sec->idx;
--
--	if (reloc_nr) {
-+	if (nr_relocs) {
- 		rsec->data->d_type = ELF_T_RELA;
--		rsec->relocs = calloc(sec_num_entries(rsec), sizeof(struct reloc));
-+
-+		rsec->nr_alloc_relocs = nr_relocs;
-+		rsec->relocs = calloc(nr_relocs, sizeof(struct reloc));
- 		if (!rsec->relocs) {
- 			ERROR_GLIBC("calloc");
- 			return NULL;
- 		}
- 	}
- 
-+	rsec->sh.sh_link = find_section_by_name(elf, ".symtab")->idx;
-+	rsec->sh.sh_info = sec->idx;
-+
- 	sec->rsec = rsec;
- 	rsec->base = sec;
- 
- 	return rsec;
- }
- 
-+struct reloc *elf_create_reloc(struct elf *elf, struct section *sec,
-+			       unsigned long offset,
-+			       struct symbol *sym, s64 addend,
-+			       unsigned int type)
-+{
-+	struct section *rsec = sec->rsec;
-+
-+	if (!rsec) {
-+		rsec = elf_create_rela_section(elf, sec, 0);
-+		if (!rsec)
-+			return NULL;
-+	}
-+
-+	if (find_reloc_by_dest(elf, sec, offset)) {
-+		ERROR_FUNC(sec, offset, "duplicate reloc");
-+		return NULL;
-+	}
-+
-+	if (elf_alloc_reloc(elf, rsec))
-+		return NULL;
-+
-+	return elf_init_reloc(elf, rsec, sec_num_entries(rsec) - 1, offset, sym,
-+			      addend, type);
-+}
-+
- struct section *elf_create_section_pair(struct elf *elf, const char *name,
- 					size_t entsize, unsigned int nr,
--					unsigned int reloc_nr)
-+					unsigned int nr_relocs)
- {
- 	struct section *sec;
- 
-@@ -1305,7 +1426,7 @@ struct section *elf_create_section_pair(struct elf *elf, const char *name,
- 	if (!sec)
- 		return NULL;
- 
--	if (!elf_create_rela_section(elf, sec, reloc_nr))
-+	if (!elf_create_rela_section(elf, sec, nr_relocs))
- 		return NULL;
- 
- 	return sec;
-diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index fc00f86bedba..5c663e475890 100644
---- a/tools/objtool/include/objtool/elf.h
-+++ b/tools/objtool/include/objtool/elf.h
-@@ -47,6 +47,7 @@ struct section {
- 	int idx;
- 	bool _changed, text, rodata, noinstr, init, truncate;
- 	struct reloc *relocs;
-+	unsigned long nr_alloc_relocs;
- };
- 
- struct symbol {
-@@ -139,6 +140,14 @@ void *elf_add_data(struct elf *elf, struct section *sec, const void *data,
- 
- unsigned int elf_add_string(struct elf *elf, struct section *strtab, const char *str);
- 
-+struct reloc *elf_create_reloc(struct elf *elf, struct section *sec,
-+			       unsigned long offset, struct symbol *sym,
-+			       s64 addend, unsigned int type);
-+
-+struct reloc *elf_init_reloc(struct elf *elf, struct section *rsec,
-+			     unsigned int reloc_idx, unsigned long offset,
-+			     struct symbol *sym, s64 addend, unsigned int type);
-+
- struct reloc *elf_init_reloc_text_sym(struct elf *elf, struct section *sec,
- 				      unsigned long offset,
- 				      unsigned int reloc_idx,
+ # Re-generate module BTFs if either module's .ko or vmlinux changed
+ %.ko: %.o %.mod.o .module-common.o $(objtree)/scripts/module.lds $(and $(CONFIG_DEBUG_INFO_BTF_MODULES),$(KBUILD_BUILTIN),$(objtree)/vmlinux) FORCE
+-	+$(call if_changed_except,ld_ko_o,$(objtree)/vmlinux)
++	+$(call if_changed_rule_except,ld_ko_o,$(objtree)/vmlinux)
+ ifdef CONFIG_DEBUG_INFO_BTF_MODULES
+ 	+$(if $(newer-prereqs),$(call cmd,btf_ko))
+ endif
 -- 
 2.49.0
 
