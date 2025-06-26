@@ -1,368 +1,192 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DB12CCC0;
-	Thu, 26 Jun 2025 16:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D72211A29
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750955911; cv=none; b=bk+wRh5R/wtXb3qxpAMht4H4GIYHrIGOiWgQbyJoNvyEszea44efvmUAmbeQx3ZwX1KQrjys3uiYwku7yEBTB+7Kf1HWt2lec4nIydQtWbV5+jjoAKtbSwdk8P13ojHfZS16j8XmACw443uQ0J82lDXneHDU4iRaQ6Cv48QPvPw=
+	t=1750955933; cv=none; b=Aa59t99aaLKIxi7/BxslyDRnx+NI4r0Gt0JveHRkSJ/ghplWuIRJRbdUB/4q26P6nHsz1qMS5ApVIRe8NO5uXVioozmybvjYPY7MiVRJAHPXwHkRL3Jh10VdfldYbafaTajg8584VS9mKsSBIgueKtW+4Jj4sIzQXR4FdJkooGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750955911; c=relaxed/simple;
-	bh=fbq5l2uaTOLxUk/YzB+CLQA+z/dACanNWFulxm/rV6s=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BQl8pF6iABJkveTc8nc3vd3hUUSyJUU668cJb6p6iLq4AAOnBtVRaCVG4sPmVMsCjKrgRixErJNkiNCOTFAYb9ZzWnBkUc9OgFcHqpjy/DQMkaJFr7RPyOWhEtdIGZ3ehxWjM/R/ffxYS3b1FiX4iMpiTpZXcIP780JvE9eZJeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dMV0l/1z; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750955933; c=relaxed/simple;
+	bh=4tM+osFLm95F10wmg1hWXVqNZ33jb/n9KzTYrLGnO40=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VFsjC+FzRFkr//4jjcgEN0vH4pRHBS9zZJkXr5c5OL9hWNkMPIOep1sQef1gPhKAJGWaHSafQNVVG1i3CTeS9iaulWXDOhmWFFswWZqpKjizAhm3JohByb1K34dL8G3fU1e6+9uNiTjTsorOFF/Pri3CzyLjfpWUwhobuxXAriI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zyJeW8fC; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dMV0l/1z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750955910; x=1782491910;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=fbq5l2uaTOLxUk/YzB+CLQA+z/dACanNWFulxm/rV6s=;
-  b=dMV0l/1z5tn98U0AftJe9fQElMt4LCIirVaxsiPdd2aPnV5BvrHokRuF
-   MPzWxI04364KKrqC1Lcf4eIvIsIaofmu1qk4z7atuKVOD6vdqE2rpqJnf
-   ISYcXCrAuDhXu5R6sccq5cTA0biA28RcEHLWAUjWr2bjW7CY9qPYLGgjd
-   3kQEudV33Yyp7I+AdjW1lyNdaSZDkaYtSLxNzhj3mMCW254XYt3CCt1pR
-   DOPcU5Xpd6+84X5mt6C/IR32e4+EDgzzZAlE4MlMEz5psIH6iW6J5cbsC
-   OV4tSxP3BZdsKInPKTJPEYhuPpn2W6W/iFrJqaUOH+HjxAxXexq7M9Wyk
-   A==;
-X-CSE-ConnectionGUID: lAphZBrNQHieScwLsva0og==
-X-CSE-MsgGUID: wOu9cCf1TsOcfKPdAv01ww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="64615174"
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="64615174"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:38:29 -0700
-X-CSE-ConnectionGUID: sWMr28zQRnGSHe/S+AS7cA==
-X-CSE-MsgGUID: qoy8WyjdTuuMYgvhC6bAIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="152740197"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:38:26 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 26 Jun 2025 19:38:22 +0300 (EEST)
-To: Xi Pardee <xi.pardee@linux.intel.com>
-cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 4/5] platform/x86:intel/pmc: Show substate requirement
- for S0ix blockers
-In-Reply-To: <20250625063145.624585-5-xi.pardee@linux.intel.com>
-Message-ID: <6f43709c-dfcb-059e-758a-be6a56538724@linux.intel.com>
-References: <20250625063145.624585-1-xi.pardee@linux.intel.com> <20250625063145.624585-5-xi.pardee@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zyJeW8fC"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-74264d1832eso1730913b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750955931; x=1751560731; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tvhr4Hd42xq744xGvgbZzLcER/F+YlE4VE7BOc+9sLU=;
+        b=zyJeW8fCkW1IexiVQQVsiddOsKr3fmmRlZ/gw+LxuiWqhubFRWmnnC4/wLAQRW1/cA
+         GFaPvN+a/us2HCzjJz6aa2fRMJ7WR+cYyRsJfEY2Nf1ATGWA6SKw1InMC1q4u/mgENh9
+         sknM/mb8GhpSJ0gQ+67APRkS8z1QinSB0TZemgNicj5ZkWcv8lE7TuBw52rbcjRqwA4d
+         d6aTdh9VNjDWewHjV/ILBU3Rs+/sikp0eV7Dz3/7J+zs+PmKlPy+ktukkoN2rtfEngp8
+         A/BlBEz+ouOU1SgpD3W5MQP5GGJLKDoamyjtNTShhSBU4Sj/9ephb6tr8x+0z/7SWz3s
+         omHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750955931; x=1751560731;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tvhr4Hd42xq744xGvgbZzLcER/F+YlE4VE7BOc+9sLU=;
+        b=ECaUdAivtM/9KyVQ+X5Z5feA7gjXg8YPePmDOHG208Lfg06pxNTM7op748GfLy5nyf
+         P4mAaaKj33gPIFJgUokUUwv0wFSp1Wb0InGekYPVN8LJ4RC1FfJfxemTbUTcF16At90Q
+         z4HOULfn+8nh/pAxpJFy+0JIpkQ+6XgR8cjZ9EnjwZ0ngMsO9vxWzeKXltb8wKoCk12k
+         iTNSF0U7rfPOR7FYx2719ihw6FzeKD+35tQgUpUSW2OGj8Nc8UWqNJ81gq8lwzFsLvtY
+         Aq66cAc7O1pSuK3+A0z+xwKEKsflGAD+7U18eFZ7WybxJeZTOfPyVDoT7Hju0/i+9z4t
+         LEZw==
+X-Forwarded-Encrypted: i=1; AJvYcCWSOGo6/Q+9WKTCzGxm07BykfVSHdOm425VXwkmizjVdHOjMaKJDLSkXEgdrJMO+gZICjRQvKRyZFUsghM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkXToQuuB2ORjKqC3rntvtYMpiTd0FGBI5LH9QeUvuvUxc09ax
+	XjVH/JrYlHzFgvHg9s+kGrrLoS8ES6S07OiZSL3RgGPA5N+uba4xxXLxd8bP+NEEf0Y=
+X-Gm-Gg: ASbGncv6uPVJ03XUpOmhTUHfL1NowSREt6TaYDFNuaxVo/7mJre2xVtbwgHwXPLG7wF
+	mdQmZFAMx4pQqTt/Ib74XgU92ULURN18/Dx6RYRk9XZqdq+0IWl+jw25glwwapU8tFeDu/RN/5o
+	7nGDz9gELgwLgm4maSy5RCIuXraiC6EI1tGH0mPowJc3fKzn7fC3uRp6ibi1N0+QsGbBb9Oz2vW
+	3VUTfyT2dBbdxvbftDKiW+ON53uD90eDZ8/FbtKCezLTC0xvOAW8wZ79M5A9UT+n4UOlU3hmWkm
+	Di9D8ys9FqgNNWlvo7TyzeuxWQw42SRvJq0EbSDxQEmXsXOghUeJYolLFJpvg2gtJA==
+X-Google-Smtp-Source: AGHT+IEjuEd/+4xRMbzboGHemRO7m2WnkSGGA6KZ1DSWu6K0FQ5qJhdZ8YASpAcYjCqHtKB3BtTM2w==
+X-Received: by 2002:a05:6a00:1141:b0:742:b3a6:db16 with SMTP id d2e1a72fcca58-74ad45b0013mr12097671b3a.20.1750955931088;
+        Thu, 26 Jun 2025 09:38:51 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:8327:3d7d:46f2:c531])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34c44460c4sm2094220a12.45.2025.06.26.09.38.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 09:38:50 -0700 (PDT)
+Date: Thu, 26 Jun 2025 10:38:48 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Andrew Davis <afd@ti.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Hari Nagalla <hnagalla@ti.com>,
+	Beleswar Padhi <b-padhi@ti.com>, linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] rpmsg: char: Export alias for RPMSG ID rpmsg-raw from
+ table
+Message-ID: <aF13mM9PSvTnKQ1k@p14s>
+References: <20250619205722.133827-1-afd@ti.com>
+ <aFwgQJ8B7EcjM1q7@p14s>
+ <a6d77856-cf9a-48f4-a66c-d124752b5f64@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a6d77856-cf9a-48f4-a66c-d124752b5f64@ti.com>
 
-On Tue, 24 Jun 2025, Xi Pardee wrote:
-
-> Add support to read and show S0ix blocker substate requirements.
-> Starting from Panther Lake, substate requirement data is provided
-> based on S0ix blockers instead of all low power mode requirements.
-> For platforms that support this new feature, add support to display
-> substate requirements based on S0ix blockers.
-
-Empty line.
-
-> Change the "substate_requirements" attribute of Intel PMC Core
-> driver to show the substate requirements for each S0ix blocker
-> and the corresponding S0ix blocker value.
+On Wed, Jun 25, 2025 at 12:12:03PM -0500, Andrew Davis wrote:
+> On 6/25/25 11:13 AM, Mathieu Poirier wrote:
+> > Good day,
+> > 
+> > On Thu, Jun 19, 2025 at 03:57:22PM -0500, Andrew Davis wrote:
+> > > Module aliases are used by userspace to identify the correct module to
+> > > load for a detected hardware. The currently supported RPMSG device IDs for
+> > > this module include "rpmsg-raw", but the module alias is "rpmsg_chrdev".
+> > > 
+> > > Use the helper macro MODULE_DEVICE_TABLE(rpmsg) to export the correct
+> > > supported IDs. And while here, to keep backwards compatibility we also add
+> > > the other ID "rpmsg_chrdev" so that it is also still exported as an alias.
+> > > 
+> > > This has the side benefit of adding support for some legacy firmware
+> > > which still uses the original "rpmsg_chrdev" ID. This was the ID used for
+> > > this driver before it was upstreamed (as reflected by the module alias).
+> > 
+> > I was surprised to receive this patch - my question from almost a year back is
+> > still pending.
+> > 
 > 
-> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
-> ---
->  drivers/platform/x86/intel/pmc/arl.c  |   2 +
->  drivers/platform/x86/intel/pmc/core.c | 111 ++++++++++++++++++++++++--
->  drivers/platform/x86/intel/pmc/core.h |  12 +++
->  drivers/platform/x86/intel/pmc/lnl.c  |   1 +
->  drivers/platform/x86/intel/pmc/mtl.c  |   1 +
->  5 files changed, 121 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
-> index 9d66d65e75779..1852876be234f 100644
-> --- a/drivers/platform/x86/intel/pmc/arl.c
-> +++ b/drivers/platform/x86/intel/pmc/arl.c
-> @@ -722,6 +722,7 @@ static int arl_h_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_
->  
->  struct pmc_dev_info arl_pmc_dev = {
->  	.pci_func = 0,
-> +	.telem_info = SUB_REQ_LPM,
->  	.dmu_guid = ARL_PMT_DMU_GUID,
->  	.regmap_list = arl_pmc_info_list,
->  	.map = &arl_socs_reg_map,
-> @@ -732,6 +733,7 @@ struct pmc_dev_info arl_pmc_dev = {
->  
->  struct pmc_dev_info arl_h_pmc_dev = {
->  	.pci_func = 2,
-> +	.telem_info = SUB_REQ_LPM,
->  	.dmu_guid = ARL_PMT_DMU_GUID,
->  	.regmap_list = arl_pmc_info_list,
->  	.map = &mtl_socm_reg_map,
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-> index 47cc5120e7dd6..e9d281b064462 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -844,6 +844,56 @@ static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index,
->  		seq_printf(s, " %9s |\n", name);
->  }
->  
-> +static int pmc_core_substate_blk_req_show(struct seq_file *s, void *unused)
-> +{
-> +	struct pmc_dev *pmcdev = s->private;
-> +	unsigned int pmc_index;
-> +	u32 *blk_sub_req_regs;
-
-Why is this here and the other variable in the inner block?
-
-> +
-> +	for (pmc_index = 0; pmc_index < ARRAY_SIZE(pmcdev->pmcs); pmc_index++) {
-> +		const struct pmc_bit_map **maps;
-> +		unsigned int arr_size, r_idx;
-> +		u32 offset, counter;
-> +		struct pmc *pmc;
-> +
-> +		pmc = pmcdev->pmcs[pmc_index];
-> +		if (!pmc || !pmc->blk_sub_req_regs)
-> +			continue;
-> +
-> +		blk_sub_req_regs = pmc->blk_sub_req_regs;
-> +		maps = pmc->map->s0ix_blocker_maps;
-> +		offset = pmc->map->s0ix_blocker_offset;
-> +		arr_size = pmc_core_lpm_get_arr_size(maps);
-> +
-> +		/* Display the header */
-> +		pmc_core_substate_req_header_show(s, pmc_index, "Value");
-> +
-> +		for (r_idx = 0; r_idx < arr_size; r_idx++) {
-> +			const struct pmc_bit_map *map;
-> +
-> +			for (map = maps[r_idx]; map->name; map++) {
-> +				int mode;
-> +
-> +				if (!map->blk)
-> +					continue;
-> +
-> +				counter = pmc_core_reg_read(pmc, offset);
-> +				seq_printf(s, "pmc%d: %34s |", pmc_index, map->name);
-> +				pmc_for_each_mode(mode, pmcdev) {
-> +					bool required = *blk_sub_req_regs & BIT(mode);
-> +
-> +					seq_printf(s, " %9s |", required ? "Required" : " ");
-> +				}
-> +				seq_printf(s, " %9d |\n", counter);
-> +				offset += map->blk * S0IX_BLK_SIZE;
-> +				blk_sub_req_regs++;
-> +			}
-> +		}
-> +	}
-> +	return 0;
-> +}
-> +DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_blk_req);
-> +
->  static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
->  {
->  	struct pmc_dev *pmcdev = s->private;
-> @@ -1335,7 +1385,10 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
->  		debugfs_create_file("substate_requirements", 0444,
->  				    pmcdev->dbgfs_dir, pmcdev,
->  				    &pmc_core_substate_req_regs_fops);
-> -	}
-> +	} else if (primary_pmc->blk_sub_req_regs)
-> +		debugfs_create_file("substate_requirements", 0444,
-> +				    pmcdev->dbgfs_dir, pmcdev,
-> +				    &pmc_core_substate_blk_req_fops);
+> I answered[0] your question and never received any follow up questions so I had
+> assumed the answer was satisfactory.
 >
->  	if (primary_pmc->map->pson_residency_offset && pmc_core_is_pson_residency_enabled(pmcdev)) {
->  		debugfs_create_file("pson_residency_usec", 0444,
-> @@ -1441,7 +1494,38 @@ static int pmc_core_pmt_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc,
->  	return ret;
->  }
->  
-> -static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, int func)
-> +static int pmc_core_pmt_get_blk_sub_req(struct pmc_dev *pmcdev, struct pmc *pmc,
-> +					struct telem_endpoint *ep)
-> +{
-> +	u32 num_blocker, sample_id;
-> +	unsigned int index;
-> +	u32 *req_offset;
-> +	int ret;
-> +
-> +	num_blocker = pmc->map->num_s0ix_blocker;
-> +	sample_id = pmc->map->blocker_req_offset;
-> +
-> +	pmc->blk_sub_req_regs = devm_kcalloc(&pmcdev->pdev->dev,
-> +					 num_blocker, sizeof(u32),
-> +					 GFP_KERNEL);
 
-Correct alignment.
-
-I guess you want to keep those two args on the same line as this would fit 
-on 2 lines.
-
-> +	if (!pmc->blk_sub_req_regs)
-> +		return -ENOMEM;
-> +
-> +	req_offset = pmc->blk_sub_req_regs;
-> +	for (index = 0; index < num_blocker; index++) {
-> +		ret = pmt_telem_read32(ep, sample_id, req_offset, 1);
-> +		if (ret) {
-> +			dev_err(&pmcdev->pdev->dev,
-> +				"couldn't read Low Power Mode requirements: %d\n", ret);
-> +			return ret;
-> +		}
-> +		sample_id++;
-> +		req_offset++;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, int func, unsigned int telem_info)
->  {
->  	struct pci_dev *pcidev __free(pci_dev_put) = NULL;
->  	struct telem_endpoint *ep;
-> @@ -1470,13 +1554,26 @@ static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, int func)
->  			return -EPROBE_DEFER;
->  		}
->  
-> -		ret = pmc_core_pmt_get_lpm_req(pmcdev, pmc, ep);
-> +		if (telem_info & SUB_REQ_LPM) {
-> +			ret = pmc_core_pmt_get_lpm_req(pmcdev, pmc, ep);
-> +			if (ret)
-> +				goto unregister_ep;
-> +		}
-> +
-> +		if (telem_info & SUB_REQ_BLK) {
-
-These two are mutually exclusive? I'm really wondering cuold pointers be 
-used instead to avoid these ifs here and in debugfs fops selection.
-
-> +			ret = pmc_core_pmt_get_blk_sub_req(pmcdev, pmc, ep);
-> +			if (ret)
-> +				goto unregister_ep;
-> +		}
-> +
->  		pmt_telem_unregister_endpoint(ep);
-> -		if (ret)
-> -			return ret;
->  	}
->  
->  	return 0;
-> +
-> +unregister_ep:
-> +	pmt_telem_unregister_endpoint(ep);
-> +	return ret;
->  }
->  
->  static const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid)
-> @@ -1585,7 +1682,9 @@ int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
->  		pmc_core_punit_pmt_init(pmcdev, pmc_dev_info->dmu_guid);
->  
->  	if (ssram) {
-> -		ret = pmc_core_get_telem_info(pmcdev, pmc_dev_info->pci_func);
-> +		ret = pmc_core_get_telem_info(pmcdev,
-> +					      pmc_dev_info->pci_func,
-> +					      pmc_dev_info->telem_info);
->  		if (ret)
->  			goto unmap_regbase;
->  	}
-> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-> index 4a94a4ee031e6..d8c7b28493055 100644
-> --- a/drivers/platform/x86/intel/pmc/core.h
-> +++ b/drivers/platform/x86/intel/pmc/core.h
-> @@ -29,6 +29,10 @@ struct telem_endpoint;
->  #define LPM_REG_COUNT		28
->  #define LPM_MODE_OFFSET		1
->  
-> +/* Telemetry Endpoint Info bits */
-> +#define SUB_REQ_LPM		0x01	/* Substate requirement for low power mode requirements */
-> +#define SUB_REQ_BLK		0x02	/* Substate requirement for S0ix blockers */
-> +
->  /* Sunrise Point Power Management Controller PCI Device ID */
->  #define SPT_PMC_PCI_DEVICE_ID			0x9d21
->  #define SPT_PMC_BASE_ADDR_OFFSET		0x48
-> @@ -344,6 +348,8 @@ struct pmc_bit_map {
->   * @pm_read_disable_bit: Bit index to read PMC_READ_DISABLE
->   * @slps0_dbg_offset:	PWRMBASE offset to SLP_S0_DEBUG_REG*
->   * @s0ix_blocker_offset PWRMBASE offset to S0ix blocker counter
-> + * @num_s0ix_blocker:	Number of S0ix blockers
-> + * @blocker_req_offset:	Telemetry offset to S0ix blocker low power mode substate requirement table
->   *
->   * Each PCH has unique set of register offsets and bit indexes. This structure
->   * captures them to have a common implementation.
-> @@ -369,6 +375,8 @@ struct pmc_reg_map {
->  	const u32 ltr_ignore_max;
->  	const u32 pm_vric1_offset;
->  	const u32 s0ix_blocker_offset;
-> +	const u32 num_s0ix_blocker;
-> +	const u32 blocker_req_offset;
->  	/* Low Power Mode registers */
->  	const int lpm_num_maps;
->  	const int lpm_num_modes;
-> @@ -404,6 +412,7 @@ struct pmc_info {
->   * @map:		pointer to pmc_reg_map struct that contains platform
->   *			specific attributes
->   * @lpm_req_regs:	List of substate requirements
-> + * @blk_sub_req_reqs:	List of registers showing substate requirements for S0ix blockers
->   * @ltr_ign:		Holds LTR ignore data while suspended
->   *
->   * pmc contains info about one power management controller device.
-> @@ -413,6 +422,7 @@ struct pmc {
->  	void __iomem *regbase;
->  	const struct pmc_reg_map *map;
->  	u32 *lpm_req_regs;
-> +	u32 *blk_sub_req_regs;
->  	u32 ltr_ign;
->  };
->  
-> @@ -468,6 +478,7 @@ enum pmc_index {
->  /**
->   * struct pmc_dev_info - Structure to keep PMC device info
->   * @pci_func:		Function number of the primary PMC
-> + * @telem_info:		Bitmask to indicate which telemetry info is available
->   * @dmu_guid:		Die Management Unit GUID
->   * @regmap_list:	Pointer to a list of pmc_info structure that could be
->   *			available for the platform. When set, this field implies
-> @@ -480,6 +491,7 @@ enum pmc_index {
->   */
->  struct pmc_dev_info {
->  	u8 pci_func;
-> +	u8 telem_info;
->  	u32 dmu_guid;
->  	struct pmc_info *regmap_list;
->  	const struct pmc_reg_map *map;
-> diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
-> index e08a77c778c2c..ec9e79f6cd913 100644
-> --- a/drivers/platform/x86/intel/pmc/lnl.c
-> +++ b/drivers/platform/x86/intel/pmc/lnl.c
-> @@ -572,6 +572,7 @@ static int lnl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_in
->  
->  struct pmc_dev_info lnl_pmc_dev = {
->  	.pci_func = 2,
-> +	.telem_info = SUB_REQ_LPM,
->  	.regmap_list = lnl_pmc_info_list,
->  	.map = &lnl_socm_reg_map,
->  	.suspend = cnl_suspend,
-> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-> index faa13a7ee688f..c58a871e2e0df 100644
-> --- a/drivers/platform/x86/intel/pmc/mtl.c
-> +++ b/drivers/platform/x86/intel/pmc/mtl.c
-> @@ -994,6 +994,7 @@ static int mtl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_in
->  
->  struct pmc_dev_info mtl_pmc_dev = {
->  	.pci_func = 2,
-> +	.telem_info = SUB_REQ_LPM,
->  	.dmu_guid = MTL_PMT_DMU_GUID,
->  	.regmap_list = mtl_pmc_info_list,
->  	.map = &mtl_socm_reg_map,
+Ah!  I never saw your reply, apologies for that.
+ 
+> > > 
+> > > Signed-off-by: Andrew Davis <afd@ti.com>
+> > > Acked-by: Hari Nagalla <hnagalla@ti.com>
+> > > Tested-by: Hari Nagalla <hnagalla@ti.com>
+> > > ---
+> > > 
+> > > Changes for v2:
+> > >   - Rebased on v6.16-rc1
+> > >   - Added Acked/Tested-by
+> > > 
+> > > [v1] https://www.spinics.net/lists/linux-remoteproc/msg18959.html
+> > > 
+> > >   drivers/rpmsg/rpmsg_char.c | 3 ++-
+> > >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
+> > > index eec7642d26863..96fcdd2d7093c 100644
+> > > --- a/drivers/rpmsg/rpmsg_char.c
+> > > +++ b/drivers/rpmsg/rpmsg_char.c
+> > > @@ -522,8 +522,10 @@ static void rpmsg_chrdev_remove(struct rpmsg_device *rpdev)
+> > >   static struct rpmsg_device_id rpmsg_chrdev_id_table[] = {
+> > >   	{ .name	= "rpmsg-raw" },
+> > > +	{ .name	= "rpmsg_chrdev" },
+> > >   	{ },
+> > >   };
+> > > +MODULE_DEVICE_TABLE(rpmsg, rpmsg_chrdev_id_table);
+> > 
+> > ... and I still don't understand why this patch is needed.  What is broken that
+> > this patch fixes?
+> > 
 > 
+> Today when this driver is built as a module it does not automatically load
+> when a matching firmware is started. You can see examples of documentation
+> working around this by manually loading it[1] and even applications
+> attempting the same in code[2]. This should not be needed. Here is why
+> this happens and how this patch fixes it:
+> 
+> A given firmware that makes use of this driver will have one of two
+> RPMSG device IDs: "rpmsg-raw" or "rpmsg_chrdev". Let's look at each in
+> turn:
+> 
+> If the ID is "rpmsg_chrdev" then this driver module will be loaded into
+> the kernel (that is what the MODULE_ALIAS line below did). But it will
+> not cause the driver module to probe, as probe is triggered by a match
+> in the above rpmsg_device_id table.
+> 
+> If the ID is "rpmsg-raw" then this driver module will probe with the
+> firmware, but only if this driver module was already loaded into the
+> kernel, or was built-in to the kernel.
+> 
+> By adding "rpmsg_chrdev" to the table we make this driver probe for
+> firmware with that ID. And by adding MODULE_DEVICE_TABLE we make both
+> IDs trigger the module to be loaded if it has not been already.
+> 
+> This patch makes it so both IDs do both needed actions. Where before
+> each ID would only do one action, but not the other.
 
--- 
- i.
+The part I was missing is the call to add_uevent_var() that uses @rpdev->id.name
+in rpmsg_uevent() - with that in mind it makes sense.  I have applied your
+patch.
 
+Thanks,
+Mathieu
+
+> 
+> Andrew
+> 
+> [0] https://www.spinics.net/lists/linux-remoteproc/msg19814.html
+> [1] https://github.com/OpenAMP/openamp-system-reference/blob/main/examples/linux/rpmsg-mat-mul/README.md?plain=1#L42
+> [2] https://github.com/Xilinx/meta-openamp/blob/master/recipes-openamp/rpmsg-examples/rpmsg-mat-mul/mat_mul_demo.c#L306
+> 
+> > Thanks,
+> > Mathieu
+> > 
+> > >   static struct rpmsg_driver rpmsg_chrdev_driver = {
+> > >   	.probe = rpmsg_chrdev_probe,
+> > > @@ -565,6 +567,5 @@ static void rpmsg_chrdev_exit(void)
+> > >   }
+> > >   module_exit(rpmsg_chrdev_exit);
+> > > -MODULE_ALIAS("rpmsg:rpmsg_chrdev");
+> > >   MODULE_DESCRIPTION("RPMSG device interface");
+> > >   MODULE_LICENSE("GPL v2");
+> > > -- 
+> > > 2.39.2
+> > > 
