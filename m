@@ -1,113 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1306E28BAAD;
-	Thu, 26 Jun 2025 13:24:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5358E28CF56
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750944253; cv=none; b=sTSVgt2ahJ1dOhgKIcXRIjS3W5VgVCB4NrhJonbpGtzHCaZAiT6FYJnB8nvftMtQ9HDghfwKCyWLVnJjdNYTihK5oDElrI0NGbgQFBNTSQGFaLd2Cww4kih4VobMtjJzKR2P827Qd2HMvUEVASx7igrv/PpB9ulPNeGoxb232jY=
+	t=1750944288; cv=none; b=pQrCKPLZVLYxU7L1GnTjYRZmzUiVyJCTN2VFXIdPkhZf7ALfXY848BN/wqmUOLa47/4q5+hUAhjzgFXkMh9svPn4NyiPL3HA6mCRvfVMsckwZQqrwDlDSh/MsY6DWesOqOE7LlRGXh5XZV4w+LGow1clCP0QQr2COKmaisDV5OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750944253; c=relaxed/simple;
-	bh=3al9fOG3/r7w7sBJN6SUAg1aITJLdTwo3biIRx5Cp+E=;
+	s=arc-20240116; t=1750944288; c=relaxed/simple;
+	bh=10uMTxglxknsiw2t3ZQh4FroAAiQNW+3m4lfHYqa4NE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b/Ps0GbVOvogZSkgwV7QsRIvmUcQhJ66n2PkUB6CUM6ZX8XxkrStkXmKgTF6hiOuCGhEE1lHwdliwVGrnXnYY5cry6bJi3p/WHrs1LA+s6z2bw/UwV9r4378jFsiEWjrD/3lYB2n8ohIVGEBLsXA/xKM83KWxTt4bo+kk5daWsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lhmF4cTC; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZzIJ9dRNtfA5RaDYayOokIKNxU124+C+K2/swKiLk9P9bPdaoxP5MHQPhGgJtvJ2ZErlTvYvGDJ83T7mzaqjCPHgbJ0gLATVBX2j7aGnPr83rg/Zq1UVhWzmaA0oqO7/k+K/nKFCtja+Gw9RWT6U4VBluE6bSvuaN6cwOwndyAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K4zMmK/P; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lhmF4cTC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750944252; x=1782480252;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=3al9fOG3/r7w7sBJN6SUAg1aITJLdTwo3biIRx5Cp+E=;
-  b=lhmF4cTCNIWHg5JwaVmW+mZrhgP/4tUeLdDXfYx/OOZ1kHfsSUzUfttk
-   NMobL7zVFeMBf1J26Z/rR7F0qM1Blm/ja9RVpqAIktKms24gtAgXs9OQN
-   p9fT7X7WNKOCTX/24B1/9YZgV6sKEYzW+fVftgbu7EVFinMN++J6C7Ivt
-   be9R+M1Q6UxlA9oKgxAuckomA+l2GUCI9kjE7fjnKOhzDi1hg5KQvD0fJ
-   jTJPWGyMOq0L9OtqLcu3/B8PArZoppJKGsqt8n+knvS4c7v62wZcXlf/E
-   dn1YBQoG2xU6gCyce5K07JcE3b3WYS8Qs41paTtAgqTM+T7Ur/SG/T9KY
-   g==;
-X-CSE-ConnectionGUID: NDYX5TiPTRicvkQBCrmpYQ==
-X-CSE-MsgGUID: Nvid1xegRs+IZpKNEXMc3w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64593631"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="64593631"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 06:24:11 -0700
-X-CSE-ConnectionGUID: kVjD+i/TS0yhD6Z2zO2w/w==
-X-CSE-MsgGUID: uxmeEAUDQGyjLyb+vdrXnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="156552267"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 06:24:10 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uUmaF-0000000ABaz-1YJs;
-	Thu, 26 Jun 2025 16:24:07 +0300
-Date: Thu, 26 Jun 2025 16:24:07 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Cezary Rojewski <cezary.rojewski@intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] ACPI: LPSS: Remove AudioDSP related ID
-Message-ID: <aF1J95lLvRFC55NT@smile.fi.intel.com>
-References: <20250625172133.3996325-1-andriy.shevchenko@linux.intel.com>
- <38ab3fb5-6d1a-491b-ad20-08066b007a28@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K4zMmK/P"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2ea58f008e9so875969fac.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:24:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750944285; x=1751549085; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QZlXkSD04zlKolE5r+OxRCc3dIBq/n6l6fhQYaRGqmU=;
+        b=K4zMmK/PpZJ4azhGeAaQBhjgVEqJqamRoMRpcyeRytdXTenaRYYzv3MYjqNjcr9AkG
+         NRY9t97mD2jozLp+7XfaliZhhNdEvrA+zncMd/AM/6SrUrUIuJLS00ttSIa08WUv2wLE
+         FbdXpDWZ+g4qdLQtoYmot1LKdMCbG2raltHnUnfQ9cEPSFA9m3+CXLdGdq5pCj5k6BsV
+         qr9u2//c4d0CtnnmI5ZQnCNMdkXj/ZDoHuHbGyxPxTnvHFI6u77a/0kTk9I90C49Ok1X
+         v3ZmzulW/dpXsYoOlI87JX7J7mfT23QqxYjdxJPyfxhYi9go1YIjg+sn03Z2TIUd3XJf
+         AWZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750944285; x=1751549085;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QZlXkSD04zlKolE5r+OxRCc3dIBq/n6l6fhQYaRGqmU=;
+        b=PbIZXOilVvNDS+Xc1q9+4o8fLTM4jJaz7DRwC2AEbTMcdSY9c02RXmJd0xYTpydPJ7
+         n+UBhPvvhQ2+USln4FiagVCNwmA2SqxTY4oTJI0jNQBqrK1Yfx7LbpwQYI0YV3tLFIct
+         Mjo0crdrMbpvufwpGX7cqrcuz91kesK6exSINM3q/eN1gE3um9+IxGK2QpiFpIepFPS7
+         SIDeCJFIsrpq04doVAeTSnBvVfRFboifLFZjv8NvJyIiSjupWrtCmwk5IL673PhC7wuN
+         5fRvASF2vftcOm05tyERtrXOtozmHjHnYo/cEMVBiws6RHV0wkkow5m9ZaIqmpkT5azQ
+         M+EA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMJXTKaRFyvwJHODPGHK60j6lSFz/CDdeRp3Py6ugEHZnZMmw+2paW2oOA17lS4MkmNkFjzkHCcfSnLnQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbdoG6fk2OKSaRFJK0LKNeMXCD0QbLWBZzFOppFFcnWLgiHdlj
+	jlSfp4nyfVApL1l+XDjSqOKdh+zxXLXMtb+P2udJpxm1WYnD6hYPtX1T0xcoy2mINbA=
+X-Gm-Gg: ASbGncvngC7EJovKosZ6l3DMIAl+0mHjwAlvopQ2pxwUJNqhRZFNULHqiwxJ1yfFUx8
+	UqLrSs7oM8sdR0QS5baTyXZQ6xtnRqK+rg3nTq+dg16RRS90NzSbbRkue4kUKG8uu62VsbLRM2D
+	EpiibmsUqbD3SR0BrlDFvMVSGBWVOOl8QUIrCwSL0IcQgV113jFfJlkeCvUMXrjUPJkRsHCbsuM
+	79g1K/WxlO2Zcp4RBLxM+hsbnTHmuEI0PLx+qYNSsFal3QZ9DdF5Q6W1YbEQx2v/CYf2kmA/JHE
+	c1lWFk04zMq1XlHrQ+g8+aftUdhnL/hdlr3Rafc0fMTltovKPx9we5H1btF7kd+H//4=
+X-Google-Smtp-Source: AGHT+IGHmrXQmGgiM1O4FMJI4ioJnomDeQhk1q4uAMvdGJQNa+bA3kRfvZeSRk6fLbxwCVrLnDbVRA==
+X-Received: by 2002:a05:6870:898e:b0:2e9:11c9:1093 with SMTP id 586e51a60fabf-2efb27ce26dmr4871522fac.31.1750944285390;
+        Thu, 26 Jun 2025 06:24:45 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:3ee4:904:206f:ad8])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a90c92150sm2575206a34.39.2025.06.26.06.24.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 06:24:44 -0700 (PDT)
+Date: Thu, 26 Jun 2025 16:24:43 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Su Hui <suhui@nfschina.com>
+Cc: akpm@linux-foundation.org, bhe@redhat.com, vgoyal@redhat.com,
+	dyoung@redhat.com, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v2] fs/proc/vmcore: a few cleanups for
+ vmcore_add_device_dump
+Message-ID: <e891bba8-9f67-47c6-8f84-a62abe35f837@suswa.mountain>
+References: <20250626105440.1053139-1-suhui@nfschina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <38ab3fb5-6d1a-491b-ad20-08066b007a28@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20250626105440.1053139-1-suhui@nfschina.com>
 
-On Thu, Jun 26, 2025 at 09:54:21AM +0200, Cezary Rojewski wrote:
-> On 2025-06-25 7:21 PM, Andy Shevchenko wrote:
-> > The AudioDSP drivers are in control for all functions of the hardware
-> > they have (they are multi-functional devices). The LPSS driver prepares
-> > for enumeration only single devices, such as DMA, UART, SPI, I²C. Hence
-> > the registration of AudioDSP should not be covered. Moreover, the very
-> > same ACPI _HID has been added by the catpt driver a few years ago.
-> > 
-> > And even more serious issue with this, is that the register window at
-> > offset 0x800 is actually D-SRAM0 in case of AudioDSP and writing to it
-> > is a data corruption.
-> > 
-> > That all being said, remove the AudioDSP ID from the LPSS driver,
-> > where it doesn't belong to.
-> > 
-> > Fixes: fb94b7b11c6a ("ASoC: Intel: Remove SST firmware components")
-> > Fixes: 05668be1b364 ("ASoC: Intel: Remove SST ACPI component")
-> > Fixes: 7a10b66a5df9 ("ASoC: Intel: catpt: Device driver lifecycle")
+On Thu, Jun 26, 2025 at 06:54:41PM +0800, Su Hui wrote:
+> There are two cleanups for vmcore_add_device_dump(). Return -ENOMEM
+> directly rather than goto the label to simplify the code. Using
+> scoped_guard() to simplify the lock/unlock code.
 > 
-> Hi Andy,
-> 
-> A nitpick:
-> 
-> The fixes tags used here seem incorrect. The catpt-driver replaced its
-> predecessor (the haswell driver) providing no interface changes. Usage of
-> INT3438 ID has been introduced with commit c2f8783fa2d0 ("ASoC: Intel: Add
-> common SST driver loader on ACPI systems"), if that's what you have been
-> looking for.
+> Signed-off-by: Su Hui <suhui@nfschina.com>
+> ---
 
-Okay, thanks for a hint. I will use that in v2.
+Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-> In regard to the code - the change has been reviewed by me and tested in our
-> CI, no regression on the audio side observed:
-> 
-> Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
-> Tested-by: Cezary Rojewski <cezary.rojewski@intel.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+regards,
+dan carpenter
 
