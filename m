@@ -1,111 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8792E92DD;
-	Thu, 26 Jun 2025 14:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE502E9EBA;
+	Thu, 26 Jun 2025 14:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750946709; cv=none; b=qKWBoaFIlD0C8eNDoSnwZlCLD5wPvvsQPruxJu8EBmJtAOfU/GslW6cFf8W2yDJakOpbkw5dNjmI8eDHSpCe2U1n88WsUghiLmeXHcfvCF++NbDADpje9M/z/49TwFrlftBigOwqd3rUw0onFILuXS8BLjSu1FmpzEFgq9QvgbY=
+	t=1750946708; cv=none; b=mFPT/yy88zOD+13Bl/ONqtWrF0oP0PNbtgoillF+jtuKu2uc7/z4mVkXYTnSBE/ikI3KuqHFzP20jj18ncAEpU8OAt1IeSpx4rgMFo7xOMqNC7yn/wYb6hma6sDKguwHos1C0H1WMkuaK7X33mlF65AOSnqSNie1vwCMeBEaWEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750946709; c=relaxed/simple;
-	bh=+K5n0VGk4TM353jmviQuCJl/tzxvNnr3dzj2b/7AuQk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GHpMXhMvAH5xACJhRAlKOYyaYnchudqlO/n6UHDss41yUA/xsVRS/6BoWWPXzaRWXBrHNk43WHG/7SOZdG2rEkwEEAAPtNJE8IdtzCg/qFlttb7dxAbkiYvvPSwn1GtCX5ILUVBHgA7ncK71rQ4t7TU/WbfBVUw4uWnRW0rPDuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qC2UnD8B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750946708; c=relaxed/simple;
+	bh=5glfHsLODiLO/3oY+r7Ho/WvBwzsT7tvBipgzjRr/7Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KzfSlqlxn58vYcunxK2k1qbLEBcwWL336rHOW/p7oZIg5hQQASIS+eY2sCt4C+a2wmk+ErQXXR5BmXHyNpTpn0pXk40kD6HNV7z2LpsUNkYWly2geCiMZXRPurQfGbtCl+Kv7+C5rCSYgEUOzL+X5Zgx4qbR86QGxNRGKSiwNDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wsa2U+pd; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qC2UnD8B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29AB5C4CEED;
-	Thu, 26 Jun 2025 14:05:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750946708;
-	bh=+K5n0VGk4TM353jmviQuCJl/tzxvNnr3dzj2b/7AuQk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qC2UnD8Bp0yw+P5bfz7aM7qzZ4eTinyxf/NB1mFB4GDJ3ZE+uw+gOPmzpmFsSgtb9
-	 fZGdvSIv60Ae68wdPc6qizeivAe8kDnlM1OWSi/YgLEwY7Z60EWoPut9sepJiMhXUP
-	 4+lJTvi+uI5BslaLaNam1tJGppwlFLIKZmOeRHtRt64ESBtGP4Fp9w6OmX3h7Acd09
-	 yaDsWigBaXq+cloTin6zsq7yyHBLHc19qZYeM2gOuYa0fdbANpUx553IKpRRrPSIZO
-	 s7Gpc0z1BZPmnuPudS6vhwr989zaSfCaC4q2aAFz3kREwciCFbAAYoBNjhQIQmIhNe
-	 w+ThtjU7u/Tvg==
-Message-ID: <08e3c707-3b39-4b67-ae9d-f9fe65ad210e@kernel.org>
-Date: Thu, 26 Jun 2025 16:05:00 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wsa2U+pd"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ade5a0442dfso196751466b.1;
+        Thu, 26 Jun 2025 07:05:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750946706; x=1751551506; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gBJ7OED84IgzfwVu3bE+rwCJsn8ySsLoxBG0PUK666c=;
+        b=Wsa2U+pdSWqlJfkQgDNV7dp72nGddnariP8IIb1LWMPkYn5tB3KCOZw0lX8ZIFFv6+
+         LEVNfrFTRQ5/V5N/WE4ssKTPG99UlulHtjczxbjGaWzPxgfRE7OEPn81g0fIx5NTLaOy
+         Ox+Z/Q18nPi7jJBJaSkXixAnu81gZpR2av1Oiz20QkMnAC5myafvbhA6/Vv9s+5w7Fr1
+         4vTFy58MmGR/PWaT6STMGHgKBePNQa0OMJ5RH0+DLpm+Ro4/oCqb6JdVNmaLKPmeAei5
+         SqEBk/GyudPLVit25DsosKo6VEvzHyqWB2cLF6EescBvjyh28UvVIQb1qFLFcKm+o2nb
+         nbHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750946706; x=1751551506;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gBJ7OED84IgzfwVu3bE+rwCJsn8ySsLoxBG0PUK666c=;
+        b=w+xdLd09hvRjLBig8VTa1BDhif/ND5LzLncJHXkdfi6pxbl3Au19+dbadeCauvLXSD
+         W607rueT0HzEGPBMB7jGZ3ZHE+t+WqQYy9NCiwKaBgcSZIRa9z7wTl/rRrKK2t6JNRlV
+         skrDMGxCZ83ZGKW42X8rP+DSRV5s1mrP+vO6VkdTB+KnS6THTAn/c8ulzvTpG9wmL0F2
+         8zhuQkg9I7ac9Dj6AZFjdyNAGSUgxbN8tdiaXnoSJt+EgCEn8d9UOwsRqndslgtmkt00
+         0KV7kVPnJvydm8CFjNtiT45q7+a7pRfs/0673z1PY0EdJqia32GPWYiQ4foEs+puDVcO
+         dSeg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWUPf/kmZaJS7R8VA2zy/Bf6AoOHFF9atpSyqPYZaNS9Qr3wJCiVeqWVX2VyCAz4FrUf8dWdr5gbndjaU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDpaUjIc/ecVIlTzOfzPC6ovouM51vV2i6cZZNMzECs7Zs0J6B
+	1hIGEhNOY0RvHPYtxuw5EWjh6/YJf/rHDVrTJM17/bLV1x/1GqcM7Tsx8PXOnYmymN3baQ==
+X-Gm-Gg: ASbGncukF8sGq4QkZ/PxInCwduV1DEKPi1/7OzQwwKZ1eWps35UJi7Gw+vA+YamSsUg
+	7KgvncUooKG/3s7185DvN96TwaOk0O75JmkC8hllhaWX05xMZmPrAIs2LePhFMM6YEdP0GAumJC
+	HuMF5xkIKCLk5BK7pCgREzCvihG0SDWWjutZ/tJOGdNz19QgGQFUicIeMXcyKjvHluqNsEsJxEM
+	SP/1lSOFtLvfAeM3T2NntxR5T8mQW87KTxp933eoMkkbvhYdvUj0RB8I3Pd8GiGVr6z1KWafmiK
+	+2IwXFYH1TmdXZOHN+og+XKHhZMyovlpAcKz8AU16ykQJgl53w1qKd2/525ewSi/PgxL7QxotfD
+	0A86o6cL4HDffvXcd4D5hVA==
+X-Google-Smtp-Source: AGHT+IFd80UBJ9vtN/l6OUaJDHUD3BJNY6g8XS2+oodfwuAVCEg0kkWD1KQ9A4HIdysep3bsRoIuoA==
+X-Received: by 2002:a17:907:724f:b0:ae0:b7c8:d735 with SMTP id a640c23a62f3a-ae0d0d15a2dmr422647466b.42.1750946703732;
+        Thu, 26 Jun 2025 07:05:03 -0700 (PDT)
+Received: from localhost.localdomain ([176.227.88.86])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae2143d928dsm3958266b.107.2025.06.26.07.05.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 07:05:03 -0700 (PDT)
+From: muhammed.efecetin.67@gmail.com
+X-Google-Original-From: muhammed.efecetin67@gmail.com
+To: linux-rockchip@lists.infradead.org
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	heiko@sntech.de,
+	neil.armstrong@linaro.org,
+	lee@kernel.org,
+	rafael@kernel.org,
+	efectn@protonmail.com,
+	daniel.lezcano@linaro.org
+Subject: [PATCH 5/5] arm64: dts: rockchip: add Khadas MCU and fan control nodes
+Date: Thu, 26 Jun 2025 17:04:32 +0300
+Message-ID: <27d9dccb3eb8723a524950f9dc6e78b7f99d46c5.1746518265.git.efectn@protonmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1746518265.git.efectn@protonmail.com>
+References: <cover.1746518265.git.efectn@protonmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/5] arm64: dts: qcom: qcm2290: Add venus video node
-To: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>, krzk+dt@kernel.org,
- bryan.odonoghue@linaro.org, quic_vgarodia@quicinc.com,
- quic_dikshita@quicinc.com, mchehab@kernel.org, robh@kernel.org,
- conor+dt@kernel.org, konradybcio@kernel.org, andersson@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250626135931.700937-1-jorge.ramirez@oss.qualcomm.com>
- <20250626135931.700937-6-jorge.ramirez@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250626135931.700937-6-jorge.ramirez@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 26/06/2025 15:59, Jorge Ramirez-Ortiz wrote:
-> +
-> +			interconnects = <&mmnrt_virt MASTER_VIDEO_P0 RPM_ALWAYS_TAG
-> +					 &bimc SLAVE_EBI1 RPM_ALWAYS_TAG>,
-> +					<&bimc MASTER_APPSS_PROC RPM_ACTIVE_TAG
-> +					 &config_noc SLAVE_VENUS_CFG RPM_ACTIVE_TAG>;
-> +			interconnect-names = "video-mem",
-> +					     "cpu-cfg";
-> +
-> +			status = "okay";
+From: Muhammed Efe Cetin <efectn@protonmail.com>
 
-Drop, unless you override existing node, but then this should follow
-standard override-label/phandle syntax.
+Add Khadas MCU fan control to Khadas Edge 2 with 4 fan control levels.
 
-Best regards,
-Krzysztof
+Signed-off-by: Muhammed Efe Cetin <efectn@protonmail.com>
+---
+ .../dts/rockchip/rk3588s-khadas-edge2.dts     | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts b/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
+index 2c22abaf4..60766c896 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
+@@ -271,12 +271,71 @@ hym8563: rtc@51 {
+ 		clock-output-names = "hym8563";
+ 		wakeup-source;
+ 	};
++
++	khadas_mcu: system-controller@18 {
++		compatible = "khadas,mcu";
++		reg = <0x18>;
++		cooling-levels = <0 50 72 100>;
++		#cooling-cells = <2>;
++	};
+ };
+ 
+ &i2s5_8ch {
+ 	status = "okay";
+ };
+ 
++&package_thermal {
++	polling-delay = <2000>;
++
++	trips {
++		package_fan0: package-fan0 {
++			temperature = <50000>;
++			hysteresis = <5000>;
++			type = "active";
++		};
++
++		package_fan1: package-fan1 {
++			temperature = <60000>;
++			hysteresis = <5000>;
++			type = "active";
++		};
++
++		package_fan2: package-fan2 {
++			temperature = <65000>;
++			hysteresis = <5000>;
++			type = "active";
++		};
++
++		package_fan3: package-fan3 {
++			temperature = <75000>;
++			hysteresis = <5000>;
++			type = "active";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&package_fan0>;
++			cooling-device = <&khadas_mcu THERMAL_NO_LIMIT 1>;
++		};
++
++		map1 {
++			trip = <&package_fan1>;
++			cooling-device = <&khadas_mcu 1 2>;
++		};
++
++		map2 {
++			trip = <&package_fan2>;
++			cooling-device = <&khadas_mcu 2 3>;
++		};
++
++		map3 {
++			trip = <&package_fan3>;
++			cooling-device = <&khadas_mcu 3 THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
+ &pd_gpu {
+ 	domain-supply = <&vdd_gpu_s0>;
+ };
+-- 
+2.49.0
+
