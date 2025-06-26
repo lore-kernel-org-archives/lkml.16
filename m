@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532B226B768
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9953219A9E
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750925782; cv=none; b=l6Ly48ISHd7FYaAZ8HpB2hkilbSRxA1ocsBCVVBif1YMIskrDN6OrAwex1FR+RqZCHhcyLXvCOISbpQ47XbIXfOABWC4gaJz2rYAO1qRoG4tJcBFyxJIoU/MJdXCJGqKKQaQLjU4C9QY4tR1Vw7Z0pE0P2YhPPrBu2AMiimQX9E=
+	t=1750925842; cv=none; b=X3YEHvWGLdP2+3OYJaICVXGt14U4pmM234pMEscdwG9XOiOX+Q7ugwJY1zX1G+NZfqCrNOqkHsxt8VGg7E8T0i5cS2psgH5/IiTR4oadW66Qb9w3C8tWwkC+UWLOVPJzohgvShFGRrrhylSiPYQQpzhk1He2EYoLuKSE8Fiq74I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750925782; c=relaxed/simple;
-	bh=2LaGHgeVxQQQMShe/h5KD7WE7trB8mcdOthVmXTBBMo=;
+	s=arc-20240116; t=1750925842; c=relaxed/simple;
+	bh=Sb2ndTBSp5Tvs/0SuD3ITGu4yetsVEfMhT0gu3r1d48=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xo2Fv11Ts9ntuhy1WXixI6wCTKMVHmlgIte+64Di2QSZ5NYa69Q1o3r1J8LlLABgNuSEJ8lq7xzCZs9q78D+gAVVDpLiCPjwaqqwcdk3DksyEYKyyInDaEkkAmj5jjnR2CJDCKFYbYv1gw8WHf4mJhJBcbjaLeu0hmOTzvvMkrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dEGS2Xpo; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=qYzbTAhM87I/wnIuKducBe2VcTxQ+rZTm/VxSNFGyGF2OANFtl0+ldExNnDajnIaAP5oGK4qTYS+Z8bKlwXV4yUMqli4+5E/sFOO3Q+0DdfvhLaNxXeTHIGd7zoS2gcB8c4lsjhudO9YH0aq0JjHe9c2VNZBpBKtREt9b2YQF2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CzeI+Ehf; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dEGS2Xpo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CzeI+Ehf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750925777;
+	s=mimecast20190719; t=1750925839;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qWPpr2CE+JfSG6/BLYsiDYGa2S9ML4EFd6pyLeDhF/g=;
-	b=dEGS2XpoadtKfdEKop+qQdwkgkUa21STAFVrAYxRtwiAO11UycQA7y+bXaCUma8EGkQCu9
-	uPuQbZvvNL+mLPwhBWsJROJ+br6zqXaMSDRrEn9OzMgp4ZkIGwrBs+4F4ZaQSfc1/C7pnW
-	j4pNkm+rOuMHqUydOPY0ZFTSBOG0XXM=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=55+jYEaEhNtGFPfW/0vKnlZGNZZvZBUpEkOyrpcO9hQ=;
+	b=CzeI+Ehfu2L0phIGakBMbV+qqwWxTlbzhA9FCKDYgDalc6WeglmJ9lSdO5PHqvZ1SFq1Nl
+	CbcdA0yItrZT+R1ql0+fbo2xPzCCxF74C6HHbHvbu01OLoiDbzhWN8bHhcE7aPRKBTFSp+
+	6WCFy2ohtIhpdUko/ozr2RegnNsfvfU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-246-dMoxIvQNNzui3FlaH-p6Fw-1; Thu, 26 Jun 2025 04:16:15 -0400
-X-MC-Unique: dMoxIvQNNzui3FlaH-p6Fw-1
-X-Mimecast-MFC-AGG-ID: dMoxIvQNNzui3FlaH-p6Fw_1750925774
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450d6768d4dso3850055e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 01:16:15 -0700 (PDT)
+ us-mta-381-qq-dNclFPZa20koJOKw2-g-1; Thu, 26 Jun 2025 04:17:16 -0400
+X-MC-Unique: qq-dNclFPZa20koJOKw2-g-1
+X-Mimecast-MFC-AGG-ID: qq-dNclFPZa20koJOKw2-g_1750925836
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a54a8a0122so267707f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 01:17:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750925774; x=1751530574;
+        d=1e100.net; s=20230601; t=1750925836; x=1751530636;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=qWPpr2CE+JfSG6/BLYsiDYGa2S9ML4EFd6pyLeDhF/g=;
-        b=SHg001yEWOIYDlBFIrTmaZt1XIevyVNQsVEunrgI8LsxWzKkn/uT7BECqvDs+gBK8d
-         KWOt3hJJXG5PkmUQr4r6ieIPiDI1c8l9boOMH7T01cpzXDUk8/nbVnDPkot125WiSJHj
-         iY8jKjT3cyndNlbC6eAQ/dGRmLu+r26FuFqT55B2WogYgB52f/QUorFRZQZJSwmU+Alo
-         Tq6Rr6+FN5x18NxjT9vgfq+eKrSwxQmG59o+kmIt2ot5jXfGNdYlzFserRObTRqS9j5m
-         qFBCD2OHvl3sqyEIjd5xqRgAEnE+uril00+YS3byMZGivxv//HinnUs08NW/ihPEAAn1
-         CmyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWIzIwgV/tjOc1/e2D27judqz09ULqu81SVACpjHq/92Vel0hYLHA/nzXwM0kPGN/NKlgJGON3/lDH0hzo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBlg1kAqlAA/uCnj5QAnCnEF1v+wzgRavM9YqTZnX1y78FSqJP
-	IUZcHAbUzOe+m/YaX8aXIzdUBS7SKpghcJe/b9svPrh7um/EgTave4iy+35c0p8C8n6dJj1TfcO
-	jtQSXXQHmz+EkctXWhIlZgYzZ6uvvvPWWQ0BKeX2El+QSi8emjNkWXdpyHg8ow5yLNA==
-X-Gm-Gg: ASbGncu5ouf7+j3+MzheGQ4FMzsI+9P5TzoQNVM8DobEh+932+pMMCRhION/kaTJ9ox
-	UNPYNy7gVUkOH4OF+8FzunDLRqbnPeCuCZ+osWK455Sk2BlCglAe3w47QEaC3+puLKoFn71wSko
-	/OLbFcJ10XmKOhHZHpfLFetAbKCD8tkQDiG14GnVLmcu351lkf6t5j/XPlu/Nj7R/JwxEd6R7ms
-	RFnDd92D51nAh3jJHR08/IDeAyJSG+6DRSLGhU7XUjzPp6s6fBNR86KQxvTaQKnT9ddoui4HcZd
-	I24BNqzYAJjJzH01JtGch8LaWCU5QqyG6xQhNOwtiYsweSz3S0wPOhBYLVH+EJnzcnkPxL2o+k0
-	5QbVSLTrlnaj1cyOGVf6a5CJS9AP6Q5TksoTnOKx/gX1U9ZCP5g==
-X-Received: by 2002:a5d:64e1:0:b0:3a6:d92d:9f7c with SMTP id ffacd0b85a97d-3a6ed5e9c5bmr4874179f8f.9.1750925774104;
-        Thu, 26 Jun 2025 01:16:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFr09EJOFj1LiA0nSuyZyXutey/xEu/VWRh+xl0GZg6IjKhv9F5hRjD5Tch3vMl1jREoIlygg==
-X-Received: by 2002:a5d:64e1:0:b0:3a6:d92d:9f7c with SMTP id ffacd0b85a97d-3a6ed5e9c5bmr4874148f8f.9.1750925773722;
-        Thu, 26 Jun 2025 01:16:13 -0700 (PDT)
+        bh=55+jYEaEhNtGFPfW/0vKnlZGNZZvZBUpEkOyrpcO9hQ=;
+        b=BdxcWQwddDpcZpj30b6FWr8DE7rL9CqxUd8OefTPd7ePkEP4kJX+1SqHmyARAn34Wy
+         AxIVa0YsNqXF/Kw+pF/uxUweDnzVi48303zoxJdR3vJ8rA96PFWxuXJujKYHxdqtRhZN
+         tnvmkZ/9lVlUXX1ErhwNsZFwhWTuD4KLqjvHOjUwdMI8IKWQyo2TFwHACtZR3LpSAu2j
+         OKhacRxeS4IHlPinmPFXp6lw/lpGihYvgNBqkfil3gs17an6guV5ft9z0Y455osIn+1K
+         AY0fRHIGPRAquEiC3YcOZ3bw2LYlU0yOKD631Of7ig8Ihoh+7jZWV2NganogJOcOXWCZ
+         JMKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMOO7PFKa/wVh8QReWvYDxKs3B/j8gstTwA9bdxfK8PTPN+mXXLFPfHmU6BibCBDt8NKEah9ZKIafQ0Ac=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwMJ0XoT21hUbkg+VNJdl8HREmwPfjtdZPa4yuijmwG+x71I0W
+	z4ZpZuapvgNkyaVIY6aS9frgyOx1gHfY1I3lMGR+/L84q+PPBfzimUFJ5XU+LfpBuLHObFYRFg+
+	Mm6gfA8fZBOYOIujGTeFPeWukUtnYpQA5bXGJCfGQOSDJs3WCdmelM99i0SdZj0/0Pw==
+X-Gm-Gg: ASbGncuPDwyyLot+31ZJvfYPEx6USmAr/hpkSiB3Zqx+Q733NeHqTcKVkSM3VE3KrKk
+	NjnmoXDuk7EfFB8+KQK5BVnrin2divANSvplE3+cDGY6Aolz3j8J6n/bcAJpozKtr/cDRnWT3wg
+	fEl2L2NFa6Ox0YmoB3ZZr/Yy4p+688A8mn1KTwwIEv9oMpizFJDFyFTzuPmHM0FmKILy739AXVN
+	eGcazR3UDBdjSn2t4yyR1J0iluUI/Awj3HQV97Yzqt2bwgv8Ke+sXvVm5ZvY9FQDliMT4Bw84IW
+	mJzsI8bfxb/TROnEtA+NhYEfUNuRpC0Lg5IrC01N9e/QtcUVJF8hZ0oUf2uLB3E0c6nqcS1kcAc
+	t+E7jLuD1OdYuTNhLzM5Jj0BQ4lBE39QB27SrzSSI5VZFGvACKA==
+X-Received: by 2002:a05:6000:1885:b0:3a1:f564:cd9d with SMTP id ffacd0b85a97d-3a6ed664553mr4593026f8f.36.1750925835694;
+        Thu, 26 Jun 2025 01:17:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEhcXZypQm7XHMVnXTuYK23gyUnWaEv0Gc3DtKcA7Ooe9VhmSlfjk+Trd4HOr6R6kONFyi0fg==
+X-Received: by 2002:a05:6000:1885:b0:3a1:f564:cd9d with SMTP id ffacd0b85a97d-3a6ed664553mr4593002f8f.36.1750925835318;
+        Thu, 26 Jun 2025 01:17:15 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f3c:2f00:8afc:23fe:3813:776c? (p200300d82f3c2f008afc23fe3813776c.dip0.t-ipconnect.de. [2003:d8:2f3c:2f00:8afc:23fe:3813:776c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3fe043sm11573745e9.26.2025.06.26.01.16.11
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3a6716sm11886905e9.11.2025.06.26.01.17.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 01:16:12 -0700 (PDT)
-Message-ID: <ff2421bc-fe91-42c8-af42-91b57824e312@redhat.com>
-Date: Thu, 26 Jun 2025 10:16:11 +0200
+        Thu, 26 Jun 2025 01:17:14 -0700 (PDT)
+Message-ID: <a5b5b0aa-21c4-4abf-b323-63af96aabcd5@redhat.com>
+Date: Thu, 26 Jun 2025 10:17:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,22 +75,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Fix do_pages_stat to use compat_uptr_t
-To: Andrew Morton <akpm@linux-foundation.org>,
- Christoph Berg <myon@debian.org>
-Cc: Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- "open list:MEMORY MANAGEMENT - MEMORY POLICY AND MIGRATION"
- <linux-mm@kvack.org>, open list <linux-kernel@vger.kernel.org>
-References: <aFrBhyHQFffJ4xgX@msg.df7cb.de>
- <d42cc185-b774-4d5e-9a51-0581dd5f3962@arm.com>
- <aFwUnu7ObizycCZ8@msg.df7cb.de>
- <20250625133909.1a054c24d933cd97afd0027d@linux-foundation.org>
- <aFxltX73iZLT2HGx@msg.df7cb.de>
- <20250625141551.ca068f6bc901943559df6bdf@linux-foundation.org>
+Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
+ folios during reclamation
+To: Lance Yang <lance.yang@linux.dev>, Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, baolin.wang@linux.alibaba.com,
+ chrisl@kernel.org, kasong@tencent.com, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-riscv@lists.infradead.org, lorenzo.stoakes@oracle.com,
+ ryan.roberts@arm.com, v-songbaohua@oppo.com, x86@kernel.org,
+ ying.huang@intel.com, zhengtangquan@oppo.com,
+ Lance Yang <ioworker0@gmail.com>
+References: <2c19a6cf-0b42-477b-a672-ed8c1edd4267@redhat.com>
+ <20250624162503.78957-1-ioworker0@gmail.com>
+ <27d174e0-c209-4851-825a-0baeb56df86f@redhat.com>
+ <938c4726-b93e-46df-bceb-65c7574714a6@linux.dev>
+ <CAGsJ_4y1GObH-C7R=FQL=UWe3kF6qhKoRqPxNPYx0k7uwocc+g@mail.gmail.com>
+ <5ba95609-302b-456a-a863-2bd5df51baf2@redhat.com>
+ <CAGsJ_4zSGT05GjxM1H6JwSa5MhgtxaiYVa1Wtvm8+SmYkm=jmQ@mail.gmail.com>
+ <6179dd30-5351-4a79-b0d6-f0e85650a926@redhat.com>
+ <CAGsJ_4yTH5ngM++e=c+P7g0fXs-QQsOk2oxd1RWa3Qww97Knrw@mail.gmail.com>
+ <5db6fb4c-079d-4237-80b3-637565457f39@redhat.com>
+ <42f1d84f-2d17-43b7-8fa2-83322fcca44f@linux.dev>
+ <9bb1e917-891d-4e1b-915f-98cdd5fc578b@redhat.com>
+ <CAGsJ_4woYd_TmZU94nedH=x_+HTwLxz94ih1jFmxoj4CxuhqzQ@mail.gmail.com>
+ <42343413-7089-404e-8ce0-dd0025dca04c@linux.dev>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -138,26 +146,51 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250625141551.ca068f6bc901943559df6bdf@linux-foundation.org>
+In-Reply-To: <42343413-7089-404e-8ce0-dd0025dca04c@linux.dev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 25.06.25 23:15, Andrew Morton wrote:
-> On Wed, 25 Jun 2025 23:10:13 +0200 Christoph Berg <myon@debian.org> wrote:
+On 26.06.25 03:17, Lance Yang wrote:
 > 
->> Re: Andrew Morton
->>> I'll update the Subject: as David suggests and I'll add a cc:stable,
->>> thanks.  I'll also add a note that David suggested an alternative, so
->>> please let's advance that option.
+> 
+> On 2025/6/26 05:03, Barry Song wrote:
+>> On Thu, Jun 26, 2025 at 12:25 AM David Hildenbrand <david@redhat.com> wrote:
+>>>
+>>> On 25.06.25 14:20, Lance Yang wrote:
+>> [...]
+>>>> Hmm... I have a question about the reference counting here ...
+>>>>
+>>>>                 if (vma->vm_flags & VM_LOCKED)
+>>>>                         mlock_drain_local();
+>>>>                 folio_put(folio);
+>>>>                 /* We have already batched the entire folio */
+>>>>
+>>>> Does anyone else still hold a reference to this folio after folio_put()?
+>>>
+>>> The caller of the unmap operation should better hold a reference :)
+>>>
+>>> Also, I am not sure why we don't perform a
+>>>
+>>> folio_put_refs(folio, nr_pages);
 >>
->> Sorry, I'm new here. Do I have to do anything now? The above sounds
->> like the alternative coding by David would be preferred
+>> Because we've already called folio_ref_sub(folio, nr_pages - 1);
+>> Looking back, it’s kind of ugly, huh.
+>>
+>> discard:
+>>                   if (unlikely(folio_test_hugetlb(folio))) {
+>>                           hugetlb_remove_rmap(folio);
+>>                   } else {
+>>                           folio_remove_rmap_ptes(folio, subpage, nr_pages, vma);
+>>                           folio_ref_sub(folio, nr_pages - 1);
+>>                   }
+>>
+>> I assume Lance will send a patch? If so, remember to remove this
+>> when switching to folio_put_refs(folio, nr_pages);
+> 
+> Ah, got it. Thanks for pointing that out!
 
-See if my proposal makes sense, and then incorporate+test it.
-
-You can feel free to add my
-
-Suggested-by: David Hildenbrand <david@redhat.com>
+Obviously I was hinting that the split refcount update can be merged 
+into a single refcount update :)
 
 -- 
 Cheers,
