@@ -1,282 +1,135 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2053.outbound.protection.outlook.com [40.107.101.53])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B452512DD;
-	Thu, 26 Jun 2025 22:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750977973; cv=fail; b=PCUKDQGw+dUq1GzptndQ1XzsieWSLn8/f86KrqUjKlgOITj8KB53kVaT0NwLs3rKzxvw2eLizn9KI7pTfdPAaQ5D5XDe9u9XOaEatjA4I5YZnVh109PfLxt8TCQYXcRDRjWOPwoXKlFyRB7jow9hRGk2VcclShrtMt9vNNWXLDU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750977973; c=relaxed/simple;
-	bh=mmninfW6VOFt64e9MlFJX9pSXhLGJjUYoK49E+sfmkQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iLYFxw5Y1Jk7W9Jnhfno/cRlnpnCu8fX2J/gs7pP+MVBEwb+21VFSVhRSQx6DZsvTQoTzf+7SN5rnaFNZ4DS54br3PIBepdOwkdAr+sgqQyp0O4wJfZXyGVkELeF6SLPcvg8chvVJigL7QEXdhQ/ysmX3W+bUfC0QSccWc6zZfw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZbGdTCNM; arc=fail smtp.client-ip=40.107.101.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C06F15990C
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750978032; cv=none; b=b7AxY6mKLuRs00eY1TN8vM9VxsfUeDQGr+37c8vpD1QfcGVeEhvVOG45/Cau5z6k8xnkcUvPuAK/4TsvEFuadYunsNMZ8S4+0ha2Mf9rfi7GIdts3Z3T4+3ALC48o+YZnIkwKNd74Q9lnbmyI216HKZTu9TJq5B7MP/C/fE4rdw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750978032; c=relaxed/simple;
+	bh=k/WLttcj9Kp3cQ4uWeQLm05Crh8H/kiYV7NaB+9UZSk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WMpqQltxTWLMses6qb0M8jl0wiugwK8ccZa4fje7KgI8zyYMLrQLbj847OlzrdDUc40UVv0FVKW20eYBmhFp6q3ZuH3NpFD7g9kex487J53V/f+K9RsoOEz+F2sSHh4fVBDzwgKMLyKEtzaj7mZ94IeXJA9NNs6dNb6QHmJh/js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DmLUJcLS; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZbGdTCNM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ApYinTsq+3gnPxKx6Ovi79sY/8wt83awHGsr3QwZhRT/os8ka0vnLH5CzmdRj4WWJMm6SITiRFPYmTuXop0hft1TkouibOI2ryQWj2wsnkHUSfLjxj3mWDvFG00djSpbBFkqlvtOE6gJU4MbR0yz8Wwgmes4FuJdgEzfF1VixO65gK8DlPwa8sFnl7jYjNcrjAPS3IGlxTuynRE9oyc0Jht3fgUhPlWFYnaRz8Bh7abp5Z+tEM1eIgmfZrZccmNs5ORps+0+kN6S33H7p6uP3y5c0jpdQeOpJ1TYs/28NVBdc618RpNBULsRNd30+FqpTEgeSupV58neB9LAdo5QXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qnu07Kkw2exdErqWk0occ44ayTZ/PKyzSWsfTNYsRn0=;
- b=DoUdK+XJN5cGwRLKKTphElwuW9KRIa2Q/5bOS2QusfOa6KbMBhk+VzorcTjhxIXUMiNXKH+Vaobim3sZOaLeWAhBstQ4wRDy3RECAYBatZLPRIvmjlYEHVhzBNhGWSxbRiYYLUjHmAUzRvTkTlsnj0pM692DXXzH8mwmIz5H87O3DoAGSh0vR2gHTLtkbVYBYjfo6cuhiHQ2ZWPth32+bC8StsOoxQLc5H/ty5/TAw9CjKKjRCF1A2sTkHs3gAnqJao2hx9C/qEbZgTIWc5rLliOK/nqkNDwg5kU2O8pTKGllAySEFw/hote9qIm+CXHPXtWpqK89il982h4TZ3bsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qnu07Kkw2exdErqWk0occ44ayTZ/PKyzSWsfTNYsRn0=;
- b=ZbGdTCNMpjTFlzSumSJv61uSx9ZIEax2VcfTokFkOrppzTdmqIQPiWvpJKEUoldlG9UO2TfeDHRr+tZXexcl35DYE3hK88hpXOjgg5tIrp/EmtYgWv5Sz3tRp1/ksMTa02Hn7gxXMREmauaPNe8u7C2az6ACe1rWpGPqK0ACzJM=
-Received: from CH0P221CA0032.NAMP221.PROD.OUTLOOK.COM (2603:10b6:610:11d::11)
- by LV5PR12MB9779.namprd12.prod.outlook.com (2603:10b6:408:301::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.16; Thu, 26 Jun
- 2025 22:46:08 +0000
-Received: from CH2PEPF00000148.namprd02.prod.outlook.com
- (2603:10b6:610:11d:cafe::15) by CH0P221CA0032.outlook.office365.com
- (2603:10b6:610:11d::11) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.20 via Frontend Transport; Thu,
- 26 Jun 2025 22:46:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH2PEPF00000148.mail.protection.outlook.com (10.167.244.105) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8880.14 via Frontend Transport; Thu, 26 Jun 2025 22:46:07 +0000
-Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 26 Jun
- 2025 17:46:07 -0500
-From: Terry Bowman <terry.bowman@amd.com>
-To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<terry.bowman@amd.com>, <linux-cxl@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: [PATCH v10 17/17] CXL/PCI: Disable CXL protocol error interrupts during CXL Port cleanup
-Date: Thu, 26 Jun 2025 17:42:52 -0500
-Message-ID: <20250626224252.1415009-18-terry.bowman@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250626224252.1415009-1-terry.bowman@amd.com>
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DmLUJcLS"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QJ38Rb021525
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:47:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	gmoMifDvBvDGBNVMAClJOdl8gLaZitfPh+a35hkvPHI=; b=DmLUJcLS0w+IF4ju
+	mlBGlsPbAW+fReM3XDpVtw5ER/J6uRpK7PbGvyeaQxUPwZtWRpBL/ajsNXUFfbQi
+	aYoZmMoQw82RlY1HVAStmFw7q0ob8oNhYGpa+kBc7dayYbG6KO2J+c+n9TNjQ+TT
+	5yHJEU5y05QWGaaBLGewI1FdFPDetApInyJuUI7aFmaay4Z/UMsoHU7wkCeT2m7E
+	axP5Ju5NOUDA/woLlcrXbIcxSLoH+MqwU98WdW8tCMO+kG4J3LtBOw3Be/AeHSAw
+	Bi6P/xeVKyW7CZHVpJFN1kHo/t/cxGuLH9hRUthSRM/KTwcjyiFOc5uI0H/SK+0n
+	lWnrTw==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fdfx33ng-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:47:08 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c7c30d8986so399820185a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:47:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750978028; x=1751582828;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gmoMifDvBvDGBNVMAClJOdl8gLaZitfPh+a35hkvPHI=;
+        b=fz1IgBoDvU1XfQ/VQ3dp3x35eiuAW2uQtYOLyTediWBHXHBaeOaghiOZIZ5JoCVMa1
+         p2CksV4GmfMatE4vhkUvZSBW4eiWjHGnSVGbpxdcQRSbpmWUvvxTRIaL7e8o8XJyYn4v
+         CRb1tT3REdolsHiiBUT7Cq2KsQo48LrI4kL7pgjI5XTp47Nc8bc68dDCLLpUyWiqu4lB
+         eSmvyS9BMhE8ILpT4yUN/4/fAXeoP9oel/IwQgxTts0Bh/wEOmJIDQfyoB9f7OzHrRZ6
+         LEDTMCqRRjilzlaE/jsHVdr/vP0Z6l/0BipF1jH1EGeHR7qraCpVBdFFcOMfZjbsbAJ4
+         uYyA==
+X-Forwarded-Encrypted: i=1; AJvYcCWK97ev87EN+QHqqfug18LgV5iQz98cY/WKNQr+GjgOyh+eyCFcXuG6cBITClQk+oPPuVmrzv0PEHnO03E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu8SSH9b3BLHWvODQJHzsDhRFLvGumJwzETVBeV/z4AOn0FD+z
+	AQzXj9YmGI/pkv2qpZ1lKkIV9rFQu1m7rM21+Aba+YCiaHiPtGdJ8ZnS25h24hPkDTZJasVOGEh
+	oIwozcCapHSwa8JYMgwvFQSlgxo4mdUoKYVBoxqlPHe2pjxJxM+8zFD1SYvwJiAcc2Ds=
+X-Gm-Gg: ASbGnctDxOv4EA/dHTD7pPIoRTgDbiPDbIgshmoTmsP3v9YwdvU0LXuD9wscU637McH
+	kqpeT3ITUEjh3wNU6NYWPtmSnAFIU0cISSaeKW/OcjpmNXmWEO0sT8I2dhZroTlovf8G3pFgg8u
+	EUSUfL6ZuCP/FzDKM7wivZLrRCBU4pN+t26iP3DawmywLuXt6oNvSdF+qpRj6CDrpQIGb3EZ7kx
+	qamu3RdFTIv2NaGFH3/58yufXCajy8lWYk3B+b9+CtvBSXVh8bEIkYEgluNKvi+ZOh+hpkL+kSS
+	MXf/HN6pAC/X5QfR7HlKWbWPN8NsPBqbU57Bx8+n5K3eBbI/n9/4IvS92NKEkjEpLiJ03Q4hRL/
+	d90i5g5fSdVeMfrXH17kEWAEfzsEA41hIdKU=
+X-Received: by 2002:ae9:e20e:0:b0:7d4:28d9:efbe with SMTP id af79cd13be357-7d443992d51mr155164985a.32.1750978028104;
+        Thu, 26 Jun 2025 15:47:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF7QvvBbuRQht/PX77z92dSw11SIpFRHu9NAfpMGbcKSTVTrTrYOF0CEnsJFm4LXzUIjnqOGg==
+X-Received: by 2002:ae9:e20e:0:b0:7d4:28d9:efbe with SMTP id af79cd13be357-7d443992d51mr155162685a.32.1750978027682;
+        Thu, 26 Jun 2025 15:47:07 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b24e4dasm185172e87.73.2025.06.26.15.47.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 15:47:05 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: dri-devel@lists.freedesktop.org, Rob Clark <robin.clark@oss.qualcomm.com>
+Cc: freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        Simona Vetter <simona@ffwll.ch>, Daniel Stone <daniels@collabora.com>,
+        David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH v2 0/2] drm/fourcc: Add additional float formats
+Date: Fri, 27 Jun 2025 01:47:04 +0300
+Message-Id: <175097802066.519545.3760408226884035937.b4-ty@oss.qualcomm.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250625173712.116446-1-robin.clark@oss.qualcomm.com>
+References: <20250625173712.116446-1-robin.clark@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF00000148:EE_|LV5PR12MB9779:EE_
-X-MS-Office365-Filtering-Correlation-Id: bbc80ebc-3319-4cf4-df90-08ddb5033da5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|82310400026|36860700013|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?gSlsSJjTd3jtb2+W1cRJLYlC8FuT0aZTPHp63Y1UmrKVencgRiW7pUt2eiMN?=
- =?us-ascii?Q?ZpD+OTHH06poEWKMO7ecS0SJeQgHatkGYRF7bkzlHkpmbwiI12PI3VgNBGI/?=
- =?us-ascii?Q?RCYCQTSqpsNmb9v9Z3YV3pZHJghFSnKbQzHxL3Dc0EmgXTtaAOX8MBsOWh/1?=
- =?us-ascii?Q?JgikP8y/nEN3A/StUw795OSHZ2xaMU3P+i88eUHTwyP+VJ6GEYU/cC7+yHIB?=
- =?us-ascii?Q?AkyKuOpynHHvjKrVER45tkAOB3uiy2YPrHLM8uuzRPsMHNCO3UCCxmvMG0gv?=
- =?us-ascii?Q?hdpUb1eUOljXO6bcR1zY9ECUuDBoFk4QV3wDAx4Y6CgYDFchWAo4hlt2QGHP?=
- =?us-ascii?Q?g4Ik0lGGxfJy1lLjDXEDgzJuSZ8OSWvXVDghZ5QtxRv/4hQMQPTp1t8z3x0y?=
- =?us-ascii?Q?qOmXTyKEI86SEBkg/5mCDIE70064RBv1JOXUWbTSMCMhUKnuNVAAUZFNVb3u?=
- =?us-ascii?Q?zdb91UrQina6+SaMfiYcA2WrqXIQvQG8FDic4BxHHaruvZ4N5/Dk0xDATaRQ?=
- =?us-ascii?Q?6vzcLpKOi+eQP/V+n3lQE7mmLqA4n7qfjjEUcJeSsbI8OPnX3U5hnRVEDvJM?=
- =?us-ascii?Q?DIwDkmYYm1Zb0/plZHFxtOIetERNFiF7xILhzv7FW42kXm3ajNLJWlwJD7/l?=
- =?us-ascii?Q?dTQaxDhJiQ2pwNRH4+Jo5HaS8tXVx2dYGh02K+nF1YX0rwLXzaxXS++JMW3g?=
- =?us-ascii?Q?bOoe6XAXnc6tYIOCzvN01zhcD6h5KrDkQY5FQsLH3tAKnXZGNGzosebQRHVV?=
- =?us-ascii?Q?cHEY18y3Nd2ErRYEwznW8NT2gohHNzUBbg3jseh5tFIC8k5gznVFp6O8Jsab?=
- =?us-ascii?Q?52Fb8TyPIJa07gCEDvFic65tu3ihyE1yxvSo78Oet9+HfQr2o+KwSu5Shizm?=
- =?us-ascii?Q?MeclsMfa6C+6HY9evj5dIgwvpiqh/iZ7NAWLdyBpvUKqGxYYSG/o+Jsrw/ov?=
- =?us-ascii?Q?xW9lMpSo4LM+O1I4vwQ+DD5lvtswM4u6S8zSZMICW48Oxs4a3GpXc3ZwN+7G?=
- =?us-ascii?Q?9lgk5WVaJ6T0etxF3AZfXr+AZ6lIjS4uliE9/oUd592JeCvI5QScSI/nAnkI?=
- =?us-ascii?Q?BMg2AZwGzHNPmxvQuVAnnKvk6DuzOCgOr0hgwZdphTqAPPh1XxcYLrh+BX5v?=
- =?us-ascii?Q?u0cNWfSkPRt1nAebwoOIZvllmv0aVJVm0zPho5awXb9k8W6S6vtruO7GH1K8?=
- =?us-ascii?Q?gWPxwHn2VycsyXsyZKYNK44fASnG4PcUz884T7sU+eEPS/KdbfKG/tiC1llY?=
- =?us-ascii?Q?iYVNv8+2hURb6kCPVMgCvswhz/xpKQX4WlmsTk4EV5Aj6C+iWyqX5Op/lsJd?=
- =?us-ascii?Q?SR20tnzO6kbGjqZ16Qlff2CAZpjpf2C2vn95o/V1d5lTNGqEjepS2SpTOHNE?=
- =?us-ascii?Q?31WlakcYiviKpe9BTpjkpJkFMW4gplpkAbNhw5j6rbFzuvha5hIULvbrIIdO?=
- =?us-ascii?Q?0+y7UUGbeuOOLrDEJxZ/UUHHfvOPQdd1ceJCkijUIdlCfQSZjnQoajACtoAD?=
- =?us-ascii?Q?MTH2yO156VbCK41SYIPvnbCzeAoXoCBQb7G49f3XZ8nqokiEvMET2jnS7w?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(82310400026)(36860700013)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 22:46:07.9746
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbc80ebc-3319-4cf4-df90-08ddb5033da5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF00000148.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV5PR12MB9779
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: o86qMuyobS4wWtQ1dP0WxWWBDrRi016A
+X-Proofpoint-ORIG-GUID: o86qMuyobS4wWtQ1dP0WxWWBDrRi016A
+X-Authority-Analysis: v=2.4 cv=MtZS63ae c=1 sm=1 tr=0 ts=685dcdec cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6IFa9wvqVegA:10 a=yB-vDBVxPvN9sSdsvdIA:9 a=QEXdDO2ut3YA:10
+ a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDE5NSBTYWx0ZWRfXwe+keE7IaLrb
+ oIGQ6zAVOD5swenIfgeFgSV2PfPyNPJKZTFzsHU0IaGis9XusDJoL731RJLYvM8G4cmmZJbkjCT
+ d+6t6XrJz9ze71v4pFTthEmGiYMWCKWKxpaKzHiRYhPUqarut5m8tbFJ2fIgiOpsD3/qYHFqwA8
+ Ro20g80VH4NZsVdXhlpc0tgRiRrd5Nj7Bjd5D/1QR4Muekw7Zy17uSX7+zpFts8j6btZQ81xhOV
+ bsuAP7DnyytsuQitVYTzWLtQYylriXLKVgHeHMsZ3HiK59AiwyeGp7BzdsD3tExoHTmu5eG2KdB
+ nOdEw/spHbIzcIdF4L47D3gjSKpRfhI1cqSOoKGBiSLDTN/9R6lnOer/VVneW+9SuE9ibh1N8i0
+ X0e2TAR2jyLSEbwRACJST5aTVH8LtdQoU2hUiYjFD/voVu7FZE/L6ps4kP3URP2CxvC8IuRc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_07,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 impostorscore=0 suspectscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 malwarescore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1015 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506260195
 
-During CXL device cleanup the CXL PCIe Port device interrupts remain
-enabled. This potentially allows unnecessary interrupt processing on
-behalf of the CXL errors while the device is destroyed.
+On Wed, 25 Jun 2025 10:37:09 -0700, Rob Clark wrote:
+> GPUs support 1/2/3/4 component f16 and f32 formats.  Define the missing
+> fourcc's needed to import/export these formats, and/or create with gbm.
+> 
+> Rob Clark (2):
+>   drm/fourcc: Add missing half-float formats
+>   drm/fourcc: Add 32b float formats
+> 
+> [...]
 
-Disable CXL protocol errors by setting the CXL devices' AER mask register.
+Applied to drm-misc-next, thanks!
 
-Introduce pci_aer_mask_internal_errors() similar to pci_aer_unmask_internal_errors().
+[1/2] drm/fourcc: Add missing half-float formats
+      commit: e04c3521df073b688b9e9e2213cd3c588e3b6e68
+[2/2] drm/fourcc: Add 32b float formats
+      commit: 3529cb5ab16b4f1f8bbc31dc39a1076a94bd1e38
 
-Introduce cxl_mask_proto_interrupts() to call pci_aer_mask_internal_errors().
-Add calls to cxl_mask_proto_interrupts() within CXL Port teardown for CXL
-Root Ports, CXL Downstream Switch Ports, CXL Upstream Switch Ports, and CXL
-Endpoints. Follow the same "bottom-up" approach used during CXL Port
-teardown.
-
-Implement cxl_mask_proto_interrupts() in a header file to avoid introducing
-Kconfig ifdefs in cxl/core/port.c.
-
-Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
----
- drivers/cxl/core/native_ras.c |  9 +++++++++
- drivers/cxl/core/port.c       |  6 ++++++
- drivers/cxl/cxl.h             |  3 +++
- drivers/pci/pcie/cxl_aer.c    | 21 +++++++++++++++++++++
- include/linux/aer.h           |  1 +
- 5 files changed, 40 insertions(+)
-
-diff --git a/drivers/cxl/core/native_ras.c b/drivers/cxl/core/native_ras.c
-index c7f9a237a1a2..8b8c7b3fba6c 100644
---- a/drivers/cxl/core/native_ras.c
-+++ b/drivers/cxl/core/native_ras.c
-@@ -9,6 +9,15 @@
- #include <cxlpci.h>
- #include <core/core.h>
- 
-+void cxl_mask_proto_interrupts(struct device *dev)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	guard(device)(dev);
-+
-+	pci_aer_mask_internal_errors(pdev);
-+}
-+
- int match_uport(struct device *dev, const void *data)
- {
- 	const struct device *uport_dev = data;
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index c76a1289e24e..786a036d33cc 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1433,6 +1433,9 @@ EXPORT_SYMBOL_NS_GPL(cxl_endpoint_autoremove, "CXL");
-  */
- static void delete_switch_port(struct cxl_port *port)
- {
-+	cxl_mask_proto_interrupts(port->uport_dev);
-+	cxl_mask_proto_interrupts(port->parent_dport->dport_dev);
-+
- 	devm_release_action(port->dev.parent, cxl_unlink_parent_dport, port);
- 	devm_release_action(port->dev.parent, cxl_unlink_uport, port);
- 	devm_release_action(port->dev.parent, unregister_port, port);
-@@ -1446,6 +1449,7 @@ static void reap_dports(struct cxl_port *port)
- 	device_lock_assert(&port->dev);
- 
- 	xa_for_each(&port->dports, index, dport) {
-+		cxl_mask_proto_interrupts(dport->dport_dev);
- 		devm_release_action(&port->dev, cxl_dport_unlink, dport);
- 		devm_release_action(&port->dev, cxl_dport_remove, dport);
- 		devm_kfree(&port->dev, dport);
-@@ -1476,6 +1480,8 @@ static void cxl_detach_ep(void *data)
- {
- 	struct cxl_memdev *cxlmd = data;
- 
-+	cxl_mask_proto_interrupts(cxlmd->cxlds->dev);
-+
- 	for (int i = cxlmd->depth - 1; i >= 1; i--) {
- 		struct cxl_port *port, *parent_port;
- 		struct detach_ctx ctx = {
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 19eb33a7de6a..95843428be92 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -12,6 +12,7 @@
- #include <linux/node.h>
- #include <linux/io.h>
- #include <linux/pci.h>
-+#include <linux/aer.h>
- 
- extern const struct nvdimm_security_ops *cxl_security_ops;
- 
-@@ -771,9 +772,11 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
- #ifdef CONFIG_PCIEAER_CXL
- void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport);
- void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host);
-+void cxl_mask_proto_interrupts(struct device *dev);
- #else
- static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
- 						struct device *host) { }
-+static inline void cxl_mask_proto_interrupts(struct device *dev) { }
- #endif
- 
- struct cxl_decoder *to_cxl_decoder(struct device *dev);
-diff --git a/drivers/pci/pcie/cxl_aer.c b/drivers/pci/pcie/cxl_aer.c
-index 3c5bf162607c..bd6660eab87b 100644
---- a/drivers/pci/pcie/cxl_aer.c
-+++ b/drivers/pci/pcie/cxl_aer.c
-@@ -33,6 +33,27 @@ void pci_aer_unmask_internal_errors(struct pci_dev *dev)
- }
- EXPORT_SYMBOL_NS_GPL(pci_aer_unmask_internal_errors, "CXL");
- 
-+/**
-+ * pci_aer_mask_internal_errors - mask internal errors
-+ * @dev: pointer to the pcie_dev data structure
-+ *
-+ * Masks internal errors in the Uncorrectable and Correctable Error
-+ * Mask registers.
-+ *
-+ * Note: AER must be enabled and supported by the device which must be
-+ * checked in advance, e.g. with pcie_aer_is_native().
-+ */
-+void pci_aer_mask_internal_errors(struct pci_dev *dev)
-+{
-+	int aer = dev->aer_cap;
-+
-+	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
-+				       0, PCI_ERR_UNC_INTN);
-+	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_COR_MASK,
-+				       0, PCI_ERR_COR_INTERNAL);
-+}
-+EXPORT_SYMBOL_NS_GPL(pci_aer_mask_internal_errors, "CXL");
-+
- static bool is_cxl_mem_dev(struct pci_dev *dev)
- {
- 	/*
-diff --git a/include/linux/aer.h b/include/linux/aer.h
-index 8fb1eca97c37..c0fd627328ae 100644
---- a/include/linux/aer.h
-+++ b/include/linux/aer.h
-@@ -114,5 +114,6 @@ int cper_severity_to_aer(int cper_severity);
- void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
- 		       int severity, struct aer_capability_regs *aer_regs);
- void pci_aer_unmask_internal_errors(struct pci_dev *dev);
-+void pci_aer_mask_internal_errors(struct pci_dev *dev);
- #endif //_AER_H_
- 
+Best regards,
 -- 
-2.34.1
+With best wishes
+Dmitry
 
