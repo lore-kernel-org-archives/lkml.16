@@ -1,172 +1,124 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9C4219E0;
-	Thu, 26 Jun 2025 06:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5413237180
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750920943; cv=none; b=XsdWHy+H7UjJzhW7nAiT3zDzOYikOvEeSxgM/RvOtdkyca4rydShGWfTmriInVjFF9YT2dnI3Ob5t/qVYatsEdUt/fmCWtYzFAb1R58okHUeuO080jKd9a80JbBdqTWoRbEKA0LBT6lJCfHWfl8EjlMS4+jEdeQ1HdLlJpGEkjU=
+	t=1750921062; cv=none; b=HbhIK4fHE6WiZP3jPo79dfJpoOBs/WFtl4rvn0jWHWxJaR26FYXi1VtkFhtK+xK+vx9UtweQX2fulAJRNlsRl2DU5d62Cz7mQfUSil6LFXaebHMttbYqba/YZxsZqNxz0ByvHYIk2GAD1f/NIxgSnEyPU/eQ1fOTFTh7WRNoPz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750920943; c=relaxed/simple;
-	bh=6lB68hPkjrHY665AbKt29s5K31RYEXTgEqeaNzUEZSQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dab9TappiygWjQU6dwZD7ItfVlsUJvzH9rvhD3v5r84EYROu3WlMivJcTF6NEjImgrGBMGc+qE9GsM3lh7gr51XeH9/COQpkZcpbEnait9wNYn5aPuvQsakInFLCvqQrnsj9niSI3DBpdcsM1KzQm6RjasMMpyeUABbj8ngeqno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jT1zocZn; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750921062; c=relaxed/simple;
+	bh=ON4pHfZjOHNvXFY9QPZUPYoUfbFKnygBHaZeZsDwMzE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GGo+Y4g5/WA//Whr3GRVG4DZjQqTkx8Ga1xODsf6AKkUuEg/MrBqHNCxsIYqBYV39xuQ5JUqsP373ZHjtoztkyDWF/HpOmGqV1rANBD0Q+zAp4wtU4SlWVEMKYNWTG5ODvSSGgzfOL2SnGyJCpDrp+Qt9ZI9Y5oWbaB/jA8VEHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=JEw6xsk0; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jT1zocZn"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-86cf3a3d4ccso70432839f.3;
-        Wed, 25 Jun 2025 23:55:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="JEw6xsk0"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2366e5e4dbaso16914985ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 23:57:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750920941; x=1751525741; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W19DxCupecPWn8c98PocInKxtCZZgrUgI9zm1Er7U/M=;
-        b=jT1zocZnyAUTmzqAt9fGbv9jmg5kOmS/XFlVO92qjmLng3SGZsxFf3ziM0b0/CLVHL
-         y/lE0Y4uLPhwzDB3rEpU6dZUGFfk2Xq3+LTLirCyIKqVQa4Rp+F68pYr+CWLxkJYw/h0
-         rmM01L6pAYoozRvSMQgyrzB/AAUlR/uJ3slbhaF17RAlOPZbb3/EmTJmZ+Qxkm3WZ+Iq
-         yXssuJmsLKekOF56BpIZSS5hKxmSeHIJ7ZIa9nj5omsDbR8ouLgvJkzSI1EsGavsu4qH
-         CO+HbI+EywdxDFHFSTr24ztOaRvKX3Q5ky0Nnr9EXY4Teq4JUDGtjcgS+92z5HD6uLqt
-         lcaw==
+        d=bytedance.com; s=google; t=1750921060; x=1751525860; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y4Vig7M7ZvV+14zfziAcuZo4feguXVoSCTQV8AryWNE=;
+        b=JEw6xsk0EeYhrKZOAAo6WnL5dGGNCnYh8VZn/Y6jj8yIJ10AnuypDpMqU4ssk3cAjk
+         dtXw0RgQa6Hh4WZ+uzb9cddthMhakcUSTPu7p+nQ/uhbMHmZmDRxA56h7tDYodJ00cNQ
+         /hHXG0g4aDKCqAAMAA3+1y4/1ELBVVnGLSsv2KbD/t1Z7XrHZkVkHPtivYYAoTh6Qqqp
+         snJbiJfe4KBrcqB6a666dl8Ocuq/26EdnHC0M9Te5CA7UkTO/ETUXnuN8Rf6i+lKYMRr
+         idf/CluESRFfxKE+VI//7Mx9K5AaWMK50TyI4wwG2226mZcPx/O5mfSs+8pPV/tVv5Wh
+         M5Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750920941; x=1751525741;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W19DxCupecPWn8c98PocInKxtCZZgrUgI9zm1Er7U/M=;
-        b=VFChK4uPTVjZDb2tyTap1WIAnwlDoo7y9LtgwqIrW1unVCekQJNI9dhvEojajWk99/
-         29W+mDG33+I0tY5KGJH655WcBXVmPWu734iaXqMD1Jv/cN2KqtRW7IQkrn7oI4Ky0WoO
-         S19oRQW4otT1sq0FYViJ6juISPuOqCHtw30p4D2DzIq2F/wcSf3NsfhyTTBzXll0//D9
-         YI/82FMdexU2LWubEBhDgeNlm5SyTBFUN/TTJlCpyDIy2PxC/CgL8q6BaOOBU1VLxOIP
-         iEclTDkSneaGcwNI15uc+apAJ5w1BIQPG6huHWuwhdF76hSfpPDefLzDirSeaj0FsKaX
-         idDA==
-X-Forwarded-Encrypted: i=1; AJvYcCVk/bm/Z9MatQ7BlrBCyROaRBt0jsSC6WDl+7G9ME4/j5hn44tHeHTvtDAr0SC3aOlLlJGGqEaf59XhRZM=@vger.kernel.org, AJvYcCWDBttoZWRkJpimeldpOegsA0xFhxmSkL15IG9adeK0h2aaRgzAmr1xWGiUNXXDlIHuftgRA2CfjnxA1l4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfOoKd84MpWgptAURVVMtH8qm1kt7om7PJ1HFq2H0y/0ivk4CZ
-	6HVlDIrkVZzx9lClmoNdtbwZC9QIMBEgZG+fE+86AR6KNSSHmmV4awi7vqkiNDd51h2cezjOL2O
-	1v5+xRZaa6Xjz7IgAuaWLVZMOCOlUk+4=
-X-Gm-Gg: ASbGncsZPoVlVLFpxIaxtT63ZDp/dOY5KtfyByrEY99jGbA8xew+nE5n4AJMbVAv3Lq
-	jk/Gbl+ej+A0tjDgddfZiSIBEVc4/sfCkwlWpaLRmBHAFE3YFY9ZyLeQPtANIWlwYTvflY6J7GL
-	UMme6V+pgIqCVeDUU1jH/DLCM74T8LHt3Sr/mAt8iGbIx7W84o1/VfdQ==
-X-Google-Smtp-Source: AGHT+IHwMBmagiYehfnzdEnifB4yQU/6UnplTUQv1H0lEqwu0zZ7n4O4uKX5Lmcip85xytB376fVrbXKR02UrAEC1i8=
-X-Received: by 2002:a05:6e02:1c0d:b0:3dd:d321:79ab with SMTP id
- e9e14a558f8ab-3df3e0bfa41mr37204905ab.18.1750920940715; Wed, 25 Jun 2025
- 23:55:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750921060; x=1751525860;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y4Vig7M7ZvV+14zfziAcuZo4feguXVoSCTQV8AryWNE=;
+        b=LPYoGosqO2xkiz3UVG5lwsxtats9PeUHrJKSj+CYRO9IePoUQPCcQ1HJuaD2JhYQdk
+         4r/ZLgbtmrTgq40rhQD+tM6mTrCX1yCefrj8rTqKK9/UrWUO1GySY+kWDCQ9Ul9gRAAV
+         REjvyDt+h4JhTlb//Edzlznv37mo3Z8M+P/lKZacyjMtJ6sJNXvDnnwEtYAMvghdrUO0
+         V6lccHe5L77Hg2PmAci8G9XmyloWWQ62XqNxLS5xdFxf8nTzziH88W9IC+/ZYKjnbARD
+         Bqo6syUFWLKLsBRd2auHzOXVlW9NP+zTv1Oct1XiTIaDRANgBtTkx8KJmRX3oRZEnIN0
+         FHyg==
+X-Forwarded-Encrypted: i=1; AJvYcCWNCIdPVgPN+RB09FWUP0TPpZgGQt9Bqe6SIZ9oqpSEDXBCf6f4B9R201zm1SFz8kVrWvWcoSIwHksnUx4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz89aGWY+14nSPtVJuoG3lZgkAi6rNpIOCAGzCfjxGjqtk9WvU5
+	JmMcVhmdzb1OOBmARH3jfrRJ2LB+HyTcHaY0mVnrT0zWJ5jheQxVs6QLfzZz0/di/yM=
+X-Gm-Gg: ASbGncvAqAkOLXiRFOrgJSkSeSwWTsqh/PqPb2fjqY1aCgLcQlaEO+jEmfv86KfzsWC
+	9ikCJeQ1UQG0R8GE1LYVQZTxLUeSEfI030Q5M5+HI+7CB93FvBIY/rhj1x0WxYo7IcCWzPvx7cM
+	ulSFn46ES29BRUUkOKLU+BSn39vdFnnrisrAVl+akZqhX+btnMTeA4s/F+wvGpW3FGDOw5Njelj
+	H/oX85lcziKA9tvshK73YGMy/t3UDdmkkkKnvToQrPTyglhVuOycda0xQxO+xWjxGbG9Yu/ECZ/
+	HdmwTMHaWK2y/OJYYZNb9xp/jN55IIsMo5GyRCfVh3H+RdNiApFynAhZWcN4I9Pvc3elXHKAJpv
+	eCVQ=
+X-Google-Smtp-Source: AGHT+IFMQohfiMG4tbP85u+fzwYzq9uXFaqf1k6qgiVNQ4h+jQ2TyJdVgYw1OL5lP+mJ4i6rhpCWHg==
+X-Received: by 2002:a17:903:2450:b0:234:71c1:d34f with SMTP id d9443c01a7336-238e9e1ab43mr34039265ad.8.1750921059733;
+        Wed, 25 Jun 2025 23:57:39 -0700 (PDT)
+Received: from H7GWF0W104 ([139.177.225.233])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23807231407sm54685805ad.54.2025.06.25.23.57.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 23:57:39 -0700 (PDT)
+Date: Thu, 26 Jun 2025 14:57:33 +0800
+From: Diangang Li <lidiangang@bytedance.com>
+To: JiangJianJun <jiangjianjun3@huawei.com>
+Cc: jejb@linux.ibm.com, martin.petersen@oracle.com,
+	linux-scsi@vger.kernel.org, hare@suse.de,
+	linux-kernel@vger.kernel.org, lixiaokeng@huawei.com,
+	hewenliang4@huawei.com, yangkunlin7@huawei.com,
+	changfengnan@bytedance.com
+Subject: Re: [External] Re: [RFC PATCH v3 04/19] scsi: scsi_error: Add helper
+ scsi_eh_sdev_stu to do START_UNIT
+Message-ID: <20250626065733.GA13649@bytedance.com>
+References: <0088ad17-37cd-4425-bfca-d03595c91cd2@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625130648.201331-1-arun@arunraghavan.net> <20250625235757.68058-3-arun@arunraghavan.net>
-In-Reply-To: <20250625235757.68058-3-arun@arunraghavan.net>
-From: Shengjiu Wang <shengjiu.wang@gmail.com>
-Date: Thu, 26 Jun 2025 14:55:28 +0800
-X-Gm-Features: Ac12FXySMQmkpT_YsYbDsQjt-wcOijwcIWgsdYkyL9-_W9kvTa4M5UfaGlI-Ptc
-Message-ID: <CAA+D8AN=K_ERUtc+mOW9Lm_B4wZT_qS5xg6RA2fDwrm9MTaCbw@mail.gmail.com>
-Subject: Re: [PATCH v2] ASoC: fsl_sai: Force a software reset when starting in
- consumer mode
-To: Arun Raghavan <arun@arunraghavan.net>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>, 
-	Nicolin Chen <nicoleotsuka@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Pieterjan Camerlynck <p.camerlynck@televic.com>, linux-sound@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	Arun Raghavan <arun@asymptotic.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0088ad17-37cd-4425-bfca-d03595c91cd2@huawei.com>
 
-On Thu, Jun 26, 2025 at 7:58=E2=80=AFAM Arun Raghavan <arun@arunraghavan.ne=
-t> wrote:
->
-> From: Arun Raghavan <arun@asymptotic.io>
->
-> In a setup with an external clock provider, when running the receiver
-> (arecord) and triggering an xrun with xrun_injection, we see a channel
-> swap/offset. This happens sometimes when running only the receiver, but
-> occurs reliably if a transmitter (aplay) is also concurrently running.
->
-> The theory is that SAI seems to lose track of frame sync during the
-> trigger stop -> trigger start cycle that occurs during an xrun. Doing
-> just a FIFO reset in this case does not suffice, and only a software
-> reset seems to get it back on track.
->
-> Signed-off-by: Arun Raghavan <arun@asymptotic.io>
-> Reported-by: Pieterjan Camerlynck <p.camerlynck@televic.com>
-> ---
->
-> v2:
-> - Address build warning from kernel test robot
->
->  sound/soc/fsl/fsl_sai.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-> index af1a168d35e3..d158352c7640 100644
-> --- a/sound/soc/fsl/fsl_sai.c
-> +++ b/sound/soc/fsl/fsl_sai.c
-> @@ -841,6 +841,18 @@ static int fsl_sai_trigger(struct snd_pcm_substream =
-*substream, int cmd,
->         case SNDRV_PCM_TRIGGER_START:
->         case SNDRV_PCM_TRIGGER_RESUME:
->         case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-> +               /*
-> +                * Force a software reset if we are not the clock provide=
-r, as we
-> +                * might have lost frame sync during xrun recovery.
-> +                */
-> +               if (sai->is_consumer_mode[tx]) {
-> +                       regmap_update_bits(sai->regmap,
-> +                                       FSL_SAI_xCSR(tx, ofs), FSL_SAI_CS=
-R_SR,
-> +                                       FSL_SAI_CSR_SR);
-> +                       regmap_update_bits(sai->regmap,
-> +                                       FSL_SAI_xCSR(tx, ofs), FSL_SAI_CS=
-R_SR,
-> +                                       0);
-> +               }
+On Wed, Jun 25, 2025 at 11:37:09AM +0800, JiangJianJun wrote:
+> > From: Wenchao Hao <haowenchao2@huawei.com>
+> >
+> > Add helper function scsi_eh_sdev_stu() to perform START_UNIT and check
+> > if to finish some error commands.
+> >
+> > > This is preparation for a genernal LUN/target based error handle
+> > > strategy and did not change original logic.
+> > >
+> > > Signed-off-by: Wenchao Hao <haowenchao2@huawei.com>
+> > > ---
+> > >  drivers/scsi/scsi_error.c | 50 +++++++++++++++++++++++----------------
+> > >  1 file changed, 29 insertions(+), 21 deletions(-)
+> > >
+> > > diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
+> > > index cc3a5adb9daa..3b55642fb585 100644
+> > > --- a/drivers/scsi/scsi_error.c
+> > > +++ b/drivers/scsi/scsi_error.c
+> > > @@ -1567,6 +1567,31 @@ static int scsi_eh_try_stu(struct scsi_cmnd
+> *scmd)
+> > >  	return 1;
+> > >  }
+> > >
+> > > +static int scsi_eh_sdev_stu(struct scsi_cmnd *scmd,
+> > > +			      struct list_head *work_q,
+> > > +			      struct list_head *done_q)
+> > > +{
+> > > +	struct scsi_device *sdev = scmd->device;
+> > > +	struct scsi_cmnd *next;
+> > > +
+> > > +	SCSI_LOG_ERROR_RECOVERY(3, sdev_printk(KERN_INFO, sdev,
+> > > +				"%s: Sending START_UNIT\n", current->comm));
+> > > +
+> >
+> > As in the scsi_eh_stu, SCSI_SENSE_VALID and scsi_check_sense is required
+> > before calling scsi_eh_try_stu.
+> 
+> But the SCSI_SENSE_VALID and scsi_check_sense has been called before calling
+> scsi_eh_try_stu, see in loop devices in scsi_eh_stu, do you means re-call at
+> here?
 
-Which platform are you using?  and please add chip info in your commit
-message.
-
-This change can be moved to fsl_sai_config_disable(). that is:
-
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -798,18 +798,16 @@ static void fsl_sai_config_disable(struct
-fsl_sai *sai, int dir)
-                           FSL_SAI_CSR_FR, FSL_SAI_CSR_FR);
-
-        /*
--        * For sai master mode, after several open/close sai,
-+        * For sai master/slave mode, after several open/close sai,
-         * there will be no frame clock, and can't recover
-         * anymore. Add software reset to fix this issue.
-         * This is a hardware bug, and will be fix in the
-         * next sai version.
-         */
--       if (!sai->is_consumer_mode[tx]) {
--               /* Software Reset */
--               regmap_write(sai->regmap, FSL_SAI_xCSR(tx, ofs),
-FSL_SAI_CSR_SR);
--               /* Clear SR bit to finish the reset */
--               regmap_write(sai->regmap, FSL_SAI_xCSR(tx, ofs), 0);
--       }
-+       /* Software Reset */
-+       regmap_write(sai->regmap, FSL_SAI_xCSR(tx, ofs), FSL_SAI_CSR_SR);
-+       /* Clear SR bit to finish the reset */
-+       regmap_write(sai->regmap, FSL_SAI_xCSR(tx, ofs), 0);
- }
-
-Could you please try the above change to also work for your case?
-
-Best regards
-Shengjiu Wang
-
->                 regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx, ofs),
->                                    FSL_SAI_CSR_FRDE, FSL_SAI_CSR_FRDE);
->
-> --
-> 2.49.0
->
+No, I meant that SCSI_SENSE_VALID and scsi_check_sense are required in
+scsi_eh_sdev_stu, or perhaps we could move them into scsi_eh_sdev_stu.
