@@ -1,142 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658B828725E;
-	Thu, 26 Jun 2025 08:35:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F73028725E;
+	Thu, 26 Jun 2025 08:35:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750926916; cv=none; b=CNewIsfKhNPpBHPWmetu00zymsEPOn6abHHjX2h/zSC/R2XCdQJmWSliL1ImOqt2rFr5HFiF56jD8l+chmqN5Lmyl+OT9SmEL8Dfo9k/AeN/yXZfoyE4Z6PYM9XIYCDIBHja2I2PT3oCdsQWJZISVeqiSzqZ5tPSYtRcvGR3ax8=
+	t=1750926920; cv=none; b=uhBsLDbq860ZmyO+C3UJE4adtRa5fudbp+PbFeIP9jWsgAKE5li+He2InIqGiNb+h+yYS6cVoSStC1GcuzzR2qQ65ufPLupXI1iEBEx07QXanidggZLzZ2ZsxYTqfh61CmfFmZzzmX4kvYtvRuBh/sry9t8AEQv7IKruQT+IqzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750926916; c=relaxed/simple;
-	bh=nHUZ668U+MnRs1YAZ7/aO4LbEwCxp+qT3jC3qnd47PU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ITVWJbBlunb3YXwKkLT3HCvqWiL2qUjrPdvJaRG0KTzm3VDZQ8eKrlAjb7QHdpNSJFiqlCSBHoLHdaeqtLPxZdKgCo2zYaOUCuSdIFdgS4OAMJWq0x1cI1rZLPMEfahJsSHk0d7vs0fHCm8C6DZ8fPeQRNDSHDVG/6NtZpQ9kQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FP0ISR/K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750926920; c=relaxed/simple;
+	bh=GSeanSVTJqcRoAxZuultvOwFtKRsYtMb7zSvJhn66LE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eojdRx/wSZjsRi0f5UedO7cc3FysaXmkD8KRIo1dGlCoeNyXY4Jmrg5A44Uz0z6/E930SS0CXLB/GZ3Cm86B6/QzdLowbaICOZ60/CDPrrA3ZVR13rlHrdRmpxfkbOvmZsLerBgPLFHJ3cmtK/iSmR1N2y+JzMFpMjj9KusdKWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A4FazDF2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FP0ISR/K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B791C4CEEB;
-	Thu, 26 Jun 2025 08:35:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A4FazDF2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C9C1C4CEEE;
+	Thu, 26 Jun 2025 08:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750926916;
-	bh=nHUZ668U+MnRs1YAZ7/aO4LbEwCxp+qT3jC3qnd47PU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FP0ISR/KkbU8MDlw/EEwLR9YHqsTvWvkgcUOdis6QPGmCj+MtHk8YcmUgNWTK8xaR
-	 gQufPOuWtEcSxcK/UOgDoO08S1DzoIes0S3W/yG7Z4lowW1VignwLyjz5f2+Av6sAM
-	 QmYJ8ocjop8hUzRjponRhMzL5Pmh2zUM5IUR2DG1bnyjzdJYbLnKMdDQZT8AUE/k6R
-	 Se3pc/EovVh51EioT0R926xbqAw/t9o4VN6mZC2tyD+SzWUjcNexRGIL7r0xO19A56
-	 f7hiMoVnJX2GB9cPH8DM6+zWqgupkCdFH65foBLsxda+1quxPQZA9xp4juoXnk4qMy
-	 SeaGOsa5TJugw==
-Date: Thu, 26 Jun 2025 09:35:12 +0100
-From: Simon Horman <horms@kernel.org>
-To: Malaya Kumar Rout <malayarout91@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests: net: fix resource leak  in napi_id_helper.c
-Message-ID: <20250626083512.GT1562@horms.kernel.org>
-References: <20250625153334.434747-1-malayarout91@gmail.com>
+	s=k20201202; t=1750926919;
+	bh=GSeanSVTJqcRoAxZuultvOwFtKRsYtMb7zSvJhn66LE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=A4FazDF2wSrhLTAbJmPvbjDwuc91MvSnBI0j5ADpDsv6iLcjzadaa0QnY0eDmTBT7
+	 ongYLAW76RjCpUrQG+Hm6aqj5kqE43psJF9KkKGQEQBmuKr6foh08Jl20xOxIhGfBV
+	 EmrJJLJk4fa1QskNpQPtvX3NSzxGjwERXf2/V506blqGxPyRJ/OTc/4dbfjudly0yG
+	 rIDEnUPaFjKAaEFsyAn61m6mk12bqE+ZhdS9ODkvt0qUutwUGKHVHcBb9XiSdKNQvG
+	 J3xKQWxDV067YfrN5v1iHca1g/yeiqD5LysZkBnx9/K5YGcd5q3P4lzW88irr/vHtS
+	 eI09hVF3YI+xQ==
+Message-ID: <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
+Date: Thu, 26 Jun 2025 10:35:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625153334.434747-1-malayarout91@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
+ system
+To: Mario Limonciello <superm1@kernel.org>,
+ Mika Westerberg <westeri@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <20250625215813.3477840-1-superm1@kernel.org>
+ <20250625215813.3477840-5-superm1@kernel.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250625215813.3477840-5-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 25, 2025 at 09:03:07PM +0530, Malaya Kumar Rout wrote:
-> Resolve minor resource leaks reported by cppcheck in napi_id_helper.c
+Hi Mario,
+
+On 25-Jun-25 23:58, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> cppcheck output before this patch:
-> tools/testing/selftests/drivers/net/napi_id_helper.c:37:3: error: Resource leak: server [resourceLeak]
-> tools/testing/selftests/drivers/net/napi_id_helper.c:46:3: error: Resource leak: server [resourceLeak]
-> tools/testing/selftests/drivers/net/napi_id_helper.c:51:3: error: Resource leak: server [resourceLeak]
-> tools/testing/selftests/drivers/net/napi_id_helper.c:59:3: error: Resource leak: server [resourceLeak]
-> tools/testing/selftests/drivers/net/napi_id_helper.c:67:3: error: Resource leak: server [resourceLeak]
-> tools/testing/selftests/drivers/net/napi_id_helper.c:76:3: error: Resource leak: server [resourceLeak]
+> Sending an input event to wake a system does wake it, but userspace picks
+> up the keypress and processes it.  This isn't the intended behavior as it
+> causes a suspended system to wake up and then potentially turn off if
+> userspace is configured to turn off on power button presses.
 > 
-> cppcheck output after this patch:
-> No resource leaks found
+> Instead send a PM wakeup event for the PM core to handle waking the system.
 > 
-> Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
+> Cc: Hans de Goede <hansg@kernel.org>
+> Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing key press event in resume phase")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/input/keyboard/gpio_keys.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+> index 773aa5294d269..4c6876b099c43 100644
+> --- a/drivers/input/keyboard/gpio_keys.c
+> +++ b/drivers/input/keyboard/gpio_keys.c
+> @@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
+>  		pm_stay_awake(bdata->input->dev.parent);
+>  		if (bdata->suspended  &&
+>  		    (button->type == 0 || button->type == EV_KEY)) {
+> -			/*
+> -			 * Simulate wakeup key press in case the key has
+> -			 * already released by the time we got interrupt
+> -			 * handler to run.
+> -			 */
+> -			input_report_key(bdata->input, button->code, 1);
+> +			pm_wakeup_event(bdata->input->dev.parent, 0);
+>  		}
+>  	}
+>  
 
-Thanks,
+Hmm, we have the same problem on many Bay Trail / Cherry Trail
+windows 8 / win10 tablets, so  this has been discussed before and e.g.
+Android userspace actually needs the button-press (evdev) event to not
+immediately go back to sleep, so a similar patch has been nacked in
+the past.
 
-I agree that it is nice to address these warnings.
-But for completeness doesn't client also need to be closed
-if an error occurs after it is accepted?
+At least for GNOME this has been fixed in userspace by ignoring
+power-button events the first few seconds after a resume from suspend.
 
-Also, I'd suggest using a ladder of goto labels for error handling,
-as is common in (Neworking?) kernel code.
+Regards,
 
-E.g. (compile tested only!!)
+Hans
 
-diff --git a/tools/testing/selftests/drivers/net/napi_id_helper.c b/tools/testing/selftests/drivers/net/napi_id_helper.c
-index eecd610c2109..105517dc315d 100644
---- a/tools/testing/selftests/drivers/net/napi_id_helper.c
-+++ b/tools/testing/selftests/drivers/net/napi_id_helper.c
-@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
- 
- 	if (setsockopt(server, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
- 		perror("setsockopt");
--		return 1;
-+		goto err_close_server;
- 	}
- 
- 	address.sin_family = AF_INET;
-@@ -43,12 +43,12 @@ int main(int argc, char *argv[])
- 
- 	if (bind(server, (struct sockaddr *)&address, sizeof(address)) < 0) {
- 		perror("bind failed");
--		return 1;
-+		goto err_close_server;
- 	}
- 
- 	if (listen(server, 1) < 0) {
- 		perror("listen");
--		return 1;
-+		goto err_close_server;
- 	}
- 
- 	ksft_ready();
-@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
- 	client = accept(server, NULL, 0);
- 	if (client < 0) {
- 		perror("accept");
--		return 1;
-+		goto err_close_server;
- 	}
- 
- 	optlen = sizeof(napi_id);
-@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
- 			 &optlen);
- 	if (ret != 0) {
- 		perror("getsockopt");
--		return 1;
-+		goto err_close_client;
- 	}
- 
- 	read(client, buf, 1024);
-@@ -73,11 +73,17 @@ int main(int argc, char *argv[])
- 
- 	if (napi_id == 0) {
- 		fprintf(stderr, "napi ID is 0\n");
--		return 1;
-+		goto err_close_client;
- 	}
- 
- 	close(client);
- 	close(server);
- 
- 	return 0;
-+
-+err_close_client:
-+	close(client);
-+err_close_server:
-+	close(server);
-+	return 1;
- }
+
