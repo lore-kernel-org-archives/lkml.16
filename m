@@ -1,104 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0988C27584C;
-	Thu, 26 Jun 2025 11:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD7517BA5;
+	Thu, 26 Jun 2025 11:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750937675; cv=none; b=AW6O4EJ7NOj7Qr+yyJH7KAIpuEmf3R46e+i6t4oD4xkfjKwOUOHaq9TxHqNiQdilwMCqszH3jitlQUPy6yV6hSpSuEKcOfWWUqN3QWytjyeNGXZ/ekL9SIgrldNh5Sw3dTEe4YW0DgvOS0J2nDqKGpAuxCInRWddHwfteNg9KGE=
+	t=1750937829; cv=none; b=UXP7bOlUT7AKzfwoA+sEqDt420aGLV9CD3NhYlOq76pkp0wlApH/5X6OpP7ogPF+1CoEO4/Xhb2y1lcpc+JlYe3MzJn04F7QUdwlAcmwiSJwPmYJCD7vY92kX9UcCdj7wAflrn1q9LLa8g1k9c6bS5SpfzYG0YZANHPVTdVmFDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750937675; c=relaxed/simple;
-	bh=y8dtuue6zG3Z62+ha6QZpJFJOue7deklq2PrhNeGUVs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HhpI9Y9KGAuKnDZXwP1yDaJoW651gvHmZIFzmKVs5SQuQKLSOHplZw5JIQlR/zRepk8+wvgsFmiG7Hpw7/zTBbnrAcFzEHQ9tQxJrpDOKtGjMm8/63vhBbG4UsMyvbwWcN62ZxM07D3Im4OalPyGV8QUi7iUisg0JfQ5b5qbv6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g8t0lUe0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g8t0lUe0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14633C4CEEE;
-	Thu, 26 Jun 2025 11:34:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750937674;
-	bh=y8dtuue6zG3Z62+ha6QZpJFJOue7deklq2PrhNeGUVs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g8t0lUe0dnz6RaK5LdH/exbPa16uKUOtSiPaw03l72RLwXsju6MWzQ1UBNcOIjhcs
-	 dyYSTBvMlLdF8mbr9Z33+2aebEM8tKRidxEcKCbWetP/VG5l4ZtdytiOQZnzrwyTzT
-	 ilvOS9Iz55pYWfTzbCa9CMq3l1hE7y51/LvDpgGGh+nPiZKKevXqLgGhWwO7I4e1/1
-	 JIm3moezVZFf+Vexrpz/5V7ueppOuXm/5BfQNcxPjtk/OZ+T3Arba0WKYUbK5IDbnh
-	 M4H3vIxhWAUdhxISc7ovYd2wnSfXazvNoluKgeHliaD15koq+9VvVGbVEhxAzcQy8f
-	 b/650v3DU9+tg==
-Date: Thu, 26 Jun 2025 12:34:28 +0100
-From: Mark Brown <broonie@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Frank Li <Frank.li@nxp.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Larisa Grigore <larisa.grigore@nxp.com>,
-	Christoph Hellwig <hch@lst.de>, linux-spi@vger.kernel.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/6] spi: spi-fsl-dspi: Stub out DMA functions
-Message-ID: <aF0wRFKOkejfvuYT@finisterre.sirena.org.uk>
-References: <20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org>
- <20250624-james-nxp-spi-dma-v3-3-e7d574f5f62c@linaro.org>
- <aFrSgJ5xZfccEX9x@lizhi-Precision-Tower-5810>
- <290fc244-e88f-47a3-8dd3-0ec27eb5c60b@app.fastmail.com>
- <0c6c78da-575a-4d29-a79a-3903aa801b42@linaro.org>
- <0f904f12-295c-48fe-96c7-c64c461cdbbd@app.fastmail.com>
- <884e86be-112b-44dd-a827-30355a5fdba6@linaro.org>
- <82824032-26d4-42a6-8a92-3e4a410741c5@app.fastmail.com>
- <faf23c39-af14-40ae-ad22-849aea87a4bd@linaro.org>
+	s=arc-20240116; t=1750937829; c=relaxed/simple;
+	bh=mtyK/NOV28AKjGqGVdbBweKlopSsf/40dE/zw8jYnf0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=XPY2LjBty7FxRk5rPGlSF9IHRVNh79eo88LBu5nfp+XyrFA3qNth6nluM9KNwcMdMyfPwjy3929XdCa//hItXYwsDOZm47oI+Vhq9eH8+6osjZJqgsBkMBTae8lvAHOUqqpoNBq9HjwpTWU8/QPacZtAW0xv9njLUTeHcrCw2XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bSc9G3xzRzKHLv5;
+	Thu, 26 Jun 2025 19:37:06 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id E44F71A12EF;
+	Thu, 26 Jun 2025 19:37:04 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgA3m1_fMF1oAe_ZQg--.50734S3;
+	Thu, 26 Jun 2025 19:37:04 +0800 (CST)
+Subject: Re: [PATCH] block: fix false warning in bdev_count_inflight_rw()
+To: John Garry <john.g.garry@oracle.com>, Yu Kuai <yukuai1@huaweicloud.com>,
+ axboe@kernel.dk, hare@suse.de, hch@infradead.org
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yi.zhang@redhat.com, calvin@wbinvd.org, david@fromorbit.com,
+ yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250626083927.576207-1-yukuai1@huaweicloud.com>
+ <27e4f72f-3b6e-4dc8-a722-0ace9aa8c066@oracle.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <bca70ea3-8f9c-b69e-0a39-0a0d91e7e353@huaweicloud.com>
+Date: Thu, 26 Jun 2025 19:37:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ToakUxsci4O8JHpH"
-Content-Disposition: inline
-In-Reply-To: <faf23c39-af14-40ae-ad22-849aea87a4bd@linaro.org>
-X-Cookie: Do not cut switchbacks.
+In-Reply-To: <27e4f72f-3b6e-4dc8-a722-0ace9aa8c066@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgA3m1_fMF1oAe_ZQg--.50734S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYK7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4II
+	rI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr4
+	1l4c8EcI0Ec7CjxVAaw2AFwI0_Jw0_GFyl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
+	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU
+	F9a9DUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+Hi,
 
---ToakUxsci4O8JHpH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+在 2025/06/26 17:34, John Garry 写道:
+> Is it even safe to even use this function when not used for just 
+> informative purposes? I mean, for example, it is used by md code to 
+> check for idle state - could that check return an invalid result (and 
+> cause harm)?
 
-On Thu, Jun 26, 2025 at 11:04:50AM +0100, James Clark wrote:
-> On 25/06/2025 11:54 am, Arnd Bergmann wrote:
+For md code, I think it's ok, md still use completed IO for idle state.
 
-> > In theory you may also want to turn off DMA mode for testing,
-> > which is supported by at least the DW_DMA driver.
+More importantly, the io_ticks can be wrong due to inflight to be zero,
+however, it's inaccurate for a long time and there is no much we can do
+:(
 
-> > I see that SPI_TEGRA114 has a dependency on TEGRA20_APB_DMA,
-> > which is yet another variation. This is clearly done for
-> > usability purposes since that SPI driver only ever works with
-> > the specific DMA driver in practice, but it seems worse
-> > conceptually.
+Thanks,
+Kuai
 
-> I can add it, I'm just questioning the usefulness of adding a new config
-> option that's unlikely to be used in reality. It only achieves the same
-> thing as doing #if CONFIG_DMA_ENGINE in one place in the code.
-
-> Ultimately we're just trying to fix some randconfig error, if we start
-> adding new knobs for people to turn just do that, there's a risk they won't
-> get used and we'll make configuring more complicated for people.
-
-Please just keep things simple, as you say nobody is likely to be
-actually trying to run such a configuration practically.
-
---ToakUxsci4O8JHpH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhdMEIACgkQJNaLcl1U
-h9D1uwf/W8rTmqkdTiKU7xj3NMtSpLL8sDI/4bHSRpuB6QSHXQDDRXuCYViMgF+U
-kVQwp4yY74+/yow0Vu1M/CvdDxHfQDMo3Lh9/nSm+NQFGWLUxcgfV3I9IkZPmAS7
-UOcbrJx7avU0i9o3To3WAhZHhej768yo0886n36qymiZwJdB2q4dIvx0tLw/Jy2a
-oqD9w6yp5c623561vSUWNida2FbAIp8vhNac7RiylL3mWtxcZE3BXN2Vrlz8D33+
-OIjxf129P5Up4H/lpD/mrhj7MS30zIjN1LjPKA3PcUJeWLTB8KEwTLGlEFPmdwAH
-dCoZNv9w8YgG58EXqf/LFoqsd1nLOQ==
-=MUyY
------END PGP SIGNATURE-----
-
---ToakUxsci4O8JHpH--
