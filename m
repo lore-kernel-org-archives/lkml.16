@@ -1,182 +1,101 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5191623314B;
-	Thu, 26 Jun 2025 08:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA4325B30F;
+	Thu, 26 Jun 2025 08:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750925069; cv=none; b=BucD5LMup1mVLg9qLBhcd5btgJ+c11o65xJlhhm1cN1TXfom1i78SllTlxjEWcaEpYpIZYbNbGq1CUCIaki/Ux2mqW335hKpiy+94/v+7PfQdUD+37gi8JkxFaviRGmX3LlLlQstNPrOXokUAUftGSZDkVkFtHWoJZydBRj66Lo=
+	t=1750925185; cv=none; b=DcIFC15XreGD4cQgM1wCyXqOARvaOEYfgAJhLs7ur2YHIZabmTtnSxG0jNVVY/oiDv9iNWKOfof++qVi5bT+3vnJ8SoS+xHhHcMmD2IQ+QL/fg8yKvKzbTI8BQM0Ja1ToYFGSMt2qFLVWZRWW/R7U0fK5Z2s+Af7tsgfKytkBEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750925069; c=relaxed/simple;
-	bh=ll/GCByaq6L/vUF7X3hIS3Ke3ltdmYqhTq+wVmecgn8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DcV2AENcigRJz3W9bOZ99PT3ft7+wx8QhdiNbGYzY8VEpPZ4fIt7EP4RekkriCY/ErIfvDeqrTSRdr+ufgNR+23ffoWNFES9CV+B9JkI2FwvX54HL1Q7K42WhT9DzkLq7NxIaDyIiAZZ7GV62oHl5HbI2Pwd6CMUXH6J7zlg7sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=B47zkZ5P; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750925185; c=relaxed/simple;
+	bh=xhnpuilzuzpPd6cI51i2HOiB+MDWT7q/4XnyimdleT4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lNuZpulceAVfEakw6SZS8YL+YunEsLByOFDXQh2DrZG/r770ESUV2PfZBRf5UCuNDlIamXZPrcm8tO94vIUP7cahytVQUUvVPskQfvAY6z3p0hIuvfZGecWfCpqW7PHd5kPOdqRrNmMR9CwT0qtmzWGR/I58eZuh3QIPYNEO9wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ANRwvLTl; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="B47zkZ5P"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q0EXZa027655;
-	Thu, 26 Jun 2025 08:04:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9bh0BdyixRnDd6O7y8OvWoe7BilB3MF8CQqhr1ip8jM=; b=B47zkZ5P/f5rZs0C
-	sv+zpXXegSp5V8D03Yqf02SdiNEdjGQzExSCEYkckthqnlcdZpuananbDe9RDliW
-	yKJMC6P3CZ4l1KU3xgj3EGRfXaUXXhlJ++zbJ05eS5aO6/EOh6Xt3iZ1hOaI+/cV
-	38ihwf+qDFBbCerJgzDji4O4mEA7K/oPKX6qT4iiMwbNewYQfBJDx6ecaLjrU82R
-	WkXuN3/NVoY1PIvoHEcqb1Ha30sYrvIs5bWem8vgP3upWf3xie4h7o8IdAU6Z2iw
-	fU0hubREb791B34FjJoKuWgyAzljIzOh66TRY01tuk2Dzss39W78HrGJAREY6kcK
-	25hzsQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47evc5umfv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 08:04:12 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55Q84Brl031370
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 08:04:11 GMT
-Received: from [10.239.133.49] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 26 Jun
- 2025 01:04:07 -0700
-Message-ID: <3905c8ab-941a-4171-a1d9-7721059a7490@quicinc.com>
-Date: Thu, 26 Jun 2025 16:04:05 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ANRwvLTl"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-45362642f3bso1022635e9.2;
+        Thu, 26 Jun 2025 01:06:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750925182; x=1751529982; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DC64y/H2oFnVNlImH6ayGBQaIfLwd9fO3/4UWP+gwOA=;
+        b=ANRwvLTlcOe2/t3FSAgKIXvNmjpyMUNAaovf7wXh/eSNvRrthTJ4xyAR2YX0WD+yqO
+         O743SAM1LsA6YIZ3nww5vXSJSspsjXRZvHnlt2TQ5MKkM/Vl4uotuF/UfDS9gVMwyMPp
+         9iwmCv3b6bEwNKfQhDsbU/kSxXtkOB9Bu/qP0w/TFnqovX9TZbHXfXW+NG8cyPQCmaRD
+         zck5xN0J8xJyA2pMOdwqORcl+rN3PsANShQWlLllraaN8plecll/3g8rIny8xMltoHKU
+         9XP8u4DK9MHEX+MQH7/1tBlHvgKQUcXxaCv7fix0HzMZCmJCm9Ci3qd2augGIB+5VwhM
+         iXfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750925182; x=1751529982;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DC64y/H2oFnVNlImH6ayGBQaIfLwd9fO3/4UWP+gwOA=;
+        b=bOGeeMuJMt5PjJDu/RFNBwu0OxowktSPwMSQF7VV/2e6854cmaTxDOfowFTLVq0FSd
+         sOjVykGl73bYh3TY3T5ZPEpZdNj9JG9Fo+FkJpyeAbuucDPHPInC8vzkgmHLZkUIGUW6
+         kKaNw1GpNmigu8ErkbNxd/J0pReqWjsUUSXVagSmyBJUYh+EpYkRvxUB3RUTVjPv4mV/
+         dALdYo6NypXWZKfgdDdl1aM9YCxIz3cRKB+BoD3agE2FEhqakkHHMv1Prkz2rF22dmRq
+         qhP6+Q85QDJef3+gEg60LOw4kuT1joQWa+0QhWP52xFYmOjBqRYY53aFkfoHGs2OiFa2
+         Zudw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuuLogou/TFTYgxYzdbV3AP1UofHty55DCyURdh1ynhqMvUDV1/FMvs4mUCSkuyDRpx94MDPGvLQg=@vger.kernel.org, AJvYcCW23a31/VhQwvjDVwC5p01KqM/kdTvYq29voE5dB1bRytau4o+fAPH2R8++pePDjuqDGFMpfDwrGWGvm73z@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxt++2aMWMWeVR9/QhxpLjjXAhNHEmTCE3SkCrG0QDgx7nPedK9
+	iM73G4TzUQq/FqSx2fQ5LkQmGmrfcUP7/E+Su5HOESx2hsj3VEefZiwZmBuDXdw=
+X-Gm-Gg: ASbGncuI7j5ROkdH4XsuK1qc7XfnY5Y8f66ZV6VDeAgU/JT7odU39L3V2lA2XC5SI+E
+	I8gkMlzznDLCxSvItkWE/AQFjBQmd1INvjLHL+c+E2IH+moFg/Kf7HBZOruTtmQ+6gsE30vXux7
+	9u6jTuXS/VniSm1BvmQbtbkQy0d/gOCur9iqA+WMBhegN10kJEVrLWHibypuFb+oE88gRgbKMoF
+	XlzN2hWC5dmtHXyf5YFMZaVMFMZ5lyPghAJfP/RhypGzBCTY3eTcNKjsYLMymRJqmgGOYVDbYhB
+	OPyR/1SVi2TrcUWbAUHrlKPGed1evqu/DnNl7Soh29k0RBB0ZXNtZRNcRDW7m8y3aIPAvrfB8vK
+	RfXFSVBDaQ0q5s8v6Q/TbY13fH/U=
+X-Google-Smtp-Source: AGHT+IFkLolt71evoXr5YSCGL+e4CJZLyipwcJOrMl+ydsN1P/MteMAs/EDIQzLoqeSKNkbQWAOU5w==
+X-Received: by 2002:a05:6000:2910:b0:3a3:6a3f:bc61 with SMTP id ffacd0b85a97d-3a6ed630c25mr2107451f8f.7.1750925181879;
+        Thu, 26 Jun 2025 01:06:21 -0700 (PDT)
+Received: from localhost (233.red-88-28-13.dynamicip.rima-tde.net. [88.28.13.233])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80f2670sm6583882f8f.49.2025.06.26.01.06.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 01:06:21 -0700 (PDT)
+Message-ID: <f2d39a21-bbeb-40b7-9759-b50308e4e382@gmail.com>
+Date: Thu, 26 Jun 2025 10:06:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/5] dt-bindings: arm: Add qcom,qmi-id for remote etm
-To: Bjorn Andersson <andersson@kernel.org>
-CC: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>,
-        Konrad Dybcio <konradybcio@kernel.org>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250424115854.2328190-1-quic_jinlmao@quicinc.com>
- <20250424115854.2328190-4-quic_jinlmao@quicinc.com>
- <ugxijerhh5yfgpvmuaatvenh7yrk5uoiracfp7xknsxrb73dcl@hwsatze4rjuq>
-Content-Language: en-US
-From: Jinlong Mao <quic_jinlmao@quicinc.com>
-In-Reply-To: <ugxijerhh5yfgpvmuaatvenh7yrk5uoiracfp7xknsxrb73dcl@hwsatze4rjuq>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [PATCH] MAINTAINERS: standardize git.kernel.org URLs
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, DOC ML <linux-doc@vger.kernel.org>,
+ KERNEL ML <linux-kernel@vger.kernel.org>
+References: <20250625142017.237949-1-xose.vazquez@gmail.com>
+ <2025062654-lubricant-lettuce-3405@gregkh>
+Content-Language: en-US, en-GB, es-ES
+From: Xose Vazquez Perez <xose.vazquez@gmail.com>
+In-Reply-To: <2025062654-lubricant-lettuce-3405@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: lkzTFagtO3N3ZaAkJPjolOa-R_hAEndf
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA2NSBTYWx0ZWRfXw+rmMdNYNj/b
- FDIWbb6LfSWXdLmOXQIs7bMkYQ0f1i3ekwh9XG7MX1ShPY9oED+xgAuVNs6oMUrvODR0rc1epUJ
- iZ+mn7P92bWZwsg1g88877kyAWKMK/M60Fe3yHA7sfXCK12opzP1kZ1r1x9HfmdguQgEYAdoqKA
- HQLpil9QA6btULs8U/DThickdN29S0FMHOmZx3HZvmZ6kJ4FzqOSxrk2zyABE1JnHilcm6j8xOL
- 1ktDVc/Q82+phCFlM+xz45jnOYmAL6VZddPc7e6mApngYgYt56K/kLFPauHTJ8g4jM4wrmj8tVC
- 3lj81PaXCxnQtAiqwwTs9Bv6r1gqDssLDdxPRZAg71n9RfYJpau8IvdeT8+NS6ffIL8aaujPbsH
- X1CICqoyBl8OhHBuRdMsrpAb4Wd7EpY3CWtP6FWM/R8KxQS+pmGmldbFoW1biPrGGjSrTwAI
-X-Authority-Analysis: v=2.4 cv=caHSrmDM c=1 sm=1 tr=0 ts=685cfefc cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=GsXIiSCn9My1Hi_4oy0A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: lkzTFagtO3N3ZaAkJPjolOa-R_hAEndf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_03,2025-06-25_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
- malwarescore=0 phishscore=0 clxscore=1015 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506260065
 
+On 6/26/25 9:38 AM, Greg Kroah-Hartman wrote:
 
-
-On 2025/6/18 11:16, Bjorn Andersson wrote:
-> On Thu, Apr 24, 2025 at 04:58:52AM -0700, Mao Jinlong wrote:
->> qcom,qmi-id is required for remote etm driver to find the remote
->> subsystem connection. It is the instance id used by qmi API to
->> communicate with remote processor.
->>
->> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
->> ---
->>   .../bindings/arm/qcom,coresight-remote-etm.yaml        | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-remote-etm.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-remote-etm.yaml
->> index 4fd5752978cd..947fe33738a3 100644
->> --- a/Documentation/devicetree/bindings/arm/qcom,coresight-remote-etm.yaml
->> +++ b/Documentation/devicetree/bindings/arm/qcom,coresight-remote-etm.yaml
->> @@ -20,6 +20,13 @@ properties:
->>     compatible:
->>       const: qcom,coresight-remote-etm
->>   
->> +  qcom,qmi-id:
+> On Wed, Jun 25, 2025 at 04:20:16PM +0200, Xose Vazquez Perez wrote:
+>> replace https: with git:, delete trailing /, and identify repos as "git"
 > 
-> Why isn't this "qcom,qmi-instance-id" if that's what it represents?
-
-ok.
-
+> This bypasses the mirror systems in place with the https: protocol,
+> please do not do this without a lot of justification and agreement of
+> the hosting providers involved as they will have a large increase in
+> resources if this were to change.
 > 
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      This id is used by qmi API to communicate with remote processor for
->> +      enabling and disabling remote etm. Each processor has its unique instance
->> +      id.
-> 
-> DeviceTree describes the hardware and firmware interface, so don't
-> describe properties in terms of what Linux will do with this value, but
-> what it represents.
+> Have you asked them if this is ok to change?  What is wrong with the
+> current urls listed here?
 
-Sure. I will update it.
+To be *consistent* with the rest of the entries:
 
-> 
->> +
->>     out-ports:
->>       $ref: /schemas/graph.yaml#/properties/ports
->>       additionalProperties: false
->> @@ -32,6 +39,7 @@ properties:
->>   required:
->>     - compatible
->>     - out-ports
->> +  - qcom,qmi-id
-> 
-> How can this suddenly be required, did devices described by this binding
-> up until this point not work?
+$ grep git.kernel.org MAINTAINERS | sed 's#://#:// #' | awk '{print $3}' | sort | uniq -c | sort -n
+       1 git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext.git
+      22 https://
+     380 git://
 
-Without this instance id, remote etm won't work.
-
-> 
-> If this is the case, make sure to clearly describe this in the commit
-> message.
-> 
-> Regards,
-> Bjorn
-> 
->>   
->>   additionalProperties: false
->>   
->> @@ -40,6 +48,8 @@ examples:
->>       etm {
->>           compatible = "qcom,coresight-remote-etm";
->>   
->> +        qcom,qmi-id = <2>;
->> +
->>           out-ports {
->>               port {
->>                   modem_etm0_out_funnel_modem: endpoint {
->> -- 
->> 2.25.1
->>
-
+But if https is preferer, a reverse patch can be done: git -> https
