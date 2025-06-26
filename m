@@ -1,63 +1,63 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA25264FBB;
-	Thu, 26 Jun 2025 21:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4109D277031;
+	Thu, 26 Jun 2025 21:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750973043; cv=none; b=BJn/0wNCjl/2lFMKvjwMFHFHJkx20/4tt49AtH4BhbVVZfRhwSpd7H1WaHOStwYPDb0B/qs0IPJlSwdZZUEH6X3aDz1hgOqlMmkV2ocFkJ19fP27o40Zi3JRb3SPB6XIEC+16P0XPiRCXE+Vdh0pzAWlfJ/sg8WgmyvANLak5cs=
+	t=1750973046; cv=none; b=BeyyPGqkiiqYQIaibLODls+eS3JzsPL6ZdnL/qBgG0KuoAb2GEubLZ/Acqsc+Oq52jQiV+l+F/s7Jv8WhRz8fKVyDR+5Z00o1y4oAw+hpkovXYTgPVXK2a9QUz8Zv5LW98HO5IpNng3kgamWW3ATyz4DRJ5pGwys1kE/P+DQYtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750973043; c=relaxed/simple;
-	bh=KBBfT0IDiw8oE0igR/jcFd9xnP51A70PMzQ4/5lb2bc=;
+	s=arc-20240116; t=1750973046; c=relaxed/simple;
+	bh=JFw7TrPsCT0OFXmIGmyZgDpgghjWJZKpxZeoG+2gAJE=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KoiEuOkOep3bDGYJsrZ67gw1FVG+aEqVJ07WxPnBZ0U39dIqpMrXa2HcvMb8xnNEGeWOIQPl4gDjX+9o1n9CotyV3odqBZwtbVklye9gppH9Vwp6lurcFbVYiiVAquEX1xihiyw67QqgGf+uVZm70MBICMxQQhrkOPEkln/+D2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VVwb4/8E; arc=none smtp.client-ip=209.85.128.41
+	 MIME-Version; b=lBUDenzG3xdWeSG+1nOpwbcDei/9reKROB2pHTMyyUU30eNAYxQx1U+b78dBsRD0aHWRpvdFoOg0IdMd7PlpDSHUvr908Ttw9VAsV7JawA3lCXJo/YSb49BxAsAs7LqPt2HWNEIu0te8oWy9TQixnv3btIVd43SlQPGJ+3K/f94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jbmX6uI4; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VVwb4/8E"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so10629965e9.1;
-        Thu, 26 Jun 2025 14:24:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jbmX6uI4"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-453398e90e9so10655125e9.1;
+        Thu, 26 Jun 2025 14:24:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750973039; x=1751577839; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750973042; x=1751577842; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ExLehqKRvcjfnLv7M/oInDmYXs2lxlBzas9u/z/Ge4c=;
-        b=VVwb4/8E6C7U6sjKszKp3naCr/L3COkwDQX0Rq2oJik5x2Njl7AkPXjK3o58vG2CJZ
-         MENEgnuVhzvMoOVHols1ILfn6CfVHoNSwR9+/lrXz8ob471JgEW1AVHSC6UsFu8eIaHL
-         YsTtX7RTQC2PH1wbFlBMS4HMqWOtyMsPDd2VHvcdhSAjoSftKXm7M3swxdplMqgBTpl5
-         I6RJAuVvju8IrR0PJJsmFis29aK1lUFMkgOfVlRlNw2HChu5g6CX0Js/FpEYLW91dqFc
-         BUjNGdLDBUmKljQzRKXHg5oHNe/yBRoYT6hx/edGOidXuKNfbNiHTmmiP94DjEUiS8dF
-         1OJw==
+        bh=BIOMFqyNUBF162fetCo3wyfrnMMJk+JlU3hf3FfA/ng=;
+        b=jbmX6uI4EUeLLtUMN/cUDyY3MuFaSPKMipIG6YR2h5O8Q6CZZ8e0A58Mt0sOOv9+Fr
+         Tz2Wj1ykz1ZeomdtablXWO/ZKlrE24TQFS9AhAlwYfQYzNuwv3gxmiHlHX59i0KLKyt1
+         lDj2dtVZbD+NcIaEzrWYt/2qVudr6wRJSuVC+xtK2ImX/ifB/41pFZuB4b8fH++hR5kh
+         XG499g5MJHXv3eb6K6asFOuVbJ302w9vYb84PG7hMn+6cHKhFFPHFjFlLMi/RJokQjJy
+         8VxAU+d2oNYW2ZC5/+PFYftglUdHXw9wIlO6cJUvrlA+1dSeP2p66H1WV+1D0/rGSh9B
+         /b9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750973039; x=1751577839;
+        d=1e100.net; s=20230601; t=1750973042; x=1751577842;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ExLehqKRvcjfnLv7M/oInDmYXs2lxlBzas9u/z/Ge4c=;
-        b=uy9RR2jvK49IqtK3evJLe2K5YEdQexGEbJW7HvODzBfRzRrovqxhOZ5XXhmBx1N4Rx
-         ZJsMUjeu6V9P1csfxfXo68Sf/ZPW6TpnWHOJerNBD1xZExHjTClPX3rEf9shEPJEqbc6
-         HjjBEoOplcwIdlB2eo75cRqMLQ/2xGmKq9sn3HE38KtZkD9UF+FkA35z77uKI2SHReit
-         Wq9n7Rrdjqfxu/rMiIt/CBZc/KVsjdcrsM3rpscPAkAvVISxsxplL9bZgvV98DQwiRTq
-         lAceq00o3MYTfHNSIxbRZvHlc7yfxxkf5GDVRKpvg7Y1X6HshhLt9nuprDlBRJOZsIZN
-         KGfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUi/Cblfar4UdyQpxMQQ8K7VyHJs2TI/DV+DECyfZgDziOy4ovOMec8eeoAnN7IZjiqkwmFZssTSSa1@vger.kernel.org, AJvYcCVyFjNID9fkwUrTCIJU0LEr+fT++iJRzpzvlupmPibJhXD/LanmyyhLVoEJ/++J+TxMsPflsPD9@vger.kernel.org, AJvYcCWCbXNs5M8y1tu4H8vBcYS4fOyOMHWNb930kUT8eNUcizryetAD7xOKg6jv6/2UPa7bfrQrnoLSXoxJQTrC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoPh0GQPyhH2wqztXDURMPO71Bmju4QdEHhpixp2S7nkF/Q+C4
-	OfgRFtnC183pnfZ7/k0Z65w5T/PZp1rtDBZ3Zu8T/VxGFzJi3ceI23hw
-X-Gm-Gg: ASbGncvcYysGdlm6qo54DrYThkzAMuGfv4gnMZs0t6/5WGpfeCMtnnfx9Fu2qeiqOCv
-	L/izY3nzEku/dIp5SBq83p/tIYxC1kK7LOI7K5svHiZbGAS2nABabUV35irwm8lulUu4wBt3dc6
-	g5xZChGjFmjLR6jQXnPcZ0gHAtvHyFOSPrV7+PUnw4kYneUIVNlPtDwebjeRNMRk1qRjuaEGnLb
-	LvrCNGcJJ31aGUnCPxXOdeMcP+jIO7s/ulywJxNS018tbu0hfwRM34Rk7NFUDoYeMj57NsvLaqC
-	/1RsZEbMcPufoj/go1nBFSo7uAYjKIsu7p5yRO4xoeZKhX9F6wUe3lO48H0afc85WyC4P70tIk0
-	my7zCjzJO2HUGNldxXnE1NKJMAFoUNA4=
-X-Google-Smtp-Source: AGHT+IHT3XTc8/cQh1sfuiiz5HzOadFkcJ1uLdBn7TWZuheeMenxiZSw/KTPt6TYLMZ2C4ahDtTORg==
-X-Received: by 2002:a05:600c:8883:b0:43d:174:2668 with SMTP id 5b1f17b1804b1-453888abb62mr41014635e9.0.1750973039396;
-        Thu, 26 Jun 2025 14:23:59 -0700 (PDT)
+        bh=BIOMFqyNUBF162fetCo3wyfrnMMJk+JlU3hf3FfA/ng=;
+        b=D0YjSjgq3903OQ5NK/6HhjLaFIrgutK4Ltnu+gM76NvTYPbBnvgCaNIfb0TmZ1kt3E
+         JQLC8n1VFrRR0c32GLNGbbzO9gT0l1oKHDNQ1hTZvewBbLUZI+lU7t2/uAIab2nGY8Vy
+         BJnQ3FItVXAEjeBt2j36E71AgWEYU5v7e2dmOv3ZaUisYYWIKbPmgpGFVy9Bb7lnTZx5
+         WMDnryYBidB5P7jPafLbRl58dNpQOk9XAXEiAgHudVSmY0NJ1FEOobSK/Q4nG5BVRh9M
+         JNUiGlMdZISizSr3wKRHeVwxBh5UgnIdhXHzMDTG3nzZxkwcD+mwDZh6m6WUL9Laukgz
+         X1ow==
+X-Forwarded-Encrypted: i=1; AJvYcCUDd1JG5NOVKI5hHPujhnAFKz2GxduwQOdpv6N5bURZ0DXtO/jiIGO3Fu4Vjt1DjMmhtDV1lQx8RnPJdcvv@vger.kernel.org, AJvYcCVrCcUDM2xIzSfLKZvtxmu3xE0u1rTNoxARKMlmF+xEqxHOTkj1n7Ot1hjG+pXWc5hYWGYxjEaA@vger.kernel.org, AJvYcCWZTXZ7y+6NokMh+An64onQXFfOvCJZwZOVMeJd6qoIg8CAATsuDyOsnzaUNM5lQxTSfdiYiIIsVTPu@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFs69CKNPLlJEc8mHHVuvy05gqOXGSOEaibe4bcdz3ToGgFC5x
+	CHoQF2G4Ily9WceW6luG7hMqdUuvzTY/5uiuLncIJFTuY0L9PSq1X/JZ
+X-Gm-Gg: ASbGncsI0eq5KQV2e7WWv5NbaMwN3EQ/DigY0EOa0k/+YE8fbNMVEG5KqQEU8YonDEt
+	mDEBq09TWkUg39pHiIK6Hpu1lS7W8kEPDlMH1ch4LZdhVrUNqsaABjK0+krgIFoMjP+5CcieKqk
+	JzAlL/zjEj20rd+3hNOLBTt2f9FD+STzUBsxf4aFP37VYqy7PP/5u4anSNwrCpcjhMobbdJXmpE
+	wffaA3ZcvLNYP/Jlgl3gUiyBHXq2E59KjGinqCnlTMUpjf2RbCZDo0D5wEX45K6h0YSYJwNemHb
+	3AcoytpI6WmrR4jLgHc1SLcFgtlQEyXkE0ua2sQQRPv0FJQH03ziecuGHkdsIOSe0psc876Beff
+	01kvUNBwlzfqoe/kDfQuP3hXwuGhAl9M=
+X-Google-Smtp-Source: AGHT+IGYoTCE2ejOG9HTcWhAHwI4ndhvI/OD/F9Oaq0DjE5kPHJxe/T8XEsB2iQptOTFDVbPGZnj9Q==
+X-Received: by 2002:a05:600c:828f:b0:43c:f629:66f4 with SMTP id 5b1f17b1804b1-4538fdfbd9amr488595e9.0.1750973042423;
+        Thu, 26 Jun 2025 14:24:02 -0700 (PDT)
 Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-453835798acsm57186475e9.10.2025.06.26.14.23.58
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-453835798acsm57186475e9.10.2025.06.26.14.24.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 14:23:59 -0700 (PDT)
+        Thu, 26 Jun 2025 14:24:02 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Christian Marangi <ansuelsmth@gmail.com>,
 	Lee Jones <lee@kernel.org>,
@@ -85,9 +85,9 @@ To: Christian Marangi <ansuelsmth@gmail.com>,
 	netdev@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [net-next PATCH v15 05/12] dt-bindings: mfd: Document support for Airoha AN8855 Switch SoC
-Date: Thu, 26 Jun 2025 23:23:04 +0200
-Message-ID: <20250626212321.28114-6-ansuelsmth@gmail.com>
+Subject: [net-next PATCH v15 07/12] nvmem: an8855: Add support for Airoha AN8855 Switch EFUSE
+Date: Thu, 26 Jun 2025 23:23:06 +0200
+Message-ID: <20250626212321.28114-8-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250626212321.28114-1-ansuelsmth@gmail.com>
 References: <20250626212321.28114-1-ansuelsmth@gmail.com>
@@ -99,199 +99,126 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document support for Airoha AN8855 Switch SoC. This SoC expose various
-peripherals like an Ethernet Switch, a NVMEM provider and Ethernet PHYs.
-
-It does also support i2c and timers but those are not currently
-supported/used.
+Add support for Airoha AN8855 Switch EFUSE. These EFUSE might be used
+for calibration data for the internal switch PHYs.
 
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- .../bindings/mfd/airoha,an8855.yaml           | 175 ++++++++++++++++++
- 1 file changed, 175 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/airoha,an8855.yaml
+ drivers/nvmem/Kconfig        | 11 ++++++
+ drivers/nvmem/Makefile       |  2 ++
+ drivers/nvmem/an8855-efuse.c | 68 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 81 insertions(+)
+ create mode 100644 drivers/nvmem/an8855-efuse.c
 
-diff --git a/Documentation/devicetree/bindings/mfd/airoha,an8855.yaml b/Documentation/devicetree/bindings/mfd/airoha,an8855.yaml
+diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+index d370b2ad11e7..8fb1a0efd431 100644
+--- a/drivers/nvmem/Kconfig
++++ b/drivers/nvmem/Kconfig
+@@ -28,6 +28,17 @@ source "drivers/nvmem/layouts/Kconfig"
+ 
+ # Devices
+ 
++config NVMEM_AN8855_EFUSE
++	tristate "Airoha AN8855 eFuse support"
++	depends on MFD_AIROHA_AN8855 || COMPILE_TEST
++	help
++	  Say y here to enable support for reading eFuses on Airoha AN8855
++	  Switch. These are e.g. used to store factory programmed
++	  calibration data required for the PHY.
++
++	  This driver can also be built as a module. If so, the module will
++	  be called nvmem-an8855-efuse.
++
+ config NVMEM_APPLE_EFUSES
+ 	tristate "Apple eFuse support"
+ 	depends on ARCH_APPLE || COMPILE_TEST
+diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+index 2021d59688db..5c9e6e450181 100644
+--- a/drivers/nvmem/Makefile
++++ b/drivers/nvmem/Makefile
+@@ -10,6 +10,8 @@ nvmem_layouts-y			:= layouts.o
+ obj-y				+= layouts/
+ 
+ # Devices
++obj-$(CONFIG_NVMEM_AN8855_EFUSE)	+= nvmem-an8855-efuse.o
++nvmem-an8855-efuse-y 			:= an8855-efuse.o
+ obj-$(CONFIG_NVMEM_APPLE_EFUSES)	+= nvmem-apple-efuses.o
+ nvmem-apple-efuses-y 			:= apple-efuses.o
+ obj-$(CONFIG_NVMEM_APPLE_SPMI)		+= apple_nvmem_spmi.o
+diff --git a/drivers/nvmem/an8855-efuse.c b/drivers/nvmem/an8855-efuse.c
 new file mode 100644
-index 000000000000..a683db4f41d1
+index 000000000000..d1afde6f623f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/airoha,an8855.yaml
-@@ -0,0 +1,175 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/airoha,an8855.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/nvmem/an8855-efuse.c
+@@ -0,0 +1,68 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  Airoha AN8855 Switch EFUSE Driver
++ */
 +
-+title: Airoha AN8855 Switch SoC
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/nvmem-provider.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
 +
-+maintainers:
-+  - Christian Marangi <ansuelsmth@gmail.com>
++#define AN8855_EFUSE_CELL		50
 +
-+description: >
-+  Airoha AN8855 Switch is a SoC that expose various peripherals like an
-+  Ethernet Switch, a NVMEM provider and Ethernet PHYs.
++#define AN8855_EFUSE_DATA0		0x1000a500
++#define   AN8855_EFUSE_R50O		GENMASK(30, 24)
 +
-+  It does also support i2c and timers but those are not currently
-+  supported/used.
++static int an8855_efuse_read(void *context, unsigned int offset,
++			     void *val, size_t bytes)
++{
++	struct regmap *regmap = context;
 +
-+properties:
-+  compatible:
-+    const: airoha,an8855
++	return regmap_bulk_read(regmap, AN8855_EFUSE_DATA0 + offset,
++				val, bytes / sizeof(u32));
++}
 +
-+  reg:
-+    maxItems: 1
++static int an8855_efuse_probe(struct platform_device *pdev)
++{
++	struct nvmem_config an8855_nvmem_config = {
++		.name = "an8855-efuse",
++		.size = AN8855_EFUSE_CELL * sizeof(u32),
++		.stride = sizeof(u32),
++		.word_size = sizeof(u32),
++		.reg_read = an8855_efuse_read,
++	};
++	struct device *dev = &pdev->dev;
++	struct nvmem_device *nvmem;
++	struct regmap *regmap;
 +
-+  reset-gpios: true
++	/* Assign NVMEM priv to MFD regmap */
++	regmap = dev_get_regmap(dev->parent, NULL);
++	if (!regmap)
++		return -ENOENT;
 +
-+  efuse:
-+    type: object
-+    $ref: /schemas/nvmem/airoha,an8855-efuse.yaml
-+    description: EFUSE exposed by the Airoha AN8855 SoC
++	an8855_nvmem_config.priv = regmap;
++	an8855_nvmem_config.dev = dev;
++	nvmem = devm_nvmem_register(dev, &an8855_nvmem_config);
 +
-+  ethernet-switch:
-+    type: object
-+    $ref: /schemas/net/dsa/airoha,an8855-switch.yaml
-+    description: Switch exposed by the Airoha AN8855 SoC
++	return PTR_ERR_OR_ZERO(nvmem);
++}
 +
-+  mdio:
-+    type: object
-+    $ref: /schemas/net/airoha,an8855-mdio.yaml
-+    description: MDIO exposed by the Airoha AN8855 SoC
++static const struct of_device_id an8855_efuse_of_match[] = {
++	{ .compatible = "airoha,an8855-efuse", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, an8855_efuse_of_match);
 +
-+required:
-+  - compatible
-+  - reg
-+  - mdio
-+  - ethernet-switch
++static struct platform_driver an8855_efuse_driver = {
++	.probe = an8855_efuse_probe,
++	.driver = {
++		.name = "an8855-efuse",
++		.of_match_table = an8855_efuse_of_match,
++	},
++};
++module_platform_driver(an8855_efuse_driver);
 +
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    mdio {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        soc@1 {
-+            compatible = "airoha,an8855";
-+            reg = <1>;
-+
-+            reset-gpios = <&pio 39 0>;
-+
-+            efuse {
-+                compatible = "airoha,an8855-efuse";
-+
-+                #nvmem-cell-cells = <0>;
-+
-+                nvmem-layout {
-+                    compatible = "fixed-layout";
-+                    #address-cells = <1>;
-+                    #size-cells = <1>;
-+
-+                    shift_sel_port0_tx_a: shift-sel-port0-tx-a@c {
-+                       reg = <0xc 0x4>;
-+                    };
-+
-+                    shift_sel_port0_tx_b: shift-sel-port0-tx-b@10 {
-+                        reg = <0x10 0x4>;
-+                    };
-+
-+                    shift_sel_port0_tx_c: shift-sel-port0-tx-c@14 {
-+                        reg = <0x14 0x4>;
-+                    };
-+
-+                    shift_sel_port0_tx_d: shift-sel-port0-tx-d@18 {
-+                       reg = <0x18 0x4>;
-+                    };
-+
-+                    shift_sel_port1_tx_a: shift-sel-port1-tx-a@1c {
-+                        reg = <0x1c 0x4>;
-+                    };
-+
-+                    shift_sel_port1_tx_b: shift-sel-port1-tx-b@20 {
-+                        reg = <0x20 0x4>;
-+                    };
-+
-+                    shift_sel_port1_tx_c: shift-sel-port1-tx-c@24 {
-+                       reg = <0x24 0x4>;
-+                    };
-+
-+                    shift_sel_port1_tx_d: shift-sel-port1-tx-d@28 {
-+                        reg = <0x28 0x4>;
-+                    };
-+                };
-+            };
-+
-+            ethernet-switch {
-+                compatible = "airoha,an8855-switch";
-+
-+                ports {
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+
-+                    port@0 {
-+                        reg = <0>;
-+                        label = "lan1";
-+                        phy-mode = "internal";
-+                        phy-handle = <&internal_phy1>;
-+                    };
-+
-+                    port@1 {
-+                        reg = <1>;
-+                        label = "lan2";
-+                        phy-mode = "internal";
-+                        phy-handle = <&internal_phy2>;
-+                    };
-+
-+                    port@5 {
-+                        reg = <5>;
-+                        label = "cpu";
-+                        ethernet = <&gmac0>;
-+                        phy-mode = "2500base-x";
-+
-+                        fixed-link {
-+                            speed = <2500>;
-+                            full-duplex;
-+                            pause;
-+                        };
-+                    };
-+                };
-+            };
-+
-+            mdio {
-+                compatible = "airoha,an8855-mdio";
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                internal_phy1: ethernet-phy@1 {
-+                  compatible = "ethernet-phy-idc0ff.0410",
-+                               "ethernet-phy-ieee802.3-c22";
-+                  reg = <1>;
-+
-+                  nvmem-cells = <&shift_sel_port0_tx_a>,
-+                      <&shift_sel_port0_tx_b>,
-+                      <&shift_sel_port0_tx_c>,
-+                      <&shift_sel_port0_tx_d>;
-+                  nvmem-cell-names = "tx_a", "tx_b", "tx_c", "tx_d";
-+                };
-+
-+                internal_phy2: ethernet-phy@2 {
-+                  compatible = "ethernet-phy-idc0ff.0410",
-+                               "ethernet-phy-ieee802.3-c22";
-+                  reg = <2>;
-+
-+                  nvmem-cells = <&shift_sel_port1_tx_a>,
-+                      <&shift_sel_port1_tx_b>,
-+                      <&shift_sel_port1_tx_c>,
-+                      <&shift_sel_port1_tx_d>;
-+                  nvmem-cell-names = "tx_a", "tx_b", "tx_c", "tx_d";
-+                };
-+            };
-+        };
-+    };
++MODULE_AUTHOR("Christian Marangi <ansuelsmth@gmail.com>");
++MODULE_DESCRIPTION("Driver for AN8855 Switch EFUSE");
++MODULE_LICENSE("GPL");
 -- 
 2.48.1
 
