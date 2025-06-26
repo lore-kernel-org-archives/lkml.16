@@ -1,107 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AD121CA08;
-	Thu, 26 Jun 2025 23:27:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1F22253EE;
+	Thu, 26 Jun 2025 23:27:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750980447; cv=none; b=bJp7/wylJjDfQyrNqtHx2T2DEKe1tAeVFNT6Xpe8n3M5xYDwfYuHn+s4/00CaI2I+LciD58h8rQ57lfxg9PMk+D/fEY+1qTj3UPgJINEuQC7o8dvYyWzpvHdLQZRnXj7pveKNcUhrCq5F2GhfDINrV7iGr077aiBvYXds5t79S0=
+	t=1750980452; cv=none; b=B1NJ96QoQWkSCesP88bjHy0VJtbq7Fsr9uxGSapMwS8ECzgKxUHXhs7hV0VM9xk4vifrX1rbkYByRRcRLesYTuZAeetcpZyNKAH5PHfYjmJdteMpzDR6seG6c43mqJuGNKFPIAhxcFPhnFME9szxc6EwiklHQttNDNZSQK3Bzts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750980447; c=relaxed/simple;
-	bh=GZeKfwcYIyYg2KRmewirfLTJlDky13ZS4q2GKR7Nsg8=;
+	s=arc-20240116; t=1750980452; c=relaxed/simple;
+	bh=V9ZFFu06Gx4VRv5ACITTag+DK1If3ZV6TP8DupOmiEo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XuI96YRZ2fA6aHXVt3PVnOjZTv5uWWOkGtYe3AwiCFOx4o28sxNJ82vsANTrE3dEZjqAFOTPnouaeCeHTDy1b360/YKw0idtZONNFhzUfrKbXzLShuc+Y3FtYMPjFTCk+Yvb3oapDwXmTLKnsM/dNDkn2VhSzBq5uXeO31lDF7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFNpmjA+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uY66Hzkq6cf2XOUPvnFnDLLM7SNrk3kzPyb/J7WtMiIMuRRPm1UlJj4gJVKEZ+2uFa66GVQdit38+DqHJSNhTXIHFyxPUUsQESbOrYrxJzLxxa0bHmhuuKXfNB8LdQGPxdGLaokmv7glxPRxB0oNGnyJrvwrrb1nCTaMokj2vBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ho8C3Pi0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFNpmjA+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28831C4CEEB;
-	Thu, 26 Jun 2025 23:27:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ho8C3Pi0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71324C4CEF2;
+	Thu, 26 Jun 2025 23:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750980447;
-	bh=GZeKfwcYIyYg2KRmewirfLTJlDky13ZS4q2GKR7Nsg8=;
+	s=k20201202; t=1750980450;
+	bh=V9ZFFu06Gx4VRv5ACITTag+DK1If3ZV6TP8DupOmiEo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fFNpmjA+64G/MZTnpAnPkqVrWDdMoagKyYZZ1ic8KscmIGnwnLJjFaJQt1I7OB84a
-	 6LM/H8hIpoqw7EtsenAfgl7qMsp0mhTjv1BoCV6e/QWu0HKI1rv1Dvrj29dTgyfkmL
-	 KVWfwD4NPCJ7WAESfk5xr3U/vTHTqFaoPLyd+M4SmEtp4kqNN7NFuRQW927dyn85XQ
-	 6whnwdpJL94d9qcZ/VjlCF7oi2pcJkhcftvL1kUPfQNk595GXRO8ZcxWWtdTJO8keN
-	 VtHRJYxW3hSxyXRSlIEXLegn1FflU2WYdzaa95Zh1E7wb8P4h1cVVRBY+McTdRr0vy
-	 Ib2/++YtyNruA==
-Date: Thu, 26 Jun 2025 16:27:26 -0700
-From: Vinod Koul <vkoul@kernel.org>
-To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
-	mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	bhelgaas@google.com, johan+linaro@kernel.org, kishon@kernel.org,
-	neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
-	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v7 1/5] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
- Update pcie phy bindings for qcs8300
-Message-ID: <aF3XXpEwTcp3JnPt@vaman>
-References: <20250625092539.762075-1-quic_ziyuzhan@quicinc.com>
- <20250625092539.762075-2-quic_ziyuzhan@quicinc.com>
+	b=Ho8C3Pi0O7kC1H8wV1QxFR0tOrczbsCZp8A0KOeSJBbQfwjkS7BhjkId5iYIb4PsM
+	 g4Mk7cWhskKUxxadlb7qR2urk3bSG33wLoRJncPN5X4RIWMKqk6TTD+F7C3d285oHU
+	 vgwdwElSXI58ypWIZRWS5kGotrZSKPgnfZCzwnm7x8tKktTS/9A2HYqWqRYh/ebAN/
+	 zzUcLBWA9M3geCRxWLs9fI3zp/aVf3H1QMKxPd4ITXi5z3xI2MKHKF5Q5ym6bgotjE
+	 +pb689FXMnoZIa2h6wIqnfebMZyIUUZsBXBCgi8NmxTTbIL68yo3vvZFFlLgGrrQBf
+	 OiIlSSuyDMJ3A==
+Date: Thu, 26 Jun 2025 16:27:27 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Dylan Hatch <dylanbhatch@google.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, 
+	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, Song Liu <song@kernel.org>, 
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
+	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
+	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 59/62] livepatch/klp-build: Introduce klp-build script
+ for generating livepatch modules
+Message-ID: <2pwptog6wdwbpz7jzu4ftiwu33aehmgrsh5oqou36jgfqlqrqk@bvezulebykbn>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
+ <CADBMgpxP31YyRMXkHnCvjbb7D8OaUuGKbR9_66pRjGsBd57m8A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250625092539.762075-2-quic_ziyuzhan@quicinc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADBMgpxP31YyRMXkHnCvjbb7D8OaUuGKbR9_66pRjGsBd57m8A@mail.gmail.com>
 
-On 25-06-25, 17:25, Ziyue Zhang wrote:
-> The gcc_aux_clk is not required by the PCIe PHY on qcs8300 and is not
-> specified in the device tree node. Hence, move the qcs8300 phy
-> compatibility entry into the list of PHYs that require six clocks.
+On Wed, Jun 18, 2025 at 05:38:07PM -0500, Dylan Hatch wrote:
+> On Fri, May 9, 2025 at 1:30 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> >
+> > +
+> > +# Make sure git re-stats the changed files
+> > +git_refresh() {
+> > +       local patch="$1"
+> > +       local files=()
+> > +
+> > +       [[ ! -d "$SRC/.git" ]] && return
 > 
-> As no compatible need the entry which require seven clocks, delete it.
+> As a user of git worktrees, my $SRC/.git is a file containing a key:
+> value pair "gitdir: <path>", causing this script to fail on a [[ ! -d
+> "$SRC/.git" ]] check. Can this be handled, perhaps with a check if
+> .git is a file?
+> 
+> It seems like the check is just to confirm the $SRC directory is still
+> a git tree, in which case maybe adding a -f check would fix this:
+> 
+> [[ ! -d "$SRC/.git" ]] && [[ ! -f "$SRC/.git" ]] && return
+> 
+> Or if the actual git directory is needed for something, maybe it can
+> be located ahead of time:
+> 
+> GITDIR="$SRC/.git"
+> [[ -f $GITDIR ]] && GITDIR=$(sed -n
+> 's/^gitdir[[:space:]]*:[[:space:]]*//p' $GITDIR)
 
-This fails for me on phy/next, can you please rebase
-> 
-> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  .../bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml   | 14 +-------------
->  1 file changed, 1 insertion(+), 13 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
-> index 57b16444eb0e..10c03831f9e7 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
-> @@ -175,6 +175,7 @@ allOf:
->            contains:
->              enum:
->                - qcom,qcs615-qmp-gen3x1-pcie-phy
-> +              - qcom,qcs8300-qmp-gen4x2-pcie-phy
->                - qcom,sa8775p-qmp-gen4x2-pcie-phy
->                - qcom,sa8775p-qmp-gen4x4-pcie-phy
->                - qcom,sc8280xp-qmp-gen3x1-pcie-phy
-> @@ -192,19 +193,6 @@ allOf:
->          clock-names:
->            minItems: 6
->  
-> -  - if:
-> -      properties:
-> -        compatible:
-> -          contains:
-> -            enum:
-> -              - qcom,qcs8300-qmp-gen4x2-pcie-phy
-> -    then:
-> -      properties:
-> -        clocks:
-> -          minItems: 7
-> -        clock-names:
-> -          minItems: 7
-> -
->    - if:
->        properties:
->          compatible:
-> -- 
-> 2.34.1
+I believe the subsequent "git update-index" operation should work on git
+worktrees as well, so I changed that to use '-e':
+
+	[[ ! -e "$SRC/.git" ]] && return
 
 -- 
-~Vinod
+Josh
