@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF942E92A7;
-	Thu, 26 Jun 2025 23:56:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C4A23B63F;
+	Thu, 26 Jun 2025 23:56:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750982214; cv=none; b=WZOXT4N0Bp5ysiwGhc0TQxeihXpopfP99qozN5YyS6BaAxZa5IIerM/SsoPFgGB4q+EeYGffbBVPmVPoqQ9ilfzVoO6zgWzQy/cEL89q8UmXkvmJG7RFyRxpIRHBR8UGB/gnW7TGvdQWTm0+XvjB/+jDW/Vv2RalGp7KfD/kK58=
+	t=1750982215; cv=none; b=KazlzfPgZUCS3emRNve6mSvNMA7jo2lrUpPTcbELMikF6RXPJ4uI+1KKB15/DFV2FPPrKxoTOHfDW2msSj6xBmGBQhwFMispTjBFHpMvycGPyZIeCcZvjjbaE2Ri+vFnc+89Gw3Gwv8MxILvIb7BIApW2GTpLDwloDY+1YOxvZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750982214; c=relaxed/simple;
-	bh=wtyF/MopiLNSY8OQ1lCxfuihtCDTzXFaLv3rp48jCvE=;
+	s=arc-20240116; t=1750982215; c=relaxed/simple;
+	bh=ym0NbDSX4B/iZLtsv9TDPNK9Jc/XifRA2u0nHW7RXVI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uAr7oRXs8I1bor2JivgVmh9K7Re/wIFmG/oRqzF4iyhsmxjQJugpUjP1z1JqSgWLY2tzYnuYYAX3kTgD5D0YYsNbjIMSlfFWAitJUr8mbCUSGCyr6Vd0dfLwbcX3MgdINmQGH44u/3lhj/UXF4czrqEoiXprYjRvRhsFexv3jn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQYT0ksD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hi6tzngoI3bHQGYlJ7h6+4+NfeLZvtlXSvdFEgEkeRuJ47tN2f196wJXkzp24ckZetjdnz0lSJ4xMWoxcOSFf/+LPSLksLhLAfvR5WORAyMe8udJi5Ja2R8ACvrqtRoiz0f0rHuXRwMz/AHxaBKbMohmf/Bwin3L4M3jLaEJmb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dMpor2XT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQYT0ksD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770FAC4CEF1;
-	Thu, 26 Jun 2025 23:56:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dMpor2XT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94FA3C4CEF4;
+	Thu, 26 Jun 2025 23:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750982213;
-	bh=wtyF/MopiLNSY8OQ1lCxfuihtCDTzXFaLv3rp48jCvE=;
+	s=k20201202; t=1750982215;
+	bh=ym0NbDSX4B/iZLtsv9TDPNK9Jc/XifRA2u0nHW7RXVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iQYT0ksDDCDf8e0Y7SLw2qh9WshRgfh/V2x8rtZvLddoPvc8MzIn+yb3j5n3QUCKl
-	 Pnvc2K7ToshwWkjw7kEETwX7ZtCOhX4CnxHjpQYjKsp1+a0PTH6+OZFUfHnyx99Bqc
-	 3Kjf5dthss+3iCjrfaJKNWlFrRgASWCArY92Uh7EPQCkzUd0n/eo3nRjB5tZYxpBYI
-	 i1H9NM5J3ueSQqG1+eRHOjgC4iyiKXOb2uNjmiMqfSsG9ucFrs4Q+1qs8r3BoTG6rg
-	 YQWQF1zi0pOutdRqsggHa6d7+PUN7Y6deqrqaBLVSgVSMlihDVPPw5g8LjE666kZTa
-	 15XRCEp8pAxjQ==
+	b=dMpor2XTgilsifBNbVKxsV07JD8LI/fjizLLk1aGLd8+lwsbDMDrjKYGqvRD2PdKV
+	 Qq3Uau4zPjRU6to+BDeQDFeenMgiBv8j2U4E6T/Iw7ZKql74TuuONI9iI+5yn5zODP
+	 DRrXAV9Du9Qv0bBFbCCkh6ErOPcjGvoOnjsaFWrDjXvrW2+wYko9jorBaq9jOAGFWQ
+	 ql84WQLitY6s/RDx2KwjBAqgAeoNXvCjFCK9Fua5UZqO6xNE7t2dhXT9ZUox5mJlqK
+	 716LlC7l28+OLGjJdzQH+QO9UjVEYbGgKtgWDshx7Fddm1Q8VD5yOeh3ccWEJ0LsII
+	 Hl30hCv5HRaYA==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -42,9 +42,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Chen Zhongjin <chenzhongjin@huawei.com>,
 	Puranjay Mohan <puranjay@kernel.org>,
 	Dylan Hatch <dylanbhatch@google.com>
-Subject: [PATCH v3 59/64] livepatch/klp-build: Introduce fix-patch-lines script to avoid __LINE__ diff noise
-Date: Thu, 26 Jun 2025 16:55:46 -0700
-Message-ID: <6ec2a82b31a90f52040846dc9a713d69a658820c.1750980517.git.jpoimboe@kernel.org>
+Subject: [PATCH v3 62/64] livepatch/klp-build: Add --debug option to show cloning decisions
+Date: Thu, 26 Jun 2025 16:55:49 -0700
+Message-ID: <3cd69269e164baa39e3eb3dfb5294ddaf22858cc.1750980517.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750980516.git.jpoimboe@kernel.org>
 References: <cover.1750980516.git.jpoimboe@kernel.org>
@@ -56,123 +56,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The __LINE__ macro creates challenges for binary diffing.  When a .patch
-file adds or removes lines, it shifts the line numbers for all code
-below it.
-
-This can cause the code generation of functions using __LINE__ to change
-due to the line number constant being embedded in a MOV instruction,
-despite there being no semantic difference.
-
-Avoid such false positives by adding a fix-patch-lines script which can
-be used to insert a #line directive in each patch hunk affecting the
-line numbering.  This script will be used by klp-build, which will be
-introduced in a subsequent patch.
+Add a --debug option which gets passed to "objtool klp diff" to enable
+debug output related to cloning decisions.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- MAINTAINERS                       |  1 +
- scripts/livepatch/fix-patch-lines | 79 +++++++++++++++++++++++++++++++
- 2 files changed, 80 insertions(+)
- create mode 100755 scripts/livepatch/fix-patch-lines
+ scripts/livepatch/klp-build | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0298d9570ca8..dd622368d74b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14006,6 +14006,7 @@ F:	include/linux/livepatch*.h
- F:	kernel/livepatch/
- F:	kernel/module/livepatch.c
- F:	samples/livepatch/
-+F:	scripts/livepatch/
- F:	tools/testing/selftests/livepatch/
+diff --git a/scripts/livepatch/klp-build b/scripts/livepatch/klp-build
+index b54776fe3161..fe9af53a8476 100755
+--- a/scripts/livepatch/klp-build
++++ b/scripts/livepatch/klp-build
+@@ -20,7 +20,7 @@ set -o nounset
+ # This helps keep execution in pipes so pipefail+errexit can catch errors.
+ shopt -s lastpipe
  
- LLC (802.2)
-diff --git a/scripts/livepatch/fix-patch-lines b/scripts/livepatch/fix-patch-lines
-new file mode 100755
-index 000000000000..73c5e3dea46e
---- /dev/null
-+++ b/scripts/livepatch/fix-patch-lines
-@@ -0,0 +1,79 @@
-+#!/usr/bin/awk -f
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Use #line directives to preserve original __LINE__ numbers across patches to
-+# avoid unwanted compilation changes.
+-unset SKIP_CLEANUP XTRACE
++unset DEBUG_CLONE SKIP_CLEANUP XTRACE
+ 
+ REPLACE=1
+ SHORT_CIRCUIT=0
+@@ -120,6 +120,7 @@ Options:
+    -v, --verbose		Pass V=1 to kernel/module builds
+ 
+ Advanced Options:
++   -d, --debug			Show symbol/reloc cloning decisions
+    -S, --short-circuit=STEP	Start at build step (requires prior --keep-tmp)
+ 				   1|orig	Build original kernel (default)
+ 				   2|patched	Build patched kernel
+@@ -140,8 +141,8 @@ process_args() {
+ 	local long
+ 	local args
+ 
+-	short="hj:o:vS:T"
+-	long="help,jobs:,output:,no-replace,verbose,short-circuit:,keep-tmp"
++	short="hj:o:vdS:T"
++	long="help,jobs:,output:,no-replace,verbose,debug,short-circuit:,keep-tmp"
+ 
+ 	args=$(getopt --options "$short" --longoptions "$long" -- "$@") || {
+ 		echo; usage; exit
+@@ -174,6 +175,11 @@ process_args() {
+ 				VERBOSE="V=1"
+ 				shift
+ 				;;
++			-d | --debug)
++				DEBUG_CLONE=1
++				keep_tmp=1
++				shift
++				;;
+ 			-S | --short-circuit)
+ 				[[ ! -d "$TMP_DIR" ]] && die "--short-circuit requires preserved klp-tmp dir"
+ 				keep_tmp=1
+@@ -600,6 +606,7 @@ copy_patched_objects() {
+ diff_objects() {
+ 	local log="$KLP_DIFF_LOG"
+ 	local files=()
++	local opts=()
+ 
+ 	rm -rf "$DIFF_DIR"
+ 	mkdir -p "$DIFF_DIR"
+@@ -607,6 +614,8 @@ diff_objects() {
+ 	find "$PATCHED_DIR" -type f -name "*.o" | mapfile -t files
+ 	[[ ${#files[@]} -eq 0 ]] && die "no changes detected"
+ 
++	[[ -v DEBUG_CLONE ]] && opts=("--debug")
 +
-+BEGIN {
-+	in_hunk = 0
-+	skip    = 0
-+}
-+
-+/^--- / {
-+	skip = $2 !~ /\.(c|h)$/
-+	print
-+	next
-+}
-+
-+/^@@/ {
-+	if (skip) {
-+		print
-+		next
-+	}
-+
-+	in_hunk = 1
-+
-+	# for @@ -1,3 +1,4 @@:
-+	#   1: line number in old file
-+	#   3: how many lines the hunk covers in old file
-+	#   1: line number in new file
-+	#   4: how many lines the hunk covers in new file
-+
-+	match($0, /^@@ -([0-9]+)(,([0-9]+))? \+([0-9]+)(,([0-9]+))? @@/, m)
-+
-+	# Set 'cur' to the old file's line number at the start of the hunk.  It
-+	# gets incremented for every context line and every line removal, so
-+	# that it always represents the old file's current line number.
-+	cur = m[1]
-+
-+	# last = last line number of current hunk
-+	last = cur + (m[3] ? m[3] : 1) - 1
-+
-+	need_line_directive = 0
-+
-+	print
-+	next
-+}
-+
-+{
-+	if (skip || !in_hunk || $0 ~ /^\\ No newline at end of file/) {
-+		print
-+		next
-+	}
-+
-+	# change line
-+	if ($0 ~ /^[+-]/) {
-+		# inject #line after this group of changes
-+		need_line_directive = 1
-+
-+		if ($0 ~ /^-/)
-+			cur++
-+
-+		print
-+		next
-+	}
-+
-+	# If this is the first context line after a group of changes, inject
-+	# the #line directive to force the compiler to correct the line
-+	# numbering to match the original file.
-+	if (need_line_directive) {
-+		print "+#line " cur
-+		need_line_directive = 0
-+	}
-+
-+	if (cur == last)
-+		in_hunk = 0
-+
-+	cur++
-+	print
-+}
+ 	# Diff all changed objects
+ 	for file in "${files[@]}"; do
+ 		local rel_file="${file#"$PATCHED_DIR"/}"
+@@ -620,6 +629,7 @@ diff_objects() {
+ 		cmd=("$SRC/tools/objtool/objtool")
+ 		cmd+=("klp")
+ 		cmd+=("diff")
++		(( ${#opts[@]} > 0 )) && cmd+=("${opts[@]}")
+ 		cmd+=("$orig_file")
+ 		cmd+=("$patched_file")
+ 		cmd+=("$out_file")
 -- 
 2.49.0
 
