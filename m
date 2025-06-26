@@ -1,124 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4171DE2DC;
-	Thu, 26 Jun 2025 10:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A51237162;
+	Thu, 26 Jun 2025 10:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750934092; cv=none; b=AMI7MfDZI2M9FcXoyt+jsZhnP+h30ch0MO4PGQyYj5CUowIy9LEtIaezq9Krjq3bYSEkmAEKD9OCu623529kATymWpyK8tsDyvs2qSJOmrKv8/WjCUgBndsQJQ5AVMahjBVJUJQD2WNOZXoQtzl8MomAUqV1FsL4XlxluufTJFM=
+	t=1750934100; cv=none; b=Vm8EtgUHXtXObxW6EFQutH98bERiym+Cl8d8j0VUpJ5eu6RYyQPS6mu/VcrlL3gVUOR+Q8X5285wazX2W9J9/ohHXAi/1rSs0aYc5mqTHS0UREkrm99jDxMZfAnQ3dWUHimF4EONGD2ktjSpGtXh9jcNitppweDx0CTQmo/Ojg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750934092; c=relaxed/simple;
-	bh=fQ/XbLvD72nwOUfQaPR2P/p2TKLVGSXc50fMucTNdag=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L8dEJPYFNFdMZJRkzf+XlL8y/hhatQXwEZpb67nbTzmtj/rZlEDTHcKWtLUO0aeKD1LTGtx8eCSzOoe91A0PAlNdGxNcRhFbYR68fS0TBIRD326/5iqfV2d3FTAbIIAFyyrolQF3oBVTI01XiY9w+DhdP4drCfXovZxj7KJH0Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QU2g5u8F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750934100; c=relaxed/simple;
+	bh=dQ2Zex+ov2PCncLQ7U1GbKR7W8qycO6k0YuiZMLpeH4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qXZ6WG4Yd6pzXjRM0Wu/y+qvii2RqfOagY6Sv18U42lW7hBx1EySh0KiLzqK0oriS6nOZmHzxRW80oq0BvzdZFUWHlvNhhfL6KSWwGPKRdM01zH79EbkIpQhyhqAdbmVKexsXLZMW0O5Jy0evpZyf/x20r5u7gYPRE3+sQwyjQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EZ2oMctZ; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QU2g5u8F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 509D2C4CEF2;
-	Thu, 26 Jun 2025 10:34:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750934092;
-	bh=fQ/XbLvD72nwOUfQaPR2P/p2TKLVGSXc50fMucTNdag=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QU2g5u8FGumzsmgsyH0udDDJkdWEH2IjLSP8ahmTd2a3QIV42+xyFu5V7dbpFmmr4
-	 wZo59XyqVrJSwihUAAs+2Hye8ZCukN7wU6cyId6zAVvqN+/yB6WsJsfoN2HpcTu278
-	 ZZUF8hk764o6aR7MGfk7p9Lhp99/uIjBW4kpCLg4lUPz2/P2cNAmhv6TbKorY12vuE
-	 HPzhkAQt6PAmj/pgvzw1A03n6WA16rm/oZfgQoBM/x+74mJ9XjyOpFoma1Prkd69Qc
-	 YEzKS8gLhm2s7MXJmYycrmpLPychzU61A5ZKsqsCJq6fNSBTvA4Dro5pkCUu0fquSj
-	 6TE6A0C5iAXyQ==
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-735b2699d5dso428149a34.0;
-        Thu, 26 Jun 2025 03:34:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUYtFQM2wGbClhaVd25zbzHsA3YZMsbwk9Q/QP44jAGbz634oz2G4lQvVRROO02tgxSdyMTBbXGT4k=@vger.kernel.org, AJvYcCWQ8DsBG4tOONuUAkMVFM4OHssccbI/GHJIv2/GY7t5iPiz8n/YMOFhEzdLlelYpf6lsqbdhaMiKdE4I7Sc@vger.kernel.org, AJvYcCWfmWbRkZGb5Mys2fxkNQWEGJdLw92dqJNxmpLwmrsDdAm4tpMtNY9Czd/R73Zlq7xMJ1qP1/P6nWlA@vger.kernel.org, AJvYcCWiweZdkXJon61N9vwUWKxWcLL81wYvbvRHW3Qs0XHD6vmBOnd9t6dwkuzgdFTDS/MsH953OQKDVxMz@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYTCArJTy19McSBTLfqPZYZj/b1FFS88JX02/CxRlniDDppB2d
-	SgcHfIl6EOd2WS+qNJxv/FOdBcufd1jXjr0P6nTOejZq4YUDxfiIjXaCqxwAeDIaL8PHZyP+GMk
-	sXId13kxYiFD/WkzTDHIlSYc9hOerWNs=
-X-Google-Smtp-Source: AGHT+IF/iWU0o68x6cZFZd7gsXItqIYob+JGTWj341oWXWNuZH1p9Bx23klyYar2h1tAxBLPKDeRh8LxAvTOgk0Jx70=
-X-Received: by 2002:a05:6830:700f:b0:739:fe86:9dfc with SMTP id
- 46e09a7af769-73adc88c2aemr3976885a34.23.1750934091510; Thu, 26 Jun 2025
- 03:34:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EZ2oMctZ"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55QAYql52391124;
+	Thu, 26 Jun 2025 05:34:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750934092;
+	bh=pdqJ3/ldB4zuQCaDnWbImn2eySoaM0afbT1+2XUy9J0=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=EZ2oMctZVZApUtrJijsJRvVhgoS3zGvOLgr3frisLx+HD6anG1y1/JvK8IEsxcJ7q
+	 IKwBbW4ZZ0C2Fk//YO80M0uKb22hQc6p09zjtKjJc6g4A36bptnXSOyrcO+qvCRMEe
+	 zpE+5rUUJmsvoHNGfnmbifxpfWycSPTsS+L798GE=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55QAYqan2165138
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 26 Jun 2025 05:34:52 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
+ Jun 2025 05:34:51 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Thu, 26 Jun 2025 05:34:51 -0500
+Received: from [172.24.31.248] (lt5cd2489kgj.dhcp.ti.com [172.24.31.248])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55QAYl0f855804;
+	Thu, 26 Jun 2025 05:34:48 -0500
+Message-ID: <b37efc4e-0959-47a0-8fae-6cb35899752e@ti.com>
+Date: Thu, 26 Jun 2025 16:04:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <22759968.EfDdHjke4D@rjwysocki.net> <CAPDyKFpZVdf2EnZE_u1xDKB7=Nd98a_ajYimQhLBu6jYwJhJFA@mail.gmail.com>
-In-Reply-To: <CAPDyKFpZVdf2EnZE_u1xDKB7=Nd98a_ajYimQhLBu6jYwJhJFA@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 26 Jun 2025 12:34:40 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0irk8n0MzRm=u8k=+Mtq84r7JsazS10DsvHO4ktgW=AMQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzeLUnMKr4aqmOzzSM5O2l38MZgj4oviZI0kCWjAqe7ClG9HIZZxSLibKA
-Message-ID: <CAJZ5v0irk8n0MzRm=u8k=+Mtq84r7JsazS10DsvHO4ktgW=AMQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/9] PM: Reconcile different driver options for runtime
- PM integration with system sleep
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
-	Linux PCI <linux-pci@vger.kernel.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/7] arm64: dts: ti: k3-j721s2-common-proc-board:
+ Enable DisplayPort-1
+To: Jayesh Choudhary <j-choudhary@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
+        <devicetree@vger.kernel.org>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devarsht@ti.com>, <u-kumar1@ti.com>
+References: <20250624082619.324851-1-j-choudhary@ti.com>
+ <20250624082619.324851-7-j-choudhary@ti.com>
+Content-Language: en-US
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <20250624082619.324851-7-j-choudhary@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, Jun 26, 2025 at 12:31=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.or=
-g> wrote:
->
-> On Wed, 25 Jun 2025 at 21:25, Rafael J. Wysocki <rjw@rjwysocki.net> wrote=
-:
-> >
-> > Hi Everyone,
-> >
-> > This series addresses a couple of issues related to the integration of =
-runtime
-> > PM with system sleep I was talking about at the OSMP-summit 2025:
-> >
-> > https://lwn.net/Articles/1021332/
-> >
-> > Most importantly, DPM_FLAG_SMART_SUSPEND cannot be used along with
-> > pm_runtime_force_suspend/resume() due to some conflicting expectations
-> > about the handling of device runtime PM status between these functions
-> > and the PM core.
-> >
-> > Also pm_runtime_force_suspend/resume() currently cannot be used in PCI
-> > drivers and in drivers that collaborate with the general ACPI PM domain
-> > because they both don't expect their mid-layer runtime PM callbacks to
-> > be invoked during system-wide suspend and resume.
-> >
-> > Patch [1/9] is a preparatory cleanup changing the code to use 'true' an=
-d
-> > 'false' as needs_force_resume flag values for consistency.
-> >
-> > Patch [2/9] makes pm_runtime_force_suspend() check needs_force_resume a=
-long
-> > with the device's runtime PM status upfront, and bail out if it is set,
-> > which allows runtime PM status updates to be eliminated from both that =
-function
-> > and pm_runtime_force_resume().
-> >
-> > Patch [3/9] causes the smart_suspend flag to be taken into account by
-> > pm_runtime_force_resume() which allows it to resume devices with smart_=
-suspend
-> > set whose runtime PM status has been changed to RPM_ACTIVE by the PM co=
-re at
-> > the beginning of system resume.  After this patch, drivers that use
-> > pm_runtime_force_suspend/resume() can also set DPM_FLAG_SMART_SUSPEND w=
-hich
-> > may be useful, for example, if devices handled by them are involved in
-> > dependency chains with other devices setting DPM_FLAG_SMART_SUSPEND.
-> >
-> > The next two patches, [4-5/9], put pm_runtime_force_suspend/resume()
-> > and needs_force_resume under CONFIG_PM_SLEEP for consistency and also
-> > because using them outside system-wide PM transitions really doesn't ma=
-ke
-> > sense.
-> >
-> > Patch [6/9] makes the code for getting a runtime PM callback for a devi=
-ce
-> > a bit more straightforward in preparation for the subsequent changes.
->
-> I can't find this one. Seems like you did not submit it.
->
-> Perhaps make a resend and fixup the patch-numbering too?
 
-I'm going to send a v2, but the patch in question is here (wrong number):
+On 6/24/2025 1:56 PM, Jayesh Choudhary wrote:
+> Enable DSI display for J721S2 EVM.
+>
+> Add the endpoint nodes to describe connection from:
+> DSS => DSI Bridge => DSI to eDP bridge => DisplayPort-1
+>
+> Set status for all required nodes for DisplayPort-1 as 'okay'.
+>
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> ---
+>   .../dts/ti/k3-j721s2-common-proc-board.dts    | 89 +++++++++++++++++++
+>   1 file changed, 89 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
+> index 793d50344fad..efe857a50bb1 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
+> @@ -93,6 +93,29 @@ vdd_sd_dv: gpio-regulator-TLV71033 {
+>   			 <3300000 0x1>;
+>   	};
+>   
+> +	dp1_pwr_3v3: regulator-dp1-prw {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "dp1-pwr";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&exp4 1 GPIO_ACTIVE_HIGH>; /* P1 - DP1_PWR_SW_EN */
+> +		enable-active-high;
+> +		regulator-always-on;
 
-https://lore.kernel.org/linux-acpi/3306233.5fSG56mABF@rjwysocki.net/
+Please check once, if this regulator falls under regulator-always-on case,
+
+I can imagine a case, where DP1 is not used and still regulator is kept on
+
+
+> +	};
+> +
+> +	dp1: connector-dp1 {
+> +		compatible = "dp-connector";
+> +		label = "DP1";
+> +		type = "full-size";
+> +		dp-pwr-supply = <&dp1_pwr_3v3>;
+> +
+> +		port {
+> +			dp1_connector_in: endpoint {
+> +				remote-endpoint = <&dp1_out>;
+> +			};
+> +		};
+> +	};
+> +
+>   	transceiver1: can-phy1 {
+>   		compatible = "ti,tcan1043";
+>   		#phy-cells = <0>;
+> @@ -563,3 +586,69 @@ &main_mcan5 {
+>   	pinctrl-0 = <&main_mcan5_pins_default>;
+>   	phys = <&transceiver4>;
+>   };
+> +
+> +&dss {
+> +	/*
+> +	 * DSS on J721S2-EVM supports DP on VP0 and DSI on VP2.
+> +	 * These clock assignments are chosen to enable the following outputs:
+> +	 * VP0 - DisplayPort SST
+> +	 * VP2 - DSI
+> +	 */
+> +	status = "okay";
+> +	assigned-clocks = <&k3_clks 158 2>,
+> +			  <&k3_clks 158 14>;
+> +	assigned-clock-parents = <&k3_clks 158 3>,
+> +				 <&k3_clks 158 16>;
+> +};
+> +
+> +&dss_ports {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	port@2 {
+> +		reg = <2>;
+> +		dpi2_out: endpoint {
+> +			remote-endpoint = <&dsi0_in>;
+> +		};
+> +	};
+> +};
+> +
+> +&dsi0_ports {
+> +	port@0 {
+> +		reg = <0>;
+> +		dsi0_out: endpoint {
+> +			remote-endpoint = <&dp1_in>;
+> +		};
+> +	};
+> +
+> +	port@1 {
+> +		reg = <1>;
+> +		dsi0_in: endpoint {
+> +			remote-endpoint = <&dpi2_out>;
+> +		};
+> +	};
+> +};
+> +
+> +&dsi_edp_bridge_ports {
+> +	port@0 {
+> +		reg = <0>;
+> +		dp1_in: endpoint {
+> +			remote-endpoint = <&dsi0_out>;
+> +		};
+> +	};
+> +
+> +	port@1 {
+> +		reg = <1>;
+> +		dp1_out: endpoint {
+> +			remote-endpoint = <&dp1_connector_in>;
+> +		};
+> +	};
+> +};
+> +
+> +&dphy_tx0 {
+> +	status = "okay";
+> +};
+> +
+> +&dsi0 {
+> +	status = "okay";
+> +};
