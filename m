@@ -1,299 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772F22EF66F;
-	Thu, 26 Jun 2025 19:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485192EF9B4
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 19:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750965548; cv=none; b=ny3Gw04SsJ1X3qSj9Kw/34XZ0EMOtVoDmBP0ztT4cj71OvhAY5np3Xe9Krf8o5xNtgfNvoZQSKjOZDDV7BfpP2qIHf2Imnk0Tay64PfMwe9LOE8tNBjC54pUyu95OT6eG9zJSpiq4kiYt99GLig2FZFXY95bynV/VmASoTe3J8w=
+	t=1750965603; cv=none; b=NM2gHlLXX3y0hmgKQmOjWYpcQJxV433P8t+kgkCU6zKWX8gnWqI2Tw5U+hUhFL8UDTXud5Zunt0Z6bBP7NHP7kjc1ZZ31cfnmZUp2voPHfj0q5PIsdewNmXd8TK+2RIdj7zi5ve+zwo0abgnlw6naZvdqOdZXoQ/65sq4rLn6XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750965548; c=relaxed/simple;
-	bh=VkX5ZuHS/bXV97AUrIGdGTgdrkQP8GvbiWckmjBNkIQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qAzuMlqIpX0BHu6Kul3m2hWNubrOTxrjql0ajVIDOk1fq/blM//5rnMQDA7Lk/EsZyvVSY8WlpNsRUKl0LNTRA7XNtqY+WhDV5v9PztI46dlUd4g+cEIAc5M0M7ceCmXiHYBtZoC9xplAh84+IAJEdOIn1h+P9kTuyamo2M5Jt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MoV6kTQt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750965603; c=relaxed/simple;
+	bh=NXZiagHgTh4ICA7Z9PcDT/eyqyxuGCGLWpxNSBxlOw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P6KYTm6YsSBmTDnqt4Gv1TYOKkyiCDOLsf0DJSiHSTQ5JJZzVqRIQaZEZ0UyEzAQw8t5QgNYb6oYRl5MR1uRGie+NBGQTVFYmyVdXASnfKpuMYmRtqEEdkydkUd7cEem5h0hwOOp2mHPeqmBuo2w0KyVw9EVx5OOZ7cZiwBSFFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iIuVPbbW; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MoV6kTQt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0F7FC4AF0B;
-	Thu, 26 Jun 2025 19:19:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750965548;
-	bh=VkX5ZuHS/bXV97AUrIGdGTgdrkQP8GvbiWckmjBNkIQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MoV6kTQt/MIZrbtDjtfMdN8xlyvtKinhJDyXfVV3CAeKRQm7CvCUkxgM6yfF2vHc4
-	 G6gHwtMHXwu9xhJb6Olp6+cVu/kZY7W3WT+uxHDzDrEBg3kvJRfh/LmkG4k+HNkclc
-	 k93AmoLxs4cXsx19g45diS1Gb0lPnPcM8XwThAcTMgktUQ4Zh0aWlfJy9eib1E9Puu
-	 U/6kGtWY8yjygihVK3GunULdFqUAFPEnb7ROM4eWKbDEX6zIuBuG8x+KT5W54LtWCB
-	 vWY4NKMaMitYHk8Nzn3ktwlZmhP3FEkPzpRM9ptk7OdIVP5TPJmBkDCqhrx+zQbjt7
-	 PjGt/rhgUR4GQ==
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-610db3f3f90so712319eaf.2;
-        Thu, 26 Jun 2025 12:19:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV8UtJiXZK1+U2N0l7HvzbQMl3Y0JTskokhPCDBbTrAOnRgtw83lxEVsiTX+qUENp9daiPjceZX/f2I@vger.kernel.org, AJvYcCVesDujmLJGUeAGxYgP+HYqVhVo3aH5nIE7gV+Tz9B2OB7a/znrtcUQJXgj8q2aykzcIbCShuQG317RqRM=@vger.kernel.org, AJvYcCVoPuM2Ktc1HIbRdrwlRwwWQQ2TqRybCIp9e3tojTuhYbhdT7cVBEotHpXqonD+K1+E34auoZi9UgqoZd+u@vger.kernel.org, AJvYcCWdtICzJV1APDCyrvxvboee3N87OUR3BgP/LLFeouItquxrN7RBnnSHbktb+IZj3k919TzoUdb2y23nPA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZlpw2LCOHT+DO6VkOFzKlRxS0Dl717fOFbxqWmIgVxeCdD0cu
-	DUWI5kRkdDZa35S/C80kXnRCN28WKhoK3megy8+ylGvI9UhZuG/S0kXd6nIe7i/X8+567wJNBDz
-	t2kyaO+iyR8hnLJplkD1xXcoIPZUuuAo=
-X-Google-Smtp-Source: AGHT+IEf8+Nk3mb1VVGmWBipvoc78JKfPHDCIcW4oYXWUF1PzlrpPecW83KkWJVeTPUxs5NdH3Wl2IBL5jwi24CoVCM=
-X-Received: by 2002:a05:6820:180c:b0:611:b85f:b159 with SMTP id
- 006d021491bc7-611b9015d61mr397663eaf.1.1750965547237; Thu, 26 Jun 2025
- 12:19:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iIuVPbbW"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-408d7e2b040so874634b6e.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:20:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750965601; x=1751570401; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Jw2OSuwMAy9W3gBCyzotqn/e/diunkHgHz26UnXH3Nw=;
+        b=iIuVPbbWVInQpHTSprJ00+lT6wWh02neX7BbaD18PF04kpXUOkt4kUymkIB0Xz03wN
+         5ApOnyonMmn7fTP1R755abBMy5NjYxXxK+qQvgJV0cVIwJPEQweuVpfOXjikt8/29n3f
+         PHVls6a6qTSBmKHm0XO9XR4HnDE9209W2RDmpmHET+SKdOVdgkztFnZieK0fgFxHm4pP
+         q2I+BLpz6tjjarb5iPzkeakbBBUNeqiXNEf+ajj6IUnH3G43Z3y+liiiEseAj5918JZ2
+         nUExCTIgacmxWn/0GBPeNquKMb+9BD8Zce4oQj7yVvs8CfZA9akn/LwpVKv+F37x900Y
+         R7Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750965601; x=1751570401;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jw2OSuwMAy9W3gBCyzotqn/e/diunkHgHz26UnXH3Nw=;
+        b=Mt+dSHVJ0SjNP6pESOaLMZREGHCkJ054D8dG5tVFcLx7t0XwZ9jHIt9c4n/enEDosr
+         NWD0AFFZf4Y3WLfURV77Zql9CETq47L/uKTCOA0jGx5T40g/fICWz19J/ia17vP9OiFJ
+         8oRZs38jARlbg+ubMGdFaezoTwejsdOKWM3633v3WqD6zh3D7Eil8BXQGV8ZmQKGil7S
+         0Jw8XrFBvuxlIVsmqkT3yn0bTMn6OBoCVX1ceABVTeyRZ5OJM4vQXhm3Q/+Xufi/GbW2
+         H1oFZb3f9xGrGG15v8IwSZQU9Gz2Lu+YUE56v3/tOT23lTD4oscTXQG+RcKL28jw9T51
+         j+vw==
+X-Forwarded-Encrypted: i=1; AJvYcCVWDxPm82VmU1bCmNcTp+gu9szUb2C8DyzUvBqFjhzqK6SA8eWcgJUPTdA+r89sbCsiWjwNbxlz/Yvoso4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoEKvp0yC+hiUclIEuDrOrd/mi+RO87CHlmlqfiBvOG3rS9FTh
+	rf1pTimYSvQK5DuJvANHo43j6mtdt1uDpA6L9eh8dAsr1uY3a0bRD33AVzdoYliCYkR4OpU1+ke
+	5NIe8
+X-Gm-Gg: ASbGncs+mkiBaunplzCs7KaFvByp/CkohkYgNs32SxYetz3rLVWWvd4Ui+aK/CJw5Qp
+	nuFqDJwDAu1Sd2Uvt+soPMJbxdPs+4K3H/m0bO08UdF68G+48mkJsk7lALVqWcOQ6u+kuPmDZz5
+	X6zR+wqwzVjXas+Q3nFyhekpa5ZglBPPv7H05sVWvvOek5RM02NVss5MBJ3HPgg8a6cBYfeHXhM
+	uXqqb0WAIQ7ni1a2j4vqY60tpYPyZG8E6NBnPs6x8tpOrrj7x+oxqfHfFFKSfprp3KPfUDvJSlV
+	rEycdtvl3vVLRdUAKeC5tDAjetGYw0aJ3WrKi1YDJlBvkwbvF7k/5M/LN455U6/UtmlB
+X-Google-Smtp-Source: AGHT+IFY7CJ7QeQO5lGm3SZuq1NkH2K1MhQoLCsDuDsQ1TcbQSnB0KYdrUkAGt1PGEgX5gAvdU6Ntw==
+X-Received: by 2002:a05:6808:1592:b0:401:e67c:b3be with SMTP id 5614622812f47-40b33c495a1mr285207b6e.4.1750965601252;
+        Thu, 26 Jun 2025 12:20:01 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:154:5a01:d5a1:16d6])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b322b1d89sm75889b6e.19.2025.06.26.12.20.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 12:20:00 -0700 (PDT)
+Date: Thu, 26 Jun 2025 22:19:59 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Cc: andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org,
+	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v2] staging: media: atomisp: remove debug sysfs
+ attributes active_bo and free_bo
+Message-ID: <8b08f2a3-8219-49b8-be47-fc33a95a3953@suswa.mountain>
+References: <20250624144943.39297-1-abdelrahmanfekry375@gmail.com>
+ <cef03d37-715c-47a8-81d4-0872d505c39b@suswa.mountain>
+ <CAGn2d8ML8eTcN2G18B7FYkapROnOeAKJir5fJvOXDdXTLY43aQ@mail.gmail.com>
+ <5ce9dac3-0b7a-45d1-8313-2f65165b50e7@suswa.mountain>
+ <CAGn2d8N8GrRR0FnaB7S2BsPs0HXHhwHfg+q55HbfkMqy1kMGTw@mail.gmail.com>
+ <5d579b8c-0676-46d8-a020-77ee91e1e7d3@suswa.mountain>
+ <CAGn2d8PdiBRN09L__XEsH=cNYz4rDR2A-GnSqCM6Y5TmtT+wcw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625215813.3477840-1-superm1@kernel.org> <20250625215813.3477840-5-superm1@kernel.org>
- <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org> <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
- <rn2kp5tog2agvswva2ipqq2ytiqdcgccnocudsg6ckwfh4roei@provk2g6dita>
- <363c2b92-4bfc-4537-9fca-025eef09526f@kernel.org> <nxticocp26r5mmpkttritw76h5igw7bdpus6zaf5krkso2h5xy@wna6m2quekfi>
- <cbbf0caf-82ce-4427-9844-b11e0f5cacdb@kernel.org> <obpakvzyludc4jskqzyxf65dhqds7ie3jkbfsqdve32ouuaili@xvogkmwvbmbf>
- <284ea5c0-dca5-4e9e-a3e7-705eca794010@kernel.org> <vkau25ybcx3bcoa2jmxlukumunzii5h6em43anh6mmzk2kyiv7@kyych4kxc4zo>
- <0d71a686-da67-4686-8976-a17d0d1ca923@kernel.org>
-In-Reply-To: <0d71a686-da67-4686-8976-a17d0d1ca923@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 26 Jun 2025 21:18:56 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gKUN1OdqAHnXNcFUAOfhpdRfa_o=L6TA2GZTpe1bMaNQ@mail.gmail.com>
-X-Gm-Features: Ac12FXxSdOjDJ8hZfsVdmlh0vRBQMtPgyURvdzpvkVcVLQ-9eoMVTSQOIi6KsFI
-Message-ID: <CAJZ5v0gKUN1OdqAHnXNcFUAOfhpdRfa_o=L6TA2GZTpe1bMaNQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake system
-To: Hans de Goede <hansg@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mario Limonciello <superm1@kernel.org>, 
-	Mika Westerberg <westeri@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>, 
-	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGn2d8PdiBRN09L__XEsH=cNYz4rDR2A-GnSqCM6Y5TmtT+wcw@mail.gmail.com>
 
-On Thu, Jun 26, 2025 at 9:16=E2=80=AFPM Hans de Goede <hansg@kernel.org> wr=
-ote:
->
-> Hi,
->
-> On 26-Jun-25 21:14, Dmitry Torokhov wrote:
-> > On Thu, Jun 26, 2025 at 08:57:30PM +0200, Hans de Goede wrote:
-> >> Hi,
-> >>
-> >> On 26-Jun-25 20:48, Dmitry Torokhov wrote:
-> >>> On Thu, Jun 26, 2025 at 01:20:54PM -0500, Mario Limonciello wrote:
-> >>>> On 6/26/2025 1:07 PM, Dmitry Torokhov wrote:
-> >>>>> On Thu, Jun 26, 2025 at 12:53:02PM -0500, Mario Limonciello wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>> On 6/26/25 12:44 PM, Dmitry Torokhov wrote:
-> >>>>>>> Hi Mario,
-> >>>>>>>
-> >>>>>>> On Thu, Jun 26, 2025 at 06:33:08AM -0500, Mario Limonciello wrote=
-:
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>> On 6/26/25 3:35 AM, Hans de Goede wrote:
-> >>>>>>>>> Hi Mario,
-> >>>>>>>>>
-> >>>>>>>>> On 25-Jun-25 23:58, Mario Limonciello wrote:
-> >>>>>>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
-> >>>>>>>>>>
-> >>>>>>>>>> Sending an input event to wake a system does wake it, but user=
-space picks
-> >>>>>>>>>> up the keypress and processes it.  This isn't the intended beh=
-avior as it
-> >>>>>>>>>> causes a suspended system to wake up and then potentially turn=
- off if
-> >>>>>>>>>> userspace is configured to turn off on power button presses.
-> >>>>>>>>>>
-> >>>>>>>>>> Instead send a PM wakeup event for the PM core to handle wakin=
-g the system.
-> >>>>>>>>>>
-> >>>>>>>>>> Cc: Hans de Goede <hansg@kernel.org>
-> >>>>>>>>>> Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing k=
-ey press event in resume phase")
-> >>>>>>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> >>>>>>>>>> ---
-> >>>>>>>>>>     drivers/input/keyboard/gpio_keys.c | 7 +------
-> >>>>>>>>>>     1 file changed, 1 insertion(+), 6 deletions(-)
-> >>>>>>>>>>
-> >>>>>>>>>> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/inpu=
-t/keyboard/gpio_keys.c
-> >>>>>>>>>> index 773aa5294d269..4c6876b099c43 100644
-> >>>>>>>>>> --- a/drivers/input/keyboard/gpio_keys.c
-> >>>>>>>>>> +++ b/drivers/input/keyboard/gpio_keys.c
-> >>>>>>>>>> @@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int=
- irq, void *dev_id)
-> >>>>>>>>>>              pm_stay_awake(bdata->input->dev.parent);
-> >>>>>>>>>>              if (bdata->suspended  &&
-> >>>>>>>>>>                  (button->type =3D=3D 0 || button->type =3D=3D=
- EV_KEY)) {
-> >>>>>>>>>> -                    /*
-> >>>>>>>>>> -                     * Simulate wakeup key press in case the =
-key has
-> >>>>>>>>>> -                     * already released by the time we got in=
-terrupt
-> >>>>>>>>>> -                     * handler to run.
-> >>>>>>>>>> -                     */
-> >>>>>>>>>> -                    input_report_key(bdata->input, button->co=
-de, 1);
-> >>>>>>>>>> +                    pm_wakeup_event(bdata->input->dev.parent,=
- 0);
-> >>>>>>>
-> >>>>>>> There is already pm_stay_awake() above.
-> >>>>>>
-> >>>>>> But that doesn't help with the fact that userspace gets KEY_POWER =
-from this
-> >>>>>> and reacts to it.
-> >>>>>>
-> >>>>>>>
-> >>>>>>>>>>              }
-> >>>>>>>>>>      }
-> >>>>>>>>>
-> >>>>>>>>> Hmm, we have the same problem on many Bay Trail / Cherry Trail
-> >>>>>>>>> windows 8 / win10 tablets, so  this has been discussed before a=
-nd e.g.
-> >>>>>>>>> Android userspace actually needs the button-press (evdev) event=
- to not
-> >>>>>>>>> immediately go back to sleep, so a similar patch has been nacke=
-d in
-> >>>>>>>>> the past.
-> >>>>>>>>>
-> >>>>>>>>> At least for GNOME this has been fixed in userspace by ignoring
-> >>>>>>>>> power-button events the first few seconds after a resume from s=
-uspend.
-> >>>>>>>>>
-> >>>>>>>>
-> >>>>>>>> The default behavior for logind is:
-> >>>>>>>>
-> >>>>>>>> HandlePowerKey=3Dpoweroff
-> >>>>>>>>
-> >>>>>>>> Can you share more about what version of GNOME has a workaround?
-> >>>>>>>> This was actually GNOME (on Ubuntu 24.04) that I found this issu=
-e.
-> >>>>>>>>
-> >>>>>>>> Nonetheless if this is dependent on an Android userspace problem=
- could we
-> >>>>>>>> perhaps conditionalize it on CONFIG_ANDROID_BINDER_DEVICES?
-> >>>>>>>
-> >>>>>>> No it is not only Android, other userspace may want to distinguis=
-h
-> >>>>>>> between normal and "dark" resume based on keyboard or other user
-> >>>>>>> activity.
-> >>>>>>>
-> >>>>>>> Thanks.
-> >>>>>>>
-> >>>>>> In this specific case does the key passed up to satisfy this users=
-pace
-> >>>>>> requirement and keep it awake need to specifically be a fabricated
-> >>>>>> KEY_POWER?
-> >>>>>>
-> >>>>>> Or could we find a key that doesn't require some userspace to igno=
-re
-> >>>>>> KEY_POWER?
-> >>>>>>
-> >>>>>> Maybe something like KEY_RESERVED, KEY_FN, or KEY_POWER2?
-> >>>>>
-> >>>>> The code makes no distinction between KEY_POWER and KEY_A or KEY_B,=
- etc.
-> >>>>> It simply passes event to userspace for processing.
-> >>>>
-> >>>> Right.  I don't expect a problem with most keys, but my proposal is =
-to
-> >>>> special case KEY_POWER while suspended.  If a key press event must b=
-e sent
-> >>>> to keep Android and other userspace happy I suggest sending somethin=
-g
-> >>>> different just for that situation.
-> >>>
-> >>> I do not know if userspace specifically looks for KEY_POWER or if it
-> >>> looks for user input in general, and I'd rather be on safe side and n=
-ot
-> >>> mangle user input.
-> >>>
-> >>> As Hans mentioned, at least some userspace already prepared to deal w=
-ith
-> >>> this issue. And again, this only works if by the time ISR/debounce
-> >>> runs the key is already released. What if it is still pressed? You st=
-ill
-> >>> going to observe KEY_POWER and need to suppress turning off the scree=
-n.
-> >>>
-> >>>>
-> >>>> Like this:
-> >>>>
-> >>>> diff --git a/drivers/input/keyboard/gpio_keys.c
-> >>>> b/drivers/input/keyboard/gpio_keys.c
-> >>>> index 773aa5294d269..66e788d381956 100644
-> >>>> --- a/drivers/input/keyboard/gpio_keys.c
-> >>>> +++ b/drivers/input/keyboard/gpio_keys.c
-> >>>> @@ -425,7 +425,10 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, =
-void
-> >>>> *dev_id)
-> >>>>                          * already released by the time we got inter=
-rupt
-> >>>>                          * handler to run.
-> >>>>                          */
-> >>>> -                       input_report_key(bdata->input, button->code,=
- 1);
-> >>>> +                       if (button->code =3D=3D KEY_POWER)
-> >>>> +                               input_report_key(bdata->input, KEY_W=
-AKEUP,
-> >>>> 1);
-> >>>
-> >>> Just FYI: Here your KEY_WAKEUP is stuck forever.
-> >>>
-> >>>> +                       else
-> >>>> +                               input_report_key(bdata->input, butto=
-n->code,
-> >>>> 1);
-> >>>>                 }
-> >>>>         }
-> >>>>
-> >>>>
-> >>>>
-> >>>>>
-> >>>>> You need to fix your userspace. Even with your tweak it is possible=
- for
-> >>>>> userspace to get a normal key event "too early" and turn off the sc=
-reen
-> >>>>> again, so you still need to handle this situation.
-> >>>>>
-> >>>>> Thanks.
-> >>>>>
-> >>>>
-> >>>> I want to note this driver works quite differently than how ACPI pow=
-er
-> >>>> button does.
-> >>>>
-> >>>> You can see in acpi_button_notify() that the "keypress" is only forw=
-arded
-> >>>> when not suspended [1].  Otherwise it's just wakeup event (which is =
-what my
-> >>>> patch was modeling).
-> >>>>
-> >>>> https://github.com/torvalds/linux/blob/v6.16-rc3/drivers/acpi/button=
-.c#L461
-> >>>> [1]
-> >>>
-> >>> If you check acpi_button_resume() you will see that the events are se=
-nt
-> >>> from there. Except that for some reason they chose to use KEY_WAKEUP =
-and
-> >>> not KEY_POWER, oh well. Unlike acpi button driver gpio_keys is used o=
-n
-> >>> multiple other platforms.
-> >>
-> >> Interesting, but the ACPI button code presumably only does this on res=
-ume
-> >> for a normal press while the system is awake it does use KEY_POWER, ri=
-ght ?
+Thank you.  This is good analysis.
+
+On Thu, Jun 26, 2025 at 06:19:40PM +0300, Abdelrahman Fekry wrote:
+> Hello Dan , Thanks for your review
+> 
+> On Tue, Jun 24, 2025 at 9:31 PM Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> > Yes.  Nothing is checking for if hmm_init() fails.  Step through the
+> > code and verify that nothing crashes or bad happens as a result.
 > >
-> > Yes. It is unclear to me why they chose to mangle the event on wakeup,
-> > it does not seem to be captured in the email discussions or in the patc=
-h
-> > description.
->
-> I assume they did this to avoid the immediate re-suspend on wakeup by
-> power-button issue. GNOME has a workaround for this, but I assume that
-> some userspace desktop environments are still going to have a problem
-> with this.
+> > For example, I think hmm_bo_alloc() will print "hmm_bo_device not inited
+> > yet." and return.  So that's kind of annoying but it's not a crash.
+> > Search through the rest of the driver and verify how it will behave.
+> >
+> 
+> So, I have been searching through the code as you suggested,
+> and found a couple of interesting things to look at.
+> 
+> Firstly, no function that calls hmm_init() checks its return code,
+> and it doesn’t crash anywhere because of this, so it's not a problem.
+> But the thing is, the hmm_initialized flag inside the hmm_init() function
+> is set even if hmm_bo_device_init() fails, and this can be misleading for
+> functions like __hm_alloc() that check this flag later.
 
-It was done for this reason IIRC, but it should have been documented
-more thoroughly.
+Yeah.
+
+> 
+> Secondly, the function hmm_bo_alloc() and others don’t check
+> the return code of hmm_init().
+
+hmm_init() is called from two places, atomisp_pci_probe() and
+__hmm_alloc().  Is it really possible to call __hmm_alloc() before
+atomisp_pci_probe() has succeeded?  That's an important question.
+Please try to read the code and find the answer.
+
+It would be better to only call hmm_init() from the probe function
+and delete the call in __hmm_alloc() but I don't know if that's
+possible.
+
+> Instead, they check the flag
+> HMM_BO_DEVICE_INITED inside bdev, which is set by the function
+> hmm_bo_device_init(). The problem is, if we inspect hmm_bo_device_init(),
+> we find that the HMM_BO_DEVICE_INITED flag is set before the calls to
+> kmem_cache_create(), kmem_cache_alloc(), and __bo_init().
+> This means that if any of these functions fail, the flag will still be set,
+> which can lead to misbehavior in functions that rely on it, like hmm_bo_alloc().
+> 
+
+Yeah.  That seems correct to me too.
+
+> Should I tackle these problems after submitting the original patch of
+> removing the debug sysfs attr. ?
+
+Perfect.  Sounds good.
+
+regards,
+dan carpenter
+
