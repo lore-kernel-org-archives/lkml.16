@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F7C22A4EB;
-	Thu, 26 Jun 2025 22:48:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD5123505E;
+	Thu, 26 Jun 2025 22:48:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750978090; cv=none; b=Bf0LsioR1oNmlDi13w4L0fOIIvy8uLdIOyPbZalzCY+HgNU3BNtc+VKQmC5M0HpbpX26sfzorjh/7xq2bn0mf1avf/2WzXU3LEYdKrYhRvX2f9BOMzzdud45ZqnzLddQqNCWr2ozyQuwKu4BoW31kfF4GD6mHX8RJJMFqjvI0lU=
+	t=1750978091; cv=none; b=P9yveNaNqzKrd6DyRW36BWWxScJHRiT94ogT7mYAaKi9gnhXX+qOQx/PU462ZmjDEAxwDnugcmzL8SmIs1g3DSbu9AAuj2ibi90fQsfQ5nYc6xtALvBoWDij9StcUc4wAvfMnpEkzW0drlIZPaZVT+eMvuZOal3hzG3+NiDEfdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750978090; c=relaxed/simple;
-	bh=fCvhvhbFhOlfeOSp3pz3JSwPF/zNpq8GnnnbKYprUD0=;
+	s=arc-20240116; t=1750978091; c=relaxed/simple;
+	bh=hSygeHkDhS+YkJFMpecHyCBgLpOxEv9yB8zO6lSVNG8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=iqA/4fihgVYt68Ii3D7GPnUAMJqX6SEncxaBc6/7BSBlzySU9ebyDj0ftWIeQl1NQdumn6dIDgMcONKKXcjy1uv3pvl+XBDbrhOYoBklOxjbk66MKfUn/9SjBW+f2nJH+n1qGPhig8/1r7H68twdJF9atxG9KAEU9ujrna1I9lQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p8ro6kuH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=AOwzXp0SrtNkFd0yw1kukL9iBkTHl+6YmxCPLYvlWxHGAi5eH66Iiq/fVCLoT9dKooySYbhcyb6b2dvo7ByauopHHUTFzneNVNVM3vJvMEimy4iqENZhGXH4zqw07DwkTeaMzOkX26AleoAtRNsv3zJaDSuFTATAhcVhifFSg0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jYksLS88; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p8ro6kuH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DACEC4CEEF;
-	Thu, 26 Jun 2025 22:48:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jYksLS88"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5C47C4CEEF;
+	Thu, 26 Jun 2025 22:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750978089;
-	bh=fCvhvhbFhOlfeOSp3pz3JSwPF/zNpq8GnnnbKYprUD0=;
+	s=k20201202; t=1750978091;
+	bh=hSygeHkDhS+YkJFMpecHyCBgLpOxEv9yB8zO6lSVNG8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=p8ro6kuHVP4rjmVN4MF+SX3pruihvHxk7qjD4XJHiiggv6p482O/uBd3JSRvtfTWx
-	 5oFtEgl9QnCM+fCcxIJgeVuQcMNF0Etva2SaPsL51fGw9dGqI8ueYPuuI4j+DUOVQD
-	 Plx45huqWvqeo2rp1+runItb0a5oUJFRk7pUTCufsNkIriFZ3pYpz2vgpO/uaRtIu4
-	 qrKW4LlNTM0xlldnf74et4wYXoIZYWBU+Xv+5Am5+B0CDG6HhtmOlXlHUZ5Y+l2CSe
-	 xoeOabeVqwCJ1ROiSvuE87brMa+aG24IYJ2oElOJ7UPEQI/5CggGyXp/qHoqI/yKLl
-	 0KNSAmkOvAhQw==
+	b=jYksLS88uoW5ZfxZ8y0tPu47NMYfPfULNP4b0L19nolyKzHxwuHVf0T43PhlKI1az
+	 QqSFU/9HiGg1YJX5EDjy8CNvhS+/6gr6NL35JniUooivJI0MOiA+44dJFp7UY0zX85
+	 DiIF40YnSD0+4odO2tt4F4zfp+fegfxKwaJ5mIEBz+yr6LfoRQDVrnVex4DAUiyOdZ
+	 +7WIEj8UbsnuYAi6GucZLcVVZ0drTWV1xGGPfh5q5B+4Wxwo0JOt6jss8rSF/W55sz
+	 aJq7I+ZaLdQ4VpK1AYLBWhR2AATtLxATdWFQ2T5/UU5mfJLXhpUUArFOTBtjXknSx3
+	 BS8cMDzCWsxNg==
 From: Vinod Koul <vkoul@kernel.org>
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Amelie Delaunay <amelie.delaunay@foss.st.com>
-Cc: dmaengine@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250624-stm32_dma_dbm_fix-v1-1-337c40d6c93e@foss.st.com>
-References: <20250624-stm32_dma_dbm_fix-v1-1-337c40d6c93e@foss.st.com>
-Subject: Re: [PATCH RESEND] dmaengine: stm32-dma: configure next sg only if
- there are more than 2 sgs
-Message-Id: <175097808959.79884.12989914478900786264.b4-ty@kernel.org>
-Date: Thu, 26 Jun 2025 15:48:09 -0700
+To: dave.jiang@intel.com, vinicius.gomes@intel.com, fenghuay@nvidia.com, 
+ Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250521231331.889204-1-anil.s.keshavamurthy@intel.com>
+References: <20250521231331.889204-1-anil.s.keshavamurthy@intel.com>
+Subject: Re: [PATCH] dmaengine: idxd: Fix warning for deadcode.deadstore
+Message-Id: <175097809088.79884.9986625120938692414.b4-ty@kernel.org>
+Date: Thu, 26 Jun 2025 15:48:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,26 +46,22 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Tue, 24 Jun 2025 09:31:37 +0200, Amelie Delaunay wrote:
-> DMA operates in Double Buffer Mode (DBM) when the transfer is cyclic and
-> there are at least two periods.
-> When DBM is enabled, the DMA toggles between two memory targets (SxM0AR and
-> SxM1AR), indicated by the SxSCR.CT bit (Current Target).
-> There is no need to update the next memory address if two periods are
-> configured, as SxM0AR and SxM1AR are already properly set up before the
-> transfer begins in the stm32_dma_start_transfer() function.
-> This avoids unnecessary updates to SxM0AR/SxM1AR, thereby preventing
-> potential Transfer Errors. Specifically, when the channel is enabled,
-> SxM0AR and SxM1AR can only be written if SxSCR.CT=1 and SxSCR.CT=0,
-> respectively. Otherwise, a Transfer Error interrupt is triggered, and the
-> stream is automatically disabled.
+On Wed, 21 May 2025 19:13:31 -0400, Anil S Keshavamurthy wrote:
+> Deletes the  second initialization as the value stored to 'dev' during
+> its initialization (struct device *dev = &idxd->pdev->dev;) is
+> sufficient.
+> 
+> ../drivers/dma/idxd/init.c:988:17: warning: Value stored to 'dev' during
+> its initialization is never read [deadcode.DeadStores]
+>   988 |         struct device *dev = &idxd->pdev->dev;
+>       |                        ^~~   ~~~~~~~~~~~~~~~~
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: stm32-dma: configure next sg only if there are more than 2 sgs
-      commit: e19bdbaa31082b43dab1d936e20efcebc30aa73d
+[1/1] dmaengine: idxd: Fix warning for deadcode.deadstore
+      commit: 8c2442663f683f4fabadb3c491821169da6c89a8
 
 Best regards,
 -- 
