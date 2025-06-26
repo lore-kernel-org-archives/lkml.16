@@ -1,134 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96ED41D5CD7;
-	Thu, 26 Jun 2025 13:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76D82E336E;
+	Thu, 26 Jun 2025 13:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750942867; cv=none; b=sQSSd4qcfAVqfl8e+ABC89PPn2GKXuaXpcC8LwWhlR2R4u+e6OMyqS2aC4jvrGtaam5kuDPQg3RlNYwMhg9Lc/95Ljb9xNa7PYn09GmFtpVM5x57AYiSfKE+RbAreg6/VW0zS+eZ/W1Nudx7IACuS6ajOKVKSRr77hQBvTNCv14=
+	t=1750942876; cv=none; b=c1aKcSXYjTQ7QGOSPTd8Bm2UoHD9yIhDIFX8oZfwujmajEBNr7FOScnezRe00qt6oZLr8L6Al9QGs5c7pWT4oeOmSXsMtBFMV1c4jHZzoHeL1oeil85pBBdZjgnuoitK0hpcqN8nBSRxy5gYXB7jQCKtmAf10cKHsZy2DhB86yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750942867; c=relaxed/simple;
-	bh=p4+eXCQGMR9TWXBMv8y3A7wqhzvhbL3bNYb1Q71TM/s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Fv0Ez3t4C2NEDGDyyNCcXEftdEJJZHZsPBIgvyQuaQbm3JDGaeFFd+uncQcPZLDbH42NzCs3iX9+8SGVy8L2pVs/eFY1RYW+12C/pasox8AxRhOBKHeB748UxEIC/k1nq1s+bEehQKj3FVwLr8XdfUpZosA9m4z/6YJokKFG7mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WO50tawx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750942876; c=relaxed/simple;
+	bh=yIokvzezyxkaDoR3N6Db1QnHti3wLHxdRvurH4Gd3hQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CiAX0H22kCBiKqX8ovzyD/ymhUYKHmyxqBoQSdldMNyxIKTE2rSp+nDLIP8Yq+cH3rFwNoo8xKsBs2O8G8G7M+H8yFw86jvB9rn8B6vsVhZ5mPwE4KI/MkNHEFMynzUs0rL7usVt5xo3q5uAkE0bAIP3rJIiS2AbJlndHuxHyvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q28LkwpJ; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WO50tawx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01354C4CEEB;
-	Thu, 26 Jun 2025 13:00:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750942867;
-	bh=p4+eXCQGMR9TWXBMv8y3A7wqhzvhbL3bNYb1Q71TM/s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=WO50tawxIGQ06se51mzA9l/QQLICo0jdAR6OV4L11SY3W4xXWwfSSjdssiglQgbwL
-	 eZZxS3EsXxw3Shq08+OWHJBAqPCxx4iDeXMnLOeOwgseINi66n6UYrtKJD3cnqcinU
-	 XgbkmNLMcWrJcSyvMCP4xverSA2HWJXEtXdCmmAbsg2xm2W9BwPO7lgUOBMEsGHN0Y
-	 UHgSgVTsddG+9qGcLdQM1QtAt1OFtvIntbZCDjT6sJxPYgvGEbNnD9h1l0Lpv/Xvm8
-	 MZ0tjnfrsEJ0+jb/3LwnUrfV+nSYUtJ43Irz9/Y0A59IxrAOkQSMOe/jD1jjkBp9ZX
-	 pvbC+xSrgVbuw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: pratyush@kernel.org,  jasonmiu@google.com,  graf@amazon.com,
-  changyuanl@google.com,  rppt@kernel.org,  dmatlack@google.com,
-  rientjes@google.com,  corbet@lwn.net,  rdunlap@infradead.org,
-  ilpo.jarvinen@linux.intel.com,  kanie@linux.alibaba.com,
-  ojeda@kernel.org,  aliceryhl@google.com,  masahiroy@kernel.org,
-  akpm@linux-foundation.org,  tj@kernel.org,  yoann.congal@smile.fr,
-  mmaurer@google.com,  roman.gushchin@linux.dev,  chenridong@huawei.com,
-  axboe@kernel.dk,  mark.rutland@arm.com,  jannh@google.com,
-  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
-  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
-  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
-  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
-  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
-  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
-  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
-  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
-  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
-  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
-  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
-  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
-  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
-  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
-  stuart.w.hayes@gmail.com,  lennart@poettering.net,  brauner@kernel.org,
-  linux-api@vger.kernel.org,  linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v1 25/32] mm: shmem: use SHMEM_F_* flags instead of VM_*
- flags
-In-Reply-To: <20250625231838.1897085-26-pasha.tatashin@soleen.com>
-References: <20250625231838.1897085-1-pasha.tatashin@soleen.com>
-	<20250625231838.1897085-26-pasha.tatashin@soleen.com>
-Date: Thu, 26 Jun 2025 15:00:57 +0200
-Message-ID: <mafs01pr6u06u.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q28LkwpJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750942875; x=1782478875;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yIokvzezyxkaDoR3N6Db1QnHti3wLHxdRvurH4Gd3hQ=;
+  b=Q28LkwpJD91V9C2PpGlriGKY1Ti1Crda0ka8xO2wHlCYkD5b1bOfp6gx
+   LG7h7IPLDQivtRi59e0Td4V1YIppR0t6yx1Etv+lFWQbIxiUSMkbqbUoC
+   pquddECptbu18NylqIYgYMjLnOLc0LAwSIWxFK0arZmdw3v3vQed79lWt
+   hY5SV0AE6Uhj4XYfqRoB04hSWA2bB+Au1wMhEnsjEi6sTflGTo07aDC9M
+   PWPZhQEW6AyTjmSO2Vrv+mhfaa+PvR5xTu8yRHC1NnZoHHgfe1TTW/9Ug
+   CJg+G2NHlH4Gn1OhiGfpzYXuPyNvsmzunuo1robCzmJbqvPeAyfOdYui6
+   g==;
+X-CSE-ConnectionGUID: ffUVeZtAQburegXcMPnnAw==
+X-CSE-MsgGUID: T9TpO67TTeSVhUfyVN7umA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="78672894"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="78672894"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 06:01:14 -0700
+X-CSE-ConnectionGUID: Om+uTs5ZRLepCITQ05kCIw==
+X-CSE-MsgGUID: 4veAPY2LToqV56gdbka4rQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="153014283"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 26 Jun 2025 06:01:12 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 650952E2; Thu, 26 Jun 2025 16:01:10 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mika Westerberg <westeri@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Subject: [PATCH v1 1/1] Documentation: firmware-guide: gpio-properties: Spelling and style fixes
+Date: Thu, 26 Jun 2025 16:01:09 +0300
+Message-ID: <20250626130109.215848-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Hi all,
+- Use consistent style for active-high and active-low
+- For C and ASL code snippets use 4-space indentation consistently
+- Interleave case examples with the explanations of the certain case
+- Remove or add commas when appropriate
 
-On Wed, Jun 25 2025, Pasha Tatashin wrote:
-
-> From: Pratyush Yadav <ptyadav@amazon.de>
->
-> shmem_inode_info::flags can have the VM flags VM_NORESERVE and
-> VM_LOCKED. These are used to suppress pre-accounting or to lock the
-> pages in the inode respectively. Using the VM flags directly makes it
-> difficult to add shmem-specific flags that are unrelated to VM behavior
-> since one would need to find a VM flag not used by shmem and re-purpose
-> it.
->
-> Introduce SHMEM_F_NORESERVE and SHMEM_F_LOCKED which represent the same
-> information, but their bits are independent of the VM flags. Callers can
-> still pass VM_NORESERVE to shmem_get_inode(), but it gets transformed to
-> the shmem-specific flag internally.
->
-> No functional changes intended.
-
-I was reading through this patch again and just realized that I missed a
-spot. __shmem_file_setup() passes VM flags to shmem_{un,}acct_size(),
-even though it now expects SHMEM_F flag. Below fixup patch should fix
-that.
-
---- 8< ---
-From d027524e390de15af1c6d9310bf6bea0194be79f Mon Sep 17 00:00:00 2001
-From: Pratyush Yadav <ptyadav@amazon.de>
-Date: Thu, 26 Jun 2025 14:50:27 +0200
-Subject: [PATCH] fixup! mm: shmem: use SHMEM_F_* flags instead of VM_* flags
-
-Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- mm/shmem.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ .../firmware-guide/acpi/gpio-properties.rst   | 30 +++++++++----------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 6b13eb40e7dc2..83ae446f779ef 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -5809,8 +5809,10 @@ static inline struct inode *shmem_get_inode(struct mnt_idmap *idmap,
- /* common code */
+diff --git a/Documentation/firmware-guide/acpi/gpio-properties.rst b/Documentation/firmware-guide/acpi/gpio-properties.rst
+index db0c0b1f3700..5addf7aaa833 100644
+--- a/Documentation/firmware-guide/acpi/gpio-properties.rst
++++ b/Documentation/firmware-guide/acpi/gpio-properties.rst
+@@ -6,7 +6,7 @@ _DSD Device Properties Related to GPIO
  
- static struct file *__shmem_file_setup(struct vfsmount *mnt, const char *name,
--			loff_t size, unsigned long flags, unsigned int i_flags)
-+			loff_t size, unsigned long vm_flags,
-+			unsigned int i_flags)
- {
-+	unsigned long flags = (vm_flags & VM_NORESERVE) ? SHMEM_F_NORESERVE : 0;
- 	struct inode *inode;
- 	struct file *res;
+ With the release of ACPI 5.1, the _DSD configuration object finally
+ allows names to be given to GPIOs (and other things as well) returned
+-by _CRS.  Previously, we were only able to use an integer index to find
++by _CRS. Previously we were only able to use an integer index to find
+ the corresponding GPIO, which is pretty error prone (it depends on
+ the _CRS output ordering, for example).
  
-@@ -5827,7 +5829,7 @@ static struct file *__shmem_file_setup(struct vfsmount *mnt, const char *name,
- 		return ERR_PTR(-ENOMEM);
+@@ -49,11 +49,11 @@ index
+ pin
+   Pin in the GpioIo()/GpioInt() resource. Typically this is zero.
+ active_low
+-  If 1, the GPIO is marked as active_low.
++  If 1, the GPIO is marked as active-low.
  
- 	inode = shmem_get_inode(&nop_mnt_idmap, mnt->mnt_sb, NULL,
--				S_IFREG | S_IRWXUGO, 0, flags);
-+				S_IFREG | S_IRWXUGO, 0, vm_flags);
- 	if (IS_ERR(inode)) {
- 		shmem_unacct_size(flags, size);
- 		return ERR_CAST(inode);
+ Since ACPI GpioIo() resource does not have a field saying whether it is
+-active low or high, the "active_low" argument can be used here.  Setting
+-it to 1 marks the GPIO as active low.
++active-low or active-high, the "active_low" argument can be used here.
++Setting it to 1 marks the GPIO as active-low.
+ 
+ Note, active_low in _DSD does not make sense for GpioInt() resource and
+ must be 0. GpioInt() resource has its own means of defining it.
+@@ -231,8 +231,8 @@ In those cases ACPI device identification objects, _HID, _CID, _CLS, _SUB, _HRV,
+ available to the driver can be used to identify the device and that is supposed
+ to be sufficient to determine the meaning and purpose of all of the GPIO lines
+ listed by the GpioIo()/GpioInt() resources returned by _CRS.  In other words,
+-the driver is supposed to know what to use the GpioIo()/GpioInt() resources for
+-once it has identified the device.  Having done that, it can simply assign names
++the driver is supposed to know what to use from the GpioIo()/GpioInt() resources
++for once it has identified the device. Having done that, it can simply assign names
+ to the GPIO lines it is going to use and provide the GPIO subsystem with a
+ mapping between those names and the ACPI GPIO resources corresponding to them.
+ 
+@@ -252,9 +252,9 @@ question would look like this::
+   static const struct acpi_gpio_params shutdown_gpio = { 0, 0, false };
+ 
+   static const struct acpi_gpio_mapping bluetooth_acpi_gpios[] = {
+-    { "reset-gpios", &reset_gpio, 1 },
+-    { "shutdown-gpios", &shutdown_gpio, 1 },
+-    { }
++      { "reset-gpios", &reset_gpio, 1 },
++      { "shutdown-gpios", &shutdown_gpio, 1 },
++      { }
+   };
+ 
+ Next, the mapping table needs to be passed as the second argument to
+@@ -270,7 +270,7 @@ Using the _CRS fallback
+ 
+ If a device does not have _DSD or the driver does not create ACPI GPIO
+ mapping, the Linux GPIO framework refuses to return any GPIOs. This is
+-because the driver does not know what it actually gets. For example if we
++because the driver does not know what it actually gets. For example, if we
+ have a device like below::
+ 
+   Device (BTH)
+@@ -292,7 +292,7 @@ The driver might expect to get the right GPIO when it does::
+ 	...error handling...
+ 
+ but since there is no way to know the mapping between "reset" and
+-the GpioIo() in _CRS desc will hold ERR_PTR(-ENOENT).
++the GpioIo() in _CRS the desc will hold ERR_PTR(-ENOENT).
+ 
+ The driver author can solve this by passing the mapping explicitly
+ (this is the recommended way and it's documented in the above chapter).
+@@ -318,15 +318,15 @@ Case 1::
+   desc = gpiod_get(dev, "non-null-connection-id", flags);
+   desc = gpiod_get_index(dev, "non-null-connection-id", index, flags);
+ 
++Case 1 assumes that corresponding ACPI device description must have
++defined device properties and will prevent from getting any GPIO resources
++otherwise.
++
+ Case 2::
+ 
+   desc = gpiod_get(dev, NULL, flags);
+   desc = gpiod_get_index(dev, NULL, index, flags);
+ 
+-Case 1 assumes that corresponding ACPI device description must have
+-defined device properties and will prevent to getting any GPIO resources
+-otherwise.
+-
+ Case 2 explicitly tells GPIO core to look for resources in _CRS.
+ 
+ Be aware that gpiod_get_index() in cases 1 and 2, assuming that there
 -- 
-Regards,
-Pratyush Yadav
+2.47.2
+
