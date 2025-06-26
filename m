@@ -1,157 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B90529C35F;
-	Thu, 26 Jun 2025 09:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290A62BDC37;
+	Thu, 26 Jun 2025 09:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750931762; cv=none; b=YtDzeVGFKfAbIFdw3Z+4cNN9mO1t7CPy8RIEwPEdtZRmgqCt2CR7Twjx0QzVMEy1DDJBfuwa+ZGZDOZlv3HgQ4myzJJyiNCBsoovFEyZD/zlbDbCSyXB1LSQcUKe0260WchSL5M45fH1EKdRs4gKUhEGvyi0PXVwNoySaY+ys+0=
+	t=1750931848; cv=none; b=ZKvB8M4qpVEescgWYXnqDvqTAtj9C/0qclBoQyL/qTtwRYQrqKKT9T8wa6ajheRAt0WdTgU3fvm2sNwGK1hvwGsh7h5ZMfNxvKc0jAd+ESiALX/GdrJTDc+QKS4MMzVv98KygsCF0uMiDEAHCOzdpx05zr4Ar+GLnAFSlw79N/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750931762; c=relaxed/simple;
-	bh=NIdi9vkSfJQtqbtgSmTPBIUYBGUucA44r7jAMoBWtrk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I+lzrRUm/gh4bbyYP9drzsaKM4m95/Z9P2MrLRWF7FL+h/IBUUSdudIL7NePZAGVpjBfBMCiKZcI8di/fX5NolY+1TwkAlfHOS2fbwXW+Yiv2APpj40KeGswCCMFBKOLndp6o/Ht1j055Zah4WqQhBRxI1kQGDPxFvxEIqDG/Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HnENumIZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750931848; c=relaxed/simple;
+	bh=tlVnFMj6w1qVUMI88zn2YTU7Dws9bsPQUK5VTrxNJYA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZgfKMeyzoa8j+OQsI1ZU/lrvFIm8awD6tq02pySUgqXxajo+2bi6nzjyC29SaJKweiFj0856rPDr0eLSInT24JuLveu6Es9yyQncvTctN+gsqSAQHYyO5LgxGdTpjLVEaD8ndwU0zZwkVoxQ6hjnR02DVoK3TuCSU9VHIZOWYZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DSxP23K1; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HnENumIZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91818C4CEF1;
-	Thu, 26 Jun 2025 09:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750931761;
-	bh=NIdi9vkSfJQtqbtgSmTPBIUYBGUucA44r7jAMoBWtrk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HnENumIZ1fVJVgXx+uIFkAExIWrr/yFkI5BgCQKsBLrcN0eNG0YjWT+DYcEaq98qa
-	 x3AICdrkpFbiul9hG1ulv7WFcbaG7YPqRFhkVVygDubPbLK8ZIJkE0MRP2A+ztSqiC
-	 1OkvauffDOxDlz1F0jlM5d8Nsn6d8AXmVUL9Wd5srmTqkJsI9GKJ/SCZWe1fbiYpWw
-	 XOxfdxgwQUTg+IsIyE+gmMY+ED/RbUWNmriWmqNm8eQSwzoJPv/hNKWO+7n8aI6NP1
-	 HNVeHrfPWl1Wecdj3GCXVtM6QfbkP6IE4tSLWf4nOCnY0aNbLGCWpjZva42jpV+HvE
-	 56YSqi4fqJ0+A==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uUjKr-000000007WP-1woe;
-	Thu, 26 Jun 2025 11:56:01 +0200
-Date: Thu, 26 Jun 2025 11:56:01 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Steev Klimaszewski <steev@kali.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v4 7/8] firmware: qcom: scm: rework QSEECOM allowlist
-Message-ID: <aF0ZMcVcgHpqsKoG@hovoldconsulting.com>
-References: <20250625-more-qseecom-v4-0-aacca9306cee@oss.qualcomm.com>
- <20250625-more-qseecom-v4-7-aacca9306cee@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSxP23K1"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ae0e0271d82so22126866b.3;
+        Thu, 26 Jun 2025 02:57:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750931845; x=1751536645; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/7jBCr5MZqaLmLDdD69Fv01V6uu7m4dupO4xr56uExw=;
+        b=DSxP23K18NTq0EYjBzKYoTfYBvB/2RHcznH7NxKiiMsmkEUbK9vldRRqcC/6Gktcq6
+         sWjzESi4Wh6ti8OaRGj9YACXtqtfQOSI1zUTReGlbNwPt7w9hDnQD3AmPfjuvBWp2qAf
+         XUaC7aeRhv66/OepzdP/oSNCbyOzssMVNoZcYvTjuR4RQ4PWscJiBAlqtpdtExPWCx+0
+         dL+cIRjFfuFjkgtq4jkdO97ES3KFBPHvIjWyoVkOAgsvbKZ/XfN/wyk67+2LHY5BDvcW
+         ATpUTGJSouzcwR3zrbrakTI4kLi80262HaTv3edSErWyoTpZSMHqYU2M4Bcflm6ReKQs
+         7tbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750931845; x=1751536645;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/7jBCr5MZqaLmLDdD69Fv01V6uu7m4dupO4xr56uExw=;
+        b=CdcV8+NhQSDdg1gn44ULeMTvhQTGw6jG0yJQlUWUCpGMruLlhZiWvR+SopiQj/zlvS
+         PpPXVsoXhX9kmKJ17uG6mr0cRbxQdIHND/JrXbJIeCE3Ia4a9u9MueTOkwdm5eItnArZ
+         NgrKek2+ykpMPcZACK0VcRl77aGvD4v0C/Wpk1WMQtfNfRInJNQRXdmEhGXEorVEVeKa
+         InSYbDFIzlQ1nwSeFLKJnDKGPczfbySdUOb8ZNlkJiiVIS3QSu6AYFStK+vl1m6wSnkY
+         BmK/s6YDuoIta76r8RHeylAz7RSAaVCyDxAtEQIhwLC3+KM/FvP21r6upUM51IAxKEFA
+         PWUg==
+X-Forwarded-Encrypted: i=1; AJvYcCW27klvawZ8LSLLRF1AoW/ZhT8VumGIO8zFArpaW6NaOqOvxCBEEx7h8puHxLPTlLB9ij0Y6M7zIS+8QBs=@vger.kernel.org, AJvYcCWeMebJ6teHHmLpMB/ATiylQcsPZERCNap5hlaRokKm3MLl865YKQI9kclLeGHU4kC93JZ7uAE7@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFNTFWOL06JmA4MSDCfJEDT0v8FRrA8ornq1zVkbl6dsE1fdYg
+	Bx+PvmHM06MGi7dArDF4oK8PRjWVW/JrLbPdcs8GqaMXZGAm3VmQu80Efge2j9ag99sJLVmmXKr
+	dHxGVhnjxiY0d6OXqx+8RAx1jRxGzO8c=
+X-Gm-Gg: ASbGncsNFYmqPCr+OO+h27Q76+On9X5QbO0KCAO5ZwMkOinENB9zprGOS5fXCby476J
+	7KyTMvCXI5nVarGAlb5hOwgja2VKZwf5cFkekJlvJyEzbwrjYs5yGdC71vR2nliKk6USQL7uown
+	bnZAjYZC1Gp1ki/RU69RTD5o6Jq5Bfm3PS8jFoF8rSHVRaKkmy+UA1ZQ==
+X-Google-Smtp-Source: AGHT+IHqVNAzo/SYvg+5aWaqbDFWj5obVs7H8dkhv8IDg3aaiUl9SM61Zk9afMLbdhzCa/5DF2NxXVMpCufIfEI54K8=
+X-Received: by 2002:a17:906:a44b:b0:ad5:55db:e413 with SMTP id
+ a640c23a62f3a-ae0be894206mr510831666b.26.1750931844899; Thu, 26 Jun 2025
+ 02:57:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625-more-qseecom-v4-7-aacca9306cee@oss.qualcomm.com>
+References: <CA+G9fYtJO4DbiabJwpSamTPHjPzyrD3O6ZCwm2+CDEUA7f+ZYw@mail.gmail.com>
+In-Reply-To: <CA+G9fYtJO4DbiabJwpSamTPHjPzyrD3O6ZCwm2+CDEUA7f+ZYw@mail.gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Thu, 26 Jun 2025 11:57:12 +0200
+X-Gm-Features: Ac12FXy8P5m6Uq6DYd39S5vG5de_lMDYUsNQB3uoNHk8hKKBSM8JOIak9cK9zIM
+Message-ID: <CAOQ4uxi9KjOx0JSakPYbsNaZj63nLiLzQE-_Hdq1H_MGrC8=6A@mail.gmail.com>
+Subject: Re: stable-rc: 5.4 and 5.10: fanotify01.c:339: TFAIL:
+ fanotify_mark(fd_notify, 0x00000001, 0x00000008, -100, ".") expected EXDEV:
+ ENODEV (19)
+To: Naresh Kamboju <naresh.kamboju@linaro.org>, Petr Vorel <pvorel@suse.cz>
+Cc: LTP List <ltp@lists.linux.it>, open list <linux-kernel@vger.kernel.org>, 
+	linux-stable <stable@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, chrubis <chrubis@suse.cz>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 25, 2025 at 01:53:26AM +0300, Dmitry Baryshkov wrote:
-> From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> 
-> Listing individual machines in qcom_scm_qseecom_allowlist doesn't scale.
-> Allow it to function as allow and disallow list at the same time by the
-> means of the match->data and list the SoC families instead of devices.
-> 
-> In case a particular device has buggy or incompatible firmware user
-> still can disable QSEECOM by specifying qcom_scm.qseecom=off kernel
-> param and (in the longer term) adding machine-specific entry to the
-> qcom_scm_qseecom_allowlist table.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+On Thu, Jun 26, 2025 at 9:03=E2=80=AFAM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+>
+> Regression in the LTP syscalls/fanotify01 test on the Linux stable-rc 5.4
+> and 5.10 kernel after upgrading to LTP version 20250530.
+>
+>  - The test passed with LTP version 20250130
+>  - The test fails with LTP version 20250530
+>
+> Regressions found on stable-rc 5.4 and 5.10 LTP syscalls fanotify01.c
+> fanotify_mark expected EXDEV: ENODEV (19)
+>
+> Regression Analysis:
+>  - New regression? Yes
+>  - Reproducibility? Yes
+>
+> Test regression: stable-rc 5.4 and 5.10
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> fanotify01.c:339: TFAIL: fanotify_mark(fd_notify, 0x00000001,
+> 0x00000008, -100, ".") expected EXDEV: ENODEV (19)
+>
+> The test expected fanotify_mark() to fail with EXDEV, but received
+> ENODEV instead. This indicates a potential mismatch between updated
+> LTP test expectations and the behavior of the 5.4 kernel=E2=80=99s fanoti=
+fy
+> implementation.
+>
 
->  /*
->   * We do not yet support re-entrant calls via the qseecom interface. To prevent
-> - * any potential issues with this, only allow validated machines for now. Users
-> + * any potential issues with this, only allow validated platforms for now. Users
->   * still can manually enable or disable it via the qcom_scm.qseecom modparam.
-> + *
-> + * To disable QSEECOM for a particular machine, add compatible entry and set
-> + * data to &qcom_qseecom_disable.
->   */
->  static const struct of_device_id qcom_scm_qseecom_allowlist[] __maybe_unused = {
-> -	{ .compatible = "asus,vivobook-s15" },
-> -	{ .compatible = "asus,zenbook-a14-ux3407qa" },
-> -	{ .compatible = "asus,zenbook-a14-ux3407ra" },
-> -	{ .compatible = "dell,xps13-9345" },
-> -	{ .compatible = "hp,elitebook-ultra-g1q" },
-> -	{ .compatible = "hp,omnibook-x14" },
-> -	{ .compatible = "huawei,gaokun3" },
-> -	{ .compatible = "lenovo,flex-5g" },
-> -	{ .compatible = "lenovo,thinkpad-t14s" },
-> -	{ .compatible = "lenovo,thinkpad-x13s", },
->  	{ .compatible = "lenovo,yoga-c630", .data = &qcom_qseecom_ro_uefi, },
-> -	{ .compatible = "lenovo,yoga-slim7x" },
-> -	{ .compatible = "microsoft,arcata", },
-> -	{ .compatible = "microsoft,blackrock" },
-> -	{ .compatible = "microsoft,romulus13", },
-> -	{ .compatible = "microsoft,romulus15", },
-> -	{ .compatible = "qcom,sc8180x-primus" },
-> +	{ .compatible = "qcom,sc8180x", },
-> +	{ .compatible = "qcom,sc8280xp", },
->  	{ .compatible = "qcom,sc8280xp-crd", .data = &qcom_qseecom_ro_uefi, },
+Yap, that's true.
 
-You need to have the machine specific entries before the SoC fallbacks
-for this to work.
+The change to fanotify01:
+* db197b7b5 - fanotify01: fix test failure when running with nfs TMPDIR
 
-Perhaps this should be made more clear in the table by adding a
-separator comment before the SoC entries or similar.
+Depends on this kernel change from v6.8:
+* 30ad1938326b - fanotify: allow "weak" fsid when watching a single filesys=
+tem
 
-> -	{ .compatible = "qcom,x1e001de-devkit" },
-> -	{ .compatible = "qcom,x1e80100-crd" },
-> -	{ .compatible = "qcom,x1e80100-qcp" },
-> -	{ .compatible = "qcom,x1p42100-crd" },
-> +	{ .compatible = "qcom,sdm845", .data = &qcom_qseecom_disable, },
-> +	{ .compatible = "qcom,x1e80100", },
-> +	{ .compatible = "qcom,x1p42100", },
->  	{ }
->  };
->  
-> @@ -2046,12 +2035,22 @@ static bool qcom_scm_qseecom_machine_is_allowed(struct device *scm_dev,
->  	match = of_match_node(qcom_scm_qseecom_allowlist, np);
->  	of_node_put(np);
->  
-> -	if (match && match->data)
-> +	if (!match) {
-> +		dev_info(scm_dev, "qseecom: untested machine, skipping\n");
-> +		return false;
-> +	}
-> +
-> +	if (match->data)
->  		*quirks = *(unsigned long *)(match->data);
->  	else
->  		*quirks = 0;
->  
-> -	return match;
-> +	if (*quirks & QCOM_QSEECOM_QUIRK_DISABLE) {
-> +		dev_info(scm_dev, "qseecom: disabled by the quirk\n");
+Which fs type is your LTP TMPDIR?
 
-Not sure this is needed since it presumably has been disabled because it
-has been tested and found not to work. No need to spam the logs with
-that on every boot.
+Can you please test this fix:
 
-In any case I don't think you should be referring to "the quirk" which
-makes little sense without looking at the implementation.
+--- a/testcases/kernel/syscalls/fanotify/fanotify01.c
++++ b/testcases/kernel/syscalls/fanotify/fanotify01.c
+@@ -374,7 +374,21 @@ static void setup(void)
+        }
 
-> +		return false;
-> +	}
-> +
-> +	return true;
->  }
+        if (fanotify_flags_supported_on_fs(FAN_REPORT_FID,
+FAN_MARK_MOUNT, FAN_OPEN, ".")) {
+-               inode_mark_fid_xdev =3D (errno =3D=3D ENODEV) ? EXDEV : err=
+no;
++               inode_mark_fid_xdev =3D errno;
++               if (inode_mark_fid_xdev =3D=3D ENODEV) {
++                       /*
++                        * The fs on TMPDIR has zero fsid.
++                        * On kernels <  v6.8 an inode mark fails with ENOD=
+EV.
++                        * On kernels >=3D v6.8 an inode mark is allowed bu=
+t multi
++                        * fs inode marks will fail with EXDEV.
++                        * See kernel commit 30ad1938326b
++                        * ("fanotify: allow "weak" fsid when watching
+a single filesystem").
++                        */
++                       if
+(fanotify_flags_supported_on_fs(FAN_REPORT_FID, FAN_MARK_INODE,
+FAN_OPEN, "."))
++                               inode_mark_fid_xdev =3D errno;
++                       else
++                               inode_mark_fid_xdev =3D EXDEV;
++               }
+                tst_res(TINFO | TERRNO, "TMPDIR does not support
+reporting events with fid from multi fs");
+        }
+ }
 
-Johan
+
+Thanks,
+Amir.
+
+> Test log,
+> --
+>
+> fanotify01.c:94: TINFO: Test #3: inode mark events (FAN_REPORT_FID)
+> fanotify01.c:301: TPASS: got event: mask=3D31 pid=3D2364 fd=3D-1
+> ...
+> fanotify01.c:301: TPASS: got event: mask=3D8 pid=3D2364 fd=3D-1
+> fanotify01.c:339: TFAIL: fanotify_mark(fd_notify, 0x00000001,
+> 0x00000008, -100, ".") expected EXDEV: ENODEV (19)
+> fanotify01.c:94: TINFO: Test #4: mount mark events (FAN_REPORT_FID)
+> fanotify01.c:301: TPASS: got event: mask=3D31 pid=3D2364 fd=3D-1
+> ...
+> fanotify01.c:301: TPASS: got event: mask=3D8 pid=3D2364 fd=3D-1
+> fanotify01.c:339: TFAIL: fanotify_mark(fd_notify, 0x00000001,
+> 0x00000008, -100, ".") expected EXDEV: ENODEV (19)
+> fanotify01.c:94: TINFO: Test #5: filesystem mark events (FAN_REPORT_FID)
+> fanotify01.c:301: TPASS: got event: mask=3D31 pid=3D2364 fd=3D-1
+> ...
+> fanotify01.c:301: TPASS: got event: mask=3D8 pid=3D2364 fd=3D-1
+> fanotify01.c:339: TFAIL: fanotify_mark(fd_notify, 0x00000001,
+> 0x00000008, -100, ".") expected EXDEV: ENODEV (19)
+>
+>
+> ## Test logs
+> * Build details:
+> https://regressions.linaro.org/lkft/linux-stable-rc-linux-5.4.y/v5.4.294-=
+223-g7ff2d32362e4/ltp-syscalls/fanotify01/
+> * Build detail 2:
+> https://regressions.linaro.org/lkft/linux-stable-rc-linux-5.10.y/v5.10.23=
+8-353-g9dc843c66f6f/ltp-syscalls/fanotify01/
+> * Test log: https://qa-reports.linaro.org/api/testruns/28859312/log_file/
+> * Issue: https://regressions.linaro.org/-/known-issues/6609/
+> * Test LAVA job 1:
+> https://lkft.validation.linaro.org/scheduler/job/8329278#L28572
+> * Test LAVA job 2:
+> https://lkft.validation.linaro.org/scheduler/job/8326518#L28491
+> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2yxH=
+GvVkVpcbKqPahSKRnlITnVS/
+> * Build config:
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/2yxHGvVkVpcbKqPahS=
+KRnlITnVS/bzImage
+>
+>
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
