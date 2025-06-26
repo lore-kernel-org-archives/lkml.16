@@ -1,170 +1,143 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7E419B3EC
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 17:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8162F1C5D55;
+	Thu, 26 Jun 2025 17:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750959179; cv=none; b=tYJY6wCUGDP6dxsbMzlZarh2V9NQ2dShrHYUHMx5Qv13kOQpwtK9pEyFpJZ7q9wSwRYtzSSfvgmKT8avsR6Meba/3SMpQNOeHils6qc046DLokAMEDioU+7Gq8gDhsSJfrZYKj3Yv3JZPMlyQ15ynRdSfAEQYYn5fa4uE0Vvf6Q=
+	t=1750959211; cv=none; b=j5isCSsfx6VKlXu6aSshmqQ0OkI/ekJEdviLWYxuyE9I93fW8D14zjClj3+rC0WrjS6JL2upO+G+woNzdJhxp3dICJhvZ7ruKZ5D/d67DExvLiV63arjEg/jn/ZBMw9C66qGds7CnzhM7vD6q2cq9nO49sL1PiU5NP+uKRW4gig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750959179; c=relaxed/simple;
-	bh=1J7sGIDeRRuq08yov7Aec49VvjrOnRiL9NKJmEA7bys=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qtAHBLXhH7aWDwi07qO0EIZx90voEqsRCkK7p1MWO07gpUZAgudhtuQzhlcxrw59QhZw3iCraN+sCvKDOn3bjjWbqBNbk5eEmTLROIfnFiS5gjHRWX3yTbzbS+Acf35vQwsQSzSadpd7xiikXeC0qVgeBiuhCcCu1wlrr9kND00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zw4uJnFO; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750959211; c=relaxed/simple;
+	bh=zm90ABypoBui1WOoW9+0AA47chVc53mgeVPJkHtakks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rI1chA0AMm19T4cFlaohMUo1ZenpODijau2xMaAi6wl7rz8BzETjxXybw67yXB1xMzM+0Kk1zvLpy9CR2BcPzGJFp7A2Il3zc7jerbQkXPpxtNe8iMWakJlkqpn7YObbQ7XtJVAel99YV8FHsDfLwYgMWQtkwBiWW/WppTZ/WcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nAxfxP94; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zw4uJnFO"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4a7f5abac0aso27551cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:32:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nAxfxP94"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b34a71d9208so989041a12.3;
+        Thu, 26 Jun 2025 10:33:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750959177; x=1751563977; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wZh1dmf/mcdWd+gaxLlwslIiT72mzKcB2kWBA/Uelgs=;
-        b=zw4uJnFO5mgu4KvC+wJusuEmw4DuHPLMMrDXZG0mHPYzyKFuRSCGQNEkG9JmWO1D30
-         fEPoIWctVgmSOR5KS6T+crAZGX01XY8rP0pAKPDHIBUtbmNGMK8UT7xi91eLR+8TTQRW
-         gjleEpKmwvKp6Ro8cSQk/AjciCzdtj+tLhqnLkbToohb9pIlrx7WfwAflXwy9Dm6d11j
-         ZXwjUdLoNXSZT5JY2mkFzwwhs5bJYo1zz4QpgvxrTjJKcaesuZrAFQEGM8Ao9lawr/WB
-         NF1YkgVDfIgPsmeY9o3KYGh0SHI9f/1+0QFlQNZSh1GUIdQ1FAFQMFn8JvxvtvCst2gU
-         smMg==
+        d=gmail.com; s=20230601; t=1750959210; x=1751564010; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q8LhjWLQQyVIxYnEL5IpUGPLzTNUEDSWnSd9GjisnV4=;
+        b=nAxfxP94IzUvaYw8/bJMlzWAq4eP54cKxsdCu/Z2DS8Jptm/O2AOzYP980vyPLqc/o
+         tM/IJO10sCBEAWuB/Cp6hscYnamnXvlZMQvfUOvyOpm/Jwchy913kBmIEAVbZHTtdfMa
+         Z2Vj7MqI5v0csISCMmXwCdZY1cCgWhzGRptKJ96NyDPFvgND6cgA0I3MsjiYV5svuExn
+         7ZWzV2EKHJcf2Re3R4JczweqBmp+fStUY3HVlRNT33FqDWwoX7bPAYZjogFSd957yL7O
+         Rj6mwKXhtoW0oqRVLr7tQmJMdELzjY/c/xTTaPKVYYm3pmRUsfzJXJNBETiRcsSLYMfy
+         sOCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750959177; x=1751563977;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wZh1dmf/mcdWd+gaxLlwslIiT72mzKcB2kWBA/Uelgs=;
-        b=VRBo350hM2TwqD0arl419iXo7pbM2UjMtJDbzPbagHBeXZmfx4kak08rf6jQlrtGGY
-         uN+nfzjhsS6St73AwtT6NZWRdamh12mq/rJBvWoergi/y+SrwtMXZR0gjnOI77cMIBGw
-         IB8sJ2VonvUNs3H8ozeTIPHv6FxpeK+MAFlwsQlLMsSiBmOkwQFmnUY32DlxotChGGsi
-         jkAgRQtjEMvsGwqSHqBSnUTwXGoLck7vNOvR+yeQGPesJBr6dcTjZs34LdTn3pYpYhY+
-         WKZK1e3B0b38MVAX7g+OoEFFdgrYAptrXXB35UKTbt2HXHf2Nu/bhEyJBSqZplMidyTH
-         twWQ==
-X-Gm-Message-State: AOJu0YzSZ+foQ6nle49/DN6byYK16etM959zHt/m2ZDHTzra1ez1gi1Y
-	Vs52r4gX2s4+cl7/xdZzLpamsy4VA1tKeZVMgxx5YS+NT0A4gcxRh5BW2rSsLAYT30M5bFNuHcT
-	ubvdtAoGB7TUFy4OKDrZCA2eV24IP4eJdWiDa9CRY
-X-Gm-Gg: ASbGncusaJTEiMN9o8E5yOabWq9G0cO8aRzBiUOLus4DSBuGeyNit8WzDu4HN9NtsUQ
-	cvxVIsx5gBcEpZ53Q5+9E+L5nDZh9VJSRGELIX8oJ6zNSHwUuAEnFfj6NZ2UUd1/0GA8L5zOdSb
-	zVQ/iA4voQEQAkwCaeJwP6ghG2E3WfqxBo+BGSlmgqTUlFlkctNy6PCUlVK9f2fTsg20iu
-X-Google-Smtp-Source: AGHT+IGmqJYRWpHfBs4knSYJUFVbh1DAaRw+ESFOCzSooRHccflCMCRz1LdjC7qSsxMz153KQSQCp/XS2qj8YR06dWE=
-X-Received: by 2002:a05:622a:8350:b0:471:f34d:1d83 with SMTP id
- d75a77b69052e-4a7fc92afa7mr486231cf.7.1750959176797; Thu, 26 Jun 2025
- 10:32:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750959210; x=1751564010;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q8LhjWLQQyVIxYnEL5IpUGPLzTNUEDSWnSd9GjisnV4=;
+        b=akEaGIjNmecBBpn01mKOEcwp77Zpn1BxSITm0mJnfPm1m6v1gcLw0RzOAN4wa1sMSn
+         mpclnvdOajb8bMv5Z1BaXtV0XLeGaEQobNwfNXpY+NJ1wGKZArOYKZOgRPps/T42GH7l
+         wUUdFyxgAxxBkETb82bPkPROHODDA9p2vvejeHeTPiWn3NWIb9eord5dcsTV9URwnSzW
+         YC1gLC9xGbXbP2aU5gm2SqOYSJcYrW6ED77uSrCvR2RnsxNWp0vkTLtc6rxdr2tuH+Of
+         oH07mJyk1Hjl7wLRma9+yyKcGgdhHRY1tMAfRAjwo1zAF/yOKTpmcDkX6lCnoZShk9SL
+         u18Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUB0ibr8msSnkygMQjR+VV7iza7qAt9rDFc+qnxmQNUeh7AinvAgRMkVloL8+5Z2gUwgfO50uV5owtq0cQ=@vger.kernel.org, AJvYcCVCVZW62ipWk1oDO3RSm7ue/YXvewdnO30xS3sHGFNsHHrddlO5juWQF+cxZs0ftTFscfbPxZ/v@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVfqMjuuX3EqaI4F4u0i+M0ybZwZfkIkVjk+lPPuCpUTiMK+vi
+	TsIP3mtKqZfIvcQCJQLcc79w7ZnXH0R9ow1ul6CAuPJkk8biYr1iuJPT
+X-Gm-Gg: ASbGncv3MsvFrr+9885kJJkbf5M5WcSHYN8pAe7JBersy1HC6Q2vIELfpVe+mijmjbN
+	mPfXWej3kpHlVaxmMV2pmIKezVxjN/XAhh4CuJvQtpPvRWzM319RyPI3mEozyE7uGpTzdoPsLfQ
+	bKWXu9OcrUPz12u80hgEmHrlvP7bieZ8qnxk96fchSCIUwA1l+Sg+W2CDXnkOWsLaUdaxTpR+PI
+	KPCYaMoqiHfZpNiSpK2nUz7i/F1HUD8FHck+5qoqF2Kckx9ckc3UnhZ4sSWIohHKdUswPHhmzys
+	VWqJhs+x5WAyGu4zE3KQa+vA858a1/FxMENXZfhWojezR7errFhc3bHdVnnBQ/SSJfx4kJLo8Wk
+	Dsj9NavLX+FL/sw==
+X-Google-Smtp-Source: AGHT+IFIG2MCLoHB58nsekBzQgo8xaHzxZEoF4DlbrEYNJEHA4e2QUAxgu4vLUP1uCJthk/vnGGVjA==
+X-Received: by 2002:a05:6a20:2591:b0:21f:5598:4c49 with SMTP id adf61e73a8af0-2207f1e6010mr13389707637.2.1750959209681;
+        Thu, 26 Jun 2025 10:33:29 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34c4445b31sm2121918a12.48.2025.06.26.10.33.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 10:33:28 -0700 (PDT)
+Message-ID: <0804c4fa-120c-4000-b4d1-4f47477d3f5f@gmail.com>
+Date: Thu, 26 Jun 2025 10:33:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620150058.1729489-1-peterx@redhat.com>
-In-Reply-To: <20250620150058.1729489-1-peterx@redhat.com>
-From: Axel Rasmussen <axelrasmussen@google.com>
-Date: Thu, 26 Jun 2025 10:32:20 -0700
-X-Gm-Features: Ac12FXx7563rh1P_h_xeJbXZuYH1OOwammAUarvbQ_QgtPaZvjNtcCFVbDfAWaU
-Message-ID: <CAJHvVchZHQCQnO48Q3OhTPYncZdXSoBc1CK-CHz_XAOO+CL9gA@mail.gmail.com>
-Subject: Re: [PATCH] selftests/mm: Reduce uffd-unit-test poison test to minimum
-To: Peter Xu <peterx@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Ujwal Kundur <ujwal.kundur@gmail.com>, 
-	David Hildenbrand <david@redhat.com>, shuah@kernel.org, jackmanb@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.15 000/589] 6.15.4-rc3 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250626105243.160967269@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250626105243.160967269@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 20, 2025 at 8:01=E2=80=AFAM Peter Xu <peterx@redhat.com> wrote:
->
-> The test will still generate quite some unwanted MCE error messages to
-> syslog.  There was old proposal ratelimiting the MCE messages from kernel=
-,
-> but that has risk of hiding real useful information on production systems=
-.
->
-> We can at least reduce the test to minimum to not over-pollute dmesg,
-> however trying to not lose its coverage too much.
->
-> Cc: Axel Rasmussen <axelrasmussen@google.com>
-> Signed-off-by: Peter Xu <peterx@redhat.com>
+On 6/26/25 03:55, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.15.4 release.
+> There are 589 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 28 Jun 2025 10:51:38 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.15.4-rc3.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.15.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Besides a small nitpick you can take:
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-Reviewed-by: Axel Rasmussen <axelrasmussen@google.com>
-
-Making the functional tests small makes sense to me, especially for
-poisoning. Only reason to use a huge number of pages is if we're
-trying to stress racy bugs or so, but really for that you'd want even
-more pages / more threads / run for a longer time. It makes sense to
-separate that use case out / maybe not run it by default, and leave
-the functional tests small + fast.
-
-> ---
->  tools/testing/selftests/mm/uffd-unit-tests.c | 20 ++++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/testing/selftests/mm/uffd-unit-tests.c b/tools/testing=
-/selftests/mm/uffd-unit-tests.c
-> index c73fd5d455c8..39b3fd1b7bf2 100644
-> --- a/tools/testing/selftests/mm/uffd-unit-tests.c
-> +++ b/tools/testing/selftests/mm/uffd-unit-tests.c
-> @@ -1027,6 +1027,9 @@ static void uffd_poison_handle_fault(
->                 do_uffdio_poison(uffd, offset);
->  }
->
-> +/* Make sure to cover odd/even, and minimum duplications */
-> +#define  UFFD_POISON_TEST_NPAGES  4
-> +
->  static void uffd_poison_test(uffd_test_args_t *targs)
->  {
->         pthread_t uffd_mon;
-> @@ -1034,12 +1037,17 @@ static void uffd_poison_test(uffd_test_args_t *ta=
-rgs)
->         struct uffd_args args =3D { 0 };
->         struct sigaction act =3D { 0 };
->         unsigned long nr_sigbus =3D 0;
-> -       unsigned long nr;
-> +       unsigned long nr, poison_pages =3D UFFD_POISON_TEST_NPAGES;
-> +
-> +       if (nr_pages < poison_pages) {
-> +               uffd_test_skip("Too less pages for POISON test");
-
-I think "Too few pages for POISON test" is more grammatically correct.
-
-> +               return;
-> +       }
->
->         fcntl(uffd, F_SETFL, uffd_flags | O_NONBLOCK);
->
-> -       uffd_register_poison(uffd, area_dst, nr_pages * page_size);
-> -       memset(area_src, 0, nr_pages * page_size);
-> +       uffd_register_poison(uffd, area_dst, poison_pages * page_size);
-> +       memset(area_src, 0, poison_pages * page_size);
->
->         args.handle_fault =3D uffd_poison_handle_fault;
->         if (pthread_create(&uffd_mon, NULL, uffd_poll_thread, &args))
-> @@ -1051,7 +1059,7 @@ static void uffd_poison_test(uffd_test_args_t *targ=
-s)
->         if (sigaction(SIGBUS, &act, 0))
->                 err("sigaction");
->
-> -       for (nr =3D 0; nr < nr_pages; ++nr) {
-> +       for (nr =3D 0; nr < poison_pages; ++nr) {
->                 unsigned long offset =3D nr * page_size;
->                 const char *bytes =3D (const char *) area_dst + offset;
->                 const char *i;
-> @@ -1078,9 +1086,9 @@ static void uffd_poison_test(uffd_test_args_t *targ=
-s)
->         if (pthread_join(uffd_mon, NULL))
->                 err("pthread_join()");
->
-> -       if (nr_sigbus !=3D nr_pages / 2)
-> +       if (nr_sigbus !=3D poison_pages / 2)
->                 err("expected to receive %lu SIGBUS, actually received %l=
-u",
-> -                   nr_pages / 2, nr_sigbus);
-> +                   poison_pages / 2, nr_sigbus);
->
->         uffd_test_pass();
->  }
-> --
-> 2.49.0
->
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
