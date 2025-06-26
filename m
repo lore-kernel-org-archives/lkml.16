@@ -1,213 +1,153 @@
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C55F171C9;
-	Thu, 26 Jun 2025 00:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4F978F3E
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 00:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750896464; cv=none; b=S4euL8esp0A3p27fI4OjRdQ9te4/nPaY9EeiEfzATAzFm/949sEUdxwtUicAaJOvZXgfTjI+WJFYVflIQqTalMXgiBcwSyebMM3X9naf+jan3yBEusj+LXnZEqbH948H7fVteCyb+A09Yt3VR7FHngYE2t7SOjsHBOosYr4i07s=
+	t=1750896470; cv=none; b=PH4IhAHgnr9jkeLND/rk0Tk7JGAoQO0lCYrmjFo8SOvZpe8WcNdImyOqjRqtd/Engq1pV4lWscZIUCgKkvN+6ALlKbBnKmWOE8zE1KvPMej2KOZCWaAZfLGTaQ1mCHOQT8mkVc1WLyUqQXZef2XtF5S2yd4No8UMsNMK90QZ5wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750896464; c=relaxed/simple;
-	bh=kUnWFnjCaiq9I4fMukWqZx0HnF1nLkWlR58aOt8J6Xs=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ti8nk7Yalhoc+rzqXIYcPse6X+kCzzCejhijr0sHa0sKv6PWNbZ2tF6FVkv9SzarUoRTUBo9i/GNr4LK81IkjJYh0iM+Xg3R7kCINmtxwQHJkRd+gZXAjrfhP5h9HB5Yw5p2sxYJELdjNDXD+AhEGuNLYoO7TbXuSARussBOiqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org; spf=pass smtp.mailfrom=maowtm.org; dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b=lyhuNiKt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CHaVK/ET; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maowtm.org
+	s=arc-20240116; t=1750896470; c=relaxed/simple;
+	bh=z+SuTfKWy/B9blRGA67JeMSchJi6yxjs/KNi6wLaXAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UUa2Z+VBoQO1lery5ny8Yv6cQiPVCTHqTKbHeUmR7z2Wrlkykv9KqEaiaUwaNmHyUKBMe6csy0yl9Wnjd+LYuSjQChpEjoXPAcRpIjVz+teEoSecXmLCVLdngbA3PhKraDY+g/6xAfPNrvYg6zvOWpxJgtr1LSbqq8y+SelJ8DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ROl/x2lw; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b="lyhuNiKt";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CHaVK/ET"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id D94797A00AA;
-	Wed, 25 Jun 2025 20:07:40 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Wed, 25 Jun 2025 20:07:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maowtm.org; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1750896460;
-	 x=1750982860; bh=6iB4j192is+XcHHs5pGOohrQltXRFVd8r1/AZa100HY=; b=
-	lyhuNiKtkWBct2tuJ7nvGabQt1EmOi702ZSkOICY0hr3nvC/mY005tbk0UTTVaPA
-	dIyHC8w4Pz2RKz2IceX/djV4/m+2uncDwSCe3v3EfV3oDiY4reY6v0bBfCxFlWHX
-	N49N0b2SRT6ig8dpkrUqD7EjlnJojmoUJXlw7mp+f0y1l3xU1ItNxSM6DFRQVYFZ
-	6xyjeUqbFP9QDKLtzYlm+71J6B9NjBpLTCWp4SK1VEXYSY6pA2fVjHpwKxjNi+5l
-	40DwH8T2CXy9xt6e3mBmWNQfrlmQnByVvxqP0fsItud35HGdFJPjRZkQKiuvHQki
-	yO0fA0N65ATbdb/6VFKl6w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1750896460; x=
-	1750982860; bh=6iB4j192is+XcHHs5pGOohrQltXRFVd8r1/AZa100HY=; b=C
-	HaVK/ET0I+AUVHSKOQxFuxdtOIAsYb2WWK5DuF9BgQ3ZV0qEeQrnpBQHUhMoKS8r
-	By5IwsQf3/WJ/8hW/FdQUaCOxZI3gfwcpEsCft2bo1pez8cXeCiVdhDhDahrkqJa
-	6Ps3NQn5BABRdBXP0qO9wzoQ5+nZs9Is4+x0Hh8o4xurrJtWi6AjQyVQg5pzyC8n
-	NvNU0lIPeomzc6P9txvn3K3V7YZr7OcpYKJrOGfK3JNjg8fwK43SPKiLPJ85xoZ0
-	fJiIvUFlPBx/2ApMkK5SVOw5D5y9QapzpowQzebfenewWwlSMA1OAHAtDRDnPzU9
-	KowRobPoKQQmrps80+7UA==
-X-ME-Sender: <xms:S49caFLFcrSApcU2jOpUlI00gsCkB2x3A6CoSOBf2-4He9X1ZrmRVg>
-    <xme:S49caBLMsz0Yr_4etyJDA2L45ck-iQb1dWk90rt6j2sPkY54gy9bTqKfoRMPdp1av
-    Ugot86l5hvmQGdNsig>
-X-ME-Received: <xmr:S49caNtn3oJl2C__wU4KcfbaKsxbs6IJpoPuorqG1ROWhEGY5qtsMeYtQW45xYnAwGUsE439iRay-u96370KYt6k>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvgedujecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefkffggfgfhuffvvehfjggtgfesthekredttddvjeenucfhrhhomhepvfhinhhgmhgr
-    ohcuhggrnhhguceomhesmhgrohifthhmrdhorhhgqeenucggtffrrghtthgvrhhnpeejfe
-    fggefhjeeuhfehieegvdetteduiedufeevhfehgffgfffhtedufeetveduffenucffohhm
-    rghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepmhesmhgrohifthhmrdhorhhgpdhnsggprhgtphhtthhopedu
-    ledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepnhgvihhlsegsrhhofihnrdhnrg
-    hmvgdprhgtphhtthhopehmihgtseguihhgihhkohgurdhnvghtpdhrtghpthhtohepshho
-    nhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsphhfsehvghgvrhdrkhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhsvggtuhhrihhthidqmhhoughu
-    lhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrrghunhgvrheskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvrhhnvghlqdhtvggrmhesmhgvthgrrdgt
-    ohhm
-X-ME-Proxy: <xmx:S49caGZmyHa7KTwgB-YjJh1GahuTe_A09zBNX8Ps1bu4-mDa6sm0yA>
-    <xmx:S49caMYBn7U26qAl9lQNLL8Id6sTzuMtT5DH0nrw3wtcCvwEDWF_ZQ>
-    <xmx:S49caKBBugcSMCDAtCGK5jZSd6CHsziHDZCH7IkQYHNc45qv9ZHshA>
-    <xmx:S49caKZCYVNCEODdnE7P0ZAi-9VA0sl1Y2BZO_AloU2GqG9lgILfMA>
-    <xmx:TI9caJs9aJd61SNdXBl1LFCVQJ7acDQS08ldytdxSP7rPodU9dzpWOaw>
-Feedback-ID: i580e4893:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 25 Jun 2025 20:07:37 -0400 (EDT)
-Message-ID: <4577db64-64f2-4102-b00e-2e7921638a7c@maowtm.org>
-Date: Thu, 26 Jun 2025 01:07:36 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ROl/x2lw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750896468; x=1782432468;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=z+SuTfKWy/B9blRGA67JeMSchJi6yxjs/KNi6wLaXAk=;
+  b=ROl/x2lw9whEg4tXJZfWxRXJPyCKrOzKPc8szCjOxNWohNUrcWbYYQv7
+   K93uOVaHDeBjM674+ED2YvjY2Ulg+UVYg3Lbh24lduwTLggzQikrFj/RW
+   33HAxFWZh1UQb0KMDGLjVBdZw4/qy6nbY9yyCMEKN8h1tpK9y8NZ//aB2
+   hJuNJM5l2eqrAS9wAaHstyuJMfbekFkfrVBpnIQ8rzbstgkKKvmL4vg6w
+   qjGv0bTDqqXJGis+uPzeTRRTY9qbfF2KDz7W/z/IYjBc2PdKUVXVgokvQ
+   51tqrRgN7Eu2eU1nBR6zZPZ5nEoi17mbqienyaPVxwnYaPvKezI+bP3oF
+   g==;
+X-CSE-ConnectionGUID: Pv6pk1h7S7Oo16q4zA28TA==
+X-CSE-MsgGUID: txJ4pCHLRAiVsHmf79ORmQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64242691"
+X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
+   d="scan'208";a="64242691"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 17:07:48 -0700
+X-CSE-ConnectionGUID: 9F+CnZ+DTTaxYZTzWzBT0g==
+X-CSE-MsgGUID: ljcNes9GQa2JXK3cOiBgWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
+   d="scan'208";a="152660576"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 25 Jun 2025 17:07:46 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uUa9Y-000TYe-0D;
+	Thu, 26 Jun 2025 00:07:44 +0000
+Date: Thu, 26 Jun 2025 08:07:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [gustavoars:testing/wfamnae-next20250616 19/19]
+ include/asm-generic/tlb.h:378:2: error: type name requires a specifier or
+ qualifier
+Message-ID: <202506260845.3py4BoAJ-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Tingmao Wang <m@maowtm.org>
-Subject: Re: [PATCH v5 bpf-next 0/5] bpf path iterator
-To: NeilBrown <neil@brown.name>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
- <mic@digikod.net>
-Cc: Song Liu <song@kernel.org>, bpf@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org, brauner@kernel.org,
- kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
- daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk,
- jack@suse.cz, kpsingh@kernel.org, mattbobrowski@google.com,
- =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>
-References: <> <20250625.Ee2Ci6chae8h@digikod.net>
- <175089269668.2280845.5681675711269608822@noble.neil.brown.name>
-Content-Language: en-US
-In-Reply-To: <175089269668.2280845.5681675711269608822@noble.neil.brown.name>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 6/26/25 00:04, NeilBrown wrote:
-> On Wed, 25 Jun 2025, Mickaël Salaün wrote:
->> On Wed, Jun 25, 2025 at 07:38:53AM +1000, NeilBrown wrote:
->>>
->>> Can you spell out the minimum that you need?
->>
->> Sure.  We'd like to call this new helper in a RCU
->> read-side critical section and leverage this capability to speed up path
->> walk when there is no concurrent hierarchy modification.  This use case
->> is similar to handle_dots() with LOOKUP_RCU calling follow_dotdot_rcu().
->>
->> The main issue with this approach is to keep some state of the path walk
->> to know if the next call to "path_walk_parent_rcu()" would be valid
->> (i.e. something like a very light version of nameidata, mainly sequence
->> integers), and to get back to the non-RCU version otherwise.
->>
->>>
->>> My vague impression is that you want to search up from a given strut path,
->>> no further then some other given path, looking for a dentry that matches
->>> some rule.  Is that correct?
->>
->> Yes
->>
->>>
->>> In general, the original dentry could be moved away from under the
->>> dentry you find moments after the match is reported.  What mechanisms do
->>> you have in place to ensure this doesn't happen, or that it doesn't
->>> matter?
->>
->> In the case of Landlock, by default, a set of access rights are denied
->> and can only be allowed by an element in the file hierarchy.  The goal
->> is to only allow access to files under a specific directory (or directly
->> a specific file).  That's why we only care of the file hierarchy at the
->> time of access check.  It's not an issue if the file/directory was
->> moved or is being moved as long as we can walk its "current" hierarchy.
->> Furthermore, a sandboxed process is restricted from doing arbitrary
->> mounts (and renames/links are controlled with the
->> LANDLOCK_ACCESS_FS_REFER right).
->>
->> However, we need to get a valid "snapshot" of the set of dentries that
->> (could) lead to the evaluated file/directory.
-> 
-> A "snapshot" is an interesting idea - though looking at the landlock
-> code you one need inodes, not dentries.
-> I imagine an interface where you give it a starting path, a root, and
-> and array of inode pointers, and it fills in the pointers with the path
-> - all under rcu so no references are needed.
-> But you would need some fallback if the array isn't big enough, so maybe
-> that isn't a good idea.
-> 
-> Based on the comments by Al and Christian, I think the only viable
-> approach is to pass a callback to some vfs function that does the
-> walking.
-> 
->    vfs_walk_ancestors(struct path *path, struct path *root,
-> 		      int (*walk_cb)(struct path *ancestor, void *data),
-> 		      void *data)
-> 
-> where walk_cb() returns a negative number if it wants to abort, and is
-> given a NULL ancestor if vfs_walk_ancestors() needed to restart.
-> 
-> vfs_walk_ancestors() would initialise a "struct nameidata" and
-> effectively call handle_dots(&nd, LAST_DOTDOT) repeatedly, calling
->     walk_cb(&nd.path, data)
-> each time.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250616
+head:   78f053980ba50a0becae798ab7d07527d97e790d
+commit: 78f053980ba50a0becae798ab7d07527d97e790d [19/19] treewide: Avoid -Wflex-array-member-not-at-end warnings
+config: s390-allnoconfig (https://download.01.org/0day-ci/archive/20250626/202506260845.3py4BoAJ-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project e04c938cc08a90ae60440ce22d072ebc69d67ee8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250626/202506260845.3py4BoAJ-lkp@intel.com/reproduce)
 
-handle_dots semantically does more than dget_parent + choose_mountpoint
-tho (which is what Landlock currently does, and is also what Song's
-iterator will do).  There is the step_into which will step into
-mountpoints (there is also code to handle symlinks, although I'm not sure
-if that's relevant for following ".."), and it will also return ENOENT if
-the path is disconnected.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506260845.3py4BoAJ-lkp@intel.com/
 
-Also I guess we might not need to have an entire nameidata?  In theory it
-only needs to do what follow_dotdot_rcu does without the path_connected
-check.  So it seems like given we have path and root as function argument,
-it would only need nd->{seq,m_seq}.
+All errors (new ones prefixed by >>):
 
-I might be wrong tho, but certainly the behaviour is different.
+   In file included from mm/oom_kill.c:49:
+   In file included from arch/s390/include/asm/tlb.h:38:
+>> include/asm-generic/tlb.h:378:2: error: type name requires a specifier or qualifier
+     378 |         );};
+         |         ^
+>> include/asm-generic/tlb.h:378:2: error: expected member name or ';' after declaration specifiers
+>> include/asm-generic/tlb.h:367:28: error: expected ';' at end of declaration list
+     367 |         unsigned int            batch_count;
+         |                                             ^
+         |                                             ;
+   3 errors generated.
 
-> 
-> How would you feel about that sort of interface?
 
-I can't speak for Mickaël, but a callback-based interface is less flexible
-(and _maybe_ less performant?).  Also, probably we will want to fallback
-to a reference-taking walk if the walk fails (rather than, say, retry
-infinitely), and this should probably use Song's proposed iterator.  I'm
-not sure if Song would be keen to rewrite this iterator patch series in
-callback style (to be clear, it doesn't necessarily seem like a good idea
-to me, and I'm not asking him to), which means that we will end up with
-the reference walk API being a "call this function repeatedly", and the
-rcu walk API taking a callback.  I think it is still workable (after all,
-if Landlock wants to reuse the code in the callback it can just call the
-callback function itself when doing the reference walk), but it seems a
-bit "ugly" to me.
+vim +378 include/asm-generic/tlb.h
 
-But this is just my opinion, and if there is a stronger desire to not
-expose any VFS seqcount integers then maybe we will just need to work with
-a callback.
+   327	
+   328		unsigned long		start;
+   329		unsigned long		end;
+   330		/*
+   331		 * we are in the middle of an operation to clear
+   332		 * a full mm and can make some optimizations
+   333		 */
+   334		unsigned int		fullmm : 1;
+   335	
+   336		/*
+   337		 * we have performed an operation which
+   338		 * requires a complete flush of the tlb
+   339		 */
+   340		unsigned int		need_flush_all : 1;
+   341	
+   342		/*
+   343		 * we have removed page directories
+   344		 */
+   345		unsigned int		freed_tables : 1;
+   346	
+   347		/*
+   348		 * Do we have pending delayed rmap removals?
+   349		 */
+   350		unsigned int		delayed_rmap : 1;
+   351	
+   352		/*
+   353		 * at which levels have we cleared entries?
+   354		 */
+   355		unsigned int		cleared_ptes : 1;
+   356		unsigned int		cleared_pmds : 1;
+   357		unsigned int		cleared_puds : 1;
+   358		unsigned int		cleared_p4ds : 1;
+   359	
+   360		/*
+   361		 * tracks VM_EXEC | VM_HUGETLB in tlb_start_vma
+   362		 */
+   363		unsigned int		vma_exec : 1;
+   364		unsigned int		vma_huge : 1;
+   365		unsigned int		vma_pfn  : 1;
+   366	
+ > 367		unsigned int		batch_count;
+   368	
+   369	#ifndef CONFIG_MMU_GATHER_NO_GATHER
+   370		struct mmu_gather_batch *active;
+   371		TRAILING_OVERLAP(struct mmu_gather_batch, local, encoded_pages,
+   372				 struct page		*__pages[MMU_GATHER_BUNDLE];
+   373	
+   374	#ifdef CONFIG_MMU_GATHER_PAGE_SIZE
+   375		unsigned int page_size;
+   376	#endif
+   377	#endif
+ > 378		);};
+   379	
 
-Quick note in case anyone reading this has not seen it, a while ago I made
-a POC of a non-callback style API for rcu parent walk based on Song's
-series:
-https://lore.kernel.org/all/dbc7ee0f1f483b7bc2ec9757672a38d99015e9ae.1749402769@maowtm.org/#iZ31fs:namei.c
-
-> 
-> NeilBrown
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
