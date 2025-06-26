@@ -1,133 +1,114 @@
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589ED23B61F
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DA629CB32
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750927145; cv=none; b=Rdgd8ioGsdtbdxK1DjqJaTAPWWYB9MO6M1x5oPGmkvpsXEpaDH0ZpZ/uAH3AirhymL0ZK3Ft3966TkjFZZ5HajyhDBU6eGICIXcIbvqtSdAoctM8m5nwE05ZHfk5OozNbdBqx6zLTlr8iU53WrevjPVcUV4Op7TVoth/1T55dkg=
+	t=1750927148; cv=none; b=hAMvjRRoRigKTCxZ35/TWcx02KXIOdIiyfLasYPDJ4uv5fGXIQd33891buOI+TFzEVuNFP1h0A8D91UeIKR30DRBJOYpN7j9m069q6cSvI0WMhzk80wlxWxgQtSr4xjhrN3fmyP7aLXQ4i1qVzNd/F0K8RHQX+OjkJ/fXUMN7KU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750927145; c=relaxed/simple;
-	bh=07vUsEyMksdmohfakBhz4xlamEj3Jb2m/86V7iG/J7s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pA5grof92yK4QOsnMDUJsj3OyDXI4aQmC1/aW0C7fzDo43TsjQ3pNHdvNJfdW2NoV5gJJv2Pels3l7vxukDz2WrVU2cN0y5b7xtkCKh8bZnrdx5A/gqA3nri8g1dCpMEfUqp+oTVYjxmWvQ8F2GgTB1juuejsHdmWdqTM62MfB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4e9b26a5e45so244832137.1
+	s=arc-20240116; t=1750927148; c=relaxed/simple;
+	bh=HSfhsMUTIEeNXER3GX24dEAFcEBa65RyFKGAcFfGniQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-type; b=TPXsDj03M2CqMevkWMZTavsBugPvEokV7sV0X1LVv7tU4Y9cMaPvhvMAUGE64l+IEUuXjKlcm74oIpxdNXpu3ej6XzlCQqPSfcnDKP25xwlmB/c++TmJS+ROAfHjAZQdQHjMOS/ZUDXx42d478GdAUMCFXhUgJx8n7YUO6XgFNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AeVpE4SM; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AeVpE4SM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750927145;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NOVgOi9q8hphdneYXIZpnIwxycB6I6Mf0iPTX4mv7ok=;
+	b=AeVpE4SM6nUiVHlDwC+9YBB7av8ovLMng2va+qxpO26LDT6gUD6/NOTXsrsekEF4ArY9xy
+	KUTBM+4+Cf7F++jboNMae0n4TsDU9UcefKcjqQlk27w6qig+i2eTrEpsCCrMMbTdobFxk9
+	77ZCeeXlKRxx15jGYYesczNaUegQEC4=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-130-MP2qlS6MOwqeI_NlnSWlYQ-1; Thu, 26 Jun 2025 04:39:04 -0400
+X-MC-Unique: MP2qlS6MOwqeI_NlnSWlYQ-1
+X-Mimecast-MFC-AGG-ID: MP2qlS6MOwqeI_NlnSWlYQ_1750927143
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451ecc3be97so2946055e9.0
         for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 01:39:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750927141; x=1751531941;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1750927143; x=1751531943;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3FKr6SOJmsMSyWxgl87rxUfaSgqLues1OApSM1lNIyA=;
-        b=lbHNPWqRGANg+P/YcYQt9TxhEbGeTpl4VBrt6BOWSftyIfNmdjePGa7J00d0HkKf3e
-         xjuCRKykzkU4isXK/RfuOH4Mzna09gOiS0x+GWVPnZYFwkLbwTVK9ZkqOPGWfMED/jPT
-         qDBaRgg+nAOKyN9Buh1KFv725iQFeqI8H1Y6FMisseKLbTfD9fMV+ukkM+QSfYyCLPPu
-         eJS2G4UAQi8vnOTuguETYZpfUkYxM531Liv7dEtVi2ozAQ+POfTc8gSndgyemYx8lh3p
-         MiAQLA+4YhJ2MxJfQ9/rSutM9zJapaH6pN6aIQPAR5X5v3JlrSuCGHq4QWov2MPFI/Bu
-         uVrA==
-X-Forwarded-Encrypted: i=1; AJvYcCUeikUpdOkG0Ne4ueWyDNXFcrc9K4DsVSaCw0fJA/yrzUAAqvIWVrtCucbDfyFeFJ0mp8qWvl8XcNJ/KSk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuwSGILCuUVByiSMN1ajRXsYFfBzaTYr5y0Ui5tjvl5vCWYLqb
-	UrgaRQonTEWa54p4sUZr31Ky/RcyjO5UybRFM6CbljN/Ri5TvBBFrelcJNaCia8L
-X-Gm-Gg: ASbGncvN+gKo//Vmwng9drze8mUG3jWC6Y+XVuXBcOCk3awx+wHBlAdrRkhXa6XIThw
-	JapArGvLIM640menx2EzsbDkD51mm0i+DkwoO7cEX0BczAlLvF7Cs6djmredboY/bNuKsVmMJ5c
-	zrDa+W6oS167ZRRIDHYATee7jd5WrUzZTtNsxDx5dgSmaGBqfbbSjnxCwGA0rfjfFkH3h//oDlj
-	w5bNKbGNBxXgWCQfQ0JV/nAzIU15vpE0OFOydrZiUzfGELxhTiV+qE8mZC7zsCEHIZIjrhnZAUX
-	v1mcQ4SB8wjTmMk3Ucs4Fsd8Fz9d6JJGO4YetfbHhxNUFnDfeOGXSXzLa7V99/sKpT221o9niW9
-	GdFWUqr3/fWz/3BVazlPqzVE0
-X-Google-Smtp-Source: AGHT+IEOp4bpEnsUP1xgDR/NgaY/Xh+kONaiI1+8VE/NW/5hT2IKsPoRrZ1b/wpTiJioZR8qlD81aA==
-X-Received: by 2002:a05:6102:b0f:b0:4e7:3efd:ac76 with SMTP id ada2fe7eead31-4ecc6a77133mr4593951137.8.1750927141388;
+        bh=NOVgOi9q8hphdneYXIZpnIwxycB6I6Mf0iPTX4mv7ok=;
+        b=HWClnymSlUDzbmWAA06rrih50krXHEi0I0rrTgJeg6LeRkkhC68O4ACqkBO4pwRaxm
+         Q2z0rivCOgbC106FtRQc710/RHEVLOGxo133tuyZNUW+Y/PzMfwCNO/sXstxZGQq3C3Z
+         a6Zk5mWZigMW5Vg74zIjFPCkFBdEYUinmf52vD2qU9O0q6vWeqU+uU7Dw1yfdLSz7Vva
+         uMpGCAykitInnjkBKmk3MHnRvQibyVRyXnVjaFUb4264jnlq2nqpsCHIdMXU1I4vtY6k
+         VjjXKFdPDzXfSVA2drVCmWfezzuiSawLgwEz3wCblgSPKhTsKGFdjSzX1WUCLIFtvPl3
+         06EA==
+X-Gm-Message-State: AOJu0YyB7GHAPraok/MdNvCUjcYq5uzvP+3pyXKp231u5s6YL8rWANCj
+	atQwoC9FDZN3M5nxJ8UhGh+yhVOR4iXrJV33io0rO0SKPpytKzcky/iKHRKJsx7wT21xk8TgcWK
+	ceU5o9KCa25Ijq//Tw2G2GGm7DzOD6TGCvQSawbcjpt8FGffOm8SKUwOJcvAeHQtE5g==
+X-Gm-Gg: ASbGncsCnNdN1MLfyHhO3vLhVQkeGsrRAqOAcZscS1FRhV/8hyJe+BBrWi3BmRVYlyt
+	JgJ8xOWX5ts0zbVXrSMpMWfDetrr53/KqQI0i7HpI76J0tT966VASvVDBUHtBGJy4OtafG9bDn8
+	lwaCN4EAL3Ot0N99vwVeBzWkYfk7Yo/M7mUvxajf05zg39qgEQU2OIokgQE8kIIJu5ltPT1DDaQ
+	8+rweglctmmbi9M4HujzPLvUy8XhtwZyxLVgMSRA26fDPDnTO0VywBsVShIUW8jFWIMZCwJBC34
+	lAQDiZEsp9V7xtCWixdDh/xJQEI=
+X-Received: by 2002:a05:600c:3b12:b0:453:5c30:a1fd with SMTP id 5b1f17b1804b1-453886ecc6bmr27801435e9.8.1750927142742;
+        Thu, 26 Jun 2025 01:39:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHhqjNyC6ulr9vBF1aI7RMGdUMF58z3nn/X9iHP+GUGyh3gq4Bxy5W7zVXa3UwHMyhVwcH4eA==
+X-Received: by 2002:a05:600c:3b12:b0:453:5c30:a1fd with SMTP id 5b1f17b1804b1-453886ecc6bmr27801235e9.8.1750927142388;
+        Thu, 26 Jun 2025 01:39:02 -0700 (PDT)
+Received: from lab.hqhome163.com ([81.57.75.210])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-45388888533sm20000505e9.21.2025.06.26.01.39.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 26 Jun 2025 01:39:01 -0700 (PDT)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e9c302136esm2350314137.14.2025.06.26.01.39.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 01:39:00 -0700 (PDT)
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-87f0efa51c0so216872241.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 01:39:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUTzrZnVBZhmAa2QWMgkQOiTWb4iixo0QCADSe066tPgAsb9UaAnP3q0IlMCIIaDwSOoUhaL5+iG8uwpFY=@vger.kernel.org
-X-Received: by 2002:a05:6102:c8d:b0:4e5:9628:9e39 with SMTP id
- ada2fe7eead31-4ecc6a7750bmr4213230137.6.1750927139785; Thu, 26 Jun 2025
- 01:38:59 -0700 (PDT)
+From: Alessandro Carminati <acarmina@redhat.com>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Dmitry Osipenko <digetx@gmail.com>,
+	Alessandro Carminati <alessandro.carminati@gmail.com>,
+	Alessandro Carminati <acarmina@redhat.com>
+Subject: [PATCH] regulator: core: fix NULL dereference on unbind due to stale coupling data
+Date: Thu, 26 Jun 2025 08:38:09 +0000
+Message-Id: <20250626083809.314842-1-acarmina@redhat.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611001255.527952-1-vishal.moola@gmail.com> <20250611001255.527952-2-vishal.moola@gmail.com>
-In-Reply-To: <20250611001255.527952-2-vishal.moola@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 26 Jun 2025 10:38:48 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXd=eha_pRNGCFHN7sS2OOh60cj=c=yPUyg_-J0S8V8yQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzbd6ICmeY6_N3sDigtBp9r-6oclQKShUI06FUTJz5bv9x-2knTpcY-Rxo
-Message-ID: <CAMuHMdXd=eha_pRNGCFHN7sS2OOh60cj=c=yPUyg_-J0S8V8yQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] m68k: mm: Convert get_pointer_table() to use ptdescs
-To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Hi Vishal,
+Failing to reset coupling_desc.n_coupled after freeing coupled_rdevs can
+lead to NULL pointer dereference when regulators are accessed post-unbind.
 
-On Wed, 11 Jun 2025 at 02:13, Vishal Moola (Oracle)
-<vishal.moola@gmail.com> wrote:
-> Motorola uses get_pointer_table() for page tables, so it should be using
-> struct ptdesc, not struct page.
->
-> This helps us prepare to allocate ptdescs as their own memory
-> descriptor, and prepares to remove a user of page->lru.
->
-> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+This can happen during runtime PM or other regulator operations that rely
+on coupling metadata.
 
-Thanks for your patch!
+For example, on ridesx4, unbinding the 'reg-dummy' platform device triggers
+a panic in regulator_lock_recursive() due to stale coupling state.
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-i.e. will queue in the m68k tree for v6.17, with the small changes
-described below.
+Ensure n_coupled is set to 0 to prevent access to invalid pointers.
 
-> --- a/arch/m68k/mm/motorola.c
-> +++ b/arch/m68k/mm/motorola.c
-> @@ -148,16 +148,18 @@ void *get_pointer_table(struct mm_struct *mm, int type)
->
->         /*
->          * For a pointer table for a user process address space, a
-> -        * table is taken from a page allocated for the purpose.  Each
-> -        * page can hold 8 pointer tables.  The page is remapped in
-> +        * table is taken from a ptdesc allocated for the purpose.  Each
-> +        * ptdesc can hold 8 pointer tables.  The ptdesc is remapped in
->          * virtual address space to be noncacheable.
->          */
->         if (mask == 0) {
-> -               void *page;
-> +               struct ptdesc *ptdesc = pagetable_alloc(GFP_KERNEL | __GFP_ZERO, 0);
+Signed-off-by: Alessandro Carminati <acarmina@redhat.com>
+---
+ drivers/regulator/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I will move the assignment just before the NULL-check below, to ease
-applying the WIP preempt patches on top.
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 7a248dc8d2e2..cbd6d53ebfb5 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -5639,6 +5639,7 @@ static void regulator_remove_coupling(struct regulator_dev *rdev)
+ 				 ERR_PTR(err));
+ 	}
+ 
++	rdev->coupling_desc.n_coupled = 0;
+ 	kfree(rdev->coupling_desc.coupled_rdevs);
+ 	rdev->coupling_desc.coupled_rdevs = NULL;
+ }
+-- 
+2.34.1
 
-> +               void *pt_addr;
-
-I will move this one line down, to follow the reverse Xmas rule.
-
->                 ptable_desc *new;
->
-> -               if (!(page = (void *)get_zeroed_page(GFP_KERNEL)))
-> +               if (!ptdesc)
->                         return NULL;
-> +               pt_addr = ptdesc_address(ptdesc);
->
->                 switch (type) {
->                 case TABLE_PTE:
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
