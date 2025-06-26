@@ -1,93 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7CC213E74;
-	Thu, 26 Jun 2025 22:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CE1A213E74
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750976417; cv=none; b=cdh1qRU2bD7+mt1/Y/gLrV5uFlIKCtj5UalAkOdU2tAyynT/ZGYtuFZQiKk/p2FBbuuJkf2ONf7j5VLqtviX4TA9d4ItIoT6Q8nxSOP9LDuJLOX3sbjONopCwsWBn8J1nTg3t4+3c1p5C125IkQkJHktUsHVmJ43lZePvvN6pzk=
+	t=1750976462; cv=none; b=RCeGLfoEVFdgnjSjTRD3Wmp/YFXUR20Ek1fS2P3MKJIaQTh2OJy+/prsQlDikB9p8BecSaPZpKH/rZtaUSzK9Ueg3FbTbqhKvgtWsf354N34hdjexfdjGPzGr7jj9jQr0Jnx52hHP6M7CLPRqqBzX1uGnv2b6FgrBG3qwyNeIFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750976417; c=relaxed/simple;
-	bh=ucsBH0oET7oAgyvEDa/a3datI+skfPNQCt62RZ9yLVQ=;
+	s=arc-20240116; t=1750976462; c=relaxed/simple;
+	bh=r1HSdZ6WNVEi/Mi83UVnh9NXStJTYzNzdw0G+GYtays=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I6qgVpLRWz8hZsKEYfnPjw/cajpGOXun1yH343/63hdE/Zby17cMAqidWj8guzX6YewlmtH/hSgHmSDB9CCtk43yRi3U36QrliLDaHXbuf30VjVzgZIrMrwZrkzSKJ/6InpGreZc7mS7334613khMCv6LK4d3j30IcVn9E+SATQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A4p020pp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A4p020pp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E10AC4CEEB;
-	Thu, 26 Jun 2025 22:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750976416;
-	bh=ucsBH0oET7oAgyvEDa/a3datI+skfPNQCt62RZ9yLVQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A4p020ppAY3ZUq9GxVphQHtmW7Nv2xB3Wlg/q5yrQXm3EkE4bNikZUjWa5OIG8tnY
-	 qtMYEw3dh73r/bTvkyn9L9gXBaKwOB4wvwcG7etPZo7YfoQzeQrJnM2fJmTcw7SUp9
-	 KmWoOf20XipOsGc1GkCMmgMDT6jjEM70DyFcnzkBLgas24Ko1EjFvkEpghCb0YZfVB
-	 bn4kGt9o7Ov8zt2bA+jqmXecRQJDiKeFJCiebQvy8IMVUKoksvX4xWLOwHccsA/+45
-	 Jtlbp/Fs/ev4/nB1b/m1NOqovgi6S4APtgI0cIT6LKyITOXVq+b1qCAn0TcVGABlqO
-	 tpqQ/llYEUv0Q==
-Date: Thu, 26 Jun 2025 15:20:15 -0700
-From: Vinod Koul <vkoul@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: Re: [PATCH v7 0/2] Add `devm_dma_request_chan()` to simplify probe
- path in atmel-quadspi.c
-Message-ID: <aF3Hn_yWPMOXOb9f@vaman>
-References: <20250610082256.400492-1-csokas.bence@prolan.hu>
- <f21f9aa5-974a-4326-88e0-cd29fd24555f@sirena.org.uk>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZJGyJfYDWIfc36ncTKthTCDsV17bpUV+JQCWIHi7HhY3Tu5Mw2ghIUSYBgLuHHuieuOG/QEr1BI7hvYSEZOKthFh5aPZuBPXKE1cUeZ6cvjUXbFY23Qspv2WUA+sA6GzYVS3M5q5mKhHL7/qoZEUv2a+ye8fI5k4szC5An3gAOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 07F56175D
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:20:43 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 529D83F66E
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:21:00 -0700 (PDT)
+Date: Thu, 26 Jun 2025 23:20:43 +0100
+From: Liviu Dudau <liviu.dudau@arm.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-omap@vger.kernel.org, patches@opensource.cirrus.com,
+	linux-samsung-soc@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH RFT 3/6] mfd: vexpress-sysreg: set-up software nodes for
+ gpio-mmio
+Message-ID: <aF3Hu0bMVfkbXdFn@e110455-lin.cambridge.arm.com>
+References: <20250624-gpio-mmio-pdata-v1-0-a58c72eb556a@linaro.org>
+ <20250624-gpio-mmio-pdata-v1-3-a58c72eb556a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f21f9aa5-974a-4326-88e0-cd29fd24555f@sirena.org.uk>
+In-Reply-To: <20250624-gpio-mmio-pdata-v1-3-a58c72eb556a@linaro.org>
 
-On 10-06-25, 12:49, Mark Brown wrote:
-> On Tue, Jun 10, 2025 at 10:22:52AM +0200, Bence Csókás wrote:
+On Tue, Jun 24, 2025 at 03:19:14PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> > to their devm_ managed counterparts. Patch 1/2 adds the new
-> > `devm_dma_request_chan()` function. Patch 2/2 then uses this APIs to
-> > simplify the probe() function.
+> Replace struct bgpio_pdata - that we plan to remove - with software
+> nodes containing properties encoding the same values thatr can now be
+> parsed by gpio-mmio.
 > 
-> I'm not copied on patch 1, please let me know if/when there's some
-> progress there.
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-You can pull in this tag for the dependency
+Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
 
-The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+I'm OK with this going through the GPIO tree.
 
-  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+Best regards,
+Liviu
 
-are available in the Git repository at:
+> ---
+>  drivers/mfd/vexpress-sysreg.c | 46 ++++++++++++++++++++++++++-----------------
+>  1 file changed, 28 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/mfd/vexpress-sysreg.c b/drivers/mfd/vexpress-sysreg.c
+> index ef03d6cec9ff6927668d051ca459eb1d8ff7269e..fc2daffc4352cca763cefbf6e17bdd5242290198 100644
+> --- a/drivers/mfd/vexpress-sysreg.c
+> +++ b/drivers/mfd/vexpress-sysreg.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/property.h>
+>  #include <linux/slab.h>
+>  #include <linux/stat.h>
+>  
+> @@ -37,22 +38,34 @@
+>  
+>  /* The sysreg block is just a random collection of various functions... */
+>  
+> -static struct bgpio_pdata vexpress_sysreg_sys_led_pdata = {
+> -	.label = "sys_led",
+> -	.base = -1,
+> -	.ngpio = 8,
+> +static const struct property_entry vexpress_sysreg_sys_led_props[] = {
+> +	PROPERTY_ENTRY_STRING("label", "sys_led"),
+> +	PROPERTY_ENTRY_U32("ngpios", 8),
+> +	{ }
+>  };
+>  
+> -static struct bgpio_pdata vexpress_sysreg_sys_mci_pdata = {
+> -	.label = "sys_mci",
+> -	.base = -1,
+> -	.ngpio = 2,
+> +static const struct software_node vexpress_sysreg_sys_led_swnode = {
+> +	.properties = vexpress_sysreg_sys_led_props,
+>  };
+>  
+> -static struct bgpio_pdata vexpress_sysreg_sys_flash_pdata = {
+> -	.label = "sys_flash",
+> -	.base = -1,
+> -	.ngpio = 1,
+> +static const struct property_entry vexpress_sysreg_sys_mci_props[] = {
+> +	PROPERTY_ENTRY_STRING("label", "sys_mci"),
+> +	PROPERTY_ENTRY_U32("ngpios", 2),
+> +	{ }
+> +};
+> +
+> +static const struct software_node vexpress_sysreg_sys_mci_swnode = {
+> +	.properties = vexpress_sysreg_sys_mci_props,
+> +};
+> +
+> +static const struct property_entry vexpress_sysreg_sys_flash_props[] = {
+> +	PROPERTY_ENTRY_STRING("label", "sys_flash"),
+> +	PROPERTY_ENTRY_U32("ngpios", 1),
+> +	{ }
+> +};
+> +
+> +static const struct software_node vexpress_sysreg_sys_flash_swnode = {
+> +	.properties = vexpress_sysreg_sys_flash_props,
+>  };
+>  
+>  static struct mfd_cell vexpress_sysreg_cells[] = {
+> @@ -61,22 +74,19 @@ static struct mfd_cell vexpress_sysreg_cells[] = {
+>  		.of_compatible = "arm,vexpress-sysreg,sys_led",
+>  		.num_resources = 1,
+>  		.resources = &DEFINE_RES_MEM_NAMED(SYS_LED, 0x4, "dat"),
+> -		.platform_data = &vexpress_sysreg_sys_led_pdata,
+> -		.pdata_size = sizeof(vexpress_sysreg_sys_led_pdata),
+> +		.swnode = &vexpress_sysreg_sys_led_swnode,
+>  	}, {
+>  		.name = "basic-mmio-gpio",
+>  		.of_compatible = "arm,vexpress-sysreg,sys_mci",
+>  		.num_resources = 1,
+>  		.resources = &DEFINE_RES_MEM_NAMED(SYS_MCI, 0x4, "dat"),
+> -		.platform_data = &vexpress_sysreg_sys_mci_pdata,
+> -		.pdata_size = sizeof(vexpress_sysreg_sys_mci_pdata),
+> +		.swnode = &vexpress_sysreg_sys_mci_swnode,
+>  	}, {
+>  		.name = "basic-mmio-gpio",
+>  		.of_compatible = "arm,vexpress-sysreg,sys_flash",
+>  		.num_resources = 1,
+>  		.resources = &DEFINE_RES_MEM_NAMED(SYS_FLASH, 0x4, "dat"),
+> -		.platform_data = &vexpress_sysreg_sys_flash_pdata,
+> -		.pdata_size = sizeof(vexpress_sysreg_sys_flash_pdata),
+> +		.swnode = &vexpress_sysreg_sys_flash_swnode,
+>  	}, {
+>  		.name = "vexpress-syscfg",
+>  		.num_resources = 1,
+> 
+> -- 
+> 2.48.1
+> 
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine_devm_api
-
-for you to fetch changes up to 08bf1663c21a3e815eda28fa242d84c945ca3b94:
-
-  dmaengine: Add devm_dma_request_chan() (2025-06-26 15:18:04 -0700)
-
-----------------------------------------------------------------
-dmaengine: tag for devm api
-
-----------------------------------------------------------------
-Bence Csókás (1):
-      dmaengine: Add devm_dma_request_chan()
-
- drivers/dma/dmaengine.c   | 30 ++++++++++++++++++++++++++++++
- include/linux/dmaengine.h |  7 +++++++
- 2 files changed, 37 insertions(+)
-
-Thanks
 -- 
-~Vinod
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    Â¯\_(ãƒ„)_/Â¯
