@@ -1,86 +1,65 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805222F0C4E
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 20:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A892F0C7F;
+	Thu, 26 Jun 2025 20:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750970649; cv=none; b=M5uhdugYk5Y1ZlHVwZJLOKIBxJzVcJl2cpG4vj5++3nZ//PbHRtC/v3PUGW7LwoqHPKDLtaS9Sun38OfDH0mOMSrHAfIaMvx0CSfvBDB7U6z/wRYiQLcoFV8kWleFAMkZpmOcubak3bCBUP4TX9kQMlsav1S41Tjd5sbWhBmK8Y=
+	t=1750970671; cv=none; b=lfYg5+h/k5stLrEND3IWL1AFZcYh1DDo9ht9/fcddKDn+6J98GLz5Np3Lizio0MduxauUco1bW2sjplNkvzJ9NkrelQkx4a5LwtLbI23Wj2KCNUFWNA81lkuxTBukgCIwDM/fPHXl0VYFHVAD9ytXiv51b4Zb32gy/D1dkyZTWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750970649; c=relaxed/simple;
-	bh=6AfxQUVh5YrbfQXfMMEOfqQHhWV7YAeM70L9oR6/MOg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lt2ebZdgRjdTbJqvgWlxVaDU/naQgl56elPfQYHxCnfVCus/cpjlDaKvWKfRjOzG4H1XwrKcgbDGMfjrp2qC0LtXamO/OJu4w1L1Iab0nNg+f4qsT89xDHE2o7u66XM3sf1dPydkX4bqNk7WFKQBAykc9LaXLTamzzvMko+LZes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NSlfl9Fk; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750970671; c=relaxed/simple;
+	bh=abaYV/TxoNSuyHl0eTqG9SzcI4RVLABBdwTCYM/IuUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R4fv/g1TqF2y4fz6Fl/IyxlxRRWlAknG+9UUQGgRPsBx4gZjvNQ4GNK2nNckAvRt7VoVN6Ounw53cgj4h1THkpvtcuxtX2MV9xCdR/yuacrzkXYQtpYdpCoxKLamAI0CVZdZnFDvtslhTpFGILWvP0/NhJ2WVD7xsmzxJFZlvdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aU54u4/c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NSlfl9Fk"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso1409a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:44:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750970646; x=1751575446; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6AfxQUVh5YrbfQXfMMEOfqQHhWV7YAeM70L9oR6/MOg=;
-        b=NSlfl9FkeqAAs+xi0Ep1bSfwYoJDBBxzDhHvs2Sd79lY3ieV2cOendxwbXOiPz49Pl
-         agVKaHuigdib23vZXRVwFEThvPTtVdhlankz+jhwyNjJqVa/VZP0/oLBoE9Z/tr5c0dy
-         GKOAhm/Sw94PKeRfUDta0NPJ/Moqp0dwmNYyjjhVqDfWcwthT04KKAuV28GlXyQ+K8ln
-         /Oi8TQPT9JQ6ifKTuhjFE7SE6i/xCvDJYJ6+xbulV+j2o3yZD4GS1R5mEjVCMeuC5Gnk
-         k/Y6uIqpF1wAwfGATzsPYZyh716B75Q5T7I05pFKQoxSC5J5k2Zj7bBM4XwDilvJmsY5
-         jqEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750970646; x=1751575446;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6AfxQUVh5YrbfQXfMMEOfqQHhWV7YAeM70L9oR6/MOg=;
-        b=YWtuKm+CPCUnOIPoDXVJYF9azjeoO1IMmKCd94vNlyhs1+chEUgPyCbAiFeXRvuB3o
-         gS3hBGaSlyjSIhRNPnvS3tOTsGggK0ACYQpyA5OVhmuX0hi+9GwKiNEUv6coygyOtdIc
-         vve4XeW2ifiCcJOsmyMjOrc/CKrfvY1t/4tkwaz15cFPC7vJs83bPgnfG9qX3dD80Mg4
-         ctUJY4NjBXaljOTF8X8v32T/qZFyoIWoPDu68wLBngXGV1wVCfZMp2M22/wOF8ukJQD+
-         GB9tG6mbNZQIWv5ImvWuOzI/Gy3iWHY9Oc0eXhbuaBIp1Fboca8K+LeSyHJwnwB4ubqk
-         uOWw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZRoWIfuytaKzW0aBIs6IwEJi5G0/p8oqB/ovllwSXgus3OY1z4XBH+6hNnKBuOV/oy3njUfu+YiHeY1E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbFZ9Lu82BJvuYPXnZCVnF0XJjsuCKcFBokfDM1ZIDysVslYRi
-	OzC5S0xQN+hbvI1aUhUTUwoY/kb4OOWcPC+eix3/558NHQTDY0JIiwyJj6lYxLzypzZKQ7yo5K+
-	0yUvLkfAmskwK0UwztknCAtq0guSoDFhPBCyKTHjP
-X-Gm-Gg: ASbGncul9dpVklYbEzPzEaNJ+dDnip4IEBNMRJdvF+W8WHSwrkMoRosOHDELQpZTEFS
-	Gp+u+a3pFmwZUSHgT+1CBSDlTz30rFMdRYqfloAm+Ann8MhGuhRQ/FnPGGdfYnrysQYmxlfZziN
-	NpnQcUtu69xKqPip6FhZGqM60Uq55qvykhdhJe6b573nc=
-X-Google-Smtp-Source: AGHT+IH8BULP6tAu0/3WdkDsshXgjY0PeHI7oDdXj6geSIlN82xNwEgewL/ZIIFlgcnyKvWjE7iQMlLR2ZL+9a3lNOE=
-X-Received: by 2002:a05:6402:4542:b0:607:bd2:4757 with SMTP id
- 4fb4d7f45d1cf-60c8e19f563mr1044a12.1.1750970645680; Thu, 26 Jun 2025 13:44:05
- -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aU54u4/c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 787D6C4CEEB;
+	Thu, 26 Jun 2025 20:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750970670;
+	bh=abaYV/TxoNSuyHl0eTqG9SzcI4RVLABBdwTCYM/IuUE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aU54u4/cN2JAQ9nEf5AfYIcmyjgFIqvA3lOdGsnxB02qthvI85iMArx7c9v/YLgWu
+	 ygsqR33ijsfk/UZYDmcPdO0v1uiPvqvRIGfi+fbJrWhlKHk84USM1XV5tMsg92zp07
+	 I7dNUfRMysVq9ebTu+To/GRg0xIoYUxblBkeoO/rGWF16ARF7m57Mvt5MKTEaPy03V
+	 dS//DqTwW0VVdwewQK2DOoXqQs6MmHcKAkUnaHENeK5XZqMKw4lj2DGHWYDU+PK2n0
+	 IqqLAJkhnN1U23rLmnr4+mmURiiJAuhInR7XWkwnGV7f/+ndTiKEiMmtwgDyvub4qc
+	 O85FInCQCIeqQ==
+Date: Thu, 26 Jun 2025 22:44:25 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Andy Shevchenko <andy@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v4 0/5] Add RIIC support for RZ/T2H and RZ/N2H SoCs
+Message-ID: <va2iyipvikhgt6uq6n6bjydsqbmeep267ue4w24z2ptzdq4t4c@w36e3vstxnzh>
+References: <20250625104526.101004-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626145122.2228258-1-naveen@kernel.org> <66bab47847aa378216c39f46e072d1b2039c3e0e.camel@redhat.com>
- <aF2VCQyeXULVEl7b@google.com> <4ae9c25e0ef8ce3fdd993a9b396183f3953c3de7.camel@redhat.com>
-In-Reply-To: <4ae9c25e0ef8ce3fdd993a9b396183f3953c3de7.camel@redhat.com>
-From: Jim Mattson <jmattson@google.com>
-Date: Thu, 26 Jun 2025 13:43:53 -0700
-X-Gm-Features: Ac12FXxQf31QSY3c-WNUJVKfbSYSN58wqYVk4ZyE_IkOT-pI4A3uvkUnKaq-8Xs
-Message-ID: <CALMp9eQXkd=3nAaWzg_V4rM2wx=bxyZhXgGLXN4x9CAZG3_O0Q@mail.gmail.com>
-Subject: Re: [EARLY RFC] KVM: SVM: Enable AVIC by default from Zen 4
-To: mlevitsk@redhat.com
-Cc: Sean Christopherson <seanjc@google.com>, "Naveen N Rao (AMD)" <naveen@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Vasant Hegde <vasant.hegde@amd.com>, 
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625104526.101004-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Thu, Jun 26, 2025 at 12:15=E2=80=AFPM <mlevitsk@redhat.com> wrote:
->
->
-> I also have nothing against this to be honest, its OK to keep it as is IM=
-HO.
+Hi Prabhakar,
 
-I would like to see it enabled by default (when appropriate) so that
-we get better coverage. Of course, we should not do this before we
-feel the code is ready.
+> Lad Prabhakar (5):
+>   dt-bindings: i2c: renesas,riic: Move ref for i2c-controller.yaml to
+>     the end
+>   dt-bindings: i2c: renesas,riic: Document RZ/T2H and RZ/N2H support
+>   i2c: riic: Pass IRQ desc array as part of OF data
+>   i2c: riic: Move generic compatible string to end of array
+>   i2c: riic: Add support for RZ/T2H SoC
+
+Merged to i2c/i2c-host.
+
+Thanks,
+Andi
