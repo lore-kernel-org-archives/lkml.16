@@ -1,124 +1,111 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8EA28FFEE
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BA32580F3;
+	Thu, 26 Jun 2025 14:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750946587; cv=none; b=ruf7s1aePNnxWh21+LcUgMP429aFe24Qc1yF8poNJJqkSc/O/93kyLbAGjcEC5h2vs9nqcFqXDP8TfTJkme9j2Ha5fBOCXEHEZ1swGCEWUFq7c46T8cIVnku04V3Qmwa4DIKCkO4EPreKahHdHjUZBK1/DzvzMN0dDZM+kLghWs=
+	t=1750946692; cv=none; b=Pcghls31ClaozYndomRfbGhzykOQxGUGg6rH9bA/MscfDPF8Gs30koLILt+HxUHa+1YYtUeK/Y38vZU2SymMfWgXNwXX4uICnfILAdExy2FcDW/y2iqdn/XTpvyZoTjZwNCK5muVKK+JAUrssNR7d0g2mhqns4MWB2abyV2Ao+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750946587; c=relaxed/simple;
-	bh=RXGAqFvutlePj0O4AUmmk7iuXwOUTnL3CNnslHpR5hA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Att97d/YQ2rctPYwsiYlw5RVdbKWxikayxzu1Ja+IJYe7GVAmP2d/jNory+0Rr1trN4jJYXy3giBffY4RKx05EczWk2RbX7vOXxDBDR0pTz3QoChvVU6aZd8SjMxtBHFXx2lQsQWZ5LeU3ROvcmZauHAM//NWRGtL9hb/Y7mjAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nebYpjp7; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750946692; c=relaxed/simple;
+	bh=Uv9jTOf8On1qgjDNbZ7SA+r4wRv5zCdvydQoA27GjSk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YCJpxFY1okcQJbAMaddiPzSHEfLsiETH/ZhRcIr4zHj8wupxymtcb6513+N53afClZbPt+E4vZZMVdIMDljQxSWZxzl009Hgv4prgjOAK7HlzMcOrDfHtAdDR3SDqzCwfKwCC3VECfqNpVTd/FzRiMH0T32LFjErQqJf6+fwCLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nVn8NzQz; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nebYpjp7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=RawXGJ4jllKNzdMM3/psOGmdykKZeSx5tN3WfXCfU1w=; b=nebYpjp7PXERY5fVOq9x8cJF01
-	Fn+FIJUS77edZdgLmUA5E+Q32C7nj5VNE+U1PdtNvHwP7nMbA76td/ElaMQ3tiweypXu4xpKam8Ff
-	AwnSSqXJkKuljFclyVR42W6Uv7bPt5YiSL6OUGl0htpsJAtC3fMyLdLyheG8m0/3kzSkI9Il2q19S
-	yuJz4F1QJ/dIK43wVsHnYzRgo3YnzWrh5tz3/kVz3sowBvUAjJkJ38sAOhjYr9Ti27QVP6AY3cTwX
-	HCRSN5nnB1RBnI3FYAt8XBZkgR33LudiM+SMWgA89uUAdMKLgX50m6CvCXvhdybAZtZ0whq6VkFNx
-	zp/4vqvg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uUnBs-000000066ZJ-3676;
-	Thu, 26 Jun 2025 14:03:01 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C195930BDA9; Thu, 26 Jun 2025 16:02:59 +0200 (CEST)
-Date: Thu, 26 Jun 2025 16:02:59 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Chris Mason <clm@meta.com>
-Cc: Jianyong Wu <jianyong.wu@outlook.com>, Chris Mason <clm@fb.com>,
-	vincent.guittot@linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] sched/fair: bump sd->max_newidle_lb_cost when
- newidle balance fails
-Message-ID: <20250626140259.GL1613200@noisy.programming.kicks-ass.net>
-References: <20250624204942.715206-1-clm@fb.com>
- <20250626070057.GE1613200@noisy.programming.kicks-ass.net>
- <SI2PR04MB49312C83A5E6B68086954B41E37AA@SI2PR04MB4931.apcprd04.prod.outlook.com>
- <2fbf24bc-e895-40de-9ff6-5c18b74b4300@meta.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVn8NzQz"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-607b59b447bso1663794a12.1;
+        Thu, 26 Jun 2025 07:04:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750946689; x=1751551489; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7wrnpvlRo7ZrS4SCXZw5XRzZPMOW57pJM9b/u98SiOg=;
+        b=nVn8NzQz8BkAlcQutto1B0wKWcrFc/5RByMH6TUD4aOEN/ggijt+OWai0bK0lH32oh
+         Hn9GSa/vDrEC9OauifmKYkg/vtF763IyEhliT/Hi61VHgI1k5IBN4qFmsHJDHdXvVD9v
+         kOg3MJKDWasTYj0IlzFLW385DzDiPMijH6MdNkUvQ7LkIOtTh2i2rY1+DGCQmSnWtxfp
+         Pwh535sqkHzByYTxc0vCogJyDMyoN80duDpKtvthSe1o2qVLhAZiiVRsryh/Z2PsIB6V
+         eaQXY39ZLRPUe+tN0qp4hTB3F5Lhg/6f5/02rSims/jqxFp4yWztzzGhM+1KIG5lnKbM
+         jy/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750946689; x=1751551489;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7wrnpvlRo7ZrS4SCXZw5XRzZPMOW57pJM9b/u98SiOg=;
+        b=ZFayp8+G2zA9CWYAl+WJYtkUq8TYhIcZcTOq2mVOnqPKA79LsNkghsvQ0F4tjEusbo
+         zyiWyZdu79QTDk/zSMGAfIPdTIHhFVH0dD1nwMIGuk9iQfn2Cp5ktWWzYQj1nC/HN+ry
+         7COVIAhxJTsC0vRHU51++39vamc26LIks8Z5i+cicyfDUOgtnJlkyKUh/1XTlSDdU20G
+         kEuSIMAplI78op7MJF/rP9MbZFvp9SdD4Z6T5oGyjzQ6Kc4sVygLnTLul9Ntrt9Cc7ji
+         U1Ci5cW9ZKXWBLNKxwVG2Trblt7riZLAyz7dKuy+ghxBhAVxLQa1i/YaaUW/piu61+XE
+         Qnvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpUaDXLTbES+5lATOXWDiAzTPrYwsI6CcFmGia/PD/mJDeXyIB2cSJ3IGvpUX1tx1tGwjtVhLt4MhqET8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUDfIkQxPuJ6ImF9BpB0gPbhskhJuV+twygh2lDeYgpTRBb+8A
+	Ljn70YlXKWarLwNpFfsZecMrg7zqbSfWzhte7F6d1zCd7/RR47mX1Ktg
+X-Gm-Gg: ASbGnctmh3WQafC+HfAoyDoI9Sd+7pJpphcQeemvtIFInHrBGkmSGugxCzsTgp8XjLw
+	YFJZM7jWROOfmVubzsTXNKtZL/RLvn/B1uWgOXt8YjD3WsKBjpHi6Ws96h06KE/bo5sJ67RJJL4
+	h3si7tU0c4fOnwSB35GnpNgg9nTVuuDK3ZvBLLj51yx2dHCFUCcUU9l5hRnIAiZyem3vqKsZd5U
+	sk52W8bNu9Gqt9L2/6laHsxXTxBzCmiCj6yAkC0QV62vjzZ/86ckzYiHXcDUT90JIx2vCEbdpXh
+	5vwBHpYC/vzUgTKZub5qJCCT/1foxOFxd6Ul9LOhUIoF0qx+8ncy5LHoUeWslDRI20OcjEZTDxY
+	aMRbmPP4JVoGVS5cmq/OtSg==
+X-Google-Smtp-Source: AGHT+IHgNpaXb9XxhY9t9BM84ENlKwWGN7WwcauV0meDMTnYk2b4LuOUVV7KJXeM9LLAWq4Jo/qbgA==
+X-Received: by 2002:a17:906:478d:b0:add:f0a2:d5d8 with SMTP id a640c23a62f3a-ae0be7fc1bemr729925366b.11.1750946688831;
+        Thu, 26 Jun 2025 07:04:48 -0700 (PDT)
+Received: from localhost.localdomain ([176.227.88.86])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae2143d928dsm3958266b.107.2025.06.26.07.04.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 07:04:48 -0700 (PDT)
+From: muhammed.efecetin.67@gmail.com
+X-Google-Original-From: muhammed.efecetin67@gmail.com
+To: linux-rockchip@lists.infradead.org
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	heiko@sntech.de,
+	neil.armstrong@linaro.org,
+	lee@kernel.org,
+	rafael@kernel.org,
+	efectn@protonmail.com,
+	daniel.lezcano@linaro.org
+Subject: [PATCH 0/5] Add Khadas MCU and fan control support for Khadas Edge 2
+Date: Thu, 26 Jun 2025 17:04:27 +0300
+Message-ID: <cover.1746518265.git.efectn@protonmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2fbf24bc-e895-40de-9ff6-5c18b74b4300@meta.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 26, 2025 at 09:48:29AM -0400, Chris Mason wrote:
+From: Muhammed Efe Cetin <efectn@protonmail.com>
 
-> FWIW, the main reason I parked this in sched_balance_rq() was because I
-> wasn't sure if there were other reasons we might fail to pull a task
-> where I didn't want to bump the cost.  You've got a good point though.
-> 
-> This v2 performs the same.  It takes about 60 seconds to warm up to the
-> point where schbench performance is fast.  Below I've also got
-> the drgn script I'm using the dump the avg_idle and sd info along with
-> output while schbench is running.
-> 
-> Peter if this is what you're looking for I'll send a new version,
-> without whatever whitespace mangling exchange does to this email.
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 7a14da5396fb2..6a3345168870a 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -12173,9 +12173,11 @@ static inline bool update_newidle_cost(struct sched_domain *sd, u64 cost)
->         if (cost > sd->max_newidle_lb_cost) {
->                 /*
->                  * Track max cost of a domain to make sure to not delay the
-> -                * next wakeup on the CPU.
-> +                * next wakeup on the CPU.  Also, cap this cost at the sched_migration
-> +                * sysctl, plus a little extra so we don't have to worry about off by 1s
+This patch series adds support for the Khadas MCU and fan control for Khadas Edge 2 board.
 
-It explains we cap (as can be read from the code); perhaps explain why
-the cap is important though.
+The first patch updates devicetree bindings for new cooling-levels property.
+The second mfd patch removes unused nvmem code.
+The third patch adds the Khadas Edge 2 registers to the mfd driver.
+The fourth patch adds support for Khadas Edge 2's new fan control registers to MCU thermal driver and the last one adds the Khadas Edge 2 device tree node for the MCU and fan control.
+And the final patch adds the Khadas Edge 2 device tree node for the MCU and fan control.
 
->                  */
-> -               sd->max_newidle_lb_cost = cost;
-> +               sd->max_newidle_lb_cost =
-> +                       min(cost, sysctl_sched_migration_cost + 200);
->                 sd->last_decay_max_lb_cost = jiffies;
->         } else if (time_after(jiffies, sd->last_decay_max_lb_cost + HZ)) {
->                 /*
-> @@ -12867,7 +12869,13 @@ static int sched_balance_newidle(struct rq *this_rq, struct rq_flags *rf)
-> 
->                         t1 = sched_clock_cpu(this_cpu);
->                         domain_cost = t1 - t0;
-> -                       update_newidle_cost(sd, domain_cost);
-> +
-> +                       /* bump the newidle cost if balances aren't productive */
-> +                       if (!pulled_task)
-> +                               update_newidle_cost(sd,
-> +                               sd->max_newidle_lb_cost + sd->max_newidle_lb_cost / 2);
-> +                       else
-> +                               update_newidle_cost(sd, domain_cost);
-> 
->                         curr_cost += domain_cost;
->                         t0 = t1;
+Muhammed Efe Cetin (5):
+  dt-bindings: mfd: khadas-mcu: add cooling-levels property
+  mfd: khadas-mcu: drop unused nvmem code
+  mfd: khadas-mcu: add Khadas Edge 2 registers
+  thermal: khadas_mcu_fan: add support for Khadas Edge 2
+  arm64: dts: rockchip: add Khadas MCU and fan control nodes
 
-I think I prefer the form:
+ .../devicetree/bindings/mfd/khadas,mcu.yaml   |  9 ++-
+ .../dts/rockchip/rk3588s-khadas-edge2.dts     | 59 ++++++++++++++
+ drivers/mfd/khadas-mcu.c                      | 19 ++---
+ drivers/thermal/khadas_mcu_fan.c              | 76 ++++++++++++++++++-
+ include/linux/mfd/khadas-mcu.h                | 25 ++++++
+ 5 files changed, 170 insertions(+), 18 deletions(-)
 
-			domain_cost = t1 - t0;
-			curr_cost += domain_cost;
-			t0 = t1;
+-- 
+2.49.0
 
-			/*
-			 * Failing newidle means it is not effective;
-			 * bump the cost so we end up doing less of it.
-			 */
-			if (!pulled_task)
-				domain_cost = (3 * sd->max_newidle_lb_cost) / 2;
-
-			update_newidle_cost(sd, domain_cost);
-
-But yes. Thanks!
