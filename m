@@ -1,105 +1,82 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75312E7F10;
-	Thu, 26 Jun 2025 15:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49FF2E7179;
+	Thu, 26 Jun 2025 15:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750950758; cv=none; b=WJiJtAcXobrVypn2KHkE/xhuTmJuh0Bh9Rq7Y9u1uydE2sHCVwwEym/P1c+TJz5BnPjIj3oeGfzwEzZ3nEnmXaijoLLgnLKYwdrkhxYlmK+aqoEOJTTG1nEMGftpXi0bu4bbDvl6QS08XYxafVAGK/2+dXUD6eQmjXtH0Osj0xE=
+	t=1750950779; cv=none; b=JyZp+NCQb5eiE0H/Xuz6/9BkuJN080+B73qBSfGFIzhrXweZqkPSWxR3C/BWGu06xDZXNvHrrtMDuj45CFRMGpNFcRPd6/beagK7w+3ssN0bQKIRNv4j9vSp66FBZVe4gYOrC9iU7Mwt1B0OOMqSayDJLb2gl0D875W/UqV6LuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750950758; c=relaxed/simple;
-	bh=kAS/IOSk7LsBnAUgqtwuX4g9he1Zg4oVAbf4qm4DPmk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sEFip7XSQdBliJxBDzbmUxd65hmYzuFZsRt/B9nFHHgyxkFyNnqHputWlTNgnDi+XTjTnCGujtgBqH2hdc6+CLrMQMpzjCBnUCMPr8VHzn3+gLPL9NNHgm+pXPTN+S0EBkNcSCx54ETge3snhtZAU1nuwOQjnwEEMT6eEqo14HI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V+WYSSUg; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+WYSSUg"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32b5226e6beso9621611fa.2;
-        Thu, 26 Jun 2025 08:12:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750950755; x=1751555555; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kAS/IOSk7LsBnAUgqtwuX4g9he1Zg4oVAbf4qm4DPmk=;
-        b=V+WYSSUgmywH5PkCiD0tdj0zYyT43StEKji/WblfZVRdG4okPL6vjC2kzbL2HVgCmM
-         /cA+N4YaFCexyg9ls4sOGRY2U82p68aSXV/ZZB9cz9nADX5ZKj3ovmLWIL1ZshjtoSDP
-         dkOAQiz5ZJGVbXC1gcRqg5Oj707ITUdE74Sa5OoiEVo+Lp18yN3DNv1I1hOxFT0udONg
-         OyuQ0sDLGvX69M0IVyui7n//yzBrmXxnlRykUwtYxGPr1g4OBoxQOP3uC5IuJfUeBpn/
-         avHj56WFrUITN5xZWx9gU4jCHPlnHRjc3uprgxL6Y9iY1PQYy6ZPd3A1T/GtjcCIJZfj
-         jXMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750950755; x=1751555555;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kAS/IOSk7LsBnAUgqtwuX4g9he1Zg4oVAbf4qm4DPmk=;
-        b=ghxTc3eRTKUkPyPpSR9qcVqf51Q1+jUaedr3RX48Vu7l5Zq1pg8/XgDxZC3BrarhoK
-         ZKLdvo5CH3rz/WaOw5rZe10MCz1VOW3AsU38tAMkPT8wf/3OY5mlehCzms5VmQz3fHAB
-         NcqovT4Aa1NRVv5yzzHxi6bZKvgL9AWHu7E/WX4Wc+f5EyaTenRVZ+WZa2Z2CvoSOBBa
-         QiMK5t2N093xswcGaOCyINFlmKJOkFK7RrcHqjVDQvkWC+ilZAj1HG5yrU8c+QZDjNzr
-         IjIX4DwH2ZCsXVGhZYgBhfOCMcd0G4D68OMrh5o6hV9uDGJTMD3juZZ5oRGj1GT4prxc
-         yGVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVEbBneTYx8gkMwgmr3geYXio92pws2XkmR/82fbneNb5Jg3hDdwH7slirQdq/8T2JO4iCAbz4VGzU=@vger.kernel.org, AJvYcCVjDj4k+NCQJmV7wAm1GnQ8gqAam56s0GO1qzH/GsMFvY/RdN8kOZVWw3f6nlyiEXzHcmk82HXlXcIaliaz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1WFXPb26m/iMzkuNyJTTyVQJabPCnFXfmmpxEfnux4TqwpmLx
-	DTzOpwXLLis3s59mJyjmofN5W4I3ihstADet5rBW9fuLX3YP0SGaVHSLL88/G21hteVh1sJOJ/4
-	jjh4WMeIuv6gkzYgWSG9Ol52Bhz9uIX4=
-X-Gm-Gg: ASbGnctRyLcPWa7rh3pP2crGeVKwHNoULnvqCQXHtGarb/OOxzVzqLn+wiE3yMdvIqt
-	wSo9nAPnhj3Jhn9YkJbJNI0oQYx4R8wswoG3w01GLfC66MrZ17zUBNt/kfzytR10xy+Cfinzsg6
-	5TWHaDSYQAoZqplDiLa1TBTb+un0rvtjAkh422u5Ir+TL6IkIod2xOEln3dMnUjo8TJhCtnpsz2
-	718DA==
-X-Google-Smtp-Source: AGHT+IFDKoSkD2CJiWyVaF6kz2z7E/EJqhlSUVFS6EzXhXgn9q6Iom3W+1bxFqxhEyMbXQMlarVbh+wES6zPUtiA2VQ=
-X-Received: by 2002:a2e:8543:0:b0:32c:a006:2a36 with SMTP id
- 38308e7fff4ca-32cc658247emr22139451fa.20.1750950754606; Thu, 26 Jun 2025
- 08:12:34 -0700 (PDT)
+	s=arc-20240116; t=1750950779; c=relaxed/simple;
+	bh=kjP7uV4m2t7heIe5+bDyCCiI6ZdG5nj7J/pYmxeikak=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Yyk5oskUw03+iPmMdY4cL3wEAd4sxhCEnbKcvaG0g0ucsB0owG8UqWnXu/aotnEBtleS9Uv49MZf0sIw1f/Iz7JT/w0aIIAa+uBnXbk7Ym9bWymU2quUHTGlWv/QjVmlLN1DXLq0D7lP0M9hCzubj8zGZHdaPeJ3UuHl/UlOgHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 1F5E61CFADA;
+	Thu, 26 Jun 2025 15:12:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 1798235;
+	Thu, 26 Jun 2025 15:12:50 +0000 (UTC)
+Date: Thu, 26 Jun 2025 11:13:16 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
+ Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v11 13/14] perf/x86: Rename and move get_segment_base()
+ and make it global
+Message-ID: <20250626111316.5a783695@gandalf.local.home>
+In-Reply-To: <20250626130705.GG1613200@noisy.programming.kicks-ass.net>
+References: <20250625225600.555017347@goodmis.org>
+	<20250625225717.016385736@goodmis.org>
+	<20250626130705.GG1613200@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623083841.364002-1-pranav.tyagi03@gmail.com>
- <aFrBeCn-j_AB1yzv@rric.localdomain> <CAH4c4jLAfMTn6wN3wJSOQZ3mAoYC3uhswDu6c+c6v-wv8mSifQ@mail.gmail.com>
- <2025062615-footpath-plank-b84f@gregkh>
-In-Reply-To: <2025062615-footpath-plank-b84f@gregkh>
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Date: Thu, 26 Jun 2025 20:42:22 +0530
-X-Gm-Features: Ac12FXwJLCSX-KjqBQhvdKlckWb8pRkvIb6E3hyGEXP7zXlxzlU_QTkv3i_OQzM
-Message-ID: <CAH4c4j+ahO6yREWAQbm3ZXykASmjyEh2dzPGE0Jhj+j71qT5vw@mail.gmail.com>
-Subject: Re: [PATCH v2] cxl/memdev: automate cleanup with __free()
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Robert Richter <rrichter@amd.com>, dave@stgolabs.net, jonathan.cameron@huawei.com, 
-	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com, 
-	ira.weiny@intel.com, dan.j.williams@intel.com, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ming.li@zohomail.com, peterz@infradead.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 1798235
+X-Stat-Signature: edt3eijep336mifp7prug3xos45x95ef
+X-Rspamd-Server: rspamout04
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+bn/ih2YZ8YJqiejKRF1XUzEdJygscgZQ=
+X-HE-Tag: 1750950770-886151
+X-HE-Meta: U2FsdGVkX191LKE7dxzPM0MGzqIrJqCDp3BxRWT/5VP7sCr/B0/MnbgyK/rdULcwuD1pdQj5pc//ZUJKP3oDPc0uAgs/hijvc0TNoajduRATo6j/dAQwEXDvNVuExYNVqEzyWoTnaPbec/WM2COi8IG7WvktPOX8l48fFJjA31iZ4rYHhS1gFKJuL8GYAxiTfY61xv846QoYWgcm6Zuubv4dvPqovT5YtiHuO3C1uWNqDh7vfVUqBHEQlWOiKGSiiAo8yu4lzdVDb/I+1Ap/6ARloOqG5fQ8azxUmXXdkMPi+0jYz23HnhOzmKY52NXHXRTgEu8J46Ei7LTtc0huAGJdEbA1zvLWENSXJR2uTv/avMYbnPGmnrcu8smS8E5L
 
-On Thu, Jun 26, 2025 at 8:26=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Thu, Jun 26, 2025 at 08:02:10PM +0530, Pranav Tyagi wrote:
-> > Thank you for the feedback. I understand your concerns and completely
-> > agree with your reasoning. Please pardon my misjudgment in sending this
-> > patch. I am still a beginner with kernel development and learning to
-> > better assess what makes a meaningful contribution.
->
-> I suggest you start in drivers/staging/ which is specifically designed
-> for beginners to get involved without having to bother other maintainers =
-:)
->
-> thanks,
->
-> greg k-h
+On Thu, 26 Jun 2025 15:07:05 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Hi Greg,
+> FWIW, I recently found we have a second 'copy' of all this in
+> insn_get_seg_base() / get_desc().
+> 
+> Its all subtly different, but largely the same.
 
-Thank you for the suggestion. I=E2=80=99ll start looking into
-drivers/staging/ and focus my efforts there. I appreciate your
-patience and guidance.
+Should I just use that then?
 
-Regards
-Pranav Tyagi
+Instead of:
+
+		cs_base = segment_base_address(regs->cs);
+		ss_base = segment_base_address(regs->ss);
+
+Use:
+
+		cs_base = insn_get_seg_base(regs, INAT_SEG_REG_CS);
+		ss_base = insn_get_seg_base(regs, INAT_SEG_REG_SS);
+
+As it is used in a few places in the x86 code already. Then I could get rid
+of this patch.
+
+-- Steve
