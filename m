@@ -1,326 +1,165 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA89B23B63B;
-	Thu, 26 Jun 2025 20:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52ABE1AC88B;
+	Thu, 26 Jun 2025 20:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750969693; cv=none; b=rMQf/vpHIfRiDFcIYlMuuTAZWgbwofbpT8YMpo9rQIMfV8CYahAWbwcFxwg3Kv/V7012cOw+tshSxhLkQDgYCsaIXaz96ntk5jPVjvoH9Tq0Y2uu3ofNK9MmM0HCxsUiOfKeViXC4mpOsu30rjMkv6ah+2aYoq+T64rf3xDWY3o=
+	t=1750969883; cv=none; b=HUzfgusHXqRzZOR5vnLW/JZkpOoOj+wsetEY+IPubdT3OUgJaD3PTFx5SHF7jXce2FUPQEi+ASz/TV2O1gXyE39yXFhMZNvr+6EZNXAUfDpxAdexzXNuZOn/wfw7WO2YXQxmftwBzrnOcy/F0+2+s8pvyZ5Q+3yMjR/DZ/EgUlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750969693; c=relaxed/simple;
-	bh=UO+ZZJLvcSeiXXxLx9yST1in7/LKn9xefRlHfXkoRwo=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=j63jTGtIDxXVpaKZJlKeQM/hZIL4oc1Ol2yR3eRhqV32NsSIYkRqJXhvtkR9aNCtrF551gOKyRpB89mxlUcHGHh/Y8n98JfTNi1/HNy88xdrjqnsk3mkdsu6VOmLV/rj2jh4sbMfOsUOalitJz42kIulxc4sePaUOnVrspWa31Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=CIb9VsIE; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1750969883; c=relaxed/simple;
+	bh=/7uLT/5QzU2c97p0dDWXOrLBhujNl00Oz5cNwO/D3YQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uTgYlEGDnyaKxCWk/hLRc/HQvsF4JpIBxIyEB8Zka5Zdmnm/mPFKxSene+fg/PU/uO59t07Snyuo6rAPYiTE8yanKnRJV+kBGJXS6OLFUwmGzOdTnbpz62VfhpuXbMwzAycaFz12xA26QpGsS4bd4Kc+nFa2qJZoqbjJFw+DGCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TwxpIKdK; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CIb9VsIE"
-Received: from mail.ideasonboard.com (unknown [IPv6:2601:602:8100:c320::cf66])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 151806BE;
-	Thu, 26 Jun 2025 22:27:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750969670;
-	bh=UO+ZZJLvcSeiXXxLx9yST1in7/LKn9xefRlHfXkoRwo=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=CIb9VsIEfjFYr9lRd+a/r3dKNclV9sFM9FwjrpKLSElNqA28EHEvyklV1e6CB431w
-	 3JKBy24QvrMNSA2qI0Rs9RcRuwvd5LLxwjE6ekPzQNox864tviqqxicMoM/bzY0IgQ
-	 BJa4zlvAhjEt7J7zLr+uL9YpsH9ouso+ot23inBs=
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TwxpIKdK"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-32b3c292bb4so12544151fa.1;
+        Thu, 26 Jun 2025 13:31:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750969878; x=1751574678; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mRgtLChVcwC91XDcRTbMS+jnkMAGg5kUPg69daDLGww=;
+        b=TwxpIKdKnchrAhtwfC7z6bORF+ZH1tgVDhmCAJAsO6W3E+Sx31vf9h3NM4wmmr2qIR
+         36R1coKF3MhG+I+7cYMYxxDEOZhurWp4n/PtD9foHuHOaXezjaaAy4sFhjuIdUUbQPuZ
+         o3qy2AgbT9ORYfid/N/6uKrUIePRdLjrpv0Q+jmE2YybakhSYyj7S0P7K1VeZAInqcTN
+         JK6ezD2T6MkqFtb+E9yaH9OP6gWgVZoaEk88cOotjJcHFv6LMqr6mOdRRoJFksAVrU3Y
+         6OSo1WUFqbSw/0HFhMQJfbmeJeP6tPsUdIKF4cyB1SuvB2Q+I9w9dX3k/35rDsgMF2Vc
+         x1ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750969878; x=1751574678;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mRgtLChVcwC91XDcRTbMS+jnkMAGg5kUPg69daDLGww=;
+        b=B4dx0WzmPqKMAbNY/F5JrU9NKEAFYPyJe+xag/FOlI27vCGeJOgoRonWgWgaaunaOE
+         QCd9h7YwLgcoQLFp+OERKwT5wmOmVlyeKa8baBd3NmvRF9t2GI8NrVVjkoi9yvhj51MJ
+         UkgOfqxxGAwLqG8IYN5bxu4/TrZnK4y4BO3yuErE06njrcqMyQsom4CEq13iFRg5Agez
+         E9TKjVuqu4yhQ7El2p0hASCKHzag1eMg4FG4Wiy+EAbPewywVr5KRPZVHNT8zYD2wvNg
+         cFR3qxbN/XfwSLI8Pwg5BSTIHFKF4L5u3gPJU8+D1vW3U9MbjZEUmzhPURqbTMq+kCyv
+         WvZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEaXhK3sLIbSbUiHbnIDazzrZrg5Kcibgav+bvKm3JpFVy0TjjKDUqgJPmifzSyTHP185E49n5szbHGOk=@vger.kernel.org, AJvYcCWxPJua/HPbGT3hmVOIe9B5QQDCKFhf0mqc/NmMkbXrvWkvZ0yh2/DOnIJDlxzN7VWJF5PoatjxLEM0sQhFssM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb5RhAf1PqOoFCe4ZZc2oqg7rHnP6bhdQzf4yuvcmCDCPSKK/s
+	1ax845NKnCI+YcD2PIDq6wAJqb3PvS/iTD4hma6CUrJOvxSI9r3Eh742
+X-Gm-Gg: ASbGncuIOTCP82hRwWaw4te12OeZl8f4RW1J7PIZ7o3giikRyylS+smzh2/CNOO9vS4
+	0AqnBCV1oa7QJ5TgTxtCXPK92DipiSe9qPYOE4N8wx+cvTLUpeiWIxdU9yeBH4StkoW0L+SZcTj
+	9M15Eq+qeKdbi8VZeZm12uistd3KVnUcJG1MPOrhiKFDMdlxnqqn/oabtmlm52cGLRDL57XWflP
+	XYKa3fGTStnrW7t9RBUNmGTf5x9rnNIal0xhnDx5dNZw/JXpeGLkjQDMemFcoespCr9TEYMKa+j
+	wXv+zsGbFYwRFuHn8Ad3mGhIgOZjjW9thel/taRlrrLbr4eMuFbErNZkF1HWyN5WU30WWo2cMJb
+	ULHc6a3yunH1TBek8fP+7kjmOdaenv7tKwlAWM78=
+X-Google-Smtp-Source: AGHT+IHYfF74apNZsEVj5yD91rWsqIQcDDehaUjeuYFFZ6knoVUZVAJYhiRM9u8vG5icCh7X99mhpA==
+X-Received: by 2002:a05:6512:31d0:b0:553:abcd:cf51 with SMTP id 2adb3069b0e04-5550ba16ad6mr269700e87.40.1750969878092;
+        Thu, 26 Jun 2025 13:31:18 -0700 (PDT)
+Received: from [192.168.1.146] (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32cd2ec5ef3sm3072181fa.60.2025.06.26.13.31.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 13:31:16 -0700 (PDT)
+Message-ID: <e2677c26-1c25-4a34-b666-9dcfa9642fd1@gmail.com>
+Date: Thu, 26 Jun 2025 23:31:15 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <aFzh9jF0ZgODThJF@kekkonen.localdomain>
-References: <20250410-probe_fixes-v2-0-801bc6eebdea@ideasonboard.com> <20250410-probe_fixes-v2-5-801bc6eebdea@ideasonboard.com> <aFzh9jF0ZgODThJF@kekkonen.localdomain>
-Subject: Re: [PATCH v2 5/6] media: cadence: cdns-csi2rx: Support multiple pixels per clock cycle
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Maxime Ripard <mripard@kernel.org>, Devarsh Thakkar <devarsht@ti.com>, Rishikesh Donadkar <r-donadkar@ti.com>, Vaishnav Achath <vaishnav.a@ti.com>, Changhuang Liang <changhuang.liang@starfivetech.com>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Date: Thu, 26 Jun 2025 13:28:05 -0700
-Message-ID: <175096968502.8144.14459853899575450802@freya>
-User-Agent: alot/0.12.dev28+gd2c823fe
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] rust: add initial scatterlist bindings
+To: Alexandre Courbot <acourbot@nvidia.com>, Lyude Paul <lyude@redhat.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>
+Cc: dakr@kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>,
+ open list <linux-kernel@vger.kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
+ rust-for-linux@vger.kernel.org,
+ "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+ Petr Tesarik <petr@tesarici.cz>, Andrew Morton <akpm@linux-foundation.org>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Sui Jingfeng <sui.jingfeng@linux.dev>, Randy Dunlap <rdunlap@infradead.org>,
+ Michael Kelley <mhklinux@outlook.com>
+References: <20250528221525.1705117-1-abdiel.janulgue@gmail.com>
+ <20250528221525.1705117-2-abdiel.janulgue@gmail.com>
+ <20250529004550.GB192517@ziepe.ca> <DA9JTYA0EQU8.26M0ZX80FOBWY@nvidia.com>
+ <95ff963ddabf7c3cd2cfd07d0231a0073ff6847e.camel@redhat.com>
+ <DAED5BUK7TUQ.4JRHFMWZ99W3@nvidia.com>
+ <27e17dbf-df6a-48fc-a652-ad48a776f668@gmail.com>
+ <DAENGORNRVZH.2KIGKFV5C5G3L@nvidia.com>
+ <f787046921fd608c385dc5c559883c5d70839507.camel@redhat.com>
+ <DAP96FEJ0XWT.PWYMIE8IJAVQ@nvidia.com>
+Content-Language: en-US
+From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+In-Reply-To: <DAP96FEJ0XWT.PWYMIE8IJAVQ@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Sakari,
 
-Thanks for the review.
 
-Quoting Sakari Ailus (2025-06-25 23:00:22)
-> Hi Jai,
->=20
-> Thanks for the patchset.
->=20
-> On Thu, Apr 10, 2025 at 12:19:03PM +0530, Jai Luthra wrote:
-> > The output pixel interface is a parallel bus (32 bits), which
-> > supports sending multiple pixels (1, 2 or 4) per clock cycle for
-> > smaller pixel widths like RAW8-RAW16.
-> >=20
-> > Dual-pixel and Quad-pixel modes can be a requirement if the export rate
-> > of the Cadence IP in Single-pixel mode maxes out before the maximum
-> > supported DPHY-RX frequency, which is the case with TI's integration of
-> > this IP [1].
-> >=20
-> > So, we export a function that lets the downstream hardware block request
-> > a higher pixel-per-clock on a particular output pad.
-> >=20
-> > We check if we can support the requested pixels per clock given the
-> > known maximum for the currently configured format. If not, we set it
-> > to the highest feasible value and return this value to the caller.
-> >=20
-> > [1] Section 12.6.1.4.8.14 CSI_RX_IF Programming Restrictions of AM62 TRM
-> >=20
-> > Link: https://www.ti.com/lit/pdf/spruj16
-> > Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
-> > ---
-> >  drivers/media/platform/cadence/cdns-csi2rx.c | 75 ++++++++++++++++++++=
-+-------
-> >  drivers/media/platform/cadence/cdns-csi2rx.h | 19 +++++++
-> >  2 files changed, 76 insertions(+), 18 deletions(-)
-> >=20
-> > diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/med=
-ia/platform/cadence/cdns-csi2rx.c
-> > index 608298c72462031515d9ad01c6b267bf7375a5bf..154eaacc39ad294db0524e8=
-8be888bd0929af071 100644
-> > --- a/drivers/media/platform/cadence/cdns-csi2rx.c
-> > +++ b/drivers/media/platform/cadence/cdns-csi2rx.c
-> > @@ -5,6 +5,7 @@
-> >   * Copyright (C) 2017 Cadence Design Systems Inc.
-> >   */
-> > =20
-> > +#include <linux/bitfield.h>
-> >  #include <linux/clk.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/io.h>
-> > @@ -22,6 +23,8 @@
-> >  #include <media/v4l2-fwnode.h>
-> >  #include <media/v4l2-subdev.h>
-> > =20
-> > +#include "cdns-csi2rx.h"
-> > +
-> >  #define CSI2RX_DEVICE_CFG_REG                        0x000
-> > =20
-> >  #define CSI2RX_SOFT_RESET_REG                        0x004
-> > @@ -53,6 +56,8 @@
-> > =20
-> >  #define CSI2RX_STREAM_CFG_REG(n)             (CSI2RX_STREAM_BASE(n) + =
-0x00c)
-> >  #define CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF                (1 << 8)
->=20
-> Not a fault of this patch but this should use BIT(). Or at the very least
-> (1U << 8). I.e. this isn't a bug but the pattern is bad. It'd be nice to
-> fix this in a separate patch.
->=20
+On 18/06/2025 04:03, Alexandre Courbot wrote:
+> Hi Lyude, sorry for taking so long to come back to this!
+> 
+> On Tue Jun 10, 2025 at 2:44 AM JST, Lyude Paul wrote:
+>> On Thu, 2025-06-05 at 22:56 +0900, Alexandre Courbot wrote:
+>>> On Thu Jun 5, 2025 at 10:30 PM JST, Abdiel Janulgue wrote:
+>>>>
+>>>>
+>>>> On 05/06/2025 08:51, Alexandre Courbot wrote:
+>>>>> Maybe I need more context to understand your problem, but the point of
+>>>>> this design is precisely that it doesn't make any assumption about the
+>>>>> memory layout - all `P` needs to do is provide the pages describing the
+>>>>> memory backing.
+>>>>>
+>>>>> Assuming that `_owner` here is the owner of the memory, couldn't you
+>>>>> flip your data layout and pass `_owner` (or rather a newtype wrapping
+>>>>> it) to `SGTable`, thus removing the need for a custom type?
+>>>>
+>>>> I think what Lyude has in mind here (Lyude, correct me if I'm wrong) is
+>>>> for cases where we need to have a rust SGTable instances for those
+>>>> struct sg_table that we didn't allocate ourselves for instance in the
+>>>> gem shmem bindings. So memory layout needs to match for
+>>>> #[repr(transparent)] to work
+>>>
+>>> Thanks, I think I am starting to understand and this is a problem
+>>> indeed. I should probably take a look at the DRM code to get my answers,
+>>> but IIUC in `OwnedSGTable`, `sg_table` is already provided by the C side
+>>> and is backed by `_owner`?
+>>
+>> Correct. You generally create a gem shmem object, and then you can call a
+>> function to ask gem to create an sg_table and hand it back to you. I should
+>> note my priorities have shifted a bit from trying to get shmem bindings
+>> upstream, but currently it's still the best example I have of this usecase.
+>>
+>> So, for gem shmem this means we can operate with an SGTable in two ways:
+>>
+>>   * gem_shmem_object.sg_table() -> Result<&kernel::scatterlist::SGTable>
+>>   * gem_shmem_object.owned_sg_table() ->
+>>     Result<kernel::drm::gem::shmem::OwnedSGTable<T: DriverObject>
+>>
+>> I'm going to call the first return type SGTable and the second one
+>> OwnedSGTable, just so I can type a bit less.
+>>
+>> The first, sg_table(), quite literally just calls drm_gem_shmem_get_pages_sgt
+>> which attempts to allocate the table and return a pointer to it on success. We
+>> then cast that to &SGTable and return it to the user. This can be good for
+> 
+> Mmm but if you cast the returned C pointer into a `&SGTable`, then who
+> owns (and is responsible for freeing) the `SGTable` it refers to? If the
+> pointer is just turned into a reference then this might leak the `struct
+> sg_table`.
+> 
 
-Ah, that's my bad, rest of the driver does already use BIT().. will fix in
-v3.
+Just commenting on this bit. From what I've seen, we don't actually leak 
+anything. The cast only creates a reference to the original C `struct 
+sg_table` object which was allocated and owned by whichever kernel 
+subsystem called sg_alloc_table(). Rust doesn't even allow us to take 
+ownership or to dereference the value, so this one is safe. Destructors 
+are not called on those "casted" objects.
 
-> > +#define CSI2RX_STREAM_CFG_NUM_PIXELS_MASK            GENMASK(5, 4)
-> > +#define CSI2RX_STREAM_CFG_NUM_PIXELS(n)                      ((n) >> 1)
-> > =20
-> >  #define CSI2RX_LANES_MAX     4
-> >  #define CSI2RX_STREAMS_MAX   4
-> > @@ -68,7 +73,10 @@ enum csi2rx_pads {
-> > =20
-> >  struct csi2rx_fmt {
-> >       u32                             code;
-> > +     /* width of a single pixel on CSI-2 bus */
-> >       u8                              bpp;
-> > +     /* max pixels per clock supported on output bus */
-> > +     u8                              max_pixels;
-> >  };
-> > =20
-> >  struct csi2rx_priv {
-> > @@ -90,6 +98,7 @@ struct csi2rx_priv {
-> >       struct reset_control            *pixel_rst[CSI2RX_STREAMS_MAX];
-> >       struct phy                      *dphy;
-> > =20
-> > +     u8                              num_pixels[CSI2RX_STREAMS_MAX];
-> >       u8                              lanes[CSI2RX_LANES_MAX];
-> >       u8                              num_lanes;
-> >       u8                              max_lanes;
-> > @@ -106,22 +115,22 @@ struct csi2rx_priv {
-> >  };
-> > =20
-> >  static const struct csi2rx_fmt formats[] =3D {
-> > -     { .code =3D MEDIA_BUS_FMT_YUYV8_1X16, .bpp =3D 16, },
-> > -     { .code =3D MEDIA_BUS_FMT_UYVY8_1X16, .bpp =3D 16, },
-> > -     { .code =3D MEDIA_BUS_FMT_YVYU8_1X16, .bpp =3D 16, },
-> > -     { .code =3D MEDIA_BUS_FMT_VYUY8_1X16, .bpp =3D 16, },
-> > -     { .code =3D MEDIA_BUS_FMT_SBGGR8_1X8, .bpp =3D 8, },
-> > -     { .code =3D MEDIA_BUS_FMT_SGBRG8_1X8, .bpp =3D 8, },
-> > -     { .code =3D MEDIA_BUS_FMT_SGRBG8_1X8, .bpp =3D 8, },
-> > -     { .code =3D MEDIA_BUS_FMT_SRGGB8_1X8, .bpp =3D 8, },
-> > -     { .code =3D MEDIA_BUS_FMT_Y8_1X8,     .bpp =3D 8, },
-> > -     { .code =3D MEDIA_BUS_FMT_SBGGR10_1X10, .bpp =3D 10, },
-> > -     { .code =3D MEDIA_BUS_FMT_SGBRG10_1X10, .bpp =3D 10, },
-> > -     { .code =3D MEDIA_BUS_FMT_SGRBG10_1X10, .bpp =3D 10, },
-> > -     { .code =3D MEDIA_BUS_FMT_SRGGB10_1X10, .bpp =3D 10, },
-> > -     { .code =3D MEDIA_BUS_FMT_RGB565_1X16,  .bpp =3D 16, },
-> > -     { .code =3D MEDIA_BUS_FMT_RGB888_1X24,  .bpp =3D 24, },
-> > -     { .code =3D MEDIA_BUS_FMT_BGR888_1X24,  .bpp =3D 24, },
-> > +     { .code =3D MEDIA_BUS_FMT_YUYV8_1X16, .bpp =3D 16, .max_pixels =
-=3D 2, },
-> > +     { .code =3D MEDIA_BUS_FMT_UYVY8_1X16, .bpp =3D 16, .max_pixels =
-=3D 2, },
-> > +     { .code =3D MEDIA_BUS_FMT_YVYU8_1X16, .bpp =3D 16, .max_pixels =
-=3D 2, },
-> > +     { .code =3D MEDIA_BUS_FMT_VYUY8_1X16, .bpp =3D 16, .max_pixels =
-=3D 2, },
-> > +     { .code =3D MEDIA_BUS_FMT_SBGGR8_1X8, .bpp =3D 8, .max_pixels =3D=
- 4, },
-> > +     { .code =3D MEDIA_BUS_FMT_SGBRG8_1X8, .bpp =3D 8, .max_pixels =3D=
- 4, },
-> > +     { .code =3D MEDIA_BUS_FMT_SGRBG8_1X8, .bpp =3D 8, .max_pixels =3D=
- 4, },
-> > +     { .code =3D MEDIA_BUS_FMT_SRGGB8_1X8, .bpp =3D 8, .max_pixels =3D=
- 4, },
-> > +     { .code =3D MEDIA_BUS_FMT_Y8_1X8,     .bpp =3D 8, .max_pixels =3D=
- 4, },
-> > +     { .code =3D MEDIA_BUS_FMT_SBGGR10_1X10, .bpp =3D 10, .max_pixels =
-=3D 2, },
-> > +     { .code =3D MEDIA_BUS_FMT_SGBRG10_1X10, .bpp =3D 10, .max_pixels =
-=3D 2, },
-> > +     { .code =3D MEDIA_BUS_FMT_SGRBG10_1X10, .bpp =3D 10, .max_pixels =
-=3D 2, },
-> > +     { .code =3D MEDIA_BUS_FMT_SRGGB10_1X10, .bpp =3D 10, .max_pixels =
-=3D 2, },
-> > +     { .code =3D MEDIA_BUS_FMT_RGB565_1X16,  .bpp =3D 16, .max_pixels =
-=3D 1, },
-> > +     { .code =3D MEDIA_BUS_FMT_RGB888_1X24,  .bpp =3D 24, .max_pixels =
-=3D 1, },
-> > +     { .code =3D MEDIA_BUS_FMT_BGR888_1X24,  .bpp =3D 24, .max_pixels =
-=3D 1, },
-> >  };
-> > =20
-> >  static const struct csi2rx_fmt *csi2rx_get_fmt_by_code(u32 code)
-> > @@ -276,8 +285,10 @@ static int csi2rx_start(struct csi2rx_priv *csi2rx)
-> > =20
-> >               reset_control_deassert(csi2rx->pixel_rst[i]);
-> > =20
-> > -             writel(CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF,
-> > -                    csi2rx->base + CSI2RX_STREAM_CFG_REG(i));
-> > +             reg =3D CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF;
-> > +             reg |=3D FIELD_PREP(CSI2RX_STREAM_CFG_NUM_PIXELS_MASK,
-> > +                               csi2rx->num_pixels[i]);
-> > +             writel(reg, csi2rx->base + CSI2RX_STREAM_CFG_REG(i));
->=20
-> I'd write this as:
->=20
->                 writel(CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF |
->                        FIELD_PREP(CSI2RX_STREAM_CFG_NUM_PIXELS_MASK,
->                                   csi2rx->num_pixels[i]),
->                        csi2rx->base + CSI2RX_STREAM_CFG_REG(i));
->=20
-> But up to you.
->=20
-
-Will do in v3.
-
-> > =20
-> >               /*
-> >                * Enable one virtual channel. When multiple virtual chan=
-nels
-> > @@ -458,6 +469,34 @@ static int csi2rx_init_state(struct v4l2_subdev *s=
-ubdev,
-> >       return csi2rx_set_fmt(subdev, state, &format);
-> >  }
-> > =20
-> > +int cdns_csi2rx_negotiate_ppc(struct v4l2_subdev *subdev, unsigned int=
- pad,
-> > +                           u8 *ppc)
-> > +{
-> > +     struct csi2rx_priv *csi2rx =3D v4l2_subdev_to_csi2rx(subdev);
-> > +     const struct csi2rx_fmt *csi_fmt;
-> > +     struct v4l2_subdev_state *state;
-> > +     struct v4l2_mbus_framefmt *fmt;
-> > +     int ret =3D 0;
->=20
-> ret is redundant.
->=20
-
-Good catch, will fix.
-
-> > +
-> > +     if (!ppc || pad < CSI2RX_PAD_SOURCE_STREAM0 || pad >=3D CSI2RX_PA=
-D_MAX)
-> > +             return -EINVAL;
-> > +
-> > +     state =3D v4l2_subdev_lock_and_get_active_state(subdev);
-> > +     fmt =3D v4l2_subdev_state_get_format(state, pad);
-> > +     csi_fmt =3D csi2rx_get_fmt_by_code(fmt->code);
-> > +
-> > +     /* Reduce requested PPC if it is too high */
-> > +     *ppc =3D min(*ppc, csi_fmt->max_pixels);
-> > +
-> > +     v4l2_subdev_unlock_state(state);
-> > +
-> > +     csi2rx->num_pixels[pad - CSI2RX_PAD_SOURCE_STREAM0] =3D
-> > +             CSI2RX_STREAM_CFG_NUM_PIXELS(*ppc);
-> > +
-> > +     return ret;
-> > +}
-> > +EXPORT_SYMBOL(cdns_csi2rx_negotiate_ppc);
->=20
-> EXPORT_SYMBOL_GPL(). Or maybe use a namespace?
->=20
-
-Ah I wasn't aware of different namespaces. I think a module-specific one as
-documented here [1] might make the most sense in this case. Will try that,
-else will use _GPL.
-
-[1] https://docs.kernel.org/core-api/symbol-namespaces.html#using-the-expor=
-t-symbol-gpl-for-modules-macro
-
-> > +
-> >  static const struct v4l2_subdev_pad_ops csi2rx_pad_ops =3D {
-> >       .enum_mbus_code =3D csi2rx_enum_mbus_code,
-> >       .get_fmt        =3D v4l2_subdev_get_fmt,
-> > diff --git a/drivers/media/platform/cadence/cdns-csi2rx.h b/drivers/med=
-ia/platform/cadence/cdns-csi2rx.h
->=20
-> I wonder if it'd be better to put this under include/media.
->=20
-
-I was unsure about it, as while these are two separate drivers it's
-essentially the same "device".. but I don't see a harm in keeping this
-under include/media. Will do in v3.
-
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..128d47e8513c99c083f49e2=
-49e876be6d19389f6
-> > --- /dev/null
-> > +++ b/drivers/media/platform/cadence/cdns-csi2rx.h
-> > @@ -0,0 +1,19 @@
-> > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > +#ifndef CDNS_CSI2RX_H
-> > +#define CDNS_CSI2RX_H
-> > +
-> > +#include <media/v4l2-subdev.h>
-> > +
-> > +/**
-> > + * cdns_csi2rx_negotiate_ppc - Negotiate pixel-per-clock on output int=
-erface
-> > + *
-> > + * @subdev: point to &struct v4l2_subdev
-> > + * @pad: pad number of the source pad
-> > + * @ppc: pointer to requested pixel-per-clock value
-> > + *
-> > + * Returns 0 on success, negative error code otherwise.
-> > + */
-> > +int cdns_csi2rx_negotiate_ppc(struct v4l2_subdev *subdev, unsigned int=
- pad,
-> > +                           u8 *ppc);
-> > +
-> > +#endif
-> >=20
->=20
-> --=20
-> Regards,
->=20
-> Sakari Ailus
-
-Thanks,
-Jai
+/Abdiel
