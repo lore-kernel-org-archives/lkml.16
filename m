@@ -1,117 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFCA2EB5BC
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF3B2EB5A4;
+	Thu, 26 Jun 2025 15:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750950990; cv=none; b=qbPOc5u3IqvU+WYQolyBVFWDgLR24sOSMPMmb/Sg2bWKOQj2lbeUltGOQiwpIRHXbp7ne9kMfCEylwkahRWL+169R3tir7GpO3n80moHvTYZIAeRX6WqvUuF9Jepf2WG6bjmCBHwEQPqd6CcMDVS2QS2uWPchn47NG8bY897yAY=
+	t=1750951040; cv=none; b=qaL313vQy7ThEXtQw59sjn4QlMYvXY4qhtpc2/UcSLgcPdU/SRH/Rl87Z5CnLhBwVa0kstoUDnJX77W+4KfnJ/Jz2Q9b36mT7Yh8m9jb/aBMwBUREkfhInh5oEA39oNRmghUNBzlpO7DKzpb4Dtlf494NIJqMSCABrtaROWRTrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750950990; c=relaxed/simple;
-	bh=vzjk8bGrqWez7QWvHDgN5uqasr79Gx9gG7/5GusfDUk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=M5vGZmbZ7otyS2HcEIwxUqWIpbEkdbPEtGEHc54adEBUg/Hwq+yFhiGw5pvF+AkK4tkc0/KmwlEjn0xbs+LsGBTSIT720mjtu/1Q/0uoi+rQsk/RkPdkmRVT3ibIciCTkGdypVPukwUCQSDouFvbKH09v3BZkLZAhlKYWhHU71Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LSp781j5; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750951040; c=relaxed/simple;
+	bh=/H8MMQsDD8gwCIoOmfc5kCh+IrmGPsSl8LrXtfr7thU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UtG0IPJlGCb4tUrnkNhJ1wFr4xw0TzJ3FZnmWNBl6oCLvjxmnA/n/TgmFS1JUPGvP68FcEnTs9YFtITf32mnlc6V8sB980LpNtWFiM2nBOUZIXVeE8A4CD3Fwuv4R7tlK41tVrWzrwjDwa8NAokAea6xhrbjh9gzxfv2ZgBoJ5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bUyxzEho; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LSp781j5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750950989; x=1782486989;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=vzjk8bGrqWez7QWvHDgN5uqasr79Gx9gG7/5GusfDUk=;
-  b=LSp781j5oCng3G9Qsn5GcNBLpfXP26dztjvaIuFIwA3a8sWlrZVUXDLm
-   r+hcLRQ4VEs2AvgTebtqV2cxPdbeW/tFmRdPG/UeUhi9Yrq6PL6xKwiwW
-   3GEsRVRKrN9KxY+Nvy77FKpO3uFqGpAtNUFsz+MibSTs977yTOuK0mEYb
-   fPUs0pnh0+U4KFiSDtX08I9TqnRIFtPPZZdf7RkoFGtgwIKBOT8Akg4RM
-   oQGBAM4KmTpLXhHqF+vr8q3DI88efZUOqh36kA4ypzd1vPxJgEN8NLHcD
-   vBJwmUmw1zdE7avUefhQjiPmb3xBylh3jOIFNBISUa0lS/s4t5ZRCvqGs
-   A==;
-X-CSE-ConnectionGUID: l++SZ9xySdK9E4v9wlf2lg==
-X-CSE-MsgGUID: pYOKyk3mTLepPFkLtjp+HQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53396821"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="53396821"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:16:29 -0700
-X-CSE-ConnectionGUID: EUMIUsY8SN6rCmTrXjA1Tw==
-X-CSE-MsgGUID: Mc5IxZpcSHeLGNSyRgdihg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="153282513"
-Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.246.120])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:16:26 -0700
-From: Jani Nikula <jani.nikula@intel.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, Thomas
- Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] iopoll: use fsleep() instead of usleep_range()
-In-Reply-To: <CAMuHMdU+tgMqHcU8Fwr_XVE9RfNEGHnbEYHQ1DraE=YRvQxJuw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250626145119.2048423-1-jani.nikula@intel.com>
- <CAMuHMdU+tgMqHcU8Fwr_XVE9RfNEGHnbEYHQ1DraE=YRvQxJuw@mail.gmail.com>
-Date: Thu, 26 Jun 2025 18:16:23 +0300
-Message-ID: <7875cadfb12b1d2e8def412346d61716a6a98107@intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bUyxzEho"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=jJl/2zla9+BwzcplCJO6oNzMjTRhWJE5a6dcK6IqAGw=; b=bUyxzEhoitzgs7vO2XSUaYzfiK
+	9QAoMnF7ssPqFPPH/pkULQ5OII6GSIGWSi3/5CjcHa2dLGp6+31mCID5Oynw9v3QJFzbGL1Jc1Fxi
+	Nyn5a8iMewMYnZXV8eawYYK5qGz5IpnAZx6Pt51XHY4mIK3B77NJW2CKNlfURa7c2AIUhZtaD9Jz/
+	KceEaKbcqSc3rUAWxbZ2Dd+J4g7+T0Q12Mz3dZ6uml3klANvHL/Qy0pDHbWvvqN2V0Mi9pF5KtFmD
+	sU5uTrKGz/mXdywy/KCWPJR4ul4g2EYu0rRaNUplvyVXUmUv+sO1KK7/bnVIwKDOENhYI2lGryGrA
+	6QqwFEAw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uUoLd-0000000Btis-31mA;
+	Thu, 26 Jun 2025 15:17:09 +0000
+Date: Thu, 26 Jun 2025 16:17:09 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: =?iso-8859-1?Q?H=E5kon?= Bugge <haakon.bugge@oracle.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	David Howells <dhowells@redhat.com>,
+	Jade Alglave <j.alglave@ucl.ac.uk>,
+	Luc Maranget <luc.maranget@inria.fr>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Akira Yokosawa <akiyks@gmail.com>,
+	Daniel Lustig <dlustig@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, lkmm@lists.linux.dev,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/1] docs/memory-barriers.txt: Add wait_event_cmd() and
+ wait_event_exclusive_cmd()
+Message-ID: <aF1kdYvCQQdIttoC@casper.infradead.org>
+References: <20250626143707.1533808-1-haakon.bugge@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250626143707.1533808-1-haakon.bugge@oracle.com>
 
-On Thu, 26 Jun 2025, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> Hi Jani,
->
-> Thanks for your patch!
->
-> On Thu, 26 Jun 2025 at 16:51, Jani Nikula <jani.nikula@intel.com> wrote:
->> Sometimes it's necessary to poll with long sleeps, and the accuracy of
->> usleep_range() is overkill. Use the flexible sleep helper fsleep() for
->> sleeping in the read_poll_timeout() family of macros to automatically
->> choose the appropriate method of waiting.
->>
->> Functionally there are a few consequences for existing users:
->>
->> - 10 us and shorter sleeps will use usleep() instead of
->
-> s/usleep/udelay/.
+On Thu, Jun 26, 2025 at 04:37:05PM +0200, Håkon Bugge wrote:
+> Add said functions to the documentation and relate them to userspace's
+> pthread_cond_wait(). The latter because when searching for
+> functionality comparable to pthread_cond_wait(), it is very hard to
+> find wait_event_cmd().
 
-D'oh!
+Would it not go better in the kernel-doc for wait_event_cmd() in
+include/linux/wait.h?
 
->
->>   usleep_range(). Presumably this will not be an issue.
->
-> Note that udelay() does not sleep, but loops.
+>  
+> +Note that the wait_event_cmd() and wait_event_exclusive_cmd() are the
+> +kernel's polymorphic implementation of userspace's
+> +pthread_cond_wait().
 
-Quite right. IIUC this is because for short delays it's more efficient.
+Pet peeve: "Note that" adds nothing to this sentence.  You can just
+write:
 
-BR,
-Jani.
+The wait_event_cmd() and wait_event_exclusive_cmd() functions are the
+kernel's polymorphic implementation of userspace's pthread_cond_wait().
 
->
->>
->> - When it leads to a slack of less than 25%, msleep() will be used
->>   instead of usleep_range(). Presumably this will not be an issue, given
->>   the sleeps will be longer in this case.
->>
->> - Otherwise, the usleep_range() slack gets switched from the begin of
->>   the range to the end of the range, i.e. [sleep/2+1..sleep] ->
->>   [sleep..sleep+sleep/2]. In theory, this could be an issue in some
->>   cases, but difficult to determine before this hits the real world.
->>
->> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
->
->> Not really sure who to Cc, given MAINTAINERS doesn't match this. Adding
->> some past committers.
->
-> Oh well ;-)
->
-> Gr{oetje,eeting}s,
->
->                         Geert
-
--- 
-Jani Nikula, Intel
+> +Using wait_event_cmd() or wait_event_exclusive_cmd(), cmd1 is
+> +typically a lock-release call and cmd2 a lock-acquire call. The
+> +locking primitive can be chosen, contrary to pthread_cond_wait(),
+> +where the locking type is cast in stone and is a pthread_mutex_t.
+> +
+>  
+>  MISCELLANEOUS FUNCTIONS
+>  -----------------------
+> -- 
+> 2.43.5
+> 
+> 
