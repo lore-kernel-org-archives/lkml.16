@@ -1,129 +1,185 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D5B2ED853
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 18:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07731D5170;
+	Thu, 26 Jun 2025 18:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750961115; cv=none; b=S+xIR+GEqQGs1djiNS0dwy2zRmmZz0xBC5J904SVDiB0ilr8LzrIIL33KRzOhtXpecloHUYpMt5oyW89MWU+ailu+oW0hJUgWpx+HLpIsbDoPqjVqaQBAH2DfxemlYw9kjMS9T4qNuogemrdsEYo7kWMyZD0jeYbkcQ333xBa9M=
+	t=1750961266; cv=none; b=hFkJuBZh9K00+ZQkAo5rCoemL5aOMr8VVDi6qWYBe7W4TVZy8sSxjHU5r1hdmnCkJ/zJPhhuDfDmMOYZSqN9mXFok8QOAHYRKGiLktK67+t+YgHAULtLh/o8s85lJDXtnzXdEUPBWpIvS+evOZ280mL8p9sr/7jPY8+afZRO0rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750961115; c=relaxed/simple;
-	bh=HT1PZrDkhp6DI0bsi07qe2ZDkBoSKcXmqoFHOkEVHss=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hh9D5CS9TcJ3y/I3sU9CWZ+r6f/BDzg9uIzOLbbyANhHFqbB7WABWaJNtu/pbRizyAV8ytFXV9+QIHnLBNVqZ+ZEG2a3T0AHborUAG0PwDLUsgluKKTthhOZpcGyJ9D6zlwXryyNNvpafrNXDwiW3bSYT+iQvG9z3UAxCgrFHVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cjSKrhN9; arc=none smtp.client-ip=209.85.219.48
+	s=arc-20240116; t=1750961266; c=relaxed/simple;
+	bh=s9x6dxudyjRS9durYlnGruJYjvUGIGYo6npJKPm0fB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D5pihdQUcblIsFsrU5kaaH+Qf9PW0PFZskm8NdI3t+gXjBrNflJ6cDup8Q+kv9MrXV/Ss27kBZ4W77pKFJhIII53A985Sm0Khx6EKI/Sg3+/npXVffaUAt07EISipv6F97iDO/jVFNA7DozXHLE1BgHuqViLU6nexHJqziJGlsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BG5V7TOV; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cjSKrhN9"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6fadb9a0325so12650896d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 11:05:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BG5V7TOV"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2363497cc4dso13690585ad.1;
+        Thu, 26 Jun 2025 11:07:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750961112; x=1751565912; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QiZwuPd0AoWibuQALk3DmH+qz68nVTZ0UFoYX05f/uk=;
-        b=cjSKrhN9i55CUBkiyawY16YeZ32z1ZbKIEHysAUDgdG3OjTTQxNoh7nV/xgWHZToPh
-         q4mljyeq9MvIzCuymj3ZaNmLS+2lE4yxDGEyzQNGzRa6PZ4hReiB/FohTTjLZ7qCT/5C
-         NWxyd62SMS2oLgqfGKw2UczbCIbdbRMKdLpjE9v7sy9Fx97OcUmYZWY4C8yAG9QqonNL
-         5LUqTepr/sjwDt31BtF5Mfb+uTkA8FqPdscZP/NEbmhUlj27XeNBH+aN9rbPa1TRNjSV
-         W0vSf914mBLeP9Qagn3NLxwwNQfjXkdGEg2XpR2NbtahWFCsCWPXgYjjII+JC2ALZ9Mv
-         mRew==
+        d=gmail.com; s=20230601; t=1750961264; x=1751566064; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Anccgxz8ioAQ/FehorCp97CbyBsNiWT7FvoW6DOnuQM=;
+        b=BG5V7TOVtgkS+0/L2TB6WUJTU8tvknuexgCn+EmchFRZXWEI4xUQLakt0BJruQblVS
+         9y+VPkWP+8xo47GKFcAskA2/zjSD2HEI1Ik5+S1NWhIs8svg/+LC/r4Vwd56ta3drwXW
+         V3FNY3SgvJCsiMKoWatJiEQZ1kdq++C31VErloGYvV8oxCg6YAWex0EiqKzRjTRxeZyt
+         +qi/rrhURVvX3urGQYfLSiFLnwcT9Q18Foj1ThOcLx/5R0HwBIMKnqz72qVuu9IoDQXB
+         +pqNCE4BLvKsIumLkjrkEzbK4QPFCtLd9ILdLAWTVIMXRi5petCse+eC9/kHdZ/I48qg
+         psWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750961112; x=1751565912;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QiZwuPd0AoWibuQALk3DmH+qz68nVTZ0UFoYX05f/uk=;
-        b=eNskp7w4j/ZB8edo7IC8WYYl/FVhu7FuFRr4QgNYDDpBwqaCHV0sHB5lRz1D6kMhku
-         EVfBHOJJMnN0ZWIeg7U1LDsvMg1QvDK6OZ6QC4zSQqQ9v55IPQS4JAdDWLqkVpyJT3QM
-         ZuJmmkT6sWpR8As5Qwt8DJA8CH0B50ymnvhlNDlUIE6oVuBx1VslcNAfPSeXvyrx+5nw
-         wQpQQ5b3e7BoeUPfee7wJvaVDZjCM7gLhEYAtNhswuoZKdJj51CBr1CGWD9LVxXIv+z3
-         bYI6nT3b5bNpce+UkRn74a+TvpoA9OSMjJiWffcR0leFhESqr7GdkYnpV0qnG+xTC4K4
-         YgDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuxTy74ueq36NDCrL04Fr6Ij0zWWQyRkqt42cVPwfUYAJ4HTfrJr5AqJNDAkH0befRSXFqF9DN/7xKPEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVGgHiJ1BTwXPu4heDnHGO9vdt8pK/89GII15NrcRQxMDi3Biz
-	mR0EYRQxPpHrGk26nPHglT6zQvMhjpR4yCautY5G67qfqLo6z1F/jlW/GM5Q4w==
-X-Gm-Gg: ASbGncttbrOU1S3EKiu2sbtFQDMWmNtGx9Z9c4X+D+/E/VEzLG3soHpGlZ2DnciPvWr
-	lCUoSpUQn/hyLDZcZ0jX+b4O9cYEZrMOxZe8yE5y9FWwcov3sGM2mM9aj2fPc8YJd1XTVENCDDv
-	MJpLgnJLIoyycT2Wu6Dhh5dJhCTACa9AaP986fEGcXAAhqdmarXAeqBoKYE5qNHIOWHS5RZ9/7q
-	XCfnlD7VKMODAFL95VkNysOnXHqzwcGPSE4kkG8IZPUuTYCY0Yu8vVQNs5W93sOyr3nkZxo+nKG
-	vv75PwJFmFaP6lVKLInWVGTKQVqNhvKrjmcfqbIyQPPpwthx6LxR
-X-Google-Smtp-Source: AGHT+IFgwg9byY7wnJjSTsjkRMLnfpRN05Qu3TUP7ur9Y/iw0TPz2j48zy3H+eunzSHMiSdxwVpIsA==
-X-Received: by 2002:a05:6214:460a:b0:6fb:23:4812 with SMTP id 6a1803df08f44-700037a5989mr7609226d6.26.1750961112038;
-        Thu, 26 Jun 2025 11:05:12 -0700 (PDT)
-Received: from fushigibana ([2601:405:4a00:186f::50e])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd7718d340sm10275906d6.4.2025.06.26.11.05.10
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1750961264; x=1751566064;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Anccgxz8ioAQ/FehorCp97CbyBsNiWT7FvoW6DOnuQM=;
+        b=w8Hnxt+Gq5WPapgtvfR0XJzJM3lS7aOTBmrEuiE/CjeHp9crAk19LjiWSS/ZJ7e8nA
+         Po8w6vrkPyneD0UV15LlqZtibzrIsj9AtapU+IGQ3WffsUsonyDWyX1aJFCfRDGFij4B
+         lhDurA7FICQIDm7TT1zR64t1+GYEsSLCLWXfTZ+N5XlfHOgugVNGP2UZK8AkktyyKpwG
+         xptOx3SCtEBUKCatDjbxBfAq4NSWSzJ85YT3UBA3RT69j8vwIhXuh4YsgVd4QNMBls7y
+         KENkawp3z8WWHOGURk2xVzQsZQ+194lH4M0jvZf/vd/esxcgOsV+IHCeBDRujvvPKWX3
+         3BGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsZMSA0+Hr409JL4kssjwYFGTi0jtCHx06ZoF+z1pQo1LSduUXCal9X1Zh2M8IW3KMd3fdxbJqu6ihxA==@vger.kernel.org, AJvYcCUu2Y5LFYWqMJ/Tbu9rEKugyT9MNiA0Z8F3Q3mpheoJZ6JJZ/p8RchfhUm/nqdQ2MdSN+ZeTvNUuu2g4IIc@vger.kernel.org, AJvYcCX6l5Rvfyucl1Pem5XsOTe0+dpHhyW8dYR9sScJ+8gn2gNch7F+w/kdYUV1pqg+SZzrRGwrn96rvkBrgmM=@vger.kernel.org, AJvYcCX9bxP5ufEHbVEdD2RxpSraDsAaiDooZbqXdE9lsYqrMPEOW6hZ4fb/BDiwOkvzlFWDuapGO9AgeOl7@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoJKeRE4LZMRVKu8493Z5jGwogX+2cPBPfiCbrKEn7wV+iiNqI
+	KMx0LCvhmI7wGTAwVCOvEhOLVw8Bm1XcAX5MR0B05QIoEwcfhHqHSF5Da7YxVw==
+X-Gm-Gg: ASbGnctlWegnHK3y9rld110JARHL/VOe+YZ1Y28OYX30i5So3U5bbJHV0ISErmxjiq7
+	hagoZKAvI3gYIG8htJlPHWERtN+RMRV5+S/wmCOUxUdJRJvWwgHIjyprj7D4vBcyCR4m+jvBm01
+	dCy/lYxZB1+vbUKK7n4wbK1eQfwLGi6dNq7NIjUZE08xkwHqZekdChMDwQsvnylC7RvVT5veZ75
+	Nk6VEloB7nQx1jG4WCa7xl9/SmgAcK8UPFEUBHbWLqzeE7IFEXisqBWEtfKRccFM9bcPWTIAriQ
+	nPkC/O4fOpMp/omwmOZ/yafX2D9t55DMa3TXMSakdq5IfSXPtWERws36QDYoexk=
+X-Google-Smtp-Source: AGHT+IHRrMPthSLR2hySukimOy0SgmAYGGUGgUW/V+UP4Nhki2DlSmyuhAPLRzU/2oBAiHJxrCWglQ==
+X-Received: by 2002:a17:902:c94c:b0:225:abd2:5e4b with SMTP id d9443c01a7336-23ac3afd0d2mr4689205ad.16.1750961264017;
+        Thu, 26 Jun 2025 11:07:44 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:9c8f:acd3:efcb:bc3d])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34c44730c6sm2154595a12.60.2025.06.26.11.07.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 11:05:11 -0700 (PDT)
-Received: from pnariyoshi (uid 1000)
-	(envelope-from pedro.nariyoshi@gmail.com)
-	id c5e35
-	by fushigibana (DragonFly Mail Agent v0.14 on fushigibana);
-	Thu, 26 Jun 2025 14:05:10 -0400
-From: Pedro Nariyoshi <pedro.nariyoshi@gmail.com>
-To: Hans Verkuil <hverkuil@xs4all.nl>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	linux-media@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	MrChromebox <mrchromebox@gmail.com>
-Cc: Pedro Nariyoshi <pedro.nariyoshi@gmail.com>
-Subject: [PATCH] media : cros-ec-cec: Add Fizz board variants, so driver can detect them
-Date: Thu, 26 Jun 2025 14:03:41 -0400
-Message-ID: <20250626180429.463420-1-pedro.nariyoshi@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        Thu, 26 Jun 2025 11:07:43 -0700 (PDT)
+Date: Thu, 26 Jun 2025 11:07:40 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>, 
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
+ system
+Message-ID: <nxticocp26r5mmpkttritw76h5igw7bdpus6zaf5krkso2h5xy@wna6m2quekfi>
+References: <20250625215813.3477840-1-superm1@kernel.org>
+ <20250625215813.3477840-5-superm1@kernel.org>
+ <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
+ <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
+ <rn2kp5tog2agvswva2ipqq2ytiqdcgccnocudsg6ckwfh4roei@provk2g6dita>
+ <363c2b92-4bfc-4537-9fca-025eef09526f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <363c2b92-4bfc-4537-9fca-025eef09526f@kernel.org>
 
-I recently reflashed a Chromebox (Wukong variant of the Fizz board) with
-coreboot and I noticed that the cec driver refused to load with a bit of
-tinkering, I realized that the dmi_match_table was expecting the product
-name to be Fizz, but `dmidecode` reports `Wukong` as the product name. I
-am not sure if this is the best approach, but adding this patch lets me
-load the driver and it works properly.
+On Thu, Jun 26, 2025 at 12:53:02PM -0500, Mario Limonciello wrote:
+> 
+> 
+> On 6/26/25 12:44 PM, Dmitry Torokhov wrote:
+> > Hi Mario,
+> > 
+> > On Thu, Jun 26, 2025 at 06:33:08AM -0500, Mario Limonciello wrote:
+> > > 
+> > > 
+> > > On 6/26/25 3:35 AM, Hans de Goede wrote:
+> > > > Hi Mario,
+> > > > 
+> > > > On 25-Jun-25 23:58, Mario Limonciello wrote:
+> > > > > From: Mario Limonciello <mario.limonciello@amd.com>
+> > > > > 
+> > > > > Sending an input event to wake a system does wake it, but userspace picks
+> > > > > up the keypress and processes it.  This isn't the intended behavior as it
+> > > > > causes a suspended system to wake up and then potentially turn off if
+> > > > > userspace is configured to turn off on power button presses.
+> > > > > 
+> > > > > Instead send a PM wakeup event for the PM core to handle waking the system.
+> > > > > 
+> > > > > Cc: Hans de Goede <hansg@kernel.org>
+> > > > > Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing key press event in resume phase")
+> > > > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> > > > > ---
+> > > > >    drivers/input/keyboard/gpio_keys.c | 7 +------
+> > > > >    1 file changed, 1 insertion(+), 6 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+> > > > > index 773aa5294d269..4c6876b099c43 100644
+> > > > > --- a/drivers/input/keyboard/gpio_keys.c
+> > > > > +++ b/drivers/input/keyboard/gpio_keys.c
+> > > > > @@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
+> > > > >    		pm_stay_awake(bdata->input->dev.parent);
+> > > > >    		if (bdata->suspended  &&
+> > > > >    		    (button->type == 0 || button->type == EV_KEY)) {
+> > > > > -			/*
+> > > > > -			 * Simulate wakeup key press in case the key has
+> > > > > -			 * already released by the time we got interrupt
+> > > > > -			 * handler to run.
+> > > > > -			 */
+> > > > > -			input_report_key(bdata->input, button->code, 1);
+> > > > > +			pm_wakeup_event(bdata->input->dev.parent, 0);
+> > 
+> > There is already pm_stay_awake() above.
+> 
+> But that doesn't help with the fact that userspace gets KEY_POWER from this
+> and reacts to it.
+> 
+> > 
+> > > > >    		}
+> > > > >    	}
+> > > > 
+> > > > Hmm, we have the same problem on many Bay Trail / Cherry Trail
+> > > > windows 8 / win10 tablets, so  this has been discussed before and e.g.
+> > > > Android userspace actually needs the button-press (evdev) event to not
+> > > > immediately go back to sleep, so a similar patch has been nacked in
+> > > > the past.
+> > > > 
+> > > > At least for GNOME this has been fixed in userspace by ignoring
+> > > > power-button events the first few seconds after a resume from suspend.
+> > > > 
+> > > 
+> > > The default behavior for logind is:
+> > > 
+> > > HandlePowerKey=poweroff
+> > > 
+> > > Can you share more about what version of GNOME has a workaround?
+> > > This was actually GNOME (on Ubuntu 24.04) that I found this issue.
+> > > 
+> > > Nonetheless if this is dependent on an Android userspace problem could we
+> > > perhaps conditionalize it on CONFIG_ANDROID_BINDER_DEVICES?
+> > 
+> > No it is not only Android, other userspace may want to distinguish
+> > between normal and "dark" resume based on keyboard or other user
+> > activity.
+> > 
+> > Thanks.
+> > 
+> In this specific case does the key passed up to satisfy this userspace
+> requirement and keep it awake need to specifically be a fabricated
+> KEY_POWER?
+> 
+> Or could we find a key that doesn't require some userspace to ignore
+> KEY_POWER?
+> 
+> Maybe something like KEY_RESERVED, KEY_FN, or KEY_POWER2?
 
-Alternatively, we could instead match the DMI_PRODUCT_FAMILY, instead of
-DMI_SYS_VENDOR and DMI_PRODUCT_NAME. In my board at least, that says
-"Google_Fizz".
+The code makes no distinction between KEY_POWER and KEY_A or KEY_B, etc.
+It simply passes event to userspace for processing.
 
-I am open to suggestions for alternative solutions and I hope I did't
-break any rules (this is my first kernel patch). (And sorry for the
-previous error in the subject line)
+You need to fix your userspace. Even with your tweak it is possible for
+userspace to get a normal key event "too early" and turn off the screen
+again, so you still need to handle this situation.
 
-Signed-off-by: Pedro Nariyoshi <pedro.nariyoshi@gmail.com>
----
- drivers/media/cec/platform/cros-ec/cros-ec-cec.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Thanks.
 
-diff --git a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
-index 419b9a7abcce..a26473c3cd84 100644
---- a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
-+++ b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
-@@ -302,8 +302,15 @@ static const char *const port_ab_conns[] = { "Port A", "Port B", NULL };
- static const char *const port_d_conns[] = { "Port D", NULL };
- 
- static const struct cec_dmi_match cec_dmi_match_table[] = {
--	/* Google Fizz */
-+	/* Google Fizz and variants*/
- 	{ "Google", "Fizz", "0000:00:02.0", port_b_conns },
-+	{ "Google", "Bleemo", "0000:00:02.0", port_b_conns },
-+	{ "Google", "Excelsior", "0000:00:02.0", port_b_conns },
-+	{ "Google", "Jax", "0000:00:02.0", port_b_conns },
-+	{ "Google", "Kench", "0000:00:02.0", port_b_conns },
-+	{ "Google", "Sion", "0000:00:02.0", port_b_conns },
-+	{ "Google", "Teemo", "0000:00:02.0", port_b_conns },
-+	{ "Google", "Wukong", "0000:00:02.0", port_b_conns },
- 	/* Google Brask */
- 	{ "Google", "Brask", "0000:00:02.0", port_b_conns },
- 	/* Google Moli */
 -- 
-2.49.0
-
+Dmitry
