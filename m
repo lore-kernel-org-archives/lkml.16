@@ -1,162 +1,125 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F102125C70D
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F79925BF1C
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750929675; cv=none; b=eJLA4EkhcdN2AzCu0p6pzLZXrwWv+L5P4tni/8zd+NJbtNTFInW0r16xD+sshx/mMYznXDHPtBtFHHoDcDTAJEKXp7JiolC1STT0kn4b4XQwaekrIJn32sqvzkmQhBoPcUROIMuMP6CvksD2+9ibI0TtlJT97Kftqep/Ol1gCOA=
+	t=1750929708; cv=none; b=gsQ9Ulb5cuz539/q+cIoh23kUO0xRfdNjL310U+2utYtuw+1Cij7oc+7PI4NkRswOTv5BEQowWnqPfVNz6ltIpO0RYDRMlG2d2pU7aDo3kWVcqbW0GVw8Ji811nO2a9oTfcwojp5GCCvmJqZ03speUc/Y8esM5fmYrlHTGCPdv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750929675; c=relaxed/simple;
-	bh=MC1tqkx0dq6JIK9w+hRVAVYH7jcS4hbI5NItNUnwQKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KvcMz18L0ptFEG7ba7Rx1bJUbSgE/QbKkqgO68XBqKhHUWW6FlS01ZAUqtEyUrHW1kkbG7jEWewrylRbdK+a8TTxLWbZ4DYp97lqqRmbcGkO9u1PNR4YsTbveSqLMZnKRdCBY+7T5QE0dYPwWbH5fi/4Yg4PsPZBryU+jhrah/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=OAwwd5bz; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1750929708; c=relaxed/simple;
+	bh=TDgaHxV73A15VcYZvTJnOtCN8fl/sdcXVVdEId4/O5Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=We1XV1YLXmcD9v2hqlcCVXqWhfYpEwpGJveqKqNlHaV6wJt00MeuEjtDUw0tWQhR6+/MxFP1bQyq/0UOPBwgW75ZmKdC242qyY/T3u58opTQ6AE1cghA2Ro/x2sb1Mf69VhZeSj2+YyjKEip0pemWHvzNIb8l2oZb1CMnM0iBuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RfqBaS3V; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="OAwwd5bz"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-453647147c6so7921565e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:21:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1750929672; x=1751534472; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l110quEZgWrA+tUVqx7bwejOA2gGYkFrBUl+v3tOblQ=;
-        b=OAwwd5bz6PxrI0EmaU816U3tsZkj5ubuvtYa6+oJ13PBGM9gjvHtZcHueuOqGIeoEx
-         zw3MVbtTof0bOVrBEr63/FAZNHN5bpQs4vaafxZs7b3XIwqULym74hk7B4L0TL/7Zz9F
-         JutzlplNEPmG7Jhs42RRrjVjJI8RhQXkOmhc/OL2Doo/FxvK2cgX5wc06Un1BtECTgzg
-         5YNKnntsBgJHYRq7sAcdKm8+eOabJsi4Yv2c2HmS6LryGF9h1Yvxfrd7ZB1Ba+TJH82u
-         0tmYuV3NcTGV3UlBr5f4AxDLLXlxnOFGqhk1xPNyB6RN6PY+KZGmNv76i6vpixCoY+Gi
-         q/YQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RfqBaS3V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750929705;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V1RpWIxhpIhaG+dP+Aru0m/IoAlqoaj7YUbbsozIeE8=;
+	b=RfqBaS3Vz0PmBObxqef6nt0bdUOo3VWN488U3OprkQUHPHFBxxRP/Baq8G5aJjXQ/zAedm
+	+Qk4GacT95FXB/J7G+gN8nTDIUrejT9d87oEEaUGoOilKTmh20bklp4WjTrjjFDmqC5OMD
+	Uk+8kEHkDP8hXeot58fi/rsBtASMez0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-62-gJCYP9X6P8OADV37SfRxmg-1; Thu, 26 Jun 2025 05:21:43 -0400
+X-MC-Unique: gJCYP9X6P8OADV37SfRxmg-1
+X-Mimecast-MFC-AGG-ID: gJCYP9X6P8OADV37SfRxmg_1750929702
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a50049f8eeso346303f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:21:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750929672; x=1751534472;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l110quEZgWrA+tUVqx7bwejOA2gGYkFrBUl+v3tOblQ=;
-        b=qdvKd9VxKaqPPsGdusxAPMEXoBAi98VYXmdgV090XxIHGNJbR9CD6xXeyUSv5GHGSh
-         HctRxXXK6JFXdkd53MaJjnEANvV1XUk0T8pKlbck0OlJORCBqwCIAdNdWKGrGEULsqyY
-         L4TSMEZ6Rh1TLjBnjfXybcHAb8Vob9fxGcYlZyHvGU/adWX6qkhjK/EbmrDeyloFbuR7
-         yNuiUUmqKSb0l8bjQjXt89D8Jpv0niQE1WRhqpTYUsfz5wX+Fb8CElAUDHn03jIOhKkv
-         ckp4XQ1LsEIeNzj8mimbMtzmdTSfLQy/z71N/noN6HZo7Njvo7sE746pWaKprHqXUCJo
-         KJPw==
-X-Forwarded-Encrypted: i=1; AJvYcCViBqxnkB3TmuwzVBu/9uO8PuM4yR0rBPjdeK3tt8odc6Ljl+WBQDVby0JPoVj4BqfhA+xCQvM/cTxIEX0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgBHPdnsoLCgv1ZM/CgW082AZO4Oiofd/Hd7dkBECTkbLc0qgh
-	Rw9gstijUzIqA2knDVi0GxEI3OvuwdbRnG15V4Wch2T9R5BwxKeMPxE50SE9YYI9OTw=
-X-Gm-Gg: ASbGncuhb/dPLRyt1Kt2qFTdJmGjHK6aCX3ifTT34pB9vqKCDIHTzrKRrIw/npKCPWs
-	OulDMqgPwDhnL74EMSvY4bRrF7l5q4GiugRx+miZ5wZBBxDE8VpwkTn/cMjzoiyIiIZ1viBPy61
-	/ctlZ3gesjPPmMT6BwRJyxAdCfOyMpAPHcZYygK+M4RO/nqZZNBhE2wPyUc3t5WvrUuMY0teL/F
-	flGg9RKkzBcK+HEQyO7fvjG+w1QylmJfJF0SipNzbGUtdupy+el4aYV23ci5ux34HHO8b+c5gDp
-	s52F2D731aNpcdagoYZQDCEf/pt5oNSgQOoBn4lN7ozqQLNZmw==
-X-Google-Smtp-Source: AGHT+IHeq7BmdkNC1QZmLNEvB/p5lyP1vBsXS+C4YxORLxnk7NCsQMhF/36QZ4+0Ss1Q61RwIEK+Ag==
-X-Received: by 2002:a05:600c:a44:b0:453:9b7:c214 with SMTP id 5b1f17b1804b1-45381b2155cmr60602115e9.29.1750929672028;
-        Thu, 26 Jun 2025 02:21:12 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::5485])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3fe587sm13667895e9.19.2025.06.26.02.21.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 02:21:11 -0700 (PDT)
-Date: Thu, 26 Jun 2025 11:21:10 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Aleksa Paunovic via B4 Relay <devnull+aleksa.paunovic.htecgroup.com@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Jonathan Corbet <corbet@lwn.net>, Palmer Dabbelt <palmer@sifive.com>, 
-	Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
-Subject: Re: [PATCH v4 6/7] riscv: Add tools support for xmipsexectl
-Message-ID: <20250626-a1aca9887bbf5410741e17c4@orel>
-References: <20250625-p8700-pause-v4-0-6c7dd7f85756@htecgroup.com>
- <20250625-p8700-pause-v4-6-6c7dd7f85756@htecgroup.com>
+        d=1e100.net; s=20230601; t=1750929702; x=1751534502;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V1RpWIxhpIhaG+dP+Aru0m/IoAlqoaj7YUbbsozIeE8=;
+        b=VHlHq69J659D/BGB4ssxFs0378hP8U6siMDzWOe5X3x4/juWx0l56I4CMzK0Eoa+Z8
+         rsprnNCdj51rUqXwKuCgyR+8/1Asho77H2M9KwaRdWykvz99oCw695luj8nUH7iWDyyl
+         VRSu7m+BNn4oqmI6RVhoTFFVX2I+dwIahRHKlq7MACAGy5gohmAWPUqSTi+uLi82RDlx
+         QqPhsVsr1RzxECGjxToGkxpTT606ieXvrjrRTYUigW/9wW6TcUG895oHdHKJOaRMOejs
+         dO15hC2ItGUXszukNWqHtaAcSrvASxMa8GrWinUAqNCQKF1i3crcG4n/iWJUK1IpTPGm
+         J50w==
+X-Forwarded-Encrypted: i=1; AJvYcCUaH7DoDw/GD5SMots3698E8ra82yEneIrJa7K0aaeDSVoKzsB/lgiP49U0xoAGvhK9wCioP7W1HFBanZI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywj169rla2hDaPUaGfYLlsulm4LMTa7/eBDi4R1LVY6A0R+7Um4
+	+3Hz+g5KrPlBAFqcNZO4KPC3K2s/IDqSO9NVDbuBPI9RzT340xJvjDUU4r4ZrJV6FAJ4w+NlHC6
+	FDs3OiLqEKCoOxklhD3AHaXXvKL3c73+VYNmLDXFhhmHtHDXNniCeImOCHCIT8sumyA==
+X-Gm-Gg: ASbGncsAPx4P8uKk6cnQ/EWrqS7BKi8BoCyMXKHBQ1OhqD3JKVmTi38S0HodykchKAJ
+	xnHdqSSSPFp7zaRyfnmyWHpnP8K4y5tjphLunrR84U4WHiiHgOw09YOTu4kuJH1RoLQmzVpAR1Z
+	YVNsEBecgA3zmQy+7lpIhtDAI5zSdu7RCoWFZrfobM89WRmM6rRDrsR5OYhCr1OO9cNtPDIpGff
+	c/9yewNn5RX7We86VJyoFUEI9H59Js26Lqjk98Ife4OK73rTUYXCOYOTJErVw7o+MSRr90urYZd
+	SUoIePyXXAyFlLR9btCw2urEepN8An00Kl+dB8PFIYa2d7H1GwYEXYaZ+LG334KrZYcZew==
+X-Received: by 2002:a05:6000:2c0f:b0:391:3aaf:1d5f with SMTP id ffacd0b85a97d-3a6ed6746a1mr5495715f8f.52.1750929702301;
+        Thu, 26 Jun 2025 02:21:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGQH908ptIl4XWG9VAtNNzn4GS6AhbkLtgnZXZlatl+hDbFHITtgt5W1+goG/gGONisVH6vpA==
+X-Received: by 2002:a05:6000:2c0f:b0:391:3aaf:1d5f with SMTP id ffacd0b85a97d-3a6ed6746a1mr5495688f8f.52.1750929701873;
+        Thu, 26 Jun 2025 02:21:41 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:244f:bd10:2bd0:124a:622c:badb? ([2a0d:3344:244f:bd10:2bd0:124a:622c:badb])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805ed03sm7021421f8f.33.2025.06.26.02.21.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 02:21:41 -0700 (PDT)
+Message-ID: <87a7f8a6-71b1-4b90-abc7-0a680f2a99cf@redhat.com>
+Date: Thu, 26 Jun 2025 11:21:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625-p8700-pause-v4-6-6c7dd7f85756@htecgroup.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: usb: usbnet: fix use-after-free in race on workqueue
+To: "Peter GJ. Park" <gyujoon.park@samsung.com>,
+ Oliver Neukum <oneukum@suse.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <CGME20250625093354epcas1p1c9817df6e1d1599e8b4eb16c5715a6fd@epcas1p1.samsung.com>
+ <20250625-usbnet-uaf-fix-v1-1-421eb05ae6ea@samsung.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250625-usbnet-uaf-fix-v1-1-421eb05ae6ea@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 25, 2025 at 04:21:01PM +0200, Aleksa Paunovic via B4 Relay wrote:
-> From: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+On 6/25/25 11:33 AM, Peter GJ. Park wrote:
+> When usbnet_disconnect() queued while usbnet_probe() processing,
+> it results to free_netdev before kevent gets to run on workqueue,
+> thus workqueue does assign_work() with referencing freeed memory address.
 > 
-> Use the hwprobe syscall to decide which PAUSE instruction to execute in
-> userspace code.
+> For graceful disconnect and to prevent use-after-free of netdev pointer,
+> the fix adds canceling work and timer those are placed by usbnet_probe()
 > 
-> Signed-off-by: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+> Signed-off-by: Peter GJ. Park <gyujoon.park@samsung.com>
+
+You should include a suitable fixes tag, and you should have specified
+the target tree ('net' in this case) in the prefix subjext
+
 > ---
->  tools/arch/riscv/include/asm/vdso/processor.h | 27 +++++++++++++++++----------
->  1 file changed, 17 insertions(+), 10 deletions(-)
+>  drivers/net/usb/usbnet.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/tools/arch/riscv/include/asm/vdso/processor.h b/tools/arch/riscv/include/asm/vdso/processor.h
-> index 662aca03984817f9c69186658b19e9dad9e4771c..027219a486b7b93814888190f8224af29498707c 100644
-> --- a/tools/arch/riscv/include/asm/vdso/processor.h
-> +++ b/tools/arch/riscv/include/asm/vdso/processor.h
-> @@ -4,26 +4,33 @@
+> diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+> index c04e715a4c2ade3bc5587b0df71643a25cf88c55..3c5d9ba7fa6660273137c80106746103f84f5a37 100644
+> --- a/drivers/net/usb/usbnet.c
+> +++ b/drivers/net/usb/usbnet.c
+> @@ -1660,6 +1660,9 @@ void usbnet_disconnect (struct usb_interface *intf)
+>  	usb_free_urb(dev->interrupt);
+>  	kfree(dev->padding_pkt);
 >  
->  #ifndef __ASSEMBLY__
->  
-> +#include <asm/hwprobe.h>
-> +#include <sys/hwprobe.h>
-> +#include <asm/vendor/mips.h>
->  #include <asm-generic/barrier.h>
->  
->  static inline void cpu_relax(void)
->  {
-> +	struct riscv_hwprobe pair;
-> +	bool has_mipspause;
->  #ifdef __riscv_muldiv
->  	int dummy;
->  	/* In lieu of a halt instruction, induce a long-latency stall. */
->  	__asm__ __volatile__ ("div %0, %0, zero" : "=r" (dummy));
->  #endif
->  
-> -#ifdef CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE
-> -	/*
-> -	 * Reduce instruction retirement.
-> -	 * This assumes the PC changes.
-> -	 */
-> -	__asm__ __volatile__ ("pause");
-> -#else
-> -	/* Encoding of the pause instruction */
-> -	__asm__ __volatile__ (".4byte 0x100000F");
-> -#endif
-> +	pair.key = RISCV_HWPROBE_KEY_VENDOR_EXT_MIPS_0;
-> +	__riscv_hwprobe(&pair, 1, 0, NULL, 0);
-> +	has_mipspause = pair.value & RISCV_HWPROBE_VENDOR_EXT_XMIPSEXECTL;
-> +
-> +	if (has_mipspause) {
-> +		/* Encoding of the mips pause instruction */
-> +		__asm__ __volatile__(".4byte 0x00501013");
-> +	} else {
-> +		/* Encoding of the pause instruction */
-> +		__asm__ __volatile__(".4byte 0x100000F");
-> +	}
-> +
+> +	timer_delete_sync(&dev->delay);
+> +	tasklet_kill(&dev->bh);
+> +	cancel_work_sync(&dev->kevent);
+>  	free_netdev(net);
 
-cpu_relax() is used in places where we cannot afford the overhead nor call
-arbitrary functions which may take locks, etc. We've even had trouble
-using a static key here in the past since this is inlined and it bloated
-the size too much. You'll need to use ALTERNATIVE().
+This happens after unregister_netdev(), which calls usbnet_stop() that
+already performs the above cleanup. How the race is supposed to take place?
 
-Thanks,
-drew
+/P
 
-
->  	barrier();
->  }
->  
-> 
-> -- 
-> 2.34.1
-> 
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
