@@ -1,118 +1,157 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out.smtpout.orange.fr (out-69.smtpout.orange.fr [193.252.22.69])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E520F2EBDE2
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04A22EAD1A;
+	Thu, 26 Jun 2025 15:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750950380; cv=none; b=ilY20ZNTqda6At9llbc8sctMjHCfTBCSSQE2/2isZ+eYO85MiGxIdHbqeDKon0fn1dksrpfftebhTY0TtD7pXUqKjyFYjz55lMVfrKO/+gMYETCgMsYjZBxXFECIsPK8gSy53OcjNZxe8HC3xU6amhQhpKhacklIE5mjZ4UkDKI=
+	t=1750950410; cv=none; b=jVEW8ZSdmf8vCmwsbgqCCTm6t+QuzTZ+xiOxqBVJXOB4Em9/noTIzYieTBr9C/uzEsBJ8siHfoJvwL+B2IDYQMPyhZszPliH4RaxsMgGUgG3VG7UO8QFErVm/IP+oS54feGqbs+COL9eXfmGVU6hO5vNTTfHiU3l1ajl6BQsvXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750950380; c=relaxed/simple;
-	bh=GjyxDuLK1zIIyCnBbyEnronQ6F6eitBNZR17OVA4BrA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MlppG8EiGEpe/OmuuHDrB7HPz1emYks+eHTdAmSrPzg+hYCeVPA/0PF2L6+St8R/WbFV0T9Jq4q3Mg7i22s0G9cTEETUgN5pyzwminIMkL//fM1k13knltNJf8B+GhkbtdIJA+fr1rri2MqfVkjnJ2u83cz4OW9aTDRxUet7ThY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uUoAz-0006sQ-3n; Thu, 26 Jun 2025 17:06:09 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uUoAx-005T6F-1f;
-	Thu, 26 Jun 2025 17:06:07 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 24007431329;
-	Thu, 26 Jun 2025 15:06:07 +0000 (UTC)
-Date: Thu, 26 Jun 2025 17:06:06 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: linux-can@vger.kernel.org, 
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>, LKML <linux-kernel@vger.kernel.org>, 
-	kernel-janitors@vger.kernel.org, Chen Ni <nichen@iscas.ac.cn>
-Subject: Re: [PATCH v2] can: ucan: Use two USB endpoint API functions rather
- than duplicating their implementations
-Message-ID: <20250626-opalescent-tireless-locust-564d48-mkl@pengutronix.de>
-References: <bf5442d1-34e0-495f-8a56-4e47f53ca4ad@wanadoo.fr>
- <a7a00125-b393-4283-a7dc-6c80ced8e7e6@web.de>
- <c96a5d2c-0ee1-4e3e-a95d-d38a8f668feb@wanadoo.fr>
- <0768a008-d4a9-41ec-bc47-1e7c63362296@web.de>
- <c04376f2-6ab7-4256-8bdc-aa6ff3ea88b4@wanadoo.fr>
- <7e6f8929-6665-45af-b01b-167a1aa80305@web.de>
- <CAMZ6Rq+PEZWzxNYDODq-Rz_Y8T_XEihyZKoY-MYo6bn5ATaGLQ@mail.gmail.com>
- <1e64bcef-33f1-4295-b91f-d4598b32b866@web.de>
- <57815326-740d-4053-8b85-c5e57d7cec90@wanadoo.fr>
- <e70a929f-a5c5-487e-9231-61b5423115db@web.de>
+	s=arc-20240116; t=1750950410; c=relaxed/simple;
+	bh=GW/yaWy2sR29otqwqoWWBOVeJiyPIEy30RjtkuFDJug=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=esmAhaPsliLsMWuKYdfUu1DYtCv7C7/QaDnO05Yg1cCpnMoY0c7+yAfNjUlreIfz73mCHqex7lQp54JP4OWgy1s5g8D6egSTQgh6QsdZ9np71DcX5GJ4BYOLAj+6VbR5SsFwesjrclIAobjAfgsj+F8dzJJgkZSzJNo60yszSXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Nrd7fB0O; arc=none smtp.client-ip=193.252.22.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Nrd7fB0O"
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id UoBPuUP4J9E9ZUoBRuQLvm; Thu, 26 Jun 2025 17:06:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1750950399;
+	bh=lAvuKIXenlfXd6kGqY1fPVYHrRTlED4Xf7/Lpv1aLrs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=Nrd7fB0OSxZVpyYm44m5rfXJDO4SEsJ0bRwqf8WcxkrosG6aZ4zRLTcmdO2e/psda
+	 TUgtqrZ/WBmeIhS24PV1IIaFfagggaSAnM9bdmAd9/ZFaoykd5OIxbeks+WKvIuw6D
+	 pGRw5tZ7+Waz1cGCS5rAgesOXXLQUcf/jT+iYY+wcb17OQ/4zFSd+Nn+HVhSsHJBq0
+	 tBD8Cf13My9nMyrvGLGl6XvlAZdG7WJrv+LgMkshvUfDsyiGBepgNMEraeADRxPZ+w
+	 7vB7x1ivxFLpdQHye+Qvbu+rRrXiH13ix1TjeP8XrNS5JBzeJ7CtBlqDjncwYErizZ
+	 qTfNZOCa2m9bQ==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 26 Jun 2025 17:06:39 +0200
+X-ME-IP: 124.33.176.97
+Message-ID: <fa9e2fae-012a-4a34-883b-30c4c2845e9e@wanadoo.fr>
+Date: Fri, 27 Jun 2025 00:06:34 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="edbne6u4w4n6o4ul"
-Content-Disposition: inline
-In-Reply-To: <e70a929f-a5c5-487e-9231-61b5423115db@web.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests: harness: Rework is_signed_type() to avoid
+ collision with overflow.h
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, Kees Cook <kees@kernel.org>,
+ Shuah Khan <shuah@kernel.org>
+References: <20250624231930.583689-1-seanjc@google.com>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <20250624231930.583689-1-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 25/06/2025 at 08:19, Sean Christopherson wrote:
+> Rename is_signed_type() to is_signed_var() to avoid colliding with a macro
+> of the same name defined by linux/overflow.h.  Note, overflow.h's version
+> takes a type as the input, whereas the harness's version takes a variable!
+> 
+> This fixes warnings (and presumably potential test failures) in tests
+> that utilize the selftests harness and happen to (indirectly) include
+> overflow.h.
+> 
+>   In file included from tools/include/linux/bits.h:34,
+>                    from tools/include/linux/bitops.h:14,
+>                    from tools/include/linux/hashtable.h:13,
+>                    from include/kvm_util.h:11,
+>                    from x86/userspace_msr_exit_test.c:11:
+>   tools/include/linux/overflow.h:31:9: error: "is_signed_type" redefined [-Werror]
+>      31 | #define is_signed_type(type)       (((type)(-1)) < (type)1)
+>         |         ^~~~~~~~~~~~~~
+>   In file included from include/kvm_test_harness.h:11,
+>                    from x86/userspace_msr_exit_test.c:9:
+>   ../kselftest_harness.h:754:9: note: this is the location of the previous definition
+>     754 | #define is_signed_type(var)       (!!(((__typeof__(var))(-1)) < (__typeof__(var))1))
+>         |         ^~~~~~~~~~~~~~
+> 
+> Opportunistically use is_signed_type() to implement is_signed_var() so
+> that the relationship and differences are obvious.
+> 
+> Fixes: fc92099902fb ("tools headers: Synchronize linux/bits.h with the kernel sources")
+> Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+> 
+> This is probably compile-tested only, I don't think any of the KVM selftests
+> utilize the harness's EXPECT macros.
+> 
+>  tools/testing/selftests/kselftest_harness.h | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+> index 2925e47db995..f3e7a46345db 100644
+> --- a/tools/testing/selftests/kselftest_harness.h
+> +++ b/tools/testing/selftests/kselftest_harness.h
+> @@ -56,6 +56,7 @@
+>  #include <asm/types.h>
+>  #include <ctype.h>
+>  #include <errno.h>
+> +#include <linux/overflow.h>
+>  #include <linux/unistd.h>
+>  #include <poll.h>
+>  #include <stdbool.h>
+> @@ -751,7 +752,7 @@
+>  	for (; _metadata->trigger; _metadata->trigger = \
+>  			__bail(_assert, _metadata))
+>  
+> -#define is_signed_type(var)       (!!(((__typeof__(var))(-1)) < (__typeof__(var))1))
+> +#define is_signed_var(var)	is_signed_type(__typeof__(var))
+
+It would potentially make sense to add the is_signed_var() to overflow.h. I see
+a couple places doing some is_signed_type(typeof(x)):
+
+  $ git grep "is_signed_type(typeof" | wc -l
+  5
+
+And I can imagine this number growing in the future.
+
+But this is by no way a reason strong enough to block this patch. It is just a
+random idea I am sharing here.
+
+So that said:
+
+Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+
+>  #define __EXPECT(_expected, _expected_str, _seen, _seen_str, _t, _assert) do { \
+>  	/* Avoid multiple evaluation of the cases */ \
+> @@ -759,7 +760,7 @@
+>  	__typeof__(_seen) __seen = (_seen); \
+>  	if (!(__exp _t __seen)) { \
+>  		/* Report with actual signedness to avoid weird output. */ \
+> -		switch (is_signed_type(__exp) * 2 + is_signed_type(__seen)) { \
+> +		switch (is_signed_var(__exp) * 2 + is_signed_var(__seen)) { \
+>  		case 0: { \
+>  			uintmax_t __exp_print = (uintmax_t)__exp; \
+>  			uintmax_t __seen_print = (uintmax_t)__seen; \
+> 
+> base-commit: 78f4e737a53e1163ded2687a922fce138aee73f5
 
 
---edbne6u4w4n6o4ul
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] can: ucan: Use two USB endpoint API functions rather
- than duplicating their implementations
-MIME-Version: 1.0
+Yours sincerely,
+Vincent Mailhol
 
-On 26.06.2025 16:46:32, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Thu, 26 Jun 2025 16:34:26 +0200
->=20
-> * Reuse existing functionality from usb_endpoint_is_bulk_in()
->   and usb_endpoint_is_bulk_out() instead of keeping duplicate source code.
->=20
-> * Omit two comment lines which became redundant with this refactoring.
->=20
-> The source code was transformed by using the Coccinelle software.
->=20
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-
-Sorry, this patch is not Signed-off-by its sender.
-
-Please don't use existing threads for vN+1.
-
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---edbne6u4w4n6o4ul
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmhdYdoACgkQDHRl3/mQ
-kZwCRAgAjj58DlDlSwFeLAshpJv805TpIGkS6gJB2osul46B81DwCkYLfEJ+9uXf
-PU8jBvSpvcw9iol10bXfBtOkkR/LbfRPInh68LeevsF5/d3MVzAQ3cU42cvUoHjk
-CC6CZJxeFeWrnB56wBPi/OJ6x6m2u7h2+5NTj3tRn3LBHOrfTkoDYTecpAQyYRnM
-kUFuJL2ZljwJhh8Oa17rsijGg3c+lGu5skXi96ZqwkuALa5OmrltZsHa6Zu4IuG0
-hCtgWzxFMW23pEP7hWHQQWvdiStZUhXdUyFASt/yGY9jeu+rFOpy1l8OoAn4JERv
-Lr4n/rKGhM8pv0zI/Sohc1ZmDPZO7w==
-=snTM
------END PGP SIGNATURE-----
-
---edbne6u4w4n6o4ul--
