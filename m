@@ -1,233 +1,132 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7181922F6
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06D328ECC0;
+	Thu, 26 Jun 2025 13:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750946147; cv=none; b=rAUbriYaqhWsHMte49KmxoM1TNH+otXOF65mCzoCHBxhomoLyS1k24yPyyw9c+7zRwedAvZf7enuwZFRH18W40RnfAWaEljAEsbDjQscCtdor7ZhG0uQgzqp+b4WR7Ct7m74jlrQA+/ldRJfCfef+NRj2DMCGFYinm9NTYApHOQ=
+	t=1750946177; cv=none; b=F6nBex3EM9Ael8iCV7Ge3aMoaijCgOQ39UoygHz1zvK18MiNvU7Y7LmsK//e0abe7J4eJ3FkesjrbFh6WPaPPYh2t0OUIQk58Z6DipMufyWFTVwmH17lbze0pcUrUZGED3RFLqMXMZKfZfkIR+2xeJurizC2wgQ/bb0T2wrVWn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750946147; c=relaxed/simple;
-	bh=p8dTFwOXaJolnPKKZxBvR0kA3vRQTNDo779L0Xg/S4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J9puI3fnyJc2yoVdJPmrVmUWjdbTV8dmWPra1hn6p38yn1WYq3w5gZtSOfpvFNh6fwWJ/kB/zPLYutKFqnRMzT8mlarn4DNN79rbFRvmLsNPYslJu/KHP7U2S9VzTstWBWyMHUkKEyEDerLCX20JekG3NVWiONjQsOScR71TDFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=dLm84g3i; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
+	s=arc-20240116; t=1750946177; c=relaxed/simple;
+	bh=4bTe33HNwDNdpF7xZ6t6fopoHMncX06V4KSWqXqFCtA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bWvhNOMBbUtjRhnmmElAle3MgXZ2qQyjqC0WC7I891Eu0ioEIKHSLDHRKiz6KxcLLOm35EjyTl8xlQuyMLJSNHj5Wn2IxScinP+KC/YgwBUxtufRszoHpDBd786vumLmHjA8cWYAiWk+7/LPbr4tZ04cN0LhsqpI549v25R1zfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g6yVnnDu; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="dLm84g3i"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7d38b84984dso146670385a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:55:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1750946144; x=1751550944; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+KY6uoWqFt+gH5qFF/7TA+aeZmO9qstem/kfCaD0HTU=;
-        b=dLm84g3ivfuQWL2r12ELv7h52SvlKvyzA3gAyTGQ2jJR0KGpFnnX6bWX34Cl9O3nSN
-         DeCHv6Fz9Nf0dtw+Sek7glBwFOoTgbq0jqp7SF4vtJht8+ZNqaDyp62tRUkBeqQaiG8n
-         3Y6y7hndWDVH83rG9FSZ98EqHliUM2CtcUupkFNB1Q2I6940CJYxAXQbARA1jBLgkJwZ
-         pL+LYKVPlKcrjgg+CYu4Se4PSIUwR4rHbvGcHTKnY8lAWvglDp2yBvuXBJXm/CebYRZV
-         vj49/d8tICu153jRw2v7ly/vfIZI1BrKPpzWtUWN1QbUTG4d4ETQDZzMcura2/zYrymb
-         3j/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750946144; x=1751550944;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+KY6uoWqFt+gH5qFF/7TA+aeZmO9qstem/kfCaD0HTU=;
-        b=EQE2eNpzfgv4j/Y+1GavZged6QIfLNOslQVybefrd7gzDaAU+hx5TMBPC3BkRzDjoj
-         FFQWCZrgitxtyZGzWFdjKUowCDe5sVpsVAmpvg+oI1xU1piyjpluyoNyuuAvHFGVsfHd
-         mShdkZCaQMB49anzX+W0tJUaIVQPF8FOgSH3SfeA5KlAb4SHZCV7eTsExtOy5xVRcHI4
-         ldZlT9EEnCuK8nJL0w79avGJxIhevQC6KPQFkRCaHPBk+AOmsHlPzo/7HnWEA16GxT/N
-         mBz0WqIt+RdSePoWHcsGBWTWaiQFVdSuD1T7omZtfGYM/0VsDXCw667YryFulZ2R0oYs
-         gT6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUV3r8dGVCgfp6JKdXLaUnv32hik4igu7JsJ78AS8ixasjpmRZYDGomVu2zqZD5Asm4ITAsFSrqi1ZA4hQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZRrivu2eqK0WqRHB9pYeGikJb8B8V9Mjqj84jEXAKqsvg/OfD
-	ia32ZAhCMvnzaCyFj/ctxQTQPl5/GGigVgmLkHuzBr3fUKAuFN08AoMRZJyv7Llk5d0=
-X-Gm-Gg: ASbGncuXHC8PSZriunXP57Tkqy8GvDSJjv0XKQOPzG1v6dYRJ23U2Y8HmWMUMQooX6/
-	ikXXJrOaWoN+Bac5FpDJobg6GWHon5Eicqqv08MSpgcCuzGTSqRHQ1wFoFAeyJnvAmn7YOwk3Lo
-	9M6cZ3r3WAV2GsXavXVOsLTN1Gnz3CtgBPFJy4ChhWrtPvRh6sCK1ilVsd5Pbm8OGkXljrRrCSA
-	KV/5HEdENNm3bsF8mhTjnaEAzBdg0OSKJ+THO6QyArumaSLaeSL32nDd0vg/lzfnP0GM1YTsOyC
-	YYtlWrT3Vzrueu3sOc5BwmqNBXWWL76/N6zXuTQsTBoD0MbANoVRbqfqcyD6+tHngetofKrutrj
-	ggcg1oCL9X91t8cgtvuhHBIy4K9+tuf5gMVpEZKVmTpxUUqSWRQ==
-X-Google-Smtp-Source: AGHT+IGF/axsm6TCoasMp3dJRYEbfjzn0cVauHe6eM7reaEROspM7hrYNsrohQKzR2Mdxe6cc1rxiA==
-X-Received: by 2002:a05:6214:ca8:b0:6fa:ccb6:602a with SMTP id 6a1803df08f44-6fd5ef83730mr118879916d6.20.1750946144137;
-        Thu, 26 Jun 2025 06:55:44 -0700 (PDT)
-Received: from hermes.local (204-195-96-226.wavecable.com. [204.195.96.226])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd7718a750sm7634076d6.8.2025.06.26.06.55.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 06:55:44 -0700 (PDT)
-Date: Thu, 26 Jun 2025 06:55:41 -0700
-From: Stephen Hemminger <stephen@networkplumber.org>
-To: z30015464 <zhongxuan2@huawei.com>
-Cc: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <dsahern@gmail.com>, <gaoxingwang1@huawei.com>, <yanan@huawei.com>,
- <tangce1@huawei.com>
-Subject: Re: [Issue] iproute2: coredump problem with command ip link xstats
-Message-ID: <20250626065519.753de723@hermes.local>
-In-Reply-To: <20250619074552.1775627-1-zhongxuan2@huawei.com>
-References: <20250619074552.1775627-1-zhongxuan2@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g6yVnnDu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750946176; x=1782482176;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4bTe33HNwDNdpF7xZ6t6fopoHMncX06V4KSWqXqFCtA=;
+  b=g6yVnnDu5WsfHpxH90VqjdUweoBXlO/7TVT9UsYAG8fbsJXP9cTRkVTD
+   lBrRL5A5yR6d2OS/VV88ZY/EOygrk8h0Tef1wJb1UDXwGRIZt+Lfg6q5s
+   yYNy0Ds7R0c/RHVFlvuaoiRZ/d2FWiYx6EaWIf0seAGfzeaOTAVum/n3K
+   PASmqR93ZmCIPmSkoB2h5yr2FmnWcfx+PoFfB+QJhg/3ofw3MN1gzzxIf
+   WOHe6ssrun5xosnelDjIumXIQP2GYa7obH62hgeEFedMZL4N780ZJQEEf
+   Jt1dBJ3PRtYUsFmA1BgDU77utbH17Upj+YSW2YyUsAXwtt/DlF1EhA2n7
+   g==;
+X-CSE-ConnectionGUID: X1bvFEkHS1SZOvzuU3yxHw==
+X-CSE-MsgGUID: mT17RoKiSrSW3WGtwkuclg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53316380"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="53316380"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 06:56:15 -0700
+X-CSE-ConnectionGUID: E2+7CxyjRJebod23oDFikQ==
+X-CSE-MsgGUID: z/osQlwIRCyQVaFcbklmiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="152146945"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 26 Jun 2025 06:56:11 -0700
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Raag Jadav <raag.jadav@intel.com>,
+	"Tauro, Riana" <riana.tauro@intel.com>,
+	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
+	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+	intel-xe@lists.freedesktop.org,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] drm/xe: i2c support
+Date: Thu, 26 Jun 2025 16:56:05 +0300
+Message-ID: <20250626135610.299943-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, 19 Jun 2025 15:45:52 +0800
-z30015464 <zhongxuan2@huawei.com> wrote:
+Hi,
 
-> Hello everyone,
->=20
-> I having an issues while using iprute2 6.15.0. When I created a bond and =
-intended to use 'ip link xstats' command to query extended information, a s=
-tack overflow occurred, followed by a coredump. I couldn't identify the roo=
-t cause through the code and need some help.
->=20
-> Example:
-> ifconfig eth1 up
-> modprobe bonding mode=3D4 max_bonds=3D1 lacp_rate=3D1 miimon=3D100
-> ip addr add 7.7.0.100/24 dev bond0
-> ip link xstats type bond dev bond0
->=20
-> Here is the result:
-> [root@localhost /]# ip link xstats type bond
-> bond0
->                     LACPDU Rx 0
->                     LACPDU Tx 0
->                     LACPDU Unknown type Rx 0
->                     LACPDU Illegal Rx 0
->                     Marker Rx 0
->                     Marker Tx 0
->                     Marker response Rx 0
->                     Marker response Tx 0
->                     Marker unknown type Rx 0
-> *** stack smashing detected ***: terminated
-> Aborted (core dumped)
->=20
-> Here is the result with valgrind:
-> [root@localhost /]# valgrind ip link xstats type bond dev bond0
-> =3D=3D242893=3D=3D Memcheck, a memory error detector
-> =3D=3D242893=3D=3D Copyright (C) 2002-2022, and GNU GPL'd, by Julian Sewa=
-rd et al.
-> =3D=3D242893=3D=3D Using Valgrind-3.22.0 and LibVEX; rerun with -h for co=
-pyright info
-> =3D=3D242893=3D=3D Command: ip link xstats type bond dev bond0
-> =3D=3D242893=3D=3D
-> bond0
->                     LACPDU Rx 0
->                     LACPDU Tx 0
->                     LACPDU Unknown type Rx 0
->                     LACPDU Illegal Rx 0
->                     Marker Rx 0
->                     Marker Tx 0
->                     Marker response Rx 0
->                     Marker response Tx 0
->                     Marker unknown type Rx 0
-> *** stack smashing detected ***: terminated
-> =3D=3D242893=3D=3D
-> =3D=3D242893=3D=3D Process terminating with default action of signal 6 (S=
-IGABRT)
-> =3D=3D242893=3D=3D    at 0x498AB5C: __pthread_kill_implementation (pthrea=
-d_kill.c:44)
-> =3D=3D242893=3D=3D    by 0x493CF45: raise (raise.c:26)
-> =3D=3D242893=3D=3D    by 0x492733B: abort (abort.c:79)
-> =3D=3D242893=3D=3D    by 0x49281A8: __libc_message.cold (libc_fatal.c:152)
-> =3D=3D242893=3D=3D    by 0x4A1621A: __fortify_fail (fortify_fail.c:24)
-> =3D=3D242893=3D=3D    by 0x4A17435: __stack_chk_fail (stack_chk_fail.c:24)
-> =3D=3D242893=3D=3D    by 0x157A81: bond_print_stats_attr (iplink_bond.c:8=
-77)
-> =3D=3D242893=3D=3D    by 0x157B02: bond_print_xstats (iplink_bond.c:895)
-> =3D=3D242893=3D=3D    by 0x1846A9: rtnl_dump_filter_l (libnetlink.c:926)
-> =3D=3D242893=3D=3D    by 0x185A01: rtnl_dump_filter_nc (libnetlink.c:969)
-> =3D=3D242893=3D=3D    by 0x16B0BF: iplink_ifla_xstats (iplink_xstats.c:71)
-> =3D=3D242893=3D=3D    by 0x118C3C: do_cmd (ip.c:131)
-> =3D=3D242893=3D=3D
-> =3D=3D242893=3D=3D HEAP SUMMARY:
-> =3D=3D242893=3D=3D     in use at exit: 33,878 bytes in 4 blocks
-> =3D=3D242893=3D=3D   total heap usage: 8 allocs, 4 frees, 66,755 bytes al=
-located
-> =3D=3D242893=3D=3D
-> =3D=3D242893=3D=3D LEAK SUMMARY:
-> =3D=3D242893=3D=3D    definitely lost: 0 bytes in 0 blocks
-> =3D=3D242893=3D=3D    indirectly lost: 0 bytes in 0 blocks
-> =3D=3D242893=3D=3D      possibly lost: 0 bytes in 0 blocks
-> =3D=3D242893=3D=3D    still reachable: 33,878 bytes in 4 blocks
-> =3D=3D242893=3D=3D         suppressed: 0 bytes in 0 blocks
-> =3D=3D242893=3D=3D Rerun with --leak-check=3Dfull to see details of leake=
-d memory
-> =3D=3D242893=3D=3D
-> =3D=3D242893=3D=3D For lists of detected and suppressed errors, rerun wit=
-h: -s
-> =3D=3D242893=3D=3D ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0=
- from 0)
-> Aborted (core dumped)
->=20
-> Through gdb debugging, __stack_chk_fail was triggered after the end of fu=
-nction bond_print_stats_attr function.
-> I first found this issue in version 6.6.0. After replacing package 6.15.0=
-, the issue still persists.=20
-> I also tried version 5.15.0 but there was no abnormality.
-> Maybe some modifications triggered this issue, but I cannot found the cau=
-se. I hope to get some helps.
->=20
-> Thank you very much.
->=20
->=20
->=20
+Changed since v3:
+- Cleanups as requested by Rodrigo.
+- The licence is now changed, but still need confirmation for it!
 
-Thanks, fixed it with:
+Changed since v2:
+- Added dependency on regmap when i2c is enabled.
 
-=46rom e4d10d064f5dbc64e4d2d73074c33b54d06b4514 Mon Sep 17 00:00:00 2001
-From: Stephen Hemminger <stephen@networkplumber.org>
-Date: Thu, 26 Jun 2025 06:50:17 -0700
-Subject: [PATCH] bond: fix stack smash in xstats
+Changed since v1:
+- Now rebased on top of drm-tip.
+- No longer ignoring errors from xe_i2c_probe().
+- Cleanups pointed out by Lucas.
 
-Building with stack smashing detection finds an off by one
-in the bond xstats attribute parsing.
+I've also included followup patches from Raag and Riana to this
+series.
 
-$ ip link xstats type bond dev bond0
-[Thread debugging using libthread_db enabled]
-Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
-bond0
-                    LACPDU Rx 0
-                    LACPDU Tx 0
-                    LACPDU Unknown type Rx 0
-                    LACPDU Illegal Rx 0
-                    Marker Rx 0
-                    Marker Tx 0
-                    Marker response Rx 0
-                    Marker response Tx 0
-                    Marker unknown type Rx 0
-*** stack smashing detected ***: terminated
+Original cover letter:
 
-Program received signal SIGABRT, Aborted.
+Some of the future GPUs will provide access to the on-board Synopsys
+DesignWare I2C host adapter. The i2c is used to connect various
+microcontrollers. The initially supported microcontroller unit is
+called Add-In Management Controller (AMC).
 
-Reported-by: z30015464 <zhongxuan2@huawei.com>
-Fixes: 440c5075d662 ("ip: bond: add xstats support")
-Cc: nikolay@cumulusnetworks.com
-Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
----
- ip/iplink_bond.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
 
-diff --git a/ip/iplink_bond.c b/ip/iplink_bond.c
-index 19af67d0..62dd907c 100644
---- a/ip/iplink_bond.c
-+++ b/ip/iplink_bond.c
-@@ -852,7 +852,7 @@ static void bond_print_stats_attr(struct rtattr *attr, =
-int ifindex)
- 	const char *ifname =3D "";
- 	int rem;
-=20
--	parse_rtattr(bondtb, LINK_XSTATS_TYPE_MAX+1, RTA_DATA(attr),
-+	parse_rtattr(bondtb, LINK_XSTATS_TYPE_MAX, RTA_DATA(attr),
- 	RTA_PAYLOAD(attr));
- 	if (!bondtb[LINK_XSTATS_TYPE_BOND])
- 		return;
---=20
+Heikki Krogerus (2):
+  i2c: designware: Add quirk for Intel Xe
+  drm/xe: Support for I2C attached MCUs
+
+Raag Jadav (1):
+  drm/xe/pm: Wire up suspend/resume for I2C controller
+
+Riana Tauro (1):
+  drm/xe/xe_i2c: Add support for i2c in survivability mode
+
+ drivers/gpu/drm/xe/Kconfig                  |   1 +
+ drivers/gpu/drm/xe/Makefile                 |   1 +
+ drivers/gpu/drm/xe/regs/xe_i2c_regs.h       |  20 ++
+ drivers/gpu/drm/xe/regs/xe_irq_regs.h       |   1 +
+ drivers/gpu/drm/xe/regs/xe_pmt.h            |   2 +-
+ drivers/gpu/drm/xe/regs/xe_regs.h           |   2 +
+ drivers/gpu/drm/xe/xe_device.c              |   5 +
+ drivers/gpu/drm/xe/xe_device_types.h        |   4 +
+ drivers/gpu/drm/xe/xe_i2c.c                 | 326 ++++++++++++++++++++
+ drivers/gpu/drm/xe/xe_i2c.h                 |  62 ++++
+ drivers/gpu/drm/xe/xe_irq.c                 |   2 +
+ drivers/gpu/drm/xe/xe_pm.c                  |   9 +
+ drivers/gpu/drm/xe/xe_survivability_mode.c  |  23 +-
+ drivers/i2c/busses/i2c-designware-platdrv.c |  18 +-
+ 14 files changed, 461 insertions(+), 15 deletions(-)
+ create mode 100644 drivers/gpu/drm/xe/regs/xe_i2c_regs.h
+ create mode 100644 drivers/gpu/drm/xe/xe_i2c.c
+ create mode 100644 drivers/gpu/drm/xe/xe_i2c.h
+
+-- 
 2.47.2
 
