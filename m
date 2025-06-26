@@ -1,182 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C56202990
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5BB1CAA79;
+	Thu, 26 Jun 2025 05:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750914410; cv=none; b=QHex0FqC6l4n2T+NxbpekyY5nG5KXVIEeNrWV/GvPa3oil+8pqrpxqWVx7SRfbJpd61kXkN26Xv/cHozIvYfeSeFKunWnWfR+J1IjX1yg8adgddNFbz1uDn0ZhK8E6wGxxNVrdEPWVTs7YgEBVyHOhS3YBRTfc97CJVNGgHV3Hw=
+	t=1750914446; cv=none; b=Zsunos+5oD8bjmnAEA9UZdS66DB1guk7I4YrnTECtNoSSobcnuTsj9TP660RWC7e5erAXn18hDtO1csGm5ys5hZgjBza0nokkLBovaUIiaBu/y5fw8hQrHKp/urhs5sXDIii3+h2JPkldIroeqfqxWTPktEWKGmZhYFn0gESBhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750914410; c=relaxed/simple;
-	bh=X7Sjk2ka0Kelqb0sjdo5AsKsObeeRUiz7gwR3nkrZnQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WL2BfN4okhwJW4KmzwUn6AFc2yNKAvpUe0960L0z8b5RsPWXiQuAio9Ohe4w0+JGF8VNmEbMTqfepou9nyHJ0Qf3HlHZ7wzIJDSXEApG8geSe0mnA3jetATH3VKe5LkpT9W6wMGjGHru44RjmW6EhWfKKHLpc1nkH9XmLsZsLos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jV1JW7kb; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750914446; c=relaxed/simple;
+	bh=0CV28ZMxCqWrFNwMSnXsVg+W9CcpMnVsE4Pz/y/owk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uEukC4JHaIwNoofdB7wcQpCfBwdbBRHBzD1QirF78WOt+h+zJWhru/CteGXZJ4J5DzNS58o+kJEM71dhYwgY9Ev+kFnjmLVqRB0qJH4lB//OiJkGyb2zBFF1Nd5asKxmax/AKwvaPENli64V6lH96DCS0GHiF8Vl2x/dM0ulSh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TmQdOPgv; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jV1JW7kb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750914409; x=1782450409;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=X7Sjk2ka0Kelqb0sjdo5AsKsObeeRUiz7gwR3nkrZnQ=;
-  b=jV1JW7kbS54Dc2Mgkgp+CY/LJO3IJrChzY0cj8ZgMw8oNjbDAL7UpXCl
-   umKrz6XBm03kUUg0GLzgjur/01hd7mWUYWk7i1GRrrPMDrMws7gUds0dq
-   0Udxiv3jfh5m3VWwSpHii6Het68bR4Zh+Eu0DgOYCJ57BIP/NQ3G4NQ62
-   5mxekSMCvgyeOUEZ5wnXMwWzjxEyMwixQ6D33Q4Lu5Yc6pBczYRGQHC43
-   jJD6vruS7U3lTrxk/GvGl73pnDtQ4OxPL14UgUgn9A3AeR1F0aSyAKe6G
-   BW7VRUmXHnniiNij5wzZvl2oOE77Td8zSjXtiZNLx85aUG1N98HduNH25
-   g==;
-X-CSE-ConnectionGUID: 8yZmm5V8Q5yZWFQcOK+7JQ==
-X-CSE-MsgGUID: QRfGePa2SIqDeUN15ZsesA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="63796514"
-X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
-   d="scan'208";a="63796514"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 22:06:49 -0700
-X-CSE-ConnectionGUID: dHz4p7K0Q2CozheQPadrjg==
-X-CSE-MsgGUID: h2potp3fTl6LIjl7AwgsSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
-   d="scan'208";a="156672267"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa005.fm.intel.com with ESMTP; 25 Jun 2025 22:06:45 -0700
-Date: Thu, 26 Jun 2025 12:59:07 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: "jgg@nvidia.com" <jgg@nvidia.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"will@kernel.org" <will@kernel.org>,
-	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"joro@8bytes.org" <joro@8bytes.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"shuah@kernel.org" <shuah@kernel.org>,
-	"nicolinc@nvidia.com" <nicolinc@nvidia.com>,
-	"aik@amd.com" <aik@amd.com>,
-	"Williams, Dan J" <dan.j.williams@intel.com>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"Xu, Yilun" <yilun.xu@intel.com>
-Subject: Re: [PATCH v2 3/4] iommufd: Destroy vdevice on idevice destroy
-Message-ID: <aFzTm76sdoYJ9hpG@yilunxu-OptiPlex-7050>
-References: <20250623094946.1714996-1-yilun.xu@linux.intel.com>
- <20250623094946.1714996-4-yilun.xu@linux.intel.com>
- <BN9PR11MB5276DCB10B6B08811206C3A28C78A@BN9PR11MB5276.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TmQdOPgv"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-32b553e33e6so4761331fa.2;
+        Wed, 25 Jun 2025 22:07:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750914443; x=1751519243; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ucuge3haHIUEqqktbb0yFSyoz0sNgFSmLZz0cdZIMeY=;
+        b=TmQdOPgvOJWhiYjeKwXuJ3g372zXnC7S+HTBMCHCdvXJE2X3en5QyTVUONqucSQ5ew
+         h++HuneYNCjQUmOHmrHkG0ZGvuqwIZPKvBrnwBXhXDv0iU2b4/6bKXMQ1L+71n9HBqgS
+         0DfO8WLdmSm/WqjUdYFUnGRN+YFJPGgvN1tPkNdlpkWGS75Udyq6ZjPBsfGs0z1uak8G
+         SFXhhBNtgJ+iHAu6FL1Gb8kfW8EPYb6QPIeKEsVutsB6qrS+9TVgB/qRU8/fdbh/UI11
+         tGP6WHKCavyTuUDJNr/bXC8apgboZP6ui6GjuYKootuuQrhOwiz9IQWQslTkxawei85/
+         qsGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750914443; x=1751519243;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ucuge3haHIUEqqktbb0yFSyoz0sNgFSmLZz0cdZIMeY=;
+        b=oovOgywCsiTwg7m0C41y086owh3TY9sAUk9fk9JSBhpec/UMTDSotCVhJ6J/Lv6Bt7
+         6E+r2y1EXrrPS40qTvK4n2Cbt9VLHFf0mc3ZRUGv4ITqpVWFnHLugmvfS7l96jZTvbC1
+         iinzdMyNUxr/b+lb5fBT7N6vHP+GUdFu13w4Nu3pm4SWrC+dPwJNQXcsrFMJ0L9rntsf
+         RSKglqdWCspMMIC1KVDTPv9qityXS7MC07mZRp9WWC98znQdYuSTdhjVQLjl9KBJ1ZiF
+         q+++WL9j/iMBZ1Fms0McNWwlj9s2xIBKemP+AxEYTojNJaH36MB8SnWubCGkfNbyGGc4
+         5+hg==
+X-Forwarded-Encrypted: i=1; AJvYcCVi6qAEMsUhuah63yRNd21Wwy+WQLwdwlykmS4ThUCiFW3iOzMk8xT2GSZecnLJL6YZnHHnRIcHiZQefBQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/Fabr5nKnNPEqIgVS223Ws9DIShw4huJJv08oKfLKORWGbQi2
+	An/CcKvrl3SUrxCeU7Tv9vEtjPA2iPIH+cn3h03QLIDvxHatsqpAP6Uzqrtz8Lq9
+X-Gm-Gg: ASbGncv5JRxs26gwxclEc2OKwud3pdzoM1QwcbrO1yLmXL6M4rnKNauQgB6JYtZLjLv
+	ulw6B0zrjb71Hla8Pp+z7cUrH2AD2v49NGlHRtjtK83K7g2CIG9INPbTFpoE37JEf5cheZof/fd
+	1tMKqv1e0EFUEUQfpRAvTJNAYG6YJpCEhxErTEVQHaFQskZl06CPITkoDF7cyqatbBzpUXaakX4
+	h5SUaeQZ+jkp/mCkvk5XKQGfYM8+M8bfcEB50VlKFVXcAYCWQhxFLfy4F2tl11WYVy8j+g6Ynu1
+	o9oCAgxXaoJfH8065ByTykC7Qa9+ZXk4qtibnxOA2g2EF850GBZdwhgV2tgQxb08xefVJfm5wbn
+	Vmr8nxu3EbN6wOTPjZvjDvH+uuxGHRBPHt3qYijDZ8nU=
+X-Google-Smtp-Source: AGHT+IFi6kv6BxFmh3WNqUo+5CW2mT0uKzXUz80kdXBfAnLTfpXObCinsf9ESupWnoDuQxZ6ayJAxg==
+X-Received: by 2002:a2e:a01b:0:b0:32b:9652:2c13 with SMTP id 38308e7fff4ca-32cc6547c26mr14480021fa.26.1750914442414;
+        Wed, 25 Jun 2025 22:07:22 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32cd2eff571sm1041011fa.92.2025.06.25.22.07.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 22:07:20 -0700 (PDT)
+Message-ID: <c97e840e-fe8e-40e9-baef-0a18103848fd@gmail.com>
+Date: Thu, 26 Jun 2025 08:07:19 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB5276DCB10B6B08811206C3A28C78A@BN9PR11MB5276.namprd11.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] iio: adc: ti-adc128s052: replace literal by unit
+ expression
+To: Lothar Rubusch <l.rubusch@gmail.com>, jic23@kernel.org,
+ dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250625170218.545654-1-l.rubusch@gmail.com>
+ <20250625170218.545654-3-l.rubusch@gmail.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20250625170218.545654-3-l.rubusch@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 24, 2025 at 08:22:11AM +0000, Tian, Kevin wrote:
-> > From: Xu Yilun <yilun.xu@linux.intel.com>
-> > Sent: Monday, June 23, 2025 5:50 PM
-> > 
-> > +static void iommufd_device_remove_vdev(struct iommufd_device *idev)
-> > +{
-> > +	bool vdev_removing = false;
-> > +
-> > +	mutex_lock(&idev->igroup->lock);
-> > +	if (idev->vdev) {
-> > +		struct iommufd_vdevice *vdev;
-> > +
-> > +		vdev = iommufd_get_vdevice(idev->ictx, idev->vdev->obj.id);
-> > +		if (IS_ERR(vdev)) {
-> > +			/* vdev is removed from xarray, but is not
-> > destroyed/freed */
-> > +			vdev_removing = true;
-> > +			goto unlock;
-> > +		}
-> > +
-> > +		/* Should never happen */
-> > +		if (WARN_ON(vdev != idev->vdev)) {
-> > +			idev->vdev = NULL;
-> > +			iommufd_put_object(idev->ictx, &vdev->obj);
-> > +			goto unlock;
-> > +		}
-> > +
-> > +		/*
-> > +		 * vdev cannot be destroyed after refcount_inc, safe to
-> > release
+On 25/06/2025 20:02, Lothar Rubusch wrote:
+> Replace the literal number 1000 by MILLI from linux/units.h
 > 
-> "vdev cannot be destroyed by userspace"
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> ---
+>   drivers/iio/adc/ti-adc128s052.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> > +		 * idev->igroup->lock and use idev->vdev afterward.
-> > +		 */
-> > +		refcount_inc(&idev->vdev->obj.users);
-> > +		iommufd_put_object(idev->ictx, &idev->vdev->obj);
-> 
-> s/idev->vdev/vdev/
+> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+> index cf271c39e663..67bc7fbd52bc 100644
+> --- a/drivers/iio/adc/ti-adc128s052.c
+> +++ b/drivers/iio/adc/ti-adc128s052.c
+> @@ -18,6 +18,7 @@
+>   #include <linux/property.h>
+>   #include <linux/regulator/consumer.h>
+>   #include <linux/spi/spi.h>
+> +#include <linux/units.h>
+>   
+>   struct adc128_configuration {
+>   	const struct iio_chan_spec	*channels;
+> @@ -189,7 +190,7 @@ static int adc128_probe(struct spi_device *spi)
+>   				     "failed to read '%s' voltage",
+>   				     config->refname);
+>   
+> -	adc->vref_mv = ret / 1000;
+> +	adc->vref_mv = ret / MILLI;
 
-Will adopt these fixes.
+This makes no sense to me. What does it mean we divide the micro volts 
+by 'milli'? It is clear when we divide micro volts by 1000 that we get 
+milli volts. Also, the mv suffix in variable makes units clear already, 
+division by MILLI just obfuscates things. I'd keep it as 1000.
 
-> 
-> > @@ -124,18 +139,28 @@ int iommufd_vdevice_alloc_ioctl(struct
-> > iommufd_ucmd *ucmd)
-> >  		goto out_put_idev;
-> >  	}
-> > 
-> > +	mutex_lock(&idev->igroup->lock);
-> > +	if (idev->vdev) {
-> > +		rc = -EEXIST;
-> > +		goto out_unlock_igroup;
-> > +	}
-> > +
-> >  	vdev = iommufd_object_alloc(ucmd->ictx, vdev,
-> > IOMMUFD_OBJ_VDEVICE);
-> >  	if (IS_ERR(vdev)) {
-> >  		rc = PTR_ERR(vdev);
-> > -		goto out_put_idev;
-> > +		goto out_unlock_igroup;
-> >  	}
-> > 
-> > +	/* vdev can't outlive idev, vdev->idev is always valid, need no refcnt
-> > */
-> > +	vdev->idev = idev;
-> >  	vdev->ictx = ucmd->ictx;
-> >  	vdev->id = virt_id;
-> >  	vdev->dev = idev->dev;
-> >  	get_device(idev->dev);
-> 
-> this is not necessary now, as idevice already holds a reference to device
-> and now vdevice cannot outlive idevice.
+I would just drop this unless Jonathan disagrees.
 
-I agree.
-
-Besides, Jason suggests use vdev->dev for iommufd_vdevice_abort() safe
-reentrancy. I think we could change to use vdev->viommu.
-
-@@ -93,10 +93,17 @@ void iommufd_vdevice_abort(struct iommufd_object *obj)
-
-        lockdep_assert_held(&idev->igroup->lock);
-
-+       /*
-+        * iommufd_vdevice_abort() could be reentrant, by
-+        * iommufd_device_unbind() or by iommufd_destroy(). Cleanup only once.
-+        */
-+       if (!viommu)
-+               return;
-+
-        /* xa_cmpxchg is okay to fail if alloc failed xa_cmpxchg previously */
-        xa_cmpxchg(&viommu->vdevs, vdev->id, vdev, NULL, GFP_KERNEL);
-        refcount_dec(&viommu->obj.users);
--       put_device(vdev->dev);
-+       vdev->viommu = NULL;
-        idev->vdev = NULL;
-
-Thanks,
-Yilun
-
-
-
-
-
-
-
-
+Yours,
+	-- Matti
