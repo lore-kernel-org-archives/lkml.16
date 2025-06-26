@@ -1,200 +1,229 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5EA2E0B72
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9341A2E11BF;
+	Thu, 26 Jun 2025 12:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750941464; cv=none; b=L+++hmZdkhH7YEymFPuMose67OUr1jtBi+lrnDLX2mfe8pGYztt9CKWUzHLtcvvx1TCBJv91L0dEFvbxcDOKlBBR277XteEUnMbZpFeTpKaBxnnpCtEgWmyG+dfj/HaDpRW2G8mdA4HUKHqipr4PWp7KU09HSKfOJJgNcl9z0iY=
+	t=1750941501; cv=none; b=U4SpjucgO+Diko+LoJg3cKB29LsxpnPxyAoPUWQm7MtWehvEDb5QYzFGcUkjw0cHTHI3nXEhgQXAPdTWTBQmiA5OXl6lgZkRNsQlnzt82b8Uq7JqYAfacFqYGO4kkZQtgR26jrUfiA9TZJkNQL1Qsq3XjJOqAgn5cwMgUzsOIgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750941464; c=relaxed/simple;
-	bh=/czma84Eer6tNDzWXV4EgHZ0U8xLVTiprJkMDLL0cRk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RR8Taq5IuRx/dFBR/IQCCDBSXvWFc2GWaratNaOP6X/8vq04wpGTME4YrPpUJEmMjW8qNQedk8587Li2GWYk9CXPsX4CAvFsJHJGOmWSOePear8zVGs3utUwNLR5SRqoWrhaxiVzOtxPzMBXDPopzAArABMZ+lZ9XeYjJ2onzds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Wzihc796; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1750941501; c=relaxed/simple;
+	bh=qoJ/V6g3ybIgWJt3ixMc3C4/7uLcMcISIquwhMdpbzY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qE3TnGjlNEqifK4iS4piRgOtIfEgDheqCItUYUQY3nT5UrviBhwaumD4lX7fx9REiehnsuqNu1ljA8Rth8RPGfiuXeWwzBKKyYOhmpd5qg/UCnayQ1Yt+nM50FEXBekOaBOklpJbu9iZEGlM2uBhu+MPm49j+txbmqZHbS/SWyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fl1q7bUB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Wzihc796"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=+YBTVY6E54N+/VkKcNbQEDOvXDHOVgRKbti2O/wwJ9o=; b=Wzihc796sJkZex2MJVqlxkkFxF
-	VSK6unBgz6ksjMIuwbiF6vJZ0Yn6eaitLf9nqZr1ROQ3+r+JWFq+OLbWjnZSohQ50LkUFnDSYLIdY
-	+lCDsCCw3jsKMkW3IISeVU4dqSTxu/9Fz5PniJDF+RTQ8VxAbzqXzmn4GLnZx69vzztNREGTlgeA7
-	rRpH+nBsPlZWUvxzJkq00gjJANqvL5xJeXJiZmCVuqd0vXXzTG+Itgc3e/lK25nyN8ApxLMTmPzL9
-	1EUiBDxg5G8U7uu7SQUSBCe2OBwVZMXOqx/Axmb/RZ160K89jGYv+7fHibzZyhaIPlNeMpx/XqL6j
-	zXZcOk5w==;
-Received: from 189-92-252-99.3g.claro.net.br ([189.92.252.99] helo=quatroqueijos.cascardo.eti.br)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1uUlr7-008yir-9d; Thu, 26 Jun 2025 14:37:30 +0200
-Date: Thu, 26 Jun 2025 09:37:19 -0300
-From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-	Zijun Hu <zijun.hu@oss.qualcomm.com>
-Subject: Re: [PATCH RFC] char: misc: Enforce simple minor space division
-Message-ID: <aF0-_0pHqLL39wse@quatroqueijos.cascardo.eti.br>
-References: <20250620-rfc_miscdev-v1-1-fda25d502a37@oss.qualcomm.com>
- <2025062445-procedure-latch-9421@gregkh>
- <ac666ce1-564d-496e-be42-8a8c1af654e7@icloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fl1q7bUB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 170C1C4CEF2;
+	Thu, 26 Jun 2025 12:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750941501;
+	bh=qoJ/V6g3ybIgWJt3ixMc3C4/7uLcMcISIquwhMdpbzY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Fl1q7bUBaFS6s0LdTuAPDfOVnNJjCjxMfnS10DMFAIv7q2ZJrlyNcznkGVnfjiTnS
+	 WG3eD+z9NN2O+Kjayk+ruFD+JHeagw/otcRyUoSN3K7+nO6wI5CfQ7qAaK9YgxWWAF
+	 FnIW2Jd1do8+lbon5lSPPOJCtT3ms9NqzkDPQs1G/nl2XNGdWNGO4vG6zumDnPCA7+
+	 djBfo9hAAw1nr8tJ1uCT2b+irhxQNLECETsmQD3ZeCz7wUA3WHPgr6L7uqAi07eHV6
+	 S4hXnnEFzvc5pl1tUFEeX1Fab5NdptTUboHeA26J35Fq91FfmzR/4zhaX0VuwTCndt
+	 C2j2YDp2e+Jtw==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ae0d11bb2a7so129621566b.3;
+        Thu, 26 Jun 2025 05:38:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU4VZtBhaOSKtxOn4lcTEJsKvUr2SNM3bk0WKh99egpmvRg5M4lk0AOCmSkLGCO78w8GBuIIBRuVa/BIg==@vger.kernel.org, AJvYcCV0Lvw3knZB5S+5CvsjxzrNPKdf1T852VQNElXXbktJyQf4JCdHxsqAzpNcKzJpKN6GfkdOBx+EshCgmpoF@vger.kernel.org
+X-Gm-Message-State: AOJu0YwexRRe8KYKEzbBgG8b71OtaVJUxOGru316OHbeTydUIZhOKiNa
+	7MvH+o9N+jP0jMddWYr82dzzRozjaEs1wLTfKnjYFdd4vtdTMHwijbIrhdiy4nLDvKRvMu3xipd
+	SPrCNcKXmkru6qe7MyB/W5R1lbL5hciA=
+X-Google-Smtp-Source: AGHT+IGSo8di1mTgjiNFKcKBHT1kPgfvvEt28qnDnKWMQCww4lIuxf/VLshubGWazh1o7b/Dkq2MufvWrSTO2REYXR0=
+X-Received: by 2002:a17:907:7e82:b0:ad8:9b5d:2c16 with SMTP id
+ a640c23a62f3a-ae0bebe9319mr695342766b.11.1750941499578; Thu, 26 Jun 2025
+ 05:38:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ac666ce1-564d-496e-be42-8a8c1af654e7@icloud.com>
+References: <20250626030806.665809-1-zhenghaoran154@gmail.com>
+In-Reply-To: <20250626030806.665809-1-zhenghaoran154@gmail.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Thu, 26 Jun 2025 13:37:42 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H6NVxiEHQfyMWbNQuszw74AyQqXo6_K9KzyKs=VRvK0yA@mail.gmail.com>
+X-Gm-Features: Ac12FXxIVRZyqW6L4qPKIvkq4abNhSkmhlJ9uQjSStR8wU8cQblKBWbzuSXPjic
+Message-ID: <CAL3q7H6NVxiEHQfyMWbNQuszw74AyQqXo6_K9KzyKs=VRvK0yA@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: Two data races in btrfs
+To: Hao-ran Zheng <zhenghaoran154@gmail.com>
+Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	baijiaju1990@gmail.com, zzzccc427@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 07:29:56AM +0800, Zijun Hu wrote:
-> On 2025/6/24 23:50, Greg Kroah-Hartman wrote:
-> > On Fri, Jun 20, 2025 at 10:53:32PM +0800, Zijun Hu wrote:
-> >> From: Zijun Hu <zijun.hu@oss.qualcomm.com>
-> >>
-> >> Enforce simple minor space division related to macro MISC_DYNAMIC_MINOR
-> >> defined as 255 currently:
-> >>
-> >> <  255 : Fixed minor codes
-> >> == 255 : Indicator to request dynamic minor code
-> >>>  255 : Dynamic minor codes requested
-> > 
-> > Is this the rule today?  If so, does the now-added tests we have for
-> > misc device properly test for this?
-> > 
-> 
-> 1) yes. this simple division becomes possible with recent commits below:
-> Commit: 31b636d2c416 ("char: misc: restrict the dynamic range to exclude
-> reserved minors")
-> Commit: c876be906ce7 ("char: misc: register chrdev region with all
-> possible minors")
-> 
-> both available fixed and dynamic minors interleaves with narrow space
-> [0, 255) before above commits.
-> 
-> it is easy to balance minor space division by adjusting macro
-> @MISC_DYNAMIC_MINOR if required in future as well.
-> 
-> Also hope all fixed minors are registered with header linux/miscdevice.h
-> 
-> 2) no. below recent commit don't cover the simple division fully.
-> Commit: 74d8361be344 ("char: misc: add test cases")
-> 
-> drivers/misc/misc_minor_kunit.c may need to be corrected to reflecting
-> division today.
-> 
+On Thu, Jun 26, 2025 at 4:08=E2=80=AFAM Hao-ran Zheng <zhenghaoran154@gmail=
+.com> wrote:
+>
+> Hello maintainers,
+>
+> I would like to report two data race bugs we discovered in BTRFS
+> filesystem on Linux kernel v6.16-rc3. These issues were identified
+> using our data race detector.
 
-Correct, those added tests do not enforce that one cannot register a static
-minor above MISC_DYNAMIC_MINOR.
+This sort of text is not proper for a patch... Saying hello and saying
+that you are reporting is totally irrelevant and odd.
 
-However, to some extent [1], it tests that a MISC_DYNAMIC_MINOR allocation
-will not return a number in the range of the static numbers. See
-miscdev_test_dynamic_only_range.
+And what do you mean by "our data race detector"? Is it something else
+other than KCSAN, something not in the linux kernel tree?
 
-It also tests that if a dynamic minor is allocated and one tries to
-allocate that same number statically, it will fail. It also tries [2] to
-test the other way around. That is, if one minor was statically allocate in
-the dynamic range, that a dynamic allocation will not return that same
-number.
+>
+> These issues were deemed non-critical after evaluation, as they
+> do not impact core functionality or security. To minimize
+> performance overhead while ensuring clarity for future maintenance,
+> I have annotated them with data_race() macros.
 
-Those tests, named miscdev_test_conflict and miscdev_test_conflict_reverse
-were written considering the current implementation, which allows for
-static allocations in the "dynamic range".
+You have to explain things in far more detail.
+To me it seems you are sprinkling data_race() randomly just because
+it's fine in some other places.
+You don't explain why "these issues were deemed non-critical after evaluati=
+on".
 
-If we are going to change that, you need to change the tests too.
+>
+> Below is a summary of the findings:
+>
+> ---
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D DATARACE =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+>  extent_write_cache_pages fs/btrfs/extent_io.c:2439 [inline]
+>  btrfs_writepages+0x34fc/0x3d20 fs/btrfs/extent_io.c:2376
+>  do_writepages+0x302/0x7c0 mm/page-writeback.c:2687
+>  filemap_fdatawrite_wbc mm/filemap.c:389 [inline]
+>   __filemap_fdatawrite_range mm/filemap.c:422 [inline]
+>  filemap_fdatawrite_range+0x145/0x1d0 mm/filemap.c:440
+>  btrfs_fdatawrite_range fs/btrfs/file.c:3701 [inline]
+>  start_ordered_ops fs/btrfs/file.c:1439 [inline]
+>  btrfs_sync_file+0x6e7/0x1d70 fs/btrfs/file.c:1550
+>  generic_write_sync include/linux/fs.h:2970 [inline]
+>  btrfs_do_write_iter+0xd0c/0x12f0 fs/btrfs/file.c:1391
+>  btrfs_file_write_iter+0x3d/0x60 fs/btrfs/file.c:1401
+>  new_sync_write fs/read_write.c:586 [inline]
+>  vfs_write+0x940/0xd10 fs/read_write.c:679
+>  ksys_write+0x116/0x200 fs/read_write.c:731
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xc9/0x1a0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>  0x0
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DOTHER_INFO=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+>  extent_write_cache_pages fs/btrfs/extent_io.c:2439 [inline]
+>  btrfs_writepages+0x34fc/0x3d20 fs/btrfs/extent_io.c:2376
+>  do_writepages+0x302/0x7c0 mm/page-writeback.c:2687
+>  filemap_fdatawrite_wbc mm/filemap.c:389 [inline]
+>  __filemap_fdatawrite_range mm/filemap.c:422 [inline]
+>  filemap_fdatawrite_range+0x145/0x1d0 mm/filemap.c:440
+>  btrfs_fdatawrite_range fs/btrfs/file.c:3701 [inline]
+>  start_ordered_ops fs/btrfs/file.c:1439 [inline]
+>  btrfs_sync_file+0x509/0x1d70 fs/btrfs/file.c:1521
+>  generic_write_sync include/linux/fs.h:2970 [inline]
+>  btrfs_do_write_iter+0xd0c/0x12f0 fs/btrfs/file.c:1391
+>  btrfs_file_write_iter+0x3d/0x60 fs/btrfs/file.c:1401
+>  new_sync_write fs/read_write.c:586 [inline]
+>  vfs_write+0x940/0xd10 fs/read_write.c:679
+>  ksys_write+0x116/0x200 fs/read_write.c:731
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xc9/0x1a0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DEND=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3DDATA_RACE=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+>  btrfs_inode_safe_disk_i_size_write+0x144/0x190 fs/btrfs/file-item.c:65
+>  btrfs_finish_one_ordered+0x999/0x1330 fs/btrfs/inode.c:3203
+>  btrfs_finish_ordered_io+0x33/0x50 fs/btrfs/inode.c:3308
+>  finish_ordered_fn+0x3a/0x50 fs/btrfs/ordered-data.c:331
+>  btrfs_work_helper+0x199/0x6c0 fs/btrfs/async-thread.c:314
+>  process_one_work kernel/workqueue.c:3238 [inline]
+>  process_scheduled_works+0x21f/0x520 kernel/workqueue.c:3319
+>  worker_thread+0x323/0x4a0 kernel/workqueue.c:3400
+>  kthread+0x2d5/0x300 kernel/kthread.c:464
+>  ret_from_fork+0x4d/0x60 arch/x86/kernel/process.c:148
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DOTHER_INFO=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+>  fill_stack_inode_item fs/btrfs/delayed-inode.c:1809 [inline]
+>  btrfs_delayed_update_inode+0x1ab/0xa40 fs/btrfs/delayed-inode.c:1931
+>  btrfs_update_inode+0x128/0x270 fs/btrfs/inode.c:4156
+>  btrfs_setxattr_trans+0x143/0x280 fs/btrfs/xattr.c:266
+>  btrfs_xattr_handler_set+0xb7/0xf0 fs/btrfs/xattr.c:380
+>  __vfs_setxattr+0x21e/0x240 fs/xattr.c:200
+>  __vfs_setxattr_noperm+0xa5/0x2d0 fs/xattr.c:234
+>  vfs_setxattr+0xd5/0x1d0 fs/xattr.c:321
+>  do_setxattr fs/xattr.c:636 [inline]
+>  file_setxattr+0xb0/0x110 fs/xattr.c:646
+>  path_setxattrat+0x217/0x260 fs/xattr.c:711
+>  __do_sys_fsetxattr fs/xattr.c:761 [inline]
+>  __se_sys_fsetxattr fs/xattr.c:758 [inline]
+>  __x64_sys_fsetxattr+0x2c/0x40 fs/xattr.c:758
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xc9/0x1a0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> Signed-off-by: Hao-ran Zheng <zhenghaoran154@gmail.com>
+> ---
+>  fs/btrfs/extent_io.c | 2 +-
+>  fs/btrfs/file-item.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> index 849199768664..0c03fafc3ae0 100644
+> --- a/fs/btrfs/extent_io.c
+> +++ b/fs/btrfs/extent_io.c
+> @@ -2436,7 +2436,7 @@ static int extent_write_cache_pages(struct address_=
+space *mapping,
+>         }
+>
+>         if (wbc->range_cyclic || (wbc->nr_to_write > 0 && range_whole))
+> -               mapping->writeback_index =3D done_index;
+> +               data_race(mapping->writeback_index =3D done_index);
+>
+>         btrfs_add_delayed_iput(BTRFS_I(inode));
+>         return ret;
+> diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
+> index 54d523d4f421..15572e79b6de 100644
+> --- a/fs/btrfs/file-item.c
+> +++ b/fs/btrfs/file-item.c
+> @@ -61,7 +61,7 @@ void btrfs_inode_safe_disk_i_size_write(struct btrfs_in=
+ode *inode, u64 new_i_siz
+>                 i_size =3D min(i_size, end + 1);
+>         else
+>                 i_size =3D 0;
+> -       inode->disk_i_size =3D i_size;
+> +       data_race(inode->disk_i_size =3D i_size);
 
-I would suggest applying only the last hunk of your patched
-drivers/char/misc.c with a separate commit. Then, when misc_deregister
-would be called the minor would be restored. However, since statically
-allocating a minor above 255 would still be allowed, it could "restore" it
-wrongly.
 
-As Greg has observed, if there is no known case in the kernel where minor
-is not set to MISC_DYNAMIC_MINOR by the driver before it calls
-misc_register a second time, then there is nothing to fix here. If there
-is such a case, then the driver must be fixed. It has always been the case,
-even when the ranges were different, that the minor needed to be reset to
-MISC_DYNAMIC_MINOR before calling misc_register after misc_deregister has
-been called.
+These are two completely different cases, each should be in a
+dedicated patch with a proper analysis.
 
-As you point out, when misc_register fails, it already restores the minor
-number.
+At least this one for disk_i_size, I don't think data_race() is a good solu=
+tion.
+It doesn't prevent store and load tearing, which would result in an
+inode item with a bogus size.
 
-Let me know if you want to proceed with this change and need help with the
-test case. I may be slow to respond since I am going on vacation.
+Please provide a rationale for the proposed solution for each case.
+We have gone through this in a patch you sent in the past (commit
+5324c4e10e9c2ce307a037e904c0d9671d7137d9), and there data_race() was
+ok because getting a stale value or some weird value due to the result
+of a load/store tearing would only makes us take unnecessary locks,
+therefore not affecting correctness - it's this type of analysis that
+you should place in a change log.
 
-Regards.
-Cascardo.
+Thanks.
 
-
-[1] To some extent, because due to the large dynamic range, it only tries
-allocating 256 dynamic minors. And only verifies numbers below 16 are not
-returned, because that was the bug that existed before.
-
-[2] Tries, because due to the large dynamic range, instead of allocating
-all numbers, it just assumes that the allocator would give the first
-number, but it also picks that "first" number by doing a dynamic allocation
-and freeing it.
-
-> >> This enforcing division also solves misc_register() reentry issue below:
-> >>
-> >> // Suppose both static @dev_A and @dev_B want to request dynamic minors.
-> >> @dev_A.minor(255) @dev_B.minor(255)
-> >>
-> >> // Register @dev_A then de-register it.
-> >> @dev_A.minor(255) -> registered -> @dev_A.minor(500) -> de-registered
-> >> -> @dev_A.minor(500)
-> >>
-> >> // Register @dev_B
-> >> @dev_B.minor(255) -> registered -> @dev_B.minor(500)
-> >>
-> >> // Register @dev_A again
-> >> @dev_A.minor(500) -> encounter -EBUSY error since @dev_B has got 500.
-> > 
-> > Does this ever really happen?
-> > 
-> 
-> i never meet this issue. but in theory, it may happen as explained below:
-> 
-> misc_register()/misc_deregister() are sometimes called within driver's
-> probe()/remove(), such cases have reentry requirements
-> 
-> actually, error handling in misc_register() also reset minor code allocated:
-> 
-> 	if (IS_ERR(misc->this_device)) {
-> 		misc_minor_free(misc->minor);
-> 		if (is_dynamic) {
-> 			misc->minor = MISC_DYNAMIC_MINOR;
-> 		}
-> 		err = PTR_ERR(misc->this_device);
-> 		goto out;
-> 	}
-> 
-> > And with the recent changes in the last dev cycle in this code area, is
-> > it still an issue?
-> >
-> 
-> this is a different issue with the ones recent changes fix.
-> 
-> >> Side effects:
-> >> It will be refused to register device whose fixed minor > 255.
-> > 
-> > Do we have any in-kernel users that are > 255?
-> 
-> NO. no kernel users have such usage.
-> 
-> Actually, if fixed minor (>255) is used to register miscdev, it may
-> encounter failure since the fixed minor (>255) may be allocated for
-> other dynamic requests.
-> 
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
+>  out_unlock:
+>         spin_unlock(&inode->lock);
+>  }
+> --
+> 2.34.1
+>
+>
