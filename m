@@ -1,102 +1,65 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C3FDDD2;
-	Thu, 26 Jun 2025 12:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08EF520FABC;
+	Thu, 26 Jun 2025 12:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750940020; cv=none; b=ETssuZGI8lilvkJ4Ap5N0eAhn7FERcvgPNuiLt7cUh/Y4xS9TtI6Nuvb2jYt3gq8puao2D1lTRvsIZ13qCT41mZZ0O0WYRmkU2FDkG9iZ3E9fW7uHYCckjyicQcQIWwOVHFkgLZKwBb1s4IcQUfRmYe6pByUNLce8YE+jNbj/Sg=
+	t=1750940067; cv=none; b=UlQYePpCtagB3LvEeVxX6rFkvPgTJljClcTi2aJzoESf9RoRWGu7PXv/+uivnqE+3Gg+EijB66ie5/nvIffUtFp4hyj1epu2Lp7X6CEOUr5JgNiStrdD6XWuklXJU9/EGlqTzOprDLxj43AyX85428Q3PPAAQSsOuQBj8vXt8tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750940020; c=relaxed/simple;
-	bh=ZJDkm+ay6O98NiXiGMPkpDGJGpWWhfw+/kn1f31F10Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JGEk36fTRpeJ5yXjl5WYHWWf2Xc9HevGorBFptsvIQ00qcTKoLXgRiosTx3gJktyAAZk2VPt+LCBoAM6VSUgsH/nOS32z6KBXwWNc/Sl0zBqaArvxDeHbDAMqSJpvN1N8uLJQDcWsD9u4+/nj7InEFykVczwNcm0wHURpD9R7qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id D538F1206B7;
-	Thu, 26 Jun 2025 12:13:35 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id DE2412000E;
-	Thu, 26 Jun 2025 12:13:31 +0000 (UTC)
-Date: Thu, 26 Jun 2025 08:13:52 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrii
- Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, "Jose
- E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
- Jens Remus <jremus@linux.ibm.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
- Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v11 13/14] perf/x86: Rename and move get_segment_base()
- and make it global
-Message-ID: <20250626081352.30b360f8@gandalf.local.home>
-In-Reply-To: <aF0IeDBaAfRypu1W@gmail.com>
-References: <20250625225600.555017347@goodmis.org>
-	<20250625225717.016385736@goodmis.org>
-	<aF0IeDBaAfRypu1W@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750940067; c=relaxed/simple;
+	bh=cYyYCDjMKo1YFR4zdTqShC1KN41JtZ+W5+ZKJ2+q91M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=JYi/PtyaeZzoLalwkmPt/9Y4kkPwaD/e+3B/ZBUx3iRxf7s3uVNTFABDVXmjo/8vSDKp8LjDgJ5KkEhqOHTytmSVobwzPGt6skWA7415EL0S7SlaYwcmZgCxLExSGhoQjWP/Nl3WcRsKtLJ7UranPztcVKhikIHoHJ9oWqQ5E/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RcfrZAhW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RcfrZAhW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39F2EC4CEEB;
+	Thu, 26 Jun 2025 12:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750940066;
+	bh=cYyYCDjMKo1YFR4zdTqShC1KN41JtZ+W5+ZKJ2+q91M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=RcfrZAhW4RNTimmfr+W3NqCrIUMFTAZBNJoivl4cZs3hiQqCt6+Hi7PNbPpX+ypvL
+	 oedNJxKj9Ltc1MMBQWVLUe74FsUNDre6hwFmSejQ1eirw1v1l+vQb9hknDmfuJi+Lq
+	 yf352DZk+9IyarvY6N2gcxxpxJ0pbtarV0A4c/ETJaU3bzzMrBczddEaJVTiv63gNG
+	 DDUWO2LjfaphBr/0q7DImM1DvKVDDV4EMWWyErP3eBee8AiISsDLzLwlIT3GBcx0qR
+	 y5KU/sStgz4YxjtEfBsioAiqUUlKpFSyMIku8wnLLdx14s5n3roKjjUzYzSX7+1YVO
+	 WQNu7TBf1e5Sw==
+From: Leon Romanovsky <leon@kernel.org>
+To: Zhu Yanjun <zyjzyj2000@gmail.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Daisuke Matsuda <dskmtsd@gmail.com>, 
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org
+In-Reply-To: <685c1430.050a0220.18b0ef.da83@mx.google.com>
+References: <685c1430.050a0220.18b0ef.da83@mx.google.com>
+Subject: Re: [PATCH] RDMA/rxe: Fix a couple IS_ERR() vs NULL bugs
+Message-Id: <175094006339.824609.2290263451460503052.b4-ty@kernel.org>
+Date: Thu, 26 Jun 2025 08:14:23 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: uys6ttrkumetetsc4q3cpeitdrxnbwkr
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: DE2412000E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18rv6R1OBR9mcy111QH7t1FM1i8rlVGQg8=
-X-HE-Tag: 1750940011-661499
-X-HE-Meta: U2FsdGVkX1/qz+jyF9/tlZIldOEdrudCEWU5a97Pg8NrdTzggJLyt/G6ust73fl1uM28G8SoLmCp1MzDYLve+kVjCQMOJj1fZ5bFx5TzIIvRIax/WNSS6Nfm8IblnY7U66+aCfrWe3XzUzXayOZVVL60wng38G259CSVpirG52uKnhro+8qgaX9c+Fjc19tJyDhoxyYKezBgefNvhN4YwIQi1vYjdtu/BoEYF3iFiohTbVtHfhisEImvcNuQLkQALapWS2EKq+qRFoZnt4mQVzlO4pg5ugfSByIU32lGeGbpVse+Ni4DJkFaLT7e2OupK/8G4lFgS1tvLuws5tsn+J+YkiY7hrfbmA0mDDGdz4TD6bHN4cyP45lRqX6dWGW9syBoLLebtVuiQtO9E0bpug==
+X-Mailer: b4 0.15-dev-37811
 
-On Thu, 26 Jun 2025 10:44:40 +0200
-Ingo Molnar <mingo@kernel.org> wrote:
 
-> * Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, 25 Jun 2025 10:22:23 -0500, Dan Carpenter wrote:
+> The lookup_mr() function returns NULL on error.  It never returns error
+> pointers.
 > 
-> > From: Josh Poimboeuf <jpoimboe@kernel.org>
-> > 
-> > get_segment_base() will be used by the unwind_user code, so make it
-> > global and rename it to segment_base_address() so it doesn't conflict with
-> > a KVM function of the same name.  
-> 
-> So if you make an x86-internal helper function global, please prefix it 
-> with x86_ or so:
-> 
-> 	unsigned long x86_get_segment_base(unsigned int segment)
-> 
-> Keeping the _get name also keeps it within the nomenclature of the 
-> general segment descriptor API family:
-> 
-> 	get_desc_base()
-> 	set_desc_base()
-> 	get_desc_limit()
-> 	set_desc_limit()
->   [x86_]get_segment_base()
-
-Sounds good.
-
-> 
-> > Also add a lockdep_assert_irqs_disabled() to make sure it's always 
-> > called with interrupts disabled.  
-> 
-> Please make this a separate patch, this change gets hidden in the noise 
-> of the function movement and renaming otherwise, plus it also makes the 
-> title false and misleading:
-> 
->    perf/x86: Rename and move get_segment_base() and make it global
 > 
 
-I'll break it up.
+Applied, thanks!
 
-Thanks for the review!
+[1/1] RDMA/rxe: Fix a couple IS_ERR() vs NULL bugs
+      https://git.kernel.org/rdma/rdma/c/19564a8576ac84
 
--- Steve
+Best regards,
+-- 
+Leon Romanovsky <leon@kernel.org>
+
