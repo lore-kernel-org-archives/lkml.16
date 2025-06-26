@@ -1,116 +1,109 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB15C249F9;
-	Thu, 26 Jun 2025 14:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332BE28FFEE;
+	Thu, 26 Jun 2025 14:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750947047; cv=none; b=gqhCIjTNKH4hq0KLYiCcNtLtXKhYolzkzd4XgNPON0KDe6qYTM8CsK2y0a+ruLxDParLUDmu/JF/jFKA43heyQZZX8yUTz5slDDrHJ2idQILjhSCGYC+LpNJ90PRTRdTzJeriu4Tz2wGQRmGEQy7UyxPnm+phRhj58m2AHVPwk8=
+	t=1750947065; cv=none; b=GFgHfeqmWyqfRf/5q4x0xE6RLUSl1b2gN+hEULdFIbrFB48j3yNzCzOtOXV5uNI7bW5bhl98bibuJF4L3ySrn3SPKXZFtHAFHtewJrpJx1wh+i2wEYdrwgQ3NFKMqEEshxTKJV7OPJQrzLui2TZVFoSXMS7gI49G8B720OnhUPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750947047; c=relaxed/simple;
-	bh=lRGt/g0g8Dt9x8qN3dripz/CNyLvV5boW50dIA5joSQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cBY618C9FVIGgjxERgBosOhVaInE9mPghSBBXNorQJHKoeRZdxwYwB0ZMlYocNKYDo5YVGXOmNB1GihsYFRGqvkbGE/y/BRWAlqxi84eI86CmNGX3NF7kS2/PHuGdwqWjxaR4rLlWuy+DTXUHDCqrkINltTPdDgPj75XvA7U05w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=d3APXVmd; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="d3APXVmd"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9B38F40E015E;
-	Thu, 26 Jun 2025 14:10:42 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id TbYHqpyYlbtU; Thu, 26 Jun 2025 14:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750947039; bh=x0ZNVMkUtmtDeX1WqjBnG1Spg/z8nwse68E2o5e9q/E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d3APXVmdrPkfYakMMvxi889t5BDcMTLZP6N9jd58++heM0JmucpBXmB9jaY/SjWj8
-	 oODAPZUoKcTNrT3FF8yYK6PTBGZnXewasgSkxUlvgYZa38ps3vehWg/Q3WNKcJ4B0b
-	 frz1CAgXPV1G24iRqjjf5TvK7sCC20pAteNx5ptg14W5Ev3ElIJt+bhXzQY2aNJ94S
-	 5yJwUYnwUfrwTzcMFY+4/F7G2PWzDCbTcngooJAzZK5hCwF+Fx8PxWUd59nhbodHcf
-	 Q6MuXwQDdtAB1uvY2oDBm9XKp0n568Yvib64DiuAjB507tmIxlQ/AjK1ol8+/zrSqf
-	 WzFA/mnSgOVrU6IspdlTWYsI+EEkWsSQ0y4mjg6pez21gr5EuGSXMGYWsSvfKvvw/8
-	 gEydbC1zWKxcTiuP+azOvJzHksoAKTWE6M4mhSjf529txokI5+s1YcaIcfa1Wd/CEw
-	 iNU6VGJKodd7u824zhDQwBT51d36X2W0hTl5xMTQy9FHt04lq0YPNkXdE/z62vdwNB
-	 /0t0S1vlw8pyFp3AOuXoR0hL0I+jCpJiBJkB9bXm5yKzVMQNLQ7RdBIX/81SGTCl3V
-	 ToGtzTK34exEfP3pe+WLrsV+sRpIi84rIe+KR8klgjdeN0OgEsvpMcx2cH6jAXd3lm
-	 YJKCsPBRZ5bqSCikUcmjw3f8=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 10F1240E00DE;
-	Thu, 26 Jun 2025 14:10:29 +0000 (UTC)
-Date: Thu, 26 Jun 2025 16:10:23 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Datta, Shubhrajyoti" <shubhrajyoti.datta@amd.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"git (AMD-Xilinx)" <git@amd.com>,
-	"Simek, Michal" <michal.simek@amd.com>,
-	Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>
-Subject: Re: [PATCH] EDAC/synopsys: Clear the ecc counters at init
-Message-ID: <20250626141023.GBaF1UzwF9ITE8-LBQ@fat_crate.local>
-References: <20250528065650.27646-1-shubhrajyoti.datta@amd.com>
- <20250603090536.GCaD664IbJB5IoR06g@fat_crate.local>
- <SA1PR12MB894764756C6538EE985BDE24816CA@SA1PR12MB8947.namprd12.prod.outlook.com>
- <20250604093735.GAaEAT39KGW1KJDrjD@fat_crate.local>
- <SA1PR12MB89471067967E0A5F46CEE1DF8175A@SA1PR12MB8947.namprd12.prod.outlook.com>
- <20250611164018.GAaEmxctC+ESUCvBNT@fat_crate.local>
- <SA1PR12MB894766DFAD90E9DB15A3268F8174A@SA1PR12MB8947.namprd12.prod.outlook.com>
+	s=arc-20240116; t=1750947065; c=relaxed/simple;
+	bh=k+PlH4M/dONX/Y7DAYamHb2UhCXdl+3x0eQwz8TJ+6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hTySMhzCHJsy1w6TNjKt+IdGUBXZIqy7G/Owf/8vZATlCLRZDqBLeQg10/2K6ACecbVAfGORCAMlpwCfgZls7xfwj1u+DrNFn9YyyyR3lsjCW6M4ncU35Nu8sMi/RbUGn88/bYk6ivi/0M4q86thIANm7jrpSG3DJ9VzYcZpntg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id C2D9B1202D6;
+	Thu, 26 Jun 2025 14:10:59 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id A18A320027;
+	Thu, 26 Jun 2025 14:10:55 +0000 (UTC)
+Date: Thu, 26 Jun 2025 10:11:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat
+ <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH v11 03/11] perf: Use current->flags & PF_KTHREAD instead
+ of current->mm == NULL
+Message-ID: <20250626101115.3e6b99bf@gandalf.local.home>
+In-Reply-To: <a3b456f2-deeb-45c9-b509-23bbe5e96cfd@kernel.dk>
+References: <20250625231541.584226205@goodmis.org>
+	<20250625231622.172100822@goodmis.org>
+	<a3b456f2-deeb-45c9-b509-23bbe5e96cfd@kernel.dk>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <SA1PR12MB894766DFAD90E9DB15A3268F8174A@SA1PR12MB8947.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 4ymo5mipbk8gcjdq5npams95x563i54f
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: A18A320027
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/N621g61In4Y2fVBleF6OF75dPcGbes5E=
+X-HE-Tag: 1750947055-359244
+X-HE-Meta: U2FsdGVkX1+n3jdg+aKXOb56mHFBWq+oesOU81aTWJL+AgfIaVxEQitthOmfcgcL3jC1vpBKa52f4r+GBI4Vih6iDYN3bQKEIbSSHzyDJLa3smBvAloDRwJIibq3tFyiCBCJA9p6IQ6zsI74iBdTX846OXS/XBqfxz2RwZazjQXWqWFSbtl5uJVHaHzJtqjeMYHut6P3zIW1ka5/wQCw/RGGCKjJjhVJbuCybPsXREpP4SmmPdtOoIfbjAS24YGImnvegu2YuIEg7hDw0TJSV8Vgwnu//75qOeqFqwVqHeC79sbSgr0MIG2IgEKogLXYIpdJj4O+2v0NJ2dryEqMoIS1/bBEMW3rlzsWVWwc4c0R3HDFgVRtSdWy18q2m8mS624vAiwa6kQHZBAMmoUk3Q==
 
-On Thu, Jun 12, 2025 at 11:42:13AM +0000, Datta, Shubhrajyoti wrote:
-> Please find the diff below
+On Thu, 26 Jun 2025 07:48:40 -0600
+Jens Axboe <axboe@kernel.dk> wrote:
 
-Good first try, however...
+> On 6/25/25 5:15 PM, Steven Rostedt wrote:
+> > From: Steven Rostedt <rostedt@goodmis.org>
+> > 
+> > To determine if a task is a kernel thread or not, it is more reliable to
+> > use (current->flags & PF_KTHREAD) than to rely on current->mm being NULL.
+> > That is because some kernel tasks (io_uring helpers) may have a mm field.  
+> 
+> This commit message is very odd, imho, and wrong. To check if it's a
+> kernel thread yes you should use PF_KTHREAD, but that has nothing to do
 
-> -/**
-> - * zynqmp_get_ecc_state - Return the controller ECC enable/disable status.
-> - * @base:      DDR memory controller base address.
-> - *
-> - * Get the ECC enable/disable status for the controller.
-> - *
-> - * Return: a ECC status boolean i.e true/false - enabled/disabled.
-> - */
-> -static bool zynqmp_get_ecc_state(void __iomem *base)
-> +static bool get_ecc_state(struct synps_edac_priv *priv)
+Yeah, I figured this was wrong when I saw your reply in the other thread.
+That's why I Cc'd you on this.
 
-This function's signature should be:
+[
+  For those interested in what that other thread is:
+  https://lore.kernel.org/all/20250624130744.602c5b5f@batman.local.home/
+]
 
-static bool get_ecc_state(void __iomem *base, bool is_zynq)
+> with PF_USER_WORKER. In fact, as mentioned in a previous reply,
+> current->mm may be non-NULL for a kthread as well, if it's done
+> kthread_use_mm().
+> 
+> If the current check for "is kernel thread" was using ->mm to gauge
+> then, then the current check was just wrong, period.
 
-or so.
+Yes, but unfortunately, that was a way a task was checked to see if it was
+a kernel thread or not. Which was right "most of the time". But it's wrong
+to use that, because it can be wrong "some of the time" :-p
 
-Or you'd have to invent a proper way to figure out what hardware the driver is
-running on. Definitely not:
+Which brings us to this discussion.
 
-	if (!priv->p_data->quirks)
+I believe Peter was under the assumption that we should not use current->mm
+to see if it's a user task or not, and use PF_KTHREAD instead. But for
+perf, a user task is something that will return back to user space, as the
+idea is to profile the user space stack trace.
 
-I have no clue how the device tree stuff makes the strings you pass in
-synps_edac_match available again but there should be a proper way to check the
-hw you're running on - not some arbitrary random case where zynq hw doesn't
-have quirks because once someone adds quirks, your scheme is down the drain.
+You said that PF_USER_WORKER never came from user space, so from the perf
+point of view, it *is* a kernel thread, and we don't want to treat it as a
+user space one. If we check current->mm to be a user space task, or if we
+check for PF_KTHREAD to be a kernel task, we are wrong in both cases when
+it comes to a task marked as PF_USER_WORKER.
 
-Thx.
+This brings up having a function like "is_kernel_thread()" (or remove the
+'is' if people don't like that) that returns true if the task *only* runs
+in the kernel.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+-- Steve
