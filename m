@@ -1,158 +1,233 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0329A202C50;
-	Thu, 26 Jun 2025 17:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1302EB5DF
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 17:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750959862; cv=none; b=LU7PzPVMELlfabuxNc0LjrpwQohZfnorGGtZ0dV9IYOU5BiPguFLsJDaHbmG8VFuDETuhFpg0BAuQBANh0ncCMF15apam6BcEB+OlVo4+KRVqcLHz8ndn7vg99xD5dMRlDM1mwg9Kwl9F37BvRb/bZ1vbAUgF95/MU/kycEegwU=
+	t=1750959887; cv=none; b=LigiHK4XUBOhfYyHtoAR233ruq6pt7mt9P17EDvrgtf7FMdIm1EIey7vkGuP7xhpsgLyptqSs6bGqEMtEH2afxIK0p7fC30Dfq9pshM1zBUY8eLfdGEVwVrDvLg2Na537poHAs5gs4SX6s4Bx0EjafAwdHBIAB+tOMW8aZnReIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750959862; c=relaxed/simple;
-	bh=ebZvQEOJOdrHVeM5gSV7fQQB052guVx3TdrknM+JY+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vBoA8vK/kHZytuo1XOcPrrajZpNl6sR4VcQ2jdnpLn33J+b24uO9G7OKRrNAZwfVEdh2ywnwHG1Z1LXdLU6yuyZLEC6COl6tLwjLFUg5mds6dRgW6BYhg5N1bJiaHjzCMuIRR3lQb30oK0FD/PdjBBIEx0X4DhQ88L06AiuTHFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NPoTIyio; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750959887; c=relaxed/simple;
+	bh=zqUO0sW+cNaKMWzNEDMI98mGQvarDe1iRGXhZ+Veqss=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TND+CRfpzLDCv3Dg+7WcO6AOM0t7+UinXgflensaZ7j0qpIIxjCq6/kT2DYPuJv9v0XI/wE5v5Pd3JcY/JzrHNyLAPfr/ocQt/Eua2RHayIzr7Us+7gGebQbdGxxLhY0EadykDv50BZ1px9YYeVmnrifkBQKuTyyaUKHJnPjm5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FBCtn/ro; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPoTIyio"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2350fc2591dso13488005ad.1;
-        Thu, 26 Jun 2025 10:44:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FBCtn/ro"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3138b2f0249so1176591a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:44:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750959860; x=1751564660; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XOqApDlDtKek45u/dybzXv0bCsKoiI2y3znxRwW87ck=;
-        b=NPoTIyiou6NRJ4Hfy5BF8zGazNLl8drR0TSC7XoQgOl0JXVXfBkSjX+b4eCUrLl6sl
-         sFsGsu48bwrQcFWj+k7RWpfRys6eb8yvfVJOTy5yhPl+rCjLFuYN3/vgcVFTkj/41Q8o
-         zSUONSY1Z7gQHWhb/Q3VsTxCRj/mF/PQTweFEyA/XxjfV/U5TPRuHzW9XVrv61NSLLh6
-         VcvXaaJVMpexrl2zZung/zoLxfm3cZwiawKRkqSpekoAySfGK4yCNQdb6KLz0sA4Hj0U
-         Yi0jDlzb19RbH6A4+d0k6u+pC8dtp5BVXLX16pBMWh+myvRnKGpq71UDzIW93HNzIkOS
-         XjsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750959860; x=1751564660;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1750959885; x=1751564685; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XOqApDlDtKek45u/dybzXv0bCsKoiI2y3znxRwW87ck=;
-        b=UPAs9idXlB7BpoVs3fOR0IRecLjdURLhxElSVEYXu3WPjOxw8438tAUUa2LbSoBE6W
-         q2CkolYWIE6ZTipxFBZETlkD8kU2xwKbutV585s8WTdRHVwtjjEyvhBiArO9Zq5Kb3Mp
-         NtgjaB4yebQIrX2dwwWUK7JnNBo0izSwVn8rstF8h0ZmPnLhCc9o5KBee/ctsBg0k1eh
-         01tfYEPtkzEXm8MCAmQx9snlayGY7mzbXdzK10SfH0ylm5JnFN+1TWpPjljFR0z4B3C5
-         xUZC28eQUYpyuUS/fi7yJk/JVk5iyaWbFaUMnpnBzjqGSe59Q6TXPhWGBXlmNk+pe6dY
-         teJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEvn0JQJCODs+afInVizC0E4s8JxQqWlCTUoXpQTcK8RPpNfyBjFEEG3djmEq3b8sJvVY+NpduOZ+MjHzH@vger.kernel.org, AJvYcCUF2+sjUuN0pQCTqH2mfMkI8t4IwTf7iWSQmO+CbIyjhqz4h193UBIZqEOWw9stBUbuUh0FfkECfSa5@vger.kernel.org, AJvYcCVAOg7HiApxodEKJ7auOA4tJFZvXl6qUS9QOzFDizyx0emQujtCzsQ4H4eCFXq0aWVOInq2qtFTABNgdA==@vger.kernel.org, AJvYcCWjd4fRJanqIXM35chXubrPkapCAaAyQiNhTnSYyFfL19Z1zxIvvcU2zSHY44wRmZFl9KGb+qxyDz/Y3mk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPH99cBq3vQjtqFftgb08IDzJmZ1WR4745PeLebNWtC+km7U1B
-	KfUQ/aCanGU4LFStwZTohUOjSk2mhoHeWQSyJZq/XSMm+RYWXrj2r+Fe+i4+qQ==
-X-Gm-Gg: ASbGnctxLls2UF57DBHwGL3azOfDtwjM6GJ7B5KsKlQ9/AexIk4nvd5ZHiHu/boMUjg
-	dDa+WQ0n0tb4yok3+E+ZXpKuITN+XEh2gNqjLqkTpLYgdkIcP2zrnD6lRZxyX70QWCrfeY8EqWY
-	/e9hj76PgdoUQO97tdOwe3y3JmUbkFvkSWaEzZo4J/hbpC21wUxKu9Ah16rq48oEZ2XzBy0OHvU
-	cTV9jiWlCl/AE78JrhmBHfz6vhFFL3FN8iP+xeYomD7GWMWFSlLJfhbVAlnpRjPsX/BQs2jkDCc
-	aplI7AQCTkpjxVXpHhHM9nt4eLlU39PZhPMHybX5bjLJzliZ/F1ekcBMLVRhxh0payz5DMsVVQ=
-	=
-X-Google-Smtp-Source: AGHT+IERpA/42F7+ID3nTxnW60mmdpQabBUjkL6LiXoHhp6te1jwac5vSBt8lZPIf3XYVILMRgCeJw==
-X-Received: by 2002:a17:903:584:b0:234:325:500b with SMTP id d9443c01a7336-2390a51a598mr46561055ad.22.1750959860234;
-        Thu, 26 Jun 2025 10:44:20 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:9c8f:acd3:efcb:bc3d])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23abe3f4551sm3139535ad.144.2025.06.26.10.44.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 10:44:19 -0700 (PDT)
-Date: Thu, 26 Jun 2025 10:44:16 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>, 
-	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
- system
-Message-ID: <rn2kp5tog2agvswva2ipqq2ytiqdcgccnocudsg6ckwfh4roei@provk2g6dita>
-References: <20250625215813.3477840-1-superm1@kernel.org>
- <20250625215813.3477840-5-superm1@kernel.org>
- <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
- <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
+        bh=awzZr2qt61hMaORaAhilI11J4L+Y4ATtUQ36+lUSj4E=;
+        b=FBCtn/ron0kYEA+/6EO/VYIzRzGisMQFV58vimNt/6bM7W6wxjx6gsubpxGhEKkJVL
+         T3AVg4enXNe1axnDBJE95/1riYSFdrUdzhjd/EsBEb7A57vx+K/rV6Zk/gqydGcMFud9
+         Li7bz+8ejPqwGbf0QM7/X9SDwS1HHImJP08nlgtaTW6ibxssJAobas8tLvE5qTVK3gcj
+         qV1lRcSQBMOuE+3Dl2y1uUT960/ZxGaCDNCghHvOJ6mtZPQ7uYzfwNbQb70Gjwt3JlES
+         CgPvqUFRYw/TEuqtj3HpKKqKRCGmFF6v4Spl/EzrqdfS2fvSSrEB10KbSoe6/0y1tZwa
+         b8Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750959885; x=1751564685;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=awzZr2qt61hMaORaAhilI11J4L+Y4ATtUQ36+lUSj4E=;
+        b=dXARvsxbJqKxHxrsdzG6WF+OfZv/Vp5izGKsMzTEcpvdK92N+IFYn8yp811Sz3rc+j
+         VU13wuQUN9A8h6uBQkGtQO9XxGFsD02JUzS7ogj6kjtegQrZJfwyKKdo1YYvIGLnZZHr
+         bZu7AybEh0U03UH08lx9/KrKr6YnfR5uoIOeuhH82phfeOlRIY57XGy0egpaon4EppwD
+         x+QaK8bSTtQIn34THbPWQtstDaLic05FPi2fPHVRGtkmKko/muZHvyj+MsA8rvO+gMzG
+         Je0pvHtLD6r3/5PuNul5sK68fJU+rSc6cwzV87pe9XXrdrTq/f0/5nvlgYW8+qrVQ4gZ
+         sNjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8DzvGutAwxd4WmRk0GO+5p5HZzkLcsHmCraM4XAbekgE6ry7YeAPFIi2IuBhr6pABoKYpX19l2EyeSXM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGumT7/pN2mB7dM5nxyHOuqQUxfXAB6nJ5EA+5VHrHfoagYh/P
+	Odn6YcEo21A0M42LfUv5mv/8/pG2G+pRV8a2Acys4lFkqpUWBa+6XaVV7a70oaQerrMZ2HqfrNi
+	jdd/AktXO38Yn2EIIjMUfWsz3rIoHb7ZsL3DWVDpyBg==
+X-Gm-Gg: ASbGncuKMksKCfBSKoNfq7PpKyKDi44SY3n4vU7dq9iO6C0cRuf3vQIehsYRjq3nKKE
+	TzN5g1OBVn5vWDgXqKAnwsBHcWPQVW0TzJ0ibmgsMTU/d34BHhIEQzzAEx/SCvceKpR9Uq+2Hh4
+	F3d3gi2pAd+b/cFih98uoDLCRprL56fu+1uPAqUjKg4R130a1GsZtdOlSxo8+ZTk5At5M45QWjB
+	Py8
+X-Google-Smtp-Source: AGHT+IEFPPEqV7DtiqEA1oE1/fKrctRNlSpnteTT9tcvCUfZIlkuK+VPMsW7r1iS1qPSXO31ZrE+Ng7a60BAXQEdGNk=
+X-Received: by 2002:a17:90b:3cd0:b0:311:d258:3473 with SMTP id
+ 98e67ed59e1d1-316158cc4d5mr6717061a91.13.1750959885262; Thu, 26 Jun 2025
+ 10:44:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
+References: <20250626105243.160967269@linuxfoundation.org>
+In-Reply-To: <20250626105243.160967269@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 26 Jun 2025 23:14:33 +0530
+X-Gm-Features: Ac12FXycaF7oeRJLnS3XeYXVpdhngxsyXODthsn8k9cqqTJDz0BHwpoRhfHoX6U
+Message-ID: <CA+G9fYunftA3YqTxm-2GMN1fpQ_PVviBpDOnGznUo4YSW9pmSA@mail.gmail.com>
+Subject: Re: [PATCH 6.15 000/589] 6.15.4-rc3 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mario,
+On Thu, 26 Jun 2025 at 16:26, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.15.4 release.
+> There are 589 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 28 Jun 2025 10:51:38 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.15.4-rc3.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.15.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-On Thu, Jun 26, 2025 at 06:33:08AM -0500, Mario Limonciello wrote:
-> 
-> 
-> On 6/26/25 3:35 AM, Hans de Goede wrote:
-> > Hi Mario,
-> > 
-> > On 25-Jun-25 23:58, Mario Limonciello wrote:
-> > > From: Mario Limonciello <mario.limonciello@amd.com>
-> > > 
-> > > Sending an input event to wake a system does wake it, but userspace picks
-> > > up the keypress and processes it.  This isn't the intended behavior as it
-> > > causes a suspended system to wake up and then potentially turn off if
-> > > userspace is configured to turn off on power button presses.
-> > > 
-> > > Instead send a PM wakeup event for the PM core to handle waking the system.
-> > > 
-> > > Cc: Hans de Goede <hansg@kernel.org>
-> > > Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing key press event in resume phase")
-> > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > > ---
-> > >   drivers/input/keyboard/gpio_keys.c | 7 +------
-> > >   1 file changed, 1 insertion(+), 6 deletions(-)
-> > > 
-> > > diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-> > > index 773aa5294d269..4c6876b099c43 100644
-> > > --- a/drivers/input/keyboard/gpio_keys.c
-> > > +++ b/drivers/input/keyboard/gpio_keys.c
-> > > @@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
-> > >   		pm_stay_awake(bdata->input->dev.parent);
-> > >   		if (bdata->suspended  &&
-> > >   		    (button->type == 0 || button->type == EV_KEY)) {
-> > > -			/*
-> > > -			 * Simulate wakeup key press in case the key has
-> > > -			 * already released by the time we got interrupt
-> > > -			 * handler to run.
-> > > -			 */
-> > > -			input_report_key(bdata->input, button->code, 1);
-> > > +			pm_wakeup_event(bdata->input->dev.parent, 0);
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-There is already pm_stay_awake() above.
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-> > >   		}
-> > >   	}
-> > 
-> > Hmm, we have the same problem on many Bay Trail / Cherry Trail
-> > windows 8 / win10 tablets, so  this has been discussed before and e.g.
-> > Android userspace actually needs the button-press (evdev) event to not
-> > immediately go back to sleep, so a similar patch has been nacked in
-> > the past.
-> > 
-> > At least for GNOME this has been fixed in userspace by ignoring
-> > power-button events the first few seconds after a resume from suspend.
-> > 
-> 
-> The default behavior for logind is:
-> 
-> HandlePowerKey=poweroff
-> 
-> Can you share more about what version of GNOME has a workaround?
-> This was actually GNOME (on Ubuntu 24.04) that I found this issue.
-> 
-> Nonetheless if this is dependent on an Android userspace problem could we
-> perhaps conditionalize it on CONFIG_ANDROID_BINDER_DEVICES?
+NOTE:
+The reported regressions on 6.15.4-rc1 / rc2 LTP syscalls readahead01 has
+been fixed on this 6.15.4-rc3.
 
-No it is not only Android, other userspace may want to distinguish
-between normal and "dark" resume based on keyboard or other user
-activity.
+## Build
+* kernel: 6.15.4-rc3
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: d93bc5feded1181a1f0de02e38b4634a7a76b549
+* git describe: v6.15.3-590-gd93bc5feded1
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.15.y/build/v6.15=
+.3-590-gd93bc5feded1
 
-Thanks.
+## Test Regressions (compared to v6.15.1-816-gd878a60be557)
 
--- 
-Dmitry
+## Metric Regressions (compared to v6.15.1-816-gd878a60be557)
+
+## Test Fixes (compared to v6.15.1-816-gd878a60be557)
+
+## Metric Fixes (compared to v6.15.1-816-gd878a60be557)
+
+## Test result summary
+total: 270887, pass: 246235, fail: 6441, skip: 18211, xfail: 0
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 139 total, 137 passed, 2 failed
+* arm64: 56 total, 56 passed, 0 failed
+* i386: 18 total, 18 passed, 0 failed
+* mips: 33 total, 27 passed, 6 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 40 total, 39 passed, 1 failed
+* riscv: 25 total, 25 passed, 0 failed
+* s390: 22 total, 22 passed, 0 failed
+* sh: 5 total, 5 passed, 0 failed
+* sparc: 4 total, 3 passed, 1 failed
+* x86_64: 49 total, 49 passed, 0 failed
+
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mm
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-rust
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* lava
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* modules
+* perf
+* rcutorture
+* rt-tests-cyclicdeadline
+* rt-tests-pi-stress
+* rt-tests-pmqtest
+* rt-tests-rt-migrate-test
+* rt-tests-signaltest
+
+--
+Linaro LKFT
+https://lkft.linaro.org
