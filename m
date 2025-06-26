@@ -1,156 +1,124 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B0C79FE;
-	Thu, 26 Jun 2025 11:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52020DDD2
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 11:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750938759; cv=none; b=qhw9nLtjk7CW5rRka9XONvPHEA1xQ4IuBHOgONVdCcQ3hWZm+5xq7GCcaZCKFYYaLPBk10drnDOYgpvYoEO7kV8w42tlmT9XaUe1jB8kckrSLY89EP/269Jyfor4ywpMU5YWISlpF00cab98J3AsTr8Tf0SnXLALyXp7GbI3DU0=
+	t=1750938928; cv=none; b=eQhDWMoNNbvPkH0L9uCDqr0P6EhwMs0TofD1tbZcjxcL99EMLIq+4UYfv881uKk9K4S11pmHsfYeqPCD835+r3sb1ziKCz7hr9OAwCYTFw1nuZ+eRoz7xwMVcnWLibcv5dXQpNBaCBxZRoJ5fIWP24v7f2tkw2v9XtWuGpT8FnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750938759; c=relaxed/simple;
-	bh=2Qh2Zd3dzsgYDm5txrfwRiPP+X34/1hlDIJLd3js8GQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bQ7P4zuqFtzpO/YNY+YsxIoX0h//wt4+aT6/earbNnaSl7rbZeoMl/5DEL9KQDSKqtG9jbP/nKuOWp+SYHgLbSuCen3l3/5HlcB+joQXjDVvGKorNYAM89mnxsCYwArx/6T4U/O4HP9f9jej73P79eN3fURH0QNPmosTl+8Nvrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=arunraghavan.net; spf=pass smtp.mailfrom=arunraghavan.net; dkim=pass (2048-bit key) header.d=arunraghavan.net header.i=@arunraghavan.net header.b=QkH2ScQe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=n4jF9ECf; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=arunraghavan.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arunraghavan.net
+	s=arc-20240116; t=1750938928; c=relaxed/simple;
+	bh=OepCRvmZSgZ21THaAIKKkjUXXt+rOFHQEY0XAoO+8s8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=JWfOvx2Mb5GI/F2f+mUWf7W/EfvbieOdDTOkhiG07Ta+/PLiD2kOGUjyv6MJ69L82wA/1quD/0pyUL7AxdiqsSgfz3TVx3tiFaBysNAcGNeB351zAhxRBXmgoLYz8mj09m6kDQMQrnviWGwkjC3Z2p28q7X12lJXaq50oiODiJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b=lW0cccsx; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arunraghavan.net header.i=@arunraghavan.net header.b="QkH2ScQe";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="n4jF9ECf"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.stl.internal (Postfix) with ESMTP id 7206F1D001A7;
-	Thu, 26 Jun 2025 07:52:36 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Thu, 26 Jun 2025 07:52:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	arunraghavan.net; h=cc:cc:content-transfer-encoding:content-type
-	:date:date:from:from:in-reply-to:message-id:mime-version
-	:reply-to:subject:subject:to:to; s=fm1; t=1750938756; x=
-	1751025156; bh=D76ucE6r4U6GishIFwF0qlrah5XVDlhRiq5O7CVmMK4=; b=Q
-	kH2ScQeY9TemKvzA4WHpb1jJ8BG2dseCerHmx31zFgB3yEedFEgZPqdql6j5U4It
-	mlR0fVAwqNHylO/IBV7eYs6tGt2wcB8QvnqDNSofJtW3VSBe+jLIEeLWfPl40Dlw
-	WXhvpebiW3VfzplDFppykeBISJBxJn2BN/1tabKZn0QCHVuv10UEGxB9NqwiFTcr
-	8pnyxYUcYWFotsojwAl3b1cIaA72LHWuxhP9SlsFwAuiwhDrwALkIDsvGkGhAx4/
-	5K4Pe5YB1Ta1DZXHZ6U7875R+gqJMboMLXP3w3pnurKbFnFQ3/4vyGxTYd1BrQ0N
-	cwr2ckQtNIYXXW8JUG1ag==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1750938756; x=1751025156; bh=D76ucE6r4U6GishIFwF0qlrah5XVDlhRiq5
-	O7CVmMK4=; b=n4jF9ECf6EkTSqo/wddtNtU3q6w2R3G/Hw5WJgg0WsAx4B3fp//
-	CZ/Z5nndXscxYpMMqbl7TXOt38uCJ2R6AUG19YlNZBos+wIPCKvvWs1Ot7z6H0MM
-	H9wkarbyBSPvA13lh6aiS/YxEibl1+IwLoUEd0F+Cx2h9L3chfh3rdTMEstfAoML
-	Z8J4WY1HFhJ0NcIeEMgFSMTiAcf+pQaJIAhrAlKfPwdg/zai/bnIr4SjJwOFoXtk
-	PC3dWweRE+8q5IMCBk6sHHfRtyTLDgjQeyqPc+HZOeHpYR5N7CaJf4rRv8jMSz8S
-	yvb3ubfzikDg3NS36FzxSsBaq/sJ/n1yW4Q==
-X-ME-Sender: <xms:gzRdaFxoc4Kt8em8TEOF9SBgQVUcFEcW3_lh4prOv47W7LGE0aRZuQ>
-    <xme:gzRdaFQzrH_uuiH-XBEB8U_uj8uK6VqPDY4WkEPHI_DG2NPOPUz8oFA679OYqyT8z
-    HW7hYWiEJw-g56Q6g>
-X-ME-Received: <xmr:gzRdaPWqPzO7IyyzIAj13qZEPVkxKIkCv7ZjyRg2lqCI3G8_v6b312E_6POXDAvk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegrihhl
-    ohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpe
-    fhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetrhhunhcutfgrghhhrghv
-    rghnuceorghruhhnsegrrhhunhhrrghghhgrvhgrnhdrnhgvtheqnecuggftrfgrthhtvg
-    hrnhepteduheelvedvledvudfhudevkefhhfeifefggeevkedvudfgueelvdehtdetvdef
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghruh
-    hnsegrrhhunhhrrghghhgrvhgrnhdrnhgvthdpnhgspghrtghpthhtohepudefpdhmohgu
-    vgepshhmthhpohhuthdprhgtphhtthhopehshhgvnhhgjhhiuhdrfigrnhhgsehgmhgrih
-    hlrdgtohhmpdhrtghpthhtohepgihiuhgsohdrlhgvvgesghhmrghilhdrtghomhdprhgt
-    phhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomhdprhgtphhtthhopehnihgtoh
-    hlvghothhsuhhkrgesghhmrghilhdrtghomhdprhgtphhtthhopehlghhirhgufihoohgu
-    sehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtohepphgvrhgvgiesphgvrhgvgidrtgiipdhrtghpthhtohepthhifigr
-    ihesshhushgvrdgtohhmpdhrtghpthhtohepphdrtggrmhgvrhhlhihntghksehtvghlvg
-    hvihgtrdgtohhm
-X-ME-Proxy: <xmx:hDRdaHhUc1pAZjHaW9ixReOptq3kk6Ay4dDv0pAr14hmefVThJvq0g>
-    <xmx:hDRdaHCL4ktOslRU0PokGQgLvbqPe3mzY5g7rkgJuz-uHLSzbUrHFA>
-    <xmx:hDRdaAKb4gTiWcmTRgmAD-nvWdU1UYkXRwHmmpn_VM7fUGi1IpHNqQ>
-    <xmx:hDRdaGBdNcBnGbR0Q4htHNFosMSMadeCVXpUO43mXd2n0Vmhxb_0KA>
-    <xmx:hDRdaFS3yrc7xiYB0oLUqf7AgIvf1k__38E-Xw3zK1E0_dbjPCF09HYC>
-Feedback-ID: i42c0435e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 26 Jun 2025 07:52:35 -0400 (EDT)
-From: Arun Raghavan <arun@arunraghavan.net>
-To: Shengjiu Wang <shengjiu.wang@gmail.com>,
-	Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>,
-	Nicolin Chen <nicoleotsuka@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Pieterjan Camerlynck <p.camerlynck@televic.com>,
-	linux-sound@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	Arun Raghavan <arun@asymptotic.io>
-Subject: [PATCH v3] ASoC: fsl_sai: Force a software reset when starting in consumer mode
-Date: Thu, 26 Jun 2025 07:52:18 -0400
-Message-ID: <20250626115218.141874-1-arun@arunraghavan.net>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b="lW0cccsx"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 7D570240027
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:50:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net;
+	s=1984.ea087b; t=1750938605;
+	bh=++tZDl1VMrYPukj14Hp1L5Dy277OIIyCwylm3lluCpM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 From;
+	b=lW0cccsxwQ8q50mmQouzfBYYL+5jMnZ3lCTJHiIie8U6j5FYBqAHlirmQ1MNpV7c6
+	 QuxILbycA3tGHTSxnsutXzf5CpdBeTpTSntHdxGEphRHHWckYuVLPNeqGUSBIhGlxI
+	 764AfEw6IcPsL4T1kJuBKH+Ot0QPbWzFnG1uyzeug+OGYSKs2dTPnV2hhcQn2bVYde
+	 Tdoaybh3JQFngYXEISPRxaxn16kETt842JN0Mz/ay8cytXuDKS3UAkWR0WX6M2Tb3a
+	 AyytNmrCZh0dafxmX2psxEHu6Ldth3jd2mQhu+vGOBLJGLVFr9rX3MUFsA0BLBieEo
+	 dly1Of5b6XYLlNKdBZC4dm4PYrpQgFUVawsfVcosaZGst1op5am80W6/kI87xQE8rI
+	 bxQ5qAAZdLN/VytO/NvSZpFYdjlAVTeBY35dTQ77QRPTMinSLKrQxz8/G5epi2dKKk
+	 iK+9+nQ3Vbe7nbHFAefcDWKidWidHGy4IgGAzsInewNdaS7JNMj
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4bScS94sRFz9rxN;
+	Thu, 26 Jun 2025 13:50:01 +0200 (CEST)
+From: Charalampos Mitrodimas <charmitro@posteo.net>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: zhangjianrong <zhangjianrong5@huawei.com>,  andreas.noever@gmail.com,
+  michael.jamet@intel.com,  YehezkelShB@gmail.com,
+  linux-usb@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  guhengsheng@hisilicon.com,  caiyadong@huawei.com,  xuetao09@huawei.com,
+  lixinghang1@huawei.com
+Subject: Re: [PATCH] thunderbolt: Confirm the necessity to configure asym
+ link first
+In-Reply-To: <20250626093026.GJ2824380@black.fi.intel.com>
+References: <20250626084107.2710306-1-zhangjianrong5@huawei.com>
+	<20250626093026.GJ2824380@black.fi.intel.com>
+Date: Thu, 26 Jun 2025 11:50:00 +0000
+Message-ID: <877c0ylo2f.fsf@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Arun Raghavan <arun@asymptotic.io>
+Mika Westerberg <mika.westerberg@linux.intel.com> writes:
 
-On an imx8mm platform with an external clock provider, when running the
-receiver (arecord) and triggering an xrun with xrun_injection, we see a
-channel swap/offset. This happens sometimes when running only the
-receiver, but occurs reliably if a transmitter (aplay) is also
-concurrently running.
+> Hi,
+>
+> On Thu, Jun 26, 2025 at 04:41:07PM +0800, zhangjianrong wrote:
+>> Current implementation can cause allocation failures in
+>> tb_alloc_dp_bandwidth() in some cases. For example:
+>> allocated_down(30Gbps), allocated_up(50Gbps),
+>> requested_down(10Gbps).
+>
+> I'm not sure I understand the above.
+>
+> Can you describe in which real life situation this can happen?
 
-It seems that the SAI loses track of frame sync during the trigger stop
--> trigger start cycle that occurs during an xrun. Doing just a FIFO
-reset in this case does not suffice, and only a software reset seems to
-get it back on track.
+I suppose this can happen when reducing bandwidth while total upstream
+bandwidth usage on the link exceeds TB_ASYM_MIN (36 Gbps). The
+allocation fails at the asymmetric limit check before checking whether
+the downstream request actually needs asymmetric mode.
 
-This looks like the same h/w bug that is already handled for the
-producer case, so we now do the reset unconditionally on config disable.
-
-Signed-off-by: Arun Raghavan <arun@asymptotic.io>
-Reported-by: Pieterjan Camerlynck <p.camerlynck@televic.com>
----
-
-v3
-- Incorporate feedback from Shengjiu Wang to consolidate with the
-  existing handling of this issue in producer mode
-
- sound/soc/fsl/fsl_sai.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index af1a168d35e3..50af6b725670 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -803,13 +803,15 @@ static void fsl_sai_config_disable(struct fsl_sai *sai, int dir)
- 	 * anymore. Add software reset to fix this issue.
- 	 * This is a hardware bug, and will be fix in the
- 	 * next sai version.
-+	 *
-+	 * In consumer mode, this can happen even after a
-+	 * single open/close, especially if both tx and rx
-+	 * are running concurrently.
- 	 */
--	if (!sai->is_consumer_mode[tx]) {
--		/* Software Reset */
--		regmap_write(sai->regmap, FSL_SAI_xCSR(tx, ofs), FSL_SAI_CSR_SR);
--		/* Clear SR bit to finish the reset */
--		regmap_write(sai->regmap, FSL_SAI_xCSR(tx, ofs), 0);
--	}
-+	/* Software Reset */
-+	regmap_write(sai->regmap, FSL_SAI_xCSR(tx, ofs), FSL_SAI_CSR_SR);
-+	/* Clear SR bit to finish the reset */
-+	regmap_write(sai->regmap, FSL_SAI_xCSR(tx, ofs), 0);
- }
- 
- static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
--- 
-2.49.0
-
+>
+>> 
+>> Signed-off-by: zhangjianrong <zhangjianrong5@huawei.com>
+>> ---
+>>  drivers/thunderbolt/tb.c | 10 +++++-----
+>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
+>> index a7c6919fbf97..558455d9716b 100644
+>> --- a/drivers/thunderbolt/tb.c
+>> +++ b/drivers/thunderbolt/tb.c
+>> @@ -1039,6 +1039,9 @@ static int tb_configure_asym(struct tb *tb, struct tb_port *src_port,
+>>  			break;
+>>  
+>>  		if (downstream) {
+>> +			/* Does consumed + requested exceed the threshold */
+>> +			if (consumed_down + requested_down < asym_threshold)
+>> +				continue;
+>>  			/*
+>>  			 * Downstream so make sure upstream is within the 36G
+>>  			 * (40G - guard band 10%), and the requested is above
+>> @@ -1048,20 +1051,17 @@ static int tb_configure_asym(struct tb *tb, struct tb_port *src_port,
+>>  				ret = -ENOBUFS;
+>>  				break;
+>>  			}
+>> -			/* Does consumed + requested exceed the threshold */
+>> -			if (consumed_down + requested_down < asym_threshold)
+>> -				continue;
+>>  
+>>  			width_up = TB_LINK_WIDTH_ASYM_RX;
+>>  			width_down = TB_LINK_WIDTH_ASYM_TX;
+>>  		} else {
+>>  			/* Upstream, the opposite of above */
+>> +			if (consumed_up + requested_up < asym_threshold)
+>> +				continue;
+>>  			if (consumed_down + requested_down >= TB_ASYM_MIN) {
+>>  				ret = -ENOBUFS;
+>>  				break;
+>>  			}
+>> -			if (consumed_up + requested_up < asym_threshold)
+>> -				continue;
+>>  
+>>  			width_up = TB_LINK_WIDTH_ASYM_TX;
+>>  			width_down = TB_LINK_WIDTH_ASYM_RX;
+>> -- 
+>> 2.34.1
