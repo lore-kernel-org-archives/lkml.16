@@ -1,198 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9AF2E1729;
-	Thu, 26 Jun 2025 12:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5EA2E0B72
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750941422; cv=none; b=qdKLYD5EhBSymR+iQoVkmJPwxV+LwcrIuFqEwHghjZ3AL8hjyo9S0BaCmST7nrlpbOFy4elzUg7XI6TlXjy8TktBAuiICDu6U4ldQLrlnSyYL9bzcTnTqnHbmW6s7oQsqq5CVZWq7sgVbYL5HfI20AHbTF7tHsIVWsgPAyz5r+w=
+	t=1750941464; cv=none; b=L+++hmZdkhH7YEymFPuMose67OUr1jtBi+lrnDLX2mfe8pGYztt9CKWUzHLtcvvx1TCBJv91L0dEFvbxcDOKlBBR277XteEUnMbZpFeTpKaBxnnpCtEgWmyG+dfj/HaDpRW2G8mdA4HUKHqipr4PWp7KU09HSKfOJJgNcl9z0iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750941422; c=relaxed/simple;
-	bh=xW15kcP4yyg5AdrMKmaXCrTg/yym1rGPvlnjvNS8aQM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dZ3RQ2VlRq7MfLihp9yVb187Vyhha0x3D6EJwbXVePKyEhUJO/1vLEKjiTywzF1Ga0WLWS7TWqOw33pmTHiDlAMK7XANaGoB7e7+5wbNxiVhtHhJlYxsweFa/s1fNd2zzspGd7C4bjhXjR41/bS5KE8xwX7iBfSpMzIz03fPrOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DcvqtYXC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750941464; c=relaxed/simple;
+	bh=/czma84Eer6tNDzWXV4EgHZ0U8xLVTiprJkMDLL0cRk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RR8Taq5IuRx/dFBR/IQCCDBSXvWFc2GWaratNaOP6X/8vq04wpGTME4YrPpUJEmMjW8qNQedk8587Li2GWYk9CXPsX4CAvFsJHJGOmWSOePear8zVGs3utUwNLR5SRqoWrhaxiVzOtxPzMBXDPopzAArABMZ+lZ9XeYjJ2onzds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Wzihc796; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DcvqtYXC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47849C4CEED;
-	Thu, 26 Jun 2025 12:36:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750941421;
-	bh=xW15kcP4yyg5AdrMKmaXCrTg/yym1rGPvlnjvNS8aQM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=DcvqtYXCj7wYyfm4lc1WtNlnSAMHX7pypAcyq0vNJeAYE2gfsy7DLFDOfnRjuspIl
-	 H6WJD9KzuzFzqWtKVudouagM3jOQwlSSOJIw8FV5rzYLY4f7RCTw/cFHIK7FiKTD+M
-	 Fv8vtbh6V7aIKoPNF9bQ6fZ7CZ9oQfBZeczUj20JXKcuXQU1pwAWr5CyATsW2hVF7w
-	 Rj0aaE6k4Pu7S0cJJWKeGlv/nKFD9EKPt165RQe+XizHsjaqS1blusPT5kIj5Relbp
-	 gehxNAviN9xflCvOZ5j1sIHSqyvZoJSxX+if1c9tIJRIw/wkUuFtDAfUsmMxfCQ5/J
-	 oNTo0sF2OaAKw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Boqun Feng" <boqun.feng@gmail.com>
-Cc: <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
-  <lkmm@lists.linux.dev>,  <linux-arch@vger.kernel.org>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <lossin@kernel.org>,  "Alice Ryhl" <aliceryhl@google.com>,
-  "Trevor Gross" <tmgross@umich.edu>,  "Danilo Krummrich"
- <dakr@kernel.org>,  "Will Deacon" <will@kernel.org>,  "Peter Zijlstra"
- <peterz@infradead.org>,  "Mark Rutland" <mark.rutland@arm.com>,  "Wedson
- Almeida Filho" <wedsonaf@gmail.com>,  "Viresh Kumar"
- <viresh.kumar@linaro.org>,  "Lyude Paul" <lyude@redhat.com>,  "Ingo
- Molnar" <mingo@kernel.org>,  "Mitchell Levy" <levymitchell0@gmail.com>,
-  "Paul E. McKenney" <paulmck@kernel.org>,  "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>,  "Linus Torvalds"
- <torvalds@linux-foundation.org>,  "Thomas Gleixner" <tglx@linutronix.de>
-Subject: Re: [PATCH v5 03/10] rust: sync: atomic: Add ordering annotation types
-In-Reply-To: <20250618164934.19817-4-boqun.feng@gmail.com> (Boqun Feng's
-	message of "Wed, 18 Jun 2025 09:49:27 -0700")
-References: <20250618164934.19817-1-boqun.feng@gmail.com>
-	<W3facY85E7FjV5y6_67OMqPUz1-Vubr8TpYgFCgXNl8GMh1oM6_bF9V94Kl_oZsdyCQSrxm5WExUmztE3pJ_BQ==@protonmail.internalid>
-	<20250618164934.19817-4-boqun.feng@gmail.com>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Thu, 26 Jun 2025 14:36:50 +0200
-Message-ID: <87wm8yznkt.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Wzihc796"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=+YBTVY6E54N+/VkKcNbQEDOvXDHOVgRKbti2O/wwJ9o=; b=Wzihc796sJkZex2MJVqlxkkFxF
+	VSK6unBgz6ksjMIuwbiF6vJZ0Yn6eaitLf9nqZr1ROQ3+r+JWFq+OLbWjnZSohQ50LkUFnDSYLIdY
+	+lCDsCCw3jsKMkW3IISeVU4dqSTxu/9Fz5PniJDF+RTQ8VxAbzqXzmn4GLnZx69vzztNREGTlgeA7
+	rRpH+nBsPlZWUvxzJkq00gjJANqvL5xJeXJiZmCVuqd0vXXzTG+Itgc3e/lK25nyN8ApxLMTmPzL9
+	1EUiBDxg5G8U7uu7SQUSBCe2OBwVZMXOqx/Axmb/RZ160K89jGYv+7fHibzZyhaIPlNeMpx/XqL6j
+	zXZcOk5w==;
+Received: from 189-92-252-99.3g.claro.net.br ([189.92.252.99] helo=quatroqueijos.cascardo.eti.br)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uUlr7-008yir-9d; Thu, 26 Jun 2025 14:37:30 +0200
+Date: Thu, 26 Jun 2025 09:37:19 -0300
+From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+	Zijun Hu <zijun.hu@oss.qualcomm.com>
+Subject: Re: [PATCH RFC] char: misc: Enforce simple minor space division
+Message-ID: <aF0-_0pHqLL39wse@quatroqueijos.cascardo.eti.br>
+References: <20250620-rfc_miscdev-v1-1-fda25d502a37@oss.qualcomm.com>
+ <2025062445-procedure-latch-9421@gregkh>
+ <ac666ce1-564d-496e-be42-8a8c1af654e7@icloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ac666ce1-564d-496e-be42-8a8c1af654e7@icloud.com>
 
-"Boqun Feng" <boqun.feng@gmail.com> writes:
+On Thu, Jun 26, 2025 at 07:29:56AM +0800, Zijun Hu wrote:
+> On 2025/6/24 23:50, Greg Kroah-Hartman wrote:
+> > On Fri, Jun 20, 2025 at 10:53:32PM +0800, Zijun Hu wrote:
+> >> From: Zijun Hu <zijun.hu@oss.qualcomm.com>
+> >>
+> >> Enforce simple minor space division related to macro MISC_DYNAMIC_MINOR
+> >> defined as 255 currently:
+> >>
+> >> <  255 : Fixed minor codes
+> >> == 255 : Indicator to request dynamic minor code
+> >>>  255 : Dynamic minor codes requested
+> > 
+> > Is this the rule today?  If so, does the now-added tests we have for
+> > misc device properly test for this?
+> > 
+> 
+> 1) yes. this simple division becomes possible with recent commits below:
+> Commit: 31b636d2c416 ("char: misc: restrict the dynamic range to exclude
+> reserved minors")
+> Commit: c876be906ce7 ("char: misc: register chrdev region with all
+> possible minors")
+> 
+> both available fixed and dynamic minors interleaves with narrow space
+> [0, 255) before above commits.
+> 
+> it is easy to balance minor space division by adjusting macro
+> @MISC_DYNAMIC_MINOR if required in future as well.
+> 
+> Also hope all fixed minors are registered with header linux/miscdevice.h
+> 
+> 2) no. below recent commit don't cover the simple division fully.
+> Commit: 74d8361be344 ("char: misc: add test cases")
+> 
+> drivers/misc/misc_minor_kunit.c may need to be corrected to reflecting
+> division today.
+> 
 
-> Preparation for atomic primitives. Instead of a suffix like _acquire, a
-> method parameter along with the corresponding generic parameter will be
-> used to specify the ordering of an atomic operations. For example,
-> atomic load() can be defined as:
->
-> 	impl<T: ...> Atomic<T> {
-> 	    pub fn load<O: AcquireOrRelaxed>(&self, _o: O) -> T { ... }
+Correct, those added tests do not enforce that one cannot register a static
+minor above MISC_DYNAMIC_MINOR.
+
+However, to some extent [1], it tests that a MISC_DYNAMIC_MINOR allocation
+will not return a number in the range of the static numbers. See
+miscdev_test_dynamic_only_range.
+
+It also tests that if a dynamic minor is allocated and one tries to
+allocate that same number statically, it will fail. It also tries [2] to
+test the other way around. That is, if one minor was statically allocate in
+the dynamic range, that a dynamic allocation will not return that same
+number.
+
+Those tests, named miscdev_test_conflict and miscdev_test_conflict_reverse
+were written considering the current implementation, which allows for
+static allocations in the "dynamic range".
+
+If we are going to change that, you need to change the tests too.
+
+I would suggest applying only the last hunk of your patched
+drivers/char/misc.c with a separate commit. Then, when misc_deregister
+would be called the minor would be restored. However, since statically
+allocating a minor above 255 would still be allowed, it could "restore" it
+wrongly.
+
+As Greg has observed, if there is no known case in the kernel where minor
+is not set to MISC_DYNAMIC_MINOR by the driver before it calls
+misc_register a second time, then there is nothing to fix here. If there
+is such a case, then the driver must be fixed. It has always been the case,
+even when the ranges were different, that the minor needed to be reset to
+MISC_DYNAMIC_MINOR before calling misc_register after misc_deregister has
+been called.
+
+As you point out, when misc_register fails, it already restores the minor
+number.
+
+Let me know if you want to proceed with this change and need help with the
+test case. I may be slow to respond since I am going on vacation.
+
+Regards.
+Cascardo.
+
+
+[1] To some extent, because due to the large dynamic range, it only tries
+allocating 256 dynamic minors. And only verifies numbers below 16 are not
+returned, because that was the bug that existed before.
+
+[2] Tries, because due to the large dynamic range, instead of allocating
+all numbers, it just assumes that the allocator would give the first
+number, but it also picks that "first" number by doing a dynamic allocation
+and freeing it.
+
+> >> This enforcing division also solves misc_register() reentry issue below:
+> >>
+> >> // Suppose both static @dev_A and @dev_B want to request dynamic minors.
+> >> @dev_A.minor(255) @dev_B.minor(255)
+> >>
+> >> // Register @dev_A then de-register it.
+> >> @dev_A.minor(255) -> registered -> @dev_A.minor(500) -> de-registered
+> >> -> @dev_A.minor(500)
+> >>
+> >> // Register @dev_B
+> >> @dev_B.minor(255) -> registered -> @dev_B.minor(500)
+> >>
+> >> // Register @dev_A again
+> >> @dev_A.minor(500) -> encounter -EBUSY error since @dev_B has got 500.
+> > 
+> > Does this ever really happen?
+> > 
+> 
+> i never meet this issue. but in theory, it may happen as explained below:
+> 
+> misc_register()/misc_deregister() are sometimes called within driver's
+> probe()/remove(), such cases have reentry requirements
+> 
+> actually, error handling in misc_register() also reset minor code allocated:
+> 
+> 	if (IS_ERR(misc->this_device)) {
+> 		misc_minor_free(misc->minor);
+> 		if (is_dynamic) {
+> 			misc->minor = MISC_DYNAMIC_MINOR;
+> 		}
+> 		err = PTR_ERR(misc->this_device);
+> 		goto out;
 > 	}
->
-> and acquire users would do:
->
-> 	let r = x.load(Acquire);
->
-> relaxed users:
->
-> 	let r = x.load(Relaxed);
->
-> doing the following:
->
-> 	let r = x.load(Release);
->
-> will cause a compiler error.
->
-> Compared to suffixes, it's easier to tell what ordering variants an
-> operation has, and it also make it easier to unify the implementation of
-> all ordering variants in one method via generic. The `IS_RELAXED` and
-> `TYPE` associate consts are for generic function to pick up the
-> particular implementation specified by an ordering annotation.
->
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> ---
->  rust/kernel/sync/atomic.rs          |   3 +
->  rust/kernel/sync/atomic/ordering.rs | 106 ++++++++++++++++++++++++++++
->  2 files changed, 109 insertions(+)
->  create mode 100644 rust/kernel/sync/atomic/ordering.rs
->
-> diff --git a/rust/kernel/sync/atomic.rs b/rust/kernel/sync/atomic.rs
-> index 65e41dba97b7..9fe5d81fc2a9 100644
-> --- a/rust/kernel/sync/atomic.rs
-> +++ b/rust/kernel/sync/atomic.rs
-> @@ -17,3 +17,6 @@
->  //! [`LKMM`]: srctree/tools/memory-mode/
->
->  pub mod ops;
-> +pub mod ordering;
-> +
-> +pub use ordering::{Acquire, Full, Relaxed, Release};
-> diff --git a/rust/kernel/sync/atomic/ordering.rs b/rust/kernel/sync/atomic/ordering.rs
-> new file mode 100644
-> index 000000000000..96757574ed7d
-> --- /dev/null
-> +++ b/rust/kernel/sync/atomic/ordering.rs
-> @@ -0,0 +1,106 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Memory orderings.
-> +//!
-> +//! The semantics of these orderings follows the [`LKMM`] definitions and rules.
-> +//!
-> +//! - [`Acquire`] and [`Release`] are similar to their counterpart in Rust memory model.
-> +//! - [`Full`] means "fully-ordered", that is:
-> +//!   - It provides ordering between all the preceding memory accesses and the annotated operation.
-> +//!   - It provides ordering between the annotated operation and all the following memory accesses.
-> +//!   - It provides ordering between all the preceding memory accesses and all the fllowing memory
-> +//!     accesses.
-> +//!   - All the orderings are the same strong as a full memory barrier (i.e. `smp_mb()`).
-> +//! - [`Relaxed`] is similar to the counterpart in Rust memory model, except that dependency
-> +//!   orderings are also honored in [`LKMM`]. Dependency orderings are described in "DEPENDENCY
-> +//!   RELATIONS" in [`LKMM`]'s [`explanation`].
-> +//!
-> +//! [`LKMM`]: srctree/tools/memory-model/
-> +//! [`explanation`]: srctree/tools/memory-model/Documentation/explanation.txt
-> +
-> +/// The annotation type for relaxed memory ordering.
-> +pub struct Relaxed;
-> +
-> +/// The annotation type for acquire memory ordering.
-> +pub struct Acquire;
-> +
-> +/// The annotation type for release memory ordering.
-> +pub struct Release;
-> +
-> +/// The annotation type for fully-order memory ordering.
-> +pub struct Full;
-> +
-> +/// Describes the exact memory ordering.
-> +pub enum OrderingType {
-> +    /// Relaxed ordering.
-> +    Relaxed,
-> +    /// Acquire ordering.
-> +    Acquire,
-> +    /// Release ordering.
-> +    Release,
-> +    /// Fully-ordered.
-> +    Full,
-> +}
-> +
-> +mod internal {
-> +    /// Unit types for ordering annotation.
-> +    ///
-> +    /// Sealed trait, can be only implemented inside atomic mod.
-> +    pub trait OrderingUnit {
-> +        /// Describes the exact memory ordering.
-> +        const TYPE: super::OrderingType;
-> +    }
-> +}
-> +
-> +impl internal::OrderingUnit for Relaxed {
-> +    const TYPE: OrderingType = OrderingType::Relaxed;
-> +}
-> +
-> +impl internal::OrderingUnit for Acquire {
-> +    const TYPE: OrderingType = OrderingType::Acquire;
-> +}
-> +
-> +impl internal::OrderingUnit for Release {
-> +    const TYPE: OrderingType = OrderingType::Release;
-> +}
-> +
-> +impl internal::OrderingUnit for Full {
-> +    const TYPE: OrderingType = OrderingType::Full;
-> +}
-> +
-> +/// The trait bound for annotating operations that should support all orderings.
-> +pub trait All: internal::OrderingUnit {}
-
-I think I would prefer `Any` rather than `All` here. Because it is "any
-of", not "all of them at once".
-
-
-Best regards,
-Andreas Hindborg
-
-
+> 
+> > And with the recent changes in the last dev cycle in this code area, is
+> > it still an issue?
+> >
+> 
+> this is a different issue with the ones recent changes fix.
+> 
+> >> Side effects:
+> >> It will be refused to register device whose fixed minor > 255.
+> > 
+> > Do we have any in-kernel users that are > 255?
+> 
+> NO. no kernel users have such usage.
+> 
+> Actually, if fixed minor (>255) is used to register miscdev, it may
+> encounter failure since the fixed minor (>255) may be allocated for
+> other dynamic requests.
+> 
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
