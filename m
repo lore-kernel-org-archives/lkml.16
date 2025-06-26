@@ -1,163 +1,236 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0711A0BF1
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:03:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D375021FF44
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:03:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750917790; cv=none; b=dwp03j9lNXJufET06zQZxaxUf0KynZ8xZM8IbBLI+hC/IZPuGoVN0SCcstjoQcrtPeh/y1Weqm8wgG+gn+Lta5Ad0T3rjyeDYKCLNaJtajggeU+XUJ8yx5ZHLj2S4S8DtFnuhcctPBBNLFtitJlrxGeLUWaLEbbP2k/N/qgDIBo=
+	t=1750917798; cv=none; b=RtYqAQ9NWqZH/9bJmnRBjF5gUfuKgzkySulPEa2cKTcsrWV7Xxxp4CaZQRuRVpcO7klW3fepDvsFnhRsnTf9pX+o1TqnPQEW2UlBzrNGGUxc3SqjurDZnVGpMVJ3Zcy1ufU8dQVmDVX4TSwrH3q9D/8eS+8pIrj+FL8oI3o5wBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750917790; c=relaxed/simple;
-	bh=tVi2SsHlzn6vFv17wmI5jfnTyqTKr1vf8vYFkxc8eBk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TT7JDOiEJ9j+6V0zuxDI2I60VizjBLIefEnv+W3sR6kDUlt2fRy2MMDErtuR8ZLAERcSnMpQTOLahQFxLtSHdrrQHwgZ1PYAsgyQhwKr6k7BThIeXCXut4Hzi0KjH07nb4RXgR1RotcPHxVhFWXFYzYYv0r0N4Ypo9KtDc0t1Gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UoYQ+N4T; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750917798; c=relaxed/simple;
+	bh=ux/mTJ8E+wX+kajs9XBKrd9beBovgB6YKCu98nQUhUo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=YvJUF1txvJDnL4plOwenrbSayxNTtFIPivIO/pwWu+tCwWGH39MeJkoCFIegLqhmFx2aQ6rjGH9bReUqlmuKVMgPnKxZFdDFjYypbpaqPt4e1X1setQPIykrVGe+aDSCsIW8siIKgpSFrJcFYi4OM64hbYX9pX5X2hdOjl9VOJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UPbuRMVE; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UoYQ+N4T"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UPbuRMVE"
 Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q0DoLP015352
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:03:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	zAw+vF31/8AdiO+erYtJscx3H3Rf6Jrg7lXaQ6w2fXA=; b=UoYQ+N4TKzXDaRem
-	ZxZW0TxsMD9344z+kUc8ZkP0k18npFkuT2dYTehR+fNxXtqMpneI8vmBbCqsjrA6
-	Hw8zMw/iJjT/WqvrejniApryT2kyC4CZHSM+1geMpG8wukZ/WJ/x/GemMHtV9xhY
-	a68qfrVfSjDoAojM031WMduv7B3StNzThj5ZpEAGg+ZWoTjIuUeLK1SMnZVkk2JY
-	NVh7LcJ4mjdAypZg3dHQ1hvK+4113I+ILIzgs6+HImL02aW9g9RwAA+/hADrIDG4
-	UvPvJPxhMpi6l0bvRQWJn7bwVzAf63lHPFZ+nbyvaIlheXc889ncPlXXdqR5SjO4
-	d3fIQw==
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g88fbw6c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:03:07 +0000 (GMT)
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b3183193374so521274a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 23:03:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750917786; x=1751522586;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zAw+vF31/8AdiO+erYtJscx3H3Rf6Jrg7lXaQ6w2fXA=;
-        b=F7Fol4lesQg/WboGjn1tbK6dsUkArOeSzbY94pXKJcZLcaiDTqLMkwWAUgXz/80+zI
-         AfG9YOHidrpqqqXlxqTPQLo0k00wgHVs1mgf+80Ll3V4GUFbXDG+aJDroJUC+lQ1z3+V
-         b86PcrqqRG3aF1gl6NxzVVw9TQKHLN4P9BbO84ao+rIYoy2s3IT8PwaHKWZ6OneHpjEB
-         KZENmdutHxkRk9MiXZ79VlyaWkOukNCxelmsYdH5C1jgzZP+/oaSUEHcZC9YO+mT9KoM
-         kwtXw6dpSTNfymS8//tW/qrvjDrap36md2sEvrcwd722LjrS7nA4qHSCoQ+Z8Pd/FMEX
-         O/lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWQX+pPjp2NxaMGA7Qvoa0roLKEFb2Am5QcnvmxDjtu8zTKYDTHy/FJ1n8e+0IeHiE/tCY8zDBFlD+1kI0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQNku/N/zTbqEKB4ng/w0nF33zBP5fLJv0S9n7BLJ9PgKnSk4i
-	ASiVFDfnKuV4B6CPrODsMwjZNCtWWcLmejsTclZksU74+vUKwMT+M/L70m2RNb5Wdsm5hHd4DDf
-	fNhM2QTlhWIZZL6ecTO0+RPu3fBz0Ptt/M/CHL2sfYZUrziNUgcPPJJnGVB3n2i/BmMU=
-X-Gm-Gg: ASbGncvSpuADq1Zl6D4JIWWNl9jzgZIpVFNrONjDCkMrk23OFUPBOGcjK3mCPZcy+Lp
-	oGxGVIERH6jIg7nE5EnFOrIpoU06t26OSxQf3HwQOigZMBWJSOzzCbL8ppnvwaQYIY4MESQakXe
-	VSsaltDRI6ds/l43oyJ981qFCHrQP6ywZut4K6cHD/iMWAv7vDIhMJhAInWKEjyFtj4QMLnGU6n
-	PnG1xPepYN7F4Z/1rEiF/pO9KrClL95rdhHVruKsobsMCJ4Kv95ZyQUtypZ/J5YdzCe9KKPVK8t
-	hFRAJ/UsH5wd6Q+oLLeVXW6zvV1nndxR7P/BtSiIQJ5voBwH
-X-Received: by 2002:a05:6a21:6185:b0:218:bb70:bd23 with SMTP id adf61e73a8af0-2207f35cfccmr9126436637.42.1750917785755;
-        Wed, 25 Jun 2025 23:03:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEAZY2KhB8bCl/WbYS2FoCo2Ms0rCSvnA7RI6r9DuVu8+cXGdo4K/PTAhGks9c7EvtK428CXA==
-X-Received: by 2002:a05:6a21:6185:b0:218:bb70:bd23 with SMTP id adf61e73a8af0-2207f35cfccmr9126395637.42.1750917785321;
-        Wed, 25 Jun 2025 23:03:05 -0700 (PDT)
-Received: from [10.204.65.175] ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c882f5b8sm6388591b3a.95.2025.06.25.23.03.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 23:03:04 -0700 (PDT)
-Message-ID: <245d602f-3037-4ae3-9af9-d98f37258aae@oss.qualcomm.com>
-Date: Thu, 26 Jun 2025 11:33:00 +0530
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q4WonY010573;
+	Thu, 26 Jun 2025 06:02:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=MpPYhArlXmWCgYgW4qeCuw
+	s8Mpxw0BvsnQQWeZhvzM0=; b=UPbuRMVERhUxDEZzGrapMCXznkNIzr7w0yT8hW
+	svXcbwZ+1vjukeeO55jUVfUuJ3S3sZ5aJV5kIHMmUBNl7I44nKfeE8ksB2anT1pa
+	NCTO7jfz/So9qR72yn42knhuDxaNJcQ8xKKCmcGLqJsOnLFindpIrHCq+sLBNjuz
+	FxbISy0eI+60M7rR9JUdX3GhLc4mjgis/JtbeXkNqxJzL3NdJtqGdAPWLVfCZLOU
+	OrOtYzHpt8BjqVNRDmijQxhWSCM0JmV7kb67d91IxF/ZfTRi2QzOslZN6Cc+HCKP
+	T3vPIgAWjKLwxAh1fZNUbr7MsfTjBk5VG0dhuF7FS37H+IPQ==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g88fbw4c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 06:02:36 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55Q62ZbK014364
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 06:02:35 GMT
+Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 25 Jun 2025 23:02:30 -0700
+From: Luo Jie <quic_luoj@quicinc.com>
+Date: Thu, 26 Jun 2025 14:02:20 +0800
+Subject: [PATCH v6] coccinelle: misc: Add field_modify script
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] misc: fastrpc: Fix channel resource access in
- device_open
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc: srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
-        quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org,
-        quic_chennak@quicinc.com, dri-devel@lists.freedesktop.org,
-        arnd@arndb.de, stable@kernel.org
-References: <20250619051026.984361-1-ekansh.gupta@oss.qualcomm.com>
- <kk3jvlwjdzy2mfs6bip7dadrnsoxwksyp2odi3rfxkv4crmwtn@x5qyn4sp2gck>
- <2025062424-dizziness-theft-0502@gregkh>
- <2025062434-reviving-grumble-1e53@gregkh>
- <golcrcr6voafr3fqsnihyjyut36sii55vzws4josfhkjjg3nie@ur43qq2kvlsv>
-Content-Language: en-US
-From: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
-In-Reply-To: <golcrcr6voafr3fqsnihyjyut36sii55vzws4josfhkjjg3nie@ur43qq2kvlsv>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA0NiBTYWx0ZWRfXxlIAv7MSg7Mr
- 7iup89ZTQIKTZAxZal85dV9nWW1U1yiZUi6xD9CK40HQzfI1VZiZ+wtLb4La2fYt1iv2NtFz3hZ
- Paphq9H5dlmCfyLqD2yu0PsIoVzX8/sKnEStB8N89bj7QTBmEwNTr+PbvItWVTzbTkC183myze1
- 4RQe+fVBqgqFaIBouejecoVz1Bef0NF/zKHupCYhCKkHCgu8T7WZjEcgxtrX/6n1ADjooUXmjas
- 0YrwhbXbwyepFZwIakMgJNEOMbGY2cVTcjQdrMdRxYNFEDqcylZlM51EIR4fP7bTStfm+3GuBRq
- B4l9zWr9QFyNWxJOTjM9bn2QfYWkrmjZocY8NvRazGNQt/38ILKcxrqauZ6TCd/fNbVvpQizFP4
- 1nec4oggpDmTMhjmGNYoX1fDCC4HNWiSnf1Saj1X1tbalVNdMag+kW7qvomdNnkyc12pfBeh
-X-Proofpoint-ORIG-GUID: qPR-oAAK6xm8TZw266FDXOwMgTVN_yUp
-X-Proofpoint-GUID: qPR-oAAK6xm8TZw266FDXOwMgTVN_yUp
-X-Authority-Analysis: v=2.4 cv=LNNmQIW9 c=1 sm=1 tr=0 ts=685ce29b cx=c_pps
- a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=A2EB1aqQ-V8H35JDescA:9
- a=QEXdDO2ut3YA:10 a=3WC7DwWrALyhR5TkjVHa:22
+Message-ID: <20250626-field_modify-v6-1-200dffa38a07@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAGviXGgC/2XOSw6CMBSF4a2Qjq3pixYcuQ9jTO1DbiKgVBsJY
+ e8WHCgyPDf5/twBBdeBC2iXDahzEQK0TRpykyFT6ebiMNi0ESMsJ5Iy7MFd7aluLfgeM0V56aX
+ iRUFRIrfOeXjNucMx7QrCo+36uR7pdP2EBFXLUOSYYOlVWTKtvTmr/f0JBhqzNW2NplQUX776I
+ 4rEtRNeCatFruWa5z+ciT+eY4qNlYoyRThxYsnHcXwDlLj04SgBAAA=
+To: Yury Norov <yury.norov@gmail.com>,
+        Rasmus Villemoes
+	<linux@rasmusvillemoes.dk>,
+        Julia Lawall <Julia.Lawall@inria.fr>,
+        "Nicolas
+ Palix" <nicolas.palix@imag.fr>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Oliver Upton
+	<oliver.upton@linux.dev>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Suzuki K Poulose
+	<suzuki.poulose@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>
+CC: <linux-kernel@vger.kernel.org>, <cocci@inria.fr>,
+        <linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+        <andrew@lunn.ch>, <quic_kkumarcs@quicinc.com>,
+        <quic_linchen@quicinc.com>, <quic_leiwei@quicinc.com>,
+        <quic_suruchia@quicinc.com>, <quic_pavir@quicinc.com>,
+        <Markus.Elfring@web.de>, Luo Jie
+	<quic_luoj@quicinc.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750917750; l=3872;
+ i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
+ bh=ux/mTJ8E+wX+kajs9XBKrd9beBovgB6YKCu98nQUhUo=;
+ b=SeVIF7MxdkxmO2LE2JP0k/HUfsPK/T+wakKidgrx0NOm7aKMlpXxE9R7z5KxWkTvp24OxHmh6
+ Qiyxud6avYeB9BngiBtHC1UwyTw3mxEhuf/qSKDCTlhD5eA/Iu23k0Q
+X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
+ pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA0NiBTYWx0ZWRfX/msli3c7dzzA
+ pQfUlU6zJZDj6mqYCP5F3geXzxrFBwq+d/e1m6IGN017415Pn2T+OywwLY/ZtXJ0a4hBFLqN63K
+ uo2Q2erLY99EF8jwveTACksI+K+i3HwgaCjSPO5xCpaQ8MWVfRcwyKzvi7zFaC9ElTKO7A/sdmz
+ WELOZfjuJucj6vnl73EyfTS7yN3SlwbLfcSpj8ycF/tkeRHRtsuJUeXBuN5Lu3FNg56rQbspAS6
+ Vv85XUTy6TmuU5DdmK/o/8pUmyPap4/QGhPmzglIis6l8hfFIRyoJuHPYV3AlVDfduLA7dsgGJU
+ lUX0wdZ0iQTK0odQSfDWIbsEI94OsSavOfGUbIzYyXAfbk4gUta/rdtW3HlSmstkWjnjT8H1qxa
+ vG0mUe0pk5gJpE35ckH2YzOzBXfsMrYWxG/JwqVCnDr9/lXMT4muAtX2aZHupt/KbTbXKZuj
+X-Proofpoint-ORIG-GUID: zaYYXVueZahctmNJ9GD006cERxboO3-t
+X-Proofpoint-GUID: zaYYXVueZahctmNJ9GD006cERxboO3-t
+X-Authority-Analysis: v=2.4 cv=LNNmQIW9 c=1 sm=1 tr=0 ts=685ce27c cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=05oQ047nAAAA:8 a=S47agHus8KO1I0bcMDsA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22 a=vNAg3JWiabyzeNEprMgK:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-06-26_03,2025-06-25_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=971
+ malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
  impostorscore=0 mlxscore=0 clxscore=1015 adultscore=0 priorityscore=1501
  lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
  authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2505280000 definitions=main-2506260046
 
+Find and suggest conversions of opencoded field modify patterns with
+the wrapper FIELD_MODIFY() API defined in include/linux/bitfield.h
+for catching the possible parameter type error in the compile time.
 
+Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+---
+Add the helper FIELD_MODIFY() to the FIELD_XXX family of bitfield
+macros. It is functionally similar as xxx_replace_bits(), but adds
+the compile time checking to catch incorrect parameter type errors.
 
-On 6/25/2025 5:15 AM, Dmitry Baryshkov wrote:
-> On Tue, Jun 24, 2025 at 04:38:25PM +0100, Greg KH wrote:
->> On Tue, Jun 24, 2025 at 04:36:35PM +0100, Greg KH wrote:
->>> On Tue, Jun 24, 2025 at 04:27:21PM +0300, Dmitry Baryshkov wrote:
->>>> On Thu, Jun 19, 2025 at 10:40:26AM +0530, Ekansh Gupta wrote:
->>>>> During rpmsg_probe, fastrpc device nodes are created first, then
->>>>> channel specific resources are initialized, followed by
->>>>> of_platform_populate, which triggers context bank probing. This
->>>>> sequence can cause issues as applications might open the device
->>>>> node before channel resources are initialized or the session is
->>>>> available, leading to problems. For example, spin_lock is initialized
->>>>> after the device node creation, but it is used in device_open,
->>>>> potentially before initialization. Move device registration after
->>>>> channel resource initialization in fastrpc_rpmsg_probe.
->>>> You've moved device init, however there is still a possibility for the
->>>> context devices to be created, but not bound to the driver (because all
->>>> the probings are async). I think instead we should drop the extra
->>>> platform driver layer and create and set up corresponding devices
->>>> manually. For example, see how it is handled in
->>>> host1x_memory_context_list_init(). That function uses iommu-maps, but we
->>>> can use OF nodes and iommus instead.
->>> Is this a real platform device?  If so, why do you need a second
->>> platform driver, what makes this so unique?  If this isn't a platform
->>> device, then why not just use the faux bus instead?
->>>
->>> It seems that "number of sessions" is a DT property, is that something
->>> that is really defined by the hardware?  Or is it just a virtual thing
->>> that people are abusing in the DT?
-> Purely software value.
->
->>> And if you really have all these sessions, why not make them real
->>> devices, wouldn't that make things simpler?
->> Oh wait, these are "fake" platform devices under the parent (i.e. real)
->> platform device.  That's not good, please don't do that, use the faux
->> bus code now instead to properly handle this.  Attempting to create a
->> device when open() is called is really really odd...
-> The driver doesn't created devices during open(). It creates them
-> earlier, then another driver probes an populates the data. I suggest to
-> follow Tegra approach, remove the sub-driver completely and instead of
-> calling of_platform_populate() create necessary devices manually and set
-> corresponding IOMMU configuration from the main driver's probe path.
-Thanks for the suggestions. I'm checking this approach.
->
+This series also converts the four instances of opencoded FIELD_MODIFY()
+that are found in the core kernel files, to instead use the new
+FIELD_MODIFY() macro. This is achieved with Coccinelle, by adding
+the script field_modify.cocci.
+
+The changes are validated on IPQ9574 SoC which uses ARM64 architecture.
+---
+Changes in v6:
+- Adopt the suggested code variant for the org mode.
+- Link to v5: https://lore.kernel.org/r/20250624-field_modify-v5-1-cd67127030e4@quicinc.com
+
+Changes in v5:
+- Remove ARM64 patches based on the discussion in v3 and v4 versions of
+  this series.
+- Simplify the condition selections in coccinelle script.
+- Link to v4: https://lore.kernel.org/r/20250612-field_modify-v4-0-ae4f74da45a6@quicinc.com
+
+Changes in v4:
+- Add org, report and context mode for coccinelle script.
+- Fix other comments on coccinelle script patch.
+- Remove the FIELD_MODIFY patch as it is merged.
+- Link to v3: https://lore.kernel.org/r/20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com
+
+Changes in v3:
+- Correct the order of header files included.
+- Add the Coccinelle script field_modify.cocci..
+- Convert the opencoded FIELD_MODIFY() variants inside arm64 directory,
+  identified by field_modify.cocci.
+- Link to v2: https://lore.kernel.org/all/20250410131048.2054791-1-quic_luoj@quicinc.com/
+
+Changes in v2:
+- Update the documented example for FIELD_MODIFY().
+- Improve the commit message to describe the need for the change.
+- Link to v1: https://lore.kernel.org/all/20250318071526.1836194-1-quic_luoj@quicinc.com/
+---
+ scripts/coccinelle/misc/field_modify.cocci | 59 ++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+
+diff --git a/scripts/coccinelle/misc/field_modify.cocci b/scripts/coccinelle/misc/field_modify.cocci
+new file mode 100644
+index 000000000000..bdc5a65a1b53
+--- /dev/null
++++ b/scripts/coccinelle/misc/field_modify.cocci
+@@ -0,0 +1,59 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/// Replace below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
++/// - reg &= ~MASK;
++/// - reg |= FIELD_PREP(MASK, val);
++//
++// Confidence: High
++// Author: Luo Jie <quic_luoj@quicinc.com>
++// Copyright: (C) 2025 Qualcomm Innovation Center, Inc.
++// Keywords: FIELD_PREP, FIELD_MODIFY
++// Options: --include-headers
++
++virtual context
++virtual patch
++virtual org
++virtual report
++
++@depends on context@
++identifier reg, val;
++constant mask;
++symbol FIELD_PREP;
++@@
++
++*reg &= ~mask;
++*reg |= FIELD_PREP(mask, val);
++
++@depends on patch@
++identifier reg, val;
++constant mask;
++symbol FIELD_PREP, FIELD_MODIFY;
++@@
++
++-reg &= ~mask;
++-reg |= FIELD_PREP(mask, val);
+++FIELD_MODIFY(mask, &reg, val);
++
++@r depends on org || report@
++identifier reg, val;
++constant mask;
++symbol FIELD_PREP;
++position p;
++@@
++
++reg &= ~mask;
++reg |= FIELD_PREP@p(mask, val);
++
++@script:python depends on report@
++p << r.p;
++x << r.reg;
++@@
++
++coccilib.report.print_report(p[0], "WARNING: Consider using FIELD_MODIFY helper on %s" % (x))
++
++@script:python depends on org@
++p << r.p;
++x << r.reg;
++@@
++
++msg = f"WARNING: Consider using FIELD_MODIFY helper on {x}"
++coccilib.org.print_todo(p[0], msg.replace("[","@(").replace("]",")"))
+
+---
+base-commit: 0bb71d301869446810a0b13d3da290bd455d7c78
+change-id: 20250612-field_modify-27139f673881
+
+Best regards,
+-- 
+Luo Jie <quic_luoj@quicinc.com>
 
