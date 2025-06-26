@@ -1,43 +1,58 @@
-Received: from mail-4323.protonmail.ch (mail-4323.protonmail.ch [185.70.43.23])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5557C2E764B;
-	Thu, 26 Jun 2025 13:45:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389CF28C86E
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750945527; cv=none; b=MimzyQd6PiFS4t0Lws2GUoGyn+DKf0g2bCAYjf2ZV7a/5cADBmSWaKFud6sFutzUd4M/iDt1ZpQclexv4U8GiV7e1jsC1+Q0YnOik+u/n1C5PtZVS6DAfFQSPdR5CKBdiyWwMvDg6C1kCGrK/Mbr86/K08ot8BDeNb2H6zIjPhw=
+	t=1750945705; cv=none; b=vGAdWQ7vUFvxygCIv/DXUyiGVB8Ah8ugYpbHT7gHZARUG6OChQ2u2HAdpCPTt+JIqsmAORIPt+/HMMW/GUJ5sS/cPiGMOzyXCOGnBmNHpZGu0wcat3HSz8quD+riL0P1KxzO7yDCYeI1M3p9X7ZbmyxVKLTzYeEWSBmkxsYaqWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750945527; c=relaxed/simple;
-	bh=cAHj2gjaMwzRztjmDjs69yqAc2m3Ews7p2bnvtbAT9s=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZChc3qI0aeyOHEg2c3fF80vPcnG/nu4PCrt9mZZU18cMaK8t0JJwQ2l8KkV4vWTUKvNldSvysIMR+i4KXgLUYSxW6Fa4IMSTlzq3OeS8e/0WArrRr6R2apnAlbrULgSUBqB5rMQrqzCwFtsTro3liRquryNGVbUCqYDY7mYL9GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=JMlikKow; arc=none smtp.client-ip=185.70.43.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1750945705; c=relaxed/simple;
+	bh=87VkdDYIT+p2yyW+Lvwy4yRbEV9b7aBVpyj41wG28ww=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eFagHBuCRSBbPcYq1QMw3cswD+5S2LnJeYbXiftDceUcbbSRmH5c72E/bqoyc4vWj4c7bOnLpykJgNuWbeAju3QvmaWD7hayNOU5Dnym5RJqMj622O3OnXXG7sUcVyFLtgHyzeEt3fN5LulBD1iaVzWbaXBd8QWDsroWKkzFrrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sROY5InF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LBDw4E0T; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="JMlikKow"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
-	s=protonmail; t=1750945512; x=1751204712;
-	bh=cAHj2gjaMwzRztjmDjs69yqAc2m3Ews7p2bnvtbAT9s=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=JMlikKowl+lKWQcHw7nyAEJZiWixewtoGtrWaTi+Bx4sb/lraXNylA1/Pb5HM1B+q
-	 a4jqvxnX6AU/ZRkCLQW7qdURSpFSnmqLRbNC6zQj8iNd1IkPYAxdNyMYGLaSY/Mj7l
-	 nX/akAkgDxJJN2JlQAtA5z/XjD2KfQajV71zwpWHIMyE/kW6i0S5JzBNvjPhxEsITx
-	 D/14hXzyJ4hm1ITol643oIIr41hv9D5ekT3YUBil9SeKUtT5paKfiURWEmXH0NHADn
-	 ZEkJTrUHm9ZJvO3iMhRuqMujZs0+Toq+9qe8iQFLpGxTCU6OiuTb9GfrVROApyDnE/
-	 2DxYR83spo4AA==
-Date: Thu, 26 Jun 2025 13:45:09 +0000
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-From: Sean Nyekjaer <sean@geanix.com>
-Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, Chandrasekar Ramakrishnan <rcsekar@samsung.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Fengguang Wu <fengguang.wu@intel.com>, Varka Bhadram <varkabhadram@gmail.com>, Dong Aisheng <b29396@freescale.com>
-Subject: Re: [PATCH] can: m_can: apply rate-limiting to lost msg in rx
-Message-ID: <wldhiihvxg42yqaccizms4xfupfv2c7w7jec7jy6iht6dbnr7k@os6f2gyrr45m>
-In-Reply-To: <d855c26a-1982-4fc6-9333-93df4a5a98d9@wanadoo.fr>
-References: <20250620-mcan_ratelimit-v1-1-e747ee30f71f@geanix.com> <d855c26a-1982-4fc6-9333-93df4a5a98d9@wanadoo.fr>
-Feedback-ID: 134068486:user:proton
-X-Pm-Message-ID: dc07e5f8eaa3e05c8410cb20b04564dbc2257281
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sROY5InF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LBDw4E0T"
+Date: Thu, 26 Jun 2025 15:48:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750945702;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LSL35RmnDpLnCbJ2BzZx+qcD5Cpk7iwSGpe9IZK2Cwk=;
+	b=sROY5InF0R6jYmf1uOT+acTm2/3SWyjb9YplOfHmWGb0Y0n6JUBXGR8nY2k6xqj1FrNDhz
+	1E372tse+GA27Z1EiSkjGyQHbj+1xfiBL71FqBmOgOjv3eO0bLrnomqW1ZWb5bM289s6zS
+	DtuWMgUgAYLaJr+q8vnfqd0j5DJezxPGjs7nyhrFb+E/BtgrqGQnZZaCI+7bff771L2zXW
+	sWJA3MMDXmuPB/C2U3VQXIUuItzMNoGU37n5UKk7NleDbnFLY7j0GCJJDSuzFPSum+fPyk
+	Xz/89DBRlsobOLnI/3wIKf9NsnPpH99kTv7m9N7Ut7aiKhwyjN3w3xNeVkxgvA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750945702;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LSL35RmnDpLnCbJ2BzZx+qcD5Cpk7iwSGpe9IZK2Cwk=;
+	b=LBDw4E0T669OeDBrnJFh8f0InlggpIyRDauOiB1zQlRL3VRoFGZDU+yVwhyGpIqgSo8ysW
+	/hBdZLsyTTgmpVBg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Chris Mason <clm@meta.com>, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: futex performance regression from "futex: Allow automatic
+ allocation of process wide futex hash"
+Message-ID: <20250626134820.ybEtTXSN@linutronix.de>
+References: <3ad05298-351e-4d61-9972-ca45a0a50e33@meta.com>
+ <20250604092815.UtG-oi0v@linutronix.de>
+ <372d8277-7edb-4f78-99bd-6d23b8f94984@meta.com>
+ <20250604200808.hqaWJdCo@linutronix.de>
+ <aa6154d1-726c-4da1-a27b-69d2e8b449c6@meta.com>
+ <20250606070638.2Wk45AMk@linutronix.de>
+ <20250624190118.GB1490279@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,38 +60,114 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250624190118.GB1490279@noisy.programming.kicks-ass.net>
 
-Hi,
+On 2025-06-24 21:01:18 [+0200], Peter Zijlstra wrote:
+> How about something like this (very lightly tested)...
+>=20
+> the TL;DR is that it turns all those refcounts into per-cpu ops when
+> there is no hash replacement pending (eg. the normal case), and only
+> folds the lot into an atomic when we really care about it.
 
-On Sat, Jun 21, 2025 at 11:13:33AM +0100, Vincent Mailhol wrote:
-> On 20/06/2025 at 19:00, Sean Nyekjaer wrote:
-> > Wrap the "msg lost in rxf0" error in m_can_handle_lost_msg() with
-> > a call to net_ratelimit() to prevent flooding the kernel log
-> > with repeated error messages.
->=20
-> Note that another solution is to simply remove the error message. The use=
-rs can
-> use the CAN error frames or the netstasts instead to see if lost messages=
- occurred.
->=20
-> That said, I am OK with your proposed patch. See above comment as a simpl=
-e FYI.
+so we have per-CPU counter and on resize we wait one RCU grace period to
+ensure everybody observed current fph, switch to atomics and wait one
+grace period to ensure everyone is using atomics. Last step is to align
+the atomic counter with the per-CPU counters and once the counter
+reaches 0 perform the swap.
 
-I'm up for both solutions :)
+This looks fine :) Due to the RCU grace period, the swap takes longer
+than before. I guess that is why you said earlier with to use srcu. For
+things like "hackbench -T" you end up creating a new hash on every
+thread creation which is not applied because RCU takes a while.
+This could be optimized later by checking if the hash in futex_phash_new
+matches the requested size.
 
-@Marc what would you prefer?
+> There's some sharp corners still.. but it boots and survives the
+> (slightly modified) selftest.
 
->=20
-> > Fixes: e0d1f4816f2a ("can: m_can: add Bosch M_CAN controller support")
-> > Signed-off-by: Sean Nyekjaer <sean@geanix.com>
->=20
-> Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
->=20
->=20
-> Yours sincerely,
-> Vincent Mailhol
->=20
+The refcount does not pop up in perf so that is good.
 
-/Sean
+> --- a/kernel/futex/core.c
+> +++ b/kernel/futex/core.c
+> @@ -243,14 +247,18 @@ static bool __futex_pivot_hash(struct mm_struct *mm,
+>  	fph =3D rcu_dereference_protected(mm->futex_phash,
+>  					lockdep_is_held(&mm->futex_hash_lock));
+>  	if (fph) {
+> -		if (!rcuref_is_dead(&fph->users)) {
+> +		if (!futex_ref_is_dead(fph)) {
+>  			mm->futex_phash_new =3D new;
+>  			return false;
+>  		}
+> =20
+>  		futex_rehash_private(fph, new);
+>  	}
+> -	rcu_assign_pointer(mm->futex_phash, new);
+> +	new->state =3D FR_PERCPU;
+> +	scoped_guard (rcu) {
 
+We do space or we don't? It looks like sched/ does while the remaining
+bits of the kernel mostly don't. I don't care but we could (later)
+adjust it for futex towards one direction.
+
+> +		mm->futex_batches =3D get_state_synchronize_rcu();
+> +		rcu_assign_pointer(mm->futex_phash, new);
+> +	}
+>  	kvfree_rcu(fph, rcu);
+>  	return true;
+>  }
+=E2=80=A6
+> +static void futex_ref_drop(struct futex_private_hash *fph)
+=E2=80=A6
+> +	call_rcu_hurry(&mm->futex_rcu, futex_ref_rcu);
+
+Do you think it would improve with srcu or it is not worth it?
+
+> +}
+> +
+> +static bool futex_ref_get(struct futex_private_hash *fph)
+> +{
+> +	struct mm_struct *mm =3D fph->mm;
+> +
+> +	guard(preempt)();
+> +
+> +	if (smp_load_acquire(&fph->state) =3D=3D FR_PERCPU) {
+> +		this_cpu_inc(*mm->futex_ref);
+> +		return true;
+> +	}
+> +
+> +	return atomic_long_inc_not_zero(&mm->futex_atomic);
+> +}
+> +
+> +static bool futex_ref_put(struct futex_private_hash *fph)
+> +{
+> +	struct mm_struct *mm =3D fph->mm;
+> +
+> +	guard(preempt)();
+> +
+> +	if (smp_load_acquire(&fph->state) =3D=3D FR_PERCPU) {
+> +		this_cpu_dec(*mm->futex_ref);
+> +		return false;
+> +	}
+> +
+> +	return atomic_long_dec_and_test(&mm->futex_atomic);
+> +}
+> +
+> +static bool futex_ref_is_dead(struct futex_private_hash *fph)
+> +{
+> +	struct mm_struct *mm =3D fph->mm;
+> +
+> +	guard(preempt)();
+> +
+> +	if (smp_load_acquire(&fph->state) =3D=3D FR_PERCPU)
+> +		return false;
+> +
+> +	return atomic_long_read(&mm->futex_atomic) =3D=3D 0;
+> +}
+
+Why preempt_disable()? Is it just an optimized version of
+rcu_read_lock()? I don't understand why. You don't even go for
+__this_cpu_inc() so I a bit puzzled.
+
+Sebastian
