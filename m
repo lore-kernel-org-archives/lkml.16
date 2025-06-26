@@ -1,269 +1,261 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879BA2E975F
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397BF2E7F29;
+	Thu, 26 Jun 2025 14:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750947665; cv=none; b=jyu73+oEK80ZTR11d69UIdYd+yEmFPwJfwbzBQ6qasHRvvlvzr0+Jkk5Ray5+TtT5NYfbaJ9Ss8Bp1aeZtzZLlv4YC7b4pyEmlvmkFpCDZ8FzctHnnYiT71RfAhnmWk8CYxy7FZEG0KwMEfj37sLphUmvVHEf9v+i+DOylpZ3yQ=
+	t=1750947674; cv=none; b=N3f24HddPrXIGodXZsv0T2R5Yntwd4ZjNatTowLiyjwq6RxvNR0JJG4Eq0vUNlWgPPRavpzGY3QEhTWy+DsCq99AisNRxNdvd8AazTpM6MjTtIUTT6iadLEkDJty33yuCtONfWCXTWEoie2IsafF5loDEtXtFh5GoKA+kpYEQ0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750947665; c=relaxed/simple;
-	bh=pb209bXaugEvQjg2MuIrZK2EF+7xdDuFhOeXfAta4ww=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d0gC0QtMWcSnPOGSlvK+GLXVgzkdU+0Zy/37FaQWqO+07INxTdeEsQJhkhwoXZXfXh/i2kU6m6eABrQZPrVQyvkZrWAsQMveZzJ1aVTvdA65VEU9HbzEB9asGg/lXOUPVG98N0sF6ZHwgrCrFt7cz/uKojwcNpLEHF9GN86ly9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PwL1KJBt; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750947674; c=relaxed/simple;
+	bh=xIJe4c6jLTcZl6XLuk6MrvbPTebmU1QDAeRz0h/qZ1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rha5xIbTSvuSqvVcbXmClqos2+VstJgw0yyb3kFwCbmFNabtd0xUAZYJO56jZWxzJcnsJBgI2bf9TR3namOgDKF9jZzf1KOdx0SV7HS7kuWsPRO/nBVo+JUrgX+ImWVs53SY9CXuzpnidbS+b52fk9vlcUD6/mYIgaDUJXq0au0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X5U1hllT; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PwL1KJBt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750947662;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4Fb7vbgp9yWJFAfr2LZ2H/YK07/bv8dqvyUraYZjnSI=;
-	b=PwL1KJBt1cqkZ69AK5rfPE4nxf/AuTyaorlHhK3ICYcv+9OrTDopRCQJq58TmEih2BsO6d
-	iJpu+wYM2ZJ0sCBEKtnatRsk8rJrjC59gRMQurypzfZUXzSQP5Pujy7/d3iKRnmv6dyNX1
-	3dLm6bi/xWynHsdaM6qS1G+FxT5hdRE=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-621-obUpJtOxNhWrcrcVQ2YF3g-1; Thu,
- 26 Jun 2025 10:21:00 -0400
-X-MC-Unique: obUpJtOxNhWrcrcVQ2YF3g-1
-X-Mimecast-MFC-AGG-ID: obUpJtOxNhWrcrcVQ2YF3g_1750947658
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BBA801956096;
-	Thu, 26 Jun 2025 14:20:57 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.64.203])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 51AF1180045C;
-	Thu, 26 Jun 2025 14:20:49 +0000 (UTC)
-From: Wander Lairson Costa <wander@redhat.com>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Wander Lairson Costa <wander@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-trace-kernel@vger.kernel.org (open list:TRACING)
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Clark Williams <williams@redhat.com>,
-	Gabriele Monaco <gmonaco@redhat.com>
-Subject: [PATCH 2/2] tracing/preemptirq: Optimize preempt_disable/enable() tracepoint overhead
-Date: Thu, 26 Jun 2025 11:20:10 -0300
-Message-ID: <20250626142017.26372-3-wander@redhat.com>
-In-Reply-To: <20250626142017.26372-1-wander@redhat.com>
-References: <20250626142017.26372-1-wander@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X5U1hllT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750947673; x=1782483673;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xIJe4c6jLTcZl6XLuk6MrvbPTebmU1QDAeRz0h/qZ1Q=;
+  b=X5U1hllTAwuCtaXfb3PjjaOMCeNmvm6MRw/VF3xJg2wkoq2WTkDxfr4L
+   I0IG2CLtzJ+7KbrWmus4HGF7txlvJshtdfFVWbIK+J3YcQSzJTG8f+Ora
+   ZS/vEIbks0g7L3LX+47ep/nlCiR03ooVg55RdtWyQ/Oc3W94UApSz2F+G
+   dItP523A7LKbqv+GKovxezMgSZi0HFcoxPrXeB63yuZ7+dNdSzz0MY75R
+   VdbJFitBmf61CIORgAHpZ2h8Yhdg93u213/QdmgSm+3Z7ejhCdB0xdFUO
+   /9rK5IyB8L2HNhYPwFZ2wwLoVA4CgRiziJBKo1y3Biqw92wB7v2f4U9YZ
+   g==;
+X-CSE-ConnectionGUID: oBgGIqp3Sr6O2pmIRtQ88g==
+X-CSE-MsgGUID: y8b2R4ErR+WCopVm69M9YQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64305780"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="64305780"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 07:21:11 -0700
+X-CSE-ConnectionGUID: KmQEI4G7Qau7oSajweR/Lw==
+X-CSE-MsgGUID: nfCr2ys8R8i137Prd6U1TA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="158029284"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 07:21:05 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uUnTK-0000000ACLQ-1JAQ;
+	Thu, 26 Jun 2025 17:21:02 +0300
+Date: Thu, 26 Jun 2025 17:21:02 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
+	Raag Jadav <raag.jadav@intel.com>,
+	"Tauro, Riana" <riana.tauro@intel.com>,
+	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
+	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+	intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] drm/xe: Support for I2C attached MCUs
+Message-ID: <aF1XTr2y1EmkRT_8@smile.fi.intel.com>
+References: <20250626135610.299943-1-heikki.krogerus@linux.intel.com>
+ <20250626135610.299943-3-heikki.krogerus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626135610.299943-3-heikki.krogerus@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Similar to the IRQ tracepoint, the preempt tracepoints are typically
-disabled in production systems due to the significant overhead they
-introduce even when not in use.
+On Thu, Jun 26, 2025 at 04:56:07PM +0300, Heikki Krogerus wrote:
+> Adding adaption/glue layer where the I2C host adapter
+> (Synopsys DesignWare I2C adapter) and the I2C clients (the
+> microcontroller units) are enumerated.
+> 
+> The microcontroller units (MCU) that are attached to the GPU
+> depend on the OEM. The initially supported MCU will be the
+> Add-In Management Controller (AMC).
 
-The overhead primarily comes from two sources: First, when tracepoints
-are compiled into the kernel, preempt_count_add() and preempt_count_sub()
-become external function calls rather than inlined operations. Second,
-these functions perform unnecessary preempt_count() checks even when the
-tracepoint itself is disabled.
+...
 
-This optimization introduces an early check of the tracepoint static key,
-which allows us to skip both the function call overhead and the redundant
-preempt_count() checks when tracing is disabled. The change maintains all
-existing functionality when tracing is active while significantly
-reducing overhead for the common case where tracing is inactive.
+> +static int xe_i2c_register_adapter(struct xe_i2c *i2c)
+> +{
+> +	struct pci_dev *pci = to_pci_dev(i2c->drm_dev);
+> +	struct platform_device *pdev;
+> +	struct fwnode_handle *fwnode;
+> +	int ret;
+> +
+> +	fwnode = fwnode_create_software_node(xe_i2c_adapter_properties, NULL);
+> +	if (!fwnode)
+> +		return -ENOMEM;
+> +
+> +	/*
+> +	 * Not using platform_device_register_full() here because we don't have
+> +	 * a handle to the platform_device before it returns. xe_i2c_notifier()
+> +	 * uses that handle, but it may be called before
+> +	 * platform_device_register_full() is done.
+> +	 */
+> +	pdev = platform_device_alloc(adapter_name, pci_dev_id(pci));
+> +	if (!pdev) {
+> +		ret = -ENOMEM;
+> +		goto err_fwnode_remove;
+> +	}
+> +
+> +	if (i2c->adapter_irq) {
 
-Signed-off-by: Wander Lairson Costa <wander@redhat.com>
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Clark Williams <williams@redhat.com>
-Cc: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
----
- include/linux/preempt.h         | 35 ++++++++++++++++++++++++++++++---
- kernel/sched/core.c             | 12 +----------
- kernel/trace/trace_preemptirq.c | 19 ++++++++++++++++++
- 3 files changed, 52 insertions(+), 14 deletions(-)
+> +		struct resource	res = { };
+> +
+> +		res.start = i2c->adapter_irq;
+> +		res.name = "xe_i2c";
+> +		res.flags = IORESOURCE_IRQ;
 
-diff --git a/include/linux/preempt.h b/include/linux/preempt.h
-index b0af8d4ef6e6..d13c755cd934 100644
---- a/include/linux/preempt.h
-+++ b/include/linux/preempt.h
-@@ -10,6 +10,7 @@
- #include <linux/linkage.h>
- #include <linux/cleanup.h>
- #include <linux/types.h>
-+#include <linux/tracepoint-defs.h>
- 
- /*
-  * We put the hardirq and softirq counter into the preemption
-@@ -191,17 +192,45 @@ static __always_inline unsigned char interrupt_context_level(void)
-  */
- #define in_atomic_preempt_off() (preempt_count() != PREEMPT_DISABLE_OFFSET)
- 
--#if defined(CONFIG_DEBUG_PREEMPT) || defined(CONFIG_TRACE_PREEMPT_TOGGLE)
-+#if defined(CONFIG_DEBUG_PREEMPT)
- extern void preempt_count_add(int val);
- extern void preempt_count_sub(int val);
--#define preempt_count_dec_and_test() \
--	({ preempt_count_sub(1); should_resched(0); })
-+#elif defined(CONFIG_TRACE_PREEMPT_TOGGLE)
-+extern void __trace_preempt_on(void);
-+extern void __trace_preempt_off(void);
-+
-+DECLARE_TRACEPOINT(preempt_enable);
-+DECLARE_TRACEPOINT(preempt_disable);
-+
-+#define __preempt_trace_enabled(type) \
-+	(tracepoint_enabled(preempt_##type) && preempt_count() == val)
-+
-+static inline void preempt_count_add(int val)
-+{
-+	__preempt_count_add(val);
-+
-+	if (__preempt_trace_enabled(disable))
-+		__trace_preempt_off();
-+}
-+
-+static inline void preempt_count_sub(int val)
-+{
-+	if (__preempt_trace_enabled(enable))
-+		__trace_preempt_on();
-+
-+	__preempt_count_sub(val);
-+}
- #else
- #define preempt_count_add(val)	__preempt_count_add(val)
- #define preempt_count_sub(val)	__preempt_count_sub(val)
- #define preempt_count_dec_and_test() __preempt_count_dec_and_test()
- #endif
- 
-+#if defined(CONFIG_DEBUG_PREEMPT) || defined(CONFIG_TRACE_PREEMPT_TOGGLE)
-+#define preempt_count_dec_and_test() \
-+	({ preempt_count_sub(1); should_resched(0); })
-+#endif
-+
- #define __preempt_count_inc() __preempt_count_add(1)
- #define __preempt_count_dec() __preempt_count_sub(1)
- 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8988d38d46a3..4feba4738d79 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5840,8 +5840,7 @@ static inline void sched_tick_start(int cpu) { }
- static inline void sched_tick_stop(int cpu) { }
- #endif
- 
--#if defined(CONFIG_PREEMPTION) && (defined(CONFIG_DEBUG_PREEMPT) || \
--				defined(CONFIG_TRACE_PREEMPT_TOGGLE))
-+#if defined(CONFIG_PREEMPTION) && defined(CONFIG_DEBUG_PREEMPT)
- /*
-  * If the value passed in is equal to the current preempt count
-  * then we just disabled preemption. Start timing the latency.
-@@ -5850,30 +5849,24 @@ static inline void preempt_latency_start(int val)
- {
- 	if (preempt_count() == val) {
- 		unsigned long ip = get_lock_parent_ip();
--#ifdef CONFIG_DEBUG_PREEMPT
- 		current->preempt_disable_ip = ip;
--#endif
- 		trace_preempt_off(CALLER_ADDR0, ip);
- 	}
- }
- 
- void preempt_count_add(int val)
- {
--#ifdef CONFIG_DEBUG_PREEMPT
- 	/*
- 	 * Underflow?
- 	 */
- 	if (DEBUG_LOCKS_WARN_ON((preempt_count() < 0)))
- 		return;
--#endif
- 	__preempt_count_add(val);
--#ifdef CONFIG_DEBUG_PREEMPT
- 	/*
- 	 * Spinlock count overflowing soon?
- 	 */
- 	DEBUG_LOCKS_WARN_ON((preempt_count() & PREEMPT_MASK) >=
- 				PREEMPT_MASK - 10);
--#endif
- 	preempt_latency_start(val);
- }
- EXPORT_SYMBOL(preempt_count_add);
-@@ -5891,7 +5884,6 @@ static inline void preempt_latency_stop(int val)
- 
- void preempt_count_sub(int val)
- {
--#ifdef CONFIG_DEBUG_PREEMPT
- 	/*
- 	 * Underflow?
- 	 */
-@@ -5903,14 +5895,12 @@ void preempt_count_sub(int val)
- 	if (DEBUG_LOCKS_WARN_ON((val < PREEMPT_MASK) &&
- 			!(preempt_count() & PREEMPT_MASK)))
- 		return;
--#endif
- 
- 	preempt_latency_stop(val);
- 	__preempt_count_sub(val);
- }
- EXPORT_SYMBOL(preempt_count_sub);
- NOKPROBE_SYMBOL(preempt_count_sub);
--
- #else
- static inline void preempt_latency_start(int val) { }
- static inline void preempt_latency_stop(int val) { }
-diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
-index 90ee65db4516..deb2428b34a2 100644
---- a/kernel/trace/trace_preemptirq.c
-+++ b/kernel/trace/trace_preemptirq.c
-@@ -118,6 +118,25 @@ EXPORT_TRACEPOINT_SYMBOL(irq_enable);
- 
- #ifdef CONFIG_TRACE_PREEMPT_TOGGLE
- 
-+#if !defined(CONFIG_DEBUG_PREEMPT)
-+EXPORT_SYMBOL(__tracepoint_preempt_disable);
-+EXPORT_SYMBOL(__tracepoint_preempt_enable);
-+
-+void __trace_preempt_on(void)
-+{
-+	trace_preempt_on(CALLER_ADDR0, get_lock_parent_ip());
-+}
-+EXPORT_SYMBOL(__trace_preempt_on);
-+NOKPROBE_SYMBOL(__trace_preempt_on);
-+
-+void __trace_preempt_off(void)
-+{
-+	trace_preempt_off(CALLER_ADDR0, get_lock_parent_ip());
-+}
-+EXPORT_SYMBOL(__trace_preempt_off);
-+NOKPROBE_SYMBOL(__trace_preempt_off);
-+#endif /* !CONFIG_DEBUG_PREEMPT */
-+
- void trace_preempt_on(unsigned long a0, unsigned long a1)
- {
- 	trace(preempt_enable, TP_ARGS(a0, a1));
+
+		struct resource	res;
+
+		res = DEFINE_RES_IRQ_NAMED(i2c->adapter_irq, "xe_i2c");
+
+> +		ret = platform_device_add_resources(pdev, &res, 1);
+> +		if (ret)
+> +			goto err_pdev_put;
+> +	}
+> +
+> +	pdev->dev.parent = i2c->drm_dev;
+> +	pdev->dev.fwnode = fwnode;
+> +	i2c->adapter_node = fwnode;
+> +	i2c->pdev = pdev;
+> +
+> +	ret = platform_device_add(pdev);
+> +	if (ret)
+> +		goto err_pdev_put;
+> +
+> +	return 0;
+> +
+> +err_pdev_put:
+> +	platform_device_put(pdev);
+> +err_fwnode_remove:
+> +	fwnode_remove_software_node(fwnode);
+> +
+> +	return ret;
+> +}
+
+...
+
+> +static int xe_i2c_irq_map(struct irq_domain *h, unsigned int virq,
+> +			  irq_hw_number_t hw_irq_num)
+> +{
+> +	irq_set_chip_and_handler(virq, &dummy_irq_chip, handle_simple_irq);
+
+Wondering if you need to setup a custom lockdep class here.
+
+> +	return 0;
+> +}
+
+...
+
+> +static void xe_i2c_remove_irq(struct xe_i2c *i2c)
+> +{
+> +	if (i2c->irqdomain) {
+
+	if (!i2c->irqdomain)
+		return;
+
+> +		irq_dispose_mapping(i2c->adapter_irq);
+> +		irq_domain_remove(i2c->irqdomain);
+> +	}
+> +}
+
+...
+
+> +static void xe_i2c_remove(void *data)
+> +{
+> +	struct xe_i2c *i2c = data;
+> +	int i;
+
+unsigned?
+
+> +	for (i = 0; i < XE_I2C_MAX_CLIENTS; i++)
+> +		i2c_unregister_device(i2c->client[i]);
+> +
+> +	bus_unregister_notifier(&i2c_bus_type, &i2c->bus_notifier);
+> +	xe_i2c_unregister_adapter(i2c);
+> +	xe_i2c_remove_irq(i2c);
+> +}
+
+...
+
+> +int xe_i2c_probe(struct xe_device *xe)
+> +{
+> +	struct xe_i2c_endpoint ep;
+> +	struct regmap *regmap;
+> +	struct xe_i2c *i2c;
+> +	int ret;
+> +
+> +	xe_i2c_read_endpoint(xe_root_tile_mmio(xe), &ep);
+> +	if (ep.cookie != XE_I2C_EP_COOKIE_DEVICE)
+> +		return 0;
+> +
+> +	i2c = devm_kzalloc(xe->drm.dev, sizeof(*i2c), GFP_KERNEL);
+> +	if (!i2c)
+> +		return -ENOMEM;
+> +
+> +	INIT_WORK(&i2c->work, xe_i2c_client_work);
+> +	i2c->mmio = xe_root_tile_mmio(xe);
+> +	i2c->drm_dev = xe->drm.dev;
+> +	i2c->ep = ep;
+
+> +	regmap = devm_regmap_init(i2c->drm_dev, NULL, i2c, &i2c_regmap_config);
+
+Use of i2c->drm_dev makes harder to maintain and understand the code.
+Managed resources should be carefully attached to the correct device,
+otherwise it's inevitable object lifetime related issues.
+
+With
+
+	struct device *dev = xe->drm.dev;
+
+and using local dev, it becomes easier to get and avoid such subtle mistakes.
+
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	i2c->bus_notifier.notifier_call = xe_i2c_notifier;
+> +	ret = bus_register_notifier(&i2c_bus_type, &i2c->bus_notifier);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = xe_i2c_create_irq(i2c);
+> +	if (ret)
+> +		goto err_unregister_notifier;
+> +
+> +	ret = xe_i2c_register_adapter(i2c);
+> +	if (ret)
+> +		goto err_remove_irq;
+> +
+> +	return devm_add_action_or_reset(i2c->drm_dev, xe_i2c_remove, i2c);
+> +
+> +err_remove_irq:
+> +	xe_i2c_remove_irq(i2c);
+> +
+> +err_unregister_notifier:
+> +	bus_unregister_notifier(&i2c_bus_type, &i2c->bus_notifier);
+> +
+> +	return ret;
+> +}
+
 -- 
-2.50.0
+With Best Regards,
+Andy Shevchenko
+
 
