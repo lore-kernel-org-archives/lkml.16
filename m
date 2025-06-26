@@ -1,85 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B408632C;
-	Thu, 26 Jun 2025 16:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5690D8632C;
+	Thu, 26 Jun 2025 16:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750953854; cv=none; b=NaCNhFRx4qdpgo2kzGq6CVAQnSZdvm9B35NCSBlNhYP88QrQX2KbCv6DI+fRp27A6N121H0q5KNfhylfmgDJIaZM653TArsntyOFBJQd4Lysz+0IRkkJtdfanFq2Cx6XnjID+CoWHbC7z22w70CQwyAc3J3G2jLSz2/JrsMsWBw=
+	t=1750953904; cv=none; b=OX1nks2DN2MPLsyXRI1jNtWA0uMXlF31bxSo7D/5QuNj+JcxvviKz5Xk00Qj6WRZHYMq1T6cTp/OI5UnZp9JKmRbPF0faTFR9mNiFXBbH5l7raF319waVrO94uAaDmgwXv+RJJ8UIpvnHDZSNZibJ+VMZhpsZGAe2ruF/MLEyFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750953854; c=relaxed/simple;
-	bh=RDVQoL4sE82paXI00u0nyf0ncj3K2JAAIAgRoe++0BY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GfJmvUkHz8/J8nl49a67qDS9as6TiM7dDQtMZbN8//OLQRgzcBdm8iaV8+StV5S5M7+sB2zDHS8FrqRYIXR2x5oq64sUzpWmbgcNKk1NZCXb9nqFRfRh2R7DPoIjTmjHvkwE4xWh2+P4wEHbeDKGsNnGCcSip/jPmx3RGGwx6sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hEof/ivM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750953904; c=relaxed/simple;
+	bh=9PmHmcHy9eS+jHEx5bX+xBvU5X8RFlCe4CEn2nr7ZM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GefSJVPzTFs9RgwkmXevqdrTIPPB1ipWj70wI7am0iLqA0K4RXygFI1tKtVF9MolVVxofAFEYmrzYl3OkKjnZF4EFesBrlUxq+maB6HMnOa22uWN+yyBTQpk9rn98PBNClHHayPneWNHH6BUOGnrzxtml1C3wXaVcs3EC5112yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yqoftNTm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bxu30B48; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hEof/ivM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E9EFC4CEEB;
-	Thu, 26 Jun 2025 16:04:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750953853;
-	bh=RDVQoL4sE82paXI00u0nyf0ncj3K2JAAIAgRoe++0BY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hEof/ivMo0Fy+fOm+QQKtPyZduOchfOjWFMaTkaTdRemSDbiRAb/xdNgZWjVgXDbu
-	 Nswr4OwHi8YWTLKzER6kRVaGqJu5pKfptYm+PtKFGWlzCRPyiNv8+rCyy+aekhsVZG
-	 nMbBpy/SuGKns7pDLzvDaRrsCK42yWW2sfGvNj8XPtHQMIJ1RaelUnSRa32yWhkodS
-	 fF+HWSBlkhO1tZ8uN7le6DcK4+6hCqM12MT3W7XstyTRKvMYaUTpiIMPnTevnzX8ZB
-	 22/bapkVc/WnVo1Xx2edSGA1wgYNGlFvYs9nUtxI7wq6K29vHaqZFcwF10qNoA+Wtn
-	 Ngj4G1GClTM4Q==
-Message-ID: <d7199941-9f7d-4dcc-89b2-9f54ec2a0232@kernel.org>
-Date: Thu, 26 Jun 2025 11:04:11 -0500
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yqoftNTm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bxu30B48"
+Date: Thu, 26 Jun 2025 18:04:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750953901;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mL5oCUpY8O6HsAvUPjtA+7B0CN116b1jmnRtEOT4Bgw=;
+	b=yqoftNTmIWO8w20LOgqlPpXchx2n7q6CMc3o1+6zM7cjgOZhwidtRtiQ4/4wCP5gAJeq3m
+	XjmBLBn36CwgtCF/9387O8uyHuIMBVIT7zN+VNY1Ey1DkHlbHHxXyQE4GB7+CM+/NfJZwY
+	ZgpBnizlTxfUi9osLfBJbw+zkSnFVqM+srVvOPk7GyjMpE7gjdx6iw3YXOo+Qq52TAMA4L
+	Z4lMFFSGBN+DIetneD7rn04bv0dRdumQxACmZNbeqafdaM0RiNtJA82eAi69rISH55ipSs
+	0D46uhv8rVYBizXdV4SURoerQooSII2oM/BvIhiSiiAhXWMu1sFvhsJ7QVy5zA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750953901;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mL5oCUpY8O6HsAvUPjtA+7B0CN116b1jmnRtEOT4Bgw=;
+	b=bxu30B48B3rzCsnORaoes91Sd97VtxLtgubqiJmmhfEcqZ+ZtFo8pai2/KOmwJqSOgNwH3
+	6MQUCvbDwzpWGzBQ==
+From: Nam Cao <namcao@linutronix.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Gabriele Monaco <gmonaco@redhat.com>, john.ogness@linutronix.de
+Subject: Re: [PATCH] tracing: Remove pointless memory barriers
+Message-ID: <20250626160459.soHxOROG@linutronix.de>
+References: <20250626151940.1756398-1-namcao@linutronix.de>
+ <20250626113520.315db641@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] gpiolib: acpi: Add a helper for programming
- debounce
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <20250625215813.3477840-1-superm1@kernel.org>
- <20250625215813.3477840-2-superm1@kernel.org>
- <aF1ZTrq4FLnpSz0q@smile.fi.intel.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <aF1ZTrq4FLnpSz0q@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626113520.315db641@gandalf.local.home>
 
-On 6/26/2025 9:29 AM, Andy Shevchenko wrote:
-> On Wed, Jun 25, 2025 at 04:58:10PM -0500, Mario Limonciello wrote:
->>
->> Debounce is programmed in two places and considered non-fatal in one of
->> them. Introduce a helper for programming debounce and show a warning
->> when failing to program.
+On Thu, Jun 26, 2025 at 11:35:20AM -0400, Steven Rostedt wrote:
+> On Thu, 26 Jun 2025 17:19:40 +0200
+> Nam Cao <namcao@linutronix.de> wrote:
+> >  static void turn_monitoring_on_with_reset(void)
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index 95ae7c4e58357..0dff4298fc0e5 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -936,7 +936,6 @@ int tracing_is_enabled(void)
+> >  	 * return the mirror variable of the state of the ring buffer.
+> >  	 * It's a little racy, but we don't really care.
+> >  	 */
+> > -	smp_rmb();
+> >  	return !global_trace.buffer_disabled;
+> >  }
+> >  
+> > @@ -1107,8 +1106,6 @@ void tracer_tracing_on(struct trace_array *tr)
+> >  	 * important to be fast than accurate.
+> >  	 */
+> >  	tr->buffer_disabled = 0;
+> > -	/* Make the flag seen by readers */
+> > -	smp_wmb();
+> >  }
+> >  
+> >  /**
+> > @@ -1640,8 +1637,6 @@ void tracer_tracing_off(struct trace_array *tr)
+> >  	 * important to be fast than accurate.
+> >  	 */
+> >  	tr->buffer_disabled = 1;
+> > -	/* Make the flag seen by readers */
+> > -	smp_wmb();
+> >  }
 > 
->> This is a difference in behavior for the call
->> in acpi_dev_gpio_irq_wake_get_by().
-> 
-> When I meant "both", I was thinking of the _single_ existing case and new one
-> which you are about to add. In principle, I think changing behaviour here is
-> undesired. We provoke BIOS writers to make mistakes with debounce settings in
-> GpioInt() resources.
-> 
-> I agree on the patch...
-> 
->> -			/* ACPI uses hundredths of milliseconds units */
->> -			ret = gpio_set_debounce_timeout(desc, info.debounce * 10);
->> -			if (ret)
->> -				return ret;
->> +			acpi_set_debounce_timeout(desc, info.debounce);
-> 
-> ...except this hunk.
-> 
+> The above three interact with each other. Without the barriers, the
+> tr->buffer_disabled = 0, can be set on one CPU, and the other CPU can think
+> the buffer is still enabled and do work that will end up doing nothing. Or
+> it can be set to 1, and the other CPU still sees it disabled and will not
+> do work when it can.
 
-OK in that case I'll just squash patches 1 and 2 together, pick up Hans' 
-tag and drop this hunk.
+(I'm not that experienced with memory barrier, so I may be writing nonsense
+here)
+
+I think you have it inverted? I assume you meant:
+
+"Without the barriers, the tr->buffer_disabled = 1 can be set on one CPU,
+and the other CPU can think the buffer is still enabled and do work that
+will end up doing nothing."
+
+Your scenario can still happen despite the memory barrier:
+
+CPU1                          CPU2
+                              smp_rb()
+                              read buffer_disabled, see 0 --> let's do work!
+buffer_disabled=1
+smp_wb()
+                              do work -> end up doing nothing
+
+From my understanding, smp_wb()'s purpose is ensuring the ordering of one
+write and another write, e.g.:
+    write(a)
+    smp_wb()
+    write(b)
+
+For our case, there is only a single write. Therefore I don't think
+smp_wb() is useful.
+
+Best regards,
+Nam
