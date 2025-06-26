@@ -1,136 +1,74 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BDF2E7178
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763372E7184;
+	Thu, 26 Jun 2025 13:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750945456; cv=none; b=A0ri6DaeaApKKsEnboC07+WyiFp01pFCD1tw5+0lImhntTKQcK6onP5am5ztA8Ng+cg7ihjQVcEmTT88yO0D0RkJXSA+aL+RtOM2zupExjnB7wpXUHsG1bYTZ7uijbRmEbbGdcZ7+nX9VeNpAY5oJ8GKPuC4+4r4FnWYk7nNgjk=
+	t=1750945476; cv=none; b=HSZDYPEKIogS0BFPnMRenFQ7nS1y6Cg4o1cmqNFtNiBEjrBOwScjFSaHsYauSR7MO4IO6+brqNbWd+GseUXx9Ey8eosWS2yb11o4RkoeRf0fn6ln3/nNmOTPoRV53t6gHSi2NYgipg/7IVF5TbWeJ+TIzIYZUhFir/DJcsDMBis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750945456; c=relaxed/simple;
-	bh=lOIhZPwjq2iRUH2/8/px4H6GSxHqp5XVL22e3XXy7z8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=EItGdEjEP9QM4KOlmYnpTkL0E5At44s9U94jiqD/LKvGzReVBCROCy0/BNrJFatOC+zmr7QuJrDAwtr++1XwFFqcNXPmlI2kTkO3QtlpPOllAXuTqYyALfSPTTpQBJ65tMqlmsvH2HjrbUN6wgSbt5O/C3mxAMTk1zdLvRSNSE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <jre@pengutronix.de>)
-	id 1uUmte-0004GB-8X; Thu, 26 Jun 2025 15:44:10 +0200
-From: Jonas Rebmann <jre@pengutronix.de>
-Date: Thu, 26 Jun 2025 15:44:02 +0200
-Subject: [PATCH v2] net: fec: allow disable coalescing
+	s=arc-20240116; t=1750945476; c=relaxed/simple;
+	bh=Ny9Vbn7ZHK3/VxaosjUkWXgcjFp6Xt44e+2Vvdj2XCY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=FG9vhsS9k1j41wcz4M71iyIL+SMyn0wn7YHKy7oI4kQWf68Sfyq7jw2JF9unLRVCo3nT7x3Ma+nfcXe/8Vng3CjxsgcPTtiTprbfdE8ppnewEYTTfjNlv4g7iCRVdbAbJuGtQhO2h82n14mnoDv8wBrMQX5uaOil6NmMBwaKzb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IW1C3N2F; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IW1C3N2F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D584C4CEEB;
+	Thu, 26 Jun 2025 13:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750945476;
+	bh=Ny9Vbn7ZHK3/VxaosjUkWXgcjFp6Xt44e+2Vvdj2XCY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IW1C3N2FcDR8ZzOhvR1V72f4Kii58ZFIEBwfyV4PdjP7Y7wzQg1IHCHRM1EpSET7V
+	 vz3IowCF9c/HF//9z/0vw0apychE2ggeqKg999BpxbmIN/t6UHH8U8cdOmQe6tb6FY
+	 fRbAwPTYaT21XJqg41VGO2y6+NN8O5l9yj0oDyj3FrXdX/N9zyMsDo8GZEBpuRGTIC
+	 MWzBGXMDMLapfybHAbGr4RhTOh5n0blNVHa9qRLE6eayr86RxyYqfxxoH8PI2bOXdQ
+	 nz+EP3koexb89FLQtsdRCyDsVfqIJIfDooBy8TWBQ659AGWBmFdSvb43OHyeXthy7S
+	 crYl5mBiUee6A==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250626-fec_deactivate_coalescing-v2-1-0b217f2e80da@pengutronix.de>
-X-B4-Tracking: v=1; b=H4sIAKFOXWgC/42NQQrCMBBFr1JmbaSJTRRX3kNKGZJpOyBJSWKol
- N7d2BO4fA/++xskikwJ7s0GkQonDr6COjVgZ/QTCXaVQbVKt0ZpMZIdHKHNXDDTYAO+KFn2k7B
- mvDnZoXTGQN0vkUZej/azrzxzyiF+jqsif/afapFCCn1FSZ3ETrvLYyE/vXMMntezI+j3ff8CC
- mFWLMcAAAA=
-X-Change-ID: 20250625-fec_deactivate_coalescing-c6f8d14a1d66
-To: Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, 
- Clark Wang <xiaoning.wang@nxp.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: imx@lists.linux.dev, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kernel@pengutronix.de, 
- Jonas Rebmann <jre@pengutronix.de>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3113; i=jre@pengutronix.de;
- h=from:subject:message-id; bh=lOIhZPwjq2iRUH2/8/px4H6GSxHqp5XVL22e3XXy7z8=;
- b=owGbwMvMwCF2ZcYT3onnbjcwnlZLYsiI9Vvx4OHE6n/nVJLubsl8WbztT/rihy+8LZfZnFnsV
- d+394WAU0cpC4MYB4OsmCJLrJqcgpCx/3WzSrtYmDmsTCBDGLg4BWAic40Y/vvq6XwWsDDStV++
- aeWlK3EHNFpK2zeHhrqnbrV90dbjUc7w34GDW3TyRK0ic8GQ5Q+nHfUIsr28IufcJd6DzmVSn/Q
- t+AA=
-X-Developer-Key: i=jre@pengutronix.de; a=openpgp;
- fpr=0B7B750D5D3CD21B3B130DE8B61515E135CD49B5
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::ac
-X-SA-Exim-Mail-From: jre@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 26 Jun 2025 15:44:31 +0200
+Message-Id: <DAWID96TPD6Y.24T1VWNHUYYLN@kernel.org>
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rust: devres: require T: Send for Devres
+X-Mailer: aerc 0.20.1
+References: <20250626132544.72866-1-dakr@kernel.org>
+In-Reply-To: <20250626132544.72866-1-dakr@kernel.org>
 
-In the current implementation, IP coalescing is always enabled and
-cannot be disabled.
+On Thu Jun 26, 2025 at 3:24 PM CEST, Danilo Krummrich wrote:
+> Due to calling Revocable::revoke() from Devres::devres_callback() T may
+> be dropped from Devres::devres_callback() and hence must be Send.
+>
+> Fix this by adding the corresponding bound to Devres and DevresInner.
+>
+> Reported-by: Boqun Feng <boqun.feng@gmail.com>
+> Closes: https://lore.kernel.org/lkml/aFzI5L__OcB9hqdG@Mac.home/
+> Fixes: 76c01ded724b ("rust: add devres abstraction")
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+>  rust/kernel/devres.rs | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 
-As setting maximum frames to 0 or 1, or setting delay to zero implies
-immediate delivery of single packets/IRQs, disable coalescing in
-hardware in these cases.
+It would be enough to require `Send` on all `impl` blocks and not on the
+struct itself. Normally, I recommend doing that, because then you can
+have types like `Foo<Invalid>` existing when they come up in some weird
+type. But in this case, I think it's fine to add it to the type
+definition.
 
-This also guarantees that coalescing is never enabled with ICFT or ICTT
-set to zero, a configuration that could lead to unpredictable behaviour
-according to i.MX8MP reference manual.
-
-Signed-off-by: Jonas Rebmann <jre@pengutronix.de>
----
-Changes in v2:
-- Adjust type of rx_itr, tx_itr (Thanks, Wei)
-- Set multiple FEC_ITR_ flags in one line for more compact code (Thanks, Wei)
-- Commit Message: mention ICFT/CTT fields constraints (Thanks, Andrew)
-- Link to v1: https://lore.kernel.org/r/20250625-fec_deactivate_coalescing-v1-1-57a1e41a45d3@pengutronix.de
----
- drivers/net/ethernet/freescale/fec_main.c | 34 +++++++++++++++----------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 63dac42720453a8b8a847bdd1eec76ac072030bf..d4eed252ad4098a7962f615bce98338bc3d12f5c 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -3121,27 +3121,25 @@ static int fec_enet_us_to_itr_clock(struct net_device *ndev, int us)
- static void fec_enet_itr_coal_set(struct net_device *ndev)
- {
- 	struct fec_enet_private *fep = netdev_priv(ndev);
--	int rx_itr, tx_itr;
-+	u32 rx_itr = 0, tx_itr = 0;
-+	int rx_ictt, tx_ictt;
- 
--	/* Must be greater than zero to avoid unpredictable behavior */
--	if (!fep->rx_time_itr || !fep->rx_pkts_itr ||
--	    !fep->tx_time_itr || !fep->tx_pkts_itr)
--		return;
--
--	/* Select enet system clock as Interrupt Coalescing
--	 * timer Clock Source
--	 */
--	rx_itr = FEC_ITR_CLK_SEL;
--	tx_itr = FEC_ITR_CLK_SEL;
-+	rx_ictt = fec_enet_us_to_itr_clock(ndev, fep->rx_time_itr);
-+	tx_ictt = fec_enet_us_to_itr_clock(ndev, fep->tx_time_itr);
- 
--	/* set ICFT and ICTT */
--	rx_itr |= FEC_ITR_ICFT(fep->rx_pkts_itr);
--	rx_itr |= FEC_ITR_ICTT(fec_enet_us_to_itr_clock(ndev, fep->rx_time_itr));
--	tx_itr |= FEC_ITR_ICFT(fep->tx_pkts_itr);
--	tx_itr |= FEC_ITR_ICTT(fec_enet_us_to_itr_clock(ndev, fep->tx_time_itr));
-+	if (rx_ictt > 0 && fep->rx_pkts_itr > 1) {
-+		/* Enable with enet system clock as Interrupt Coalescing timer Clock Source */
-+		rx_itr = FEC_ITR_EN | FEC_ITR_CLK_SEL;
-+		rx_itr |= FEC_ITR_ICFT(fep->rx_pkts_itr);
-+		rx_itr |= FEC_ITR_ICTT(rx_ictt);
-+	}
- 
--	rx_itr |= FEC_ITR_EN;
--	tx_itr |= FEC_ITR_EN;
-+	if (tx_ictt > 0 && fep->tx_pkts_itr > 1) {
-+		/* Enable with enet system clock as Interrupt Coalescing timer Clock Source */
-+		tx_itr = FEC_ITR_EN | FEC_ITR_CLK_SEL;
-+		tx_itr |= FEC_ITR_ICFT(fep->tx_pkts_itr);
-+		tx_itr |= FEC_ITR_ICTT(tx_ictt);
-+	}
- 
- 	writel(tx_itr, fep->hwp + FEC_TXIC0);
- 	writel(rx_itr, fep->hwp + FEC_RXIC0);
+Reviewed-by: Benno Lossin <lossin@kernel.org>
 
 ---
-base-commit: 8dacfd92dbefee829ca555a860e86108fdd1d55b
-change-id: 20250625-fec_deactivate_coalescing-c6f8d14a1d66
-
-Best regards,
--- 
-Jonas Rebmann <jre@pengutronix.de>
-
+Cheers,
+Benno
