@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F94120F088
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 18:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A49F2EE610
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 18:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750961843; cv=none; b=cAYub9PSeMn9ZlJ7v7FWYbd/1BhssgCwTtwdQAG8raJM6VPP5cHuWVZikSjV7ZwOAETRt4dWUB+WP9vuRvibMl3cK7P5BeDVtx/OOjCLe838lMEeNiXWEdAGkfBkmK/3VlDwt1tKhmJuXzSA1UolNfTuFK3MfKsT5oC8FW6/F5Q=
+	t=1750961845; cv=none; b=EqzJfq60PWHA7Sr4n6nHC4rjWhiPwWoBPmMnFfuBektmzXEyP2kGjs5MmqynNDsb50zZ+zZBuKb/fCJ6dzbPktTsyIDo9YaVayHNXUdqKbUTSHXM7tMro6WBeR2WcpvzSr/vtirB5l5KzUmhDlXQv8f8nkW9tHOfDLmjgKuTM8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750961843; c=relaxed/simple;
-	bh=c+mx986lRAbskx6MMl3OUNrj9ZPAUwwbO3To6mjWE+U=;
+	s=arc-20240116; t=1750961845; c=relaxed/simple;
+	bh=6oGoKMyXjxgzqrisONTm1WSrJ7oucpkiGgq39C3HYBI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ejnb2WigfW8Jugk9q0zEPsdC0FsXIO2FA3JyKE63Tp6gu0pLCppP8poyNZRf1UhTOAITFcO4fny0wYGQiZyc61kfaE6HS0dk/ez7l3MA4/nHbTWaCPlg10eSe0m3sP9grqOw9bX2ipJyqfBMeYLH+pNhoo4l4NcxrkMZgcBKaJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MUXNIwSA; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=N9PAIWLUok0tu4TbGN6dUNjqErL4C9ZQ3O8Jonmv88UfLtwuAz6wP+TydI9VU7oWBfbL1xrc/2TZFM8X8d0cGUzsKqCLDOz+KzSmKa9exh3CsVPdXJpqLs8hEXkJO8ZBlTsy4ycV7wvp6HmceTZ4fNqMIATe9Wt5eNyWtAYwt3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PiQgVJUk; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MUXNIwSA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PiQgVJUk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750961840;
+	s=mimecast20190719; t=1750961843;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TH77IL/TNyI4SDjghOhi61Kro+MAz3ctSA2qi2jFT8E=;
-	b=MUXNIwSA18lRBg5HqipTz504THimiskFYE89gFushu8R9BmMes9UIBIKxIBXPh06SJmTeS
-	kKuDsIBRpOp8u2YlndjpI62BG+KgjdIv+6tVdDr9Z9k8aAheKKS6QmZRn7/OTSmrQWdqXB
-	eHkV/rG5QB71y1c1Xr4CEB9DD4Rkjwk=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+	bh=8FvEh9KPwU2FPVYiAUQ819UI09czGQfx0V/ZDJLQtEw=;
+	b=PiQgVJUkp7nwjPtLx6DyxF+5PsabVOheG37VeG+HJRIOeHBECwhU2l370s0BBIXVlGOi8h
+	OFNOzUQA6K01QUZGUyT7dCMEDbRjWFIXPCgHwTksw2N2yRc1c5wLq9gtBrNtNaIi46BKF5
+	1DK2BA3p4z80BjLZGnyE611SnBUXkMQ=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-364-aITcI2HHOZWFrmv8FBvjVg-1; Thu,
- 26 Jun 2025 14:17:16 -0400
-X-MC-Unique: aITcI2HHOZWFrmv8FBvjVg-1
-X-Mimecast-MFC-AGG-ID: aITcI2HHOZWFrmv8FBvjVg_1750961835
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-513-7UNU5ohPMiy7mflE6UnpEg-1; Thu,
+ 26 Jun 2025 14:17:19 -0400
+X-MC-Unique: 7UNU5ohPMiy7mflE6UnpEg-1
+X-Mimecast-MFC-AGG-ID: 7UNU5ohPMiy7mflE6UnpEg_1750961838
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1109118002EC;
-	Thu, 26 Jun 2025 18:17:15 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A1DEE180028A;
+	Thu, 26 Jun 2025 18:17:18 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.22.64.64])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E5335180045B;
-	Thu, 26 Jun 2025 18:17:12 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4C6B718003FC;
+	Thu, 26 Jun 2025 18:17:17 +0000 (UTC)
 From: Luiz Capitulino <luizcap@redhat.com>
 To: david@redhat.com,
 	willy@infradead.org
@@ -50,9 +50,9 @@ Cc: akpm@linux-foundation.org,
 	linux-mm@kvack.org,
 	lcapitulino@gmail.com,
 	shivankg@amd.com
-Subject: [PATCH 1/3] mm: introduce snapshot_page()
-Date: Thu, 26 Jun 2025 14:16:51 -0400
-Message-ID: <4a9745dd2989f7d5bf5bc69c37fc3e3cfda37e87.1750961812.git.luizcap@redhat.com>
+Subject: [PATCH 3/3] fs: stable_page_flags(): use snapshot_page()
+Date: Thu, 26 Jun 2025 14:16:53 -0400
+Message-ID: <ede227784078c4c619582c2c69aee1d8450edf12.1750961812.git.luizcap@redhat.com>
 In-Reply-To: <cover.1750961812.git.luizcap@redhat.com>
 References: <cover.1750961812.git.luizcap@redhat.com>
 Precedence: bulk
@@ -64,200 +64,116 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-This commit refactors __dump_page() into snapshot_page().
+A race condition is possible in stable_page_flags() where user-space is
+reading /proc/kpageflags concurrently to a folio split. This may lead to
+oopses or BUG_ON()s being triggered.
 
-snapshot_page() tries to take a faithful snapshot of a page and its
-folio representation. The snapshot is returned in the struct
-page_snapshot parameter along with additional flags that are best
-retrieved at snapshot creation time to reduce race windows.
+To fix this, this commit uses snapshot_page() in stable_page_flags() so
+that stable_page_flags() works with a stable page and folio snapshots
+instead.
 
-This function is intended to be used by callers that need a stable
-representation of a struct page and struct folio so that pointers
-or page information doesn't change while working on a page.
-
-The idea and original implemenetation of snapshot_page() comes from
-Matthew Wilcox with suggestions for improvements from David Hildenbrand.
-All bugs and misconceptions are mine.
+Note that stable_page_flags() makes use of some functions that require
+the original page or folio pointer to work properly (eg.
+is_free_budy_page() and folio_test_idle()). Since those functions can't
+be used on the page snapshot, we replace their usage with flags that
+were set by snapshot_page() for this purpose.
 
 Signed-off-by: Luiz Capitulino <luizcap@redhat.com>
 ---
- include/linux/mm.h | 20 +++++++++++++
- mm/debug.c         | 42 +++------------------------
- mm/util.c          | 72 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 96 insertions(+), 38 deletions(-)
+ fs/proc/page.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0ef2ba0c667a..4d83674e32a7 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4184,4 +4184,24 @@ static inline bool page_pool_page_is_pp(struct page *page)
- }
+diff --git a/fs/proc/page.c b/fs/proc/page.c
+index 936f8bbe5a6f..a2ee95f727f0 100644
+--- a/fs/proc/page.c
++++ b/fs/proc/page.c
+@@ -147,6 +147,7 @@ static inline u64 kpf_copy_bit(u64 kflags, int ubit, int kbit)
+ u64 stable_page_flags(const struct page *page)
+ {
+ 	const struct folio *folio;
++	struct page_snapshot ps;
+ 	unsigned long k;
+ 	unsigned long mapping;
+ 	bool is_anon;
+@@ -158,7 +159,9 @@ u64 stable_page_flags(const struct page *page)
+ 	 */
+ 	if (!page)
+ 		return 1 << KPF_NOPAGE;
+-	folio = page_folio(page);
++
++	snapshot_page(&ps, page);
++	folio = &ps.folio_snapshot;
+ 
+ 	k = folio->flags;
+ 	mapping = (unsigned long)folio->mapping;
+@@ -167,7 +170,7 @@ u64 stable_page_flags(const struct page *page)
+ 	/*
+ 	 * pseudo flags for the well known (anonymous) memory mapped pages
+ 	 */
+-	if (page_mapped(page))
++	if (folio_mapped(folio))
+ 		u |= 1 << KPF_MMAP;
+ 	if (is_anon) {
+ 		u |= 1 << KPF_ANON;
+@@ -179,7 +182,7 @@ u64 stable_page_flags(const struct page *page)
+ 	 * compound pages: export both head/tail info
+ 	 * they together define a compound page's start/end pos and order
+ 	 */
+-	if (page == &folio->page)
++	if (ps.idx == 0)
+ 		u |= kpf_copy_bit(k, KPF_COMPOUND_HEAD, PG_head);
+ 	else
+ 		u |= 1 << KPF_COMPOUND_TAIL;
+@@ -189,10 +192,10 @@ u64 stable_page_flags(const struct page *page)
+ 	         folio_test_large_rmappable(folio)) {
+ 		/* Note: we indicate any THPs here, not just PMD-sized ones */
+ 		u |= 1 << KPF_THP;
+-	} else if (is_huge_zero_folio(folio)) {
++	} else if (ps.flags & PAGE_SNAPSHOT_PG_HUGE_ZERO) {
+ 		u |= 1 << KPF_ZERO_PAGE;
+ 		u |= 1 << KPF_THP;
+-	} else if (is_zero_folio(folio)) {
++	} else if (is_zero_pfn(ps.pfn)) {
+ 		u |= 1 << KPF_ZERO_PAGE;
+ 	}
+ 
+@@ -200,14 +203,14 @@ u64 stable_page_flags(const struct page *page)
+ 	 * Caveats on high order pages: PG_buddy and PG_slab will only be set
+ 	 * on the head page.
+ 	 */
+-	if (PageBuddy(page))
++	if (PageBuddy(&ps.page_snapshot))
+ 		u |= 1 << KPF_BUDDY;
+-	else if (page_count(page) == 0 && is_free_buddy_page(page))
++	else if (ps.flags & PAGE_SNAPSHOT_PG_FREE)
+ 		u |= 1 << KPF_BUDDY;
+ 
+-	if (PageOffline(page))
++	if (folio_test_offline(folio))
+ 		u |= 1 << KPF_OFFLINE;
+-	if (PageTable(page))
++	if (folio_test_pgtable(folio))
+ 		u |= 1 << KPF_PGTABLE;
+ 	if (folio_test_slab(folio))
+ 		u |= 1 << KPF_SLAB;
+@@ -215,7 +218,7 @@ u64 stable_page_flags(const struct page *page)
+ #if defined(CONFIG_PAGE_IDLE_FLAG) && defined(CONFIG_64BIT)
+ 	u |= kpf_copy_bit(k, KPF_IDLE,          PG_idle);
+ #else
+-	if (folio_test_idle(folio))
++	if (ps.flags & PAGE_SNAPSHOT_PG_IDLE)
+ 		u |= 1 << KPF_IDLE;
  #endif
  
-+#define PAGE_SNAPSHOT_FAITHFUL     (1 << 0)
-+#define PAGE_SNAPSHOT_PG_HUGE_ZERO (1 << 1)
-+#define PAGE_SNAPSHOT_PG_FREE      (1 << 2)
-+#define PAGE_SNAPSHOT_PG_IDLE      (1 << 3)
-+
-+struct page_snapshot {
-+	struct folio folio_snapshot;
-+	struct page page_snapshot;
-+	unsigned long pfn;
-+	unsigned long idx;
-+	unsigned long flags;
-+};
-+
-+static inline bool snapshot_page_is_faithful(const struct page_snapshot *ps)
-+{
-+	return ps->flags & 0x1;
-+}
-+
-+void snapshot_page(struct page_snapshot *ps, const struct page *page);
-+
- #endif /* _LINUX_MM_H */
-diff --git a/mm/debug.c b/mm/debug.c
-index 907382257062..7349330ea506 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -129,47 +129,13 @@ static void __dump_folio(struct folio *folio, struct page *page,
+@@ -241,7 +244,7 @@ u64 stable_page_flags(const struct page *page)
+ 	if (u & (1 << KPF_HUGE))
+ 		u |= kpf_copy_bit(k, KPF_HWPOISON,	PG_hwpoison);
+ 	else
+-		u |= kpf_copy_bit(page->flags, KPF_HWPOISON,	PG_hwpoison);
++		u |= kpf_copy_bit(ps.page_snapshot.flags, KPF_HWPOISON, PG_hwpoison);
+ #endif
  
- static void __dump_page(const struct page *page)
- {
--	struct folio *foliop, folio;
--	struct page precise;
--	unsigned long head;
--	unsigned long pfn = page_to_pfn(page);
--	unsigned long idx, nr_pages = 1;
--	int loops = 5;
--
--again:
--	memcpy(&precise, page, sizeof(*page));
--	head = precise.compound_head;
--	if ((head & 1) == 0) {
--		foliop = (struct folio *)&precise;
--		idx = 0;
--		if (!folio_test_large(foliop))
--			goto dump;
--		foliop = (struct folio *)page;
--	} else {
--		foliop = (struct folio *)(head - 1);
--		idx = folio_page_idx(foliop, page);
--	}
-+	struct page_snapshot ps;
- 
--	if (idx < MAX_FOLIO_NR_PAGES) {
--		memcpy(&folio, foliop, 2 * sizeof(struct page));
--		nr_pages = folio_nr_pages(&folio);
--		if (nr_pages > 1)
--			memcpy(&folio.__page_2, &foliop->__page_2,
--			       sizeof(struct page));
--		foliop = &folio;
--	}
--
--	if (idx > nr_pages) {
--		if (loops-- > 0)
--			goto again;
-+	snapshot_page(&ps, page);
-+	if (!snapshot_page_is_faithful(&ps))
- 		pr_warn("page does not match folio\n");
--		precise.compound_head &= ~1UL;
--		foliop = (struct folio *)&precise;
--		idx = 0;
--	}
- 
--dump:
--	__dump_folio(foliop, &precise, pfn, idx);
-+	__dump_folio(&ps.folio_snapshot, &ps.page_snapshot, ps.pfn, ps.idx);
- }
- 
- void dump_page(const struct page *page, const char *reason)
-diff --git a/mm/util.c b/mm/util.c
-index 0b270c43d7d1..4de427d48116 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -25,6 +25,7 @@
- #include <linux/sizes.h>
- #include <linux/compat.h>
- #include <linux/fsnotify.h>
-+#include <linux/page_idle.h>
- 
- #include <linux/uaccess.h>
- 
-@@ -1171,3 +1172,74 @@ int compat_vma_mmap_prepare(struct file *file, struct vm_area_struct *vma)
- 	return 0;
- }
- EXPORT_SYMBOL(compat_vma_mmap_prepare);
-+
-+static void set_flags(struct page_snapshot *ps, const struct folio *folio,
-+		      const struct page *page)
-+{
-+	if (is_huge_zero_folio(folio))
-+		ps->flags |= PAGE_SNAPSHOT_PG_HUGE_ZERO;
-+	if (folio_ref_count(folio) == 0 && is_free_buddy_page(page))
-+		ps->flags |= PAGE_SNAPSHOT_PG_FREE;
-+	if (folio_test_idle(folio))
-+		ps->flags |= PAGE_SNAPSHOT_PG_IDLE;
-+}
-+
-+/*
-+ * Create a snapshot of a page and store its struct page and struct folio
-+ * representations in a struct page_snapshot.
-+ *
-+ * @ps: struct page_snapshot to store the page snapshot
-+ * @page: the page we want to snapshot
-+ *
-+ * Note that creating a faithful snapshot of a page may fail if the page
-+ * compound keeps changing (eg. due to folio split). In this case we set
-+ * ps->faithful to false and the snapshot will assume that @page refers
-+ * to a single page.
-+ */
-+void snapshot_page(struct page_snapshot *ps, const struct page *page)
-+{
-+	unsigned long head, nr_pages = 1;
-+	struct folio *foliop, folio;
-+	int loops = 5;
-+
-+	ps->pfn = page_to_pfn(page);
-+	ps->flags = PAGE_SNAPSHOT_FAITHFUL;
-+
-+again:
-+	memcpy(&ps->page_snapshot, page, sizeof(*page));
-+	head = ps->page_snapshot.compound_head;
-+	if ((head & 1) == 0) {
-+		foliop = (struct folio *)&ps->page_snapshot;
-+		ps->idx = 0;
-+		if (!folio_test_large(foliop)) {
-+			set_flags(ps, page_folio(page), page);
-+			goto out;
-+		}
-+		foliop = (struct folio *)page;
-+	} else {
-+		foliop = (struct folio *)(page->compound_head - 1);
-+		ps->idx = folio_page_idx(foliop, page);
-+	}
-+
-+	if (ps->idx < MAX_FOLIO_NR_PAGES) {
-+		memcpy(&folio, foliop, 2 * sizeof(struct page));
-+		nr_pages = folio_nr_pages(&folio);
-+		if (nr_pages > 1)
-+			memcpy(&folio.__page_2, &foliop->__page_2,
-+			       sizeof(struct page));
-+		set_flags(ps, foliop, page);
-+		foliop = &folio;
-+	}
-+
-+	if (ps->idx > nr_pages) {
-+		if (loops-- > 0)
-+			goto again;
-+		ps->page_snapshot.compound_head &= ~1UL;
-+		foliop = (struct folio *)&ps->page_snapshot;
-+		ps->flags = 0;
-+		ps->idx = 0;
-+	}
-+
-+out:
-+	memcpy(&ps->folio_snapshot, foliop, sizeof(struct folio));
-+}
+ 	u |= kpf_copy_bit(k, KPF_RESERVED,	PG_reserved);
 -- 
 2.49.0
 
