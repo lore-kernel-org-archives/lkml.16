@@ -1,101 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward101a.mail.yandex.net (forward101a.mail.yandex.net [178.154.239.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8FD23B62A;
-	Thu, 26 Jun 2025 07:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464C1192B90
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 07:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750923001; cv=none; b=svCqhcKJfGCE13m9WG2TnyTzcexa5R6wkjbXoSa/gRe88EkBsqJGLCFNVdhQ5CHi3AUGPYvJ7NtC0sBXNufAhA+IgSo1EAwJ5X9TeuA94zpmZjU6XiZIlhIyKUr6jYVXIPBVsUDO1u8Ryb/PzVw4WI+VgON2rrKi3tC+Fs/Dtw0=
+	t=1750923115; cv=none; b=DxA8tCsOZfNWuwKMQHkqT+IrkbxDFCu4CkyyiMQu1pw9Mrk+KzM1MZwL5dkdy/SPHk4zhJvN90VeX1sfskk8osTkBKZwBkhAyc9ZS7tZR2lu4iZp/822RkeF7ZXdYhyRRV7TqTdwK8T5gygMm+Xg90sW8zjNCW6mIjYUAd6wDTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750923001; c=relaxed/simple;
-	bh=USPecJ+fVgr0c6joAtvhKAAbQeCia+AOGrJmMy5S67s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Smqi/BNKF43zjBh3vO5viv+eQIIGfIsay1Lc2A4jBNIQKVoxHltUROjkT0dH6augKxsJajrp0jiTU+eoZ54b/C5H3GK1SoLI+XvtmufgvuXwe7RipED/wgng9AXWsuJgtaN0DZeD8BeOrqJ0L61NSljMgvmOPFea0OJkbngv7Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zOz4Dkoa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750923115; c=relaxed/simple;
+	bh=DzShWGsiCFTrhG795YY2CzC9oV+TFQYhXZg84VvmGYQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s3qFYMJdUQKkXmVlUAZjIavj4C9AJVT6bQmVkHib+uvpZNol06ll3ONeUcMkBGJMpwCOC2elkntn9UejpA1svIo/khm/X4E18lqhLJBCDxO++5nNyPCtarMD0uEYnI2NV9Nto0NTeQulJPLxYtBfoRTOCqMrMyVtXnH5Oov7l2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=oUfsYCq9; arc=none smtp.client-ip=178.154.239.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zOz4Dkoa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C99F2C4CEEB;
-	Thu, 26 Jun 2025 07:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750923001;
-	bh=USPecJ+fVgr0c6joAtvhKAAbQeCia+AOGrJmMy5S67s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=zOz4DkoaO1jWxTi1g8gxaqhuZFjhE58S2mC08ZOo65kPh8SCcNbP/rKvuW+4l78g8
-	 fgF47yIEpADGouZPK6Z7LTVUYQyBDzVmeDDL6Vm0wv4U9fLCT3zHF2wkC5oa81G/us
-	 oM69Ad7pj8HIncudOUeIlD2SyDqSz8kzL4dfsMlo=
-Date: Thu, 26 Jun 2025 08:29:58 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Cc: stable@vger.kernel.org, Jeff Johnson <jjohnson@kernel.org>,
-	linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Gregoire <gregoire.s93@live.fr>,
-	Sebastian Reichel <sre@kernel.org>,
-	Baochen Qiang <quic_bqiang@quicinc.com>,
-	Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH ath-next 0/2] wifi: ath12k: install pairwise key first
-Message-ID: <2025062637-facsimile-chatter-f87a@gregkh>
-References: <20250523-ath12k-unicast-key-first-v1-0-f53c3880e6d8@quicinc.com>
- <aFvGnJwMTqDbYsHF@hovoldconsulting.com>
- <2d688040-e547-4e18-905e-ea31ea9d627b@quicinc.com>
- <e23d7674-31cd-4499-9711-6e5695b149c6@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="oUfsYCq9"
+Received: from mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0d:4d14:0:640:55f0:0])
+	by forward101a.mail.yandex.net (Yandex) with ESMTPS id C37E160E57;
+	Thu, 26 Jun 2025 10:31:42 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id fVPJVTiLeeA0-5UqhBIxu;
+	Thu, 26 Jun 2025 10:31:42 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1750923102; bh=QZ/6fF8uaLS8LItjh0X1JxYDuz3QBRHtBeKdW7mgNSY=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=oUfsYCq9wYFyFUsF2XGsKlwquJpoVuMhxGh76I0NzYQRL/nyuaMxi67bJ6k+5kMvn
+	 U1XDEH0Y/SUTHP1XWrsPuZ7+4ShLa6IItR2wPwUaRaOjflqqWwg45gwHWmXKMkb+CV
+	 vxFZvJDuk8Y+pAYgb03tlh9I0vOMYomynBG2WVNs=
+Authentication-Results: mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Carlos Llamas <cmllamas@google.com>
+Cc: =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>,
+	Martijn Coenen <maco@android.com>,
+	"Tiffany Y . Yang" <ynaffit@google.com>,
+	linux-kernel@vger.kernel.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH 1/2] binder: use kstrdup() in binderfs_binder_device_create()
+Date: Thu, 26 Jun 2025 10:30:53 +0300
+Message-ID: <20250626073054.7706-1-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e23d7674-31cd-4499-9711-6e5695b149c6@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 25, 2025 at 07:48:54AM -0700, Jeff Johnson wrote:
-> On 6/25/2025 3:15 AM, Baochen Qiang wrote:
-> > 
-> > 
-> > On 6/25/2025 5:51 PM, Johan Hovold wrote:
-> >> [ +CC: Gregoire ]
-> >>
-> >> On Fri, May 23, 2025 at 11:49:00AM +0800, Baochen Qiang wrote:
-> >>> We got report that WCN7850 is not working with IWD [1][2]. Debug
-> >>> shows the reason is that IWD installs group key before pairwise
-> >>> key, which goes against WCN7850's firmware.
-> >>>
-> >>> Reorder key install to workaround this.
-> >>>
-> >>> [1] https://bugzilla.kernel.org/show_bug.cgi?id=218733
-> >>> [2] https://lore.kernel.org/all/AS8P190MB12051DDBD84CD88E71C40AD7873F2@AS8P190MB1205.EURP190.PROD.OUTLOOK.COM
-> >>>
-> >>> Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
-> >>> ---
-> >>> ---
-> >>> Baochen Qiang (2):
-> >>>       wifi: ath12k: avoid bit operation on key flags
-> >>>       wifi: ath12k: install pairwise key first
-> >>
-> >> Thanks for fixing this, Baochen.
-> >>
-> >> I noticed the patches weren't clearly marked as fixes. Do you think we
-> >> should ask the stable team to backport these once they are in mainline
-> >> (e.g. after 6.17-rc1 is out)? Or do you think they are too intrusive and
-> >> risky to backport or similar?
-> > 
-> > Yeah, I think they should be backported.
-> > 
-> >>
-> >> [ Also please try to remember to CC any (public) reporters. I only found
-> >>   out today that this had been addressed in linux-next. ]
-> > 
-> > Thanks, will keep in mind.
-> 
-> +Stable team,
-> Per the above discussion please backport the series:
-> https://msgid.link/20250523-ath12k-unicast-key-first-v1-0-f53c3880e6d8@quicinc.com
+In 'binderfs_binder_device_create()', use 'kstrdup()' to copy the
+newly created device's name, thus making the former a bit simpler.
 
-<formletter>
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+---
+ drivers/android/binderfs.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
+diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+index 024275dbfdd8..4f827152d18e 100644
+--- a/drivers/android/binderfs.c
++++ b/drivers/android/binderfs.c
+@@ -117,7 +117,6 @@ static int binderfs_binder_device_create(struct inode *ref_inode,
+ 	struct dentry *dentry, *root;
+ 	struct binder_device *device;
+ 	char *name = NULL;
+-	size_t name_len;
+ 	struct inode *inode = NULL;
+ 	struct super_block *sb = ref_inode->i_sb;
+ 	struct binderfs_info *info = sb->s_fs_info;
+@@ -161,9 +160,7 @@ static int binderfs_binder_device_create(struct inode *ref_inode,
+ 	inode->i_gid = info->root_gid;
+ 
+ 	req->name[BINDERFS_MAX_NAME] = '\0'; /* NUL-terminate */
+-	name_len = strlen(req->name);
+-	/* Make sure to include terminating NUL byte */
+-	name = kmemdup(req->name, name_len + 1, GFP_KERNEL);
++	name = kstrdup(req->name, GFP_KERNEL);
+ 	if (!name)
+ 		goto err;
+ 
+-- 
+2.50.0
 
-</formletter>
