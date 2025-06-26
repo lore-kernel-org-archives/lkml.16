@@ -1,233 +1,150 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1302EB5DF
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 17:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8B2339A8;
+	Thu, 26 Jun 2025 17:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750959887; cv=none; b=LigiHK4XUBOhfYyHtoAR233ruq6pt7mt9P17EDvrgtf7FMdIm1EIey7vkGuP7xhpsgLyptqSs6bGqEMtEH2afxIK0p7fC30Dfq9pshM1zBUY8eLfdGEVwVrDvLg2Na537poHAs5gs4SX6s4Bx0EjafAwdHBIAB+tOMW8aZnReIY=
+	t=1750960111; cv=none; b=QjZ0dtVh8lWZwu5+k1ongWwP1l29p7wJ5imWaskZfpKATGBcSLCICF7oedDAdBBPOdvwVFovzPuNxYrKfFEkHBa5fwhCFj2gWH/8eGCqkpBG9d3vVgijJOfxyNJEjwI6wQCqRh51YIpsJXXFPrS50ueuJrCPzJBu1yQLMhy/S/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750959887; c=relaxed/simple;
-	bh=zqUO0sW+cNaKMWzNEDMI98mGQvarDe1iRGXhZ+Veqss=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TND+CRfpzLDCv3Dg+7WcO6AOM0t7+UinXgflensaZ7j0qpIIxjCq6/kT2DYPuJv9v0XI/wE5v5Pd3JcY/JzrHNyLAPfr/ocQt/Eua2RHayIzr7Us+7gGebQbdGxxLhY0EadykDv50BZ1px9YYeVmnrifkBQKuTyyaUKHJnPjm5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FBCtn/ro; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750960111; c=relaxed/simple;
+	bh=LRec7XG15yYVqYXD4V+rr6o+ySekVyH57ZR0Z7yirGE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iOkMJMOVfgbDrXQgEYX4MMn3UvlI2PDOiLVZpY4bMe95NLRXIiOC8DVZ3E24iPrXRQY7rgYbn/s6mM+poELCDMBUUfu3Hu89wPW03hhN9czx9ikoZzNBDMRXEKjBs/5rBtQsUyGd2ZyEi1DhqRL8B7DWHAO2/xWiNQS+fKEzrug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GFtVBfcY; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FBCtn/ro"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3138b2f0249so1176591a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:44:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFtVBfcY"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4536b8c183cso8603985e9.0;
+        Thu, 26 Jun 2025 10:48:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750959885; x=1751564685; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=awzZr2qt61hMaORaAhilI11J4L+Y4ATtUQ36+lUSj4E=;
-        b=FBCtn/ron0kYEA+/6EO/VYIzRzGisMQFV58vimNt/6bM7W6wxjx6gsubpxGhEKkJVL
-         T3AVg4enXNe1axnDBJE95/1riYSFdrUdzhjd/EsBEb7A57vx+K/rV6Zk/gqydGcMFud9
-         Li7bz+8ejPqwGbf0QM7/X9SDwS1HHImJP08nlgtaTW6ibxssJAobas8tLvE5qTVK3gcj
-         qV1lRcSQBMOuE+3Dl2y1uUT960/ZxGaCDNCghHvOJ6mtZPQ7uYzfwNbQb70Gjwt3JlES
-         CgPvqUFRYw/TEuqtj3HpKKqKRCGmFF6v4Spl/EzrqdfS2fvSSrEB10KbSoe6/0y1tZwa
-         b8Fg==
+        d=gmail.com; s=20230601; t=1750960108; x=1751564908; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=d4IQo3oY1NUbU13/kHA6jBPwbWfvABXBa/vUplEI8Dw=;
+        b=GFtVBfcY84Mb2yshMniEEk1Ri3iAEBSQ5IB/wjYQvJXN+rB06D5AQTj8fvOL6wwxj5
+         v8gwkfOOApiSVNi+E0E7196UcKcLChsbtzlYab/CvCYR2Ffec9nNmlN4Xk4EnbkiHCyv
+         t3qH46m/YQccqMUS5ao/v22DFSNe3CUzIhdacv3JE2zz6WKKqnsBOw1gf6dFggfASAuc
+         iwsRriGnBQkDMYQQ0A+h2D2c69Fc6vIG4TFbG+PnqsuvsEOpLPLGl38dOYfiwDrRn40i
+         lT1ZqgMQqzaXQlDxNJkJ9y2jpHSxJtegFADALh1D3CZD1+fJhp/DZdntoi/qh0GaJpAJ
+         rwSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750959885; x=1751564685;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=awzZr2qt61hMaORaAhilI11J4L+Y4ATtUQ36+lUSj4E=;
-        b=dXARvsxbJqKxHxrsdzG6WF+OfZv/Vp5izGKsMzTEcpvdK92N+IFYn8yp811Sz3rc+j
-         VU13wuQUN9A8h6uBQkGtQO9XxGFsD02JUzS7ogj6kjtegQrZJfwyKKdo1YYvIGLnZZHr
-         bZu7AybEh0U03UH08lx9/KrKr6YnfR5uoIOeuhH82phfeOlRIY57XGy0egpaon4EppwD
-         x+QaK8bSTtQIn34THbPWQtstDaLic05FPi2fPHVRGtkmKko/muZHvyj+MsA8rvO+gMzG
-         Je0pvHtLD6r3/5PuNul5sK68fJU+rSc6cwzV87pe9XXrdrTq/f0/5nvlgYW8+qrVQ4gZ
-         sNjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8DzvGutAwxd4WmRk0GO+5p5HZzkLcsHmCraM4XAbekgE6ry7YeAPFIi2IuBhr6pABoKYpX19l2EyeSXM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGumT7/pN2mB7dM5nxyHOuqQUxfXAB6nJ5EA+5VHrHfoagYh/P
-	Odn6YcEo21A0M42LfUv5mv/8/pG2G+pRV8a2Acys4lFkqpUWBa+6XaVV7a70oaQerrMZ2HqfrNi
-	jdd/AktXO38Yn2EIIjMUfWsz3rIoHb7ZsL3DWVDpyBg==
-X-Gm-Gg: ASbGncuKMksKCfBSKoNfq7PpKyKDi44SY3n4vU7dq9iO6C0cRuf3vQIehsYRjq3nKKE
-	TzN5g1OBVn5vWDgXqKAnwsBHcWPQVW0TzJ0ibmgsMTU/d34BHhIEQzzAEx/SCvceKpR9Uq+2Hh4
-	F3d3gi2pAd+b/cFih98uoDLCRprL56fu+1uPAqUjKg4R130a1GsZtdOlSxo8+ZTk5At5M45QWjB
-	Py8
-X-Google-Smtp-Source: AGHT+IEFPPEqV7DtiqEA1oE1/fKrctRNlSpnteTT9tcvCUfZIlkuK+VPMsW7r1iS1qPSXO31ZrE+Ng7a60BAXQEdGNk=
-X-Received: by 2002:a17:90b:3cd0:b0:311:d258:3473 with SMTP id
- 98e67ed59e1d1-316158cc4d5mr6717061a91.13.1750959885262; Thu, 26 Jun 2025
- 10:44:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750960108; x=1751564908;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d4IQo3oY1NUbU13/kHA6jBPwbWfvABXBa/vUplEI8Dw=;
+        b=LIetQ9111AigcSL1GcKzrqYLQK9FJMh2/TaaIZeQkE3VD7BpUn5CHUY33YLWPlAOXZ
+         8oiKHLzwC3P1fszf3WSHHB/FOYk0+EW5OhOX6OTCnxkLXoM9zSlX+GJr6Fn1xSp5sjtr
+         EQhroDMVMi/pEUrmsdgxhFK2vjBT564l4/dBtKY7t74gVUXRSddu85Py1oQkNc7s9DOY
+         YTaFro9FMn1163osMA1aUENlUzRG3Oca+3q+V3rWdzhy2AuiNxER5opC0uyWXI6dR6jC
+         wyPmFd/6904cgfb8CYbz/0A3vBuogco6KBOY835uHQboNtY9/T1N77FGlZ9XXU8kjOij
+         J78Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVc3G1CVwrjcM+fUNlHBw1wJgTMATUvsxT3hsu4AXZ93vBTAgRRcby/lXpP1RM/3CqPbAIjh76PATs=@vger.kernel.org, AJvYcCVsgCjsud+BcU9dOeua9+V94YGFmSge+uCQpKAI0PrKumn1UNtvu8rka4m4XrpleguqCSgunfaZdg5PPMap@vger.kernel.org, AJvYcCW/WOCxVKMgsG/6xbK+aaZopeqBFMH/Qxj2Ds9mzSMvxgxn5z+n//jBtSyqcyT5q3eap9OKdRVYqYn7yDTkI60=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7E2XUXsTw8rV9+B9FH3brXJXHVd6SFznvSe0QTVNxQJiktxqK
+	afiU+S4COeCL1kHEkr5XpD2sJOzvyTu2qrFPURKl15YLyfjZMmQu7T7w
+X-Gm-Gg: ASbGncvreEv+iHLtvUcRFAi3fyjo+fHbUuyr7+L9g92puySrlxQ5Dmtbekd3qlOt26V
+	O4aG9wsHDWo9O18Htd3WTFqrSTfZ6Q8ZCWdPpwHLvnywQlJ7ZVJ9Q6tJMPzXWOapIGjgsqGgq3N
+	Y+dEKZiWnmuUs+ZAlIIFV2vtAUfDsuAcBJcSMZpUteK75h2EjVaktISqFHOoV7b+CtLvCgyeyM2
+	ORStPigmfSYf0LCZtEIxmzWwM+p5+wrdIaSRcjTTDzdBh/cHdFlmub9rym2GvWEpaEU6Xxqeqm8
+	+oxiZW9EWhH9L2dNWlWRX9VcE7Yu4szW1Ws0jW/gz7/B6ggjARfv+DLTJQsvrLI8V4BbAqL/jqx
+	9A9FH7ABsgKpfjgOzSI/fqx0WwvnrGc9Mef45
+X-Google-Smtp-Source: AGHT+IEtQQDsCtrX7XpvEE3Zm7CcK8+iP9f0fNFYFZWyY02phYTfFomN9ziJ0aLLcUwjE6mDiO8Wzw==
+X-Received: by 2002:a05:600c:8b41:b0:442:f904:1305 with SMTP id 5b1f17b1804b1-4538901ec48mr49592805e9.6.1750960107401;
+        Thu, 26 Jun 2025 10:48:27 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52c2esm494455f8f.53.2025.06.26.10.48.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 10:48:26 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Asahi Lina <lina+kernel@asahilina.net>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: [PATCH v1 0/4] rust: Add basic I2C driver abstractions
+Date: Thu, 26 Jun 2025 18:46:22 +0100
+Message-ID: <20250626174623.904917-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626105243.160967269@linuxfoundation.org>
-In-Reply-To: <20250626105243.160967269@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 26 Jun 2025 23:14:33 +0530
-X-Gm-Features: Ac12FXycaF7oeRJLnS3XeYXVpdhngxsyXODthsn8k9cqqTJDz0BHwpoRhfHoX6U
-Message-ID: <CA+G9fYunftA3YqTxm-2GMN1fpQ_PVviBpDOnGznUo4YSW9pmSA@mail.gmail.com>
-Subject: Re: [PATCH 6.15 000/589] 6.15.4-rc3 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 26 Jun 2025 at 16:26, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.15.4 release.
-> There are 589 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 28 Jun 2025 10:51:38 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.15.4-rc3.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+This patch series introduces basic Rust I2C driver abstractions 
+and optional ACPI match-table support and provides a sample driver 
+demonstrating both OF and ACPI binding
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Currently Rust I2C abstractions support only Open Firmware OF device 
+matching. This series splits the work into four patches so that the 
+core abstractions and sample driver can land immediately while ACPI 
+integration may be reviewed once the ACPI macros are upstream
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Changes include
+ - core I2C abstractions `i2c::Device` `i2c::Driver` `i2c::Adapter` 
+   built on `struct i2c_client` and `struct i2c_driver`
+ - a standalone Rust sample driver exercising Legacy I2C ID and OF ID
+   matching
+ - optional ACPI ID-table support in the `i2c::Driver` abstraction
+ - ACPI-enabled sample driver showing `kernel::acpi_device_table!` 
+   usage
 
-NOTE:
-The reported regressions on 6.15.4-rc1 / rc2 LTP syscalls readahead01 has
-been fixed on this 6.15.4-rc3.
+This separation lets maintainers review and merge the non-ACPI portions
+immediately while patches 3 and 4 both depending on the ACPI 
+infrastructure can be queued once the ACPI macros are upstream
 
-## Build
-* kernel: 6.15.4-rc3
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: d93bc5feded1181a1f0de02e38b4634a7a76b549
-* git describe: v6.15.3-590-gd93bc5feded1
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.15.y/build/v6.15=
-.3-590-gd93bc5feded1
+Patch series:
 
-## Test Regressions (compared to v6.15.1-816-gd878a60be557)
+1 rust: i2c: add basic I2C device and driver abstractions
+2 samples: rust: add I2C sample driver (OF only)
+3 rust: i2c: support ACPI match-table in driver abstractions
+Depends-on: 20250620152425.285683-1-igor.korotin.linux@gmail.com
+4 samples: rust: show ACPI ID-table in I2C sample driver
+Depends-on: 20250620152425.285683-1-igor.korotin.linux@gmail.com
 
-## Metric Regressions (compared to v6.15.1-816-gd878a60be557)
+Igor Korotin (4):
+  rust: i2c: add basic I2C device and driver abstractions
+  samples: rust: add Rust I2C sample driver
+  rust: i2c: ACPI ID-table support for I2C abstractions
+  samples: rust: show ACPI ID-table in I2C sample driver
 
-## Test Fixes (compared to v6.15.1-816-gd878a60be557)
+ MAINTAINERS                     |   3 +
+ rust/bindings/bindings_helper.h |   1 +
+ rust/helpers/helpers.c          |   1 +
+ rust/helpers/i2c.c              |  15 ++
+ rust/kernel/i2c.rs              | 386 ++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs              |   2 +
+ samples/rust/Kconfig            |  11 +
+ samples/rust/Makefile           |   1 +
+ samples/rust/rust_driver_i2c.rs |  69 ++++++
+ 9 files changed, 489 insertions(+)
+ create mode 100644 rust/helpers/i2c.c
+ create mode 100644 rust/kernel/i2c.rs
+ create mode 100644 samples/rust/rust_driver_i2c.rs
 
-## Metric Fixes (compared to v6.15.1-816-gd878a60be557)
 
-## Test result summary
-total: 270887, pass: 246235, fail: 6441, skip: 18211, xfail: 0
+base-commit: 63dafeb392139b893a73b6331f347613f0929702
+-- 
+2.43.0
 
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 139 total, 137 passed, 2 failed
-* arm64: 56 total, 56 passed, 0 failed
-* i386: 18 total, 18 passed, 0 failed
-* mips: 33 total, 27 passed, 6 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 40 total, 39 passed, 1 failed
-* riscv: 25 total, 25 passed, 0 failed
-* s390: 22 total, 22 passed, 0 failed
-* sh: 5 total, 5 passed, 0 failed
-* sparc: 4 total, 3 passed, 1 failed
-* x86_64: 49 total, 49 passed, 0 failed
-
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-rust
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* lava
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* modules
-* perf
-* rcutorture
-* rt-tests-cyclicdeadline
-* rt-tests-pi-stress
-* rt-tests-pmqtest
-* rt-tests-rt-migrate-test
-* rt-tests-signaltest
-
---
-Linaro LKFT
-https://lkft.linaro.org
