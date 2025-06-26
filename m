@@ -1,89 +1,86 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03E286338;
-	Thu, 26 Jun 2025 06:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86861DA21
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750918540; cv=none; b=gWDH+PmvS0W9EQpQQB21/wP9/7d7VldSzJkf60zNSWUo01D4qFkh7zc15CcthyKlLz73N68Qd6bA7ZMn6zBXXG8VbnXVBMAjVEPbzn0TjWQYbMjJ2RRocz/TwAGkzbn23QwJ713VT69q8QMUh4r3kPD2uxGvklzhv4ldiMlZoxs=
+	t=1750918603; cv=none; b=GjmcgdZIeIa1z7vPHgiZnToAXiUxnBJ16+RgSKvktaZVI+78cH5/FZ8wHyOd8sfOZ01sAZAkimExoVS/klsoDpkD8q7NCw5wpSUs+PMua0HIQDa1AcweOp9VBokuOh0mprtp5XSdRpyLmxrhvuiUdmvhuPP9fUJsRME//8pHhTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750918540; c=relaxed/simple;
-	bh=tVaFi0QQFxJOCGxz5I04EMMBBFJ2MuDd2QlikpakzeY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KBTV3MrjBUXRFXkhpT/yoKUcXb+gP9Gfbu5TdX0fjt5Tr+VDMFc6N86dTyQRuKu9fPZBGN3J+PY90WMdX5wsJoiNZ8252V4XtM/GWYYENT4GBMTg8wjMhM+7gqG/KZpv9fSypFbHkIVhiK+eguDZms7hXeTBQ251Xwumj+NIYPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=MmymMmnG; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750918603; c=relaxed/simple;
+	bh=fuoGu97eAgoG12hIFzrfKG97BbKGChXg/c7x5aY12vM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hFv52NJ68DiWY7r6eXmOpPSzoUDj9Lu249sFuK+epdUyazd+UCLPzrLqnjVdsnEtu09CJx3wyGvRAnqbL2a6aua2e6kOTJUVV/tR8+P31DGhNKDtWvpzeTtmikFwpI2Dg2WoPE4wSTxwjplxtZYIV2XWIAdmkZ5vAe4S7i450k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N3oZMM4Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MmymMmnG"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55Q6FU9O1658138;
-	Thu, 26 Jun 2025 01:15:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750918530;
-	bh=BrnBb1u8+xN0axh7RXZF3RUvtezK1itX/RvwUC1NtH0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=MmymMmnGVpx24An7rZMbUABpApdcdUpdAEwaML+iE+J6pD7A0v+z94gmACWgZ14ru
-	 /b8yCIO+YqaP694skNPA7oxeyieA/GGQU9717Qa+YJbXAggSjOc8hb7sqK9iDFlkck
-	 FGmDP88Mr680fn+E60tZtNqrVjGJA1WYcIbCLIsE=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55Q6FU5X1980491
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 26 Jun 2025 01:15:30 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 26
- Jun 2025 01:15:29 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Thu, 26 Jun 2025 01:15:29 -0500
-Received: from [172.24.227.245] (uda0132425.dhcp.ti.com [172.24.227.245])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55Q6FQpk506594;
-	Thu, 26 Jun 2025 01:15:26 -0500
-Message-ID: <0d81594f-ad1a-4c65-a00a-9c97c8b01a65@ti.com>
-Date: Thu, 26 Jun 2025 11:45:26 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N3oZMM4Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99AADC4CEEB;
+	Thu, 26 Jun 2025 06:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750918602;
+	bh=fuoGu97eAgoG12hIFzrfKG97BbKGChXg/c7x5aY12vM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N3oZMM4ZUryM+NWt20jGXzXKvGfjVDoz+yueLUhKXe+3lJLuSTZuDMoY052P9qBA8
+	 Y+AcU81iRknabJE7sltgipL2gjLpuek7v9Vi7RQUFkZe774mM6e/dibCRDkFeG011j
+	 PkGvpzdA/P6eyuTxR++8njHS3KjlpwQeQ/cmJjLhyC+c464uDroO2I8RPr2aWYpngs
+	 Qs0MsLYlxogA6kPcnlhnyhKd8uZGBif+uyqRwEWaoHraw2LyRqcLCFeYQGGU7vHWyE
+	 OeTzcNNaSEWdUgZVcyifa0OsjTRvvh9L9QjcXYWj1S4qjdsgcpKFsGlCCoJMEwUCac
+	 BMKVNji4J9vEA==
+Date: Thu, 26 Jun 2025 09:16:37 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-kernel@vger.kernel.org, Steve Wahl <steve.wahl@hpe.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Subject: Re: [PATCH] sched/topology: Correct "sched_domains_curr_level" in
+ topology_span_sane()
+Message-ID: <20250626061637.GF17401@unreal>
+References: <20250624041235.1589-1-kprateek.nayak@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/7] Add DSI display support for TI's Jacinto platforms
-To: Jayesh Choudhary <j-choudhary@ti.com>, <nm@ti.com>,
-        <devicetree@vger.kernel.org>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devarsht@ti.com>, <u-kumar1@ti.com>
-References: <20250624082619.324851-1-j-choudhary@ti.com>
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Content-Language: en-US
-In-Reply-To: <20250624082619.324851-1-j-choudhary@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624041235.1589-1-kprateek.nayak@amd.com>
 
-
-
-On 24/06/25 13:56, Jayesh Choudhary wrote:
-> Hello All,
+On Tue, Jun 24, 2025 at 04:12:35AM +0000, K Prateek Nayak wrote:
+> The updated topology_span_sane() algorithm in commit ce29a7da84cd
+> ("sched/topology: Refinement to topology_span_sane speedup") works on
+> the "sched_domain_topology_level" hierarchy to detect overlap in
+> !SDTL_OVERLAP domains using the tl->mask() as opposed to the
+> sched_domain hierarchy (and the sched_domain_span()) in the previous
+> approach.
 > 
-> This series adds the dts support to enable DSI on 3 platforms for TI SoCs:
-> - J784S4-EVM
-> - J721S2-EVM
-> - AM68-SK
+> For NODE domain, the cpumask retunred by tl->mask() depends on the
+> "sched_domains_curr_level". Unless the "sched_domains_curr_level" is
+> reset during topology_span_sane(), it reflects the "numa_level" of the
+> last sched_domain created which is incorrect.
 > 
-> Relevant driver fixes, CDNS-DSI fixes[0] and SN65DSI86 detect fix[1]
-> are Reviewed and Tested.
-> 
+> Reset the "sched_domains_curr_level" to the "tl->numa_level" during
+> topology_span_sane(). Although setting "topology_span_sane" to 0 in
+> topology_span_sane() should be enough since all domains with
+> numa_level > 0 currently set SDTL_OVERLAP flag, setting it to
+> "tl->numa_level" makes it more explicit and future proof against changes
+> in the same area.
 
-Are these merged?
+<...>
 
-[...]
+> Changes are based on tip:sched/urgent at commit 914873bc7df9 ("Merge tag
+> 'x86-build-2025-05-25' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip")
+> ---
+>  kernel/sched/topology.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
--- 
-Regards
-Vignesh
-https://ti.com/opensource
+Sorry for the delay, we had internal issues with our verification cloud :(.
 
+Thanks
