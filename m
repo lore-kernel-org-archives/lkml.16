@@ -1,135 +1,65 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8140218AAA;
-	Thu, 26 Jun 2025 09:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BFD1DF99C;
+	Thu, 26 Jun 2025 09:07:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750928802; cv=none; b=O3QnjN/k2NylH4uF6W48OVaX/j7SGt4VyJgzUuEshhin/OBP+8lNdbnHlzOlfMXnWEAyTjUzQDwLHnIMF2NCUGsVqT5AL8JqbP2jyPN0NaclYsTZ/NlClLGleUMt4DnQzzvBGQhVHpQGOlxpa10aCgpUfJePenvd9Tr8VovzJLU=
+	t=1750928878; cv=none; b=kU4ibmKTOZTleavoJIeDPaKwuhkkkjhUWf1VHSb4Gxni51BrXTcOL8jxcaUxABk0PZolRvwgskRd7L3mon18IA8VoO3oL5f41sox4RjpdAlo23G658+EsJj9FvlQAjbR2Py8qTJOYbqkuWCn7RU5A3/3XOe2UE0Sdd2nU/CyP20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750928802; c=relaxed/simple;
-	bh=tG/5cNlLK/kXqFJS1cRXWXvsOfAAbi28sGdlXX21KZ8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fj9xw2GWPBYelWDZDQulsXSH2SEFiwMgDJx6atlr/Z3ZoW3RfNvRdMwU2TmRdQh7pX8F9hT8y94ms8cDdNqO0jijR/2BtvKT+VZKAFxc0MopytqtI8O+Lv7nXR/cF5+CK+lnphD610TbhBY+M/yu8QTy1XZDKHjEbo+E5aB4n24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Ua/0wZiz; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1750928878; c=relaxed/simple;
+	bh=cMWzftq2K/LlrUV3h0r8T99wGbmF4Fb85mw7RkXt0vw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=THYtvFL8rmPDN9OzjfYInXdnOA3wVkhFdUlPc/1H/pci7++XoFYahEUbMaVhxKeJBbduUoL0tXLqjHsC0RJxwCD2806P2bfSpq+ui4xLfuEod4BJCmdtCBGz7Smp0Rnh86hBPWydnra9YZ83rmmO8mcXwzg3qYDyKD3EayDDoVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sDSYdLmE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Ua/0wZiz"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q8TXu5002736;
-	Thu, 26 Jun 2025 11:06:25 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	yzHnsmLTewRsBfKjcqS7Ovd/FClDc2H6W6if0kL0/KE=; b=Ua/0wZizeUaayLiM
-	sXZv4jngLUekGFY86nIQFCWLKslebcuvBKzdPrea+yMDtXzzxzxfyhX5LMbZRH+P
-	oOGTBIo9bXUT/cp/J6+IO77mhvsWjHXC6ZKvqXwUB/ogCZj11EQ+kN2PE3dqc9gz
-	RE0nKR6sNtNgyQf/PLFfA092pxu9hfeHkvHwIpWynI8puTlTi/K5dbd9CuVUo06m
-	8TazMhhD/mLbcgaqPMYVdja6IEsIM4QVwslyBxSK1q000NUQgrfHLF260QvrwVeY
-	yue7Q5r14Mqgvx90T+BPa5zALMXGv0HEjMXtSHHCx4om84GLlhcC7lYmoqdntUZK
-	ZFoV2Q==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dhvbwk1y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 11:06:24 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B3AA14002D;
-	Thu, 26 Jun 2025 11:03:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 241D0B2F98C;
-	Thu, 26 Jun 2025 11:03:03 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.130.77.119) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 26 Jun
- 2025 11:03:02 +0200
-Date: Thu, 26 Jun 2025 11:03:01 +0200
-From: Alain Volmat <alain.volmat@foss.st.com>
-To: =?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
-CC: Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
-        Andi Shyti
-	<andi.shyti@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Sumit Semwal
-	<sumit.semwal@linaro.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?=
-	<christian.koenig@amd.com>,
-        M'boumba Cedric Madianga
-	<cedric.madianga@gmail.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        "Pierre-Yves
- MORDRET" <pierre-yves.mordret@st.com>,
-        <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>
-Subject: Re: [PATCH 2/3] i2c: stm32f7: unmap DMA mapped buffer
-Message-ID: <20250626090301.GC348766@gnbcxd0016.gnb.st.com>
-References: <20250616-i2c-upstream-v1-0-42d3d5374e65@foss.st.com>
- <20250616-i2c-upstream-v1-2-42d3d5374e65@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sDSYdLmE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3770DC4CEEB;
+	Thu, 26 Jun 2025 09:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750928877;
+	bh=cMWzftq2K/LlrUV3h0r8T99wGbmF4Fb85mw7RkXt0vw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sDSYdLmEptJrfoQcOx/lqGIKc0ntZ9ZIyGHxOVOEZikIHNAQvC5UebB2f0C8eiFyp
+	 9lnP3lKWcG6yno50gX9t/DMcvnJMpWLpoDRKRFcgjTZdbo/agniDrU6zOXXB+EJQlg
+	 3HZ4EU+T43P1D2KeP5n5xQjsVlGLly0KNMZYD4iRGSYiNN+LBeqQWdBsd0kjMA41G4
+	 /Is3DJ4jzQ0n2wF/QJh9U4Zwab9kaL3tfPFagcDI5VO4X6SoZyRaOlv+TDtrlm4XL2
+	 skKQHL7yigDlapSgjg3I8tI3/T3nzpvafC28WlzD0VpV8dXbR1OedHFkpH9o0U6uEW
+	 k2XGo6ZcBbLQg==
+Date: Thu, 26 Jun 2025 10:07:53 +0100
+From: Simon Horman <horms@kernel.org>
+To: Fushuai Wang <wangfushuai@baidu.com>
+Cc: saeedm@nvidia.com, tariqt@nvidia.com, leon@kernel.org,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Zhu Yanjun <yanjun.zhu@linux.dev>,
+	Dragos Tatulea <dtatulea@nvidia.com>
+Subject: Re: [PATCH net-next v2] net/mlx5e: Fix error handling in RQ memory
+ model registration
+Message-ID: <20250626090753.GU1562@horms.kernel.org>
+References: <20250626053003.45807-1-wangfushuai@baidu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250616-i2c-upstream-v1-2-42d3d5374e65@foss.st.com>
-X-Disclaimer: ce message est personnel / this message is private
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_04,2025-06-25_01,2025-03-28_01
+In-Reply-To: <20250626053003.45807-1-wangfushuai@baidu.com>
 
-Hi Clément,
-
-thanks for the patch.
-
-On Mon, Jun 16, 2025 at 10:53:55AM +0200, Clément Le Goffic wrote:
-> Fix an issue where the mapped DMA buffer was not unmapped.
+On Thu, Jun 26, 2025 at 01:30:03PM +0800, Fushuai Wang wrote:
+> Currently when xdp_rxq_info_reg_mem_model() fails in the XSK path, the
+> error handling incorrectly jumps to err_destroy_page_pool. While this
+> may not cause errors, we should make it jump to the correct location.
 > 
-> Fixes: 7ecc8cfde553 ("i2c: i2c-stm32f7: Add DMA support")
-> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
+> Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
+> Acked-by: Dragos Tatulea <dtatulea@nvidia.com>
 > ---
->  drivers/i2c/busses/i2c-stm32f7.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-> index 973a3a8c6d4a..a05cac5ee9db 100644
-> --- a/drivers/i2c/busses/i2c-stm32f7.c
-> +++ b/drivers/i2c/busses/i2c-stm32f7.c
-> @@ -1622,6 +1622,8 @@ static irqreturn_t stm32f7_i2c_isr_event_thread(int irq, void *data)
->  		if (i2c_dev->use_dma) {
->  			stm32f7_i2c_disable_dma_req(i2c_dev);
->  			dmaengine_terminate_async(dma->chan_using);
-> +			dma_unmap_single(i2c_dev->dev, dma->dma_buf, dma->dma_len,
-> +					 dma->dma_data_dir);
->  		}
->  		f7_msg->result = -ENXIO;
->  	}
-> @@ -1642,6 +1644,8 @@ static irqreturn_t stm32f7_i2c_isr_event_thread(int irq, void *data)
->  				dev_dbg(i2c_dev->dev, "<%s>: Timed out\n", __func__);
->  				stm32f7_i2c_disable_dma_req(i2c_dev);
->  				dmaengine_terminate_async(dma->chan_using);
-> +				dma_unmap_single(i2c_dev->dev, dma->dma_buf, dma->dma_len,
-> +						 dma->dma_data_dir);
->  				f7_msg->result = -ETIMEDOUT;
->  			}
->  		}
-> 
+>  drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 
-Sounds good to me, however there might be an additional place to fix
-within the function stm32f7_i2c_handle_isr_errs:
-Could you also take care of the unmap in the error ITs handling ?
-
-Regards,
-Alain
-
-> -- 
-> 2.43.0
-> 
+Thanks for rebasing.
+This version applies cleanly and otherwise LGTM.
