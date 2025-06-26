@@ -1,81 +1,80 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4693725FA2A;
-	Thu, 26 Jun 2025 21:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE44238141
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750975002; cv=none; b=thRoG7co5v3+R9uImH8wv/8dekrAr8lP9jnQvXshZL6SLmmkCQnF2VMchF9NXUKqARSC50UX0PxBi4mqu/3eRgw/HzfUmF4JdwumEmbnM3+xgmb+IaH2uktZ1LvP60Mq9Vg+E+zJ6vnoylIaqX9wRr0AjE4wPoE5YzyuBE7+66M=
+	t=1750975029; cv=none; b=W4L+xeixd7VCV+fN7fzTlEqHQONsxcQS98Ktlwffg/r67IaXs/r7iQe1lDk3pBgN3BX0zriskhaStLsKGlYq1Ka2yCm7M4wjfFKVIxy9gCUWOj7BinpkrZc4YzLN+q4RJmc06peVs2ePqaxGIyt24sEE20DqnCOY7qmly/y+r6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750975002; c=relaxed/simple;
-	bh=w4LB5IVBoNq8vucSbKbHBP/jocVrfObuHVEudF1BwRs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ftuNpgSk/PArZJqN1ScyoFf9mfYdFO6re3wC7fpLWbx25JUKBB1D9w4H5DajKhdmethQ7MNEiWGVU8Wy7slfbGgD0XLtGyNfLf4xqoNBwWrQGxmC6aMDUcFVKBOg4pOjlgqYNrduQoEjzH++/e+I/m2dhx0s5O7lC3qsVARWEEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AAeP/cuK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vjAoGFqf; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AAeP/cuK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vjAoGFqf"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750974999;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RtgbyxoI+EsUygN4LGfgqt+wkR/WkYOJEHURHPuEX8E=;
-	b=AAeP/cuKKrxYrD8EJYdwaWAs5WFF4XtUXRfsrRthkMul3Kd7I+aV6Kqm7IwXZoId4Z8eIR
-	DNiS3CaEnrTcw/yKVQP6Uf8+tmF8EvmjSVek4ltsTUZygF/0soD6X05xdbOsSrekXebiJt
-	LvOtVlBSQ4uRYOucxDVI1Orf4SEdkpQhbtyKVkD1GUO7p5UzglVNibygu3JClLddLvL0jt
-	ByvtznSSPu8sot09sLqp2kPLDVQjPlJMNR+U6aM0nKKL6q8iJFWe0r7qqM/JwDMkNjIRek
-	3SMgyffOdWcPwnFurTmrsGnuqiwYNlXOQvlUXdhCt/pYGRZRjcMT4mqOXgJ5VA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750974999;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RtgbyxoI+EsUygN4LGfgqt+wkR/WkYOJEHURHPuEX8E=;
-	b=vjAoGFqfFnb4siZ0WHDWTTZ/lvvTKWXKQeMdmSS19cggaorpsaFN2Qkma4OwRa0QYud4cL
-	YpUjBQL8BmAeREAA==
-To: Terry Tritton <terry.tritton@linaro.org>, Shuah Khan <shuah@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
- =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@igalia.com>, Wei Gao
- <wegao@suse.com>
-Cc: ttritton@google.com, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Terry Tritton <terry.tritton@linaro.org>
-Subject: Re: [PATCH] selftests/futex: Convert 32bit timespec struct to 64bit
- version for 32bit compatibility mode
-In-Reply-To: <20250609131055.84547-1-terry.tritton@linaro.org>
-References: <20250609131055.84547-1-terry.tritton@linaro.org>
-Date: Thu, 26 Jun 2025 23:56:38 +0200
-Message-ID: <87jz4yp3op.ffs@tglx>
+	s=arc-20240116; t=1750975029; c=relaxed/simple;
+	bh=Js1/egzHau8cSrZDfwFjSH4T2I0dLiLhlUWEZZFXbB8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NyFmCpMzHg+V1Iaj+wumUEOQGG5R92UaXZM5xvNtWdvrQJzRAvS56Gr0Tyj6jDgcOV0v+PVe774wfC5korWmzgVGyYhV3lMPwxlGhXPYxL5AVqPxUkWEoRD8Y4VhGGiefWLmRi6C6PonndamWZEL+avPEXdsxRsFp8pHUU+hMhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
+	id 7adf1deb-52d8-11f0-a5c4-005056bdf889;
+	Fri, 27 Jun 2025 00:56:58 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 27 Jun 2025 00:56:57 +0300
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v1 1/1] libnvdimm: Don't use "proxy" headers
+Message-ID: <aF3CKcVoO4aebaaG@surfacebook.localdomain>
+References: <20250626153523.323447-1-andriy.shevchenko@linux.intel.com>
+ <685dbdfb80651_2ce8302947e@iweiny-mobl.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <685dbdfb80651_2ce8302947e@iweiny-mobl.notmuch>
 
-On Mon, Jun 09 2025 at 14:10, Terry Tritton wrote:
+Thu, Jun 26, 2025 at 04:39:07PM -0500, Ira Weiny kirjoitti:
+> Andy Shevchenko wrote:
 
-> Futex_waitv can not accept old_timespec32 struct, so userspace should
-> convert it from 32bit to 64bit before syscall in 32bit compatible mode.
->
-> This fix is based off [1] 
->
-> Link: https://lore.kernel.org/all/20231203235117.29677-1-wegao@suse.com/ [1]
->
-> Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
-> Signed-off-by: Wei Gao <wegao@suse.com>
+...
 
-This Signed-off-by chain is broken. See
 
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
+> > +#include <linux/ioport.h>
+> 
+> If we are going in this direction why include ioport vs forward declaring
+> struct resource?
 
-and the following chapters.
 
-Thanks,
+I don't know where I looked when added this. This should be io.h.
+And yes, we need forward declarations for struct resource and struct kobject.
 
-        tglx
+...
+
+
+> > -#include <linux/spinlock.h>
+> > -#include <linux/bio.h>
+> 
+> I'm leaning toward including bio, module, and sysfs rather than do the
+> forward declarations.
+
+Header already uses forward declarations.
+
+> Are forward declarations preferred these days?
+
+Always with the dependency hell we have. For example, if we go your way we
+would need to include of.h which is yet another monsteur. I prefer to use
+this patch as provided.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
