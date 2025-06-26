@@ -1,136 +1,112 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6219378F2F
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 17:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D0FF2ED14B
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 17:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750958369; cv=none; b=iLjmwcHXoaEqsOLjgqk2MGuOmytg7x3WK6Qb2Hhx7qkDWbf9osqEK8BiASYjcOSLAlHfKAWnPFKneiZm/5ysEUnmkTjxGl8abT8yos9VpxwborbIgaooJ387i+/HoVrR7ztJdE+c1FtYPtQ6HWi+XSQGCxX+d4vWBNiiJiPLSD8=
+	t=1750958373; cv=none; b=Q5qr3TNHKVYT37liLHPeGISfP+JolNX4gnbYnUaUZ+VjD+axi35G+MFv0FVL601vbLrUij3KCvJIGJOx2AOl782bmBm/tHB3/sbM1mI7pEtnXNoAZQxmYkuY/L7/9R5h4JVUVvecX9StspugdKTm7kigHvVBO4SyfCvMfzlLI5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750958369; c=relaxed/simple;
-	bh=nDbbC4Hd9/3B+vhCQ1wjsPmR72rrMSVbY68DC68o54c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fnmxu8Gwl3cux006lf9xZ0ihODqzyX0eEeU8PAwYCm0V6urERzTPTQl/uv8fBCD9qa7Qzaga/xFOGd2yIY/bKRff0JpWaiZy71JvH5+uCZTu8sEV4Tab5/GlK8Qo0YFP6oFUe5hozMarDBl/hNpFQkxqrEN5xZH4TTS0ffPFhp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=HRxRzThR; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HRxRzThR"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-748e378ba4fso1742609b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:19:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1750958368; x=1751563168; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=NtZRDmDAizpW4/XBY5edDAXk7j8AwfqYz0MnAvJx1HQ=;
-        b=HRxRzThRTJ50H3Iw/4YuR22CJAwn5SZSADAdE3G3jpoA6wTT8ot2MESw88wp5B1TUh
-         lqPQnVf6lNQqetlQsV3mAdtB8msVfvVdjVz98TlX4/9cO3ugywIqyNYcvCI6Szo2BQ9r
-         zRbRpSnI+/F7QruRTcgBvNnfbCYT0nit4WL2Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750958368; x=1751563168;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NtZRDmDAizpW4/XBY5edDAXk7j8AwfqYz0MnAvJx1HQ=;
-        b=mzV1sAlHjEn0WAF/cjVeFGGVTxl5vVi/eaPSmfMeNIAilrw5IwGyDMBuCA2BFVQSME
-         /SWFYAcMplXNigTcRZFr5M2rmzf8wTgakl+7ZacQb8QHlAmwWFJV0erJT3hJwqKPbEv2
-         aUmX4i7Ev0Rgj4mKAUgzMxvTR9CTr1EAGTS0bFG5r6EqIrGUEzI/jvIn8ZUQJ0BECixx
-         gBq7EQ+OO+9PLiopJSlEZgUt+SlVyBP5N34djNuE1eCYjSbejHGaLzA3FdrmL2TaOHvv
-         slEH9xf4IOgQ/dW5m/n6Ab1IuiFziUkQUgPn2n/QFVg9uNlucP2H8ZTI9GKbu06znG1n
-         6RCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXi35HkEbm0awQ2yRwq+X3KqoJn21PS23Ot2Swqajnjgbo4skYtXoS+NJlAb5bQqQu5IQMSV5QZmiivNlg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfG/O1TIt+psWTFpnl/iQPTWUkxG2JBYyy5r/JMzjUw5QpTYsn
-	p0OPXJQrlpN1oCLVv3Lh4SEYgITFj9m1Y3pNyNknFrzSbjsDH3AR8BnzujspbNm5PA==
-X-Gm-Gg: ASbGncupjkbroT/suKa7Z68FQh8sAIyGwVDtwTmNN+zrTns9aqwcyT5oATuiez7HsNr
-	Edbj9l+GKBJW8TOMtEfJsCNlJOFcOZF0vH7H9+kgKOsJC7Up7i1bNYrCEDzjYJGh/9R0OSki2hI
-	f1YUS5qhdp5PbZ8dxMUIzx9ZPjxxrRyrD7nG1j8dLqvaGn2p7k2kaC961tv9/8z2BNWXBmFuAi6
-	PRwIQn0eM9n7Egh52Mf9v56s010qurPk6Ty8Tu2EazU3bOaJwgq0MBOwvzxRrufyG8T2XRUppwY
-	yBdNrrAFin71fZKNkYqFA30C6Rq80BB6PJsOk1GVmJiUdhpSSeLkZ7tWGHQWupMK/5ANjwGy+Fj
-	bK9V+PbZwZ+6IRhAXO6u8/D3rcQ==
-X-Google-Smtp-Source: AGHT+IFEFBCC0pNWKqWjl/nW7VN5jN8ypvsYJMVUKK/PSMS5q0p9HDSKxuQ24OXpG2wTZaN9wqvZYA==
-X-Received: by 2002:a05:6a00:3c95:b0:742:a91d:b2f5 with SMTP id d2e1a72fcca58-74af6f40b91mr14622b3a.13.1750958367445;
-        Thu, 26 Jun 2025 10:19:27 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af540be24sm217577b3a.20.2025.06.26.10.19.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 10:19:26 -0700 (PDT)
-Message-ID: <afda0ce3-d824-4a4e-9b91-58e57e649aa0@broadcom.com>
-Date: Thu, 26 Jun 2025 10:19:25 -0700
+	s=arc-20240116; t=1750958373; c=relaxed/simple;
+	bh=qKm4Msl3Cem+MEjo6MbTNbgxxMFgQbL2TfBbT6L4aIA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=miJypJGi+mqREtLPJaCwzRPDsYso9+CBmmxJalK92A7ofoCChd4fzkhfq/s5A64gp2zpnJS0IpEL3o+oBG+3AlBFj1hvpol9Z/R8qbDBbZSwb6l5w/+7MBC2fQhgc6NxgFglQvHzigvBeOp5c903WLz3Uxp/9do6K+Dc0C34C7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BAD771E8D;
+	Thu, 26 Jun 2025 10:19:13 -0700 (PDT)
+Received: from localhost.localdomain (unknown [10.163.88.58])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9B9B33F762;
+	Thu, 26 Jun 2025 10:19:28 -0700 (PDT)
+From: Dev Jain <dev.jain@arm.com>
+To: akpm@linux-foundation.org,
+	Liam.Howlett@oracle.com
+Cc: richard.weiyang@gmail.com,
+	maple-tree@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Dev Jain <dev.jain@arm.com>
+Subject: [PATCH 2/2] maple tree: Add and fix some comments
+Date: Thu, 26 Jun 2025 22:49:18 +0530
+Message-Id: <20250626171918.17261-2-dev.jain@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20250626171918.17261-1-dev.jain@arm.com>
+References: <20250626171918.17261-1-dev.jain@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scripts/gdb: Fix dentry_name() lookup
-To: Illia Ostapyshyn <illia@yshyn.com>
-Cc: akpm@linux-foundation.org, jack@suse.cz, jan.kiszka@siemens.com,
- jlayton@kernel.org, kbingham@kernel.org, linux-kernel@vger.kernel.org,
- viro@zeniv.linux.org.uk
-References: <87pleq4ete.fsf@yshyn.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <87pleq4ete.fsf@yshyn.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Illia,
+Add comments explaining the fields for maple_metadata, since "end" is
+ambiguous and "gap" can be confused as the largest gap, whereas it
+is actually the offset of the largest gap.
 
-On 6/26/25 10:01, Illia Ostapyshyn wrote:
-> Hi Florian,
-> 
-> I have previously submitted (and resent due to inactivity) an equivalent
-> patch here:
-> 
-> https://lore.kernel.org/all/20250428142117.3455683-1-illia@yshyn.com/
-> https://lore.kernel.org/all/20250525213709.878287-2-illia@yshyn.com/
+MAPLE_ROOT_NODE is used for mt_mk_root() and mt_safe_root(), indicating
+that it is used to mark the node as root. So fix the comment.
 
-Ah my bad, I had not seen your submission, then it should be taken 
-instead of mine, but with the Fixes: tag added so that your patch can 
-get back ported to stable trees.
+Add comment for mas_ascend() to explain, whose min and max we are
+trying to find. Explain that, for example, if we are already on offset
+zero, then the parent min is mas->min, otherwise we need to walk up
+to find the implied pivot min.
 
-> 
-> However, looks like d_shortname is not suitable for entries with name
-> longer than D_NAME_INLINE_LEN characters.  Although this matches the
-> previous behavior of the GDB script (before 58cf9c383c5c68666808), I was
-> planning to resubmit a v2 that addresses this issue as well.
+Signed-off-by: Dev Jain <dev.jain@arm.com>
+---
+ include/linux/maple_tree.h | 4 ++--
+ lib/maple_tree.c           | 9 +++++++--
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
-Sure, please do! Andrew can you drop my patch in favor of Illia's when 
-it shows up?
+diff --git a/include/linux/maple_tree.h b/include/linux/maple_tree.h
+index 9ef129038224..bafe143b1f78 100644
+--- a/include/linux/maple_tree.h
++++ b/include/linux/maple_tree.h
+@@ -75,8 +75,8 @@
+  * searching for gaps or any other code that needs to find the end of the data.
+  */
+ struct maple_metadata {
+-	unsigned char end;
+-	unsigned char gap;
++	unsigned char end;	/* end of data */
++	unsigned char gap;	/* offset of largest gap */
+ };
+ 
+ /*
+diff --git a/lib/maple_tree.c b/lib/maple_tree.c
+index 6c89e6790fb5..e4735ccd06f2 100644
+--- a/lib/maple_tree.c
++++ b/lib/maple_tree.c
+@@ -338,7 +338,7 @@ static inline void mte_set_node_dead(struct maple_enode *mn)
+ 	smp_wmb(); /* Needed for RCU */
+ }
+ 
+-/* Bit 1 indicates the root is a node */
++/* Bit 1 indicates the node is the root */
+ #define MAPLE_ROOT_NODE			0x02
+ /* maple_type stored bit 3-6 */
+ #define MAPLE_ENODE_TYPE_SHIFT		0x03
+@@ -1053,7 +1053,7 @@ static inline void mte_set_gap(const struct maple_enode *mn,
+  * mas_ascend() - Walk up a level of the tree.
+  * @mas: The maple state
+  *
+- * Sets the @mas->max and @mas->min to the correct values when walking up.  This
++ * Sets the @mas->max and @mas->min for the parent node of mas->node.  This
+  * may cause several levels of walking up to find the correct min and max.
+  * May find a dead node which will cause a premature return.
+  * Return: 1 on dead node, 0 otherwise
+@@ -1098,6 +1098,11 @@ static int mas_ascend(struct ma_state *mas)
+ 
+ 	min = 0;
+ 	max = ULONG_MAX;
++
++	/*
++	 * !mas->offset => parent node min == mas->min. mas->offset => need
++	 * to walk up to find the implied pivot min.
++	 */
+ 	if (!mas->offset) {
+ 		min = mas->min;
+ 		set_min = true;
 -- 
-Florian
+2.30.2
+
