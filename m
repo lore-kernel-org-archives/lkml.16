@@ -1,147 +1,148 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067712ED875;
-	Thu, 26 Jun 2025 20:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3C4203706;
+	Thu, 26 Jun 2025 20:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750968189; cv=none; b=BysDtPgohDzjor9Nrim0dgLGgT/hjME79R2OUWgJbi54F5sf1im+mv/ogPMpkdVPpfYrXVr1Ed1JqN/PtWVbYVFEFzimfx/ydb3UPmSfEQZ91C9NVv2E0aC8zxsXdKHOLqOPL+xhhMD4t7Lo/OWjWFqJNe2fs8VauSBl/nFpD8s=
+	t=1750968264; cv=none; b=ixF5FcmmpiZezYRnGMqV0NH91+0DUKjQDPvTuHdwbrjORmLYgH+FK/82vIgUl5cjtAwrxP8epg0LcrwAGBTsBfSEbgWpm57rVOgEjQG5+DZQPQNEQDPeS/gDDm8jxe/tiU5z1g2rKy4ue7/b3wYgsyjT5MYPOqQdeW13YJ8KJF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750968189; c=relaxed/simple;
-	bh=VjWDw4t3h4cNum7xsPfsK70215WkC5vDDIC0yeyeJOs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u3X/p+KoeCEEzCe9LBTg5tTmjiWkl9K3bs5ncV1DxJuPzzco5nLtPBNwrQQqDatEZb5lHudBms+NxhMQpfnwGIevMlJuGvB239uUaGqOKlgn+JE3ALd8CC6dVo39Yr1eiYfAgnP/4ABpjDjdTB8n43JIihqGgr+ErWbgIARw8WQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mVvD0fA6; arc=none smtp.client-ip=209.85.215.182
+	s=arc-20240116; t=1750968264; c=relaxed/simple;
+	bh=4TBsc6xhi+uYVOpE5Pcm2Y1YjnAXFNjO88XqrPPEayg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rfWVs8GjeuUNJpXliS1/Qf2UAq9BvWN77BIneU5ELvsx809AodoG0vhAJzMIetWdTcZc8ahUUsb9e9u8JVJ0+cHfl+mM/YjI5s64hacIuB/ABYX0X4vOjKwlU88tZq4jvpE4Y7VIp67B6YVmvcsy7Ja85mKxaH+u+DIVZumZdz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aLW4Tyho; arc=none smtp.client-ip=209.85.219.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mVvD0fA6"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b31befde0a0so966399a12.0;
-        Thu, 26 Jun 2025 13:03:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLW4Tyho"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6fafaa60889so10894346d6.3;
+        Thu, 26 Jun 2025 13:04:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750968187; x=1751572987; darn=vger.kernel.org;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zrm8L66LLcQsHrXXA3l65aniUqeLYIRXTzmknhRNJo0=;
-        b=mVvD0fA6GPKXvmr5qnz6pfDDJkDr5eWlH6TmLiW4nnZo70lFwKXcyrEHff9N8oo1GE
-         zANxQxwE2x8bYMiuUEeb+7pBXx8VksW5TaYwfFfjDYqKuGF0aHlTFBcunZV7Uo/aNdjy
-         jkEQSXPMPK7UTHBkgPNGPdkBX9fF1onadr4qHA724REOJlx7J8A/8rSuoYao0G+aQ/bi
-         rRdWddMmAGiaqdKuzpW6ootyCQ8wHfagps5l6t0UIGhcuNAMuDBiOdbgqxQMFFrHrtBb
-         7ziZvSqAL0VSMM/UMUmB+tyoW4gyg6fBNbfhpmxsXm6SUZvKhVn1/pPAEp5xuHIakHmS
-         35Gw==
+        d=gmail.com; s=20230601; t=1750968262; x=1751573062; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mzA78hvTyN+FKpGbZL5udwfan1aXw4weKy0ixbiLeok=;
+        b=aLW4TyhoW+sUGRBOAMLalqDawx+FVYv7hurCEKyUBjk+EVo+yiZfyAar9yCQe/kfpl
+         MN/jqzJuvbOO+j1XwLiaMK5OctsE7g3UWAeoFP+9V+wnbxo6WXebI+HVbrELiQALCPzo
+         yPMwF2D+oWKVyRbH4oplBkXw02ZP6t/PoLkvdXtNaIQLMOpRe6qzmHL+P28dNdW9CDOO
+         QAwui+682HMQcnQEgFjc53Sp6BbHcqWC6KIblucY9a7eXRrGUtLwKgqBFwVWDW9R7jHK
+         gsXG1rQbzhGq742PdmoX247EE6CoRmCISHapKKlevrB1a3lWu1BFIqs2QVtbZsmZbzRP
+         2BVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750968187; x=1751572987;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zrm8L66LLcQsHrXXA3l65aniUqeLYIRXTzmknhRNJo0=;
-        b=CQfAM3f58Xy2JvyJZcpGOBUZHQg7DFRhRBulOgd8LHLVB5+8UgZa3Bas4diswyIdx4
-         PKHJq6TfYLdycDPyugV5iniAe9X0Hy8bjDrEdfwds4XBZlOxNzMKRKPJnXQCyAz9x1Qf
-         sqeCflAHO/Tz1RWmhwV52/YQkJI/a/kqiV+ounvctoXzzWpGpLZcUlzlxpDL379AYJ7Z
-         9fN/jynIrUc5TBCdxCJZyxS3keixUWUQOchp0QmQ8QTJRCOPD7srKQ5j9G5mKfMIlCgo
-         BKWJtZaPF1WrXtkt1o/sISE1SxdKzPWqokwyZgEkGj4A5sP/ZhB3Ix2YC32SNHnO8AFc
-         5GdA==
-X-Forwarded-Encrypted: i=1; AJvYcCXZDfuQGExDHW/I9oPlXNSj8GFiEZHXx7n6llpiaYEZLF2g4SbW9zInznadd0VTno4dh9DMWorjCV4pNf8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzp3IvL0EcbrSpMFXVxyHMp0ZjNQOrSCovFWb+iTSX34tx+NldI
-	0+sGWAbqpBKgSppxJdbuF9YtF10si0Dpe329MbC9eo8MkZU7KlpHcnYw7NaKdQ==
-X-Gm-Gg: ASbGnctDQuqPNfmtsHTEwt4lJrD6fLZENLHEYVIxpXG5rwIaha2QAWTq8wRxCXAf/oJ
-	S96UbKTtkbxKa3XZizEP9TtLXslL4xeKxvmtpIh6ygdpOxXEjbd6ib9sIc8YXuDijHNCz/TTyW2
-	P52PmjOJIHBKfcu9xJKQXDBlYXVkQfFl7PR5hT0HlrC1W3NKjmeGwJ2zMtP30U983FiiMZPQGUe
-	VgwAG3MFqU82wDAljoIwkWKJv/j1VynBVZqWp5I2z33P98udAAjwkNRDliomWs/yNEtSmwh/JC2
-	WG8IHMkNJe63nnHAQ0GVRZdsNjNflaC7rTHCezNqYo8sOgwCEzuCFe7MjiLvdvmFicEw4vi+G26
-	MGb6DXdr+b48=
-X-Google-Smtp-Source: AGHT+IHc5rHsF38HSxT6Smu8wkgsJl8VXDgV/uf64g0b0w4qk83tfyuuUvNEVb3dZTnt8SJhaVmpPw==
-X-Received: by 2002:a17:90b:2e87:b0:313:287c:74bd with SMTP id 98e67ed59e1d1-318c927f3c9mr435130a91.33.1750968186872;
-        Thu, 26 Jun 2025 13:03:06 -0700 (PDT)
-Received: from tx3000mach.io (static.220.227.itcsa.net. [190.15.220.227])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23abe415416sm4637645ad.187.2025.06.26.13.03.04
+        d=1e100.net; s=20230601; t=1750968262; x=1751573062;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mzA78hvTyN+FKpGbZL5udwfan1aXw4weKy0ixbiLeok=;
+        b=w8dHlSWQuVhaaqlnCckgV5orzG2LTz+YJyQ0My+/PiWMf43Eh2f/p9MtxdWQi5UV7x
+         nyxZKNr6E+hLBfc3/q9qfxR9oi+0OTwWwRT8WtSzr7esCfDJXOS97xvIWXdtDw2yye6x
+         dLvrmU8RYSf1M7TOdCYWdOg1BVYSHQBXpbqrBTM8gxKcoP8iNomMT4sxqeeVlX4o6S6q
+         EPWSZYl8lRMcyvwQkX4ot9hGYLDTbOM/rqOEcAIur+9tlwjKIK9I97XROG22Htvs5fuL
+         FbBJGvNrkfs9aiDeqx7ybybRInPsXsHvSl2Fc4oAWKETWrV8TjgR0D3ig6k3RBl5bM75
+         icBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/IyocM4xpuiUjt89yZ88+DRvjaNH4vLXuNBLdBO0V1zB2yKJLLuM+1Mq5G4StcaZKKNQDQeWAqr/LRc4=@vger.kernel.org, AJvYcCVAewcu5PAEWutjRwuWAV41odG+3PXb964I08cZ2c7+o5Qj9lj6DnJdhsCPLX5sLYUCTJ+7/NWgBcUx@vger.kernel.org, AJvYcCX1ey+7wi0DoGA8qvNW6ME1B+TPbTJiI7ghGC4zoCifN60UVyix1aIVIrK5bT9rS5K3gZhA9Gi2g6L6ET4B0Yw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9HyMC6N0u7NxiyFdRFvdmFOBybClamuU3QoGheO0bZgvctq9G
+	hawQ/Fo6/jKmnDh9jEH6/RM3U/i09/BYkXpAhtAuy9U8/w9A3s295wfk
+X-Gm-Gg: ASbGncuTiBJ0s2Dxd+R9ZIIgk3zYO7ouuyjV8ZmtOKLwwDZp5YDyzjYhbkJGkrSvf7x
+	BdQfqw8TITAGoQ2LFMUum+/FLZOPJOrSC9riKHaKMFfEmCPoc7YAvZ93YwmMufCJ7aC3g6q50xS
+	+htIACX5kydh0QMZSFWeMv1mn6gln9iq2zUlDxLKTfDCRatgIqLzWILFPYUIxyMm4PuYrTmhhRI
+	JBBbf6wuAg8RSRb2csHaEWa42AElWg7yivFcpkZHP6XdTzsI5HKOWzJl/ny5LoE9/hLKcTuYOfr
+	VjOOJe3w5wrkRMGBVp8+7Vqm9A/6eIQ9sUYq/9DmG3fJ+GAfJuCA1SvwIxdxziYIZyUdYbcaS2R
+	9hFu6oe3Os5zVQ+1awZWxnhY8wcoSljNEGFzYo2+cpHJnH0EV3s4lISqBO8sZdWg=
+X-Google-Smtp-Source: AGHT+IFNwrVIC+1OEDyjPamFRwTfRDnxZPff0Z2sSJNbE3rPuIG2Zc8hTYsLuGB/OMtkJ1TD/dbLpw==
+X-Received: by 2002:a05:6214:2a84:b0:6fd:1b0f:8b93 with SMTP id 6a1803df08f44-7000233d740mr11774336d6.33.1750968261961;
+        Thu, 26 Jun 2025 13:04:21 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd771d940asm11239256d6.46.2025.06.26.13.04.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 13:03:06 -0700 (PDT)
-From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-To: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- Ping-Ke Shih <pkshih@realtek.com>
-Cc: Jes Sorensen <Jes.Sorensen@gmail.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] wifi: rtl8xxxu: toggle P2P for supported devices
-Date: Thu, 26 Jun 2025 17:02:44 -0300
-Message-ID: <22784267.EfDdHjke4D@tx3000mach.io>
-In-Reply-To: <0083530d59084b82bebde68a73877568@realtek.com>
-References:
- <20250625142541.44795-1-yakoyoku@gmail.com>
- <0083530d59084b82bebde68a73877568@realtek.com>
+        Thu, 26 Jun 2025 13:04:21 -0700 (PDT)
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id DC901F40067;
+	Thu, 26 Jun 2025 16:04:20 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Thu, 26 Jun 2025 16:04:20 -0400
+X-ME-Sender: <xms:xKddaPJsr_RqX8Yfz_iXH10d0gcMGnCW3nUgCT05eG3lQssEM4DCqA>
+    <xme:xKddaDLroF1m5RuU5i_vx5V3HG9rma4_3Nebzta-f5RpH4YWLaLHMFUDFb2-9-iM4
+    3h9s2glHJgYQb-ugw>
+X-ME-Received: <xmr:xKddaHtoS5YwRcipcnn-rNFWksFwIei6m0Q27QWUOrT8V2ZWhBR7a68VUw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddutdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgv
+    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
+    hnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueevieduffeivden
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquh
+    hnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudej
+    jeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrd
+    hnrghmvgdpnhgspghrtghpthhtohepvddtpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlih
+    hnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghr
+    nhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgr
+    rhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhroh
+    htohhnmhgrihhlrdgtohhmpdhrtghpthhtoheplhhoshhsihhnsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:xKddaIZqQf7lfbUxHyOTpH36KUkE1QLWV3mHE4QtMmlPKD1Kqj4P0g>
+    <xmx:xKddaGaDWqtkj8UygFk7V2ktF00YiIfHfdRCPUv2r6MPWtkzJhvtJw>
+    <xmx:xKddaMAyhl6z0j_LcbAlpGkCoTw3bosGI9DH_SdDiyQ3FBX-ViVaGA>
+    <xmx:xKddaEatWYzEWuRwodMdBddPXW0V-agMJGK7DDZoJU-FYwdCAbZudA>
+    <xmx:xKddaKp3FM02k90Wsx6_DEdL6A3pCfU7T7yjciK01Kd7wSJoD4hKoJ6k>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 26 Jun 2025 16:04:20 -0400 (EDT)
+Date: Thu, 26 Jun 2025 13:04:19 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] rust: devres: get rid of Devres' inner Arc
+Message-ID: <aF2nwx6fRlhzbdsq@tardis.local>
+References: <20250624215600.221167-1-dakr@kernel.org>
+ <20250624215600.221167-4-dakr@kernel.org>
+ <aFzI5L__OcB9hqdG@Mac.home>
+ <aF2jxp51tvF6SpZR@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart7861243.EvYhyI6sBW";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aF2jxp51tvF6SpZR@cassiopeiae>
 
---nextPart7861243.EvYhyI6sBW
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-Subject: Re: [PATCH] wifi: rtl8xxxu: toggle P2P for supported devices
-Date: Thu, 26 Jun 2025 17:02:44 -0300
-Message-ID: <22784267.EfDdHjke4D@tx3000mach.io>
-In-Reply-To: <0083530d59084b82bebde68a73877568@realtek.com>
-MIME-Version: 1.0
-
-On Wednesday 25 June 2025 22:27:40 Argentina Standard Time Ping-Ke Shih wrote:
-> Martin Rodriguez Reboredo <yakoyoku@gmail.com> wrote:
->> This is a MR to see if rtl8xxxu can be made to support P2P.
+On Thu, Jun 26, 2025 at 09:47:18PM +0200, Danilo Krummrich wrote:
+> On Wed, Jun 25, 2025 at 09:13:24PM -0700, Boqun Feng wrote:
+> > On Tue, Jun 24, 2025 at 11:54:01PM +0200, Danilo Krummrich wrote:
+> > `T` also need to be `Send` for `Devres<T>` to be `Sync` because that's
+> > what `Revocable<T>` requires.
 > 
-> Sorry. What is MR?
+> I think that's because of Revocable::revoke(), however you can't call
+> Devres::revoke().
 
-Merge request in GitLab's jargon, like PR.
+Well, what could happen is we create a `Arc<Devres<T>>` on one thread,
+and because it's `Sync`, we can have a clone of it in another thread,
+and if that's the last one call `Arc::drop()`, the `Revocable` will be
+`revoke()`d in a different thread than it's created.
 
->> Theoretically this should be handled by mac80211 but it seems that
->> drivers may have to take some extra steps depending on which device we
->> are talking about. I know that this patch is so basic that it might be
->> missing some H2C commands or similar for this to work on Realtek chips
->> but I don't have the required knowledge for me to implement it, so if
->> you know a place to read about I'll be glad to hear.
+But with `T` always being `Send`, this is not a problem now.
+
+Regards,
+Boqun
+
 > 
-> The commit message looks informal. Just describe why/what patch does.
-> If you want to share more information to readers, add information after
-> s-o-b with "---".
-
-I admit that it doesn't look as a proper commit message, I'll take it into 
-account in the next version of the patch.
-
-> Basically if a WiFi device can support station and AP modes, it can
-> also support P2P mode. To work well, it needs to support additional
-> P2P PS, such as NoA, which needs some H2C commands or registers to
-> achieve. I'm not sure if chips supported by rtl8xxxu have these.
-
-Many of these chips do have them, per some of the alternative drivers for them 
-show in their sources. Perhaps in another patch some methods could be added to 
-`rtl8xxxu_fileops`.
-
-> [...]
---nextPart7861243.EvYhyI6sBW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEoKWxm2R3rrCyIqCZhYg+G2pbUccFAmhdp2QACgkQhYg+G2pb
-UcfQRhAAkAE3BWNgSecupi25lZVP+cGJMy6EKx755X1ssV82pRIVgZ1kDRKjBZo+
-8Z1/9RnKV4D0Jp2z8caOziQPq7eCb/qkJ45CydWSVnR2tQujO1FIR3h5tHqDS0V+
-h++5IZ1mq3E8Df0IoSeEs/7NQHeiJ3DlVkPO7Q+f08ahrnNhQOvfjqfOR0+CEUvU
-qbCBYzhejI5Z86e5S7nMNJcLERfnXcA9uqXLGgSoQpLjpaq4/xTFHL6eYUd02kp9
-drr/Tiz/9XIKsIZlqdX5RB0p0kCiX3asv0NlPGMrDMPhz3LkYw3gBpCPMj7e0uGS
-nqf7qdRNluc9aPQUJMJ/CLmN+g3+302cWOIiC6/r1HZ5M/fRAMTrmMr4fhJocU2U
-aNlDXTDQ+J+3EuJnvzbKb3E5ioqJ4w4wBfq3KeCGob/XBYpcvAmdAhui1jmAZ4JM
-Q1VsNekBMUtkcKnsHtkA+yoJL+6dxkPTpxVPrDlljdzMuvsJr7qGJzvV+u4cFAl+
-fqdN7mXTpkg55XuRc1ooJ9AqeI9Y4BNBVog6Fr6jyGOkVFTKv/ChZBaRWxfDExWC
-08ILp+DhCwryiWr24IXW1JtJ1CveUyzDefhmqrzxKEzWj8mfpG1L6STWEtUWLTrL
-4qyQiqiK4ipnVxg+mUoUInGsT3JuZ28cbtGkiYSXUth7FnxeeP4=
-=G8pN
------END PGP SIGNATURE-----
-
---nextPart7861243.EvYhyI6sBW--
-
-
-
+> > (Unless we want `T` always being `Send`
+> > because of the issue I mentioned above)
+> 
+> Yes, we do.
+> 
+> > The rest looks good to me.
+> 
+> Great! :)
