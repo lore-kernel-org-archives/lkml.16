@@ -1,171 +1,324 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D211459FA;
-	Thu, 26 Jun 2025 23:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9021F8724
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750981541; cv=none; b=YXL+A9ONfc8N8jjmGg6+0Q3t9K1ZJRW0MmPCrJUfB9n1tvDjQL6V5SN+Ss6YAbOQg2t1XCZ8cES3YuP6JnrABKJIfpxvpq+kX2P8s4hcdBCl06T7o0Gs8JCzEn+j6xVf7aHsrcvahMwpcTXl9zgjpMfQnbRCzIckfSbLqxQSJlA=
+	t=1750981604; cv=none; b=pvZgJ+JF0iyMYlaHIW7vGcWVGJ6O+DW66TNooZ56s7Bq4XGV5lzbKN2I70qNP43Ju2GEEv2M+T3otMOChCJlOJaTDhFuhJ+HgkroAuf3Y3OZmVI90a+E5Q11uiJ+Q1MYQ0/jX+pDYDa9sOROySI75dZmY2tkdvhma01VsYtx2kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750981541; c=relaxed/simple;
-	bh=HjNHxuUtVtqJ+E+XFMhXbJFRRAtTO4J1wmzly/ahXZE=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=HHc3fAdbqvGcXW5o7rh4qTnGMHpmoIKr0AL3SFFWEUqKb0sp62ik5npQ9xlgJcef6rpShPeqz9LvZDO0yXVA8BuigQ90FZVJMnOjsw7ioEFC8o23fkfVRlo7rp6zRlit8M33VuWGRTarlGNWqptvW5oI/H5jZLrusAC3qkULCEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E1b+IqCi; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750981604; c=relaxed/simple;
+	bh=69LORJOhchweda7tzHk61b68/mcAIihNisSJ66vzjeA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=byOMHCQQHT07riEX8zFcahEvQcy9UPYlRW2uWRfNx6Kw0DG0N4uHmptEatv2SuCQYtWJh/v44iUhEc95y3SXztcwxx2EMDKmeXSL7kl+0USlvAvvuY0wdyDbBXV7vtqnM3dW64E6/Oqx6ptGCz8WcDBuILl16SAal5TLx+NyFHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JgdXzffg; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1b+IqCi"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d0a2220fb0so184359785a.3;
-        Thu, 26 Jun 2025 16:45:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750981537; x=1751586337; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:references:in-reply-to:message-id
-         :cc:to:from:date:mime-version:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+RlRZzJJo69Hb7oEfyDdPzBBhlLTwP8vir0dHoRyHIE=;
-        b=E1b+IqCi1SCM+kRphDbDXo3ecZa3/1ivfc9lkGapfc8RbW35jW9vqcz18NS7tF+0sG
-         zV6ElIUxYlQ3xKs/j3vu4hSeDFC4sebN1mEhsM3WIq/iKoifHS5N8Wt3ZOvNSJBXgWi6
-         ZoSOr31yVfzkAp53ta4Hk/gEWibeuTzTjaDqH62ySXAxralK0io+7actLkfOhpiH9n/i
-         AVSlpjfP9KLDHigKSOaA8+P7XYPVBJm8jBKKqMN+UHxWSvZ2fPD0lJN5FlU3rgsXNF+Z
-         XPEPSCk94yo5/HpaIcVyp76bUkWhdKW5GjVSOGMx1ri5n1p/SNhddOFcuk1mST41i33r
-         wkug==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JgdXzffg"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QJ25PB031223
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:46:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	7KegPe8W7T2gpH9g2ETCWHauXeLTwZBk9lVvzRO/WrQ=; b=JgdXzffgjuyd+i5J
+	R6tI2q7XvuRCnRScdCiGMG4Zd5e7MzRk2gJKF7Jz41ybocbS1OzZ7BjYriZwMHHO
+	aHpJ0URto5VO2Mi/EeuXYWpv2+RBNy4o4zetjwDnYDKJ8xykbA7zZzxss3UXxfZ5
+	Kd7gi+vSr8uB2GyjDucIlUIB3v3UN6q5Jx+F/smE2r5moTprdM6Ltz7bxkai62xw
+	Kwq+A90LkcqGNOFBHGCr1vxnB59SVMPNU0t7mC0oAK30+5i1x6LNT+SbZoof8Pd1
+	/FXmOxthtucg0gcCWb/fXFhAvH0m9D3mfRxsynMQBj33Ky511SPRkejCRURr96cK
+	Pvb5jA==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f4b44skx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:46:40 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fb50d92061so22836856d6.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:46:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750981537; x=1751586337;
-        h=content-transfer-encoding:subject:references:in-reply-to:message-id
-         :cc:to:from:date:mime-version:feedback-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+RlRZzJJo69Hb7oEfyDdPzBBhlLTwP8vir0dHoRyHIE=;
-        b=tkm/dpSo8UUjBrNeORygx3ZYInmzQT6fFMQ1ukmVkxv9dmLdtkU7ISZyQfgoNdhRYh
-         KBL+0JnGUE+sfTTEsRzgyc8S3CR+cEhGoqv8NrVqW16BZqE4PExISjNP3ZfcyB5wLmKi
-         yqLA2YJ/57cDMNMs7Qu58yPZRhi6A+MXbNSIga010v3z0iTAxjSTH2+bfoishhTnufo8
-         FDfCVactTw5vwb1dzqx9gwFItyTaei3oouhH/L9fhTxfeD/YhtjOx4wRFT2wFnjoTKQq
-         ANUrZ4fI9t+KlnUDjGKdkXvOJipfb607w6X22QuvLus3yTumyl3wGLWPDARUFXngOPtA
-         pm/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUgu90UmSilBYUvz3JxQf+InWUtiLmAu75iPV9wtzNffa5FOAAIs9HqlC0E4H5Tzg3cwP2TdGKk42Rp@vger.kernel.org, AJvYcCWLJ5+NHjyaQLnZFbUjLQEocY+MWpaNDnrwUSywRyUZyt8fmHVpSr0ndRX97OD9jM7gyYmAsIz+WjaMlphrYAI=@vger.kernel.org, AJvYcCXlf4lM2ZIogmY5z+P0rzSFCOgJFrTaRdnQUHFhnao7tTKILIWX4qUnSeTwKR0CXzUzUVWDnxW9J4hZv/4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVF+ivxIqz5u3hS6ZB6hhVfb6C98E4kbLHxrcXZdqN0TDnX6Dr
-	o7zO9vOnwvQ9rK9fmwSfsM3CFJ9/6fj9Ggq+2Jia+HWDEgs4oTEFGmI58X72GA==
-X-Gm-Gg: ASbGncvXoXBL837CqKn65lc8FkQ7+lQfDpfn2qwfWJMHAispeteHlys/zjrXnGN2ajQ
-	tHE/TPLi8MP5SpU1dWM+X6Z1KqrikT1b+oKxu9AeYk/k7U0I0Ieba8oRU0MSGMcQv+od57K5z0N
-	ayakvDuwP6qXHxAmTY827tixviDUbK1xDx7JLtoRIcSFNwTOSJvDIIDnVQIu5saZDVPo2ZxEklE
-	0k+ALUxfBKBGNthvnlOSp2r7PvqsHvlo5NVu04kKJHiC6Z0vEA700qIBhUjxxHaCIbLfSOy/cdi
-	J/B0sJQdbaGl2rOMyqhKGF3Jo12rXwnbomi1TAqY7Y/+G8BEwMC3IIAC/3ETEj+bdOOOFTmGkSY
-	Qx7QcHYFQIXGzdOD+E2JahMPbiA5e2xwTZcP4f1Zxsyl5RNPkreKD
-X-Google-Smtp-Source: AGHT+IEo+hlZvbxkNeRGx3kYoxJtFh++ApszonB41Wh2Hvqi74i+5EjVggdjDomEooqVMDhisQDJkQ==
-X-Received: by 2002:a05:620a:4487:b0:7d4:4004:307a with SMTP id af79cd13be357-7d4439505f4mr196626385a.29.1750981537366;
-        Thu, 26 Jun 2025 16:45:37 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44313695dsm56555385a.1.2025.06.26.16.45.36
+        d=1e100.net; s=20230601; t=1750981599; x=1751586399;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7KegPe8W7T2gpH9g2ETCWHauXeLTwZBk9lVvzRO/WrQ=;
+        b=okAc3HlM44gbOszEo3xnPaGso5x5r00WkWBLG/783AhKFMYQ/9gD3nTqzjm06uW8Je
+         2KUzgahRpKsBwkSHv4ThkFJ6ZWP8aCUDr657bh0WeA3vZ4GXYs7qY/oE+vQDXyAECtc3
+         Ev+SHc/zaD1USbu2r7oQvuS9SC2i0bzU/rHYrczHkt8hG91oSQgUq9bZ0/w+9odlCAyw
+         kFDGNFKXMI8cmUrzRxpCZpa8P7e+rMjCkSaki/rOcZwUX/ArIwAtu+SQU4l4KWEssXcY
+         1ZviBaPbYqvZd4Hs7+LS/z1zQhFRTIsht3lO2k+VOpWo2ZGzPit8N1i1L5+TkRvAl5np
+         Mchw==
+X-Forwarded-Encrypted: i=1; AJvYcCWAi/3K5nmItFAYBWrB+d6TuTiShOeLqdXUzB9tLP8Ew59K5gLzsIZ3lw/kuSP21WKebNizi2Xkn3r9+4s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOqn61aTa1Wo1mB2t43AeZFp1aEb5vOVyDzMOZW2DtjHzRV+Nm
+	zfy7amo+qDBm4xasDGsyY/XSjc+4e/t7YUxhHUCEew5j1WJ1atZF/CeFe5+0GR3D5Zre7V6idSA
+	e4yUWTn+tdUw17B4yjUPjfF8D2IqtAQ8PcAGNNqPxGEqrNZ4tS6++iIvnJ44jKqcbI1c=
+X-Gm-Gg: ASbGncuQOcU9UlkWE+J0nOdG6gWn/8ytjuPLoQcPO2AK2lh4+2psADj72FhgB1voI9r
+	yIRdALHeM8PE7U2zT3ea9Ew/94Q2VBe5zD+lVg1SqLmXBVu8tq2aiZqz4XOaqlOLVQBCuRfBPIf
+	GJMFSQychFGxHSBB+U9HBGsTAwDedmaDyA/4N0XVilWvcjS3wp2KZ171DnDF2qHGWrSG0Lj8ie+
+	lFucseQSsTqL9o3IF71R5oJa4Ls2A4DeAuhLGIxhnQ88J/jBxLVpv/WxlllllxdyI/scLpt1WhB
+	xdbUPXv18gUnNPY77dCwVr2u4m3G65uYmG/kNAdMet6cNCWvLoKR7lCk4CWP3YJa4zPgt/OIgih
+	6lZdT76cdAODoqdCM3ccxH1iwRmiVSdUE/4M=
+X-Received: by 2002:a05:6214:2f87:b0:6ff:664f:c4ca with SMTP id 6a1803df08f44-70001d66704mr24208946d6.12.1750981599065;
+        Thu, 26 Jun 2025 16:46:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF6V3S1K8u35BRIWj4UvPY2uDUKmwFKq2ypmoKF6aUR+WTdlzRmdvuzitBWJTCwteFsgHOszg==
+X-Received: by 2002:a05:6214:2f87:b0:6ff:664f:c4ca with SMTP id 6a1803df08f44-70001d66704mr24208586d6.12.1750981598593;
+        Thu, 26 Jun 2025 16:46:38 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32cd2ec5deasm3701091fa.58.2025.06.26.16.46.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 16:45:37 -0700 (PDT)
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 91367F40066;
-	Thu, 26 Jun 2025 19:45:36 -0400 (EDT)
-Received: from phl-imap-16 ([10.202.2.88])
-  by phl-compute-01.internal (MEProxy); Thu, 26 Jun 2025 19:45:36 -0400
-X-ME-Sender: <xms:oNtdaG9QMKqXLvt4edhTWTnE6IeCv3pSOBzmcadQuB8TGMymlk4uyg>
-    <xme:oNtdaGsVII8PhvoQO6jFD9d0z_f3lzhGOFKwpee9EYDJMmHD-qE97PkcdrjWoMGCy
-    bIN96Q4MS5PCnbJCQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduheefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfuehoqhhunhcu
-    hfgvnhhgfdcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhepieelueeiffefffeigfelheeggfeuuedtvdejvdejteevudffteeffffgkedt
-    uedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsg
-    hoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieeg
-    qddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigi
-    hmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhr
-    tghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtoheprghlvgigrd
-    hgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopegrlhhitggvrhihhhhlsehg
-    ohhoghhlvgdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtoh
-    hmpdhrtghpthhtohepuggrvhhiugdrmhdrvghrthhmrghnsehinhhtvghlrdgtohhmpdhr
-    tghpthhtohepihhrrgdrfigvihhnhiesihhnthgvlhdrtghomhdprhgtphhtthhopegrrd
-    hhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehkfihilhgtiiihnhhskhhisehkvghrnhgvlhdroh
-    hrgh
-X-ME-Proxy: <xmx:oNtdaMCY60Pu_sE1pTGglxVl_nEUCW9riLTy5RpSU25_iZ0XxB-yrg>
-    <xmx:oNtdaOf1byy9xHqilTNyrGeBOhEK93kz9mBDt8L3mRUORIc3il9lxg>
-    <xmx:oNtdaLMB0cHU50PFNA81yKySj5wP3ccq3WYRh0UiL9wEowikrdqi6Q>
-    <xmx:oNtdaIknb5kQNkIMQ6uQV5hO5wCqvIX8J8tHa5vOZAoKVcTOjXbPew>
-    <xmx:oNtdaNt8wuTHMpMoMizAClssb3ClQdu_KS1fxhMyDrQ7wdRg-sAYyDDC>
-Feedback-ID: iad51458e:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 69B2A2CC0081; Thu, 26 Jun 2025 19:45:36 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+        Thu, 26 Jun 2025 16:46:37 -0700 (PDT)
+Date: Fri, 27 Jun 2025 02:46:34 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Jun Nie <jun.nie@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 11/12] drm/msm/dpu: support plane splitting in
+ quad-pipe case
+Message-ID: <54unag6whlbkjujjirsgqqiukadudgbcfsol2jwdbc523ebas7@3shvc3yepkmq>
+References: <20250603-v6-15-quad-pipe-upstream-v11-0-c3af7190613d@linaro.org>
+ <20250603-v6-15-quad-pipe-upstream-v11-11-c3af7190613d@linaro.org>
+ <5hmgt4v4nop3xpqt34wq4yyfjnypkrnlrr5fnt6r72k5c6r4vn@ykmg5ni6hjyt>
+ <CABymUCOx-kJ0FpZnvTPAT9i-kvcA8Bs8WxFZZWQXbLZ2Koobpg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T383afef5f8ca9bad
-Date: Thu, 26 Jun 2025 16:45:15 -0700
-From: "Boqun Feng" <boqun.feng@gmail.com>
-To: "Benno Lossin" <lossin@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, rafael@kernel.org,
- "Miguel Ojeda" <ojeda@kernel.org>, alex.gaynor@gmail.com,
- "Gary Guo" <gary@garyguo.net>, bjorn3_gh@protonmail.com,
- "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- david.m.ertman@intel.com, ira.weiny@intel.com, leon@kernel.org,
- kwilczynski@kernel.org, bhelgaas@google.com, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Message-Id: <8922f6f0-241a-4659-b382-fb8c62b77e8f@app.fastmail.com>
-In-Reply-To: <DAWUY4YH6XP9.TWAP6N95L5BR@kernel.org>
-References: <20250626200054.243480-1-dakr@kernel.org>
- <20250626200054.243480-5-dakr@kernel.org> <aF2rpzSccqgoVvn0@tardis.local>
- <DAWUKB7PAZG1.2K2W9VCATZ3O0@kernel.org>
- <45a2bd65-ec77-4ce7-bd8e-553880d85bdf@app.fastmail.com>
- <DAWUY4YH6XP9.TWAP6N95L5BR@kernel.org>
-Subject: Re: [PATCH v4 4/5] rust: types: ForeignOwnable: Add type Target
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABymUCOx-kJ0FpZnvTPAT9i-kvcA8Bs8WxFZZWQXbLZ2Koobpg@mail.gmail.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDIwMyBTYWx0ZWRfXwhlMf/aQ30J7
+ iumRz1R2L1/wx84umZ84cEMPuPkK92tqL9cDbbbq45swjGMM7W6ynyhrFfeGrK7/Sixf/EeecMY
+ gLLgsGwg5rCq7pgBom/g58MNRG0aFrnm9qMLQCIWzvfXnECZwo5LB7md8zzSbURy5qS9QG5q6I2
+ xh/gQmBC8OqfM1bgiib29LUYenK5CZ5awgxjB9nPuya1G7fqc/5eV/z1jyTT3/5jGirJpSiEf5N
+ zsZRyQxjhVDF97zSEQqsm0fvYc1oYWzFUik7pCe14bKscFMvWo11fUEKWHWLB9Gp6foshBqPKGI
+ H9tfK82dV/FB6F95RbQrTUyG8OACuLzQE6lfG5RS0i8aALiEgHOCEQ0L1e0EYEuWnfdxWBdb47X
+ QbqGj9Vc/5wr9J8Tj20bZSiqYOTnsHx3vcU2JEtO8i+I3VkuBcagjh0bDA8jQIj0tfrZeb71
+X-Proofpoint-ORIG-GUID: 9lxc4IN4WrgSexh-7Y3TgV_Jzn06BacN
+X-Proofpoint-GUID: 9lxc4IN4WrgSexh-7Y3TgV_Jzn06BacN
+X-Authority-Analysis: v=2.4 cv=A8BsP7WG c=1 sm=1 tr=0 ts=685ddbe0 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6IFa9wvqVegA:10 a=sWKEhP36mHoA:10 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8
+ a=2m9aEEAoIjJPnTDgS3EA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=iYH6xdkBrDN1Jqds4HTS:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_07,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0
+ phishscore=0 adultscore=0 impostorscore=0 suspectscore=0 mlxscore=0
+ clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506260203
 
+On Thu, Jun 12, 2025 at 03:44:32PM +0800, Jun Nie wrote:
+> Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> 于2025年6月3日周二 18:24写道：
+> >
+> > On Tue, Jun 03, 2025 at 03:10:10PM +0800, Jun Nie wrote:
+> > > The content of every half of screen is sent out via one interface in
+> > > dual-DSI case. The content for every interface is blended by a LM
+> > > pair in quad-pipe case, thus a LM pair should not blend any content
+> > > that cross the half of screen in this case. Clip plane into pipes per
+> > > left and right half screen ROI if topology is quad pipe case.
+> > >
+> > > The clipped rectangle on every half of screen is futher handled by two
+> > > pipes if its width exceeds a limit for a single pipe.
+> > >
+> > > Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> > > Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > ---
+> > >  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c  |  11 +++
+> > >  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h  |   2 +
+> > >  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 137 +++++++++++++++++++++---------
+> > >  3 files changed, 110 insertions(+), 40 deletions(-)
+> > >
+> > > @@ -886,35 +887,94 @@ static int dpu_plane_atomic_check_nosspp(struct drm_plane *plane,
+> > >
+> > >       max_linewidth = pdpu->catalog->caps->max_linewidth;
+> > >
+> > > -     drm_rect_rotate(&pipe_cfg->src_rect,
+> > > +     drm_rect_rotate(&init_pipe_cfg.src_rect,
+> > >                       new_plane_state->fb->width, new_plane_state->fb->height,
+> > >                       new_plane_state->rotation);
+> > >
+> > > -     if ((drm_rect_width(&pipe_cfg->src_rect) > max_linewidth) ||
+> > > -          _dpu_plane_calc_clk(&crtc_state->adjusted_mode, pipe_cfg) > max_mdp_clk_rate) {
+> > > -             if (drm_rect_width(&pipe_cfg->src_rect) > 2 * max_linewidth) {
+> > > -                     DPU_DEBUG_PLANE(pdpu, "invalid src " DRM_RECT_FMT " line:%u\n",
+> > > -                                     DRM_RECT_ARG(&pipe_cfg->src_rect), max_linewidth);
+> > > -                     return -E2BIG;
+> > > +     /*
+> > > +      * We have 1 mixer pair cfg for 1:1:1 and 2:2:1 topology, 2 mixer pair
+> > > +      * configs for left and right half screen in case of 4:4:2 topology.
+> > > +      * But we may have 2 rect to split wide plane that exceeds limit with 1
+> > > +      * config for 2:2:1. So need to handle both wide plane splitting, and
+> > > +      * two halves of screen splitting for quad-pipe case. Check dest
+> > > +      * rectangle left/right clipping first, then check wide rectangle
+> > > +      * splitting in every half next.
+> > > +      */
+> > > +     num_stages = (num_lm + 1) / 2;
+> >
+> > I thought we agreed to loop over all stages, dropping the need for
+> > num_lm.
+> 
+> num_stages is needed here, so that the plane can be cropped into left/right
+> half of LCD and result pipe will be handled by 2 stages in quadpipe case.
+> While only 1 stage is involved in 1 or 2 pipe case and the crop operation
+> does not make a real impact. If we do not care num_lm and use 2 stages
+> by default, then we are forcing quad-pipe. Do you have any suggestion?
 
+I'm sorry, it took me a while to respond.
 
-On Thu, Jun 26, 2025, at 4:36 PM, Benno Lossin wrote:
-> On Fri Jun 27, 2025 at 1:21 AM CEST, Boqun Feng wrote:
->> On Thu, Jun 26, 2025, at 4:17 PM, Benno Lossin wrote:
->>> On Thu Jun 26, 2025 at 10:20 PM CEST, Boqun Feng wrote:
->>>> On Thu, Jun 26, 2025 at 10:00:42PM +0200, Danilo Krummrich wrote:
->>>>> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
->>>>> index 3958a5f44d56..74c787b352a9 100644
->>>>> --- a/rust/kernel/types.rs
->>>>> +++ b/rust/kernel/types.rs
->>>>> @@ -27,6 +27,9 @@
->>>>>  /// [`into_foreign`]: Self::into_foreign
->>>>>  /// [`PointedTo`]: Self::PointedTo
->>>>>  pub unsafe trait ForeignOwnable: Sized {
->>>>> +    /// The payload type of the foreign-owned value.
->>>>> +    type Target;
->>>>
->>>> I think `ForeignOwnable` also implies a `T` maybe get dropped via a
->>>> pointer from `into_foreign()`. Not sure it's worth mentioning thoug=
-h.
->>>
->>> What? How would that happen?
->>
->> The owner of the pointer can do from_foreign() and eventually drop
->> the ForeignOwnable, hence dropping T.
->
-> I'm confused, you said `into_foreign` above. I don't think any sensible
-> ForeignOwnable implementation will drop a T in any of its functions.
->
+No, this is fine.
 
-A KBox<T> would drop T when it gets dropped, no?
-A Arc<T> would drop T when it gets dropped if it=E2=80=99s the last refc=
-ount.
+> 
+> >
+> > > +     /* iterate mixer configs for this plane, to separate left/right with the id */
+> > > +     for (stage_id = 0; stage_id < num_stages; stage_id++) {
+> > > +             struct drm_rect mixer_rect = {
+> > > +                     .x1 = stage_id * mode->hdisplay / num_stages,
+> > > +                     .y1 = 0,
+> > > +                     .x2 = (stage_id + 1) * mode->hdisplay / num_stages,
+> 
+> The crop window is calculated with num_stages here.
 
-I was trying to say =E2=80=9CForeignOwnable::drop() may implies Target::=
-drop()=E2=80=9D,
-that=E2=80=99s what a =E2=80=9Cpayload=E2=80=9D means. Maybe that I used=
- =E2=80=9CT=E2=80=9D instead of =E2=80=9CTarget=E2=80=9D
-in the original message caused confusion?
+Ack.
 
-Regards,
-Boqun
+> 
+> > > +                     .y2 = mode->vdisplay
+> > > +                     };
+> > > +             int cfg_idx = stage_id * PIPES_PER_STAGE;
+> > > +
+> > > +             pipe_cfg = &pstate->pipe_cfg[cfg_idx];
+> > > +             r_pipe_cfg = &pstate->pipe_cfg[cfg_idx + 1];
+> > > +
+> > > +             drm_rect_fp_to_int(&pipe_cfg->src_rect, &new_plane_state->src);
+> > > +             pipe_cfg->dst_rect = new_plane_state->dst;
+> > > +
+> > > +             DPU_DEBUG_PLANE(pdpu, "checking src " DRM_RECT_FMT
+> > > +                             " vs clip window " DRM_RECT_FMT "\n",
+> > > +                             DRM_RECT_ARG(&pipe_cfg->src_rect),
+> > > +                             DRM_RECT_ARG(&mixer_rect));
+> > > +
+> > > +             /*
+> > > +              * If this plane does not fall into mixer rect, check next
+> > > +              * mixer rect.
+> > > +              */
+> > > +             if (!drm_rect_clip_scaled(&pipe_cfg->src_rect,
+> > > +                                       &pipe_cfg->dst_rect,
+> > > +                                       &mixer_rect)) {
+> > > +                     memset(pipe_cfg, 0, 2 * sizeof(struct dpu_sw_pipe_cfg));
+> > > +
+> > > +                     continue;
+> > >               }
+> > >
+> > > -             *r_pipe_cfg = *pipe_cfg;
+> > > -             pipe_cfg->src_rect.x2 = (pipe_cfg->src_rect.x1 + pipe_cfg->src_rect.x2) >> 1;
+> > > -             pipe_cfg->dst_rect.x2 = (pipe_cfg->dst_rect.x1 + pipe_cfg->dst_rect.x2) >> 1;
+> > > -             r_pipe_cfg->src_rect.x1 = pipe_cfg->src_rect.x2;
+> > > -             r_pipe_cfg->dst_rect.x1 = pipe_cfg->dst_rect.x2;
+> > > -     } else {
+> > > -             memset(r_pipe_cfg, 0, sizeof(*r_pipe_cfg));
+> > > -     }
+> > > +             pipe_cfg->dst_rect.x1 -= mixer_rect.x1;
+> > > +             pipe_cfg->dst_rect.x2 -= mixer_rect.x1;
+> > > +
+> > > +             DPU_DEBUG_PLANE(pdpu, "Got clip src:" DRM_RECT_FMT " dst: " DRM_RECT_FMT "\n",
+> > > +                             DRM_RECT_ARG(&pipe_cfg->src_rect), DRM_RECT_ARG(&pipe_cfg->dst_rect));
+> > > +
+> > > +             /* Split wide rect into 2 rect */
+> > > +             if ((drm_rect_width(&pipe_cfg->src_rect) > max_linewidth) ||
+> > > +                  _dpu_plane_calc_clk(mode, pipe_cfg) > max_mdp_clk_rate) {
+> > > +
+> > > +                     if (drm_rect_width(&pipe_cfg->src_rect) > 2 * max_linewidth) {
+> > > +                             DPU_DEBUG_PLANE(pdpu, "invalid src " DRM_RECT_FMT " line:%u\n",
+> > > +                                             DRM_RECT_ARG(&pipe_cfg->src_rect), max_linewidth);
+> > > +                             return -E2BIG;
+> > > +                     }
+> > > +
+> > > +                     memcpy(r_pipe_cfg, pipe_cfg, sizeof(struct dpu_sw_pipe_cfg));
+> > > +                     pipe_cfg->src_rect.x2 = (pipe_cfg->src_rect.x1 + pipe_cfg->src_rect.x2) >> 1;
+> > > +                     pipe_cfg->dst_rect.x2 = (pipe_cfg->dst_rect.x1 + pipe_cfg->dst_rect.x2) >> 1;
+> > > +                     r_pipe_cfg->src_rect.x1 = pipe_cfg->src_rect.x2;
+> > > +                     r_pipe_cfg->dst_rect.x1 = pipe_cfg->dst_rect.x2;
+> > > +                     DPU_DEBUG_PLANE(pdpu, "Split wide plane into:"
+> > > +                                     DRM_RECT_FMT " and " DRM_RECT_FMT "\n",
+> > > +                                     DRM_RECT_ARG(&pipe_cfg->src_rect),
+> > > +                                     DRM_RECT_ARG(&r_pipe_cfg->src_rect));
+> > > +             } else {
+> > > +                     memset(r_pipe_cfg, 0, sizeof(struct dpu_sw_pipe_cfg));
+> > > +             }
+> > >
+> > > -     drm_rect_rotate_inv(&pipe_cfg->src_rect,
+> > > -                         new_plane_state->fb->width, new_plane_state->fb->height,
+> > > -                         new_plane_state->rotation);
+> > > -     if (drm_rect_width(&r_pipe_cfg->src_rect) != 0)
+> > > -             drm_rect_rotate_inv(&r_pipe_cfg->src_rect,
+> > > -                                 new_plane_state->fb->width, new_plane_state->fb->height,
+> > > +             drm_rect_rotate_inv(&pipe_cfg->src_rect,
+> > > +                                 new_plane_state->fb->width,
+> > > +                                 new_plane_state->fb->height,
+> > >                                   new_plane_state->rotation);
+> > >
+> > > +             if (drm_rect_width(&r_pipe_cfg->src_rect) != 0)
+> > > +                     drm_rect_rotate_inv(&r_pipe_cfg->src_rect,
+> > > +                                         new_plane_state->fb->width,
+> > > +                                         new_plane_state->fb->height,
+> > > +                                         new_plane_state->rotation);
+> > > +     }
+> > > +
+> > >       pstate->needs_qos_remap = drm_atomic_crtc_needs_modeset(crtc_state);
+> > >
+> > >       return 0;
+> > > @@ -997,20 +1057,17 @@ static int dpu_plane_atomic_check_sspp(struct drm_plane *plane,
+> > >               drm_atomic_get_new_plane_state(state, plane);
+> > >       struct dpu_plane *pdpu = to_dpu_plane(plane);
+> > >       struct dpu_plane_state *pstate = to_dpu_plane_state(new_plane_state);
+> > > -     struct dpu_sw_pipe *pipe = &pstate->pipe[0];
+> > > -     struct dpu_sw_pipe *r_pipe = &pstate->pipe[1];
+> > > -     struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg[0];
+> > > -     struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->pipe_cfg[1];
+> > > -     int ret = 0;
+> > > -
+> > > -     ret = dpu_plane_atomic_check_pipe(pdpu, pipe, pipe_cfg,
+> > > -                                       &crtc_state->adjusted_mode,
+> > > -                                       new_plane_state);
+> > > -     if (ret)
+> > > -             return ret;
+> > > +     struct dpu_sw_pipe *pipe;
+> > > +     struct dpu_sw_pipe_cfg *pipe_cfg;
+> > > +     int ret = 0, i;
+> > >
+> > > -     if (drm_rect_width(&r_pipe_cfg->src_rect) != 0) {
+> > > -             ret = dpu_plane_atomic_check_pipe(pdpu, r_pipe, r_pipe_cfg,
+> > > +     for (i = 0; i < PIPES_PER_PLANE; i++) {
+> > > +             pipe = &pstate->pipe[i];
+> > > +             pipe_cfg = &pstate->pipe_cfg[i];
+> > > +             if (!pipe->sspp)
+> > > +                     continue;
+> > > +             DPU_DEBUG_PLANE(pdpu, "pipe %d is in use, validate it\n", i);
+> > > +             ret = dpu_plane_atomic_check_pipe(pdpu, pipe, pipe_cfg,
+> > >                                                 &crtc_state->adjusted_mode,
+> > >                                                 new_plane_state);
+> > >               if (ret)
+> > >
+> > > --
+> > > 2.34.1
+> > >
+> >
+> > --
+> > With best wishes
+> > Dmitry
 
-> ---
-> Cheers,
-> Benno
+-- 
+With best wishes
+Dmitry
