@@ -1,88 +1,125 @@
-Received: from mail3-164.sinamail.sina.com.cn (mail3-164.sinamail.sina.com.cn [202.108.3.164])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114E31F1517
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB4219DF48
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750978354; cv=none; b=Lri+JdsN3BF0d15mK4t/KyIqzEYK0R+kxH9xYTPxlyeW7AGXXm5sUwUjyBIXeLm3S2aTL3mewM6yzCVyhHTRgGxWK+zXkDXb+p+xu69csee8GruRtNOJjz6pDoZMX6KzQfuOVF/iDcyhqjq/4kfGsErixwSU1XetjVXwbmmVC98=
+	t=1750978446; cv=none; b=Df0REytCkYs6dAmERd4IKMrKrp/HSWVc3i5QxG3r44xb5vzSnc6ZQQErWclBSoNOvhREBn87A5X7MjEwnEDKmbpLRBykWB4P6Iim73e2ft0b9IAwGDSNsLSUwG9Xia3zYDWM98abK+npfOBxREHRDAwIUkiqKlorxPnVHgRcdUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750978354; c=relaxed/simple;
-	bh=oO9xXlEmDjfJ0TmucBn0cdmIBWgPOsAA5hV8uywnh2I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mkFt5L0xN6vI7aPuUhTzvwOiAztCV/2iMSR6Xu/dVDYF+aQ+qfdfFb9Cq9NvhJtRg0yNfl887iFG8BEDdhn+Y4I4XXviyuiLF8YtOyq6g191JQ6omCqlM/k+KHorVwEumygZ8d9+bHlman6mStpkVm2m9FAAZcBpQVZjFVDgh/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=202.108.3.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
-	by sina.com (10.54.253.32) with ESMTP
-	id 685DCF2400007EBB; Thu, 27 Jun 2025 06:52:22 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 3690114456921
-X-SMAIL-UIID: 56F7B027901B4BE1BCE184E36B9B96A8-20250627-065222-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
-Date: Fri, 27 Jun 2025 06:52:09 +0800
-Message-ID: <20250626225210.1924-1-hdanton@sina.com>
-In-Reply-To: <685db3be.a00a0220.2e5631.0362.GAE@google.com>
-References: 
+	s=arc-20240116; t=1750978446; c=relaxed/simple;
+	bh=QlETPmLKJ5wuuOZ0mip2MITO1Lvw1vGgGhJsAXrwaoM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=B/nA/tDWycxdLBtcDs5MvZsqnIefJa+Rx8CNVQjmn0GDKTjVbKGgPlk6aTbOUzH5ir50BQjMzorhNoU71sFbb8k4j2L1ppgkOuO0B1wmmJxExz63nu8W0PgABfs+mHteNonkKMS2WAHwejNj6dERBxkQIMr9tY1KQZwNaC1r0Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddcfea00afso27381825ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:54:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750978444; x=1751583244;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cNpfT6ibDRY0Y1o29N5gMsrBI9DUrvOGsxJBMGuBz4c=;
+        b=YIYtKmTztddnsPPdDQ2IP+9mqyjryGxzzryCaJvUWjtpUfAhW1XYdjn+dJmqVX+ki2
+         pRsBKOhjbCgSKjeut4T9cYh+IREW1Hsbw/xiAJC3u+Pt4bmbypvkjYKyUfLHPx/hi044
+         +qfSu2EGq8j6RvyXtOhT8jvkVPIt6vK3J2GOpMGKlQTOYYjmhxIE2yjAeyGnHD1leM+V
+         uFImWWQHttM+eeBmXW8aNYo3cxO8Os3k3zDi2BtzHRpBzV7XEtXLoTdg6oKBLwLzuX2k
+         dJjkwHHFkwAr5OWgBujwvKCHz39ZHC28vih63ti/54cRLu+v0iKeQb541c0Z2sQvAEDq
+         OAiA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZqzJaEUdzyd701D69Gi/zgCLjZtVZlnZZdfIswEEGc6xXkFGG8ZSiBKGp3x36bfWFI9cLvYsBn6gsaLI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydiXcJMqmt/gyfortycpXEYYiAtay8HFgliRYC/6uybmjPubpB
+	+iFU2eq19/ySBZAm622bL9GfFOo92Sb9Yk2TI4LCsqx5bywc3hAs921JNWmQJn1AC1BCI5cqqCx
+	N0rjlif9vLAMF0JYed1iUQuPuL8WIPPmxYoWRd6B0/VC/ZupDxiO1hBoG6Ac=
+X-Google-Smtp-Source: AGHT+IHxGXrwL2GZPqC8dWhafW/ishAVfJhDvJUIN+TmKhFXbzw1bS/15W/YG6sDtN3g8OxoavAn3JYsyw81O4zqJXNf3MXhckEM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1c2a:b0:3dd:b523:7abe with SMTP id
+ e9e14a558f8ab-3df4abafbe6mr18925865ab.18.1750978444108; Thu, 26 Jun 2025
+ 15:54:04 -0700 (PDT)
+Date: Thu, 26 Jun 2025 15:54:04 -0700
+In-Reply-To: <f59b4048-a4e3-4d7d-8aa9-5a3ad42db8b7@linux.dev>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685dcf8c.a00a0220.2e5631.038a.GAE@google.com>
+Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
+From: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>
+To: jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	yanjun.zhu@linux.dev, zyjzyj2000@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-> Date: Thu, 26 Jun 2025 13:55:26 -0700
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    ee88bddf7f2f Merge tag 'bpf-fixes' of git://git.kernel.org..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14367182580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
-> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e9008c580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10c12f0c580000
+Hello,
 
-#syz test
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+WARNING in rxe_skb_tx_dtor
 
---- x/drivers/infiniband/sw/rxe/rxe_net.c
-+++ y/drivers/infiniband/sw/rxe/rxe_net.c
-@@ -471,6 +471,7 @@ struct sk_buff *rxe_init_packet(struct r
- 	struct net_device *ndev;
- 	const struct ib_gid_attr *attr;
- 	const int port_num = 1;
-+	struct rxe_dev *rdev;
- 
- 	attr = rdma_get_gid_attr(&rxe->ib_dev, port_num, av->grh.sgid_index);
- 	if (IS_ERR(attr))
-@@ -503,6 +504,17 @@ struct sk_buff *rxe_init_packet(struct r
- 	skb->dev	= ndev;
- 	rcu_read_unlock();
- 
-+	rdev = rxe_get_dev_from_net(ndev);
-+	if (!rdev && is_vlan_dev(ndev))
-+		rdev = rxe_get_dev_from_net(vlan_dev_real_dev(ndev));
-+	if (rdev)
-+		ib_device_put(&rdev->ib_dev);
-+	if (rdev != rxe) {
-+		kfree_skb(skb);
-+		skb = NULL;
-+		goto out;
-+	}
-+
- 	if (av->network_type == RXE_NETWORK_TYPE_IPV4)
- 		skb->protocol = htons(ETH_P_IP);
- 	else
---
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1093 at drivers/infiniband/sw/rxe/rxe_net.c:357 rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
+Modules linked in:
+CPU: 0 UID: 0 PID: 1093 Comm: kworker/u4:9 Not tainted 6.15.0-rc4-syzkaller-00150-ge382eacdcc20 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: rxe_wq do_work
+RIP: 0010:rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
+Code: 80 3c 20 00 74 08 4c 89 ff e8 91 fd 89 f9 4d 8b 37 44 89 f6 83 e6 01 31 ff e8 61 41 27 f9 41 f6 c6 01 75 0e e8 76 3c 27 f9 90 <0f> 0b 90 e9 b4 01 00 00 4c 89 ff e8 85 0d fb 01 48 89 c7 be 0e 00
+RSP: 0018:ffffc90000007a08 EFLAGS: 00010246
+RAX: ffffffff8898ce3a RBX: ffff888043ae33c0 RCX: ffff88803513a440
+RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: ffffffff88723ee4 R12: dffffc0000000000
+R13: 1ffff1100875c683 R14: 0000000000025820 R15: ffff888035198000
+FS:  0000000000000000(0000) GS:ffff88808d6b1000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f31350a7fc8 CR3: 0000000059b8c000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ skb_release_head_state+0xfe/0x250 net/core/skbuff.c:1149
+ napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
+ e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
+ e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
+ e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
+ __napi_poll+0xc4/0x480 net/core/dev.c:7324
+ napi_poll net/core/dev.c:7388 [inline]
+ net_rx_action+0x6ea/0xdf0 net/core/dev.c:7510
+ handle_softirqs+0x283/0x870 kernel/softirq.c:579
+ do_softirq+0xec/0x180 kernel/softirq.c:480
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
+ local_bh_enable include/linux/bottom_half.h:33 [inline]
+ rcu_read_unlock_bh include/linux/rcupdate.h:910 [inline]
+ __dev_queue_xmit+0x1cd7/0x3a70 net/core/dev.c:4656
+ neigh_output include/net/neighbour.h:539 [inline]
+ ip6_finish_output2+0x11fb/0x16a0 net/ipv6/ip6_output.c:141
+ __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
+ ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
+ rxe_send drivers/infiniband/sw/rxe/rxe_net.c:391 [inline]
+ rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:450
+ rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
+ rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
+ do_task+0x1ad/0x6b0 drivers/infiniband/sw/rxe/rxe_task.c:127
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+
+Tested on:
+
+commit:         e382eacd RDNA/rxe: Fix rxe_skb_tx_dtor problem
+git tree:       https://github.com/zhuyj/linux.git linux-6.15-rc4-fix-rxe_skb_tx_dtor
+console output: https://syzkaller.appspot.com/x/log.txt?x=14a83b70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bf156ad608427e4b
+dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+
+Note: no patches were applied.
