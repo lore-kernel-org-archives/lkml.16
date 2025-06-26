@@ -1,161 +1,134 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D22D2E762A
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAB02E1C7E;
+	Thu, 26 Jun 2025 13:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750945780; cv=none; b=ENzpLg5kuHW1MAhNk+snptOO7wCyZ2/RynSPlD534dH4/GeglIGdTCkf6zpVhCkc1nLdjqN+Rxhi2pCCqJcC2Tfuhre25WENkjEeby/0CeMUEQXwmsKUo4PZAalKnnS8AkJDx5zz8MY7/RGcKIgkvkd9cfPR+P4s995HzFCZ9Yw=
+	t=1750945791; cv=none; b=LOODkFZk6Xd/4XyFtKZdXaZKHQ3pjINr8txGlTtMiSs0W0Qf920PSfdt9LWAhh8WPXKFxoJ/nbYJkms5G6H4TjnBRFQ5lkeUfpiugSWjFw/958tYdcotmLu5fnzyGV16VPx6cS9AY8HX8DCQmbdWbzudyBG8oBeKYFJXRI5hwvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750945780; c=relaxed/simple;
-	bh=7soQAPGLWq1wxtwbCSjjPgm0cssslz7RgCt8zlMExqg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SbdmcGA0J4wixq48+v+HpwlO8mjrYcHw4pvaugkb5VZtaqEVSBektILTQsHql+fPSLlbE7vk8XiE6aIBgO8WeoW2pzCXY8IAoqLEK49VeoSH9xrUZ3C9e9LbeqFe9McMAZKpxfeHQMwBbxW4xSojP6Qkz2H4GnTIIGjhL25XdBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Xn+dBHrN; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750945791; c=relaxed/simple;
+	bh=kozox/jbM9GWIB06RT5vuS5Ewwi9VvJVmt22hiXXCr8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gpPG70LHRfGHy0IQi1scgZ4V+zDlE9mJgwA4u7cF3sENR0Wwz2oKrSwPsDUk7ssskyUErFAaFKa+jn6+F9OUwjjhqhoXozExiKWggouIB6Kf0zwPoy9gpxViS3kqa9eop+thTFxZ0XMWeDIixfZlThWfBbVH0F7/wXgr8StO9YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mwSmQ5JJ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Xn+dBHrN"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q9Untn026632
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:49:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FKzdM9fMZXWLUOkRuS4r8lfC3OfMj540spQyqtt5veg=; b=Xn+dBHrN5VKvXc0D
-	Uel7/VLxwftzvNcg9Eh+UXA2oDIDPpCMUrSFrToVuR/GTtxbE6cIaM6uB2Py1laP
-	nxcMhFb9KNHBVokxxOa67AfuKG74utUlMGRlw4//o/kc5UvfBtYoezg6vpD1UoaB
-	WqauyTTAPfuEVu9UMgd6nzlYj4/jq50NGJGxvyZI/UWnn05tJOh3E4cL4fvUsxCQ
-	CXOaB+HaksjOHqBrFUZX16ZSs/oCBbfPgDQGmjyNKpOm23EajMWnHOahiUPXI+gF
-	AbM4Vr0SAZMY+6UrVka8bOOBDDE9qxdoTJOwvYjPQh+z+HMyKEs4rRjgn9NnsPU7
-	LL17ag==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47evc5vnte-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:49:37 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4a7fb1710f9so53401cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:49:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750945776; x=1751550576;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FKzdM9fMZXWLUOkRuS4r8lfC3OfMj540spQyqtt5veg=;
-        b=NapAvJXy/kO9BMlt/kejQIS7XL7wW/meEIOsJcJi3PEy5JyKVza8vWuDBU/RQbwzuT
-         cUUco8DBHQ0+76Hkd8yKoZyFmWgJhkMqNaPrTSWQb9CNCXp2D28yNW+GsVC8qOSkj3VT
-         /FcokW6PhvauhBcboUU6buCUS6L8IkcW+iBjVoXsQ/guPw3X/kshAA66JWCwXktkUB48
-         MjRYmHPbzkUCdwiZzdn3Q2kaOXRC7Tq9yflXgKN8RB2W2rBZQ8u1AxvR1X5/t5BU/+W+
-         XLJxkjojZ/JIYa6i5jzMnjGXQEtXKfTXw2XtCRGbF+ZrkbRIot4KicaJutwc1BGX87OG
-         sAvA==
-X-Forwarded-Encrypted: i=1; AJvYcCXP04Q76foMP3/r6uFuRkpVnzDQJyvzUWJmnlYNp2XclQHAn+xlT1bk2IrTZx4msqHTr2GDYZjfJ8oidGM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUJqSyLgOmK3a6y69WszM0NlR5dxfdI0kUxfwZ5oWqi0BPiKx2
-	0YBSRTIPeWhhUbnCOqBbd3JcwJzhcv2liQ9gqjdgfGYciol/GVnm/gIG303TCPmo9cCoqqcWm7i
-	gq6uYlfO81N1UAvGSIdoPoPac0eYtq0OHxGF3tNHAVobwBmWaSO75v/fqhkTv/Ga1uLM=
-X-Gm-Gg: ASbGncu1oFvwbIFPt+cmqHJA8qc6vpTaynK9RaKXIo58mpKzMk+3cgAlwYaZJ1/SX0q
-	lQTr4oQR3BNVdOApgkQzc3rtXglz1gC0NucwJK28S5bULCxzAx4T1rOund0mufs0xrjGvPtlTN0
-	eih0wFgDQGuXDdkF8TcnOfB1wpZqxnA4mXdn7dV+7YNWA7E2rQi78oGtl+vLzQjqHjmz6OAccaj
-	ZQQH9bOLdy041D6QV6LwKVKjniZHFRdR8/TP+8MjKTOhv3exA9VFt+4N7Nnql6mZNahybYhkYeh
-	MUeVlgD8VBRDgxN07acJ8y7qmQC4UrJ8AkeyWQGGk8LTlLabLGKjJOMC9R0S6HTmhaYFiRWbM2t
-	Rt44=
-X-Received: by 2002:ac8:5cd2:0:b0:4a6:f7dc:d0ba with SMTP id d75a77b69052e-4a7c08a54ddmr40139491cf.3.1750945776235;
-        Thu, 26 Jun 2025 06:49:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEytgFicUwxVtuRipp+MGkdKAo/DZIZy/PYmxSSSPftdTFihChTHOMq2r7K5wZn4pDMiN9TDw==
-X-Received: by 2002:ac8:5cd2:0:b0:4a6:f7dc:d0ba with SMTP id d75a77b69052e-4a7c08a54ddmr40139271cf.3.1750945775648;
-        Thu, 26 Jun 2025 06:49:35 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae2143d8ee1sm2146366b.91.2025.06.26.06.49.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 06:49:35 -0700 (PDT)
-Message-ID: <cae5bfbe-9537-4b9d-b026-170063054b35@oss.qualcomm.com>
-Date: Thu, 26 Jun 2025 15:49:32 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mwSmQ5JJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=DDjOhg3TDA3lAk/n8wJigYThpB4BiPBNqT914UwqWr4=; b=mwSmQ5JJj9GCM6h53p6V6Ly1Ur
+	bR/FprIAMYt9ES7WjIwtXs4Fg2epbCSYV5xdWtLV2wmXsyyQGDS4gFn+lqX+bEw+lrzmuLBmv8hPv
+	Phtec8rRMc2b31BMwiypEcQtCXFaB5SmQbpKIaZ7alD2OxxZXneU6FZOPY3ZVqc91pXRdtRm9NxZ3
+	O2EDB3QNDHO7/8V/JTj2tgMuE7qLsLMd7+kdbu8ZFmRdXOM+WEYSm+0obArX6wiTtkcJr3CgXil9p
+	oyLDhT3tYFfNOghkv3+1UD3dWyLAwUPBK4CNWgO9yggHIIjKofh6og8+FMbA0dd+SscVt8hGtWM1C
+	kufkI7kQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uUmyf-0000000BkWF-368u;
+	Thu, 26 Jun 2025 13:49:21 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4678430BDA9; Thu, 26 Jun 2025 15:49:21 +0200 (CEST)
+Date: Thu, 26 Jun 2025 15:49:21 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Xiongwei Song <xiongwei.song@windriver.com>,
+	Xin Li <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Breno Leitao <leitao@debian.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>,
+	Juergen Gross <jgross@suse.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>,
+	Huang Shijie <shijie@os.amperecomputing.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCHv7 03/16] x86/alternatives: Disable LASS when patching
+ kernel alternatives
+Message-ID: <20250626134921.GK1613200@noisy.programming.kicks-ass.net>
+References: <20250625125112.3943745-1-kirill.shutemov@linux.intel.com>
+ <20250625125112.3943745-5-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] firmware: qcom: uefisecapp: add support for R/O
- UEFI vars
-To: Johan Hovold <johan@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250621-more-qseecom-v2-0-6e8f635640c5@oss.qualcomm.com>
- <20250621-more-qseecom-v2-2-6e8f635640c5@oss.qualcomm.com>
- <aFloifxONXnQbVg6@hovoldconsulting.com>
- <aFlps9iUcD42vN4w@hovoldconsulting.com>
- <diarijcqernpm4v5s6u22jep3gzdrzy7o4dtw5wzmlec75og6y@wlbyjbtvnv3s>
- <aF0WGmnN_8rvI9n1@hovoldconsulting.com>
- <zufyvg4hoxxz4i45pynzta3gyglqvecrmeslnpphsgwmtujivl@t2zbdtejt3x4>
- <aF1Hhs0JAS747SVi@hovoldconsulting.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <aF1Hhs0JAS747SVi@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: JFRq3-xoZFxeoWPxZpHQRJJOyhVb5HTP
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDExNiBTYWx0ZWRfXyCy8vFWQ4V/s
- khsZsB7wkEA7qj8Wt3SDC6lg5hHWb+4M27Dt7J5d+F0A0fqkeDyUwMIrG+KHmXfY/HkmzN/9qSs
- Rr9EwgIWMBV9hhOlcQF8QkehT4C5m4bKukLXZSxoxS8+tIKqSA78O1CFHkdoAkmU7iGP0cwW6Ye
- T/Jrme/xL9Vg6kDrzY8meOp5Il7XDON7xySf3PA1Bf2FkoYaRlEj4FOyNEu3l5e2CvBb/R4uLy6
- /3VnKyrcPvjXfPmdqIj6kQKRTZoTFDwQktrTNnTB8SoXscYM6VStKJlvohBP4ZzT+lQixLbfG8v
- /WyF0HG/z4/DakcU19KtDeJgz2UB/rOwOKeZi0QdTDeDwD4xbiIY7y1TqW0Wf0WmNLVlE/AtjL2
- SHjiLi+G1PsWn4hUHwqejKV3HaRHpGJ6lH9ZWw5diZTtJtLJwXlmdWlGRA039dJywEl7BlNK
-X-Authority-Analysis: v=2.4 cv=caHSrmDM c=1 sm=1 tr=0 ts=685d4ff1 cx=c_pps
- a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=S-ZiAtxHWdWJY4AEpg4A:9
- a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22
-X-Proofpoint-ORIG-GUID: JFRq3-xoZFxeoWPxZpHQRJJOyhVb5HTP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_06,2025-06-26_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
- malwarescore=0 phishscore=0 clxscore=1015 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506260116
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625125112.3943745-5-kirill.shutemov@linux.intel.com>
 
-On 6/26/25 3:13 PM, Johan Hovold wrote:
-> On Thu, Jun 26, 2025 at 02:15:26PM +0300, Dmitry Baryshkov wrote:
->> On Thu, Jun 26, 2025 at 11:42:50AM +0200, Johan Hovold wrote:
->>> On Tue, Jun 24, 2025 at 04:13:34AM +0300, Dmitry Baryshkov wrote:
->>>> On Mon, Jun 23, 2025 at 04:50:27PM +0200, Johan Hovold wrote:
->>>>> On Mon, Jun 23, 2025 at 04:45:30PM +0200, Johan Hovold wrote:
->>>
->>>>>> Also not sure how useful it is to only be able to read variables,
->>>>>> including for the RTC where you'll end up with an RTC that's always
->>>>>> slightly off due to drift (even if you can set it when booting into
->>>>>> Windows or possibly from the UEFI setup).
->>>>>>
->>>>>> Don't you have any SDAM blocks in the PMICs that you can use instead for
->>>>>> a proper functioning RTC on these machines?
->>>>
->>>> I'd rather not poke into an SDAM, especially since we don't have docs
->>>> which SDAM blocks are used and which are not.
->>>
->>> You're with Qualcomm now so you should be able to dig up this
->>> information like we did for the X13s (even if I'm quite aware that it
->>> may still be easier said than done).
->>
->> I'd rather try to find information on how to update UEFI vars on the
->> storage.
-> 
-> You can do both, especially if it turns out you won't be able to have
-> persistent variables on these machines.
+On Wed, Jun 25, 2025 at 03:50:56PM +0300, Kirill A. Shutemov wrote:
 
-The danger here is that we only know what Qualcomm uses these cells
-for, not necessarily what the vendors with a similar idea could
-have come up with.
+> +/*
+> + * The CLAC/STAC instructions toggle the enforcement of X86_FEATURE_SMAP and
+> + * X86_FEATURE_LASS.
+> + *
+> + * SMAP enforcement is based on the _PAGE_BIT_USER bit in the page tables: the
+> + * kernel is not allowed to touch pages with the bit set unless the AC bit is
+> + * set.
+> + *
+> + * LASS enforcement is based on bit 63 of the virtual address. The kernel is
+> + * not allowed to touch memory in the lower half of the virtual address space
+> + * unless the AC bit is set.
+> + *
+> + * Note: a barrier is implicit in alternative().
+> + */
+> +
+>  static __always_inline void clac(void)
+>  {
+> -	/* Note: a barrier is implicit in alternative() */
+>  	alternative("", "clac", X86_FEATURE_SMAP);
+>  }
+>  
+>  static __always_inline void stac(void)
+>  {
+> -	/* Note: a barrier is implicit in alternative() */
+>  	alternative("", "stac", X86_FEATURE_SMAP);
+>  }
+>  
+> +static __always_inline void lass_enable_enforcement(void)
+> +{
+> +	alternative("", "clac", X86_FEATURE_LASS);
+> +}
+> +
+> +static __always_inline void lass_disable_enforcement(void)
+> +{
+> +	alternative("", "stac", X86_FEATURE_LASS);
+> +}
 
-This is especially important since (unfortunately without going into
-detail), you *really* don't want to mess up some existing values in
-there.
+Much hate for this naming. WTH was wrong with lass_{clac,stac}()?
 
-Konrad
+We're not calling those other functions smap_{en,dis}able_enforcement()
+either (and please don't take that as a suggestion, its terrible
+naming).
