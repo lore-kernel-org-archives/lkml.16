@@ -1,140 +1,139 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B9128D8EA
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E95224D6
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750944010; cv=none; b=NJC5mS0IuXOidVxTBcwPs+9VBDU2FHQDDEHGCYjwhi1L5rmDc6CoCmi71YDuEzpPX+zItkkSW7LGz+H5ABYR8jIdnlqdXMLmXDCEyoRlzUyAg4t0SdM/JL6ly4RpFocioL5qBWz52ZnkhTyhvDIM+ozmAWejcLn+Nmb4lrwpqo0=
+	t=1750944049; cv=none; b=DHFYxeKNVu8XzRarOy8GUd7z98jXBujmnEFcND5Yh7mK4jtd13FusHgdjCOedLa4nM7qSlGaz7BmAu796cEF0bFeO0AlRo5GEdDjoVjogHOa6viOOo81GVnQRkfznqwCPfvqZDgP/K8+ycLC1KQMWF27X0Jl3/BmrXIcyQj96Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750944010; c=relaxed/simple;
-	bh=nTAcmkuNSsOsG0UMgcEAl/0QHbB0kfoR1wF8PdVKA4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=VQbbCCtE/hYZtShn+GYCD2Ssvl+UI2rStGalqR4oRB4ydECUzYtFrSrfIEU4unCBLrTyuTLkwBj9/pHrMTTD6ri6NpIWHO95NITiKV8r8NPT6mmrHrCwqPTfOr4vKb2ULvSvYgRWz9eChwAddyN9UAEwHv8d7DMFSTN3pXU/Wy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=WVMl2rwF; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750944049; c=relaxed/simple;
+	bh=AQJQCHmfuUOJ5fPV5xHd1/fpOqYyjo0Fjlog5uL2iyo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=beyahKOLSS2+5r+O6ugxZ1vt3IeQ2bi6eNVTUnhpkOQItBs4LWTE4v7OQMNY6iYiQyZ0zfzwL0Qe66lKaytvpO9UdaR6IX46E8SGKoQ0kqpuRMbCzxnICPNB3755+49stj4On7tavfiy8P/3WuBhQB/IIMWvJgFhbgYsm7EsPlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=EQBJvIrT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=e1v/rkGT; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WVMl2rwF"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250626132003epoutp0403fcce8db416530c723e602c6251eb82~MmktUsiKD2560425604epoutp04O
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:20:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250626132003epoutp0403fcce8db416530c723e602c6251eb82~MmktUsiKD2560425604epoutp04O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750944003;
-	bh=4fUi/0sjNWRXt2jLqXYkkX00g95v9CpPtPL9v4x0ccI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WVMl2rwFvSIvjJUkkpscvwf8pL/+zYLpQPR6ZUkDOlsF1H0BmslQSWtdyVdpY3Pfj
-	 oNSmoabU0OP32mfwDOzqbX4wB04ijgFpKRCfSMGStJR5Bbeu6Vg6LqrZlZPHm9DBi5
-	 z32k5Pao18nKQlRvgo2qjBw0z+5S3520Cm2MCZeM=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250626132003epcas5p3cef059dd1bec1b3788d8e74bf9a56f42~Mmks7CfyQ1619716197epcas5p3K;
-	Thu, 26 Jun 2025 13:20:03 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4bSfS303nNz2SSKZ; Thu, 26 Jun
-	2025 13:20:03 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250626095823epcas5p15a77ae68c5c7ca2c5659d9e3da16020c~Mj0oAlY3O0634906349epcas5p10;
-	Thu, 26 Jun 2025 09:58:23 +0000 (GMT)
-Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250626095820epsmtip1335eb847d4c1d96f6c5b0ecd6dcce87a~Mj0ln-xxU1533815338epsmtip1M;
-	Thu, 26 Jun 2025 09:58:20 +0000 (GMT)
-Date: Thu, 26 Jun 2025 15:28:15 +0530
-From: Neeraj Kumar <s.neeraj@samsung.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: dan.j.williams@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
-	a.manzanares@samsung.com, nifan.cxl@gmail.com, anisa.su@samsung.com,
-	vishak.g@samsung.com, krish.reddy@samsung.com, arun.george@samsung.com,
-	alok.rathore@samsung.com, neeraj.kernel@gmail.com,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
-Subject: Re: [RFC PATCH 07/20] nvdimm/namespace_label: Update namespace
- init_labels and its region_uuid
-Message-ID: <1296674576.21750944003001.JavaMail.epsvc@epcpadp1new>
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="EQBJvIrT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="e1v/rkGT"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 29C2D7A02E0;
+	Thu, 26 Jun 2025 09:20:46 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Thu, 26 Jun 2025 09:20:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1750944046; x=
+	1751030446; bh=o7umsiNhqXFeL9cqtTaaZvG0eglvA5cs8iHUgyy8KsE=; b=E
+	QBJvIrT3Ano4Zp/e92gEZb/S7T232pFfTGV5kBBi7IkkIBGBVCopt+w7t23iMQxO
+	t2BbRHkQHU+xlebaHVCcrnTnl2/4v/K0jrgDOC5sMSS/jqWlaGP6GTtfucRmkUrz
+	u+CeEjDSQR3/Rrn5oEPb7n2+mFkP5zi+vI2iRNZtelaNjPTm6/VsEP5Mw/W/7vZv
+	e1Vs1+ux/oFJ8U+yXZIdaCPvvixFgUndJk5bXXRJ6sGFYBCZ4+jTkYQGm82falYW
+	EHcmVE7MlJ7TS7NE4f+Gmep0TAhBKu3QJvO7u4O+NVCZbA7PFi3t75sFpxkQlSKJ
+	/aTHUvU4Eq9LYROXV6FSA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1750944046; x=1751030446; bh=o7umsiNhqXFeL9cqtTaaZvG0eglvA5cs8iH
+	Ugyy8KsE=; b=e1v/rkGTMrxflNbFMg36gTsoXk1hzGdvxDtwIIOA4w2FqiaW7GC
+	+ZCKysBGmDAocLtEa3RyaamrXW0pKA+mHKGirFeAmnzKlbRP3ewk8fgtv25qGtNB
+	CK91HmEp6DHEAAJMOCaqKsGhrMP9pA76lpkDJXXGF0z3SnyOmM29vCbqJj9prOpS
+	vP5bexjy8RMicCSWySpzhnaFtdKqUHEcXVFKxd8s+tcUhXizgvsMm9//T2DChj7S
+	XkN8BNpGUCsYtK6t1mpm7Y+u6cr75Rr3/lEZrzpMp+t45dMOZtD/4cFxZXM8l9GN
+	NxUAW4Eg9lj36grDeKUfaQD8T5jAzl/CdMg==
+X-ME-Sender: <xms:LUldaKw8VA0EzEa31BfUjtqGoJcZUVgRdqP3HC7863j2g9oZcip8ig>
+    <xme:LUldaGR55rlzL2wuXEJWGDMbhN2TDHVx3R81RwjH1BJT6DLfBqa_MYw4iySqV61pU
+    9qAlNMJIXfhLAW69iA>
+X-ME-Received: <xmr:LUldaMXfwc_VN8JRb7JSsBmRgXzsuqrWVSuanlqn-lmE1hW_kURRfAW9ryETxfv3SYPEYA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegrihhl
+    ohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpe
+    ffhffvvefukfhfgggtuggjsehttdfstddttddvnecuhfhrohhmpedfmfhirhhilhhlucet
+    rdcuufhhuhhtvghmohhvfdcuoehkihhrihhllhesshhhuhhtvghmohhvrdhnrghmvgeqne
+    cuggftrfgrthhtvghrnhepffdvveeuteduhffhffevlefhteefveevkeelveejudduvedv
+    uddvleetudevhfeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdrnhgrmhgvpdhnsggprhgtphhtthho
+    pedufedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhivghlsehsuhhrrhhivg
+    hlrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtohepkhgvrhhnvghlqdhtvggrmhesmhgvthgrrdgtohhmpd
+    hrtghpthhtohepuggrvhgvrdhhrghnshgvnheslhhinhhugidrihhnthgvlhdrtghomhdp
+    rhgtphhtthhopehluhhtoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgvthgvrh
+    iisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepsghpsegrlhhivghnkedruggv
+    pdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgruggrvh
+    drrghmihhtsehgmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:LUldaAixFgkHYwajMj0iCUv_29KzCx0YumEKHsLduKVzvJHn3yu1XA>
+    <xmx:LUldaMBUWqEuR2-mDTCImBgA3GwQyAlDi2kaNhEN6PtPLsfajo6xYw>
+    <xmx:LUldaBIygf27w2miaGCBykkcLvtDTAgRIJm6DqtAaw3dbmUf5z2RFA>
+    <xmx:LUldaDAPNDqLyWroCcBm9c8dKoyan5mcDF806dJXHL9iZ_bKj7aECQ>
+    <xmx:LUldaK-EJl5bn5uWIzRTA278fmwCWk0uB1qTRHHR90rDPlAN7ZDrjzdU>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 26 Jun 2025 09:20:40 -0400 (EDT)
+Date: Thu, 26 Jun 2025 16:20:37 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Rik van Riel <riel@surriel.com>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, 
+	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, bp@alien8.de, 
+	x86@kernel.org, nadav.amit@gmail.com, seanjc@google.com, tglx@linutronix.de, 
+	mingo@kernel.org, Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: Re: [RFC PATCH v4 4/8] x86/apic: Introduce Remote Action Request
+ Operations
+Message-ID: <mqeuxn4in7pscni5odii2qvzoils5ce3jdzvmp45w3bg462buj@4elenf2mxaro>
+References: <20250619200442.1694583-1-riel@surriel.com>
+ <20250619200442.1694583-5-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250623101104.00001ca4@huawei.com>
-X-CMS-MailID: 20250626095823epcas5p15a77ae68c5c7ca2c5659d9e3da16020c
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_cdaad_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20250617124025epcas5p1ce6656fed9ef1175812f80574048cd7a
-References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124025epcas5p1ce6656fed9ef1175812f80574048cd7a@epcas5p1.samsung.com>
-	<720167805.241750165205630.JavaMail.epsvc@epcpadp1new>
-	<20250623101104.00001ca4@huawei.com>
-
-------h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_cdaad_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250619200442.1694583-5-riel@surriel.com>
 
-On 23/06/25 10:11AM, Jonathan Cameron wrote:
->On Tue, 17 Jun 2025 18:09:31 +0530
->Neeraj Kumar <s.neeraj@samsung.com> wrote:
->
->> nd_mapping->labels maintains the list of labels present into LSA.
->> init_labels function prepares this list while adding new label
->
->init_labels() prepares
->
+On Thu, Jun 19, 2025 at 04:03:56PM -0400, Rik van Riel wrote:
+> From: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> 
+> RAR TLB flushing is started by sending a command to the APIC.
+> This patch adds Remote Action Request commands.
+> 
+> Because RAR_VECTOR is hardcoded at 0xe0, POSTED_MSI_NOTIFICATION_VECTOR
+> has to be lowered to 0xdf, reducing the number of available vectors by
+> 13.
+> 
+> [riel: refactor after 6 years of changes, lower POSTED_MSI_NOTIFICATION_VECTOR]
 
-Thanks, Will fix it up
+But why? Because it is used as FIRST_SYSTEM_VECTOR?
 
->
->> into LSA and updates nd_mapping->labels accordingly. During cxl
->> region creation nd_mapping->labels list and LSA was updated with
->> one region label. Therefore during new namespace label creation
->> pre-include the previously created region label, so increase
->> num_labels count by 1.
->>
->> Also updated nsl_set_region_uuid with region uuid with which
->> namespace is associated with.
->>
->> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
->> ---
->>  drivers/nvdimm/label.c | 5 +++--
->>  1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
->> index 9381c50086fc..108100c4bf44 100644
->> --- a/drivers/nvdimm/label.c
->> +++ b/drivers/nvdimm/label.c
->> @@ -947,7 +947,7 @@ static int __pmem_label_update(struct nd_region *nd_region,
->>  	nsl_set_slot(ndd, ns_label, slot);
->>  	nsl_set_alignment(ndd, ns_label, 0);
->>  	nsl_set_type_guid(ndd, ns_label, &nd_set->type_guid);
->> -	nsl_set_region_uuid(ndd, ns_label, NULL);
->> +	nsl_set_region_uuid(ndd, ns_label, &nd_set->uuid);
->>  	nsl_set_claim_class(ndd, ns_label, ndns->claim_class);
->>  	nsl_calculate_checksum(ndd, ns_label);
->>  	nd_dbg_dpa(nd_region, ndd, res, "\n");
->> @@ -1114,7 +1114,8 @@ int nd_pmem_namespace_label_update(struct nd_region *nd_region,
->>  				count++;
->>  		WARN_ON_ONCE(!count);
->>
->> -		rc = init_labels(nd_mapping, count);
->> +		/* Adding 1 to pre include the already added region label */
->> +		rc = init_labels(nd_mapping, count + 1);
->>  		if (rc < 0)
->>  			return rc;
->>
->
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> Signed-off-by: Rik van Riel <riel@surriel.com>
+> ---
+>  arch/x86/include/asm/apicdef.h     | 1 +
+>  arch/x86/include/asm/irq_vectors.h | 7 ++++++-
+>  arch/x86/include/asm/smp.h         | 1 +
+>  arch/x86/kernel/apic/ipi.c         | 5 +++++
+>  arch/x86/kernel/apic/local.h       | 3 +++
+>  5 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/apicdef.h b/arch/x86/include/asm/apicdef.h
+> index 094106b6a538..b152d45af91a 100644
+> --- a/arch/x86/include/asm/apicdef.h
+> +++ b/arch/x86/include/asm/apicdef.h
+> @@ -92,6 +92,7 @@
+>  #define		APIC_DM_LOWEST		0x00100
+>  #define		APIC_DM_SMI		0x00200
+>  #define		APIC_DM_REMRD		0x00300
+> +#define		APIC_DM_RAR		0x00300
 
-------h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_cdaad_
-Content-Type: text/plain; charset="utf-8"
+Hm. Do we conflict with APIC_DM_REMRD here?
 
+>  #define		APIC_DM_NMI		0x00400
+>  #define		APIC_DM_INIT		0x00500
+>  #define		APIC_DM_STARTUP		0x00600
 
-------h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_cdaad_--
-
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
