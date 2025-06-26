@@ -1,241 +1,186 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0D92ECEB9;
-	Thu, 26 Jun 2025 20:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C201FFC49
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 20:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750970248; cv=none; b=G4FGHZ4wmRK//4RJDFUd7Az18I8h1UprgL8MvMovUSXaDMAomZ+3zLP+D77W2kIuQsCtlmEYQ+q7h/M1xMAwn4zPktQ6IifEV3rYxvPhigJlb9fKbIdhZvXEmdmPY/qmaliir9L9eDqXTCxmkzdYh6/R2IbPI9bPZ9eGG8rhvTU=
+	t=1750970485; cv=none; b=W1owjdOxXfAx7IokZ3sCRUjT1W8shbuTLk7P2lkHkmBjtZiN42OD3kfC5usjdSJPgx6ODQmQACR0eI9RB0nZQIT9nbgKh2v7pDMwSE8xkrRO6v7RueMx5DPmMrKqErH78dViY/yShsfbn8sOs8N7qTGJXm3szTD0l6lR06XxENg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750970248; c=relaxed/simple;
-	bh=TjETarpWW8rD1QojqRu8kZpa9Wzk7eJudQD6rpxZgjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nr1cU+UWgIkTSbnJiVpp23xUI/Melhmeq9eAtz9o1abfuhPuDhjNSwDvncskaYcesR7wYuE/0pjqJXQFWM4DEbcWLhcDv//wBaGwW1qug3Ljfgkygo731FlTbbUZXwxAqWt5OQxxpTwuj3OxqqpF0MmjfsTiIurFk/xGidulpfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gNSIL/Qf; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750970485; c=relaxed/simple;
+	bh=yO4nmXPlOE3qATYCBlrBBNyW0/AyKXF04RwCBvWMJm8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZwzTjWe3eIQ/fqh+LCdCQaTDvEcsGfEbN4+H8G5afBe63sSfWtJtaHcLwfJpskVayhKsk14zSCCvdhn2E/kNhR6OCpV59br+ElJFyX7RYlka2p9OfMMxr4Iqp8G6iIDSPDEJJp/Scowy00yB1qZ5DxT0U2cI+ESoXn90g4W+y1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=igGQ166U; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNSIL/Qf"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6facacf521eso15402266d6.3;
-        Thu, 26 Jun 2025 13:37:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750970246; x=1751575046; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=49HOUtWYGa8Q1wPaREKsJ9GTWTJXnHxy3/BYMvp9qZs=;
-        b=gNSIL/QfwoocFyUZnclUd2zN6WGpvlEtqE9fIYon8kAdsc+KODsX+s8G1roynHM3+Z
-         dmIQJgglHhppBcKVObdmmIwB2r3H0HC2SEGEQAKHFla8BxlSRb8Z87pY7Pf2pjx3lz9F
-         H8FXFiz0aKAMKMCt/Oat+D0uSUL3IH+bSv6eD5+LzZndhSWaDSNHeZHaPcfgHXvg6L5k
-         snSVShWuE8bDZofQhpGzUoWrSWaUD99ZGPtYyE+7/vnD0epTxkQ86n2I21qthmIZrm92
-         BPISRP73WJHNv/1IxHOV9Vdx3vTLTwtfm5CprWktKa5/++rNqLyHnvxOhgBKRrJm/ziv
-         Jz1Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="igGQ166U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750970483;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=McFwiUl5A+mzAAL3ucys/TS38xH7gm0pAeK1El97cl4=;
+	b=igGQ166U2th5ZCCTp0AcjR5kwkHR5qIG06d9Gb1yp4Juu92fCMugl+pr+UzRQl+gg5Gs27
+	xXBWryMbEDp+CFs8lV8RF9ux3RzJdRN9epmBWrnWMYHexteOWIsWQSW8/lYbksmTMiUkXv
+	9kgDo1VXLlEiIiIi6agEfEjN6OEbG10=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-312-hkF_Vh0VPt-xet9KoD51fw-1; Thu, 26 Jun 2025 16:41:18 -0400
+X-MC-Unique: hkF_Vh0VPt-xet9KoD51fw-1
+X-Mimecast-MFC-AGG-ID: hkF_Vh0VPt-xet9KoD51fw_1750970478
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d3d3f6471cso194390785a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:41:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750970246; x=1751575046;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=49HOUtWYGa8Q1wPaREKsJ9GTWTJXnHxy3/BYMvp9qZs=;
-        b=YEOb47fuHpGw4YRFuTvciStAybA/IAif39BKQUo8zg3HdfRgi3VZCEShLHj4tAjrfA
-         FqzCZHUbtBIXnHb6Eh+BhHHCmdn6FmDZIzlH97zYZ917AcynS8fzyMu8okrTnkhO8kU1
-         CU5fKVPMnaCvfxDKGcUQSCMze7eV4WHlbq8wI9oWzZlidUJvRbSMVR0vxusoIAnhLj6C
-         cKvzVG1xVmLtS/GLINm1YvJ2Ood0QQkzZy7ft2cDIdL09ohAtx55k04VnxP5sAjfS6Q5
-         nHkdvB3957s9kJih/2kyQ7rQjAzZEN/JTfc7bdz0jvLK6fGGK+ZuGu8Vk1BO2eEcQPOu
-         EVrA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBrh8kj+qrKaGDeLZ0REH7zjLZ3VYtlOOgPNLoY2pqf86mZey4LS40pPSlS7kVInhgrt6CwYvRRc8a8LRLOz0=@vger.kernel.org, AJvYcCWlY2M4dVCugJ4yJNfHxzZmgLFIr9LKcQtiu7YMJrtdVvdA2XppdpuIFzrht+riq7WRXRcQ1VlxWPAt@vger.kernel.org, AJvYcCXISgvb58+jEuKzTQPhz4JV0zyJs12H9E5J3MvPZ+ayo2rdvf/xaQ/DIia1+rvGPrVQF2v147OpzUKhTNM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywPbfXTkvy424u0MnksJ4LfeR5b5KOK6oUe7RZDeAiPYezobu1
-	eR8R7munGMhTkHlC6+c3Rw9A0GKkmpwWmYA6n2rSpGBfrKvO0DdR85bZ
-X-Gm-Gg: ASbGncvZTvmfHTv9LwFlsdf79bFZHpGWk0lgHc/K1z27Ru/InAUtUzPebsRoPh0/FAl
-	UbadzFJFjDqJ1OWPIzqrSlNeRGFZ+Sx9GEcMOIfiivmMPnJD43SPs3FauXiqxYh6tiPqFRH37oQ
-	RpWE7K7z7yojQaaHCOhLviX8O34ehVkx9jynvT00qM3SK635s8pi/YQdqAuoN9FEikw2jrHeYrQ
-	xvbugZHnFFEmqDkNaiyMIJm8lYE0bybUPMYHBon+Nu68NRcQxWajBj1b1O55z5dUCDpMljfbyQv
-	fXjYmEGwZOuepx+2um8sLsTk6o41cZckSCMb/uhjeLDvI/0vi//mRCBAxK12FhRt2+p50Evds7V
-	0+7gTcfsnBK4qUHVY75KxKVPUfr3x06uEHQDtZqeaCC1sNRbZKxmd+b9NwAuVwfg=
-X-Google-Smtp-Source: AGHT+IGB9nMy7ILFoVhr0U892upEJDvEMUN1MTP8Gm1YdP6vS+3aASUQQBoY2mBI+Z8QaYjlVpHPyQ==
-X-Received: by 2002:a05:6214:2421:b0:6fd:609d:e925 with SMTP id 6a1803df08f44-70003a8c137mr17456886d6.36.1750970244750;
-        Thu, 26 Jun 2025 13:37:24 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd771dd8afsm11480516d6.54.2025.06.26.13.37.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 13:37:24 -0700 (PDT)
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfauth.phl.internal (Postfix) with ESMTP id B5971F40068;
-	Thu, 26 Jun 2025 16:37:23 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Thu, 26 Jun 2025 16:37:23 -0400
-X-ME-Sender: <xms:g69daGZtzUvkCA3l6nDTt6ZH4wUngMhGHvNiTTeHFo9OihMatalUSA>
-    <xme:g69daJZUv2zANHnLxvnJswv_Yr_NkE2rdodO1hFbGxnw2qmAfiP4gYe9lTURnXQJB
-    yhyPI9Ua3IkyUVLFw>
-X-ME-Received: <xmr:g69daA8gHjnsu4xZRI83ckkkmcFxjbafCePXRuAedkHvFBhyMLHwPa7GMg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgv
-    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
-    hnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueevieduffeivden
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquh
-    hnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudej
-    jeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrd
-    hnrghmvgdpnhgspghrtghpthhtohepvddtpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlih
-    hnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtph
-    htthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgr
-    rhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhroh
-    htohhnmhgrihhlrdgtohhmpdhrtghpthhtoheplhhoshhsihhnsehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:g69daIqMWDclFsqFfQbaBde1LUxsxtX4xIRqZ3RXEWIc7LdifyS8jg>
-    <xmx:g69daBqXc5aPyVRV_ohpjhCmbtYNzGK1IJa17hw7IXUW6GGAru-uPQ>
-    <xmx:g69daGRO10EMAESCPC7izUz5rcO3EhSf__kGstakC0j3VUQv6jBZ7A>
-    <xmx:g69daBrK5-dTxvltwC8IJVfKitNVY4uaQ3xoc9L0B13Dc5I8CcIoKg>
-    <xmx:g69daO417eEe24dg0zOXGXS3xZeYWySDnlXEX83PfM4okWKuj44qQc3m>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 26 Jun 2025 16:37:23 -0400 (EDT)
-Date: Thu, 26 Jun 2025 13:37:22 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
-	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 5/5] rust: devres: implement register_release()
-Message-ID: <aF2vgthQlNA3BsCD@tardis.local>
-References: <20250626200054.243480-1-dakr@kernel.org>
- <20250626200054.243480-6-dakr@kernel.org>
+        d=1e100.net; s=20230601; t=1750970478; x=1751575278;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=McFwiUl5A+mzAAL3ucys/TS38xH7gm0pAeK1El97cl4=;
+        b=MstIP6LNnkHCDe4bYCKkmeZNOPYjvt2jKcckTaORr8Rb6rGifeJngeSUdF/MI6sVzZ
+         ipdmzGEU91h//UjupKOIU5pxTfcBb+gMpgJNYwaJQ4SIcRGaGZoeCLVo8BD1bon9np/3
+         44wjAXwd35NnnLjTuKEdYs9CQAPoKNpinG+YXNYL3iA3pUMABp59fMdHQwLRrUQB94V1
+         V04n/h9pPzHP978p5wZQz2VAMmdy3RgrrC9G+xZL8Zo2YiYyq7sin8MFSnkWBnkT+M2n
+         Zc+Ws6G63RMFmEVE6dQWN2SzYCKVEviveZh40EtA2mOJEWyhS5Hkx8WQIZOD6LWr0pFJ
+         tk3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWxvQz7Z7X11Nam1GeurKtKPIKlal2qNvqZkZA9/Q4FGFLvro5M0Oung77K6w0DnChCroF9uHHEUANm0KU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4/ZBAR6nnKPFw2n2pqmZuL7BdwxhAE6fuvqktE8KV078cOfx7
+	W/jxNNjG9yY7EP9cuRnnWrcu9IHzySlIjk9/Jy9piTzX7IGgOVmWOEJW7qxykHZC/SPfCvv0E0S
+	aw93ha2qvDJZC26UN45pMyqHDb2nAxmzm3kuE9JarGdg6K2qNb77HC2crxQtTc+7erQ==
+X-Gm-Gg: ASbGncuaZ1BEtWDYZ4hSVXyizDm+jxwbf0l+p5VVx0LATa3RmkXmZMtu26R7TL6UrRU
+	MY5vls5xntrT5bDGsoWm3hU5WzLZwsRcZjI7e4C72jDNUKeCeplp7s8XNwvLDtSxf7pyNiNOzLX
+	o917lud+ZwXnz5D3+BhF/xiMtjy2G9S16TzUfZKE7f3A3tbRuWLDlEe9ZuG2Km1cxzTfKPlyDIM
+	sIc74GEJcmva/51kvbufmMtYqMYVxonkJXl8En3Ghkups0W8KiJIJ/DbTg//gCABa7NcbfGtGTF
+	JQoOPJSzXvohcHMru8Jmjjw=
+X-Received: by 2002:a05:620a:a209:b0:7d0:a309:b1a0 with SMTP id af79cd13be357-7d4439233eamr137642385a.1.1750970478005;
+        Thu, 26 Jun 2025 13:41:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH0VfaF5gy5sqyorzrlrj2psC5q6ithRQ3K38EnG2q1bcJiydt5Kp7n65cteWaeW097MHo8hw==
+X-Received: by 2002:a05:620a:a209:b0:7d0:a309:b1a0 with SMTP id af79cd13be357-7d4439233eamr137637685a.1.1750970477399;
+        Thu, 26 Jun 2025 13:41:17 -0700 (PDT)
+Received: from [192.168.0.241] ([198.48.244.52])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44318800bsm43199385a.52.2025.06.26.13.41.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 13:41:16 -0700 (PDT)
+Message-ID: <3e82680d-149c-4a67-b838-bc73c0be3e4e@redhat.com>
+Date: Thu, 26 Jun 2025 16:41:16 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626200054.243480-6-dakr@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: man-pages-6.14 released
+To: "Andries E. Brouwer" <aeb@cwi.nl>, Alejandro Colomar <alx@kernel.org>
+Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
+ libc-alpha@sourceware.org
+References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
+ <20250509112627.GA924923@if>
+ <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
+ <20250509121454.GA952723@if>
+Content-Language: en-US
+From: Carlos O'Donell <carlos@redhat.com>
+Autocrypt: addr=carlos@redhat.com; keydata=
+ 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
+ O0FatDMfJw==
+Organization: Red Hat
+In-Reply-To: <20250509121454.GA952723@if>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 26, 2025 at 10:00:43PM +0200, Danilo Krummrich wrote:
-> register_release() is useful when a device resource has associated data,
-> but does not require the capability of accessing it or manually releasing
-> it.
+On 5/9/25 8:14 AM, Andries E. Brouwer wrote:
+> Hi Alejandro,
 > 
-> If we would want to be able to access the device resource and release the
-> device resource manually before the device is unbound, but still keep
-> access to the associated data, we could implement it as follows.
+>>> I wonder about the legal status of such a change.
+>>> There is ownership of the pages, and a license that allows
+>>> others to do certain things.
+>>
+>> I also wonder about it.  We discussed it for several (~3) months, and I
+>> documented links to the discussion in the commit message:
+>>
+>> commit 9f2986c34166085225bb5606ebfd4952054e1657
+>> Author: Alejandro Colomar <alx@kernel.org>
+>> Date:   Fri Apr 11 02:19:48 2025 +0200
+>>
+>>      *, CREDITS: Unify copyright notices
+>>      
+>>      Link: <https://lore.kernel.org/linux-man/jpin2dbnp5vpitnh7l4qmvkamzq3h3xljzsznrudgioox3nn72@57uybxbe3h4p/T/#u>
+>>      Link: <https://www.linuxfoundation.org/blog/blog/copyright-notices-in-open-source-software-projects>
 > 
-> 	struct Registration<T> {
-> 	   inner: Devres<RegistrationInner>,
-> 	   data: T,
-> 	}
+> So I read this last link, and see
 > 
-> However, if we never need to access the resource or release it manually,
-> register_release() is great optimization for the above, since it does not
-> require the synchronization of the Devres type.
+> "Don’t change someone else’s copyright notice without their permission
+> You should not change or remove someone else’s copyright notice unless
+> they have expressly (in writing) permitted you to do so. This includes
+> third parties’ notices in pre-existing code."
 > 
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  rust/kernel/devres.rs | 73 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 73 insertions(+)
-> 
-> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-> index 3ce8d6161778..92aca78874ff 100644
-> --- a/rust/kernel/devres.rs
-> +++ b/rust/kernel/devres.rs
-> @@ -353,3 +353,76 @@ pub fn register<T, E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flag
->  
->      register_foreign(dev, data)
->  }
-> +
-> +/// [`Devres`]-releaseable resource.
-> +///
-> +/// Register an object implementing this trait with [`register_release`]. Its `release`
-> +/// function will be called once the device is being unbound.
-> +pub trait Release {
-> +    /// The [`ForeignOwnable`] pointer type consumed by [`register_release`].
-> +    type Ptr: ForeignOwnable;
-> +
-> +    /// Called once the [`Device`] given to [`register_release`] is unbound.
-> +    fn release(this: Self::Ptr);
-> +}
-> +
+> The main topic of that link is how one should document new contributions,
+> and writing "by the contributors of the foo project" is OK for new stuff,
+> of course provided the new contributor agrees.
+> In my opinion it is illegal to change existing copyright notices,
+> unless you get permission from all people involved, which seems unlikely.
 
-I would like to point out the limitation of this design, say you have a
-`Foo` that can ipml `Release`, with this, I think you could only support
-either `Arc<Foo>` or `KBox<Foo>`. You cannot support both as the input
-for `register_release()`. Maybe we want:
+I agree with Andries.
 
-    pub trait Release<Ptr: ForeignOwnable> {
-        fn release(this: Ptr);
-    }
+This is also my interpretation, you cannot remove these entries without
+express permission from the copyright holder.
 
-?
+In glibc we did not remove any copyright notices, but *added* under DCO
+"Copyright, The GNU Toolchain authors."
 
-Regards,
-Boqun
+Example:
+    1 /* Map in a shared object's segments from the file.
+    2    Copyright (C) 1995-2025 Free Software Foundation, Inc.
+    3    Copyright The GNU Toolchain Authors.
+    4    This file is part of the GNU C Library.
+    ...
 
-> +/// Consume the `data`, [`Release::release`] and [`Drop::drop`] `data` once `dev` is unbound.
-> +///
-> +/// # Examples
-> +///
-> +/// ```no_run
-> +/// use kernel::{device::{Bound, Device}, devres, devres::Release, sync::Arc};
-> +///
-> +/// /// Registration of e.g. a class device, IRQ, etc.
-> +/// struct Registration;
-> +///
-> +/// impl Registration {
-> +///     fn new() -> Result<Arc<Self>> {
-> +///         // register
-> +///
-> +///         Ok(Arc::new(Self, GFP_KERNEL)?)
-> +///     }
-> +/// }
-> +///
-> +/// impl Release for Registration {
-> +///     type Ptr = Arc<Self>;
-> +///
-> +///     fn release(this: Arc<Self>) {
-> +///        // unregister
-> +///     }
-> +/// }
-> +///
-> +/// fn from_bound_context(dev: &Device<Bound>) -> Result {
-> +///     let reg = Registration::new()?;
-> +///
-> +///     devres::register_release(dev, reg.clone())
-> +/// }
-> +/// ```
-> +pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
-> +where
-> +    P: ForeignOwnable,
-> +    P::Target: Release<Ptr = P> + Send,
-> +{
-> +    let ptr = data.into_foreign();
-> +
-> +    #[allow(clippy::missing_safety_doc)]
-> +    unsafe extern "C" fn callback<P>(ptr: *mut kernel::ffi::c_void)
-> +    where
-> +        P: ForeignOwnable,
-> +        P::Target: Release<Ptr = P>,
-> +    {
-> +        // SAFETY: `ptr` is the pointer to the `ForeignOwnable` leaked above and hence valid.
-> +        let data = unsafe { P::from_foreign(ptr.cast()) };
-> +
-> +        P::Target::release(data);
-> +    }
-> +
-> +    // SAFETY:
-> +    // - `dev.as_raw()` is a pointer to a valid and bound device.
-> +    // - `ptr` is a valid pointer the `ForeignOwnable` devres takes ownership of.
-> +    to_result(unsafe {
-> +        // `devm_add_action_or_reset()` also calls `callback` on failure, such that the
-> +        // `ForeignOwnable` is released eventually.
-> +        bindings::devm_add_action_or_reset(dev.as_raw(), Some(callback::<P>), ptr.cast())
-> +    })
-> +}
-> -- 
-> 2.49.0
-> 
+-- 
+Cheers,
+Carlos.
+
