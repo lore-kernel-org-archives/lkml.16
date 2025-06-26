@@ -1,88 +1,171 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E3538FB9;
-	Thu, 26 Jun 2025 05:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E161BC9E2;
+	Thu, 26 Jun 2025 05:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750915376; cv=none; b=T6jca1feNxeUdGhpv/fXO1CoCFwS9rNr6BNsYjB2LQbDqavmW2xu4uqt15BzdE0JgssT9e3eNuBgLEOT1QmWOswLdYsyMBjfooPO+HeR+oxLSVOy8TVKmnpMB7tuS+3Xfg+QzAYo5G6QOnebIFbJqZhl9GMgPVwkjCD7wRHBRsU=
+	t=1750915487; cv=none; b=Vz3n0FujlcUHoEeoCCfSQ7KIbEpsc5IkJTRX2UlPTEuLOcQ0P7yfSr23hH8XyTXloDC6/zfxgLlGP7UdYzUYyQZrjt1JiRZfMDBC+KvGTqwUukDxGnQeADigOP2MzkvGsGmzGtGGh03PYLQi/WMz3+4n0ljDKeNdKKINWYdTpYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750915376; c=relaxed/simple;
-	bh=DgPueT0FVH+s+1tOBBcFZ6uSCotZFHDPWJ+ROEwtJqs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pEWkla+cvhSfydO1+ZEggu11zf8uWpPJtsTImJa7m0TB6MihmmEibyGfqrarJ8ldkVcOCqsWenVvs300KmVx77wt99yNIn8hti8oHThJzow4YlaaOEAbemb5rDTCDLyO+6aL72zBeH5k80oCwTBMSNgbyl6LOeMpkGK35iI3KUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XMKXJGRW; arc=none smtp.client-ip=209.85.208.54
+	s=arc-20240116; t=1750915487; c=relaxed/simple;
+	bh=iBQQwEBGxbk3afYSw03+fGXpz55h3dAShiAwQQQdpMw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PCJ5h5DsYZ9NKpbmyWoiJGAVgYvS1vaKpg8/LXkAnzEpZFHFkFTjvv4v6XISEmtnx8eIhbpDd593NVm8vSinOpdQ/uXarkOD7g4hLEAbEs/Ftasmp4Gj6B1etEPzwC+bXq33U7GJRhhf51xN2esbisOrjNzlEIOwHEFcTdjKztk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WcnmxyIb; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMKXJGRW"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-60c5b8ee2d9so1178960a12.2;
-        Wed, 25 Jun 2025 22:22:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcnmxyIb"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553cf020383so589057e87.2;
+        Wed, 25 Jun 2025 22:24:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750915373; x=1751520173; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DgPueT0FVH+s+1tOBBcFZ6uSCotZFHDPWJ+ROEwtJqs=;
-        b=XMKXJGRWF+4tS+uWrLwfSaayTWSCkRgmMA6zd0W3TttdpB/DGRwS2ltdDSeu8ATcsW
-         CUGDX9QWo6XKU+f/uh9SPvXPNywCknWThar2RVcUhh+slggNsWfzqPitd7787lKst0YU
-         6VFw4rmzu3auifx3yz41kTTTMjy8ByTx1kGHtsBgS6/UFpT3vqTl0/CMhhN+p59K0+2k
-         yKtE4qzvVDQrN6JCjWWj35Tn5N4izf3aiAZuWBdQgJHj3o32Ib0oK3pUGUsHoqM5OW3b
-         /o+UeGIZlROT0+WEC7eYzPrUZDj+6GPVQM1dd/CG0g0zB8VyXZHC/yjH6cBf1GK1TBoR
-         jpcQ==
+        d=gmail.com; s=20230601; t=1750915484; x=1751520284; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Uu+PcA2M9xAN/Gp41c21x1ds5eVoC83exOsltc9gBIU=;
+        b=WcnmxyIbLKDhFRmH3IDZrOMaqlbYDrdZsOrXYZLAfMT5MJ2OMmYZOrPPFIkyBAYsgh
+         OsVcyP2O3MeOMHJyymnVd61UjqeThIzTKaYQy0NNtPDe7K0jMOQHaZoIWqdVjdCEpAXO
+         XP5kz6lvafZTYKpOQq2qDPdg4jWUJ0jzyqW2ddShVJnOJoG6TN0MgA7wmcX8Hs9EERUA
+         oRpa3QehUmdoe4rsqZGg9THhj2jYCWnlWcGJrTmBIe8TM95PNyCfB90FuvnHXeG3VCGv
+         1NEPPjd7CzA69U1yoa9zLXGQY2oeI6tC5i+zu8K8x0GT4qXrpk9mm1FCCDzCK06B0U66
+         dkqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750915373; x=1751520173;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DgPueT0FVH+s+1tOBBcFZ6uSCotZFHDPWJ+ROEwtJqs=;
-        b=Nc22E/sPe4/1yQuxjvof/9Ag5EVe+DShemLnKlkMwB9yDsjPymc9kCU5k1u4F2Ydmt
-         vLczEswBkYmFvE5GlLmoDbyC75620tUVbd7s2OsK0gSiIttCWDzWGruVjXV/ArdTX715
-         fhhKxuez2DLnkJRLapAZM24zQvJGmbAEl1sAQZAqcKOeZWs86k9bC0FqNfUHVD93SZ2w
-         9vItEsO9ytg1Z8k+g/U76iaifaU1BzI9W7YdbLGzvSZT6CI4+CBLkyCWoI1rN0I2sBDd
-         QUY2yJ21R31EIRm9O66B3O358ysSZQ8F718Bp7OtdoTfKzfC3kAuuoLHbnEs+DaHnSSm
-         KDVg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/P+spc9hXzGIZo4ZXM30iLNADBZE2pO+ZBci6tNw8vBtW9IqxIC/Di9R/EalEGiF7tOUzbXh2ms8IdRk=@vger.kernel.org, AJvYcCWsvwQOtU60xKtz0TKgKkCJjEMhoaGXKJJwuIzixJFD459jyD/Fj7tCc4Zb2nRGXTBsQ4K4u/dp13v2Y5AOlZrk@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyw7Fr1x1sdj7CS2HPjNtLbjLixyaP8RRRSVZ7qEFQzuCpLCfw8
-	yq1inJAiqjLLC6m0Hb2cLY88+7c2ynhq+PcFdXnnWRUJgC486HCdwbOeLZf2iDD0ONZVnXLDqUQ
-	LvcwTt6fdlFhPxiKvV25x5cjo7ODFmQ==
-X-Gm-Gg: ASbGncuCpY6W4JcwToPhjfFsD6owsjzSmxlJCckFcInkws2D+7DMakVHPV2SPoCg4O8
-	WQ0TTJojMLjLHGwErl7VS21mcQapi9xnanmmiTuIoUKMdgn+eBwuAeRQVddR4rMowF3o8wafNpC
-	BQ0zXBJFQa0D9ip3MIGcdGumVrrbtJ03pnI9nehImJrXk7CJLcn1Qe6+c=
-X-Google-Smtp-Source: AGHT+IFMtI9vNN4mVc4Uj643Koas+IVY4144ie/eip+PQxxbCdBGXf1mdG9mEH5HIpz38t1lC0w2i/z2+s6gKUkuj1Q=
-X-Received: by 2002:a17:906:dc90:b0:ae0:c690:1bed with SMTP id
- a640c23a62f3a-ae0d0d69237mr249238666b.51.1750915372722; Wed, 25 Jun 2025
- 22:22:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750915484; x=1751520284;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uu+PcA2M9xAN/Gp41c21x1ds5eVoC83exOsltc9gBIU=;
+        b=pMy3MiyKIuO6dNKQzFO1mnJJ6j9JQp3O8yxJ+4WIX5+1dodd8VI+Rp9ayV/XdEUezZ
+         ykNyb6XLZm/tYuGqdoO82Kz06as5m1nulYBh5Ilg0gNirzkGZCHb//WLgSyL+Ljgydcc
+         C69OKGDlJXQuCCbbPfiqTvBI/ORilc0Q0iU24rQ0RhalnnKe+87EHyFjYSNM38U0NGh6
+         NbVOhzJ7OaDxbavXEWS8Kot0/g58OzKA6IsBdMsBoAejfjO9yjfh9CYlEf7bMIZ1bFEP
+         WVejWcacIwAjB7EdyB5CN0JOOgJc1sp93j4stmXG1vj6h9IaUtSOUKqzYqFvpWrR8J3T
+         6WoA==
+X-Forwarded-Encrypted: i=1; AJvYcCX4XhwTmC1jQBnWIfQYb67KGhEo1gcduArOUpeQi1W9c/qDRW8uq7LmTTKeT5bekklrwfSFqOTrdBOeKfk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuO7EIJ5nFm08NlHrWWczR38Et9dDFvs72uHavIAnH8ao2nKq0
+	mK3B2TKmq0BgFxxyKdEHf+GZ07WfXgPFYpHd6pNC47LNzno7uQf2h6ou
+X-Gm-Gg: ASbGncvPh/PK6JEKujqWm/UC1ice/rSAujMb7AEXWVrkbuNaZZkXtA6W/WH2ZBEOI0P
+	bFgRE3icnR2qHwOO1aru4MkPg+3mFbDafOgWWs05/Nfi5qMdMY4kRdjPermqqN6DxR8iYZAPrNW
+	ThRNCuMcjVAxl9V/K604GC9GIacmhX0Y952BUy6pOFkVyuQAgCHaw9dyH+xaCJaOMbpyfC+zHjO
+	wnILbYRoPsqW2BjNUvZcb8Xns9FkgCoGBT2jhwRHs89a97w1O0A+7bsyjOfZoLA2vDyDqusgKVo
+	Q+kxugcNk5tQvGXRLW4dFwHyDBX/0QNMHF6J5GGGlnzucf/n6bT9faoHPO9DR8Y9movXs503/0w
+	+Pi57Nv/7TH37NLs4U95K17De30vAMWzxLt6C1hlB664=
+X-Google-Smtp-Source: AGHT+IEsC4rDc+64YF1sGfY3ai9vBnsupasxMmqopeBsQPAEa8G5eRWY5JWsJXLWwT60frnqoSpf3A==
+X-Received: by 2002:a05:6512:1052:b0:553:2868:6357 with SMTP id 2adb3069b0e04-554fdfb7fd8mr1754864e87.50.1750915483663;
+        Wed, 25 Jun 2025 22:24:43 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e41c300bsm2418337e87.158.2025.06.25.22.24.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 22:24:42 -0700 (PDT)
+Message-ID: <8eb80697-e76e-412d-82a9-5a95d4ca4f2a@gmail.com>
+Date: Thu, 26 Jun 2025 08:24:41 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501163827.2598-1-ujwal.kundur@gmail.com> <20250616100406.2853-1-ujwal.kundur@gmail.com>
- <20250616172618.0609127a8b1e406d4c228d24@linux-foundation.org>
- <aFGPVPDKGLOIEucg@x1.local> <aFGkVh-rs2ZqcL6g@x1.local> <DAPKLM86IC4F.1MCOR35P2D9VV@google.com>
-In-Reply-To: <DAPKLM86IC4F.1MCOR35P2D9VV@google.com>
-From: Ujwal Kundur <ujwal.kundur@gmail.com>
-Date: Thu, 26 Jun 2025 10:52:39 +0530
-X-Gm-Features: Ac12FXyFSCtM1gISILFlaHmOn5UMXxggV9pDS9HhDySU1ituOJIVAR92vq9HPPU
-Message-ID: <CALkFLLK2-SCPZz9tOseFp4Ry77GYg+LKik0SEbjK6LuanDyyKw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/1] selftests/mm/uffd: Refactor non-composite global
- vars into struct
-To: Brendan Jackman <jackmanb@google.com>
-Cc: Peter Xu <peterx@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, shuah@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] iio: adc: ti-adc128s052: add support for
+ adc121s021
+To: Lothar Rubusch <l.rubusch@gmail.com>, jic23@kernel.org,
+ dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250625170218.545654-1-l.rubusch@gmail.com>
+ <20250625170218.545654-2-l.rubusch@gmail.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20250625170218.545654-2-l.rubusch@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> Ujwal, can you reproduce these issues and have a look?
+Hi Lothar,
 
-> The script I mentioned in that other mail should help with this
+On 25/06/2025 20:02, Lothar Rubusch wrote:
+> Add support for the single channel variant(s) of this ADC.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 
-Sorry about the delay, I'll try to reproduce this over the weekend and
-send a v6 over.
-Will rebase on Peter's patch [1] if it's been applied to mm-new already.
+Thanks for this addition. In principle, this looks good to me but I am 
+afraid there is another colliding series being worked on:
 
-[1] https://lore.kernel.org/all/20250620190342.1780170-1-peterx@redhat.com/
+https://lore.kernel.org/all/20250614091504.575685-3-sbellary@baylibre.com/
 
-Thanks,
-Ujwal.
+Maybe you can align the effort with Sukrut?
+
+What I specifically like (and think is the right thing to do) in 
+Sukrut's series is replacing the 'adc122s021_channels' -array with 
+individual structures. In my opinion the array is just unnecessary 
+complexity and individual structures are simpler.
+
+Other than that, this looks good to me.
+
+Yours,
+	-- Matti
+
+
+> ---
+>   drivers/iio/adc/ti-adc128s052.c | 17 ++++++++++++++++-
+>   1 file changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+> index 1b46a8155803..cf271c39e663 100644
+> --- a/drivers/iio/adc/ti-adc128s052.c
+> +++ b/drivers/iio/adc/ti-adc128s052.c
+> @@ -7,6 +7,7 @@
+>    * https://www.ti.com/lit/ds/symlink/adc128s052.pdf
+>    * https://www.ti.com/lit/ds/symlink/adc122s021.pdf
+>    * https://www.ti.com/lit/ds/symlink/adc124s021.pdf
+> + * https://www.ti.com/lit/ds/symlink/adc121s021.pdf
+>    */
+>   
+>   #include <linux/cleanup.h>
+> @@ -110,6 +111,10 @@ static const struct iio_chan_spec adc128s052_channels[] = {
+>   	ADC128_VOLTAGE_CHANNEL(7),
+>   };
+>   
+> +static const struct iio_chan_spec adc121s021_channels[] = {
+> +	ADC128_VOLTAGE_CHANNEL(0),
+> +};
+> +
+>   static const struct iio_chan_spec adc122s021_channels[] = {
+>   	ADC128_VOLTAGE_CHANNEL(0),
+>   	ADC128_VOLTAGE_CHANNEL(1),
+> @@ -143,6 +148,10 @@ static const struct adc128_configuration adc128_config[] = {
+>   		.refname = "vdd",
+>   		.other_regulators = &bd79104_regulators,
+>   		.num_other_regulators = 1,
+> +	}, {
+> +		.channels = adc121s021_channels,
+> +		.num_channels = ARRAY_SIZE(adc121s021_channels),
+> +		.refname = "vref",
+>   	},
+>   };
+
+I'd love seeing this array split to individual structs.
+
+>   
+> @@ -207,7 +216,10 @@ static const struct of_device_id adc128_of_match[] = {
+>   	{ .compatible = "ti,adc124s051", .data = &adc128_config[2] },
+>   	{ .compatible = "ti,adc124s101", .data = &adc128_config[2] },
+>   	{ .compatible = "rohm,bd79104", .data = &adc128_config[3] },
+> -	{ }
+> +	{ .compatible = "ti,adc121s021", .data = &adc128_config[4] },
+> +	{ .compatible = "ti,adc121s051", .data = &adc128_config[4] },
+> +	{ .compatible = "ti,adc121s101", .data = &adc128_config[4] },
+> +	{ },
+>   };
+>   MODULE_DEVICE_TABLE(of, adc128_of_match);
+>   
+> @@ -220,6 +232,9 @@ static const struct spi_device_id adc128_id[] = {
+>   	{ "adc124s051", (kernel_ulong_t)&adc128_config[2] },
+>   	{ "adc124s101", (kernel_ulong_t)&adc128_config[2] },
+>   	{ "bd79104", (kernel_ulong_t)&adc128_config[3] },
+> +	{ "adc121s021", (kernel_ulong_t)&adc128_config[4] },
+> +	{ "adc121s051", (kernel_ulong_t)&adc128_config[4] },
+> +	{ "adc121s101", (kernel_ulong_t)&adc128_config[4] },
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(spi, adc128_id);
+
