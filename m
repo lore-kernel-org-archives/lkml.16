@@ -1,256 +1,65 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD4B2E54B9
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC79928C009;
+	Thu, 26 Jun 2025 13:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750944813; cv=none; b=LFrPDwbUQV+0Z3LABy3IM1fGj6VUXy2CH1c09sBnv4royZLPZdGSIqhN/oYRq8D5VseUupni1F0ovE6/HPB97aQKdwwTSniDf9Py2CXmICEdz9fdYhpLLOsDOHDGJ8JcCD48GIRX0Tz3ntF/Mv0qoO2g2l5hux6QdXNgkvZ+gbA=
+	t=1750944830; cv=none; b=p77XJub6DEksU4TibJqwqnRZpPQzV1cRGuHHqoMCzW2s/aLd4RHF0XQUzMG2OFJD9AzdmaCt6aBTQ6FJKVCoiF+4p3hYZ36yXA+BHi+iiAjT5jGDU5t9FTfkoo+cc4HB8pQh5s6+iwiyT5wrtQQcpA1Au+e9rX95sZO9+gxnBnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750944813; c=relaxed/simple;
-	bh=v01uEnPZNFuwIhQpYvDDHT0RyQYE6ARQrYMccQw3PeU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MMIkgj6SbA+MtBRmkEzIKH1TJEpjKH53PQwYmCQLGDJ5AVvkxkun9rr2fKZV4N3pLMoOvD7htozj+ZJxyKYKHkvC1oAcGvDANEYRWvkGplbxf0zCz1FewVCdHXN2T/P8f6hNLU38rTxKGysSP8uqz5McaGFFsQFda3CnGtNnkvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3df40226ab7so17947265ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:33:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750944811; x=1751549611;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZcGrDK8kr1Uh+Iy3TORmHc3k2JAnLxWd/SYreTk4gvU=;
-        b=ugPEzrrI0Fm0rtnM0KdBen60g+OrwbPbasv+arqI0pm2yKQYUxaKVVv4byXHizLQVJ
-         niedsRnM2QEKwgOLuN5MCv31lGs7Hhxs8BI49KvdPYh6bmXvQskxtBIBLEXi8UXkYpAE
-         iVfPlbv9z9ycQUYmJ3Uh4NiYwmPrxbLY/UCdBkzs2w8aixrUdydwYovoW+il2T1ZIZXf
-         aTUHy0haMsuzth3Nr4W0Ss9ptjcuGro5DYAnRuMBGylhW1c8UGiyjwv7CLOEFHbp0RBk
-         98bS2/DIvpGbcVQuydiYfBfg9hAF+kvLgmm9k5alEsHLqk8iojYwaVl4tAV0iRuUsbIo
-         b5Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCWdPhnbUaSgXUHKVZccr19RRS41KuGFNw2t6m583jRSpJBA+AS7VT0GEKpoamkT4lClmtYwS/RvMl1o3TU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyikJvc4TWfnLGjB4eKfJiqQm+NuGrY3Dt7KXTLQUgRIlA8RGOC
-	a44hCVjmKBOE8J6puG3C2PxFMVU2VC+PVmtejr2RQUz4NT9QXxwsGrFeCPxK3eN66Et98MIpk5F
-	hEeV8qbKZWcR7Nda2yWVF3HzKXdmePbe9ToNsc9cLUw3YIAknI3eg6/FgQhQ=
-X-Google-Smtp-Source: AGHT+IHyMyilehOJv29/LoTNchEqwPGWT6vNOXljXaNhAtvIDikBotXU4vJDPGa2QYN8+qFKpUJrOk6PHggw/klNbksElNfhF//U
+	s=arc-20240116; t=1750944830; c=relaxed/simple;
+	bh=d/60YnmlyVjCgsaESfsTR5bhN8Cd5tY+YhEX/ZBs7Hc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=btUl2MWdLpq2FSdgHNbeJPa4DNs8EqDG15UHHUMs0J/ALi4QokwUKdCZbi7+5Sv/55sae4VTRr0a8FIfANnh808Uq0QIikXBQzLI54UYg0iyFnDE7HjZKMxZGSEUSa0iKKM/HmhPYlxLaIbHqo3aYQrWufw8kGgFnr75j8E+VPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=sqNElX7f; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sqNElX7f"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=iN5oa8WFpQH679cSz3xeEssUmCfX9gDZTweFMclKHvM=; b=sqNElX7fXBTXxTkWkPhQ+KaumA
+	fDUmRX8e6QwcX0uyQ+xhXeuuANxa5nHXYWK4Y3AhGyr/XSoUDZ1DZt324kNl/JLJ5ViNHv/F4rbpC
+	8YGnryXiMtabm+nc/A3Ixg3XFYYUWEtKm6sdkaRfjMtg+sK4+rCTI9RWsgRut2am5QF8u9SpTQNDK
+	U94j9Hd1lxj3rJa6wRM9IwTh6WOUdKDYSZsuqRyb650mBPll21XSTL1mVV56V7Hf2W84j15YbGvSW
+	EqjIEFHdMDeAN7Srkz01bPW89lfXX6BTTDxgGiWRPXJZB6fiwmDihdVri8WPFKHnrFcvp9MSGSP8P
+	3UPZlBQg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uUmjb-0000000BgSF-0uhn;
+	Thu, 26 Jun 2025 13:33:47 +0000
+Date: Thu, 26 Jun 2025 06:33:47 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Yu Kuai <yukuai3@huawei.com>
+Cc: axboe@kernel.dk, hare@suse.de, hch@infradead.org,
+	john.g.garry@oracle.com, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, yi.zhang@redhat.com,
+	calvin@wbinvd.org, david@fromorbit.com, yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com
+Subject: Re: [PATCH v2] block: fix false warning in bdev_count_inflight_rw()
+Message-ID: <aF1MOxsOm2tcc0Ct@infradead.org>
+References: <20250626115743.1641443-1-yukuai3@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:248a:b0:3dd:ce9b:aa17 with SMTP id
- e9e14a558f8ab-3df3292bebfmr99052815ab.20.1750944810724; Thu, 26 Jun 2025
- 06:33:30 -0700 (PDT)
-Date: Thu, 26 Jun 2025 06:33:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685d4c2a.a00a0220.2e5631.028c.GAE@google.com>
-Subject: [syzbot] [hams?] possible deadlock in nr_rt_ioctl (2)
-From: syzbot <syzbot+14afda08dc3484d5db82@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626115743.1641443-1-yukuai3@huawei.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hello,
+On Thu, Jun 26, 2025 at 07:57:43PM +0800, Yu Kuai wrote:
+>  static void bdev_count_inflight_rw(struct block_device *part,
+>  		unsigned int inflight[2], bool mq_driver)
 
-syzbot found the following issue on:
+Why not pass the inflight arguments as signed? (and split it for
+reads and writes as you did below)
 
-HEAD commit:    09a0fa92e5b4 Merge tag 'selinux-pr-20250107' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=122714b0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7bdfbaac3fbb90d6
-dashboard link: https://syzkaller.appspot.com/bug?extid=14afda08dc3484d5db82
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17b8db0f980000
+Anyway, I think this is good enough to get a fix queued up ASAP,
+but we can probably clean it up incrementally:
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-09a0fa92.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/38215ac79538/vmlinux-09a0fa92.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/117da94a1c81/bzImage-09a0fa92.xz
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+14afda08dc3484d5db82@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.13.0-rc6-syzkaller-00038-g09a0fa92e5b4 #0 Not tainted
-------------------------------------------------------
-syz.3.32/6172 is trying to acquire lock:
-ffffffff9012a4f8 (nr_neigh_list_lock){+...}-{3:3}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
-ffffffff9012a4f8 (nr_neigh_list_lock){+...}-{3:3}, at: nr_remove_neigh net/netrom/nr_route.c:307 [inline]
-ffffffff9012a4f8 (nr_neigh_list_lock){+...}-{3:3}, at: nr_del_node net/netrom/nr_route.c:342 [inline]
-ffffffff9012a4f8 (nr_neigh_list_lock){+...}-{3:3}, at: nr_rt_ioctl+0x207f/0x29e0 net/netrom/nr_route.c:678
-
-but task is already holding lock:
-ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
-ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: nr_node_lock include/net/netrom.h:152 [inline]
-ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: nr_del_node net/netrom/nr_route.c:335 [inline]
-ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: nr_rt_ioctl+0x2aa/0x29e0 net/netrom/nr_route.c:678
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #2 (&nr_node->node_lock){+...}-{3:3}:
-       __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
-       _raw_spin_lock_bh+0x33/0x40 kernel/locking/spinlock.c:178
-       spin_lock_bh include/linux/spinlock.h:356 [inline]
-       nr_node_lock include/net/netrom.h:152 [inline]
-       nr_rt_device_down+0x188/0x7f0 net/netrom/nr_route.c:519
-       nr_device_event+0x126/0x170 net/netrom/af_netrom.c:126
-       notifier_call_chain+0xb7/0x410 kernel/notifier.c:85
-       call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:1996
-       call_netdevice_notifiers_extack net/core/dev.c:2034 [inline]
-       call_netdevice_notifiers net/core/dev.c:2048 [inline]
-       __dev_notify_flags+0x1f9/0x2e0 net/core/dev.c:8992
-       dev_change_flags+0x10c/0x160 net/core/dev.c:9028
-       dev_ifsioc+0x9c8/0x10b0 net/core/dev_ioctl.c:526
-       dev_ioctl+0x224/0x10c0 net/core/dev_ioctl.c:783
-       sock_do_ioctl+0x19e/0x280 net/socket.c:1223
-       sock_ioctl+0x228/0x6c0 net/socket.c:1328
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (nr_node_list_lock){+...}-{3:3}:
-       __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
-       _raw_spin_lock_bh+0x33/0x40 kernel/locking/spinlock.c:178
-       spin_lock_bh include/linux/spinlock.h:356 [inline]
-       nr_rt_device_down+0xd5/0x7f0 net/netrom/nr_route.c:517
-       nr_device_event+0x126/0x170 net/netrom/af_netrom.c:126
-       notifier_call_chain+0xb7/0x410 kernel/notifier.c:85
-       call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:1996
-       call_netdevice_notifiers_extack net/core/dev.c:2034 [inline]
-       call_netdevice_notifiers net/core/dev.c:2048 [inline]
-       __dev_notify_flags+0x1f9/0x2e0 net/core/dev.c:8992
-       dev_change_flags+0x10c/0x160 net/core/dev.c:9028
-       dev_ifsioc+0x9c8/0x10b0 net/core/dev_ioctl.c:526
-       dev_ioctl+0x224/0x10c0 net/core/dev_ioctl.c:783
-       sock_do_ioctl+0x19e/0x280 net/socket.c:1223
-       sock_ioctl+0x228/0x6c0 net/socket.c:1328
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (nr_neigh_list_lock){+...}-{3:3}:
-       check_prev_add kernel/locking/lockdep.c:3161 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3280 [inline]
-       validate_chain kernel/locking/lockdep.c:3904 [inline]
-       __lock_acquire+0x249e/0x3c40 kernel/locking/lockdep.c:5226
-       lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5849
-       __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
-       _raw_spin_lock_bh+0x33/0x40 kernel/locking/spinlock.c:178
-       spin_lock_bh include/linux/spinlock.h:356 [inline]
-       nr_remove_neigh net/netrom/nr_route.c:307 [inline]
-       nr_del_node net/netrom/nr_route.c:342 [inline]
-       nr_rt_ioctl+0x207f/0x29e0 net/netrom/nr_route.c:678
-       nr_ioctl+0x19a/0x2e0 net/netrom/af_netrom.c:1254
-       sock_do_ioctl+0x116/0x280 net/socket.c:1209
-       sock_ioctl+0x228/0x6c0 net/socket.c:1328
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  nr_neigh_list_lock --> nr_node_list_lock --> &nr_node->node_lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&nr_node->node_lock);
-                               lock(nr_node_list_lock);
-                               lock(&nr_node->node_lock);
-  lock(nr_neigh_list_lock);
-
- *** DEADLOCK ***
-
-2 locks held by syz.3.32/6172:
- #0: ffffffff9012a558 (nr_node_list_lock){+...}-{3:3}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
- #0: ffffffff9012a558 (nr_node_list_lock){+...}-{3:3}, at: nr_del_node net/netrom/nr_route.c:334 [inline]
- #0: ffffffff9012a558 (nr_node_list_lock){+...}-{3:3}, at: nr_rt_ioctl+0x22e/0x29e0 net/netrom/nr_route.c:678
- #1: ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
- #1: ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: nr_node_lock include/net/netrom.h:152 [inline]
- #1: ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: nr_del_node net/netrom/nr_route.c:335 [inline]
- #1: ffff88810370fa70 (&nr_node->node_lock){+...}-{3:3}, at: nr_rt_ioctl+0x2aa/0x29e0 net/netrom/nr_route.c:678
-
-stack backtrace:
-CPU: 3 UID: 0 PID: 6172 Comm: syz.3.32 Not tainted 6.13.0-rc6-syzkaller-00038-g09a0fa92e5b4 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_circular_bug+0x419/0x5d0 kernel/locking/lockdep.c:2074
- check_noncircular+0x31a/0x400 kernel/locking/lockdep.c:2206
- check_prev_add kernel/locking/lockdep.c:3161 [inline]
- check_prevs_add kernel/locking/lockdep.c:3280 [inline]
- validate_chain kernel/locking/lockdep.c:3904 [inline]
- __lock_acquire+0x249e/0x3c40 kernel/locking/lockdep.c:5226
- lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5849
- __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
- _raw_spin_lock_bh+0x33/0x40 kernel/locking/spinlock.c:178
- spin_lock_bh include/linux/spinlock.h:356 [inline]
- nr_remove_neigh net/netrom/nr_route.c:307 [inline]
- nr_del_node net/netrom/nr_route.c:342 [inline]
- nr_rt_ioctl+0x207f/0x29e0 net/netrom/nr_route.c:678
- nr_ioctl+0x19a/0x2e0 net/netrom/af_netrom.c:1254
- sock_do_ioctl+0x116/0x280 net/socket.c:1209
- sock_ioctl+0x228/0x6c0 net/socket.c:1328
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fbff7985d29
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fbff8769038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fbff7b75fa0 RCX: 00007fbff7985d29
-RDX: 0000000020000180 RSI: 000000000000890c RDI: 0000000000000005
-RBP: 00007fbff7a01b08 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fbff7b75fa0 R15: 00007ffd23708838
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
