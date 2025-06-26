@@ -1,92 +1,120 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1101DE2DC;
-	Thu, 26 Jun 2025 11:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7545A17BA5;
+	Thu, 26 Jun 2025 11:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750937564; cv=none; b=gTpXyNhjPv/r+uz0TEbVmit7sKif940w/t+hXvSqRK3O7ryO8Kxvqlnhd5Z6xj2G8fKjku844Hy2zw7A7Kt3oiFcef4g5LEh4Kac3m+D+4W1Mhy5ydu4fR7Wh/Fy/Z9u01/G/aBTJ3icjD2xcZdsdKEAg2vCUefxLyMcVoeeCm8=
+	t=1750937590; cv=none; b=eI4dL4bPTsMeQi2RlUkqE++HX+zMWA7OZRAuJyFX6h0nKAEpOd7+uJVzxPV2Ky7xlSoyuamJkT/Tb5p+xdh+NbSM9pXdM6v0GT/kZUpOF65Wfywvur4GBiiXT72EuJSrKkxu1mS7LNqRrZsX5kX4IVWmZRx2LrZsPxETXZP12DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750937564; c=relaxed/simple;
-	bh=cDQe/RO/gOW6Up5JUtL30QugNGUwFodfimvzdFGHspU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I45X9oq1pD8xqp8feGs5GDIgWrnAdXnQcAj18nn4MhgT1GYmgCFYEyhFNx1bKefA/rLsLxujYmuPk6ahTmRfXbW5STQbfupPSK2MscHY+Jh2tqfzRosCcp7ezj1W8JKReOIQCkqe7MdrrVJCkU+dp4l1r/frTUbla0j4ke0jDb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bSc410RZSz9tc3;
-	Thu, 26 Jun 2025 13:32:33 +0200 (CEST)
-From: Pankaj Raghav <p.raghav@samsung.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	mcgrof@kernel.org,
-	Christian Brauner <brauner@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	kernel@pankajraghav.com,
-	gost.dev@samsung.com,
-	Pankaj Raghav <p.raghav@samsung.com>,
-	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v4] fs/buffer: remove the min and max limit checks in __getblk_slow()
-Date: Thu, 26 Jun 2025 13:32:23 +0200
-Message-ID: <20250626113223.181399-1-p.raghav@samsung.com>
+	s=arc-20240116; t=1750937590; c=relaxed/simple;
+	bh=xNNGbFh2wsJes74tor0RiVvoVzoUaZ9XjJ4mHjEG10o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rAJFwsdXLxNrVspwnLD47sgpYTO9Qm8wlx3VYVWI/NOz2YaCT0MNCnFpCQ+KBWys4y933UzF5KZBv9OjPXTQ2GoOpoczYbwB6VVQSZvy4nVYr9wNIZ4n5pgX2E/0mx1mNDKsYO1DLf/RMl/Bd7Ng0hA3j0Cig/SFYtOAnvHzn+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RtSe9HZf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtSe9HZf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14517C4CEEB;
+	Thu, 26 Jun 2025 11:33:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750937590;
+	bh=xNNGbFh2wsJes74tor0RiVvoVzoUaZ9XjJ4mHjEG10o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RtSe9HZfMvfkJBx7YBgx9Oq9DqpdzUgG6gfBEUK4kGGwBB4sitcig369ayeEGvPnh
+	 7krEeAUt7B9cf9MsxMDeGZ0BrOdkjXACLLUkuGuXzoeoDVu0mNXsJWbuVghHvg4Wvc
+	 j5A170qvNf2nt1mp5lQHDMp4abpNMh/H/XRGjxJy3q8O+yIReT2A9VBG5Yf39m4LeD
+	 XMdlpHz3VfwmxRrp4OppnZXkfo6TIv5DAiwgz3qHRK06U7ElLlf9t+i4lvrQbUog/8
+	 7NYp4VWnsj4ogZs7nynth1Vkd/sJEamcYmCmY5jZ3vux/6XGv9QMCB2PNb3svHvGcg
+	 h5xkGOV4TJm5w==
+Message-ID: <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
+Date: Thu, 26 Jun 2025 06:33:08 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
+ system
+To: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <20250625215813.3477840-1-superm1@kernel.org>
+ <20250625215813.3477840-5-superm1@kernel.org>
+ <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-All filesystems will already check the max and min value of their block
-size during their initialization. __getblk_slow() is a very low-level
-function to have these checks. Remove them and only check for logical
-block size alignment.
 
-As this check with logical block size alignment might never trigger, add
-WARN_ON_ONCE() to the check. As WARN_ON_ONCE() will already print the
-stack, remove the call to dump_stack().
 
-Suggested-by: Matthew Wilcox <willy@infradead.org>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
----
-Changes since v3:
-- Use WARN_ON_ONCE on the logical block size check and remove the call
-  to dump_stack.
-- Use IS_ALIGNED() to check for aligned instead of open coding the
-  check.
+On 6/26/25 3:35 AM, Hans de Goede wrote:
+> Hi Mario,
+> 
+> On 25-Jun-25 23:58, Mario Limonciello wrote:
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> Sending an input event to wake a system does wake it, but userspace picks
+>> up the keypress and processes it.  This isn't the intended behavior as it
+>> causes a suspended system to wake up and then potentially turn off if
+>> userspace is configured to turn off on power button presses.
+>>
+>> Instead send a PM wakeup event for the PM core to handle waking the system.
+>>
+>> Cc: Hans de Goede <hansg@kernel.org>
+>> Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing key press event in resume phase")
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>>   drivers/input/keyboard/gpio_keys.c | 7 +------
+>>   1 file changed, 1 insertion(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+>> index 773aa5294d269..4c6876b099c43 100644
+>> --- a/drivers/input/keyboard/gpio_keys.c
+>> +++ b/drivers/input/keyboard/gpio_keys.c
+>> @@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
+>>   		pm_stay_awake(bdata->input->dev.parent);
+>>   		if (bdata->suspended  &&
+>>   		    (button->type == 0 || button->type == EV_KEY)) {
+>> -			/*
+>> -			 * Simulate wakeup key press in case the key has
+>> -			 * already released by the time we got interrupt
+>> -			 * handler to run.
+>> -			 */
+>> -			input_report_key(bdata->input, button->code, 1);
+>> +			pm_wakeup_event(bdata->input->dev.parent, 0);
+>>   		}
+>>   	}
+>>   
+> 
+> Hmm, we have the same problem on many Bay Trail / Cherry Trail
+> windows 8 / win10 tablets, so  this has been discussed before and e.g.
+> Android userspace actually needs the button-press (evdev) event to not
+> immediately go back to sleep, so a similar patch has been nacked in
+> the past.
+> 
+> At least for GNOME this has been fixed in userspace by ignoring
+> power-button events the first few seconds after a resume from suspend.
+> 
 
- fs/buffer.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+The default behavior for logind is:
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index d61073143127..565fe88773c2 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -1122,14 +1122,9 @@ __getblk_slow(struct block_device *bdev, sector_t block,
- {
- 	bool blocking = gfpflags_allow_blocking(gfp);
- 
--	if (unlikely(size & (bdev_logical_block_size(bdev) - 1) ||
--		     (size < 512 || size > PAGE_SIZE))) {
--		printk(KERN_ERR "getblk(): invalid block size %d requested\n",
--					size);
--		printk(KERN_ERR "logical block size: %d\n",
--					bdev_logical_block_size(bdev));
--
--		dump_stack();
-+	if (WARN_ON_ONCE(!IS_ALIGNED(size, bdev_logical_block_size(bdev)))) {
-+		printk(KERN_ERR "getblk(): block size %d not aligned to logical block size %d\n",
-+		       size, bdev_logical_block_size(bdev));
- 		return NULL;
- 	}
- 
+HandlePowerKey=poweroff
 
-base-commit: b39f7d75dc41b5f5d028192cd5d66cff71179f35
--- 
-2.49.0
+Can you share more about what version of GNOME has a workaround?
+This was actually GNOME (on Ubuntu 24.04) that I found this issue.
 
+Nonetheless if this is dependent on an Android userspace problem could 
+we perhaps conditionalize it on CONFIG_ANDROID_BINDER_DEVICES?
+
+Most people not using Android would be compiling with that enabled in 
+their kernel I'd expect.
