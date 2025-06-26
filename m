@@ -1,87 +1,101 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9972AD11;
-	Thu, 26 Jun 2025 13:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8892E427B;
+	Thu, 26 Jun 2025 13:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943245; cv=none; b=kRYjxBsprp2enVkdb165N3u4nCDI4Y4PuErCeFl0Cba/ZhX1e8KaqwHqoUezO4eiq1fk+ttbs8Xx6d4Ky/T4TSobu4yVSKbnnNG+xRJbQqA4o3wamg2OB2eZSA37g1KZnovAt/2Ps8iSAeQnvngYVgID1I6OQ3CwU8FDVI8dk8I=
+	t=1750943272; cv=none; b=LSeL+kOsuSTPjmQLBV9zLNihtlhZYrP6kD/Lv7FsUIpX4g33x6XLbA0rgGgIMR0t28GR9GF8VM5ChwtBI3wTb1dY1rthawhr3y2dtmb2cWJwRMWy+TGz4zieKubrHj+DVn1OF3HqM/gfu+nw1KMSq+dctlwKdCkwRa62wt4lbe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943245; c=relaxed/simple;
-	bh=oN0tXWyd2Pl7Qho5xOU8PktHj9C10fwN6NEZn0c0cK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IyOa65+Zk46Dzp1Xq1sU5IhAKvprN1REgBI949CQGOe97IoF97rPsLpvn+fk5mzevS7aRjTVUqwUmsc4tVO7BJFOjI40LEsUamEZiANi/AX2uXAlc94o2S/V7pmbqRPqzngUJaZyORpMdjXZE4IfDxtrMzEDM4zGzWmuTCJJ+Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Wd46GmJc; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750943272; c=relaxed/simple;
+	bh=1cc6i/SKqjjHG+MY0TMZQTCnqXf1errPmHMvb0A9nAA=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=PiOgzaEo50WbO53LYrdXUGWRAqXCObyIy8Zj8kHe5ndH9FuwKiUTK85fcNQ90Up5ELprke3vTLOd0ajX1XBjECKhVc9pUH6HE4cOgjrSvGZGJQb97ngS+3gdAL2ZHXlSXwOVeZO9rCEoizsL9zLMRYrPgXayCukXCIBkeXOtBHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGb508gb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wd46GmJc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=J4mM+Th2cNmMlS1OHaD0inVbssW+LOr+GAf200cBoM0=; b=Wd46GmJc2meXibKUN2+7aJ1XgO
-	gdm1xyUL40dpG7E4vIBavoPQOq/5TEdm/CNnKeSMOh8/7yKpLAprgQqrGHHF0y4NCstFzjZW8v52m
-	w7uHVWe1/H7GC+r+rvoqYddFl9B+8XwE2U+8vbTsVgWz8DXIH2/2flAlq+IvulzSv4rIHpLPi17ka
-	sHhGf7iJTh/RryhXm/hezQ6Ju6ONyoI1gB9DKuUFmuX+Pn1XhT8qCTqPzi4USvv/aUkLRgOFVeyZL
-	PvDKhOg27hri5+pW+t7dhJw5dSy3GKO0eSN8zr83owni1Gy2Ddg1czrjTiYkE+NjhfzFRzUbAoDrP
-	8hy3avDw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uUmJn-000000066Hi-1MXi;
-	Thu, 26 Jun 2025 13:07:07 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E415630BDA9; Thu, 26 Jun 2025 15:07:05 +0200 (CEST)
-Date: Thu, 26 Jun 2025 15:07:05 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v11 13/14] perf/x86: Rename and move get_segment_base()
- and make it global
-Message-ID: <20250626130705.GG1613200@noisy.programming.kicks-ass.net>
-References: <20250625225600.555017347@goodmis.org>
- <20250625225717.016385736@goodmis.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGb508gb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED3C9C4CEED;
+	Thu, 26 Jun 2025 13:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750943272;
+	bh=1cc6i/SKqjjHG+MY0TMZQTCnqXf1errPmHMvb0A9nAA=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=oGb508gb7TTQiKkHtPPIkIAEsJ2xdPsrVk4Wi1DqnojoECmpdKQ9Q/dzLvImPHCp8
+	 uyBHb9WalDwgJjpCuTmWv5cv/he/4k/K5xTfSxiEEldoQynXwg2g8vb9AYyAxaq4UI
+	 rzGBWITVDk//VmjeCjamHDb9GFeUnmxjKpVz2dziO0uMEgwdQGach3ev1vqezCwfCq
+	 4b4YZfRTk8LsACT1CJ8R5P8vo5VeJGgkkHobmAv4keft2nwIKl/5gOPhfiyKSP55Ni
+	 /3kQFhrxHwpxPvfCCrxSyTlVQWySxZlPGBR8ua4rxYC50n5UsuXCBEiqMzFpzUJTKX
+	 bmNqg9iCA5J1A==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625225717.016385736@goodmis.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 26 Jun 2025 15:07:47 +0200
+Message-Id: <DAWHL4FKR25G.3PFDJX0SGX00E@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>
+Cc: "Boqun Feng" <boqun.feng@gmail.com>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <a.hindborg@kernel.org>,
+ <aliceryhl@google.com>, <tmgross@umich.edu>, <david.m.ertman@intel.com>,
+ <ira.weiny@intel.com>, <leon@kernel.org>, <kwilczynski@kernel.org>,
+ <bhelgaas@google.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 3/4] rust: devres: get rid of Devres' inner Arc
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250624215600.221167-1-dakr@kernel.org>
+ <20250624215600.221167-4-dakr@kernel.org> <aFzI5L__OcB9hqdG@Mac.home>
+ <aF0aiHhCuHjLFIij@pollux> <DAWE690DWP9A.10I5FIJSZDSR6@kernel.org>
+ <aF0p5vIcL_4PBJCG@pollux>
+In-Reply-To: <aF0p5vIcL_4PBJCG@pollux>
 
-On Wed, Jun 25, 2025 at 06:56:13PM -0400, Steven Rostedt wrote:
-> From: Josh Poimboeuf <jpoimboe@kernel.org>
-> 
-> get_segment_base() will be used by the unwind_user code, so make it
-> global and rename it to segment_base_address() so it doesn't conflict with
-> a KVM function of the same name.
-> 
-> As the function is no longer specific to perf, move it to ptrace.c as that
-> seems to be a better location for a generic function like this.
-> 
-> Also add a lockdep_assert_irqs_disabled() to make sure it's always called
-> with interrupts disabled.
+On Thu Jun 26, 2025 at 1:07 PM CEST, Danilo Krummrich wrote:
+> On Thu, Jun 26, 2025 at 12:27:18PM +0200, Benno Lossin wrote:
+>> On Thu Jun 26, 2025 at 12:01 PM CEST, Danilo Krummrich wrote:
+>> > On Wed, Jun 25, 2025 at 09:13:24PM -0700, Boqun Feng wrote:
+>> >> On Tue, Jun 24, 2025 at 11:54:01PM +0200, Danilo Krummrich wrote:
+>> >> [...]
+>> >> > +#[pin_data(PinnedDrop)]
+>> >> > +pub struct Devres<T> {
+>> >>=20
+>> >> It makes me realize: I think we need to make `T` being `Send`? Becaus=
+e
+>> >> the devm callback can happen on a different thread other than
+>> >> `Devres::new()` and the callback may drop `T` because of revoke(), so=
+ we
+>> >> are essientially sending `T`. Alternatively we can make `Devres::new(=
+)`
+>> >> and its friend require `T` being `Send`.
+>> >>=20
+>> >> If it's true, we need a separate patch that "Fixes" this.
+>> >
+>> > Indeed, that needs a fix.
+>>=20
+>> Oh and we have no `'static` bound on `T` either... We should require
+>> that as well.
+>
+> I don't think we actually need that, The Devres instance can't out-live a=
+ &T
+> passed into it. And the &T can't out-live the &Device<Bound>, hence we're
+> guaranteed that devres_callback() is never called because Devres::drop() =
+will be
+> able successfully unregister the callback given that we're still in the
+> &Device<Bound> scope.
 
-FWIW, I recently found we have a second 'copy' of all this in
-insn_get_seg_base() / get_desc().
+Yeah that's correct, I got confused.
 
-Its all subtly different, but largely the same.
+> The only thing that could technically out-live the &Device<Bound> would b=
+e
+> &'static T, but that would obviously be fine.
+>
+> Do I miss anything?
 
+Nope :)
 
+---
+Cheers,
+Benno
