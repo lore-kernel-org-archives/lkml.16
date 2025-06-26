@@ -1,267 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from glittertind.blackshift.org (glittertind.blackshift.org [116.203.23.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA53E2E5426;
-	Thu, 26 Jun 2025 13:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680FE2AD11
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:05:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.23.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943141; cv=none; b=n3D+2kLkQE7MV3aW7Il08mCj4cI71Be7quhmYnWQ8+14IGnM+PL5yPE475wQlN699qez+zzaTgAdGNQ1uxbYJkBGjUwt6o34LI+nHDfZTB6PO+lFCP7VYr716Y9Mm0XPvrgHImQFh7DKlcxqiyBFNbx2PTE18HFrG3gQp/29Vn8=
+	t=1750943160; cv=none; b=DQHZTuKegjHFHQRs4OLAEdO3jicLEB2PCFPIgsZMLLXAkJg9hYzmxWJ3pYwHY1goinv9PcJFXthinrrDgL6ZMuSqw7yIXk0PN1AsN3oEZyZS/8CeB2ZIyRpGpJeZYyf1ncON+CgYBGEwpccXwWZBKn0B0X77uAWl15tjiLzMqlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943141; c=relaxed/simple;
-	bh=DpGBPizqI39r8mTEdIiOyt3eB4mXDzhbE/IEJOZzF0A=;
+	s=arc-20240116; t=1750943160; c=relaxed/simple;
+	bh=mg4SwQNbvzeE2sj3wCDg1tjz/VjheXExlZOnS8rGJFM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fzHkYL+Wt0xxVYE2+L57dhSvQ+SjbzcJ7srXdTe0ZKY6rc/XLP7cKfn3JsuJ5OIv8qrFS62Q1Zsi1vGBdXq6TEh0C/nQ6zZ69ZBDWyCORwy25oZhjsayeTfDUYHLSaiGVRtuumXgf9IEADH3MxBnV5w0YSI+veYb4MpJa59s1LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGfxAgDz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGfxAgDz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4192C4CEF0;
-	Thu, 26 Jun 2025 13:05:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750943141;
-	bh=DpGBPizqI39r8mTEdIiOyt3eB4mXDzhbE/IEJOZzF0A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eGfxAgDzzRqOtClrx7FlwSf2lx5m2SzNkhrlnPhjR7u0ofzjwXWMD5mKQ3AhCy8hq
-	 mVX/aWSRTcsGPspsm9zZQb2Jl/KWBcWR1vbC646JRQXpMDsHvDbvo3ujHt98A5fA/z
-	 edAprThG+Lqrd0bTYrTXxSp3DDWpscEWn7i9y4iLwXOLklN6WVtML+6gpQp7loCkU+
-	 +iICkJwX7MXCSBHgb4oN017O34FwCe7AI0EwQ+/pApq8vdMByfko45sTpw2Hbswvl0
-	 ppKHAqsu10JsuvVoug2M/GZ3+5ZB2L2ePaCk241MzgBhC5iR8E14r+Rjp1ygsKFDFF
-	 IxyLHCAOxwsJw==
-Date: Thu, 26 Jun 2025 14:05:36 +0100
-From: Lee Jones <lee@kernel.org>
-To: Nam Tran <trannamatk@gmail.com>
-Cc: pavel@kernel.org, rdunlap@infradead.org, christophe.jaillet@wanadoo.fr,
-	krzk+dt@kernel.org, robh@kernel.org, conor+dt@kernel.org,
-	corbet@lwn.net, linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v10 3/4] docs: ABI: Document LP5812 LED sysfs interfaces
-Message-ID: <20250626130536.GC10134@google.com>
-References: <20250618183205.113344-1-trannamatk@gmail.com>
- <20250618183205.113344-4-trannamatk@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gAuelUT1lDcfBTlGsxkrk5KpNkF1DCkmIumHEPCFXtEtC2q5hQcuy6q3eGemkR39fDnMynyyoPqEyLN3sXAB5+97qLUi2Nebqyhaf4PUXgUTTGIVOklWcPRmJxeWs9nSTIsZnlp9nftaTzvc5INBDaGbU24jlEOtqi/3RybkzNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardanger.blackshift.org; spf=none smtp.mailfrom=hardanger.blackshift.org; arc=none smtp.client-ip=116.203.23.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardanger.blackshift.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=hardanger.blackshift.org
+Received: from bjornoya.blackshift.org (unknown [IPv6:2003:e3:7f3d:bb00:dea6:32ff:feb1:177a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1)
+	 client-signature RSA-PSS (4096 bits))
+	(Client CN "bjornoya.blackshift.org", Issuer "R10" (verified OK))
+	by glittertind.blackshift.org (Postfix) with ESMTPS id 31A52678AD0
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:59:37 +0000 (UTC)
+Received: from dspam.blackshift.org (localhost [127.0.0.1])
+	by bjornoya.blackshift.org (Postfix) with SMTP id DDC0443114B
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:59:36 +0000 (UTC)
+Received: from hardanger.blackshift.org (unknown [172.20.34.65])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bjornoya.blackshift.org (Postfix) with ESMTPS id 05D47431147;
+	Thu, 26 Jun 2025 12:59:36 +0000 (UTC)
+Received: from localhost (hardanger.blackshift.org [local])
+	by hardanger.blackshift.org (OpenSMTPD) with ESMTPA id 42c87de3;
+	Thu, 26 Jun 2025 12:59:35 +0000 (UTC)
+Date: Thu, 26 Jun 2025 14:59:35 +0200
+From: Marc Kleine-Budde <frogger@hardanger.blackshift.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>, 
+	Guenter Roeck <linux@roeck-us.net>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] spi: Raise limit on number of chip selects
+Message-ID: <pulc4xhdpqfseyugxloid6vvjeducuxghfuh7qre67k5v2zie3@wfpiyoyzalmf>
+References: <20240124-spi-multi-cs-max-v2-1-df6fc5ab1abc@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wqkdkixsemn3jz2k"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250618183205.113344-4-trannamatk@gmail.com>
+In-Reply-To: <20240124-spi-multi-cs-max-v2-1-df6fc5ab1abc@kernel.org>
 
-On Thu, 19 Jun 2025, Nam Tran wrote:
 
-> The LP5812 is a 4x3 matrix RGB LED driver with autonomous animation
-> engine control.
-> 
-> The driver provides interfaces to configure LED modes manual/autonomous,
-> set PWM/DC values, and manage autonomous animation engines.
+--wqkdkixsemn3jz2k
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] spi: Raise limit on number of chip selects
+MIME-Version: 1.0
 
-How many of these can be swapped out for already existing sysfs
-attributes, I wonder.
+On 24.01.2024 13:24:24, Mark Brown wrote:
+> As reported by Guenter the limit we've got on the number of chip selects =
+is
+> set too low for some systems, raise the limit. We should really remove the
+> hard coded limit but this is needed as a fix so let's do the simple thing
+> and raise the limit for now.
 
-Let's start with the basics first.  Just to get the device working.
-This is a huge change with massive impact and it all needs to be well
-thought through before we start doing anything drastic like introducing
-massive amounts of stable ABI !!
+We currently have a use case for 24 chip selects.
 
-> Signed-off-by: Nam Tran <trannamatk@gmail.com>
+> Fixes: 4d8ff6b0991d ("spi: Add multi-cs memories support in SPI core")
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Suggested-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 > ---
->  .../ABI/testing/sysfs-bus-i2c-devices-lp5812  |  40 ++++++
->  .../ABI/testing/sysfs-class-led-lp5812        | 120 ++++++++++++++++++
->  MAINTAINERS                                   |   2 +
->  3 files changed, 162 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
->  create mode 100644 Documentation/ABI/testing/sysfs-class-led-lp5812
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812 b/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
-> new file mode 100644
-> index 000000000000..a8b1d5c52a82
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
-> @@ -0,0 +1,40 @@
-> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/dev_config
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		Configures drive mode and scan order. (WO)
-> +		Some valid values: tcmscan:4:0:1:2:3 (default), tcmscan:3:0:1:2, mixscan:2:2:0:3, mixscan:3:0:1:2:3
-> +
-> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/device_command
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		Issues device-level commands. (WO)
-> +		Valid values: "update", "start", "stop", "pause", "continue"
-> +
-> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/sw_reset
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		Triggers a software reset of the device. (WO)
-> +		1 - resets device
-> +		0 - does not reset device
-> +
-> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/fault_clear
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		Clears fault status. (WO)
-> +		1 - clears fault status
-> +		0 - does not clear fault status
-> +
-> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/tsd_config_status
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		Report the current thermal shutdown config status. (RO)
-> diff --git a/Documentation/ABI/testing/sysfs-class-led-lp5812 b/Documentation/ABI/testing/sysfs-class-led-lp5812
-> new file mode 100644
-> index 000000000000..a6cb49fb523f
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-led-lp5812
-> @@ -0,0 +1,120 @@
-> +What:		/sys/class/leds/led_<id>/activate
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		Activate or deactivate the specified LED channel. (WO)
-> +		1 - Activate
-> +		0 - Deactivate
-> +
-> +What:		/sys/class/leds/led_<id>/mode
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		Selects LED operation mode. (WO)
-> +		Valid values: "manual", "autonomous"
-> +
-> +What:		/sys/class/leds/led_<id>/led_current
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		DC current level. (WO)
-> +		Valid values: 0 - 255
-> +
-> +What:		/sys/class/leds/led_<id>/max_current
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		Shows maximum DC current bit setting. (RO)
-> +		0 (default) means the LED maximum current is set to 25.5 mA.
-> +		1 means the LED maximum current is set to 51 mA.
-> +
-> +What:		/sys/class/leds/led_<id>/pwm_dimming_scale
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		PWM dimming scale type. (WO)
-> +		Valid values: "linear", "exponential"
-> +
-> +What:		/sys/class/leds/led_<id>/pwm_phase_align
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		Configures PWM phase alignment. (WO)
-> +		Valid values: "forward", "middle", "backward"
-> +
-> +What:		/sys/class/leds/led_<id>/auto_time_pause_at_start
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		Controls start pause time. (WO)
-> +		Valid values: 0 - 15
-> +
-> +What:		/sys/class/leds/led_<id>/auto_time_pause_at_stop
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		Controls stop pause time. (WO)
-> +		Valid values: 0 - 15
-> +
-> +What:		/sys/class/leds/led_<id>/auto_playback_eau_number
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		Active AEU number of led_<id> selection. (WO)
-> +		Valid values: 0 - 3
-> +		0 - only use AEU1
-> +		1 - use AEU1 and AEU2
-> +		2 - use AEU1, AEU2 and AEU3
-> +		3 - use AEU1, AEU2 and AEU3 (the same as 2)
-> +
-> +What:		/sys/class/leds/led_<id>/auto_playback_time
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		Animation pattern playback times of led_<id>. (WO)
-> +		Valid values: 0 - 15
-> +		0 - 14 means 0 - 14 times, 15 means infinite times
-> +
-> +What:		/sys/class/leds/led_<id>/aeu_playback_time
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		AEU pattern playback times of led_<id>. (WO)
-> +		Format: aeu<x>:<y> where x (1 - 3) indicates the AEU number,
-> +		y (0 - 3) indicates the number of playback times.
-> +
-> +What:		/sys/class/leds/led_<id>/aeu_pwm_<pwm_id>
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		AEU PWM duty cycle setting. (WO)
-> +		Format: aeu<x>:<y> where x (1 - 3) indicates the AEU number,
-> +		y (0 - 255) indicates pwm value.
-> +
-> +What:		/sys/class/leds/led_<id>/aeu_slop_time_<st_id>
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		AEU slop time setting. (WO)
-> +		Format: aeu<x>:<y> where x (1 - 3) indicates the AEU number,
-> +		y (0 - 15) indicates the slop time value.
-> +
-> +What:		/sys/class/leds/led_<id>/lod_lsd
-> +Date:		July 2025
-> +KernelVersion:	6.17
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +		0 0 mean no lod and lsd fault detected, 1 1 mean lod and lsd fault detected (RO)
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b4eb3265c800..cdba86f1768b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -24565,6 +24565,8 @@ TEXAS INSTRUMENTS' LP5812 RGB LED DRIVER
->  M:	Nam Tran <trannamatk@gmail.com>
->  L:	linux-leds@vger.kernel.org
->  S:	Maintained
-> +F:	Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
-> +F:	Documentation/ABI/testing/sysfs-class-led-lp5812
->  F:	Documentation/devicetree/bindings/leds/ti,lp5812.yaml
->  F:	drivers/leds/rgb/Kconfig
->  F:	drivers/leds/rgb/Makefile
-> -- 
-> 2.25.1
-> 
+> Changes in v2:
+> - Raise the limit further, the highest I've seen thus far is 12.
+> - Link to v1: https://lore.kernel.org/r/20240122-spi-multi-cs-max-v1-1-a7=
+e98cd5f6c7@kernel.org
+> ---
+>  include/linux/spi/spi.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+> index 471fe2ff9066..600fbd5daf68 100644
+> --- a/include/linux/spi/spi.h
+> +++ b/include/linux/spi/spi.h
+> @@ -21,7 +21,7 @@
+>  #include <uapi/linux/spi/spi.h>
+> =20
+>  /* Max no. of CS supported per spi device */
+> -#define SPI_CS_CNT_MAX 4
+> +#define SPI_CS_CNT_MAX 16
 
--- 
-Lee Jones [李琼斯]
+Just further increase the limit to 24? Add a Kconfig symbol?
+
+regards,
+Marc
+
+--wqkdkixsemn3jz2k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmhdRDQACgkQDHRl3/mQ
+kZyyOwf+OXLwobSDwvA5qRpH1KP1AEORA/RtlDzudGtBpnaxtppG+/nc5YI1+icd
+/pozE0gF+623mhD2iA/IeNc74OHUHNnDdsHSa6LzHUZfdFjCkcs/lJWBPlMgoyGB
+U9Ewsf9Zu/4oCHYRLyxNWQKBwCfQ7EAkxYqryKvDeFh5+jiqFiQecKuv77EnH9c+
+Ffa7qk3bWX3Cn4zypT8a0Huih8kNygUP9/MMKylY3gKIMD5bXjsZX96uaXSylllu
+Nw8m0NbvkedOpLILA5crJm21gXWZV8IXALy2dvCKq7/9ArHtFgl668G78GDSJ4xb
+KdmZ+QRQS2HWOtdZZQYVmG3AGgJMNA==
+=TG5b
+-----END PGP SIGNATURE-----
+
+--wqkdkixsemn3jz2k--
+
