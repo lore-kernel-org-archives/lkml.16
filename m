@@ -1,90 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98EB2E540B;
-	Thu, 26 Jun 2025 13:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6112B2E5401;
+	Thu, 26 Jun 2025 13:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943592; cv=none; b=rLLDT/GT+5BRJyzBwC+h92xDGwRUJEwd+AO0VgRYKxy7/nxIgCPsmhlLJh0mf6YqmSuHZ8DhA8045D8mdejE0bRB60Eev/HOt2a+mDAPFrgL+ISn8CyzArVWXkaRUDiawcezT9hEitmzR2lidbsFJyT0qn7cKPyvlKBdnNOBf/4=
+	t=1750943611; cv=none; b=lOYvuDqk66io5LLLZY5nc75WTyvKMLBQ8l0THheplbdnE0tYnAozz8dt6DvflQ0e7aHTTrf3gt66RmulDxYFL9ugxUfOenZXD11VwNdXyvS/4SoNdtHWUyQPYn9riyGwXUPVFK+vlTJp4bKLLg9KyE2GAcPnY4ufgirJ12CSHys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943592; c=relaxed/simple;
-	bh=PreKZtSoyeCQQgE0MXWcjP/5/bBwOnNbclzp2Oj3YyU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=NOE/IQHmuapzYQUyrPcTDg/1GUxAI//0E+7llRJGZfl9hE5T0knyECfWwSCcBG7IKjVIlconIObjRibetXCiwu/cIspKYvemTOKWwAWuJ5efpXFtQ1Ez5a2AlH06BgauEO1mtQHVPGiDvHaJodUv/SiwcOTdbLOCkURwVLXMAXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UyFvx/SC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750943611; c=relaxed/simple;
+	bh=+TaLcRAODzVe1YlprcD13pOkDvDks0vO6YcEcbJ1dps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VkbBOqfHMsc1SIgfH7NM2PB1Z03lvgjpXegz60QM/OjqIWqFkLwE4qNZnRLoyWkuIzYORKgjXgCHdlhhYXiZM0VIfOV9NVrGSTfXmta+xB97B/PdqZtXw5h9lpCY9OAGaLXVGopMMVJpeqndVGAoxTpou/5bv6uIZUgZQTCnbSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YeXEgArP; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UyFvx/SC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E96CAC4CEEB;
-	Thu, 26 Jun 2025 13:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750943591;
-	bh=PreKZtSoyeCQQgE0MXWcjP/5/bBwOnNbclzp2Oj3YyU=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=UyFvx/SCp+HbuN3e7GecTnhWCE7ctRhui/g5helDTlWYPRD4bG+aPKUeDeXOx8Ka+
-	 WV2yxI0wSQq6FLkQpp6ixke8+Iev9J/1RCKzdZvd0a+jRbC4MXMe8qKF5lFxwyTxGt
-	 eWrpN4MpEuJL24yBQywXDis+xgOOe3QXAOwlMpRSoW3JawpmD6N1+iWtdPx+krUsc7
-	 2RQJ3UPWVNjVmt8IHrIgT7sFwPdMP1lXrpOCA+6AJfMhGGm491cB2TTF9D+cfh8yX2
-	 G66cRqz8q46jtptaNrp3gJkNi+AOAi1Gjmweq4jkAe8r5sFg5tjVH04aAA81GNurxW
-	 62E/6LlKRB4Gg==
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YeXEgArP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=FJiv3Smj87Kb7GmOuhvZBdlqpaeOIoAZg/wJR0QpmlA=; b=YeXEgArPlHozISEO9MsmjOrik1
+	m5UBPOskji1ge7P+1V7ma+nsuvRLiU7E1xc8FUhLubsCn9bCKwikpR+Sb/BtQ2eC33qbvIVSMlR6P
+	trAx9hdYJXBElF1eQ3GheG/AH15M6rkVWKP/IMHRrGn+7iOpZv90pDyt6/akPXBDnpBiDkyznL6oi
+	IBErJGCkyhchDnxsabogpFssadfSy6ArShZRCdywu7NoNmbTXDquJYent3zh9tQb9wDDlirAi74O9
+	Sjqxb8iK6yrbZBuSbmyAAtsZ7UUl7aF1HmajWElnhZXLN/zMucZeKq/HGsFzxdPutvSsxU+EpRneV
+	3dGdxgcQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uUmPv-0000000BhGi-1M1C;
+	Thu, 26 Jun 2025 13:13:27 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id D81B530BDDA; Thu, 26 Jun 2025 15:13:26 +0200 (CEST)
+Date: Thu, 26 Jun 2025 15:13:26 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Luo Gengkun <luogengkun@huaweicloud.com>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [tip: perf/urgent] perf/core: Fix WARN in perf_cgroup_switch()
+Message-ID: <20250626131326.GH1613200@noisy.programming.kicks-ass.net>
+References: <20250604033924.3914647-3-luogengkun@huaweicloud.com>
+ <174963417198.406.3332177110975635135.tip-bot2@tip-bot2>
+ <3dfe387c-d1db-4cbe-b41d-8f9f27fe3a1f@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 26 Jun 2025 15:13:06 +0200
-Message-Id: <DAWHP7292ZGD.2SQDBIZOUA4AB@kernel.org>
-Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
- <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
- <bjorn3_gh@protonmail.com>, <a.hindborg@kernel.org>,
- <aliceryhl@google.com>, <tmgross@umich.edu>, <david.m.ertman@intel.com>,
- <ira.weiny@intel.com>, <leon@kernel.org>, <kwilczynski@kernel.org>,
- <bhelgaas@google.com>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 4/4] rust: devres: implement register_release()
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250624215600.221167-1-dakr@kernel.org>
- <20250624215600.221167-5-dakr@kernel.org>
- <DAWED7BIC32G.338MXRHK4NSJG@kernel.org> <aF0rzzlKgwopOVHV@pollux>
-In-Reply-To: <aF0rzzlKgwopOVHV@pollux>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3dfe387c-d1db-4cbe-b41d-8f9f27fe3a1f@huaweicloud.com>
 
-On Thu Jun 26, 2025 at 1:15 PM CEST, Danilo Krummrich wrote:
-> On Thu, Jun 26, 2025 at 12:36:23PM +0200, Benno Lossin wrote:
->> Or, we could change `Release` to be:
->>=20
->>     pub trait Release {
->>         type Ptr: ForeignOwnable;
->>=20
->>         fn release(this: Self::Ptr);
->>     }
->>=20
->> and then `register_release` is:
->>=20
->>     pub fn register_release<T: Release>(dev: &Device<Bound>, data: T::Pt=
-r) -> Result
->>=20
->> This way, one can store a `Box<T>` and get access to the `T` at the end.
->
-> I think this was also the case before? Well, it was P::Borrowed instead.
+On Thu, Jun 26, 2025 at 09:08:38PM +0800, Luo Gengkun wrote:
 
-Well you had access to a `&T`, but not the `T` directly.
+> Sorry for the late reply, I found that the link is v2 instead of v3.
+> This v3 link is:
+> 
+> https://lore.kernel.org/all/20250609035316.250557-1-luogengkun@huaweicloud.com/
+> 
+> v2 attempts to fix a concurrency problem between perf_cgroup_switch
+> and perf_cgroup_event_disable. But it does not to move WARN_ON_ONCE
+> into lock-protected region, so the warning is still triggered.
+> 
+> The following patches have been tested and fix this issue.
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 1f746469fda5..a35784d42c66 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -951,8 +951,6 @@ static void perf_cgroup_switch(struct task_struct *task)
+>         if (READ_ONCE(cpuctx->cgrp) == NULL)
+>                 return;
+> 
+> -       WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
+> -
+>         cgrp = perf_cgroup_from_task(task, NULL);
+>         if (READ_ONCE(cpuctx->cgrp) == cgrp)
+>                 return;
+> @@ -964,6 +962,8 @@ static void perf_cgroup_switch(struct task_struct *task)
+>         if (READ_ONCE(cpuctx->cgrp) == NULL)
+>                 return;
+> 
+> +       WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
+> +
+>         perf_ctx_disable(&cpuctx->ctx, true);
+> 
+>         ctx_sched_out(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
 
->> Related questions:
->>=20
->> * should we implement `ForeignOwnable` for `&'static T`?
->
-> There's already a patch on the list doing this in the context of DebugFS =
-[1].
->
-> [1] https://lore.kernel.org/lkml/20250624-debugfs-rust-v7-3-9c8835a7a20f@=
-google.com/
-
-Ah, I'm not following that series at the moment.
-
----
-Cheers,
-Benno
+Can you send as a full new patch, the thing is already in Linus' tree.
