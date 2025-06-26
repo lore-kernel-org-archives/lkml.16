@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD23128FFCD;
-	Thu, 26 Jun 2025 23:56:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2465290D83;
+	Thu, 26 Jun 2025 23:56:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750982207; cv=none; b=BpUwRmKltROBw4pNNai0HnoGjVcMa/z2+th/3gxq15UaKESoyJ60R9Fw/5BrxFh3oq1fOJgjWj1LGT7NRwy68qluxJU1spftrcls5M8vIm8yPBgnlONBdqIyYi2NybNO/ea5vUm9IPrhggLgutln1hs7CzN3nL5mTiHXzj8gggg=
+	t=1750982209; cv=none; b=V2M6iHS+MZv9eH1Knd0tpiD9hKesyKxRhD/pmgAu2vBlhAfT7/4JU0LTzzDyoJLz7aJ8ENlIqL/iTfKicxzNjNFfuJkBiOhW9ZivEQF6q8YH7iJn0lSW6/CHo5SxjCBrovLhxbh4C+rtrj7Oa6rrHSV1CInPTl0UJEC1pmwwBi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750982207; c=relaxed/simple;
-	bh=iAB4PmF8Ue1UmbFWEwdpFocIyqIX3gtRI0157QGOb28=;
+	s=arc-20240116; t=1750982209; c=relaxed/simple;
+	bh=P7Lmx069P9t+Q6SOpAKxHr+0/2SiR5xXTd+e7kEt5dA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uXeG9N2B3cLWPlb6X8NS4gFifoDpPN4Nahonhn2/uA77CwmQapE10pI6JYBCjiSXcjmaVlz8+5lR1pra5ZT+jGbkfRZKQYaC6zVoT/Rfzz+58V2rs6aeHldPDCHjIVRxe/6AL3bY2/J92ZBRSkHkVoGTIdU3wP4NkFeQ9yGTmGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WEjx/U7X; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nL7AjfSg8dexsOw8uo37OtY9F0df7He1CemKh4XyXS2xmF7XvS9dFsAAjOAUsLO50qWzY5kXey0u924dwz9RwXeoAk7gHyEGKFQGhM0w1vcrfTG2/KNUSCyX4AhwNkiY4hcLeKkA+Dp8NwCPI8BKWjEHtnIZt/q+0r690dijbxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BUznRFpj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WEjx/U7X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2B09C4CEEF;
-	Thu, 26 Jun 2025 23:56:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BUznRFpj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 433B7C4CEF4;
+	Thu, 26 Jun 2025 23:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750982207;
-	bh=iAB4PmF8Ue1UmbFWEwdpFocIyqIX3gtRI0157QGOb28=;
+	s=k20201202; t=1750982208;
+	bh=P7Lmx069P9t+Q6SOpAKxHr+0/2SiR5xXTd+e7kEt5dA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WEjx/U7XDGAionvACIIk01ObVtK3qZeIw0XcNVCs1qSMxqmk5uuP/rg1JWi7uUMpk
-	 U7oqwX70ydanM/Rf3YWksnlivMC0RdFmjKpWWW674PEA+vQjkpw+cayFGfowoRXbxm
-	 8VNqfbD/vll3UTMDIY+Y9jWZcJhW+pM5SDnsFNVXH39/S14hRUojV+1oQs7x1v8YuH
-	 thbmWJVZL+WhIfANqqmzN7Yl2H00vYx8OdrnyvQ/4RKmT9cAXAtLu5e6wjQcnAWEwF
-	 PdNcStF8cH/XdlFELqkXCzXALOyGQLrew5cYq9UwPinjmutD3LAMPq9QElV7fTcJj+
-	 eYCHbXSl0VL4g==
+	b=BUznRFpj71vYtEYkDCpLU4MJ7k5gjN/AsP/RgXKhiokshqWH7IBNpluBlYyDIE0tL
+	 q5HbkXt0sghvTusMGt0TbvWC8HzWMXSrJ8PN+KqZjPwoNtqUjlu52WSPzP/YDevQl0
+	 xG/ehG9O0jILlhsImdEveDTkxe8Cav6UAA6Z3LvjspD3C/aTQNUvieXLemv1aHuuu3
+	 zL7weTiK0JKkCwu7lWHnyVgvUQd6QUo+YrnvllIQi+uUlEVYlpc79W2Psa0ElixPAw
+	 zXnBxS6YxD9b6VyAfH/ngm0RniB+mj1e473Ybf4P2paezGzyy7xci/29Fl5/5umHEm
+	 XXDt84rmzuEqg==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -42,9 +42,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Chen Zhongjin <chenzhongjin@huawei.com>,
 	Puranjay Mohan <puranjay@kernel.org>,
 	Dylan Hatch <dylanbhatch@google.com>
-Subject: [PATCH v3 51/64] objtool/klp: Add --debug-checksum=<funcs> to show per-instruction checksums
-Date: Thu, 26 Jun 2025 16:55:38 -0700
-Message-ID: <545d32e05f6c2634a6fc854ca6246d602f09768a.1750980517.git.jpoimboe@kernel.org>
+Subject: [PATCH v3 53/64] objtool/klp: Add --debug option to show cloning decisions
+Date: Thu, 26 Jun 2025 16:55:40 -0700
+Message-ID: <cdc42fe6c27a0a8e9c5ab01cea61fd2556eeb3a8.1750980517.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750980516.git.jpoimboe@kernel.org>
 References: <cover.1750980516.git.jpoimboe@kernel.org>
@@ -56,170 +56,205 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a --debug-checksum=<funcs> option to the check subcommand to print
-the calculated checksum of each instruction in the given functions.
-
-This is useful for determining where two versions of a function begin to
-diverge.
+Add a --debug option to klp diff which prints cloning decisions and an
+indented dependency tree for all cloned symbols and relocations.  This
+helps visualize which symbols and relocations were included and why.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- tools/objtool/builtin-check.c            |  6 ++++
- tools/objtool/check.c                    | 42 ++++++++++++++++++++++++
- tools/objtool/include/objtool/builtin.h  |  1 +
- tools/objtool/include/objtool/checksum.h |  1 +
- tools/objtool/include/objtool/elf.h      |  1 +
- tools/objtool/include/objtool/warn.h     | 19 +++++++++++
- 6 files changed, 70 insertions(+)
+ tools/objtool/include/objtool/warn.h | 21 ++++++++
+ tools/objtool/klp-diff.c             | 75 ++++++++++++++++++++++++++++
+ tools/objtool/objtool.c              |  3 ++
+ 3 files changed, 99 insertions(+)
 
-diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
-index 331c6e1dc04c..cd2c4a387100 100644
---- a/tools/objtool/builtin-check.c
-+++ b/tools/objtool/builtin-check.c
-@@ -93,6 +93,7 @@ static const struct option check_options[] = {
- 	OPT_GROUP("Options:"),
- 	OPT_BOOLEAN(0,		 "backtrace", &opts.backtrace, "unwind on error"),
- 	OPT_BOOLEAN(0,		 "backup", &opts.backup, "create backup (.orig) file on warning/error"),
-+	OPT_STRING(0,		 "debug-checksum", &opts.debug_checksum,  "funcs", "enable checksum debug output"),
- 	OPT_BOOLEAN(0,		 "dry-run", &opts.dryrun, "don't write modifications"),
- 	OPT_BOOLEAN(0,		 "link", &opts.link, "object is a linked object"),
- 	OPT_BOOLEAN(0,		 "module", &opts.module, "object is part of a kernel module"),
-@@ -168,6 +169,11 @@ static bool opts_valid(void)
- 	}
- #endif
- 
-+	if (opts.debug_checksum && !opts.checksum) {
-+		ERROR("--debug-checksum requires --checksum");
-+		return false;
-+	}
-+
- 	if (opts.checksum		||
- 	    opts.hack_jump_label	||
- 	    opts.hack_noinstr		||
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index fd7e470f01bd..7e492945e5e5 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -3587,6 +3587,44 @@ static bool skip_alt_group(struct instruction *insn)
- 	return alt_insn->type == INSN_CLAC || alt_insn->type == INSN_STAC;
- }
- 
-+static int checksum_debug_init(struct objtool_file *file)
-+{
-+	char *dup, *s;
-+
-+	if (!opts.debug_checksum)
-+		return 0;
-+
-+	dup = strdup(opts.debug_checksum);
-+	if (!dup) {
-+		ERROR_GLIBC("strdup");
-+		return -1;
-+	}
-+
-+	s = dup;
-+	while (*s) {
-+		struct symbol *func;
-+		char *comma;
-+
-+		comma = strchr(s, ',');
-+		if (comma)
-+			*comma = '\0';
-+
-+		func = find_symbol_by_name(file->elf, s);
-+		if (!func || !is_func_sym(func))
-+			WARN("--debug-checksum: can't find '%s'", s);
-+		else
-+			func->debug_checksum = 1;
-+
-+		if (!comma)
-+			break;
-+
-+		s = comma + 1;
-+	}
-+
-+	free(dup);
-+	return 0;
-+}
-+
- static void checksum_update_insn(struct objtool_file *file, struct symbol *func,
- 				 struct instruction *insn)
- {
-@@ -4753,6 +4791,10 @@ int check(struct objtool_file *file)
- 	cfi_hash_add(&init_cfi);
- 	cfi_hash_add(&func_cfi);
- 
-+	ret = checksum_debug_init(file);
-+	if (ret)
-+		goto out;
-+
- 	ret = decode_sections(file);
- 	if (ret)
- 		goto out;
-diff --git a/tools/objtool/include/objtool/builtin.h b/tools/objtool/include/objtool/builtin.h
-index 06083e8c5c91..92bc7089cfc1 100644
---- a/tools/objtool/include/objtool/builtin.h
-+++ b/tools/objtool/include/objtool/builtin.h
-@@ -31,6 +31,7 @@ struct opts {
- 	/* options: */
- 	bool backtrace;
- 	bool backup;
-+	const char *debug_checksum;
- 	bool dryrun;
- 	bool link;
- 	bool mnop;
-diff --git a/tools/objtool/include/objtool/checksum.h b/tools/objtool/include/objtool/checksum.h
-index 927ca74b5c39..7fe21608722a 100644
---- a/tools/objtool/include/objtool/checksum.h
-+++ b/tools/objtool/include/objtool/checksum.h
-@@ -19,6 +19,7 @@ static inline void checksum_update(struct symbol *func,
- 				   const void *data, size_t size)
- {
- 	XXH3_64bits_update(func->csum.state, data, size);
-+	dbg_checksum(func, insn, XXH3_64bits_digest(func->csum.state));
- }
- 
- static inline void checksum_finish(struct symbol *func)
-diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index 4d1023fdb700..4cfd09e66cb5 100644
---- a/tools/objtool/include/objtool/elf.h
-+++ b/tools/objtool/include/objtool/elf.h
-@@ -78,6 +78,7 @@ struct symbol {
- 	u8 ignore	     : 1;
- 	u8 cold		     : 1;
- 	u8 prefix	     : 1;
-+	u8 debug_checksum    : 1;
- 	struct list_head pv_target;
- 	struct reloc *relocs;
- 	struct section *group_sec;
 diff --git a/tools/objtool/include/objtool/warn.h b/tools/objtool/include/objtool/warn.h
-index cb8fe846d9dd..29173a1368d7 100644
+index 29173a1368d7..e88322d97573 100644
 --- a/tools/objtool/include/objtool/warn.h
 +++ b/tools/objtool/include/objtool/warn.h
-@@ -102,4 +102,23 @@ static inline char *offstr(struct section *sec, unsigned long offset)
+@@ -102,6 +102,10 @@ static inline char *offstr(struct section *sec, unsigned long offset)
  #define ERROR_FUNC(sec, offset, format, ...) __WARN_FUNC(ERROR_STR, sec, offset, format, ##__VA_ARGS__)
  #define ERROR_INSN(insn, format, ...) WARN_FUNC(insn->sec, insn->offset, format, ##__VA_ARGS__)
  
++extern bool debug;
++extern int indent;
 +
-+#define __dbg(format, ...)						\
-+	fprintf(stderr,							\
-+		"DEBUG: %s%s" format "\n",				\
-+		objname ?: "",						\
-+		objname ? ": " : "",					\
-+		##__VA_ARGS__)
-+
-+#define dbg_checksum(func, insn, checksum)				\
++static inline void unindent(int *unused) { indent--; }
+ 
+ #define __dbg(format, ...)						\
+ 	fprintf(stderr,							\
+@@ -110,6 +114,23 @@ static inline char *offstr(struct section *sec, unsigned long offset)
+ 		objname ? ": " : "",					\
+ 		##__VA_ARGS__)
+ 
++#define dbg(args...)							\
 +({									\
-+	if (unlikely(insn->sym && insn->sym->pfunc &&			\
-+		     insn->sym->pfunc->debug_checksum)) {		\
-+		char *insn_off = offstr(insn->sec, insn->offset);	\
-+		__dbg("checksum: %s %s %016lx",				\
-+		      func->name, insn_off, checksum);			\
-+		free(insn_off);						\
-+	}								\
++	if (unlikely(debug))						\
++		__dbg(args);						\
 +})
 +
- #endif /* _WARN_H */
++#define __dbg_indent(format, ...)					\
++({									\
++	if (unlikely(debug))						\
++		__dbg("%*s" format, indent * 8, "", ##__VA_ARGS__);	\
++})
++
++#define dbg_indent(args...)						\
++	int __attribute__((cleanup(unindent))) __dummy_##__COUNTER__;	\
++	__dbg_indent(args);						\
++	indent++
++
+ #define dbg_checksum(func, insn, checksum)				\
+ ({									\
+ 	if (unlikely(insn->sym && insn->sym->pfunc &&			\
+diff --git a/tools/objtool/klp-diff.c b/tools/objtool/klp-diff.c
+index 85c6a480ecdb..c9320ce39578 100644
+--- a/tools/objtool/klp-diff.c
++++ b/tools/objtool/klp-diff.c
+@@ -37,6 +37,8 @@ static const char * const klp_diff_usage[] = {
+ };
+ 
+ static const struct option klp_diff_options[] = {
++	OPT_GROUP("Options:"),
++	OPT_BOOLEAN('d', "debug", &debug, "enable debug output"),
+ 	OPT_END(),
+ };
+ 
+@@ -47,6 +49,38 @@ static inline u32 str_hash(const char *str)
+ 	return jhash(str, strlen(str), 0);
+ }
+ 
++static char *escape_str(const char *orig)
++{
++	size_t len = 0;
++	const char *a;
++	char *b, *new;
++
++	for (a = orig; *a; a++) {
++		switch (*a) {
++		case '\001': len += 5; break;
++		case '\n':
++		case '\t':   len += 2; break;
++		default: len++;
++		}
++	}
++
++	new = malloc(len + 1);
++	if (!new)
++		return NULL;
++
++	for (a = orig, b = new; *a; a++) {
++		switch (*a) {
++		case '\001': memcpy(b, "<SOH>", 5); b += 5; break;
++		case '\n': *b++ = '\\'; *b++ = 'n'; break;
++		case '\t': *b++ = '\\'; *b++ = 't'; break;
++		default:   *b++ = *a;
++		}
++	}
++
++	*b = '\0';
++	return new;
++}
++
+ static int read_exports(void)
+ {
+ 	const char *symvers = "Module.symvers";
+@@ -527,6 +561,28 @@ static struct symbol *__clone_symbol(struct elf *elf, struct symbol *patched_sym
+ 	return out_sym;
+ }
+ 
++static const char *sym_type(struct symbol *sym)
++{
++	switch (sym->type) {
++	case STT_NOTYPE:  return "NOTYPE";
++	case STT_OBJECT:  return "OBJECT";
++	case STT_FUNC:    return "FUNC";
++	case STT_SECTION: return "SECTION";
++	case STT_FILE:    return "FILE";
++	default:	  return "UNKNOWN";
++	}
++}
++
++static const char *sym_bind(struct symbol *sym)
++{
++	switch (sym->bind) {
++	case STB_LOCAL:   return "LOCAL";
++	case STB_GLOBAL:  return "GLOBAL";
++	case STB_WEAK:    return "WEAK";
++	default:	  return "UNKNOWN";
++	}
++}
++
+ /*
+  * Copy a symbol to the output object, optionally including its data and
+  * relocations.
+@@ -539,6 +595,8 @@ static struct symbol *clone_symbol(struct elfs *e, struct symbol *patched_sym,
+ 	if (patched_sym->clone)
+ 		return patched_sym->clone;
+ 
++	dbg_indent("%s%s", patched_sym->name, data_too ? " [+DATA]" : "");
++
+ 	/* Make sure the prefix gets cloned first */
+ 	if (is_func_sym(patched_sym) && data_too) {
+ 		pfx = get_func_prefix(patched_sym);
+@@ -901,6 +959,8 @@ static int clone_reloc_klp(struct elfs *e, struct reloc *patched_reloc,
+ 
+ 	klp_sym = find_symbol_by_name(e->out, sym_name);
+ 	if (!klp_sym) {
++		__dbg_indent("%s", sym_name);
++
+ 		/* STB_WEAK: avoid modpost undefined symbol warnings */
+ 		klp_sym = elf_create_symbol(e->out, sym_name, NULL,
+ 					    STB_WEAK, patched_sym->type, 0, 0);
+@@ -949,6 +1009,17 @@ static int clone_reloc_klp(struct elfs *e, struct reloc *patched_reloc,
+ 	return 0;
+ }
+ 
++#define dbg_clone_reloc(sec, offset, patched_sym, addend, export, klp)			\
++	dbg_indent("%s+0x%lx: %s%s0x%lx [%s%s%s%s%s%s]",				\
++		   sec->name, offset, patched_sym->name,				\
++		   addend >= 0 ? "+" : "-", labs(addend),				\
++		   sym_type(patched_sym),						\
++		   patched_sym->type == STT_SECTION ? "" : " ",				\
++		   patched_sym->type == STT_SECTION ? "" : sym_bind(patched_sym),	\
++		   is_undef_sym(patched_sym) ? " UNDEF" : "",				\
++		   export ? " EXPORTED" : "",						\
++		   klp ? " KLP" : "")
++
+ /* Copy a reloc and its symbol to the output object */
+ static int clone_reloc(struct elfs *e, struct reloc *patched_reloc,
+ 			struct section *sec, unsigned long offset)
+@@ -968,6 +1039,8 @@ static int clone_reloc(struct elfs *e, struct reloc *patched_reloc,
+ 
+ 	klp = klp_reloc_needed(patched_reloc);
+ 
++	dbg_clone_reloc(sec, offset, patched_sym, addend, export, klp);
++
+ 	if (klp) {
+ 		if (clone_reloc_klp(e, patched_reloc, sec, offset, export))
+ 			return -1;
+@@ -999,6 +1072,8 @@ static int clone_reloc(struct elfs *e, struct reloc *patched_reloc,
+ 	if (is_string_sec(patched_sym->sec)) {
+ 		const char *str = patched_sym->sec->data->d_buf + addend;
+ 
++		__dbg_indent("\"%s\"", escape_str(str));
++
+ 		addend = elf_add_string(e->out, out_sym->sec, str);
+ 		if (addend == -1)
+ 			return -1;
+diff --git a/tools/objtool/objtool.c b/tools/objtool/objtool.c
+index c8f611c1320d..3c26ed561c7e 100644
+--- a/tools/objtool/objtool.c
++++ b/tools/objtool/objtool.c
+@@ -16,6 +16,9 @@
+ #include <objtool/objtool.h>
+ #include <objtool/warn.h>
+ 
++bool debug;
++int indent;
++
+ static struct objtool_file file;
+ 
+ struct objtool_file *objtool_open_read(const char *filename)
 -- 
 2.49.0
 
