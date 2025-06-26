@@ -1,116 +1,173 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F6C2D3A80;
-	Thu, 26 Jun 2025 09:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202C52BF3F8;
+	Thu, 26 Jun 2025 09:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750930253; cv=none; b=E5ITU/SslJFTPQaIFLtY4pvjLs8BRo4ZktMIb4qu36U5MbvkJmHu2uvlJb1l+LSn56IRIWJQChI7NIs0dnHEaufw9uQyAtcaV894u10czpF1i7pSNJVymaz6tgc8zRgWhocjwHKv/mZ8v7Br6KtnPytAy2B0wh2km1979zP4KmQ=
+	t=1750930286; cv=none; b=IV1rO0ZPrzsbwnFD4M3WGv3jSL/X2MxNGupxmK+YnP3ZizE8LNRlTSvsSkmBo+opeLwbT1loMfRawRAbDkCVm5NmbsZOQ9e3ZBNzgFlXzxZnleyYKOgHPIUEGUe2bzksSvYA7TRbhqwz12ZfTH2cgtag0D1LWl+fmwmrZ2aps7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750930253; c=relaxed/simple;
-	bh=T/BapR8VrPUhdzgTEiubVOtynqAKASrFAT5V8+X0ksg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QP52mVZhF+laxGoZ6LZBIp3Bh5CooaGF1hSv1jdFE8qn6IsRo0xrKyh9qaBFcMjBiVSkW51vO5vf/phbvKfzSV+PYKGpXn7xuXIP8bBIRyU4MlRHjHoMJ003gDDmXnGCIBBeyDJ9mBMDWYTag2hwCGYH1z9Q6mNFN4F8r9Fjfhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mcvsw0NN; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750930286; c=relaxed/simple;
+	bh=ekv2eO6oe4yBEEcGx/v664SW1vBsIAVNXe/2ysde03Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n40brPWjCbmlvthR+07wZ1fQqX5wT81ZpzahNi53JzA6zhrXjKblFIImEjIxflhyNdFZdfOEdtwv1DmYkJnkEDMmnGOwLli2UpKfvbU3MEScuJ7SOGlmFnSadEL4OrVpp8WrfIvV69NXwFQ3R/q9mRis/KMJQGn1wIejWKinSwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LgoUIGxh; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mcvsw0NN"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q9TYEp021525;
-	Thu, 26 Jun 2025 09:30:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Lyj+kx3ysXar+B5uWk98MwNaaUr9bnNieXpVHAG45po=; b=mcvsw0NNQdMWYGba
-	B8upNRD78E98uN3gLGY4YrmRqQHTGdtOs3dLS4V7TlTV37cYlhetJptmrGnwkjyi
-	trchdhMNwU3QafsyEEBD5g0f/7uDidWJeaOud/LuUKfQkcVOReRNC67HyfXv5pMR
-	1ztGcLmmyNNt1k3ZMmJyDihAUVXe5/gFZ4F/SOhHcwInrMgQbZ3OFVaV8yGjpdmB
-	pzZ/YYL0+tEKobD9lX+gkqCwJQGRZ5Vr03md3EDpAoi7iwyP9JFsCLzgzmFbvJhT
-	ykTcItSUwJ5Lhq0TFBa2vOXvp1SxUmG0K2IigJzhP1o/YD1MFBJy+ZVnLj7UO6qR
-	ycMz1g==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fdfx13fb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 09:30:48 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55Q9UlRT026380
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 09:30:47 GMT
-Received: from hu-lxu5-sha.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 26 Jun 2025 02:30:43 -0700
-From: Ling Xu <quic_lxu5@quicinc.com>
-To: <cros-qcom-dts-watchers@chromium.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>
-CC: <quic_kuiw@quicinc.com>, <ekansh.gupta@oss.qualcomm.com>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Ling Xu <quic_lxu5@quicinc.com>
-Subject: [PATCH v3 2/2] arm64: dts: qcom: sc7280: Add nsessions property for adsp
-Date: Thu, 26 Jun 2025 14:59:52 +0530
-Message-ID: <20250626092952.847393-3-quic_lxu5@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250626092952.847393-1-quic_lxu5@quicinc.com>
-References: <20250626092952.847393-1-quic_lxu5@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LgoUIGxh"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553bcf41440so805577e87.3;
+        Thu, 26 Jun 2025 02:31:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750930283; x=1751535083; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iuFmqpRengejqXGMt8z0krXQLsPU94kcoziX8PACH+I=;
+        b=LgoUIGxhPNV4WNEaGU0tVQDsGfdHOraRR7tnGFcPlXDVtYFujOYiyUTJQEdrvr/hph
+         DI/2DA6Nh8/La+q1oKW8LO4dNDxuu5k3GI8VudtdQJ3BNJ5M1cnbi7NkQYNh1yXT9NSc
+         m0LloyQ6QYeSSVOUIQYYfETIdfoNSh7luAt5x6NOr9TT3Kmn5oNIqlNrflR8ZiNTIuG4
+         K4BHOanK3+s3ak8h4imzAcNVr7k6ZeCnmISIt/tjgsgFJ7cDG0AFOcSlQsAUkOKWUqcm
+         xc/mFl8Nj+AGF+J/H+OoAOD0s1JOW2uPOHzzQQnWRtL3IzCO8TBdeqkpDXJfBWVdl+zk
+         r1RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750930283; x=1751535083;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iuFmqpRengejqXGMt8z0krXQLsPU94kcoziX8PACH+I=;
+        b=GK+tJmn1Sja9J6ytrrdw0Mna3Ixmk2FyFyIRJ5hf2aNH/zhGJ2yB+js3GjS9vCoH2V
+         M1HHRpITZxKLdBc+GC62QUZcrBpc14w/3xutPU7c8ZbmAM521YHvAT4bdVubhP01xgDe
+         Sot3J7Ray0GeaQCWbDPm5bcuKUluYbPFp1iY/agTRZ7avKimnXwSPM9oXpc0UYmujRl8
+         QgdGOx9rGkmGivSg8ft88Hq3K32AT5E9TOicHiy0fViHIRf8xgreGPnzECi0iFpT+4qE
+         HoWDSOztV9ebzb0NmU2Xgn9r59PbXMbwaFwJsQGvLRta+Exlh0sRe8OupPOwH7QcUPcQ
+         G4Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1pp4EXb+uWH33HEMBu3v9rvG6Hk8KdrtcDOQNzyx7LblKrzMh3tRYtbU7HQxg/LoEHiH9ZZMhk61ZuvI=@vger.kernel.org, AJvYcCVs/oIilUo37E2VFGGGFwK1DqEjbjRgi+igyCgJ96mJDskvepE5Ha9HYWc5goGI1SlRCKbCrPr5VOVHmQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqSZooKgPFfIEbrtJp0Vimh7uHh1VyZQ927AzNBa8d2iBt+DuH
+	nEFJbW1/Xm9GeT4cnQ+f7+o0WYrlMHO7xExINQLRN/LdvCDAF3rm55WVZMwUq3apNtQIbTLTCIx
+	yl/Gl2U+el6QMgQGiNvXQTlXDCyLMMDk=
+X-Gm-Gg: ASbGncunmaqP8OKhOkHZe6QXmyveZiCS8CJOjHzAONNnAEouz4j8I5k+Dio+cz7KYDz
+	RFw/zBh6IfHlFuoV6YeCmdK1VwEmfUr0B0h7rYpWjpuZztNwnp5uqxwAh9zS8Oj+fdZ0H5cs/N1
+	hsm6ISI49dAMYCFSweXQrMrLJtPSw1zwkOBgc5kAEo9bjsYuzuLvWx
+X-Google-Smtp-Source: AGHT+IHKD9vv7E6n80MsMeNjpJwBWGKsDmTjk3A0J3+cAywyuJ59mQfEiaL2YVTpTIc2tcdraTY+Dh5qWDg83RmXaIY=
+X-Received: by 2002:a05:6512:1150:b0:553:36b7:7b14 with SMTP id
+ 2adb3069b0e04-554fdf96ec2mr2102615e87.37.1750930282937; Thu, 26 Jun 2025
+ 02:31:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Z0XWeD36KsKA1Zz244I9tkYEvanp4MBb
-X-Proofpoint-ORIG-GUID: Z0XWeD36KsKA1Zz244I9tkYEvanp4MBb
-X-Authority-Analysis: v=2.4 cv=MtZS63ae c=1 sm=1 tr=0 ts=685d1348 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8
- a=92LHXw4WN0ZY75pjLU0A:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA3OCBTYWx0ZWRfX1XFIhZrxnaX4
- XQAi5qg9OLWHWdTTMLKsA+wcuvzYtoFN1XmTPmHYSX8rGnt8Q30nGDrcEm1GSwx8FsZUBC9SkM1
- Ef+ubruRhkKWLiGVzNr1054zXCpB005kAOxIPN+PodEuvcG4m7wL2M95n7U0PxDMXe+h3A9/oYg
- w2nW987KOPIOWnaVf8KxtPsSDQ0l51Z3oI2/HeIcIefXAD/RoGJ9mTsyaGifvSayXi80uvH6yEH
- kOskr0q8t9E34GpDE+MBHt0SzwK2kBXKyTF8dvA4TnNQOH/SKr9PkGdVpzlsgg1reH4X+orWcQc
- 95SoHHwHBn6FEz2XCb/VYJJQnvL2N7CMF56hL5PTIpSvxtcmR4ygccAcURDYZSRwxfQjPifwM6G
- vdIltzSefpX8hlpm93hcZ/2wBZWe908iwzDfkuLeLjpRPexqXkIe6X4PIPVOgJaneSqVyWfD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_04,2025-06-25_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 suspectscore=0 adultscore=0 phishscore=0
- mlxlogscore=671 spamscore=0 malwarescore=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506260078
+References: <20250625095224.118679-1-snovitoll@gmail.com> <20250625095224.118679-2-snovitoll@gmail.com>
+ <db30beb6-a331-46b7-92a3-1ee7782e317a@csgroup.eu>
+In-Reply-To: <db30beb6-a331-46b7-92a3-1ee7782e317a@csgroup.eu>
+From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+Date: Thu, 26 Jun 2025 14:31:05 +0500
+X-Gm-Features: Ac12FXyxTyp0b2hD3uhdVzbeUTYpXnyKRANJYa2mQoNch15i1MQX1xBLZECmC3k
+Message-ID: <CACzwLxj3KWdy-mBu-te1OFf2FZ8eTp5CieYswF5NVY4qPWD93Q@mail.gmail.com>
+Subject: Re: [PATCH 1/9] kasan: unify static kasan_flag_enabled across modes
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com, 
+	dvyukov@google.com, vincenzo.frascino@arm.com, catalin.marinas@arm.com, 
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, hca@linux.ibm.com, 
+	gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com, 
+	svens@linux.ibm.com, richard@nod.at, anton.ivanov@cambridgegreys.com, 
+	johannes@sipsolutions.net, dave.hansen@linux.intel.com, luto@kernel.org, 
+	peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	x86@kernel.org, hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com, 
+	akpm@linux-foundation.org, guoweikang.kernel@gmail.com, geert@linux-m68k.org, 
+	rppt@kernel.org, tiwei.btw@antgroup.com, richard.weiyang@gmail.com, 
+	benjamin.berg@intel.com, kevin.brodsky@arm.com, kasan-dev@googlegroups.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add nsessions property for adsp context bank to make sessions
-available for ADSP offload.
+On Wed, Jun 25, 2025 at 3:35=E2=80=AFPM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
+>
+>
+>
+> Le 25/06/2025 =C3=A0 11:52, Sabyrzhan Tasbolatov a =C3=A9crit :
+> > Historically the fast-path static key `kasan_flag_enabled` existed
+> > only for `CONFIG_KASAN_HW_TAGS`. Generic and SW_TAGS either relied on
+> > `kasan_arch_is_ready()` or evaluated KASAN checks unconditionally.
+> > As a result every architecture had to toggle a private flag
+> > in its `kasan_init()`.
+> >
+> > This patch turns the flag into a single global runtime predicate that
+> > is built for every `CONFIG_KASAN` mode and adds a helper that flips
+> > the key once KASAN is ready.
+>
+> Shouldn't kasan_init_generic() also perform the following line to reduce
+> even more code duplication between architectures ?
+>
+>         init_task.kasan_depth =3D 0;
 
-Co-developed-by: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
-Signed-off-by: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
-Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sc7280.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+I've tried to introduce a new function kasan_mark_ready() to gather
+all arch duplicated code in one place:
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-index 982f120511a0..9046a7b9a728 100644
---- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-@@ -3931,6 +3931,7 @@ compute-cb@5 {
- 						compatible = "qcom,fastrpc-compute-cb";
- 						reg = <5>;
- 						iommus = <&apps_smmu 0x1805 0x0>;
-+						qcom,nsessions = <5>;
- 						dma-coherent;
- 					};
- 				};
--- 
-2.34.1
+In mm/kasan/common.c:
 
+void __init kasan_mark_ready(void)
+{
+        /* Enable error reporting */
+        init_task.kasan_depth =3D 0;
+        /* Mark KASAN as ready */
+        static_branch_enable(&kasan_flag_enabled);
+}
+
+So we could've called it
+in mm/kasan/generic.c:
+void __init kasan_init_generic(void)
+{
+        kasan_mark_ready();
+        pr_info("KernelAddressSanitizer initialized (generic)\n");
+}
+
+in mm/kasan/sw_tags.c:
+void __init kasan_init_sw_tags(void)
+{
+...
+        kasan_mark_ready();
+        pr_info("KernelAddressSanitizer initialized ..");
+}
+
+in mm/kasan/hw_tags.c:
+void __init kasan_init_hw_tags(void)
+{
+...
+        kasan_mark_ready();
+        pr_info("KernelAddressSanitizer initialized ..");
+}
+
+But it works only for CONFIG_KASAN_GENERIC mode,
+when arch code calls kasan_init(), for example, arm64:
+
+void __init kasan_init(void)
+{
+        kasan_init_shadow();
+        kasan_init_generic();
+}
+
+And for HW_TAGS, SW_TAGS it won't work.
+Fails during compiling:
+mm/kasan/common.c:45:12: error: no member named 'kasan_depth' in
+'struct task_struct'
+   45 |         init_task.kasan_depth =3D 0;
+
+because kasan_init_sw_tags(), kasan_init_hw_tags() are called
+once on CPU boot. For arm64, where these KASAN modes are supported,
+both functions are called in smp_prepare_boot_cpu().
+
+So I guess, every arch kasan_init() has to set in kasan_init()
+       init_task.kasan_depth =3D 0;
+to enable error messages before switching KASAN readiness
+via enabling kasan_flag_enabled key.
+
+>
+> Christophe
+>
