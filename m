@@ -1,547 +1,163 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B179191F7E
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683862BEC31
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750930724; cv=none; b=N57BxUdYaeHgKsGC3nVwzZ73uEYpNf227a7H3ffDhFPk9/QJv7+cGuWt0pDYtAGCNDfzFzUQSXb8yt5sVsFBNOQ+GXcOvCkCoiJfA77+p3n+ihqwK0fB299JfIGfQDloUvY2SGHa1hmmoWcMEgYHVWlKjcPNOmFrm0oSSkkioQM=
+	t=1750930728; cv=none; b=NiISsr0jwM9u+nS1yIQBHxyXrJw7DspvHywSYxrBmYhLe1T7iQA08qnydX32XWZgR0nh2UgWgdPUf3Urgzn2jVt4Wa4bpPXU8wTHW8EU12RBtqjc4iEyIXqN2b2KXaoswek0tGhYqoBattNOlVO1Ie8uRpeIpmCKAuRb1ctiKBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750930724; c=relaxed/simple;
-	bh=mqKJRkq0W8ATPm0+Ew3Mj66KQihZADA+zEulpCV4erQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gf4jLz47pIiGApX4RkVkWH0PrAPTz2bxIUp5QCFVFK1U4jHpz3d+Oc8B/0Y6WXytUEHEqt5N4fxbecvVTR4DDLEpKAGiCoRyttYgppdcz4c8s6wRSaNtcpT3WA0G9BLniMxE6/O7r1VyLzBSYq3ctjAQKt1vr1rqXaiZtBIv5DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=ZZNGYrgJ; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1750930728; c=relaxed/simple;
+	bh=e6BYYN0RrbPQauR2xmIcMIc/SKh6PKKv9oYpeF+Oqd8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iGpBQ13A+EmdLHsGL2o6nesEiteYmNX/TR8uAY0Dsry0Ej/7vIOt7jaTBU02D4BgycG0nRt82mQ2RoXVeTmbj4YDS2dEAhGipk6r3zhxW++1rYSx8Iu8p3R5/g/J+z5DUleykntrI80x5LMID90fYyMFhD/BC56TeLoj26FFm1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KsIaojvX; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="ZZNGYrgJ"
-Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 6A58E1F967;
-	Thu, 26 Jun 2025 11:38:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1750930720;
-	bh=wL5rIYbk+FKuqfNm4dI1sNYrQVxIwIxEyY/Nl9/LMWo=;
-	h=Received:From:To:Subject;
-	b=ZZNGYrgJHCJZHnEVacbdbG7X3f71gFZQ+kW0y5VyBa1BlTy+ompsCzlq320PVUOYM
-	 ZMnssFH+XbuZpxZaWo/LqlfouqNqTJk8XMAZqREECvteKPsvF2fkl5gzwc48tHpQv9
-	 P0nG1Q+HXW9dLPFUb1MOWeGrkb4t/F/RMC6Nxysgzd3UQ19v3ua94Fc1MvzewkLHg+
-	 e5zszFNT9dBZoaP4PMf04NyyQcpTWq+yHsSsvpwZt+XeZLVOAZohO5NcaA1puAnLtn
-	 AdLeXZWQbeJet6IighkzpnVc9mM+6N3CTGZR1mcCQaSoos3nNq+Bc1a+QAmZXZgxBl
-	 XOC+3f7/nXk/A==
-Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
-	id 198357F9CF; Thu, 26 Jun 2025 11:38:40 +0200 (CEST)
-Date: Thu, 26 Jun 2025 11:38:40 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Anusha Srivatsa <asrivats@redhat.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Francesco Dolcini <francesco@dolcini.it>
-Subject: Re: [PATCH 0/5] drm/panel: panel-simple: Fix panel-dpi probe error
-Message-ID: <aF0VIBqcLQSBZeNE@gaggiata.pivistrello.it>
-References: <20250625-drm-panel-simple-fixes-v1-0-c428494a86b8@kernel.org>
- <aF0SBNGmTpgtBTC3@gaggiata.pivistrello.it>
- <aF0UUBQFAu9GUde0@gaggiata.pivistrello.it>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KsIaojvX"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e731a56e111so667220276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:38:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750930725; x=1751535525; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=pMUIQ5YDyeNXFe3b105yTgr62Ww89LPKr15AiB8c878=;
+        b=KsIaojvXzRsFuFW8AdaeLjDtWqbVsB9KOLmyXWBGqHa0Faylk2+kFq3hPdxjN6OvP/
+         9JFJdCAQ61WNWESi3gn5SXG1ZUj9r3OBQufANaYCpeyzCxzu6yxINMvZ6q25Dlu5l3KW
+         tHEFFw0PiH2ZT54usj2wEFK+hjmmYf2bkyQDO7ki1dELWwQaAykOqB6DZAhnEctW1KxF
+         /rFw8uF7BJnjJqSxvNECm6hhGvEZXe+4y7tb5vzhtXHF/yHlKt9v1s67ZEqJONb4muXZ
+         JzB5w6PQ960IdSmJzZqi62JxGctdGlpNrH0LdBZyuWRR5nOKhMSB5NhOkcgRjZp5gaen
+         bf0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750930725; x=1751535525;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pMUIQ5YDyeNXFe3b105yTgr62Ww89LPKr15AiB8c878=;
+        b=G9TdWOYDCc7A84COH/5Lr6buIhSfCzBRpeOHFyibrymZGUOVqZzufLkr5ehWM3s1Z0
+         A1yc8hRH/B6VzPaG50t3bLIHOCO3SwQ8HOlsCMgNQ1KvlR9PQUum+3gCsFRFS9Fjq0wM
+         U5rE5VjyYh0L8+h8m0HN+cxPvkJYSn7nZAk4ZYkLcVyDn/WDQ6puz2iIRW5JpL7d057l
+         ie5iphezAbUw1AeBQddVyLLsq4ou03iKRCXRV467Vuib0S51IqKl8g2nsnF8wkTuX7S+
+         bb0p2PCmm3OG0IHm/1hWr3CikOWgbO14PK5qwnQsRJ4vt+L9eUmP2mh/4ZOR2X1X13wK
+         00Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCWlc9uPN19hk/fK2QpGF+qBA7u196SZX9kjVphlrOQ8Xcl1FRu2Xj/C8WSMt0+kQl5clZh8UZbB1zp48W0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKpp5FzF+clDFfhN1wPFKDE2/+OwAKVBtivVXcD9paQCHvhhZA
+	Q3DPUrsWiWxvMtXJkKwE//dBoX0gqEUn0SRy+CJ7uT+633mZv7enOSAamDkdiSzCAMUDtvlWyYO
+	4ZrvnSQ6FNGaPY/+ocAHd3IY1Iy0zFtqVQiA/Jcq/GA==
+X-Gm-Gg: ASbGncvuJNnZSWEh2KBeGZrY7xAU2zFZxGxX2JI8rENndj7+kBXP0XSB3/+CBdpFVOe
+	WZfuGxlKrM3e70PaQZIdZmTTFdUlZAxuEnoKjvYTrJveGJ1ScnPQLJT09cj/CkFOwM3m5tjOOnN
+	zi3CE1s52Ezg38Thuf1fiI8jAWxvYBl1SyL4mcT4cuT7fy
+X-Google-Smtp-Source: AGHT+IGrpanO/3GvZtkdw+zW8xGsoUTA6H0Q9aX5hZ9J/rpREkBRKcp+Slx0dssooKyIYA59huReEPP3hAYYC9tyJtU=
+X-Received: by 2002:a05:6902:168f:b0:e81:52ff:b40 with SMTP id
+ 3f1490d57ef6-e8601786020mr7981913276.20.1750930725237; Thu, 26 Jun 2025
+ 02:38:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="GO8ZmcqGmxEQ4yIE"
-Content-Disposition: inline
-In-Reply-To: <aF0UUBQFAu9GUde0@gaggiata.pivistrello.it>
+References: <22759968.EfDdHjke4D@rjwysocki.net> <2045419.usQuhbGJ8B@rjwysocki.net>
+In-Reply-To: <2045419.usQuhbGJ8B@rjwysocki.net>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 26 Jun 2025 11:38:08 +0200
+X-Gm-Features: Ac12FXyLItyotFSiFfzbcS6RmKm69PO701oLuNAu0WjTraC_1HAu9CP21xq8fYM
+Message-ID: <CAPDyKFq8ea+YogkAExUOBc2TEqi1z9WZswqgP29bLbursFUApg@mail.gmail.com>
+Subject: Re: [PATCH v1 4/9] PM: Move pm_runtime_force_suspend/resume() under CONFIG_PM_SLEEP
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux ACPI <linux-acpi@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Wed, 25 Jun 2025 at 21:25, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Since pm_runtime_force_suspend/resume() and pm_runtime_need_not_resume()
+> are only used during system-wide PM transitions, there is no reason to
+> compile them in if CONFIG_PM_SLEEP is unset.
+>
+> Accordingly, move them all under CONFIG_PM_SLEEP and make the static
+> inline stubs for pm_runtime_force_suspend/resume() return an error
+> to indicate that they should not be used outside CONFIG_PM_SLEEP.
+>
 
---GO8ZmcqGmxEQ4yIE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Just realized that there seems to be some drivers that actually make
+use of pm_runtime_force_suspend() from their ->remove() callbacks.
 
-On Thu, Jun 26, 2025 at 11:35:12AM +0200, Francesco Dolcini wrote:
-> On Thu, Jun 26, 2025 at 11:25:24AM +0200, Francesco Dolcini wrote:
-> > On Wed, Jun 25, 2025 at 08:48:37AM +0200, Maxime Ripard wrote:
-> > > Here's a series fixing (hopefully) the panel-simple regression for
-> > > panels with a panel-dpi compatible.
-> > > 
-> > > It's only build tested, so if you could give that series a try
-> > > Francesco, I'd really appreciate it.
-> > 
-> > It does not build for me, applied on top of commit ee88bddf7f2f ("Merge tag
-> > 'bpf-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf")
-> > 
-> >   SYNC    include/config/auto.conf.cmd
-> >   CALL    scripts/checksyscalls.sh
-> >   CC      drivers/gpu/drm/drm_of.o
-> >   CC [M]  drivers/gpu/drm/panel/panel-simple.o
-> >   AR      drivers/gpu/drm/built-in.a
-> >   AR      drivers/gpu/built-in.a
-> >   AR      drivers/built-in.a
-> >   AR      built-in.a
-> >   AR      vmlinux.a
-> >   LD      vmlinux.o
-> >   OBJCOPY modules.builtin.modinfo
-> >   GEN     modules.builtin
-> >   GEN     .vmlinux.objs
-> >   MODPOST Module.symvers
-> > ERROR: modpost: "mipi_dsi_bus_type" [drivers/gpu/drm/panel/panel-simple.ko] undefined!
-> > make[2]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
-> > make[1]: *** [/home/francesco/Toradex/sources/linux/Makefile:1953: modpost] Error 2
-> > make: *** [Makefile:248: __sub-make] Error 2
-> > [Exit 2]
-> > 
-> 
-> The issue is that I do not have CONFIG_DRM_MIPI_DSI. Adding it the build
-> finishes, and it also fixes the issue.
+To not break them, we probably need to leave this code to stay under CONFIG_PM.
 
-Please find attached the defconfig that trigger this build issue. ARCH=arm, the
-actual target I am testing on is an NXP i.MX6.
+Kind regards
+Uffe
 
-Francesco
-
-
---GO8ZmcqGmxEQ4yIE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename=defconfig
-
-# CONFIG_LOCALVERSION_AUTO is not set
-CONFIG_KERNEL_LZ4=y
-CONFIG_SYSVIPC=y
-CONFIG_POSIX_MQUEUE=y
-CONFIG_GENERIC_IRQ_DEBUGFS=y
-CONFIG_NO_HZ_IDLE=y
-CONFIG_HIGH_RES_TIMERS=y
-CONFIG_BPF_SYSCALL=y
-CONFIG_BPF_JIT=y
-CONFIG_PREEMPT=y
-CONFIG_IKCONFIG=y
-CONFIG_IKCONFIG_PROC=y
-CONFIG_CGROUPS=y
-CONFIG_MEMCG=y
-CONFIG_BLK_CGROUP=y
-CONFIG_CGROUP_SCHED=y
-CONFIG_CFS_BANDWIDTH=y
-CONFIG_CGROUP_PIDS=y
-CONFIG_CPUSETS=y
-CONFIG_CGROUP_DEVICE=y
-CONFIG_CGROUP_CPUACCT=y
-CONFIG_CGROUP_BPF=y
-CONFIG_CGROUP_MISC=y
-CONFIG_NAMESPACES=y
-CONFIG_USER_NS=y
-CONFIG_BLK_DEV_INITRD=y
-CONFIG_SYSFS_SYSCALL=y
-CONFIG_EXPERT=y
-CONFIG_PROFILING=y
-CONFIG_ARCH_MXC=y
-CONFIG_SOC_IMX6Q=y
-CONFIG_SOC_IMX6UL=y
-CONFIG_SOC_IMX7D=y
-CONFIG_SMP=y
-CONFIG_ARM_PSCI=y
-CONFIG_HIGHMEM=y
-CONFIG_ARCH_FORCE_MAX_ORDER=13
-CONFIG_CPU_FREQ=y
-CONFIG_CPU_FREQ_STAT=y
-CONFIG_CPU_FREQ_GOV_POWERSAVE=y
-CONFIG_CPU_FREQ_GOV_USERSPACE=y
-CONFIG_CPU_FREQ_GOV_ONDEMAND=y
-CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
-CONFIG_CPUFREQ_DT=y
-CONFIG_ARM_IMX6Q_CPUFREQ=y
-CONFIG_ARM_IMX_CPUFREQ_DT=y
-CONFIG_CPU_IDLE=y
-CONFIG_ARM_CPUIDLE=y
-CONFIG_ARM_PSCI_CPUIDLE=y
-CONFIG_VFP=y
-CONFIG_NEON=y
-CONFIG_PM_DEBUG=y
-CONFIG_PM_ADVANCED_DEBUG=y
-CONFIG_ENERGY_MODEL=y
-CONFIG_KPROBES=y
-CONFIG_JUMP_LABEL=y
-CONFIG_MODULES=y
-CONFIG_MODULE_UNLOAD=y
-CONFIG_MODVERSIONS=y
-CONFIG_BINFMT_MISC=m
-# CONFIG_COMPAT_BRK is not set
-CONFIG_CMA_DEBUGFS=y
-CONFIG_CMA_SYSFS=y
-CONFIG_CMA_AREAS=7
-CONFIG_LRU_GEN=y
-CONFIG_LRU_GEN_ENABLED=y
-CONFIG_NET=y
-CONFIG_PACKET=y
-CONFIG_UNIX=y
-CONFIG_INET=y
-CONFIG_IP_MULTICAST=y
-CONFIG_IP_PNP=y
-CONFIG_IP_PNP_DHCP=y
-CONFIG_IP_PNP_BOOTP=y
-CONFIG_IPV6=m
-CONFIG_NETFILTER=y
-CONFIG_BRIDGE_NETFILTER=m
-CONFIG_NF_CONNTRACK=m
-CONFIG_IP_NF_IPTABLES=m
-CONFIG_IP_NF_FILTER=m
-CONFIG_IP_NF_TARGET_REJECT=m
-CONFIG_IP_NF_NAT=m
-CONFIG_IP_NF_TARGET_MASQUERADE=m
-CONFIG_IP6_NF_IPTABLES=m
-CONFIG_IP6_NF_FILTER=m
-CONFIG_IP6_NF_TARGET_REJECT=m
-CONFIG_IP6_NF_NAT=m
-CONFIG_IP6_NF_TARGET_MASQUERADE=m
-CONFIG_BRIDGE=m
-CONFIG_BRIDGE_VLAN_FILTERING=y
-CONFIG_VLAN_8021Q=m
-CONFIG_VLAN_8021Q_GVRP=y
-CONFIG_VLAN_8021Q_MVRP=y
-CONFIG_CAN=m
-CONFIG_BT=m
-CONFIG_BT_RFCOMM=m
-CONFIG_BT_BNEP=m
-CONFIG_BT_HIDP=m
-CONFIG_BT_HCIBTUSB=m
-CONFIG_BT_HCIBTSDIO=m
-CONFIG_BT_HCIUART=m
-CONFIG_BT_HCIUART_MRVL=y
-CONFIG_BT_MRVL=m
-CONFIG_BT_MRVL_SDIO=m
-CONFIG_BT_NXPUART=m
-CONFIG_CFG80211=m
-CONFIG_CFG80211_WEXT=y
-CONFIG_MAC80211=m
-CONFIG_RFKILL=m
-CONFIG_RFKILL_GPIO=m
-CONFIG_PCI=y
-CONFIG_PCIEPORTBUS=y
-CONFIG_PCIEAER=y
-CONFIG_PCI_MSI=y
-# CONFIG_VGA_ARB is not set
-CONFIG_PCI_IMX6_HOST=y
-CONFIG_DEVTMPFS=y
-CONFIG_DEVTMPFS_MOUNT=y
-CONFIG_IMX_WEIM=y
-CONFIG_ARM_SCMI_PROTOCOL=y
-CONFIG_MTD=y
-CONFIG_MTD_CMDLINE_PARTS=y
-CONFIG_MTD_BLOCK=y
-CONFIG_MTD_CFI=y
-CONFIG_MTD_JEDECPROBE=y
-CONFIG_MTD_CFI_INTELEXT=y
-CONFIG_MTD_CFI_AMDSTD=y
-CONFIG_MTD_CFI_STAA=y
-CONFIG_MTD_PHYSMAP=y
-CONFIG_MTD_PHYSMAP_OF=y
-CONFIG_MTD_RAW_NAND=y
-CONFIG_MTD_NAND_GPMI_NAND=y
-CONFIG_MTD_SPI_NOR=m
-CONFIG_MTD_UBI=y
-CONFIG_MTD_UBI_FASTMAP=y
-CONFIG_MTD_UBI_BLOCK=y
-CONFIG_BLK_DEV_LOOP=m
-CONFIG_BLK_DEV_NVME=m
-CONFIG_EEPROM_AT24=y
-CONFIG_EEPROM_AT25=y
-CONFIG_SCSI=y
-CONFIG_BLK_DEV_SD=m
-CONFIG_SCSI_CONSTANTS=y
-CONFIG_ATA=m
-# CONFIG_SATA_PMP is not set
-CONFIG_SATA_AHCI=m
-CONFIG_SATA_MOBILE_LPM_POLICY=0
-CONFIG_AHCI_IMX=m
-# CONFIG_ATA_SFF is not set
-CONFIG_NETDEVICES=y
-CONFIG_R8169=m
-CONFIG_MICREL_PHY=y
-CONFIG_CAN_FLEXCAN=m
-CONFIG_CAN_MCP251X=m
-CONFIG_CAN_MCP251XFD=m
-CONFIG_USB_PEGASUS=m
-CONFIG_USB_RTL8150=m
-CONFIG_USB_RTL8152=m
-CONFIG_USB_USBNET=m
-CONFIG_USB_NET_DM9601=m
-CONFIG_USB_NET_SR9800=m
-CONFIG_USB_NET_SMSC75XX=m
-CONFIG_USB_NET_SMSC95XX=m
-CONFIG_USB_NET_PLUSB=m
-CONFIG_USB_NET_MCS7830=m
-CONFIG_ATH10K=m
-CONFIG_ATH10K_PCI=m
-CONFIG_ATH10K_SDIO=m
-CONFIG_ATH11K=m
-CONFIG_ATH11K_PCI=m
-CONFIG_ATH12K=m
-CONFIG_IWLWIFI=m
-CONFIG_MWIFIEX=m
-CONFIG_MWIFIEX_SDIO=m
-CONFIG_MWIFIEX_PCIE=m
-CONFIG_RTL8192CU=m
-CONFIG_RTL8XXXU=m
-CONFIG_INPUT_EVDEV=m
-# CONFIG_KEYBOARD_ATKBD is not set
-CONFIG_KEYBOARD_GPIO=m
-CONFIG_KEYBOARD_GPIO_POLLED=m
-CONFIG_KEYBOARD_SNVS_PWRKEY=m
-CONFIG_KEYBOARD_IMX=m
-# CONFIG_INPUT_MOUSE is not set
-CONFIG_INPUT_TOUCHSCREEN=y
-CONFIG_TOUCHSCREEN_AD7879=m
-CONFIG_TOUCHSCREEN_AD7879_I2C=m
-CONFIG_TOUCHSCREEN_ATMEL_MXT=m
-CONFIG_TOUCHSCREEN_STMPE=m
-CONFIG_TOUCHSCREEN_COLIBRI_VF50=m
-CONFIG_SERIAL_8250=y
-CONFIG_SERIAL_8250_CONSOLE=y
-CONFIG_SERIAL_8250_NR_UARTS=6
-CONFIG_SERIAL_8250_RUNTIME_UARTS=6
-CONFIG_SERIAL_OF_PLATFORM=y
-CONFIG_SERIAL_IMX=y
-CONFIG_SERIAL_IMX_CONSOLE=y
-CONFIG_SERIAL_FSL_LPUART=y
-CONFIG_SERIAL_FSL_LPUART_CONSOLE=y
-CONFIG_RPMSG_TTY=m
-CONFIG_SERIAL_DEV_BUS=y
-CONFIG_I2C_CHARDEV=y
-CONFIG_I2C_GPIO=m
-CONFIG_I2C_IMX=y
-CONFIG_SPI=y
-CONFIG_SPI_FSL_LPSPI=m
-CONFIG_SPI_FSL_QUADSPI=m
-CONFIG_SPI_IMX=m
-CONFIG_SPI_SPIDEV=m
-# CONFIG_PINCTRL_IMX8ULP is not set
-CONFIG_GPIO_SYSFS=y
-CONFIG_GPIO_MXC=y
-CONFIG_POWER_RESET=y
-CONFIG_POWER_RESET_GPIO=y
-CONFIG_POWER_RESET_GPIO_RESTART=y
-CONFIG_POWER_RESET_REGULATOR=y
-CONFIG_POWER_RESET_SYSCON_POWEROFF=y
-CONFIG_SENSORS_ARM_SCMI=y
-CONFIG_SENSORS_GPIO_FAN=m
-CONFIG_SENSORS_IIO_HWMON=m
-CONFIG_SENSORS_LM75=m
-CONFIG_SENSORS_PWM_FAN=m
-CONFIG_SENSORS_AMC6821=m
-CONFIG_SENSORS_INA2XX=m
-CONFIG_THERMAL_STATISTICS=y
-CONFIG_THERMAL_EMERGENCY_POWEROFF_DELAY_MS=10000
-CONFIG_THERMAL_GOV_USER_SPACE=y
-CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
-CONFIG_CPU_THERMAL=y
-CONFIG_IMX_THERMAL=y
-CONFIG_WATCHDOG=y
-CONFIG_WATCHDOG_SYSFS=y
-CONFIG_RN5T618_WATCHDOG=y
-CONFIG_IMX2_WDT=y
-CONFIG_MFD_RN5T618=y
-CONFIG_MFD_STMPE=y
-CONFIG_REGULATOR=y
-CONFIG_REGULATOR_FIXED_VOLTAGE=y
-CONFIG_REGULATOR_ANATOP=y
-CONFIG_REGULATOR_GPIO=y
-CONFIG_REGULATOR_PFUZE100=y
-CONFIG_REGULATOR_RN5T618=y
-CONFIG_MEDIA_SUPPORT=y
-CONFIG_MEDIA_SUPPORT_FILTER=y
-CONFIG_MEDIA_CAMERA_SUPPORT=y
-CONFIG_MEDIA_PLATFORM_SUPPORT=y
-CONFIG_MEDIA_USB_SUPPORT=y
-CONFIG_USB_VIDEO_CLASS=m
-CONFIG_V4L_PLATFORM_DRIVERS=y
-CONFIG_V4L_MEM2MEM_DRIVERS=y
-CONFIG_VIDEO_MUX=m
-CONFIG_VIDEO_CODA=m
-CONFIG_VIDEO_IMX7_CSI=m
-CONFIG_VIDEO_IMX_MIPI_CSIS=m
-CONFIG_VIDEO_IMX_PXP=m
-CONFIG_VIDEO_OV5640=m
-CONFIG_VIDEO_ADV7180=m
-CONFIG_IMX_IPUV3_CORE=y
-CONFIG_DRM=y
-CONFIG_DRM_LOAD_EDID_FIRMWARE=y
-CONFIG_DRM_PANEL_LVDS=m
-CONFIG_DRM_PANEL_EDP=m
-CONFIG_DRM_PANEL_SIMPLE=m
-CONFIG_DRM_CDNS_MHDP8546=m
-CONFIG_DRM_DW_HDMI_AHB_AUDIO=m
-CONFIG_DRM_DW_HDMI_GP_AUDIO=m
-CONFIG_DRM_DW_HDMI_CEC=m
-CONFIG_DRM_IMX=y
-CONFIG_DRM_IMX_PARALLEL_DISPLAY=y
-CONFIG_DRM_IMX_TVE=y
-CONFIG_DRM_IMX_LDB=y
-CONFIG_DRM_IMX_HDMI=y
-CONFIG_DRM_ETNAVIV=m
-CONFIG_DRM_MXSFB=m
-CONFIG_DRM_IMX_LCDIF=y
-CONFIG_FB=y
-CONFIG_BACKLIGHT_CLASS_DEVICE=y
-CONFIG_BACKLIGHT_PWM=m
-CONFIG_BACKLIGHT_GPIO=m
-CONFIG_LOGO=y
-CONFIG_SOUND=y
-CONFIG_SND=y
-CONFIG_SND_SOC=y
-CONFIG_SND_SOC_FSL_ASRC=m
-CONFIG_SND_IMX_SOC=m
-CONFIG_SND_SOC_IMX_SGTL5000=m
-CONFIG_SND_SOC_FSL_ASOC_CARD=m
-CONFIG_SND_SOC_IMX_AUDMIX=m
-CONFIG_SND_SOC_IMX_HDMI=m
-CONFIG_SND_SOC_SOF_TOPLEVEL=y
-CONFIG_SND_SOC_SOF_OF=m
-CONFIG_SND_SOC_SPDIF=m
-CONFIG_SND_SOC_NAU8822=m
-CONFIG_SND_SIMPLE_CARD=m
-CONFIG_SND_AUDIO_GRAPH_CARD=m
-CONFIG_SND_AUDIO_GRAPH_CARD2=m
-CONFIG_UHID=m
-CONFIG_HID_MULTITOUCH=m
-CONFIG_USB_HIDDEV=y
-CONFIG_USB_CONN_GPIO=m
-CONFIG_USB=y
-CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
-CONFIG_USB_OTG=y
-CONFIG_USB_MON=m
-CONFIG_USB_XHCI_HCD=y
-CONFIG_USB_XHCI_PLATFORM=y
-CONFIG_USB_EHCI_HCD=m
-CONFIG_USB_ACM=m
-CONFIG_USB_STORAGE=y
-CONFIG_USB_UAS=m
-CONFIG_USB_CHIPIDEA=m
-CONFIG_USB_CHIPIDEA_UDC=y
-CONFIG_USB_CHIPIDEA_HOST=y
-CONFIG_USB_SERIAL=m
-CONFIG_USB_SERIAL_OPTION=m
-CONFIG_USB_TEST=m
-CONFIG_USB_EHSET_TEST_FIXTURE=m
-CONFIG_USB_HUB_USB251XB=m
-CONFIG_USB_HSIC_USB3503=m
-CONFIG_NOP_USB_XCEIV=m
-CONFIG_USB_MXS_PHY=m
-CONFIG_USB_GADGET=y
-CONFIG_USB_CONFIGFS=y
-CONFIG_USB_CONFIGFS_SERIAL=y
-CONFIG_USB_CONFIGFS_ACM=y
-CONFIG_USB_CONFIGFS_NCM=y
-CONFIG_USB_CONFIGFS_ECM=y
-CONFIG_USB_CONFIGFS_ECM_SUBSET=y
-CONFIG_USB_CONFIGFS_EEM=y
-CONFIG_USB_CONFIGFS_MASS_STORAGE=y
-CONFIG_USB_CONFIGFS_F_LB_SS=y
-CONFIG_USB_CONFIGFS_F_FS=y
-CONFIG_USB_CONFIGFS_F_UAC1=y
-CONFIG_USB_CONFIGFS_F_UAC2=y
-CONFIG_USB_CONFIGFS_F_HID=y
-CONFIG_USB_CONFIGFS_F_UVC=y
-CONFIG_MMC=y
-CONFIG_MMC_SDHCI=y
-CONFIG_MMC_SDHCI_PLTFM=y
-CONFIG_MMC_SDHCI_ESDHC_IMX=y
-CONFIG_NEW_LEDS=y
-CONFIG_LEDS_CLASS=m
-CONFIG_LEDS_CLASS_MULTICOLOR=m
-CONFIG_LEDS_GPIO=m
-CONFIG_LEDS_PWM=m
-CONFIG_LEDS_TRIGGERS=y
-CONFIG_LEDS_TRIGGER_TIMER=m
-CONFIG_LEDS_TRIGGER_DISK=y
-CONFIG_LEDS_TRIGGER_HEARTBEAT=m
-CONFIG_LEDS_TRIGGER_BACKLIGHT=m
-CONFIG_LEDS_TRIGGER_DEFAULT_ON=m
-CONFIG_LEDS_TRIGGER_PANIC=y
-CONFIG_RTC_CLASS=y
-CONFIG_RTC_DRV_DS1307=y
-CONFIG_RTC_DRV_MXC=m
-CONFIG_RTC_DRV_SNVS=y
-CONFIG_DMADEVICES=y
-CONFIG_IMX_SDMA=m
-CONFIG_MXS_DMA=y
-CONFIG_STAGING=y
-CONFIG_STAGING_MEDIA=y
-CONFIG_VIDEO_IMX_MEDIA=m
-CONFIG_HWSPINLOCK=y
-CONFIG_IMX_MBOX=y
-CONFIG_REMOTEPROC=y
-CONFIG_REMOTEPROC_CDEV=y
-CONFIG_IMX_REMOTEPROC=y
-CONFIG_RPMSG_CHAR=m
-CONFIG_RPMSG_CTRL=m
-CONFIG_RPMSG_VIRTIO=m
-CONFIG_EXTCON_USB_GPIO=y
-CONFIG_IIO=y
-CONFIG_IIO_SW_TRIGGER=m
-CONFIG_IMX7D_ADC=m
-CONFIG_STMPE_ADC=m
-CONFIG_TI_ADS1015=m
-CONFIG_VF610_ADC=m
-CONFIG_IIO_RESCALE=m
-CONFIG_IIO_MUX=m
-CONFIG_IIO_HRTIMER_TRIGGER=m
-CONFIG_IIO_INTERRUPT_TRIGGER=m
-CONFIG_IIO_SYSFS_TRIGGER=m
-CONFIG_PWM=y
-CONFIG_PWM_FSL_FTM=m
-CONFIG_PWM_IMX27=m
-CONFIG_PHY_CAN_TRANSCEIVER=m
-CONFIG_NVMEM_IMX_OCOTP=y
-CONFIG_NVMEM_IMX_OCOTP_ELE=m
-CONFIG_NVMEM_SNVS_LPGPR=m
-CONFIG_TEE=m
-CONFIG_OPTEE=m
-CONFIG_MUX_GPIO=m
-CONFIG_MUX_MMIO=m
-CONFIG_EXT3_FS=m
-CONFIG_EXT3_FS_POSIX_ACL=y
-CONFIG_EXT3_FS_SECURITY=y
-CONFIG_EXT4_FS=y
-CONFIG_FANOTIFY=y
-CONFIG_AUTOFS_FS=m
-CONFIG_FUSE_FS=m
-CONFIG_VFAT_FS=y
-CONFIG_EXFAT_FS=y
-CONFIG_NTFS3_FS=m
-CONFIG_TMPFS_POSIX_ACL=y
-CONFIG_JFFS2_FS=m
-CONFIG_UBIFS_FS=y
-CONFIG_NFS_FS=y
-CONFIG_NFS_V2=y
-CONFIG_NFS_V4=y
-CONFIG_NFS_V4_1=y
-CONFIG_NFS_V4_2=y
-CONFIG_ROOT_NFS=y
-CONFIG_NLS_DEFAULT="cp437"
-CONFIG_NLS_CODEPAGE_437=m
-CONFIG_NLS_ASCII=m
-CONFIG_NLS_ISO8859_1=m
-CONFIG_NLS_ISO8859_15=m
-CONFIG_NLS_UTF8=m
-CONFIG_LSM="landlock,lockdown,yama,loadpin,safesetid,bpf"
-CONFIG_CRYPTO_NULL=m
-CONFIG_CRYPTO_SHA256=y
-CONFIG_CRYPTO_CRC32C=y
-CONFIG_CRYPTO_DEV_FSL_CAAM=m
-CONFIG_CRYPTO_DEV_MXS_DCP=m
-CONFIG_CMA_SIZE_MBYTES=256
-CONFIG_CMA_SIZE_PERCENTAGE=35
-CONFIG_CMA_SIZE_SEL_MIN=y
-CONFIG_PRINTK_TIME=y
-CONFIG_DYNAMIC_DEBUG=y
-CONFIG_MAGIC_SYSRQ=y
-CONFIG_DEBUG_FS=y
-CONFIG_DEBUG_MEMORY_INIT=y
-CONFIG_HARDLOCKUP_DETECTOR=y
-# CONFIG_FTRACE is not set
-
---GO8ZmcqGmxEQ4yIE--
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/base/power/runtime.c |    4 ++++
+>  include/linux/pm_runtime.h   |   20 ++++++++++++++------
+>  2 files changed, 18 insertions(+), 6 deletions(-)
+>
+> --- a/drivers/base/power/runtime.c
+> +++ b/drivers/base/power/runtime.c
+> @@ -1941,6 +1941,8 @@
+>         pm_request_idle(link->supplier);
+>  }
+>
+> +#ifdef CONFIG_PM_SLEEP
+> +
+>  bool pm_runtime_need_not_resume(struct device *dev)
+>  {
+>         return atomic_read(&dev->power.usage_count) <= 1 &&
+> @@ -2063,3 +2065,5 @@
+>         return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(pm_runtime_force_resume);
+> +
+> +#endif /* CONFIG_PM_SLEEP */
+> --- a/include/linux/pm_runtime.h
+> +++ b/include/linux/pm_runtime.h
+> @@ -66,9 +66,6 @@
+>
+>  extern int pm_generic_runtime_suspend(struct device *dev);
+>  extern int pm_generic_runtime_resume(struct device *dev);
+> -extern bool pm_runtime_need_not_resume(struct device *dev);
+> -extern int pm_runtime_force_suspend(struct device *dev);
+> -extern int pm_runtime_force_resume(struct device *dev);
+>
+>  extern int __pm_runtime_idle(struct device *dev, int rpmflags);
+>  extern int __pm_runtime_suspend(struct device *dev, int rpmflags);
+> @@ -257,9 +254,6 @@
+>
+>  static inline int pm_generic_runtime_suspend(struct device *dev) { return 0; }
+>  static inline int pm_generic_runtime_resume(struct device *dev) { return 0; }
+> -static inline bool pm_runtime_need_not_resume(struct device *dev) {return true; }
+> -static inline int pm_runtime_force_suspend(struct device *dev) { return 0; }
+> -static inline int pm_runtime_force_resume(struct device *dev) { return 0; }
+>
+>  static inline int __pm_runtime_idle(struct device *dev, int rpmflags)
+>  {
+> @@ -330,6 +324,20 @@
+>
+>  #endif /* !CONFIG_PM */
+>
+> +#ifdef CONFIG_PM_SLEEP
+> +
+> +extern bool pm_runtime_need_not_resume(struct device *dev);
+> +extern int pm_runtime_force_suspend(struct device *dev);
+> +extern int pm_runtime_force_resume(struct device *dev);
+> +
+> +#else /* !CONFIG_PM_SLEEP */
+> +
+> +static inline bool pm_runtime_need_not_resume(struct device *dev) {return true; }
+> +static inline int pm_runtime_force_suspend(struct device *dev) { return -ENXIO; }
+> +static inline int pm_runtime_force_resume(struct device *dev) { return -ENXIO; }
+> +
+> +#endif /* CONFIG_PM_SLEEP */
+> +
+>  /**
+>   * pm_runtime_idle - Conditionally set up autosuspend of a device or suspend it.
+>   * @dev: Target device.
+>
+>
+>
