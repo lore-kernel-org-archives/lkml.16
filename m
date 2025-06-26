@@ -1,92 +1,95 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27ED62EE606;
-	Thu, 26 Jun 2025 18:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7591A316C;
+	Thu, 26 Jun 2025 18:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750961979; cv=none; b=c4f9oQotC8v5TAig+c25IFFu1w3UxKC4uA7C0+qNY/14pfaXmqxeKCIigW48+jKsE4dNhF0n3Zyd0IM4UKbr/RRUyWrj7BPaObtHsXZyf9G+sKeiBXIN3Yvvl/FSYRFutBwhGvI0WLXB7JxwIuGMC9O6T5Tp0r8P7a7wv+UPI4A=
+	t=1750962022; cv=none; b=ASBT+wm+ot827MARCtV/k8St6wz96+3LnOwHs1tGDRTwz4NTJe6LJbiuAxKp5EleRahLbrCqF14cvSeuIKFJhK0lKANnBurzHf0Vje22nSN3nn2IwVqGzcoAzsxYnLBlnSC75sVm9zj91dcu/ZDeB5Nr99m0i6kup88QGN0aBVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750961979; c=relaxed/simple;
-	bh=QNkQXNj81suZNdgejPQ/g8TgMMxfckamBb6SyqSWugk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cUqx/0bly7mzloOuhm6UxjdXHPjx+w+8PWzrTx6Q9sgIMmRckZs2U+kmcNI9EOIXvNnJ08xPaN9pFMBS+ass5eU257z6K7GU4wuq7sdgPv3IAGSKjuxcGf0xGFVnU2SbYxkJRrIBCk+hrZNwFz1pxznG6y5bdnT3v66qAR7Jvqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=UfkC2P/I; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1750962022; c=relaxed/simple;
+	bh=ojxtrCSlAxBab3aqEdaoBxwo2pv44yPWbPAbxh2oCzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BbuTJ8MuVY5Zczb1ZEEBCZ9Y98lSP9Hl2ZbYJOiNWh0rTBtwcZQ6FWXRoENiyZAbhaRRb5e60SO1InGGagKoUe/wVe++ZONT0wULeGR47eFI3CwofpNDtxNCB6TU4HcQoDEDgJxmGrJ6uZLCAtJQK/KmdAdFLrXiPsYiGjo7Kus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j1TSmmKa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="UfkC2P/I"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QG6Ak2025531;
-	Thu, 26 Jun 2025 20:19:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=v4xN43MYu3e3S0oexgiTVn
-	3iIbbwbmNw+3LdQPITQ9s=; b=UfkC2P/IykYF5tUIvNYKlakfc/jQsk7sbMry14
-	CpFISpfAe/7UADp8LrZfoJo4JDLQF7Iwxw8VE0I8YZu78MPG9s9x5MNCffwVkJKV
-	Opzevu9WwtdPeoGVtJkiglWOvYxwJ/diU22cSbgLyyxhorRIbA6UdduPqjlw1qA6
-	BLHpPVwotIrJaGfWrw6px1xeAxLYC3ozWYZEy8kTQhrTPWbAqEFWSUR1JfCqHZ54
-	6q2bbYW8FkSv4oEM9crQzD9Ta85vltZjcRsGzwWlj72zVLi+IIfGwIIlBVsJSrhk
-	3CA3VsmVWsl2sovE0OUZVKJjiNufHxH3xa8yDzEDkQtDOWDg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dhvbysfc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 20:19:24 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id DF59540055;
-	Thu, 26 Jun 2025 20:18:02 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2FC45BAE253;
-	Thu, 26 Jun 2025 20:15:41 +0200 (CEST)
-Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 26 Jun
- 2025 20:15:40 +0200
-From: Christian Bruel <christian.bruel@foss.st.com>
-To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>,
-        <kwilczynski@kernel.org>, <mani@kernel.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@foss.st.com>, <linus.walleij@linaro.org>
-CC: <linux-pci@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>
-Subject: [PATCH 0/2] Add pinctrl_pm_select_init_state helper function
-Date: Thu, 26 Jun 2025 20:15:35 +0200
-Message-ID: <20250626181537.1872159-1-christian.bruel@foss.st.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j1TSmmKa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0FEEC4CEEB;
+	Thu, 26 Jun 2025 18:20:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750962022;
+	bh=ojxtrCSlAxBab3aqEdaoBxwo2pv44yPWbPAbxh2oCzM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=j1TSmmKawOFir+mO9EHc15u/sZGKkncgNtQ8/BsyXg7aASmkemxG/soApRH+/F3TB
+	 Vi+b2MKNLlOKBVjirUwCIIQ7QvP3+RGS0nd9qVZjCCIa1+/rM5fR9C1u1aKG5MSEsC
+	 5m3TEWvQaabaq6PPJ78q9V/IACAkhY7lNIwnk9j6kqZw4ODJEdk0AjP6PaR/3gCGwI
+	 8i7iopo5xBVjKxj22Xp/6BQvEqDcO9qbO0F7WXE+wgPpPSVklI5m72zvnZbL/YNCdG
+	 zqyEeHCqx+cyKweWXFt8eXYpXEOVGquszGNn9s7TqcFSD4IJDdOi/xjGS8/hYcy/1v
+	 S3daq7Em6oQfA==
+Date: Thu, 26 Jun 2025 19:20:14 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Lothar Rubusch <l.rubusch@gmail.com>, dlechner@baylibre.com,
+ nuno.sa@analog.com, andy@kernel.org, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] iio: adc: ti-adc128s052: replace literal by unit
+ expression
+Message-ID: <20250626192014.4dd4a270@jic23-huawei>
+In-Reply-To: <c97e840e-fe8e-40e9-baef-0a18103848fd@gmail.com>
+References: <20250625170218.545654-1-l.rubusch@gmail.com>
+	<20250625170218.545654-3-l.rubusch@gmail.com>
+	<c97e840e-fe8e-40e9-baef-0a18103848fd@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_06,2025-06-26_05,2025-03-28_01
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Some platforms need to set the pinctrl to an initial state during
-pm_resume, just like in probe. To achieve this, the function
-pinctrl_pm_select_init_state is added.
+On Thu, 26 Jun 2025 08:07:19 +0300
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-This allows a driver to balance pinctrl_pm_select_sleep_state()
-with pinctrl_pm_select_default_state() and
-pinctrl_pm_select_init_state() in pm_runtime_suspend and pm_runtime_resume.
+> On 25/06/2025 20:02, Lothar Rubusch wrote:
+> > Replace the literal number 1000 by MILLI from linux/units.h
+> > 
+> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> > ---
+> >   drivers/iio/adc/ti-adc128s052.c | 3 ++-
+> >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+> > index cf271c39e663..67bc7fbd52bc 100644
+> > --- a/drivers/iio/adc/ti-adc128s052.c
+> > +++ b/drivers/iio/adc/ti-adc128s052.c
+> > @@ -18,6 +18,7 @@
+> >   #include <linux/property.h>
+> >   #include <linux/regulator/consumer.h>
+> >   #include <linux/spi/spi.h>
+> > +#include <linux/units.h>
+> >   
+> >   struct adc128_configuration {
+> >   	const struct iio_chan_spec	*channels;
+> > @@ -189,7 +190,7 @@ static int adc128_probe(struct spi_device *spi)
+> >   				     "failed to read '%s' voltage",
+> >   				     config->refname);
+> >   
+> > -	adc->vref_mv = ret / 1000;
+> > +	adc->vref_mv = ret / MILLI;  
+> 
+> This makes no sense to me. What does it mean we divide the micro volts 
+> by 'milli'? It is clear when we divide micro volts by 1000 that we get 
+> milli volts. Also, the mv suffix in variable makes units clear already, 
+> division by MILLI just obfuscates things. I'd keep it as 1000.
+> 
 
-Christian Bruel (2):
-  pinctrl: Add pinctrl_pm_select_init_state helper function
-  PCI: stm32: use pinctrl_pm_select_init_state() in
-    stm32_pcie_resume_noirq()
-
- drivers/pci/controller/dwc/pcie-stm32.c | 10 +++++++---
- drivers/pinctrl/core.c                  | 13 +++++++++++++
- include/linux/pinctrl/consumer.h        | 10 ++++++++++
- 3 files changed, 30 insertions(+), 3 deletions(-)
-
-
-base-commit: 5a972a01e24b278f7302a834c6eaee5bdac12843
--- 
-2.34.1
+ret / (MICRO / MILLI) would be more descriptive as indicates
+we are converting form microvolts to milivolts.
+ 
+> I would just drop this unless Jonathan disagrees.
+> 
+> Yours,
+> 	-- Matti
 
