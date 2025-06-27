@@ -1,177 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D822C08B8
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F36D2C08C9
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751025139; cv=none; b=BsHJtl2Tl2kjVnWbdq+UxQ/zmw+AShIY0yYZNwSLjmPByyltjyad9Lw+S11dpQI9Vs5G2wEKFAzeBReAPAzQOW53rLkDMpAvPLFzI5KSZAy9aMUMUCRdPrgOaI0VibZUfYrg0+qWH5B4ypSe+fNqSk4RnWRgXa1N8x+zVCKP2Lw=
+	t=1751025141; cv=none; b=hSgMAPC+3bdSeXGD/+e220XR3tF0+WcXAZgd5wzdmLygansxQMNTPfRQNduUDa53tYNirGUZLGSkqvkMmnp42//yG3nNx+j10Z2YwClHNVa4HVciTegjD1ytRjdLS4oRaWUhdTm9b5skGirUq1M9QBZcnSj7+Ef9o+0MKoclF9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751025139; c=relaxed/simple;
-	bh=oe/djtKSTdSzpUdhBo9TuVrBDGew6WT12dilaDKbJ6g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iL7dtcJwRW4aPXJHxBwBxJ6lhS+NxrZwYlITuHpNiH48MACsL9XhTM8fWwaWP66+5rjdWQZ6vz23Q5yWKwZ31KAUwCAXNdL5IrdkIjqc2sXnte3AKEcshPqbV9L050rdnUVxYP4IZu2gKUG2sFpPVreugjNgaw/gC+xV4Jy29OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UNXA1+ZP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UNXA1+ZP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751025136;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OUoybRgoNWhIkWcgJ2UioTXoFAnH9jtRNvXiFttaDg0=;
-	b=UNXA1+ZPM0YMv2tWZRFJQnsLPdR04Y6hIptB73QlPj3DMeXMjYW4tltMm15UYITH2HLpjE
-	1J8t3Wu0W8tZhMUSeqjwKvHfoqzSogiMcDaDzakAJSp8eVJz3KOAiYR32saWlKS0SmrUvA
-	5BMB3U7IQIE7aNefjKInyPId/yTH7jE=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-644-nQlPTTL4NhWbScIck-psfg-1; Fri,
- 27 Jun 2025 07:52:13 -0400
-X-MC-Unique: nQlPTTL4NhWbScIck-psfg-1
-X-Mimecast-MFC-AGG-ID: nQlPTTL4NhWbScIck-psfg_1751025132
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B81341954198;
-	Fri, 27 Jun 2025 11:52:11 +0000 (UTC)
-Received: from jlelli-thinkpadt14gen4.remote.csb (unknown [10.44.32.84])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A0A2619560A7;
-	Fri, 27 Jun 2025 11:52:06 +0000 (UTC)
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <llong@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>,
-	Luca Abeni <luca.abeni@santannapisa.it>,
-	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 4/5] tools/sched: Add root_domains_dump.py which dumps root domains info
-Date: Fri, 27 Jun 2025 13:51:17 +0200
-Message-ID: <20250627115118.438797-5-juri.lelli@redhat.com>
-In-Reply-To: <20250627115118.438797-1-juri.lelli@redhat.com>
-References: <20250627115118.438797-1-juri.lelli@redhat.com>
+	s=arc-20240116; t=1751025141; c=relaxed/simple;
+	bh=qoXC/l3xNPFNA8wYwenCP2bGPYx0KGdr+dPkmBLbGJw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HN511yeju9eRjmnUQfsfVfqCrkDX9B5CcDknr2uvqen6wJWIQsqpB/k0w2Y0WouAFwO046G3rYTWD/nCQ011Xpi4WjZJM/4FuzVePCvxggBQlRLco7/EfnaRffVvRs+tKpDPNU1B9KhjkdjOvfIT4YbE6n2reBcnifQWBYY9hS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5F811A00;
+	Fri, 27 Jun 2025 04:52:00 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71EF13F58B;
+	Fri, 27 Jun 2025 04:52:16 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v4 00/10] coresight: Fix and improve clock usage
+Date: Fri, 27 Jun 2025 12:51:46 +0100
+Message-Id: <20250627-arm_cs_fix_clock_v4-v4-0-0ce0009c38f8@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANOFXmgC/x2MWwqAIBAArxL7nWCLPa8SIWZrLT1RkCC6e9LnM
+ Mw8EMgzBeiyBzxFDnweCVSegV3MMZPgKTGgxFJWWAvjd22Ddnxru5121VEJQjUWVLimRQmpvDw
+ l/1/74X0/MuX2WGUAAAA=
+X-Change-ID: 20250627-arm_cs_fix_clock_v4-e24b1e1f8920
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
+ Anshuman Khandual <anshuman.khandual@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751025136; l=3817;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=qoXC/l3xNPFNA8wYwenCP2bGPYx0KGdr+dPkmBLbGJw=;
+ b=3Vrpyuj0g3wgLf3vy2h2lTU/Ztbwf4fbhJTfkVn+5AlcSNz6IOHJ2k70ibxk2VAzhUvqrJ5Wj
+ JvuL9JyFmWwDmZPufSX+wf8eidoI4rOOWsHgzYiix58F8Gp+jbswhU8
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Root domains information is somewhat hard to access at runtime. Even
-with sched_debug and sched_verbose, such information is only printed
-on kernel console when domains are modified.
+This series fixes and improves clock usage in the Arm CoreSight drivers.
 
-Add a simple drgn script to more easily retrieve root domains
-information at runtime.
+Based on the DT binding documents, the trace clock (atclk) is defined in
+some CoreSight modules, but support is absent. In most cases, the issue
+is hidden because the atclk clock is shared by multiple CoreSight
+modules and the clock is enabled anyway by other drivers. The first
+three patches address this issue.
 
-Since tools/sched is a new directory, add it to MAINTAINERS as well.
+The programming clock (pclk) management in CoreSight drivers does not
+use the devm_XXX() variant APIs, the drivers needs to manually disable
+and release clocks for errors and for normal module exit.  However, the
+drivers miss to disable clocks during module exit. The atclk may also
+not be disabled in CoreSight drivers during module exit. By using devm
+APIs, patches 04 and 05 fix clock disabling issues.
 
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+Another issue is pclk might be enabled twice in init phase - once by
+AMBA bus driver, and again by CoreSight drivers. This is fixed in
+patch 06.
+
+Patches 07 to 10 refactor the clock related code. Patch 07 consolidates
+the clock initialization into a central place. Patch 08 polishes driver
+data allocation. Patch 09 makes the clock enabling sequence consistent.
+Patch 09 removes redundant condition checks and adds error handling in
+runtime PM.
+
+This series has been verified on Arm64 Hikey960 and Juno platforms.
+
+Changes from v3:
+- Separated patch 07 into two patches, one is for clock consolidation
+  and another is for polishing driver data allocation (Anshuman).
+
+Changes from v2:
+- Updated subjects for patches 04 and 05 (Anshuman).
+- Refined condition checking "if (dev_is_amba(dev))" in patch 07
+  (Anshuman).
+
+Changes from v1:
+- Moved the coresight_get_enable_clocks() function into CoreSight core
+  layer (James).
+- Added comments for clock naming "apb_pclk" and "apb" (James).
+- Re-ordered patches for easier understanding (Anshuman).
+- Minor improvement for commit log in patch 01 (Anshuman).
+
+Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- MAINTAINERS                      |  1 +
- tools/sched/root_domains_dump.py | 68 ++++++++++++++++++++++++++++++++
- 2 files changed, 69 insertions(+)
- create mode 100755 tools/sched/root_domains_dump.py
+Leo Yan (10):
+      coresight: tmc: Support atclk
+      coresight: catu: Support atclk
+      coresight: etm4x: Support atclk
+      coresight: Appropriately disable programming clocks
+      coresight: Appropriately disable trace bus clocks
+      coresight: Avoid enable programming clock duplicately
+      coresight: Consolidate clock enabling
+      coresight: Refactor driver data allocation
+      coresight: Make clock sequence consistent
+      coresight: Refactor runtime PM
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a92290fffa163..b986a49383c9c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22165,6 +22165,7 @@ F:	include/linux/wait.h
- F:	include/uapi/linux/sched.h
- F:	kernel/fork.c
- F:	kernel/sched/
-+F:	tools/sched/
- 
- SCHEDULER - SCHED_EXT
- R:	Tejun Heo <tj@kernel.org>
-diff --git a/tools/sched/root_domains_dump.py b/tools/sched/root_domains_dump.py
-new file mode 100755
-index 0000000000000..56dc91f017b20
---- /dev/null
-+++ b/tools/sched/root_domains_dump.py
-@@ -0,0 +1,68 @@
-+#!/usr/bin/env drgn
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2025 Juri Lelli <juri.lelli@redhat.com>
-+# Copyright (C) 2025 Red Hat, Inc.
-+
-+desc = """
-+This is a drgn script to show the current root domains configuration. For more
-+info on drgn, visit https://github.com/osandov/drgn.
-+
-+Root domains are only printed once, as multiple CPUs might be attached to the
-+same root domain.
-+"""
-+
-+import os
-+import argparse
-+
-+import drgn
-+from drgn import FaultError
-+from drgn.helpers.common import *
-+from drgn.helpers.linux import *
-+
-+def print_root_domains_info():
-+
-+    # To store unique root domains found
-+    seen_root_domains = set()
-+
-+    print("Retrieving (unique) Root Domain Information:")
-+
-+    runqueues = prog['runqueues']
-+    def_root_domain = prog['def_root_domain']
-+
-+    for cpu_id in for_each_possible_cpu(prog):
-+        try:
-+            rq = per_cpu(runqueues, cpu_id)
-+
-+            root_domain = rq.rd
-+
-+            # Check if we've already processed this root domain to avoid duplicates
-+            # Use the memory address of the root_domain as a unique identifier
-+            root_domain_cast = int(root_domain)
-+            if root_domain_cast in seen_root_domains:
-+                continue
-+            seen_root_domains.add(root_domain_cast)
-+
-+            if root_domain_cast == int(def_root_domain.address_):
-+                print(f"\n--- Root Domain @ def_root_domain ---")
-+            else:
-+                print(f"\n--- Root Domain @ 0x{root_domain_cast:x} ---")
-+
-+            print(f"  From CPU: {cpu_id}") # This CPU belongs to this root domain
-+
-+            # Access and print relevant fields from struct root_domain
-+            print(f"  Span       : {cpumask_to_cpulist(root_domain.span[0])}")
-+            print(f"  Online     : {cpumask_to_cpulist(root_domain.span[0])}")
-+
-+        except drgn.FaultError as fe:
-+            print(f"  (CPU {cpu_id}: Fault accessing kernel memory: {fe})")
-+        except AttributeError as ae:
-+            print(f"  (CPU {cpu_id}: Missing attribute for root_domain (kernel struct change?): {ae})")
-+        except Exception as e:
-+            print(f"  (CPU {cpu_id}: An unexpected error occurred: {e})")
-+
-+if __name__ == "__main__":
-+    parser = argparse.ArgumentParser(description=desc,
-+                                     formatter_class=argparse.RawTextHelpFormatter)
-+    args = parser.parse_args()
-+
-+    print_root_domains_info()
+ drivers/hwtracing/coresight/coresight-catu.c       | 53 ++++++++---------
+ drivers/hwtracing/coresight/coresight-catu.h       |  1 +
+ drivers/hwtracing/coresight/coresight-core.c       | 46 +++++++++++++++
+ drivers/hwtracing/coresight/coresight-cpu-debug.c  | 41 +++++---------
+ drivers/hwtracing/coresight/coresight-ctcu-core.c  | 24 +++-----
+ drivers/hwtracing/coresight/coresight-etb10.c      | 18 ++----
+ drivers/hwtracing/coresight/coresight-etm3x-core.c | 17 ++----
+ drivers/hwtracing/coresight/coresight-etm4x-core.c | 32 ++++++-----
+ drivers/hwtracing/coresight/coresight-etm4x.h      |  4 +-
+ drivers/hwtracing/coresight/coresight-funnel.c     | 66 ++++++++--------------
+ drivers/hwtracing/coresight/coresight-replicator.c | 63 ++++++++-------------
+ drivers/hwtracing/coresight/coresight-stm.c        | 34 +++++------
+ drivers/hwtracing/coresight/coresight-tmc-core.c   | 48 ++++++++--------
+ drivers/hwtracing/coresight/coresight-tmc.h        |  2 +
+ drivers/hwtracing/coresight/coresight-tpiu.c       | 36 +++++-------
+ include/linux/coresight.h                          | 30 +---------
+ 16 files changed, 226 insertions(+), 289 deletions(-)
+---
+base-commit: 67a993863163cb88b1b68974c31b0d84ece4293e
+change-id: 20250627-arm_cs_fix_clock_v4-e24b1e1f8920
+
+Best regards,
 -- 
-2.49.0
+Leo Yan <leo.yan@arm.com>
 
