@@ -1,143 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5AB2E2640
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 14:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BE22E2640;
+	Fri, 27 Jun 2025 14:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751034008; cv=none; b=UAt/DIunWPeqmaRf2eXwexlWfS4asH8awKhN0yAHriL6v9htDNh9ezg3B6AVt3m2lLOlT7rfa6hpnl2eW4L+UaU3ZUgneHyjwOJZm6f7fxfPlxRoY/d0T3I57Rx7G0JnsqK4yW8giSeqNAb+w/NBcx1Xx8bNw5baDDEzsVrgbHY=
+	t=1751034013; cv=none; b=fKk6b1Tb9c1LjlNkwPTu7pAAHKk5Gs5j8QgHtB4896KC8HdalK/vab8kTJ3IefZBVxdxpgD+Mjh1F9Ocoqk4RkwiIfEKalmP0hFFgTX7Kw7XIuv8RLjp38koazFXKRUCQyUJr5415uWBYT6PAnDfF2f0JynbVzZSSCiQXvM16vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751034008; c=relaxed/simple;
-	bh=X1LW1oZ0Yi5W6s1QSGFN/vY4p6QmWFxGUP/LCeeyHA8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ldCIyLAS8ZTbI5TWLrKkmqpcFZ7e+6o3CMI5k3a9jjQZYxEI60fbOXa12CztpP1TBmVUKxbUtQqIUGwM8BFeCAQ9qIUWDg9oQNbmg3vV90ioWC5kNtpCtCSxmvJfWFanaaqDLuW215XHKCHEW50y1EX/dCutMI8MnlBdNsfT6b8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N/pdxHje; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N/pdxHje"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751034007; x=1782570007;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=X1LW1oZ0Yi5W6s1QSGFN/vY4p6QmWFxGUP/LCeeyHA8=;
-  b=N/pdxHje3fd/cte5RS/3HZINzcPdG8ie7dNqeV9rI54ub1EP645GWxer
-   I5lcUDhyOFAcgCCsnda+yucHf8zFb2BC6k4+UmpTY/Kb4aPxVxM6ONu7x
-   C34XeQtLJzIOZG/n7epBRYxkOFtK+2Ni1t3QzPhCjbe1xBOYFfRc6hmlE
-   oEeLchTVDytXbSNPVZ5JSTCoo+AMjPUZjwQ5VbjJo8BDao8C/5JANYeOG
-   ZcIOXuBQp8mrthRxHQia9IrytWnstCZm4IjfC9hviVZBUdDnmeQYRp1FL
-   PlCJbJz2/M0XgoQVkeGTNCcBlXYLfMzu5ffdPqeviYJLyvppMiTmeNLaj
-   Q==;
-X-CSE-ConnectionGUID: sbbcKu3bShuhMExqL3c20Q==
-X-CSE-MsgGUID: gPqCB9z6R1iO/iKMqa8O5g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="52467226"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="52467226"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 07:20:06 -0700
-X-CSE-ConnectionGUID: 1rtKbcErQu2qicUgRu890Q==
-X-CSE-MsgGUID: IH+tU32BTqu3xrHkLL7q+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="158548200"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa005.jf.intel.com with ESMTP; 27 Jun 2025 07:20:04 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id D176B2BA; Fri, 27 Jun 2025 17:20:02 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH v2 1/1] libnvdimm: Don't use "proxy" headers
-Date: Fri, 27 Jun 2025 17:19:23 +0300
-Message-ID: <20250627142001.994860-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1751034013; c=relaxed/simple;
+	bh=EzhCQPgT4q4FikRj54oTe+DHEuehnFQRnWTjIramQHY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=lucWkMJhSSygG+Cl1KsrPFiD64PhxLqQmyhGDgKGcvnzJWtcQOOqZinuHggxgUsYJ7pGz7e9JCLGrSRxFlRPDq+/lv/d1Jdu1N2p/TScrM6WG22KmDE3LjMz1hzPxrgRLCeKRtMDHtPsWKih4ZpyHUAb9tKOM4WF5Ji8V4X0fGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55REJVmB024488;
+	Fri, 27 Jun 2025 23:19:31 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55REJUl8024484
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Fri, 27 Jun 2025 23:19:31 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <d84dc916-2982-45dc-a9a5-a6255cbc62bd@I-love.SAKURA.ne.jp>
+Date: Fri, 27 Jun 2025 23:19:30 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH v2] ocfs2: update d_splice_alias() return code checking
+To: Al Viro <viro@zeniv.linux.org.uk>, Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Richard Weinberger <richard@nod.at>, ocfs2-devel@lists.linux.dev,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <d689279f-03ed-4f9b-8fde-713b2431f303@I-love.SAKURA.ne.jp>
+ <20250626033411.GU1880847@ZenIV>
+Content-Language: en-US
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <20250626033411.GU1880847@ZenIV>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Anti-Virus-Server: fsav101.rs.sakura.ne.jp
+X-Virus-Status: clean
 
-Update header inclusions to follow IWYU (Include What You Use)
-principle.
+When commit d3556babd7fa ("ocfs2: fix d_splice_alias() return code
+checking") was merged into v3.18-rc3, d_splice_alias() was returning
+one of a valid dentry, NULL or an ERR_PTR.
 
-Note that kernel.h is discouraged to be included as it's written
-at the top of that file.
+When commit b5ae6b15bd73 ("merge d_materialise_unique() into
+d_splice_alias()") was merged into v3.19-rc1, d_splice_alias() started
+returning -ELOOP as one of ERR_PTR values.
 
-While doing that, sort headers alphabetically.
+Now, when syzkaller mounts a crafted ocfs2 filesystem image that hits
+d_splice_alias() == -ELOOP case from ocfs2_lookup(), ocfs2_lookup() fails
+to handle -ELOOP case and generic_shutdown_super() hits "VFS: Busy inodes
+after unmount" message.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Instead of calling ocfs2_dentry_attach_lock() or ocfs2_dentry_attach_gen()
+when d_splice_alias() returned an ERR_PTR value, change ocfs2_lookup() to
+bail out immediately.
+
+Also, ocfs2_lookup() needs to call dupt() when ocfs2_dentry_attach_lock()
+returned an ERR_PTR value.
+
+Reported-by: syzbot <syzbot+1134d3a5b062e9665a7a@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=1134d3a5b062e9665a7a
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 ---
+ fs/ocfs2/namei.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-v2: reshuffled includes and forward declarations (Ira)
-
- include/linux/libnvdimm.h | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index e772aae71843..28f086c4a187 100644
---- a/include/linux/libnvdimm.h
-+++ b/include/linux/libnvdimm.h
-@@ -6,12 +6,12 @@
-  */
- #ifndef __LIBNVDIMM_H__
- #define __LIBNVDIMM_H__
--#include <linux/kernel.h>
-+
-+#include <linux/io.h>
- #include <linux/sizes.h>
-+#include <linux/spinlock.h>
- #include <linux/types.h>
- #include <linux/uuid.h>
--#include <linux/spinlock.h>
--#include <linux/bio.h>
+diff --git a/fs/ocfs2/namei.c b/fs/ocfs2/namei.c
+index 99278c8f0e24..f75fd19974bc 100644
+--- a/fs/ocfs2/namei.c
++++ b/fs/ocfs2/namei.c
+@@ -142,6 +142,8 @@ static struct dentry *ocfs2_lookup(struct inode *dir, struct dentry *dentry,
  
- struct badrange_entry {
- 	u64 start;
-@@ -80,7 +80,9 @@ typedef int (*ndctl_fn)(struct nvdimm_bus_descriptor *nd_desc,
- 		struct nvdimm *nvdimm, unsigned int cmd, void *buf,
- 		unsigned int buf_len, int *cmd_rc);
+ bail_add:
+ 	ret = d_splice_alias(inode, dentry);
++	if (IS_ERR(ret))
++		goto bail_unlock;
  
-+struct attribute_group;
- struct device_node;
-+struct module;
- struct nvdimm_bus_descriptor {
- 	const struct attribute_group **attr_groups;
- 	unsigned long cmd_mask;
-@@ -121,6 +123,8 @@ struct nd_mapping_desc {
- 	int position;
- };
- 
-+struct bio;
-+struct resource;
- struct nd_region;
- struct nd_region_desc {
- 	struct resource *res;
-@@ -147,8 +151,6 @@ static inline void __iomem *devm_nvdimm_ioremap(struct device *dev,
- 	return (void __iomem *) devm_nvdimm_memremap(dev, offset, size, 0);
- }
- 
--struct nvdimm_bus;
+ 	if (inode) {
+ 		/*
+@@ -154,13 +156,12 @@ static struct dentry *ocfs2_lookup(struct inode *dir, struct dentry *dentry,
+ 		 * NOTE: This dentry already has ->d_op set from
+ 		 * ocfs2_get_parent() and ocfs2_get_dentry()
+ 		 */
+-		if (!IS_ERR_OR_NULL(ret))
+-			dentry = ret;
 -
- /*
-  * Note that separate bits for locked + unlocked are defined so that
-  * 'flags == 0' corresponds to an error / not-supported state.
-@@ -238,6 +240,9 @@ struct nvdimm_fw_ops {
- 	int (*arm)(struct nvdimm *nvdimm, enum nvdimm_fwa_trigger arg);
- };
- 
-+struct kobject;
-+struct nvdimm_bus;
-+
- void badrange_init(struct badrange *badrange);
- int badrange_add(struct badrange *badrange, u64 addr, u64 length);
- void badrange_forget(struct badrange *badrange, phys_addr_t start,
+-		status = ocfs2_dentry_attach_lock(dentry, inode,
++		status = ocfs2_dentry_attach_lock(ret ? ret : dentry, inode,
+ 						  OCFS2_I(dir)->ip_blkno);
+ 		if (status) {
+ 			mlog_errno(status);
++			if (ret)
++				dput(ret);
+ 			ret = ERR_PTR(status);
+ 			goto bail_unlock;
+ 		}
 -- 
-2.47.2
+2.50.0
 
