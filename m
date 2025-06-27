@@ -1,71 +1,70 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B241C5D77
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5B41BE871
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:26:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750998242; cv=none; b=D6pzP3QSvjf2g1yMYJWJ1r/XrRcuYtDiVcyaM3IOIw6daj9QQwwNEwX/dOVYnLUuiNlZCDzNGPlxGO7ONCbB5Mo78On+7g5N995sZU83GkET8MVNxP2JVRZT7aQQxU4OqO88cePXXulxMKnqzkH1xeYjy7kBRUevuXapGhwFrAA=
+	t=1750998390; cv=none; b=rgKIOqdKQbEGQ/CIaKDWQ9wLItz5HvV6MpXSVOD2eFig53nyTspEfQ1ddYj5xQByNSaatHnu4l3coWTH+J95uUR2tWkH6sGzbEuiR8ZnDjuqAXkWgkNvBHzCmGcooE0cwCplrqm/wBcavUyzpq6xVM3egVfEixqwyx8hSvbC5pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750998242; c=relaxed/simple;
-	bh=AQk8u+AukaF097t6/dIKRIcXHl5qFFYU0nRqmvxCwTg=;
+	s=arc-20240116; t=1750998390; c=relaxed/simple;
+	bh=VfNg7i8DnarIz0vddVP/BSr8IV38z86RUZ7+o6IvmQ8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZYMAi3e7FHPhIqrbi3vKGVGHDKYUFS8pJUswDYVWqnx1q/6n3pWxAY9xncDhRQ6sC+u0g3IqySLGF0yxPeDB7U9ov2OuQ5m1zbE0YVRPyiEoQr/5OJqnTyBPDte7VZjYb/Ce8ksmBSBRBUVeHI9/o9S1QDLVhk/Fqz2GUt6Z/xU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SJuc/hGO; arc=none smtp.client-ip=209.85.167.48
+	 To:Cc:Content-Type; b=e8xIcGrgAGrWz9WJYN37QgSzOO+9cayY1Iys4/mV8cPRZj2wyn+VkkqSId0vIuRsKzu/M4cskHjS8gtIQBEowDVVl/NEqf8eEi04Kk83jz2bC/woZ30+1j0j6QCtd6Nymcfsa0bV30pJawFGVe8/YH8gDH72qo+5RhmOf0Cmxus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2GpTstop; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SJuc/hGO"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553b6a349ccso1919878e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:24:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2GpTstop"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32b2f5d91c8so15135861fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:26:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750998238; x=1751603038; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750998385; x=1751603185; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AQk8u+AukaF097t6/dIKRIcXHl5qFFYU0nRqmvxCwTg=;
-        b=SJuc/hGOJNhUK27NV1GiW2kjlcMttBuZzKSS1HSPU1NUhdKe95SxyaxZz8rx3WU5+S
-         DPHZ9gGs6DoSP8L/n/KTE9MATC/ZlTVX0G7ZJ+/eYGxxVjK97KMETr3Yoqe4S7DfkEXF
-         uqMVRaiE6dq3lTehf6V7BUuhm7Io2p2hu2sQsyZsB6axyIj9c4qlMYCBVcgRGq20akQX
-         3w5wNSb78Hn+vxtPJ7gW9CMVASfYkKd4Q+bKEMOuGR1S0p11izDeTKhb2tVy79VXFJiC
-         8C2IMa0p3edS29zGiPziJDVJUfsmgzdB+yK00S0jADn2RDc7X+a0LAv/vRmIcZ5Mc8O7
-         TVYg==
+        bh=VfNg7i8DnarIz0vddVP/BSr8IV38z86RUZ7+o6IvmQ8=;
+        b=2GpTstop6QMTk0pSOfbkzxb/r2vJXp4ElRxzbfx+SD2kLaZSnCA5kQzDjxBDttnHGs
+         lJT5jIH12q8QHH0UvYrKZA1Kq1MF+2QLa3hpjBZGqzQQWspJmIadP5U53mXZdbOiBYLJ
+         DbD2b7dOgZxbHMXDRfwWgiF3UgHgCbjWe5UR67/eusFGgPVuBD3hXWg6ZwvnHqu6i/YO
+         ij/ojtlQ57wtxgHVMpbdRQUGq3P1N8Ggo1LJpKity7wL7AG3XrW67IcN4qTpePzeS9zx
+         ZaVQjZPaAgPkcA6E2TEY+U1MWpnyBQifKTek1N+aCAt/4/MX4Uc14+pGFyIwdMgG6nyW
+         mxvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750998238; x=1751603038;
+        d=1e100.net; s=20230601; t=1750998385; x=1751603185;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AQk8u+AukaF097t6/dIKRIcXHl5qFFYU0nRqmvxCwTg=;
-        b=v8MfOJuIrvh9mSk53vJ2u7fjTtlSDIeIiNobJcCsaL8aXxajG+Ix2JttxD9PVcxzCb
-         KfS/2HAufpidrBzFUUV13l5jRiUvZ8NLVwsTV2Rx6RXaubt4IuxwzYsfjT2w6D+QhHEj
-         ayW1kE2APWNE0HkTk0GJOgG/MFZzwkTSYe0qgS8j3mi/dm/psVwZQ1iRy5oBMGFvVi1B
-         v23mj328Z7pRgHVVnFvuIe0d9nIV12lvIMlaN6b2YomRbJpWStuv9Np+zkakpII06rnw
-         N9vS2ZOwSadsJh+KrbrFrXTTI/c9fR7ckPD7AKZouyzNWPRghQH0h+KrwjnXRJ1Y5Leo
-         UICQ==
-X-Gm-Message-State: AOJu0YxveMO/OL4tY0RBporXsbwl5VCzaXIVqhM1jpqrgqiQfoN86Q8d
-	g85afeFiQrYqW8ju5aot/nliapLgeYcLhPHKgKWcORu/x4P8L2teSD6msnQZsJkRrcCpvmX122O
-	Hx17ot0eqDjvm6GBd6Ln418m0L35bXUGin/SRa2g=
-X-Gm-Gg: ASbGncsPavehTZYREi42KAb30qerzZdedvblaV5BbJH8ffs03GfqiaFGnXWGsr/F2Sl
-	grqT+9yhdNAInc/V0UojlRLfrLFj+vttXVSXfE0bNa4yqWByxJ6POozySxhPw+smcyLObFiodHq
-	rWquC2IqV/pPS55C+g1cs6oYaf2XuCAmKktcIX5EkNC+96MsMZsvf52xO/xGgfizG0neLoFABAW
-	UuOkJbADMI=
-X-Google-Smtp-Source: AGHT+IFbw9uwqwYDro8uwfyG3XZHTePS4XI+ezN8utGdLDHt/1r8QpA2Og7uGGqfEAZ6R6+ZtyZzkp10+9C3zYEbPNs=
-X-Received: by 2002:a05:6512:10cf:b0:553:25b2:fd28 with SMTP id
- 2adb3069b0e04-5550b8bdfd5mr636360e87.42.1750998238298; Thu, 26 Jun 2025
- 21:23:58 -0700 (PDT)
+        bh=VfNg7i8DnarIz0vddVP/BSr8IV38z86RUZ7+o6IvmQ8=;
+        b=eaggoE3sQv1fjwjcVCQMUoUVPwkA6hJK4sikclWRzK+lJPAxr4fxUuEXL1JonzACSJ
+         IEa0MarwHKBsid6e+HKqUO1PARHXF21yrCY6bcySHlNMYvB1JU1gpc9NxMMkltbNGX/m
+         Yx9vsMqkRbbhSHtc37dFRbdaaF5ZG/YPgzm3QAZX4FuK/hEnZVE8AC3ZOMbC5UKvO7Sb
+         OxDmtruzJHlRLIwN3+KPiBcu61XTe/RJ0TkQRSzaZauF+wVKluaHqFPgcF5GmQevFMVy
+         aWjYNb3JkneWqPVSBpkuxnjcb9apnxWJyZdxz9L3uJZu+r76MNVWcnv132F+UJ9fYqP3
+         5g4Q==
+X-Gm-Message-State: AOJu0YxDi0zgzPP1PvC+7s8muS6doYEInoS5S/JAIbqPrim9wHlepTjs
+	Af7W0KXOqwLZbvb+EOxQda+E9+2rINyiV9AaBi6N8FYOHeUXEi0AO9pkABuEPh6Ajn/VGBdVYfa
+	nCDXP8PKltSEoXUZDN7wt5UFEVVk9q06a2n/l5aY=
+X-Gm-Gg: ASbGncsB1KHZCnCPxDoy5Mcvgj/Om1ENzs1xBIrfaUwV41A/6HsnJItB0eYXHmkAf3I
+	S8514avN0jPqIQMi3QvmVcAM4+dNEDnJhWSoApJm5Vj1uL6jClKr16BtiqrTCyDhzge0nCCg7Pp
+	G4pqHF2KZuGJyI/C5edZ35p7uHC3crp8829woNTeGG3rKVAN33RFPRn+XJ/gkGFYdnTJUr9QFp
+X-Google-Smtp-Source: AGHT+IEN0up3efKrhLZsd3nBpPiaMWt0HTAJctuZuXsO4lV9GjEKhsowTIRAiuY8Spw+0nSc6ymf2ZnARGVEAMJ3rL0=
+X-Received: by 2002:a05:6512:3b9d:b0:553:a2c0:da70 with SMTP id
+ 2adb3069b0e04-5550b9e5d1bmr591838e87.26.1750998385370; Thu, 26 Jun 2025
+ 21:26:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625182951.587377878@linutronix.de> <20250625183757.995688714@linutronix.de>
-In-Reply-To: <20250625183757.995688714@linutronix.de>
+References: <20250625182951.587377878@linutronix.de> <20250625183758.059934561@linutronix.de>
+In-Reply-To: <20250625183758.059934561@linutronix.de>
 From: John Stultz <jstultz@google.com>
-Date: Thu, 26 Jun 2025 21:23:46 -0700
-X-Gm-Features: Ac12FXzuHfHFWe7nf24S9nkWLlVYSMh-w9sEZOHfKbzqb2or0rs6hY-DP5_ZNg0
-Message-ID: <CANDhNCpu5+ZVxFg0XVU4KYEWnNCbSruPob9dOeF3btxqJ1N70g@mail.gmail.com>
-Subject: Re: [patch V3 04/11] timekeeping: Provide time setter for auxiliary clocks
+Date: Thu, 26 Jun 2025 21:26:13 -0700
+X-Gm-Features: Ac12FXw5F6Tv9EinXUyVRVWX0w62FmgD8aJPlvktltqCpTRwogZjjuf3K6zok1o
+Message-ID: <CANDhNCp+Zu4aAy4G__QZd40B2z0uiLJ=WSa_6h+bQkeRE3Ga-g@mail.gmail.com>
+Subject: Re: [patch V3 05/11] timekeeping: Make timekeeping_inject_offset() reusable
 To: Thomas Gleixner <tglx@linutronix.de>
 Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
 	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
@@ -81,19 +80,12 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Jun 25, 2025 at 11:38=E2=80=AFAM Thomas Gleixner <tglx@linutronix.d=
 e> wrote:
 >
-> Add clock_settime(2) support for auxiliary clocks. The function affects t=
-he
-> AUX offset which is added to the "monotonic" clock readout of these clock=
-s.
+> Split out the inner workings for auxiliary clock support and feed the cor=
+e time
+> keeper into it.
 >
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
 
-Minor fretting: I worry a little that the difference here between the
-default timekeeper where set adjusts the REALTIME offset from
-MONOTONIC, and here where it directly adjusts "mono" might confuse
-later readers?
-Would something about that be useful to have in a comment?
+Looks ok to me.
 
-Either way,
 Acked-by: John Stultz <jstultz@google.com>
