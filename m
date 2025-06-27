@@ -1,140 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30E727F010;
-	Fri, 27 Jun 2025 09:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D890228C036;
+	Fri, 27 Jun 2025 09:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751014819; cv=none; b=thFQgE4NUODYOsEZs9OUHLa+7UjKQp+KCPOk2G+6BaBAYu+O47kcPE5rjbkqUyHCDP96dPl0mmKg4yX4qN3t1v0LjV8XWA40vhlIZLjPA6iVQeHVRb3+QTHldKENU7QM/+TijN3qq5Rb5BH9CTyEzL6caCFV7wwS6Uwq49uGkjQ=
+	t=1751014923; cv=none; b=MbRiUJALDkA2N1LVwbji4Lol9uQ8oFNznFSjgUawW8b8HZIKACbv/Fa1dfFPr6xmhqAVa9leyjsDQn3C3UfD2WnoXCUjtWZUlW+/LXw6ImyTQb8yMk0+uztOAcNIxqhNcZl1W4dfNALnW9lLcaKo7Vw4zR7yid6ruSJxfZ87MmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751014819; c=relaxed/simple;
-	bh=OFGGtjh9lLAJpazPZciAUtiSAFEWyX3zAFFdP5TVjw0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ofH4DBCcHK0eoSR1aEQPHPUqCPy/H7pQ+cmSQ8fnlYlHJIalEoC3HOCEnb7R8mADHW0deAbsmf5tLLV4/ZghtixA2Rjw5O/O1glbD/X44szZ54OedTszqwdtyTFFtQHbV7jUByftFwRriYCYxMWXl7COmgScbmuYP3413+eEUEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=USx4WGd6; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751014923; c=relaxed/simple;
+	bh=f3aVQTD1fvHDoFJz6BYUdn4YpiDHzFeLA+PwQobS9bc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=In4pRL9/cDvZ8jkS1XLEsOszOjxwicXt8/ii/iz/0+l5uvTOigB5bQn0bm2TZcHcWlPJQbRWJUBwV+1P16bRNJyVIiQ3K1zNq029tNZRsY/OudCytNOUAitnDrwe6hitzcfc+L1RZ7gZOCtASgS8v+coL7l/2DKvjewzOhhbfng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NmwFgQ2C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="USx4WGd6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751014817; x=1782550817;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=OFGGtjh9lLAJpazPZciAUtiSAFEWyX3zAFFdP5TVjw0=;
-  b=USx4WGd6Dnh6DjAt53BvJrgNiRpOGlQpvdaHSnwaQfEouOX/d8hYke4Z
-   lrwrpXouO5mp5qKDs8OGzURvrDF6WlDj2DiMaqnXbRlmJg1FUPmkLDMic
-   D9AjaT54WSo2NH5R+QYKb/RuRXbJ6hFyHSChRrZNCi7XXsfXIqE2sGj1o
-   vCF9ZLe9sLqGrX8u0NBWWEaJAB0caphhxX8osnmSTRcEz+pTE8FG3eMGx
-   mFXq5gGzAs1l1HUScHLqY5kG8zLvQjTPz3CLLe3SRzcd0Bbzr6TvkuvIv
-   BA384VMmy3N57GzT8ig7Q9tI3sJmZazS4ULLuTr07SOD8Ym4mlxDXuglT
-   g==;
-X-CSE-ConnectionGUID: Vqhc97DRTrq7JhGcQB601g==
-X-CSE-MsgGUID: aCneS0ZKSU+FI49aQHM/Xw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="40944766"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="40944766"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 02:00:15 -0700
-X-CSE-ConnectionGUID: JqUZiAKiR46VDN/gPt4Vyg==
-X-CSE-MsgGUID: emlWJGyaSl2vPUpGyYcGrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="183790537"
-Received: from klitkey1-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.146])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 02:00:10 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>, airlied@gmail.com,
- simona@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- tzimmermann@suse.de, corbet@lwn.net
-Cc: dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, kevinpaul468@gmail.com, Mauro Carvalho
- Chehab <mchehab+huawei@kernel.org>
-Subject: Re: [PATCH] workaround for Sphinx false positive preventing index
-In-Reply-To: <20250627071628.30258-1-kevinpaul468@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250627071628.30258-1-kevinpaul468@gmail.com>
-Date: Fri, 27 Jun 2025 12:00:07 +0300
-Message-ID: <462a34d3027f22a65c129e2305c7aa4d4fda0e43@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NmwFgQ2C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A903AC4CEEB;
+	Fri, 27 Jun 2025 09:01:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751014923;
+	bh=f3aVQTD1fvHDoFJz6BYUdn4YpiDHzFeLA+PwQobS9bc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NmwFgQ2CZcpvV0ROnSPtemkMq+ettLDih5Q9iYDyajNBRYh+W7hwf8ahthkAsqTz7
+	 nc/eL9y9NGTCDC8Ik9DSrmA0O0vIKztETv6P3NoFWQKusVBpdPuuAZNgLBlJIbS7No
+	 3HHeQSC6zcB6hk9U/fIRaRcNuAmW+mz8YcpjG9mR8vcnXQiHSTv+6PPzDGmQXADQN6
+	 s16fcHTo1N5Uyfi6tBOMLKIiNM2fINPBwnalu81M4LCE1VuBou/+8yf5TmCrq+tLkX
+	 8fwM8Dl5ZAXI5FMkw30KVtcq/0Ghj2Wrb0U8VDvhA8lm2aATc5zwpJzGZGfMsLDPHF
+	 IGwWuZKC80KCA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 27 Jun 2025 11:01:58 +0200
+Message-Id: <DAX6ZGG442EA.2C365WV15IC7C@kernel.org>
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>
+Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+ <bjorn3_gh@protonmail.com>, <a.hindborg@kernel.org>,
+ <aliceryhl@google.com>, <tmgross@umich.edu>, <david.m.ertman@intel.com>,
+ <ira.weiny@intel.com>, <leon@kernel.org>, <kwilczynski@kernel.org>,
+ <bhelgaas@google.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v4 3/5] rust: devres: get rid of Devres' inner Arc
+X-Mailer: aerc 0.20.1
+References: <20250626200054.243480-1-dakr@kernel.org>
+ <20250626200054.243480-4-dakr@kernel.org>
+ <DAWUWCQCW7WD.29U1POJFXTLXS@kernel.org> <aF3dlfLiy8w4henN@pollux>
+In-Reply-To: <aF3dlfLiy8w4henN@pollux>
 
-On Fri, 27 Jun 2025, Kevin Paul Reddy Janagari <kevinpaul468@gmail.com> wrote:
-> Functions drm_format_info, drm_modeset_lock, drm_ioctl_flags are not being
-> indexed in the documentation because there are structs with the same name 
-> and sphinx is only indexing one of them, Added them to namespaces as a
-> workaround for suppressing the warnings and indexing the functions
-
-I think there's a Sphinx bug about this that should be referenced.
-
-Cc: Mauro
-
-> Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
-> ---
->  Documentation/gpu/drm-kms.rst  | 2 ++
->  Documentation/gpu/drm-uapi.rst | 1 +
->  2 files changed, 3 insertions(+)
+On Fri Jun 27, 2025 at 1:53 AM CEST, Danilo Krummrich wrote:
+> On Fri, Jun 27, 2025 at 01:33:41AM +0200, Benno Lossin wrote:
+>> On Thu Jun 26, 2025 at 10:00 PM CEST, Danilo Krummrich wrote:
+>> > diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.=
+rs
+>> > index 60b86f370284..47653c14838b 100644
+>> > --- a/drivers/gpu/nova-core/gpu.rs
+>> > +++ b/drivers/gpu/nova-core/gpu.rs
+>>=20
+>> > @@ -161,14 +161,14 @@ fn new(bar: &Bar0) -> Result<Spec> {
+>> >  pub(crate) struct Gpu {
+>> >      spec: Spec,
+>> >      /// MMIO mapping of PCI BAR 0
+>> > -    bar: Devres<Bar0>,
+>> > +    bar: Arc<Devres<Bar0>>,
+>>=20
+>> Can't you store it inline, given that you return an `impl PinInit<Self>`
+>> below?
 >
-> diff --git a/Documentation/gpu/drm-kms.rst b/Documentation/gpu/drm-kms.rst
-> index abfe220764e1..da865ba1c014 100644
-> --- a/Documentation/gpu/drm-kms.rst
-> +++ b/Documentation/gpu/drm-kms.rst
-> @@ -357,6 +357,7 @@ Format Functions Reference
->  .. kernel-doc:: include/drm/drm_fourcc.h
->     :internal:
->  
-> +.. c:namespace:: gpu_drm_fourcc
+> I could, but I already know that we'll have to share bar later on.
 
-I think using c:namespace-push and c:namespace-pop is the better
-option. Otherwise c:namespace will be in effect until the end of the rst
-file or next c:namespace.
+Ahh, planning ahead :)
 
-I'm not quite sure what the namespace names should be, but for
-referencing anything the names here are pretty bad
-e.g. gpu_drm_fourcc.drm_format_info.
+How would you have shared it if you didn't do the devres rework? Or is
+this one of the reasons to do that?
 
-As a workaround this does hide the worst fallout, but it's not even
-generic enough to handle structs and functions with the same name in the
-same file. I'm not sure if there are such cases, but I wouldn't be
-surprised if there were.
+>> >      fw: Firmware,
+>> >  }
+>> > =20
+>> >  impl Gpu {
+>> >      pub(crate) fn new(
+>> >          pdev: &pci::Device<device::Bound>,
+>> > -        devres_bar: Devres<Bar0>,
+>> > +        devres_bar: Arc<Devres<Bar0>>,
+>> >      ) -> Result<impl PinInit<Self>> {
+>>=20
+>> While I see this code, is it really necessary to return `Result`
+>> wrapping the initializer here? I think it's probably better to return
+>> `impl PinInit<Self, Error>` instead. (of course in a different patch/an
+>> issue)
+>
+> I will double check, but it's rather unlikely it makes sense. There's a l=
+ot of
+> initialization going on in Gpu::new(), the try_pin_init! call would proba=
+bly get
+> too crazy.
 
-A more generic (but also invasive) alternative would be to have
-kernel-doc always put structs/unions in a namespace, say "type", so
-they'd never conflict with functions. The automagic referencing in
-kernel-doc could produce those references. The downside is that manual
-references should include type.foo, and the produced html also contains
-type.foo.
+Makes sense, I don't have too much data on where to place the error,
+since I only have had rather simple uses of pin-init. So you could have
+a case where it makes sense to put the error outside of the initializer.
 
-BR,
-Jani.
+>> >  /// # Example
+>> >  ///
+>> >  /// ```no_run
+>>=20
+>> > @@ -213,44 +233,63 @@ pub fn new(dev: &Device<Bound>, data: T, flags: =
+Flags) -> Result<Self> {
+>> >      /// }
+>> >      /// ```
+>> >      pub fn access<'a>(&'a self, dev: &'a Device<Bound>) -> Result<&'a=
+ T> {
+>> > -        if self.0.dev.as_raw() !=3D dev.as_raw() {
+>> > +        if self.dev.as_raw() !=3D dev.as_raw() {
+>> >              return Err(EINVAL);
+>> >          }
+>> > =20
+>> >          // SAFETY: `dev` being the same device as the device this `De=
+vres` has been created for
+>> > -        // proves that `self.0.data` hasn't been revoked and is guara=
+nteed to not be revoked as
+>> > -        // long as `dev` lives; `dev` lives at least as long as `self=
+`.
+>> > -        Ok(unsafe { self.0.data.access() })
+>> > +        // proves that `self.data` hasn't been revoked and is guarant=
+eed to not be revoked as long
+>> > +        // as `dev` lives; `dev` lives at least as long as `self`.
+>>=20
+>> What if the device has been unbound and a new device has been allocated
+>> in the exact same memory?
+>
+> Unbound doesn't mean freed. Devres holds a reference of the device is was
+> created with, so it is impossible that it has been freed.
 
+Ahh right, I thought I was missing something! This also should be
+mentioned in the safety comment though! Feel free to do it in some later
+patch or create a good-first-issue :)
 
->  .. kernel-doc:: drivers/gpu/drm/drm_fourcc.c :export:
->  
-> @@ -473,6 +474,7 @@ KMS Locking
->  .. kernel-doc:: include/drm/drm_modeset_lock.h
->     :internal:
->  
-> +.. c:namespace:: gpu_drm_modeset_lock
->  .. kernel-doc:: drivers/gpu/drm/drm_modeset_lock.c
->     :export:
->  
-> diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
-> index 69f72e71a96e..37a2bc461326 100644
-> --- a/Documentation/gpu/drm-uapi.rst
-> +++ b/Documentation/gpu/drm-uapi.rst
-> @@ -554,6 +554,7 @@ DRM specific patterns. Note that ENOTTY has the slightly unintuitive meaning of
->  .. kernel-doc:: include/drm/drm_ioctl.h
->     :internal:
->  
-> +.. c:namespace:: gpu_drm
->  .. kernel-doc:: drivers/gpu/drm/drm_ioctl.c
->     :export:
-
--- 
-Jani Nikula, Intel
+---
+Cheers,
+Benno
