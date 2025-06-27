@@ -1,287 +1,154 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D772DD5F7;
-	Fri, 27 Jun 2025 13:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EEB2D97B5;
+	Fri, 27 Jun 2025 13:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751032420; cv=none; b=F2cI94wYxYszbKKT414IU1EpDZnjvkg6L+xp1u/7GCDVpW/yyNd3lIkx5O1KT+iNRwbTgO1S4N5WTHtPBuhuemRrX3aSLDHGo0Jpl3snrWLawcxOGGdvu2C/7tprojl8pdniH0fYufBXU7n25wj6Y6gZ67Ntidwv6ZLe9McXEpc=
+	t=1751032644; cv=none; b=VftZ1YafMF0uUGFFUKuGCJkdPMUe1//I6wMOkN2gyaRfINh+wFiSnJcyXkqKmOqOOaFHgaoXdLH+H+GXZ4lexmQ6YHoJfbr5ff59CEe24azqpKOJVyWxWLAklDyWi73DDrgmeCnLxpuCWDVJm4+HV4iyQpSw4RnT678oVZzESZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751032420; c=relaxed/simple;
-	bh=8tB5Tt+SddCBUKuuMhYJNECWuks405uefcI+g9Gv/+o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sXrgwyg7BiWv1ipdCfu6uBWJ6fLbcpyrPSnG5b0W0Ir/+JxZOZJXNigsgV4kBgKXGOhDDPYIjpiQeZ4mcJfw8ehp5RkD57mooMMw5d7MNq4sMqSp5PLmF2+sP7tSllyZjgpBQr5KKNiJS47kgmBmNmw03WZ8F4iTZfIqTPof7FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hJUytmS8; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751032644; c=relaxed/simple;
+	bh=/htD94M65gpDXvW9vEUyXa4/LwaKe7J0D8WDQ6IIYg8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LDC3fM1H09UIqqq+6pWI2hczcTntRoSWCeDEtk8dQPeXXm7YSgdfLk0+uH72kBeNrbunPgBRfrxUIZJQOw2/ZaHPxAJiBZYbcrStoQrVARLKZ9b6RAoH17XveVc+sxJRDTH7RafouJKTyWowAZavL94dsd4VGNehc3mUA9nyI2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ckvpAK9/; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJUytmS8"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a76ea97cefso24112831cf.2;
-        Fri, 27 Jun 2025 06:53:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751032417; x=1751637217; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uouMimeWn3ZYuKBw0rjlLhYpQtgnBhD5z9a/AZnhU0Q=;
-        b=hJUytmS8RG5HU4jLr+V9Y/FBIpppIEGYfL90K0eKuFTlbqIYpCCoI6UqHPF7YuL0OF
-         X/VzxBTgq6JHhOB4QYOXPm3aXD2fqvca9Ku14ulpPnf3z+PlJt4JghGUPA3F5ETzbrPU
-         C4UUQvrF8rN2nKtX9LBC4TNu7bf2vANy1ImLjGDRiw1Owc5OsZeWle+KZkY7csUfu9Xy
-         yWMLEplnT3JwpaVpPf5vjpVAt0hOY7xMWgUVv9/LF3qyPGI5vY7d5UbUtjuekw5M7RW0
-         Q6hNqG4ew176eMZj47jVx32Egmvb8N70bj/Fla6/LMzS2UeA3VpfBC5gPfHaRglYMv09
-         4m0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751032417; x=1751637217;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uouMimeWn3ZYuKBw0rjlLhYpQtgnBhD5z9a/AZnhU0Q=;
-        b=NBT75TMsJo6eSiWD+MqXMS9H5dfUXG+UElM6upcuSGvYvf5y6U1mqINy0YjpMGU148
-         Lrf8e+KhJ+hO7j33aN29xXs55SvCiQZzwFQI6Q/KC+cW7PPcqMyWXH9JMHqpm3Jfa069
-         6ACO+dKDibx8GEIfp1y/0ls/EBt/ei/JHurSSgReobPSBRh9XIYzFJvtDde/00nmRdiI
-         3oivkIfACqV930HoH9yu0USjULnPL4ghZcelmgHaEclDKzBGrUxKvMzMR3QOx5kY/lc8
-         7lx6lw0Gz+29+1s4XvpbJ2Xc6ZCWmxu7QJuuXe6KGiXEsqbDmyUf17Khpr8KMwreaNa7
-         MWhg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8UIMBL7ziryTqXcYH6IkPmq5iKWyeu7hFEevThJAmKpcEHgUVBM+nvy/Tg4qpkIvVhsv9T+1qiXPU@vger.kernel.org, AJvYcCXbzCvjRtpoMcPPSID3M0WaBVfqNwqcSNC/FiyY407z1RpZdQFCkNL1T889P6cT6Ft/UMoyAEgWEiudhBOuh4g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYxV6eJW7+GIMT9ScgIamr7eLWsadHXpVSWQw4gPOugmjv7mmj
-	f7+z03DP3o1EqJj8Q9CVQPWjXKxNV723aW0hYf+vAMBmypsvdcn40PBR
-X-Gm-Gg: ASbGncv/12Kr6ev8qssMVTA4o477utbWqT2AaUokAd7yvLmGf291UALhwrvMD8dxWYW
-	zoKGFADJmBoDO/4ccSpep7fksgWNRVDDTvkWomse1Hq/3RBMXv/I6+vKiIkunV6/Z4sG0JBQVc0
-	+p14qZqD5VL97oHfhcJi2lb3iYK9dLiUIDHL63j4cpGp/c3b+9zl8Mjmmmgu6y5q1QlQQ9spPGS
-	t7WknSU+GCEssViub4qW4CoG3PG5Ug91Qs6aoRxe3KKdN7J3nlQJXVCNabdLOjmjf/ZiRE4vKEv
-	ZXDhoyF2TyGwlRBw+X6uzGMoQ0Nm8NIYQPiB/QCKYTwRfwPTBqL1YCvTWUeVVUPRAmVG5vK2cjM
-	EHOEqwiKJohLpmd63ualwJdglHvN1e7uV0wizRocQUehlGSFWk0t1
-X-Google-Smtp-Source: AGHT+IFB5RPz7AavPYxnvUdQV0GTPoXzInj8vBq+TaGKAoDyNUISq/13GFMrDrtRPxv8yQgsf/UAoA==
-X-Received: by 2002:a05:622a:1b8f:b0:4a7:f683:9749 with SMTP id d75a77b69052e-4a7fcacff9emr61351051cf.30.1751032416813;
-        Fri, 27 Jun 2025 06:53:36 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc1061d3sm12664251cf.15.2025.06.27.06.53.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 06:53:36 -0700 (PDT)
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 52B84F40066;
-	Fri, 27 Jun 2025 09:53:35 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Fri, 27 Jun 2025 09:53:35 -0400
-X-ME-Sender: <xms:X6JeaHTxoa3I_5haNUJuCuDhdqS0gqX5rNd4xGZpITPIHCtjcBRtKA>
-    <xme:X6JeaIwiyONgnklVtgQedSe3iBmF3fqDjqOueL8G0BFIab4uYk3T4maCJfEIouMNO
-    C4oZEolDkepnmhjcg>
-X-ME-Received: <xmr:X6JeaM3VsANY7ZPYU55fdYt_hWX_c9bQf_ONd9Vvh3yi_1RzOxZXPhC9Ig>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefvdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgv
-    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
-    hnpedugeetueejudegieffvdevffektefgvdfhgfekvdduffeuieduueekkeetleevleen
-    ucffohhmrghinheprhgvrgguhidrshhtohhrvgdprhgvrgguhidrtghomhhprghrvgenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhn
-    odhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejje
-    ekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhn
-    rghmvgdpnhgspghrtghpthhtohepvdeipdhmohguvgepshhmthhpohhuthdprhgtphhtth
-    hopehlohhsshhinheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgv
-    rhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhushhtqdhfoh
-    hrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhkmhhm
-    sehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqrghrtghhse
-    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprh
-    gtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhn
-    fegpghhhsehprhhothhonhhmrghilhdrtghomh
-X-ME-Proxy: <xmx:X6JeaHCiQJZ8SxvfLpk-O1IjpqLksqfNI4FqnICIg2jQe0D_yPtFfg>
-    <xmx:X6JeaAiO-SZ71Rf7y5-ZPjT8akWg9wCztqk7_qxN6iFSFQ3Xr6BIBA>
-    <xmx:X6JeaLpFIy4Lsu2G4UjMEKuCBp1oauPq7GdJzkD-czkOtbtQ2hJNMw>
-    <xmx:X6JeaLhdv1stuY4KcDbGvhX3Hqy50z03qVyk_fGc5PK94i7qTXjtcA>
-    <xmx:X6JeaDQE__zOJyV2HLRV7dRbmDuQyG6DOvQLyoicHMV1M2zUdFvrCMIu>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 27 Jun 2025 09:53:33 -0400 (EDT)
-Date: Fri, 27 Jun 2025 06:53:32 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Benno Lossin <lossin@kernel.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	lkmm@lists.linux.dev, linux-arch@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 05/10] rust: sync: atomic: Add atomic {cmp,}xchg
- operations
-Message-ID: <aF6iXB6wiHcpAKIU@Mac.home>
-References: <20250618164934.19817-1-boqun.feng@gmail.com>
- <20250618164934.19817-6-boqun.feng@gmail.com>
- <DAX6WZ87S99G.1CMIN6IQXJYPL@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ckvpAK9/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751032643; x=1782568643;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/htD94M65gpDXvW9vEUyXa4/LwaKe7J0D8WDQ6IIYg8=;
+  b=ckvpAK9/7Cm1oU8HGKptSH7dJq0zkeZzBmBigqZApfK5hjfqV4IyHjdY
+   FfZK+5MPEAjNuLVv0ZW3PTluKcIZlW/I7I5THy9YtC4tIU5RzsdOtlxv6
+   hZgRZmhZRMQZl2lGj40mycE8pYRsAJt4t7Dcre4vuyZEAAQgeK9BDS3ZH
+   +08diwYoTpwAcqRNftSJI1gnIRXQbnqUzeyfPu4bdy3YbYpAGsfbNTq9E
+   A5eH4lvBsGGYg1IpHSD3SADjkpe3X+dkPcDR74mDIoR1AIXsTjM0VVpFH
+   mQyMGbx5oA0Youo6OjPQGQPoXcOR/C9DKoAoJ7vr1xOAKiwEal3+V/LZh
+   Q==;
+X-CSE-ConnectionGUID: Y4yVnPCrQRmhhJ/odU0uMw==
+X-CSE-MsgGUID: iNXv1DVjTqu9A9nJ5W5Apg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="57151849"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="57151849"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 06:57:21 -0700
+X-CSE-ConnectionGUID: Wag5NK0FTEu7CYqh0IUhAA==
+X-CSE-MsgGUID: zzEl0U+QR/S6v1udtZMDeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="152207821"
+Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.109.66]) ([10.125.109.66])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 06:57:19 -0700
+Message-ID: <0ebb0e54-6451-449a-8449-28036e8ca77b@intel.com>
+Date: Fri, 27 Jun 2025 06:57:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DAX6WZ87S99G.1CMIN6IQXJYPL@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ard Biesheuvel <ardb@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>,
+ Brijesh Singh <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>,
+ Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>,
+ Ingo Molnar <mingo@kernel.org>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
+ Breno Leitao <leitao@debian.org>, Rick Edgecombe
+ <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>,
+ Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>,
+ Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>,
+ Eric Biggers <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>,
+ Changbin Du <changbin.du@huawei.com>,
+ Huang Shijie <shijie@os.amperecomputing.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, linux-mm@kvack.org,
+ Yian Chen <yian.chen@intel.com>
+References: <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
+ <20250620163504.GCaFWNuI-8QFqAM0yI@fat_crate.local>
+ <6y2iqv6c2idn7yebaec7tyhzl5zcsrwqq4lcsokumlqeophzaf@ljnmxorblgcj>
+ <20250620182943.GDaFWolxhwogB2tTxb@fat_crate.local>
+ <tmd5llufitosphzhiik2tlemjuwyi7xkcjlhbqhibrgjjhsqcj@b3xtgub42p45>
+ <20250623102105.GCaFkqkatFSbyl1YeN@fat_crate.local>
+ <ztkgdk72p2z3q6z4hslfg4gj6pejirh7cnssxhd7u72mo4enn4@viqrwrycderf>
+ <20250626151837.GFaF1kzfLtesXLqaAQ@fat_crate.local>
+ <20250626160707.GGaF1wK5tW37P6xt0O@fat_crate.local>
+ <2768baad-1b1f-40c2-9cd9-9f4489e14f4d@intel.com>
+ <h47uwzno7oqer72sjwyc4spxaduggqi4meccjvai6v42iwnqnh@uhloooww25mo>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <h47uwzno7oqer72sjwyc4spxaduggqi4meccjvai6v42iwnqnh@uhloooww25mo>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 27, 2025 at 10:58:43AM +0200, Benno Lossin wrote:
-> On Wed Jun 18, 2025 at 6:49 PM CEST, Boqun Feng wrote:
-> > +impl<T: AllowAtomic> Atomic<T>
-> > +where
-> > +    T::Repr: AtomicHasXchgOps,
-> > +{
-> > +    /// Atomic exchange.
-> > +    ///
-> > +    /// # Examples
-> > +    ///
-> > +    /// ```rust
-> > +    /// use kernel::sync::atomic::{Atomic, Acquire, Relaxed};
-> > +    ///
-> > +    /// let x = Atomic::new(42);
-> > +    ///
-> > +    /// assert_eq!(42, x.xchg(52, Acquire));
-> > +    /// assert_eq!(52, x.load(Relaxed));
-> > +    /// ```
-> > +    #[doc(alias("atomic_xchg", "atomic64_xchg"))]
-> > +    #[inline(always)]
-> > +    pub fn xchg<Ordering: All>(&self, v: T, _: Ordering) -> T {
-> 
-> Can we name this `exchange`?
-> 
+On 6/27/25 03:25, Kirill A. Shutemov wrote:
+> So, we want an entry for SLAM?
 
-FYI, in Rust std, this operation is called `swap()`, what's the reason
-of using a name that is neither the Rust convention nor Linux kernel
-convention?
-
-As for naming, the reason I choose xchg() and cmpxchg() is because they
-are the name LKMM uses for a long time, to use another name, we have to
-have a very good reason to do so and I don't see a good reason
-that the other names are better, especially, in our memory model, we use
-xchg() and cmpxchg() a lot, and they are different than Rust version
-where you can specify orderings separately. Naming LKMM xchg()/cmpxchg()
-would cause more confusion I believe.
-
-Same answer for compare_exchange() vs cmpxchg().
-
-> > +        let v = T::into_repr(v);
-> > +        let a = self.as_ptr().cast::<T::Repr>();
-> > +
-> > +        // SAFETY:
-> > +        // - For calling the atomic_xchg*() function:
-> > +        //   - `self.as_ptr()` is a valid pointer, and per the safety requirement of `AllocAtomic`,
-> > +        //      a `*mut T` is a valid `*mut T::Repr`. Therefore `a` is a valid pointer,
-> > +        //   - per the type invariants, the following atomic operation won't cause data races.
-> > +        // - For extra safety requirement of usage on pointers returned by `self.as_ptr():
-> > +        //   - atomic operations are used here.
-> > +        let ret = unsafe {
-> > +            match Ordering::TYPE {
-> > +                OrderingType::Full => T::Repr::atomic_xchg(a, v),
-> > +                OrderingType::Acquire => T::Repr::atomic_xchg_acquire(a, v),
-> > +                OrderingType::Release => T::Repr::atomic_xchg_release(a, v),
-> > +                OrderingType::Relaxed => T::Repr::atomic_xchg_relaxed(a, v),
-> > +            }
-> > +        };
-> > +
-> > +        T::from_repr(ret)
-> > +    }
-> > +
-> > +    /// Atomic compare and exchange.
-> > +    ///
-> > +    /// Compare: The comparison is done via the byte level comparison between the atomic variables
-> > +    /// with the `old` value.
-> > +    ///
-> > +    /// Ordering: When succeeds, provides the corresponding ordering as the `Ordering` type
-> > +    /// parameter indicates, and a failed one doesn't provide any ordering, the read part of a
-> > +    /// failed cmpxchg should be treated as a relaxed read.
-> 
-> This is a bit confusing to me. The operation has a store and a load
-> operation and both can have different orderings (at least in Rust
-> userland) depending on the success/failure of the operation. In
-> userland, I can supply `AcqRel` and `Acquire` to ensure that I always
-> have Acquire semantics on any read and `Release` semantics on any write
-> (which I would think is a common case). How do I do this using your API?
-> 
-
-Usually in kernel that means in a failure case you need to use a barrier
-afterwards, for example:
-
-	if (old != cmpxchg(v, old, new)) {
-		smp_mb();
-		// ^ following memory operations are ordered against.
-	}
-
-> Don't I need `Acquire` semantics on the read in order for
-> `compare_exchange` to give me the correct behavior in this example:
-> 
->     pub struct Foo {
->         data: Atomic<u64>,
->         new: Atomic<bool>,
->         ready: Atomic<bool>,
->     }
-> 
->     impl Foo {
->         pub fn new() -> Self {
->             Self {
->                 data: Atomic::new(0),
->                 new: Atomic::new(false),
->                 ready: Atomic::new(false),
->             }
->         }
-> 
->         pub fn get(&self) -> Option<u64> {
->             if self.new.compare_exchange(true, false, Release).is_ok() {
-
-You should use `Full` if you want AcqRel-like behavior when succeed.
-
->                 let val = self.data.load(Acquire);
->                 self.ready.store(false, Release);
->                 Some(val)
->             } else {
->                 None
->             }
->         }
-> 
->         pub fn set(&self, val: u64) -> Result<(), u64> {
->             if self.ready.compare_exchange(false, true, Release).is_ok() {
-
-Same.
-
-Regards,
-Boqun
-
->                 self.data.store(val, Release);
->                 self.new.store(true, Release);
->             } else {
->                 Err(val)
->             }
->         }
->     }
-> 
-> IIUC, you need `Acquire` ordering on both `compare_exchange` operations'
-> reads for this to work, right? Because if they are relaxed, this could
-> happen:
-> 
->                     Thread 0                    |                    Thread 1
-> ------------------------------------------------|------------------------------------------------
->  get() {                                        | set(42) {
->                                                 |   if ready.cmpxchg(false, true, Rel).is_ok() {
->                                                 |     data.store(42, Rel)
->                                                 |     new.store(true, Rel)
->    if new.cmpxchg(true, false, Rel).is_ok() {   |
->      let val = self.data.load(Acq); // reads 0  |
->      ready.store(false, Rel);                   |
->      Some(val)                                  |
->    }                                            |   }
->  }                                              | }
->  
-> So essentially, the `data.store` operation is not synchronized, because
-> the read on `new` is not `Acquire`.
-> 
-[...]
+SLAM wasn't ever a practical problem anywhere, so I don't think we need
+to do anything on top of what we already did.
