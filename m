@@ -1,120 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551392EBBA8;
-	Fri, 27 Jun 2025 17:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC181DFE1
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751045116; cv=none; b=UQrOeNJXoWkDxMhZHVOJvzoj3ZnxCkTgtU16RqoPNANqRb3eLe1gVgn6a3gwI2lYzezelqAbrwC5GFsy0Fqwncu+5YKebmSXoquYdMfbeNnDbFqgMXfEHChtX/LnnVLyxj0piuZwvMjLkJwBeK1U6erVWZgN4qY20nQCZQIJUuA=
+	t=1751045319; cv=none; b=NnVvLbYW58uShNWqQX/1vW/9AOX31PbAF0jAziCNjawD1muwpbhcuBNuw7u724kOdFO5nh1KVT42H0aETt/b1Vm2nd3RkU73HSyA/BmpdE2lVFNZEMBHh9XJObXgta/QVrRStvIcUadfW8JECDdSwzRDo2GVICfosKGd8D/y80U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751045116; c=relaxed/simple;
-	bh=lH2UPYp6QCoEhr4YOD4G34RicJOUqUNXtxpfpE/H2hQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hX0V6KxvJ9zhWAY348ZJjaJZ+pTyH5T3WTaWIFX/6xTPYnW4r14IoPVJHYwj4sJ2eeySlEwLx42CkOeOe089Pn7qUMk9H7oTzzz8NolRhJk7Mqz8ptiZoVpCHMNA8vsd68GM+6kAm5mskSmyhPEzxl3+gVDuQXi6CgtC+G3wffQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mkF1UUJ/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mkF1UUJ/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD342C4CEF1;
-	Fri, 27 Jun 2025 17:25:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751045116;
-	bh=lH2UPYp6QCoEhr4YOD4G34RicJOUqUNXtxpfpE/H2hQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=mkF1UUJ/jF5LyPnV9B8BJwjRIGHIl8zLQkLQBsrWZKEGb8SBkvLa8jRSNa6qgMQZv
-	 pBIIc0622B0Gw2SQ6vVqwWr6289TmMZxjXrA8ZuvvVzIZhVCUMnvrUrlfjbx7S2d+2
-	 AXYocZpqY0qZ4cr1S1ADPeQtAkLpSFYRyS054D8waAKCBQtXM7w5snKxUdq/J/bWAc
-	 GsCeURDU6QpyBmLMKdN5n8+cWrLRckFu5MeZCXfBXDFkAMZM+jE6/HIzfm6LHdJJhE
-	 6k079+yJOD0zdKdDxb6RqMnUbktSjcbBjN9KoxQR+yJHbShOXQ9kkzSSDort40GUxK
-	 9++ZdvO+uSIrg==
-From: Mark Brown <broonie@kernel.org>
-Date: Fri, 27 Jun 2025 18:20:46 +0100
-Subject: [PATCH 3/3] kselftest/arm64: Add lsfe to the hwcaps test
+	s=arc-20240116; t=1751045319; c=relaxed/simple;
+	bh=+0C2Py53QX3fVfhJen5AoFbcBsazdegSy9P4LgV3ZNY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o2GlRkeCM1oJ9v0vhrvRs20son9Xa8SFL+ApFWselU9Gu+TBYfxZanD/0jeRJVl5R7rSXWVzygyfPuXxsbwOeoSrsggogW0583a2h22Nr5RkbhnjAl7RxQIpXDV//M3dIq4ij/soLEdJT/g8r/bWhvFv98wriIGrx8HL50k9Uf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uVCs3-0005XS-EX; Fri, 27 Jun 2025 19:28:15 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uVCs1-005eW0-2n;
+	Fri, 27 Jun 2025 19:28:13 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uVCs1-003eZ4-2O;
+	Fri, 27 Jun 2025 19:28:13 +0200
+Date: Fri, 27 Jun 2025 19:28:13 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Russ Weight <russ.weight@linux.dev>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Marco Felsch <kernel@pengutronix.de>,
+	Henrik Rydberg <rydberg@bitmath.org>,
+	Danilo Krummrich <dakr@redhat.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] firmware_loader: expand firmware error codes with
+ skip error
+Message-ID: <20250627172813.x2bgp6frsjrzgx7l@pengutronix.de>
+References: <20250529-v6-10-topic-touchscreen-axiom-v2-0-a5edb105a600@pengutronix.de>
+ <20250529-v6-10-topic-touchscreen-axiom-v2-1-a5edb105a600@pengutronix.de>
+ <b5jlh7ngl64aqrm7b2hkpafvfk6rmuyhwshzogxqozpal3owmj@u26s6bpwbax7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250627-arm64-lsfe-v1-3-68351c4bf741@kernel.org>
-References: <20250627-arm64-lsfe-v1-0-68351c4bf741@kernel.org>
-In-Reply-To: <20250627-arm64-lsfe-v1-0-68351c4bf741@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
- Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, 
- linux-kselftest@vger.kernel.org, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-cff91
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1403; i=broonie@kernel.org;
- h=from:subject:message-id; bh=lH2UPYp6QCoEhr4YOD4G34RicJOUqUNXtxpfpE/H2hQ=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoXtPvHdrwxtM6K55h9ibmBPuatpZ0f6ZPAQ+ii
- cvW6CW1ddaJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaF7T7wAKCRAk1otyXVSH
- 0IQKB/0TOvdgLavdQtvO6QYDy5rzRWcJ2bv8jmEwtiA6ZLIXdyI8DSOJnxX6gJP6juqegfqPfTz
- iLvcK7uYQGzTs868wXkYC1LgUVJMX0f3gKSX0wJ6p8cGOduRvD5ZO3MB0ve0CdNP4hgxvaxM2ov
- Mdv05y+jtfzgNxJht4TI3X4PXwstUNqvphKdetij0jZiV/m+t5l6gLmYbkAJEoAz3kf+p0hkT8k
- Z9D17eNlB5ptmsmq13v1Qlnz9ya3zr1irOCD5nTMjkpRLXucuLLcrOCmKiwV0a8T7ZApbNJbXsR
- CHp5ZsrGCMS5LRNT1pH78PzHtRSp4Fpsr4huWOw/79Rkf+LD
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b5jlh7ngl64aqrm7b2hkpafvfk6rmuyhwshzogxqozpal3owmj@u26s6bpwbax7>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-This feature has no traps associated with it so the SIGILL is not reliable.
+On 25-06-04, Russ Weight wrote:
+> On Thu, May 29, 2025 at 12:08:42AM +0200, Marco Felsch wrote:
+> > Add FW_UPLOAD_ERR_SKIP to allow drivers to inform the firmware_loader
+> > framework that the update is not required. This can be the case if the
+> > user provided firmware matches the current running firmware.
+> 
+> The changes below look fine, but the commit message is inconsistent
+> with the actual changes. The commit message should reference
+> FW_UPLOAD_ERR_DUPLICATE instead of FW_UPLOAD_ERR_SKIP.
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/arm64/abi/hwcap.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Argh.. you're right. Will fix this in the v3, thanks.
 
-diff --git a/tools/testing/selftests/arm64/abi/hwcap.c b/tools/testing/selftests/arm64/abi/hwcap.c
-index 35f521e5f41c..9dfca2eb7c41 100644
---- a/tools/testing/selftests/arm64/abi/hwcap.c
-+++ b/tools/testing/selftests/arm64/abi/hwcap.c
-@@ -17,6 +17,8 @@
- #include <asm/sigcontext.h>
- #include <asm/unistd.h>
- 
-+#include <linux/auxvec.h>
-+
- #include "../../kselftest.h"
- 
- #define TESTS_PER_HWCAP 3
-@@ -165,6 +167,18 @@ static void lse128_sigill(void)
- 		     : "cc", "memory");
- }
- 
-+static void lsfe_sigill(void)
-+{
-+	float __attribute__ ((aligned (16))) mem = 0;
-+	register float *memp asm ("x0") = &mem;
-+
-+	/* LDFADD H0, H0, [X0] */
-+	asm volatile(".inst 0x7c600000"
-+		     : "+r" (memp)
-+		     :
-+		     : "cc", "memory");
-+}
-+
- static void lut_sigill(void)
- {
- 	/* LUTI2 V0.16B, { V0.16B }, V[0] */
-@@ -758,6 +772,13 @@ static const struct hwcap_data {
- 		.cpuinfo = "lse128",
- 		.sigill_fn = lse128_sigill,
- 	},
-+	{
-+		.name = "LSFE",
-+		.at_hwcap = AT_HWCAP3,
-+		.hwcap_bit = HWCAP3_LSFE,
-+		.cpuinfo = "lsfe",
-+		.sigill_fn = lsfe_sigill,
-+	},
- 	{
- 		.name = "LUT",
- 		.at_hwcap = AT_HWCAP2,
-
--- 
-2.39.5
-
+> 
+> - Russ
+> 
+> > 
+> > Sync lib/test_firmware.c file accordingly.
+> > 
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > ---
+> >  drivers/base/firmware_loader/sysfs_upload.c | 1 +
+> >  include/linux/firmware.h                    | 2 ++
+> >  lib/test_firmware.c                         | 1 +
+> >  3 files changed, 4 insertions(+)
+> > 
+> > diff --git a/drivers/base/firmware_loader/sysfs_upload.c b/drivers/base/firmware_loader/sysfs_upload.c
+> > index 829270067d1632f92656859fb9143e3fa9635670..0a583a1b3f4fde563257566426d523fbf839b13f 100644
+> > --- a/drivers/base/firmware_loader/sysfs_upload.c
+> > +++ b/drivers/base/firmware_loader/sysfs_upload.c
+> > @@ -28,6 +28,7 @@ static const char * const fw_upload_err_str[] = {
+> >  	[FW_UPLOAD_ERR_RW_ERROR]     = "read-write-error",
+> >  	[FW_UPLOAD_ERR_WEAROUT]	     = "flash-wearout",
+> >  	[FW_UPLOAD_ERR_FW_INVALID]   = "firmware-invalid",
+> > +	[FW_UPLOAD_ERR_DUPLICATE]    = "firmware-duplicate",
+> >  };
+> >  
+> >  static const char *fw_upload_progress(struct device *dev,
+> > diff --git a/include/linux/firmware.h b/include/linux/firmware.h
+> > index aae1b85ffc10e20e9c3c9b6009d26b83efd8cb24..fe7797be4c08cd62cdad9617b8f70095d5e0af2f 100644
+> > --- a/include/linux/firmware.h
+> > +++ b/include/linux/firmware.h
+> > @@ -29,6 +29,7 @@ struct firmware {
+> >   * @FW_UPLOAD_ERR_RW_ERROR: read or write to HW failed, see kernel log
+> >   * @FW_UPLOAD_ERR_WEAROUT: FLASH device is approaching wear-out, wait & retry
+> >   * @FW_UPLOAD_ERR_FW_INVALID: invalid firmware file
+> > + * @FW_UPLOAD_ERR_DUPLICATE: firmware is already up to date (duplicate)
+> >   * @FW_UPLOAD_ERR_MAX: Maximum error code marker
+> >   */
+> >  enum fw_upload_err {
+> > @@ -41,6 +42,7 @@ enum fw_upload_err {
+> >  	FW_UPLOAD_ERR_RW_ERROR,
+> >  	FW_UPLOAD_ERR_WEAROUT,
+> >  	FW_UPLOAD_ERR_FW_INVALID,
+> > +	FW_UPLOAD_ERR_DUPLICATE,
+> >  	FW_UPLOAD_ERR_MAX
+> >  };
+> >  
+> > diff --git a/lib/test_firmware.c b/lib/test_firmware.c
+> > index 211222e63328f970228920f5662ee80cc7f51215..603c3a4b385c849944a695849a1894693234b5eb 100644
+> > --- a/lib/test_firmware.c
+> > +++ b/lib/test_firmware.c
+> > @@ -1133,6 +1133,7 @@ static const char * const fw_upload_err_str[] = {
+> >  	[FW_UPLOAD_ERR_RW_ERROR]     = "read-write-error",
+> >  	[FW_UPLOAD_ERR_WEAROUT]	     = "flash-wearout",
+> >  	[FW_UPLOAD_ERR_FW_INVALID]   = "firmware-invalid",
+> > +	[FW_UPLOAD_ERR_DUPLICATE]    = "firmware-duplicate",
+> >  };
+> >  
+> >  static void upload_err_inject_error(struct test_firmware_upload *tst,
+> > 
+> > -- 
+> > 2.39.5
+> > 
+> 
