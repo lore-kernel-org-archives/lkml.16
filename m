@@ -1,130 +1,149 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2719C2FB
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4092E3A8F7;
+	Fri, 27 Jun 2025 20:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751055332; cv=none; b=fOutprQc/Zhtfcun24cE96GgcXI2rCqcl09Xvw81+zB1Hm47Qk75HkUm8a/YSj+u5R09dxXNH40HuTYN8UzMe+O167pVzE8JlX3gN8aIxSxF2u8q8IHPtRfLrWWmm8IFB4Ntveh8cj0X0uq3C3FC1yCXWlXEdzLBWFb48iPVei4=
+	t=1751055346; cv=none; b=IR+NX1XrsOuk3BYDFfptUMY38SNYELOODh9s9Xvv5+3yhBTKRJ5jLe2kwEAjVzhoIIWr1lBlkj3H+VClhbjtnBWqdgXr9R89LtGsDVnjj9McQblFFftUogNeOuA5A1q3eHnxgRJqz6aGkaAqfONX2hS/EPvAFKiyQpExU8mU/Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751055332; c=relaxed/simple;
-	bh=fhJzl/BU8BwWcrvqa0wNq4MSNWvssLce9yTWXyJlRKw=;
+	s=arc-20240116; t=1751055346; c=relaxed/simple;
+	bh=A1HZdHwLlVd1wktKvcUvDiv1sLcJQsvaROUniDdEirI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K4BBe5uODBH9F0iAHEGP0PjGOM6N3fNpgY4s/a5En9I1QwlGhU6Al81UgP+QdYpzNDxieechuAgYSE9IaIeswZfW20uqBySRj59XR2/8esZsilnCkmFrgBVnfV4KrUuTh86mo7YGxfTE+on1FohiTmd1rVhgsAj20KieXzAwHg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tDoMwArZ; arc=none smtp.client-ip=209.85.167.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=JNx+KoX58a2ynHZ5f1Y5B+yLtd1PYE96f92JT9o3SDqmHSajOxTli8ZKs+xjKo0xgyN25V9n/Rg4L3MeH/1ZzLlXY6D8pltqSBnoP+ICBxJh1q4aNGaEK7C/EEe66ThKa1RiMMqFsOwlPajUNGmkodQmwDiT8/jkv68j7zNwwzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qrHiXih+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tDoMwArZ"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-40791b696a2so833900b6e.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751055330; x=1751660130; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kEIb/b8zfSQ8Wgz/gF2ijAZBGf1xUf7mBAxLOW/TZ2A=;
-        b=tDoMwArZwzY75qeEkmzrbh0/M1AemIoEv9vxKuyqt6zUFUWiekpwdZV0QSv8uAbn31
-         p3c4JpeJ7aZ2xbjch1uOxkD1FF/G5qfujYQZSmMBCKZR/Tv9zrw5Dm7ocNEb3ppBFAyN
-         JVEs53876JVZ68fQrKGOVrV75o1Q2I5Kujg8uQ9QpGGxDBPn5YBnNVEEsH+Hsc4UfODi
-         sptqFg82iP4UemIRstAOl+pPjX/fN10V3EoXowGSoUeFcIYeD1qcL8Egdo9tgh/NkqLB
-         i+u7eaptjTIq5hM6cYHwSmqFmWPaxYeE3atDF9aZz0VbS2aYd/z4OBxar61rEGiNr1xk
-         QVVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751055330; x=1751660130;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kEIb/b8zfSQ8Wgz/gF2ijAZBGf1xUf7mBAxLOW/TZ2A=;
-        b=ugVnP2PNpx8cgSuk/qGk7Cogf5x73wwupsyVUTOFHqLtZX1GBAaDAZ5acQJTsVPsXw
-         P68/0R6CxNs2GLXXmonoBPPy+4mgrlKlL1Cn/p1Lbyiu6TvctJ2zP7fmBxSHBJAENr2v
-         y3ZT/74knSNDkKNbrvmLaveDwYsfp6SzETEfi2A8EsPNcPEjcI6hPNmYrN5ByN0/Y86k
-         n6+pR/T5IObJnN98WDIAkstSwHcNyhiHdZb8I+Is7Yr48ibX7/ixE3udSzkll4z50TQy
-         4rZGMHKfNLU6N7Izhpu7okXG6oV4R0ME/FFSJ78iqmF6pFLIjKGBte0vTZ0VwE9FdNjS
-         rnUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjI9coUFIo3GhJzcJOn5hVMrsLMyszzaRBDRDf98Ce3KpbDsA87pSN/XWhivxsO7Y6XtJZHMeRTpWF8dY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIX+5/6XZ04O1/kY4p23isk59N+ouXdiGAuhL9N4vYK9R0Jhfn
-	gU6k4Uo3potIgbir2yB9D22F5F4OJ4jPe1PhCmdNzC7WEqESga5uzElBEUb1vh8hkv8=
-X-Gm-Gg: ASbGncv/tRkk+czoFGOU3eg8MUHnAhRaCKvJzF8v7+aYLNXaiyLRLPInh9HoyvFLnwJ
-	DVQ+t6rvTkxqs6bOrnLtP8fzudxlSPBvyk2HFGBng+kZ1v+LgvAiAooBXSFoTRPW4zznCc+lMAv
-	uJuWN+GuwiWKngyQ9JOYUtkjsNgOZMpKbWLHty+d00O+jOQjQi5vokc2GsmMAL6fgebKIbx9BQ3
-	l4qzMNJSQEqovkI9RpjVtpmVlpHQo2+ddNkC+vZUcNUWSlqzumHZvnrf86gM2g66XPzQc8ZGtNJ
-	+fIhGOB9b8bsii46ut+Nn9HrwHO2VuEK5Skc4pdpEFKaXxEWLgqT84IoA4NhA/qbqu9WqA==
-X-Google-Smtp-Source: AGHT+IELqMvmlnygIS4B9arBKFzvmzktHr65gCsThSoqSAND4qXrdXRwMi9SILSeCCyt72INteDqqA==
-X-Received: by 2002:a05:6870:3118:b0:2d5:2955:aa6c with SMTP id 586e51a60fabf-2efed72bbd1mr2960606fac.31.1751055329792;
-        Fri, 27 Jun 2025 13:15:29 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:f3a4:7b11:3bf4:5d7b])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-611b85c79e6sm335864eaf.38.2025.06.27.13.15.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 13:15:29 -0700 (PDT)
-Date: Fri, 27 Jun 2025 23:15:27 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Abdalla Ahmad <Abdalla.Ahmad@sesame.org.jo>
-Cc: Dave Penkler <dpenkler@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Michael Rubin <matchstick@neverthere.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Paul =?iso-8859-1?Q?Retourn=E9?= <paul.retourne@orange.fr>,
-	"open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drivers: staging: gpib: minor fixes for some C macros.
-Message-ID: <2cf34cff-717b-41b7-96ba-2041028bc0f0@suswa.mountain>
-References: <20250627193613.552193-1-abdalla.ahmad@sesame.org.jo>
- <4edd380e-6314-4fa0-8051-ac55144e061d@suswa.mountain>
- <AM9PR08MB61145157B28A55649F155F2AA145A@AM9PR08MB6114.eurprd08.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qrHiXih+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5257C4CEE3;
+	Fri, 27 Jun 2025 20:15:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751055344;
+	bh=A1HZdHwLlVd1wktKvcUvDiv1sLcJQsvaROUniDdEirI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qrHiXih+BZdymtaHzgqTsVDdu1FEBGcLRQgLhv1aG2fsboVDOZbVMbynjwTaX3sNA
+	 iWGag08iZ4mv30r/ci/yihUghINwgdiMVZhoZBh3bnyRsXN5OthTcrzdiFHQ41xlmk
+	 2woK0MPlzohsTuK9e63xEhfpn+73hPWvc9IN1IsA3hHrKBOYPv/FvVYXSbyu6VGn8c
+	 i19BkmMr0OojSpgJxRcDIwIPlwJ1tP+2svqvKBr7A8H3B8V5Gr3lGA8x91em23ot1z
+	 K/BMTKv86TfG4EaUgc3t9yudO3Bo4hTMV48TuVsbF7MWaeEADllTHH67D/o+viXmad
+	 hTLcRg4Fpphdw==
+Date: Fri, 27 Jun 2025 15:15:43 -0500
+From: Rob Herring <robh@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-mediatek@lists.infradead.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, matthias.bgg@gmail.com, ulf.hansson@linaro.org,
+	y.oudjana@protonmail.com, fshao@chromium.org, wenst@chromium.org,
+	lihongbo22@huawei.com, mandyjh.liu@mediatek.com, mbrugger@suse.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+	kernel@collabora.com
+Subject: Re: [PATCH v1 01/13] dt-bindings: power: mediatek: Document
+ mediatek,bus-protection
+Message-ID: <20250627201543.GA4171766-robh@kernel.org>
+References: <20250623120154.109429-1-angelogioacchino.delregno@collabora.com>
+ <20250623120154.109429-2-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM9PR08MB61145157B28A55649F155F2AA145A@AM9PR08MB6114.eurprd08.prod.outlook.com>
+In-Reply-To: <20250623120154.109429-2-angelogioacchino.delregno@collabora.com>
 
-On Fri, Jun 27, 2025 at 07:53:21PM +0000, Abdalla Ahmad wrote:
-> Hi
+On Mon, Jun 23, 2025 at 02:01:42PM +0200, AngeloGioacchino Del Regno wrote:
+> Add a new mediatek,bus-protection property in the main power
+> controller node and deprecate the old mediatek,infracfg,
+> mediatek,infracfg-nao and mediatek,smi properties located in
+> the children.
 > 
-> > This breaks the build.
-> Sorry but how is this breaking the build? Putting checkpatch.pl aside, intuitively it makes sense to wrap long macros in parenthesis to avoid compile time errors and runtime bugs...
+> This is done in order to both simplify the power controller
+> nodes and in preparation for adding support for new generation
+> SoCs like MT8196/MT6991 and other variants, which will need
+> to set protection on new busses.
+
+Protection like access controls? We have the access-controller binding 
+for that.
+
 > 
-
-Take a look at how the LINVAL define is used and then try building
-the gpib_bitbang.o file.
-
-$ make drivers/staging/gpib/gpio/gpib_bitbang.o 2>&1 | head -n 30
-  CALL    scripts/checksyscalls.sh
-  DESCEND objtool
-  INSTALL libsubcmd_headers
-  CC      drivers/staging/gpib/gpio/gpib_bitbang.o
-In file included from ./include/linux/printk.h:616,
-                 from ./include/asm-generic/bug.h:28,
-                 from ./arch/x86/include/asm/bug.h:103,
-                 from ./arch/x86/include/asm/alternative.h:9,
-                 from ./arch/x86/include/asm/atomic.h:7,
-                 from ./include/linux/atomic.h:7,
-                 from ./drivers/staging/gpib/include/gpib_types.h:12,
-                 from ./drivers/staging/gpib/include/gpibP.h:12,
-                 from drivers/staging/gpib/gpio/gpib_bitbang.c:56:
-drivers/staging/gpib/gpio/gpib_bitbang.c: In function ‘bb_read’:
-<command-line>: warning: format ‘%d’ expects a matching ‘int’ argument [-Wformat=]
-./include/linux/dynamic_debug.h:224:29: note: in definition of macro ‘__dynamic_func_call_cls’
-  224 |                 func(&id, ##__VA_ARGS__);                       \
-      |                             ^~~~~~~~~~~
-./include/linux/dynamic_debug.h:250:9: note: in expansion of macro ‘_dynamic_func_call_cls’
-  250 |         _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
-      |         ^~~~~~~~~~~~~~~~~~~~~~
-./include/linux/dynamic_debug.h:273:9: note: in expansion of macro ‘_dynamic_func_call’
-  273 |         _dynamic_func_call(fmt, __dynamic_dev_dbg,              \
-      |         ^~~~~~~~~~~~~~~~~~
-./include/linux/dev_printk.h:165:9: note: in expansion of macro ‘dynamic_dev_dbg’
-  165 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
-      |         ^~~~~~~~~~~~~~~
-drivers/staging/gpib/gpio/gpib_bitbang.c:28:21: note: in expansion of macro ‘KBUILD_MODNAME’
-   28 | #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-      |                     ^~~~~~~~~~~~~~
-
-regards,
-dan carpenter
-
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> ---
+>  .../power/mediatek,power-controller.yaml      | 40 +++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml b/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml
+> index 9c7cc632abee..2530c873bb3c 100644
+> --- a/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml
+> +++ b/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml
+> @@ -44,6 +44,18 @@ properties:
+>    '#size-cells':
+>      const: 0
+>  
+> +  mediatek,bus-protection:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description:
+> +      A number of phandles to external blocks to set and clear the required
+> +      bits to enable or disable bus protection, necessary to avoid any bus
+> +      faults while enabling or disabling a power domain.
+> +      For example, this may hold phandles to INFRACFG and SMI.
+> +    minItems: 1
+> +    maxItems: 3
+> +    items:
+> +      maxItems: 1
+> +
+>  patternProperties:
+>    "^power-domain@[0-9a-f]+$":
+>      $ref: "#/$defs/power-domain-node"
+> @@ -123,14 +135,17 @@ $defs:
+>        mediatek,infracfg:
+>          $ref: /schemas/types.yaml#/definitions/phandle
+>          description: phandle to the device containing the INFRACFG register range.
+> +        deprecated: true
+>  
+>        mediatek,infracfg-nao:
+>          $ref: /schemas/types.yaml#/definitions/phandle
+>          description: phandle to the device containing the INFRACFG-NAO register range.
+> +        deprecated: true
+>  
+>        mediatek,smi:
+>          $ref: /schemas/types.yaml#/definitions/phandle
+>          description: phandle to the device containing the SMI register range.
+> +        deprecated: true
+>  
+>      required:
+>        - reg
+> @@ -138,6 +153,31 @@ $defs:
+>  required:
+>    - compatible
+>  
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - mediatek,mt8183-power-controller
+> +    then:
+> +      properties:
+> +        mediatek,bus-protection:
+> +          minItems: 2
+> +          maxItems: 2
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - mediatek,mt8365-power-controller
+> +    then:
+> +      properties:
+> +        mediatek,bus-protection:
+> +          minItems: 3
+> +          maxItems: 3
+> +
+>  additionalProperties: false
+>  
+>  examples:
+> -- 
+> 2.49.0
+> 
