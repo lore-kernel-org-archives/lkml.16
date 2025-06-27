@@ -1,63 +1,106 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCADB2980BF
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D087224893;
+	Fri, 27 Jun 2025 10:55:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751021687; cv=none; b=A1YMgViR39AOiUc3xE6qKiR4nV8dS1jH46W0oS4R3ZKn2KuyLkwW7S3NVmBmuHTAwEH51vTCTH7j2xT5dlkYjshUvJ4gDOHwDhn3yNYjVd8MLKkVJ9B7csJi0AMktobk3SeLcBboOMWNSQHgd0Mc2hwDbIc5kODYeECiOQWerjw=
+	t=1751021738; cv=none; b=r0AUviF/TONEWY5B6+1WXCytH0lbLqihVxhdOhs55LdflaT/1DKkOrAlSE3rtDK3cutpC0KKDn4+NCu5frfMBi+3jwLD/tLxXhyLdHKro922sik4Tm9gQrUBxc4a26GKC7AxF2rU3V/aHP/uHEqVT5MZx3SOodltR32wfi6nAjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751021687; c=relaxed/simple;
-	bh=Ek+lA1SX5gipBxgIfPVabXXslyult+iMQ0m7IDgHvtA=;
+	s=arc-20240116; t=1751021738; c=relaxed/simple;
+	bh=w8uGM8V3BeOaxaupPf60FQSG2Cnb6F/+ZSO18HXNtkc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HMnB8sqUN8xS1ofA41Ng0mgilclg047xjTTeJnIpXyfN7yQIYR/TiranRX5Gx0Qx8HqNSu6yFXTlT7DmX+YvDH/eHJJ3j5gwqk6e+hXy5cy0u4KlFhaZSLaYgLzqDC0POGJBqD2TMvcNQuxcK+aVMNzr9oeU1LpQrIV8V3tlotA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=H25St+d9; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sJeTC5dS56OCuCxu5/Cvcdg6gEmmv6eWoui5xuby8C/DJx57um7ptW96FQbbUYmARMV++KGOKSLKrf1pdxqo9C0g6cS9i5SSi3g1SXSsdqV63eNL7/Eq+ibmPfKglU/mbF5EWjW0v2VSelvp9VU/Jo9gqaFlJqOKPAZuDIUGgpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fj360n+b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="H25St+d9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=/VkP
-	h9CtKvJ+8x44vX4RgQiDyyc1lUXyDR2rjHDL+Zo=; b=H25St+d9xO6yD4YGBtxY
-	cB3vQ/If8IPj4Vpp7+JlEHWYGJ9/dVCAP1TyX5mB4bI2FblUvSJv6I7cSoGaK3XN
-	OBPChSVjJ6P4xqCRlDIjVAEJMyhtGKdhedPLbcGJhmw7BeH2C8hDCwFYz4V/dyry
-	XUPOb1XmfAYDbcI0gd1/LmHNQ/3W9utyfvesZyJwCi1V8tvi6mQS2GSep10g8N2Y
-	qH5TrQtrF+lDhqBlKSId2CMToz6731wF5duFfsTYi6KNBzey6s93Fcq9WMGJnvi/
-	SlE0ttxT+i4GV2jHRwKayiN1mtZl0RBD2AoINW5K2Z8OKQTb3IFY2QydElj0QzK2
-	cw==
-Received: (qmail 1435052 invoked from network); 27 Jun 2025 12:54:42 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 27 Jun 2025 12:54:42 +0200
-X-UD-Smtp-Session: l3s3148p1@kS1hgYs4os4gAwDPXzuUAOCQSK0rM+sw
-Date: Fri, 27 Jun 2025 12:54:42 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de,
-	Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH] i2c: Use dev_fwnode()
-Message-ID: <aF54cmMncmbtU3Qb@shikoro>
-References: <20250611104348.192092-1-jirislaby@kernel.org>
- <20250611104348.192092-8-jirislaby@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fj360n+b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB677C4CEE3;
+	Fri, 27 Jun 2025 10:55:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751021738;
+	bh=w8uGM8V3BeOaxaupPf60FQSG2Cnb6F/+ZSO18HXNtkc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fj360n+blrE4iYL1vzNpEIzzok3rcXkLm2AN1scyQgysvlldpZEhZHz9kA9cud+rM
+	 AYJulATI+pF8PxE1Xce9WqZiS6v2SnyOrJ60B25q3bSU0iBQg5jfDiVQnRm1QdXZmM
+	 X7ibljFytuz/nrxp9j9HodGkOSUks8ovvY1kKYQ7jwBwugNuuzec9nGQkvgqeShwfz
+	 qQ0NcGnoeycpOX6wjlauz/8FFfxHk42dRhSua98b8+t4idIktSr9Wge6Twg8NQ0jjX
+	 ZpFOxChEOHm29VEUyu0GsfpupQtBL70UERgF8DxIyDCGPDWRPjeDdIt9F46tHoHqsD
+	 xxprjRGnLyAog==
+Date: Fri, 27 Jun 2025 11:55:34 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/arm64: Prevent build warnings from
+ -Wmaybe-uninitialized
+Message-ID: <aF54phWq1IGlaphz@finisterre.sirena.org.uk>
+References: <20250625020138.3777454-1-anshuman.khandual@arm.com>
+ <dd3dee5a-b030-4658-8cef-c777928368d4@sirena.org.uk>
+ <af5cbd48-6312-481d-8e91-7739612493c1@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="0uBnPjIGKotRgbPj"
+Content-Disposition: inline
+In-Reply-To: <af5cbd48-6312-481d-8e91-7739612493c1@arm.com>
+X-Cookie: Do not cut switchbacks.
+
+
+--0uBnPjIGKotRgbPj
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611104348.192092-8-jirislaby@kernel.org>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 11, 2025 at 12:43:36PM +0200, Jiri Slaby (SUSE) wrote:
-> irq_domain_create_simple() takes fwnode as the first argument. It can be
-> extracted from the struct device using dev_fwnode() helper instead of
-> using of_node with of_fwnode_handle().
-> 
-> So use the dev_fwnode() helper.
-> 
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Cc: Peter Rosin <peda@axentia.se>
-> Cc: linux-i2c@vger.kernel.org
+On Fri, Jun 27, 2025 at 04:15:09PM +0530, Anshuman Khandual wrote:
+> On 25/06/25 3:54 PM, Mark Brown wrote:
 
-Added "mux: pca954x:" to the header and applied to for-next, thanks!
+> >> -	int status;
+> >> +	int status =3D 0;
 
+> > This will shut the warnings up, but it's a bit of a heavy hammer that
+> > means that the warning can never trigger warnings for that variable
+> > being unused.  Is it possible to fix this by updating the control flow
+> > such that the compiler can tell that the initialisation follows the use?
+
+> The problem might not exist in reality. In the test function test_fork()
+> in the file tools/testing/selftests/arm64/gcs/basic-gcs.c there does not
+> seem to be a path where WIFEXITED(status) might get called when 'status'
+> has not been initialized as there is a preceding waitpid() which would
+> ensure 'status' gets set. Similar scenarios are present in fork_test_c()
+> and write_fork_read() as well.=20
+
+Yes, it's a fairly common false positive pattern (in this case it'll be
+that the compiler can't understand the constraints with pulling things
+out of the exit status).
+
+> But the compiler still throws these build warnings. Seems to be false
+> positives and this fix just works around that.
+
+Right, the problem is that it works around it with a big hammer that
+just shuts the warning up completely meaning that if we do cause issues
+in the future then the compiler won't be able to tell us about them.  It
+would be better to suppess it by changing the control flow such that the
+compiler can follow it.
+
+--0uBnPjIGKotRgbPj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmheeKAACgkQJNaLcl1U
+h9BoAAf/cLJ4iO8ZRetLgVRyylvU3LbHGcwMSRactvuK8r9ThRrcNDQIDZWvFoVe
++QensBvEaIO8IrQCbE0FpKQrE199O7hwkT3Lv56V2uMNlXCm8B+Usm+iPLdn8nRO
+8GgVuezQqAJxkjfUA1LBcmblqVikDLtnIGT863TEqd4Wexnliei+Xd/jL5WJJis6
+s1qr7wo83A2RIuMPNPzdEJMiwhkSNRQbenLCXeXiNt754TyQBTnw8BhGf4Uyy6E0
+0sNtuHLmxtxiFqSXJQPDotg04tyrJinM6GlHDjHmRlyDopBKRSaQTZwQHclas/oK
+0klJ3MGVJSlx89Bj/Wyfucqhm6ZEsQ==
+=/LTI
+-----END PGP SIGNATURE-----
+
+--0uBnPjIGKotRgbPj--
