@@ -1,212 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44F82F1FDF
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2B2294A11;
+	Fri, 27 Jun 2025 13:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751031272; cv=none; b=YtRkeswvV5SdHS8fezxShuUE1aj0rJMVXzcKs4be08OGcl9FA20Q/zHmp3hJH1fB1CBVePtWh1H4GkI3YLV4vzcBi/W908g1QLMNZcWo8TZWrK2pjZTl9w8F08vn+qx/r+VmC6eW214Ur4xligYQ41PlsJ8AcbYGKYyV8djfVjU=
+	t=1751031272; cv=none; b=gNxoOmHHXVRcHT0qWAx1YH4UfCbYOniTLg8c8VXJzkDVaK4p+dvAYILbyggNqMmxWIGiX+zWw1RlYbK+dYgk/F+A2BlLsqDtgVnsOuVFQnqiyf7YI6zhiG68dOy6kGFuGCaG9zhL8Qv2YY36k7XNtZRIX2PUMAm0Z8wJJF4mqHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751031272; c=relaxed/simple;
-	bh=QRg/Zei1BexxRcPkF9RqYWSAq0V6f/MrUnmF+rZpc/M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QFBxB4OTjGeDS7c4IQ8iXqF20gS1mxDZ79tWuyliYuLHDjg4puBC5W4X3HKfFhqBN3Kk6NEe3+cmJLfmTICMLotItg4Hu7xPhlCDjFJQPflSMPvV5bXQPOXv2ncd2XlkJCQxUYNCYCwSi/dNU1TMx2mdKK0uTt8zlXiuAQl2fBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QIpIBwPI; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=IdTDvFP8y9HaGTCvvR1/VaHuRyW7QodsgF7bM8TCSI0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HaS+wc5JkZOe2me+Z7LcxIIMGnf4Jv+0umGTRNzsyrNRgCFZPrWXkJJPcVz50Qck1Zi/SFrdmdE+VDfxCFk1D8qBB94MjLKLgm3/gaZJrGYUoIxDJWbC1sYnCBp6iCMQ2jyX0JzT1P/Ze5sdeGDJESG3XUAqpD8UfUeIKoRGNW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGV9S0Du; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QIpIBwPI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751031271; x=1782567271;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=QRg/Zei1BexxRcPkF9RqYWSAq0V6f/MrUnmF+rZpc/M=;
-  b=QIpIBwPI4HCQeYaa1gOoUJVpp+T1nqM04qTuFshGrdwY6qfy7notnyJU
-   gaUPd23iniZD9j2cbljmI7QsF/NNDJAU6fgogXyIvKiVHyZrUg+txX+08
-   d5F4+dM/MAIYVnkGeVdRlPHrI2PPCwv0xfiEHZHbqJP0IBeDtZsZ9RGkW
-   FvUaip/b2od7YsO5iG271m44A1YN1f/pBkeke3jXTSbTjNrYrpO5131RD
-   zIyUsJ96YGlnsioScPEnDgSynxviht4Dc/ydtQKX/QzJK78JKxVLb+Klv
-   hG2jY2lwZICniLakprmcfOXNOaZgw5ovScW+95GHUrad2TKhbgWb0FXEN
-   g==;
-X-CSE-ConnectionGUID: rNGMBxYzQ2SZA6ZCY3tpQA==
-X-CSE-MsgGUID: wZmRxwDhQIqElRu7Qa99WA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="64699125"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="64699125"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 06:34:30 -0700
-X-CSE-ConnectionGUID: QqtRsua5Tiy/zII1uD/BDA==
-X-CSE-MsgGUID: GFy12A7zRD2T6QbRq2kmOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="190000355"
-Received: from klitkey1-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.146])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 06:34:26 -0700
-From: Jani Nikula <jani.nikula@intel.com>
-To: Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc: intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org, Imre
- Deak <imre.deak@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>,
- Matt Wagantall <mattw@codeaurora.org>, Dejin Zheng
- <zhengdejin5@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 18/18] drm/i915/ddi: prefer read_poll_timeout() over
- readx_poll_timeout()
-In-Reply-To: <aF6UOCLdO0fGHGA9@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <cover.1751023767.git.jani.nikula@intel.com>
- <59bcc15dd4debf00ee0c7b430a3b701462ac9de7.1751023767.git.jani.nikula@intel.com>
- <aF6UOCLdO0fGHGA9@intel.com>
-Date: Fri, 27 Jun 2025 16:34:23 +0300
-Message-ID: <f922ec0a42855e17228d3f22d7291b389abe2df0@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGV9S0Du"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20E84C4AF09;
+	Fri, 27 Jun 2025 13:34:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751031272;
+	bh=IdTDvFP8y9HaGTCvvR1/VaHuRyW7QodsgF7bM8TCSI0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dGV9S0DuN0PMGbTcSCHn0V2FGwVDGdhEXR3I4FUJ9/YySKuhAQSzKWPC5ArWakjbs
+	 XMCzbvUTLK5/R4eWuNHhnTwGYwtNaTvcvZbW+yOcOodJ7GCu0IPv3sjktwFI61jyAF
+	 lTQ1sTzZOWVnU/Z1TE+0I0WhZAqmS/cmZhnI+E1OFdwbY3JnZ6CdPRijk0ixaTUovH
+	 d2cDv6ytpRwCYMhPVUxh4+5zaK2odYUEDjwzn6Bh8ltMFRnKzp9MEgNZioFt8bh2tY
+	 KYP7clxaiDJN2XrmKDUc/aMiPoebM6CREcwsnP0YOgS3Ous7gPnpoqOUXsZni2JYii
+	 AFtzOAC3SJMJQ==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-60768f080d8so3820707a12.1;
+        Fri, 27 Jun 2025 06:34:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUsM2TJeCdXlaU1Fnb+0wmEG9C8FPSwvJGpc7CY5F0SiKUEIptFpF4e/Sf9HI807m/9qKSA4eNSc1F9@vger.kernel.org, AJvYcCVxPllmP9ne0g6s/6Lsc97a2zjxQsW1WkZgfqVECjxinFBuargabvaQoRPqMKjN7irD/TgE7CWtm6pBWywi@vger.kernel.org, AJvYcCXMOZYFfQjZ6suYXUsaoW8mMkUXqWXOksJ4GvYbTawE2IBSRRYIAwbZ3Otyn6qFCeSm0JTWwPRHqtSYLA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZapbGPiLWC0AQ46P38+p6fD00hRsS/sspYkPJ/BZxRKUT1KED
+	HQA9IXwhiHFQnngKmBwxLKFyB14KWfbr5EAuQ+DT81HP4qI1StdolYALycc0+YGf6GOM+D4WmIt
+	VOhP705aXn+aFFEbqcyyHpC5Fquwu1w==
+X-Google-Smtp-Source: AGHT+IEVRFNBFlTP6R9fUrxtJFc+ywLiUb4Q+PsDVjgttF7BLiyvAKx8hYh9X9Oqt+d5yA8ADVKHtkuR4NjvhsGbj6E=
+X-Received: by 2002:a17:907:7f14:b0:ae0:c561:b806 with SMTP id
+ a640c23a62f3a-ae3500f276fmr296866566b.37.1751031270546; Fri, 27 Jun 2025
+ 06:34:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250625085715.889837-1-daniel.lezcano@linaro.org>
+In-Reply-To: <20250625085715.889837-1-daniel.lezcano@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 27 Jun 2025 08:34:18 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLNQ729cwSEUnk5bNMjhJR7WTqcPPh1uL4suN1GhNhRMw@mail.gmail.com>
+X-Gm-Features: Ac12FXxw2NuGvxwtqORXKtaK75DRC2OKF-_MV83Pl275d2zGx8F2rQx8EOkHjI8
+Message-ID: <CAL_JsqLNQ729cwSEUnk5bNMjhJR7WTqcPPh1uL4suN1GhNhRMw@mail.gmail.com>
+Subject: Re: [PATCH RFC] timer: of: Create a platform_device before the
+ framework is initialized
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	lorenzo.pieralisi@linaro.org, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Arnd Bergmann <arnd@arndb.de>, John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, 
+	"open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 27 Jun 2025, Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com=
-> wrote:
-> On Fri, Jun 27, 2025 at 02:36:32PM +0300, Jani Nikula wrote:
->> Unify on using read_poll_timeout() throughout instead of mixing with
->> readx_poll_timeout(). While the latter can be ever so slightly simpler,
->> they are both complicated enough that it's better to unify on one
->> approach only.
->>=20
->> While at it, better separate the handling of error returns from
->> drm_dp_dpcd_readb() and the actual status byte. This is best achieved by
->> inlining the read_fec_detected_status() function.
->>=20
->> Cc: Imre Deak <imre.deak@intel.com>
->> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
->> ---
->>  drivers/gpu/drm/i915/display/intel_ddi.c | 33 +++++++++---------------
->>  1 file changed, 12 insertions(+), 21 deletions(-)
->>=20
->> diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/=
-i915/display/intel_ddi.c
->> index 0405396c7750..fc4587311607 100644
->> --- a/drivers/gpu/drm/i915/display/intel_ddi.c
->> +++ b/drivers/gpu/drm/i915/display/intel_ddi.c
->> @@ -2339,34 +2339,25 @@ static void intel_dp_sink_set_fec_ready(struct i=
-ntel_dp *intel_dp,
->>  		drm_dbg_kms(display->drm, "Failed to clear FEC detected flags\n");
->>  }
->>=20=20
->> -static int read_fec_detected_status(struct drm_dp_aux *aux)
->> -{
->> -	int ret;
->> -	u8 status;
->> -
->> -	ret =3D drm_dp_dpcd_readb(aux, DP_FEC_STATUS, &status);
->> -	if (ret < 0)
->> -		return ret;
->> -
->> -	return status;
->> -}
->> -
->>  static int wait_for_fec_detected(struct drm_dp_aux *aux, bool enabled)
->>  {
->>  	struct intel_display *display =3D to_intel_display(aux->drm_dev);
->>  	int mask =3D enabled ? DP_FEC_DECODE_EN_DETECTED : DP_FEC_DECODE_DIS_D=
-ETECTED;
->> -	int status;
->> -	int err;
->> +	u8 status =3D 0;
->> +	int ret, err;
->>=20=20
->> -	err =3D readx_poll_timeout(read_fec_detected_status, aux, status,
->> -				 status & mask || status < 0,
->> -				 10000, 200000);
->> +	ret =3D read_poll_timeout(drm_dp_dpcd_readb, err,
->> +				err || (status & mask),
->> +				10 * 1000, 200 * 1000, false,
->> +				aux, DP_FEC_STATUS, &status);
+On Wed, Jun 25, 2025 at 3:57=E2=80=AFAM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
 >
-> I think I hate these macros. It's very hard to tell from this
-> soup what is actually being done here.
-
-The thing is, I hate __wait_for(), wait_for(), wait_for_us(),
-wait_for_atomic_us(), and wait_for_atomic() even more.
-
-It's also very hard to figure out what is actually going on with
-them. The timeouts are arbitrarily either ms or us. wait_for_us() is
-atomic depending on the timeout. __wait_for() Wmax parameter actually
-isn't the max sleep, it's 2*Wmax-2. Some of them have exponentially
-growing sleeps, while some arbitrarily don't.
-
-It's a fscking mess, and people randomly choose whichever version with
-no idea what's actually going on behind the scenes.
-
-> The 'val', 'op', and 'args' look very disconnected here even though
-> they are always part of the same thing. Is there a reason they can't
-> just be a single 'op' parameter like we have in wait_for() so you can
-> actually see the code?
+> In the context of the time keeping and the timers, some platforms have
+> timers which need to be initialized very early. It is the case of the
+> ARM platform which do not have the architected timers.
 >
-> Ie.
-> read_poll_timeout(err =3D drm_dp_dpcd_readb(aux, DP_FEC_STATUS, &status),
-> 		  err || (status & mask),
->                   10 * 1000, 200 * 1000, false);
-> ?
-
-Internally the macro has:
-
-#define read_poll_timeout(op, val, cond, sleep_us, timeout_us, \
-				sleep_before_read, args...) \
-
-...
-
-		(val) =3D op(args); \
-
-So you do need to provide an lvalue val, and you need to be able to add
-() after op. I think GCC allows not passing varargs. IOW you'd need to
-implement another macro (which could be used to implement the existing
-one, but not the other way round).
-
-I'm really not enthusiastic about blocking this series waiting on that
-kind of refactoring in iopoll.h which might happen, or might not,
-considering there's no active maintainer for iopoll.h.
-
-So yeah, the interface isn't great, and I'm not claiming it is, but it
-is *one* *single* *documented* *interface* that's used across the
-kernel. On the whole, warts and all, I think it's still much better than
-what we currently have. And it breaks the dependency on i915_utils.h.
-
-I've carefully tried to do the line breaks so that it's always:
-
-        read_poll_timeout(op, val,
-                          cond,
-                          sleep_us, timeout_us, sleep_before_read,
-                          args...);
-
-I think that helps a bit.
-
-
-BR,
-Jani.
-
-
+> The macro TIMER_OF_DECLARE adds an entry in the timer init functions
+> array at compile time and the function timer_probe is called from the
+> timer_init() function in kernel/time.c
 >
->>=20=20
->> -	if (err || status < 0) {
->> +	/* Either can be non-zero, but not both */
->> +	ret =3D ret ?: err;
->> +	if (ret) {
->>  		drm_dbg_kms(display->drm,
->> -			    "Failed waiting for FEC %s to get detected: %d (status %d)\n",
->> -			    str_enabled_disabled(enabled), err, status);
->> -		return err ? err : status;
->> +			    "Failed waiting for FEC %s to get detected: %d (status 0x%02x)\n=
-",
->> +			    str_enabled_disabled(enabled), ret, status);
->> +		return ret;
->>  	}
->>=20=20
->>  	return 0;
->> --=20
->> 2.39.5
+> This array contains a t-uple with the init function and the compatible
+> string.
+>
+> The init function has a device node pointer parameter.
+>
+> The timer_probe() function browses the of nodes and find the ones
+> matching the compatible string given when using the TIMER_OF_DECLARE
+> macro. It then calls the init function with the device node as a
+> pointer.
+>
+> But there are some platforms where there are multiple timers like the
+> ARM64 with the architected timers. Those are always initialized very
+> early and the other timers can be initialized later.
+>
+> For this reason we find timer drivers with the platform_driver
+> incarnation. Consequently their init functions are different, they
+> have a platform_device pointer parameter and rely on the devm_
+> function for rollbacking.
+>
+> To summarize, we have:
+>  - TIMER_OF_DECLARE with init function prototype:
+>    int (*init)(struct device_node *np);
+>
+>  - module_platform_driver (and variant) with the probe function
+>    prototype:
+>    int (*init)(struct platform_device *pdev);
+>
+> The current situation with the timers is the following:
+>
+>  - Two platforms can have the same timer hardware, hence the same
+>    driver but one without alternate timers and the other with multiple
+>    timers. For example, the Exynos platform has only the Exynos MCT on
+>    ARM but has the architeched timers in addition on the ARM64.
+>
+>  - The timer drivers can be modules now which was not the case until
+>    recently. TIMER_OF_DECLARE do not allow the build as a module.
+>
+> It results in duplicate init functions (one with rollback and one with
+> devm_) and different way to declare the driver (TIMER_OF_DECLARE and
+> module_platform_driver).
+>
+> This proposed change is to unify the prototyping of the init functions
+> to receive a platform_device pointer as parameter. Consequently, it
+> will allow a smoother and nicer module conversion and a huge cleanup
+> of the init functions by removing all the rollback code from all the
+> timer drivers. It introduces a TIMER_OF_DECLARE_PDEV macro.
+>
+> If the macro is used a platform_device is manually allocated and
+> initialized with the needed information for the probe
+> function. Otherwise module_platform_driver can be use instead with the
+> same probe function without the timer_probe() initialization.
+>
+> I don't have an expert knowledge of the platform_device internal
+> subtilitie so I'm not sure if this approach is valid. However, it has
+> been tested on a Rockchip board with the "rockchip,rk3288-timer" and
+> verified the macro and the devm_ rollback work correctly.
 
---=20
-Jani Nikula, Intel
+Have you looked at the SH "early_platform_driver"? How does this
+compare? IIRC, that used to be generally available, but has been
+pushed into SH since that was the only arch using it and no one likes
+it.
+
+Rob
