@@ -1,74 +1,81 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5534226D4C7;
-	Fri, 27 Jun 2025 10:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from techbitestudio.com (techbitestudio.com [75.119.147.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5328E2C1A2;
+	Fri, 27 Jun 2025 10:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=75.119.147.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751021120; cv=none; b=jOPw3eQhvG2e+HoxH2Gd6YEXwAobyfD796Hrzg3LUFJXrHPAkKsKbQGwOfh2zMtYPOafE0PGPH3XD4j0gVCTkONOzoFN+FwdyWZj9HB7pO0FjqJyaULBEJ4OWgUmEbNaeaC6ILsbrtWAE2y8wcgo219bq3fAxYg4dOUBoOMsBg0=
+	t=1751021141; cv=none; b=l66bGhLISO/C1JSTYrW2kafx9Gz+Fd+abQH7s0FAAKpdcjCatQhDl9xQHSuqpEFr0nQL1HanfQXpSeSzMk6vQycohI2/nx/XhnyXlaZWOs0T61HdwtqsbMBTB3cFxuCy4eu2yRVBAM/29NY+2I7o7svSbiplVKNEd7ql5PB3CWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751021120; c=relaxed/simple;
-	bh=rOC3ZN61YB87VOjCKjWidgsmHChsG4gpfO2vqW9HwGM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YS8axdIdm/Thpc6nCxxMhjwgtPRH0ZgequvY4x5V42LRTw7GUSZXzoTHxhsLtwNUJkq+TakeABnOUcQvIF5ujsWJaNbHeJL4mZIv/WXJEz8tTylCvkqVI/F5H33o1WGsi9YS7ydlHY3YPUzH0xwIRiq99UJaISVHybjrEXOwnpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D31A1A00;
-	Fri, 27 Jun 2025 03:45:00 -0700 (PDT)
-Received: from [10.163.36.129] (unknown [10.163.36.129])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A64A3F58B;
-	Fri, 27 Jun 2025 03:45:14 -0700 (PDT)
-Message-ID: <af5cbd48-6312-481d-8e91-7739612493c1@arm.com>
-Date: Fri, 27 Jun 2025 16:15:09 +0530
+	s=arc-20240116; t=1751021141; c=relaxed/simple;
+	bh=bb7T5g653eHTADZB4mZwhNRfpFKwCangLk8Efqyd0gg=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=nZ4XZXh30ESV+DcVQg/IiKgk2MMdunxM7Hifmdxrta92ywgQYdE81dTQYAMeODaEFDdYPMAlYDDKnPFTe/FdaZcQwe7r+ukmzB3MS6kuGkm7Ad1iENe3atR6c73yQNp6gY61SFaIHxOjjOW34seQcos6UxNTzzxzWnKCtQc5Y4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kenip.in; spf=pass smtp.mailfrom=kenip.in; dkim=pass (1024-bit key) header.d=kenip.in header.i=@kenip.in header.b=YEHYCuqj; arc=none smtp.client-ip=75.119.147.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kenip.in
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kenip.in
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=kenip.in header.i=@kenip.in header.b="YEHYCuqj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kenip.in;
+	 s=mail; h=Content-Transfer-Encoding:Content-Type:Message-ID:References:
+	In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=vqrgS0UqgBzLa2CIHyVnbuPfpxmfPQydTgYW5Z9NGyM=; b=YEHYCuqjtngyjK1TvgUs5LPy3t
+	xsvxMAGB/1gTu13bSCMfo+ugs/VSxuJcp5NyIYqynegcl8o54+l9UfHvQ3t+cOCQfnOp/lY5qmwD8
+	qKm+sdsAYjUQqIeudRnvNp8MmjEaGvud2Kvpcfcw5MAR6tXVHtJs3eOuEkvvwhD9Lhc4=;
+Received: from localhost ([127.0.0.1] helo=kenip.in)
+	by techbitestudio.com with esmtpa (Exim 4.93)
+	(envelope-from <siddhartha@kenip.in>)
+	id 1uV6aO-0004ff-9l; Fri, 27 Jun 2025 16:15:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/arm64: Prevent build warnings from
- -Wmaybe-uninitialized
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250625020138.3777454-1-anshuman.khandual@arm.com>
- <dd3dee5a-b030-4658-8cef-c777928368d4@sirena.org.uk>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <dd3dee5a-b030-4658-8cef-c777928368d4@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
+Date: Fri, 27 Jun 2025 16:15:36 +0530
+From: siddhartha@kenip.in
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, mgorman@suse.de
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH=5D_mm=3A_limit_THP_alignment_=E2=80=93_?=
+ =?UTF-8?Q?performance_gain_observed_in_AI_inference_workloads?=
+In-Reply-To: <28338f055b3c9afa8b69ff6f05ea20ed@kenip.in>
+References: <28338f055b3c9afa8b69ff6f05ea20ed@kenip.in>
+Message-ID: <d391b2ddcb4e69251c3044d7e2f36f87@kenip.in>
+X-Sender: siddhartha@kenip.in
+X-Priority: 1 (Highest)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 25/06/25 3:54 PM, Mark Brown wrote:
-> On Wed, Jun 25, 2025 at 03:01:38AM +0100, Anshuman Khandual wrote:
+> Hi all,
 > 
->> @@ -96,7 +96,7 @@ static int write_sleep_read(void)
->>  static int write_fork_read(void)
->>  {
->>  	pid_t newpid, waiting, oldpid;
->> -	int status;
->> +	int status = 0;
->>  
->>  	set_tpidr2(getpid());
->>  
+> I wanted to share validation data from a Hugging Face-based AI
+> inferencing workload,
+> which was significantly impacted by the THP alignment logic introduced
+> in commit efa7df3e3bb5.
 > 
-> This will shut the warnings up, but it's a bit of a heavy hammer that
-> means that the warning can never trigger warnings for that variable
-> being unused.  Is it possible to fix this by updating the control flow
-> such that the compiler can tell that the initialisation follows the use?
-
-The problem might not exist in reality. In the test function test_fork()
-in the file tools/testing/selftests/arm64/gcs/basic-gcs.c there does not
-seem to be a path where WIFEXITED(status) might get called when 'status'
-has not been initialized as there is a preceding waitpid() which would
-ensure 'status' gets set. Similar scenarios are present in fork_test_c()
-and write_fork_read() as well. 
-
-But the compiler still throws these build warnings. Seems to be false
-positives and this fix just works around that.
-
+> Using transformer models with dynamic input lengths on Intel Xeon 
+> (Cooper Lake),
+> we observed up to a 3200% throughput improvement after applying the
+> patch from Oct 2024:
+> 
+>   mm: limit THP alignment of anonymous mappings to PMD-aligned sizes
+> 
+> Metrics:
+> - Model: BERT-base
+> - Inference engine: Transformers + ONNX Runtime
+> - Kernel: 6.6 vs patched 6.6.8
+> - Batch size: 8-32, input length: 64-512 tokens
+> - Metric: inference throughput (samples/sec)
+> 
+> Thanks for the fix -- this change had real impact on a
+> production-relevant workload.
+> 
+> Best Regards,
+> Siddhartha Sharma
+> ISV @ Kenip
+> Solution Link:
+> https://www.intel.com/content/www/us/en/partner/showcase/offering/a5bHo00000045YUIAY/deadlock-clearance.html
