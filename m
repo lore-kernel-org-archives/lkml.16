@@ -1,100 +1,99 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D03D171C9
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653EF1B3925
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751039132; cv=none; b=To+BTIA0Nx8xgDzYzU/phYvZnUthyzdo6H5T9Z7NmcFKGNCZToEDNAI4Mr+39Tey7e1pTWXOtM2zD1GW8zdMv0W+ZhSSh6WZ+G+YeX+kX/0dNVsnA2jwvbiQkyIIXEsRbhXwsBF5Y4jP4Kg4XMxkGE0sW+smEqz5UQ83gXPAugg=
+	t=1751039162; cv=none; b=WM1AE2Zj8SvSS1xfT5baiBiv2zFBQkxb3ZTr5TB+R7/kvpM3ufg+mUHR+UUT3fdQuD9l7OIDyv9Ycq6zah8iygO1yeZuf7GOeMKzywTVGoe5JrDM2yvtqyL+veAkQC/SMEf99QUkf+mW+6sF5d11RHoNfvqfMdXUQdlJYXHqKws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751039132; c=relaxed/simple;
-	bh=dyrNXeueqsvoBFA6tBhA0LImcM48dwOA1AYjkCUCdew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qatVDvtg5p+VH6o5iYYgW9b02EWdN/M9JDyFUn0c5DF6ESyYlPqkyJTSRc2fXNukGbB/jDar4VkszVlKKHFtwAYqVVaJ3XNGoUPLadgghuDuhUnltnq3U5B8swqv6gmct52Z+1W4ZeVJf1xjgRN7s2YYNjJwofgH9opZ68B+YIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V+HDiJBX; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V+HDiJBX"
-Message-ID: <2cee98d1-bdaa-4252-a9a6-15b1bc864ba0@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751039128;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZRFpxZUqLbnyGQPCOgdy9ogKvNkTdMJpkHmLoXCE7sw=;
-	b=V+HDiJBXLTL0WH1AkxHG9YhAVQhuDj2+GdXeZy0A5fCjCrZ9Z7OGImiy9nTZ5amX3VRIuJ
-	hkZFSeOxy8ymkbygPQMSGBUhzV15J8fPCHd0aBJzbFN37uOfR4vsC9G6wfRzW+wlm49bZ1
-	ogp5jNl6yUrR6OwA8aeY4kj2SWoTM2I=
-Date: Fri, 27 Jun 2025 23:45:15 +0800
+	s=arc-20240116; t=1751039162; c=relaxed/simple;
+	bh=BiIbeOmUeRO0AU6RuqdDm9kIvmbX5U9hAIstbN8vuSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e5C98BPhT/a9boOx1jw48GvfaHcWM6JW97rOfyMRAlFIj+ejaD42Mhau3JL01mc7c7MKRQuX52tTV1cWdrS1oSTRuaI7V4f2HHhY1QBGVQm/5fS2tJ9OiSISRjlzNDxcxurm5MXfEWPGjx9t/EQzFS4OGJj5xlzPltQ5I82HMvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uVBGw-0004cf-KM; Fri, 27 Jun 2025 17:45:50 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uVBGv-005dlG-0h;
+	Fri, 27 Jun 2025 17:45:49 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uVBGv-003coG-0M;
+	Fri, 27 Jun 2025 17:45:49 +0200
+Date: Fri, 27 Jun 2025 17:45:49 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v3 1/1] phy: micrel: add Signal Quality
+ Indicator (SQI) support for KSZ9477 switch PHYs
+Message-ID: <aF68rU2XQQ8a3ww4@pengutronix.de>
+References: <20250627112539.895255-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1 3/4] mm: split folio_pte_batch() into folio_pte_batch()
- and folio_pte_batch_ext()
-Content-Language: en-US
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>, Pedro Falcato <pfalcato@suse.de>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>,
- Lance Yang <ioworker0@gmail.com>
-References: <20250627115510.3273675-1-david@redhat.com>
- <20250627115510.3273675-4-david@redhat.com>
- <CABzRoya5n6ChTnjfsoYpQuQ6Gtuu61kpH5fc_iXv2cAQHS-KKg@mail.gmail.com>
- <9eb26777-cdfd-49df-9e1f-e326454ab477@redhat.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <9eb26777-cdfd-49df-9e1f-e326454ab477@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250627112539.895255-1-o.rempel@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-
-
-On 2025/6/27 23:09, David Hildenbrand wrote:
-> On 27.06.25 16:19, Lance Yang wrote:
->> On Fri, Jun 27, 2025 at 7:55 PM David Hildenbrand <david@redhat.com> 
->> wrote:
->>>
->>> Many users (including upcoming ones) don't really need the flags etc,
->>> and can live with a function call.
->>>
->>> So let's provide a basic, non-inlined folio_pte_batch().
->>>
->>> In zap_present_ptes(), where we care about performance, the compiler
->>> already seem to generate a call to a common inlined folio_pte_batch()
->>> variant, shared with fork() code. So calling the new non-inlined variant
->>> should not make a difference.
->>
->> It's always an interesting dance with the compiler when it comes to 
->> inlining,
->> isn't it? We want the speed of 'inline' for critical paths, but also a 
->> compact
->> binary for the common case ...
->>
->> This split is a nice solution to the classic 'inline' vs. code size 
->> dilemma ;p
+On Fri, Jun 27, 2025 at 01:25:39PM +0200, Oleksij Rempel wrote:
+> Add support for the Signal Quality Indicator (SQI) feature on KSZ9477
+> family switches, providing a relative measure of receive signal quality.
 > 
-> Yeah, in particular when we primarily care about optimizing out all the 
-> unnecessary checks inside the function, not necessarily also inlining 
-> the function call itself.
+> The hardware exposes separate SQI readings per channel. For 1000BASE-T,
+> all four channels are read. For 100BASE-TX, only one channel is reported,
+> but which receive pair is active depends on Auto MDI-X negotiation, which
+> is not exposed by the hardware. Therefore, it is not possible to reliably
+> map the measured channel to a specific wire pair.
 > 
-> If we ever realize we absolute must inline it into a caller, we could 
-> turn folio_pte_batch_ext() into an "__always_inline", but for now it 
-> does not seem like this is really required from my experiments.
+> This resolves an earlier discussion about how to handle multi-channel
+> SQI. Originally, the plan was to expose all channels individually.
+> However, since pair mapping is sometimes unavailable, this
+> implementation treats SQI as a per-link metric instead. This fallback
+> avoids ambiguity and ensures consistent behavior. The existing get_sqi()
+> UAPI was designed for single-pair Ethernet (SPE), where per-pair and
+> per-link are effectively equivalent. Restricting its use to per-link
+> metrics does not introduce regressions for existing users.
+> 
+> The raw 7-bit SQI value (0–127, lower is better) is converted to the
+> standard 0–7 (high is better) scale. Empirical testing showed that the
+> link becomes unstable around a raw value of 8.
+> 
+> The SQI raw value remains zero if no data is received, even if noise is
+> present. This confirms that the measurement reflects the "quality" during
+> active data reception rather than the passive line state. User space
+> must ensure that traffic is present on the link to obtain valid SQI
+> readings.
 
-Right, that makes sense. No need to force "__always_inline" prematurely.
+Update for this statement: it is valid only if EEE is active. With
+disabled EEE, SQI provide correct value even if no data is transferred.
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
