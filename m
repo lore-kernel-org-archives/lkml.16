@@ -1,46 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2625D25D20D;
-	Fri, 27 Jun 2025 21:21:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A572125FA34;
+	Fri, 27 Jun 2025 21:21:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751059270; cv=none; b=a+678sGhnTEWb5VuKqb+wT8yCkmNZr8Z3cKCGpG+tWpicEsgoFUJ7n4tRByoupQ60d/kmbCpwyGN3B2VMIQFoN5D43x0ysezkIzz98orSRS3+u11IOWDv5DvmXba+BJXQBqHtf8SoubSSL0BYZmq+B+FxtwMMm0r9HK97KF0z4c=
+	t=1751059290; cv=none; b=AK/AjusXb7yvpWWZWNXJGEGeWZ+OAClUnRwL9Hfkwz9RNijukz63V4SyvCGzA5H4bE2IupaZ0cwzvx+G/spFmvhS45p5MrZSkAqzcRaV8cSWggxa2QG5tq68GqomrVWj8er5OYZI8to1akUzh2O5v4VS30TPhrCWNuprZfAytLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751059270; c=relaxed/simple;
-	bh=87jq3UNGAunmwZrI/3JQ5eBj1P2HSlHE9VvJ80kDosk=;
+	s=arc-20240116; t=1751059290; c=relaxed/simple;
+	bh=eJ4JeujYEqEr8p7iiInQq4CDjHaLLtwxoaNgL3PVvp0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gsZBrXMkXOoY6FIKNOYo0dr0ZD7eVpszgBJGvkzoz2BFswQ1pfd+cemba+jhxWVgq7ztS9tG88qsxhwTPYoMlkfpWHecvmWFEfJvSZJOSLHaR8y4Qj2qmIIrLDE9eJ003bNqeecm+v3PxDa2W+U8OuAyuwcBANd/XyGaAcBc52I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rL6lFfm1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=X56baIPlAzxPuauJfU/pTyuI+ikGJDNINfSD3XtUfSeUgAH6vv39CGxkSnzKBoYmbD68eM4AcJox49CzVtAuFuww/fMWxUPAHy910WGPnbXJscP6LwrGdRYnozGMVFDYU4LaPClhIuYj598N/XxpNc7zyQPack7jukGfYjT6FfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=psLuxavv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rL6lFfm1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1440C4CEE3;
-	Fri, 27 Jun 2025 21:21:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="psLuxavv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19C38C4CEE3;
+	Fri, 27 Jun 2025 21:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751059270;
-	bh=87jq3UNGAunmwZrI/3JQ5eBj1P2HSlHE9VvJ80kDosk=;
+	s=k20201202; t=1751059290;
+	bh=eJ4JeujYEqEr8p7iiInQq4CDjHaLLtwxoaNgL3PVvp0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rL6lFfm1SPJz6Th3DuiDCMbVnrrFB7flRlGxAX0TRgjgxfwgUS6k5hNyysk2AKHlX
-	 tfqEr4sMsAaIqrkO8YEKjGRf2EF42aH5TPQ8dskVYXaDtZ6pNTUycKpxdpDWqr4qYO
-	 +1juy6Wdi0olfb4YGwByC0d538lig2Kih5iLGtTQI5+gAGNvGmCxVpVIqXkCpouL5n
-	 eHrt+Jr5TXrJ4QAeO0HO29AJW76dj0MwqSL6IyS1S6RD/ihsoHgm22vtBMV4xVLq3D
-	 VDJl6EtCZrp0kq50XDbq/sLcQbr3i3t60WVWfgQvwd069dqekHEZkYIjxUJ+LB0tEq
-	 Y/DEML/Or1SsQ==
-Date: Fri, 27 Jun 2025 16:21:09 -0500
+	b=psLuxavvIHRpyHijNtJpBPYSZpd4z1Or+RCc530bVYrLFxdjtwPN17Codm1L/WOcn
+	 e+rbD54Bx3bwH7Uh+ZPJ2P42eQx9eN8u+e4GBoJN0agDLkSgZs3SSCQWGRjJdeRkl7
+	 DLgm6dfoUUcVxoIbeNS2wiE3I01fvhgLu5WXALbMwY76Vku508KckvxCi51oX1YF6v
+	 +4txAazDN069CRN7dbiyIZaxcUAejbfraSXeqTe0A1Xp4JN/aO/pWdZyyVZNniFGrC
+	 tELVeQJuBp3Ls8JgnsVFQJYN/HWtPxsAqoWDZYr4KXsXnQ8l7N3O5WQtUusBMfgOa+
+	 WAKb7Cxk9EG9g==
+Date: Fri, 27 Jun 2025 16:21:29 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Sai Krishna Musham <sai.krishna.musham@amd.com>
-Cc: mani@kernel.org, thippeswamy.havalige@amd.com,
-	bharat.kumar.gogada@amd.com, bhelgaas@google.com,
-	lpieralisi@kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, lkp@intel.com,
-	linux-kernel@vger.kernel.org, michal.simek@amd.com,
-	cassel@kernel.org, krzk+dt@kernel.org, kw@linux.com,
-	conor+dt@kernel.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: PCI: amd-mdb: Add example usage of
- reset-gpios for PCIe RP PERST#
-Message-ID: <175105926858.163560.8044521916399216806.robh@kernel.org>
-References: <20250626054906.3277029-1-sai.krishna.musham@amd.com>
- <20250626054906.3277029-2-sai.krishna.musham@amd.com>
+To: Paul Kocialkowski <paulk@sys-base.io>
+Cc: Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+	Chen-Yu Tsai <wens@csie.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Andre Przywara <andre.przywara@arm.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Samuel Holland <samuel@sholland.org>, linux-sunxi@lists.linux.dev,
+	linux-gpio@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH 3/5] dt-bindings: net: sun8i-emac: Add A100 EMAC
+ compatible
+Message-ID: <175105928901.164047.15283634095632177281.robh@kernel.org>
+References: <20250626080923.632789-1-paulk@sys-base.io>
+ <20250626080923.632789-4-paulk@sys-base.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,32 +55,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250626054906.3277029-2-sai.krishna.musham@amd.com>
+In-Reply-To: <20250626080923.632789-4-paulk@sys-base.io>
 
 
-On Thu, 26 Jun 2025 11:19:05 +0530, Sai Krishna Musham wrote:
-> Update the device tree binding example to include usage of the
-> `reset-gpios` property in PCIe Root Port (RP) bridge node for PERST#
-> signal handling.
+On Thu, 26 Jun 2025 10:09:21 +0200, Paul Kocialkowski wrote:
+> The Allwinner A100/A133 has an Ethernet MAC (EMAC) controller that is
+> compatible with the A64 one. It features the same syscon registers for
+> control of the top-level integration of the unit.
 > 
-> Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
+> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
 > ---
-> Changes in v4:
-> - Remove reset-gpios define as it is already part of pci-bus-common.yaml.
-> 
-> Changes in v3:
-> - Move reset-gpios to PCI bridge node.
-> 
-> Changes in v2:
-> - Update commit message
-> 
-> v3 https://lore.kernel.org/r/20250618080931.2472366-1-sai.krishna.musham@amd.com/
-> v2 https://lore.kernel.org/r/20250429090046.1512000-1-sai.krishna.musham@amd.com/
-> v1 https://lore.kernel.org/r/20250326041507.98232-1-sai.krishna.musham@amd.com/
-> ---
->  .../bindings/pci/amd,versal2-mdb-host.yaml    | 22 +++++++++++++++++++
->  1 file changed, 22 insertions(+)
+>  .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml       | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
