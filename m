@@ -1,66 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBFC2750E7;
-	Fri, 27 Jun 2025 15:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784D12E8E14
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751039037; cv=none; b=XAN9PgW0Ig0LxM042rSZFZUtFqEKzgz4cOA2ixZUaElslBRzo2vsaGcorL5mGJuX9kuqAiLVwC9L0Q5bZmL1V15hfTjRYvWJ9Wnd+DzArX6N0lFyvBAl8uxBX2n77vYSxNlFjoaASHK1eGsSJl9JDP4+URc5itdrzhZwAoUn/ZU=
+	t=1751039053; cv=none; b=VGBeOBGlr3zSfLjn688hbeyKVeah6t3jhAjt/jRnqDfyDC34A/OViZoa+56wZEEDw0xHb75a7w0LhDtBuVz0wOOp6ofaVvwBq5+v6sCItfqOAeZzO5w1YG9mECN3xhbM3hZMJgNq5uSSR8ngGqzgMTIfmc/bkRvUlWxcisK7ZWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751039037; c=relaxed/simple;
-	bh=v701UG/S/YZj/dcs0xf6XcvTyfKyjdh0AA1QqbDRy24=;
+	s=arc-20240116; t=1751039053; c=relaxed/simple;
+	bh=LcnRDVEnZy6QHKQQxsP/nvCacp9OQV2gpAzUNBJMFr0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ytld2XBayVlMh94P+rgY+a/NmZDDL4yiLyZV1pVxLzQXADBIV4E6OlewsenbnN2+i3EIMEHsfapLc4+t7NoYpfjND/i+uSr4z4rs+clRM/Wpid2evLQcRHM+7i6b+spMbqF/JMT+3dqW63koy+rozJECjnrICrud32l6JJIewjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QlbEu2bK; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=g/qJxd8NJCbL5Lg24B+4sGo2Dc+0lGpLmVDa51SIXXlPZGBPrE2PBsMozv8rV0QLVLkCqH7FRuOVj4FTpWudIb12hxsQEbpscswarDF1UeGOsDUG3SNBqPpZrZLe4oz+Yz86gsjFf+9KjxYQO8XTOzrPJpXhL1/iYJMnJff6cI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qji/ETkQ; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QlbEu2bK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751039036; x=1782575036;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=v701UG/S/YZj/dcs0xf6XcvTyfKyjdh0AA1QqbDRy24=;
-  b=QlbEu2bKzLAEx2W/VC1jbAC9/i6p/z4tiGpvdduFlOy1A//ZIHea6WtU
-   r+T1dDcpOzVAAKQmKnvRt+Jd4wrsMd3pAEdzAPHi0jrLVaCDLwjVA2D5F
-   sA+f+HhsRMtlnv9gv3lU55lzvg7rXyQpLyd6/7QH5Qm/eq9gawo0HCKrP
-   7FV1C+1CxBc0qVZT53tA9pQRTH0YZr41mvpmxUXTL8BTpreYhtLDqfDoD
-   1xW3fGoYm/+IYFkqtDfIwnbjcYfxd/KE8yKZFtkqerD70y2uHoHAw76UV
-   V55AxL2cdmhK19f+f9BpEjh92kUYtR9q4+N6Ts5YyxjtCSWvT7Ta0RHoF
-   Q==;
-X-CSE-ConnectionGUID: XQDVvc1DR465/7OzEuKRZQ==
-X-CSE-MsgGUID: RYMdFipdQIaAeaSHiEYhjQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="64046471"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="64046471"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 08:43:55 -0700
-X-CSE-ConnectionGUID: NjOxPtofRuCMb7jMNhhWCw==
-X-CSE-MsgGUID: OxJ/GkpaT0ObKM5q9m2lxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="153009466"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa007.jf.intel.com with ESMTP; 27 Jun 2025 08:43:53 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 60C042BA; Fri, 27 Jun 2025 18:43:51 +0300 (EEST)
-Date: Fri, 27 Jun 2025 18:43:51 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	Kent Gibson <warthog618@gmail.com>,
-	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
-	Marek Vasut <marex@denx.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 5/9] gpio: sysfs: rename the data variable in
- gpiod_(un)export()
-Message-ID: <aF68N4ZYKupWHJoL@black.fi.intel.com>
-References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org>
- <20250623-gpio-sysfs-chip-export-v2-5-d592793f8964@linaro.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qji/ETkQ"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2ea35edc691so591438fac.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:44:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751039049; x=1751643849; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vNskI9ihVQwbRR9S2z7pyG2KNmQ2CECCpU1on9KtPmA=;
+        b=Qji/ETkQ2YdAM0G4AO3zcmLVlrtaIO7YQgnMz85O8GpXE5FNI0dI1a293Anac4TVoM
+         czOYuk6aPm+Yb5sL7vu6ZrtthUfh3Wufwd1HXUmc4QDDLSQURSwTX6DAZUDpPa6x9MZI
+         a6JIsi1ATzCAZnJVgf5B9/76M1QKzHGSvjI7u5c06SKvgHayToXyINg+f9jTVIicVtfG
+         llOBBxDwoQSiQtVyBe4rwPx1o13WofG7o5XAvxI0SoCjw9JDcmon4xz/GnvgyAhyrN9g
+         XWva984D/xI6blHHHg4S02CyYmiHVo2ozoC809CBUFlyTPV4dOeyajA6WIJxDBPRce4v
+         SOFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751039049; x=1751643849;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vNskI9ihVQwbRR9S2z7pyG2KNmQ2CECCpU1on9KtPmA=;
+        b=YZZuXMVXN+K1R1gm8jAyRSjJ6H0x92fmhJaw3hTCF2YrorRVNMcmsKd13Lt8TGjPM/
+         BvXrztLjYYDCydRlyxjJ6T0Drg3xa2r0OmEonDGWIJhxkLmsY92rNfdAAmLLCeVkRp52
+         MBKQiGrLnxFxmrxK+BRHmvbPcyqbUL0f2gCWyoEwHW7g7K/UGzjhADaZa161kDqyznAp
+         d7XofbzVm7i3YOX8p6VGiPJo0TSWg7nwbryL0rbat3vRH+OzY+kP+5NLSm3krbyFhdq8
+         uUZj2LUrSFUlcWEYUOQ4ZHSotEyPUeDociMoPG1P/279ZYJDGXnogFL3r51SikWy91g8
+         AH3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWmsmN1N7KyeHYneTw/ISXw/geCSLJ9MDsSQQmrTnFJPVCLwEuqoR5/I324V+sM9+IdYC9p35QC4vlN27A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7Jap3IbsWsS1ADrxV9YINuGrbbwT2H0IfXnmsebv0NOG77c/g
+	CkLtNAE7q+xdGHufNJn2OPoEhM1uWigeckI2eTIqR1h1vTf6P4PmtRclrahkOfzcIf4=
+X-Gm-Gg: ASbGncuG28nFsnKRTaGMbRvQOC/k4iqntzfnIi5C8xZN3Mg1Ue8qmLhpJx7J/O1RHsc
+	WPQq2IM7OEQz0piUKRGjEIZwiAO1+/AU4CLNaPJGsWF4cxT31UdR4RX7WtC/Sotxb+i88L6hE01
+	jsu9JFE+Uv5lXyNAUZFApoyy57q3y7x1BNM3NoLww8SbHAMPKQNr9NUoIBwhbjZYHQwoVUZ0Vpb
+	Yah27i02MGG7r/zy6of1zQxy8/fNyYenm/HpTPNQ6fb+qebfdlosNfSyAX5XSP+UABuwRjZm2N9
+	pwaqiVGKp+Z+sp99BsT7BzUuPEAuSq0qvSIO2dJGSm2DFI1KXZ1RtDswjRTn4iSN32478Q==
+X-Google-Smtp-Source: AGHT+IHhU09H+nMf0lfOpqCHxF+Y0NTLulCnQbm0DdYiPRfdIF593CXffYxkSUXy1F9j48/+OHfs/A==
+X-Received: by 2002:a05:6870:a10b:b0:29e:5897:e9d1 with SMTP id 586e51a60fabf-2efed7a51d7mr2326653fac.39.1751039049549;
+        Fri, 27 Jun 2025 08:44:09 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:f3a4:7b11:3bf4:5d7b])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd4f0f7d4sm911929fac.18.2025.06.27.08.44.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 08:44:09 -0700 (PDT)
+Date: Fri, 27 Jun 2025 18:44:06 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Cc: andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org,
+	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+	skhan@linuxfoundation.com, Hans de Goede <hansg@kernel.org>
+Subject: Re: [PATCH v5] staging: media: atomisp: remove debug sysfs
+ attributes active_bo and free_bo
+Message-ID: <e7dfe490-abfc-49da-8beb-50ce02678c86@suswa.mountain>
+References: <20250627100604.29061-1-abdelrahmanfekry375@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,32 +76,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250623-gpio-sysfs-chip-export-v2-5-d592793f8964@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250627100604.29061-1-abdelrahmanfekry375@gmail.com>
 
-On Mon, Jun 23, 2025 at 10:59:53AM +0200, Bartosz Golaszewski wrote:
+On Fri, Jun 27, 2025 at 01:06:04PM +0300, Abdelrahman Fekry wrote:
+> The sysfs attributes active_bo and free_bo expose internal buffer
+> state used only for debugging purposes. These are not part of
+> any standard kernel ABI, and need to be removed before this
+> driver may be moved out of drivers/staging.
 > 
-> In preparation for future commits which will make use of descriptor AND
-> GPIO-device data in the same functions rename the former from data to
-> desc_data separately which will make future changes smaller and easier
-> to read.
+> - Remove active_bo and free_bo attributes
+> - Remove group registration calls form hmm_init() and hmm_cleanup()
+> 
+> Suggested-by: Hans de Goede <hansg@kernel.org>
+> Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+> ---
 
-...
+Thanks!
 
-> +	attrs = desc_data->attrs;
-> +	desc_data->attr_group.is_visible = gpio_is_visible;
-> +	attrs[GPIO_SYSFS_LINE_ATTR_DIRECTION] = &desc_data->dir_attr.attr;
-> +	attrs[GPIO_SYSFS_LINE_ATTR_VALUE] = &desc_data->val_attr.attr;
-> +	attrs[GPIO_SYSFS_LINE_ATTR_EDGE] = &desc_data->edge_attr.attr;
->  	attrs[GPIO_SYSFS_LINE_ATTR_ACTIVE_LOW] =
-> -						&data->active_low_attr.attr;
-> +				&desc_data->active_low_attr.attr;
+Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-These were added in the previous patch and immediately got rewritten?!
-Sounds like a wrong patch order.
-
--- 
-With Best Regards,
-Andy Shevchenko
+regards,
+dan carpenter
 
 
