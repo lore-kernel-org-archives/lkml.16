@@ -1,160 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B68E2951A0
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4BB29615D;
+	Fri, 27 Jun 2025 10:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751021440; cv=none; b=GWRwZqJpGTrkAVS2ziVLx/rkhNHEUqT53BhhXYFkLARP4o/mwbhtBo9UeBMEchT1Bt9CMZp34rqAkbvJ+KgVFzr2JlZJFd51YycXFCjYpXk2pgOFx76Km1NQr/9sowGkVko+dXYLHgz/ZXIo3SD2Arg6cnkT3YeB58SnK/pVZXo=
+	t=1751021460; cv=none; b=mcLJdd/J5iSe8OKNe2qu/4DAt3ERpD4Hukx1H+qZjY6JDqLYugw2g2OGMsTfzPIERMNlxtnBYq8qZCXa50Yp5HHZj+D7VVbkHHQYDyfrowM6oij+FbGb/HBu+4yXr5wr556dTaBIzX5nTrRDjU8entjouuJRpa1QSk6DKPJFtnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751021440; c=relaxed/simple;
-	bh=5NnJtdqKYJVhQjds2kWd0SpjFMdEvQzFH06HhWnZsfw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mUJxXRE4DKhzx1tCLwwJX7ZghaZkvrm2O3AGRNDg/QrmRVXMuhpJWE5tkIHlZEv1ERGysvEVjXUphjl1Mk6XTvnucQ/9cpfEgmPSnRy4VE6gurWzVIdOvXJzVxAIm3fxcer0vOXIuAn8IiGHookh3jvu7x99jiot9wrTijNPitE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iij45RS+; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751021460; c=relaxed/simple;
+	bh=iyRgdZz62kfHtWgProqZ9GBCRWbW6BTlAC0PWj8nzus=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JVMfqqYRygVy3RZ33xS/3fJNUuNMTPl2QoNC2WcfCS7mdDq4+kZ5QWZ+jTukg6/K4SaRdKFx6LTn4bTBeonqQRYK5tuzF2SCILRypEqAhA40byr0tTu0RDYYrehVqOSqK+DBOJ/JIm620dG7zjEmoUogt4TFpoDp5pDcf2fWG58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=pksJWTHU; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iij45RS+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751021439; x=1782557439;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5NnJtdqKYJVhQjds2kWd0SpjFMdEvQzFH06HhWnZsfw=;
-  b=iij45RS+ocV1b6ULDe+4/i5C9EBL/cNEZfS40QVLh7+Ar94rsWPwRrA0
-   gh+EKdK4H8D5pq34yd6D3P/hPcIqv0gi4Qff8wqMcFbFTk8ar/+chQgXd
-   YIEzdyJZepb1gzRgo9jus83y27Btrv7XrPG7yszlfRIprjeu3S/AwD6+G
-   gASiIcpyb3lgp83cntgAFnjMrg1fKsHJKrIXpkcH3HY9If2LElmCMpx6N
-   HyxXFeVthWYMz6vNPtf2soOKXYlV/wkS00bm0xx384C7M9t9Smzyx5cCf
-   eZcE74i3gT99Py2+pppKyrJB0/Lw6bYNPNIRrkt6tN8q/S8sSxuqVPMgJ
-   A==;
-X-CSE-ConnectionGUID: O7jcoGlyT2amq/EY6qRqtg==
-X-CSE-MsgGUID: IfFriJd3QgO3K2HwiykOug==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="57137858"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="57137858"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:50:35 -0700
-X-CSE-ConnectionGUID: WHbIMHNNRxCj2KkPBEuXhw==
-X-CSE-MsgGUID: OMAEJkvfR86Ayy23cfPkfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="153304717"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:50:33 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uV6f9-0000000ASM6-1593;
-	Fri, 27 Jun 2025 13:50:31 +0300
-Date: Fri, 27 Jun 2025 13:50:30 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Javier Martinez Canillas <javierm@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH v1 1/2] firmware: sysfb: Unorphan sysfb files
-Message-ID: <aF53djlieUNF_-aV@smile.fi.intel.com>
-References: <20250626172039.329052-1-andriy.shevchenko@linux.intel.com>
- <20250626172039.329052-2-andriy.shevchenko@linux.intel.com>
- <87ikkhd0uv.fsf@minerva.mail-host-address-is-not-set>
- <aF5eL1o3WNo3Q7_p@smile.fi.intel.com>
- <87wm8xbkyh.fsf@minerva.mail-host-address-is-not-set>
- <aF5w4QTbSkebYbk2@smile.fi.intel.com>
- <87ldpdbhj8.fsf@minerva.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pksJWTHU"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RAbJZv012822;
+	Fri, 27 Jun 2025 10:50:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2025-04-25; bh=Xo6dHGRpyyJ5stGO
+	yGIAPRrHVhhNbeVBOkIc5fi1KhM=; b=pksJWTHUSjb1dR7FEIdM6KMxYRIOI+WW
+	OWJshPa5FOP3b+zC6FyF5w76syHRip+H0+RZFl4lvo80+5g+mHz4bwPjyHq2haRC
+	YEJhRlS9J6knjrrngizAyI8rn/wtCcMvpBBnbEQ4W9X1H59E3WnygtfYreB+5X91
+	MGCHo95FGbdrdi9Lg6kUu4ISk7KTgrQ+UFP0C8p/S0wqF7Fe4/SLL2nCluK7UPUE
+	RF99i5HZd6vAmcI2kDZpj6tV/4A1pCwgLduMjuflS6XKEu3xNpbm+D2Bpmw3axuu
+	b5SflnJd6B/0zWZxcOMGbtbGzgn44pkvLMLAwV9D/frI+N8nRPghjg==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47egt5tmqc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 27 Jun 2025 10:50:39 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55RAWS7B018085;
+	Fri, 27 Jun 2025 10:50:39 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47ehw16w1e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 27 Jun 2025 10:50:39 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55RAocV9011478;
+	Fri, 27 Jun 2025 10:50:38 GMT
+Received: from lab61.no.oracle.com (lab61.no.oracle.com [10.172.144.82])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 47ehw16vyg-1;
+	Fri, 27 Jun 2025 10:50:38 +0000
+From: =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>
+To: Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>, Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>, Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>, Daniel Lustig <dlustig@nvidia.com>,
+        Joel Fernandes <joelagnelf@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc: =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        lkmm@lists.linux.dev, linux-doc@vger.kernel.org
+Subject: [PATCH v2 1/1] docs/memory-barriers.txt: Add wait_event_cmd() and wait_event_exclusive_cmd()
+Date: Fri, 27 Jun 2025 12:50:33 +0200
+Message-ID: <20250627105034.1612947-1-haakon.bugge@oracle.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ldpdbhj8.fsf@minerva.mail-host-address-is-not-set>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_04,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 spamscore=0
+ phishscore=0 adultscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506270088
+X-Proofpoint-GUID: 8FpXteLgEXlpSTDqPX7G2_fm-vPer4yz
+X-Authority-Analysis: v=2.4 cv=PMYP+eqC c=1 sm=1 tr=0 ts=685e777f b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=M51BFTxLslgA:10 a=yPCof4ZbAAAA:8 a=lPgn3NRR9fYW2pfQ3SIA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 cc=ntf awl=host:14723
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDA4OCBTYWx0ZWRfX7ohwrFESJfrD aINzfDGzLbT2VX4HNPF8gP01tA+7rr/zKLEyGoQi08RLkZGhQW44I3CymIPuKuxiDrUYX8frqve PAxlV6Sso+UsiWg1xZX0CyeL+yixnYz8UWDscdHIGA6TyfTVDbod3dUFlQpqe45gyXTPTjTE2Vt
+ wi16bsrfgVbyZ2MjzEshAXY4QkbQ7vAqr2FKOSU1ieKj2B83FCEPBMSwH8c2IARROMxan8HC959 JmfKFo4dSn7YHBtTPpCSEiFbgZszJlUhVzMa17JOEFtlt6ip/blReRtz8Q9WV/PM44cjVHDP0kY pkYMqCaP5j4Y4PUvBuH55WRKgGiLh+9/5+MvOzcWcHoOz7j03zsnxa0H7tQyLljRFqMtfn5KxNS
+ ujvnYemC+DXFE8nmUgGWz7PQ/bS/Abf2PY6438eP+Ot31NXSkg5bmQyyV2jCViZ8TybLxWkL
+X-Proofpoint-ORIG-GUID: 8FpXteLgEXlpSTDqPX7G2_fm-vPer4yz
 
-On Fri, Jun 27, 2025 at 12:33:31PM +0200, Javier Martinez Canillas wrote:
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+Add said functions to Documentation/memory-barriers.txt.
 
-[...]
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
 
-> >> That's just because there is an entry for arch/x86/. The problem then is
-> >> that there isn't an entry for drivers/firmware. It was orphaned then just
-> >> because it was moved to a directory that has no entry in MAINTAINERS.
-> >> 
-> >> > See the difference?
-> >> 
-> >> There is no need to have such a rude tone.
-> >
-> > It wasn't meant to be rude, sorry. The point is that any change in
-> 
-> No worries.
-> 
-> > drivers/firmware/sysfb* and respective include are not visible to (any)
-> > maintainers, they just might be sent for a luck of somebody to pick
-> > them up by browsing the LKML for such things.
-> >
-> 
-> Right. But get_maintainer.pl still reports I think the correct people to Cc:
-> 
-> ./scripts/get_maintainer.pl -f -- drivers/firmware/sysfb*
-> Thomas Zimmermann <tzimmermann@suse.de> (commit_signer:4/4=100%,authored:2/4=50%,added_lines:11/43=26%,removed_lines:5/11=45%,commit_signer:1/1=100%,authored:1/1=100%,added_lines:1/1=100%,removed_lines:30/30=100%)
-> Javier Martinez Canillas <javierm@redhat.com> (commit_signer:4/4=100%,authored:1/4=25%,added_lines:19/43=44%,commit_signer:1/1=100%)
-> Alex Deucher <alexander.deucher@amd.com> (commit_signer:3/4=75%,authored:1/4=25%,added_lines:13/43=30%,removed_lines:6/11=55%)
-> Tzung-Bi Shih <tzungbi@kernel.org> (commit_signer:1/4=25%)
-> linux-kernel@vger.kernel.org (open list)
+--
 
-The problem is deeper. This is default behaviour of get_maintainer digging
-into the Git history. In the past people were complaining (a lot in some cases)
-that they were included in the threads by a mistake because they made cosmetic
-patches or the treewide change while not being interested _at all_ in looking
-after the certain file / driver. So, with --no-git-fallback it gives nothing,
-expect LKML.
+v1 -> v2:
+      * Changed the prosaic part to kernel-doc style and moved it to
+        include/linux/wait.h in another commit
+---
+ Documentation/memory-barriers.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> In my opinion both Thomas and me have much more context and knowledge of
-> the sysfb codebase than the x86 maintainers. It was just for historical
-> reasons that the sysfb code ended in the arch/x86/ sub-directory.
-> 
-> But you are correct that dri-devel at least should also be in the Cc list.
-
-See also above. Depending on the options it may still give bad result w.o.
-explicit mention in the MAINTAINERS (or via glob).
-
-...
-
-> >> >> > +F:	drivers/firmware/sysfb*.c
-> >> >
-> >> >> I would prefer these to be in the "DRM DRIVER FOR FIRMWARE FRAMEBUFFERS"
-> >> >> entry instead of "DRM DRIVERS" since the former is what has most of the
-> >> >> code for the sysfb infrastructure.
-> >> >
-> >> > Then do it, please, fix the above.
-> >> 
-> >> Part of the review process is to give feedback to patch authors. I don't
-> >> understand why you expect me to fix an issue you brought up just because
-> >> I ask you to rework your patch a little.
-> >
-> > In my humble opinion, the author of the patch that makes the problem appear
-> > can help to fix that as well. Are my expectations too high?
-> >
-> > In any case, this was an ad-hoc patch due to the second one, so this one
-> > may be considered as a administrative bug report.
-> 
-> That's OK, but it wasn't framed as a bug report but as a patch and that's why
-> I gave my feedback. But I'll post a patch and add a Reported-by tag from you.
-
-Sure, thanks ahead!
-
-> Thomas, I think we can then only merge patch #2 and I will take care of #1.
-
-I just sent a v2 without the first patch.
-
-Thanks for review!
-
+diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
+index 93d58d9a428b8..1d164e0057769 100644
+--- a/Documentation/memory-barriers.txt
++++ b/Documentation/memory-barriers.txt
+@@ -2192,6 +2192,8 @@ interpolate the memory barrier in the right place:
+ 	wait_event_timeout();
+ 	wait_on_bit();
+ 	wait_on_bit_lock();
++	wait_event_cmd();
++	wait_event_exclusive_cmd();
+ 
+ 
+ Secondly, code that performs a wake up normally follows something like this:
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.5
 
