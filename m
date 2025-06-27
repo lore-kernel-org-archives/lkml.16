@@ -1,130 +1,108 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDB7293B55;
-	Fri, 27 Jun 2025 09:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C42222590;
+	Fri, 27 Jun 2025 09:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751014972; cv=none; b=EubNZ2r3AKVEew7o4Cip1zJxfrpDLZxumhTTnScH7H/Pk+dvl3HbD/uZkAWnBiyU9rUXM6udjf2y9RTletzuOH5rWTHPSReqVl1WoeAs5z0+TbEkxMtFdyPRQVbMQJdrtWauyeeIx4vTKS4SXUUqnTOAzSjwoDVWvRzijTgQGmM=
+	t=1751015032; cv=none; b=hMAJIphW5xnZosq1wOlenjppdiOwqOl0NxagWmr1H4PUXK0VvHC2mhRVmtNl/V9haiOTiAJHMnlypvR+WI1Add8MUYEWvUAcb/PbB0ZIaX36iwy5LD3P9CRvEv4vkEg4YdQ1R3x6JyMgrytQcA6m8/Hc465WPJV20vmsIdb91pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751014972; c=relaxed/simple;
-	bh=qaBguxJ/59Y70qyBDlyzD5aimjI4J8ODIPajo/Wefvc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XZsdRdF2VAkSNepNq0ahuwu/hslZx+10q/INpl/6B4T0yCqDzfcGg6NAfICWAZVb2cgzxtmxvxDY08zvs6ZKOJ5xKUUAu8tSHSLl2IvAfd9aBgCPsZcAN+bHjfqiwUxabwNj0tRc+ce4XfXZy5zflt7F6Qgf8eoBj8g17NR7UXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bT8hc4FsFzYQvD3;
-	Fri, 27 Jun 2025 17:02:40 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 78AA41A10F6;
-	Fri, 27 Jun 2025 17:02:39 +0800 (CST)
-Received: from [10.67.109.79] (unknown [10.67.109.79])
-	by APP3 (Coremail) with SMTP id _Ch0CgCH2MItXl5oDsw0Qg--.9912S2;
-	Fri, 27 Jun 2025 17:02:39 +0800 (CST)
-Message-ID: <5f622eec-a039-4e82-9f37-3cad1692f268@huaweicloud.com>
-Date: Fri, 27 Jun 2025 17:02:37 +0800
+	s=arc-20240116; t=1751015032; c=relaxed/simple;
+	bh=SkT01FuiroIHQcsTRFpB/e7tKPVnTyJoT7yGqpKBv3k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G7nxjodLTutSdVBZs8yzZudBHnE8yKaEuHGxWZjgAze/mKqC3FlhrlJji3TVdEY2aAzwifX1Iog5zE44gjHde9k0xlQnkb8U2qK065+5l+ZCovqjQ6EPvC0VLhNP40I33vqnCivmDZMoeFXgXPsL0buoJ5eVdIz2XW1W72GNWQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N8ME8cDw; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8ME8cDw"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-70e3caa3f7cso1403367b3.3;
+        Fri, 27 Jun 2025 02:03:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751015030; x=1751619830; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LxPXFm/2Af/O0czSgJFjpR6ljpGP3r1+LOljZ09h6rw=;
+        b=N8ME8cDw1BIMkfuXB0WG0ElQlHkW3U17C67Wgz+4E9SAal8vP8PjvUskV1wyEgJoHg
+         jbYyIrG/BoNxj8LOyZd+jqkFbblv1gwQfnMU7dfE70tR2AM31YE7qs/2zaHH0vCTJ7Hh
+         HhONzU0UpQRkLxlo6SYORtQjZXYDQTjR7VhTgYUow+uJrxt8y6tfXGVaQBm5IV/xOjv3
+         Kq3nwN/u+VZHNeo7o5kf0yEu5cKRHY+p0uBldWziPb+UjTc2g08SaUE+a1Ri3Bye6isu
+         5U8ZPKIfw8JcEDuKPOL+DAZoKo9vZbqm7Lmtcv85DmxI34XAyqzZLiao+fY+wcJIPe3X
+         ekuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751015030; x=1751619830;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LxPXFm/2Af/O0czSgJFjpR6ljpGP3r1+LOljZ09h6rw=;
+        b=wJaZve6x9KvNh5pqPaEYmoDJ7e7bbF4B23Ywm+3476F/ginz78B2S+7D+JYp2x9SWb
+         zgUlURLTatSGOoL4XW3+hNigvgVAnxBZXcRx879FU0RXGzzG0QBU9BvAZD0cTNRRUcqd
+         yB4vKhWx3bKRZmrcvCPu5HD5J6RPWqppey+6vo6o1IAS/kXO0tnYQp0E/xS1nD7hW/qw
+         uZl3LqJEe2K3XQqhjNI3lVmAPjzLqIYgTrwOuaz83HFU/DEetuqUNTMNi3jyDXmBB1OP
+         ZjqoB1vyAMvxLiD0fEHcWxb2hkyJyyRhMfjEnInPa1+ZnQ+Ktsarq4sEcMKayCxMVCLR
+         Guug==
+X-Forwarded-Encrypted: i=1; AJvYcCUYXqXDMwzFINZVKu/SusxfyV2/pFxaz8b1TIeiolNwxDUXJlv8BEv6xIWHOrg+BgKIXq5T55ilvi1tJ6Q=@vger.kernel.org, AJvYcCXp5b7C81NywhBmLbv9NJHY1nBZ4cOsVov+UT0B9Rc4M1LeD2kdANde+bHuSpbQg3gdLTGkMshpN+gcrWI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypJIjrM43flE5eZo0Rnvr69ZCdf1Hzgn9J9HFufcKHzkV24cqo
+	6UOt6pQY2GbDd3FFd3UzMQ7OpVlgULPUJGRZHqeymzjeO00wqd1Mqrfmo86H79ZPxRZmTfYdgXo
+	e6rZmyHcg6O8721mjlGcBlJ2A4x5iN0I=
+X-Gm-Gg: ASbGncvp9WAuwxjRaNovrlXGiyjSF5T9q1F4Nv9sm3/+Ej4jp2CY5zmvSUa7wiyiQ0p
+	mXt7N1Dg008LVmM1d37Kaa6i27zGf0JHLGryE+Sf0zgKyvIzZgGOV29XMxq2SsFuFmIZmRj54Ze
+	uuSs1hhwoIdPUKxbnj2ZyitBBrqcoa/QQZr+jepNJ0/Y5JBg==
+X-Google-Smtp-Source: AGHT+IHxWtIJzA7AjqYBeRaD1K1kJoZF1TThU2Qzy0U70LW+zaf9l8TXpjHPTMMpS0pxvero1s7YpQzkzOAIKEGREi8=
+X-Received: by 2002:a05:690c:4a01:b0:713:fff3:62ad with SMTP id
+ 00721157ae682-7151719d791mr15585547b3.8.1751015030205; Fri, 27 Jun 2025
+ 02:03:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 00/28] Eliminate Dying Memory Cgroup
-To: Kairui Song <ryncsn@gmail.com>, Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Muchun Song <muchun.song@linux.dev>,
- Muchun Song <songmuchun@bytedance.com>, hannes@cmpxchg.org,
- mhocko@kernel.org, shakeel.butt@linux.dev, akpm@linux-foundation.org,
- david@fromorbit.com, zhengqi.arch@bytedance.com, yosry.ahmed@linux.dev,
- nphamcs@gmail.com, chengming.zhou@linux.dev, linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org, linux-mm@kvack.org,
- hamzamahfooz@linux.microsoft.com, apais@linux.microsoft.com,
- yuzhao@google.com
-References: <20250415024532.26632-1-songmuchun@bytedance.com>
- <CAMgjq7BAfh-op06++LEgXf4UM47Pp1=ER+1WvdOn3-6YYQHYmw@mail.gmail.com>
- <F9BDE357-C7DA-4860-A167-201B01A274FC@linux.dev>
- <CAMgjq7D+GXce=nTzxPyR+t6YZSLWf-8eByo+0NpprQf61gXjPA@mail.gmail.com>
- <aAF2eUG26_xDYIDU@google.com>
- <CAMgjq7BNUMFzsFCOt--mvTqSmgdA65PWcn57G_6-gEj0ps-jCg@mail.gmail.com>
-Content-Language: en-US
-From: Chen Ridong <chenridong@huaweicloud.com>
-In-Reply-To: <CAMgjq7BNUMFzsFCOt--mvTqSmgdA65PWcn57G_6-gEj0ps-jCg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgCH2MItXl5oDsw0Qg--.9912S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4xtw47CFWUWryUuFyxAFb_yoW8Ar4fpF
-	WFqF42kFs5ur95A3y0y34kWFyUta97Wr15Ar1rJrn8tw1DZF1FyF47CrWF9as29r1xZ3yI
-	vrWDur4UK3WDZa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	bAw3UUUUU==
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+References: <20250627072939.21447-1-abdelrahmanfekry375@gmail.com> <aF5Y5MurVIn1mUk1@smile.fi.intel.com>
+In-Reply-To: <aF5Y5MurVIn1mUk1@smile.fi.intel.com>
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Date: Fri, 27 Jun 2025 12:03:39 +0300
+X-Gm-Features: Ac12FXwOUEosg--SmicR1srEOI1Ci9W95VvN9pfI47FDKsi8dSoopfUooLVYraM
+Message-ID: <CAGn2d8O-X8mgmf9kED=XbFYAoySs6+is=dorkz4yPbrSLiP6Nw@mail.gmail.com>
+Subject: Re: [PATCH v4] staging: media: atomisp: remove debug sysfs attributes
+ active_bo and free_bo
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org, 
+	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev, 
+	skhan@linuxfoundation.com, dan.carpenter@linaro.org, 
+	Hans de Goede <hansg@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 2025/4/28 11:43, Kairui Song wrote:
-> On Fri, Apr 18, 2025 at 5:45 AM Roman Gushchin <roman.gushchin@linux.dev> wrote:
->>
->> On Fri, Apr 18, 2025 at 02:22:12AM +0800, Kairui Song wrote:
->>>
->>> We currently have some workloads running with `nokmem` due to objcg
->>> performance issues. I know there are efforts to improve them, but so
->>> far it's still not painless to have. So I'm a bit worried about
->>> this...
->>
->> Do you mind sharing more details here?
->>
->> Thanks!
-> 
-> Hi,
-> 
-> Sorry for the late response, I was busy with another series and other works.
-> 
-> It's not hard to observe such slow down, for example a simple redis
-> test can expose it:
-> 
-> Without nokmem:
-> redis-benchmark -h 127.0.0.1 -q -t set,get -n 80000 -c 1
-> SET: 16393.44 requests per second, p50=0.055 msec
-> GET: 16956.34 requests per second, p50=0.055 msec
-> 
-> With nokmem:
-> redis-benchmark -h 127.0.0.1 -q -t set,get -n 80000 -c 1
-> SET: 17263.70 requests per second, p50=0.055 msec
-> GET: 17410.23 requests per second, p50=0.055 msec
-> 
-> And I'm testing with latest kernel:
-> uname -a
-> Linux localhost 6.15.0-rc2+ #1594 SMP PREEMPT_DYNAMIC Sun Apr 27
-> 15:13:27 CST 2025 x86_64 GNU/Linux
-> 
-> This is just an example. For redis, it can be a workaround by using
-> things like redis pipeline, but not all workloads can be adjusted
-> that flexibly.
-> 
-> And the slowdown could be amplified in some cases.
-
-Hi Kairui,
-
-We've also encountered this issue in our Redis scenario. May I confirm
-whether your testing is based on cgroup v1 or v2?
-
-In our environment using cgroup v1, we've identified memcg_account_kmem
-as the critical performance bottleneck function - which, as you know, is
-specific to the v1 implementation.
-
-Best regards,
-Ridong
-
+On Fri, Jun 27, 2025 at 11:40=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Fri, Jun 27, 2025 at 10:29:39AM +0300, Abdelrahman Fekry wrote:
+> > The sysfs attributes active_bo and free_bo expose internal buffer
+> > state used only for debugging purposes. These are not part of
+> > any standard kernel ABI, and need to be removed before this
+> > driver may be moved out of drivers/staging.
+> >
+> > - Remove active_bo and free_bo attributes
+> > - Remove group registration calls form hmm_init() and hmm_cleanup()
+>
+> ...
+>
+> >       /* free dummy memory first */
+> >       hmm_free(dummy_ptr);
+> >       dummy_ptr =3D 0;
+> > -
+> >       hmm_bo_device_exit(&bo_device);
+> >       hmm_initialized =3D false;
+>
+> Stray change.
+>
+sorry for that , will fix and resend it right away
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
