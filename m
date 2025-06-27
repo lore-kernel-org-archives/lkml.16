@@ -1,150 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12371DDC1E
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B68E2951A0
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751021440; cv=none; b=RUgTvgSaFMOqmBTIe8LtfcTy7fb+UgqRljOYtl9L1TZQH67gRoOFet0N8s/HVlVT54WfZFGMvF2E1xftB1Kco96ftoRDPSbZdpY+zC2NWOnvJaQ8i9wTVfFKHhylLa27KrftfGAeagzQVmDVawfTh54DM91DsIn1kHGPnjeUaXI=
+	t=1751021440; cv=none; b=GWRwZqJpGTrkAVS2ziVLx/rkhNHEUqT53BhhXYFkLARP4o/mwbhtBo9UeBMEchT1Bt9CMZp34rqAkbvJ+KgVFzr2JlZJFd51YycXFCjYpXk2pgOFx76Km1NQr/9sowGkVko+dXYLHgz/ZXIo3SD2Arg6cnkT3YeB58SnK/pVZXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751021440; c=relaxed/simple;
-	bh=BVHZXeFbpjqe+fGCkZrzN32CSukxqi5Z0bBDKpeU2bg=;
+	bh=5NnJtdqKYJVhQjds2kWd0SpjFMdEvQzFH06HhWnZsfw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AaVCbPGGngaI2M9ICUvT2UKR1Dzvj4UjwPtAd6wYBjcRzgdfeEOMDDo9mH2KgRd9UwKQx1yQwVdSld0/VuGeS69c9gHc0MQ9Vd+rEhNArjjQu0tlV3yS9f/oTkfB2XuecJcNv8W5/38W79AfnOum5JSWLR39/xBNGysTbnd1z3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gL0A/hW0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mUJxXRE4DKhzx1tCLwwJX7ZghaZkvrm2O3AGRNDg/QrmRVXMuhpJWE5tkIHlZEv1ERGysvEVjXUphjl1Mk6XTvnucQ/9cpfEgmPSnRy4VE6gurWzVIdOvXJzVxAIm3fxcer0vOXIuAn8IiGHookh3jvu7x99jiot9wrTijNPitE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iij45RS+; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gL0A/hW0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751021438;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=htlFXUXFpvLyLzYGnFDK9X72riSzVnaZycxspABjtgs=;
-	b=gL0A/hW0W/jX5DhSr5pQeXUT3YlZ/o3f/+HDa8hDiS8a8TyM6NM+21xn4JrOucDjFn0Y6o
-	YquBcQ4k3GQuz295r5kDI27l8GEM7UcPTTOi1Rb0OeHodYWb4K0F8WC/fTfnZelP3r8b8H
-	JP947TBk/X5R0J/FE7upPMlF1a5J/rY=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-365-_yo8F5N8Ocetb-LLbpCsgw-1; Fri, 27 Jun 2025 06:50:36 -0400
-X-MC-Unique: _yo8F5N8Ocetb-LLbpCsgw-1
-X-Mimecast-MFC-AGG-ID: _yo8F5N8Ocetb-LLbpCsgw_1751021436
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6face45b58dso28277446d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 03:50:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751021436; x=1751626236;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=htlFXUXFpvLyLzYGnFDK9X72riSzVnaZycxspABjtgs=;
-        b=siCFT4asu1W9nmV9syvSN4j0pz+qRaUBoGRNtrrrmW+SfkJT+XxflXZ1TRWtfLoRyf
-         c6pKVQFraeLY/8rEIgoaTdsAX3tJ+mGds9ZQcEqxUE4M6b4RrTXZlvd8+xg4XQD+ezWt
-         7x+6AlTVKPGz+CU3ZaBqoVTGVqMrgIrQ2yE9pw9dob3B7087lfREq8RX6f5Dv9HYbG4C
-         ewwg+1xDXudMDwtS851Vzg9Lipcp0McmMDFAfo8D3K4gAn73gqjeAjwPwpI/pZPp3FdI
-         KIBzmqyhdsNzhLwKANBiL/gEhxJoAj8MydAerg88ct1OSeDcxsq/kIlW9FZbLQVRUwGk
-         YILQ==
-X-Gm-Message-State: AOJu0YzWlDR386DmW5m1ouIeAujhewuRmQgPGDQncaLXTCG5kx7Cg50U
-	ISSxYAxdWPTTl8bxOqDFZh7oP/rIR0atXkVEH73mt919+Qg6uYgldmw+eRyqrjou9CPsepFkFyO
-	lAQNXkIgWHTaqEfWNENwGK15BOa1f4F+UKhYVjf7GTsdZLVFeUxGy4GHqWVoyVUu5Dw==
-X-Gm-Gg: ASbGncsF+jr1riF9z9dwDwSdYFbNGUda0RjPa+/27p+htXKCAve3aSO3sRlZ2GyT6xP
-	aVtxSYR54eQTx/rqCCIWoat+xij+f5rH3cLo9tZRDojkoGZyzI/NAhfUkOGK4qgPrpOMMo91bPi
-	jO5aB+/ta3+QSoLkiCAM5Vz4P+3pn/DkZ6/Vb+4X2GmJxQZfTQTKCA0dfP+I2wONfnRXHEonSsw
-	2DPFvm8wHiSYxDaU4Q2QtVERDyyY+iRLIxO3F67sIGHGuYwcHUGjFrKWR97rFT8LERZ8/+qT6Ez
-	JIj2B3PBz+vGAZheQbKAQa7/AUx8
-X-Received: by 2002:ad4:5e8f:0:b0:6fb:66f7:643a with SMTP id 6a1803df08f44-7000224847fmr46956096d6.23.1751021435676;
-        Fri, 27 Jun 2025 03:50:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFuVOPpSbDXmObd1CmdrkOaPEYJK4J2y+x493SsV5Ja2/xhandwC2sZzDDh/UAk4qzxJ+GDUw==
-X-Received: by 2002:ad4:5e8f:0:b0:6fb:66f7:643a with SMTP id 6a1803df08f44-7000224847fmr46955756d6.23.1751021435242;
-        Fri, 27 Jun 2025 03:50:35 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.181.237])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772e3f2dsm17866906d6.78.2025.06.27.03.50.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 03:50:34 -0700 (PDT)
-Date: Fri, 27 Jun 2025 12:50:27 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Will Deacon <will@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Keir Fraser <keirf@google.com>, 
-	Steven Moreland <smoreland@google.com>, Frederick Mayle <fmayle@google.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
-	netdev@vger.kernel.org, virtualization@lists.linux.dev
-Subject: Re: [PATCH 5/5] vhost/vsock: Allocate nonlinear SKBs for handling
- large transmit buffers
-Message-ID: <cuqzmhjjakvmbwvcyub75vvjxorjkmzxkuvwvwowhec6wuaghj@uyq6glnhxp5n>
-References: <20250625131543.5155-1-will@kernel.org>
- <20250625131543.5155-6-will@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iij45RS+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751021439; x=1782557439;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5NnJtdqKYJVhQjds2kWd0SpjFMdEvQzFH06HhWnZsfw=;
+  b=iij45RS+ocV1b6ULDe+4/i5C9EBL/cNEZfS40QVLh7+Ar94rsWPwRrA0
+   gh+EKdK4H8D5pq34yd6D3P/hPcIqv0gi4Qff8wqMcFbFTk8ar/+chQgXd
+   YIEzdyJZepb1gzRgo9jus83y27Btrv7XrPG7yszlfRIprjeu3S/AwD6+G
+   gASiIcpyb3lgp83cntgAFnjMrg1fKsHJKrIXpkcH3HY9If2LElmCMpx6N
+   HyxXFeVthWYMz6vNPtf2soOKXYlV/wkS00bm0xx384C7M9t9Smzyx5cCf
+   eZcE74i3gT99Py2+pppKyrJB0/Lw6bYNPNIRrkt6tN8q/S8sSxuqVPMgJ
+   A==;
+X-CSE-ConnectionGUID: O7jcoGlyT2amq/EY6qRqtg==
+X-CSE-MsgGUID: IfFriJd3QgO3K2HwiykOug==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="57137858"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="57137858"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:50:35 -0700
+X-CSE-ConnectionGUID: WHbIMHNNRxCj2KkPBEuXhw==
+X-CSE-MsgGUID: OMAEJkvfR86Ayy23cfPkfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="153304717"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:50:33 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uV6f9-0000000ASM6-1593;
+	Fri, 27 Jun 2025 13:50:31 +0300
+Date: Fri, 27 Jun 2025 13:50:30 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Javier Martinez Canillas <javierm@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH v1 1/2] firmware: sysfb: Unorphan sysfb files
+Message-ID: <aF53djlieUNF_-aV@smile.fi.intel.com>
+References: <20250626172039.329052-1-andriy.shevchenko@linux.intel.com>
+ <20250626172039.329052-2-andriy.shevchenko@linux.intel.com>
+ <87ikkhd0uv.fsf@minerva.mail-host-address-is-not-set>
+ <aF5eL1o3WNo3Q7_p@smile.fi.intel.com>
+ <87wm8xbkyh.fsf@minerva.mail-host-address-is-not-set>
+ <aF5w4QTbSkebYbk2@smile.fi.intel.com>
+ <87ldpdbhj8.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250625131543.5155-6-will@kernel.org>
+In-Reply-To: <87ldpdbhj8.fsf@minerva.mail-host-address-is-not-set>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-nit: I'd use `vsock/virtio: ` prefix since we are touching the virtio 
-transport common code. Maybe we can mention that this will affect both
-virtio and vhost transports.
+On Fri, Jun 27, 2025 at 12:33:31PM +0200, Javier Martinez Canillas wrote:
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-On Wed, Jun 25, 2025 at 02:15:43PM +0100, Will Deacon wrote:
->When transmitting a vsock packet, virtio_transport_send_pkt_info() calls
->virtio_transport_alloc_skb() to allocate and fill SKBs with the transmit
->data. Unfortunately, these are always linear allocations and can
->therefore result in significant pressure on kmalloc() considering that
->the maximum packet size (VIRTIO_VSOCK_MAX_PKT_BUF_SIZE +
->VIRTIO_VSOCK_SKB_HEADROOM) is a little over 64KiB, resulting in a 128KiB
->allocation for each packet.
->
->Rework the vsock SKB allocation so that, for sizes with page order
->greater than PAGE_ALLOC_COSTLY_ORDER, a nonlinear SKB is allocated
->instead with the packet header in the SKB and the transmit data in the
->fragments.
->
->Signed-off-by: Will Deacon <will@kernel.org>
->---
-> net/vmw_vsock/virtio_transport_common.c | 9 +++++++--
-> 1 file changed, 7 insertions(+), 2 deletions(-)
->
->diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
->index 1b5d9896edae..424eb69e84f9 100644
->--- a/net/vmw_vsock/virtio_transport_common.c
->+++ b/net/vmw_vsock/virtio_transport_common.c
->@@ -109,7 +109,8 @@ static int virtio_transport_fill_skb(struct sk_buff *skb,
-> 		return __zerocopy_sg_from_iter(info->msg, NULL, skb,
-> 					       &info->msg->msg_iter, len, NULL);
->
->-	return memcpy_from_msg(skb_put(skb, len), info->msg, len);
->+	virtio_vsock_skb_put(skb);
->+	return skb_copy_datagram_from_iter(skb, 0, &info->msg->msg_iter, len);
-> }
->
-> static void virtio_transport_init_hdr(struct sk_buff *skb,
->@@ -261,7 +262,11 @@ static struct sk_buff *virtio_transport_alloc_skb(struct virtio_vsock_pkt_info *
-> 	if (!zcopy)
-> 		skb_len += payload_len;
->
->-	skb = virtio_vsock_alloc_skb(skb_len, GFP_KERNEL);
->+	if (skb_len > SKB_WITH_OVERHEAD(PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
->+		skb = virtio_vsock_alloc_skb_with_frags(skb_len, GFP_KERNEL);
->+	else
->+		skb = virtio_vsock_alloc_skb(skb_len, GFP_KERNEL);
->+
+[...]
 
-As I mentioned in the other patch, we may avoid this code duplication 
-hiding this in virtio_vsock_alloc_skb() or adding a new function that
-we can use when we want to allocate frags or not.
+> >> That's just because there is an entry for arch/x86/. The problem then is
+> >> that there isn't an entry for drivers/firmware. It was orphaned then just
+> >> because it was moved to a directory that has no entry in MAINTAINERS.
+> >> 
+> >> > See the difference?
+> >> 
+> >> There is no need to have such a rude tone.
+> >
+> > It wasn't meant to be rude, sorry. The point is that any change in
+> 
+> No worries.
+> 
+> > drivers/firmware/sysfb* and respective include are not visible to (any)
+> > maintainers, they just might be sent for a luck of somebody to pick
+> > them up by browsing the LKML for such things.
+> >
+> 
+> Right. But get_maintainer.pl still reports I think the correct people to Cc:
+> 
+> ./scripts/get_maintainer.pl -f -- drivers/firmware/sysfb*
+> Thomas Zimmermann <tzimmermann@suse.de> (commit_signer:4/4=100%,authored:2/4=50%,added_lines:11/43=26%,removed_lines:5/11=45%,commit_signer:1/1=100%,authored:1/1=100%,added_lines:1/1=100%,removed_lines:30/30=100%)
+> Javier Martinez Canillas <javierm@redhat.com> (commit_signer:4/4=100%,authored:1/4=25%,added_lines:19/43=44%,commit_signer:1/1=100%)
+> Alex Deucher <alexander.deucher@amd.com> (commit_signer:3/4=75%,authored:1/4=25%,added_lines:13/43=30%,removed_lines:6/11=55%)
+> Tzung-Bi Shih <tzungbi@kernel.org> (commit_signer:1/4=25%)
+> linux-kernel@vger.kernel.org (open list)
 
-Thanks,
-Stefano
+The problem is deeper. This is default behaviour of get_maintainer digging
+into the Git history. In the past people were complaining (a lot in some cases)
+that they were included in the threads by a mistake because they made cosmetic
+patches or the treewide change while not being interested _at all_ in looking
+after the certain file / driver. So, with --no-git-fallback it gives nothing,
+expect LKML.
 
-> 	if (!skb)
-> 		return NULL;
->
->-- 
->2.50.0.714.g196bf9f422-goog
->
->
+> In my opinion both Thomas and me have much more context and knowledge of
+> the sysfb codebase than the x86 maintainers. It was just for historical
+> reasons that the sysfb code ended in the arch/x86/ sub-directory.
+> 
+> But you are correct that dri-devel at least should also be in the Cc list.
+
+See also above. Depending on the options it may still give bad result w.o.
+explicit mention in the MAINTAINERS (or via glob).
+
+...
+
+> >> >> > +F:	drivers/firmware/sysfb*.c
+> >> >
+> >> >> I would prefer these to be in the "DRM DRIVER FOR FIRMWARE FRAMEBUFFERS"
+> >> >> entry instead of "DRM DRIVERS" since the former is what has most of the
+> >> >> code for the sysfb infrastructure.
+> >> >
+> >> > Then do it, please, fix the above.
+> >> 
+> >> Part of the review process is to give feedback to patch authors. I don't
+> >> understand why you expect me to fix an issue you brought up just because
+> >> I ask you to rework your patch a little.
+> >
+> > In my humble opinion, the author of the patch that makes the problem appear
+> > can help to fix that as well. Are my expectations too high?
+> >
+> > In any case, this was an ad-hoc patch due to the second one, so this one
+> > may be considered as a administrative bug report.
+> 
+> That's OK, but it wasn't framed as a bug report but as a patch and that's why
+> I gave my feedback. But I'll post a patch and add a Reported-by tag from you.
+
+Sure, thanks ahead!
+
+> Thomas, I think we can then only merge patch #2 and I will take care of #1.
+
+I just sent a v2 without the first patch.
+
+Thanks for review!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
