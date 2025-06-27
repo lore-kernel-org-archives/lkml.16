@@ -1,165 +1,103 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00FB824A3;
-	Fri, 27 Jun 2025 12:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715962D3EDA
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751026547; cv=none; b=lxuenAttMGVDcfXP66Cdu2EWSQov7sje/TqoaKNmyY7Mu4MFC2I9vu8+zwTXaEsr39blrDZOIbBXYPAbK3KSXZup19ydzYQWh6gJj1jm7r+7H/7htwLQfIaZ+atxKN6SrgalGxQlUuwVMhUA4k3QBO5JfzklNMNet/n6eLA0Bbg=
+	t=1751026560; cv=none; b=c7Bugwh+QeajYB5M3prvDBUvBKUyhrqzJQQQCAVJ/YoKkbAquLS2PCeX1QRlp0zMwymtjyMUkTDMewTteuBUMGXMP+2nyarbaWLFti2Eny0w3IR+bcuamBBThqd0y8nXSxU9nOgu6pFAaRH04xrUYrmtUZqxmA+rJ5vrraCjW0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751026547; c=relaxed/simple;
-	bh=vWaPSK7tFprZvlKk6cNOOT8GxuKU+3MFNSmpz8uN3kk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iYcEA5A6Uwb9UJg80nQlNM+YcGjsaMAI/ZnNZf5p73dZOTA5c4KCC8p0zOpFP8nnTm4Y/2N295dYN5RpulNtOA8g65nvLh1Z7zlI6ZnErwGHNAx0rlThvZFwYR6LADOnYfZf4MIsGWA5yyEltCye1lR2w5kDVmiT8NK5C/R+nT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YTgs6Q5e; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751026560; c=relaxed/simple;
+	bh=5bnO/bwKwvz0W9dml3PFN0tff+1CpXP9/A1In0KM8MU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=IRpGFyuyjbSyccoZ7DJNp2BZwlgzi8tprCwmKGS0I2+1IFBe0/RLswu3A7BXmPpCIIWLHdOLqi5uNztlHiwUErDcf0suAr1sqxBYmXSGPcJgbBLbmjmJ6AP/BJo3dZTjqhzeMWvN4uKpy7Cj/5j3ul+5Rat0r8Rb/70vT10v9zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fh1mssCM; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTgs6Q5e"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a577ab8c34so292768f8f.3;
-        Fri, 27 Jun 2025 05:15:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fh1mssCM"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4e742dc97so2085531f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:15:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751026544; x=1751631344; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fSNzCAhQULxNCOGe2nHXtwBZiRA02UYH1olLfxSNu64=;
-        b=YTgs6Q5etdzGhRpo+uvSOuAn1wryk/tXTNxqeAgwAubtxurllJPDZiaBJ/VyAwOwf2
-         UP09uJj5wKr61TAhzYapoGfqNNGWla5Xq0G24G3WhDTxbJCoLPXUmxLZb3czl6CPiQVj
-         Gu3VvUCqMBlqaBOkgABk0Q6YxNYBopYGHPgt1+sJuyG1SGrREZds/NLrIJ8eoHUSwsmB
-         hawkOcZ1YUREeBkEoQRBJx7tfL0TwGWKIf3EqkM7oEfKpV87XYYnzIxizpmk7gdRJXj5
-         6hS/OmRfMe3eENASgK0MODsjuL4sJGPAAOxBZXDqAKhtN6K+vlfw7WHRcG6hxUlhKUNC
-         ITbQ==
+        d=linaro.org; s=google; t=1751026557; x=1751631357; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5bnO/bwKwvz0W9dml3PFN0tff+1CpXP9/A1In0KM8MU=;
+        b=fh1mssCMbwMs6+0c8SaQ1DL4WEUjPfHl44PEovi3ImZqcHUlWw/2iokUKIo5jtlw5n
+         irNdOSQdtQp4h9+9NULTdwwfErSr5Ew+IAkMflLxbqsWHhrVg++4gARJR0OSwOWtQe9S
+         xvdYt5unnfTZ7Go4UItxHEPC7cDqTJ6asy0kBxerZtXhjbDN835E063MTNT5KYxh5MkS
+         euYZqoxK1WoMfNSnASUClEnoG6cx+RutnGcu+BaPEtw4N0kT5LSvct2rdddKBimxEyIX
+         Z5xAkH5q6zMgatVEAaX8Xx3pmtaWtujrUsLR4zjaEHt8KEPlSPp82t58dRUKlWoL2BYp
+         I0Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751026544; x=1751631344;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fSNzCAhQULxNCOGe2nHXtwBZiRA02UYH1olLfxSNu64=;
-        b=CO6fLzqc8OxWMlXUYBj2RugcH2qafkLmBVzAlLJ0IY7d6h4tLxJcYqp40+fh0KeFvY
-         dKp6jJuUpVN8DTgJ4gOjGvl+MZy9p4wl36Oh4Was+3C6GK9C0BTam5L6x9lr44HyEAxk
-         lZpkjtyZo+0hEMJo9IWxIbZI3Sc5+zyhksgbHymTHzje+Mdsw/d++7hDxCk/0+QkaM6u
-         7pXwu18QRhjc1JPcinpsouBFky5yV5iPdScRDknh6vT//lCuw2W34ygi5NeXrWibZMmE
-         MtHBhWH3EFs8xP0N0+5PWc3PPTgrjv2SSd+3+ixtvPoW5Yru5FoneVlj3DgfLPp/oKFg
-         mafw==
-X-Forwarded-Encrypted: i=1; AJvYcCUiV1qHissiW/AfD5IKOLwqaQ7r1QaDXgBsygPQLE7KR9lYOpSNJsNOJTqcfGy4TCAGG4AP9rgTqtn/lA==@vger.kernel.org, AJvYcCWLawctQf2CxIgmzhuEK8KeljZlOHNiaJkaLr652EgYsdHYzftKrn6Hk/DPOWaueh6egYqJNFlZPwKk4TGk@vger.kernel.org
-X-Gm-Message-State: AOJu0Yybwl5Oqe4+0JNjgPowyIaseRJGZ+7IVqq4pjHOYx86J9ca4A3x
-	JZn+OZFXBhhQk1fM8lUPryRpAq0bohsJ0G1lJOEiTHDeE6MyzXMfiaWy
-X-Gm-Gg: ASbGncusJp57xaLjo5K9Uk6met31jZN3rZ5llkX1fHTAeJbmxgXiFiFMl383DeTvsE7
-	B1dNou/qDyxpwl7h+KIDG0jXqWuT2fd0JrmcJ9OgMQBUWYK3JCpg/pdjig0Ju47GWquX196vpud
-	T6YDUdYSXe/qTGi49kobzZpQjxpDmYSdH6p53sG3MiL+HBVwrAyEjuaE23f4XHaSoBjZTGOVRNq
-	J70Af983Yqu4dlmIM/Ibj4SljQMVlLo1BdXt8ajHwDbAcqWjqSG6FGAzGBZ660hN0mM8wk+ZvA9
-	wRYY+driVIiyem3ETVpY3luONrm4FBi0A+kYmzeeqxnBdpVZ0sfNP1CWrQulJZCHZB+XnD+ClMb
-	0qgq1iI6rioqVHw4=
-X-Google-Smtp-Source: AGHT+IFxEau6MybuzhUxkkPYte1ZoUsWvtByYAO8s26pxQdvWzlR86gK9+Q+u9x1KVPd0RJnXeBUig==
-X-Received: by 2002:a5d:6384:0:b0:3a6:d191:a834 with SMTP id ffacd0b85a97d-3a90dd535bamr793215f8f.9.1751026543770;
-        Fri, 27 Jun 2025 05:15:43 -0700 (PDT)
-Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:c222:941f:da95:c9f3])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a892e59628sm2522355f8f.81.2025.06.27.05.15.43
+        d=1e100.net; s=20230601; t=1751026557; x=1751631357;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5bnO/bwKwvz0W9dml3PFN0tff+1CpXP9/A1In0KM8MU=;
+        b=dxiM094W/EaOVp+kdi1xmWzvF2EwW9ICIgUd7MHVtV2ggwSn6UcLPoYLhb+CRy9Bxm
+         HYF5VJ4vC2rHyfWTWFyKANwfuUU+iTmyX8poHoIsAtVFlmCTj3zhPJgBEKiuiHL6aY8I
+         E0M+fwVeUjvh+/e9KzQfL53s65X4Z/E6BWqTg43shVRtaX0zwo3DUndGddFg6jVSemqQ
+         ewHGnNIQGHsIq81ta1MSyQX9Ok9qTxzqnOUb24GSJnUkNA/mQCRvh5ohwcUPJ6Ebcy1a
+         bcF1YPbQGwesSWYV9vFUoWChUn7APLO2QpBf0vCRJn7cL9FJaEFaO14GFVLYuB2lkJPy
+         LU1w==
+X-Forwarded-Encrypted: i=1; AJvYcCWCCqA4COE0+7lkuIx/g3LTLINvUW7V9YtBZALtRmEllVziz8Wie/gqbzM0UyhjBwSmfKs3HoJSYlk9wrw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yydx1ealunNH+ILR8Xw2eLpqfoUQ/Fwyofbda6KKEP9cf64+6zV
+	3W8bi9l+iIMbhzh7jdzYysWMk5D3q9P1cdu3N1gofU0xKx95T7L83kNhgJ4QaNDMhBI=
+X-Gm-Gg: ASbGncubrHVUymZ5KMdU6ZM/nbVWD4aI5EsVBny2IsyETWNC82t7ZL8iOebr7thzTGb
+	g/W8sOo9/niZTiXFJQMuzFBxWOXwkMHLzLg6WSnJrmq4g1un1Xpkw6FIIbAeauqWa0esmwC1M5S
+	JRe1HtKMD6W3XeNgtwlbMve8s3DpS+E15uwEZ2WxuCM5ojbi4cHiXOeV6b9T8b8oyUyO+MRl5v0
+	AwkQtwRXlbLN4mfbgylYylAQ3RasZC6M9CJDhWBrxNg/RKU3DHGxBw4hExMNw4rvTbyB4C6MFCx
+	3k4lSXOYsSNodYFRsDXJ8+HqqGKF8qkAFSYCFRWV+DWr+5IT9ozgKR5lNhsGqC5Aw9Q=
+X-Google-Smtp-Source: AGHT+IEQFM3pQCiRU5lNSKxbqFCgvUVf7e/LcmOK+L4hhlaL9cMKkmMb9g/3CGCF3L4wxugIwNImYA==
+X-Received: by 2002:a05:6000:40d9:b0:3a4:cec5:b59c with SMTP id ffacd0b85a97d-3a6f3162238mr7238080f8f.25.1751026556678;
+        Fri, 27 Jun 2025 05:15:56 -0700 (PDT)
+Received: from [10.1.1.109] ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a4076ebsm48177435e9.31.2025.06.27.05.15.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 05:15:43 -0700 (PDT)
-From: Thomas Fourier <fourier.thomas@gmail.com>
-To: 
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Philipp Stanner <phasta@kernel.org>,
-	Anuj Gupta <anuj20.g@samsung.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Li Zetao <lizetao1@huawei.com>,
-	Asai Thambi S P <asamymuthupa@micron.com>,
-	Sam Bradshaw <sbradshaw@micron.com>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] block: mtip32xx: Fix usage of dma_map_sg()
-Date: Fri, 27 Jun 2025 14:11:19 +0200
-Message-ID: <20250627121123.203731-2-fourier.thomas@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Fri, 27 Jun 2025 05:15:56 -0700 (PDT)
+Message-ID: <ba42a719df8dfb74406336e8adb80b5286bd6fbc.camel@linaro.org>
+Subject: Re: [PATCH v4 02/32] dt-bindings: clock: samsung,s2mps11: add
+ s2mpg10
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, Rob
+ Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Sylwester
+ Nawrocki	 <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>,
+ Alim Akhtar	 <alim.akhtar@samsung.com>, Michael Turquette
+ <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas	 <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Alexandre Belloni	 <alexandre.belloni@bootlin.com>
+Cc: Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus
+	 <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rtc@vger.kernel.org
+Date: Fri, 27 Jun 2025 13:15:54 +0100
+In-Reply-To: <20250409-s2mpg10-v4-2-d66d5f39b6bf@linaro.org>
+References: <20250409-s2mpg10-v4-0-d66d5f39b6bf@linaro.org>
+	 <20250409-s2mpg10-v4-2-d66d5f39b6bf@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The dma_map_sg() can fail and, in case of failure, returns 0.  If it
-fails, mtip_hw_submit_io() returns an error.
+On Wed, 2025-04-09 at 21:37 +0100, Andr=C3=A9 Draszik wrote:
+> The Samsung S2MPG10 clock controller is similar to the existing clock
+> controllers supported by this binding. Register offsets / layout are
+> slightly different, so it needs its own compatible.
+>=20
+> Acked-by: Stephen Boyd <sboyd@kernel.org>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
 
-The dma_unmap_sg() requires the nents parameter to be the same as the
-one passed to dma_map_sg(). This patch saves the nents in
-command->scatter_ents.
+Friendly ping.
 
-Fixes: 88523a61558a ("block: Add driver for Micron RealSSD pcie flash cards")
-Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
----
- drivers/block/mtip32xx/mtip32xx.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/block/mtip32xx/mtip32xx.c b/drivers/block/mtip32xx/mtip32xx.c
-index 66ce6b81c7d9..8fc7761397bd 100644
---- a/drivers/block/mtip32xx/mtip32xx.c
-+++ b/drivers/block/mtip32xx/mtip32xx.c
-@@ -2040,11 +2040,12 @@ static int mtip_hw_ioctl(struct driver_data *dd, unsigned int cmd,
-  * @dir      Direction (read or write)
-  *
-  * return value
-- *	None
-+ *	0	The IO completed successfully.
-+ *	-ENOMEM	The DMA mapping failed.
-  */
--static void mtip_hw_submit_io(struct driver_data *dd, struct request *rq,
--			      struct mtip_cmd *command,
--			      struct blk_mq_hw_ctx *hctx)
-+static int mtip_hw_submit_io(struct driver_data *dd, struct request *rq,
-+			     struct mtip_cmd *command,
-+			     struct blk_mq_hw_ctx *hctx)
- {
- 	struct mtip_cmd_hdr *hdr =
- 		dd->port->command_list + sizeof(struct mtip_cmd_hdr) * rq->tag;
-@@ -2056,12 +2057,14 @@ static void mtip_hw_submit_io(struct driver_data *dd, struct request *rq,
- 	unsigned int nents;
- 
- 	/* Map the scatter list for DMA access */
--	nents = blk_rq_map_sg(rq, command->sg);
--	nents = dma_map_sg(&dd->pdev->dev, command->sg, nents, dma_dir);
-+	command->scatter_ents = blk_rq_map_sg(rq, command->sg);
-+	nents = dma_map_sg(&dd->pdev->dev, command->sg,
-+			   command->scatter_ents, dma_dir);
-+	if (!nents)
-+		return -ENOMEM;
- 
--	prefetch(&port->flags);
- 
--	command->scatter_ents = nents;
-+	prefetch(&port->flags);
- 
- 	/*
- 	 * The number of retries for this command before it is
-@@ -2112,11 +2115,13 @@ static void mtip_hw_submit_io(struct driver_data *dd, struct request *rq,
- 	if (unlikely(port->flags & MTIP_PF_PAUSE_IO)) {
- 		set_bit(rq->tag, port->cmds_to_issue);
- 		set_bit(MTIP_PF_ISSUE_CMDS_BIT, &port->flags);
--		return;
-+		return 0;
- 	}
- 
- 	/* Issue the command to the hardware */
- 	mtip_issue_ncq_command(port, rq->tag);
-+
-+	return 0;
- }
- 
- /*
-@@ -3315,7 +3320,9 @@ static blk_status_t mtip_queue_rq(struct blk_mq_hw_ctx *hctx,
- 
- 	blk_mq_start_request(rq);
- 
--	mtip_hw_submit_io(dd, rq, cmd, hctx);
-+	if (mtip_hw_submit_io(dd, rq, cmd, hctx))
-+		return BLK_STS_IOERR;
-+
- 	return BLK_STS_OK;
- }
- 
--- 
-2.43.0
-
+Cheers,
+Andre'
