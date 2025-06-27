@@ -1,134 +1,135 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E151F2EACE5
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BD02EA148;
+	Fri, 27 Jun 2025 17:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751046935; cv=none; b=CfQHhhqxCV0R/PVZfeqICFMUbfL5A/o7gqSV+QWH/TFKCxpUFXkif4o5TQMr3F6oQSgCXrDuNnMqVncDkhRqRPOsp4pw9W+DevixayM37VMj9TGceotQLQH/pLqOMSWNYFfnqINgbUnM9AhlVHNAdeDeK7fHsw1/NcHiAUQ3yaE=
+	t=1751046955; cv=none; b=QJAL10KH+2tdjNDGJIXSsGKscIk28gtEyJeBKC1z3nmfeXEhFPE2Nl3aE5Ml83W61jqbk6IQin87qLoAZ75Z493MgGldpnReiCkjR/Z4IXLts0aAZ5q59Ew4CfmkLxEdrRROXCFJyqX+Z1wCKB3IytumkBLOFGNQtnhe0sb4cuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751046935; c=relaxed/simple;
-	bh=sP55RcNGRtVXAqUW36R17TRg0JabtTdiLcEfMjXZ0rg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a3MMuIkytknQimdqwNbIAowBVD1N4+7kO0S+To/XmFAQCKnoB4bgpCTj9ONEJhlG6UYoI0Knc3QCjp1oDj4IPLxu9CJNbFraIbnZp3PHc3YcUWXmn/IcsGBq8q/C82jMjPX0o74iixPvNJg0ihnkQ8v/cYuqTYZtwMIHz87dLRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bktBNDHk; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bktBNDHk"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RCoENR011279
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:55:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	xhtPwHF0fTtys7QWflgWfeVzTXfKtMLTUh3g+imGqfM=; b=bktBNDHk6uXDTEkc
-	P3hPdPknqjLUHgdbQBnOxh0EkFLa3qjGh0hsd72BMxnmtzFKmSqT3MZn6H5wQFZn
-	esyndwzb/ajSbcEuCUFWD6HeppBAWxX45VTf5anMua3JjOjDl+mRUxlIT2fh8DNb
-	LFX7XX7JeuSDBYFs12oq1x0qRnbASgbjTqZmYwvKsNNPX9rzMduNHgdttdd4TY79
-	htJBfVjiXzKr++u0m8uUbvkV8dJgth9Zp6qf3fbyWl1ej16lGxZrKGOczkqGWWEO
-	qMsuPvV296TfDskYUzZ1Cu4EyhSKTYnjECJUlJ25z1D0BUiR4jJOgy6b2GMsZpN+
-	HWYIcA==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f3bgqjjn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:55:32 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4a43be59f17so4162431cf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:55:32 -0700 (PDT)
+	s=arc-20240116; t=1751046955; c=relaxed/simple;
+	bh=YQDmW0AHOMU3s6GZ1mdIC4hsmUz01ytmXUBgVV3yg+c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Hn9qn7CqVn+jC3LIX00o1zFFbRWL6dIkQ+NyO5DFHLLl3/CpMEx58wdRp3e78OAlktUUi2H0l8hv4g2ot9eNOi2kBX5qGiLUMHYcscPzw3C/FYQynuP2+TtaJkaXTCFWxbxUTd/oLJa2TCyZlFjuYU0rWM4kRokHUihmFBWz/50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ae0b6532345so663410666b.1;
+        Fri, 27 Jun 2025 10:55:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751046932; x=1751651732;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xhtPwHF0fTtys7QWflgWfeVzTXfKtMLTUh3g+imGqfM=;
-        b=Q+bkBloSQa+6T0F4FGFAdu2/z4wiQekCIm9t2YLotEerKJlSYI/k0WxNKUbZeAXC5r
-         +qdox61smJQVr9UPX9dhi30g6dsnKzfDcvr7IghMm1FKfztmRlW6hujZKUN8+5Ey9amg
-         5DgrXbjgvWuoO1fDVnB+LZCehOGJduJpPwity+sSZZZFuYjPnGkufa89bpolj8kosORG
-         yE4ziqXE5p33p3zIPDwULP/MQChqu/aLWAnfo653BkwehEzQ4gE1cZObph9C36zaNIHN
-         7xf7V9/fidmS3v7VnAp2D4z7gtf6CtMUnaNydxRGYB/IxkIWcEQFuG0B6VEPNzzYuy8G
-         gONg==
-X-Gm-Message-State: AOJu0Yw8Z1qFECYrfsV/E/k8m8bcsq9R4I9SMUK8YPmX5A/GD6sDQVV7
-	8Aq3GcYXs1Dm/JGZv0NksUqbQkWDNeEzlIyKJ5xKLp2yP8P+PJtOQl+tx/93Jsq/DUrb37pX1cS
-	FbHHSTrVkpF4BiVoFNRytznd1C+OkYd6sR5v7hdGmDjxqScz/qxWlGMyMl5bVtBj7U9mLY+LPHL
-	Y=
-X-Gm-Gg: ASbGncu2F9wqL5QLDRYwIA8+XmWzQfJWIu8dwspct3+4iY8OXdJ4/MPOaLGmChAcfpz
-	mIi3dc6YUE7+lbgMdEtCC7Xsyty3hxma1oHTNi313vV5ce6alLyAYraRpLU38pg+79a3zOJ4KPd
-	H7/WX3/SN8FZPkYcyEvXHyplQeoqsxm2j+qYZ5x3TIlWgouhy845BROTT6HMjY9R5DIaym/rVhN
-	QoqraX3zh/YKrYuD1azaMMi5i2TPYOCH5fpQ75gMAFL9/FZu7dpz4RUthhad4fwv+nrMsymgpYE
-	oXnx5DzyNT3Ll7SkX+/p5+AQoIgqGTq9PyHZ2wGgStME9k9jf90riCgV7uRnPwtQsr5reI1inA6
-	zgrM=
-X-Received: by 2002:a05:622a:1a0c:b0:472:2122:5a37 with SMTP id d75a77b69052e-4a807390ff1mr1923091cf.4.1751046931762;
-        Fri, 27 Jun 2025 10:55:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEjS6V7nSMnoKIToCQDAP4GKzUa5d91t9ousBqXncQjQ5eyhDeXwLOlzvN8i3GRTqy4F6YNGw==
-X-Received: by 2002:a05:622a:1a0c:b0:472:2122:5a37 with SMTP id d75a77b69052e-4a807390ff1mr1922741cf.4.1751046931099;
-        Fri, 27 Jun 2025 10:55:31 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c828e1a96sm1778182a12.19.2025.06.27.10.55.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 10:55:30 -0700 (PDT)
-Message-ID: <80912fb3-2af3-48b1-b81c-89bfcdb54841@oss.qualcomm.com>
-Date: Fri, 27 Jun 2025 19:55:27 +0200
+        d=1e100.net; s=20230601; t=1751046952; x=1751651752;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=41QiIv+uFhnnf5jTOH3MwkOz5Uie3N60jNO94UEkVlM=;
+        b=WM8CMefuiyYaG9IDA0ljTt5MlA4h1PLer6uoYGXeZINYv1FQQ3ZD/a1fm5+0r7lZRj
+         V19YljGCcyZJZyaQfP3Nh6ABolsIHuSB8ypdufqiGCZew24LEynL+Yxw95HlY+s3cIXC
+         BVfttsb0LKWhwqoue1UAbtfSGZzXCq4c83LhwNZrFuTXc4C/g0WKz7hurEadewx8bFz6
+         o1KE/RmQ5HbTFFhiaL+0gWGeGjnf8d9xvysh4/WWfWDnEes3cH19W7o4BG15ooPzf+lH
+         /GEEjSTMOV3OcPhpQbseWnoE3eT1vNk8ytyTnycZqgHwC/+Yh9gI6dH5jkvX89TZ8SnM
+         SzTw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcCiKjTCXrqJrg2/6D4lmE64K1aJadfXemvw+HPpar9WkbMx+mxEG4EsysTE3KfnfQwaPYDt61Fk5VjFjaVSpi@vger.kernel.org, AJvYcCX+wFizyYB2eOhnGdxCr6RGo2mmExn6porYwi6GlnR31MXJuhgsQzE6auJVor045qRRFF9NlHbcf/3C0Nc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfAsC2ijgXUOc7ILp3Pm6trVdSjuYy2pLMjt5NKEEfcuTfDNjM
+	fYjvAmHC6mG2f69UvqvKVpUnyQovFNf48jbT2HalC9fY+zR7DVVSasoC
+X-Gm-Gg: ASbGncvox2HeQ3Vij3zYEKF01H3IS/7vUgelYILjp8J4MBLAk5xL1bGPssIBRdDkjL3
+	jnT6wvJQGi1yNOHR0FsGcPq2kVAmWirg1gVe58LsuXVCLz6v6W62WLiMkU8yDMddMUAslsIIW4k
+	9+KC8SklVJYD/l0XuFuhHF6JmMI+8zKtfZ84nTFfX4nvFhrKiRYjyqPTU9P0S6VAYS/xVEgzdI9
+	nsaY0d5n5kop4wFSiKOUD25qRzrL+//gdqP3wYiPJKtgVxy8FoySeDvNMEQ9teKWrB/ywouw4SS
+	znMjO4r2UFYzgyz0zd782C1Nl9XMK+3jznBLzdFksPLMfxaVYCLmXg==
+X-Google-Smtp-Source: AGHT+IE2/uolgPkUBId7WzzJ21Ck8sXguq+OetxpuidJMY5Mc9L6a6CX3gE2vD+RNH8nPcn4j1Un3g==
+X-Received: by 2002:a17:907:6ea9:b0:ae0:b8c5:6142 with SMTP id a640c23a62f3a-ae0d25757b5mr922173666b.7.1751046951550;
+        Fri, 27 Jun 2025 10:55:51 -0700 (PDT)
+Received: from localhost ([2a03:2880:30ff:71::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c8290ffb4sm1765078a12.36.2025.06.27.10.55.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 10:55:50 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+Subject: [PATCH net-next 0/7] netpoll: Factor out functions from
+ netpoll_send_udp() and add ipv6 selftest
+Date: Fri, 27 Jun 2025 10:55:46 -0700
+Message-Id: <20250627-netpoll_untagle_ip-v1-0-61a21692f84a@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/msm/mdp4: Consistently use the "mdp4_" namespace
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Rob Clark <robin.clark@oss.qualcomm.com>,
-        Dmitry Baryshkov
- <lumag@kernel.org>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org
-References: <6b9076268548c52ec371e9ed35fee0dd8fcb46ef.1751044672.git.christophe.jaillet@wanadoo.fr>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <6b9076268548c52ec371e9ed35fee0dd8fcb46ef.1751044672.git.christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: ct0SYqN38Z8hXKD3hQ8kbNAmJ81Q6gzG
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDE0NCBTYWx0ZWRfX1F8f/jn87gYq
- bC4DbrZ6T+XqhMY8HzYOZGvyXKYVBaUk75piujH1Z/Qf6MJW0/VpP7btEGIV8zAXz/osAnYoXy6
- dzi7LEI4spF6P9aweZbhpKNWcNbIbuk3wDo18gcQTBrqTChpPHZLZdJO1RBgZ/8Mn9eVIaSd2r/
- FDYY61Aeh+XrqeL7rNFhfHDtmvqpJSusA+KIH9eFynDa7QxUeAL0BmKyCXQJMOdlFo/+fP7gfGk
- FZByrvevPf5WDQxlYIWZywurp/USq9CnrIVR9RXItiapR5oSmjkJH5O25ahPCKkMPQBhc2/Covh
- jQBVLe+rVksq3d8Soqm6jeVV/FRErymj+a50u0b0ZTTXK/syT6geGS4zirCzjDqefoeVZDmJXmJ
- wRu7WfbtqWMthz1VvhrsurHvcjBItMA+9fl0/Vy4/vSW1MIxwrsi7311L2rKGo5p7wnZnJWO
-X-Authority-Analysis: v=2.4 cv=L4kdQ/T8 c=1 sm=1 tr=0 ts=685edb14 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=5MiDvfStR0l9wvLywkEA:9
- a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-GUID: ct0SYqN38Z8hXKD3hQ8kbNAmJ81Q6gzG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_05,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1015 suspectscore=0
- adultscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- spamscore=0 phishscore=0 mlxlogscore=809 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506270144
+X-B4-Tracking: v=1; b=H4sIACLbXmgC/x3MUQqDMBAFwKss79tAmqKSXKUUCXZrF8IaklgE8
+ e6Cc4A5ULkIVwQ6UPgvVVZFoEdHmH9RFzbyQSA463o7OGuUW15TmjZtcUk8STb8HOfR+zh416M
+ j5MJf2e/0BeVmlPeG93ledyzQ3G4AAAA=
+X-Change-ID: 20250620-netpoll_untagle_ip-e37c799a6925
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Breno Leitao <leitao@debian.org>, 
+ gustavold@gmail.com
+X-Mailer: b4 0.15-dev-dd21f
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2128; i=leitao@debian.org;
+ h=from:subject:message-id; bh=YQDmW0AHOMU3s6GZ1mdIC4hsmUz01ytmXUBgVV3yg+c=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoXtsl85gL84npdpHQF18rMWKqLo+yjnoSF8sbP
+ yDySTcPtxuJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaF7bJQAKCRA1o5Of/Hh3
+ bRbRD/4+tckhsv/5F4eHqSbuxkGL80BXgeOeDewEIwJgrDlJhLUPfZJsmnYgURKvdfLUA0UG+b6
+ Cbf5umMkqpp3LGYRxWwZ6yJZKoN5mUvGXqnQa32gpEamG31eilyQKYpSU1iYz+mDfmkD6H1UroY
+ u2ZDtV5M62CHLqRocBVmX1xZDUEywO09a5yMpQp9iBzfQ4mL3K9EOfF9jeJa0zgjoEbn2J5YEDY
+ iMjmdJ6Fw+xsgkC0jqGfnNPv6CQmWJQ+IKD0pppDj8/pka5LD8x2Ie/IdBj/VGNHoTpUrkVAudn
+ gZto+K+2tf9/2s52erGrKz7WBd1GJmi3DFtcKUJsSgkQHoF1spYLGmOfHcWq25dPSkd/E+Ora0q
+ 6W6Em8h1zxGeah+ZewRPcBIoFCF4kQtcSlwyLQe1GAz1/spWPIjBJWnrqjQpOYK5fr3yFLUtcED
+ j5ug0WfwunDh5dbcgsckTFEBWivv89dvw0avJKo45QFeBFG02Di25sZ2znrwDjDlRBvyuGTXbCq
+ dxUK02BLYds3C+YY94YN7SyPWdkC2vjfevIsqJl9MbAGBrcsufE912lkTHEuBoh6gAmlv0m8hEz
+ 3V14mEJtVqjXda5AxCmlggPdv4ck9ZsXrcMEXhuJg8fOKaEqFsly3xUOaj9+aQxLTqQCLdEF6Vh
+ DAxaVAPSq3M2weg==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-On 6/27/25 7:18 PM, Christophe JAILLET wrote:
-> Functions and other stuff all start with "mdp4_", except a few ones that
-> start with "mpd4_" (d and p switched)
-> 
-> Make things consistent and use "mdp4_" everywhere.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
+Refactors the netpoll UDP transmit path to improve code clarity,
+maintainability, and protocol-layer encapsulation.
 
-Nice, thank you
+Function netpoll_send_udp() has more than 100 LoC, which is hard to
+understand and review. After this patchset, it has only 32 LoC, which is
+more manageable.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+The series systematically moves the construction of protocol headers
+(UDP, IPv4, IPv6, Ethernet) out of the core `netpoll_send_udp()`
+function into dedicated static helpers:
 
-Konrad
+  - `push_udp()` for UDP header setup
+  - `push_ipv4()` and `push_ipv6()` for IP header setup
+  - `push_eth()` for Ethernet header setup
+
+This results in a clean, layered abstraction that mirrors the protocol
+stack, reduces code duplication, and improves readability.
+
+Also, to make sure this is not breaking anything, add IPv6 selftest to
+netconsole tests, which will exercise this code. This test would also pick
+problems similiar to the one fixed by f599020702698  ("net: netpoll:
+Initialize UDP checksum field before checksumming"), which was
+embarrassin we didn't have a selftest catch it.
+
+Anyway, there are **no functional changes** intended in this patchset.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+Breno Leitao (7):
+      netpoll: Improve code clarity with explicit struct size calculations
+      netpoll: factor out UDP checksum calculation into helper
+      netpoll: factor out IPv6 header setup into push_ipv6() helper
+      netpoll: factor out IPv4 header setup into push_ipv4() helper
+      netpoll: factor out UDP header setup into push_udp() helper
+      netpoll: move Ethernet setup to push_eth() helper
+      selftests: net: Add IPv6 support to netconsole basic tests
+
+ net/core/netpoll.c                                 | 196 +++++++++++++--------
+ .../selftests/drivers/net/lib/sh/lib_netcons.sh    |  74 +++++++-
+ .../testing/selftests/drivers/net/netcons_basic.sh |  52 +++---
+ 3 files changed, 216 insertions(+), 106 deletions(-)
+---
+base-commit: 8efa26fcbf8a7f783fd1ce7dd2a409e9b7758df0
+change-id: 20250620-netpoll_untagle_ip-e37c799a6925
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
 
