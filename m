@@ -1,82 +1,107 @@
-Received: from joooj.vinc17.net (joooj.vinc17.net [155.133.131.76])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B55212E5B;
-	Fri, 27 Jun 2025 00:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.133.131.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126C3FBF6
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 00:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750983787; cv=none; b=R9nYon1UpAdhzVg8PoAmv6Ba1hOg7/IYgEtJVjbsB9trqtMcnHztF/Jm5rrXJW6u3Ys3bK0HVuY+sbjbRdRWIvor7a9A1vockf4pmYUCgrSjIZUVNCxpzmoB8ymZJH0e6dVt2VCtKs0MKGPWZEiE1Lm2267OcWD/gJODRbrkRPU=
+	t=1750984008; cv=none; b=ZZhrrafmLM5J1JNa7IdYa/TFS3KHzBZ1xsKbSwIlIQ5AmvVjoZ0aEyBmNgpnWzOMyIFkUhyR8JwNjOq7hMbLllAlh4d5il2KO1D44nMnbd3NZVuRjjSUt9rdqVo0H/dwLflAiSE8G2rDhgdrSYSeMb9vVvWun/ueBkbd4Hi+sag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750983787; c=relaxed/simple;
-	bh=ARQyf+w3iW4Di+uKWvsWr3VefT5lXktN5+Vu3+WI1r0=;
+	s=arc-20240116; t=1750984008; c=relaxed/simple;
+	bh=2jlhl1pT0vOK+0eJYYLHSdYMDOjk44bGVrpxsdU43YA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rsOv/esJAgYEqdRi6yaas+Q1HxtjhkDyufTuDJ8ImZdNDkD8BFt6dMoWSvCx5jqcFNasr5RP3Z6v82aVaTaGzEr/1J5xvXn9uW7JnZAjLA1PQwNrk5H9/tkbTnwf7pdDKLopwHP1eFY2x2yeu+Hm4HLsCHT1QEpcenjLp3nhheQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vinc17.net; spf=pass smtp.mailfrom=vinc17.net; arc=none smtp.client-ip=155.133.131.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vinc17.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinc17.net
-Received: from smtp-qaa.vinc17.net (2a02-8428-1b1d-4d01-96a9-491d-7b48-ba31.rev.sfr.net [IPv6:2a02:8428:1b1d:4d01:96a9:491d:7b48:ba31])
-	by joooj.vinc17.net (Postfix) with ESMTPSA id 0E6285CF;
-	Fri, 27 Jun 2025 02:20:13 +0200 (CEST)
-Received: by qaa.vinc17.org (Postfix, from userid 1000)
-	id 4A6E5CA045B; Fri, 27 Jun 2025 02:20:11 +0200 (CEST)
-Date: Fri, 27 Jun 2025 02:20:11 +0200
-From: Vincent Lefevre <vincent@vinc17.net>
-To: Carlos O'Donell <carlos@redhat.com>
-Cc: Alejandro Colomar <alx@kernel.org>, "Andries E. Brouwer" <aeb@cwi.nl>,
-	linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
-	libc-alpha@sourceware.org
-Subject: Re: man-pages-6.14 released
-Message-ID: <20250627002011.GA431181@qaa.vinc17.org>
-Mail-Followup-To: Vincent Lefevre <vincent@vinc17.net>,
-	Carlos O'Donell <carlos@redhat.com>,
-	Alejandro Colomar <alx@kernel.org>,
-	"Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org,
-	linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
-References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
- <20250509112627.GA924923@if>
- <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
- <20250509121454.GA952723@if>
- <3e82680d-149c-4a67-b838-bc73c0be3e4e@redhat.com>
- <e363mzanav4inu3wtk5pmyzfwlquxr5kwh7ytk5emtayizi7qi@dqxritlnl22g>
- <42dad79f-e0f2-4731-ac14-0189f5d278a0@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=GlwEFFqYqfJFfeiFnQttAy+jEeY4ZR9HRhlBMdaJa1ClVibwlXW7iQux4/tv/+E/ODmqtYaG1iqzQYd8fZrrXx6D02zN4jb5o1TUF3TTmJLHxzWmc+Aqe3rh82c26B+D+YuVaGza9s129QppDi7PykVcj0/AmKKnO7iKebGV2v8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fPeK/WbX; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fPeK/WbX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750984007; x=1782520007;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2jlhl1pT0vOK+0eJYYLHSdYMDOjk44bGVrpxsdU43YA=;
+  b=fPeK/WbX/iPwPVa80AxaYDiVD3Fo1QtneTLTPzUAjejyYFPrXQXRBJOh
+   MoEkxfTUAK+/lgArYm5tkIYCcJer7NiU6u1U50Vro3nFkaLLrHG6j4zt2
+   JxCO5visTjFaHMIEYH5ixEBnbMKqfIWqZWfpBY6PHEL/YRsVx98mXlJ/B
+   EziyVSfIyGX6QSdCypuETnj/zYtfQfiQO10/BjVB0D4fpSFwIBIRVKcbs
+   P2vrlcRBZQQLdr2ASJXuCfCxNdRSc2IgKbwcPaankQpMvtLStKo3hj6XQ
+   8jsql3wUVjk9W46b1owF8ZQXiEDvZ4yo/S23LhUSQQ4i6JfT+v2G0kXss
+   Q==;
+X-CSE-ConnectionGUID: STq53I7aRTiEB9mkcLVDKg==
+X-CSE-MsgGUID: DLJaHZ8iTXSGQX4GPhIysQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="75842877"
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="75842877"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 17:26:47 -0700
+X-CSE-ConnectionGUID: o4gK8dzQTaKbZnIK+5LjZg==
+X-CSE-MsgGUID: 3j2suu7bTYe+PJ9hcPFwMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="189855296"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 17:26:47 -0700
+Date: Thu, 26 Jun 2025 17:26:44 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Fenghua Yu <fenghuay@nvidia.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Chen Yu <yu.c.chen@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v6 00/30] x86,fs/resctrl telemetry monitoring
+Message-ID: <aF3lRKURweT4mhAj@agluck-desk3>
+References: <20250626164941.106341-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <42dad79f-e0f2-4731-ac14-0189f5d278a0@redhat.com>
-X-Mailer-Info: https://www.vinc17.net/mutt/
-User-Agent: Mutt/2.2.13+86 (bb2064ae) vl-169878 (2025-02-08)
+In-Reply-To: <20250626164941.106341-1-tony.luck@intel.com>
 
-On 2025-06-26 19:01:24 -0400, Carlos O'Donell wrote:
-> On 6/26/25 5:04 PM, Alejandro Colomar wrote:
-> > The thing is, as someone else mentioned, removals happen also implicitly
+Bother. Just got e-mail after posting v6 from lkp. Apparently
+I applied the fixes to avoid "'d' used before set" in
+domain_remove_cpu_ctrl() and domain_remove_cpu_mon() to some
+other branch than the one that made it to my final version.
 
-This was me, there:
+Please imagine the hunks below merged into patches 7 & 8.
 
-https://lore.kernel.org/linux-man/u2ogua4573d2xm2p2oiuna67kydkr3e26pt6lixeidezdw34dg@nvn64na3cptt/T/#me71349fc15520d5c183311dfaf85667903c07d9d
+-Tony
 
-> > by moving text from one page to another and not copying copyright
-> > notices, so how much does it matter an intentional rewrite of the
-> > copyright notices into a different form (but which keeps their
-> > copyright, as part of the AUTHORS file), compared to an unintentional
-> > removal of copyright by moving the text (these do actually remove
-> > copyright, so these are the problematic ones).
-> 
-> Both are legally mistakes.
+---
 
-Mistakes, yes (as long as copyright notices are per-file).
-But legally? Why?
-
-I've always heard that a copyright notice was optional and only
-informative (so, in particular, there are no requirements to have
-per-file copyright notices instead of a single one for the work).
-
--- 
-Vincent Lefèvre <vincent@vinc17.net> - Web: <https://www.vinc17.net/>
-100% accessible validated (X)HTML - Blog: <https://www.vinc17.net/blog/>
-Work: CR INRIA - computer arithmetic / Pascaline project (LIP, ENS-Lyon)
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 3ec8fbd2f778..39cee572a121 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -651,8 +651,8 @@ static void domain_remove_cpu_ctrl(int cpu, struct rdt_resource *r)
+ 	if (!domain_header_is_valid(hdr, RESCTRL_CTRL_DOMAIN, r->rid))
+ 		return;
+ 
+-	cpumask_clear_cpu(cpu, &d->hdr.cpu_mask);
+-	if (!cpumask_empty(&d->hdr.cpu_mask))
++	cpumask_clear_cpu(cpu, &hdr->cpu_mask);
++	if (!cpumask_empty(&hdr->cpu_mask))
+ 		return;
+ 
+ 	d = container_of(hdr, struct rdt_ctrl_domain, hdr);
+@@ -696,8 +696,8 @@ static void domain_remove_cpu_mon(int cpu, struct rdt_resource *r)
+ 	if (!domain_header_is_valid(hdr, RESCTRL_MON_DOMAIN, r->rid))
+ 		return;
+ 
+-	cpumask_clear_cpu(cpu, &d->hdr.cpu_mask);
+-	if (!cpumask_empty(&d->hdr.cpu_mask))
++	cpumask_clear_cpu(cpu, &hdr->cpu_mask);
++	if (!cpumask_empty(&hdr->cpu_mask))
+ 		return;
+ 
+ 	switch (r->rid) {
