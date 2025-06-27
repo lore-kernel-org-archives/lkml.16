@@ -1,65 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDE4289E37;
-	Fri, 27 Jun 2025 21:41:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60693289E37;
+	Fri, 27 Jun 2025 21:41:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751060487; cv=none; b=E+T22eDEL6cmvqEfvy6qBXc/HziDpZmsqdaeP22XeXddoQk5GwHQ7CNX1CVlhGeqrngwpuwOEyhxahbe6wnFiLkgoQeqb5hu8CIx02jd3X7IrYYJ5md201fevWGKXyNUV3VRdHqP7LkR/LkgC+Ay9/EZgdmdc9MVlxYc6VzeFqQ=
+	t=1751060495; cv=none; b=j6rWMgEU99JsmIqxVZ0dmVbkcbCliNdp7j4LojruImfacvJjFVQwnGiRTz+Z7j4nz26vJu6ao0tWHB85vSVDinkEvPCaB5TjpB51DCREZ28SPAH/gZMeN7ngFim1lQLySrnvu7KVg5AmvTp9R6UZHgtxr9WKVIfWR8djsJF/kFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751060487; c=relaxed/simple;
-	bh=6qGjtqck4coO6NZjDUGE9y+GBqUOpbdnYaMZr6gFMos=;
+	s=arc-20240116; t=1751060495; c=relaxed/simple;
+	bh=5Ljo3CcoOPKf5/DedTG4W2a6UHG8S1ZDpc+SXGnp4DE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VJRgCvb6UMUuMKTi/pBogD/2KUrYn39AqUseUhGXFX1Cj+7ssjhU5Vr12lxzRMRTrWuYh5kijrmyHHcMEieojPA5RkCKDeoECaWk0Z7PQxN2Llh/ar50RdCr8/4gDlFBtestiltIwYs6mkEiTw/PQ3bqjiATs31T7HgpJWhnN4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltKWYsBV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DDPOmQKE3PpmeWt/9FAi1QcT+hkEyl86o5MUu+TelpejTJ73PvOkkE9QjkNSg088yQSwOzwEPwMeePmjCc+3VLk5M4Ym8+ceF/GJWlhwimLxLrnj25UiKxvH6juN4YoXrJFUeBSp/jbUfmqY/gLSqaWOndBz6aXSqNc+Uqo6atQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uZJOBiR8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltKWYsBV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDC49C4CEE3;
-	Fri, 27 Jun 2025 21:41:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uZJOBiR8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1488C4CEE3;
+	Fri, 27 Jun 2025 21:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751060486;
-	bh=6qGjtqck4coO6NZjDUGE9y+GBqUOpbdnYaMZr6gFMos=;
+	s=k20201202; t=1751060494;
+	bh=5Ljo3CcoOPKf5/DedTG4W2a6UHG8S1ZDpc+SXGnp4DE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ltKWYsBVFs6COQQf8/KTq7n5oUd+XwK5vSrJDcKqAgqVp6fW+Hgz6NNtp/8aBcOrb
-	 dWCUfItSGtpDrT4noMkswvJWAkH9mV6Ja+DilPt5pxREIy0JUDsmFJHsJB83b9/tMd
-	 rj/OTmKxAEIzg4/gtrYXNfxXEm0OtaGd0rhLXJmr6zicbc3UT8RDTUio9G4gEE4+Fa
-	 26A3IRj4/t3Y27ruVi+YQcdNtSOnNH/g9SuP7IOJ1W4KHXpHNeKV194HhMGSBrSoRE
-	 y11ZBpaV5ZjCdqj6sJbH5aNqWwD5SbgevypuH/I6bqVDepAUSXp4hmydGwGUjaKZfX
-	 TUSTeSaZRFCLw==
-Date: Fri, 27 Jun 2025 16:41:26 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Kaustabh Chakraborty <kauschluss@disroot.org>
-Cc: linux-samsung-soc@vger.kernel.org,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: samsung: exynos-sysreg: add
- exynos7870 sysregs
-Message-ID: <175106048556.189134.1526670585968824295.robh@kernel.org>
-References: <20250627-exynos7870-drm-dts-v2-0-d4a59207390d@disroot.org>
- <20250627-exynos7870-drm-dts-v2-1-d4a59207390d@disroot.org>
+	b=uZJOBiR8DKoBr7HUN+DYQdov6AZSy1ItCrxaJkFHt7+5EiNrNPXDY2Lfp0hqGaq8y
+	 2H9Wgk29NSEEd3JQe6ZjTauNTe2PCD6cPjyMSJgNz/zvyzMhkyso7PTEMlsgcTP4Ro
+	 IzKdEiFLyHP5jkGRzE7vZoIbvN2dbR4BjdGRV6r8NJS5we6hqbu0C5bH3BMtSiUpxs
+	 isH/yjg2l8vx9hLgNiaujAOVEG+J4/DxmgZJbmI0GMYLsA7H/TAkoeISTL1sSVjGrb
+	 zvzstNFwRpgWyVivAhWHeMRLfFdb7/21Mjm5NpCes+X3z2DUqNZuw9/qjBht1SvhsH
+	 vZZlYokiABIHQ==
+Date: Fri, 27 Jun 2025 22:41:30 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Larisa Grigore <larisa.grigore@nxp.com>,
+	Christoph Hellwig <hch@lst.de>, linux-spi@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 6/6] spi: spi-fsl-dspi: Report FIFO overflows as errors
+Message-ID: <22d69113-fec0-4405-872d-af76bd038c09@sirena.org.uk>
+References: <20250627-james-nxp-spi-dma-v4-0-178dba20c120@linaro.org>
+ <20250627-james-nxp-spi-dma-v4-6-178dba20c120@linaro.org>
+ <aF73e/ggeycsYiaD@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1nt4mhY+dwym5Hr9"
+Content-Disposition: inline
+In-Reply-To: <aF73e/ggeycsYiaD@lizhi-Precision-Tower-5810>
+X-Cookie: Avoid contact with eyes.
+
+
+--1nt4mhY+dwym5Hr9
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250627-exynos7870-drm-dts-v2-1-d4a59207390d@disroot.org>
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jun 27, 2025 at 03:56:43PM -0400, Frank Li wrote:
+> On Fri, Jun 27, 2025 at 11:21:42AM +0100, James Clark wrote:
 
-On Fri, 27 Jun 2025 01:43:24 +0530, Kaustabh Chakraborty wrote:
-> Add sysreg compatible strings for the Exynos7870 SoC. Two sysregs are
-> added, used for the SoC MIPI PHY's CSIS and DSIM blocks.
-> 
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> ---
->  .../devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml          | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+> > In target mode, the host sending more data than can be consumed would be
+> > a common problem for any message exceeding the FIFO or DMA buffer size.
+> > Cancel the whole message as soon as this condition is hit as the message
+> > will be corrupted.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> > Only do this for target mode in a DMA transfer, it's not likely these
+> > flags will be set in host mode
 
+> "not likely", I think SPI controller should stop CLK if FIFO empty and fu=
+ll.
+> It should be "never" happen.
+
+> Only check FIFO error flags at target mode because it never happen at hos=
+t mode.
+
+> You can remove below whole paragram.
+
+I agree it *should* never happen in host mode but it can be good
+practice to look in case something gets messed up.  That said extra
+device accesses in the hot path are probably going to be noticable so
+likely not worth it, but in the dspi_poll() case:
+
+> @@ -1067,6 +1080,9 @@ static void dspi_poll(struct fsl_dspi *dspi)
+>                         regmap_read(dspi->regmap, SPI_SR, &spi_sr);
+>                         regmap_write(dspi->regmap, SPI_SR, spi_sr);
+>=20
+> +                       dspi->cur_msg->status =3D dspi_fifo_error(dspi, s=
+pi_sr);
+> +                       if (dspi->cur_msg->status)
+> +                               return;
+
+we're reading the register anyway so the overhead is much lower.
+
+--1nt4mhY+dwym5Hr9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhfEAkACgkQJNaLcl1U
+h9Bfiwf9Fa3LD6n+/brGDGbQJc6S5NZo/Iv8vZRtcpTQ4iXdTte85tTkmykGA+I0
+kNkP6wImm2WAZx1qKa/QKK0zYBP8e8Be/N2/6mF+dB+qlzrD0g/W0GWIUSnyhAzt
+xLs+VKHajdZgy16CyxV+KZAz9K4W7VZCd5b3/jIBJoVkyBEMAUkKgoZpZTff7WLd
+3ObZOvGQxLU70o/MPz5v65neCmVIuu20V9A/7BZReFY1ZpgIycndnyzM+E80iVKF
+uIJvbjuV6lmMjBO6GpyjMm1U6D+ebGte8JlE6mY2s1o1lJ5n35naBOaIURTrzOWS
+yBcsW/v17RQ1UMqYRUPd6q++ciWczg==
+=1ixx
+-----END PGP SIGNATURE-----
+
+--1nt4mhY+dwym5Hr9--
