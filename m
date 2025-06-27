@@ -1,209 +1,166 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10BA2C3257
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751027631; cv=none; b=cLE32bywMoRGVj97sjC6J8alJK6wij3tYrlY2HDCHKypKzO2Tlbk5zFR2J6RQj9c3lH0IMLBvN1JXs6Y0S09MbPmMPHVHMzQhdJf9XvCCB2ESbs8QtUuFfkNgRO8lLMXXlXHlmPYwrqP98G9WEWSMfl0caI555J8j0E21Lnbp6U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751027631; c=relaxed/simple;
-	bh=7+B0fupMsVNOVu8V8tGzBY7GBfas+EnrrN008V14AM8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hHcw5c/SrNFJGLjwusU7GxT5r+Hw9qCvmYiBwSA4HeqX6KfLcXcJY2CZVvTj9ogZvJhv94e+gB4p2QL3Eyf3Pc+OcPWiYImZ4iGPNBKbCrwiClB/0cGZfNjWrO47owNPc7/8mjqFCNAwwna4oxLGEPw2CKlca7tutaFM/omn+cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FhKdUWbQ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322782D8DAF
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751027635; cv=pass; b=ZBUadvKkLlSz2lWRtgzESP5wvZSKtq4QShmEnzseiFiuwTKA9d/fP+SapXI8DdUAIy36fRYAD7R5dgW/uIGx12Fk9GVQdcAaoF0yYp0J6P7POa5PjXICro+HKmb3vB61JacbUWFnpWPsYEijuMPbhiTxuIElbjq8XCwVNcPcQTA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751027635; c=relaxed/simple;
+	bh=uyGlLJdsrpOs/6Btu8IbtzbV/xEAGIn+2sLR12eDSg8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CKnneNTcjt2+Nqq70XPMTPL6c7XjNzrihjP5poOvsxl2jnXWLj09do4wJ4uZAYC1/8OPbQQ0SabMrVznw3EnTDJsyMOdlWo6XjE3wHOMIRy7KYL3Qs18pfYOBuXufY5q5IS99LVaXzEJfhtqFnA2jwaCyMgtkwOmSn6dNQqsrVU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b=E3dXl/We; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FhKdUWbQ"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RCLKLk014507
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:33:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=eTEkigVB7s/c3lzv/enIwb+8
-	61vMMZEHP1ib8VKxubY=; b=FhKdUWbQs0wDrTxBmzOXj6S6VP0KvFZMwrhHfpPF
-	Dpj7mDpdrU2upICSoe0D//KYXr9adTPEwMsqVXZeVlyMrYlz2QUlu0yptXMo0F2k
-	jnYwYKuOlVbnoxnMq4AIX4O+YqejlbBS/7MrhJWNQBg9SXnNv8zhP+Zsrp58bHUw
-	H4xTIdZL6p/3QhS+M87CECCOe7ILf0jaZCph7RYTz3lMNEVWvqfi3ytdFCWyAhhs
-	iiomT7YFMPvCDhX9gcgLfHasF9s3iuGN+Dzv2BxBVpU4OcQ0OuN14YtGfRVC+be+
-	wSMANiWjYSOW1DLLUQ8VP05FOh1okYUnCjjNCC1FCpwpnA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbm25dsw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:33:48 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d099c1779dso275544285a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:33:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751027628; x=1751632428;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eTEkigVB7s/c3lzv/enIwb+861vMMZEHP1ib8VKxubY=;
-        b=G7xbXIig3UOwfdZbBN8EexIu0gaHfbBHovTilOQC/STFRoE1CEzvImU4eXJNuLfdZP
-         Nwr7rvloOZtmGq6TgE8K/43jG/h/Wow2OdVX2WCss6SlvX2RXVajkPEBX/Jujt6DjD84
-         NolnFszI3rDjOc4pQDEvjOyl8d3/zCyyGU4LVsaobTknMIaNGRFGA03/QB/fF8VT+Egn
-         bo0QbdGYxJNN1Ua0vsndd12qQj8PjD0n9WtClZUE83nG1kVhXRzfmAEwRnlXqgxv77Zb
-         Nh+XzFJ4YIrzkZNuwYxkku3OG2EwrJz14jb+7SlZ1cKkjZq2EAp7EcSLJcelK3QtbhiJ
-         9H8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVVU9sNKWT8wVaPTEx4a77e1qJNkshqigSGUB180J+jdekVU2gVUjiGhDZ+ZL+RcHclmL4AiO/nCuhQScU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJLve641cf5pXX6Meo8J0nIyp/T/tZ7nq1bBBLp5apIXXNeyI7
-	DtRTNj+rJrjrK20zEDzxGXbJIyYk4YZaeAZ5AvpFYcVVYAZNmAGjnZYzK6fU4MdECKzxaTJJmxB
-	0irDcpJTRqA5DVAvxGTPmT98y8X0S5sAkyvFu0JGYg7pl4QwESpCzP8gB0KGFDlDC9TE=
-X-Gm-Gg: ASbGncuXtvYH9JldJksxXrF+QWYim5e1idLb8Yd48E9K8wOEID4VFF+45tZqzNJfA8g
-	OvWaV/5GCKGL19wQCbjUA5bYUf3yv2UNFQMAet94lLgTSAQL+F+zy9Qf8XqeeR+lq5gFxFKgyA7
-	5ZZzzRXbznT/yLpOzBVKT4Q0g9SGDaJ1r8QTjL1dNp9hB/X4QJPNCU0YdyU1jvVJ+Q7FREQzkEb
-	g2HBR5ilj1HUDlXCS955UA+LAH0QNv6vF/I3yQZaylWwLEWjUXXcAJqUdMvY3YIn2B1Ls87fRyN
-	Ljt19kCgJ7TfBZ+B6s3gN3KngjnZbaAGdrMF5U7J2m+iHOiqcNzn3fyyGg==
-X-Received: by 2002:a05:620a:278c:b0:7ca:ca00:735 with SMTP id af79cd13be357-7d4439a80a6mr450478385a.41.1751027627764;
-        Fri, 27 Jun 2025 05:33:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE6Cgx2agTOK5/IZXOIF0ZSAwg41hRwabLP1fIcfmij7RmRnTOdnah43vsFXkHU0/3rV84TIA==
-X-Received: by 2002:a05:620a:278c:b0:7ca:ca00:735 with SMTP id af79cd13be357-7d4439a80a6mr450473285a.41.1751027627297;
-        Fri, 27 Jun 2025 05:33:47 -0700 (PDT)
-Received: from trex (132.red-79-144-190.dynamicip.rima-tde.net. [79.144.190.132])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a306a01sm52217925e9.0.2025.06.27.05.33.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 05:33:46 -0700 (PDT)
-From: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>
-X-Google-Original-From: Jorge Ramirez <JorgeRamirez-Ortiz>
-Date: Fri, 27 Jun 2025 14:33:44 +0200
-To: Vikash Garodia <quic_vgarodia@quicinc.com>
-Cc: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>, krzk+dt@kernel.org,
-        bryan.odonoghue@linaro.org, quic_dikshita@quicinc.com,
-        mchehab@kernel.org, robh@kernel.org, conor+dt@kernel.org,
-        konradybcio@kernel.org, andersson@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 5/5] arm64: dts: qcom: qcm2290: Add venus video node
-Message-ID: <aF6PqCY/E6H0Mc2/@trex>
-References: <20250626135931.700937-1-jorge.ramirez@oss.qualcomm.com>
- <20250626135931.700937-6-jorge.ramirez@oss.qualcomm.com>
- <6e330e8f-5856-ef8e-5fe3-52bd61b59e02@quicinc.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b="E3dXl/We"
+ARC-Seal: i=1; a=rsa-sha256; t=1751027616; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=n0u3gQ+u4hMzUNZXXQjCKP3SqP5F8ouXUwuImCJNtZvInphx8eik+K8fJ1kM5w1JKFkVUzujLOKqL3cuTG7xHlGhsz/I7JU0CBSXu2B+FL1OW9lvHpKZtqRjURGTfXIIekm5VWN1CdU4Vmlg5nSR1m55n7TILI84Am31IMmImrI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751027616; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=uyGlLJdsrpOs/6Btu8IbtzbV/xEAGIn+2sLR12eDSg8=; 
+	b=kZGv/3cJp7bClypPYKjoB1yijMLBAUe6Q1JVfLu8BLHkKH4YKtr7UrUsJIl2HEcSrt2UhE78iDp/74e4BGs+fdg+SgkE0pw/MZH4RWIEf9gFciXkKqNxudlK6HwoT2Z4v63d32pWffOYg856JTbk7CX7utcjRHpnezz/4fHpIo8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nfraprado@collabora.com;
+	dmarc=pass header.from=<nfraprado@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751027616;
+	s=zohomail; d=collabora.com; i=nfraprado@collabora.com;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=uyGlLJdsrpOs/6Btu8IbtzbV/xEAGIn+2sLR12eDSg8=;
+	b=E3dXl/WeONf/z8ONGbf/KQ2C2ljVFtrhJ3u5b5nmIVUvXWp11UosU5iqquCLAw0Q
+	8lxvbE/rT5Pzx7mFcdQtJheVcU6jouIzZ8A/XRcMlO73XZWRu738olHwDg3x0aYe/93
+	CEGiNT3V+UgH5iyVO/AOyHyfj9IqMxe8j+DwZZiA=
+Received: by mx.zohomail.com with SMTPS id 1751027612875820.9172933784699;
+	Fri, 27 Jun 2025 05:33:32 -0700 (PDT)
+Message-ID: <a5a3a27882a8ea8a147bd56f8250f6dc9391377d.camel@collabora.com>
+Subject: Re: [PATCH v4 1/1] drm/mediatek: Adjust bandwidth limit for DP
+From: =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado" <nfraprado@collabora.com>
+To: CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?=
+ <ck.hu@mediatek.com>,  Project_Global_Chrome_Upstream_Group
+ <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+ "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,  "simona@ffwll.ch"
+ <simona@ffwll.ch>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, "airlied@gmail.com"
+ <airlied@gmail.com>, Mac Shen =?UTF-8?Q?=28=E6=B2=88=E4=BF=8A=29?=
+ <Mac.Shen@mediatek.com>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+  "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, Peng Liu
+ =?UTF-8?Q?=28=E5=88=98=E9=B9=8F=29?= <Peng.Liu@mediatek.com>, LIANKUN YANG
+ =?UTF-8?Q?=28=E6=9D=A8=E8=BF=9E=E5=9D=A4=29?= <Liankun.Yang@mediatek.com>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>
+Date: Fri, 27 Jun 2025 08:33:30 -0400
+In-Reply-To: <667a201e7893d6d4bf9ae0267a5afaf06faa5db8.camel@mediatek.com>
+References: <20250625095446.31726-1-liankun.yang@mediatek.com>
+	 <f3135961b2fe2c2b5cb3c29d76eb3d818d7a766a.camel@collabora.com>
+	 <667a201e7893d6d4bf9ae0267a5afaf06faa5db8.camel@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6e330e8f-5856-ef8e-5fe3-52bd61b59e02@quicinc.com>
-X-Authority-Analysis: v=2.4 cv=YYu95xRf c=1 sm=1 tr=0 ts=685e8fac cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=wjE3nLva0YkvARyJ+Gfmxg==:17
- a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=DfKWsWQFUtAST0jsyLYA:9
- a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-GUID: L2m4Ellzs-Mp8i61xIscK2H31rhBDPOK
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDEwNCBTYWx0ZWRfX9AvN7Uj1mczx
- fkDiLMkMBcpjNZpygxJ85ycthpFWcbdoh5cn5xfyo+y3cYEpaOKjQsWKMGbSWhFd2QMN2w72cDc
- d68PlhLFpwXnJYqv5xhzeIRFiw540/bvYVt6bXl94C6lLpkUa9AQJRbgF4HfG92k5CyVBJodKt0
- 0MS5UHYlBHz/3odTYTW6uV4m7iOAP0RLLrt0K4SXq59LKjupz1diVSVCqS3I9aebnhddOTmfj9B
- 2nmOB0iFXwxjqG+4YFNKcqnfcwhl34GbaCMXaBQrnFD/eimAagxhrgXEaK/aZoFKICTcL1Nek2L
- no0cCzzlJdZoTYrKmxM7CNxhp9b6ZPKvjpIgIDjJmJ7Pkczpgz/ALmoeBzQaeZq7Ip6pp1pKDXG
- hcmLcSQp54AZoNVKqz0ETwtlHsbygjDG85cHIJMvHo00F/RDv+DG/R9VbXNKYm+/AB7unOAg
-X-Proofpoint-ORIG-GUID: L2m4Ellzs-Mp8i61xIscK2H31rhBDPOK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_04,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 spamscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
- clxscore=1015 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506270104
+X-ZohoMailClient: External
 
-On 27/06/25 17:40:19, Vikash Garodia wrote:
-> 
-> On 6/26/2025 7:29 PM, Jorge Ramirez-Ortiz wrote:
-> > Add DT entries for the qcm2290 venus encoder/decoder.
-> > 
-> > Co-developed-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
-> > Signed-off-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
-> > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/qcm2290.dtsi | 57 +++++++++++++++++++++++++++
-> >  1 file changed, 57 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/qcm2290.dtsi b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-> > index f49ac1c1f8a3..5326c91a0ff0 100644
-> > --- a/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-> > @@ -1628,6 +1628,63 @@ adreno_smmu: iommu@59a0000 {
-> >  			#iommu-cells = <2>;
-> >  		};
-> >  
-> > +		venus: video-codec@5a00000 {
-> > +			compatible = "qcom,qcm2290-venus";
-> > +			reg = <0 0x5a00000 0 0xf0000>;
-> > +			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
-> > +
-> > +			power-domains = <&gcc GCC_VENUS_GDSC>,
-> > +					<&gcc GCC_VCODEC0_GDSC>,
-> > +					<&rpmpd QCM2290_VDDCX>;
-> > +			power-domain-names = "venus",
-> > +					     "vcodec0",
-> > +					     "cx";
-> > +			operating-points-v2 = <&venus_opp_table>;
-> > +
-> > +			clocks = <&gcc GCC_VIDEO_VENUS_CTL_CLK>,
-> > +				 <&gcc GCC_VIDEO_AHB_CLK>,
-> > +				 <&gcc GCC_VENUS_CTL_AXI_CLK>,
-> > +				 <&gcc GCC_VIDEO_THROTTLE_CORE_CLK>,
-> > +				 <&gcc GCC_VIDEO_VCODEC0_SYS_CLK>,
-> > +				 <&gcc GCC_VCODEC0_AXI_CLK>;
-> > +			clock-names = "core",
-> > +				      "iface",
-> > +				      "bus",
-> > +				      "throttle",
-> > +				      "vcodec0_core",
-> > +				      "vcodec0_bus";
-> > +
-> > +			memory-region = <&pil_video_mem>;
-> > +			iommus = <&apps_smmu 0x860 0x0>,
-> > +				 <&apps_smmu 0x880 0x0>,
-> > +				 <&apps_smmu 0x861 0x04>,
-> > +				 <&apps_smmu 0x863 0x0>,
-> > +				 <&apps_smmu 0x804 0xe0>;
-> keep only the non secure ones.
+On Fri, 2025-06-27 at 01:32 +0000, CK Hu (=E8=83=A1=E4=BF=8A=E5=85=89) wrot=
+e:
+> On Wed, 2025-06-25 at 14:49 -0400, N=C3=ADcolas F. R. A. Prado wrote:
+> > External email : Please do not click links or open attachments
+> > until you have verified the sender or the content.
+> >=20
+> >=20
+> > On Wed, 2025-06-25 at 17:54 +0800, Liankun Yang wrote:
+> > > By adjusting the order of link training and relocating it to HPD,
+> > > link training can identify the usability of each lane in the
+> > > current
+> > > link.
+> > >=20
+> > > It also supports handling signal instability and weakness due to
+> > > environmental issues, enabling the acquisition of a stable
+> > > bandwidth
+> > > for the current link. Subsequently, DP work can proceed based on
+> > > the actual maximum bandwidth.
+> > >=20
+> > > It should training in the hpd event thread.
+> > > Check the mode with lane count and link rate of training.
+> > >=20
+> > > If we're eDP and capabilities were already parsed we can skip
+> > > reading again because eDP panels aren't hotpluggable hence the
+> > > caps and training information won't ever change in a boot life
+> > >=20
+> > > Therefore, bridge typec judgment is required for edp training in
+> > > atomic_enable function.
+> > >=20
+> > > Signed-off-by: Liankun Yang <liankun.yang@mediatek.com>
+> > > ---
+> > > Change in V4:
+> > > - Tested the internal eDP display on MT8195 Tomato and it is
+> > > fine.
+> > > Per suggestion from the previous thread:
+> > > https://urldefense.com/v3/__https://patchwork.kernel.org/project/linu=
+x-mediatek/patch/20250318140236.13650-2-liankun.yang@mediatek.com/__;!!CTRN=
+KA9wMg0ARbw!g0Ii2UaT9Wu1FktoGneG4gHV_zwIAwcqEihEA0W4XHKOW2vv7i5MLlekFB9AbbB=
+JvWKvbyaiQFkF-JpPcq0$
+> >=20
+> > Hi,
+> >=20
+> > I tested this patch on MT8195 Tomato, on top of next-20250625.
+> > Indeed
+> > the internal eDP display is unaffected by this commit: it still
+> > works
+> > fine.
+> >=20
+> > The external displays though not so much. I tested 3 different
+> > displays, using 2 different USBC-to-HDMI adapters, and in all cases
+> > the
+> > behavior was the same:
+> > - Before the patch, the image on the display is completely
+> > corrupted
+> > and unusable. The only discernible element on the display is the
+> > mouse
+> > cursor, which shows perfectly fine. Occasionally no image will be
+> > shown
+> > at all, but most of the times, the behavior is as described.
+> > - After the patch, nothing ever shows at all on the display. It is
+> > always black.
+> >=20
+> > So while the external display support on Tomato is basically broken
+> > as
+> > of the latest next, this patch seems to regress the support even
+> > further.
+>=20
+> Hi, Nicolas:
+>=20
+> Have external display worked normally in previous version?
+> If no, I think this patch just let external display change from one
+> bad state to another bad state.
+> If yes, I think we should fix this problem first, and then apply this
+> patch to test.
 
-ok
+Hi,
 
-> > +
-> > +			interconnects = <&mmnrt_virt MASTER_VIDEO_P0 RPM_ALWAYS_TAG
-> > +					 &bimc SLAVE_EBI1 RPM_ALWAYS_TAG>,
-> > +					<&bimc MASTER_APPSS_PROC RPM_ACTIVE_TAG
-> > +					 &config_noc SLAVE_VENUS_CFG RPM_ACTIVE_TAG>;
-> > +			interconnect-names = "video-mem",
-> > +					     "cpu-cfg";
-> > +
-> > +			status = "okay";
-> > +
-> > +			venus_opp_table: opp-table {
-> > +				compatible = "operating-points-v2";
-> > +
-> > +				opp-133000000 {
-> > +					opp-hz = /bits/ 64 <133000000>;
-> > +					required-opps = <&rpmpd_opp_low_svs>;
-> > +				};
-> Fix the corner freq value
+I do remember the external display working on Tomato before, but it's
+been a long time since I'd last tested.
 
-can you add some reference please?
-
-I took this data from an internal document - not sure why the downstream
-driver supports different values or where those were taken from (AFAIK
-they are not supported)
+In any case, as I've described it is currently basically broken (just
+the mouse cursor renders fine), so indeed this patch is bringing the
+display from one bad state to another bad state. The bad state after
+the patch is even worse than before, since nothing even shows, so
+personally I think it'd make more sense to fix this issue before
+merging this patch, so we can actually make sure the patch works well,
+but I'll leave it for you to decide the best way forward.
 
 
-> 
-> Regards,
-> Vikash
-> > +
-> > +				opp-240000000 {
-> > +					opp-hz = /bits/ 64 <240000000>;
-> > +					required-opps = <&rpmpd_opp_svs>;
-> > +				};
-> > +			};
-> > +		};
-> > +
-> >  		mdss: display-subsystem@5e00000 {
-> >  			compatible = "qcom,qcm2290-mdss";
-> >  			reg = <0x0 0x05e00000 0x0 0x1000>;
+--=20
+Thanks,
+
+N=C3=ADcolas
