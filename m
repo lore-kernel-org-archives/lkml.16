@@ -1,124 +1,87 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F7C2CCA9
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6FFC18A6DB;
+	Fri, 27 Jun 2025 07:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751010377; cv=none; b=ZaxIoNMeOjlRAhOJAHewwKbyoJfFcDgFI99Q13AaDWyqcy9brYDfbHDSIeyEP12HPlwNS46rHXxAZ8aQuAnnLdoenp0alblcm9Zm92S9d7XkD82uBmXBGjaXLf+Q17Zd7AsghXAlwoDpcureiMMOOctRZln+Pd1DmUI2pXkYXrE=
+	t=1751010397; cv=none; b=sz7FIPjjfMHpaQU9cU7jzvkaaQQFkLZtIWHfwCR9ataQES1QLIvWKwg7ObLvY+bbZdzVaFG3p7BGVnTn8gkfWBs7rdlM6/6f4W0kWn9cN1X2FfzBIt/qoQKEIvtD1JjnZQhGSt43QNDuEGz5nd2Y9KC3p+p9OMaqOTejT5e692o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751010377; c=relaxed/simple;
-	bh=dfGDnPRiwN7EuOkD03nB8CSrfVnT+NSKNmSD92S8fXo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dwEOs0NYeplr2G71lGlPwJwwqpq8J4v+XR4hbbbVAooRFgRHKTsdCXiOJFoMjTJjVJRVTrVXJcQk01xXCafcBLSSayFYhHgmz7CMdqttuEo1TnfE/YTRW7O3K3PV5Qqq1O5YIy1X9g9iSnPOlBRaKaXBdbo7HZNjZe3V1pMw8PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c42ddc80532a11f0b29709d653e92f7d-20250627
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:475b7cd6-ffa6-4ce2-b4ce-fac83fe3678c,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-50
-X-CID-META: VersionHash:6493067,CLOUDID:270913f7217740048e4aa9b8e5e63ecf,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:1,IP:nil,URL
-	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
-	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: c42ddc80532a11f0b29709d653e92f7d-20250627
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 369483624; Fri, 27 Jun 2025 15:45:59 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 23F43E008FA1;
-	Fri, 27 Jun 2025 15:45:59 +0800 (CST)
-X-ns-mid: postfix-685E4C37-40371140
-Received: from localhost.localdomain (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 55A64E008FA5;
-	Fri, 27 Jun 2025 15:45:55 +0800 (CST)
-From: Zihuan Zhang <zhangzihuan@kylinos.cn>
-To: mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	patrick.bellasi@arm.com,
-	qyousef@layalina.io,
-	xuewen.yan@unisoc.com
-Cc: linux-kernel@vger.kernel.org,
-	Zihuan Zhang <zhangzihuan@kylinos.cn>
-Subject: [PATCH v1] sched/uclamp: Initialize uclamp_rq alongside rq setup in sched_init()
-Date: Fri, 27 Jun 2025 15:45:35 +0800
-Message-Id: <20250627074535.14064-1-zhangzihuan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1751010397; c=relaxed/simple;
+	bh=MjnuYsr9mMsW2TxJ7qqc2j1p+0Vn25jzjwjGDbMIb1Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L1iLBJFc+iN8TcYykJe6E6PKGU5vtSF1ykwi7PNpCDzDQ+ROtwU0r/WV/l3xAJ3ETESk46B4hVcNYgHjW1Ddm2lE7LkfQtH6OeMSCsxzQ0RnDh1uTxTl1IAVmBn1Qxy1934x7QqB8ITeeadowA4oSD8873MRuAakHo9ugugO9PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=RnclplwY; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="RnclplwY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=sW+Hs3IzTA2qyhfGPDj9o95ND8i+/JEitbctsHCJl1o=; b=RnclplwY03mQ/Ay/NxJ/7P8Aro
+	Ik6w6leKGbJnlwUEsLFdXi5OfvEyl/Mo1J2fgMj9CsPbPAi8+x6aKIwejF/kyIZUrI2lgwqkf+VS+
+	0kdsn2sd3wbirOYxaURPw9Cx4kUIfEZUkLzrqd27SOEoSJOR6s+gjrjoMcv5NpynDgFI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uV3n0-00H7Pq-TD; Fri, 27 Jun 2025 09:46:26 +0200
+Date: Fri, 27 Jun 2025 09:46:26 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Wen Gu <guwen@linux.alibaba.com>
+Cc: richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	xuanzhuo@linux.alibaba.com, dust.li@linux.alibaba.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] ptp: add Alibaba CIPU PTP clock driver
+Message-ID: <69ee8a60-3134-4b7a-8217-be9bbc79a8fa@lunn.ch>
+References: <20250627072921.52754-1-guwen@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627072921.52754-1-guwen@linux.alibaba.com>
 
-uclamp_rq is currently initialized for all possible CPUs in a separate
-loop within init_uclamp(). This creates a dependency on the ordering of
-sched_init() and init_uclamp(), and duplicates the per-CPU iteration.
+> +#define DRV_VER_MAJOR		1
+> +#define DRV_VER_MINOR		3
+> +#define DRV_VER_SUBMINOR	0
 
-This patch simplifies the logic by moving uclamp_rq initialization into
-sched_init(), immediately after each cpu_rq is initialized. This ensures
-uclamprq setup is tightly coupled with rq setup and removes the need for
-a redundant loop.
+> +#define LINUX_UPSTREAM		0x1F
 
-Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
----
- kernel/sched/core.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+> +static int ptp_cipu_set_drv_version(struct ptp_cipu_ctx *ptp_ctx)
+> +{
+> +	struct ptp_cipu_regs *regs = &ptp_ctx->regs;
+> +	int version, patchlevel, sublevel;
+> +	u32 env_ver, drv_ver;
+> +	int rc;
+> +
+> +	if (sscanf(utsname()->release, "%u.%u.%u",
+> +		   &version, &patchlevel, &sublevel) != 3)
+> +		return -EINVAL;
+> +	sublevel = sublevel < 0xFF ? sublevel : 0xFF;
+> +
+> +	env_ver = (LINUX_UPSTREAM << 27) | (version << 16) |
+> +		  (patchlevel << 8) | sublevel;
+> +
+> +	rc = cipu_iowrite32_and_check(ptp_ctx->reg_addr +
+> +				      PTP_CIPU_REG(env_ver),
+> +				      env_ver, &regs->env_ver);
+> +	if (rc)
+> +		return rc;
+> +
+> +	drv_ver = (DRV_TYPE << 24) | (DRV_VER_MAJOR << 16) |
+> +		  (DRV_VER_MINOR << 8) | DRV_VER_SUBMINOR;
+> +
+> +	return cipu_iowrite32_and_check(ptp_ctx->reg_addr +
+> +					PTP_CIPU_REG(drv_ver), drv_ver,
+> +					&regs->drv_ver);
+> +}
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8988d38d46a3..a160ec8645b2 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1998,7 +1998,7 @@ static void uclamp_post_fork(struct task_struct *p)
- 	uclamp_update_util_min_rt_default(p);
- }
-=20
--static void __init init_uclamp_rq(struct rq *rq)
-+static void init_uclamp_rq(struct rq *rq)
- {
- 	enum uclamp_id clamp_id;
- 	struct uclamp_rq *uc_rq =3D rq->uclamp;
-@@ -2016,10 +2016,6 @@ static void __init init_uclamp(void)
- {
- 	struct uclamp_se uc_max =3D {};
- 	enum uclamp_id clamp_id;
--	int cpu;
--
--	for_each_possible_cpu(cpu)
--		init_uclamp_rq(cpu_rq(cpu));
-=20
- 	for_each_clamp_id(clamp_id) {
- 		uclamp_se_set(&init_task.uclamp_req[clamp_id],
-@@ -2043,6 +2039,7 @@ static inline void uclamp_rq_dec(struct rq *rq, str=
-uct task_struct *p) { }
- static inline void uclamp_fork(struct task_struct *p) { }
- static inline void uclamp_post_fork(struct task_struct *p) { }
- static inline void init_uclamp(void) { }
-+static inline void init_uclamp_rq(struct rq *rq) {}
- #endif /* CONFIG_UCLAMP_TASK */
-=20
- bool sched_task_on_rq(struct task_struct *p)
-@@ -8586,6 +8583,7 @@ void __init sched_init(void)
- 		init_cfs_rq(&rq->cfs);
- 		init_rt_rq(&rq->rt);
- 		init_dl_rq(&rq->dl);
-+		init_uclamp_rq(rq);
- #ifdef CONFIG_FAIR_GROUP_SCHED
- 		INIT_LIST_HEAD(&rq->leaf_cfs_rq_list);
- 		rq->tmp_alone_branch =3D &rq->leaf_cfs_rq_list;
---=20
-2.25.1
+Please could you explain what this is doing.
 
+	Andrew
