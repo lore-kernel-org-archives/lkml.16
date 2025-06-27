@@ -1,213 +1,328 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2073.outbound.protection.outlook.com [40.107.92.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B8E2E9749;
-	Fri, 27 Jun 2025 15:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751038386; cv=none; b=Y4IndSCeujR6CpyqyzrNMPpVkijDtIcBBPSjfDHGBtjfL/IBFV7fZ/EEcKxYuLxmgnh2Yp1pL6hZ/0jEPUfptgQu9nGbPnMV/RQiqdiBxDXCgNq7VIsZW7+GPaml2SYV0yWf7u29gN4vrci4aJV9ICJhfkSTKnj7uEhw+I2zHA8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751038386; c=relaxed/simple;
-	bh=x7TrWzl0vmdW72cGXoKDrWehoBJMvORlw4ylRPQ1a/A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=hZH9putbx4g7RLaWEN6H0CrqjggAQ0abnGyPzmFQdevkRbBaBf3KYt3Ig+28qBewqhsBWdxt6qXXk1YfrojMl1fAyHPfaQa089FQUabd1ccOxMxeXw9bFgRsoHb30THd5jApfL21f47KeZvVdoFHl7AuEB2NN0Sx54YHeQBO/f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=X9OTBeYy; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195972E9EA1;
+	Fri, 27 Jun 2025 15:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751038387; cv=fail; b=WzxDlQDxEGv6r9mI/T7T4HmHIUVfvPVedROrZ5f/szn21VCH/f5IqJLaDSaGr8T8fYMlBOaVZPsEErzZGxj6P+oMZzLOQ8QpUG8MpYPnT65rgNw6EgG5MUC2fU24GVnTr2mx3xVK3HQEIvH6Nc3lMF4Seuk+9xO2ul1jzUK68yg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751038387; c=relaxed/simple;
+	bh=GB8HTOdZb6sloi5jcWxyvsuA/uDenZVKqU/6zqJlO1M=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=u0zJWAIaiV8rXSiXQQOLDbCuLeNC0KgsmFhNmjuswgzO2X22m37VAmdJ3Dwibn+oUdAo4euBJOmjZpiVDj8L8l8eV+qz1VWJdMbBt/i7eWGFlttS4ohi0NWPkYKfALhv30vBjM04UPaS1fl0pi6e0T4Si+OnAHVdMOIlsxgMmYg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ssZv8Jdo; arc=fail smtp.client-ip=40.107.92.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="X9OTBeYy"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RC1cCK032657;
-	Fri, 27 Jun 2025 15:32:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ScGX7//Aa/vXpPts6JOh+RRdDSNYRcaqf4SUATARBkc=; b=X9OTBeYyRcpQzHrG
-	AGadZWRyhCw4dO50bUmO0Wprx7DNzQg22RKdYqCfFVnWXJq9FdecNTKGq+p4ChBD
-	sfNNT+pvvvvhEUmt+yBZiAhq/+JU+LTVipSObQxvOgTLDA9/irP9JOr6ivW7PdSs
-	p2/lTjomfcoNOfUGSmWercv2IGra1+VRAI2f5XoSC/UeQAfqwNiRYib53UQ1Gc+l
-	k/fezLwULz9C9ZOdWqj0WG7Fffb4qy8LG+txZFekdfNMX78NwqRpxWgm+uFw5efb
-	FMFWRX2dYcAcEhMWjfaKoBQZ39pnR5pHkLbLouWUEkHrkTj+/h3062uQjUVtLT8U
-	9U0Jrg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g7tdhaw1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 15:32:58 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55RFWviX006326
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 15:32:57 GMT
-Received: from hu-vgarodia-hyd.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 27 Jun 2025 08:32:54 -0700
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-Date: Fri, 27 Jun 2025 21:02:38 +0530
-Subject: [PATCH v2 1/5] media: dt-bindings: add non-pixel property in iris
- schema
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ssZv8Jdo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SuUpdt352Hx3IcuZ0v+qSL00hlhe8UI2UCpHt9gBOdtaDGMYyfOexubDhocG0WSBwm48h3WyR4kBEGQ1Wc53I1gvWnjIGt3hmvDMh2dqpWgtbb0+B5Q/c+O0fluCYvvKYuzM5ghYgFJiXyGD2YL+4DsBV+X3GUAgpuPyXuyxcjqVnWwYXlY4pWV43ZNYx7ivdPEDoZvxAV26IK3itznjnZWCr4fM6kEBnSdvEH2/bPO501FPF6lfohudRT5vb7gQppjst1fpRWhyEvcGzrjAvRxO5X8fBOgFyxiStpgwsFBhnsrZ9Q8ZFFH1gZsYr/gHCevB5FZApHX9hufgYj0moA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5fQboSs/5/bXDh8HLuZLTAl16XdVgH1rML49GhypkCY=;
+ b=BjSxsuiA58g03dp9AVYNnguzlmvYIomXuFYk0FJ9484mlmhys9k0dBEWw+APaAnNu+FhwS7RlGlnsK/rv33j6QKuvpLSvcjlcRK2WOMy3KsVyVy8jgBM9Q/wNBUe2v7pj5JwjRblLxxNaBb3xlblz8FuQaaeewUU8SMR5jxqyUHCMI+GMR2qekwv8fGkskpnCtMrFCmFabjISOFhJqhyzXw6pU97datTaojIb8wsklGvaX0Zl58KLXeY4tpWSjSeTxjgtUktiDH4V/OB3JBqck8t93N28chEjjUX+DrpRLovg5yXrUikofmXBXJfDXi3OP2W4a/7779zWIehkAb/IQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5fQboSs/5/bXDh8HLuZLTAl16XdVgH1rML49GhypkCY=;
+ b=ssZv8JdoAhqL6o59pxGEKslz0rTpErVGu63rEMIyDB9Q7wDSCE48U3tQ2OKI33AH4NqrwJbs3ERaeDKRAwPOO9YzuNkSWFtVl9XZ/cSL9X9T1hABMI1AEQPPYhjhVfHJg90xI/gRLHI1NMHOW+2fJOSwLBwEkbnYqTZp7LJETE8=
+Received: from DM6PR02CA0098.namprd02.prod.outlook.com (2603:10b6:5:1f4::39)
+ by SA0PR12MB4461.namprd12.prod.outlook.com (2603:10b6:806:9c::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.22; Fri, 27 Jun
+ 2025 15:33:01 +0000
+Received: from DS2PEPF00003443.namprd04.prod.outlook.com
+ (2603:10b6:5:1f4:cafe::2b) by DM6PR02CA0098.outlook.office365.com
+ (2603:10b6:5:1f4::39) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.20 via Frontend Transport; Fri,
+ 27 Jun 2025 15:33:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS2PEPF00003443.mail.protection.outlook.com (10.167.17.70) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8880.14 via Frontend Transport; Fri, 27 Jun 2025 15:33:01 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 27 Jun
+ 2025 10:33:00 -0500
+Received: from aaurabin-z5-cachy.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39
+ via Frontend Transport; Fri, 27 Jun 2025 10:32:59 -0500
+From: Aurabindo Pillai <aurabindo.pillai@amd.com>
+To: Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	Guo Ren <guoren@kernel.org>, Michal Simek <monstr@monstr.eu>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, Madhavan Srinivasan
+	<maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
+	<npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N
+ Rao <naveen@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andreas
+ Larsson <andreas@gaisler.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>, Chris Zankel <chris@zankel.net>, Max Filippov
+	<jcmvbkbc@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
+	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
+	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
+CC: <linux-snps-arc@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-csky@vger.kernel.org>,
+	<linux-mips@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<sparclinux@vger.kernel.org>
+Subject: [PATCH] kmap: fix header include to reflect actual path
+Date: Fri, 27 Jun 2025 11:32:57 -0400
+Message-ID: <20250627153259.301946-1-aurabindo.pillai@amd.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250627-video_cb-v2-1-3931c3f49361@quicinc.com>
-References: <20250627-video_cb-v2-0-3931c3f49361@quicinc.com>
-In-Reply-To: <20250627-video_cb-v2-0-3931c3f49361@quicinc.com>
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar
-	<abhinav.kumar@linux.dev>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751038370; l=3567;
- i=quic_vgarodia@quicinc.com; s=20241104; h=from:subject:message-id;
- bh=x7TrWzl0vmdW72cGXoKDrWehoBJMvORlw4ylRPQ1a/A=;
- b=6GFJeBY/zjfp/MW0jdD+S+o9ImB8jT6sizTBIPKkLlRCejxKvo/MgpfsyouhNiQKTbTYsQi2P
- zHK5OxW8G6YCPOqnL9azWCDtcH+jpxCX9LTGnTUbxHZaE5c91O1PKuo
-X-Developer-Key: i=quic_vgarodia@quicinc.com; a=ed25519;
- pk=LY9Eqp4KiHWxzGNKGHbwRFEJOfRCSzG/rxQNmvZvaKE=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=CPYqXQrD c=1 sm=1 tr=0 ts=685eb9aa cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=PYxMoiBjk0tJv0C1prkA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDEyNiBTYWx0ZWRfXw/ehngEe6bWX
- 1aY7m4wgvnqDVsKew8pt7LoxwUpRabGTJW+8DOxgo2zwfPpQhOcT6ocJSH5/++oP+3xqmiwpPM3
- pkWD9qh+GRaRI0r1pQkdYjXkx34GutmaU24Hz59HI7/sfyP99D3mfOfUG6DV7MYDDjfVrUl4918
- GDj7aHE8SFFRw7u3VHdY4xC8eNsClcwRZJvHQlUJrxtOmgfyw0zyGDAByErcmhkL118vL4Xsq2I
- cLOoBHTjjuJsRJASIBxDGq4jTNnl16BoeZ6yDYMRMCvNWU6SlFnkaZIM416mtqsO2RlK8EbysfF
- oLMVMaCcG2jDzrVjbTLu+1BY4vUiBU4djK8X8aK/Z/HHGYV+nny1t+wSnj966e21E+q0naBsvdE
- O0bnHqOb9RLfye2CIsqZWaZkiOLry1yvf2vWQIdIubgGB2euKamQLfH5lFP5Y+h4adGnJ/0H
-X-Proofpoint-GUID: 28_CT0lEwyjtu3viQfyNIkY7oGrW4VOi
-X-Proofpoint-ORIG-GUID: 28_CT0lEwyjtu3viQfyNIkY7oGrW4VOi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_04,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
- impostorscore=0 suspectscore=0 clxscore=1015 spamscore=0 priorityscore=1501
- adultscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506270126
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: aurabindo.pillai@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF00003443:EE_|SA0PR12MB4461:EE_
+X-MS-Office365-Filtering-Correlation-Id: fa3d1a8a-36d3-4a3c-f4d1-08ddb58fe6c3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|7416014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?dlTK7w1IbyyQXFUIhEzViuseygrINLnH56IMgdxHEBSJMaXKIuk/JIEza7n9?=
+ =?us-ascii?Q?QjEmYTKodgqcsNCfznBYoRAoNHJgtm+MPDDUleoQHefXnfQQgEropvvmmqpo?=
+ =?us-ascii?Q?+2AjICmWOhthgL9HGNp6B2N3i5gerr6VBMMdmVV8jN29lvutAJLQDhLPcEdG?=
+ =?us-ascii?Q?7yCeuLAzCmOy+EOc5OKa4n6ML8ml1mFeSyzl4BnSMmzANKFBfksIAEaydM9v?=
+ =?us-ascii?Q?yv3o1EJA5fU3YahtkksxfvzKg66Uk780ZgkSZejkBDdC9hrRS11k/5fsuC9Z?=
+ =?us-ascii?Q?mdM3g2Fk8zRJIpkgGOK3PL5fs+f4lwQ6tR4MG8OvgkTltZ3+6+V5piCRtO9B?=
+ =?us-ascii?Q?Nu3fhK/vbd93GDeBTDv4w+sghLyKvnl5pxREdrnlm+k88MndZRn7z19JjGEv?=
+ =?us-ascii?Q?als1fLyQ9qm3wKGgNCX0gEwvopi1arG8jXEFSzKxAfolV6YlZCltOZS4H5Hq?=
+ =?us-ascii?Q?5QQIDDneEipGJjGsbWmq22cJm/h2Bd7olOb7Po86IMNKKjKFPDvBkcNVAVsh?=
+ =?us-ascii?Q?OMO4QG37OapwUIgPNktQHi92vO+QAhT4mIdgv0yzDuVJi7SMoNDJ6pBgNu/r?=
+ =?us-ascii?Q?nTAbER+CaC2nl/twc9ESVsZKvNwMJu0lg12QZLZ8mQMBfRrCJLXvyAORhpH7?=
+ =?us-ascii?Q?DD0JscF7L2aCLfE7PQ1ttLQxX49NT75LQ28OVSaO/HfrDT0Crd3yb+bziGMr?=
+ =?us-ascii?Q?5J78/YjQVq9xV4VlDAYdyhsTpNVMnlH9kJeCNl69Omo+Adh0TDDbRljIyFSW?=
+ =?us-ascii?Q?RXSJdHd1LDrjVs/ts8fKpGc5DVlPZouSg7jDqn9K6fy5RxgQ2x2lg6J1Xv1Z?=
+ =?us-ascii?Q?CmOdO08eXGlp361wJSVErrAPR9cKnV21JTYkgJxJKm/m9dB3dcQ7pLRnWpFi?=
+ =?us-ascii?Q?bOBx4C+9GcPTDx+sigV/P2XzPpNKi8ldcqS/Ao/WXFEF4hAJsruQfFlw3oYZ?=
+ =?us-ascii?Q?7pegGpOAUyuLhzxJORnGUn1gckySXStq/dvelp2619H21G6FRsWPsmMwDts4?=
+ =?us-ascii?Q?MPyeXIN6seAzy7PQBoDe8yhbMtDjiHsq1H7rNDTOw+4fiH5i6v4ue7/9Z8KV?=
+ =?us-ascii?Q?nK9QO4jVSA1tFVO8LyAWzWuugnX/O7I7bR8aJXASXCfLmrnIMe46QIbvyY2t?=
+ =?us-ascii?Q?5tjhXAQB9JUO/AbMrwmE7NWHDN6X/a6frg122XscTawW6A/RFa/NyBsiPvsC?=
+ =?us-ascii?Q?waSkRJauUU1JsAZutUNIluTGcE8gnW61CvJa/0H47cuxSCzAd8+MTpZOasfc?=
+ =?us-ascii?Q?v62FvM7DjLur1ANbuhXCNTpTyHvvFiB0nxt2npVixlkf69oNuI5zY3JTqT/W?=
+ =?us-ascii?Q?kpnoIWh+6Vj9ezi+ofPGLdZwSliAovQNlCKS1dTfKtCN1f++VyRlhdhjW3kh?=
+ =?us-ascii?Q?oU9K+9QC9NuvZZizvANExSDU1WKa92PLlUTPeXyuOqUhRMBRA0JDzCmI9LcI?=
+ =?us-ascii?Q?UzE4d9O9ENre6q6sDEpczxaAhtmGzSNvgosiZHHclWzPptGHk837vfufmL58?=
+ =?us-ascii?Q?2dV5hlCy5lQsu6kBSPzPhJCPcg6jdhdnoJJ+dh4nI3PU67A4+0hyF3+cDg?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 15:33:01.2146
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa3d1a8a-36d3-4a3c-f4d1-08ddb58fe6c3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF00003443.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4461
 
-Existing definition limits the IOVA to an addressable range of 4GiB, and
-even within that range, some of the space is used by IO registers,
-thereby limiting the available IOVA to even lesser. Video hardware is
-designed to emit different stream-ID for pixel and non-pixel buffers,
-thereby introduce a non-pixel sub node to handle non-pixel stream-ID.
+There are plenty of header includes like:
 
-With this, both iris and non-pixel device can have IOVA range of 0-4GiB
-individually. Certain video usecases like higher video concurrency needs
-IOVA higher than 4GiB.
+	#include <asm/kmap_size.h>
 
-Add reference to the reserve-memory schema, which defines reserved IOVA
-regions that are *excluded* from addressable range. Video hardware
-generates different stream IDs based on the predefined range of IOVA
-addresses. Thereby IOVA addresses for firmware and data buffers need to
-be non overlapping. For ex. 0x0-0x25800000 address range is reserved for
-firmware stream-ID, while non-pixel (bitstream) stream-ID can be
-generated by hardware only when bitstream buffers IOVA address is from
-0x25800000-0xe0000000.
+However, the file kmap_size.h is actually inside the folder asm-generic.
+Fix the includes in various header files so that the correct path is
+referenced in the source, so rename them to:
 
-Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+	#include <asm-generic/kmap_size.h>
+
+Signed-off-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
 ---
- .../bindings/media/qcom,sm8550-iris.yaml           | 40 ++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 2 deletions(-)
+ arch/arc/include/asm/highmem.h       | 2 +-
+ arch/arm/include/asm/fixmap.h        | 2 +-
+ arch/csky/include/asm/fixmap.h       | 2 +-
+ arch/csky/include/asm/highmem.h      | 2 +-
+ arch/microblaze/include/asm/fixmap.h | 2 +-
+ arch/mips/include/asm/fixmap.h       | 2 +-
+ arch/mips/include/asm/highmem.h      | 2 +-
+ arch/powerpc/include/asm/fixmap.h    | 2 +-
+ arch/sparc/include/asm/vaddrs.h      | 2 +-
+ arch/x86/include/asm/fixmap.h        | 2 +-
+ arch/xtensa/include/asm/fixmap.h     | 2 +-
+ include/linux/sched.h                | 2 +-
+ 12 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-index c79bf2101812d83b99704f38b7348a9f728dff44..4dda2c9ca1293baa7aee3b9ee10aff38d280fe05 100644
---- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-+++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-@@ -65,10 +65,31 @@ properties:
-       - const: core
+diff --git a/arch/arc/include/asm/highmem.h b/arch/arc/include/asm/highmem.h
+index a6b8e2c352c44..3be6754ab304d 100644
+--- a/arch/arc/include/asm/highmem.h
++++ b/arch/arc/include/asm/highmem.h
+@@ -9,7 +9,7 @@
+ #ifdef CONFIG_HIGHMEM
  
-   iommus:
-+    minItems: 1
-     maxItems: 2
+ #include <uapi/asm/page.h>
+-#include <asm/kmap_size.h>
++#include <asm-generic/kmap_size.h>
  
-   dma-coherent: true
+ #define FIXMAP_SIZE		PGDIR_SIZE
+ #define PKMAP_SIZE		PGDIR_SIZE
+diff --git a/arch/arm/include/asm/fixmap.h b/arch/arm/include/asm/fixmap.h
+index 707068f852c27..149669def2e92 100644
+--- a/arch/arm/include/asm/fixmap.h
++++ b/arch/arm/include/asm/fixmap.h
+@@ -7,7 +7,7 @@
+ #define FIXADDR_TOP		(FIXADDR_END - PAGE_SIZE)
  
-+  non-pixel:
-+    type: object
-+    additionalProperties: false
-+
-+    description:
-+      Non pixel context bank is needed when video hardware have distinct iommus
-+      for non pixel buffers. Non pixel buffers are mainly compressed and
-+      internal buffers.
-+
-+    properties:
-+      iommus:
-+        maxItems: 1
-+
-+      memory-region:
-+        maxItems: 1
-+
-+    required:
-+      - iommus
-+      - memory-region
-+
-   operating-points-v2: true
+ #include <linux/pgtable.h>
+-#include <asm/kmap_size.h>
++#include <asm-generic/kmap_size.h>
  
-   opp-table:
-@@ -86,6 +107,7 @@ required:
+ enum fixed_addresses {
+ 	FIX_EARLYCON_MEM_BASE,
+diff --git a/arch/csky/include/asm/fixmap.h b/arch/csky/include/asm/fixmap.h
+index 49a77cbbe2a9c..c68aabec22429 100644
+--- a/arch/csky/include/asm/fixmap.h
++++ b/arch/csky/include/asm/fixmap.h
+@@ -7,7 +7,7 @@
+ #include <asm/memory.h>
+ #ifdef CONFIG_HIGHMEM
+ #include <linux/threads.h>
+-#include <asm/kmap_size.h>
++#include <asm-generic/kmap_size.h>
+ #endif
  
- allOf:
-   - $ref: qcom,venus-common.yaml#
-+  - $ref: /schemas/reserved-memory/reserved-memory.yaml
-   - if:
-       properties:
-         compatible:
-@@ -117,6 +139,16 @@ examples:
-     #include <dt-bindings/power/qcom-rpmpd.h>
-     #include <dt-bindings/power/qcom,rpmhpd.h>
+ enum fixed_addresses {
+diff --git a/arch/csky/include/asm/highmem.h b/arch/csky/include/asm/highmem.h
+index 1ed810effb3d1..c3c4d51a93d0d 100644
+--- a/arch/csky/include/asm/highmem.h
++++ b/arch/csky/include/asm/highmem.h
+@@ -8,7 +8,7 @@
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/uaccess.h>
+-#include <asm/kmap_size.h>
++#include <asm-generic/kmap_size.h>
+ #include <asm/cache.h>
  
-+    reserved-memory {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      iris_resv: reservation-iris {
-+        iommu-addresses = <&iris_non_pixel 0x0 0x0 0x0 0x25800000>,
-+                          <&iris_non_pixel 0x0 0xe0000000 0x0 0x20000000>;
-+      };
-+    };
-+
-     video-codec@aa00000 {
-         compatible = "qcom,sm8550-iris";
-         reg = <0x0aa00000 0xf0000>;
-@@ -144,12 +176,16 @@ examples:
-         resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
-         reset-names = "bus";
+ /* undef for production */
+diff --git a/arch/microblaze/include/asm/fixmap.h b/arch/microblaze/include/asm/fixmap.h
+index e6e9288bff761..77996f6605949 100644
+--- a/arch/microblaze/include/asm/fixmap.h
++++ b/arch/microblaze/include/asm/fixmap.h
+@@ -20,7 +20,7 @@
+ #include <asm/page.h>
+ #ifdef CONFIG_HIGHMEM
+ #include <linux/threads.h>
+-#include <asm/kmap_size.h>
++#include <asm-generic/kmap_size.h>
+ #endif
  
--        iommus = <&apps_smmu 0x1940 0x0000>,
--                 <&apps_smmu 0x1947 0x0000>;
-+        iommus = <&apps_smmu 0x1947 0x0000>;
-         dma-coherent;
+ #define FIXADDR_TOP	((unsigned long)(-PAGE_SIZE))
+diff --git a/arch/mips/include/asm/fixmap.h b/arch/mips/include/asm/fixmap.h
+index b037718d7e8b4..85e2854a2fc50 100644
+--- a/arch/mips/include/asm/fixmap.h
++++ b/arch/mips/include/asm/fixmap.h
+@@ -17,7 +17,7 @@
+ #include <spaces.h>
+ #ifdef CONFIG_HIGHMEM
+ #include <linux/threads.h>
+-#include <asm/kmap_size.h>
++#include <asm-generic/kmap_size.h>
+ #endif
  
-         operating-points-v2 = <&iris_opp_table>;
+ /*
+diff --git a/arch/mips/include/asm/highmem.h b/arch/mips/include/asm/highmem.h
+index 92a3802100178..80a6409d4a137 100644
+--- a/arch/mips/include/asm/highmem.h
++++ b/arch/mips/include/asm/highmem.h
+@@ -24,7 +24,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/uaccess.h>
+ #include <asm/cpu-features.h>
+-#include <asm/kmap_size.h>
++#include <asm-generic/kmap_size.h>
  
-+        iris_non_pixel: non-pixel {
-+            iommus = <&apps_smmu 0x1940 0x0000>;
-+            memory-region = <&iris_resv>;
-+        };
-+
-         iris_opp_table: opp-table {
-             compatible = "operating-points-v2";
+ /* declarations for highmem.c */
+ extern unsigned long highstart_pfn, highend_pfn;
+diff --git a/arch/powerpc/include/asm/fixmap.h b/arch/powerpc/include/asm/fixmap.h
+index f9068dd8dfce7..b0622370fbab1 100644
+--- a/arch/powerpc/include/asm/fixmap.h
++++ b/arch/powerpc/include/asm/fixmap.h
+@@ -20,7 +20,7 @@
+ #include <asm/page.h>
+ #ifdef CONFIG_HIGHMEM
+ #include <linux/threads.h>
+-#include <asm/kmap_size.h>
++#include <asm-generic/kmap_size.h>
+ #endif
  
-
+ /*
+diff --git a/arch/sparc/include/asm/vaddrs.h b/arch/sparc/include/asm/vaddrs.h
+index 4fec0341e2a81..f21d51153d6ef 100644
+--- a/arch/sparc/include/asm/vaddrs.h
++++ b/arch/sparc/include/asm/vaddrs.h
+@@ -32,7 +32,7 @@
+ #define SRMMU_NOCACHE_ALCRATIO	64	/* 256 pages per 64MB of system RAM */
+ 
+ #ifndef __ASSEMBLY__
+-#include <asm/kmap_size.h>
++#include <asm-generic/kmap_size.h>
+ 
+ enum fixed_addresses {
+ 	FIX_HOLE,
+diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
+index d0dcefb5cc59d..ed2dc040747e4 100644
+--- a/arch/x86/include/asm/fixmap.h
++++ b/arch/x86/include/asm/fixmap.h
+@@ -14,7 +14,7 @@
+ #ifndef _ASM_X86_FIXMAP_H
+ #define _ASM_X86_FIXMAP_H
+ 
+-#include <asm/kmap_size.h>
++#include <asm-generic/kmap_size.h>
+ 
+ /*
+  * Exposed to assembly code for setting up initial page tables. Cannot be
+diff --git a/arch/xtensa/include/asm/fixmap.h b/arch/xtensa/include/asm/fixmap.h
+index 1c65dc1d33971..af09aafb66687 100644
+--- a/arch/xtensa/include/asm/fixmap.h
++++ b/arch/xtensa/include/asm/fixmap.h
+@@ -16,7 +16,7 @@
+ #ifdef CONFIG_HIGHMEM
+ #include <linux/threads.h>
+ #include <linux/pgtable.h>
+-#include <asm/kmap_size.h>
++#include <asm-generic/kmap_size.h>
+ 
+ /* The map slots for temporary mappings via kmap_atomic/local(). */
+ enum fixed_addresses {
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 9c15365a30c08..28507df174ee7 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -46,7 +46,7 @@
+ #include <linux/rv.h>
+ #include <linux/livepatch_sched.h>
+ #include <linux/uidgid_types.h>
+-#include <asm/kmap_size.h>
++#include <asm-generic/kmap_size.h>
+ 
+ /* task_struct member predeclarations (sorted alphabetically): */
+ struct audit_context;
 -- 
-2.34.1
+2.50.0
 
