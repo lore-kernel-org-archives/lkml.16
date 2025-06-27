@@ -1,64 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AE3290095;
-	Fri, 27 Jun 2025 23:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639BF291157
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 23:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751067637; cv=none; b=HD2uXHYRL26EchGb0guoNNzWxJgpSt+sfSQ5GcdC9k8jtYPRG+e9HxpVSXB/upbE6GVPUYFS2oLU2PHrc5/SrVnpQEHpwlKzs8UYypR/66kX2Qcw494R7vSqKQPOsHR3Y+EGhE6Nkdu1vQp/uW41lal5mrohkRupe++awqe6BdI=
+	t=1751067686; cv=none; b=FRag34rLAJfd45I9vbuTDLc/oVKGW4DrRJ9moj7wMUjrokulIqYG87kjLwReKFiQ0FWYpAPvu+fpex7kkex3V8XoQQSz5EXX4hUQl4tqX0fkY4PsMtVkTEkwDb50FeZrqjUCb2wJ+JnXoCciPUekfpoAUiTg3+6j68uX0VOBASs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751067637; c=relaxed/simple;
-	bh=GU/MMqTCtY/mnSC6TIWLdAKtJvLTP40P40z3oOY8SQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=daPaJ/B/5l/rfyYwdagh1Z1XKwVP9yzSkkENQednIIJpGKxYsJVPsqqOi8Ld3Y/ZXpdbYHe1mkKvYnFXJUWGgDadxR+RAXbkgg6XcooDuldB6uCVadVHax1SG5hkvN939RqKuB0J5GbXeC0eD/ri8AirBq5358SnCxFhbLCDqRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hzwrB48l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751067686; c=relaxed/simple;
+	bh=KkL9nx6xWz75QC67um30E7FvAUyDCBFhbQGkrXNp2lQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=s29FjYVr+we3vvU9ynVWEeAWY92oklxi10Vr+1jmzd3oeSh/Qp0NlJY8TH4nLkY8/bDZhdxRiGDfmWG3Q9YSYYovFtWj1wLL/Yt9NZt8er3H2JQpJMtBA/higP4D7RfyK9Qt3xAltWHHp6IljYl/nl+mUpHO2yr3vh75LA7osjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=i+fZP0Xg; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hzwrB48l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49EE9C4CEED;
-	Fri, 27 Jun 2025 23:40:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751067637;
-	bh=GU/MMqTCtY/mnSC6TIWLdAKtJvLTP40P40z3oOY8SQE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hzwrB48lhOcycXueIFvKgHl5QoouUY1QfWmnu+sgvtro69ETwlVWxQzHLLnIz9Pdb
-	 MTjDFFSNLmXauKa8mDxByXqNz2jCGQGgBkC/dvEatLaa1Hl4zYVBFSo/Aly3dcSMG0
-	 L1ki0YSDtP8Zy64UR3ve9bZ5SmvO53B+KKWZOpfX9Z7OFPmb5Y6uS8GEkTh1IFtLOU
-	 /nAxE/r38soP8s3pLwbueI6dyQ20n5rpTBYJUmj4nqdKO9jk/qmAFBCuHjKTwA2gYO
-	 FIE+fTVEl0m35fMypRH1lC277ZPVXkFeXBXXDtm0tCpWM6LmZFe+goVU4rH3PvYI6b
-	 SBuz4e5Y9qbLw==
-Date: Fri, 27 Jun 2025 16:40:35 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-Cc: donald.hunter@gmail.com, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, horms@kernel.org, vadim.fedorenko@linux.dev,
- jiri@resnulli.us, anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
- andrew+netdev@lunn.ch, aleksandr.loktionov@intel.com, corbet@lwn.net,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH net-next v7 0/3] dpll: add Reference SYNC feature
-Message-ID: <20250627164035.3ef705fa@kernel.org>
-In-Reply-To: <20250626135219.1769350-1-arkadiusz.kubalewski@intel.com>
-References: <20250626135219.1769350-1-arkadiusz.kubalewski@intel.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="i+fZP0Xg"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-735ae68cc78so1636861a34.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751067683; x=1751672483; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LZQeNbyi/XgTcIb18rAAtFT3uJWB9QoyLs3h9EjzCMc=;
+        b=i+fZP0Xgsjgis39FJdpBf/x6KkXygHgYFQp3vhnFySdrlsBykJ0kE2b3ilZIm0uFSW
+         MiR1tPEfvNUV1/EaMJoHDuFfmWGJ8NPT4Vnk1epnOXdcNlMbPrahJj9o9536ytTJmpqT
+         UpLPYq5Sv7N98zaWYFJ8aaDAQlmlG+E8hEMPT0VnmuZIGy7s3Jm6SDODNbxCq/5mpnbm
+         tktLG4dq4oFCgUNJI4tlc8Rm6CT5+T+pSEpisLXd1DDb+C/G5k6CmsfQXeRFnfKwa5Fm
+         /thqpqW3Sala9JWSvEOR9OSp3qQVwxet9EUCOXeiztHYPmimCjJGjvqMzssNS6RxyypW
+         NJFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751067683; x=1751672483;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LZQeNbyi/XgTcIb18rAAtFT3uJWB9QoyLs3h9EjzCMc=;
+        b=H6TeXleyPfV0RAAMxJCBmr9D1CbtV4tMt0djXNsygZWBXNGGmn30UYBh3+NZKeDcpt
+         F6Npih4UUwXMye8lu/IgENAGhV5As/+FKkc9xHrrtniawI6F7klmRvbA5SujX5R+BsOZ
+         mIP26YD2GuUxXoEcGRZk3XFsy4dPD+afAPbEqdBxrytDpVp/wm4XWRC43wYN78nQ2LDL
+         65rZOnnFO28h6dLIlv6jR0gyX1GnFVI5x5yg7FvqCN8zprXy8FfFKKyk4elicCU6QiU2
+         ioGqtqIamfRapxVTgChFwySapwYHvPuuWEqNRwOosG8ZnVeCMMv9eXqDKqLvDXSHPkrf
+         MA/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVlH46dv1h0RkBGb2Ld8RnjHZfWmB90/rRTQOTQ8y32aTNqGhtTntYsmBKTTD9HUlyQarJ+9qUVx5M1i+M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD/66RfObUYag1LyfxYudvW06dIGUgkoC5/IsqCtcOzY4pO31p
+	/9S0EndbrXb7QZIj5MkLw1JgIw/fXtBNOfWpn1AiSv/FU7vmFDHQ2exHYprK9sIgMOU=
+X-Gm-Gg: ASbGncv4d0A9tMLP0EBTHzr3vGjL7bjwt1Mu1lQEutejp9LmozNDqw4sqTWyN2FPLZe
+	wMCyBX1eLsYZjHEolMIvI1odFGEnFRb600OA22W/N79CS5LuC0E+bq1B0ZrCZ3ArmFGkn9RvW8U
+	16uTRftyMWAErYl/TboWTaMiCOY9ExDN9icjzLXe+EFmcVd+RYWjKyEy7wEs0im8/xaYRXZgM7u
+	YGBsjRKnjH0GplXuhiZmMvSpzGGR3ygv8V6LIz04F7xbgrivMYVdx5WswL66j6S8EnQGsXeIHJU
+	QYjyn2oJ6yVgNuVGF3riR/qVUjuWlolq9ksnXhk9Ni4GcOAGb9158MjNlWquq7hsWOM=
+X-Google-Smtp-Source: AGHT+IFzfk6ekHC37qyVzvk3yU2SiXLTE+N1CJOvqAo+DeliXH0yV/vT1NpjyvcOKdpSKrsqxVX9jA==
+X-Received: by 2002:a05:6808:1902:b0:40a:52f5:f2b7 with SMTP id 5614622812f47-40b33c66525mr3795849b6e.1.1751067683424;
+        Fri, 27 Jun 2025 16:41:23 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:1715:453e:e133:7d6])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b322ae4e9sm568483b6e.17.2025.06.27.16.41.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 16:41:23 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Subject: [PATCH v2 00/11] iio: adc: ad7173: add SPI offload support
+Date: Fri, 27 Jun 2025 18:39:56 -0500
+Message-Id: <20250627-iio-adc-ad7173-add-spi-offload-support-v2-0-f49c55599113@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMwrX2gC/5WOQQ6CMBBFr0Jm7ZhStFVW3sO4KDDoJEBrW4iEc
+ HcrnMDFZOb/5M/7CwTyTAHKbAFPEwe2QxLykEH9MsOTkJukQQp5FkoKZLZomjqNznWRVoPBMdq
+ 27axJ9+ic9RELaXJ9qZRSpoD0zHlq+bOB7o9de3qPiRd3EyoTCGvb9xzLbKBPxJ0pzvALvDhE6
+ +et6JRviX87TTkKFFqpVsmrPhXiVpm548rTMXHhsa7rF2h3keQQAQAA
+X-Change-ID: 20250620-iio-adc-ad7173-add-spi-offload-support-32a178b666a3
+To: Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-spi@vger.kernel.org, 
+ David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2728; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=KkL9nx6xWz75QC67um30E7FvAUyDCBFhbQGkrXNp2lQ=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoXyvQzqD0E/s83E2RyYbH7oq5HqUJLp6sK/HOD
+ sUWXJuG5yOJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaF8r0AAKCRDCzCAB/wGP
+ wP1tB/sH/Hp5y05bPf0zRVQwcxJaB/l3H0wz85OJvDkJ+Xk8/av62XPhqS5X2Ww+MfrplFeIh0M
+ Cknp+glzlLcv6Ch41S0KQ/KvkBaEdAbmskM/1wpoOHG9hQuMlLYr8w/fJJXf3lX8O5veVZG5U8Y
+ nxU8XId1wYgvAr+9IumoiXB1gFQCcsKBkAiRtQswvZ76P5vQPzb9rvD+7di37UQ/7w8R46bly26
+ n8ETMgpsIE8nA6U2cNzJQ1BmX8m6t7UM9CDgyPZJrLmkdqrqXWgJTLotUsryzaQ30YYRYeyIAaJ
+ p6RRC/2nfOWYicDxiHEsFhfRPpaqvnjh1b9+2MwkErh7XnzJ
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-On Thu, 26 Jun 2025 15:52:16 +0200 Arkadiusz Kubalewski wrote:
-> $ ./tools/net/ynl/pyynl/cli.py \
->  --spec Documentation/netlink/specs/dpll.yaml \
-> --do pin-get \
-> --json '{"id":0}'
+Here comes another series for adding SPI offload support to an ADC.
 
-For future patches -- I think we should switch to using ynl as the CLI
-name, and the --family shorthand, since the good folks at Red Hat
-RPM-packaged YNL (kernel-tools).
+The primary target is AD411x, but since this uses the ad_sigma_delta
+shared module, a lot of this series is focused on that.
 
-IOW instead of the above we can say:
+To start with, we have some cleanups to the ad_sigma_delta code, so feel
+free to pick these up as they are ready as they generally stand on their
+own.
 
- $ ynl --family dpll --do pin-get --json '{"id":0}'
+Then before adding proper SPI offload support, we make use of
+spi_optimize_message() to reduce CPU usage of all users of this driver
+during buffered reads.
+
+Also there is a new dt-binding and driver for a special SPI offload
+trigger FPGA IP core that is used in this particular setup.
+
+Then finally actual SPI offload support is added to the ad_sigma_delta
+module and the ad7173 driver.
+
+This was tested using EVAL-AD4112ARDZ on a DE10-Nano.
+
+---
+Changes in v2:
+- New patch to fix overallocation of buffer size. [1/11]
+- Also change int64_t to s64. [3/11]
+- Fix typo in commit message. [4/11]
+- Factor out scan_type to reduce line wraps. [4/11]
+- New patch to clean up include more. [5/11]
+- Duplicate comment about odd case of 24-bit data. [7/11]
+- Fixed missing MODULE_IMPORT_NS() [10/11]
+- Link to v1: https://lore.kernel.org/r/20250620-iio-adc-ad7173-add-spi-offload-support-v1-0-0766f6297430@baylibre.com
+
+---
+David Lechner (11):
+      iio: adc: ad_sigma_delta: don't overallocate scan buffer
+      iio: adc: ad_sigma_delta: sort includes
+      iio: adc: ad_sigma_delta: use u8 instead of uint8_t
+      iio: adc: ad_sigma_delta: use BITS_TO_BYTES() macro
+      iio: adc: ad_sigma_delta: audit included headers
+      iio: adc: ad_sigma_delta: refactor setting read address
+      iio: adc: ad_sigma_delta: use spi_optimize_message()
+      dt-bindings: trigger-source: add ADI Util Sigma-Delta SPI
+      spi: offload trigger: add ADI Util Sigma-Delta SPI driver
+      iio: adc: ad_sigma_delta: add SPI offload support
+      iio: adc: ad7173: add SPI offload support
+
+ .../trigger-source/adi,util-sigma-delta-spi.yaml   |  49 ++++
+ MAINTAINERS                                        |   7 +-
+ drivers/iio/adc/ad7173.c                           |  13 +
+ drivers/iio/adc/ad_sigma_delta.c                   | 294 +++++++++++++--------
+ drivers/spi/Kconfig                                |   5 +
+ drivers/spi/Makefile                               |   1 +
+ .../spi/spi-offload-trigger-adi-util-sigma-delta.c |  59 +++++
+ include/linux/iio/adc/ad_sigma_delta.h             |  27 +-
+ 8 files changed, 341 insertions(+), 114 deletions(-)
+---
+base-commit: d02f330b0c78bcf76643fbb7d3215a58b181f829
+change-id: 20250620-iio-adc-ad7173-add-spi-offload-support-32a178b666a3
+
+Best regards,
+-- 
+David Lechner <dlechner@baylibre.com>
+
