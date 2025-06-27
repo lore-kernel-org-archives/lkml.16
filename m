@@ -1,160 +1,111 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EF42D8796
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51583264FBB;
+	Fri, 27 Jun 2025 12:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751028864; cv=none; b=baKYkuj2zwq9m+S7PpVgb8KXaLnh5nt1BwwUdFXrujRvTowpVYXYkXia9Aa3K6pPUbWVCjb+biUzPfpCGHceW0+aINQ+E3kqLb7Q7tPXc4mQMY60cJtIxQ5dQA6ZgHbgFCiuekNjQX6Z825FEvVy7t473cBBJRfUBLu0PTcHBFI=
+	t=1751028865; cv=none; b=iI1YRwlxj8zFisYYsOv3eWZ2j6UgiyYdBgQc/cNcmrs7lbDI1P76MtVgjLA2VdER9OGWOazo4oP1xBI8Sd+JXHYlgRT1sDBRLzrQ9Z43GAnYjDGqYlgIbXr1aQHbx3tTwoAytB9+m+2yMusBqgb8CEWztY34cTK9YmpV3pscXk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751028864; c=relaxed/simple;
-	bh=Du0b+TeI3ZTwjyWt4pvKm1qINJzsD733zYyEarZI+ak=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=tCMrUqoYoH7TtmQplGi17quL1QIjTz+WGjBh6BdNeWHr29S6w7IVZ4oXn79WF6p81f0vfNpNZrbKZBUANb44VuaHG8uLlJvpWF2W8c5gDG4OSnGpVmeOPfVr+2JE/vSy2FpaqgiLIv7cr4kQd3GgHHSoSTfLu9v8M4uxmRC9WVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=kwKZnHLI; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1751028865; c=relaxed/simple;
+	bh=CsVnaF/Eh3p9OwhSPjGCnz0lOWWPvKUupyYNi601i1g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CUY0ZEYbSCPZME438DK6T8qOWJCcHMTqdp6fedG0AktgW2dr8WuwXEak20xu0+yPMSoAO0CdOAUfvyN+JfOISeTKy6tm5mSCqq6B/vRYogNrN3gNAv7OPH5Rrb3Je3vw1hxZgTDV1o6zb5SCs2rMXHlIWjgAIkyyeefcjD/JpWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b5m/FJ6J; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="kwKZnHLI"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ae0de1c378fso229183366b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:54:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5m/FJ6J"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-453647147c6so23391855e9.2;
+        Fri, 27 Jun 2025 05:54:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1751028861; x=1751633661; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1751028862; x=1751633662; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+nhdHiI1mmifgnWppwRjST41ES3N+612bitCEUi1kbU=;
-        b=kwKZnHLIudBDOYp0TsE/PcyW4o/D77UX8c/+mzMnR9hyQgmWVSOfrmWp6UiPLCLiNl
-         JsOFHN8WY54Q7tW07j/1I1TVgdVIT8byUpmJBWXhmcQh0SEqoemGNCr8cYAm0aylCGQj
-         uXal0qpCzCM2WyTFSvFazoJ+kVrCGdSZIegRoKdAiBRVxWq+Y8a7m5lsRlmJ66zHr0n1
-         cJ/b1p32A+S6Jin1xysI0ynRFZPoqq0N9WiGHa53/uq1i+VP+Pr9FdCRTKeSqieXl9um
-         IelpFnI/oW9EET6O7isLuWYfHt2/S19lFOlJTaZaRRo//9ZnKXj8tH9NvmkuAeHjaFfO
-         gOiA==
+        bh=jaJ3Cx6DcSgbse+UDo1cFmYk+teUuZEfclXtMnc3Iec=;
+        b=b5m/FJ6JrVE+ScAfNS2yDYoxtC0KYKDBENlNEmCfgfHDQ2K6qLZnrHfq53hIek0ijW
+         Va+xnSZgEsKJ65DftZUujNWiDVghSj2zkB/YtLTluUJM1DXSlOQAVzCxzdNvGbYnmw5I
+         Tsozq5WNk8PH1auqTVJ9qk/C1QYUatJTwdUpQkoXn7FAptMHd+RwyqfhZw+Qt3R8czEI
+         QEieALltu8Rl3nN4sb4827H8utF+GMm+FMdL/odQeQ8mTCczlg6Q84zeLvEobw89EESY
+         I9/s5XL7N7+bnwxrMZscg0SE9+SRsfwG8j1DKy92l9kW7mueADzu1R0jDZ9BgGOP+m03
+         8JAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751028861; x=1751633661;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+nhdHiI1mmifgnWppwRjST41ES3N+612bitCEUi1kbU=;
-        b=BTdmUXPPf9S8Lqewc1r4FwiGTm/udkXJztC5FDVtNfbknB1aCW3cySx8cvzGpiuK2g
-         LMVzJZ6131IrCumivN2KDuC2jc24/FdZozCjyyIJTglIAib3ywenLPXJrsj914Yvsfit
-         aOt71T4dhNPaT53m9AkTsGgXJ7bZxImvAz8nZY9twcZHXPkrkWOhqbpAp0rdy7F/NmV3
-         BUnr7wFhhCa5TvujYh3SHIHpxEY6cz+OIHvEnkjhl3dmI66x5+/fIY/z+YlAqf2QWkiU
-         W9FHwg5fglYvDGMy2Eg9/ncxx7tQIuza8EfCuG2701V5tSUgKIaJi7WeWNM72Sbibvwj
-         ZIew==
-X-Forwarded-Encrypted: i=1; AJvYcCVUF2WwYoGHfHyIiYasLJV+WhapxAtwFmGZQq212RilbGfirN/taiptCoJ59YQqrPq1aeEjJ1MR6FQrHEA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6whwNy/I6Hws4TzEzOmv846pBaDKd6tPCyCHBZlVvVyTPy+kx
-	ehWFdZxfoHcjiWXShgWcD8NlMBhz2bcPME22jOtAsmUl+9F/YvzL6folNXVyPGD8bpU=
-X-Gm-Gg: ASbGncuqd3le3DqW2azYZ1XelQrdbHP6UzqD7AG4KJDe+5gVWe0f3afE0E+/ayzcVjU
-	imf1RNfHLrwObn8APuD0iHTh207oyVvpPcwwAPTVteVA3IGxTy4hHn8A6eCvtR29TlUVWb/Ww5i
-	UKAWwnhLGsaFngL3IWONvdTjpo8N/ibjtw0b6WDkjqyXcekw99ZD79yBT1HVohcAnbrjygpBqHv
-	F9WiLflCAGavUc7dEylSX/puBFPiarJhzGourNMmu0nkAe8Yzg0Tq2h+qI1JCrSrPLZL+PzKcIR
-	Qm/LQqq98/xQITd7sSWeRTT8Lxd1JRnYrPFBMRPbliw9pL0mKd6PyEj9LSLpgMygDgPPycR68OX
-	MZZyDKnGmiBa5dv699F5o6Rre0fOGgEM=
-X-Google-Smtp-Source: AGHT+IFsbMB++QIubPPkEjUAaoqBr8kfEWyj7SeiVTthlBeTY5ebiAvDyXm55/dHcIfRL97TTYOl8A==
-X-Received: by 2002:a17:907:3c89:b0:ad2:417b:2ab5 with SMTP id a640c23a62f3a-ae3501b9be9mr278351166b.60.1751028860934;
-        Fri, 27 Jun 2025 05:54:20 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353659efbsm118554866b.46.2025.06.27.05.54.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 05:54:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751028862; x=1751633662;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jaJ3Cx6DcSgbse+UDo1cFmYk+teUuZEfclXtMnc3Iec=;
+        b=ti0XmyAJyCA5aHMehOXyREKgNoESjVI+VpfwgvqiPU+BAV0Pti5zUitNQFKOdipGqW
+         6Ni6hbbBKJoKYyOOLyYyzVWsjM5ExiEQ30v6V3lxzR2ITaKqx1dZkEUsuJWfOaenE2BS
+         wLSscMWhZxlCrkb0FICXcWT0ETTwnuS1qybnfkxV1M+WKwglcurRtls/QPxXeOzCIsBD
+         NZ2y/FmiEMxgxhwLkQd1IqttZKX40rElwSKtfoIG76ftjGI0yx0EyOY/nPqO+b5jBufN
+         3wvUC2laGeGKNwpUeEzxeUikEyJrCB8E6nArCPf3Ce+H7r/v/y8Qze34YF8LMElxphia
+         0bWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVGfXs7strlNQ94DPvHuSMrTw28ZoMezWdLq7h/dmIwGDTLwXcLvF7qSSktlcx6igp6AM8mhTfRD9TojyzbPI8jC4Y=@vger.kernel.org, AJvYcCWHL/pRy2nlREbkRPF0W7+X/WLa3pvEma3RY2hhIiMsJ1cyHLtvSkmz6qH2sWHike9OOi0RlhyKAA4DU2wk@vger.kernel.org, AJvYcCXit5iz76v6hzTphYed1Vq8pB1B+MBGFIfdr6Gk1Lyz2N40ljKOhd3VxXFOeSpwW4OvPrMILq7FOT9T@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXzQxoTcIIbOJasp11/dPKhefmRQ0TGVhSxFSfV6EMbBBR8rly
+	ymtxvi/riaabH2NVvnE2koJV4PfF9dSAbeWPdwNiEHnJn4ufhffg80XKvuj4goRCleJMVlMYg1z
+	u0JuQx4ZCgMxQth3HGvXPeE4P/kMiSGk=
+X-Gm-Gg: ASbGncssNKJMNIka7qxyZ2LzFxhIH0MEcm7/wvYDKoJvfSdum4GDoDH2FSeX4gjLL2r
+	yrR/H8qUwDxi2ByKqRc27/Qnk+Bm1XchjabIG61hwcuDqi4DbNT3VZbSVaiAFkeGP351SZJE/Kx
+	3EU5jRNuEJVx/AaGelD5nUELQe/ZolbFkFOdjGA1iUpFx+OunzYVOUxFBRv/EHXBkWeIPwaw92P
+	B0=
+X-Google-Smtp-Source: AGHT+IGfXhJYyRHcjfBzH3E/Np7+WxNYEs/xRPKs+t1hrWzSZI6HjdEh4sxpFfRuFAr4vLNu0c2ndW3IV75njl2FMgM=
+X-Received: by 2002:adf:9d81:0:b0:3a5:39a8:199c with SMTP id
+ ffacd0b85a97d-3a9186566d4mr2664298f8f.53.1751028862280; Fri, 27 Jun 2025
+ 05:54:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250625153042.159690-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWFvRJoa9uhmUKYaMTB=eAYURfSJ6ebekDornY5O5aLXw@mail.gmail.com>
+In-Reply-To: <CAMuHMdWFvRJoa9uhmUKYaMTB=eAYURfSJ6ebekDornY5O5aLXw@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 27 Jun 2025 13:53:56 +0100
+X-Gm-Features: Ac12FXyaV0N2Ji6yym-tyLlWm1nqp4jELVVzRhl43VsKlnpvxJBV2_ZYETXP8tc
+Message-ID: <CA+V-a8v36ygwPhLjkcgDUrRgU-f6BLSeL0J90QOmrvMi8iwFoQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] arm64: dts: renesas: Add I2C and SDHI nodes for
+ RZ/T2H and RZ/N2H SoCs
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 27 Jun 2025 14:54:20 +0200
-Message-Id: <DAXBXDDJAXDE.2V71E3E8F3GIH@fairphone.com>
-Cc: <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
- <linux-arm-msm@vger.kernel.org>, <linux-leds@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: Add PMXR2230 PMIC
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Lee Jones"
- <lee@kernel.org>, "Pavel Machek" <pavel@kernel.org>, "Rob Herring"
- <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, "Fenglin Wu" <quic_fenglinw@quicinc.com>,
- "Stephen Boyd" <sboyd@kernel.org>, "Bjorn Andersson"
- <andersson@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250625-sm7635-pmxr2230-v1-0-25aa94305f31@fairphone.com>
- <20250625-sm7635-pmxr2230-v1-3-25aa94305f31@fairphone.com>
- <bced42f0-bc9a-47e6-bbdf-c49657d2e18b@oss.qualcomm.com>
-In-Reply-To: <bced42f0-bc9a-47e6-bbdf-c49657d2e18b@oss.qualcomm.com>
 
-On Wed Jun 25, 2025 at 3:20 PM CEST, Konrad Dybcio wrote:
-> On 6/25/25 11:18 AM, Luca Weiss wrote:
->> Add a dts for the PMIC used e.g. with SM7635 devices.
->>=20
->> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->> ---
->>  arch/arm64/boot/dts/qcom/pmxr2230.dtsi | 63 +++++++++++++++++++++++++++=
-+++++++
->>  1 file changed, 63 insertions(+)
->>=20
->> diff --git a/arch/arm64/boot/dts/qcom/pmxr2230.dtsi b/arch/arm64/boot/dt=
-s/qcom/pmxr2230.dtsi
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..a7650f3230c01422b76ef78e=
-897e5e7ae2f20cc6
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/qcom/pmxr2230.dtsi
->> @@ -0,0 +1,63 @@
->> +// SPDX-License-Identifier: BSD-3-Clause
->> +/*
->> + * Copyright (c) 2025, Luca Weiss <luca.weiss@fairphone.com>
->> + */
->> +
->> +#include <dt-bindings/interrupt-controller/irq.h>
->> +#include <dt-bindings/spmi/spmi.h>
->> +
->> +/ {
->> +	thermal-zones {
->> +		pmxr2230_thermal: pmxr2230-thermal {
->> +			polling-delay-passive =3D <100>;
->> +
->> +			thermal-sensors =3D <&pmxr2230_temp_alarm>;
->> +
->> +			trips {
->> +				pmxr2230_trip0: trip0 {
->> +					temperature =3D <95000>;
->> +					hysteresis =3D <0>;
->> +					type =3D "passive";
->> +				};
->> +
->> +				pmxr2230_crit: pmxr2230-crit {
+Hi Geert,
+
+On Thu, Jun 26, 2025 at 3:26=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
 >
-> This name is "meh", please change to tripN
+> Hi Prabhakar,
 >
->> +					temperature =3D <115000>;
+> On Wed, 25 Jun 2025 at 17:30, Prabhakar <prabhakar.csengg@gmail.com> wrot=
+e:
+> > This patch series adds I2C and SDHI nodes for the Renesas RZ/T2H
+> > (R9A09G077) and RZ/N2H (R9A09G087) SoCs. The I2C/SDHI nodes are added
+> > to the respective SoC DTSI files. Additionally, user LEDs are added
+> > to the RZ/T2H EVK and RZ/N2H EVK boards.
 >
-> Unless there's some actual electrical/physical SKU differences,
-> downstream lists 145C as critical for a PMIC carrying the same
-> name
-
-[    0.085990] spmi-temp-alarm c400000.spmi:pmic@1:temp-alarm@a00: No ADC i=
-s configured and critical temperature 145000 mC is above the maximum stage =
-2 threshold of 125000 mC! Configuring stage 2 shutdown at 125000 mC.
-
-Same for the PMIV0104:
-
-[    0.086556] spmi-temp-alarm c400000.spmi:pmic@7:temp-alarm@a00: No ADC i=
-s configured and critical temperature 145000 mC is above the maximum stage =
-2 threshold of 125000 mC! Configuring stage 2 shutdown at 125000 mC.
-
-What shall I do?
-
-Regards
-Luca
-
-
+> Thanks for your series!
 >
-> with that:
+> > Note, these patches apply on top of the series:
+> > https://lore.kernel.org/all/20250617171957.162145-1-prabhakar.mahadev-l=
+ad.rj@bp.renesas.com/
+> > https://lore.kernel.org/all/20250617162810.154332-1-prabhakar.mahadev-l=
+ad.rj@bp.renesas.com/
 >
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> FTR, the LED patches also depend on:
+>   - Adding the pinctrl nodes,
+>   - Including dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>,
+>   - Adding RZN2H_*() macros.
 >
-> Konrad
+Oops, thanks for pointing this out. I missed to mention this dependency,
 
+Cheers,
+Prabhakar
