@@ -1,177 +1,249 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2042EA72E
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454652EA162;
+	Fri, 27 Jun 2025 17:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751043842; cv=none; b=qZIM3ss/ju8U9GJMJaaJ2TvApzL3OVzY0sQAiDRddNXu0w6sLyUV6foTMbWkgrmuLrI9NgkeVjp7O60+onAtNu6VrBx2nSl4r40dYAvapLlrnBpLo0paRB9kwVuclOAr+x1GwSFnB1Ln8SQguvfAIxUBRLAVxsSLKlbMidLPYnc=
+	t=1751043888; cv=none; b=YYNYcbsI1AC4GJksoUtS+a468VJsq1DoU9+6VgquHa+HIJIJ/k4PylTjZM/gYobJu62LY9NYPhsctvrmALMtx4tYxdoMoJ9Ho6e1GNd316JMBARewivIAwUrVY/HsOASpIaqy13M4gQ9Ymzj2u4G4CxHe9dwFDKf4V3k7SRwMCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751043842; c=relaxed/simple;
-	bh=HSdDzpGEZh0Z+ObhrUewY7ZjXhceaEJ5COoUxc2cJis=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tf/vUP1z0zGCjJbg56LNUib1Q6JBMEwAYN+klWbfSX2XSF7p9xsl6FEh83HUGhlYAWaKNVwsHkQZ8GpM7Lqe5i67ump0Hm7ehAYVSHEoOoAXGXUiY679F80AL3giCxbUheJjJJskfCpk5uG0CQNWkTNjyWi7JygyzVJHsiQV3Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qh8R7gRo; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751043888; c=relaxed/simple;
+	bh=No+wuCe/tIjYr5O7xl1ig1e/CPEA7GnvRaS/TCSraIo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gfg+4Ij3Vg6zRpnksOieyOIhZNDnjw/O5Leb8z0wlwpuaSvNHQYPf1yN2BtNVOz/R8HK9dQQxYBnVSWLm0bCBfYm028/cX1Trf4EZp5q8R2Fb3TPUvi1/p4tGBwYHD1BUdP2FQ+f7br+0Ty2Cw3WS2nRvIO2o1sGkQdfYufZjhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cRQtHRQX; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qh8R7gRo"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a50956e5d3so1903322f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:04:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRQtHRQX"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso2540383b3a.2;
+        Fri, 27 Jun 2025 10:04:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751043838; x=1751648638; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=C0lM+9jotmOVOM1lf7WJ8vyAHMjEM1wCcsIwWRjnqrk=;
-        b=qh8R7gRoLMJtn8znL8iuP+5EtC9hEvibIe+YPvnaIgeM5vpRLRGSCJP2Lht2b6slpc
-         jsMZbc80LDgYL7ZNF03OxgRqYkiyR1lRWhIEuLRzYd0ILxrI1XH96aKWrMI0LAj61Ivn
-         kOU3M6HY4j+wVp308CByEa0ZGhSjI8WqGvnErI1QqVNWWHmK7pU8dkpcYTHjR37az02y
-         TVOZZ8mV0hs3k5fMOyVi6IpBP5aIdQxTcW3+u+kYsMWHQOE82i57+A88CO3ZtBszmPhY
-         YDTCMvHOgM4OCy9baWXN9xgEankQYFFIo6BrYxyaxbuWmHsGMQsvcLXnOG/vvRNrYmlW
-         YAvg==
+        d=gmail.com; s=20230601; t=1751043885; x=1751648685; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=P/5PezlxnjZrbHkP3cgxpGJy4eDTLe4cMi4EVTPNnAo=;
+        b=cRQtHRQX91GWZRXT4OqXuXrmX6DxqbjkLdAE584bcVH8bNSxvI/qlIoiP1rI7dmkTL
+         eVBh5ax+wXovgUy6WJB09Q2iUoZEC6kQ8oAzj8tFUuLBrMu0w+xWszODCDCanYgNFWeC
+         MI05hMETTLdsiInYqsLhfYWbc3x/3iixd/Cm0ov2eZscP6ymTt5eIc/2AuVy/7qNcQxI
+         TRpwGqr2t/AdEBwh7ZRJi3HuqtXuAg3XJtvcYoTLllF1depmSRe+zY+D+ku/DqfPn3NK
+         bdeog8Tq29u4tx0subiifgp2X9OeKq4J1Iaw51VJIABEtj5uuzhHHuKCkyvzbApRwKhA
+         OFdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751043838; x=1751648638;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C0lM+9jotmOVOM1lf7WJ8vyAHMjEM1wCcsIwWRjnqrk=;
-        b=kO2p3piFxLMCyZnPz/2vvwRu8woEwF2pflQEW35KQWFPSRrHHQL+3LBtpWUa1rnCcr
-         fTes0xf8HYhdnGt+/q0sxiUZc1CrbCTzUV+nes4fdgXJGweL2D+zl+qf9u4KCopXOHiK
-         j2aAdKbS5MijQmtrwbmgCcDomMgqy1Hivb3pNYlql2pfjDA5u1Zg574hZUZNdUluWIsG
-         MRx/aY450DzvmJzc0qEldFCNNgZ6CSvYXO+fMdAW/S6lAdqlYMNBI5JLI2Ptf4g5YYQ8
-         HFhFOuIX3+fIcc+Jejr7nsX+vpLjm3kwxTvhPOzXGzjYqaPvd95mK+H3IyoakDlQ4hXZ
-         JbRw==
-X-Forwarded-Encrypted: i=1; AJvYcCWahL+epetNJlnoem+EyQmIXA6alft+VJpzetNbMIrdGKftFeO5Ees7I2PX/Nvv8/+xW1ZLPNEq+5llbTQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEIh0C8w1Uqw9bzYdCtdycyUeigJFB3Jo8yRqqU5sX6HNTlgzy
-	ZCCoW9uL0FPvAzPOai7mCJ1JLxlzZp84ffSTE+PRXkX/zU/j8tW4KghzbuI4llNy4qA=
-X-Gm-Gg: ASbGncuV0JKrUMljuWYucATh1H5TRQ+FlxPoLNZQrxswpNJDEproLL2t2/j5G8PodgL
-	58mpBvAjEbGmOvq0xtWHbITQR2TWwjQtvsFQLotGX6K40qJPa2yfjCztu6CxEDOFntkJ/3u6ei0
-	6LGo+rdoTFc5e03hhjgheouocmjkbQk0iX0nBerVZ6XQsrI7ytY4fsmrWmghgzHTMvVSNVZQWad
-	6j27JMoRQcPBiK75XNgtw9ywYjy/n8K+ao+zkwx23+U4JzLLhMwEh9N53vVA6grCmg2GselLIpE
-	+i450/tCxUBMTvuc1vheymdNkvlK7GQIU9xrwC9ngCjeTlMi2kZc6k38BiFXmi0TdTWaagYWQKt
-	7tbYVMvLJwSuAk1IbeU6MQPZ8cwg=
-X-Google-Smtp-Source: AGHT+IEQnYHLVvvRdo07ECuZNx96gkoirCSuaogNuBRIDfH0KzcTC9kqZQWgGcTR8Zpls8/g0XN7fg==
-X-Received: by 2002:a05:6000:481c:b0:3a6:f2a7:d0bb with SMTP id ffacd0b85a97d-3a90d0d6cd6mr3642010f8f.12.1751043838332;
-        Fri, 27 Jun 2025 10:03:58 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a406489sm57074825e9.27.2025.06.27.10.03.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 10:03:57 -0700 (PDT)
-Message-ID: <ebdbb517-ffa2-422a-989e-a4f19ab0163a@linaro.org>
-Date: Fri, 27 Jun 2025 18:03:56 +0100
+        d=1e100.net; s=20230601; t=1751043885; x=1751648685;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P/5PezlxnjZrbHkP3cgxpGJy4eDTLe4cMi4EVTPNnAo=;
+        b=ZieOsWH9D5p1qC78RF/XEY+BnMz2j16/Fe5D+fN9mQXFp6nlzAjEvNflVCoN6bwuNp
+         l6/opI1y0X4NLR+abBIg7SwRRWKm3QnVIq/Oc6NDAf3qLOXl5MrehZo7EF4Gvdx/r0Q7
+         666lwQX+OajtWknp56sT8ZnuT4ACRt2Zrd+MQjNkU6GvLiWM7NPjPm30AM7wviZix3uC
+         3FmxwqSatCEKiZZcLA/5ToCKUXBeDjpOV5wWo1aENCClRGw4r2YsRbrFA7heA70LSZf1
+         Gq5OU6WI4924bX6FnrQ1NJYFtHgVRlrPvZAIThGT1L90G2uF58SsGR197Mg4GNRvATL3
+         LIpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIqakSOgJuM7szE20BtWbdFlFuMSPyl3qoiTQ3AHHxbOPVKnIYEbPdhrTGPJcdoh7vx5LDCeaizJXAVD4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGK2T3PHSdPVRw1Pw8fR37464gCqVzM1vD+wp+x2cO7ZopD4Mm
+	Ic3ljewlUmOa3vHdp3N3LKoSsH0Q6klh4jGym0wO3l83g5EvErKNF9P0f6LQWu6HZyBRDEn6
+X-Gm-Gg: ASbGncsoRixNLyruKi5lJUz7lN+UPC4x6xG/4rREt8LsXRj4n2VIIcHFUAzB3Nhlkn2
+	gM9CCc58rZV/yjmuxdLIxDHLnAMo5SApnA7e6iNww7NN63Ya699aVkiC8HUhp00Q4r2n3H/dK30
+	9gyOCyUBohGYHK7Qo37ekxDOSzsyvI0OHHLBmb2AgTx9rZwYm3yVygKJSm5+MUg8AhLiVuPLGZQ
+	bPn6clsfTcvQzzRTOCzjfmsxgqOt7k3dNgkrDh3rF4qfmZ7arpFMIgXbd0NA+4yEFrWqM+6VUzc
+	GKnFJxvvR7DH99+D4PuFYLTeg0O/bBJRItqZv20d+PmTYAzHmLD0ueVMOfmjrZw5UjZ6C9iYduQ
+	E94E6grSZYAIaTBG0cdc=
+X-Google-Smtp-Source: AGHT+IHtSOboieq26f8FxmQImnoqo69iFml/sbhGorgHggHV/+81pdSqdzA0F8u/YFtciuzcaRUo3g==
+X-Received: by 2002:a05:6a00:3d14:b0:748:edf5:95de with SMTP id d2e1a72fcca58-74af6e9f834mr5259526b3a.10.1751043885160;
+        Fri, 27 Jun 2025 10:04:45 -0700 (PDT)
+Received: from localhost.localdomain ([2402:800:61b0:46ba:b722:c530:9812:c27c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541e5c1sm2760775b3a.70.2025.06.27.10.04.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 10:04:44 -0700 (PDT)
+From: Nguyen Dinh Dang Duong <dangduong31205@gmail.com>
+To: jikos@kernel.org,
+	bentiss@kernel.org
+Cc: linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nguyen Dinh Dang Duong <dangduong31205@gmail.com>
+Subject: [PATCH] HID: rapoo: Add support for side buttons on RAPOO 0x2015 mouse
+Date: Sat, 28 Jun 2025 00:04:23 +0700
+Message-ID: <20250627170425.11166-1-dangduong31205@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] media: iris: use np_dev as preferred DMA device in
- HFI queue management
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <20250627-video_cb-v3-3-51e18c0ffbce@quicinc.com>
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Content-Language: en-US
-In-Reply-To: <20250627-video_cb-v3-3-51e18c0ffbce@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 27/06/2025 16:48, Vikash Garodia wrote:
-> Update HFI interface queues to use np_dev(preferred non-pixel device)
-> for DMA memory allocation and deallocation if available. This allows
-> platforms with separate DMA domain for non-pixel to use the appropriate
-> device handle when managing HFI queues and SFR regions.
-> 
-> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
-> ---
->   drivers/media/platform/qcom/iris/iris_hfi_queue.c | 20 +++++++++++++-------
->   1 file changed, 13 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_queue.c b/drivers/media/platform/qcom/iris/iris_hfi_queue.c
-> index fac7df0c4d1aec647aeca275ab19651c9ba23733..a31ebe947f525f0d7c09f8b786939d01b62532c3 100644
-> --- a/drivers/media/platform/qcom/iris/iris_hfi_queue.c
-> +++ b/drivers/media/platform/qcom/iris/iris_hfi_queue.c
-> @@ -247,24 +247,27 @@ static void iris_hfi_queue_deinit(struct iris_iface_q_info *iface_q)
->   int iris_hfi_queues_init(struct iris_core *core)
->   {
->   	struct iris_hfi_queue_table_header *q_tbl_hdr;
-> +	struct device *dev;
->   	u32 queue_size;
->   
-> +	dev = core->np_dev ? core->np_dev : core->dev;
-> +
+This patch adds support for handling the side buttons
+on the RAPOO 0x2015 wireless mouse. These buttons were
+previously not generating input events due to missing
+driver logic.
 
-dev = core->dev;
-if (core->np_dev)
-     dev = core->np_dev;
+The new code handles raw HID input report with Report
+ID 1 and maps the side buttons to KEY_BACK and KEY_FORWARD
+using the input subsystem.
 
-Is much easier to read.
+Tested on a RAPOO mouse with USB ID 24AE:2015.
 
->   	/* Iris hardware requires 4K queue alignment */
->   	queue_size = ALIGN((sizeof(*q_tbl_hdr) + (IFACEQ_QUEUE_SIZE * IFACEQ_NUMQ)), SZ_4K);
-> -	core->iface_q_table_vaddr = dma_alloc_attrs(core->dev, queue_size,
-> +	core->iface_q_table_vaddr = dma_alloc_attrs(dev, queue_size,
->   						    &core->iface_q_table_daddr,
->   						    GFP_KERNEL, DMA_ATTR_WRITE_COMBINE);
->   	if (!core->iface_q_table_vaddr) {
-> -		dev_err(core->dev, "queues alloc and map failed\n");
-> +		dev_err(dev, "queues alloc and map failed\n");
->   		return -ENOMEM;
->   	}
->   
-> -	core->sfr_vaddr = dma_alloc_attrs(core->dev, SFR_SIZE,
-> +	core->sfr_vaddr = dma_alloc_attrs(dev, SFR_SIZE,
->   					  &core->sfr_daddr,
->   					  GFP_KERNEL, DMA_ATTR_WRITE_COMBINE);
->   	if (!core->sfr_vaddr) {
-> -		dev_err(core->dev, "sfr alloc and map failed\n");
-> -		dma_free_attrs(core->dev, sizeof(*q_tbl_hdr), core->iface_q_table_vaddr,
-> +		dev_err(dev, "sfr alloc and map failed\n");
-> +		dma_free_attrs(dev, sizeof(*q_tbl_hdr), core->iface_q_table_vaddr,
->   			       core->iface_q_table_daddr, DMA_ATTR_WRITE_COMBINE);
->   		return -ENOMEM;
->   	}
-> @@ -292,6 +295,7 @@ int iris_hfi_queues_init(struct iris_core *core)
->   
->   void iris_hfi_queues_deinit(struct iris_core *core)
->   {
-> +	struct device *dev;
->   	u32 queue_size;
->   
->   	if (!core->iface_q_table_vaddr)
-> @@ -301,7 +305,9 @@ void iris_hfi_queues_deinit(struct iris_core *core)
->   	iris_hfi_queue_deinit(&core->message_queue);
->   	iris_hfi_queue_deinit(&core->command_queue);
->   
-> -	dma_free_attrs(core->dev, SFR_SIZE, core->sfr_vaddr,
-> +	dev = core->np_dev ? core->np_dev : core->dev;
+Signed-off-by: Nguyen Dinh Dang Duong <dangduong31205@gmail.com>
+---
+ drivers/hid/Kconfig     |   6 +++
+ drivers/hid/Makefile    |   1 +
+ drivers/hid/hid-ids.h   |   3 ++
+ drivers/hid/hid-rapoo.c | 101 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 111 insertions(+)
+ create mode 100644 drivers/hid/hid-rapoo.c
 
-and again
-
-> +
-> +	dma_free_attrs(dev, SFR_SIZE, core->sfr_vaddr,
->   		       core->sfr_daddr, DMA_ATTR_WRITE_COMBINE);
->   
->   	core->sfr_vaddr = NULL;
-> @@ -310,7 +316,7 @@ void iris_hfi_queues_deinit(struct iris_core *core)
->   	queue_size = ALIGN(sizeof(struct iris_hfi_queue_table_header) +
->   		(IFACEQ_QUEUE_SIZE * IFACEQ_NUMQ), SZ_4K);
->   
-> -	dma_free_attrs(core->dev, queue_size, core->iface_q_table_vaddr,
-> +	dma_free_attrs(dev, queue_size, core->iface_q_table_vaddr,
->   		       core->iface_q_table_daddr, DMA_ATTR_WRITE_COMBINE);
->   
->   	core->iface_q_table_vaddr = NULL;
-> 
-Other than that.
-
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+index 43859fc75..cf58e811e 100644
+--- a/drivers/hid/Kconfig
++++ b/drivers/hid/Kconfig
+@@ -1004,6 +1004,12 @@ config HID_PXRC
+        To compile this driver as a module, choose M here: the
+        module will be called hid-pxrc.
+ 
++config HID_RAPOO
++	tristate "Rapoo non-fully HID-compliant devices"
++	help
++	Support for Rapoo devices that are not fully compliant with the
++	HID standard.
++
+ config HID_RAZER
+ 	tristate "Razer non-fully HID-compliant devices"
+ 	help
+diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
+index 10ae5dedb..4a1944184 100644
+--- a/drivers/hid/Makefile
++++ b/drivers/hid/Makefile
+@@ -112,6 +112,7 @@ obj-$(CONFIG_HID_PLANTRONICS)	+= hid-plantronics.o
+ obj-$(CONFIG_HID_PLAYSTATION)	+= hid-playstation.o
+ obj-$(CONFIG_HID_PRIMAX)	+= hid-primax.o
+ obj-$(CONFIG_HID_PXRC)		+= hid-pxrc.o
++obj-$(CONFIG_HID_RAPOO) += hid-rapoo.o
+ obj-$(CONFIG_HID_RAZER)	+= hid-razer.o
+ obj-$(CONFIG_HID_REDRAGON)	+= hid-redragon.o
+ obj-$(CONFIG_HID_RETRODE)	+= hid-retrode.o
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index c6468568a..abfa62041 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1144,6 +1144,9 @@
+ #define I2C_PRODUCT_ID_RAYDIUM_4B33	0x4b33
+ #define I2C_PRODUCT_ID_RAYDIUM_3118	0x3118
+ 
++#define USB_VENDOR_ID_RAPOO			0x24ae
++#define USB_DEVICE_ID_RAPOO_2_4G_RECEIVER	0x2015
++
+ #define USB_VENDOR_ID_RAZER            0x1532
+ #define USB_DEVICE_ID_RAZER_BLACKWIDOW_ULTIMATE   0x010D
+ #define USB_DEVICE_ID_RAZER_BLACKWIDOW            0x010e
+diff --git a/drivers/hid/hid-rapoo.c b/drivers/hid/hid-rapoo.c
+new file mode 100644
+index 000000000..4c81f3086
+--- /dev/null
++++ b/drivers/hid/hid-rapoo.c
+@@ -0,0 +1,101 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <asm-generic/errno-base.h>
++#include <asm-generic/int-ll64.h>
++#include <linux/bitops.h>
++#include <linux/input.h>
++#include <linux/input-event-codes.h>
++#include <linux/module.h>
++#include <linux/hid.h>
++#include <linux/usb.h>
++
++#include "hid-ids.h"
++
++#define RAPOO_BTN_BACK			0x08
++#define RAPOO_BTN_FORWARD		0x10
++
++static const struct hid_device_id rapoo_devices[] = {
++	{ HID_USB_DEVICE(USB_VENDOR_ID_RAPOO, USB_DEVICE_ID_RAPOO_2_4G_RECEIVER) },
++	{ }
++};
++MODULE_DEVICE_TABLE(hid, rapoo_devices);
++
++static int rapoo_probe(struct hid_device *hdev, const struct hid_device_id *id)
++{
++	int ret;
++	struct input_dev *input;
++
++	ret = hid_parse(hdev);
++	if (ret) {
++		hid_err(hdev, "parse failed\n");
++		return ret;
++	}
++
++	ret = hid_hw_start(hdev, HID_CONNECT_DEFAULT);
++	if (ret) {
++		hid_err(hdev, "start failed\n");
++		return ret;
++	}
++
++	if (hdev->bus == BUS_USB) {
++		struct usb_interface *intf = to_usb_interface(hdev->dev.parent);
++
++		if (intf->cur_altsetting->desc.bInterfaceNumber != 1)
++			return 0;
++	}
++
++	input = devm_input_allocate_device(&hdev->dev);
++	if (!input)
++		return -ENOMEM;
++
++	input->name = "Rapoo 2.4G Wireless Mouse";
++	input->phys = "rapoo/input1";
++	input->id.bustype = hdev->bus;
++	input->id.vendor = hdev->vendor;
++	input->id.product = hdev->product;
++	input->id.version = hdev->version;
++
++	__set_bit(EV_KEY, input->evbit);
++	__set_bit(KEY_BACK, input->keybit);
++	__set_bit(KEY_FORWARD, input->keybit);
++
++	ret = input_register_device(input);
++	if (ret)
++		return ret;
++
++	hid_set_drvdata(hdev, input);
++
++	return ret;
++}
++
++static int rapoo_raw_event(struct hid_device *hdev, struct hid_report *report, u8 *data, int size)
++{
++	struct input_dev *input = hid_get_drvdata(hdev);
++
++	if (!input)
++		return 0;
++
++	if (report->id == 1 && size >= 2) {
++		u8 btn = data[1];
++
++		input_report_key(input, KEY_BACK, btn & RAPOO_BTN_BACK);
++		input_report_key(input, KEY_FORWARD, btn & RAPOO_BTN_FORWARD);
++		input_sync(input);
++		return 1;
++	}
++
++	return 0;
++}
++
++static struct hid_driver rapoo_driver = {
++	.name = "hid-rapoo",
++	.id_table = rapoo_devices,
++	.probe = rapoo_probe,
++	.raw_event = rapoo_raw_event,
++};
++
++module_hid_driver(rapoo_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Nguyen Dinh Dang Duong <dangduong31205@gmail.com>");
++MODULE_DESCRIPTION("RAPOO 2.4G Wireless Device Driver");
++
+-- 
+2.50.0
 
