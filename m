@@ -1,154 +1,102 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5DF4430;
-	Fri, 27 Jun 2025 02:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2040219EB
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 02:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750990474; cv=none; b=pnCtCPubbQYdMOzFyeqWVf8F6dXEC4IhueU2iWYThuWNlKXbL+chtS1jGahAkfLE6H6dkbr5ryQ7LpSv8yglLHBmtRDZXMpn/Kl3kGHv8HBtWPmjqqheT3j+ihGSMdqITBxkNYYvXjdhMMJFdJYs09bkeyREoxKMmY5/6dKv7VY=
+	t=1750990607; cv=none; b=pOMgM+vgfLd0oYG64INilMKL7YtjeHuTob2JUQLyM2vGoQd0952nB3kVJ41kj0T0Mczw/WE9exCEHladxPfAs5Icla79b+pw2LI6sw6OcKGn6Q7zBLIBd9/JQHxE62vn7bGLbKfFR4tx/coOqWGbHEmQv+iqIoLz72ZpHY/pXT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750990474; c=relaxed/simple;
-	bh=dI4gZ+8FzlaNHjUsB5SGQuiANMweHx2aAKZjzQFvAaA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V2cRjN9/YbhFOjD6N2DNB74CGgeCdpQRc8e1XTWQg8YyQPvNGex1YLVL0UP7V6nrnzgcVyV07kMkcj073fspy/N5AmhP1+SvDn5ejdF75/D4xD+zRXN7q6HJi1b066sQXchul/dhObfPyz2ea9/jKKhHol6Vy89tv27UfhF7TSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IMfbi+44; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750990607; c=relaxed/simple;
+	bh=pZsPe42CiZoGGMQSeeHGeXnuo34X8knlQoD8r/oOmIM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tx09vaht4bX59wdIFr35u2qiM3Ti6TgJC4L0Lu9basdYvOKGFY+JFXo9NDZKq2/0FOr7h4WzpLPkb9XYBKrrwsmrflRyErec8HCHIqnNcHzAd+H3ci9+5lL4J5zR8LdD53mQCwdTRTnilwsBWFvzUNsA9bzRE29ZJcc1QYikQDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qy+yHzYF; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMfbi+44"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a588da60dfso1074930f8f.1;
-        Thu, 26 Jun 2025 19:14:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750990471; x=1751595271; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E4lNwGl5/Jt7PfY8MgdOgaaMPKP74HZQfLuN1tx9Z0E=;
-        b=IMfbi+44J7GzX39UYP6f6MKKG6yHX0QWjLGmln9EQRoeISrZU18uT6KZJUHrfnf3zj
-         ATK9UzsRIio+s8zMuMoBreELjTvWD1+XWvbt84QUtY0IZ1EPXSqg7qzF3vKC6Nm2vuNm
-         HWaT3JWxi+dCdSmsPhsGoTEoy+494BVCQHPjlKWfe2T4ndIZtvbb5s0kZXS5sEGBzD9n
-         XwQDFOHKsnIZB8DxkClRLD42dFSqgrt4rx9kVc3Mq7l7UASof8ZHXsN9PznTR8jRlKoJ
-         0XzC5udPdsw4Q+qHeDJvu09r94hy/ZWqr59kGqQLHA1f58ghmU9ZI9+7fJa3ek0XzGSI
-         0u5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750990471; x=1751595271;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E4lNwGl5/Jt7PfY8MgdOgaaMPKP74HZQfLuN1tx9Z0E=;
-        b=nK/wKbFt0RssoCMRH6xqiHadLWdGajR4KxxJzLOInJEnPImJpgUgbXs8vsF7i+4fVg
-         dVkZMDVPnn6zSrA9EL5/YIUn2K3kff2droZMhjupkSYz+J96QIC6e08ApiRDmVQfSfn+
-         TFGCGyl6IL8pBK2nxtbHP4HGruWbd/OWY+yLX2bWRpvS7NRsv3BWz4FTd8xZRVGcXaCK
-         T7MVH7+PgS3OWvNHsy+GW9CMSu9eWjps8iichngafdCm+/Od6M0OMlvpJpC+0i9nuT6o
-         YYngXTmKno9aQaqpjL4xvoywbW/zNlhDGYDkhMzdWx0G9n68aLHwn0RL1uGT5DFtQG9t
-         VoKw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+t3Rl9PUIPRLgqfd09rBVnuUlROqAOdfWU1EabwC/VYDDGPgvo5do/X7ZyqvZ0PxacsA=@vger.kernel.org, AJvYcCUJzvPG6P5UdIkPD+oPHAHlzTpG92u1rjcWOEv7jt/NALlsyH9FumjNBElavmomqMP4349Z5GaOW+NhxtqbbyWD9bHhczJv@vger.kernel.org, AJvYcCVNBQJD8TQtpsURyJE/vDWKtusOuzCcbOkO73vdmrgFk2yjt/odDCR+RSxSD06xaWv/tXi3x1gf87GANNv3tA==@vger.kernel.org, AJvYcCWE7ULaXRSBvnuFBWilUVNtTjXx8r3ISzvbP5pAPnyfXdiWbn/3JxxsnGrnpmpHXDvyjyx0Y4NWyR1VtP8K@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJzxTYBnSq4C6V9l5zH0c4+ZXIRVi0KE6EWnASzKzDCMB9Lh9d
-	nQdt69r6FVVsXc9mSO2ifUItBVeBbTFjoC/SHHkLo6wCQyI3fGY9UsKq3nzYuoqe4DBfQ/PNX0/
-	bGid47EWZAmE0toqBBYOtDumLraMyDc0=
-X-Gm-Gg: ASbGncv42M8qhCoIVNl7zCEqRvdNWgPA02ddt2uOdRd1RhtGqY2f6SiadwSzXdW6Vh2
-	O4anP1VgOKmMbdsrWZDwYUDGIwCybHVaYZTPjdcQucKHanfuqKo2Vq4FweZGhrozHxZSTQBhj5U
-	zIh9wse1+Kdh8Fq4VrRak+TZUOPFFUPkFEhJwG9uxeqxQI2QFXStTxn+csBtVtqUvak8MIqv8u
-X-Google-Smtp-Source: AGHT+IHhQq7iiVPbFftO+a9tCi+ffYjvL3dZ8R3tbTzTtJ2i3ocuYXdA43JAjuSzuyh6wsuSStT9cpvNEaKlLt5V1bI=
-X-Received: by 2002:adf:b603:0:b0:3a8:38b4:1d55 with SMTP id
- ffacd0b85a97d-3a8fe5b1dc2mr1023815f8f.28.1750990471164; Thu, 26 Jun 2025
- 19:14:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qy+yHzYF"
+Date: Thu, 26 Jun 2025 22:16:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750990593;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U144Ph4RXxj4gGppJr9qT0Dw0b6wY2GgPOKo6Yovtog=;
+	b=qy+yHzYFPd5ntOkc9N8/MwGXmHEUwJV01+b6dEnJ5EqsJ3Tm8V7fMSzGl+jPJM8uK1APRB
+	9r2Jehd557lAkcgloXsi7Jg2jwVOpRsVCJ8aLNXiGF7E6ZqXpL6ESMr+QEgZ0lfIqHl4Xv
+	WgdAIK8IjpWW56gl1zjvMQD1iwRapgc=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Youling Tang <youling.tang@linux.dev>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Youling Tang <tangyouling@kylinos.cn>
+Subject: Re: [PATCH 1/2] bcachefs: Simplify bch2_bio_map()
+Message-ID: <e6r3mzeb33xidr6e24ylrdop2v2hr7ztcqxl5uoskvfsmfbid2@2qztfbarr5bx>
+References: <20250605020639.6868-1-youling.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623063854.1896364-1-song@kernel.org> <20250623-rebel-verlust-8fcd4cdd9122@brauner>
-In-Reply-To: <20250623-rebel-verlust-8fcd4cdd9122@brauner>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 26 Jun 2025 19:14:20 -0700
-X-Gm-Features: Ac12FXzZ4cgBuecloSupKKY-UlToperUwwsAUxig5haY8CRIzCHHMpN-6hUT62U
-Message-ID: <CAADnVQ+iqMi2HEj_iH7hsx+XJAsqaMWqSDe4tzcGAnehFWA9Sw@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 0/4] Introduce bpf_cgroup_read_xattr
-To: Christian Brauner <brauner@kernel.org>
-Cc: Song Liu <song@kernel.org>, Kernel Team <kernel-team@meta.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
-	Amir Goldstein <amir73il@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Tejun Heo <tj@kernel.org>, Daan De Meyer <daan.j.demeyer@gmail.com>, bpf <bpf@vger.kernel.org>, 
-	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250605020639.6868-1-youling.tang@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Jun 23, 2025 at 4:03=E2=80=AFAM Christian Brauner <brauner@kernel.o=
-rg> wrote:
->
-> On Sun, 22 Jun 2025 23:38:50 -0700, Song Liu wrote:
-> > Introduce a new kfunc bpf_cgroup_read_xattr, which can read xattr from
-> > cgroupfs nodes. The primary users are LSMs, cgroup programs, and sched_=
-ext.
-> >
->
-> Applied to the vfs-6.17.bpf branch of the vfs/vfs.git tree.
-> Patches in the vfs-6.17.bpf branch should appear in linux-next soon.
+On Thu, Jun 05, 2025 at 10:06:38AM +0800, Youling Tang wrote:
+> From: Youling Tang <tangyouling@kylinos.cn>
+> 
+> For the part of directly mapping the kernel virtual address, there is no
+> need to increase to bio page-by-page. It can be directly replaced by
+> bio_add_virt_nofail().
+> 
+> For the address part of the vmalloc region, its physical address is
+> discontinuous and needs to be increased page-by-page to bio. The helper
+> function bio_add_vmalloc() can be used to simplify the implementation of
+> bch2_bio_map().
+> 
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
 
-Thanks.
-Now merged into bpf-next/master as well.
+Thanks, I'll apply this
 
-> Please report any outstanding bugs that were missed during review in a
-> new review to the original patch series allowing us to drop it.
-
-bugs :(
-
-> It's encouraged to provide Acked-bys and Reviewed-bys even though the
-> patch has now been applied. If possible patch trailers will be updated.
-
-Pls don't. Keep it as-is, otherwise there will be merge conflicts
-during the merge window.
-
-> Note that commit hashes shown below are subject to change due to rebase,
-> trailer updates or similar. If in doubt, please check the listed branch.
->
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-> branch: vfs-6.17.bpf
->
-> [1/4] kernfs: remove iattr_mutex
->       https://git.kernel.org/vfs/vfs/c/d1f4e9026007
-> [2/4] bpf: Introduce bpf_cgroup_read_xattr to read xattr of cgroup's node
->       https://git.kernel.org/vfs/vfs/c/535b070f4a80
-> [3/4] bpf: Mark cgroup_subsys_state->cgroup RCU safe
->       https://git.kernel.org/vfs/vfs/c/1504d8c7c702
-> [4/4] selftests/bpf: Add tests for bpf_cgroup_read_xattr
->       https://git.kernel.org/vfs/vfs/c/f4fba2d6d282
-
-Something wrong with this selftest.
-Cleanup is not done correctly.
-
-./test_progs -t lsm_cgroup
-Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-./test_progs -t lsm_cgroup
-Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-./test_progs -t cgroup_xattr
-Summary: 1/8 PASSED, 0 SKIPPED, 0 FAILED
-./test_progs -t lsm_cgroup
-test_lsm_cgroup_functional:PASS:bind(ETH_P_ALL) 0 nsec
-(network_helpers.c:121: errno: Cannot assign requested address) Failed
-to bind socket
-test_lsm_cgroup_functional:FAIL:start_server unexpected start_server:
-actual -1 < expected 0
-(network_helpers.c:360: errno: Bad file descriptor) getsockopt(SOL_PROTOCOL=
-)
-test_lsm_cgroup_functional:FAIL:connect_to_fd unexpected
-connect_to_fd: actual -1 < expected 0
-test_lsm_cgroup_functional:FAIL:accept unexpected accept: actual -1 < expec=
-ted 0
-test_lsm_cgroup_functional:FAIL:getsockopt unexpected getsockopt:
-actual -1 < expected 0
-test_lsm_cgroup_functional:FAIL:sk_priority unexpected sk_priority:
-actual 0 !=3D expected 234
-...
-Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
-
-
-Song,
-Please follow up with the fix for selftest.
-It will be in bpf-next only.
+> ---
+> NOTE:
+> The following patch needs to be applied (because the bcachefs.git repository
+> has not been synchronized to the latest):
+> commit 850e210d5ad2 ("block: add a bio_add_virt_nofail helper")
+> commit 8dd16f5e3469 ("block: add a bio_add_vmalloc helpers")
+> 
+>  fs/bcachefs/util.c | 15 ++++-----------
+>  1 file changed, 4 insertions(+), 11 deletions(-)
+> 
+> diff --git a/fs/bcachefs/util.c b/fs/bcachefs/util.c
+> index dc3817f545fa..5e5075630bc6 100644
+> --- a/fs/bcachefs/util.c
+> +++ b/fs/bcachefs/util.c
+> @@ -623,17 +623,10 @@ void bch2_pd_controller_debug_to_text(struct printbuf *out, struct bch_pd_contro
+>  
+>  void bch2_bio_map(struct bio *bio, void *base, size_t size)
+>  {
+> -	while (size) {
+> -		struct page *page = is_vmalloc_addr(base)
+> -				? vmalloc_to_page(base)
+> -				: virt_to_page(base);
+> -		unsigned offset = offset_in_page(base);
+> -		unsigned len = min_t(size_t, PAGE_SIZE - offset, size);
+> -
+> -		BUG_ON(!bio_add_page(bio, page, len, offset));
+> -		size -= len;
+> -		base += len;
+> -	}
+> +	if (is_vmalloc_addr(base))
+> +		bio_add_vmalloc(bio, base, size);
+> +	else
+> +		bio_add_virt_nofail(bio, base, size);
+>  }
+>  
+>  int bch2_bio_alloc_pages(struct bio *bio, size_t size, gfp_t gfp_mask)
+> -- 
+> 2.34.1
+> 
