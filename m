@@ -1,175 +1,215 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298602D97B5
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B3C2DA766
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751032687; cv=none; b=Hg5Ry7GAJ1PxX99+YKY8g13Fg4ZDWEZY4l9BoksOiO+auGa9NH3clbAYf9wXK0wpxLbh2nMZ0AhyLoUdZo/ly7lhjMmujTK81X9MjTGIYPcPTJxLQe2dA5Gc/bt0o3AC2uHepSqJ1nQopOF4jtxm9igk/gmc4kmIR86bM8IfjWM=
+	t=1751032698; cv=none; b=MWdINozt5rk1K5H32yGdfzbAutD7vRTeCiuruiGpz74gG3YPPbMCWSCMMfgO4QcJ1YKU4st1JpD5mX8XrG5EQ0bTWfI3vH7zGGne5is8V/igQN9Nl7NRNbMKd4iTxOmq3gDcSjGVbx9QqOg0z1mHBnbTehtJsf6Qx1NoWELK38c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751032687; c=relaxed/simple;
-	bh=PbW+EBtMztzzi8ICMRD/REkIEiRuhchOsk7eMRuZuBo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PqSwxRlaE/PZtVtg77QVEswUnfOtimtLCJC4F+p43Xx2fGuGChCHaKk8HSJRJUDKnWK9pcr3SqQzo1pZ8Kijwvxe/+BzWJPvrDnDk/sulpp7tFP0dfYAFzz9TPsvBiDznT5GcAnO6GkTNOtQkyu1xZ2m55I3sQBvhrrbGv8x7Ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=p6mlJ+Z8; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751032698; c=relaxed/simple;
+	bh=b77O1oHzVJc9Ti8JGlDRhvAzjUbmcBSv05XZUCJ8kF0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ttTVtasXacn/INn+AXaA43egX07p3n0I7/Uh34OrrAnEnmkhWLgIA18lnQryWu0cBUL4IRfrkpptEIj89EXCznZBvr3bDXHPDRbgk+TB3GAyQSep0jkT1+XmOkp/X/zvOPyqMROfbRSQT5UyTZLqZVG44U3cRP9wKzUVLwVyeq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JBXs7b6p; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="p6mlJ+Z8"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RCIoui028698
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:58:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8f9O0TugmOaHYNQ6bPlsLyE5Zw/b0P1alMxsrUiNUbk=; b=p6mlJ+Z8/Mn9RTiu
-	zP89Q+yg5MlMjJgCTmhPia3MawoftVFvRTBG3Cbu6lTTeW3nSRmHLOfV/eAzBKJS
-	l/z4dfdNOCuu/drw2CPhWpTiu6a2LIaBEk/oWRIIDNKRQzisZyR7owTrWqZLaTOl
-	sOqnhG62sCoxduAS1OXEi9XA/2qsHiWc8QK4p9TGOaFVlWNYy2XhaRHQLiNsPK+V
-	Y8AijlKN+LUb+3446GZImtZAwfpYtiS9n24FPRw7BLkxCL97biOxqR1Cxvj2oqJq
-	mLyQWuecK1mxYDaPlrxdsHs6zQwxLgm/QDYEj/c3FCPKKUpi8GbyEDWbSCSrF0ip
-	NdNnVA==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47esa50b89-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:58:05 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d094e04aa4so53152085a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 06:58:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JBXs7b6p"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6fb1be9ba89so18543176d6.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 06:58:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751032695; x=1751637495; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xPp/ClYZgzM+1U+QFbDcHJs/6imwSQiPcKsdqOO410E=;
+        b=JBXs7b6pBy3KS+n2S/t6J7lC7Jv0x8HLm9rZVu47yG7ixEhUGE3FASeXk7uYPbenYA
+         Pmh2H6f9jPl3PYMZVUq2bdqK5XSpNDvjcVeBtKHqW2QSqfd1Arff429wWJ0PwA8ipU32
+         InX+Gm87P2cFIaTGEsm4OtOPmykIsAAKxZt0/Kib+AUjxvyx4arey2W96wFQMPA+RGVD
+         7xEwIJKi8XRU04stNkdhW2tqAbB9w4HVFrDO5v06ySoFijYQfXep4usnkgYNxSMB+siW
+         H7+N2ESbaFdJsGynqBDqBidmd7Y3KXP9SjmSwE7NZh6ndJwdfcs605ZLVpa97rr2gHz/
+         rkxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751032684; x=1751637484;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8f9O0TugmOaHYNQ6bPlsLyE5Zw/b0P1alMxsrUiNUbk=;
-        b=EO78X8BWr67G4Yv7FfQdekZfq0XJBeEHFrYqwJlvnXvGqQX2ebG4rW0fsuQC1ZTtuv
-         eqmdFV4n8oVagjdqgfqpbpxrm7/nOEWF1WExQD6aDX5fACmjmfZEGg2gaOcu+k9ohkfO
-         FulRynnUZnBONO9eR4pIZ0moHGXHgmw4cqIxRxYeTyp2q9B/pR9/L6kKfzJFBVv7g7in
-         bDwmVxQ4IoROOvzVLtsMl8xQzqinpGSOAvYA2OiqlmwB96tiWQx3OR7LwJPIEPzj/Vor
-         PDOC/J86t9qvSO0G1V9Hb0Y9qTb8ZMZrLRRyQpu6lfqP0Qh24KOxOlNwj5Ack/nx+/3Z
-         N3aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWus1d+mkVY1aUbrxGASXafsarEGOJqQ7V+159mXEe8joOdTQLsx9Rp2vxi4Dm+OAuF3naTHK+VC+g18HI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzlandv0UOutD2bceBc/WEypMcdBNSZNv4ArtZJLyyvBvtGnFnn
-	WCG29VaUVcalFX1naDLBlvhRbnqkpXMeyrGLeIfS5ckN0XLpGoIShlXuiQN6RlwZQh33tgP6Fjo
-	AEdrd02bo1VLupFY/2s2sv2itRK6amgOMigSEEUdWeqSANrGbTWEcnQNuQ65DrUt2yhE=
-X-Gm-Gg: ASbGncvBNDVXzF/GqB4Ipci6vefr5VEKLUG0VmiI8Y9MNMFmLMuKlnCDNtWNZ3ulHYO
-	RuYnWpow5r7+v0vRxzEv7SrcK8v71opskFeemX+ibmPZxT7raLs0AVnOad2DiY6kLPL9QEMKqXY
-	1TqDzQKMj/3HcQLqEHpI/uymp52rV2Ex7M0ON7LwozZvS2FOMvnpJQzIq/F2xj0DbG36qQ3N8fk
-	WI3XgFjPu1Yh4lfwiyiQyXBUJj7NAyb4PZ1lGOQJD00rm6wfQcw1Xv1X+sRaJEaxYo6F3w3uWoj
-	gs0Os97ZhInuCsRXEEVV6olAh8Ppoz3m78eQo1UK0YaGTieKzuDKyyx652yAcBF4O0HfWCin3rm
-	hoIk=
-X-Received: by 2002:a05:620a:4606:b0:7cd:14b:554b with SMTP id af79cd13be357-7d4439a5828mr185945985a.10.1751032683916;
-        Fri, 27 Jun 2025 06:58:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEsqCNx5b/ikeBt7ufEGaLEu1rBhGNo0bQDVX9XSB7OyW/vrELCoJjxuw9x+u5urdhndBoKUA==
-X-Received: by 2002:a05:620a:4606:b0:7cd:14b:554b with SMTP id af79cd13be357-7d4439a5828mr185943185a.10.1751032683377;
-        Fri, 27 Jun 2025 06:58:03 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363b1fdsm131221366b.14.2025.06.27.06.58.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 06:58:02 -0700 (PDT)
-Message-ID: <99b9e6aa-36b4-456c-ba46-6e1207cc1019@oss.qualcomm.com>
-Date: Fri, 27 Jun 2025 15:57:59 +0200
+        d=1e100.net; s=20230601; t=1751032695; x=1751637495;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xPp/ClYZgzM+1U+QFbDcHJs/6imwSQiPcKsdqOO410E=;
+        b=vixdxMeWTJ8dChFgrOaAC2KyUqplTP+zXNRynXEDKXFqSh07BHA7hbpmDI8xPHBUNl
+         YClPKj+MviCxpAmHEmnzSzf46NRUH5mAAY3MCV3vo7z1EgDzFhhVK4VWb0mvl/cyzsNj
+         O90Cqqk4XyK52Xto/VPa/uiECN+gGTBTnxMnpt3wPeFSCyABAs+wbADZfubu/eb3kb18
+         qEPKXttuOyM1n8O5NPveKgd0E0azXH0XMO9Wd0yHglG105j/rm8mknfhV/hFjBWoVf0Y
+         5w/OyhcDP3OVDw+Lo3dC0XBZgy7YBgg5yEJ45k7p4fxL8JMAafj4JvYWgfePY1gzfD3i
+         A8HQ==
+X-Gm-Message-State: AOJu0YylEwG0Ty8HH5VQuDOfYq1MDQwmoLLlcuqD438v1LEccv/JBr7+
+	D192s3LyRVrpcMlqvv3qxJeIrHqxFTon1L31TjhQIq4PuY5pYaCxjwFW+vcaKUnuNH22wOTra9/
+	NnzhjHliyw6TbKgHKq6bBAUJHq7bqYfo=
+X-Gm-Gg: ASbGncvGEkVYxqOhbzBTKXp/ha9EE8DcSyjfFpnKDd3Px4+bYHZVwZC5W0Tprb10hRA
+	qYauyOoLXF3S1YOQ8qJQ10Q82BH+xV/ZfsMho9xz/50ienV60p9/fH4R0/2MU4C4jLwfYo2fzvG
+	m6zPi8eNeVq1iG5TpuTIUPCI7E/aidesQgSUl6IgSPLbZrB3s=
+X-Google-Smtp-Source: AGHT+IFpz83flyurGfNPQ8AbMQA21CHaV6uWbep69Uq7TnkmpyxVeWsBqTGWH7RYjX9d4WBpwpvNCs9ZJfQpXumdBHY=
+X-Received: by 2002:ad4:5bcf:0:b0:6fb:4caf:5d04 with SMTP id
+ 6a1803df08f44-700031c6a5bmr53652566d6.45.1751032694524; Fri, 27 Jun 2025
+ 06:58:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/4] dt-bindings: mmc: Add dll-hsr-list for HS400 and
- HS200 modes
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Ram Prakash Gupta <quic_rampraka@quicinc.com>,
-        Sachin Gupta <quic_sachgupt@quicinc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        quic_cang@quicinc.com, quic_nguyenb@quicinc.com,
-        quic_bhaskarv@quicinc.com, quic_mapa@quicinc.com,
-        quic_narepall@quicinc.com, quic_nitirawa@quicinc.com,
-        quic_sartgarg@quicinc.com
-References: <20250122094707.24859-1-quic_sachgupt@quicinc.com>
- <20250122094707.24859-2-quic_sachgupt@quicinc.com>
- <72b02fd1-5195-4bb0-b01d-5481b49a5680@kernel.org>
- <379e9199-4a9e-cd38-20cb-0fbd76fa33b3@quicinc.com>
- <abdde4ff-eae2-44c4-8608-89c762790549@kernel.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <abdde4ff-eae2-44c4-8608-89c762790549@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=eLYTjGp1 c=1 sm=1 tr=0 ts=685ea36d cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=v25VQKkRDONtiw5Uw7IA:9
- a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: e-jidb_FQkNkim-BPCTn7you47Vyl6ad
-X-Proofpoint-ORIG-GUID: e-jidb_FQkNkim-BPCTn7you47Vyl6ad
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDExNSBTYWx0ZWRfXy+72IwVR0cDu
- 2IFJF8OcSz7hxOXeV4/Kp1J2IO6xQPYdWJQkGPvtLee0FySwKjxA1HsESPcfPHPvUM2x3iQfXrS
- Q0Bc6z1IuLPDgAHeEo6qSojyHovSsgUtAs9D0622Zg+1aFzcdqJsSyQxmzJEt3y+YRKeJo4AWPy
- SKJXhi2su7J6TwVkee90yjjbYXC92cjDB59qoO5hWq8gLdgQhh86UDJujPrRPrtkWWPnRcruRco
- uJcxSIbjR9paoknj0b5SZv6JVTgpXIaUeHkK8Q8qKEv+28MpLy98lYa3x+wM1nBUR3ritVsi/4O
- hFo8yTalCVDCsMVpFnz/7Bakzr89JNEJxymHUDCcg1ONcebON3m5haN57WoHkoiYCAsLQKea/Ek
- +KklN9y6qJb10Fw9gY/G2sMwU/djWHiqL3afWHsMRW3JdOrwUfL+M1O7eqTS28hujszvTwuA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_04,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 mlxlogscore=999
- suspectscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506270115
+References: <20250627115510.3273675-1-david@redhat.com> <20250627115510.3273675-3-david@redhat.com>
+In-Reply-To: <20250627115510.3273675-3-david@redhat.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Fri, 27 Jun 2025 21:58:00 +0800
+X-Gm-Features: Ac12FXzXEXO95rUOIhdNLv7ixexjXu4CIZwfTgmr5h-Nl8qkP697ay-q0c7YJ5k
+Message-ID: <CABzRoyZKgWm=uQ2FioFyxStH+5z5OenX+BKEbfDQg+1546dsHg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/4] mm: smaller folio_pte_batch() improvements
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Jann Horn <jannh@google.com>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>, 
+	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
+	Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
+	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
+	Pedro Falcato <pfalcato@suse.de>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/26/25 7:42 PM, Krzysztof Kozlowski wrote:
-> On 26/06/2025 16:16, Ram Prakash Gupta wrote:
->> On 1/22/2025 3:56 PM, Krzysztof Kozlowski wrote:
->>> On 22/01/2025 10:47, Sachin Gupta wrote:
->>>> Document the 'dll-hsr-list' property for MMC device tree bindings.
->>>> The 'dll-hsr-list' property defines the DLL configurations for HS400
->>>> and HS200 modes.
->>>>
->>>> Signed-off-by: Sachin Gupta <quic_sachgupt@quicinc.com>
->>>> ---
->>>>  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 5 +++++
->>>>  1 file changed, 5 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
->>>> index 8b393e26e025..65dc3053df75 100644
->>>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
->>>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
->>>> @@ -133,6 +133,11 @@ properties:
->>>>      $ref: /schemas/types.yaml#/definitions/uint32
->>>>      description: platform specific settings for DLL_CONFIG reg.
->>>>  
->>>> +  qcom,dll-hsr-list:
->>>> +    maxItems: 10
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> uint32 has only one item. Anyway, there is already DLL there, so don't
->>> duplicate or explain why this is different. Explain also why this is not
->>> deducible from the compatible.
->>
-> 
-> 
-> Timeline still amazes me. I will be grumpy on this thread.
-> 
->> I will change it to reflect array from uint32.
->> There is change with artanis DLL hw addition where it need total of 5 entries
->> (dll_config, dll_config_2, dll_config_3, dll_usr_ctl, ddr_config)
->> for each HS400 and HS200 modes, hence the new addition in dt. And these values
->> are not fixed and varies for every SoC, hence this needs to be passed through
->> dt like it was passed earlier for qcom,dll-config & qcom,ddr-config.
-> 
-> 
-> Eh, no. That's not a valid reason. It's still SoC deducible. Don't bring
-> your downstream practices here, but remove EVERYTHING from downstream
-> and start doing things like upstream is doing.
+On Fri, Jun 27, 2025 at 7:55=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> Let's clean up a bit:
+>
+> (1) No need for start_ptep vs. ptep anymore, we can simply use ptep
+>
+> (2) Let's switch to "unsigned int" for everything
+>
+> (3) We can simplify the code by leaving the pte unchanged after the
+>     pte_same() check.
+>
+> (4) Clarify that we should never exceed a single VMA; it indicates a
+>     problem in the caller.
+>
+> No functional change intended.
 
-QC SoCs have between 0 and 4 SDHCI instances, each one potentially requiring
-different tuning, let's keep this data in DT
+Nice cleanup! Simplifying the loop and removing the temporary variables
+makes the code much easier to follow.
 
-Konrad
+Also, clarifying the caller's responsibility to stay within a single VMA
+and page table is a nice change ;)
+
+Feel free to add:
+Reviewed-by: Lance Yang <lance.yang@linux.dev>
+
+Thanks,
+Lance
+
+>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/internal.h | 37 +++++++++++++++----------------------
+>  1 file changed, 15 insertions(+), 22 deletions(-)
+>
+> diff --git a/mm/internal.h b/mm/internal.h
+> index 9690c75063881..ca6590c6d9eab 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -221,7 +221,7 @@ static inline pte_t __pte_batch_clear_ignored(pte_t p=
+te, fpb_t flags)
+>   * folio_pte_batch - detect a PTE batch for a large folio
+>   * @folio: The large folio to detect a PTE batch for.
+>   * @addr: The user virtual address the first page is mapped at.
+> - * @start_ptep: Page table pointer for the first entry.
+> + * @ptep: Page table pointer for the first entry.
+>   * @pte: Page table entry for the first page.
+>   * @max_nr: The maximum number of table entries to consider.
+>   * @flags: Flags to modify the PTE batch semantics.
+> @@ -233,24 +233,24 @@ static inline pte_t __pte_batch_clear_ignored(pte_t=
+ pte, fpb_t flags)
+>   *               first one is dirty.
+>   *
+>   * Detect a PTE batch: consecutive (present) PTEs that map consecutive
+> - * pages of the same large folio.
+> + * pages of the same large folio in a single VMA and a single page table=
+.
+>   *
+>   * All PTEs inside a PTE batch have the same PTE bits set, excluding the=
+ PFN,
+>   * the accessed bit, writable bit, dirty bit (unless FPB_HONOR_DIRTY is =
+set) and
+>   * soft-dirty bit (unless FPB_HONOR_SOFT_DIRTY is set).
+>   *
+> - * start_ptep must map any page of the folio. max_nr must be at least on=
+e and
+> - * must be limited by the caller so scanning cannot exceed a single page=
+ table.
+> + * @ptep must map any page of the folio. max_nr must be at least one and
+> + * must be limited by the caller so scanning cannot exceed a single VMA =
+and
+> + * a single page table.
+>   *
+>   * Return: the number of table entries in the batch.
+>   */
+> -static inline int folio_pte_batch(struct folio *folio, unsigned long add=
+r,
+> -               pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
+> +static inline unsigned int folio_pte_batch(struct folio *folio, unsigned=
+ long addr,
+> +               pte_t *ptep, pte_t pte, unsigned int max_nr, fpb_t flags,
+>                 bool *any_writable, bool *any_young, bool *any_dirty)
+>  {
+> -       pte_t expected_pte, *ptep;
+> -       bool writable, young, dirty;
+> -       int nr, cur_nr;
+> +       unsigned int nr, cur_nr;
+> +       pte_t expected_pte;
+>
+>         if (any_writable)
+>                 *any_writable =3D false;
+> @@ -267,29 +267,22 @@ static inline int folio_pte_batch(struct folio *fol=
+io, unsigned long addr,
+>         max_nr =3D min_t(unsigned long, max_nr,
+>                        folio_pfn(folio) + folio_nr_pages(folio) - pte_pfn=
+(pte));
+>
+> -       nr =3D pte_batch_hint(start_ptep, pte);
+> +       nr =3D pte_batch_hint(ptep, pte);
+>         expected_pte =3D __pte_batch_clear_ignored(pte_advance_pfn(pte, n=
+r), flags);
+> -       ptep =3D start_ptep + nr;
+> +       ptep =3D ptep + nr;
+>
+>         while (nr < max_nr) {
+>                 pte =3D ptep_get(ptep);
+> -               if (any_writable)
+> -                       writable =3D !!pte_write(pte);
+> -               if (any_young)
+> -                       young =3D !!pte_young(pte);
+> -               if (any_dirty)
+> -                       dirty =3D !!pte_dirty(pte);
+> -               pte =3D __pte_batch_clear_ignored(pte, flags);
+>
+> -               if (!pte_same(pte, expected_pte))
+> +               if (!pte_same(__pte_batch_clear_ignored(pte, flags), expe=
+cted_pte))
+>                         break;
+>
+>                 if (any_writable)
+> -                       *any_writable |=3D writable;
+> +                       *any_writable |=3D pte_write(pte);
+>                 if (any_young)
+> -                       *any_young |=3D young;
+> +                       *any_young |=3D pte_young(pte);
+>                 if (any_dirty)
+> -                       *any_dirty |=3D dirty;
+> +                       *any_dirty |=3D pte_dirty(pte);
+>
+>                 cur_nr =3D pte_batch_hint(ptep, pte);
+>                 expected_pte =3D pte_advance_pfn(expected_pte, cur_nr);
+> --
+> 2.49.0
+>
+>
