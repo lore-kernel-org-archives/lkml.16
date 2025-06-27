@@ -1,103 +1,164 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B355234994
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD3023BD1B;
+	Fri, 27 Jun 2025 08:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751012860; cv=none; b=UsTGsCdWfXNxM2MiRktJobAAlxW5yhmJ7aMGPW7dXaFsWCZcYPcoIWf84Az5AiqPD0NOZVJxDv3yOn0bjtgNiZBU87WmUGsIssRROr8wY+JI7pNSmaDrVcOajkpq4bM45/wBFgvLJBIZmr4Y9Rkz/CK+w+S9idrtLxa4IwwgihA=
+	t=1751012864; cv=none; b=eUr2MHVUCP/fSmN6Luv1jgQwdv8eBR5E0jnl5bhOkuZAiwdGPHx0YF+tOgcCmRAAeERNYPYx6y3yRDqITHpb7En5PdNbTQrRvsYAqo/0siQAalP9wzeVLx+E3Attb9/4QfeemdVw409EYsbBymBpEgvo5CGn6MI2SXjE9YATbJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751012860; c=relaxed/simple;
-	bh=ZeAO4OBjLQf6wovsW9Crpb96XV+o1K5q8+3fT2in1dg=;
+	s=arc-20240116; t=1751012864; c=relaxed/simple;
+	bh=YRUIoOzu1tATu4wgHlO+GjAHs+OYHRlReZgqQTEBN04=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SA0PjK+++0fHpCOcB3+NzNmjpUj9tw6b1zpyF2R6+dRGIQJJ9EJiRcCspGsNpx8Pkig4iX4BeCNuft07wLLWlWIqir8gtNTTWeMaEMfUSfG7Bf9C1TWa3FyRDYhlp3ncZqjR5SPJHu4xbsAO+ljJhLjkNw4Q69NYxa5VMVgoZ6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bxAB4rB8; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dz9AipkcLEhrhuOikdTng06uNM8mTfLhmXusnf669EsN3BJmx5CWfscywyaSPgjuHAws4hn2Zs/gj9Mx7r+i5QQyqt2HQqDQasoo8BAdR9MNjpGkkO80yHsqcjeK1weUejRFS7iaIymZBqNE+iaR7HjLTQXtLyA29g2F19S/5x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2aC/CWCX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CmuK24lM; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bxAB4rB8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=UUuri5ffyS/Mgik1WbOq5F0obfwWWCtPFTBMnttn1ek=; b=bxAB4rB8sFQy7nYWPFkrtNaTEJ
-	pRwXJolQv/CGykn7aFi1RukOTPDpJSjef+7accoud5aAGYw2SMQfuSCqeFk4ZZQdh0s7wajYEigIZ
-	xZx995ctPZ/khpyUyUhtOHWf4Aqp8KX8pNmHfTaLNviC3err2Djfj0/ta7gPbbfZZsEYCGi3rr+r5
-	Qv27cyBxnALRxRdwcWhLYrSO6kRLCxv6GmIqGNHD3tAnkUhDNpcWWeOkvlR6RRMhAbCbdhwKorcu7
-	+4e+b3vQcFZ6Pfrx4ov29/DdkZUjbUB5NOrtW3iYyEPWoHsAv3Id6bURwLuBu925/qtf8tYVu4Ap4
-	jLD4Tc/A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uV4Ql-00000006HAG-0I1e;
-	Fri, 27 Jun 2025 08:27:31 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9E70F300222; Fri, 27 Jun 2025 10:27:30 +0200 (CEST)
-Date: Fri, 27 Jun 2025 10:27:30 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Alexander Potapenko <glider@google.com>
-Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com, Aleksandr Nogikh <nogikh@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 08/11] kcov: add ioctl(KCOV_UNIQUE_ENABLE)
-Message-ID: <20250627082730.GS1613200@noisy.programming.kicks-ass.net>
-References: <20250626134158.3385080-1-glider@google.com>
- <20250626134158.3385080-9-glider@google.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2aC/CWCX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CmuK24lM"
+Date: Fri, 27 Jun 2025 10:27:36 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751012859;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kwOcZZs1ZIVtoa5esxxBWO/UwD8QHSKhv8lKZGDgSx0=;
+	b=2aC/CWCXE3jx9ogAHfeVvi5askDWzS4IIKA+1ZfA5SSTxSLYBQ90m6Dy2nICwxv8qzRoGL
+	rY6faDt9BJM+h83DTYHmU2Hh5lgLpbyej4lAKL3nKPN6lPO4+y6zJDpRWeq6XmAJNwvkhs
+	lGslEcJtbzrxI1LQsXqONZI9p7AOL1ZwoFSh6tfVaanUB1UnrcbnUPincQuvsHUo9RBv01
+	dwTADTWtGWwrTj2m21XatcwxDmi1F8SIRGrHmBmYpJLoGXdpFTy2m8yJ9XpPikUfOshPNg
+	VZ3uW2mSn2xV8eSUmW9NhS/5YVQmsUXxwrqWyDgJIxA3l6WEGRs3rpHnniX1jQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751012859;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kwOcZZs1ZIVtoa5esxxBWO/UwD8QHSKhv8lKZGDgSx0=;
+	b=CmuK24lMiNHqVe9jMdhvIIcCp3aCMFD6MbSCB8x5brTssfB2wvfSQdz+md2aVmzdnSIPBf
+	zKnT8k9vrlWiU0Ag==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Benjamin Berg <benjamin@sipsolutions.net>, 
+	Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, 
+	workflows@vger.kernel.org, Kees Cook <kees@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v4 12/15] kunit: Introduce UAPI testing framework
+Message-ID: <20250627100608-9eff2270-8f5b-49d4-9fe3-54a12a14dd25@linutronix.de>
+References: <20250626-kunit-kselftests-v4-0-48760534fef5@linutronix.de>
+ <20250626-kunit-kselftests-v4-12-48760534fef5@linutronix.de>
+ <66deaafe1974c989e949975bafe3ab0b2ae3f5ff.camel@sipsolutions.net>
+ <20250627060129-4fe09191-4714-4856-9de5-c8e5cf5ed0d6@linutronix.de>
+ <8cfa715301c7c357c5d6c82fabd9b53d2fa01182.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250626134158.3385080-9-glider@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8cfa715301c7c357c5d6c82fabd9b53d2fa01182.camel@sipsolutions.net>
 
-On Thu, Jun 26, 2025 at 03:41:55PM +0200, Alexander Potapenko wrote:
-> ioctl(KCOV_UNIQUE_ENABLE) enables collection of deduplicated coverage
-> in the presence of CONFIG_KCOV_ENABLE_GUARDS.
+On Fri, Jun 27, 2025 at 08:58:11AM +0200, Benjamin Berg wrote:
+> On Fri, 2025-06-27 at 06:20 +0200, Thomas Weiﬂschuh wrote:
+> > On Thu, Jun 26, 2025 at 08:11:17PM +0200, Benjamin Berg wrote:
+> > > I ran into two minor issues trying out the patches, see inline.
+> > 
+> > Thanks for testing the series.
+> > 
+> > > On Thu, 2025-06-26 at 08:10 +0200, Thomas Weiﬂschuh wrote:
+> > > > Enable running UAPI tests as part of kunit.
+> > > > The selftests are embedded into the kernel image and their output is
+> > > > forwarded to kunit for unified reporting.
+> > > > 
+> > > > The implementation reuses parts of usermode drivers and usermode
+> > > > helpers. However these frameworks are not used directly as they make it
+> > > > impossible to retrieve a thread's exit code.
+> > > > 
+> > > > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> > > > 
+> > > > [SNIP]
+> > > > +/**
+> > > > + * KUNIT_UAPI_EMBED_BLOB() - Embed another build artifact into the kernel
+> > > > + * @_name: The name of symbol under which the artifact is embedded.
+> > > > + * @_path: Path to the artifact on disk.
+> > > > + *
+> > > > + * Embeds a build artifact like a userspace executable into the kernel or current module.
+> > > > + * The build artifact is read from disk and needs to be already built.
+> > > > + */
+> > > > +#define KUNIT_UAPI_EMBED_BLOB(_name, _path)					\
+> > > > +	asm (									\
+> > > > +	"	.pushsection .rodata, \"a\"				\n"	\
+> > > > +	"	.global " __stringify(CONCATENATE(_name, _data)) "	\n"	\
+> > > > +	__stringify(CONCATENATE(_name, _data)) ":			\n"	\
+> > > > +	"	.incbin " __stringify(_path) "				\n"	\
+> > > > +	"	.size " __stringify(CONCATENATE(_name, _data)) ", "		\
+> > > > +			". - " __stringify(CONCATENATE(_name, _data)) "	\n"	\
+> > > > +	"	.global " __stringify(CONCATENATE(_name, _end)) "	\n"	\
+> > > > +	__stringify(CONCATENATE(_name, _end)) ":			\n"	\
+> > > > +	"	.popsection						\n"	\
+> > > > +	);									\
+> > > > +										\
+> > > > +	extern const char CONCATENATE(_name, _data)[];				\
+> > > > +	extern const char CONCATENATE(_name, _end)[];				\
+> > > > +										\
+> > > > +	static const struct kunit_uapi_blob _name = {				\
+> > > > +		.path	= _path,						\
+> > > > +		.data	= CONCATENATE(_name, _data),				\
+> > > > +		.end	= CONCATENATE(_name, _end),				\
+> > > > +	}									\
+> > > 
+> > > For me, the compiler could not find the files for the ".incbin" unless
+> > > I added an include path. i.e. adding
+> > > † ccflags-y := -I$(obj)
+> > > to lib/kunit/Makefile fixed the problem for me.
+> > 
+> > Can you share some more details on your build setup?
+> > This worked for me as-is and also passed 0day build testing.
 > 
-> The buffer shared with the userspace is divided in two parts, one holding
-> a bitmap, and the other one being the trace. The single parameter of
-> ioctl(KCOV_UNIQUE_ENABLE) determines the number of words used for the
-> bitmap.
+> Funny, I ran this on a Fedora 41 with gcc --version saying
+> gcc (GCC) 14.3.1 20250523 (Red Hat 14.3.1-1)
 > 
-> Each __sanitizer_cov_trace_pc_guard() instrumentation hook receives a
-> pointer to a unique guard variable. Upon the first call of each hook,
-> the guard variable is initialized with a unique integer, which is used to
-> map those hooks to bits in the bitmap. In the new coverage collection mode,
-> the kernel first checks whether the bit corresponding to a particular hook
-> is set, and then, if it is not, the PC is written into the trace buffer,
-> and the bit is set.
+> I tried both 32 and 64 bit builds for ARCH=um.
+> 
+> Attaching my current kernel configuration and the last few lines of a
+> V=1 build.
+> 
+> The kernel I used is a bit newer than what you had. Applied on top of
+> ee88bddf7f2f5d1f1da87dd7bedc734048b70e88 (bpf-fixes merge).
 
-I am somewhat confused; the clang documentation states that every edge
-will have a guard variable.
+So this happens because you are building inside the source tree.
+scripts/Makefile.lib has this block:
 
-So if I have code like:
+# $(src) for including checkin headers from generated source files
+# $(obj) for including generated headers from checkin source files
+ifdef building_out_of_srctree
+_c_flags   += $(addprefix -I, $(src) $(obj))
+_a_flags   += $(addprefix -I, $(src) $(obj))
+_cpp_flags += $(addprefix -I, $(src) $(obj))
+endif
 
-foo:	Jcc	foobar
-...
-bar:	Jcc	foobar
-...
-foobar:
+Apparently GNU/clang assemblers don't look for .incbin/.include files next to
+the including files [0].
+In contrast, the ARM compiler does (at least according to its docs) [1].
 
-Then we get two guard variables for the one foobar target?
+Maybe we can work around this in the macro, but I assume this will become even
+uglier. So for the next revision I'll use your proposal of explicit cflags.
+Or if Masahiro prefers to have a more global and generic solution, we can do that.
 
-But from a coverage PoV you don't particularly care about the edges; you
-only care you hit the instruction. Combined with the naming of the hook:
-'trace_pc_guard', which reads to me like: program-counter guard, suggesting
-the guard is in fact per PC or target node, not per edge.
+[0] https://sourceware.org/binutils/docs/as/I.html
+[1] https://developer.arm.com/documentation/dui0801/l/Directives-Reference/INCBIN
 
-So which is it?
 
-Also, dynamic edges are very hard to allocate guard variables for, while
-target guards are trivial, even in the face of dynamic edges.
-
-A further consideration is that the number of edges can vastly outnumber
-the number of nodes, again suggesting that node guards might be better.
-
+Thomas
