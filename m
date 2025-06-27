@@ -1,106 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CB7264FBB;
-	Fri, 27 Jun 2025 13:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4D6264FBB;
+	Fri, 27 Jun 2025 13:04:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751029421; cv=none; b=M7Cd2klvk+1soMSmyX5rWiIk2/zOBlpuyUd54WFL9NJnGbmiwoPwA33HVNUOVey93U0m6YEK0keUhOJiE1sXpwhrC6wVgJrlzSaKy+WM9nQG3M1Z44TMPud5Ap4tfORRmyfCSMQvAZs3GXTjk1lDTa43XzcruMDBFNfimMzParU=
+	t=1751029461; cv=none; b=L3sbU+23nb+dEXwmQs6Om/B3455vzmGmOsJRNtn3VCFHhuCIbXCIRDsDzVC+u4HibaWDvqmoJthDq/Uy854VkS7Ew2a+rfEzzF/Aoyc2adtbzQ428RRrpAjdqkMZiMDCDgEKX7YtY4zxuDtiDWmmyxI6ypDKz7dv0ulv2LUy9Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751029421; c=relaxed/simple;
-	bh=yLjtgMRMU2cpI0DE9ZxiLsKQBe07OjkZ3ktOz8r7re4=;
+	s=arc-20240116; t=1751029461; c=relaxed/simple;
+	bh=XzX4psFBvnYR6QHI3Kw1ucRawOE+xlOc/dM9jXgI1bU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lxA7Mm3AgQVHy3bCfH0p7CHRdVOLw60SAv+F4HYWMY5IaDcdKWD2YGNzIk9iCwelAR+5CdWwfAmlwC/DPI3niDUYz1R0UrkxvfppO6Rjm4bWjeKDgx59JxcFNxJRROZEZJhi/34WwoSP0jWOAlT68dwbcn4FHR9NnXVeBMnfsFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h0WKGi9W; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=nUbcQU6KzXp8TqxyAcx/Lo7ApwUFaSBb+T1S5556dqsBCg3ewwT6VBk6CxCavWcBEd6zLDlhRUQWEffFozQE51kCGtzvkqqTsblBDEvtkrtalgHVwNfNR9GrnozcOVkchV6KuhtyqcEr1tZ3UyOYvudG5PkY9z1LaOLj6Ar931c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qj4zAGp1; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h0WKGi9W"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qj4zAGp1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751029420; x=1782565420;
+  t=1751029459; x=1782565459;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=yLjtgMRMU2cpI0DE9ZxiLsKQBe07OjkZ3ktOz8r7re4=;
-  b=h0WKGi9WD5976q986C2Fzf96ZR3KIA3jlZGLyCZ9TdDrbhrsDjRgHPXQ
-   Li3fiapwS1rIcseCwybiaxTduQI78kofS6fbLmO4SHQccHrZCNlLTcbBA
-   nL4OaaDvBPyzVR87goBA7uOfwzJbtpnnM99QzO0QqLjZMLHVf+tM9jfY5
-   rNRmzyQPw9CDMXL/7j+fhZRq4kgbpJETIW60UkRoKmbAmp7OONqoHj8xX
-   ZJrGWZvXBc9jyYDfZL92a+msu+/k0JvpUqJA4QfQTDEM+HDXrgMee201F
-   zCfFGTD+E3EPshT/tPAmeAn9XD++8tFPi6pC7FCp/CAaAcXZ01M2uSDoF
+   mime-version:in-reply-to;
+  bh=XzX4psFBvnYR6QHI3Kw1ucRawOE+xlOc/dM9jXgI1bU=;
+  b=Qj4zAGp1nkz4s5S6kAIIP4UqFpVrUt6AJXZetUhU1KQY03w86Tdk+Bpx
+   hljB+ArUX5eRHBj5/BP+iXcm5Q95t4K6F7FCyqRLXZN0IR+gj9DXRfQo8
+   /2MqY/C0plAkOiRfXTYFyEPupx6Xxgt47LyY7SZPPGsQN/k2ASAfyYDC2
+   Fl0nKghJnlbhSSSRc0k5ZpXVXrfdhkSNC25VkyZKOxaYDc747LQVX85hL
+   JOOtA6U3xCJEA5hbFbUOeqTbqfiazAILvHiok+2hm1mXpoPA/5Jju3J0n
+   UJyPb6rCA/Orqu93SLYoZSAOkUcwojl3K2XZjMf6Jen2+yDDWDMfV+9YJ
    g==;
-X-CSE-ConnectionGUID: /R176IQoQ+aJ+e5z8Bd/7w==
-X-CSE-MsgGUID: BaumWjpmQJGYqJQp0N3PCQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="57123509"
+X-CSE-ConnectionGUID: 6zWTJDa9SluUqD+NdnUTig==
+X-CSE-MsgGUID: s5wI5y4OQFar0KX95jYu9A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="70773961"
 X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="57123509"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 06:03:38 -0700
-X-CSE-ConnectionGUID: 7qcoc1HiRV29Zltj/dwo+g==
-X-CSE-MsgGUID: wVDW1LARQJOSzRebyi347w==
+   d="scan'208";a="70773961"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 06:04:02 -0700
+X-CSE-ConnectionGUID: ldfBJ5F6RAmcS7Go8ORzNA==
+X-CSE-MsgGUID: L9DsV3rAT+Wj/YlqbN+IEQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="153516197"
+   d="scan'208";a="183836732"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 06:03:36 -0700
-Date: Fri, 27 Jun 2025 16:03:32 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	airlied@gmail.com, simona@ffwll.ch,
-	Krzysztof Karas <krzysztof.karas@intel.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com
-Subject: Re: [PATCH v2 2/2] drm: Add missing struct drm_wedge_task_info
- kernel doc
-Message-ID: <aF6WpMe9Ar8jmXOX@black.fi.intel.com>
-References: <20250619140655.2468014-1-andrealmeid@igalia.com>
- <20250619140655.2468014-2-andrealmeid@igalia.com>
+  by orviesa002.jf.intel.com with ESMTP; 27 Jun 2025 06:03:58 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 01F626A; Fri, 27 Jun 2025 16:03:56 +0300 (EEST)
+Date: Fri, 27 Jun 2025 16:03:56 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, dave.hansen@linux.intel.com, 
+	rick.p.edgecombe@intel.com, isaku.yamahata@intel.com, kai.huang@intel.com, 
+	yan.y.zhao@intel.com, chao.gao@intel.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, kvm@vger.kernel.org, x86@kernel.org, linux-coco@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 04/12] x86/virt/tdx: Add tdx_alloc/free_page() helpers
+Message-ID: <g5akv7uwsdrvs3j4wsj2xmc3fpdlyudj5sjuhw62m3f4yjsxse@nrne5miazbx4>
+References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
+ <20250609191340.2051741-5-kirill.shutemov@linux.intel.com>
+ <dba2841f-0725-4b58-b633-650201c053b4@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250619140655.2468014-2-andrealmeid@igalia.com>
+In-Reply-To: <dba2841f-0725-4b58-b633-650201c053b4@intel.com>
 
-On Thu, Jun 19, 2025 at 11:06:55AM -0300, André Almeida wrote:
-> Fix the following kernel doc warning:
+On Fri, Jun 27, 2025 at 10:49:34AM +0300, Adrian Hunter wrote:
+> On 09/06/2025 22:13, Kirill A. Shutemov wrote:
+> > +static void tdx_pamt_put(struct page *page, enum pg_level level)
+> > +{
+> > +	unsigned long hpa = page_to_phys(page);
+> > +	atomic_t *pamt_refcount;
+> > +	LIST_HEAD(pamt_pages);
+> > +	u64 err;
+> > +
+> > +	if (!tdx_supports_dynamic_pamt(&tdx_sysinfo))
+> > +		return;
+> > +
+> > +	if (level != PG_LEVEL_4K)
+> > +		return;
+> > +
+> > +	hpa = ALIGN_DOWN(hpa, PMD_SIZE);
+> > +
+> > +	pamt_refcount = tdx_get_pamt_refcount(hpa);
+> > +	if (!atomic_dec_and_test(pamt_refcount))
+> > +		return;
+> > +
+> > +	scoped_guard(spinlock, &pamt_lock) {
+> > +		/* Lost race against tdx_pamt_add()? */
+> > +		if (atomic_read(pamt_refcount) != 0)
+> > +			return;
+> > +
+> > +		err = tdh_phymem_pamt_remove(hpa | TDX_PS_2M, &pamt_pages);
+> > +
+> > +		if (err) {
+> > +			atomic_inc(pamt_refcount);
+> > +			pr_err("TDH_PHYMEM_PAMT_REMOVE failed: %#llx\n", err);
+> > +			return;
+> > +		}
+> > +	}
+> > +
 > 
-> include/drm/drm_device.h:40: warning: Function parameter or struct member 'pid' not described in 'drm_wedge_task_info'
-> include/drm/drm_device.h:40: warning: Function parameter or struct member 'comm' not described in 'drm_wedge_task_info'
-> 
-> Fixes: 183bccafa176 ("drm: Create a task info option for wedge events")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: André Almeida <andrealmeid@igalia.com>
-> ---
-> v2: Add Reported-by tag
-> ---
->  include/drm/drm_device.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/drm/drm_device.h b/include/drm/drm_device.h
-> index 08b3b2467c4c..aae0800ccef1 100644
-> --- a/include/drm/drm_device.h
-> +++ b/include/drm/drm_device.h
-> @@ -33,6 +33,8 @@ struct pci_controller;
->  
->  /**
->   * struct drm_wedge_task_info - information about the guilty task of a wedge dev
-> + * @pid:	the pid of the task
-> + * @comm:	the command name of the task
+> Won't any pages that have been used need to be cleared
+> before being freed.
 
-Redundant tabs. A whitespace is ususally good enough for docs.
+Good point. I missed that.
 
-Raag
-
->   */
->  struct drm_wedge_task_info {
->  	pid_t pid;
-> -- 
-> 2.49.0
-> 
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
