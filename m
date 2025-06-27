@@ -1,222 +1,121 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1609292B5E
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 23:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F7D230BCE;
+	Fri, 27 Jun 2025 23:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751066345; cv=none; b=hJEK7T1okez/2l7SCqoPaEi8ETFG/zSlgpQq+CYHUAqS7We68/Z/t4wBHWGd7RjYLdmJu5KosplgUz+83oMsqwACUEZrgJf0WyxFfeUjMIbAkT543A29gMNVZ9QMLP+6+e0GRUOA6EKymvTj3ZMaWQ7NW2EDqpEpSlXLFFIYEtM=
+	t=1751066371; cv=none; b=HK6wuBCDC4LqjAxn4I34EM0Ht7/Kykn/8XZa6DxqU5bEd0cW9SdOZXPv5slwhefz+q5lY5fbgGSvoyjTqLaQ77Beu5XogoiMRvgEWste+oyad1+vcV5LFEt2Sc/MF/zSpmXFkOHuZzWSFHbPYU6+fTGW/4fngVRohLd0bMTfi1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751066345; c=relaxed/simple;
-	bh=zLOPr23btb/P2Q+bNErI5riOTp9hfWGYj59cKhKyl3M=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lE3DTCYa8iZDH7uF1S3XxIKvaMUfgWnAbHx/+muujp0HCQKvvC3BSJfhzcJb5rsd67Bo+XnU1IMDKhb7xwbDYNbLWxk3kte+XgBAA4f56ogBuO/iwEpXSYXfo7yhHojJAmd2G6Eo5DC0di3CfHUOoEXj7eRLtWZ85tT+2dOaOHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mmaurer.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MwTE/p1f; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mmaurer.bounces.google.com
+	s=arc-20240116; t=1751066371; c=relaxed/simple;
+	bh=cggULdMle2TeJAoxTMS1tcuLG5g3D1w+m7hLKIg0EmU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Z2NMckfP59QhNuf8OSNVWpqqqgqFfZkGgjtyWSJagJtke+L4ZSy42QyeHp3d56cRLRjMnRUWkNCoSuZWjm+No6WqdVNLGqNHJCTHpCj4bDreRa5Fu4WqrMXJzJPFt7+5PzuVBva7N77gxE7o9k1an09qDjYWDcpUo94sOl4YRWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D57I+98n; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MwTE/p1f"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-313fb0ec33bso2355677a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:19:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D57I+98n"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7d3efcb9bd6so254551385a.1;
+        Fri, 27 Jun 2025 16:19:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751066343; x=1751671143; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FYSKWILaHkU1OfYdFyMg39AM+0yljyAGiysqEp8n70A=;
-        b=MwTE/p1fE75+Zz3OTjavzk7dUKmYmGiXFNVKVKs/6SFre2H2BADlGlLUrsX+zFzp2/
-         N+YDFO5ZHJ/M/n9BzQR+6vBmCXQOFpyN3jI+7xDajJiMTXODzyTTnE/D3AyGB3T//JWM
-         XLet1tOLlnuuhQ/C0b3SzOxEUWvZguZHe1GqaPZxLSNlJ7NRgst9/4BXlfswQMQz5yAC
-         FrGIs+G4IqBkEP48pkPMzFFCZyCh8Yio9Z9g7Y+yBnu9hwljz4V1yAF2tvT4I9tqu+4+
-         gki0liqlrvjt9cOYIOlRIIAgWTYovqXEO45h31ozSeWyCVJWdqWk53CFgG3PhVhSTc5S
-         Uw8g==
+        d=gmail.com; s=20230601; t=1751066368; x=1751671168; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LtGn7JEXF3zMF7k6UE9h1fA9eDoP/JvwC3ZRU+1yFw4=;
+        b=D57I+98nrFlaAc2wNCdpwy2SjNvjBThryyTB4ocArNOfagD5IRnAwltkqoaXGDz/q6
+         ZTf1+0gYciA3Vvu1nhnucTNcR1OAkCK8urM5+xeW6CNVs6vBUtfB+ZUWrPDimP1OQ3J/
+         idgeYnm3nbdHwrQfjMS6aC+HQqeYS9JM/Pty6v1hMQiQHNGwm4XZFlgBp54otfsuAm/A
+         AeKXVu2+BzsEhz0MaHG1O0sTTht6Nr5yBWdxlp25TY5U0L2hbcqFxUGZHJjat88+JDmt
+         ux4xo/VtuOFkRjqH2Fe8e96eLmsSjHt2s/Tn26ApRWTE4AbvVWBC6Ee2xS3UXqKm3wHf
+         WsPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751066343; x=1751671143;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FYSKWILaHkU1OfYdFyMg39AM+0yljyAGiysqEp8n70A=;
-        b=sluc7MEnJ1Gb2sNCc39O4/lE0jMGbgEt3kQfeLf8tVBJaBbmqdUe8yJyViVyFVDi7B
-         edJ7l9iSzeoV8vYosLLcUKwgXsDRlAvJwCQ4hSQLHmOWnBC4d3nNjr7yJV9nbD1Yd+DB
-         QRsXfycrXeJCOgpsjN7po2P48O/U73Idlzw90Ij3i7Pf315N60rYTjz0P0YiZyR0NC2k
-         gC0SvNBKAm2jVvPz2xT6RIUumVvt+ajJQGcvL9+cmlwVk1i5+zkC9NJFikPdX8jlRpyp
-         TlgK2ji1vlDpZGvzP73nUOYJVaWKlLPoqzbxawXYWnxSVo7I2kFYID5oBjgF3jO5jrUB
-         MGAA==
-X-Gm-Message-State: AOJu0Ywqgddeov6VWUKw6QrH9CuOnvIYy8vsOlLNXWXi/vLSYVlV0omd
-	MEQcivXyVT98DjFX1hP9BUc7Vtgi2ew0xlyLwOMjJWo8S+rH64VFrtGfLu2GmUGUuw5ZEwOzO1g
-	3pVn/RWMp7w==
-X-Google-Smtp-Source: AGHT+IE+Y7GHm/K1Vq+yCasbBH4sgxeF6wx8bTZ4uGjwS1XAJoUvWQvS6NqJ5QvX+Ml437xKVT5J2EZTcIUG
-X-Received: from pjj5.prod.google.com ([2002:a17:90b:5545:b0:314:3438:8e79])
- (user=mmaurer job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b0d:b0:311:df4b:4b93
- with SMTP id 98e67ed59e1d1-318c9106951mr7504640a91.7.1751066343031; Fri, 27
- Jun 2025 16:19:03 -0700 (PDT)
-Date: Fri, 27 Jun 2025 23:18:29 +0000
-In-Reply-To: <20250627-debugfs-rust-v8-0-c6526e413d40@google.com>
+        d=1e100.net; s=20230601; t=1751066368; x=1751671168;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LtGn7JEXF3zMF7k6UE9h1fA9eDoP/JvwC3ZRU+1yFw4=;
+        b=D4SyXuhsYkH2oHSbKuCTodqh0teR/05Xk/BlFaIUyjTdRhSY85ANdkBKzNiYK+z9Ei
+         slg4yVWp+lUvtl/XlHCYQK03r7f5l1v5HTveHexzDixijv+LQAi73Ky1FXPqXQ8Vw90e
+         J0fytMn4zmtmTuLx8SGKoezlPOddQI6AdlRpErsTV1uaWKhTUtwd0Hqjs5fgHK00umG9
+         X6JTjuqyXkl309dM7A2oC9kjC2YeAbdm+iJTJz2QKSwJxu7fico2QCzY/GjCAgCT6VLk
+         MF4P0RKtVEGSwOHjeekw4hTF8Qo9/Tcp7ILmzXBJLYpupNd1ssKgAh6IfQMKE9HnP45K
+         pl/w==
+X-Forwarded-Encrypted: i=1; AJvYcCXOpxAFSDbNB3CnY6y4zYe8/wD2wXnpS6CCi5gIEtch/aN2b1/2tsa2yh4ZE9h3ELpaARpFsp46PYyR@vger.kernel.org
+X-Gm-Message-State: AOJu0YxO6ZlwokKm05xnP1wIrQde0+cjy2mbMW44pNh72virmy3QnQwi
+	W91cn90zOqCnsfQ68g0OQVa6/FtAayXGYyEf3GOJmTB081ljEnz3X44zy74PThRjHo2y9dBvM48
+	2uPfaQtytjYWSDpHn6Aw3Uym7HZMLqjY=
+X-Gm-Gg: ASbGncvXMEDang1dRw3qPG9nhtMaOJntH37VfrAYwscoqzNOIoestoRIyWW1VsRfcFJ
+	icUn6Bb1dPcMBvaqUaTnsRrJMUfgscA5Om7kKWPiqVwAZ2h3eC54QRQisvs6Qb3RuEte4CXZ66d
+	5wUpHFV9KFdJfKf1VpB7IeabP7fjwJ2wFUjcFIgXzdSH6oqqI50M5Laqi9Gf7STPeIWpMkmIKBN
+	2AY
+X-Google-Smtp-Source: AGHT+IHqoqXQJ+s8V09pQDz+Xdi40YWaoSJ7Bph5bxs/p+DKiDqKUgVpC7sywebID2PHaH/1MsDqjMZ4CRmPXE7F5Ak=
+X-Received: by 2002:a05:620a:3946:b0:7d3:a66d:4f3c with SMTP id
+ af79cd13be357-7d443920b10mr778910985a.7.1751066368288; Fri, 27 Jun 2025
+ 16:19:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250627-debugfs-rust-v8-0-c6526e413d40@google.com>
-X-Developer-Key: i=mmaurer@google.com; a=ed25519; pk=2Ezhl7+fEjTOMVFpplDeak2AdQ8cjJieLRVJdNzrW+E=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751066331; l=5627;
- i=mmaurer@google.com; s=20250429; h=from:subject:message-id;
- bh=zLOPr23btb/P2Q+bNErI5riOTp9hfWGYj59cKhKyl3M=; b=0pqWdWwjSCuBN0BzLJf896SS+iXUk/wx513y49aaWkud6WntkFbHaaTEzJ1okWZl0yAKgDKY2
- cpJ61WNa5RoBZzpH4tAt/d5kBHlIlf1bHGfak58BZiRVYx4zJ/U4V2L
-X-Mailer: b4 0.14.2
-Message-ID: <20250627-debugfs-rust-v8-6-c6526e413d40@google.com>
-Subject: [PATCH v8 6/6] rust: samples: Add debugfs sample
-From: Matthew Maurer <mmaurer@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Timur Tabi <ttabi@nvidia.com>, Benno Lossin <lossin@kernel.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Matthew Maurer <mmaurer@google.com>, Dirk Behme <dirk.behme@de.bosch.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+From: Steve French <smfrench@gmail.com>
+Date: Fri, 27 Jun 2025 18:19:17 -0500
+X-Gm-Features: Ac12FXwM05RZ36BGrQzXn07BpzLXCYfL5pKs7_ueaLKjdT_p9qB1HjlLBAC7lqc
+Message-ID: <CAH2r5muAE5KvodJSk9VuFOF1fAHWPdnG3NsSgOZONqge06k65g@mail.gmail.com>
+Subject: [GIT PULL] smb3 client fixes
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Provides an example of using the Rust DebugFS bindings.
+Please pull the following changes since commit
+86731a2a651e58953fc949573895f2fa6d456841:
 
-Tested-by: Dirk Behme <dirk.behme@de.bosch.com>
-Signed-off-by: Matthew Maurer <mmaurer@google.com>
----
- MAINTAINERS                  |  1 +
- samples/rust/Kconfig         | 11 +++++++
- samples/rust/Makefile        |  1 +
- samples/rust/rust_debugfs.rs | 76 ++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 89 insertions(+)
+  Linux 6.16-rc3 (2025-06-22 13:30:08 -0700)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 551e3a6a16d9051a2d58a77614c458287da2bdcc..f55c99cb2907655d109cb1fa248cdec803b5ce9a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7374,6 +7374,7 @@ F:	rust/kernel/devres.rs
- F:	rust/kernel/driver.rs
- F:	rust/kernel/faux.rs
- F:	rust/kernel/platform.rs
-+F:	samples/rust/rust_debugfs.rs
- F:	samples/rust/rust_driver_platform.rs
- F:	samples/rust/rust_driver_faux.rs
- 
-diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
-index 7f7371a004ee0a8f67dca99c836596709a70c4fa..01101db41ae31b08a86d048cdd27da8ef9bb23a2 100644
---- a/samples/rust/Kconfig
-+++ b/samples/rust/Kconfig
-@@ -62,6 +62,17 @@ config SAMPLE_RUST_DMA
- 
- 	  If unsure, say N.
- 
-+config SAMPLE_RUST_DEBUGFS
-+	tristate "DebugFS Test Module"
-+	depends on DEBUG_FS
-+	help
-+	  This option builds the Rust DebugFS Test module sample.
-+
-+	  To compile this as a module, choose M here:
-+	  the module will be called rust_debugfs.
-+
-+	  If unsure, say N.
-+
- config SAMPLE_RUST_DRIVER_PCI
- 	tristate "PCI Driver"
- 	depends on PCI
-diff --git a/samples/rust/Makefile b/samples/rust/Makefile
-index bd2faad63b4f3befe7d1ed5139fe25c7a8b6d7f6..61276222a99f8cc6d7f84c26d0533b30815ebadd 100644
---- a/samples/rust/Makefile
-+++ b/samples/rust/Makefile
-@@ -4,6 +4,7 @@ ccflags-y += -I$(src)				# needed for trace events
- obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
- obj-$(CONFIG_SAMPLE_RUST_MISC_DEVICE)		+= rust_misc_device.o
- obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
-+obj-$(CONFIG_SAMPLE_RUST_DEBUGFS)		+= rust_debugfs.o
- obj-$(CONFIG_SAMPLE_RUST_DMA)			+= rust_dma.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
-diff --git a/samples/rust/rust_debugfs.rs b/samples/rust/rust_debugfs.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..6af9177c711a07764f0323e03a72d115287f1205
---- /dev/null
-+++ b/samples/rust/rust_debugfs.rs
-@@ -0,0 +1,76 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+// Copyright (C) 2025 Google LLC.
-+
-+//! Sample DebugFS exporting module
-+
-+use core::sync::atomic::{AtomicU32, Ordering};
-+use kernel::c_str;
-+use kernel::debugfs::{Dir, File};
-+use kernel::prelude::*;
-+use kernel::sync::{new_mutex, Arc};
-+
-+module! {
-+    type: RustDebugFs,
-+    name: "rust_debugfs",
-+    authors: ["Matthew Maurer"],
-+    description: "Rust DebugFS usage sample",
-+    license: "GPL",
-+}
-+
-+struct RustDebugFs {
-+    // As we only hold these for drop effect (to remove the directory/files) we have a leading
-+    // underscore to indicate to the compiler that we don't expect to use this field directly.
-+    _debugfs: Dir,
-+    _subdir: Dir,
-+    _file: File,
-+    _file_2: File,
-+}
-+
-+static EXAMPLE: AtomicU32 = AtomicU32::new(8);
-+
-+impl kernel::Module for RustDebugFs {
-+    fn init(_this: &'static ThisModule) -> Result<Self> {
-+        // Create a debugfs directory in the root of the filesystem called "sample_debugfs".
-+        let debugfs = Dir::new(c_str!("sample_debugfs"));
-+
-+        // Create a subdirectory, so "sample_debugfs/subdir" now exists.
-+        let sub = debugfs.subdir(c_str!("subdir"));
-+
-+        // Create a single file in the subdirectory called "example" that will read from the
-+        // `EXAMPLE` atomic variable.
-+        // We `forget` the result to avoid deleting the file at the end of the scope.
-+        let file = sub.fmt_file(c_str!("example"), &EXAMPLE, &|example, f| {
-+            writeln!(f, "Reading atomic: {}", example.load(Ordering::Relaxed))
-+        });
-+        // Now, "sample_debugfs/subdir/example" will print "Reading atomic: 8\n" when read.
-+
-+        // Change the value in the variable displayed by the file. This is intended to demonstrate
-+        // that the module can continue to change the value used by the file.
-+        EXAMPLE.store(10, Ordering::Relaxed);
-+        // Now, "sample_debugfs/subdir/example" will print "Reading atomic: 10\n" when read.
-+
-+        // In addition to globals, we can also attach any kind of owned data. Most commonly, this
-+        // will look like an `Arc<MyObject>` as those can be shared with the rest of the module.
-+        let my_arc = Arc::pin_init(new_mutex!(10), GFP_KERNEL)?;
-+        // An `Arc<Mutex<usize>>` doesn't implement display, so let's give explicit instructions on
-+        // how to print it
-+        let file_2 = sub.fmt_file(c_str!("arc_backed"), my_arc.clone(), &|val, f| {
-+            writeln!(f, "locked value: {:#010x}", *val.lock())
-+        });
-+
-+        // Since it's an `Arc` and we cloned it, we continue to have access to `my_arc`. If this
-+        // were real, we'd probably stash it in our module struct and do something with it when
-+        // handling real calls.
-+        *my_arc.lock() = 99;
-+
-+        // Save the handles we want to preserve to our module object. They will be automatically
-+        // cleaned up when our module is unloaded.
-+        Ok(Self {
-+            _debugfs: debugfs,
-+            _subdir: sub,
-+            _file: file,
-+            _file_2: file_2,
-+        })
-+    }
-+}
+are available in the Git repository at:
+
+  git://git.samba.org/sfrench/cifs-2.6.git tags/v6.16-rc3-smb3-client-fixes
+
+for you to fetch changes up to 263debecb4aa7cec0a86487e6f409814f6194a21:
+
+  cifs: Fix reading into an ITER_FOLIOQ from the smbdirect code
+(2025-06-26 11:13:16 -0500)
+
+----------------------------------------------------------------
+Six smb3 client fixes
+- Multichannel reconnect lock ordering deadlock fix
+- Fix for regression in handling native Windows symlinks
+- 3 smbdirect fixes: one for oops in RDMA response processing,
+   one for handling smbdirect memcpy issue,, fix smbdirect regression
+with large writes
+   (smbdirect test cases now all passing)
+- Fix for "FAILED_TO_PARSE" warning in trace-cmd report output
+
+It does not include the fixes for the recent netfs regression causing
+cifs mount hangs
+since those have dependencies on Christian's VFS branch so will need
+to go through him.
+----------------------------------------------------------------
+David Howells (2):
+      cifs: Fix the smbd_response slab to allow usercopy
+      cifs: Fix reading into an ITER_FOLIOQ from the smbdirect code
+
+Paulo Alcantara (2):
+      smb: client: fix regression with native SMB symlinks
+      smb: client: fix potential deadlock when reconnecting channels
+
+Stefan Metzmacher (2):
+      smb: client: let smbd_post_send_iter() respect the peers
+max_send_size and transmit all data
+      smb: client: remove \t from TP_printk statements
+
+ fs/smb/client/cifsglob.h  |   1 +
+ fs/smb/client/connect.c   |  58 ++++++++++-------
+ fs/smb/client/reparse.c   |  20 ++----
+ fs/smb/client/smbdirect.c | 161 +++++++++++++++++------------------------------
+ fs/smb/client/trace.h     |  24 +++----
+ 5 files changed, 110 insertions(+), 154 deletions(-)
 
 -- 
-2.50.0.727.gbf7dc18ff4-goog
+Thanks,
 
+Steve
