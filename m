@@ -1,117 +1,75 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44521DDC18
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8972F1FE2
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751001110; cv=none; b=sGyuaObqFkCbRXjvNhIU2dBlF0W5gL4qsPSacjionw4sUrkUqnMSxLgamCmJp2lCKBut9Goit3kqe7K5AvYkbbWP7l9rwotyJ4LuBecddd6pk39Ua5w0zackRDNNp3oBuA9UJRx5HGHNOqWHoy0fux3rNjdmXFtspoGD87a96FY=
+	t=1751001194; cv=none; b=IQWwuILAohNv/FrFNZrobWHl+g/EuKzvv9uCUnG8fK7ei/jScE8S8LEohBrb8nM1QfyTmNhFLGFsyL3e1tp/rG/1CHaaVCQeqB+P0YCE+5WukTnsdkKf35X9jPXTqB9bXWOo4ZrnJ8m/IrDyR5M7odorGWzxFCxFejzwtS3OIDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751001110; c=relaxed/simple;
-	bh=MJvRIhPa9PArrO7PG94uOGF9pwk6XLUMymLUuFR8d3w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oyXAws4vsOPOLAKHVKekKGs2dDOg6+IygJlFbmC2kX9n0wbyuj/FpwyBK8kIXysST5MhZ3sy/MUBEAJOtgzVSMIjFbkWyqHpbrq+bqcgUdap6MbKU0bH5lxCiokBgSWMv7FeZjhFtW22fRJ4w2ZkjGFQ1W/SPlGfYsI8bWH2PC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=a9Bk/ijF; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="a9Bk/ijF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1751001106;
-	bh=MJvRIhPa9PArrO7PG94uOGF9pwk6XLUMymLUuFR8d3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a9Bk/ijFnQpWL7GCR4DrZ83hbmg1qjtU/zgLImzt0inXWZNATUvxyP81lWN/8LuDu
-	 bsXCY2P6K9T8R8p+2GCNu0K+iGANnlvoBS2kFDpn170ksSF0Qwt36l6gLN8z8iOKkO
-	 BH+gcSmMednHwwOhU7F3RyLTH4bdPQDE001U6q1c=
-Date: Fri, 27 Jun 2025 07:11:45 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Willy Tarreau <w@1wt.eu>, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, linux-kernel@vger.kernel.org, 
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [RFC PATCH 3/3] tools/nolibc: add a new "install_all_archs"
- target
-Message-ID: <89a2e713-edfd-4556-b321-cdccc3437a43@t-8ch.de>
-References: <20250620103705.10208-1-w@1wt.eu>
- <20250620103705.10208-4-w@1wt.eu>
- <92eda9ff-116e-4ec1-930c-7474da9652fc@t-8ch.de>
- <b14da196-84cc-4d13-baa2-952ba22f5a3e@app.fastmail.com>
+	s=arc-20240116; t=1751001194; c=relaxed/simple;
+	bh=2Q5W2odvEtMdI09KrvfDEQStgA0vj0l5F109MKlzPMM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ZL2coow18PIPhGQ2fn4cBU30Ljelwuh42KgtJvJAAODxy3oXuk0G2BLnkun1re9/tETp5EHCcuiAtDisV2hyRoWJ9eu2dpQ0ulU9/eOjeivzhk2SA/LR1oNFAoydquRByf5iMkgM0j8j7tWdTuzmyrFsool1IcFBQulOoR7VNrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3df2e9e6146so10826735ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:13:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751001192; x=1751605992;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=n10L9Tb9PJbo/aqLl4vRx3/ZJeXm4v87M+V6JfGxD4M=;
+        b=b+pGHAj3BxamPD4BKR45kgUKF0/mJlVbiI6CD4oECOxKnnjknZQDgVV+/inaxq0M+V
+         v7QpH2H5a6QwgJjDeC9vZg7srFenrCGMeUNhyGgETaE3BvUeDXKwihvyrdvRtB2yWj84
+         7mOMY0cxBHrgmY4Sp8ZA0DhHaMJdYIazaOaso2L19Pd4mBeFhTZklfYJKRFMXN4LRD31
+         xMB3KKC9q+06JWegJiKXSGt1OmdR+eebn4eAAgcUTWN8acRwmzjftRXWB77Kc645lO8L
+         woyuSpnTPlTEPrNl37+oOaafBEXt8CziA4jSrcEWsHg1rXP21DMp8bKrw1YqvW+cU6xh
+         Vj6Q==
+X-Gm-Message-State: AOJu0YwHRdKjvg4fxIiLhELD/effbGt/sW7RbjHSW56YlFL2+5xlkvtL
+	0pDwcUdQAPK1047EEUbgLbW/wB+QEQOxAkqDmQDDjSfSmpK0WVJvn0fBJbl3QqtN4rl+Bq80wAA
+	5mpWsSp+QpEdK2ZJDXViLOSmi3dy4J4HGAKidl6GvEaw/TkvThBU1qP940w0=
+X-Google-Smtp-Source: AGHT+IHenrQkMB3RyDJ1PcfIy2h0jL9kizMrIPO4jtJSkeBFY1KF88BKyZT0U3unWM9AXROr0+2rojFHGnqzXvXD4taOE4fajTmO
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b14da196-84cc-4d13-baa2-952ba22f5a3e@app.fastmail.com>
+X-Received: by 2002:a05:6e02:378b:b0:3dd:d6d5:2d03 with SMTP id
+ e9e14a558f8ab-3df4abae94fmr21211345ab.11.1751001192011; Thu, 26 Jun 2025
+ 22:13:12 -0700 (PDT)
+Date: Thu, 26 Jun 2025 22:13:11 -0700
+In-Reply-To: <6854a3e6.a00a0220.137b3.0022.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685e2867.a00a0220.2e5631.040a.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in
+ vmci_host_unlocked_ioctl (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 2025-06-26 23:15:07+0200, Arnd Bergmann wrote:
-> On Thu, Jun 26, 2025, at 22:18, Thomas Weißschuh wrote:
-> > On 2025-06-20 12:37:05+0200, Willy Tarreau wrote:
-> >> This installs all supported archs together, both from nolibc and kernel
-> >> headers. The arch-specific asm/ subdirs are renamed to asm-arch-$arch,
-> >> and asm/ is rebuilt from all these files in order to include the right
-> >> one depending on the build architecture.
-> >> 
-> >> This allows to use a single unified sysroot for all archs, and to only
-> >> change the compiler or the target architecture. This way, a complete
-> >> sysroot is much easier to use (a single directory is needed) and much
-> >> smaller.
-> >> 
-> >> +	$(Q)rm -rf "$(OUTPUT)sysroot/include/asm"
-> >> +	$(Q)mkdir -p "$(OUTPUT)sysroot/include/asm"
-> >> +	@# Now install headers for all archs
-> >> +	$(Q)for arch in $(patsubst aarch64,arm64,$(nolibc_supported_archs)); do \
-> >> +		echo "# installing $$arch"; \
-> >> +		if ! [ -d $(OUTPUT)sysroot/include/asm-arch-$$arch ]; then \
-> >> +			$(MAKE) -C $(srctree) ARCH=$$arch mrproper; \
-> >> +			$(MAKE) -C $(srctree) ARCH=$$arch headers_install no-export-headers= \
-> >> +				INSTALL_HDR_PATH="$(OUTPUT)sysroot/include/$$arch" >/dev/null; \
-> 
-> >
-> > I'm not a fan of the loop to build the ifdeffery. It is a duplication
-> > of what we have in tools/include/nolibc/arch.h and horrible to look at.
-> > Can we stick this into a reusable header file?
-> > Something along the lines of this:
-> >
-> > 	/* asm/foo.h */
-> > 	#define _NOLIBC_PER_ARCH_HEADER "foo.h"
-> > 	#include "_nolibc_include_per_arch_header.h"
-> >
-> >
-> > 	/* _nolibc_include_per_arch_header.h */
-> > 	#if defined(__i386__)
-> > 	#include CONCAT("asm-arch-x86/", _NOLIBC_PER_ARCH_HEADER)
-> > 	#elif
-> > 	...
-> >
-> > However, so far I couldn't get it to work.
-> > Also it would be great if we can use it for the current arch.h, too.
-> 
-> I'm not sure either of those is better than the version we
-> had until commit f3c8d4c7a728 ("kbuild: remove headers_{install,check}_all").
-> which simply relied on a symlink to the architecture specific
-> directory to be set.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-Thanks for the pointer, that probably answers the question if this could
-be part of kbuild proper. It shouldn't.
+***
 
-With the symlink, a given generic UAPI tree can be specialized to one
-specific architecture. But here we want to create a full sysroot that works
-for all architectures *at the same time*. So a symlink would not be enough.
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl (3)
+Author: lizhi.xu@windriver.com
 
-> If it's indeed possible to concatenate the path name (I couldn't
-> figure that out either), that could also be done in place of the
-> symlink but simpler than the #if/#elif/#elif/... block, like
-> 
-> #include <arch.h> // defines ARCH_PREFIX
-> #include CONCAT(ARCH_PREFIX, ioctl.h)
+#syz test
 
-If we can't get it to work like this I would still prefer to have a
-template header file which gets specialized with sed instead of the
-Makefile loop.
-
-
-Thomas
+diff --git a/drivers/misc/vmw_vmci/vmci_context.c b/drivers/misc/vmw_vmci/vmci_context.c
+index f22b44827e92..c4fcc62761a7 100644
+--- a/drivers/misc/vmw_vmci/vmci_context.c
++++ b/drivers/misc/vmw_vmci/vmci_context.c
+@@ -251,6 +251,7 @@ static int ctx_fire_notification(u32 context_id, u32 priv_flags)
+ 		ev.msg.hdr.src = vmci_make_handle(VMCI_HYPERVISOR_CONTEXT_ID,
+ 						  VMCI_CONTEXT_RESOURCE_ID);
+ 		ev.msg.hdr.payload_size = sizeof(ev) - sizeof(ev.msg.hdr);
++		memset((char*)&ev.msg.hdr + sizeof(ev.msg.hdr), 0, ev.msg.hdr.payload_size);
+ 		ev.msg.event_data.event = VMCI_EVENT_CTX_REMOVED;
+ 		ev.payload.context_id = context_id;
+ 
