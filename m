@@ -1,103 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391162045AD
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47532BAF9;
+	Fri, 27 Jun 2025 19:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751051248; cv=none; b=roWbH2x7lyjdYOuAfNmEF2yZ9OzYhSvKBnZLQvHJoUA0bgS6CajXxp56tqSU2dWcYZ3ghJq7/QL90UOzU/ncUxKg9QQrpVPAJoqmXpZSCf4pTF5/awOi3mY7ArhNVoC+shtrxavqV80QimWk+9tR1Yq2+N/rUN7oKlzR4zC6vEM=
+	t=1751051290; cv=none; b=HUzAarMm3q5LA204PVD+L8i8w1vEcjtq/MJpzImLbrMarKfdbtn62Q4XEIqP+nK4bckDwIYF/hV2wr3hEu4cFqJbovWImFnv1NhPMT7zolqezyNpgSgfvKr678Nmt84YCsMMQh7fxM2mdrODm6lilTlwhDNBXMUy4dNV6B1dg3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751051248; c=relaxed/simple;
-	bh=GHZyCz3k+4Q/vRmIMYgAOLIbt1ZePQ/jnRsUDREhYUA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=F2zVzj1Uh+vC7uiqJVhL5WKmlhzCzr35dw6op6muTy6bJmTqyu2J12ox+8Q8ydhd0iyFqw6EpKFxoopSF65JI1tP7OUq8lZJvmgJk2qU0lM+2KlQY5kgex4caPyoAL+kU+yW123t9fRjr+kGNUFGN9wuWvb9MIjhQmAqe/AbSjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ixdkWGva; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751051290; c=relaxed/simple;
+	bh=h2V7n5lcId3Q5D9J9FBwMhLB7N9wwQBDYBQCNpHNKUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LGLLBWmfmBz7hV5/h7Frf+ZK9HNGLuUuBn8fma73oa6Wt+B4/7AKV6Md0zIDlVzCrCDvPrR4o9F2VhcUaBdmlzN0F3UeE6JUaAQp0jdwPaXIkjV22jdtQYkkUpBDuQTQWlSQJ+Oppe6iD0R5x88OWNy+ZagFrkChIPF69mZkNFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pe/0J1kh; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ixdkWGva"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A108AC4CEF1;
-	Fri, 27 Jun 2025 19:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751051247;
-	bh=GHZyCz3k+4Q/vRmIMYgAOLIbt1ZePQ/jnRsUDREhYUA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ixdkWGvaCrS/O5cwtfV6sAHGQaTnOjAtp1awY1We1C3fqgdRJUrYV/N649q15g1dC
-	 It52OqJkNdWk6ika8cM297cJu5pMBpPi81qgjewKpHujOviXnqMmBJjVxBHwLi2MNn
-	 MkoB5bS5Q9ZHvBvHbokwZ/hfpuwT1+IUJtXLjUjK/1orGdibVX7J3vpMzmqujb8tOK
-	 nfXHNEZkwHeV0hLXj0gy0T4R3G0W7g9/dRMVyMDtN6qjw+htSRJIiMynEcx6EyvEuK
-	 TJ8IcnhzCBjZtaW1zXtSDtKlTal28FYrgp73DnPhH8EGmHKrgyKzzVTuE7FddeviXx
-	 dllC9k/ctZYDA==
-From: SeongJae Park <sj@kernel.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: SeongJae Park <sj@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	akpm@linux-foundation.org,
-	mhocko@kernel.org,
-	hannes@cmpxchg.org,
-	roman.gushchin@linux.dev,
-	yosryahmed@google.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] mm: introduce per-node proactive reclaim interface
-Date: Fri, 27 Jun 2025 12:07:25 -0700
-Message-Id: <20250627190725.52969-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <zutbi6jjx6rj2beytkp2ihpyxkuvg43ggsglfhimluojko4frf@gacgibzen5k4>
-References: 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pe/0J1kh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751051288; x=1782587288;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=h2V7n5lcId3Q5D9J9FBwMhLB7N9wwQBDYBQCNpHNKUY=;
+  b=Pe/0J1khOdln0qBRTGB87NHMnyMHpJbz3MhK2CHrWhaHomfepB95QRqh
+   MmzWeawdJVXGCR4S+mKbJym9uVeGj50DsuLAKlBUTIneoXA3Vsbvaibvp
+   e+5esCENLlD+fYhfEQfNMuIwGNd8J0N3//dQ/tm3mI0YzeXrDu6rw/f+U
+   czS57C+2GSjRFMjiFcQ8l2zjMf38PpMSqN/ANZR6OkOwMSNGaGKg5AxdM
+   7nOLXkW/oUlS24ln8w8zzK9oyeHgwX+XMF7tH0gxW1JBodwP/onFlzrNx
+   IUiuDrGLmirk4avjNqQB1DAIQbQW5XTm2hPKbezncHbGU6DOLK/1hXWzI
+   g==;
+X-CSE-ConnectionGUID: /9jdx+iFRGSxA9iKhMnWHQ==
+X-CSE-MsgGUID: nAP/FOt7TxiRQJTaHA/j7g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="70806780"
+X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
+   d="scan'208";a="70806780"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 12:08:08 -0700
+X-CSE-ConnectionGUID: xiHlSFjZSpCMu6OQRMYUZg==
+X-CSE-MsgGUID: xnkBiDgXTrKpHNSSnyugrQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
+   d="scan'208";a="183794875"
+Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO localhost) ([10.124.221.68])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 12:08:07 -0700
+Date: Fri, 27 Jun 2025 12:08:06 -0700
+From: David Box <david.e.box@linux.intel.com>
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	srinivas.pandruvada@linux.intel.com, andriy.shevchenko@linux.intel.com, ilpo.jarvinen@linux.intel.com, 
+	xi.pardee@linux.intel.com, hdegoede@redhat.com
+Subject: Re: [PATCH V2 00/15] Intel VSEC/PMT: Introduce Discovery Driver
+Message-ID: <blofpgaq2o3jcy2h4mbpbm2zpnpniroz5agvvqvfs4qf5o2pwm@7spetkpvs7u7>
+References: <20250617014041.2861032-1-david.e.box@linux.intel.com>
+ <aFxahfwnntrMFumI@agluck-desk3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aFxahfwnntrMFumI@agluck-desk3>
 
-On Wed, 25 Jun 2025 16:10:16 -0700 Shakeel Butt <shakeel.butt@linux.dev> wrote:
+On Wed, Jun 25, 2025 at 01:22:29PM -0700, Luck, Tony wrote:
+> On Mon, Jun 16, 2025 at 06:40:24PM -0700, David E. Box wrote:
+> > This patch series introduces a new discovery driver for Intel Platform
+> > Monitoring Technology (PMT) and a set of supporting changes to improve
+> > telemetry integration across Intel VSEC features.
+> 
+> Caution. Part 14 has this "Subject:"
+> 
+>    [PATCH V2] platform/x86/intel/pmt/telemetry: Add API to retrieve telemetry regions by feature
+> 
+> which is missing the "14/15" "b4 am" does warn:
+> 
+> 	ERROR: missing [14/15]!
+> 
+> But my eyes skipped over that, and then I got surprised that the
+> DISCOVERY driver was missing from my kernel.
+> 
+> With part 14 manually applied things seem good.
+> 
+> -Tony
 
-> On Mon, Jun 23, 2025 at 11:58:51AM -0700, Davidlohr Bueso wrote:
-> > This adds support for allowing proactive reclaim in general on a
-> > NUMA system. A per-node interface extends support for beyond a
-> > memcg-specific interface, respecting the current semantics of
-> > memory.reclaim: respecting aging LRU and not supporting
-> > artificially triggering eviction on nodes belonging to non-bottom
-> > tiers.
-> > 
-> > This patch allows userspace to do:
-> > 
-> >      echo "512M swappiness=10" > /sys/devices/system/node/nodeX/reclaim
-[...]
-> One orthogonal thought: I wonder if we want a unified aging (hotness or
-> generation or active/inactive) view of jobs/memcgs/system. At the moment
-> due to the way LRUs are implemented i.e. per-memcg per-node, we can have
-> different view of these LRUs even for the same memcg. For example the
-> hottest pages in low tier node might be colder than coldest pages in the
-> top tier.
+Ah, I forgot to reset the numbering to 14/15 when I respun this patch. I didn't
+even notice. Thanks for spotting it and testing Tony.
 
-I think it would be nice to have, and DAMON could help.
-
-DAMON can monitor access patterns on the entire physical address space and make
-actions such as migrating pages to different nodes[1] or LRU-[de]activate
-([anti-]aging)[2] for specific cgroups[3,4], based on the monitored access
-pattern.
-
-Such migrations and [anti-]aging would not conflict with page fault and memory
-pressure based promotions and demotions, so could help existing tiering
-solutions by running those together.
-
-> Not sure how to implement it in a scalable way.
-
-DAMON's monitoring overhead is designed to be not ruled by memory size, so
-scalable in terms of memory size.  We recently found it actually shows
-reasonable monitoring results on an 1 TiB memory machine[5].  DAMON incurs
-minimum overhead and limited to one CPU by default.  If needed, it could also
-scale out using multiple threads.
-
-[1] https://lore.kernel.org/all/20250420194030.75838-1-sj@kernel.org
-[2] https://lore.kernel.org/all/20220613192301.8817-1-sj@kernel.org
-[3] https://lkml.kernel.org/r/20221205230830.144349-1-sj@kernel.org
-[4] https://lore.kernel.org/20250619220023.24023-1-sj@kernel.org
-[5] page 46, right side plot of
-    https://static.sched.com/hosted_files/ossna2025/16/damon_ossna25.pdf?_gl=1*12x1jv*_gcl_au*OTkyNjI0NTk0LjE3NTA4Nzg1Mzg.*FPAU*OTkyNjI0NTk0LjE3NTA4Nzg1Mzg.
-
-
-Thanks,
-SJ
+David
