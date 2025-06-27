@@ -1,65 +1,65 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5502E88A9
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7801E49F
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751044062; cv=none; b=kya80uO9pomOeii+2CQWepaN/+9Hc+WGZ9EjR8qEoRS+MageW0OZSqbya9NxUKbuFlPcRMym9VK5j+BTBXYKMkWcOQiRjZrWo92EoiLnBuK0NZRcVpwA4epkIaEEmsAFh8o84Hdg3QRd8bQYiwosX8+dRz23eWBYl8LDW94bY2s=
+	t=1751044127; cv=none; b=ZyXOVGkoRYUJIwT70vpDClDGLHYQSMfNhQF4VIs8RQIY+uMLrxOMkJDYpK+jiqDOlCbgze8oa6p2a8PyOKkSmWyGzVTT1SsDUIZKXDuGOd4QH8kuAtD6C1PQJivOeeiazmKC69TztjjEmxab58/Kcifk2257g5qN813zbfaRuso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751044062; c=relaxed/simple;
-	bh=fozUXgzdys12L7XIOaNewlTS0SdNY9+9Qgo5gNsnZe4=;
+	s=arc-20240116; t=1751044127; c=relaxed/simple;
+	bh=CPhVKvvRZP2RoqPrqurlpapAK8pKjBMB2Uzg2l9MDA0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BzDNrMIoc0xLkex9C058eexIPCHY0Obi7dz9OxdnsahTOmEMW1jyt/MSoXaqS3H5Z8dd0SFjacOzjATbrVCGx4yczJcwcFb+e1PVs/uADzezILx2M07ZTvmLU5QaN2vv+LkL/Ae0kx0XDy0jSlMdj0eQ/E2BZfwiiohmoQmSKhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R0alO3p3; arc=none smtp.client-ip=209.85.128.45
+	 In-Reply-To:Content-Type; b=Y1VGepoZ4vSqHh3SjEC7LQYkG4hlIihQMVfBssYtt7seZOq+sopAxJeelBhIuWdXt+dYuBUo8zXqUlhZSXi78AQW9iusSSfir2+Xo8EjD3md6AhfbfZN9EtMORGu/DbzdMAdffXEF5AetfmwC33SjwN98ovupWqLksm1GPixQrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OAoAoEBX; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R0alO3p3"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so13247355e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:07:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OAoAoEBX"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a4f379662cso52192f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:08:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751044057; x=1751648857; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751044124; x=1751648924; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=uICgYiY+G3JspFAyT3xgva3fPY2F/XGPfCaGX5O6oEY=;
-        b=R0alO3p3hTdZr06m1pakC61V9Fk97rsWGw+bKG7oKLjYCn141+UYLbJ7bkxjxeNAP3
-         TrDgMAdUpBexc7N5Qcjuj8lfkar9dyTEhC7ipMGWaAwSshiz1r1De9RgTcqLcoEIRZpN
-         iLDG2w9Nj0KrjHQraZdkvIeCnTpV518lZXhX7v1dJAhdPbByu+C0HQ7cGmJundfFvrrg
-         FVdOPrL2ZcsUC7Nc7BukLLyFa9Xqu34j22gQG1jD8Ta5aacd5/j3TjzzdXlFy94XdDBw
-         Y9C4Ok7b3ZV8dqSCqJ7S9KkOASjqbBJXw0pq6jzqFcIYyHo8JJ1s42M3tGmQAUyTOzmi
-         l4jg==
+        bh=RDt7FHaT4ZSAQUnGiAQ3GxGI761JPEEdyCi6VnGIO98=;
+        b=OAoAoEBX4vj7D72EUFTWRGncv2TRq1pENASDn+7xpFpcSy+k5zAnb53zjL2Fh1GCYG
+         AJG9ZX0a43EQub9aeVYT8RMJ/bDZ7rTJfPe2fM4LQpzDt0XuK3d1G7H8M8wUzfNtCqYA
+         lBE2Es0gpznRubOvbxbD7wdR7AVS9NKq/djL331RYLZ0qIX+SH16zS8jdACEwJej2kUI
+         TbD7cAalo8e6DXeK8m6h85YAYE0y8Y0JvPIp0o9gjcob4QESFFcbJYoE9sgfzcUMwJAX
+         JY3TbMM3W5cnuWRjdDx6kXN6GReRn4r2KKJskQ9oFbc4pNHfVJ5u8h0YVZRbDC1/jZkp
+         tiPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751044057; x=1751648857;
+        d=1e100.net; s=20230601; t=1751044124; x=1751648924;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uICgYiY+G3JspFAyT3xgva3fPY2F/XGPfCaGX5O6oEY=;
-        b=jng6NDv/2zTnyAVAWsp87vY8vXwPtuT1Awon9jh2Xt1FIt2phwE/YrRKxRXxveb5P9
-         8FkPwKDe9JrxQwHjR8fe4EWEsOAe/xaKc/JM0VfUmaTcQChmjzBPUncgS4cBapkpXRAd
-         8m4JNDo1/HZmjyCKEhkDKlTL6yoAB/LODE2zI7//K2QFdQw4vCnADNmkAY2OrAbV3/lZ
-         e2QQ3ekAPlHkcDiPt6f2QdR4wqHmzlI1c5grusvYAkZNUd1tG006SzbL3SM3lRB5gQT0
-         nHV6g8Vv91NcjJ/fQ1LYcZUsifp9E1WhGFkQ080j21IcNBELg0NHP9FKdFNSJ2buM8IK
-         1clQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDBKB0RCP9rR4N0fWiQyO39g3lVcWXxyqNvcClBuL9zsZ8E4lNuom6GVQpfoewf8PfagRYMuwplsuyNCM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzSk+IpcgUys5g2ciswDhm0tnuaHLr8TwUhjRXcl65p8bGZ4Xn
-	mVbt9eR/Xd2Fg5UgfpAWQM6HWetQZmyf5GD3fx05VqRQ9+8fLG8V5+CiheaiovpdpA4=
-X-Gm-Gg: ASbGncv/tNj5bT9Ia8/Qk7wXiv0EtF70sSRNO3aUnmfgK9RlsGeCbB38mNo0STti7U4
-	oqKPtZ82lxlKJamCXd0YEnEc58wGDBqPaV/zq3NjFpxyr51KrkifucS8JMtoz8HXswAp6cjaLLZ
-	16JR7e5PhhTBcaTnIHxJEVzqxP9yPcALMOQNdxhjQ+KOK5TQ2MOKUOsth95vBdQP6eevN/H78HQ
-	/16qGJcAPkOmkExuoz/cT1IbqEFWUMe4DZo4RcSm5WTdbc8gU8qLZtn2foGlfw05GUAuMuOcVLP
-	wk3cZBJSlIsHKMAIluMOrYFVCprO/lqWMduWf5qJJCCx6mFfoP33dGRtXPwTVrg4+FedWTbvrCy
-	MCW501oZbKHVIVf65+1xRbln+WCI=
-X-Google-Smtp-Source: AGHT+IH31SkLI3Vsbb2Y9EKuOMKX6EReaApoDazwONmaL3DKqX/243XHNKIPxGCAkbSxqfNRW2Vmuw==
-X-Received: by 2002:a05:600c:198a:b0:442:ccf9:e6f2 with SMTP id 5b1f17b1804b1-4538ee7df15mr52309315e9.16.1751044057276;
-        Fri, 27 Jun 2025 10:07:37 -0700 (PDT)
+        bh=RDt7FHaT4ZSAQUnGiAQ3GxGI761JPEEdyCi6VnGIO98=;
+        b=jFFQYzpZ2LHBjHaRbaq5VlIOv4JamuY7ieos4E1GK9SoE0uYWR3KGt77Os+pFLUPnt
+         JYFSJWajG4I+ILRoyGIP/BIbiXUHDSJ0MqGgneBXV559H4W3B+e7imTSIuprhqnss5X3
+         gmP1nyZhWWtsRK/hXT3caK9gfMaWIWcV1hUMaXgDc+u6LnLA/SW3ZFF64R+I6yBJKRJF
+         cZ78sWRQqh0ZisPR34a6jy8TvtavhJv8ql4Z76+cIXT5yVzpVrZvGsVCkxxR67lBFMET
+         Shwn/reiT66ixwjsajKMNZSTWFT7Jf7UoqfsQ+k9hFVqGzaFplfOpJmJeE8AouAeNMS/
+         tP9w==
+X-Forwarded-Encrypted: i=1; AJvYcCWWhoRqWsaQDY/gGhgkkIjmsJ80gK7Yq4e8p7HUZzYFdAZUva7LX6XNjnRuN+TjIWB+iANa61iqdTA7iQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaazLjTVORIQtUrWg/zMIOtewUeyYFVEcHw3sGhyk60Ofd/m+C
+	+GDfqFZyC4ppSSXnQmOea35By+nBSBy27N4rVe3OzGSF9oAdo5L80OvGyW2VwmeDHXE=
+X-Gm-Gg: ASbGnctNZtG79hQskMS2s5Q9Udw0X9XB+O6czr07AeXv1dpHKiOsdnNqROlb+pDfYUA
+	klllAoj8rz49yt065EbQv8miQABN36nURL0Xq4qKxGQZuiN0ZeK1D+8eL9KdLQWCYnzxe94Wioq
+	X2cAZJc0v8/GTV+25vyrSnkcy7dcwyjQtAY6RqMk9LzwmbjsB9yu7dO/sdELVN4onHqKrC2l1nO
+	WaCuyEhHzwQ6j2tUida+NHJYp1izZe5ihM8Nv4RSPozJbDiPgRciK0LMDfLwqij59UrlDipn6e+
+	ajDi6VyYXIZKerCi3DT0/jKnKzbA/3+FxNQtdpn1YXvqddUBSMX+iPzI6eGXciDhZ5khA6o6+EY
+	YuHLR5JQCSGkC/kmk73vlZa9dFeM=
+X-Google-Smtp-Source: AGHT+IGEiTAHrFznmF82/P4/I4eMpiYo52DQEWoZMaOuj4n48DFOabR3xu9XY1qKoygvdgxJdEBhoA==
+X-Received: by 2002:a05:6000:42c1:b0:3a4:fc07:f453 with SMTP id ffacd0b85a97d-3a8f435e0acmr2642026f8f.8.1751044123666;
+        Fri, 27 Jun 2025 10:08:43 -0700 (PDT)
 Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3fe0efsm55339995e9.24.2025.06.27.10.07.35
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad03asm87196535e9.23.2025.06.27.10.08.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 10:07:36 -0700 (PDT)
-Message-ID: <000a9208-4a4d-458c-bf28-de4b10ed0678@linaro.org>
-Date: Fri, 27 Jun 2025 18:07:35 +0100
+        Fri, 27 Jun 2025 10:08:43 -0700 (PDT)
+Message-ID: <d8a1fdd4-0056-480f-ade1-318a34d27204@linaro.org>
+Date: Fri, 27 Jun 2025 18:08:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,8 +67,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/5] media: iris: select appropriate DMA device for
- internal buffers
+Subject: Re: [PATCH v3 5/5] media: iris: configure DMA device for vb2 queue on
+ OUTPUT plane
 To: Vikash Garodia <quic_vgarodia@quicinc.com>,
  Dikshita Agarwal <quic_dikshita@quicinc.com>,
  Abhinav Kumar <abhinav.kumar@linux.dev>,
@@ -77,72 +77,45 @@ To: Vikash Garodia <quic_vgarodia@quicinc.com>,
 Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <20250627-video_cb-v3-4-51e18c0ffbce@quicinc.com>
+ <20250627-video_cb-v3-5-51e18c0ffbce@quicinc.com>
 From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 Content-Language: en-US
-In-Reply-To: <20250627-video_cb-v3-4-51e18c0ffbce@quicinc.com>
+In-Reply-To: <20250627-video_cb-v3-5-51e18c0ffbce@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 27/06/2025 16:48, Vikash Garodia wrote:
-> When a non-pixel device (np_dev) exists, it is preferred for DMA
-> operations for internal buffers which are specific to bitstream data
-> processing. DPB(decoded picture buffer) buffers are internal buffers
-> associated with pixel buffers, hence they are not part of "non_pixel"
-> device.
+> While setting up the vb2 queues, assign "non_pixel" device to manage
+> OUTPUT plane buffers i.e bitstream buffers incase of decoder. It prefers
+> the non_pixel device(np_dev) when available, falling back to core->dev
+> otherwise.
 > 
 > Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
 > ---
->   drivers/media/platform/qcom/iris/iris_buffer.c | 15 +++++++++++++--
->   1 file changed, 13 insertions(+), 2 deletions(-)
+>   drivers/media/platform/qcom/iris/iris_vb2.c | 4 ++++
+>   1 file changed, 4 insertions(+)
 > 
-> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/media/platform/qcom/iris/iris_buffer.c
-> index e5c5a564fcb81e77746df8c4797a10a07f2ae946..0bf6041936175d03a51985be148e78894fc3e990 100644
-> --- a/drivers/media/platform/qcom/iris/iris_buffer.c
-> +++ b/drivers/media/platform/qcom/iris/iris_buffer.c
-> @@ -265,6 +265,7 @@ static int iris_create_internal_buffer(struct iris_inst *inst,
->   	struct iris_buffers *buffers = &inst->buffers[buffer_type];
->   	struct iris_core *core = inst->core;
->   	struct iris_buffer *buffer;
-> +	struct device *dev;
+> diff --git a/drivers/media/platform/qcom/iris/iris_vb2.c b/drivers/media/platform/qcom/iris/iris_vb2.c
+> index cdf11feb590b5cb7804db3fcde7282fb1f9f1a1e..01cc337970400d48063c558c1ac039539dbcbaba 100644
+> --- a/drivers/media/platform/qcom/iris/iris_vb2.c
+> +++ b/drivers/media/platform/qcom/iris/iris_vb2.c
+> @@ -159,6 +159,10 @@ int iris_vb2_queue_setup(struct vb2_queue *q,
+>   	*num_planes = 1;
+>   	sizes[0] = f->fmt.pix_mp.plane_fmt[0].sizeimage;
 >   
->   	if (!buffers->size)
->   		return 0;
-> @@ -280,7 +281,11 @@ static int iris_create_internal_buffer(struct iris_inst *inst,
->   	buffer->dma_attrs = DMA_ATTR_WRITE_COMBINE | DMA_ATTR_NO_KERNEL_MAPPING;
->   	list_add_tail(&buffer->list, &buffers->list);
->   
-> -	buffer->kvaddr = dma_alloc_attrs(core->dev, buffer->buffer_size,
-> +	dev = core->np_dev ? core->np_dev : core->dev;
-> +	if (buffer->type == BUF_DPB)
-> +		dev = core->dev;
+> +	if (q->type == V4L2_BUF_TYPE_VIDEO_OUTPUT ||
+> +	    q->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+> +		q->dev = core->np_dev ? core->np_dev : core->dev;
 > +
-> +	buffer->kvaddr = dma_alloc_attrs(dev, buffer->buffer_size,
->   					 &buffer->device_addr, GFP_KERNEL, buffer->dma_attrs);
->   	if (!buffer->kvaddr)
->   		return -ENOMEM;
-> @@ -367,9 +372,15 @@ int iris_queue_internal_buffers(struct iris_inst *inst, u32 plane)
->   int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buffer)
->   {
->   	struct iris_core *core = inst->core;
-> +	struct device *dev;
-> +
-> +	dev = core->np_dev ? core->np_dev : core->dev;
-> +
-> +	if (buffer->type == BUF_DPB)
-> +		dev = core->dev;
-
-Again I think the hooking of dev is clearer with if/else instead of 
-ternary operators.
-
-Its not against the coding standard to my knowledge ..
-
->   
->   	list_del(&buffer->list);
-> -	dma_free_attrs(core->dev, buffer->buffer_size, buffer->kvaddr,
-> +	dma_free_attrs(dev, buffer->buffer_size, buffer->kvaddr,
->   		       buffer->device_addr, buffer->dma_attrs);
->   	kfree(buffer);
+>   unlock:
+>   	mutex_unlock(&inst->lock);
 >   
 > 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+
+q->dev = core->dev;
+
+if (thing || thing_else)
+     q->dev = core->np_dev;
+
+---
+bod
