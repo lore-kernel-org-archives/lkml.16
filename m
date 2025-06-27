@@ -1,124 +1,231 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11023088.outbound.protection.outlook.com [40.107.162.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38311F09A5;
-	Fri, 27 Jun 2025 17:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751046589; cv=none; b=mrtoOWlqW8Dh8KD+cyxOX9Ujyaev9nbykkS7MyIp5FHp3Zgyg7ZIVoi15vwG9GEBBAPzhoFY13wHobAm9soatPvvFg3OGw0eu84ZE8JVj3cwwmCIEd8ZzjJTy+GTWQy8ruQ6AcxTW2R0t0shzNGaIl1RI/ZksXyv1owND1sSddg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751046589; c=relaxed/simple;
-	bh=fENVGkGcV01nrx8rwyk5yc++tYlpmC/4in3yTWfI+BU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bbMFCZQLINv8QjrLvBc/yfPykhqqF9Cjo00k07ZXilnMn4yDazQ7C/SvMyecXvCsF8WMGL9IFdw7fpWMb9tmE5phn7r/d/9EVwcsZ5TjFU2WKkPgW5Y7hJ9aXuPPnbhW/sEMY7UJVc5IfhyclqB6xT5VSfbNh8BXO7B8Z0lXDdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QDaBKqc7; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E4E2EA148;
+	Fri, 27 Jun 2025 17:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751046688; cv=fail; b=jc9jYd5bxYqIlwxj1c4xk5rLiQCZHCnvQDPdIz2YXU+1b5p6EEqtHbB1+p47QP2Kz/a+Zm/sQM2LpTbn5ZjsXz6Gvz1SQTujO3v8DEtvOjU0GmVB9pUHjW1E45mgY7hTTvDVDquTIHzhtGKJYI6b9pZZT7CkFIjMOH3wPMl/Fh0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751046688; c=relaxed/simple;
+	bh=B5LbD6sfzcRd4pwEStTdKe6tMaI8Dnjp9K7t1Ggr1w8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=miBto7vzYKx803EWCOYKeX2m3bgsolh5l/4OIxo3FvYOngF24MYQn+H9vwbtOKphskrEBizFcebeeJpZq5vqhBzz6ACf0pD9VXkMZX1C5kq8StUz+J1fhkq7zyOsKgAok5e9sRNtiuFTE/8xiJUVfv5gjPAn7Iq8+/3DM7HFbUk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sesame.org.jo; spf=pass smtp.mailfrom=sesame.org.jo; dkim=pass (1024-bit key) header.d=sesame.org.jo header.i=@sesame.org.jo header.b=ZyBUfD7D; arc=fail smtp.client-ip=40.107.162.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sesame.org.jo
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sesame.org.jo
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QDaBKqc7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66C83C4CEFB;
-	Fri, 27 Jun 2025 17:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751046589;
-	bh=fENVGkGcV01nrx8rwyk5yc++tYlpmC/4in3yTWfI+BU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QDaBKqc73OAck/HvM0EVd5wtKUjUN7GPsOvpdjQ9yxQfT7gPphE3WJUX18LD5I3cV
-	 3I0DsaAXNiZrzbAjgH5RmUIHzuGV+il3/DAWKdEl1GqN7pgoGcBq/ue07wIRoUWsUt
-	 DTpXWcdsABzLOk1esyLFQ6+vPQhDQTQrIl2/oW859p+ENQfTmHeQIpUI/tNrE7f6Jx
-	 0HaPtNPil8h6RVpt0LhQKj8TbFYuz1YRJsqIZTzOr7g9NNuWwvAtNNz3sRmHxoyX4R
-	 hw1JP/ra1GDPoCgdErvqrQrL0xl6DZHuw+Uqxk597rbpThcBDon2oxslqivu081ygM
-	 1Gw7oJVnPaDng==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ade5a0442dfso452627066b.1;
-        Fri, 27 Jun 2025 10:49:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUFcL3o8K4XcNCCwr/1Hn0poOddvQhQrl+98rz+OBpFX0ptmAaBjOFw2icmYhyPxanLDzt3Bs9Dsyz0@vger.kernel.org, AJvYcCV85OlD2kqLMH+Ja/mtvbCkla+glBX8wqNUUJe/yG2gHde+uYriYhSDOkr7yXOZpsmD6xnF8lws+cCI9g==@vger.kernel.org, AJvYcCVR33dTuoHXsGzVCTB+FMM8EMK9TJJo7JifLED2McI1RRmgmyuqnfMG7VQFSvbYyiojIpq/mrIRLMOINlny@vger.kernel.org, AJvYcCWnhdWYwqlaZEF2RE2uYpmQ//qLwa151J0iS4Vc8EJLhuZIxCl4pwBgYqcb+LIfH5uwVLFzvbLiBax7@vger.kernel.org, AJvYcCWrHIQdkFKqtu3aTQe3Rth8wTXCPpm4S9x5flUxxc26wlhd32JcGCxnhS/5ODR1wgyqwBYj/osYKFVE@vger.kernel.org, AJvYcCWympIu3XRPp0mybc36H/IdWUAq6GKlRTipRzrnuDEVdVT8/2HOhpdqq3/Mv597Gfh22MM2szwKsm7D@vger.kernel.org, AJvYcCXj269BJATXYJKaiwemrLrVPs3JuriT1yFOyGMIRecNlIeyCDGPUqOuYgRCRfP/dpshlW+Q0PgCADAZ@vger.kernel.org, AJvYcCXzOxcNMxXblyIensO8v/yRIGHlv0jZgNvVzCw8BGJKBIKV5e3X3ZJb0mhP+ST5jENabLIVP50ZB1mF@vger.kernel.org
-X-Gm-Message-State: AOJu0YztsrCYPhCat9rSiG0ZJpXcwuYjAABZTfK3HEg+1YoO9IEcQB6U
-	6JMZVZ7qUx6Vj1mNIyivWMcUXoAXi2TaGRiXtHa0r8CM5UIQwJPg1t8nyXWRj+7v6n7rJr7Gv6w
-	agkHDNUDKa82cwRcNh3KZXbHHACzjlg==
-X-Google-Smtp-Source: AGHT+IHT5hz4lr0pRGvdH2rjBfGZM81PcOoFrAQguTcQw3WkJwjxgHpGim6dbfGwqFeg5PpW/uAYH3Ohif/f2EVITXw=
-X-Received: by 2002:a17:907:cb86:b0:ae3:55bd:7724 with SMTP id
- a640c23a62f3a-ae355bd77f6mr319698366b.37.1751046587752; Fri, 27 Jun 2025
- 10:49:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=sesame.org.jo header.i=@sesame.org.jo header.b="ZyBUfD7D"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WtdJKNfwXNeCiFxgKUXfBftcssM4yP8Z6XNu73OuMTedTQqpnw9htW4PBux4EXFYelGzFcLxe6fwArSqwnTNC+jrcW25SaTji3iXsSC4vpOP78kt+8nxto53RfhUfq2FCToxZZPF523YpoRWqMkILnIpvcMX23ewh8aT/HOaQzrIvNaQ02HgykKO5LPGZVxGJc8NBBCOqw69RiMWj/CsRDWBO+k3yr1GvagDLyoAZEitloaIwqH4/QLZNvYQROgd4huow12/JJRhgrp+PBHsdtBjAr7gKNYK9wRK6F2OUNMdWfomaZPWnePllRjwJHY6xB2j9Xkygaf1WDCZlZgGiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KESVAxK5UpgNFFfS1dic0yDQrcUFcwdvtxMXpBfymMU=;
+ b=iHGhsoHz7vEyjc49BRs3WOZWV19GiBobsvErbyKS1juEwrtFYbnUZByVl0QgkQnykSxKZQX6nsOVuqPVtMX+7w7XhyepWFZmO4b8jO8UJ1Ru4oHKSWD7c0WYJrFKx+cnSc5gb39hev3Qq2vudbKYCtYxaMKKG5oRu+CTV4QaIlBXqITXTmTi0+3CaLhAWBAzsgAl3tvBPPoDF7D1Q16DnLLEVkbpd9kWvkwVF8P/mtJmkgCKa7B6npIiguh46DmD9ktbMsU2cdV0C0cwx4tvteJ0nHmbWRUUKjWGo9TXoU/UOKUyJgOKTCPivg8HUkziGQv1lrGgSQLMedPjMat6jw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 80.90.171.68) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=sesame.org.jo;
+ dmarc=bestguesspass action=none header.from=sesame.org.jo; dkim=none (message
+ not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sesame.org.jo;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KESVAxK5UpgNFFfS1dic0yDQrcUFcwdvtxMXpBfymMU=;
+ b=ZyBUfD7DnKpifSaVymAxFmGcf2wTeM/JpddADrL9agFSzeAlViHmvpb+Vvow7yyTQ+Sv8Hp+tm+qw88aN4aAqOmpQjOPwF9bWZdk/QtIpwo7jtvnOK92nMYDxJlUY2vfGuIZ2HGCXME8wEo8J5WNmLOJn7Z8qHlbY/6ag9HmYpM=
+Received: from AM0PR06CA0083.eurprd06.prod.outlook.com (2603:10a6:208:fa::24)
+ by PAWPR08MB9541.eurprd08.prod.outlook.com (2603:10a6:102:2eb::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.17; Fri, 27 Jun
+ 2025 17:51:21 +0000
+Received: from AM4PEPF00025F9C.EURPRD83.prod.outlook.com
+ (2603:10a6:208:fa:cafe::58) by AM0PR06CA0083.outlook.office365.com
+ (2603:10a6:208:fa::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.23 via Frontend Transport; Fri,
+ 27 Jun 2025 17:51:21 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 80.90.171.68)
+ smtp.mailfrom=sesame.org.jo; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=sesame.org.jo;
+Received-SPF: Pass (protection.outlook.com: domain of sesame.org.jo designates
+ 80.90.171.68 as permitted sender) receiver=protection.outlook.com;
+ client-ip=80.90.171.68; helo=SESAME-SMTP.SESAME.LOCAL; pr=C
+Received: from SESAME-SMTP.SESAME.LOCAL (80.90.171.68) by
+ AM4PEPF00025F9C.mail.protection.outlook.com (10.167.16.11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8922.1 via Frontend Transport; Fri, 27 Jun 2025 17:51:20 +0000
+Received: from sesame-smtp.sesame.local ([10.1.100.13]) by SESAME-SMTP.SESAME.LOCAL with Microsoft SMTPSVC(10.0.14393.4169);
+	 Fri, 27 Jun 2025 20:51:35 +0300
+From: Abdalla Al-Dalleh <abdalla.ahmad@sesame.org.jo>
+To: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Gabriel Shahrouzi <gshahrouzi@gmail.com>,
+	Abdalla Al-Dalleh <abdalla.ahmad@sesame.org.jo>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+	linux-staging@lists.linux.dev (open list:STAGING SUBSYSTEM)
+Subject: [PATCH] drivers: staging: iio: frequency: ad9832.h: Fixed TODO note.
+Date: Fri, 27 Jun 2025 20:51:14 +0300
+Message-ID: <20250627175114.548076-1-abdalla.ahmad@sesame.org.jo>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-19-herve.codina@bootlin.com> <20250627162245.GA3513535-robh@kernel.org>
- <aF7H4-toeb7Ouz3d@smile.fi.intel.com>
-In-Reply-To: <aF7H4-toeb7Ouz3d@smile.fi.intel.com>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 27 Jun 2025 12:49:36 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJCuevzu69bx3yWm3ZR9wZ+UsWuNXscig5KMm2WH4WxOw@mail.gmail.com>
-X-Gm-Features: Ac12FXz-QVHJXTEek87UkxSujkajQAR7GpuL-shCkOttrl-AQQGXN_bA70yoM5c
-Message-ID: <CAL_JsqJCuevzu69bx3yWm3ZR9wZ+UsWuNXscig5KMm2WH4WxOw@mail.gmail.com>
-Subject: Re: [PATCH v3 18/28] of: property: Allow fw_devlink device-tree on
- x86 when PCI device-tree node creation is enabled
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
-	Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-OriginalArrivalTime: 27 Jun 2025 17:51:35.0923 (UTC) FILETIME=[20334430:01DBE78C]
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM4PEPF00025F9C:EE_|PAWPR08MB9541:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: db27b0ef-3458-4889-1c75-08ddb5a339de
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|41320700013|376014|36860700013|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?XNQkPo9Yb+ZEU+EpxhdOzanrbfET6h2tZyJForUQkjIcAta9fld6MyNeI1ot?=
+ =?us-ascii?Q?5G9Ayw2rtzEaBJ/Cc04nPRgZNwPxbaNzHPZAhBWn9Yv69HJQv9bb7fW+3qFy?=
+ =?us-ascii?Q?JeaGi9wXil6vwMJYmJiBnI4Z3/mH3uTmXAR/CJfAVKmY5De88UprmqxFSTgX?=
+ =?us-ascii?Q?z2mU/erM+brUloMlfAyZcQJ44F1sFdEULCV9BE3wjBWRgsKgS2t2fjQxbImI?=
+ =?us-ascii?Q?9SPLIRg4JjMi+TjmxCL8Vq7E2PjTSTILsuN8MpeSSXAbQwFKzubL/Csn4doQ?=
+ =?us-ascii?Q?Wbxo5B1XVYCnxXZGFdpJoRgB7NvAPuyy52ZeEDqNWnkMCsQ4Fuqvwhe/Nwf/?=
+ =?us-ascii?Q?Fynyj73y4SHJi2EV4sm00UYRr/n3HQ/AaVE2HIvQpmeRmzdl/JySzXSdFGDP?=
+ =?us-ascii?Q?M1dzGdJ3v3hrQ0E3yBEgzKXKBri6bHkFUiIA80De5rbb/pWALKt+fabb7/iO?=
+ =?us-ascii?Q?bXCtlc/n1qEH19vthI8Mi/5ajIpImhdhPanbd19g4knaTFlx0PcghWX/ZAbh?=
+ =?us-ascii?Q?eMx7SuFXpNvBH0UbONwpyylO3XTBu+DwP3FnHHUV6yNhm2giE9renNEapNoU?=
+ =?us-ascii?Q?QmtqGoszWEKD1lC99A3hBrDJJpTT4p2MDPEO6kilOY2m9tzZMwPtFASNyFRT?=
+ =?us-ascii?Q?lF1MzVW4R2AxcHM8hzY4NmeroEIcrZQBQ3UljuD4ddyVntBQr6kc65YxO0Zm?=
+ =?us-ascii?Q?RTO3bTidLprD8DiWcbJeVXpUWWatJfkmWRTe+lj0UMCPDLxO3iyW2u4ms93e?=
+ =?us-ascii?Q?7qXNJQ5t9dbheXnwtiAbxAggf+OSC+ABd9aVpSdEke3hQHhEPpBGPOOLzkFF?=
+ =?us-ascii?Q?W3D3/bQzyQaUBhFCivthtjiTtFoDe/t/XUQkJvzk6n0zwyniBJnXAtjKEkQO?=
+ =?us-ascii?Q?AICYUJx0mipWKT65mEbdzzg9KB9eUh8UPou7dMZkwGUgY/dG4tAebO9q5W+y?=
+ =?us-ascii?Q?ezVov/zKR7AFsFVSjUYvRQ+r+VKGTLozFScBmWJlRsO6nrXhbvDnBbsALNie?=
+ =?us-ascii?Q?YLTEeaGxV/OmwyEiDJE/rGSzsdKiPbElqMGr8p3yoqtRZaXNuTPRPCkAXEv/?=
+ =?us-ascii?Q?aYBEJ4IimtaznL1oPN4YVOe484oLTwmsPIpRO2QXN1Oi4w2+zc22HpWgpN82?=
+ =?us-ascii?Q?ZtRzaA43TVzCZZn9A7NXR3z5XJs38EHQcZlVb4ZIPFJONeaAX6W3CTOZRC3V?=
+ =?us-ascii?Q?T+QBYJDW0CwNZ9u0wk21ZBkTQVElkig7DyvPnGiYaOS93KKWdxQSx4ROFAMw?=
+ =?us-ascii?Q?/mMC8UsqHoUvCH0QfnxoihBn0kKnNCDKjfZ0lvFRirS4XcbavhFR1UJ0GQLE?=
+ =?us-ascii?Q?FSZ7Q6BjF9lTra3zAGDmUJt569YDRBhoX9d3A9B4ZNryDhEpGOMRqV1DDnsl?=
+ =?us-ascii?Q?AJ0uF+8aeZAXIsrjzzJuauwb1kT+r4l1JrJsli2XVq1SQEewiIjlu4uCpxC8?=
+ =?us-ascii?Q?oWIEHKYuCQKfnD0JjlDUtsTe+BjDPHaFAswgV89tHLCJZdiaP6M3/VSou2ab?=
+ =?us-ascii?Q?jaW1gzHqfuvwr2c=3D?=
+X-Forefront-Antispam-Report:
+	CIP:80.90.171.68;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SESAME-SMTP.SESAME.LOCAL;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(41320700013)(376014)(36860700013)(1800799024)(921020);DIR:OUT;SFP:1102;
+X-OriginatorOrg: sesame.org.jo
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 17:51:20.4598
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: db27b0ef-3458-4889-1c75-08ddb5a339de
+X-MS-Exchange-CrossTenant-Id: 0788906c-6e04-423a-b37e-862cc7808738
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0788906c-6e04-423a-b37e-862cc7808738;Ip=[80.90.171.68];Helo=[SESAME-SMTP.SESAME.LOCAL]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM4PEPF00025F9C.EURPRD83.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR08MB9541
 
-On Fri, Jun 27, 2025 at 11:33=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Jun 27, 2025 at 11:22:45AM -0500, Rob Herring wrote:
-> > On Fri, Jun 13, 2025 at 03:47:58PM +0200, Herve Codina wrote:
->
-> ...
->
-> > > -   if (IS_ENABLED(CONFIG_X86))
-> > > +   if (IS_ENABLED(CONFIG_X86) && !IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_N=
-ODES))
-> >
-> > I really want CONFIG_PCI_DYNAMIC_OF_NODES to go away at some point, not
-> > add more users.
-> >
-> > I think this should instead check for specific platforms not with
-> > kconfig symbols but DT properties. For ce4100, you can just check the
-> > root compatible string. For OLPC, there isn't a root compatible (in the
-> > DT I have). You could check for /architecture =3D=3D OLPC instead. Ther=
-e's
-> > some virtualization guests using DT now too. I would think their DT's
-> > are simple enough to avoid any fw_devlink issues.
->
-> I don't think this is good approach. The above check is more reliable in =
-my
-> opinion.
+- drivers/staging/iio/frequency/ad9832.c: Changed .h file location
+- drivers/staging/iio/frequency/ad9832.h: Removed struct definition
+- include/linux/iio/dac/ad9832.h: Added header file according to the
+  TODO note.
 
-I'm fine with any solution that doesn't add a
-CONFIG_PCI_DYNAMIC_OF_NODES which we can't remove. Adding it was a
-kick the can down the road to merge the support worry the mixed
-usecase (on ACPI systems) later. It's now later.
+Signed-off-by: Abdalla Al-Dalleh <abdalla.ahmad@sesame.org.jo>
+---
+ drivers/staging/iio/frequency/ad9832.c |  3 +--
+ drivers/staging/iio/frequency/ad9832.h | 23 ------------------
+ include/linux/iio/dac/ad9832.h         | 33 ++++++++++++++++++++++++++
+ 3 files changed, 34 insertions(+), 25 deletions(-)
+ create mode 100644 include/linux/iio/dac/ad9832.h
 
-> > Alternatively, we could perhaps make x86 fw_devlink default off
->
-> For my (little) knowledge I believe this is not feasible anymore.
-> Some x86 code (drivers) relies on fw_devlink nowadays. But take
-> this with grain of salt, I may be way mistaken.
+diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
+index 49388da5a684..4c7d618b2572 100644
+--- a/drivers/staging/iio/frequency/ad9832.c
++++ b/drivers/staging/iio/frequency/ad9832.c
+@@ -22,8 +22,7 @@
+ 
+ #include <linux/iio/iio.h>
+ #include <linux/iio/sysfs.h>
+-
+-#include "ad9832.h"
++#include <linux/iio/dac/ad9832.h>
+ 
+ #include "dds.h"
+ 
+diff --git a/drivers/staging/iio/frequency/ad9832.h b/drivers/staging/iio/frequency/ad9832.h
+index d0d840edb8d2..a0819042a81e 100644
+--- a/drivers/staging/iio/frequency/ad9832.h
++++ b/drivers/staging/iio/frequency/ad9832.h
+@@ -7,27 +7,4 @@
+ #ifndef IIO_DDS_AD9832_H_
+ #define IIO_DDS_AD9832_H_
+ 
+-/*
+- * TODO: struct ad9832_platform_data needs to go into include/linux/iio
+- */
+-
+-/**
+- * struct ad9832_platform_data - platform specific information
+- * @freq0:		power up freq0 tuning word in Hz
+- * @freq1:		power up freq1 tuning word in Hz
+- * @phase0:		power up phase0 value [0..4095] correlates with 0..2PI
+- * @phase1:		power up phase1 value [0..4095] correlates with 0..2PI
+- * @phase2:		power up phase2 value [0..4095] correlates with 0..2PI
+- * @phase3:		power up phase3 value [0..4095] correlates with 0..2PI
+- */
+-
+-struct ad9832_platform_data {
+-	unsigned long		freq0;
+-	unsigned long		freq1;
+-	unsigned short		phase0;
+-	unsigned short		phase1;
+-	unsigned short		phase2;
+-	unsigned short		phase3;
+-};
+-
+ #endif /* IIO_DDS_AD9832_H_ */
+diff --git a/include/linux/iio/dac/ad9832.h b/include/linux/iio/dac/ad9832.h
+new file mode 100644
+index 000000000000..8259a0b0f981
+--- /dev/null
++++ b/include/linux/iio/dac/ad9832.h
+@@ -0,0 +1,33 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * AD9832 SPI DDS driver
++ *
++ * Copyright 2011 Analog Devices Inc.
++ */
++#ifndef IIO_DDS_AD9832_H_
++#define IIO_DDS_AD9832_H_
++
++/*
++ * struct ad9832_platform_data moved from drivers/staging/iio/frequency/
++ */
++
++/**
++ * struct ad9832_platform_data - platform specific information
++ * @freq0:		power up freq0 tuning word in Hz
++ * @freq1:		power up freq1 tuning word in Hz
++ * @phase0:		power up phase0 value [0..4095] correlates with 0..2PI
++ * @phase1:		power up phase1 value [0..4095] correlates with 0..2PI
++ * @phase2:		power up phase2 value [0..4095] correlates with 0..2PI
++ * @phase3:		power up phase3 value [0..4095] correlates with 0..2PI
++ */
++
++struct ad9832_platform_data {
++	unsigned long		freq0;
++	unsigned long		freq1;
++	unsigned short		phase0;
++	unsigned short		phase1;
++	unsigned short		phase2;
++	unsigned short		phase3;
++};
++
++#endif /* IIO_DDS_AD9832_H_ */
+-- 
+2.43.0
 
-Doesn't the CONFIG_X86 check disable it?
-
-Rob
