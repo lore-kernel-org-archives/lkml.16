@@ -1,64 +1,106 @@
-Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08EB8215062
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 06:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751007122; cv=none; b=PxF6HXi3srdLqSHL+0H/y/YLJVE+2wYJmgxRbfZfm854z1/Ca3PgMHFHQ9Uu7URu6nT+0zOJlnWG222ZW/iQ7ovJaGGoJqFNEftQyDJBkhvTde9OPoSVPjEOPHb3ZP9cXKD5Zzu/r9VzWnRpVJRH1/8b2bNVCLVM4vCTcoXDUjU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751007122; c=relaxed/simple;
-	bh=J6roTKu1LZFed1xB52SQWNskYxrd2HsCYTIfh1PHGS0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JRr7qv9wEOHpACDsq1Y6CW78GKyhEEfecapLK9sUGWIFErmQMq5WK2It9orDsKFKOLrge4u0kin77ri+VPpJSNl5puS3Ageur4aJD6Ydo+GT1NA+pm/BY4d917Q0CMcI3pfHSjVuZDDn2CQjHe/8i3zxpfqOCdTgd15rRUFlX6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=xDmlrwrZ; arc=none smtp.client-ip=85.214.250.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="xDmlrwrZ"
-Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id B25884D686;
-	Fri, 27 Jun 2025 08:51:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
-	s=default; t=1751007118;
-	bh=J6roTKu1LZFed1xB52SQWNskYxrd2HsCYTIfh1PHGS0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xDmlrwrZJLnxdDF37cRxA6WNXwJcDvP47zLr6qKal0uun3CiexSQN/esm0OAPFsHR
-	 6Dy6EaWro3884mCYqwXcZoO/HgERTM6/ObzNUiZQa1XwmCUitrKq3F+9xNORNuXyDd
-	 QjzXpMnxE08a99hYtY6oS14X/4Xk3SLj7kn7aYDs/Dd1EoXx0A7X1qcTuZnVnE6Xyn
-	 Iw2BCNSx4BeZgTH/bp5eCGl0GApPcO6rxHE1ChmbMLsj+NC8Wnrh/FgHQVc5/rSTiY
-	 Yma4ArUbPUe1V/YWe4/ctjfQS7AVsYgJYvwKTJoG4YeGGNQ8YHn4VW2wi93924u6A3
-	 LJc5xdWZUtLZA==
-Date: Fri, 27 Jun 2025 08:51:57 +0200
-From: Joerg Roedel <joro@8bytes.org>
-To: Ankit Soni <Ankit.Soni@amd.com>
-Cc: iommu@lists.linux.dev, vasant.hegde@amd.com, joao.m.martins@oracle.com,
-	suravee.suthikulpanit@amd.com, will@kernel.org,
-	robin.murphy@arm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] iommu/amd: Support for HATdis and HATS features
-Message-ID: <aF4_jfApBmuZq5aB@8bytes.org>
-References: <cover.1749016436.git.Ankit.Soni@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EF518E750
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 06:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751007170; cv=none; b=SkFYEGzsaLMXTro3O9m50jWf6Xqbf6vrPuDYyRghx0237+BIUcL3SGKT0dIgZTeSseeK+40XBYFcfAqJuvzKg6jO3z6dDIJ8capd6dHiRDy+Q/QoOa5IA3diS/TTOrZG0ASTClxMuVVLXM6ETg0xSyQsYU/0qvzx9eazU+XQY/A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751007170; c=relaxed/simple;
+	bh=al0hP3jK7BMgOXJbds9j4gsxtWUZxEhNq2cDmR5SwyY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IzqX901u30/ygRt541ccRZnS/h/gMpIQyP+AjeIybxxRd+L4sfVRAr4/kQPQIUZ2LOIeUSjYeDK+HmMlvewRoScBvvD6KzRA3Yw+tmZaM1WL5bx/AzzxYx4Q0osYZyqJ03mMGpjum/VDCeKL2P0Z7VyW+eStGR+HHCCL+/HPZfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dPa+h1+Q; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dPa+h1+Q"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4a5851764e1so34946451cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:52:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751007168; x=1751611968; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=al0hP3jK7BMgOXJbds9j4gsxtWUZxEhNq2cDmR5SwyY=;
+        b=dPa+h1+QsfN7xxLBAz0q6UcNVIdTNmc33ID8l5BtjywOaFfiAPgmig3K3HLpPK8TeZ
+         P+e0OGSC8LfJHL5hScEBMuthwKSJDBEHmCVj0muSN0c+AKNEl8dBWGF+yLNgar40bAPg
+         PC4bPU+SxnjsaU5qiH+z93cXWAGkZznZfsV+mzI2o4VGxhe0kfwyvpScEgT0Ll6rV/xc
+         yk509wd9mq1pt8e2tGdKl1t1rCPZrZQLlkBy/JSo6q2t+SsaA9MvBa+ap0QT3Ex04DwS
+         Z22xeitTC3XXLZ+UNkiqrYBD8VGLAR594KnMdWajJjqU355XWw+1yArgO4j1K/La1RiF
+         V06Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751007168; x=1751611968;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=al0hP3jK7BMgOXJbds9j4gsxtWUZxEhNq2cDmR5SwyY=;
+        b=sOk8F8gttS7VtQ16AFwN7qrgx8rBZMzoMPIAewwmIzOVhWnt51s6w2mumW7U3/pxF/
+         QduBd/fPMf7PV3e0wG+5Do0Tuk+GUDkdsU6VmW2eZt+cC5p9UfiSkSXfG2Fs9muKpoo0
+         536840gTxKLON7vL1iIFeJLfqhTtTmPwVonrYIaXK61PYNJGfjWMTYj0bXdyMOTrPkL+
+         kzBmGgjpxKHr/WdM4dboiIUV5pMKtKaeASbflxKB8+N06YeNr4Vr4RnFe9mVXAH+v9sJ
+         9T0v0Uw+akKnahIxuZJpGg5YGL4B2nxwGYri+5Fnis5twP6+/exHmelzxk6GMR6YAD4Q
+         Glcg==
+X-Forwarded-Encrypted: i=1; AJvYcCWt3qxgTPxEHcyO2VZdtFYFXeRhobTBe94l4xgwmMAAE5N0kWWW/CNC8ycw4M6QfQFHFK7KfgNaB2/Mr/I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxqlAwimkuyM+9Skr4yy+Kd4PZY3RZhHVQMR4VBAuiMe4moese
+	Kb0ToZ5aehHW9ZAjjJAkCwAIqsLc8TtG5ve2IyukEbHo7qsS26qpzVEgECbAL+W51TTfh9kv1n9
+	7RIkZDq2ZmprB1Ls0RYbRz7U+TAhjFAHas/RS5P5eYzszkvKO2GRM7aKV6wI=
+X-Gm-Gg: ASbGncuuj4ribrSwq12dJpmiKvFUdnXl2ScV9fj2K2oUB3SSuOXj3XNv7RF3EEeMOcq
+	ERizfPvo7YwJ5+oIVe4zr8uhb28whSmoJg87QmT64alo+NDuyNziDehdeJ8ALSJ3PIT9TYVeWjO
+	Q2W1CpORR0JVJo8xhmwLs8yKV4sfemP8OoIcA/wRR5DfBJYJXRO3c9
+X-Google-Smtp-Source: AGHT+IEPBqWT/GV01Fy00IJ77bWCUdtJK/GlNaGd/pKF+Z/UsurcBd54QfHuDJmPQ+IFuYw4TsscuIy8eVOU5/Hm7c0=
+X-Received: by 2002:ac8:5f0d:0:b0:4a3:5ba8:4978 with SMTP id
+ d75a77b69052e-4a7fca45d98mr40468011cf.21.1751006669534; Thu, 26 Jun 2025
+ 23:44:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1749016436.git.Ankit.Soni@amd.com>
+References: <20250625034021.3650359-1-dqfext@gmail.com> <20250625034021.3650359-2-dqfext@gmail.com>
+ <aF1z52+rpNyIKk0O@debian> <CALW65jasGOz_EKHPhKPNQf3i0Sxr1DQyBWBeXm=bbKRdDusAKg@mail.gmail.com>
+In-Reply-To: <CALW65jasGOz_EKHPhKPNQf3i0Sxr1DQyBWBeXm=bbKRdDusAKg@mail.gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 26 Jun 2025 23:44:18 -0700
+X-Gm-Features: Ac12FXw8B5uCF1YYGK-NP__GnNnDRKGjEfGKypkayVaYnKX9pkP04LmQrIHb8dk
+Message-ID: <CANn89i+GO3jSDs94SaqvC8FvO9uv4Jyn_Q0W752QcvRSPLnzcQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 1/3] ppp: convert rlock to rwlock to improve RX concurrency
+To: Qingfang Deng <dqfext@gmail.com>
+Cc: Guillaume Nault <gnault@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	linux-ppp@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 04, 2025 at 06:13:23AM +0000, Ankit Soni wrote:
-> Ankit Soni (2):
->   iommu/amd: Add HATDis feature support
->   iommu/amd: Add efr[HATS] max v1 page table level
-> 
->  drivers/iommu/amd/amd_iommu.h       |  2 ++
->  drivers/iommu/amd/amd_iommu_types.h |  7 ++++-
->  drivers/iommu/amd/init.c            | 47 +++++++++++++++++++++++++++--
->  drivers/iommu/amd/io_pgtable.c      |  4 +--
->  drivers/iommu/amd/iommu.c           | 15 ++++++++-
->  5 files changed, 69 insertions(+), 6 deletions(-)
+On Thu, Jun 26, 2025 at 9:00=E2=80=AFPM Qingfang Deng <dqfext@gmail.com> wr=
+ote:
+>
+> On Fri, Jun 27, 2025 at 12:23=E2=80=AFAM Guillaume Nault <gnault@redhat.c=
+om> wrote:
+> > That doesn't look right. Several PPP Rx features are stateful
+> > (multilink, compression, etc.) and the current implementations
+> > currently don't take any precaution when updating the shared states.
+> >
+> > For example, see how bsd_decompress() (in bsd_comp.c) updates db->*
+> > fields all over the place. This db variable comes from ppp->rc_state,
+> > which is passed as parameter of the ppp->rcomp->decompress() call in
+> > ppp_decompress_frame().
+> >
+> > I think a lot of work would be needed before we could allow
+> > ppp_do_recv() to run concurrently on the same struct ppp.
+>
+> Right. I think we can grab a write lock where it updates struct ppp.
 
-Applied, thanks.
+tldr: network maintainers do not want rwlock back.
+
+If you really care about concurrency, do not use rwlock, because it is
+more expensive than a spinlock and very problematic.
+
+Instead use RCU for readers, and spinlock for the parts needing exclusion.
+
+Adding rwlock in network fast path is almost always a very bad choice.
+
+Take a look at commit 0daf07e527095e6 for gory details.
