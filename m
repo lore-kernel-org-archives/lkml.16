@@ -1,209 +1,225 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6946D19EEC2;
-	Fri, 27 Jun 2025 01:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2DC4EB38
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750986442; cv=none; b=uVqvzsLfvFRJIytrEtJy0piyM06tPVbrrCMxqimiX2I7cI/0q3mY/icJxEefu9r2sProje9FAGquGumr0lcWrRUCRG18qzt1X7RLPMJZYS6zkSQcXIML8y4efi6c/7SwAwmV0NVuQCLA0tSjs3K1RjqXasRVbqYk3jRdpV1dTQk=
+	t=1750986486; cv=none; b=MRO69P6nwM5SOwzWzGU7dg+GQmVjGxwfEWLbyqANtb1NEEoHxntnPE92xikqWG8m8oI+LyFIzL3RGct10UEXX1rVytN+YUjyE7Amle2BmNcFWtG87d/nohOKGqEK8jRi68AI5Au2YkmDf9e3/Ep/x42bIC8kF+y3SkGt5y7OLi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750986442; c=relaxed/simple;
-	bh=4R5N0PI9UZQ+i5uRNE5ZyANWHo+7XVAg9OA23ozkzKo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MlWvdyeqTTJsZjnkyqIeZXx0aM+Z2GIRJqtWVHTmOItKyTuCFK1C6hOe60pAlKOFJhh6I6vZseUGfAMV7yqWD9OIZLmIIFNUsYVzKjDISqkT51humOU1/60015Q53sfgYZDgA4TtmNd7c8cHn2rRG6jnnIl5QWy4B9Pyd501LDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=auejeBC3; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1750986486; c=relaxed/simple;
+	bh=RiCHL5E/X9fW/mAJPBDMEK6WODsKqu512xjMd12s/IA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ISo15EREVTjxHDrAykEAPG3h38pY0oPptp+OFkgwxEDhUC19vg9XFxS3YmfsqqJ1bb+M2NCupiA1RA9olocQLUluZvbeYu0zTywS2EXvukDFzGTSvcQ3dkjyKH+UKH9EjITsNvn85GAUNI78A65aazBGeSr7htIceYmANhBm/1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DW0WokrE; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="auejeBC3"
-Received: from mail.ideasonboard.com (unknown [IPv6:2601:602:8100:c320::cf66])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8429F73B;
-	Fri, 27 Jun 2025 03:06:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750986420;
-	bh=4R5N0PI9UZQ+i5uRNE5ZyANWHo+7XVAg9OA23ozkzKo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=auejeBC3u36fR/u0LkcvYWtPZTG444ezhupvCjyCj1MyUsrD0XWHnyigdXbK9twQN
-	 vPe+rUPFe4IGtCMB+xiMCsvfzyGRHTHftAPHz8czlgP3wP4EO9awhL6f9HvZducqsO
-	 mp4GfIlQ8O3kTtCtCy2IqkJRC00ITOLZ6R9pa2L8=
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-Date: Thu, 26 Jun 2025 18:06:11 -0700
-Subject: [PATCH v3 6/6] media: ti: j721e-csi2rx: Support multiple pixels
- per clock
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DW0WokrE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750986484; x=1782522484;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=RiCHL5E/X9fW/mAJPBDMEK6WODsKqu512xjMd12s/IA=;
+  b=DW0WokrEXLGBkByoY5Qqwour9aLDxIvRnKieZ6/+CSNI6oqM+JO2yapw
+   08vAVwzhwVH8nZh29HGoBYE6EZcg+HEUgN85EtWXRjMAabPb5Hpm3w7Pt
+   zDF/Me0pMOe6b6gFoaGEP3g84m3ZV8fROrPqs038z701g79cgNMOFYYky
+   CNwDcL9VkL8vzqOJ9KBsq3z+eJkBkQYCrAx/SSC295bsPRqZ/vmIM1+Kz
+   Bv7Qb0i01cCRi5JVHcdAGFbQv5Tj8j0Sd2vLw87BUw1aRGbcD0ORLvZqu
+   Mptfd5UsByd52r75+I1QfkXTJ9dRvnaCiyVXWiiNOJT5TYDSg5+gNJlkd
+   Q==;
+X-CSE-ConnectionGUID: t5diX2nDQruD9CXbEbSOqw==
+X-CSE-MsgGUID: o8uVsfbhRs2Kux0jDGPCTw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="63985363"
+X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
+   d="scan'208";a="63985363"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 18:08:03 -0700
+X-CSE-ConnectionGUID: M0uvYER8QMOW0f7P7tPBDg==
+X-CSE-MsgGUID: Cs2/1JBxTx6yEpzk+CF06w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
+   d="scan'208";a="152960019"
+Received: from igk-lkp-server01.igk.intel.com (HELO e588e990b675) ([10.91.175.65])
+  by fmviesa009.fm.intel.com with ESMTP; 26 Jun 2025 18:08:02 -0700
+Received: from kbuild by e588e990b675 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uUxZQ-0000bL-0H;
+	Fri, 27 Jun 2025 01:08:00 +0000
+Date: Fri, 27 Jun 2025 03:07:00 +0200
+From: kernel test robot <lkp@intel.com>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>
+Subject: drivers/perf/apple_m1_cpu_pmu.c:404:7: warning: variable 'user' set
+ but not used
+Message-ID: <202506270340.rgP7askD-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250626-probe_fixes-v3-6-83e735ae466e@ideasonboard.com>
-References: <20250626-probe_fixes-v3-0-83e735ae466e@ideasonboard.com>
-In-Reply-To: <20250626-probe_fixes-v3-0-83e735ae466e@ideasonboard.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>
-Cc: Devarsh Thakkar <devarsht@ti.com>, 
- Rishikesh Donadkar <r-donadkar@ti.com>, Vaishnav Achath <vaishnav.a@ti.com>, 
- Changhuang Liang <changhuang.liang@starfivetech.com>, 
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jai Luthra <jai.luthra@ideasonboard.com>, 
- Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4928;
- i=jai.luthra@ideasonboard.com; h=from:subject:message-id;
- bh=4R5N0PI9UZQ+i5uRNE5ZyANWHo+7XVAg9OA23ozkzKo=;
- b=owEBbQKS/ZANAwAKAUPekfkkmnFFAcsmYgBoXe6nJj1oSx/xQSv/wwhSJ+up+dnzR5GoQgGea
- pJCkFLtr5+JAjMEAAEKAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCaF3upwAKCRBD3pH5JJpx
- RdbFD/98cQ60vXxhfilhRUXSw6SCz0tl+TPyWRJtN3NRPVLi08FRdq+wWhp2xChmRqoDedp5HyH
- yV+WpkdgvMmIy/9m652AeZk3bKOBKWaFf8/iO8bgisQpC1CCFj3Se9GEcKd7oTOO2IPhDNbIpXA
- ovxKufnZnrFY+k9icBaYFiCcW23ca6tlKttAAMHbCbxUFs1b//rNlo9uxPQTEeOkN+Dlh65eol5
- QaiIUNSF15j551IbSPAbSZp6fPsZaZTEmxjP/7NpAT8XoLEGKMZk4vuHO5PFwioarvXZIUPVDX7
- oVFag/6hbACkHIp972ZG3WSle3xcRoL6xabDlaCmm+98MBWthw6h4nJp5SwZQ1JTxCgED1IjGtN
- /ENTB5pbN/zUQxefGfVQWG72VtJo42xhamavOYFvAaZQrR5gBpXv0JtgyFskNk8WJnYvlK1lIxD
- 1+tSnb59f+UEW84LGlGP+8Xje/b49HtBqnWxnfaNaR+wCGRzMi6bp91xBoWMwQcCN+oN2r49NN8
- DHl2ALUVWgUsZWaVq3WwCq8H+kWmL8D14rUFirg+SQANlW7LzGT8V09wx7jO7OA9ORkbpd0oAHP
- /h12W+EhP9zUvvcES62YOpj8azW6Y3voHfXNyS7Ei6/leIUaFjVFCfbuLOGe2HnB/XM6ObTtIJN
- WXNb+94t71mPqPw==
-X-Developer-Key: i=jai.luthra@ideasonboard.com; a=openpgp;
- fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Add support for negotiating the highest possible pixel mode (from
-single, dual, quad) with the Cadence CSI2RX bridge. This is required to
-drain the Cadence stream FIFOs without overflowing when the source is
-operating at a high link-frequency [1].
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   f02769e7f272d6f42b9767f066c5a99afd2338f3
+commit: 75ecffc361bbc85696c084f3d3c73eb207386e3f drivers/perf: apple_m1: Refactor event select/filter configuration
+date:   4 months ago
+config: arm64-randconfig-2002-20250627 (https://download.01.org/0day-ci/archive/20250627/202506270340.rgP7askD-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250627/202506270340.rgP7askD-lkp@intel.com/reproduce)
 
-Also, update the Kconfig as this introduces a hard build-time dependency
-on the Cadence CSI2RX driver, even for a COMPILE_TEST.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506270340.rgP7askD-lkp@intel.com/
 
-[1] Section 12.6.1.4.8.14 CSI_RX_IF Programming Restrictions of AM62 TRM
+All warnings (new ones prefixed by >>):
 
-Link: https://www.ti.com/lit/pdf/spruj16
-Tested-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com> (on SK-AM68)
-Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
----
-Changes in v3:
-- Reorder declarations in ti_csi2rx_request_max_ppc to be reverse
-  christmas tree
-- Include cdns-csi2rx.h from its new location at include/media/cadence
----
- drivers/media/platform/ti/Kconfig                  |  3 +-
- .../media/platform/ti/j721e-csi2rx/j721e-csi2rx.c  | 37 ++++++++++++++++++++--
- 2 files changed, 36 insertions(+), 4 deletions(-)
+         |                                         ^~~~~~~~~~~~~
+   include/linux/bits.h:34:2: note: expanded from macro 'GENMASK'
+      34 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:162:35: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     162 |         [M1_PMU_PERFCTR_UNKNOWN_f7]                             = ONLY_2_4_6,
+         |                                                                   ^~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:27:22: note: expanded from macro 'ONLY_2_4_6'
+      27 | #define ONLY_2_4_6                      (BIT(2) | BIT(4) | BIT(6))
+         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:132:35: note: previous initialization is here
+     132 |         [0 ... M1_PMU_PERFCTR_LAST]                             = ANY_BUT_0_1,
+         |                                                                   ^~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:25:23: note: expanded from macro 'ANY_BUT_0_1'
+      25 | #define ANY_BUT_0_1                     GENMASK(9, 2)
+         |                                         ^~~~~~~~~~~~~
+   include/linux/bits.h:34:2: note: expanded from macro 'GENMASK'
+      34 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:163:35: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     163 |         [M1_PMU_PERFCTR_UNKNOWN_f8]                             = ONLY_2_TO_7,
+         |                                                                   ^~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:26:23: note: expanded from macro 'ONLY_2_TO_7'
+      26 | #define ONLY_2_TO_7                     GENMASK(7, 2)
+         |                                         ^~~~~~~~~~~~~
+   include/linux/bits.h:34:2: note: expanded from macro 'GENMASK'
+      34 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:132:35: note: previous initialization is here
+     132 |         [0 ... M1_PMU_PERFCTR_LAST]                             = ANY_BUT_0_1,
+         |                                                                   ^~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:25:23: note: expanded from macro 'ANY_BUT_0_1'
+      25 | #define ANY_BUT_0_1                     GENMASK(9, 2)
+         |                                         ^~~~~~~~~~~~~
+   include/linux/bits.h:34:2: note: expanded from macro 'GENMASK'
+      34 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:164:35: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     164 |         [M1_PMU_PERFCTR_UNKNOWN_fd]                             = ONLY_2_4_6,
+         |                                                                   ^~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:27:22: note: expanded from macro 'ONLY_2_4_6'
+      27 | #define ONLY_2_4_6                      (BIT(2) | BIT(4) | BIT(6))
+         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:132:35: note: previous initialization is here
+     132 |         [0 ... M1_PMU_PERFCTR_LAST]                             = ANY_BUT_0_1,
+         |                                                                   ^~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:25:23: note: expanded from macro 'ANY_BUT_0_1'
+      25 | #define ANY_BUT_0_1                     GENMASK(9, 2)
+         |                                         ^~~~~~~~~~~~~
+   include/linux/bits.h:34:2: note: expanded from macro 'GENMASK'
+      34 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:169:32: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     169 |         [PERF_COUNT_HW_CPU_CYCLES]              = M1_PMU_PERFCTR_CORE_ACTIVE_CYCLE,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:168:2: note: previous initialization is here
+     168 |         PERF_MAP_ALL_UNSUPPORTED,
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:44:34: note: expanded from macro 'PERF_MAP_ALL_UNSUPPORTED'
+      44 |         [0 ... PERF_COUNT_HW_MAX - 1] = HW_OP_UNSUPPORTED
+         |                                         ^~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:39:28: note: expanded from macro 'HW_OP_UNSUPPORTED'
+      39 | #define HW_OP_UNSUPPORTED               0xFFFF
+         |                                         ^~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:170:34: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     170 |         [PERF_COUNT_HW_INSTRUCTIONS]            = M1_PMU_PERFCTR_INST_ALL,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:168:2: note: previous initialization is here
+     168 |         PERF_MAP_ALL_UNSUPPORTED,
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:44:34: note: expanded from macro 'PERF_MAP_ALL_UNSUPPORTED'
+      44 |         [0 ... PERF_COUNT_HW_MAX - 1] = HW_OP_UNSUPPORTED
+         |                                         ^~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:39:28: note: expanded from macro 'HW_OP_UNSUPPORTED'
+      39 | #define HW_OP_UNSUPPORTED               0xFFFF
+         |                                         ^~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:171:40: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     171 |         [PERF_COUNT_HW_BRANCH_INSTRUCTIONS]     = M1_PMU_PERFCTR_INST_BRANCH,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:168:2: note: previous initialization is here
+     168 |         PERF_MAP_ALL_UNSUPPORTED,
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:44:34: note: expanded from macro 'PERF_MAP_ALL_UNSUPPORTED'
+      44 |         [0 ... PERF_COUNT_HW_MAX - 1] = HW_OP_UNSUPPORTED
+         |                                         ^~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:39:28: note: expanded from macro 'HW_OP_UNSUPPORTED'
+      39 | #define HW_OP_UNSUPPORTED               0xFFFF
+         |                                         ^~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:172:35: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     172 |         [PERF_COUNT_HW_BRANCH_MISSES]           = M1_PMU_PERFCTR_BRANCH_MISPRED_NONSPEC,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:168:2: note: previous initialization is here
+     168 |         PERF_MAP_ALL_UNSUPPORTED,
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:44:34: note: expanded from macro 'PERF_MAP_ALL_UNSUPPORTED'
+      44 |         [0 ... PERF_COUNT_HW_MAX - 1] = HW_OP_UNSUPPORTED
+         |                                         ^~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:39:28: note: expanded from macro 'HW_OP_UNSUPPORTED'
+      39 | #define HW_OP_UNSUPPORTED               0xFFFF
+         |                                         ^~~~~~
+>> drivers/perf/apple_m1_cpu_pmu.c:404:7: warning: variable 'user' set but not used [-Wunused-but-set-variable]
+     404 |         bool user, kernel;
+         |              ^
+>> drivers/perf/apple_m1_cpu_pmu.c:404:13: warning: variable 'kernel' set but not used [-Wunused-but-set-variable]
+     404 |         bool user, kernel;
+         |                    ^
+>> drivers/perf/apple_m1_cpu_pmu.c:405:5: warning: variable 'evt' set but not used [-Wunused-but-set-variable]
+     405 |         u8 evt;
+         |            ^
+   39 warnings generated.
 
-diff --git a/drivers/media/platform/ti/Kconfig b/drivers/media/platform/ti/Kconfig
-index bab998c4179aca3b07372782b9be7de340cb8d45..3bc4aa35887e6edc9fa8749d9956a67714c59001 100644
---- a/drivers/media/platform/ti/Kconfig
-+++ b/drivers/media/platform/ti/Kconfig
-@@ -67,7 +67,8 @@ config VIDEO_TI_J721E_CSI2RX
- 	tristate "TI J721E CSI2RX wrapper layer driver"
- 	depends on VIDEO_DEV && VIDEO_V4L2_SUBDEV_API
- 	depends on MEDIA_SUPPORT && MEDIA_CONTROLLER
--	depends on (PHY_CADENCE_DPHY_RX && VIDEO_CADENCE_CSI2RX) || COMPILE_TEST
-+	depends on VIDEO_CADENCE_CSI2RX
-+	depends on PHY_CADENCE_DPHY_RX || COMPILE_TEST
- 	depends on ARCH_K3 || COMPILE_TEST
- 	select VIDEOBUF2_DMA_CONTIG
- 	select V4L2_FWNODE
-diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-index ad51d033b6725426550578bdac1bae8443458f13..c710c8c5ca2fd6b296443612af96f8640a37c552 100644
---- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-+++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-@@ -15,6 +15,7 @@
- #include <linux/platform_device.h>
- #include <linux/property.h>
- 
-+#include <media/cadence/cdns-csi2rx.h>
- #include <media/mipi-csi2.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-ioctl.h>
-@@ -29,6 +30,7 @@
- #define SHIM_DMACNTX			0x20
- #define SHIM_DMACNTX_EN			BIT(31)
- #define SHIM_DMACNTX_YUV422		GENMASK(27, 26)
-+#define SHIM_DMACNTX_DUAL_PCK_CFG	BIT(24)
- #define SHIM_DMACNTX_SIZE		GENMASK(21, 20)
- #define SHIM_DMACNTX_FMT		GENMASK(5, 0)
- #define SHIM_DMACNTX_YUV422_MODE_11	3
-@@ -40,6 +42,7 @@
- #define SHIM_PSI_CFG0_SRC_TAG		GENMASK(15, 0)
- #define SHIM_PSI_CFG0_DST_TAG		GENMASK(31, 16)
- 
-+#define TI_CSI2RX_MAX_PIX_PER_CLK	4
- #define PSIL_WORD_SIZE_BYTES		16
- /*
-  * There are no hard limits on the width or height. The DMA engine can handle
-@@ -110,6 +113,7 @@ struct ti_csi2rx_dev {
- 	struct v4l2_format		v_fmt;
- 	struct ti_csi2rx_dma		dma;
- 	u32				sequence;
-+	u8				pix_per_clk;
- };
- 
- static const struct ti_csi2rx_fmt ti_csi2rx_formats[] = {
-@@ -485,6 +489,26 @@ static int ti_csi2rx_notifier_register(struct ti_csi2rx_dev *csi)
- 	return 0;
- }
- 
-+/* Request maximum possible pixels per clock from the bridge */
-+static void ti_csi2rx_request_max_ppc(struct ti_csi2rx_dev *csi)
-+{
-+	u8 ppc = TI_CSI2RX_MAX_PIX_PER_CLK;
-+	struct media_pad *pad;
-+	int ret;
-+
-+	pad = media_entity_remote_source_pad_unique(&csi->vdev.entity);
-+	if (!pad)
-+		return;
-+
-+	ret = cdns_csi2rx_negotiate_ppc(csi->source, pad->index, &ppc);
-+	if (ret) {
-+		dev_warn(csi->dev, "NUM_PIXELS negotiation failed: %d\n", ret);
-+		csi->pix_per_clk = 1;
-+	} else {
-+		csi->pix_per_clk = ppc;
-+	}
-+}
-+
- static void ti_csi2rx_setup_shim(struct ti_csi2rx_dev *csi)
- {
- 	const struct ti_csi2rx_fmt *fmt;
-@@ -496,6 +520,9 @@ static void ti_csi2rx_setup_shim(struct ti_csi2rx_dev *csi)
- 	reg = SHIM_CNTL_PIX_RST;
- 	writel(reg, csi->shim + SHIM_CNTL);
- 
-+	/* Negotiate pixel count from the source */
-+	ti_csi2rx_request_max_ppc(csi);
-+
- 	reg = SHIM_DMACNTX_EN;
- 	reg |= FIELD_PREP(SHIM_DMACNTX_FMT, fmt->csi_dt);
- 
-@@ -524,14 +551,18 @@ static void ti_csi2rx_setup_shim(struct ti_csi2rx_dev *csi)
- 	case V4L2_PIX_FMT_YVYU:
- 		reg |= FIELD_PREP(SHIM_DMACNTX_YUV422,
- 				  SHIM_DMACNTX_YUV422_MODE_11);
-+		/* Multiple pixels are handled differently for packed YUV */
-+		if (csi->pix_per_clk == 2)
-+			reg |= SHIM_DMACNTX_DUAL_PCK_CFG;
-+		reg |= FIELD_PREP(SHIM_DMACNTX_SIZE, fmt->size);
- 		break;
- 	default:
--		/* Ignore if not YUV 4:2:2 */
-+		/* By default we change the shift size for multiple pixels */
-+		reg |= FIELD_PREP(SHIM_DMACNTX_SIZE,
-+				  fmt->size + (csi->pix_per_clk >> 1));
- 		break;
- 	}
- 
--	reg |= FIELD_PREP(SHIM_DMACNTX_SIZE, fmt->size);
--
- 	writel(reg, csi->shim + SHIM_DMACNTX);
- 
- 	reg = FIELD_PREP(SHIM_PSI_CFG0_SRC_TAG, 0) |
+
+vim +/user +404 drivers/perf/apple_m1_cpu_pmu.c
+
+75ecffc361bbc8 Oliver Upton 2025-03-05  400  
+a639027a1be1d6 Marc Zyngier 2022-02-08  401  /* arm_pmu backend */
+a639027a1be1d6 Marc Zyngier 2022-02-08  402  static void m1_pmu_enable_event(struct perf_event *event)
+a639027a1be1d6 Marc Zyngier 2022-02-08  403  {
+a639027a1be1d6 Marc Zyngier 2022-02-08 @404  	bool user, kernel;
+a639027a1be1d6 Marc Zyngier 2022-02-08 @405  	u8 evt;
+a639027a1be1d6 Marc Zyngier 2022-02-08  406  
+a639027a1be1d6 Marc Zyngier 2022-02-08  407  	evt = event->hw.config_base & M1_PMU_CFG_EVENT;
+a639027a1be1d6 Marc Zyngier 2022-02-08  408  	user = event->hw.config_base & M1_PMU_CFG_COUNT_USER;
+a639027a1be1d6 Marc Zyngier 2022-02-08  409  	kernel = event->hw.config_base & M1_PMU_CFG_COUNT_KERNEL;
+a639027a1be1d6 Marc Zyngier 2022-02-08  410  
+a639027a1be1d6 Marc Zyngier 2022-02-08  411  	m1_pmu_disable_counter_interrupt(event->hw.idx);
+a639027a1be1d6 Marc Zyngier 2022-02-08  412  	m1_pmu_disable_counter(event->hw.idx);
+a639027a1be1d6 Marc Zyngier 2022-02-08  413  	isb();
+a639027a1be1d6 Marc Zyngier 2022-02-08  414  
+75ecffc361bbc8 Oliver Upton 2025-03-05  415  	m1_pmu_configure_counter(event->hw.idx, event->hw.config_base);
+a639027a1be1d6 Marc Zyngier 2022-02-08  416  	m1_pmu_enable_counter(event->hw.idx);
+a639027a1be1d6 Marc Zyngier 2022-02-08  417  	m1_pmu_enable_counter_interrupt(event->hw.idx);
+a639027a1be1d6 Marc Zyngier 2022-02-08  418  	isb();
+a639027a1be1d6 Marc Zyngier 2022-02-08  419  }
+a639027a1be1d6 Marc Zyngier 2022-02-08  420  
+
+:::::: The code at line 404 was first introduced by commit
+:::::: a639027a1be1d68437e1c2cac6ed16306c84ab3c drivers/perf: Add Apple icestorm/firestorm CPU PMU driver
+
+:::::: TO: Marc Zyngier <maz@kernel.org>
+:::::: CC: Will Deacon <will@kernel.org>
 
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
