@@ -1,179 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011058.outbound.protection.outlook.com [40.107.130.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BCF2951CE;
-	Fri, 27 Jun 2025 11:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751023389; cv=none; b=SvgZwLbudVA3UvddJB4WfKhtDJqpIC2jhj/eHRWz4dXw8HPJxjuSXlkukHFNKXAIf5b2OwWxj9qaMN4BG9niicxzmRzCHklUIjC8XjNMo2ITHJ/52cyCJMFRiy6ChDweER16FMhTyb2Z6jWeSg8AelxU7yHs9PpMaNFKy4iVqW4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751023389; c=relaxed/simple;
-	bh=4E766QcrHyc6FJQNUYWjsfGgdu/BRMSpFtNgERpjx+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CpOCZrYp7ihOK/ayuvN5eTP+xCznRRK9sTgT3hwRS6P46DhlOmNkWzWkNMmnnT33VveqTSNLZghrP1PXgKWHDhOpN+ugSsxgFXxh99XXO+74GjJj0VN49y4b0mgPo3IigSZBf7D/1xPst2ppfMFM1CpTaM8G3cTU6S9CtL8++Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aRFg/cEz; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3D929552F;
+	Fri, 27 Jun 2025 11:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751023413; cv=fail; b=gZbKxPKdIk6vKFUT53X9exPzpkjcrSayMm4naBRHqsADPPgDucFW3YggmsiQDhfw6KMwb1PQbbpRo6/E91wi6YqU9oHWiIBQkamVxA6cY3HYxrbkSSMVgkyaFX1TJwwDaUpPAez4mwz4ybkoRsDdgQLbfiFtHzVPTDILOpIaa3I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751023413; c=relaxed/simple;
+	bh=IS1X6Rvm4rmWmumwGaTS6hqSfFLct/k+zRjslSCZDyo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SuEvDT/1qSegaj5cfglZ9RuqDqdLtWkMKqxS+DvuSYTaSc01QvdUEVTLYCBhDtEaUO32jgLhrI+yoB5u71C88WP52Raq0GaKgHpZuetoF9zwx7d3wAC/y0YyKFfr6diiq7XbX/O6d47vfihF/p4RJFcIUJ9Dbc5GEDlksmj27VY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=2n.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=g6gAWtN1; arc=fail smtp.client-ip=40.107.130.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=2n.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aRFg/cEz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751023387; x=1782559387;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4E766QcrHyc6FJQNUYWjsfGgdu/BRMSpFtNgERpjx+c=;
-  b=aRFg/cEzfp9Z/1eKoPTRubCTpm7vhkHtulKXVKzp8GOxHzPrX3KGzF6k
-   o94ORfDUGnAW+ajvdZkYMEoC3h/iAxaAqtA8zwNlB/HxHKhF8enLx6Ndk
-   mSRjz430leOnDOsAJDOY9zsbQafpcB7UTvxswoGzZZY3/Poe9AhXrpan4
-   MdfoBvPerCc78z4hkRFT0sMnbjBi4fJowrVeybO9/tIG050KiZDHEqFBR
-   vXcrXk2+uSvKfAP1LItfJYnNPu1/93FQYD52T+4h3MbjJ8Ub3T81H82o3
-   WQhMC0Z5mhLgsAih44DV3wG3fqkvulWG13wUvltCzCnoGbaxKJ2h17gai
-   g==;
-X-CSE-ConnectionGUID: 3b1jxNXFSZaVQMoFznQM6g==
-X-CSE-MsgGUID: C0X9IszmSlOBheNkF9f5Pw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="64774530"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="64774530"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 04:23:07 -0700
-X-CSE-ConnectionGUID: pWmaIgjQRVmcrM9GMPJZOw==
-X-CSE-MsgGUID: sUZS+/A6QaWHE3H4M8P7Ow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="153498611"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 04:23:03 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uV7Aa-0000000ASlm-1HHR;
-	Fri, 27 Jun 2025 14:23:00 +0300
-Date: Fri, 27 Jun 2025 14:22:59 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: ezequiel@vanguardiasur.com.ar, mchehab@kernel.org,
-	laurent.pinchart@ideasonboard.com, hdegoede@redhat.com,
-	gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de,
-	viro@zeniv.linux.org.uk, thomas.weissschuh@linutronix.de,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org, imx@lists.linux.dev, jun.li@nxp.com
-Subject: Re: [PATCH v2 1/3] usb: core: add dma-noncoherent buffer alloc and
- free API
-Message-ID: <aF5_EwSHHMOOMRv9@smile.fi.intel.com>
-References: <20250627101939.3649295-1-xu.yang_2@nxp.com>
- <20250627101939.3649295-2-xu.yang_2@nxp.com>
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="g6gAWtN1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cuhwEbnAIXigB3dRAcm5g5KNQn0pvy+fBqeeBitNata8gotMkFtV0jjCFDv74bTDFBB0u0mgImVTr+uCzMCE5RT3rB7krgnUSpe1Jhz6Ap+B9sbbSUIumSqHJhjIjotIIeEPMO2Lr8zgBwXjD7ouICiq7djTxKpooV/PSOarxKQG/8eIIQvW6/5lnBzJLz1JVzrzK/j+3AvtfSfzDoZjF1k0jXuyh2zxn9Atm7PvJkc7LeSata0h8BoqgkiAJLg39Gg75inz6ocyHRuV2E55di21ay0mAV2SuhiFec6kQAPHyvlhjaBotcNkiSdgkdG0TD67+n2/nK+ODQwFVPnalg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fXsT7fF4qRZS7FvhSu7tSSPhI0TqBqpFozQ8kLup8pc=;
+ b=DT04uoSBtvy4b9/ZviGo8PDPPfqAaFE8OiQCeqCtlxCOZphuS6PtK5D3j2z9jQeQfiT0fbyR4JqcUExwXxRYdSXRsMc+CGNRgHg4eIsyZgTzK8FqaOCiVgfQ5zRib4akHEGfbzeKHMUxxjV0mqP3zwROBIBq3koaCFsMn/eOKuAGTaT8aMFuoGRaXNH02/z3bU6vb7TBDHjkJgDMJHpeL82HC9/s/PbkQJqIM8a6kWypS1kS7Ta70lWctrbsNTz44x2DI10fm9dBi3VnfaGLyLMDly1nCwdSTtvxLHidL4pUNhtrhEtbb80fHqDxcdtsabZ0eh6w/iP+0R+hzrU+Pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=broadcom.com smtp.mailfrom=2n.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fXsT7fF4qRZS7FvhSu7tSSPhI0TqBqpFozQ8kLup8pc=;
+ b=g6gAWtN1UklGY5Zg3FhURk+jUShcjI79djyKtxJS+6X8kx2LHM6DK7SmtGaIdfzLyOSYQSSwS+9yON7ZQl6+vQIiTci8yKOgVpQ4D+AEH4AksA2lOIdW1H6L8rwmXHu80l9IddlE1qC0R47o0Ir5pliawt6aeGGBZxr0tMyX68o=
+Received: from AM4PR07CA0007.eurprd07.prod.outlook.com (2603:10a6:205:1::20)
+ by PA4PR02MB6959.eurprd02.prod.outlook.com (2603:10a6:102:109::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.18; Fri, 27 Jun
+ 2025 11:23:25 +0000
+Received: from AM2PEPF0001C70C.eurprd05.prod.outlook.com
+ (2603:10a6:205:1:cafe::c0) by AM4PR07CA0007.outlook.office365.com
+ (2603:10a6:205:1::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.15 via Frontend Transport; Fri,
+ 27 Jun 2025 11:23:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=2n.com; dkim=none (message not signed) header.d=none;dmarc=fail
+ action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of 2n.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ AM2PEPF0001C70C.mail.protection.outlook.com (10.167.16.200) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8880.14 via Frontend Transport; Fri, 27 Jun 2025 11:23:25 +0000
+Received: from pcczc3457tyd.2n.cz.axis.com (10.4.0.13) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Fri, 27 Jun
+ 2025 13:23:24 +0200
+From: =?UTF-8?q?Kamil=20Hor=C3=A1k=20-=202N?= <kamilh@axis.com>
+To: <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
+	<andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <kamilh@axis.com>, <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <f.fainelli@gmail.com>, <robh@kernel.org>,
+	<andrew+netdev@lunn.ch>
+Subject: [PATCH net v2 0/4] net: phy: bcm54811: Fix the PHY initialization
+Date: Fri, 27 Jun 2025 13:23:02 +0200
+Message-ID: <20250627112306.1191223-1-kamilh@axis.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627101939.3649295-2-xu.yang_2@nxp.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail01w.axis.com
+ (10.20.40.7)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM2PEPF0001C70C:EE_|PA4PR02MB6959:EE_
+X-MS-Office365-Filtering-Correlation-Id: 084e6633-c028-4ed8-84d5-08ddb56d088d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|7416014|36860700013|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Y292S281NW41Z3drZ0dzSXB0ZHhDaXlFOS9sbzF0b08wUU5OcE1HeWFDVS9M?=
+ =?utf-8?B?ZmZwbHd4V0R4U01JSDJyQTVPV3RLc3lWb2Z1TTNGOEtTTllobVk5K09hY2xs?=
+ =?utf-8?B?czBJbHlaRVBROFQ2SEF5WXZxLzRGYk8xV1FpazBTbHhkZUpLZlFBNmNWdG9D?=
+ =?utf-8?B?QjVXOEdMUGdaZXJxbE0xdnZwblV5Nm9yWXVJTmFoZElhczZ2emcxVCtJV3Fr?=
+ =?utf-8?B?cXVJVTBmVmg3eEQ4US9RalNxcE9XcjFFWFBlUHJUdXUzeS9kTnF2UzJZVllz?=
+ =?utf-8?B?YUpIWkV5TXA4dmEzTVF6ZDdndjB6ai82b3FPTktOTEhGY3pxN1A4ck9nNzV1?=
+ =?utf-8?B?MjRrL29jd3N2SEs4VmNuRGJVS0syUDZMNlR1bWlCdXNBY1EvS09BMTlnNmdt?=
+ =?utf-8?B?NWE0RlNtV3RlS3JYMWdPeGxMSit0LytENEF5ZmFRZmEwY1RvUjZjUVE0R0o1?=
+ =?utf-8?B?bDdPVXJ4SzZzL1FPaU9rQStCZjJoTWRvNGtxK1R4ckRNelhDVC9TODMyWEYw?=
+ =?utf-8?B?bHZCbzhZQ3lUV0dLOWY5clZUem9oV2QvTVhMM2pIV3A3dzBJZjc3NndhT2My?=
+ =?utf-8?B?T05qK2lKUU9Yd0xlRDM3M2Z4Ny84K2w4dkhCSUdjU2d2cDU1TnhLYWdwRnQw?=
+ =?utf-8?B?SDM0MzJzY0tGdXhiUXp1cTZtaUR5U1JpSUduSHhTODF2QWowTURMSWV2ck5X?=
+ =?utf-8?B?S1pwZWljayt1UG83b01zaXZhQTVSZVNpS1d3MkZheVA0SGZSMHcydGJVOGQx?=
+ =?utf-8?B?UWQ3dFhqeHFacVBselhRVFNtcFNGMTlGSXM4ajBUaVdIbFZrbEJGU0RRNElh?=
+ =?utf-8?B?QWxRcTJ5OWdSU2RWOFhFalVocm93Vnl1Tm00MXE4VDlMeXVtUURZdjNHVkxI?=
+ =?utf-8?B?QjRpSXJPQy9Cb1BZb0VhUm1qUWZqQStHdXpNa1NpNDdQcVJrQ21LVjNrb0dq?=
+ =?utf-8?B?RjhsVVEzSjVCeDlaaGR1T1hLUnRpMHVWWkdoMXZXT25URmRhRmZYZjZndnhp?=
+ =?utf-8?B?Q0ZXTHVpRTJVQzh3NTZNOCtqUStydWtPWndOMTJXdU92MHp3cDNvOXFlWHU3?=
+ =?utf-8?B?T0FsUUVJcERUYWtlVHEwRHJWOTFmdUFqYXNXSjZxYlE3aDdDZjZyQS9DTUNs?=
+ =?utf-8?B?WVBjdlgvdVRmVStHM3VPTG4yM0dhRU4xeUkvb2IxNzBsQnZrSUE2VG9QTlVn?=
+ =?utf-8?B?Um01RzlIMVBSU1pJa2JHR1h1ZXNtQzdVT294Ukd0M3Q3ZVVyc1cxdzVvSUNl?=
+ =?utf-8?B?OGVVZ0sxMlVXV3p2bU1qQkxHMlRJM3VwanlpU2Y1T2xtODdjU3dLVGJXaG1S?=
+ =?utf-8?B?b2hpNGpSTzdiZFdtSW0zNE4wN3YyNTFNVGRIMVJtb1ZLY2VHUDZHTnNHdVc3?=
+ =?utf-8?B?TFRocWNSV3VNSEg0U2luOXJrSnFWYXFsS3l0eExaNGJDUDFpQkRkWlBHSmph?=
+ =?utf-8?B?aU9QMENoT3cxbURuRndrQUdNK2Zvc0t6QlJXb1lmVEpLOWk4WFZyakR6Rmh3?=
+ =?utf-8?B?bmZYMWVNTEZDS3A5Q1RXdktoSTNBaUpORWxtYmRvdUVCQ1dXNk9wYzlSamVa?=
+ =?utf-8?B?eWNVNDZnM3JxMkJLaWRmNStUaEtjWmhER2c1TUxxYmRBZDZaRks4d0lja2hr?=
+ =?utf-8?B?Qmp3R200enNsSEphRWx5Qm4rbENkUjA2N2d5YllHbGo1WEhTRWg0U0tRZ2E3?=
+ =?utf-8?B?ajJrRjhvYjhLVUpXcVF5bkJ0MlJIblo2OFZPOWp3WmtaYzFrRE42eXpRUVVR?=
+ =?utf-8?B?K1BTNEhOUGNOSHR1blM4U2kzWkRWZUJQOFgxbHhxb3dlV3J1Ty93TDQ3bUxu?=
+ =?utf-8?B?WjE5elFseEoxRnFWdjk3Y1c1YmNsbUt1aDFKRVBXSlRpQ0U0bk1CTG9yRVJ6?=
+ =?utf-8?B?UHowY2lTT1BNQTJwWjZncU1UYjMwT2F2RUFvQ09kb1RNZHpmNzlGekQxL1Jw?=
+ =?utf-8?B?NzVJU1R6OUF5R2hMdHk1UjVrUE02VHBHalFoWXlRL2JvcVJibWVKZlFueFRq?=
+ =?utf-8?B?MHhUZXZnUy83andBNnVEVm85cy9saFVvU3Q5bklNaFZoa0RTY0JJd1Y1Tkxv?=
+ =?utf-8?B?QjFwWnA5R05nZUx1Si9yaEJHckxrSVBtSGhsdz09?=
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(7416014)(36860700013)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 11:23:25.5630
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 084e6633-c028-4ed8-84d5-08ddb56d088d
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM2PEPF0001C70C.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR02MB6959
 
-On Fri, Jun 27, 2025 at 06:19:37PM +0800, Xu Yang wrote:
-> This will add usb_alloc_noncoherent() and usb_free_noncoherent()
-> functions to support alloc and free buffer in a dma-noncoherent way.
-> 
-> To explicit manage the memory ownership for the kernel and device,
-> this will also add usb_dma_noncoherent_sync_for_cpu/device() functions
-> and call it at proper time.  The management requires the user save
-> sg_table returned by usb_alloc_noncoherent() to urb->sgt.
+PATCH 1 - Add MII-Lite PHY interface mode as defined by Broadcom for
+   their two-wire PHYs. It can be used with most Ethernet controllers
+   under certain limitations (no half-duplex link modes etc.).
 
-...
+PATCH 2 - Add MII-Lite PHY interface type
 
-> +/**
-> + * usb_alloc_noncoherent - allocate dma-noncoherent buffer for URB_NO_xxx_DMA_MAP
-> + * @dev: device the buffer will be used with
-> + * @size: requested buffer size
-> + * @mem_flags: affect whether allocation may block
-> + * @dma: used to return DMA address of buffer
-> + * @dir: dma transfer direction
-> + * @table: used to return sg_table of allocated memory
-> + *
-> + * Return: Either null (indicating no buffer could be allocated), or the
-> + * cpu-space pointer to a buffer that may be used to perform DMA to the
-> + * specified device.  Such cpu-space buffers are returned along with the DMA
-> + * address (through the pointer provided).
+PATCH 3 - Activation of MII-Lite interface mode on Broadcom bcm5481x
+   PHYs
 
-Return section should be last in the kernel-doc (this requirement is
-documented).
+PATCH 4 - Fix the BCM54811 PHY initialization so that it conforms
+   to the datasheet regarding a reserved bit in the LRE Control
+   register, which must be written to zero after every device reset.
+   Also fix the LRE Status register reading, there is another bit to
+   be ignored on bcm54811.
 
-> + * To explicit manage the memory ownership for the kernel vs the device by
-> + * usb core, the user needs save sg_table to urb->sgt. Then usb core will
-> + * do dma sync for cpu and device properly.
-> + *
-> + * When the buffer is no longer used, free it with usb_free_noncoherent().
-
-Here and everywhere else in your series, pay respect to acronyms by using them
-as acronyms:
-
-dma --> DMA
-cpu --> CPU
-usb --> USB
-
-and so on...
+Changes in v2:
+  - Applied reviewers' comments
+  - Divided into more patches (separated common and Broadcom
+   PHY specific code)
 
 
-> + */
-> +void *usb_alloc_noncoherent(struct usb_device *dev, size_t size,
-> +			    gfp_t mem_flags, dma_addr_t *dma,
-> +			    enum dma_data_direction dir,
-> +			    struct sg_table **table)
-> +{
-> +	struct device *dmadev;
-> +	struct sg_table *sgt;
-> +	void *buffer;
-> +
-> +	if (!dev || !dev->bus)
+Kamil Horák - 2N (4):
+  net: phy: MII-Lite PHY interface mode
+  dt-bindings: ethernet-phy: add MII-Lite phy interface type
+  net: phy: bcm5481x: MII-Lite activation
+  net: phy: bcm54811: Fix the PHY initialization
 
-When !dev case is possible?
-
-> +		return NULL;
-> +
-> +	dmadev = bus_to_hcd(dev->bus)->self.sysdev;
-> +
-> +	sgt = dma_alloc_noncontiguous(dmadev, size, dir, mem_flags, 0);
-> +	if (!sgt)
-> +		return NULL;
-> +
-> +	buffer = dma_vmap_noncontiguous(dmadev, size, sgt);
-> +	if (!buffer) {
-> +		dma_free_noncontiguous(dmadev, size, sgt, dir);
-> +		return NULL;
-> +	}
-> +
-> +	*table = sgt;
-> +	*dma = sg_dma_address(sgt->sgl);
-> +
-> +	return buffer;
-> +}
-
-...
-
-> +void usb_free_noncoherent(struct usb_device *dev, size_t size,
-> +			  void *addr, enum dma_data_direction dir,
-> +			  struct sg_table *table)
-> +{
-> +	struct device *dmadev;
-> +
-> +	if (!dev || !dev->bus)
-
-Ditto.
-
-> +		return;
-> +	if (!addr)
-> +		return;
-> +
-> +	dmadev = bus_to_hcd(dev->bus)->self.sysdev;
-> +	dma_vunmap_noncontiguous(dmadev, addr);
-> +	dma_free_noncontiguous(dmadev, size, table, dir);
-> +}
+ .../bindings/net/ethernet-controller.yaml     |  1 +
+ drivers/net/phy/broadcom.c                    | 39 ++++++++++++++++---
+ drivers/net/phy/phy-core.c                    |  1 +
+ drivers/net/phy/phy_caps.c                    |  4 ++
+ drivers/net/phy/phylink.c                     |  1 +
+ include/linux/brcmphy.h                       |  7 ++++
+ include/linux/phy.h                           |  4 ++
+ 7 files changed, 52 insertions(+), 5 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.5
 
