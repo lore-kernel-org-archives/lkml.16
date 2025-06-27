@@ -1,76 +1,92 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE1121D00D;
-	Fri, 27 Jun 2025 07:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C984C2FB
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751010314; cv=none; b=T/H6YdNT2/JAIdYloT6fg7e/iEBi4XMHMpGe1bokAvp5DtzYFehGsx5aoDwIz+LNglyoLJeIFQG4ufyKK23tG4GYIJDCMKMt+fGBjGr929WVMUw9DVCBmRvleHwr0jXBQGRM+6L8Jj+TbN8r9RDH9g8ersQsPYHPAYrR3A61SkM=
+	t=1751010355; cv=none; b=b+e1T9FdIEZyN7pb6E0xNJ6D00b8xFTDa+RInRal6h0TLwjvCc5tzDN3hmDi496i5AX8zWUp5eqt72xhvvPwHvgw1aly2PcVdqb1MB0LbwRIGKWktHQSzpAKqrOdJKh/36SRMKxD9kpalFVGjP9aGMhmdxirBB0VEccl7sNu7Z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751010314; c=relaxed/simple;
-	bh=vqujOY/R4b/ay6EtDaM0zoqhCTHH7KClxFgKqjr1jAY=;
+	s=arc-20240116; t=1751010355; c=relaxed/simple;
+	bh=qsv8lX2R+jjj7HaR3MGPWXprxxFXhiUsHzsjLqXkaFk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D8WW4yCgA9NrMfDDS8HINZVlFxCrlMyKzM/5JHNTF6edOYrlCQCDlfwfWb4uA8aHyFTg+tkyzr9dI/rUT0Ckhd7M63F8Yr9+VqzXigJBftoBMwVrPl8pvZxZu3phm/EBJNrbAfGgVrwK8Hhi2CglPLPGCqErygr8E8MSojbftxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JI8LsXwJ; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=u8/pMTa5oX+SIMEYGES8hRyZkfvCj1yxG16C5Mud0yZVmm4DIs5tHrRwQibqAi0czx0gIIlelU7RETf2xLjDguE68B2H1jUJ2/SPNEgirogUTYthO/AFn32x1CZgipcNJnjdvHc36Yo4A0sIezVUb736dgox7Va4MWe+U36Rv0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pcKJcOO4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=svOvG1i1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rXUyVd1l; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=K/E9pd0f; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JI8LsXwJ"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-23636167b30so18764285ad.1;
-        Fri, 27 Jun 2025 00:45:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751010312; x=1751615112; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6kwXMa0RVLz7EpJ4koQvotLZKLm6G+hz8I9ALzuYytU=;
-        b=JI8LsXwJxX53o20GpIOOy/nUOaexh7Fbx1sSyPcq1+td9HR4u4/Xppy/lcOEIC5zOI
-         Ax/EYOm2GerXow223olh1doGimdl+3aSQFy/mMQTkn0peFZhNQswsPffocPrxWq2jQO+
-         bpu7pHBrNtnyhvgspBNiC03q6GqZ77y0xhWdZStQOBH2gpw2+ME4yyVyQDj8aFUsRzTu
-         emaqh+fX9j0GT7p14QOtDh8Lo9XgHJzCym74seNH72HwwRfXLDCZriNU/UNwG2ASyuNG
-         YIZPLl9jHJ29GhZZqoK+uX1VZ/zWQyRE4hBqnhOktrombY6c+dxi2hnzNSVYis2ZU7/d
-         Kf1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751010312; x=1751615112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6kwXMa0RVLz7EpJ4koQvotLZKLm6G+hz8I9ALzuYytU=;
-        b=cBsVLT9om1BuqsC50jV7dDyTqWng41paF0pTEWE/k6Qq+8ZSooozgRDK3ubIhnRsle
-         jAvIhfFUg+WLI3K9WN2rI6BATho7RcCFP9OUkzbkSDCJ6e+wTlERgKCukEdDO65F5aEM
-         yuaWbQ+qQHUMNDnV5ZxvLTLhSE/QTqZ/gbkGEmhAbppVXKgaQBzeksB8NIgz+YuLBYXn
-         BLNVUwSBgO4TnslQ7B/4pV/qNUKyWiDVP+3POfBqL3HQaMkckHv6j7D4hTd38eRiFlJY
-         b1rD3/Ea4wg/NbCIcmcAHzCWks+s8Myo3NkZ9Qd82MHGK7zGc4A7idpcx8ikbT1LSDP1
-         hyHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVAWTlJYCSVgBuqYc3SrCRy78+L8SUprJry/vfKcEtDqi5ZLQmq8UE+Wc9QRJodHVBD8lce7VThcf0D0yw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxw72SesRsXAV0DoIhDjemIU7WDbhozaApZA5B2jzf072H04FEd
-	z5A8IglMr1dsuEWDfh5kSLkpmCtdS1zJsvaY1rsZ0qonEUc5uCfpIt28
-X-Gm-Gg: ASbGncvjXeu9+CZ0pwStJa5GJhTOnsc6OSfwi9CO8e+RD4fBHw2OUHWebJx7nJ+g/YI
-	k3go70B8QBCjepsYA0oWUBNamDHi5OVj1+nn6mmkh9fIXDZu0s2zRqKmZa6zT8CzDuD45RLj4Ei
-	1EXIEYFuD4wK2YEyPLmwS44CI4MUAEQ7Jpxgrn74oW0QgmLJo3isH7m9ndgjhp0+WLjz4jTArB1
-	0MZuPIl0EZKdQoJI0xWGorRsPMkeyYQds7WO1eHhx2per9MYAlYXHk9zYFj1YDpMK1h09w+hmPS
-	H4R39ldOqr2XJNWlQeJcev3P+PJiEUPM+URwo4+CwoUjVTosZtYjHnTuy6T2iGKslo6B/wXJ
-X-Google-Smtp-Source: AGHT+IEosVdRq8jswGr8fyP/uRwtM7xveOdc4+/YhWRKXXFAv1fBojRPrGKTceYMplzzNMFyzx4jZA==
-X-Received: by 2002:a17:902:f601:b0:235:c9a7:d5fb with SMTP id d9443c01a7336-23ac3deaf2cmr35094145ad.16.1751010312004;
-        Fri, 27 Jun 2025 00:45:12 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23acb39b99esm10595105ad.102.2025.06.27.00.45.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 00:45:11 -0700 (PDT)
-Date: Fri, 27 Jun 2025 15:44:58 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>, Yixun Lan <dlan@gentoo.org>, Ze Huang <huangze@whut.edu.cn>, 
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Cc: devicetree@vger.kernel.org, sophgo@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH v4 0/4] riscv: sophgo: cv18xx: Add reset generator support
-Message-ID: <ep7gbthprqyzfdcqvs3wadqflyusdsut3uxt5wv5j7mvazyl5s@muk77uizwcrg>
-References: <20250617070144.1149926-1-inochiama@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pcKJcOO4";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="svOvG1i1";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rXUyVd1l";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="K/E9pd0f"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BC81D21171;
+	Fri, 27 Jun 2025 07:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751010352; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dvxjyj926UqSRTbrbUxqXNDmogrIF3eTQkUGhEy25zk=;
+	b=pcKJcOO4/sdg+ixuq4nhO7EZFqYyqm4asTnc2AYKJ6C6j8aqqIx553wO68pHh167AXm665
+	gLFXqW6HVn1WyEsbsmwHO4qpOjjqZ9pqVexFtBvPoJ6xmjHlebW+YoYVEyycBbqD1nxGjF
+	N0A96p8DSL9ezjd6pi25erhjY4M6u2E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751010352;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dvxjyj926UqSRTbrbUxqXNDmogrIF3eTQkUGhEy25zk=;
+	b=svOvG1i1UkFRrX5HR+UCjNp8OMKXLCVu7/rwasd+jI+ZjgZgVdxA0OBW9aCka3/PdUkgaz
+	M8bmj7d4Rf3XmXBw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751010351; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dvxjyj926UqSRTbrbUxqXNDmogrIF3eTQkUGhEy25zk=;
+	b=rXUyVd1lmpRHtsdziS5ilOCxgB+qPW5tp9wdlIJLojzjrNJZ+xxuluC/HjyXNgQUYPhBAk
+	gKhTDxv+9SX7IfP45CEdhmKZvsfNJWfj/ZZIwE+cbcS1NYpabZcjqWU0R42ZB+glAa8KsO
+	Gme6nojmUgkYPcxWWNnyM4KXH+/LD8c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751010351;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dvxjyj926UqSRTbrbUxqXNDmogrIF3eTQkUGhEy25zk=;
+	b=K/E9pd0fntjiucNgk5TsNkVT4oqiGNI27qxrB0CH9ND+1WfzjGF+OwCAf1bxobo/S6weWU
+	cRtM7koB3CTmTJDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0A2F413786;
+	Fri, 27 Jun 2025 07:45:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id BexPOy5MXmiRTgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 27 Jun 2025 07:45:50 +0000
+Date: Fri, 27 Jun 2025 09:45:49 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+Cc: Gregory Price <gourry@gourry.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Byungchul Park <byungchul@sk.com>,
+	David Hildenbrand <david@redhat.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Ying Huang <ying.huang@linux.alibaba.com>, Zi Yan <ziy@nvidia.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH 1/2] mm/mempolicy: Simplify weighted interleave bulk
+ alloc calculations
+Message-ID: <aF5MLcXmLopuHDht@localhost.localdomain>
+References: <20250626200936.3974420-1-joshua.hahnjy@gmail.com>
+ <20250626200936.3974420-2-joshua.hahnjy@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,47 +95,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250617070144.1149926-1-inochiama@gmail.com>
+In-Reply-To: <20250626200936.3974420-2-joshua.hahnjy@gmail.com>
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On Tue, Jun 17, 2025 at 03:01:38PM +0800, Inochi Amaoto wrote:
-> Like SG2042, CV1800 Series SoCs also have simple bit reset generator.
-> Add necessary code and bindings for it.
+On Thu, Jun 26, 2025 at 01:09:33PM -0700, Joshua Hahn wrote:
+> Simplify the math used to figure out how many pages should be allocated
+> per node. Instead of making conditional additions and deletions, we can just
+> make them unconditional by using min(). No functional changes intended.
 > 
-> Changes from v4:
-> 1. patch 1: convert the compatible as entry of enum.
-> 1. patch 2, 3: apply Alexander's tag.
-> 1. patch 3: apply Junhui's tag.
-> 
-> Changes from v2:
-> 1. patch 3: fix wrong reset ID.
-> 
-> Changes from v1:
-> 1. rebase to v6.16-rc1
-> 2. patch 1: apply Rob's tag
-> 3. patch 3: fix wrong reset ID
-> 
-> Inochi Amaoto (4):
->   dt-bindings: reset: sophgo: Add CV1800B support
->   reset: simple: add support for Sophgo CV1800B
->   riscv: dts: sophgo: add reset generator for Sophgo CV1800 series SoC
->   riscv: dts: sophgo: add reset configuration for Sophgo CV1800 series
->     SoC
-> 
->  .../bindings/reset/sophgo,sg2042-reset.yaml   |  4 +-
->  arch/riscv/boot/dts/sophgo/cv180x.dtsi        | 25 +++++
->  arch/riscv/boot/dts/sophgo/cv18xx-reset.h     | 98 +++++++++++++++++++
->  drivers/reset/reset-simple.c                  |  2 +
->  4 files changed, 128 insertions(+), 1 deletion(-)
->  create mode 100644 arch/riscv/boot/dts/sophgo/cv18xx-reset.h
-> 
-> --
-> 2.49.0
-> 
+> Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
 
-I wonder if the binding and driver can be merged, as many devices
-require reset to functional normally. If these two are taken, I
-can take the dts change.
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
-Regards,
-Inochi
 
+-- 
+Oscar Salvador
+SUSE Labs
