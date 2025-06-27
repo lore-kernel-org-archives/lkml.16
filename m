@@ -1,38 +1,38 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCF125FA2C
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 22:45:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84447290BA2
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 22:45:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751064335; cv=none; b=VDS61a8lq2VknyT8raHjqZSXDrOg73QxVdgDp9E1UZCm6q/20imqD56ZMbRUEm7x8AcOq9CgdItcj+ZCObQfDQJOknJUmDWjKlCq7AJKm+VwBRj/v4veyfBRhrPodyFgxOk1rObM1VaYwWDwJhfB7YuspfPy5h/X2X+YZ2otJPc=
+	t=1751064336; cv=none; b=UT+ABcPh9D81rSZXIu3V14prv5SPpWtJrU9CipGdNk21fXvQ1m0hhLBtv6YsyTPCemNila+FVRbWPwiQ3r+5W0nwWjN6FVXFlx84eEM1dLBcMdd+PUCcfLCU5SK405Yx/9KSoSCdFWnB65d728f1b2I4RhZHHUKPzbn5+OLWnuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751064335; c=relaxed/simple;
-	bh=9W7/iaW86HFburFCXdjcAjYgjpQfkNR4cnVMBwhKBR4=;
+	s=arc-20240116; t=1751064336; c=relaxed/simple;
+	bh=8fXFkUR+Lc1tk8kOkE5sv9OnxPn8iF8vc0Fe038bZOo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S7hwKX0U40TZn7vPSPeoEAUdxAQx8yC8Pl7oBJnuUeyY+iqXFJON5JsLL0li4cB+CG1/U3czTsIJUFh+5zegXcip+dSrx0Rt5oTWdeLAEQrv+WIaLrDbtfKYEZlwrOGv8orFpl9hY+4x1fHRYBeyjB2LGSxBI2vyZuDYBKN1ITA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=g8ZQroC0; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=ZpkDhyhuXlPFkva4Z1ov9X4ZVKUZkAwSZHmaUGEOLUV8GULKsVpm3qDid/CWsSK+X+RtT6okrCyHv8kwor6YsZRJQCkAs6GaE8Aya50ySol0vGFXYvAF+cnK7BYm0E86z/9Rpmi/MGWTRocmGInMc0LfnPO4xfWN6dfVC8/Z+/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=J46u7wYK; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="g8ZQroC0"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B7A6043AD7;
-	Fri, 27 Jun 2025 22:45:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="J46u7wYK"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 93F7E43AD1;
+	Fri, 27 Jun 2025 22:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751064331;
+	t=1751064327;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JC2W+b237xoo6DgglhCGfd6HW4qgBDoN3fLXVYlTXUk=;
-	b=g8ZQroC0sJskZFfokmdn13xyxEcnlXLngBCWcCSU7hPERAjFAYcKSuQTidIKkO0STy8UxP
-	hz6sA9giTbPwBysKU4t1cT7c2070yjPBeH2i3IHk07p40eok2ZHLCFVZnx0aEZ+QCbVrUB
-	ztBYlPNbpEcyVtMivOOk2XkPOWwA2ftAldVDDcerkhxz1kLWOGFN91FLTwYZq9oVPMjuA7
-	ovMV3ANzg2lGskOV0u16LWb0ZjNA6uz+hJ0nazZ8l3QNFGgUkLX4P26vPcqVpIvSkhrttM
-	agFN8jSxjYEHGrysT6dXpdWW6aW2yCjCR/QG0Jmaml0nDLqHbdnivUoaqTMJ7w==
+	bh=r6olnAzZt8q6c0vxZagmakWT4mAYlJndaPLBUR1ASfw=;
+	b=J46u7wYK4Vl2PcHvHzWC0cCC/YhuvtsmgZmX+XIUz3NWVY7kzrpXPcdcS5O80cx6J+XYk9
+	aXKLQhjh9v57BAHHanSSV0fLtbffW4VaKls4uT6sKrcP7WTUw+Y89gMHr+toa3j2pSn8b7
+	0fOQqOpG7KFJebFzVcUAUireUkd4voh8b8SBhLMqHpJ3HjlU7N0xb7U63wyr3di7JvOAD1
+	QrbqYYBq4acsHWEm/aAovKRXSyFG9Ro6J3ilfEQIdiCwprOmTanTBRJ0KNCGV+6UuUB/Xv
+	hXao/MpTuHU76aYlwTp+xUofHjafB6rXHEy0IzKGfBr4fuBLZriq0ISyIdnb2g==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Sat, 28 Jun 2025 00:45:22 +0200
-Subject: [PATCH v6 8/8] drm/vkms: Add P01* formats
+Date: Sat, 28 Jun 2025 00:45:18 +0200
+Subject: [PATCH v6 4/8] drm/vkms: Add support for RGB565 formats
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250628-b4-new-color-formats-v6-8-2125b193f91a@bootlin.com>
+Message-Id: <20250628-b4-new-color-formats-v6-4-2125b193f91a@bootlin.com>
 References: <20250628-b4-new-color-formats-v6-0-2125b193f91a@bootlin.com>
 In-Reply-To: <20250628-b4-new-color-formats-v6-0-2125b193f91a@bootlin.com>
 To: Melissa Wen <melissa.srw@gmail.com>, 
@@ -59,81 +59,89 @@ Cc: dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net,
  Louis Chauvet <louis.chauvet@bootlin.com>, 
  =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1932;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2212;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=9W7/iaW86HFburFCXdjcAjYgjpQfkNR4cnVMBwhKBR4=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBoXx8ASneTv5auJPNUXb+WyQXhsb/KuoWjx+SNa
- ak5RZIs4DyJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCaF8fAAAKCRAgrS7GWxAs
- 4rCcEACLT2A0W+anJzi4C/jV6CflL1x80qiL7AeBH7lbyY6XyR9fO8kOKmzGK9Q41/UVYZK/WUK
- dr1IQewyC5I11iLzrx/Ee136EPNTim3ASf9GbNY6f/eGfi6q5Rj5fl/dua6Q+xbAnOU1QqX5Rkn
- EyLWZSqArYzKSpWHDZU259ck5h8D2QU6GeRwNoSxC6cPyH/Ad58XTXcGTRprx0zk0eVO6uxfI3X
- OWMIa9Ij01OEsqMJ784tm9e1K/9p4NAEg6fNOCgcr0oRJ2/RdWW+ZJoEcKGGvXeiI4v8c8Cruqj
- Umk70JFQ4FCyzM7UGrQ9KzxL1eP4JKXnbs2qvi6vpbmc8kJUwzCydwwMp0Nww2xEzS1pMOJ4Ei3
- HB0nYiC5j9PahjkpsbaDxT/j+OsQlPz44Shbg7SXplDspKOdprzqU4Ym3t61rcQPgxNBASaiszw
- 4PpzkMb79S+aorhKHuiZbOTWk+QHL8KGS5V3F9eZCZRjS2ogFCFbH/koXkk4M4GZyKyqzUND39D
- 8xLjtQWrze/dInBVxlgQODZAOS0512dTs6nIX0G2y/BsQ98c9e6f5K/csQ468zrwENvyMVqTlrp
- k5b8q/m0fr6NPRvukFxhUhkb6PosvTYfiMU1SLcLoWWO/hK9P+wNfx3HFMHmDEstmTf1ghjDIo3
- kX9fLfy3PDDZ15Q==
+ bh=8fXFkUR+Lc1tk8kOkE5sv9OnxPn8iF8vc0Fe038bZOo=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBoXx7+Vp0DEtcojbuRQ+582DKFQG86Majspcest
+ 4vRhmCJkPeJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCaF8e/gAKCRAgrS7GWxAs
+ 4rH8EACTq4153DOHmuOMaU5gA+Vyt8/hknD1vxQInQZd5cXqSfv1YlVWstjecHj890Psfq7HjPG
+ 8gApxsEn0qDhg3EiGZhiR5DlGSKoXWNj8/zPbEmf8D3yCkkB9qLumC1IK+hp0GMXkauXZcWhATK
+ To/E1VYoCy5hnFxnpCA7E+jjrbybGkpBX1v3B+vWuiEKBasLjAyQ0V00xCyQRlV96IodOl2JIMQ
+ X/Xxf9UHJaEOWM4vNxeqbLQv+9mbhTuv1g28aTGODCUB3ovsVtCSheGqrQ0SiiAXk2t7aKYPZTq
+ 9U6Rsb6aoUxZ0ZuaKisWZcOkE2M8XzV1ERGsMtijQQd6W8+km9I7FvfteOq8Cnvl81bfPXxGEtl
+ oui3PFzBAPN/kKSbl9eDi/9tsL+rTSC1NjKmth1/EjL/kJv0x2tktokqPkLeFUejdlt+eXu38h/
+ mYV1dZ/AMz35ghn2qciOH0tPU2I2cyDjfLShkoWihi3zBwOwSureY7jxnkAKVb9AgkVPncGoaKD
+ QREVWsCbyt3iyMUKUT7m5ilqXLEOuo7pUP5oTXM9+bIB1rHzHteCyzz3eWqaAncoQBHWeEGFQU9
+ qyWcfq7BF4RlegL6I6uBXsCy7G01QsaQZciHerdCvNajSdkHw6mHP2tZff85RyXG/mcQJ/CQemR
+ PyXYar8zOJ7zVHQ==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegvdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredtjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtieevieduhedttdfgtefhuddufeffudetkeegveeuteduveehheeivedttddtkeenucfkphepvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehnecuvehluhhsthgvrhfuihiivgepheenucfrrghrrghmpehinhgvthepvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehpdhhvghloheplgduledvrdduieekrddurddvjegnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddtpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgvrghnphgruhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehjvghrvghmihgvrdgurghuthhhvghrihgsvghssegsohhothhlihhnrdgtohhmpdhrtghpt
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegvdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredtjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtieevieduhedttdfgtefhuddufeffudetkeegveeuteduveehheeivedttddtkeenucfkphepvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehpdhhvghloheplgduledvrdduieekrddurddvjegnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddtpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgvrghnphgruhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehjvghrvghmihgvrdgurghuthhhvghrihgsvghssegsohhothhlihhnrdgtohhmpdhrtghpt
  hhtohepshhiqhhuvghirhgrsehighgrlhhirgdrtghomhdprhgtphhtthhopehsihhmohhnrgdrvhgvthhtvghrsehffhiflhhlrdgthhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtohephhgrmhhohhgrmhhmvggurdhsrgesghhmrghilhdrtghomhdprhgtphhtthhopegrrhhthhhurhhgrhhilhhlohesrhhishgvuhhprdhnvght
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-The formats NV 12/16/24/21/61/42 were already supported.
-Add support for:
-- P010
-- P012
-- P016
+The format RGB565 was already supported. Add the support for:
+- BGR565
 
 Reviewed-by: Maíra Canal <mcanal@igalia.com>
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- drivers/gpu/drm/vkms/vkms_formats.c | 7 ++++++-
- drivers/gpu/drm/vkms/vkms_plane.c   | 3 +++
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vkms/vkms_formats.c | 13 +++++++++++++
+ drivers/gpu/drm/vkms/vkms_plane.c   |  1 +
+ 2 files changed, 14 insertions(+)
 
 diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-index b18d67436e1d..e540218fdcad 100644
+index 44547f56e4b2..c4c623472e04 100644
 --- a/drivers/gpu/drm/vkms/vkms_formats.c
 +++ b/drivers/gpu/drm/vkms/vkms_formats.c
-@@ -522,7 +522,8 @@ static void function_name(const struct vkms_plane_state *plane, int x_start,			\
+@@ -259,6 +259,16 @@ static struct pixel_argb_u16 argb_u16_from_grayu16(u16 gray)
+ 	return argb_u16_from_u16161616(0xFFFF, gray, gray, gray);
+ }
  
- READ_LINE_YUV_SEMIPLANAR(YUV888_semiplanar_read_line, y, uv, u8, u8, argb_u16_from_yuv161616,
- 			 y[0] * 257, uv[0] * 257, uv[1] * 257)
--
-+READ_LINE_YUV_SEMIPLANAR(YUV161616_semiplanar_read_line, y, uv, u16, u16, argb_u16_from_yuv161616,
-+			 y[0], uv[0], uv[1])
- /*
-  * This callback can be used for YUV format where each color component is
-  * stored in a different plane (often called planar formats). It will
-@@ -719,6 +720,10 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
- 	case DRM_FORMAT_NV61:
- 	case DRM_FORMAT_NV42:
- 		return &YUV888_semiplanar_read_line;
-+	case DRM_FORMAT_P010:
-+	case DRM_FORMAT_P012:
-+	case DRM_FORMAT_P016:
-+		return &YUV161616_semiplanar_read_line;
- 	case DRM_FORMAT_YUV420:
- 	case DRM_FORMAT_YUV422:
- 	case DRM_FORMAT_YUV444:
++static struct pixel_argb_u16 argb_u16_from_BGR565(const __le16 *pixel)
++{
++	struct pixel_argb_u16 out_pixel;
++
++	out_pixel = argb_u16_from_RGB565(pixel);
++	swap(out_pixel.r, out_pixel.b);
++
++	return out_pixel;
++}
++
+ VISIBLE_IF_KUNIT struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 channel_1, u8 channel_2,
+ 							    const struct conversion_matrix *matrix)
+ {
+@@ -445,6 +455,7 @@ READ_LINE_le16161616(XRGB16161616_read_line, px, cpu_to_le16(0xFFFF), px[2], px[
+ READ_LINE_le16161616(XBGR16161616_read_line, px, cpu_to_le16(0xFFFF), px[0], px[1], px[2])
+ 
+ READ_LINE(RGB565_read_line, px, __le16, argb_u16_from_RGB565, px)
++READ_LINE(BGR565_read_line, px, __le16, argb_u16_from_BGR565, px)
+ 
+ READ_LINE(R8_read_line, px, u8, argb_u16_from_gray8, *px)
+ 
+@@ -669,6 +680,8 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
+ 		return &XBGR16161616_read_line;
+ 	case DRM_FORMAT_RGB565:
+ 		return &RGB565_read_line;
++	case DRM_FORMAT_BGR565:
++		return &BGR565_read_line;
+ 	case DRM_FORMAT_NV12:
+ 	case DRM_FORMAT_NV16:
+ 	case DRM_FORMAT_NV24:
 diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-index 9f34f3a18d8c..e592e47a5736 100644
+index d4c51b4486f7..6e7597ab935d 100644
 --- a/drivers/gpu/drm/vkms/vkms_plane.c
 +++ b/drivers/gpu/drm/vkms/vkms_plane.c
-@@ -39,6 +39,9 @@ static const u32 vkms_formats[] = {
- 	DRM_FORMAT_YVU420,
- 	DRM_FORMAT_YVU422,
- 	DRM_FORMAT_YVU444,
-+	DRM_FORMAT_P010,
-+	DRM_FORMAT_P012,
-+	DRM_FORMAT_P016,
- 	DRM_FORMAT_R1,
- 	DRM_FORMAT_R2,
- 	DRM_FORMAT_R4,
+@@ -24,6 +24,7 @@ static const u32 vkms_formats[] = {
+ 	DRM_FORMAT_ARGB16161616,
+ 	DRM_FORMAT_ABGR16161616,
+ 	DRM_FORMAT_RGB565,
++	DRM_FORMAT_BGR565,
+ 	DRM_FORMAT_NV12,
+ 	DRM_FORMAT_NV16,
+ 	DRM_FORMAT_NV24,
 
 -- 
 2.49.0
