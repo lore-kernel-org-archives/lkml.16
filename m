@@ -1,112 +1,75 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7CBDF59;
-	Fri, 27 Jun 2025 00:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0109B28371;
+	Fri, 27 Jun 2025 00:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750982666; cv=none; b=AH4KI26R55znIRENd4xuOWywc92HiBpapk0RKjhWUyiwIZUMdRKiV0AWqCwgRbvJwJdqNt5BMAtScuCHBi85NVGEugCiNkyXHWOnrIv8MkpAibpvqEkWCbuWD2MD0GxSKsYMN8F8yj0hH1JrO6vx4idQyXoBkzSH3TGVxPhvQt4=
+	t=1750982746; cv=none; b=ZCyIf2xNq/jTHARleWM0Lg7weuppuLgGNy1Rqa7aL7l6K9yMvS1/v7NDmMQ5KAGNEksvwEcI0RpP2gzkeb735olSQNFUP9khecMgQP7TxAJuK57Hxh6e70wUb34P8GAesCkOeWKXqYqAFofxB3bzlS+GQY0AvlFIHQz5tURRDYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750982666; c=relaxed/simple;
-	bh=MMnGvwviEVFlUvuSc5IrOYIGoVikK7rLR8ZR2R2Vb74=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lx6VKOlUf1xG8eCJJqqC8H9n8dX+f+iKn5nN352xUkI7JgDo24nVDkAvYEUEO+MiVCSqwyuXNDfyEdBMXfIY3+e0x5hPUG9DtQ6ToAgl1dC5WTwa5WDDG7Ekrv3M46kicvW0cHi67zSaS+H4j9tD1mPrZdzK/DxJTxeboKImh+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YY1x5GFc; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750982746; c=relaxed/simple;
+	bh=Ck+DzOXAxdqOO+jxI+vUNr8Y2kNlJLXxkINzJ1YAIWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H9/2cBVubaBH1YTiIkbF2oJH2pRdvQj6rcO/rqo5hA8z1DcEz6G8E1B7mRHSHWU0yfp7+qebnsyKjc5SrjjtYgjWqKsOkmGWRC+xcbKgPfMlA+EWbG5OI2RlB8GlZEAFoKrWxGGMKksLvlpFcO3QXMR4AbP4x1fEbqG1PipRa0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXOOh3NA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YY1x5GFc"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-236470b2dceso17908285ad.0;
-        Thu, 26 Jun 2025 17:04:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750982664; x=1751587464; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MMnGvwviEVFlUvuSc5IrOYIGoVikK7rLR8ZR2R2Vb74=;
-        b=YY1x5GFc9sOdDUcj7fllnIRRt11uSZx/pdaycwO8UNq70joxNoda+99Hphz08jMIEq
-         w65DiQfjFYsIF40SDOV0aJ+j5aTZLBQs/2KQPShWd88Vc0wK6c7jCVvHgF60tXW4aWF8
-         U89WCVOmq/wCqIfaFKmJ8+vV/mLbj92prnuNpsHgy1sVJCyp7WCHbiqwE6objMCIKwzw
-         9LWJe/MvC1yc3c4EJd7yfvBQAFH4KE5hq+txnil7Ca/2iiRRm+PBxsEFnu+H1uP7RjjL
-         oX7AzkSCgeY8GbydUfH7LAMgYcP8PSLxtgjYmGhcdQft0cSvmxf9Blvc6Ww1BazunKBR
-         O9Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750982664; x=1751587464;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MMnGvwviEVFlUvuSc5IrOYIGoVikK7rLR8ZR2R2Vb74=;
-        b=tXfAtR7K4fmW1Uz3YzKS/oaVxg8EG/OBaWIy63jSoUCC7ePcN5hmnim8RCg9mPRBP1
-         E3C31rZW0hdhOIPVmwT2xWvIWSCoeqavH/9Q7BSx00wozIrkY4N0YFnPRNyXWXtZ1TFg
-         iO+GLWw1/Cf0ZKWk6JzELpZV4w54XgtdSvlMbdxzXqjiX6xibVppbAIZHySTksm/PoFa
-         0FYdMe5nyi/xbqttdLZx2JB1JyxqNl6Bi1XLSIYskN0OtIIyiA/XJT0ZHwhgJIZ8JCFC
-         JAOA3QSxBHdUT7lWVXBpM6y3S8p5NXxW1LmgyvDJ90SKpx9ipxHBtoQGSS0f2g1rVibZ
-         c6tA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiUMV14Lrjc7ZHj8E0s7wPRgluR+Utf69bTUNlIklDutkW1mJ3ItOyZntlEr+r/12xcIZzA9gdnI/TGI1i@vger.kernel.org, AJvYcCWAb8jkwprQIbsm8doQg1BKjqXcX+awHVizVqLd43pb+cbgWYmT6HnObe35blE+1QnH/DfrtdKnYkaPLA==@vger.kernel.org, AJvYcCXCEmbeYbcf69qtfiLzYIsUuYySxWgqRPdj51eXkodzkbbNwzB54qci7EbB5GbGaebnIMCeKixhkpoI@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYjoJNH/jLvVKTcLnx00GlWjJH/D62PTV1STDAZg2ojXlChI6p
-	O7YZFs9GRHloJXTLCzgYzPHIt3WGM1NACJwEAYflqeWLhE8OkZVJDp9mOq32va7+flAxR7GhEPY
-	h2CPoRf248pbWz1E1I+v3nRnKupy2ztM=
-X-Gm-Gg: ASbGncuw0wboDWWVb6oXSvQR5QTlvohmktvcjCAZnbt6mdD7Kad0acL4xzSi0Q8va5Z
-	SeFlPTl1Fa3YYIspIlqSnMVDR8xXe8RQno8l4B3hylah8sUQpu7f2vIurieP1m1/Rb0ijyU0kMG
-	eQxd2Xc8LWSRauC1lGO3TvQv0N2joXXp8Swvb8MvTZ13Ys
-X-Google-Smtp-Source: AGHT+IFlddWDto7V2+jazoypW+F1vj2BX8bxx8BPpRAZpczzJKylaofzMNivlk1qo7wzFt/Q3vzyNmQWz/UqPI/9Bpo=
-X-Received: by 2002:a17:903:f8d:b0:234:a734:4ab1 with SMTP id
- d9443c01a7336-23ac2d86971mr13866665ad.3.1750982663585; Thu, 26 Jun 2025
- 17:04:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXOOh3NA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCEC7C4CEEB;
+	Fri, 27 Jun 2025 00:05:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750982745;
+	bh=Ck+DzOXAxdqOO+jxI+vUNr8Y2kNlJLXxkINzJ1YAIWw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GXOOh3NA9gmywj39wIs+aigKeNMeViNksWSk/5y28zohFx5WMCY1eLtcSzpdzXU87
+	 VX3w9Xk1/v3Oyt/q4VsNpOGuxQYZYFkaBuDSV+pQcMu0oOwVZZAAl0H/Jx2/hp78+Q
+	 4G7cybaPKiRznAIICJW+8KA38s8MPCywWbABM/BgXMHHikQ0I8mg+H0p0RiRLuo2ch
+	 vm7SeUCxCVzi61OIuPKt7oBnydhcGEx7lDXQ7GsmwPy04yjNnlv2NWJZtgeUNFjqCo
+	 cPSSlOVHksN5Kiqwb/wa/AXUQPbIzka2jCmLDz48p7Nl4hz3cr5m2s4BWC7P3rbHV1
+	 4alWUEk09msug==
+Date: Thu, 26 Jun 2025 17:05:43 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: krzk+dt@kernel.org, conor+dt@kernel.org, Matthew Gerlach
+ <matthew.gerlach@altera.com>, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, maxime.chevallier@bootlin.com,
+ mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+ richardcochran@gmail.com, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, Mun Yew Tham
+ <mun.yew.tham@altera.com>
+Subject: Re: [PATCH v6] dt-bindings: net: Convert socfpga-dwmac bindings to
+ yaml
+Message-ID: <20250626170543.6696868d@kernel.org>
+In-Reply-To: <20250626234119.GA1398428-robh@kernel.org>
+References: <20250613225844.43148-1-matthew.gerlach@altera.com>
+	<20250623111913.1b387b90@kernel.org>
+	<20250626234119.GA1398428-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620-bbg-v5-0-84f9b9a2e3a8@bootlin.com> <e49a3fff-8a50-44aa-aa0c-1ba1bf478eb6@ti.com>
-In-Reply-To: <e49a3fff-8a50-44aa-aa0c-1ba1bf478eb6@ti.com>
-From: Robert Nelson <robertcnelson@gmail.com>
-Date: Thu, 26 Jun 2025 19:03:56 -0500
-X-Gm-Features: Ac12FXzvGaKZfG4TDGgxvXq8kIRn9_pX2bPdP2HIh9V69ipXrdVK7EmoJJX0lj8
-Message-ID: <CAOCHtYgNfnAK43GBTdN675dFSHrbTJfy_2GbRE88E-0keoChrg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/5] Add support for BeagleBone Green Eco board
-To: Judith Mendez <jm@ti.com>
-Cc: Kory Maincent <kory.maincent@bootlin.com>, Tony Lindgren <tony@atomide.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas Kemnade <andreas@kemnade.info>, 
-	Kevin Hilman <khilman@baylibre.com>, Roger Quadros <rogerq@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Paul Barker <paul.barker@sancloud.com>, 
-	Marc Murphy <marc.murphy@sancloud.com>, Jason Kridner <jkridner@gmail.com>, Andrew Davis <afd@ti.com>, 
-	Bajjuri Praneeth <praneeth@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-omap@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Romain Gantois <romain.gantois@bootlin.com>, 
-	Conor Dooley <conor.dooley@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 6:23=E2=80=AFPM Judith Mendez <jm@ti.com> wrote:
->
-> Hi Kory,
->
-> On 6/20/25 3:15 AM, Kory Maincent wrote:
-> > SeeedStudio BeagleBone Green Eco (BBGE) is a clone of the BeagleBone Gr=
-een
-> > (BBG). It has minor differences from the BBG, such as a different PMIC,
-> > a different Ethernet PHY, and a larger eMMC.
->
-> Thanks for the patches.
-> I was testing against next and noticed a kernel paging request error:
-> https://gist.github.com/jmenti/d861528f98035b07259c29e76e5fae8b
->
-> Did you see this by chance?
->
-> I will double check that I tested correctly and come back, but was just
-> curious to see if this is expected.
+On Thu, 26 Jun 2025 18:41:19 -0500 Rob Herring wrote:
+> No need to ping us. Like netdev, you can check the PW queue:
+>=20
+> https://patchwork.ozlabs.org/project/devicetree-bindings/list/
 
-The tps65219-regulator.c has a bug, make sure with this board you also
-have: https://patchew.org/linux/20250620154541.2713036-1-s-ramamoorthy@ti.c=
-om/
+Thanks, noted!
 
-Regards,
+> In any case, we're a bit behind ATM.
+>=20
+>=20
+> It looks like we have 2 competing conversions of this binding. This one=20
+> and this one which I reviewed:
+>=20
+> https://lore.kernel.org/all/20250624191549.474686-1-dinguyen@kernel.org/
+>=20
+> Looks like there are some differences which need resolving, so I revoke=20
+> my review. Will follow-up separately on both.
 
---=20
-Robert Nelson
-https://rcn-ee.com/
+=F0=9F=91=8D=EF=B8=8F
