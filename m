@@ -1,485 +1,159 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8C2262D14;
-	Fri, 27 Jun 2025 23:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58980262D14
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 23:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751065803; cv=none; b=I1X2SSXd2kXJ3kNtceKVSqIFLa8gqiUkW74X+xI0T7PnUvT+cc4K6tY5YUpZiiNXa/sSGkzXVXAKTars45Y6X4vXBhSD8K5QP1cVQdBdkPBLpFeEHhArzafcRCRUn6G3lYQQfYpID3CkOnrOJmgaUP8NL5ytiXlX4DBh2lXvBUE=
+	t=1751065855; cv=none; b=ppHdrJRsmqVP0CPyHzzjOhEbO8FUCg/p8/ZqOTMQGD4NqvDUsn5WFauBU/ICN2p2FZ/bfwXJf3b8g4fs8gT4reN7onKty/A/ZtLycos0nB+mtN+t+4f9KkqtS3/MNCjxtfTewvdslL8XJfDTTJI6+dNRxbcJHm6Tb4Ti1BstR4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751065803; c=relaxed/simple;
-	bh=a5qV1ZzUtuWYcwKNjY1yORTn+Gc7HyPk6JoXVBM3RQM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mofHwIOiuO/TfF3ZhMHeB5FiQTFhF8nti5XSCPADXR3msT+hZWaRAoys5VwyBACmA6gee3OWnnb7jasF2FogBV7y2WnCK3FWBNNhGg+MICt4fZNkOm8MWmBAwvP8/Ey2bs/gqpjy3HjLR/spQn4RsJxRqSsi5+wf8uVlLHeLJnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=QDkQ10nz; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1751065855; c=relaxed/simple;
+	bh=LpFM7L8AHpBWBjCFaSLD4sn+R7RxcGe4IQ2vW+3wuN4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=m8p678yUTOMMNoSjNOjPFat2pyLcSAS5ln9/rmidwagq4iIpT829P/+YPpzXmCOIutzJ9Fu6wmCRQuiBzoVHadhVlZUCf06sKynBkUYKcX3neSw47B7uTOK8qM+BZB1us/K41nT4Unwno2d6r4iqVJ+7Z9GnoefB07PnlFO/h58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KzNpiuSk; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="QDkQ10nz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1751065798; x=1751670598; i=w_armin@gmx.de;
-	bh=AT7x4FmskyQoSj0E9z7aFB2LxqvJFTIPMIPqwc9K1HM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=QDkQ10nzJ4mf6uNC8kOnSVoJK2Gd7SAp/A2u2dyqhlE4+sFCE49mSVsoiLU3RMWS
-	 HUETkyz6veLMFRb/6f+/o9yiICm4QQQRh5hv9tFLQWJOa0E9NQY3jR4NozbMpp4RC
-	 VAs02yNro3IpY1QvbA+xjUD/i+fiuLbLvX9GJ1iPWcn/ToZMc8/RgJqTGorHsIixv
-	 bW1rMJz2Bpszs7mbpsB56Ks4Ayzz73J7DUM/xXkyTWV+2FkqcOiov+7fELsQv66Zv
-	 qzmR8zz55q2TE+4V6GthUgdwSoqIoPDI/3IXehmL/fwZJi67AOzUpX6nX67Oe0uAz
-	 IbTr6dfM+sPQ8lqObQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MG9kM-1uWNc91nhM-00F3Eq; Sat, 28
- Jun 2025 01:09:58 +0200
-Message-ID: <7b29df39-8146-4913-83ff-d71db26983c8@gmx.de>
-Date: Sat, 28 Jun 2025 01:09:52 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KzNpiuSk"
+Message-ID: <1109aeb9-1e64-4052-b733-dd4af62019b7@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751065849;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CPCe6Tcr4w/qutC4mIds2r6y/+g1SeYgO+CKCZrb6HI=;
+	b=KzNpiuSkfJh9cXqTtNOrAOURSzChir6c4+hxtQ97bnMQ2NTE8GIh8Bnp+eO+Bkg/4WD/u4
+	REZ1O8HQajiCJFp6N9t82et7zg1aYCA35h/SSy/A2E3xK1oMeKuIKWre0rtUNF//15UUHS
+	xio1pyFelznABzT7yurv3hSyxf4SbG8=
+Date: Fri, 27 Jun 2025 16:10:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/3] platform/x86: Add Uniwill laptop driver
-To: =?UTF-8?Q?P=C5=91cze_Barnab=C3=A1s?= <pobrn@protonmail.com>,
- ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com, chumuzero@gmail.com,
- corbet@lwn.net, cs@tuxedo.de, wse@tuxedocomputers.com,
- ggo@tuxedocomputers.com
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20250615175957.9781-1-W_Armin@gmx.de>
- <20250615175957.9781-3-W_Armin@gmx.de>
- <1b79a3c3-c493-471b-aa37-92458b356e8d@protonmail.com>
- <7b0243fd-15c6-42da-8570-9ad9cd5163af@gmx.de>
- <7a58972f-5256-4598-b729-224f20f3ecd2@protonmail.com>
+Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
+To: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>,
+ linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <685f030b.a00a0220.3efde.0002.GAE@google.com>
 Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <7a58972f-5256-4598-b729-224f20f3ecd2@protonmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Yanjun.Zhu" <yanjun.zhu@linux.dev>
+In-Reply-To: <685f030b.a00a0220.3efde.0002.GAE@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:s1ijSSP8GwLOpCwObGsCPumlbY7+MfPIOQIc6aCsPh2SLoPMIdc
- ZcDdin0UornAL+IAXIoF3jwc+xdVTHa5h6zmEsKxCmYPtDIjX27ifx3BfSiH1+qFFIEZPCe
- zDhZLtISp8UH9/q6wtNMqtzEKuRKA+fp3gyteqLOI8U6YCB2eU0Nkb8/Z0pJyCH3QhnpNXv
- 0Tb0f3NfwAj35u90r5hsQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:cSeFMgmOx08=;X4UuRTgdGgiv/7LDsnpjBT8U8Bj
- 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
- IQ==
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Am 25.06.25 um 17:59 schrieb P=C5=91cze Barnab=C3=A1s:
+#syz test: https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
 
-> Hi
+On 6/27/25 1:46 PM, syzbot wrote:
+> Hello,
 >
-> 2025. 06. 23. 0:36 keltez=C3=A9ssel, Armin Wolf =C3=ADrta:
->> Am 22.06.25 um 23:37 schrieb P=C5=91cze Barnab=C3=A1s:
->>
->>> Hi
->>>
->>>
->>> 2025. 06. 15. 19:59 keltez=C3=A9ssel, Armin Wolf =C3=ADrta:
->>>> Add a new driver for Uniwill laptops. The driver uses a ACPI WMI
->>>> interface to talk with the embedded controller, but relies on a
->>>> DMI whitelist for autoloading since Uniwill just copied the WMI
->>>> GUID from the Windows driver example.
->>>>
->>>> The driver is reverse-engineered based on the following information:
->>>> - OEM software from intel
->>>> - https://github.com/pobrn/qc71_laptop
->>> Oh... I suppose an end of an era for me...
->> I now remember that we interacted on the mailing lists before, sorry fo=
-r not CCing
->> you on this patch series.
->>
->> Do you want a Co-developed-by tag on those patches?
-> I'll leave it up to you.
+> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+> general protection fault in rxe_skb_tx_dtor
 >
->
->>>> - https://github.com/tuxedocomputers/tuxedo-drivers
->>>> - https://github.com/tuxedocomputers/tuxedo-control-center
->>>>
->>>> The underlying EC supports various features, including hwmon sensors,
->>>> battery charge limiting, a RGB lightbar and keyboard-related controls=
-.
->>>>
->>>> Reported-by: cyear <chumuzero@gmail.com>
->>>> Closes: https://github.com/lm-sensors/lm-sensors/issues/508
->>>> Closes: https://github.com/Wer-Wolf/uniwill-laptop/issues/3
->>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->>>> ---
->>>>      .../ABI/testing/sysfs-driver-uniwill-laptop   |   53 +
->>>>      Documentation/wmi/devices/uniwill-laptop.rst  |  109 ++
->>>>      MAINTAINERS                                   |    8 +
->>>>      drivers/platform/x86/uniwill/Kconfig          |   17 +
->>>>      drivers/platform/x86/uniwill/Makefile         |    1 +
->>>>      drivers/platform/x86/uniwill/uniwill-laptop.c | 1477 +++++++++++=
-++++++
->>>>      drivers/platform/x86/uniwill/uniwill-wmi.c    |    3 +-
->>>>      7 files changed, 1667 insertions(+), 1 deletion(-)
->>>>      create mode 100644 Documentation/ABI/testing/sysfs-driver-uniwil=
-l-laptop
->>>>      create mode 100644 Documentation/wmi/devices/uniwill-laptop.rst
->>>>      create mode 100644 drivers/platform/x86/uniwill/uniwill-laptop.c
->>>>
->> [...]
->>>> +
->>>> +static const unsigned int uniwill_led_channel_to_bat_reg[LED_CHANNEL=
-S] =3D {
->>>> +	EC_ADDR_LIGHTBAR_BAT_RED,
->>>> +	EC_ADDR_LIGHTBAR_BAT_GREEN,
->>>> +	EC_ADDR_LIGHTBAR_BAT_BLUE,
->>>> +};
->>>> +
->>>> +static const unsigned int uniwill_led_channel_to_ac_reg[LED_CHANNELS=
-] =3D {
->>>> +	EC_ADDR_LIGHTBAR_AC_RED,
->>>> +	EC_ADDR_LIGHTBAR_AC_GREEN,
->>>> +	EC_ADDR_LIGHTBAR_AC_BLUE,
->>>> +};
->>>> +
->>>> +static int uniwill_led_brightness_set(struct led_classdev *led_cdev,=
- enum led_brightness brightness)
->>>> +{
->>>> +	struct led_classdev_mc *led_mc_cdev =3D lcdev_to_mccdev(led_cdev);
->>>> +	struct uniwill_data *data =3D container_of(led_mc_cdev, struct uniw=
-ill_data, led_mc_cdev);
->>>> +	unsigned int value;
->>>> +	int ret;
->>>> +
->>>> +	ret =3D led_mc_calc_color_components(led_mc_cdev, brightness);
->>>> +	if (ret < 0)
->>>> +		return ret;
->>>> +
->>>> +	for (int i =3D 0; i < LED_CHANNELS; i++) {
->>>> +		/* Prevent the brightness values from overflowing */
->>>> +		value =3D min(LED_MAX_BRIGHTNESS, data->led_mc_subled_info[i].brig=
-htness);
->>>> +		ret =3D regmap_write(data->regmap, uniwill_led_channel_to_ac_reg[i=
-], value);
->>> This is interesting. I am not sure which "control center" application =
-you have looked at,
->>> but I found many lookup tables based on the exact model, etc. For exam=
-ple, on my laptop
->>> any value larger than 36 will simply turn that color component off. Ha=
-ve you seen
->>> anything like that?
->> I was using the Intel NUC studio software application during reverse-en=
-gineering and had a user
->> test the resulting code on a Intel NUC notebook. AFAIK the OEM software=
- did not use a lookup table.
->>
->> If we extend this driver in the future then we might indeed use the qui=
-rk system to change the max.
->> LED brightness depending on the model.
-> I see. So everything up to 200 works. And after that do you know if it t=
-urns off or what happens?
-
-The user who tested the driver reported that "the brightest lightbar setti=
-ng is 200", so i assume
-that the lightbar simply clamps the values. However i would not trust the =
-EC firmware in the slightest,
-i can definitely imagine that other models react differently.
-
->>>> +		if (ret < 0)
->>>> +			return ret;
->>>> +
->>>> +		ret =3D regmap_write(data->regmap, uniwill_led_channel_to_bat_reg[=
-i], value);
->>>> +		if (ret < 0)
->>>> +			return ret;
->>>> +	}
->>>> +
->>>> +	if (brightness)
->>>> +		value =3D 0;
->>>> +	else
->>>> +		value =3D LIGHTBAR_S0_OFF;
->>>> +
->>>> +	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, =
-LIGHTBAR_S0_OFF, value);
->>>> +	if (ret < 0)
->>>> +		return ret;
->>>> +
->>>> +	return regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_BAT_CTRL, =
-LIGHTBAR_S0_OFF, value);
->>>> +}
->>>> +
->>>> +#define LIGHTBAR_MASK	(LIGHTBAR_APP_EXISTS | LIGHTBAR_S0_OFF | LIGHT=
-BAR_S3_OFF | LIGHTBAR_WELCOME)
->>>> +
->>>> +static int uniwill_led_init(struct uniwill_data *data)
->>>> +{
->>>> +	struct led_init_data init_data =3D {
->>>> +		.devicename =3D DRIVER_NAME,
->>>> +		.default_label =3D "multicolor:" LED_FUNCTION_STATUS,
->>>> +		.devname_mandatory =3D true,
->>>> +	};
->>>> +	unsigned int color_indices[3] =3D {
->>>> +		LED_COLOR_ID_RED,
->>>> +		LED_COLOR_ID_GREEN,
->>>> +		LED_COLOR_ID_BLUE,
->>>> +	};
->>>> +	unsigned int value;
->>>> +	int ret;
->>>> +
->>>> +	if (!(supported_features & UNIWILL_FEATURE_LIGHTBAR))
->>>> +		return 0;
->>>> +
->>>> +	/*
->>>> +	 * The EC has separate lightbar settings for AC and battery mode,
->>>> +	 * so we have to ensure that both settings are the same.
->>>> +	 */
->>>> +	ret =3D regmap_read(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, &value)=
-;
->>>> +	if (ret < 0)
->>>> +		return ret;
->>>> +
->>>> +	value |=3D LIGHTBAR_APP_EXISTS;
->>>> +	ret =3D regmap_write(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, value)=
-;
->>>> +	if (ret < 0)
->>>> +		return ret;
->>>> +
->>>> +	/*
->>>> +	 * The breathing animation during suspend is not supported when
->>>> +	 * running on battery power.
->>>> +	 */
->>>> +	value |=3D LIGHTBAR_S3_OFF;
->>>> +	ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_BAT_CTRL,=
- LIGHTBAR_MASK, value);
->>>> +	if (ret < 0)
->>>> +		return ret;
->>>> +
->>>> +	data->led_mc_cdev.led_cdev.color =3D LED_COLOR_ID_MULTI;
->>>> +	data->led_mc_cdev.led_cdev.max_brightness =3D LED_MAX_BRIGHTNESS;
->>>> +	data->led_mc_cdev.led_cdev.flags =3D LED_REJECT_NAME_CONFLICT;
->>>> +	data->led_mc_cdev.led_cdev.brightness_set_blocking =3D uniwill_led_=
-brightness_set;
->>>> +
->>>> +	if (value & LIGHTBAR_S0_OFF)
->>>> +		data->led_mc_cdev.led_cdev.brightness =3D 0;
->>>> +	else
->>>> +		data->led_mc_cdev.led_cdev.brightness =3D LED_MAX_BRIGHTNESS;
->>>> +
->>>> +	for (int i =3D 0; i < LED_CHANNELS; i++) {
->>>> +		data->led_mc_subled_info[i].color_index =3D color_indices[i];
->>>> +
->>>> +		ret =3D regmap_read(data->regmap, uniwill_led_channel_to_ac_reg[i]=
-, &value);
->>>> +		if (ret < 0)
->>>> +			return ret;
->>>> +
->>>> +		/*
->>>> +		 * Make sure that the initial intensity value is not greater than
->>>> +		 * the maximum brightness.
->>>> +		 */
->>>> +		value =3D min(LED_MAX_BRIGHTNESS, value);
->>>> +		ret =3D regmap_write(data->regmap, uniwill_led_channel_to_ac_reg[i=
-], value);
->>>> +		if (ret < 0)
->>>> +			return ret;
->>>> +
->>>> +		ret =3D regmap_write(data->regmap, uniwill_led_channel_to_bat_reg[=
-i], value);
->>>> +		if (ret < 0)
->>>> +			return ret;
->>>> +
->>>> +		data->led_mc_subled_info[i].intensity =3D value;
->>>> +		data->led_mc_subled_info[i].channel =3D i;
->>>> +	}
->>>> +
->>>> +	data->led_mc_cdev.subled_info =3D data->led_mc_subled_info;
->>>> +	data->led_mc_cdev.num_colors =3D LED_CHANNELS;
->>>> +
->>>> +	return devm_led_classdev_multicolor_register_ext(&data->wdev->dev, =
-&data->led_mc_cdev,
->>>> +							 &init_data);
->>>> +}
->>>> [...]
->>>> +static const enum power_supply_property uniwill_properties[] =3D {
->>>> +	POWER_SUPPLY_PROP_HEALTH,
->>>> +	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD,
->>>> +};
->>>> +
->>>> +static const struct power_supply_ext uniwill_extension =3D {
->>>> +	.name =3D DRIVER_NAME,
->>>> +	.properties =3D uniwill_properties,
->>>> +	.num_properties =3D ARRAY_SIZE(uniwill_properties),
->>>> +	.get_property =3D uniwill_get_property,
->>>> +	.set_property =3D uniwill_set_property,
->>>> +	.property_is_writeable =3D uniwill_property_is_writeable,
->>>> +};
->>>> +
->>>> +static int uniwill_add_battery(struct power_supply *battery, struct =
-acpi_battery_hook *hook)
->>> What is the motivation for supporting multiple batteries?
->>> There is still just a single parameter in the EC/etc.
->> I simply assume that devices using this EC interface will only ever sup=
-port a single battery anyway,
->> as the EC will be unable to handle more than that.
-> I see, I was just wondering if all this code is needed. But I suppose
-> you can't remove much more.
+> Oops: general protection fault, probably for non-canonical address 0xe000bc000000006c: 0000 [#1] SMP KASAN NOPTI
+> KASAN: maybe wild-memory-access in range [0x0006000000000360-0x0006000000000367]
+> CPU: 0 UID: 0 PID: 1039 Comm: kworker/u4:7 Not tainted 6.16.0-rc3-syzkaller-gc0e71fcff378 #0 PREEMPT(full)
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+> Workqueue: rxe_wq do_work
+> RIP: 0010:rxe_skb_tx_dtor+0x78/0x240 drivers/infiniband/sw/rxe/rxe_net.c:364
+> Code: 03 42 80 3c 28 00 74 08 4c 89 f7 e8 72 65 81 f9 4d 8b 36 4d 85 f6 0f 84 c3 00 00 00 4d 8d be 60 03 00 00 4c 89 f8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 77 01 00 00 41 8b 2f 31 ff 89 ee e8 bf
+> RSP: 0018:ffffc900000079e8 EFLAGS: 00010206
+> RAX: 0000c0000000006c RBX: ffff8880122848c0 RCX: ffff8880330a8000
+> RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff8880122848c0
+> RBP: 0000000000000000 R08: ffffffff8fa10ef7 R09: 1ffffffff1f421de
+> R10: dffffc0000000000 R11: ffffffff88a26c60 R12: dffffc0000000000
+> R13: dffffc0000000000 R14: 0006000000000000 R15: 0006000000000360
+> FS:  0000000000000000(0000) GS:ffff88808d250000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007fb0aec28fc8 CR3: 000000004f814000 CR4: 0000000000352ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   <IRQ>
+>   skb_release_head_state+0x101/0x250 net/core/skbuff.c:1139
+>   napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
+>   e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
+>   e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
+>   e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
+>   __napi_poll+0xc7/0x480 net/core/dev.c:7414
+>   napi_poll net/core/dev.c:7478 [inline]
+>   net_rx_action+0x707/0xe30 net/core/dev.c:7605
+>   handle_softirqs+0x286/0x870 kernel/softirq.c:579
+>   do_softirq+0xec/0x180 kernel/softirq.c:480
+>   </IRQ>
+>   <TASK>
+>   __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
+>   local_bh_enable include/linux/bottom_half.h:33 [inline]
+>   __neigh_event_send+0x9b/0x1560 net/core/neighbour.c:1194
+>   neigh_event_send_probe include/net/neighbour.h:463 [inline]
+>   neigh_event_send include/net/neighbour.h:469 [inline]
+>   neigh_resolve_output+0x198/0x750 net/core/neighbour.c:1496
+>   neigh_output include/net/neighbour.h:539 [inline]
+>   ip6_finish_output2+0x11fb/0x16a0 net/ipv6/ip6_output.c:141
+>   __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
+>   ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
+>   rxe_send drivers/infiniband/sw/rxe/rxe_net.c:390 [inline]
+>   rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:449
+>   rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
+>   rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
+>   do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
+>   do_work+0x1b1/0x6c0 drivers/infiniband/sw/rxe/rxe_task.c:187
+>   process_one_work kernel/workqueue.c:3238 [inline]
+>   process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
+>   worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
+>   kthread+0x70e/0x8a0 kernel/kthread.c:464
+>   ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+>   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+>   </TASK>
+> Modules linked in:
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:rxe_skb_tx_dtor+0x78/0x240 drivers/infiniband/sw/rxe/rxe_net.c:364
+> Code: 03 42 80 3c 28 00 74 08 4c 89 f7 e8 72 65 81 f9 4d 8b 36 4d 85 f6 0f 84 c3 00 00 00 4d 8d be 60 03 00 00 4c 89 f8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 77 01 00 00 41 8b 2f 31 ff 89 ee e8 bf
+> RSP: 0018:ffffc900000079e8 EFLAGS: 00010206
+> RAX: 0000c0000000006c RBX: ffff8880122848c0 RCX: ffff8880330a8000
+> RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff8880122848c0
+> RBP: 0000000000000000 R08: ffffffff8fa10ef7 R09: 1ffffffff1f421de
+> R10: dffffc0000000000 R11: ffffffff88a26c60 R12: dffffc0000000000
+> R13: dffffc0000000000 R14: 0006000000000000 R15: 0006000000000360
+> FS:  0000000000000000(0000) GS:ffff88808d250000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007fb0aec28fc8 CR3: 000000004f814000 CR4: 0000000000352ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> ----------------
+> Code disassembly (best guess):
+>     0:	03 42 80             	add    -0x80(%rdx),%eax
+>     3:	3c 28                	cmp    $0x28,%al
+>     5:	00 74 08 4c          	add    %dh,0x4c(%rax,%rcx,1)
+>     9:	89 f7                	mov    %esi,%edi
+>     b:	e8 72 65 81 f9       	call   0xf9816582
+>    10:	4d 8b 36             	mov    (%r14),%r14
+>    13:	4d 85 f6             	test   %r14,%r14
+>    16:	0f 84 c3 00 00 00    	je     0xdf
+>    1c:	4d 8d be 60 03 00 00 	lea    0x360(%r14),%r15
+>    23:	4c 89 f8             	mov    %r15,%rax
+>    26:	48 c1 e8 03          	shr    $0x3,%rax
+> * 2a:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax <-- trapping instruction
+>    2f:	84 c0                	test   %al,%al
+>    31:	0f 85 77 01 00 00    	jne    0x1ae
+>    37:	41 8b 2f             	mov    (%r15),%ebp
+>    3a:	31 ff                	xor    %edi,%edi
+>    3c:	89 ee                	mov    %ebp,%esi
+>    3e:	e8                   	.byte 0xe8
+>    3f:	bf                   	.byte 0xbf
 >
 >
->>>> +{
->>>> +	struct uniwill_data *data =3D container_of(hook, struct uniwill_dat=
-a, hook);
->>>> +	struct uniwill_battery_entry *entry;
->>>> +	int ret;
->>>> +
->>>> +	entry =3D kzalloc(sizeof(*entry), GFP_KERNEL);
->>>> +	if (!entry)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	ret =3D power_supply_register_extension(battery, &uniwill_extension=
-, &data->wdev->dev, data);
->>>> +	if (ret < 0) {
->>>> +		kfree(entry);
->>>> +		return ret;
->>>> +	}
->>>> +
->>>> +	scoped_guard(mutex, &data->battery_lock) {
->>>> +		entry->battery =3D battery;
->>>> +		list_add(&entry->head, &data->batteries);
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +}
->>>> [...]
->>>> +static int uniwill_ec_init(struct uniwill_data *data)
->>>> +{
->>>> +	unsigned int value;
->>>> +	int ret;
->>>> +
->>>> +	ret =3D regmap_read(data->regmap, EC_ADDR_PROJECT_ID, &value);
->>>> +	if (ret < 0)
->>>> +		return ret;
->>>> +
->>>> +	dev_dbg(&data->wdev->dev, "Project ID: %u\n", value);
->>>> +
->>>> +	ret =3D regmap_set_bits(data->regmap, EC_ADDR_AP_OEM, ENABLE_MANUAL=
-_CTRL);
->>> I think this might turn out to be problematic. If this is enabled, the=
-n multiple
->>> things are not handled automatically. For example, keyboard backlight =
-is not handled
->>> and as far as I can see, no `KEY_KBDILLUM{DOWN,UP}` are sent (events 0=
-xb1, 0xb2). The
->>> other thing is the "performance mode" button (event 0xb0). I don't see=
- that these two
->>> things would be handled in the driver.
->> On the intel NUC notebooks the keyboard backlight is controlled by a se=
-parate USB device,
->> so the driver only has to forward the KEY_KBDILLUMTOGGLE event to users=
-pace (the
->> KEY_KBDILLUM{DOWN,UP} events are not supported on those devices). This =
-happens inside the
->> uniwill-wmi driver.
-> An USB HID device controls the keyboard backlight on my laptop as well, =
-but the brightness
-> up/down requests arrive via this WMI mechanism.
-
-Alright, i will add support for those two events as well. Maybe this helps=
- when adding new devices
-to this driver in the future.
-
-Thanks,
-Armin Wolf
-
->> Once we add support for devices where the EC also controls the keyboard=
- backlight i will
->> add support for those events. I am also planning to add support for the=
- performance mode
->> event later. Currently the EC does not change the performance mode itse=
-lf even when in
->> automatic mode (at least on intel NUC notebooks).
-> Interesting, it does on mine...
+> Tested on:
 >
+> commit:         c0e71fcf RDNA/rxe: Fix rxe_skb_tx_dtor problem
+> git tree:       https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13d9708c580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
+> dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
 >
->> Since this driver relies on a DMI whitelist i think that we can safely =
-add support for those
->> feature later when new devices are added to those list.
->>
->>>> +	if (ret < 0)
->>>> +		return ret;
->>>> +
->>>> +	return devm_add_action_or_reset(&data->wdev->dev, uniwill_disable_m=
-anual_control, data);
->>>> +}
->>>> +
->> [...]
->>>> +static int uniwill_suspend_battery(struct uniwill_data *data)
->>>> +{
->>>> +	if (!(supported_features & UNIWILL_FEATURE_BATTERY))
->>>> +		return 0;
->>>> +
->>>> +	/*
->>>> +	 * Save the current charge limit in order to restore it during resu=
-me.
->>>> +	 * We cannot use the regmap code for that since this register needs=
- to
->>>> +	 * be declared as volatile due to CHARGE_CTRL_REACHED.
->>>> +	 */
->>> What is the motivation for this? I found that this is not needed, I fo=
-und that
->>> the value is persistent.
->> The OEM application i reverse-engineered did restore this value after a=
- resume, so
->> i decided to replicate this behavior.
-> I suppose it can't hurt.
->
->
->> [...]
-> Regards,
-> Barnab=C3=A1s P=C5=91cze
->
->
+> Note: no patches were applied.
