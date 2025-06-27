@@ -1,314 +1,175 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011027.outbound.protection.outlook.com [40.107.130.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290502F1FC4;
-	Fri, 27 Jun 2025 02:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750989820; cv=none; b=I3/VZ53R44pTJbhunn/11EYMIoG9XxNrcz+jW7Qsl3NyNIg9hDjbCabmx/Vf0h8UP+/LkNIVlyO3o78/1co43Ulvx555PGUhCY4VUwKPXABbEjFZgdBzn27AvRQhUXgRxZcebSkBAz0mMhQHtY7LGu68Uc5SySVA0lPNxJX0YqI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750989820; c=relaxed/simple;
-	bh=Q3lLYWFRvkpLOgxfv0OXL3FmSu2du7UZLl8y9bHHdiw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AOXdA8zL2obQLyuXC6R59OMDV64zie6OOdUqqmXWAR0NSkATo4wygYzM3rLSjaT93nxO2iYx14Zm6EcI26fOtl/NebpUW8avmbjrIZEQe7meZBTBj9H9AIZL7WBq6FRcMYGeUMbnWnAAplRhwsXDejYCY5BdwgHBa3ZRirp2jkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uo20jgFK; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3652F1FC4;
+	Fri, 27 Jun 2025 02:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.27
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750990124; cv=fail; b=Z7mLy2Qps2cii2FtcSlGsMasALOPnEkRx8e22h658ere1yBDaYx3V3Xz9P/ppdK8op70EWsXnE6Jk6THB3qa2CBCZjmVyMV6DXoSL2e7Sk3xGC81MHP0ra7sCifYeqUXMPQAPwR7O2AQlJkk2g3GWpGjX+WduTWxoljAdE69r4g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750990124; c=relaxed/simple;
+	bh=Y513o5IqaTas+scJLRs7XUFnJvorDlhe763jwPjnrzw=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=iHe66RfkQ/w6UyZvTMDV/48FUPvQlviGVb7lNZY+GW5eiNKbSesGSayfbEd8ln+jCwQSUUp8PNE5FDvBHPpyQay4HVcaTCYyFSlUIjdJccVakY0RiQKhsNEldsKvAcbqDkjmjge0sM5mbzBVZGouB1jtBy7HDlZRaLZ0POMQot8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ALDetjyV; arc=fail smtp.client-ip=40.107.130.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uo20jgFK"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-532dbe71e4eso1048466e0c.2;
-        Thu, 26 Jun 2025 19:03:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750989816; x=1751594616; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i/f/+hiyDwdHx+cA843RdLoAxbDE7w4hdsMpE4lkbXo=;
-        b=Uo20jgFKFm7qnxLptVEwTRr9Kqf42RJ2uL9WzInxSpQdc1NOjQeM95ix/TkQOrZ/0U
-         d437g6suyCtAP1z9iKZpsVL7RDfkiEQv5fnyf/IAolK0T8wI/+rXvELGuZjvLzH6sQc9
-         EVX+E4vJCistZ7/9zinRV0aS8qJTtvndH30r9i38KhXE4bT1nHR77UwFFNcAXX3s5dtV
-         ki1M7IPRhYsWPCXDUW9zprwIcTI5Njcjhe/S1EPSj6/0j//xnnrx9aw9OFGeFbp6asLD
-         dF/W6PKW7wVk3vdIjzhRYwqnBAC5lfM3rZ+nY7Y9Rqtr3ONsB4sW4pFkMPNURY4yN/dP
-         Ulzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750989816; x=1751594616;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i/f/+hiyDwdHx+cA843RdLoAxbDE7w4hdsMpE4lkbXo=;
-        b=tKbkCf7PY/jbOhuM6+lDVg/dFAxUp8cjHDHe4gzZkftPUs6SBT+lTf5x5pZEXBbUyr
-         2+4bGJwJq17M6D2FtgzZ4pzgBGAEHw4k1yiv3Huw7W+z4q10sSr2OEz8jsyk5E4ju+ko
-         CD7BXk6dxLXEwJKGY4GIRc/XZnowvP6gmzuRn5x+ieD7wVtCT9BOJrz/S/BW/tX5Py4A
-         aGEjzuiXHGr+aFGGBb1mnOS4euO4Q7rqy+dObmR3+GCbgFLSh/Q4csbh3UJSn8HIJ+e/
-         tUMHWJHDEB/ot6tMY6R5VCMAH7eMismmxPeu8+0Q1XyVIRC9EFIpfhU2SCGqeid8ZJ4j
-         rA0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU5euJzbAHeRztceJAA27BPDQq3jILSTzZDVSNywN8hEgGx2cpQVDiZOR9RRV2/kVfI1U4rJka+s2NAztoFqfSfjdE=@vger.kernel.org, AJvYcCX8ADQrjuH3NvV0Hd3k6VngU+njltUX2Xxd7SkaccMLZD3E4kQOvH4JfoMkn41uwsxYkohqe5xKsjd1DA+c@vger.kernel.org, AJvYcCXNf0kI3RuIBLfQSdPmSXkpGEeTm5TGqhHmOZ3/GsPBZNAHuNMeABfDcJY6a5ShXalE1E/sihN9CYGsLfgd@vger.kernel.org
-X-Gm-Message-State: AOJu0YzflOVpTJEpVdD8g1n1SmeNJ1YsXQYTZjqb8HCc0uQE1e/RIrtM
-	xJywDxqspe59YFslld3LdCn+deKoVLtW3+0v4AP0hOwPCik7uq4AbhKeaOl8TVmXlexAg7T9lWF
-	C5IHOUW2/gofa0OecJ2DqnfiX9Ndmp2k=
-X-Gm-Gg: ASbGncsKjspA0L2/PLU+t6E/dTh9DIeUPGXbuf32r0SVM+b+H48awgYJg++9Oahzlqc
-	R7YBGl9xvvsCi9mP0m40c1bGgP7LXzvCDK74kJAklWhzKuh2ObQdB7KlGNTKntquJR0K05noxyO
-	DOvvtHDUSevfnnY1EfmZvUCMMOhUzkFuAHrbHfe5o6uA==
-X-Google-Smtp-Source: AGHT+IHhVsq5/VI1dr0dwY9jUchBPbEamRa2csC8XrsamXPtwwwYjcpSjiIYO02pEuPWifIo5HwkuElrIvaVqdLt0x0=
-X-Received: by 2002:a05:6122:8c1a:b0:531:2906:752e with SMTP id
- 71dfb90a1353d-5330beda07fmr1498050e0c.5.1750989815830; Thu, 26 Jun 2025
- 19:03:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ALDetjyV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=emHouk+N1674gDVfxeKtdsXgRwuCsdOa4YOUiNXhcX2PTqw7wpztzW+sAw+smsmp/3i9cW9sz36RIwiT5uKYOsQN02JF2qNY9B80sF2e5iMFupjNTu4YY+RatdoY3/efrBOJXYY/5BaX2nPIDES4J5HAqf27gyWdkQpW+LUoBdZIjXF5/+N6RCCMhpoxeZ0e0M1P6/sMvvlmy29kBptSmfRO1O7EhX8P8GlBOFI3e18klhtOK18ZIN+Xqf8b47R5FXp21bqyUWUR40f41OZYoRd8lJnB9dUPjiRiycmZJHF+lYi3/rbqCZ/H9LEGufiqn4meVsI0f7CyJR10OnJ97A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/XMY3pvxvxhqrcZyFkVd4ICV1pncbNmfcqRMKoo+9kc=;
+ b=IpLDCUsoLroTtruvDWD1JtJZ9ljPn1pq+Kx2A74wLQbycbSzkS23xk6G2LfJLKDRDMg77KvOj5TKw4sNPR6X295JU4D1QLrPGeLZjxC8LXSnWE9b2v/NL8XRyXjzTfXwMhyyEpDbkyujMu/QpEya8hcVORQwRoMtcC48glWVs+jAQ3WQbNkzqCwIIeWxtvPrEaNZTT+LrM30ObFTTLJMkjpr2Op7/1Y3YKvjlA2924+wgdNYcHZkcAFsrJiBvgbDXr3Zs88VcU9omxt+MpuNqbRm9NAy2LSwFghs0ije+aIrmzkDaUpGrZK4JMVeh6v3NZOlP616b82ScGwuXYOloQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/XMY3pvxvxhqrcZyFkVd4ICV1pncbNmfcqRMKoo+9kc=;
+ b=ALDetjyViWa2+wt1U/lEBNAdTr0jB9FnLr7z+HsaX3vCkURlKpqtb2qv54ZE5Ds/P4H/gaHd3shoBFcLFP5krb4lviPbYj6bhjTz+oyJrJ3896EckNAvK+ejFtCrfyc7eMlLbgnZBWHPbuUG1jZYDXvBYtftO/I4PQHoprzduPaJcKmXj7kPJoQXp0K7R5PAPQJRHxBGUkXSkOB9lkSaq0a58Z1TTaaLeUobztE/m2vt/Z78SO0xQwvwqyoUBuIl8WR22HGvIc4U04qpESzjiJOFVY6h3CdcQVueP5zTNL7baOS6vH2SL1S8Dj2VNDsxfkeGGH8dJfSXJ5VsJBxwpQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
+ by DB9PR04MB8377.eurprd04.prod.outlook.com (2603:10a6:10:25c::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.30; Fri, 27 Jun
+ 2025 02:08:39 +0000
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db%5]) with mapi id 15.20.8880.021; Fri, 27 Jun 2025
+ 02:08:39 +0000
+From: Wei Fang <wei.fang@nxp.com>
+To: claudiu.manoil@nxp.com,
+	vladimir.oltean@nxp.com,
+	xiaoning.wang@nxp.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	frank.li@nxp.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: [PATCH v2 RESEND 0/3] net: enetc: change some statistics to 64-bit
+Date: Fri, 27 Jun 2025 10:11:05 +0800
+Message-Id: <20250627021108.3359642-1-wei.fang@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MAXPR01CA0096.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:5d::14) To PAXPR04MB8510.eurprd04.prod.outlook.com
+ (2603:10a6:102:211::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618-restricted-pointers-drm-v1-0-781e0d88cd92@linutronix.de> <20250618-restricted-pointers-drm-v1-2-781e0d88cd92@linutronix.de>
-In-Reply-To: <20250618-restricted-pointers-drm-v1-2-781e0d88cd92@linutronix.de>
-From: Inki Dae <daeinki@gmail.com>
-Date: Fri, 27 Jun 2025 11:02:59 +0900
-X-Gm-Features: Ac12FXx_H-k6IjgjBdIwZwvFGVMe7aOTzmfWa57DZUuTaImbO0rimzs6HuQBV-w
-Message-ID: <CAAQKjZMBfU5pSsY9sHE3DBB1AZ1sBDp6hXiV9iXVo6acEZezWg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] drm/exynos: Don't use %pK through printk
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Abhinav Kumar <abhinav.kumar@linux.dev>, Jessica Zhang <jessica.zhang@oss.qualcomm.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8510:EE_|DB9PR04MB8377:EE_
+X-MS-Office365-Filtering-Correlation-Id: f998f1e8-4ff2-4177-f373-08ddb51f8860
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?GNl2zdA3S5vGXlOVgpp7TIDP6s4xju3WZ3Wipm9/Jug+yktEeTEVL4hS+j5K?=
+ =?us-ascii?Q?VN0hUk2Pz9YzESgsDVjlRiyoCaScJFQ4bJ1UqLkKqLZ7REMay4t33u4o0yad?=
+ =?us-ascii?Q?rUke6/VeXYnulgFWl5q3tp/WE3ekJCzhjf0Cej5J45QnohVC/h3W4kD0sTRX?=
+ =?us-ascii?Q?expg8U2vE4NfiWh+6e+M6CxtWZo9QmaKfhZq+qJAmvziM2pCKY6w7HgTiE3o?=
+ =?us-ascii?Q?PB7sCuLmqa7iwh5VkdJ6M1E8LqUOpOulVLSJKC+YCqoA8+Z38DCh9eBAYrcR?=
+ =?us-ascii?Q?5APJDJ3kx6xwCeORNzy95rrbKrRfGvjP/baJn/IEBxZk9ljUFqTqRgDoz26R?=
+ =?us-ascii?Q?KR33SAUcN2RW7O53usR3ow6iReF7yJyYT9XokIoHA4HQC3zbiQ/Zx/r6xLjT?=
+ =?us-ascii?Q?3xkqA2itRSguBCH0k/K2Wz3c3JVX1b499YwLT07cMaVb+Aw+nDT47uU1vYOB?=
+ =?us-ascii?Q?2tJDd2+qQDYYmluFSt8KpoLxrfzxKcrOJyCBzjnhFhMMD/wFsB68e8VGd1/B?=
+ =?us-ascii?Q?QC49P1B3ZTLrAk5rQMgud+DTw11deNUuEttgdOxhi4KJ8HSstsMebkV8boEX?=
+ =?us-ascii?Q?/9ewFRxzIp9ykp1sc03E7mGwuQSjjoGHvjrgJwUYRjra0hYMXNtJN6D23lTf?=
+ =?us-ascii?Q?S72mJ19jO7cJXtx+hR2ANsYBbeaMF1iFoPiA4MDTLWkaLt7INbN2uF6/P+Oc?=
+ =?us-ascii?Q?mYkAX6tFCTku4RKGigsuiaH1D76g3ByIVKzEmbFsXEn8bNXUCha8YYEddAIO?=
+ =?us-ascii?Q?hPf3DJY1JXXTG/lVMeBQmKZKn374ewSVH4wKbUUHHbPS7r/R4d4u/fPH/i6Z?=
+ =?us-ascii?Q?oyzBQuUviCzfWY0wX+YtiBl4YzYjiOGq/n4/rsbfgZDR0G/eS+GUR3USq4Wr?=
+ =?us-ascii?Q?+5lVBsZBIPdOtHgAJIgjv/VmsotpbTR8OZXLHg8PHh1c6IUhPsCgEOG+3Taa?=
+ =?us-ascii?Q?q6Lou89s37DhRPaZNgfc0pXVHTYt3Uhds8vddvb7js0Yr5LFJR/HHiUGfWyu?=
+ =?us-ascii?Q?ZBYHXxyDot2T+qN8m+lCtw62ykfx1cF/wEPdLwB0YBtvixtAWIq2PxIixEAq?=
+ =?us-ascii?Q?tqZyLSyCxCl6pdT7314kcXS3WtdsAGLmw6RblO+gEqgVbjKeYL1HwVmx1SyH?=
+ =?us-ascii?Q?bCOs2ul1+B/LNpp0f59tHcWoXnGnTZsk3OgBIvifgZMw7CYpJhu3cvzbAInz?=
+ =?us-ascii?Q?nHokZnVolV1HJDvZXnUfRrt/PfLDz9t7C+4DQMOSTMdXSO16ctwrlkdQOtS+?=
+ =?us-ascii?Q?0pH9yxh+GY6D6rtVXpo/TP7v18WdmslH/tINWGmXOryxCYPSDd87AY7qI4js?=
+ =?us-ascii?Q?hlofrVJHIun5TIxMW8sVrcd8+x6Ds5niSqMtAPC79yaeFtZhTXnwOjfvJHqe?=
+ =?us-ascii?Q?YOfqhnMJt0HRo38ojZggwcm/R/SPFsDNJmHL7QXwoklX1IxfSLjxEkq6Jh2U?=
+ =?us-ascii?Q?38EgrQLt4gO1f5rJx6k/trQ5c7f2LRGklqjRMtglZCrNPbcrz/LmAyBzl95S?=
+ =?us-ascii?Q?rVrQsiJZBScgTwGnV8bsAypVizIzvNdZrtj5?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?lf9YXGwrkdqJOE3PtgdZKVeMbk873oC2M+md+35vB71BIN5DMHkUUprXD8US?=
+ =?us-ascii?Q?+Hy8R7lq2neVZLq1K4YVvKs+TDqhDmZnK1yiLGWHoPDyi3BmH4RLB1/2JJ9R?=
+ =?us-ascii?Q?iWEFz/7s4/hipIWbOSl9+8qP8OIZ3XJoSRpuhJOaPWJUtQK+a1atdlTuw709?=
+ =?us-ascii?Q?nmXa4d4VqLI82l8j/IG4jylt35D8PqiUduAXizMSek0XXW1JhbJzwTDYNFZY?=
+ =?us-ascii?Q?UzcMlASws4oiCHHd1Whch9wX5+K1gnc5U2xI7RTxAisMEfido6l9HaCWwDoF?=
+ =?us-ascii?Q?XFjHIMHMKdD0XPRZ4zIZuVDjSgbniZW8NL0zHlpr17GBQ9gdkPTGGhHBYWuw?=
+ =?us-ascii?Q?iI8BW7Crt4excVBrqDVPMFJ0ca6Il3Pze8nqq0NLRlYsASl3CZVO5J82dnnB?=
+ =?us-ascii?Q?P/ypYQu17SFWtCHeL8mgFSxXhAXH8luHuBmEtjaUrXwYe6liGN/GCshJb9bo?=
+ =?us-ascii?Q?hmylvGva1xshl0056sI/LE77USjAEi2jElFtLlVY5gPcdg5y1pxdm9IcGfJN?=
+ =?us-ascii?Q?9SxUpEEGYTcmg6+DBk2r/hfrvQxXBjKtKaHdiQAmvwi7q1eHWzs76UILmdvs?=
+ =?us-ascii?Q?T0KF0USr52War3+BuKwdfj7JSEjOEzVxjrNwPzODvScQiQo2iUJO++IVmjB+?=
+ =?us-ascii?Q?c96a0Fvn43wa/3Mxe/vz+5wgo9wbYxqlA/2ULIrJ+SGiKN+Z1bcIvbTGdub0?=
+ =?us-ascii?Q?UcrLIKg2Rtnm/MuHHX81eB6B22m2iRLqy9aoi+PIjms9cA97XT8WIrp27qm2?=
+ =?us-ascii?Q?WwFuEyaU3R6CrCFE7hROV/pCNomQ2WVPl2zYzilxE444o6ZDGIh7nmsRKUeZ?=
+ =?us-ascii?Q?DTvtQJ6zmXvv2ife6/1MsTOmdczr7efbagYQDhryrUr6ImBMVY7RdQyRfnLP?=
+ =?us-ascii?Q?cv8mbr/RyNECaEh67okMkej8ayHDrKjeBdIcn+Xi3gBTyH6MJcGMacE2ZpYc?=
+ =?us-ascii?Q?yG6m2Z8zXp+1gZRdR98LGVkqOrpd0EcsPV3V4qLKblDiWV9tWTwb1XKVWC6M?=
+ =?us-ascii?Q?yTiCgNCXgPIdQjjfk2eqJP7Da6eEJcv3hkeCN+hNGxDV6OPf2Xx5I2Gtk09Z?=
+ =?us-ascii?Q?1rcvhoSBzEELw63q9a56j26ED3JsrZWWj3WRndQJrkluRbEe14fmS5MCWMIq?=
+ =?us-ascii?Q?aKHHvLaYhBit5iRd91VYAkz7N1ws7xvGvZ0WQPsWwjXfuFbJB9pKPdPM8CbM?=
+ =?us-ascii?Q?g5Ac3zwRmyLSSWwM+Q45htkGSR/ZLe0m+GKGC4v/QTzsadtd2WJmPgN5sblA?=
+ =?us-ascii?Q?DyohOwYq+vib4rwAgXpkloLrF3uGPgrjgCm6yAZH1LxD/UMwdehy/m27ESQJ?=
+ =?us-ascii?Q?dvt1i2KS/uTqZQWPCttX6VyUYZZHv1BzT3DuQiTMTvhd9BJUGlIvt4lfBvGZ?=
+ =?us-ascii?Q?UwjrpZQHgbDXMQQ6PLbIQYA6wt3CYM0Gb6qQ35+kV3D7TMFFgmtwkn1dHymW?=
+ =?us-ascii?Q?L9gRlF/37ehUEVpleci0ySgGnb2s2cZBTU5lB1Ur6uDq9/Y3ocQNKrgqfPlD?=
+ =?us-ascii?Q?ie3wmeJyTmZFsSe9NKFiN8LM+WRUJcV+csIQTQo1tr02DP9VX+IcYCB7RK8y?=
+ =?us-ascii?Q?IgtU3uE19xBh/jGyh8ksrPGZd49vDZ+KBdqrbQfF?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f998f1e8-4ff2-4177-f373-08ddb51f8860
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 02:08:39.6575
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nKIxilLNCUbX4XY4dgXR9QZhz5VIm7uK+P2Q0PaR7TNHjBCIQAcbR8/NOAS0XFbmVOWchcjY1C2pt7+bSepURA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8377
 
-Hi,
+The port MAC counters of ENETC are 64-bit registers and the statistics
+of ethtool are also u64 type, so add enetc_port_rd64() helper function
+to read 64-bit statistics from these registers, and also change the
+statistics of ring to unsigned long type to be consistent with the
+statistics type in struct net_device_stats.
 
-2025=EB=85=84 6=EC=9B=94 18=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 4:56, T=
-homas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> In the past %pK was preferable to %p as it would not leak raw pointer
-> values into the kernel log.
-> Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
-> the regular %p has been improved to avoid this issue.
-> Furthermore, restricted pointers ("%pK") were never meant to be used
-> through printk(). They can still unintentionally leak raw pointers or
-> acquire sleeping locks in atomic contexts.
->
-> Switch to the regular pointer formatting which is safer and
-> easier to reason about.
+---
+v1 link: https://lore.kernel.org/imx/20250620102140.2020008-1-wei.fang@nxp.com/
+v2 changes:
+1. Improve the commit message of patch 1
+2. Collect Reviewed-by tags
+v2 link: https://lore.kernel.org/imx/20250624101548.2669522-1-wei.fang@nxp.com/
+---
 
-Applied.
+Wei Fang (3):
+  net: enetc: change the statistics of ring to unsigned long type
+  net: enetc: separate 64-bit counters from enetc_port_counters
+  net: enetc: read 64-bit statistics from port MAC counters
 
-Thanks,
-Inki Dae
+ drivers/net/ethernet/freescale/enetc/enetc.h  | 22 ++---
+ .../ethernet/freescale/enetc/enetc_ethtool.c  | 99 +++++++++++--------
+ .../net/ethernet/freescale/enetc/enetc_hw.h   |  1 +
+ 3 files changed, 68 insertions(+), 54 deletions(-)
 
->
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-> ---
->  drivers/gpu/drm/exynos/exynos_drm_gem.c |  2 +-
->  drivers/gpu/drm/exynos/exynos_drm_ipp.c | 32 ++++++++++++++++-----------=
------
->  2 files changed, 17 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_gem.c b/drivers/gpu/drm/ex=
-ynos/exynos_drm_gem.c
-> index 4787fee4696f8e6f9eecaacb1535765c246688c8..d44401a695e203bd36b3b6678=
-fdeb3572a91bfda 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_gem.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_gem.c
-> @@ -174,7 +174,7 @@ static struct exynos_drm_gem *exynos_drm_gem_init(str=
-uct drm_device *dev,
->                 return ERR_PTR(ret);
->         }
->
-> -       DRM_DEV_DEBUG_KMS(dev->dev, "created file object =3D %pK\n", obj-=
->filp);
-> +       DRM_DEV_DEBUG_KMS(dev->dev, "created file object =3D %p\n", obj->=
-filp);
->
->         return exynos_gem;
->  }
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_ipp.c b/drivers/gpu/drm/ex=
-ynos/exynos_drm_ipp.c
-> index ea9f66037600e1020da4b0a9c318ca2f2266a871..03c8490af4f45447d123a2077=
-7e5362ebd933b46 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_ipp.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_ipp.c
-> @@ -271,7 +271,7 @@ static inline struct exynos_drm_ipp_task *
->         task->src.rect.h =3D task->dst.rect.h =3D UINT_MAX;
->         task->transform.rotation =3D DRM_MODE_ROTATE_0;
->
-> -       DRM_DEV_DEBUG_DRIVER(task->dev, "Allocated task %pK\n", task);
-> +       DRM_DEV_DEBUG_DRIVER(task->dev, "Allocated task %p\n", task);
->
->         return task;
->  }
-> @@ -339,7 +339,7 @@ static int exynos_drm_ipp_task_set(struct exynos_drm_=
-ipp_task *task,
->         }
->
->         DRM_DEV_DEBUG_DRIVER(task->dev,
-> -                            "Got task %pK configuration from userspace\n=
-",
-> +                            "Got task %p configuration from userspace\n"=
-,
->                              task);
->         return 0;
->  }
-> @@ -394,7 +394,7 @@ static void exynos_drm_ipp_task_release_buf(struct ex=
-ynos_drm_ipp_buffer *buf)
->  static void exynos_drm_ipp_task_free(struct exynos_drm_ipp *ipp,
->                                  struct exynos_drm_ipp_task *task)
->  {
-> -       DRM_DEV_DEBUG_DRIVER(task->dev, "Freeing task %pK\n", task);
-> +       DRM_DEV_DEBUG_DRIVER(task->dev, "Freeing task %p\n", task);
->
->         exynos_drm_ipp_task_release_buf(&task->src);
->         exynos_drm_ipp_task_release_buf(&task->dst);
-> @@ -559,7 +559,7 @@ static int exynos_drm_ipp_check_format(struct exynos_=
-drm_ipp_task *task,
->                                             DRM_EXYNOS_IPP_FORMAT_DESTINA=
-TION);
->         if (!fmt) {
->                 DRM_DEV_DEBUG_DRIVER(task->dev,
-> -                                    "Task %pK: %s format not supported\n=
-",
-> +                                    "Task %p: %s format not supported\n"=
-,
->                                      task, buf =3D=3D src ? "src" : "dst"=
-);
->                 return -EINVAL;
->         }
-> @@ -609,7 +609,7 @@ static int exynos_drm_ipp_task_check(struct exynos_dr=
-m_ipp_task *task)
->         bool rotate =3D (rotation !=3D DRM_MODE_ROTATE_0);
->         bool scale =3D false;
->
-> -       DRM_DEV_DEBUG_DRIVER(task->dev, "Checking task %pK\n", task);
-> +       DRM_DEV_DEBUG_DRIVER(task->dev, "Checking task %p\n", task);
->
->         if (src->rect.w =3D=3D UINT_MAX)
->                 src->rect.w =3D src->buf.width;
-> @@ -625,7 +625,7 @@ static int exynos_drm_ipp_task_check(struct exynos_dr=
-m_ipp_task *task)
->             dst->rect.x + dst->rect.w > (dst->buf.width) ||
->             dst->rect.y + dst->rect.h > (dst->buf.height)) {
->                 DRM_DEV_DEBUG_DRIVER(task->dev,
-> -                                    "Task %pK: defined area is outside p=
-rovided buffers\n",
-> +                                    "Task %p: defined area is outside pr=
-ovided buffers\n",
->                                      task);
->                 return -EINVAL;
->         }
-> @@ -642,7 +642,7 @@ static int exynos_drm_ipp_task_check(struct exynos_dr=
-m_ipp_task *task)
->             (!(ipp->capabilities & DRM_EXYNOS_IPP_CAP_SCALE) && scale) ||
->             (!(ipp->capabilities & DRM_EXYNOS_IPP_CAP_CONVERT) &&
->              src->buf.fourcc !=3D dst->buf.fourcc)) {
-> -               DRM_DEV_DEBUG_DRIVER(task->dev, "Task %pK: hw capabilitie=
-s exceeded\n",
-> +               DRM_DEV_DEBUG_DRIVER(task->dev, "Task %p: hw capabilities=
- exceeded\n",
->                                      task);
->                 return -EINVAL;
->         }
-> @@ -655,7 +655,7 @@ static int exynos_drm_ipp_task_check(struct exynos_dr=
-m_ipp_task *task)
->         if (ret)
->                 return ret;
->
-> -       DRM_DEV_DEBUG_DRIVER(ipp->dev, "Task %pK: all checks done.\n",
-> +       DRM_DEV_DEBUG_DRIVER(ipp->dev, "Task %p: all checks done.\n",
->                              task);
->
->         return ret;
-> @@ -667,25 +667,25 @@ static int exynos_drm_ipp_task_setup_buffers(struct=
- exynos_drm_ipp_task *task,
->         struct exynos_drm_ipp_buffer *src =3D &task->src, *dst =3D &task-=
->dst;
->         int ret =3D 0;
->
-> -       DRM_DEV_DEBUG_DRIVER(task->dev, "Setting buffer for task %pK\n",
-> +       DRM_DEV_DEBUG_DRIVER(task->dev, "Setting buffer for task %p\n",
->                              task);
->
->         ret =3D exynos_drm_ipp_task_setup_buffer(src, filp);
->         if (ret) {
->                 DRM_DEV_DEBUG_DRIVER(task->dev,
-> -                                    "Task %pK: src buffer setup failed\n=
-",
-> +                                    "Task %p: src buffer setup failed\n"=
-,
->                                      task);
->                 return ret;
->         }
->         ret =3D exynos_drm_ipp_task_setup_buffer(dst, filp);
->         if (ret) {
->                 DRM_DEV_DEBUG_DRIVER(task->dev,
-> -                                    "Task %pK: dst buffer setup failed\n=
-",
-> +                                    "Task %p: dst buffer setup failed\n"=
-,
->                                      task);
->                 return ret;
->         }
->
-> -       DRM_DEV_DEBUG_DRIVER(task->dev, "Task %pK: buffers prepared.\n",
-> +       DRM_DEV_DEBUG_DRIVER(task->dev, "Task %p: buffers prepared.\n",
->                              task);
->
->         return ret;
-> @@ -764,7 +764,7 @@ void exynos_drm_ipp_task_done(struct exynos_drm_ipp_t=
-ask *task, int ret)
->         struct exynos_drm_ipp *ipp =3D task->ipp;
->         unsigned long flags;
->
-> -       DRM_DEV_DEBUG_DRIVER(task->dev, "ipp: %d, task %pK done: %d\n",
-> +       DRM_DEV_DEBUG_DRIVER(task->dev, "ipp: %d, task %p done: %d\n",
->                              ipp->id, task, ret);
->
->         spin_lock_irqsave(&ipp->lock, flags);
-> @@ -807,7 +807,7 @@ static void exynos_drm_ipp_next_task(struct exynos_dr=
-m_ipp *ipp)
->         spin_unlock_irqrestore(&ipp->lock, flags);
->
->         DRM_DEV_DEBUG_DRIVER(ipp->dev,
-> -                            "ipp: %d, selected task %pK to run\n", ipp->=
-id,
-> +                            "ipp: %d, selected task %p to run\n", ipp->i=
-d,
->                              task);
->
->         ret =3D ipp->funcs->commit(ipp, task);
-> @@ -917,14 +917,14 @@ int exynos_drm_ipp_commit_ioctl(struct drm_device *=
-dev, void *data,
->          */
->         if (arg->flags & DRM_EXYNOS_IPP_FLAG_NONBLOCK) {
->                 DRM_DEV_DEBUG_DRIVER(ipp->dev,
-> -                                    "ipp: %d, nonblocking processing tas=
-k %pK\n",
-> +                                    "ipp: %d, nonblocking processing tas=
-k %p\n",
->                                      ipp->id, task);
->
->                 task->flags |=3D DRM_EXYNOS_IPP_TASK_ASYNC;
->                 exynos_drm_ipp_schedule_task(task->ipp, task);
->                 ret =3D 0;
->         } else {
-> -               DRM_DEV_DEBUG_DRIVER(ipp->dev, "ipp: %d, processing task =
-%pK\n",
-> +               DRM_DEV_DEBUG_DRIVER(ipp->dev, "ipp: %d, processing task =
-%p\n",
->                                      ipp->id, task);
->                 exynos_drm_ipp_schedule_task(ipp, task);
->                 ret =3D wait_event_interruptible(ipp->done_wq,
->
-> --
-> 2.49.0
->
->
+-- 
+2.34.1
+
