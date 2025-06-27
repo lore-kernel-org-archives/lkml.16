@@ -1,147 +1,182 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C6A2E264F
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2DD2904;
+	Fri, 27 Jun 2025 16:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751040803; cv=none; b=Xpvp4f7hZnDPPzFJQuqRnIV6ebVDQQp58XEYEZJYSOE7Yg9bzoyVoKZV9C6a9uvwEXEwmY1uKZW7a+SFwRQBdnmiUMQVaXUilMUC87PRRDmCGrHzx8jpLTR+dLn+RlOoG6N2mdC0bfMrbECZmZaW73WU1eQVFXcgoz65W6wR038=
+	t=1751040955; cv=none; b=Zwwcxx6zrJUKlg03/mPVqyl/41zsuEE2wy/X7YdytZhvHk/p4r03PIOmSwtOff6QLSLmtXpkzaUbc3SEDSLYa645qrV64PBfKWKqHq191qRu+7EdVV9/OEI5SgH7ZMiNfQYwxp4TCAvPtGalhDeVAFE45pysE/4FBTDO7Nga9a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751040803; c=relaxed/simple;
-	bh=s87iftt3M0xd+S5nypoMSz3HspQP+qOBNTIvYEchE3U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e8e2sB5VYmnVtsRyXVkwQ9N9FpeP5UPeCytfMEWWolEmLqSI11x+WuTd25J8mF/a0Pb3LY1HWzx8gZfhnd7TqGfRsmDglmf1VeXxj1Bv+u0G8MirYqBvR0vbwIdg1j2OUsYWRPV0hGMz+8l+XNvhgr1atRc0cJqe+DncPYZXnVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yd0NmH0a; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751040955; c=relaxed/simple;
+	bh=ngjP2j/mogEBHJHVAdxePa/ZTfx8oWY4hps0ZIisoVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=asE4CWgXbeXpaf6J6rwIPDHuI+KP2V+56GYnnFJHHcw1JozwTIAJ0+4Bo4V63L28HhEmmJxpXgw7JDfCCuvUFfpB0hOomWaLbRO1DB8w1QKNcxg0JyjzhxgyyvPalB2b+cE918I90lIDSWVpCrFHHVVFsu3qOuuoc2JuthUoOHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3pfO07Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yd0NmH0a"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e7569ccf04cso40100276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:13:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751040801; x=1751645601; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dR5MPIlTa2PoYXve2Gi2m66jUTuWCrLna8bHb+jCXJM=;
-        b=Yd0NmH0axQqo+ye1+WnCUFoc7mliIWOn580fw4o7I2/G1NYxL/LdvvXxBDu2C3PCv9
-         2/cuN3ouW9rzevR4cxHdxJVm9mK7ONaK5mx98nPhfqKQ/AX+ze4Q8KisSFKAmynsOtO7
-         v/+54pt1P75Tdr/+hh4aGHnqvNesyLuc96GUkV0VdfZrZPvRDJOPYWUYMq7gOGwnTgpA
-         689RDGrjDlaSAiJHpOXEfRPnhazLfk8B9H6cFmE31aZUolKGlO7US16Z9YbgYI1zho50
-         4G/6jy6PxD0+XufPTOBBQE64ysI5G4ZZSOR2mHuZVJv15mrhXJWf7NJAxS1DouYjHWxM
-         52og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751040801; x=1751645601;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dR5MPIlTa2PoYXve2Gi2m66jUTuWCrLna8bHb+jCXJM=;
-        b=HMbnxKchporzDEhqvyN1KUucuVFhEvL8+LKxckwwxj9dnCNwY7TWmM6ah/QX3WtZr3
-         sJ9QX5zW69SR/Q8RG3KxBmCKRb/OQPma7RlFDtCIKB76ct4M8uzPcKUHmErKFu1Byt+1
-         +WaNzrBdGASQLzH2bRlTzgpIz54lCJh88MElVGd7fpENFMiO0U8cSm7K8YJjuKt+ar56
-         B/Y38BwS4AbRyu5YDTePlVg0/lORDr7Nm2sZ3P+oLRMJry9U5Z1xx7o5/0yAVDRouniD
-         4qJmj5SC/6H/Y2Je40NYVQRO0ytbLJMeHwKe22dBNTMXWHwkmO7HcC0A0bq9i0lFrO7t
-         +wHg==
-X-Forwarded-Encrypted: i=1; AJvYcCVYzi+/1zc5yhOJ3Qe9DDHWt/DAy7Ytga4a4xDQ8lZorbxBwRw6rJUez11qjbDsbgQ2TjTq9UcDznWl4l4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYkEa6G9D+3J+jbV7d6qGc6VKzNCYuUlVDOWqe2F5rGI/MK1hI
-	48Qs0KbAaWQ6xnpb8ZQEhFcADywgFyIoaaIUw/00JPHCnZp9wia2+ujJ
-X-Gm-Gg: ASbGncvgIvbHNR+C8gdYMaNMPqs0W04C4siTSd1fIEn1EQyLa+47Ed+Oy+xGThsnZV+
-	sIAyEVYwkmFHKIH11BYxvyEGEGc0tgVxMtyQZrytAV/8M7mhHDgONp9+EJZSdghxlhiq3BsJnG1
-	T4LuGOZsD4T1WiHWCHYtwICd7xMT6nIinto641cAvI49FfdxqO53L4ODQg2wMysNFDWD/0BNcy4
-	6WTVR/mowAtyW5upGhZO+ZQBa9nuZJ3GDzXd/Hm1z6971XDZD41OgzCihXAApTNrULCQv4x1NvY
-	0d2rwvou4yTi+t5p0Ts7jmpPm3pvM2juFrewBuEyUgoyiDz1DKQHFPxgbUAy3A==
-X-Google-Smtp-Source: AGHT+IGYoGw3Y12KQQ+u7jOP+q4hfx5i8DJ1Ymkci1iQSqm6ujlUokE29l8NKgb1YWii/pFbW8GX7g==
-X-Received: by 2002:a05:6902:2ec3:b0:e81:f864:133a with SMTP id 3f1490d57ef6-e87a7b01d5bmr3464143276.7.1751040800830;
-        Fri, 27 Jun 2025 09:13:20 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:11::])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e87a6be423fsm646653276.47.2025.06.27.09.13.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 09:13:20 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Alistair Popple <apopple@nvidia.com>,
-	Byungchul Park <byungchul@sk.com>,
-	David Hildenbrand <david@redhat.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Rakie Kim <rakie.kim@sk.com>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Zi Yan <ziy@nvidia.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH 2/2] mm/mempolicy: Skip extra call to __alloc_pages_bulk in weighted interleave
-Date: Fri, 27 Jun 2025 09:13:18 -0700
-Message-ID: <20250627161318.1898633-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <aF4d8YcGbfTktnu6@gourry-fedora-PF4VCD3F>
-References: 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3pfO07Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0DEAC4CEE3;
+	Fri, 27 Jun 2025 16:15:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751040953;
+	bh=ngjP2j/mogEBHJHVAdxePa/ZTfx8oWY4hps0ZIisoVM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=d3pfO07YLCIK1I43m79Ck6t80cQIjU0rIm1HCmhgWy+yeE0cyqsL6+xQ78s/Mn//j
+	 HA//ehNfgC/ue6v0at98gGIDu73K9Tny0zIY9K14a7CUWza29A19uWAsLKtroQ/HN6
+	 7ysGjEs5pDT8rTa0uUg30IBvvS/55l7xkYGo63rew18C3Qgf/yKOuqVaUpv81a2coD
+	 FBv1qJe0+TQvQgR1duQ2iJmAU+hSAYuZpcCB14O6ytfEFOoOCfYKED2M6DvC354U5x
+	 djlnN1/jqbuJeWOXwRgHOZ2Uxv2GL3PzvoSt3fu0nwbSBoVBa/CENboYJGRPOH0b3X
+	 k1lsRpMl0X3eg==
+Date: Fri, 27 Jun 2025 11:15:52 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Lukas Wunner <lukas@wunner.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+	"open list:SOUND" <linux-sound@vger.kernel.org>,
+	Daniel Dadap <ddadap@nvidia.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v5 9/9] PCI: Add a new 'boot_display' attribute
+Message-ID: <20250627161552.GA1671755@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5cc01163-1feb-4a18-8060-27f4da39b2e4@kernel.org>
 
-On Fri, 27 Jun 2025 00:28:33 -0400 Gregory Price <gourry@gourry.net> wrote:
-
-Hi Gregory,
-
-Hope you are doing well : -) Thanks for the review!
-
-> On Thu, Jun 26, 2025 at 01:09:34PM -0700, Joshua Hahn wrote:
-> > Currently, alloc_pages_bulk_weighted_interleave can make up to nr_node_ids+1
-> > calls to __alloc_pages_bulk. The additional allocation can happen if the
-> > previous call to this function finished the weighted round robin allocation
-> > partially on a node. To make up for this, the next time this function is
-> > called, an extra allocation is made to finish cleanly on the node boundaries
-> > before performing the weighted round-robin cycles again.
+On Thu, Jun 26, 2025 at 06:33:15PM -0500, Mario Limonciello wrote:
+> On 6/26/25 4:47 PM, Bjorn Helgaas wrote:
+> > On Thu, Jun 26, 2025 at 04:12:21PM -0500, Mario Limonciello wrote:
+> > > On 6/26/2025 3:45 PM, Bjorn Helgaas wrote:
+> > > > On Tue, Jun 24, 2025 at 03:30:42PM -0500, Mario Limonciello wrote:
+> > > > > From: Mario Limonciello <mario.limonciello@amd.com>
+> > > > > 
+> > > > > On systems with multiple GPUs there can be uncertainty which GPU is the
+> > > > > primary one used to drive the display at bootup. In order to disambiguate
+> > > > > this add a new sysfs attribute 'boot_display' that uses the output of
+> > > > > video_is_primary_device() to populate whether a PCI device was used for
+> > > > > driving the display.
+> > > > > 
+> > > > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> > > > 
+> > > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > > 
+> > > > Question below.
+> > > > 
+> > > > > ---
+> > > > > v4:
+> > > > >    * new patch
+> > > > > ---
+> > > > >    Documentation/ABI/testing/sysfs-bus-pci |  9 +++++++++
+> > > > >    drivers/pci/pci-sysfs.c                 | 14 ++++++++++++++
+> > > > >    2 files changed, 23 insertions(+)
+> > > > > 
+> > > > > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> > > > > index 69f952fffec72..897cfc1b0de0f 100644
+> > > > > --- a/Documentation/ABI/testing/sysfs-bus-pci
+> > > > > +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> > > > > @@ -612,3 +612,12 @@ Description:
+> > > > >    		  # ls doe_features
+> > > > >    		  0001:01        0001:02        doe_discovery
+> > > > > +
+> > > > > +What:		/sys/bus/pci/devices/.../boot_display
+> > > > > +Date:		October 2025
+> > > > > +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
+> > > > > +Description:
+> > > > > +		This file indicates whether the device was used as a boot
+> > > > > +		display. If the device was used as the boot display, the file
+> > > > > +		will contain "1". If the device is a display device but wasn't
+> > > > > +		used as a boot display, the file will contain "0".
+> > > > 
+> > > > Is there a reason to expose this file if it wasn't a boot display
+> > > > device?  Maybe it doesn't need to exist at all unless it contains "1"?
+> > > 
+> > > I was mostly thinking that it's a handy way for userspace to know whether
+> > > the kernel even supports this feature.  If userspace sees that file on any
+> > > GPU as it walks a list then it knows it can use that for a hint.
+> > > 
+> > > But if you would rather it only shows up for the boot display yes it's
+> > > possible to do I think.  It's just more complexity to the visibility lookup
+> > > to also call video_is_primary_device().
 > > 
+> > I think for a singleton situation like this it makes more sense to
+> > only expose the file for one device, not several files where only one
+> > of them contains "1".
 > 
-> task->il_weight can be operated on by other weighted_interleave
-> functions in mempolicy, so it's not just
-> alloc_pages_bulk_weighted_interleave that affects this.
-
-This is true, and I think that's what makes testing this part of the code
-tricky. I'll elaborate more below.
-
-> Observations here are still true, just a correction for clarity.
+> I did an experiment with this but the PCI resources aren't ready at the time
+> visibility is determined.
 > 
-> i.e.:
+> So either:
+> * the sysfs file creation needs to be deferred similar to
+> pci_create_resource_files() does
 > 
-> The additional allocation happens for the current il_node/il_weight.
+> or
 > 
-> I *think* I did it this way just because it was easier to reason about
-> the two chunks separately.  So I don't see a reason not to improve this.
-> I will say that, at least at the time, I took the core math and
-> validated the edge conditions in a separate program.
+> * call to sysfs_update_group() is needed to recalculate visibility.
+
+Sigh, yeah, that's an old annoying problem.  I think deferring as you
+did is fine.
+
+> > > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > > > > index 268c69daa4d57..5bbf79b1b953d 100644
+> > > > > --- a/drivers/pci/pci-sysfs.c
+> > > > > +++ b/drivers/pci/pci-sysfs.c
+> > > > > @@ -30,6 +30,7 @@
+> > > > >    #include <linux/msi.h>
+> > > > >    #include <linux/of.h>
+> > > > >    #include <linux/aperture.h>
+> > > > > +#include <asm/video.h>
+> > > > >    #include "pci.h"
+> > > > >    #ifndef ARCH_PCI_DEV_GROUPS
+> > > > > @@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
+> > > > >    	NULL,
+> > > > >    };
+> > > > > +static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
+> > > > > +				 char *buf)
+> > > > > +{
+> > > > > +	return sysfs_emit(buf, "%u\n", video_is_primary_device(dev));
+> > > > > +}
+> > > > > +static DEVICE_ATTR_RO(boot_display);
+> > > > > +
+> > > > >    static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
+> > > > >    			     char *buf)
+> > > > >    {
+> > > > > @@ -1698,6 +1706,7 @@ late_initcall(pci_sysfs_init);
+> > > > >    static struct attribute *pci_dev_dev_attrs[] = {
+> > > > >    	&dev_attr_boot_vga.attr,
+> > > > > +	&dev_attr_boot_display.attr,
+> > > > >    	NULL,
+> > > > >    };
+> > > > > @@ -1710,6 +1719,11 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
+> > > > >    	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
+> > > > >    		return a->mode;
+> > > > > +#ifdef CONFIG_VIDEO
+> > > > > +	if (a == &dev_attr_boot_display.attr && pci_is_display(pdev))
+> > > > > +		return a->mode;
+> > > > > +#endif
+> > > > > +
+> > > > >    	return 0;
+> > > > >    }
+> > > > > -- 
+> > > > > 2.43.0
+> > > > > 
+> > > 
 > 
-> If you get it wrong in the kernel, you'd either fail to allocate - or more
-> likely just get the wrong distribution of pages.  The latter is
-> non-obvious unless you go looking for it, so it might be good to at
-> least add this test result in the change log.  It's hard to write this
-> in LTP or kernel selftest unfortunately.
-
-I think so too : -(
-
-One test that I wanted to do while developing this feature was to see if
-I could figure out how many pages are really allocated from each node. The
-difficulty in doing this (as you pointed out above) is that because there are
-other ways that move the round robin forward (without necessarily calling the
-bulk alloc function), it's hard to directly attribute the page allocations.
-
-If this was the only place that we were modifying these values, then a
-correctness check would be equivalent to just adding a printk of each node
-and how many pages were allocated on it, then adding all the numbers up to
-see if it matches the weight ratios in sysfs.
-
-So I think I will do what you did as well -- I think that performing some
-tests, at least on the edge cases in a separate program will help give
-some confidence that the code works as intended. I'll also continue to think
-about if there are better ways to be testing this instead.
-
-Thanks again for reviewing this, have a great day!
-Joshua
-
-Sent using hkml (https://github.com/sjp38/hackermail)
