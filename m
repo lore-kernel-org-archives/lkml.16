@@ -1,207 +1,129 @@
-Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F994A21;
-	Fri, 27 Jun 2025 05:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5774A21;
+	Fri, 27 Jun 2025 05:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751003552; cv=none; b=Yo3q0SDSR+sgyO7aReIrI/PmJF8swkdr1V4NW66IqeXlxSebefmOokJqNZuoD/dNuWAtYaMWJkH/lbkiU3BZ8qplGDC0tqlJF7QTKXuq4N2Pq1koTCCv1go37IoHsYuulxmJWJaGwxkXkvTQq0Co5/V1dYTnAtZA1NBZvMtzVhs=
+	t=1751003632; cv=none; b=r++GIOaq23TZiMvutmsyvFuhuxHXwV1+234j9Mmv0eVe3+X5z5z+giL2dSovm6eYmPDPy0zX1xVeI2+gO+DTVkaOCWPDSVI6sisXpGpPy6q93prKR7RCcGRW4gL/3X33cvWR1etC63pZqzpQzTGcW+rZpYRZPAgcRn6FahTcZgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751003552; c=relaxed/simple;
-	bh=I+cyzXXEFsVaAY+O6/we7LXtcWZMrSXWgPA81FRNw4c=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=ZxNrFPMicuowjVKuEBF34vY8ukOizREkCskBjT1rYXDwbe+crFvn8BK8tkb0Jk3ju2li+CK8j379kDrQzr0AlPgTwCtFFtahv8vAi8uv0kM0eYap44cUIGfLAiiJs6t7Pp1fQ84eZ2AsTo4sy0ceXH7kgnWVPB4+e11XDXNEAzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=NUg3Q+FS; arc=none smtp.client-ip=212.122.41.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+	s=arc-20240116; t=1751003632; c=relaxed/simple;
+	bh=Zy7/A3rzqYMOX2kuIULbMqwklqRSmkuYRNgDTCLHLx8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TfyMKv7uS8XsdeFtcVryVTliMoTtbvczW+nyxXkaib/LVU/1XFNbDjG/nii/7jgiRcH0zc8kcaRRn0Ch4kHHXwqQkckURv34e5cfZuxbSQYtFnJwblD62+Bn05qDQERPwuuUvfOaQRhJ1KmrOljpk0eLBLsjyBnO3IPE1uIMFT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LMbQW5ml; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="NUg3Q+FS"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
-	s=mail; t=1751003086;
-	bh=UyV35LOM07P/PALS6LcEMleCj1no3wxnvAIeYWaEtMU=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=NUg3Q+FSo4ZvGRStNFZRcyBK2LQb6PdQnA/gJ9PlV5t7nFWQSPNUt3RjFyklTZ+HC
-	 iXPD48xk53aOi7RlCQXLB0Orsic0/wjL9ImhlnrVhMz0XcN68kVY4/fHrIjaliksWB
-	 ojxzRZjZeTqF6MG9YpIg6T86PnpEhMf8g2ubuyd8=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LMbQW5ml"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFDE4C4CEE3;
+	Fri, 27 Jun 2025 05:53:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751003631;
+	bh=Zy7/A3rzqYMOX2kuIULbMqwklqRSmkuYRNgDTCLHLx8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LMbQW5mlkGKkpBsIgJV9lXDi6vB3mPzOQSA1MK/GWLVqISLweLKvAsoeDsgwN56G0
+	 rxCqYplVblADvJZnwV4i+9s/uJqcW3wHfMmDTH5eaglniCKfH0JsC47iDOOL707/qN
+	 e/h/HuDkysaES5yiRHJUDRU5miZSPmJJsDzx6qx+LHDM5TJ7SycikNyTOlFr9axfSl
+	 GBsgAhyUmqSAND5o9QRK8ve5H+giExJrfPTh1KdLhOAk9YcEsWYEIcEfImwBueBwxf
+	 2Ut6sN97jY54oW9BQxw6+4ypzo+jPAWKwx21Qi6u28K5FrZldnzOdSYrNYP7PUP9qv
+	 IKK23XLywfEEg==
+Message-ID: <87dddb35-6132-4417-8fe0-09b0df2f870c@kernel.org>
+Date: Fri, 27 Jun 2025 07:53:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [REGRESSION] 9pfs issues on 6.12-rc1
-From: Christian Theune <ct@flyingcircus.io>
-In-Reply-To: <w5ap2zcsatkx4dmakrkjmaexwh3mnmgc5vhavb2miaj6grrzat@7kzr5vlsrmh5>
-Date: Fri, 27 Jun 2025 07:44:31 +0200
-Cc: Antony Antony <antony.antony@secunet.com>,
- David Howells <dhowells@redhat.com>,
- Antony Antony <antony@phenome.org>,
- Christian Brauner <brauner@kernel.org>,
- Eric Van Hensbergen <ericvh@kernel.org>,
- Latchesar Ionkov <lucho@ionkov.net>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Christian Schoenebeck <linux_oss@crudebyte.com>,
- Sedat Dilek <sedat.dilek@gmail.com>,
- Maximilian Bosch <maximilian@mbosch.me>,
- regressions@lists.linux.dev,
- v9fs@lists.linux.dev,
- netfs@lists.linux.dev,
- linux-fsdevel@vger.kernel.org,
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: iio: pressure: invensense,icp101xx: add
+ binding
+To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>, jic23@kernel.org,
+ dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ jmaneyrol@invensense.com
+Cc: ~lkcamp/patches@lists.sr.ht, linux-iio@vger.kernel.org,
  linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C7DAFD20-65D2-4B61-A612-A25FCC0C9573@flyingcircus.io>
-References: <ZxFQw4OI9rrc7UYc@Antony2201.local>
- <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me>
- <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info>
- <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me>
- <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com>
- <3327438.1729678025@warthog.procyon.org.uk>
- <ZxlQv5OXjJUbkLah@moon.secunet.de>
- <w5ap2zcsatkx4dmakrkjmaexwh3mnmgc5vhavb2miaj6grrzat@7kzr5vlsrmh5>
-To: Ryan Lahfa <ryan@lahfa.xyz>
+References: <20250626212742.7986-1-rodrigo.gobbi.7@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250626212742.7986-1-rodrigo.gobbi.7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 26/06/2025 23:12, Rodrigo Gobbi wrote:
+> There is no txt file for it, add yaml for invensense,icp101xx family
+> which is already used in the driver.
+> 
+> Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+> ---
+> Very simple yaml for a i2c device with psu. The pin out for the rest of
+> the family (the other PNs) doesn`t change anything here, since the diff
+> were RESV pins (unused).
 
-we=E2=80=99re experiencing the same issue with a number of NixOS tests =
-that are heavy in operations copying from the v9fs mounted nix store.
+Filename matching compatible, please.
 
-> On 13. Jun 2025, at 00:24, Ryan Lahfa <ryan@lahfa.xyz> wrote:
->=20
-> Hi everyone,
->=20
-> Le Wed, Oct 23, 2024 at 09:38:39PM +0200, Antony Antony a =C3=A9crit :
->> On Wed, Oct 23, 2024 at 11:07:05 +0100, David Howells wrote:
->>> Hi Antony,
->>>=20
->>> I think the attached should fix it properly rather than working =
-around it as
->>> the previous patch did.  If you could give it a whirl?
->>=20
->> Yes this also fix the crash.
->>=20
->> Tested-by: Antony Antony <antony.antony@secunet.com>
->=20
-> I cannot confirm this fixes the crash for me. My reproducer is =
-slightly
-> more complicated than Max's original one, albeit, still on NixOS and
-> probably uses 9p more intensively than the automated NixOS testings
-> workload.
->=20
-> Here is how to reproduce it:
->=20
-> $ git clone https://gerrit.lix.systems/lix
-> $ cd lix
-> $ git fetch https://gerrit.lix.systems/lix refs/changes/29/3329/8 && =
-git checkout FETCH_HEAD
-> $ nix-build -A hydraJobs.tests.local-releng
->=20
-> I suspect the reason for why Antony considers the crash to be fixed is
-> that the workload used to test it requires a significant amount of
-> chance and retries to trigger the bug.
->=20
-> On my end, you can see our CI showing the symptoms:
-> =
-https://buildkite.com/organizations/lix-project/pipelines/lix/builds/2357/=
-jobs/019761e7-784e-4790-8c1b-f609270d9d19/log.
->=20
-> We retried probably hundreds of times and saw different corruption
-> patterns, Python getting confused, ld.so getting confused, systemd
-> sometimes too. Python had a much higher chance of crashing in many of
-> our tests. We reproduced it over aarch64-linux (Ampere Altra Q80-30) =
-but
-> also Intel and AMD CPUs (~5 different systems).
+<form letter>
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC. It might happen, that command when run on an older
+kernel, gives you outdated entries. Therefore please be sure you base
+your patches on recent Linux kernel.
 
-Yeah. We=E2=80=99re on AMD CPUs and it wasn=E2=80=99t hardware-bound.=20
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline) or work on fork of kernel
+(don't, instead use mainline). Just use b4 and everything should be
+fine, although remember about `b4 prep --auto-to-cc` if you added new
+patches to the patchset.
 
-The errors we saw where:=20
+You missed at least devicetree list (maybe more), so this won't be
+tested by automated tooling. Performing review on untested code might be
+a waste of time.
 
-- malloc(): unaligned tcache chunk detected
-- segfaulting java processes
-- misbehaving filesystems (errors about internal structures in ext4, =
-incorrect file content in xfs)
-- crashing kernels when dealing with the outfall of those errors
+Please kindly resend and include all necessary To/Cc entries.
+</form letter>
 
-> As soon as we reverted to Linux 6.6 series, the bug went away.
 
-Same here, the otherway around: we came from 6.6.94 and updated to =
-6.12.34 and immediately saw a number of tests failing, all of which were =
-heavy in copying data from v9fs to the root filesystem in the VM.
-
-> We bisected but we started to have weirder problems, this is because =
-we
-> encountered the original regression mentioned in October 2024 and for =
-a
-> certain range of commits, we were unable to bisect anything further.
-
-I had already found the issue from last October when started bisecting, =
-I later got in touch with Ryan who recognized that we were chasing the =
-same issue. I stopped bisecting at that point - the bisect was already =
-homing in around the time of the changes in last October.
-
-> So I switched my bisection strategy to understand when the bug was
-> fixed, this lead me on the commit
-> e65a0dc1cabe71b91ef5603e5814359451b74ca7 which is the proper fix
-> mentioned here and on this discussion.
->=20
-> Reverting this on the top of 6.12 cause indeed a massive amount of
-> traces, see this gist [1] for examples.
-
-Yeah. During bisect I noticed it flapping around with the original =
-October issues crashing immediately during boot.
-
-> Applying the "workaround patch" aka "[PATCH] 9p: Don't revert the I/O
-> iterator after reading" after reverting e65a0dc1cabe makes the problem
-> go away after 5 tries (5 tries were sufficient to trigger with the
-> proper fix).
-
-Yup, I applied the revert and workaround patch on top of 6.12.34 and the =
-reliably broken test became reliably green again.
-
-Our test can be reproduced, too:
-
-$ git clone https://github.com/flyingcircusio/fc-nixos.git
-$ cd fc-nixos
-$ eval $(./dev-setup)
-$ nix-build tests/matomo.nix
-
-The test will fail with ext4 complaining something like this:
-
-machine # [ 42.596728] =
-vn2haz1283lxz6iy0rai850a7jlgxbja-matomo-setup-update-pre[1233]: Copied =
-files, updating package link in /var/lib/matomo/current-package.
-machine # [ 42.788956] EXT4-fs error (device vda): =
-htree_dirblock_to_tree:1109: inode #13138: block 5883: comm setfacl: bad =
-entry in directory: rec_len % 4 !=3D 0 - offset=3D0, inode=3D606087968, =
-rec_len=3D31074, size=3D4096 fake=3D0
-machine # [ 42.958590] EXT4-fs error (device vda): =
-htree_dirblock_to_tree:1109: inode #13138: block 5883: comm chown: bad =
-entry in directory: rec_len % 4 !=3D 0 - offset=3D0, inode=3D606087968, =
-rec_len=3D31074, size=3D4096 fake=3D0
-machine # [ 43.068003] EXT4-fs error (device vda): =
-htree_dirblock_to_tree:1109: inode #13138: block 5883: comm chmod: bad =
-entry in directory: rec_len % 4 !=3D 0 - offset=3D0, inode=3D606087968, =
-rec_len=3D31074, size=3D4096 fake=3D0
-machine # [ 43.004098] =
-vn2haz1283lxz6iy0rai850a7jlgxbja-matomo-setup-update-pre[1233]: Giving =
-matomo read+write access to /var/lib/matomo/share/matomo.js, =
-/var/lib/matomo/share/piwik.js, /var/lib/matomo/share/config, =
-/var/lib/matomo/share/misc/user, /var/lib/matomo/share/js, =
-/var/lib/matomo/share/tmp, /var/lib/matomo/share/misc
-machine # [ 43.201319] EXT4-fs error (device vda): =
-htree_dirblock_to_tree:1109: inode #13138: block 5883: comm setfacl: bad =
-entry in directory: rec_len % 4 !=3D 0 - offset=3D0, inode=3D606087968, =
-rec_len=3D31074, size=3D4096 fake=3D0
-
-I=E2=80=99m also available for testing and further diagnosis.
-
-Christian
-
---=20
-Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
-Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
-Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
-HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
-Christian Zagrodnick
-
+Best regards,
+Krzysztof
