@@ -1,83 +1,79 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103C8C2FB;
-	Fri, 27 Jun 2025 20:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED25921A44C;
+	Fri, 27 Jun 2025 20:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751055817; cv=none; b=HZjInVjr0UHBK0/zB7Qo2DzCHPKATZ8zCuTOIHuA90r5qoLfNk+eFgDUHIuWBfZ2dRcZt7hdL7unoGatbTWjFSHJV9847UGVxxSyFlSOUSRJofR8eXyWSch6qwLDSVMWfLtUijGoGy8C6cGdxj3iXafi46M08OT/TT74ba6v7Os=
+	t=1751055828; cv=none; b=RwqwAVcb9kbTIXJoGpt+S4dZb9ze4xG06LeEW7xBURb64WLJgEmdqNJa/qhpXZyDD3eCE5gzg9MwEfUGt02eMnmVuhtx2Wd3MRKxD6th01sXWn6ccxwgkYFveexc5HqvqPJlJOZl0G0f6zyg4G+07Sy4eG0Zv47V0VgWRbMy1yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751055817; c=relaxed/simple;
-	bh=8LRAvUFeTwmz4rDd900x+Z+XteT5wGFcJVnT+hGaLP4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h3ReBkcaFyx0OS0n5PUmlfN73VlbtJEdBYwYPObiIYOtaVXVFEzNJyYyhJCV2JasNXRz5eW3TrWcCcgX+40c6mMe1a40YL+cOZNowhmeUb1ZYAmCfFvjmOTn32M5DaVI1gFx6GrjZryyoPU1rSbW15hNJI3v1ZAwPAWXH1fCFgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=PgigF6B0; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1751055828; c=relaxed/simple;
+	bh=ZUs7oMicwFryr12OGl0ndU7qfjIlyTt3/e0DKs0MGVo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nn4f79dFKHmIhC7RB5a26FZ00r3VuV2n9PeskulMDq27N6g+i8VYCx+4V5/hCFBsCCGPZ6HviPBbHWHI4xj5dBzgah3KWiIUDyQm6do0AxZj5wQ8RNxHYN+JHKbbHuuDoYERJZ9NNKptJwkJh7up3/gB+ik9d2gA5Q+gjlZ2b2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XYvqsoLC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="PgigF6B0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=LNuHdZp1p8Oowbp9pqTlemJ4dhvpEIex6NkU/PUOyGM=; b=PgigF6B0mR7Bk3asa15fereY3a
-	LPqE/FIBEXopIv4s9QCLrpfaYUBgKU1u89vGKeK1muVH7XyHMxbqcQsGG2tS2YrSlQ1uHKiFWBQEz
-	Lr/2r9vFkbEvN0Xv/FYTMn4jCq9aCt2/oLa6gNJjtS2ZChMJNe8/S8m2QWzBrou4fAH4Ckyq127dp
-	tj0V8qFApRZZcxf5YQn2Q9uV1KnKj47ndCt9zpnmIylfOSfIRxx/LNeoDzL/a+dLMHTexTdZsIBNd
-	+4NjBh6x0TVn5T3yxmTcpMY8SqOr555P/xg7x87szaSOqTug4SXO2VZua01RaYpX5c5RbgEUHUhO6
-	4JV762+g==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uVFbI-009XtB-C6; Fri, 27 Jun 2025 22:23:08 +0200
-Message-ID: <96b3d0fa-7fd2-4d2b-a6d6-cc91ed1dca4e@igalia.com>
-Date: Fri, 27 Jun 2025 17:23:03 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XYvqsoLC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55852C4CEE3;
+	Fri, 27 Jun 2025 20:23:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751055826;
+	bh=ZUs7oMicwFryr12OGl0ndU7qfjIlyTt3/e0DKs0MGVo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XYvqsoLCo0czRGJb19eWtrW5bHpMhPlUhmy3uB8g/ehHEVFMs0cYqhFkC6s1buEte
+	 d3kuw4FX3ejzT8lKoG5vvM8t5pJLOpUD1C/l0ILPWGcpiDU+Pt2/zXqjzw6XZZJRBx
+	 R83HUQ0OLhZmEFVYHvgTO6kV8+se8wkpCRZs2hWif0nEVt8crYdNOBjVGT3vI6xTZ7
+	 ZQ+wk7leKA7qh/DwmmOEToGfD5FyMUa7slAWwXG4OB0WaIBO+P+ylzMZ7LwlLSB6lg
+	 1vGJEWgbMfOrt9o++UWhJ8niIFR4SlzkluUyq7SEqmWgr4faAJDig5UNL7OJQw5lTZ
+	 O8TFDLQHEogBg==
+Date: Fri, 27 Jun 2025 15:23:45 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Detlev Casanova <detlev.casanova@collabora.com>
+Cc: Alexey Charkov <alchark@gmail.com>, Dragan Simic <dsimic@manjaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	linux-rockchip@lists.infradead.org,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Jianfeng Liu <liujianfeng1994@gmail.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	linux-kernel@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ricardo Ribalda <ribalda@chromium.org>, linux-media@vger.kernel.org,
+	Hans de Goede <hansg@kernel.org>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	linux-arm-kernel@lists.infradead.org, kernel@collabora.com,
+	Yunke Cao <yunkec@google.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/8] media: dt-bindings: rockchip: Add RK3576 Video
+ Decoder bindings
+Message-ID: <175105582524.23618.936234591360412095.robh@kernel.org>
+References: <20250623160722.55938-1-detlev.casanova@collabora.com>
+ <20250623160722.55938-3-detlev.casanova@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/7] selftests/futex: Add ASSERT_ macros
-To: Thomas Gleixner <tglx@linutronix.de>, Shuah Khan <shuah@kernel.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Peter Zijlstra
- <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- linux-api@vger.kernel.org, kernel-dev@igalia.com,
- Darren Hart <dvhart@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Waiman Long <longman@redhat.com>
-References: <20250626-tonyk-robust_futex-v5-0-179194dbde8f@igalia.com>
- <20250626-tonyk-robust_futex-v5-1-179194dbde8f@igalia.com>
- <87ecv6p364.ffs@tglx>
-Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <87ecv6p364.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623160722.55938-3-detlev.casanova@collabora.com>
 
-Em 26/06/2025 19:07, Thomas Gleixner escreveu:
-> On Thu, Jun 26 2025 at 14:11, André Almeida wrote:
+
+On Mon, 23 Jun 2025 12:07:16 -0400, Detlev Casanova wrote:
+> The video decoder in RK3576 (vdpu383) is described the same way as the
+> one in RK3588 (vdpu381). A new compatible is added as the driver
+> implementation will be different.
 > 
->> Create ASSERT_{EQ, NE, TRUE, FALSE} macros to make test creation easier.
-> 
-> What's so futex special about this that it can't use the same muck in
-> 
-> tools/testing/selftests/kselftest_harness.h
+> Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+> ---
+>  Documentation/devicetree/bindings/media/rockchip,vdec.yaml | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
 
-My previous version of this test used kselftest_harness.h, but Shuah 
-request to keep consistency and don't use this header, giving that the 
-rest of futex test doesn't use it:
-
-https://lore.kernel.org/lkml/fe02f42b-7ba8-4a3b-a86c-2a4a7942fd3b@linuxfoundation.org/
-
-> or at least share the implementation in some way?
-> 
-> Thanks,
-> 
->          tglx
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
