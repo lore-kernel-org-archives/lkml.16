@@ -1,113 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4E82EA755;
-	Fri, 27 Jun 2025 15:52:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3923208;
+	Fri, 27 Jun 2025 15:53:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751039564; cv=none; b=qMJIiD+AOPv8Ek9lj/ZjG0t76LUFDiB2+1SsHg0aC9Mn+FM5WRQJA3ZCplDvnrnsW3LEHHPydfc5ObLYxQ8Q7UKHlwZKgJOO614u7ZEBZUGB9ffceIpqrDFeAJPDrJje6UYorITKXl7TYkkiF/0nqxaH3Ma4XStUt7Mh6w/ZBbs=
+	t=1751039609; cv=none; b=sqsOTvSCkRx3rygkZfLjAVnrgoxoh5Dw7UzpGyIU3wNTu7yiZRIyg57qEOiDM9dvQTge5tbONCf17wPRaZHv3ZqVwaK+6h1a5uqz/xkmooQakH3Udups5/sMkPqetzqmC79vqvGlGp/z8NQTDJgwlbbkb7Wx6YdH4BM01WbZcAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751039564; c=relaxed/simple;
-	bh=gy9CL9y+gfjM4QOF0F7e8FXJmc5anJ3Go0BAtsFvsKc=;
+	s=arc-20240116; t=1751039609; c=relaxed/simple;
+	bh=9jvEQ9I22Mhlsd+LxJZ4oHjg0gKuzAh0ToNhXaQgrpY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dZ/UsQ7KSHDX1W4g4pO5spN99GWZrfhS3nvy1/R4TCX/+26yjoOYHVJBnZjYGG3a3CF3jcrRau4LLrNDfSQEzgPoO/Hnvxvi5zFk0JUvRX7ipC6la7qzFwXHXKvk7eZy7nPP1dG2++JzLy4d1+xh4/CKLrlvUYCb+Ei32pYjOPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HptNLOij; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bs8SMHqW1JfQedE9v25vzcupc9uqn5kDzOpTWx5+qpRXa1gzuudgDNqenR6yHC8lxMsAgK5ug+1x6ZM75vyhXqPB6F6qM4+P7UWQW7zvwZfiD7xmMmxu3mr4l2DTbWYU4Q6suYzHDxHSavQOh/0XXC/fgr0APjHjyhVr5hBO2pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2PIXGHE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HptNLOij"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CAC9C4CEF3;
-	Fri, 27 Jun 2025 15:52:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2PIXGHE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65CE1C4CEE3;
+	Fri, 27 Jun 2025 15:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751039563;
-	bh=gy9CL9y+gfjM4QOF0F7e8FXJmc5anJ3Go0BAtsFvsKc=;
+	s=k20201202; t=1751039608;
+	bh=9jvEQ9I22Mhlsd+LxJZ4oHjg0gKuzAh0ToNhXaQgrpY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HptNLOijAQuThXyOxRbHv92Tpzf90xR4vy7kfuhDOhzs21PwCMTLa/n8A7+FkixcA
-	 Do1jFS+DS4LuXGoeDkq3q78CvN5ZHGP5nGaNDnhCmDYKWuecBEqAeQaN4WVnCoesfs
-	 rszraaQAVmK/qcWUSPrhTrkAc/r+ADkSNvvx8KJ8FEGTi9jsPlUNNm9UbCKjkACL0R
-	 2UyJ1ENh7PDdR7V9aWsKw7YD/F70DKGmeGtbhFe7pdpOxxT3CKrYMZRdV8Q6AgxUq9
-	 Jf5NNu6Y+EP++/i+iy8LCMwYxi4DVMgCwb7jAY1MbRO/p0PvxmO6rpN1PiOMUyjAv1
-	 x4osoJ4oZjibQ==
-Date: Fri, 27 Jun 2025 08:52:42 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, nvdimm@lists.linux.dev,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4][for-next/hardening] acpi: nfit: intel: avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <202506270850.8631FABC17@keescook>
-References: <aFxtOLs6Yv_uzgt4@kspp>
+	b=b2PIXGHE/PIjk2eDAc/MPl8v1olroLzQzQ5N7Art4TKnw7Y/JDV72yh7d0qcKcw68
+	 UgsFSysnsboCT9wr1010yB4dmIynxsWaFSikE8rw/5BA3TrdS65ZE7l0jl04EHuxJO
+	 2GOT0nxqJhDmMIfHSo1N85/YEBBp/65e0trzeq5sDbiHY9XdRsxb8luQ1FAheRPJ2a
+	 hoiN65nrtqvpEbPAKYVmeSQ+yTebSXYVUW7LUMnTvTb2/sHiVg211ij6N8SE36fNXI
+	 QeORosy2Y636/Sh0a/w8EKPuG1e4RJ7jDT/+Ba/yidThRoXlHNSDexIuKlZAuYJLEy
+	 RneUfat3/2WBQ==
+Date: Fri, 27 Jun 2025 16:53:24 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+Cc: andy@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+	dlechner@baylibre.com, jic23@kernel.org, krzk+dt@kernel.org,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nuno.sa@analog.com, robh@kernel.org, ~lkcamp/patches@lists.sr.ht
+Subject: Re: [PATCH v3] dt-bindings: iio: adc: st,spear600-adc: txt to yaml
+ format conversion.
+Message-ID: <20250627-rage-oat-14141026cf28@spud>
+References: <20250526-overtake-charger-6c5ffcc2bc09@spud>
+ <20250626205733.6354-1-rodrigo.gobbi.7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="0y+6vaV681sTCfCv"
+Content-Disposition: inline
+In-Reply-To: <20250626205733.6354-1-rodrigo.gobbi.7@gmail.com>
+
+
+--0y+6vaV681sTCfCv
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aFxtOLs6Yv_uzgt4@kspp>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 25, 2025 at 03:42:16PM -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Use the new TRAILING_OVERLAP() helper to fix a dozen instances of
-> the following type of warning:
-> 
-> drivers/acpi/nfit/intel.c:692:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
-> Tested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> This patch should go through:
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/ (for-next/hardening)
-> 
-> Changes in v4:
->  - Use the new TRAILING_OVERLAP() helper.
-> 
-> Changes in v3:
->  - Use union instead of DEFINE_RAW_FLEX().
->  - Link: https://lore.kernel.org/linux-hardening/aEneid7gdAZr1_kR@kspp/
-> 
-> Changes in v2:
->  - Use DEFINE_RAW_FLEX() instead of __struct_group().
->  - Link: https://lore.kernel.org/linux-hardening/Z-QpUcxFCRByYcTA@kspp/ 
-> 
-> v1:
->  - Link: https://lore.kernel.org/linux-hardening/Z618ILbAR8YAvTkd@kspp/
-> 
->  drivers/acpi/nfit/intel.c | 84 +++++++++++++++++----------------------
->  1 file changed, 36 insertions(+), 48 deletions(-)
-> 
-> diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
-> index 3902759abcba..d0b72e906428 100644
-> --- a/drivers/acpi/nfit/intel.c
-> +++ b/drivers/acpi/nfit/intel.c
-> @@ -55,10 +55,9 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
->  {
->  	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
->  	unsigned long security_flags = 0;
-> -	struct {
-> -		struct nd_cmd_pkg pkg;
-> -		struct nd_intel_get_security_state cmd;
-> -	} nd_cmd = {
-> +	TRAILING_OVERLAP(struct nd_cmd_pkg, pkg, nd_payload,
-> +			 struct nd_intel_get_security_state cmd;
-> +	) nd_cmd = {
+On Thu, Jun 26, 2025 at 05:54:01PM -0300, Rodrigo Gobbi wrote:
+> Hi, all,
+>=20
+> Just a gentle ping here since it was already been reviewed.
+> If there is any other concerns, let me know.
+> Tks and regards.
 
-If you wanted, these could be even further minimized to this, leaving
-the trailing object indentation unchanged:
+This is all I see here, a ping with no context is not very
+helpful. I have to go look it up on lore to see who reviewed it
+etc. In this case the reviewer in question is me, so you're looking for
+Jonathan to apply it.
 
--	struct {
--		struct nd_cmd_pkg pkg;
-+	TRAILING_OVERLAP(struct nd_cmd_pkg, pkg, nd_payload,
- 		struct nd_intel_get_security_state cmd;
--	} nd_cmd = {
-+	) nd_cmd = {
+--0y+6vaV681sTCfCv
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Kees Cook
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaF6+cwAKCRB4tDGHoIJi
+0sEuAP0XXkr/zdyXCCujaPGWlfN2pKqB7teOqvhq2sk+UHO9tQD+MpTvyNNFmJ8p
+o2nW19m3IMiJ8OyL3Yss+7hndGZA+AQ=
+=qBDa
+-----END PGP SIGNATURE-----
+
+--0y+6vaV681sTCfCv--
