@@ -1,46 +1,60 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653EF1B3925
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54772E9EBE;
+	Fri, 27 Jun 2025 15:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751039162; cv=none; b=WM1AE2Zj8SvSS1xfT5baiBiv2zFBQkxb3ZTr5TB+R7/kvpM3ufg+mUHR+UUT3fdQuD9l7OIDyv9Ycq6zah8iygO1yeZuf7GOeMKzywTVGoe5JrDM2yvtqyL+veAkQC/SMEf99QUkf+mW+6sF5d11RHoNfvqfMdXUQdlJYXHqKws=
+	t=1751039166; cv=none; b=imsd+qokC2K6e3405bJW17a9Amjjkx2kEwar12hC1RZ1QppdCrmT/7UrSN6pRr2XGQuRvbieFBqcPnzUZ3/eS3DvrgWgI7K40XxIXiSVl0TGMnQhZA4XWwP5egunoNWBQZKLGRV5gs2b4dBxbya9Xs6iN05M9OcEDwBPichTvqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751039162; c=relaxed/simple;
-	bh=BiIbeOmUeRO0AU6RuqdDm9kIvmbX5U9hAIstbN8vuSQ=;
+	s=arc-20240116; t=1751039166; c=relaxed/simple;
+	bh=pX+4k3111DQycypNzgJjqu+X5auTYHwX1w8qTrIgzYo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e5C98BPhT/a9boOx1jw48GvfaHcWM6JW97rOfyMRAlFIj+ejaD42Mhau3JL01mc7c7MKRQuX52tTV1cWdrS1oSTRuaI7V4f2HHhY1QBGVQm/5fS2tJ9OiSISRjlzNDxcxurm5MXfEWPGjx9t/EQzFS4OGJj5xlzPltQ5I82HMvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uVBGw-0004cf-KM; Fri, 27 Jun 2025 17:45:50 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uVBGv-005dlG-0h;
-	Fri, 27 Jun 2025 17:45:49 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uVBGv-003coG-0M;
-	Fri, 27 Jun 2025 17:45:49 +0200
-Date: Fri, 27 Jun 2025 17:45:49 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v3 1/1] phy: micrel: add Signal Quality
- Indicator (SQI) support for KSZ9477 switch PHYs
-Message-ID: <aF68rU2XQQ8a3ww4@pengutronix.de>
-References: <20250627112539.895255-1-o.rempel@pengutronix.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=l1ULLAtzfUML1GhHppRv3XtSL91EjFTISQvVm0nPiqzw0VxIE2L22mIa/By9I8KJnRA2leLhx1WSiZk/Wj1IgdkxugFwvRdRHC90FpCGI/dgageOQ1CNTaAqCJ9bd8NbdfFyKWptZU1ik6JXNkJX7ZLuDhdOqb3SMzJawzkAUW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=n4oL3gyp; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n4oL3gyp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=c3vCkFbhdgYVqqEDes1QFepeOfqXaiheP5+7KDv7Ebw=; b=n4oL3gypIqI5TK4THtINSLCpag
+	SLp8q5VAaIR2EAkfhPLrL7o2dw/4U+ToS3OxEkKznV75IoTM1GcozkaWQ/8eEI33+FO5aDjg13dQ9
+	DylQV6P3+OXB19c6sT+eReDIh97U+/GmnY8WvId1nHr4daVmwDz7ydeDjadHBnDQG7QrNElKKx/m9
+	hFgxuHXLCzivX/7zTwZqwWToFNjne1uEIhM5GhdaBPk0i4oEdgw2GF8trCoksP0lS41SPzRnPF+R1
+	pcmWZq+1ZNQMmJ4HglF5LEQKe1q2dAZxj5+MQJwTlZFK5lmsOXAISpwtg5rwx4xV34HpBgEEXMxOQ
+	9Fo+Gong==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uVBGy-0000000EQ1q-4BPK;
+	Fri, 27 Jun 2025 15:45:53 +0000
+Date: Fri, 27 Jun 2025 16:45:52 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: =?utf-8?B?6ZmI5rab5rab?= Taotao Chen <chentaotao@didiglobal.com>
+Cc: "tytso@mit.edu" <tytso@mit.edu>,
+	"hch@infradead.org" <hch@infradead.org>,
+	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+	"rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+	"tursulin@ursulin.net" <tursulin@ursulin.net>,
+	"airlied@gmail.com" <airlied@gmail.com>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"chentao325@qq.com" <chentao325@qq.com>,
+	"frank.li@vivo.com" <frank.li@vivo.com>
+Subject: Re: [PATCH v3 3/4] fs: change write_begin/write_end interface to
+ take struct kiocb *
+Message-ID: <aF68sKzx24P1q54h@casper.infradead.org>
+References: <20250627110257.1870826-1-chentaotao@didiglobal.com>
+ <20250627110257.1870826-4-chentaotao@didiglobal.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,50 +64,82 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250627112539.895255-1-o.rempel@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20250627110257.1870826-4-chentaotao@didiglobal.com>
 
-On Fri, Jun 27, 2025 at 01:25:39PM +0200, Oleksij Rempel wrote:
-> Add support for the Signal Quality Indicator (SQI) feature on KSZ9477
-> family switches, providing a relative measure of receive signal quality.
-> 
-> The hardware exposes separate SQI readings per channel. For 1000BASE-T,
-> all four channels are read. For 100BASE-TX, only one channel is reported,
-> but which receive pair is active depends on Auto MDI-X negotiation, which
-> is not exposed by the hardware. Therefore, it is not possible to reliably
-> map the measured channel to a specific wire pair.
-> 
-> This resolves an earlier discussion about how to handle multi-channel
-> SQI. Originally, the plan was to expose all channels individually.
-> However, since pair mapping is sometimes unavailable, this
-> implementation treats SQI as a per-link metric instead. This fallback
-> avoids ambiguity and ensures consistent behavior. The existing get_sqi()
-> UAPI was designed for single-pair Ethernet (SPE), where per-pair and
-> per-link are effectively equivalent. Restricting its use to per-link
-> metrics does not introduce regressions for existing users.
-> 
-> The raw 7-bit SQI value (0–127, lower is better) is converted to the
-> standard 0–7 (high is better) scale. Empirical testing showed that the
-> link becomes unstable around a raw value of 8.
-> 
-> The SQI raw value remains zero if no data is received, even if noise is
-> present. This confirms that the measurement reflects the "quality" during
-> active data reception rather than the passive line state. User space
-> must ensure that traffic is present on the link to obtain valid SQI
-> readings.
+On Fri, Jun 27, 2025 at 11:03:11AM +0000, 陈涛涛 Taotao Chen wrote:
+> diff --git a/fs/exfat/file.c b/fs/exfat/file.c
+> index 841a5b18e3df..fdc2fa1e5c41 100644
+> --- a/fs/exfat/file.c
+> +++ b/fs/exfat/file.c
+> @@ -532,10 +532,12 @@ int exfat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
+>  	return blkdev_issue_flush(inode->i_sb->s_bdev);
+>  }
+>  
+> -static int exfat_extend_valid_size(struct file *file, loff_t new_valid_size)
+> +static int exfat_extend_valid_size(const struct kiocb *iocb,
+> +				   loff_t new_valid_size)
+>  {
+>  	int err;
+>  	loff_t pos;
+> +	struct file *file = iocb->ki_filp;
+>  	struct inode *inode = file_inode(file);
+>  	struct exfat_inode_info *ei = EXFAT_I(inode);
+>  	struct address_space *mapping = inode->i_mapping;
+> @@ -551,14 +553,14 @@ static int exfat_extend_valid_size(struct file *file, loff_t new_valid_size)
+>  		if (pos + len > new_valid_size)
+>  			len = new_valid_size - pos;
+>  
+> -		err = ops->write_begin(file, mapping, pos, len, &folio, NULL);
+> +		err = ops->write_begin(iocb, mapping, pos, len, &folio, NULL);
+>  		if (err)
+>  			goto out;
+>  
+>  		off = offset_in_folio(folio, pos);
+>  		folio_zero_new_buffers(folio, off, off + len);
+>  
+> -		err = ops->write_end(file, mapping, pos, len, len, folio, NULL);
+> +		err = ops->write_end(iocb, mapping, pos, len, len, folio, NULL);
+>  		if (err < 0)
+>  			goto out;
+>  		pos += len;
+> @@ -604,7 +606,7 @@ static ssize_t exfat_file_write_iter(struct kiocb *iocb, struct iov_iter *iter)
+>  	}
+>  
+>  	if (pos > valid_size) {
+> -		ret = exfat_extend_valid_size(file, pos);
+> +		ret = exfat_extend_valid_size(iocb, pos);
+>  		if (ret < 0 && ret != -ENOSPC) {
+>  			exfat_err(inode->i_sb,
+>  				"write: fail to zero from %llu to %llu(%zd)",
+> @@ -655,8 +657,11 @@ static vm_fault_t exfat_page_mkwrite(struct vm_fault *vmf)
+>  	struct file *file = vma->vm_file;
+>  	struct inode *inode = file_inode(file);
+>  	struct exfat_inode_info *ei = EXFAT_I(inode);
+> +	struct kiocb iocb;
+>  	loff_t start, end;
+>  
+> +	init_sync_kiocb(&iocb, file);
+> +
+>  	if (!inode_trylock(inode))
+>  		return VM_FAULT_RETRY;
+>  
+> @@ -665,7 +670,7 @@ static vm_fault_t exfat_page_mkwrite(struct vm_fault *vmf)
+>  			start + vma->vm_end - vma->vm_start);
+>  
+>  	if (ei->valid_size < end) {
+> -		err = exfat_extend_valid_size(file, end);
+> +		err = exfat_extend_valid_size(&iocb, end);
+>  		if (err < 0) {
+>  			inode_unlock(inode);
+>  			return vmf_fs_error(err);
 
-Update for this statement: it is valid only if EEE is active. With
-disabled EEE, SQI provide correct value even if no data is transferred.
+This is unnecessary work.  The only ->write_begin/write_end that we'll
+see here is exfat_write_begin() / exfat_write_end() which don't actually
+need iocb (or file).  Traditionally we pass NULL in these situations,
+but the exfat people probably weren't aware of this convention.
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+exfat_extend_valid_size() only uses the file it's passed to get the
+inode, and both callers already have the inode.  So I'd change
+exfat_extend_valid_size() to take an inode instead of a file as its
+first argument, then you can skip the creation of an iocb in
+exfat_page_mkwrite().
