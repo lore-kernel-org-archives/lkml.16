@@ -1,46 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E8F20B80B;
-	Fri, 27 Jun 2025 20:11:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4DA20B80B;
+	Fri, 27 Jun 2025 20:12:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751055115; cv=none; b=eq3Vian8Tb95FmUQpHmRo/RwVWsBVAZ68MS8Eo0cDAOvMudmZbXQntdUR+JXIHgT3Y6g+1ljOVRh7QIWDgFRztvjaiw1s0h8+qmj7vYFozrWh9SO/lJGyRNdcxzMPyzySiYsX79dai0V89stl70GH1s7tqEhMHOb33eCm4zaEYg=
+	t=1751055140; cv=none; b=SYH3Arryk4B9MytT9O15tEa5k/04r+PJMsgV+XSno2XMCMnjuXXGvpi3vOBV3e17UeRyfbicIvIxUj8+SlXNdq27PEDOujryrN6+Kt9KSi3NWRroEyN8oWCGRy+VWHSLkG498t/5jN0t4bsV3pumWnUBW/7dp7IFi7TkMakBaP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751055115; c=relaxed/simple;
-	bh=j480d8kCKmPEv/s1I085hF2TgeZLCw2SbopKfGFaiCc=;
+	s=arc-20240116; t=1751055140; c=relaxed/simple;
+	bh=s0Xged9J2HnvN6x2GXvoVG4DhENWGLcw1Wvk3UDfhk0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P/bdynyJeJ/xjEnN47WrIz8vPZZaXFT5KUL3+6dFPvi5OpamcOluC+ecQvLi1GetFCAo+txBvKAQfuECGy56e1swocyS90U3VebQKMP6MMMDL9J0Q3DOOgYTZrQ/lUk7lrjNNQ9Yp9E0opgd0V7/eD2t6J+4E/0kzZuoAeJclSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oS8WYC9x; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nbN8HWAtbojg8EC6UwJi4Gnb3A6lC2CBUtITnpFnbeYiHqpGPoS16gws+F0FFniAN6bZiSF+cq7XoW3KgUH7b6NJXFtQx2StqTnFL03en71eOm0WPAH1BZI50bLdBSPEr8I1nX35CROx0EgUJUSQqyP9MEsNvBWx4RPEtix7fPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dbvaIv84; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oS8WYC9x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2E32C4CEE3;
-	Fri, 27 Jun 2025 20:11:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dbvaIv84"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C113C4CEE3;
+	Fri, 27 Jun 2025 20:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751055113;
-	bh=j480d8kCKmPEv/s1I085hF2TgeZLCw2SbopKfGFaiCc=;
+	s=k20201202; t=1751055140;
+	bh=s0Xged9J2HnvN6x2GXvoVG4DhENWGLcw1Wvk3UDfhk0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oS8WYC9x/7XhB5hLSlEiIiX+fhE4IFlUON6lQtVaHwQKQqTI/neox5yvPgnmoHIDU
-	 BPZjNf6mASLzwlTkMLu6Q+3K0TNkeeUQyp1/CbH5aJ1IVNGg1QbgXvOZRRHua9FewX
-	 p5vzDP4GoiK6VczT2MuY8ldfpKNb1ZuS5zDqLmHM0wkJn0NkM9tNyapWTy7L9b7DRF
-	 DgnPmwybwvVD39nIvbfjS3sh/80OkM0A9fOx9v2rJnP41n0h3ScdbwNvV8NM3W0BKn
-	 FqaLVTTGyNm4FQVl9a1R4Ndt8w8qG+91ijqc2TYb9wsuXkpRrOUmDJIalXECE+d4QP
-	 bTJoZ7iqO6ykA==
-Date: Fri, 27 Jun 2025 15:11:52 -0500
-From: Rob Herring <robh@kernel.org>
+	b=dbvaIv84Q8/hxga+QPQuAVOJo1iAVrT3k3tciBHSB01FYbsIbgXMqUtXbZrrFDe7X
+	 OnKj4xc8bpec1TE1VMfxS3vlCZrcGxvj7bc4r/NIR12UEp/SiKK/CgY2CumCXTuN7V
+	 8ojRypb9bxPPbTwJJTbX8Y0o79DHcv9DNRt7NoAumwz+/uSm65r2kqL93yx6KZuk2k
+	 vsuNKV59kFj7IlI25mMmAv0GEed5gou1mK4SZao+NxLP+Ze3pG4lvXbCZD8EujeMN7
+	 G7xBF+ar5OYrvQi6rlNIqhmgeLhNuhYmpf3qvkYTWYnf7f0L7XCyGqDRTGHUWiQKp9
+	 LaEvc20NP2RCg==
+Date: Fri, 27 Jun 2025 15:12:19 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
 To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: jianjun.wang@mediatek.com, ryder.lee@mediatek.com, bhelgaas@google.com,
-	lpieralisi@kernel.org, kwilczynski@kernel.org,
-	manivannan.sadhasivam@linaro.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, matthias.bgg@gmail.com,
-	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+Cc: conor+dt@kernel.org, kernel@collabora.com, krzk+dt@kernel.org,
+	linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v1 2/3] dt-bindings: PCI: mediatek-gen3: Add support for
- MT6991/MT8196
-Message-ID: <20250627201152.GA4114099-robh@kernel.org>
-References: <20250623120058.109036-1-angelogioacchino.delregno@collabora.com>
- <20250623120058.109036-3-angelogioacchino.delregno@collabora.com>
+	linux-arm-kernel@lists.infradead.org, jassisinghbrar@gmail.com
+Subject: Re: [PATCH v1 1/2] dt-bindings: mailbox: Add MediaTek TinySYS MHU
+ mailbox
+Message-ID: <175105513896.4155718.5094277254740319329.robh@kernel.org>
+References: <20250623120127.109237-1-angelogioacchino.delregno@collabora.com>
+ <20250623120127.109237-2-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,81 +46,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250623120058.109036-3-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250623120127.109237-2-angelogioacchino.delregno@collabora.com>
 
-On Mon, Jun 23, 2025 at 02:00:57PM +0200, AngeloGioacchino Del Regno wrote:
-> Add compatible strings for MT8196 and MT6991 (which are fully
-> compatible between each other) and clock definitions.
+
+On Mon, 23 Jun 2025 14:01:26 +0200, AngeloGioacchino Del Regno wrote:
+> Add a binding for the MediaTek TinySYS MHU mailbox, used for IPC
+> with the TinySYS hardware integrated in various MediaTek SoCs.
 > 
-> These new SoCs don't have tl_96m and tl_32k clocks, but need
-> an AHB to APB bus clock and a low power clock.
+> This mailbox handles a custom MHU enabling communication through
+> the TinySYS SCMI protocol.
 > 
 > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 > ---
->  .../bindings/pci/mediatek-pcie-gen3.yaml      | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
+>  .../mediatek,mt6985-tinysys-mhu-mbox.yaml     | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/mediatek,mt6985-tinysys-mhu-mbox.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> index 162406e0691a..02cddf0246ce 100644
-> --- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> @@ -52,7 +52,12 @@ properties:
->                - mediatek,mt8188-pcie
->                - mediatek,mt8195-pcie
->            - const: mediatek,mt8192-pcie
-> +      - items:
-> +          - enum:
-> +              - mediatek,mt6991-pcie
-> +          - const: mediatek,mt8196-pcie
->        - const: mediatek,mt8192-pcie
-> +      - const: mediatek,mt8196-pcie
->        - const: airoha,en7581-pcie
->  
->    reg:
-> @@ -212,6 +217,36 @@ allOf:
->  
->          mediatek,pbus-csr: false
->  
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - mediatek,mt8196-pcie
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 6
-> +
-> +        clock-names:
-> +          items:
-> +            - const: pl_250m
-> +            - const: tl_26m
-> +            - const: bus
-> +            - const: low_power
-> +            - const: peri_26m
-> +            - const: peri_mem
-> +
-> +        resets:
-> +          minItems: 1
 
-The min is already 1.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-> +          maxItems: 2
-> +
-> +        reset-names:
-> +          minItems: 1
-> +          maxItems: 2
-
-It would be good to define what the names are. I assume they are fixed 
-and not just any of the allowed ones.
-
-> +
-> +        mediatek,pbus-csr: false
-> +
->    - if:
->        properties:
->          compatible:
-> -- 
-> 2.49.0
-> 
