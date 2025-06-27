@@ -1,207 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55839443;
-	Fri, 27 Jun 2025 15:21:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDC12980BF;
+	Fri, 27 Jun 2025 15:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751037684; cv=none; b=UWw29pijqYL5na24EJneTIskjJwq+ijjWT6PhR8nv+j69IhX3s49g++j+5FX5rpno9FXl+/aAXlBOFOFQStoDZ7jxF8q6kMbI62Bj0wf9yDJI/+OfEEOFUhOQSv4CuToquMyAcxDqsKv5rmh0jZluOtVneLkS0uXodu2Lgaxxj0=
+	t=1751037721; cv=none; b=oPXyzuWvAEcD/SiEpF48j82w4K0xSq47q0yjGRTVk/DXtyHLqworVY4oVyvEw9myxl17GI3QzuMU6LOpRtEVe0WlZS+YHvBTB+WroOYzbZZBatH9MrhyItHyJynIOO301daFktoOd2mEjjZHZRD4b5n5iKLO5Qs5aK0a5leUBP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751037684; c=relaxed/simple;
-	bh=Oeioom8uEThUTCOqsqu9wyR90HbhY5yThWPiJTHUTek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BHJqMNET5Z4T/83T05IAQVY1e5YJ1GrsDjcaNh0Kne908jmrLQLn9DBz2th/XLRzO7ClZpyAozxlvSpZ9h8Mv0syZScqU9RuvQTGHsUGjgzV+dc3+ZcQsAiuVOy5AGOq9teFPu6o9rRbEIKUfYjLj6JW/V3jI5Cy64QeGkvi9Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=csDq/cJc; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751037721; c=relaxed/simple;
+	bh=CAGA/LC8gIjY84M23uMjgwqj01wT2Jq0hkpX/eaSid8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JzpTIRugdTfh3Elpm42YnSCvnBAavnM7Wzf++0p5WFF1bITMyvXEcPhsfEjNV/REQER85M8+aSOhOEgzX0NMk3b19iGIGyrIGr+Ox+/ZoVAX2ItuzMYRdwGEHkLTx+NJNHdsGR4dqczQoAy5l839QNZCjssOCFQCj0tF/dOldMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JT3cpXl9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NnpV9FW+; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="csDq/cJc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751037683; x=1782573683;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Oeioom8uEThUTCOqsqu9wyR90HbhY5yThWPiJTHUTek=;
-  b=csDq/cJcsDiakKf6H0kiYMifzSFQr3GEsq/N45GzfHwumb9SCfEii8ND
-   5gbOxK4vzqLW/IfdJ/eQSKOs1yl397T/Tq4dnAwGT2ruCtFJW/fDWcoJA
-   V2KYhvE0sktkorSK5kjDOs3L4T4jn1H1UKO6ZHVJqmeatHompFMTTndPe
-   Eg1RjfaMn0nL9FJj8R9mITVCb/+9dpMemAYhSrF9steZN8C2iceh78GsE
-   ZO2/BSPOjZ+LajVLOhyHd97IMwO9va9DpkstJJmXbJKvHXhupJJ8Wkg9n
-   Eg/ibiefMrH8gbvAS/g0OFrpZA4EN+zua2Oq9PF4PCv4BTzmtv4rK7ysG
-   Q==;
-X-CSE-ConnectionGUID: JgeWv5FQRY+ENCaVifgGzA==
-X-CSE-MsgGUID: QBoS87tPS+CzFCPQh9gd6w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="70923537"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="70923537"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 08:21:22 -0700
-X-CSE-ConnectionGUID: HXFfjP5OQEK7L4RYdRckZw==
-X-CSE-MsgGUID: 9lsc+j9+RRuvpddqsrMlCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="153544157"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 27 Jun 2025 08:21:19 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 417D92BA; Fri, 27 Jun 2025 18:21:17 +0300 (EEST)
-Date: Fri, 27 Jun 2025 18:21:17 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	Kent Gibson <warthog618@gmail.com>,
-	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
-	Marek Vasut <marex@denx.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 1/9] gpio: sysfs: add a parallel class device for each
- GPIO chip using device IDs
-Message-ID: <aF627RVZ8GFZ_S_x@black.fi.intel.com>
-References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org>
- <20250623-gpio-sysfs-chip-export-v2-1-d592793f8964@linaro.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JT3cpXl9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NnpV9FW+"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751037717;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MUttCkDzXycQcM+ZeLMMRCpzl+xVLbejcM6RPqzvGE4=;
+	b=JT3cpXl9ZArMeSYMOke6l07StbVHeRVQhA3tuV4Bg8Km1Ss+9agaha2LHgTaHmJjZVcvq7
+	zynPyvMlDmw05ilZOHCf9dtf3xr4HkJFzcI3RP2G6TvW5b33SvcGZaD0XFEaLAJ7j9QwSi
+	2N3YMNO+gWVPMvtA3+fNEQE4ef9KkQzRypHmv3Xn7znpcpGRsJx3ZdH+2bH7ae0TnqPXIx
+	nAVZSvaG21nSwzg3g1co3xgx9KE+P6pyfW4TK2ElfoQ7u1QvXN9ikTw9xipl5TcmmOs50c
+	S50r8NzZ5AsS+gw1Z5JoKzuB5Txn1TtDL1zvBi4pmPZBR6hVMcN5VqhTIfrwfA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751037717;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MUttCkDzXycQcM+ZeLMMRCpzl+xVLbejcM6RPqzvGE4=;
+	b=NnpV9FW+8h+UsSWIHT3D8wYe/35aNjAaYlU8izb9l8Z9vawRjWekkV+9RESqAKOqchAuwo
+	FNUosS2NQlN+NhCw==
+Date: Fri, 27 Jun 2025 17:21:51 +0200
+Subject: [PATCH] kunit: Enable PCI on UML without triggering WARN()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623-gpio-sysfs-chip-export-v2-1-d592793f8964@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250627-kunit-uml-pci-v1-1-a622fa445e58@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIAA63XmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDMyMz3ezSvMwS3dLcHN2C5EzdRKMkMwtzU1NjcxMzJaCegqLUtMwKsHn
+ RsbW1AO3c72lfAAAA
+X-Change-ID: 20250626-kunit-uml-pci-a2b687553746
+To: Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Richard Weinberger <richard@nod.at>, 
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+ Johannes Berg <johannes@sipsolutions.net>
+Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ linux-kernel@vger.kernel.org, linux-um@lists.infradead.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751037715; l=2743;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=CAGA/LC8gIjY84M23uMjgwqj01wT2Jq0hkpX/eaSid8=;
+ b=Eh34OpL8RnMKtiUJyh8hWfe8gsxH8Ew5FtrA9CHeYf9PtRmtzRqr6baH8A/VTN1VurhCKzWY2
+ pw8lIbXWbaFDQBo9s2+vND8RtSWFm8ymLkMXrP5yYcB5uWzM6EZRe00
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Mon, Jun 23, 2025 at 10:59:49AM +0200, Bartosz Golaszewski wrote:
-> 
-> In order to enable moving away from the global GPIO numberspace-based
-> exporting of lines over sysfs: add a parallel, per-chip entry under
-> /sys/class/gpio/ for every registered GPIO chip, denoted by device ID
-> in the file name and not its base GPIO number.
-> 
-> Compared to the existing chip group: it does not contain the "base"
-> attribute as the goal of this change is to not refer to GPIOs by their
-> global number from user-space anymore. It also contains its own,
-> per-chip export/unexport attribute pair which allow to export lines by
-> their hardware offset within the chip.
-> 
-> Caveat #1: the new device cannot be a link to (or be linked to by) the
-> existing "gpiochip<BASE>" entry as we cannot create links in
-> /sys/class/xyz/.
-> 
-> Caveat #2: the new entry cannot be named "gpiochipX" as it could
-> conflict with devices whose base is statically defined to a low number.
-> Let's go with "chipX" instead.
-> 
-> While at it: the chip label is unique so update the untrue statement
-> when extending the docs.
+Various KUnit tests require PCI infrastructure to work.
+All normal platforms enable PCI by default, but UML does not.
+Enabling PCI from .kunitconfig files is problematic as it would not be
+portable. So in commit 6fc3a8636a7b ("kunit: tool: Enable virtio/PCI by default on UML")
+PCI was enabled by way of CONFIG_UML_PCI_OVER_VIRTIO=y.
+However CONFIG_UML_PCI_OVER_VIRTIO requires additional configuration of
+CONFIG_UML_PCI_OVER_VIRTIO_DEVICE_ID or will otherwise trigger a WARN() in
+virtio_pcidev_init(). However there is no one correct value for
+UML_PCI_OVER_VIRTIO_DEVICE_ID which could be used by default.
 
-...
+This warning is confusing when debugging test failures.
 
->  struct gpiodev_data {
->  	struct gpio_device *gdev;
->  	struct device *cdev_base; /* Class device by GPIO base */
-> +	struct device *cdev_id; /* Class device by GPIO device ID */
+On the other hand, the functionality of CONFIG_UML_PCI_OVER_VIRTIO is not
+used at all, given that it is completely non-functional as indicated by
+the WARN() in question. Instead it is only used as a way to enable
+CONFIG_UML_PCI which itself is not directly configurable.
 
-I would add it in the middle in a way of the possible drop or conditional
-compiling of the legacy access in the future.
+Instead of going through CONFIG_UML_PCI_OVER_VIRTIO, introduce a custom
+configuration option which enables CONFIG_UML_PCI without triggering
+warnings or building dead code.
 
->  };
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ lib/kunit/Kconfig                           | 7 +++++++
+ tools/testing/kunit/configs/arch_uml.config | 5 ++---
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-...
+diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+index a97897edd9642f3e5df7fdd9dee26ee5cf00d6a4..c8ca155521b2455a221ddbec3f6fc55662c83475 100644
+--- a/lib/kunit/Kconfig
++++ b/lib/kunit/Kconfig
+@@ -93,4 +93,11 @@ config KUNIT_AUTORUN_ENABLED
+ 	  In most cases this should be left as Y. Only if additional opt-in
+ 	  behavior is needed should this be set to N.
+ 
++config KUNIT_UML_PCI
++	bool "KUnit UML PCI Support"
++	depends on UML
++	select UML_PCI
++	help
++	  Enables the PCI subsystem on UML for use by KUnit tests.
++
+ endif # KUNIT
+diff --git a/tools/testing/kunit/configs/arch_uml.config b/tools/testing/kunit/configs/arch_uml.config
+index 54ad8972681a2cc724e6122b19407188910b9025..28edf816aa70e6f408d9486efff8898df79ee090 100644
+--- a/tools/testing/kunit/configs/arch_uml.config
++++ b/tools/testing/kunit/configs/arch_uml.config
+@@ -1,8 +1,7 @@
+ # Config options which are added to UML builds by default
+ 
+-# Enable virtio/pci, as a lot of tests require it.
+-CONFIG_VIRTIO_UML=y
+-CONFIG_UML_PCI_OVER_VIRTIO=y
++# Enable pci, as a lot of tests require it.
++CONFIG_KUNIT_UML_PCI=y
+ 
+ # Enable FORTIFY_SOURCE for wider checking.
+ CONFIG_FORTIFY_SOURCE=y
 
-> +static int export_gpio_desc(struct gpio_desc *desc)
-> +{
-> +	int offset, ret;
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250626-kunit-uml-pci-a2b687553746
 
-Why offset is signed?
-
-> +	CLASS(gpio_chip_guard, guard)(desc);
-> +	if (!guard.gc)
-> +		return -ENODEV;
-> +
-> +	offset = gpio_chip_hwgpio(desc);
-> +	if (!gpiochip_line_is_valid(guard.gc, offset)) {
-> +		pr_debug_ratelimited("%s: GPIO %d masked\n", __func__,
-> +				     gpio_chip_hwgpio(desc));
-
-Can we use gdev here? (IIRC we can't due to some legacy corner cases)
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	/*
-> +	 * No extra locking here; FLAG_SYSFS just signifies that the
-> +	 * request and export were done by on behalf of userspace, so
-> +	 * they may be undone on its behalf too.
-> +	 */
-> +
-> +	ret = gpiod_request_user(desc, "sysfs");
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = gpiod_set_transitory(desc, false);
-> +	if (ret) {
-> +		gpiod_free(desc);
-> +		return ret;
-> +	}
-> +
-> +	ret = gpiod_export(desc, true);
-> +	if (ret < 0) {
-> +		gpiod_free(desc);
-> +	} else {
-> +		set_bit(FLAG_SYSFS, &desc->flags);
-> +		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_REQUESTED);
-> +	}
-> +
-> +	return ret;
-> +}
-
-...
-
-> +static struct device_attribute dev_attr_export = __ATTR(export, 0200, NULL,
-> +							chip_export_store);
-
-__ATTR_WO()
-
-...
-
-> +static struct device_attribute dev_attr_unexport = __ATTR(unexport, 0200,
-> +							  NULL,
-> +							  chip_unexport_store);
-
-Ditto.
-
-...
-
-> +static struct attribute *gpiochip_ext_attrs[] = {
-> +	&dev_attr_label.attr,
-> +	&dev_attr_ngpio.attr,
-> +	&dev_attr_export.attr,
-> +	&dev_attr_unexport.attr,
-> +	NULL,
-
-No comma for the terminator, please.
-
-> +};
-
-...
-
-> +	data->cdev_id = device_create_with_groups(&gpio_class, parent,
-> +						  MKDEV(0, 0), data,
-> +						  gpiochip_ext_groups,
-> +						  "chip%d", gdev->id);
-> +	if (IS_ERR(data->cdev_id)) {
-> +		device_unregister(data->cdev_base);
-> +		kfree(data);
-
-UAF
-
-> +		return PTR_ERR(data->cdev_id);
-> +	}
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
