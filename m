@@ -1,125 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5152EA14C;
-	Fri, 27 Jun 2025 15:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8427623B61F;
+	Fri, 27 Jun 2025 15:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751039522; cv=none; b=LEw7Nl1HIzJZGatY7RH84Lx86NIdHR+BQFd18S2OJq5IxqiIl2XFYmEfHGHDJachz8frR5dS2JqLNvVPtp27gSQcY16fvWPp+71ZQNPdms5jOGKiXPrhIfcDjl+NVThwjlmRhEgY2NsFB4KCfmtaZlpBByKmE75wGgD3ZFJJV7M=
+	t=1751039546; cv=none; b=folD3kd1+eNGMSsZz+jhDRf+p5V8Xv73tNONYwk5+u5Bc5amWrdtimE1+hls0ImydF9BZYxAKzChjVCVJN/XO1IRNANNuSDj149LW6FfHQBBZqA0w/nvyB2okjBFCC6dHIVO3ONfmHnpqbkSwLReWOhx3sdISwVUExu9CGrKxVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751039522; c=relaxed/simple;
-	bh=f0UYA/EuZoGSHsVhZD3Fus+HSK9WipcpF5RxkV+BP5o=;
+	s=arc-20240116; t=1751039546; c=relaxed/simple;
+	bh=d40eK7td5Xa1FR52S3Q2YnEJMCDbNmnB5/xe1+8KVxw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TGV7y1jQ45g4SXi1xJX7Ki495PudN3emL0VPxvAyvWaOzY5/KK5XiUr++9Ccp4AHluPh7dUAN9kA0ie1Q5HkWuzKi+sBhguyJQxwBK5DIkBlkyUL/ol5BI6D79XMNwvJbGOD4C2meXk3Zp1nM+FkGYN2IWi6WvehwGexpsRQTA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pyPdnJ7Q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=W/dCTWmNR0A1z+ekx7OLIwpGWjlE4mAzVryI7xqXNKN5jmElNUnJM8VOBoh0F21KmtW1c0azrAUw5WEyHYxwZKgzr8BKcYnm6e9HmC2WA/Nigiil3VwL/+FnpeXJfpKRCLhq6KOPosrraEoMkSKxyepdIVUuwDUqZypU7obqtKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Z0ceVbAZ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pyPdnJ7Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B088C4CEED;
-	Fri, 27 Jun 2025 15:52:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751039521;
-	bh=f0UYA/EuZoGSHsVhZD3Fus+HSK9WipcpF5RxkV+BP5o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pyPdnJ7Q7HuuIiKgrWaMDcrBwxGTZiscgxJc6vl+XrICm0G79l/w04xJOgIgSsiT4
-	 nyJKeqIT4LG/SdOrP9BThyVFe+sK/VvM3jidhmIf4FL5wNqqTU5vXGLNIqJcAXv1fB
-	 qKTpyLWg6gUYFK9zYNPKm3MeePbH4VzwGEN7jkKanOyl7pqQcVspMU/YR0KWDgEe+y
-	 Zv5XPVN4hnsL9/6Codf3WfenmJLS/Wop+OvwNF2usYFuIMsbN5lfU8nIT0Fa6ZEQ9G
-	 1eaaz5yVdyekzbuVGyJ58FdAsHP1VfbszTS+QL47CPNvx+4zmaedL/KBAtCkPkCxRv
-	 NsSgI1XvWhPIA==
-Date: Fri, 27 Jun 2025 10:52:00 -0500
-From: Rob Herring <robh@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 05/28] bus: simple-pm-bus: Populate child nodes at
- probe
-Message-ID: <20250627155200.GB3234475-robh@kernel.org>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-6-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z0ceVbAZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=Z+c/vMVBxvVliRM5Ba7u5qi1BNZCmTnatXuCT2DSf3s=; b=Z0ceVbAZOy3oDx3Jzp0zWCkcEC
+	5+/Ux5Woml8GdpSfkIhVTxnoD/1Ma1995s/H+9SLhMV2WFdH9AnA9VE6AMi5lmgAUc/GeLJBH8dv8
+	E+M91T3jrx+/xDUjfEcpMkKP2yciCidFInvaEizsorLfYjYs4vSQqrO5c8ROi7216sQU8i31mcYAN
+	tujVt5eFpXiIQNYSJqIuB4VKAotXXyXWuUkTHDWgreQsgQoRPqOcBBnTBM8tXQMMJZ9gn6FY62Phu
+	Xf2fu73K0hPBw9c5br2aSuebLqlrVwLN+UclnVhjVRg3/Iu1SkfzhW56ODmF5CZeO5B9qaQwK9fRF
+	+21HmNKA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uVBN9-0000000EQf9-17Tf;
+	Fri, 27 Jun 2025 15:52:15 +0000
+Date: Fri, 27 Jun 2025 16:52:15 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: =?utf-8?B?6ZmI5rab5rab?= Taotao Chen <chentaotao@didiglobal.com>
+Cc: "tytso@mit.edu" <tytso@mit.edu>,
+	"hch@infradead.org" <hch@infradead.org>,
+	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+	"rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+	"tursulin@ursulin.net" <tursulin@ursulin.net>,
+	"airlied@gmail.com" <airlied@gmail.com>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"chentao325@qq.com" <chentao325@qq.com>,
+	"frank.li@vivo.com" <frank.li@vivo.com>
+Subject: Re: [PATCH v3 3/4] fs: change write_begin/write_end interface to
+ take struct kiocb *
+Message-ID: <aF6-L5Eu7XieS8aM@casper.infradead.org>
+References: <20250627110257.1870826-1-chentaotao@didiglobal.com>
+ <20250627110257.1870826-4-chentaotao@didiglobal.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250613134817.681832-6-herve.codina@bootlin.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250627110257.1870826-4-chentaotao@didiglobal.com>
 
-On Fri, Jun 13, 2025 at 03:47:45PM +0200, Herve Codina wrote:
-> The simple-pm-bus driver handles several simple busses. When it is used
-> with busses other than a compatible "simple-pm-bus", it doesn't populate
-> its child devices during its probe.
-> 
-> This confuses fw_devlink and results in wrong or missing devlinks.
-> 
-> Once a driver is bound to a device and the probe() has been called,
-> device_links_driver_bound() is called.
-> 
-> This function performs operation based on the following assumption:
->     If a child firmware node of the bound device is not added as a
->     device, it will never be added.
-> 
-> Among operations done on fw_devlinks of those "never be added" devices,
-> device_links_driver_bound() changes their supplier.
-> 
-> With devices attached to a simple-bus compatible device, this change
-> leads to wrong devlinks where supplier of devices points to the device
-> parent (i.e. simple-bus compatible device) instead of the device itself
-> (i.e. simple-bus child).
-> 
-> When the device attached to the simple-bus is removed, because devlinks
-> are not correct, its consumers are not removed first.
-> 
-> In order to have correct devlinks created, make the simple-pm-bus driver
-> compliant with the devlink assumption and create its child devices
-> during its probe.
+On Fri, Jun 27, 2025 at 11:03:11AM +0000, 陈涛涛 Taotao Chen wrote:
+> @@ -1399,13 +1400,10 @@ static int write_end_fn(handle_t *handle, struct inode *inode,
+>  }
+>  
+>  /*
+> - * We need to pick up the new inode size which generic_commit_write gave us
+> - * `file' can be NULL - eg, when called from page_symlink().
+> - *
 
-IIRC, skipping child nodes was because there were problems with 
-letting the driver handle 'simple-bus'. How does this avoid that now?
+Why delete this?  It seems still true to me, other than s/file/iocb/
 
-The root of_platform_populate() that created the simple-bus device that 
-gets us to the probe here will continue descending into child nodes. 
-Meanwhile, the probe here is also descending into those same child 
-nodes. Best case, that's just redundant. Worst case, won't you still 
-have the same problem if the first of_platform_populate() creates the 
-devices first?
-
-Rob
+>   * ext4 never places buffers on inode->i_mapping->i_private_list.  metadata
+>   * buffers are managed internally.
+>   */
+> -static int ext4_write_end(struct file *file,
+> +static int ext4_write_end(const struct kiocb *iocb,
+>  			  struct address_space *mapping,
+>  			  loff_t pos, unsigned len, unsigned copied,
+>  			  struct folio *folio, void *fsdata)
