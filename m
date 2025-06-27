@@ -1,162 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F5E2D3EE8;
-	Fri, 27 Jun 2025 16:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6725E29898B
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751041367; cv=none; b=nv++dJlmLK3Z/+crg1Ye0k0wCz9mkR6xgN43sRYRipplAdMGnVkNV2oNRNQZTf99gxwzeSTZUdtU+kA+5eP7PsPux+6f4ygU4VIJNecIlETRZsoNIcjjksqRUJis+DZL+qKjnNhUpkblJWAro8TSUH7phmOHJ5Nl+xMgfSQdZvE=
+	t=1751041417; cv=none; b=ETCPGHfzidlsGgiBJ0Y51ZMEXPrGbuL3KNnKZgCxPIgSWjSh1Xb53+t3iIUXkq7rXYUBCJT5SiyjGJbFOOu3tO75iRg0pdWQt3QnOK7fLQ3BrnSvvR5CoFNko2fnseATwNavZWiKXZ8uQLE0vkIePvzqd3mLhMwEkJtcFg5gCig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751041367; c=relaxed/simple;
-	bh=S4rQXSxYy7l30Jex5dOyQNVkfrqjgNBFJChd03NJJd4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nt/A/6TCDTZSTUeRThDAgS5pkheb6/eeWrJCEyzTxOqTRqNJYNrdvnmgIWSDXq0prj9YF/sL3kmUIZwoht9JKDgrIISvK07oi8AQhqirwSVbw7eE8YF6nNzZoHTJd1i/9CK1h1odOEJQP1uMqVPWS4V2iW6rxfjjyD8ORB7swlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9+kRI24; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751041417; c=relaxed/simple;
+	bh=1Z5FIvgVxVgOK1v1qVEDoeCNDa+RgVIxtitLI+LQd5g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aj8Yml2KJsPJaH6rbZDscc4GCFAmmKoyHCqmNsJdyfWK6u3+FVAQyQ6LyCCYTsGq+pbW9gcnfTXAEH3Ubx4A8ChNofoOgXx8wTUpAN03j+4/Rx3CQQMcJMo6DFuTO3EDoQ0OXmJC16I/fFmsTpetjXthS3KCCwuCWK5gddZ4EuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cLPPdqLP; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9+kRI24"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D3C2C4CEE3;
-	Fri, 27 Jun 2025 16:22:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751041366;
-	bh=S4rQXSxYy7l30Jex5dOyQNVkfrqjgNBFJChd03NJJd4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q9+kRI24E/sv8i/YQJ0N921DtCB+0kcRk3H1pQUMNQtT02K02PjfsySme4B8GniwI
-	 9dRRJgnIYjYIcYjcs5Tb6obHmqh8Twkaf0TCIOBrTfj53TmQdFrvAxOP+wruzM3Ril
-	 JCTW0cM7wsH4IW+Zw3XsSKRN7zxXgWdw8fzZVfaBSHnAOFcYr4+qCebHHiZca51pkr
-	 3BUYtnmUuDrHiFYPlicYhuFNogDvoLoyaU3CKheMqkHeHJarNuPc7Ks6Whuzf7UE8A
-	 TZW+lJ9Gtdsw5sd9/k4NKCLKh0F893QUDS6oOqMbIefzWUsXHa7lfFZkbD8l+/snV+
-	 iZPTmjg/hmAvQ==
-Date: Fri, 27 Jun 2025 11:22:45 -0500
-From: Rob Herring <robh@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 18/28] of: property: Allow fw_devlink device-tree on
- x86 when PCI device-tree node creation is enabled
-Message-ID: <20250627162245.GA3513535-robh@kernel.org>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-19-herve.codina@bootlin.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cLPPdqLP"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ae04d3d63e6so411654966b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:23:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1751041413; x=1751646213; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XIBFa7vtiai1aZdrnHbI17B2HX5VyBn+7Wdc06Hzja4=;
+        b=cLPPdqLPQYN8RS9I1KedhQG1aLAmACgMOn3gKqm2gdliZyLTHlndVfPd8rezxu6Ta8
+         qsNsM8g1YI1Tf96e7tWkSQPJKHfwMHXAc2/lOAHuyVBXDRtBAyUvhyHY7CsWM5iu7uaf
+         h7x7F4zt71hXu2a8xHpYK2Qf5O93tBqKQdHA0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751041413; x=1751646213;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XIBFa7vtiai1aZdrnHbI17B2HX5VyBn+7Wdc06Hzja4=;
+        b=BrmrK/UJ2NcD+fAS+CQFkKmmgH/UT7jlUQSC6rFCGAaz/LpsiXBsyISZUD/AmEPAn3
+         0D2mWMUNCNETkS+S3fAtiPCMz2xhTjAn7aybjxCdOFOiLsU6G+69mG6vQcj4lhcvaONs
+         SPyI1IOGnVp/qUczfAYAqWyCVxZbLleCeJeIkq9cKVhaX06Q/HWZ/+2zFSeYVpllMl4t
+         R5ChWPjE5A636ZbHKEjX9Mxldfi2Q8Ou0p7jQ/HkvYaV2NkB9m5UDKvqc2F4zT6aq+s+
+         YX3e0m83kqmSQ2ROrLfQ3MQRjbuxbN5QUzkKybSYv5dui2LccQoNAySbwneidPXvj6qf
+         tmDg==
+X-Forwarded-Encrypted: i=1; AJvYcCVRa9xyHEkcVfZa3t5pM3pHT1UT4oka5XKAaRHOOWmGgc2So14hvailDK5hAFIFX8p4n1N8UXbPI+ixqVk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw74VGHnxtGCvMbrXA1J4dhMCq1rl7ny/bLxXr6S+u8JHCX8tey
+	3jN7qQDggWr4r7MRa9fFqEJ6cFvnHgJPUFa/B/Cu9apUzCE0M6u/j1g07DEnsAx3NhWZaQHdLpb
+	AumiyblI=
+X-Gm-Gg: ASbGncs0hrnPlQneu5DgdepRdpwFC9EaTi2QhtTXhe7DSfQLLuRuZQDPgQMmMmDTtbc
+	6YBikUdcJdHeT+QaMrrK5ODndpVBW5aHo2a8XRk46LtcaDQrNkwGORdYp6P+3VXkHFXvHnKB/PR
+	Wg5J0c6cg1OI3pXLy6X/yBp8Nl4UTc/AB/wAnue0WiBtxfcKAi8sJV0SnVF3HUcgeohPgEG8bvC
+	6ll0qqASR9S5PspelljybpAQP9LptW+4L6kOjKrFNH6+sujMGx/WmBOuoheS/FYWYVV/8iM/sHV
+	ClQBp+fBD3pWupA61Tm19VKiqkii966K3KTJw/r2KMRL92QXe6CTTjmL3A5312EknB0DfPOn2pX
+	dxNz7lQG33ByNQT9Tyt01TCGM9/0uWpFg2bTM
+X-Google-Smtp-Source: AGHT+IGF5bng2yqQ+infvmffRkBuDpoDOmpfFU3xOd+9LIS7WkVOEM0QrvY73DmoCRCTUZb0CHQM0Q==
+X-Received: by 2002:a17:907:988:b0:ad5:e18:2141 with SMTP id a640c23a62f3a-ae35016de22mr373658466b.53.1751041413457;
+        Fri, 27 Jun 2025 09:23:33 -0700 (PDT)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353ca2bdasm151646666b.171.2025.06.27.09.23.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 09:23:31 -0700 (PDT)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-60c5b7cae8bso19653a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:23:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWiEdLlKFoC7B7UGLVaQ+zUODh4S78WL89OTs20rkU0pBibW6tk0lNvAYr2OjSPWGu3ZCJzodzeA5cD4R8=@vger.kernel.org
+X-Received: by 2002:a05:6402:34c6:b0:5ff:ef06:1c52 with SMTP id
+ 4fb4d7f45d1cf-60c88d65540mr3554120a12.3.1751041411199; Fri, 27 Jun 2025
+ 09:23:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613134817.681832-19-herve.codina@bootlin.com>
+References: <20250625225600.555017347@goodmis.org> <20250625225717.187191105@goodmis.org>
+ <aF0FwYq1ECJV5Fdi@gmail.com> <20250626081220.71ac3ab6@gandalf.local.home> <20250627100113.7f9ee77b@gandalf.local.home>
+In-Reply-To: <20250627100113.7f9ee77b@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 27 Jun 2025 09:23:14 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiXsMA3OJ0tnSWFDwqH=H8OAsUwF2hqCuQ6uHaLmpQubg@mail.gmail.com>
+X-Gm-Features: Ac12FXwXn1CGZ5TDseyf0yMPbEJKzZlOp6kLfp771zfoaf5rHgLNIhEIXduSSPA
+Message-ID: <CAHk-=wiXsMA3OJ0tnSWFDwqH=H8OAsUwF2hqCuQ6uHaLmpQubg@mail.gmail.com>
+Subject: Re: [PATCH v11 14/14] unwind_user/x86: Enable compat mode frame
+ pointer unwinding on x86
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
+	"Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>, 
+	Jens Remus <jremus@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 13, 2025 at 03:47:58PM +0200, Herve Codina wrote:
-> PCI drivers can use a device-tree overlay to describe the hardware
-> available on the PCI board. This is the case, for instance, of the
-> LAN966x PCI device driver.
-> 
-> Adding some more nodes in the device-tree overlay adds some more
-> consumer/supplier relationship between devices instantiated from this
-> overlay.
-> 
-> Those fw_node consumer/supplier relationships are handled by fw_devlink
-> and are created based on the device-tree parsing done by the
-> of_fwnode_add_links() function.
-> 
-> Those consumer/supplier links are needed in order to ensure a correct PM
-> runtime management and a correct removal order between devices.
-> 
-> For instance, without those links a supplier can be removed before its
-> consumers is removed leading to all kind of issue if this consumer still
-> want the use the already removed supplier.
-> 
-> The support for the usage of an overlay from a PCI driver has been added
-> on x86 systems in commit 1f340724419ed ("PCI: of: Create device tree PCI
-> host bridge node").
-> 
-> In the past, support for fw_devlink on x86 had been tried but this
-> support has been removed in commit 4a48b66b3f52 ("of: property: Disable
-> fw_devlink DT support for X86"). Indeed, this support was breaking some
-> x86 systems such as OLPC system and the regression was reported in [0].
-> 
-> Instead of disabling this support for all x86 system, a first approach
-> would be to use a finer grain and disable this support only for the
-> possible problematic subset of x86 systems (at least OLPC and CE4100).
-> 
-> This first approach could still leads to issues. Indeed, the list of
-> possible problematic system and the way to identify them using Kconfig
-> symbols is not well defined and so some system can be missed leading to
-> kernel regressions on those missing systems.
-> 
-> Use an other way and enable the support on x86 system only when this
-> support is needed by some specific feature. The usage of a device-tree
-> overlay by a PCI driver and thus the creation of PCI device-tree nodes
-> is a feature that needs it.
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> Link: https://lore.kernel.org/lkml/3c1f2473-92ad-bfc4-258e-a5a08ad73dd0@web.de/ [0]
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/of/property.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index c1feb631e383..8b5cfee696e2 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1605,7 +1605,7 @@ static int of_fwnode_add_links(struct fwnode_handle *fwnode)
->  	const struct property *p;
->  	struct device_node *con_np = to_of_node(fwnode);
->  
-> -	if (IS_ENABLED(CONFIG_X86))
-> +	if (IS_ENABLED(CONFIG_X86) && !IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES))
+On Fri, 27 Jun 2025 at 07:01, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> That's not a function. It's just setting a macro named arch_unwind_user_next to
+> be arch_unwind_user_next. I think adding "()" to the end of that will be
+> confusing.
 
-I really want CONFIG_PCI_DYNAMIC_OF_NODES to go away at some point, not 
-add more users. 
+Yeah, we use the pattern
 
-I think this should instead check for specific platforms not with 
-kconfig symbols but DT properties. For ce4100, you can just check the 
-root compatible string. For OLPC, there isn't a root compatible (in the 
-DT I have). You could check for /architecture == OLPC instead. There's 
-some virtualization guests using DT now too. I would think their DT's 
-are simple enough to avoid any fw_devlink issues. 
+   #define abc abc
 
-Alternatively, we could perhaps make x86 fw_devlink default off and then 
-enable it only when you create nodes. Maybe it has to be restricted a 
-sub tree of the DT to avoid any later interactions if devices are 
-unbound and rebound. Not a fully fleshed out idea...
+just to show "I have my own architecture-specific implementation for
+this" without having to make up a *new* name for it.
 
-Rob
+[ We used to have things like "#define __arch_has_abc" instead, which
+is just annoying particularly when people didn't even always agree on
+the exact prefix. We still do, but we used to too. These days that
+"this arch has" pattern is _mostly_ confined to config variables, I
+think. ]
+
+Adding parenthesis not only makes that much more complicated - now you
+need to match argument numbers etc - but can actually end up causing
+real issues where you now can't use that 'abc' as a function pointer
+any more.
+
+That said, parenthesis can also actually help catch mis-uses (ie maybe
+you *cannot* use the function as a function pointer, exactly because
+some architectures _only_ implement it as a macro), so it's not like
+parentheses are necessarily always wrong, but in general, I think that
+
+  #define abc abc
+
+pattern is the simplest and best way for an architecture header file
+to say "I have an implementation for this".
+
+And obviously the reason we have to use macros for this is because C
+doesn't have a way to test for symbols existing. Other languages do
+have things like that (various levels of "reflection"), but in C
+you're basically limited to the pre-processor.
+
+             Linus
