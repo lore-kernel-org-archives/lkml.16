@@ -1,102 +1,93 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2040219EB
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 02:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB4DB78F2E;
+	Fri, 27 Jun 2025 02:17:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750990607; cv=none; b=pOMgM+vgfLd0oYG64INilMKL7YtjeHuTob2JUQLyM2vGoQd0952nB3kVJ41kj0T0Mczw/WE9exCEHladxPfAs5Icla79b+pw2LI6sw6OcKGn6Q7zBLIBd9/JQHxE62vn7bGLbKfFR4tx/coOqWGbHEmQv+iqIoLz72ZpHY/pXT0=
+	t=1750990631; cv=none; b=KPPf8Fs2eu6XZbCwdjSDCPLG/AtJxhuDirkb0dtwqDrDbNXVnipeRQ/pqSFEUVKxOAp3irmJmlU1YkMHxXyjIK0LSDJdl9+V+1g8cXx5cua5NW2036hoojLbupzfvf1PnxbGMZLYqwKVIKIft7i+oYNQ6IRTRiSSWndbxwWcAL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750990607; c=relaxed/simple;
-	bh=pZsPe42CiZoGGMQSeeHGeXnuo34X8knlQoD8r/oOmIM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tx09vaht4bX59wdIFr35u2qiM3Ti6TgJC4L0Lu9basdYvOKGFY+JFXo9NDZKq2/0FOr7h4WzpLPkb9XYBKrrwsmrflRyErec8HCHIqnNcHzAd+H3ci9+5lL4J5zR8LdD53mQCwdTRTnilwsBWFvzUNsA9bzRE29ZJcc1QYikQDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qy+yHzYF; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750990631; c=relaxed/simple;
+	bh=y69knhQjyqFnndBIw78Hms1l+Xk7SVjkc6Yaj5+r4QU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mSb8z0IVDPhlN3QWOPelnKy8xsLQNnX7f3XVWbyxmIRNeYA41tfek/skB+smmw3OswRmMzfXuxzRk8FaLCCdBq4iOIfrqPN6f/YAHze8gb5f48g0GuWtMuPD5gXGD03Or5V0gIiAaHXXGvDziorhoYoTCiSsyMNSdwVfvidozes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ArVd+/YJ; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qy+yHzYF"
-Date: Thu, 26 Jun 2025 22:16:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750990593;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U144Ph4RXxj4gGppJr9qT0Dw0b6wY2GgPOKo6Yovtog=;
-	b=qy+yHzYFPd5ntOkc9N8/MwGXmHEUwJV01+b6dEnJ5EqsJ3Tm8V7fMSzGl+jPJM8uK1APRB
-	9r2Jehd557lAkcgloXsi7Jg2jwVOpRsVCJ8aLNXiGF7E6ZqXpL6ESMr+QEgZ0lfIqHl4Xv
-	WgdAIK8IjpWW56gl1zjvMQD1iwRapgc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Youling Tang <youling.tang@linux.dev>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: Re: [PATCH 1/2] bcachefs: Simplify bch2_bio_map()
-Message-ID: <e6r3mzeb33xidr6e24ylrdop2v2hr7ztcqxl5uoskvfsmfbid2@2qztfbarr5bx>
-References: <20250605020639.6868-1-youling.tang@linux.dev>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ArVd+/YJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=tc
+	/BQSujfSpTkh1XCLZ71AAIXQedB9w+B7U5bWFPNho=; b=ArVd+/YJjqOEl66hJG
+	eLqr/NhAjPpoMnBVbPy7zUY/D2/tgh9Rqy0NZ/Ay5INPWCn0b5GFR/2819UYOXls
+	M9xtp6ZYb0qWku2buk8ocLTfrdIx/Ap6IIgc+Pp4ckf5XmXPs+bMzJXPmwvX5LvU
+	P7LsG8zERshCtfvqRcSLT6tdc=
+Received: from 163.com (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgCH50IR_11oSw1RAQ--.45226S2;
+	Fri, 27 Jun 2025 10:16:51 +0800 (CST)
+From: Yuan Chen <chenyuan_fl@163.com>
+To: robdclark@gmail.com,
+	quic_abhinavk@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	chenyuan_fl@163.com,
+	Yuan Chen <chenyuan@kylinos.cn>
+Subject: [PATCH] drm/msm: Add error handling for krealloc in metadata setup
+Date: Fri, 27 Jun 2025 10:16:43 +0800
+Message-Id: <20250627021643.58426-1-chenyuan_fl@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250605020639.6868-1-youling.tang@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PCgvCgCH50IR_11oSw1RAQ--.45226S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7CrWxWrW7CFWftr18AF43ZFb_yoW8JFy8pF
+	W7Gr1SqrWqvwnrWw47Aa1fCFy5G3W8Ww45CrZFvw17Zw18KF1UXFWqyw40yFy2vFy8J3Z2
+	van2kFyfXr1qyr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEWE_ZUUUUU=
+X-CM-SenderInfo: xfkh05pxdqswro6rljoofrz/1tbiNxB4vWhc+8Rt6wABsu
 
-On Thu, Jun 05, 2025 at 10:06:38AM +0800, Youling Tang wrote:
-> From: Youling Tang <tangyouling@kylinos.cn>
-> 
-> For the part of directly mapping the kernel virtual address, there is no
-> need to increase to bio page-by-page. It can be directly replaced by
-> bio_add_virt_nofail().
-> 
-> For the address part of the vmalloc region, its physical address is
-> discontinuous and needs to be increased page-by-page to bio. The helper
-> function bio_add_vmalloc() can be used to simplify the implementation of
-> bch2_bio_map().
-> 
-> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+From: Yuan Chen <chenyuan@kylinos.cn>
 
-Thanks, I'll apply this
+Function msm_ioctl_gem_info_set_metadata() now checks for krealloc
+failure and returns -ENOMEM, avoiding potential NULL pointer dereference.
+Explicitly avoids __GFP_NOFAIL due to deadlock risks and allocation constraints.
 
-> ---
-> NOTE:
-> The following patch needs to be applied (because the bcachefs.git repository
-> has not been synchronized to the latest):
-> commit 850e210d5ad2 ("block: add a bio_add_virt_nofail helper")
-> commit 8dd16f5e3469 ("block: add a bio_add_vmalloc helpers")
-> 
->  fs/bcachefs/util.c | 15 ++++-----------
->  1 file changed, 4 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/bcachefs/util.c b/fs/bcachefs/util.c
-> index dc3817f545fa..5e5075630bc6 100644
-> --- a/fs/bcachefs/util.c
-> +++ b/fs/bcachefs/util.c
-> @@ -623,17 +623,10 @@ void bch2_pd_controller_debug_to_text(struct printbuf *out, struct bch_pd_contro
->  
->  void bch2_bio_map(struct bio *bio, void *base, size_t size)
->  {
-> -	while (size) {
-> -		struct page *page = is_vmalloc_addr(base)
-> -				? vmalloc_to_page(base)
-> -				: virt_to_page(base);
-> -		unsigned offset = offset_in_page(base);
-> -		unsigned len = min_t(size_t, PAGE_SIZE - offset, size);
-> -
-> -		BUG_ON(!bio_add_page(bio, page, len, offset));
-> -		size -= len;
-> -		base += len;
-> -	}
-> +	if (is_vmalloc_addr(base))
-> +		bio_add_vmalloc(bio, base, size);
-> +	else
-> +		bio_add_virt_nofail(bio, base, size);
->  }
->  
->  int bch2_bio_alloc_pages(struct bio *bio, size_t size, gfp_t gfp_mask)
-> -- 
-> 2.34.1
-> 
+Signed-off-by: Yuan Chen <chenyuan@kylinos.cn>
+---
+ drivers/gpu/drm/msm/msm_drv.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index f316e6776f67..993502a86d0a 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -551,6 +551,7 @@ static int msm_ioctl_gem_info_set_metadata(struct drm_gem_object *obj,
+ 					   u32 metadata_size)
+ {
+ 	struct msm_gem_object *msm_obj = to_msm_bo(obj);
++	void *new_metadata;
+ 	void *buf;
+ 	int ret;
+ 
+@@ -568,8 +569,14 @@ static int msm_ioctl_gem_info_set_metadata(struct drm_gem_object *obj,
+ 	if (ret)
+ 		goto out;
+ 
+-	msm_obj->metadata =
++	new_metadata =
+ 		krealloc(msm_obj->metadata, metadata_size, GFP_KERNEL);
++	if (!new_metadata) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	msm_obj->metadata = new_metadata;
+ 	msm_obj->metadata_size = metadata_size;
+ 	memcpy(msm_obj->metadata, buf, metadata_size);
+ 
+-- 
+2.25.1
+
