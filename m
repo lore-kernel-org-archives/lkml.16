@@ -1,122 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076271E8322;
-	Fri, 27 Jun 2025 06:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E111F9A8B
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 06:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751004879; cv=none; b=WA5GCh6TyM73Cm5aWP1Xddu+fR1Pmam1uOzWKUV4czdO21vNad7o1z6GTDIMyr/i4azJdt6aRgKyntsYuPCNPiX00t75kOUTEF/7c7jPnamfm+iUTrzctS0XNDR5fc4fAMlpv9nnt20nDgkYxlLCrvInC1OMh5VxK0zmrlYRjuo=
+	t=1751004885; cv=none; b=NqBys3Y6HWKgy8JlEjk7Zc+t1YnfEFBsZYuAi3oG3t/vRzvRqyOfSAjNJbZ+TqfOLegFhkKcpB62I1HoQW/gW8U9DAG/R69c8KusTL0NZ3wVcDrcmqM5a70yN5zRB1yX+RVG8cJnKW7JqA3WxlM12Lw8kpcCgTqIl5l2HTSCxF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751004879; c=relaxed/simple;
-	bh=0FAP8h3Bqn60g8pdq2IXB//EoK8uGVAIYk1n1XgwjaY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HN5oOalqzI5hWtNOKlWoi7TdFdjzcPS8gnIRAuhxPcbi7qVR71fUnYwQCLyQkUNWqCmGKdOlcZtP8v5W7f65oSKhOK9MKAi6jtK36QdDR2e2nWXmo4DhAl61Q/M8GEze7VxpQNB2iU2UgNXM5ySynHR10Qj2TAdaZ2dbSCD+qH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LyqOcJnF; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751004885; c=relaxed/simple;
+	bh=s20/Ee1rJ6rBoOY7u3AJ4u2WbhNf9ZVzZJHhv8LQ6K8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tqrqelLZTOICKVoQfv5t7faS8uoW+oaZwN+YthOuZCaKj9M8cX6opNgK7kinp20hwJrZubbhFMPCt9+AksRHWxDnf6ooS2I4F+BAYZn+3n/1xd54Wb9hC5fvc+wC/vryLXwiPZU0VPOLCYrxtjQtwbZBasKgPW63FSDKbeEbUig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YfudznCY; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LyqOcJnF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751004878; x=1782540878;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0FAP8h3Bqn60g8pdq2IXB//EoK8uGVAIYk1n1XgwjaY=;
-  b=LyqOcJnF+AuUs73fcYslGvSCA9z6CR2ZPNJr0n/R0+YTbHPmeZ6S2J/X
-   quJslTq8uE7J23Iv49SwKzxNoKkCXp+jXUooZ6iW3m5wCJYJywkPEWPm1
-   PPXr/FP95busSmHKRJnwJ0GKhl8ixkjYxp8BWGgs0KAP20r6KuT0LIZhE
-   VmQi4xfNS0iurE02rPZhmcopLp/T1r0hJiast84nRXSH2tBhSz2Lx9U4L
-   vdGr3QaU7Bcz8Uv7DJKVmRRXq6GVHQySUdP8ce4PuiOa/QE7u2iEsQ/Cn
-   blDKyVc8kuzmVWrH4Nsc2t1IK9qMQuFhKSXrGBwrOuJCRwZIleUz5Rtnn
-   g==;
-X-CSE-ConnectionGUID: wD4QsDZpSzymRI9FO+pX4g==
-X-CSE-MsgGUID: Z2sTrkkQRMiKdQbJoNbQOA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="57118946"
-X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
-   d="scan'208";a="57118946"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 23:14:38 -0700
-X-CSE-ConnectionGUID: SxK+aZxVTPOy8PTdX3DNAw==
-X-CSE-MsgGUID: uiO6Ism6TPymVeQbjZPqsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
-   d="scan'208";a="158457188"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa005.jf.intel.com with ESMTP; 26 Jun 2025 23:14:35 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id CFB4B21E; Fri, 27 Jun 2025 09:14:33 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Xu Yilun <yilun.xu@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-fpga@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Moritz Fischer <mdf@kernel.org>,
-	Wu Hao <hao.wu@intel.com>,
-	Tom Rix <trix@redhat.com>
-Subject: [PATCH v1 1/1] fpga: altera-cvp: Use pci_find_vsec_capability() when probing FPGA device
-Date: Fri, 27 Jun 2025 09:14:31 +0300
-Message-ID: <20250627061431.522016-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YfudznCY"
+Message-ID: <e33bbf93-ed78-4cbd-9ed7-1e36453549c0@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751004880;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RIqr1G8w341JdjB67nlcBhtQ9EOdz3z9dERZmNVdkZk=;
+	b=YfudznCYk3WoX9DBBDdaJTY5VlTsRNSRfpU+C/HCgg4VyCUC021HG0XVnTunKtN57mjv5I
+	P9Md7kHGGVfC0XgIc8DZFDdo/bVJqb8S9fohOQPbyv4PUceTJBy2Cwl1fATsK446rJr5f1
+	YBewEH6Gy68GWtDSCHkKRwOtL6+xozs=
+Date: Fri, 27 Jun 2025 14:14:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH 1/1] mm/rmap: make folio unmap batching safe and support
+ partial batches
+Content-Language: en-US
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, david@redhat.com,
+ baolin.wang@linux.alibaba.com, chrisl@kernel.org, kasong@tencent.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+ lorenzo.stoakes@oracle.com, ryan.roberts@arm.com, v-songbaohua@oppo.com,
+ x86@kernel.org, huang.ying.caritas@gmail.com, zhengtangquan@oppo.com,
+ riel@surriel.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ harry.yoo@oracle.com, mingzhe.yang@ly.com, Lance Yang <ioworker0@gmail.com>
+References: <20250627025214.30887-1-lance.yang@linux.dev>
+ <CAGsJ_4yjvHzeUTDoALafLddTCTOSzYiFQNvAmSQORLJV1HPhPQ@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <CAGsJ_4yjvHzeUTDoALafLddTCTOSzYiFQNvAmSQORLJV1HPhPQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Currently altera_cvp_probe() open-codes pci_find_vsec_capability().
-Refactor the former to use the latter. No functional change intended.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/fpga/altera-cvp.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
-index 5af0bd33890c..f6140a56c70b 100644
---- a/drivers/fpga/altera-cvp.c
-+++ b/drivers/fpga/altera-cvp.c
-@@ -22,9 +22,6 @@
- #define TIMEOUT_US	2000	/* CVP STATUS timeout for USERMODE polling */
- 
- /* Vendor Specific Extended Capability Registers */
--#define VSE_PCIE_EXT_CAP_ID		0x0
--#define VSE_PCIE_EXT_CAP_ID_VAL		0x000b	/* 16bit */
--
- #define VSE_CVP_STATUS			0x1c	/* 32bit */
- #define VSE_CVP_STATUS_CFG_RDY		BIT(18)	/* CVP_CONFIG_READY */
- #define VSE_CVP_STATUS_CFG_ERR		BIT(19)	/* CVP_CONFIG_ERROR */
-@@ -577,25 +574,19 @@ static int altera_cvp_probe(struct pci_dev *pdev,
- {
- 	struct altera_cvp_conf *conf;
- 	struct fpga_manager *mgr;
--	int ret, offset;
- 	u16 cmd, val;
-+	u16 offset;
- 	u32 regval;
--
--	/* Discover the Vendor Specific Offset for this device */
--	offset = pci_find_next_ext_capability(pdev, 0, PCI_EXT_CAP_ID_VNDR);
--	if (!offset) {
--		dev_err(&pdev->dev, "No Vendor Specific Offset.\n");
--		return -ENODEV;
--	}
-+	int ret;
- 
- 	/*
- 	 * First check if this is the expected FPGA device. PCI config
- 	 * space access works without enabling the PCI device, memory
- 	 * space access is enabled further down.
- 	 */
--	pci_read_config_word(pdev, offset + VSE_PCIE_EXT_CAP_ID, &val);
--	if (val != VSE_PCIE_EXT_CAP_ID_VAL) {
--		dev_err(&pdev->dev, "Wrong EXT_CAP_ID value 0x%x\n", val);
-+	offset = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_ALTERA, 0);
-+	if (!offset) {
-+		dev_err(&pdev->dev, "Wrong EXT_CAP_ID value\n");
- 		return -ENODEV;
- 	}
- 
--- 
-2.47.2
+On 2025/6/27 13:02, Barry Song wrote:
+> On Fri, Jun 27, 2025 at 2:53 PM Lance Yang <ioworker0@gmail.com> wrote:
+>>
+>> From: Lance Yang <lance.yang@linux.dev>
+>>
+>> As pointed out by David[1], the batched unmap logic in try_to_unmap_one()
+>> can read past the end of a PTE table if a large folio is mapped starting at
+>> the last entry of that table.
+>>
+>> So let's fix the out-of-bounds read by refactoring the logic into a new
+>> helper, folio_unmap_pte_batch().
+>>
+>> The new helper now correctly calculates the safe number of pages to scan by
+>> limiting the operation to the boundaries of the current VMA and the PTE
+>> table.
+>>
+>> In addition, the "all-or-nothing" batching restriction is removed to
+>> support partial batches. The reference counting is also cleaned up to use
+>> folio_put_refs().
+>>
+>> [1] https://lore.kernel.org/linux-mm/a694398c-9f03-4737-81b9-7e49c857fcbe@redhat.com
+>>
+>> Fixes: 354dffd29575 ("mm: support batched unmap for lazyfree large folios during reclamation")
+>> Suggested-by: David Hildenbrand <david@redhat.com>
+>> Suggested-by: Barry Song <baohua@kernel.org>
+>> Signed-off-by: Lance Yang <lance.yang@linux.dev>
+> 
+> I'd prefer changing the subject to something like
+> "Fix potential out-of-bounds page table access during batched unmap"
+
+Yep, that's much better.
+
+> 
+> Supporting partial batching is a cleanup-related benefit of this fix.
+> It's worth mentioning that the affected cases are quite rare,
+> since MADV_FREE typically performs split_folio().
+
+Yeah, it would be quite rare in practice ;)
+
+> 
+> Also, we need to Cc stable.
+
+Thanks! Will do.
 
