@@ -1,238 +1,128 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AAD136327
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708132737F1
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751014341; cv=none; b=XSG5752pFAw1CSAIllmu2S0/2eJtEUo51/gvpLBhA5kjLFsQLVCw/WLd/SvApTCbUVaL73VZWUy2SqPefVbbm3O0zOH4AtsJYLbdpvQH2p8MBCMfveVq4gsAHtl4ASxuxCBGNxn4Ftqu7O/VlIvS4iJC5etp4VBQb0QOoeleHYk=
+	t=1751014462; cv=none; b=r3PAxYPWzxAaZlLLCM0iX+FMJKyjZow5ajLjlm6unC4xSfVfqk8veC69ndMSYkpiIrvsP8xM9pnssn/JduDJ3wuLCmXkqoI+x6vHyZbkd0EYf+1zryr54r98odAMId1wioOWBxsh5IiilRra+i6aTHe1gxvkMwRof7sScpRZLIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751014341; c=relaxed/simple;
-	bh=Trp2tEL9MBTHjgrxShlRCBnJKQ3r7660UkyS6y6g+ls=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hw8ot3QZwDTAqEhDT55z822iHfyMdqCidEwLCwsMAf9KQk7sDdL0qAhzopTRLOSYkgTBmd+4xDYHcpmP2UIPkm5Jbxj3196BSSnhKgpn5pVF5n58yrLXaCM67fc1lp9aJRA3XNQpm1ZhiM9d8w2nrARmS0J0GXAPNwK7SWEf0nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JSfFUhJo; arc=none smtp.client-ip=209.85.221.41
+	s=arc-20240116; t=1751014462; c=relaxed/simple;
+	bh=G/67mhxLuKytL5l5EvWf4Siqtg/clNGoegq0wOXrKnE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=J+wSB0a6axP2yUUESk1L1y6Irr8XnVfBg2t7O2uK0EtGYJviMrsYOcxpFgnZJqTtWgkNA8vD+2uNSBev6e/mwHoTMKj6jq+xzhCc3ksOya4nFCP7AjD4umo78N2bQi+UzzJWyqeNaAcIzzBcLKK7qLYl4D3+ZB+Ud0px+7hZf9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iba02Znd; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JSfFUhJo"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a548a73ff2so1745791f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:52:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iba02Znd"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-451d54214adso13118565e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:54:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751014337; x=1751619137; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UoFUdFqAipKbBMVUce6Z7qQLfXF9kagacYpEqN92/d8=;
-        b=JSfFUhJo2F8EXBGUNpMbkIKbjKcklAhHtf115HQiMSX3NE48lYGsc5bfzVRZgZjS95
-         lkebQKemNmbRq9JIlk+nbwbbOGeTVaZAyNfZkcVclvRhBgPNeQ2hT+1Nk6MFcGiBzIMZ
-         XIofhi8v3KXaJLTpIgtX7f5I9OnPSoVpMLDroy9zCJEQBl+KzILcg7+R7VnTgDx3vOZQ
-         qeGyO4rDXMrSoW3kK5xPjO4b/+sl/jhJy7q3HZa8RMEN8PcxHQm01QRTOQ6U8WK/9Kfc
-         nJ/UpC3xDw2RsdUamxKiYfB7MzwmeuNS0i7KZkwPUfAF+nZVZadCQFExY9qVxf2hwIAT
-         bhxw==
+        d=linaro.org; s=google; t=1751014459; x=1751619259; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0BS+6uy4su/8ABLs5cJdrouwkh2bvREAZhph1XMTpHE=;
+        b=iba02ZndNDEd8FYkIxmnk0X3mZnW4cYs7zKS8dLT0Aeltvyo8fofDespJ+Nq8ompjG
+         D1uddw91hnsRPH/DNoGBALCrrFfow+lMQxqjgbxw6GqLYhORAVBy6XMrf6KUoxgC7iuo
+         RtH+vr1MNWgySIOXmxJ29Arllq7sXQ23n5jhI4SeLEFg8kPnPRT4DJCM2LsHSa5IvMi+
+         irrWWPcEV/CCNvXRjkbmr56FHRMtTMPvVMZBpbTBQWVITUbuWj4kG6VzRjESdoeSH88E
+         InbD7swBRHhdZbonyFcx6JuBKfZ0YCrYh8mwIVg5ZSLra/e06iIDPzND/0QRkm5BPJ5O
+         VBgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751014337; x=1751619137;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UoFUdFqAipKbBMVUce6Z7qQLfXF9kagacYpEqN92/d8=;
-        b=rqESNTsS2YbQyeRmcTI73BEO2CYYKAV6pPfyyhTlRNF+Qn4y/sZH6hTL0qZ5EA/qid
-         AD6x9Nf+ufQ4xvh+G1YU81RQoKb+af8FUel2OUbP2t1SctrrCBQxiEU/bzrP+lEDsP4U
-         I7cJSjowYVjBOIr6t/v9KnmvJemfBSDmY0sxx/OuNsIrQJbEofFiecN3VFBQHpi6aKdY
-         mcum1s46aOzvYcirn8f4okMXs92BvNnDdvsXv1W6w16COBX8MkXsI+U6Q77wv8mkmHXh
-         Pbhza2oks2gQlDhw59KS9cJh2oqtzqa4ejUgAOA8YCUiqkWBz8HdLgL0e160mrSlYWt9
-         vBrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ6sZ0kmfAGYPTpXzSEOKZPk2FE5JwYtvGOVknXwCe/mTSmIxLIeSQzHvIERxkPRJ10SJkQaxdO44zSB8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzo8CXyvkEfiV0e5S7+ozKTjJhIwdSCWE+pqQHZPmtn+sEVJ3l6
-	zcYdb6n1HvYI5tcxHdjvpeqveOiaawBk0pI5VjPbRvEy/Bq3LbV6K4K7yC1rrQQzGPw=
-X-Gm-Gg: ASbGncsv/O+52yaqoonwGZ/Ldvs4MSlqlil55rG76JMXr6U2NdwQmLXiuBf1y+eGQUY
-	MVwyHU2zsNNEXg6aVscIi7IQbmImQh/6Dn+7kTUW74OwlYKEoTXv5iiGJeuCqP0c+Bp8lC1FwN5
-	pZUdfK7auVhc53SV8XIxaZydBSrV6qDzjXK2WO8n7SC0YwDzdQnqEnTbZ7/zqxv7Sb+24Me1Oka
-	V/RlW/m6qKpgzfqt5DDZKrlEmzz13zzsz3lBu+XJdpYgIEfdAZ04iYSRwtgKBBQWfgSMPz9bkbp
-	YHaJMDS7HgyPB4EF8wt26J+7WaO5T6dMvYyajPXmXZ1zEvuQp/PkPK2vhWhAkpNfJoBEm1dxKZh
-	Fow==
-X-Google-Smtp-Source: AGHT+IECZfBrc+AzA+5LfKHuhgle/QkdG0KHezJE31byGodBUKLEFLFk2mmygHC6OYjmlmscdlmdXg==
-X-Received: by 2002:a5d:4a01:0:b0:3a1:fe77:9e1d with SMTP id ffacd0b85a97d-3a90d5a7e61mr1890018f8f.16.1751014337246;
-        Fri, 27 Jun 2025 01:52:17 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e597a8sm2071994f8f.70.2025.06.27.01.52.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 01:52:16 -0700 (PDT)
-Message-ID: <19302e67-7df1-4100-912d-c9b426a4b943@linaro.org>
-Date: Fri, 27 Jun 2025 09:52:16 +0100
+        d=1e100.net; s=20230601; t=1751014459; x=1751619259;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0BS+6uy4su/8ABLs5cJdrouwkh2bvREAZhph1XMTpHE=;
+        b=OYjxLpD4jDKsaZPEhngkDtQ//1cWjshWaH74r8nXeWNSUuOPguNO41LCV+zV580lm7
+         ZxVutrWLctrfj4coE0Yk4Whm1OcyMBVeCfdrR/fAeI4ZVIdxgdccsVcvE7zZpkZ4fa4J
+         7zq0wWbk2o4oVOWJT5L56tYpRtDR2oVUrPx3q1fNkVdCe/PqWPLWRUbxmXxYYBeD8J5N
+         dbC0lWYlYlNH3D3jYOb8LnDWUPw9WzzZaLiYYTJQ1ZwA5r9UuRDvmMejtdfcsgTp0YYT
+         8n2jHvTF5w7igpOyK5CqlkhZLZnrnV2gKYfB/zrI7uFP5BDNmUREkdydC4RMDLA0UqZq
+         vX5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVOZ0wkyTkv87XzJ7KfAZUN2SjfsEiQj0C0CjknxiA+r2t6Lm5bzCIm5G19hIxIsrhgI5RpHPdbMmE5MBU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypUQpbCTcyngRSPus6loH/Lv/m6y3ly5WZ6xkC+J7Gf3BSwnvH
+	ncn4LHCG73XaiLadq9cKB0A8Nxqb5yHC+w69C/33rkJXgwMzS7/sTArwoq/0ZwmAqgQ=
+X-Gm-Gg: ASbGncvS+6te8MRm2S/5yAErVFKng8JvckuabhkVERdOitqOgwpZUcqAuQMIUSA+r3l
+	sRu37J7VEF+Qw4D4TsBfIJh6MWzrvRLCJW2vgFLvh1Wulh76zNvvWZHrO/+5OM5REgI0+VU4o9L
+	blRZw6g6xKG6uKYKc1VxO6+ujRcrnSc/sfSItBT0OXLhBpFYLymXkTVPLAE5HDxWof4xCtzQ+yl
+	wuVDQV6Dbq5E6cPk5KFvsO8jcMA2vRJRc6sB5zFI/6ZpfJv0ZoFitxA1Sk75FE5UIBoOmu/Zcdq
+	X3vA5Zuz13FLNkxf6VMpQQudRm4YQQgta8jtxcSQLUs0os9GUINgy8hQUDUqhNQFKbs=
+X-Google-Smtp-Source: AGHT+IE4X30M79feYa1B4IoJp+P/zoAnkDqF1pqfPyj589N4UXNvVInq2V7VnCmuiR3hct5W2E2d9A==
+X-Received: by 2002:a05:600c:1c87:b0:442:c993:6f94 with SMTP id 5b1f17b1804b1-4538ee59148mr23355875e9.12.1751014458664;
+        Fri, 27 Jun 2025 01:54:18 -0700 (PDT)
+Received: from [10.1.1.109] ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4537c6e2f64sm51190205e9.2.2025.06.27.01.54.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 01:54:18 -0700 (PDT)
+Message-ID: <b2c3b78d60f3dc3e4576e8b79298e22ea46567c6.camel@linaro.org>
+Subject: Re: [PATCH v2 2/4] arm64: dts: exynos: gs101-pixel-common: add
+ Maxim MAX77759 PMIC
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Catalin Marinas	
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Peter Griffin	
+ <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley	 <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Date: Fri, 27 Jun 2025 09:54:16 +0100
+In-Reply-To: <2c491166-d8ae-4fb6-a4f7-74e823e1205d@kernel.org>
+References: <20250524-b4-max77759-mfd-dts-v2-0-b479542eb97d@linaro.org>
+	 <20250524-b4-max77759-mfd-dts-v2-2-b479542eb97d@linaro.org>
+	 <2c491166-d8ae-4fb6-a4f7-74e823e1205d@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/6] spi: spi-fsl-dspi: Report FIFO overflows as errors
-To: Frank Li <Frank.li@nxp.com>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
- Vladimir Oltean <vladimir.oltean@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
- Larisa Grigore <larisa.grigore@nxp.com>, Christoph Hellwig <hch@lst.de>,
- linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org>
- <20250624-james-nxp-spi-dma-v3-6-e7d574f5f62c@linaro.org>
- <aFrXRDJmMgt0qTlL@lizhi-Precision-Tower-5810>
- <0e26494d-7b85-4874-a2e4-a498ce1864c8@linaro.org>
- <aFwN/LlXEmv82PcF@lizhi-Precision-Tower-5810>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <aFwN/LlXEmv82PcF@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+Hi Krzysztof,
 
+On Thu, 2025-06-26 at 21:49 +0200, Krzysztof Kozlowski wrote:
+> On 24/05/2025 07:21, Andr=C3=A9 Draszik wrote:
+> > +
+> > +		gpio {
+> > +			compatible =3D "maxim,max77759-gpio";
+> > +
+> > +			gpio-controller;
+> > +			#gpio-cells =3D <2>;
+> > +			/*
+> > +			 * "Human-readable name [SIGNAL_LABEL]" where the
+> > +			 * latter comes from the schematic
+> > +			 */
+> > +			gpio-line-names =3D "OTG boost [OTG_BOOST_EN]",
+> > +					=C2=A0 "max20339 IRQ [MW_OVP_INT_L]";
+> > +
+> > +			interrupt-controller;
+> > +			#interrupt-cells =3D <2>;
+> > +		};
+> > +
+> > +		nvmem-0 {
+>=20
+> Why is this called nvmem-0, not nvmem? Is there nvmem-1? I see binding
+> does it, but why?
 
-On 25/06/2025 3:55 pm, Frank Li wrote:
-> On Wed, Jun 25, 2025 at 11:09:57AM +0100, James Clark wrote:
->>
->>
->> On 24/06/2025 5:50 pm, Frank Li wrote:
->>> On Tue, Jun 24, 2025 at 11:35:36AM +0100, James Clark wrote:
->>>> In target mode, the host sending more data than can be consumed would be
->>>> a common problem for any message exceeding the FIFO or DMA buffer size.
->>>> Cancel the whole message as soon as this condition is hit as the message
->>>> will be corrupted.
->>>>
->>>> Only do this for target mode in a DMA transfer because we need to add a
->>>> register read.
->>>
->>> "We need to add a register read" is not reason.
->>>
->>
->> Maybe: "It's not likely to catch any errors in host mode so optimize by
->> avoiding an extra register read"?
->>
->>> Add checking FIFO error status at target mode in a DMA transfer since PIO
->>> mode already do it. It help catch some host mode ...
->>>
->>
->> Are you suggesting that we check for FIFO errors in host mode too? It
->> requires an extra read and check in dspi_tx_dma_callback(), but I'm not sure
->> what it could catch. Realistically as long as everything is setup correctly
->> then neither of those flags will be set. It will either always work or never
->> work.
->>
->> It might be better to add it later if a use becomes apparent otherwise it's
->> extra noise in the code.
-> 
-> I think your origial last phrase is not good enough. You may rephrase it
-> to make it clear.
-> 
-> for example: according to your patch
-> 
-> "Only do this for target mode in a DMA transfer because we need to add a register read."
-> 
-> "add a register read" is result, not a reason. the reason should be "you want
-> host side capture such error."
-> 
-> Frank
-> 
-> 
+'nvmem' is used/declared by nvmem-consumer.yaml as a phandle array
+already so using just 'nvmem' fails validation:
 
-Got it, thanks
+Documentation/devicetree/bindings/mfd/maxim,max77759.example.dtb: pmic@66: =
+nvmem: {'compatible': ['maxim,max77759-nvmem'], 'nvmem-
+layout': {'compatible': ['fixed-layout'], '#address-cells': 1, '#size-cells=
+': 1, 'reboot-mode@0': {'reg': [[0, 4]]}, 'boot-reason@4':
+{'reg': [[4, 4]]}, 'shutdown-user-flag@8': {'reg': [[8, 1]]}, 'rsoc@10': {'=
+reg': [[10, 2]]}}} is not of type 'array'
+	from schema $id: http://devicetree.org/schemas/nvmem/nvmem-consumer.yaml#
 
->>
->>>> In IRQ and polling modes always do it because SPI_SR was
->>>> already read and it might catch some host mode programming/buffer
->>>> management errors too.
->>>>
->>>> Signed-off-by: James Clark <james.clark@linaro.org>
->>>> ---
->>>>    drivers/spi/spi-fsl-dspi.c | 28 +++++++++++++++++++++++++++-
->>>>    1 file changed, 27 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
->>>> index 58881911e74a..16a9769f518d 100644
->>>> --- a/drivers/spi/spi-fsl-dspi.c
->>>> +++ b/drivers/spi/spi-fsl-dspi.c
->>>> @@ -560,12 +560,24 @@ static void dspi_rx_dma_callback(void *arg)
->>>>    	complete(&dma->cmd_rx_complete);
->>>>    }
->>>>
->>>> +static int dspi_fifo_error(struct fsl_dspi *dspi, u32 spi_sr)
->>>> +{
->>>> +	if (spi_sr & (SPI_SR_TFUF | SPI_SR_RFOF)) {
->>>> +		dev_err_ratelimited(&dspi->pdev->dev, "FIFO errors:%s%s\n",
->>>> +				    spi_sr & SPI_SR_TFUF ? " TX underflow," : "",
->>>> +				    spi_sr & SPI_SR_RFOF ? " RX overflow," : "");
->>>> +		return -EIO;
->>>> +	}
->>>> +	return 0;
->>>> +}
->>>> +
->>>>    static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
->>>>    {
->>>>    	size_t size = dspi_dma_transfer_size(dspi);
->>>>    	struct device *dev = &dspi->pdev->dev;
->>>>    	struct fsl_dspi_dma *dma = dspi->dma;
->>>>    	int time_left;
->>>> +	u32 spi_sr;
->>>>    	int i;
->>>>
->>>>    	for (i = 0; i < dspi->words_in_flight; i++)
->>>> @@ -614,7 +626,8 @@ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
->>>>
->>>>    	if (spi_controller_is_target(dspi->ctlr)) {
->>>>    		wait_for_completion_interruptible(&dspi->dma->cmd_rx_complete);
->>>> -		return 0;
->>>> +		regmap_read(dspi->regmap, SPI_SR, &spi_sr);
->>>> +		return dspi_fifo_error(dspi, spi_sr);
->>>>    	}
->>>>
->>>>    	time_left = wait_for_completion_timeout(&dspi->dma->cmd_tx_complete,
->>>> @@ -1069,6 +1082,10 @@ static void dspi_poll(struct fsl_dspi *dspi)
->>>>
->>>>    			if (spi_sr & SPI_SR_CMDTCF)
->>>>    				break;
->>>> +
->>>> +			dspi->cur_msg->status = dspi_fifo_error(dspi, spi_sr);
->>>> +			if (dspi->cur_msg->status)
->>>> +				return;
->>>
->>>
->>> Although fifo error may happen after you check, it may reduce some possilbity
->>> and catch some problems.
->>>
->>> Frak
->>>
->>
->> Not sure what you mean by this one. But I've seen a few small errors now
->> that I look again. The error check should be before the transfer complete
->> break. And tries should be reset for each part of the message.
->>
->>>>    		} while (--tries);
->>>>
->>>>    		if (!tries) {
->>>> @@ -1085,6 +1102,7 @@ static void dspi_poll(struct fsl_dspi *dspi)
->>>>    static irqreturn_t dspi_interrupt(int irq, void *dev_id)
->>>>    {
->>>>    	struct fsl_dspi *dspi = (struct fsl_dspi *)dev_id;
->>>> +	int status;
->>>>    	u32 spi_sr;
->>>>
->>>>    	regmap_read(dspi->regmap, SPI_SR, &spi_sr);
->>>> @@ -1093,6 +1111,14 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
->>>>    	if (!(spi_sr & SPI_SR_CMDTCF))
->>>>    		return IRQ_NONE;
->>>>
->>>> +	status = dspi_fifo_error(dspi, spi_sr);
->>>> +	if (status) {
->>>> +		if (dspi->cur_msg)
->>>> +			WRITE_ONCE(dspi->cur_msg->status, status);
->>>> +		complete(&dspi->xfer_done);
->>>> +		return IRQ_HANDLED;
->>>> +	}
->>>> +
->>>>    	dspi_rxtx(dspi);
->>>>
->>>>    	if (!dspi->len) {
->>>>
->>>> --
->>>> 2.34.1
->>>>
->>
+https://lore.kernel.org/all/20250226-max77759-mfd-v2-3-a65ebe2bc0a9@linaro.=
+org/
 
+Cheers,
+Andre'
