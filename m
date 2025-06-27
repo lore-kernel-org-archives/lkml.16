@@ -1,43 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596AA214A8B;
-	Fri, 27 Jun 2025 20:31:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E6E1EE03D;
+	Fri, 27 Jun 2025 20:31:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751056266; cv=none; b=QTm2xmngEIe5Ui74IpdoGYb6iCxAhlis3dB4g9ULWRRclPYkT5WR60pZCkzV+gOgnIdvO+bhuadBrSiT61dUIG9HZX4W9YU+3HoZozQBfzvR6YA/HqI2xzdHzXwjIdebGOfqeFGmw7ozUjCyAcOaDNKAwyglfn3fy4oFsrDEcSk=
+	t=1751056280; cv=none; b=h7+BKR/m9gErTry+wPMsd57uGRvkAz3mZ08hmLJyU0EgeaG88yRj0/0eeXkQax4GEAvcRYT/iZqBA/MCdqfY6ScoH1akIm7XbwR8Ele7bCykqN9nnzABGm2A2ZrsqK9dWNIGl8MnA8oo0cnAQkCu3ZY75NjFWzjs1/Tswa8W1JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751056266; c=relaxed/simple;
-	bh=chIjgY/DRXU+aobNz+GV9xajKaVjC+6hRM85uhsc/qI=;
+	s=arc-20240116; t=1751056280; c=relaxed/simple;
+	bh=Q4joD0I2iiCOd+XFK08HVBTF0vf7uNpdrUvs65Kql+s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oE2ZkVnapcq5PQFNU6nXJ5JRy9730m7yGXK8TryM7C8rvPlXDCFiXzwMbBde4b4lHSR+R+YNkZ0CLn9yDSs7Pnq+C/clbDi97O+dRbd39iLkn+ovTxfH0iDJk6l9unT4t0+kcw+fd9erXkR4i7rSzm3aZumPnV86QbA4WD4ubeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B7Dp6gGN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JGiZ5KNM+ptTRwOCMxGqSM8diri+S0WkTJ+F0AUDNnLFdAkSsOlue30MTxabcOuW0fUoI7frBLIufxrVxcmA2xOWhW99ngwjPn3Oo9hcJjLU8J1hTwwjMDf73YIag3sYAZdayEhj26gNmYTLn0lW0BGG5t2tvY4fRj8/AS6jNIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hqEB7tDP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B7Dp6gGN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF932C4CEE3;
-	Fri, 27 Jun 2025 20:31:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hqEB7tDP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35B6CC4CEE3;
+	Fri, 27 Jun 2025 20:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751056265;
-	bh=chIjgY/DRXU+aobNz+GV9xajKaVjC+6hRM85uhsc/qI=;
+	s=k20201202; t=1751056280;
+	bh=Q4joD0I2iiCOd+XFK08HVBTF0vf7uNpdrUvs65Kql+s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B7Dp6gGNKtHwnvKpIrpACDdjpFI1LJ6wN+3cHi8na9/FEvZWTkeDR9lq1XI7B6l7w
-	 zM7Slh6sZhZkAKeGT25yAsOYlsuLUdsqyhyTvRlykn3zitrvD6taBqJjTvq5ssvu0V
-	 EukfE+y2xfXux6l2wJD8OX5oaFGWrrwpamd9ybxuCTKP4Ae1g3TDYkLqp2kWqtveRU
-	 sKB/xT/xLwTNWEobFO3tzqsVc8wjX3XhVwmpLQbyZwvreNouio8nfnuCJOxgxUIgOI
-	 7no4IzwmJHVPUS36kaqGBKaIHzoeBZyVkN+3j/OY86TCLcg7s+NouyQ+QrLeKiOCix
-	 1MFc6XhiR/HcA==
-Date: Fri, 27 Jun 2025 15:31:05 -0500
+	b=hqEB7tDPwd/dTf9pdxiIjmDCdyInWkq0rHDIdKi2KUqfSLfFtfZuJSZKmUMxD/gKR
+	 HaQ1LZqsvgFVw6fdg3nLITnZtSaiyeRcKjV1dGzhzY78SK8jbX3UyPvw3M7tUIlLG0
+	 lz7xJn6qMAsTAEw/ExqI4nLzVVVDa+Zmm+2qpzQg7qYeoMYkulPNBkt5WbLElBFqv6
+	 btk5Aap2s6xcYP+jF61BrtZ7fh9vUapTQml4FeNB4tkeWChVam03pUR4pQg+yDnrj5
+	 9wfs21rfKrG/qHI4BYO76/lIczRF1GDQxqdd+oRQOhmcITXJTKFYeWEtG44qvaPBGm
+	 HybCy5cIRuvaA==
+Date: Fri, 27 Jun 2025 15:31:19 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Frank Li <Frank.Li@nxp.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>, imx@lists.linux.dev,
-	Conor Dooley <conor+dt@kernel.org>,
-	Roland Stigge <stigge@antcom.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] dt-bindings: watchdog: nxp,pnx4008-wdt: allow clocks
+Cc: devicetree@vger.kernel.org, imx@lists.linux.dev,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	linux-iio@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Conor Dooley <conor+dt@kernel.org>
+Subject: Re: [PATCH 1/1] dt-bindings: iio: adc: nxp,lpc3220-adc: allow clocks
  property
-Message-ID: <175105626276.33089.3774490288241746622.robh@kernel.org>
-References: <20250624201227.2515275-1-Frank.Li@nxp.com>
+Message-ID: <175105627901.33520.13967663171471942396.robh@kernel.org>
+References: <20250624201302.2515391-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,16 +50,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250624201227.2515275-1-Frank.Li@nxp.com>
+In-Reply-To: <20250624201302.2515391-1-Frank.Li@nxp.com>
 
 
-On Tue, 24 Jun 2025 16:12:27 -0400, Frank Li wrote:
+On Tue, 24 Jun 2025 16:13:02 -0400, Frank Li wrote:
 > Allow clocks property to fix below CHECK_DTB warning:
->   arch/arm/boot/dts/nxp/lpc/lpc3250-phy3250.dtb: watchdog@4003c000 (nxp,pnx4008-wdt): Unevaluated properties are not allowed ('clocks' was unexpected)
+>   arch/arm/boot/dts/nxp/lpc/lpc3250-ea3250.dtb: adc@40048000 (nxp,lpc3220-adc): 'clocks' does not match any of the regexes: 'pinctrl-[0-9]+'
 > 
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->  .../devicetree/bindings/watchdog/nxp,pnx4008-wdt.yaml          | 3 +++
+>  Documentation/devicetree/bindings/iio/adc/nxp,lpc3220-adc.yaml | 3 +++
 >  1 file changed, 3 insertions(+)
 > 
 
