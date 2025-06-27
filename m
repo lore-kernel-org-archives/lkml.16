@@ -1,155 +1,313 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8BF1FA178;
-	Fri, 27 Jun 2025 19:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BEF1FF7C8
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751051460; cv=none; b=f65LRcD3pMAvW/Hzn5DIig75BlFYd6ZMTxc5Px8XH3O6I2nJQ8gpr19/vODaTlvqHYAN66PnJ91AinrSQyQ31gk2XYOqEx6yyPIkXGp/rXc54ugnJt9MM6cTtU+H3AW9MdsXYZ5uP05d2pXqU04LHFnN8ktwB+OqAM5nJlY6wK4=
+	t=1751051501; cv=none; b=edk3a+YWonYz8Fr4rSeAoa3dLYrSHgJ4yDb+Tv4jpxIPuCt84Gv0WrFMbIfc+HLQoIuEV494wbTu751Zi67hnyHZ8/AWfsE88BFLWm9qwHbjzxFFxwYswYwhSZwaHFVax65jtI2ek32tU+jcp0hSMvGBFAB2LuYyc3cxpsbKLFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751051460; c=relaxed/simple;
-	bh=QZiRTIlW7NLE74aUDOhyqOhz1pnacE00cL6tAh357EM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BtsUY+69MM73vxz5ECf04PP3iJBLF7ODtBk6PmJHBV2qIXvgmqF1lWdgULpKwAxtVw4msiYACVoWuLetQM32jlgZA8SwLvT5ly3TEXbKuiqdQkaLkUyzx6nJbb9qrydN8t7BL2B8J4jHrMyrS7SGZvFwrigy5/KlN/GBXzDIp3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZ1l8wcF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751051501; c=relaxed/simple;
+	bh=ceb9dt7giSkpdzaLvWyBrC2cey5gGpnzKli7QJAEgoU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ondjkYEpB4jqgsGly2K0CcSwv2SMhsjDBdlvHDWqXS3XKqOKteBAnM82ibBnkYyn/Zl7aIKhCETx2VVK5H4o6JEEeldpiL8w2rE8HkybNCuYDJbKkzE8Y01jqntcNtXxirCvnHw86bvzvKexMiFIGo+5DLbMw2rSMhkdSZPb4pQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PAr0Axp+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=39s8DCb7; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PAr0Axp+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=39s8DCb7; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZ1l8wcF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 619BDC4CEE3;
-	Fri, 27 Jun 2025 19:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751051459;
-	bh=QZiRTIlW7NLE74aUDOhyqOhz1pnacE00cL6tAh357EM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gZ1l8wcFhgJeBP3/hryq7iU4k7N+1fcXJwN2wMru8CHICE6YABwyfKMxUy6xGhvQT
-	 j5BfXHyomSCG+4GoYhe7g4P24Gjvm/Ep/yq1zfQbVj/xaKf96vtYUJ4us0nTEg1eRA
-	 LCeooBLEw8Z/1rvDg+qbfjjWAQPkM/wCuBt5ndNXJBOzwjXp6STxMrtgJBrNk40oXm
-	 aNMklTk8jL+fAQ34ychjIrcd/8LZs5Pqez4RvhyiGIwOxmynmhkQ9Zqxd/3/faYPFO
-	 0D6N7GuKRKzLylZ5kum6z4+K/5i6pabXo29oSikYPRpOLwVe5+vLEkF4L0m+G5ZWmR
-	 FhYXgIjES7rJQ==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Eric Biggers <ebiggers@kernel.org>
-Subject: [PATCH] lib/crypto: x86/sha512: Drop unnecessary ANNOTATE_NOENDBR
-Date: Fri, 27 Jun 2025 12:09:40 -0700
-Message-ID: <20250627190940.66756-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PAr0Axp+";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="39s8DCb7";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PAr0Axp+";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="39s8DCb7"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9F9F321180;
+	Fri, 27 Jun 2025 19:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751051496; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=21bjnz7XARCDbcBLPY8MR0klXzrVEXq4DsGpt0IuhAI=;
+	b=PAr0Axp+d6pMC4npYtGzrOR51C6YXicQ24jDNYIz39L2JU0kfGe6cLE4aTmG8xhDJfjzjE
+	tK66qphD5Cn5qNAKZ/BJZucgnzW88hFvv3qhDA3rJn/DY3y59+HzZKcnkRcaMvF5GtMDxQ
+	gatoqe7gnI2zCiEFA+DTkDBzVd/hO4c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751051496;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=21bjnz7XARCDbcBLPY8MR0klXzrVEXq4DsGpt0IuhAI=;
+	b=39s8DCb7lwoE0+/63i4SWOcpFAPM+kTK7906qyi6jk2t2MHl8eAhDo0WKDjEu8RU8p2uka
+	v2TKb0+PiZbM0wCQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751051496; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=21bjnz7XARCDbcBLPY8MR0klXzrVEXq4DsGpt0IuhAI=;
+	b=PAr0Axp+d6pMC4npYtGzrOR51C6YXicQ24jDNYIz39L2JU0kfGe6cLE4aTmG8xhDJfjzjE
+	tK66qphD5Cn5qNAKZ/BJZucgnzW88hFvv3qhDA3rJn/DY3y59+HzZKcnkRcaMvF5GtMDxQ
+	gatoqe7gnI2zCiEFA+DTkDBzVd/hO4c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751051496;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=21bjnz7XARCDbcBLPY8MR0klXzrVEXq4DsGpt0IuhAI=;
+	b=39s8DCb7lwoE0+/63i4SWOcpFAPM+kTK7906qyi6jk2t2MHl8eAhDo0WKDjEu8RU8p2uka
+	v2TKb0+PiZbM0wCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8D9FA138A7;
+	Fri, 27 Jun 2025 19:11:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3cSNIujsXmjjHgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 27 Jun 2025 19:11:36 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 50B64A08D2; Fri, 27 Jun 2025 21:11:32 +0200 (CEST)
+Date: Fri, 27 Jun 2025 21:11:32 +0200
+From: Jan Kara <jack@suse.cz>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, jack@suse.cz, 
+	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, linux-kernel@vger.kernel.org, 
+	yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH v2 08/16] ext4: merge freed extent with existing extents
+ before insertion
+Message-ID: <gvy6graln2rfpkaa3ms7lx7wlzzpjruzvefagsnnf3vcdfoxq7@dlsvj2gw6huk>
+References: <20250623073304.3275702-1-libaokun1@huawei.com>
+ <20250623073304.3275702-9-libaokun1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623073304.3275702-9-libaokun1@huawei.com>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-When migrating the x86 SHA-512 assembly code to lib/crypto/, I replaced
-SYM_TYPED_FUNC_START with ANNOTATE_NOENDBR.  This was intended to match
-a change in the caller from an indirect call to a static call, like what
-I did for SHA-256.  However, for SHA-512 I actually decided to bring the
-static call up a level; see DEFINE_X86_SHA512_FN in
-lib/crypto/x86/sha512.h.  Therefore, now the assembly functions are just
-called via normal direct calls.  At least for SHA this seems to be the
-better way to do it, and it means using ANNOTATE_NOENDBR is unnecessary.
+On Mon 23-06-25 15:32:56, Baokun Li wrote:
+> Attempt to merge ext4_free_data with already inserted free extents prior
+> to adding new ones. This strategy drastically cuts down the number of
+> times locks are held.
+> 
+> For example, if prev, new, and next extents are all mergeable, the existing
+> code (before this patch) requires acquiring the s_md_lock three times:
+> 
+>   prev merge into new and free prev // hold lock
+>   next merge into new and free next // hold lock
+>   insert new // hold lock
+> 
+> After the patch, it only needs to be acquired once:
+> 
+>   new merge next and free new // no lock
+>   next merge into prev and free prev // hold lock
+> 
+> Performance test data follows:
+> 
+> Test: Running will-it-scale/fallocate2 on CPU-bound containers.
+> Observation: Average fallocate operations per container per second.
+> 
+>                    | Kunpeng 920 / 512GB -P80|  AMD 9654 / 1536GB -P96 |
+>  Disk: 960GB SSD   |-------------------------|-------------------------|
+>                    | base  |    patched      | base  |    patched      |
+> -------------------|-------|-----------------|-------|-----------------|
+> mb_optimize_scan=0 | 20982 | 21157 (+0.8%)   | 50629 | 50420 (-0.4%)   |
+> mb_optimize_scan=1 | 10703 | 12896 (+20.4%)  | 14856 | 17273 (+16.2%)  |
+> 
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
 
-Fixes: b82535bf96da ("lib/crypto: x86/sha512: Migrate optimized SHA-512 code to library")
-Signed-off-by: Eric Biggers <ebiggers@kernel.org>
----
+Looks good. Feel free to add:
 
-This patch is targeting libcrypto-next.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
- lib/crypto/x86/sha512-avx-asm.S   | 2 --
- lib/crypto/x86/sha512-avx2-asm.S  | 2 --
- lib/crypto/x86/sha512-ssse3-asm.S | 2 --
- 3 files changed, 6 deletions(-)
+								Honza
 
-diff --git a/lib/crypto/x86/sha512-avx-asm.S b/lib/crypto/x86/sha512-avx-asm.S
-index af7ea311cc945..7732aa8fd8506 100644
---- a/lib/crypto/x86/sha512-avx-asm.S
-+++ b/lib/crypto/x86/sha512-avx-asm.S
-@@ -46,11 +46,10 @@
- # and search for that title.
- #
- ########################################################################
- 
- #include <linux/linkage.h>
--#include <linux/objtool.h>
- 
- .text
- 
- # Virtual Registers
- # ARG1
-@@ -274,11 +273,10 @@ frame_size = frame_WK + WK_SIZE
- # The size of the message pointed to by "data" must be an integer multiple
- # of SHA512 message blocks.
- # "nblocks" is the message length in SHA512 blocks.  Must be >= 1.
- ########################################################################
- SYM_FUNC_START(sha512_transform_avx)
--	ANNOTATE_NOENDBR	# since this is called only via static_call
- 
- 	# Save GPRs
- 	push	%rbx
- 	push	%r12
- 	push	%r13
-diff --git a/lib/crypto/x86/sha512-avx2-asm.S b/lib/crypto/x86/sha512-avx2-asm.S
-index 1302ddb5ec8cc..22bdbfd899d0f 100644
---- a/lib/crypto/x86/sha512-avx2-asm.S
-+++ b/lib/crypto/x86/sha512-avx2-asm.S
-@@ -48,11 +48,10 @@
- ########################################################################
- # This code schedules 1 blocks at a time, with 4 lanes per block
- ########################################################################
- 
- #include <linux/linkage.h>
--#include <linux/objtool.h>
- 
- .text
- 
- # Virtual Registers
- Y_0 = %ymm4
-@@ -566,11 +565,10 @@ frame_size = frame_CTX + CTX_SIZE
- # The size of the message pointed to by "data" must be an integer multiple
- # of SHA512 message blocks.
- # "nblocks" is the message length in SHA512 blocks.  Must be >= 1.
- ########################################################################
- SYM_FUNC_START(sha512_transform_rorx)
--	ANNOTATE_NOENDBR	# since this is called only via static_call
- 
- 	# Save GPRs
- 	push	%rbx
- 	push	%r12
- 	push	%r13
-diff --git a/lib/crypto/x86/sha512-ssse3-asm.S b/lib/crypto/x86/sha512-ssse3-asm.S
-index 108f1accc6bc7..4cae7445b2a86 100644
---- a/lib/crypto/x86/sha512-ssse3-asm.S
-+++ b/lib/crypto/x86/sha512-ssse3-asm.S
-@@ -46,11 +46,10 @@
- # and search for that title.
- #
- ########################################################################
- 
- #include <linux/linkage.h>
--#include <linux/objtool.h>
- 
- .text
- 
- # Virtual Registers
- # ARG1
-@@ -273,11 +272,10 @@ frame_size = frame_WK + WK_SIZE
- # The size of the message pointed to by "data" must be an integer multiple
- # of SHA512 message blocks.
- # "nblocks" is the message length in SHA512 blocks.  Must be >= 1.
- ########################################################################
- SYM_FUNC_START(sha512_transform_ssse3)
--	ANNOTATE_NOENDBR	# since this is called only via static_call
- 
- 	# Save GPRs
- 	push	%rbx
- 	push	%r12
- 	push	%r13
-
-base-commit: d74152ec2b5106263c2a502380acfaf5954f9898
+> ---
+>  fs/ext4/mballoc.c | 113 +++++++++++++++++++++++++++++++---------------
+>  1 file changed, 76 insertions(+), 37 deletions(-)
+> 
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index 5410fb3688ee..94950b07a577 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -6298,28 +6298,63 @@ ext4_fsblk_t ext4_mb_new_blocks(handle_t *handle,
+>   * are contiguous, AND the extents were freed by the same transaction,
+>   * AND the blocks are associated with the same group.
+>   */
+> -static void ext4_try_merge_freed_extent(struct ext4_sb_info *sbi,
+> -					struct ext4_free_data *entry,
+> -					struct ext4_free_data *new_entry,
+> -					struct rb_root *entry_rb_root)
+> +static inline bool
+> +ext4_freed_extents_can_be_merged(struct ext4_free_data *entry1,
+> +				 struct ext4_free_data *entry2)
+>  {
+> -	if ((entry->efd_tid != new_entry->efd_tid) ||
+> -	    (entry->efd_group != new_entry->efd_group))
+> -		return;
+> -	if (entry->efd_start_cluster + entry->efd_count ==
+> -	    new_entry->efd_start_cluster) {
+> -		new_entry->efd_start_cluster = entry->efd_start_cluster;
+> -		new_entry->efd_count += entry->efd_count;
+> -	} else if (new_entry->efd_start_cluster + new_entry->efd_count ==
+> -		   entry->efd_start_cluster) {
+> -		new_entry->efd_count += entry->efd_count;
+> -	} else
+> -		return;
+> +	if (entry1->efd_tid != entry2->efd_tid)
+> +		return false;
+> +	if (entry1->efd_start_cluster + entry1->efd_count !=
+> +	    entry2->efd_start_cluster)
+> +		return false;
+> +	if (WARN_ON_ONCE(entry1->efd_group != entry2->efd_group))
+> +		return false;
+> +	return true;
+> +}
+> +
+> +static inline void
+> +ext4_merge_freed_extents(struct ext4_sb_info *sbi, struct rb_root *root,
+> +			 struct ext4_free_data *entry1,
+> +			 struct ext4_free_data *entry2)
+> +{
+> +	entry1->efd_count += entry2->efd_count;
+>  	spin_lock(&sbi->s_md_lock);
+> -	list_del(&entry->efd_list);
+> +	list_del(&entry2->efd_list);
+>  	spin_unlock(&sbi->s_md_lock);
+> -	rb_erase(&entry->efd_node, entry_rb_root);
+> -	kmem_cache_free(ext4_free_data_cachep, entry);
+> +	rb_erase(&entry2->efd_node, root);
+> +	kmem_cache_free(ext4_free_data_cachep, entry2);
+> +}
+> +
+> +static inline void
+> +ext4_try_merge_freed_extent_prev(struct ext4_sb_info *sbi, struct rb_root *root,
+> +				 struct ext4_free_data *entry)
+> +{
+> +	struct ext4_free_data *prev;
+> +	struct rb_node *node;
+> +
+> +	node = rb_prev(&entry->efd_node);
+> +	if (!node)
+> +		return;
+> +
+> +	prev = rb_entry(node, struct ext4_free_data, efd_node);
+> +	if (ext4_freed_extents_can_be_merged(prev, entry))
+> +		ext4_merge_freed_extents(sbi, root, prev, entry);
+> +}
+> +
+> +static inline void
+> +ext4_try_merge_freed_extent_next(struct ext4_sb_info *sbi, struct rb_root *root,
+> +				 struct ext4_free_data *entry)
+> +{
+> +	struct ext4_free_data *next;
+> +	struct rb_node *node;
+> +
+> +	node = rb_next(&entry->efd_node);
+> +	if (!node)
+> +		return;
+> +
+> +	next = rb_entry(node, struct ext4_free_data, efd_node);
+> +	if (ext4_freed_extents_can_be_merged(entry, next))
+> +		ext4_merge_freed_extents(sbi, root, entry, next);
+>  }
+>  
+>  static noinline_for_stack void
+> @@ -6329,11 +6364,12 @@ ext4_mb_free_metadata(handle_t *handle, struct ext4_buddy *e4b,
+>  	ext4_group_t group = e4b->bd_group;
+>  	ext4_grpblk_t cluster;
+>  	ext4_grpblk_t clusters = new_entry->efd_count;
+> -	struct ext4_free_data *entry;
+> +	struct ext4_free_data *entry = NULL;
+>  	struct ext4_group_info *db = e4b->bd_info;
+>  	struct super_block *sb = e4b->bd_sb;
+>  	struct ext4_sb_info *sbi = EXT4_SB(sb);
+> -	struct rb_node **n = &db->bb_free_root.rb_node, *node;
+> +	struct rb_root *root = &db->bb_free_root;
+> +	struct rb_node **n = &root->rb_node;
+>  	struct rb_node *parent = NULL, *new_node;
+>  
+>  	BUG_ON(!ext4_handle_valid(handle));
+> @@ -6369,27 +6405,30 @@ ext4_mb_free_metadata(handle_t *handle, struct ext4_buddy *e4b,
+>  		}
+>  	}
+>  
+> -	rb_link_node(new_node, parent, n);
+> -	rb_insert_color(new_node, &db->bb_free_root);
+> -
+> -	/* Now try to see the extent can be merged to left and right */
+> -	node = rb_prev(new_node);
+> -	if (node) {
+> -		entry = rb_entry(node, struct ext4_free_data, efd_node);
+> -		ext4_try_merge_freed_extent(sbi, entry, new_entry,
+> -					    &(db->bb_free_root));
+> +	atomic_add(clusters, &sbi->s_mb_free_pending);
+> +	if (!entry)
+> +		goto insert;
+> +
+> +	/* Now try to see the extent can be merged to prev and next */
+> +	if (ext4_freed_extents_can_be_merged(new_entry, entry)) {
+> +		entry->efd_start_cluster = cluster;
+> +		entry->efd_count += new_entry->efd_count;
+> +		kmem_cache_free(ext4_free_data_cachep, new_entry);
+> +		ext4_try_merge_freed_extent_prev(sbi, root, entry);
+> +		return;
+>  	}
+> -
+> -	node = rb_next(new_node);
+> -	if (node) {
+> -		entry = rb_entry(node, struct ext4_free_data, efd_node);
+> -		ext4_try_merge_freed_extent(sbi, entry, new_entry,
+> -					    &(db->bb_free_root));
+> +	if (ext4_freed_extents_can_be_merged(entry, new_entry)) {
+> +		entry->efd_count += new_entry->efd_count;
+> +		kmem_cache_free(ext4_free_data_cachep, new_entry);
+> +		ext4_try_merge_freed_extent_next(sbi, root, entry);
+> +		return;
+>  	}
+> +insert:
+> +	rb_link_node(new_node, parent, n);
+> +	rb_insert_color(new_node, root);
+>  
+>  	spin_lock(&sbi->s_md_lock);
+>  	list_add_tail(&new_entry->efd_list, &sbi->s_freed_data_list[new_entry->efd_tid & 1]);
+> -	atomic_add(clusters, &sbi->s_mb_free_pending);
+>  	spin_unlock(&sbi->s_md_lock);
+>  }
+>  
+> -- 
+> 2.46.1
+> 
 -- 
-2.50.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
