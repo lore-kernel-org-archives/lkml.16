@@ -1,92 +1,91 @@
-Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1A729B773;
-	Fri, 27 Jun 2025 11:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FD529A9E4;
+	Fri, 27 Jun 2025 11:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751022041; cv=none; b=L8m+TzKiD8QProopxWPJzHBVhpBFejncrQC8Umnt/EVr/s3Rs86rlP8o1QZHN0kDLzb6N5aFua9UiHLBkmTha2ZjcMYZVrL8ceH6mtO4YJge6PQYd1Tl5pFeBn3wLcUayA0er8lYbMIxSmdQd7aaZ/7n+EEsk/3rkPFphRAA6LI=
+	t=1751022049; cv=none; b=B0SipqKp9Ixj7ejzVxp9nUQBMgnabIFZXLOhbWSMoDyJ0rvtEjrDfoDOgbF/ORqGvlle0kZ5IG7LDofHCq43R1jegm+Yt/0eyVtDY6biGy24jCrVxctaabUupwr6HnDkTheWd9HfeSD9EMjJSm+F3oCi1b5j/tEp+oPqQEugNdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751022041; c=relaxed/simple;
-	bh=30Dnyv1dF4DnBpa2oEEXfw7yRvrgEeQITsAYxnpbgS8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qSEEhorgY65veJR5H7dgDriwtypl4DR+/XvTcCMwazGanhvUdhCP8OE0K2PYXceEGef6mN7+tx7z9qsZ1vPybw40So+6YBuylvV4qcXeWcnkxmEM2oHoBdUuqUY9JhrtJ5/G12CfSNs8KVUaFU9KdVB/o8bW++H24hZFw7Gv6qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=185.125.25.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bTC9P1q2ZzZJF;
-	Fri, 27 Jun 2025 12:54:17 +0200 (CEST)
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bTC9N13KQzw8D;
-	Fri, 27 Jun 2025 12:54:16 +0200 (CEST)
-From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Fri, 27 Jun 2025 12:53:56 +0200
-Subject: [PATCH v4 4/5] arm64: dts: rockchip: force PMIC reset behavior to
- restart PMU on RK3588 Jaguar
+	s=arc-20240116; t=1751022049; c=relaxed/simple;
+	bh=lqMMTP1yhhlfjf6iJhvfIFcNWwN4TjqIAC4xUq/hPm8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iNZ39buHCvCCI/PZAgC0I+1fO8Jqi+xh1IQYhM86yiTrGPZ896Cd7vorrF8rmnJesXR4TJQ63h2ZSknf1/jAFrKL9uPGweCKSCithgKRnqAqvi0ombzDB+KYKe2hQ3yZ2BoNcEUd7PybJTEdQlMuXP1LYJR2I7E2aHnbnGTzhJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IjI4W1Z7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IjI4W1Z7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF3EDC4CEEB;
+	Fri, 27 Jun 2025 11:00:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751022048;
+	bh=lqMMTP1yhhlfjf6iJhvfIFcNWwN4TjqIAC4xUq/hPm8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IjI4W1Z73WmLTsreROLH+fYoV6wXIJEMOb3MNKX/yuRJmS7griT1taFprJ5PGNkNc
+	 m4gYkn7Nhnb5Tc56ERd9/1X4hQK374cglRCaWiyqZxi/Fk0gywqShd8G5bzk/HAVZ+
+	 uhJNuoqDhUf0Qp7A2KdbKTSj+oMxAoL7cvdDg4XwviAc3mmrmckadBlt9H7uDT6tL1
+	 Gfkr9kz7XBadf7H9ZVcDnz+eX4FOzkmyjzpQ7fmbXQdbVuXSyJHppShIXRR4L20wk5
+	 STdzfO503JuVgiF3SrFLsZ4dmDNUjlzyjWtqGKnj1GLPzX/ig29bWxlCTtP7EMyecy
+	 bT/Kk4oT47SGg==
+Date: Fri, 27 Jun 2025 12:00:44 +0100
+From: Mark Brown <broonie@kernel.org>
+To: "Hohn, Torben" <Torben.Hohn@bruker.com>
+Cc: "amit.kumar-mahapatra@amd.com" <amit.kumar-mahapatra@amd.com>,
+	"frogger@hardanger.blackshift.org" <frogger@hardanger.blackshift.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+	"linux@roeck-us.net" <linux@roeck-us.net>
+Subject: Re: [PATCH v2] spi: Raise limit on number of chip selects
+Message-ID: <aF553GU_btT81_b_@finisterre.sirena.org.uk>
+References: <FR4P281MB343441EB901D3DD286B923D6837AA@FR4P281MB3434.DEUP281.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250627-rk8xx-rst-fun-v4-4-ce05d041b45f@cherry.de>
-References: <20250627-rk8xx-rst-fun-v4-0-ce05d041b45f@cherry.de>
-In-Reply-To: <20250627-rk8xx-rst-fun-v4-0-ce05d041b45f@cherry.de>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Lukasz Czechowski <lukasz.czechowski@thaumatec.com>, 
- Daniel Semkowicz <dse@thaumatec.com>, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Quentin Schulz <quentin.schulz@cherry.de>
-X-Mailer: b4 0.14.2
-X-Infomaniak-Routing: alpha
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="u0SfgTdM+pvwNqIA"
+Content-Disposition: inline
+In-Reply-To: <FR4P281MB343441EB901D3DD286B923D6837AA@FR4P281MB3434.DEUP281.PROD.OUTLOOK.COM>
+X-Cookie: Do not cut switchbacks.
 
-From: Quentin Schulz <quentin.schulz@cherry.de>
 
-The bootloader for RK3588 Jaguar currently forces the PMIC reset
-behavior (stored in RST_FUN bitfield in register SYS_CFG3 of the PMIC)
-to 0b1X which is incorrect for our devices.
+--u0SfgTdM+pvwNqIA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It is required to restart the PMU as otherwise the companion
-microcontroller cannot detect the PMIC (and by extension the full
-product and main SoC) being rebooted which is an issue as that is used
-to reset a few things like the PWM beeper and watchdogs.
+On Thu, Jun 26, 2025 at 04:58:20PM +0000, Hohn, Torben wrote:
+> Hello Marc,
 
-Let's add the new rockchip,reset-mode property to make sure the PMIC
-reset behavior is the expected one.
+That isn't my name...
 
-Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
----
- arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts | 2 ++
- 1 file changed, 2 insertions(+)
+> +#define SPI_CS_CNT_MAX 16
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
-index ebe77cdd24e803b00fb848dc81258909472290f1..176925d0a1a809d1e2500f5e5efbbfa6a6d0bd42 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
-@@ -10,6 +10,7 @@
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/soc/rockchip,vop2.h>
- #include <dt-bindings/usb/pd.h>
-+#include "rk8xx.h"
- #include "rk3588.dtsi"
- 
- / {
-@@ -693,6 +694,7 @@ pmic@0 {
- 		vcc13-supply = <&vcc_1v1_nldo_s3>;
- 		vcc14-supply = <&vcc_1v1_nldo_s3>;
- 		vcca-supply = <&vcc5v0_sys>;
-+		rockchip,reset-mode = <RK806_RESTART>;
- 
- 		rk806_dvs1_null: dvs1-null-pins {
- 			pins = "gpio_pwrctrl1";
+> If this is increased to 24 now, we need to carry another patch on top of mainline again once we add another Chipselect
+> into our FPGA, or into the next iteration of our hardware. We would really prefer that a Kconfig value is used.
+> We have handed a patch to pengutronix, because they can send proper emails.
 
--- 
-2.50.0
+> In the IIO framework there is a Konfig Value for something similar:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/iio/trigger.h#n74
 
+This doesn't really work, we're supposed to support single kernel image
+so putting per platform configuration in Kconfig ends up being at best a
+usability problem.  At some point it's better to just bite the bullet
+and make things dynamic.
+
+--u0SfgTdM+pvwNqIA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmheedsACgkQJNaLcl1U
+h9AplQf+MNNvZr6JlQ5WWyzKnDpp9b0sjYa821cSH1QHeD+oHTrihMnplm+jnQ3Y
+B1V8xWmszYWsy6m8ZtpZPr1be703DDoS2dfyOe6EnY8dLI2hrWQvJmtUcLvBxZQi
+VZakbibVhTbWVaUWk5z6jLtmpGMuQKG005S0jtuMJtOgLICgYTYeHX4dzlxuR4Wm
+I5vzSZHDwEBDoVH62o4FbWllRnV6Vm281oP/dXWcP6L2xxQngG4/LmxZZy70/Zro
+5uL/rLzlOPGj+/48E8Abxn3lyKv7Azt4O9grikgyNfFjN2719QjyZ/TkC6c5e1pv
+2NV66TvwnpBvh162R5YLFzPToo6dJw==
+=Pcx2
+-----END PGP SIGNATURE-----
+
+--u0SfgTdM+pvwNqIA--
