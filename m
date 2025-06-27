@@ -1,237 +1,90 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7179293C76;
-	Fri, 27 Jun 2025 11:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F0829DB79;
+	Fri, 27 Jun 2025 11:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751022068; cv=none; b=MfVmzMWbyYP3Wpad8AR35OPn1EIk+RE7r5LO69nifbN6OSR4yvF0vRiMITgnRyhxGZ+vHJyzgWn4tx2g2hT9dFxawohxATnqg8q/B2yOin2+WyNarIqYm1Ob3rFSY5c91HXlNoCmDhaBbSbR6tmYXqkBD3RvLE+zNyt0ZXtkevQ=
+	t=1751022075; cv=none; b=ufUu+PPtoAP+bIzjKhdkpnQ675a6HWoTJwTpqjzR031kHF7aStmhuyMuSneYLB27f8Ku4TjPaNOmfxiRDQBEAUzGcH5Haqofc5XtFigy7IH10OffpTBm5hPaxNnIUeXnQ0gbn43PEnACLq2okfE7Sbf8/Osywp5yAgdy9yfibq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751022068; c=relaxed/simple;
-	bh=N3XRBdiKzMPDGgz2NDdVvWFw0c6XbfWNBNrfipfZlyA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bNi9q/zadiEgR2dZ+dw8jXl9qlY/iXE2png8n5XllfC8ivmrnbIWlM7/fLyVUjllKS7LgBgYYnsvZ6ymMddNvqeFsTlHVJw/kXhyICoTsqkpDYkNQ699fT2ZIqHiBFC9EMKtuJG0PWGnZb8XgZ2CYqrKQdZQWTbhAXDe+UMgDjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bTCJF2Ybxz6M4sX;
-	Fri, 27 Jun 2025 19:00:13 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id DF7641402ED;
-	Fri, 27 Jun 2025 19:01:01 +0800 (CST)
-Received: from localhost (10.48.153.213) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 27 Jun
- 2025 13:00:52 +0200
-Date: Fri, 27 Jun 2025 12:00:50 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v10 06/17] PCI/AER: Dequeue forwarded CXL error
-Message-ID: <20250627120050.00001461@huawei.com>
-In-Reply-To: <20250626224252.1415009-7-terry.bowman@amd.com>
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
-	<20250626224252.1415009-7-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751022075; c=relaxed/simple;
+	bh=c+o4o1W5LrCSv6enfzhJpCZAcCcaLrGjYkQH30oj5Sw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N/A5jT9IsoSOF8S2iL2IxCsXXZ2VdZzN8K8UXRvj2eJTFXJLm41ACafE+mnfwPQnOntLxK3l0kKtJkNUk0AOKd7nxlIV2BW8gNrQrTxge/NlwcDnJTksVMsmo5MFtYW9+hvfPuWDUHy3dNUUBW+OIHVr84wjOyJb1erJG0wKyO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eCOKEq9n; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eCOKEq9n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751022074; x=1782558074;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=c+o4o1W5LrCSv6enfzhJpCZAcCcaLrGjYkQH30oj5Sw=;
+  b=eCOKEq9nfS4EjC27rmVOVPE0ZG/FXQTMn5fms9EkoHZCqLwOyj9FgXDD
+   Ckt5sU82FTfH8ZA4HKLkF4POspOKZJdFqgDeoprNW209Ltnp7uImNZphm
+   ApHuoza4ZChrrfnnXna1STisZ1y8Y5fGZScOsRhwjOQc0frmmhcPQszXV
+   pnnTCnEmJDJ3VDmm2ETgWX6DhtDmak6TriLHu2RnuZH0ldR+QvoV+S3kq
+   9B3I+U/gwXw4lqqtPGB6ljsryiLhCLNQiF76uYv4aWJmICAz87CGfFnou
+   mjJm7S+9LwdsXsTg7iwXlncSLQ/ntbD4XwhQKAmfafdms0nKvT3fGe4kZ
+   w==;
+X-CSE-ConnectionGUID: ngCoP4f4QZuyC0M2+PSkhw==
+X-CSE-MsgGUID: QclRRHSyTpmA+JK2bZobWg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="52565518"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="52565518"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 04:01:13 -0700
+X-CSE-ConnectionGUID: MI9ObuygSn6Tx29iN1mzMg==
+X-CSE-MsgGUID: bUThnTU3Sj+M4+waK9dyGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="152957137"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 04:01:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uV6pO-0000000ASU7-3Cng;
+	Fri, 27 Jun 2025 14:01:06 +0300
+Date: Fri, 27 Jun 2025 14:01:06 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Cc: andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org,
+	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+	skhan@linuxfoundation.com, dan.carpenter@linaro.org,
+	Hans de Goede <hansg@kernel.org>
+Subject: Re: [PATCH v5] staging: media: atomisp: remove debug sysfs
+ attributes active_bo and free_bo
+Message-ID: <aF558plEWPpTw78F@smile.fi.intel.com>
+References: <20250627100604.29061-1-abdelrahmanfekry375@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627100604.29061-1-abdelrahmanfekry375@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, 26 Jun 2025 17:42:41 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
-
-> The AER driver is now designed to forward CXL protocol errors to the CXL
-> driver. Update the CXL driver with functionality to dequeue the forwarded
-> CXL error from the kfifo. Also, update the CXL driver to begin the protocol
-> error handling processing using the work received from the FIFO.
+On Fri, Jun 27, 2025 at 01:06:04PM +0300, Abdelrahman Fekry wrote:
+> The sysfs attributes active_bo and free_bo expose internal buffer
+> state used only for debugging purposes. These are not part of
+> any standard kernel ABI, and need to be removed before this
+> driver may be moved out of drivers/staging.
 > 
-> Introduce function cxl_proto_err_work_fn() to dequeue work forwarded by the
+> - Remove active_bo and free_bo attributes
+> - Remove group registration calls form hmm_init() and hmm_cleanup()
 
-After earlier update it already exists, you are just filling it in here.
-So reword this.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
-> AER service driver. This will begin the CXL protocol error processing with
-> a call to cxl_handle_proto_error().
-> 
-> Update cxl/core/native_ras.c by adding cxl_rch_handle_error_iter() that was
-> previously in the AER driver. Add check that Endpoint is bound to a CXL
-> driver.
-> 
-> Introduce logic to take the SBDF values from 'struct cxl_proto_error_info'
-> and use in discovering the erring PCI device. The call to pci_get_domain_bus_and_slot()
-> will return a reference counted 'struct pci_dev *'. This will serve as
-> reference count to prevent releasing the CXL Endpoint's mapped RAS while
-> handling the error. Use scope base __free() to put the reference count.
-> This will change when adding support for CXL port devices in the future.
-> 
-> Implement cxl_handle_proto_error() to differentiate between Restricted CXL
-> Host (RCH) protocol errors and CXL virtual host (VH) protocol errors. RCH
-> errors will be processed with a call to walk the associated Root Complex
-> Event Collector's (RCEC) secondary bus looking for the Root Complex
-> Integrated Endpoint (RCiEP) to handle the RCH error. Export pcie_walk_rcec()
-> so the CXL driver can walk the RCEC's downstream bus, searching for the
-> RCiEP.
-
-I'd drop the RCiEP description beyond saying 'handle it as before'
-as I think there is no major change in this.
-
-> 
-> VH correctable error (CE) processing will call the CXL CE handler. VH
-> uncorrectable errors (UCE) will call cxl_do_recovery(), implemented as a
-> stub for now and to be updated in future patch. Export pci_aer_clean_fatal_status()
-> and pci_clean_device_status() used to clean up AER status after handling.
-> 
-> Maintain the locking logic found in the original AER driver. Replace the
-> existing device_lock() in cxl_rch_handle_error_iter() to use guard(device)
-> lock for maintainability.
-
-This change is fine, but it is an AND change in a patch doing quite a few other
-things.  So do it in a trivial precursor patch.  Look at the other things in this
-description and see if they can be factored out too so that the guts of this
-patch are much easier to spot.
-
-
-> CE errors did not include locking in previous driver
-> implementation. Leave the updated CE handling path as-is.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-A few comments inline.
-
-Jonathan
-
-> ---
->  drivers/cxl/core/native_ras.c | 87 +++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlpci.h          |  1 +
->  drivers/cxl/pci.c             |  6 +++
->  drivers/pci/pci.c             |  1 +
->  drivers/pci/pci.h             |  7 ---
->  drivers/pci/pcie/aer.c        |  1 +
->  drivers/pci/pcie/cxl_aer.c    | 41 -----------------
->  drivers/pci/pcie/rcec.c       |  1 +
->  include/linux/aer.h           |  2 +
->  include/linux/pci.h           | 10 ++++
->  10 files changed, 109 insertions(+), 48 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/native_ras.c b/drivers/cxl/core/native_ras.c
-> index 011815ddaae3..5bd79d5019e7 100644
-> --- a/drivers/cxl/core/native_ras.c
-> +++ b/drivers/cxl/core/native_ras.c
-> @@ -6,9 +6,96 @@
->  #include <cxl/event.h>
->  #include <cxlmem.h>
->  #include <core/core.h>
-> +#include <cxlpci.h>
-> +
-> +static void cxl_do_recovery(struct pci_dev *pdev)
-> +{
-> +}
-> +
-> +static bool is_cxl_rcd(struct pci_dev *pdev)
-> +{
-> +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)
-> +		return false;
-> +
-> +	/*
-> +	 * The capability, status, and control fields in Device 0,
-> +	 * Function 0 DVSEC control the CXL functionality of the
-> +	 * entire device (CXL 3.2, 8.1.3).
-> +	 */
-> +	if (pdev->devfn != PCI_DEVFN(0, 0))
-> +		return false;
-> +
-> +	/*
-> +	 * CXL Memory Devices must have the 502h class code set (CXL
-
-Short wrap.
-
-> +	 * 3.2, 8.1.12.1).
-> +	 */
-> +	if (FIELD_GET(PCI_CLASS_CODE_MASK, pdev->class) != PCI_CLASS_MEMORY_CXL)
-> +		return false;
-> +
-> +	return true;
-
-
-If this isn't going to get more complex
-
-	return FIELD_GET(...)
-
-> +}
-> +
-> +static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
-> +{
-> +	struct cxl_proto_error_info *err_info = data;
-> +
-> +	guard(device)(&pdev->dev);
-> +
-> +	if (!is_cxl_rcd(pdev) || !cxl_pci_drv_bound(pdev))
-> +		return 0;
-> +
-> +	if (err_info->severity == AER_CORRECTABLE)
-> +		cxl_cor_error_detected(pdev);
-> +	else
-> +		cxl_error_detected(pdev, pci_channel_io_frozen);
-> +
-> +	return 1;
-> +}
-> +
-> +static void cxl_handle_proto_error(struct cxl_proto_error_info *err_info)
-> +{
-> +	struct pci_dev *pdev __free(pci_dev_put) =
-> +		pci_get_domain_bus_and_slot(err_info->segment,
-> +					    err_info->bus,
-> +					    err_info->devfn);
-> +
-> +	if (!pdev) {
-> +		pr_err("Failed to find the CXL device (SBDF=%x:%x:%x:%x)\n",
-> +		       err_info->segment, err_info->bus, PCI_SLOT(err_info->devfn),
-> +		       PCI_FUNC(err_info->devfn));
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * Internal errors of an RCEC indicate an AER error in an
-> +	 * RCH's downstream port. Check and handle them in the CXL.mem
-> +	 * device driver.
-
-I don't think the reference here to the CXL.mem driver is that helpful
-given the code is immediate above. Maybe move the comment?
-
-
-> +	 */
-> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_EC)
-> +		return pcie_walk_rcec(pdev, cxl_rch_handle_error_iter, err_info);
-> +
-> +	if (err_info->severity == AER_CORRECTABLE) {
-> +		int aer = pdev->aer_cap;
-> +
-> +		if (aer)
-> +			pci_clear_and_set_config_dword(pdev,
-> +						       aer + PCI_ERR_COR_STATUS,
-> +						       0, PCI_ERR_COR_INTERNAL);
-> +
-> +		cxl_cor_error_detected(pdev);
-> +
-> +		pcie_clear_device_status(pdev);
-> +	} else {
-> +		cxl_do_recovery(pdev);
-> +	}
-> +}
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
