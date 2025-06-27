@@ -1,94 +1,91 @@
-Received: from smtp233.sjtu.edu.cn (smtp233.sjtu.edu.cn [202.120.2.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3473E19F420;
-	Fri, 27 Jun 2025 03:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.120.2.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09B419F420;
+	Fri, 27 Jun 2025 03:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750996715; cv=none; b=Mkysr/raNNRrA1+sh7ONOaN2eypg9DyuHej5Fe81GpuGFk/G3s+4nPANOIKjt+j0QqME1cZa70uByJLa7OqOg/DSiSXw2m6EbLYyqHOXxUQ1gwQW73ioetNaPag/h7TymN6n+QBRS8XL90pneuKRUPkxIvNmBs33hFE14xrsXbM=
+	t=1750996794; cv=none; b=UVLZ67mlBGMxs1QOjxoXqCDT904bUqY8NQfw7HkYjWkmDM/fyDZHlt1HD59rZFwDupulIZWHxxywMntQjQhzus234QHm+kZmr7KZKnIi+Qlu58wS2D/4bsTIcNtFUHHjq5houXYXmwq5cr5YXwXng5wSHYIAaxTliH6ObLNFWgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750996715; c=relaxed/simple;
-	bh=KWYG+KDmZ23DgBo9d2D5szE4ZJeBNWiYsvY7c/LCezw=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=Ks0TAyNQ1bcWQWeUOjRspvkzHnptVwK6i5IBiRRTU1UJEbCymkbEBW6MIYqDQNZJkJimZVOaytM20O1ScFbm4AIyBYw8FNezG8PdU38sCZZnzP04G8aVkCpLg+X8oKTxSznCK/RgzEsqbFmUxuETfeyGKxbus9jRic629ilsU6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn; spf=pass smtp.mailfrom=sjtu.edu.cn; arc=none smtp.client-ip=202.120.2.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjtu.edu.cn
-Received: from mta90.sjtu.edu.cn (unknown [10.118.0.90])
-	by smtp233.sjtu.edu.cn (Postfix) with ESMTPS id 1D16D1009E7B2;
-	Fri, 27 Jun 2025 11:52:28 +0800 (CST)
-Received: from mstore132.sjtu.edu.cn (unknown [10.118.0.132])
-	by mta90.sjtu.edu.cn (Postfix) with ESMTP id B834237D65C;
-	Fri, 27 Jun 2025 11:52:27 +0800 (CST)
-Date: Fri, 27 Jun 2025 11:52:27 +0800 (CST)
-From: =?gb2312?B?s8LA1g==?= <tom2cat@sjtu.edu.cn>
-To: bpf@vger.kernel.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <1444123482.1827743.1750996347470.JavaMail.zimbra@sjtu.edu.cn>
-Subject: [BUG][BPF] Kernel Bug Triggered when Ebpf Verifier Check Fails
+	s=arc-20240116; t=1750996794; c=relaxed/simple;
+	bh=30ofrfTmzxnxVEFkrGqHc6kxPyp7kpbqtMKKF0e3Fr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=anlF9GqsNNpjtoDFEFs3ISbRcKXj0oz5b1uDGf4V+s+50Ht8x6isFG+SZl0nVTR2prLemF/NuyyiG8o7DPOcL0FgqTj/MggwPVhy5U20HjD1N+S9L16C1wo/RREj+vuU1onDHawtXvPgztoyIlIU6Gw1DT2HseYDrIP+r6lYLm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C8/iTcP5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8/iTcP5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47BD6C4CEEB;
+	Fri, 27 Jun 2025 03:59:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750996794;
+	bh=30ofrfTmzxnxVEFkrGqHc6kxPyp7kpbqtMKKF0e3Fr0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C8/iTcP5umsFzug4zLePft5CeRdVZh9wtKEltjW4vJdNGv9X6o/qJ0WgNt6hK5EEG
+	 gflZmchPMw8DcsK8JzZ2/yArBSRtFxRKre7nz6nY+6isfxxLzXlgMKgmNpqFqZL0Gp
+	 TqIurcvfipphqx+zvUEhJIirczLt4tdg7Me9LNFvJFqVUDJ7LuvyeG/LanWpIVzUWK
+	 1BkfrBwHw7jRy//Dwt5geNwnys2mc8lO6Lyt+wFYfYAwjqGwMqZejeWQRN9+K1zqMy
+	 fVAUZVEX65w2VZXiLBK0i3IOa284NU+pN3p83Gqv//DO2JZ6guAp3u88rGFzwllWI+
+	 TtgqvIaaYccMw==
+Date: Thu, 26 Jun 2025 20:59:18 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: John Johansen <john.johansen@canonical.com>
+Cc: apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH] apparmor: use SHA-256 library API instead of
+ crypto_shash API
+Message-ID: <20250627035918.GA15797@sol>
+References: <20250428190430.850240-1-ebiggers@kernel.org>
+ <20250514042147.GA2073@sol>
+ <4f37c07c-3a39-4c98-b9c4-13356f5a10dc@canonical.com>
+ <20250612191105.GE1283@sol>
+ <c80d4e69-ef03-462c-9084-e6bb56f428e6@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=GB2312
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 10.0.14_GA_4767 (ZimbraWebClient - GC137 (Win)/10.0.15_GA_4781)
-Thread-Index: +aKzrn/MfADNs/QCqWSK6DYv606TCw==
-Thread-Topic: Kernel Bug Triggered when Ebpf Verifier Check Fails
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c80d4e69-ef03-462c-9084-e6bb56f428e6@canonical.com>
 
-Hi BPF maintainers,
+On Sun, Jun 22, 2025 at 02:16:07PM -0700, John Johansen wrote:
+> On 6/12/25 12:11, Eric Biggers wrote:
+> > On Sat, May 17, 2025 at 12:43:30AM -0700, John Johansen wrote:
+> > > On 5/13/25 21:21, Eric Biggers wrote:
+> > > > On Mon, Apr 28, 2025 at 12:04:30PM -0700, Eric Biggers wrote:
+> > > > > From: Eric Biggers <ebiggers@google.com>
+> > > > > 
+> > > > > This user of SHA-256 does not support any other algorithm, so the
+> > > > > crypto_shash abstraction provides no value.  Just use the SHA-256
+> > > > > library API instead, which is much simpler and easier to use.
+> > > > > 
+> > > > > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > > > > ---
+> > > > > 
+> > > > > This patch is targeting the apparmor tree for 6.16.
+> > > > > 
+> > > > >    security/apparmor/Kconfig  |  3 +-
+> > > > >    security/apparmor/crypto.c | 85 ++++++--------------------------------
+> > > > >    2 files changed, 13 insertions(+), 75 deletions(-)
+> > > > 
+> > > > Any interest in taking this patch through the apparmor or security trees?
+> > > > 
+> > > I can take it through my tree
+> > 
+> > Thanks!  I notice this isn't in v6.16-rc1.  Do you have a pull request planned?
+> > 
+> 
+> Hey Eric,
+> 
+> sorry I have been sick and didn't get a 6.16 pull request out. I am slowly trying
+> to dig my way out of the backlog, which is several weeks deeo. I might get together
+> a small PR of bug fixes before the 6.17 merge window but the bulk of what is in
+> apparmor-next will be waiting to merge in 6.17 now.
 
-I'm reporting a bug I encountered in the BPF subsystem on Linux kernel version <<5.19.5>>, <<6.15.0-rc2-00577-g8066e388be48-dirty>>,  <<6.15.3>>.
+Hope you're feeling better!  Actually, would you mind if instead I took this
+patch (with your ack) through the libcrypto-next tree for 6.17?
+Otherwise there will be a silent merge conflict after I apply
+https://lore.kernel.org/r/20250625070819.1496119-11-ebiggers@kernel.org/
 
-I wrote a BPF program that triggered a verifier rejection, but at the same time, the kernel emitted a BUG() warning at <<kernel/bpf/hashtab.c:222>>, suggesting a potential kernel-side issue rather than just verifier rejection. Later on, I discovered that constructing any ebpf Verifier rejection behavior within the specified code snippets would trigger this kernel bug.
-
-- Miniest poc code:
-
-#include "vmlinux.h"
-#include <bpf/bpf_helpers.h>
-
-struct mac_table_entry
-{
-    struct bpf_timer expiration_timer;
-    __u32 ifindex;
-    __u64 last_seen_timestamp_ns;
-    struct in_addr border_ip;
-};
-
-struct
-{
-    __uint(type, BPF_MAP_TYPE_HASH);
-    __type(key, struct mac_address);
-    __type(value, struct mac_table_entry);
-    __uint(max_entries, 4 * 1024 * 1024);
-    __uint(pinning, LIBBPF_PIN_BY_NAME);
-} mac_table SEC(".maps");
-
-SEC("xdp.frags")
-long mac_xdp_func(struct xdp_md *ctx)
-{
-    // Constructing any code segment that does not meet the requirements of BPF Validator
-    // can trigger a kernel BUG: sleeping function called from invalid context at kernel/bpf/hashtab.c:222:
-    while(1){
-        __u32 j;
-    }
-    return XDP_PASS;
-}
-
-char LICENSE[] SEC("license") = "Dual BSD/GPL";
-
-- Kernel version: <<6.15.3...>>
-- Architecture: <<x86_64>>
-- dmesg excerpt: <<BUG: sleeping function called from invalid context at kernel/bpf/hashtab.c:222>>
-
-Detailed info including reproducible BPF program and kernel logs have been filed on Bugzilla:
-
-  https://bugzilla.kernel.org/show_bug.cgi?id=220278
-
-
-Please let me know if you need more information or if I can help test a patch.
-
-Thanks,  
-Le Chen;  
-tom2cat@sjtu.edu.cn; 
+- Eric
