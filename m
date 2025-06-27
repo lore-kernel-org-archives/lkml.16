@@ -1,46 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AF62BAF7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021E87261D;
 	Fri, 27 Jun 2025 00:47:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750985227; cv=none; b=V57dTvTQiP3FSCP6xQEE0R8HV6hJ5YAkoK6VigH365kb4o3LMPWR534HnwzzjJeLesU2qoG1YRywj1oGNsRqSgSfC7TCQCXHmRh2MRI8m2BoyhQTrKxK5wfjjwM0W1m4CqS8yr3vrdzWs0DCKxLoeUFsmvU5aOCSmsnQfzQ9GZs=
+	t=1750985228; cv=none; b=J8JJetyoWhngWo8Jb+veoxbh/kf2WFj0MSYztx89b8VnB9vc8rwTsg3uf8iv1HNboxwnLr6g99uD6b1ufP9umjmKIxi8QbZFAEqBcZk0WXoWPAOwt3JJCC9SBmzfOP5AsTiEJ4b5Nqsvj4raXGxmaPnpoc54OAbvoqeaK2h+5tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750985227; c=relaxed/simple;
-	bh=f9xFZ64ZazYnbLcMEuHUS/mLu2nEZaRiRv2AuGm800M=;
+	s=arc-20240116; t=1750985228; c=relaxed/simple;
+	bh=KLVo0i7bzQjuCkB6EyoBn05Oq4kJmck/VNNy4YqEOZY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gPPPyFRYjCoyebb2cqkayGmbx1BANT5ajPZbu3lQLakm98AeJPQYbW5a6A61M0O/kQiGg4UXUh8M7cCNyk0b5UB/CCzKFSNV/7PTu76NqsNyLE4sy65uamHu7MNQVvYK2uzMjgeO5+PHECz0FlA+43DjcONH3e25M8bjrDFGIy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nvWJwdqy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=NKLnqd8YQOjz67oyPvQKyMGl1ggHSvGpJLjGf7yg+00Fp2n1LDXRcdddjSUmw7GBfYk/fkRkrgekSNUhjlobvk5D4RUsBtWc2GtGUGMAkjBP0Wa/dY96LvXkHHKc5EO+7RLq+4X4jD4q40NjE96Y8at0dImm3dikmnlHkTngObo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sSCckswS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nvWJwdqy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A253DC4CEF0;
-	Fri, 27 Jun 2025 00:47:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sSCckswS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 441ADC4CEF1;
+	Fri, 27 Jun 2025 00:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750985227;
-	bh=f9xFZ64ZazYnbLcMEuHUS/mLu2nEZaRiRv2AuGm800M=;
+	bh=KLVo0i7bzQjuCkB6EyoBn05Oq4kJmck/VNNy4YqEOZY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=nvWJwdqy7TwhmBM9D+f5VSB0SvOc1HrP+YkKvTPGB7MLFGqyNlAC7qi1wwrDHoyTW
-	 wJy9dkBUwCIm/1VHf1fEXy7XYZOBZ2jxT5pM18Bnp1dmqf94L+d3Vsh8CD+NNA+/Sj
-	 KxlhUfIGeXSfrqCkSGd6Ye/AWk0Sk7NBz/sfzFVQPpYc8+4pmlIuXtPOiDsFs4HNnF
-	 EcIaDXxcFRpegrWL1QbqAy6joYt+IYEuDf0ye2KqsX4fWW9KYlpn2qgRKs2uCIEUVd
-	 QxNBXjk6doje1WEurdmNt+YZx63isDnKzE/2pX9FHKPRMaI2XoYmV5soe5CQBDXygq
-	 yGJ260AOYwoRA==
+	b=sSCckswSACPcKvyWCKnrG2h1+jZ67FaMJTasx6hSt5ts/L+BJx5oHj93hwJZ8ioc1
+	 q3h9KH658ecGogfhe3XXRVBtKn2Y3cPDOwyEUDdJXjYu6YcuqfmadmBFYEwVqo4FTk
+	 bBj0+xI3F2R6yR7xFSq5grvz2V7U5IJtHKkdQlr1A2V0z1b3mBmzvqa5OkKMS2kyCa
+	 ICcrUiZ1QzYcb1RksKQ79BJqjO97w+XMY2dZHL5ogoPcZGaqTMfVa3qMVma7UvKszx
+	 sRGFdQ/z4MFpYMn8PUAdMt3w6hUeZHy3hQEha5BCeJFRITaUCtDN/S+82sB6Aafnwy
+	 sPpsHpoJIIKvQ==
 From: Vinod Koul <vkoul@kernel.org>
 To: Kishon Vijay Abraham I <kishon@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Abel Vesa <abel.vesa@linaro.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Luca Weiss <luca.weiss@fairphone.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-In-Reply-To: <20250617-eusb2-repeater-tuning-v2-0-ed6c484f18ee@fairphone.com>
-References: <20250617-eusb2-repeater-tuning-v2-0-ed6c484f18ee@fairphone.com>
-Subject: Re: (subset) [PATCH v2 0/2] Fix tuning on eUSB2 repeater
-Message-Id: <175098522656.106297.12274853092906224270.b4-ty@kernel.org>
-Date: Thu, 26 Jun 2025 17:47:06 -0700
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
+ krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com, 
+ quic_nayiluri@quicinc.com, quic_ramkri@quicinc.com, 
+ quic_nitegupt@quicinc.com, Mrinmay Sarkar <quic_msarkar@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+In-Reply-To: <20250617-update_phy-v5-0-2df83ed6a373@quicinc.com>
+References: <20250617-update_phy-v5-0-2df83ed6a373@quicinc.com>
+Subject: Re: (subset) [PATCH v5 0/2] Update PCIe PHY settings for QCS8300
+ and SA8775P
+Message-Id: <175098522717.106297.12993468962065635081.b4-ty@kernel.org>
+Date: Thu, 26 Jun 2025 17:47:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,20 +56,17 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Tue, 17 Jun 2025 10:26:34 +0200, Luca Weiss wrote:
-> Update the dt-bindings to remove the 'default' tuning values, since they
-> depend on the PMIC and are not guaranteed to be the same.
+On Tue, 17 Jun 2025 17:08:18 +0530, Mrinmay Sarkar wrote:
+> This Series is to update PCIe PHY settings as per latest
+> hardware programming guide and remove max link speed dt
+> property for SA8775P PCIe EP.
 > 
-> And add a fix into the driver to not zero-out all tuning registers if
-> they are not specified in the "init sequence", since zero is not the
-> reset value for most parameter and will lead to very unexpected tuning.
 > 
-> [...]
 
 Applied, thanks!
 
-[1/2] dt-bindings: phy: qcom,snps-eusb2-repeater: Remove default tuning values
-      commit: db9f3e3ff9347a233a17eadefae9c1b29ec8f3ed
+[1/2] phy: qcom: qmp-pcie: Update PHY settings for QCS8300 & SA8775P
+      commit: 03aa45d6c62d6861dcbcff627d88814c0ddecc88
 
 Best regards,
 -- 
