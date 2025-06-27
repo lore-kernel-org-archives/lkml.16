@@ -1,152 +1,132 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19DE26B756;
-	Fri, 27 Jun 2025 10:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63990218EB7;
+	Fri, 27 Jun 2025 10:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751020451; cv=none; b=Cvjh3LRpa0QXXMxdiYklOcozZnTrfegQGTyWOJn6cbMw16/xtdubNBmYb2ojW5fReTKxTE/OZJkK4cvpJahMIG6aN+zqFXBRMgKAnYG2ebA9EUjPNGHWlp4ScIH69KNlJ2NwJtd021XbyMkonPXtqBJATF7wF07T6HG/rdRo/VQ=
+	t=1751020499; cv=none; b=h4K1CGw6Tys7f8sirvRklpBcQsiUYgHBRNsmzsS5rViRm1IcN56ggLGi767qfdKhTI1dlcxVBQRaZiYPaqEMq6/Llo9mzVFhjLJWgRntvl1gWUWapf66+rIqZVQWXZxI4AaqVAYHzLxOnr5wb9n8kXyMxdhqJJkQhnUUMCL69gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751020451; c=relaxed/simple;
-	bh=NJEr28iU7ySNWsWvysGjhjF4BlXU02+p7PrxqHp0KDM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pfyglehnv2SGTJ+aicqn2OqX+mCc/oN7cFzOXz6zN4LUIADWeezQOm3tKOYbCSP9bgPRwMiRRKEFTyS3Aq7cxH6t2k7byYAzeBdMvnJN5OrRypbRcIVUHMdzUKCK0YC+nwiBqztqYVwgWDgrTPlbf7z3tvF35wf2Kx3/y4lY9KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aZYnrqB9; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751020499; c=relaxed/simple;
+	bh=sP7eB94NnhZK1xna9CpCGCFE23Qc6HGEQNYmmcJR+fU=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kcP50liQwRA1yqr/PmfIsrVmDKDyPNWvWcFdz1tcBkGXrIfAQyBNR6FPn3wGqGJV2M+1VB4rGVIICaJANgFQWvNiuhBA9vMoIMpbA02zu3YhSITtviQjVjf3GNxEdKPqnJj9j2BAO+wvQJtgqrIwICobraKcwzix4be6tYtWwRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mMFJvfUU; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aZYnrqB9"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55R4DgCD008739;
-	Fri, 27 Jun 2025 10:34:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3qG4vDhN+pXvVkjr4GfQm6rnWkov+SX8y6P46nqvpMw=; b=aZYnrqB9nXrZRxCp
-	EL7bATJ8bMFRY2w7fWle3V/BqZVqXILGN9CFC7Ab2fFJHo8KjYnXSmP5eFMTzMjz
-	DffdJfX5SURIYXomVp6sjaxOTbi/C4VRyvmlNkb0bC2fLvA8uG9snm9liCJdToGe
-	N7vhign3lOMmQwO8l+RRhJ1UiYjwfD7jgs0R7o80VLlix39wBkYeYjMy/PKLr7uX
-	RsEhx3ZVvr0VOHs/U3DIu//WKt0pM3hPpEBRV0jnMle262xfvcb++i48iEQjpz+j
-	UcJP+kgXcqBLDZ5ku74ykWG7mIgVmrTrjDC6sasAAfl7U7wPL4zbULxdHuU2kbTn
-	vi7G6Q==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbhqvw74-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 10:34:04 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55RAY38r000354
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 10:34:03 GMT
-Received: from hu-lxu5-sha.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Fri, 27 Jun 2025 03:34:00 -0700
-From: Ling Xu <quic_lxu5@quicinc.com>
-To: <srini@kernel.org>, <amahesh@qti.qualcomm.com>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>
-CC: <quic_kuiw@quicinc.com>, <ekansh.gupta@oss.qualcomm.com>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Ling Xu
-	<quic_lxu5@quicinc.com>
-Subject: [PATCH v4 4/4] misc: fastrpc: add support for gdsp remoteproc
-Date: Fri, 27 Jun 2025 16:03:19 +0530
-Message-ID: <20250627103319.2883613-5-quic_lxu5@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250627103319.2883613-1-quic_lxu5@quicinc.com>
-References: <20250627103319.2883613-1-quic_lxu5@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMFJvfUU"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a4ef2c2ef3so1767525f8f.2;
+        Fri, 27 Jun 2025 03:34:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751020496; x=1751625296; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=FYCPYhXwvbl67YrntbHDgHlcse2PpEHhXgqEt3NJXKQ=;
+        b=mMFJvfUUxzKwX4xRoZPfOms59Z6mZELgBR4nVhVOygCUd6YYW3ZIiR7OBMlOLlX0FV
+         lnFPSu/JgVCLmuCWBYVMuTCvFKlRhU0MDpfGELj855rxJ1cWWxUlOau5LKhGqYrd1b3i
+         MZlHht9tCA36SN4WQDg87pg2pNmDJhuCSN1Y3Wx8yZ/z3jY7WhAfVmMIDe9df/8PLHva
+         KUfkpgHLCGlP3nr6pbik0M77t9TtsSGU3dkVB3fcgNDJZxbCDCHmcvqw2/jeiT6E52Ov
+         +O61Hb7kVNCa1jo58SuxMB62mBLDZhHR+ELXZYxrEGARVk6bMX6W5Ki4XrUBCWdj8x/U
+         5k7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751020496; x=1751625296;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FYCPYhXwvbl67YrntbHDgHlcse2PpEHhXgqEt3NJXKQ=;
+        b=kKoFigmc3eLSOttoSZkX9O/+Ov27PB2E+qH4y56eonzo8exictNNt8htCvqE6nhvH1
+         pvpwtrOSEibaN2Ow11fB8aZCCxBMu+e2zYWoxxrKnQOM6liXnN/2gTp8oUrQ5/vke6NI
+         GR1lFniTfJmYsSEyG1xd3LHrbBDpMNnDxs8VuzGX/f1+KTMobLQ1THDxbeRHOtl/0jCr
+         5/V3xyVRdDX9tgdCeVUHobq0kvsWg3wYW7UVyHaH6lNoSpUHHcYOeuYlq17AhYyzj8Nv
+         6QW7/cIVymJxt9EK9fCbiO21YzLOSHZrZLt166NQZt1mj3os6R95NesaecJ2RkZISv8k
+         9wpw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9FauI9K2HO5cSwKj6bFkNLW4XKx4FZ7RRCVW6gnjb2cFIk9JUUKURkbrx2zlDQe5R0/YsCIekBkQpgWU=@vger.kernel.org, AJvYcCXWCce11gnBcsJzDSjw7J7SPOk1Vfs/G449zcJOPtcMFXkNCBOTzFB2QKlOGrg+wN7kf4w80WM5jbN/@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJbmEjuLdtQNwjcNtRFQLMYAB2LSNmo2hPaJqwdfG7AZvetIMz
+	iy5KMoneaEH1k6wJd//ncvHNpEdEpBJ0qKs+pqjgmjO+Hw5DVY2nkesnvdlzQg==
+X-Gm-Gg: ASbGncs4mIRD2FulTn94Tw2z/YBgADBX+b6nl46OIXn95HwC/79h+LdClPqC6HEEg3t
+	tXXPovDxLwIL4YSdL/EiI0lcHE0wwhHHvJ80y3j32NTDr3HN3tO0xnXhYN67XVpH+QwyHQhA5E0
+	VdZuUWEyVCauym08NAqwJA321fxLdu2IdwRudEBbqwjwVa/OLBdJZEVfW8eoa4SmGmwgwvIEzkY
+	mjCMaayRfZM2CnLDFuCZMDDRUX6S/UknyQtk96uAdYBRg+7qKCPSHTMwdTtgnc33VxtVuNneKm7
+	dy6/wVuRI7EKLIB4trMsXr4DHKcgRhAdCH5EvF6WMa3AZcfgvTrfNnQfIJzxtug+njYiO81Eap/
+	CCMUZd9bZ6za1MiCiPg==
+X-Google-Smtp-Source: AGHT+IEpbbKGizSeHC2f9m6bPvaeLpE43IfxzxnuwTKbPHVI/5Tb9NpHN+EvY0SxhR3aaIJmzZgsFg==
+X-Received: by 2002:a05:6000:2893:b0:3a9:dc5:df15 with SMTP id ffacd0b85a97d-3a90dc5df54mr2755755f8f.13.1751020495468;
+        Fri, 27 Jun 2025 03:34:55 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fa8aasm2298990f8f.27.2025.06.27.03.34.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 03:34:55 -0700 (PDT)
+Message-ID: <685e73cf.df0a0220.214b10.9998@mx.google.com>
+X-Google-Original-Message-ID: <aF5zyeGvNGX_q15U@Ansuel-XPS.>
+Date: Fri, 27 Jun 2025 12:34:49 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v18] pwm: airoha: Add support for EN7581 SoC
+References: <20250626224805.9034-1-ansuelsmth@gmail.com>
+ <aF5dHDr8yDSKlp5j@smile.fi.intel.com>
+ <685e6544.5d0a0220.20cf55.9440@mx.google.com>
+ <aF5xrHkTr8Tb71ZH@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 4qZbUDNaC49OtDFPDmTmBSXN2qgt2e27
-X-Authority-Analysis: v=2.4 cv=Id+HWXqa c=1 sm=1 tr=0 ts=685e739c cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=d01il73eTdEK0Eih25sA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 4qZbUDNaC49OtDFPDmTmBSXN2qgt2e27
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDA4NSBTYWx0ZWRfX5NMSaEyfuXhg
- CpXOdmIeaBZ+oJkK9Ly5Z7Ik6CKEGQtabDl084/RlTehUA1p10MzycX9MaruCBplDTpsJl2wHCc
- //Cj/z1FNR9IJT76wIdd2keP1y1OZi/BOxLfTVSeuqdCXFKvOFPnY8n/uPXBqt/bEcHc8vtbwVm
- SsofQgfQg4C45TIfpf/8FDhzuc9p/X1WFAh/iLChFgpQAyfp7aGKdTvqyomtKfjTVZlagRU/uHs
- ZB0ruD70m6q1Rk9TUWBuLNTNuAoJ1g++6PuwSQLV+ZZQY9MNwCnE9ceVNwFwvzNV4EGllhLEd1k
- TrvuPmapTd7gDB+uUhnZRsbwoZTnptSBbEUVcfx0mjWQMZnMYDgEEpUJkntv93SlXFjjPUzcHpu
- 3DB/i4Oc0TmlnO2BakT847bSZFl/mpdPpIDCKtlM6c+pgrPMTjGmtqvVtTtlCaBwgmJE6H+1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_04,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0 bulkscore=0
- clxscore=1015 impostorscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506270085
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aF5xrHkTr8Tb71ZH@smile.fi.intel.com>
 
-The fastrpc driver has support for 5 types of remoteprocs. There are
-some products which support GDSP remoteprocs. GDSP is General Purpose
-DSP where tasks can be offloaded. This patch extends the driver to
-support GDSP remoteprocs.
+On Fri, Jun 27, 2025 at 01:25:48PM +0300, Andy Shevchenko wrote:
+> On Fri, Jun 27, 2025 at 11:32:46AM +0200, Christian Marangi wrote:
+> > On Fri, Jun 27, 2025 at 11:58:04AM +0300, Andy Shevchenko wrote:
+> > > On Fri, Jun 27, 2025 at 12:47:53AM +0200, Christian Marangi wrote:
+> 
+> ...
+> 
+> > > > +	/* Global mutex to protect bucket used refcount_t */
+> > > > +	struct mutex mutex;
+> > > 
+> > > This makes a little sense. Either you use refcount_t (which is atomic) or
+> > > use mutex + regular variable.
+> > 
+> > Using a regular variable I lose all the benefits of refcount_t with
+> > underflow and other checks.
+> 
+> Then drop the mutex, atomic operations do not need an additional
+> synchronisation. Btw, have you looked at kref APIs? Maybe that
+> would make the intention clearer?
 
-Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
----
- drivers/misc/fastrpc.c      | 5 ++++-
- include/uapi/misc/fastrpc.h | 3 ++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+It's needed for
 
-diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index cb9f4be286af..d3d9b9fdbf4c 100644
---- a/drivers/misc/fastrpc.c
-+++ b/drivers/misc/fastrpc.c
-@@ -2245,6 +2245,8 @@ static int fastrpc_get_domain_id(const char *domain)
- 		return MDSP_DOMAIN_ID;
- 	else if (!strncmp(domain, "sdsp", 4))
- 		return SDSP_DOMAIN_ID;
-+	else if (!strncmp(domain, "gdsp", 4))
-+		return GDSP_DOMAIN_ID;
- 
- 	return -EINVAL;
- }
-@@ -2319,13 +2321,14 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
- 	case ADSP_DOMAIN_ID:
- 	case MDSP_DOMAIN_ID:
- 	case SDSP_DOMAIN_ID:
--		/* Unsigned PD offloading is only supported on CDSP*/
-+		/* Unsigned PD offloading is only supported on CDSP and GDSP*/
- 		data->unsigned_support = false;
- 		err = fastrpc_device_register(rdev, data, secure_dsp, domain);
- 		if (err)
- 			goto err_free_data;
- 		break;
- 	case CDSP_DOMAIN_ID:
-+	case GDSP_DOMAIN_ID:
- 		data->unsigned_support = true;
- 		/* Create both device nodes so that we can allow both Signed and Unsigned PD */
- 		err = fastrpc_device_register(rdev, data, true, domain);
-diff --git a/include/uapi/misc/fastrpc.h b/include/uapi/misc/fastrpc.h
-index b890f8042e86..5ea891615c49 100644
---- a/include/uapi/misc/fastrpc.h
-+++ b/include/uapi/misc/fastrpc.h
-@@ -22,8 +22,9 @@
- #define MDSP_DOMAIN_ID (1)
- #define SDSP_DOMAIN_ID (2)
- #define CDSP_DOMAIN_ID (3)
-+#define GDSP_DOMAIN_ID (4)
- 
--#define FASTRPC_DOMAIN_MAX    3
-+#define FASTRPC_DOMAIN_MAX    4
- 
- /**
-  * enum fastrpc_map_flags - control flags for mapping memory on DSP user process
++       mutex_lock(&pc->mutex);
++       if (refcount_read(&pc->buckets[bucket].used) == 0) {
++               config_bucket = true;
++               refcount_set(&pc->buckets[bucket].used, 1);
++       } else {
++               refcount_inc(&pc->buckets[bucket].used);
++       }
++       mutex_unlock(&pc->mutex);
+
+the refcount_read + refcount_set. As you explained there might be case
+where refcount_read is zero but nother PWM channel is setting the value
+so one refcount gets lost.
+
+kref I checked but not useful for the task.
+
+The logic here is
+
+- refcount init as 0 (bucket unused)
+- refcount set to 1 on first bucket use (bucket get configured)
+- refcount increased if already used
+- refcount decreased when PWM channel released
+- bucket gets flagged as unused when refcount goes to 0 again
+
+
 -- 
-2.34.1
-
+	Ansuel
