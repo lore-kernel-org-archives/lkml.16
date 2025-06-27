@@ -1,277 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7902264A8;
-	Fri, 27 Jun 2025 07:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252BE22D781
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751011105; cv=none; b=BWsj9Ksz5cht+Y+cmlGHumKJNQqzeuGkO8KT0DJfEQAIB0ykutp17Kv2ZW8aMkuGxIC5NHKuvDNoqreAf4MaSHg9PwRWmfZMtbJEJoQsWjQiL3gnE0mbC7nTFljlQuVaZzLzyOkLuQmJoeB7KAVkTFFgbUEEO2XVbsXIcN3PPJ0=
+	t=1751011112; cv=none; b=o1kfh2IdzJFfF5pcLoVlcQzvBV4dJUzAaW2WIa6g6v4k60G7RQvVgaKegZJ8yL9rR6sM0RMgPxICUD9KM50CHnl/38sPp/t+R+Cyon9Rgx+/UjFutltjWNAekdY5aC4XDn9G/2tMO1S7igyK0IR7Up08X6RG9Xxrv+CBHwfPiEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751011105; c=relaxed/simple;
-	bh=UpsiR6zd6bu4MlnICqiapGGFAB8luTnRxLbAdopgwY8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=GBHtJa2KN6MKSYCOdVHcnaUK0TNf9ypeUKDoAymREnHj3Tuwa/u6ab/ML1THG//FpwHTeC1K59dz2r8S/MjkKgGCXk2JNUww6Ov22bVJaFr6HkJRU40z8btHb43KDUEApisWdgyM+9X1dHcBYGXJMCcaq8uFsRgSjuDyBnC7FzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lA9YIfVe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751011112; c=relaxed/simple;
+	bh=l9n8KltPPbYE3t93Ps5saCbC29p8bhSOg0qy1bAZscs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pav3uBM7ToDOMUw1IT+SkHFHCnmKDuq/ltyQ6ykUaT1kl6soPwE11ze2p6pGReFCZHc4KkVBIDoGFynPK1ypiu3Ayo54bnsw/tEXCUs00opkhwsBvecRywWcx7fEMM4mBF4ClcQFW1xnKnbR2DrJzdg4d9f2fs6jghy8YJ8I8XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lm9XR8QN; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lA9YIfVe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5C5DC4CEEB;
-	Fri, 27 Jun 2025 07:58:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751011105;
-	bh=UpsiR6zd6bu4MlnICqiapGGFAB8luTnRxLbAdopgwY8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=lA9YIfVesFUSJyxyUiHtmeadCw8GjAKjj/xwnxI1NGVoFt1a8SFY12ox1c/AWUYqU
-	 MUcHmXdVnNEhlnBMp6EoBQvwo6rOZ8/ISh/vBlSAR0qSC4gIauiifVV3wwL61o0c3l
-	 tYWG8+uhLEg8zOzoMl/hzmnqn8DtTOIzgKYNQkzUigCr4Om+AzOkMTG7nl7y/DONee
-	 1i+v2H6NqrKTUTa+5WwYRrJwcOXksjnOde5Vh5/y2mIjrIA/DXU5veRpatvEp/u0LA
-	 OVEDw5ztPXHDwYuM8JGhnVRHLIgzDPpLI90oX2XBAleoJysH+axBb7yxdDMZyIzgi5
-	 kPHCR73v6sogQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice
- Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
-  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
- <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
- Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
-  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
- <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
- KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,
-  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
-In-Reply-To: <878qlh4aj1.fsf@kernel.org> (Andreas Hindborg's message of "Tue,
-	24 Jun 2025 13:57:38 +0200")
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
-	<20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
-	<COU2bqJOzCHRf6g4rwFpu2NY3wLY0G0AmNjRaU9aGEqu1HaPZ5X4KzfDT_CEB3Okh5BV50sJS10sKhmtHut8ew==@protonmail.internalid>
-	<DAQJCUE1C2JE.204A8IS7LBIVZ@kernel.org> <87ikkq648o.fsf@kernel.org>
-	<smOfUo2mEmQu-lykKKMiNOUWq2ze6p_CoEEpgGE0dtAnoJDGEpvQMkP1q-n13MiUxLK1xAiM-4QLsivPrG57sg==@protonmail.internalid>
-	<DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org> <877c126bce.fsf@kernel.org>
-	<Mg1_h6lRpg9tdi0VjiyDfIEy2juzgDWxOhYX61qSUfyEpeMMksWW1e-blTka_G1dXUvpZVktdD-zL3X1a6T6Cg==@protonmail.internalid>
-	<DATW0XWNN45X.1L2WMZ41JJ5O8@kernel.org> <87v7om4jhq.fsf@kernel.org>
-	<RPPvXQKnjK77Kp9mKaiFxbNj1fTHKb_I7_nbY81fZop-Wz8n5TTi4_lpXP9U9AwjocvZKqJPI8PGKufJn9cIzQ==@protonmail.internalid>
-	<DAU0J3T0IEVM.2K7ZRQOVOHF8H@kernel.org> <878qlh4aj1.fsf@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Fri, 27 Jun 2025 09:57:54 +0200
-Message-ID: <87plepzke5.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lm9XR8QN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751011110; x=1782547110;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=l9n8KltPPbYE3t93Ps5saCbC29p8bhSOg0qy1bAZscs=;
+  b=lm9XR8QN717Dn9AGiFl0LAhZqAp5vDbDnvXvs8418J4O5taW1PZ7ym8n
+   GulVOOF3PiB3Hig75R2OxMlnF4fw/ST0cKguPelHhQ7FfoJsXu54yzetj
+   U7mOoV1tWpWZLOU3MY3tL0BPewvIeK6koqz987Uck7+B5bA6eLQbhX2Hs
+   04PXPgxf5X1787vwLSMcBNLTykumyMdczY3URMrdEYrMBekskyhzTLoHZ
+   rI64A4IEpAIal/Dk4jC5QmkAXH1A3M7ktWqGpnjQeVIYgQ4gvzuPupXsx
+   VMyH2fL8GbGSWlXZ138wQ6MekcXMuTWfP0oPF0UZwf+DUejlMOdT/e1Zr
+   A==;
+X-CSE-ConnectionGUID: PbEW0na9S6q6dCO/q3L8Rg==
+X-CSE-MsgGUID: 8u7IZybVTwKNnqP2X9nIyQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="78759731"
+X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
+   d="scan'208";a="78759731"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 00:58:29 -0700
+X-CSE-ConnectionGUID: 8dWLYkZISsKZ8xM6dWnpuA==
+X-CSE-MsgGUID: Z8UhkWkBQcOjsDb0DD5w2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
+   d="scan'208";a="152479987"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 27 Jun 2025 00:58:28 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uV3yb-000VwQ-30;
+	Fri, 27 Jun 2025 07:58:25 +0000
+Date: Fri, 27 Jun 2025 15:58:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bo Liu <liubo03@inspur.com>, phillip@squashfs.org.uk
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Bo Liu <liubo03@inspur.com>
+Subject: Re: [PATCH] Squashfs: add page cache share support
+Message-ID: <202506271526.5iaNmw8d-lkp@intel.com>
+References: <20250626003644.3675-1-liubo03@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626003644.3675-1-liubo03@inspur.com>
 
-Andreas Hindborg <a.hindborg@kernel.org> writes:
+Hi Bo,
 
-> "Benno Lossin" <lossin@kernel.org> writes:
->
->> On Mon Jun 23, 2025 at 4:31 PM CEST, Andreas Hindborg wrote:
->>> "Benno Lossin" <lossin@kernel.org> writes:
->>>
->>>> On Mon Jun 23, 2025 at 11:44 AM CEST, Andreas Hindborg wrote:
->>>>> "Benno Lossin" <lossin@kernel.org> writes:
->>>>>
->>>>>> On Fri Jun 20, 2025 at 1:29 PM CEST, Andreas Hindborg wrote:
->>>>>>> "Benno Lossin" <lossin@kernel.org> writes:
->>>>>>>> On Thu Jun 12, 2025 at 3:40 PM CEST, Andreas Hindborg wrote:
->>>>>>>>> +/// A wrapper for kernel parameters.
->>>>>>>>> +///
->>>>>>>>> +/// This type is instantiated by the [`module!`] macro when module parameters are
->>>>>>>>> +/// defined. You should never need to instantiate this type directly.
->>>>>>>>> +///
->>>>>>>>> +/// Note: This type is `pub` because it is used by module crates to access
->>>>>>>>> +/// parameter values.
->>>>>>>>> +#[repr(transparent)]
->>>>>>>>> +pub struct ModuleParamAccess<T> {
->>>>>>>>> +    data: core::cell::UnsafeCell<T>,
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +// SAFETY: We only create shared references to the contents of this container,
->>>>>>>>> +// so if `T` is `Sync`, so is `ModuleParamAccess`.
->>>>>>>>> +unsafe impl<T: Sync> Sync for ModuleParamAccess<T> {}
->>>>>>>>> +
->>>>>>>>> +impl<T> ModuleParamAccess<T> {
->>>>>>>>> +    #[doc(hidden)]
->>>>>>>>> +    pub const fn new(value: T) -> Self {
->>>>>>>>> +        Self {
->>>>>>>>> +            data: core::cell::UnsafeCell::new(value),
->>>>>>>>> +        }
->>>>>>>>> +    }
->>>>>>>>> +
->>>>>>>>> +    /// Get a shared reference to the parameter value.
->>>>>>>>> +    // Note: When sysfs access to parameters are enabled, we have to pass in a
->>>>>>>>> +    // held lock guard here.
->>>>>>>>> +    pub fn get(&self) -> &T {
->>>>>>>>> +        // SAFETY: As we only support read only parameters with no sysfs
->>>>>>>>> +        // exposure, the kernel will not touch the parameter data after module
->>>>>>>>> +        // initialization.
->>>>>>>>
->>>>>>>> This should be a type invariant. But I'm having difficulty defining one
->>>>>>>> that's actually correct: after parsing the parameter, this is written
->>>>>>>> to, but when is that actually?
->>>>>>>
->>>>>>> For built-in modules it is during kernel initialization. For loadable
->>>>>>> modules, it during module load. No code from the module will execute
->>>>>>> before parameters are set.
->>>>>>
->>>>>> Gotcha and there never ever will be custom code that is executed
->>>>>> before/during parameter setting (so code aside from code in `kernel`)?
->>>>>>
->>>>>>>> Would we eventually execute other Rust
->>>>>>>> code during that time? (for example when we allow custom parameter
->>>>>>>> parsing)
->>>>>>>
->>>>>>> I don't think we will need to synchronize because of custom parameter
->>>>>>> parsing. Parameters are initialized sequentially. It is not a problem if
->>>>>>> the custom parameter parsing code name other parameters, because they
->>>>>>> are all initialized to valid values (as they are statics).
->>>>>>
->>>>>> If you have `&'static i64`, then the value at that reference is never
->>>>>> allowed to change.
->>>>>>
->>>>>>>> This function also must never be `const` because of the following:
->>>>>>>>
->>>>>>>>     module! {
->>>>>>>>         // ...
->>>>>>>>         params: {
->>>>>>>>             my_param: i64 {
->>>>>>>>                 default: 0,
->>>>>>>>                 description: "",
->>>>>>>>             },
->>>>>>>>         },
->>>>>>>>     }
->>>>>>>>
->>>>>>>>     static BAD: &'static i64 = module_parameters::my_param.get();
->>>>>>>>
->>>>>>>> AFAIK, this static will be executed before loading module parameters and
->>>>>>>> thus it makes writing to the parameter UB.
->>>>>>>
->>>>>>> As I understand, the static will be initialized by a constant expression
->>>>>>> evaluated at compile time. I am not sure what happens when this is
->>>>>>> evaluated in const context:
->>>>>>>
->>>>>>>     pub fn get(&self) -> &T {
->>>>>>>         // SAFETY: As we only support read only parameters with no sysfs
->>>>>>>         // exposure, the kernel will not touch the parameter data after module
->>>>>>>         // initialization.
->>>>>>>         unsafe { &*self.data.get() }
->>>>>>>     }
->>>>>>>
->>>>>>> Why would that not be OK? I would assume the compiler builds a dependency graph
->>>>>>> when initializing statics?
->>>>>>
->>>>>> Yes it builds a dependency graph, but that is irrelevant? The problem is
->>>>>> that I can create a `'static` reference to the inner value *before* the
->>>>>> parameter is written-to (as the static is initialized before the
->>>>>> parameters).
->>>>>
->>>>> I see, I did not consider this situation. Thanks for pointing this out.
->>>>>
->>>>> Could we get around this without a lock maybe? If we change
->>>>> `ModuleParamAccess::get` to take a closure instead:
->>>>>
->>>>>     /// Call `func` with a reference to the parameter value stored in `Self`.
->>>>>     pub fn read(&self, func: impl FnOnce(&T)) {
->>>>>         // SAFETY: As we only support read only parameters with no sysfs
->>>>>         // exposure, the kernel will not touch the parameter data after module
->>>>>         // initialization.
->>>>>         let data = unsafe { &*self.data.get() };
->>>>>
->>>>>         func(data)
->>>>>     }
->>>>>
->>>>> I think this would bound the lifetime of the reference passed to the
->>>>> closure to the duration of the call, right?
->>>>
->>>> Yes that is correct. Now you can't assign the reference to a static.
->>>> However, this API is probably very clunky to use, since you always have
->>>> to create a closure etc.
->>>>
->>>> Since you mentioned in the other reply that one could spin up a thread
->>>> and do something simultaneously, I don't think this is enough. You could
->>>> have a loop spin over the new `read` function and read the value and
->>>> then the write happens.
->>>
->>> Yes you are right, we have to treat it as if it could be written at any
->>> point in time.
->>>
->>>> One way to fix this issue would be to use atomics to read the value and
->>>> to not create a reference to it. So essentially have
->>>>
->>>>     pub fn read(&self) -> T {
->>>>         unsafe { atomic_read_unsafe_cell(&self.data) }
->>>>     }
->>>
->>> That could work.
->>>
->>>> Another way would be to use a `Once`-like type (does that exist on the C
->>>> side?) so a type that can be initialized once and then never changes.
->>>> While it doesn't have a value set, we return some default value for the
->>>> param and print a warning, when it's set, we just return the value. But
->>>> this probably also requires atomics...
->>>
->>> I think atomic bool is not that far away. Either that, or we can lock.
->>>
->>>> Is parameter accessing used that often in hot paths? Can't you just copy
->>>> the value into your `Module` struct?
->>>
->>> I don't imagine this being read in a hot path. If so, the user could
->>> make a copy.
->>
->> That's good to know, then let's try to go for something simple.
->>
->> I don't think that we can just use a `Mutex<T>`, because we don't have a
->> way to create it at const time... I guess we could have
->>
->>     impl<T> Mutex<T>
->>         /// # Safety
->>         ///
->>         /// The returned value needs to be pinned and then `init` needs
->>         /// to be called before any other methods are called on this.
->>         pub unsafe const fn const_new() -> Self;
->>
->>         pub unsafe fn init(&self);
->>     }
->>
->> But that seems like a bad idea, because where would we call the `init`
->> function? That also needs to be synchronized...
->
-> Ah, that is unfortunate. The init function will not run before this, so
-> we would need a `Once` or an atomic anyway to initialize the lock.
->
-> I am not sure if we are allowed to sleep during this, I would have to
-> check. But then we could use a spin lock.
->
-> We will need the locking anyway, when we want to enable sysfs write
-> access to the parameters.
->
->>
->> Maybe we can just like you said use an atomic bool?
->
-> Sigh, I will have to check how far that series has come.
->
+kernel test robot noticed the following build warnings:
 
-I think I am going to build some kind of `Once` feature on top of
-Boqun's atomic series [1], so that we can initialize a lock in these
-statics. We can't use `global_lock!`, because that depends on module
-init to initialize the lock before first use.
+[auto build test WARNING on v6.16-rc3]
+[also build test WARNING on linus/master next-20250626]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-As far as I can tell, atomics may not land in v6.17, so this series
-will probably not be ready for merge until v6.18 at the earliest.
+url:    https://github.com/intel-lab-lkp/linux/commits/Bo-Liu/Squashfs-add-page-cache-share-support/20250626-084010
+base:   v6.16-rc3
+patch link:    https://lore.kernel.org/r/20250626003644.3675-1-liubo03%40inspur.com
+patch subject: [PATCH] Squashfs: add page cache share support
+config: m68k-randconfig-r132-20250627 (https://download.01.org/0day-ci/archive/20250627/202506271526.5iaNmw8d-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 8.5.0
+reproduce: (https://download.01.org/0day-ci/archive/20250627/202506271526.5iaNmw8d-lkp@intel.com/reproduce)
 
-Thanks for the input, Benno!
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506271526.5iaNmw8d-lkp@intel.com/
 
+sparse warnings: (new ones prefixed by >>)
+>> fs/squashfs/pagecache_share.c:136:35: sparse: sparse: symbol 'squashfs_file_vm_ops' was not declared. Should it be static?
 
-Best regards,
-Andreas Hindborg
+vim +/squashfs_file_vm_ops +136 fs/squashfs/pagecache_share.c
 
+   135	
+ > 136	const struct vm_operations_struct squashfs_file_vm_ops = {
+   137		.fault		= filemap_fault,
+   138		.map_pages	= filemap_map_pages,
+   139		.page_mkwrite	= filemap_page_mkwrite,
+   140	};
+   141	
 
-[1] https://lore.kernel.org/all/20250618164934.19817-1-boqun.feng@gmail.com
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
