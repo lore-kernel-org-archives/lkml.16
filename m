@@ -1,128 +1,70 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F332EBDD9
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198AA2ED156;
+	Fri, 27 Jun 2025 20:06:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751054747; cv=none; b=jXsV5t3/3/dITySqi79yyJ3hW61rfnzYS8fApuCBu61BsYwZjk1nUV2WFLAcxdkHW+OCCskmPbtlGV8kUnIwWpgSyETEEkYebmj95hpjLElPvk/HBj9GBOm0mXPQnCOxOoAdSoAxqVinMpp/lPxSsp3aI+TEuxz577yKdTl0hR0=
+	t=1751054766; cv=none; b=szt7Jh+VhP0a/6VxvH6K1HC636CLaJwqr0l3FwsD5z9drRCtQRSoXDGOEmm53JEPozFfLBY3bGLwAUKDWWvmg8DgJvET+p33q7U1xER11wiw3eAYEEKBmbmWdsFvHPRT2xFqB1R2YxV7LF7HmnRP+yQAK+GJJNcCDVpDfSH/Jq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751054747; c=relaxed/simple;
-	bh=LR3FEYO4lseRQoD8fNl9kELElxWTZ4qSpuPKRqnou5E=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BnCH2t0u2gaodWwGJ9feQ6VNvzB0HqfguwnyH0lkyaRS23ukKSrchjzyckkHutNTk7+b6i0tPEWrEo5HnbGScdZ4Kj9xid9V+gw0ir7qGXAnyy39ZIZ+WbDr3x4bQVOBAuJ6S9o2UugLqNGg+5cWoVT2WQWMU7B1X3dHcwK6hnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TTPV8XGC; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+	s=arc-20240116; t=1751054766; c=relaxed/simple;
+	bh=xt+sPA3McDF8nj4nAc9sQO77sEGlMr35aTxGAMLLbcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=niaeULGcNre2moXJ8w1XX5at/0Khi11fVYNO6XkSLDfi3gt2tYCO3dBOZBUx0xB5khezQQ7gn6RiOFhjkJ0HCK/Wklow5MrN7g8eGzAzqNyQO0myh+7PJd3YvWScbbhAzreC+uO1dDQtpOZfufe2zxf3AkoWU7GAb6lFoc6/Omc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JIiqxOJj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TTPV8XGC"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74943a7cd9aso598119b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751054745; x=1751659545; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZsCnLtPUB1WW+niTlrUm0KWXpbsHYBTnip7qlkFxEqw=;
-        b=TTPV8XGC5LnjKfGOB32kPx6d0GcrGWH1saQhsQ37V89C+j0aW0TypZebJwxwwSU+oG
-         fEohcWwm7o2ofP/+TSLgy12+XFz38B6gygeDe4zPf1x40N3NM9Tf4ohn9qGjzlfCpEoz
-         CMkusz2kBZrf+B7WGoYAMSQUpluBtD7QVZohQWenXiZVZXPufvMP26UJvwdHD8K1PewH
-         RvjgIs6fyFSwBfzyjVuDlx/dQMycJAO+RKRVLQHD0EZgvLIL9IoIIKxVCe6ypvF0bMj0
-         Affzq/y+kzXrMBLPKDyDiSBFdS9dUrXM5V6y+jTngfyKYev7Hptfgq5Fq96t+AYOoVpg
-         eLMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751054745; x=1751659545;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZsCnLtPUB1WW+niTlrUm0KWXpbsHYBTnip7qlkFxEqw=;
-        b=ZsD5IE28014+1u5Vcza+IZoxf939yb/xRNCXUgwLxuox2IH6gkulAxECR1poqD9bmh
-         DuKmcZRpSAvpz/OjjCuojwSb8hombpG+LoWD0bqx54ZWbqn5+jDPG2AU45f5NKUfd0tH
-         PVmFmr+5O4A6rwzFVaq+Sm9zD9E3Md1+HEIQc6DUQWupTsxVuW7b4zaex8sW+uxJ8oTy
-         VCBjqBbPeFq+m5DSOSJGFiF7aLANjI/CV8cv+LW0QmqNdj7+J4NCWQFeDKImxn+minys
-         bce6ldMbj2pMpyXv+dU1f+rYbIv0ugisR1WgLbr5gDQsWJ/K4wBgbnsCwAQhW3N9Cr8n
-         nmaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWgMIDrlmD77nFGbSmKTkmKj2fobHvBwj0nGldBuNri9d5vO6Y9LLp/clQyNujQVpOsWRx7ozvbCLXki18=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+h66KT0GXtdSzzM50zKzk3AjB0fvyOyl/wrP/DoCMWa1uYu/S
-	IzAMsQWgAtkL4CwKyVVgut4uBSUlMbKpWArL0kL0+tUT0TJ84vObFR4dcTroIeuBwdZ9hFyijoj
-	spPJkN1xjvlqGBiJ/2RmoVpYlkQ==
-X-Google-Smtp-Source: AGHT+IG/oOX4Ds24NX7C8OYmI3C+kJZrnfuJT15/L/7jauTWcRcnnLkHUgGCREUfwknTXT4g7yRM1bwd9m2A7brqUg==
-X-Received: from pgbfq27.prod.google.com ([2002:a05:6a02:299b:b0:b31:cc05:3c03])
- (user=almasrymina job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:c704:b0:220:63bd:2bdb with SMTP id adf61e73a8af0-220a16ca7famr7000010637.40.1751054745372;
- Fri, 27 Jun 2025 13:05:45 -0700 (PDT)
-Date: Fri, 27 Jun 2025 20:04:52 +0000
-In-Reply-To: <20250627200501.1712389-1-almasrymina@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JIiqxOJj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35345C4CEE3;
+	Fri, 27 Jun 2025 20:06:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751054765;
+	bh=xt+sPA3McDF8nj4nAc9sQO77sEGlMr35aTxGAMLLbcI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JIiqxOJjW8e0EbxHP33GonhpPoPsyZvm8fh5UVszngCN5snxDMySGjw+XX/ITyJB2
+	 XCr7JKE2ibIbdaq0jV36c0rMUPZb6vaVOrfdweUBQCGxv+yFXppiMRtI5hh52NoH5w
+	 ABgQCyEOf4oGaXZ1f4Nx4W3f19e+SS0KJIhJJyPWdsoIwm8+8pU9KAvaG/HP+h0ys3
+	 IKjHFOtaDmr8YClW6BrsvIvGOL+j6WFXlxmrO3f5uunAeX7tmHvyl5uDUGOYoyAcAK
+	 a2Y+Smx+jGbggmsw+JUJK3xBElxccLRqu2WvuOnwaz7gEY1pj8MHwCltc1qr6fFdna
+	 kXxOui47m6y3w==
+Date: Fri, 27 Jun 2025 21:06:01 +0100
+From: Simon Horman <horms@kernel.org>
+To: Lukas Bulwahn <lbulwahn@redhat.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH] MAINTAINERS: adjust file entry after renaming
+ rzv2h-gbeth dtb
+Message-ID: <20250627200601.GG1776@horms.kernel.org>
+References: <20250627134453.51780-1-lukas.bulwahn@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250627200501.1712389-1-almasrymina@google.com>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250627200501.1712389-2-almasrymina@google.com>
-Subject: [PATCH net-next v1 2/2] selftests: pp-bench: remove
- page_pool_put_page wrapper
-From: Mina Almasry <almasrymina@google.com>
-To: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	"=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?=" <toke@redhat.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627134453.51780-1-lukas.bulwahn@redhat.com>
 
-Minor cleanup: remove the pointless looking _ wrapper around
-page_pool_put_page, and just do the call directly.
+On Fri, Jun 27, 2025 at 03:44:53PM +0200, Lukas Bulwahn wrote:
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> 
+> Commit d53320aeef18 ("dt-bindings: net: Rename
+> renesas,r9a09g057-gbeth.yaml") renames the net devicetree binding
+> renesas,r9a09g057-gbeth.yaml to renesas,rzv2h-gbeth.yaml, but misses to
+> adjust the file entry in the RENESAS RZ/V2H(P) DWMAC GBETH GLUE LAYER
+> DRIVER section in MAINTAINERS.
+> 
+> Adjust the file entry after this file renaming.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-Signed-off-by: Mina Almasry <almasrymina@google.com>
----
- .../net/bench/page_pool/bench_page_pool_simple.c     | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+Thanks, and sorry for missing this.
 
-diff --git a/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c b/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c
-index 1cd3157fb6a9..cb6468adbda4 100644
---- a/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c
-+++ b/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c
-@@ -16,12 +16,6 @@
- static int verbose = 1;
- #define MY_POOL_SIZE 1024
- 
--static void _page_pool_put_page(struct page_pool *pool, struct page *page,
--				bool allow_direct)
--{
--	page_pool_put_page(pool, page, -1, allow_direct);
--}
--
- /* Makes tests selectable. Useful for perf-record to analyze a single test.
-  * Hint: Bash shells support writing binary number like: $((2#101010)
-  *
-@@ -121,7 +115,7 @@ static void pp_fill_ptr_ring(struct page_pool *pp, int elems)
- 	for (i = 0; i < elems; i++)
- 		array[i] = page_pool_alloc_pages(pp, gfp_mask);
- 	for (i = 0; i < elems; i++)
--		_page_pool_put_page(pp, array[i], false);
-+		page_pool_put_page(pp, array[i], -1, false);
- 
- 	kfree(array);
- }
-@@ -180,14 +174,14 @@ static int time_bench_page_pool(struct time_bench_record *rec, void *data,
- 
- 		} else if (type == type_ptr_ring) {
- 			/* Normal return path */
--			_page_pool_put_page(pp, page, false);
-+			page_pool_put_page(pp, page, -1, false);
- 
- 		} else if (type == type_page_allocator) {
- 			/* Test if not pages are recycled, but instead
- 			 * returned back into systems page allocator
- 			 */
- 			get_page(page); /* cause no-recycling */
--			_page_pool_put_page(pp, page, false);
-+			page_pool_put_page(pp, page, -1, false);
- 			put_page(page);
- 		} else {
- 			BUILD_BUG();
--- 
-2.50.0.727.gbf7dc18ff4-goog
-
+Reviewed-by: Simon Horman <horms@kernel.org>
