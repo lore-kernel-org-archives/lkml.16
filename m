@@ -1,251 +1,158 @@
-Received: from mail-ot1-f73.google.com (mail-ot1-f73.google.com [209.85.210.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972301D79BE
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1342ED857
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751057161; cv=none; b=GMjg5ynPnl6HtofwZMgFd0VkRjaQOpPciq3q+Onx6+8Uk4QY7aGcFXfHvzRJGNw3hGP+5zZ7MguvBrt1HITdzkppYWFq1+s5y0SFEjsEIi/wNHeFsk2e1yIQfg6BrB27LTV3S7K1sREHIhjdwngdVlariaHZpNLgnBf4hGj0h/0=
+	t=1751057163; cv=none; b=E45lFLeAD+2tglMdkN7n+u5DtvsZKY3UyORqHMaVMLVKPk69g9lnKwDGNxdNPtvcALgvYdDUBd3+ZQeb7h1XAA0w3YzZlm+nhfjE5KNaoynloopU9NX2rbNBp8B+GL/O5UHb/rZbIcpE0mISQmQJOPV+ZuNoTIyr4gyG+GbiJz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751057161; c=relaxed/simple;
-	bh=Dbw6vfXTIcPD2nnOiddnC76ZVYtHdIwQERNCs5CZ+AM=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=e+fwUw1yQIKK93C/ZLQ3inrVLybbvsyQJO7KBOxP7GDZ9+EwHptU7An5j2ZxC/2lsH/HHFMKBOrgMt5/3KCRIU56dXN/LsAM/mO9bZ1S8SeuyZqiSTYWE2Jm3HpogkXoBJDOShdx7/5oZ2o9bDex+I4fuM/IUHOoulfdMZU9mSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=chb2zHM+; arc=none smtp.client-ip=209.85.210.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1751057163; c=relaxed/simple;
+	bh=B1amgNphjp1S7GFjFXPs/GcQYxye3YWoYVlI/qcxf/Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C0vZQDW6Ugo2OXXXd9KTDNaKSqNOM68biGf0Zl8tknr2YYiy9SGgfsvof9Mt7WA3UDeQQoRrs3ybo7B8wnf+uFuXE7JqkrR9f0++Ai8LAVsrPh6CfstAZ7qfxP0xDxGH2XxaSqiDH7yhQki954g5cHDd1z5EDdenZV/3pDhyrHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=d3ypjC2v; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="chb2zHM+"
-Received: by mail-ot1-f73.google.com with SMTP id 46e09a7af769-73abbfc3d0aso34460a34.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751057159; x=1751661959; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vCwkQeNvJFmRc91Gk8T3YA4HoLg8Wg847EVfC3MKwm0=;
-        b=chb2zHM+qpJUEpMnCwyd8NgEPi3M4Ase/rKhFoV8lM32AdG14FlUUe6DfvAZOvc/Yt
-         jZ1DbLscucMS+714pHT7VFfu1Svu+TdttzFkenolTXjezC8oVDkyn8D4bHNhHMlCfb3y
-         0hlTPQ5vMzdMQdE9bKa5rNPsZXXQ88fhFnS3ViEttyCZvouSPxhhX31ZOMHfhBkki2KD
-         0LRlkOj1dDoEa61My54K+pJvyNuba7HOpVs5nXvveIihUTPzArWZa31RfKHKFAy/+voL
-         Z0ixic/1sOJxNl5BjUEE0fd34UbYS29rzWfw5Iacj8De2j4JCLKIB/xfpeLXfszw3YWM
-         o1Ug==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="d3ypjC2v"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RCMa7S014518
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:46:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	LvmCj0v1cjoY74eE/WOAeBAPKyTiGX4dCvytV+elP2k=; b=d3ypjC2vuoyx12oD
+	8k3PeRG+Wf6owcxXBFDsZJSjn/sCOXVMkGMYfpnZNv/uw0wnJk5vwiDJK7Zz+NlO
+	D0fSn2N33W3369LvFH/9K70cgB1S51+RGdDwQfhKNyZyxePjWky7Q/UZsohks4+u
+	5R2/64ueSt8eRw8qBP8g0w5ny5o12bPjU6CiCYqS0dRsFpvvelLwOFvg6chmnMGm
+	/03ZLxzOzEn/d/2+HVZ0geRg/S8PizRdbHykya5lhod0rSc3GkuQfEUuTsjEGZLs
+	qP80KJBWvLTUg55glWb1xy3M7ZBm9nr3gVS10df5BReP3pcoRYBLVjDLySjCxdck
+	9zb4nQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbm26ja7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:46:00 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d09a3b806aso46708685a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:46:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1751057159; x=1751661959;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vCwkQeNvJFmRc91Gk8T3YA4HoLg8Wg847EVfC3MKwm0=;
-        b=ByTLC8Fc0lc068vECHKZNQWC1SoDLOjMY6SAKlTCgn9/5lKzPhdGhY8k2x+7tY/w8j
-         VxbBQVxVZu14Tcgr4hIJciRdcD6yw1zHL5r9nlnLJcySCrNSg+JzGjRQ3WDVUQHjhNuY
-         5zV5E4j9HYCi25kwa8roBhrHdeDMg56MBVtQF91CzO23KBlFcf5+hyla7+mcs7xHDvUf
-         1mlUPW/6eiWDNnhtx2+M7O+fI0P09tdL7KCazXpWSNH3I3c1OxCWlXSsUmEsCDqKoXqF
-         Ay2RTB/u9weDaa8azlI1hhLkopC3JVb+WQlCNTr9Renb16iZpIP/HRD/x3jdsT7WS4lV
-         MFDg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqIdVWkCV7zCjNG1tm/njl1HKvsWBfJFrL35QTR+NckXnx1NLG5vSDudOJwFX3TewfXMNxo4dnAqTNBY4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPkKA9VmhdkAjBGTB5DIDqcojnz2x68SZfYAoCvinmDc4ifEdW
-	k1eTRRGW+TDFGcEwRcjAP8B2aX22y5oRRwXmv9b8FggTBVATuRsXAcb9CIeFsk9hAEFJq1JRV0C
-	tdDRMQSOeKG+GgCj/rsQFfMW2Pg==
-X-Google-Smtp-Source: AGHT+IH2HpfAlrvSBQPMk62/RIc0nWzkxCoCzJycTm56dna3SUVLdeLNxUVR8JHlvZrOyIvBaFCfMBXjvOwVdkFbjg==
-X-Received: from otbby6.prod.google.com ([2002:a05:6830:6086:b0:72c:10e4:a953])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6830:2710:b0:727:4356:9f07 with SMTP id 46e09a7af769-73afc67b661mr3036914a34.14.1751057158815;
- Fri, 27 Jun 2025 13:45:58 -0700 (PDT)
-Date: Fri, 27 Jun 2025 20:45:57 +0000
-In-Reply-To: <86plepb54f.wl-maz@kernel.org> (message from Marc Zyngier on Fri,
- 27 Jun 2025 16:01:36 +0100)
+        bh=LvmCj0v1cjoY74eE/WOAeBAPKyTiGX4dCvytV+elP2k=;
+        b=BVHXnQf21T655yUHC7QdyV2cnkYkmcTzhRe4wpx0LB6VBnPBKS44oX+JbAGeni4FAd
+         M1LvGFxZJSwtx2l1uRgnRuAyAn2ay4qX6Oi0sFE2e41r5Zu5JXo4YXsQsYWegDrH3S9m
+         GM9IAXHdzeHk/dIPXauA+GTj6ker4HQrGYBv6GI0GAFGqbiTHHwKFPxNqCCigrVNU2AC
+         CTLlOPjN/Hfd3S0lfa6d7w44OYzg3c1HdUCen0zsXJ0/mI7/HnHE1Ow98JOQ/7JqQuR3
+         ftmiQHk1rhjcwgwH7zRCv1z9MSJtpywYTG03kvF08PE5RTqf8TP6+J3nzRFMF4N1KS0k
+         ASIw==
+X-Forwarded-Encrypted: i=1; AJvYcCVX+JA67hJYJrXncl+ZH80HddvnLATLEUWUC+pXAkSKvFIg6WKtmpoVppoId0A633tpw3bv8WyjrWmeEmM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOKL9PWNLcfLNXhO3jpBdX14AgMC54KarQorcKN7keJD/BNxU7
+	Bc70bYmuPk+X51dakO2sJHB+9lWAOdbT6lQasevpRxrAsm5sLkKW9mEImvIsa+WQPfnnk4xAVG/
+	Z8orVrqtOBn2I2yEmAwNDwFNyAYKEt0x77cf4wGtcBckToWArraAnlSsQNYuqQnqRH/s=
+X-Gm-Gg: ASbGncvc2pu1A2BLbzFZUyPv6UR/GzK/rUNM2IbgWgkutv47DIhSyS9AQZ7vgo5xByc
+	OCMECGWjnwY/XfdF/1DyGhYitk5H6pTKvNiJPLs0gxmejCisyHVWBhNp/MRVJ5NUimEnUdcC49j
+	WrkwSrT2jpXsv8kAJim3h2CDIHXmYw/8DAT97ZUp/9qB/PZ5oyMO9mJFk2N2/Jjgug7ES/Z8IiG
+	2D1NQRzro7FZ2GrVSSZMVRhLK1N/20qknMt1R+faz08Zr5tbSw4Vvt2YFDI7thzwT7os/2gQBbO
+	IcMzzxUAl6HuTs87+cUHeXAhbg5AzCwgJle37SbJhD5DXhVvx4TYT8jU1eZkb3Xz+sz7O4VzXXz
+	sL0k=
+X-Received: by 2002:a05:620a:2b9b:b0:7d0:993c:7163 with SMTP id af79cd13be357-7d44c2a78eamr30937485a.15.1751057159583;
+        Fri, 27 Jun 2025 13:45:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHwFR1XY8aZISqHPCrWFyviC+3MqnKMSTMQkUGTWSkYl0QopZh6D1CRsu1zF3w72yFTsELv0Q==
+X-Received: by 2002:a05:620a:2b9b:b0:7d0:993c:7163 with SMTP id af79cd13be357-7d44c2a78eamr30935085a.15.1751057159165;
+        Fri, 27 Jun 2025 13:45:59 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c831cb724sm1976837a12.53.2025.06.27.13.45.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 13:45:58 -0700 (PDT)
+Message-ID: <c309acd7-e306-48ad-81e1-cb5fdd02b2da@oss.qualcomm.com>
+Date: Fri, 27 Jun 2025 22:45:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsntbjq89am2.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH v3 10/22] KVM: arm64: Set up FGT for Partitioned PMU
-From: Colton Lewis <coltonlewis@google.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, 
-	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	oliver.upton@linux.dev, mizhang@google.com, joey.gouly@arm.com, 
-	suzuki.poulose@arm.com, yuzenghui@huawei.com, mark.rutland@arm.com, 
-	shuah@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Add support for IQ-8275-evk board
+To: Rob Herring <robh@kernel.org>
+Cc: Umang Chheda <umang.chheda@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konradybcio@kernel.org>, kernel@oss.qualcomm.com,
+        Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+        Bjorn Andersson <andersson@kernel.org>
+References: <20250623130420.3981916-1-umang.chheda@oss.qualcomm.com>
+ <175069348269.3797007.5540625905808833666.robh@kernel.org>
+ <bcfbfaed-e857-44be-86bd-d4e977fd4d27@oss.qualcomm.com>
+ <20250627202313.GA4189710-robh@kernel.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250627202313.GA4189710-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=YYu95xRf c=1 sm=1 tr=0 ts=685f0308 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=gEfo2CItAAAA:8 a=EUspDBNiAAAA:8
+ a=tTVXt7mVe-G5UhCDjR8A:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+ a=sptkURWiP4Gy88Gu7hUp:22
+X-Proofpoint-GUID: h_-nz0XnwASDjbFGwzHsfP-vnoc_oYlz
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDE2OCBTYWx0ZWRfXzE7Imx9fldAM
+ 0LyHtpiTPcIFGlAcgH6Fjyr74xVSqE/qstKvHOvGWr06dY0pAhwjXZzMGwKL4BvwD1+0ijfO3p5
+ ix4lNcUlIhOkejKr1OQyeGynCFbaPMpLU4KMcKSqDuX4CmN80Q8mclL55FMCtxAYtXMr0CRDvLL
+ WKD7RaRvV1vAZEIomM9ME0xWqB0e+7xxYF0hhYIafDzI2W5CXTcWd/cjZOgkdJjlWIuF8bB+JQL
+ 3uwT7LeCqbls0SbUH/JE5qQlP6iE+Mer3WbCWXoJ+Lcr8zEn3RaMeHc/2Mjb42Qd+n01RYWR6sx
+ K8O7Bdw+Qi9g/5sZyiQ/mzUlZC4lNurtFhniWfXRW8ZEW4T2haQxvbG6Xj0xhy/a3vTKguXqFoc
+ lBOC7T/1RoFeUXFsPnjsqQqitUhuZtAlEfZ3T4d8e0q67gneI7ns7hGAUdexeedChpB5StnE
+X-Proofpoint-ORIG-GUID: h_-nz0XnwASDjbFGwzHsfP-vnoc_oYlz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
+ clxscore=1015 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506270168
 
-Marc Zyngier <maz@kernel.org> writes:
+On 6/27/25 10:23 PM, Rob Herring wrote:
+> On Mon, Jun 23, 2025 at 05:50:11PM +0200, Konrad Dybcio wrote:
+>> On 6/23/25 5:46 PM, 'Rob Herring (Arm)' via kernel wrote:
+>>>
+>>> On Mon, 23 Jun 2025 18:34:18 +0530, Umang Chheda wrote:
+>>>> This series:
+>>>>
+>>>> Add support for Qualcomm's IQ-8275-evk board using QCS8275 SOC.
+>>
+>> [...]
+>>
+>>>>
+>>>>  .../devicetree/bindings/arm/qcom.yaml         |   7 +
+>>>>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>>>>  .../boot/dts/qcom/qcs8275-iq-8275-evk.dts     | 241 ++++++++++++++++++
+>>>>  3 files changed, 249 insertions(+)
+>>>>  create mode 100644 arch/arm64/boot/dts/qcom/qcs8275-iq-8275-evk.dts
+>>>>
+>>
+>> [...]
+>>
+>>>
+>>> New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250623130420.3981916-1-umang.chheda@oss.qualcomm.com:
+>>>
+>>> arch/arm64/boot/dts/qcom/msm8916-samsung-gt58.dtb: panel@0 (samsung,lsl080al03): 'port' does not match any of the regexes: '^pinctrl-[0-9]+$'
+>>> 	from schema $id: http://devicetree.org/schemas/display/panel/samsung,s6d7aa0.yaml#
+>>
+>> Seems like a fluke..
+> 
+> Yes, I failed to filter that out.
+> 
+> This is just a before and after run with filtering out everything in 
+> before. I suspect that sometimes warning lines get interleaved and these 
+> show up as new.
+> 
+> If QCom was warning free, then this would be less of an issue. :(
 
-> On Thu, 26 Jun 2025 21:04:46 +0100,
-> Colton Lewis <coltonlewis@google.com> wrote:
+We're trying.. not always doing the best, but it's on the agenda!
 
->> In order to gain the best performance benefit from partitioning the
->> PMU, utilize fine grain traps (FEAT_FGT and FEAT_FGT2) to avoid
->> trapping common PMU register accesses by the guest to remove that
->> overhead.
-
->> There should be no information leaks between guests as all these
->> registers are context swapped by a later patch in this series.
-
->> Untrapped:
->> * PMCR_EL0
->> * PMUSERENR_EL0
->> * PMSELR_EL0
->> * PMCCNTR_EL0
->> * PMINTEN_EL0
->> * PMEVCNTRn_EL0
-
->> Trapped:
->> * PMOVS_EL0
->> * PMEVTYPERn_EL0
->> * PMCCFILTR_EL0
->> * PMICNTR_EL0
->> * PMICFILTR_EL0
-
->> PMOVS remains trapped so KVM can track overflow IRQs that will need to
->> be injected into the guest.
-
->> PMICNTR remains trapped because KVM is not handling that yet.
-
->> PMEVTYPERn remains trapped so KVM can limit which events guests can
->> count, such as disallowing counting at EL2. PMCCFILTR and PMCIFILTR
->> are the same.
-
-> I'd rather you explain why it is safe not to trap the rest.
-
-Okay, I will reverse my explanation.
-
-
->> Signed-off-by: Colton Lewis <coltonlewis@google.com>
->> ---
->>   arch/arm64/include/asm/kvm_pmu.h        | 23 ++++++++++
->>   arch/arm64/kvm/hyp/include/hyp/switch.h | 58 +++++++++++++++++++++++++
->>   arch/arm64/kvm/pmu-part.c               | 32 ++++++++++++++
->>   3 files changed, 113 insertions(+)
-
->> diff --git a/arch/arm64/include/asm/kvm_pmu.h  
->> b/arch/arm64/include/asm/kvm_pmu.h
->> index 6328e90952ba..73b7161e3f4e 100644
->> --- a/arch/arm64/include/asm/kvm_pmu.h
->> +++ b/arch/arm64/include/asm/kvm_pmu.h
->> @@ -94,6 +94,21 @@ u64 kvm_pmu_guest_counter_mask(struct arm_pmu *pmu);
->>   void kvm_pmu_host_counters_enable(void);
->>   void kvm_pmu_host_counters_disable(void);
-
->> +#if !defined(__KVM_NVHE_HYPERVISOR__)
->> +bool kvm_vcpu_pmu_is_partitioned(struct kvm_vcpu *vcpu);
->> +bool kvm_vcpu_pmu_use_fgt(struct kvm_vcpu *vcpu);
->> +#else
->> +static inline bool kvm_vcpu_pmu_is_partitioned(struct kvm_vcpu *vcpu)
->> +{
->> +	return false;
->> +}
->> +
->> +static inline bool kvm_vcpu_pmu_use_fgt(struct kvm_vcpu *vcpu)
->> +{
->> +	return false;
->> +}
->> +#endif
->> +
->>   /*
->>    * Updates the vcpu's view of the pmu events for this cpu.
->>    * Must be called before every vcpu run after disabling interrupts, to  
->> ensure
->> @@ -133,6 +148,14 @@ static inline u64 kvm_pmu_get_counter_value(struct  
->> kvm_vcpu *vcpu,
->>   {
->>   	return 0;
->>   }
->> +static inline bool kvm_vcpu_pmu_is_partitioned(struct kvm_vcpu *vcpu)
->> +{
->> +	return false;
->> +}
->> +static inline bool kvm_vcpu_pmu_use_fgt(struct kvm_vcpu *vcpu)
->> +{
->> +	return false;
->> +}
->>   static inline void kvm_pmu_set_counter_value(struct kvm_vcpu *vcpu,
->>   					     u64 select_idx, u64 val) {}
->>   static inline void kvm_pmu_set_counter_value_user(struct kvm_vcpu *vcpu,
->> diff --git a/arch/arm64/kvm/hyp/include/hyp/switch.h  
->> b/arch/arm64/kvm/hyp/include/hyp/switch.h
->> index 825b81749972..47d2db8446df 100644
->> --- a/arch/arm64/kvm/hyp/include/hyp/switch.h
->> +++ b/arch/arm64/kvm/hyp/include/hyp/switch.h
->> @@ -191,6 +191,61 @@ static inline bool cpu_has_amu(void)
->>                  ID_AA64PFR0_EL1_AMU_SHIFT);
->>   }
-
->> +/**
->> + * __activate_pmu_fgt() - Activate fine grain traps for partitioned PMU
->> + * @vcpu: Pointer to struct kvm_vcpu
->> + *
->> + * Clear the most commonly accessed registers for a partitioned
->> + * PMU. Trap the rest.
->> + */
->> +static inline void __activate_pmu_fgt(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm_cpu_context *hctxt = host_data_ptr(host_ctxt);
->> +	struct kvm *kvm = kern_hyp_va(vcpu->kvm);
->> +	u64 set;
->> +	u64 clr;
->> +
->> +	set = HDFGRTR_EL2_PMOVS
->> +		| HDFGRTR_EL2_PMCCFILTR_EL0
->> +		| HDFGRTR_EL2_PMEVTYPERn_EL0;
->> +	clr = HDFGRTR_EL2_PMUSERENR_EL0
->> +		| HDFGRTR_EL2_PMSELR_EL0
->> +		| HDFGRTR_EL2_PMINTEN
->> +		| HDFGRTR_EL2_PMCNTEN
->> +		| HDFGRTR_EL2_PMCCNTR_EL0
->> +		| HDFGRTR_EL2_PMEVCNTRn_EL0;
->> +
->> +	update_fgt_traps_cs(hctxt, vcpu, kvm, HDFGRTR_EL2, clr, set);
->> +
->> +	set = HDFGWTR_EL2_PMOVS
->> +		| HDFGWTR_EL2_PMCCFILTR_EL0
->> +		| HDFGWTR_EL2_PMEVTYPERn_EL0;
->> +	clr = HDFGWTR_EL2_PMUSERENR_EL0
->> +		| HDFGWTR_EL2_PMCR_EL0
->> +		| HDFGWTR_EL2_PMSELR_EL0
->> +		| HDFGWTR_EL2_PMINTEN
->> +		| HDFGWTR_EL2_PMCNTEN
->> +		| HDFGWTR_EL2_PMCCNTR_EL0
->> +		| HDFGWTR_EL2_PMEVCNTRn_EL0;
->> +
->> +	update_fgt_traps_cs(hctxt, vcpu, kvm, HDFGWTR_EL2, clr, set);
->> +
->> +	if (!cpus_have_final_cap(ARM64_HAS_FGT2))
->> +		return;
->> +
->> +	set = HDFGRTR2_EL2_nPMICFILTR_EL0
->> +		| HDFGRTR2_EL2_nPMICNTR_EL0;
->> +	clr = 0;
->> +
->> +	update_fgt_traps_cs(hctxt, vcpu, kvm, HDFGRTR2_EL2, clr, set);
->> +
->> +	set = HDFGWTR2_EL2_nPMICFILTR_EL0
->> +		| HDFGWTR2_EL2_nPMICNTR_EL0;
->> +	clr = 0;
->> +
->> +	update_fgt_traps_cs(hctxt, vcpu, kvm, HDFGWTR2_EL2, clr, set);
-
-> This feels wrong. There should be one place to populate the FGTs that
-> apply to a guest as set from the host, not two or more.
-
-> There is such a construct in the SME series, and maybe you could have
-> a look at it, specially if the trap configuration is this static.
-
-> 	M.
-
-> --
-> Without deviation from the norm, progress is not possible.
-
-I'm assuming you are referring to Mark Brown's series [1], specifically
-patches 5 and 18 and I see what you mean.
-
-You are probably thinking configuration should happen from
-sys_regs.c:kvm_calculate_traps or thereabout and should be setting bits
-in the existing kvm->arch.fgt array.
-
-Correct me if I'm mistaken.
-
-[1]  
-https://lore.kernel.org/kvm/20250625-kvm-arm64-sme-v6-0-114cff4ffe04@kernel.org/
+Konrad
