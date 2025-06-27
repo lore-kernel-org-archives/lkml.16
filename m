@@ -1,222 +1,230 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636C81A316E;
-	Fri, 27 Jun 2025 16:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2FB1DFCB
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751040313; cv=none; b=miGD1bi92DmRGKRIZY6FA0NQrHi7BDBxneIhAnjgkcPJiHIM8fUXyjm9YTVDTIlpY48XT1pSTDJQU9kv8E7u3p8KVHyNi3nKuZSEluZT5eEB0e0pBvh0KKQTu135FFr1BRvinSQdHjXR52VJ4jcfateEjHZ8zBWBzotIjpxRonw=
+	t=1751040437; cv=none; b=CrVdih/avxdqf8DDNmcTDYYaElQHLRpMBVypOSd9WJAfzskFtg6ba0JGaae3PZOyMpqwinDGHhZMxHnUfWZYOC18RUlxtTGlY8cZ1ElBPYIZZLTC34ym0UiWFHzlDU30YZLeQWoOwA/1rWqVOnlTWcoVldMvqfhuys5wJ/k0R+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751040313; c=relaxed/simple;
-	bh=6yeSLlUWG2ViTe2oO5VkJbCr3BcK0z6zXXc0F+BsewQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xyxag1fJlzC3NkPrZDO+uDbCKehakjraubvCfciXAabBM4a1zo9q0NoqL9oK3OYa5G4MHfVl99gupMrPKY5wREU+CHojCicsYdYM5oyYvxSetnst0oW0GFVcHgZN9UGG8AnZg03W2qyg3yljxv5UOYbMK63TVyJI4O4ccZQBeZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DUCSHoFY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751040437; c=relaxed/simple;
+	bh=Tdpe6JDS+rR3v1xR5w42iqwYeD9PI+17P546Ndy04J8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qXvktLi4kJJxV0StXKu2Tr09Bla+eFMLowPUQz1j3cLilQMVghu2F+x5y+nrta0qMrGXDZgHGkKPzFOoOfH0p3IcmFCVuxB9T+ZZsMR/vN8tlw5qZJIzwaUOWzNjaF4+WQfEzvR8NJV9ocghIW6MKBUWXGJA//ZlMBr9D3CFfHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LyEtm1Ao; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUCSHoFY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DA94C4CEED;
-	Fri, 27 Jun 2025 16:05:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751040312;
-	bh=6yeSLlUWG2ViTe2oO5VkJbCr3BcK0z6zXXc0F+BsewQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DUCSHoFYwrR1adukBmbRAwYE1LktakUEjlPhZ4sFmvwhcKJrfJjztWj+ISKnI+UDu
-	 QCFcAmpn/qMLIGs4gJAjGHXka+ur4G9keQSvRGjXaHc+D9ZyVRbRHbDgDR4/ux9N37
-	 vvV0qncLWjRCf88D6fXAgL5QspLRjtw+ETIPu3hamXQb1UHScwoGmK3qMOoUe1Irp0
-	 oWXwAGNKDMD40gHSlKTfr2ljshosXTUjvRfNIYRBGgwoFwl9D20up/v5/Mw3w9dxuN
-	 sdto5AxYUezfK/aDEL0Nzw7f0mlAd0E1IKNu0EA2o1aNOCuxtJeXuoinR4Ifc2GEL4
-	 6pSc2/MeExYdw==
-Message-ID: <e201c4b0-4fcc-4d98-9d76-0e9c41dc4d9f@kernel.org>
-Date: Fri, 27 Jun 2025 18:05:08 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LyEtm1Ao"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751040434;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/xy96KI8UDKszt96CyDW7op5ryIeAmzp/OyFji+BJh8=;
+	b=LyEtm1AoeOdOT51IS9/1yXfFxldqk9L1y5raEA47XaownHbxDVfKtsMF+wqz2b2FD0AQ9f
+	ANFSzsvdNxny0pAHhNmsQVUTMs8DbGQfmcdVUhFJ+wi0CzY31Qc+L/6MwzhQ0aw3AXbcrm
+	NGSW935W7Ll0z7Vc+Av4esGnTU9FQB0=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-630-hZpAjPy1MIuKb-Tqr2KaQg-1; Fri, 27 Jun 2025 12:07:12 -0400
+X-MC-Unique: hZpAjPy1MIuKb-Tqr2KaQg-1
+X-Mimecast-MFC-AGG-ID: hZpAjPy1MIuKb-Tqr2KaQg_1751040432
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6fb4eed1914so77116d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:07:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751040431; x=1751645231;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/xy96KI8UDKszt96CyDW7op5ryIeAmzp/OyFji+BJh8=;
+        b=DTPlQwXRnsjMa2sc3E927j2OvdHBPaFyn5aaI17tl5vPWk5W/mXHTvid3TLgMUM5Xe
+         1Q6Q4bpVg7/WtHhBP3ALPDTTz+/+iszJEZj6G7x5nLHvLkUq4tsSpx+ihIvRR7zBGGIU
+         hfxj5peQ+xLvHwWgJ3GfTrGKFJnl2RdDnIl/q8GgQJIb+OJh2JwApK9r1pehV9aJH8VU
+         dsHY874Ly7awV5Qv7D3pT8UvefDZi/aS62uc/e2h0kPb8mERah/hOrLp8GeorVprh5WC
+         8rnYlbyY85Ib3fvtAtI0BlgtiiLSRvPITbmIAOQyKbikx3yAT36UP+rEOnrrNoSqjkfg
+         570A==
+X-Gm-Message-State: AOJu0YyaBU4R8NtT3CRmJlyvX66BrfxxkRJVL25X8O8FtP1xJ381BAT4
+	W0gi32/rFe6DvP+mHNl2xybsMn4+t6xzwA6vs3RFwsYEN3veNw2M0eqkTkV2uhAm2z5s42b+ZjD
+	xPGglYd7qIk5TcWBQ/23HOCaJpnr8wLGPw6ZHIo4suodP0POJUY4+1E94D3fAPxUZLto86poyTj
+	bA6Z2VHLfjFpVzLvp8tqWANk6W3olH9LWCUnxJSTHgEfonIcY=
+X-Gm-Gg: ASbGnctCg5LusNyfA8ka2LxQMyTSjrwWxQ6HgR9U8q0IAvlfFJLmrXz73821bGz4o27
+	t8gwqN7XSy8Ai8T0+p90dhUtGeronWjtwvdiMoqnZz9lysxUfVF/dJYgTs4RQmGzFpDoICk9WHO
+	Gw3vqdp0s5OmztCAMBlIJt2tzbzvyhp0s7S3PXjE0WXYlzcjtcJG6Wr2OEHx11eEEkWrF/RGVuT
+	U9G0nwNeaFQHCMPooEe5pmLZWH712nXRzwx5IkRSALHmq9dlMBeogBfjCqDc1Urec4/DdEcuOEh
+	bRPKR4jTlnY=
+X-Received: by 2002:a05:6214:405:b0:6fd:24:b0e0 with SMTP id 6a1803df08f44-7000252f09fmr61586516d6.6.1751040431244;
+        Fri, 27 Jun 2025 09:07:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGpI3B+sCb86YFp8sTXjrVwNo2dAmF8TVfkL08aeMHEOdDuhipHJHbQBBG3CZhrBLuzvp45Qw==
+X-Received: by 2002:a05:6214:405:b0:6fd:24:b0e0 with SMTP id 6a1803df08f44-7000252f09fmr61585916d6.6.1751040430641;
+        Fri, 27 Jun 2025 09:07:10 -0700 (PDT)
+Received: from x1.com ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd76e74372sm22805016d6.0.2025.06.27.09.07.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 09:07:10 -0700 (PDT)
+From: Peter Xu <peterx@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	peterx@redhat.com,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	David Hildenbrand <david@redhat.com>
+Subject: [PATCH] mm/hugetlb: Remove prepare_hugepage_range()
+Date: Fri, 27 Jun 2025 12:07:07 -0400
+Message-ID: <20250627160707.2124580-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] staging: media: atomisp: apply clang-format and fix
- checkpatch.pl errors
-To: LiangCheng Wang <zaq14760@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-staging@lists.linux.dev, llvm@lists.linux.dev
-References: <20250627-bar-v6-1-b22b5ea3ced0@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250627-bar-v6-1-b22b5ea3ced0@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 27-Jun-25 4:56 PM, LiangCheng Wang wrote:
-> Applied clang-format to the entire AtomISP driver to improve code consistency,
-> readability, and adherence to Linux kernel coding style.
-> 
-> Additionally, manually fixed all checkpatch.pl-reported ERRORs across
-> the driver, including:
-> 
-> - Macro definitions with complex expressions now wrapped in parentheses
-> - Removed unnecessary parentheses in return statements
-> - Avoided initializing globals to zero
-> - Fixed invalid spacing around unary operators
-> 
-> This patch only includes formatting and stylistic changes with no functional logic modifications.
-> 
-> Suggested-by: Andy Shevchenko <andy@kernel.org>
-> Link: https://lore.kernel.org/all/aFwSgCtrK7DH3pIw@smile.fi.intel.com/
-> Signed-off-by: LiangCheng Wang <zaq14760@gmail.com>
-> ---
-> This patch applies clang-format to the entire AtomISP driver and manually
-> fixes all checkpatch.pl-reported ERRORs. The intent is to improve code
-> consistency and align with kernel coding standards.
+Only mips and loongarch implemented this API, however what it does was
+checking against stack overflow for either len or addr.  That's already
+done in arch's arch_get_unmapped_area*() functions, even though it may not
+be 100% identical checks.
 
-I'm sorry but this patch is totally un-reviewable because it
-is much much too large.
+For example, for both of the architectures, there will be a trivial
+difference on how stack top was defined.  The old code uses STACK_TOP which
+may be slightly smaller than TASK_SIZE on either of them, but the hope is
+that shouldn't be a problem.
 
-For starters the automated part done by clang-format and
-any later changes done by hand should be split out into
-separate patches.
+It means the whole API is pretty much obsolete at least now, remove it
+completely.
 
-Ideally I should be able to recreate the clang-format
-patch my self, so that I can apply it without needing
-to manually check that any unintentional code changes
-have been added.
+Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Muchun Song <muchun.song@linux.dev>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: loongarch@lists.linux.dev
+Cc: linux-mips@vger.kernel.org
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Acked-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/loongarch/include/asm/hugetlb.h | 14 --------------
+ arch/mips/include/asm/hugetlb.h      | 14 --------------
+ fs/hugetlbfs/inode.c                 |  8 ++------
+ include/asm-generic/hugetlb.h        |  8 --------
+ include/linux/hugetlb.h              |  6 ------
+ 5 files changed, 2 insertions(+), 48 deletions(-)
 
-> Formatting and error fixes include:
-> - Replacing space-based indentation with tabs
-> - Wrapping complex macros in parentheses
-> - Removing redundant return parentheses
-> - Avoiding unnecessary zero-initialized globals
-
-All of these should be separate patches, 1 patch
-per change in your above list.
-
-Also there are many many undesirable changes in here, just
-a few random examples:
-
---- a/drivers/staging/media/atomisp/i2c/atomisp-gc0310.c
-+++ b/drivers/staging/media/atomisp/i2c/atomisp-gc0310.c
-@@ -19,50 +19,50 @@
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-device.h>
+diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
+index 4dc4b3e04225..ab68b594f889 100644
+--- a/arch/loongarch/include/asm/hugetlb.h
++++ b/arch/loongarch/include/asm/hugetlb.h
+@@ -10,20 +10,6 @@
  
--#define GC0310_NATIVE_WIDTH			656
--#define GC0310_NATIVE_HEIGHT			496
-+#define GC0310_NATIVE_WIDTH 656
-+#define GC0310_NATIVE_HEIGHT 496
+ uint64_t pmd_to_entrylo(unsigned long pmd_val);
  
--#define GC0310_FPS				30
--#define GC0310_SKIP_FRAMES			3
-+#define GC0310_FPS 30
-+#define GC0310_SKIP_FRAMES 3
+-#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+-static inline int prepare_hugepage_range(struct file *file,
+-					 unsigned long addr,
+-					 unsigned long len)
+-{
+-	unsigned long task_size = STACK_TOP;
+-
+-	if (len > task_size)
+-		return -ENOMEM;
+-	if (task_size - len < addr)
+-		return -EINVAL;
+-	return 0;
+-}
+-
+ #define __HAVE_ARCH_HUGE_PTE_CLEAR
+ static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+ 				  pte_t *ptep, unsigned long sz)
+diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
+index fbc71ddcf0f6..8c460ce01ffe 100644
+--- a/arch/mips/include/asm/hugetlb.h
++++ b/arch/mips/include/asm/hugetlb.h
+@@ -11,20 +11,6 @@
  
--#define GC0310_FOCAL_LENGTH_NUM			278 /* 2.78mm */
-+#define GC0310_FOCAL_LENGTH_NUM 278 /* 2.78mm */
+ #include <asm/page.h>
  
--#define GC0310_ID				0xa310
-+#define GC0310_ID 0xa310
+-#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+-static inline int prepare_hugepage_range(struct file *file,
+-					 unsigned long addr,
+-					 unsigned long len)
+-{
+-	unsigned long task_size = STACK_TOP;
+-
+-	if (len > task_size)
+-		return -ENOMEM;
+-	if (task_size - len < addr)
+-		return -EINVAL;
+-	return 0;
+-}
+-
+ #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+ static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+ 					    unsigned long addr, pte_t *ptep,
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index 00b2d1a032fd..81a6acddd690 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -179,12 +179,8 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
  
--#define GC0310_RESET_RELATED			0xFE
--#define GC0310_REGISTER_PAGE_0			0x0
--#define GC0310_REGISTER_PAGE_3			0x3
-+#define GC0310_RESET_RELATED 0xFE
-+#define GC0310_REGISTER_PAGE_0 0x0
-+#define GC0310_REGISTER_PAGE_3 0x3
-
-Before everything was nicely aligned into a singel column, now
-it is harder to read + we get lots of churn which we don't
-want.
-
--	{ 0x51, 0x00 },
--	{ 0x52, 0x00 },
--	{ 0x53, 0x00 },
--	{ 0x54, 0x01 },
--	{ 0x55, 0x01 }, /* crop window height */
--	{ 0x56, 0xf0 },
--	{ 0x57, 0x02 }, /* crop window width */
-+	{ 0x51, 0x00 }, { 0x52, 0x00 }, { 0x53, 0x00 },
-+	{ 0x54, 0x01 }, { 0x55, 0x01 }, /* crop window height */
-+	{ 0x56, 0xf0 }, { 0x57, 0x02 }, /* crop window width */
-
-No we don't want multiple register inits on a single line.
-
-@@ -271,9 +265,11 @@ static int gc0310_write_reg_array(struct i2c_client *client,
- 	int i, err;
+ 	if (len & ~huge_page_mask(h))
+ 		return -EINVAL;
+-	if (flags & MAP_FIXED) {
+-		if (addr & ~huge_page_mask(h))
+-			return -EINVAL;
+-		if (prepare_hugepage_range(file, addr, len))
+-			return -EINVAL;
+-	}
++	if ((flags & MAP_FIXED) && (addr & ~huge_page_mask(h)))
++		return -EINVAL;
+ 	if (addr)
+ 		addr0 = ALIGN(addr, huge_page_size(h));
  
- 	for (i = 0; i < count; i++) {
--		err = i2c_smbus_write_byte_data(client, reglist[i].reg, reglist[i].val);
-+		err = i2c_smbus_write_byte_data(client, reglist[i].reg,
-+						reglist[i].val);
- 		if (err) {
--			dev_err(&client->dev, "write error: wrote 0x%x to offset 0x%x error %d",
-
-The original line here had a length below 100 chars, so it was fine
-and log messages are allowed to go over the length limit
-
-+			dev_err(&client->dev,
-+				"write error: wrote 0x%x to offset 0x%x error %d",
- 				reglist[i].val, reglist[i].reg, err);
- 			return err;
- 		}
-
-@@ -317,8 +313,8 @@ static int gc0310_gain_set(struct gc0310_device *dev, u32 gain)
+diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
+index 3e0a8fe9b108..4bce4f07f44f 100644
+--- a/include/asm-generic/hugetlb.h
++++ b/include/asm-generic/hugetlb.h
+@@ -114,14 +114,6 @@ static inline int huge_pte_none_mostly(pte_t pte)
+ }
+ #endif
  
- static int gc0310_s_ctrl(struct v4l2_ctrl *ctrl)
+-#ifndef __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+-static inline int prepare_hugepage_range(struct file *file,
+-		unsigned long addr, unsigned long len)
+-{
+-	return 0;
+-}
+-#endif
+-
+ #ifndef __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
+ static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 		unsigned long addr, pte_t *ptep)
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index c6c87eae4a8d..474de8e2a8f2 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -359,12 +359,6 @@ static inline void hugetlb_show_meminfo_node(int nid)
  {
--	struct gc0310_device *dev =
--		container_of(ctrl->handler, struct gc0310_device, ctrls.handler);
-+	struct gc0310_device *dev = container_of(
-+		ctrl->handler, struct gc0310_device, ctrls.handler);
- 	int ret;
+ }
  
- 	/* Only apply changes to the controls if the device is powered up */
-
-This just is making the code outright harder to read + it will actually
-introduce a checkpatch warning!
-
-And these are just a few examples from the first file touched by
-the series...
-
-E.g. I also saw some changes from: "foo - 1" to "foo-1" which actually
-breaks the coding style, instead of fixing it.
-
-All in all it looks like this needs a lot more work because ATM
-it is just causing a ton of churn and not necessarily making
-things better.
-
-Note specifically for the gc0310 code I've a patch series which
-fixes some last issues and after that it is ready to move out
-of staging:
-
-https://lore.kernel.org/linux-media/20250517114106.43494-1-hdegoede@redhat.com/
-
-So please don't touch the gc0310 code at all, it already has no
-known style issues and any changes will not be merged since that
-would cause the need to resolve conflicts with the linked series
-which is undesirable.
-
-And for other sensor drivers under drivers/staging/media/i2c/
-I plan to simply write new clean drivers from scratch using
-the info from the old drivers and then retire the old ones,
-because the gc0310 work (lots of work was already done before)
-has shown that slowly evolving them into mainline ready drivers
-is much much more work then just starting from scratch.
-
-So please don't touch anything under:
-drivers/staging/media/i2c/
-
-For just code-style changes since that is all planned to go
-away anyway, so that is just wasted effort.
-
-Regards,
-
-Hans
-
-
+-static inline int prepare_hugepage_range(struct file *file,
+-				unsigned long addr, unsigned long len)
+-{
+-	return -EINVAL;
+-}
+-
+ static inline void hugetlb_vma_lock_read(struct vm_area_struct *vma)
+ {
+ }
+-- 
+2.49.0
 
