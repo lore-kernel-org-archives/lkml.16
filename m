@@ -1,215 +1,424 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552C929346F;
-	Fri, 27 Jun 2025 09:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71047293B44
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751015049; cv=none; b=iQmpDt6a7ZyDRgdm4ZZi5tMYwW7aWdffd09fmzOBme0rXvat3SdZEzgdMT2gOUHy3u5jddMyiRpMjqjp7KOz6gaAh55dRKQv9PtevliGqKFRxmN7RCINDmHFJ8juxjtjMnDgsO84iY6GTBplB58jq4bT+szG4ywXmFvBZlgP6U8=
+	t=1751015051; cv=none; b=tYfYtT5NJeIjOP7vENx7Z16wumwljTDumrhCKJ5eyfN4QEWSz1hVqMNRFwbpNgj1CM5t54H3jsFoMPGSu2bH2fJQdf1AKTS6aoS1oE95cTCK1EJvSBb12WX2IUfUqXqy2dyPjoiySvvkmfW8vkdnzrY7GJpQXd0/ybwlXMqRDak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751015049; c=relaxed/simple;
-	bh=26Z1MwHnjk2h7wspYJq72P8Nt3nRYsPC+dd6E2tbHiA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rqzs3OdzEm4mKYb1VkgZpPgKv62tkpIgMdV80GzgH+fBLNfFJGOaTybjn6ehtL+hWoR9bjIgbDZDONiwpe2TUo0lYELKG95wVoy4x82XMpjWSVZovbwMMBZtgRPy7hKrXsPkcPTTx6FEDtbS01aTmpEnBbEykG63mB1m79H6tlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QYwzdnyM; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751015051; c=relaxed/simple;
+	bh=sI9PSeFKPto1hBnuPyVWDinkTYbeEBZqPdiV6vnPMng=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f9pn98A9sNrJsbGTS7dRhZ5CKrdSQuzb3svtha1KiFseVFdzjwpYWP3UpJqtjI8WQB3/iy+kTGIuhl7glnGNvVVZU0XxnhPB1eUjBiwyjJcVGnhRjcPo8PZHy3frMcBn7prQtagVB5NkJEoQ7SwSMwAFTL41dpG9btSyMhFo6nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=z7qxvyJB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xSWWrbmi; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=z7qxvyJB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xSWWrbmi; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYwzdnyM"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-74801bc6dc5so1803855b3a.1;
-        Fri, 27 Jun 2025 02:04:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751015047; x=1751619847; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+OPOjWi2p5Z5MHfvR9PBiYVVI5F5wJufIgUU5dhlzxE=;
-        b=QYwzdnyMXyzC/AkjUu+yLzPM4JBPyFuOqerNlmYneVAZoFc6ADqf5+esANONCuLIl4
-         CS8oTCfd0kUw42QtYWVN3ON44t2T1IEb8JCUZPlWzTiQ/a8cgDvP3XVyutFZ6/lcmPCe
-         y06KezVNckEazH9MBDXS4N80TTql4cBrww0xUxt17cbvdLce2hs+3mOuLv8HwpoqgkD7
-         YeTo8leP0KJHhJv4Ljb7AB5fVbBcduq11LKT3UetyeLS3/Hrz2ayYLrZE7sgdXA0DbvL
-         U99kY4OP/hd9vZKzX2c5OSJn4FntClnCODkkr5MwhmTLkcFIEn11+sE24P/+ktWOkOmR
-         asDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751015047; x=1751619847;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+OPOjWi2p5Z5MHfvR9PBiYVVI5F5wJufIgUU5dhlzxE=;
-        b=pPha3/yf0x60fMiHwykMyAj41MR/XJDAhaoK+CKDu+P1xLXHkeRxDYLBeUhChxc02+
-         sSpu8+gG/ezo/JH+XwakbW9uA3u0nmUjUsOs0XIpRHp7kP4VByS5KUSX5i1QYB1W3MIE
-         5mjgQOAbHME4HBQQlx3S5AV6t4MpDdK+TJVXuWA2lGQuFfK4W489qbEIr1+AEqwskqQL
-         EatK3fx27OInM05iyXo6fcundPeo1ho2AnmYhG6oT9TpOz1xTHLqSNGnsikdyaWgijok
-         C7U1EXfC2wrTaJaBIwOjEwNvUbaCywxqrYQ6EkYSCkk+GwJOq3SXE2Zw4fL3Dhfxr/pV
-         pxXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3NbkwiI9v7+tOTkGlk/cNX3uF7Y3FeNnB6FSKmoTBhczhcVT39tLun7CawgNJF6LRPYGwaAXOdXD4NV6o@vger.kernel.org, AJvYcCUaKYHffPD6j2C8T9+sbFOLYr8kOrJXCxi8Xa5yh2nHGuS6zlU6w4wK/zPI92INYWp1Wkk=@vger.kernel.org, AJvYcCVf8xcDBhlopQUz+MVMGSIvMbLQ/GlA+eQTNfI6KV1Nnm60xN1KSaWCoHUNHTrNZoOPvYJTNL25@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1sMXnb7FuPPVpAFraTkECgPB1QbMNKugwVq7lur/X0AeQ/UZ0
-	RBfxPtuAyv9yvtroO0W+RwqJECx87bb0LRlmeRzZceHBuJLARyvT5otM1qG09Drt
-X-Gm-Gg: ASbGnctsnA0hGUQZcXbhx8cGeALOokG2ZZmE2kc2Mbrqulgi3VpyEKc7QDnbqKjUm+o
-	PLbRgCG3G/0kHj1tm0Ag6DRZKXyr5RIvoKr3yimxrqyXo5rHTOKTcPzvgzoKe829zbpFaE2+dH5
-	wDD7akexEXTnmDEaCQMP1JMmdatV0eHsYnNDeX5EUaTZk40vFL13K0cnzm64F5oU8tosMBkC1++
-	AflXFB3svvFExiGKGs2wZ2EfkVJ575pAr055R+B+Dzlkd6mbQeZaWjgN+Rb3qZPd4iOjMuuFFEp
-	jyy3UBHs/R1JRrP/UfKicpKPkrXDXs6t38GIA/4BGReHWSi9fl0EjoCizXYNputlweVrZD2e/j1
-	3o+JEFLs=
-X-Google-Smtp-Source: AGHT+IFi7uSNU0NXFWo1RpPm1TGTKsqRNAglzlIgdaPSrhHfNLCIMhftBcZcOffl8C56MCw/UDFE6w==
-X-Received: by 2002:a05:6a00:8ca:b0:749:1e60:bdd with SMTP id d2e1a72fcca58-74af7893218mr3329499b3a.2.1751015046910;
-        Fri, 27 Jun 2025 02:04:06 -0700 (PDT)
-Received: from manjaro.domain.name ([2401:4900:1c67:6116:afb5:b6ab:2dc8:4a21])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af540b389sm1846158b3a.35.2025.06.27.02.04.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 02:04:06 -0700 (PDT)
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-To: netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: john.fastabend@gmail.com,
-	daniel@iogearbox.net,
-	jakub@cloudflare.com,
-	lmb@cloudflare.com,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	ast@kernel.org,
-	andrii@kernel.org,
-	kafai@fb.com,
-	songliubraving@fb.com,
-	yhs@fb.com,
-	kpsingh@kernel.org,
-	cong.wang@bytedance.com,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	stable@vger.kernel.org,
-	Jiri Olsa <jolsa@kernel.org>,
-	Xu Kuohai <xukuohai@huawei.com>,
-	Pranav Tyagi <pranav.tyagi03@gmail.com>
-Subject: [PATCH 5.15] bpf, sockmap: Fix skb refcnt race after locking changes
-Date: Fri, 27 Jun 2025 14:33:54 +0530
-Message-ID: <20250627090354.10491-1-pranav.tyagi03@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="z7qxvyJB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xSWWrbmi";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="z7qxvyJB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xSWWrbmi"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A785621168;
+	Fri, 27 Jun 2025 09:04:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751015046; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tpUwWc1MsGjg8fTsVIs2OYUCwvzIOqC3kz4VF4R8vw8=;
+	b=z7qxvyJBa4UCMOwSb5bMK9eG9wEHaZgAnSRWq511ab4tNbGhVOnWwXK0P2wQhCooS73O26
+	UvnnxzVVtmIo2BdIzOoGu5wPL+OayMfqfHWk+nnVmekMHodYFXHxn67GiY8Ubqr6sT8fMK
+	sn8yXjMTg1it8/1Cj86lQJIuC+VNJz0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751015046;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tpUwWc1MsGjg8fTsVIs2OYUCwvzIOqC3kz4VF4R8vw8=;
+	b=xSWWrbmiHfmIIcxUhXXH9wOpf223ov8etfZDLoysUR58ClxVSl2Kl4+hkvEunZsH0HupY1
+	fEiYZgDb9j/oyoDg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751015046; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tpUwWc1MsGjg8fTsVIs2OYUCwvzIOqC3kz4VF4R8vw8=;
+	b=z7qxvyJBa4UCMOwSb5bMK9eG9wEHaZgAnSRWq511ab4tNbGhVOnWwXK0P2wQhCooS73O26
+	UvnnxzVVtmIo2BdIzOoGu5wPL+OayMfqfHWk+nnVmekMHodYFXHxn67GiY8Ubqr6sT8fMK
+	sn8yXjMTg1it8/1Cj86lQJIuC+VNJz0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751015046;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tpUwWc1MsGjg8fTsVIs2OYUCwvzIOqC3kz4VF4R8vw8=;
+	b=xSWWrbmiHfmIIcxUhXXH9wOpf223ov8etfZDLoysUR58ClxVSl2Kl4+hkvEunZsH0HupY1
+	fEiYZgDb9j/oyoDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5CFDF138A7;
+	Fri, 27 Jun 2025 09:04:06 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Jln7FIZeXmjuZQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 27 Jun 2025 09:04:06 +0000
+Message-ID: <54d8db0d-0e40-454e-bdfa-6ce9ce622118@suse.de>
+Date: Fri, 27 Jun 2025 11:04:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fbdev: efifb: do not load efifb if PCI BAR has changed
+ but not fixuped
+To: Shixiong Ou <oushixiong1025@163.com>, Helge Deller <deller@gmx.de>
+Cc: Peter Jones <pjones@redhat.com>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Shixiong Ou <oushixiong@kylinos.cn>
+References: <20250626094937.515552-1-oushixiong1025@163.com>
+ <ecf7f260-4c5f-45fc-be8d-0361b00af6a3@suse.de>
+ <24f53098-710a-43f9-8d1c-d809fb5354eb@163.com>
+ <855d6faa-9f72-466e-9294-d6059bb9d920@suse.de>
+ <bbfebeac-a5b4-4350-a4e8-3da8a5f0efad@163.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <bbfebeac-a5b4-4350-a4e8-3da8a5f0efad@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[163.com,gmx.de];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[163.com,gmx.de];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
+X-Spam-Level: 
 
-From: John Fastabend <john.fastabend@gmail.com>
+Hi
 
-[ Upstream commit a454d84ee20baf7bd7be90721b9821f73c7d23d9 ]
+Am 27.06.25 um 10:48 schrieb Shixiong Ou:
+>
+>
+> 在 2025/6/27 16:12, Thomas Zimmermann 写道:
+>> Hi
+>>
+>> Am 27.06.25 um 10:07 schrieb Shixiong Ou:
+>>>
+>>> 在 2025/6/26 18:31, Thomas Zimmermann 写道:
+>>>> Hi
+>>>>
+>>>> Am 26.06.25 um 11:49 schrieb oushixiong1025@163.com:
+>>>>> From: Shixiong Ou <oushixiong@kylinos.cn>
+>>>>>
+>>>>> [WHY]
+>>>>> On an ARM machine, the following log is present:
+>>>>> [    0.900884] efifb: framebuffer at 0x1020000000, using 3072k, 
+>>>>> total 3072k
+>>>>> [    2.297884] amdgpu 0000:04:00.0: 
+>>>>> remove_conflicting_pci_framebuffers: bar 0: 0x1000000000 -> 
+>>>>> 0x100fffffff
+>>>>> [    2.297886] amdgpu 0000:04:00.0: 
+>>>>> remove_conflicting_pci_framebuffers: bar 2: 0x1010000000 -> 
+>>>>> 0x10101fffff
+>>>>> [    2.297888] amdgpu 0000:04:00.0: 
+>>>>> remove_conflicting_pci_framebuffers: bar 5: 0x58200000 -> 0x5823ffff
+>>>>>
+>>>>> It show that the efifb framebuffer base is out of PCI BAR, and this
+>>>>
+>>>> The patch at
+>>>>
+>>>> https://patchwork.freedesktop.org/series/148057/
+>>>>
+>>>> is supposed to fix the problem. It has been merged with v6.16-rc1 
+>>>> as commit 2f29b5c23101 ("video: screen_info: Relocate framebuffers 
+>>>> behind PCI bridges"). It is in your tree?
+>>>>
+>>>> Best regards
+>>>> Thomas
+>>>>
+>>> yeah, this patch is in my tree. but do not fix the problem.
+>>
+>> The patch's final revision had a rough development. Just for testing 
+>> purposes, could you revert the commit and instead apply the patch's 
+>> earlier revision from
+>>
+>> https://patchwork.freedesktop.org/patch/649527/?series=148057&rev=1
+>>
+>> ?
+>>
+>> Thanks a lot.
+>>
+>> Best regards
+>> Thomas
+>>
+> I have revert the commit and applied this patch, and added some prints as:
+>
+> +               printk("pcibios_bus_to_resource orginal: start = %llx, 
+> end = %llx",
+> +                               r->start, r->end);
+> +               pcibios_bus_to_resource(pdev->bus, r, &bus_region);
+> +               printk("pcibios_bus_to_resource finished: start = 
+> %llx, end = %llx",
+> +                               r->start, r->end);
+> +
+>
+> and the kernel message as follow:
+>
+> kylin@kylin-pc:~$ dmesg | grep pcibios_bus_to_resource
+> [    0.684698] pcibios_bus_to_resource orginal: start = 1020000000, 
+> end = 10202fffff
+> [    0.684702] pcibios_bus_to_resource finished: start = 1020000000, 
+> end = 10202fffff
+>
+> The address doesn't seem to have been modified.
 
-There is a race where skb's from the sk_psock_backlog can be referenced
-after userspace side has already skb_consumed() the sk_buff and its refcnt
-dropped to zer0 causing use after free.
+Thanks for confirming.
 
-The flow is the following:
+> Best regards
+> Shixiong.
+>
+>>>
+>>> this is some message:
+>>>
+>>> kylin@kylin-pc:~$ dmesg | grep BAR
+>>> [    0.688192] pci 0000:00:03.0: BAR 15: assigned [mem 
+>>> 0x1000000000-0x101fffffff 64bit pref]
+>>> [    0.688200] pci 0000:00:00.0: BAR 0: assigned [mem 
+>>> 0x1020000000-0x10200fffff 64bit pref]
+>>> [    0.688205] pci 0000:00:00.0: BAR 14: assigned [mem 
+>>> 0x58000000-0x580fffff]
+>>> [    0.688210] pci 0000:00:01.0: BAR 0: assigned [mem 
+>>> 0x1020100000-0x10201fffff 64bit pref]
+>>> [    0.688215] pci 0000:00:02.0: BAR 0: assigned [mem 
+>>> 0x1020200000-0x10202fffff 64bit pref]
+>>> [    0.688221] pci 0000:00:02.0: BAR 14: assigned [mem 
+>>> 0x58100000-0x581fffff]
+>>> [    0.688225] pci 0000:00:03.0: BAR 0: assigned [mem 
+>>> 0x1020300000-0x10203fffff 64bit pref]
+>>> [    0.688231] pci 0000:00:03.0: BAR 14: assigned [mem 
+>>> 0x58200000-0x585fffff]
+>>> [    0.688237] pci 0000:00:04.0: BAR 0: assigned [mem 
+>>> 0x1020400000-0x10204fffff 64bit pref]
+>>> [    0.688243] pci 0000:00:05.0: BAR 0: assigned [mem 
+>>> 0x1020500000-0x10205fffff 64bit pref]
+>>> [    0.688249] pci 0000:00:05.0: BAR 14: assigned [mem 
+>>> 0x58600000-0x586fffff]
+>>> [    0.688253] pci 0000:01:00.0: BAR 0: assigned [mem 
+>>> 0x58000000-0x58003fff 64bit]
+>>> [    0.688290] pci 0000:03:00.0: BAR 6: assigned [mem 
+>>> 0x58100000-0x5817ffff pref]
+>>> [    0.688296] pci 0000:03:00.0: BAR 0: assigned [mem 
+>>> 0x58180000-0x58181fff]
+>>> [    0.688303] pci 0000:03:00.0: BAR 5: assigned [mem 
+>>> 0x58182000-0x58183fff]
+>>> [    0.688317] pci 0000:04:00.0: BAR 1: assigned [mem 
+>>> 0x1000000000-0x101fffffff 64bit pref]
+>>> [    0.688326] pci 0000:04:00.0: BAR 0: assigned [mem 
+>>> 0x58200000-0x583fffff]
+>>> [    0.688332] pci 0000:04:00.0: BAR 6: assigned [mem 
+>>> 0x58400000-0x584fffff pref]
+>>> [    0.688336] pci 0000:04:00.1: BAR 0: assigned [mem 
+>>> 0x58500000-0x58503fff]
+>>> [    0.688360] pci 0000:06:00.0: BAR 0: assigned [mem 
+>>> 0x58600000-0x58601fff 64bit]
+>>> kylin@kylin-pc:~$ dmesg | grep framebuffer
+>>> [    1.137536] efifb: framebuffer at 0x1020000000, using 3072k, 
+>>> total 3072k
+>>>
+>>> the efifb base address is still at 0x1020000000 after calling 
+>>> pcibios_bus_to_resource().
+>>>
+>>>
+>>>>> results in both efi-framebuffer and amdgpudrmfb co-existing.
+>>>>>
+>>>>> The fbcon will be bound to efi-framebuffer by default and cannot 
+>>>>> be used.
+>>>>>
+>>>>> [HOW]
+>>>>> Do not load efifb driver if PCI BAR has changed but not fixuped.
+>>>>> In the following cases:
+>>>>>     1. screen_info_lfb_pdev is NULL.
+>>>>>     2. __screen_info_relocation_is_valid return false.
+>>>>>
+>>>>> Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+>>>>> ---
+>>>>>   drivers/video/fbdev/efifb.c     |  4 ++++
+>>>>>   drivers/video/screen_info_pci.c | 24 ++++++++++++++++++++++++
+>>>>>   include/linux/screen_info.h     |  5 +++++
+>>>>>   3 files changed, 33 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/video/fbdev/efifb.c 
+>>>>> b/drivers/video/fbdev/efifb.c
+>>>>> index 0e1bd3dba255..de8d016c9a66 100644
+>>>>> --- a/drivers/video/fbdev/efifb.c
+>>>>> +++ b/drivers/video/fbdev/efifb.c
+>>>>> @@ -303,6 +303,10 @@ static void efifb_setup(struct screen_info 
+>>>>> *si, char *options)
+>>>>>     static inline bool fb_base_is_valid(struct screen_info *si)
+>>>>>   {
+>>>>> +    /* check whether fb_base has changed but not fixuped */
+>>>>> +    if (!screen_info_is_useful())
+>>>>> +        return false;
+>>>>> +
+>>>>>       if (si->lfb_base)
+>>>>>           return true;
+>>>>>   diff --git a/drivers/video/screen_info_pci.c 
+>>>>> b/drivers/video/screen_info_pci.c
+>>>>> index 66bfc1d0a6dc..ac57dcaf0cac 100644
+>>>>> --- a/drivers/video/screen_info_pci.c
+>>>>> +++ b/drivers/video/screen_info_pci.c
+>>>>> @@ -9,6 +9,8 @@ static struct pci_dev *screen_info_lfb_pdev;
+>>>>>   static size_t screen_info_lfb_bar;
+>>>>>   static resource_size_t screen_info_lfb_res_start; // original 
+>>>>> start of resource
+>>>>>   static resource_size_t screen_info_lfb_offset; // framebuffer 
+>>>>> offset within resource
+>>>>> +static bool screen_info_changed;
+>>>>> +static bool screen_info_fixuped;
+>>>>>     static bool __screen_info_relocation_is_valid(const struct 
+>>>>> screen_info *si, struct resource *pr)
+>>>>>   {
+>>>>> @@ -24,6 +26,24 @@ static bool 
+>>>>> __screen_info_relocation_is_valid(const struct screen_info *si, stru
+>>>>>       return true;
+>>>>>   }
+>>>>>   +bool screen_info_is_useful(void)
+>>>>> +{
+>>>>> +    unsigned int type;
+>>>>> +    const struct screen_info *si = &screen_info;
+>>>>> +
+>>>>> +    type = screen_info_video_type(si);
+>>>>> +    if (type != VIDEO_TYPE_EFI)
+>>>>> +        return true;
+>>>>> +
+>>>>> +    if (screen_info_changed && !screen_info_fixuped) {
+>>>>> +        pr_warn("The screen_info has changed but not fixuped");
+>>>>> +        return false;
+>>>>> +    }
+>>>>> +
+>>>>> +    pr_info("The screen_info is useful");
+>>>>> +    return true;
+>>>>> +}
+>>>>> +
+>>>>>   void screen_info_apply_fixups(void)
+>>>>>   {
+>>>>>       struct screen_info *si = &screen_info;
+>>>>> @@ -32,18 +52,22 @@ void screen_info_apply_fixups(void)
+>>>>>           struct resource *pr = 
+>>>>> &screen_info_lfb_pdev->resource[screen_info_lfb_bar];
+>>>>>             if (pr->start != screen_info_lfb_res_start) {
+>>>>> +            screen_info_changed = true;
+>>>>>               if (__screen_info_relocation_is_valid(si, pr)) {
+>>>>>                   /*
+>>>>>                    * Only update base if we have an actual
+>>>>>                    * relocation to a valid I/O range.
+>>>>>                    */
+>>>>>                   __screen_info_set_lfb_base(si, pr->start + 
+>>>>> screen_info_lfb_offset);
+>>>>> +                screen_info_fixuped = true;
+>>>>>                   pr_info("Relocating firmware framebuffer to 
+>>>>> offset %pa[d] within %pr\n",
+>>>>>                       &screen_info_lfb_offset, pr);
+>>>>>               } else {
+>>>>>                   pr_warn("Invalid relocating, disabling firmware 
+>>>>> framebuffer\n");
+>>>
+>>> And should something be done 
+>>> after __screen_info_relocation_is_valid() return false?
+>>>
+>>> Best regards
+>>> Shixiong.
+>>>
+>>>>>               }
+>>>>>           }
+>>>>> +    } else {
+>>>>> +        screen_info_changed = true;
+>>>>>       }
+>>>>>   }
+>>>>>   diff --git a/include/linux/screen_info.h 
+>>>>> b/include/linux/screen_info.h
+>>>>> index 923d68e07679..632cdbb1adbe 100644
+>>>>> --- a/include/linux/screen_info.h
+>>>>> +++ b/include/linux/screen_info.h
+>>>>> @@ -138,9 +138,14 @@ ssize_t screen_info_resources(const struct 
+>>>>> screen_info *si, struct resource *r,
+>>>>>   u32 __screen_info_lfb_bits_per_pixel(const struct screen_info *si);
+>>>>>     #if defined(CONFIG_PCI)
+>>>>> +bool screen_info_is_useful(void);
+>>>>>   void screen_info_apply_fixups(void);
+>>>>>   struct pci_dev *screen_info_pci_dev(const struct screen_info *si);
+>>>>>   #else
+>>>>> +bool screen_info_is_useful(void)
+>>>>> +{
+>>>>> +    return true;
+>>>>> +}
+>>>>>   static inline void screen_info_apply_fixups(void)
+>>>>>   { }
+>>>>>   static inline struct pci_dev *screen_info_pci_dev(const struct 
+>>>>> screen_info *si)
+>>>>
+>>>
+>>
 
-  while ((skb = skb_peek(&psock->ingress_skb))
-    sk_psock_handle_Skb(psock, skb, ..., ingress)
-    if (!ingress) ...
-    sk_psock_skb_ingress
-       sk_psock_skb_ingress_enqueue(skb)
-          msg->skb = skb
-          sk_psock_queue_msg(psock, msg)
-    skb_dequeue(&psock->ingress_skb)
-
-The sk_psock_queue_msg() puts the msg on the ingress_msg queue. This is
-what the application reads when recvmsg() is called. An application can
-read this anytime after the msg is placed on the queue. The recvmsg hook
-will also read msg->skb and then after user space reads the msg will call
-consume_skb(skb) on it effectively free'ing it.
-
-But, the race is in above where backlog queue still has a reference to
-the skb and calls skb_dequeue(). If the skb_dequeue happens after the
-user reads and free's the skb we have a use after free.
-
-The !ingress case does not suffer from this problem because it uses
-sendmsg_*(sk, msg) which does not pass the sk_buff further down the
-stack.
-
-The following splat was observed with 'test_progs -t sockmap_listen':
-
-  [ 1022.710250][ T2556] general protection fault, ...
-  [...]
-  [ 1022.712830][ T2556] Workqueue: events sk_psock_backlog
-  [ 1022.713262][ T2556] RIP: 0010:skb_dequeue+0x4c/0x80
-  [ 1022.713653][ T2556] Code: ...
-  [...]
-  [ 1022.720699][ T2556] Call Trace:
-  [ 1022.720984][ T2556]  <TASK>
-  [ 1022.721254][ T2556]  ? die_addr+0x32/0x80^M
-  [ 1022.721589][ T2556]  ? exc_general_protection+0x25a/0x4b0
-  [ 1022.722026][ T2556]  ? asm_exc_general_protection+0x22/0x30
-  [ 1022.722489][ T2556]  ? skb_dequeue+0x4c/0x80
-  [ 1022.722854][ T2556]  sk_psock_backlog+0x27a/0x300
-  [ 1022.723243][ T2556]  process_one_work+0x2a7/0x5b0
-  [ 1022.723633][ T2556]  worker_thread+0x4f/0x3a0
-  [ 1022.723998][ T2556]  ? __pfx_worker_thread+0x10/0x10
-  [ 1022.724386][ T2556]  kthread+0xfd/0x130
-  [ 1022.724709][ T2556]  ? __pfx_kthread+0x10/0x10
-  [ 1022.725066][ T2556]  ret_from_fork+0x2d/0x50
-  [ 1022.725409][ T2556]  ? __pfx_kthread+0x10/0x10
-  [ 1022.725799][ T2556]  ret_from_fork_asm+0x1b/0x30
-  [ 1022.726201][ T2556]  </TASK>
-
-To fix we add an skb_get() before passing the skb to be enqueued in the
-engress queue. This bumps the skb->users refcnt so that consume_skb()
-and kfree_skb will not immediately free the sk_buff. With this we can
-be sure the skb is still around when we do the dequeue. Then we just
-need to decrement the refcnt or free the skb in the backlog case which
-we do by calling kfree_skb() on the ingress case as well as the sendmsg
-case.
-
-Before locking change from fixes tag we had the sock locked so we
-couldn't race with user and there was no issue here.
-
-[ Backport to 5.15: context cleanly applied with no semantic changes.
-Build-tested. ]
-
-Fixes: 799aa7f98d53e ("skmsg: Avoid lock_sock() in sk_psock_backlog()")
-Reported-by: Jiri Olsa  <jolsa@kernel.org>
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Tested-by: Xu Kuohai <xukuohai@huawei.com>
-Tested-by: Jiri Olsa <jolsa@kernel.org>
-Link: https://lore.kernel.org/bpf/20230901202137.214666-1-john.fastabend@gmail.com
-Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
----
- net/core/skmsg.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/net/core/skmsg.c b/net/core/skmsg.c
-index a5947aa55983..a13ddb9976ad 100644
---- a/net/core/skmsg.c
-+++ b/net/core/skmsg.c
-@@ -608,12 +608,18 @@ static int sk_psock_skb_ingress_self(struct sk_psock *psock, struct sk_buff *skb
- static int sk_psock_handle_skb(struct sk_psock *psock, struct sk_buff *skb,
- 			       u32 off, u32 len, bool ingress)
- {
-+	int err = 0;
-+
- 	if (!ingress) {
- 		if (!sock_writeable(psock->sk))
- 			return -EAGAIN;
- 		return skb_send_sock(psock->sk, skb, off, len);
- 	}
--	return sk_psock_skb_ingress(psock, skb, off, len);
-+	skb_get(skb);
-+	err = sk_psock_skb_ingress(psock, skb, off, len);
-+	if (err < 0)
-+		kfree_skb(skb);
-+	return err;
- }
- 
- static void sk_psock_skb_state(struct sk_psock *psock,
-@@ -681,9 +687,7 @@ static void sk_psock_backlog(struct work_struct *work)
- 		} while (len);
- 
- 		skb = skb_dequeue(&psock->ingress_skb);
--		if (!ingress) {
--			kfree_skb(skb);
--		}
-+		kfree_skb(skb);
- 	}
- end:
- 	mutex_unlock(&psock->work_mutex);
 -- 
-2.49.0
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
