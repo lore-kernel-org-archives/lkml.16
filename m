@@ -1,111 +1,103 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDFF2E54AD
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 14:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69AE22E2EF4;
+	Fri, 27 Jun 2025 14:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751034318; cv=none; b=qh8BTnx0J/LqaJEQ0TMbV9fKOLyvek9dQ9ab4jCnj/H//yy6/vMTRyh2TfTNEWQDSRs+8J95bhxklHmdFCmYzr5EKeVzpcPBtRfqPQfohBZEivZfAPNvm/xrS5LGjIxLMGjH0Ntj0B97ykicUYfS3aBEv46x/wX5o3fsDfh/4LI=
+	t=1751034344; cv=none; b=un/as3rf4vptXBtpcQE4YM4Nx4RuocSj7/qNnkfiuMTpyBfWiwzUcXLEBHcG+eQz75oxx0QheKlrL0sCpvWzEcEGc/dC5YX+GAUq+qKUrJlPmjUkdIfkMCIasl2kOr0jg58HVSYRhUanr/rxricy/mNKgz8PjxmCknigNKSjQ3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751034318; c=relaxed/simple;
-	bh=jhExwZF8WZRBqXdyQDZ/i8JAohQYvfSaazVslwt3TJs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aVmB60uNc4NCUy6hNnKsOAaDqGU3qom/P0+iXFK6/Spy+I0oNZHd2DldGLKpW+duOyqLWd+y3/6J7sr3tea5+6k06HFarybolM4hd/EWEhoViqxG6cEbIdTWFTTsqQ2GjW71ejC/ghvaP5dXAniMapnv2+rqz+uN51Tr9HeYw70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vMgUH9bs; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751034344; c=relaxed/simple;
+	bh=ME2cqXZUHKwJVGbFXLVEvCVVXrHKQ8El4V5MfXi0efU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EOJZJVo5Sjvqs7l2Y4wnX4hJnPim7MwHQzU6mnDaQDRCKDMZ0HHZAj0iru5BK9MCF6JoRQqvUfR4/IlaQ4l6B/D0tVGC00YSnwBR2AVVv5ISaVno0LocEsZ2Xu8bX8n58M+Dlckq1Fb4MkdnQkzsWD8KJNSYOz7Eo6s4tCC28cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OmrTwTjm; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vMgUH9bs"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b26df8f44e6so2460392a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:25:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OmrTwTjm"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4eb4dfd8eso325723f8f.2;
+        Fri, 27 Jun 2025 07:25:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751034316; x=1751639116; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rWEwwAXq7aUCx39IeLJxT3jNwxQZV+O1CFl/KQTm4BE=;
-        b=vMgUH9bsLouSaGJg61KtLZWXXjqdgeQxccaB42/eWCsZt2k9cub8FshUfow5WndQbH
-         AOmdLwsl6rl30UDFEYus3PyhxVXr8VpDszkrIJ8vlSGI6PKUPTYn2za+0aQ+I3xS5SCV
-         87p7blt20VAMBj27hpQUhE/y1/DcTMSk/Q2t2Si9uVNh8E6AS+D4tL74kQA708aWnUzV
-         uTdWgfSiR+BD/hkBY5N5IgYZeRg6pefyCMFtG8ydNtaj2RhMm+eqbMVP3hzGbpdeFnWq
-         u9xFeYCYc8ylzwQN6BR9VmVv9I95/Pr4JnupAkOObrkLdcjoOCsU+woCkXD2my21rsji
-         6IVA==
+        d=gmail.com; s=20230601; t=1751034341; x=1751639141; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yk+TCPe5F7/HoOrV73Zo6MpjOMLx2phHFu+ne2bfNMI=;
+        b=OmrTwTjmyIv8kgX9uyWM4kh0Qz7GG15qzicOWkaVT0ncR/Z6eNioDGUC7Gg4nLwPnv
+         aIajgnJllz6q7a/138iboZTBpUWB0MivI55aoxxH+18PfWCjD/zYLcN3nRylecgOlfH6
+         5K+LbiMwWgv3d4Zot6hzKilQDCZRkT51pj6fd1B+HDQMtBp3T8S7U1PriVTls2Cfar62
+         Ejdg/ybgTr37YrnxippYZ08tOlbJDRz3XZqu+OzfBk5W2pmbLfpo5JpP7JLNmjN58pf4
+         uUkT7vUrMJ+s7MuYjqE8ES3CD3/NDqqCtDkXEA/lsOEl9e5Cji9PRJexrGmDRbTCPOVA
+         Qaig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751034316; x=1751639116;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rWEwwAXq7aUCx39IeLJxT3jNwxQZV+O1CFl/KQTm4BE=;
-        b=FRmr56eNKzRIscChcONQYkIi3QUae/+6L9+vb9OXPPrQIpIZNELOxKgFtyhPn5uCVi
-         lW76DlUw44mUWtjRl5ERcSqqftGH4B9nGNWQ01vRoi6sOjAKT//+F19r9nIiLhNGYGm5
-         ZhDL5Bz0r8UsD4rF78YjiaBt0k50bBwgyKHjmafloM2aDwcp6Yp1x69VIpwygOTbXwfE
-         NSYzAsSpVhBZAV2D95/TAcLxWESgRb4dtS/ynfoayHmTx6vg6Iulg+pUix7RbCjMnMvs
-         h2M04krMipIrq9hOaeMMOxzv0YO6dlVoP802+zdrkZtD+5FpyPVlX7f1179F/8MhPs8M
-         p67A==
-X-Forwarded-Encrypted: i=1; AJvYcCVTvBl0Co091NpPAWaL5nsAUfx3m3ReUsOEWsLTUs8aokkKA/mrepXYMZGH7xEX1+HtU9Fql9+ZRIiDYYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhO9Zmk956VICGhb1/R+1gXLHrxbPoIYh7YGhtZuyQvYr63Yqo
-	djVDA8m6tCgkCmcSgcjC6jaZbV4rauTef2KLuyA3fGSwvFTEc19OtYBDIuWHn0GMxEFlJbG0ybh
-	NBcPFUQdNFYAvIwRd74zgrd7Vv2/jnaZ9aw1DTjjv
-X-Gm-Gg: ASbGncs4S2Og2nSxYKe25cXjrqdqhtu+xUj3voalC365PivZrdLaFYbnNur/yBNmpHe
-	Ljkk3f5aUiw5T+RabpnfnQCESOce9LGBCaDMnW1tNlwVnOFl1cKHCWzKEaqRpT56modC7EmRL+P
-	jP5ERZbDDvUfMorQBlrKUPs+Yo4mmtBGkT8Gohj5sXW3i036ZK/qn5Gi0YoVR9X1mx/4Elhmi05
-	A==
-X-Google-Smtp-Source: AGHT+IHGNRgkygpHfMPQOj0NGGskB03ytD7z1igBmXJiwj5qUKZOxneN4SXR+feUmOnbJZmq/d2uR46t8CjA+D5Oxn8=
-X-Received: by 2002:a17:90b:4e8b:b0:312:1b53:5e9f with SMTP id
- 98e67ed59e1d1-318c92e111fmr5023442a91.24.1751034315698; Fri, 27 Jun 2025
- 07:25:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751034341; x=1751639141;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Yk+TCPe5F7/HoOrV73Zo6MpjOMLx2phHFu+ne2bfNMI=;
+        b=NQwKVnRfSR61wJ0ETgKV7m6GqKey3NasMeujFV22waHfn/uO0JoKiOvCoP42eYcA6U
+         +GDyk2VIWa4vrCZ2UOFb1b1fI0R6o5ysKjLJ2W8gLJXker24KTWt3ihVzkrrr2qJgA5F
+         fw4Ft8motHx9Cb/Uv7CftvYAjp4053SnxtwgSUg8x47SHegU2w0B1JkTfTA+WMKfINB5
+         nJb/eTkujOu1tANK3tndE9FGTd8KElIxO1rMyuHA+NzMloojFdtewkFrLcnLj3DBsoKc
+         7OqXZ/fM/Uywp2qlfWvV0c7qi4f5e5Of+efHyT8UTleqIVy8heg50eVHEXQwv5QlDmyM
+         2n8w==
+X-Forwarded-Encrypted: i=1; AJvYcCVsK/SjcfHz6f5DLKYWydjvRekUuKNUrzwAUjXzVJBWqsn5XQvpPjvrjCXqjdR1739KHGsSEkxdhyQWZg==@vger.kernel.org, AJvYcCXRNaolwYYTgZZ8CRz1PFCyQ9uzsnTSii4aLSc2Nmowb+HrfyvXfZA4cvLUhpakcm53XuJ/IZJm9Um8e64=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxv9Xt635mWnVNeZs3T+EGXAlN2HiO8xUQL90e/vfPQlbfAov7i
+	ZVOMrEsNKJRxgHmofgexhb/9QNrCBRIiHUOQ0nMXqYTj+/ehoQ9X41cY
+X-Gm-Gg: ASbGncuWlo2sYhcVnv8G3irW1sqFP4vE1hIs06NVvCVyej3+OZZb6umPyOS35dEWIsN
+	EVbmolnArXmwYLKjIEALRYWYtkgfSlfFKlO1514axdmz3f35tT2KU8yt9RgUSAGdBxmK4ORcpxV
+	0wZOXoQ11VtpOSc1Nf5AEgMZ8Fym78rgp22gDA4RRXBuVvxciXv/mmva9NVlOzp43bAMq+PIBxS
+	pSXi8m94/7rHIzuxUktRaMuq0iXl3fEB8F521U8T8EoizzOEvaYAKB63hLXdEJ+w8GHSdBx0q5T
+	vyOuRITHnPcnovL/vVVabTlcGOxrZfoEzIz1SIsEeK4K7SKh4t9hBxABQIKiPnA3AJ/FJKtnYwa
+	6e6PYGU6jtmEiDIN0YwXD1hmtUg==
+X-Google-Smtp-Source: AGHT+IFgCpOkXg8yoUr8araE5Gzl7VuIF7NW3Fx9azLsYdBtEloAb5F9bReMzOc9yPTKcifJsH4H8A==
+X-Received: by 2002:a05:6000:43c9:b0:3a4:d4a0:1315 with SMTP id ffacd0b85a97d-3a8fe1dd906mr1006346f8f.6.1751034340473;
+        Fri, 27 Jun 2025 07:25:40 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:fade:13b1:a534:8568])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a88c7e7098sm2818338f8f.4.2025.06.27.07.25.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 07:25:40 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] isci: Fix dma_unmap_sg() nents value
+Date: Fri, 27 Jun 2025 16:24:47 +0200
+Message-ID: <20250627142451.241713-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626134158.3385080-1-glider@google.com> <20250626134158.3385080-7-glider@google.com>
- <20250627081146.GR1613200@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250627081146.GR1613200@noisy.programming.kicks-ass.net>
-From: Alexander Potapenko <glider@google.com>
-Date: Fri, 27 Jun 2025 16:24:36 +0200
-X-Gm-Features: Ac12FXyQawK2wMIbahdpGNOHGjO4VNy-BCPJo06Xuokf1P8k9xJhRjaaDWA72xY
-Message-ID: <CAG_fn=UrOBF=hQ5y6VN9VuA67GeVOyaaWtrnaSLz4TnC7u1fiw@mail.gmail.com>
-Subject: Re: [PATCH v2 06/11] kcov: x86: introduce CONFIG_KCOV_UNIQUE
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com, x86@kernel.org, 
-	Aleksandr Nogikh <nogikh@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Marco Elver <elver@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 27, 2025 at 10:11=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
->
-> On Thu, Jun 26, 2025 at 03:41:53PM +0200, Alexander Potapenko wrote:
-> > The new config switches coverage instrumentation to using
-> >   __sanitizer_cov_trace_pc_guard(u32 *guard)
-> > instead of
-> >   __sanitizer_cov_trace_pc(void)
-> >
-> > This relies on Clang's -fsanitize-coverage=3Dtrace-pc-guard flag [1].
-> >
-> > Each callback receives a unique 32-bit guard variable residing in the
-> > __sancov_guards section. Those guards can be used by kcov to deduplicat=
-e
-> > the coverage on the fly.
->
-> This sounds like a *LOT* of data; how big is this for a typical kernel
-> build?
+The dma_unmap_sg() functions should be called with the same nents as the
+dma_map_sg(), not the value the map function returned.
 
-I have a 1.6Gb sized vmlinux, which has a .text section of 176Mb.
-There are 1809419 calls to __sanitizer_cov_trace_pc_guard, and the
-__sancov_guards section has a size of 6Mb, which are only allocated at
-runtime.
+Fixes: ddcc7e347a89 ("isci: fix dma_unmap_sg usage")
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/scsi/isci/request.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If we take a vmlinux image from syzbot (e.g.
-https://storage.googleapis.com/syzbot-assets/dadedf20b2e3/vmlinux-67a99386.=
-xz),
-its .text section is 166Mb, and there are 1893023 calls to
-__sanitizer_cov_trace_pc, which will translate to exactly the same
-number of __sanitizer_cov_trace_pc_guard, if we apply the unique
-coverage instrumentation.
+diff --git a/drivers/scsi/isci/request.c b/drivers/scsi/isci/request.c
+index 355a0bc0828e..bb89a2e33eb4 100644
+--- a/drivers/scsi/isci/request.c
++++ b/drivers/scsi/isci/request.c
+@@ -2904,7 +2904,7 @@ static void isci_request_io_request_complete(struct isci_host *ihost,
+ 					 task->total_xfer_len, task->data_dir);
+ 		else  /* unmap the sgl dma addresses */
+ 			dma_unmap_sg(&ihost->pdev->dev, task->scatter,
+-				     request->num_sg_entries, task->data_dir);
++				     task->num_scatter, task->data_dir);
+ 		break;
+ 	case SAS_PROTOCOL_SMP: {
+ 		struct scatterlist *sg = &task->smp_task.smp_req;
+-- 
+2.43.0
+
