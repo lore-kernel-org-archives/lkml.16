@@ -1,71 +1,110 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3041A2746A
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4D22BB17
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750986258; cv=none; b=f7if0JBx7PHGv4X3NL8F4CdVa70wy25QPptUlnWpUvsgZyWqTYapba5aa7wky8okLYIK/gZp30atq6iFKyvsChn+Dspvr2JF0soC8buqdT84RFMXGDJJQFU2sxc8VjRxPIA+nELzIdtFZV4JAF2lp52zF+kobkGAq6cAGbdWIkM=
+	t=1750986348; cv=none; b=Ju+QlQW2iw3EKG6N+y0aW+S8x8D5q84adY4BgGmaChI+JFLe35plPVFm+Y54MBTvKr6Gktgc0gFQ1MxL+puk/GezhbIWo/kXmux4nxv7+Uiae9/Hv8MoMMgdlv4beN3Doi7q8E446vhgrQb9cf/L3JjMvFWmopt+FcbOoQ9audE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750986258; c=relaxed/simple;
-	bh=zeC+iIpYdcOVvmwz3iWpMIo7n0ZyvT9VQrkbmEEEwxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=N4xUUiK8LkM+hgNz25SCmuS6Sr1GfUSL+wQ1XkrppyRpM1UevK7jg/ut7WJ+XeCzxiEl8GHRCawc05+MgmpZOVInG+2waPZuDzjE269a0BlpaVjoDMaHFGJ6YlGZOU4tPObi3FMDMvpvyMbfOZyYBjAdeUjSu9LW1M8bQtCKnbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nr0H93Wi; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1750986348; c=relaxed/simple;
+	bh=5pMT3+eEro9ox0pu/3gJoCitkuT60qFDYmpBxmejqZQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FPTCD46jXMd3FkgOsw5t3rctsvXvUS/VamOhn8nkWcI4hOZhucLmRpccRBu6DQTmM5vgDS46LsHXHinnQ4vvVLZ3pphSfSFX9wMYHNGpzz/8TudfYwdrGyCVZQoUxz+bnrqdsHcZWWCFmOzJVLRipbvFOxkIf0D/fGS2Q0ap4xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mCWxXp0E; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nr0H93Wi"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750986252; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=zzsOvPofranR4VW3KfgumZYrk2uPPq3zcvTSbWlvrRY=;
-	b=nr0H93WiSSDw8P0dGta51GkuoYmY7GU0DQqf0AvL5zIqZUK2Gxi0uvAmCgXSE2ixjXoUVHBK0IsM2Ak1utQDDq6FsJe2R4wGmyjUM6n4F+Dusst7kQMhBRa2i43KIwACzDtT3JEy0F/Tnit3iiIWLPRZOt/nx3sDrm3901NaQXw=
-Received: from U-V2QX163P-2032.local(mailfrom:fengwei_yin@linux.alibaba.com fp:SMTPD_---0WfKwkgn_1750986251 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 27 Jun 2025 09:04:12 +0800
-Date: Fri, 27 Jun 2025 09:04:11 +0800
-From: YinFengwei <fengwei_yin@linux.alibaba.com>
-To: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Kees Cook <kees@kernel.org>
-Cc: fengwei_yin@linux.alibaba.com, zhourundong.zrd@linux.alibaba.com
-Subject: [Question] About the elf program header size
-Message-ID: <sxokzxpo74u7yhrhfrmgtdvkpshwl464jicrwwkwtvkwl5d5dj@fqto77h2prj2>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mCWxXp0E"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a6f2c6715fso1720034f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 18:05:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750986345; x=1751591145; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zCEH4/nYFQC/5D2TWQLQCIAUawTphbfim/GsSeVhbPY=;
+        b=mCWxXp0Edg++D7XPrK91D4EXpGANa4cc3wqKnU7lbaLyHmbh1u1oi4QQwgHQzME2Ob
+         GFTe43xf4cAnAqB9SLIpTNf+xBglj3OTc3yl2Y00yz5fKgqnMDqFYJEO/9ySK9GmG7Ja
+         Ni5Uvw105ixK9RVs3WtrDAUxmBROT8MlrdSasyAZdmKaeMfhy168vGnCVvthIfSckGeV
+         7p7bcP8HpSa/PVezEMrggjSpdfn+wNZQ2zSHfIv3DcxnjfktFjXEb4sqaJ2RtaZTmLtd
+         xfd4xnQqddM/Q2ByLssfG5VewSOzvsp/SniHYe8zXDXN+S67cXpSa+yEGrT2jbCVSqDL
+         Y6eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750986345; x=1751591145;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zCEH4/nYFQC/5D2TWQLQCIAUawTphbfim/GsSeVhbPY=;
+        b=upWlFW1XqyXpXwoMCzXewa4xzpCFf+09mm4bQar9wkl1JWkRsJqaAnJq+Gk5XRug5Z
+         5VVhPP2nzi2ndthY/G9lIlrVH0IwUQjcQyIGCU9x3ksVG9X6Gja70dDDczzUng7ER0a+
+         A98ONZITa6BTng6cF2YGIe4DG+X6bkJipFqUVfiW9s0P5wch4BtJxru9AjSfcOfthf67
+         fLmCmdXO7AJifXJBlG4wHVEDa50Qp+JZ4wXTBsxnRK7Xr1dSVjJkNDILZyX3lj7qyH22
+         Y/mtQiaJX90T6ECD2ruJb+gYWwPduJLMjMkrznZaPAZ7B7MWdUOVbkDcW9/ALFuIVbsd
+         Zlpg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpdkxwxYY7gjHADn4/QmCJemXKG0hbFcZDeNivk6WmoKKdrQ5emdq1mChtdSpPSQQHTv2lchwTht1Bfyk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTbEcuR6IVjwSnLEI1dWZU0gAiscQX4GydY6knlK1F8Y6HbyFa
+	7X4ZU4o6g6C0h2UfRQ2hiK7O7dqIVkMu1UlcaXOkhgG8vebzuKpCtt8jvS1svWHS9K/0mm688Yr
+	4cNFN0P+oKg==
+X-Gm-Gg: ASbGncuUCjh2hIynH5Ct5a77LXonGi0v3SY1Q1ME4BGEofhYXcKMbPAX09W63SMqfnf
+	21CRePm40lWG99p/lJu1qLBL4ddgFX0ZcUhcZeWvTTnprAtgF1oqSFar2tZOZqF//ivvOywU2Mw
+	Ls5FjWUwKxtGSJMcmaj1x3hqsvubUg1ULO72iKIRa1tfuG4FYZegaIOWpBYqQmBEDk29r9HRxjS
+	UUGzLK9ssukw6z0MQC/8TX3d1d7qHls+C7zk/Gt033FakLBiKa+19Iev1zpjgrAdmoiZ7TB8N0r
+	vYEoOvZuWQD/6zT1vG/nm02yAaw0QNbHxDfHZq1NwIMljNVQk8bigxEOA104srT3c2SsSYghNrl
+	n9F+NIBqWAHNbj07M3+mlCFSLDqLWvL5Fg5YdtQ==
+X-Google-Smtp-Source: AGHT+IFey/mVIRKk3UWUu/tEfrImgRAEJgM0T9pJubxRsrTOR9on5HnEM0Ys6a04nuCT6wlQIXOdGQ==
+X-Received: by 2002:a05:6000:21c3:b0:3a4:fb7e:5fa6 with SMTP id ffacd0b85a97d-3a8f435e29cmr997757f8f.1.1750986345232;
+        Thu, 26 Jun 2025 18:05:45 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45380d0f15esm59111445e9.1.2025.06.26.18.05.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jun 2025 18:05:44 -0700 (PDT)
+Message-ID: <9153b2cb-b123-4799-939f-cc8b7e3f1330@linaro.org>
+Date: Fri, 27 Jun 2025 02:05:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: qcom: camss: Remove extraneous -supply postfix on
+ supply names
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: mchehab@kernel.org, hverkuil@xs4all.nl, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ vladimir.zapolskiy@linaro.org
+References: <20250626012433.261328-1-bryan.odonoghue@linaro.org>
+ <0975cd75-2363-44b9-8ae8-b2430799ab78@oss.qualcomm.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <0975cd75-2363-44b9-8ae8-b2430799ab78@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
-We had a script generated assembly code. built it with gcc and the
-output elf file had 78 program headers.
-
-On an arm64 platform, if we have 64KB base page size, the elf can
-be started correctly. But if we have 4KB base page size, the elf
-can NOT be started with:
-    cannot execute binary file: Exec format error
-
-Look at the function load_elf_phdrs():
-        if (size == 0 || size > 65536 || size > ELF_MIN_ALIGN)
-	                goto out;
-
-ELF_MIN_ALIGN is defined as PAGE_SIZE on arm64. Which can explain
-above inconsistent behaviors (from user perspetive).
-
-I didn't find the limitation definition in ELF spec(Maybe I missed
-some obvious info there). If I remove "size > ELF_MIN_ALIGN", the
-same elf can be started correctly even with 4KB page size.
-
-So my question is why we limit the who program headers total size
-to PAGE_SIZE? git history couldn't tell anything because the
-limitation was introduced when whole linux kernel tree was migrated
-to git. Is there a possible constrain on other architecture? Thanks.
+On 27/06/2025 01:43, Konrad Dybcio wrote:
+> On 6/26/25 3:24 AM, Bryan O'Donoghue wrote:
+>> The -supply postfix is wrong but wasn't noticed on the CRD devices or
+>> indeed the Dell devices, however on Lenovo devices the error comes up.
+> 
+> Please give the commit message another shot, perhaps with "PM" in the
+> commit date above ;)
 
 
-Regards
-Yin, Fengwei
+On 27/06/2025 01:43, Konrad Dybcio wrote:
 
+lol
+
+> 
+> For the code:
+> 
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> Konrad
+
+thx for RB
+
+I'll translate my commit log to English after my suspend/resume cycle.
+
+---
+bod
