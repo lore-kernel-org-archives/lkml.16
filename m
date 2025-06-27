@@ -1,142 +1,128 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E32126C17
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 03:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FFE1A705C
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 03:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750996490; cv=none; b=sK29zwdr/n5/l7voAPnKcziNxZ+cZ+E4rUKOM/p1Zy2Ld4y7FQm/gtkM3nOIxFkj/J7waXvd2j3ldPGQXfhBXZ3eF9sNCPaEMK9MirCurt++97w1OA9hjI1bc2g4tRH4E5EAUhdBpVYIQvcfyG7O4mWGE8qeGgiWGkUxoGDM1+A=
+	t=1750996625; cv=none; b=SMA6J7ikwEkR79d3BZAKWdCDCEMQ+jFu3nLYfpwrgZ2rhnVPDhpeahxFj98NLlg+6MWqvzpqLMpYQAkbNRu3teTK7UYBOpFadN5cm66dSI13oSGTCe4nJuuCv9wp4q2GMw860YeyNOjAbAnTZrW7+45ZfCuroljbfKiZsVgD1bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750996490; c=relaxed/simple;
-	bh=mo4UYzAPRGQ5Ylm3f5lg6SHdT1ZrpuHPYHJJfR9miOw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZwLfsuxg6GtvfuA/8dtOcyNb6AHKSwDJI7t5BrbDO1S1YK1GJRgKIzHMnkm1K7BBTtnSCqkMlD+G1zj4U7sPZH2vU9g5V+U6R3gUJfgxWnPYBD+WQNpSOk9jBEDpYc89gL0QKR+ixfbOAyMYLYGCQcVr8Sw8X6CulzDGFo2fYeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bT1lw5FPWz10XcV;
-	Fri, 27 Jun 2025 11:50:04 +0800 (CST)
-Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id D24E41402EA;
-	Fri, 27 Jun 2025 11:54:42 +0800 (CST)
-Received: from kwepemq200018.china.huawei.com (7.202.195.108) by
- dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 27 Jun 2025 11:54:32 +0800
-Received: from localhost.localdomain (10.50.165.33) by
- kwepemq200018.china.huawei.com (7.202.195.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 27 Jun 2025 11:54:31 +0800
-From: Yicong Yang <yangyicong@huawei.com>
-To: <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>,
-	<vincent.guittot@linaro.org>
-CC: <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>, <bsegall@google.com>,
-	<mgorman@suse.de>, <vschneid@redhat.com>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>, <yangyicong@hisilicon.com>
-Subject: [PATCH] sched/deadline: Don't count nr_running twice for dl_server proxy tasks
-Date: Fri, 27 Jun 2025 11:54:20 +0800
-Message-ID: <20250627035420.37712-1-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
+	s=arc-20240116; t=1750996625; c=relaxed/simple;
+	bh=iGtsc2zIpestiI1LiwAjLp7hMhvKPPtvOJ/nYZ4+MNM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=g3v6NvlS81/iRRMmJkdMP12jA0BHaWzwSYuQXisuHM3U+RyySqG2ZIa8SYXzEhB4Cz8bCsM5//91hqX+mVdquE4YSYpK//XRW/GS6VrnNjO+GVJzN8w8ABlGgvUPL/NaVRDT4MiEFVDsdOfjeW+pp97fyK0xAQciOP0E7p8XR8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3de3b5b7703so10845195ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 20:57:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750996623; x=1751601423;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Edqk8b6TRexhsTMFdiRMX8dpvvT0ITdG0FS3RQnqiFI=;
+        b=UB/IVdymPQRy+MWJXBulMYtmJsWru3qozAI3CpfLaiBTI0uDzF22TJT8P5wMOCci0/
+         vLt8IK5RzoIDhfDrU7nnrHSih3RmErfJW0GyUVfInGlq5n/tpTdqZInagGpmeTzGquWq
+         zIesbq5nBw3ASs/LJpNce4GcPCHjO6QLYwLPRgNb2dvxDfNqmP9tajPo9uDDbT/3ZcDX
+         YOQ5aipp0A3hwUJuQyt5YC4ZW4S1W7Gho8MzbEd2h631zdjHIKdqkFJbfE2CYKW+c702
+         HW28o9/yU72WXF3CJ1rvwsHVgGyvvGi/FSBQJGA6+fiI1fEwleJDIA9g+5OZqvzlBsDS
+         sZ5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXfq1VJL3CLZHqPCkAyioIde+5zY/quYr+TGHQRMUtdpwGNhBc7O9Rlrz7jamsIwDU4Wj+X80RtYIo3098=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlsmqEvSGlqe6uhihbye/0vnLb1MiDlU0MhO98L5rnVg/bAuoY
+	lGgoEFD5AOf+7/Vsy9P2FWK785MhQmVeBL/LjqcPdds+Cq4lFzkQUl5PCs4hG2UNIR9zARLTsxZ
+	nwi4fYqUGiM3dcFEy7YkfOb3qe6EdhZiVGF/OaLGlF6jsJ0au6H/ppn6ig2k=
+X-Google-Smtp-Source: AGHT+IESmmH/HGBBLnn5qK3lcAscrw/OP1YEPEl9mM72nxERUyiHuxuBc3rKf/ewxGsGgPCjey5/xnQS+m0G9gbqergdnAxYbm5I
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemq200018.china.huawei.com (7.202.195.108)
+X-Received: by 2002:a05:6e02:18ce:b0:3dd:cc26:61c7 with SMTP id
+ e9e14a558f8ab-3df4acf1885mr22597545ab.20.1750996622691; Thu, 26 Jun 2025
+ 20:57:02 -0700 (PDT)
+Date: Thu, 26 Jun 2025 20:57:02 -0700
+In-Reply-To: <95a8efa9-eca2-4b07-a762-e08de6ae61b3@linux.dev>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685e168e.a00a0220.2e5631.03f4.GAE@google.com>
+Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
+From: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>
+To: jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	yanjun.zhu@linux.dev, zyjzyj2000@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+Hello,
 
-On CPU offline the kernel stalled with below call trace:
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+WARNING in rxe_skb_tx_dtor
 
-  INFO: task kworker/0:1:11 blocked for more than 120 seconds.
-        Tainted: G           O        6.15.0-rc4+ #1
-  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-  task:kworker/0:1     state:D stack:0     pid:11    tgid:11    ppid:2   task_flags:0x4208060 flags:0x00000008
-  Workqueue: events vmstat_shepherd
-  Call trace:
-   __switch_to+0x118/0x188 (T)
-   __schedule+0x31c/0x1300
-   schedule+0x3c/0x120
-   percpu_rwsem_wait+0x12c/0x1b0
-   __percpu_down_read+0x78/0x188
-   cpus_read_lock+0xc4/0xe8
-   vmstat_shepherd+0x30/0x138
-   process_one_work+0x154/0x3c8
-   worker_thread+0x2e8/0x400
-   kthread+0x154/0x230
-   ret_from_fork+0x10/0x20
-  INFO: task kworker/1:1:116 blocked for more than 120 seconds.
-        Tainted: G           O        6.15.0-rc4+ #1
-  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-  task:kworker/1:1     state:D stack:0     pid:116   tgid:116   ppid:2   task_flags:0x4208060 flags:0x00000008
-  Workqueue: events work_for_cpu_fn
-  Call trace:
-   __switch_to+0x118/0x188 (T)
-   __schedule+0x31c/0x1300
-   schedule+0x3c/0x120
-   schedule_timeout+0x10c/0x120
-   __wait_for_common+0xc4/0x1b8
-   wait_for_completion+0x28/0x40
-   cpuhp_kick_ap_work+0x114/0x3c8
-   _cpu_down+0x130/0x4b8
-   __cpu_down_maps_locked+0x20/0x38
-   work_for_cpu_fn+0x24/0x40
-   process_one_work+0x154/0x3c8
-   worker_thread+0x2e8/0x400
-   kthread+0x154/0x230
-   ret_from_fork+0x10/0x20
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 3034 at drivers/infiniband/sw/rxe/rxe_net.c:357 rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
+Modules linked in:
+CPU: 0 UID: 0 PID: 3034 Comm: kworker/u4:10 Not tainted 6.16.0-rc3-syzkaller-ge9ef70b277ad #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: rxe_wq do_work
+RIP: 0010:rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
+Code: 80 3c 20 00 74 08 4c 89 ff e8 c1 64 81 f9 4d 8b 37 44 89 f6 83 e6 01 31 ff e8 d1 e5 1d f9 41 f6 c6 01 75 0e e8 e6 e0 1d f9 90 <0f> 0b 90 e9 b4 01 00 00 4c 89 ff e8 45 97 fd 01 48 89 c7 be 0e 00
+RSP: 0018:ffffc900000079e8 EFLAGS: 00010246
+RAX: ffffffff88a26d8a RBX: ffff8880560d4500 RCX: ffff88801f722440
+RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff887bc1c4
+R10: dffffc0000000000 R11: ffffffff88a26d00 R12: dffffc0000000000
+R13: 1ffff1100ac1a8ab R14: 0000000000025820 R15: ffff888033440000
+FS:  0000000000000000(0000) GS:ffff88808d250000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f5e595acfc8 CR3: 0000000056029000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ skb_release_head_state+0x101/0x250 net/core/skbuff.c:1139
+ napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
+ e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
+ e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
+ e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
+ __napi_poll+0xc7/0x480 net/core/dev.c:7414
+ napi_poll net/core/dev.c:7478 [inline]
+ net_rx_action+0x707/0xe30 net/core/dev.c:7605
+ handle_softirqs+0x286/0x870 kernel/softirq.c:579
+ do_softirq+0xec/0x180 kernel/softirq.c:480
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
+ local_bh_enable include/linux/bottom_half.h:33 [inline]
+ __neigh_event_send+0x9b/0x1560 net/core/neighbour.c:1194
+ neigh_event_send_probe include/net/neighbour.h:463 [inline]
+ neigh_event_send include/net/neighbour.h:469 [inline]
+ neigh_resolve_output+0x198/0x750 net/core/neighbour.c:1496
+ neigh_output include/net/neighbour.h:539 [inline]
+ ip6_finish_output2+0x11fb/0x16a0 net/ipv6/ip6_output.c:141
+ __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
+ ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
+ rxe_send drivers/infiniband/sw/rxe/rxe_net.c:391 [inline]
+ rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:450
+ rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
+ rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
+ do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
+ do_work+0x1b4/0x6c0 drivers/infiniband/sw/rxe/rxe_task.c:187
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
 
-cpuhp hold the cpu hotplug lock endless and stalled vmstat_shepherd.
-This is because we count nr_running twice on cpuhp enqueuing and failed
-the wait condition of cpuhp:
 
-enqueue_task_fair() // pick cpuhp from idle, rq->nr_running = 0
-  dl_server_start()
-    [...]
-    add_nr_running() // rq->nr_running = 1
-  add_nr_running() // rq->nr_running = 2
-[switch to cpuhp, waiting on balance_hotplug_wait()]
-rcuwait_wait_event(rq->nr_running == 1 && ...) // failed, rq->nr_running=2
-  schedule() // wait again
+Tested on:
 
-This doesn't make sense to count one single task twice on
-rq->nr_running. So fix this.
+commit:         e9ef70b2 RDNA/rxe: Fix rxe_skb_tx_dtor problem
+git tree:       https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
+console output: https://syzkaller.appspot.com/x/log.txt?x=122183d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
+dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
 
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
- kernel/sched/deadline.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index ad45a8fea245..59fb178762ee 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -1894,7 +1894,9 @@ void inc_dl_tasks(struct sched_dl_entity *dl_se, struct dl_rq *dl_rq)
- 	u64 deadline = dl_se->deadline;
- 
- 	dl_rq->dl_nr_running++;
--	add_nr_running(rq_of_dl_rq(dl_rq), 1);
-+
-+	if (!dl_server(dl_se))
-+		add_nr_running(rq_of_dl_rq(dl_rq), 1);
- 
- 	inc_dl_deadline(dl_rq, deadline);
- }
-@@ -1904,7 +1906,9 @@ void dec_dl_tasks(struct sched_dl_entity *dl_se, struct dl_rq *dl_rq)
- {
- 	WARN_ON(!dl_rq->dl_nr_running);
- 	dl_rq->dl_nr_running--;
--	sub_nr_running(rq_of_dl_rq(dl_rq), 1);
-+
-+	if (!dl_server(dl_se))
-+		sub_nr_running(rq_of_dl_rq(dl_rq), 1);
- 
- 	dec_dl_deadline(dl_rq, dl_se->deadline);
- }
--- 
-2.24.0
-
+Note: no patches were applied.
