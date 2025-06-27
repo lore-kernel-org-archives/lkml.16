@@ -1,151 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE621632C8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3167F2E7644;
 	Fri, 27 Jun 2025 14:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751035495; cv=none; b=tRc+jC2dZnJKX2o2L6KYjfMv3Xjgn8Hg/wrvQ/FkPPPZYwd9RQl7gapFz5vafSQYoWIkBMj0BpPrkTbd3bVOb56+OGyr20wqrO5efrTEe0HBqdA0mUYHQ8YozpYBekTBiUc0URiZXr2Y1+/CIcSWHr7ioy7b7njv+HJBDRmAt+0=
+	t=1751035497; cv=none; b=TaxpQ/4GKi4hOAjXDxWPqatfcrp82hDvm66BpqETxcWeUQe7UHDfOnov5SjfO1dFJ2WATBG5eZiWiHkx5C7uGe5lWeN5ZdKP3JSdIxqOJxsIw/gS+lxIbbsMX4UxKV05kRo7gAalRTQ4FpzleXujE0n+VdKIrZq78axtFrSMk1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751035495; c=relaxed/simple;
-	bh=BbRHpwFDS8oG4qb080zfed8GL0QZmzDg+bshXX1ksd0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gb96nxx8zj73xvA3ofG6v8gD1ckF7e+ClSl5V+vevE4V+Yj62ZId4lxlUBxTS0pgP2xv894KNfgK0ldLKkGHSY/q4gbSWwBBIBwIkfidACxeP/jySzXRJMhMAA9gGweAfUlaajZIDo7ufhz2fCIGck03VE6TXj/JPkQBibvPa9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZMgE3NEV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751035497; c=relaxed/simple;
+	bh=wB2dQL35c8imjz8aUYEkv+Kk0qxUmqHONiTsdy+0DVQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=anCiWA5x5/ogKkma1SWul/8W7iit5IXeLUUAaezuFoa2Gtycj+24qfeyyQpTJno4B6lTlm5yYpYLwhFDvRAtxvLdDaf3im3B7Dymboh2h/Q4ilgD3/M8Lzm24kCSeeuLubR6FKDm5f6C698v2djKwo5ncLBnM/2DWLD8XPu87Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CiPqq0Bg; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZMgE3NEV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0695FC4CEE3;
-	Fri, 27 Jun 2025 14:44:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751035495;
-	bh=BbRHpwFDS8oG4qb080zfed8GL0QZmzDg+bshXX1ksd0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZMgE3NEVYmuSOTFzuel/GH63fs9C0k/cIxyKvZvuBcrRW3B3x0nMJ5c/jMHzSPHeH
-	 pyBkYzlzXzkyU0TytQ76R0w4c5QXnmCTEbpBlhLnULtQ6tyJXnDXCgn2wmD3bYPHOU
-	 WXNpRQDbOrzSsG7YeixDwO+eBLfwKG4pIjZ37IF8JVwAMEP6s8l65uiH8R6jm0jXJH
-	 uoWl9X9p0ROjDy/BkV7XHU3kaic8cmfNKUX4B9jowURrG0JyKk/u5Ll31tl6dHJQ7H
-	 IkLvcLIH6UjUKWMCAP+1KsQDzD5BbzkoHFVE+38iMXdlFPGfPdE+Jo6EImb4908s7k
-	 5h5WFvUExrSog==
-Message-ID: <efa167d1-a5f3-47cd-855d-250f41a5e883@kernel.org>
-Date: Fri, 27 Jun 2025 16:44:45 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CiPqq0Bg"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6facf4d8e9eso24144226d6.1;
+        Fri, 27 Jun 2025 07:44:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751035495; x=1751640295; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WuWs3j1x7+EnEWhudL7zxC8HxyHZbbIVHszRV1zTF6s=;
+        b=CiPqq0Bg41fA+gtRBVNoy9OynHMKX6Kubeb77PzfJT+ITZ9v4YiLUpQ5zPvPFmDrzC
+         Ulka3opPhn4Wo3/yvwtwr6Y6zrlBZQFNKXmcbaVbDCGRqll4PJsqvoDlmZQkajGIQhO0
+         Gg1kVD+IiDDULzP5b55ZN3ZvphtxUn9HTWgxPk8xLvJ7CfllDjkgcO+W5aO2TgAUWK0/
+         9z8wKQ+8wccLVPy2O0xOrNKCNnYSdJ4MX65wmU3sZwMTaAWKOMkl0IGBldgKhCD/rXW+
+         0DTMrbXERcsUQKeqy5h9bvr9wlU2aXrfeEYhLKXmn0/TO3krY0nIJcEssc5ymtYCSCF2
+         rDWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751035495; x=1751640295;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WuWs3j1x7+EnEWhudL7zxC8HxyHZbbIVHszRV1zTF6s=;
+        b=Xem64bg2/Oj7xOkPkfHlL2VM1DpQHpaYH7fb+dKOsXSKniis5nTqGH2edxIOMaAwB3
+         3p8uf64ZVpVfTFj/hg1SpHeOjwQtSwwiIHv2vjPqapM0o3Q+21F/EMXH/hNz28SYDMUV
+         cvb1is1PX1EbUEE4C1DZTigaskenhFLk3dVu7MEnl4okLml2ihsH3dl7UTiNm+FwczGI
+         V+HwP38AQn+xzbFR6c3HN2lw8elxzJbcy5SudTmwse3SxcXAZhwTOlDPIxeT9d/Ktlg3
+         lDbvM0SgD98NC7bG95g/x86WGJJuAKiCBhArA892aiYjkp2gA1ZnyRprkwTyi1ceGSx1
+         qzfw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7JUIseCILH1PLVeNamHo+7tnnYFJ3bNgUCgxrF89mywrhvrqb+XqhMEeVs9dzJP/WMtW/Vl2aJqrQLEuPl+g=@vger.kernel.org, AJvYcCXUIrsYtoGyz9SalRyWkRhPuXIjazCg3FF6OIh6ZehYLed5FQqsz2yUXQDB2blqS+yqUkJYu8uKnTsA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz38MPC/m5vXjyTZ2MendQ/2l8TSbfR+ux4g15Rv/TBgnFFv6kx
+	e2rJtwBjg22S7zeB88C39ynfqCRaeYtxjteb27g6KUtI3lXlv9+CT7Xh
+X-Gm-Gg: ASbGncvE/6L9yDZRT5+uH9oJnASypStrSO9Oe58ceDCGgv/hx0PLjEMH8uGPHdiab7e
+	7t9rmJNnl1vL4eVCoTaUvFJwNinXRzyCOQdgd1xHtQskPgAHbMRz5Fhh0XB849/pb/nLU7Q2xrG
+	x0x5SeUOaiC83x5hZOFfKvkBGsVpN8qTFS8Z9kWR0Nmt/D4FYre4AltPJsSbeCS8D/peI36xvE5
+	MyHc8wf+6s/6tCzT7HzX1TRrWh+ngXEb4DYHxdNTYshBbSandlJDLiUjc3Hu8zWBZUUTINuGIm5
+	Am6NFo+IQX2DN7qhfusCko10Msv5EnWkuaGUtoHCIiHUFwsO9Wyf7qunbH1m/ofymwRjr3fagN1
+	L7qovuvwqDgLg4eHZEQvcJrJILk3NuAE64y9/iZCAFsQ7JMWl8Jx3
+X-Google-Smtp-Source: AGHT+IEUuwUXgo2OeUL457R+n35acysC8d/++BJCeB5mNVOencHsLALChCWLXr3tQwUpPpTD/emPDg==
+X-Received: by 2002:ad4:576c:0:b0:6e8:f4d3:e8a5 with SMTP id 6a1803df08f44-6ffffd79be6mr64502026d6.15.1751035495022;
+        Fri, 27 Jun 2025 07:44:55 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd771acfe6sm21357226d6.31.2025.06.27.07.44.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 07:44:54 -0700 (PDT)
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfauth.phl.internal (Postfix) with ESMTP id C03ECF40066;
+	Fri, 27 Jun 2025 10:44:53 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Fri, 27 Jun 2025 10:44:53 -0400
+X-ME-Sender: <xms:Za5eaAVF4SuboNZjcMJ9rdBGSPX_5cHdfbiSeicrA3wqcG_W8L2IAw>
+    <xme:Za5eaEn9flFN2ZT8DQEQqF1C53qbDpuaABIgKYNSE5mgtcrnsB9vEeoZlEhW8cq8q
+    eidtsjfn5p5_nX9ng>
+X-ME-Received: <xmr:Za5eaEbGTY-KHkU-PX2sPFB734tKCambWcvaUzeYKrINnfuiTR94fG8Zwg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdeffeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgv
+    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
+    hnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueevieduffeivden
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquh
+    hnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudej
+    jeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrd
+    hnrghmvgdpnhgspghrtghpthhtohepvdeipdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
+    hugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhu
+    shhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    eplhhkmhhmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidq
+    rghrtghhsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdr
+    tghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhope
+    gsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomh
+X-ME-Proxy: <xmx:Za5eaPW7q6Vm8vQlEADyJOfkpYnVLCxMpNksemrPxOzEGJE7uM8k9w>
+    <xmx:Za5eaKnpHM2jAJxSluf5PfN1C7hDNUk8A5i_tdNqVLgC8JFW7gZ_Gg>
+    <xmx:Za5eaEfv78VoW3DYO3PFYqvODKwkYh3DRXA0sLBdtlnUrlaFln7CKg>
+    <xmx:Za5eaME8NHJKzekGkjLzGCIinLX4t9iLWofJN-_c_ZSS35kE1zIzmg>
+    <xmx:Za5eaAkRcPceVK611x3G6DFFFJs7q4BQ7s4NZYWOlLOqe9Lg3JK1QeRH>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 27 Jun 2025 10:44:53 -0400 (EDT)
+Date: Fri, 27 Jun 2025 07:44:52 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	lkmm@lists.linux.dev, linux-arch@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 03/10] rust: sync: atomic: Add ordering annotation
+ types
+Message-ID: <aF6uZLX1zr2MP6Ne@Mac.home>
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+ <W3facY85E7FjV5y6_67OMqPUz1-Vubr8TpYgFCgXNl8GMh1oM6_bF9V94Kl_oZsdyCQSrxm5WExUmztE3pJ_BQ==@protonmail.internalid>
+ <20250618164934.19817-4-boqun.feng@gmail.com>
+ <87wm8yznkt.fsf@kernel.org>
+ <aF6sBmgTmdM5ZoB3@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] dt-bindings: display: samsung,exynos7-decon: add
- properties for iommus and ports
-To: Kaustabh Chakraborty <kauschluss@disroot.org>
-Cc: Inki Dae <inki.dae@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>,
- Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Alim Akhtar <alim.akhtar@samsung.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>,
- Ajay Kumar <ajaykumar.rs@samsung.com>, Akshu Agrawal <akshua@gmail.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250627-exynosdrm-decon-v3-0-5b456f88cfea@disroot.org>
- <20250627-exynosdrm-decon-v3-1-5b456f88cfea@disroot.org>
- <20250627-literate-talented-panda-cbac89@krzk-bin>
- <85c3658fdfa90636caac3b3fce295915@disroot.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <85c3658fdfa90636caac3b3fce295915@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aF6sBmgTmdM5ZoB3@Mac.home>
 
-On 27/06/2025 15:44, Kaustabh Chakraborty wrote:
->>> a/Documentation/devicetree/bindings/display/samsung/samsung,exynos7-decon.yaml
->>> +++ 
->>> b/Documentation/devicetree/bindings/display/samsung/samsung,exynos7-decon.yaml
->>> @@ -80,6 +80,14 @@ properties:
->>>        - const: vsync
->>>        - const: lcd_sys
->>>
->>> +  iommus:
->>> +    maxItems: 1
->>> +
->>> +  ports:
->>> +    $ref: /schemas/graph.yaml#/properties/ports
->>> +    description:
->>> +      Contains a port which is connected to mic or dsim node.
->>
->> You need to list and describe the ports.
+On Fri, Jun 27, 2025 at 07:34:46AM -0700, Boqun Feng wrote:
+> On Thu, Jun 26, 2025 at 02:36:50PM +0200, Andreas Hindborg wrote:
+> [...]
+> > > +/// The trait bound for annotating operations that should support all orderings.
+> > > +pub trait All: internal::OrderingUnit {}
+> > 
+> > I think I would prefer `Any` rather than `All` here. Because it is "any
+> > of", not "all of them at once".
+> > 
 > 
-> -    description:
-> -      Contains a port which is connected to mic or dsim node.
-> +    properties:
-> +      port@0:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description:
-> +          Input port which is connected to either a Mobile Image
-> +          Compressor (MIC) or a DSI Master device.
-
-
-If this is only one port, then just 'port' property, but I have doubts
-it should be one, because even you mentioned two - MIC could be the
-input and MIPI DSIM would be the output.
-
-Maybe if the MIC is integral part, it would not have been an input, but
-then only 'port'.
-
+> Good idea! Changed. Thanks!
 > 
-> I assume you want something like this?
-> Is the formatting correct? Should there be a space between
-> ports:$ref and ports:properties?
 
-Look at toshiba,tc358768.yaml or the simple-bridge (except you should
-name the input and output ports).
+And I realized I can unify `Any` with `OrderingUnit`, here is the what I
+have now:
 
+mod internal {
+    /// Sealed trait, can be only implemented inside atomic mod.
+    pub trait Sealed {}
 
+    impl Sealed for super::Relaxed {}
+    impl Sealed for super::Acquire {}
+    impl Sealed for super::Release {}
+    impl Sealed for super::Full {}
+}
 
-Best regards,
-Krzysztof
+/// The trait bound for annotating operations that support any ordering.
+pub trait Any: internal::Sealed {
+    /// Describes the exact memory ordering.
+    const TYPE: OrderingType;
+}
+
+impl Any for Relaxed {
+    const TYPE: OrderingType = OrderingType::Relaxed;
+}
+
+impl Any for Acquire {
+    const TYPE: OrderingType = OrderingType::Acquire;
+}
+
+impl Any for Release {
+    const TYPE: OrderingType = OrderingType::Release;
+}
+
+impl Any for Full {
+    const TYPE: OrderingType = OrderingType::Full;
+}
+
+Better than what I had before, thanks!
+
+Regards,
+Boqun
