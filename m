@@ -1,375 +1,154 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7922F2E7184
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 14:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB82B2E54DD
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 14:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751034900; cv=none; b=t3jKVg7vvap0o8P5Nt2guJ9LwMCccA1XtS3MThuQQPuRm+nWrh3xYJZWRSjnTLE4QpRIuHczMmNNr685pqC9BI2NzFsvQ6zF228svmBHuPcqsESKLh6MBSiSYwqvPU6XtFM5UF1fki9Z78AEpqGydJTS5xbzIGY5VI/t9ETxKis=
+	t=1751034909; cv=none; b=iET+YBv6BUBKj8bmFxvyTkZ1yYm06kVSvxcs3mGf5ws/t3x6T8nAiMyYY0bpNFWxmtCl0/02eCDeMK9UP8NCutKgj5CUW87vRt/081JztoHCgyfPVp/O39Hi0maFU8laNHkfnb6KJzPay+pNKwHYDi99hh0voSvXWy4x+pTXjeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751034900; c=relaxed/simple;
-	bh=ptw5/n4Yq68flNkb1+LUzM1uwhmYfc8ueadjeSu+36A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G1XzqnLMLTqtiVDBbA/d68QCVz2pFUpwrj0ZbTZCxycrJxD7/PNpkyD6TsAPLwnLpaFbkRGXmOipM5qlSw1hXY3HNuQl7oZiDva1S9mrsCbHyr/NLg0bcPZRBehPc5C4T+JUZ0L+BtXkF6FSHxq21qtpYS0yzjhJuznD2zJKX3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M7/ETzmQ; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751034909; c=relaxed/simple;
+	bh=Y5pq0cmBvwKZCs/T1QHUOinWdfneN7cBghg4iep1AwQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=is3T+A6hleeP5MXPeWRVvJQPDTB2YAHVbnn388f3+I/jtkUq8aCU/Pftz+mD78Dz+hyOThNVYk7gh1cgSUIsV2ahrw81Rt0nrkCzg6ZAf/ukrYNC2QkDhKmFjcdZNYWjdJ7fNygEDceWK5CdGSQ2O/0x0tl4jKqv5PmtbSHRIGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DJAZ1ILl; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7/ETzmQ"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6fac7147cb8so37094246d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751034897; x=1751639697; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VUWRSrhW18inrM2U55/15P9xJCvGAZ8/b4I9nG6Q2rs=;
-        b=M7/ETzmQYA7a/N0tFTES+UPUOFzQEWoy/1WLwwCVCI7MG2w6HMUo3Wt8gD8aPIqlNF
-         ac60y8n4dXsElZljW8TGaHxzAbS6u5Nvlowegfxo8YgiabwT8IlyxY4EkivEXvqvKCCo
-         Qi7cJogLxYgTxw5bkgE5mfgsWFb/M7w34f8f4GK8Fqk02BMwbSETg334laIq384aDg1r
-         l+n/MHxN9TIMHfbhgF9gw+frUnpCd86lSV5BajhrR8XbiJux1XMSuo5dpMjZZff6LTxE
-         T5pSnFaILn4SqWYphHonI5n+/HIuDHmuiUw1TTt2MPaJv0AHtOQZewvXBWf6rQANjOZL
-         I1yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751034897; x=1751639697;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VUWRSrhW18inrM2U55/15P9xJCvGAZ8/b4I9nG6Q2rs=;
-        b=CYjxntXMDF3t36094zj5Ef5PjraB3DYtysRzaIh7QP5gh4nJt9mi5bVplgra3OkH6e
-         nx0gWuFO8t3vCne6nViqXEn8fGCrmTeY07q837WISe1gJ1hj/Aig7MvDiAwCTWXyNnOF
-         zKQ9xARWQEJOs3NMJDTW7WSN1IuPWtXtrYwwjWWublmuKLQLU3dMzZjBKBJerQbNK7tz
-         a8tBPokPmZO5DYXX0kuYilhD7KQ/BtR215q5yuh3MQ+NS8MIDAG/i3dNffylvrDZOb2E
-         XN8xZEYDmv00GkeFle//hjstJ+smXtMdYInj+s6Dc0Da6wju50LrvShBG8m7vv0T7lEm
-         dQuQ==
-X-Gm-Message-State: AOJu0YyQqgAdYjYrenELWQ9iDTLQqLmPqt2oWoEt0VIFLmXxXF/LAZUc
-	iMO05vnKBcOeaHsCmNsgOWPBruO0ggVY9kNCZkRtBME+ZE1uWJNuKeWOPpLzJa/wdAdKwzgRkxg
-	qzys5tDIk04eJT1LDgJ630vAe09esosg=
-X-Gm-Gg: ASbGncuDJo1CUlkd754id+uXuVR3UKtRfmsZ7vtvDhn2ULimOdC0Sv9rwtFQ7uD/CSO
-	0CeFspIolWyL68jXEMSU9aizJsdjaiPtED6eMdzXYarzYFpUPjc3aIneVJin9BMYuIpK8YUaV/8
-	45MS8/m5Dq3llCP3nF6bKw0py0kXTI8spFncmEq3E8zpNSYm+u8bhCeb0aIw==
-X-Google-Smtp-Source: AGHT+IHOAtB2bfJJ+OBxDpC50T5Yf6mq7R0xq/g2hcK5EODQbk489K8wapErIHNZN1aBexXDwQCdR9sEqXbd6EFIgUs=
-X-Received: by 2002:a05:6214:2f90:b0:6fa:c2a4:f806 with SMTP id
- 6a1803df08f44-700029155eamr56151186d6.29.1751034897174; Fri, 27 Jun 2025
- 07:34:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DJAZ1ILl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751034907; x=1782570907;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Y5pq0cmBvwKZCs/T1QHUOinWdfneN7cBghg4iep1AwQ=;
+  b=DJAZ1ILlP6ypW/ijUfpFYTnCYzRuYgCkmDN67gOpXJv3pFvW4gfzpe31
+   puVjmTrc7cP/5JOp2gv1m7BeIPuIE1r6O1iyUaR9R/m5XnobAx+J3KHdC
+   6mo0onwwWuDfSGgCunPRkuz6P4G/Kp/G17egtelDIHlIoFVIDhVsUtzXx
+   ix3m8V7xuClti63RF0+YqNXHXG6dj6FMb66cefa7tuA9B6ezDX/M5F7np
+   n2LzP99U1tNwNzgKRwBXD8shXHx68h/NEpCcNBmtgGTGdlpb67pCDbK3H
+   aGh9mMv+TwV/e/xfAwANXNeIz0N66PLzGPudvUMNoJ44S+3uUii5K9ulV
+   w==;
+X-CSE-ConnectionGUID: IZkZ2JAHTg61pNezPUzm9A==
+X-CSE-MsgGUID: F1fIS8NSR+KiW+9bMEzB3Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="64407397"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="64407397"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 07:35:07 -0700
+X-CSE-ConnectionGUID: WJjpsbn2Shm2X2M88WYNXg==
+X-CSE-MsgGUID: 6k5xHte9SnOqjHGr5Pnnpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="157359850"
+Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.109.66]) ([10.125.109.66])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 07:35:07 -0700
+Message-ID: <b894739e-a0e1-4451-92c5-8bc577d3979b@intel.com>
+Date: Fri, 27 Jun 2025 07:35:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627115510.3273675-1-david@redhat.com> <20250627115510.3273675-5-david@redhat.com>
-In-Reply-To: <20250627115510.3273675-5-david@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Fri, 27 Jun 2025 22:34:44 +0800
-X-Gm-Features: Ac12FXzCpNegqkO37t2dgAKJKb6-obTMh0G-SuUe8uFTcIhWOpR4z4mbSRbmI6Y
-Message-ID: <CABzRoyarK=NnwXis3PUAC_x4YpULUQv_jq-upNpnNQhAPypR1w@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] mm: remove boolean output parameters from folio_pte_batch_ext()
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Jann Horn <jannh@google.com>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
-	Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
-	Pedro Falcato <pfalcato@suse.de>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH V2 05/13] perf/x86: Support XMM register for non-PEBS
+ and REGS_USER
+To: kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+ dave.hansen@linux.intel.com, irogers@google.com, adrian.hunter@intel.com,
+ jolsa@kernel.org, alexander.shishkin@linux.intel.com,
+ linux-kernel@vger.kernel.org
+Cc: dapeng1.mi@linux.intel.com, ak@linux.intel.com, zide.chen@intel.com,
+ mark.rutland@arm.com, broonie@kernel.org, ravi.bangoria@amd.com
+References: <20250626195610.405379-1-kan.liang@linux.intel.com>
+ <20250626195610.405379-6-kan.liang@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250626195610.405379-6-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 27, 2025 at 7:55=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> Instead, let's just allow for specifying through flags whether we want
-> to have bits merged into the original PTE.
->
-> For the madvise() case, simplify by having only a single parameter for
-> merging young+dirty. For madvise_cold_or_pageout_pte_range() merging the
-> dirty bit is not required, but also not harmful. This code is not that
-> performance critical after all to really force all micro-optimizations.
-
-IIRC, this work you've wanted to do for a long time - maybe even a year ago=
-?
-
-Less conditional logic is always a good thing ;)
-
-Thanks,
-Lance
-
->
-> As we now have two pte_t * parameters, use PageTable() to make sure we
-> are actually given a pointer at a copy of the PTE, not a pointer into
-> an actual page table.
->
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/internal.h | 58 +++++++++++++++++++++++++++++++--------------------
->  mm/madvise.c  | 26 +++++------------------
->  mm/memory.c   |  8 ++-----
->  mm/util.c     |  2 +-
->  4 files changed, 43 insertions(+), 51 deletions(-)
->
-> diff --git a/mm/internal.h b/mm/internal.h
-> index 6000b683f68ee..fe69e21b34a24 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -208,6 +208,18 @@ typedef int __bitwise fpb_t;
->  /* Compare PTEs honoring the soft-dirty bit. */
->  #define FPB_HONOR_SOFT_DIRTY           ((__force fpb_t)BIT(1))
->
-> +/*
-> + * Merge PTE write bits: if any PTE in the batch is writable, modify the
-> + * PTE at @ptentp to be writable.
-> + */
-> +#define FPB_MERGE_WRITE                        ((__force fpb_t)BIT(2))
+On 6/26/25 12:56, kan.liang@linux.intel.com wrote:
+> +static void x86_pmu_get_ext_regs(struct x86_perf_regs *perf_regs, u64 mask)
+> +{
+> +	struct xregs_state *xsave = per_cpu(ext_regs_buf, smp_processor_id());
 > +
-> +/*
-> + * Merge PTE young and dirty bits: if any PTE in the batch is young or d=
-irty,
-> + * modify the PTE at @ptentp to be young or dirty, respectively.
-> + */
-> +#define FPB_MERGE_YOUNG_DIRTY          ((__force fpb_t)BIT(3))
+> +	if (WARN_ON_ONCE(!xsave))
+> +		return;
 > +
->  static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
->  {
->         if (!(flags & FPB_HONOR_DIRTY))
-> @@ -220,16 +232,11 @@ static inline pte_t __pte_batch_clear_ignored(pte_t=
- pte, fpb_t flags)
->  /**
->   * folio_pte_batch_ext - detect a PTE batch for a large folio
->   * @folio: The large folio to detect a PTE batch for.
-> + * @vma: The VMA. Only relevant with FPB_MERGE_WRITE, otherwise can be N=
-ULL.
->   * @ptep: Page table pointer for the first entry.
-> - * @pte: Page table entry for the first page.
-> + * @ptentp: Pointer at a copy of the first page table entry.
->   * @max_nr: The maximum number of table entries to consider.
->   * @flags: Flags to modify the PTE batch semantics.
-> - * @any_writable: Optional pointer to indicate whether any entry except =
-the
-> - *               first one is writable.
-> - * @any_young: Optional pointer to indicate whether any entry except the
-> - *               first one is young.
-> - * @any_dirty: Optional pointer to indicate whether any entry except the
-> - *               first one is dirty.
->   *
->   * Detect a PTE batch: consecutive (present) PTEs that map consecutive
->   * pages of the same large folio in a single VMA and a single page table=
-.
-> @@ -242,28 +249,26 @@ static inline pte_t __pte_batch_clear_ignored(pte_t=
- pte, fpb_t flags)
->   * must be limited by the caller so scanning cannot exceed a single VMA =
-and
->   * a single page table.
->   *
-> + * Depending on the FPB_MERGE_* flags, the pte stored at @ptentp will
-> + * be modified.
-> + *
->   * This function will be inlined to optimize based on the input paramete=
-rs;
->   * consider using folio_pte_batch() instead if applicable.
->   *
->   * Return: the number of table entries in the batch.
->   */
->  static inline unsigned int folio_pte_batch_ext(struct folio *folio,
-> -               pte_t *ptep, pte_t pte, unsigned int max_nr, fpb_t flags,
-> -               bool *any_writable, bool *any_young, bool *any_dirty)
-> +               struct vm_area_struct *vma, pte_t *ptep, pte_t *ptentp,
-> +               unsigned int max_nr, fpb_t flags)
->  {
-> +       bool any_writable =3D false, any_young =3D false, any_dirty =3D f=
-alse;
-> +       pte_t expected_pte, pte =3D *ptentp;
->         unsigned int nr, cur_nr;
-> -       pte_t expected_pte;
-> -
-> -       if (any_writable)
-> -               *any_writable =3D false;
-> -       if (any_young)
-> -               *any_young =3D false;
-> -       if (any_dirty)
-> -               *any_dirty =3D false;
->
->         VM_WARN_ON_FOLIO(!pte_present(pte), folio);
->         VM_WARN_ON_FOLIO(!folio_test_large(folio) || max_nr < 1, folio);
->         VM_WARN_ON_FOLIO(page_folio(pfn_to_page(pte_pfn(pte))) !=3D folio=
-, folio);
-> +       VM_WARN_ON(virt_addr_valid(ptentp) && PageTable(virt_to_page(pten=
-tp)));
->
->         /* Limit max_nr to the actual remaining PFNs in the folio we coul=
-d batch. */
->         max_nr =3D min_t(unsigned long, max_nr,
-> @@ -279,12 +284,12 @@ static inline unsigned int folio_pte_batch_ext(stru=
-ct folio *folio,
->                 if (!pte_same(__pte_batch_clear_ignored(pte, flags), expe=
-cted_pte))
->                         break;
->
-> -               if (any_writable)
-> -                       *any_writable |=3D pte_write(pte);
-> -               if (any_young)
-> -                       *any_young |=3D pte_young(pte);
-> -               if (any_dirty)
-> -                       *any_dirty |=3D pte_dirty(pte);
-> +               if (flags & FPB_MERGE_WRITE)
-> +                       any_writable |=3D pte_write(pte);
-> +               if (flags & FPB_MERGE_YOUNG_DIRTY) {
-> +                       any_young |=3D pte_young(pte);
-> +                       any_dirty |=3D pte_dirty(pte);
-> +               }
->
->                 cur_nr =3D pte_batch_hint(ptep, pte);
->                 expected_pte =3D pte_advance_pfn(expected_pte, cur_nr);
-> @@ -292,6 +297,13 @@ static inline unsigned int folio_pte_batch_ext(struc=
-t folio *folio,
->                 nr +=3D cur_nr;
->         }
->
-> +       if (any_writable)
-> +               *ptentp =3D pte_mkwrite(*ptentp, vma);
-> +       if (any_young)
-> +               *ptentp =3D pte_mkyoung(*ptentp);
-> +       if (any_dirty)
-> +               *ptentp =3D pte_mkdirty(*ptentp);
-> +
->         return min(nr, max_nr);
->  }
->
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 9b9c35a398ed0..dce8f5e8555cb 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -344,13 +344,12 @@ static inline bool can_do_file_pageout(struct vm_ar=
-ea_struct *vma)
->
->  static inline int madvise_folio_pte_batch(unsigned long addr, unsigned l=
-ong end,
->                                           struct folio *folio, pte_t *pte=
-p,
-> -                                         pte_t pte, bool *any_young,
-> -                                         bool *any_dirty)
-> +                                         pte_t *ptentp)
->  {
->         int max_nr =3D (end - addr) / PAGE_SIZE;
->
-> -       return folio_pte_batch_ext(folio, ptep, pte, max_nr, 0, NULL,
-> -                                  any_young, any_dirty);
-> +       return folio_pte_batch_ext(folio, NULL, ptep, ptentp, max_nr,
-> +                                  FPB_MERGE_YOUNG_DIRTY);
->  }
->
->  static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
-> @@ -488,13 +487,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *=
-pmd,
->                  * next pte in the range.
->                  */
->                 if (folio_test_large(folio)) {
-> -                       bool any_young;
-> -
-> -                       nr =3D madvise_folio_pte_batch(addr, end, folio, =
-pte,
-> -                                                    ptent, &any_young, N=
-ULL);
-> -                       if (any_young)
-> -                               ptent =3D pte_mkyoung(ptent);
-> -
-> +                       nr =3D madvise_folio_pte_batch(addr, end, folio, =
-pte, &ptent);
->                         if (nr < folio_nr_pages(folio)) {
->                                 int err;
->
-> @@ -724,11 +717,7 @@ static int madvise_free_pte_range(pmd_t *pmd, unsign=
-ed long addr,
->                  * next pte in the range.
->                  */
->                 if (folio_test_large(folio)) {
-> -                       bool any_young, any_dirty;
-> -
-> -                       nr =3D madvise_folio_pte_batch(addr, end, folio, =
-pte,
-> -                                                    ptent, &any_young, &=
-any_dirty);
-> -
-> +                       nr =3D madvise_folio_pte_batch(addr, end, folio, =
-pte, &ptent);
->                         if (nr < folio_nr_pages(folio)) {
->                                 int err;
->
-> @@ -753,11 +742,6 @@ static int madvise_free_pte_range(pmd_t *pmd, unsign=
-ed long addr,
->                                         nr =3D 0;
->                                 continue;
->                         }
-> -
-> -                       if (any_young)
-> -                               ptent =3D pte_mkyoung(ptent);
-> -                       if (any_dirty)
-> -                               ptent =3D pte_mkdirty(ptent);
->                 }
->
->                 if (folio_test_swapcache(folio) || folio_test_dirty(folio=
-)) {
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 43d35d6675f2e..985d09bee44fd 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -972,10 +972,9 @@ copy_present_ptes(struct vm_area_struct *dst_vma, st=
-ruct vm_area_struct *src_vma
->                  pte_t *dst_pte, pte_t *src_pte, pte_t pte, unsigned long=
- addr,
->                  int max_nr, int *rss, struct folio **prealloc)
->  {
-> +       fpb_t flags =3D FPB_MERGE_WRITE;
->         struct page *page;
->         struct folio *folio;
-> -       bool any_writable;
-> -       fpb_t flags =3D 0;
->         int err, nr;
->
->         page =3D vm_normal_page(src_vma, addr, pte);
-> @@ -995,8 +994,7 @@ copy_present_ptes(struct vm_area_struct *dst_vma, str=
-uct vm_area_struct *src_vma
->                 if (vma_soft_dirty_enabled(src_vma))
->                         flags |=3D FPB_HONOR_SOFT_DIRTY;
->
-> -               nr =3D folio_pte_batch_ext(folio, src_pte, pte, max_nr, f=
-lags,
-> -                                    &any_writable, NULL, NULL);
-> +               nr =3D folio_pte_batch_ext(folio, src_vma, src_pte, &pte,=
- max_nr, flags);
->                 folio_ref_add(folio, nr);
->                 if (folio_test_anon(folio)) {
->                         if (unlikely(folio_try_dup_anon_rmap_ptes(folio, =
-page,
-> @@ -1010,8 +1008,6 @@ copy_present_ptes(struct vm_area_struct *dst_vma, s=
-truct vm_area_struct *src_vma
->                         folio_dup_file_rmap_ptes(folio, page, nr, dst_vma=
-);
->                         rss[mm_counter_file(folio)] +=3D nr;
->                 }
-> -               if (any_writable)
-> -                       pte =3D pte_mkwrite(pte, src_vma);
->                 __copy_present_ptes(dst_vma, src_vma, dst_pte, src_pte, p=
-te,
->                                     addr, nr);
->                 return nr;
-> diff --git a/mm/util.c b/mm/util.c
-> index d29dcc135ad28..19d1a5814fac7 100644
-> --- a/mm/util.c
-> +++ b/mm/util.c
-> @@ -1197,6 +1197,6 @@ EXPORT_SYMBOL(compat_vma_mmap_prepare);
->  unsigned int folio_pte_batch(struct folio *folio, pte_t *ptep, pte_t pte=
-,
->                 unsigned int max_nr)
->  {
-> -       return folio_pte_batch_ext(folio, ptep, pte, max_nr, 0, NULL, NUL=
-L, NULL);
-> +       return folio_pte_batch_ext(folio, NULL, ptep, &pte, max_nr, 0);
->  }
->  #endif /* CONFIG_MMU */
-> --
-> 2.49.0
->
->
+> +	xsaves_nmi(xsave, mask);
+
+This makes me a little nervous.
+
+Could we maybe keep a mask around that reminds us what 'ext_regs_buf'
+was sized for and then ensure that no bits in the passed-in mask are set
+in that?
+
+I almost wonder if you want to add a
+
+	struct fpu_state_config fpu_perf_cfg;
+
+I guess it's mostly overkill for this. But please do have a look at the
+data structures in:
+
+	arch/x86/include/asm/fpu/types.h
+
+> +	if (mask & XFEATURE_MASK_SSE &&
+> +	    xsave->header.xfeatures & BIT_ULL(XFEATURE_SSE))
+> +		perf_regs->xmm_space = xsave->i387.xmm_space;
+> +}
+
+There's a lot going on here.
+
+'mask' and 'xfeatures' have the exact same format. Why use
+XFEATURE_MASK_SSE for one and BIT_ULL(XFEATURE_SSE) for the other?
+
+Why check both? How could a bit get into 'xfeatures' without being in
+'mask'?
+
+How does the caller handle the fact that ->xmm_space might be written or
+not?
