@@ -1,61 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626DB21772D;
-	Fri, 27 Jun 2025 06:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3265821772D;
+	Fri, 27 Jun 2025 06:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751007420; cv=none; b=TtioHtDIRqecaJW8ncsP9n3p+fsofmRPC1wYVWMmtv2zLik3tDVqY94Mvi+NrSSoQnCiUVNSGQseawuf15dXMMWQE7FTg6Wa34/pXsO7Uv2zL9gX2sq01h9HLTcYuxdaRWF27YCDjlblUBq6klmKFWzLnG9PZLDm+cuFUORUGmE=
+	t=1751007468; cv=none; b=N0lLh+TMqtEn7IiJfGLiDeg7wSWRtYSwVU1bBtSP1bjJRlQLpVmbK2o2OJetxS3fa2atU10aaU36zUmxwevliX+4RhkqnIto3WwdDmYRK48CVQDFXt02Y1Ibm1oI7HEGpS5lhD/gY8gpEUxLy1kEd5YUCYuwT7Q5PB+mI9eUQjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751007420; c=relaxed/simple;
-	bh=RUJsjmSGQPxvlILjO7Cg04n19x/+TREx8d9eLpvfC+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dWp+MOWAWegdrQqyDNkbv44k1iR31/ZcOnKoRWuWS88/Gd7/7TbtbDAr/VHLNlOBG+uVOUEOIMN1fUiuzqF4KHB00WKVJU8fVDu9Ia2ixVgVqflX9AieSiZVGt2CsCS6Ioi5ogXEiEQkxU9sQDL5RTbrDkgx6ju3b7YjRCjppzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rfxPO0xF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751007468; c=relaxed/simple;
+	bh=Uo4olL5yDw0YFadlO02NXTHa38+zQf05vr91IvJyStY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XiF9RLnj0btB0ZNJ9MXizVRo9zEwman7nG02be/LXLETFK5krzl9BdCX37sZq9Ik/ImGaUC3+6O52GbTAppwwRuPXlNDsGMXnTMRcEuo8yVapRiAeBf1jbWlVuHc5UDiTrmpqw/XdZL89suwyInV4kfMmX2YgxBVTr+QPjFiR+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UegOdAV/; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rfxPO0xF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20C8FC4CEE3;
-	Fri, 27 Jun 2025 06:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751007420;
-	bh=RUJsjmSGQPxvlILjO7Cg04n19x/+TREx8d9eLpvfC+w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rfxPO0xFDf8iwX3L/LLjc4NqWbApFKokjGOYNiMubo9FKIcNmC6O57xiZqOXFIpOn
-	 44ZoqG769urqZ7N0S8Q7zN9XdDK+f4nbkxaRMwH3VX0/r2VdI4qBRrIfvtriLnwYBu
-	 40n3Wfind6dDtwrZVQSXWZIE07lPRnbWglF6SGpmSmwiecfa/gu7inEKurwDX8lD6g
-	 ihhJnrbD1l3urWdr4JMN1T88Tt8t+Ga5ff6AcFifAam6a7ze303Mg6LEu3+bDtaVOy
-	 GFzo9jYJCvrxVV1RtNJ8yObHwceUaSBIPCngFi+6sVIwJ9nUzyDTwhzZmcyosyvs7H
-	 RKFMlp7Pahwuw==
-Date: Fri, 27 Jun 2025 08:56:55 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Jorge Marques <jorge.marques@analog.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	gastmaier@gmail.com
-Subject: Re: [PATCH v4 1/2] dt-bindings: i3c: Add adi-i3c-master
-Message-ID: <20250627-steadfast-ferret-of-expertise-5c8ff2@krzk-bin>
-References: <20250626-adi-i3c-master-v4-0-3846a1f66d5e@analog.com>
- <20250626-adi-i3c-master-v4-1-3846a1f66d5e@analog.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UegOdAV/"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-acb5ec407b1so314972666b.1;
+        Thu, 26 Jun 2025 23:57:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751007464; x=1751612264; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M4eds/rIFq5zfoX/63Svgj/d7xGIUzwYOHndRisqlgQ=;
+        b=UegOdAV/OeQzs2NlpRfgit54yD3qmDqLUfGPlGV38BLg336iljLWmtaJ/WXbS9A60G
+         x/+rTHkXo6QrNOyd+draerBE3np7oJDS981qghwuYTD4ArzXk+ZQeTlB0ak9ZOL0U0zV
+         a7ZtBPHT6g3sZeIKb/+GnTsurDslsAq0T9up4XUi8k5C7jq32PtnPlmNy/Vo4abJo9hf
+         K6a5CoXByxbJ4pbOdX7y/KhZzPLS05aOZ1JjJgtcwf3W0U0LwUrdpYCa1CyHAXrvBaRc
+         iMUtPgBM7u/KaDCaL+YrPQfE4X6YcAXjUJBRa6ZpU57daJmXnqZW3v7Ztkg8Iao3Qqw2
+         7wSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751007464; x=1751612264;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M4eds/rIFq5zfoX/63Svgj/d7xGIUzwYOHndRisqlgQ=;
+        b=HrxgBUcCu6pe6T/ohscZNK+Ge6fZnE+PqZoruvsK9Ks/K4A1jZves4+K9IH1F5eyMB
+         AncbLRUpqTkdtt5hJ+JNogpnzeZbVHaqTnO9OdUxFBLbrF2xYx8eN/rSMfUhELXIo2KV
+         ehcbQx9TRcIe1WZ1VZBRnxmq/j193/5XJXKlCDZnCIqb00H5GAdrXFSVkj3Hh+76Lq/e
+         pNlBzx8JJ7y5uFFbmsuoGnx6iDmMzifb5+RaLeBeUNJ0K2TOrcO7xlYnQKLMpiS8Oe32
+         8ezdrtndCpCztNSRsnr5uHRuOiw/lfv8P4V5ArrQYlOtdMw5whoXoDMlEiHgaSXgbGbR
+         HnLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWxlisPyfaqrSFX8EKDdpXX8KUmbBKl27xEwj89fTpoZxdwvNxy+OqcfXe+ajvyiN0O4K8GHSVArUnWYGz7@vger.kernel.org, AJvYcCXQiMPYuRKit7WDUK8+NU8Xw4win9740bE4ExEtLpj+qtQDRDpYtqnT3nPQnkkTR5yDENApbziNmng=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ+rvLcvwCVK4mWYS8iyBQzaEH/wNWY6Ya1w5zxzYCwbGsv1LU
+	OqhcHE9ZN2JkLsdMjYs4DYDVPsThkpCMAm+5rIFjjGYmy1HLgWvbVTmcMnv42wqMW3W+qrW5F+d
+	rYZ7b3O/GAot/qVYodqWsgvV6HmgIoGg=
+X-Gm-Gg: ASbGncvSc81TJbl3eJ2P2HMAa3Nh3mG2X5tdI0py9Tdv0JikYfIy0THDTjQCQcfFZHx
+	YHxBY86+vI8cnYJurr9f4zHlxxcZic/XHhV9Ka/aGFiq86rETgVbsoXrkTIn/+1E7RyyuktJsFW
+	8DEYoK3UMyPS4qYeuq84InWAJFOVsDWEGFge/O06Z5BVMXMQ==
+X-Google-Smtp-Source: AGHT+IHJSsyMeqRr5intkwBWnKyNtk3g0mX7tSg7DFc2b0s9uH+82/Y88uv28Rky7EHgItkJ470zIsHiOfZBX18e8pM=
+X-Received: by 2002:a17:906:c154:b0:adb:229f:6b71 with SMTP id
+ a640c23a62f3a-ae34fce7aaemr184521966b.5.1751007464308; Thu, 26 Jun 2025
+ 23:57:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250626-adi-i3c-master-v4-1-3846a1f66d5e@analog.com>
+References: <20250404053614.3096769-1-yi.sun@intel.com> <175097809157.79884.15067500318866840512.b4-ty@kernel.org>
+ <aF4YdFZnAWcZlpbW@surfacebook.localdomain> <aF46cRgzYE4N3A25@ysun46-mobl.ccr.corp.intel.com>
+In-Reply-To: <aF46cRgzYE4N3A25@ysun46-mobl.ccr.corp.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 27 Jun 2025 09:57:07 +0300
+X-Gm-Features: Ac12FXz2y3A_ioqrN6rCHgk48H91jo-Ky6pl0Onf28Kg7scL2GJHNLk-quO9dO8
+Message-ID: <CAHp75VciZKX8uyZvYsrG6-ffrZbzDEPU4UH06eh9X23qBC0LYg@mail.gmail.com>
+Subject: Re: [PATCH v2] dmaengine: idxd: Remove __packed from structures
+To: Yi Sun <yi.sun@intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, gordon.jin@intel.com, yi.sun@linux.intel.com, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Fenghua Yu <fenghuay@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 12:07:36PM +0200, Jorge Marques wrote:
-> Add bindings doc for ADI I3C Controller IP core, a FPGA synthesizable IP
-> core that implements the MIPI I3C Basic controller specification.
+On Fri, Jun 27, 2025 at 9:30=E2=80=AFAM Yi Sun <yi.sun@intel.com> wrote:
+>
+> On 27.06.2025 07:05, Andy Shevchenko wrote:
+> >Thu, Jun 26, 2025 at 03:48:11PM -0700, Vinod Koul kirjoitti:
+> >>
+> >> On Fri, 04 Apr 2025 13:36:14 +0800, Yi Sun wrote:
+> >> > The __packed attribute introduces potential unaligned memory accesse=
+s
+> >> > and endianness portability issues. Instead of relying on compiler-sp=
+ecific
+> >> > packing, it's much better to explicitly fill structure gaps using pa=
+dding
+> >> > fields, ensuring natural alignment.
+> >> >
+> >> > Since all previously __packed structures already enforce proper alig=
+nment
+> >> > through manual padding, the __packed qualifiers are unnecessary and =
+can be
+> >> > safely removed.
+> >
+> >[...]
+> >
+> >> Applied, thanks!
+> >
+> >Please, don't or fix it ASAP. This patch is broken in the formal things,
+> >i.e. changelog entry must not disrupt SoB chain. I'm not sure if Stephen=
+'s
+> >scripts will catch this up on Linux Next integration, though.
+> >
+> >--
+> >With Best Regards,
+> >Andy Shevchenko
+> >
+> >
+>
+> Hi Andy
+>
+>  From what I understand, changelog comments are ignored by git am and do =
+not
+> interfere with the SoB chain. They appear after the "---" separator and
+> aren't part of the actual commit message. So it should be safe and won't
+> break anything during the integration.
+>
+> Let me know if there's something I might have missed.
 
-How did you resolve my last comment? I don't see any explanation -
-neither here nor in the binding description. Binding description is
-actually better place, I think now.
+Please, look how it looks in the repository:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git/com=
+mit/?id=3D671a654aecc710a278bdd30cfd2afef2d4e0828f
+This is wrong.
 
-Best regards,
-Krzysztof
 
+--=20
+With Best Regards,
+Andy Shevchenko
