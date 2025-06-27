@@ -1,213 +1,181 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C31521C18A
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA48E21C9E5;
+	Fri, 27 Jun 2025 07:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751010196; cv=none; b=HlYh4Qu4PTVkUKhc+pcfEf+EPRVoXJwZiG4ob2q7peUeJqDN77beUUucez9nUt4xYudhjsNPnbQkvTBZrppy1aPpR2t3LQGu8fsCd+iQXQFMrKmlROSHzuPkLlIfLQTAho9yuEAhVYbwqbtSmBzh2IKF7Lio1CMfVeOrrofbix8=
+	t=1751010278; cv=none; b=F4Cp19cxDJGU9bFSzpekAW+UpdIX55DhBTj3o8Iv3YviCKX9jndoZPvBdCaCBzzYEgnLoV7BceyHCfC0Wl+sKj1Q1whFLqy+SWbPA9TaNl3f5u0JAqFs2K4Akju0OFOkiBOsJe0mBHLw0h+eFWrryUXgI/7ILLWdEVT+lcIulsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751010196; c=relaxed/simple;
-	bh=mcIJFk1BZcqMJ+vhmYyQwN3voqEnRwZ1YCxJxVOwt+8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iylgbOHJGrsrJFrBOn5YC2EjzL1qYXMdZVSK+0NnwPKGiCGxVE76inOSvY16QHIkuuqBadgClRj7g6S520Rb2b8QecMDIjDYPK/+rUWlx/0tHRpd+TJf5oVZCPVQe+KjoY6DoHxD0XUb/wzN0phL0A8E/ESEnG6+k5jbccuzW0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FPBR33B6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mL8n51BQ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FPBR33B6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mL8n51BQ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FPBR33B6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mL8n51BQ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FPBR33B6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mL8n51BQ"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B09752116E;
-	Fri, 27 Jun 2025 07:43:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751010192; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=v83I5sWrw7pJlJ1VVVGM0VdIkUZd9LHitjShDYzsjX4=;
-	b=FPBR33B6z4upqtwJcW913zj0L01gitf/yT0hQl+21eW/RAgOSmXKI2bPlH7ffEjrrR23GK
-	BfqTARMOS3wsYiGhF/6nwftvWLI06DNVTjbvHhCpqof//shgI9pLQX7LL7WXUpytzmYDjk
-	wECjrDSUDr0zRUxEGi7+X3dlUa/wm7w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751010192;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=v83I5sWrw7pJlJ1VVVGM0VdIkUZd9LHitjShDYzsjX4=;
-	b=mL8n51BQNnG8brYpYWkClYRxBED2e9+cxBewoN4eGzWLZ+NV/PWeQl8hUi4jhbpO8lsHzg
-	Zop/b90SQylMRZBw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=FPBR33B6;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=mL8n51BQ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751010192; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=v83I5sWrw7pJlJ1VVVGM0VdIkUZd9LHitjShDYzsjX4=;
-	b=FPBR33B6z4upqtwJcW913zj0L01gitf/yT0hQl+21eW/RAgOSmXKI2bPlH7ffEjrrR23GK
-	BfqTARMOS3wsYiGhF/6nwftvWLI06DNVTjbvHhCpqof//shgI9pLQX7LL7WXUpytzmYDjk
-	wECjrDSUDr0zRUxEGi7+X3dlUa/wm7w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751010192;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=v83I5sWrw7pJlJ1VVVGM0VdIkUZd9LHitjShDYzsjX4=;
-	b=mL8n51BQNnG8brYpYWkClYRxBED2e9+cxBewoN4eGzWLZ+NV/PWeQl8hUi4jhbpO8lsHzg
-	Zop/b90SQylMRZBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 514EE13786;
-	Fri, 27 Jun 2025 07:43:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id OTBsEpBLXmi3TQAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 27 Jun 2025 07:43:12 +0000
-Message-ID: <16244be7-4cc7-4e3f-8403-35c1dd7fe31d@suse.de>
-Date: Fri, 27 Jun 2025 09:43:11 +0200
+	s=arc-20240116; t=1751010278; c=relaxed/simple;
+	bh=jXG93fc3rFPQgN+mMO0U62dZxXk94xTclsVcEKGc8Wo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=u5vIRVKcJbhz4ikoa/m5BLhcFnoYIeuMNHlZsAnW9bKPvdvAZAbmbrEs139m4MwKxTngZo/c9Q/J2xz2yPalKu/ELiTFisapN/V7rTMy3gXdeHuZo+YzSFgDDwiW2wuQyDGa6CV1OrYMK6BdANMRTNRvBpKs5qa6Zydp4uO5mls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxQK_gS15o9iceAQ--.32219S3;
+	Fri, 27 Jun 2025 15:44:33 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJBxZOTXS15o8BgAAA--.645S3;
+	Fri, 27 Jun 2025 15:44:31 +0800 (CST)
+Subject: Re: [PATCH v3 4/9] LoongArch: KVM: INTC: Check validation of num_cpu
+ from user space
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250611014651.3042734-1-maobibo@loongson.cn>
+ <20250611014651.3042734-5-maobibo@loongson.cn>
+ <CAAhV-H7ehdkKwzsFNAaX+r5eXLknvskyXLPDKei2A55LoSiJMA@mail.gmail.com>
+ <5f1b9068-2d3d-2f89-4f72-85b021537f58@loongson.cn>
+ <CAAhV-H4PKb=BKRQpaqAN7QDu+2PWTinipCAfu13YkaQ0UExuig@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <d197255b-9165-adc5-8ba1-a6d96579fc38@loongson.cn>
+Date: Fri, 27 Jun 2025 15:42:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] fbdev/simplefb: Sort headers correctly
-To: Luca Weiss <luca.weiss@fairphone.com>, Hans de Goede
- <hdegoede@redhat.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Javier Martinez Canillas <javierm@redhat.com>, Helge Deller <deller@gmx.de>
-Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
- <20250623-simple-drm-fb-icc-v2-4-f69b86cd3d7d@fairphone.com>
+In-Reply-To: <CAAhV-H4PKb=BKRQpaqAN7QDu+2PWTinipCAfu13YkaQ0UExuig@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250623-simple-drm-fb-icc-v2-4-f69b86cd3d7d@fairphone.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	FREEMAIL_TO(0.00)[fairphone.com,redhat.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch,gmx.de];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: B09752116E
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -3.01
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxZOTXS15o8BgAAA--.645S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJFWrKF1DurWxAr4rWFy8Zwc_yoWrXrykpr
+	W8AFs8CF4rXryxGrn2qwn8GFnxtrn7Wrn7Xr17Ka4a9rZ0qFn3GFykArWjkF1Fk34rCF10
+	vFWayay3u3WDt3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j5WrAU
+	UUUU=
 
 
 
-Am 23.06.25 um 08:44 schrieb Luca Weiss:
-> Make sure the headers are sorted alphabetically to ensure consistent
-> code.
->
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+On 2025/6/20 下午10:43, Huacai Chen wrote:
+> On Fri, Jun 20, 2025 at 9:43 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2025/6/19 下午4:46, Huacai Chen wrote:
+>>> Hi, Bibo,
+>>>
+>>> On Wed, Jun 11, 2025 at 9:47 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>> The maximum supported cpu number is EIOINTC_ROUTE_MAX_VCPUS about
+>>>> irqchip eiointc, here add validation about cpu number to avoid array
+>>>> pointer overflow.
+>>>>
+>>>> Cc: stable@vger.kernel.org
+>>>> Fixes: 1ad7efa552fd ("LoongArch: KVM: Add EIOINTC user mode read and write functions")
+>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/kvm/intc/eiointc.c | 18 +++++++++++++-----
+>>>>    1 file changed, 13 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+>>>> index b48511f903b5..ed80bf290755 100644
+>>>> --- a/arch/loongarch/kvm/intc/eiointc.c
+>>>> +++ b/arch/loongarch/kvm/intc/eiointc.c
+>>>> @@ -798,7 +798,7 @@ static int kvm_eiointc_ctrl_access(struct kvm_device *dev,
+>>>>           int ret = 0;
+>>>>           unsigned long flags;
+>>>>           unsigned long type = (unsigned long)attr->attr;
+>>>> -       u32 i, start_irq;
+>>>> +       u32 i, start_irq, val;
+>>>>           void __user *data;
+>>>>           struct loongarch_eiointc *s = dev->kvm->arch.eiointc;
+>>>>
+>>>> @@ -806,7 +806,12 @@ static int kvm_eiointc_ctrl_access(struct kvm_device *dev,
+>>>>           spin_lock_irqsave(&s->lock, flags);
+>>>>           switch (type) {
+>>>>           case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_NUM_CPU:
+>>>> -               if (copy_from_user(&s->num_cpu, data, 4))
+>>>> +               if (copy_from_user(&val, data, 4) == 0) {
+>>>> +                       if (val < EIOINTC_ROUTE_MAX_VCPUS)
+>>>> +                               s->num_cpu = val;
+>>>> +                       else
+>>>> +                               ret = -EINVAL;
+>>> Maybe it is better to set s->num_cpu to EIOINTC_ROUTE_MAX_VCPUS (or
+>>> other value) rather than keep it uninitialized. Because in other
+>>> places we need to check s->num_cpu and an uninitialized value may
+>>> cause undefined behavior.
+>> There is error return value -EINVAL, VMM should stop running and exit
+>> immediately if there is error return value with the ioctl command.
+>>
+>> num_cpu is not uninitialized and it is zero by default. If VMM does not
+>> care about the return value, VMM will fail to get coreisr information in
+>> future.
+> If you are sure you can keep it as is. Then please resend patch
+> 1,2,3,4,5,9 as a series because they are all bug fixes that should be
+> merged as soon as possible. And in my own opinion, "INTC" can be
+> dropped in the title.
+Ok, will do in this way.
 
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-> ---
->   drivers/video/fbdev/simplefb.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
-> index be95fcddce4c8ca794826b805cd7dad2985bd637..db27d51046af5cc3c46a0bc81ad9d9ed9a0783cc 100644
-> --- a/drivers/video/fbdev/simplefb.c
-> +++ b/drivers/video/fbdev/simplefb.c
-> @@ -13,18 +13,18 @@
->    */
->   
->   #include <linux/aperture.h>
-> +#include <linux/clk.h>
->   #include <linux/errno.h>
->   #include <linux/fb.h>
->   #include <linux/io.h>
->   #include <linux/module.h>
-> -#include <linux/platform_data/simplefb.h>
-> -#include <linux/platform_device.h>
-> -#include <linux/clk.h>
->   #include <linux/of.h>
->   #include <linux/of_address.h>
->   #include <linux/of_clk.h>
->   #include <linux/of_platform.h>
->   #include <linux/parser.h>
-> +#include <linux/platform_data/simplefb.h>
-> +#include <linux/platform_device.h>
->   #include <linux/pm_domain.h>
->   #include <linux/regulator/consumer.h>
->   
->
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+Regards
+Bibo Mao
+> 
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>>
+>>> Huacai
+>>>> +               } else
+>>>>                           ret = -EFAULT;
+>>>>                   break;
+>>>>           case KVM_DEV_LOONGARCH_EXTIOI_CTRL_INIT_FEATURE:
+>>>> @@ -835,7 +840,7 @@ static int kvm_eiointc_regs_access(struct kvm_device *dev,
+>>>>                                           struct kvm_device_attr *attr,
+>>>>                                           bool is_write)
+>>>>    {
+>>>> -       int addr, cpuid, offset, ret = 0;
+>>>> +       int addr, cpu, offset, ret = 0;
+>>>>           unsigned long flags;
+>>>>           void *p = NULL;
+>>>>           void __user *data;
+>>>> @@ -843,7 +848,7 @@ static int kvm_eiointc_regs_access(struct kvm_device *dev,
+>>>>
+>>>>           s = dev->kvm->arch.eiointc;
+>>>>           addr = attr->attr;
+>>>> -       cpuid = addr >> 16;
+>>>> +       cpu = addr >> 16;
+>>>>           addr &= 0xffff;
+>>>>           data = (void __user *)attr->addr;
+>>>>           switch (addr) {
+>>>> @@ -868,8 +873,11 @@ static int kvm_eiointc_regs_access(struct kvm_device *dev,
+>>>>                   p = &s->isr.reg_u32[offset];
+>>>>                   break;
+>>>>           case EIOINTC_COREISR_START ... EIOINTC_COREISR_END:
+>>>> +               if (cpu >= s->num_cpu)
+>>>> +                       return -EINVAL;
+>>>> +
+>>>>                   offset = (addr - EIOINTC_COREISR_START) / 4;
+>>>> -               p = &s->coreisr.reg_u32[cpuid][offset];
+>>>> +               p = &s->coreisr.reg_u32[cpu][offset];
+>>>>                   break;
+>>>>           case EIOINTC_COREMAP_START ... EIOINTC_COREMAP_END:
+>>>>                   offset = (addr - EIOINTC_COREMAP_START) / 4;
+>>>> --
+>>>> 2.39.3
+>>>>
+>>
 
