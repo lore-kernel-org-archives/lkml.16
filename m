@@ -1,195 +1,458 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54124C2FB;
-	Fri, 27 Jun 2025 20:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93AE6C2FB;
+	Fri, 27 Jun 2025 20:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751055964; cv=none; b=jLlg7AGYP1PICjuM/PriqgsEV0seZ3InEgBHEtmbOhGt7rA3OS9Eh0ZgjnqtRTm4iGMUu5iJd7tHxYW8QJTtZSB4HnpsNsgZVH8bPl8p0Xw7NJuIqfM9Tt5vfNMEWlGf0vdzktw+LUEjdpv7APV6oDZOV8BjR+3xmp1/mvcCI+I=
+	t=1751056020; cv=none; b=qVZtzNu9cSR3+zzuMsYVgEjjHRqUaR0MHCvYLgR7SnTyzyFDSVpxoWqaHRhdq4l9DupGkkiepP6OR0ftG74IWcjLiCaQBbJXA1eV3p5Plte47IvG0aBe7D9Apu2JukcyJbrmmpan8UM+ZYXfanR1dCAcE0VdvB8ALaIdeEY9Zpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751055964; c=relaxed/simple;
-	bh=YT2e/UrTPLRrkBQtY5j9rxnjaYxhH76IJd3VIMz0jqo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Us8u+GxnL6h8W9+t4E3wMJJ6wKiEDBh7dys9df51Uil9tDvqhLx/uaXWtiTuJWX2t8lZBa9abzbwuLPK99PBJQhxfA1DCvl1z48mj0hu8ym5NTgkTGEsH5f4S0HVQBNX2Fsk99mYa7npLKHcSiVj/zIbaQTYXRU6DbcW1c+FR+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mF7yCjrV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751056020; c=relaxed/simple;
+	bh=Ly7QHnrYHlj29CgS16fNm7D2VWmARLszS4eebllMQ+4=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=JrKwutrD5U46wnzIVuIIYXmQ9TtdF9IxivPEGmAapI6uoOBJg+GVuvVSM17+IWJ5NQ5ZFdBj4PIO1jVaDWnJbiAnixcnSPQRgrmy3ZfmNq3YhSxmBVzW7qas8vd14FFaHoEGBd5KKvOzy2QvihBVhK/5rmDm++C6b6QQJB/+/ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Xh43A8AU; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mF7yCjrV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8460EC4CEE3;
-	Fri, 27 Jun 2025 20:26:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751055963;
-	bh=YT2e/UrTPLRrkBQtY5j9rxnjaYxhH76IJd3VIMz0jqo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mF7yCjrViL8c+1IpdhJAWAG1mZOOzaGeNUjsW11TEbRHSs0gCIA3Z1cwVYzdZPtRd
-	 tDOjxlz5oXFQkxd4JgAiIiEm2Cnf43lpwqnfqk7fLt9mAUnOLtVEYZjMHXSx8pWSv2
-	 EWYsgaYCvgfjUwBlRFd4oYjaQSJrW5mTZr34DIQAhBoYURUuQ+bdnyyfNOlE8npUBw
-	 5q+Sz22BfglkJltepaymcdJVORS7ZMuD+MPOzMxdRJHRtzA6pyTWf8v+k1D5oNJs0e
-	 2+4MwQSgnZ12WZAEr0yvpNXs7LD5vofNfbJ5sZN+Z2E7ZdQw/QxCG7brv6TnZ3SEyj
-	 nmv+gl9SmiFYA==
-Message-ID: <5c8ca17f-2f77-4492-ade7-a78dba45df7d@kernel.org>
-Date: Fri, 27 Jun 2025 22:25:59 +0200
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Xh43A8AU"
+Received: by linux.microsoft.com (Postfix, from userid 1006)
+	id 222572124E1F; Fri, 27 Jun 2025 13:26:58 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 222572124E1F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1751056018;
+	bh=my06lgKPXwPZ/xB18tm4IOWlQUpbE/MSYOljLFPEQfs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Xh43A8AUcojnhDBF0uGXR127LWbH1rx91bRl7p1p1zPLoT7hTwL504YMDAfXG/jQB
+	 w89C8AGQ695PtAgSLWxYIaCQc4MPxmPMvIMT1XSJm90U3wLuzp8VQinihx6jnbgFhv
+	 cv0hb7D4DYtfNmhGoHEw/pmJIOtnqmAWoAB5Q6is=
+From: Haiyang Zhang <haiyangz@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: haiyangz@microsoft.com,
+	decui@microsoft.com,
+	stephen@networkplumber.org,
+	kys@microsoft.com,
+	paulros@microsoft.com,
+	olaf@aepfle.de,
+	vkuznets@redhat.com,
+	davem@davemloft.net,
+	wei.liu@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	leon@kernel.org,
+	longli@microsoft.com,
+	ssengar@linux.microsoft.com,
+	linux-rdma@vger.kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	bpf@vger.kernel.org,
+	ast@kernel.org,
+	hawk@kernel.org,
+	tglx@linutronix.de,
+	shradhagupta@linux.microsoft.com,
+	andrew+netdev@lunn.ch,
+	kotaranov@microsoft.com,
+	horms@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: mana: Handle Reset Request from MANA NIC
+Date: Fri, 27 Jun 2025 13:26:23 -0700
+Message-Id: <1751055983-29760-1-git-send-email-haiyangz@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
- system
-To: Mario Limonciello <superm1@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <CAJZ5v0j3ZyuEqSKQ+3K8M3BwPCxn5Z6KOwjyjt4cJW6HfxjPDw@mail.gmail.com>
- <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
- <de548b27-4c43-4f30-af9d-b060101e6fd8@kernel.org>
- <75fixx6rgwsgsw6e765oxdcivcg2nkzx2fp2qywgx4vi3ihywh@ot7gdecsnttw>
- <1b0d2349-dbf7-47aa-95c9-1974e63d111a@kernel.org>
- <13025910-7639-400b-878a-cd0780c6534c@kernel.org>
- <4ajmcrl3bqeikki2etek5bafzszelgevr322tvuubx4pxxyju2@qqxz6lzcb6e5>
- <fdd635ce-5e8e-4123-8e8e-241a57b4d7fe@kernel.org>
- <eaf7bva2skjz6oo2s2f4agooplthvuztyr6tssa7rux764qw35@kscd3rtejfvn>
- <9f5e0c21-bc25-44d0-a4d4-6fd6e58a9f2e@kernel.org>
- <ly3mww7nq7uuqvdx7p2uzcrphhboeuep3yuwbaxwfimesitjaa@hf72i4vu5quo>
- <584af55f-1b73-4c17-bf85-c2d3ecf6692e@kernel.org>
- <e0469bf9-f12a-48a7-bd58-3ae346354987@kernel.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <e0469bf9-f12a-48a7-bd58-3ae346354987@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-On 27-Jun-25 9:44 PM, Mario Limonciello wrote:
-> On 6/27/2025 2:38 PM, Hans de Goede wrote:
->> Hi,
->>
->> On 27-Jun-25 9:18 PM, Dmitry Torokhov wrote:
->>> On Fri, Jun 27, 2025 at 01:56:53PM -0500, Mario Limonciello wrote:
->>>> On 6/27/2025 1:36 PM, Dmitry Torokhov wrote:
->>>>> On Fri, Jun 27, 2025 at 05:56:05PM +0200, Hans de Goede wrote:
->>>
->>> [ ... trim ... ]
->>>
->>>>>
->>>>> 2. There is a patch from Mario (a8605b0ed187) suppressing sending
->>>>> KEY_POWER as part of "normal" wakeup handling, pretty much the same as
->>>>> what he and you are proposing to do in gpio-keys (and eventually in
->>>>> every driver keyboard or button driver in the kernel). This means we no
->>>>> longer can tell if wakeup is done by power button or sleep button (on
->>>>> systems with dual-button models, see ACPI 4.8.3.1).
->>>>
->>>> Actually a8605b0ed187 was about a runtime regression not a suspend
->>>> regression.  I didn't change anything with sending KEY_POWER during wakeup
->>>> handling.
->>>
->>> Ah, right, ignorng events for "suspended" buttons was done in
->>> e71eeb2a6bcc ("ACPI / button: Do not propagate wakeup-from-suspend
->>> events"). Again trying to add heuristic to the kernel instead of
->>> enlightening userspace.
->>>
->>> I am curious why the system is sending "Notify Wake" events when not
->>> sleeping though?
->>>
->>> [ .. skip .. ]
->>>
->>>>
->>>> FTR I did test Hans suggestion and it does work effectively (code below).
->>>>
->>>> diff --git a/drivers/input/keyboard/gpio_keys.c
->>>> b/drivers/input/keyboard/gpio_keys.c
->>>> index f9db86da0818b..3bc8c95e9943b 100644
->>>> --- a/drivers/input/keyboard/gpio_keys.c
->>>> +++ b/drivers/input/keyboard/gpio_keys.c
->>>> @@ -425,7 +425,8 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void
->>>> *dev_id)
->>>>                           * already released by the time we got interrupt
->>>>                           * handler to run.
->>>>                           */
->>>> -                       input_report_key(bdata->input, button->code, 1);
->>>> +                       input_report_key(bdata->input, *bdata->code, 1);
->>>> +                       input_sync(bdata->input);
->>>
->>> I start wondering if we should keep the fake press given that we do not
->>> know for sure if wakeup truly happened because of this button press...
->>
->> AFAIK we cannot drop the fake press because then Android userspace
->> will immediately go back to sleep again assuming the wakeup was
->> e.g. just some data coming in from the modem which did not result
->> in a notification to show, so no need to turn on the display,
->> but instead immediately go back to sleep.
->>
->> IIRC last time we had this discussion (man years ago) the reason
->> to send KEY_POWER was to let Android know that it should actualy
->> turn on the display and show the unlock screen because the user
->> wants that to happen.
->>
->> I believe this is also what the KEY_WAKEUP thing in the ACPI button
->> code is for.
->>
->>> Can we track back to the wakeup source and determine this? It will not
->>> help your problem, but I still believe userspace is where policy should
->>> live.
->>
->> There is /sys/power/pm_wakeup_irq we could correlate that to the IRQ
->> number of the ISR and then AFAICT we will definitively know if
->> the power-button was the wakeup source ?
->>
-> 
-> So at least in my case when woken up by this power button press the IRQ isn't the one for the GPIO itself, but rather for the GPIO controller master interrupt.
-> 
-> # cat /sys/power/pm_wakeup_irq
-> 7
-> # grep . /sys/kernel/irq/7/*
-> /sys/kernel/irq/7/actions:pinctrl_amd
-> /sys/kernel/irq/7/chip_name:IR-IO-APIC
-> /sys/kernel/irq/7/hwirq:7
-> /sys/kernel/irq/7/name:fasteoi
-> /sys/kernel/irq/7/per_cpu_count:0,0,0,0,0,5,0,0
-> /sys/kernel/irq/7/type:level
-> /sys/kernel/irq/7/wakeup:enabled
-> 
-> # grep . /sys/kernel/irq/102/*
-> /sys/kernel/irq/102/actions:power
-> /sys/kernel/irq/102/chip_name:amd_gpio
-> /sys/kernel/irq/102/hwirq:0
-> /sys/kernel/irq/102/per_cpu_count:0,1,0,2,1,0,0,1
-> /sys/kernel/irq/102/type:edge
-> /sys/kernel/irq/102/wakeup:disabled
+Upon receiving the Reset Request, pause the connection and clean up
+queues, wait for the specified period, then resume the NIC.
+In the cleanup phase, the HWC is no longer responding, so set hwc_timeout
+to zero to skip waiting on the response.
 
-Ah, right.
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+---
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 127 ++++++++++++++----
+ .../net/ethernet/microsoft/mana/hw_channel.c  |   4 +-
+ drivers/net/ethernet/microsoft/mana/mana_en.c |  37 +++--
+ include/net/mana/gdma.h                       |  10 ++
+ 4 files changed, 143 insertions(+), 35 deletions(-)
 
-But thinking more about this I do not think believe
-that wakeup racing is really a big issue here.
-
-Wakeup racing only hits if the button ISR runs before
-gpio_keys_resume() has run and cleared the bdata->suspended
-flag. IOW the button was pressed before the system has
-completely resumed in that case the users intend to me
-very clearly was to wakeup the system.
-
-So I still believe that sending key-wakeup for the simulated
-keypress is the right thing to do in wakeup race cases even
-if the system was actually woken up by e.g. network traffic.
-
-As for Mario's patch from earlier in the thread that needs
-some more work because it will release the wrong code if
-the release ISR runs after gpio_keys_resume().
-
-But working further on that only is useful if we can get
-agreement from Dmitry on that approach.
-
-Regards,
-
-Hans
-
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index ac2f39853bf4..4e344ff44ac1 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -10,6 +10,7 @@
+ #include <linux/irqdomain.h>
+ 
+ #include <net/mana/mana.h>
++#include <net/mana/hw_channel.h>
+ 
+ struct dentry *mana_debugfs_root;
+ 
+@@ -65,6 +66,24 @@ static void mana_gd_init_registers(struct pci_dev *pdev)
+ 		mana_gd_init_vf_regs(pdev);
+ }
+ 
++/* Suppress logging when we set timeout to zero */
++bool mana_need_log(struct gdma_context *gc, int err)
++{
++	struct hw_channel_context *hwc;
++
++	if (err != -ETIMEDOUT)
++		return true;
++
++	if (!gc)
++		return true;
++
++	hwc = gc->hwc.driver_data;
++	if (hwc && hwc->hwc_timeout == 0)
++		return false;
++
++	return true;
++}
++
+ static int mana_gd_query_max_resources(struct pci_dev *pdev)
+ {
+ 	struct gdma_context *gc = pci_get_drvdata(pdev);
+@@ -275,8 +294,9 @@ static int mana_gd_disable_queue(struct gdma_queue *queue)
+ 
+ 	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
+ 	if (err || resp.hdr.status) {
+-		dev_err(gc->dev, "Failed to disable queue: %d, 0x%x\n", err,
+-			resp.hdr.status);
++		if (mana_need_log(gc, err))
++			dev_err(gc->dev, "Failed to disable queue: %d, 0x%x\n", err,
++				resp.hdr.status);
+ 		return err ? err : -EPROTO;
+ 	}
+ 
+@@ -363,25 +383,12 @@ EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
+ 
+ #define MANA_SERVICE_PERIOD 10
+ 
+-struct mana_serv_work {
+-	struct work_struct serv_work;
+-	struct pci_dev *pdev;
+-};
+-
+-static void mana_serv_func(struct work_struct *w)
++static void mana_serv_fpga(struct pci_dev *pdev)
+ {
+-	struct mana_serv_work *mns_wk;
+ 	struct pci_bus *bus, *parent;
+-	struct pci_dev *pdev;
+-
+-	mns_wk = container_of(w, struct mana_serv_work, serv_work);
+-	pdev = mns_wk->pdev;
+ 
+ 	pci_lock_rescan_remove();
+ 
+-	if (!pdev)
+-		goto out;
+-
+ 	bus = pdev->bus;
+ 	if (!bus) {
+ 		dev_err(&pdev->dev, "MANA service: no bus\n");
+@@ -402,7 +409,74 @@ static void mana_serv_func(struct work_struct *w)
+ 
+ out:
+ 	pci_unlock_rescan_remove();
++}
++
++static void mana_serv_reset(struct pci_dev *pdev)
++{
++	struct gdma_context *gc = pci_get_drvdata(pdev);
++	struct hw_channel_context *hwc;
++
++	if (!gc) {
++		dev_err(&pdev->dev, "MANA service: no GC\n");
++		return;
++	}
++
++	hwc = gc->hwc.driver_data;
++	if (!hwc) {
++		dev_err(&pdev->dev, "MANA service: no HWC\n");
++		goto out;
++	}
++
++	/* HWC is not responding in this case, so don't wait */
++	hwc->hwc_timeout = 0;
++
++	dev_info(&pdev->dev, "MANA reset cycle start\n");
+ 
++	mana_gd_suspend(pdev, PMSG_SUSPEND);
++
++	msleep(MANA_SERVICE_PERIOD * 1000);
++
++	mana_gd_resume(pdev);
++
++	dev_info(&pdev->dev, "MANA reset cycle completed\n");
++
++out:
++	gc->in_service = false;
++}
++
++struct mana_serv_work {
++	struct work_struct serv_work;
++	struct pci_dev *pdev;
++	enum gdma_eqe_type type;
++};
++
++static void mana_serv_func(struct work_struct *w)
++{
++	struct mana_serv_work *mns_wk;
++	struct pci_dev *pdev;
++
++	mns_wk = container_of(w, struct mana_serv_work, serv_work);
++	pdev = mns_wk->pdev;
++
++	if (!pdev)
++		goto out;
++
++	switch (mns_wk->type) {
++	case GDMA_EQE_HWC_FPGA_RECONFIG:
++		mana_serv_fpga(pdev);
++		break;
++
++	case GDMA_EQE_HWC_RESET_REQUEST:
++		mana_serv_reset(pdev);
++		break;
++
++	default:
++		dev_err(&pdev->dev, "MANA service: unknown type %d\n",
++			mns_wk->type);
++		break;
++	}
++
++out:
+ 	pci_dev_put(pdev);
+ 	kfree(mns_wk);
+ 	module_put(THIS_MODULE);
+@@ -459,6 +533,7 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ 		break;
+ 
+ 	case GDMA_EQE_HWC_FPGA_RECONFIG:
++	case GDMA_EQE_HWC_RESET_REQUEST:
+ 		dev_info(gc->dev, "Recv MANA service type:%d\n", type);
+ 
+ 		if (gc->in_service) {
+@@ -480,6 +555,7 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ 		dev_info(gc->dev, "Start MANA service type:%d\n", type);
+ 		gc->in_service = true;
+ 		mns_wk->pdev = to_pci_dev(gc->dev);
++		mns_wk->type = type;
+ 		pci_dev_get(mns_wk->pdev);
+ 		INIT_WORK(&mns_wk->serv_work, mana_serv_func);
+ 		schedule_work(&mns_wk->serv_work);
+@@ -631,7 +707,8 @@ int mana_gd_test_eq(struct gdma_context *gc, struct gdma_queue *eq)
+ 
+ 	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
+ 	if (err) {
+-		dev_err(dev, "test_eq failed: %d\n", err);
++		if (mana_need_log(gc, err))
++			dev_err(dev, "test_eq failed: %d\n", err);
+ 		goto out;
+ 	}
+ 
+@@ -666,7 +743,7 @@ static void mana_gd_destroy_eq(struct gdma_context *gc, bool flush_evenets,
+ 
+ 	if (flush_evenets) {
+ 		err = mana_gd_test_eq(gc, queue);
+-		if (err)
++		if (err && mana_need_log(gc, err))
+ 			dev_warn(gc->dev, "Failed to flush EQ: %d\n", err);
+ 	}
+ 
+@@ -812,8 +889,9 @@ int mana_gd_destroy_dma_region(struct gdma_context *gc, u64 dma_region_handle)
+ 
+ 	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
+ 	if (err || resp.hdr.status) {
+-		dev_err(gc->dev, "Failed to destroy DMA region: %d, 0x%x\n",
+-			err, resp.hdr.status);
++		if (mana_need_log(gc, err))
++			dev_err(gc->dev, "Failed to destroy DMA region: %d, 0x%x\n",
++				err, resp.hdr.status);
+ 		return -EPROTO;
+ 	}
+ 
+@@ -1113,8 +1191,9 @@ int mana_gd_deregister_device(struct gdma_dev *gd)
+ 
+ 	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
+ 	if (err || resp.hdr.status) {
+-		dev_err(gc->dev, "Failed to deregister device: %d, 0x%x\n",
+-			err, resp.hdr.status);
++		if (mana_need_log(gc, err))
++			dev_err(gc->dev, "Failed to deregister device: %d, 0x%x\n",
++				err, resp.hdr.status);
+ 		if (!err)
+ 			err = -EPROTO;
+ 	}
+@@ -1912,7 +1991,7 @@ static void mana_gd_remove(struct pci_dev *pdev)
+ }
+ 
+ /* The 'state' parameter is not used. */
+-static int mana_gd_suspend(struct pci_dev *pdev, pm_message_t state)
++int mana_gd_suspend(struct pci_dev *pdev, pm_message_t state)
+ {
+ 	struct gdma_context *gc = pci_get_drvdata(pdev);
+ 
+@@ -1928,7 +2007,7 @@ static int mana_gd_suspend(struct pci_dev *pdev, pm_message_t state)
+  * fail -- if this happens, it's safer to just report an error than try to undo
+  * what has been done.
+  */
+-static int mana_gd_resume(struct pci_dev *pdev)
++int mana_gd_resume(struct pci_dev *pdev)
+ {
+ 	struct gdma_context *gc = pci_get_drvdata(pdev);
+ 	int err;
+diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+index 650d22654d49..ef072e24c46d 100644
+--- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
++++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+@@ -880,7 +880,9 @@ int mana_hwc_send_request(struct hw_channel_context *hwc, u32 req_len,
+ 
+ 	if (!wait_for_completion_timeout(&ctx->comp_event,
+ 					 (msecs_to_jiffies(hwc->hwc_timeout)))) {
+-		dev_err(hwc->dev, "HWC: Request timed out!\n");
++		if (hwc->hwc_timeout != 0)
++			dev_err(hwc->dev, "HWC: Request timed out!\n");
++
+ 		err = -ETIMEDOUT;
+ 		goto out;
+ 	}
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 016fd808ccad..a7973651ae51 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -47,6 +47,15 @@ static const struct file_operations mana_dbg_q_fops = {
+ 	.read   = mana_dbg_q_read,
+ };
+ 
++static bool mana_en_need_log(struct mana_port_context *apc, int err)
++{
++	if (apc && apc->ac && apc->ac->gdma_dev &&
++	    apc->ac->gdma_dev->gdma_context)
++		return mana_need_log(apc->ac->gdma_dev->gdma_context, err);
++	else
++		return true;
++}
++
+ /* Microsoft Azure Network Adapter (MANA) functions */
+ 
+ static int mana_open(struct net_device *ndev)
+@@ -854,7 +863,8 @@ static int mana_send_request(struct mana_context *ac, void *in_buf,
+ 		if (err == -EOPNOTSUPP)
+ 			return err;
+ 
+-		if (req->req.msg_type != MANA_QUERY_PHY_STAT)
++		if (req->req.msg_type != MANA_QUERY_PHY_STAT &&
++		    mana_need_log(gc, err))
+ 			dev_err(dev, "Failed to send mana message: %d, 0x%x\n",
+ 				err, resp->status);
+ 		return err ? err : -EPROTO;
+@@ -931,8 +941,10 @@ static void mana_pf_deregister_hw_vport(struct mana_port_context *apc)
+ 	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
+ 				sizeof(resp));
+ 	if (err) {
+-		netdev_err(apc->ndev, "Failed to unregister hw vPort: %d\n",
+-			   err);
++		if (mana_en_need_log(apc, err))
++			netdev_err(apc->ndev, "Failed to unregister hw vPort: %d\n",
++				   err);
++
+ 		return;
+ 	}
+ 
+@@ -987,8 +999,10 @@ static void mana_pf_deregister_filter(struct mana_port_context *apc)
+ 	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
+ 				sizeof(resp));
+ 	if (err) {
+-		netdev_err(apc->ndev, "Failed to unregister filter: %d\n",
+-			   err);
++		if (mana_en_need_log(apc, err))
++			netdev_err(apc->ndev, "Failed to unregister filter: %d\n",
++				   err);
++
+ 		return;
+ 	}
+ 
+@@ -1218,7 +1232,9 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 	err = mana_send_request(apc->ac, req, req_buf_size, &resp,
+ 				sizeof(resp));
+ 	if (err) {
+-		netdev_err(ndev, "Failed to configure vPort RX: %d\n", err);
++		if (mana_en_need_log(apc, err))
++			netdev_err(ndev, "Failed to configure vPort RX: %d\n", err);
++
+ 		goto out;
+ 	}
+ 
+@@ -1402,7 +1418,9 @@ void mana_destroy_wq_obj(struct mana_port_context *apc, u32 wq_type,
+ 	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
+ 				sizeof(resp));
+ 	if (err) {
+-		netdev_err(ndev, "Failed to destroy WQ object: %d\n", err);
++		if (mana_en_need_log(apc, err))
++			netdev_err(ndev, "Failed to destroy WQ object: %d\n", err);
++
+ 		return;
+ 	}
+ 
+@@ -3067,11 +3085,10 @@ static int mana_dealloc_queues(struct net_device *ndev)
+ 
+ 	apc->rss_state = TRI_STATE_FALSE;
+ 	err = mana_config_rss(apc, TRI_STATE_FALSE, false, false);
+-	if (err) {
++	if (err && mana_en_need_log(apc, err))
+ 		netdev_err(ndev, "Failed to disable vPort: %d\n", err);
+-		return err;
+-	}
+ 
++	/* Even in err case, still need to cleanup the vPort */
+ 	mana_destroy_vport(apc);
+ 
+ 	return 0;
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 92ab85061df0..57df78cfbf82 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -62,6 +62,7 @@ enum gdma_eqe_type {
+ 	GDMA_EQE_HWC_FPGA_RECONFIG	= 132,
+ 	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
+ 	GDMA_EQE_HWC_SOC_SERVICE	= 134,
++	GDMA_EQE_HWC_RESET_REQUEST	= 135,
+ 	GDMA_EQE_RNIC_QP_FATAL		= 176,
+ };
+ 
+@@ -584,6 +585,9 @@ enum {
+ /* Driver supports dynamic MSI-X vector allocation */
+ #define GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT BIT(13)
+ 
++/* Driver can self reset on EQE notification */
++#define GDMA_DRV_CAP_FLAG_1_SELF_RESET_ON_EQE BIT(14)
++
+ /* Driver can self reset on FPGA Reconfig EQE notification */
+ #define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
+ 
+@@ -594,6 +598,7 @@ enum {
+ 	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
+ 	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
+ 	 GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT | \
++	 GDMA_DRV_CAP_FLAG_1_SELF_RESET_ON_EQE | \
+ 	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE)
+ 
+ #define GDMA_DRV_CAP_FLAGS2 0
+@@ -921,4 +926,9 @@ void mana_unregister_debugfs(void);
+ 
+ int mana_rdma_service_event(struct gdma_context *gc, enum gdma_service_type event);
+ 
++int mana_gd_suspend(struct pci_dev *pdev, pm_message_t state);
++int mana_gd_resume(struct pci_dev *pdev);
++
++bool mana_need_log(struct gdma_context *gc, int err);
++
+ #endif /* _GDMA_H */
+-- 
+2.34.1
 
