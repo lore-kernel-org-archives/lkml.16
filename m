@@ -1,228 +1,408 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EEFA2F3E;
-	Fri, 27 Jun 2025 06:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751005834; cv=fail; b=fYXjHIu7i8PXhcKzUIeZbKq061ajLLdhO/qa2juiNRuZ4Y6DZPEb6YTYUlBefSzBe+g+rJwbxh1hSkrZ7MOuRPkfatBkfbRh7uGF3fki0lVO9lhDJ14GBlHLjXjfL441qEmdEDSGPoolyKbrtidZZuj3ZfsOw1eZ4Ef23Ynh8UI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751005834; c=relaxed/simple;
-	bh=lfmOCQmpWjSR5q/SzivYcB/gzfiIR1bnXSlo9Cq6bbs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Fh2x/uruVr0gOPATcI+vwfwgwPK5rnX0Sik8KaQA88TU+O3yCoYPH19KSpHuwlvISohRrzduwi8CiPBHqsyiFd3h65wds2MxcvfOTkFNDkrEiXLxOviAnwZcYm9Jt45KmAq9thzO6DLnSruARV2/2Fno7bpF1SsqEj1NxkJUKuk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YjuypvbU; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E81D2F3E;
+	Fri, 27 Jun 2025 06:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751005841; cv=none; b=dyJ0tswjsGh77VjNaESa6j49kbnYD7t0i7jeDw2yL20iHUA3hEAgAt9G91EkIteouHNVtPI2CpZb09rWqdWt0ZmFa4H4vj2udY+tIAdQ7E+ik8yEjWo4Qq87lcnXrrQXgTCuOvLZtFtWRz6ibd8U13BM7eq476gvIcMqZpOpJLE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751005841; c=relaxed/simple;
+	bh=A8g893xtk1dK4cJaLgB0wst2X+UBVHooFVW6CTqVfTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ESEjcINqF34qLpvKjOPaFirUGs6V8rcmptltr7ObjBK7XxNh+Tq3dwXPtU2n1wjNdu/KB2UUstJwxV5fnM6M41dBpnl4X3KjkQA4q+82t7Pclg8Vsv+AUzp+R8mp3/0UOfnQN39WGcfyQ+YyArcrsWH1Lr0ce+zdeUSllsKIUJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EdCI56KR; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YjuypvbU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751005832; x=1782541832;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=lfmOCQmpWjSR5q/SzivYcB/gzfiIR1bnXSlo9Cq6bbs=;
-  b=YjuypvbUEhtM5k0ww2LIUFiCrOIZEFIcqbkhdE0OyCoWG6+Tk+lGKCzX
-   kUwInLens6OMeGzAM+6KW/AtAD473fGedv4m7WSW8+Am8f+fOKb0/TJHA
-   YuXFv9XlbY3vaEDKurPu2zaF8ew3Z0TSR0GpRjG7UR20jxB37ti3i96rM
-   TO/isB2H4Pu7+87+hO7iBVs0I1lxvQA+sDeFnT2rDN94XC6R3+YeyJSCL
-   riMffDz0bHCFVREJ93po1YJRowqdgXW9VUqDqA0UVo+r5OIsbpLlRxbch
-   QRTcZUqCGKlAzeS+g5PCWCS9wy5BF8JFTPdjxTQX55zB6p9t+0tpmrnId
-   w==;
-X-CSE-ConnectionGUID: 1SfPMrEfT5yPqzw6NXuywg==
-X-CSE-MsgGUID: mtTstkQCQdajDUIlGOQ8lg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="40930697"
-X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
-   d="scan'208";a="40930697"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 23:30:29 -0700
-X-CSE-ConnectionGUID: ze9kIVLhQ6ClbIZaPisTnA==
-X-CSE-MsgGUID: 1o1mKZomRJisLi6A8V4TUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
-   d="scan'208";a="153435507"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 23:30:28 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 26 Jun 2025 23:30:28 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 26 Jun 2025 23:30:28 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.69)
- by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 26 Jun 2025 23:30:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EbFc8RVwy21aNWid/4qmVwE0vi5iJ46KmFO9qqd+yVW6QSxJsiXZre71t2LMEMBCqmYUju/qtMrhvLLoKJvfJTU7MADT18qtp8FKaq2TwPdw+k5Tlp9KlrIQpirulV6PG0aS7W6jO26HW1zPVg9CGg7xr5psF3EYRk0vsNTRcLad9QsCoqawo8+K2iBE5wkQyGDQUyH8mAjSRU1vOphha4IghNvdPaMcHkWCFDv1gwMEtyqcdZCLQUi81qKJulUGLHn8HOteGCV0B0lYbxiPKLnLxkOLhd0qUV9lUxLRaqb1XkNRXXWd1tKa4oQQ9c24RFSnIiv2uQTRbSLJunN26g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N94+9fpmfs2abJCnjDxG4S61ys618aCn5pQni7gs7/g=;
- b=HgrcGnaWa1higP00HuZS1ogdAP+M3BOggbz3tp0jSS0wHML0dFBByXq7SPVow2vcWGObk0CHdjCUWPowF0rLNqJ1qJJ2Dg50y5QkAGItXWepitrczJQwzUsev4LNkcghGo0l5AKm7G/p5dEPdTcPTlNWKq0Kj2Ax5rvT6L43KSeBsM86EVsOzusAM9gy9Fdr/qfNrRgbDX23DyfJ3FKZWBlKzdZL8OjAYpNhkffvo+x1UVLTQnBJayTXRAbbULJhktX2RCirjl5kguAhliSEE71w3pGNC/Z1+izrTBZWN9LrajENzh1F53bO/E848wb3jLT2On2ojiQaEPOrnuRClQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BL3PR11MB6363.namprd11.prod.outlook.com (2603:10b6:208:3b6::5)
- by MN2PR11MB4517.namprd11.prod.outlook.com (2603:10b6:208:24e::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.23; Fri, 27 Jun
- 2025 06:30:20 +0000
-Received: from BL3PR11MB6363.namprd11.prod.outlook.com
- ([fe80::6206:bcb:fd57:6467]) by BL3PR11MB6363.namprd11.prod.outlook.com
- ([fe80::6206:bcb:fd57:6467%6]) with mapi id 15.20.8857.026; Fri, 27 Jun 2025
- 06:30:20 +0000
-Date: Fri, 27 Jun 2025 14:30:09 +0800
-From: Yi Sun <yi.sun@intel.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Vinod Koul <vkoul@kernel.org>
-CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<gordon.jin@intel.com>, <yi.sun@linux.intel.com>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, Dave Jiang <dave.jiang@intel.com>,
-	Fenghua Yu <fenghuay@nvidia.com>
-Subject: Re: [PATCH v2] dmaengine: idxd: Remove __packed from structures
-Message-ID: <aF46cRgzYE4N3A25@ysun46-mobl.ccr.corp.intel.com>
-References: <20250404053614.3096769-1-yi.sun@intel.com>
- <175097809157.79884.15067500318866840512.b4-ty@kernel.org>
- <aF4YdFZnAWcZlpbW@surfacebook.localdomain>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Disposition: inline
-In-Reply-To: <aF4YdFZnAWcZlpbW@surfacebook.localdomain>
-X-ClientProxiedBy: SGBP274CA0018.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::30)
- To BL3PR11MB6363.namprd11.prod.outlook.com (2603:10b6:208:3b6::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EdCI56KR"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-23633a6ac50so25789115ad.2;
+        Thu, 26 Jun 2025 23:30:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751005839; x=1751610639; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iS5tVSNWUllBELvROnskbRuvuRv6gr3FeSaDzg0SVcg=;
+        b=EdCI56KRkmjAUyUrH4RRUSrGWzDzv6HOvtj1bHaIXPx+8TdwJ9p0X0JApgQvQ830T/
+         hO+B66OoUDG9N9ihN3573yQQP51qC/1OVpOb2GnYnW/5OKMvgVM0w47LMPBC6nAGw9tD
+         6SKgXyH7UMx7/YZ7RT1Zt4O6jK2v1zN1oraaX9hCA94a0yrwe9Ybptp0E+8RXpdmtyAp
+         SPB+06+aip0VyNxVf/S7VXoWCYpKWGS7vY7iB//BGCXYu7JFMQIYDQiEjlCRCKOokBuD
+         A7HWpaq7RlI6bpIG4yN+fbQIhiVpepAofDovyE43FNIToVBJZx9O6a3ySr1bPLLwlY25
+         Gdpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751005839; x=1751610639;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iS5tVSNWUllBELvROnskbRuvuRv6gr3FeSaDzg0SVcg=;
+        b=AI+pd0BmgcToIJHYX9Y3WFPY0wInV3zPgTnVX3oJHknHTaazHLoCWlaxVr910ezQFe
+         t0cfP0XEqJFF1otkoMh0ZY4f4+6i1D9qjF/imnupv5SMIOou4JABp7tTTSpKPz9DVxFe
+         x29ataI5AQPJxzmyAv38surh5qhpBID3rgYtdQ3aNGxcglrI0t2jVOCJYwblmm4aBhgY
+         GUfRkftRavOUBIMxLrnHiS3c00UI3RUjwYmnzbKaaXYVwqurEZfFus8bl0VBYcLEINfT
+         5q9Fs9sIWLSlSpvj/l6nT+ZA6P3m5pSKagFwrUyL7o7YCo24iV43EY/JHCQYS8M5WR4b
+         C29Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXUBYwfTlyoPWewohajOfkIzOcD41K6nVhFKj0ACsFi1gOZ+KkQfAJKOHB+m+3LvXPi6+ljXXYmVLsFYbTR@vger.kernel.org, AJvYcCXgA05ZRWdtkESPFwG8qZrPsYpmcOOvEC4/4pjnA01YH+QvVucL5iTaVDVpyGU5FUUS+5wmSTZm2FTm@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSXpgd2uFXZNdvajDDazdUIT/VILEdRmR21tKAqeljqZdpvO+x
+	eJ4s9yG49t7D8RX7aYqEBaklOSgm5Av02y2Uk1y0edQwYj7LxjJ7gf1s
+X-Gm-Gg: ASbGncuRYAMTap1yBpoKpF7RreukG58Tpi4S4RWvqXtShujnm84DDOFKEdmrq06fWvS
+	yEo6bv+RAJnfv2ntrDQIupHP6xGlhd5n5LE6p6NVtoTGR00hBKBaZWRAOqLDbxQg/M75rYFuFl5
+	4fZ6t8zSRyy09dMhb0MHPxuN9TLEguwnta17RXkAaxS71LeV8ZgUMoqbBytCC2yxGvSVTbCGmJQ
+	jf4wjz/VFKWPhz0h2ZyxZr4NOeHQQSxZyyv3ATfQLNcJ56ycFZoBHKiClkpAniSfx73TRTmv0V6
+	7F4XSM65I5HdqpLuBwULYKN+yUCTAcH5IJtg4+RFbveNFdkU/AMsPSG415RiXg==
+X-Google-Smtp-Source: AGHT+IE+7b9v9Zj2LkXyd2nC+NZQDpDyK3bypoGbpAIzajLvSyCeyoIKvei7PJggtI88oZ0VmbeCOg==
+X-Received: by 2002:a17:902:ea0e:b0:238:f2a:8893 with SMTP id d9443c01a7336-23ac4654004mr32944735ad.42.1751005838719;
+        Thu, 26 Jun 2025 23:30:38 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23acb2e219asm9090255ad.40.2025.06.26.23.30.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 23:30:38 -0700 (PDT)
+Date: Fri, 27 Jun 2025 14:30:25 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Vinod Koul <vkoul@kernel.org>, Inochi Amaoto <inochiama@gmail.com>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-phy@lists.infradead.org, 
+	devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH v4 2/2] phy: sophgo: Add USB 2.0 PHY driver for Sophgo
+ CV18XX/SG200X
+Message-ID: <kt3envdgn7kxjjvu6mm5hozb3ml64d4s54ssozljmr7qttvxij@hnuzfawjspoy>
+References: <20250611081804.1196397-1-inochiama@gmail.com>
+ <20250611081804.1196397-3-inochiama@gmail.com>
+ <aF3i3L4BF6YgUMcO@vaman>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL3PR11MB6363:EE_|MN2PR11MB4517:EE_
-X-MS-Office365-Filtering-Correlation-Id: 20e09ab7-aa63-4fbc-6003-08ddb54416bb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?OGw0bjQyZ0YwdUdjbytvakRIV1AreldBSmJlbjRRa0N1ZGdRamFlYzFvaGZ2?=
- =?utf-8?B?Mm5rbS93SktJSDBnN0RodXVwTThuN3RXbmdGZDZCMDQ0WjJNQzRxVDdGRHBt?=
- =?utf-8?B?L0huOWJadnlJTnY0WUxMRThSSElCcnZ0WkdhZU8xZTh5TmZpNTNtcEVFS1Rm?=
- =?utf-8?B?Y0todVpKZlJCVk5wZk1DZThxUFJzVUFuNFZ5a2dvTWEwek1Lb2JtZkxvVVFO?=
- =?utf-8?B?cktFZ1NoSER0U2pEdm9RMWRDWHNUL3JtYm1lRU1iOTA1NVl5Z0VFVldmM3Vl?=
- =?utf-8?B?d3BveDRKTE96amNNK2pWS1h5b0REZ3ltVXNMM3RRTS9hQWtiTW1DblJIUjBi?=
- =?utf-8?B?a2V4V0N4aTRzYjlnQmZ2Q0tldDM3a3VIZzlSMWFxV3BlVkFFK2VjL1hkbHpX?=
- =?utf-8?B?SEJtUTVCamxwUVNSVStCUGRqQmN2L3E5YnRMOW1IMUp2S0VWb3o4aUJTcHBn?=
- =?utf-8?B?aFYrazFGL2JIQitYdGt3VExGWkpHS20ySTNxbUdibDdBRDhNK0RoKzFBS3NW?=
- =?utf-8?B?dVRkdVZGR2hKR2lIdEk0MU44K2ZXZFhCYk10RkJDTGVaTXo3cGh4RG5KdUpq?=
- =?utf-8?B?UUlSYmUzdFh1TW56aHpVRWRmSCtZTUtYbTdyK1h3d2VzbVN0cnd1RU5iWngx?=
- =?utf-8?B?TDdubm1ydFZFWlBVZ3JzbnZnZVhpRytabkRjbjIybjdaU1hrcUJ1dUNFR1BF?=
- =?utf-8?B?R3EveWVweUptTFBraitJTVBjYUlvQUJkajE3SHNhbWZvK1VZWnpScHduaXBs?=
- =?utf-8?B?V0VoWllmREFoNStwYUVKeTdVMTRJQ1k2djlnbVlGUkJYRWJuYXQ4QXg3aTIv?=
- =?utf-8?B?bGNBTGgzTzE4bVNNYVVuZUpHMnIrZmtiY1dEa1pOK3NJUU0rdG9wRGc1WXZu?=
- =?utf-8?B?Z3p6V3FVZGJkOGRGdWRldDdOdjh5NDlnaG84WmZ4dnkxSHFBMGRidHF3b2hO?=
- =?utf-8?B?d0lXWUllSWY0MmYzdWlsSmJzaW4zWWptbmNqWXQ4dmd5VnZib1RQT01XOFYr?=
- =?utf-8?B?bEV1RVpMWmQ2cGYrU2VVNm5IN3lPK0ZZbVg0cS9CWlQzc3IxWkFka1EzZmU2?=
- =?utf-8?B?UXJVNXYxWXFyYlhaejVFWk5vUDFpb2pNbENXcnpHSmpxYk5zYm95V1h3S1FF?=
- =?utf-8?B?N0g3SXBuTDBYQ3lBZVc2Sy9TcEI4RFJWalRKUFgxOHRwWGFVZmthcTNabDBz?=
- =?utf-8?B?a0hkeGJyOTZ2N21mbnlXYXFad0Q1R0puNjNpTnpWdEZPZXpMeXZFMXozdlkv?=
- =?utf-8?B?R2hma1B3OHdHV0pMV2tLenZpdXVPcmRTM1RmWExobDA4eGl6U1MvSTJ6aUEz?=
- =?utf-8?B?dUF0dnJtUytYYUxGejV5bStSOHNzcStvK2l0OE4xdkdIMVJWbkQxdXJUdi9H?=
- =?utf-8?B?Rkk4WCsrYU41OVp1WmRjUXZIb3dzdUpDbktad3dKRVJ1V0xJQUU3Wkh5TnR0?=
- =?utf-8?B?NmI4UDdxZDN1bkZFaVBvMXJKdjFESzNoWUZRSEszaDRyeEp4M1QrYjc0ZC81?=
- =?utf-8?B?ZmpEZXVqWUp2TmloWGoxV0QyRjUyMzN4SEtDUWdGOVpSa3ltbGlyNFlqdFdZ?=
- =?utf-8?B?M1JGUlRmWUZQZHYzQ3RhNVJNWUVLSGQ0RmhuV1hNcjF3elRSMlRlWFJBOVF4?=
- =?utf-8?B?eGRmdFBTV1hKL1FHd0x5cEtUWVZxeXVZOEd6dk1zeDg1VmVvY085c1J1QURK?=
- =?utf-8?B?a1NoLzlLZXJRM25aWnFKenQwUmg2dnRmSG5DVU9LOVAyZUhFNW5JeXZBVGxQ?=
- =?utf-8?B?eXp0NllwNlZieWp6M1BaUlJzVjdOYVB6WEVkTm1nbjNHZVNZVmhoTHFOejVO?=
- =?utf-8?B?ekpnN0xIU2VVNXEwZ2VJZGJJZ3pMSXIwYW1UaHdFeWpuTlh3ZHU1WEVDTThH?=
- =?utf-8?B?Z3ZMeUV6YytuQ1lpbTM4YUVmMDhLeld3RTJyK2lvYkpQQXhMRXlSUkhHS1lp?=
- =?utf-8?Q?Ed+H6KcMpeY=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR11MB6363.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Mk41YkxycWJvYzc1dTFUdUlYNENpZko3QUhzRitvTklNQTlEenlPNHQxWGJH?=
- =?utf-8?B?QnU3a0dIK1lZTDUzWURrcWVnNExaN2F6NGlINWNDYXJMY3Q2SDQyY0dqTE9i?=
- =?utf-8?B?ZC9FNG9XeTIzL2p1U2hqYVpkMzV4bFo2N2lGNUgwdytrQlk3WHpKekRLZTkv?=
- =?utf-8?B?UHNLM2Zkamx2dUZMMW1nenkvMnc4eXBrMUVWNGdaT25PL0JtM3J1WXBZeEht?=
- =?utf-8?B?K040TXJ0UUxod1BndTVwVTM2d3JRL1VzR2hZNHpJWlN5MjBmUDNHYUY1bzRM?=
- =?utf-8?B?YjZxOXBKUGVNbnlPb0VMYlVDckFWQ3hpZTYzRkRXS28vdU9XTDZwT1A4NHVr?=
- =?utf-8?B?TlF4VnhVajQ4Q2hieVpVeTdFeWJBS25FVFNXNjdHM1dYc0l1UTJ2cXBaaDBZ?=
- =?utf-8?B?R0pHYjR6RUh3SnhtM0lkWnliZFJyQXVPR09sc29MVFB3bmUrazA4alFGMS9p?=
- =?utf-8?B?Mkh3MmZqWi9BbmNZM1dJbWVIY2hXR1FmMmFUMlJQYlZnK2lrdStGcm5US040?=
- =?utf-8?B?ZUs2OEcyVXJzRUxQMS9NamNFeHo1bVVmVVlFNFRXQ1RpajZSWklENlF5MTh0?=
- =?utf-8?B?Vi9hT3B1dHlXSXdndmprS1dXNGZndWlvTDJDdXRRV0RnSCtvK0ZGS2FUYkwz?=
- =?utf-8?B?TzJRSHdHMDhSMDl1d0dyMkFpYlpVUFU0MHJ1VlQxMHhBdlBFczRZejlJb1J3?=
- =?utf-8?B?WmdiR1JRcFk4ZnQ4cTdERnhPaXBWNXZoQzhVSURyWDBJalppTWZZb0VZMmho?=
- =?utf-8?B?d1BOa3RobVVlTWVYd3RFd1dqczA5OFRIbFBwaWpQdyt3ZFU3OElVQk5wazND?=
- =?utf-8?B?OEdNMTZ0WHVNa1hlVE1lQXg5VHJ2Q3R5dnMxUmVmYXNUZnU0WVhrREcxdnZW?=
- =?utf-8?B?NWMwa3AyVmxjY3F6UkNwVHVyUzBpSUpkN3JjS1YxdVdPK2VmMGRJL1M0UXR5?=
- =?utf-8?B?MlZHWU1UZGcrODVCVkQzbXFmMHRGczltdXlWR2F6bC93Q1hHVjlEUDh4dXVP?=
- =?utf-8?B?QVpDNC9iNlN5L0tpVG5QOGVMWXNsd1FHZ0FUcjF5aERobm92U1BFYUVzSzlj?=
- =?utf-8?B?emlibUFvbDhHemNFNm5QNnNZaEd6SWdORWdCNjRRaFRRdFpXVDI5WVExRnhl?=
- =?utf-8?B?UmpBVnl5UUJqUHAvbnhzV1dreGhZNDBiUXBPL3pNSTBGSE8wWkZzODFkaU40?=
- =?utf-8?B?TEoxOWlwZytwaERkVTBMdy9Md215TlZqcUFGekRFczdUVDd1SjJXUXA5ZWQx?=
- =?utf-8?B?a0tlbXAxYmd3ajBDL1NQRTRRZ0M5NUlZRjBjNjFwT2E4UWdTYzc1M0xxREd4?=
- =?utf-8?B?cUtmejlZblU0ak5KdlFpOGpSRTljWVpXWmdvV3ZLT3dXNXFITU43dm1Ybzd1?=
- =?utf-8?B?eDBXeHVacEhGR0VoVVE2S3BEbTZoNHNHYmhINUZEYkVsOHRoZWpqb1FOYUIv?=
- =?utf-8?B?ZnYxeTZFamREVG9zTEs3NWdscGJRVkQ4UENyWmV2UFJHdHFqREg5aGJXSzM2?=
- =?utf-8?B?SzNxSEtFNEc0aGZiSEtwamNXWExiOFJTeEZOSmZRL1ZuUWcyeU5BaFU0a2x0?=
- =?utf-8?B?cXhGUzJkbUdLVk01c0ViWHlJWERSWVUrRkVqWXJRVTBUUmRob24xMlpTSFU5?=
- =?utf-8?B?WVdiSDdMMkRaN3lGTnBHWGczdUFTVitkK3lIUXNiQVV4MGFMQVZTU3hLTzVx?=
- =?utf-8?B?YnkybUt4SkV0L1h6QXNjbXFWRDh6Yzhiei9hZ2lGd2YvaW1wUS9nV1JNNjFR?=
- =?utf-8?B?ZDA2Z1VTMUM0THZkcjJJdXR0akpTeVZva3pZNEEzcHRreVd2Zi9yV3VMaHYy?=
- =?utf-8?B?b3Y4ZWJvQXgwWmFOWFB6V051SEVESFNlNnpHMVg0TTlKa3FMaGFsNjkxVWxx?=
- =?utf-8?B?M3ZEN2tmQkNFMGJYY2xPWDhraUM1TGY3NDBvZStYUVVwNFRYZTROUmVQSWRv?=
- =?utf-8?B?U3NHSk5RQ1N2bkJ5MkZkdGEyZXRqQ1VyZWhwRTFkYlBUWjFkV0ZNMmFTVDlh?=
- =?utf-8?B?aXRVb3Q4Z1BscDhNQ3pZZXZvQVZ0akdjTjdrSU95V2hnN29nOXdXSEZXVGh3?=
- =?utf-8?B?WmN6dWxlTGlubkQ5RlZRbTBSbVFIK0hoZ1p1aUhXOTZnNUFMcDdIL0RINHFq?=
- =?utf-8?Q?WlecFPTftuXkxu87KEuTUi8fL?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20e09ab7-aa63-4fbc-6003-08ddb54416bb
-X-MS-Exchange-CrossTenant-AuthSource: BL3PR11MB6363.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 06:30:20.4905
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MbMv5dfAZjd5jb3q9V3LwhbJzYkVvpIdD9iTILE2g2bGMboGGMnrSR2GEZI7bwT4cMCG7UtUdhK9ibdbMdO3ZQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4517
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aF3i3L4BF6YgUMcO@vaman>
 
-On 27.06.2025 07:05, Andy Shevchenko wrote:
->Thu, Jun 26, 2025 at 03:48:11PM -0700, Vinod Koul kirjoitti:
->>
->> On Fri, 04 Apr 2025 13:36:14 +0800, Yi Sun wrote:
->> > The __packed attribute introduces potential unaligned memory accesses
->> > and endianness portability issues. Instead of relying on compiler-specific
->> > packing, it's much better to explicitly fill structure gaps using padding
->> > fields, ensuring natural alignment.
->> >
->> > Since all previously __packed structures already enforce proper alignment
->> > through manual padding, the __packed qualifiers are unnecessary and can be
->> > safely removed.
->
->[...]
->
->> Applied, thanks!
->
->Please, don't or fix it ASAP. This patch is broken in the formal things,
->i.e. changelog entry must not disrupt SoB chain. I'm not sure if Stephen's
->scripts will catch this up on Linux Next integration, though.
->
->-- 
->With Best Regards,
->Andy Shevchenko
->
->
+On Thu, Jun 26, 2025 at 05:16:28PM -0700, Vinod Koul wrote:
+> On 11-06-25, 16:18, Inochi Amaoto wrote:
+> > Add USB 2.0 PHY driver for Sophgo CV18XX/SG200X. Currently
+> > this driver does not support OTG mode as lack of document.
+> > 
+> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> > ---
+> >  drivers/phy/Kconfig                  |   1 +
+> >  drivers/phy/Makefile                 |   1 +
+> >  drivers/phy/sophgo/Kconfig           |  19 +++
+> >  drivers/phy/sophgo/Makefile          |   2 +
+> >  drivers/phy/sophgo/phy-cv1800-usb2.c | 222 +++++++++++++++++++++++++++
+> >  5 files changed, 245 insertions(+)
+> >  create mode 100644 drivers/phy/sophgo/Kconfig
+> >  create mode 100644 drivers/phy/sophgo/Makefile
+> >  create mode 100644 drivers/phy/sophgo/phy-cv1800-usb2.c
+> > 
+> > diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> > index 58c911e1b2d2..678dd0452f0a 100644
+> > --- a/drivers/phy/Kconfig
+> > +++ b/drivers/phy/Kconfig
+> > @@ -122,6 +122,7 @@ source "drivers/phy/renesas/Kconfig"
+> >  source "drivers/phy/rockchip/Kconfig"
+> >  source "drivers/phy/samsung/Kconfig"
+> >  source "drivers/phy/socionext/Kconfig"
+> > +source "drivers/phy/sophgo/Kconfig"
+> >  source "drivers/phy/st/Kconfig"
+> >  source "drivers/phy/starfive/Kconfig"
+> >  source "drivers/phy/sunplus/Kconfig"
+> > diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> > index c670a8dac468..bfb27fb5a494 100644
+> > --- a/drivers/phy/Makefile
+> > +++ b/drivers/phy/Makefile
+> > @@ -35,6 +35,7 @@ obj-y					+= allwinner/	\
+> >  					   rockchip/	\
+> >  					   samsung/	\
+> >  					   socionext/	\
+> > +					   sophgo/	\
+> >  					   st/		\
+> >  					   starfive/	\
+> >  					   sunplus/	\
+> > diff --git a/drivers/phy/sophgo/Kconfig b/drivers/phy/sophgo/Kconfig
+> > new file mode 100644
+> > index 000000000000..2c943bbe1f81
+> > --- /dev/null
+> > +++ b/drivers/phy/sophgo/Kconfig
+> > @@ -0,0 +1,19 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +#
+> > +# Phy drivers for Sophgo platforms
+> > +#
+> > +
+> > +if ARCH_SOPHGO || COMPILE_TEST
+> > +
+> > +config PHY_SOPHGO_CV1800_USB2
+> > +	tristate "Sophgo CV18XX/SG200X USB 2.0 PHY support"
+> > +	depends on MFD_SYSCON
+> > +	depends on USB_SUPPORT
+> > +	select GENERIC_PHY
+> > +	help
+> > +	  Enable this to support the USB 2.0 PHY used with
+> > +	  the DWC2 USB controller in Sophgo CV18XX/SG200X
+> > +	  series SoC.
+> > +	  If unsure, say N.
+> > +
+> > +endif # ARCH_SOPHGO || COMPILE_TEST
+> > diff --git a/drivers/phy/sophgo/Makefile b/drivers/phy/sophgo/Makefile
+> > new file mode 100644
+> > index 000000000000..318060661759
+> > --- /dev/null
+> > +++ b/drivers/phy/sophgo/Makefile
+> > @@ -0,0 +1,2 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +obj-$(CONFIG_PHY_SOPHGO_CV1800_USB2)	+= phy-cv1800-usb2.o
+> > diff --git a/drivers/phy/sophgo/phy-cv1800-usb2.c b/drivers/phy/sophgo/phy-cv1800-usb2.c
+> > new file mode 100644
+> > index 000000000000..1d21db7f875b
+> > --- /dev/null
+> > +++ b/drivers/phy/sophgo/phy-cv1800-usb2.c
+> > @@ -0,0 +1,222 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2025 Inochi Amaoto <inochiama@outlook.com>
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/bitfield.h>
+> > +#include <linux/debugfs.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_gpio.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/phy/phy.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/spinlock.h>
+> > +
+> > +#define REG_USB_PHY_CTRL		0x048
+> > +
+> > +#define PHY_ID_OVERWRITE_EN		BIT(6)
+> > +#define PHY_ID_OVERWRITE_MODE		BIT(7)
+> > +#define PHY_ID_OVERWRITE_MODE_HOST	FIELD_PREP(BIT(7), 0)
+> > +#define PHY_ID_OVERWRITE_MODE_DEVICE	FIELD_PREP(BIT(7), 1)
+> > +
+> > +#define PHY_APP_CLK_RATE		125000000
+> > +#define PHY_LPM_CLK_RATE		12000000
+> > +#define PHY_STB_CLK_RATE		333334
+> > +
+> > +struct cv1800_usb_phy {
+> > +	struct phy	*phy;
+> > +	struct regmap	*syscon;
+> > +	spinlock_t	lock;
+> > +	struct clk	*usb_app_clk;
+> > +	struct clk	*usb_lpm_clk;
+> > +	struct clk	*usb_stb_clk;
+> > +	bool		support_otg;
+> > +};
+> > +
+> > +static int cv1800_usb_phy_set_mode(struct phy *_phy,
+> > +				   enum phy_mode mode, int submode)
+> > +{
+> > +	struct cv1800_usb_phy *phy = phy_get_drvdata(_phy);
+> > +	unsigned int regval = 0;
+> > +	int ret;
+> > +
+> > +	switch (mode) {
+> > +	case PHY_MODE_USB_DEVICE:
+> > +		regval = PHY_ID_OVERWRITE_EN | PHY_ID_OVERWRITE_MODE_DEVICE;
+> > +		break;
+> > +	case PHY_MODE_USB_HOST:
+> > +		regval = PHY_ID_OVERWRITE_EN | PHY_ID_OVERWRITE_MODE_HOST;
+> > +		break;
+> > +	case PHY_MODE_USB_OTG:
+> > +		if (!phy->support_otg)
+> > +			return 0;
+> > +
+> > +		ret = regmap_read(phy->syscon, REG_USB_PHY_CTRL, &regval);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		regval = FIELD_GET(PHY_ID_OVERWRITE_MODE, regval);
+> > +		break;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	return regmap_update_bits(phy->syscon, REG_USB_PHY_CTRL,
+> > +				  PHY_ID_OVERWRITE_EN | PHY_ID_OVERWRITE_MODE,
+> > +				  regval);
+> > +}
+> > +
+> > +static ssize_t dr_mode_write(struct file *file, const char __user *_buf,
+> > +			     size_t count, loff_t *ppos)
+> > +{
+> > +	struct seq_file *seq = file->private_data;
+> > +	struct cv1800_usb_phy *phy = seq->private;
+> > +	enum phy_mode mode;
+> > +	char buf[16];
+> > +
+> > +	if (copy_from_user(&buf, _buf, min_t(size_t, sizeof(buf) - 1, count)))
+> > +		return -EFAULT;
+> > +
+> > +	if (sysfs_streq(buf, "host"))
+> > +		mode = PHY_MODE_USB_DEVICE;
+> > +	else if (sysfs_streq(buf, "peripheral"))
+> > +		mode = PHY_MODE_USB_DEVICE;
+> > +	else if (sysfs_streq(buf, "otg"))
+> > +		mode = PHY_MODE_USB_OTG;
+> > +	else
+> > +		return -EINVAL;
+> > +
+> > +	return cv1800_usb_phy_set_mode(phy->phy, mode, 0);
+> > +}
+> > +
+> > +static int dr_mode_show(struct seq_file *seq, void *v)
+> > +{
+> > +	struct cv1800_usb_phy *phy = seq->private;
+> > +	unsigned long flags;
+> > +	unsigned int regval;
+> > +	bool is_host = true;
+> > +	int ret;
+> > +
+> > +	spin_lock_irqsave(&phy->lock, flags);
+> > +	ret = regmap_read(phy->syscon, REG_USB_PHY_CTRL, &regval);
+> > +	spin_unlock_irqrestore(&phy->lock, flags);
+> > +
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (regval & PHY_ID_OVERWRITE_MODE)
+> > +		is_host = false;
+> > +
+> > +	if (!(regval & PHY_ID_OVERWRITE_EN))
+> > +		seq_puts(seq, "otg: ");
+> > +
+> > +	seq_puts(seq, is_host ? "host\n" : "peripheral\n");
+> > +
+> > +	return 0;
+> > +}
+> 
+> This should be done by host controller and not phy and then use apis to
+> set the mode for phy from controller, pls see other driver on how they
+> do this
+> 
 
-Hi Andy
+Cool, I will remove this thing and let the controller do this.
 
- From what I understand, changelog comments are ignored by git am and do not
-interfere with the SoB chain. They appear after the "---" separator and
-aren't part of the actual commit message. So it should be safe and won't
-break anything during the integration.
+> > +
+> > +DEFINE_SHOW_STORE_ATTRIBUTE(dr_mode);
+> > +
+> > +static int cv1800_usb_phy_set_clock(struct cv1800_usb_phy *phy)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = clk_set_rate(phy->usb_app_clk, PHY_APP_CLK_RATE);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = clk_set_rate(phy->usb_lpm_clk, PHY_LPM_CLK_RATE);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = clk_set_rate(phy->usb_stb_clk, PHY_STB_CLK_RATE);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return 0;
+> 
+> Should this not be return ret here? or just do return clk_set_rate()
+> here
+> 
 
-Let me know if there's something I might have missed.
+I think return ret is the same as return 0. And it is a good
+idea to just do return clk_set_rate.
 
-Thanks
-    --Sun, Yi
+> 
+> > +}
+> > +
+> > +static const struct phy_ops cv1800_usb_phy_ops = {
+> > +	.set_mode	= cv1800_usb_phy_set_mode,
+> > +	.owner		= THIS_MODULE,
+> > +};
+> > +
+> > +static int cv1800_usb_phy_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct device *parent = dev->parent;
+> > +	struct cv1800_usb_phy *phy;
+> > +	struct phy_provider *phy_provider;
+> > +	int ret;
+> > +
+> > +	if (!parent)
+> > +		return -ENODEV;
+> > +
+> > +	phy = devm_kmalloc(dev, sizeof(*phy), GFP_KERNEL);
+> > +	if (!phy)
+> > +		return -ENOMEM;
+> > +
+> > +	phy->syscon = syscon_node_to_regmap(parent->of_node);
+> > +	if (IS_ERR_OR_NULL(phy->syscon))
+> > +		return -ENODEV;
+> > +
+> > +	phy->support_otg = false;
+> > +
+> > +	spin_lock_init(&phy->lock);
+> > +
+> > +	phy->usb_app_clk = devm_clk_get_enabled(dev, "app");
+> > +	if (IS_ERR(phy->usb_app_clk))
+> > +		return dev_err_probe(dev, PTR_ERR(phy->usb_app_clk),
+> > +			"Failed to get app clock\n");
+> > +
+> > +	phy->usb_lpm_clk = devm_clk_get_enabled(dev, "lpm");
+> > +	if (IS_ERR(phy->usb_lpm_clk))
+> > +		return dev_err_probe(dev, PTR_ERR(phy->usb_lpm_clk),
+> > +			"Failed to get lpm clock\n");
+> > +
+> > +	phy->usb_stb_clk = devm_clk_get_enabled(dev, "stb");
+> > +	if (IS_ERR(phy->usb_stb_clk))
+> > +		return dev_err_probe(dev, PTR_ERR(phy->usb_stb_clk),
+> > +			"Failed to get stb clock\n");
+> > +
+> > +	phy->phy = devm_phy_create(dev, NULL, &cv1800_usb_phy_ops);
+> > +	if (IS_ERR(phy->phy))
+> > +		return dev_err_probe(dev, PTR_ERR(phy->phy),
+> > +			"Failed to create phy\n");
+> > +
+> > +	ret = cv1800_usb_phy_set_clock(phy);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	debugfs_create_file("dr_mode", 0644, phy->phy->debugfs,
+> > +			    phy, &dr_mode_fops);
+> > +
+> > +	phy_set_drvdata(phy->phy, phy);
+> > +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> > +
+> > +	return PTR_ERR_OR_ZERO(phy_provider);
+> > +}
+> > +
+> > +static const struct of_device_id cv1800_usb_phy_ids[] = {
+> > +	{ .compatible = "sophgo,cv1800b-usb2-phy" },
+> > +	{ },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, cv1800_usb_phy_ids);
+> > +
+> > +static struct platform_driver cv1800_usb_phy_driver = {
+> > +	.probe = cv1800_usb_phy_probe,
+> > +	.driver = {
+> > +		.name = "cv1800-usb2-phy",
+> > +		.of_match_table = cv1800_usb_phy_ids,
+> > +	 },
+> > +};
+> > +module_platform_driver(cv1800_usb_phy_driver);
+> > +
+> > +MODULE_AUTHOR("Inochi Amaoto <inochiama@outlook.com>");
+> > +MODULE_DESCRIPTION("CV1800/SG2000 SoC USB 2.0 PHY driver");
+> > +MODULE_LICENSE("GPL");
+> > -- 
+> > 2.49.0
+> 
+> -- 
+> ~Vinod
