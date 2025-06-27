@@ -1,58 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A05289E2D
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 21:43:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B875289E2D;
+	Fri, 27 Jun 2025 21:44:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751060635; cv=none; b=OCUs+kncTEmQgSPmjmR2epsTUdf1N+kd38RdaYuMR6MwWPtq1p/9k1yizc2J9tGI0zKL+PNPb6OLGZHCZg/GPxSc+GJUJE3W9p/n8uou3iwdEAmqz+hqKNqTt2C4IFVwSqzthvpsSIeb6t4R9c2x89/9ulgb6SkyKHmDn1mufOo=
+	t=1751060679; cv=none; b=dc0lEsi8Y1QZMOvqTjBmPBNbpbfFp0p4+kX/gx8hmUHyfwmC/WEOpQshhA1fl89prYKtNFu9Ek1H1A7ZM2lE8jOPrxVdC9lOgTjyIA4UoDN9VdyhEyt/X7oDb4cFMI8D5Nb4c81adMo1oHdQLBU36EhEVHNSMWmKfxNKBl5BY5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751060635; c=relaxed/simple;
-	bh=D+gXU4UtMEccbF0FM5UGBExJ8SzeCkvd3uqjNim8IVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tzXBeBWgXry1p18rSangiFaNbWRL8rOjrJJzj/tXOXCIYaVAGJmfhiaxBL0PB1tCsPF80hfLnmi0Bjm6Nw2xHqdnz1ZpU+CGmljKB/g/I4v44AYM2mVvGovKFPMuuXySfU44mYv9EZndG2NzWK7jem0wmna50NB34NL6O3olJIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BYEbp0no; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751060679; c=relaxed/simple;
+	bh=b4bjcqtYTMlbCBJkkYv4E30QbkPwT0gz6mXrIsFMar4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mX1KyYIPY+xKR8nFRRl4KMT2TqFkUNqswfwgaRe0w9mFQ+RlMgVkeXMF+uz09Ae2muQtuRQENSZsnk2vNbqvOV90S70t087kag8VH8xVA8lWEoIco7LFRoukOkt/bBhk1UKj7sLI9gSQi8mFwXP+nTC+mWLWjjccGrx4833OFn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7LZXGuM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BYEbp0no"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B2FAC4CEE3;
-	Fri, 27 Jun 2025 21:43:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7LZXGuM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4687C4CEE3;
+	Fri, 27 Jun 2025 21:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751060634;
-	bh=D+gXU4UtMEccbF0FM5UGBExJ8SzeCkvd3uqjNim8IVE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BYEbp0nocLjCd9+Plhx44R8iEuYKqSyBrndYaQVYIs/q6yF+xJlvsFe+06lEat9Cz
-	 Z3JCkX69T67wNAjNv/J/UGYns2TXIjto92WJjjd2kyTI4Pu/rwh+otEgwwSwTK0vB7
-	 D8YWqiDgU6RX3gXyhiW3qcyLpwrDsu531dE/Omfx5vVLHzQ+Jkf1Hd/bNguALxcrzk
-	 FTDVXhPohcJMPV19GPGE8/GGDTnLP56yB9O0C0GKyWlE0YVjmEH+1iLly6vfuyJs4Y
-	 0i9jLiDZ0j1+9hcp+Z5lJ78jH2lbB/TLIH1B0cgWQ1uCsNFv4V6r6kC1EqzY931x5e
-	 CFhgA26AbsCag==
-Date: Fri, 27 Jun 2025 14:43:53 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>, Andrew Morton
- <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, kernel test
- robot <oliver.sang@intel.com>
-Subject: Re: [PATCH] ref_tracker: do xarray and workqueue job
- initializations earlier
-Message-ID: <20250627144353.57ee3f18@kernel.org>
-In-Reply-To: <20250626-reftrack-dbgfs-v1-1-812102e2a394@kernel.org>
-References: <20250626-reftrack-dbgfs-v1-1-812102e2a394@kernel.org>
+	s=k20201202; t=1751060678;
+	bh=b4bjcqtYTMlbCBJkkYv4E30QbkPwT0gz6mXrIsFMar4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X7LZXGuMzoYAPwAVmFLgM9ZXHBrFMbRhTDriRlOw/PJEGiL5TsFIW55+ILevN3XMZ
+	 e0I6+5cJhuher+4bqd+U2LfXSYPU1v+C8ZXAhGEOqJ0SfhsGyEAePZNtQCakduJ0tv
+	 3UTT1loKWWpkGN1J0XT9NCfWxPctHlKYyf4GuAqyB+iDe6ka2AUX82cXGALqIwXk7F
+	 1a/R2EQr9ihzEcrnjSusgAEB93D6/wSeg0xDv4Wy5aDEHyotgzbh+Fg5R3SWQa0qXs
+	 0ka6FS6xpazzLpq5KgRvPF2slmlnFRq1YDEQ/rCtEWQMLOPQH07iLvCdIQjCNuvKhX
+	 JK3kJJ14iL/tg==
+Date: Fri, 27 Jun 2025 16:44:37 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: linux-mediatek@lists.infradead.org,
+	Russell King <linux@armlinux.org.uk>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>, devicetree@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Eric Dumazet <edumazet@google.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Simon Horman <horms@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>, netdev@vger.kernel.org,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"Chester A. Unal" <chester.a.unal@arinc9.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"David S. Miller" <davem@davemloft.net>
+Subject: Re: [net-next PATCH v15 02/12] dt-bindings: net: Document support
+ for Airoha AN8855 Switch PBUS MDIO
+Message-ID: <175106067736.193475.3574090852380015869.robh@kernel.org>
+References: <20250626212321.28114-1-ansuelsmth@gmail.com>
+ <20250626212321.28114-3-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626212321.28114-3-ansuelsmth@gmail.com>
 
-On Thu, 26 Jun 2025 08:52:14 -0400 Jeff Layton wrote:
-> The kernel test robot reported an oops that occurred when attempting to
-> deregister a dentry from the xarray during subsys_initcall().
+
+On Thu, 26 Jun 2025 23:23:01 +0200, Christian Marangi wrote:
+> Document support for Airoha AN8855 PBUS MDIO. Airoha AN8855 Switch
+> expose a way to access internal PHYs via Switch register.
+> This is named internally PBUS and does the function of an MDIO bus
+> for the internal PHYs.
 > 
-> The ref_tracker xarrays and workqueue job are being initialized in
-> late_initcall() which is too late. Move those to postcore_initcall()
-> instead.
+> It does support a maximum of 5 PHYs (matching the number of port
+> the Switch support)
+> 
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+>  .../bindings/net/airoha,an8855-mdio.yaml      | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/airoha,an8855-mdio.yaml
+> 
 
-Applied to net-next (on top of an -rc tag again, if anyone else
-needs it). Thanks!
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+
