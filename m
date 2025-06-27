@@ -1,239 +1,293 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A088225388;
-	Fri, 27 Jun 2025 07:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751010605; cv=fail; b=Oth1KtWDr/3QBVmD/y9D/YjjJrrpLG3ycLh/THyszCRUyWwoI4klcfKJMkUvXslwzKngazBaGdK61/KHrVBc22Ya4H3QSxU0LN8XWKgtDzEW5Gmr1Bh/sB0JarXDBP4dWsnAdOz3GxJ6F+q3WOtbTzStpTKNbiS+b4PRhcNI3DU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751010605; c=relaxed/simple;
-	bh=rJ6aBmi1sBOrCQ7GnMI2h+PryjgGyxuZoosaol5SQ7s=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=BgyM4elNiSbgBvsBM5wtqP+N469DJAkDwH8NGD8naNNLF1BKiOogyF1h40al9QAiFkU8N/kXEMmSqBL4LU93/MvIy7Livj9PdTBtrutg3mdr9OGggEF4BXdvPiRf948jJYODL3jGwhiJ3ArhxKvV/lw79LgguSZecnnGvv1SGv4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q6dRjKum; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BCA2264A8;
+	Fri, 27 Jun 2025 07:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751010619; cv=none; b=OPiA9g0WRfacjxY4uTZutHN4EvYU1G43TqogDAq3UGD8/b8iUYoDvxmCLkYr9w2xLO/kxbo93pCdEGwDr6nXWuvItET+DB4oW0O/wLWy+3wtIL3rvKLikgMLsGtLDkHtFPLhUDtPWrpJxthFX4lr9GB+S02ay7UlpmhrrgBCb/c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751010619; c=relaxed/simple;
+	bh=Z4/lv4IS6ipDfRZW5AAPrjhhB70JxHRntaI60dxPhgM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rsJdB0jLXi6THiPrm0inoK1N9iMEvk3L1bWkNrawz2fUOuV90ugTFMUfhfOtFG6QMsHodPEWUdLPsVH6q1Z7peZJuBdvcrRm1AYPFffoSgD47xJ/AQWWTOYRUT+blk6yJqmiv53u9sDS+W9DQBPh1XCc1uEZXIdJq85yRkkcxXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SJPdx+gL; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q6dRjKum"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751010603; x=1782546603;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=rJ6aBmi1sBOrCQ7GnMI2h+PryjgGyxuZoosaol5SQ7s=;
-  b=Q6dRjKumpb+Y/kicYymsgz/4MBeS7ZkSZOrhDefb57K3R3EduHekrSfl
-   dD0Yna75+YIt3oM5b28MGozRV3/2YhnG8tcJas17Z1wOrpIrZnsKXZ9Rb
-   03aSdpj7RDuRc4l/WJOCtRe0OCacncvSOOxFYrYdLgyaMSryRSmAdddx8
-   QwgaEFspzc2GthbUPLhsZBjWHizfqMnSXix+oY3DGkhhGKnivv+7l+RTG
-   oa617Df+t0iT7xc2rX+ZvR49zq/Qkxoyb7LXU0jEg3MUg94msxpt8Nax8
-   seNDsenpHLPz6AaAs9i7iMIc3UGKxR9i94GWTqyiW1dA1ahOKv6Ml2wLp
-   A==;
-X-CSE-ConnectionGUID: 9/8Fi3oNTtKgnbPYPvzO+g==
-X-CSE-MsgGUID: jjrRGtqnSjGH7Pp3zNmZnA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="63577324"
-X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
-   d="scan'208";a="63577324"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 00:50:03 -0700
-X-CSE-ConnectionGUID: cAsf1w3eSCWhVRMySfCluQ==
-X-CSE-MsgGUID: 9xoxruwkSL6wanR0KTe60w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
-   d="scan'208";a="152478823"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 00:50:03 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 27 Jun 2025 00:50:02 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Fri, 27 Jun 2025 00:50:02 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (40.107.96.42) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 27 Jun 2025 00:50:01 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=q4EBBGs7QwlsS+sc/b2UmfxeMFgFK/jnZXL4PBM9yPd4g1zN7gLgvzO/gAEV22dylSo+1hhjOKErwFoTtAg5nstqRy/wTBsQPLkxfwUYxllXTbStFYhLi2Wp98juzyD4OIHnIZguttme88dJSLXdEjWBeYd6wteIYhc/Qvd0+wn6ipcX8/bEc8KAHlBCY3UZM4PqCKCNqiLkE1K7Vtq9flQ1A4VQwt66fu5bRzUblekiuASwNZ6vjbXPLFGs9LSZJOdBMhE2G1JS7weMWwQ7glSEc46HUWfHP2+DdcUSxgzbbsKTXnv3zCOAnoRKlwXYt0vaXc2VLAPpQdieIRdpcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=My4rSxiTipWqwIbDBpP9plMwL37UQLNFzl9a7v9TXq0=;
- b=dRy35v+XSU3gkvat1CoCp2cWGuen3NmWpazAr60js5S0wLom0Ktb7HKGLgpgAe+bYV7g+Qqg+YRq3JSEgYBrqjMsTzG8BQzm9tbl3pZ2QrKrrcMWYO/3K5W4FMGEKMWW1C/05jWnKmW5GppBIiSfQ9Jf7D7mlE+V4D110KmIVqUf1ixnsq7s378gQ3ORnJ9l7MVZuBsLEXyaVy1Czh3m+aDnCyZ+2DOUt8bbanIqwVnx9tncd9HYdxVJTlnNaxskp0PSKMa7grqOxf2FRdILkdX0jVzlF2VOIyVjVU0KP8WxlsVneRQaVuywVKAP1jEaICIGzsLcjwPSaRpoKi+7jA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BN7PR11MB2708.namprd11.prod.outlook.com (2603:10b6:406:a9::11)
- by IA4PR11MB9231.namprd11.prod.outlook.com (2603:10b6:208:560::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Fri, 27 Jun
- 2025 07:49:40 +0000
-Received: from BN7PR11MB2708.namprd11.prod.outlook.com
- ([fe80::6790:e12f:b391:837d]) by BN7PR11MB2708.namprd11.prod.outlook.com
- ([fe80::6790:e12f:b391:837d%5]) with mapi id 15.20.8857.026; Fri, 27 Jun 2025
- 07:49:40 +0000
-Message-ID: <dba2841f-0725-4b58-b633-650201c053b4@intel.com>
-Date: Fri, 27 Jun 2025 10:49:34 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv2 04/12] x86/virt/tdx: Add tdx_alloc/free_page() helpers
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	<pbonzini@redhat.com>, <seanjc@google.com>, <dave.hansen@linux.intel.com>
-CC: <rick.p.edgecombe@intel.com>, <isaku.yamahata@intel.com>,
-	<kai.huang@intel.com>, <yan.y.zhao@intel.com>, <chao.gao@intel.com>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<kvm@vger.kernel.org>, <x86@kernel.org>, <linux-coco@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>
-References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
- <20250609191340.2051741-5-kirill.shutemov@linux.intel.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
- 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
- 4, Domiciled in Helsinki
-In-Reply-To: <20250609191340.2051741-5-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DU7P190CA0003.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:10:550::16) To BN7PR11MB2708.namprd11.prod.outlook.com
- (2603:10b6:406:a9::11)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SJPdx+gL"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55R4DFfZ028699;
+	Fri, 27 Jun 2025 07:50:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zdkB40YhgP4G2OpaHQmOJCHVPGaOSXgufof3fjxY1K0=; b=SJPdx+gLxIINMNnA
+	nMZe2DdW9yZ2Xv+SEg4Mh8J6DetODlWlFv7YmUK+tIelqT19SuB0fKP7IANak3GK
+	nVMaDDy3bZF+cSgmwc1LK+pEWj3VyvnhelXE7RSVcRjubtnCmyucOTVoEPU6GMsL
+	0qHBRMs3Y869V0IPjVS6dkieQu7rcqGHSmkrxCFsN/zbpDlQ2V2icDfLSQQmjtt0
+	tWAfjg1TY/bKfb9Msu6ALXz6F0jFKWe6ClYe5M/tc72EMvsLn4qEckr3KPVKd7Af
+	Sawct/qJ3OtRlvqxBr3yrziwxRDuyBmeLf+yiJOyC3J2LfbZFLuAKGI9aYnhcaGZ
+	ANX/JA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47esa4y7sx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 07:50:03 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55R7o2iw031202
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 07:50:02 GMT
+Received: from [10.253.74.126] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Fri, 27 Jun
+ 2025 00:49:58 -0700
+Message-ID: <014d535e-ca9c-4707-9ff4-7afdd489b780@quicinc.com>
+Date: Fri, 27 Jun 2025 15:49:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN7PR11MB2708:EE_|IA4PR11MB9231:EE_
-X-MS-Office365-Filtering-Correlation-Id: 49aa2644-a81d-4080-42e5-08ddb54f2bdb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?bDB4eGFxbmdaRk1lVzdjK3EyTzVRLzRTRVp6bjNpczRBZHlrSVRlRDNOdlM1?=
- =?utf-8?B?T1NkV2hBdG9ndHNOcXZiUTIrTjY0dG5VeFdzMGhRSElKSW5DZ3dhbHB0dXI4?=
- =?utf-8?B?OE5uWVlscXIxVlB1SnYzU0hvOXJSUzMrSUdKckxXQm9rNXJNWmI2MkJpenll?=
- =?utf-8?B?TllCQTVmZUY0OWNxUTRUSnZ2ZWEzdE9pSG5GazlTNmFTSGhlNkpTWlNCejFP?=
- =?utf-8?B?VmwxeksvNWlPbUNqVzI4WmJnOHJVYS8vaGI1V3FuSUkzYVRsbXJScnUvdlhw?=
- =?utf-8?B?WElqaCt2dUowZ21qNk45UlVBenNHMjVvdGY3MFlINFRPWjRXc29EdzRIQTc4?=
- =?utf-8?B?aFl0eVYvNnQzVnJkRlVWQ290ZmFKTWw5aERZQXpvWFlpeExHVDl4c216RkM1?=
- =?utf-8?B?dDVmZUVSeU9NV09WV09SaGRNWHJCVGlQWlVyQ3p3Q1d6aGFWWVdDeE52bjZh?=
- =?utf-8?B?Q3VKdjc0MVZQWnZqbCtkUTh3M0FtbTVuTklLMHJ0TU1pMWtiN3RzS3FyTzNS?=
- =?utf-8?B?MTZXZWxqOENYYVhoUEFVMjZFdGlxVllMVzhiWDUvbENQNzF6REhBRGgxaE5M?=
- =?utf-8?B?Q1BCdlNHNXVsRjAwa043d3ZtdzZZb2pBQWlFN1RtdUJJQzBXL3JZWUIrU2Fk?=
- =?utf-8?B?SWpVRGs0VG5YNWFFbTVCYjRZYmNCTjRVWlI1VDc5clM1RlAzdVNQVFkvK1dn?=
- =?utf-8?B?VVlyYXVKTHB2Wm5wVnorL29SWThjWHh5TFN3RkhWRUJQU1ZzaGI4aEhiNzV0?=
- =?utf-8?B?dndYd0dmY3R1Y01yNGo3MitNWUtuTCsxWkx6aHM2YzUwemw5U05NY0xBYVQz?=
- =?utf-8?B?SXdsYzVjdGxlYTRTKzN0bVBPQWN5RU1SaC9xVzM0VldmaWlrM0w5ekJyZXRT?=
- =?utf-8?B?Y2daRy9XL1RibG5VcmU2WHg4SWlHeE1yODB4YVd6cEEyM2hrSmVyaWJXcUNS?=
- =?utf-8?B?cnhWYTc0TXJuendESU1yZXZLaW9jTnNTQmFCVkxJNnMrbGlWeGFkK1FMQWl4?=
- =?utf-8?B?WkxUOEtwRERtQlZJQTg0QXkxWmYyVk1aam9vUmlvbVhIakx5eFZLeUJtdVFw?=
- =?utf-8?B?RTRzWXZRV1lmaDZNMG0xRGhPQkFMUTl6NWY0WlFLejIwQlBtSjdzMkcyVlJB?=
- =?utf-8?B?TWg3QXFoNnFmbmJsL1NUeWFHRWNPWm9FbWM0NThxSkY0L2NpZktpd2RScDdo?=
- =?utf-8?B?Y3dFMHhkZitYKzBGNUhIQjU3UWlOVHJ2Y09IR0lIdjdMQkVQeWx4eWJTWm91?=
- =?utf-8?B?eDRaZ3RENFlIYVlEK0J3Z294WVcrOCtIL25mVWVYWXh2MUtIdVkzTjJ1Q3VI?=
- =?utf-8?B?VDl5UGJ5ZVB3SlNEcTRjMjBmd3ZBM0ppL3JLaWRSM3hWMTBIWWduVFZnd1Rh?=
- =?utf-8?B?Zkt6SDFCWkJRdjFhTnFMT2hpcVkzKzFCc3N2a0hJTjg5UG1mY2Q4REJ1V01j?=
- =?utf-8?B?YS9vUDVQVmp4SjgxRTI1UGJ5TW1rNUw5TStnMkdaeitQdWh0SDB3YjlKY1RL?=
- =?utf-8?B?YlVvbEMxK1dOQ24vUTRhVG9xdXVacm1YU2ZiZitZZEdUYnpWRlBMVjdTUUh0?=
- =?utf-8?B?a2hLSTVUb2JLYWpYcWY2bW5Tck5JU01aRnJKSlp6WUZEWlBiUzFYd2lYY2Jh?=
- =?utf-8?B?aXVWNUlLbzhnblp5VGx5UkVXWXoyZC9rbWdHSEJlOUJCYWk5cEdsN2dsaHY2?=
- =?utf-8?B?eTFYTjhPM1laSEUxL1JCcU5Md2NVeEhITE1jUHhyM1ZKVzJlMUMxazdmTmp0?=
- =?utf-8?B?UWMrRWxLUVl6dVlPS2FiaXV6UElLb1NjclN4YllMVlpYeEVucmNLc212aVVU?=
- =?utf-8?B?RlJ3UldvQ05ZRkVGSmZQSVJyeDRocnVzcUlNWWtlTjFZOHBpVzZhT3dMSERn?=
- =?utf-8?B?cDdDQ3EyMG1FczhIQWU3Z1U0dVBHc3QxcTFRZnFRcmxhSVVKOEUrNFBCcnQ4?=
- =?utf-8?Q?Wt8zvhTTAfQ=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR11MB2708.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZENCRXlManVIU0NjSWF4ei90UzN5Tjd4L0cvU3ViS21wY1RaVktxT3ZuT2dS?=
- =?utf-8?B?UmxsREJOeWR6NzBzK0I5d3JZSDFVamhVVGVRTHpLazc5MjRjSFFDanNUT2hI?=
- =?utf-8?B?eGR4ZW5xWUxmVWlISTQ5MU9PbHQ1T0RFYmtObjNVZFZtVlZtZGdlQVk4eklQ?=
- =?utf-8?B?cXVVVHFVa3lmblVoaXMrM0ZpUTBwSkxuOGdMazk3dkFTMTRJZzc0Q1pKeG5k?=
- =?utf-8?B?NTZNR0l6SEdRYXBKeUt3MTFRL2VRdW1mSWlCVysyb2J1N1MzUTdXNnNrWStl?=
- =?utf-8?B?Y1FBbUFDTG1sczR1VXRQOEU4Z0VJNkZjVDE3ejIrMWoxL3grUEwzNWM2Mnll?=
- =?utf-8?B?TTBDeis2cGV2M2k4TS9BbG93SnVveVVrSENHZVQ5NlU4RWhUTDBpMWRXZThT?=
- =?utf-8?B?RDBaY2tYYUpVT2tYdGFDbldENXc4anM3bDM2aGtYOXBaWFhxV0x1L3M2WjQ4?=
- =?utf-8?B?TjhqS2pUZGMzTUJ5ZUFxQXZQbzBJQ2ZUekc5cjRSTkZuVWN0THBCd25JOTdl?=
- =?utf-8?B?b3VTZ0E1NlNYY2RsZER6WDQzekt4YjVpWXBPRS9YSWlCL0txalF4Z0p0WWE4?=
- =?utf-8?B?aXdjYS9OTkdQQW1MSCt2QkVWNGpxa1RMVVJZM200ZUFhclkvWEl6U0t0cFpV?=
- =?utf-8?B?RnhYWHZWaG1tMk5oWWdoV2pWS05zZEh6YlZWUmd4b21CRW5uLzFRcVVGTjUw?=
- =?utf-8?B?ZUwzeXY5RHBGL2VsVHdjWU9tcEc1ZG5sMHJDcW1mcmJLZnZIWjZFRUo3NHUr?=
- =?utf-8?B?QjNYWTRucE51UFYydFdob0tPQUNJUkhRS1hPMU1Fd2NTeUd6QVNyK3JRSVJL?=
- =?utf-8?B?QnF1SjEvMHVpZ0oyWEFxdmFJZTlFUmtUS0IxWUJmcHNiTGVFZTRveWswRFVl?=
- =?utf-8?B?MDhPTndPR0NDSVZIQmdSV1dDVXl5ZUtvVGNwdkNkTzZGUWNkK2F4b2FNU3ZV?=
- =?utf-8?B?c3NZM0hZUnBic2dueTN6TFI4UGZrZnUwb1FKQjU5Q01ieVZTNXVRUjJMUE9Y?=
- =?utf-8?B?Q0ZTeHRKOXhjZnpXUy9ZelY3eUNwQ3lZZzIxZkpaZ3dOM05STlZ0Tmt5WnZB?=
- =?utf-8?B?Z3RCZVg0cTNuSWNERC9HR1c3Z3ZLSWw0blVwTzAvN1lwV1ZRN1QvT0paR2J4?=
- =?utf-8?B?MjRUb3BUVzlFdCtYZXd2b1dnUHJ2cEUydmsxeVEvMHlqS2NxT1dGRUkrYjBp?=
- =?utf-8?B?cFJxeWN6R3hlRFZNYnlmTE0zdFVGMjdqUEd4bS9wOGJ2ZlU4T2xIYTM4cHNN?=
- =?utf-8?B?MEdDbWtBMVMwWHZuVzl5OUN4dUZUNXhYQmpkUW5RMnhMWXhvSTAySnhSbTkv?=
- =?utf-8?B?RGtwdUV0M0pacHJodTJPdXMrTGMzazA4UnZ3dVhzTUd6SkRmWEhRV3pjWmV3?=
- =?utf-8?B?MmpqalgweUhwYjE0N0pUaGxhZ1VhL0wvVVhWWFA4cjI2anZGZDVhMUpRWjkw?=
- =?utf-8?B?SjR3OUpBdm5KVXNJQUo2QXFtN1BRRnhIbWhTeFlocTN6R3B0Nk9Ma05zZWdq?=
- =?utf-8?B?K1ViK1M3V3pZVkRvM0tpOWRCazlZcTBQSXFWcUZURllTZmtwRXNMMEduZEdR?=
- =?utf-8?B?eCtKMkRGY3ZTMElXWXgxU0g5OFNTb3ZrekFEajdPcFp0MzAvUThQKzJaUU9h?=
- =?utf-8?B?L0RFd3drUHdWbXArNFVIeWFna2VmejU1MkVCdTN3UGlvaUdLRXc0THFSN0sx?=
- =?utf-8?B?aUhDdXcwZHhtbFppdUxDVVFqZEtKS3J0eG9nUjlaamZQNVUvWURGYnYrdlc1?=
- =?utf-8?B?Z2VIZ0M1Mm8rYmFXODJpdm8rRThMR3IvczNHZWsyaWdPTUliaS9CbkF5NG1q?=
- =?utf-8?B?OXpka1Exd09hSGRmdlpMY21CdUpMU2RVWXR6RGxRVlFUQTZPRC9UUEdPakJX?=
- =?utf-8?B?akppbmRRYWVLU0JzNGs2MDZ6ZnZxbEhDNXdIK3JhYjJKSTZmVU1WalVNMzNL?=
- =?utf-8?B?SHhpY0ZXSHpVTEZPWFFZNjNWV3p2TDFmVzZFTUpWei9WbnV6WmgrWjNyRzJU?=
- =?utf-8?B?U3FNeHZjWG1FTWQ5SHpkSXp3SXprdnVuQ3BZcUpCSmw5eEpPWUlNa2dMcldL?=
- =?utf-8?B?ZWVtNTZKc3JrZ2Jvd0dJbEJkSUFxcGl0bGp5VnJQSFdDSDNwaFpEbnRSbHl6?=
- =?utf-8?B?engxV0FtVjlzd2tvVi9Ebk5lMmdMYnRLWVhOZFJRTStweTg5Tko5MkNsTkhj?=
- =?utf-8?B?R3c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49aa2644-a81d-4080-42e5-08ddb54f2bdb
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR11MB2708.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 07:49:40.3790
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WNhjKKbAXBcrBn2oGkEmuKptrDOq77cKuu4IF6ZBnEPhCLvVObbvdS3LRjdLci0hl1veAEb1nhsk4Mkh9yORBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB9231
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/38] drm/msm/dp: split msm_dp_panel_read_sink_caps()
+ into two parts and drop panel drm_edid
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Rob Clark <robin.clark@oss.qualcomm.com>,
+        Abhinav Kumar
+	<abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        "Abhinav
+ Kumar" <quic_abhinavk@quicinc.com>
+References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
+ <20250609-msm-dp-mst-v2-1-a54d8902a23d@quicinc.com>
+ <g6wqvbszbrw6gnvxz7cjmhx4rc53kyulcr5wjekfjaisontikl@723odzngtlnd>
+ <326bbd02-f414-48e3-a396-4b94f19054f7@quicinc.com>
+ <buvgxzf5u5wkj2nxd6rquvcktjmxoclwrkkmxeih6pnikubqe3@yoytvnayvxtv>
+Content-Language: en-US
+From: Yongxing Mou <quic_yongmou@quicinc.com>
+In-Reply-To: <buvgxzf5u5wkj2nxd6rquvcktjmxoclwrkkmxeih6pnikubqe3@yoytvnayvxtv>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=eLYTjGp1 c=1 sm=1 tr=0 ts=685e4d2b cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=E04JO-gUzBZdZbePgc0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: oMio7BAkI8NlZciJyRrtZ7PNPZKOXxWo
+X-Proofpoint-ORIG-GUID: oMio7BAkI8NlZciJyRrtZ7PNPZKOXxWo
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDA2MiBTYWx0ZWRfX+WAfJBA6JyhX
+ adNA6Rdnzil6sfWBefGRYQq6PsuFC8zTpPY2z6Z93uuM9z13rUkSUvycW5rvvIJPYlocmoUu5Qy
+ xWNHLWh+Nc5Tp1n7XkVaNnUcY5bCuOZx2CmPVkc0BVS84nKh0qUbi1+IR+KS1iV2OVXIpBf47As
+ +jRnm4FK7zDm5Lhrz3yxGfJ9J2sffPYTpgB7JU3ObZmsZec5YiQM2XqHvpMQt3TnxgrLgU1HfyA
+ Rw0u9O3ao/b6JV4FXJ4JJEwFrY7lEwlKRevvuHrBA3tB7Y0LTAZDMfQz4DyJxyhHCFjC8E6SjKi
+ 0wzuOxOYR9a5pq/liYuEpuFsCDeQj87p+KX+/NxZACojPmNiIBi/a7iw4oQNIzhIMm3In+B44yf
+ BqxFNzfoyZ46NjTXjgGAdWULhkY4dwIKmz7clmASeY4EejkpbN1HdvS8Qp6HebZiQD/gPLA+
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_02,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 mlxlogscore=999
+ suspectscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506270062
 
-On 09/06/2025 22:13, Kirill A. Shutemov wrote:
-> +static void tdx_pamt_put(struct page *page, enum pg_level level)
-> +{
-> +	unsigned long hpa = page_to_phys(page);
-> +	atomic_t *pamt_refcount;
-> +	LIST_HEAD(pamt_pages);
-> +	u64 err;
-> +
-> +	if (!tdx_supports_dynamic_pamt(&tdx_sysinfo))
-> +		return;
-> +
-> +	if (level != PG_LEVEL_4K)
-> +		return;
-> +
-> +	hpa = ALIGN_DOWN(hpa, PMD_SIZE);
-> +
-> +	pamt_refcount = tdx_get_pamt_refcount(hpa);
-> +	if (!atomic_dec_and_test(pamt_refcount))
-> +		return;
-> +
-> +	scoped_guard(spinlock, &pamt_lock) {
-> +		/* Lost race against tdx_pamt_add()? */
-> +		if (atomic_read(pamt_refcount) != 0)
-> +			return;
-> +
-> +		err = tdh_phymem_pamt_remove(hpa | TDX_PS_2M, &pamt_pages);
-> +
-> +		if (err) {
-> +			atomic_inc(pamt_refcount);
-> +			pr_err("TDH_PHYMEM_PAMT_REMOVE failed: %#llx\n", err);
-> +			return;
-> +		}
-> +	}
-> +
 
-Won't any pages that have been used need to be cleared
-before being freed.
 
-> +	tdx_free_pamt_pages(&pamt_pages);
-> +}
+On 2025/6/25 21:32, Dmitry Baryshkov wrote:
+> On Wed, Jun 25, 2025 at 04:43:55PM +0800, Yongxing Mou wrote:
+>>
+>>
+>> On 2025/6/9 20:41, Dmitry Baryshkov wrote:
+>>> On Mon, Jun 09, 2025 at 08:21:20PM +0800, Yongxing Mou wrote:
+>>>> From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>>>>
+>>>> In preparation of DP MST where link caps are read for the
+>>>> immediate downstream device and the edid is read through
+>>>
+>>> EDID, not edid. Please review all your patches for up/down case.
+>>>
+>> Got it. Thanks~
+>>>> sideband messaging, split the msm_dp_panel_read_sink_caps() into
+>>>> two parts which read the link parameters and the edid parts
+>>>> respectively. Also drop the panel drm_edid cached as we actually
+>>>> don't need it.
+>>>
+>>> Also => separate change.
+>>>
+>> Got it.
+>>>>
+>>>> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>>>> Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
+>>>> ---
+>>>>    drivers/gpu/drm/msm/dp/dp_display.c | 13 +++++----
+>>>>    drivers/gpu/drm/msm/dp/dp_panel.c   | 55 ++++++++++++++++++++-----------------
+>>>>    drivers/gpu/drm/msm/dp/dp_panel.h   |  6 ++--
+>>>>    3 files changed, 40 insertions(+), 34 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
+>>>> index 6f05a939ce9e648e9601597155999b6f85adfcff..4a9b65647cdef1ed6c3bb851f93df0db8be977af 100644
+>>>> --- a/drivers/gpu/drm/msm/dp/dp_display.c
+>>>> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
+>>>> @@ -389,7 +389,11 @@ static int msm_dp_display_process_hpd_high(struct msm_dp_display_private *dp)
+>>>>    	dp->link->lttpr_count = msm_dp_display_lttpr_init(dp, dpcd);
+>>>> -	rc = msm_dp_panel_read_sink_caps(dp->panel, connector);
+>>>> +	rc = msm_dp_panel_read_link_caps(dp->panel);
+>>>> +	if (rc)
+>>>> +		goto end;
+>>>> +
+>>>> +	rc = msm_dp_panel_read_edid(dp->panel, connector);
+>>>>    	if (rc)
+>>>>    		goto end;
+>>>> @@ -720,7 +724,6 @@ static int msm_dp_irq_hpd_handle(struct msm_dp_display_private *dp, u32 data)
+>>>>    static void msm_dp_display_deinit_sub_modules(struct msm_dp_display_private *dp)
+>>>>    {
+>>>>    	msm_dp_audio_put(dp->audio);
+>>>> -	msm_dp_panel_put(dp->panel);
+>>>>    	msm_dp_aux_put(dp->aux);
+>>>>    }
+>>>> @@ -783,7 +786,7 @@ static int msm_dp_init_sub_modules(struct msm_dp_display_private *dp)
+>>>>    		rc = PTR_ERR(dp->ctrl);
+>>>>    		DRM_ERROR("failed to initialize ctrl, rc = %d\n", rc);
+>>>>    		dp->ctrl = NULL;
+>>>> -		goto error_ctrl;
+>>>> +		goto error_link;
+>>>>    	}
+>>>>    	dp->audio = msm_dp_audio_get(dp->msm_dp_display.pdev, dp->catalog);
+>>>> @@ -791,13 +794,11 @@ static int msm_dp_init_sub_modules(struct msm_dp_display_private *dp)
+>>>>    		rc = PTR_ERR(dp->audio);
+>>>>    		pr_err("failed to initialize audio, rc = %d\n", rc);
+>>>>    		dp->audio = NULL;
+>>>> -		goto error_ctrl;
+>>>> +		goto error_link;
+>>>>    	}
+>>>>    	return rc;
+>>>> -error_ctrl:
+>>>> -	msm_dp_panel_put(dp->panel);
+>>>>    error_link:
+>>>>    	msm_dp_aux_put(dp->aux);
+>>>>    error:
+>>>> diff --git a/drivers/gpu/drm/msm/dp/dp_panel.c b/drivers/gpu/drm/msm/dp/dp_panel.c
+>>>> index 4e8ab75c771b1e3a2d62f75e9993e1062118482b..d9041e235104a74b3cc50ff2e307eae0c4301ef3 100644
+>>>> --- a/drivers/gpu/drm/msm/dp/dp_panel.c
+>>>> +++ b/drivers/gpu/drm/msm/dp/dp_panel.c
+>>>> @@ -118,14 +118,13 @@ static u32 msm_dp_panel_get_supported_bpp(struct msm_dp_panel *msm_dp_panel,
+>>>>    	return min_supported_bpp;
+>>>>    }
+>>>> -int msm_dp_panel_read_sink_caps(struct msm_dp_panel *msm_dp_panel,
+>>>> -	struct drm_connector *connector)
+>>>> +int msm_dp_panel_read_link_caps(struct msm_dp_panel *msm_dp_panel)
+>>>>    {
+>>>>    	int rc, bw_code;
+>>>>    	int count;
+>>>>    	struct msm_dp_panel_private *panel;
+>>>> -	if (!msm_dp_panel || !connector) {
+>>>> +	if (!msm_dp_panel) {
+>>>>    		DRM_ERROR("invalid input\n");
+>>>>    		return -EINVAL;
+>>>>    	}
+>>>> @@ -160,26 +159,29 @@ int msm_dp_panel_read_sink_caps(struct msm_dp_panel *msm_dp_panel,
+>>>>    	rc = drm_dp_read_downstream_info(panel->aux, msm_dp_panel->dpcd,
+>>>>    					 msm_dp_panel->downstream_ports);
+>>>> -	if (rc)
+>>>> -		return rc;
+>>>> +	return rc;
+>>>> +}
+>>>> -	drm_edid_free(msm_dp_panel->drm_edid);
+>>>> +int msm_dp_panel_read_edid(struct msm_dp_panel *msm_dp_panel, struct drm_connector *connector)
+>>>> +{
+>>>> +	struct msm_dp_panel_private *panel;
+>>>> +	const struct drm_edid *drm_edid;
+>>>> +
+>>>> +	panel = container_of(msm_dp_panel, struct msm_dp_panel_private, msm_dp_panel);
+>>>> -	msm_dp_panel->drm_edid = drm_edid_read_ddc(connector, &panel->aux->ddc);
+>>>> +	drm_edid = drm_edid_read_ddc(connector, &panel->aux->ddc);
+>>>> -	drm_edid_connector_update(connector, msm_dp_panel->drm_edid);
+>>>> +	drm_edid_connector_update(connector, drm_edid);
+>>>> -	if (!msm_dp_panel->drm_edid) {
+>>>> +	if (!drm_edid) {
+>>>>    		DRM_ERROR("panel edid read failed\n");
+>>>>    		/* check edid read fail is due to unplug */
+>>>>    		if (!msm_dp_catalog_link_is_connected(panel->catalog)) {
+>>>> -			rc = -ETIMEDOUT;
+>>>> -			goto end;
+>>>> +			return -ETIMEDOUT;
+>>>>    		}
+>>>>    	}
+>>>> -end:
+>>>> -	return rc;
+>>>> +	return 0;
+>>>>    }
+>>>>    u32 msm_dp_panel_get_mode_bpp(struct msm_dp_panel *msm_dp_panel,
+>>>> @@ -208,15 +210,20 @@ u32 msm_dp_panel_get_mode_bpp(struct msm_dp_panel *msm_dp_panel,
+>>>>    int msm_dp_panel_get_modes(struct msm_dp_panel *msm_dp_panel,
+>>>>    	struct drm_connector *connector)
+>>>>    {
+>>>> +	struct msm_dp_panel_private *panel;
+>>>> +	const struct drm_edid *drm_edid;
+>>>> +
+>>>>    	if (!msm_dp_panel) {
+>>>>    		DRM_ERROR("invalid input\n");
+>>>>    		return -EINVAL;
+>>>>    	}
+>>>> -	if (msm_dp_panel->drm_edid)
+>>>> -		return drm_edid_connector_add_modes(connector);
+>>>> +	panel = container_of(msm_dp_panel, struct msm_dp_panel_private, msm_dp_panel);
+>>>> +
+>>>> +	drm_edid = drm_edid_read_ddc(connector, &panel->aux->ddc);
+>>>> +	drm_edid_connector_update(connector, drm_edid);
+>>>
+>>> If EDID has been read and processed after HPD high event, why do we need
+>>> to re-read it again? Are we expecting that EDID will change?
+>>>
+>> Here we indeed don't need to read the EDID again, so we can directly call
+>> drm_edid_connector_add_modes. Thanks.
+>>>> -	return 0;
+>>>> +	return drm_edid_connector_add_modes(connector);
+>>>>    }
+>>>>    static u8 msm_dp_panel_get_edid_checksum(const struct edid *edid)
+>>>> @@ -229,6 +236,7 @@ static u8 msm_dp_panel_get_edid_checksum(const struct edid *edid)
+>>>>    void msm_dp_panel_handle_sink_request(struct msm_dp_panel *msm_dp_panel)
+>>>>    {
+>>>>    	struct msm_dp_panel_private *panel;
+>>>> +	const struct drm_edid *drm_edid;
+>>>>    	if (!msm_dp_panel) {
+>>>>    		DRM_ERROR("invalid input\n");
+>>>> @@ -238,8 +246,13 @@ void msm_dp_panel_handle_sink_request(struct msm_dp_panel *msm_dp_panel)
+>>>>    	panel = container_of(msm_dp_panel, struct msm_dp_panel_private, msm_dp_panel);
+>>>>    	if (panel->link->sink_request & DP_TEST_LINK_EDID_READ) {
+>>>> +		drm_edid = drm_edid_read_ddc(msm_dp_panel->connector, &panel->aux->ddc);
+>>>
+>>> And again....
+>>>
+>> Here we need the struct edid,since we drop the cached drm_edid, so we need
+>> to read it again. Or we can return the drm_edid from msm_dp_panel_read_edid
+>> and pass it to msm_dp_panel_handle_sink_request, then we don't need to read
+>> drm_edid here. Emm, I'm still a bit curious why we can't cache the drm_edid?
+>> It would help us to access it when needed. Emm, i see other drivers also
+>> cache it.
+> 
+> Yes, they can cache EDID. However, in this case we don't even need it at
+> all. This piece needs to be rewritten to use
+> drm_dp_send_real_edid_checksum(), connector->real_edid_checksum.
+> 
+> Corresponding changes can be submitted separately.
+> 
+Got it, thanks, will separate this patch from MST patches..  Even if we 
+use drm_dp_send_real_edid_checksum to send 
+connector->real_edid_checksum, that’s only when the EDID state is incorrect.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c?h=v6.16-rc3#n1020 
+
+  When the EDID is read correctly, it should send edid->checksum instead.
+> 
 
