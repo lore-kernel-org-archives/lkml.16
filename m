@@ -1,140 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C164A0C;
-	Fri, 27 Jun 2025 05:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A112F852
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751002893; cv=none; b=p/l7yyRR3TedpziiH/ziiVZYL93qf/UaC5+an81srDtjyQvhwaBbKcBlQLPt1gVxbdx7M1zvvAFQisyhJtZS5NwPV3+ZETHTRmKrAEf280kOC7BC1nihdr8++pc5IaLVo6Ta49gfCYZejQ62vDRf48LMAnE3DiE97Mb2XgQ/zfM=
+	t=1751003044; cv=none; b=DrNeHDS9Sc7quUhZfwPgiIAjx5c/hLLb74mU6Li23zSTPlEbImlHGwlvWEZkryDqYHAZofUvaaw1nlMLydU4FvxsmHdiW7kmBTi8VlufJpa3yLrLovTqSWv0gs7Z0ksoawd9NY2sOWyaqSHMKK05c+xeXcvPTvdAYSi5bon+bh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751002893; c=relaxed/simple;
-	bh=dUm1yrHhH24CENQYmfpWDm2x5uhPiAm3sLBZRyUUA0k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FllLf6EJLWIratYo6Obz8kT/1TAv0XIXghz3gj0t+fcPsGSrB8Rfu0mFjl1nkFfeoD69a5JVnHd+v1PfOSlPrVDayA028HPVidlDFed/CxFYoN+79TXdPIdS+7ogk9kQ9AgdqX4W3iPI1gROF5qX3KOx7u9qNmvZg7jQyxfrLcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UPMsTKpL; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UPMsTKpL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751002892; x=1782538892;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=dUm1yrHhH24CENQYmfpWDm2x5uhPiAm3sLBZRyUUA0k=;
-  b=UPMsTKpLoU+aQqHHFXziuD4OEEpxNSEmFmF717ROtxMyPscmTT0RXNVe
-   mH16fVC/XaGCUCmZeH/VmZnAYr/y5rcdSzgkY4hv0hpVfopbQkODNbRuH
-   DMzi5399r4IkVmEOQgwXQRbFa9R7CtI7KTPOeEOjvMzjYD5fEkhF1paGt
-   ZjuS4+sHo1nbirQROhD/fkjTge99zjlPmJTxAh7I94esqptx2hBTHhmIt
-   Djnu+uE5K2NvCBOXpHb1B2MpGtcDo4ti+CyJJvYmGP6AJxy1ootGF+6OH
-   hyptYdyTL9AFmzODZ5XwRTPQrBoSS5j55gAhrYt/Doz3t9ArIc7ZRUMP/
-   A==;
-X-CSE-ConnectionGUID: u3Zd68ruShaEQr1giRXypg==
-X-CSE-MsgGUID: r4e9Wag+QBO9++ZI1h3qSg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53182613"
-X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
-   d="scan'208";a="53182613"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 22:41:32 -0700
-X-CSE-ConnectionGUID: PxZkQBxTTY2I18IgDbybEw==
-X-CSE-MsgGUID: FVMUb/POSQaRwjPra/uBzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
-   d="scan'208";a="189914632"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 22:41:28 -0700
-Message-ID: <67bd4e2f-24a8-49d8-80af-feaca6926e45@intel.com>
-Date: Fri, 27 Jun 2025 13:41:25 +0800
+	s=arc-20240116; t=1751003044; c=relaxed/simple;
+	bh=soSTAGmaFQ30rdWSI32v3PHsN9vFxhd0C7khwWjTrWk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=fFtKTKv/AhWee/UEzt5HS8TGWLlkJNeKFr8atR8vGEH62GWO+1D9dvx2fkPEWsqyXknIbAWQK1YNyjJsfckmV8J59QYwWE/rPRuhVh4v2BemHqpYrBuLE8FcWrRoGgkQgoofSlMZGYq7wHuL5999mUUHEA/2wxPfvDUrKoWkt9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddafe52d04so44412385ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:44:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751003042; x=1751607842;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Pd432zo7LFGK6KOyiXTXMOvwX3eozzXxwAFL1DPThI=;
+        b=w6gUfwX4pvdTHEr9XE1STjjO81IPs+aG4DJUX8nYJOMRO0fkRc9gHD7E8iLPTTwOHk
+         MtYGVbDEq4NGZSfAwFNYVoI0TrlqcS4GO4mjt1y5t2wZxs6eTPz9+HxPRAC1O0jZqRqv
+         OSUvhTZB/jJbynJ09Z3Tl2rW5yp8BV42YoWG3qK8CzMTM3LswMDkJoYsZhNFMhQE6q7T
+         YMqyvFBBedFmTAulyrGK14D0lSZQDrHpW2uZYW06+2bOOsadGndcmSkDq2YvmcmR8o/R
+         iDgucK9b9jQMROOkcjimT0l7Q93hDekb1lT48pR0ARIEqGpHMDYjhs3EyEGkgKLyyYl7
+         lf/Q==
+X-Gm-Message-State: AOJu0YxPDeu70GgW0pf0Wwvf98J1Po5Zjgv8D61dvaI1b9Qc5hkfhqbD
+	Enl1HDtGQBtVu9pwNkq5DW+jlve5Nxu1PA3lDLVU0whIKh3z+UnfBDLOjghjXnHvRpwYjozQLDY
+	ODajcYS+PDt7+ZHTgA57be/E1JRgiuWWlw9lGSzm0mLl8CL0rzRFHL4Vjj9E=
+X-Google-Smtp-Source: AGHT+IHVpClRtlO3j1SYzj+w0FS7Z69fNeAIKojFmVrL8DN54Qr0A+mFUE6fB0bTOnj/NargK9mVhJOPLJXKzrLRHsIad62GHlLS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kvm/x86: ARCH_CAPABILITIES should not be advertised on
- AMD
-To: Sean Christopherson <seanjc@google.com>,
- Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, pbonzini@redhat.com,
- x86@kernel.org, konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
- Jim Mattson <jmattson@google.com>
-References: <20250626125720.3132623-1-alexandre.chartre@oracle.com>
- <aF1S2EIJWN47zLDG@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <aF1S2EIJWN47zLDG@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:194d:b0:3dd:c40d:787e with SMTP id
+ e9e14a558f8ab-3df4ab56738mr27583995ab.2.1751003041875; Thu, 26 Jun 2025
+ 22:44:01 -0700 (PDT)
+Date: Thu, 26 Jun 2025 22:44:01 -0700
+In-Reply-To: <20250627051303.2837086-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685e2fa1.a00a0220.34b642.0154.GAE@google.com>
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
+ (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/26/2025 10:02 PM, Sean Christopherson wrote:
-> +Jim
-> 
-> For the scope, "KVM: x86:"
-> 
-> On Thu, Jun 26, 2025, Alexandre Chartre wrote:
->> KVM emulates the ARCH_CAPABILITIES on x86 for both vmx and svm.
->> However the IA32_ARCH_CAPABILITIES MSR is an Intel-specific MSR
->> so it makes no sense to emulate it on AMD.
->>
->> The AMD documentation specifies that this MSR is not defined on
->> the AMD architecture. So emulating this MSR on AMD can even cause
->> issues (like Windows BSOD) as the guest OS might not expect this
->> MSR to exist on such architecture.
->>
->> Signed-off-by: Alexandre Chartre<alexandre.chartre@oracle.com>
->> ---
->>
->> A similar patch was submitted some years ago but it looks like it felt
->> through the cracks:
->> https://lore.kernel.org/kvm/20190307093143.77182-1- 
->> xiaoyao.li@linux.intel.com/
-> It didn't fall through the cracks, we deliberately elected to emulate the MSR in
-> common code so that KVM's advertised CPUID support would match KVM's emulation.
-> 
->    On Thu, 2019-03-07 at 19:15 +0100, Paolo Bonzini wrote:
->    > On 07/03/19 18:37, Sean Christopherson wrote:
->    > > On Thu, Mar 07, 2019 at 05:31:43PM +0800, Xiaoyao Li wrote:
->    > > > At present, we report F(ARCH_CAPABILITIES) for x86 arch(both vmx and svm)
->    > > > unconditionally, but we only emulate this MSR in vmx. It will cause #GP
->    > > > while guest kernel rdmsr(MSR_IA32_ARCH_CAPABILITIES) in an AMD host.
->    > > >
->    > > > Since MSR IA32_ARCH_CAPABILITIES is an intel-specific MSR, it makes no
->    > > > sense to emulate it in svm. Thus this patch chooses to only emulate it
->    > > > for vmx, and moves the related handling to vmx related files.
->    > >
->    > > What about emulating the MSR on an AMD host for testing purpsoes?  It
->    > > might be a useful way for someone without Intel hardware to test spectre
->    > > related flows.
->    > >
->    > > In other words, an alternative to restricting emulation of the MSR to
->    > > Intel CPUS would be to move MSR_IA32_ARCH_CAPABILITIES handling into
->    > > kvm_{get,set}_msr_common().  Guest access to MSR_IA32_ARCH_CAPABILITIES
->    > > is gated by X86_FEATURE_ARCH_CAPABILITIES in the guest's CPUID, e.g.
->    > > RDMSR will naturally #GP fault if userspace passes through the host's
->    > > CPUID on a non-Intel system.
->    >
->    > This is also better because it wouldn't change the guest ABI for AMD
->    > processors.  Dropping CPUID flags is generally not a good idea.
->    >
->    > Paolo
-> 
-> I don't necessarily disagree about emulating ARCH_CAPABILITIES being pointless,
-> but Paolo's point about not changing ABI for existing setups still stands.  This
-> has been KVM's behavior for 6 years (since commit 0cf9135b773b ("KVM: x86: Emulate
-> MSR_IA32_ARCH_CAPABILITIES on AMD hosts"); 7 years, if we go back to when KVM
-> enumerated support without emulating the MSR (commit 1eaafe91a0df ("kvm: x86:
-> IA32_ARCH_CAPABILITIES is always supported").
-> 
-> And it's not like KVM is forcing userspace to enumerate support for
-> ARCH_CAPABILITIES, e.g. QEMU's named AMD configs don't enumerate support.  So
-> while I completely agree KVM's behavior is odd and annoying for userspace to deal
-> with, this is probably something that should be addressed in userspace.
-> 
->> I am resurecting this change because some recent Windows updates (like OS Build
->> 26100.4351) crashes on AMD KVM guests (BSOD with Stop code: UNSUPPORTED PROCESSOR)
->> just because the ARCH_CAPABILITIES is available.
+Hello,
 
-Isn't it the Windows bugs? I think it is incorrect to assume AMD will 
-never implement ARCH_CAPABILITIES.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
+Reported-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
+Tested-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         67a99386 Merge tag 'v6.16-p6' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=134d3b70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=595d344ff0b23ac5
+dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=134a808c580000
+
+Note: testing is done by a robot and is best-effort only.
