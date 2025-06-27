@@ -1,81 +1,80 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3D227F013
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB40026C393
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751014256; cv=none; b=a5KZxgp5FzE/pJUIKgHVT5OAiA3ZToFQ9MzYPWS5FX3SFguByxM0IuV6k3dpRPgYvPNWe/QIi2Q8UFE0zrE5zlx6Wp0GK4mSh2R4AMrtEZctK0J2VmlbwnuJCfpxufhzv2En0JU3MNv0izKdiQeGOTejDi/rFkh7paptIuj1aaU=
+	t=1751014275; cv=none; b=q5FpNl7P8DcgoZfkNmkwfSObW3SV82xIT0Ik+xgSd03Smbeq6k/d3rzw8ZOkeHXev659XYLs2QF/FBAkZpqKvq2tuk8pvQv4pXZfBnaIxkCCnRztT3ZUk4XEfCzTXouktyAUETCaXDo76k+oySZ/z98YbzghxT0g4W62yTieOC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751014256; c=relaxed/simple;
-	bh=YkpEUHT41WQqx7y+f37T05/GWaTVsSShl5t9HQQ1vuc=;
+	s=arc-20240116; t=1751014275; c=relaxed/simple;
+	bh=lMIsRDkxKlW2sITXvPt1YCZorjg8GdjUNuUGIzNXHKc=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VVPC66+HP/XYCiLe/w4yRVscpKbEslZRHJAqiM6v1VOLGlamspiE0MYFe34m5SaNh+y9OYmE4RIGdc2vJNnrfBdIRwYZ1RejIG6iKD2emG59d5UeXNA1hD1Zgj44O+ZGB49uGKrRixMMtPffgIrIYJbTIcaYw9H95/KHkRYFEQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VdSOHQ0L; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=UUJo+RBG72wSQDX2vSlFlNHWvO+v2psKcgfpDUOqJEWCLrb+MzJC3sit+gvloXdY3GO9PInLqLZF3kLFtR5BUTqtsYGx1gSdkpaNowIj6mznWQCMdKw/LAlNdogZdABVcvmLYeya0/6yjPu3m2vog4A+H89MrCUc2BPIYJ4DN24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FgmfI8ib; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VdSOHQ0L"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FgmfI8ib"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751014253;
+	s=mimecast20190719; t=1751014272;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ReqtPQPZuynpPpuvR3wKtoK8Qv/uthGzjSx/FWJvxIw=;
-	b=VdSOHQ0LtVw3XphMl93DkxIHrHJzJmqcRi86H+7Y/+gIJVEB8wsiFuRArnUrj/4L6S6dPC
-	oriConOp9jq0M4Dcq1waHVj2iFIgWapbTXSjzXbtZvXgh0nLht5vDoxevY1jOnOWOficoX
-	I65YX4kaBg3W8cZvkaUxLfRVWgSIFLk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=9S5BIwJWhZ7aWoIrg/4Qmnz4yYjjaSexucJJwI2/7U4=;
+	b=FgmfI8ibtGhz3/hlAkyv8/DciBe2Q4l9lqXdLlTrpu/jqGQFl7d9TDEbwHADiW5fpbdIVn
+	t0lZN7RtNZivWBrjDE6oQdzgzfTcZTzsxJdhyOB7kDNzn+5ar7svrwoKAnxm3sZXQffda1
+	zY8XzFQE5UwPkcTzgqzeoeOUwy2427k=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-94-7qmbPTMrOV6rGJMUlNsSkg-1; Fri, 27 Jun 2025 04:50:52 -0400
-X-MC-Unique: 7qmbPTMrOV6rGJMUlNsSkg-1
-X-Mimecast-MFC-AGG-ID: 7qmbPTMrOV6rGJMUlNsSkg_1751014251
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a3696a0d3aso808651f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:50:52 -0700 (PDT)
+ us-mta-341-N3LDsnuDP6Gxah7R_nsGTg-1; Fri, 27 Jun 2025 04:51:11 -0400
+X-MC-Unique: N3LDsnuDP6Gxah7R_nsGTg-1
+X-Mimecast-MFC-AGG-ID: N3LDsnuDP6Gxah7R_nsGTg_1751014270
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450d6768d4dso10839555e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:51:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751014250; x=1751619050;
+        d=1e100.net; s=20230601; t=1751014270; x=1751619070;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ReqtPQPZuynpPpuvR3wKtoK8Qv/uthGzjSx/FWJvxIw=;
-        b=GKb674cNrdBeIACbpG91YpahPNIwdp4BRUBbQzDSLbYaMilrcYlVKC+/M0kgAdetgZ
-         uD3ZCKxpL1dVL+aZHoY3mefboGEiY/NpplxHlecYZh9doLYKQ4XHh92gdSUQ5x/m+308
-         kicpAozfaJWczvD3jqBZcXNWuo5Wn9JNBZu/62R7RHOi18DpNK0Xcde/haK92MJPzA53
-         iioYFhXOeb72noTW/jXFf+W8wMahon8xuL1vXE/NE4KLrG6BdZ2R6RqcdFzxP9Cc+Edk
-         wUC1mgkvDzAisWosfK5m3gW92eYs4U4ZUrYyDS7sK5MTU4IZ1ZE9Vuq3o/8Bsgq0ktXd
-         I8Cw==
-X-Forwarded-Encrypted: i=1; AJvYcCWzAVlv3MxThkaujt7PbDb+p5Rj5PVcYpakoPYzfdRU8K6bFp5b7TzcSBh9/jis5KiPqQeYinBeVaxcyk8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrvRDjEBghyO6ZPjkVGhC7Bz+RN0OGLMi7WXfRgO5mxD2hG0Yq
-	XdYRWIXAsPdHlY0t1ODAIkfDP4d9eHeUsbyp9FoJzfKZRoF/F6ver+HdhGDcxW9/rb4t2jCHfwn
-	QrlcIztpKQDH51E1UvroVc/90BxubJ71oQCVboVYG/Wc5lBJewfq5uaMiw4UUw6j8t/L/Ew1T8g
-	==
-X-Gm-Gg: ASbGncuc+L9ecGe67tqFHtksExtl95zfSRer0/m/0qy1PzXmGoQ/IHOgO8pCRANOaWM
-	reYWuiAOeE0Xn+q9MEdLA8iEeWKVgwM5M7cPB6Tj/MArmDuRqUdoNsHdF0kqYm7vZ6dtc9hrLHF
-	bUqPFHDYyzbcOFZJaFnl5L/241LBQ68rsCgm15tlT+ArYn4efNBE/xwq9GZCh2Olb9bdVO96daZ
-	Szvfok5qBNegxMQ+8QS85m0ojauOkbBglQTkGK/9EZh0bs8UFwFXAYIDVHrvAR05POm5Nwsfc0N
-	MEtXzuR5NYyqhKTpjkJHU30NJpHMtg+4+pEKA32dy6ppnpdIS92MEEFMw3kfHQZtWIGT0pvUyTH
-	04Ftk
-X-Received: by 2002:a05:6000:23c6:b0:3a3:7987:945f with SMTP id ffacd0b85a97d-3a8ffeb4059mr1334445f8f.57.1751014250305;
-        Fri, 27 Jun 2025 01:50:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGosAHh6wG2YWG6Pd5KssGRidpTbYqrmLPTbfUfSLFVXEHNkTHsVJz8y2jSB35dDR4lyfaNVA==
-X-Received: by 2002:a05:6000:23c6:b0:3a3:7987:945f with SMTP id ffacd0b85a97d-3a8ffeb4059mr1334423f8f.57.1751014249818;
-        Fri, 27 Jun 2025 01:50:49 -0700 (PDT)
+        bh=9S5BIwJWhZ7aWoIrg/4Qmnz4yYjjaSexucJJwI2/7U4=;
+        b=nT2nt6y9BdX7FtuoBfehNGftM99+3p8nIYy38CpfSws/5kYJvc+M/8iCS1y5cwR9eS
+         SXFZjFWiWu8S4YABz/8UyOU7rk9LT/9bcaMYI2yu9GWeNIagVWQtmvN1Y/HObcoIvP5h
+         gERQkBORqfGxyhFhwbw2alvJQH9zcG9b1vQOTr7JfzpmbhwbfhY5zdk6IbkZ0RhXy5oi
+         CqJ9GO5oHg0jml/8NlVI0dO4Gt/BAwCXvw36ohWCJ53pDlYUmTYBXbNsaswXyB5C9kaA
+         LbrPwxe7/qbA7CivSdiY3zvpG69t0md6jfS6VZfkz/MAziKSpaQvSx78JcSqLw1YlINK
+         nF+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWskQpqtHYSh+Oi4Mv3fgicO/sW7D1+4wCdjwJWLXOAc2pbDfOEVJWNaeDEYF5SXS8hUdmX/lueCGKmNM4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzL9Lso30cFWKaA9i1j/TGAAEFRn83Klhl7v4wVUwpoKJGZOLKA
+	fprpy8nLDbcZgYnyOc8zDG1+nAwUnf+qrOhpwZ9Xg1hwf5JoTyAFo/mO2ZbsvB7RXdkv0DmzZw/
+	CAwLsE1L5ylg64e5PbAZfdTmcrl9gFpDMtNE/ZErZu6oQnn3HrPQIQXuM3TBC5RgM/g==
+X-Gm-Gg: ASbGncsM4H4NKBH9276h5y8dsmlxFaJ0LSv8c4lEYa+tdfclM77ma+LY54mT5oikmiw
+	BntQ/M4dRzJ+aLySk9ZGTLbNAwQ+GyAJxfysPT/LnFRJ9xA1YPZ/C0nUmnVQr9YGNIPbRrdd0sh
+	kz+cBfG1lu+ow/Qils/zdc00mOqpebiDp9d88JDqV9W/4BRDrVkVSkl7UG12b1rWcSGuQeltfPz
+	eYV2ISe65HJqR3hIWU4jSfWihWcqiYxUEu0L0lvKzmwEk4yosEJ3brzHOU4Ki8QEeKhwBtlVILQ
+	EIzJNslo4/zashEEZ+jDgfN4hPiKmSiCMym1RoCcUtBl9CCjDD0A9NTd9uQwXwni6jXc0VsGef6
+	2xprx
+X-Received: by 2002:a05:600c:c111:b0:441:b3eb:570a with SMTP id 5b1f17b1804b1-4538f21d22cmr20152315e9.2.1751014269712;
+        Fri, 27 Jun 2025 01:51:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGXokL65QImWUWdVGNsBSXoLoc72EgugzTSJPGmsScrWsNWL3lNb3wxJPDeprEOScHkjECCNA==
+X-Received: by 2002:a05:600c:c111:b0:441:b3eb:570a with SMTP id 5b1f17b1804b1-4538f21d22cmr20151975e9.2.1751014269256;
+        Fri, 27 Jun 2025 01:51:09 -0700 (PDT)
 Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e59628sm2058886f8f.81.2025.06.27.01.50.48
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823c42e1sm73481915e9.37.2025.06.27.01.51.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 01:50:49 -0700 (PDT)
+        Fri, 27 Jun 2025 01:51:08 -0700 (PDT)
 From: Javier Martinez Canillas <javierm@redhat.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
  linux-kernel@vger.kernel.org
 Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
  <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Andy
  Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 1/2] firmware: sysfb: Unorphan sysfb files
-In-Reply-To: <20250626172039.329052-2-andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v1 2/2] firmware: sysfb: Don't use "proxy" headers
+In-Reply-To: <20250626172039.329052-3-andriy.shevchenko@linux.intel.com>
 References: <20250626172039.329052-1-andriy.shevchenko@linux.intel.com>
- <20250626172039.329052-2-andriy.shevchenko@linux.intel.com>
-Date: Fri, 27 Jun 2025 10:50:48 +0200
-Message-ID: <87ikkhd0uv.fsf@minerva.mail-host-address-is-not-set>
+ <20250626172039.329052-3-andriy.shevchenko@linux.intel.com>
+Date: Fri, 27 Jun 2025 10:51:07 +0200
+Message-ID: <87frfld0uc.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,35 +85,16 @@ Content-Type: text/plain
 
 Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-Hello Andy,
-
-> The commit d391c5827107 ("drivers/firmware: move x86 Generic
-> System Framebuffers support") moved some code to the common
-> folders and effectively orphaned it without any reason. Put
-> it back under DRM MISC record.
+> Update header inclusions to follow IWYU (Include What You Use)
+> principle.
 >
-
-What do you mean that it was "orphaned without any reason" ? There were no
-regex matchs for the old file paths in MAINTAINERS either before that commit.
-
+> Note that kernel.h is discouraged to be included as it's written
+> at the top of that file.
+>
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  MAINTAINERS | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8dc0f6609d1f..c2c7aa594160 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7973,10 +7973,12 @@ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
->  F:	Documentation/devicetree/bindings/display/
->  F:	Documentation/devicetree/bindings/gpu/
->  F:	Documentation/gpu/
-> +F:	drivers/firmware/sysfb*.c
 
-I would prefer these to be in the "DRM DRIVER FOR FIRMWARE FRAMEBUFFERS"
-entry instead of "DRM DRIVERS" since the former is what has most of the
-code for the sysfb infrastructure.
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 
 -- 
 Best regards,
