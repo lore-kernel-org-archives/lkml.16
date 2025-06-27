@@ -1,30 +1,65 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 506C02E92C8;
-	Fri, 27 Jun 2025 15:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204D22E92C8;
+	Fri, 27 Jun 2025 15:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751038443; cv=none; b=G90Bc4SbdaU+T5AiDfWCOzz7jnzbOomFSYeI8Jw+nFAPANO9HuHiUZ13f53JNZ2pcjDOweWJIHigvhTwtN9Co4aw7jl5baOeHeTkP/Jy3EvaOYvgsLowXYwMULfl3iK/v31keD6sZdVc7GOIlZjKaSw+5lV3vJIAKnn9TSx4M54=
+	t=1751038460; cv=none; b=DD917EnbfYxFlyPEIPjsOFI61i5mQJMQI/c+HqmmJXcnhbam7Qem33c817QBD8xvg6GMQ8XGwE7Lgzh2xjUjbaMnIe73BsHobDrwSOUINCXUWCBzoVEH6gKDf6FFFIvnmlj8c9A40kDVBczRU1cnt7fpCe6WWE9u/XrWK0UpPOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751038443; c=relaxed/simple;
-	bh=LgdvqBTRB61bdlKxwir8i1HbLL9fRJZEYQrJo9z9NSI=;
+	s=arc-20240116; t=1751038460; c=relaxed/simple;
+	bh=TSrj8lUJHsCMJnJ0zuJ959GnZXlehfxxa8dxlgRCb6g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SUSgLPbSky7Um4XFmBAJZB5rBgLLPcgbSt5bhAJ1BtWN0gWdYhqZan9ozaGbKZljaWTkTEHrPIRmPBp3/bRBBlW5vNdzys1ZQqGnQ7qszAdas6DONhagSEK6drsrvxo75opYySvLk+OT9/T6XVbQZi6gZ9Ah1GeZ3r9EwuM4tvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UgJXL9R3; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	 In-Reply-To:Content-Type; b=oQF8hiOXJiA86saxFZb6tYFxC1L8aygxOABQDEJZ3r11gNMNIP33lFQrW45K/EVSQu3F1rzxEFoEU1dC5IdAagYOazkVXbXv541nTL1CZ9vXPvZGzM0xhp6Q1P73a1zztSImKyjnQBiYtiofw2vbMndl9+eitqP3hq+/24cMM3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kopjYKn2; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UgJXL9R3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=y5QkQnnSrcoyz3W4bWPHzK9WuTb9VBE36yVoQb6GpKY=;
-	b=UgJXL9R3RyB/lWpMZBiVFD7Lp7reJ5J2XFU30O8Mzi5F7kYW3+5s8lEX2GgjMu
-	L/P8Qymi6+pmY+bHFwHq90Z5zusEROqKt1LUZL7xuEQz8769EqDLZuRM8F0NP7XU
-	A5WPD/kgN2N299Tlwhc3JYvWHEax0TZHQ0BpWQEJSznI8=
-Received: from [IPV6:240e:b8f:919b:3100:5951:e2f3:d3e5:8d13] (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id PCgvCgCHFBbAuV5oafePAQ--.54065S2;
-	Fri, 27 Jun 2025 23:33:22 +0800 (CST)
-Message-ID: <f24aac22-d53e-4751-8bc5-db86a6d12598@163.com>
-Date: Fri, 27 Jun 2025 23:33:20 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kopjYKn2"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a54700a46eso1239883f8f.1;
+        Fri, 27 Jun 2025 08:34:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751038456; x=1751643256; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VrBYuujR4fIVA3KgM/a2Coa5U/0N6ngCG44B1fghGXc=;
+        b=kopjYKn22Rgdqa0cMRu9fen1RP+7Y3WqydTX3wrkgxy5ugmQsEmUPLgeBQH6p4xFfC
+         /JQwerw95/uX6xQJgFq7qEjmspLJpkTUrgAbAGVkWK7KQ6vW3InYh5s/85JStzVNZoVo
+         QBZHBjHApLC67422Pkt+DIZzT9fr8mGhAnSmd/7Bic7ASxR0sYdpAjp55YgbCX67H1I9
+         T+VmJVbfYynQPY2NM2fB0DqK2/6HW6S0AP97J8MpopfwZOsbPt3H+g5OfSdkzONM+YlV
+         EqhoOVm9HS2wScpTBrvZA7Bafwt1pfHLXhOD1mVQ7uXzpGa2tZU9vHhizmf1yNUyvrif
+         40YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751038456; x=1751643256;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VrBYuujR4fIVA3KgM/a2Coa5U/0N6ngCG44B1fghGXc=;
+        b=rSMwJvq9mty7OOwm5ICFVNlig+lNqDvzrfZyK3DD8NRkqcE0qg+VIwdFMwiRhk0zUK
+         DRMPwIj2OVU1dJy9GJAEKDqmS59RquAN47L2tCiyS9S4o2QTcYJHCd31q9Rt0BKNW2BU
+         btD5uUmwnB9Y2NuJHShFayVz/DM+5wG5FFHISKBUfpusK1usXk1GdU/nu4gEFITjkk0/
+         IwIleKlFd5q4VROXEnLLikxr0OAGBdFOn41jWv4BWpYY49wdcR5HOxCjOdpOzxL3xDV9
+         YL5N5WmdPFkjniyjjtS/EEKxjjAcsifqRRYe1nLOxyNuO/6X1R39W97Vh9B7PXLWelrC
+         u4eQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwJ9aC+JW7I73/mqS45FEQuULnPv0ovy+7CRjyWFYfoNVxjzmD2dv2UM1PzqnpOASy3NaFO2SSidWQAOo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXnkncYmedIgzCPvJtJuz2v7MwBSV1VHn6jiZhyBeOTMUq8MzO
+	CNrJ0i9OvmIYe3jTn7wsrYUuBonbn1BX/0AaPpIirf7FjxE8PYTsgRET
+X-Gm-Gg: ASbGncuxyr4+8LCgRvjL/0Fu4yPXDp7avI4BEtGmyz4/xNm1mlo6s4pqL31URrBBnLg
+	G7HlPRONsCiE8lu2hS1i0jmH8xrXqOn1TyF5Q8M6b3DbGTrZPu90r8VVCwZhs/HdLET0uTOpFpx
+	RcBNNydjQzmR+ThRsjR2qlif0U/BZtY9Rn82zPGO19/NqlNjE9etg+Isk+weNQqIpDf8dBP3QXv
+	Cao5q/zuuGJjIWg74Fy/+/JI81sR15VNOAW4ScyARM7vvuzfjkvgGRW6CtAxDKOrovDDBlk9JYI
+	vMt9dvzV8pSx1TRQRo6jEBdBwRkys25wdNBJrbVlbRbi6ZashSJWp10cHAZcsudvuN4eGTttPLs
+	3AklVj5XcS9pbccSU7///kvgWexD3lBSxv9z+XrD3otjIh21f5g==
+X-Google-Smtp-Source: AGHT+IGl6TlrpYJqpko3bDCWTzqwhq9i4ZOiMp1p5Jz2GrOjRXq9ytwleBI5nmR2zjB+VFKCcaexfg==
+X-Received: by 2002:a05:6000:2a09:b0:3a0:b308:8427 with SMTP id ffacd0b85a97d-3a8ffbd4d31mr2286304f8f.37.1751038456101;
+        Fri, 27 Jun 2025 08:34:16 -0700 (PDT)
+Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a40766csm54430465e9.32.2025.06.27.08.34.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 08:34:15 -0700 (PDT)
+Message-ID: <3a9be6e3-7533-4216-aecc-7261b4adf8af@gmail.com>
+Date: Fri, 27 Jun 2025 16:34:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,139 +67,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 04/13] PCI: imx6: Refactor code by using
- dw_pcie_clear_and_set_dword()
-To: Frank Li <Frank.li@nxp.com>
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, mani@kernel.org,
- kwilczynski@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250626145040.14180-1-18255117159@163.com>
- <20250626145040.14180-5-18255117159@163.com>
- <aF1/DzLRRhtgFVsH@lizhi-Precision-Tower-5810>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <aF1/DzLRRhtgFVsH@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH net-next] sfc: siena: eliminate xdp_rxq_info_valid using
+ XDP base API
+To: Fushuai Wang <wangfushuai@baidu.com>, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Cc: netdev@vger.kernel.org, linux-net-drivers@amd.com,
+ linux-kernel@vger.kernel.org
+References: <20250626155959.88051-1-wangfushuai@baidu.com>
+Content-Language: en-GB
+From: Edward Cree <ecree.xilinx@gmail.com>
+In-Reply-To: <20250626155959.88051-1-wangfushuai@baidu.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:PCgvCgCHFBbAuV5oafePAQ--.54065S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAF1fAF1UXFyrJr47KF4DJwb_yoWrZw4rpa
-	y2v3WSkF48JF4ruan2ya95ZF1aqas3Cr1DG3ZrK34FqFy2yr9rKa10y3y3trn7Cr47tryj
-	kw1UJw43Ga1YyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UoBTrUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQxJ4o2hdXLQ8tQACsc
 
-
-
-On 2025/6/27 01:10, Frank Li wrote:
-> On Thu, Jun 26, 2025 at 10:50:31PM +0800, Hans Zhang wrote:
->> i.MX6 PCIe driver contains multiple read-modify-write sequences for
->> link training and speed configuration. These operations manually handle
->> bit masking and shifting to update specific fields in control registers,
->> particularly for link capabilities and speed change initiation.
->>
->> Refactor link capability configuration and speed change handling using
->> dw_pcie_clear_and_set_dword(). The helper simplifies LNKCAP modification
->> by encapsulating bit clear/set operations and eliminates intermediate
->> variables. For speed change control, replace explicit bit manipulation
->> with direct register updates through the helper.
->>
->> Adopting the standard interface reduces code complexity in link training
->> paths and ensures consistent handling of speed-related bits. The change
->> also prepares the driver for future enhancements to Gen3 link training
->> by centralizing bit manipulation logic.
->>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
+On 26/06/2025 16:59, Fushuai Wang wrote:
+> Commit eb9a36be7f3e ("sfc: perform XDP processing on received packets")
+> and commit d48523cb88e0 ("sfc: Copy shared files needed for Siena
+> (part 2)") use xdp_rxq_info_valid to track failures of xdp_rxq_info_reg().
+> However, this driver-maintained state becomes redundant since the XDP
+> framework already provides xdp_rxq_info_is_reg() for checking registration
+> status.
 > 
-> missed my review tag, you need collect all review tags when respin patches.
-> 
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> 
-> https://lore.kernel.org/linux-pci/aFQp4MYpRaEUXNQy@lizhi-Precision-Tower-5810/
-> 
+> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
 
-Dear Frank,
-
-Sorry. Next time I will check the corresponding tag.
-
-Best regards,
-Hans
-
-> 
->> ---
->>   drivers/pci/controller/dwc/pci-imx6.c | 26 ++++++++++----------------
->>   1 file changed, 10 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
->> index 5a38cfaf989b..3004e432f013 100644
->> --- a/drivers/pci/controller/dwc/pci-imx6.c
->> +++ b/drivers/pci/controller/dwc/pci-imx6.c
->> @@ -941,7 +941,6 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
->>   	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
->>   	struct device *dev = pci->dev;
->>   	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->> -	u32 tmp;
->>   	int ret;
->>
->>   	if (!(imx_pcie->drvdata->flags &
->> @@ -956,10 +955,9 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
->>   	 * bus will not be detected at all.  This happens with PCIe switches.
->>   	 */
->>   	dw_pcie_dbi_ro_wr_en(pci);
->> -	tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
->> -	tmp &= ~PCI_EXP_LNKCAP_SLS;
->> -	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
->> -	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
->> +	dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
->> +				    PCI_EXP_LNKCAP_SLS,
->> +				    PCI_EXP_LNKCAP_SLS_2_5GB);
->>   	dw_pcie_dbi_ro_wr_dis(pci);
->>
->>   	/* Start LTSSM. */
->> @@ -972,18 +970,16 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
->>
->>   		/* Allow faster modes after the link is up */
->>   		dw_pcie_dbi_ro_wr_en(pci);
->> -		tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
->> -		tmp &= ~PCI_EXP_LNKCAP_SLS;
->> -		tmp |= pci->max_link_speed;
->> -		dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
->> +		dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
->> +					    PCI_EXP_LNKCAP_SLS,
->> +					    pci->max_link_speed);
->>
->>   		/*
->>   		 * Start Directed Speed Change so the best possible
->>   		 * speed both link partners support can be negotiated.
->>   		 */
->> -		tmp = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
->> -		tmp |= PORT_LOGIC_SPEED_CHANGE;
->> -		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
->> +		dw_pcie_clear_and_set_dword(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
->> +					    0, PORT_LOGIC_SPEED_CHANGE);
->>   		dw_pcie_dbi_ro_wr_dis(pci);
->>
->>   		ret = imx_pcie_wait_for_speed_change(imx_pcie);
->> @@ -1295,7 +1291,6 @@ static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
->>   {
->>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>   	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
->> -	u32 val;
->>
->>   	if (imx_pcie->drvdata->flags & IMX_PCIE_FLAG_8GT_ECN_ERR051586) {
->>   		/*
->> @@ -1310,9 +1305,8 @@ static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
->>   		 * to 0.
->>   		 */
->>   		dw_pcie_dbi_ro_wr_en(pci);
->> -		val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
->> -		val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
->> -		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
->> +		dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
->> +					    GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL, 0);
->>   		dw_pcie_dbi_ro_wr_dis(pci);
->>   	}
->>   }
->> --
->> 2.25.1
->>
-
+Looks alright except that subject prefix is misleading as it sounds like
+ it's just patching siena rather than both siena and ef10.
+I'd suggest splitting this into two patches, one just touching the siena
+ version with this title, the other with subject prefix just "sfc: ".
