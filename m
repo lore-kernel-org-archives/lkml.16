@@ -1,67 +1,33 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B83224AE0;
-	Fri, 27 Jun 2025 08:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53F83C01;
+	Fri, 27 Jun 2025 08:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751012029; cv=none; b=sFEXyOiMtl6miwoyP+kUpsjN53hHG4DzVtVKrVE2WkyRPSHOyxnzxCvLVrdRQBB0nFmESJPYhnt1fr/qEaaY5AzN7nE3RAuNiiqIifEHAJEFKd24yXJWWMR58Ym7hir89y9M63tBAr2iyLgMQpc0KdTjmT49RQ/dlKTfwsIQTfE=
+	t=1751012074; cv=none; b=avBFMTm7bArqH7BET4B8qbn8dQJFQOcW2pVR0VmG+e9hr7fPR5iP2uc1hSMGcUQCJgY3StFrQLtSfiTyU6vRNRyABa8OACRMerb9SG6DIipkvqVa7THPo91WDv2P5szQeTO8jy+fIRZck15vWGDRY+1PnQn//ZqOYhGFuMam/S0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751012029; c=relaxed/simple;
-	bh=o6hJzsHfwa7l8QymsFAPFL0BssPaa5+yNqxXr8OOqGI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=f/Y2L+NuT6jdHrL2YQbQkKJMZXCgBUzvGgNVgSBCocLo5cUDrBADALtAqhRLml0rj/AHKZPvcLgCf+JMaRTatf4YLVtif4EBRrYElw2ynXzZCeToTgWW6Rd+CnbddKrOrLlGgSShhoxKLx0mu0+7gPcdF0VBJ2aSJo8A5jpgl6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gsdC/VKN; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751012074; c=relaxed/simple;
+	bh=XAx0w0qIj6lxMzl756cOTRLfX5HxkURSvrdAy+8ZYYk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MyI+nlor7KYo/mwBck3LrdwRri/lkcKgGlbCnMgmnmCacljSK1ErvSlVpw8YI6690aUNVZACvGQSzA2G6XBGbg7mBMj0Ti4cQdk1mAQcRhDBWLLuZrAuHhJUzRrVEjOkv4j3mpdOHgvDRqt5wmZYberuGdlXDYzl1FFp77ceJ9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOKwoNkf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gsdC/VKN"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QMGbdt019573;
-	Fri, 27 Jun 2025 08:13:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=FRv+jf
-	+H2WOoOyo2DrESPYPWQcOAbheMqs0hH1dSsC0=; b=gsdC/VKNSU+UJ+Kcn/+wtu
-	yJCxzlTOYh3GGpn1VLdgrMabickgPWQEi7EDVtMgY/nTKEFysxFiFHb+oRYm7XpN
-	V/qlAKAc4U+71qUzZet1qHqVWu2L+yMyUslWkUyeTyCO3NXXt913EnJ/DBtaxFzD
-	bggmXNoGq/14AL781KTrszjV00NDUKV0OmZbmMR4xHZXWwzXVe1nzugMNgebXrwe
-	ynzCKJgbVLVk+hO84zW+2yyLrN79I8rhJ331Lfscbas64hXXiOjyW8M31xUyoD9R
-	U6s62xYtD4m4zTL7kPEjT/AVQh3TJcGlnuykaiDCwzq3Ak/1WfPO8R2ZDfIJ5+ng
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dmf3kgva-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 08:13:43 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55R8BC8A015251;
-	Fri, 27 Jun 2025 08:13:43 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dmf3kgv8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 08:13:43 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55R4OUEJ031277;
-	Fri, 27 Jun 2025 08:13:42 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e7f0b8su-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 08:13:42 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55R8Dc6F56295772
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 27 Jun 2025 08:13:39 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CED5C2004B;
-	Fri, 27 Jun 2025 08:13:38 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4D0C920040;
-	Fri, 27 Jun 2025 08:13:38 +0000 (GMT)
-Received: from [9.111.10.20] (unknown [9.111.10.20])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 27 Jun 2025 08:13:38 +0000 (GMT)
-Message-ID: <283e109b-9eb5-4e7d-b7df-215f54496503@linux.ibm.com>
-Date: Fri, 27 Jun 2025 10:13:37 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOKwoNkf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78EEBC4CEE3;
+	Fri, 27 Jun 2025 08:14:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751012074;
+	bh=XAx0w0qIj6lxMzl756cOTRLfX5HxkURSvrdAy+8ZYYk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sOKwoNkf0p1oYczXQDEbSoR5cCwXYcjKxj5uqiypqUeJgxFHoB9j+l9es2c1W07fi
+	 KrL/GGBR13cyDYTVc9rHmUs6Ih3x8rACYDf9Z7lkIjGGw5tHB50rwA9LKBj/1JNyEn
+	 Q1TxuB194jDejg3mlyQ4ptGn2V72G7F7rhH3Iu2u2euirICc8kW6XocaA9mP0u88mt
+	 s7YEYiKE6aeMReCsdu5Qxl2OCbbv/klStmQycUV9A61LbaRhaR9rl94VzxHLeLh76B
+	 tSGcF+HbuWxQe+1H+qeXMISyGc/wTClVJA+XoWLCrUjCcP42EtHaIGiUBpkKFowdbe
+	 WR5o/G2KWbJ9g==
+Message-ID: <e7c012c6-d5df-4247-b4c2-1b3e787d7576@kernel.org>
+Date: Fri, 27 Jun 2025 10:14:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,150 +35,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: [Ping][PATCH] perf list: Add IBM z17 event descriptions
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
-        japo@linux.ibm.com
-References: <20250623132731.899525-1-tmricht@linux.ibm.com>
- <CAP-5=fV_hXzq0A-91NakejcQGnvPp+uJGGe=vccwM+47JVCmtA@mail.gmail.com>
- <ad905a68-a89b-458d-8a8b-2081a6656b91@linux.ibm.com>
+Subject: Re: [PATCH 1/2] dt-bindings: leds: issi,is31fl319x: Drop 'db' suffix
+ duplicating dtschema
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Vincent Knecht <vincent.knecht@mailoo.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Li Jun <jun.li@nxp.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+References: <20250627-dt-bindings-db-v1-0-d5c7072acbee@linaro.org>
+ <20250627-dt-bindings-db-v1-1-d5c7072acbee@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-Organization: IBM
-In-Reply-To: <ad905a68-a89b-458d-8a8b-2081a6656b91@linux.ibm.com>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250627-dt-bindings-db-v1-1-d5c7072acbee@linaro.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=M5FNKzws c=1 sm=1 tr=0 ts=685e52b8 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=NzcymgBwEkHtfacI-E8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDA2MiBTYWx0ZWRfX+Z3hlRaHsMty 5w8fwgVXRRbsE8H9zke3lhvmZyEMj6pDkpSDpASIrAw90DYXYcLuya9GZ+i+3P+XYNdQryLdP+b 3/iNWPpCv3jTDTJXWkp+LahcZil7g29OdYO/SEE7UFLR03KqI9JDFbm1/RbxYsDVPJw4iDENfhd
- XHoArKJo+GTqD+fHMaDXKVC1R5kJCv/aI+z6rvSBGMePajpZdvVNJjYUR/Z/MCNx8lZwOMY4iNc Xuw6iu7pVXkOieCvCaVDseecUDcrNf7Y6mwf+x0La1zy5ad/zi0bKO3Ynz4UtvZphHkhuCsBBXr qyrknjgSxa2VDGlcovmYMlPqlp5/Ylvbmv2Wdy94+0KOW/pbtkIIZFysuOkdyMnSzeSjxb14WQW
- 1yCS3RcWUqC9GaXOoEYkeNQaFpNWDDIG11VGdD0ZJmFl0Do1JVwLatz2Gm8+5IOKiM0Gpngy
-X-Proofpoint-GUID: H2R94vQXsgPCdjztjCGfVvEv9kHIMcb_
-X-Proofpoint-ORIG-GUID: USYL82GF2n57L5lrjJkladDPLAScSt2A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_02,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 malwarescore=0 impostorscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 spamscore=0 clxscore=1015 adultscore=0
- mlxscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506270062
+Content-Transfer-Encoding: 7bit
 
-On 6/24/25 08:35, Thomas Richter wrote:
-
-Gently Ping
-
-Ian, I have responded to your comments some days ago.
-See below.
-
-Thanks a lot.
-
-> On 6/23/25 19:53, Ian Rogers wrote:
->> On Mon, Jun 23, 2025 at 6:35 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
->>>
->>> Update IBM z17 counter description using document SA23-2260-08:
->>> "The Load-Program-Parameter and the CPU-Measurement Facilities"
->>> released in May 2025 to include counter definitions for IBM z17
->>> counter sets:
->>> * Basic counter set
->>> * Problem/user counter set
->>> * Crypto counter set.
->>>
->>> Use document SA23-2261-09:
->>> "The CPU-Measurement Facility Extended Counters Definition
->>>  for z10, z196/z114, zEC12/zBC12, z13/z13s, z14, z15, z16 and z17"
->>> released on April 2025 to include counter definitions for IBM z17
->>> * Extended counter set
->>> * MT-Diagnostic counter set.
->>>
->>> Use document SA22-7832-14:
->>> "z/Architecture Principles of Operation."
->>> released in April 2025 to include counter definitions for IBM z17
->>> * PAI-Crypto counter set
->>> * PAI-Extention counter set.
->>>
->>> Use document
->>> "CPU MF Formulas and Updates April 2025"
->>> released in April 2025 to include metric calculations.
->>>
->>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
->>> Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
->>
->> [snip]
->>
->>> +       {
->>> +               "Unit": "CPU-M-CF",
->>> +               "EventCode": "143",
->>> +               "EventName": "L1C_TLB2_MISSES",
->>> +               "BriefDescription": "L1C TLB2 Misses",
->>> +               "PublicDescription": "Increments by one for any cycle where a Level-1 cache or Level-2 TLB miss is in progress."
->>> +       },
->>
->> [snip]
->>
->>> +  {
->>> +    "BriefDescription": "Cycles per Instructions from Finite cache/memory",
->>> +    "MetricName": "finite_cpi",
->>> +    "MetricExpr": "L1C_TLB2_MISSES / INSTRUCTIONS if has_event(L1C_TLB2_MISSES) else 0"
->>> +  },
->>> +  {
->>> +    "BriefDescription": "Estimated Instruction Complexity CPI infinite Level 1",
->>> +    "MetricName": "est_cpi",
->>> +    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INSTRUCTIONS) if has_event(INSTRUCTIONS) else 0"
->>> +  },
->>> +  {
->>> +    "BriefDescription": "Estimated Sourcing Cycles per Level 1 Miss",
->>> +    "MetricName": "scpl1m",
->>> +    "MetricExpr": "L1C_TLB2_MISSES / (L1I_DIR_WRITES + L1D_DIR_WRITES) if has_event(L1C_TLB2_MISSES) else 0"
->>> +  },
->>
->> Just a quick check. If the PMU CPU-M-CF is always present then the
->> "has_event(L1C_TLB2_MISSES)" check will always be true as the event is
->> in json and not in sysfs. I'm guessing this is being done for the
->> benefit of hypervisors.
->>
+On 27/06/2025 10:01, Krzysztof Kozlowski wrote:
+> A common property unit suffix '-db' was added to dtschema, thus
+> in-kernel bindings should not reference the type.
 > 
-> The issue is indeed with z/VM, where the CPU Measurement facility is not exported to
-> any guest OS including linux.
-> If you run Linux on top of z/VM then these events do not exist.
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
-> # uname -a
-> Linux a8345022.lnxne.boe 6.16.0-rc1m-perf #14 SMP Tue Jun 10 07:39:06 CEST 2025 s390x GNU/Linux
-> # grep VM /proc/sysinfo 
-> VM00 Name:            A8345022
-> VM00 Control Program: z/VM    7.4.0   
-> VM00 Adjustment:      50
-> VM00 CPUs Total:      4
-> VM00 CPUs Configured: 4
-> VM00 CPUs Standby:    0
-> VM00 CPUs Reserved:   0
-> # lscpumf 
-> lscpumf: No CPU-measurement facilities detected
-> # 
+> ---
 > 
-> Without this if..else the perf stat -e metric fail when Linux is installed on top of z/VM systems.
-> See commit c2f3d7dfc7373 ("perf stat: Do not fail on metrics on s390 z/VM systems")
-> 
-> which fixed it for z16 machine generation.
-> 
-> Hope this helps.
-> 
->> Thanks,
->> Ian
-> 
-> 
+> RFC because this depends on dtschema changes and should be accepted
+> after new dtschema is released with this merged:
+> https://github.com/devicetree-org/dt-schema/pull/166
+... and I forgot `b4 prep --add-prefixes RFC`. Please treat as RFC.
 
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
-
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Best regards,
+Krzysztof
