@@ -1,64 +1,66 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF8D2989BA
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FE6298CA2
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751019733; cv=none; b=n2f22rQ1z1043jtVDOMDJVFLmy0jjWk6U4YagKR7opYObiy+HX+lTuINtGcR4F4X2B5/1rjeB5tm+9iL49OJVlRJtTZbG5xKTKeaUz7PRmIsD6lvLwjsSWSBBmd0Nkjmx1ExzqByb8ExbW2sJvH7nmg8jCa+e2N8xd9Bl92qY2M=
+	t=1751019734; cv=none; b=mvvbhT6jmrD+GKOoavou2SM8FP9W6lWSxPyj2H/+7JcQu1F3EWwavfpZJs9QqPzYqaaCUFWjGRJx7UaktnlGYIE1VD3i1ew6vRkPHpQW+JEhX5ZlECZPlXze539EiygEJZXcGNSbRkvhFcesaQwJniJ0aGlBVZJX8nBV9vWMrZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751019733; c=relaxed/simple;
-	bh=+eXi3DiHzgQsYWud3YipBZFVOyps3/W6L3tl11/2HAU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oL1feKSAuo7vMOP3jTCyZc3f0J6AlaVibYMnmWAz5ujdR/lgiVVKlH9ZDFAWfN8rxNAckR4aTq4ydRok+fpQ2i+/zx7gav7R8eZORLKjrnKYyLlc7m5fGySXrutxJue24db93WT/FSxLOq8YRYYSjuYE2XN6Sic+OqGVRsOa/Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KQ9WX+J2; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1751019734; c=relaxed/simple;
+	bh=u3+3xTgg8ySwFwJSh4UIH/QbNDMkPzATVebHq3ynfNk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=uoqwG6hQ6iYEF6tUTYXqU8n8jTgMywAg+ojQXD/KAlKeHFHgJ8bczkjF/d5ung8Ab5PplAwiYqJKWQfFEUoSrh198P5QUZr18n3TLkFGa6yTUA/rVrmzgHgAQO+JCH/l34Q8l5HmjQnPE+/eZcDDkR90duSZBFwVJaAPSrG0GuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mhGDS2xQ; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KQ9WX+J2"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4530921461aso13501735e9.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mhGDS2xQ"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-450cf214200so15034055e9.1
         for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 03:22:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google; t=1751019730; x=1751624530; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UkE+u8fu4iyuqxNowVgVLUi88LeAKltjfpkNJ+TScv8=;
-        b=KQ9WX+J2fhUAETYMH6hXPL38admNTxL75bkmV5z8BNBSMXjxad3T2edGnMB9KaFkdB
-         ZBMK15m579Xc/koj/rH1V5+2OHGWDdB2EMGzfE0ou7YX3VM37iOmyOJFIj1n55sextrJ
-         XiOuBVrfiKh1i4neakS4ux3yGima7ojNzLV4WWkpblbTEc1xkdLb0AuKjm+tY8/ddtpu
-         /wW825PE87glu6bFZdj+DWYLoanLfosIDnQizL6onlEfRpTNsaS2YJ1QxtKeN0KUeFPA
-         dn9665bGwygez/pHh6vwhRoMUk3dhGkm0wwuXjcMMhsoFsSHsmNd4dNSEiJ/LcPwUMm4
-         8GMQ==
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vCVCFwjAnkMVnM2TrNuY2f6SQdKDIj82hiVpU3a366c=;
+        b=mhGDS2xQ4Ae8/i8Ev03u2s7nAz6l9VFRC/xnP8E5rxjADgdo3dy8S4EpK4NA/JPHjS
+         Kz0OpVgvoJqdaY2UItq0iK9hf5Q5uppsX8WnsllTEJH61VswDsSDTXOpA75DgMH3X6Lj
+         0VanKMBsv7wn9W8uPvOXcsACqaECZuEdR1CcNwG4UbkQ9805gs7ytJO9wu0RDFXo2NVF
+         biv/PohKBege3Irh4DLwzeKaoHAkFsXK3NDUB+7vHzmNd2w0unXj2KxEDa93Nlnap3o/
+         W9koUDwvAJxJEAZyiEk5q7UcjC8cT2hMhAbfDczE6hTuejrWbTjF3kHtHFso378Didkh
+         hdFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1751019730; x=1751624530;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UkE+u8fu4iyuqxNowVgVLUi88LeAKltjfpkNJ+TScv8=;
-        b=SkftB9mjoP5LSgpxTy5y28z0qy7oo0q3AJY/y4gZu6e+3jBGHq+4yDfCBJXwXD68Jw
-         zeh63CBsOKVZGHrrfXBaoCHWZBFi+ExMjCK/28rJK0EPVaj8Ww2eP/ajVh2/OQCS4KLS
-         SKo4QCsH+Rmb9/LSmu9xjxsn1qY0QRT7ZoB9wmw/ztWWsClmHPgIAR8NbOUjq/9LEsip
-         Ul8A89E1qMPHRVYIXvu24GXpVJpZ8QJBEIOaUFdgU9Vmso3XATTJHr8/+buL31NnSc/o
-         fI+Y9dtJKsYiwe4Vshe6en4d3fEW9hxU4NLMCUbm4UxeTH8u97+6Sjy/gKO31THyQaOk
-         8EEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVScahluHHiCliL2AkIMnxBRkk98uleXWbbiYQCP1ovdarM2Yy2vtAIpuAc1BfwJq6ZJYnGYQPf6RFcJJg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyl13k3mi6Hlgqkg/gTaNyfZeKO8smDqekT8VG9Unf5PaYDlSpW
-	cG97Hvp6FVTdsL90acYxjgQjB92B5QVrxP87lDKRgxeQrsFLrNhtZ7K4oNN3BSdp5LU=
-X-Gm-Gg: ASbGncvGrQPHE+SAMvdH/sgiD+Og2mttpENQjMFgUfZbGMzT1rz35LCL8mcZPg02XUX
-	0fsT8XTKipRXY0cZecOo6ThY3ajmLYQPjfnzxDBSrsiJpGF+6moTSNAOHtbbp3roFWcHCatmAP/
-	0Pa5tofUxW4CA8fQHaaFiPsccb6ZUsfEfH8OASTQCg7bmPUe+5EkgZUPTqi9/JsycACN/QGpmze
-	WzgaikQnIU4rPbMqDa1gaB4K82GKSp74aBGETho6Nf61YjFe7iRKBuhqH0Ygi9JFQNIwyj6AV7P
-	rg4VJRO9JFgoUlQdxq4owPx1yzHom6SmBFjJa2YsDoNjAc3rFZWI6zmWw8v2SWaESzHPiGU=
-X-Google-Smtp-Source: AGHT+IG7QxsvZWl/3ydeZ4Pv3VBNO8dZz1Djzdjybj3GGWSc7o2t+AVTgzQIN9QyIjzq1OREsAK8vw==
-X-Received: by 2002:a05:600c:8b52:b0:43c:fa24:8721 with SMTP id 5b1f17b1804b1-45390699e19mr20404765e9.17.1751019729592;
-        Fri, 27 Jun 2025 03:22:09 -0700 (PDT)
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vCVCFwjAnkMVnM2TrNuY2f6SQdKDIj82hiVpU3a366c=;
+        b=CNOsY8vAIpEWSIXwxz8zMZl1shuMZH9TNyiM7peCzcQsruVBWVjychk6cjHwzt5V53
+         KkLAfaVekJyUfOlvFl9oRgomIrXVkUR3aFsecoQz0OF4yT0nNgKxCm6qHWeK00eXbSJ0
+         igoTyhp1JP88NdZlPI8WXNkNjWRo8TWuvY208bX9oVC8zB8I7eg3xsyGPpg/24DGyksw
+         EgNyvlWlUluMlw3s7wLo4q4OLh9ErVitG9bjENElDEPTJu6sLj09btP4m/pJ0++oqZFP
+         lr2HEGP2OIPBgWTztVfVRma7nfq4xcsxXA0v4sqvxWaaM0+fJxTSaJmqcYsXrvvHCo+3
+         tXgg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVoXYJ0i/i3uIFZiQI8mZMAI+2gKWcsPGUPI3EddJgGiOKnePWcm2ETQoII7HX019Hc5EuXeU2jSPgjT0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTalJ0H38wwyn64W0b45LPI10CqDfZ9+2Pr1RbGJiV6KKzS1/J
+	rHuA+j+MVOv0E9h5OBQs9Q2LyFewy0bH4kt2faEfEgu8uX9qF1kVzeqZZuHc/ccnwBY=
+X-Gm-Gg: ASbGncvYOVa5bsmJs6i8kgKUYVC2/t94uqtC0TnUqVpcAY8RVTUSxNepRpzvGBfvySI
+	s1HB0YISti4BDPQMR7LlBI1srntYRnZ+B85y+VcC0C6xAD6eFFfWE8Cmhd5IlOya81C0AEH1s7H
+	Dmnp2iKVhYB0ykU2Q6X6EtkqBIqTY7YsO00IvvsLh8WubFkwVkN3CJJtYq2fav9aSYyfPu73bIa
+	VYTiOsvsN+P/XBf6MTi0BO2oEmRzXojz+hgCil6yvHx65itXl5aXRgPwh0NJ2zvxjMGXgu/YLem
+	4zT8XgIl7lr9pp2jTthvVG4Zqm1Wp7BH+JI/cwnELJ67S6L2O95r8TaaNcvdrmZbrv5r5+s=
+X-Google-Smtp-Source: AGHT+IFkxpAvv3NX+mkvbpnx8oeFvyJPpp2vOli48509Lsv+DaI/U3dnvJcfYEQZDOvJnNBBW4GAGA==
+X-Received: by 2002:a05:600c:a087:b0:453:a88:d509 with SMTP id 5b1f17b1804b1-4538ee42c26mr35820825e9.10.1751019730502;
+        Fri, 27 Jun 2025 03:22:10 -0700 (PDT)
 Received: from ho-tower-lan.lan ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3a5599sm47250955e9.13.2025.06.27.03.22.08
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3a5599sm47250955e9.13.2025.06.27.03.22.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 03:22:09 -0700 (PDT)
+        Fri, 27 Jun 2025 03:22:10 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Subject: [PATCH v4 0/6] spi: spi-fsl-dspi: Target mode improvements
-Date: Fri, 27 Jun 2025 11:21:36 +0100
-Message-Id: <20250627-james-nxp-spi-dma-v4-0-178dba20c120@linaro.org>
+Date: Fri, 27 Jun 2025 11:21:37 +0100
+Subject: [PATCH v4 1/6] spi: spi-fsl-dspi: Clear completion counter before
+ initiating transfer
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,11 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALBwXmgC/3XOQQ6CMBAF0KuYrq1pp6UFV97DuGhhqjUKpDUEQ
- 7i7hcSIEZd/kv/+DCRi8BjJfjOQgJ2PvqlTkNsNKS+mPiP1VcoEGGQsA6BXc8dI676lsfW0uht
- qikKjReussiT12oDO97N5PKV88fHRhOc80fHp+tbyFa3jlFHOVI4gkJVOHW6+NqHZNeE86XNVs
- eJfFWwuOGouLcKyOn3SwWddcbFGQCIY14ilA2mM/SHEggC5RohEoK4yLV3mFJRfxDiOL2uwYiN
- 0AQAA
+Message-Id: <20250627-james-nxp-spi-dma-v4-1-178dba20c120@linaro.org>
+References: <20250627-james-nxp-spi-dma-v4-0-178dba20c120@linaro.org>
+In-Reply-To: <20250627-james-nxp-spi-dma-v4-0-178dba20c120@linaro.org>
 To: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>, 
  Vladimir Oltean <vladimir.oltean@nxp.com>, Arnd Bergmann <arnd@arndb.de>, 
  Larisa Grigore <larisa.grigore@nxp.com>, Frank Li <Frank.li@nxp.com>, 
@@ -80,81 +80,51 @@ Cc: linux-spi@vger.kernel.org, imx@lists.linux.dev,
  linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-Improve usability of target mode by reporting FIFO errors and increasing
-the buffer size when DMA is used. While we're touching DMA stuff also
-switch to non-coherent memory, although this is unrelated to target
-mode.
+In target mode, extra interrupts can be received between the end of a
+transfer and halting the module if the host continues sending more data.
+If the interrupt from this occurs after the reinit_completion() then the
+completion counter is left at a non-zero value. The next unrelated
+transfer initiated by userspace will then complete immediately without
+waiting for the interrupt or writing to the RX buffer.
 
-The first commit is marked as a fix because it can fix intermittent
-issues with existing transfers, rather than the later fixes which
-improve larger than FIFO target mode transfers which would have never
-worked.
+Fix it by resetting the counter before the transfer so that lingering
+values are cleared. This is done after clearing the FIFOs and the
+status register but before the transfer is initiated, so no interrupts
+should be received at this point resulting in other race conditions.
 
-With the combination of the commit to increase the DMA buffer size and
-the commit to use non-coherent memory, the host mode performance figures
-are as follows on S32G3:
-
-  # spidev_test --device /dev/spidev1.0 --bpw 8 --size <test_size> --cpha --iter 10000000 --speed 10000000
-
-  Coherent (4096 byte transfers): 6534 kbps
-  Non-coherent:                   7347 kbps
-
-  Coherent (16 byte transfers):    447 kbps
-  Non-coherent:                    448 kbps
-
-Just for comparison running the same test in XSPI mode:
-
-  4096 byte transfers:            2143 kbps
-  16 byte transfers:               637 kbps
-
-These tests required hacking S32G3 to use DMA in host mode, although
-the figures should be representative of target mode too where DMA is
-used. And the other devices that use DMA in host mode should see similar
-improvements.
-
+Fixes: 4f5ee75ea171 ("spi: spi-fsl-dspi: Replace interruptible wait queue with a simple completion")
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
-Changes in v4:
-- Fix !CONFIG_DMA_ENGINE build (and actually test it this time)
-- Reword completion counter comment
-- Reword some commit messages
-- Reset tries in dspi_poll() for each transfer
-- Check for fifo errors in dspi_poll() before checking for completion
-- Link to v3: https://lore.kernel.org/r/20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org
+ drivers/spi/spi-fsl-dspi.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-Changes in v3:
-- Stub out DMA functions in the driver so no-DMA builds work
-- Link to v2: https://lore.kernel.org/r/20250613-james-nxp-spi-dma-v2-0-017eecf24aab@linaro.org
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 04c88d090c4d..4bd4377551b5 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -1122,11 +1122,20 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
+ 		if (dspi->devtype_data->trans_mode == DSPI_DMA_MODE) {
+ 			status = dspi_dma_xfer(dspi);
+ 		} else {
++			/*
++			 * Reinitialize the completion before transferring data
++			 * to avoid the case where it might remain in the done
++			 * state due to a spurious interrupt from a previous
++			 * transfer. This could falsely signal that the current
++			 * transfer has completed.
++			 */
++			if (dspi->irq)
++				reinit_completion(&dspi->xfer_done);
++
+ 			dspi_fifo_write(dspi);
+ 
+ 			if (dspi->irq) {
+ 				wait_for_completion(&dspi->xfer_done);
+-				reinit_completion(&dspi->xfer_done);
+ 			} else {
+ 				do {
+ 					status = dspi_poll(dspi);
 
-Changes in v2:
-- Store status in cur_msg->status rather than adding xfer_status
-- Show exact underflow/overflow flags in error message
-- Rate limit error messages
-- Add a comment about resetting the completion counter prior to transfer
-- Rename dspi_is_fifo_overflow() -> dspi_fifo_error()
-- Add performance figures to cover letter
-- Rebase onto https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git/for-next
-  to avoid some conflicts
-- Link to v1: https://lore.kernel.org/r/20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org
-
----
-James Clark (5):
-      spi: spi-fsl-dspi: Clear completion counter before initiating transfer
-      spi: spi-fsl-dspi: Store status directly in cur_msg->status
-      spi: spi-fsl-dspi: Stub out DMA functions
-      spi: spi-fsl-dspi: Use non-coherent memory for DMA
-      spi: spi-fsl-dspi: Report FIFO overflows as errors
-
-Larisa Grigore (1):
-      spi: spi-fsl-dspi: Increase DMA buffer size
-
- drivers/spi/spi-fsl-dspi.c | 233 ++++++++++++++++++++++++++++++++-------------
- 1 file changed, 166 insertions(+), 67 deletions(-)
----
-base-commit: 4f326fa6236787ca516ea6eab8e5e9dc5c236f03
-change-id: 20250522-james-nxp-spi-dma-a997ebebfb6b
-
-Best regards,
 -- 
-James Clark <james.clark@linaro.org>
+2.34.1
 
