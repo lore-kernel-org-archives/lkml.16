@@ -1,103 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A31296169;
-	Fri, 27 Jun 2025 10:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E069D29824B
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751020959; cv=none; b=g+clTwVQsYIm4OgkptBDLbK1+EqI6VbqHslKn/mtQP1me58XNkMa966G/l8BCStCBN8Q0aNb99biFxf0LModp8dcJ1FEOZogJT4ogRynv3inbAWXDNLjdFwgkJiIkSIaY0Ofw0oep9IFkuPCHxXlkpRmuFkmqZO3CgTB8kJXqoQ=
+	t=1751020974; cv=none; b=P59466i9IAMeUpYscsRJurIIRt+CdZzFekv7DubTk+04SYx6ZEKEu/MFJbF8yMj22S7HIWDrRFnU7hYZhOOG1vY9lREV9m1g4UJ7HNOhHwi87N2haOEBK/1Dcz+P1m5PNrajF+g3eV1ujQjZvpr2OC75OrGrLZ7BjGE8RqsKkwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751020959; c=relaxed/simple;
-	bh=s4SNJbgVVl5wgGD5pUu4CM0at/ywNXfl1l5qwi2MZv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HqMW/ZsJK5c15Y3M33VY4eIgxd4E0gaI4UVlBy5A9rIDy0y2L551fbCLATOqrB/q3yWsY3P+/98jEFywFPzGDjs5OxCgMnxzTvmTND2yKkF2luRbfr3fLcJZdDOZWryNkN9G4pwDcbQRZP4eqxzzpb0cfr/3Ff+DQgtQSftT2ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c8GATjHk; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c8GATjHk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751020959; x=1782556959;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=s4SNJbgVVl5wgGD5pUu4CM0at/ywNXfl1l5qwi2MZv0=;
-  b=c8GATjHkP5vlWQOg262t1Rci5o+6X2nvnvhQgaLvEPwE3U7+vG3z+sZe
-   vAcWRtkOjp1pHE0PlPthA6ub0OqIUsDOiEbz4/1vYCfCDclhB8Bf1PB3A
-   85LE7iJF/bBBPJqReTc4Qc/yOTCu8e+8OZsvehLKGpQpXGM7UHDkK119R
-   74XY+aot7y9IUztzkR1+UuOQFOp+ebjH5BMyGMX3CvTyf2W9/FKO+hEBx
-   we16qFi5XSZ7to72514Iy6n0fMaz5XRXW7VW/lYHosY8Pmp4WdaOyAjk8
-   Hwoa2tjGZCmmYVeehlAYHH/gDGhuZBDEtaPIQ281Ig2APNBBy69ryQm7i
-   A==;
-X-CSE-ConnectionGUID: kG6VOYsRRJy2XvGSObPdDA==
-X-CSE-MsgGUID: cVDsK26AS/K934kYTuo2Kg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="40952401"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="40952401"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:42:38 -0700
-X-CSE-ConnectionGUID: WLXeMLuQRL6ppBWUqOdM9g==
-X-CSE-MsgGUID: CySObl8PRU+l7CdlnR0alw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="152953275"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa007.jf.intel.com with ESMTP; 27 Jun 2025 03:42:33 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id A8E716A; Fri, 27 Jun 2025 13:42:31 +0300 (EEST)
-Date: Fri, 27 Jun 2025 13:42:31 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Sean Christopherson <seanjc@google.com>, 
-	Rick P Edgecombe <rick.p.edgecombe@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, Chao Gao <chao.gao@intel.com>, "bp@alien8.de" <bp@alien8.de>, 
-	Kai Huang <kai.huang@intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, Yan Y Zhao <yan.y.zhao@intel.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, Isaku Yamahata <isaku.yamahata@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2 01/12] x86/tdx: Consolidate TDX error handling
-Message-ID: <yhoysoqiqcof3uf723p2chqmnfbcyw5nucn6uke6vfrsknui3o@tsm64jev6ngt>
-References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
- <20250609191340.2051741-2-kirill.shutemov@linux.intel.com>
- <5cfb2e09-7ecb-4144-9122-c11152b18b5e@intel.com>
- <d897ab70d48be4508a8a9086de1ff3953041e063.camel@intel.com>
- <aFxpuRLYA2L6Qfsi@google.com>
- <vgk3ql5kcpmpsoxfw25hjcw4knyugszdaeqnzur6xl4qll73xy@xi7ttxlxot2r>
- <3e55fd58-1d1c-437a-9e0a-72ac92facbb5@intel.com>
- <aF1sjdV2UDEbAK2h@google.com>
- <1fbdfffa-ac43-419c-8d96-c5bb1bdac73f@intel.com>
+	s=arc-20240116; t=1751020974; c=relaxed/simple;
+	bh=kQlsDwXrPFgl1A/aQW7glaPsDNQH27Vku+YZxYijmN0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BH8YNzv5J0F+y51gt3v7wevcJPVxIufxZkwSPR7DOVE7VJvdCCPAwziwe+/dwZJ3yW4XxXU5KP2oipqJZslLIxfcS9dIRYvueQpAWm8YMMamEHQlikcep8hRY9aqnN/udh5WU0GfDndJ+FlDzxfk7s8H5FhnsIR61lNPGT++PXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0907D1A00;
+	Fri, 27 Jun 2025 03:42:35 -0700 (PDT)
+Received: from [10.57.30.59] (unknown [10.57.30.59])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E9D143F58B;
+	Fri, 27 Jun 2025 03:42:50 -0700 (PDT)
+Message-ID: <43acfcd8-b359-448f-bbb6-da1b71a64f45@arm.com>
+Date: Fri, 27 Jun 2025 11:42:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1fbdfffa-ac43-419c-8d96-c5bb1bdac73f@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: SMMUv3 interrupt handling via custom logic
+To: Michal Simek <michal.simek@amd.com>, Will Deacon <will@kernel.org>,
+ "Stabellini, Stefano" <stefano.stabellini@amd.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+ iommu@lists.linux.dev,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "Sarangi, Anirudha" <anirudha.sarangi@amd.com>
+References: <0482d84e-871b-4522-b94b-29a97c87ff66@amd.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <0482d84e-871b-4522-b94b-29a97c87ff66@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 26, 2025 at 09:59:47AM -0700, Dave Hansen wrote:
-> On 6/26/25 08:51, Sean Christopherson wrote:
-> > No, I was thinking:
-> > 
-> > 	if (IS_TDX_ERR_OPERAND_BUSY(err))
-> > 
-> > e.g. to so that it looks like IS_ERR(), which is a familiar pattern.
+On 2025-06-27 8:19 am, Michal Simek wrote:
+> Hi Will and Robin, (+Stefano, Anirudha)
 > 
-> That would be a more more compelling if IS_ERR() worked on integers. It
-> works on pointers, so I'm not sure it's a pattern we want to apply to
-> integers here.
+> We are using smmu-v3 in our SOC and I would like to ask you for 
+> recommendation how to handle our interrupt cases.
+> 
+> here is description which we are using
+> 
+> smmu: iommu@ec000000 {
+>      compatible = "arm,smmu-v3";
+>      reg = <...>;
+>      #iommu-cells = <1>;
+>      interrupt-names = "combined";
+>      interrupts = <0 169 4>;
+> };
+> 
+> but it is missing one important detail which just arise that actually 
+> there is additional HW logic which deals with SMMU interrupts separately.
+> There is a secure part (global, cmd, event - gerror, cmdq-sync, eventq 
+> in DT)
+> and non secure part (pri, global, cmd, event - priq, gerror, cmdq-sync, 
+> eventq in DT).
+> Based on my information all these interrupts should be acked once 
+> handled to be able to get another one.
+> The driver itself is able to handle them separately but we didn't create 
+> any solution to reach custom HW to do it.
+> 
+> I looked at f935448acf46 ("iommu/arm-smmu-v3: Add workaround for Cavium 
+> ThunderX2 erratum #126") which introduced combined IRQs but it looks 
+> like that there is no need for additional ACK of that IRQs.
 
-IS_ERR_VALUE() works on integers.
+Per the architecture, SMMU interrupts are logically edge-triggered so 
+there is nothing to clear at the SMMU end (the "interrupt status" is 
+implicit in whatever condition caused an interrupt to be sent, e.g. the 
+event queue becoming non-empty, SMMU_GERROR becoming different from 
+SMMU_GERRORN, etc.)
 
-> I kind of hate all of this. I'd kinda prefer that we just shove the TDX
-> error codes as far up into the helpers as possible rather than making
-> them easier to deal with in random code.
+If this is an Arm SMMU IP (MMU-600/700/S3) then the physical interrupt 
+outputs are most definitely rising-edge. If somone's stuck some 
+interrupt combiner in between those and the main interrupt controller, 
+then yes, that interrupt combiner really should have its own driver.
 
-Stripping info from error code early in handling can backfire if we ever
-would need this inf (like need to know which argument is problematic). We
-suddenly can suddenly be in position to rework all callers.
+> The HW logic itself is handling secure and non secure settings for SMMU 
+> that's why would be the best to avoid directly mapping it in Linux.
+> 
+> One way to go is to create secondary interrupt controller driver
+> a) ioremap one with notice about secure part because we are using SMMU 
+> only with NS world
+> b) firmware based to tunnel accesses via SMCs and allow only access to 
+> limited amount of registers
+> 
+> The second way is likely create any hooks in the driver to be able to 
+> provide additional SOC specific hooks.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+If this thing is munging *all* the SMMU interrupt outputs as I suspect, 
+then the big problem with that idea is that "the driver" is at least two 
+separate drivers (SMMU and PMU), 3 if it has RAS and you ever want to 
+entertain the idea of kernel-first handling.
+
+Thanks,
+Robin.
+
+> 
+> I am not quite sure which way would be the best that's why I would like 
+> to get some recommendation from you.
+> 
+> Stefano: please correct me if any of my description is not accurate.
+> 
+> Thanks,
+> Michal
+
