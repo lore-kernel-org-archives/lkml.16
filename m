@@ -1,121 +1,184 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443E7199FD0;
-	Fri, 27 Jun 2025 02:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA061A2398
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 02:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750993192; cv=none; b=Jyu1SaBvnbiCcxM3tcn0YSa1ZQEQEcnYPGVowWXrcKnpolf/NF5Api6/NpHD63cIsoLeh7B3q76mwgBVDWdiKJ7bK5JNnoZFbgfMmMCBgK8Sxggx03W0yjMVIPIYO96pmkRr+e+2cor2cq1/QKApZkwUEqx00X9x5ghE1eL3+2A=
+	t=1750993194; cv=none; b=E3PojXGmFG6gbHvjK922KRTeoyT5k6QWLpHlGyQpQ215r1HyTZIqUtgNmDtcQi/Ch1k+O4rGGmIxzMEYZlDnokfZSGgRYvGmuMyCGPwmaxXGMZtJn3/qamEjqT4SXxGqWGotkBjPXi501VgMQvWhHouO1oROSGW/1nf+NRsSIr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750993192; c=relaxed/simple;
-	bh=B5JXGZGmMiWSQNghFqgfsxwqKjADuBDCng2oC7GG9V4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=P6FQfhpEyavmOJ7+hedLkSYqk3tIrqsCOAZi/l34vk5fp+euNtNvWlkBe4C64I4eRa1moIRmiGky6yjH2gydZpB2/pXu9X3NpWyKWWGK60z53rPq0Wf9VmOn5RrvvyRhWiRjqAZkQRp5dSeP6S/4prWHLQGV738Qfs7stS5fDR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bbb/fc4D; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750993194; c=relaxed/simple;
+	bh=4NqwKliYxy8MhrsnNyN+PcNi2iyEW5+AWz1gEYnmZ54=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JF1nRjBCV/dlLR8S6bwhmYYyh8gy50hTflUT1bSFRR6BFIkxifHbeyeWl8w/kyohHjerF60Ah+MYWeY3ZDr7aKeW422wkMFGgnE0BmTtvfyLvElXLC2aRUDt190gqpMH15NcPiWLyLfafQlrxqGLTFc1VwjWluvZYm9IvZDUYQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j+MCvt/2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bbb/fc4D"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b31d489a76dso1511584a12.1;
-        Thu, 26 Jun 2025 19:59:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750993190; x=1751597990; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SKbBTi7IDp31OkTJ6cIcfFVheRI1s9qIcPf1iWX2qRU=;
-        b=bbb/fc4DptXAiAUhqldDuk4AbATG9SgtQsxSqpMZzzFiUq1L+wi+K+fdbsmQa/XROk
-         TfapPrV9hA/nVYj2CrxKvO8xi5DD+aphTK8yYzOkC8wICqyXDhQT6WKFNWe0voTrdyq8
-         Hv5KyhnezwtuS6yahP4SamaeInUW1oDQ20tgiDNzaCddCi9EWzfwxc035cT5ZzGMn8vu
-         iraqMaiejtZa76+fzgoPcPpNl432C7hGiFr48AgzC3VI2uTNXVEqC7N/Ki7E69hvEIuJ
-         l8HN0flQU7+wUFqHtG+OscIO6AEZOzylzYsI1Dx9CIGoFlJUSGgjEKjFuoo4F6x990js
-         nvrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750993190; x=1751597990;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SKbBTi7IDp31OkTJ6cIcfFVheRI1s9qIcPf1iWX2qRU=;
-        b=Iy4c/bUr+DaQb/nWS/lxFnjmtQ25WCDPk0fNNlTnPSlDWE5EWNMnXXvs1uP/UvXAe5
-         L58KFRFviVkG56xL5VnVLMC7Zj8WRqov1UPPVe1nAcY4PToQNtoDE9yfllueZpKyKa8V
-         UlDicZHAXGLk1e+W6/iGrUPPq7MopvdYHUdfPvGtMaUdCKkz/bMcdSqFjfujwtTKTjDg
-         niep19Yx4H2VXdfkFQnv05AB0x0BE+0LZwqEPBPO5OloTZmQ/mssVWaJZxADR6O9Sq1P
-         v21EdJiael6xj2bv8SjydUMgA7W0T3sol2MZUoKL4SpbIpdfUixHixu+U9bMLKzs0ybg
-         Y1mw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPtsj3IOijvkut689vXB+lcow4u4ucbvkqsybLTsxb+ak1qwxqV8kkJKtXZsMSA0RqNeUu2ixILWs5+cf4@vger.kernel.org, AJvYcCUYBSUkYzelGzfcD0YbuQD0vL0TzIOh8U2rrmumSH4WVI4Hj478QvrAfb982Qgt3fmipmY88Xq+NQzGZigtlHBbkWM=@vger.kernel.org, AJvYcCXfjLPIthCGiLbyQiPWsDHVl7vCKhHGUW4YAyCGLSZihne94aXjlb6aBSUsvAnAGgIay6V0mLHOt97co4NQwTU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyal/qO4jfJW1v7bB8lTLssvQD34MZg/lXeqRBMKT7PaYjjfWmV
-	xe/UuM1IvRINljSW1tV68FO8FlMlEx6DOLqJBxbHMcpx9LT+V9aSlsM6
-X-Gm-Gg: ASbGncsYv6mmV7FmE62IHQpxfzCb/51D+h/Um0Jovv8N3GHIH2k8M5YhJhUDdPyVn9P
-	fC2Bb/NRAIaiUxHnTYbMNSannmrn6Nr0VGBZy5yhWZBoret+bwZGXTXks5wX6amS800EwGWXUPL
-	wmASQ3rqeLTPSHJ1qyMwR72hfOhT7GHu90PZ1GE6qZRskoPD8Pgu3TD0tIKhaNkJC4pnsT27N2K
-	MpR1/JTwFN6db7tspWD3JKhXOSsMgYa+2rVMjrNRuPAWIqxkLjKhyc0uL0AtOJ+FOJwBbs+sTVa
-	GVBD3TIUTIDVnEe0SRD4QfZGfeYvvVFTOPsEui4WG0cxl1pyPJe48sqKNqq0MjtgG/p0fsi8fki
-	EJwktfEVEr2vScsm+XaX33uAKaxqHCTm0PLCrDXAtqA==
-X-Google-Smtp-Source: AGHT+IGKG91ljITMzoVCW+bBbL43wOYsdAmeiGbGiZjPAqk6qOf9V5tPOGCVNlv/03ppyEr4tpG14w==
-X-Received: by 2002:a17:90b:5212:b0:311:e731:523a with SMTP id 98e67ed59e1d1-318c8ee570fmr2178372a91.11.1750993190514;
-        Thu, 26 Jun 2025 19:59:50 -0700 (PDT)
-Received: from [172.17.0.2] (125-227-29-20.hinet-ip.hinet.net. [125.227.29.20])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f5426bd9sm5358186a91.27.2025.06.26.19.59.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 19:59:50 -0700 (PDT)
-From: Leo Wang <leo.jt.wang@gmail.com>
-X-Google-Original-From: Leo Wang <leo.jt.wang@fii-foxconn.com>
-Date: Fri, 27 Jun 2025 10:59:02 +0800
-Subject: [PATCH v4 1/2] dt-bindings: arm: aspeed: add Meta Clemente board
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j+MCvt/2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87F48C4CEEB;
+	Fri, 27 Jun 2025 02:59:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750993192;
+	bh=4NqwKliYxy8MhrsnNyN+PcNi2iyEW5+AWz1gEYnmZ54=;
+	h=From:To:Cc:Subject:Date:From;
+	b=j+MCvt/2FcPez/rFPZyI6bhqypUTJfQAwX2v8YBWMRudhwu/XzFe/YL9wGejK+2yc
+	 XIUTIeDbhxxVN4RSKl469DRbQzM3lXhYuxCaJOg8R+xhNZmypn997e2nLXGNPY92fx
+	 wScR4n4/f825GRadPfvf3fdIxVjwcgzxys9Kpu5NbkVL125dvue2Ca5PufIOEf6UXW
+	 ybuwKYBCvOPOq8Cgi0FFNM3uFi2S35d3SOMwwFAFSC1F8ngTbyg2kZTIgUyppA6K4A
+	 xHFu//XGI+N+gPE5/YRxXJGOBjSYfzbIyQg0+vFiFyZGIflPBAIyFSYwlMJkEcDs9F
+	 60AMMdVP9eoeg==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH] f2fs: account and print more stats during recovery
+Date: Fri, 27 Jun 2025 10:59:43 +0800
+Message-ID: <20250627025944.152334-1-chao@kernel.org>
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250627-add-support-for-meta-clemente-bmc-v4-1-ce7ff23460c4@fii-foxconn.com>
-References: <20250627-add-support-for-meta-clemente-bmc-v4-0-ce7ff23460c4@fii-foxconn.com>
-In-Reply-To: <20250627-add-support-for-meta-clemente-bmc-v4-0-ce7ff23460c4@fii-foxconn.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, Kees Cook <kees@kernel.org>, 
- Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- bruce.jy.hung@fii-foxconn.com, george.kw.lee@fii-foxconn.com, 
- Leo Wang <leo.jt.wang@fii-foxconn.com>, Leo Wang <leo.jt.wang@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750993183; l=886;
- i=leo.jt.wang@fii-foxconn.com; s=20250618; h=from:subject:message-id;
- bh=jaJuRFuiQIpQeCgkDZC/ZckoYXAyyJRWtir3QL+VwYw=;
- b=AYHEHTRIFy88S1GjWZDWK5NLlxMnwupBgtb6qjRHYkPO4trM6o6fQKG9w+vESOZJ2Pi2UwYu3
- 5RmXtrrudpSDo/PwJ0dJJo50AxHwE3iiQYAc+uKcT3OqY9VjtELAt4s
-X-Developer-Key: i=leo.jt.wang@fii-foxconn.com; a=ed25519;
- pk=x+DKjAtU/ZbbMkkAVdwfZzKpvNUVgiV1sLJbidVIwSQ=
+Content-Transfer-Encoding: 8bit
 
-From: Leo Wang <leo.jt.wang@gmail.com>
+F2FS-fs (vdc): f2fs_recover_fsync_data: recovery fsync data, check_only: 0
+F2FS-fs (vdc): do_recover_data: start to recover dnode
+F2FS-fs (vdc): recover_inode: ino = 5, name = testfile.t2, inline = 21
+F2FS-fs (vdc): recover_data: ino = 5, nid = 5 (i_size: recover), range (0, 864), recovered = 1, err = 0
+F2FS-fs (vdc): do_recover_data: dnode: (recoverable: 256, fsynced: 256, total: 256), recovered: (inode: 256, dentry: 1, dnode: 256), err: 0
 
-Document the new compatibles used on Meta Clemente.
-
-Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
 ---
- Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ fs/f2fs/recovery.c | 38 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 31 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-index 01333ac111fbb076582a6c0e801903c3500b459f..ff3fea63cecd99ec2dc56d3cf71403f897681a98 100644
---- a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-+++ b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-@@ -81,6 +81,7 @@ properties:
-               - asus,x4tf-bmc
-               - facebook,bletchley-bmc
-               - facebook,catalina-bmc
-+              - facebook,clemente-bmc
-               - facebook,cloudripper-bmc
-               - facebook,elbert-bmc
-               - facebook,fuji-bmc
-
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index 51ebed4e1521..f7d2fc86aeb1 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -624,7 +624,7 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ {
+ 	struct dnode_of_data dn;
+ 	struct node_info ni;
+-	unsigned int start, end;
++	unsigned int start = 0, end = 0, index;
+ 	int err = 0, recovered = 0;
+ 
+ 	/* step 1: recover xattr */
+@@ -679,7 +679,7 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ 		goto err;
+ 	}
+ 
+-	for (; start < end; start++, dn.ofs_in_node++) {
++	for (index = start; index < end; index++, dn.ofs_in_node++) {
+ 		block_t src, dest;
+ 
+ 		src = f2fs_data_blkaddr(&dn);
+@@ -708,9 +708,9 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ 		}
+ 
+ 		if (!file_keep_isize(inode) &&
+-			(i_size_read(inode) <= ((loff_t)start << PAGE_SHIFT)))
++			(i_size_read(inode) <= ((loff_t)index << PAGE_SHIFT)))
+ 			f2fs_i_size_write(inode,
+-				(loff_t)(start + 1) << PAGE_SHIFT);
++				(loff_t)(index + 1) << PAGE_SHIFT);
+ 
+ 		/*
+ 		 * dest is reserved block, invalidate src block
+@@ -765,9 +765,11 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ err:
+ 	f2fs_put_dnode(&dn);
+ out:
+-	f2fs_notice(sbi, "recover_data: ino = %lx (i_size: %s) recovered = %d, err = %d",
+-		    inode->i_ino, file_keep_isize(inode) ? "keep" : "recover",
+-		    recovered, err);
++	f2fs_notice(sbi, "recover_data: ino = %lx, nid = %x (i_size: %s), "
++		    "range (%u, %u), recovered = %d, err = %d",
++		    inode->i_ino, nid_of_node(&folio->page),
++		    file_keep_isize(inode) ? "keep" : "recover",
++		    start, end, recovered, err);
+ 	return err;
+ }
+ 
+@@ -778,6 +780,14 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
+ 	int err = 0;
+ 	block_t blkaddr;
+ 	unsigned int ra_blocks = RECOVERY_MAX_RA_BLOCKS;
++	unsigned int recoverable_dnode = 0;
++	unsigned int fsynced_dnode = 0;
++	unsigned int total_dnode = 0;
++	unsigned int recovered_inode = 0;
++	unsigned int recovered_dentry = 0;
++	unsigned int recovered_dnode = 0;
++
++	f2fs_notice(sbi, "do_recover_data: start to recover dnode");
+ 
+ 	/* get node pages in the current segment */
+ 	curseg = CURSEG_I(sbi, CURSEG_WARM_NODE);
+@@ -800,10 +810,12 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
+ 			f2fs_folio_put(folio, true);
+ 			break;
+ 		}
++		recoverable_dnode++;
+ 
+ 		entry = get_fsync_inode(inode_list, ino_of_node(&folio->page));
+ 		if (!entry)
+ 			goto next;
++		fsynced_dnode++;
+ 		/*
+ 		 * inode(x) | CP | inode(x) | dnode(F)
+ 		 * In this case, we can lose the latest inode(x).
+@@ -815,6 +827,7 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
+ 				f2fs_folio_put(folio, true);
+ 				break;
+ 			}
++			recovered_inode++;
+ 		}
+ 		if (entry->last_dentry == blkaddr) {
+ 			err = recover_dentry(entry->inode, &folio->page, dir_list);
+@@ -822,12 +835,14 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
+ 				f2fs_folio_put(folio, true);
+ 				break;
+ 			}
++			recovered_dentry++;
+ 		}
+ 		err = do_recover_data(sbi, entry->inode, folio);
+ 		if (err) {
+ 			f2fs_folio_put(folio, true);
+ 			break;
+ 		}
++		recovered_dnode++;
+ 
+ 		if (entry->blkaddr == blkaddr)
+ 			list_move_tail(&entry->list, tmp_inode_list);
+@@ -840,9 +855,15 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
+ 		f2fs_folio_put(folio, true);
+ 
+ 		f2fs_ra_meta_pages_cond(sbi, blkaddr, ra_blocks);
++		total_dnode++;
+ 	}
+ 	if (!err)
+ 		err = f2fs_allocate_new_segments(sbi);
++
++	f2fs_notice(sbi, "do_recover_data: dnode: (recoverable: %u, fsynced: %u, "
++		"total: %u), recovered: (inode: %u, dentry: %u, dnode: %u), err: %d",
++		recoverable_dnode, fsynced_dnode, total_dnode, recovered_inode,
++		recovered_dentry, recovered_dnode, err);
+ 	return err;
+ }
+ 
+@@ -855,6 +876,9 @@ int f2fs_recover_fsync_data(struct f2fs_sb_info *sbi, bool check_only)
+ 	unsigned long s_flags = sbi->sb->s_flags;
+ 	bool need_writecp = false;
+ 
++	f2fs_notice(sbi, "f2fs_recover_fsync_data: recovery fsync data, "
++					"check_only: %d", check_only);
++
+ 	if (is_sbi_flag_set(sbi, SBI_IS_WRITABLE))
+ 		f2fs_info(sbi, "recover fsync data on readonly fs");
+ 
 -- 
-2.43.0
+2.49.0
 
