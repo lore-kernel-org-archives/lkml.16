@@ -1,138 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0BD224893;
-	Fri, 27 Jun 2025 10:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D12298CA6;
+	Fri, 27 Jun 2025 10:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751021801; cv=none; b=sFHyipDbGyr0Ev1dH+T34L7zqyoJ6oXobRmbp2RpU9qa/cgVpFnIOC4L7UDCf3TLz6zLk9ZfoJo4Xhw0j8iDm9Bfjpgc6NhxJj3gsfBBLijpq09oMscjh2UVXRJjWPtgTBuc0hZXkV8T5KMue9ekyk5Tz0FL8mo6tBsmFY7NiTU=
+	t=1751021830; cv=none; b=WJk6NNu0O1kEetUtAYX/zZVjR7QF8pQViPndhG86HoHt/I19iYNiKk7DRHvlVotN1cRRAW+4h+NPmIz2jAwTYC+/gesZz2yaTbTY1bfTj4xWFea9M3NUzNAsg6sFKZ0StMNVvup8s/1ETqmNKNak7TcpRy6+KjhlqNV+2CY9jU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751021801; c=relaxed/simple;
-	bh=T3uWh/QcvqROPfZzHSbKKajGRp9ht/LT12j2WdEkiwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cr67W3yJkwY3dG9WSBxsfTGRyXHpVbNe2kICm27d92xY9h8QLoerfMtVimnl96kbdM+uKClaxITD+SuUWqKtpKkUYB1TJN/4PBpSDPeeEOVdzpAHEWkr8BJCHjt7C16kLUN2yaQjfeSKxoIeWLuSxVbeX3lwVChvjA98thyQ5wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QEmBjAL4; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751021830; c=relaxed/simple;
+	bh=6LeEQMY2R6fE0USThubcoc4+I+0HfqSLN2u+w0Br1jo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WSeIiSI5HBKhL1pUaBM9jZxll8hk57DkvdgPWCABee4PmtiazmC19D5o5gSbWw8oaMJJw+A6PJkjEY7YE0LDzs3d3MUj2EP5pWenTveN1FvrUwKCN5A+e/k3/M0yu37Lhd8mPrhh+CFimcvO51yt3Hpo1Sqg2ndVhw4frzdCw7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jqzx9QRS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QEmBjAL4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751021800; x=1782557800;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=T3uWh/QcvqROPfZzHSbKKajGRp9ht/LT12j2WdEkiwk=;
-  b=QEmBjAL4/NCCc7Jz9vgo2OWurfDoZ3YVWgVGUzXvrXlNxzfb/g5gzQiw
-   WLCAW2WCDenqZCdrOrBUL32OlCNDIJGRwBi8Q4vfzI+HaXhzqaz7hGO1m
-   fVtrE6g5NzOQScnhtll1djR4Vx1v3TA9g2ygaIafOOaH+S1nXK1IFjHCu
-   1Y1GucPTJiG9VaijlFEMS0ZPOKiR6hd/xoBhB5dQbuGiS3/wlFooyrE5u
-   2C2bf4F0RUT4ChW041njZa/P+VP4xL0Q27e0wasMi5JA5fX0gd2q4tWgT
-   /cJPNGS7FgPEmgiLa6b+dY47KGt2MBFdKoFs/CSHIp+6neWpH/RiNBjTf
-   g==;
-X-CSE-ConnectionGUID: 1pPkIyPVT/qjbOw8lbJ/2g==
-X-CSE-MsgGUID: 2exypl5EQ7Oluwarat4aSw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="75878678"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="75878678"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:56:39 -0700
-X-CSE-ConnectionGUID: rn9VVUwTSM+F408M91+awQ==
-X-CSE-MsgGUID: snRNiK3sSTWzsuJHRF4Ivg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="152519354"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:56:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uV6l0-0000000ASQB-3aSH;
-	Fri, 27 Jun 2025 13:56:34 +0300
-Date: Fri, 27 Jun 2025 13:56:34 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCH v18] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <aF544lt-9YJq8r0y@smile.fi.intel.com>
-References: <20250626224805.9034-1-ansuelsmth@gmail.com>
- <aF5dHDr8yDSKlp5j@smile.fi.intel.com>
- <685e6544.5d0a0220.20cf55.9440@mx.google.com>
- <aF5xrHkTr8Tb71ZH@smile.fi.intel.com>
- <685e73cf.df0a0220.214b10.9998@mx.google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jqzx9QRS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A0E9C4CEE3;
+	Fri, 27 Jun 2025 10:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751021829;
+	bh=6LeEQMY2R6fE0USThubcoc4+I+0HfqSLN2u+w0Br1jo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jqzx9QRSQtpb9W/z1Y82jvXOCIsqaYZard1+FI+q8nJL2Xus7nxBqgr3jG2lZurSV
+	 +gkYt8PxwjlP8YmPSLAhIWqC8t3YikSRx9k6vcHwNiH7+laH7rkJiI+3Bx9rN0JOVe
+	 XJUM28fcvCwaVMH41yw+8q8xy7u4o7mHdRH1k+qknypldjhDehYsywHIg/Fp9fEgwJ
+	 k6eLTziDXvs/dg8f/E3oB3BpbdMZI4XQJG+A4yVIKIMblVoKDstSeCMp6XfQ7vs1+J
+	 7WQ7zGFBZl4JLf2pn5hjjySDw4ZRS9+O4+rGHoGt8qMrVfmKKSIPG0t7wJfanr9lPn
+	 ns6fkyShms6Tw==
+Message-ID: <909f1a39-b614-4292-912a-624be5df6af1@kernel.org>
+Date: Fri, 27 Jun 2025 11:57:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <685e73cf.df0a0220.214b10.9998@mx.google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nvmem: layouts: Switch from crc32() to crc32_le()
+To: Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+ Srinivas Kandagatla <srini@kernel.org>
+References: <20250620205027.23403-1-ebiggers@kernel.org>
+Content-Language: en-US
+From: Srinivas Kandagatla <srini@kernel.org>
+In-Reply-To: <20250620205027.23403-1-ebiggers@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 27, 2025 at 12:34:49PM +0200, Christian Marangi wrote:
-> On Fri, Jun 27, 2025 at 01:25:48PM +0300, Andy Shevchenko wrote:
-> > On Fri, Jun 27, 2025 at 11:32:46AM +0200, Christian Marangi wrote:
-> > > On Fri, Jun 27, 2025 at 11:58:04AM +0300, Andy Shevchenko wrote:
-> > > > On Fri, Jun 27, 2025 at 12:47:53AM +0200, Christian Marangi wrote:
 
-...
 
-> > > > > +	/* Global mutex to protect bucket used refcount_t */
-> > > > > +	struct mutex mutex;
-> > > > 
-> > > > This makes a little sense. Either you use refcount_t (which is atomic) or
-> > > > use mutex + regular variable.
-> > > 
-> > > Using a regular variable I lose all the benefits of refcount_t with
-> > > underflow and other checks.
-> > 
-> > Then drop the mutex, atomic operations do not need an additional
-> > synchronisation. Btw, have you looked at kref APIs? Maybe that
-> > would make the intention clearer?
+On 6/20/25 9:50 PM, Eric Biggers wrote:
+> u_boot_env_parse() calls crc32() from within a scope that has a uint32_t
+> variable named crc32.  This works only because crc32() is actually a
+> macro that expands to crc32_le().  I'm planning to make it an inline
+> function instead, which will make the usual C scoping rules apply to it.
+> Therefore, update u_boot_env_parse() to be compatible with that.  To do
+> so, just call crc32_le() directly instead of using the crc32() alias.
+> (An alternative would be to rename the local variable.)
 > 
-> It's needed for
+> Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+> ---
 > 
-> +       mutex_lock(&pc->mutex);
-> +       if (refcount_read(&pc->buckets[bucket].used) == 0) {
-> +               config_bucket = true;
-> +               refcount_set(&pc->buckets[bucket].used, 1);
-> +       } else {
-> +               refcount_inc(&pc->buckets[bucket].used);
-> +       }
-> +       mutex_unlock(&pc->mutex);
+> I'm planning to apply this patch to crc-next, since my patch
+> https://lore.kernel.org/r/20250619183414.100082-3-ebiggers@kernel.org/
+> depends on this.
+
+
+Acked-by: Srinivas Kandagatla <srini@kernel.org>
+
+--srini
+
 > 
-> the refcount_read + refcount_set.
-
-Which is simply wrong. Nobody should use atomics in such a way.
-Imagine if somebody wants to copy something like this in their
-code (in case of no mutex is there), they most likely won't notice
-this subtle bug.
-
-> As you explained there might be case where refcount_read is zero but nother
-> PWM channel is setting the value so one refcount gets lost.
-
-Right, because you should use refcount_inc_and_test() and initialise it
-to -MAX instead of 0. Or something like this.
-
-> kref I checked but not useful for the task.
-
-Okay.
-
-> The logic here is
+>  drivers/nvmem/layouts/u-boot-env.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> - refcount init as 0 (bucket unused)
-> - refcount set to 1 on first bucket use (bucket get configured)
-> - refcount increased if already used
-> - refcount decreased when PWM channel released
-> - bucket gets flagged as unused when refcount goes to 0 again
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> diff --git a/drivers/nvmem/layouts/u-boot-env.c b/drivers/nvmem/layouts/u-boot-env.c
+> index 436426d4e8f91..274e8a456e8c1 100644
+> --- a/drivers/nvmem/layouts/u-boot-env.c
+> +++ b/drivers/nvmem/layouts/u-boot-env.c
+> @@ -146,11 +146,11 @@ int u_boot_env_parse(struct device *dev, struct nvmem_device *nvmem,
+>  	crc32_addr = (__le32 *)(buf + crc32_offset);
+>  	crc32 = le32_to_cpu(*crc32_addr);
+>  	crc32_data_len = dev_size - crc32_data_offset;
+>  	data_len = dev_size - data_offset;
+>  
+> -	calc = crc32(~0, buf + crc32_data_offset, crc32_data_len) ^ ~0L;
+> +	calc = crc32_le(~0, buf + crc32_data_offset, crc32_data_len) ^ ~0L;
+>  	if (calc != crc32) {
+>  		dev_err(dev, "Invalid calculated CRC32: 0x%08x (expected: 0x%08x)\n", calc, crc32);
+>  		err = -EINVAL;
+>  		goto err_kfree;
+>  	}
+> 
+> base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
 
