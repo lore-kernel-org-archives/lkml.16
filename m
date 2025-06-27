@@ -1,101 +1,83 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2F52D9787
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E69EEDE;
+	Fri, 27 Jun 2025 16:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751043329; cv=none; b=MVDT3stAW/zI/dVkkauYbf35ZroQCsYTENpK1IxOtIGFl4RbFRKRpZMXBpI8hDwzIVCYPZQpi7kv9NFIh8abXZWmHl0Wx475cMMQGH4I5yTsYQMivCXHuWsZ+67pVxQQ3IhPLwCdPHq+mDREvrzseO9MoMCWrAd14QBtAMrZnC4=
+	t=1751043334; cv=none; b=VS1wZ6FbpqMgn82rNlAgy6rnZ3NY8JJY4ouF3ReVe3Es1d1HpxD0vvFoW4upZ9+FwuwgRlxEDXYQLpUF4qBn/9fYfpoN1+k5J5dWtjLtueStwvjHzX515fnN3qzkD47J+VKcy79sfyIH8k1upvNp0Wtxnzz0hjh8h/mHrQYbSFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751043329; c=relaxed/simple;
-	bh=WzuNp8fggmNQSdOMdCp9Rv2L2qJowlPOrqD/MfoEN2o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nw0KOrTPcv59Xbph0mYRKSqDXyWychfzBI0CMk9b5s88m5oy4w/elicNTnXTbInNo1wtiq1rHNPdPs/esKqFOh20Mh18CM2NZZqM5lLladCjEKPsIGgw1UVKe6sGONpd5M4uvyLyiyU8Iu9/1J6FFqB9aK16OoWHfmRhb/65w1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fC0QAzTV; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751043334; c=relaxed/simple;
+	bh=Yp5x1qAvIVckjNxZdzXQoxusyqiTWxQXK0b6azS+QuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QTrTke00pwRHzwSN3J1CnoqSo5q3W1cFUmyzcBiUSm1X7P/em8Y0KII1OIGG8I63BiwyLQyGsme/HI2tJqba95/Fhvgohm56Z4B8UAkQ7/XCNP40hSIZM3gYld8HCFl78M684JRzIHk17ysJwxJ/eRKgYuE15hi/cWddEPMx3/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nCWLsIdC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fC0QAzTV"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so14705ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:55:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751043327; x=1751648127; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WzuNp8fggmNQSdOMdCp9Rv2L2qJowlPOrqD/MfoEN2o=;
-        b=fC0QAzTV4BP9BuVx6X1bN1S8/6V96d6Sj1VrZxXcCwMt3yWeZOYYGeb8RECeI26GXz
-         z+TTdkbnGwBxAmgNLsbDrY8/a9qmNvELI/N+xPUoiczG7FmUX2Sn5lwlK2oV/3Jl70wG
-         ATxc5/3Smsib9NcsZHZvDuxLDXfrEx9LgIxlUkE5sxB8xo3OHGH9iZyrrHxZzeXkNdva
-         kEjM0PsUoqdncJljllR/fOyFQZgcNAoUlffvYwSi1eLqCbhxEFFNP/v8doUjmfTqhZcG
-         xvirimfP7co7Dr3GI9EmBxxMg15iYaHr5uEKC0rYPA1pkeoJBD6MXBq9XKIJgOQReu19
-         e1IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751043327; x=1751648127;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WzuNp8fggmNQSdOMdCp9Rv2L2qJowlPOrqD/MfoEN2o=;
-        b=iANbH6k3IeT/e5zz91E5LisxCa1+I00oc1646HsWHxcGq5df5E02XUYwACiarVNaLx
-         /0c50KDifQIrp957pwobJvqmMGfC2gk7xdeBUPPbx+blS5i0RiGAiEsR9AG8oU42I9mm
-         gLJ1/0Fz5AauPDj+gpNRd2iDRAXXi12LQ+Vg2rXyITCFwyj26CbE4xLbzbASbM8Moyxd
-         2jM7+r3v41V6nkeMGjDyvRW8QT9q4N7TorbPaJfgnEIdTL01lZhhS97j5VmEeiQnEwAA
-         +3oWZH2yda1/8KOxYZzu2W+WhF7CV30Q67zG+WgBDSVRSM4wdn/2QHcZB7INQSDfH7r1
-         X3cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZzIadKjszpYKdOHrQRZtMe5t3NkG6ZyC0FIlfoUk/77qwk4wDzLw6sSnLpQhjcRGV09SklTFwQEW8JSM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz56eAEe+LpiPb9855N0CA0pdghbXNxDGfoeoVSntfirGvTc5NB
-	g8wNvtZPFAWm6S0RdusW+Ng57NbifnUoxJCbCYA2IYLVc4evBmmFXsY/Wni732NQMYk8G0dGC1C
-	Nn1e9NwtB8T76h2IPofTEKyrYqVBb1T+S8GDPsPxK
-X-Gm-Gg: ASbGncsAF+IH62rdCobMY6+74rBXdeJzjXWSlJgTmgrIkoQ4dPmYr0QYugBJAj6CxcJ
-	7ja9P0U9rwPPWTnnLSlzO2hieV6bRu7DLKKlSTAEMLIwNpCiVZrn6JOTFSm4j+1TX1JGWY/w34P
-	jTRTxpJOhcBnih0N0RQlDGf0QegoUyIbgi7FEvXlncpiVF
-X-Google-Smtp-Source: AGHT+IE5bGgRxFzXmQ/GK/K2hDeu4kZV1vxh0NaCBm134jFcoqYIxFe7n/gmLkBp4tcqZHW1FSxbKy0H3FhyJhjAvAs=
-X-Received: by 2002:a05:6e02:4719:b0:3dd:a562:ce54 with SMTP id
- e9e14a558f8ab-3df53c25bacmr505685ab.15.1751043326954; Fri, 27 Jun 2025
- 09:55:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nCWLsIdC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D23C4CEE3;
+	Fri, 27 Jun 2025 16:55:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751043333;
+	bh=Yp5x1qAvIVckjNxZdzXQoxusyqiTWxQXK0b6azS+QuQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nCWLsIdCFXGSMIWDscE5n0stzwsjApyob+KlQk7bl+ibo3bXvfmtfzO21wijG17JH
+	 mXmstkHmLOo2bvxvLgVXRpST0vM0ZETNZv++7Nlj7fGMTuDsBGWc2HUaHnwyyC9ELp
+	 vDYP98p9lV+d6QKLcJh7BNjEw3DPnErLSinXlhG7F24n7qPQElbtnAPBJ9yyXw1Od7
+	 49ZMdsGn8HGp/mETG2riqQaQQXSmK+WH2eIlKj3L1qyOe0oQaq0dgINqiay+Lwt6HF
+	 79u2I9rLOIbaT29OurYwRIlGWu2T9eKqTiYU+WHJ2zkg+uJPfeyIXeZUtH3TtUNF1f
+	 vHQ+dEFCrCPxQ==
+Date: Fri, 27 Jun 2025 09:55:30 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, 
+	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, Song Liu <song@kernel.org>, 
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
+	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
+	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>, Dylan Hatch <dylanbhatch@google.com>
+Subject: Re: [PATCH v3 44/64] x86/jump_label: Define ELF section entry size
+ for jump labels
+Message-ID: <dhuk7aokj2hpqy3q65uqpv7bz4pwvg2zhngyfh44y7gmiujg4y@h6s354xixgf2>
+References: <cover.1750980516.git.jpoimboe@kernel.org>
+ <7217634a8158e56703dfe22199f1b9c08c501ae3.1750980517.git.jpoimboe@kernel.org>
+ <20250627104818.GW1613200@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623132731.899525-1-tmricht@linux.ibm.com>
- <CAP-5=fV_hXzq0A-91NakejcQGnvPp+uJGGe=vccwM+47JVCmtA@mail.gmail.com>
- <ad905a68-a89b-458d-8a8b-2081a6656b91@linux.ibm.com> <283e109b-9eb5-4e7d-b7df-215f54496503@linux.ibm.com>
-In-Reply-To: <283e109b-9eb5-4e7d-b7df-215f54496503@linux.ibm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 27 Jun 2025 09:55:14 -0700
-X-Gm-Features: Ac12FXzYMDHRBdMmNG-uDcOa6V7yaYqEFMkI9NCQ5NDul3g-e1u9_oRedp0lZFU
-Message-ID: <CAP-5=fVcNqE9txXQgO+EUV6xz3Mvsqin9FP8FNUztPp35LW2Ng@mail.gmail.com>
-Subject: Re: [Ping][PATCH] perf list: Add IBM z17 event descriptions
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	namhyung@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com, 
-	hca@linux.ibm.com, japo@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250627104818.GW1613200@noisy.programming.kicks-ass.net>
 
-On Fri, Jun 27, 2025 at 1:13=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
->
-> On 6/24/25 08:35, Thomas Richter wrote:
->
-> Gently Ping
->
-> Ian, I have responded to your comments some days ago.
+On Fri, Jun 27, 2025 at 12:48:18PM +0200, Peter Zijlstra wrote:
+> > +#define JUMP_TABLE_ENTRY(key, label)				\
+> > +	".pushsection __jump_table,  \"aM\", @progbits, "	\
+> > +	__stringify(JUMP_ENTRY_SIZE) "\n\t"			\
+> 
+> Argh, can you please not do this line-break. Yes it'll be long, but this
+> is most confusing.
 
-Thanks Thomas, minor nit in your explanation the events must exist as
-they are in json, but the json events are only exposed if the PMU is
-present, so the has_event is more of a has_pmu test. Maybe we should
-add a function like this to the metrics to make this kind of case
-clearer. Maybe `perf list` should test the events of a metric and hide
-metrics when the events aren't available to avoid the have_event
-logic. I'm a bit uncomfortable with that as the events may not be
-available because of permission issues, but it'd still be useful to
-know the metrics are around. Anyway I'm digressing.
+Yeah, I'll go indent that like the extable one.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+> > @@ -29,6 +30,9 @@ int main(void)
+> >  #else
+> >  	DEFINE(LRU_GEN_WIDTH, 0);
+> >  	DEFINE(__LRU_REFS_WIDTH, 0);
+> > +#endif
+> > +#if defined(CONFIG_HAVE_ARCH_JUMP_LABEL_RELATIVE) && defined(CONFIG_JUMP_LABEL)
+> 
+> How is HAVE_ARCH_JUMP_LABEL_RELATIVE relevant here?
 
-Thanks,
-Ian
+#ifdef CONFIG_HAVE_ARCH_JUMP_LABEL_RELATIVE
+
+struct jump_entry {
+	s32 code;
+	s32 target;
+	long key;	// key may be far away from the core kernel under KASLR
+};
+
+-- 
+Josh
