@@ -1,90 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20874502A;
-	Fri, 27 Jun 2025 20:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103C8C2FB;
+	Fri, 27 Jun 2025 20:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751055795; cv=none; b=KSOfTCPUeRUUJFRgiVYf6rsavLXcdR2p3QRjZPShtudaN5NG+Qkv7mFvl3d+GibmbwlADmYZKKXOL389xYsuB1jXoAtRwSOs9bAHJgLnf7KftXP8HT0s9vq/3aa2BP1GBZ2QLG3NZM7LKK2srZLQMeei+bW6qvSDNIzEGVW1MI4=
+	t=1751055817; cv=none; b=HZjInVjr0UHBK0/zB7Qo2DzCHPKATZ8zCuTOIHuA90r5qoLfNk+eFgDUHIuWBfZ2dRcZt7hdL7unoGatbTWjFSHJV9847UGVxxSyFlSOUSRJofR8eXyWSch6qwLDSVMWfLtUijGoGy8C6cGdxj3iXafi46M08OT/TT74ba6v7Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751055795; c=relaxed/simple;
-	bh=h4QlW7GZNwkMaT48nW8b+HM7x20vb+bnxT8cmkT0MvA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o1N9G2EHfMDLF+A1Eh2mNXXwUFT1kESz/JqblkCOUVq6cQulhXMpn+sM/bkWHvOx0iWb6sden0Z8yGsHuGdIWxU+XMcbJFdxBDwNIUXyILMHWmFnFsvSHKP/ksWlERs1t+z6LshDNzvSj6mlR6xD8XU2sYyOaWAJPfmYfmKPcEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LuiTKiZR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751055817; c=relaxed/simple;
+	bh=8LRAvUFeTwmz4rDd900x+Z+XteT5wGFcJVnT+hGaLP4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h3ReBkcaFyx0OS0n5PUmlfN73VlbtJEdBYwYPObiIYOtaVXVFEzNJyYyhJCV2JasNXRz5eW3TrWcCcgX+40c6mMe1a40YL+cOZNowhmeUb1ZYAmCfFvjmOTn32M5DaVI1gFx6GrjZryyoPU1rSbW15hNJI3v1ZAwPAWXH1fCFgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=PgigF6B0; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LuiTKiZR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D212C4CEED;
-	Fri, 27 Jun 2025 20:23:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751055794;
-	bh=h4QlW7GZNwkMaT48nW8b+HM7x20vb+bnxT8cmkT0MvA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LuiTKiZRQo9wmdm3gQj5kbd/ugDzxx7piAfqCB9uvE6P8UkFE0xKUotZyNCmkoqd/
-	 CnLMCaFEauE2ntc91/7YFz8YSnlmOv0ZglC2lrI69xbXowFhFTyFWFI4fQukEQ5vi7
-	 kVrmZ327fK/D78jZ+uQEbNIKLbP7gvQrHvR6BBQwnj7el01zXZZauC0yK2a9hSPhsE
-	 LQRtcgQ2EeCdvFzPVzMUkzJUhNKTyV1ukPSHiGulUos6JxiPynqhwHnUhcX7fOoAKz
-	 ba1g1XZMtMIEm4awk0Qw3tokkfBpzs/88eURm2yXSsu4XNbJeLV6GNhlzSWwF/BTFp
-	 gh1xGrI3oqS0w==
-Date: Fri, 27 Jun 2025 15:23:13 -0500
-From: Rob Herring <robh@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Umang Chheda <umang.chheda@oss.qualcomm.com>,
-	linux-arm-msm@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Konrad Dybcio <konradybcio@kernel.org>, kernel@oss.qualcomm.com,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH 0/2] Add support for IQ-8275-evk board
-Message-ID: <20250627202313.GA4189710-robh@kernel.org>
-References: <20250623130420.3981916-1-umang.chheda@oss.qualcomm.com>
- <175069348269.3797007.5540625905808833666.robh@kernel.org>
- <bcfbfaed-e857-44be-86bd-d4e977fd4d27@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="PgigF6B0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=LNuHdZp1p8Oowbp9pqTlemJ4dhvpEIex6NkU/PUOyGM=; b=PgigF6B0mR7Bk3asa15fereY3a
+	LPqE/FIBEXopIv4s9QCLrpfaYUBgKU1u89vGKeK1muVH7XyHMxbqcQsGG2tS2YrSlQ1uHKiFWBQEz
+	Lr/2r9vFkbEvN0Xv/FYTMn4jCq9aCt2/oLa6gNJjtS2ZChMJNe8/S8m2QWzBrou4fAH4Ckyq127dp
+	tj0V8qFApRZZcxf5YQn2Q9uV1KnKj47ndCt9zpnmIylfOSfIRxx/LNeoDzL/a+dLMHTexTdZsIBNd
+	+4NjBh6x0TVn5T3yxmTcpMY8SqOr555P/xg7x87szaSOqTug4SXO2VZua01RaYpX5c5RbgEUHUhO6
+	4JV762+g==;
+Received: from [191.204.192.64] (helo=[192.168.15.100])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uVFbI-009XtB-C6; Fri, 27 Jun 2025 22:23:08 +0200
+Message-ID: <96b3d0fa-7fd2-4d2b-a6d6-cc91ed1dca4e@igalia.com>
+Date: Fri, 27 Jun 2025 17:23:03 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bcfbfaed-e857-44be-86bd-d4e977fd4d27@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/7] selftests/futex: Add ASSERT_ macros
+To: Thomas Gleixner <tglx@linutronix.de>, Shuah Khan <shuah@kernel.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Peter Zijlstra
+ <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ linux-api@vger.kernel.org, kernel-dev@igalia.com,
+ Darren Hart <dvhart@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Waiman Long <longman@redhat.com>
+References: <20250626-tonyk-robust_futex-v5-0-179194dbde8f@igalia.com>
+ <20250626-tonyk-robust_futex-v5-1-179194dbde8f@igalia.com>
+ <87ecv6p364.ffs@tglx>
+Content-Language: en-US
+From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+In-Reply-To: <87ecv6p364.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 23, 2025 at 05:50:11PM +0200, Konrad Dybcio wrote:
-> On 6/23/25 5:46 PM, 'Rob Herring (Arm)' via kernel wrote:
-> > 
-> > On Mon, 23 Jun 2025 18:34:18 +0530, Umang Chheda wrote:
-> >> This series:
-> >>
-> >> Add support for Qualcomm's IQ-8275-evk board using QCS8275 SOC.
+Em 26/06/2025 19:07, Thomas Gleixner escreveu:
+> On Thu, Jun 26 2025 at 14:11, André Almeida wrote:
 > 
-> [...]
+>> Create ASSERT_{EQ, NE, TRUE, FALSE} macros to make test creation easier.
 > 
-> >>
-> >>  .../devicetree/bindings/arm/qcom.yaml         |   7 +
-> >>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
-> >>  .../boot/dts/qcom/qcs8275-iq-8275-evk.dts     | 241 ++++++++++++++++++
-> >>  3 files changed, 249 insertions(+)
-> >>  create mode 100644 arch/arm64/boot/dts/qcom/qcs8275-iq-8275-evk.dts
-> >>
+> What's so futex special about this that it can't use the same muck in
 > 
-> [...]
+> tools/testing/selftests/kselftest_harness.h
 > 
-> > 
-> > New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250623130420.3981916-1-umang.chheda@oss.qualcomm.com:
-> > 
-> > arch/arm64/boot/dts/qcom/msm8916-samsung-gt58.dtb: panel@0 (samsung,lsl080al03): 'port' does not match any of the regexes: '^pinctrl-[0-9]+$'
-> > 	from schema $id: http://devicetree.org/schemas/display/panel/samsung,s6d7aa0.yaml#
-> 
-> Seems like a fluke..
 
-Yes, I failed to filter that out.
+My previous version of this test used kselftest_harness.h, but Shuah 
+request to keep consistency and don't use this header, giving that the 
+rest of futex test doesn't use it:
 
-This is just a before and after run with filtering out everything in 
-before. I suspect that sometimes warning lines get interleaved and these 
-show up as new.
+https://lore.kernel.org/lkml/fe02f42b-7ba8-4a3b-a86c-2a4a7942fd3b@linuxfoundation.org/
 
-If QCom was warning free, then this would be less of an issue. :(
+> or at least share the implementation in some way?
+> 
+> Thanks,
+> 
+>          tglx
 
-Rob
