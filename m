@@ -1,104 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3B32951D2;
-	Fri, 27 Jun 2025 10:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A1D2951D2;
+	Fri, 27 Jun 2025 10:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751019359; cv=none; b=Iuz2j7N7txsGR8pjLPR0vThMruJgotvbLAuh7+hHX2Cfv2q2YEMKsJ1gLrYVXNbRvPTzdaOrrviInuQQInR0C0sfNDDBt/HWqgeron0aZSuwwCc8MsGaQMPcUkLOejv9pxHELgDav9ViWakcGHhyF96KfIJlYVQGTUW5RiVjYZo=
+	t=1751019376; cv=none; b=a8bwRUH50xGlo6ftUhF8mlu1UjEim7nyQArxs0FsMQx8Vm93SWR3JGAQZ9kFEmnmrT8Zr0p8H/ywyCnb3njhXTCXB/xzTEAY4E/xzg56N0ZFvXekoja6GH+or7wNrDB0mA9ui8m4fZWG7yURe3HtlLzjSMWvGr56OMjnj6hmCCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751019359; c=relaxed/simple;
-	bh=3s6q/x000fxdjTd8nipUwFWpBcy6fLFPtzHW1ADaES8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fhAily4XV08BLCRzWQ12AbSc+i3nGNj/piPCnJIQr6ptqXWRYEP8Czt7Ylc/t8wIrfInBKz5Y5Bz+xxUbqtb9U3dWW5bA3Vl6+zRGHN6Wr/Ko1i5pt7bKE5CoIl2qjbvqES1lJUepKdStgjjheW4reIXruXcfbDKkJM3XF6EDlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tnhnTgEo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751019376; c=relaxed/simple;
+	bh=l3MXeCKLCE4V4WDL1a0YYyXD7TdNstvMiK4jATH+ZFM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=W4rZUmetz2HSP7ZIgkMUd+1xwLOeSMBhxAvYikgCbkIyPgOvDJsjsJX1vzjyyrz/8mQG+vHtX2FgV7tPJTSkh0F91TZBZNwp2gpatU9Vqq0CJ0HzIpxm+DKjogPo9LzqrGHzv0hO/VTucyQdWLtqGI/Fr8RhbAbzXy/6f6gUqBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R6lC6nTe; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tnhnTgEo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FEE9C4CEEB;
-	Fri, 27 Jun 2025 10:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751019359;
-	bh=3s6q/x000fxdjTd8nipUwFWpBcy6fLFPtzHW1ADaES8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tnhnTgEoCUVtmDaHRWJU/1Hn/S2PMjvOoZDeIQ6We3xo1I3Qrbj9qsK/+5GbQNx65
-	 H0aZDYLAvG3HmDDaHLeyPpwzl+/rTchbLjTGfuG6oLTVnYKydKVEX8XUcLDUJXc51Z
-	 lGZCr12WwxZwvqk1yUCDRx2GI0GGLq46v5mMztLbfpDFIOQXj7ax9UfD9Uz6IfdXqK
-	 aPnfUJ1npAwsypLnjLZBobK7BkIAwBacWsSeyFHyDGnlnBxqPSf8G0vYLqBg9kN+kr
-	 7pCwayqp0Ikrfdkm3PTl3dvD9ZYP9rljQzzpy95zWMFZPIZx9SRWbtTYXibFMx5OPC
-	 GEyqnE0r78hKQ==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60c79bedc19so2363445a12.3;
-        Fri, 27 Jun 2025 03:15:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUhxYS8XZ80mZnCEDRgycyxjAbDYlR9yuP15s26h4jaADlK6zXO/JlXtJmhyhaZnjX/dgzvIV/Ww4QbNZIy@vger.kernel.org, AJvYcCWFwYfZWT/HLL7fWshBCRmDM8KxfseRGStVA2zaM1s7pTSSrBvEKewWTr+RKhbmekErZvT1ROahuH1lvwI=@vger.kernel.org, AJvYcCXsPy33xS7l2M1K+9bmxn/TaY+CYJxcCLysMl3tE2K8Gggs0zoJmPTRpFJ5P8b2TU8eo86ZqjMpN3MBKFmEWmb2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8WvqCx62M/DkpdQiju5t5lqUc5hDcXxxNXdxFKVE4B22gLjDE
-	5GGI3VDGU9o98whN+/D2Pl5Xac3dGOv3gdhhLwmFPyU4Z4LqGQgweH3G4XC2kChfG8uj3Gt9L5s
-	9V0s28ZbnrAITI3VHIw7eu9yfDR4BvUI=
-X-Google-Smtp-Source: AGHT+IEC0RlMZ0dBSk+i/oRcQH/9JIC09lTKPfqTuntyMRorx+R8qqxJK7/9jgwr4DviueaaQI2nTlixyx18/q/CnoY=
-X-Received: by 2002:aa7:d98f:0:b0:60c:42ce:27e2 with SMTP id
- 4fb4d7f45d1cf-60c88ec2ademr1766441a12.30.1751019357555; Fri, 27 Jun 2025
- 03:15:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R6lC6nTe"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55R4DAeX011315;
+	Fri, 27 Jun 2025 10:16:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ej6060Px8LTJFEpTirXrl8cNCe5SgWbJxsnR8+8uv+E=; b=R6lC6nTeGa+JGYTl
+	Xnk2A76x25ZYQdo2wGnHYfm0p/yuLl8SIH1D0WjfUAmLAVbOH451ywxtFfwgZE04
+	yy6P669SJeBSctkwJvhTQBo9eYzx9nzGFLQU9bAQAHLqO6Zn9KrmUjBglNgo5Xku
+	Bt0JnXhyP10W5rMleSC2sm9NEoYOnKsEsRtiHbkBgTAqjHE+mnXKtgrqADd/VUO9
+	XH3+50T+YXc9LCK4LSVVKqb74bpVlYKgjTJ+Y8TJc4TMPYOgslBoFwrmrOE4b+QO
+	FyeLmrUfGD+5/KrZBYNNLAJ3vZQWagBXwnbHL0mOYSEs9S0kGAJTJmkvhatU1eb+
+	q2KuZw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f3bgpdvw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 10:16:03 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55RAG2NL021601
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 10:16:02 GMT
+Received: from [10.239.29.49] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Fri, 27 Jun
+ 2025 03:15:58 -0700
+Message-ID: <9fda4c17-869f-4d2f-930c-01eb714d68a8@quicinc.com>
+Date: Fri, 27 Jun 2025 18:15:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619025138.2854-1-zhaoqunqin@loongson.cn> <20250619025138.2854-4-zhaoqunqin@loongson.cn>
- <aFs2RDOeOKvWUN2L@kernel.org> <20250625080527.GN795775@google.com>
- <aFvhorr3kZSuzVpv@kernel.org> <20250625134047.GX795775@google.com>
- <aFwsIs6ri3HZictC@kernel.org> <20250626103030.GA10134@google.com>
- <aF0oHDVQKVfGZNV2@kernel.org> <CAAhV-H7nyKHS70BGh7nwjuGwSWayCbUY=1-zWMU4N3bJZtH1gQ@mail.gmail.com>
- <aF2Rn0R4AlopEwz8@kernel.org> <86b5e396-54d4-7b36-8848-06f41083ba59@loongson.cn>
-In-Reply-To: <86b5e396-54d4-7b36-8848-06f41083ba59@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 27 Jun 2025 18:15:45 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5JkzOOq-1pJFXmGLLtXmrDEErfTfvcQUe-9bzCJ9znWA@mail.gmail.com>
-X-Gm-Features: Ac12FXzDlC7jJ5hahCiQAD4Tlirbeiu71uFZpCn5cbdTSSpq6MQ0DvfKW-Bp0ag
-Message-ID: <CAAhV-H5JkzOOq-1pJFXmGLLtXmrDEErfTfvcQUe-9bzCJ9znWA@mail.gmail.com>
-Subject: Re: [PATCH v11 3/4] tpm: Add a driver for Loongson TPM device
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, Lee Jones <lee@kernel.org>, herbert@gondor.apana.org.au, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, davem@davemloft.net, 
-	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca, 
-	linux-integrity@vger.kernel.org, Yinggang Gu <guyinggang@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] dt-bindings: misc: qcom,fastrpc: Add GDSP label
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <srini@kernel.org>, <amahesh@qti.qualcomm.com>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <arnd@arndb.de>,
+        <gregkh@linuxfoundation.org>, <quic_kuiw@quicinc.com>,
+        <ekansh.gupta@oss.qualcomm.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250622133820.18369-1-quic_lxu5@quicinc.com>
+ <20250622133820.18369-2-quic_lxu5@quicinc.com>
+ <j2nni4oyoochjgw5w7vodxnn562vff2krkesta6zzgqs5ihvcx@5up7ga7k4gdl>
+Content-Language: en-US
+From: Ling Xu <quic_lxu5@quicinc.com>
+In-Reply-To: <j2nni4oyoochjgw5w7vodxnn562vff2krkesta6zzgqs5ihvcx@5up7ga7k4gdl>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Hu4jpJRLnpK6e2srN_MY5S0P_fmMZo-f
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDA4NCBTYWx0ZWRfX1LboU4UUFUj5
+ XOI3yHZfTc2OG7YczfauH9Wik6KdFSFIlcUq9E7KztqpvdlqTlKj7DBPoIfJf1WZE66y5kSnRDY
+ PDaSENDL+0z7iYNhJvAu17y1SdGTiJnXV3c0ZEoI+7XKkWns6jxbQSE2lvDIrXSZF2ILx97XhZt
+ OS6RVEqizXhBofj+sCYrN5ZI+ZvYRd6Hswhb8QYUPw6fWDZ0NxWnkdRkTCMOPtAMjZIAUQqCR3f
+ JOe5797ZLI0+ojyxZo4F/Ruro2VHkfPoksGwar9UNd6e0tlWZIYO3vDa+bNIer7f4nOKhkdkUiB
+ 9u+KobwBB9QM62MOkVSsqqU7XWYjeLffqkEi5KfzbYB2Z2aBToIyyD/zrnA2BTcZaQJGVplxuON
+ xhKPl/LjEUDrNCS6ZRwBbxtf2yg5CLxharA3ZAvwHsy5MVTqgjCJihSz1lCoLc8eZG2acaVB
+X-Authority-Analysis: v=2.4 cv=L4kdQ/T8 c=1 sm=1 tr=0 ts=685e6f63 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=5KBTReNGNWZAHrgyXRAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: Hu4jpJRLnpK6e2srN_MY5S0P_fmMZo-f
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_03,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1011 suspectscore=0
+ adultscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ spamscore=0 phishscore=0 mlxlogscore=864 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506270084
 
-On Fri, Jun 27, 2025 at 2:47=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
-> wrote:
->
->
-> =E5=9C=A8 2025/6/27 =E4=B8=8A=E5=8D=882:29, Jarkko Sakkinen =E5=86=99=E9=
-=81=93:
-> > On Thu, Jun 26, 2025 at 08:48:35PM +0800, Huacai Chen wrote:
-> >> But there is another coherency, you can see this in the 1st patch:
-> >>
-> >> +static const struct mfd_cell engines[] =3D {
-> >> + { .name =3D "loongson-rng" },
-> >> + { .name =3D "loongson-tpm" },
-> >> +};
-> > I thought already after ffa driver from ARM that I need to fix up
-> > the naming a bit before it explodes. Thus, I'll stick to this.
-> >
-> > And e.g., I could easily find DRM driver with opposite order.
-> Next revision:
->
-> +static const struct mfd_cell engines[] =3D {
-> +       { .name =3D "loongson-rng" },
-> +       { .name =3D "tpm_loongson" },
-> +};
-> Then
-> "loongson-rng" can match MFD and Crypto subsystem naming convention.
-> "tpm_loongson" can match TPM subsystem naming convention.
-If possible, I prefer the old names.
+在 6/25/2025 3:44 PM, Krzysztof Kozlowski 写道:
+> On Sun, Jun 22, 2025 at 07:08:18PM +0530, Ling Xu wrote:
+>> Add "gdsp" as the new supported label for GDSP fastrpc domain.
+> 
+> Neither this commit, nor second nor third explain what is GDSP...
+> 
+> Best regards,
+> Krzysztof
+> Okay, I will edit commit message in next patch.
+GDSP is General Purpose DSP where tasks can be offloaded, and it includes GDSP0 and GDSP1.
+Analogous to CDSP (Compute DSP) which includes CDSP0 and CDSP1.
+-- 
+Thx and BRs,
+Ling Xu
 
-Huacai
-
->
->
-> Thanks,
-> Qunqin
->
-> >> Huacai
-> > BR, Jarkko
->
