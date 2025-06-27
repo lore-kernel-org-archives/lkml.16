@@ -1,159 +1,381 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3056B2D12FF;
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C762980BF;
 	Fri, 27 Jun 2025 12:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751028538; cv=none; b=MkgYrasUl8XuRwICmzy7FsPc5mJWc2S4kPWexb7LNRDuYTEU6okxqvjVsTxEcj1XqC+NsVXs8nNVig3EsJKqyP2B8Z4tRAT+vKPLVsIsNKWMzOGLoryItvNPC7Rt1Z/JFbXTWecLT9YBuWx+h+vuenVxS+47Ngc7aP0h173Ieis=
+	t=1751028538; cv=none; b=VFdPq0amJSCOcEkw/ns9LjkL89OIaAH5LCgp8Gp9yqYiqh9vPnFQOXqcrxy1/aRCKEh0oK/knz/ESz62Yf++YJ54qBpnuT6AbaqxQoYeiLbOShJFgjEgXSSnYysNlTvplP/p8dZHxv3CSd4Gc+IesvIg5YsOcWiTyhEp3Kcq0I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751028538; c=relaxed/simple;
-	bh=EFWZzpDdnafF5Ptd+x/Wkh8LMcHx8o6F4Xvns2BD2J4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C3K60YBtM3ti63VPTV4jzSVFimH8vX5AbZKsycs66WOP7F98uecFOKf3h6qtSELORdY3ET0M4eBOkx0M6UU91esGQQGsoGanMcNzevVENdQGFquNCJdXikbPv78pFkoR+7VTgLxTD/LUn1Q6wuoLrNmKTf7b3jLdb3TeOPBx0g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 448F81A00;
-	Fri, 27 Jun 2025 05:48:38 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E0E03F58B;
-	Fri, 27 Jun 2025 05:48:53 -0700 (PDT)
-Date: Fri, 27 Jun 2025 13:48:50 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, arm-scmi@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/7] firmware: arm_scmi: imx: Support discovering
- buildinfo of MISC protocol
-Message-ID: <aF6TMpXmIiiCkxWD@pluto>
-References: <20250627-sm-misc-api-v1-v1-0-2b99481fe825@nxp.com>
- <20250627-sm-misc-api-v1-v1-2-2b99481fe825@nxp.com>
+	bh=91g/Z0XKaGrm4enQreIzabrBw3Lf4UpDZ4SRKzVP1xo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=t8ccilJz6NrPEt8+PcA4shkbgEgU+8nJfSGdUB45A3oetuUh0c+jTsruGC8xLF1AeQtTamxBO0VS72GFOoEf1GCMxPSSxF+cN1l2Wt43WdqeNEC3mj6z6WIj1I15zluU2BHLx8aKDLoBR2QNOYOEwi+ydRfw/TnifRwAJl6z2Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lqmuzra6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NeYoApK1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lqmuzra6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NeYoApK1"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751028535;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dahXu2LEDMAp26RbUOIDlGEe7yKn2tw8fEfvF1ZcJHA=;
+	b=lqmuzra6pRShzul0BKepI1sehWdXlq7GRY6s+aWJmehnFXVc2um1nmpnw+W5PC8U/NJeed
+	TEp78/NSPC28NRo1WAnF7CP31PZSGfJCFwRRRmVxySvvoNr7eOeWopOGLQ+THKJif4FlV+
+	bTctGp317l7qkQ2finUivmro66xG6b/ZBMLIGTS5xw8I191KKuTsfVoIuaj84tqSx4zCiQ
+	ADsG/VUW8/pakI+zv8Kj19k5AACZitEYI5Odea9pMasohs1ubkb8yNKkEAtaOJGhBL/cvE
+	7gbDuepex8RX2NJDmvuRJ19u7jAaMVdzOqWe6k75Q5Ha7rz8NUQ4EBnJY6owZA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751028535;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dahXu2LEDMAp26RbUOIDlGEe7yKn2tw8fEfvF1ZcJHA=;
+	b=NeYoApK17LDa2m/ATlT2S+xXuEP1obxvXvQ2rZS4JhKRPbPkEy91xRAqFifQEHFCgw3wnx
+	irF2m56Q1/vYN5Ag==
+To: =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@igalia.com>, Ingo Molnar
+ <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Waiman Long <longman@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-api@vger.kernel.org, kernel-dev@igalia.com, =?utf-8?Q?Andr=C3=A9?=
+ Almeida
+ <andrealmeid@igalia.com>
+Subject: Re: [PATCH v5 7/7] selftests: futex: Expand robust list test for
+ the new interface
+In-Reply-To: <20250626-tonyk-robust_futex-v5-7-179194dbde8f@igalia.com>
+References: <20250626-tonyk-robust_futex-v5-0-179194dbde8f@igalia.com>
+ <20250626-tonyk-robust_futex-v5-7-179194dbde8f@igalia.com>
+Date: Fri, 27 Jun 2025 14:48:54 +0200
+Message-ID: <87tt41nydl.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627-sm-misc-api-v1-v1-2-2b99481fe825@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 27, 2025 at 02:03:45PM +0800, Peng Fan wrote:
-> MISC protocol supports discovering the System Manager(SM) build
-> information including build commit, build time and etc. Add the API
-> for user to retrieve the information from SM.
-> 
+On Thu, Jun 26 2025 at 14:11, Andr=C3=A9 Almeida wrote:
 
-Hi,
-
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Expand the current robust list test for the new set_robust_list2
+> syscall. Create an option to make it possible to run the same tests
+> using the new syscall, and also add two new relevant test: test long
+> lists (bigger than ROBUST_LIST_LIMIT) and for unaligned addresses.
+>
+> Signed-off-by: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
 > ---
->  .../firmware/arm_scmi/vendors/imx/imx-sm-misc.c    | 35 ++++++++++++++++++++++
->  include/linux/scmi_imx_protocol.h                  | 12 ++++++++
->  2 files changed, 47 insertions(+)
-> 
-> diff --git a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
-> index a8915d3b4df518719d56bfff38922625ad9b70f6..1b24d070c6f4856b92f515fcdba5836fd6498ce6 100644
-> --- a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
-> +++ b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
-> @@ -25,6 +25,7 @@
->  enum scmi_imx_misc_protocol_cmd {
->  	SCMI_IMX_MISC_CTRL_SET	= 0x3,
->  	SCMI_IMX_MISC_CTRL_GET	= 0x4,
-> +	SCMI_IMX_MISC_DISCOVER_BUILDINFO = 0x6,
->  	SCMI_IMX_MISC_CTRL_NOTIFY = 0x8,
->  };
->  
-> @@ -65,6 +66,13 @@ struct scmi_imx_misc_ctrl_get_out {
->  	__le32 val[];
->  };
->  
-> +struct scmi_imx_misc_buildinfo_out {
-> +	__le32 buildnum;
-> +	__le32 buildcommit;
-> +	u8 builddate[MISC_MAX_BUILDDATE];
-> +	u8 buildtime[MISC_MAX_BUILDTIME];
+>  .../selftests/futex/functional/robust_list.c       | 160 +++++++++++++++=
++++++-
+>  1 file changed, 156 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/testing/selftests/futex/functional/robust_list.c b/too=
+ls/testing/selftests/futex/functional/robust_list.c
+> index 42690b2440fd29a9b12c46f67f9645ccc93d1147..004ad79ff6171c411fd47e699=
+e3c38889544218e 100644
+> --- a/tools/testing/selftests/futex/functional/robust_list.c
+> +++ b/tools/testing/selftests/futex/functional/robust_list.c
+> @@ -35,16 +35,45 @@
+>  #include <stddef.h>
+>  #include <sys/mman.h>
+>  #include <sys/wait.h>
+> +#include <stdint.h>
+>=20=20
+>  #define STACK_SIZE (1024 * 1024)
+>=20=20
+>  #define FUTEX_TIMEOUT 3
+>=20=20
+> +#define SYS_set_robust_list2 468
+> +
+> +enum robust_list2_type {
+> +        ROBUST_LIST_32BIT,
+> +        ROBUST_LIST_64BIT,
 > +};
+
+Why can't this use an updated header?
+
 > +
->  static int scmi_imx_misc_attributes_get(const struct scmi_protocol_handle *ph,
->  					struct scmi_imx_misc_info *mi)
+>  static pthread_barrier_t barrier, barrier2;
+>=20=20
+> +bool robust2 =3D false;
+
+global because ....
+
+>  int set_robust_list(struct robust_list_head *head, size_t len)
 >  {
-> @@ -272,10 +280,37 @@ static int scmi_imx_misc_ctrl_set(const struct scmi_protocol_handle *ph,
->  	return ret;
+> -	return syscall(SYS_set_robust_list, head, len);
+> +	int ret, flags;
+> +
+> +	if (!robust2) {
+> +		return syscall(SYS_set_robust_list, head, len);
+> +	}
+
+Pointless brackets.
+
+> +	if (sizeof(head) =3D=3D 8)
+> +		flags =3D ROBUST_LIST_64BIT;
+> +	else
+> +		flags =3D ROBUST_LIST_32BIT;
+> +
+> +	/*
+> +	 * We act as we have just one list here. We try to use the first slot,
+> +	 * but if it hasn't been alocated yet we allocate it.
+> +	 */
+> +	ret =3D syscall(SYS_set_robust_list2, head, 0, flags);
+> +	if (ret =3D=3D -1 && errno =3D=3D ENOENT)
+> +		ret =3D syscall(SYS_set_robust_list2, head, -1, flags);
+
+What the heck is this?
+
+> +	return ret;
 >  }
->  
-> +static int scmi_imx_discover_build_info(const struct scmi_protocol_handle *ph,
-> +					struct scmi_imx_misc_system_info *info)
-> +{
-> +	struct scmi_imx_misc_buildinfo_out *out;
-> +	struct scmi_xfer *t;
-> +	int ret;
-> +
-> +	ret = ph->xops->xfer_get_init(ph, SCMI_IMX_MISC_DISCOVER_BUILDINFO, 0,
-> +				      sizeof(*out), &t);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ph->xops->do_xfer(ph, t);
-> +	if (!ret) {
-> +		out = t->rx.buf;
-> +		info->buildnum = le32_to_cpu(out->buildnum);
-> +		info->buildcommit = le32_to_cpu(out->buildcommit);
-> +		strscpy(info->date, out->builddate, MISC_MAX_BUILDDATE);
-> +		strscpy(info->time, out->buildtime, MISC_MAX_BUILDTIME);
+>=20=20
+>  int get_robust_list(int pid, struct robust_list_head **head, size_t *len=
+_ptr)
+> @@ -246,6 +275,11 @@ static void test_set_robust_list_invalid_size(void)
+>  	size_t head_size =3D sizeof(struct robust_list_head);
+>  	int ret;
+>=20=20
+> +	if (robust2) {
+> +		ksft_test_result_skip("This test is only for old robust interface\n");
+
+Why is it invoked in the first place?
+
+> +		return;
 > +	}
 > +
-> +	ph->xops->xfer_put(ph, t);
+>  	ret =3D set_robust_list(&head, head_size);
+>  	ASSERT_EQ(ret, 0);
+>=20=20
+> @@ -321,6 +355,11 @@ static void test_get_robust_list_child(void)
+>  	struct robust_list_head head, *get_head;
+>  	size_t len_ptr;
+>=20=20
+> +	if (robust2) {
+> +		ksft_test_result_skip("Not implemented in the new robust interface\n");
+
+For the very wrong reasons.
+
+> +		return;
+> +	}
 > +
-> +	return ret;
+>  	ret =3D pthread_barrier_init(&barrier, NULL, 2);
+>  	ret =3D pthread_barrier_init(&barrier2, NULL, 2);
+>  	ASSERT_EQ(ret, 0);
+> @@ -332,7 +371,7 @@ static void test_get_robust_list_child(void)
+>=20=20
+>  	ret =3D get_robust_list(tid, &get_head, &len_ptr);
+>  	ASSERT_EQ(ret, 0);
+> -	ASSERT_EQ(&head, get_head);
+> +	ASSERT_EQ(get_head, &head);
+
+ROTFL
+
+>=20=20
+>  	pthread_barrier_wait(&barrier2);
+>=20=20
+> @@ -507,11 +546,119 @@ static void test_circular_list(void)
+>  	ksft_test_result_pass("%s\n", __func__);
+>  }
+>=20=20
+> +#define ROBUST_LIST_LIMIT	2048
+> +#define CHILD_LIST_LIMIT (ROBUST_LIST_LIMIT + 10)
+> +
+> +static int child_robust_list_limit(void *arg)
+> +{
+> +	struct lock_struct *locks;
+> +	struct robust_list *list;
+> +	struct robust_list_head head;
+> +	int ret, i;
+> +
+> +	locks =3D (struct lock_struct *) arg;
+> +
+> +	ret =3D set_list(&head);
+> +	if (ret)
+> +		ksft_test_result_fail("set_list error\n");
+
+Yet again the same broken crap.
+
+> +	/*
+> +	 * Create a very long list of locks
+> +	 */
+> +	head.list.next =3D &locks[0].list;
+> +
+> +	list =3D head.list.next;
+> +	for (i =3D 0; i < CHILD_LIST_LIMIT - 1; i++) {
+> +		list->next =3D &locks[i+1].list;
+> +		list =3D list->next;
+> +	}
+> +	list->next =3D &head.list;
+> +
+> +	/*
+> +	 * Grab the lock in the last one, and die without releasing it
+> +	 */
+> +	mutex_lock(&locks[CHILD_LIST_LIMIT], &head, false);
+> +	pthread_barrier_wait(&barrier);
+> +
+> +	sleep(1);
+> +
+> +	return 0;
 > +}
 > +
->  static const struct scmi_imx_misc_proto_ops scmi_imx_misc_proto_ops = {
->  	.misc_ctrl_set = scmi_imx_misc_ctrl_set,
->  	.misc_ctrl_get = scmi_imx_misc_ctrl_get,
->  	.misc_ctrl_req_notify = scmi_imx_misc_ctrl_notify,
-> +	.misc_discover_build_info = scmi_imx_discover_build_info,
->  };
->  
->  static int scmi_imx_misc_protocol_init(const struct scmi_protocol_handle *ph)
-> diff --git a/include/linux/scmi_imx_protocol.h b/include/linux/scmi_imx_protocol.h
-> index 27bd372cbfb142b6acb0b1cf4b82f061529d0d45..826402dfe6f4d3b9e6d2e93868d6699f989e9bcc 100644
-> --- a/include/linux/scmi_imx_protocol.h
-> +++ b/include/linux/scmi_imx_protocol.h
-> @@ -52,6 +52,16 @@ struct scmi_imx_misc_ctrl_notify_report {
->  	unsigned int		flags;
->  };
->  
-> +#define MISC_MAX_BUILDDATE	16
-> +#define MISC_MAX_BUILDTIME	16
+> +/*
+> + * The old robust list used to have a limit of 2048 items from the kerne=
+l side.
+> + * After this limit the kernel stops walking the list and ignore the oth=
+er
+
+ignores
+
+> + * futexes, causing deadlocks.
+> + *
+> + * For the new interface, test if we can wait for a list of more than 20=
+48
+> + * elements.
+> + */
+> +static void test_robust_list_limit(void)
+> +{
+> +	struct lock_struct locks[CHILD_LIST_LIMIT + 1];
+> +	_Atomic(unsigned int) *futex =3D &locks[CHILD_LIST_LIMIT].futex;
+> +	struct robust_list_head head;
+> +	int ret;
 > +
-> +struct scmi_imx_misc_system_info {
-> +	u32 buildnum;
-> +	u32 buildcommit;
-> +	u8 date[MISC_MAX_BUILDDATE];
-> +	u8 time[MISC_MAX_BUILDTIME];
-> +};
+> +	if (!robust2) {
+> +		ksft_test_result_skip("This test is only for new robust interface\n");
+> +		return;
+> +	}
 > +
->  struct scmi_imx_misc_proto_ops {
->  	int (*misc_ctrl_set)(const struct scmi_protocol_handle *ph, u32 id,
->  			     u32 num, u32 *val);
-> @@ -59,6 +69,8 @@ struct scmi_imx_misc_proto_ops {
->  			     u32 *num, u32 *val);
->  	int (*misc_ctrl_req_notify)(const struct scmi_protocol_handle *ph,
->  				    u32 ctrl_id, u32 evt_id, u32 flags);
-> +	int (*misc_discover_build_info)(const struct scmi_protocol_handle *ph,
-> +					struct scmi_imx_misc_system_info *info);
->  };
+> +	*futex =3D 0;
+> +
+> +	ret =3D set_list(&head);
+> +	ASSERT_EQ(ret, 0);
+> +
+> +	ret =3D pthread_barrier_init(&barrier, NULL, 2);
+> +	ASSERT_EQ(ret, 0);
+> +
+> +	create_child(child_robust_list_limit, locks);
+> +
+> +	/*
+> +	 * After the child thread creates the very long list of locks, wait on
+> +	 * the last one.
+> +	 */
+> +	pthread_barrier_wait(&barrier);
+> +	ret =3D mutex_lock(&locks[CHILD_LIST_LIMIT], &head, false);
+> +
+> +	if (ret !=3D 0)
+> +		printf("futex wait returned %d\n", errno);
+> +	ASSERT_EQ(ret, 0);
 
-LGTM.
+lalala.
 
-Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
+> +
+> +	ASSERT_TRUE(*futex | FUTEX_OWNER_DIED);
 
-Thanks,
-Cristian
+Copy and pasta does not make it more correct.
+
+> +	wait(NULL);
+> +	pthread_barrier_destroy(&barrier);
+> +
+> +	ksft_test_result_pass("%s\n", __func__);
+> +}
+> +
+> +/*
+> + * The kernel should refuse an unaligned head pointer
+> + */
+> +static void test_unaligned_address(void)
+> +{
+> +	struct robust_list_head head, *h;
+> +	int ret;
+> +
+> +	if (!robust2) {
+> +		ksft_test_result_skip("This test is only for new robust interface\n");
+> +		return;
+> +	}
+> +
+> +	h =3D (struct robust_list_head *) ((uintptr_t) &head + 1);
+> +	ret =3D set_list(h);
+> +	ASSERT_EQ(ret, -1);
+> +	ASSERT_EQ(errno, EINVAL);
+> +}
+> +
+>  void usage(char *prog)
+>  {
+>  	printf("Usage: %s\n", prog);
+>  	printf("  -c	Use color\n");
+>  	printf("  -h	Display this help message\n");
+> +	printf("  -n	Use robust2 syscall\n");
+
+Right. We need a command line option to guarantee that the test is not
+executed by bots...
+
+>  	printf("  -v L	Verbosity level: %d=3DQUIET %d=3DCRITICAL %d=3DINFO\n",
+>  	       VQUIET, VCRITICAL, VINFO);
+>  }
+> @@ -520,7 +667,7 @@ int main(int argc, char *argv[])
+>  {
+>  	int c;
+>=20=20
+> -	while ((c =3D getopt(argc, argv, "cht:v:")) !=3D -1) {
+> +	while ((c =3D getopt(argc, argv, "chnt:v:")) !=3D -1) {
+>  		switch (c) {
+>  		case 'c':
+>  			log_color(1);
+> @@ -531,6 +678,9 @@ int main(int argc, char *argv[])
+>  		case 'v':
+>  			log_verbosity(atoi(optarg));
+>  			break;
+> +		case 'n':
+> +			robust2 =3D true;
+> +			break;
+>  		default:
+>  			usage(basename(argv[0]));
+>  			exit(1);
+> @@ -538,7 +688,7 @@ int main(int argc, char *argv[])
+>  	}
+>=20=20
+>  	ksft_print_header();
+> -	ksft_set_plan(7);
+> +	ksft_set_plan(8);
+>
+
+Just check whether the new syscall is implemented and then set the
+number of tests accordingly.
+
+>  	test_robustness();
+>=20=20
+> @@ -548,6 +698,8 @@ int main(int argc, char *argv[])
+>  	test_set_list_op_pending();
+>  	test_robust_list_multiple_elements();
+>  	test_circular_list();
+> +	test_robust_list_limit();
+> +	test_unaligned_address();
+
+and then do:
+
+	test_robustness();
+        ....
+	test_circular_list();
+
+        if (has_robust) {
+        	robust2 =3D true;
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
+                test_robustness();
+                ...
+                test_circular_list();
+		test_robust_list_limit();
+		test_unaligned_address();
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
+        }=20=20=20=20=20=20=20=20
+
+or something like that.
+
+Time for a stiff drink....
