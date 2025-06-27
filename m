@@ -1,121 +1,137 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E2A293C76
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C9E1DE2C9;
+	Fri, 27 Jun 2025 09:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751017171; cv=none; b=llTPFWeJoemhSTpNL+XPrvhVTvoCi2ttbGdgHJkcFVQ26ndznVcFrSuCaOmrOhLK+FSPDE/opUJ3VL5fjd8zUgpXQpWu/Naeqk02n+RQaXdlnvFcxDJyn/cendfXwXnSFp5rMA7L9W60PnBpKk9fJjc7mYsfsch5RNnZMPqwDfk=
+	t=1751017331; cv=none; b=E1bD9qSwfVmg4DinhCQtpQXkGlRHk5o2KI4bRaP+KHZ9ihfqmDLgxMWGKxpGR+f1C96UGjCo01QcZMKrcTcxiuued3lSbFdGnj8ScYkB06tiXnHYmcPS37Es/yoUeHhjWIa+Ec35Prf3cYNmvo1MSqj0cSLtjmDS77+XEYBW/sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751017171; c=relaxed/simple;
-	bh=sqHLSnoPdND2n2YqIlO9rU36LPxSklJW5fcjecRMfIU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PN2+Q96QUxnzVztEpdEtMrEpsOWeDMPYS5CcuFBh2Escfwj2seOUCrq5swV+0YsFjEuvfeiDQNWC2ok/RNJDHlqZAWHQCk/0WqW0PxxrgklzregWXgOiWg6oqHbXsBLsZLXoZsSU73X39v20M2DWuy5LpNfRhutryJUr7mx/S7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b=iQpTZMnt; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
+	s=arc-20240116; t=1751017331; c=relaxed/simple;
+	bh=ALB8scmnqBjrj7Lx7mrURXy49O4IYjmrSTfkDIal3lI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rTE+dD7fzvved3bS2x+XF7ebqHPmSzsN2x7WwT6krkVQmt6BTneXSyyotPs+rPqhEhDZ8p6FxltGFdKm/1/bQqT0mFy9bIDcTPo/PnVW6udMb0GX6VA3BDMoCT4t9N4b6SOdDM5wDOfq0Svwz2+PTmXDCmYj4o4kJA/AQgs0Kb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ANo4mvAp; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b="iQpTZMnt"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3138b2f0249so1719653a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 02:39:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=futuring-girl.com; s=google; t=1751017169; x=1751621969; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7EoXolbAXfPP7jncmJ+OthdgINgb5uiOwXnkRnnjQZQ=;
-        b=iQpTZMntS1cfqk91R40wtBZthKh0HYZdXof1ML/IjyPPHjGkpK0m8zr/OgErcECd2H
-         Y7oqc5J8KSDO7gcsVXIwICuk2pzqalXutB4zrYB040oRGvNkE48htrA1KLyD/FYVLUXe
-         WcrDQa07TC8b0GTNAGFo8NhxQUC7tWy0OGNuzau7A0Lw/VK8qjdJNc5f4PPS8CbpWl3P
-         izOtG1P5QUj1f8EmL6hVh+ujtWrkGq47VXX405oYT/V+as9lvx3Oh6F+TVSdUpXl4vFW
-         du4MWaM6qnV+/PxXDdI3jw/oQBbJFrFSyZkQsW5qgJAujSJWfqVW6gX0OPo6irV1GO+N
-         drKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751017169; x=1751621969;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7EoXolbAXfPP7jncmJ+OthdgINgb5uiOwXnkRnnjQZQ=;
-        b=nJge6tcoxeTQM3FPESSspy06mGafY8aFQvxaz1KyU77QgpKqLLV8XQmLChDvef/pdd
-         9wOEIya9y5M+4HULp8k+Zzx+U0HjQJXeTHDYtoAht9ATfolP4VHa5t95x2XaTp0LZ7mo
-         yNUvGwiGAKNsenz4f3uiwlWSjuppqIq3wbl4QXjijh/PzihriwQHd8khKliFJ0oiYoxH
-         giw8KOunLd0by8WWTliytT5HNLjDWEap7nRdf+LLk3qsxWn1L9WwrVxRVwlffUREKAvY
-         LvJkrlJKv2iJN1XIowbRJ/B5hX2rAzZfWrqQzkHErEv+g+SJKxttaJoMWTEKKhwgk2F9
-         AslQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqBoDeMzH+83GyDHCufRUw/G4YrqBcWMg55dNMyNiU1HPb5eVIkDv/gPV6eIBpwEYhDs1QnanFRV0CZyw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvWvAN35Y1oi8vVVwNOiPM0PZcdI35iIuktsNsLKH1NCG8FY6w
-	DybEofxySpmhAbtEXL9/1ccIOHCYYy+dyujPRJjhMYuY2SW0Evf2cKihvA994u+XQjZVs1x9n/+
-	iIwx+SSmr6CIoqYMhW6p2zz0fGpBaLbXaMuGTuJFIjg==
-X-Gm-Gg: ASbGncvH6t7dOldc5lmLH9oPAjDuiDVwUjGEeqy2ZWUeB016b+3eira53I41/vmUKWU
-	oMttvTFQFF9u3hoaxyRBvEKXy1oQJoIIZHbkyhxY+FhlmOrdETLXqt+oRNZpptZnzn6l+RBnz91
-	hzxeFcdPQjITY8UjRpkDwVvpJJGEOepH2GvEiybQevjNs=
-X-Google-Smtp-Source: AGHT+IGP36mzrkCAQx/61O1uVwnGrnhnEFQFaqi7Au+tCZKEUAsLtA9E3QNCQ4g5Lbjr9hqyOV0ruBng7xb3pRA7xMQ=
-X-Received: by 2002:a17:90a:f94d:b0:311:c5d9:2c7c with SMTP id
- 98e67ed59e1d1-318c9250375mr2738869a91.23.1751017169338; Fri, 27 Jun 2025
- 02:39:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ANo4mvAp"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 081091FD35;
+	Fri, 27 Jun 2025 09:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751017321;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ebkQpOy7jU/hd2ovSMuvbdUVcZ8KbjpAp3Ecuke29NM=;
+	b=ANo4mvApogHPe4fMWd2QFeBCg+mWgojUEV8XaXM/25ncURaUsz9M/kEC6Nn6IVH4maVX6j
+	gSeSCAUP/wlUINz90v32u/TeUsei8qUxIXQS6gDZRhsaB8zBNJmzkdZiaYtkNAavTknDsP
+	dRdh+FNdH2dlKN6La4DumIswSehs0FgFn89O4Iokd0AoNO4qnLq0SpsC6O1yrdqCLW9b2k
+	h9Upd+221NuY96MmaBC7ix86cApTM5GZSfo0ZV56K/KAoyKWrsuFyHBZ31W4LK69SU2LzV
+	acuBc9jpT4Ril5gE8uY2KWJvi1SV/M7Wfe4OOWc+QLioRAkbvmT+bkVgu9R1Iw==
+Date: Fri, 27 Jun 2025 11:41:51 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: =?UTF-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu
+ Beznea <claudiu.beznea@tuxon.dev>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Samuel Holland
+ <samuel.holland@sifive.com>, Richard Cochran <richardcochran@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, Vladimir Kondratiev
+ <vladimir.kondratiev@mobileye.com>, Gregory CLEMENT
+ <gregory.clement@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>,
+ Harini Katakam <harini.katakam@xilinx.com>, Rafal Ozieblo
+ <rafalo@cadence.com>, Haavard Skinnemoen <hskinnemoen@atmel.com>,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-mips@vger.kernel.org, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+ Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next v2 00/18] Support the Cadence MACB/GEM
+ instances on Mobileye EyeQ5 SoCs
+Message-ID: <20250627112234.1cb54133@2a02-8440-d103-6715-ef68-2a2e-b947-8885.rev.sfr.net>
+In-Reply-To: <20250627-macb-v2-0-ff8207d0bb77@bootlin.com>
+References: <20250627-macb-v2-0-ff8207d0bb77@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626105243.160967269@linuxfoundation.org>
-In-Reply-To: <20250626105243.160967269@linuxfoundation.org>
-From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
-Date: Fri, 27 Jun 2025 18:39:13 +0900
-X-Gm-Features: Ac12FXzLbc93PcgOHbJI6EISu6a8l58rrpz2xfCSW65gNinqzCCU2fndTSOrQ-Q
-Message-ID: <CAKL4bV5mKKAAE2AXWDVLRhzUNiG51Q7jsx0FhKx_GsDJMRGpjQ@mail.gmail.com>
-Subject: Re: [PATCH 6.15 000/589] 6.15.4-rc3 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvjedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkeehgeeijeekteffhfelheetffeghfffhfeufeeifeffjeeftefhveduteduueeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddvmeekgeegtdemugdutdefmeeijeduheemvghfieekmedvrgdvvgemsgelgeejmeekkeekheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeeggedtmeguuddtfeemieejudehmegvfheikeemvdgrvdgvmegsleegjeemkeekkeehpdhhvghlohepvdgrtddvqdekgeegtddqugdutdefqdeijeduhedqvghfieekqddvrgdvvgdqsgelgeejqdekkeekhedrrhgvvhdrshhfrhdrnhgvthdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeffedprhgtphhtthhopehthhgvohdrlhgvsghruhhnsegsohhothhli
+ hhnrdgtohhmpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hi Greg
+Hi Th=C3=A9o,
 
-On Thu, Jun 26, 2025 at 7:56=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.15.4 release.
-> There are 589 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 28 Jun 2025 10:51:38 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.15.4-rc3.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, 27 Jun 2025 11:08:46 +0200
+Th=C3=A9o Lebrun <theo.lebrun@bootlin.com> wrote:
 
-6.15.4-rc3 tested.
+> Mobileye EyeQ5 SoCs provides two GEM IP blocks. The end result of this
+> series is working 1G networking on the EyeQ5 eval board. It isn't just
+> a new macb_config & compatible, we also provide some cleanup & fixes
+> along the way.
+>=20
+> dt-bindings:
+>   [PATCH net-next v2 01/18] dt-bindings: net: cdns,macb: sort compatibles
+>   [PATCH net-next v2 02/18] dt-bindings: net: cdns,macb: add Mobileye Eye=
+Q5 ethernet interface
+>   [PATCH net-next v2 03/18] dt-bindings: net: cdns,macb: allow tsu_clk wi=
+thout tx_clk
+>   [PATCH net-next v2 04/18] dt-bindings: net: cdns,macb: allow dma-cohere=
+nt
+>=20
+> Cleanup:
+>   [PATCH net-next v2 05/18] net: macb: use BIT() macro for capability def=
+initions
+>   [PATCH net-next v2 06/18] net: macb: Remove local variables clk_init an=
+d init in macb_probe()
+>   [PATCH net-next v2 07/18] net: macb: drop macb_config NULL checking
+>   [PATCH net-next v2 08/18] net: macb: introduce DMA descriptor helpers (=
+is 64bit? is PTP?)
+>   [PATCH net-next v2 09/18] net: macb: sort #includes
+>=20
+> Fixes:
+>   [PATCH net-next v2 10/18] net: macb: remove illusion about TBQPH/RBQPH =
+being per-queue
+>   [PATCH net-next v2 11/18] net: macb: single dma_alloc_coherent() for DM=
+A descriptors
+>   [PATCH net-next v2 12/18] net: macb: match skb_reserve(skb, NET_IP_ALIG=
+N) with HW alignment
+>   [PATCH net-next v2 13/18] net: macb: avoid double endianness swap in ma=
+cb_set_hwaddr()
 
-Build successfully completed.
-Boot successfully completed.
-No dmesg regressions.
-Video output normal.
-Sound output normal.
+Fixes go through the net tree, and new features through net-next :
 
-Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
+https://docs.kernel.org/process/maintainer-netdev.html#netdev-faq
 
-[    0.000000] Linux version 6.15.4-rc3rv-gd93bc5feded1
-(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 15.1.1 20250425, GNU ld (GNU
-Binutils) 2.44.0) #2 SMP PREEMPT_DYNAMIC Fri Jun 27 11:57:58 JST 2025
+As this series is quite big, it could be nice to send the cleanups and
+fixes in dedicated series, and then the eyeQ5 support in itself as a
+standalone series. This would make the review work easier.
 
-Thanks
 
-Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
+> EyeQ5 support:
+>   [PATCH net-next v2 14/18] net: macb: add no LSO capability (MACB_CAPS_N=
+O_LSO)
+>   [PATCH net-next v2 15/18] net: macb: Add "mobileye,eyeq5-gem" compatible
+>=20
+> DTS:
+>   [PATCH net-next v2 16/18] MIPS: mobileye: add EyeQ5 DMA IOCU support
+>   [PATCH net-next v2 17/18] MIPS: mobileye: eyeq5: add two Cadence GEM Et=
+hernet controllers
+>   [PATCH net-next v2 18/18] MIPS: mobileye: eyeq5-epm: add two Cadence GE=
+M Ethernet PHYs
+
+Maxime
