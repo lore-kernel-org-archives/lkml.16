@@ -1,103 +1,84 @@
-Received: from forward103b.mail.yandex.net (forward103b.mail.yandex.net [178.154.239.150])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053E15475E;
-	Fri, 27 Jun 2025 06:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5339421ABA3;
+	Fri, 27 Jun 2025 06:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751007287; cv=none; b=Rh1KxIg1hoZZLGqz6/X+UwgpV6hywq9KAl4qXb4iNOXjeLHYem0T/5yzfA4A602TLKchdJ1+rLdmOQJXg6YqVdgJZlgBLMcCehn/Ttd6JYUjguV0cq6gLNWpQXzT2m5E/LUp4gHsGTEsEMbwQoiFtta7L6xs5dRg9cofdVz9BIM=
+	t=1751007290; cv=none; b=WmfQ1MfcqWPjeqR/noYRgmJ05LzTUrZu4v0k2bZzCHeMWyjxO/GjFs97mwfrSS8JlTKlA0dtWqFYkGxEH0OAo05lPVDc46AdW0apeCgV90zymvSJxDwtiilsdMTLrOX5oYstWjVaj5bZU/KBWunuIMyw54Lm+loubhq/Gn6ymrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751007287; c=relaxed/simple;
-	bh=VbiOjkMGx8RbxGecy4HGHfDEcdfX0CcHQBAusBhbrgg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IrG+RNgjr7oCMrga6TvmH4nmcKDVudOHnMpmc/bwuLN9pwiEv1OMBn9EGxLO8emcibG9DJ/lhiW8y2xnIdfi7/2W+BsO5JLhf3Hf2c7Xq2qV2/TPJur6RO9OHH2k+TIqXbVUk9AkZVFIHXh7Bs6ewiwmPXNsS8BORvoFVH2F5JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=eLlFtzX3; arc=none smtp.client-ip=178.154.239.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
+	s=arc-20240116; t=1751007290; c=relaxed/simple;
+	bh=JfCgW9HbTpeOku1zvHWwMxVzRgAAq76SRmjvxE7JOHA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e3dhO26XIRTm0YvM6xa7pIJkbF/qG378NE8ZE9nY9j9q03o2W5eRb0HH/DXgtPNGdVSBK+b9UAv2/T5dT8yIHLd5Qnu7xAKH6p6DB6oj0GBueGjnkPzFqGPUsmG7v/QJ0wPbAwoXjIRhnaGhDcWJqZvBTMxEP8Il1LgfGacJ6/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NKoDSdFG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="eLlFtzX3"
-Received: from mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net [IPv6:2a02:6b8:c23:2ea3:0:640:da3e:0])
-	by forward103b.mail.yandex.net (Yandex) with ESMTPS id 5053960A8F;
-	Fri, 27 Jun 2025 09:54:41 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id PsPIlP9LwSw0-gTqUx7D4;
-	Fri, 27 Jun 2025 09:54:39 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
-	s=mail; t=1751007279;
-	bh=CJNwJ0KShExEmokb1VTyUgnlCMRXg6H/DizRF/P0E2k=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=eLlFtzX3Npmy1h9o+JVKvYItTJ8QgPVZSUfll3pl8usLWah2ow7CpvdGMepgX0XSG
-	 S9Lg5/bVB1Na3tQiQZEDQd3WK/vM697y6AfKQpluCuGkuH89SW3QoocCXRR7JLG/qd
-	 7+BUTW/0JHI3TVthr5RJ4/Wm5j9levNHUd87pdMU=
-Authentication-Results: mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
-From: =?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
-To: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com
-Cc: airlied@gmail.com,
-	simona@ffwll.ch,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	rafael@kernel.org,
-	viresh.kumar@linaro.org,
-	gregkh@linuxfoundation.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	davidgow@google.com,
-	nm@ti.com,
-	=?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
-Subject: [PATCH v2 0/3] replace `allow(...)` lints with `expect(...)`
-Date: Fri, 27 Jun 2025 09:53:17 +0300
-Message-ID: <20250627065320.9315-1-work@onurozkan.dev>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NKoDSdFG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1128CC4CEE3;
+	Fri, 27 Jun 2025 06:54:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751007289;
+	bh=JfCgW9HbTpeOku1zvHWwMxVzRgAAq76SRmjvxE7JOHA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NKoDSdFGJkCNvhF3Xu1UasZIiLobiK8/6c9da6j/VV9fKBmwFDWN77p/WbpQQfSkn
+	 rnb+e8dpEm/mvMYW+NZjEr0bFfD1KWXiQ6y7R3yRMmCMH4s1L7XAAqq7lcigB+6J5c
+	 N5QQMeXpFoIc3IEImjtpc2/PzTRx34UsY6kdQlUmkYR7QfbRA+mR2PjHFjsrqjr2zs
+	 SYVurFWT7N5AtwZdqR/ETq5i13glR8pPLkxRJ1hoXtun39if5eU5Jwy2fvwEv9aEA2
+	 W5Ua5/LSVUXsOUeYSC2KZKaGdvYGN3+e34GW0UBC1p2fOlyd3Oj9eEgY0qXHimvt+B
+	 KU1/tGB99Mdaw==
+Date: Fri, 27 Jun 2025 08:54:46 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de, 
+	kernel@pengutronix.de, festevam@gmail.com, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: dwc: Add one more reference
+ clock
+Message-ID: <20250627-sensible-pigeon-of-reading-b021a3@krzk-bin>
+References: <20250626073804.3113757-1-hongxing.zhu@nxp.com>
+ <20250626073804.3113757-2-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250626073804.3113757-2-hongxing.zhu@nxp.com>
 
-Changes in v2:
-  - Removed lints are not replaced with `expect` in the first diff.
-  - Removals are done in separate diffs for each.
+On Thu, Jun 26, 2025 at 03:38:02PM +0800, Richard Zhu wrote:
+> Add one more reference clock "extref" to be onhalf the reference clock
+> that comes from external crystal oscillator.
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>  .../devicetree/bindings/pci/snps,dw-pcie-common.yaml        | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+> index 34594972d8db..ee09e0d3bbab 100644
+> --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+> +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+> @@ -105,6 +105,12 @@ properties:
+>              define it with this name (for instance pipe, core and aux can
+>              be connected to a single source of the periodic signal).
+>            const: ref
+> +        - description:
+> +            Some dwc wrappers (like i.MX95 PCIes) have two reference clock
+> +            inputs, one from internal PLL, the other from off chip crystal
+> +            oscillator. Use extref clock name to be onhalf of the reference
+> +            clock comes form external crystal oscillator.
 
-The `#[allow(clippy::non_send_fields_in_send_ty)]` removal was tested
-on 1.81 and clippy was still happy with it. I couldn't test it on 1.78
-because when I go below 1.81 `menuconfig` no longer shows the Rust option.
-And any manual changes I make to `.config` are immediately reverted on
-`make` invocations.
+How internal PLL can be represented as 'ref' clock? Internal means it is
+not outside, so impossible to represent.
 
-Onur Özkan (3):
-  replace `#[allow(...)]` with `#[expect(...)]`
-  rust: remove `#[allow(clippy::unnecessary_cast)]`
-  rust: remove `#[allow(clippy::non_send_fields_in_send_ty)]`
+Where is the DTS so we can look at big picture?
 
- drivers/gpu/nova-core/regs.rs       | 2 +-
- rust/compiler_builtins.rs           | 2 +-
- rust/kernel/alloc/allocator_test.rs | 2 +-
- rust/kernel/cpufreq.rs              | 1 -
- rust/kernel/devres.rs               | 2 +-
- rust/kernel/driver.rs               | 2 +-
- rust/kernel/drm/ioctl.rs            | 8 ++++----
- rust/kernel/error.rs                | 3 +--
- rust/kernel/init.rs                 | 6 +++---
- rust/kernel/kunit.rs                | 2 +-
- rust/kernel/opp.rs                  | 4 ++--
- rust/kernel/types.rs                | 2 +-
- rust/macros/helpers.rs              | 2 +-
- 13 files changed, 18 insertions(+), 20 deletions(-)
 
---
-2.50.0
+Best regards,
+Krzysztof
 
