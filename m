@@ -1,130 +1,239 @@
-Received: from joooj.vinc17.net (joooj.vinc17.net [155.133.131.76])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BDF221FA4;
-	Fri, 27 Jun 2025 07:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.133.131.76
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751010569; cv=none; b=l43VtB9pQ/qkRBEMiyk5yapdX1KHwlehuXbOF1PeN9C7WMFPjtB2L6RfxgDaThptv3SG/4l9lKutqQe0xsenKeZBpZF2LiBTGV459zmO86hiRd07h8seO9kFGhh4lkXpwgG1FJ9St3um/VqSC1JJ1lz7SDAvf65Pf8IzhRyu4Sc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751010569; c=relaxed/simple;
-	bh=BCaO2ybR5yvOCiJnt5S+ARqflw3kao+Hl1RZmeDRtZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L0y0f65Zq0XvkxyDEXbtLBRg5x7b4lQygSYAiDGfF4hkXlK6CErtZx1EVXzsLG5sFrqd6gKNNs6GJNfGe6AgB1wYM0DtFF6rxqMpo+iEXgJjAendths0L0vuiW7EsPaKq8Eht1HZ4J40zeemTgu/IbIzOyMxnjr/XlVdsX7X+zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vinc17.net; spf=pass smtp.mailfrom=vinc17.net; arc=none smtp.client-ip=155.133.131.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vinc17.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinc17.net
-Received: from smtp-qaa.vinc17.net (2a02-8428-1b1d-4d01-96a9-491d-7b48-ba31.rev.sfr.net [IPv6:2a02:8428:1b1d:4d01:96a9:491d:7b48:ba31])
-	by joooj.vinc17.net (Postfix) with ESMTPSA id 7D841197;
-	Fri, 27 Jun 2025 09:49:25 +0200 (CEST)
-Received: by qaa.vinc17.org (Postfix, from userid 1000)
-	id 3D581CA045B; Fri, 27 Jun 2025 09:49:25 +0200 (CEST)
-Date: Fri, 27 Jun 2025 09:49:25 +0200
-From: Vincent Lefevre <vincent@vinc17.net>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: Jilayne Lovejoy <opensource@jilayne.com>, seabass-labrax@gmx.com,
-	Carlos O'Donell <carlos@redhat.com>,
-	"Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org,
-	linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
-Subject: Re: man-pages-6.14 released
-Message-ID: <20250627074925.GJ2809@qaa.vinc17.org>
-Mail-Followup-To: Vincent Lefevre <vincent@vinc17.net>,
-	Alejandro Colomar <alx@kernel.org>,
-	Jilayne Lovejoy <opensource@jilayne.com>, seabass-labrax@gmx.com,
-	Carlos O'Donell <carlos@redhat.com>,
-	"Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org,
-	linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
-References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
- <20250509112627.GA924923@if>
- <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
- <20250509121454.GA952723@if>
- <3e82680d-149c-4a67-b838-bc73c0be3e4e@redhat.com>
- <e363mzanav4inu3wtk5pmyzfwlquxr5kwh7ytk5emtayizi7qi@dqxritlnl22g>
- <42dad79f-e0f2-4731-ac14-0189f5d278a0@redhat.com>
- <20250627002011.GA431181@qaa.vinc17.org>
- <wwtmtg6ar6gfxvezbcendmcuo3zzgferrmqvhvutos7vp3er2q@xljv6kkogidj>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A088225388;
+	Fri, 27 Jun 2025 07:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751010605; cv=fail; b=Oth1KtWDr/3QBVmD/y9D/YjjJrrpLG3ycLh/THyszCRUyWwoI4klcfKJMkUvXslwzKngazBaGdK61/KHrVBc22Ya4H3QSxU0LN8XWKgtDzEW5Gmr1Bh/sB0JarXDBP4dWsnAdOz3GxJ6F+q3WOtbTzStpTKNbiS+b4PRhcNI3DU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751010605; c=relaxed/simple;
+	bh=rJ6aBmi1sBOrCQ7GnMI2h+PryjgGyxuZoosaol5SQ7s=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=BgyM4elNiSbgBvsBM5wtqP+N469DJAkDwH8NGD8naNNLF1BKiOogyF1h40al9QAiFkU8N/kXEMmSqBL4LU93/MvIy7Livj9PdTBtrutg3mdr9OGggEF4BXdvPiRf948jJYODL3jGwhiJ3ArhxKvV/lw79LgguSZecnnGvv1SGv4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q6dRjKum; arc=fail smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q6dRjKum"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751010603; x=1782546603;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=rJ6aBmi1sBOrCQ7GnMI2h+PryjgGyxuZoosaol5SQ7s=;
+  b=Q6dRjKumpb+Y/kicYymsgz/4MBeS7ZkSZOrhDefb57K3R3EduHekrSfl
+   dD0Yna75+YIt3oM5b28MGozRV3/2YhnG8tcJas17Z1wOrpIrZnsKXZ9Rb
+   03aSdpj7RDuRc4l/WJOCtRe0OCacncvSOOxFYrYdLgyaMSryRSmAdddx8
+   QwgaEFspzc2GthbUPLhsZBjWHizfqMnSXix+oY3DGkhhGKnivv+7l+RTG
+   oa617Df+t0iT7xc2rX+ZvR49zq/Qkxoyb7LXU0jEg3MUg94msxpt8Nax8
+   seNDsenpHLPz6AaAs9i7iMIc3UGKxR9i94GWTqyiW1dA1ahOKv6Ml2wLp
+   A==;
+X-CSE-ConnectionGUID: 9/8Fi3oNTtKgnbPYPvzO+g==
+X-CSE-MsgGUID: jjrRGtqnSjGH7Pp3zNmZnA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="63577324"
+X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
+   d="scan'208";a="63577324"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 00:50:03 -0700
+X-CSE-ConnectionGUID: cAsf1w3eSCWhVRMySfCluQ==
+X-CSE-MsgGUID: 9xoxruwkSL6wanR0KTe60w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
+   d="scan'208";a="152478823"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 00:50:03 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 27 Jun 2025 00:50:02 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 27 Jun 2025 00:50:02 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (40.107.96.42) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 27 Jun 2025 00:50:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=q4EBBGs7QwlsS+sc/b2UmfxeMFgFK/jnZXL4PBM9yPd4g1zN7gLgvzO/gAEV22dylSo+1hhjOKErwFoTtAg5nstqRy/wTBsQPLkxfwUYxllXTbStFYhLi2Wp98juzyD4OIHnIZguttme88dJSLXdEjWBeYd6wteIYhc/Qvd0+wn6ipcX8/bEc8KAHlBCY3UZM4PqCKCNqiLkE1K7Vtq9flQ1A4VQwt66fu5bRzUblekiuASwNZ6vjbXPLFGs9LSZJOdBMhE2G1JS7weMWwQ7glSEc46HUWfHP2+DdcUSxgzbbsKTXnv3zCOAnoRKlwXYt0vaXc2VLAPpQdieIRdpcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=My4rSxiTipWqwIbDBpP9plMwL37UQLNFzl9a7v9TXq0=;
+ b=dRy35v+XSU3gkvat1CoCp2cWGuen3NmWpazAr60js5S0wLom0Ktb7HKGLgpgAe+bYV7g+Qqg+YRq3JSEgYBrqjMsTzG8BQzm9tbl3pZ2QrKrrcMWYO/3K5W4FMGEKMWW1C/05jWnKmW5GppBIiSfQ9Jf7D7mlE+V4D110KmIVqUf1ixnsq7s378gQ3ORnJ9l7MVZuBsLEXyaVy1Czh3m+aDnCyZ+2DOUt8bbanIqwVnx9tncd9HYdxVJTlnNaxskp0PSKMa7grqOxf2FRdILkdX0jVzlF2VOIyVjVU0KP8WxlsVneRQaVuywVKAP1jEaICIGzsLcjwPSaRpoKi+7jA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BN7PR11MB2708.namprd11.prod.outlook.com (2603:10b6:406:a9::11)
+ by IA4PR11MB9231.namprd11.prod.outlook.com (2603:10b6:208:560::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Fri, 27 Jun
+ 2025 07:49:40 +0000
+Received: from BN7PR11MB2708.namprd11.prod.outlook.com
+ ([fe80::6790:e12f:b391:837d]) by BN7PR11MB2708.namprd11.prod.outlook.com
+ ([fe80::6790:e12f:b391:837d%5]) with mapi id 15.20.8857.026; Fri, 27 Jun 2025
+ 07:49:40 +0000
+Message-ID: <dba2841f-0725-4b58-b633-650201c053b4@intel.com>
+Date: Fri, 27 Jun 2025 10:49:34 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2 04/12] x86/virt/tdx: Add tdx_alloc/free_page() helpers
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	<pbonzini@redhat.com>, <seanjc@google.com>, <dave.hansen@linux.intel.com>
+CC: <rick.p.edgecombe@intel.com>, <isaku.yamahata@intel.com>,
+	<kai.huang@intel.com>, <yan.y.zhao@intel.com>, <chao.gao@intel.com>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<kvm@vger.kernel.org>, <x86@kernel.org>, <linux-coco@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>
+References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
+ <20250609191340.2051741-5-kirill.shutemov@linux.intel.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
+ 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
+ 4, Domiciled in Helsinki
+In-Reply-To: <20250609191340.2051741-5-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DU7P190CA0003.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:10:550::16) To BN7PR11MB2708.namprd11.prod.outlook.com
+ (2603:10b6:406:a9::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <wwtmtg6ar6gfxvezbcendmcuo3zzgferrmqvhvutos7vp3er2q@xljv6kkogidj>
-X-Mailer-Info: https://www.vinc17.net/mutt/
-User-Agent: Mutt/2.2.13+86 (bb2064ae) vl-169878 (2025-02-08)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN7PR11MB2708:EE_|IA4PR11MB9231:EE_
+X-MS-Office365-Filtering-Correlation-Id: 49aa2644-a81d-4080-42e5-08ddb54f2bdb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?bDB4eGFxbmdaRk1lVzdjK3EyTzVRLzRTRVp6bjNpczRBZHlrSVRlRDNOdlM1?=
+ =?utf-8?B?T1NkV2hBdG9ndHNOcXZiUTIrTjY0dG5VeFdzMGhRSElKSW5DZ3dhbHB0dXI4?=
+ =?utf-8?B?OE5uWVlscXIxVlB1SnYzU0hvOXJSUzMrSUdKckxXQm9rNXJNWmI2MkJpenll?=
+ =?utf-8?B?TllCQTVmZUY0OWNxUTRUSnZ2ZWEzdE9pSG5GazlTNmFTSGhlNkpTWlNCejFP?=
+ =?utf-8?B?VmwxeksvNWlPbUNqVzI4WmJnOHJVYS8vaGI1V3FuSUkzYVRsbXJScnUvdlhw?=
+ =?utf-8?B?WElqaCt2dUowZ21qNk45UlVBenNHMjVvdGY3MFlINFRPWjRXc29EdzRIQTc4?=
+ =?utf-8?B?aFl0eVYvNnQzVnJkRlVWQ290ZmFKTWw5aERZQXpvWFlpeExHVDl4c216RkM1?=
+ =?utf-8?B?dDVmZUVSeU9NV09WV09SaGRNWHJCVGlQWlVyQ3p3Q1d6aGFWWVdDeE52bjZh?=
+ =?utf-8?B?Q3VKdjc0MVZQWnZqbCtkUTh3M0FtbTVuTklLMHJ0TU1pMWtiN3RzS3FyTzNS?=
+ =?utf-8?B?MTZXZWxqOENYYVhoUEFVMjZFdGlxVllMVzhiWDUvbENQNzF6REhBRGgxaE5M?=
+ =?utf-8?B?Q1BCdlNHNXVsRjAwa043d3ZtdzZZb2pBQWlFN1RtdUJJQzBXL3JZWUIrU2Fk?=
+ =?utf-8?B?SWpVRGs0VG5YNWFFbTVCYjRZYmNCTjRVWlI1VDc5clM1RlAzdVNQVFkvK1dn?=
+ =?utf-8?B?VVlyYXVKTHB2Wm5wVnorL29SWThjWHh5TFN3RkhWRUJQU1ZzaGI4aEhiNzV0?=
+ =?utf-8?B?dndYd0dmY3R1Y01yNGo3MitNWUtuTCsxWkx6aHM2YzUwemw5U05NY0xBYVQz?=
+ =?utf-8?B?SXdsYzVjdGxlYTRTKzN0bVBPQWN5RU1SaC9xVzM0VldmaWlrM0w5ekJyZXRT?=
+ =?utf-8?B?Y2daRy9XL1RibG5VcmU2WHg4SWlHeE1yODB4YVd6cEEyM2hrSmVyaWJXcUNS?=
+ =?utf-8?B?cnhWYTc0TXJuendESU1yZXZLaW9jTnNTQmFCVkxJNnMrbGlWeGFkK1FMQWl4?=
+ =?utf-8?B?WkxUOEtwRERtQlZJQTg0QXkxWmYyVk1aam9vUmlvbVhIakx5eFZLeUJtdVFw?=
+ =?utf-8?B?RTRzWXZRV1lmaDZNMG0xRGhPQkFMUTl6NWY0WlFLejIwQlBtSjdzMkcyVlJB?=
+ =?utf-8?B?TWg3QXFoNnFmbmJsL1NUeWFHRWNPWm9FbWM0NThxSkY0L2NpZktpd2RScDdo?=
+ =?utf-8?B?Y3dFMHhkZitYKzBGNUhIQjU3UWlOVHJ2Y09IR0lIdjdMQkVQeWx4eWJTWm91?=
+ =?utf-8?B?eDRaZ3RENFlIYVlEK0J3Z294WVcrOCtIL25mVWVYWXh2MUtIdVkzTjJ1Q3VI?=
+ =?utf-8?B?VDl5UGJ5ZVB3SlNEcTRjMjBmd3ZBM0ppL3JLaWRSM3hWMTBIWWduVFZnd1Rh?=
+ =?utf-8?B?Zkt6SDFCWkJRdjFhTnFMT2hpcVkzKzFCc3N2a0hJTjg5UG1mY2Q4REJ1V01j?=
+ =?utf-8?B?YS9vUDVQVmp4SjgxRTI1UGJ5TW1rNUw5TStnMkdaeitQdWh0SDB3YjlKY1RL?=
+ =?utf-8?B?YlVvbEMxK1dOQ24vUTRhVG9xdXVacm1YU2ZiZitZZEdUYnpWRlBMVjdTUUh0?=
+ =?utf-8?B?a2hLSTVUb2JLYWpYcWY2bW5Tck5JU01aRnJKSlp6WUZEWlBiUzFYd2lYY2Jh?=
+ =?utf-8?B?aXVWNUlLbzhnblp5VGx5UkVXWXoyZC9rbWdHSEJlOUJCYWk5cEdsN2dsaHY2?=
+ =?utf-8?B?eTFYTjhPM1laSEUxL1JCcU5Md2NVeEhITE1jUHhyM1ZKVzJlMUMxazdmTmp0?=
+ =?utf-8?B?UWMrRWxLUVl6dVlPS2FiaXV6UElLb1NjclN4YllMVlpYeEVucmNLc212aVVU?=
+ =?utf-8?B?RlJ3UldvQ05ZRkVGSmZQSVJyeDRocnVzcUlNWWtlTjFZOHBpVzZhT3dMSERn?=
+ =?utf-8?B?cDdDQ3EyMG1FczhIQWU3Z1U0dVBHc3QxcTFRZnFRcmxhSVVKOEUrNFBCcnQ4?=
+ =?utf-8?Q?Wt8zvhTTAfQ=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR11MB2708.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZENCRXlManVIU0NjSWF4ei90UzN5Tjd4L0cvU3ViS21wY1RaVktxT3ZuT2dS?=
+ =?utf-8?B?UmxsREJOeWR6NzBzK0I5d3JZSDFVamhVVGVRTHpLazc5MjRjSFFDanNUT2hI?=
+ =?utf-8?B?eGR4ZW5xWUxmVWlISTQ5MU9PbHQ1T0RFYmtObjNVZFZtVlZtZGdlQVk4eklQ?=
+ =?utf-8?B?cXVVVHFVa3lmblVoaXMrM0ZpUTBwSkxuOGdMazk3dkFTMTRJZzc0Q1pKeG5k?=
+ =?utf-8?B?NTZNR0l6SEdRYXBKeUt3MTFRL2VRdW1mSWlCVysyb2J1N1MzUTdXNnNrWStl?=
+ =?utf-8?B?Y1FBbUFDTG1sczR1VXRQOEU4Z0VJNkZjVDE3ejIrMWoxL3grUEwzNWM2Mnll?=
+ =?utf-8?B?TTBDeis2cGV2M2k4TS9BbG93SnVveVVrSENHZVQ5NlU4RWhUTDBpMWRXZThT?=
+ =?utf-8?B?RDBaY2tYYUpVT2tYdGFDbldENXc4anM3bDM2aGtYOXBaWFhxV0x1L3M2WjQ4?=
+ =?utf-8?B?TjhqS2pUZGMzTUJ5ZUFxQXZQbzBJQ2ZUekc5cjRSTkZuVWN0THBCd25JOTdl?=
+ =?utf-8?B?b3VTZ0E1NlNYY2RsZER6WDQzekt4YjVpWXBPRS9YSWlCL0txalF4Z0p0WWE4?=
+ =?utf-8?B?aXdjYS9OTkdQQW1MSCt2QkVWNGpxa1RMVVJZM200ZUFhclkvWEl6U0t0cFpV?=
+ =?utf-8?B?RnhYWHZWaG1tMk5oWWdoV2pWS05zZEh6YlZWUmd4b21CRW5uLzFRcVVGTjUw?=
+ =?utf-8?B?ZUwzeXY5RHBGL2VsVHdjWU9tcEc1ZG5sMHJDcW1mcmJLZnZIWjZFRUo3NHUr?=
+ =?utf-8?B?QjNYWTRucE51UFYydFdob0tPQUNJUkhRS1hPMU1Fd2NTeUd6QVNyK3JRSVJL?=
+ =?utf-8?B?QnF1SjEvMHVpZ0oyWEFxdmFJZTlFUmtUS0IxWUJmcHNiTGVFZTRveWswRFVl?=
+ =?utf-8?B?MDhPTndPR0NDSVZIQmdSV1dDVXl5ZUtvVGNwdkNkTzZGUWNkK2F4b2FNU3ZV?=
+ =?utf-8?B?c3NZM0hZUnBic2dueTN6TFI4UGZrZnUwb1FKQjU5Q01ieVZTNXVRUjJMUE9Y?=
+ =?utf-8?B?Q0ZTeHRKOXhjZnpXUy9ZelY3eUNwQ3lZZzIxZkpaZ3dOM05STlZ0Tmt5WnZB?=
+ =?utf-8?B?Z3RCZVg0cTNuSWNERC9HR1c3Z3ZLSWw0blVwTzAvN1lwV1ZRN1QvT0paR2J4?=
+ =?utf-8?B?MjRUb3BUVzlFdCtYZXd2b1dnUHJ2cEUydmsxeVEvMHlqS2NxT1dGRUkrYjBp?=
+ =?utf-8?B?cFJxeWN6R3hlRFZNYnlmTE0zdFVGMjdqUEd4bS9wOGJ2ZlU4T2xIYTM4cHNN?=
+ =?utf-8?B?MEdDbWtBMVMwWHZuVzl5OUN4dUZUNXhYQmpkUW5RMnhMWXhvSTAySnhSbTkv?=
+ =?utf-8?B?RGtwdUV0M0pacHJodTJPdXMrTGMzazA4UnZ3dVhzTUd6SkRmWEhRV3pjWmV3?=
+ =?utf-8?B?MmpqalgweUhwYjE0N0pUaGxhZ1VhL0wvVVhWWFA4cjI2anZGZDVhMUpRWjkw?=
+ =?utf-8?B?SjR3OUpBdm5KVXNJQUo2QXFtN1BRRnhIbWhTeFlocTN6R3B0Nk9Ma05zZWdq?=
+ =?utf-8?B?K1ViK1M3V3pZVkRvM0tpOWRCazlZcTBQSXFWcUZURllTZmtwRXNMMEduZEdR?=
+ =?utf-8?B?eCtKMkRGY3ZTMElXWXgxU0g5OFNTb3ZrekFEajdPcFp0MzAvUThQKzJaUU9h?=
+ =?utf-8?B?L0RFd3drUHdWbXArNFVIeWFna2VmejU1MkVCdTN3UGlvaUdLRXc0THFSN0sx?=
+ =?utf-8?B?aUhDdXcwZHhtbFppdUxDVVFqZEtKS3J0eG9nUjlaamZQNVUvWURGYnYrdlc1?=
+ =?utf-8?B?Z2VIZ0M1Mm8rYmFXODJpdm8rRThMR3IvczNHZWsyaWdPTUliaS9CbkF5NG1q?=
+ =?utf-8?B?OXpka1Exd09hSGRmdlpMY21CdUpMU2RVWXR6RGxRVlFUQTZPRC9UUEdPakJX?=
+ =?utf-8?B?akppbmRRYWVLU0JzNGs2MDZ6ZnZxbEhDNXdIK3JhYjJKSTZmVU1WalVNMzNL?=
+ =?utf-8?B?SHhpY0ZXSHpVTEZPWFFZNjNWV3p2TDFmVzZFTUpWei9WbnV6WmgrWjNyRzJU?=
+ =?utf-8?B?U3FNeHZjWG1FTWQ5SHpkSXp3SXprdnVuQ3BZcUpCSmw5eEpPWUlNa2dMcldL?=
+ =?utf-8?B?ZWVtNTZKc3JrZ2Jvd0dJbEJkSUFxcGl0bGp5VnJQSFdDSDNwaFpEbnRSbHl6?=
+ =?utf-8?B?engxV0FtVjlzd2tvVi9Ebk5lMmdMYnRLWVhOZFJRTStweTg5Tko5MkNsTkhj?=
+ =?utf-8?B?R3c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49aa2644-a81d-4080-42e5-08ddb54f2bdb
+X-MS-Exchange-CrossTenant-AuthSource: BN7PR11MB2708.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 07:49:40.3790
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WNhjKKbAXBcrBn2oGkEmuKptrDOq77cKuu4IF6ZBnEPhCLvVObbvdS3LRjdLci0hl1veAEb1nhsk4Mkh9yORBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB9231
+X-OriginatorOrg: intel.com
 
-On 2025-06-27 06:23:26 +0200, Alejandro Colomar wrote:
-> > I've always heard that a copyright notice was optional and only
-> > informative (so, in particular, there are no requirements to have
-> > per-file copyright notices instead of a single one for the work).
-> 
-> I tend to agree with you.  I'll invoke some SPDX people, which might
-> clarify our legal doubts.  I suspect they're lawyers or have contact
-> with lawyers.
-> 
-> For context to the SPDX people, we're discussing if the following is
-> valid or not:
-> 
-> There were a lot of old copyright notices, each with its own format,
-> some more formal, some less...
-> 
-> That was a huge mess, and the copyright notices were not always
-> respected: for example, in cases code has been moved from one file to
-> another, and the copyright notices weren't carried over.  In other
-> cases, some people (including myself) significantly modified some files,
-> but forgot to add a copyright notice for themselves.
-> 
-> So, I eventually decided to unify the copyright notices for the entire
-> project, so that the copyright notices would look like
-> 
-> 	Copyright, the authors of the Linux man-pages project
-> 
-> And then a top-level AUTHORS file would list every author.  This is
-> quite more accurate than the previous copyright notices.  However, some
-> contributors are concerned that it might be illegal to modify those
-> copyright notices without express written permission.
-> 
-> I've sent email to everyone whose copyright notice has been modified,
-> and I got around a third of explicit approvals, but the other two thirds
-> remained silent (in some cases, the emails probably don't exist, the
-> people are dead, or they don't read the email anymore).  Notably, nobody
-> has explicitly said no.
-> 
-> What do you think?
+On 09/06/2025 22:13, Kirill A. Shutemov wrote:
+> +static void tdx_pamt_put(struct page *page, enum pg_level level)
+> +{
+> +	unsigned long hpa = page_to_phys(page);
+> +	atomic_t *pamt_refcount;
+> +	LIST_HEAD(pamt_pages);
+> +	u64 err;
+> +
+> +	if (!tdx_supports_dynamic_pamt(&tdx_sysinfo))
+> +		return;
+> +
+> +	if (level != PG_LEVEL_4K)
+> +		return;
+> +
+> +	hpa = ALIGN_DOWN(hpa, PMD_SIZE);
+> +
+> +	pamt_refcount = tdx_get_pamt_refcount(hpa);
+> +	if (!atomic_dec_and_test(pamt_refcount))
+> +		return;
+> +
+> +	scoped_guard(spinlock, &pamt_lock) {
+> +		/* Lost race against tdx_pamt_add()? */
+> +		if (atomic_read(pamt_refcount) != 0)
+> +			return;
+> +
+> +		err = tdh_phymem_pamt_remove(hpa | TDX_PS_2M, &pamt_pages);
+> +
+> +		if (err) {
+> +			atomic_inc(pamt_refcount);
+> +			pr_err("TDH_PHYMEM_PAMT_REMOVE failed: %#llx\n", err);
+> +			return;
+> +		}
+> +	}
+> +
 
-There is actually a more important issue: it appears that the man
-pages are not all distributed under the same license (according to
-"SPDX-License-Identifier:"), so that some care would have had do be
-done when copying text from one man page to another one. That said,
-I would tend to think that when such text has been copied, this was
-for related man pages, and there is a chance that such man pages are
-distributed under the same license. Unifying the licenses by asking
-the authors / copyright holders would be a great thing to do.
+Won't any pages that have been used need to be cleared
+before being freed.
 
-Now, about the copyright notices, you also need to give the full
-list of the licenses that can apply, as some license may require
-the copyright notice to have some restricted form (such as being
-included in the file itself).
+> +	tdx_free_pamt_pages(&pamt_pages);
+> +}
 
-For instance, the GPL licenses have
-
-  To do so, attach the following notices to the program. It is safest
-  to attach them to the start of each source file to most effectively
-  convey the exclusion of warranty; and each file should have at least
-  the "copyright" line and a pointer to where the full notice is
-  found.
-
-(or "state" instead of "convey"), for which this seems clear that
-the current decision is OK.
-
-I think that among the licences listes under LICENSES, only
-Linux-man-pages-1-para could be problematic, but only 18 files
-are concerned.
-
--- 
-Vincent Lefèvre <vincent@vinc17.net> - Web: <https://www.vinc17.net/>
-100% accessible validated (X)HTML - Blog: <https://www.vinc17.net/blog/>
-Work: CR INRIA - computer arithmetic / Pascaline project (LIP, ENS-Lyon)
