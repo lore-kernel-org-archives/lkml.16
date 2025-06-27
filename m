@@ -1,135 +1,199 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02F5296145
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3BC296145;
+	Fri, 27 Jun 2025 10:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751019818; cv=none; b=gyxgDwll/6sZBuJBLl2WG5ZgNzmBCvv+KxYsqUixJAo/hVSHaNyNpfEWkMvvZfF3Jx+W1uGvKGCjRZKpg3bxHlc8MiTCPToRnMM95PYybEpFyMFl8To/R25W7C2h/ivkEbHiHYmdRlz9r/h8oxl/PzYq6s41RQEH2gaM79lXwIQ=
+	t=1751019883; cv=none; b=Q8nrweB2IgrMHUflY1PHKC8Biio+6J8tjx7VuG2MDRlyEYQg6pxji0Kjn+LurDq/ycV+5Z91gO1SsHNbcrN5mixkkxJF7FlXZUPYhynl3EfhYHvp+GKr1D4J+au67WCqsOatiTGbgNZxwWE1JLX7bHUXTNQAAWjpQHg+UBM1Zmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751019818; c=relaxed/simple;
-	bh=V7FnJzBLi3EY72me3A2A+ErukVK7xe42c72R+6Jyi/g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RE6yyC6p8EzkzFxbiIKcPmHyrHZ+Uo/FaczTnB+5ydhoMqPwW17lj2h2vxkETYKifZMBXfA1rcnTfep1d47d7/6HXhrGCxq1YqaV1YmougYC1MHRnGPZ1Pj+NAYYdLwV1abHq2psRynwI4eSRHzgI3oo95lzZLA3+3XSO2kUtzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e/ktNeMf; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e/ktNeMf"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a43afb04a7so15409701cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 03:23:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751019816; x=1751624616; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0nKxFEYE/UeFFPamRqoXAyJPsV2H+5u5JXw+CSplOKw=;
-        b=e/ktNeMfMu1V1LNTxfGWDxLHpT2pkc8Mr4+riNFRCd44XuCDlhF3r87scfMy+BADY8
-         tI0RngoLspdHouMsEMG1N0c01WW712YfPMlnABRnaJvrlffjbAI5OXi0y74zdP/3NFxo
-         R7RAeRLjG0du7PWwTvD5NB81LxVI8S/hlveUKpUbVzRwLNaWxzrIqEWegFq8oOU/j9mI
-         +socf4glDNor0lSriFDcR5WkPHLqRrsVg7Ml609RSf8UZyVI0tsPL4gDyyRAgnO4ilSv
-         f9otDvuo9bvALCk6z05BUwMQqOm58uz8y1GeIvGJlr7ErhQAW7mULBHVloTlgB7dys6+
-         NFpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751019816; x=1751624616;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0nKxFEYE/UeFFPamRqoXAyJPsV2H+5u5JXw+CSplOKw=;
-        b=oSEnuSwaM2CounnJzyjSmPLlAT47QRxUrJTcHS06vVVw2P1Qv4pBmI4FtDhnxtdcug
-         lEmYnaZg7W11ArHqMPa6HlAkodPub0apD/xM1iOuYVtzzvwvrDkOea9eUihkYcO7sHWR
-         3pzuMMPLhIY9GJgqvA0CcyyQTpIrAIoafxSqUl8+KvL1dkM2GuwPML7zK7g82LgFcHyI
-         sGAJh54QsBpESeZyrO6K2tb3sjUn0lorh4BeBccSSb8X+7EMtf+WFGwfNZvq2yH6vSI0
-         yin9CGElvV38weAQxKrgCRcbOs/I9PKvknTfWunkdYsm5ADe2kO6bFjO0LaDgufhap5t
-         w/yA==
-X-Forwarded-Encrypted: i=1; AJvYcCU3DKreNl+su4I/GvnVxAdZlbQ/lst3dB/tRYahbJT8igiWbkqvCVH6afF6t515G2q0JyROovq0Tfytcj4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4U4AaDxxn9fQbr4E1RGpWmdTtwpMvqDPScfHTomsf7HXXL601
-	bbvF9Agw+Zhr0jkl2fUj5O3rKKrKIh+jN7jdhRYJ1kRByRuYFmsN5SLi/2LXUM/ceKNKFnZRuiX
-	DPXrX9oWPJeuChfcyXrHVfLRa61yrXF6V3p/4HUH2
-X-Gm-Gg: ASbGncuuMmBQCXot9qwRbXGxKxRd9DE+J319F9IeF9gXcoeIPZHHhsqtBcQ+/W2V0D7
-	DXfkezXHV+LLU68bP+bsR33D6AjNRNgE2v1muKyRGpjPvIt4hB+MX1pn8AtQZqekI6ATO0h2yAA
-	Wjbv3xNw5s4DKcFlH/gbgfKdH8S2Nwp/k+w4Ra/hw9J6Jz1JO4GPf8
-X-Google-Smtp-Source: AGHT+IFRBSu4OSWWwhUA10FKePzkXfzypfFlIilARxDfH6dzTpsWBTUQ/wDOJF5G8OVjrmkSdCmZJ9Dg3DqKmRy3yeY=
-X-Received: by 2002:ac8:5796:0:b0:4a5:a96d:606d with SMTP id
- d75a77b69052e-4a7fcbe417dmr48902211cf.46.1751019815425; Fri, 27 Jun 2025
- 03:23:35 -0700 (PDT)
+	s=arc-20240116; t=1751019883; c=relaxed/simple;
+	bh=BCbatr1KZPFWU9OTfqGjZ/24IBVjG/LV+9y/pRxtkMM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ubJpDTpkqgiO19sPpbQCVnmEutOEJaTuqBO7G2XLv6G2bLjk99R0DaB8uxKk5Kvlci2KYgG5+D9DYnxTOq1zCa0a+ZJ+HgJqcDz0mjh/zB/uN2WPsjDZftFp1P9c7hTvRCLNFJNJSBj0EuX+g5NegvI/YedpUZO4eT6P6JxgQOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bTBVx1RGyz6L50b;
+	Fri, 27 Jun 2025 18:24:25 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 77F431402EC;
+	Fri, 27 Jun 2025 18:24:34 +0800 (CST)
+Received: from localhost (10.48.153.213) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 27 Jun
+ 2025 12:24:33 +0200
+Date: Fri, 27 Jun 2025 11:24:29 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
+	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
+	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v10 05/17] CXL/AER: Introduce kfifo for forwarding CXL
+ errors
+Message-ID: <20250627112429.00007155@huawei.com>
+In-Reply-To: <20250626224252.1415009-6-terry.bowman@amd.com>
+References: <20250626224252.1415009-1-terry.bowman@amd.com>
+	<20250626224252.1415009-6-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627094406.100919-1-yangfeng59949@163.com> <CANn89i+JziB6-WTqyK47=Otn8i6jShTz=kzTJbJdJgC0=Kfw6A@mail.gmail.com>
-In-Reply-To: <CANn89i+JziB6-WTqyK47=Otn8i6jShTz=kzTJbJdJgC0=Kfw6A@mail.gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 27 Jun 2025 03:23:24 -0700
-X-Gm-Features: Ac12FXzCqOJALJRgTaH8w7cAG6dXP3Xqdw3LY61OOOtlzGBfz-N8-LGxpyqFxy0
-Message-ID: <CANn89iJs5qX_daLTob17t-ZLUQ5q+x9vvw=DP0CQVdLPGbtpKQ@mail.gmail.com>
-Subject: Re: [PATCH v2] skbuff: Improve the sending efficiency of __skb_send_sock
-To: Feng Yang <yangfeng59949@163.com>
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, 
-	willemb@google.com, almasrymina@google.com, kerneljasonxing@gmail.com, 
-	ebiggers@google.com, asml.silence@gmail.com, aleksander.lobakin@intel.com, 
-	stfomichev@gmail.com, yangfeng@kylinos.cn, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, Jun 27, 2025 at 3:19=E2=80=AFAM Eric Dumazet <edumazet@google.com> =
-wrote:
->
-> On Fri, Jun 27, 2025 at 2:44=E2=80=AFAM Feng Yang <yangfeng59949@163.com>=
- wrote:
-> >
-> > From: Feng Yang <yangfeng@kylinos.cn>
-> >
-> > By aggregating skb data into a bvec array for transmission, when using =
-sockmap to forward large packets,
-> > what previously required multiple transmissions now only needs a single=
- transmission, which significantly enhances performance.
-> > For small packets, the performance remains comparable to the original l=
-evel.
-> >
-> > When using sockmap for forwarding, the average latency for different pa=
-cket sizes
-> > after sending 10,000 packets is as follows:
-> > size    old(us)         new(us)
-> > 512     56              55
-> > 1472    58              58
-> > 1600    106             79
-> > 3000    145             108
-> > 5000    182             123
-> >
-> > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
->
-> Instead of changing everything, have you tried strategically adding
-> MSG_MORE in this function ?
+On Thu, 26 Jun 2025 17:42:40 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-Untested patch:
+> CXL error handling will soon be moved from the AER driver into the CXL
+> driver. This requires a notification mechanism for the AER driver to share
+> the AER interrupt with the CXL driver. The notification will be used
+> as an indication for the CXL drivers to handle and log the CXL RAS errors.
+> 
+> First, introduce cxl/core/native_ras.c to contain changes for the CXL
+> driver's RAS native handling. This as an alternative to dropping the
+> changes into existing cxl/core/ras.c file with purpose to avoid #ifdefs.
+> Introduce CXL Kconfig CXL_NATIVE_RAS, dependent on PCIEAER_CXL, to
+> conditionally compile the new file.
+> 
+> Add a kfifo work queue to be used by the AER driver and CXL driver. The AER
+> driver will be the sole kfifo producer adding work and the cxl_core will be
+> the sole kfifo consumer removing work. Add the boilerplate kfifo support.
+> 
+> Add CXL work queue handler registration functions in the AER driver. Export
+> the functions allowing CXL driver to access. Implement registration
+> functions for the CXL driver to assign or clear the work handler function.
+> 
+> Introduce 'struct cxl_proto_err_info' to serve as the kfifo work data. This
+> will contain the erring device's PCI SBDF details used to rediscover the
+> device after the CXL driver dequeues the kfifo work. The device rediscovery
+> will be introduced along with the CXL handling in future patches.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+Hi Terry,
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index d6420b74ea9c6a9c53a7c16634cce82a1cd1bbd3..b0f5e8898fdf450129948d82924=
-0b570f3cbf9eb
-100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -3252,6 +3252,8 @@ static int __skb_send_sock(struct sock *sk,
-struct sk_buff *skb, int offset,
-                kv.iov_len =3D slen;
-                memset(&msg, 0, sizeof(msg));
-                msg.msg_flags =3D MSG_DONTWAIT | flags;
-+               if (slen < len)
-+                       msg.msg_flags |=3D MSG_MORE;
+Whilst it obviously makes patch preparation a bit more time consuming
+for series like this with many patches it can be useful to add a brief
+change log to the individual patches as well as the cover letter.
+That helps reviewers figure out where they need to look again.
 
-                iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, &kv, 1, slen);
-                ret =3D INDIRECT_CALL_2(sendmsg, sendmsg_locked,
-@@ -3292,6 +3294,8 @@ static int __skb_send_sock(struct sock *sk,
-struct sk_buff *skb, int offset,
-                                             flags,
-                        };
+A few trivial things inline.
 
-+                       if (slen < len)
-+                               msg.msg_flags |=3D MSG_MORE;
-                        bvec_set_page(&bvec, skb_frag_page(frag), slen,
-                                      skb_frag_off(frag) + offset);
-                        iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, &bvec, 1,
+With those fixed up
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+
+Jonathan
+
+
+> ---
+>  drivers/cxl/Kconfig           | 14 ++++++++
+>  drivers/cxl/core/Makefile     |  1 +
+>  drivers/cxl/core/core.h       |  8 +++++
+>  drivers/cxl/core/native_ras.c | 26 +++++++++++++++
+>  drivers/cxl/core/port.c       |  2 ++
+>  drivers/cxl/core/ras.c        |  1 +
+>  drivers/cxl/cxlpci.h          |  1 +
+>  drivers/pci/pci.h             |  4 +++
+>  drivers/pci/pcie/aer.c        |  7 ++--
+>  drivers/pci/pcie/cxl_aer.c    | 60 +++++++++++++++++++++++++++++++++++
+>  include/linux/aer.h           | 31 ++++++++++++++++++
+>  11 files changed, 153 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/cxl/core/native_ras.c
+
+
+>  static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 54e219b0049e..6f1396ef7b77 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -4,6 +4,7 @@
+>  #define __CXL_PCI_H__
+>  #include <linux/pci.h>
+>  #include "cxl.h"
+> +#include "linux/aer.h"
+
+Why?  There are no changes in this header other than the include and the changes
+to linux/aer.h are new stuff so I can't see how it becomes necessary if it
+wasn't before.
+
+Might well have always been missing and should have been here. If so separate
+patch to tidy that up.
+
+>  
+>  #define CXL_MEMORY_PROGIF	0x10
+>  
+
+
+> diff --git a/drivers/pci/pcie/cxl_aer.c b/drivers/pci/pcie/cxl_aer.c
+> index b2ea14f70055..846ab55d747c 100644
+> --- a/drivers/pci/pcie/cxl_aer.c
+> +++ b/drivers/pci/pcie/cxl_aer.c
+
+>  static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+>  {
+>  	struct aer_err_info *info = (struct aer_err_info *)data;
+> @@ -136,3 +152,47 @@ void cxl_rch_enable_rcec(struct pci_dev *rcec)
+>  	pci_info(rcec, "CXL: Internal errors unmasked");
+>  }
+>  
+> +static DEFINE_KFIFO(cxl_proto_err_fifo, struct cxl_proto_err_work_data,
+> +		    CXL_ERROR_SOURCES_MAX);
+> +static DEFINE_SPINLOCK(cxl_proto_err_fifo_lock);
+> +struct work_struct *cxl_proto_err_work;
+
+I'm not seeing a declaration for this in the headers, so can it be static?
+
+This is made a little more confusing as in this patch we have both
+a structure called cxl_proto_err_work and a pointer to it with exactly the
+same name.  Maybe rename this so it's subtly different.  cxl_protocol_err_work
+or something silly like that just to make reviewers life a tiny bit easier!
+
+> +
+
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index 02940be66324..24c3d9e18ad5 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -10,6 +10,7 @@
+>  
+>  #include <linux/errno.h>
+>  #include <linux/types.h>
+> +#include <linux/workqueue_types.h>
+>  
+>  #define AER_NONFATAL			0
+>  #define AER_FATAL			1
+> @@ -53,6 +54,26 @@ struct aer_capability_regs {
+>  	u16 uncor_err_source;
+>  };
+>  
+> +/**
+> + * struct cxl_proto_err_info - Error information used in CXL error handling
+> + * @severity: AER severity
+> + * @function: Device's PCI function
+
+Run kernel-doc over the files and fix errors / warning.
+Missed updating this to devfn which it would have shouted about.
+
+> + * @device: Device's PCI device
+> + * @bus: Device's PCI bus
+> + * @segment: Device's PCI segment
+> + */
+> +struct cxl_proto_error_info {
+> +	int severity;
+> +
+> +	u8 devfn;
+> +	u8 bus;
+> +	u16 segment;
+> +};
+
