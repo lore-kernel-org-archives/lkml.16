@@ -1,298 +1,245 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2076.outbound.protection.outlook.com [40.107.237.76])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0251F17E8;
-	Fri, 27 Jun 2025 08:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751012879; cv=fail; b=o9p5SzyzGDlvycFLpJ6RxwgTCeB+ZlQ1DGwTvyhz89vH5OO1ZyM17/+Rb1vx3G33unTcMFZ2fVfRTeiPP9a8poJFt4/E/ZYfaqOFD+j0XZ/6GUz9t8v3Cohfzb6BzYtcqx8sfAhZylQuMCGi92uooPp0GsSIdLpavgzrCEj4M4s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751012879; c=relaxed/simple;
-	bh=i+9mlIwLl53AZ0nuWmeZ+olxAYX+sUtQTXtyRkhRkIw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=CD5C4uMNrsOfGG4I7JIBABM4A/bxKyAJjitY50Cwfs8vo7c2yipzTEmkNEPABljLX5QLl9wSLT/a9Rw/pRFMayjc0wFur6xDHt7v9o81SFJBwJv4sT3XC9VTW2bdsVTCGckyO50+g8sUF5I+7CE/j0UsThW12mLNCjwJcnDZHJA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2HA+qR0N; arc=fail smtp.client-ip=40.107.237.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0ED2185B8
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751013108; cv=none; b=k2tWdhTIgMA8FamUTzez6PQoyEXW+C4ptYUXzuLbhwp4sf7K4FenD28SgVwqKHt0jSVqitkadVo89tKzAjzJl8yauT66txaOhsWHSHMKfC/Eys+wgldwPOJjP36y2CwlPZx9Q/gQsFMsu5uXSH/8J48A3c4nC3jX0S8RKoPkoAs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751013108; c=relaxed/simple;
+	bh=mSzYF/l1A+reJ2xStiWCI99vmFzdoQ3mDfhZ6R41LVk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=oIxXJv0cMDQqWQQSOmT8bJ4+CQA6uVLhCmfPHtu55e/hZE3ZPvAcq+/jVDlJiI+aeIzbwt7J85u1LNXlgk7W55sns4ktVL2OVehynEvQ6pXnAvhp80sgVcNk34rnTNS39J6Pn4/Um8Dw0ZiC0njvQPxbFaIUiAbbUconoGE3hJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VFsTr+ub; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2HA+qR0N"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QMcvEJswvkqWoCYmb/1ScaDvd5k9In0m+6YvZOQOYpMJh1aatgLskxitEQxlSQ9+eHWsQTLwUBYffWdt/+A+y21mSqGERh8/PsPzeFSVD2EOmsEXY+KVnHw17HoJBXM/o1mJiUpGAv39HOqpC5CPACdZ1XUxs7Ol+GSbGq0hTzu9YEGTNNFD3NJesbflqff7vJs8OKfJtbXqfQQMJhRrGWcJfc8SRTpBNRJV1DFaLC1Osp9UrUcDSt8XAbZi6JfNGeIvUyOVOShqsY1iimwimIZKKcibdxQw8yjnzcv10+Mo9wZhcNL+gitdzaVoFumV0NmLvhcItIttn88I/800jA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=f8lffmM6beYEeSIe7NzI/7qcpC0VQHrOoBekByvJOcw=;
- b=nVyUEraWQUNP/1/gV4L9QagfOZFIC5xFiCDIdsEXWffFGHwcBNGg9j1decbRK5iFuunyiUmzpzlqqma9kTKla80gQek35eGD/byV08t6Ug5b4Y5wFw+oCTm2uOJkFGM7bxPUPHjTgd2Dh7HWv9Jfk0QZsG23Dhjyqa6o+9/xvhsQuwTki1CbuLmepHCJ8FtfjJj2NiPMdkGs8gYD3gXclRzQkG895ef8IzysKPu1q6Z6qTFGMlh2xa/8ky+gNb2oB/Fag+zPR2aiBNouB2MkYCDF5yRGvKEzAjOq0S9gunilnxYJzLaRy9VYyYWP4DsusHixf+TSeFN+694ZC/YNNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f8lffmM6beYEeSIe7NzI/7qcpC0VQHrOoBekByvJOcw=;
- b=2HA+qR0Nd4/UPdtV1y5uYmQ6mxIUpeRC43THRIjlyp/VO7lnpzR+kd+3q/NZ0I/orqbaYUCABtWhWr+KVKI8bQAUWjcJhMHrt/Fr7lhXaJpVXRFB7g3Fp5h/FaavcRuJ7wp6IRVuwKeU93tjOndwa+OozDl+eP+v8bch+5iwL8Y=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB8189.namprd12.prod.outlook.com (2603:10b6:208:3f0::13)
- by PH7PR12MB7356.namprd12.prod.outlook.com (2603:10b6:510:20f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.17; Fri, 27 Jun
- 2025 08:27:54 +0000
-Received: from IA1PR12MB8189.namprd12.prod.outlook.com
- ([fe80::193b:bbfd:9894:dc48]) by IA1PR12MB8189.namprd12.prod.outlook.com
- ([fe80::193b:bbfd:9894:dc48%4]) with mapi id 15.20.8880.021; Fri, 27 Jun 2025
- 08:27:54 +0000
-Message-ID: <9e4ffa68-1be4-4fcb-99a9-bb6e6aac7db9@amd.com>
-Date: Fri, 27 Jun 2025 10:27:49 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3] fs: generalize anon_inode_make_secure_inode() and fix
- secretmem LSM bypass
-To: Shivank Garg <shivankg@amd.com>, david@redhat.com,
- akpm@linux-foundation.org, brauner@kernel.org, paul@paul-moore.com,
- rppt@kernel.org, viro@zeniv.linux.org.uk
-Cc: seanjc@google.com, vbabka@suse.cz, willy@infradead.org,
- pbonzini@redhat.com, tabba@google.com, afranji@google.com,
- ackerleytng@google.com, jack@suse.cz, hch@infradead.org,
- cgzones@googlemail.com, ira.weiny@intel.com, roypat@amazon.co.uk,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-References: <20250626191425.9645-5-shivankg@amd.com>
-Content-Language: en-US
-From: "Gupta, Pankaj" <pankaj.gupta@amd.com>
-In-Reply-To: <20250626191425.9645-5-shivankg@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR4P281CA0113.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:bb::7) To IA1PR12MB8189.namprd12.prod.outlook.com
- (2603:10b6:208:3f0::13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VFsTr+ub"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751013105;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l83S+y1jfDts5TmYlfvBTvXdste6+/ImQkXXtWWTZFE=;
+	b=VFsTr+ub9L+0Qi+fz0r8op0FsRV+IyZ/MjdbeIUBq/32Wpu0/WEJ3OZdWHBIU5OcW5fJo4
+	Zpv1Nf2OWkDCCk9bE/ve2Cp39NaM35Fre+2VN9deotENTJltckLtgWhwRxYe9pk063o9/u
+	efHKUTu1F8FO6xJA3LPUsRaUDk0LRD4=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-496-0wiUibOKN8minbx0ltfKgQ-1; Fri, 27 Jun 2025 04:31:43 -0400
+X-MC-Unique: 0wiUibOKN8minbx0ltfKgQ-1
+X-Mimecast-MFC-AGG-ID: 0wiUibOKN8minbx0ltfKgQ_1751013102
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-451deff247cso14582465e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:31:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751013102; x=1751617902;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l83S+y1jfDts5TmYlfvBTvXdste6+/ImQkXXtWWTZFE=;
+        b=Unq2O1gwU3AFp47+xQMONfKNHZQVSuXjhEQ/tkosL4BHJdzsNpypff2xmRQST4YSta
+         mn6c3ut79L23JwAk59kmI8WyD+FpqVXTDzYDdKcOqfMrpATB5/Gc5+MjTdWig9CzlfhI
+         loJpD5BzLbOqQyIu0hZVTY1mtFpVr38ZBBareoA5JTqKepeilRTpobtKceGbdyvwcOBG
+         9BuaJDpdHKs7OhKtInVsGXBm8FS5LOjaTRfyO57Dp56ZfjZmuipAyt7ZyAsWKGU9ujW6
+         u11K2e9TTaRjX0218DfGWuqs/6mZHuyXNTh/FjiOnXFTLLuce3LS+5VWtYM/7aydULpD
+         EnXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFwSIAEU6cRPNjw008APphvkM0oN7tmDvz8oGaHunjclLtj/jqMDwSgT1LZ+cAwLBODGV+Zz5xplbKdRo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgQnGoRmZoKyAmT1yETSsT78IFP2yz5+gjR+0SGcUUGuRFGrNA
+	TZEwhceW67EBPOBs1T2XMbzAgl95G7j1EYoR0kqwmwNI5VkCmT6xQhfItcfeM/x5NsVSCv5CoEH
+	7NsZRUtrI+AkPceV3dgu7TqEk8awxjh+qpbDvbq+ULuXMCu/GtgpRhVIy9GlmCIHIdA==
+X-Gm-Gg: ASbGnctt7rennwyYy6eqQbBEZqNLjjXvv8FXkgP20cRKRPqmnDCyCCxPC2OsP1wcKFF
+	AwgVVKEYord1FmX8XtFPzyGhqcFboLmUkwB3GvHcBl8/OFD+b2BAkf82ABnDla3SHK98G1yKiRP
+	QXZMndGGV4yfau0nCKJGQ0SNUc4toPtm9o/XQ9S7NzmjmFhft0b6JM+m5EQIhScf2eMS8FyEZVY
+	dn+luqFfdG6RxTZIXqN/rrLpoO5jOdU3XLr3/Ep4GPQBXGYcajUxQY5esgf1vwatn+p4YCUou/j
+	/OAeF3hSvT3pZ3uWQQ==
+X-Received: by 2002:a05:6000:1789:b0:3a0:b565:a2cb with SMTP id ffacd0b85a97d-3a97fcd271amr1933553f8f.1.1751013102084;
+        Fri, 27 Jun 2025 01:31:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEpAq+GX0z7Tgxlh9jYNr6p5XnDNGBPWZShD8anGUPNisIyuqXuny7kFa3r1rfjaUq4iY4FAQ==
+X-Received: by 2002:a05:6000:1789:b0:3a0:b565:a2cb with SMTP id ffacd0b85a97d-3a97fcd271amr1933506f8f.1.1751013101607;
+        Fri, 27 Jun 2025 01:31:41 -0700 (PDT)
+Received: from fedora (g3.ign.cz. [91.219.240.17])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5979dsm2032976f8f.75.2025.06.27.01.31.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 01:31:40 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>, Sean Christopherson
+ <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ kvm@vger.kernel.org
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org,
+ alanjiang@microsoft.com, chinang.ma@microsoft.com,
+ andrea.pellegrini@microsoft.com, Kevin Tian <kevin.tian@intel.com>, "K. Y.
+ Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+ linux-hyperv@vger.kernel.org, Jeremi Piotrowski
+ <jpiotrowski@linux.microsoft.com>
+Subject: Re: [RFC PATCH 1/1] KVM: VMX: Use Hyper-V EPT flush for local TLB
+ flushes
+In-Reply-To: <4266fc8f76c152a3ffcbb2d2ebafd608aa0fb949.1750432368.git.jpiotrowski@linux.microsoft.com>
+References: <cover.1750432368.git.jpiotrowski@linux.microsoft.com>
+ <4266fc8f76c152a3ffcbb2d2ebafd608aa0fb949.1750432368.git.jpiotrowski@linux.microsoft.com>
+Date: Fri, 27 Jun 2025 10:31:39 +0200
+Message-ID: <875xghoaac.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB8189:EE_|PH7PR12MB7356:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6b523f19-d3c9-4402-36bb-08ddb554831c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|366016|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QTVNSXRueFZmM3VQbTVSL0EyU0xIeWJBaEh3Y1RxTXdZVng4WDVmNVNrY1A5?=
- =?utf-8?B?WnRBRUpLU3BEMWFwTTVVdkszYzFBZ3JzUW1Mak8rV0dHQTFTb2FQTGNRc2Nl?=
- =?utf-8?B?NU9ZYjFJNUR2NW5zZkdlb3NGbmhocmNpeEpDSitiMndYVEtMZjF6bm5CRXZF?=
- =?utf-8?B?eEl1Z3NybS8xOGNqWkdZY004N2VtNDlXQk9TNXZLRVArSElqSzlVbVVDeUxl?=
- =?utf-8?B?WHYxSnUrN0Y3Mk1EWTYrK3E2RWpTeERYUjUwdFNEbFFOOE1OL1lXajB0bFY2?=
- =?utf-8?B?bWpVTzh0OEQwRGtOZ2Nnc2M4RzNDcDAxZmRkWjVYSzFRaDM3R0tjZ25FM1Vh?=
- =?utf-8?B?ZXhVTWhTTXdKRmE3SmZwdjdBVkVEUU5GVXA1YkVkbHFhQUhKckpCNFBYOTJU?=
- =?utf-8?B?cWVScnJTckFyU0kvSmdYWjVvTFR5VVNOQyswbmVNdUVWaS95a2oyVTUvUUk3?=
- =?utf-8?B?MDBzSDU3VUV0ZHlqSUl6Uy9WTm5jcHlWU09SeDg0dXVjR0RSRDVnaXBHbEdM?=
- =?utf-8?B?TmVOVWtTdnFydnRnazBERFdGejBGN1BhTk90TjRaNEo0QzhUYUpZaW1oQmtD?=
- =?utf-8?B?bTJoZkN4UkZUNlkvMG9BTTd4N0NLZXRucDRYbUVkcG0xdEtVSHZBWThsTHBm?=
- =?utf-8?B?cTViTCt4RG00SWI2djkzNFJMQmM0NVdZUkxrQVFSMDRPeGFnT29ZR0lXVFox?=
- =?utf-8?B?dWREcUVuUjY5dU1uSG5QOVZoVlFyNGZSRGExRmtaeHFLaDZrQ2d3RUxRc1B6?=
- =?utf-8?B?TnM0Z29aU1hyZFBNSmtXUmh6YTJ5M1N3alZJQmZucVY4emdGcGxFTVRhNzFY?=
- =?utf-8?B?cFR3N1BaL2JGVzdaSDUzQXVudHJzSG81U0M1RlU1NkJSSzVSRDRRd3FHdnkr?=
- =?utf-8?B?YjZJc1RMdU5uU3JGVVVxSDlkcXB6RFJjVlZBREIycmxFbzNJa1lHR040Mm5h?=
- =?utf-8?B?WVdPTStyMnRIb2x0WDJPdnBwV2FQeGozaXJHcW5TaU8xSEVFbXBoWlR3UXpO?=
- =?utf-8?B?SEVaaXVGcHBIdGt1ejQ3MXI5OCt3TExHRklLQ0gwSmhzcVhrT3VuRkQvWGUw?=
- =?utf-8?B?S3VvNHMvd3lTakU3c2ZkNGovL3VCN1B4T0tkZ2VJT2VyVGpVbzVhSTl1NlQr?=
- =?utf-8?B?UUpGekhPSDRJcnJpMmllV25xclI2TnJLSVpVN2VmQkpVTVFZclNrR1FTa2hR?=
- =?utf-8?B?Qnl1VjFYWjFQa2E1OXdnT0pMTzZkY0Q5QUt0V3JJRGlUTnZZM0RsOWIzZUE0?=
- =?utf-8?B?SjNzQUdTMWt1S3ovK0Nualh4YTU3L3FmT1NlbEdJRFA4M0FmRlVBc2xyRmY3?=
- =?utf-8?B?UXFQNjNWRUFKaXpYbmxJbEd2WFFwSkZHRnpZbEh6aEE1aTNRZExUeDQ3NXlK?=
- =?utf-8?B?N1p6bWk4RkRXOGx1RklQL0pLamxHOGtMd0d1cXN2UEtrTEVTbGFMVEI2OUU5?=
- =?utf-8?B?YWdRMmRka2xLZFB2aU1tRDA5UFA1Nnd3VzEzUjdHdkNnbHlKZG95QnpsRlpw?=
- =?utf-8?B?WllqbXBVSFpoYlU1UWZUZDZHazk3bHVsYktacndFUzR1amEyd05lNTFKcjVH?=
- =?utf-8?B?dnl0SUk1cmlDR3duQTRuWWZ2aVdMdUFpRHhBaW1TMHU4WUJYNENFUGhBMFZj?=
- =?utf-8?B?bzkrK1N3Zm5NR3lpVE91ZGtyZ2E5RUFhWFR5aW55M3lRWmlOUDJpNmJnQ2Jk?=
- =?utf-8?B?Zi9rWVozSHJmM25vaXFUa3VVeHZ5ejRvWlpGRitRV09JVWlVOTN1Nlo5T2xI?=
- =?utf-8?B?WkYxeUsvMm5keHRDZjFWak9XWW1weFlyZ0V6TkpFTW5tMytJL29rU2wvRUpB?=
- =?utf-8?B?OWs5ZEVlRWkvb05GVmh6WGE5cm14cmtyVGoycGo0RkJMd0N4QlhGMEpoYnNS?=
- =?utf-8?B?U0lPaU1wRmVId1Uva2RDb0N3RkM5TU9waXJ2MkpDNE9tc055NGlsNjlwQkFY?=
- =?utf-8?Q?mbIMmuXDWnY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB8189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dm1Edmk0Z3lLNnY3Q3prNnJMUG15Vit1Y245TUVCNEdHVXQzcXE0OHhHekp2?=
- =?utf-8?B?TTZIQmltUHgwN25BL0QyakhEZVJFMlZaeUtuVm1IRWx2Wk1zWVZVaE9TK0RL?=
- =?utf-8?B?MzE1U2xrTThFK2ZtRHNVK2V1NERRNk1pTlpvSmJWU3N0SzRISUlENFI2SzNE?=
- =?utf-8?B?WHNGNVkyMm1jMW8xK0xLVldLUnNZdnExMDNqUFpLcXhsSWNTTHdtTVcwMmhq?=
- =?utf-8?B?UXNYbUJ5cDRXbkw2WUx1NXhvNkVPZERncXdHenZmcFpaMGNGU09iSkpocFdI?=
- =?utf-8?B?RnBqZ2l0OWR5dVVWdmdEbldHamhEeXJ1c0NRVG90Umd4S1lmWGZwUEF6TmZl?=
- =?utf-8?B?bHJpRmptV09LNHd6RDZnT3l3OGNaeENyQzMwNkMxWjNzcUpHdGhjLzNKVmhG?=
- =?utf-8?B?U25xRHQyL1J5bTJZWTZiK3l6WTZtOFNiOU9PdEcyNTdLT3NsM0c0MGJQbkxB?=
- =?utf-8?B?ZEpYcUxiRlZGNzBZbW5EME5GcjFWeGxkZHNuV29aWGFXdkRWVW9PajJvcks2?=
- =?utf-8?B?TitYSzRYcjdRekc3cjFVajdzMGQva3ZMUzNsc0Y1QjZZV0dZa2hJQzA2ODUv?=
- =?utf-8?B?S2hVNGZSVmpOYmZaZHc0VU1xdGdsc2h3MG1HVk9yYTgvQ3kxdm1sUnNQbExC?=
- =?utf-8?B?dnZKR2s3RS9FR0c4Nk9NOFB0b2hyUzgxZXBTMTcrZEZmOFZYbVFGalVPOEp1?=
- =?utf-8?B?bkdiakFVbStvNW5VSHUyc2hCNjJDQlU3eFB5VVRZUWd3VFYrV1pFZS9KNmw3?=
- =?utf-8?B?bjh3N1NWOHlRL0RmbEpwNkkyRUU1V0pZMDdkMjJhTU4rQXluVWV1NWhNa1Qw?=
- =?utf-8?B?MEs1ZnFqclV5MWVWa3NOcStlZkFPNVBaMld0TjRRVDhIakVjZC9lbmZpOHdl?=
- =?utf-8?B?QUU5OWE2RUt2QWFrWWJUTHZKN09MR0NhYmoyTW9IUzl6NWo5Njh2eXNNQnRm?=
- =?utf-8?B?SXo5S1R3MmdoOHFlOFVHVFdWYmFSSlZrckVrNlVpaHRlNDd3bGlwWHpaSjVV?=
- =?utf-8?B?WFBBUTNHMXN1MCtjVStmU0JIQWI1UkQ3cktNRi9obDNHYVovWVZQZTBZM3RE?=
- =?utf-8?B?R0UwMlJQaE9JV1pmNGF3M3NTc2k0cUxaZ1JvK1JxSUNoUStRV3puL0M4YUVq?=
- =?utf-8?B?TDQrL2wzVlZLRlRKcUxBb3p1MVNVZDNXaENrc3puZkw3NzIvTmdtdWwxMFdH?=
- =?utf-8?B?ZjIxWHg2YjlhVnRUem5Yd09WeHAwMFkyT1ZmZ0ExYWQvek4xNXc5WDNPSzR4?=
- =?utf-8?B?amtQM3VYK2U5cTg4MGpLNFFyQkE2aWVnKzhRdTcwM1p2aFRGWmZ4SUVaMm1v?=
- =?utf-8?B?bVduSndjdWNseWwvK3JGb3NzamJ3ZG1ncDJVQlJUc05SY1RnWWUreFZYUk8y?=
- =?utf-8?B?ZWE4WG51Z2tYVWIxMHJveHZkMFYzVUZDTXIwU2pZalo1cUYrV1JKVmFMZTdo?=
- =?utf-8?B?YWxxcEhteml4NmsrSHdLeGM5Y0ZxNzlrL2dESWgzMkp4OUw0bEZyamMrV0o3?=
- =?utf-8?B?NE5WOW9yT2YrVjZhM3BvVitNbmVpeDhnRGl3YndsQURNSDRCTHZQRFQ5UnNL?=
- =?utf-8?B?dmpsbXZUbTRSWVdVUnJnaU5vcjYwSlNWMEFTcktJREZvajhHOEptZURiTkI4?=
- =?utf-8?B?MHhoOGJ0amtxS2JoQkUyZ2NZcUlyUmVoanN1OFBEUzVNOENQRVZFZlN0eUhF?=
- =?utf-8?B?M0hrV2lnVGFRc3JGbms5UFRISTU0SHBzK054ZmhZQWgrNnE4UUZXRTM4cUNu?=
- =?utf-8?B?K0Yxb2FZSTFYWUlzZFIyc0F1UGJQTXNmK1lTUnNtc1ZWMnhaNEZQWUE1WlNt?=
- =?utf-8?B?SjhybURXZG5XZ0FCQ2VZK3pyTUdaWENOeWFFVnRkb0tPNU93TUhXTW1vamVH?=
- =?utf-8?B?WjJvRHNRYWorRjFQdUgwa2RQNHdFNjgyVVFUUGVZSjY4eVdVSjRoL1JvcjY0?=
- =?utf-8?B?K1ZWNDRLUllnTmJlUTZYQ0gzdk55SVVLRmNUN1hraUpjWG1kdmFYVXl0R2x1?=
- =?utf-8?B?ZlhOS1FmZTlNa09KbXlpQXNIT1Fka0NBUkdHRkxYbUNDQUZRemt4ZFlUdGpN?=
- =?utf-8?B?NGNTeDlJZWgrRjJXWHg2Yy9aamwydG9wdEwvSmZNUi8zajhVbVlOeHZSZ3RU?=
- =?utf-8?Q?qRQj6aWUnomHVxwqApq7YrbFw?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b523f19-d3c9-4402-36bb-08ddb554831c
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB8189.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 08:27:54.0212
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 19YPYcshmDlZbpH6bgAH+SylQSo5bQuHa8mjE5/f9qXEn+aZviLStGLaoj6k/ZMmN/5sWS2dRuLc/9Q5vLDuKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7356
+Content-Type: text/plain
 
+Jeremi Piotrowski <jpiotrowski@linux.microsoft.com> writes:
 
-> Extend anon_inode_make_secure_inode() to take superblock parameter and
-> make it available via fs.h. This allows other subsystems to create
-> anonymous inodes with proper security context.
-> 
-> Use this function in secretmem to fix a security regression, where
-> S_PRIVATE flag wasn't cleared after alloc_anon_inode(), causing
-> LSM/SELinux checks to be skipped.
-> 
-> Using anon_inode_make_secure_inode() ensures proper security context
-> initialization through security_inode_init_security_anon().
-> 
-> Fixes: 2bfe15c52612 ("mm: create security context for memfd_secret inodes")
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Suggested-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: Shivank Garg <shivankg@amd.com>
+> Use Hyper-V's HvCallFlushGuestPhysicalAddressSpace for local TLB flushes.
+> This makes any KVM_REQ_TLB_FLUSH_CURRENT (such as on root alloc) visible to
+> all CPUs which means we no longer need to do a KVM_REQ_TLB_FLUSH on CPU
+> migration.
+>
+> The goal is to avoid invept-global in KVM_REQ_TLB_FLUSH. Hyper-V uses a
+> shadow page table for the nested hypervisor (KVM) and has to invalidate all
+> EPT roots when invept-global is issued. This has a performance impact on
+> all nested VMs.  KVM issues KVM_REQ_TLB_FLUSH on CPU migration, and under
+> load the performance hit causes vCPUs to use up more of their slice of CPU
+> time, leading to more CPU migrations. This has a snowball effect and causes
+> CPU usage spikes.
+>
+> By issuing the hypercall we are now guaranteed that any root modification
+> that requires a local TLB flush becomes visible to all CPUs. The same
+> hypercall is already used in kvm_arch_flush_remote_tlbs and
+> kvm_arch_flush_remote_tlbs_range.  The KVM expectation is that roots are
+> flushed locally on alloc and we achieve consistency on migration by
+> flushing all roots - the new behavior of achieving consistency on alloc on
+> Hyper-V is a superset of the expected guarantees. This makes the
+> KVM_REQ_TLB_FLUSH on CPU migration no longer necessary on Hyper-V.
 
-Relying on 'anon_inode_make_secure_inode' for anon inodes LSM/SELinux
-checks seems okay to me.
+Sounds reasonable overall, my only concern (not sure if valid or not) is
+that using the hypercall for local flushes is going to be more expensive
+than invept-context we do today and thus while the performance is
+improved for the scenario when vCPUs are migrating a lot, we will take a
+hit in other cases.
 
-Acked-by: Pankaj Gupta <pankaj.gupta@amd.com>
-
-
+>
+> Coincidentally - we now match the behavior of SVM on Hyper-V.
+>
+> Signed-off-by: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
 > ---
-> The handling of the S_PRIVATE flag for these inodes was discussed
-> extensively ([1], [2], [3]).
-> 
-> As per discussion [3] with Mike and Paul, KVM guest_memfd and secretmem
-> result in user-visible file descriptors, so they should be subject to
-> LSM/SELinux security policies rather than bypassing them with S_PRIVATE.
-> 
-> [1] https://lore.kernel.org/all/b9e5fa41-62fd-4b3d-bb2d-24ae9d3c33da@redhat.com
-> [2] https://lore.kernel.org/all/cover.1748890962.git.ackerleytng@google.com
-> [3] https://lore.kernel.org/all/aFOh8N_rRdSi_Fbc@kernel.org
-> 
-> V3:
-> - Drop EXPORT to be added later in separate patch for KVM guest_memfd and
->    keep this patch focused on fix.
-> 
-> V2: https://lore.kernel.org/all/20250620070328.803704-3-shivankg@amd.com
-> - Use EXPORT_SYMBOL_GPL_FOR_MODULES() since KVM is the only user.
-> 
-> V1: https://lore.kernel.org/all/20250619073136.506022-2-shivankg@amd.com
-> 
->   fs/anon_inodes.c   | 22 +++++++++++++++++-----
->   include/linux/fs.h |  2 ++
->   mm/secretmem.c     |  9 +--------
->   3 files changed, 20 insertions(+), 13 deletions(-)
-> 
-> diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
-> index e51e7d88980a..c530405edd15 100644
-> --- a/fs/anon_inodes.c
-> +++ b/fs/anon_inodes.c
-> @@ -98,14 +98,25 @@ static struct file_system_type anon_inode_fs_type = {
->   	.kill_sb	= kill_anon_super,
->   };
->   
-> -static struct inode *anon_inode_make_secure_inode(
-> -	const char *name,
-> -	const struct inode *context_inode)
-> +/**
-> + * anon_inode_make_secure_inode - allocate an anonymous inode with security context
-> + * @sb:		[in]	Superblock to allocate from
-> + * @name:	[in]	Name of the class of the new file (e.g., "secretmem")
-> + * @context_inode:
-> + *		[in]	Optional parent inode for security inheritance
-> + *
-> + * The function ensures proper security initialization through the LSM hook
-> + * security_inode_init_security_anon().
-> + *
-> + * Return:	Pointer to new inode on success, ERR_PTR on failure.
-> + */
-> +struct inode *anon_inode_make_secure_inode(struct super_block *sb, const char *name,
-> +					   const struct inode *context_inode)
->   {
->   	struct inode *inode;
->   	int error;
->   
-> -	inode = alloc_anon_inode(anon_inode_mnt->mnt_sb);
-> +	inode = alloc_anon_inode(sb);
->   	if (IS_ERR(inode))
->   		return inode;
->   	inode->i_flags &= ~S_PRIVATE;
-> @@ -132,7 +143,8 @@ static struct file *__anon_inode_getfile(const char *name,
->   		return ERR_PTR(-ENOENT);
->   
->   	if (make_inode) {
-> -		inode =	anon_inode_make_secure_inode(name, context_inode);
-> +		inode =	anon_inode_make_secure_inode(anon_inode_mnt->mnt_sb,
-> +						     name, context_inode);
->   		if (IS_ERR(inode)) {
->   			file = ERR_CAST(inode);
->   			goto err;
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index b085f161ed22..040c0036320f 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -3608,6 +3608,8 @@ extern int simple_write_begin(struct file *file, struct address_space *mapping,
->   extern const struct address_space_operations ram_aops;
->   extern int always_delete_dentry(const struct dentry *);
->   extern struct inode *alloc_anon_inode(struct super_block *);
-> +struct inode *anon_inode_make_secure_inode(struct super_block *sb, const char *name,
-> +					   const struct inode *context_inode);
->   extern int simple_nosetlease(struct file *, int, struct file_lease **, void **);
->   extern const struct dentry_operations simple_dentry_operations;
->   
-> diff --git a/mm/secretmem.c b/mm/secretmem.c
-> index 589b26c2d553..9a11a38a6770 100644
-> --- a/mm/secretmem.c
-> +++ b/mm/secretmem.c
-> @@ -195,18 +195,11 @@ static struct file *secretmem_file_create(unsigned long flags)
->   	struct file *file;
->   	struct inode *inode;
->   	const char *anon_name = "[secretmem]";
-> -	int err;
->   
-> -	inode = alloc_anon_inode(secretmem_mnt->mnt_sb);
-> +	inode = anon_inode_make_secure_inode(secretmem_mnt->mnt_sb, anon_name, NULL);
->   	if (IS_ERR(inode))
->   		return ERR_CAST(inode);
->   
-> -	err = security_inode_init_security_anon(inode, &QSTR(anon_name), NULL);
-> -	if (err) {
-> -		file = ERR_PTR(err);
-> -		goto err_free_inode;
-> -	}
-> -
->   	file = alloc_file_pseudo(inode, secretmem_mnt, "secretmem",
->   				 O_RDWR, &secretmem_fops);
->   	if (IS_ERR(file))
+>  arch/x86/include/asm/kvm_host.h |  1 +
+>  arch/x86/kvm/vmx/vmx.c          | 20 +++++++++++++++++---
+>  arch/x86/kvm/vmx/vmx_onhyperv.h |  6 ++++++
+>  arch/x86/kvm/x86.c              |  3 +++
+>  4 files changed, 27 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index b4a391929cdb..d3acab19f425 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1077,6 +1077,7 @@ struct kvm_vcpu_arch {
+>  
+>  #if IS_ENABLED(CONFIG_HYPERV)
+>  	hpa_t hv_root_tdp;
+> +	bool hv_vmx_use_flush_guest_mapping;
+>  #endif
+>  };
+>  
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 4953846cb30d..f537e0df56fc 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1485,8 +1485,12 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
+>  		/*
+>  		 * Flush all EPTP/VPID contexts, the new pCPU may have stale
+>  		 * TLB entries from its previous association with the vCPU.
+> +		 * Unless we are running on Hyper-V where we promotes local TLB
+
+s,promotes,promote, or, as Sean doesn't like pronouns, 
+
+"... where local TLB flushes are promoted ..."
+
+> +		 * flushes to be visible across all CPUs so no need to do again
+> +		 * on migration.
+>  		 */
+> -		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
+> +		if (!vmx_hv_use_flush_guest_mapping(vcpu))
+> +			kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
+>  
+>  		/*
+>  		 * Linux uses per-cpu TSS and GDT, so set these when switching
+> @@ -3243,11 +3247,21 @@ void vmx_flush_tlb_current(struct kvm_vcpu *vcpu)
+>  	if (!VALID_PAGE(root_hpa))
+>  		return;
+>  
+> -	if (enable_ept)
+> +	if (enable_ept) {
+> +		/*
+> +		 * hyperv_flush_guest_mapping() has the semantics of
+> +		 * invept-single across all pCPUs. This makes root
+> +		 * modifications consistent across pCPUs, so an invept-global
+> +		 * on migration is no longer required.
+> +		 */
+> +		if (vmx_hv_use_flush_guest_mapping(vcpu))
+> +			return (void)WARN_ON_ONCE(hyperv_flush_guest_mapping(root_hpa));
+> +
+
+HvCallFlushGuestPhysicalAddressSpace sounds like a heavy operation as it
+affects all processors. Is there any visible perfomance impact of this
+change when there are no migrations (e.g. with vCPU pinning)? Or do we
+believe that Hyper-V actually handles invept-context the exact same way?
+
+>  		ept_sync_context(construct_eptp(vcpu, root_hpa,
+>  						mmu->root_role.level));
+> -	else
+> +	} else {
+>  		vpid_sync_context(vmx_get_current_vpid(vcpu));
+> +	}
+>  }
+>  
+>  void vmx_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t addr)
+> diff --git a/arch/x86/kvm/vmx/vmx_onhyperv.h b/arch/x86/kvm/vmx/vmx_onhyperv.h
+> index cdf8cbb69209..a5c64c90e49e 100644
+> --- a/arch/x86/kvm/vmx/vmx_onhyperv.h
+> +++ b/arch/x86/kvm/vmx/vmx_onhyperv.h
+> @@ -119,6 +119,11 @@ static inline void evmcs_load(u64 phys_addr)
+>  }
+>  
+>  void evmcs_sanitize_exec_ctrls(struct vmcs_config *vmcs_conf);
+> +
+> +static inline bool vmx_hv_use_flush_guest_mapping(struct kvm_vcpu *vcpu)
+> +{
+> +	return vcpu->arch.hv_vmx_use_flush_guest_mapping;
+> +}
+>  #else /* !IS_ENABLED(CONFIG_HYPERV) */
+>  static __always_inline bool kvm_is_using_evmcs(void) { return false; }
+>  static __always_inline void evmcs_write64(unsigned long field, u64 value) {}
+> @@ -128,6 +133,7 @@ static __always_inline u64 evmcs_read64(unsigned long field) { return 0; }
+>  static __always_inline u32 evmcs_read32(unsigned long field) { return 0; }
+>  static __always_inline u16 evmcs_read16(unsigned long field) { return 0; }
+>  static inline void evmcs_load(u64 phys_addr) {}
+> +static inline bool vmx_hv_use_flush_guest_mapping(struct kvm_vcpu *vcpu) { return false; }
+>  #endif /* IS_ENABLED(CONFIG_HYPERV) */
+>  
+>  #endif /* __ARCH_X86_KVM_VMX_ONHYPERV_H__ */
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index b58a74c1722d..cbde795096a6 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -25,6 +25,7 @@
+>  #include "tss.h"
+>  #include "kvm_cache_regs.h"
+>  #include "kvm_emulate.h"
+> +#include "kvm_onhyperv.h"
+>  #include "mmu/page_track.h"
+>  #include "x86.h"
+>  #include "cpuid.h"
+> @@ -12390,6 +12391,8 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>  
+>  #if IS_ENABLED(CONFIG_HYPERV)
+>  	vcpu->arch.hv_root_tdp = INVALID_PAGE;
+> +	vcpu->arch.hv_vmx_use_flush_guest_mapping =
+> +		(kvm_x86_ops.flush_remote_tlbs == hv_flush_remote_tlbs);
+>  #endif
+>  
+>  	r = kvm_x86_call(vcpu_create)(vcpu);
+
+-- 
+Vitaly
 
