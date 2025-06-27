@@ -1,115 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04672D97A3;
-	Fri, 27 Jun 2025 13:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46B782D8DC5;
+	Fri, 27 Jun 2025 13:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751029870; cv=none; b=KKjeWhY82AGpouh7XZ+zjLQq4AKutA7fM26+5C5EiQbybG90A8yXLlpwqUEjU0AcqTvcXdtXYonco6rCTH2nH4CGEsw214DI9LH7obiYg0S1pmVAyRLBmzdVKLAPuY1NQXiYTzzcRmlOdKO+RNaLZBG2DGq7fc5Cq7vc04/usOo=
+	t=1751029883; cv=none; b=V1pvm50S932wQalpB6vmG/pWLC1ZlUmCootBqMIizJo+kGe0pc9bqwXPkUHyN3JACz1x215vcZUyaHtIPhvegQZZAqyQtEoDN5xN9ooQ+ICLNBs3UcO3YnB1vLAnLzShpJy9CKwze866tuiM2mO4mrZ9w+SEIpT2+htR3cV4F+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751029870; c=relaxed/simple;
-	bh=lcJWZqeVwjpFnSWJSZOtJO5vAGFfa9DHinhZvGR946A=;
+	s=arc-20240116; t=1751029883; c=relaxed/simple;
+	bh=4Vxv6m1FLYRrhTVG6vptpa8t9PYLpynpN3yl3kH7qE4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Amy+7JSpMQngncZEItf0t+Pp5GYjEWi6BUwlIGYqwEu3K3HuSpIDhjW0doCJGPoU1bqFwuVMuAK4aky78+n6ep41cvw/uZm75ffNZOmCUaGJY+3ADUZsPpgqwrALEFnrnqJYSrpQKUI4PkdyP7ID17yWvNbJT55C7xN+KjCLcBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e4iB+fR3; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e4iB+fR3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751029869; x=1782565869;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=lcJWZqeVwjpFnSWJSZOtJO5vAGFfa9DHinhZvGR946A=;
-  b=e4iB+fR3iDwIXppqIKgqivWlYbJyt1jXKCv52QaBoOtM9GxSHpZ2i2Or
-   /fMFgN67GgHNNkSXAQQrSQ5maLYZkrgQ4FvadFiCAiNM4mHA/beKG81sP
-   S7d5ajUmlpGhdGYDESu++H+QcKxgBhDk2lstCFfnJHK1CkUorotskOyy4
-   gELazbk1pcbqoRQG1juvgbQ4NTMbAonGNiw3l3WFIPNYo3s2kTqvb/1+t
-   n+0r6HwHfwRJFpRIg4xY6v5PxBG5jSDG0fyi+ScHT3+Qpxe50I4L57a2s
-   sLda+6U5XJEUG8oblR15tpcDH3kqxMpVngF9ztinAj8KPZbQupqVtkL5q
-   w==;
-X-CSE-ConnectionGUID: Hq0d3edhQXayFY74uidzGQ==
-X-CSE-MsgGUID: xYI0mVHxSfyhm7l2wypxYQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="53216376"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="53216376"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 06:11:08 -0700
-X-CSE-ConnectionGUID: X9qCysVXTMOOGGnxCeuv7w==
-X-CSE-MsgGUID: f2/YQqXwSAKxqaMjoJ71Tw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="157348817"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 06:11:05 -0700
-Date: Fri, 27 Jun 2025 16:11:02 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	airlied@gmail.com, simona@ffwll.ch,
-	Krzysztof Karas <krzysztof.karas@intel.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com
-Subject: Re: [PATCH v2 1/2] drm/doc: Fix title underline for "Task
- information"
-Message-ID: <aF6YZmRiPcIGt6F5@black.fi.intel.com>
-References: <20250619140655.2468014-1-andrealmeid@igalia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=KbmcUWx7BynqPbRjkiVr8ZcI+f0rulYev94Y+zCbElRV4abzOL4EoMGiUK+/Yoc/T/TTMNfhNlWtS7aD/dBonM2ZNgqdagwCwyItww1eWy/2r3RLQPiC3YSRwp4QOKQng1RjbQ68pL5Wqw6DIoNbivTcHRZrL57gtRAl3zuj/Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 717AF1A00;
+	Fri, 27 Jun 2025 06:11:04 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81E3F3F66E;
+	Fri, 27 Jun 2025 06:11:19 -0700 (PDT)
+Date: Fri, 27 Jun 2025 14:11:16 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, arm-scmi@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] firmware: arm_scmi: imx: Support getting silicon
+ info of MISC protocol
+Message-ID: <aF6YdPc6z21XNhWQ@pluto>
+References: <20250627-sm-misc-api-v1-v1-0-2b99481fe825@nxp.com>
+ <20250627-sm-misc-api-v1-v1-4-2b99481fe825@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250619140655.2468014-1-andrealmeid@igalia.com>
+In-Reply-To: <20250627-sm-misc-api-v1-v1-4-2b99481fe825@nxp.com>
 
-On Thu, Jun 19, 2025 at 11:06:54AM -0300, André Almeida wrote:
-> Fix the following warning:
+On Fri, Jun 27, 2025 at 02:03:47PM +0800, Peng Fan wrote:
+> MISC protocol supports getting the silicon information including revision
+> number, part number and etc. Add the API for user to retrieve the
+> information from SM.
 > 
-> Documentation/gpu/drm-uapi.rst:450: WARNING: Title underline too short.
-> 
-> Task information
-> --------------- [docutils]
-> 
-> Fixes: cd37124b4093 ("drm/doc: Add a section about "Task information" for the wedge API")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: André Almeida <andrealmeid@igalia.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
-> v2: Add Reported-by tag
-> ---
->  Documentation/gpu/drm-uapi.rst | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  .../firmware/arm_scmi/vendors/imx/imx-sm-misc.c    | 34 ++++++++++++++++++++++
+>  include/linux/scmi_imx_protocol.h                  |  8 +++++
+>  2 files changed, 42 insertions(+)
 > 
-> diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
-> index 263e5a97c080..10dea6a1f097 100644
-> --- a/Documentation/gpu/drm-uapi.rst
-> +++ b/Documentation/gpu/drm-uapi.rst
-> @@ -447,7 +447,7 @@ hang is usually the most critical one which can result in consequential hangs or
->  complete wedging.
+> diff --git a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
+> index 8ce4bf92e6535af2f30d72a34717678613b35049..d5b24bc4d4ca6c19f4cddfaea6e9d9b32a4c92f7 100644
+> --- a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
+> +++ b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
+> @@ -26,6 +26,7 @@ enum scmi_imx_misc_protocol_cmd {
+>  	SCMI_IMX_MISC_CTRL_SET	= 0x3,
+>  	SCMI_IMX_MISC_CTRL_GET	= 0x4,
+>  	SCMI_IMX_MISC_DISCOVER_BUILDINFO = 0x6,
+> +	SCMI_IMX_MISC_SI_INFO = 0xB,
+>  	SCMI_IMX_MISC_CFG_INFO = 0xC,
+>  	SCMI_IMX_MISC_CTRL_NOTIFY = 0x8,
+>  };
+> @@ -79,6 +80,13 @@ struct scmi_imx_misc_cfg_info_out {
+>  	u8 cfgname[MISC_MAX_CFGNAME];
+>  };
 >  
->  Task information
-> ----------------
-> +----------------
-
-Since we're here, can you please also fix the grammar in last sentence
-of this section? I presume you meant to use either "provides" or "should
-have" and not both? ;)
-
-Raag
-
->  The information about which application (if any) was involved in the device
->  wedging is useful for userspace if they want to notify the user about what
-> @@ -728,4 +728,4 @@ Stable uAPI events
->  From ``drivers/gpu/drm/scheduler/gpu_scheduler_trace.h``
+> +struct scmi_imx_misc_si_info_out {
+> +	__le32 deviceid;
+> +	__le32 sirev;
+> +	__le32 partnum;
+> +	u8 siname[MISC_MAX_SINAME];
+> +};
+> +
+>  static int scmi_imx_misc_attributes_get(const struct scmi_protocol_handle *ph,
+>  					struct scmi_imx_misc_info *mi)
+>  {
+> @@ -335,12 +343,38 @@ static int scmi_imx_misc_cfg_info(const struct scmi_protocol_handle *ph,
+>  	return ret;
+>  }
 >  
->  .. kernel-doc::  drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-> -   :doc: uAPI trace events
-> \ No newline at end of file
-> +   :doc: uAPI trace events
-> -- 
-> 2.49.0
-> 
+> +static int scmi_imx_misc_silicon_info(const struct scmi_protocol_handle *ph,
+> +				      struct scmi_imx_misc_system_info *info)
+> +{
+> +	struct scmi_imx_misc_si_info_out *out;
+> +	struct scmi_xfer *t;
+> +	int ret;
+> +
+> +	ret = ph->xops->xfer_get_init(ph, SCMI_IMX_MISC_SI_INFO, 0, sizeof(*out), &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ph->xops->do_xfer(ph, t);
+> +	if (!ret) {
+> +		out = t->rx.buf;
+> +		info->deviceid = le32_to_cpu(out->deviceid);
+> +		info->sirev = le32_to_cpu(out->sirev);
+> +		info->partnum = le32_to_cpu(out->partnum);
+> +		strscpy(info->siname, out->siname, MISC_MAX_SINAME);
+> +	}
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +
+> +	return ret;
+> +}
+> +
+>  static const struct scmi_imx_misc_proto_ops scmi_imx_misc_proto_ops = {
+>  	.misc_cfg_info = scmi_imx_misc_cfg_info,
+>  	.misc_ctrl_set = scmi_imx_misc_ctrl_set,
+>  	.misc_ctrl_get = scmi_imx_misc_ctrl_get,
+>  	.misc_ctrl_req_notify = scmi_imx_misc_ctrl_notify,
+>  	.misc_discover_build_info = scmi_imx_discover_build_info,
+> +	.misc_silicon_info = scmi_imx_misc_silicon_info,
+>  };
+>  
+>  static int scmi_imx_misc_protocol_init(const struct scmi_protocol_handle *ph)
+> diff --git a/include/linux/scmi_imx_protocol.h b/include/linux/scmi_imx_protocol.h
+> index bb0c35b5d6705acddd6c83c31474482a2667b418..0e639dfb5d16e281e2ccf006a63694b316c431f4 100644
+> --- a/include/linux/scmi_imx_protocol.h
+> +++ b/include/linux/scmi_imx_protocol.h
+> @@ -55,6 +55,7 @@ struct scmi_imx_misc_ctrl_notify_report {
+>  #define MISC_MAX_BUILDDATE	16
+>  #define MISC_MAX_BUILDTIME	16
+>  #define MISC_MAX_CFGNAME	16
+> +#define MISC_MAX_SINAME		16
+>  
+>  struct scmi_imx_misc_system_info {
+>  	u32 buildnum;
+> @@ -63,6 +64,11 @@ struct scmi_imx_misc_system_info {
+>  	u8 time[MISC_MAX_BUILDTIME];
+>  	u32 msel;
+>  	u8 cfgname[MISC_MAX_CFGNAME];
+> +	/* silicon */
+> +	u32 deviceid;
+> +	u32 sirev;
+> +	u32 partnum;
+> +	u8 siname[MISC_MAX_SINAME];
+>  };
+
+Same observation here...maybe embed a struct dedicated to this....BUT in
+this case the silicon_info are NOT meant to change during a boot (and
+even across a reboot really) so why a distinct command from build_info
+since both infos has the same lifetime ? (I understand the quality of
+the info returned is drastically different HW vs SW)
+
+>  
+>  struct scmi_imx_misc_proto_ops {
+> @@ -76,6 +82,8 @@ struct scmi_imx_misc_proto_ops {
+>  				    u32 ctrl_id, u32 evt_id, u32 flags);
+>  	int (*misc_discover_build_info)(const struct scmi_protocol_handle *ph,
+>  					struct scmi_imx_misc_system_info *info);
+> +	int (*misc_silicon_info)(const struct scmi_protocol_handle *ph,
+> +				 struct scmi_imx_misc_system_info *info);
+>  };
+>  
+>  /* See LMM_ATTRIBUTES in imx95.rst */
+
+
+Other than this, no strong opinion anyway.
+
+Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
+
+Thanks,
+Cristian
