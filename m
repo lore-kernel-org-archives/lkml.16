@@ -1,76 +1,73 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365C22F1FEA;
-	Fri, 27 Jun 2025 07:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C9F33F6
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751008667; cv=none; b=me32D5GV77OXe7YoqtnjqUdHNe8X/SoztY0gzLsnnp2eKpIS7JxvCuXyzVptEMnCy411VuAq+I4ChJBCjp/dncslZ+wuiQeZLP0dUyvYfGj58y9W8oGWPEcL7rUhrUq/pZgs9MDY2eXNEgGFzNnjdo6+7BPCLkIuNmF+iXwsExs=
+	t=1751008734; cv=none; b=U7fBE87+3ACfJMemUvgdivPgs5DR3h9tWhFVRqoMtpRRjPPIbwNC1D2V6dZgJv4C89HEUY/eaq9ZPK7ExBKuzJgB+9rkA3H/mQ/UoY7kvEYePYsFl3Wmz9S7A0giJ0E428uX1HGl07JLjJxRsGcJaNHkjLxcb4zqEOwCNmJoNQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751008667; c=relaxed/simple;
-	bh=BWGZw+FZlRDQ4aOmdDP8cwTVgpIYK+iKWf50s9UCZoU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F2gGlnPPDRZWzQ3ZQH2ZgvR71gJq+u2a4QQKqYwk8aMzx+zQTBZviGfFSCYTmcpwxbaIHmol1upAwgt2a05g8hoQ80aVmjzUD1jrnE9OrdJ54Y4X0X08BfCgXrx3qh4XNfPVBPxvorlucileEp1H0XEEInCTyfL7ZM4z7OLiM8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WIy2gxhQ; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751008734; c=relaxed/simple;
+	bh=s0MKz0LYCUSl+PREsipx69b8MkTSre17kmQ/gXk2iMo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WsnABAeA5bIE1YyJwmYnjRisxQDOoLWyERwV9Rjvm8+RC17uPVxoXut+felOfoiIiODfmxf8/fcppgEH+jmpcM++dj61qOUvOK+tzicCs19Am/szikNR3QUVAOcRswcidwnkEbxDJKgjWQMtE3cWKu8QDkTQlwAuVIMvHVWu5Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WK1Ktqc1; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WIy2gxhQ"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso1681219b3a.2;
-        Fri, 27 Jun 2025 00:17:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WK1Ktqc1"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-236377f00easo24451985ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 00:18:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751008665; x=1751613465; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5XgMUClXF3KatALn7b4tRRqk6odMfDui0ubzVB6tzUM=;
-        b=WIy2gxhQmFb+j3TpLKZZ9We0O9qCzytaNpcd5MEYLB34l3pZd3DRRzPEFXzWuUUUs4
-         bq1rDRDb1upiz9uNMMxdMhFKYDCNUlgUKuLJ5PFgT7i0BSDnNwonfYvVI7VT5HYB7Jpx
-         lfu10Ekx6U+m+2gHfSYuFmq3HF0zgDh0mtVdmGmI0fWXfRVsvEz5qgFC4TUEFlWplsSc
-         VuwB3/9WE4CxCs5m/WEw74ufh/dUbBhSwRdpadFbDjAoodNmzClPU5QqfGo4hNioT+z/
-         esSvp2pNrVD7wCf3uI3SyKPezeyJN6KBYe9ITRNyGa7FsBMdLH+T6CY5wLxiZTO54Mdh
-         dJvA==
+        d=chromium.org; s=google; t=1751008732; x=1751613532; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EB+J0JTiaeKcpjtbE/NJOgrsuv9/ekzaPkYkdAHom5w=;
+        b=WK1Ktqc1LhT832huhg+VSXhfAXseGg++wsouBjz8FdjZhsQN54Vs8af0FTDoBde9B3
+         /xEjAYSjCLhafeJmmdtWstN14sLWs5BxrFhE+pql10Gr/EXF04jPc2656vmY3DpbTra7
+         SiChav3ZQUVkmBsGiYczLTHgG7BMmGGW6kMKc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751008665; x=1751613465;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5XgMUClXF3KatALn7b4tRRqk6odMfDui0ubzVB6tzUM=;
-        b=IJi+K3aR/vPc+6nrgzkc7P7nzROZpzLnoFedQrM4wWnI/oqj7XAf4NxPy71Zj8J5Hh
-         W+eaI3Lc6cPPlRLk7fD0i9GycOqqRoYZkYc3ALmX/gzFSMietKxMBiS/Tzf8DAUQc3jU
-         2FSKFp9OSyOvt1Irer/FfokJnTSlgdF1CN2w2ZhdUFDlr0SLEzirTeSEE3I1dlkxbYQZ
-         xPXCKVuqLLkbZod98fOs9/eQdbL2rhZAo6nYsKFlW0tfD++uvrxapgJryVdLD9IVKteT
-         zWiofu9ZukqLSBsGPrqvNVcIm+lwBHuLyqRuRiCTpf5SDyToSS77UnwsZInRq/ZkhEul
-         /w1g==
-X-Forwarded-Encrypted: i=1; AJvYcCWu+tvM4Lt+f1dwg0NvxIEugd11Kfr3ZaEPHeuauYk3LkS8WO0Cg1ZKz8Z/kvuziafqBuV6oTv00/M4angm@vger.kernel.org, AJvYcCXZiN9TQL/imtCFI4/npiBy7svKRjJL1QylADii1wqpSzCecceckJNH9hWi0m9I8OTSICZsCbMdtgY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzY0GrN/w6pzck/j9eVuKSANtVP4FrkY4pppJETsqnc5u/ZllNm
-	xeXTYFfBP7NCkRyWyOWcUMSoXR3YBkys9Lb1MrXhTqHPbCwqv5/T+0D58Y7d0dC9oB0=
-X-Gm-Gg: ASbGncvlLg+hYVQGkj9lxv06Ok8W2EiUPofNl3MgBLNY9+h/obHPIAH6D8ZCqQODgyd
-	lJLPRH4KWwOuFayLZOMwAXAdKY8KWzRv0oA3U8IsIIPCxch9k6qArQhc48pMBRkSJa9EZoiikXM
-	/wqcCxIArcL6a3R6gbSfySVQgHR1YxrsffkP+Ml0BRp9xIy9m4YBmjcQJ5U/Lk9ouRSk1EoHJbh
-	0hKU8PimuJCTEX22uBB1o2PNC3A13v3qVYpb61tdNH7Aj611/KGrwXrvAyXuDdUe/oX6sGKo+wz
-	PjzSjmVkSwzauQFgO4hj28OwLOyy3qEYCAD3ug11ESX9puKtsIn07dRFCrY8dEMLIqOgxyKY7X1
-	DohXBSiI=
-X-Google-Smtp-Source: AGHT+IEnlgGJKz4hRMQnHG4OUHuPzELReZvtgZ7r6T+KaQ6GH7+zzfmWiDvo5odncMVXtilKmndjbw==
-X-Received: by 2002:a05:6a00:c8f:b0:748:fd94:e62a with SMTP id d2e1a72fcca58-74af6e51ea9mr2804852b3a.1.1751008665275;
-        Fri, 27 Jun 2025 00:17:45 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c408:a02c:2fc6:2cad:e985:b61d])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af54099besm1558667b3a.9.2025.06.27.00.17.41
+        d=1e100.net; s=20230601; t=1751008732; x=1751613532;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EB+J0JTiaeKcpjtbE/NJOgrsuv9/ekzaPkYkdAHom5w=;
+        b=hDqZPktMkhPm1NB5AW1dXkDECcIYu6KFs9I/9d/pnMVeQhKr9JXGVMqY9Gq9eXULr7
+         TapH/YLzJj7qtEu0RqBJhEYLImis01OV3zgB/H6fN+WeiUrIkx9CgNtuOL+U9qplZBdp
+         vT+DQ+/RLrQsC/F/gC02XnQkG59lmADva7jDm6RI5M6j7WJ3W2ec7LHzIz91DXJFvyoF
+         4BldK76OLTKY80gZg7kPXmlKYJ3zOFJhARtqNuWrk4X/GosbySBgKhEfiXtxA18izRTR
+         ngM89rm0txxiXJVjFyYQ5eMPUgFp7xMbT8iJfZ2lJdf8Pu5q2d7CW7NEtx3e0XUQrIl8
+         pw8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUNXzG5fR3pgGl5nmOqF3ZNhPCR4FCeDEeYmPXeqLlBk0vRLjmqjT6dcORg8y1+i/fzx4hz1tkiZzIjev4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykU7IucbYzmclVcp1jT0zRLSk1OxdY4WNXognAg0g+XM1RPA+J
+	lOvCkDYC81zxofqicjWa1NRXJfmlMG1p2UQM0+HPnBCCXHQJVdMm5atk0OC7Uv72zg==
+X-Gm-Gg: ASbGncs0BfRIieoCSTfJzVfJLIk9R8ldyiH7kmyd3WYGGVs6/U4Npe15reOufAZE+Vw
+	EJztqsjq9Ly7/9QReMl6YSvgu+Z+2mfxf0v37bxkaFD3SO5hJPNqzjEmoD4Z6SGf5vXdiMAK/kk
+	sHHj4lbo/36ePTHn5B7S143e7rXoFN8Lme1AN49W1gPnWeFMnGpNphgwscN8mIRfuRuqcDJSLcV
+	/9ctBsUdfVH0j8hPU/Y5qxfOLhebJbiJcMSHBA3xtLAz86ZUKzCQg3GwQzuNDQvbSppK9pJI9ig
+	7FODRRwKqQG+6aCg+YqeKaBzxLg174yt553E07isVjWAKndWqXh4rezRSb8O/fzW5wazfqIgL6v
+	F6bProo2Om7Sd
+X-Google-Smtp-Source: AGHT+IEniPdeUaDBJqW2J9JxlFM3DDSGnoXCNLODgE1sh4luqIQPy073VHyEhRaenz6+Ej5gQQv+EQ==
+X-Received: by 2002:a17:903:2451:b0:235:5a9:9769 with SMTP id d9443c01a7336-23ac4605d87mr31453005ad.25.1751008732349;
+        Fri, 27 Jun 2025 00:18:52 -0700 (PDT)
+Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:de1c:e88f:de93:cd95])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2f1814sm9316095ad.57.2025.06.27.00.18.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 00:17:44 -0700 (PDT)
-From: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
-To: airlied@gmail.com,
-	simona@ffwll.ch,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	corbet@lwn.net
-Cc: dri-devel@lists.freedesktop.org,
-	linux-doc@vger.kernel.org,
+        Fri, 27 Jun 2025 00:18:51 -0700 (PDT)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Minchan Kim <minchan@kernel.org>,
+	Rahul Kumar <rk0006818@gmail.com>,
+	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	kevinpaul468@gmail.com
-Subject: [PATCH] workaround for Sphinx false positive preventing index
-Date: Fri, 27 Jun 2025 12:46:28 +0530
-Message-Id: <20250627071628.30258-1-kevinpaul468@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH] zram: pass buffer offset to zcomp_available_show()
+Date: Fri, 27 Jun 2025 16:18:21 +0900
+Message-ID: <20250627071840.1394242-1-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+In-Reply-To: <20250627035256.1120740-1-rk0006818@gmail.com>
+References: <20250627035256.1120740-1-rk0006818@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,51 +76,123 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Functions drm_format_info, drm_modeset_lock, drm_ioctl_flags are not being
-indexed in the documentation because there are structs with the same name 
-and sphinx is only indexing one of them, Added them to namespaces as a
-workaround for suppressing the warnings and indexing the functions
+In most cases zcomp_available_show() is the only emitting
+function that is called from sysfs read() handler, so it
+assumes that there is a whole PAGE_SIZE buffer to work with.
+There is an exception, however: recomp_algorithm_show().
 
+In recomp_algorithm_show() we prepend the buffer with
+priority number before we pass it to zcomp_available_show(),
+so it cannot assume PAGE_SIZE anymore and must take
+recomp_algorithm_show() modifications into consideration.
+Therefore we need to pass buffer offset to zcomp_available_show().
 
+Also convert it to use sysfs_emit_at(), to stay aligned
+with the rest of zram's sysfs read() handlers.
 
-Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
+On practice we are never even close to using the whole PAGE_SIZE
+buffer, so that's not a critical bug, but still.
+
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- Documentation/gpu/drm-kms.rst  | 2 ++
- Documentation/gpu/drm-uapi.rst | 1 +
- 2 files changed, 3 insertions(+)
+ drivers/block/zram/zcomp.c    | 15 +++++++--------
+ drivers/block/zram/zcomp.h    |  2 +-
+ drivers/block/zram/zram_drv.c |  9 +++++----
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/gpu/drm-kms.rst b/Documentation/gpu/drm-kms.rst
-index abfe220764e1..da865ba1c014 100644
---- a/Documentation/gpu/drm-kms.rst
-+++ b/Documentation/gpu/drm-kms.rst
-@@ -357,6 +357,7 @@ Format Functions Reference
- .. kernel-doc:: include/drm/drm_fourcc.h
-    :internal:
+diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
+index d26a58c67e95..b1bd1daa0060 100644
+--- a/drivers/block/zram/zcomp.c
++++ b/drivers/block/zram/zcomp.c
+@@ -8,6 +8,7 @@
+ #include <linux/sched.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/vmalloc.h>
++#include <linux/sysfs.h>
  
-+.. c:namespace:: gpu_drm_fourcc
- .. kernel-doc:: drivers/gpu/drm/drm_fourcc.c
-    :export:
+ #include "zcomp.h"
  
-@@ -473,6 +474,7 @@ KMS Locking
- .. kernel-doc:: include/drm/drm_modeset_lock.h
-    :internal:
+@@ -89,23 +90,21 @@ bool zcomp_available_algorithm(const char *comp)
+ }
  
-+.. c:namespace:: gpu_drm_modeset_lock
- .. kernel-doc:: drivers/gpu/drm/drm_modeset_lock.c
-    :export:
+ /* show available compressors */
+-ssize_t zcomp_available_show(const char *comp, char *buf)
++ssize_t zcomp_available_show(const char *comp, char *buf, ssize_t at)
+ {
+-	ssize_t sz = 0;
+ 	int i;
  
-diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
-index 69f72e71a96e..37a2bc461326 100644
---- a/Documentation/gpu/drm-uapi.rst
-+++ b/Documentation/gpu/drm-uapi.rst
-@@ -554,6 +554,7 @@ DRM specific patterns. Note that ENOTTY has the slightly unintuitive meaning of
- .. kernel-doc:: include/drm/drm_ioctl.h
-    :internal:
+ 	for (i = 0; i < ARRAY_SIZE(backends) - 1; i++) {
+ 		if (!strcmp(comp, backends[i]->name)) {
+-			sz += scnprintf(buf + sz, PAGE_SIZE - sz - 2,
+-					"[%s] ", backends[i]->name);
++			at += sysfs_emit_at(buf, at, "[%s] ",
++					    backends[i]->name);
+ 		} else {
+-			sz += scnprintf(buf + sz, PAGE_SIZE - sz - 2,
+-					"%s ", backends[i]->name);
++			at += sysfs_emit_at(buf, at, "%s ", backends[i]->name);
+ 		}
+ 	}
  
-+.. c:namespace:: gpu_drm
- .. kernel-doc:: drivers/gpu/drm/drm_ioctl.c
-    :export:
+-	sz += scnprintf(buf + sz, PAGE_SIZE - sz, "\n");
+-	return sz;
++	at += sysfs_emit_at(buf, at, "\n");
++	return at;
+ }
  
+ struct zcomp_strm *zcomp_stream_get(struct zcomp *comp)
+diff --git a/drivers/block/zram/zcomp.h b/drivers/block/zram/zcomp.h
+index 4acffe671a5e..eacfd3f7d61d 100644
+--- a/drivers/block/zram/zcomp.h
++++ b/drivers/block/zram/zcomp.h
+@@ -79,7 +79,7 @@ struct zcomp {
+ 
+ int zcomp_cpu_up_prepare(unsigned int cpu, struct hlist_node *node);
+ int zcomp_cpu_dead(unsigned int cpu, struct hlist_node *node);
+-ssize_t zcomp_available_show(const char *comp, char *buf);
++ssize_t zcomp_available_show(const char *comp, char *buf, ssize_t at);
+ bool zcomp_available_algorithm(const char *comp);
+ 
+ struct zcomp *zcomp_create(const char *alg, struct zcomp_params *params);
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 385aaaa2531b..8acad3cc6e6e 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -1225,12 +1225,13 @@ static void comp_algorithm_set(struct zram *zram, u32 prio, const char *alg)
+ 	zram->comp_algs[prio] = alg;
+ }
+ 
+-static ssize_t __comp_algorithm_show(struct zram *zram, u32 prio, char *buf)
++static ssize_t __comp_algorithm_show(struct zram *zram, u32 prio,
++				     char *buf, ssize_t at)
+ {
+ 	ssize_t sz;
+ 
+ 	down_read(&zram->init_lock);
+-	sz = zcomp_available_show(zram->comp_algs[prio], buf);
++	sz = zcomp_available_show(zram->comp_algs[prio], buf, at);
+ 	up_read(&zram->init_lock);
+ 
+ 	return sz;
+@@ -1387,7 +1388,7 @@ static ssize_t comp_algorithm_show(struct device *dev,
+ {
+ 	struct zram *zram = dev_to_zram(dev);
+ 
+-	return __comp_algorithm_show(zram, ZRAM_PRIMARY_COMP, buf);
++	return __comp_algorithm_show(zram, ZRAM_PRIMARY_COMP, buf, 0);
+ }
+ 
+ static ssize_t comp_algorithm_store(struct device *dev,
+@@ -1416,7 +1417,7 @@ static ssize_t recomp_algorithm_show(struct device *dev,
+ 			continue;
+ 
+ 		sz += sysfs_emit_at(buf, sz, "#%d: ", prio);
+-		sz += __comp_algorithm_show(zram, prio, buf + sz);
++		sz += __comp_algorithm_show(zram, prio, buf, sz);
+ 	}
+ 
+ 	return sz;
 -- 
-2.39.5
+2.50.0.727.gbf7dc18ff4-goog
 
