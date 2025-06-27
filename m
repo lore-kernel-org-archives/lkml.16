@@ -1,70 +1,70 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1431E41C63
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6810B1C5F10
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751001781; cv=none; b=MXnsYHpW5GwD9z2CTbWrG5ReFcIV6pMsZYAFmhglLQSchKxtXpusAOw5mu1sbm4gtkgZFfWioLubDLD2rGu66CUS0PeTrQR3NfEHt+fOvYv/rO5LP4PYodzaf9Bf3zW8f9BS+iNUxZD7HI7L/SajfRoU8jI59X7fyU5xSKU8JfM=
+	t=1751001829; cv=none; b=sC/whYSmwCpPKDrIoG2Mwa8uSWRePccQCyatCcmwwGlCuWOUFDJYq6TZZAezO8Q8pEIVIy5pYlfePsEF4ycrN8YjoQmqqGRhwPAky5brzjMubwgFFfrMFHczSvV5eKsE40VaCF4RqmqVrVCNPCY6h3Ml3KLgzMiVlZty2r1JaM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751001781; c=relaxed/simple;
-	bh=aUr8TZECzOn15DZq6wR7TF8mTexxly6x410wdhMAY7E=;
+	s=arc-20240116; t=1751001829; c=relaxed/simple;
+	bh=SiH7xridhHLVUbjwk1VSxv1+eCF5hmb0du6+goXv3Z8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gU3oiq0gCoG58gGArXBVZfUygEguh/TEwGGgX1eiECVibxmxBe7PInO4nS3e+95iX9XR/Z4szoqNsJkvEcRsaSUGwDw17cGDR2hUn3vpcCVlm1hSyLXsmtz7BqUL5iiOgCcsI7LZ/hkVGmKPiVtaPXefeSJUZAENFsO5BhGTRAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hnPGvrfS; arc=none smtp.client-ip=209.85.167.51
+	 To:Cc:Content-Type; b=cDc/19PTrniHqhMwLy2jFtmA8dTgz1L7vRpVcT60/cfJDzdfwwz3O6Qmedc9t1SZBHfcxkLEorm7+0Pkeo6370fPL5Fo6vuhmyo6hrn87G3ECkHkQpXtWdrhUBSOy+/rdUOEKhO1gUE9OUFXiTS7C7q3yV6jxMlcYrIUo9fiUcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OJbuPpun; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hnPGvrfS"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5532a30ac45so1623289e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:22:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OJbuPpun"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553dceb345eso1751576e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:23:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751001778; x=1751606578; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751001825; x=1751606625; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wMR9DDKVoZLB02tWU9/iY5aDzbALx9JilNraIO+BE6Q=;
-        b=hnPGvrfSfQ3otJOzl5lJbph+h3siZaEjBDky4v2kxmqdRvI3pyd50WNFCp7k2DGEU6
-         1EE2xtoOaE4kOT++FD7hhuzlrSkdPDorjt2GTnTjcv/BIWs5PD3gDs7NRYB3oHBvDsnB
-         78BwRA9rwRESc4/fkuwiQxCY9HFHejbeg5F4NmhZuxZkCvWFjn5sgOZ5tAuXoAO9o2RH
-         5NJTb3uhaaFRKt/VGCWv8Bu0E0LIXZ/UpwGCo8ddK9/2kNuaJ2gNoRCkKSUFaal3tOfT
-         pfYD4nX120P2N1Y/o+CSyQfUPpTI6jaS5Se8upfh5MdX6ibxNf4Xo4AOYCpO04N8CcCk
-         BSGQ==
+        bh=SiH7xridhHLVUbjwk1VSxv1+eCF5hmb0du6+goXv3Z8=;
+        b=OJbuPpunTKwf9CcIgUHMnwTB0D04/IE5lfzn3aGfwBhG6KOeb8uEKaRNcwS0lxZMAn
+         FdshKYPUSRKJbFWHH4Kpo4eOr1q2i2WAa0c+Mx6vmJeJTR/dJqfAOjwnG3nJRXATSq6h
+         8jaDQq+dz1XItwHDGxM92u0bgFCu4JKel+xNUmKHTgTXwFA+XA4DfT4ViikgShYL/UAt
+         bHEKZStw+ZnLx8pv7Qzoo7f03ogEp1xq4FTeaBD2LJYFRHM10xoo6FHGDz2B9IwYqfDQ
+         HewAzVwYvj4HRGWlFRdogUOmfkxKmVNwWSx5u7E0+dbPCRR0qXbXcfNW4KtOIXdwCXBM
+         e69w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751001778; x=1751606578;
+        d=1e100.net; s=20230601; t=1751001825; x=1751606625;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wMR9DDKVoZLB02tWU9/iY5aDzbALx9JilNraIO+BE6Q=;
-        b=UnoDiufL/rXZIEa/wsPU55GJTt8iZiuFwAr/k3DoFhc8x2b0FzjgD4vAsyBYEexiwU
-         xOS42Ktsk7+htXitjbzGvAO9iP7CnZIjOF0xyYsvyK62nj0ceD8F/Uiv0CJSYbIcfER+
-         2eTfkXvRQZlGPI8cGIaB0raJpuWamADKFHhChD5E49AFDZqLoal6IjrQypyqkex7O8a3
-         cgyYHhVF81KvlN7bKPCu+xxvG4YF4S7R2SHY1Iagg/C5vc/Y9wYoHNIJxvECndp5WLDc
-         DUAC7eGrSJrP6fzJ7Va5RwpVt6rQf7SsML+sG4mWuswQqLaRm+aGtDlRPo9q4YkwKi5B
-         lV7w==
-X-Gm-Message-State: AOJu0YyimzAEG0/m6CZ6Luk3vnnL+YqWR+/mSuV7ceHY+7pUXGsSS/lr
-	s9gyF8hbPQWX/C9vYUEiVytxGW67lFwz/KxcCumOheG4pdi2pBxPLclk3O6fCH0TGndgxma9Isp
-	Wyx2uCKTSvKTkE0X4brFFgOuE+b7el68sMzr8O3w=
-X-Gm-Gg: ASbGnctCqZsdZf4iissDGURoYs2Pcs19s59OBLxkC973JRbVOw+uOxKcXSv+TKvrzpo
-	LRUJGXe2t61LtBuaNMoATAJ03K2dnnFPebwb4sAbap06szb+aEjElj2M/dpDo0Yi2BwjvZZT9m/
-	m6aSCJr/nQNMd7IPNXJvuwR4BbTMqOGbMiqB/3w0dKl3guFuutVHU9fk8PtuSDm1h0bNG7BHox
-X-Google-Smtp-Source: AGHT+IGBUmLHUHlyHy3bRmJvqlQWLFAu6V4YAO5HstEpvKInbDwkITqOvl/+ZrRmAUVfyeJuXU3HuKGr/IzzVao21Hk=
-X-Received: by 2002:ac2:57c5:0:b0:553:cf72:45d3 with SMTP id
- 2adb3069b0e04-5550c2bfeaemr338971e87.3.1751001777848; Thu, 26 Jun 2025
- 22:22:57 -0700 (PDT)
+        bh=SiH7xridhHLVUbjwk1VSxv1+eCF5hmb0du6+goXv3Z8=;
+        b=Ml0NCmBYvft9JLtqCyPUR4m47AknlnVy/917r0yin/WwvPbMwU8KUcYQX/pMp95g6H
+         0/hDzynZx3aQdJn8whPz602/GdO9Xsp17H/L0Jn8+M0xUxNvSEV+u7C2wLvjPQ830H6z
+         zicrs8TXRpBU/yv9Wz9CjTleWnC5Z7Yb3pKnWWwy38ET8+lu2ARVes09SaomPCyDJB8t
+         J3d+qMwtCZ/47iWR5PmXJaY43JFBHnQ993wzJ1mUufbNq6JmaWgTt2AuAzL1Mj3ajK08
+         xB5HkU11Rc4PLBIf2SsI/D/QEDBORw24IBhlsA8/6ou9ZWrU9nNrabwD1OpJfYvgKBqr
+         aUig==
+X-Gm-Message-State: AOJu0YxW6XiXGZI24QrKoeJCRsw7soPQu+K1tyo10RI7J0qYHewVpoZh
+	qIho3Gu78nW7EbmK/NEQQmvZaD6B+GPwGqbH290axU9NQc/w18SN7ci6BeRgCk3Liix+9zbKFgH
+	vV7ec2XQHaglIcSiqDcdJdzfs0Arqj3ZGfJ7WXqc=
+X-Gm-Gg: ASbGncuxkio07Dyn4otkuICpfHr6l7KoY4ohZhNGkWhe1604iiUgePpUdH+fNIu6ZAe
+	R6HK2CWduZJUAREvvapqk/iqE+WqIBmozg9kToegOPLGZxFoVl6/0oYbAtviDs9XwKNyzSNxXTG
+	aNIsdOK10O0r5hHm1Z5eXKrrcA5kUqXTIZrfGk/J6NhQdm0R9S35DgW1p1ROTwriKVin5inniK
+X-Google-Smtp-Source: AGHT+IE7lh4Q86gUh7l+Je06VBoRyg78BwI5g+/EKXqdZ1rAx6T+4jk0dsMVX/4rkMiqNvzdEzscayOuzGcNrtzMVgA=
+X-Received: by 2002:a05:6512:b9f:b0:553:2698:99c0 with SMTP id
+ 2adb3069b0e04-5550b899c7amr639611e87.36.1751001825184; Thu, 26 Jun 2025
+ 22:23:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626124327.667087805@linutronix.de> <20250626131708.419101339@linutronix.de>
-In-Reply-To: <20250626131708.419101339@linutronix.de>
+References: <20250626124327.667087805@linutronix.de> <20250626131708.482362835@linutronix.de>
+In-Reply-To: <20250626131708.482362835@linutronix.de>
 From: John Stultz <jstultz@google.com>
-Date: Thu, 26 Jun 2025 22:22:46 -0700
-X-Gm-Features: Ac12FXxEqKGa622Jk3Wd1qpsoRqhXK8q4rXtoQYbAaF1kiVczxTsdIaAUY9DiaU
-Message-ID: <CANDhNCrxj9w+mcKOiGuOuLgJ26SairQTJ0Sqv8XteUtJRyWdwA@mail.gmail.com>
-Subject: Re: [patch 1/3] timekeeping: Provide ktime_get_clock_ts64()
+Date: Thu, 26 Jun 2025 22:23:33 -0700
+X-Gm-Features: Ac12FXzM8-aep28R3IArGsJAukHjUz6095wlNSKyugOJbuE92Ig0D61cQdWf210
+Message-ID: <CANDhNCoxEYtcmy9fRXOEgqZAEbanFU5A3aous=vG4aBe36Qh8g@mail.gmail.com>
+Subject: Re: [patch 2/3] ptp: Use ktime_get_clock_ts64() for timestamping
 To: Thomas Gleixner <tglx@linutronix.de>
 Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
 	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
@@ -80,78 +80,19 @@ Content-Transfer-Encoding: quoted-printable
 On Thu, Jun 26, 2025 at 6:27=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
 > wrote:
 >
-> PTP implements an inline switch case for taking timestamps from various
-> POSIX clock IDs, which already consumes quite some text space. Expanding =
-it
-> for auxiliary clocks really becomes too big for inlining.
+> The inlined ptp_read_system_[pre|post]ts() switch cases expand to a copio=
+us
+> amount of text in drivers, e.g. ~500 bytes in e1000e. Adding auxiliary
+> clock support to the inlines would increase it further.
 >
-> Provide a out of line version.
+> Replace the inline switch case with a call to ktime_get_clock_ts64(), whi=
+ch
+> reduces the code size in drivers and allows to access auxiliary clocks on=
+ce
+> they are enabled in the IOCTL parameter filter.
 >
-> The function invalidates the timestamp in case the clock is invalid. The
-> invalidation allows to implement a validation check without the need to
-> propagate a return value through deep existing call chains.
+> No functional change.
 >
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  include/linux/timekeeping.h |    1 +
->  kernel/time/timekeeping.c   |   34 ++++++++++++++++++++++++++++++++++
->  2 files changed, 35 insertions(+)
->
-> --- a/include/linux/timekeeping.h
-> +++ b/include/linux/timekeeping.h
-> @@ -44,6 +44,7 @@ extern void ktime_get_ts64(struct timesp
->  extern void ktime_get_real_ts64(struct timespec64 *tv);
->  extern void ktime_get_coarse_ts64(struct timespec64 *ts);
->  extern void ktime_get_coarse_real_ts64(struct timespec64 *ts);
-> +extern void ktime_get_clock_ts64(clockid_t id, struct timespec64 *ts);
->
->  /* Multigrain timestamp interfaces */
->  extern void ktime_get_coarse_real_ts64_mg(struct timespec64 *ts);
-> --- a/kernel/time/timekeeping.c
-> +++ b/kernel/time/timekeeping.c
-> @@ -1636,6 +1636,40 @@ void ktime_get_raw_ts64(struct timespec6
->  EXPORT_SYMBOL(ktime_get_raw_ts64);
->
->  /**
-> + * ktime_get_clock_ts64 - Returns time of a clock in a timespec
-> + * @id:                POSIX clock ID of the clock to read
-> + * @ts:                Pointer to the timespec64 to be set
-> + *
-> + * The timestamp is invalidated (@ts->sec is set to -1) if the
-> + * clock @id is not available.
-> + */
-> +void ktime_get_clock_ts64(clockid_t id, struct timespec64 *ts)
-> +{
-> +       /* Invalidate time stamp */
-> +       ts->tv_sec =3D -1;
-> +       ts->tv_nsec =3D 0;
-> +
-> +       switch (id) {
-> +       case CLOCK_REALTIME:
-> +               ktime_get_real_ts64(ts);
-> +               return;
-> +       case CLOCK_MONOTONIC:
-> +               ktime_get_ts64(ts);
-> +               return;
-> +       case CLOCK_MONOTONIC_RAW:
-> +               ktime_get_raw_ts64(ts);
-> +               return;
-> +       case CLOCK_AUX ... CLOCK_AUX_LAST:
-> +               if (IS_ENABLED(CONFIG_POSIX_AUX_CLOCKS))
-> +                       ktime_get_aux_ts64(id, ts);
-> +               return;
-> +       default:
-> +               WARN_ON_ONCE(1);
-> +       }
-> +}
-> +EXPORT_SYMBOL_GPL(ktime_get_clock_ts64);
 
-While I recognize this is mainly focused on the ptp use case, as the
-interface looks generic from headers point of view, should we add the
-other clockids for completeness?
-
-Other than that,
 Acked-by: John Stultz <jstultz@google.com>
-
-thanks
--john
