@@ -1,287 +1,97 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E695293B44
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CAB293C66;
+	Fri, 27 Jun 2025 09:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751015595; cv=none; b=T5wJCqfUkf4SbWX8pzPwcZxJJAdZIWxDe5alE8P3+GR537o7+4hfIf3k7SNFwe/suM7X6CV7sx+FNWZ/Y45N0TdokEAyzq1Ne095ytwTrpF1bAQXg12l6C/JvDkzrKc4n8IWZDtdeuED7CtwiRr1NCcQvXfxH3U2x8svQKvNgb4=
+	t=1751015606; cv=none; b=lUaE+VmLQcUE5lDcaztPsotj/pRamfEsViGnk7cZWn3QFGyvkmd8GN6wqLatdHVOqGpcR4xrQw2JM+cRKp82e733uv9uMXUjkdUALvz0MZoFQyWk7qR4XgH+wE8U92lIQDwYBX9ulTvABcfgN+W1F5MFyi5B9gz02MAuRgHSyJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751015595; c=relaxed/simple;
-	bh=CW9dRrxzJsbZj7d/cQox7XcDlQ0KFU2RLYYIYS+YKec=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ipgSRisiqtXJxGblvbP5zx5xmPH9G/Ptmt0sp+DkcteegAszZxn2GH2tclHNgTNEaLJdhtPrcyL+8KXL7DwuKzFZ6E313/HqXBlOJjkMcYkV56+RLgqPz/lnCA1pXJ0RHZGPC0O657Yn1VTjvGCeZ6mGmYCl2TLxYMhRfvi2lkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0r2AvZzQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Cw7qgBzE; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0r2AvZzQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Cw7qgBzE; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751015606; c=relaxed/simple;
+	bh=poWVzOnHetZgZU7IdKfAmHG/waKkAXe7Ld6cd9s7APc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M5MK8fWV3iYfxFWXr6BF8btHtVb9jyjdbfpFjZOpabIDixcj76OVhTf7bkQbzWYcVeodwKZIQlfN8/lNgileu2d6U5PKk0Dxiw4x4m5ZsghUhV+LsN0d8TL0CJd7+6LfjLCOCNlS9domi2U1JuknW+hByOVvke3AYYSWgW0Vk4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bwkUVUgA; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0r2AvZzQ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Cw7qgBzE";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0r2AvZzQ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Cw7qgBzE"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 543A521168;
-	Fri, 27 Jun 2025 09:13:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751015591; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mHSKn2TBs2JAIZha6EG+kAH1cFbN9zY+1x5JS8zFklo=;
-	b=0r2AvZzQO+EesVNyZmAbZL48pPDcKRDe0qETAcjRENL8jdAYwWuZeDIxGhEmUOkEDEUUSI
-	n87b1AlkzTNBlYgGoQdwPa3VAqzry0sQbSIwUF/xQW+54MqBEx1cVMLQX1X7TvaAlN+uNM
-	Iuv9avTlB9Qjn8h3k6X1mGccHPOnsXM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751015591;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mHSKn2TBs2JAIZha6EG+kAH1cFbN9zY+1x5JS8zFklo=;
-	b=Cw7qgBzEz688YWnXaN/BY/xv2HAmrBXkvDSObChPx3ej0+rIZYrajq6cNYsqFnzz4Bbs24
-	toQboJhVYpN+J/Bg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751015591; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mHSKn2TBs2JAIZha6EG+kAH1cFbN9zY+1x5JS8zFklo=;
-	b=0r2AvZzQO+EesVNyZmAbZL48pPDcKRDe0qETAcjRENL8jdAYwWuZeDIxGhEmUOkEDEUUSI
-	n87b1AlkzTNBlYgGoQdwPa3VAqzry0sQbSIwUF/xQW+54MqBEx1cVMLQX1X7TvaAlN+uNM
-	Iuv9avTlB9Qjn8h3k6X1mGccHPOnsXM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751015591;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mHSKn2TBs2JAIZha6EG+kAH1cFbN9zY+1x5JS8zFklo=;
-	b=Cw7qgBzEz688YWnXaN/BY/xv2HAmrBXkvDSObChPx3ej0+rIZYrajq6cNYsqFnzz4Bbs24
-	toQboJhVYpN+J/Bg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 22031138A7;
-	Fri, 27 Jun 2025 09:13:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id qW/TBqdgXmh6aAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 27 Jun 2025 09:13:11 +0000
-Message-ID: <3b3feb03-c417-4569-b7b0-44565d7cce4f@suse.de>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bwkUVUgA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=jm4R/gQ1agew1insNV1QFxJtrJoIL+kzIrLuWUHpbLw=; b=bwkUVUgA1yQ6yfsPR8uVtfI39r
+	KN4WCmC9f8s3NSJujCXr7Zi4Sk18FCbCBFmxt4XhBQbgPHlFdy3u5cUZVaEJuYAg9n40KyepMrbQK
+	RwYW/bObLrrdSsPZjZppOyfH+6jS1JqfO4qLsn2LvpmQXsLBIarS4i5Db3EF1PckJZdeneDwTPw8K
+	Rij7AoW/mHkOAzv4G6iUHGgNXiSDsRMGV5iHO68UsMnYpSu516bbEzebbtstDkhsRGheE5Wkzpi6T
+	zNm+yukOhGzytWL/l7BaWD9nHQqvsrhHECwXQ9GlIDk+dkmUVWoZaC5HojsVvDMKRVqt7x74dHgS3
+	DCVMovCQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uV58x-00000006HbP-3n0F;
+	Fri, 27 Jun 2025 09:13:12 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B81ED300222; Fri, 27 Jun 2025 11:13:10 +0200 (CEST)
 Date: Fri, 27 Jun 2025 11:13:10 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Weinan Liu <wnliu@google.com>,
+	Fazla Mehrab <a.mehrab@bytedance.com>,
+	Chen Zhongjin <chenzhongjin@huawei.com>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Dylan Hatch <dylanbhatch@google.com>
+Subject: Re: [PATCH v3 17/64] objtool: Fix weak symbol detection
+Message-ID: <20250627091310.GT1613200@noisy.programming.kicks-ass.net>
+References: <cover.1750980516.git.jpoimboe@kernel.org>
+ <19b1efe3f1f6bac2268497e609d833903aa99599.1750980517.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fbdev: efifb: do not load efifb if PCI BAR has changed
- but not fixuped
-To: oushixiong1025@163.com, Helge Deller <deller@gmx.de>
-Cc: Peter Jones <pjones@redhat.com>, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Shixiong Ou <oushixiong@kylinos.cn>
-References: <20250626094937.515552-1-oushixiong1025@163.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250626094937.515552-1-oushixiong1025@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_TO(0.00)[163.com,gmx.de];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[163.com,gmx.de];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <19b1efe3f1f6bac2268497e609d833903aa99599.1750980517.git.jpoimboe@kernel.org>
 
-Hi
-
-Am 26.06.25 um 11:49 schrieb oushixiong1025@163.com:
-> From: Shixiong Ou <oushixiong@kylinos.cn>
->
-> [WHY]
-> On an ARM machine, the following log is present:
-> [    0.900884] efifb: framebuffer at 0x1020000000, using 3072k, total 3072k
-> [    2.297884] amdgpu 0000:04:00.0: remove_conflicting_pci_framebuffers: bar 0: 0x1000000000 -> 0x100fffffff
-> [    2.297886] amdgpu 0000:04:00.0: remove_conflicting_pci_framebuffers: bar 2: 0x1010000000 -> 0x10101fffff
-> [    2.297888] amdgpu 0000:04:00.0: remove_conflicting_pci_framebuffers: bar 5: 0x58200000 -> 0x5823ffff
->
-> It show that the efifb framebuffer base is out of PCI BAR, and this
-> results in both efi-framebuffer and amdgpudrmfb co-existing.
->
-> The fbcon will be bound to efi-framebuffer by default and cannot be used.
->
-> [HOW]
-> Do not load efifb driver if PCI BAR has changed but not fixuped.
-> In the following cases:
-> 	1. screen_info_lfb_pdev is NULL.
-> 	2. __screen_info_relocation_is_valid return false.
-
-Apart from ruling out invalid screen_info, did you figure out why the 
-relocation tracking didn't work? It would be good to fix this if possible.
-
-Best regards
-Thomas
-
->
-> Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+On Thu, Jun 26, 2025 at 04:55:04PM -0700, Josh Poimboeuf wrote:
+> find_symbol_hole_containing() fails to find a symbol hole (aka stripped
+> weak symbol) if its section has no symbols before the hole.  This breaks
+> weak symbol detection if -ffunction-sections is enabled.
+> 
+> Fix that by allowing the interval tree to contain section symbols, which
+> are always at offset zero for a given section.
+> 
+> Fixes a bunch of (-ffunction-sections) warnings like:
+> 
+>   vmlinux.o: warning: objtool: .text.__x64_sys_io_setup+0x10: unreachable instruction
+> 
+> Fixes: 4adb23686795 ("objtool: Ignore extra-symbol code")
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 > ---
->   drivers/video/fbdev/efifb.c     |  4 ++++
->   drivers/video/screen_info_pci.c | 24 ++++++++++++++++++++++++
->   include/linux/screen_info.h     |  5 +++++
->   3 files changed, 33 insertions(+)
->
-> diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
-> index 0e1bd3dba255..de8d016c9a66 100644
-> --- a/drivers/video/fbdev/efifb.c
-> +++ b/drivers/video/fbdev/efifb.c
-> @@ -303,6 +303,10 @@ static void efifb_setup(struct screen_info *si, char *options)
->   
->   static inline bool fb_base_is_valid(struct screen_info *si)
->   {
-> +	/* check whether fb_base has changed but not fixuped */
-> +	if (!screen_info_is_useful())
-> +		return false;
-> +
->   	if (si->lfb_base)
->   		return true;
->   
-> diff --git a/drivers/video/screen_info_pci.c b/drivers/video/screen_info_pci.c
-> index 66bfc1d0a6dc..ac57dcaf0cac 100644
-> --- a/drivers/video/screen_info_pci.c
-> +++ b/drivers/video/screen_info_pci.c
-> @@ -9,6 +9,8 @@ static struct pci_dev *screen_info_lfb_pdev;
->   static size_t screen_info_lfb_bar;
->   static resource_size_t screen_info_lfb_res_start; // original start of resource
->   static resource_size_t screen_info_lfb_offset; // framebuffer offset within resource
-> +static bool screen_info_changed;
-> +static bool screen_info_fixuped;
->   
->   static bool __screen_info_relocation_is_valid(const struct screen_info *si, struct resource *pr)
->   {
-> @@ -24,6 +26,24 @@ static bool __screen_info_relocation_is_valid(const struct screen_info *si, stru
->   	return true;
->   }
->   
-> +bool screen_info_is_useful(void)
-> +{
-> +	unsigned int type;
-> +	const struct screen_info *si = &screen_info;
-> +
-> +	type = screen_info_video_type(si);
-> +	if (type != VIDEO_TYPE_EFI)
-> +		return true;
-> +
-> +	if (screen_info_changed && !screen_info_fixuped) {
-> +		pr_warn("The screen_info has changed but not fixuped");
-> +		return false;
-> +	}
-> +
-> +	pr_info("The screen_info is useful");
-> +	return true;
-> +}
-> +
->   void screen_info_apply_fixups(void)
->   {
->   	struct screen_info *si = &screen_info;
-> @@ -32,18 +52,22 @@ void screen_info_apply_fixups(void)
->   		struct resource *pr = &screen_info_lfb_pdev->resource[screen_info_lfb_bar];
->   
->   		if (pr->start != screen_info_lfb_res_start) {
-> +			screen_info_changed = true;
->   			if (__screen_info_relocation_is_valid(si, pr)) {
->   				/*
->   				 * Only update base if we have an actual
->   				 * relocation to a valid I/O range.
->   				 */
->   				__screen_info_set_lfb_base(si, pr->start + screen_info_lfb_offset);
-> +				screen_info_fixuped = true;
->   				pr_info("Relocating firmware framebuffer to offset %pa[d] within %pr\n",
->   					&screen_info_lfb_offset, pr);
->   			} else {
->   				pr_warn("Invalid relocating, disabling firmware framebuffer\n");
->   			}
->   		}
-> +	} else {
-> +		screen_info_changed = true;
->   	}
->   }
->   
-> diff --git a/include/linux/screen_info.h b/include/linux/screen_info.h
-> index 923d68e07679..632cdbb1adbe 100644
-> --- a/include/linux/screen_info.h
-> +++ b/include/linux/screen_info.h
-> @@ -138,9 +138,14 @@ ssize_t screen_info_resources(const struct screen_info *si, struct resource *r,
->   u32 __screen_info_lfb_bits_per_pixel(const struct screen_info *si);
->   
->   #if defined(CONFIG_PCI)
-> +bool screen_info_is_useful(void);
->   void screen_info_apply_fixups(void);
->   struct pci_dev *screen_info_pci_dev(const struct screen_info *si);
->   #else
-> +bool screen_info_is_useful(void)
-> +{
-> +	return true;
-> +}
->   static inline void screen_info_apply_fixups(void)
->   { }
->   static inline struct pci_dev *screen_info_pci_dev(const struct screen_info *si)
+>  tools/include/linux/interval_tree_generic.h | 2 +-
+>  tools/objtool/elf.c                         | 8 ++++----
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/include/linux/interval_tree_generic.h b/tools/include/linux/interval_tree_generic.h
+> index aaa8a0767aa3..c0ec9dbdfbaf 100644
+> --- a/tools/include/linux/interval_tree_generic.h
+> +++ b/tools/include/linux/interval_tree_generic.h
+> @@ -77,7 +77,7 @@ ITSTATIC void ITPREFIX ## _remove(ITSTRUCT *node,			      \
+>   *   Cond2: start <= ITLAST(node)					      \
+>   */									      \
+>  									      \
+> -static ITSTRUCT *							      \
+> +ITSTATIC ITSTRUCT *							      \
+>  ITPREFIX ## _subtree_search(ITSTRUCT *node, ITTYPE start, ITTYPE last)	      \
+>  {									      \
+>  	while (true) {							      \
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+IIRC this file is a direct copy from the kernel; this should probably be
+changed in both?
