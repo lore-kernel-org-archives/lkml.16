@@ -1,122 +1,139 @@
-Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2DC28A40C;
-	Fri, 27 Jun 2025 22:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB4E28F523
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 22:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751062995; cv=none; b=oLt0D9OO7nTeSIWJZBqICa8/2egQXuiQpiyAHEt24uH0mO2CK//RlbsD9yCxV4GVSYaepi6qOizTlqBYELkM/VYHJBwks8tdbLfShsV7c20WzWvKo35GSlCHlyfbrn9rsA2Ff/kfwQewQggJgYhnAF3iARy9TGJ28nngm+T34I0=
+	t=1751063293; cv=none; b=fQrHrqV6mUoqMe4UpMkqwvwDGnDsPP40ZaK0iMg5qtolia/ambv11zKTTb4wiBBvaeNZHyegKA66UjPMGIy3KO9s6BQHq/VtqHv3I134ZSquYPwGue4hvJC+3wFGzd9KZnD7zQUFHg7/y1uL9koTpNMVckzMzmIskCimJi2NiTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751062995; c=relaxed/simple;
-	bh=rjlE+KDgRHWCSWKyhXNO7pfpClaA55NFoIubE6nZjHw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mty+/rDF0jqot+A7WqG8g7MsxuCurz4TC7FVNGm5qdzBRkuoInz2ZTuJyUl6gadpTAfKhCmdBg7ZVHiHwXr2ojvtce1IJ5Cux5pUQ4TJKqC8RjqSTZA6KiZVNmh1aU85GhEyklozUqEeATJskfnq+rMkYnZ4UwgE+9CSvZhsCH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=cb/2IN+r; arc=none smtp.client-ip=98.142.107.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
+	s=arc-20240116; t=1751063293; c=relaxed/simple;
+	bh=mvyzCImA9C9zhndmyufLSspMX/CTzojFGEHMAVwofdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mA1FdR6ROITS13lDdgHxRMowUEIQPh6whzPhHpKY8B/yR68xNdo3W3qmXPAVnjX9jZRXgXtvhtqJYGjTRUs0BQDBsIlMPIgRmfhxDaoQVYvU8eEbPXvmjSrZ3GDayklUlT0kkCp0BHYNAbxqRUPdFl8+9FLdVcVODnBndOoolzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oFrLFPDF; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="cb/2IN+r"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=9pR6IDw/Y31ZqeE9wCgkVL95jAGsPYQ6vrtzrGRASCk=; b=cb/2IN+rB1DTVIKbpfTX4IwXG3
-	5oIvu7CJUjr/snqySBBlckbA/m+iHkrJizfw5UThuyVX1JPq5OrD87Ap0g72RqBZ6apZPGOBtA7+m
-	0tGpvdRvZB15WYt8UqmV0CbBbbNXP6b77thdPNmUY5aQwbvUKRH0oubjuS/gMvgHTUXzQEX73EhB+
-	SZguQQqQs0pDAVpm6FQ2At28QzmIR4lcKbSocS7zS5aurdZAn2lmi6vZD/gqWyH2zL6iOdQ9ZJ/Nb
-	qCtDNI57A70t4JzdegrNRPP5TxCvB9p6rREidvZEhfRiwnSj4ehthoP6/JzUNY2U7TVBhKtJc26Un
-	j45j2aSA==;
-Received: from [2600:8803:e7e4:1d00:1715:453e:e133:7d6] (port=59610)
-	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <david@lechnology.com>)
-	id 1uVHG5-000000007EW-3gBM;
-	Fri, 27 Jun 2025 18:06:34 -0400
-Message-ID: <fab212d2-5ab6-4353-901d-113eee0c567b@lechnology.com>
-Date: Fri, 27 Jun 2025 17:06:32 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oFrLFPDF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751063291; x=1782599291;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=mvyzCImA9C9zhndmyufLSspMX/CTzojFGEHMAVwofdc=;
+  b=oFrLFPDFC9xXUeW+J/AUwmpQoSIqQUD2vO/FRIwN2z6/pRg7px3DfAcB
+   7haHyVN5mNK4V3pBvkrNJ0Nb1f9nkOtZUevmwpFKkq6WnNyKyzl9MyisG
+   UwGeYX5JS79KEJztbtZKHCatIh1WQqFns01nsHcOfzdOeMZ3mFo6mMcf0
+   nDX0sy+aNAyL++mXcPBkFnVgulV5rTuxlDVb9JqwlF2+AimmGmbig09z1
+   Pzm+Li/DlkRKQ4yCdYeeDW55rLZpMEqcQWGYjBfq2+Gbt19mJht6E0XN3
+   FUSWQzTfwrYuxUVu4bMcrbrFBVAYbGHj7cDiDJXCuen19OB3dgUjsVW1y
+   A==;
+X-CSE-ConnectionGUID: 7BWWIwIlS9SdXZzEiyyzqw==
+X-CSE-MsgGUID: F+0mj1WIQFOU1577nx/wng==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="64074396"
+X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
+   d="scan'208";a="64074396"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 15:28:10 -0700
+X-CSE-ConnectionGUID: eUDheSWeQDugdt2kld5bYQ==
+X-CSE-MsgGUID: VYGaKQjMRM+ErcoFLQB7xw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
+   d="scan'208";a="156959491"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 15:28:10 -0700
+Date: Fri, 27 Jun 2025 15:28:09 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Fenghua Yu <fenghuay@nvidia.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v6 14/30] x86,fs/resctrl: Support binary fixed point
+ event counters
+Message-ID: <aF8a-bbfn2xhnKXz@agluck-desk3>
+References: <20250626164941.106341-1-tony.luck@intel.com>
+ <20250626164941.106341-15-tony.luck@intel.com>
+ <a14b2ed0-c319-43df-85f1-f97ecd6b688b@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt-bindings: phy: Convert ti,da830-usb-phy to DT
- schema
-To: "Rob Herring (Arm)" <robh@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250627220107.214162-1-robh@kernel.org>
-Content-Language: en-US
-From: David Lechner <david@lechnology.com>
-Autocrypt: addr=david@lechnology.com; keydata=
- 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
-In-Reply-To: <20250627220107.214162-1-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a14b2ed0-c319-43df-85f1-f97ecd6b688b@nvidia.com>
 
-On 6/27/25 5:01 PM, Rob Herring (Arm) wrote:
-> Convert the TI DA830 USB PHY binding to DT schema format. Add "clocks"
-> and "clock-names" which are already in use. As they are always present,
-> make them required as well.
+On Fri, Jun 27, 2025 at 02:22:18PM -0700, Fenghua Yu wrote:
+> Hi, Tony,
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-Reviewed-by: David Lechner <david@lechnology.com>
+> On 6/26/25 09:49, Tony Luck wrote:
+> > Resctrl was written with the assumption that all monitor events can be
+> > displayed as unsigned decimal integers.
+> > 
+> > Hardware architecture counters may provide some telemetry events with
+> > greater precision where the event is not a simple count, but is a
+> > measurement of some sort (e.g. Joules for energy consumed).
+> > 
+> > Add a new argument to resctrl_enable_mon_event() for architecture code
+> > to inform the file system that the value for a counter is a fixed-point
+> > value with a specific number of binary places.  The file system will
+> > only allow architecture to use floating point format on events that it
+> > marked with mon_evt::is_floating_point.
+> 
+> User app needs to know if a number is a floating pointer value or an integer
+> value. I see you document the energy and activity events as floating point
+> values and all others are integer values.
+> 
+> Is it better to show the value types in info directory?
+> 
+> e.g. create an info file "events_floating" which shows all events with
+> floating point values. Events not in this info are integer by default.
+> 
+> This may have two benefits:
+> 
+> 1. An app can query the type info to parse the values accordingly without
+> hard coding event types.
+> 
+> 2. Any future floating point events can be added here without changing the
+> document.
 
+Maybe. It's obvious which are floating point because the values
+have a "." in them.  Some apps may not care about the difference
+and just read everything as if they are floating point. Maybe
+likely since the next step is to compute the rate with:
+	(current_value - previous_value) / delta_t
+which will be done as a floating point calculation with
+microsecond timestamps.
+
+But it wouldn't be hard to add an info file that lists which are
+in floating point (maybe also to provide the precision as
+suggested by Dave Martin).
+
+[snip]
+
+> > +static void print_event_value(struct seq_file *m, int binary_bits, u64 val)
+> > +{
+> > +	struct fixed_params *fp = &fixed_params[binary_bits];
+> 
+> Is it worth to have a boundary check here like? I'm afraid without the
+> hardening check, a future caller may give a wrong value and cause hard
+> debugged failure.
+> 
+> if (WARN_ON_ONCE(binary_bits >=MAX_BINARY_BITS))
+> 
+>     return;
+
+Seems like belt and braces overkill. resctrl_enable_mon_event()
+already has a check for MAX_BINARY_BITS and will not enable
+an event if architecture provides a too-large value.
+
+-Tony
