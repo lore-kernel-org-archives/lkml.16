@@ -1,123 +1,138 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFE225C81F;
-	Fri, 27 Jun 2025 08:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D791927A10D
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751013916; cv=none; b=nGC5AaoKiBI1lv7zdzbxVSjp1Zlf40PdyBnzOryahW2NnggUIA6NfrU1TJWD7CAozKvmVtmQOJZyc2/N5cxShPhoCv2XFVsPokD1dOJzHthrVInwzqT2B6osDUOuXQivLItPLIpFcAIBQ0R6+KPO5T0Y4QrAsLdgi+UFyWTLrP8=
+	t=1751014041; cv=none; b=CpC9sozrPPhKWipk0cFPmNO7RvYLXLDw1GuQFGsPnrYv5TjmRaj7QnMAFKX9j4T75Jqje2ekLNuVvzIyweC7Kj0JnbYRw9GJgdzaUwYtizRzXmUBrgV2d051N5PdD6q88we0rQQWdakrhB7ooiAmQ5Tu/2MDyR4SOHOofDrxeSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751013916; c=relaxed/simple;
-	bh=8w5TeuyPxlptFjUY6ArFjdkAPl+REWCj4tvTr+seV7o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ON4K1MpgAWNmUCPrfVh4yWo027dExlDLE1rmGMlzSlJDzHPDhAqHkQK1HUHsWnRsgfok4M6Tx7lSZLr/uDz/R4EO0j9YnHWA7FWRL4ACt2PNE3/N70B2RhgxvvZQdVzUimz0yKrxsHfDVTqtQgmOF7ftzcgVKZ+qBL0neMs6QYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=de.ibm.com; spf=pass smtp.mailfrom=de.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PLfnY8P3; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=de.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PLfnY8P3"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QMWGsp031577;
-	Fri, 27 Jun 2025 08:45:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=fN8e7t
-	+1zr8+1WCchHeHmB33VLUmUSL2gWn8n+v4ZwM=; b=PLfnY8P3CTO8+u0sBkpsmN
-	bz06r0RYT3xKFRGX0Oize/oQkRn246TvocnNCyctAHOU7ZVWsCQ/BUJf9l9VaaYD
-	dTtVML8//DwIOabmp3bRwKQm5mLOHLV+1ft9Oc/6i06LshDlJJWRVkFopI51dOYe
-	DhWTrSrnUajK561opa9CdlvQXflKzo7KnpDbrLgO11Fr34oGBy1Iz19X9rz17NDo
-	dhcWGbZpr1KDkfIIbHjeR9RalqQkB+UOxNdrc6G89cr2qBECL4voC59KeKKupDp1
-	CiJUiusCiQIZaF8Yvo5ITBhm+5DkH0WDt2WdDk4lCeU1fA2r08cy+legI/2pKerQ
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dj5uc23h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 08:45:11 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55R81lYO014987;
-	Fri, 27 Jun 2025 08:45:10 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e72u3f5u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 08:45:10 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55R8j6U458786234
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 27 Jun 2025 08:45:07 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DB5822004D;
-	Fri, 27 Jun 2025 08:45:06 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3355E20043;
-	Fri, 27 Jun 2025 08:45:06 +0000 (GMT)
-Received: from [9.111.32.43] (unknown [9.111.32.43])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 27 Jun 2025 08:45:06 +0000 (GMT)
-Message-ID: <faa9ad1e-2497-42da-a825-c25986251005@de.ibm.com>
-Date: Fri, 27 Jun 2025 10:45:05 +0200
+	s=arc-20240116; t=1751014041; c=relaxed/simple;
+	bh=S9R1daGF0xfRUHuD8kFU/fIW4cXvRKaYSgRGFQpd0/M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O8YAYaT7mCw0S/M/QpNQqY8xd9sS/naRV1hdS0LDqknk9PDN3zKF1NDfpIHiyhnVhT6B1eYAfeGW20bFCwCydBdg2PjocrNuIf2Gfm8vnD6HVVHR74sIQmQpxM6KB+LHMXiwEOiNl9Ph3afh5Cf09wzZdS009VkL7Mw0xxDjUfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uV4ja-0003zL-Vq; Fri, 27 Jun 2025 10:46:58 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uV4jW-005aNg-0W;
+	Fri, 27 Jun 2025 10:46:54 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uV4jW-003X1G-02;
+	Fri, 27 Jun 2025 10:46:54 +0200
+Date: Fri, 27 Jun 2025 10:46:53 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Pankaj Gupta <pankaj.gupta@nxp.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	Frank Li <frank.li@nxp.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [PATCH v18 3/7] firmware: imx: add driver for NXP
+ EdgeLock Enclave
+Message-ID: <20250627084653.6vgwnm3llf3zknlp@pengutronix.de>
+References: <20250619-imx-se-if-v18-0-c98391ba446d@nxp.com>
+ <20250619-imx-se-if-v18-3-c98391ba446d@nxp.com>
+ <20250625105546.pxuatcnfpe7mssgs@pengutronix.de>
+ <AM9PR04MB8604611B8D91B5526C9704E69545A@AM9PR04MB8604.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/5] KVM: s390: remove unneeded srcu lock
-To: Nina Schoetterl-Glausch <nsg@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        seiden@linux.ibm.com, nrb@linux.ibm.com, david@redhat.com,
-        hca@linux.ibm.com, agordeev@linux.ibm.com, svens@linux.ibm.com,
-        gor@linux.ibm.com
-References: <20250514163855.124471-1-imbrenda@linux.ibm.com>
- <20250514163855.124471-3-imbrenda@linux.ibm.com>
- <8373c4a476e6a8f714a559d0fad8f3fed66089f1.camel@linux.ibm.com>
- <0b90cd0ad24727c9d7b110f09fd79b2525b4fbe1.camel@linux.ibm.com>
-Content-Language: en-US
-From: Christian Borntraeger <borntraeger@de.ibm.com>
-In-Reply-To: <0b90cd0ad24727c9d7b110f09fd79b2525b4fbe1.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: GlP2qVrpn1eigaspF6t0UFwcJnru7XY_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDA2NiBTYWx0ZWRfXys4I6R2dq0fP +t0MSeD4Rqlp6ZkQ9JscAnrYVxuspA6H5PzYnCfsUa5SHuT7bSKihMzCvN6f1zNUyrnVfjbZgWJ UPailssoTf3pdwrgkkX7wzpcN3noc5e/4PjIcoUS/FlLAPDyaTDCE+y/WegkqCVz74TYkisim9b
- XNvB9GM4Z63wtDpwXKyIp8ezOm52n1bBUNKh4uEnGtokVLxopvkpNN1Exe6MyUennVPPP9ZrtSI B/ZasfFIX8at9UITA1Rf8l6+cs+2PEMiiPAgf08ADhnzKVP2SdjOBdpXbRo7xoRQnBzNvfN/hz1 iVr4Ef/MtEC4gufJeOoT/KoGSZrFUEF7hHosXmTFSOdRQPMA9hJ57zRH9mU9KrLI4wWfT4KaUuH
- 6HFSQnNmKE6R9Mz4zk8i6dwg0lWyGE6zleRDwR0GHGc65VzM5J5Yvxdnzti1oKPI8NupZRUz
-X-Authority-Analysis: v=2.4 cv=MshS63ae c=1 sm=1 tr=0 ts=685e5a17 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=zO_5yEawC278s_0qgMcA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: GlP2qVrpn1eigaspF6t0UFwcJnru7XY_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_03,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=618 impostorscore=0
- clxscore=1015 phishscore=0 malwarescore=0 suspectscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506270066
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM9PR04MB8604611B8D91B5526C9704E69545A@AM9PR04MB8604.eurprd04.prod.outlook.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+Hi,
 
+your e-mail configuration mixed my e-mail with your answer, which makes
+it hard to read. Can you please check the quoting next time :)
 
-Am 20.05.25 um 16:34 schrieb Nina Schoetterl-Glausch:
-> On Mon, 2025-05-19 at 16:42 +0200, Nina Schoetterl-Glausch wrote:
->> On Wed, 2025-05-14 at 18:38 +0200, Claudio Imbrenda wrote:
->>> All paths leading to handle_essa() already hold the kvm->srcu.
->>> Remove unneeded srcu locking from handle_essa().
->>>
->>> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
->>
->> Reviewed-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
->>
->> Why are you removing it tho?
->> It should be very low cost and it makes the code more robust,
->> since handle_essa itself ensures that it has the lock.
->> It is also easier to understand which synchronization the function does.
->> You could of course add a comment stating that the kvm srcu read side needs
->> to be held. I think this would be good to have if you really don't want the
->> srcu_read_lock here.
->> But then you might also want that documented up the call chain.
+On 25-06-27, Pankaj Gupta wrote:
+> >> Add driver for enabling MU based communication interface to
+> secure-enclave.
+> >>
+> >> NXP hardware IP(s) for secure-enclaves like Edgelock Enclave(ELE), are 
+> >> embedded in the SoC to support the features like HSM, SHE & V2X, using 
+> >> message based communication interface.
+> >>
+> >> The secure enclave FW communicates with Linux over single or multiple 
+> >> dedicated messaging unit(MU) based interface(s).
+> >> Exists on i.MX SoC(s) like i.MX8ULP, i.MX93, i.MX95 etc.
 > 
-> Actually, can we use __must_hold or have some assert?
+> > You write single or multiple MUs are possible. I'm aware that the i.MX93
+> > has two MUs one for the secure and one for the non-secure world. But I'm
+> > really concerned about the fact that both MUs can't be used at the same time
+> > from both world:
+>
+> Yes, you are correct.
+> 
+> Fix is still work in progress.
 
-Yes, that might be the best way.
+So after ~6 months no fix is available :(
 
+> > Also how is the secure and non-secure world talking to the ELE if there is
+> > only one MU as you have written?
+> 
+> Till the fix is WIP, either Linux or OPTEE can use the ELE, at one point in
+> time.
+
+That has nothing to do with the fix. The fix is for platforms/SoCs which
+do have 2-MUs, but you also have written that there are platforms with
+only 1-MU.
+
+This MU can't be shared between secure and non-secure world.
+
+> > IMHO it makes much more sense to put the complete ELE communication into
+> > (OP-)TEE and let the secure OS taking care of it. All non-secure world
+> > requests are passed via (OP-)TEE to the ELE. This involves:
+> > - eFuse access (done via OP-TEE i.MX specific PTA)
+> > - ELE 23h59m ping (kernel SMC WDG driver, requires OP-TEE watchdog driver)
+> > - HW-RNG (kernel OP-TEE HWRNG driver + OP-TEE HWRNG PTA)
+> 
+> There is a dedicated MU "trusted-MU" for OPTEE-OS. The idea to converge to a
+
+Yes for systems with 2-MUs there is a "trusted-MU" and a
+"non-trusted-MU". As of now, there is no fix available for using both
+MUs at the same time. Furhtermore there are platforms/SoCs with only
+1-MU, as you have written in your commit message. This 1-MU system can
+have the MU either trusted or non-trusted.
+
+> single path via OPTEE-OS, is good. But it will impact the performance of the
+> features at Linux side.
+
+Performance? We are talking about a ping every 23h59m (I still don't
+know if this is a feature or bug), eFuse write/read, and the HW-RNG
+which can seed the Linux PRNG.
+
+> Since the fix is still WIP. Let's wait till then.
+
+The fix is for the 2-MUs SoCs but not the 1-MU case.
+
+I would like to have a system design which doesn't differ too much
+between SoCs which are equipped with the ELE engine.
+
+Regards,
+  Marco
