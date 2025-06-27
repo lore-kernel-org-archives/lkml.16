@@ -1,144 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A702C20AF9C;
-	Fri, 27 Jun 2025 19:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A0320A5F3
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751052413; cv=none; b=OJYThcfCMF58fkI/t196/xnGXaOFIZbRKPuupVFR4bfIoYSMVz/aJmPONHVuPZuvqgG8BxECXHC8+dvAS2izKUoJyQDrlxMzECjVRMAzENfSRMg2REa8zo0sQRuljVG4ehUQ1A3Jt3gDeGlZ+qDHJkAQKC4F1ZwKtdA/fZ0Osqo=
+	t=1751052415; cv=none; b=k+zKNa/e1e3+8Nd9mOzZPYH0b4pJHoeaOnooB/VFHL9JSirO+tfBgn1uyJT/r03iSRfmJ7bI9srE/G9/83kLzwG0PeiGpL8YI0RfZbJbzQVpsM5PLQ090O0wi7bgkI0nPIeRUg32Qc/EG+BMjzTwVNIVFms3BVJddiuJSrHwKiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751052413; c=relaxed/simple;
-	bh=kCoAehJoP4d3veWTy0DxemolidReITNQ2YabMYVknDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R5Oyzhfaz7ewmzkd2UOZKzlV5upoQ+H4miYnK1K9ixtIcTqCFqetmSnbtDaVbrrfAMWtqwxGD28+yn+CPRQaWPwfEBhl1EwtqgTBcsvUuIZ63KPC5cv5E+zvxqhaxSKocuvHeosps3FFYLq9tqBK85tkr7bJHY2MlOq0T8L8i2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcStCyds; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751052415; c=relaxed/simple;
+	bh=PgKJBp53dR2Ai67YO4V4HA071loDKNdxLue3b8RIr58=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=awnAEPYR35KqSN1m21pJeETRN5ZRSe/1QqvuxQ7ZebppSNwe+JA3qG8FO7UPLncjdNF/qa5WwPPWL5lJ+bNZew50sToLH2BoriCLFvwY/YTM6jY2xPNPCzIZeRR+iX24OKrPh6EaOWfuynCmUAww96BFnmja1rIA+/nXBgzqJx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fAvw9ewj; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcStCyds"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0140AC4CEE3;
-	Fri, 27 Jun 2025 19:26:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751052413;
-	bh=kCoAehJoP4d3veWTy0DxemolidReITNQ2YabMYVknDI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fcStCydsxKyIDjbz3Tz51AeLrwy5mof6hG1an2zqnuWTNSnQLJUO0VkblIlnYNyzP
-	 4ioTcAoJeHgAWz8nJrR/AoPshag+KCtlDO/ZzklDEDbLyKhP+iZcc2ocHDOhjDK3Av
-	 erBF0XU329gNyQW7lDqBBRv8GrGHvsnR8GzkdxWe1Bvd+6V8PKvsJQkTs6QkZIC+35
-	 WDWaaU0yKbjz8YqGFZFfvUT7Soth1y0BLOfdiAq6TTVPCFwpxt/uFRnzoILet9oizy
-	 O8aWp2JmnMCfOBv4XY2LiWTQGVxE0aM5lo49Tuxe8VH2Dulut2dn15YAEhhxFfXAdE
-	 lW+/7cDWPe8Wg==
-Date: Fri, 27 Jun 2025 12:26:50 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Li Huafei <lihuafei1@huawei.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	llvm@lists.linux.dev, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v4 06/19] perf capstone: Support for dlopen-ing
- libcapstone.so
-Message-ID: <aF7wesWHTv_Wp-8y@google.com>
-References: <20250417230740.86048-1-irogers@google.com>
- <20250417230740.86048-7-irogers@google.com>
- <aF3Vd0C-7jqZwz91@google.com>
- <CAP-5=fV4x0q7YdeYJd6GAHXd48Qochpa-+jq5jsRJWK36v7rSA@mail.gmail.com>
- <CAP-5=fXLUO3yvSmM4nSnNV_qQGGLP_XTcfPgOhgOkuaNnr3Hvw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fAvw9ewj"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RBZlda027379
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:26:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	C34ONTM+joY3ACRb//NUdUTbM2c8N4wd1fosaRZcrkY=; b=fAvw9ewj+WXk6hsR
+	H7EEKDhYakCtAsWIFBtBE704V+9MVIFwgkjPJ8+ByILnTPMBhoHyLjXHyaSwHHY+
+	IHkBisTMnVksCJqHulekIir75GZ2VaWmMqFx1EfJ2Ko5YHW/k85gItEJnRMT/HPX
+	Tn2S/HQdebfWS+YHYrbAu5AhqdraMR8jQLpfw1e5VvOpNveO6+rDXIwdWEtnJR5P
+	vHUoOfLgbSNXQCBZwaDfnqVcxDryD4X4olYv2DRN9DEbzpK4n3H+IRZPFF3JB26V
+	gisA2Amo4581exSBsuQnRAGtivDoI4MC14M95n8FMm1RaQ69rdCzFqmFYmw4pzR5
+	AJqAtg==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ec26j8hj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:26:51 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d21080c26fso39387285a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:26:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751052410; x=1751657210;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C34ONTM+joY3ACRb//NUdUTbM2c8N4wd1fosaRZcrkY=;
+        b=YIn/K7EoV0z76qpRLDFY5FKE6yWOEZPWLuo1bXCUscXCkB9Kr2U20uHRP4mXLWy+P9
+         NT9DPr42BlNTyF6w+h5L1C94cDLMy3U2gdbGNH8YqVpONgMm0zuU9n/gTip4nf5SoMww
+         8YA4fY9TFXstbYWAXt1x7+B9Kg87U/bB6OAGTH6rNJLnY/oLfjdiRwkMR/G1UvlzHIOH
+         T1GN7YBVVTmM8uS8w5JdBs+tQ75F1ze8MquaOonMamNZkgvzlSVFVeNwiJVVd5IX/M5Q
+         HAawDBRskdLeAkILs15c5hnQwFpxOPepVJxJ+umauQ3pWU3EJReoDfh217uOGAdNOk4b
+         kwJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXOUnQ5QFG4fQwiJpD1VYinwyCUJZrXwWcxm9gEr0Xpr9HcGMxKYVhzfgjmlsspfryFR1d4pM3AZ2o2C5U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPAqbEdSefJEWtyXiYsjH+XsSyN7WOXIngZdaIdL6cQZoiBG35
+	xIO0Z5SFoRLm/yCyxKvZcK3RQ+fcTKOP4SvNubUwynX7Zq2eWF6pihwBpuQueNpojUAhBfBXrcC
+	Yuwd28j0QJFRJDvUDDB7Wk8pzPw8nXiLbWsdYavMxhKgBopLJuc82WNRdwYTjjvc+vIg=
+X-Gm-Gg: ASbGncuz9IShfVDVtWj6FdmdR+BiiR+fg5o8vtt/Bc4umc7as3K0CnlnWwUqx89xUnL
+	ouuytJN3DrVb35LOm2Ijozj6HCk1s4/ZMiNMDchCsdpR4x75LuZrqXSRtPrt2k+aTjXqoOoK7kb
+	7rubbH8iMAOv6pM4XeDlhf7Su7f98/xQE16K1yc6wjvisMS93JT4zqFfJyI9e5QZ428tVWUjemi
+	KbCKBDBhO8K2H8iPJjjjP7jsLU2Z1VDLtngYLwsKquv94tJpsSmCMwy7u7FzFVNOWqwhfbjEFkb
+	2wmeFyJh6cpcfdnnQ89gJz0IrIy1PMUG4GgPr9WVnUiTYdq6MxDZHbqGJH8VpBlu3ESi0LsvC1P
+	rUlU=
+X-Received: by 2002:a05:620a:4384:b0:7c3:cccc:8790 with SMTP id af79cd13be357-7d44c21acefmr18327985a.5.1751052410503;
+        Fri, 27 Jun 2025 12:26:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEHDPYkLsnmO2nGzNZ10OMjymrNY7J2wqTDz4VWNzNFIV4cSvpU0BqsujQtneyalnxm/ShhOA==
+X-Received: by 2002:a05:620a:4384:b0:7c3:cccc:8790 with SMTP id af79cd13be357-7d44c21acefmr18326485a.5.1751052410034;
+        Fri, 27 Jun 2025 12:26:50 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c6bc2dsm181908766b.136.2025.06.27.12.26.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 12:26:49 -0700 (PDT)
+Message-ID: <18dddd39-6118-4b46-ba07-8304d1830798@oss.qualcomm.com>
+Date: Fri, 27 Jun 2025 21:26:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXLUO3yvSmM4nSnNV_qQGGLP_XTcfPgOhgOkuaNnr3Hvw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] clk: qcom: rpmh: Add support for RPMH clocks on
+ SM7635
+To: Luca Weiss <luca.weiss@fairphone.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Taniya Das <quic_tdas@quicinc.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250625-sm7635-clocks-misc-v1-0-45fea645d39b@fairphone.com>
+ <20250625-sm7635-clocks-misc-v1-2-45fea645d39b@fairphone.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250625-sm7635-clocks-misc-v1-2-45fea645d39b@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDE1NyBTYWx0ZWRfX4dZX6ODgfJ2Z
+ sqORE3BgGDGtUkSZhsrv7wMc3ywIk89odiFd6yZdOIiq6ptxexvF53hR3C3O4SuuNNFH+vKbiLK
+ PtzZMzD7rxO65M8t30mz7FFmEHHjB+OgYLNBWkUkJVD2rbUXDNsaapuJnb4GRZgaM5AeuSWkwOn
+ hAHeIUatAInEAmYSDtzan5/eNDADDRgtK/Y12urZXxXyCsyYppuYxgQaZfbJnNFUMCQaX7ZvUOn
+ kMLN/lhmkcz7RGimXbPk9WU6IIp7L7m+J4QXjEgXlYUCiFZ2uYUcQdCY47QWi1fjX5fs+uPACGA
+ 04ZmSDhDKN9r7FxrNSmOUee4+lK0+KfK/Qp7/YlCovew8GNrfFjfZDsuFLSbuB0tA/QT/h9BEHu
+ do03CK/AEVB39O2F0HnWB841JqJ+ryqLnEh8QHbFpc3POYnFj9E/wfTKpYQIFnpGIW8/HERb
+X-Authority-Analysis: v=2.4 cv=XPQwSRhE c=1 sm=1 tr=0 ts=685ef07b cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=6H0WHjuAAAAA:8 a=EUspDBNiAAAA:8
+ a=WWQFUNGd85j635JlVwcA:9 a=QEXdDO2ut3YA:10 a=AYr37p2UDEkA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=Soq9LBFxuPC4vsCAQt-j:22
+X-Proofpoint-GUID: xHDoOMZjHPKxirHQHpv06WdYQXCV81LP
+X-Proofpoint-ORIG-GUID: xHDoOMZjHPKxirHQHpv06WdYQXCV81LP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 impostorscore=0 clxscore=1015 suspectscore=0 mlxscore=0
+ spamscore=0 phishscore=0 malwarescore=0 mlxlogscore=884 bulkscore=0
+ priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506270157
 
-On Fri, Jun 27, 2025 at 09:44:02AM -0700, Ian Rogers wrote:
-> On Thu, Jun 26, 2025 at 9:53 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Thu, Jun 26, 2025 at 4:19 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > On Thu, Apr 17, 2025 at 04:07:27PM -0700, Ian Rogers wrote:
-> > > > If perf wasn't built against libcapstone, no HAVE_LIBCAPSTONE_SUPPORT,
-> > > > support dlopen-ing libcapstone.so and then calling the necessary
-> > > > functions by looking them up using dlsym. Reverse engineer the types
-> > > > in the API using pahole, adding only what's used in the perf code or
-> > > > necessary for the sake of struct size and alignment.
-> > >
-> > > I still think it's simpler to require capstone headers at build time and
-> > > add LIBCAPSTONE_DYNAMIC=1 or something to support dlopen.
-> >
-> > I agree, having a header file avoids the need to declare the header
-> > file values. This is simpler. Can we make the build require
-> > libcapstone and libLLVM in the same way that libtraceevent is
-> > required? That is you have to explicitly build with NO_LIBTRACEEVENT=1
-> > to get a no libtraceevent build to succeed. If we don't do this then
-> > having LIBCAPSTONE_DYNAMIC will most likely be an unused option and
-> > not worth carrying in the code base, I think that's sad. If we require
-> > the libraries I don't like the idea of people arguing, "why do I need
-> > to install libcapstone and libLLVM just to get the kernel/perf to
-> > build now?" The non-simple, but still not very complex, approach taken
-> > here was taken as a compromise to get the best result (a perf that
-> > gets faster, BPF support, .. when libraries are available without
-> > explicitly depending on them) while trying not to offend kernel
-> > developers who are often trying to build on minimal systems.
+On 6/25/25 11:12 AM, Luca Weiss wrote:
+> Add support for RPMH clocks on SM7635 SoCs.
 > 
-> Fwiw, a situation that I think is analogous (and was playing on my
-> mind while writing the code) is that we don't require python to build
-> perf and carry around empty-pmu-events.c:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/empty-pmu-events.c?h=perf-tools-next
-> It would be simpler (in the code base and in general) to require
-> everyone building perf to have python.
-> Having python on a system seems less of a stretch than requiring
-> libcapstone and libLLVM.
-> 
-> If we keep the existing build approach, optional capstone and libLLVM
-> by detecting it as a feature, then just linking against the libraries
-> is natural. Someone would need to know they care about optionality and
-> enable LIBCAPSTONE_DYNAMIC=1. An average build where the libraries
-> weren't present would lose the libcapstone and libLLVM support. We
-> could warn about this situation but some people are upset about build
-> warnings, and if we do warn we could be pushing people into just
-> linking against libcapstone and libLLVM which seems like we'll fall
-> foul of the, "perf has too many library dependencies," complaint. We
-> could warn about linking against libraries when there is a _DYNAMIC
-> alternative like this available, but again people don't like build
-> warnings and they could legitimately want to link against libcapstone
-> or libLLVM.
-> 
-> Anyway, that's why I ended up with the code in this state, to best try
-> to play off all the different compromises and complaints that have
-> been dealt with in the past.
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
 
-I can see your point.  Adding new build flags is likely to be unused and
-forgotten.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-But I also think is that this dlopen support is mostly useful to distro
-package managers who want to support more flexible environment and
-regular dynamic linking is preferred to local builds over dlopen.  Then
-adding a note to a pull request and contacting them directly (if needed)
-might work?
-
-Thanks,
-Namhyung
-
+Konrad
