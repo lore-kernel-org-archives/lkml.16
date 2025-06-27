@@ -1,161 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73539339A8;
-	Fri, 27 Jun 2025 10:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFB041A8F;
+	Fri, 27 Jun 2025 10:53:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751021585; cv=none; b=nli1R21PfGL8yu9I2kPQjuYusuf1vHlqc3seir8jwuM63aPIEGUejkpttmPy3jTBlRW+hKJzLD47v5VKMBhXTmSuFhTMVG1odiKpfMLRLKSZ0L0/ZBJ+lx9KoYiEY0p/WyOYDut8ewnYo5y/HFu6xP5UJtYH9a1tMsN9m6pAwgo=
+	t=1751021612; cv=none; b=kmzlFnUZC8xfGoH3PRiI+ieXFqGPpllxw3cWpEfTDrm6mf4EG6d2X2icEniA3V8BVuye/ECZPiD2aYmSE4b607Xy8XgWX7e0xh+xOt0DiS/ozZe+wwkDFdHFkUxsy8qq/S0y1T/Xa5bzkb2BuKkRH5l31ZMLqIabfscWAXnpKgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751021585; c=relaxed/simple;
-	bh=K4XpAjTa7+hKIgq7u8CKdwP6yqA/xD2glJZeavWK7Ho=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gaXUwSiWyuiBwxKcwxJCowpUrri8lpRr/B8ipgAIi3A2GxGpRV59rruR40eFwMjFciMWKlF6MwH3i/rf6h9lLflNO1UxHGcjl8HhpjsSq+E1HSubMZ0TwATS0CBhlyr7xCnlqpioq7jwra9w5I1a9dICqxhRKBye6sDjbGfT0zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAuVz6pF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751021612; c=relaxed/simple;
+	bh=VCjbvRdf6XSyodZZQyEnO3752BxeuOjhcMPqXymOMWU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=iXXxUTEj+Fnbd83LOpiFzeXh1G4fNWQBAs8IxwAjs5OJgenMkziknZuK6+uaKEaG0C9Er6eloLavYs/WZlliCVwr07ezu+RIzb2bTkW4BsPtmbIJqSHDXMYqkzPGV1lQFqOB1B1OYoiCEmcu+mpj+OLdUyIs7x3BP82GTsIQ3GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kwzJ9fZi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAuVz6pF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8387C4CEF2;
-	Fri, 27 Jun 2025 10:53:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kwzJ9fZi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36CC2C4CEE3;
+	Fri, 27 Jun 2025 10:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751021584;
-	bh=K4XpAjTa7+hKIgq7u8CKdwP6yqA/xD2glJZeavWK7Ho=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uAuVz6pFEKbocjVvpbM6rYL/y1pxfzqTeU2lLOucXiyZXaJ3jN1l8fdzoid8Urxf1
-	 c5eT03JfanyIx54HrwoMNYnwdoJf1xOUtF3S5btvG7vtAqgfk8lsC0MKbw3lXJxQ/x
-	 NNYdMzpoA8/RUSZ4tgiezTHDp7Ei8kBaS98afaDDtNCw9CDig/kyrw6bL55cofD7hN
-	 WP+q4Nw+tf+aBceGBbhGETZfJUfjeJgMnsT0w6YvWpIGdKd0dPF8UTzAgxvWQAUtN8
-	 1HBF8jpNJGVLUlvUJq/r8tk7tdYwy6WrrjXySE+fqWjxoiKDlWljQtlju26uoy4hvI
-	 DeCUGez17OFLg==
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-40b1c099511so1201451b6e.0;
-        Fri, 27 Jun 2025 03:53:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVBttQevcfvqNpdtE4zsh2qLVAexTFFYGNsHSgm8H/znDN9g0DTfE6LMaXO20KyEgtUisACYdVPv9PD@vger.kernel.org, AJvYcCVPsudfaOFdzS/DjkFKsj7hjAcIFTOjBKkbBXww8eeK2Yb31xj80KVwQzp3TT/GDPWnBK0vYWYY729P@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIM7911X5Ng02AOboLTOeFZ77GbNXg8+kfQ1ySj4os2ugXXmWF
-	ozgjcxPvWX4Dgd40ixkWNA+taOYX6Gq2MDx9J54uWsPgKkPwCLc7/y3JBdrNc54/sBjEzUbMJYK
-	HVQcbmkF3UcVTx/3iIupI05kw7lCc52s=
-X-Google-Smtp-Source: AGHT+IGF5o3JdiAyonVr5J6bCA8gf3fqFl/nAXMHCfe9W09f17nIkklyMepiatGdtSYaCw/7Ez4+TL6U4SyEGXl6bDI=
-X-Received: by 2002:a05:6808:2124:b0:407:a0ea:a233 with SMTP id
- 5614622812f47-40b1caac7b6mr5565686b6e.10.1751021584137; Fri, 27 Jun 2025
- 03:53:04 -0700 (PDT)
+	s=k20201202; t=1751021611;
+	bh=VCjbvRdf6XSyodZZQyEnO3752BxeuOjhcMPqXymOMWU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=kwzJ9fZiZW0Z7dWIRbocLMuMAmCxPeBuzff8/2znikaRc1brjLdOwsYYf2XesGt1d
+	 duvcWDO8WMkc4zpbViTfwO/sg3qDNiOdTBOn1GFuvls0iP8rAu1Mz0RkaFkXx0Vvb2
+	 ge/2qRgFkb66/3uv4nwbwV9pDqZl0lakEs8KP0lQsAJEww0LVJ+vSNSC09pg4O1VXT
+	 cE/0Z6NocHUxvdPi8s1MfCCau6V+qftv/mVkKVCekNLTzR3ypRxUJPqSbOZBmTAxSK
+	 zVIFkX6ZroP0LjIUo88wDbNQDZtNeOdfBcGR3K1kpUmXP6qWIdIZDT2mT98EDZ8eKe
+	 FQ7MnywY0WvcQ==
+From: Srinivas Kandagatla <srini@kernel.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Janne Grunau <j@jannau.net>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
+ Hector Martin <marcan@marcan.st>, Sven Peter <sven@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sasha Finkelstein <fnkl.kernel@gmail.com>, asahi@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20250610-nvmem-bit-pattern-v1-0-55ed5c1b369c@kernel.org>
+References: <20250610-nvmem-bit-pattern-v1-0-55ed5c1b369c@kernel.org>
+Subject: Re: (subset) [PATCH 0/2] Extend nvmem patternProperties and then
+ fix W=1 warnings in Apple dts
+Message-Id: <175102160789.6398.6252477701848323795.b4-ty@kernel.org>
+Date: Fri, 27 Jun 2025 11:53:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <5015172.GXAFRqVoOG@rjwysocki.net> <2336655.iZASKD2KPV@rjwysocki.net>
-In-Reply-To: <2336655.iZASKD2KPV@rjwysocki.net>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 27 Jun 2025 12:52:52 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h4AMFfyBugjBwQOV=xY-Hq5kL_vB7Gwrj06N8vo6GQtg@mail.gmail.com>
-X-Gm-Features: Ac12FXwpg9AnVFZosYa_eZDnu0_6_9S_gG---O66k8-4K1sDgRQ8bmySwBdfXks
-Message-ID: <CAJZ5v0h4AMFfyBugjBwQOV=xY-Hq5kL_vB7Gwrj06N8vo6GQtg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/9] PM: Check power.needs_force_resume in pm_runtime_force_suspend()
-To: Linux PM <linux-pm@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
-	Linux PCI <linux-pci@vger.kernel.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Thu, Jun 26, 2025 at 8:15=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.ne=
-t> wrote:
->
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> Add a power.needs_force_resume check to pm_runtime_force_suspend() so
-> it need not rely on the runtime PM status of the device when deciding
-> whether or not to return early.
->
-> With the new check in place, pm_runtime_force_suspend() will also skip
-> devices with the runtime PM status equal to RPM_ACTIVE if they have
-> power.needs_force_resume set, so it won't need to change the RPM
-> status of the device to RPM_SUSPENDED in addition to setting
-> power.needs_force_resume in the case when pm_runtime_need_not_resume()
-> return false.
->
-> This allows the runtime PM status update to be removed from
-> pm_runtime_force_resume(), so the runtime PM status remains unchanged
-> between the pm_runtime_force_suspend() and pm_runtime_force_resume()
-> calls.
->
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->
-> v1 -> v2: Corresponds to patch [2/9] (that was posted as [0/9] by mistake=
-) in v1.
->
-> ---
->  drivers/base/power/runtime.c |   21 ++++++++-------------
->  1 file changed, 8 insertions(+), 13 deletions(-)
->
-> --- a/drivers/base/power/runtime.c
-> +++ b/drivers/base/power/runtime.c
-> @@ -1973,7 +1973,7 @@
->         int ret;
->
->         pm_runtime_disable(dev);
-> -       if (pm_runtime_status_suspended(dev))
-> +       if (pm_runtime_status_suspended(dev) || dev->power.needs_force_re=
-sume)
->                 return 0;
->
->         callback =3D RPM_GET_CALLBACK(dev, runtime_suspend);
-> @@ -1988,15 +1988,16 @@
->         /*
->          * If the device can stay in suspend after the system-wide transi=
-tion
->          * to the working state that will follow, drop the children count=
-er of
-> -        * its parent, but set its status to RPM_SUSPENDED anyway in case=
- this
-> -        * function will be called again for it in the meantime.
-> +        * its parent and the usage counters of its suppliers.  Otherwise=
-, set
-> +        * power.needs_force_resume to let pm_runtime_force_resume() know=
- that
-> +        * the device needs to be taken care of and to prevent this funct=
-ion
-> +        * from handling the device again in case the device is passed to=
- it
-> +        * once more subsequently.
->          */
-> -       if (pm_runtime_need_not_resume(dev)) {
-> +       if (pm_runtime_need_not_resume(dev))
->                 pm_runtime_set_suspended(dev);
-> -       } else {
-> -               __update_runtime_status(dev, RPM_SUSPENDED);
-> +       else
->                 dev->power.needs_force_resume =3D true;
-> -       }
 
-I kind of see that this change may confuse other things looking at the
-PM runtime status to determine whether or not the device needs to be
-suspended that possibly run after pm_runtime_force_suspend().
+On Tue, 10 Jun 2025 17:17:33 +0000, Sven Peter wrote:
+> This brief series fixes a W=1 warning recently introduced with the Apple
+> Silicon PMIC NVMEM nodes. We have cells that are the same bytes but a
+> different bit offset and these currently result in the same node name.
+> The legcy layout already allows to specify the bit offset in the name as
+> a suffix but this isn't possible in the new fixed-layout.
+> Thus first adjust the fixed-layout cell patternProperties to the same pattern
+> as the legacy one and then fix the node names in our device tree files.
+> 
+> [...]
 
-I'm also not quite sure why I thought that this patch would be
-necessary in this series because the [5/9] should just work without
-it.
+Applied, thanks!
 
-Please disregard it unless you see why it is needed here.
+[1/2] dt-bindings: nvmem: fixed-layout: Allow optional bit positions
+      commit: 6aa656ce94693c8712c004045375e2221b157659
 
->
->         return 0;
->
-> @@ -2029,12 +2030,6 @@
->         if (!dev->power.needs_force_resume)
->                 goto out;
->
-> -       /*
-> -        * The value of the parent's children counter is correct already,=
- so
-> -        * just update the status of the device.
-> -        */
-> -       __update_runtime_status(dev, RPM_ACTIVE);
-> -
->         callback =3D RPM_GET_CALLBACK(dev, runtime_resume);
->
->         dev_pm_disable_wake_irq_check(dev, false);
->
->
->
->
+Best regards,
+-- 
+Srinivas Kandagatla <srini@kernel.org>
+
