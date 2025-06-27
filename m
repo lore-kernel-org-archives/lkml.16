@@ -1,269 +1,227 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F7C2EBB90
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 18:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2DE1EC01B
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 18:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751049115; cv=none; b=fsTvI/Pe6YhzRAbeHMNdOr+CA74fbrt+Lbr9+9F82lA4hAabnaCjzHkoao5P2v6FindgiJGMHxT1WZe6ngGvINs7pdd4NHCNclu+D/W8FWARWTfgx7nGWqGHw8Efdybrcpd6engMZ+vY81RFeyN2a6jsglNVv01BpRhkGFj2c0M=
+	t=1751049213; cv=none; b=P2B6I9ZWVCXAlWkhlF4d+qMAdGreqLKC4CDo4ZjR0HRORfH/b6I6vjm193tXnX0SFMSp6KNHB4i97KyyhsjK3JGu7r1Z2vRg2eZXnHoX46EC3QiDJFv7Wcn4xYN+Tj2Na+WFkMg9WNhVg3yjPH5Q9X12Xulgi85M5K7d250D/XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751049115; c=relaxed/simple;
-	bh=HkWCVwJQbfpx8FmLn65kmBBlTCs+zaW3lqttbUJLeJ8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ch3G3QsQ/NcSN+NsBOOSanv9kAo/aBC0ahIIRnAldTKXoaSetYdHPxfbflTSVZGYOm+Au5Qi8bZRmUK+7cUiv2oo8vOKfkmxAbYKQcGfDG8fJLO82DKHjeQQummdL1kaqR0u7WEVIaZRTsxcFMYtzFSI1IuB6jN/jT6/mpdHsKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yI5VaWmh; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com
+	s=arc-20240116; t=1751049213; c=relaxed/simple;
+	bh=LFdvlMY3TCqK4PRtgCei2Vpx/E4wStOIaecqT6ZOtU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ACR0Nxa/BmI49nVjstC7nX+PiBYzh/mDYO54ZLNLO0n9hZPBTCj776ahsojFCR9VWEnzx/I3TzLURBRIzoerllQKgdX0xVRuYQljAes6/dNwrt6xFn8IGRneyFDnJWXK0ynKldXCVEcKb9arDTfA1xt+hk0UpXsvLTNV5D9Ss9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dgPHdGs4; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xNh6E+95; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YGjr8Q8s; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=hrjKs/vA; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yI5VaWmh"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-749177ad09fso82436b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:31:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751049112; x=1751653912; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OJo9CtXFcRWuDjas8h65+O0iUteSLSP5tA8EVWt81GY=;
-        b=yI5VaWmhoyT9AwcA1ECsRMNyoH21rIjlDBwqhRh/6smrgTLpbclUyfSD+bIBB1x+zR
-         kXBRISg4UwnMkPhRasNtQBU71OOqImxpSIxH0/wSBRWYBeZS1QepoOvqzG5J8QKWvQ9I
-         3tc0KuPnC2wBkN+mrAGgj0ACJDlxQpfDznv5sAQm+Ma90BajNNJhgtJulqdozai5kx2E
-         d2O9GJmjtGJAqSJbekiA0xt7wqPzgDyRJMsFLcivmlQlNQnvJtre+BvNCIqCPll9QVUe
-         7s36HhOvRiRKuVTMLTw391sO9ei1pC9CfviMCV6nhSNdmsUFccNvgN6GlzDjNXo++zVp
-         CwvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751049112; x=1751653912;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OJo9CtXFcRWuDjas8h65+O0iUteSLSP5tA8EVWt81GY=;
-        b=op7YVUc/LUBnRo22bf5rZ4lQJCv8NofOPqU7Z4CU+952Ip81pJUpuGgBdL138GxZ/w
-         +KWep7euEFJozeVw8LCkqIjaYQiZGJvyXgkGJ7P2jXhUulMh6w7NnrgeIB4peAUuP7uM
-         buVx0cCe2Y/JapC+sH5vA2V2Vt2/mU9lNpekT6yNxW66H8Ez7tqYVx8e2KaPu+uuGXtU
-         wLyime1qyX9vYhu5yyBc7BPVDcpS12pExySJwn8ZppdeayfdmIP6FN3uJORa7+1JpqZ8
-         /38XWpC4vTHiMTjlQ+FeSRmq1jKPZgIo1WL/aWHn2FJ2Hz1dSdvgJBkoiNCEI6Vsc6AS
-         F2sg==
-X-Forwarded-Encrypted: i=1; AJvYcCXCevTzW9h7y74ZncxWEC4kiaE3u815RjbZenPvyN9aMikt9yMVJj73AGQg11mp70oAc5QfN7PaA3zaidA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuYk6kooe06b3O/RmxtFDa+O86izg7OiKiHt+GqL3VLq/pG1Q9
-	1QYQoGsL5/KhizVIElTRhQBwPoG75RcY/410ae2fCkr1XaHHi78mI5svZ4AosTyNBDAEXnNO1Ld
-	yr5j5dIFXRh61/zNjEeVXid7/7Q==
-X-Google-Smtp-Source: AGHT+IGj48GQh4XwsgU2Xo4f83vJ4SZi9wNSVpTXqFST1M+jCyUOENFkEoJDQmfjon74Fce5t0qqkKhLlxuqiBe3Pw==
-X-Received: from pfiu9.prod.google.com ([2002:a05:6a00:1249:b0:748:f627:51c4])
- (user=hramamurthy job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:889:b0:748:6a1f:6d3b with SMTP id d2e1a72fcca58-74af6f43cb7mr6230462b3a.19.1751049112565;
- Fri, 27 Jun 2025 11:31:52 -0700 (PDT)
-Date: Fri, 27 Jun 2025 18:31:41 +0000
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dgPHdGs4";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xNh6E+95";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YGjr8Q8s";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hrjKs/vA"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id EBAC81F390;
+	Fri, 27 Jun 2025 18:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751049204; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6oRt6nVMCmDpOH4aMgxdoDBrGumgwgOaEOZ7NzWu0N4=;
+	b=dgPHdGs4YmmLr5vEaIZWlDKHeUGWJXVoQesD6IT+XcCTtFWeURk3mfNZzbSVIY8IsA8jsW
+	lbeCwJOGDr726kMXdjqqvLSvURVaGvTzek2foqRWTCMbrbh0tM/CSxMjOzTIwSO2QbeJOM
+	x0POoFhx49nN/zgNBBLo9P8hWCL2g/A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751049204;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6oRt6nVMCmDpOH4aMgxdoDBrGumgwgOaEOZ7NzWu0N4=;
+	b=xNh6E+95sb8wX6QGofCmy2z/DNKUF/ZslSd2esJYAwX76olXEswfNJToHCPZ5KQHjnd/pt
+	DlQQ/yjnCnPrtiCQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=YGjr8Q8s;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="hrjKs/vA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751049203; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6oRt6nVMCmDpOH4aMgxdoDBrGumgwgOaEOZ7NzWu0N4=;
+	b=YGjr8Q8sh1i0hDViiW+E5ofYy239qvViV7O8Ey1Q07oJGjYm9r9EkgPAnFlsJNpyXzwnCw
+	49hUM+7tXVGLp37cKv4ca5ZDtp+/ucw+ixyLaZqdgW8WDJFCd7MEytMm3Zn+8ip1ExHNkJ
+	1K8IsTwYM0Y0BNZVX51oi2Jn//LlNWs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751049203;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6oRt6nVMCmDpOH4aMgxdoDBrGumgwgOaEOZ7NzWu0N4=;
+	b=hrjKs/vA2/6gtHySr1Ue6sfmwlqUfIMF8NNuOntLjBreUMZIvtJjorq70jVCa9em6C/3pk
+	yh2ZfduBxznMFCCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D3EBF13786;
+	Fri, 27 Jun 2025 18:33:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id pcxkM/PjXmhjFQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 27 Jun 2025 18:33:23 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 31A4EA08D2; Fri, 27 Jun 2025 20:33:23 +0200 (CEST)
+Date: Fri, 27 Jun 2025 20:33:23 +0200
+From: Jan Kara <jack@suse.cz>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, jack@suse.cz, 
+	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, linux-kernel@vger.kernel.org, 
+	yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH v2 07/16] ext4: convert sbi->s_mb_free_pending to atomic_t
+Message-ID: <kn22zrgititzedfjutzudq6i3qn26ukmg26g7nzmgwahkrn3r7@bhpccisxsvz2>
+References: <20250623073304.3275702-1-libaokun1@huawei.com>
+ <20250623073304.3275702-8-libaokun1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250627183141.3781516-1-hramamurthy@google.com>
-Subject: [PATCH net-next] gve: make IRQ handlers and page allocation NUMA aware
-From: Harshitha Ramamurthy <hramamurthy@google.com>
-To: netdev@vger.kernel.org
-Cc: jeroendb@google.com, hramamurthy@google.com, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	willemb@google.com, bcf@google.com, pkaligineedi@google.com, 
-	joshwash@google.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623073304.3275702-8-libaokun1@huawei.com>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,suse.cz:dkim,suse.cz:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: EBAC81F390
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.01
 
-From: Bailey Forrest <bcf@google.com>
+On Mon 23-06-25 15:32:55, Baokun Li wrote:
+> Previously, s_md_lock was used to protect s_mb_free_pending during
+> modifications, while smp_mb() ensured fresh reads, so s_md_lock just
+> guarantees the atomicity of s_mb_free_pending. Thus we optimized it by
+> converting s_mb_free_pending into an atomic variable, thereby eliminating
+> s_md_lock and minimizing lock contention. This also prepares for future
+> lockless merging of free extents.
+> 
+> Following this modification, s_md_lock is exclusively responsible for
+> managing insertions and deletions within s_freed_data_list, along with
+> operations involving list_splice.
+> 
+> Performance test data follows:
+> 
+> Test: Running will-it-scale/fallocate2 on CPU-bound containers.
+> Observation: Average fallocate operations per container per second.
+> 
+>                    | Kunpeng 920 / 512GB -P80|  AMD 9654 / 1536GB -P96 |
+>  Disk: 960GB SSD   |-------------------------|-------------------------|
+>                    | base  |    patched      | base  |    patched      |
+> -------------------|-------|-----------------|-------|-----------------|
+> mb_optimize_scan=0 | 19699 | 20982 (+6.5%)   | 53093 | 50629 (-4.6%)   |
+> mb_optimize_scan=1 | 9862  | 10703 (+8.5%)   | 14401 | 14856 (+3.1%)   |
+> 
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
 
-All memory in GVE is currently allocated without regard for the NUMA
-node of the device. Because access to NUMA-local memory access is
-significantly cheaper than access to a remote node, this change attempts
-to ensure that page frags used in the RX path, including page pool
-frags, are allocated on the NUMA node local to the gVNIC device. Note
-that this attempt is best-effort. If necessary, the driver will still
-allocate non-local memory, as __GFP_THISNODE is not passed. Descriptor
-ring allocations are not updated, as dma_alloc_coherent handles that.
+Looks good. Feel free to add:
 
-This change also modifies the IRQ affinity setting to only select CPUs
-from the node local to the device, preserving the behavior that TX and
-RX queues of the same index share CPU affinity.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Signed-off-by: Bailey Forrest <bcf@google.com>
-Signed-off-by: Joshua Washington <joshwash@google.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
----
- drivers/net/ethernet/google/gve/gve.h         |  1 +
- .../ethernet/google/gve/gve_buffer_mgmt_dqo.c |  1 +
- drivers/net/ethernet/google/gve/gve_main.c    | 30 +++++++++++++++----
- drivers/net/ethernet/google/gve/gve_rx.c      | 15 ++++++----
- drivers/net/ethernet/google/gve/gve_rx_dqo.c  |  9 +++---
- 5 files changed, 40 insertions(+), 16 deletions(-)
+								Honza
 
-diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
-index 4469442d4940..d99654771487 100644
---- a/drivers/net/ethernet/google/gve/gve.h
-+++ b/drivers/net/ethernet/google/gve/gve.h
-@@ -790,6 +790,7 @@ struct gve_priv {
- 	struct gve_tx_queue_config tx_cfg;
- 	struct gve_rx_queue_config rx_cfg;
- 	u32 num_ntfy_blks; /* split between TX and RX so must be even */
-+	int numa_node;
- 
- 	struct gve_registers __iomem *reg_bar0; /* see gve_register.h */
- 	__be32 __iomem *db_bar2; /* "array" of doorbells */
-diff --git a/drivers/net/ethernet/google/gve/gve_buffer_mgmt_dqo.c b/drivers/net/ethernet/google/gve/gve_buffer_mgmt_dqo.c
-index a71883e1d920..6c3c459a1b5e 100644
---- a/drivers/net/ethernet/google/gve/gve_buffer_mgmt_dqo.c
-+++ b/drivers/net/ethernet/google/gve/gve_buffer_mgmt_dqo.c
-@@ -246,6 +246,7 @@ struct page_pool *gve_rx_create_page_pool(struct gve_priv *priv,
- 		.flags = PP_FLAG_DMA_MAP | PP_FLAG_DMA_SYNC_DEV,
- 		.order = 0,
- 		.pool_size = GVE_PAGE_POOL_SIZE_MULTIPLIER * priv->rx_desc_cnt,
-+		.nid = priv->numa_node,
- 		.dev = &priv->pdev->dev,
- 		.netdev = priv->dev,
- 		.napi = &priv->ntfy_blocks[ntfy_id].napi,
-diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/ethernet/google/gve/gve_main.c
-index 28e4795f5f40..0de348605872 100644
---- a/drivers/net/ethernet/google/gve/gve_main.c
-+++ b/drivers/net/ethernet/google/gve/gve_main.c
-@@ -457,10 +457,19 @@ int gve_napi_poll_dqo(struct napi_struct *napi, int budget)
- 	return work_done;
- }
- 
-+static const struct cpumask *gve_get_node_mask(struct gve_priv *priv)
-+{
-+	if (priv->numa_node == NUMA_NO_NODE)
-+		return cpu_all_mask;
-+	else
-+		return cpumask_of_node(priv->numa_node);
-+}
-+
- static int gve_alloc_notify_blocks(struct gve_priv *priv)
- {
- 	int num_vecs_requested = priv->num_ntfy_blks + 1;
--	unsigned int active_cpus;
-+	const struct cpumask *node_mask;
-+	unsigned int cur_cpu;
- 	int vecs_enabled;
- 	int i, j;
- 	int err;
-@@ -499,8 +508,6 @@ static int gve_alloc_notify_blocks(struct gve_priv *priv)
- 		if (priv->rx_cfg.num_queues > priv->rx_cfg.max_queues)
- 			priv->rx_cfg.num_queues = priv->rx_cfg.max_queues;
- 	}
--	/* Half the notification blocks go to TX and half to RX */
--	active_cpus = min_t(int, priv->num_ntfy_blks / 2, num_online_cpus());
- 
- 	/* Setup Management Vector  - the last vector */
- 	snprintf(priv->mgmt_msix_name, sizeof(priv->mgmt_msix_name), "gve-mgmnt@pci:%s",
-@@ -529,6 +536,8 @@ static int gve_alloc_notify_blocks(struct gve_priv *priv)
- 	}
- 
- 	/* Setup the other blocks - the first n-1 vectors */
-+	node_mask = gve_get_node_mask(priv);
-+	cur_cpu = cpumask_first(node_mask);
- 	for (i = 0; i < priv->num_ntfy_blks; i++) {
- 		struct gve_notify_block *block = &priv->ntfy_blocks[i];
- 		int msix_idx = i;
-@@ -545,9 +554,17 @@ static int gve_alloc_notify_blocks(struct gve_priv *priv)
- 			goto abort_with_some_ntfy_blocks;
- 		}
- 		block->irq = priv->msix_vectors[msix_idx].vector;
--		irq_set_affinity_hint(priv->msix_vectors[msix_idx].vector,
--				      get_cpu_mask(i % active_cpus));
-+		irq_set_affinity_and_hint(block->irq,
-+					  cpumask_of(cur_cpu));
- 		block->irq_db_index = &priv->irq_db_indices[i].index;
-+
-+		cur_cpu = cpumask_next(cur_cpu, node_mask);
-+		/* Wrap once CPUs in the node have been exhausted, or when
-+		 * starting RX queue affinities. TX and RX queues of the same
-+		 * index share affinity.
-+		 */
-+		if (cur_cpu >= nr_cpu_ids || (i + 1) == priv->tx_cfg.max_queues)
-+			cur_cpu = cpumask_first(node_mask);
- 	}
- 	return 0;
- abort_with_some_ntfy_blocks:
-@@ -1036,7 +1053,7 @@ int gve_alloc_page(struct gve_priv *priv, struct device *dev,
- 		   struct page **page, dma_addr_t *dma,
- 		   enum dma_data_direction dir, gfp_t gfp_flags)
- {
--	*page = alloc_page(gfp_flags);
-+	*page = alloc_pages_node(priv->numa_node, gfp_flags, 0);
- 	if (!*page) {
- 		priv->page_alloc_fail++;
- 		return -ENOMEM;
-@@ -2294,6 +2311,7 @@ static int gve_init_priv(struct gve_priv *priv, bool skip_describe_device)
- 	 */
- 	priv->num_ntfy_blks = (num_ntfy - 1) & ~0x1;
- 	priv->mgmt_msix_idx = priv->num_ntfy_blks;
-+	priv->numa_node = dev_to_node(&priv->pdev->dev);
- 
- 	priv->tx_cfg.max_queues =
- 		min_t(int, priv->tx_cfg.max_queues, priv->num_ntfy_blks / 2);
-diff --git a/drivers/net/ethernet/google/gve/gve_rx.c b/drivers/net/ethernet/google/gve/gve_rx.c
-index 90e875c1832f..367f1157fa73 100644
---- a/drivers/net/ethernet/google/gve/gve_rx.c
-+++ b/drivers/net/ethernet/google/gve/gve_rx.c
-@@ -192,8 +192,9 @@ static int gve_rx_prefill_pages(struct gve_rx_ring *rx,
- 	 */
- 	slots = rx->mask + 1;
- 
--	rx->data.page_info = kvzalloc(slots *
--				      sizeof(*rx->data.page_info), GFP_KERNEL);
-+	rx->data.page_info =
-+		kvzalloc_node(array_size(slots, sizeof(*rx->data.page_info)),
-+			      GFP_KERNEL, priv->numa_node);
- 	if (!rx->data.page_info)
- 		return -ENOMEM;
- 
-@@ -216,7 +217,8 @@ static int gve_rx_prefill_pages(struct gve_rx_ring *rx,
- 
- 	if (!rx->data.raw_addressing) {
- 		for (j = 0; j < rx->qpl_copy_pool_mask + 1; j++) {
--			struct page *page = alloc_page(GFP_KERNEL);
-+			struct page *page = alloc_pages_node(priv->numa_node,
-+							     GFP_KERNEL, 0);
- 
- 			if (!page) {
- 				err = -ENOMEM;
-@@ -303,9 +305,10 @@ int gve_rx_alloc_ring_gqi(struct gve_priv *priv,
- 
- 	rx->qpl_copy_pool_mask = min_t(u32, U32_MAX, slots * 2) - 1;
- 	rx->qpl_copy_pool_head = 0;
--	rx->qpl_copy_pool = kvcalloc(rx->qpl_copy_pool_mask + 1,
--				     sizeof(rx->qpl_copy_pool[0]),
--				     GFP_KERNEL);
-+	rx->qpl_copy_pool =
-+		kvzalloc_node(array_size(rx->qpl_copy_pool_mask + 1,
-+					 sizeof(rx->qpl_copy_pool[0])),
-+			      GFP_KERNEL, priv->numa_node);
- 
- 	if (!rx->qpl_copy_pool) {
- 		err = -ENOMEM;
-diff --git a/drivers/net/ethernet/google/gve/gve_rx_dqo.c b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
-index 0be41a0cdd15..ecaf1a56e4fb 100644
---- a/drivers/net/ethernet/google/gve/gve_rx_dqo.c
-+++ b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
-@@ -236,9 +236,10 @@ int gve_rx_alloc_ring_dqo(struct gve_priv *priv,
- 
- 	rx->dqo.num_buf_states = cfg->raw_addressing ? buffer_queue_slots :
- 		gve_get_rx_pages_per_qpl_dqo(cfg->ring_size);
--	rx->dqo.buf_states = kvcalloc(rx->dqo.num_buf_states,
--				      sizeof(rx->dqo.buf_states[0]),
--				      GFP_KERNEL);
-+	rx->dqo.buf_states =
-+		kvzalloc_node(array_size(rx->dqo.num_buf_states,
-+					 sizeof(rx->dqo.buf_states[0])),
-+			      GFP_KERNEL, priv->numa_node);
- 	if (!rx->dqo.buf_states)
- 		return -ENOMEM;
- 
-@@ -487,7 +488,7 @@ static int gve_rx_copy_ondemand(struct gve_rx_ring *rx,
- 				struct gve_rx_buf_state_dqo *buf_state,
- 				u16 buf_len)
- {
--	struct page *page = alloc_page(GFP_ATOMIC);
-+	struct page *page = alloc_pages_node(rx->gve->numa_node, GFP_ATOMIC, 0);
- 	int num_frags;
- 
- 	if (!page)
+> ---
+>  fs/ext4/balloc.c  | 2 +-
+>  fs/ext4/ext4.h    | 2 +-
+>  fs/ext4/mballoc.c | 9 +++------
+>  3 files changed, 5 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/ext4/balloc.c b/fs/ext4/balloc.c
+> index c48fd36b2d74..c9329ed5c094 100644
+> --- a/fs/ext4/balloc.c
+> +++ b/fs/ext4/balloc.c
+> @@ -703,7 +703,7 @@ int ext4_should_retry_alloc(struct super_block *sb, int *retries)
+>  	 * possible we just missed a transaction commit that did so
+>  	 */
+>  	smp_mb();
+> -	if (sbi->s_mb_free_pending == 0) {
+> +	if (atomic_read(&sbi->s_mb_free_pending) == 0) {
+>  		if (test_opt(sb, DISCARD)) {
+>  			atomic_inc(&sbi->s_retry_alloc_pending);
+>  			flush_work(&sbi->s_discard_work);
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index 294198c05cdd..003b8d3726e8 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -1602,7 +1602,7 @@ struct ext4_sb_info {
+>  	unsigned short *s_mb_offsets;
+>  	unsigned int *s_mb_maxs;
+>  	unsigned int s_group_info_size;
+> -	unsigned int s_mb_free_pending;
+> +	atomic_t s_mb_free_pending;
+>  	struct list_head s_freed_data_list[2];	/* List of blocks to be freed
+>  						   after commit completed */
+>  	struct list_head s_discard_list;
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index 216b332a5054..5410fb3688ee 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -3680,7 +3680,7 @@ int ext4_mb_init(struct super_block *sb)
+>  	}
+>  
+>  	spin_lock_init(&sbi->s_md_lock);
+> -	sbi->s_mb_free_pending = 0;
+> +	atomic_set(&sbi->s_mb_free_pending, 0);
+>  	INIT_LIST_HEAD(&sbi->s_freed_data_list[0]);
+>  	INIT_LIST_HEAD(&sbi->s_freed_data_list[1]);
+>  	INIT_LIST_HEAD(&sbi->s_discard_list);
+> @@ -3894,10 +3894,7 @@ static void ext4_free_data_in_buddy(struct super_block *sb,
+>  	/* we expect to find existing buddy because it's pinned */
+>  	BUG_ON(err != 0);
+>  
+> -	spin_lock(&EXT4_SB(sb)->s_md_lock);
+> -	EXT4_SB(sb)->s_mb_free_pending -= entry->efd_count;
+> -	spin_unlock(&EXT4_SB(sb)->s_md_lock);
+> -
+> +	atomic_sub(entry->efd_count, &EXT4_SB(sb)->s_mb_free_pending);
+>  	db = e4b.bd_info;
+>  	/* there are blocks to put in buddy to make them really free */
+>  	count += entry->efd_count;
+> @@ -6392,7 +6389,7 @@ ext4_mb_free_metadata(handle_t *handle, struct ext4_buddy *e4b,
+>  
+>  	spin_lock(&sbi->s_md_lock);
+>  	list_add_tail(&new_entry->efd_list, &sbi->s_freed_data_list[new_entry->efd_tid & 1]);
+> -	sbi->s_mb_free_pending += clusters;
+> +	atomic_add(clusters, &sbi->s_mb_free_pending);
+>  	spin_unlock(&sbi->s_md_lock);
+>  }
+>  
+> -- 
+> 2.46.1
+> 
 -- 
-2.50.0.727.gbf7dc18ff4-goog
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
