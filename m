@@ -1,153 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00092747B
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 00:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF5B45C14;
+	Fri, 27 Jun 2025 00:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750985344; cv=none; b=UoQsiZNpTImG/VscIU0nUJN6DlDMDbPd5fcbe/ylxpQ79XdWS2GCRO/YXXkm8ETwc5u/uWCGXsQQZGpu9wK2qAV3cjYhuzgWOQK2cb45DAW4V6VuzO4VfAbXeW4TdixKDgfpxOdbUvYshTtMEjsS8Uj+DY9tD1aHX80y8RUZnLU=
+	t=1750985347; cv=none; b=d3gwNWcGKI5XccS6QpJtH6Xw+LfrlCmbpi3UI38yT5PWOP+GDk5KEMnFkCyE2t26AtmQunsoevcn1oDcln3E7MBwGIN0wPDJEO7ioKMYs3OrVtaJRgouBZoFnJiA7leryANGivYGLxwMWbW3FDyIQVVD1ZAhvpJjwF/tTYHIoW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750985344; c=relaxed/simple;
-	bh=y3AmZRizhCYu2Dn2RysfKaGz8kN/CPxFAiMyRDa+2Ds=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VXL1dWWE4Mu1pqnfhq6MZgynTipHW45DhqzxUGPWRZVatTI9NXV6N1bCERxoJ+29NYWE2d8ZMu30to2kUEebvESHVE3OzvlifDdh8yKDKlqJMm9EE+a168T7fyWA53MU1fydrI7r5dJvSLvqoKa8SypceSfAN9Jwm/ktNGEiaBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FayOwSZp; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750985347; c=relaxed/simple;
+	bh=EpqjtPVGt04E7RcuSotMKejW6u3yq2ucjguads+7u2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nLsYnD9UNPoKMcXiNt7GqQAb0Ia8sg0tMlk1LIJ1/cC5+vs+aHfROJ3Jw5zH49xHOnI+fg7nd+qc0Zjz8ogvVEZbQgGskjDZfZbxJS+O+gktSW7BAuodrncKy1cVdnB8at1zzI+mKdRPsJa8Gwcg35ebbuJzJkOTWYHiaMiFPhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhD6dYEI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FayOwSZp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750985342;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CLA+OYU1ylbvB7vJ0ft6aI2rAS7z7d9CDwxTqg9DYJE=;
-	b=FayOwSZpYGW/Vr0YI74vsPyuzFrzssmG7uVyd0EIBpmZHKcsqe7VBQPDRiwpGcg9JiUWSP
-	qv5ey//dutrhpb68LnoN5AgYdlX4qepXf/d2oyalgN8RzwY3dhFyqrM1tItsh3YOtMNHfY
-	lJNiLUFihRzCssmBXkPagjt60f/8PXQ=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-398-oZyMqZ-7M8inndEbKaFkmQ-1; Thu,
- 26 Jun 2025 20:48:58 -0400
-X-MC-Unique: oZyMqZ-7M8inndEbKaFkmQ-1
-X-Mimecast-MFC-AGG-ID: oZyMqZ-7M8inndEbKaFkmQ_1750985337
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 843FB19560B9;
-	Fri, 27 Jun 2025 00:48:56 +0000 (UTC)
-Received: from pauld.westford.csb (unknown [10.22.82.105])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 58736195609D;
-	Fri, 27 Jun 2025 00:48:54 +0000 (UTC)
-Date: Thu, 26 Jun 2025 20:48:51 -0400
-From: Phil Auld <pauld@redhat.com>
-To: Waiman Long <llong@redhat.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH 02/27] sched/isolation: Introduce housekeeping per-cpu
- rwsem
-Message-ID: <20250627004851.GB222768@pauld.westford.csb>
-References: <20250620152308.27492-1-frederic@kernel.org>
- <20250620152308.27492-3-frederic@kernel.org>
- <3bf95ee2-1340-41b1-9f5c-1563f953c6eb@redhat.com>
- <20250625121850.GA57862@pauld.westford.csb>
- <aFwI6sCtObAGoMBt@localhost.localdomain>
- <20250625155017.GC57862@pauld.westford.csb>
- <c205b6a8-89ee-424e-ac83-94584d59a449@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhD6dYEI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90785C4CEEB;
+	Fri, 27 Jun 2025 00:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750985347;
+	bh=EpqjtPVGt04E7RcuSotMKejW6u3yq2ucjguads+7u2c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JhD6dYEItqr1kEqwbDypImWuwC6DkC//2HpSf/hgwxLYbnhR8EuQdDrRcs9QYZXpL
+	 NCOk1Ui6TH1oeylieGVA0AaZpYjG06vWKOUgNQYb5uPEjlAhA4GaIVVVh5MvTCgWbS
+	 PmG7wnTnV/4the3QfpV471XKmIZ33YZPjwtHfKr0QMean7TulHtheSS+nwRf/gMP0g
+	 VF0THNST7vk0sxscSP/ClnJp5iBAwWIGfVjP/PV/8anoSyJdkah3YyVbeuERLiNIRJ
+	 M1452yPuJMakT9SvZoHdVGPZV37wH7NBQp6QlZYsNsJ44lwYi+mpihmoggrA0c7Uie
+	 N+XC/kOPDkhFA==
+Date: Thu, 26 Jun 2025 17:49:04 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Byungchul Park <byungchul@sk.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com,
+ almasrymina@google.com, ilias.apalodimas@linaro.org, harry.yoo@oracle.com,
+ hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net,
+ john.fastabend@gmail.com, andrew+netdev@lunn.ch, asml.silence@gmail.com,
+ toke@redhat.com, tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
+ saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+ horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+ vishal.moola@gmail.com, hannes@cmpxchg.org, ziy@nvidia.com,
+ jackmanb@google.com
+Subject: Re: [PATCH net-next v7 1/7] netmem: introduce struct netmem_desc
+ mirroring struct page
+Message-ID: <20250626174904.4a6125c9@kernel.org>
+In-Reply-To: <20250625043350.7939-2-byungchul@sk.com>
+References: <20250625043350.7939-1-byungchul@sk.com>
+	<20250625043350.7939-2-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c205b6a8-89ee-424e-ac83-94584d59a449@redhat.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 26, 2025 at 08:11:54PM -0400 Waiman Long wrote:
-> On 6/25/25 11:50 AM, Phil Auld wrote:
-> > On Wed, Jun 25, 2025 at 04:34:18PM +0200 Frederic Weisbecker wrote:
-> > > Le Wed, Jun 25, 2025 at 08:18:50AM -0400, Phil Auld a écrit :
-> > > > Hi Waiman,
-> > > > 
-> > > > On Mon, Jun 23, 2025 at 01:34:58PM -0400 Waiman Long wrote:
-> > > > > On 6/20/25 11:22 AM, Frederic Weisbecker wrote:
-> > > > > > The HK_TYPE_DOMAIN isolation cpumask, and further the
-> > > > > > HK_TYPE_KERNEL_NOISE cpumask will be made modifiable at runtime in the
-> > > > > > future.
-> > > > > > 
-> > > > > > The affected subsystems will need to synchronize against those cpumask
-> > > > > > changes so that:
-> > > > > > 
-> > > > > > * The reader get a coherent snapshot
-> > > > > > * The housekeeping subsystem can safely propagate a cpumask update to
-> > > > > >     the susbsytems after it has been published.
-> > > > > > 
-> > > > > > Protect against readsides that can sleep with per-cpu rwsem. Updates are
-> > > > > > expected to be very rare given that CPU isolation is a niche usecase and
-> > > > > > related cpuset setup happen only in preparation work. On the other hand
-> > > > > > read sides can occur in more frequent paths.
-> > > > > > 
-> > > > > > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> > > > > Thanks for the patch series and it certainly has some good ideas. However I
-> > > > > am a bit concern about the overhead of using percpu-rwsem for
-> > > > > synchronization especially when the readers have to wait for the completion
-> > > > > on the writer side. From my point of view, during the transition period when
-> > > > > new isolated CPUs are being added or old ones being removed, the reader will
-> > > > > either get the old CPU data or the new one depending on the exact timing.
-> > > > > The effect the CPU selection may persist for a while after the end of the
-> > > > > critical section.
-> > > > > 
-> > > > > Can we just rely on RCU to make sure that it either get the new one or the
-> > > > > old one but nothing in between without the additional overhead?
-> > > > > 
-> > > > > My current thinking is to make use CPU hotplug to enable better CPU
-> > > > > isolation. IOW, I would shut down the affected CPUs, change the housekeeping
-> > > > > masks and then bring them back online again. That means the writer side will
-> > > > > take a while to complete.
-> > > > The problem with this approach is that offlining a cpu effects all the other
-> > > > cpus and causes latency spikes on other low latency tasks which may already be
-> > > > running on other parts of the system.
-> > > > 
-> > > > I just don't want us to finally get to dynamic isolation and have it not
-> > > > usable for the usecases asking for it.
-> > > We'll have to discuss that eventually because that's the plan for nohz_full.
-> > > We can work around the stop machine rendez-vous on nohz_full if that's the
-> > > problem. If the issue is not to interrupt common RT-tasks, then that's a
-> > > different problem for which I don't have a solution.
-> > > 
-> > My understanding is that it's the stop machine issue. If you have a way
-> > around that then great!
-> 
-> My current thinking is to just run a selected set of CPUHP teardown and
-> startup methods relevant to housekeeping cpumasks usage without calling the
-> full set from CPUHP_ONLINE to CPUHP_OFFLINE. I don't know if it is possible
-> or not or how much additional changes will be needed to make that possible.
-> That will skip the CPUHP_TEARDOWN_CPU teardown method that is likely the
-> cause of most the latency spike experienced by other CPUs.
->
+On Wed, 25 Jun 2025 13:33:44 +0900 Byungchul Park wrote:
+> +/* A memory descriptor representing abstract networking I/O vectors,
+> + * generally for non-pages memory that doesn't have its corresponding
+> + * struct page and needs to be explicitly allocated through slab.
 
-Yes, CPUHP_TEARDOWN_CPU is the source of the stop_machine I believe.
+I still don't get what your final object set is going to be.
 
-It'll be interesting to see if you can safely use the cpuhp machinery
-selectively like that :)
+We have 
+ - CPU-readable buffers (struct page)
+ - un-readable buffers (struct net_iov)
+ - abstract reference which can be a pointer to either of the
+   above two (bitwise netmem_ref)
 
-Cheers,
-Phil
+You say you want to evacuate page pool state from struct page
+so I'd expect you to add a type which can always be fed into
+some form of $type_to_virt(). A type which can always be cast
+to net_iov, but not vice versa. So why are you putting things
+inside net_iov, not outside.
 
-> Cheers,
-> Longman
-> 
+> + * net_iovs are allocated and used by networking code, and the size of
+> + * the chunk is PAGE_SIZE.
 
--- 
-
+FWIW not for long. Patches to make the size of net_iov configurable 
+are in progress.
