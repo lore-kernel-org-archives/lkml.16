@@ -1,87 +1,70 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2DE1EC01B
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 18:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD9B1E22FC;
+	Fri, 27 Jun 2025 18:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751049213; cv=none; b=P2B6I9ZWVCXAlWkhlF4d+qMAdGreqLKC4CDo4ZjR0HRORfH/b6I6vjm193tXnX0SFMSp6KNHB4i97KyyhsjK3JGu7r1Z2vRg2eZXnHoX46EC3QiDJFv7Wcn4xYN+Tj2Na+WFkMg9WNhVg3yjPH5Q9X12Xulgi85M5K7d250D/XM=
+	t=1751049318; cv=none; b=ADU/IAEozXYkH1o2SSRqEJYXi/6QXnTkB9G1913HELP1pZJ3GBbNYi909qTxT2evy1OyBuqD/de0QScXOUWISvdWK/EB6ocmEkPzNCycRYyAYKbjCoaAEpHJzSy1OncE4Bog8co+GY0iHFgjRFXuLPSqtXKN0/P9FFslt34+IQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751049213; c=relaxed/simple;
-	bh=LFdvlMY3TCqK4PRtgCei2Vpx/E4wStOIaecqT6ZOtU4=;
+	s=arc-20240116; t=1751049318; c=relaxed/simple;
+	bh=24Rf4fcQhzVQj606dPkJtUuBP6Bx4YPQzEDioizRXAk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ACR0Nxa/BmI49nVjstC7nX+PiBYzh/mDYO54ZLNLO0n9hZPBTCj776ahsojFCR9VWEnzx/I3TzLURBRIzoerllQKgdX0xVRuYQljAes6/dNwrt6xFn8IGRneyFDnJWXK0ynKldXCVEcKb9arDTfA1xt+hk0UpXsvLTNV5D9Ss9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dgPHdGs4; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xNh6E+95; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YGjr8Q8s; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=hrjKs/vA; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=WB+N8Y1bZJsCDAh/qc5+p65gwdp1xIK4Nnb3oZVBFaRTAVy0qHzv+NWK6KZWKjmF8Wh3xj7FFZ6W6Zj4UbEH9HljmWmgkyApiu2XX6JZZQ01YLqe63OABGmHg5glsIehmrGJGK+e34PuUld7omxfrD2HN12E2tsEn5YiZgWqEvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OXROE+DY; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dgPHdGs4";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xNh6E+95";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YGjr8Q8s";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hrjKs/vA"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id EBAC81F390;
-	Fri, 27 Jun 2025 18:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751049204; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6oRt6nVMCmDpOH4aMgxdoDBrGumgwgOaEOZ7NzWu0N4=;
-	b=dgPHdGs4YmmLr5vEaIZWlDKHeUGWJXVoQesD6IT+XcCTtFWeURk3mfNZzbSVIY8IsA8jsW
-	lbeCwJOGDr726kMXdjqqvLSvURVaGvTzek2foqRWTCMbrbh0tM/CSxMjOzTIwSO2QbeJOM
-	x0POoFhx49nN/zgNBBLo9P8hWCL2g/A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751049204;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6oRt6nVMCmDpOH4aMgxdoDBrGumgwgOaEOZ7NzWu0N4=;
-	b=xNh6E+95sb8wX6QGofCmy2z/DNKUF/ZslSd2esJYAwX76olXEswfNJToHCPZ5KQHjnd/pt
-	DlQQ/yjnCnPrtiCQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=YGjr8Q8s;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="hrjKs/vA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751049203; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6oRt6nVMCmDpOH4aMgxdoDBrGumgwgOaEOZ7NzWu0N4=;
-	b=YGjr8Q8sh1i0hDViiW+E5ofYy239qvViV7O8Ey1Q07oJGjYm9r9EkgPAnFlsJNpyXzwnCw
-	49hUM+7tXVGLp37cKv4ca5ZDtp+/ucw+ixyLaZqdgW8WDJFCd7MEytMm3Zn+8ip1ExHNkJ
-	1K8IsTwYM0Y0BNZVX51oi2Jn//LlNWs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751049203;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6oRt6nVMCmDpOH4aMgxdoDBrGumgwgOaEOZ7NzWu0N4=;
-	b=hrjKs/vA2/6gtHySr1Ue6sfmwlqUfIMF8NNuOntLjBreUMZIvtJjorq70jVCa9em6C/3pk
-	yh2ZfduBxznMFCCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D3EBF13786;
-	Fri, 27 Jun 2025 18:33:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id pcxkM/PjXmhjFQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 27 Jun 2025 18:33:23 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 31A4EA08D2; Fri, 27 Jun 2025 20:33:23 +0200 (CEST)
-Date: Fri, 27 Jun 2025 20:33:23 +0200
-From: Jan Kara <jack@suse.cz>
-To: Baokun Li <libaokun1@huawei.com>
-Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, jack@suse.cz, 
-	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, linux-kernel@vger.kernel.org, 
-	yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v2 07/16] ext4: convert sbi->s_mb_free_pending to atomic_t
-Message-ID: <kn22zrgititzedfjutzudq6i3qn26ukmg26g7nzmgwahkrn3r7@bhpccisxsvz2>
-References: <20250623073304.3275702-1-libaokun1@huawei.com>
- <20250623073304.3275702-8-libaokun1@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OXROE+DY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751049315; x=1782585315;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=24Rf4fcQhzVQj606dPkJtUuBP6Bx4YPQzEDioizRXAk=;
+  b=OXROE+DYL8Da23/djCv8m/Y5dJmiJP//uoeriQKkanpiB/oZQ58LbTci
+   mR2P392UmODPtCUclh1rQqmw9j12IHWtK4+Hige/43KPvwk+pUPcWu8iM
+   jTItJ7/f20JFpQFArhLbX4e42D9rMsKeRVJQ+IADk4bQ9TGNdwb+Oz63q
+   9SeKltKrVE8g2ZLxITbNzvK4siukz1eUu8ji23GRQx/yBjmVjoiXDg8WB
+   y3G0302wWw7nkCtD70qizr7KQ0Y+xoyykFA4TcLR0vtsX5msQxeyyRzs2
+   limcCG0tsUI68C2iwUnGUA7tmkE4S4VcW4aP466hlxPGib5XRg4kCMtf1
+   w==;
+X-CSE-ConnectionGUID: xi3AB4dyT72V731xuvwtlw==
+X-CSE-MsgGUID: MTvBkacaQxuzbme7z86SKQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="53454596"
+X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
+   d="scan'208";a="53454596"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 11:35:14 -0700
+X-CSE-ConnectionGUID: HTPV0Bi2Q1yQYIAVgmgZ+Q==
+X-CSE-MsgGUID: s8sB29yzTseJmvQMpyBcQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
+   d="scan'208";a="183909918"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 11:35:11 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uVDum-0000000AYqm-04Jp;
+	Fri, 27 Jun 2025 21:35:08 +0300
+Date: Fri, 27 Jun 2025 21:35:07 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Abdalla Al-Dalleh <abdalla.ahmad@sesame.org.jo>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Gabriel Shahrouzi <gshahrouzi@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+	"open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>
+Subject: Re: [PATCH] drivers: staging: iio: frequency: ad9832.h: Fixed TODO
+ note.
+Message-ID: <aF7kW6xRxRb0VN5H@smile.fi.intel.com>
+References: <20250627175114.548076-1-abdalla.ahmad@sesame.org.jo>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,138 +73,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250623073304.3275702-8-libaokun1@huawei.com>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,suse.cz:dkim,suse.cz:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: EBAC81F390
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.01
+In-Reply-To: <20250627175114.548076-1-abdalla.ahmad@sesame.org.jo>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon 23-06-25 15:32:55, Baokun Li wrote:
-> Previously, s_md_lock was used to protect s_mb_free_pending during
-> modifications, while smp_mb() ensured fresh reads, so s_md_lock just
-> guarantees the atomicity of s_mb_free_pending. Thus we optimized it by
-> converting s_mb_free_pending into an atomic variable, thereby eliminating
-> s_md_lock and minimizing lock contention. This also prepares for future
-> lockless merging of free extents.
-> 
-> Following this modification, s_md_lock is exclusively responsible for
-> managing insertions and deletions within s_freed_data_list, along with
-> operations involving list_splice.
-> 
-> Performance test data follows:
-> 
-> Test: Running will-it-scale/fallocate2 on CPU-bound containers.
-> Observation: Average fallocate operations per container per second.
-> 
->                    | Kunpeng 920 / 512GB -P80|  AMD 9654 / 1536GB -P96 |
->  Disk: 960GB SSD   |-------------------------|-------------------------|
->                    | base  |    patched      | base  |    patched      |
-> -------------------|-------|-----------------|-------|-----------------|
-> mb_optimize_scan=0 | 19699 | 20982 (+6.5%)   | 53093 | 50629 (-4.6%)   |
-> mb_optimize_scan=1 | 9862  | 10703 (+8.5%)   | 14401 | 14856 (+3.1%)   |
-> 
-> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+On Fri, Jun 27, 2025 at 08:51:14PM +0300, Abdalla Al-Dalleh wrote:
+> - drivers/staging/iio/frequency/ad9832.c: Changed .h file location
+> - drivers/staging/iio/frequency/ad9832.h: Removed struct definition
 
-Looks good. Feel free to add:
+Nothing of the above explains "why you are doing this".
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+> - include/linux/iio/dac/ad9832.h: Added header file according to the
+>   TODO note.
 
-								Honza
+Also it sounds like you put three different things in one basket.
 
-> ---
->  fs/ext4/balloc.c  | 2 +-
->  fs/ext4/ext4.h    | 2 +-
->  fs/ext4/mballoc.c | 9 +++------
->  3 files changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/fs/ext4/balloc.c b/fs/ext4/balloc.c
-> index c48fd36b2d74..c9329ed5c094 100644
-> --- a/fs/ext4/balloc.c
-> +++ b/fs/ext4/balloc.c
-> @@ -703,7 +703,7 @@ int ext4_should_retry_alloc(struct super_block *sb, int *retries)
->  	 * possible we just missed a transaction commit that did so
->  	 */
->  	smp_mb();
-> -	if (sbi->s_mb_free_pending == 0) {
-> +	if (atomic_read(&sbi->s_mb_free_pending) == 0) {
->  		if (test_opt(sb, DISCARD)) {
->  			atomic_inc(&sbi->s_retry_alloc_pending);
->  			flush_work(&sbi->s_discard_work);
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 294198c05cdd..003b8d3726e8 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -1602,7 +1602,7 @@ struct ext4_sb_info {
->  	unsigned short *s_mb_offsets;
->  	unsigned int *s_mb_maxs;
->  	unsigned int s_group_info_size;
-> -	unsigned int s_mb_free_pending;
-> +	atomic_t s_mb_free_pending;
->  	struct list_head s_freed_data_list[2];	/* List of blocks to be freed
->  						   after commit completed */
->  	struct list_head s_discard_list;
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index 216b332a5054..5410fb3688ee 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -3680,7 +3680,7 @@ int ext4_mb_init(struct super_block *sb)
->  	}
->  
->  	spin_lock_init(&sbi->s_md_lock);
-> -	sbi->s_mb_free_pending = 0;
-> +	atomic_set(&sbi->s_mb_free_pending, 0);
->  	INIT_LIST_HEAD(&sbi->s_freed_data_list[0]);
->  	INIT_LIST_HEAD(&sbi->s_freed_data_list[1]);
->  	INIT_LIST_HEAD(&sbi->s_discard_list);
-> @@ -3894,10 +3894,7 @@ static void ext4_free_data_in_buddy(struct super_block *sb,
->  	/* we expect to find existing buddy because it's pinned */
->  	BUG_ON(err != 0);
->  
-> -	spin_lock(&EXT4_SB(sb)->s_md_lock);
-> -	EXT4_SB(sb)->s_mb_free_pending -= entry->efd_count;
-> -	spin_unlock(&EXT4_SB(sb)->s_md_lock);
+...
+
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
 > -
-> +	atomic_sub(entry->efd_count, &EXT4_SB(sb)->s_mb_free_pending);
->  	db = e4b.bd_info;
->  	/* there are blocks to put in buddy to make them really free */
->  	count += entry->efd_count;
-> @@ -6392,7 +6389,7 @@ ext4_mb_free_metadata(handle_t *handle, struct ext4_buddy *e4b,
+
+This blank line should stay. It will delimit the groups of headers.
+
+> -#include "ad9832.h"
+> +#include <linux/iio/dac/ad9832.h>
 >  
->  	spin_lock(&sbi->s_md_lock);
->  	list_add_tail(&new_entry->efd_list, &sbi->s_freed_data_list[new_entry->efd_tid & 1]);
-> -	sbi->s_mb_free_pending += clusters;
-> +	atomic_add(clusters, &sbi->s_mb_free_pending);
->  	spin_unlock(&sbi->s_md_lock);
->  }
->  
-> -- 
-> 2.46.1
-> 
+>  #include "dds.h"
+
+> +++ b/include/linux/iio/dac/ad9832.h
+> @@ -0,0 +1,33 @@
+
+Haven't you added -M -C when preparing the patch? This will make sure you are
+really copying / moving the context and show only the differences.
+
+...
+
+> +struct ad9832_platform_data {
+> +	unsigned long		freq0;
+> +	unsigned long		freq1;
+> +	unsigned short		phase0;
+> +	unsigned short		phase1;
+> +	unsigned short		phase2;
+> +	unsigned short		phase3;
+> +};
+
+Ideally this should be dropped from any global header file. If one needs
+something like this, it can be propagated via software nodes.
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+With Best Regards,
+Andy Shevchenko
+
+
