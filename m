@@ -1,167 +1,88 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CC326281
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 02:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FE5184540;
+	Fri, 27 Jun 2025 02:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750992544; cv=none; b=DG+s09RwEXUz8nK1XNhDD5BYd2CoW+tzoZHWo/EMKCURu12uf3mb/bNodZcoiI+IRmYRC5nAetcQNz8sIJnMT9xgojH8Grp9kgLj1tkroELUv1RMYuj7fIchv3EaL4OBHaDNvNa5QuUdjmzh98+x8QwljNZizNkjF0vM0xoZrmI=
+	t=1750992564; cv=none; b=TlmA2bKhvx0ewjfNLi6+Xf/oNVh55llz0vaRKag6M5vIBI3kmqSwLtahnYs1i669Ng60LExyz/QgI4dwaL8I+zi+5gzREo9WpbFZXCu7+6L7MBigTQeunmpAUGMbao8XEWn+Hp/3YUtY1Gm5RN3yiXEdxsYPfKzPjb9/fq/GdKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750992544; c=relaxed/simple;
-	bh=ycn4+QMNwehBVE4IOzl8I9T3C8WXF6gND67WoF4bUjc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RL+A1nczP0/lK3SAVXtJQ6u9q4tAuIZd8gfIquwSKyUW708J+u1RnYPSUADszbPMZHoTAV9G+2VG1bbhEccksI/SzBcYvcJ3ed7LHEy5JfvGYDZTsrZIA5wUvQk891gG3wtOYb6yRf0UfNIZOrrJJWdbkNjoTGf8YUqt2+oE9Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=obNLqC3G; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750992564; c=relaxed/simple;
+	bh=+UCtVlBLAXOI2ORddkR4UDa9jYX18LCIvBb6RX6rVeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ude+jCWyPBZoDLQAcqdIru59tP87/mWC+Gv+RMO7+GS/dDtxhcJRKrdlf4WNKqKCnGeKSe6fEKg0W8isvyIUyNhyTPjzDFH/HC9I4nTnAVySyug02Ngm5epu3a6LzkSxBcoN8d2JjVPxWfx4K2tgkN4SyfTTUSLF4cywY8YS9Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kLBpD1Qn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="obNLqC3G"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553b82f3767so1742559e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 19:49:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750992540; x=1751597340; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KIyz0TyYX+Z3NqBUdZDf3ZSHxoRX7/bXEgMDfSI548Y=;
-        b=obNLqC3GKmu7eY4GCNo4K3kXQhOKx0ABJ1AWrFCwypWPGmL2Usm5rbKKLHO3wyb2Mo
-         THdcsMxp4zeQU78t5PP/nzI8xSh1DdE1cwTcTJi6OJM82G1TtlH2imadGq6EnJEEfA32
-         cFWOU/Bsah4NiaeUnBFIWF8PN0p9FJyXBPOEQrDIXtc5fwg20ieBKzIpwgdvSzLVRXDX
-         I7qCGSOlqdo4zS1PMU7qzKjL//Z88AjYhKma/n7hdcUiM+/moFodwinKW9aqNXKW2yJQ
-         0//tayBetYwQA60xbyZhg21xsWQ8iphDjL6dEnetM0XWbNjcM+72DtFLSpf2YNXnljCH
-         5qLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750992540; x=1751597340;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KIyz0TyYX+Z3NqBUdZDf3ZSHxoRX7/bXEgMDfSI548Y=;
-        b=u/xvwWNXjFeTFUHWI3pfg55kSks3Zx26x9gUM9Pe4RXqQP/lU+FtY8juFN7WfMw7cE
-         31QCcRnvaeShEvTbuYH85JQWoF3UA8YdOJT3zYQYj3gBufG7xi28tOpUGdEeiwVr3P82
-         li+jJvkz2APKUogNQiQn/5jnC4RBu351GPy+IQErl7VB0Gmy0kGTw7Tj0HwjyeoDsRbl
-         SmdHult46zX1h3zfO2Gg6rMIyNLjoGI+/FqWKlY0rL+rZKGEhKpDgL0DDft2QQVsL9Rn
-         /qK8Ha5T+kImiL9jhofxTvqE6oxYcs9NhYCNhePCuuRvi1osqvKqPxwHyEaePZjrRH9j
-         skyA==
-X-Forwarded-Encrypted: i=1; AJvYcCVaZzoP9P7HYaG3KTaapvLO84HJNb64J6ETjoYOQWcIJduVs6naf4/QGUcl4zunW6TeEw3NRvnDBfHY+p8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaUm7Joiu8MJCNaWs4c2ioKbDJCJuXe56bhrTPF6a0T30qJcbU
-	gyK1CSP29DJgG2gl7yDmCi23hPZ0+PbIYxCh+9TQaQSAs+PxBcs7J8bbHm97WHdOyHnOPIIiz0Y
-	NxH1B1N6apMzhgZOIB61WKPX0yjr/l7K4gCnaFsE=
-X-Gm-Gg: ASbGncvcf644xfQQLNK/Un00SeFdi3hFnBpqXAVE7bF5aUgf6eXy/SZduiJVitfO8ET
-	MxukyusOQSYBoW9qm2RhU0DjPhQwQc2c2uE47ZgEzHEfIj4OSmZp7MU23eh5paBo44+cRBQz4W9
-	UpaVQln7l06WImXEMGLY1nDyjO7RY0oTVBlJWR2h1wV+lMkkCbjP7SSG8LJ8Fqrj2RAx5/h/Ab
-X-Google-Smtp-Source: AGHT+IEzF/swD5xaOdJR7lMJjb1yXBvdw4JiGquGN0u5dPeY58LAcd6ntfOPW/1JZJGrYX4JaKsPUJ8VGHh+iWR50cE=
-X-Received: by 2002:a05:6512:4007:b0:553:5283:980f with SMTP id
- 2adb3069b0e04-5550ba29ed0mr628392e87.51.1750992540108; Thu, 26 Jun 2025
- 19:49:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kLBpD1Qn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60E7AC4CEEB;
+	Fri, 27 Jun 2025 02:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750992564;
+	bh=+UCtVlBLAXOI2ORddkR4UDa9jYX18LCIvBb6RX6rVeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kLBpD1QnBw1ALAIJfkczn08T6ijgUZ4PAER9Rnxhny0mwatX1hYBZEC2q9rJngAc6
+	 F/0uRtJofaxCo7wQDkicnRfdJ46qJLR4SHePsJH7lCamf7gL4MwilpJjtPmW4rx5hr
+	 O07PvjaZn/beK/9x8eWNVD7po47qgZaIwJsEeKpfZCUYDnPtATdflri06RxrkBNkTV
+	 Onc0pH/28dNuGwzy+AqrinvtAJIPmI63f+MCH7dStgiVOd2pfRCDVu1mXFM0X2MclA
+	 nWUTWzkZxweqxx/P3VbmjBjkh3onYNO4rT1SZom2Vu+3d/pDIK5eIUjNJ7bQMaD4SG
+	 naHzoPqxiZt/A==
+Date: Fri, 27 Jun 2025 02:49:21 +0000
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Michal Gorlas <michal.gorlas@9elements.com>
+Cc: Brian Norris <briannorris@chromium.org>,
+	Julius Werner <jwerner@chromium.org>, linux-kernel@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	Marcello Sylvester Bauer <marcello.bauer@9elements.com>
+Subject: Re: [PATCH v2 2/3] firmware: coreboot: loader for Linux-owned SMI
+ handler
+Message-ID: <aF4GsTGNSHQKn7Ms@google.com>
+References: <20250616-coreboot-payload-mm-v2-0-5d679b682e13@9elements.com>
+ <20250616-coreboot-payload-mm-v2-2-5d679b682e13@9elements.com>
+ <aFuQHqSd9kT87tsF@google.com>
+ <aFvq49ODR3XfcwZJ@cyber-t14sg4>
+ <aF0x-d-uBbMQxrxO@cyber-t14sg4>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627022837.3331827-1-kuyo.chang@mediatek.com>
-In-Reply-To: <20250627022837.3331827-1-kuyo.chang@mediatek.com>
-From: John Stultz <jstultz@google.com>
-Date: Thu, 26 Jun 2025 19:48:48 -0700
-X-Gm-Features: Ac12FXwf59eyhe3NIP1HlmImClaDAHzqNeVDRK7bbuvKnPBO5OcLJhb39G9nTn8
-Message-ID: <CANDhNCorm58L9CqHyNORgfk=++HkCttmyCkM23Pn8rXV7cF41Q@mail.gmail.com>
-Subject: Re: [PATCH V4 1/1] sched/deadline: Fix dl_server runtime calculation formula
-To: Kuyo Chang <kuyo.chang@mediatek.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aF0x-d-uBbMQxrxO@cyber-t14sg4>
 
-On Thu, Jun 26, 2025 at 7:28=E2=80=AFPM Kuyo Chang <kuyo.chang@mediatek.com=
-> wrote:
-> In our testing with 6.12 based kernel on a big.LITTLE system, we were
-> seeing instances of RT tasks being blocked from running on the LITTLE
-> cpus for multiple seconds of time, apparently by the dl_server. This
-> far exceeds the default configured 50ms per second runtime.
->
-> This is due to the fair dl_server runtime calculation being scaled
-> for frequency & capacity of the cpu.
->
-> Consider the following case under a Big.LITTLE architecture:
-> Assume the runtime is: 50,000,000 ns, and Frequency/capacity
-> scale-invariance defined as below:
-> Frequency scale-invariance: 100
-> Capacity scale-invariance: 50
-> First by Frequency scale-invariance,
-> the runtime is scaled to 50,000,000 * 100 >> 10 =3D 4,882,812
-> Then by capacity scale-invariance,
-> it is further scaled to 4,882,812 * 50 >> 10 =3D 238,418.
-> So it will scaled to 238,418 ns.
->
-> This smaller "accounted runtime" value is what ends up being
-> subtracted against the fair-server's runtime for the current period.
-> Thus after 50ms of real time, we've only accounted ~238us against the
-> fair servers runtime. This 209:1 ratio in this example means that on
-> the smaller cpu the fair server is allowed to continue running,
-> blocking RT tasks, for over 10 seconds before it exhausts its supposed
-> 50ms of runtime.  And on other hardware configurations it can be even
-> worse.
->
-> For the fair deadline_server, to prevent realtime tasks from being
-> unexpectedly delayed, we really do want to use fixed time, and not
-> scaled time for smaller capacity/frequency cpus. So remove the scaling
-> from the fair server's accounting to fix this.
->
+On Thu, Jun 26, 2025 at 01:41:45PM +0200, Michal Gorlas wrote:
+> On Wed, Jun 25, 2025 at 02:26:11PM +0200, Michal Gorlas wrote:
+> > > > +
+> > > > +	/*
+> > > > +	 * Gives SMI some time in case it takes longer than expected.
+> > > > +	 * Only useful on real hardware (tested on RaptorLake), not needed on emulation.
+> > > > +	 */
+> > > > +	mdelay(100);
+> > > 
+> > > This looks weird. Are there some ways for Linux to be aware of the SMI has
+> > > completed?
+> > 
+> > Not in a straight forward fashion. On Intel SoCs we could read MSR_SMI_COUNT
+> > [1] before and after sending an SMI, and wait till it increments. I am
+> > not aware about any unified way that works for AMD SoCs. However, so far
+> > none of the AMD boards supported by coreboot was tested with MM payload,
+> > so to make it Intel-only in v3 is not a bad idea.
+> > 
+> > [1]: https://elixir.bootlin.com/linux/v6.16-rc3/source/arch/x86/include/asm/msr-index.h#L880
+> 
+> As a follow-up here, making COREBOOT_PAYLOAD_MM dependent on !SMP
+> resolves the need of acknowledging SMI completion. If SMI takes longer,
+> Linux is just stalled until SMI handler gives the CPU back to the caller.
+> I think for this case it could be the way, LinuxBoot is by default
+> compiled without SMP support anyways when used as coreboot's payload [1],
+> [2].
+> 
+> [1]: https://github.com/coreboot/coreboot/blob/main/payloads/external/LinuxBoot/x86_64/defconfig
+> [2]: https://github.com/coreboot/coreboot/blob/main/payloads/external/LinuxBoot/i386/defconfig
 
-Thanks again for revising the commit message, this version is easier
-(for me at least) to follow.
+To make sure I understand: do you mean the trigger_smi() becomes a blocking
+call without a timeout?
 
-
-> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> index ad45a8fea245..96a21f38fcc3 100644
-> --- a/kernel/sched/deadline.c
-> +++ b/kernel/sched/deadline.c
-> @@ -1624,7 +1626,9 @@ void dl_server_update_idle_time(struct rq *rq, stru=
-ct task_struct *p)
->         if (delta_exec < 0)
->                 return;
->
-> -       scaled_delta_exec =3D dl_scaled_delta_exec(rq, &rq->fair_server, =
-delta_exec);
-> +       scaled_delta_exec =3D delta_exec;
-> +       if (!rq->fair_server.dl_server)
-> +               scaled_delta_exec =3D dl_scaled_delta_exec(rq, &rq->fair_=
-server, delta_exec);
->
->         rq->fair_server.runtime -=3D scaled_delta_exec;
-
-As I mentioned earlier, I still don't see this conditional as making a
-lot of sense, as I don't believe there is time when this function
-would be called and (!rq->fair_server.dl_server) would be true.
-And even if there were, I'm not sure it makes sense to scale the time
-interval based on the fair_server.dl_server flag.
-
-From a separate discussion, you highlighted that it might be useful
-once we have multiple dl_server types, which may want scaled
-accounting, but I think in that case we should use an explicit flag
-instead of the dl_server bit to denote if the accounting should be
-scaled or not.
-
-So, since your patch is a fix for a pretty bad bug, I think it should
-be focused on fixing the issue in the simplest and clearest way for
-the existing code, and not be too worried about integrating with
-future changes that haven't landed.
-
-Then, as those future changes land, we can see how best to generalize
-the decision to scale or not scale the accounting on a dl_server.
-
-That said, the conditional is a bit of a moot point, since I don't
-think we'll actually hit it, and I'm motivated to get the bug you are
-fixing resolved, so I wouldn't object if this went in as-is, but it
-seems like it would be much cleaner to just drop that conditional as
-you did in the original version of this patch.
-
-Thanks so much again for your iterating on this change here! I really
-appreciate your efforts to both find this issue as well as to get it
-fixed!
--john
+I may misunderstand: depends on !SMP which also means it can't use on most
+modern architectures.
