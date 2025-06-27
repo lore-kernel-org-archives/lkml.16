@@ -1,93 +1,152 @@
-Received: from e3i282.smtp2go.com (e3i282.smtp2go.com [158.120.85.26])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FC12ECD1F
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.85.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8546A134AC;
+	Fri, 27 Jun 2025 20:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751057522; cv=none; b=C7I/7tKZhVuwVX42cyT4Lb5mEBsA0WM9CCCL4kQKEyFyAIikW8Q6gb7RAjbUiDM4pDR9PoD5lX3M9rtsCnfgwCQzxygTe68MXmc9Ac5jaIMOykxZ1R6htBzaQEchHLWRS1+eYig+GXPNRh3H2hXnzk8G/knm9uvtrhc/5pkq8lg=
+	t=1751057618; cv=none; b=IclIv7cKI67RV0ba+zC+K9qB45cJq+fMxPq1xM+9zMSgEkKr5fiqjVyayRxQRCu0ENZzTIWXVthYWzhhDa0c7UnObC68QhDyID3+rVgIpANUz7VOx04dzd2pd/EIZmA5jgSxPeVk3d5qtgizo47fujEXTOBuZgSKn+EKzRr39tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751057522; c=relaxed/simple;
-	bh=hnIQiztxMqZWdOo1P+htuYxmTRJegAPaInqW5mKJO1o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GkAm/ODqXhpXycOIewewsR9lve/eVao15SPBlpaJJUGglEwEdMt80Etkoq+bG/16mYzJGhGLLaIs8AzxRM9hTjfAPd3l1kteb8kylLtpmsnZU8ooHPxd5qIrMwIvUz2lLvWV/IZYAucOguYEndxukh2/OfJD7NIYSSLNk7Cme6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev; spf=pass smtp.mailfrom=em1255854.medip.dev; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=av4kSKYL; dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b=Ly+Zqvtq; arc=none smtp.client-ip=158.120.85.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1255854.medip.dev
+	s=arc-20240116; t=1751057618; c=relaxed/simple;
+	bh=7bBkr7vOy93+eqGqvYWVbUJzuDZHDCdQa+v7bLkdR0c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CJquZAlo9Pn89JLTdqbph9E0+M0wRT+Y2fp1opkDWF7oJwv3/KZtzlc3JuSD+moiSG/zqQL5rKO4H6Z5SSuVfyhrqV4HVmasJowrxRImUL4AYTHoDn36csrdfoC1OKy1r9eacMYfkAHVJkcrMT1iFYcz4RTvP0IIey3YaMvyqP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=uEu6qiMj; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="av4kSKYL";
-	dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b="Ly+Zqvtq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpservice.net;
- i=@smtpservice.net; q=dns/txt; s=a1-4; t=1751056609; h=feedback-id :
- x-smtpcorp-track : date : message-id : to : subject : from : reply-to
- : sender : list-unsubscribe : list-unsubscribe-post;
- bh=TqdWV7/vA1rvF4B46py+BIoi1Rg8y4mycuMpMH6ZDBQ=;
- b=av4kSKYLDByvQKFQewI0AeGRQpE6TT14Rq5yCQFv4TWsXzWEsYGmLRMBKtZrdqq+sMGnw
- n/auzkCIDFCoZ9/ij8jENxRfo23x9Ig+j3y1QYzIwtBPoQ2quxdOM6iPvUrjdMlRdVmHu0c
- h+GgDJLXt/NF0a7WPdKnpR7k+WDfVL/DSGRLvKZ31TfFhewvWlxTfmlafxdMD+ZN5RHHT0H
- u3dweNETCHu+2BMFXkTmYdBYAR47l1S0PttPcvQmty6bgQ9K4arLwVcmjnbqXAlqkrvaqYM
- GOJeQ8Zcl9zYI7PyYTdfDPXhVV5xMYyzFXiEhnYULm1npdsuD9JZfhORU2yg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=medip.dev;
- i=@medip.dev; q=dns/txt; s=s1255854; t=1751056609; h=from : subject :
- to : message-id : date;
- bh=TqdWV7/vA1rvF4B46py+BIoi1Rg8y4mycuMpMH6ZDBQ=;
- b=Ly+ZqvtqFPf8NbXHLWbg+++xHg3waNOtJWTSkUTj73ev2ALh1+ispds0Q/DV6fgFHlMNZ
- 6Q++LHGodnUuyPTZ2aO1XRe34/9isRyKhtTeY5Gjc69WwBQPadbc+lrBGGRrUbWlsDOoxXU
- eAsgWK9g/GcHz8m5hf93w81yBTom8hukDiVYqRS0woXOby2fa6JxDNYfEcw7fW46iNGwcG3
- bhTembhvviKpxEillyvXrHws+omWleXDc5qDnpDSBH9TZnQAP/gaOxiB5R7ienZDwsGPMb0
- ph+tNtopb+m/l52lXir5id1REt8yVLRZdKhTmkzahTNpLrX17RLfIrherKJA==
-Received: from [10.152.250.198] (helo=vilez)
-	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.1-S2G)
-	(envelope-from <edip@medip.dev>)
-	id 1uVFoO-FnQW0hPsXUs-39tC;
-	Fri, 27 Jun 2025 20:36:41 +0000
-From: edip@medip.dev
-To: perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-sound@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="uEu6qiMj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1751057613; x=1751662413; i=w_armin@gmx.de;
+	bh=wBbodj4U8PSmgG+umKsS8wnN/yuTYmb0Sf8A08BFjT4=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=uEu6qiMjDPz17MFiAyZeCbo7CzCrHnMp1egYLyUsl5yFTLOoFKHu7N1Wjd9vYVgh
+	 zwOpbKyBswPwRDGrnVI+Dpjj7sX/0PMz04IMG9O4enQSQRIZLnLnFOnEO1rPjnGQb
+	 YaW9YXcm8Lpbabv584MQpDHuBlgkDj+6t42cFTdQfhXjQAa08vXDDF2pCYo8SjQNB
+	 odvqgA+KOfnYhOYp+qSF8FQ8bUdet6f7klGKYs4pm0LjVbI/0V7vYvAlHF+6qbpEs
+	 O44+9ZfsvU0bewubeFtxoTEuOudN9PxZSrEib3UpJTMUPjTzNnQ644V1aemJe0V2z
+	 5Jy4wr++4hluKVC7Yg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MD9X9-1udonU1ONt-00BdAG; Fri, 27 Jun 2025 22:53:33 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: sre@kernel.org,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: linux-pm@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Edip Hazuri <edip@medip.dev>,
-	stable@vger.kernel.org
-Subject: [PATCH] ALSA: hda/realtek - Add mute LED support for HP Victus 15-fb2xxx
-Date: Fri, 27 Jun 2025 23:34:16 +0300
-Message-ID: <20250627203415.56785-2-edip@medip.dev>
-X-Mailer: git-send-email 2.50.0
+	linux@weissschuh.net
+Subject: [PATCH 2/3] power: supply: test-power: Test access to extended power supply
+Date: Fri, 27 Jun 2025 22:53:24 +0200
+Message-Id: <20250627205325.250608-2-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250627205325.250608-1-W_Armin@gmx.de>
+References: <20250627205325.250608-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
-Feedback-ID: 1255854m:1255854ay30w_v:1255854sS8hnAP156
-X-smtpcorp-track: UnwhM9mHtMbX.i6ZMZODIbA4Z.-5GMkAxhpj1
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:hsLVzFy4XGIbkxbD0331eYTkwhkNqRVEGwT+5R/iRfzA6buflyf
+ xnnSmKgXxwY4+u9h+W6Ip2tRu9CcULC8GnlQGt25PXQGNiMgeZFhXkrMuDNQOA+LRIq5RWp
+ Z4HdkfB491clwdcNrfrFtiq5ZJsMd/FISkUqJi73Ldd9si/VOFe6Er4iRoMACQ+ZyZSoc3u
+ /EDTuz0FEWH9T5J4z94Lw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ra284GPEdPg=;EnAh/g53jKuft6RWcmDX7uDwLTM
+ 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
+ IxTbDZaTiCgzfrr/6Z8yHk5cpSaFhehA=
 
-From: Edip Hazuri <edip@medip.dev>
+Test that power supply extensions can access properties of their
+power supply using power_supply_get_property_direct(). This both
+ensures that the functionality works and serves as an example for
+future driver developers.
 
-The mute led on this laptop is using ALC245 but requires a quirk to work
-This patch enables the existing quirk for the device.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/power/supply/test_power.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Tested on my friend's Victus 15-fb2xxx Laptop. The LED behaviour works as intended.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Edip Hazuri <edip@medip.dev>
----
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 5d6d01ecf..a33e8a654 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10881,6 +10881,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8ce0, "HP SnowWhite", ALC287_FIXUP_CS35L41_I2C_2_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8cf5, "HP ZBook Studio 16", ALC245_FIXUP_CS35L41_SPI_4_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8d01, "HP ZBook Power 14 G12", ALC285_FIXUP_HP_GPIO_LED),
-+	SND_PCI_QUIRK(0x103c, 0x8d07, "HP Victus 15-fb2xxx (MB 8D07)", ALC245_FIXUP_HP_MUTE_LED_COEFBIT),
- 	SND_PCI_QUIRK(0x103c, 0x8d18, "HP EliteStudio 8 AIO", ALC274_FIXUP_HP_AIO_BIND_DACS),
- 	SND_PCI_QUIRK(0x103c, 0x8d84, "HP EliteBook X G1i", ALC285_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8d85, "HP EliteBook 14 G12", ALC285_FIXUP_HP_GPIO_LED),
--- 
-2.50.0
+diff --git a/drivers/power/supply/test_power.c b/drivers/power/supply/test=
+_power.c
+index 5bfdfcf6013b..2c0e9ad820c0 100644
+=2D-- a/drivers/power/supply/test_power.c
++++ b/drivers/power/supply/test_power.c
+@@ -259,6 +259,7 @@ static const struct power_supply_config test_power_con=
+figs[] =3D {
+ static int test_power_battery_extmanufacture_year =3D 1234;
+ static int test_power_battery_exttemp_max =3D 1000;
+ static const enum power_supply_property test_power_battery_extprops[] =3D=
+ {
++	POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW,
+ 	POWER_SUPPLY_PROP_MANUFACTURE_YEAR,
+ 	POWER_SUPPLY_PROP_TEMP_MAX,
+ };
+@@ -270,6 +271,9 @@ static int test_power_battery_extget_property(struct p=
+ower_supply *psy,
+ 					      union power_supply_propval *val)
+ {
+ 	switch (psp) {
++	case POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW:
++		return power_supply_get_property_direct(psy, POWER_SUPPLY_PROP_TIME_TO_=
+EMPTY_AVG,
++							val);
+ 	case POWER_SUPPLY_PROP_MANUFACTURE_YEAR:
+ 		val->intval =3D test_power_battery_extmanufacture_year;
+ 		break;
+=2D-=20
+2.39.5
 
