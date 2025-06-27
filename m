@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36722DE1E7;
-	Fri, 27 Jun 2025 14:06:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F086A2DE211;
+	Fri, 27 Jun 2025 14:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751033192; cv=none; b=nBhDeiHBv0fk3sGuZF1d1qwAnkTYVKjs2nMVfFi17PFkgtmAkSXetGqGSLHaTqMZ4MQQpGjVQI/+H374wUiHQq4YfKPSs60m0JGCaTPzrJYaM5T3YCrJTAXzrG+rYnKvcguUFBKlvSaFmEG3Tv8PHfspIggcclr/VVL92DM9HgA=
+	t=1751033193; cv=none; b=itIip6SXlDTux3CJkflWYvUMsWdlmOn5XLU0Ue9DIvFxSCGRAFiPSE8Dtce1TMdMuwHt9TGPLvr+VOXLuTbUQ0lb7HtZjZWDiCCXU4KsLOrVc/j9jhrwjdg2mHzP39KI0LyTiEQBdDwwRSB9XUPUzpcMG1jhEb/fSKiIMXAZCo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751033192; c=relaxed/simple;
-	bh=adVsjIBtKgCgfvIZbKXclC2cbdubaiTo5YZIsWYdjqA=;
+	s=arc-20240116; t=1751033193; c=relaxed/simple;
+	bh=cx3cfDqYfml9hV1dbrF3BBDdYHzNauZUQLohSd44LWI=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Ueo8liShSRdEkkeG6WfYzBZj9xQtKLAqzyrNcOAWHyZjbhtc2lHm2ed7PuiMgnOpt1AW1Rd6zoikuIdfnCR0/TsZVm5m9700d/w3jgRbrwZIVNVEZHbkNXDKsBFkx12ljI16IF6FRzlmbEwZ7pUafxbKnitLaA5F6BZ/XlKyNJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jZ5t9e4S; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=RhRessquWG0Yun5AFotwVXQLs0m1RI5ocq780OwBUe77XTRmNqq9SgEX5bwdTrp90cLRvqjvWPzpXviBa4gpMBIxlwtRSgkAUZUZPWPNjiE2+p69yJ2/1ZJVybpwpUoQ6WwnDuooyGOcYxvMfXlvGV1f8QnYtZmnjRKY6QlfyGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eLwD4NyA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZ5t9e4S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD77FC4CEE3;
-	Fri, 27 Jun 2025 14:06:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eLwD4NyA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7D0DC4CEED;
+	Fri, 27 Jun 2025 14:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751033191;
-	bh=adVsjIBtKgCgfvIZbKXclC2cbdubaiTo5YZIsWYdjqA=;
+	s=k20201202; t=1751033192;
+	bh=cx3cfDqYfml9hV1dbrF3BBDdYHzNauZUQLohSd44LWI=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=jZ5t9e4SSWnGYL0n2bI4xn1iOrlC+e/Nf4REXNYlxgqerKtOjjvsgPzXd1jxylOOC
-	 84facDh65ry5zHJWSewulap42brLM0ofT6G9YDow0rqvEv2ZEv9FUwfkB3V7NuuZgT
-	 BS5i2jX/1UV7J5+17yFOh59uv2yqTerAkTBlzgDobTE/JotqgYrOayXgfGoYjZfcbK
-	 zUHOG+bOV+n8B+jSldNIDoD9lfP3PJses40Iu4uoW6i732j0lHhxu+N6H02JPMF2O7
-	 NZ0/POcs7Vy+K2OHvbulthQwNu9CNHwasY/HT99WUhkBpc3SmaKB9v55/wvz3KlXtg
-	 W4HI7DsBO2ymw==
-Date: Fri, 27 Jun 2025 09:06:30 -0500
+	b=eLwD4NyAv3OzHJZbC3TUTa9zbjGqUYr0wrSJ+Tz/zfIYnIhUNr6bpoWgADe+Q5ZZi
+	 DBBgztSpx3jYcQl9m0cUhMhB4be1aLgSYnortrqAS1rH++fKo8+bhlC5LySlZ9GsXt
+	 /WdozpPW85WUFjD26uWFt4J5m7IPe9qCjGN1MG79HYauafibsM1EFX4fkytxQEOUdy
+	 myFZaDqyVQwEfGFE2PzH+SIICzk9C9W7gAFMxtwv9idi0VyiOVaOSCz4Bo6Tv73iET
+	 H3xFuQv9yP35IuZxFDmtvR1x02xNcpfd4EcuOEW7MOmzK/x0LsXIP/VjZ9H9qSUni/
+	 j+hBeg+iFzE7g==
+Date: Fri, 27 Jun 2025 09:06:32 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,70 +36,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Leo Wang <leo.jt.wang@fii-foxconn.com>, 
- Magnus Damm <magnus.damm@gmail.com>, george.kw.lee@fii-foxconn.com, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-aspeed@lists.ozlabs.org, 
- linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>, 
- Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
- linux-arm-kernel@lists.infradead.org, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, 
- linux-renesas-soc@vger.kernel.org, 
- Geert Uytterhoeven <geert+renesas@glider.be>, bruce.jy.hung@fii-foxconn.com, 
- linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>, 
- devicetree@vger.kernel.org
-To: Leo Wang <leo.jt.wang@gmail.com>
-In-Reply-To: <20250627-add-support-for-meta-clemente-bmc-v5-0-038ed6f1cb9f@fii-foxconn.com>
-References: <20250627-add-support-for-meta-clemente-bmc-v5-0-038ed6f1cb9f@fii-foxconn.com>
-Message-Id: <175103315156.3220577.5517131859109984485.robh@kernel.org>
-Subject: Re: [PATCH v5 0/2] ARM: dts: Add support for Meta Clemente BMC
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-samsung-soc@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+In-Reply-To: <20250627-exynos7870-drm-dts-v2-0-d4a59207390d@disroot.org>
+References: <20250627-exynos7870-drm-dts-v2-0-d4a59207390d@disroot.org>
+Message-Id: <175103315202.3220613.9523717145992109827.robh@kernel.org>
+Subject: Re: [PATCH v2 0/6] Support for Exynos7870's display stack (DECON,
+ MIPIPHY, DSIM, etc.)
 
 
-On Fri, 27 Jun 2025 15:31:20 +0800, Leo Wang wrote:
-> This series adds initial support for the Meta Clemente BMC based on the ASPEED AST2600 SoC.
+On Fri, 27 Jun 2025 01:43:23 +0530, Kaustabh Chakraborty wrote:
+> Exynos7870 has a IP subsystem in its architecture dedicated to display
+> management. Notably, this block includes the Display Enhancement
+> Controller (DECON), and the DSI Master (DSIM).
 > 
-> Patch 1 documents the compatible string.
-> Patch 2 adds the device tree for the board.
+> The following series and its sub-series implement all components for a
+> functioning display pipeline. All vital information which helped shaping
+> up the patches have been retrieved from Exynos7870 vendor kernel sources
+> as provided by Samsung.
 > 
-> Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
+> Testing has been done on all three devices available upstream, i.e.
+> Samsung Galaxy J7 Prime (samsung-on7xelte), Samsung Galaxy A2 Core
+> (samsung-a2corelte), and Samsung Galaxy J6 (samsung-j6lte). Regrettably,
+> I've only been able to test the functionality on video mode, as none of
+> the devices have panels working in command mode.
+> 
+> This series implements changes in the SoC subsystem, which includes
+> devicetree additions. It depends on all sub-series listed below:
+> (Legend: [R]eviewed, [A]ccepted)
+> 
+> exynosdrm-decon            - https://lore.kernel.org/r/20250627-exynosdrm-decon-v3-0-5b456f88cfea@disroot.org
+> exynos7870-mipi-phy        A https://lore.kernel.org/r/20250612-exynos7870-mipi-phy-v1-0-3fff0b62d9d3@disroot.org
+> exynos7870-mipi-phy-fix    - https://lore.kernel.org/r/20250627-exynos7870-mipi-phy-fix-v1-0-2eefab8b50df@disroot.org
+> exynos7870-dsim            - https://lore.kernel.org/r/20250627-exynos7870-dsim-v2-0-1433b67378d3@disroot.org
+> panel-samsung-s6e8aa5x01   - https://lore.kernel.org/r/20250625-panel-samsung-s6e8aa5x01-v3-0-9a1494fe6c50@disroot.org
+> panel-synaptics-tddi       - https://lore.kernel.org/r/20250625-panel-synaptics-tddi-v2-0-7a62ab1d13c7@disroot.org
+> 
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
 > ---
-> Changes in v5:
-> - Remove accidently pasted texts.
-> - Link to v4: https://lore.kernel.org/r/20250627-add-support-for-meta-clemente-bmc-v4-0-ce7ff23460c4@fii-foxconn.com
-> 
-> Changes in v4:
-> - Move properties of nodes defined in the same file from label ref back to where they belong.
-> - Move pinctrl default configs for ncsi3 and ncsi4 to aspeed-g6-pinctrl.dtsi.
-> - Add properties to i2c10 and i2c15 to enable MCTP.
-> - Link to v3: https://lore.kernel.org/r/20250623-add-support-for-meta-clemente-bmc-v3-0-c223ffcf46cf@fii-foxconn.com
-> 
-> Changes in v3:
-> - Modify leakage sensor to reflect current design.
-> - Link to v2: https://lore.kernel.org/r/20250621-add-support-for-meta-clemente-bmc-v2-0-6c5ef059149c@fii-foxconn.com
-> 
 > Changes in v2:
-> - Fix patch 1/2 subject line to match dt-bindings convention.
-> - Reorder device tree nodes in patch 2/2 to follow upstream DTS style.
-> - Link to v1: https://lore.kernel.org/r/20250618-add-support-for-meta-clemente-bmc-v1-0-e5ca669ee47b@fii-foxconn.com
+> - modified compatible hierarchy to use non-deprecated syntax (krzk)
+> - fixed subject prefixes of [v1 2/5], [v1 3/5], [v1 4/5], [v1 5/5] (krzk)
+> - removed simplefb nodes instead of disabling it (krzk)
+> - added dt-bindings patch to allow mipi-phy node under PMU
+> - changed clock names of dsim node
+> - Link to v1: https://lore.kernel.org/r/20250612-exynos7870-drm-dts-v1-0-88c0779af6cb@disroot.org
 > 
 > ---
-> Leo Wang (2):
->       dt-bindings: arm: aspeed: add Meta Clemente board
->       ARM: dts: aspeed: clemente: add Meta Clemente BMC
+> Kaustabh Chakraborty (6):
+>       dt-bindings: samsung: exynos-sysreg: add exynos7870 sysregs
+>       dt-bindings: soc: samsung: exynos-pmu: allow mipi-phy subnode
+>       arm64: dts: exynos7870: add DSI support
+>       arm64: dts: exynos7870-on7xelte: enable display panel support
+>       arm64: dts: exynos7870-a2corelte: enable display panel support
+>       arm64: dts: exynos7870-j6lte: enable display panel support
 > 
->  .../devicetree/bindings/arm/aspeed/aspeed.yaml     |    1 +
->  arch/arm/boot/dts/aspeed/Makefile                  |    1 +
->  .../dts/aspeed/aspeed-bmc-facebook-clemente.dts    | 1291 ++++++++++++++++++++
->  arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi    |   11 +
->  4 files changed, 1304 insertions(+)
+>  .../bindings/soc/samsung/exynos-pmu.yaml           |  1 +
+>  .../soc/samsung/samsung,exynos-sysreg.yaml         |  2 +
+>  .../arm64/boot/dts/exynos/exynos7870-a2corelte.dts | 52 +++++++++----
+>  arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts    | 49 ++++++++----
+>  arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts | 51 ++++++++----
+>  arch/arm64/boot/dts/exynos/exynos7870.dtsi         | 90 ++++++++++++++++++++++
+>  6 files changed, 206 insertions(+), 39 deletions(-)
 > ---
-> base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
-> change-id: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
+> base-commit: 1b152eeca84a02bdb648f16b82ef3394007a9dcf
+> change-id: 20250523-exynos7870-drm-dts-87ccab731ba9
 > 
 > Best regards,
 > --
-> Leo Wang <leo.jt.wang@fii-foxconn.com>
+> Kaustabh Chakraborty <kauschluss@disroot.org>
 > 
 > 
 > 
@@ -120,60 +129,25 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: using specified base-commit 52da431bf03b5506203bca27fe14a97895c80faf
+ Base: using specified base-commit 1b152eeca84a02bdb648f16b82ef3394007a9dcf
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/aspeed/' for 20250627-add-support-for-meta-clemente-bmc-v5-0-038ed6f1cb9f@fii-foxconn.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/exynos/' for 20250627-exynos7870-drm-dts-v2-0-d4a59207390d@disroot.org:
 
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: timer (arm,armv7-timer): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/timer/arm,arch_timer.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /sdram@1e6e0000: failed to match any schema with compatible: ['aspeed,ast2600-sdram-edac', 'syscon']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: bus@1e600000 (aspeed,ast2600-ahbc): compatible: ['aspeed,ast2600-ahbc', 'syscon'] is too long
-	from schema $id: http://devicetree.org/schemas/bus/aspeed,ast2600-ahbc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: syscon@1e6e2000 (aspeed,ast2600-scu): 'smp-memram@180' does not match any of the regexes: '^interrupt-controller@[0-9a-f]+$', '^p2a-control@[0-9a-f]+$', '^pinctrl(@[0-9a-f]+)?$', '^pinctrl-[0-9]+$', '^silicon-id@[0-9a-f]+$'
-	from schema $id: http://devicetree.org/schemas/mfd/aspeed,ast2x00-scu.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/syscon@1e6e2000/smp-memram@180: failed to match any schema with compatible: ['aspeed,ast2600-smpmem']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/display@1e6e6000: failed to match any schema with compatible: ['aspeed,ast2600-gfx', 'syscon']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@1e6e9000 (aspeed,ast2600-adc0): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@1e6e9100 (aspeed,ast2600-adc1): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: crypto@1e6fa000 (aspeed,ast2600-acry): 'aspeed,ahbc' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/crypto/aspeed,ast2600-acry.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/timer@1e782000: failed to match any schema with compatible: ['aspeed,ast2600-timer']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): reg-io-width: 4 is not of type 'object'
-	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): lpc-snoop@80: 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@24 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@28 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@2c (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@114 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/lpc@1e789000/lhc@a0: failed to match any schema with compatible: ['aspeed,ast2600-lhc']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/lpc@1e789000/ibt@140: failed to match any schema with compatible: ['aspeed,ast2600-ibt-bmc']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740100:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
-	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740200:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
-	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/sdc@1e740000/sdhci@1e740100: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/sdc@1e740000/sdhci@1e740200: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@34 (maxim,max1363): '#address-cells', '#size-cells', 'channel@0', 'channel@1', 'channel@2', 'channel@3' do not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/iio/adc/maxim,max1363.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@35 (maxim,max1363): '#address-cells', '#size-cells', 'channel@0', 'channel@1', 'channel@2', 'channel@3' do not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/iio/adc/maxim,max1363.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: fsi@1e79b000 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
-	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/fsi@1e79b000: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: fsi@1e79b100 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
-	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/fsi@1e79b100: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/dma-controller@1e79e000: failed to match any schema with compatible: ['aspeed,ast2600-udma']
+arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dtb: /soc@0/dsi@14800000: failed to match any schema with compatible: ['samsung,exynos7870-mipi-dsi']
+arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dtb: /soc@0/dsi@14800000/panel@0: failed to match any schema with compatible: ['syna,td4300-panel']
+arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dtb: decon@14830000 (samsung,exynos7870-decon): 'iommus', 'ports' do not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/display/samsung/samsung,exynos7-decon.yaml#
+arch/arm64/boot/dts/exynos/exynos7870-a2corelte.dtb: /soc@0/dsi@14800000: failed to match any schema with compatible: ['samsung,exynos7870-mipi-dsi']
+arch/arm64/boot/dts/exynos/exynos7870-a2corelte.dtb: /soc@0/dsi@14800000/panel@0: failed to match any schema with compatible: ['syna,td4101-panel']
+arch/arm64/boot/dts/exynos/exynos7870-a2corelte.dtb: decon@14830000 (samsung,exynos7870-decon): 'iommus', 'ports' do not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/display/samsung/samsung,exynos7-decon.yaml#
+arch/arm64/boot/dts/exynos/exynos7870-j6lte.dtb: /soc@0/dsi@14800000: failed to match any schema with compatible: ['samsung,exynos7870-mipi-dsi']
+arch/arm64/boot/dts/exynos/exynos7870-j6lte.dtb: /soc@0/dsi@14800000/panel@0: failed to match any schema with compatible: ['samsung,s6e8aa5x01']
+arch/arm64/boot/dts/exynos/exynos7870-j6lte.dtb: decon@14830000 (samsung,exynos7870-decon): 'iommus', 'ports' do not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/display/samsung/samsung,exynos7-decon.yaml#
 
 
 
