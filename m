@@ -1,843 +1,147 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621EF2ED168
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F1D2ECD36;
+	Fri, 27 Jun 2025 20:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751056704; cv=none; b=hu3qmTICVUPZp6bqXasQlazzqUe7F5QbOgRyPunQV4INJgtttH4pFAdX+69Svy6LyXoIzX/zIRVs1Kk9Tn6jp/fUn2npGHEE6AXKo+VeggiMDkRlQce8cZsRLuoPKwPEqXd5z2mnz8stHTCauFJbukni3ICSrk1C0d9iEkK97qc=
+	t=1751056710; cv=none; b=nSyBwMm3NDU14fPmh218XfFv9mWeEKAyX28PuPwjHDNVxyHM3zhwSzpHM32Z0KnTA07EO02Xc8+Ih8iWGwP0pajLRpAN7E8ypBI17C+/RjdtzOkXMdvLywdYagaHeM/jRChH4rI25F0cj+SGQjBgvBT71qIC/KavfxmwzVHb0H8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751056704; c=relaxed/simple;
-	bh=wb8oYRoTY0+9D1slnTkZLIYKZBXALupCR0E0+NW6+xo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Wln7eMcraLiPRzBOFZI3uXkWASe8wS3i7MetjcjApA4iM1XJBFhOrKDTfWpfBOO0SpR3pGVnriO2YQSPMuEjsIP2HPRUUCfdDwdIDPujba8KJqJh667xSJLXEvLYHksJFSb14Po5AiEuBc6EqdMsKjZbMlKtDjlN1RPNyIu4T64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KXRI4V6s; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com
+	s=arc-20240116; t=1751056710; c=relaxed/simple;
+	bh=+eGj7zgGi5dwTzNE1CT8j7CF9nne/AsU+wpmGrdbYzk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=nzN5592Ygo9K9X10EGRSUXnfoyj426BvdfdUw7BfttS1fkVzb8/0FhhTKWL9zAYjq2BJUzdfbEoHsCkcMpbes0J6CvhygA8cf+LjPDI93MKgUjS9nm8ZBdJ50HKZFWkyBEj512zeHQhYJD6ivlfTPbaSml0790U6MjAd7aXZKTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RDM2Q/V8; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KXRI4V6s"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2eeff19115so3475878a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:38:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RDM2Q/V8"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4a44e94f0b0so34817531cf.1;
+        Fri, 27 Jun 2025 13:38:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751056701; x=1751661501; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pbblKIP5kwGJthzjmPtWkjGHdpslgAQakiXmXt1cBQ8=;
-        b=KXRI4V6sE7ymT9YZlgu/4rfta/hStgSYfuNFzHrAnaHYMcHAt2DbKnjfL2syCkrYl5
-         WIG3KY/ho9RpIETNwPQvqLZkRV+NVMOdNe3OkNlyKi/FRtL2ipck4Kt4iZIe4vyV9lKl
-         2u0yTzjtAtxtGL8ygNnJmN9/vJLLaP92kp8PBda/8to/p5/uhXtCFnyRt/6GXisEg+WF
-         h2VNeAh+nBloDgczDleT3khptaEHKOSm6zshbcl3EjlXZU9GFmN5/6wOTDHwRj5Q+Ehr
-         aRc9d9y0jplHMbCCyrw5IVsU8EAW2Dt66jPZ/PUqIP/A7Udt8aSPuuCuKXZJEu55XeC2
-         8Z2g==
+        d=gmail.com; s=20230601; t=1751056708; x=1751661508; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HRQMeMJ9GJ70sWKndVBYSqsjABZis78O/cgobcgMLcI=;
+        b=RDM2Q/V8lyQAL04rLT9tNREKcFYRqYH8XDJBiSIE6jcfqhYCdw9Nx1bDngwhFWGhkz
+         W+AI4RSjUp6ZeozBig99l6TaJyb3vlW06WqSLQ5At6QDSABoV+kR3RHnv0DnEBnCPmLy
+         8zbJe0pcm+D4wtDxETQQqjBw/lb5hcFjQkLWzAKR/E1hmc4psdAq+cNDtJ3G6XnjyVkQ
+         +Znh3+QUawfOoPt8Twe63gzXZI37m/h8/nKsJF7x5Bd09cu6y/XQEI6m6+Qd84Uys1Mx
+         OkrTRg263R5rzuiLTIJE/gBptihbHK2iX3gKcsaHyRk9blAhrP/XNLMBicD+BeWANUT4
+         3l7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751056701; x=1751661501;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pbblKIP5kwGJthzjmPtWkjGHdpslgAQakiXmXt1cBQ8=;
-        b=thfjUFeMJ+Xei5asGfeXIl9skgAOMWjn+mY6Jw11qgsI6BDSSiCoW0SDyswju7tOMO
-         CqPuJUjeS/yidC62ADkiVXvIRV1nCW+LWgeHxspLgRJ18judls7K4sWWmLERQdZO4mHx
-         mjBmFZtS7GC3z9vUnt9+M1pAqzYrMvN9f1Ura8BEK0eYdLVwa0iCGf5+Lua2Hm22m04C
-         1op4+uMKDeGDCect0p8+l/GbI5rAH4/aUHf+f0d3k3zdEEX99ZHep5LQ8qs8188S+IXX
-         QwpoNyk2pUrFKAhojKAHdKyaGa89cVT3mxPp1cbuW34nwf01Wj17LcH/7rCvWcEA/smB
-         kXNA==
-X-Gm-Message-State: AOJu0YyWwm+Zu4kPWJy6Z8R8X7jxC/dFYQTPNBH7EZwkfu3Y1So6sjsw
-	gmyv9s91jN1cUKq/rl8BDC2YBaERgMTINLAawuJlhh65iQYfQJZrGpF+m33cGiEgU6nx3FSvXiB
-	h4fVGzsrEnUXZqIqZMpAPpjRUaBmG5XceBA1nP+vfc8diR6wBjXPnpQDQw3IhyRYOZBaLFi2B09
-	2uOIS4ph3+nBMjG+mly4t60AB2aNwz9lt6bVM4Hnws5fs7HVu8EA==
-X-Google-Smtp-Source: AGHT+IHm+lRxG+m2LUOVajGQ6CUeLAklQul6iCyqI6XKr2h0WT8VjUIErUKhF84g2gdyKVfR9Z1nU9Qv9dh0
-X-Received: from pjbsr15.prod.google.com ([2002:a17:90b:4e8f:b0:311:ff32:a85d])
- (user=ynaffit job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5604:b0:311:ad7f:329f
- with SMTP id 98e67ed59e1d1-318c93228d9mr6327952a91.31.1751056700714; Fri, 27
- Jun 2025 13:38:20 -0700 (PDT)
-Date: Fri, 27 Jun 2025 13:37:45 -0700
-In-Reply-To: <20250627203748.881022-1-ynaffit@google.com>
+        d=1e100.net; s=20230601; t=1751056708; x=1751661508;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HRQMeMJ9GJ70sWKndVBYSqsjABZis78O/cgobcgMLcI=;
+        b=M8Qik6ZR2VZ92Qki8a8mIEeXtvlGJk6cP40+LXmD1+KlUUpha/izub6OHPL9Yk4e9d
+         EtbYRR9mmjuFbvLz2aPSx4cINf2uCJWJa7GtenjnCMWf+p8bGkTYEbYiayosgZq6mZnS
+         HBeqtxyV8pwaAkuNB4sWfcDKtcCplqdmqSWy0QkAOOvMhpmCBDF606oX/3qgKrwRnPrU
+         p/G1jTdCE/HHOBnxXRNp32td3sRcAG+YBO48rvkzTEXuA/O7DsuXRosft81vSjSEEbvM
+         SWpDh9xNmGBH9lv2YpnsYZlqb52jq8dSQWezaQn2Rc7zHc9Y58N4ptF6/bab0Uj4vt6I
+         lvdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQKBJzAnWJ8to1F/tHQwf1noIrCRCTdNYUhezWQXqzBeBdBq8yDhx562P9wVTKb+1YMCwW2YrX1/upjmk=@vger.kernel.org, AJvYcCXZyxTgvRiWgu3dR7JaKJApDj3qG9/4ti/QlBeHJdORa/sGiA27Ui4e0p5LS7mvyrk1DYpbUh87QFD4/0M0igxYMnTnbQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOBjJNRk6QhJHe3eOLE0t0dtbcKIo2gupwq4MPGVzW/guuPVpJ
+	2/OppDOYEEGvQTeDQTIVDGQfJz+6zYC9NGA4bojcuPCl6hYV1MqYurnR
+X-Gm-Gg: ASbGncu0aBoNGYUEcIt4DVz7/tE2snw3e85cVKLXc8AKBxMxTteT+FHBTa/uVZMOusu
+	f66JO654VTd3ST40SokKxyfPhr21sROAqo9CmLCQKnjIsaBEQ9xYbKwUcwGO51eZjdOo8R+sUm+
+	7JnoIPMqE4VMC+SLHnJLOsWAQfytAfM53kQgveq5cwRQ6hQJbBNM/OgnLxy+RB1rl7Vrayg/PJs
+	5zZDmUo6XwutiKPokrcX9W+0xoX0iuQrjetf9Q+wtOyUJaQeXmZQ9EMqVGw0BSO8vPuhe+/eDO/
+	l5yfJtbjwKgzNnppwl7vl1gm/dDreTAVQgkrQNi5oFM6skJaDq6vDQY=
+X-Google-Smtp-Source: AGHT+IE+PZcuEiD8A2+EEBg8+3JJWIdKjKK/1KFeguTiNAF19ipY7xJtM236kz49MjcRPP80KWytTQ==
+X-Received: by 2002:a05:622a:34c:b0:476:8a27:6b01 with SMTP id d75a77b69052e-4a7fce1c431mr79154601cf.47.1751056707710;
+        Fri, 27 Jun 2025 13:38:27 -0700 (PDT)
+Received: from localhost ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc55c65bsm18098691cf.52.2025.06.27.13.38.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 13:38:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250627203748.881022-1-ynaffit@google.com>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250627203748.881022-5-ynaffit@google.com>
-Subject: [PATCH 4/5] binder: Convert binder_alloc selftests to KUnit
-From: Tiffany Yang <ynaffit@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: keescook@google.com, kernel-team@android.com, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joelagnelf@nvidia.com>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed;
+ boundary=d77776d3ae73202e0ccee692db360a93d0d95a9a8b45106f9cd2204109ac;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Fri, 27 Jun 2025 17:38:19 -0300
+Message-Id: <DAXLSMRH9E6Y.3Q8Z59YG2B50C@gmail.com>
+Cc: <mpearson-lenovo@squebb.ca>, <hdegoede@redhat.com>,
+ <ilpo.jarvinen@linux.intel.com>, <platform-driver-x86@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: lenovo-hotkey: Handle missing hardware
+ features gracefully
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Armin Wolf" <W_Armin@gmx.de>, <xy-jackie@139.com>,
+ <alireza.bestboyy@gmail.com>, <atescula@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250627195436.3877-1-W_Armin@gmx.de>
+In-Reply-To: <20250627195436.3877-1-W_Armin@gmx.de>
 
-Convert the existing binder_alloc_selftest tests into KUnit tests. These
-tests allocate and free an exhaustive combination of buffers with
-various sizes and alignments. This change allows them to be run without
-blocking or otherwise interfering with other processes in binder.
+--d77776d3ae73202e0ccee692db360a93d0d95a9a8b45106f9cd2204109ac
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-This test is refactored into more meaningful cases in the subsequent
-patch.
+Hi Armin,
 
-Signed-off-by: Tiffany Yang <ynaffit@google.com>
----
- drivers/android/Kconfig                    |  10 -
- drivers/android/Makefile                   |   1 -
- drivers/android/binder.c                   |   5 -
- drivers/android/binder_alloc.c             |   3 +
- drivers/android/binder_alloc.h             |   5 -
- drivers/android/binder_alloc_selftest.c    | 345 ---------------------
- drivers/android/tests/binder_alloc_kunit.c | 278 +++++++++++++++++
- 7 files changed, 281 insertions(+), 366 deletions(-)
- delete mode 100644 drivers/android/binder_alloc_selftest.c
+On Fri Jun 27, 2025 at 4:54 PM -03, Armin Wolf wrote:
+> Not all devices support audio mute and microphone mute LEDs, so the
+> explicitly checks for hardware support while probing. However missing
+> hardware features are treated as errors, causing the driver so fail
+> probing on devices that do not support both LEDs.
+>
+> Fix this by simply ignoring hardware features that are not present.
+> This way the driver will properly load on devices not supporting both
+> LEDs and will stop throwing error messages on devices with no LEDS
+> at all.
 
-diff --git a/drivers/android/Kconfig b/drivers/android/Kconfig
-index b1bc7183366c..5b3b8041f827 100644
---- a/drivers/android/Kconfig
-+++ b/drivers/android/Kconfig
-@@ -37,16 +37,6 @@ config ANDROID_BINDER_DEVICES
- 	  created. Each binder device has its own context manager, and is
- 	  therefore logically separated from the other devices.
- 
--config ANDROID_BINDER_IPC_SELFTEST
--	bool "Android Binder IPC Driver Selftest"
--	depends on ANDROID_BINDER_IPC
--	help
--	  This feature allows binder selftest to run.
--
--	  Binder selftest checks the allocation and free of binder buffers
--	  exhaustively with combinations of various buffer sizes and
--	  alignments.
--
- config ANDROID_BINDER_ALLOC_KUNIT_TEST
- 	tristate "KUnit Tests for Android Binder Alloc" if !KUNIT_ALL_TESTS
- 	depends on ANDROID_BINDER_IPC && KUNIT
-diff --git a/drivers/android/Makefile b/drivers/android/Makefile
-index 74d02a335d4e..c5d47be0276c 100644
---- a/drivers/android/Makefile
-+++ b/drivers/android/Makefile
-@@ -3,5 +3,4 @@ ccflags-y += -I$(src)			# needed for trace events
- 
- obj-$(CONFIG_ANDROID_BINDERFS)		+= binderfs.o
- obj-$(CONFIG_ANDROID_BINDER_IPC)	+= binder.o binder_alloc.o
--obj-$(CONFIG_ANDROID_BINDER_IPC_SELFTEST) += binder_alloc_selftest.o
- obj-$(CONFIG_ANDROID_BINDER_ALLOC_KUNIT_TEST)	+= tests/
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index 9dfe90c284fc..7b2653a5d59c 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -5718,11 +5718,6 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 	struct binder_thread *thread;
- 	void __user *ubuf = (void __user *)arg;
- 
--	/*pr_info("binder_ioctl: %d:%d %x %lx\n",
--			proc->pid, current->pid, cmd, arg);*/
--
--	binder_selftest_alloc(&proc->alloc);
--
- 	trace_binder_ioctl(cmd, arg);
- 
- 	ret = wait_event_interruptible(binder_user_error_wait, binder_stop_on_user_error < 2);
-diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_alloc.c
-index c79e5c6721f0..74a184014fa7 100644
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -701,6 +701,7 @@ struct binder_buffer *binder_alloc_new_buf(struct binder_alloc *alloc,
- out:
- 	return buffer;
- }
-+EXPORT_SYMBOL_IF_KUNIT(binder_alloc_new_buf);
- 
- static unsigned long buffer_start_page(struct binder_buffer *buffer)
- {
-@@ -879,6 +880,7 @@ void binder_alloc_free_buf(struct binder_alloc *alloc,
- 	binder_free_buf_locked(alloc, buffer);
- 	mutex_unlock(&alloc->mutex);
- }
-+EXPORT_SYMBOL_IF_KUNIT(binder_alloc_free_buf);
- 
- /**
-  * binder_alloc_mmap_handler() - map virtual address space for proc
-@@ -1217,6 +1219,7 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
- err_mmget:
- 	return LRU_SKIP;
- }
-+EXPORT_SYMBOL_IF_KUNIT(binder_alloc_free_page);
- 
- static unsigned long
- binder_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
-diff --git a/drivers/android/binder_alloc.h b/drivers/android/binder_alloc.h
-index dc8dce2469a7..bed97c2cad92 100644
---- a/drivers/android/binder_alloc.h
-+++ b/drivers/android/binder_alloc.h
-@@ -121,11 +121,6 @@ struct binder_alloc {
- 	bool oneway_spam_detected;
- };
- 
--#ifdef CONFIG_ANDROID_BINDER_IPC_SELFTEST
--void binder_selftest_alloc(struct binder_alloc *alloc);
--#else
--static inline void binder_selftest_alloc(struct binder_alloc *alloc) {}
--#endif
- enum lru_status binder_alloc_free_page(struct list_head *item,
- 				       struct list_lru_one *lru,
- 				       void *cb_arg);
-diff --git a/drivers/android/binder_alloc_selftest.c b/drivers/android/binder_alloc_selftest.c
-deleted file mode 100644
-index 8b18b22aa3de..000000000000
---- a/drivers/android/binder_alloc_selftest.c
-+++ /dev/null
-@@ -1,345 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/* binder_alloc_selftest.c
-- *
-- * Android IPC Subsystem
-- *
-- * Copyright (C) 2017 Google, Inc.
-- */
--
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
--#include <linux/err.h>
--#include <linux/list_lru.h>
--#include <linux/mm_types.h>
--#include "binder_alloc.h"
--
--#define BUFFER_NUM 5
--#define BUFFER_MIN_SIZE (PAGE_SIZE / 8)
--
--static bool binder_selftest_run = true;
--static int binder_selftest_failures;
--static DEFINE_MUTEX(binder_selftest_lock);
--static struct list_lru binder_selftest_freelist;
--
--/**
-- * enum buf_end_align_type - Page alignment of a buffer
-- * end with regard to the end of the previous buffer.
-- *
-- * In the pictures below, buf2 refers to the buffer we
-- * are aligning. buf1 refers to previous buffer by addr.
-- * Symbol [ means the start of a buffer, ] means the end
-- * of a buffer, and | means page boundaries.
-- */
--enum buf_end_align_type {
--	/**
--	 * @SAME_PAGE_UNALIGNED: The end of this buffer is on
--	 * the same page as the end of the previous buffer and
--	 * is not page aligned. Examples:
--	 * buf1 ][ buf2 ][ ...
--	 * buf1 ]|[ buf2 ][ ...
--	 */
--	SAME_PAGE_UNALIGNED = 0,
--	/**
--	 * @SAME_PAGE_ALIGNED: When the end of the previous buffer
--	 * is not page aligned, the end of this buffer is on the
--	 * same page as the end of the previous buffer and is page
--	 * aligned. When the previous buffer is page aligned, the
--	 * end of this buffer is aligned to the next page boundary.
--	 * Examples:
--	 * buf1 ][ buf2 ]| ...
--	 * buf1 ]|[ buf2 ]| ...
--	 */
--	SAME_PAGE_ALIGNED,
--	/**
--	 * @NEXT_PAGE_UNALIGNED: The end of this buffer is on
--	 * the page next to the end of the previous buffer and
--	 * is not page aligned. Examples:
--	 * buf1 ][ buf2 | buf2 ][ ...
--	 * buf1 ]|[ buf2 | buf2 ][ ...
--	 */
--	NEXT_PAGE_UNALIGNED,
--	/**
--	 * @NEXT_PAGE_ALIGNED: The end of this buffer is on
--	 * the page next to the end of the previous buffer and
--	 * is page aligned. Examples:
--	 * buf1 ][ buf2 | buf2 ]| ...
--	 * buf1 ]|[ buf2 | buf2 ]| ...
--	 */
--	NEXT_PAGE_ALIGNED,
--	/**
--	 * @NEXT_NEXT_UNALIGNED: The end of this buffer is on
--	 * the page that follows the page after the end of the
--	 * previous buffer and is not page aligned. Examples:
--	 * buf1 ][ buf2 | buf2 | buf2 ][ ...
--	 * buf1 ]|[ buf2 | buf2 | buf2 ][ ...
--	 */
--	NEXT_NEXT_UNALIGNED,
--	/**
--	 * @LOOP_END: The number of enum values in &buf_end_align_type.
--	 * It is used for controlling loop termination.
--	 */
--	LOOP_END,
--};
--
--static void pr_err_size_seq(size_t *sizes, int *seq)
--{
--	int i;
--
--	pr_err("alloc sizes: ");
--	for (i = 0; i < BUFFER_NUM; i++)
--		pr_cont("[%zu]", sizes[i]);
--	pr_cont("\n");
--	pr_err("free seq: ");
--	for (i = 0; i < BUFFER_NUM; i++)
--		pr_cont("[%d]", seq[i]);
--	pr_cont("\n");
--}
--
--static bool check_buffer_pages_allocated(struct binder_alloc *alloc,
--					 struct binder_buffer *buffer,
--					 size_t size)
--{
--	unsigned long page_addr;
--	unsigned long end;
--	int page_index;
--
--	end = PAGE_ALIGN(buffer->user_data + size);
--	page_addr = buffer->user_data;
--	for (; page_addr < end; page_addr += PAGE_SIZE) {
--		page_index = (page_addr - alloc->vm_start) / PAGE_SIZE;
--		if (!alloc->pages[page_index] ||
--		    !list_empty(page_to_lru(alloc->pages[page_index]))) {
--			pr_err("expect alloc but is %s at page index %d\n",
--			       alloc->pages[page_index] ?
--			       "lru" : "free", page_index);
--			return false;
--		}
--	}
--	return true;
--}
--
--static void binder_selftest_alloc_buf(struct binder_alloc *alloc,
--				      struct binder_buffer *buffers[],
--				      size_t *sizes, int *seq)
--{
--	int i;
--
--	for (i = 0; i < BUFFER_NUM; i++) {
--		buffers[i] = binder_alloc_new_buf(alloc, sizes[i], 0, 0, 0);
--		if (IS_ERR(buffers[i]) ||
--		    !check_buffer_pages_allocated(alloc, buffers[i],
--						  sizes[i])) {
--			pr_err_size_seq(sizes, seq);
--			binder_selftest_failures++;
--		}
--	}
--}
--
--static void binder_selftest_free_buf(struct binder_alloc *alloc,
--				     struct binder_buffer *buffers[],
--				     size_t *sizes, int *seq, size_t end)
--{
--	int i;
--
--	for (i = 0; i < BUFFER_NUM; i++)
--		binder_alloc_free_buf(alloc, buffers[seq[i]]);
--
--	for (i = 0; i <= (end - 1) / PAGE_SIZE; i++) {
--		if (list_empty(page_to_lru(alloc->pages[i]))) {
--			pr_err_size_seq(sizes, seq);
--			pr_err("expect lru but is %s at page index %d\n",
--			       alloc->pages[i] ? "alloc" : "free", i);
--			binder_selftest_failures++;
--		}
--	}
--}
--
--static void binder_selftest_free_page(struct binder_alloc *alloc)
--{
--	int i;
--	unsigned long count;
--
--	while ((count = list_lru_count(&binder_selftest_freelist))) {
--		list_lru_walk(&binder_selftest_freelist, binder_alloc_free_page,
--			      NULL, count);
--	}
--
--	for (i = 0; i < (alloc->buffer_size / PAGE_SIZE); i++) {
--		if (alloc->pages[i]) {
--			pr_err("expect free but is %s at page index %d\n",
--			       list_empty(page_to_lru(alloc->pages[i])) ?
--			       "alloc" : "lru", i);
--			binder_selftest_failures++;
--		}
--	}
--}
--
--static void binder_selftest_alloc_free(struct binder_alloc *alloc,
--				       size_t *sizes, int *seq, size_t end)
--{
--	struct binder_buffer *buffers[BUFFER_NUM];
--
--	binder_selftest_alloc_buf(alloc, buffers, sizes, seq);
--	binder_selftest_free_buf(alloc, buffers, sizes, seq, end);
--
--	/* Allocate from lru. */
--	binder_selftest_alloc_buf(alloc, buffers, sizes, seq);
--	if (list_lru_count(&binder_selftest_freelist))
--		pr_err("lru list should be empty but is not\n");
--
--	binder_selftest_free_buf(alloc, buffers, sizes, seq, end);
--	binder_selftest_free_page(alloc);
--}
--
--static bool is_dup(int *seq, int index, int val)
--{
--	int i;
--
--	for (i = 0; i < index; i++) {
--		if (seq[i] == val)
--			return true;
--	}
--	return false;
--}
--
--/* Generate BUFFER_NUM factorial free orders. */
--static void binder_selftest_free_seq(struct binder_alloc *alloc,
--				     size_t *sizes, int *seq,
--				     int index, size_t end)
--{
--	int i;
--
--	if (index == BUFFER_NUM) {
--		binder_selftest_alloc_free(alloc, sizes, seq, end);
--		return;
--	}
--	for (i = 0; i < BUFFER_NUM; i++) {
--		if (is_dup(seq, index, i))
--			continue;
--		seq[index] = i;
--		binder_selftest_free_seq(alloc, sizes, seq, index + 1, end);
--	}
--}
--
--static void binder_selftest_alloc_size(struct binder_alloc *alloc,
--				       size_t *end_offset)
--{
--	int i;
--	int seq[BUFFER_NUM] = {0};
--	size_t front_sizes[BUFFER_NUM];
--	size_t back_sizes[BUFFER_NUM];
--	size_t last_offset, offset = 0;
--
--	for (i = 0; i < BUFFER_NUM; i++) {
--		last_offset = offset;
--		offset = end_offset[i];
--		front_sizes[i] = offset - last_offset;
--		back_sizes[BUFFER_NUM - i - 1] = front_sizes[i];
--	}
--	/*
--	 * Buffers share the first or last few pages.
--	 * Only BUFFER_NUM - 1 buffer sizes are adjustable since
--	 * we need one giant buffer before getting to the last page.
--	 */
--	back_sizes[0] += alloc->buffer_size - end_offset[BUFFER_NUM - 1];
--	binder_selftest_free_seq(alloc, front_sizes, seq, 0,
--				 end_offset[BUFFER_NUM - 1]);
--	binder_selftest_free_seq(alloc, back_sizes, seq, 0, alloc->buffer_size);
--}
--
--static void binder_selftest_alloc_offset(struct binder_alloc *alloc,
--					 size_t *end_offset, int index)
--{
--	int align;
--	size_t end, prev;
--
--	if (index == BUFFER_NUM) {
--		binder_selftest_alloc_size(alloc, end_offset);
--		return;
--	}
--	prev = index == 0 ? 0 : end_offset[index - 1];
--	end = prev;
--
--	BUILD_BUG_ON(BUFFER_MIN_SIZE * BUFFER_NUM >= PAGE_SIZE);
--
--	for (align = SAME_PAGE_UNALIGNED; align < LOOP_END; align++) {
--		if (align % 2)
--			end = ALIGN(end, PAGE_SIZE);
--		else
--			end += BUFFER_MIN_SIZE;
--		end_offset[index] = end;
--		binder_selftest_alloc_offset(alloc, end_offset, index + 1);
--	}
--}
--
--int binder_selftest_alloc_get_page_count(struct binder_alloc *alloc)
--{
--	struct page *page;
--	int allocated = 0;
--	int i;
--
--	for (i = 0; i < alloc->buffer_size / PAGE_SIZE; i++) {
--		page = alloc->pages[i];
--		if (page)
--			allocated++;
--	}
--	return allocated;
--}
--
--/**
-- * binder_selftest_alloc() - Test alloc and free of buffer pages.
-- * @alloc: Pointer to alloc struct.
-- *
-- * Allocate BUFFER_NUM buffers to cover all page alignment cases,
-- * then free them in all orders possible. Check that pages are
-- * correctly allocated, put onto lru when buffers are freed, and
-- * are freed when binder_alloc_free_page is called.
-- */
--void binder_selftest_alloc(struct binder_alloc *alloc)
--{
--	struct list_lru *prev_freelist;
--	size_t end_offset[BUFFER_NUM];
--
--	if (!binder_selftest_run)
--		return;
--	mutex_lock(&binder_selftest_lock);
--	if (!binder_selftest_run || !alloc->mapped)
--		goto done;
--
--	prev_freelist = alloc->freelist;
--
--	/*
--	 * It is not safe to modify this process's alloc->freelist if it has any
--	 * pages on a freelist. Since the test runs before any binder ioctls can
--	 * be dealt with, none of its pages should be allocated yet.
--	 */
--	if (binder_selftest_alloc_get_page_count(alloc)) {
--		pr_err("process has existing alloc state\n");
--		goto cleanup;
--	}
--
--	if (list_lru_init(&binder_selftest_freelist)) {
--		pr_err("failed to init test freelist\n");
--		goto cleanup;
--	}
--
--	alloc->freelist = &binder_selftest_freelist;
--
--	pr_info("STARTED\n");
--	binder_selftest_alloc_offset(alloc, end_offset, 0);
--	if (binder_selftest_failures > 0)
--		pr_info("%d tests FAILED\n", binder_selftest_failures);
--	else
--		pr_info("PASSED\n");
--
--	if (list_lru_count(&binder_selftest_freelist))
--		pr_err("expect test freelist to be empty\n");
--
--cleanup:
--	/* Even if we didn't run the test, it's no longer thread-safe. */
--	binder_selftest_run = false;
--	alloc->freelist = prev_freelist;
--	list_lru_destroy(&binder_selftest_freelist);
--done:
--	mutex_unlock(&binder_selftest_lock);
--}
-diff --git a/drivers/android/tests/binder_alloc_kunit.c b/drivers/android/tests/binder_alloc_kunit.c
-index 4b68b5687d33..500b21246c99 100644
---- a/drivers/android/tests/binder_alloc_kunit.c
-+++ b/drivers/android/tests/binder_alloc_kunit.c
-@@ -21,6 +21,265 @@ MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
- 
- #define BINDER_MMAP_SIZE SZ_128K
- 
-+#define BUFFER_NUM 5
-+#define BUFFER_MIN_SIZE (PAGE_SIZE / 8)
-+
-+static int binder_alloc_test_failures;
-+
-+/**
-+ * enum buf_end_align_type - Page alignment of a buffer
-+ * end with regard to the end of the previous buffer.
-+ *
-+ * In the pictures below, buf2 refers to the buffer we
-+ * are aligning. buf1 refers to previous buffer by addr.
-+ * Symbol [ means the start of a buffer, ] means the end
-+ * of a buffer, and | means page boundaries.
-+ */
-+enum buf_end_align_type {
-+	/**
-+	 * @SAME_PAGE_UNALIGNED: The end of this buffer is on
-+	 * the same page as the end of the previous buffer and
-+	 * is not page aligned. Examples:
-+	 * buf1 ][ buf2 ][ ...
-+	 * buf1 ]|[ buf2 ][ ...
-+	 */
-+	SAME_PAGE_UNALIGNED = 0,
-+	/**
-+	 * @SAME_PAGE_ALIGNED: When the end of the previous buffer
-+	 * is not page aligned, the end of this buffer is on the
-+	 * same page as the end of the previous buffer and is page
-+	 * aligned. When the previous buffer is page aligned, the
-+	 * end of this buffer is aligned to the next page boundary.
-+	 * Examples:
-+	 * buf1 ][ buf2 ]| ...
-+	 * buf1 ]|[ buf2 ]| ...
-+	 */
-+	SAME_PAGE_ALIGNED,
-+	/**
-+	 * @NEXT_PAGE_UNALIGNED: The end of this buffer is on
-+	 * the page next to the end of the previous buffer and
-+	 * is not page aligned. Examples:
-+	 * buf1 ][ buf2 | buf2 ][ ...
-+	 * buf1 ]|[ buf2 | buf2 ][ ...
-+	 */
-+	NEXT_PAGE_UNALIGNED,
-+	/**
-+	 * @NEXT_PAGE_ALIGNED: The end of this buffer is on
-+	 * the page next to the end of the previous buffer and
-+	 * is page aligned. Examples:
-+	 * buf1 ][ buf2 | buf2 ]| ...
-+	 * buf1 ]|[ buf2 | buf2 ]| ...
-+	 */
-+	NEXT_PAGE_ALIGNED,
-+	/**
-+	 * @NEXT_NEXT_UNALIGNED: The end of this buffer is on
-+	 * the page that follows the page after the end of the
-+	 * previous buffer and is not page aligned. Examples:
-+	 * buf1 ][ buf2 | buf2 | buf2 ][ ...
-+	 * buf1 ]|[ buf2 | buf2 | buf2 ][ ...
-+	 */
-+	NEXT_NEXT_UNALIGNED,
-+	/**
-+	 * @LOOP_END: The number of enum values in &buf_end_align_type.
-+	 * It is used for controlling loop termination.
-+	 */
-+	LOOP_END,
-+};
-+
-+static void pr_err_size_seq(struct kunit *test, size_t *sizes, int *seq)
-+{
-+	int i;
-+
-+	kunit_err(test, "alloc sizes: ");
-+	for (i = 0; i < BUFFER_NUM; i++)
-+		pr_cont("[%zu]", sizes[i]);
-+	pr_cont("\n");
-+	kunit_err(test, "free seq: ");
-+	for (i = 0; i < BUFFER_NUM; i++)
-+		pr_cont("[%d]", seq[i]);
-+	pr_cont("\n");
-+}
-+
-+static bool check_buffer_pages_allocated(struct kunit *test,
-+					 struct binder_alloc *alloc,
-+					 struct binder_buffer *buffer,
-+					 size_t size)
-+{
-+	unsigned long page_addr;
-+	unsigned long end;
-+	int page_index;
-+
-+	end = PAGE_ALIGN(buffer->user_data + size);
-+	page_addr = buffer->user_data;
-+	for (; page_addr < end; page_addr += PAGE_SIZE) {
-+		page_index = (page_addr - alloc->vm_start) / PAGE_SIZE;
-+		if (!alloc->pages[page_index] ||
-+		    !list_empty(page_to_lru(alloc->pages[page_index]))) {
-+			kunit_err(test, "expect alloc but is %s at page index %d\n",
-+				  alloc->pages[page_index] ?
-+				  "lru" : "free", page_index);
-+			return false;
-+		}
-+	}
-+	return true;
-+}
-+
-+static void binder_alloc_test_alloc_buf(struct kunit *test,
-+					struct binder_alloc *alloc,
-+					struct binder_buffer *buffers[],
-+					size_t *sizes, int *seq)
-+{
-+	int i;
-+
-+	for (i = 0; i < BUFFER_NUM; i++) {
-+		buffers[i] = binder_alloc_new_buf(alloc, sizes[i], 0, 0, 0);
-+		if (IS_ERR(buffers[i]) ||
-+		    !check_buffer_pages_allocated(test, alloc, buffers[i], sizes[i])) {
-+			pr_err_size_seq(test, sizes, seq);
-+			binder_alloc_test_failures++;
-+		}
-+	}
-+}
-+
-+static void binder_alloc_test_free_buf(struct kunit *test,
-+				       struct binder_alloc *alloc,
-+				       struct binder_buffer *buffers[],
-+				       size_t *sizes, int *seq, size_t end)
-+{
-+	int i;
-+
-+	for (i = 0; i < BUFFER_NUM; i++)
-+		binder_alloc_free_buf(alloc, buffers[seq[i]]);
-+
-+	for (i = 0; i <= (end - 1) / PAGE_SIZE; i++) {
-+		if (list_empty(page_to_lru(alloc->pages[i]))) {
-+			pr_err_size_seq(test, sizes, seq);
-+			kunit_err(test, "expect lru but is %s at page index %d\n",
-+				  alloc->pages[i] ? "alloc" : "free", i);
-+			binder_alloc_test_failures++;
-+		}
-+	}
-+}
-+
-+static void binder_alloc_test_free_page(struct kunit *test,
-+					struct binder_alloc *alloc)
-+{
-+	unsigned long count;
-+	int i;
-+
-+	while ((count = list_lru_count(alloc->freelist))) {
-+		list_lru_walk(alloc->freelist, binder_alloc_free_page,
-+			      NULL, count);
-+	}
-+
-+	for (i = 0; i < (alloc->buffer_size / PAGE_SIZE); i++) {
-+		if (alloc->pages[i]) {
-+			kunit_err(test, "expect free but is %s at page index %d\n",
-+				  list_empty(page_to_lru(alloc->pages[i])) ?
-+				  "alloc" : "lru", i);
-+			binder_alloc_test_failures++;
-+		}
-+	}
-+}
-+
-+static void binder_alloc_test_alloc_free(struct kunit *test,
-+					 struct binder_alloc *alloc,
-+					 size_t *sizes, int *seq, size_t end)
-+{
-+	struct binder_buffer *buffers[BUFFER_NUM];
-+
-+	binder_alloc_test_alloc_buf(test, alloc, buffers, sizes, seq);
-+	binder_alloc_test_free_buf(test, alloc, buffers, sizes, seq, end);
-+
-+	/* Allocate from lru. */
-+	binder_alloc_test_alloc_buf(test, alloc, buffers, sizes, seq);
-+	if (list_lru_count(alloc->freelist))
-+		kunit_err(test, "lru list should be empty but is not\n");
-+
-+	binder_alloc_test_free_buf(test, alloc, buffers, sizes, seq, end);
-+	binder_alloc_test_free_page(test, alloc);
-+}
-+
-+static bool is_dup(int *seq, int index, int val)
-+{
-+	int i;
-+
-+	for (i = 0; i < index; i++) {
-+		if (seq[i] == val)
-+			return true;
-+	}
-+	return false;
-+}
-+
-+/* Generate BUFFER_NUM factorial free orders. */
-+static void permute_frees(struct kunit *test, struct binder_alloc *alloc,
-+			  size_t *sizes, int *seq, int index, size_t end)
-+{
-+	int i;
-+
-+	if (index == BUFFER_NUM) {
-+		binder_alloc_test_alloc_free(test, alloc, sizes, seq, end);
-+		return;
-+	}
-+	for (i = 0; i < BUFFER_NUM; i++) {
-+		if (is_dup(seq, index, i))
-+			continue;
-+		seq[index] = i;
-+		permute_frees(test, alloc, sizes, seq, index + 1, end);
-+	}
-+}
-+
-+static void gen_buf_sizes(struct kunit *test, struct binder_alloc *alloc,
-+			  size_t *end_offset)
-+{
-+	size_t last_offset, offset = 0;
-+	size_t front_sizes[BUFFER_NUM];
-+	size_t back_sizes[BUFFER_NUM];
-+	int seq[BUFFER_NUM] = {0};
-+	int i;
-+
-+	for (i = 0; i < BUFFER_NUM; i++) {
-+		last_offset = offset;
-+		offset = end_offset[i];
-+		front_sizes[i] = offset - last_offset;
-+		back_sizes[BUFFER_NUM - i - 1] = front_sizes[i];
-+	}
-+	/*
-+	 * Buffers share the first or last few pages.
-+	 * Only BUFFER_NUM - 1 buffer sizes are adjustable since
-+	 * we need one giant buffer before getting to the last page.
-+	 */
-+	back_sizes[0] += alloc->buffer_size - end_offset[BUFFER_NUM - 1];
-+	permute_frees(test, alloc, front_sizes, seq, 0,
-+		      end_offset[BUFFER_NUM - 1]);
-+	permute_frees(test, alloc, back_sizes, seq, 0, alloc->buffer_size);
-+}
-+
-+static void gen_buf_offsets(struct kunit *test, struct binder_alloc *alloc,
-+			    size_t *end_offset, int index)
-+{
-+	size_t end, prev;
-+	int align;
-+
-+	if (index == BUFFER_NUM) {
-+		gen_buf_sizes(test, alloc, end_offset);
-+		return;
-+	}
-+	prev = index == 0 ? 0 : end_offset[index - 1];
-+	end = prev;
-+
-+	BUILD_BUG_ON(BUFFER_MIN_SIZE * BUFFER_NUM >= PAGE_SIZE);
-+
-+	for (align = SAME_PAGE_UNALIGNED; align < LOOP_END; align++) {
-+		if (align % 2)
-+			end = ALIGN(end, PAGE_SIZE);
-+		else
-+			end += BUFFER_MIN_SIZE;
-+		end_offset[index] = end;
-+		gen_buf_offsets(test, alloc, end_offset, index + 1);
-+	}
-+}
-+
- struct binder_alloc_test {
- 	struct binder_alloc alloc;
- 	struct list_lru binder_test_freelist;
-@@ -56,6 +315,24 @@ static void binder_alloc_test_mmap(struct kunit *test)
- 	KUNIT_EXPECT_TRUE(test, list_is_last(&buf->entry, &alloc->buffers));
- }
- 
-+/**
-+ * binder_alloc_exhaustive_test() - Exhaustively test alloc and free of buffer pages.
-+ *
-+ * Allocate BUFFER_NUM buffers to cover all page alignment cases,
-+ * then free them in all orders possible. Check that pages are
-+ * correctly allocated, put onto lru when buffers are freed, and
-+ * are freed when binder_alloc_free_page() is called.
-+ */
-+static void binder_alloc_exhaustive_test(struct kunit *test)
-+{
-+	struct binder_alloc_test *priv = test->priv;
-+	size_t end_offset[BUFFER_NUM];
-+
-+	gen_buf_offsets(test, &priv->alloc, end_offset, 0);
-+
-+	KUNIT_EXPECT_EQ(test, binder_alloc_test_failures, 0);
-+}
-+
- /* ===== End test cases ===== */
- 
- static void binder_alloc_test_vma_close(struct vm_area_struct *vma)
-@@ -149,6 +426,7 @@ static void binder_alloc_test_exit(struct kunit *test)
- static struct kunit_case binder_alloc_test_cases[] = {
- 	KUNIT_CASE(binder_alloc_test_init_freelist),
- 	KUNIT_CASE(binder_alloc_test_mmap),
-+	KUNIT_CASE(binder_alloc_exhaustive_test),
- 	{}
- };
- 
--- 
-2.50.0.727.gbf7dc18ff4-goog
+This patch makes me wonder what is the policy around issues like this.
+In fact I've submitted and changes that do the exact opposite :p
+Like commit: 4630b99d2e93 ("platform/x86: dell-pc: Propagate errors when
+detecting feature support")
 
+IMO missing features should be treated as errors. i.e. The probe should
+fail.
+
+Quoting documentation [1]:
+
+	If a match is found, the device=E2=80=99s driver field is set to the
+	driver and the driver=E2=80=99s probe callback is called. This gives the
+	driver a chance to verify that it really does support the
+	hardware, and that it=E2=80=99s in a working state.
+
+And again [2]:
+
+	This callback holds the driver-specific logic to bind the driver
+	to a given device. That includes verifying that the device is
+	present, that it=E2=80=99s a version the driver can handle, that driver
+	data structures can be allocated and initialized, and that any
+	hardware can be initialized.
+
+Both of these makes me wonder if such a "fail" or error message should
+be fixed in the first place. In this case the probe correctly checks for
+device support and fails if it's not found, which is suggested to be the
+correct behavior.
+
+BTW this also leaks `wpriv`, which would remain allocated for no reason.
+
+
+[1] https://docs.kernel.org/driver-api/driver-model/binding.html
+[2] https://docs.kernel.org/driver-api/driver-model/driver.html
+
+--=20
+ ~ Kurt
+
+--d77776d3ae73202e0ccee692db360a93d0d95a9a8b45106f9cd2204109ac
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaF8BPwAKCRAWYEM49J/U
+ZpCKAQD9kVouyazJBEdUB7HrwPvRO9ampPP4Nc0XJqLWWERQQwEA1c++aRcrBiG+
+icr25qdwlo0j1QSw+GtWsa+xivZwSw0=
+=7Ri1
+-----END PGP SIGNATURE-----
+
+--d77776d3ae73202e0ccee692db360a93d0d95a9a8b45106f9cd2204109ac--
