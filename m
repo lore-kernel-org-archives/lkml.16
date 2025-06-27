@@ -1,93 +1,91 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBF01A5B86
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407E81DF244
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751044664; cv=none; b=dyAL1Hx9QWCiP392RjBd/owM2kvmODN2RbTS+sVg3r77GVUu86AOd/q4NcvHAtrrO/EbspwOfzc7i2rYMyt0qnyq8xDIrddHSMD6lBZZ9oQAS0ARxtJJYMDTk5XEpmL4x7jNnUzq3V5E3JbrAZh30psXdTvXqGBO0RDfmAU7HS8=
+	t=1751044690; cv=none; b=mjvlQUtJSUH9Ftk3Qim2CLX5VbNSVbKLnkuBvr7UFWDabw4lcbZmjQnU5nhHOFe1zyXUlbVSx4XUU9/vijQpSu++W2I1VeXvlI5XJBC8mhkASHjWk6Ee7ASp51MXeZkEEV+ctztnZ7FB995NczbxD4x24KjcALOEAmd3hxYeb+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751044664; c=relaxed/simple;
-	bh=kOfo3luaaMg+eGrsjU+2gYBVIr0dVzGBHw07w0ytM48=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NOJN0e/z0iQo801fgf05212mWAwUStLFuzs7TaLCjb6qU5PLawm0gI0tVIZjd60++nJ/CTxLumWc9kLB1Egg5q5MPeV/d8wo5UtQRXsCcd0VY9LokKO9cHrUUbyZg5uliSIKQDVK306DI/DyeYchnvHxAqewJDbuqynmpUTIUGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=D9bEq4nw; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1751044690; c=relaxed/simple;
+	bh=NLX9SbHhgJ2ZYzaQ/Iwrr7y+VTFqKbjsoqNKxm7jvRs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lHnjuh1hKZs5S5mMlW9r50t2s7ecIlZyzh+n2sv+PulelwohHnPZJBuCKT6Js7UP20P9ZE8s/zOx3J/Y0w6UjMRnaUMJ8dflT8fQKaBHgJRmrKyeQ4mUF9ygg+iLnBBAAwZrcJbYiNvWwI2PsU9r0T0dhtwM4dlXo6iWo5AJZoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GPxM4YA5; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="D9bEq4nw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=e7H7k7eywQL2/UAtjmY0ggGSYxU+Gfh+qwxK/xtmbnM=; b=D9bEq4nwTaQb8hRMdTFHAp7lcz
-	bkPkhpmfRyOHUuGSAy2PHqxji0iJyKxboP5VxXrwshwUT9HgbH1+jBkkt2kOCZAd1tXzS3dJ0rnSa
-	eBkr65yOzMxpMs8581OrXUQrU9V40K9bphAk4kQ9tZ4uhaAsctJwbbQVGlH6u+IbIzLKOUsd+QryE
-	mjAo8fDKgPXVxPbNR818DvKDwN/2EC1dMrJRkeWbPA6vpG5CnkSDDWXc5rdHGiuInLxNUgMneHaZ+
-	cXYkRVHXtknbrC/eYQnjiHj1yZwZ0IHLUaVHjqssA1clJf5nX+sSPLnNREnEjmS8fLCtBByLyHd/p
-	O730teZw==;
-Received: from [191.204.192.64] (helo=localhost.localdomain)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1uVChY-009UVF-Au; Fri, 27 Jun 2025 19:17:24 +0200
-From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Linux Next Mailing List <linux-next@vger.kernel.org>, airlied@gmail.com, simona@ffwll.ch, " Raag Jadav " <raag.jadav@intel.com>,
-	Krzysztof Karas <krzysztof.karas@intel.com>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH v3 1/3] drm/doc: Fix title underline for "Task information"
-Date: Fri, 27 Jun 2025 14:17:13 -0300
-Message-ID: <20250627171715.438304-1-andrealmeid@igalia.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GPxM4YA5"
+Date: Fri, 27 Jun 2025 10:17:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751044676;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fYWgHymkoVzb35T69i1z7qhWfmrbkaY7mAFuq52RhI0=;
+	b=GPxM4YA5OYWBBbWd+VerIZDiDk1YBIgol2ghwEO6nV7CnXwliNQih4FfJy0T/zHOxGHtFs
+	IFYtdFztKjhh2Chgwp+opmjYm1RXayXXBVBWVnRgsjxjQn+xPdmrZX2XHrWNLNEAK1Rt7u
+	zF7R1bvsJEXIADC5BDpmNXPeAfjnVLs=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: "Wlodarczyk, Bertrand" <bertrand.wlodarczyk@intel.com>
+Cc: "tj@kernel.org" <tj@kernel.org>, 
+	"hannes@cmpxchg.org" <hannes@cmpxchg.org>, "mkoutny@suse.com" <mkoutny@suse.com>, 
+	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"inwardvessel@gmail.com" <inwardvessel@gmail.com>
+Subject: Re: [PATCH v2] cgroup/rstat: change cgroup_base_stat to atomic
+Message-ID: <wbff6zths3lvd7df2lblcyzzabovxkjrbxt7x734mdt7qdr3kh@v3urgrdibben>
+References: <20250624144558.2291253-1-bertrand.wlodarczyk@intel.com>
+ <ykbwsq7xckhjaeoe6ba7tqm55vxrth74tmep4ey7feui3lblcf@vt43elwkqqf7>
+ <CH3PR11MB7894DDEE6C630D5A3A4D23A1F145A@CH3PR11MB7894.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CH3PR11MB7894DDEE6C630D5A3A4D23A1F145A@CH3PR11MB7894.namprd11.prod.outlook.com>
+X-Migadu-Flow: FLOW_OUT
 
-Fix the following warning:
+On Fri, Jun 27, 2025 at 01:15:31PM +0000, Wlodarczyk, Bertrand wrote:
+> > The kernel faces scalability issues when multiple userspace programs 
+> > attempt to read cgroup statistics concurrently.
+> > 
+> > The primary bottleneck is the css_cgroup_lock in cgroup_rstat_flush, 
+> > which prevents access and updates to the statistics of the css from 
+> > multiple CPUs in parallel.
+> > 
+> > Given that rstat operates on a per-CPU basis and only aggregates 
+> > statistics in the parent cgroup, there is no compelling reason why 
+> > these statistics cannot be atomic.
+> > By eliminating the lock during CPU statistics access, each CPU can 
+> > traverse its rstat hierarchy independently, without blocking.
+> > Synchronization is achieved during parent propagation through atomic 
+> > operations.
+> > 
+> > This change significantly enhances performance on commit
+> > 8dcb0ed834a3ec03 ("memcg: cgroup: call css_rstat_updated irrespective 
+> > of in_nmi()") in scenarios where multiple CPUs accessCPU rstat within 
+> > a single cgroup hierarchy, yielding a performance improvement of around 40 times.
+> > Notably, performance for memory and I/O rstats remains unchanged, as 
+> > the lock remains in place for these usages.
+> > 
+> > Additionally, this patch addresses a race condition detectable in the 
+> > current mainline by KCSAN in __cgroup_account_cputime, which occurs 
+> > when attempting to read a single hierarchy from multiple CPUs.
+> > 
+> > Signed-off-by: Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>
+> 
+> > This patch breaks memory controller as explained in the comments on the previous version.
+> 
+> Ekhm... no? I addressed the issue and v2 has lock back and surrounding the call to dependent submodules? 
+> The behavior is the same as before patching.
+> 
 
-Documentation/gpu/drm-uapi.rst:450: WARNING: Title underline too short.
+Oh you have moved the rstat lock just around pos->ss->css_rstat_flush().
 
-Task information
---------------- [docutils]
-
-Fixes: cd37124b4093 ("drm/doc: Add a section about "Task information" for the wedge API")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: André Almeida <andrealmeid@igalia.com>
----
-v2: Add Reported-by tag
----
- Documentation/gpu/drm-uapi.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
-index 263e5a97c080..10dea6a1f097 100644
---- a/Documentation/gpu/drm-uapi.rst
-+++ b/Documentation/gpu/drm-uapi.rst
-@@ -447,7 +447,7 @@ hang is usually the most critical one which can result in consequential hangs or
- complete wedging.
- 
- Task information
-----------------
-+----------------
- 
- The information about which application (if any) was involved in the device
- wedging is useful for userspace if they want to notify the user about what
-@@ -728,4 +728,4 @@ Stable uAPI events
- From ``drivers/gpu/drm/scheduler/gpu_scheduler_trace.h``
- 
- .. kernel-doc::  drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
--   :doc: uAPI trace events
-\ No newline at end of file
-+   :doc: uAPI trace events
--- 
-2.49.0
+Have you checked if __css_process_update_tree() is safe from concurrent
+flushers for a given cpu and css?
 
