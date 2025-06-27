@@ -1,158 +1,49 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC0F9E571;
-	Fri, 27 Jun 2025 13:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062D98460
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751031954; cv=none; b=AYGMRjqHkMtP3tZEAmD4bTvhqlJBHX9cBnmRW/D4GIN7ydCxuhl+7zKpBIkti4DRBIKbVZJQ7HVdr4/0dvlx/R7mPs73umsoOZgJ8bZ2eOqxDooEbUl5MmrGMGndgXR4J06nCLeaG6ftsZNGYV9omiFBUK+tOUeIE80EfLDBILE=
+	t=1751032029; cv=none; b=EIPX/LUKUAwRW+FU1RgjbnLO4NR6odegm19WJzlI/VHlQkIYFF3EueHn+/7z4Nyl0WxxSOlXTn4jN9+5EaSRPwXprDc7MY6De1JUO53Q/O/zXnzkJ/a1sM3QOAPXpcwNnUohm59XX1DZ8DMTU9yCo3bV5nyhL57ZPlJ84gqj1NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751031954; c=relaxed/simple;
-	bh=nfWIKAMKZDjFY1lYLyAS8bDX8HPAqN5K9zZR6z3zGB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ro3CvVC3tf3rIQmE0W0bbJGX3O2x4R/3DN4wz17/uCG29dVeKaPMhG7QP34p6/qBT50TOMa+2QA3uw/62/WkUDDmZeZ18Ly7BW6cRnYtMmIVsr9D+1Vz37nTai4HHeYVP/JyCnJZgQ2UBIiUEpp35R91blFU0mP62qRmQjwy2FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 206801A00;
-	Fri, 27 Jun 2025 06:45:35 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6353A3F66E;
-	Fri, 27 Jun 2025 06:45:50 -0700 (PDT)
-Date: Fri, 27 Jun 2025 14:45:47 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, arm-scmi@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] firmware: arm_scmi: imx: Support getting board info
- of MISC protocol
-Message-ID: <aF6gi9ejloRphvgI@pluto>
-References: <20250627-sm-misc-api-v1-v1-0-2b99481fe825@nxp.com>
- <20250627-sm-misc-api-v1-v1-6-2b99481fe825@nxp.com>
+	s=arc-20240116; t=1751032029; c=relaxed/simple;
+	bh=ImQxyS0IaLYue1GE3pv+fXyhPHBvYq8/o6fR8ZbY4Tc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=PsKho7x2TWYxg1Xk3JvSLs1KeCPAKSNU8CYZpU1+YNN1rbkCLYxPDjDGowav7R1tUPdy6APjk7OyurxuO4JkxXBXdvJueVvnOZ2+P4b7OzwhW4Cct+NQMgauHf0+aiRi92SM95GheU/H/9rQj2dGVsKJI8dytTlD9UXGIqLjcJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55RDl1YG016275;
+	Fri, 27 Jun 2025 22:47:01 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55RDl19r016272
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Fri, 27 Jun 2025 22:47:01 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <6c87fb5e-7474-4c9b-9bf9-917280d7ce02@I-love.SAKURA.ne.jp>
+Date: Fri, 27 Jun 2025 22:47:00 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627-sm-misc-api-v1-v1-6-2b99481fe825@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [net?] possible deadlock in team_device_event (3)
+To: syzbot <syzbot+b668da2bc4cb9670bf58@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org
+References: <685e9fe6.a00a0220.129264.0006.GAE@google.com>
+Content-Language: en-US
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <685e9fe6.a00a0220.129264.0006.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Anti-Virus-Server: fsav101.rs.sakura.ne.jp
+X-Virus-Status: clean
 
-On Fri, Jun 27, 2025 at 02:03:49PM +0800, Peng Fan wrote:
-> MISC protocol supports getting board information. Add the API for user
-> to retrieve the information from SM
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  .../firmware/arm_scmi/vendors/imx/imx-sm-misc.c    | 30 ++++++++++++++++++++++
->  include/linux/scmi_imx_protocol.h                  |  5 ++++
->  2 files changed, 35 insertions(+)
-> 
-> diff --git a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
-> index 1a6d75357b76ce6bb7d06461999b368c27f1fa43..35c63e7cb189475807ed1e6723dbcb61ab66800a 100644
-> --- a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
-> +++ b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
-> @@ -29,6 +29,7 @@ enum scmi_imx_misc_protocol_cmd {
->  	SCMI_IMX_MISC_SI_INFO = 0xB,
->  	SCMI_IMX_MISC_CFG_INFO = 0xC,
->  	SCMI_IMX_MISC_SYSLOG = 0xD,
-> +	SCMI_IMX_MISC_BOARD_INFO = 0xE,
->  	SCMI_IMX_MISC_CTRL_NOTIFY = 0x8,
->  };
->  
-> @@ -76,6 +77,11 @@ struct scmi_imx_misc_buildinfo_out {
->  	u8 buildtime[MISC_MAX_BUILDTIME];
->  };
->  
-> +struct scmi_imx_misc_board_info_out {
-> +	__le32 attributes;
-> +	u8 brdname[MISC_MAX_BRDNAME];
-> +};
-> +
->  struct scmi_imx_misc_cfg_info_out {
->  	__le32 msel;
->  	u8 cfgname[MISC_MAX_CFGNAME];
-> @@ -334,6 +340,29 @@ static int scmi_imx_discover_build_info(const struct scmi_protocol_handle *ph,
->  	return ret;
->  }
->  
-> +static int scmi_imx_misc_board_info(const struct scmi_protocol_handle *ph,
-> +				    struct scmi_imx_misc_system_info *info)
-> +{
-> +	struct scmi_imx_misc_board_info_out *out;
-> +	struct scmi_xfer *t;
-> +	int ret;
-> +
-> +	ret = ph->xops->xfer_get_init(ph, SCMI_IMX_MISC_BOARD_INFO, 0, sizeof(*out), &t);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ph->xops->do_xfer(ph, t);
-> +	if (!ret) {
-> +		out = t->rx.buf;
-> +		info->brd_attributes = le32_to_cpu(out->attributes);
-> +		strscpy(info->brdname, out->brdname, MISC_MAX_BRDNAME);
-> +	}
-> +
-> +	ph->xops->xfer_put(ph, t);
-> +
-> +	return ret;
-> +}
-> +
->  static int scmi_imx_misc_cfg_info(const struct scmi_protocol_handle *ph,
->  				  struct scmi_imx_misc_system_info *info)
->  {
-> @@ -446,6 +475,7 @@ static int scmi_imx_misc_syslog(const struct scmi_protocol_handle *ph, u16 size,
->  }
->  
->  static const struct scmi_imx_misc_proto_ops scmi_imx_misc_proto_ops = {
-> +	.misc_board_info = scmi_imx_misc_board_info,
->  	.misc_cfg_info = scmi_imx_misc_cfg_info,
->  	.misc_ctrl_set = scmi_imx_misc_ctrl_set,
->  	.misc_ctrl_get = scmi_imx_misc_ctrl_get,
-> diff --git a/include/linux/scmi_imx_protocol.h b/include/linux/scmi_imx_protocol.h
-> index ff34d974046aa982fa9f5d46fc673412e01a532d..4950cd6f50aa7b3038bd519a7287e805f70e1cf5 100644
-> --- a/include/linux/scmi_imx_protocol.h
-> +++ b/include/linux/scmi_imx_protocol.h
-> @@ -56,6 +56,7 @@ struct scmi_imx_misc_ctrl_notify_report {
->  #define MISC_MAX_BUILDTIME	16
->  #define MISC_MAX_CFGNAME	16
->  #define MISC_MAX_SINAME		16
-> +#define MISC_MAX_BRDNAME	16
->  
->  struct scmi_imx_misc_system_info {
->  	u32 buildnum;
-> @@ -69,6 +70,8 @@ struct scmi_imx_misc_system_info {
->  	u32 sirev;
->  	u32 partnum;
->  	u8 siname[MISC_MAX_SINAME];
-> +	u32 brd_attributes;
-> +	u8 brdname[MISC_MAX_BRDNAME];
->  };
+#syz fix: team: replace team lock with rtnl lock
 
-Same comment here as before...
-
->  
->  struct scmi_imx_misc_sys_sleep_rec {
-> @@ -89,6 +92,8 @@ struct scmi_imx_misc_syslog {
->  };
->  
->  struct scmi_imx_misc_proto_ops {
-> +	int (*misc_board_info)(const struct scmi_protocol_handle *ph,
-> +			       struct scmi_imx_misc_system_info *info);
->  	int (*misc_cfg_info)(const struct scmi_protocol_handle *ph,
->  			     struct scmi_imx_misc_system_info *info);
->  	int (*misc_ctrl_set)(const struct scmi_protocol_handle *ph, u32 id,
->
-
-Anyway, LGTM.
-Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
- 
-Thanks,
-Cristian
