@@ -1,134 +1,170 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76D12E1C7F;
-	Fri, 27 Jun 2025 15:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 506C02E92C8;
+	Fri, 27 Jun 2025 15:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751038419; cv=none; b=DFi85Mj1QzKgdVdWcGX+5jkUCnmloJMhNLSOAX1dcyoewfeh+x1B+t+wMlTbirZ73I1qR2VuB8I+Ltqd22WNAujrXN/6OCWhhyXlfuQ75dKulkBz1zcbySUnLX60Wfvlr9hM2nY8AtBY7dZ75rf/irb1cxrT3+sSnlgn8pAXH4c=
+	t=1751038443; cv=none; b=G90Bc4SbdaU+T5AiDfWCOzz7jnzbOomFSYeI8Jw+nFAPANO9HuHiUZ13f53JNZ2pcjDOweWJIHigvhTwtN9Co4aw7jl5baOeHeTkP/Jy3EvaOYvgsLowXYwMULfl3iK/v31keD6sZdVc7GOIlZjKaSw+5lV3vJIAKnn9TSx4M54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751038419; c=relaxed/simple;
-	bh=7yLqISZi2iOkaYLdO3jaD791BiQle43dMbxx3g6IDjM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=aVRMYSflqG/I+7HAo+Ff4qNu6qEt3Bvex6UYY6a8YR++pVWl6JINPkQcwLK24+GTnT46/8vnuMXwyCXqCtnWcvaFlNrRtrbM1JpNhDvmdcizyEsN5G8L8joqw3qxlXjOg0u64dBkrK5qnk/9SNg01yimGFFnv7zXWYmQDeg6BcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TBq0pIge; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751038443; c=relaxed/simple;
+	bh=LgdvqBTRB61bdlKxwir8i1HbLL9fRJZEYQrJo9z9NSI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SUSgLPbSky7Um4XFmBAJZB5rBgLLPcgbSt5bhAJ1BtWN0gWdYhqZan9ozaGbKZljaWTkTEHrPIRmPBp3/bRBBlW5vNdzys1ZQqGnQ7qszAdas6DONhagSEK6drsrvxo75opYySvLk+OT9/T6XVbQZi6gZ9Ah1GeZ3r9EwuM4tvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UgJXL9R3; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TBq0pIge"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RC5Yg4014245;
-	Fri, 27 Jun 2025 15:33:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	tv69h5+7Ly9EksC2Tsf+uzCBpppecTtLheLgqclXCFk=; b=TBq0pIgex6PpX3mP
-	MDMEOZ4/WtADv3ijqmZiLFTQH8W0SzdwKq6ndGwODBWnht4G3+wBUtGhOc0zJRsP
-	emYM6A9RMo4CODveA7vdywZh2wT7HYK0hCZauS4LV0TLmsGrYXeDGzwlsGw90XRp
-	ZSlRVwDqoJGN44KoQVs+1/RKbCCoZ3jTvhQZrxJd7liPk0Qpa6sBA2KJOsQZy3UV
-	Dwk5E12hzXYC02HyvinqWmqxGd5/yKILq29Yb0GT5Dd8t9Sbi4Kyzg2+hVd9OzPi
-	vjGd9jxehmbTeQ9ANzqNUujjibwHjeEixV0YsJ7IRoZG+xkuyMvaetHHt3HSNsfj
-	IHVEKA==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47emcn13qf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 15:33:32 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55RFXVx4028121
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 15:33:31 GMT
-Received: from hu-vgarodia-hyd.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 27 Jun 2025 08:33:08 -0700
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-Date: Fri, 27 Jun 2025 21:02:42 +0530
-Subject: [PATCH v2 5/5] media: iris: configure DMA device for vb2 queue on
- OUTPUT plane
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UgJXL9R3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=y5QkQnnSrcoyz3W4bWPHzK9WuTb9VBE36yVoQb6GpKY=;
+	b=UgJXL9R3RyB/lWpMZBiVFD7Lp7reJ5J2XFU30O8Mzi5F7kYW3+5s8lEX2GgjMu
+	L/P8Qymi6+pmY+bHFwHq90Z5zusEROqKt1LUZL7xuEQz8769EqDLZuRM8F0NP7XU
+	A5WPD/kgN2N299Tlwhc3JYvWHEax0TZHQ0BpWQEJSznI8=
+Received: from [IPV6:240e:b8f:919b:3100:5951:e2f3:d3e5:8d13] (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgCHFBbAuV5oafePAQ--.54065S2;
+	Fri, 27 Jun 2025 23:33:22 +0800 (CST)
+Message-ID: <f24aac22-d53e-4751-8bc5-db86a6d12598@163.com>
+Date: Fri, 27 Jun 2025 23:33:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 04/13] PCI: imx6: Refactor code by using
+ dw_pcie_clear_and_set_dword()
+To: Frank Li <Frank.li@nxp.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, mani@kernel.org,
+ kwilczynski@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250626145040.14180-1-18255117159@163.com>
+ <20250626145040.14180-5-18255117159@163.com>
+ <aF1/DzLRRhtgFVsH@lizhi-Precision-Tower-5810>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <aF1/DzLRRhtgFVsH@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250627-video_cb-v2-5-3931c3f49361@quicinc.com>
-References: <20250627-video_cb-v2-0-3931c3f49361@quicinc.com>
-In-Reply-To: <20250627-video_cb-v2-0-3931c3f49361@quicinc.com>
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar
-	<abhinav.kumar@linux.dev>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751038370; l=1047;
- i=quic_vgarodia@quicinc.com; s=20241104; h=from:subject:message-id;
- bh=7yLqISZi2iOkaYLdO3jaD791BiQle43dMbxx3g6IDjM=;
- b=oTbDCzGCYYmLi2iqlXPuX89czjjcSCXKphzW/FFLmzcMlHUO5MP7tyqVoeKFH+x5p2RiqWRUG
- 5VRCRWJCMwPBHl181JFia+8w2GUZPBk0tiRcK6zlL3NT+8rrk7Oj1Vh
-X-Developer-Key: i=quic_vgarodia@quicinc.com; a=ed25519;
- pk=LY9Eqp4KiHWxzGNKGHbwRFEJOfRCSzG/rxQNmvZvaKE=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: EX3SaSJiTpEPEm0ln1RWvh8y23XP2zYo
-X-Proofpoint-ORIG-GUID: EX3SaSJiTpEPEm0ln1RWvh8y23XP2zYo
-X-Authority-Analysis: v=2.4 cv=J+eq7BnS c=1 sm=1 tr=0 ts=685eb9cc cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=9NI5Io21HBJBbxBAymgA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDEyNSBTYWx0ZWRfX+tryu9OBSq93
- 0wyPibvzF+0o5o4FdRoAw9ZPWJGkNcWDfjEXBfhqQlrRKCZREp7cY25wFKxpo5N/J2j7UDmgxoy
- 90//wu6S27arUfDpDA2koarZifQBGXYQ1P533tgm4GKqn8/uLQI6X16+xhOXmJCudG6F+QpBDZg
- QW0WjXaBu9Moyf/BY3Motbf7oN/3XS3KSgIzSE88xNmu0TWfnKbma+3uvL4FMAKnrjZF9HeJBHH
- Luw6VGf9j1CWLhO6i414sPSr5Mpd3RWUmiwSICAugCGXLhTn7jWkvXg1jN5/8kjBqCAebZMKuBO
- KLI5LndV0MLuGfZJRnUQDh7rXi4RIV6FrqNaen5Y/VS3cLEaE0u4CT9w41uk/bWEai7XdJeJ0oq
- 2v/9FMp1OcDQ8vxFf465d8/Voo5T+oE8TMjgiTcWpl6HHDBjQs9yT2lMC0qJtD5Y5PxTM1cP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_04,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 mlxlogscore=999 adultscore=0 impostorscore=0 clxscore=1015
- spamscore=0 malwarescore=0 phishscore=0 priorityscore=1501 suspectscore=0
- mlxscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506270125
+X-CM-TRANSID:PCgvCgCHFBbAuV5oafePAQ--.54065S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAF1fAF1UXFyrJr47KF4DJwb_yoWrZw4rpa
+	y2v3WSkF48JF4ruan2ya95ZF1aqas3Cr1DG3ZrK34FqFy2yr9rKa10y3y3trn7Cr47tryj
+	kw1UJw43Ga1YyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UoBTrUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiQxJ4o2hdXLQ8tQACsc
 
-While setting up the vb2 queues, assign "non_pixel" device to manage
-OUTPUT plane buffers i.e bitstream buffers incase of decoder. It prefers
-the non_pixel device(np_dev) when available, falling back to core->dev
-otherwise.
 
-Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
----
- drivers/media/platform/qcom/iris/iris_vb2.c | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/media/platform/qcom/iris/iris_vb2.c b/drivers/media/platform/qcom/iris/iris_vb2.c
-index cdf11feb590b5cb7804db3fcde7282fb1f9f1a1e..01cc337970400d48063c558c1ac039539dbcbaba 100644
---- a/drivers/media/platform/qcom/iris/iris_vb2.c
-+++ b/drivers/media/platform/qcom/iris/iris_vb2.c
-@@ -159,6 +159,10 @@ int iris_vb2_queue_setup(struct vb2_queue *q,
- 	*num_planes = 1;
- 	sizes[0] = f->fmt.pix_mp.plane_fmt[0].sizeimage;
- 
-+	if (q->type == V4L2_BUF_TYPE_VIDEO_OUTPUT ||
-+	    q->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
-+		q->dev = core->np_dev ? core->np_dev : core->dev;
-+
- unlock:
- 	mutex_unlock(&inst->lock);
- 
+On 2025/6/27 01:10, Frank Li wrote:
+> On Thu, Jun 26, 2025 at 10:50:31PM +0800, Hans Zhang wrote:
+>> i.MX6 PCIe driver contains multiple read-modify-write sequences for
+>> link training and speed configuration. These operations manually handle
+>> bit masking and shifting to update specific fields in control registers,
+>> particularly for link capabilities and speed change initiation.
+>>
+>> Refactor link capability configuration and speed change handling using
+>> dw_pcie_clear_and_set_dword(). The helper simplifies LNKCAP modification
+>> by encapsulating bit clear/set operations and eliminates intermediate
+>> variables. For speed change control, replace explicit bit manipulation
+>> with direct register updates through the helper.
+>>
+>> Adopting the standard interface reduces code complexity in link training
+>> paths and ensures consistent handling of speed-related bits. The change
+>> also prepares the driver for future enhancements to Gen3 link training
+>> by centralizing bit manipulation logic.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+> 
+> missed my review tag, you need collect all review tags when respin patches.
+> 
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> 
+> https://lore.kernel.org/linux-pci/aFQp4MYpRaEUXNQy@lizhi-Precision-Tower-5810/
+> 
 
--- 
-2.34.1
+Dear Frank,
+
+Sorry. Next time I will check the corresponding tag.
+
+Best regards,
+Hans
+
+> 
+>> ---
+>>   drivers/pci/controller/dwc/pci-imx6.c | 26 ++++++++++----------------
+>>   1 file changed, 10 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+>> index 5a38cfaf989b..3004e432f013 100644
+>> --- a/drivers/pci/controller/dwc/pci-imx6.c
+>> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+>> @@ -941,7 +941,6 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+>>   	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
+>>   	struct device *dev = pci->dev;
+>>   	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>> -	u32 tmp;
+>>   	int ret;
+>>
+>>   	if (!(imx_pcie->drvdata->flags &
+>> @@ -956,10 +955,9 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+>>   	 * bus will not be detected at all.  This happens with PCIe switches.
+>>   	 */
+>>   	dw_pcie_dbi_ro_wr_en(pci);
+>> -	tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+>> -	tmp &= ~PCI_EXP_LNKCAP_SLS;
+>> -	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
+>> -	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
+>> +	dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
+>> +				    PCI_EXP_LNKCAP_SLS,
+>> +				    PCI_EXP_LNKCAP_SLS_2_5GB);
+>>   	dw_pcie_dbi_ro_wr_dis(pci);
+>>
+>>   	/* Start LTSSM. */
+>> @@ -972,18 +970,16 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+>>
+>>   		/* Allow faster modes after the link is up */
+>>   		dw_pcie_dbi_ro_wr_en(pci);
+>> -		tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+>> -		tmp &= ~PCI_EXP_LNKCAP_SLS;
+>> -		tmp |= pci->max_link_speed;
+>> -		dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
+>> +		dw_pcie_clear_and_set_dword(pci, offset + PCI_EXP_LNKCAP,
+>> +					    PCI_EXP_LNKCAP_SLS,
+>> +					    pci->max_link_speed);
+>>
+>>   		/*
+>>   		 * Start Directed Speed Change so the best possible
+>>   		 * speed both link partners support can be negotiated.
+>>   		 */
+>> -		tmp = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+>> -		tmp |= PORT_LOGIC_SPEED_CHANGE;
+>> -		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
+>> +		dw_pcie_clear_and_set_dword(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
+>> +					    0, PORT_LOGIC_SPEED_CHANGE);
+>>   		dw_pcie_dbi_ro_wr_dis(pci);
+>>
+>>   		ret = imx_pcie_wait_for_speed_change(imx_pcie);
+>> @@ -1295,7 +1291,6 @@ static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
+>>   {
+>>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>   	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
+>> -	u32 val;
+>>
+>>   	if (imx_pcie->drvdata->flags & IMX_PCIE_FLAG_8GT_ECN_ERR051586) {
+>>   		/*
+>> @@ -1310,9 +1305,8 @@ static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
+>>   		 * to 0.
+>>   		 */
+>>   		dw_pcie_dbi_ro_wr_en(pci);
+>> -		val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+>> -		val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
+>> -		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
+>> +		dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
+>> +					    GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL, 0);
+>>   		dw_pcie_dbi_ro_wr_dis(pci);
+>>   	}
+>>   }
+>> --
+>> 2.25.1
+>>
 
