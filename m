@@ -1,195 +1,241 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218271ACED5
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 21:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5274D1ACED5;
+	Fri, 27 Jun 2025 21:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751058173; cv=none; b=VmU79gqV/qXmh2beOYPLew5/Z6jMHA6iB0pPc8sJHXeWv+CsJ/7AzL4spMRroC5fHlOGAe/ZGxf/hY+cvMR9CdA4Psj+ZGgDh82BNQVAyt5QJ9sDXuydt0D75M//MNpclVltq6/Jpj6aFuEPRbrXtbUEMCfPwNHYAYXhJ5FqUTg=
+	t=1751058215; cv=none; b=lSGCihLpBmXXWRn9pmTeRjuX9QyNgVIIrIHIUdaEsZ6sU4kFss13aqvE8xpRpT9vjP1KpSebeVhFIjGo+mdFtANRh7Cz2iVUjO16klFjx/t0n5IjRQvCDRQi9B67TTVhQ/wa2jbbf6+Fs7MDJ5fN9Vp1d1FssM6gYB9gO18FSTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751058173; c=relaxed/simple;
-	bh=ItSIJGKrvn67D4VoacryvL8WyxCA9mhgPnojA/eepVw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eHWKg1mptZB7+qHOW6B/nyLHH6v6eW9+Z62tsAghP7LgEcRqPPpHuCsCwdFgzYSY0anSGBE816FTIGF/ezoSdGdFFMiyNwbESDw9SCxO0KbIjEYglRIvhy09ibGD0r1C0qDJVEMr8bZo8IOSZss0kWeXkgwR+kJ44POc08fpKgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ii977w7F; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751058215; c=relaxed/simple;
+	bh=0W8W59iot3FeAisR7nDyXzE2AYNn9ZHtEufvzCTXQoc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZIP2IMUXAdszzLLZeMz3+24i+UGhSb5mFVp4CaWMckgk3lCe5l+hHjcZuOZsp4EaoOldpq61JQlJVvTG2ylGMhA6zb7734/+g6rNm3O7iKq2tySkBZsFKcL6i8eRvT3DtryLYcqh892dqtLS6AsOZozeIRJqO1SLSK0PL7l7Y/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z0cPlhJH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ii977w7F"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6fad4a1dc33so2835986d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 14:02:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751058171; x=1751662971; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=P9YLk/5TTdLYt8yViLvXA0YsEMCQm55CT3LavF8lNgY=;
-        b=ii977w7FysVsit1F5uts6RywXQgLrwhICkNVAgMw3Ahtsv1x24yj/ad+wsasTVbiAw
-         rMaulU4t7lKX53zTtjCHcsF0TTz02n/zlAX2ToQEslf6fjSdYM7HCr+UUWq5i8ZrsG3T
-         j6xG7cNBgERV7XpERaaayJFj/RbiH6sMowQ3XGe6Ai3NlvTyEIYCTs6CbD3jHctr2GM1
-         8jeB0XQZZd3A75zukuc+bekn5hE5J06oFhHMKurB3Fh98jmIAJAgaSjskUkvDHhYV9FQ
-         Ime3Nm0a1HruKjlgFGQTUBylxKjWuBMLoeD6BpxoxrSAZUk4lYJcHASRV3Z9yulOQliI
-         oaig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751058171; x=1751662971;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=P9YLk/5TTdLYt8yViLvXA0YsEMCQm55CT3LavF8lNgY=;
-        b=nawBkztDmvMA5JuonEGuw8Eie8iFmHPAhwDVBJ0N+C4ccUOQD7MjmjnOvv/Y47xBIZ
-         r2LCz1C0vRn3qOSwJA9IQFddcXQYCijKQdmhDB1s1PjaZtQe2bQjr+J8rLlNWGsdIufw
-         H922Ko9Vrpro9TW3JTkf+HbnflUR0poEXW1c6r8UycZYOF/tnaISad5d/QaUpgPIuWee
-         RnfTLX9xDYtdGPgnNT6UvwRK1ip2f7AJxZJKEAcmIqQEKfYoylHt4STYx+G/o0ElhUFA
-         yXU0uM2sF5wucvRMuayfCiRNj9QjPYXMlb+Xo4R7RmvMQQlk3N4WAlk0WCv7LFAI6jTe
-         8PBg==
-X-Gm-Message-State: AOJu0Yxqi1d+BD7g44brb0FbhXVMqic8SzA/spbCmp2uJVe/a7WS/j5O
-	IlBjmEVBbeJtKJ/JSyFzr1hkWZhM475KkXKJdvFkehhCNBk64H2QoVm4BOOGgGAz
-X-Gm-Gg: ASbGncv4vfFL+yJzbFod4JAB8Kupo8BSmbVX9XJAZuPgsIk4xspe7obBDyuR4TaTRBq
-	73e1GI5H2CKsQ69iYJlz6J6gHw6wQmOXXhzWhmkjwQvuQOn3VlVOsDQKHNio6ul/2smirWjnI2f
-	pDe10NIl2Bl/BdZ8CAdgIkzIgLhNKaCxU94koJaXaJ6fzx4v4A/WOK75jXzQh4YWj3FgxAbLHyM
-	WERoPRve7/YYuQ4doBBFaYk1TQR/vBST/83voyd7ro4lbDR9hGj/VVjmp4Q9Gtw9Bvpaf4Vyysc
-	ezi/pmWI78RbO39+EC4HKjni+kGxr5Rv9R0CjKs6FFUbOC6rVHr8NEtcqXYP7/HbjkjAEIT6Bw=
-	=
-X-Google-Smtp-Source: AGHT+IE7XmLeqLTL3tEF2SVJmNia2rGDAkZb9OjXwbP6Aw0NV1oxPShVevsy2hMbsCgvkdcrVqvEgg==
-X-Received: by 2002:ad4:5c8a:0:b0:6e4:4274:aaf8 with SMTP id 6a1803df08f44-70001e5bf93mr83405026d6.17.1751058170690;
-        Fri, 27 Jun 2025 14:02:50 -0700 (PDT)
-Received: from pop-os.. ([177.21.141.235])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd7730aea1sm26887116d6.112.2025.06.27.14.02.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 14:02:50 -0700 (PDT)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: apw@canonical.com,
-	joe@perches.com,
-	dwaipayanray1@gmail.com,
-	lukas.bulwahn@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-Subject: [RESEND PATCH] checkpatch: check format of Vec<String> in modules
-Date: Fri, 27 Jun 2025 18:02:22 -0300
-Message-Id: <20250627210222.105038-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z0cPlhJH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88FEDC4CEE3;
+	Fri, 27 Jun 2025 21:03:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751058213;
+	bh=0W8W59iot3FeAisR7nDyXzE2AYNn9ZHtEufvzCTXQoc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z0cPlhJHHV1gWR9CVc54A+0kWgk2xzw+lPg30UvCw1DWA622U11UjYQKmkaTcczMb
+	 aLN/ElG8454hcSLsEahyoDqaseMHkZ9uDhlqG8pWgu+sx3ZYVpwDKUND30HEFrSqW2
+	 PgGgBCzELuj6xs5m+oWUsQawUxeNVdphmKCMEYWSCNx5QJQOk/EVWAfanVOgKcJOcc
+	 xoub/hFy7cOolETgoSoQmO4T5bljvkuIpErPWKq/wEiHbGAZ24U2tO88HBdbVQhv9S
+	 2Oe98MyRu/tpZPPnKbNzHZsNDgn47BW8QsNruVWrLVemaCn6sU2/7voTg5PGeCaC1d
+	 8zpgaWuXdDbwA==
+Received: by pali.im (Postfix)
+	id 35CD9798; Fri, 27 Jun 2025 23:03:31 +0200 (CEST)
+Date: Fri, 27 Jun 2025 23:03:31 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Steve French <sfrench@samba.org>
+Cc: Paulo Alcantara <pc@manguebit.org>, Remy Monsen <monsen@monsen.cc>,
+	linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cifs: Fix lstat() and AT_SYMLINK_NOFOLLOW to work on
+ broken symlink nodes
+Message-ID: <20250627210331.qpp7bmpjnux63eow@pali>
+References: <20250610213404.16288-1-pali@kernel.org>
+ <26e59412fa2c70efad5f9c585bfc198f@manguebit.org>
+ <20250621122139.3xq675cbs5kgkd7t@pali>
+ <82bf746b2c44f9cccd7e3f4ca349d145@manguebit.org>
+ <20250621165246.5yvdolrrdchrbe22@pali>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250621165246.5yvdolrrdchrbe22@pali>
+User-Agent: NeoMutt/20180716
 
-Implement a check to ensure that the author, firmware, and alias fields
-of the module! macro are properly formatted.
+So what would be the next steps here?
 
-* If the array contains more than one value, enforce vertical
-  formatting.
-* If the array contains only one value, it may be formatted on a single
-  line
-* If the array is not indentation aligned, enforce indentation alignment
-
-Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
----
- scripts/checkpatch.pl | 77 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 664f7b7a622c..c8341c7a2bac 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2796,6 +2796,12 @@ sub process {
- 	$realcnt = 0;
- 	$linenr = 0;
- 	$fixlinenr = -1;
-+
-+	my %array_parse_module;
-+	my $expected_spaces;
-+	my $spaces;
-+	my $herevet_space_add;
-+
- 	foreach my $line (@lines) {
- 		$linenr++;
- 		$fixlinenr++;
-@@ -2872,6 +2878,11 @@ sub process {
- 			$realfile =~ s@^([^/]*)/@@ if (!$file);
- 			$in_commit_log = 0;
- 			$found_file = 1;
-+
-+			%array_parse_module = ();
-+			$expected_spaces = undef;
-+			$spaces = undef;
-+
- 		} elsif ($line =~ /^\+\+\+\s+(\S+)/) {
- 			$realfile = $1;
- 			$realfile =~ s@^([^/]*)/@@ if (!$file);
-@@ -3588,6 +3599,72 @@ sub process {
- # ignore non-hunk lines and lines being removed
- 		next if (!$hunk_line || $line =~ /^-/);
- 
-+# check if the field is about author, firmware or alias from module! macro and find malformed arrays
-+		my $inline = 0;
-+		my $key = "";
-+		my $add_line = $line =~ /^\+/;
-+
-+		if ($line =~ /\b(authors|alias|firmware)\s*:\s*\[/) {
-+			$inline = 1;
-+			$array_parse_module{$1} = 1;
-+		}
-+
-+		my @keys = keys %array_parse_module;
-+		if (@keys) {
-+			$key = $keys[0];
-+		}
-+
-+		if (!$expected_spaces && !$add_line && $key && !$inline) {
-+			if ($line =~ /^([\t ]+)(\s)/) {
-+				$expected_spaces = $1;
-+			}
-+		}
-+
-+		if ($add_line && $key) {
-+			my $herevet = "$here\n" . cat_vet($rawline) . "\n";
-+
-+			my $counter = () = $line =~ /"/g;
-+			my $more_than_one = $counter > 2;
-+			if ($more_than_one) {
-+				WARN("ARRAY_MODULE_MACRO",
-+				     "Prefer each array element on a separate line\n". $herevet);
-+			} elsif ($inline && $line !~ /\]/ && $line !~ /,/ && $line =~ /"/) {
-+				WARN("ARRAY_MODULE_MACRO",
-+				     "Prefer to declare ] on the same line\n" . $herevet);
-+			} elsif (!$inline && $line =~ /\]/ && $line =~ /\"/) {
-+				WARN("ARRAY_MODULE_MACRO",
-+				     "Prefer a new line after the last value and before ]\n" . $herevet);
-+			} elsif ($inline && $line =~ /,/ && $line !~ /\]/) {
-+				WARN("ARRAY_MODULE_MACRO",
-+				     "Prefer a new line after [\n" . $herevet);
-+			}
-+
-+			my $line_cmp = $line;
-+			$line_cmp =~ s/\+/ /;
-+			$spaces = -1;
-+			if ($line_cmp =~ /^([\t ]+)(\s)/) {
-+				$spaces = $1;
-+			}
-+
-+			$herevet_space_add = $herevet;
-+		}
-+
-+		if ($expected_spaces && $spaces) {
-+			if ($spaces ne $expected_spaces) {
-+				WARN("ARRAY_MODULE_MACRO",
-+				     "Prefer aligned parameters\n" . $herevet_space_add);
-+			}
-+
-+			$spaces = undef;
-+		}
-+
-+		#END OF ANALYZE FIELD
-+		if ($line =~ /\]/) {
-+			delete $array_parse_module{$key};
-+			$expected_spaces = undef;
-+			$spaces = undef;
-+		}
-+
- #trailing whitespace
- 		if ($line =~ /^\+.*\015/) {
- 			my $herevet = "$here\n" . cat_vet($rawline) . "\n";
--- 
-2.34.1
-
+On Saturday 21 June 2025 18:52:46 Pali Rohár wrote:
+> On Saturday 21 June 2025 12:38:34 Paulo Alcantara wrote:
+> > Pali Rohár <pali@kernel.org> writes:
+> > 
+> > > On Friday 20 June 2025 20:44:37 Paulo Alcantara wrote:
+> > >> Pali Rohár <pali@kernel.org> writes:
+> > >> 
+> > >> > Currently Linux SMB client returns EIO for lstat() and AT_SYMLINK_NOFOLLOW
+> > >> > calls on symlink node when the symlink target location is broken or cannot
+> > >> > be read or parsed.
+> > >> >
+> > >> > Fix this problem by relaxing the errors from various locations which parses
+> > >> > information about symlink file node (UNIX SMB1, native SMB2+, NFS-style,
+> > >> > WSL-style) and let readlink() syscall to return EIO when the symlink target
+> > >> > location is not available.
+> > >> 
+> > >> Please, don't.  We still want those validations for the other types of
+> > >> symlinks.
+> > >
+> > > Well, validation was not removed. Validation is still there, just the
+> > > error is signalled by the readlink() syscall instead of the lstat() or
+> > > AT_SYMLINK_NOFOLLOW syscalls.
+> > >
+> > > My opinion is that the lstat() or AT_SYMLINK_NOFOLLOW should work on
+> > > symlink node independently of where the symlink points (and whether the
+> > > symlink target is valid POSIX path or not). That is because the lstat()
+> > > and AT_SYMLINK_NOFOLLOW says that the symlink target location must not
+> > > be used and must not be resolved.
+> > >
+> > > But still the invalid / incorrect / broken or non-representable symlink
+> > > target path in POSIX notation should be reported as an issue and the
+> > > readlink() is the correct syscall which should report these errors.
+> > 
+> > The only issue is breaking existing customer or user applications that
+> > really don't care if cifs.ko could follow those kind of symlinks.
+> > 
+> > Samba create symlinks to represent DFS links with targets like
+> > 'msdfs:srv1\share,srv2\share', which are not valid POSIX paths.  Does
+> > that mean the filesystem should not allow readlink(2) to succeed just
+> > because it is not a valid POSIX path?  Is that what you mean?
+> 
+> But this is something totally different thing.
+> 
+> Here you are referring to the behavior of Samba server, which interprets
+> symlink node stored on local filesystem named e.g. "link1" pointing to
+> target relative file name 'msdfs:srv1\share,srv2\share' specially.
+> 
+> Calling "ln -s 'msdfs:srv1\share,srv2\share' link1" is perfectly fine on
+> the ext4 filesystem. It creates a relative symlink to the specified
+> file.
+> 
+> And if you call "echo test > 'msdfs:srv1\share,srv2\share'" then it would
+> world correctly and "cat link1" will print "test".
+> 
+> The 'msdfs:srv1\share,srv2\share' is a valid POSIX path and it is stored
+> on the local Linux filesystem. So I do not see anything wrong with it or
+> reason why local filesystem should disallow creating such symlink or why
+> would realink() should fail on such node.
+> 
+> 
+> That example has nothing with symlinks stored on NTFS-compatible
+> filesystems which has ability to store symlinks pointing to non-POSIX
+> NT object model paths.
+> 
+> Here the issue is with symlink target locations which are coming from
+> the remote NT server and are pointing to location which cannot be
+> directly represented by the Linux system. The translation needs to be
+> done in both directions and reversible. Otherwise moving the file or
+> symlink from cifs to ext4 and back would damage the file or symlink.
+> 
+> > >> The problem is just that cifs.ko can't handle absolute
+> > >> symlink targets in the form of '\??\UNC\srv\share\foo', while Windows
+> > >> client can.  They are still valid symlink targets, but cifs.ko doesn't
+> > >> know how to follow them.
+> > >
+> > > Windows client can represent and follow such symlink because the symlink
+> > > is in the NT style format and Windows kernel uses NT style of paths
+> > > internally. Linux kernel uses POSIX paths and POSIX does not contain any
+> > > GLOBAL?? namespace for NT object hierarchy.
+> > >
+> > > Leaking raw NT object hierarchy from SMB to POSIX userspace via
+> > > readlink() syscall is a bad idea. Applications are really not expecting
+> > > that the readlink() syscall will return NT kernel internals (exported
+> > > over SMB protocol and passed to cifs.ko).
+> > >
+> > > For UNC paths encoded in NT object hierarchy, which is just some subset
+> > > of all possible NT paths, I had an idea that we could convert these
+> > > paths to some format like:
+> > >
+> > >    <prefix>/server/share/path...
+> > >
+> > > Where <prefix> would be specified by the string mount option. So user
+> > > could say that wants all UNC symlinks pointing to /mnt/unc/.
+> > >
+> > > And in the same way if user would want to create symlink pointing to
+> > > /mnt/unc/server/share/path... then cifs.ko will transform it into valid
+> > > NT UNC path and create a symlink to this location.
+> > 
+> > That's really a terrible idea.  The symlink targets in the form of
+> > '\??\UNC\...' could be resolved by cifs.ko.  The ones that refer to a
+> > file outside the mounted share, we would set those as automounts.
+> 
+> I agree that above is not the best idea, but I wrote at least something
+> as an idea as I do not know how it could be solved in better way.
+> 
+> And I do not see how it could be resolved by cifs.ko somehow
+> automatically. I'm not sure to which you refer how it can be resolved by
+> cifs.ko. I understood you message as it could automount another share
+> and do the whole path symlink resolving in cifs.ko.
+> 
+> And I think that this is even worse idea than mine. Because that
+> automount means that symlinks pointing outside of the share would start
+> behaving like a mount point. Such thing can cause even a security issues
+> if not used carefully.
+> 
+> But moreover there is a big difference between symlink and mount point.
+> Symlinks are not resolved by filesystem itself (but rather by the VFS,
+> to ensure that all access checks are applied) and also moving the
+> symlink between filesystems should not break them. In this idea when the
+> symlink is going to be moved from smb share to e.g. ext4 local fs, then
+> it would stops working (if the path resolved is in the cifs.ko) as
+> ext4.ko would not be able to process special cifs.ko symlinks.
+> 
+> > > But this would solve only problem with UNC symlink, not symlinks
+> > > pointing to NT object hierarchy in general.
+> > >
+> > >> The following should do it and then restore old behavior
+> > >> 
+> > >> diff --git a/fs/smb/client/reparse.c b/fs/smb/client/reparse.c
+> > >> index bb25e77c5540..11d44288e75a 100644
+> > >> --- a/fs/smb/client/reparse.c
+> > >> +++ b/fs/smb/client/reparse.c
+> > >> @@ -875,15 +875,8 @@ int smb2_parse_native_symlink(char **target, const char *buf, unsigned int len,
+> > >>  			abs_path += sizeof("\\DosDevices\\")-1;
+> > >>  		else if (strstarts(abs_path, "\\GLOBAL??\\"))
+> > >>  			abs_path += sizeof("\\GLOBAL??\\")-1;
+> > >> -		else {
+> > >> -			/* Unhandled absolute symlink, points outside of DOS/Win32 */
+> > >> -			cifs_dbg(VFS,
+> > >> -				 "absolute symlink '%s' cannot be converted from NT format "
+> > >> -				 "because points to unknown target\n",
+> > >> -				 smb_target);
+> > >> -			rc = -EIO;
+> > >> -			goto out;
+> > >> -		}
+> > >> +		else
+> > >> +			goto out_unhandled_target;
+> > >>  
+> > >>  		/* Sometimes path separator after \?? is double backslash */
+> > >>  		if (abs_path[0] == '\\')
+> > >> @@ -910,13 +903,7 @@ int smb2_parse_native_symlink(char **target, const char *buf, unsigned int len,
+> > >>  			abs_path++;
+> > >>  			abs_path[0] = drive_letter;
+> > >>  		} else {
+> > >> -			/* Unhandled absolute symlink. Report an error. */
+> > >> -			cifs_dbg(VFS,
+> > >> -				 "absolute symlink '%s' cannot be converted from NT format "
+> > >> -				 "because points to unknown target\n",
+> > >> -				 smb_target);
+> > >> -			rc = -EIO;
+> > >> -			goto out;
+> > >> +			goto out_unhandled_target;
+> > >>  		}
+> > >>  
+> > >>  		abs_path_len = strlen(abs_path)+1;
+> > >> @@ -966,6 +953,7 @@ int smb2_parse_native_symlink(char **target, const char *buf, unsigned int len,
+> > >>  		 * These paths have same format as Linux symlinks, so no
+> > >>  		 * conversion is needed.
+> > >>  		 */
+> > >> +out_unhandled_target:
+> > >>  		linux_target = smb_target;
+> > >>  		smb_target = NULL;
+> > >>  	}
+> > >
+> > > I'm really not sure if removing the messages and error reporting about
+> > > symlinks which cannot be represented in POSIX system is a good idea.
+> > 
+> > Those messages are just useless and noisy.  Do you think it's useful
+> > printing that message for _every_ symlink when someone is calling
+> > readdir(2) in a directory that contain such files?
+> 
+> I though that for any debugging purposes these messages are useful.
+> Now I see that VFS level is printed always, so maybe the FYI level could
+> be better. Or do you really think that it is useless even for debugging?
