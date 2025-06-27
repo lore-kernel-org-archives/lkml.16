@@ -1,87 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-8fab.mail.infomaniak.ch (smtp-8fab.mail.infomaniak.ch [83.166.143.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEB72980B4;
-	Fri, 27 Jun 2025 11:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359E029AB11
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751022625; cv=none; b=WG44ngWxuphQw/YXn+4l+ECt0Qjs/gnLIJMmAecq/URuVgMonvx9txQnuxiUTFX6ih6F8GY6dlLtprMozAYPwAF13lz6hHvKGnHh/BNHCaTlmTvued7lRBJbqMT/Bc+iiCcM3Sb3Rf7qyKMhCnQEdoJ5Zk9dqEnIBBH0iXIAYGo=
+	t=1751022635; cv=none; b=NiB/5DnZaYverh3zXWlZqCQzL2sR34MEMk+9Dulzc8MRJEgYi2GViGVWNQgTw/8OjTl1S5GDoOONs2EhdSRjMtjc/nEEMnfJHBHDvxPwmh8BaSDgFfVdcUIb5adw95MmtLK70x1G+BL3Fo2TcrhLagpFP6XludmOtlMq6KoQJOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751022625; c=relaxed/simple;
-	bh=mGMGfBohkZ1WPzOd7l0m/Nelbywkij2anI7hHz+8Wtg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kuynsI9VW7I+lq3bqjYmaLKGDORejbwrn7Q9CwQoAc3ZJvfcB1EmQhbyMuwyidf+B+Vi0/rfM58HGiOUfZY5smMw3ZEo02YjTjU5QZ/n1pTWu+2y5jIlOXhkt2pMk9qcCilfoy1EU462r0T8d2KGibVfXrw8GQNbqVoiVzp8BdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IIMwd5af; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IIMwd5af"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B02D5C4CEE3;
-	Fri, 27 Jun 2025 11:10:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751022625;
-	bh=mGMGfBohkZ1WPzOd7l0m/Nelbywkij2anI7hHz+8Wtg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IIMwd5afvL0J/BPxLK6qEbVvjUxRT5d3rknTaZM9WrdHd8lyYqOmr4faeVqoQbv9A
-	 zFLWXY6pifR+dc3jVcynzhPcSoqUw/bjuLO16NQMRL3IbMXoeQFD3wAc1unC/B2xRo
-	 fXZN/irWwTW4V69YlaOZCyDJrw75cGKi3a1hUee3+MvzPxU4BbBK8iN0F5j/6AW8QM
-	 Lzbli/VLSYDfFxzNXv0wsScHhUGDO7ytjshn+VJc+8XTqxPbf8rwhoyhBfSu2jT6qg
-	 Xaba5+y0sfXJINzM+ZuwAghARcnWnqWFCpAsRNf2aNw0spdKADrCkN4NJ+TcUlwM+X
-	 DHxNNlgHHTpHw==
-Message-ID: <7dd6cb50-78bc-4d44-afc1-9e0fb99a5e49@kernel.org>
-Date: Fri, 27 Jun 2025 06:10:22 -0500
+	s=arc-20240116; t=1751022635; c=relaxed/simple;
+	bh=QVNN6PEuKtjv/LwBBEU6+ak92MwPeasvGzcyPAw29aY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=eKyKA5lb7Av+zC1G/CIrFTZQmK++eN87qr/1X9rsUS92UBfMa9nnY8hB7DWrIuIjD2Gz4Kp3iBF9RAJgfHOkPDwIQuHRvvw4t9Kvw+McryL/Xw1NFppZt20KLeIA93V3r2ONHTKTU1IU0Ih+m9526OZRCsiAS/rjAqlyrKOUwOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=83.166.143.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bTC9Q2slpzVtZ;
+	Fri, 27 Jun 2025 12:54:18 +0200 (CEST)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bTC9P25PgzxLs;
+	Fri, 27 Jun 2025 12:54:17 +0200 (CEST)
+From: Quentin Schulz <foss+kernel@0leil.net>
+Date: Fri, 27 Jun 2025 12:53:57 +0200
+Subject: [PATCH v4 5/5] arm64: dts: rockchip: force PMIC reset behavior to
+ restart PMU on RK3588 Tiger
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] dt-bindings: net: Convert socfpga-dwmac bindings to
- yaml
-To: Matthew Gerlach <matthew.gerlach@altera.com>,
- Rob Herring <robh@kernel.org>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, krzk+dt@kernel.org, conor+dt@kernel.org,
- maxime.chevallier@bootlin.com, mcoquelin.stm32@gmail.com,
- alexandre.torgue@foss.st.com, richardcochran@gmail.com,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, Mun Yew Tham <mun.yew.tham@altera.com>
-References: <20250613225844.43148-1-matthew.gerlach@altera.com>
- <20250626234816.GB1398428-robh@kernel.org>
- <fe705ffc-9a4c-462c-a1bf-e14c55cdb2cd@altera.com>
-Content-Language: en-US
-From: Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <fe705ffc-9a4c-462c-a1bf-e14c55cdb2cd@altera.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250627-rk8xx-rst-fun-v4-5-ce05d041b45f@cherry.de>
+References: <20250627-rk8xx-rst-fun-v4-0-ce05d041b45f@cherry.de>
+In-Reply-To: <20250627-rk8xx-rst-fun-v4-0-ce05d041b45f@cherry.de>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Lukasz Czechowski <lukasz.czechowski@thaumatec.com>, 
+ Daniel Semkowicz <dse@thaumatec.com>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Quentin Schulz <quentin.schulz@cherry.de>
+X-Mailer: b4 0.14.2
+X-Infomaniak-Routing: alpha
 
-On 6/26/25 20:40, Matthew Gerlach wrote:
-> 
-> 
-> On 6/26/25 4:48 PM, Rob Herring wrote:
->> On Fri, Jun 13, 2025 at 03:58:44PM -0700, Matthew Gerlach wrote:
->> > Convert the bindings for socfpga-dwmac to yaml. Since the original
->> > text contained descriptions for two separate nodes, two separate
->> > yaml files were created.
->>
->> Sigh I just reviewed a conversion from Dinh:
->>
->> https://lore.kernel.org/all/20250624191549.474686-1-dinguyen@kernel.org/
->>
->> I prefer this one as it has altr,gmii-to-sgmii-2.0.yaml, but I see some
->> issues compared to Dinh's.
+From: Quentin Schulz <quentin.schulz@cherry.de>
 
-Apologies for the duplicate review. I was planning to convert the dwmac 
-first then add on to the gmii. We should continue with Matthew's version.
+The bootloader for RK3588 Tiger currently forces the PMIC reset behavior
+(stored in RST_FUN bitfield in register SYS_CFG3 of the PMIC) to 0b1X
+which is incorrect for our devices.
 
-> I am sorry for my part in the duplicate review. I just rechecked the 
-> output of get_maintainers.pl, and Dinh was not listed, and I should have 
-> known better.
-> 
-> I am happy to do the work to resolve the differences and resubmit with 
-> Dinh as the maintainer.
-> 
+It is required to restart the PMU as otherwise the companion
+microcontroller cannot detect the PMIC (and by extension the full
+product and main SoC) being rebooted which is an issue as that is used
+to reset a few things like the PWM beeper and watchdogs.
 
-I'm not the maintainer of this. Maxime Chevalier is. Please don't add me.
+Let's add the new rockchip,reset-mode property to make sure the PMIC
+reset behavior is the expected one.
 
-Dinh
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+ arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi
+index c4933a08dd1e3c92f3e0747135faf97c5eeca906..b44e89e1bb1599ee70b921598c2eb6fd54614f55 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi
+@@ -6,6 +6,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/leds/common.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
++#include "rk8xx.h"
+ #include "rk3588.dtsi"
+ 
+ / {
+@@ -440,6 +441,7 @@ pmic@0 {
+ 		vcc13-supply = <&vcc_1v1_nldo_s3>;
+ 		vcc14-supply = <&vcc_1v1_nldo_s3>;
+ 		vcca-supply = <&vcc5v0_sys>;
++		rockchip,reset-mode = <RK806_RESTART>;
+ 
+ 		rk806_dvs1_null: dvs1-null-pins {
+ 			pins = "gpio_pwrctrl1";
+
+-- 
+2.50.0
+
