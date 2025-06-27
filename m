@@ -1,136 +1,130 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFF219D89B;
-	Fri, 27 Jun 2025 15:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593A92E973C;
+	Fri, 27 Jun 2025 15:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751039808; cv=none; b=E4itW3d1yl339q6mLFNVqam9X4hCiQ/SkFJDQKIZ73U0j5m/cvaai5u1g+12QP6qZhc9s7DiPCbwPyPnX5MFdt/iUvjir16dJWGJfobHeB/zSg8e201LPjbreIuweb2en4cSMf4FgLsX9gORluV/jrGFcBNtIlmUPYpAWATDj6E=
+	t=1751039817; cv=none; b=aFctq4WXOLKldez+xaEi9VKqkZphaRmUt+sZFJFmVVZUgU2yHpg4QK5lrl9lfMybaik3DUD6H9kD1cBEsE8H+e01pUqxomVaFdrbulOBHyvGV7plnMFXK1tROpxJmxWX7BlL1jP8le6BhY8XbImsLuUEFvH9ZaB00srNgjih1nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751039808; c=relaxed/simple;
-	bh=seh8opfNudjWdQklnYEbjMOaE4msR+OSBfaNqXdugOQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QPC6ksEPhjVRFf72h89pFecrJhR3V/ZAsbPW5ZTVivXQ9ml+OdAvPxg92/cdVmALngv3lyGzjOR1tcWvrF6bKQlBGcRiVIb3lr2zqot9oUwosbfoUiIhEicUtmqYfMyQfqnYlOHJdpmMvL25hz/vKfz6SG0eUXIZI9Miv6ucK80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ACNE+BzY; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751039817; c=relaxed/simple;
+	bh=IOusWH85S4yiTdywO3XqYqSK8cw+vKq9Jp+ntdI2tpE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q9J6h84MhSrVDk4YCF1rOw8eG48y+lwTJ1dcSu5aUy1cwzS5wqJq1nDPx5lq/XOqPX8CCTlnfLHdZvi1H2IRmuN/9ToHSp+PObyKL8xNi+DFcvm/4wLqUI7PZiB1acenGIMpfoQeBacQbkE7hu/HureBoAVCqpCJI8P791a01MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bWUy2+KH; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACNE+BzY"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a510432236so1825307f8f.0;
-        Fri, 27 Jun 2025 08:56:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751039805; x=1751644605; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6O6idYvvd7oXDFef9YBBpW9+f8KvCtTxmkJ8rEx+Gcc=;
-        b=ACNE+BzYelsIwLswq4cj+8sQ7Srcy+NyCyc9pYU7pAfYGgdg4FdJ1Xsd0hVi+4uKC7
-         l3vTEhhouPcSX+CiE2K1RfI7Kyg4Tt9Fd5+LKccLsX4ODldOhvt0mbYKBUi2uSeDpcD0
-         CsCOCXCa3r/R3XL9oAL7vS1mhuh4qF3DZkyhIs6q+Qq0u8tvOHQptYFZy7JFAWWvXRHo
-         kMnDzB3/TMhh51Nxf+cx2/Z+fOTtfp9dl33kSrHqRIK4jaKq/smrSJz3S1vDwcmdpUeq
-         jjJpY1fJeVoK9SOYURZKpvEPr0sUZaSOYqsckSuoqAuFoX4/c+WsOIuP/mRFbeVU+hT5
-         kfrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751039805; x=1751644605;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6O6idYvvd7oXDFef9YBBpW9+f8KvCtTxmkJ8rEx+Gcc=;
-        b=Z6b9dlPRI8ZtrroNc0P4NaM4qB3Gp7zY/3k6/wI+JUaY0Z3IGEkaFYFOJfthcLlg59
-         Eti8bBDHoPHtAWfO1Mk7CU+ZGRJ5v4SCw4CsrgLJwkUtYlFB1laz/Vod0LwaxP89KkZP
-         qnGQw2KY6Oqm6Ecp51Lu7grSAV45NBnfrycmmpH1rLhMXyOBeIB7yVwGdkpTUz2JmUPd
-         Ki6cwJnnLpenL/8MGjqR9JbKpcFj4zwuxfo2pZhBguMC7+JmNv6BHNeXWWI+Mu7n95D/
-         jzbJIDVsfc01fqel4QAA+mMvajImjjOIvrqx+8ahoZ8Q5BHhziEEJHeXwDpDnDN6XarH
-         AkiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEBSvKsZrQMrUwkXXw9xi3Ve8ACkyPOQodVOGFk9Yo4hgR/zAJM6+yD6LynxfTLaAhH1OTPCUFd5+Gjjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfUVTmrqGFPOPJi9nh6ZZZFDrESNQAvKGHCYDUKAQUoPKxi+ui
-	4Yn1cKMofRuvyUOwa90E9RiPxRRaA7PP9knn+NMFsVQsith2PsTjiUP5
-X-Gm-Gg: ASbGncv3Dxymfum5l7HeXebRp5L9nNGl0ddb2T8s/q1gQZsrBy9k/D9W/ZsBRhrNJIt
-	4LY8h4VgWXX0XoEiO/EjT6bmsDgVT/bQ4zfN0BAGUgxqgQ3xhLgzL6F2D24JJDj92l4tLrx64jy
-	Xl58ZAfxRFxY2atg58bp/sk/m6Djb2F85cZP/GhI7wxtdbEaz/bobxpNh09kPMfzTKd8aDn1975
-	cr/1N+B+DYYxGWdzRvjELIuMl545xlUwWHpvZBL0bgvPhqkURpR6rwc+vxVXmMZwWsmCghV7+6r
-	F802nhDGrKjA7vIgtwY8xvKmMBmonyB91icEJsB2HPSpfyF3Zu1xMCsMdMV6BxdYp3FhxQ==
-X-Google-Smtp-Source: AGHT+IE4a4I72nLCTRYleWtFC5YZjODy9qWh87mZgIA844i4/nZGIblwiP9IwslChuceELFRidx+sg==
-X-Received: by 2002:a05:6000:4186:b0:3a5:57b7:cd7b with SMTP id ffacd0b85a97d-3a8f482cf28mr3216991f8f.22.1751039805292;
-        Fri, 27 Jun 2025 08:56:45 -0700 (PDT)
-Received: from [192.168.1.187] ([161.230.67.253])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52c99sm2995844f8f.49.2025.06.27.08.56.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 08:56:45 -0700 (PDT)
-Message-ID: <cd0b9044ce6434e9313a4fddf73897800821aec3.camel@gmail.com>
-Subject: Re: [PATCH] iio: adc: ad7380: remove unused oversampling_ratio
- getter
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Michael Hennerich	
- <michael.hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>,  Jonathan Cameron	 <jic23@kernel.org>, Andy
- Shevchenko <andy@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 27 Jun 2025 16:56:55 +0100
-In-Reply-To: <20250624-iio-adc-ad7380-remove-unused-oversampling_ratio-getter-v1-1-26cbee356860@baylibre.com>
-References: 
-	<20250624-iio-adc-ad7380-remove-unused-oversampling_ratio-getter-v1-1-26cbee356860@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bWUy2+KH"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55R8HC56010490;
+	Fri, 27 Jun 2025 15:56:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=IOusWH85S4yiTdywO3XqYqSK8cw+vK
+	q9Jp+ntdI2tpE=; b=bWUy2+KHyNK2AImHPoT/K7nzfyjM9NmbuPvmXplHr+g7Y1
+	XypofmRRr63tOsATvlz60+Wh/jAkHbBDW1m06Xp4w2EWccwM0RJ8z8f/KoYWJeOg
+	7/fYOrpDpOX/qcMMSetF5V0Yi78zQj8arGJTbiEmJrArgZI7GA1orxcm1ivZa2CO
+	9fjaBYSiqaW49sfvXKOO5C6Vu7EeMAP6cSsfUCix4Ifi792kapFAfhH9xCBZ7UNx
+	cni79E0bRZxeweolBPXZyKdVQdzJZeeSVMuK1+fX7xGK4fq9qDKhajNSSl7x8Do+
+	1dO+VnToeXsnT3eToBYuSmsdNn/I5R3qzZDDED2A==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47gsphva72-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 15:56:27 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55RFtCtW014897;
+	Fri, 27 Jun 2025 15:56:26 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47gsphva6v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 15:56:26 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55RC14MI014987;
+	Fri, 27 Jun 2025 15:56:25 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e72u52rw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 15:56:25 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55RFuLZq17498492
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 27 Jun 2025 15:56:21 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 869D720043;
+	Fri, 27 Jun 2025 15:56:21 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1E42A20040;
+	Fri, 27 Jun 2025 15:56:20 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.111.0.221])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 27 Jun 2025 15:56:20 +0000 (GMT)
+Date: Fri, 27 Jun 2025 17:56:18 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: GONG Ruiqi <gongruiqi1@huawei.com>
+Cc: Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Eric Snowberg <eric.snowberg@oracle.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, "Lee, Chun-Yi" <jlee@suse.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-integrity@vger.kernel.org,
+        keyrings@vger.kernel.org, Lu Jialin <lujialin4@huawei.com>
+Subject: Re: [PATCH RESEND] integrity: Extract secure boot enquiry function
+ out of IMA
+Message-ID: <aF6/ItTfd7oVN+Sn@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20250626023617.3885806-1-gongruiqi1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626023617.3885806-1-gongruiqi1@huawei.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ZVGn4lXE8Yi5L_H_NMtRZszsX8O1zlVQ
+X-Proofpoint-ORIG-GUID: cRmhbyTPAwHuG266gZfp9uPvG-4fDGhs
+X-Authority-Analysis: v=2.4 cv=Hul2G1TS c=1 sm=1 tr=0 ts=685ebf2b cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=i0EeH86SAAAA:8 a=MfmPClk6on00Wl0lz3oA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDEyOCBTYWx0ZWRfX6FVFnTWLiZx0 z+RdbizKGA2mloifLyiTyqfs1kKkb6HuDB7ShsfyeOqkPjTZQ2RFoKFT6dgyhrDmqMjux7VWIhh 1sclUvGeNFDf8T/69PdD+yAWPwgTzIPkpYSQDQOOlTU+Q3kohFm9WF7bQSgMvdjoASGwEtnXvcY
+ 6y+ex2clQaDlEgQmJ06Fff03IWLZROr7C1eXc6Df7d/Z+tqVlulcx8L546Q1zKdlECtopleiyQ2 QhKyVwbYOwhggvmbHlMyekUCKU7JpeaDVC4OBgVMcngHb2SiwhL/a1PfRc+8dEBCYVnzzvPidyN iJlbRUHMzNB2FsUG296X4cX4R6GG8CqcCKCaJA3nmlNYVy7ram2mcjJ09GJWSOVzIvDWMmgtY2B
+ mAjNLCSr8qBAq/aNrZEhsp1J54ZLASLtkHcj3YTHS5pQmacwx9wmLyhvEpCo0XcQkn+m54j9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=952 bulkscore=0 mlxscore=0 adultscore=0 spamscore=0
+ impostorscore=0 clxscore=1011 priorityscore=1501 lowpriorityscore=0
+ suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506270128
 
-On Tue, 2025-06-24 at 22:44 +0000, David Lechner wrote:
-> Remove a call to ad7380_get_osr() in ad7380_init_offload_msg. The
-> returned value is never used.
->=20
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
-> I wrote this a while back but it looks like it never got sent so here
-> it is now.
-> ---
+On Thu, Jun 26, 2025 at 10:36:17AM +0800, GONG Ruiqi wrote:
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+Hi GONG,
 
-> =C2=A0drivers/iio/adc/ad7380.c | 5 -----
-> =C2=A01 file changed, 5 deletions(-)
->=20
-> diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
-> index
-> d96bd12dfea632b62475d6537c8d6601b042de1f..abcd4cc70074723303b9b67e2b89b0c=
-4b43c
-> 6884 100644
-> --- a/drivers/iio/adc/ad7380.c
-> +++ b/drivers/iio/adc/ad7380.c
-> @@ -1165,7 +1165,6 @@ static int ad7380_init_offload_msg(struct ad7380_st=
-ate
-> *st,
-> =C2=A0	struct spi_transfer *xfer =3D &st->offload_xfer;
-> =C2=A0	struct device *dev =3D &st->spi->dev;
-> =C2=A0	const struct iio_scan_type *scan_type;
-> -	int oversampling_ratio;
-> =C2=A0	int ret;
-> =C2=A0
-> =C2=A0	scan_type =3D iio_get_current_scan_type(indio_dev,
-> @@ -1195,10 +1194,6 @@ static int ad7380_init_offload_msg(struct ad7380_s=
-tate
-> *st,
-> =C2=A0		}
-> =C2=A0	}
-> =C2=A0
-> -	ret =3D ad7380_get_osr(st, &oversampling_ratio);
-> -	if (ret)
-> -		return ret;
-> -
-> =C2=A0	xfer->bits_per_word =3D scan_type->realbits;
-> =C2=A0	xfer->offload_flags =3D SPI_OFFLOAD_XFER_RX_STREAM;
-> =C2=A0	xfer->len =3D AD7380_SPI_BYTES(scan_type) * st->chip_info-
-> >num_simult_channels;
->=20
-> ---
-> base-commit: b57cb7c47e31244bef6612f271c5dc390f761e17
-> change-id: 20250624-iio-adc-ad7380-remove-unused-oversampling_ratio-gette=
-r-
-> e54413627fe0
->=20
-> Best regards,
+...
+> Compile-tested for powerpc, s390 and x86, all with allmodconfig.
+
+This breaks defconfig and debug_defconfig builds on s390
+since IMA_ARCH_POLICY=n in these configurations and thus
+CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT=n as well:
+
+s390x-15.1.0-ld: security/integrity/ima/ima_main.o: in function `ima_load_data':
+/home/agordeev/linux.c3/security/integrity/ima/ima_main.c:902:(.text+0x54e): undefined reference to `arch_integrity_get_secureboot'
+s390x-15.1.0-ld: security/integrity/ima/ima_appraise.o: in function `ima_appraise_parse_cmdline':
+/home/agordeev/linux.c3/security/integrity/ima/ima_appraise.c:30:(.init.text+0x44): undefined reference to `arch_integrity_get_secureboot'
+make[2]: *** [scripts/Makefile.vmlinux:91: vmlinux.unstripped] Error 1
+make[1]: *** [/home/agordeev/linux.c3/Makefile:1236: vmlinux] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
+
+> Signed-off-by: GONG Ruiqi <gongruiqi1@huawei.com>
+
+Thanks!
