@@ -1,94 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D71F19F10A;
-	Fri, 27 Jun 2025 09:28:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F0A293B55;
+	Fri, 27 Jun 2025 09:29:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751016529; cv=none; b=hOPB/eS5B4YODo04WfTyafRTg5MuenhZ8AW8DRrVePCRjghQ9BxL3aJ4H6lUZk6j4E/LY+XEdJtcX8WD0bCPiOoeAMaYDAMIaA/ka9OOpGPVq5+e6B8xRs+XxhPP9TIYtwpV5Zv7Q3P3YsUFXroEPh7O+2/k0U6LvSJlM89Z0us=
+	t=1751016589; cv=none; b=Y8OUKe3QnqpOi3PgAtJ5ORdKhdf3OrlgMXUeRgLnL3TgGacZc1IgVlX1Yn09yXVaB8U6UkGQL/AT1BszYw0JIpbdBmThwKeUVlxTY10AaC6jmRYPiNwUB878YfKckaYGfSxwoAg6hWpcsNcQ0iwiTFM3+ui7w+NEuByNQ1y/1OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751016529; c=relaxed/simple;
-	bh=NMdUf/+EgOboapTSK2P0BWd2KGOh4vtzeZ1cIy0waMQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rs8BXmSYPINYZX8l6jWl3sS/jGRJBReUoz+E6Hr3SXVPUvDbblhoT2O2sevm9Z1NRjbp6n3kDWuRggr2yx3I3ZCj6/0+9wW8FykareMknV6VNGa3q/i3Al0Nm6699F3nnBzMElnumKOBue7vESCBzw/czRyPNGL5c3ZmFzSWMXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EVM8rqp/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751016589; c=relaxed/simple;
+	bh=gbtN9iAolEaCiV9gpV7aHOW/rR2hqsOZc9r1CtdycQU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KSDIUHxdqIDA42kRqUUFYuqLA+T5F/UpG0VqGJ7Wbbo0KkyQsnxX/acS2neEpd+OYDcrPoYebQUKG4R1vpquOALctAejS1CZU/yTmjSwLHCKGOLTmcouT5BQ/cQD6pYnM9c4PMH5tWwzM3fRWxGlQPmZ3q8nn0GH6o8KTXiSSGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VdHrMVMZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EVM8rqp/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1F06C4CEE3;
-	Fri, 27 Jun 2025 09:28:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VdHrMVMZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7062DC4CEED;
+	Fri, 27 Jun 2025 09:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751016528;
-	bh=NMdUf/+EgOboapTSK2P0BWd2KGOh4vtzeZ1cIy0waMQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EVM8rqp/Jt8lnO6gp/6oOYfJeZkJKCBM65127Pdwzk+90BDjC1vKMC1FrmJWGVrPG
-	 Gclq5nLOFnFPmBdIDG6sUiKDVq3maqQzwL5stg7wfdvwuUCyXi9RVeEHvJw/tu0L4T
-	 xsxT7uvLHf3J3T+rmGxCmw7ryGYu/mFfZ9pMs2Tpyjc0an87/YFT1sYoYEWU0KteNP
-	 +qKzT3oe6M5kAa3FdrHaYy6TqDIp9Hdcp6ZzqiHISl3ahpkJ+eag5e0u/OTwrkWv6T
-	 p1v07vNfR5vUWSpk+G+nHWJToQxCBo62O3DXdapdaWNq4fH8TN4x+pwH+9nY24NGtB
-	 Kzku7Wpgtspvg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uV5O4-000000000Co-3wci;
-	Fri, 27 Jun 2025 11:28:49 +0200
-Date: Fri, 27 Jun 2025 11:28:48 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
-	mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
-	kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
-	kw@linux.com, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-	qiang.yu@oss.qualcomm.com, quic_krichai@quicinc.com,
-	quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v3 2/4] dt-bindings: PCI: qcom,pcie-sa8775p: document
- link_down reset
-Message-ID: <aF5kUDghdXUbaDo3@hovoldconsulting.com>
-References: <20250625090048.624399-1-quic_ziyuzhan@quicinc.com>
- <20250625090048.624399-3-quic_ziyuzhan@quicinc.com>
+	s=k20201202; t=1751016589;
+	bh=gbtN9iAolEaCiV9gpV7aHOW/rR2hqsOZc9r1CtdycQU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=VdHrMVMZNj2q1T/GCDuFbhBdWasXcCg9h5dAFgwFgXKYG7vvsgJ93V9HItbeU6GFV
+	 jgNp34gDziptbHlu7qQlAKssvzLKU5J6VgpjGZFk2FknaXM3cFmr6qLMgxZPs3HSWx
+	 lHUqhlzVpgL7CcPPNOMt/H5KZqpMKS088BeomHvP/ElvxVxm0PtEuNnvLl/IXDbh5D
+	 UHDW1WajuQPlEIBx+aR8mm8FPAr70q2KNtkmsYEqNZX8FT8gBrXbgb65L7SULVdEj4
+	 +KeQwi+5J3tt4hrZLQKxUR1tDqou7K4gnfbFu+bI08jEVV6vtwoQfDqenwlP8p2CNU
+	 3fC2HlRaXVc2A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51044C77B7F;
+	Fri, 27 Jun 2025 09:29:49 +0000 (UTC)
+From: Joel Granados <joel.granados@kernel.org>
+Date: Fri, 27 Jun 2025 11:27:25 +0200
+Subject: [PATCH 1/5] sysctl: Nixify sysctl.sh
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625090048.624399-3-quic_ziyuzhan@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250627-jag-sysctl-v1-1-20dd9801420b@kernel.org>
+References: <20250627-jag-sysctl-v1-0-20dd9801420b@kernel.org>
+In-Reply-To: <20250627-jag-sysctl-v1-0-20dd9801420b@kernel.org>
+To: Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Joel Granados <joel.granados@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=810;
+ i=joel.granados@kernel.org; h=from:subject:message-id;
+ bh=gbtN9iAolEaCiV9gpV7aHOW/rR2hqsOZc9r1CtdycQU=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGheZInuFzY4h7evnT6lmDFOI2joCl1dQ00cb
+ CXzz3XyO4K8gIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJoXmSJAAoJELqXzVK3
+ lkFPYfEL/3OwRZjo77JjVR/Y+FsoxCGJ5utRTtsTviWHC8mqOOQj1GQnMPiVSPSr35YmqOy4kCE
+ ox34cAygccgUrVCcCN7x+yUtHukR1qN1qq8k3kEIZzg0YMH4harhadcGHG6eF+LbIjh7aU5YEUI
+ MyZf0ALMLyO0gSwm5aEhLCOBXKL/xnrbXS6OBUqU63tqUMR3nZ9kxtdHFkIfVAU/DA6erq+zmE4
+ RA7VCBCmRi3NrJ+2wxlr5hWccTJ8vgGLEYRZTLxBJL0LO4nxIzS6KCSPxwUJvSuC9ZHU8vUsnp+
+ MtwKJx1XvJilir8o7t73aiHcIxDp15AGFtMP5Mu7j5Hd+Ew6f9f82JtE+lIlqwPrMksU5gCaSgh
+ Yww3u/HqZY/qcD5CaN+kC7wxhSuj867+Ansb2AMFJDjNzhQTfawZoVGYMJo5NocFDXOGkaVqL35
+ SWUriiBUrlUIjokINruOHPF3MAkTownu8HiyzYVhMHEYadFTtl3H89c3md4CT7nA5ZWlqcPBfh5
+ Pk=
+X-Developer-Key: i=joel.granados@kernel.org; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for joel.granados@kernel.org/default with
+ auth_id=239
 
-On Wed, Jun 25, 2025 at 05:00:46PM +0800, Ziyue Zhang wrote:
-> Each PCIe controller on sa8775p includes 'link_down'reset on hardware,
-> document it.
+Use "#!/usr/bin/env bash" instead of "#!/bin/bash". Needed for testing
+in nix environments as they only provide /usr/bin/env at the standard
+location.
 
-Please describe what this reset does here as I asked you to earlier.
+Signed-off-by: Joel Granados <joel.granados@kernel.org>
+---
+ tools/testing/selftests/sysctl/sysctl.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie-sa8775p.yaml  | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
-> index 4b91b5608013..510c9e1c28e1 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
-> @@ -66,11 +66,14 @@ properties:
->        - const: global
->  
->    resets:
-> -    maxItems: 1
-> +    items:
-> +      - description: PCIe controller reset
-> +      - description: PCIe link down reset
->  
->    reset-names:
->      items:
-> -      - const: pci
-> +      - const: pci # PCIe core reset
-> +      - const: link_down # PCIe link down reset
+diff --git a/tools/testing/selftests/sysctl/sysctl.sh b/tools/testing/selftests/sysctl/sysctl.sh
+index a10350c8a46e42691f4f89763bc3e2d3dc270097..b2d8bd9026a721e96c26be20069f7f87b06a5cf7 100755
+--- a/tools/testing/selftests/sysctl/sysctl.sh
++++ b/tools/testing/selftests/sysctl/sysctl.sh
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/usr/bin/env bash
+ # SPDX-License-Identifier: GPL-2.0-or-later OR copyleft-next-0.3.1
+ # Copyright (C) 2017 Luis R. Rodriguez <mcgrof@kernel.org>
+ 
 
-I think you can drop the comments since you already describe the resets
-above.
+-- 
+2.47.2
 
-Johan
+
