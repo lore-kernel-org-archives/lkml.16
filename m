@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8C4282EB;
-	Fri, 27 Jun 2025 08:16:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63D217741;
+	Fri, 27 Jun 2025 08:18:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751012216; cv=none; b=C3tWulvUFupx5mJwddCyGdMiUj8k7vPhtiG8iIXiWbycPC5tN8hfJX6xBmkX4pbKYfJzzM3B4nzwf7PB3niEepL5nCpcYMdL9RIfpcR4eimPtafAtLbhkjC1vsMFBOizpFZxExjYMjHO35BOTaaXbqyWd6FhyhMH5ZCaNOQl+BA=
+	t=1751012322; cv=none; b=QRJEFt7dzcOBYcUhlmtqk76ud+joo3tVvEBTNwpypPlxs4glleV3TnFEyPxOTKTfLp4pSETr0uRquRmroRJzFxNqcLzrMI8f9P0FSKrg/IJnN35LVq1b137p/+LWJO1zGfcAnZQteQCoF53+oRtpxo4+7qCfLfpnZxN0jbkBNZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751012216; c=relaxed/simple;
-	bh=U5s9iEMSbWh9IK7RltR780D3binhRP0cWZphzDzaaHk=;
+	s=arc-20240116; t=1751012322; c=relaxed/simple;
+	bh=/o9ZO57wn41Pket5Wzm+vGinxIbfR+TSFjHBB2eIaw4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jz7tY15AJTOl4v3S2pc23Ps2Ja0r4qYsBslgmgNUqT+vtOw0m7+a5PG84/BHl1I34KYaKBmfXwwcnv39adddcMv0clacd2XjCGt2gyM+TnBX8n1pGPJR37aVqUDcHaf+fETNEy+tyT2udik6RWOtP5th0lG22n+9RkOkxU1ZKAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PaRZCi9h; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EiBwb28KR08264zFaXw6sKz9BT1HXzI34pXPiVQXlI3KdCjriamEbwici6X6WF4cEL8SQ/cqsqH5yzBzNVf4q3pEqfgFohKCXvCT3Zi0WXyPfgm4akmiREroVgomtfQk794G8U5NrS1QVMrztMUV9LFlRwIedfcw633QpfoAA9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mqPvWOJU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PaRZCi9h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CEBFC4CEE3;
-	Fri, 27 Jun 2025 08:16:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mqPvWOJU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F9D9C4CEE3;
+	Fri, 27 Jun 2025 08:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751012216;
-	bh=U5s9iEMSbWh9IK7RltR780D3binhRP0cWZphzDzaaHk=;
+	s=k20201202; t=1751012322;
+	bh=/o9ZO57wn41Pket5Wzm+vGinxIbfR+TSFjHBB2eIaw4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PaRZCi9hyS1TFB/6tfgC0csFv4IxtOprlLG5DcPHHj16yXQENW0cUnsHdVsPv9cMx
-	 t3N17ORjeqvREbx+w2UYGGLJ96P8ozvDNAKGtXAuLme9otsRCyt8vXjGoeUO+xawHI
-	 7MTozUbELHLWy+ZIZeAXNyb+JSekvOdms4liIFvfEZoYo4cPrMqHLFfpUErfufmkso
-	 ZLE6fD1VE96JOgNTFQkC0qbeDSmVzunJuSf2YgykOONTB0p9dhtkQ5DQ1oKg/crkWZ
-	 yrI2mhw8Fb+5RqGfOVxjqOZqTutv2LzEX4aohTqxp434Wa4Ht0Mn9U14cht2jbrPQB
-	 iywRgC33cR8IQ==
-Date: Fri, 27 Jun 2025 10:16:52 +0200
+	b=mqPvWOJUhq4fNqUaLX6/zVEbiJ2ufRXlXJd7iW5yx4AHgsSLPzllrYXxv9XZzT9+2
+	 G8WzmyyT9tjvwtDSzZU5k8kzB1IgZ+LVupkvMVDDxDg125evJNNdWpdryOPa+WFEXY
+	 Ln8Msa63aBbT1ragSp1KsJhOg7xOtAHByGSVqQjoxkwoyAAq0p7KfuxvnY5DjOcWns
+	 OGbi+1/L12w6tXsfPCFRZQXn/MccoPSWkQF+5WKzwAgZNWNU+7XuEYnyuIFkVETk53
+	 3U05TSllX4qHMt7Qc1RzWLDIPF/o9mQp3I7Spdz1Lz0nfnrddAvc0AoP0qbi/8q1D9
+	 wTS106R9JjfuA==
+Date: Fri, 27 Jun 2025 10:18:38 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Cc: broonie@kernel.org, lgirdwood@gmail.com, robh@kernel.org, 
 	krzk+dt@kernel.org, conor+dt@kernel.org, matthias.bgg@gmail.com, 
 	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
 	linux-mediatek@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v2 1/6] dt-bindings: regulator: Document MediaTek MT6316
+Subject: Re: [PATCH v2 3/6] dt-bindings: regulator: Document MediaTek MT6363
  PMIC Regulators
-Message-ID: <20250627-premium-clay-husky-9d32bc@krzk-bin>
+Message-ID: <20250627-neon-hidden-sheep-ed8dae@krzk-bin>
 References: <20250624073548.29732-1-angelogioacchino.delregno@collabora.com>
- <20250624073548.29732-2-angelogioacchino.delregno@collabora.com>
+ <20250624073548.29732-4-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,78 +46,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250624073548.29732-2-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250624073548.29732-4-angelogioacchino.delregno@collabora.com>
 
-On Tue, Jun 24, 2025 at 09:35:43AM +0200, AngeloGioacchino Del Regno wrote:
-> Add bindings for the regulators found in the MediaTek MT6316 PMIC,
+On Tue, Jun 24, 2025 at 09:35:45AM +0200, AngeloGioacchino Del Regno wrote:
+> Add bindings for the regulators found in the MediaTek MT6363 PMIC,
 > usually found in board designs using the MT6991 Dimensity 9400 and
-> on MT8196 Kompanio SoC for Chromebooks.
-> 
-> This chip is fully controlled by SPMI and has multiple variants
-> providing different phase configurations.
+> on MT8196 Kompanio SoC for Chromebooks, along with the MT6316 and
+> MT6373 PMICs.
 > 
 > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 > ---
->  .../regulator/mediatek,mt6316-regulator.yaml  | 81 +++++++++++++++++++
->  1 file changed, 81 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mediatek,mt6316-regulator.yaml
+>  .../regulator/mediatek,mt6363-regulator.yaml  | 123 ++++++++++++++++++
+>  1 file changed, 123 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mediatek,mt6363-regulator.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/regulator/mediatek,mt6316-regulator.yaml b/Documentation/devicetree/bindings/regulator/mediatek,mt6316-regulator.yaml
+> diff --git a/Documentation/devicetree/bindings/regulator/mediatek,mt6363-regulator.yaml b/Documentation/devicetree/bindings/regulator/mediatek,mt6363-regulator.yaml
 > new file mode 100644
-> index 000000000000..019c3c36997c
+> index 000000000000..f866c89c56f7
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/mediatek,mt6316-regulator.yaml
-> @@ -0,0 +1,81 @@
+> +++ b/Documentation/devicetree/bindings/regulator/mediatek,mt6363-regulator.yaml
+> @@ -0,0 +1,123 @@
 > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/regulator/mediatek,mt6316-regulator.yaml#
+> +$id: http://devicetree.org/schemas/regulator/mediatek,mt6363-regulator.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: MediaTek MT6316 SPMI PMIC Regulators
+> +title: MediaTek MT6363 PMIC Regulators
 > +
 > +maintainers:
 > +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 > +
-> +description: |
-> +  The MediaTek MT6316 PMIC is fully controlled by SPMI interface; it features
-> +  four step-down DC/DC (buck) converters and has multiple variants, providing
-> +  different phase configurations. In particular:
-> +  MT6316BP/VP:    2+2 Phase (buck 1+2, buck 3+4)
-> +  MT6316CP/HP/KP: 3+1 Phase (buck 1+2+4, buck 3)
-> +  MT6316DP/TP:    4+0 Phase (buck 1+2+3+4)
+> +description:
+> +  The MT6363 SPMI PMIC provides 10 BUCK and 26 LDO (Low Dropout) regulators
+> +  and can optionally provide overcurrent warnings with one ocp interrupt
+> +  for each voltage regulator.
 > +
 > +properties:
 > +  compatible:
-> +    enum:
-> +      - mediatek,mt6316b-regulator
-> +      - mediatek,mt6316c-regulator
-> +      - mediatek,mt6316d-regulator
+> +    const: mediatek,mt6363-regulator
 > +
-> +  vbuck1234:
-> +    type: object
-> +    $ref: regulator.yaml#
-> +    unevaluatedProperties: false
+> +  interrupts:
+> +    description: Overcurrent warning interrupts
+
+Are you sure interrupts are physically not connected?
+
+> +    minItems: 1
+> +    maxItems: 36
 > +
+> +  interrupt-names:
+> +    description:
+> +      Names for the overcurrent interrupts are the same as the name
+> +      of a regulator (hence the same as each regulator's node name).
+> +      For example, the interrupt name for regulator vs2 will be "vs2".
 
-Here you define all regulators
-
-> +additionalProperties: false
-
-This goes to the end.
-
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          const: mediatek,mt6316b-regulator
-> +    then:
-> +      patternProperties:
-> +        "^vbuck(12|34)$":
-
-Every device has different regulators, so there is little benefit in
-keeping this in one schema file.
+You need to define the items or pattern if this is really flexible in
+the hardware (not drivers).
 
 Best regards,
 Krzysztof
