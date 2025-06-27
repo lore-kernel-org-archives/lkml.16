@@ -1,152 +1,125 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91985FBF6;
-	Fri, 27 Jun 2025 14:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF7EFBF6
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 14:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751034754; cv=none; b=ddkTnFtoU2MU5tSPh8swfm2xwI8ZLUZ+2YTR/sYDTLaOJdeBs2jSbUgXYc73MWzk+XKUU43/ct3k1fSHvh7k6jpGg5RQ8xSHNu/cSuDBZp7Z8iCEMzGFjPs896Z+6EPLEzfCCBFblmwK8H5yO9hIBrGNeM+JXVec9FY8sIGUvAs=
+	t=1751034770; cv=none; b=EaB9U6fnVic8Tu+RvRGZlF0uoyjRgAIepk9+fVBa9TsKtII/xmhwVqPsoTIAFDx5/P8PqxIAAW9UH9xWUsMgiVPD9zY/ZGP188SCyMuYWiUY400CC6CnsgroL4OMwOYBqAu/nUykqOGBvsOYxHogFfHcB1ibhVIs6JkeKsFIARI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751034754; c=relaxed/simple;
-	bh=FrVhbkkVKeQtsuNIVg2sLAXrQNn1Hy74XCRKIHnkmJE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nGhjPh6TFpi9Gy4sGYtUB0YtbpdMFiFrYriabFuQWt0NYoAwyFhoLuopdDIbTY5wIFsRGpSehOGiVmZvPlMbIW5UuttqX85vUE7pKDa5ZJhhQfV/WKmhsXuRJbsWWfts1cRBYyJ6hW6iP8m9hATFiz5IoqTYl7RhB7XozUpzdv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=Qdq/fjGV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JwN1jtOG; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	s=arc-20240116; t=1751034770; c=relaxed/simple;
+	bh=Po4u001r36w6b0m/+peKhn+9f+wXsw6fw50zBQ2mS6k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hwiznzUXpUZ5jBe/EihS4EyW7NuLlGXCqVRx4vGWA6ISSjRDME/7z/YHnXgjCgVC6ULUmST541M4yCuOFuZ/z9WLIZiYyyQVpVkuB7ZqeWmd1fBr+OMJjPi1TMJb2Sd2wQSx01YHgTEJD56S4X+NU4/SaMiQPWrX9FQZTGJ5oT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gPwYuyKH; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="Qdq/fjGV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JwN1jtOG"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id D8E6BEC00CE;
-	Fri, 27 Jun 2025 10:32:31 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Fri, 27 Jun 2025 10:32:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1751034751;
-	 x=1751121151; bh=chbCjC3t9JjOmLOSGQMKEQ3r5t5d3Ytx0IJncZGWBQM=; b=
-	Qdq/fjGV5338rPvsM0lAMiBopivn6bYP7Xdh+j3+fYbOzcVHOkIHmbqKIQ3FIgu9
-	RiEV7kfiaxik20A+OoupeLKl0CQTMU0GeaIoIE32t4fjISrp8KLcFWAtX02fFrNt
-	QyONhwtydqEcotsyBvS0ira/J5/m8Z+GyZY0mIFSs44gOg9MSWXYuwAZmx3bX+Pj
-	uTgDOeyM3pg+d0Exzbr3oylcuWSKbDRE2d+pXbH8kafi9Oy062cKQqiHxcaIkTl1
-	XgZWCXUnTo3kc/VpWOKJbON7hCy/RyO5jCmiXDlpjr3ag0H7w/M6vpu7vLl89wiV
-	b/jVcxpQLmztUmyJLH+/tQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1751034751; x=1751121151; bh=chbCjC3t9JjOmLOSGQMKEQ3r5t5d3Ytx0IJ
-	ncZGWBQM=; b=JwN1jtOG9PxlAdco/5FkbwEpbGr7xouXfDtEINjVbLOA335VEA+
-	AancngIM76j0vgLMAWl5ZuuPmei8DI+3aSp0J7C5EBMc7HZj776JCKL8qLJXzmoR
-	d/6dorb64lyBhqcqX01Ck00IumFZia4oLb0PCfNYaeZeUfh3q6d6wqAjM2EvkgPJ
-	pBy0fWwfikOjElifnGbb0xpgPS9IPN/YSqCGG6Jt8xrHnndEWY6k6Glu+CcXsFa1
-	ycDzwPK8MPbUb9kq4lsITqPOkmpgnpWb1Qu1LsVIad4JwGaUn31k+HF3HpM2VBQr
-	sSYXCltzI2GkXCi8QZ8t5DDKQldXyJJf1aQ==
-X-ME-Sender: <xms:f6teaDUVuMTHaB4DaOxKKuiMrM-I1r2pF0aVTuYo7Rbl15TfIH_XSg>
-    <xme:f6teaLnBQPD4CFbf0w-JSYJ_SnD5e0P2UrETuM0UewBmOtqoiFQHyH8Oq14i4aFFN
-    gbF0Q52RCxzRg>
-X-ME-Received: <xmr:f6teaPYJi3VdOGOYa6leOQb4pcyxNDlFMjwXIRNjIA_AbOS8ltfHLlc-Yom4kQsIkqBDAQX6fNWTMply9GXEtZOzN61lVpBzfXM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdeffeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrrhgvkhcuofgr
-    rhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomhgrrhhmrghrvghksehinhhvihhsih
-    gslhgvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepieeluddvkeej
-    ueekhfffteegfeeiffefjeejvdeijedvgfejheetuddvkeffudeinecuffhomhgrihhnpe
-    hkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpehmrghrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrd
-    gtohhmpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
-    pehmihhrihgrmhdrrhgrtghhvghlrdhkohhrvghnsghlihhtsehinhhtvghlrdgtohhmpd
-    hrtghpthhtoheptgholhhinhdrihdrkhhinhhgsehgmhgrihhlrdgtohhmpdhrtghpthht
-    oheplhhinhhugidqfihirhgvlhgvshhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvh
-X-ME-Proxy: <xmx:f6teaOWt0b55a6C0BYUvxye25OwMrLA48TSn15K5igQmIdJKJP_qiA>
-    <xmx:f6teaNmM4sKOgJuOw54bQolvNRgst1_3lUAAr8fydJeDvkQu8SvSww>
-    <xmx:f6teaLeK8wsC6P61srHNRiVBIPRyfX0sAEmuVL2Y9PRdd9k9QfjQAg>
-    <xmx:f6teaHELpOpp0amDhYynDwlKd5-sMErFShPm3ICh1QeCOmGskhz1eQ>
-    <xmx:f6teaB80l4ijJQjBi1wti_YKQA05yOm9AdFUNC0MpCSJ4ChszBXmWkhN>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 27 Jun 2025 10:32:30 -0400 (EDT)
-Date: Fri, 27 Jun 2025 16:32:28 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Colin Ian King <colin.i.king@gmail.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: iwlwifi stopped working with AX200 (6.16-rc3 regression)
-Message-ID: <aF6rfM-RFrwFyoEw@mail-itl>
-References: <aF35FqJAw63NSl63@mail-itl>
- <aF35tbqxHtyj9fJO@mail-itl>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gPwYuyKH"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6ecf99dd567so25942106d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:32:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751034768; x=1751639568; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JRHcsCTsHBJJ/xPjm9td2b9ZVcHsn4qi0sxiMajgt+I=;
+        b=gPwYuyKHxhwoEbanprOIh/57CEyP03cbIzJKwi5KKraefC2IZzXSIenDkyPHo0IH0j
+         ublPcITE9ig7QW9L5VioufYTKb1n2Q0HpX62nIFz/OzOOnRfrFH78isD7HAC3ODTJYY3
+         zX/7QpPNoaCoyZTl7w8Vi8yty92g9XCWuhydE9ErDL0AnLcBcSn9mvZXAgmykZmSYSBX
+         Mdnym3NmzmJzD5U6LwZEP+0gFz0J+fbq9P8IM021Ezg7c5I2yAuVdrSx3fJ95oqcCdBp
+         ZNcY1rr7CACetUxTQ7DkXYaR5Oa8IJSNjP0BqnUvrZVF3bv8Wl9VOOM0zwWPQo9MNK5f
+         ny/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751034768; x=1751639568;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JRHcsCTsHBJJ/xPjm9td2b9ZVcHsn4qi0sxiMajgt+I=;
+        b=cVpS//e0UdvmVBdaB0mbYRw9Jbq92UXD0PhLXokvcIv9DRjmuWfyVULPRqPNcQPDEi
+         YGqg+hS1/rZ2R9ya52mXUJb1lBaIWT6wkI/MrFag4nyq7z0FUDb+Zb8mO949QNjKXKCa
+         R+NUxQWYjZIDrEUG6tW/aq8eqVaNlASZVsFmUbWgMohLw0cRMWkOLzYBl8g/z7j6UvG5
+         eJyTOTez/cPkWKpR8gj0/4i01IHBunuyW1uw6zaIpWxL/6XS1KIPhQ+SDLf8QqBmRmzt
+         O3HfnRBJkALiaqAIdxRCW3VdT3LanjBFY98G0dOyGy21xRG/8NjUmg6U9v46yrCb+O60
+         1T6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVkrhPTR+w2jbcOE4qUmd0zEajncOOe7usIRBdkjHdsfQ+v3gKjjWllHYY3en35ch4JeRlWqwE0EcTlPdc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxgsd4Z8po6d2IYX7ojEqXU5gEryB1uGvYEJbqQoC0ckL2Q+Rcx
+	ivq6j4zRjtNKUBaYpUY5FeyhM/rA+ooJF8ngqDEbi13FLHLMDZnUMAaazVQ99fkDd968k7BFqwk
+	xeI+wDwPARKJad5phnznFcnBeU1zsbZNFVLY/2F9r
+X-Gm-Gg: ASbGncu6wYwKtp78oy0Q5u0RVpAUYWdvz9Hw5lBNvnoxcCiJVRfZRC5A4VUK29iPPGk
+	e8R3xmbTdg4Ow7D0e6r+YSdMBiGaMRXMe47PCbxyKpFy8HzUbxgVC/WRb21kiGv55Rk2pqKrYNE
+	a9s/VLT5pEHwGeo/PRqcSGfC41ATVsdZ9L1F0pbJPaFXXxI4UY1OEnR8lRjFGAZ485daWXr4dOR
+	w==
+X-Google-Smtp-Source: AGHT+IGXvg5qcm/3TlvU9TnzKZw93CYVeSD6YM9ZKocDg+cEOxV9hu8gdB/cBYZ0v7+49zyWV0HzRZrOxmjxS3ILpO0=
+X-Received: by 2002:a05:6214:3c9e:b0:6fb:59de:f8ab with SMTP id
+ 6a1803df08f44-70002b09787mr64657346d6.10.1751034767488; Fri, 27 Jun 2025
+ 07:32:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4mRJGigGX3Xsa7Rl"
-Content-Disposition: inline
-In-Reply-To: <aF35tbqxHtyj9fJO@mail-itl>
-
-
---4mRJGigGX3Xsa7Rl
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20250626134158.3385080-1-glider@google.com> <20250626134158.3385080-7-glider@google.com>
+ <20250627081146.GR1613200@noisy.programming.kicks-ass.net> <CAG_fn=UrOBF=hQ5y6VN9VuA67GeVOyaaWtrnaSLz4TnC7u1fiw@mail.gmail.com>
+In-Reply-To: <CAG_fn=UrOBF=hQ5y6VN9VuA67GeVOyaaWtrnaSLz4TnC7u1fiw@mail.gmail.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Fri, 27 Jun 2025 16:32:11 +0200
+X-Gm-Features: Ac12FXyNdmWFSSJKEPyXOJOFO_SgvNyJtoRQ-REuaA1XlHVfOaH0P5mnZZsSDRc
+Message-ID: <CAG_fn=W6hXNnYLZpHN5Ein_iZ-tqJDFZWXaQm29eUf7xQoU=Lg@mail.gmail.com>
+Subject: Re: [PATCH v2 06/11] kcov: x86: introduce CONFIG_KCOV_UNIQUE
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org, 
+	kasan-dev@googlegroups.com, x86@kernel.org, 
+	Aleksandr Nogikh <nogikh@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Marco Elver <elver@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 27 Jun 2025 16:32:28 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Colin Ian King <colin.i.king@gmail.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: iwlwifi stopped working with AX200 (6.16-rc3 regression)
 
-On Fri, Jun 27, 2025 at 03:53:57AM +0200, Marek Marczykowski-G=C3=B3recki w=
-rote:
-> On Fri, Jun 27, 2025 at 03:51:18AM +0200, Marek Marczykowski-G=C3=B3recki=
- wrote:
-> > I see the only change there between rc2 and rc3 is fixing that WARN_ON
-> > condition. Unfortunately, I don't know what cmd_ver value I have there,
-> > but apparently it's outside of that range (and yet, the driver worked
-> > fine before).
-> >=20
-> > The device is:
-> > 02:00.0 Network controller [0280]: Intel Corporation Wi-Fi 6 AX200 [808=
-6:2723] (rev 1a)
-> >     Subsystem: Intel Corporation Wi-Fi 6 AX200NGW [8086:0084]
-> >=20
-> > #regzbot introduced: v6.16-rc2..v6.16-rc3
->=20
-> Oh, I see it might be already fixed by
-> https://lore.kernel.org/linux-wireless/20250623111351.1819915-1-miriam.ra=
-chel.korenblit@intel.com/,
-> I'll test it.
+On Fri, Jun 27, 2025 at 4:24=E2=80=AFPM Alexander Potapenko <glider@google.=
+com> wrote:
+>
+> On Fri, Jun 27, 2025 at 10:11=E2=80=AFAM Peter Zijlstra <peterz@infradead=
+.org> wrote:
+> >
+> > On Thu, Jun 26, 2025 at 03:41:53PM +0200, Alexander Potapenko wrote:
+> > > The new config switches coverage instrumentation to using
+> > >   __sanitizer_cov_trace_pc_guard(u32 *guard)
+> > > instead of
+> > >   __sanitizer_cov_trace_pc(void)
+> > >
+> > > This relies on Clang's -fsanitize-coverage=3Dtrace-pc-guard flag [1].
+> > >
+> > > Each callback receives a unique 32-bit guard variable residing in the
+> > > __sancov_guards section. Those guards can be used by kcov to deduplic=
+ate
+> > > the coverage on the fly.
+> >
+> > This sounds like a *LOT* of data; how big is this for a typical kernel
+> > build?
+>
+> I have a 1.6Gb sized vmlinux, which has a .text section of 176Mb.
+> There are 1809419 calls to __sanitizer_cov_trace_pc_guard, and the
+> __sancov_guards section has a size of 6Mb, which are only allocated at
+> runtime.
 
-Yes, it does fix the issue.
+Also note that most of this array will be containing zeroes.
+The high coverage watermark across all syzbot instances is below 900K
+coverage points: https://syzkaller.appspot.com/upstream
+But that is coverage aggregated from multiple runs of the same kernel binar=
+y.
+CONFIG_KCOV_UNIQUE will be only initializing the guards for the code
+that was executed during a single run (<=3D 1 hour), and only when
+coverage collection was enabled for the current process, so background
+tasks won't be polluting them.
 
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
-
---4mRJGigGX3Xsa7Rl
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmheq30ACgkQ24/THMrX
-1yzvlwf/bo+OfRHbn4oHUi9G7NMHLS6YFNOdGC5vN0cgQuodid1A8EwsekXbID12
-xxorMjqSx1KzwZO+JLG5ZStXxK5yZ2SIJ6bwA2WS7625jnxxOXaXOuUO/GoJWfd8
-e7F1HFxP9eYXvjKA76qwIM5u8jCwWkHtZErGxfBfQrFJ5MVWWH15/VIZav5dQrNi
-gO2MIK/EQQU6IIUf16Qr0ZiNc1XUJiRUtDmGdmswEOateUDryUjd3Cz6wKcubk1G
-94tq1pBsXA+gtr5ygpDkPuCfx11IENO12gq98BaVFv6PwO2tzzyxaCQon7Gv9k3R
-GkV1Tn4GOkHJ9dvvxkqFFcpr3W/0uw==
-=OMSN
------END PGP SIGNATURE-----
-
---4mRJGigGX3Xsa7Rl--
+>
+> If we take a vmlinux image from syzbot (e.g.
+> https://storage.googleapis.com/syzbot-assets/dadedf20b2e3/vmlinux-67a9938=
+6.xz),
+> its .text section is 166Mb, and there are 1893023 calls to
+> __sanitizer_cov_trace_pc, which will translate to exactly the same
+> number of __sanitizer_cov_trace_pc_guard, if we apply the unique
+> coverage instrumentation.
