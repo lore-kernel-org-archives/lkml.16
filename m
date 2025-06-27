@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32EFD266562
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:08:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA81019F461;
+	Fri, 27 Jun 2025 12:09:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751026113; cv=none; b=JlWoRdnbUvnuFAU9/A7BfhI+7thLj+tDqOn+HH4q+MXgfZheYODTf7Nd1bbX6L8io4rcPchIen5f6baeqqXH4jhqDngXdbFup0EOcPkiot0z2oV3UwmSf2Ui3nDZvSxtlEgowruUj7jxgQHxCoQV6TLtevyVc9LesVimnmE+78U=
+	t=1751026190; cv=none; b=g6FYWUYCRNapKCouGKH+WBzpmDYIJ1+21RZgkUq5iTGNuhvOhjD0atZxvsy/ThcliAuZN6RM/IRMQ2oD0chWggkItsRR8ZxkWh1CrtfaqqObFwtNinesMdhT6Ed3gvtOGxwsRcyqcx8ME2uro6TGkKp65iMvqMzTfJKxpZrzODU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751026113; c=relaxed/simple;
-	bh=bosySage1v8mvmttftw+jB5MVv9HlIxA9qcOCsluLdQ=;
+	s=arc-20240116; t=1751026190; c=relaxed/simple;
+	bh=+Vg2SDvLbTlYtiD21pxDbYD6+IG8r3EWbgiH1xHwNHM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GF9P5C0+ISW9XIAbafFT7O8xLBqw8kwDW1odp0qoxUuIW3ALMyP4sJ/oasbY8brxlslzXbMwtpUy6WGMvanoivOJMb/5DQB+MZ0RFLqOz2YRXk2gX7a0XWlLMvq5VvoK/hM0cHi/Qjzm75+CHexrc0HCd+A1lfW6hbX0uu+F+aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kk+XsKaJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=p+DtZWYovVahg2QBY/CLVedC+P10529PCjfegLejZsdZbXn6zQUcXdACC406yvnNSxM4Oq+tjUnfiThvarCbwlJLLtOdHDJfZRPtn3tXKEmMR4cBEPS0h4yZWl69MHeRvf7Pycl05q3NM2NdQ5qIGSOJmNk2xFbF1RTzXTc1MWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pNh/ZMfz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kk+XsKaJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD0ABC4CEE3;
-	Fri, 27 Jun 2025 12:08:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pNh/ZMfz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CC6BC4CEE3;
+	Fri, 27 Jun 2025 12:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751026112;
-	bh=bosySage1v8mvmttftw+jB5MVv9HlIxA9qcOCsluLdQ=;
+	s=k20201202; t=1751026190;
+	bh=+Vg2SDvLbTlYtiD21pxDbYD6+IG8r3EWbgiH1xHwNHM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Kk+XsKaJwpLwgvLO7wh/dtaVOiBvgw1rtfYjjUWkNn6u86aiKb+WiYLX3K6rzMKKJ
-	 +JrmfY85rxEGf4boyy4g/2K0UkblFsO3Eq5X/xOMQaw6cvmiaPHfCkjgEGmKAoBBX1
-	 xpYC8K3xNHdKMqTRQbOmVjhDIVu9Yt4XgtO/YPPYOLCwU/95hFBav5JhekJLdRWnpd
-	 UZ5V2+sHUPsVu2klB2oGQenc7niCK0P/AV0VmGVlzQXCTbLmu+kygo4mHEObzPA7p4
-	 tJFxpHfeTA7JfEauwJDn3gKYrES3nEeYI1U6ePUtqRylApduJhQyLu27Bmrlzxj4yI
-	 MPpJh/E5nB0vg==
+	b=pNh/ZMfzCMUHpsyxxY9zMiCmkxbEx4RCV26dl5aw5TyFJH4aQ//Cj5fH/ZShh0DWL
+	 q7N0g7gp1jmRdLvySTNsnqE+SYxY/cHpwIxXLUAZjBEktRFWF2yEEwDWe3nca6Hi+A
+	 PonfFqv9dn5NxZdfhF+mFSkIR3CZrEp5+dSabD9TstgwkgkIG6O0m32GaXgsqboftT
+	 +nIGyA9TDtaGqAP+uN/Bay+PAuCiYVrdTP4quXthZmR7IbnC3SaDN5sq38t56n1R3j
+	 tlKmL990gl0DFHZYPLnJOsiMUnzWCNNiEBeiHta59Z5LiILJPATRLLS9sN7oLLJo4P
+	 iSdqCPnmD/g9w==
 From: Srinivas Kandagatla <srini@kernel.org>
-To: linux-kernel@vger.kernel.org, Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: darren.kenny@oracle.com
-In-Reply-To: <20250615135212.1356469-1-alok.a.tiwari@oracle.com>
-References: <20250615135212.1356469-1-alok.a.tiwari@oracle.com>
-Subject: Re: (subset) [PATCH 1/2] nvmem: core: fix memory leak in
- nvmem_register() on error path
-Message-Id: <175102611159.6832.14617431798504418373.b4-ty@kernel.org>
-Date: Fri, 27 Jun 2025 13:08:31 +0100
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
+Cc: imx@lists.linux.dev
+In-Reply-To: <20250603152836.1069326-1-Frank.Li@nxp.com>
+References: <20250603152836.1069326-1-Frank.Li@nxp.com>
+Subject: Re: [PATCH v2 1/1] dt-bindings: nvmem: convert lpc1857-eeprom.txt
+ to yaml format
+Message-Id: <175102618816.6916.17165812030870481659.b4-ty@kernel.org>
+Date: Fri, 27 Jun 2025 13:09:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,18 +48,15 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Sun, 15 Jun 2025 06:52:07 -0700, Alok Tiwari wrote:
-> Ensure that the allocated nvmem structure is freed if device
-> registration return error code.
-> The missing kfree() caused a memory leak when nvmem_register()
-> exited via err_put_device label.
+On Tue, 03 Jun 2025 11:28:35 -0400, Frank Li wrote:
+> Convert lpc1857-eeprom.txt to yaml format.
 > 
 > 
 
 Applied, thanks!
 
-[2/2] nvmem: core: Fix typos in comments and MODULE_AUTHOR strings
-      commit: 98addb97db5d86ad18c831241c03f180d269438f
+[1/1] dt-bindings: nvmem: convert lpc1857-eeprom.txt to yaml format
+      commit: e315a752a6a5399d711fe413bd3543306ef5e421
 
 Best regards,
 -- 
