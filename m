@@ -1,65 +1,73 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47382EAB6B
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9334D2E9EB5
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751041646; cv=none; b=ge6qJg/oDfCccQbrr3m9uPaOWldb+Zg/ClqenoTxOzAked++AP9Dt70ACA49E8Adrmv/CVkkK1jSJtC2CnUPnZn17HPnsdot8Z78EX7uWsDSfU1dM5p0E445QksTLxpmzYtZuOnJie6E2KfW9kJhb9lXUVOQZDMHnWAMFH9hDqY=
+	t=1751041648; cv=none; b=M7GHTH945xYnoCacgqVEfJQXHAFUpw1xGL7sFJW7zt7iI5X5AhMEVvAvCTutlk4urjngG2GjLgWFz2fCsdyTTfym2a6XD/kgqctxVBhbtVfa+ENtv7mP3XVw9WeV7c77hscTt6rtjQdrfyqFVj0/vEhs520LoFEW1UnQmWOyvYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751041646; c=relaxed/simple;
-	bh=7J2Wa3sPySlrGHq0Zg1mHnl8WJ1dcQzGUqhzealuGNY=;
+	s=arc-20240116; t=1751041648; c=relaxed/simple;
+	bh=LRgiyfrICsKTlHv9IhC5r+4XBxhCMDaKngyow+IGVj4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LSdDHnCCfMTq/wa6mJcSBZho7er+kVklCn5bVz+cX8uH6MeoBjx02bUJ0f9N5jVXXbufBs70r+iJrzStDHsWRSUkVH2nLN2vkXdJCyAyHe9iXAv6JglJWdPLm6WyGlK6KTuXnQgzrEZ9b6KXDsUM5WajcrnshRJh2EWRfL7XTq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=X1nlui+a; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 In-Reply-To:Content-Type; b=JjCkS7VoC1B9R9k7j2bRVYRrEN51b/BLlvPyTUC3cZwbFMszqjW04qjRcYQf201x0aksi8WJiyROBfGRX1+fRsjfdKYKsO1gZjC3Kv00sWSXfk78XJ0bTRsbFZQ6nrO2FY7VqLGFN2M/+yKpHtJN+v/c7Zq/A/6hoD3Z47E1dKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bDXLCAQ0; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="X1nlui+a"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-72c16e658f4so44330a34.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:27:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751041644; x=1751646444; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qKlvmyFZn+CwFvf1fECS/aASkNiuv6sHWrjfdb8eanA=;
-        b=X1nlui+a7hfnXbLlfBkw3/0Xeh4Sfe7WMnIF+PsXEezNP81cVRQmHcHcFhsjeC0B6R
-         HVHENZvHbb1LFwwQiw8cCLMl42z44cgNTfYy4DqhoP4Xxo3kZmchHO3aEHFacHtvkLrE
-         zDgX8H1NoXp4b6Qxex9DE/GfUMULdHrQHo3xvjZd73mq54TxAiJSnVVNI6I3eYYJQ41f
-         AJ5LeBIrrSVDU67epftXH/gdOKKkj3lJFl+UVVEH/ilqCADwxCWQ4F1VqFw1yfxf9KDd
-         66BB1OZ4aQkvYgEnQZHkNKStfWJXexUAAcyhxbCB9zQ6cxuzyPTxqKV2uix28H4/oIWP
-         sN1Q==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bDXLCAQ0"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RCQuNF014495
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:27:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	lvYd1deVAhihvBAnBWJn94CrhAU80ERbjP9yegxtMRc=; b=bDXLCAQ0cbgCnzoi
+	lm+zHp0o4lGhoQHyD9gxNOKnTFOFDsTWHkH8HmlD5/uBJW4rnl8cXb4Iiurr8HK4
+	XWXZUjskbqOFfdlzu8eneXoVRrnHQ0izL8V8U8OGPVNi+/19sBQkKUkT0qngbbsz
+	e6H8F3kGVCBMhN9ByxZkXMJfSy/TJnOIRDEDzWtUNA7vCW+VYrAGwBcyNr8ntvII
+	HNexMP22VMPgv3qVSUFsSxkjm5C/EVvoDKtIgW4KZ/4PGBIG5DNfUa6r+J3jnP0d
+	kzQsq+hYUyJaCEOlqcb7dIarRz7UZeNBOPCWu1nBFcZZieEKow8ZsZwgO1wTFWZP
+	yn6sAg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbm261e0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:27:25 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d09b74dc4bso45133685a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:27:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751041644; x=1751646444;
+        d=1e100.net; s=20230601; t=1751041645; x=1751646445;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qKlvmyFZn+CwFvf1fECS/aASkNiuv6sHWrjfdb8eanA=;
-        b=s0nCmtdin2dli4Lbs/tPSHErDThsRyU9WaGVXNiBjR3e8uiCU2Udi/+KvSZRuanIP7
-         EL/NpKYIezebbwjyXPLFFhQFkg2i3B7hzOrh2QjTx8bWymoloVG5O7CZyv0qrrcZMDrR
-         WTU0Dt3UrIoBUmmEEVHqog5dVbEf7by2M5UpWj42t/OOT2yaB32HHyD5TfUnYWVlF+nX
-         D5i2A0Ymt0ZMnAyZY9ZvpRqqnHJw0/1g4cPnZU43FLDE6hQ91zB9l0K4mdTfkmTDUik6
-         xBvfbcjaLomB/ozrlwddlgE3s/1zOS2W89ATeHDfo7UblZ0AMLgAzHNpzJiWAUSqp0Cz
-         EdNw==
-X-Forwarded-Encrypted: i=1; AJvYcCV94rEq5vJ16DCOtZm/Cmn0quQ5uDW/MoIASM1sQjmoT4mf1FCwy0xQW5Z9D+gDI5Syajxi3CySIZPbUW4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxav4VqGNIbgVwaeFG8iCbpZt1DOIzjwzss0rMRHG6aIl+nZ+Qw
-	D9H3/JkRiAEXXRd1cR6i+UTdGKjWr9CVQjltcyTLL7AJps9m0s45Xprwana8S7e14gA=
-X-Gm-Gg: ASbGncumWSLQE04R3xC+dafpJEan3xu7gFSX2xr9Z8tS0ikEeGKQaugnBcXjIrL3jfL
-	/y1175qpu6DsKNJUOF1Yh4l5O2w+XHbMkijoAQDQ6EgSu7IPeNPEQzaOYYxaEwSlG1Zp2b5U6Sd
-	P8jGz7/2pxqFSMoUodmp1nZUiyJv4jfE8l1YbKBjQd9FilCUy6+llqWeCGrvEmnsYjGSiJPuxyw
-	cP4TYk1AzRjxy5eApaAjZ0DoVrzmb+odXjRV1PL+8s+X4BeErIMVo5udjNkHbyu3lPMe3nDG77l
-	5ckiHpJ6rGc4wOIiB4dLF4KYWaFf3Q5jgr2zHg2Y3AgvdXrrxBWQ97aJitnzGMQnXiBY7hzthId
-	27mEFFlKJ+9zKRpxzCBTVIMb9Hcfl6PBve3OydfGq1eVwxxE=
-X-Google-Smtp-Source: AGHT+IGEpoH/3E0MWa+cvzBIlqmwlVY4mNTlSxULk1nWLfgYXMeesrrQZCCQRr90YGb8TriAyAKjbQ==
-X-Received: by 2002:a05:6830:418f:b0:739:f3b2:80f0 with SMTP id 46e09a7af769-73afc647c7dmr2567896a34.12.1751041643919;
-        Fri, 27 Jun 2025 09:27:23 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:1715:453e:e133:7d6? ([2600:8803:e7e4:1d00:1715:453e:e133:7d6])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73afb122c68sm407770a34.65.2025.06.27.09.27.23
+        bh=lvYd1deVAhihvBAnBWJn94CrhAU80ERbjP9yegxtMRc=;
+        b=dgNw3ciwIgT9vBYZhsNZqdjj/Yx4J+3nTeP23W6mBQ4LHU5QdY819/XaizrrXGzNxy
+         kUt2s9dpvNOCMUJe6iy3r3E8TFipFu8CKcX9bv37N7q4LPvY8c/WVI8R32cf1mMFf4mP
+         eGTvLQ5q9ak0yy6z6Cy3ctPMQgzTPoxiFrecwGq6ddz65M1QLNNrEsIM/OVUkSu+fm9y
+         St3VFAc73NAJ/tHKlfYA/a4sgqu3ORe3OZCQlBNtZ/zDLRvhd/Ebo+thxHl0Rn5sOFr5
+         YdBVixYHZjzw2VisUer4CtXu26xQW1i735KfYjXYjWhGFmuzhnp/JDwbi/v6WFag2m32
+         UO2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUK+lqHBIhAnvDb0Z1dggdyRDg+Zb2Cq7ou4BFIEEp4cQvsSq/UVDtz7o2X4sGw4YQivkax1UtVmqmgADc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycplyPOF7+ChE329gnyQXfuDyPO0pQT/voBlIBhMGZ7belWBN7
+	tsDQmFEJ7rMVQdNbp7EEyIFH/dkMBsE3kL29eFjlhGp/UQwt1B8bRUhDTxsY/vZ8LRUB3lUN+Yt
+	90TOTnjxvHbn+JtWuge3cCNrRAb6hWAmCwZLsK0PIMMG5QCKWFoq7VcOeUKQj2dbMr9M=
+X-Gm-Gg: ASbGncstHz5JY9ngeo0bne1YEaL+pYFeCbk8wVRNmZXQr+WnhJXOHqqtQmm9n4eQ3h/
+	8VoH2ND89AnOx7IXiKlVhsmM+MThfUMuNpTeLuoYAHUL8KjoNb0Bt9EpEWNVJBWnzpTPabA8380
+	Djoxu0/cR+Tl+Pw2Dgo+byR218EsOVruDMQb7qvSZm0YEowecUpda730ljBbqQGioWVOLf/xgcO
+	UDz/87l52bd182RUoiQO08xH/ASAobaEZCC6/Aa58NpbJW6mcqa5Ro8f2Svmu7eFnPoLNQD4Iho
+	/+7u0Mc5mbv/esF5RJkoL94vTwIiImF21LDiEMU3qD+mmw4egZcUE9ZJXUY+S6uRcsr1J/IiA2k
+	K2uw=
+X-Received: by 2002:a05:620a:6011:b0:7c0:c024:d5 with SMTP id af79cd13be357-7d44393af52mr224993685a.8.1751041644579;
+        Fri, 27 Jun 2025 09:27:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGQx+88Ksz4ECZwUoGt+Ed4X8fsAOVBGWYUZ4j8qk+znxirQR95/4sMWkJF3ZwWKFN09XhTLg==
+X-Received: by 2002:a05:620a:6011:b0:7c0:c024:d5 with SMTP id af79cd13be357-7d44393af52mr224991485a.8.1751041644137;
+        Fri, 27 Jun 2025 09:27:24 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353659e12sm148855366b.40.2025.06.27.09.27.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
         Fri, 27 Jun 2025 09:27:23 -0700 (PDT)
-Message-ID: <4d01de83-7b85-4127-960d-0563359a0844@baylibre.com>
-Date: Fri, 27 Jun 2025 11:27:22 -0500
+Message-ID: <cd6f018d-5653-47d8-abd2-a13f780eb38f@oss.qualcomm.com>
+Date: Fri, 27 Jun 2025 18:27:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,68 +75,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] iio: adc: ti-adc128s052: add support for
- adc121s021
-To: Lothar Rubusch <l.rubusch@gmail.com>, Jonathan Cameron <jic23@kernel.org>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, nuno.sa@analog.com,
- andy@kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- Sukrut Bellary <sbellary@baylibre.com>
-References: <20250625170218.545654-1-l.rubusch@gmail.com>
- <20250625170218.545654-2-l.rubusch@gmail.com>
- <8eb80697-e76e-412d-82a9-5a95d4ca4f2a@gmail.com>
- <20250626192802.0079d579@jic23-huawei>
- <CAFXKEHZ8zDEXLT57BD5Dg1mTN-Gj0Z7uhxX5Xx=XH0wFeAhe6g@mail.gmail.com>
+Subject: Re: [PATCH v2 7/8] arm64: dts: qcom: ipq5424: Add NSS clock
+ controller node
+To: Luo Jie <quic_luoj@quicinc.com>, Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Georgi Djakov <djakov@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Anusha Rao <quic_anusha@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, quic_kkumarcs@quicinc.com,
+        quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
+        quic_suruchia@quicinc.com, quic_pavir@quicinc.com
+References: <20250627-qcom_ipq5424_nsscc-v2-0-8d392f65102a@quicinc.com>
+ <20250627-qcom_ipq5424_nsscc-v2-7-8d392f65102a@quicinc.com>
 Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <CAFXKEHZ8zDEXLT57BD5Dg1mTN-Gj0Z7uhxX5Xx=XH0wFeAhe6g@mail.gmail.com>
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250627-qcom_ipq5424_nsscc-v2-7-8d392f65102a@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=YYu95xRf c=1 sm=1 tr=0 ts=685ec66d cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8
+ a=f6GukiY9ARMaQ3Zrt0MA:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 8-0qxeRpkDtOQMke2FbdwNYAp25PkqPp
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDEzMyBTYWx0ZWRfX0dDlW34aRIsl
+ tglm/cM3lyVu0K0AxeuwuqOheK/teJSVq3PnMFUHwvoNkvGhxU6FnqVxMMSKoZ9zHN7fyOQNN/o
+ KtzsA5trAeBpBmy9Ikna74WmTreXhVkKqJQIDhuTmIYfMB0JnSPvekGXxl89qBLBJiZdZVtjgGI
+ M86bbHTWoJJoXf8akUoUw3+vG3Zvus747NR8TfJnClT/7VmdBuIdYw7J5QPCiCKIasdeeC4lSEK
+ ++WGpNAal9fvr5SprRHcZYwWah7N891NjARBhikT+QNXWjNvFqgiiZlDsrhiX8uajCHGfBIu4T1
+ spmSEOrerRBE6K47JOv6udFCNWjg5mfcIBX0KHgQrmqS4bjw2sN44eBxrt7a8eJ9seAnD6bnY8X
+ z/7q9qhxbGoJEDr7HdhpcDlNTOpkJLge9DwJhOjEa9lVDC54F5q/BMzztQ1KZa0BhaeXiCsZ
+X-Proofpoint-ORIG-GUID: 8-0qxeRpkDtOQMke2FbdwNYAp25PkqPp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
+ clxscore=1015 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506270133
 
-On 6/26/25 4:33 PM, Lothar Rubusch wrote:
-> Hi guys,
+On 6/27/25 2:09 PM, Luo Jie wrote:
+> NSS clock controller provides the clocks and resets to the networking
+> hardware blocks on the IPQ5424, such as PPE (Packet Process Engine) and
+> UNIPHY (PCS) blocks.
 > 
-
-...
-
-> Perhaps just one little question here to you. You used the regulator
-> name "vdd" where others
-> before used "vref". At the end, this seems to be pretty free,
-> depending on how it is set in the
-> DT or how you name it in the DT (in my case it was "5v0", but I wanted
-> to keep the convention,
-> if so).
+> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/ipq5424.dtsi | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 > 
-> So, my question is, is there a naming convention what to take for a,
-> say, default
-> regulator naming or fixed 5V regulator?
-> 
+> diff --git a/arch/arm64/boot/dts/qcom/ipq5424.dtsi b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
+> index 2eea8a078595..eb4aa778269c 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq5424.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
+> @@ -730,6 +730,36 @@ frame@f42d000 {
+>  			};
+>  		};
+>  
+> +		clock-controller@39b00000 {
+> +			compatible = "qcom,ipq5424-nsscc";
+> +			reg = <0 0x39b00000 0 0x800>;
 
-I don't think there is a naming convention for supplies other than making
-it match the pin name from the datasheet.
+size = 0x100_000
 
-If we were to try to come up with some standard naming convention though,
-I would not include the voltage value in the name. Rather, the properties
-should be named after the function that it does, like vref-supply for an
-external reference voltage, vio-supply for I/O pin voltage supply,
-power-supply for a whole-chip or main supply, analog-supply and digital-supply
-for chips that don't have a whole-chip supply but rather split the
-analog and digital circuitry. These are the most common ones that I have
-seen on ADCs.
+with that:
 
-The fact that the TI chips in this driver use "vref-supply" doesn't really
-make sense in the DT bindings. V_REF is an internal signal in the ADC.
-In other words, it's kind of abusing the binding to specify the reference
-voltage without actually saying that the chip also has power supplies.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Chips like adc128s052 should really have va-supply for the power supply
-connected to the V_A pin that also serves as the reference voltage and
-vd-supply for the supply connected to the V_D pin for the digital I/O
-supply. And adc121s021 would only have va-supply because there is no
-separate V_D pin for a separate I/O supply.
-
-But there are lot's of ADCs already incorrectly using vref-supply like
-this, so not sure if it is worth trying to fix them or not. But if we
-wanted to fix it for these TI chips, I would suggest to deprecate the
-vref-supply and add the actual supplies to the DT bindings and implement
-a fallback in the driver to check for vref-supply if the other supplies
-are not given so that we don't break existing dtbs.
+Konrad
