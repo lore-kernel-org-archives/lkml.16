@@ -1,203 +1,221 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A835813C8FF;
-	Fri, 27 Jun 2025 01:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD44D14AD20
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750989268; cv=none; b=KD+nxFpAtNVPBEArO1EdaWY4s/TCw5/WdzRgJ//XSoN38h7GlR95+JhY5itah/Ccr+WMIEQlmqaaQ4iDRxvLqF7rZQBY5awoSQowHBDiq/qmNIdpqIuLTFU4y/vuWcNkE2XKBwUjTvn2rQoJV2oGxppOL4Yi+J6ZwD3GrjZl5Hk=
+	t=1750989291; cv=none; b=m8NaoRBEviWzUiu2CSqUxhlyk7lGDhSVUSBpVyrk4BKmb6I/xq5VN0ZInXhrO6YoREn/G74weByaGMoroI9VXO5Le/RRF9KIkTeHIYdokUytS1YfefciS9mvFamB5+iZu02Fqwl9VJHCyScpD6E9d5y5hO1+ON+bv1Zd33KsmbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750989268; c=relaxed/simple;
-	bh=Es267rRXGE5VjzmtVxJncSw1FEz0XMXDDYpFqsXjyNA=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ETRHWRgsL8UhoE/M5Twp7D3nvQlNOtZDK6heztAyBfv/dJN2rnGVRZoZaIhEbA4FW5S0gzm3K/sV1nMLrRuTfypvfpwGC5x9sOnjlik3ceyrrzGaYLzCJ67T6CfLClrD02Mhew98RsGWvPGTo0weW4sJwB8jflHqko9ApIGLXYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=aXHmAF36; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1750989291; c=relaxed/simple;
+	bh=RElHUZ7p9bZPMuVv3Ghi8ZmlWQJ6/tXqG/QBg/f4NFo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XntibEp05RKxRd+gRpuW/o60+VUL06ieorqKwpsStjng9yQHSbCJXXtatI0g9kBZAww06O8BvnEF1VxzU0rii6bk5dAOPSz8CekfSqxSwgNYb1lYHrPh8O56IkzFLd1RF/EabCVJcbepXPUEecN6NQhrWhBsl/I4R5skfr0rwoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MSdkjrvC; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="aXHmAF36"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1750989264;
-	bh=Es267rRXGE5VjzmtVxJncSw1FEz0XMXDDYpFqsXjyNA=;
-	h=Subject:From:To:Date:In-Reply-To:References;
-	b=aXHmAF36FzIhrxG+54gPyEfxH4rI0cCegg+rRNlIw/Kpo1InaSIuLyoUI2NcTNJP7
-	 X6gCS8hOG9OBBx3yhQrvRgK7cHteOPgZJHBDRWzzmNI9rIStKktOEzwk6GTNrfS8GB
-	 aJa1lGZthTl+HNFY16T9CyGpuCwG+RfJmP7aJHWUDXQKyv6hHk/tpvv440QhgOL9EN
-	 nqpfXaobGk8IirDskBsZGI83N9gaVnR2biiMjbqjPUif2gC1VLsHXJgF5NrCXRsNwd
-	 +B0iiP805uIlQCKbd/c3xAh5obEqJaPhlR8OaYEfR4F983bmlBLISzx0ipoo9Bl/ib
-	 05+ZaHa3+Qd6A==
-Received: from [192.168.68.112] (unknown [180.150.112.166])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 309796449F;
-	Fri, 27 Jun 2025 09:54:24 +0800 (AWST)
-Message-ID: <91b94197dc245f70e3cbd05944e8ed3712b7fd25.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v5 2/2] mailbox: aspeed: add mailbox driver for AST27XX
- series SoC
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Jammy Huang <jammy_huang@aspeedtech.com>, jassisinghbrar@gmail.com, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-Date: Fri, 27 Jun 2025 11:24:23 +0930
-In-Reply-To: <20250625073417.2395037-3-jammy_huang@aspeedtech.com>
-References: <20250625073417.2395037-1-jammy_huang@aspeedtech.com>
-	 <20250625073417.2395037-3-jammy_huang@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MSdkjrvC"
+Message-ID: <b93db234-6eaf-47cb-b85f-2506d94b6ad7@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750989287;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aQXvZWsIpL4D0UHCP14aMf5WoWG1JhpEQqpq+JDv33c=;
+	b=MSdkjrvC+p4gxCpmuwdobcGGOwCjy1h7CNACl6a2THchVGL5Tiw/HjwLQAOPQqoDpqdbhu
+	tWEkzwZJFxoyfQD8nttBCNuDUHNYs4FdIM1ARVMKiH4u4TGEEweWagqmHAVgdZJqHAILy2
+	yX7HEkTnkd4rW4fN4x16Y1X6cYDwc1Q=
+Date: Fri, 27 Jun 2025 09:54:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH 3/3 linux next v2] Docs/zh_CN: Translate netmem.rst to
+ Simplified Chinese
+To: jiang.kun2@zte.com.cn, alexs@kernel.org, corbet@lwn.net,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: xu.xin16@zte.com.cn, yang.yang29@zte.com.cn, wang.yaxin@zte.com.cn,
+ fan.yu9@zte.com.cn, he.peilin@zte.com.cn, tu.qiang35@zte.com.cn,
+ qiu.yutan@zte.com.cn, zhang.yunkai@zte.com.cn, ye.xingchen@zte.com.cn
+References: <202506261856010460uy5H5tAhfJzQXZaIk8-a@zte.com.cn>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <202506261856010460uy5H5tAhfJzQXZaIk8-a@zte.com.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-T24gV2VkLCAyMDI1LTA2LTI1IGF0IDE1OjM0ICswODAwLCBKYW1teSBIdWFuZyB3cm90ZToKPiBB
-ZGQgbWFpbGJveCBjb250cm9sbGVyIGRyaXZlciBmb3IgQVNUMjdYWCBTb0NzLCB3aGljaCBwcm92
-aWRlcwo+IGluZGVwZW5kZW50IHR4L3J4IG1haWxib3ggYmV0d2VlbiBkaWZmZXJlbnQgcHJvY2Vz
-c29ycy4gVGhlcmUgYXJlIDQKPiBjaGFubmVscyBmb3IgZWFjaCB0eC9yeCBtYWlsYm94IGFuZCBl
-YWNoIGNoYW5uZWwgaGFzIGFuIDMyLWJ5dGUgRklGTy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKYW1t
-eSBIdWFuZyA8amFtbXlfaHVhbmdAYXNwZWVkdGVjaC5jb20+Cj4gLS0tCj4gwqBkcml2ZXJzL21h
-aWxib3gvS2NvbmZpZ8KgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDggKwo+IMKgZHJpdmVycy9t
-YWlsYm94L01ha2VmaWxlwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDIgKwo+IMKgZHJpdmVycy9t
-YWlsYm94L2FzdDI3MDAtbWFpbGJveC5jIHwgMjQwICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKwo+IMKgMyBmaWxlcyBjaGFuZ2VkLCAyNTAgaW5zZXJ0aW9ucygrKQo+IMKgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvbWFpbGJveC9hc3QyNzAwLW1haWxib3guYwo+IAo+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL21haWxib3gvS2NvbmZpZyBiL2RyaXZlcnMvbWFpbGJveC9LY29uZmlnCj4g
-aW5kZXggNjhlZWVkNjYwYTRhLi4xYzM4Y2Q1NzAwOTEgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9t
-YWlsYm94L0tjb25maWcKPiArKysgYi9kcml2ZXJzL21haWxib3gvS2NvbmZpZwo+IEBAIC0zNDAs
-NCArMzQwLDEyIEBAIGNvbmZpZyBUSEVBRF9USDE1MjBfTUJPWAo+IMKgwqDCoMKgwqDCoMKgwqDC
-oCBrZXJuZWwgaXMgcnVubmluZywgYW5kIEU5MDIgY29yZSB1c2VkIGZvciBwb3dlciBtYW5hZ2Vt
-ZW50IGFtb25nIG90aGVyCj4gwqDCoMKgwqDCoMKgwqDCoMKgIHRoaW5ncy4KPiDCoAo+ICtjb25m
-aWcgQVNUMjcwMF9NQk9YCj4gK8KgwqDCoMKgwqDCoMKgdHJpc3RhdGUgIkFTUEVFRCBBU1QyNzAw
-IElQQyBkcml2ZXIiCj4gK8KgwqDCoMKgwqDCoMKgZGVwZW5kcyBvbiBBUkNIX0FTUEVFRCB8fCBD
-T01QSUxFX1RFU1QKPiArwqDCoMKgwqDCoMKgwqBoZWxwCj4gK8KgwqDCoMKgwqDCoMKgwqAgTWFp
-bGJveCBkcml2ZXIgaW1wbGVtZW50YXRpb24gZm9yIEFTUEVFRCBBU1QyN1hYIFNvQ3MuIFRoaXMg
-ZHJpdmVyCj4gK8KgwqDCoMKgwqDCoMKgwqAgY2FuIGJlIHVzZWQgdG8gc2VuZCBtZXNzYWdlIGJl
-dHdlZW4gZGlmZmVyZW50IHByb2Nlc3NvcnMgaW4gU29DLgo+ICvCoMKgwqDCoMKgwqDCoMKgIFRo
-ZSBkcml2ZXIgcHJvdmlkZXMgbWFpbGJveCBzdXBwb3J0IGZvciBzZW5kaW5nIGludGVycnVwdHMg
-dG8gdGhlCj4gK8KgwqDCoMKgwqDCoMKgwqAgY2xpZW50cy4gU2F5IFkgaGVyZSBpZiB5b3Ugd2Fu
-dCB0byBidWlsZCB0aGlzIGRyaXZlci4KPiDCoGVuZGlmCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-bWFpbGJveC9NYWtlZmlsZSBiL2RyaXZlcnMvbWFpbGJveC9NYWtlZmlsZQo+IGluZGV4IDEzYTM0
-NDhiMzI3MS4uOWE5YWRkOWE3NTQ4IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvbWFpbGJveC9NYWtl
-ZmlsZQo+ICsrKyBiL2RyaXZlcnMvbWFpbGJveC9NYWtlZmlsZQo+IEBAIC03MiwzICs3Miw1IEBA
-IG9iai0kKENPTkZJR19RQ09NX0NQVUNQX01CT1gpwqArPSBxY29tLWNwdWNwLW1ib3gubwo+IMKg
-b2JqLSQoQ09ORklHX1FDT01fSVBDQynCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCs9
-IHFjb20taXBjYy5vCj4gwqAKPiDCoG9iai0kKENPTkZJR19USEVBRF9USDE1MjBfTUJPWCnCoMKg
-wqDCoMKgwqDCoMKgKz0gbWFpbGJveC10aDE1MjAubwo+ICsKPiArb2JqLSQoQ09ORklHX0FTVDI3
-MDBfTUJPWCnCoMKgwqDCoMKgKz0gYXN0MjcwMC1tYWlsYm94Lm8KPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9tYWlsYm94L2FzdDI3MDAtbWFpbGJveC5jIGIvZHJpdmVycy9tYWlsYm94L2FzdDI3MDAt
-bWFpbGJveC5jCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjU0
-NzAwNTNmODEzOQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL21haWxib3gvYXN0Mjcw
-MC1tYWlsYm94LmMKPiBAQCAtMCwwICsxLDI0MCBAQAo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRp
-ZmllcjogR1BMLTIuMC1vbmx5Cj4gKy8qCj4gKyAqIENvcHlyaWdodCBBc3BlZWQgVGVjaG5vbG9n
-eSBJbmMuIChDKSAyMDI1LiBBbGwgcmlnaHRzIHJlc2VydmVkCj4gKyAqLwo+ICsKPiArI2luY2x1
-ZGUgPGxpbnV4L2ludGVycnVwdC5oPgo+ICsjaW5jbHVkZSA8bGludXgvaW8uaD4KPiArI2luY2x1
-ZGUgPGxpbnV4L2lvcG9sbC5oPgo+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4gKyNpbmNs
-dWRlIDxsaW51eC9tYWlsYm94X2NvbnRyb2xsZXIuaD4KPiArI2luY2x1ZGUgPGxpbnV4L21vZHVs
-ZS5oPgo+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4KPiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3Jt
-X2RldmljZS5oPgo+ICsjaW5jbHVkZSA8bGludXgvc2xhYi5oPgo+ICsKPiArLyogRWFjaCBiaXQg
-aW4gdGhlIHJlZ2lzdGVyIHJlcHJlc2VudHMgYW4gSVBDIElEICovCj4gKyNkZWZpbmUgSVBDUl9U
-WF9UUklHwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDB4MDAKPiArI2RlZmluZSBJUENSX0VOQUJMRcKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoDB4MDQKPiArI2RlZmluZSBJUENSX1NUQVRVU8KgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoDB4MDgKPiArI2RlZmluZcKgIFJYX0lSUShuKcKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgQklUKG4pCj4gKyNkZWZpbmXCoCBSWF9JUlFfTUFTS8KgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAweGYKPiArI2RlZmluZSBJUENSX0RBVEHCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgMHgxMAo+ICsKPiArc3RydWN0IGFzdDI3MDBfbWJveF9kYXRhIHsKPiArwqDCoMKgwqDCoMKg
-wqB1OCBudW1fY2hhbnM7Cj4gK8KgwqDCoMKgwqDCoMKgdTggbXNnX3NpemU7Cj4gK307Cj4gKwo+
-ICtzdHJ1Y3QgYXN0MjcwMF9tYm94IHsKPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgbWJveF9jb250
-cm9sbGVyIG1ib3g7Cj4gK8KgwqDCoMKgwqDCoMKgdTggbXNnX3NpemU7Cj4gK8KgwqDCoMKgwqDC
-oMKgdm9pZCBfX2lvbWVtICp0eF9yZWdzOwo+ICvCoMKgwqDCoMKgwqDCoHZvaWQgX19pb21lbSAq
-cnhfcmVnczsKPiArwqDCoMKgwqDCoMKgwqBzcGlubG9ja190IGxvY2s7Cj4gK307Cj4gKwo+ICtz
-dGF0aWMgaW5saW5lIGludCBjaF9udW0oc3RydWN0IG1ib3hfY2hhbiAqY2hhbikKPiArewo+ICvC
-oMKgwqDCoMKgwqDCoHJldHVybiBjaGFuIC0gY2hhbi0+bWJveC0+Y2hhbnM7Cj4gK30KPiArCj4g
-K3N0YXRpYyBpbmxpbmUgYm9vbCBhc3QyNzAwX21ib3hfdHhfZG9uZShzdHJ1Y3QgYXN0MjcwMF9t
-Ym94ICptYiwgaW50IGlkeCkKPiArewo+ICvCoMKgwqDCoMKgwqDCoHJldHVybiAhKHJlYWRsKG1i
-LT50eF9yZWdzICsgSVBDUl9TVEFUVVMpICYgQklUKGlkeCkpOwo+ICt9Cj4gKwo+ICtzdGF0aWMg
-aXJxcmV0dXJuX3QgYXN0MjcwMF9tYm94X2lycShpbnQgaXJxLCB2b2lkICpwKQo+ICt7Cj4gK8Kg
-wqDCoMKgwqDCoMKgc3RydWN0IGFzdDI3MDBfbWJveCAqbWIgPSBwOwo+ICvCoMKgwqDCoMKgwqDC
-oHZvaWQgX19pb21lbSAqZGF0YV9yZWc7Cj4gK8KgwqDCoMKgwqDCoMKgaW50IG51bV93b3JkczsK
-PiArwqDCoMKgwqDCoMKgwqB1MzIgKndvcmRfZGF0YTsKPiArwqDCoMKgwqDCoMKgwqB1MzIgc3Rh
-dHVzOwo+ICvCoMKgwqDCoMKgwqDCoGludCBuOwo+ICsKPiArwqDCoMKgwqDCoMKgwqAvKiBPbmx5
-IGV4YW1pbmUgY2hhbm5lbHMgdGhhdCBhcmUgY3VycmVudGx5IGVuYWJsZWQuICovCj4gK8KgwqDC
-oMKgwqDCoMKgc3RhdHVzID0gcmVhZGwobWItPnJ4X3JlZ3MgKyBJUENSX0VOQUJMRSkgJgo+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVhZGwobWItPnJ4X3JlZ3MgKyBJUENSX1NU
-QVRVUyk7CgpBbHNvIG5lZWQgdG8gbG9jayBvdmVyIHRoZXNlIHJlYWRzIHRvIGhhbmRsZSBjb25j
-dXJyZW50CnN0YXJ0dXAvc2h1dGRvd24/Cgo+ICsKPiArwqDCoMKgwqDCoMKgwqBpZiAoIShzdGF0
-dXMgJiBSWF9JUlFfTUFTSykpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVy
-biBJUlFfTk9ORTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgZm9yIChuID0gMDsgbiA8IG1iLT5tYm94
-Lm51bV9jaGFuczsgKytuKSB7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHN0cnVj
-dCBtYm94X2NoYW4gKmNoYW4gPSAmbWItPm1ib3guY2hhbnNbbl07Cj4gKwo+ICvCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAoIShzdGF0dXMgJiBSWF9JUlEobikpKQo+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29udGludWU7Cj4gKwo+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAvKiBSZWFkIHRoZSBtZXNzYWdlIGRhdGEgKi8K
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZm9yIChkYXRhX3JlZyA9IG1iLT5yeF9y
-ZWdzICsgSVBDUl9EQVRBICsgbWItPm1zZ19zaXplICogbiwKPiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgd29yZF9kYXRhID0gY2hhbi0+Y29uX3ByaXYsCj4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG51bV93b3JkcyA9IChtYi0+bXNnX3Np
-emUgLyBzaXplb2YodTMyKSk7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIG51bV93b3JkczsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-bnVtX3dvcmRzLS0sIGRhdGFfcmVnICs9IHNpemVvZih1MzIpLCB3b3JkX2RhdGErKykKPiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCp3b3JkX2RhdGEgPSBy
-ZWFkbChkYXRhX3JlZyk7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtYm94
-X2NoYW5fcmVjZWl2ZWRfZGF0YShjaGFuLCBjaGFuLT5jb25fcHJpdik7Cj4gKwo+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAvKiBUaGUgSVJRIGNhbiBiZSBjbGVhcmVkIG9ubHkgb25j
-ZSB0aGUgRklGTyBpcyBlbXB0eS4gKi8KPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-d3JpdGVsKFJYX0lSUShuKSwgbWItPnJ4X3JlZ3MgKyBJUENSX1NUQVRVUyk7CgpDYW4gd2UgcmF0
-aGVyIGNsZWFyIHRoZSBzdGF0dXMgb25jZSBvdXRzaWRlIHRoZSBsb29wIGltbWVkaWF0ZWx5IGJl
-Zm9yZQpyZXR1cm4/Cgp3cml0ZWwoc3RhdHVzLCBtYi0+cnhfcmVncyArIElQQ1JfU1RBVFVTKTsK
-Cj4gK8KgwqDCoMKgwqDCoMKgfQo+ICsKPiArwqDCoMKgwqDCoMKgwqByZXR1cm4gSVJRX0hBTkRM
-RUQ7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgYXN0MjcwMF9tYm94X3NlbmRfZGF0YShzdHJ1Y3Qg
-bWJveF9jaGFuICpjaGFuLCB2b2lkICpkYXRhKQo+ICt7Cj4gK8KgwqDCoMKgwqDCoMKgc3RydWN0
-IGFzdDI3MDBfbWJveCAqbWIgPSBkZXZfZ2V0X2RydmRhdGEoY2hhbi0+bWJveC0+ZGV2KTsKPiAr
-wqDCoMKgwqDCoMKgwqB2b2lkIF9faW9tZW0gKmRhdGFfcmVnOwo+ICvCoMKgwqDCoMKgwqDCoHUz
-MiAqd29yZF9kYXRhOwo+ICvCoMKgwqDCoMKgwqDCoGludCBudW1fd29yZHM7Cj4gK8KgwqDCoMKg
-wqDCoMKgaW50IGlkeCA9IGNoX251bShjaGFuKTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgaWYgKCEo
-cmVhZGwobWItPnR4X3JlZ3MgKyBJUENSX0VOQUJMRSkgJiBCSVQoaWR4KSkpIHsKPiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGV2X3dhcm4obWItPm1ib3guZGV2LCAiJXM6IENoLSVk
-IG5vdCBlbmFibGVkIHlldFxuIiwgX19mdW5jX18sIGlkeCk7Cj4gK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoHJldHVybiAtRUJVU1k7CgotRU5PREVWPyBJIHdvdWxkbid0IHNheSBpdCdz
-IGJ1c3kgaGVyZSA6KQoKPiArwqDCoMKgwqDCoMKgwqB9Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoGlm
-ICghKGFzdDI3MDBfbWJveF90eF9kb25lKG1iLCBpZHgpKSkgewo+ICvCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqBkZXZfd2FybihtYi0+bWJveC5kZXYsICIlczogQ2gtJWQgbGFzdCBkYXRh
-IGhhcyBub3QgZmluaXNoZWRcbiIsIF9fZnVuY19fLCBpZHgpOwo+ICvCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqByZXR1cm4gLUVCVVNZOwo+ICvCoMKgwqDCoMKgwqDCoH0KPiArCj4gK8Kg
-wqDCoMKgwqDCoMKgLyogV3JpdGUgdGhlIG1lc3NhZ2UgZGF0YSAqLwo+ICvCoMKgwqDCoMKgwqDC
-oGZvciAoZGF0YV9yZWcgPSBtYi0+dHhfcmVncyArIElQQ1JfREFUQSArIG1iLT5tc2dfc2l6ZSAq
-IGlkeCwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB3b3JkX2RhdGEgPSAodTMyICopZGF0YSwK
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBudW1fd29yZHMgPSAobWItPm1zZ19zaXplIC8gc2l6
-ZW9mKHUzMikpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG51bV93b3JkczsKPiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBudW1fd29yZHMtLSwgZGF0YV9yZWcgKz0gc2l6ZW9mKHUzMiksIHdv
-cmRfZGF0YSsrKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB3cml0ZWwoKndvcmRf
-ZGF0YSwgZGF0YV9yZWcpOwo+ICsKPiArwqDCoMKgwqDCoMKgwqB3cml0ZWwoQklUKGlkeCksIG1i
-LT50eF9yZWdzICsgSVBDUl9UWF9UUklHKTsKPiArwqDCoMKgwqDCoMKgwqBkZXZfZGJnKG1iLT5t
-Ym94LmRldiwgIiVzOiBDaC0lZCBzZW50XG4iLCBfX2Z1bmNfXywgaWR4KTsKPiArCj4gK8KgwqDC
-oMKgwqDCoMKgcmV0dXJuIDA7Cj4gK30KPiArCgoqc25pcCoKCj4gKwo+ICtzdGF0aWMgaW50IGFz
-dDI3MDBfbWJveF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICt7Cj4gK8Kg
-wqDCoMKgwqDCoMKgc3RydWN0IGFzdDI3MDBfbWJveCAqbWI7Cj4gK8KgwqDCoMKgwqDCoMKgY29u
-c3Qgc3RydWN0IGFzdDI3MDBfbWJveF9kYXRhICpkZXZfZGF0YTsKPiArwqDCoMKgwqDCoMKgwqBz
-dHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Owo+ICvCoMKgwqDCoMKgwqDCoGludCBpcnEs
-IHJldDsKPiArCj4gK8KgwqDCoMKgwqDCoMKgaWYgKCFwZGV2LT5kZXYub2Zfbm9kZSkKPiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIC1FTk9ERVY7Cj4gKwo+ICvCoMKgwqDC
-oMKgwqDCoGRldl9kYXRhID0gZGV2aWNlX2dldF9tYXRjaF9kYXRhKCZwZGV2LT5kZXYpOwo+ICsK
-PiArwqDCoMKgwqDCoMKgwqBtYiA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqbWIpLCBHRlBf
-S0VSTkVMKTsKPiArwqDCoMKgwqDCoMKgwqBpZiAoIW1iKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqByZXR1cm4gLUVOT01FTTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgbWItPm1ib3gu
-Y2hhbnMgPSBkZXZtX2tjYWxsb2MoJnBkZXYtPmRldiwgZGV2X2RhdGEtPm51bV9jaGFucywKPiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIHNpemVvZigqbWItPm1ib3guY2hhbnMpLCBHRlBfS0VSTkVMKTsKPiAr
-wqDCoMKgwqDCoMKgwqBpZiAoIW1iLT5tYm94LmNoYW5zKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqByZXR1cm4gLUVOT01FTTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgLyogY29uX3By
-aXYgb2YgZWFjaCBjaGFubmVsIGlzIHVzZWQgdG8gc3RvcmUgdGhlIG1lc3NhZ2UgcmVjZWl2ZWQg
-Ki8KPiArwqDCoMKgwqDCoMKgwqBmb3IgKGludCBpID0gMDsgaSA8IGRldl9kYXRhLT5udW1fY2hh
-bnM7IGkrKykgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtYi0+bWJveC5jaGFu
-c1tpXS5jb25fcHJpdiA9IGRldm1fa2NhbGxvYyhkZXYsIGRldl9kYXRhLT5tc2dfc2l6ZSwKPiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBz
-aXplb2YodTgpLCBHRlBfS0VSTkVMKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-aWYgKCFtYi0+bWJveC5jaGFuc1tpXS5jb25fcHJpdikKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAtRU5PTUVNOwo+ICvCoMKgwqDCoMKgwqDC
-oH0KPiArCj4gK8KgwqDCoMKgwqDCoMKgcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgbWIpOwo+
-ICsKPiArwqDCoMKgwqDCoMKgwqBtYi0+dHhfcmVncyA9IGRldm1fcGxhdGZvcm1faW9yZW1hcF9y
-ZXNvdXJjZShwZGV2LCAwKTsKClNlZSB0aGUgdGhvdWdodCBhYm91dCByZWctbmFtZXMgb24gdGhl
-IGJpbmRpbmcuCgpBbmRyZXcK
 
+在 6/26/25 6:56 PM, jiang.kun2@zte.com.cn 写道:
+> From: Wang Yaxin <wang.yaxin@zte.com.cn>
+>
+> translate the "netmem.rst" into Simplified Chinese.
+>
+> Update to commit 383faec0fd64("net: enable driver support for
+ditto.
+>  netmem TX")
+>
+> Signed-off-by: Wang Yaxin <wang.yaxin@zte.com.cn>
+> Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
+> Reviewed-by: xu xin <xu.xin16@zte.com.cn>
+> ---
+
+I don't understand netmem, but the translation seems pretty good, so:
+
+
+Reviewed-by: Yanteng Si <siyanteng@cqsoftware.com.cn>
+
+
+Thanks,
+
+Yanteng
+
+> v1->v2:
+> 1. add reviewer tag.
+>
+>  .../translations/zh_CN/networking/index.rst  |  2 +-
+>  .../translations/zh_CN/networking/netmem.rst | 92 +++++++++++++++++++
+>  2 files changed, 93 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/translations/zh_CN/networking/netmem.rst
+>
+> diff --git a/Documentation/translations/zh_CN/networking/index.rst 
+> b/Documentation/translations/zh_CN/networking/index.rst
+> index 4cf09b60b3f0..e646b019598c 100644
+> --- a/Documentation/translations/zh_CN/networking/index.rst
+> +++ b/Documentation/translations/zh_CN/networking/index.rst
+> @@ -24,6 +24,7 @@
+>     napi.rst
+>     netif-msg
+>     xfrm_proc
+> +   netmem
+>  Todolist:
+> @@ -102,7 +103,6 @@ Todolist:
+>  *   netdev-features
+>  *   netdevices
+>  *   netfilter-sysctl
+> -*   netmem
+>  *   nexthop-group-resilient
+>  *   nf_conntrack-sysctl
+>  *   nf_flowtable
+> diff --git a/Documentation/translations/zh_CN/networking/netmem.rst 
+> b/Documentation/translations/zh_CN/networking/netmem.rst
+> new file mode 100644
+> index 000000000000..fe351a240f02
+> --- /dev/null
+> +++ b/Documentation/translations/zh_CN/networking/netmem.rst
+> @@ -0,0 +1,92 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +.. include:: ../disclaimer-zh_CN.rst
+> +
+> +:Original: Documentation/networking/netmem.rst
+> +
+> +:翻译:
+> +
+> +   王亚鑫 Wang Yaxin <wang.yaxin@zte.com.cn>
+> +
+> +==================
+> +网络驱动支持Netmem
+> +==================
+> +
+> +本文档概述了网络驱动支持netmem（一种抽象内存类型）的要求，该内存类型
+> +支持设备内存 TCP 等功能。通过支持netmem，驱动可以灵活适配不同底层内
+> +存类型（如设备内存TCP），且无需或仅需少量修改。
+> +
+> +Netmem的优势：
+> +
+> +* 灵活性：netmem 可由不同内存类型（如 struct page、DMA-buf）支持，
+> +  使驱动程序能够支持设备内存 TCP 等各种用例。
+> +* 前瞻性：支持netmem的驱动可无缝适配未来依赖此功能的新特性。
+> +* 简化开发：驱动通过统一API与netmem交互，无需关注底层内存的实现差异。
+> +
+> +驱动RX要求
+> +==========
+> +
+> +1. 驱动必须支持page_pool。
+> +
+> +2. 驱动必须支持tcp-data-split ethtool选项。
+> +
+> +3. 驱动必须使用page_pool netmem API处理有效载荷内存。当前netmem API
+> +   与page API一一对应。转换时需要将page API替换为netmem API，并用驱动
+> +   中的netmem_refs跟踪内存而非 `struct page *`：
+> +
+> +   - page_pool_alloc -> page_pool_alloc_netmem
+> +   - page_pool_get_dma_addr -> page_pool_get_dma_addr_netmem
+> +   - page_pool_put_page -> page_pool_put_netmem
+> +
+> +   目前并非所有页 pageAPI 都有对应的 netmem 等效接口。如果你的驱动程序
+> +   依赖某个尚未实现的 netmem API，请直接实现并提交至 netdev@邮件列表，
+> +   或联系维护者及 almasrymina@google.com 协助添加该 netmem API。
+> +
+> +4. 驱动必须设置以下PP_FLAGS：
+> +
+> +   - PP_FLAG_DMA_MAP：驱动程序无法对 netmem 执行 DMA 映射。此时驱动
+> +     程序必须将 DMA 映射操作委托给 
+> page_pool，由其判断何时适合（或不适合）
+> +     进行 DMA 映射。
+> +   - PP_FLAG_DMA_SYNC_DEV：驱动程序无法保证 netmem 的 DMA 地址一定能
+> +     完成 DMA 同步。此时驱动程序必须将 DMA 同步操作委托给 page_pool，由
+> +     其判断何时适合（或不适合）进行 DMA 同步。
+> +   - PP_FLAG_ALLOW_UNREADABLE_NETMEM：仅当启用 tcp-data-split 时，
+> +     驱动程序必须显式设置此标志。
+> +
+> +5. 驱动不得假设netmem可读或基于页。当netmem_address()返回NULL时，表示
+> +内存不可读。驱动需正确处理不可读的netmem，例如，当netmem_address()返回
+> +NULL时，避免访问内容。
+> +
+> + 理想情况下，驱动程序不应通过netmem_is_net_iov()等辅助函数检查底层
+> +    netmem 类型，也不应通过netmem_to_page()或netmem_to_net_iov()将
+> +    netmem 转换为其底层类型。在大多数情况下，系统会提供抽象这些复杂性的
+> +    netmem 或 page_pool 辅助函数（并可根据需要添加更多）。
+> +
+> +6. 
+> 驱动程序必须使用page_pool_dma_sync_netmem_for_cpu()代替dma_sync_single_range_for_cpu()。
+> +对于某些内存提供者，CPU 的 DMA 同步将由 page_pool 完成；而对于其他提供者
+> +（特别是 dmabuf 内存提供者），CPU 的 DMA 同步由使用 dmabuf API 的用户空
+> +间负责。驱动程序必须将整个 DMA 同步操作委托给 
+> page_pool，以确保操作正确执行。
+> +
+> +7. 避免在 page_pool 之上实现特定于驱动程序内存回收机制。由于 netmem 可能
+> +不由struct page支持，驱动程序不能保留struct page来进行自定义回收。不过，
+> +可为此目的通过page_pool_fragment_netmem()或page_pool_ref_netmem()保留
+> +page_pool 引用，但需注意某些 netmem 
+> 类型的循环时间可能更长（例如零拷贝场景
+> +下用户空间持有引用的情况）。
+> +
+> +驱动TX要求
+> +==========
+> +
+> +1. 驱动程序绝对不能直接把 netmem 的 dma_addr 传递给任何 dma-mapping 
+> API。这
+> +是由于 netmem 的 dma_addr 可能源自 dma-buf 这类和 dma-mapping API 
+> 不兼容的
+> +源头。
+> +
+> +应当使用netmem_dma_unmap_page_attrs()和netmem_dma_unmap_addr_set()等辅助
+> +函数来替代dma_unmap_page[_attrs]()、dma_unmap_addr_set()。不管 dma_addr
+> +来源如何，netmem 的这些变体都能正确处理 netmem 
+> dma_addr，在合适的时候会委托给
+> +dma-mapping API 去处理。
+> +
+> +目前，并非所有的 dma-mapping API 都有对应的 netmem 
+> 版本。要是你的驱动程序需要
+> +使用某个还不存在的 netmem API，你可以自行添加并提交到 
+> netdev@，也可以联系维护
+> +人员或者发送邮件至 almasrymina@google.com 寻求帮助。
+> +
+> +2. 驱动程序应通过设置 netdev->netmem_tx = true 来表明自身支持 netmem 
+> 功能。
+> -- 
+> 2.25.1
+>
+>
+>
+>
+>
+>
