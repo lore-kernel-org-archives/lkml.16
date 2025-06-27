@@ -1,180 +1,144 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FE92F1FDF;
-	Fri, 27 Jun 2025 13:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D6C275844
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751030266; cv=none; b=Be6FgaCGorPRfjnz+4XxH09kSu+FVDUTs6np3pDgKNm/3VLjLAtO0kd4+2QzFFMyIemGKZrFiC0BHh3tHOGe+eYJWMgQZtHfw00nRZUX1kjSapsJ3KxPxbOy/4QA89YIhE8glHwZlKXziHeis+dKe5OvvDYKhe8QBEyw9bps4+k=
+	t=1751030268; cv=none; b=fTOKa7DxAyBugx8sAbWMm6uJibfQ0LKT7qSQjnPZmUzinjY8EfI8DF5PD5pgDreKLeDieDO36LnxgeX2zuUt+rT9Fkz26JC3ZuZTFP275S4NkX4Hqr/Ji8QQXZ+WWIXPt2hMsWag7oCTEt6/iESIB/bHyRbnF6L0YNqABpaDCSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751030266; c=relaxed/simple;
-	bh=opTsP10y/AWCBBhzQwoL4YDgiNtc2a1QNoEd6hSSHec=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Yz/NH8N+YK6e0IxMyjWV9q8DDZ/JOnLYk2y+XScEbvs0ivADIxYomTkSAoFMyE4yUdz2Zu4a8p8V1To8q/nUSqDy+xkXb0DqR90aTsVtJHctsoEacSRj2n1v4RW/ZRefPXO1JXd4/yW2pR4c6VO+mKPPQ7Lpbh97L1ealD6Elv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qf/5xaLD; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751030268; c=relaxed/simple;
+	bh=6FeSjFqOYtMG/JOS5zkDfG54IG2nMIa0Z87QbiZzm3A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aGZrFxxNdKByieGgePq5wub7tBf3KTfpCRdi1te0CvP6b2jmCuwhWiAaSRPnHdc7nr+bvaBMVVSLtXidxDexFJ4qqTwY7YzYxTlWkHCAL+2ZIIpgRvW73wN4K+5rV/mlqgycSQSpI/aMyMKpf9TrMuZkTJOcs3InmkeLkGYY514=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=T51NL9X3; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qf/5xaLD"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6088d856c6eso4115438a12.0;
-        Fri, 27 Jun 2025 06:17:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751030263; x=1751635063; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vgOdRzeLiUyb+th+vZ8OE4pKfRDS2CiYAzgM2DeadJs=;
-        b=Qf/5xaLDuulecXENBQnSZXstheLjnHr2IfmPBjLgFAnsdnumbqWBcXMYCvR/rOYcLt
-         RBGFkOMOnGONvwNlxGmSXQD+5FuQxydJRoU/J8Us5DySof1XN+3m3X2sCNG+ETqxUWpG
-         JQ8TGOQ32rL6PXpGZZxihQeen2KGx4RhhQsMO0N1V9FM24foZ0FeACVdiRjhh+ETa5fS
-         +9N/68ylngyHqufXXXmYExWV92hCRe2WnQgKBgHrk5chmqdSpKgV3CpXEn8X9dgKQWzm
-         tNSN9Vk9urumXsYOvw+FYySt4LP38b7IY9+PZKmeUR+2lfIEnZGPbHq1d8p5zWaQ/uYU
-         8zQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751030263; x=1751635063;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vgOdRzeLiUyb+th+vZ8OE4pKfRDS2CiYAzgM2DeadJs=;
-        b=RjaUxa7NDLZcAq8xQBECTbI/P56CRD2K3c5SL5yI1nlgNx5Pb2kbLCrtQZE7C7GfWG
-         RiidXaBXSt3zCODzeAzm+Pw8Wn+wFDXXWpUSoESfp/oCV4k5bWYPjGuTEJXJvmW9fpn5
-         CC7A5/X2DzaZdhb+lS0Xfz8GNijq+kGfP5ClIlzWfMsNVzyLEBqrf+1aomuslCxL0Buf
-         50HXJifEiztR5nNm8kq4zEOMzUTanLQq1nCY//T5WNF/DOhKr/wFE4ld+YXwsn1M9R6m
-         nOhKErMlvNkudUvdMfjIdCCJ24TZoo2YEwmNu5IeR3LxmiuAwudhN7y7xCT5inQ0BRT3
-         aRSA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKsoPFElUlLTvBQEttl5RZexjQyTESHv5iv38LCt9HMkSSUWYbZtfk9E9J6WR88BUyMDQd12Cco3pt2i8O@vger.kernel.org, AJvYcCXdcmoUvZ6jQmxcPiunGHdEARMq7zVqTC2MkqSPWZpnjYAxbY2BpviFMPhSkNmFn0vtL7MzUXlpmGHC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMeAuaX/EEtRAD+a73Vm0dLaxq/RsPA/BdlpKtjAMXY47/mouq
-	44Bo0jIth0cNZJE2OQxkp40sUzu/hjH/XuIBzMgfoJG5SG9oJ1HwqWVa
-X-Gm-Gg: ASbGncs5onrrW8ZLWsO3tYa0sVrh9St+WE2xhbf68ee4A+hWGqQdTJ9GwMyKX6VTQaU
-	6bMG0obrfBa0MdW2p3sGeNzPh9xfJBCfi4Yc3q2qwhVoc+UU2UmeA1NVL5thS5/c9czlc7bAzH9
-	DNXdlS1O66trvylRx+x8AjvYWCwt30Qhu+sCntdgs27yXGhQeY8s+Ewmr+/PAtPA2RUbt7HggjK
-	x7899+5ALsMQJCCxCGiRczq0J7kcmeSPyUR+L2vV0GFv+7lUYCbpG1RE9KQPClY+8lhZLVa9226
-	Ovb0q4xs4wdZgIxqQivdbEUk/qDk3nkQZqOWIPfRCTTU5Nh2AwQb3FVGK75Wu3LNVge+z5Wime5
-	nzBCxQWb09MNAdcKSOZVZiknJdQZAGla5ZUBbI3jQ
-X-Google-Smtp-Source: AGHT+IFeDwRVWmFdmXrateAqMmllYMK2zntwA1WZ2gBdjY3aP4MNxSK4Z7UA17+I+Adl/DbaSrC1jg==
-X-Received: by 2002:a05:6402:84e:b0:60c:79de:1c59 with SMTP id 4fb4d7f45d1cf-60c88b3e392mr2714318a12.7.1751030263064;
-        Fri, 27 Jun 2025 06:17:43 -0700 (PDT)
-Received: from localhost.localdomain (ip092042140082.rev.nessus.at. [92.42.140.82])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c83205eb0sm1471143a12.72.2025.06.27.06.17.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 06:17:42 -0700 (PDT)
-From: Jakob Unterwurzacher <jakobunt@gmail.com>
-X-Google-Original-From: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Quentin Schulz <quentin.schulz@cherry.de>,
-	Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>,
-	Lukasz Czechowski <lukasz.czechowski@thaumatec.com>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Johan Jonker <jbx6244@gmail.com>,
-	Farouk Bouabid <farouk.bouabid@cherry.de>,
-	Diederik de Haas <didi.debian@cknow.org>
-Cc: stable@vger.kernel.org,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: rockchip: use cs-gpios for spi1 on ringneck
-Date: Fri, 27 Jun 2025 15:17:12 +0200
-Message-Id: <20250627131715.1074308-1-jakob.unterwurzacher@cherry.de>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="T51NL9X3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=DVo6iRITrHOG5MmQsBw+GAXuoHIgqVw49q4vBY/hs64=; b=T51NL9X39G9S3/iBl6ImV1LlFK
+	gnYam49uTpCt9cMySIVvMVrKYF4N2Mad7XfBHhqe+un5QBeiyd8vlb1vFx1g0LFr/hdq9MyzisZnl
+	+sdxEl29Vx5ysTP5id4TRb/+SEms0Cd7UmPADmzsIqvel1rXjS1rTs9vkBwvkWvqoYx35mCpVoWUW
+	cQE64WXwoiMu9Kr6AUT5J0DXtCGRhNYNZfYrBPBpT9CJc+2TIib3THazxgvP0BSIFOwwJe2vTleG5
+	GBV2q73cPK20H28+dRMbsJDDilaOH2dA1TwEy3vIlTJgm4LwGgKL85I4y5//u+JxSyhLiGzRGdLzv
+	5k1EjzHg==;
+Received: from [189.7.87.79] (helo=[192.168.0.7])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uV8xG-009PQ5-Dn; Fri, 27 Jun 2025 15:17:22 +0200
+Message-ID: <0fc35309-f487-4aa2-b0df-c9b0e2b51fb7@igalia.com>
+Date: Fri, 27 Jun 2025 10:17:14 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/8] drm/vkms: Add support for ARGB8888 formats
+To: Louis Chauvet <louis.chauvet@bootlin.com>,
+ Melissa Wen <melissa.srw@gmail.com>,
+ Haneen Mohammed <hamohammed.sa@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rodrigo Siqueira <siqueira@igalia.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net,
+ linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+ miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+ seanpaul@google.com, nicolejadeyee@google.com
+References: <20250627-b4-new-color-formats-v5-0-94452f119c72@bootlin.com>
+ <20250627-b4-new-color-formats-v5-2-94452f119c72@bootlin.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+In-Reply-To: <20250627-b4-new-color-formats-v5-2-94452f119c72@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>
+Hi Louis,
 
-Hardware CS has a very slow rise time of about 6us,
-causing transmission errors when CS does not reach
-high between transaction.
+On 27/06/25 06:12, Louis Chauvet wrote:
+> The formats XRGB8888 and ARGB8888 were already supported. Add the
+> support for: - XBGR8888 - RGBX8888 - BGRX8888 - ABGR8888 - RGBA8888 -
+> BGRA8888
 
-It looks like it's not driven actively when transitioning
-from low to high but switched to input, so only the CPU
-pull-up pulls it high, slowly. Transitions from high to low
-are fast. On the oscilloscope, CS looks like an irregular sawtooth
-pattern like this:
-                         _____
-              ^         /     |
-      ^      /|        /      |
-     /|     / |       /       |
-    / |    /  |      /        |
-___/  |___/   |_____/         |___
+Please, remove RGBX8888 and BGRX8888 from this list. Also, for
+readability, it would be great if you add each format in one separate
+line.
 
-With cs-gpios we have a CS rise time of about 20ns, as it should be,
-and CS looks rectangular.
+Apart from that,
 
-This fixes the data errors when running a flashcp loop against a
-m25p40 spi flash.
+Reviewed-by: Maíra Canal <mcanal@igalia.com>
 
-With the Rockchip 6.1 kernel we see the same slow rise time, but
-for some reason CS is always high for long enough to reach a solid
-high.
+Best Regards,
+- Maíra
 
-The RK3399 and RK3588 SoCs use the same SPI driver, so we also
-checked our "Puma" (RK3399) and "Tiger" (RK3588) boards.
-They do not have this problem. Hardware CS rise time is good.
-
-Fixes: c484cf93f61b ("arm64: dts: rockchip: add PX30-µQ7 (Ringneck) SoM with Haikou baseboard")
-Cc: stable@vger.kernel.org
-Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
-Signed-off-by: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>
----
-v2:
-* Rename spi1_csn0_gpio -> spi1_csn0_gpio_pin to make CHECK_DTBS=y happy
-* Add pinctrl-names = "default";
-
-v1: https://lore.kernel.org/all/20250620113549.2900285-1-jakob.unterwurzacher@cherry.de/
-
- .../boot/dts/rockchip/px30-ringneck.dtsi      | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi b/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi
-index ab232e5c7ad6..4203b335a263 100644
---- a/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi
-@@ -379,6 +379,18 @@ pmic_int: pmic-int {
- 				<0 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
- 		};
- 	};
-+
-+	spi1 {
-+		spi1_csn0_gpio_pin: spi1-csn0-gpio-pin {
-+			rockchip,pins =
-+				<3 RK_PB1 RK_FUNC_GPIO &pcfg_pull_up_4ma>;
-+		};
-+
-+		spi1_csn1_gpio_pin: spi1-csn1-gpio-pin {
-+			rockchip,pins =
-+				<3 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up_4ma>;
-+		};
-+	};
- };
- 
- &pmu_io_domains {
-@@ -396,6 +408,17 @@ &sdmmc {
- 	vqmmc-supply = <&vccio_sd>;
- };
- 
-+&spi1 {
-+	/*
-+	 * Hardware CS has a very slow rise time of about 6us,
-+	 * causing transmission errors.
-+	 * With cs-gpios we have a rise time of about 20ns.
-+	 */
-+	cs-gpios = <&gpio3 RK_PB1 GPIO_ACTIVE_LOW>, <&gpio3 RK_PB2 GPIO_ACTIVE_LOW>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi1_clk &spi1_csn0_gpio_pin &spi1_csn1_gpio_pin &spi1_miso &spi1_mosi>;
-+};
-+
- &tsadc {
- 	status = "okay";
- };
--- 
-2.39.5
+> 
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> ---
+>   drivers/gpu/drm/vkms/vkms_formats.c | 13 +++++++++++--
+>   drivers/gpu/drm/vkms/vkms_plane.c   |  5 ++++-
+>   2 files changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+> index a9c624081dac..231b327e86b3 100644
+> --- a/drivers/gpu/drm/vkms/vkms_formats.c
+> +++ b/drivers/gpu/drm/vkms/vkms_formats.c
+> @@ -432,9 +432,12 @@ static void R4_read_line(const struct vkms_plane_state *plane, int x_start,
+>   
+>   
+>   READ_LINE_ARGB8888(XRGB8888_read_line, px, 0xFF, px[2], px[1], px[0])
+> +READ_LINE_ARGB8888(XBGR8888_read_line, px, 0xFF, px[0], px[1], px[2])
+>   
+>   READ_LINE_ARGB8888(ARGB8888_read_line, px, px[3], px[2], px[1], px[0])
+>   READ_LINE_ARGB8888(ABGR8888_read_line, px, px[3], px[0], px[1], px[2])
+> +READ_LINE_ARGB8888(RGBA8888_read_line, px, px[0], px[3], px[2], px[1])
+> +READ_LINE_ARGB8888(BGRA8888_read_line, px, px[0], px[1], px[2], px[3])
+>   
+>   READ_LINE_le16161616(ARGB16161616_read_line, px, px[3], px[2], px[1], px[0])
+>   READ_LINE_le16161616(XRGB16161616_read_line, px, cpu_to_le16(0xFFFF), px[2], px[1], px[0])
+> @@ -644,10 +647,16 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
+>   	switch (format) {RGBA8888
+>   	case DRM_FORMAT_ARGB8888:
+>   		return &ARGB8888_read_line;
+> -	case DRM_FORMAT_XRGB8888:
+> -		return &XRGB8888_read_line;
+>   	case DRM_FORMAT_ABGR8888:
+>   		return &ABGR8888_read_line;
+> +	case DRM_FORMAT_BGRA8888:
+> +		return &BGRA8888_read_line;
+> +	case DRM_FORMAT_RGBA8888:
+> +		return &RGBA8888_read_line;
+> +	case DRM_FORMAT_XRGB8888:
+> +		return &XRGB8888_read_line;
+> +	case DRM_FORMAT_XBGR8888:
+> +		return &XBGR8888_read_line;
+>   	case DRM_FORMAT_ARGB16161616:
+>   		return &ARGB16161616_read_line;
+>   	case DRM_FORMAT_XRGB16161616:
+> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
+> index e3fdd161d0f0..01fed722808b 100644
+> --- a/drivers/gpu/drm/vkms/vkms_plane.c
+> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
+> @@ -14,8 +14,11 @@
+>   
+>   static const u32 vkms_formats[] = {
+>   	DRM_FORMAT_ARGB8888,
+> -	DRM_FORMAT_XRGB8888,
+>   	DRM_FORMAT_ABGR8888,
+> +	DRM_FORMAT_BGRA8888,
+> +	DRM_FORMAT_RGBA8888,
+> +	DRM_FORMAT_XRGB8888,
+> +	DRM_FORMAT_XBGR8888,
+>   	DRM_FORMAT_XRGB16161616,
+>   	DRM_FORMAT_ARGB16161616,
+>   	DRM_FORMAT_RGB565,
+> 
 
