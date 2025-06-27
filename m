@@ -1,163 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E6F234994;
-	Fri, 27 Jun 2025 08:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119FF234994
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751012603; cv=none; b=kI9jVb8KJN5Ls3brucPMnT0I0If+LUdGsMqeH5qjS2SZdgWeHruYNMuNCeWDipHGeLlej8PvV/0jiTdvK2VIywrvFUQ1owS16aQVYjzchqI405n7Sl0vpZdXB8RZJpy5kC5nF5Ys8wmuOovb1YISPR4kMdM4P01Ysslkg6QFTcM=
+	t=1751012611; cv=none; b=ncZcF5klO6VgGjy3Tlx3/b4slQw9RUvUMvSKCxkTUFohMNNw3OM+CtFB5Ko1//kKa4TTUFkmd06Spiwv99YsnlQ4AkkE8F7r72xf8EFfO+fzajAcxfCZEs9BBRm7i6ZCHqQKhSQT8yiZ1Cpf7tgJQNMdqDtDiE6g6s4Cqch6l9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751012603; c=relaxed/simple;
-	bh=uN/D8dqiB5VYUFly92uE7+enUWgNCKOFbWJkaVmg9qA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=pB5fCV0SBhNpvMOlOuyXHiSQuIxbJV0vs/ZMudiB1xNybjJV5kP+NHoPAgN8eCVZiZF1gAYoWPry09+VqyB8lXQjHCj5kk0edUwBddxUhKlwMb6ETWMVr/IngYQiN/i94T6Y7EtuUvXxCtwBn7fj9aJcfQqZzczwfdxfLlJHwfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgDlZYlR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751012611; c=relaxed/simple;
+	bh=0qsfHkdiaPe+zrLEcT0n7j0W1NM11N4BiDQtywbGvy0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UTlbKglzL6xbmGrlpVauU6uWy6ZEiO1+f7oAwJR1rzixWOn6PPnXsRXq08UyTX1A2mQmVJsNK9/OfKIIyGgd+mLZy2SYvaB+L98H4RQ2H7bYveAyj4p+jW+gyM8oUSGSeoKczydc1+/gjEybg43KqrXxdfxRkIXFK6WOBoiliEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZAzIe1wj; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgDlZYlR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F4B1C4CEF0;
-	Fri, 27 Jun 2025 08:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751012602;
-	bh=uN/D8dqiB5VYUFly92uE7+enUWgNCKOFbWJkaVmg9qA=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=XgDlZYlRR03OoCIqDOBeRU4oLrgs71elLSS/qGk/G2DlO88AvkkDIqF6F/Ns5XYFr
-	 bBTvujelzy6neisx4LvhnKPgCQxrq/M5odUoba+UGq0x+dLDMZVqprpeaOw4D6xqhA
-	 fTeYWukLLqRHBwnnKzQbq8tlPX0H/4PYfiTaDCfkSjG97GFpCMXEq/kFQ3Cx7ghiia
-	 bsQrXnY+3aCP0fd5tlZ4lZCkncR+PcebFVPzEqTuXcm7Csp5ivhgDTJARZ4hKwbsmi
-	 B8I9D83riALQ8iY+dptih3ew7XOw+0G8YGoW3pgRWb9TI6ZbCH0qd5bJ39OsGqIKhP
-	 SaSLksICej/iQ==
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZAzIe1wj"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751012596;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=WUtgtn6DGjbiHo5TL3dMTmg2+WrXcPod1H9rbrXXmaY=;
+	b=ZAzIe1wjlI+5osujoAKEYpyJy55qlKN1dNsrhj0ZRaa9YDRb0ROny6CIlGvlatE/qBkPNe
+	dkTLPzMbaSTvI2Obk28ySP0sUTC0vS27+KoiY2fv+pst+E8ALDIgvkpi8NTQ4RAQUsgcBy
+	H351kESVUnWNQHxxleQwxGSfMW2bSz4=
+From: Tao Chen <chen.dylane@linux.dev>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next v6 1/3] bpf: Show precise link_type for {uprobe,kprobe}_multi fdinfo
+Date: Fri, 27 Jun 2025 16:22:50 +0800
+Message-ID: <20250627082252.431209-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 27 Jun 2025 10:23:16 +0200
-Message-Id: <DAX65TRN0TGP.25VZ9DYV86XWY@kernel.org>
-Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Masahiro
- Yamada" <masahiroy@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>,
- "Luis Chamberlain" <mcgrof@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>, "Nicolas Schier" <nicolas.schier@linux.dev>, "Trevor
- Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye" <ark.email@gmail.com>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-kbuild@vger.kernel.org>, "Petr Pavlu" <petr.pavlu@suse.com>, "Sami
- Tolvanen" <samitolvanen@google.com>, "Daniel Gomez" <da.gomez@samsung.com>,
- "Simona Vetter" <simona.vetter@ffwll.ch>, "Greg KH"
- <gregkh@linuxfoundation.org>, "Fiona Behrens" <me@kloenk.dev>, "Daniel
- Almeida" <daniel.almeida@collabora.com>, <linux-modules@vger.kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
- <20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
- <COU2bqJOzCHRf6g4rwFpu2NY3wLY0G0AmNjRaU9aGEqu1HaPZ5X4KzfDT_CEB3Okh5BV50sJS10sKhmtHut8ew==@protonmail.internalid> <DAQJCUE1C2JE.204A8IS7LBIVZ@kernel.org> <87ikkq648o.fsf@kernel.org> <smOfUo2mEmQu-lykKKMiNOUWq2ze6p_CoEEpgGE0dtAnoJDGEpvQMkP1q-n13MiUxLK1xAiM-4QLsivPrG57sg==@protonmail.internalid> <DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org> <877c126bce.fsf@kernel.org> <Mg1_h6lRpg9tdi0VjiyDfIEy2juzgDWxOhYX61qSUfyEpeMMksWW1e-blTka_G1dXUvpZVktdD-zL3X1a6T6Cg==@protonmail.internalid> <DATW0XWNN45X.1L2WMZ41JJ5O8@kernel.org> <87v7om4jhq.fsf@kernel.org> <RPPvXQKnjK77Kp9mKaiFxbNj1fTHKb_I7_nbY81fZop-Wz8n5TTi4_lpXP9U9AwjocvZKqJPI8PGKufJn9cIzQ==@protonmail.internalid> <DAU0J3T0IEVM.2K7ZRQOVOHF8H@kernel.org> <878qlh4aj1.fsf@kernel.org> <87plepzke5.fsf@kernel.org>
-In-Reply-To: <87plepzke5.fsf@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri Jun 27, 2025 at 9:57 AM CEST, Andreas Hindborg wrote:
-> Andreas Hindborg <a.hindborg@kernel.org> writes:
->> "Benno Lossin" <lossin@kernel.org> writes:
->>> That's good to know, then let's try to go for something simple.
->>>
->>> I don't think that we can just use a `Mutex<T>`, because we don't have =
-a
->>> way to create it at const time... I guess we could have
->>>
->>>     impl<T> Mutex<T>
->>>         /// # Safety
->>>         ///
->>>         /// The returned value needs to be pinned and then `init` needs
->>>         /// to be called before any other methods are called on this.
->>>         pub unsafe const fn const_new() -> Self;
->>>
->>>         pub unsafe fn init(&self);
->>>     }
->>>
->>> But that seems like a bad idea, because where would we call the `init`
->>> function? That also needs to be synchronized...
->>
->> Ah, that is unfortunate. The init function will not run before this, so
->> we would need a `Once` or an atomic anyway to initialize the lock.
->>
->> I am not sure if we are allowed to sleep during this, I would have to
->> check. But then we could use a spin lock.
->>
->> We will need the locking anyway, when we want to enable sysfs write
->> access to the parameters.
->>
->>>
->>> Maybe we can just like you said use an atomic bool?
->>
->> Sigh, I will have to check how far that series has come.
->>
->
-> I think I am going to build some kind of `Once` feature on top of
-> Boqun's atomic series [1], so that we can initialize a lock in these
-> statics. We can't use `global_lock!`, because that depends on module
-> init to initialize the lock before first use.
+Alexei suggested, 'link_type' can be more precise and differentiate
+for human in fdinfo. In fact BPF_LINK_TYPE_KPROBE_MULTI includes
+kretprobe_multi type, the same as BPF_LINK_TYPE_UPROBE_MULTI, so we
+can show it more concretely.
 
-Sounds good, though we probably don't want to name it `Once`. Since it
-is something that will be populated in the future, but not by some
-random accessor, but rather a specific populator.
+link_type:	kprobe_multi
+link_id:	1
+prog_tag:	d2b307e915f0dd37
+...
+link_type:	kretprobe_multi
+link_id:	2
+prog_tag:	ab9ea0545870781d
+...
+link_type:	uprobe_multi
+link_id:	9
+prog_tag:	e729f789e34a8eca
+...
+link_type:	uretprobe_multi
+link_id:	10
+prog_tag:	7db356c03e61a4d4
 
-So maybe:
+As Andrii suggested attach_type can be recorded in bpf_link, there is
+still a 6 byte hole in bpf_link, we can fill the hole with attach_type
+soon.
 
-    pub struct Delayed<T> {
-        dummy: T,
-        real: Opaque<T>,
-        populated: Atomic<bool>, // or Atomic<Flag>
-        writing: Atomic<bool>, // or Atomic<Flag>
-    }
-
-    impl<T> Delayed<T> {
-        pub fn new(dummy: T) -> Self {
-            Self {
-                dummy,
-                real: Opaque::uninit(),
-                populated: Atomic::new(false),
-                writing: Atomic::new(false),
-            }
-        }
-
-        pub fn get(&self) -> &T {
-            if self.populated.load(Acquire) {
-                unsafe { &*self.real.get() }
-            } else {
-                // maybe print a warning here?
-                // or maybe let the user configure this in `new()`?
-                &self.dummy
-            }
-        }
-
-        pub fn populate(&self, value: T) {
-            if self.writing.cmpxchg(false, true, Release) {
-                unsafe { *self.real.get() =3D value };
-                self.populated.store(true, Release);
-            } else {
-                pr_warn!("`Delayed<{}>` written to twice!\n", core::any::ty=
-pe_name::<T>());
-            }
-        }
-    }
-
-(no idea if the orderings are correct, I always have to think way to
-much about that... especially since our atomics seem to only take one
-ordering in compare_exchange?)
-
-> As far as I can tell, atomics may not land in v6.17, so this series
-> will probably not be ready for merge until v6.18 at the earliest.
-
-Yeah, sorry about that :(
-
-> Thanks for the input, Benno!
-
-My pleasure!
-
+Co-authored-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
 ---
-Cheers,
-Benno
+ include/linux/bpf.h      |  1 +
+ kernel/bpf/syscall.c     |  9 ++++++++-
+ kernel/trace/bpf_trace.c | 10 ++++------
+ 3 files changed, 13 insertions(+), 7 deletions(-)
+
+Change list:
+  v5 -> v6:
+    - Move flags into bpf_link to get retprobe info
+      directly.(Alexei, Jiri)
+  v5:
+  https://lore.kernel.org/bpf/20250623134342.227347-1-chen.dylane@linux.dev
+
+  v4 -> v5:
+    - Add patch1 to show precise link_type for
+      {uprobe,kprobe}_multi.(Alexei)
+    - patch2,3 just remove type field, which will be showed in
+      link_type
+  v4:
+  https://lore.kernel.org/bpf/20250619034257.70520-1-chen.dylane@linux.dev
+
+  v3 -> v4:
+    - use %pS to print func info.(Alexei)
+  v3:
+  https://lore.kernel.org/bpf/20250616130233.451439-1-chen.dylane@linux.dev
+
+  v2 -> v3:
+    - show info in one line for multi events.(Jiri)
+  v2:
+  https://lore.kernel.org/bpf/20250615150514.418581-1-chen.dylane@linux.dev
+
+  v1 -> v2:
+    - replace 'func_cnt' with 'uprobe_cnt'.(Andrii)
+    - print func name is more readable and security for kprobe_multi.(Alexei)
+  v1:
+  https://lore.kernel.org/bpf/20250612115556.295103-1-chen.dylane@linux.dev
+
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 5b25d278409..3d8fecc9b17 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1702,6 +1702,7 @@ struct bpf_link {
+ 	 * link's semantics is determined by target attach hook
+ 	 */
+ 	bool sleepable;
++	u32 flags :8;
+ 	/* rcu is used before freeing, work can be used to schedule that
+ 	 * RCU-based freeing before that, so they never overlap
+ 	 */
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 51ba1a7aa43..e6eea594f1c 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -3228,7 +3228,14 @@ static void bpf_link_show_fdinfo(struct seq_file *m, struct file *filp)
+ 	char prog_tag[sizeof(prog->tag) * 2 + 1] = { };
+ 
+ 	if (type < ARRAY_SIZE(bpf_link_type_strs) && bpf_link_type_strs[type]) {
+-		seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
++		if (link->type == BPF_LINK_TYPE_KPROBE_MULTI)
++			seq_printf(m, "link_type:\t%s\n", link->flags == BPF_F_KPROBE_MULTI_RETURN ?
++				   "kretprobe_multi" : "kprobe_multi");
++		else if (link->type == BPF_LINK_TYPE_UPROBE_MULTI)
++			seq_printf(m, "link_type:\t%s\n", link->flags == BPF_F_UPROBE_MULTI_RETURN ?
++				   "uretprobe_multi" : "uprobe_multi");
++		else
++			seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
+ 	} else {
+ 		WARN_ONCE(1, "missing BPF_LINK_TYPE(...) for link type %u\n", type);
+ 		seq_printf(m, "link_type:\t<%u>\n", type);
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 24b94870b50..85f07f662fe 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2469,7 +2469,6 @@ struct bpf_kprobe_multi_link {
+ 	u32 cnt;
+ 	u32 mods_cnt;
+ 	struct module **mods;
+-	u32 flags;
+ };
+ 
+ struct bpf_kprobe_multi_run_ctx {
+@@ -2589,7 +2588,7 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
+ 
+ 	kmulti_link = container_of(link, struct bpf_kprobe_multi_link, link);
+ 	info->kprobe_multi.count = kmulti_link->cnt;
+-	info->kprobe_multi.flags = kmulti_link->flags;
++	info->kprobe_multi.flags = kmulti_link->link.flags;
+ 	info->kprobe_multi.missed = kmulti_link->fp.nmissed;
+ 
+ 	if (!uaddrs)
+@@ -2979,7 +2978,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+ 	link->addrs = addrs;
+ 	link->cookies = cookies;
+ 	link->cnt = cnt;
+-	link->flags = flags;
++	link->link.flags = flags;
+ 
+ 	if (cookies) {
+ 		/*
+@@ -3048,7 +3047,6 @@ struct bpf_uprobe_multi_link {
+ 	struct path path;
+ 	struct bpf_link link;
+ 	u32 cnt;
+-	u32 flags;
+ 	struct bpf_uprobe *uprobes;
+ 	struct task_struct *task;
+ };
+@@ -3112,7 +3110,7 @@ static int bpf_uprobe_multi_link_fill_link_info(const struct bpf_link *link,
+ 
+ 	umulti_link = container_of(link, struct bpf_uprobe_multi_link, link);
+ 	info->uprobe_multi.count = umulti_link->cnt;
+-	info->uprobe_multi.flags = umulti_link->flags;
++	info->uprobe_multi.flags = umulti_link->link.flags;
+ 	info->uprobe_multi.pid = umulti_link->task ?
+ 				 task_pid_nr_ns(umulti_link->task, task_active_pid_ns(current)) : 0;
+ 
+@@ -3372,7 +3370,7 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+ 	link->uprobes = uprobes;
+ 	link->path = path;
+ 	link->task = task;
+-	link->flags = flags;
++	link->link.flags = flags;
+ 
+ 	bpf_link_init(&link->link, BPF_LINK_TYPE_UPROBE_MULTI,
+ 		      &bpf_uprobe_multi_link_lops, prog);
+-- 
+2.48.1
+
