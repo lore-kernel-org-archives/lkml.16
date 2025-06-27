@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0804A16DEB1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E881553A3;
 	Fri, 27 Jun 2025 00:47:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750985229; cv=none; b=sOLW8Jd+23NQas0oaAidKA3r3h0vDfn65kcgND2e8bV0PmUBmv/UHEA5uQL8ZNuEU1abnMknrc5OBaIrY/2Cq0cX9ULF8M9Rqq6T5dlQYijYpMaz8QbPaAqxtrkzN/VC7GZ0HEefO3f6q/TL0sVZmMF+sm/mBzv8kDXCWoa9bQE=
+	t=1750985228; cv=none; b=gjiWTGIURjPhnqgctIoxWYeCnnvm9iNQQl4o35H3ag34e48uNRPnDBkLbFyBBo4Jk7N85uTqrJ7kx7bRCRiXbF1i4sbSC+DuePZ8y7leJA4Y9+XMUO5f2Z45PxX344g9g5YdA0y/EAAKgf7yJ0YCNQGKtD4LwhVjQ4fnAO+VgZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750985229; c=relaxed/simple;
-	bh=N6BtiYtAE91IjBviDHOKuD3lvCAmE+hW+1yotu7D/9g=;
+	s=arc-20240116; t=1750985228; c=relaxed/simple;
+	bh=LJTr39Kx9TzcBouC4IUe/L5JK7gaijmdnU+4I29p2ow=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=cv3Yw0dJINb0PFf9BoLNDVoGtGKCIUCrwo1yw8pe/dxIIYvSTnOtnpHTo4TQzhRagbGilosVitNTi91fuzD8TNQprD1QRDN8XIZLWa+oO1zfa3P9BTxDMJc24d7LTBqlSSWc+gGDJCdP1UF5vGHExDRThIWsxpZST1a1bWQER9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h+HcB2Y3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=l5iL/tY4/jUX0LzWmiu38LcTyOACg6hu1Y0sMaGyxMsZubSjj8sSZut9P8ms8Iq05REsKO9ZdfBhoBG3xvshPlfvm575BhXTRmyzTpyfvxjC4uP+S7ftDgTzWHcNYEkd5945f2l2JYWi9zdA698GtKb9FX5662lGqFQEmBRYQ3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bA4xoOX5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h+HcB2Y3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66B1EC4CEF0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bA4xoOX5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F63C4CEF2;
 	Fri, 27 Jun 2025 00:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750985228;
-	bh=N6BtiYtAE91IjBviDHOKuD3lvCAmE+hW+1yotu7D/9g=;
+	bh=LJTr39Kx9TzcBouC4IUe/L5JK7gaijmdnU+4I29p2ow=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=h+HcB2Y3aEPv5xWqHZTcTioJJpF+LEjGSG2p45BLGMVfee5HYtBrACShOt8LDtDAW
-	 eG/scDecAw78231X0JNk3lktihknlZBwq1I8lOVueVb7gNjm+1pvPq+zzYq3nBugTK
-	 awtCgU5rmsE6CHdBv4la7Tyxe/GQxrlI6jPurORwl9fkZYCvLQZYC5jLMd3tH9Kk2v
-	 TfsysL8odTD389uqTpfmi2PXxmEYhj+PDw9mRzg6X6lOgU1aJEyrr3MM7r7Me3si5X
-	 Q+gPWA5JyBuSsdKUgNp2z9EfgdqZwkuQ5gVrGpxA0/AXvyg4bCC+UdJR8SUDtx+tq2
-	 E5hQmMmxVyYkw==
+	b=bA4xoOX5nA8QfsxhPGXul7HIXU5a8zXGOH+1yv6cNDQ+ftwmAbQakn/JSlcqyK9n7
+	 ouSDQZRIwx2JbaV3o0TSBc9f/fkwxkZ1knXAFo/8vjt1sm8D9n5HVcq6/eHh9P8Hxu
+	 ckFB7Lpb62PWaHcM4HXP9x/THCBikF/qpbgKvJzUxmvsPJpR3KenrG1QQqtEwoe9TK
+	 NfGTvCYre9/lFMwrSPP3XAq0ZVWkiYHVM6ENtTKXl1Vg/RH+t70pL5N1DmI2ejI1Lf
+	 CgmI2QOlllxkMAqGpkyp0UOj57+5ceVE1YTTN0wb6TCf3Djfd8j9DAaB/3f8OaxkPy
+	 vqmDbAtv6LXLg==
 From: Vinod Koul <vkoul@kernel.org>
 To: Johan Hovold <johan+linaro@kernel.org>
 Cc: Kishon Vijay Abraham I <kishon@kernel.org>, 
@@ -33,11 +33,11 @@ Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
  Melody Olvera <melody.olvera@oss.qualcomm.com>, 
  linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250617080401.11147-1-johan+linaro@kernel.org>
-References: <20250617080401.11147-1-johan+linaro@kernel.org>
-Subject: Re: [PATCH] phy: qcom: m31-eusb2: drop registration printk
-Message-Id: <175098522832.106297.6161787629116315639.b4-ty@kernel.org>
-Date: Thu, 26 Jun 2025 17:47:08 -0700
+In-Reply-To: <20250617080503.11262-1-johan+linaro@kernel.org>
+References: <20250617080503.11262-1-johan+linaro@kernel.org>
+Subject: Re: [PATCH] phy: qcom: m31-eusb2: fix match data santity check
+Message-Id: <175098522793.106297.10666098884425088402.b4-ty@kernel.org>
+Date: Thu, 26 Jun 2025 17:47:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,16 +49,16 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Tue, 17 Jun 2025 10:04:01 +0200, Johan Hovold wrote:
-> Drivers should generally be quiet on successful probe so drop the
-> registration printk from the recently added M31 EUSB2 driver.
+On Tue, 17 Jun 2025 10:05:03 +0200, Johan Hovold wrote:
+> The device_get_match_data() helper returns NULL if a new entry is ever
+> added without corresponding match data.
 > 
 > 
 
 Applied, thanks!
 
-[1/1] phy: qcom: m31-eusb2: drop registration printk
-      commit: 2bff9083c1744dc8751ddc0844a65e3bee89f519
+[1/1] phy: qcom: m31-eusb2: fix match data santity check
+      commit: 603bd9808f58009e1f230271f94e1b9e13d506ba
 
 Best regards,
 -- 
