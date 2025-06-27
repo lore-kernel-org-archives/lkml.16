@@ -1,159 +1,89 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from mailrelay-egress12.pub.mailoutpod2-cph3.one.com (mailrelay-egress12.pub.mailoutpod2-cph3.one.com [46.30.211.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C284B21C190
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226F7212B3D
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751053379; cv=none; b=XeNHmIXgVOVHhlAVG+/PkIUJKHI9O/5R9Y4HH0VTGl/a5eD99ioFCraCSdp5QFm3P+oZviRs12/BMSP710mLoMr71op/Dr9AdgMScXcoMpe7dkagELdsDmtTm0RkcWQgIrcJ+FZCwix3i5JQZ79Umung8ze6BAhKH43BzQKHg3w=
+	t=1751053394; cv=none; b=sCz2MjvQrCKX7PvUVQd/0yQFtw1dEyMwKHyWXfD9nFYK1+Ac4Ad9PA5jZGuCnzSfcTE33HSKQLhqR/fcOhi9H89tDK3ZX3Zev65kt/Y0w0pWcczfEal9OCLRke8KDoO29pP3a4+291FiZC7/EaBCXa+iFRRRguAIkFkwyRPdqqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751053379; c=relaxed/simple;
-	bh=OLsiblbD30bMEADwFBTdnq08XDWZ4YNw5yDgXwOvedQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fMt/4y3txWkYCm+cjW+VvbYy0fbuczuowsPRCjM798Ehwy0/kNBI42fEiIphrArnj5SWPgaMV910hLB/YN9N3+GpB7i9CbxzjhEjDjX249JqBhVl8o9PTymLM2157lbWdYYCPpQQ8jJJiZISvCbWu3K+4MDo40l40AWUNbWkWN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=M1yexdNX; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751053394; c=relaxed/simple;
+	bh=kip3maXOLhHraRuZCsgnHfHjSz1/RRGdLakbVWQIGCU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=PUSbLGWvuYRQJkKvJ4hBg9BGv9g7wrSnUD43sNlsv+QQPe1AXTG0uZQ+TEsHTkcEBw0AZuVuTcT28FoYuwMHlvYwEvf6CAb+Lu433Oy1u+EkseF7tuomiTXKEfMpIxX+w8zXOIRW97GP9oM2fb+ImBRA2GxcOAGxP3xI6BTgpSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=nhKx0Tpw; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=hvVysKG+; arc=none smtp.client-ip=46.30.211.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="M1yexdNX"
-Date: Fri, 27 Jun 2025 15:42:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751053365;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h035NnqCX1c3xP4ru1BilXA6CW38PXAnRjGNRfkRM2I=;
-	b=M1yexdNXg+CWSBnaA7wfbhjGt1QdUK1sX+l2qF5Opz4iKF+0507R4USBh4Q45MD8nPWvSq
-	rdxskb4KflKZh6UeUQmEBK/gWGdtgbuLbYV4Wxaf6PM/d0guetTxA+urU99jTRL+n7tf55
-	FCpf77sHEAfZ0oykLEepCdXfiFEtrWE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kyle Sanderson <kyle.leet@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] bcachefs fixes for 6.16-rc4
-Message-ID: <gxpaa7u46vicn5npm4plvvdd3iuowzts4oljuw2djfqny3rqae@n6vi53u6sa43>
-References: <ahdf2izzsmggnhlqlojsnqaedlfbhomrxrtwd2accir365aqtt@6q52cm56jmuf>
- <CAHk-=wi+k8E4kWR8c-nREP0+EA4D+=rz5j0Hdk3N6cWgfE03-Q@mail.gmail.com>
- <065f98ab-885d-4f5e-97e3-beef095b93f0@gmail.com>
- <774936dd-32b8-46f1-a849-2f8ea76a24ac@gmail.com>
+	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="nhKx0Tpw";
+	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="hvVysKG+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751053390; x=1751658190;
+	d=konsulko.se; s=rsa1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from;
+	bh=kip3maXOLhHraRuZCsgnHfHjSz1/RRGdLakbVWQIGCU=;
+	b=nhKx0TpwpR1Q4EEI1eKXo4iE+0w6MO6l1JqE9jkr7/k6K/5oyn5/HOiHpVJ42ACvYpzdP13OrMFxl
+	 OQHDswdqs8bE2sNFOcGmdWiC/zrd5BdvyCGns5BjNHFeYEPzoZIVzeo+1UwnTKsiSEooZ66vxTDlcj
+	 nXk7r2yTWWwEIHAHaKp1BFVXoXGRiZ6kWdbU68Zx2tVk9a75Zt5O7kN1Siq/PZTRURnU0p4iwBnYjm
+	 iJtu7mkiWe/KYsu7A+AMXjv0+FGYJOzVWEr9W5ibbOaPeZDSixJ6aH34+vpbo46VhSRzNqatw0tBLn
+	 3KlQbXocjuMmhJOtgyAnoNV/0JFBheg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751053390; x=1751658190;
+	d=konsulko.se; s=ed1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from;
+	bh=kip3maXOLhHraRuZCsgnHfHjSz1/RRGdLakbVWQIGCU=;
+	b=hvVysKG+OEzQSEGEPSRVQhnvKz1kZm0qnr+5Uzn59+GV/cP5isf4RK2KeQslXaOtRr0T+a9Xtnyux
+	 tI1oKScBA==
+X-HalOne-ID: f34261ec-538e-11f0-a53b-85eb291bc831
+Received: from smtpclient.apple (c188-150-224-8.bredband.tele2.se [188.150.224.8])
+	by mailrelay5.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
+	id f34261ec-538e-11f0-a53b-85eb291bc831;
+	Fri, 27 Jun 2025 19:43:09 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <774936dd-32b8-46f1-a849-2f8ea76a24ac@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
+Subject: Re: [PATCH v6 3/4] rust: add support for NUMA ids in allocations
+From: Vitaly Wool <vitaly.wool@konsulko.se>
+In-Reply-To: <aF7km7nm9ggoj2AW@pollux>
+Date: Fri, 27 Jun 2025 21:42:58 +0200
+Cc: linux-mm@kvack.org,
+ akpm@linux-foundation.org,
+ linux-kernel@vger.kernel.org,
+ Uladzislau Rezki <urezki@gmail.com>,
+ Alice Ryhl <aliceryhl@google.com>,
+ rust-for-linux@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EFAE3F9B-645F-4121-9B9A-7D7EE5B072ED@konsulko.se>
+References: <20250627181505.2080916-1-vitaly.wool@konsulko.se>
+ <20250627181638.2081102-1-vitaly.wool@konsulko.se> <aF7km7nm9ggoj2AW@pollux>
+To: Danilo Krummrich <dakr@kernel.org>
+X-Mailer: Apple Mail (2.3826.200.121)
 
-On Fri, Jun 27, 2025 at 12:16:09PM -0700, Kyle Sanderson wrote:
-> On 6/27/2025 12:07 PM, Kyle Sanderson wrote:
-> > On 6/26/2025 8:21 PM, Linus Torvalds wrote:
-> > > On Thu, 26 Jun 2025 at 19:23, Kent Overstreet
-> > > <kent.overstreet@linux.dev> wrote:
-> > > > 
-> > > > per the maintainer thread discussion and precedent in xfs and btrfs
-> > > > for repair code in RCs, journal_rewind is again included
-> > > 
-> > > I have pulled this, but also as per that discussion, I think we'll be
-> > > parting ways in the 6.17 merge window.
-> > > 
-> > > You made it very clear that I can't even question any bug-fixes and I
-> > > should just pull anything and everything.
-> > > 
-> > > Honestly, at that point, I don't really feel comfortable being
-> > > involved at all, and the only thing we both seemed to really
-> > > fundamentally agree on in that discussion was "we're done".
-> > > 
-> > >                Linus
-> > 
-> > Linus,
-> > 
-> > The pushback on rewind makes sense, it wasn’t fully integrated and was
-> > fsck code written to fix the problems with the retail 6.15 release -
-> > this looks like it slipped through Kents CI and there were indeed
-> > multiple people hit by it (myself included).
-> > 
-> > Quoting someone back to themselves is not cool, however I believe it
-> > highlights what has gone on here which is why I am breaking my own rule:
-> > 
-> > "One of the things I liked about the Rust side of the kernel was that
-> > there was one maintainer who was clearly much younger than most of the
-> > maintainers and that was the Rust maintainer.
-> > 
-> > We can clearly see that certain areas in the kernel bring in more young
-> > people.
-> > 
-> > At the Maintainer Summit, we had this clear division between the
-> > filesystem people, who were very careful and very staid, and cared
-> > deeply about their code being 100% correct - because if you have a bug
-> > in a filesystem, the data on your disk may be gone - so these people
-> > take themselves and their code very seriously.
-> > 
-> > And then you have the driver people who are a bit more 'okay',
-> > especially the GPU folks, 'where anything goes'.
-> > You notice that on the driver side it’s much easier to find young
-> > people, and that is traditionally how we’ve grown a lot of maintainers.
-> > " (1)
-> > 
-> > Kent is moving like the older days of rapid development - fast and
-> > driven - and this style clashes with the mature stable filesystem
-> > culture that demands extreme caution today. Almost every single patch
-> > has been in response to reported issues, the primary issue here is
-> > that’s on IRC where his younger users are (not so young, anymore - it is
-> > not tiktok), and not on lkml. The pace of development has kept up, and
-> > the "new feature" part of it like changing out the entire hash table in
-> > rc6 seems to have stopped. This is still experimental, and he's moving
-> > that way now with care and continuing to improve his testing coverage
-> > with each bug.
-> > 
-> > Kent has deep technical experience here, much earlier in the
-> > interview(1) regarding the 6.7 merge window this filesystem has been in
-> > the works for a decade. Maintainership means adapting to kernel process
-> > as much as code quality, that may be closer to the issue here.
-> > 
-> > If direct pulls aren’t working, maybe a co-maintainer or routing changes
-> > through a senior fs maintainer can help. If you're open to it, maybe
-> > that is even you.
-> > 
-> > Dropping bcachefs now would be a monumental step backward from the
-> > filesystems we have today. Enterprises simply do not use them for true
-> > storage at scale which is why vendors have largely taken over this
-> > space. The question is how to balance rigor with supporting new
-> > maintainers in the ecosystem. Everything Kent has written around
-> > supporting users is true, and publicly visible, if only to the 260 users
-> > on irc, and however many more are on matrix. There are plenty more that
-> > are offline, and while this is experimental there are a number of public
-> > sector agencies testing this now (I have seen reference to a number of
-> > emergency service providers, which isn’t great, but for whatever reason
-> > they are doing that).
-> > 
-> > (1) https://youtu.be/OvuEYtkOH88?t=1044
-> > 
-> > Kyle.
-> 
-> Re-sending as this thread seems to have typo'd lkml (removing the bad
-> entry).
 
-Thanks.
 
-Also, I think I should add, in case my words in the private conversation
-were misinterpreted:
+> On Jun 27, 2025, at 8:36=E2=80=AFPM, Danilo Krummrich =
+<dakr@kernel.org> wrote:
+>=20
+> On Fri, Jun 27, 2025 at 08:16:38PM +0200, Vitaly Wool wrote:
+>> Add support for specifying NUMA ids in Rust allocators as an Option
+>> (i. e. providing `None` as nid corresponds to NUMA_NO_NODE). To do
+>> this, modify ReallocFunc to use the new extended realloc primitives
+>> from the C side of the kernel (i. e. k[v]realloc_node/vrealloc_node)
+>> and add the new function alloc_node to the Allocator trait while
+>> keeping the existing one (alloc) for backward compatibility.
+>>=20
+>> This will allow to specify node to use for allocation of e. g.
+>> {KV}Box, as well as for future NUMA aware users of the API.
+>>=20
+>> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+>=20
+> Did you see [1]? I can't see the feedback being addressed.
+>=20
+> [1] https://lore.kernel.org/lkml/aF5-a-bUp1pD5tiS@pollux/
 
-I don't think bcachefs should be dropped from the kernel, I think it
-would be better for this to be worked out.
-
-I firstly want to reassure people that: if bcachefs has to be shipped as
-a DKMS module, that will not kill the project. It will be a giant hassle
-(especially if distributions have to scramble), but life will continue.
-I remain committed as ever to getting this done - one way or the other.
-
-And I think it is safe to say that going that route would be the better
-option for the sanity of myself and Linus, but it wouldn't be the better
-option for the users or the rest of the development community.
-
-With that, I am going to take a breather.
+Awkwardly enough, this one I did miss.=20=
