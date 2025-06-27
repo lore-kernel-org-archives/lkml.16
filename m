@@ -1,93 +1,102 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB4DB78F2E;
-	Fri, 27 Jun 2025 02:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5543770B;
+	Fri, 27 Jun 2025 02:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750990631; cv=none; b=KPPf8Fs2eu6XZbCwdjSDCPLG/AtJxhuDirkb0dtwqDrDbNXVnipeRQ/pqSFEUVKxOAp3irmJmlU1YkMHxXyjIK0LSDJdl9+V+1g8cXx5cua5NW2036hoojLbupzfvf1PnxbGMZLYqwKVIKIft7i+oYNQ6IRTRiSSWndbxwWcAL8=
+	t=1750990660; cv=none; b=WK+88+4VHnMUHJ+kle9bQzhnKzBnLLWfT4djEcZYbaHSVzgb3WBygDoGSk7Dy96bB2qWiLd8CL+G/84szxc2SwsLim49AI2r7pwu01dDneFDMrJeYVowhQDuTAokcXCu7TjXtFPpz+1wMJoBjSXN7ScQuaUIdYTEg7i+Ut76ZME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750990631; c=relaxed/simple;
-	bh=y69knhQjyqFnndBIw78Hms1l+Xk7SVjkc6Yaj5+r4QU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mSb8z0IVDPhlN3QWOPelnKy8xsLQNnX7f3XVWbyxmIRNeYA41tfek/skB+smmw3OswRmMzfXuxzRk8FaLCCdBq4iOIfrqPN6f/YAHze8gb5f48g0GuWtMuPD5gXGD03Or5V0gIiAaHXXGvDziorhoYoTCiSsyMNSdwVfvidozes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ArVd+/YJ; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750990660; c=relaxed/simple;
+	bh=6V8nhRdefhkJ5zpLgVnJaZ2+u6oFZCKcrQjsnL/ra8Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f5L0ZFB+UtNB+uqOj2NT1srWrNx9+Qt7iLhPEgeNpoDksIjKvCTeC+SUZL21HxkBRBYgLDWGjnbx78CAsYNJ/cCCLe9nbZoyGVDqagUjqNA/4WgVTrSySMsgdYscmIOcObsxAghCqPkHb3+j+Idiwx6I/Y7L+J2AGvhsn7G7wVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=egmTbhbm; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ArVd+/YJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=tc
-	/BQSujfSpTkh1XCLZ71AAIXQedB9w+B7U5bWFPNho=; b=ArVd+/YJjqOEl66hJG
-	eLqr/NhAjPpoMnBVbPy7zUY/D2/tgh9Rqy0NZ/Ay5INPWCn0b5GFR/2819UYOXls
-	M9xtp6ZYb0qWku2buk8ocLTfrdIx/Ap6IIgc+Pp4ckf5XmXPs+bMzJXPmwvX5LvU
-	P7LsG8zERshCtfvqRcSLT6tdc=
-Received: from 163.com (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id PCgvCgCH50IR_11oSw1RAQ--.45226S2;
-	Fri, 27 Jun 2025 10:16:51 +0800 (CST)
-From: Yuan Chen <chenyuan_fl@163.com>
-To: robdclark@gmail.com,
-	quic_abhinavk@quicinc.com
-Cc: linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	chenyuan_fl@163.com,
-	Yuan Chen <chenyuan@kylinos.cn>
-Subject: [PATCH] drm/msm: Add error handling for krealloc in metadata setup
-Date: Fri, 27 Jun 2025 10:16:43 +0800
-Message-Id: <20250627021643.58426-1-chenyuan_fl@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egmTbhbm"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a575a988f9so931009f8f.0;
+        Thu, 26 Jun 2025 19:17:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750990656; x=1751595456; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qn2gI/3dfst+MEJuneR4iiTqAk2R7396Prx/FoAmbtI=;
+        b=egmTbhbmxKdwe0ibT3qOdXzaC2HThjGBQ5PN3EQqdPcp1EWjFpBf5BzHxr7gN9QkhM
+         lSbFgShuUVLJIO9yaK+znBF7NkYHwT0mczvMlzkqZJBCSpqfXaZdOyDMQz1zWEMFRnz3
+         TGgBGkG97pD7qTAe5iyryq6kcDaR673NWplyjw6mHgvUPVu0Yo5mEPfeKUgpSc4CrMB1
+         jA0I9gwU2B8s+E/7W3o01AtxnTVcwy+IGpEA4EsypCnHiWeGKxZyFTv2oXs5IGNdkT9a
+         J7E/DJSozrOOJDgK0j6M5uMZZNKE4SxUYNIB6dybeuNcKgbH3zexV1UukoznVN4AGczg
+         HZ/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750990656; x=1751595456;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qn2gI/3dfst+MEJuneR4iiTqAk2R7396Prx/FoAmbtI=;
+        b=JvCoL2qcIi+jLYwPTWJKVqrGLRvmmYGGASXSQy8EbRSAoPjQpHbjSvdI5/cjNCPq5N
+         Gwo9zBN1YzNcw3raWXwUzLjZWv8rwjMgrcPoupg9aYhdiqVxXS5X8dDCR3ehzs8o3Foy
+         wnI6IsDEzu1JI3g1xGNsznz/C+Ryv5QbC4kRtDu3GpCpc72u0HOo3PpaAbWAEX+KPY7h
+         7ZVGvfGi0JnLqLdLLoahLWnYD57WhoSRZ1jiHrREq3aTU8mKM4idy4NoBvUulfjk2F8g
+         TlRiXrlvwmWUZIBxpZSH+VKJWF40zVjAdp+b0V1Y+qRUeugh92va36mvyRNJbMpUaqkb
+         huLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVIlDgjFNZX6qH42HnC1PBhwxRO7TogZ8wuxqg8aHJJMcmDGWI+zdd63H1fiwCrpqXH5qY=@vger.kernel.org, AJvYcCVRlfNr+xQQ/jdyOelM8KNgREc7g9AW/oQo/ROakCjXLD9CrSOQnD1E7j090RStA6cGcz10W6cCHpYAy/bx@vger.kernel.org, AJvYcCWz6/LHM4KBqT6tKg/VUR85lplOgLm05K6JdJsMBqJgNFnuHBaHt3L9k2WP0xwJLaoEs5ebxzja@vger.kernel.org, AJvYcCXovL52Qaks7AFMAIWkXsw990UzQ9aJ8CoNxrqM8gKnLP76zq2MNiArfwlHa2aDruQ/MWySEhK4tSOgmA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCqI2iwjeU9fsOpzvk2MSe3DhrZOpw0pwHg8kmnQqjK2LQWoWG
+	S0txiCojvoZfplsGK/ojIe2ZP4Pg4QTF58q3yRBA0AunluGCz/4IFYDrO1zv54ZFm4idpJgzmMu
+	ZeJZV4EYB8k7zxsqNdHuSdgdE8shmNKo=
+X-Gm-Gg: ASbGnctT7XdZNbuJZfgmGPeoLACXrItdHbybIGjzJ17Zv0+dioyLF0ngl//kJyPmqZV
+	ADBY6LFd57tMeP+nkT8ddwKeEGyJR6s7mfQwZBLm6ywTp+DJQea2hNCKvlSURLOSg0GJeQkwdYI
+	rVABEx0blpxIF+PPRZVs4BaoBqMkrL5XeUwSETkuFgFER5/6D6U5KI39dNgpJ7gxhtqPq2IGY8
+X-Google-Smtp-Source: AGHT+IE2MKCnXyEXatn+1v7zmEwzvFt7APJouIXo9tXLXDVY1OnZPhfs+VXXtMDsVTuxieWP3fZVO70t9t08XpJyYj8=
+X-Received: by 2002:a05:6000:4013:b0:3a5:7904:b959 with SMTP id
+ ffacd0b85a97d-3a90b9bfc9bmr1234289f8f.58.1750990656109; Thu, 26 Jun 2025
+ 19:17:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PCgvCgCH50IR_11oSw1RAQ--.45226S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7CrWxWrW7CFWftr18AF43ZFb_yoW8JFy8pF
-	W7Gr1SqrWqvwnrWw47Aa1fCFy5G3W8Ww45CrZFvw17Zw18KF1UXFWqyw40yFy2vFy8J3Z2
-	van2kFyfXr1qyr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEWE_ZUUUUU=
-X-CM-SenderInfo: xfkh05pxdqswro6rljoofrz/1tbiNxB4vWhc+8Rt6wABsu
+References: <20250627121206.31048e14@canb.auug.org.au>
+In-Reply-To: <20250627121206.31048e14@canb.auug.org.au>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 26 Jun 2025 19:17:25 -0700
+X-Gm-Features: Ac12FXwEgzgRlWLKS_TuEb3UyrZGzL4sLA755bo2s92uzjKkD1UTCsThCLKf8fo
+Message-ID: <CAADnVQLo4-jSRh5J=tNeEnN_3Rsxy0zOGccYdfqe934+jteVjA@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the bpf-next tree with the
+ vfs-brauner tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Christian Brauner <brauner@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Networking <netdev@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, Song Liu <song@kernel.org>, 
+	Viktor Malik <vmalik@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Yuan Chen <chenyuan@kylinos.cn>
+On Thu, Jun 26, 2025 at 7:12=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote:
+>
+> Hi all,
+>
+> Today's linux-next merge of the bpf-next tree got a conflict in:
+>
+>   kernel/bpf/helpers.c
+>
+> between commit:
+>
+>   535b070f4a80 ("bpf: Introduce bpf_cgroup_read_xattr to read xattr of cg=
+roup's node")
+>
+> from the vfs-brauner tree and commit:
+>
+>   e91370550f1f ("bpf: Add kfuncs for read-only string operations")
+>
+> from the bpf-next tree.
 
-Function msm_ioctl_gem_info_set_metadata() now checks for krealloc
-failure and returns -ENOMEM, avoiding potential NULL pointer dereference.
-Explicitly avoids __GFP_NOFAIL due to deadlock risks and allocation constraints.
-
-Signed-off-by: Yuan Chen <chenyuan@kylinos.cn>
----
- drivers/gpu/drm/msm/msm_drv.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index f316e6776f67..993502a86d0a 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -551,6 +551,7 @@ static int msm_ioctl_gem_info_set_metadata(struct drm_gem_object *obj,
- 					   u32 metadata_size)
- {
- 	struct msm_gem_object *msm_obj = to_msm_bo(obj);
-+	void *new_metadata;
- 	void *buf;
- 	int ret;
- 
-@@ -568,8 +569,14 @@ static int msm_ioctl_gem_info_set_metadata(struct drm_gem_object *obj,
- 	if (ret)
- 		goto out;
- 
--	msm_obj->metadata =
-+	new_metadata =
- 		krealloc(msm_obj->metadata, metadata_size, GFP_KERNEL);
-+	if (!new_metadata) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	msm_obj->metadata = new_metadata;
- 	msm_obj->metadata_size = metadata_size;
- 	memcpy(msm_obj->metadata, buf, metadata_size);
- 
--- 
-2.25.1
-
+Our emails raced in www :)
+A minute ago merged vfs's branch into bpf-next/master,
+resolved this conflict and pushed to /master and /for-next.
