@@ -1,172 +1,80 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048572EBBA3;
-	Fri, 27 Jun 2025 19:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D9420C000;
+	Fri, 27 Jun 2025 19:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751052726; cv=none; b=i4tQ7nZSXvRS1Pb0f0XDwpzK626rTUIGUfTRt0CDMcfHNnhjdy91R0aOB8PSkYr+Uc8m+xhjJkx4KuzH4TqIDA8OPkLc/vS4SGXPoYbGYm0nlDJgNo6g3/pfTbXTJtkkTWPHEl9C4o9AhJnrbF3/OjBB1G86UvYL5F0FgytyW/Q=
+	t=1751052760; cv=none; b=FRkGFebyGXMWiEShsEmR+8h/qJziNsrH6Pon6X7MqpGrKH4eUa90MSZHVeL85s1W5mQzZ1rn8W0dJDFDZIZOHUhBAsP/MtpQil9IxNFi4HBuoPDDe2l9ptd/eAg9l/f1wS7waY4oyIKBwgGQhjjkl+aPXMmrx2gYHDpaUYp/Kms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751052726; c=relaxed/simple;
-	bh=OmkwvJTCg9uftU+D1x+MegluB/qmhXQnYLMchcdtboI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VU0BKuQFnq0/7SkhM01MVT8TAQOzX7qlp0g3JKGPHg6bJ8VB6wpcq89k7iBDcKuNgTExwXWFshkUQS3oaTTZ6vTznoNCvzCB/n/q17RHUndPTm2DAUi8V0LEKecd8wF9j/5E6NJbWSyQtDFJ+LlK+MZKmMwA1SekYVt+QSnnXb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pDQSiQ1+; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1751052760; c=relaxed/simple;
+	bh=N2LlGZclOXCw7TE47Z4FmdVZl/MFbgtwae0FgUWZL2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ef3KTRa6N2QbBmvR/D3tDAdqU+aP5bPctMQLaOZ7lubsE9Tv4LJXxS1jpdNMCcMXdFYmCchuTNXMBgrAASmdCUleFa2/FhCXJKzFdss7j1BKpDh8OHZI138ZdLTt8Wb/1xOZl8norinuzpEDACqolP5kFgalS2EpY9jPop3nnv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUkCoLLa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pDQSiQ1+"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55RJVppO2496974;
-	Fri, 27 Jun 2025 14:31:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1751052711;
-	bh=IsmC7YBYLmO/IpP84oFzjb88vBYm7nSf6TjgsuwpSqY=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=pDQSiQ1+cQqO547LwgYMRGy+oMhly/INy1eCQ2edPoQus286hjCKMwI10wdtSzA+7
-	 6YbgIMShghzvNO+fsMnfbyJZ3SKFQigpgnEnZFKgY50j92rAfsEkDjcRZTce1PMulu
-	 QAnM12CWoI83aCJ6KhpGBSuayRO47Rc90f4kpVjA=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55RJVp4Q3531647
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 27 Jun 2025 14:31:51 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 27
- Jun 2025 14:31:50 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Fri, 27 Jun 2025 14:31:50 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55RJVo3k3598018;
-	Fri, 27 Jun 2025 14:31:50 -0500
-Date: Fri, 27 Jun 2025 14:31:50 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-CC: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
-        <rogerq@kernel.org>, <tony@atomide.com>, <lee@kernel.org>,
-        <d-gole@ti.com>, <robertcnelson@gmail.com>, <jkridner@gmail.com>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <m-leonard@ti.com>, <praneeth@ti.com>, <afd@ti.com>
-Subject: Re: [PATCH v2] regulator: tps65219: Fix devm_kmalloc size allocation
-Message-ID: <20250627193150.nxer4zuowaejzp4v@unarmored>
-References: <20250620154541.2713036-1-s-ramamoorthy@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUkCoLLa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 612E6C4CEE3;
+	Fri, 27 Jun 2025 19:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751052759;
+	bh=N2LlGZclOXCw7TE47Z4FmdVZl/MFbgtwae0FgUWZL2M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZUkCoLLaU+FTuL7hpCLEOfDH1TS1ct5XQxvZZ3ato8k61iiYYzo1jMiIU1mP4ENfi
+	 +xjZnNF9JCXUMZohhtLqd6jyEHtZ93jZKH1f0x/yCMB6+Nj1rATZJ/JLTgvsu0Fe02
+	 QkusVYMyS+y7Uj8BoZysWD9dafU68FeBu0oZhnRZRnP4GZ5nC0iduGWsaksCVzu7Vv
+	 2/KtYm/b66UTC4Km9MDhYKEsgsnZ5B2HNu6FSjr+jZF/5fKTlvVOePNEknLwZ9mVfu
+	 b5s+hHSZ4/fdpVSaNXHn/4Sjx9ei4R9iT6oxYthUPP1hz0qGGZe47XMQ+j9AeSv2CU
+	 V6AMNI0c75fXg==
+Date: Fri, 27 Jun 2025 14:32:38 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Conor Dooley <conor+dt@kernel.org>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>, linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-mmc@vger.kernel.org,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v2] dt-bindings: mmc: renesas,sdhi: Document RZ/T2H and
+ RZ/N2H support
+Message-ID: <175105275812.4046920.1856778113483721034.robh@kernel.org>
+References: <20250617164914.158091-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250620154541.2713036-1-s-ramamoorthy@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <20250617164914.158091-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On 10:45-20250620, Shree Ramamoorthy wrote:
-> In probe(), two arrays of structs are allocated with the devm_kmalloc()
-> function, but the memory size of the allocations were given as the arrays'
-> length (pmic->common_irq_size for the first call and pmic->dev_irq_size for
-> the second devm_kmalloc call). The memory size should have been the total
-> memory needed.
+
+On Tue, 17 Jun 2025 17:49:14 +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> This led to a heap overflow when the struct array was used. The issue was
-> first discovered with the PocketBeagle2 and BeaglePlay. The common and
-> device-specific structs are now allocated one at a time within the loop.
+> Add SDHI bindings for the Renesas RZ/T2H (a.k.a R9A09G077) and RZ/N2H
+> (a.k.a R9A09G087) SoCs. Use `renesas,sdhi-r9a09g057` as a fallback since
+> the SD/MMC block on these SoCs is identical to the one on RZ/V2H(P),
+> allowing reuse of the existing driver without modifications.
 > 
-> Fixes: 38c9f98db20a ("regulator: tps65219: Add support for TPS65215 Regulator IRQs")
-> Reported-by: Dhruva Gole <d-gole@ti.com>
-> Closes: https://lore.kernel.org/all/20250619153526.297398-1-d-gole@ti.com/
-> Tested-by: Robert Nelson <robertcnelson@gmail.com>
-> Acked-by: Andrew Davis <afd@ti.com>
-> Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+> Update the binding schema to reflect differences: unlike RZ/V2H(P),
+> RZ/T2H and RZ/N2H do not require the `resets` property and use only a
+> two clocks instead of four.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
-> v2: Update commit message explanation & tags.
+> v1->v2:
+> - Added the high speed clock to the clocks list.
 > ---
-
-Kasan also reports the same on latest next :(
-https://gist.github.com/nmenon/a0a020e8417c198d2f366fa00b900e12
-
-Could this be routed to master please?
-
-Reviewed-by: Nishanth Menon <nm@ti.com>
-
->  drivers/regulator/tps65219-regulator.c | 28 +++++++++++++-------------
->  1 file changed, 14 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/regulator/tps65219-regulator.c b/drivers/regulator/tps65219-regulator.c
-> index b16b300d7f45..5e67fdc88f49 100644
-> --- a/drivers/regulator/tps65219-regulator.c
-> +++ b/drivers/regulator/tps65219-regulator.c
-> @@ -436,46 +436,46 @@ static int tps65219_regulator_probe(struct platform_device *pdev)
->  					     pmic->rdesc[i].name);
->  	}
->  
-> -	irq_data = devm_kmalloc(tps->dev, pmic->common_irq_size, GFP_KERNEL);
-> -	if (!irq_data)
-> -		return -ENOMEM;
-> -
->  	for (i = 0; i < pmic->common_irq_size; ++i) {
->  		irq_type = &pmic->common_irq_types[i];
->  		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
->  		if (irq < 0)
->  			return -EINVAL;
->  
-> -		irq_data[i].dev = tps->dev;
-> -		irq_data[i].type = irq_type;
-> +		irq_data = devm_kmalloc(tps->dev, sizeof(*irq_data), GFP_KERNEL);
-> +		if (!irq_data)
-> +			return -ENOMEM;
-> +
-> +		irq_data->dev = tps->dev;
-> +		irq_data->type = irq_type;
->  		error = devm_request_threaded_irq(tps->dev, irq, NULL,
->  						  tps65219_regulator_irq_handler,
->  						  IRQF_ONESHOT,
->  						  irq_type->irq_name,
-> -						  &irq_data[i]);
-> +						  irq_data);
->  		if (error)
->  			return dev_err_probe(tps->dev, PTR_ERR(rdev),
->  					     "Failed to request %s IRQ %d: %d\n",
->  					     irq_type->irq_name, irq, error);
->  	}
->  
-> -	irq_data = devm_kmalloc(tps->dev, pmic->dev_irq_size, GFP_KERNEL);
-> -	if (!irq_data)
-> -		return -ENOMEM;
-> -
->  	for (i = 0; i < pmic->dev_irq_size; ++i) {
->  		irq_type = &pmic->irq_types[i];
->  		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
->  		if (irq < 0)
->  			return -EINVAL;
->  
-> -		irq_data[i].dev = tps->dev;
-> -		irq_data[i].type = irq_type;
-> +		irq_data = devm_kmalloc(tps->dev, sizeof(*irq_data), GFP_KERNEL);
-> +		if (!irq_data)
-> +			return -ENOMEM;
-> +
-> +		irq_data->dev = tps->dev;
-> +		irq_data->type = irq_type;
->  		error = devm_request_threaded_irq(tps->dev, irq, NULL,
->  						  tps65219_regulator_irq_handler,
->  						  IRQF_ONESHOT,
->  						  irq_type->irq_name,
-> -						  &irq_data[i]);
-> +						  irq_data);
->  		if (error)
->  			return dev_err_probe(tps->dev, PTR_ERR(rdev),
->  					     "Failed to request %s IRQ %d: %d\n",
-> 
-> base-commit: 75f5f23f8787c5e184fcb2fbcd02d8e9317dc5e7
-> -- 
-> 2.43.0
-> 
+>  .../devicetree/bindings/mmc/renesas,sdhi.yaml | 85 ++++++++++++-------
+>  1 file changed, 53 insertions(+), 32 deletions(-)
 > 
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+
