@@ -1,91 +1,130 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from joooj.vinc17.net (joooj.vinc17.net [155.133.131.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F86223316;
-	Fri, 27 Jun 2025 07:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BDF221FA4;
+	Fri, 27 Jun 2025 07:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.133.131.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751010485; cv=none; b=AXV7FypHY6SUluySf8ga0zxOYFr44OPRvx/mocS/BvntBzJPpuiatnubGB/fZxARN+dqHDfP391geeP/04llNvoKXiVzfqim3mLd/K5J6CgrDpTlpZQh8Ii/VLPX61imR3rQFfI3ssY7XwfxzsJKu3PkBFZJuN1TXwJNoBBeVd0=
+	t=1751010569; cv=none; b=l43VtB9pQ/qkRBEMiyk5yapdX1KHwlehuXbOF1PeN9C7WMFPjtB2L6RfxgDaThptv3SG/4l9lKutqQe0xsenKeZBpZF2LiBTGV459zmO86hiRd07h8seO9kFGhh4lkXpwgG1FJ9St3um/VqSC1JJ1lz7SDAvf65Pf8IzhRyu4Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751010485; c=relaxed/simple;
-	bh=e3ZY0/pui2Vz7RrxJYmby3liH1RgnHTQdK37ii9ibXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=aKyKbmncDvBM6SMiT3gLqhd8MXHQNYRx5eyBdPcyx2ynr5iBi3BrQ+XKm2mfyjHUF2sCRzowHblBPOSJxODolUc2/KHFt+s+GnCq//xbPcx3yqoMkhZfbAhTgRA/b/KfpJNnt6eX7DAfGAa1sxfVxtykQ25eWUEogaL0nhllLac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=dpAqmKjb; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dpAqmKjb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751010480;
-	bh=fy1EyAnTjmeVxDb3+C3bDInrgdQUJPABqEglxufnHMc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=dpAqmKjbtjoe+0ay92ZjIMNIQNALLlNt8+P8idx0KXqgdZvFw3Xwru4AKmDVSUbUB
-	 Izi7qTq1zLpaVBz0uZxIqfhJTELQKCzKKASYXzs3/xCKS9b3j+dMKPjIFK+n8map6Q
-	 AGOsjEQqy3bYGERWWjChcp4sGLRhI2a9SManYqIkCwhwV/+2xRCWgrXw3Ggg0Gy3J5
-	 lRZhLY2ik7X5+xcozERs6Gn2DiHp/8HRWwJb3jFM6ZjZkILPu9qX+uDl/WManNZTMq
-	 rIFgK2fdpoDv7JFDeptO9RnW/8Ispr3eJlxM7vh0/QvzD8DDSDDiUwK7h5ProzK6fo
-	 sZEXeJGrNAG+A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bT72S2YNYz4x5d;
-	Fri, 27 Jun 2025 17:47:59 +1000 (AEST)
-Date: Fri, 27 Jun 2025 17:47:59 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov
- <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>
-Cc: Viktor Malik <vmalik@redhat.com>, bpf <bpf@vger.kernel.org>, Networking
- <netdev@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the bpf-next tree
-Message-ID: <20250627174759.3a435f86@canb.auug.org.au>
+	s=arc-20240116; t=1751010569; c=relaxed/simple;
+	bh=BCaO2ybR5yvOCiJnt5S+ARqflw3kao+Hl1RZmeDRtZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L0y0f65Zq0XvkxyDEXbtLBRg5x7b4lQygSYAiDGfF4hkXlK6CErtZx1EVXzsLG5sFrqd6gKNNs6GJNfGe6AgB1wYM0DtFF6rxqMpo+iEXgJjAendths0L0vuiW7EsPaKq8Eht1HZ4J40zeemTgu/IbIzOyMxnjr/XlVdsX7X+zM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vinc17.net; spf=pass smtp.mailfrom=vinc17.net; arc=none smtp.client-ip=155.133.131.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vinc17.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinc17.net
+Received: from smtp-qaa.vinc17.net (2a02-8428-1b1d-4d01-96a9-491d-7b48-ba31.rev.sfr.net [IPv6:2a02:8428:1b1d:4d01:96a9:491d:7b48:ba31])
+	by joooj.vinc17.net (Postfix) with ESMTPSA id 7D841197;
+	Fri, 27 Jun 2025 09:49:25 +0200 (CEST)
+Received: by qaa.vinc17.org (Postfix, from userid 1000)
+	id 3D581CA045B; Fri, 27 Jun 2025 09:49:25 +0200 (CEST)
+Date: Fri, 27 Jun 2025 09:49:25 +0200
+From: Vincent Lefevre <vincent@vinc17.net>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: Jilayne Lovejoy <opensource@jilayne.com>, seabass-labrax@gmx.com,
+	Carlos O'Donell <carlos@redhat.com>,
+	"Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org,
+	linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
+Subject: Re: man-pages-6.14 released
+Message-ID: <20250627074925.GJ2809@qaa.vinc17.org>
+Mail-Followup-To: Vincent Lefevre <vincent@vinc17.net>,
+	Alejandro Colomar <alx@kernel.org>,
+	Jilayne Lovejoy <opensource@jilayne.com>, seabass-labrax@gmx.com,
+	Carlos O'Donell <carlos@redhat.com>,
+	"Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org,
+	linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
+References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
+ <20250509112627.GA924923@if>
+ <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
+ <20250509121454.GA952723@if>
+ <3e82680d-149c-4a67-b838-bc73c0be3e4e@redhat.com>
+ <e363mzanav4inu3wtk5pmyzfwlquxr5kwh7ytk5emtayizi7qi@dqxritlnl22g>
+ <42dad79f-e0f2-4731-ac14-0189f5d278a0@redhat.com>
+ <20250627002011.GA431181@qaa.vinc17.org>
+ <wwtmtg6ar6gfxvezbcendmcuo3zzgferrmqvhvutos7vp3er2q@xljv6kkogidj>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/tXxknDF54A1Q.Q8AAv6kdW+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <wwtmtg6ar6gfxvezbcendmcuo3zzgferrmqvhvutos7vp3er2q@xljv6kkogidj>
+X-Mailer-Info: https://www.vinc17.net/mutt/
+User-Agent: Mutt/2.2.13+86 (bb2064ae) vl-169878 (2025-02-08)
 
---Sig_/tXxknDF54A1Q.Q8AAv6kdW+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2025-06-27 06:23:26 +0200, Alejandro Colomar wrote:
+> > I've always heard that a copyright notice was optional and only
+> > informative (so, in particular, there are no requirements to have
+> > per-file copyright notices instead of a single one for the work).
+> 
+> I tend to agree with you.  I'll invoke some SPDX people, which might
+> clarify our legal doubts.  I suspect they're lawyers or have contact
+> with lawyers.
+> 
+> For context to the SPDX people, we're discussing if the following is
+> valid or not:
+> 
+> There were a lot of old copyright notices, each with its own format,
+> some more formal, some less...
+> 
+> That was a huge mess, and the copyright notices were not always
+> respected: for example, in cases code has been moved from one file to
+> another, and the copyright notices weren't carried over.  In other
+> cases, some people (including myself) significantly modified some files,
+> but forgot to add a copyright notice for themselves.
+> 
+> So, I eventually decided to unify the copyright notices for the entire
+> project, so that the copyright notices would look like
+> 
+> 	Copyright, the authors of the Linux man-pages project
+> 
+> And then a top-level AUTHORS file would list every author.  This is
+> quite more accurate than the previous copyright notices.  However, some
+> contributors are concerned that it might be illegal to modify those
+> copyright notices without express written permission.
+> 
+> I've sent email to everyone whose copyright notice has been modified,
+> and I got around a third of explicit approvals, but the other two thirds
+> remained silent (in some cases, the emails probably don't exist, the
+> people are dead, or they don't read the email anymore).  Notably, nobody
+> has explicitly said no.
+> 
+> What do you think?
 
-Hi all,
+There is actually a more important issue: it appears that the man
+pages are not all distributed under the same license (according to
+"SPDX-License-Identifier:"), so that some care would have had do be
+done when copying text from one man page to another one. That said,
+I would tend to think that when such text has been copied, this was
+for related man pages, and there is a chance that such man pages are
+distributed under the same license. Unifying the licenses by asking
+the authors / copyright holders would be a great thing to do.
 
-After merging the bpf-next tree, today's linux-next build (htmldocs)
-produced this warning:
+Now, about the copyright notices, you also need to give the full
+list of the licenses that can apply, as some license may require
+the copyright notice to have some restricted form (such as being
+included in the file itself).
 
-kernel/bpf/helpers.c:3465: warning: expecting prototype for bpf_strlen(). P=
-rototype was for bpf_strnlen() instead
-kernel/bpf/helpers.c:3557: warning: expecting prototype for strcspn(). Prot=
-otype was for bpf_strcspn() instead
+For instance, the GPL licenses have
 
-Introduced by commit
+  To do so, attach the following notices to the program. It is safest
+  to attach them to the start of each source file to most effectively
+  convey the exclusion of warranty; and each file should have at least
+  the "copyright" line and a pointer to where the full notice is
+  found.
 
-  e91370550f1f ("bpf: Add kfuncs for read-only string operations")
+(or "state" instead of "convey"), for which this seems clear that
+the current decision is OK.
 
---=20
-Cheers,
-Stephen Rothwell
+I think that among the licences listes under LICENSES, only
+Linux-man-pages-1-para could be problematic, but only 18 files
+are concerned.
 
---Sig_/tXxknDF54A1Q.Q8AAv6kdW+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmheTK8ACgkQAVBC80lX
-0GzBHAf/Tyvc5FiGRv0lq0rtA4R0nVYIOKub58TcVsAZYu2Zu6vMPRHw1tUT8s93
-YSgSDch5CxrCGcNid7d2Lob3JcFI7T7TsdGBSjCthQxZzhbiaR94+oewqq/L02Fj
-lq7vvfV7qJ/1M+mtOMYBB0sCdp9/0jzFeSNV5JJkkibh20K15OU/NizUMfnxytlf
-+0QcVRnMc86E3jiJHMac/GuumkHCpxF2nGrPBpg7py32RTJ/q0GdHG8LbsVhcb70
-QP0tiK+IMQMx5IuI+GBHz+JeSlZttw2Hz0hC1RRwajjYXaTzHHF4yuhmtQGptPbA
-wbOIR2QlE90HiFs19Oeo7JW6ZXbaTg==
-=qmkn
------END PGP SIGNATURE-----
-
---Sig_/tXxknDF54A1Q.Q8AAv6kdW+--
+-- 
+Vincent Lefèvre <vincent@vinc17.net> - Web: <https://www.vinc17.net/>
+100% accessible validated (X)HTML - Blog: <https://www.vinc17.net/blog/>
+Work: CR INRIA - computer arithmetic / Pascaline project (LIP, ENS-Lyon)
