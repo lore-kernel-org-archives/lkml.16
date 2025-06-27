@@ -1,172 +1,198 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9DC19D8A8;
-	Fri, 27 Jun 2025 19:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22FD81F419B;
+	Fri, 27 Jun 2025 19:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751051772; cv=none; b=bpuibZwV+DSDqe4lZTkk36G2uOMpZLERfSNWvYik2BXjbPBy3rRKTBXbJV2Xas3z2ufpUPmJ661BGS2WuY5XSV8OhTva0lXkevAycYruN32RRhptonbMhd3Pln6vK7RKUD2vRahFWHGpsOaoPRyE+/W3XPpX00slyv4xghchBXE=
+	t=1751051852; cv=none; b=PWIUWIykVZgw9ljoUv5F2H+f48y3cv+XEKF1zXhpE7AFIFvfKLxOSz85dcfeLPijwikWN+9Hp8tx5cPZfmNKZy6ubJOS3rE8SPHqSAQtnZYOTy4vkV7zHWdmdbXkxwQghA51sSRC5QAfqqKsnvaLlmY06n0DPU1UgnCWCJkH/E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751051772; c=relaxed/simple;
-	bh=dutVWxABHdKOTL+kXEyaD/WsyC1WgC3gkxbZufJPzb8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Thrpv+nyAV1hpRrlZSg7Y29r6NUs4LzDGMRWMZUqvuUZBP+mYnAWeTYP4coLhurJ0ZaW3XJ3TGbpWVMrHuJaZ0zwn7McyF8Y41sb3uF91NS4NgFOPi7ZIbju6eR80u8mlGNWP5Hf44NnkqlP9+b9nO6zqgOfhhd6Wnp97uVJKdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fLDFnzJ+; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751051852; c=relaxed/simple;
+	bh=4tIY5Xv1aq93hm2eYGyz9mdC6DOUVIOyHjZ+4y79CfQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=heKClivohQ+CJCNhLYY1emnM7phdOvATrmhkBN72RSJp/iQa9f/Vr3cyGwWsoe5Ah/+0TzchRgpQDv+BGhm5Nsq9Bbe9oED0FmkJjesRxW++bEdLVP4Ab6jL5VjBH+jMBS6Lqu38WtDRYdD5JTy1AVz9Sc8s8dBIxAQVhkt6+uM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MrokVCE/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fLDFnzJ+"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-748e1816d4cso195070b3a.2;
-        Fri, 27 Jun 2025 12:16:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751051770; x=1751656570; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tS0gPt0Ngw3XgWlRV3zh4CMlac6wfNf6E8w0knAheoE=;
-        b=fLDFnzJ+V4UILan0JZJbgj+4Wf0ZlhMNDGh0ydGLoUzaTgX3SK1CfELBgfbEBMYWdq
-         LutvTTfWDzN+JzxWzV4inqfnzHh4rL9DEquCXcRr++jQ9rApRyA5yYyJWqxGvsrzeybv
-         HXLpRXZ05Cs68gZbPybEYrDn2O0Vfnv4nFSR0fhNxtzz2sRb1EgE+0a4aCFgxOmrwT/w
-         xii+yBAkRghDJoRMYd03xQLsg7HZWDczITISNU28YXh8Q8yIWybcGqdHymmzC3RLRu30
-         QRhBnrYDKTvZ/4xeH+GmSLkI9hENXIm31hlBNnwSQTOVJ7JUJipZtxzoGbH8shiptOh2
-         wxeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751051770; x=1751656570;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tS0gPt0Ngw3XgWlRV3zh4CMlac6wfNf6E8w0knAheoE=;
-        b=jid8158dUiBzPqKflUxxe309diNRcJIjNehTubpTiT+j4PQoInGg4ishq/yv5DsI1m
-         zFGvprMhqGuzPWiZB8YYrIU81C4QR9P/cMb/NZEEVp+e3R2EepoT0NOQppDzttF3lbqt
-         MO/TooXLCA+lrnzX1KgzZb18z8zDP25iweeqKlcCETZ0GzusGJhZMRxSjZCtOqt6rdhV
-         YXJhIpJbA9D3jcNBypBqOmb5fWZDelcNo1zw2bJunKIIsIrAJUHPtaHujmHGgIrrWw+b
-         G5D0f68/12o6c0qjcl07H88cku0cdaP07TBmZijaYJM2/1eG+ycPZRvc4jzqrfGDFoKk
-         aNsg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+iabngTKwoB8Mbt0bXBdPZsu7IW+LJAiF6ytPZiS0xNFYRh3GnD6gv2kUmbEK7AKpm32amjfi58V2U5Pq@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOQ1QFY49claNhVOxGONlJOZyA+YY3lpCFt3hx8ZY/edv+Fp57
-	2uT9RCyPEsIOWtUdkXpRHwLEyT2hoFjqZpswuWYpYu+YMar06KJt1NhVOY5+jshU
-X-Gm-Gg: ASbGnctOnPFZu1gYo30vhdxDAJqtvv5SeMtvugxLSGgBvINK7zJpuDkirMUBNediJcp
-	OGS/Z8WwCQwFHQ9YcwcstUQzNxye+aX9mD6GSAVitxRrP914IqaJWCvnegvbcuNPKC28EOwrHyJ
-	0rzqMAK4v9lxNT2XCstlxgQhSEKcLWRX/jyOZGxIdX68zqmA8sA5pRxrW4z3biwfJ2d9sVhdrht
-	j+tC0mSvIthEtSWBkk87ncJh5HCmVD8Cc3+ONoaTWbux6suNyR9qm6g5P1ecK/+vYrwo1y3VEsl
-	G+0e+0kn4eQ0G1rdDLUlGDUkN1nebhM9Mo9UmpYw8HKBMn1757wWcXJts5tFQG6SrcPrO2lsAmE
-	w+dThiDdahwOvvxamnIG7CmkXpuBOJDsnc2IJ
-X-Google-Smtp-Source: AGHT+IGpmDwMN1YUPNEHK2ONYM5CH3fvYhtrvNkCB9HVntdGgFj2nm3VDW7TQ351DL+yIe6QvKArwQ==
-X-Received: by 2002:a05:6a00:340d:b0:732:18b2:948 with SMTP id d2e1a72fcca58-74b0a4ed5f8mr236636b3a.1.1751051769616;
-        Fri, 27 Jun 2025 12:16:09 -0700 (PDT)
-Received: from [172.30.157.194] (S0106a85e45f3df00.vc.shawcable.net. [174.7.235.4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541e7f0sm2841738b3a.64.2025.06.27.12.16.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 12:16:09 -0700 (PDT)
-Message-ID: <774936dd-32b8-46f1-a849-2f8ea76a24ac@gmail.com>
-Date: Fri, 27 Jun 2025 12:16:09 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MrokVCE/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 891C0C4CEE3;
+	Fri, 27 Jun 2025 19:17:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751051851;
+	bh=4tIY5Xv1aq93hm2eYGyz9mdC6DOUVIOyHjZ+4y79CfQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MrokVCE/iHGDnWfI2S2bpRHqVDTYWrOZjsS0Notwml4J1ce0uUyE0NYLMuxXrF4lL
+	 Gv8LJBYbedx1LqCCpBGikDCZggPY3HiPXy/DFIDkU5pmH4TC3mD7if3RPMp98TUkPx
+	 eOh6yRKMGs3LvXWwt/R7PUQpnz4M50xkqBZGg9wqFmfpn3psUG7Y4Oq3430IkwNbuJ
+	 Ym9DWQ7ES8tkLTsb4ybKl/bsoDxb0/i1Ae8lFNy+RBRCDTqZij0bd3e7EPK30+atEl
+	 QZhPzW6UwC0SH6Zj6DBR3tOnr1tIHtauojq/XTNg9+HePZ38UAfwwgREf4uO+E0Orp
+	 1F1HqILr8Mhzg==
+Date: Fri, 27 Jun 2025 14:17:30 -0500
+From: Rob Herring <robh@kernel.org>
+To: Michael Riesch <michael.riesch@collabora.com>
+Cc: Diederik de Haas <didi.debian@cknow.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Jagan Teki <jagan@amarulasolutions.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Collabora Kernel Team <kernel@collabora.com>,
+	Kever Yang <kever.yang@rock-chips.com>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org
+Subject: Re: [PATCH 2/5] dt-bindings: phy: rockchip-inno-csi-dphy: add rk3588
+ variant
+Message-ID: <20250627191730.GA4025458-robh@kernel.org>
+References: <20250616-rk3588-csi-dphy-v1-0-84eb3b2a736c@collabora.com>
+ <20250616-rk3588-csi-dphy-v1-2-84eb3b2a736c@collabora.com>
+ <DAOVBOKLXLS2.S9MXDD29X68J@cknow.org>
+ <e9db11c2-b02d-4fd5-8927-7b5857089533@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] bcachefs fixes for 6.16-rc4
-From: Kyle Sanderson <kyle.leet@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Kent Overstreet <kent.overstreet@linux.dev>,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <ahdf2izzsmggnhlqlojsnqaedlfbhomrxrtwd2accir365aqtt@6q52cm56jmuf>
- <CAHk-=wi+k8E4kWR8c-nREP0+EA4D+=rz5j0Hdk3N6cWgfE03-Q@mail.gmail.com>
- <065f98ab-885d-4f5e-97e3-beef095b93f0@gmail.com>
-Content-Language: en-CA
-In-Reply-To: <065f98ab-885d-4f5e-97e3-beef095b93f0@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e9db11c2-b02d-4fd5-8927-7b5857089533@collabora.com>
 
-On 6/27/2025 12:07 PM, Kyle Sanderson wrote:
-> On 6/26/2025 8:21 PM, Linus Torvalds wrote:
->> On Thu, 26 Jun 2025 at 19:23, Kent Overstreet 
->> <kent.overstreet@linux.dev> wrote:
->>>
->>> per the maintainer thread discussion and precedent in xfs and btrfs
->>> for repair code in RCs, journal_rewind is again included
->>
->> I have pulled this, but also as per that discussion, I think we'll be
->> parting ways in the 6.17 merge window.
->>
->> You made it very clear that I can't even question any bug-fixes and I
->> should just pull anything and everything.
->>
->> Honestly, at that point, I don't really feel comfortable being
->> involved at all, and the only thing we both seemed to really
->> fundamentally agree on in that discussion was "we're done".
->>
->>                Linus
+On Wed, Jun 18, 2025 at 09:45:32AM +0200, Michael Riesch wrote:
+> Hi Diederik,
 > 
-> Linus,
+> Thanks for your comments!
 > 
-> The pushback on rewind makes sense, it wasn’t fully integrated and was 
-> fsck code written to fix the problems with the retail 6.15 release - 
-> this looks like it slipped through Kents CI and there were indeed 
-> multiple people hit by it (myself included).
+> On 6/17/25 16:12, Diederik de Haas wrote:
+> > Hi,
+> > 
+> > I'm (unfortunately) not seeing any @rock-chips.com recipients ...
 > 
-> Quoting someone back to themselves is not cool, however I believe it 
-> highlights what has gone on here which is why I am breaking my own rule:
+> Oops, I meant to include at least Kever, but forgot to do it. Will do in v2.
 > 
-> "One of the things I liked about the Rust side of the kernel was that 
-> there was one maintainer who was clearly much younger than most of the 
-> maintainers and that was the Rust maintainer.
+> Cc: Kever
 > 
-> We can clearly see that certain areas in the kernel bring in more young 
-> people.
-> 
-> At the Maintainer Summit, we had this clear division between the 
-> filesystem people, who were very careful and very staid, and cared 
-> deeply about their code being 100% correct - because if you have a bug 
-> in a filesystem, the data on your disk may be gone - so these people 
-> take themselves and their code very seriously.
-> 
-> And then you have the driver people who are a bit more 'okay', 
-> especially the GPU folks, 'where anything goes'.
-> You notice that on the driver side it’s much easier to find young 
-> people, and that is traditionally how we’ve grown a lot of maintainers.
-> " (1)
-> 
-> Kent is moving like the older days of rapid development - fast and 
-> driven - and this style clashes with the mature stable filesystem 
-> culture that demands extreme caution today. Almost every single patch 
-> has been in response to reported issues, the primary issue here is 
-> that’s on IRC where his younger users are (not so young, anymore - it is 
-> not tiktok), and not on lkml. The pace of development has kept up, and 
-> the "new feature" part of it like changing out the entire hash table in 
-> rc6 seems to have stopped. This is still experimental, and he's moving 
-> that way now with care and continuing to improve his testing coverage 
-> with each bug.
-> 
-> Kent has deep technical experience here, much earlier in the 
-> interview(1) regarding the 6.7 merge window this filesystem has been in 
-> the works for a decade. Maintainership means adapting to kernel process 
-> as much as code quality, that may be closer to the issue here.
-> 
-> If direct pulls aren’t working, maybe a co-maintainer or routing changes 
-> through a senior fs maintainer can help. If you're open to it, maybe 
-> that is even you.
-> 
-> Dropping bcachefs now would be a monumental step backward from the 
-> filesystems we have today. Enterprises simply do not use them for true 
-> storage at scale which is why vendors have largely taken over this 
-> space. The question is how to balance rigor with supporting new 
-> maintainers in the ecosystem. Everything Kent has written around 
-> supporting users is true, and publicly visible, if only to the 260 users 
-> on irc, and however many more are on matrix. There are plenty more that 
-> are offline, and while this is experimental there are a number of public 
-> sector agencies testing this now (I have seen reference to a number of 
-> emergency service providers, which isn’t great, but for whatever reason 
-> they are doing that).
-> 
-> (1) https://youtu.be/OvuEYtkOH88?t=1044
-> 
-> Kyle.
+> > 
+> > On Tue Jun 17, 2025 at 10:54 AM CEST, Michael Riesch via B4 Relay wrote:
+> >> From: Michael Riesch <michael.riesch@collabora.com>
+> >>
+> >> The Rockchip RK3588 variant of the CSI-2 DPHY features two reset lines.
+> >> Add the variant and allow for the additional reset.
+> >>
+> >> Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
+> >> ---
+> >>  .../bindings/phy/rockchip-inno-csi-dphy.yaml       | 60 ++++++++++++++++++++--
+> >>  1 file changed, 55 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/phy/rockchip-inno-csi-dphy.yaml b/Documentation/devicetree/bindings/phy/rockchip-inno-csi-dphy.yaml
+> >> index 5ac994b3c0aa..6755738b13ee 100644
+> >> --- a/Documentation/devicetree/bindings/phy/rockchip-inno-csi-dphy.yaml
+> >> +++ b/Documentation/devicetree/bindings/phy/rockchip-inno-csi-dphy.yaml
+> >> @@ -21,6 +21,7 @@ properties:
+> >>        - rockchip,rk3326-csi-dphy
+> >>        - rockchip,rk3368-csi-dphy
+> >>        - rockchip,rk3568-csi-dphy
+> >> +      - rockchip,rk3588-csi-dphy
+> >>  
+> >>    reg:
+> >>      maxItems: 1
+> >> @@ -39,18 +40,49 @@ properties:
+> >>      maxItems: 1
+> >>  
+> >>    resets:
+> >> -    items:
+> >> -      - description: exclusive PHY reset line
+> >> +    minItems: 1
+> >> +    maxItems: 2
+> >>  
+> >>    reset-names:
+> >> -    items:
+> >> -      - const: apb
+> >> +    minItems: 1
+> >> +    maxItems: 2
+> >>  
+> >>    rockchip,grf:
+> >>      $ref: /schemas/types.yaml#/definitions/phandle
+> >>      description:
+> >>        Some additional phy settings are access through GRF regs.
+> >>  
+> >> +allOf:
+> >> +  - if:
+> >> +      properties:
+> >> +        compatible:
+> >> +          contains:
+> >> +            enum:
+> >> +              - rockchip,px30-csi-dphy
+> >> +              - rockchip,rk1808-csi-dphy
+> >> +              - rockchip,rk3326-csi-dphy
+> >> +              - rockchip,rk3368-csi-dphy
+> >> +              - rockchip,rk3568-csi-dphy
+> >> +    then:
+> >> +      properties:
+> >> +        resets:
+> >> +          items:
+> >> +            - description: exclusive PHY reset line
+> >> +
+> >> +        reset-names:
+> >> +          items:
+> >> +            - const: apb
+> >> +
+> >> +      required:
+> >> +        - reset-names
+> >> +    else:
+> >> +      properties:
+> >> +        resets:
+> >> +          minItems: 2
+> >> +
+> >> +        reset-names:
+> >> +          minItems: 2
 
-Re-sending as this thread seems to have typo'd lkml (removing the bad 
-entry).
+You have to define the names. Ideally, at the top level and then keep 
+this part like this.
 
-Kyle.
+> >> +
+> >>  required:
+> >>    - compatible
+> >>    - reg
+> >> @@ -59,7 +91,6 @@ required:
+> >>    - '#phy-cells'
+> >>    - power-domains
+> >>    - resets
+> >> -  - reset-names
+> >>    - rockchip,grf
+> >>  
+> >>  additionalProperties: false
+> >> @@ -78,3 +109,22 @@ examples:
+> >>          reset-names = "apb";
+> >>          rockchip,grf = <&grf>;
+> >>      };
+> >> +  - |
+> >> +    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
+> >> +    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
+> >> +
+> >> +    soc {
+> >> +        #address-cells = <2>;
+> >> +        #size-cells = <2>;
+> >> +
+> >> +        csi_dphy0: phy@fedc0000 {
+> >> +            compatible = "rockchip,rk3588-csi-dphy";
+> >> +            reg = <0x0 0xfedc0000 0x0 0x8000>;
+> >> +            clocks = <&cru PCLK_CSIPHY0>;
+> >> +            clock-names = "pclk";
+> >> +            #phy-cells = <0>;
+> >> +            resets = <&cru SRST_CSIPHY0>, <&cru SRST_P_CSIPHY0>;
+> >> +            rockchip,grf = <&csidphy0_grf>;
+> >> +            status = "disabled";
+> >> +        };
+> >> +    };
+> > 
+> > ... which could hopefully tell us what the value is/should be for the
+> > *required* 'power-domains' property, which is missing in this example.
+> > IOW: the binding example is invalid according to its own binding.
+> 
+> Huh, indeed. Hm. Why didn't make dt_binding_check warn me about that?!
+
+You disabled the node, what do you want us to check?
+
+Rob
