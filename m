@@ -1,233 +1,157 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0EB2980CD;
-	Fri, 27 Jun 2025 10:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38729296168
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751018810; cv=none; b=ZUfbL6fmLcxVFY+5cMEGhBp8REecg9MLc/y8cr9K7dD7Lj5L00SAjR2N7WIOW3gywZMCuXQEqIA9j3jLn++gbg9xExBA1kAQzV1d1u+f8oUk6a1o1K3lsXdwSlPk72Nr3HA1DqX3OCaU2yoY1MUDxW7JZEtl+o7ypFcN5HdQWy4=
+	t=1751018823; cv=none; b=jhKLJmdJpT4TtsUCs3mlM+/2wocQcbgAITazBNo7Ra5dXvJ5bJBkK49m0W6ziN4HvWNLDGO9GX4pzaGJCvZytEUJLQFiTwLTs6/UUNE9Y6r0WQ5lsn1J4ZU7S0Jdl+XefBygMhYf6WtRL/ikFdIJkITp9niRnejbnAl+iVnstE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751018810; c=relaxed/simple;
-	bh=r0YnwAalgTRGHMtfmaMXLEDkTNOEImu3iRSewaoDnpk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MbWuXKlQP4fvWco1jeZAIdMa21k+RdNs7z6M+EJzq1r22PvMLx5aDnvNJMoX3tk207nMCkZNLJ0Ar2LvFab9J7qu3YOGGvLHOFObHDagJoow3+qonrJouxLeNfvx+KgZRteiMH7raiR2dasprje+xT2lXVmNTJ1WpMedXuxkV4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jlcSzDPR; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751018823; c=relaxed/simple;
+	bh=+IXYk0BLsk9VOjPdYK0JSoHlaBQmpqTb5SeExnFFEbc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YLPj72MMAKN561Q3j4zWZVoZqtfLwy/uadosueRWW2ZY/eTP/CbrbAHO6EspH23RvPl2pJLBcx6B/XEAsg9j42DHMMnjy8Ft8SS4F+cNo+b0m3E3Infnexq0/3fLsaQ5wSXnXS7FmwtBxFGNrmGONYaZYjMj/hKSu8nhOJhk7iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PzHNWuRI; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jlcSzDPR"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a577f164c8so275756f8f.2;
-        Fri, 27 Jun 2025 03:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751018807; x=1751623607; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JxXlLI+5RHgcRNLRoMQn0tLo5umStcod1M6mXH84eyE=;
-        b=jlcSzDPRu9NsUsYc+JrqOHwG2ZID3Xfgj3VFsVNiRuEOgJczt6YnywkNSToRPAFbQz
-         OWBPm1yDjq8AFWEFSr47GPia2NTPxq0ziwYPNduVCxsZ7ada/oNZ/nGQoMk0kIW1pws4
-         Nc9IdHhjetOSEKzByhfm6Smau/FVgZ4I/R/DRKRM0LO8V9XZznrQw7ILrfJkpW2cSfRK
-         PTPow5puKf2TQms0i4RhFFP276Ug5NEIQd7jXuOpA4J0/WHP9qWyFPdF0xeVhUY+tUbo
-         Eu3iv6+BJLCJ/CWg63sIz+uesE7RweCmBFPhI0vWvLILwEiI5yRLLzPadkIt4ygiXwIp
-         0GSw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PzHNWuRI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751018821;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uYXXAceZfrCUqpQ9OsgNrpmSa7NX1ldTsGlTcQdd5wI=;
+	b=PzHNWuRINO8x9Gopq4f/mEFCrmSvjM688Jqv04bPQzU6SH8cO4ImSmpko5dtFzngoc8i6K
+	m2ilxQdRAe/SkQpdZgcoV2YKoGdVSzSYg+wVwHmVPB/9gpmzHMbT/4qnRndTSXMy0gsdx0
+	M6sGr2CTgIV0NasJ9vSjKRxOudDkYDQ=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-658-e-hRwPPnM9qFZMWgx4XfXw-1; Fri, 27 Jun 2025 06:06:58 -0400
+X-MC-Unique: e-hRwPPnM9qFZMWgx4XfXw-1
+X-Mimecast-MFC-AGG-ID: e-hRwPPnM9qFZMWgx4XfXw_1751018817
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f55ea44dso840807f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 03:06:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751018807; x=1751623607;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JxXlLI+5RHgcRNLRoMQn0tLo5umStcod1M6mXH84eyE=;
-        b=KsbQe2NOuVl+UxYgC9kxw9JVkb0B0IvE/2JesOUTomcGbsgB8qAYpCIgBVPLS4YkMo
-         otK0wqVagmFSSjJr3PxNnhdJ9hjByvj1HOhsUMMCr30xXxEPPSWnYWWLtAWe3ndNov5O
-         T43C+/Gl/i76WOEKsMIDabPvq4WQ6PCPBwFMmn1gYeDY7opY2pPDPZpeuDgmw2G4ZgoR
-         YJwvYfoow+92CoYFI3W+zq/zd5M50kWRkR4xOXCL/Vm5Fq10z8PGBriMGW7VkIWoDciU
-         q3bY+l3/UQQj/Qah9URMszUQLcIw7hh8bRET5o1q3qUQhCtc/EOimqGtLdYHb9KRZNk9
-         /g5g==
-X-Forwarded-Encrypted: i=1; AJvYcCV1DjnFFrKO3Jw2jgW8z8qupS9GfMGTA+Xx0ljna/d99492mEhWTmjjWv2+B3O+2HF8O30ELdQGJZQEyAI=@vger.kernel.org, AJvYcCVYjkMk3cGo7aVDpIVd9u/2drAlrhCDfxzv3q9pqos/aSNAbMlb/asbxGE9A4CrL42gKMRWx/osLyt7FM0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsfIUA3YTTWWJQkaVzDlnhbG9x9vsNLHNZVu8YCrTa2L+r6xho
-	4vdLYg9OXkNxCvOtRCQp9KCwYZv83qV5UR7eHUPufUeUp/Z5uZ1nOX8X
-X-Gm-Gg: ASbGnctiVPg0eGme8X0aN2di5jDl7yoS/BjP+xYE+n5gTW/OTwf2mTY8AJCvvUWqs4K
-	ylYEjZUeUqyjuxUsGCH+bp/sPj9hzk3sPj3QDCaSg08zfikZjs6IyGbiuH8RjBSXCjSdLxNkEAE
-	swSxrfTfEoK+uHFPJijTnzTCKjDP4N60qcQBobKIA6wI/XVF1lBrAVqpT6tcCN84BM+sM6dEfAc
-	nWt4xhKmT64a0CyYm9V29l4oZsMwyZ9P64+jWk7DnVRlD9Q2OMpc2EovHOJM+bmxIMaTbzyPqtQ
-	1Y70LdcVyWFGYSGfEWa9lS14bO9MWxymR5lRl42Q8ZABkjqwbtZuzrlMWbaiXBrlX95NPizNnRu
-	6KryJ5i8U2yQEJUBNc7KIUk1q
-X-Google-Smtp-Source: AGHT+IGPWENIh37fy0usHQ/GxRQDWqrtNlHrDfI+wS47KXWgE9P6pSxGpvKCA6RJwezPYbisfZU3uw==
-X-Received: by 2002:a05:600c:358d:b0:453:8c5:95d3 with SMTP id 5b1f17b1804b1-4538ee5d303mr10792245e9.7.1751018806659;
-        Fri, 27 Jun 2025 03:06:46 -0700 (PDT)
-Received: from localhost.localdomain ([156.208.147.213])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538233c05csm75908545e9.5.2025.06.27.03.06.45
+        d=1e100.net; s=20230601; t=1751018817; x=1751623617;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uYXXAceZfrCUqpQ9OsgNrpmSa7NX1ldTsGlTcQdd5wI=;
+        b=UtcJf2fQI4fPr/k/+v2SIEbwBU/p2//qN6xsHTb3uGxUMgPoUMu5Rb0z32ynOhDPcC
+         fzbZSIgi4NcbLuWgbupBb1e8hYS2vn4Mu8R7/ymX55iI5FiZSzHLjSZyVqj7jYcXjHv3
+         keCFeBvBzgOpMaBUmzhhzTpyl3RBcxMTBIaJW9H1LCgtz+aa6SbCda/pSCqGgvVGkzm0
+         GI/EtaSg8jfg9HI5Ti2Xc5NhljRLNFlCCadhk1rxGt0o2NWnlsPo/K1Rbo6V9s1NnhZa
+         pGYKadxmzZ2V73SOtnq6TPneYCEChpZlACkiflBdJpNUZG/3WJSOaHzRBVDYaN89GXl3
+         cixg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLzxDPss/LoUCVUvulr0k3H6ErSDDFJ5h2Pg15twZvvvoc0sLRn+ZfdrGXzAtbR+4Z8LM47EqSZ9OnLA0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzlvgc2j97aTdRxZuWpnsi8xVsGWGnHF5l7K3RktAS3xNPn/Bd0
+	blu4/EriqZf90+zriyubpgWCHPSfAJBpyCuw/2wQq5l86l9oLo4nm0LtKmO1UcYgnRfS8Ymydck
+	kA1R4VP9qmVE8YdhUoYLcKKdNpTD+HcuoININ0XW9w4tu/2fH9QqyvoSAP0IwUDpG6Q==
+X-Gm-Gg: ASbGncvWJFBSsnzohMq2MYUorXV0sJwsYqaERyWDQORiyfnPSZtioqya2Q6eAfh9CDB
+	D2nE7h8nnTg+AbYw6kLNjuBAfe0y3lHXkaC5eueeRRjUf2Rq+FxEbrT1G6h6Iy6i8dzC8vJY3io
+	pdqm8rRYoi74UwB2jaS+2uLY/BxAD4pFF5OaMcZJZCMoXQQt+l58Lxc5OOAFrIR5XMmHMYv62tS
+	CCNqkzNcrzCwEVK2WlzeUalYTDMX99IK/K3zvrAxGpHCcSj4+ZwOpOsf8ksOPtfuu9U+SMnz0n0
+	Jp6lvVRRwtzm7gP2HvuZdGnCL+9jEi41B9ORHyGwuKu/sAB4jfwyu8IKJRqeUe04l9UxFkETsR0
+	h8yhl
+X-Received: by 2002:a05:6000:23c8:b0:3a4:eef9:818a with SMTP id ffacd0b85a97d-3a8ff51fb85mr1792636f8f.27.1751018816826;
+        Fri, 27 Jun 2025 03:06:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGjPZ2YyzP07UvUHeXF1IowQrFwAxVkZWw/RrEy4ehDzyrnnvfw0IfiYAn/CtAHUzPqxVhAtQ==
+X-Received: by 2002:a05:6000:23c8:b0:3a4:eef9:818a with SMTP id ffacd0b85a97d-3a8ff51fb85mr1792609f8f.27.1751018816340;
+        Fri, 27 Jun 2025 03:06:56 -0700 (PDT)
+Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f918sm2247895f8f.100.2025.06.27.03.06.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 03:06:46 -0700 (PDT)
-From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-To: andy@kernel.org,
-	hdegoede@redhat.com,
-	mchehab@kernel.org,
-	sakari.ailus@linux.intel.com,
-	gregkh@linuxfoundation.org
-Cc: linux-kernel-mentees@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	skhan@linuxfoundation.com,
-	dan.carpenter@linaro.org,
-	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>,
-	Hans de Goede <hansg@kernel.org>
-Subject: [PATCH v5] staging: media: atomisp: remove debug sysfs attributes active_bo and free_bo
-Date: Fri, 27 Jun 2025 13:06:04 +0300
-Message-Id: <20250627100604.29061-1-abdelrahmanfekry375@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 27 Jun 2025 03:06:55 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Luca Weiss <luca.weiss@fairphone.com>, Krzysztof Kozlowski
+ <krzk@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Helge Deller <deller@gmx.de>,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] dt-bindings: display: simple-framebuffer: Add
+ interconnects property
+In-Reply-To: <DAX7ZB27SBPV.2Y0I09TVSF3TT@fairphone.com>
+References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
+ <20250623-simple-drm-fb-icc-v2-1-f69b86cd3d7d@fairphone.com>
+ <20250627-mysterious-optimistic-bird-acaafb@krzk-bin>
+ <DAX7ZB27SBPV.2Y0I09TVSF3TT@fairphone.com>
+Date: Fri, 27 Jun 2025 12:06:54 +0200
+Message-ID: <87o6u9birl.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-The sysfs attributes active_bo and free_bo expose internal buffer
-state used only for debugging purposes. These are not part of
-any standard kernel ABI, and need to be removed before this
-driver may be moved out of drivers/staging.
+"Luca Weiss" <luca.weiss@fairphone.com> writes:
 
-- Remove active_bo and free_bo attributes
-- Remove group registration calls form hmm_init() and hmm_cleanup()
+> Hi Krzysztof,
+>
+> On Fri Jun 27, 2025 at 10:08 AM CEST, Krzysztof Kozlowski wrote:
+>> On Mon, Jun 23, 2025 at 08:44:45AM +0200, Luca Weiss wrote:
+>>> Document the interconnects property which is a list of interconnect
+>>> paths that is used by the framebuffer and therefore needs to be kept
+>>> alive when the framebuffer is being used.
+>>> 
+>>> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/display/simple-framebuffer.yaml | 3 +++
+>>>  1 file changed, 3 insertions(+)
+>>> 
+>>> diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>>> index 296500f9da05e296dbbeec50ba5186b6b30aaffc..f0fa0ef23d91043dfb2b220c654b80e2e80850cd 100644
+>>> --- a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>>> +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>>> @@ -79,6 +79,9 @@ properties:
+>>>    power-domains:
+>>>      description: List of power domains used by the framebuffer.
+>>>  
+>>> +  interconnects:
+>>> +    description: List of interconnect paths used by the framebuffer.
+>>> +
+>>
+>> maxItems: 1, or this is not a simple FB anymore. Anything which needs
+>> some sort of resources in unknown way is not simple anymore. You need
+>> device specific bindings.
+>
+> The bindings support an arbitrary number of clocks, regulators,
+> power-domains. Why should I artificially limit the interconnects to only
+> one?
+>
 
-Suggested-by: Hans de Goede <hansg@kernel.org>
-Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
----
-v5:
-- remove stray change
+I agree with Luca here. There are device specific bindings for the device
+specific drivers. But this is about the generic drivers that are able to
+scan out using a system provided framebuffer.
 
-v4: https://lore.kernel.org/all/20250627072939.21447-1-abdelrahmanfekry375@gmail.com/
-- fix typos
+The display controller is setup by the firmware but it might need a set
+of clocks, power domains, regulators, etc left enabled in order to work.
 
-v3: https://lore.kernel.org/all/20250624170746.47188-1-abdelrahmanfekry375@gmail.com/
-- remove blank line
+It's true that the "simple" is a misnomer, probably these drivers should
+had been named sysfb and sysfbdrm, or something along those lines.
 
-v2: https://lore.kernel.org/all/20250624144943.39297-1-abdelrahmanfekry375@gmail.com/
-- add Suggested-by line
-- remove unnecessary comments
+> The driver code also has that support added in this series.
+>
+> Regards
+> Luca
+>
+>>
+>> Best regards,
+>> Krzysztof
+>
 
-v1: https://lore.kernel.org/all/20250624130841.34693-1-abdelrahmanfekry375@gmail.com/
+-- 
+Best regards,
 
----
- drivers/staging/media/atomisp/pci/hmm/hmm.c | 91 ---------------------
- 1 file changed, 91 deletions(-)
-
-diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/staging/media/atomisp/pci/hmm/hmm.c
-index 84102c3aaf97..f998b57f90c4 100644
---- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
-+++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
-@@ -28,88 +28,6 @@ struct hmm_bo_device bo_device;
- static ia_css_ptr dummy_ptr = mmgr_EXCEPTION;
- static bool hmm_initialized;
-
--/*
-- * p: private
-- * v: vmalloc
-- */
--static const char hmm_bo_type_string[] = "pv";
--
--static ssize_t bo_show(struct device *dev, struct device_attribute *attr,
--		       char *buf, struct list_head *bo_list, bool active)
--{
--	ssize_t ret = 0;
--	struct hmm_buffer_object *bo;
--	unsigned long flags;
--	int i;
--	long total[HMM_BO_LAST] = { 0 };
--	long count[HMM_BO_LAST] = { 0 };
--	int index1 = 0;
--	int index2 = 0;
--
--	ret = scnprintf(buf, PAGE_SIZE, "type pgnr\n");
--	if (ret <= 0)
--		return 0;
--
--	index1 += ret;
--
--	spin_lock_irqsave(&bo_device.list_lock, flags);
--	list_for_each_entry(bo, bo_list, list) {
--		if ((active && (bo->status & HMM_BO_ALLOCED)) ||
--		    (!active && !(bo->status & HMM_BO_ALLOCED))) {
--			ret = scnprintf(buf + index1, PAGE_SIZE - index1,
--					"%c %d\n",
--					hmm_bo_type_string[bo->type], bo->pgnr);
--
--			total[bo->type] += bo->pgnr;
--			count[bo->type]++;
--			if (ret > 0)
--				index1 += ret;
--		}
--	}
--	spin_unlock_irqrestore(&bo_device.list_lock, flags);
--
--	for (i = 0; i < HMM_BO_LAST; i++) {
--		if (count[i]) {
--			ret = scnprintf(buf + index1 + index2,
--					PAGE_SIZE - index1 - index2,
--					"%ld %c buffer objects: %ld KB\n",
--					count[i], hmm_bo_type_string[i],
--					total[i] * 4);
--			if (ret > 0)
--				index2 += ret;
--		}
--	}
--
--	/* Add trailing zero, not included by scnprintf */
--	return index1 + index2 + 1;
--}
--
--static ssize_t active_bo_show(struct device *dev, struct device_attribute *attr,
--			      char *buf)
--{
--	return bo_show(dev, attr, buf, &bo_device.entire_bo_list, true);
--}
--
--static ssize_t free_bo_show(struct device *dev, struct device_attribute *attr,
--			    char *buf)
--{
--	return bo_show(dev, attr, buf, &bo_device.entire_bo_list, false);
--}
--
--
--static DEVICE_ATTR_RO(active_bo);
--static DEVICE_ATTR_RO(free_bo);
--
--static struct attribute *sysfs_attrs_ctrl[] = {
--	&dev_attr_active_bo.attr,
--	&dev_attr_free_bo.attr,
--	NULL
--};
--
--static struct attribute_group atomisp_attribute_group[] = {
--	{.attrs = sysfs_attrs_ctrl },
--};
--
- int hmm_init(void)
- {
- 	int ret;
-@@ -130,14 +48,6 @@ int hmm_init(void)
- 	 */
- 	dummy_ptr = hmm_alloc(1);
-
--	if (!ret) {
--		ret = sysfs_create_group(&atomisp_dev->kobj,
--					 atomisp_attribute_group);
--		if (ret)
--			dev_err(atomisp_dev,
--				"%s Failed to create sysfs\n", __func__);
--	}
--
- 	return ret;
- }
-
-@@ -145,7 +55,6 @@ void hmm_cleanup(void)
- {
- 	if (dummy_ptr == mmgr_EXCEPTION)
- 		return;
--	sysfs_remove_group(&atomisp_dev->kobj, atomisp_attribute_group);
-
- 	/* free dummy memory first */
- 	hmm_free(dummy_ptr);
---
-2.25.1
+Javier Martinez Canillas
+Core Platforms
+Red Hat
 
