@@ -1,361 +1,203 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E1F78F59;
-	Fri, 27 Jun 2025 01:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A835813C8FF;
+	Fri, 27 Jun 2025 01:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750989243; cv=none; b=C0XH2uyazsOVD3RJgZDBDC+Tqk35q/WZDOZI3zm/eZrLO0Z/frAZVLDcjcD288hsY4W4sOIsxV99Rj7SmTJIeVKHjDRjLDtUxs5lpyjKq2bKXodJ6FoXfoXU1aqS5v08ZodlzJh+m522FDyxj4hh2t6x/AKNO6wgLlp+ojD1DIY=
+	t=1750989268; cv=none; b=KD+nxFpAtNVPBEArO1EdaWY4s/TCw5/WdzRgJ//XSoN38h7GlR95+JhY5itah/Ccr+WMIEQlmqaaQ4iDRxvLqF7rZQBY5awoSQowHBDiq/qmNIdpqIuLTFU4y/vuWcNkE2XKBwUjTvn2rQoJV2oGxppOL4Yi+J6ZwD3GrjZl5Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750989243; c=relaxed/simple;
-	bh=9/3UKOq/ZQWjiyH2+5gwYB5rh+qnO3UVXnq2yd/Qzi4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cdhslQ94mlCOoEBbY5RxPFvhgnv7uZQTPxfZ6eNOsBvIb9YPibOowTp6TzP9RbeMDJB1SZ9QKaGDPQXNoSf+DmTxoGUQH1O/blFwlGjuaveSs+WWo93kIrlNFL+AFn2uWhFyCkkBu1knXfql00APr4xmhaIMiXTiSgAmqBVHrpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=H8rIpnHs; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HPS+Ga3t; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	s=arc-20240116; t=1750989268; c=relaxed/simple;
+	bh=Es267rRXGE5VjzmtVxJncSw1FEz0XMXDDYpFqsXjyNA=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ETRHWRgsL8UhoE/M5Twp7D3nvQlNOtZDK6heztAyBfv/dJN2rnGVRZoZaIhEbA4FW5S0gzm3K/sV1nMLrRuTfypvfpwGC5x9sOnjlik3ceyrrzGaYLzCJ67T6CfLClrD02Mhew98RsGWvPGTo0weW4sJwB8jflHqko9ApIGLXYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=aXHmAF36; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="H8rIpnHs";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HPS+Ga3t"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id 5A134EC008F;
-	Thu, 26 Jun 2025 21:54:00 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Thu, 26 Jun 2025 21:54:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1750989240;
-	 x=1751075640; bh=R7H+I8t7+/Sphir7DxxTWFcy0tOG7sN1kMnh2M9QQ6Q=; b=
-	H8rIpnHsbIi7WbZGpuOBTXtft2R20fmeMWkXozKVC/yLQCHHOF2S+UHZKsROKZHt
-	eQjFiKZSu0lTiQVN/h6fktXY7Nkgg+iMy9vGNCCBX7Shg4RJ9ACAt9WMb6vJQdyW
-	3YFz558H58CBidel8rXZPOIGJEigJ0zjp7xmsf9aSrzX3H9DmyBOpDV/aabD0RIX
-	WGpBkGyEU2eOlRU9PMQgQbl5OCj3n//zBK6QKVs2BTE+k/TWCZjDhXvrnwZKc/0r
-	Lk8zji5CTEZoJUcNvjqYpmv+fhAJUQzH9Bo+M/U8yclKSqU2+uoWWqgUIrghN+/T
-	R3VskE5OsVFFxie10KQxbA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1750989240; x=1751075640; bh=R7H+I8t7+/Sphir7DxxTWFcy0tOG7sN1kMn
-	h2M9QQ6Q=; b=HPS+Ga3tEIvpTV+r7lskSdp5zVwBAvx/+jsB/lc7JmUeTQwXdq/
-	atE2VzMrH8OYNwrfBxdvIB/Yv15i9d0J4p9qvcZHV4OQzXb42GV80vXMLM0esg2X
-	FF0Nsd8vB+ZEwtwnJ7oQEVgbygQQjB3f33IC3yH54WZkc3n3rV84cpwauG4OBWpS
-	5KY7coCopdvyKf6aEAJp/lXyFcZcAscilXIJeXdlWfVSCUV8TYoi8kyzoQLkdhHW
-	edeKcJFFBl4nrvELio3MMp/0HDWODb9SVXn4qRyYb12GZ2Cg00+JFwbYYHLljo5L
-	Duo5Fro7RtzX9GjZmj8SkLYJa1yCKHm0F6w==
-X-ME-Sender: <xms:uPldaHI-wbFv1kW67jyqZYgMd_sqOEtnTUqnx-uUR2Jl4hHjHgU0nQ>
-    <xme:uPldaLIecALaDN6wlV2o1IySIzSbLn7VeM3fUI7PBLps74yuZcyhkrZdhi8qmb4MI
-    gIyiVshB_WDRw>
-X-ME-Received: <xmr:uPldaPtVyWSa6sSoRJK-YvNbQckrvLf4-vOv9ekgK1F_MtuVoy19So9rdEewPcsY8NdkgpIF7FF4iZlWQ4twI42sCJhh8hpIKg4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddujeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrrhgvkhcuofgr
-    rhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomhgrrhhmrghrvghksehinhhvihhsih
-    gslhgvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepieeluddvkeej
-    ueekhfffteegfeeiffefjeejvdeijedvgfejheetuddvkeffudeinecuffhomhgrihhnpe
-    hkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpehmrghrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrd
-    gtohhmpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
-    pehmihhrihgrmhdrrhgrtghhvghlrdhkohhrvghnsghlihhtsehinhhtvghlrdgtohhmpd
-    hrtghpthhtoheptgholhhinhdrihdrkhhinhhgsehgmhgrihhlrdgtohhmpdhrtghpthht
-    oheplhhinhhugidqfihirhgvlhgvshhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvh
-X-ME-Proxy: <xmx:uPldaAaKQP-iWQSqIszMQJsvuzGnLCFW0gW5mQneOXQz1pZvrzcedg>
-    <xmx:uPldaObsR1gshmVWza6uxh9r5SVNktR2PMmOxXmJ9rIPwAvQZVzuAQ>
-    <xmx:uPldaEAeZY6UjCIkfZ3YjutAyrOlwR45OVlkrkXB-kZb4mPvkZf80Q>
-    <xmx:uPldaMby2E8Jz7zWbAFNXeUSSIt8-ZTwaGWCXaLRXmJ_1lJhTAkx4g>
-    <xmx:uPldaHBfI527JH89ur_Otguop4uyo6h7SjoQpqBQA0DAISXbG54QBQTX>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 26 Jun 2025 21:53:59 -0400 (EDT)
-Date: Fri, 27 Jun 2025 03:53:57 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Colin Ian King <colin.i.king@gmail.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: iwlwifi stopped working with AX200 (6.16-rc3 regression)
-Message-ID: <aF35tbqxHtyj9fJO@mail-itl>
-References: <aF35FqJAw63NSl63@mail-itl>
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="aXHmAF36"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1750989264;
+	bh=Es267rRXGE5VjzmtVxJncSw1FEz0XMXDDYpFqsXjyNA=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=aXHmAF36FzIhrxG+54gPyEfxH4rI0cCegg+rRNlIw/Kpo1InaSIuLyoUI2NcTNJP7
+	 X6gCS8hOG9OBBx3yhQrvRgK7cHteOPgZJHBDRWzzmNI9rIStKktOEzwk6GTNrfS8GB
+	 aJa1lGZthTl+HNFY16T9CyGpuCwG+RfJmP7aJHWUDXQKyv6hHk/tpvv440QhgOL9EN
+	 nqpfXaobGk8IirDskBsZGI83N9gaVnR2biiMjbqjPUif2gC1VLsHXJgF5NrCXRsNwd
+	 +B0iiP805uIlQCKbd/c3xAh5obEqJaPhlR8OaYEfR4F983bmlBLISzx0ipoo9Bl/ib
+	 05+ZaHa3+Qd6A==
+Received: from [192.168.68.112] (unknown [180.150.112.166])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 309796449F;
+	Fri, 27 Jun 2025 09:54:24 +0800 (AWST)
+Message-ID: <91b94197dc245f70e3cbd05944e8ed3712b7fd25.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v5 2/2] mailbox: aspeed: add mailbox driver for AST27XX
+ series SoC
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Jammy Huang <jammy_huang@aspeedtech.com>, jassisinghbrar@gmail.com, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Date: Fri, 27 Jun 2025 11:24:23 +0930
+In-Reply-To: <20250625073417.2395037-3-jammy_huang@aspeedtech.com>
+References: <20250625073417.2395037-1-jammy_huang@aspeedtech.com>
+	 <20250625073417.2395037-3-jammy_huang@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="WMHaSM0+1xq+v8x3"
-Content-Disposition: inline
-In-Reply-To: <aF35FqJAw63NSl63@mail-itl>
 
+T24gV2VkLCAyMDI1LTA2LTI1IGF0IDE1OjM0ICswODAwLCBKYW1teSBIdWFuZyB3cm90ZToKPiBB
+ZGQgbWFpbGJveCBjb250cm9sbGVyIGRyaXZlciBmb3IgQVNUMjdYWCBTb0NzLCB3aGljaCBwcm92
+aWRlcwo+IGluZGVwZW5kZW50IHR4L3J4IG1haWxib3ggYmV0d2VlbiBkaWZmZXJlbnQgcHJvY2Vz
+c29ycy4gVGhlcmUgYXJlIDQKPiBjaGFubmVscyBmb3IgZWFjaCB0eC9yeCBtYWlsYm94IGFuZCBl
+YWNoIGNoYW5uZWwgaGFzIGFuIDMyLWJ5dGUgRklGTy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKYW1t
+eSBIdWFuZyA8amFtbXlfaHVhbmdAYXNwZWVkdGVjaC5jb20+Cj4gLS0tCj4gwqBkcml2ZXJzL21h
+aWxib3gvS2NvbmZpZ8KgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDggKwo+IMKgZHJpdmVycy9t
+YWlsYm94L01ha2VmaWxlwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDIgKwo+IMKgZHJpdmVycy9t
+YWlsYm94L2FzdDI3MDAtbWFpbGJveC5jIHwgMjQwICsrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKwo+IMKgMyBmaWxlcyBjaGFuZ2VkLCAyNTAgaW5zZXJ0aW9ucygrKQo+IMKgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvbWFpbGJveC9hc3QyNzAwLW1haWxib3guYwo+IAo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL21haWxib3gvS2NvbmZpZyBiL2RyaXZlcnMvbWFpbGJveC9LY29uZmlnCj4g
+aW5kZXggNjhlZWVkNjYwYTRhLi4xYzM4Y2Q1NzAwOTEgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9t
+YWlsYm94L0tjb25maWcKPiArKysgYi9kcml2ZXJzL21haWxib3gvS2NvbmZpZwo+IEBAIC0zNDAs
+NCArMzQwLDEyIEBAIGNvbmZpZyBUSEVBRF9USDE1MjBfTUJPWAo+IMKgwqDCoMKgwqDCoMKgwqDC
+oCBrZXJuZWwgaXMgcnVubmluZywgYW5kIEU5MDIgY29yZSB1c2VkIGZvciBwb3dlciBtYW5hZ2Vt
+ZW50IGFtb25nIG90aGVyCj4gwqDCoMKgwqDCoMKgwqDCoMKgIHRoaW5ncy4KPiDCoAo+ICtjb25m
+aWcgQVNUMjcwMF9NQk9YCj4gK8KgwqDCoMKgwqDCoMKgdHJpc3RhdGUgIkFTUEVFRCBBU1QyNzAw
+IElQQyBkcml2ZXIiCj4gK8KgwqDCoMKgwqDCoMKgZGVwZW5kcyBvbiBBUkNIX0FTUEVFRCB8fCBD
+T01QSUxFX1RFU1QKPiArwqDCoMKgwqDCoMKgwqBoZWxwCj4gK8KgwqDCoMKgwqDCoMKgwqAgTWFp
+bGJveCBkcml2ZXIgaW1wbGVtZW50YXRpb24gZm9yIEFTUEVFRCBBU1QyN1hYIFNvQ3MuIFRoaXMg
+ZHJpdmVyCj4gK8KgwqDCoMKgwqDCoMKgwqAgY2FuIGJlIHVzZWQgdG8gc2VuZCBtZXNzYWdlIGJl
+dHdlZW4gZGlmZmVyZW50IHByb2Nlc3NvcnMgaW4gU29DLgo+ICvCoMKgwqDCoMKgwqDCoMKgIFRo
+ZSBkcml2ZXIgcHJvdmlkZXMgbWFpbGJveCBzdXBwb3J0IGZvciBzZW5kaW5nIGludGVycnVwdHMg
+dG8gdGhlCj4gK8KgwqDCoMKgwqDCoMKgwqAgY2xpZW50cy4gU2F5IFkgaGVyZSBpZiB5b3Ugd2Fu
+dCB0byBidWlsZCB0aGlzIGRyaXZlci4KPiDCoGVuZGlmCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+bWFpbGJveC9NYWtlZmlsZSBiL2RyaXZlcnMvbWFpbGJveC9NYWtlZmlsZQo+IGluZGV4IDEzYTM0
+NDhiMzI3MS4uOWE5YWRkOWE3NTQ4IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvbWFpbGJveC9NYWtl
+ZmlsZQo+ICsrKyBiL2RyaXZlcnMvbWFpbGJveC9NYWtlZmlsZQo+IEBAIC03MiwzICs3Miw1IEBA
+IG9iai0kKENPTkZJR19RQ09NX0NQVUNQX01CT1gpwqArPSBxY29tLWNwdWNwLW1ib3gubwo+IMKg
+b2JqLSQoQ09ORklHX1FDT01fSVBDQynCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCs9
+IHFjb20taXBjYy5vCj4gwqAKPiDCoG9iai0kKENPTkZJR19USEVBRF9USDE1MjBfTUJPWCnCoMKg
+wqDCoMKgwqDCoMKgKz0gbWFpbGJveC10aDE1MjAubwo+ICsKPiArb2JqLSQoQ09ORklHX0FTVDI3
+MDBfTUJPWCnCoMKgwqDCoMKgKz0gYXN0MjcwMC1tYWlsYm94Lm8KPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9tYWlsYm94L2FzdDI3MDAtbWFpbGJveC5jIGIvZHJpdmVycy9tYWlsYm94L2FzdDI3MDAt
+bWFpbGJveC5jCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjU0
+NzAwNTNmODEzOQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL21haWxib3gvYXN0Mjcw
+MC1tYWlsYm94LmMKPiBAQCAtMCwwICsxLDI0MCBAQAo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRp
+ZmllcjogR1BMLTIuMC1vbmx5Cj4gKy8qCj4gKyAqIENvcHlyaWdodCBBc3BlZWQgVGVjaG5vbG9n
+eSBJbmMuIChDKSAyMDI1LiBBbGwgcmlnaHRzIHJlc2VydmVkCj4gKyAqLwo+ICsKPiArI2luY2x1
+ZGUgPGxpbnV4L2ludGVycnVwdC5oPgo+ICsjaW5jbHVkZSA8bGludXgvaW8uaD4KPiArI2luY2x1
+ZGUgPGxpbnV4L2lvcG9sbC5oPgo+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4gKyNpbmNs
+dWRlIDxsaW51eC9tYWlsYm94X2NvbnRyb2xsZXIuaD4KPiArI2luY2x1ZGUgPGxpbnV4L21vZHVs
+ZS5oPgo+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4KPiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3Jt
+X2RldmljZS5oPgo+ICsjaW5jbHVkZSA8bGludXgvc2xhYi5oPgo+ICsKPiArLyogRWFjaCBiaXQg
+aW4gdGhlIHJlZ2lzdGVyIHJlcHJlc2VudHMgYW4gSVBDIElEICovCj4gKyNkZWZpbmUgSVBDUl9U
+WF9UUklHwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDB4MDAKPiArI2RlZmluZSBJUENSX0VOQUJMRcKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoDB4MDQKPiArI2RlZmluZSBJUENSX1NUQVRVU8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoDB4MDgKPiArI2RlZmluZcKgIFJYX0lSUShuKcKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgQklUKG4pCj4gKyNkZWZpbmXCoCBSWF9JUlFfTUFTS8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAweGYKPiArI2RlZmluZSBJUENSX0RBVEHCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgMHgxMAo+ICsKPiArc3RydWN0IGFzdDI3MDBfbWJveF9kYXRhIHsKPiArwqDCoMKgwqDCoMKg
+wqB1OCBudW1fY2hhbnM7Cj4gK8KgwqDCoMKgwqDCoMKgdTggbXNnX3NpemU7Cj4gK307Cj4gKwo+
+ICtzdHJ1Y3QgYXN0MjcwMF9tYm94IHsKPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgbWJveF9jb250
+cm9sbGVyIG1ib3g7Cj4gK8KgwqDCoMKgwqDCoMKgdTggbXNnX3NpemU7Cj4gK8KgwqDCoMKgwqDC
+oMKgdm9pZCBfX2lvbWVtICp0eF9yZWdzOwo+ICvCoMKgwqDCoMKgwqDCoHZvaWQgX19pb21lbSAq
+cnhfcmVnczsKPiArwqDCoMKgwqDCoMKgwqBzcGlubG9ja190IGxvY2s7Cj4gK307Cj4gKwo+ICtz
+dGF0aWMgaW5saW5lIGludCBjaF9udW0oc3RydWN0IG1ib3hfY2hhbiAqY2hhbikKPiArewo+ICvC
+oMKgwqDCoMKgwqDCoHJldHVybiBjaGFuIC0gY2hhbi0+bWJveC0+Y2hhbnM7Cj4gK30KPiArCj4g
+K3N0YXRpYyBpbmxpbmUgYm9vbCBhc3QyNzAwX21ib3hfdHhfZG9uZShzdHJ1Y3QgYXN0MjcwMF9t
+Ym94ICptYiwgaW50IGlkeCkKPiArewo+ICvCoMKgwqDCoMKgwqDCoHJldHVybiAhKHJlYWRsKG1i
+LT50eF9yZWdzICsgSVBDUl9TVEFUVVMpICYgQklUKGlkeCkpOwo+ICt9Cj4gKwo+ICtzdGF0aWMg
+aXJxcmV0dXJuX3QgYXN0MjcwMF9tYm94X2lycShpbnQgaXJxLCB2b2lkICpwKQo+ICt7Cj4gK8Kg
+wqDCoMKgwqDCoMKgc3RydWN0IGFzdDI3MDBfbWJveCAqbWIgPSBwOwo+ICvCoMKgwqDCoMKgwqDC
+oHZvaWQgX19pb21lbSAqZGF0YV9yZWc7Cj4gK8KgwqDCoMKgwqDCoMKgaW50IG51bV93b3JkczsK
+PiArwqDCoMKgwqDCoMKgwqB1MzIgKndvcmRfZGF0YTsKPiArwqDCoMKgwqDCoMKgwqB1MzIgc3Rh
+dHVzOwo+ICvCoMKgwqDCoMKgwqDCoGludCBuOwo+ICsKPiArwqDCoMKgwqDCoMKgwqAvKiBPbmx5
+IGV4YW1pbmUgY2hhbm5lbHMgdGhhdCBhcmUgY3VycmVudGx5IGVuYWJsZWQuICovCj4gK8KgwqDC
+oMKgwqDCoMKgc3RhdHVzID0gcmVhZGwobWItPnJ4X3JlZ3MgKyBJUENSX0VOQUJMRSkgJgo+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVhZGwobWItPnJ4X3JlZ3MgKyBJUENSX1NU
+QVRVUyk7CgpBbHNvIG5lZWQgdG8gbG9jayBvdmVyIHRoZXNlIHJlYWRzIHRvIGhhbmRsZSBjb25j
+dXJyZW50CnN0YXJ0dXAvc2h1dGRvd24/Cgo+ICsKPiArwqDCoMKgwqDCoMKgwqBpZiAoIShzdGF0
+dXMgJiBSWF9JUlFfTUFTSykpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVy
+biBJUlFfTk9ORTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgZm9yIChuID0gMDsgbiA8IG1iLT5tYm94
+Lm51bV9jaGFuczsgKytuKSB7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHN0cnVj
+dCBtYm94X2NoYW4gKmNoYW4gPSAmbWItPm1ib3guY2hhbnNbbl07Cj4gKwo+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAoIShzdGF0dXMgJiBSWF9JUlEobikpKQo+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29udGludWU7Cj4gKwo+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAvKiBSZWFkIHRoZSBtZXNzYWdlIGRhdGEgKi8K
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZm9yIChkYXRhX3JlZyA9IG1iLT5yeF9y
+ZWdzICsgSVBDUl9EQVRBICsgbWItPm1zZ19zaXplICogbiwKPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgd29yZF9kYXRhID0gY2hhbi0+Y29uX3ByaXYsCj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG51bV93b3JkcyA9IChtYi0+bXNnX3Np
+emUgLyBzaXplb2YodTMyKSk7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIG51bV93b3JkczsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+bnVtX3dvcmRzLS0sIGRhdGFfcmVnICs9IHNpemVvZih1MzIpLCB3b3JkX2RhdGErKykKPiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCp3b3JkX2RhdGEgPSBy
+ZWFkbChkYXRhX3JlZyk7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtYm94
+X2NoYW5fcmVjZWl2ZWRfZGF0YShjaGFuLCBjaGFuLT5jb25fcHJpdik7Cj4gKwo+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAvKiBUaGUgSVJRIGNhbiBiZSBjbGVhcmVkIG9ubHkgb25j
+ZSB0aGUgRklGTyBpcyBlbXB0eS4gKi8KPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+d3JpdGVsKFJYX0lSUShuKSwgbWItPnJ4X3JlZ3MgKyBJUENSX1NUQVRVUyk7CgpDYW4gd2UgcmF0
+aGVyIGNsZWFyIHRoZSBzdGF0dXMgb25jZSBvdXRzaWRlIHRoZSBsb29wIGltbWVkaWF0ZWx5IGJl
+Zm9yZQpyZXR1cm4/Cgp3cml0ZWwoc3RhdHVzLCBtYi0+cnhfcmVncyArIElQQ1JfU1RBVFVTKTsK
+Cj4gK8KgwqDCoMKgwqDCoMKgfQo+ICsKPiArwqDCoMKgwqDCoMKgwqByZXR1cm4gSVJRX0hBTkRM
+RUQ7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgYXN0MjcwMF9tYm94X3NlbmRfZGF0YShzdHJ1Y3Qg
+bWJveF9jaGFuICpjaGFuLCB2b2lkICpkYXRhKQo+ICt7Cj4gK8KgwqDCoMKgwqDCoMKgc3RydWN0
+IGFzdDI3MDBfbWJveCAqbWIgPSBkZXZfZ2V0X2RydmRhdGEoY2hhbi0+bWJveC0+ZGV2KTsKPiAr
+wqDCoMKgwqDCoMKgwqB2b2lkIF9faW9tZW0gKmRhdGFfcmVnOwo+ICvCoMKgwqDCoMKgwqDCoHUz
+MiAqd29yZF9kYXRhOwo+ICvCoMKgwqDCoMKgwqDCoGludCBudW1fd29yZHM7Cj4gK8KgwqDCoMKg
+wqDCoMKgaW50IGlkeCA9IGNoX251bShjaGFuKTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgaWYgKCEo
+cmVhZGwobWItPnR4X3JlZ3MgKyBJUENSX0VOQUJMRSkgJiBCSVQoaWR4KSkpIHsKPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGV2X3dhcm4obWItPm1ib3guZGV2LCAiJXM6IENoLSVk
+IG5vdCBlbmFibGVkIHlldFxuIiwgX19mdW5jX18sIGlkeCk7Cj4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoHJldHVybiAtRUJVU1k7CgotRU5PREVWPyBJIHdvdWxkbid0IHNheSBpdCdz
+IGJ1c3kgaGVyZSA6KQoKPiArwqDCoMKgwqDCoMKgwqB9Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoGlm
+ICghKGFzdDI3MDBfbWJveF90eF9kb25lKG1iLCBpZHgpKSkgewo+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqBkZXZfd2FybihtYi0+bWJveC5kZXYsICIlczogQ2gtJWQgbGFzdCBkYXRh
+IGhhcyBub3QgZmluaXNoZWRcbiIsIF9fZnVuY19fLCBpZHgpOwo+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqByZXR1cm4gLUVCVVNZOwo+ICvCoMKgwqDCoMKgwqDCoH0KPiArCj4gK8Kg
+wqDCoMKgwqDCoMKgLyogV3JpdGUgdGhlIG1lc3NhZ2UgZGF0YSAqLwo+ICvCoMKgwqDCoMKgwqDC
+oGZvciAoZGF0YV9yZWcgPSBtYi0+dHhfcmVncyArIElQQ1JfREFUQSArIG1iLT5tc2dfc2l6ZSAq
+IGlkeCwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB3b3JkX2RhdGEgPSAodTMyICopZGF0YSwK
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBudW1fd29yZHMgPSAobWItPm1zZ19zaXplIC8gc2l6
+ZW9mKHUzMikpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG51bV93b3JkczsKPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBudW1fd29yZHMtLSwgZGF0YV9yZWcgKz0gc2l6ZW9mKHUzMiksIHdv
+cmRfZGF0YSsrKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB3cml0ZWwoKndvcmRf
+ZGF0YSwgZGF0YV9yZWcpOwo+ICsKPiArwqDCoMKgwqDCoMKgwqB3cml0ZWwoQklUKGlkeCksIG1i
+LT50eF9yZWdzICsgSVBDUl9UWF9UUklHKTsKPiArwqDCoMKgwqDCoMKgwqBkZXZfZGJnKG1iLT5t
+Ym94LmRldiwgIiVzOiBDaC0lZCBzZW50XG4iLCBfX2Z1bmNfXywgaWR4KTsKPiArCj4gK8KgwqDC
+oMKgwqDCoMKgcmV0dXJuIDA7Cj4gK30KPiArCgoqc25pcCoKCj4gKwo+ICtzdGF0aWMgaW50IGFz
+dDI3MDBfbWJveF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICt7Cj4gK8Kg
+wqDCoMKgwqDCoMKgc3RydWN0IGFzdDI3MDBfbWJveCAqbWI7Cj4gK8KgwqDCoMKgwqDCoMKgY29u
+c3Qgc3RydWN0IGFzdDI3MDBfbWJveF9kYXRhICpkZXZfZGF0YTsKPiArwqDCoMKgwqDCoMKgwqBz
+dHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Owo+ICvCoMKgwqDCoMKgwqDCoGludCBpcnEs
+IHJldDsKPiArCj4gK8KgwqDCoMKgwqDCoMKgaWYgKCFwZGV2LT5kZXYub2Zfbm9kZSkKPiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIC1FTk9ERVY7Cj4gKwo+ICvCoMKgwqDC
+oMKgwqDCoGRldl9kYXRhID0gZGV2aWNlX2dldF9tYXRjaF9kYXRhKCZwZGV2LT5kZXYpOwo+ICsK
+PiArwqDCoMKgwqDCoMKgwqBtYiA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqbWIpLCBHRlBf
+S0VSTkVMKTsKPiArwqDCoMKgwqDCoMKgwqBpZiAoIW1iKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqByZXR1cm4gLUVOT01FTTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgbWItPm1ib3gu
+Y2hhbnMgPSBkZXZtX2tjYWxsb2MoJnBkZXYtPmRldiwgZGV2X2RhdGEtPm51bV9jaGFucywKPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHNpemVvZigqbWItPm1ib3guY2hhbnMpLCBHRlBfS0VSTkVMKTsKPiAr
+wqDCoMKgwqDCoMKgwqBpZiAoIW1iLT5tYm94LmNoYW5zKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqByZXR1cm4gLUVOT01FTTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgLyogY29uX3By
+aXYgb2YgZWFjaCBjaGFubmVsIGlzIHVzZWQgdG8gc3RvcmUgdGhlIG1lc3NhZ2UgcmVjZWl2ZWQg
+Ki8KPiArwqDCoMKgwqDCoMKgwqBmb3IgKGludCBpID0gMDsgaSA8IGRldl9kYXRhLT5udW1fY2hh
+bnM7IGkrKykgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtYi0+bWJveC5jaGFu
+c1tpXS5jb25fcHJpdiA9IGRldm1fa2NhbGxvYyhkZXYsIGRldl9kYXRhLT5tc2dfc2l6ZSwKPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBz
+aXplb2YodTgpLCBHRlBfS0VSTkVMKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+aWYgKCFtYi0+bWJveC5jaGFuc1tpXS5jb25fcHJpdikKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAtRU5PTUVNOwo+ICvCoMKgwqDCoMKgwqDC
+oH0KPiArCj4gK8KgwqDCoMKgwqDCoMKgcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgbWIpOwo+
+ICsKPiArwqDCoMKgwqDCoMKgwqBtYi0+dHhfcmVncyA9IGRldm1fcGxhdGZvcm1faW9yZW1hcF9y
+ZXNvdXJjZShwZGV2LCAwKTsKClNlZSB0aGUgdGhvdWdodCBhYm91dCByZWctbmFtZXMgb24gdGhl
+IGJpbmRpbmcuCgpBbmRyZXcK
 
---WMHaSM0+1xq+v8x3
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 27 Jun 2025 03:53:57 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Colin Ian King <colin.i.king@gmail.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: iwlwifi stopped working with AX200 (6.16-rc3 regression)
-
-On Fri, Jun 27, 2025 at 03:51:18AM +0200, Marek Marczykowski-G=C3=B3recki w=
-rote:
-> Hi,
->=20
-> With Linux 6.16-rc3 iwlwifi stopped working for me - device never
-> initializes fully. It was working fine with Linux 6.16-rc2. Log
-> includes:
->=20
->     iwlwifi 0000:00:07.0: Registered PHC clock: iwlwifi-PTP, with index: 0
->     ------------[ cut here ]------------
->     WARNING: CPU: 0 PID: 516 at drivers/net/wireless/intel/iwlwifi/mvm/ml=
-d-mac.c:37 iwl_mvm_mld_mac_ctxt_cmd_common+0x17d/0x1d0 [iwlmvm]
->     Modules linked in: nft_reject_ipv6 nf_reject_ipv6 nft_reject_ipv4 nf_=
-reject_ipv4 nft_reject qrtr nft_ct nft_masq nft_chain_nat nf_nat nf_conntra=
-ck nf_defrag_ipv6 nf_defrag_ipv4 nf_tables iwlmvm mac80211 libarc4 joydev i=
-wlwifi intel_rapl_msr intel_rapl_common cfg80211 polyval_clmulni ghash_clmu=
-lni_intel sha512_ssse3 rfkill sha1_ssse3 r8169 pcspkr i2c_piix4 ehci_pci re=
-altek ata_generic ehci_hcd i2c_smbus pata_acpi serio_raw xen_scsiback targe=
-t_core_mod xen_netback xen_privcmd xen_gntdev xen_gntalloc xen_blkback xen_=
-evtchn i2c_dev fuse loop nfnetlink overlay xen_blkfront
->     CPU: 0 UID: 0 PID: 516 Comm: NetworkManager Not tainted 6.16.0-0.rc3.=
-1.qubes.1.fc41.x86_64 #1 PREEMPT(full)=20
->     Hardware name: Xen HVM domU, BIOS 4.19.2 05/27/2025
->     RIP: 0010:iwl_mvm_mld_mac_ctxt_cmd_common+0x17d/0x1d0 [iwlmvm]
->     Code: eb a2 ba 01 00 00 00 66 41 89 55 18 eb 96 41 83 fe 02 74 25 41 =
-c6 45 19 01 eb c8 b9 01 00 00 00 66 41 89 4d 1a e9 7a ff ff ff <0f> 0b 5b 5=
-d 41 5c 41 5d 41 5e e9 04 26 f5 ec bf 01 00 00 00 66 41
->     RSP: 0018:ffffd45c807b3600 EFLAGS: 00010282
->     RAX: 00000000ffffffff RBX: ffff8d334a68a008 RCX: ffff8d33428c3efc
->     RDX: 00000000000000bf RSI: 0000000000000308 RDI: ffff8d33428c3efc
->     RBP: 0000000000000001 R08: 0000000000000003 R09: 0000000000000000
->     R10: 0000000000000000 R11: 0000000000000001 R12: ffff8d334a799c98
->     R13: ffffd45c807b3634 R14: 0000000000000000 R15: ffff8d334a799c98
->     FS:  00007b3ca8f0a800(0000) GS:ffff8d33a15db000(0000) knlGS:000000000=
-0000000
->     CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->     CR2: 000072848666ab60 CR3: 000000000049f000 CR4: 0000000000350ef0
->     Call Trace:
->      <TASK>
->      iwl_mvm_mld_mac_ctxt_cmd_sta+0x6b/0x1d0 [iwlmvm]
->      iwl_mvm_mld_mac_ctxt_add+0x32/0xc0 [iwlmvm]
->      iwl_mvm_mld_mac_add_interface+0x137/0x3b0 [iwlmvm]
->      drv_add_interface+0x52/0x230 [mac80211]
->      ieee80211_do_open+0x57b/0x720 [mac80211]
->      ieee80211_open+0x8c/0xa0 [mac80211]
->      __dev_open+0x114/0x2a0
->      __dev_change_flags+0x1f6/0x240
->      ? security_inode_post_setattr+0xf8/0x110
->      netif_change_flags+0x26/0x70
->      do_setlink.isra.0+0x326/0xcd0
->      ? cred_has_capability.isra.0+0xa7/0x140
->      ? __rtnl_newlink+0x1fe/0x3f0
->      rtnl_newlink+0x4a4/0x8d0
->      ? __pfx_rtnl_newlink+0x10/0x10
->      rtnetlink_rcv_msg+0x37e/0x450
->      ? avc_has_perm+0x5c/0xe0
->      ? __pfx_rtnetlink_rcv_msg+0x10/0x10
->      netlink_rcv_skb+0x52/0x100
->      netlink_unicast+0x27d/0x3d0
->      netlink_sendmsg+0x228/0x480
->      ____sys_sendmsg+0x35e/0x390
->      ___sys_sendmsg+0x99/0xe0
->      __sys_sendmsg+0x88/0xf0
->      do_syscall_64+0x84/0x2c0
->      ? syscall_exit_work+0x108/0x140
->      ? do_syscall_64+0x200/0x2c0
->      ? syscall_exit_work+0x108/0x140
->      ? do_syscall_64+0x200/0x2c0
->      entry_SYSCALL_64_after_hwframe+0x76/0x7e
->     RIP: 0033:0x7b3ca9e876c2
->     Code: 08 0f 85 81 42 ff ff 49 89 fb 48 89 f0 48 89 d7 48 89 ce 4c 89 =
-c2 4d 89 ca 4c 8b 44 24 08 4c 8b 4c 24 10 4c 89 5c 24 08 0f 05 <c3> 66 2e 0=
-f 1f 84 00 00 00 00 00 66 2e 0f 1f 84 00 00 00 00 00 66
->     RSP: 002b:00007ffed9f47ff8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
->     RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007b3ca9e876c2
->     RDX: 0000000000000000 RSI: 00007ffed9f48090 RDI: 000000000000000d
->     RBP: 00007ffed9f48030 R08: 0000000000000000 R09: 0000000000000000
->     R10: 0000000000000000 R11: 0000000000000246 R12: 0000642f470dd5a0
->     R13: 000000000000001a R14: 0000000000000000 R15: 00007ffed9f4822c
->      </TASK>
->     ---[ end trace 0000000000000000 ]---
->     iwlwifi 0000:00:07.0: Microcode SW error detected. Restarting 0x0.
->     iwlwifi 0000:00:07.0: Start IWL Error Log Dump:
->     iwlwifi 0000:00:07.0: Transport status: 0x0000004B, valid: 6
->     iwlwifi 0000:00:0[2025-06-27 00:40:21] 7.0: Loaded firmware version: =
-77.864baa2e.0 cc-a0-77.ucode
->     iwlwifi 0000:00:07.0: 0x00000071 | NMI_INTERRUPT_UMAC_FATAL   =20
->     iwlwifi 0000:00:07.0: 0x00A0A2F0 | trm_hw_status0
->     iwlwifi 0000:00:07.0: 0x00000000 | trm_hw_status1
->     iwlwifi 0000:00:07.0: 0x004F8D82 | branchlink2
->     iwlwifi 0000:00:07.0: 0x004EEDD2 | interruptlink1
->     iwlwifi 0000:00:07.0: 0x004EEDD2 | interruptlink2
->     iwlwifi 0000:00:07.0: 0x00015332 | data1
->     iwlwifi 0000:00:07.0: 0x00001000 | data2
->     iwlwifi 0000:00:07.0: 0x00000000 | data3
->     iwlwifi 0000:00:07.0: 0x00000000 | beacon time
->     iwlwifi 0000:00:07.0: 0x00062EC7 | tsf low
->     iwlwifi 0000:00:07.0: 0x00000000 | tsf hi
->     iwlwifi 0000:00:07.0: 0x00000000 | time gp1
->     iwlwifi 0000:00:07.0: 0x00069534 | time gp2
->     iwlwifi 0000:00:07.0: 0x00000001 | uCode revision type
->     iwlwifi 0000:00:07.0: 0x0000004D | uCode version major
->     iwlwifi 0000:00:07.0: 0x864BAA2E | uCode version minor
->     iwlwifi 0000:00:07.0: 0x00000340 | hw version
->     iwlwifi 0000:00:07.0: 0x00C89000 | board version
->     iwlwifi 0000:00:07.0: 0x8032F500 | hcmd
->     iwlwifi 0000:00:07.0: 0x20028000 | isr0
->     iwlwifi 0000:00:07.0: 0x00000000 | isr1
->     iwlwifi 0000:00:07.0: 0x08F04802 | isr2
->     iwlwifi 0000:00:07.0: 0x00C3400C | isr3
->     iwlwifi 0000:00:07.0: 0x00000000 | isr4
->     iwlwifi 0000:00:07.0: 0x00110148 | last cmd Id
->     iwlwifi 0000:00:07.0: 0x00015332 | wait_event
->     iwlwifi 0000:00:07.0: 0x00000000 | l2p_control
->     iwlwifi 0000:00:07.0: 0x00000000 | l2p_duration
->     iwlwifi 0000:00:07.0: 0x00000000 | l2p_mhvalid
->     iwlwifi 0000:00:07.0: 0x00000000 | l2p_addr_match
->     iwlwifi 0000:00:07.0: 0x00000008 | lmpm_pmg_sel
->     iwlwifi 0000:00:07.0: 0x00000000 | timestamp
->     iwlwifi 0000:00:07.0: 0x0000084C | flow_handler
->     iwlwifi 0000:00:07.0: Start IWL Error Log Dump:
->     iwlwifi 0000:00:07.0: Transport status: 0x0000004B, valid: 7
->     iwlwifi 0000:00:07.0: 0x20103126 | ADVANCED_SYSASSERT
->     iwlwifi 0000:00:07.0: 0x00000000 | umac branchlink1
->     iwlwifi 0000:00:07.0: 0x80455D7A | umac branchlink2
->     iwlwifi 0000:00:07.0: 0xC0081228 | umac interruptlink1
->     iwlwifi 0000:00:07.0: 0x00000000 | umac interruptlink2
->     iwlwifi 0000:00:07.0: 0x00000000 | umac data1
->     iwlwifi 0000:00:07.0: 0x00000000 | umac data2
->     iwlwifi 0000:00:07.0: 0xDEADBEEF | umac data3
->     iwlwifi 0000:00:07.0: 0x0000004D | umac major
->     iwlwifi 0000:00:07.0: 0x864BAA2E | umac minor
->     iwlwifi 0000:00:07.0: 0x0006952F | frame pointer
->     iwlwifi 0000:00:07.0: 0xC0886C14 | stack pointer
->     iwlwifi 0000:00:07.0: 0x00120308 | last host cmd
->     iwlwifi 0000:00:07.0: 0x00000009 | isr status reg
->     iwlwifi 0000:00:07.0: IML/ROM dump:
->     iwlwifi 0000:00:07.0: 0x00000003 | IML/ROM error/state
->     iwlwifi 0000:00:07.0: 0x000062FC | IML/ROM data1
->     iwlwifi 0000:00:07.0: 0x00000080 | IML/ROM WFPM_AUTH_KEY_0
->     iwlwifi 0000:00:07.0: Fseq Registers:
->     iwlwifi 0000:00:07.0: 0x60000000 | FSEQ_ERROR_CODE
->     iwlwifi 0000:00:07.0: 0x80290021 | FSEQ_TOP_INIT_VERSION
->     iwlwifi 0000:00:07.0: 0x00050008 | FSEQ_CNVIO_INIT_VERSION
->     iwlwifi 0000:00:07.0: 0x0000A503 | FSEQ_OTP_VERSION
->     iwlwifi 0000:00:07.0: 0x80000003 | FSEQ_TOP_CONTENT_VERSION
->     iwlwifi 0000:00:07.0: 0x4552414E | FSEQ_ALIVE_TOKEN
->     iwlwifi 0000:00:07.0: 0x00100530 | FSEQ_CNVI_ID
->     iwlwifi 0000:00:07.0: 0x00000532 | FSEQ_CNVR_ID
->     iwlwifi 0000:00:07.0: 0x00100530 | CNVI_AUX_MISC_CHIP
->     iwlwifi 0000:00:07.0: 0x00000532 | CNVR_AUX_MISC_CHIP
->     iwlwifi 0000:00:07.0: 0x05B0905B | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_V=
-TRIM
->     iwlwifi 0000:00:07.0: 0x0000025B | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDI=
-G_MIRROR
->     iwlwifi 0000:00:07.0: 0x00050008 | FSEQ_PREV_CNVIO_INIT_VERSION
->     iwlwifi 0000:00:07.0: 0x00290021 | FSEQ_WIFI_FSEQ_VERSION
->     iwlwifi 0000:00:07.0: 0x00290021 | FSEQ_BT_FSEQ_VERSION
->     iwlwifi 0000:00:07.0: 0x000000F0 | FSEQ_CLASS_TP_VERSION
->     iwlwifi 0000:00:07.0: UMAC CURRENT PC: 0x80472b1c
->     iwlwifi 0000:00:07.0: LMAC1 CURRENT PC: 0xd0
->     iwlwifi 0000:00:07.0: FW error in SYNC CMD MAC_CONFIG_CMD
->     CPU: 0 UID: 0 PID: 516 Comm: NetworkManager Tainted: G        W      =
-     6.16.0-0.rc3.1.qubes.1.fc41.x86_64 #1 PREEMPT(full)=20
->     Tainted: [W]=3DWARN
->     Hardware name: Xen HVM domU, BIOS 4.19.2 05/27/2025
->     Call Trace:
->      <TASK>
->      dump_stack_lvl+0x5d/0x80
->      iwl_trans_pcie_send_hcmd_sync+0x355/0x360 [iwlwifi]
->      ? __pfx_autoremove_wake_function+0x10/0x10
->      iwl_trans_send_cmd+0x4f/0xe0 [iwlwifi]
->      iwl_mvm_send_cmd_pdu+0x61/0xb0 [iwlmvm]
->      iwl_mvm_mld_mac_ctxt_cmd_sta+0x10b/0x1d0 [iwlmvm]
->      iwl_mvm_mld_mac_ctxt_add+0x32/0xc0 [iwlmvm]
->      iwl_mvm_mld_mac_add_interface+0x137/0x3b0 [iwlmvm]
->      drv_add_interface+0x52/0x230 [mac80211]
->      ieee80211_do_open+0x57b/0x720 [mac80211]
->      ieee80211_open+0x8c/0xa0 [mac80211]
->      __dev_open+0x114/0x2a0
->      __dev_change_flags+0x1f6/0x240
->      ? security_inode_post_setattr+0xf8/0x110
->      netif_change_flags+0x26/0x70
->      do_setlink.isra.0+0x326/0xcd0
->      ? cred_has_capability.isra.0+0xa7/0x140
->      ? __rtnl_newlink+0x1fe/0x3f0
->      rtnl_newlink+0x4a4/0x8d0
->      ? __pfx_rtnl_newlink+0x10/0x10
->      rtnetlink_rcv_msg+0x37e/0x450
->      ? avc_has_perm+0x5c/0xe0
->      ? __pfx_rtnetlink_rcv_msg+0x10/0x10
->      netlink_rcv_skb+0x52/0x100
->      netlink_unicast+0x27d/0x3d0
->      netlink_sendmsg+0x228/0x480
->      ____sys_sendmsg+0x35e/0x390
->      ___sys_sendmsg+0x99/0xe0
->      __sys_sendmsg+0x88/0xf0
->      do_syscall_64+0x84/0x2c0
->      ? syscall_exit_work+0x108/0x140
->      ? do_syscall_64+0x200/0x2c0
->      ? syscall_exit_work+0x108/0x140
->      ? do_syscall_64+0x200/0x2c0
->      entry_SYSCALL_64_after_hwframe+0x76/0x7e
->     RIP: 0033:0x7b3ca9e876c2
->     Code: 08 0f 85 81 42 ff ff 49 89 fb 48 89 f0 48 89 d7 48 89 ce 4c 89 =
-c2 4d 89 ca 4c 8b 44 24 08 4c 8b 4c 24 10 4c 89 5c 24 08 0f 05 <c3> 66 2e 0=
-f 1f 84 00 00 00 00 00 66 2e 0f 1f 84 00 00 00 00 00 66
->     RSP: 002b:00007ffed9f47ff8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
->     RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007b3ca9e876c2
->     RDX: 0000000000000000 RSI: 00007ffed9f48090 RDI: 000000000000000d
->     RBP: 00007ffed9f48030 R08: 0000000000000000 R09: 0000000000000000
->     R10: 0000000000000000 R11: 0000000000000246 R12: 0000642f470dd5a0
->     R13: 000000000000001a R14: 0000000000000000 R15: 00007ffed9f4822c
->      </TASK>
->     iwlwifi 0000:00:07.0: Failed to send MAC_CONFIG_CMD (action:0): -5
->=20
-> I see the only change there between rc2 and rc3 is fixing that WARN_ON
-> condition. Unfortunately, I don't know what cmd_ver value I have there,
-> but apparently it's outside of that range (and yet, the driver worked
-> fine before).
->=20
-> The device is:
-> 02:00.0 Network controller [0280]: Intel Corporation Wi-Fi 6 AX200 [8086:=
-2723] (rev 1a)
->     Subsystem: Intel Corporation Wi-Fi 6 AX200NGW [8086:0084]
->=20
-> #regzbot introduced: v6.16-rc2..v6.16-rc3
-
-Oh, I see it might be already fixed by
-https://lore.kernel.org/linux-wireless/20250623111351.1819915-1-miriam.rach=
-el.korenblit@intel.com/,
-I'll test it.
-
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
-
---WMHaSM0+1xq+v8x3
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmhd+bUACgkQ24/THMrX
-1yyYngf+PPH/WZJ8AkWYwL8ACgxKIAOpVpiJ2SFIai3lNtIDekVqeeqG4FwHli1A
-vjjfo6erFIPFc3EQUZIoV4TWANmqNOXijZA1XuUQwDeP9RZF7GKM1Y3YuqENGlmY
-R4rO7w9ShRphFfe/L/4ZREwASuJG2X/QPBas/BkIFGAcvzyCcLJ16WKMqdmjzREE
-bho2AIyc8g+tRsyDFQnFlcrHRPXbBXoYgVRage4EaFLyD9Ojlc/1/wnn1PqC9kvE
-GQjCO/NQopSFZAuUCz86n4wo+dZxWwxeKtGR84sI9FvdE/y+Yk1582ZabPJFYMaI
-uTN2kOU5XuVT0KQmH3899hOdMdhw5A==
-=i+7L
------END PGP SIGNATURE-----
-
---WMHaSM0+1xq+v8x3--
