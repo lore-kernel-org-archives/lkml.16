@@ -1,89 +1,336 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C97C2EBB9F
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 21:09:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A421E8322;
+	Fri, 27 Jun 2025 21:12:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751058573; cv=none; b=tImk5vN/vF0nr0ctAwtPNr4waKu3FM8RpN3Xo+2ZeOMbbLozwPEeqYGIw2PKJG1iH7R9eq8wDX0VEWmwuVnVL69nfkaK91SNiSKgWvF3Xyw7UJ+flaQ/70eZ/+E9ZI7fNJtDky0hYdytYWoPPWbc7Vp+CLrsSQKTPcvXqXtbGaI=
+	t=1751058759; cv=none; b=CQgKhNDOQxhlr9f2Rp5r9pLr3lTE0CeNkCUD43ciYr9Hrfe7kBLiEFtZeKHOC42f+fsD06HTbf2kbWZtn2MhvjHSGbnnWwKG8e9hzdkr4FLvui0J64f9SG58KNS3a/3hndsl9SimUbBq9io+lfywJ5GU4l6N6uRl3KlyN/iL8M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751058573; c=relaxed/simple;
-	bh=pIB7dbUg5YiC8wZop1hSiIBUgou3FUP2dBBIURZS/q0=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=KA6Z7RK6fjDPoRMAKa/kcVujW7fJ8uEa6QJcqZzKZtLgj+iHjV79QnpxGe+CyAUBQGN/4C/dEN2yOfZtat6OigKhFn7sSpTnkk6QmSQj1WYA+UJ2ICR7nSy4kbWRtHUyEiGFeMVAsalbPjVBPATgU7RtPMjky4CJF0Nx2IOZ2Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=uruW/Syz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751058759; c=relaxed/simple;
+	bh=svUYSDXjgjPfLQhcEOdWRWksVsA976jCuE+IoA6ycNU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nUIWxEqerXZNt+GAo/qMQRbwFyF61+6uGreOnJ+f0rwa6mSMij8c056cT0UxkyNvXsapzkFsyxT+8Aaz3ZZSCVSoQUI08A3LAcHm/+8enq9JnmvhMZABNyzH02jDglnr/ingWa5lH2VZvUaSqsWHiczXObS/2Xi/qePz/hcRZHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rOzgmbW7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="uruW/Syz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B0C9C4CEE3;
-	Fri, 27 Jun 2025 21:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1751058572;
-	bh=pIB7dbUg5YiC8wZop1hSiIBUgou3FUP2dBBIURZS/q0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uruW/Syzqdc+hsDCq7ULTgKSNYLRLjzUUC7iu8inxYx4+v2Oiekd+j/oIz0iJDnDP
-	 +gzxtwuPEMer5swmRyFmFNiOigEZ9VUrntl/SMGRpOvLorWSduONlMsMJpb3uFWok9
-	 ZRyCxewEZonmC2T9HE60xPSd6v+1S19SHskA+qIg=
-Date: Fri, 27 Jun 2025 14:09:32 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: <zhongjinji@honor.com>
-Cc: <linux-mm@kvack.org>, <yuzhao@google.com>,
- <linux-kernel@vger.kernel.org>, <yipengxiang@honor.com>,
- <liulu.liu@honor.com>, <feng.han@honor.com>, Axel Rasmussen
- <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Greg Thelen
- <gthelen@google.com>
-Subject: Re: [PATCH] mm: vmscan: Page scanning depends on swappiness and
- refault
-Message-Id: <20250627140932.1278169c50ba873937444599@linux-foundation.org>
-In-Reply-To: <20250627162606.30609-1-zhongjinji@honor.com>
-References: <20250627162606.30609-1-zhongjinji@honor.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rOzgmbW7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13DF5C4CEE3;
+	Fri, 27 Jun 2025 21:12:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751058757;
+	bh=svUYSDXjgjPfLQhcEOdWRWksVsA976jCuE+IoA6ycNU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rOzgmbW7vV/mYGQxckuhC5FYN5ylxShyS60Bg9yF2/rUsPwm+C32dI2YRV2yx8iUa
+	 vkMjYzP1M97vAqvEp9sowPKHIVtJ4dP4lATxYEOCoPMeTVtYQNkUY3lZd1hGVMCf55
+	 DCJuoc9Xi+M7qjb6cwAmX3Cc55B7C7x4o2MiOfS4DLQtxZX4ltgpN9G7463N7qEeZe
+	 WB0zgYPeufqjRug06JFuTzb5gYsV0vsIfEfY13rkfR8qBaDFXkwSAYYrZa9gH39j+A
+	 Y6wQxXKjlTF39swyPQaXI6+K2Ww/ilV71loV3IO+LkO6pqDmles7cPD7w/X8+IZ1qt
+	 hg9/i8WIfJoJA==
+Date: Fri, 27 Jun 2025 16:12:36 -0500
+From: Rob Herring <robh@kernel.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org, linux-fsd@tesla.com,
+	manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org,
+	kw@linux.com, bhelgaas@google.com, jingoohan1@gmail.com,
+	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
+	vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de,
+	m.szyprowski@samsung.com, jh80.chung@samsung.com,
+	pankaj.dubey@samsung.com
+Subject: Re: [PATCH v2 06/10] dt-bindings: PCI: Add bindings support for
+ Tesla FSD SoC
+Message-ID: <20250627211236.GA147018-robh@kernel.org>
+References: <20250625165229.3458-1-shradha.t@samsung.com>
+ <CGME20250625165315epcas5p19f081c8a0e2e7dc87698577cc2d460ca@epcas5p1.samsung.com>
+ <20250625165229.3458-7-shradha.t@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625165229.3458-7-shradha.t@samsung.com>
 
-On Sat, 28 Jun 2025 00:26:06 +0800 <zhongjinji@honor.com> wrote:
+On Wed, Jun 25, 2025 at 10:22:25PM +0530, Shradha Todi wrote:
+> Document the PCIe controller device tree bindings for Tesla FSD
+> SoC for both RC and EP.
 
-> From: z00025326 <z00025326@hihonor.com>
+Drop 'bindings support for ' in the subject.
+
 > 
-> The current MGLRU aging strategy isn’t flexible enough. For example,
-> when the system load and pressure are low, reclaiming more anonymous
-> pages might be better. But when the system is under heavy pressure,
-> enough file pages are needed for quick reclaim. Right now, when MGLRU
-> is on, changing the swappiness value doesn’t really let you prioritize
-> reclaiming certain types of pages in different situations.
+> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+> ---
+>  .../bindings/pci/samsung,exynos-pcie.yaml     | 121 ++++++++++++------
+
+I think this should be its own schema file. There's not much shared.
+
+>  .../bindings/pci/tesla,fsd-pcie-ep.yaml       |  91 +++++++++++++
+>  2 files changed, 176 insertions(+), 36 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/tesla,fsd-pcie-ep.yaml
 > 
-> This patch changes the aging strategy to adjust the reclaim ratio based
-> on swappiness and refault values, allowing anonymous and file pages to
-> age separately. and it can prioritize reclaiming certain types of pages
-> and doesn’t have to wait until all the oldest pages are reclaimed before
-> moving on to the next aging generation.
+> diff --git a/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
+> index f20ed7e709f7..595156759b06 100644
+> --- a/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
+> @@ -11,16 +11,15 @@ maintainers:
+>    - Jaehoon Chung <jh80.chung@samsung.com>
+>  
+>  description: |+
+> -  Exynos5433 SoC PCIe host controller is based on the Synopsys DesignWare
+> +  Samsung SoCs PCIe host controller is based on the Synopsys DesignWare
+>    PCIe IP and thus inherits all the common properties defined in
+>    snps,dw-pcie.yaml.
+>  
+> -allOf:
+> -  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+> -
+>  properties:
+>    compatible:
+> -    const: samsung,exynos5433-pcie
+> +    enum:
+> +      - samsung,exynos5433-pcie
+> +      - tesla,fsd-pcie
+>  
+>    reg:
+>      items:
+> @@ -37,52 +36,102 @@ properties:
+>    interrupts:
+>      maxItems: 1
+>  
+> -  clocks:
+> -    items:
+> -      - description: PCIe bridge clock
+> -      - description: PCIe bus clock
+> -
+> -  clock-names:
+> -    items:
+> -      - const: pcie
+> -      - const: pcie_bus
+> -
+>    phys:
+>      maxItems: 1
+>  
+> -  vdd10-supply:
+> -    description:
+> -      Phandle to a regulator that provides 1.0V power to the PCIe block.
+> -
+> -  vdd18-supply:
+> -    description:
+> -      Phandle to a regulator that provides 1.8V power to the PCIe block.
+> -
+> -  num-lanes:
+> -    const: 1
+> -
+> -  num-viewport:
+> -    const: 3
+> -
+>  required:
+>    - reg
+>    - reg-names
+>    - interrupts
+>    - "#address-cells"
+>    - "#size-cells"
+> -  - "#interrupt-cells"
+> -  - interrupt-map
+> -  - interrupt-map-mask
+>    - ranges
+> -  - bus-range
+>    - device_type
+>    - num-lanes
+> -  - num-viewport
+>    - clocks
+>    - clock-names
+>    - phys
+> -  - vdd10-supply
+> -  - vdd18-supply
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - tesla,fsd-pcie
+> +    then:
+> +      properties:
+> +        clocks:
+> +          maxItems: 4
+> +
+> +        clock-names:
+> +          items:
+> +            - const: aux
+> +            - const: dbi
+> +            - const: mstr
+> +            - const: slv
+> +
+> +        samsung,syscon-pcie:
+> +          $ref: /schemas/types.yaml#/definitions/phandle-array
+> +          description: phandle for system control registers, used to
+> +                       control signals at system level
+> +
+> +        num-lanes:
+> +          maximum: 4
+> +
+> +      required:
+> +        - samsung,syscon-pcie
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - samsung,exynos5433-pcie
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: pcie bridge clock
+> +            - description: pcie bus clock
+> +
+> +        clock-names:
+> +          items:
+> +            - const: pcie
+> +            - const: pcie_bus
+> +
+> +        vdd10-supply:
+> +          description:
+> +            phandle to a regulator that provides 1.0v power to the pcie block.
+> +
+> +        vdd18-supply:
+> +          description:
+> +            phandle to a regulator that provides 1.8v power to the pcie block.
+> +
+> +        num-lanes:
+> +          const: 1
+> +
+> +        num-viewport:
+> +          const: 3
+> +
+> +        assigned-clocks:
+> +          maxItems: 2
+> +
+> +        assigned-clock-parents:
+> +          maxItems: 2
+> +
+> +        assigned-clock-rates:
+> +          maxItems: 2
+> +
+> +      required:
+> +        - "#interrupt-cells"
+> +        - interrupt-map
+> +        - interrupt-map-mask
+> +        - bus-range
+> +        - num-viewport
+> +        - vdd10-supply
+> +        - vdd18-supply
+>  
+>  unevaluatedProperties: false
+>  
+> diff --git a/Documentation/devicetree/bindings/pci/tesla,fsd-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/tesla,fsd-pcie-ep.yaml
+> new file mode 100644
+> index 000000000000..f85615a0225d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/tesla,fsd-pcie-ep.yaml
+> @@ -0,0 +1,91 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/tesla,fsd-pcie-ep.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung SoC series PCIe Endpoint Controller
+> +
+> +maintainers:
+> +  - Shradha Todi <shradha.t@samsung.com>
+> +
+> +description: |+
+
+Don't need '|+'
+
+> +  Samsung SoCs PCIe endpoint controller is based on the Synopsys DesignWare
+> +  PCIe IP and thus inherits all the common properties defined in
+> +  snps,dw-pcie-ep.yaml.
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: tesla,fsd-pcie-ep
+> +
+> +  reg:
+> +    maxItems: 4
+> +
+> +  reg-names:
+> +    items:
+> +      - const: elbi
+> +      - const: dbi
+> +      - const: dbi2
+> +      - const: addr_space
+> +
+> +  clocks:
+> +    maxItems: 4
+> +
+> +  clock-names:
+> +    items:
+> +      - const: aux
+> +      - const: dbi
+> +      - const: mstr
+> +      - const: slv
+> +
+> +  num-lanes:
+> +    maximum: 4
+> +
+> +  samsung,syscon-pcie:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: phandle for system control registers, used to
+> +                 control signals at system level
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - clocks
+> +  - clock-names
+> +  - num-lanes
+> +  - samsung,syscon-pcie
+> +  - phys
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/fsd-clk.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    bus {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        pcieep0: pcie-ep@16a00000 {
+> +            compatible = "tesla,fsd-pcie-ep";
+> +            reg = <0x0 0x168b0000 0x0 0x1000>,
+> +                  <0x0 0x16a00000 0x0 0x2000>,
+> +                  <0x0 0x16a01000 0x0 0x80>,
+> +                  <0x0 0x17000000 0x0 0xff0000>;
+> +            reg-names = "elbi", "dbi", "dbi2", "addr_space";
+> +            clocks = <&clock_fsys1 PCIE_LINK0_IPCLKPORT_AUX_ACLK>,
+> +                     <&clock_fsys1 PCIE_LINK0_IPCLKPORT_DBI_ACLK>,
+> +                     <&clock_fsys1 PCIE_LINK0_IPCLKPORT_MSTR_ACLK>,
+> +                     <&clock_fsys1 PCIE_LINK0_IPCLKPORT_SLV_ACLK>;
+> +            clock-names = "aux", "dbi", "mstr", "slv";
+> +            num-lanes = <4>;
+> +            samsung,syscon-pcie = <&sysreg_fsys1 0x50c>;
+> +            phys = <&pciephy1>;
+> +        };
+> +    };
+> +...
+> -- 
+> 2.49.0
 > 
-> ...
->
->  include/linux/mm_inline.h |  19 +-
->  include/linux/mmzone.h    |  13 +-
->  include/linux/swap.h      |   1 +
->  mm/vmscan.c               | 797 ++++++++++++++++++++++----------------
->  mm/workingset.c           |  10 +-
->  5 files changed, 494 insertions(+), 346 deletions(-)
-> 
-
-(replying to https://lkml.kernel.org/r/20250627162606.30609-1-zhongjinji@honor.com)
-
-That is one big patch!  I'll avoid it at this time, see what the
-reviewers say.
-
-Have you reviewed Documentation/admin-guide/mm/multigen_lru.rst to see
-if any updates are appropriate?
-
-I expect people are going to want to see a lot of detail about the
-runtime effects of this change.  What sort of workloads are being
-targeted, what were the effects on testing results.  What sort of
-workloads might be harmed by the change and what were the effects on
-testing results for those, etcetera.
-
