@@ -1,187 +1,321 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7E03C01
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 02:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595AE3C01;
+	Fri, 27 Jun 2025 02:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750991432; cv=none; b=C80+8g082VArzlCLVMh6FsM2VjYATRAulUx66TSsQkQiqKuzU5CNp2JehPVR6/h6kxJ5R59vvv+JwDqZOTmbnsso7Z7AIJKe4b3UIdNLBq5SqqufrtCiMsKF4Fcn+mTR3mdnKjyzbbulzztaF5TjqR93LK7DgpbF/+QaGDA7HHg=
+	t=1750991601; cv=none; b=UBEJAm5hy1g7cbbfLxmVi0nt9Kz+t0P1cqzxCv+3Ri5JP9s15OdGoL6ae11TJAaFM87Lx9lYRa8FU0uFaZPVxds6suXvXZNQcaw8GTD7tq5XKqrDvjXk9y1wBOZk0zq+X5a1SJFz66A3TicKTd3Rhz0H+UPC2h/Q6xCVq0d1p6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750991432; c=relaxed/simple;
-	bh=YBrWZoXjOtj7uUnmAB7VDlbYhFotolL8AeYeCYLmD2M=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Nn6H/OjJePUYQ4Ze7ZCq3kb9pZKqAqU/5TpBmalmvZ/k5srVSeBg2VSTf5PCP2PXvWtUh83Cmv6V9xzHzKL+r7I01957ZEPJUWZCm115HnrhwKdXtf+aUZgon8Sej2bhaizt/RPfZN+O82Fq6AxCld1X3ySXRFOcqmJ3Mt1T4fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dPYS8uo3; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750991601; c=relaxed/simple;
+	bh=JeDvWOF1XyNZlVbSRkKg62AXuM9cfneLs6TPaSfZpr4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c32HbuvFh6ME9wyI5DrPz3W4nrQMMdQbUjBELuVZSlXNRv6hojsT17JDy2XPUIjP6H/L+ubSlRK6H4F9se0WNC8iNFelVNyXEFFCPCsmiPKzkamvFmiAb11WvAmuf1ZUEbEm1/OdEuk+ao8SyLTeOrlqh0eK8asIbvJSb92sSNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Az5GSdU4; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dPYS8uo3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750991431; x=1782527431;
-  h=date:from:to:cc:subject:message-id;
-  bh=YBrWZoXjOtj7uUnmAB7VDlbYhFotolL8AeYeCYLmD2M=;
-  b=dPYS8uo3mfDHbXoUXdFNwAyg8gxvGzPJii1aoZsJ57SeXgsc/ykN9n2s
-   f1c0dHalEylOoi3nyMbV9QcvrEpGmyjztWlmMAybl5QSwuJ7L+5LBfFE0
-   HbY6JxNLRWQoRD4qURdjeAbPpGqcwDCEzYP4Zj1nJ8sJtsCxP6/wLl/GV
-   78txveUQl4urhzD9FqTTnAXv8HVl3YKYKamkKRX7r4QiglHC9qTl34Jrk
-   4cKGtTE+YOTW7XB0DeXCl5/D9bGZXBARVM98jf9SBLvTK93Py88F3qdkP
-   ParP3kQk48AE/edv/dT2z0d77fG7dHPPzzUw2BzZlVVpE+XZB04pqfqdk
-   w==;
-X-CSE-ConnectionGUID: XWkIxmL2QoiOAO3mdpDLWA==
-X-CSE-MsgGUID: xAQ86j5ATjq2wF11JebELw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="63989501"
-X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
-   d="scan'208";a="63989501"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 19:30:26 -0700
-X-CSE-ConnectionGUID: k2uIysJRQZ6/uvBDLZTJfQ==
-X-CSE-MsgGUID: LLFhZOzBTJuv/vF6zglRig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
-   d="scan'208";a="158425461"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 26 Jun 2025 19:30:25 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUyr8-000VjA-1Z;
-	Fri, 27 Jun 2025 02:30:22 +0000
-Date: Fri, 27 Jun 2025 10:30:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:tip/urgent] BUILD SUCCESS
- 7ed1f13ed278c2f05c648e286513b1e94e77b6a6
-Message-ID: <202506271010.CDrxN2Q4-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Az5GSdU4"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso2132753b3a.2;
+        Thu, 26 Jun 2025 19:33:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750991597; x=1751596397; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mzGMUD5FoQ+Qma22SIVK819nPdr7pYinoircpLfGQJY=;
+        b=Az5GSdU4jXt9EBpiLFgVDCPuqDp/gAnc7qFKU7GChE8gnxhRgRB7fi2xsBxhyF4fcU
+         cVOH0F5EcI74Zf2sU85I7Z/HuAuEVqJvp1mIp66RRpfJ6i2gIMIMiZCEGuO8CPXWp+y/
+         KXjdxEJGmKfhbHPvC9LyMmE29bDU9U+gbn3kq1HGORrKVu0L6YIcSh3CR8ATfl4w7ITu
+         XgITJXMSPr8aWXLou9qPK+tdePdIhw3xfKV7+5kxay6hjKtdFGtWsiRd1dTWWGvbZvdp
+         ipSOW2XUWji9AB4OFPBXLdIjEDZRXFJXPGdXTVQW6RLkLohyH4tPzt9QJwHi+yObklMh
+         ZWSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750991597; x=1751596397;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mzGMUD5FoQ+Qma22SIVK819nPdr7pYinoircpLfGQJY=;
+        b=s+4ADPeZMsheQOeULonRgalWUVO7Y5jzTsojbJqW5HG8PNBdnR/ZBB70yZL4/uemDq
+         n7YoW4lUQJCKeiM9qLZlXkNjuypc3slAMG7xPK+wvlcZUhEGKrZZp95EGJzcrQoXNhj7
+         N9OODwRxLxrdOFA74dLrpU5dM8b9wMM9sgyxRrpFY/n87DWDdHGvwWPZnZ68SXFL59ef
+         lwAWfpPXYaYFax9X9h0QPQh8I071rDcpxJQARxuU9mhZm0gkSCqrZ1RL8s8vW7dQhL6y
+         SpwZ7+Fvv7BouQMOjT7UVarEXxsUJZSFiG0SQlWettGDsHiKoyCnAQ72jO2374L2JwcO
+         9l4g==
+X-Forwarded-Encrypted: i=1; AJvYcCU5ONnMMp/dEecCyNqtUaeMZPFTJExTfcXcqsquaKJcK22YLAkYaCj3tQfFRCbEaFKhgbucWnSWK8xLVaY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAud+XN9/IP2Po3oSEZsf6pQdf85hKTp1CNd3LpiZdtKyezYWy
+	kmGzvC2CQvdsMnqK9pIUH5GfxYGLhyRCFl1juzzaURs4rZ+/8eGSVnR9
+X-Gm-Gg: ASbGncs9R9wdXyHTp2xd58FpqJ9BcI+M/nJwJFk+hMliuxNZDABcrPCv2iAo1DN4S5i
+	w0woOfJUobmj+iW1iAGsFM8yyAM2R1M8VuPECp5hlwSt5z0qd/b53wmB9cDTvnSt7B8/A7sXyZJ
+	RjSnEizYZ5m40nJMQIBH2GmmhhwMKma7VHeA4fG3PvG0NLe7uiHvLlK2T5X0rcNreKGycRowP/O
+	rYaCtnGvSYokt5gdpRg/CeaFU5x55aaeYTKpjune0oAFOmRjUShml8nl8ZhMcGIhYo1eXZ+LlWk
+	kq2QPpv1PqlaGCSqtThtd2qqoLm1mTVgqBpU8nWABORJ30jhXk6KK3k3WCeIBjT7G6HOc5cOa2d
+	jT4Hh2HI=
+X-Google-Smtp-Source: AGHT+IE0KPJ87HsMv3dtTh+XWbECzdpVVXv6McTxOopZBlTno+x0ugWKzcRPa0Xer44he323810Vnw==
+X-Received: by 2002:a05:6a20:2451:b0:21c:fc27:aee6 with SMTP id adf61e73a8af0-220a15857f3mr2183641637.22.1750991597365;
+        Thu, 26 Jun 2025 19:33:17 -0700 (PDT)
+Received: from danascape.tail34aafc.ts.net ([2402:e280:218d:2e5:925:fa94:e64:60ee])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af57dda03sm989250b3a.147.2025.06.26.19.33.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 19:33:16 -0700 (PDT)
+From: Saalim Quadri <danascape@gmail.com>
+To: jikos@kernel.org,
+	bentiss@kernel.org
+Cc: linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Saalim Quadri <danascape@gmail.com>
+Subject: [PATCH v3] HID: Xinmeng: Add driver for Xinmeng M71 Keyboard
+Date: Fri, 27 Jun 2025 08:03:11 +0530
+Message-Id: <20250627023311.104045-1-danascape@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
-branch HEAD: 7ed1f13ed278c2f05c648e286513b1e94e77b6a6  Merge branch into tip/master: 'x86/urgent'
+In this driver, the battery is probed, and it checks the capacity
+and charging status of the battery
 
-elapsed time: 987m
+Signed-off-by: Saalim Quadri <danascape@gmail.com>
+---
+v2 -> v3:
+	Match lore email to the driver
+	assign ret val while probing battery
+v1 -> v2: Update Kconfig paragraph :/
 
-configs tested: 110
-configs skipped: 1
+ drivers/hid/Kconfig       |  12 +++
+ drivers/hid/Makefile      |   1 +
+ drivers/hid/hid-ids.h     |   3 +
+ drivers/hid/hid-xinmeng.c | 170 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 186 insertions(+)
+ create mode 100644 drivers/hid/hid-xinmeng.c
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+index 43859fc75747..1cc61ca63682 100644
+--- a/drivers/hid/Kconfig
++++ b/drivers/hid/Kconfig
+@@ -536,6 +536,18 @@ config HID_XIAOMI
+ 	  Adds support for side buttons of Xiaomi Mi Dual Mode Wireless
+ 	  Mouse Silent Edition.
+ 
++config HID_XINMENG
++	tristate "Xinmeng Keyboards"
++	depends on USB_HID
++	help
++		Support for Xinmeng Keyboard.
++
++		Say Y here if you have a Xinmeng M71 Keyboard
++		and want to be able to read its battery capacity.
++
++		To compile this driver as a module, choose M here: the
++		module will be called hid-xinmeng.
++
+ config HID_GYRATION
+ 	tristate "Gyration remote control"
+ 	help
+diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
+index 10ae5dedbd84..e5c9d1276138 100644
+--- a/drivers/hid/Makefile
++++ b/drivers/hid/Makefile
+@@ -145,6 +145,7 @@ obj-$(CONFIG_HID_UDRAW_PS3)	+= hid-udraw-ps3.o
+ obj-$(CONFIG_HID_UNIVERSAL_PIDFF)	+= hid-universal-pidff.o
+ obj-$(CONFIG_HID_LED)		+= hid-led.o
+ obj-$(CONFIG_HID_XIAOMI)	+= hid-xiaomi.o
++obj-$(CONFIG_HID_XINMENG)	+= hid-xinmeng.o
+ obj-$(CONFIG_HID_XINMO)		+= hid-xinmo.o
+ obj-$(CONFIG_HID_ZEROPLUS)	+= hid-zpff.o
+ obj-$(CONFIG_HID_ZYDACRON)	+= hid-zydacron.o
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index e3fb4e2fe911..f649549bd58c 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1471,6 +1471,9 @@
+ #define USB_DEVICE_ID_XIN_MO_DUAL_ARCADE	0x05e1
+ #define USB_DEVICE_ID_THT_2P_ARCADE		0x75e1
+ 
++#define USB_VENDOR_ID_XINMENG   0x3554
++#define USB_DEVICE_ID_XINMENG_M71_RECEIVER  0xfa09
++
+ #define USB_VENDOR_ID_XIROKU		0x1477
+ #define USB_DEVICE_ID_XIROKU_SPX	0x1006
+ #define USB_DEVICE_ID_XIROKU_MPX	0x1007
+diff --git a/drivers/hid/hid-xinmeng.c b/drivers/hid/hid-xinmeng.c
+new file mode 100644
+index 000000000000..a4f5b181bca4
+--- /dev/null
++++ b/drivers/hid/hid-xinmeng.c
+@@ -0,0 +1,170 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ *  HID driver for Xinmeng M71 Keyboard.
++ *
++ *  Copyright (c) 2025 Saalim Quadri <danascape@gmail.com>
++ */
++
++#include <linux/device.h>
++#include <linux/hid.h>
++#include <linux/module.h>
++#include <linux/usb.h>
++
++#include "hid-ids.h"
++
++#define	BATTERY_REPORT_ID	(0x13)
++
++struct xinmeng_drvdata {
++	struct hid_device *hdev;
++	bool online;
++
++	struct power_supply *battery;
++	struct power_supply_desc battery_desc;
++	u8 battery_capacity;
++	bool battery_charging;
++};
++
++static enum power_supply_property xinmeng_battery_props[] = {
++	POWER_SUPPLY_PROP_STATUS,
++	POWER_SUPPLY_PROP_PRESENT,
++	POWER_SUPPLY_PROP_CAPACITY,
++	POWER_SUPPLY_PROP_MODEL_NAME,
++	POWER_SUPPLY_PROP_ONLINE
++};
++
++static int xinmeng_battery_get_property(struct power_supply *psy,
++					enum power_supply_property psp,
++					union power_supply_propval *val)
++{
++	struct xinmeng_drvdata *drv_data = power_supply_get_drvdata(psy);
++	int ret = 0;
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_PRESENT:
++		val->intval = 1;
++		break;
++	case POWER_SUPPLY_PROP_ONLINE:
++		val->intval = drv_data->online;
++		break;
++	case POWER_SUPPLY_PROP_STATUS:
++		if (drv_data->online)
++			val->intval = drv_data->battery_charging ?
++					POWER_SUPPLY_STATUS_CHARGING :
++					POWER_SUPPLY_STATUS_DISCHARGING;
++		else
++			val->intval = POWER_SUPPLY_STATUS_UNKNOWN;
++		break;
++	case POWER_SUPPLY_PROP_CAPACITY:
++		val->intval = drv_data->battery_capacity;
++		break;
++	case POWER_SUPPLY_PROP_MODEL_NAME:
++		val->strval = drv_data->hdev->name;
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++	return ret;
++}
++
++static int xinmeng_battery_probe(struct hid_device *hdev)
++{
++	struct xinmeng_drvdata *drv_data = hid_get_drvdata(hdev);
++	struct power_supply_config pscfg = { .drv_data = drv_data };
++	int ret = 0;
++
++	drv_data->online = false;
++	drv_data->battery_capacity = 0;
++
++	drv_data->battery_desc.name = "xinmeng-m71-battery";
++	drv_data->battery_desc.type = POWER_SUPPLY_TYPE_BATTERY;
++	drv_data->battery_desc.properties = xinmeng_battery_props;
++	drv_data->battery_desc.num_properties = ARRAY_SIZE(xinmeng_battery_props);
++	drv_data->battery_desc.get_property = xinmeng_battery_get_property;
++
++	drv_data->battery = devm_power_supply_register(&hdev->dev,
++						       &drv_data->battery_desc, &pscfg);
++
++	if (IS_ERR(drv_data->battery)) {
++		ret = PTR_ERR(drv_data->battery);
++		drv_data->battery = NULL;
++		hid_err(hdev, "Unable to register battery device\n");
++		return ret;
++	}
++
++	power_supply_powers(drv_data->battery, &hdev->dev);
++
++	return ret;
++}
++
++static int xinmeng_probe(struct hid_device *hdev, const struct hid_device_id *id)
++{
++	int ret;
++	struct xinmeng_drvdata *drv_data;
++	struct usb_interface *usbif;
++
++	if (!hid_is_usb(hdev))
++		return -EINVAL;
++
++	usbif = to_usb_interface(hdev->dev.parent);
++
++	drv_data = devm_kzalloc(&hdev->dev, sizeof(*drv_data), GFP_KERNEL);
++	if (!drv_data)
++		return -ENOMEM;
++
++	hid_set_drvdata(hdev, drv_data);
++	drv_data->hdev = hdev;
++
++	ret = hid_parse(hdev);
++	if (ret)
++		return ret;
++
++	ret = hid_hw_start(hdev, HID_CONNECT_DEFAULT);
++	if (ret)
++		return ret;
++
++	if (usbif->cur_altsetting->desc.bInterfaceNumber == 1) {
++		ret = xinmeng_battery_probe(hdev);
++		if (ret < 0) {
++			hid_err(hdev, "Xinmeng hid battery_probe failed: %d\n", ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static int xinmeng_raw_event(struct hid_device *hdev,
++				 struct hid_report *report, u8 *data, int size)
++{
++	struct xinmeng_drvdata *drv_data = hid_get_drvdata(hdev);
++
++	if (drv_data->battery && data[0] == BATTERY_REPORT_ID) {
++		u8 charging_status = data[7];
++		bool is_charging = (charging_status == 0x11 || charging_status == 0x10);
++
++		drv_data->battery_capacity = data[6];
++		drv_data->battery_charging = is_charging;
++		drv_data->online = true;
++	}
++
++	return 0;
++}
++
++static const struct hid_device_id xinmeng_devices[] = {
++	{ HID_USB_DEVICE(USB_VENDOR_ID_XINMENG, USB_DEVICE_ID_XINMENG_M71_RECEIVER) },
++	{ }
++};
++MODULE_DEVICE_TABLE(hid, xinmeng_devices);
++
++static struct hid_driver xinmeng_driver = {
++	.name = "xinmeng",
++	.id_table = xinmeng_devices,
++	.probe = xinmeng_probe,
++	.raw_event = xinmeng_raw_event
++};
++module_hid_driver(xinmeng_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("HID driver for Xinmeng keyboards");
++MODULE_AUTHOR("Saalim Quadri <danascape@gmail.com>");
+-- 
+2.34.1
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    clang-19
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    clang-19
-arc                   randconfig-001-20250626    gcc-12.4.0
-arc                   randconfig-001-20250627    gcc-10.5.0
-arc                   randconfig-002-20250626    gcc-13.3.0
-arc                   randconfig-002-20250627    gcc-10.5.0
-arm                              allmodconfig    clang-19
-arm                               allnoconfig    clang-21
-arm                               allnoconfig    gcc-15.1.0
-arm                              allyesconfig    clang-19
-arm                   randconfig-001-20250626    clang-21
-arm                   randconfig-001-20250627    gcc-10.5.0
-arm                   randconfig-002-20250626    clang-20
-arm                   randconfig-002-20250627    gcc-10.5.0
-arm                   randconfig-003-20250626    gcc-10.5.0
-arm                   randconfig-003-20250627    gcc-10.5.0
-arm                   randconfig-004-20250626    clang-21
-arm                   randconfig-004-20250627    gcc-10.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250626    clang-21
-arm64                 randconfig-001-20250627    gcc-10.5.0
-arm64                 randconfig-002-20250626    clang-17
-arm64                 randconfig-002-20250627    gcc-10.5.0
-arm64                 randconfig-003-20250626    gcc-8.5.0
-arm64                 randconfig-003-20250627    gcc-10.5.0
-arm64                 randconfig-004-20250626    clang-21
-arm64                 randconfig-004-20250627    gcc-10.5.0
-csky                              allnoconfig    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                           allnoconfig    gcc-15.1.0
-hexagon                          allyesconfig    clang-21
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    clang-20
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20250626    clang-20
-i386        buildonly-randconfig-001-20250627    gcc-12
-i386        buildonly-randconfig-002-20250626    clang-20
-i386        buildonly-randconfig-002-20250627    gcc-12
-i386        buildonly-randconfig-003-20250626    clang-20
-i386        buildonly-randconfig-003-20250627    gcc-12
-i386        buildonly-randconfig-004-20250626    clang-20
-i386        buildonly-randconfig-004-20250627    gcc-12
-i386        buildonly-randconfig-005-20250626    clang-20
-i386        buildonly-randconfig-005-20250627    gcc-12
-i386        buildonly-randconfig-006-20250626    clang-20
-i386        buildonly-randconfig-006-20250627    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-15.1.0
-openrisc                          allnoconfig    clang-21
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    clang-21
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    clang-21
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    gcc-15.1.0
-riscv                            allmodconfig    gcc-15.1.0
-riscv                             allnoconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    gcc-15.1.0
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-15.1.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250627    clang-20
-x86_64      buildonly-randconfig-002-20250627    clang-20
-x86_64      buildonly-randconfig-003-20250627    clang-20
-x86_64      buildonly-randconfig-004-20250627    clang-20
-x86_64      buildonly-randconfig-005-20250627    clang-20
-x86_64      buildonly-randconfig-005-20250627    gcc-12
-x86_64      buildonly-randconfig-006-20250627    clang-20
-x86_64      buildonly-randconfig-006-20250627    gcc-12
-x86_64                              defconfig    clang-20
-x86_64                                  kexec    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-12
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-12
-x86_64                           rhel-9.4-ltp    gcc-12
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
