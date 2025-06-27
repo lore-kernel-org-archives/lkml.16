@@ -1,132 +1,127 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECA42D3EDA
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A296296169;
+	Fri, 27 Jun 2025 10:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751019042; cv=none; b=u8N2G0YHSH5PRVDUB0XKRvCGUj+ERuyY6shuEBxAu+LstSIj9ZbmeZC9ExpuPl2UVHB0jGAMZ4sZvOwsCGAAFFaGX6QOAWwDYQc69GZEclOq9/9nwCaGn5iQ3gQtx9bpM3UaZIOQrem7MbTQLYF3Rl6jln+2mbLDixUC2ebMUUo=
+	t=1751019099; cv=none; b=HCkCJomS0yXd1PaGOnSMu4ATCv0jpvugmyVXwoe/WxHY44ctE5SWjkJ1VTajkit1S8L5EqY9ivO5jmxWko64lzf2qztj7A1GTghiINViXyxvDqyHXNPF706TGiPPBAVRWYSty06CsMmzYHGBxUxEhKUgI5jtlEjfqt3q46F+VCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751019042; c=relaxed/simple;
-	bh=PY7MCM4FXuwFMl63xmFYQRu/KWGisjazEhN6tbWGbm4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tyVaG5KruINwL6qCgFYVD5KdPU+SAwvTZm4Lka4xx/EBz1tJxDzbtRB/NK7F8uFsltuGsZvGVqQN4G8aBwV348Si2qwY3BnydrkId34GC4742BE8zlfe4vCc92HUp9CNTJwHPqF3FnsjFTtpaGzXVtBO7g8cxGgJMQAVapNwe+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GTkBwrvX; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1751019099; c=relaxed/simple;
+	bh=pr2TNql3hThXDgKAMavYEjtYW0R2AuC56+PsUT6h0KM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=irDVyOV0uIKaeCJHgW8rS7w4Qj64rOeKlLAHTZKT36Ddao1BVNXUbd5drV/Kvkn+dcfNmu/eufw/zGi7HcmhaMC6nBmaB2pVScYpuzeqdZc2Qv9pmEa06p+WF3OlibCYE3cxuslB+nKeOizcson/gKOzVLPc6EPJ5ahleifRzqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TV39J278; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GTkBwrvX"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450ddb35583so2877955e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 03:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751019039; x=1751623839; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q4D/AiHSkh+69Es8gMfweA+RJzsnoZRpe3Ttw4Zd1mI=;
-        b=GTkBwrvXOARO/FKqqBUgWxCtGjIIoFE2vfqAt+pmKhYlk6e0plTyzEqonnPv+yljVC
-         lyuTNQhXS/idjKrgB/NqTJ1fEOsDoEicThZdoHtSjDjPTlWX6jzao7iXChqdk2w0R6NE
-         n74qxZvqLxB1r4f7U0gx0IN8xKsn/g95Jjx5aX6WUyWsVK7P1wJr4x/HjvRfxMjqaqQb
-         We7frVBa213i30v7ArbhI7vC+kjOiSePD2Hg6UipPV8IWA3rvUQShtrWVTMyl/1Aya0j
-         n076V/mHVAMnS64LXaG8FvRmzGJGcuyf+LumuZq6skjBhmd0zFKEqZhDi5tBRUjggNrw
-         L1RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751019039; x=1751623839;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q4D/AiHSkh+69Es8gMfweA+RJzsnoZRpe3Ttw4Zd1mI=;
-        b=ep4pOzlT8LFh5CigLDCavEt6KZkcpOCvK3pR7mx7hgajbUL5vrUhx+Rdw5Xy+oVpKL
-         drTpXoOHfm20dhWAZus/E7dc2LrpMTKS68be4yDWA0+SHW0BgPkj/OZnyMQ5GTYLr84I
-         OlCSQeu1XHpNfwfIhFHa4r+MDFeMJSkL8GGbekaAIYFaThp9PEe2AI4g4gBfY9fn6ciy
-         qqiP95szfyi8myHzA0VyTQkYg1d5nlv2izbMQeWX7Zw9WovTKqWwMZ1S0HsfpvAQ+ep6
-         jsnaQADawqVEdehpyt4V5ZiibcUuvlPOdHkZeiW7AmdFRSeHyJAlTKACUf4PJY7HXr2B
-         +1qA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxd9b/kzRUGCi0mGD6u4t6SmFneavsJ1iNJLcA+xRteM8EOhRRjqJmEoLWGxv2Gfx53qP1XeK7Oy7YWCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyi3TeRmMN//698UnXCzp4igC/TcKbnXY+Z5rynjbQxRY8+NqQc
-	Ar3WtKaK53qIUQ0lRiXRDa/fW3TQmZ6nfVrU0riWpgG8mRcoeNbPfwskIGf3t2QzyHs=
-X-Gm-Gg: ASbGncuylF2njBprtZi8yyZ8ur2ryP7EUcFYTHz+ySiKWqJbFUFUWBDtwS/euJVgpyr
-	Q2GUoCcsj6NiEnR18l08FU73hFPkTBG427dQ33qzT5/IcJkIHGAILlJTip/MJt5MGA8yIbAH+/b
-	P/uyYvGX9OP79DR15EcIcS0A4fDmrNwJd9+OBoOPoE+Kjh/igyyeG2B8PiAPWz7KhHlTfoKu/ZU
-	WBY5PpYepDESIk6b01q6dERUzkdJ5Z4HsvzQAotWkITIdfjbPDrN4IMlrDggUQ3OKRdrhdwSltF
-	fxlhJGZ+zCLlBAZY6oVAa/IJLIvL2/IN1Suz6ELdPeVXkNWV2HNy//6vgXSaXQ7K3+dQ3/BFIZ6
-	+hZq0rnwALyr2taPSdxb7u78znkHzLbf2ferNloYIzE7FxFG9Af99
-X-Google-Smtp-Source: AGHT+IFhGjN5+1VG4TKQb30R0Dc6Kgtf1mHBD0dtlQDL49I+8wxvgFwjsJemxuxfEbYHyeyL9tfPrA==
-X-Received: by 2002:a05:600c:a08b:b0:450:d5ed:3c20 with SMTP id 5b1f17b1804b1-4538ee7446fmr10977035e9.6.1751019038988;
-        Fri, 27 Jun 2025 03:10:38 -0700 (PDT)
-Received: from localhost (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4538327fed8sm37178605e9.1.2025.06.27.03.10.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 03:10:38 -0700 (PDT)
-From: Petr Tesarik <ptesarik@suse.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Keith Busch <kbusch@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
-	linux-kernel@vger.kernel.org (open list),
-	linux-mm@kvack.org (open list:MEMORY MANAGEMENT),
-	Petr Tesarik <ptesarik@suse.com>
-Subject: [PATCH v2 8/8] docs: dma-api: clean up documentation of dma_map_sg()
-Date: Fri, 27 Jun 2025 12:10:15 +0200
-Message-ID: <20250627101015.1600042-9-ptesarik@suse.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250627101015.1600042-1-ptesarik@suse.com>
-References: <20250627101015.1600042-1-ptesarik@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TV39J278"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DFD3C4CEE3;
+	Fri, 27 Jun 2025 10:11:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751019098;
+	bh=pr2TNql3hThXDgKAMavYEjtYW0R2AuC56+PsUT6h0KM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TV39J278LTRvqD8rrIg+Hd0RqL6WeXmBCn2DAw1OfyDj23QebGFe3sUfJReZqRcrW
+	 JgCK09LtgcsOFwmnASa7Zi7ixZXQiQBBfPhG8rE5Ngzpkl7m6OZiVxvCrgOyUg4cZs
+	 viMsK9m8XxX3V92FQbgRrIEM5Xegnw5IA46TzVY0Fp7pYGsNa9tD2WbrzvF/AFQ6w9
+	 UkK1+4+T9h+UnAYSY2N9+7pziG9PNY86mEGs9FMxEbhT7TeRqpq/Osq/HanTTex7Fj
+	 atM5b+Rk+3gzxmo75psJ8vGhb1mibKUb9PPRhbUYr2Lk69RhOU9r7MVSmjndLhLrUi
+	 4b5wQzr1Y+tyQ==
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-60d5c665fceso944356eaf.1;
+        Fri, 27 Jun 2025 03:11:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUm2iTtsncjUWAge49SQ6spg1VjnLgV1Hswl3g1cmYMIYS80ek3Hxx6fOab5GgW9fiXQo/PldNS9JIH@vger.kernel.org, AJvYcCVCmJQGTxI/5w51V1Nvbmzu00rHyFwNW3caFAD3qvRhUAHHEO+rPDxs1tvGfOzqZnu/zuSF+kOIZFtE@vger.kernel.org, AJvYcCW6Hm3rlM0hyxYd+ZC5lxcSeEfGeg2XbXP2Zolk74AD7MOG+dzQfScyROZGaPAQD16QVdVlklG8UVI=@vger.kernel.org, AJvYcCXtF345dz+XwmjzzwliCZSXkoVzosqlJ4fh2HoljjWPKK8v1pAkV8/ACb7nFSWdYe9UnREoD9XTYQbLbvnr@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFH7u4/A/IuWmhAaosqZUxEFto7dPBUmsvHlQTb8vynA/nwCFG
+	eM+WIrqlGWAdDrLCDeEvqTn3wM8UtClphl0Eqp5tF8k79jMCICQ9qAusXgj5Ei9lYz+88TbICdt
+	12CkCH61P6ans4rLDWMH/00b9qTA95sg=
+X-Google-Smtp-Source: AGHT+IHKFy5vLlUe15/yzSikt6vQUk2IusHi96SQuGMqrHseBGhPTAoSr+tw0f3d70e/5HH6fGJ5+Fd0mksP129g1KY=
+X-Received: by 2002:a05:6820:2085:b0:611:5132:6296 with SMTP id
+ 006d021491bc7-611b90e52d6mr1561486eaf.4.1751019097776; Fri, 27 Jun 2025
+ 03:11:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1952931.CQOukoFCf9@rjwysocki.net> <20250626205923.GA1639790@bhelgaas>
+In-Reply-To: <20250626205923.GA1639790@bhelgaas>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 27 Jun 2025 12:11:25 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jH8m06r1thobzxHsQFwYUkY_6jPyQViXGFY6PsUFThow@mail.gmail.com>
+X-Gm-Features: Ac12FXwA8xkD7X7FbWDgBnwmFupdV7LVC82L0ibNqUcSI1XeVBkaSPJjLUn0ua0
+Message-ID: <CAJZ5v0jH8m06r1thobzxHsQFwYUkY_6jPyQViXGFY6PsUFThow@mail.gmail.com>
+Subject: Re: [PATCH v2 9/9] PCI: PM: Set power.strict_midlayer in pci_pm_init()
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Describe in one sentence what the function does.
+On Thu, Jun 26, 2025 at 10:59=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
+ wrote:
+>
+> On Thu, Jun 26, 2025 at 08:15:05PM +0200, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > The PCI bus type does not expect its runtime PM callbacks,
+> > pci_pm_runtime_suspend() and pci_pm_runtime_resume(), to be invoked at
+> > any point during system-wide suspend and resume, so make it express
+> > that expectation by setting power.strict_midlayer for all PCI devices
+> > in pci_pm_prepare() and clear it in pci_pm_complete().
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Previous PM-related patches in drivers/pci/ use a subject line like:
+>
+>   PCI/PM: ...
 
-Do not repeat example situations when the returned number is lower than
-the number of segments on input.
+Sure.
 
-Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
----
- Documentation/core-api/dma-api.rst | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+> Would be cool if there were hints about what
+> dev_pm_set_strict_midlayer() means.  Maybe the comment in
+> get_callback() is enough, but it takes a little work to find it.
 
-diff --git a/Documentation/core-api/dma-api.rst b/Documentation/core-api/dma-api.rst
-index a075550ebbb54..6a57618118fd4 100644
---- a/Documentation/core-api/dma-api.rst
-+++ b/Documentation/core-api/dma-api.rst
-@@ -322,10 +322,10 @@ action (e.g. reduce current DMA mapping usage or delay and try again later).
- 	dma_map_sg(struct device *dev, struct scatterlist *sg,
- 		   int nents, enum dma_data_direction direction)
- 
--Returns: the number of DMA address segments mapped (this may be shorter
--than <nents> passed in if some elements of the scatter/gather list are
--physically or virtually adjacent and an IOMMU maps them with a single
--entry).
-+Maps a scatter/gather list for DMA. Returns the number of DMA address segments
-+mapped, which may be smaller than <nents> passed in if several consecutive
-+sglist entries are merged (e.g. with an IOMMU, or if some adjacent segments
-+just happen to be physically contiguous).
- 
- Please note that the sg cannot be mapped again if it has been mapped once.
- The mapping process is allowed to destroy information in the sg.
-@@ -349,9 +349,8 @@ With scatterlists, you use the resulting mapping like this::
- where nents is the number of entries in the sglist.
- 
- The implementation is free to merge several consecutive sglist entries
--into one (e.g. with an IOMMU, or if several pages just happen to be
--physically contiguous) and returns the actual number of sg entries it
--mapped them to. On failure 0, is returned.
-+into one.  The returned number is the actual number of sg entries it
-+mapped them to. On failure, 0 is returned.
- 
- Then you should loop count times (note: this can be less than nents times)
- and use sg_dma_address() and sg_dma_len() macros where you previously
--- 
-2.49.0
+OK, I can add a kerneldoc comment to it.
 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Thanks!
+
+> > ---
+> >
+> > v1 -> v2:
+> >    * Set and clear the new flag in "prepare" and "complete" to allow
+> >      pm_runtime_force_suspend() invoked from driver remove callbacks to
+> >      work.
+> >    * Update subject and changelog.
+> >
+> > ---
+> >  drivers/pci/pci-driver.c |    4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > --- a/drivers/pci/pci-driver.c
+> > +++ b/drivers/pci/pci-driver.c
+> > @@ -708,6 +708,8 @@
+> >       struct pci_dev *pci_dev =3D to_pci_dev(dev);
+> >       const struct dev_pm_ops *pm =3D dev->driver ? dev->driver->pm : N=
+ULL;
+> >
+> > +     dev_pm_set_strict_midlayer(dev, true);
+> > +
+> >       if (pm && pm->prepare) {
+> >               int error =3D pm->prepare(dev);
+> >               if (error < 0)
+> > @@ -749,6 +751,8 @@
+> >               if (pci_dev->current_state < pre_sleep_state)
+> >                       pm_request_resume(dev);
+> >       }
+> > +
+> > +     dev_pm_set_strict_midlayer(dev, false);
+> >  }
+> >
+> >  #else /* !CONFIG_PM_SLEEP */
+> >
+> >
+> >
+>
