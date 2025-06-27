@@ -1,83 +1,51 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDAD91F3FED;
-	Fri, 27 Jun 2025 19:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06244200110;
+	Fri, 27 Jun 2025 19:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751051927; cv=none; b=DUOKGYIzAMLkFFsPomIEFjXQGVl0lQc/KBTcT59zLt9W2bNFmMpux1xFBijwtVjxpstB5C3ND/gO1unSoe592fjpCysxyb590hsF6pahwH4KNXrX7IBB8bnVZoqkpb5yZiqqaEDyeo6MJmN+DMk5ZEVXA06/goUMMmg0rTsvKLA=
+	t=1751052010; cv=none; b=VUZJ8Tqal/nKDjtcAZtRu0IAGBWjMTIQahWWm8o/Jjc7OjCe7zpXet2ylHh7WXe82Fk5PuaDDc5FNUDDIdS6DXcSpbvGjJyh+xMfz81KEaL1Zgn+I+BBxjaPxXyPzPQCoeET5+/XU9WAr9eQaeOpau3NdjKFFR4ZPONVtkT9P9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751051927; c=relaxed/simple;
-	bh=QG/ZJnQsijuz1qj6xMLY39ghXIjNmxMa07OJWY23Tcg=;
+	s=arc-20240116; t=1751052010; c=relaxed/simple;
+	bh=rlOHZjZIEspl0q/GBx3OYaU1/H0UqF4UUVO6+aOekBA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uACxotE77Q4dv/WV52cqbbqXxO50c+vNdByIoT2ezn7fAxFCNTc/MEY0x+/MJf4mJfgVW7jZR03HMbKeQNsf4Rrj5E4D5o30oH0l4KjS/06Jg2XpuL9UgW7E/XZ40TSwADr7SRpsINmRmUwKV+yFw6VrLqZusUAQt2W997yxyRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kSYGMoSx; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YlqCQNZb6eeFG6AUgsYzxyZfHoBKLJIlFPf4ZZAsoyMoewJIwQd4j07BiI5olnWqAMaJ4rRq1jvHOoB9Ei9leLu0pSVwqVZRljMHnt2ktIEDJNSlNjhoFO8ZXNHmoMUUbYGzQH4VtybqfRS3qfi7+zRv8+lrOJreYSwSObvSoEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgSXez3g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSYGMoSx"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-748d982e97cso353140b3a.1;
-        Fri, 27 Jun 2025 12:18:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751051925; x=1751656725; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rl1bZeaKAel4vJ0Jypkmyrk8ZrocaoAqPfxCMeVNaTM=;
-        b=kSYGMoSxOhAWpK+XPfg3tbaOQexlMNOwOanZSWIuPtbcgj9a8lJAHtucyIGnsMGL9P
-         uxPQWD28Amr8Ut8WfTAwIwspUDkrTdPhpNMyJH6BC7j8sAaExSkux0Mqa+uRyK1XZIjN
-         vSXEWROAyOGcEfMoTDbDHstgrwMZPwZCL4yy6C1a0fD2jQ0NVAa3aJXlGj3hVt6vkNsl
-         jakQvzmsACRRKCrla/1lp19GBhf7EYcrQC1AWXUFAgOPYSEUJu/0x5HSlHcQtosdjF+8
-         e1Zut6+14Bjcd7xASihuJpUVu3JoxL6G0TazDB/x7zeOmuj/2/pU2ADk3OZ8Ju2RExBN
-         Fo7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751051925; x=1751656725;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Rl1bZeaKAel4vJ0Jypkmyrk8ZrocaoAqPfxCMeVNaTM=;
-        b=GwfPcTRpX1eewtlhtMiLPgrUUXsUAmzHPqdKELqMRrL0FyLQySdLWQCVo9v5Ag7r52
-         fWaLakfKmcbhS1SzM3Brxtiaq6vGQBtIZugOLUHhoTRPoWl5avo3TB3UBdhIY/7X79ja
-         c9Sk7xlL0KuMVYnfsJrp0EWhXZrKpBVuQ1Uy9lJxlheggVZrqrOXp3uMwO+/mcrt/+UM
-         dnDaByVL4O4fmJyCNxFzF6JlzeDbJZ+zvAU4fq8Uf0+siNKwikpzLzSxIjS3ugYBJ4ZW
-         b31DZ+rmB0BLSKKM0x9NkuYXO6EWRoOyB+4OrKkfkqFLaIsShFlIY1Ryo47sGbGDcLQn
-         wrcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTSMphCue4uDxt06owY1gplqTsltGohyi14dzQEgwdUttZW9jm0iRcvQJBcLZ6c/yL6vt81MpMr2GKUuA=@vger.kernel.org, AJvYcCUqOnHm1Jwav57DUX/hO6z9ln/k9TM48oKclc6R/v8KG5KO3aOtyjojl8zUoYjEw3OcdqIQOSRJA9J++XnV@vger.kernel.org, AJvYcCVYsvU8jyQFnhSBsv9aoniF+ugbhsQKyj9D8cVZmbmX/JhvrTRAmp0My1qccJcSuE/XhLGuUKPy3L/TJg==@vger.kernel.org, AJvYcCXsO2ZNQyzXRCh1beuhXarH5/yZk5vJO2j12yqQa+ZV3+wz052GbCP8/f6RL8IYXYoxyZXgqQzurIj1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9wZP7p3KBMbUhzJqjt6u/776lWYk/ImvPxh+fb526TlTr3zBd
-	vE84LdcACEIrobYXBiazXJlOnBk/GdGkRfzTpy/wPJEIlQ1aOTrXmjRF
-X-Gm-Gg: ASbGnctzuT08f/gyWZ4lu1XTUjqtuUBwewmaEKmRslOnpYft9oQ/kvrS5QGygNVHf5n
-	PkWiHuBDKX4KycidWV8PsQE2eIBqXN/sa0zEbKkanUfSX1DX+PySZpgxZprTUZU7cWMrI1Wuve2
-	dqIFkqNyvYQIrWAc/pS8bNa/9Sftu77G+nHRFYcbOerxi0Wt9iMAs0XABfxmSPCtFhNtZZ6i0KR
-	1lqP8tyPXfr3EJA1NhOIe1F/eVjgEraClWofXsuM75+2CZ4H3aQDOU6EiYDiZC6ynH+CnStgjMN
-	bQU64KaO94YovqJS7SpuIU1Ci/f2NnqY8hVcuUFb/2QRTE7Q6zmAssmHAKlgwg==
-X-Google-Smtp-Source: AGHT+IEHoSjyu/PsbXM8b723Z9LDDY+YcLgnYsBPgCDGNL/jl8ME3FpZgblnhLA1Y1P88anS+TKUUQ==
-X-Received: by 2002:a05:6a20:a10a:b0:210:4397:82a5 with SMTP id adf61e73a8af0-220a1583b68mr6269885637.21.1751051924958;
-        Fri, 27 Jun 2025 12:18:44 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:d0c7:d92:6a17:eb62])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af56d91d7sm2710939b3a.141.2025.06.27.12.18.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 12:18:44 -0700 (PDT)
-Date: Fri, 27 Jun 2025 12:18:41 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Hans de Goede <hansg@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>, 
-	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
- system
-Message-ID: <ly3mww7nq7uuqvdx7p2uzcrphhboeuep3yuwbaxwfimesitjaa@hf72i4vu5quo>
-References: <CAJZ5v0j3ZyuEqSKQ+3K8M3BwPCxn5Z6KOwjyjt4cJW6HfxjPDw@mail.gmail.com>
- <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
- <de548b27-4c43-4f30-af9d-b060101e6fd8@kernel.org>
- <75fixx6rgwsgsw6e765oxdcivcg2nkzx2fp2qywgx4vi3ihywh@ot7gdecsnttw>
- <1b0d2349-dbf7-47aa-95c9-1974e63d111a@kernel.org>
- <13025910-7639-400b-878a-cd0780c6534c@kernel.org>
- <4ajmcrl3bqeikki2etek5bafzszelgevr322tvuubx4pxxyju2@qqxz6lzcb6e5>
- <fdd635ce-5e8e-4123-8e8e-241a57b4d7fe@kernel.org>
- <eaf7bva2skjz6oo2s2f4agooplthvuztyr6tssa7rux764qw35@kscd3rtejfvn>
- <9f5e0c21-bc25-44d0-a4d4-6fd6e58a9f2e@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgSXez3g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A246C4CEE3;
+	Fri, 27 Jun 2025 19:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751052009;
+	bh=rlOHZjZIEspl0q/GBx3OYaU1/H0UqF4UUVO6+aOekBA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XgSXez3gkFbYLioFF1Fbh7TfdWdk1g+mL4gRgdBv3mngkruDkm3DWglLsA+T/otE3
+	 vZmAGxTOGI5eIRRUD7YOqdvWvcyRmVH8JeEnJR2IaxgZZhzjyg8lD7PNujHYaae5Z+
+	 d4wua3Nb2eJ6dUPa2w1m5wdnaj16cHcGm0BE7MWK2girIwq/FX2WptGY7cc5wzHYTA
+	 oGfU0oDaXpv0NltxRqLVlCh0uj+wkBQuqH6tO8IiNJbBihCuP0Sy06kNX2ESc4vlWB
+	 QPCfPg+D9AfJkypXNTK7rWe4nj/gC/cp+wJ20Cqlxu/T8fSD939GEvmDfP/saBCgID
+	 RpQCvFx4V8dTg==
+Date: Fri, 27 Jun 2025 14:20:08 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Pengyu Luo <mitltlatltl@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Eric Biggers <ebiggers@google.com>, devicetree@vger.kernel.org,
+	Benno Lossin <lossin@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Ingo Molnar <mingo@kernel.org>,
+	Joel Granados <joel.granados@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-arm-msm@vger.kernel.org,
+	Alice Ryhl <aliceryhl@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>
+Subject: Re: [PATCH 1/4] dt-bindings: vendor-prefixes: Add Ntmer
+Message-ID: <175105200813.4031932.897263178678419405.robh@kernel.org>
+References: <20250617092929.1492750-1-mitltlatltl@gmail.com>
+ <20250617092929.1492750-2-mitltlatltl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,61 +54,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9f5e0c21-bc25-44d0-a4d4-6fd6e58a9f2e@kernel.org>
+In-Reply-To: <20250617092929.1492750-2-mitltlatltl@gmail.com>
 
-On Fri, Jun 27, 2025 at 01:56:53PM -0500, Mario Limonciello wrote:
-> On 6/27/2025 1:36 PM, Dmitry Torokhov wrote:
-> > On Fri, Jun 27, 2025 at 05:56:05PM +0200, Hans de Goede wrote:
 
-[ ... trim ... ]
-
-> > 
-> > 2. There is a patch from Mario (a8605b0ed187) suppressing sending
-> > KEY_POWER as part of "normal" wakeup handling, pretty much the same as
-> > what he and you are proposing to do in gpio-keys (and eventually in
-> > every driver keyboard or button driver in the kernel). This means we no
-> > longer can tell if wakeup is done by power button or sleep button (on
-> > systems with dual-button models, see ACPI 4.8.3.1).
+On Tue, 17 Jun 2025 17:29:26 +0800, Pengyu Luo wrote:
+> Ntmer is a Chinese company, their website is https://www.ntmer.com
 > 
-> Actually a8605b0ed187 was about a runtime regression not a suspend
-> regression.  I didn't change anything with sending KEY_POWER during wakeup
-> handling.
-
-Ah, right, ignorng events for "suspended" buttons was done in
-e71eeb2a6bcc ("ACPI / button: Do not propagate wakeup-from-suspend
-events"). Again trying to add heuristic to the kernel instead of
-enlightening userspace.
-
-I am curious why the system is sending "Notify Wake" events when not
-sleeping though?
-
-[ .. skip .. ]
-
+> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> FTR I did test Hans suggestion and it does work effectively (code below).
-> 
-> diff --git a/drivers/input/keyboard/gpio_keys.c
-> b/drivers/input/keyboard/gpio_keys.c
-> index f9db86da0818b..3bc8c95e9943b 100644
-> --- a/drivers/input/keyboard/gpio_keys.c
-> +++ b/drivers/input/keyboard/gpio_keys.c
-> @@ -425,7 +425,8 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void
-> *dev_id)
->                          * already released by the time we got interrupt
->                          * handler to run.
->                          */
-> -                       input_report_key(bdata->input, button->code, 1);
-> +                       input_report_key(bdata->input, *bdata->code, 1);
-> +                       input_sync(bdata->input);
 
-I start wondering if we should keep the fake press given that we do not
-know for sure if wakeup truly happened because of this button press...
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-Can we track back to the wakeup source and determine this? It will not
-help your problem, but I still believe userspace is where policy should
-live.
-
-Thanks.
-
--- 
-Dmitry
