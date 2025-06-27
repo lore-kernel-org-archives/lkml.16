@@ -1,123 +1,222 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183862BF01A
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:01:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380F829B8FE;
+	Fri, 27 Jun 2025 11:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751022093; cv=none; b=kJnf+aHPsY8YsTY/RYj8KC3Yq1Rpv1A6BXnQLA6DuAR/Y9GJrLHFfqMPb7EdiTNU+tQudcf3KAB54ij8DWE52/jKxHPsYE6T5N0GjQ8OvGRXKjou2kktVpC3ab3LYKynW5YWGhtPPEs/HP6QtNgZN/YquQoKffs3GpDBHlRnFy0=
+	t=1751022098; cv=none; b=Bt6gACFbR8tCQ3H0Hsiix4c2xgTV3ZUyql0B+pthoU9ql4ZsL7TS6UpsPYik6YlIT/meYK/2hsTEqUYCXQlIlaczPg/iuiwaDyGsdpPp3yR0yHpR2cvHIi/h64GG54r3mC2Q/PWdeNbkFIMalW6mHM1tRB0o/7DhQGglbLWEgJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751022093; c=relaxed/simple;
-	bh=ZbJdgOIbkGwBeQnmkTbzv066EyMDgSE02LiXwxp50sQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N6BrsL+pjlBJ65y8GP5WCRKMKfGOH0GzZOAvH+18VudOTd+kMdjfJkNTN0zLsc/RNPKcstHeHWAiickrsuh6jO2S2HZ+hotu9jUOOS6rZtsdXlSDJhNyh5tCkyQbS86eucbR1faJkVHIt01axa7mduqteDCfG6fyjrRyXsp8b8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IdnQX3c1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751022098; c=relaxed/simple;
+	bh=3dExj16ujw0S0QYOUPAHLTgpEZAJVtVkMwlrNFXYVeo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cPoii4UgTvqLsvRCIXMtuZPufzouPF4y6a0tNp52nMN+W6WUB7W/LT96COQJFWiH92t5YC68vHNUK43jCGU7SQ+YnMijrL22xjw1TIS/zSDvlCCT07RhA74f6+eWorQ3W1RON1RL9Bz4zOR+PfGosV6cuXOflL2MJAoG/y4YKAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GuhdNEOI; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IdnQX3c1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751022088;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZbJdgOIbkGwBeQnmkTbzv066EyMDgSE02LiXwxp50sQ=;
-	b=IdnQX3c18/HWhugUf1S+iutKZaJ6kMu/23Lor6UrxnX4yrqtHWk0qP9sxLWo1qvxYM5CsW
-	GmxN3S4a6d4ld36jsoLIClbWNhIlhsKR03GddUws3xJfmq+SPCMp/1WIIunZLuSFXJl35X
-	QX1yfz2o357KN2zAmrd5yqSPErkoUaQ=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-322-0Tp0NDKxNBCqaDCN76eSRw-1; Fri, 27 Jun 2025 07:01:20 -0400
-X-MC-Unique: 0Tp0NDKxNBCqaDCN76eSRw-1
-X-Mimecast-MFC-AGG-ID: 0Tp0NDKxNBCqaDCN76eSRw_1751022079
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4a44e608379so66940041cf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:01:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GuhdNEOI"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a50956e5d3so1574351f8f.1;
+        Fri, 27 Jun 2025 04:01:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751022094; x=1751626894; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rwvj1O48c3DVNQHDKsP5lCweSM9mM09cc5anRD1gkPk=;
+        b=GuhdNEOI/xUr3zLgjgA8lJRwg/OfL1bhBs/I50LgA7sUeLlZF3BPUPrCXFegogHzDx
+         bZiG9483ZxvqJTNawV6iTtXaKCEr0LrJhzTLmq5UvzGQ1ryTSWvjrjKAmVmMsMsmtmzK
+         pt2Vii9mPnh5k9uib1U5sWtIG755/i9B3QVjswuXDu0P7nBt3Nu1ZNXQUEKLrbgZheBI
+         57m5JLJv8gbKp3InuVvZa37KMf7SqvEuL2HzmPZbcjom1vrcV4AoB2VcW6JJrb+qgCrv
+         oYn8LbN0Be5LwBkr3WD7Dl35+klM+SEW6jSnjv8yGkLWcH0qdujm8znqywHq+gDJEE68
+         B0OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751022078; x=1751626878;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZbJdgOIbkGwBeQnmkTbzv066EyMDgSE02LiXwxp50sQ=;
-        b=RTqFuEHia0i2DwPa5jWRn8sIpxcJeRWxvl8rQkIYnIq8lzBQ7pAjFjdhPLN7agsJdM
-         jvhXlXwMcJr4AiHLN94/Mxn3wN/pH6c5OX0himaokwRIc4/Aoc05p3awgqfl2yqvUWcT
-         Gy8yh7nVTn3E9RLzL9P9t8dkhrTtDoZ+9yyKvSDomRRYTyqjSnh84dAzn2J9NeTsE5O3
-         kkQcheuYX4KbCTCswQHu97/PVmzQUHn8S4Mpp6X4RoXB9nDrEu1jpVey9U0CL4BUY5oI
-         EFtaoK9G5KgvJahr/SFwpsKZgM1i9VnxQnGGkGmOKaEIL+qWhQhztihvsNpZYsKBYjO7
-         h1HA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKXhf7XlxjpGg+xW6kRPBs+tY0ZowM6mRpzjPvr/DWlUHQCBzZDpUcU6abo2wuTKS8k6S/r6apUc/VLjI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+QrXuBiI6xFpRKIbWv5RSiOkLJw8r2W+ZPaq/kiqTEyUSkA3Q
-	tGD7MqVeeMH4sfzLyUITr8JDCjse7uoNJCUDjrXSPFxviw91Kr8Bm4wpHH2cOLGp4R1TSwkb6N0
-	M8/0HZnOx0hoHFx87nAhHb6t8kxIBfzQi418f/3Yx6PPshv7AF4BhzEm83XI5BbedZw==
-X-Gm-Gg: ASbGnct6yoPkiAMRTz/h6tpJ4YrJcJP4uFsROswIAbk5bfosoBTtEj431WdrqNn/MaA
-	wTBxplmNpsS4vVNGyS8F+rm4KIJ4aK3x85EnnQMUimgBW1bhdOAFEkTFD7SaGM3jciYr9XuNzk2
-	VoXm8qc9fupJTC+z6q5PVmflwScsXOroZbXBMvTHhtxuOaggfHawr6LTy19KS6AysO0YZZb6gbY
-	0MtOs3HT6aTAtvF2KT6GDdJj5C9Vk0NwlAMo+FOamvYaWVrUhM4Dmj1Z6WLOR5EOjpz226vuL7h
-	0h3fTam38CnrTT+cEeRzP447mqQs
-X-Received: by 2002:a05:6214:76b:b0:6fd:d33:bf30 with SMTP id 6a1803df08f44-700033b6fcamr44379866d6.44.1751022078486;
-        Fri, 27 Jun 2025 04:01:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEI8TS4H6eRA0UouWBKDumbd4mbbqZxeye6OCeaKrfLx9sLYI9IeIKljRoNoP6GNozp6MQ7gA==
-X-Received: by 2002:a05:6214:76b:b0:6fd:d33:bf30 with SMTP id 6a1803df08f44-700033b6fcamr44378836d6.44.1751022077610;
-        Fri, 27 Jun 2025 04:01:17 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.181.237])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772e3f2dsm17994826d6.78.2025.06.27.04.01.12
+        d=1e100.net; s=20230601; t=1751022094; x=1751626894;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Rwvj1O48c3DVNQHDKsP5lCweSM9mM09cc5anRD1gkPk=;
+        b=VBu0wJUiBsyGc3ezNcM6OrnaGIc0p3tnwsnZDWohdEgRnyKGB64xP54dLp2nSXybsy
+         v77TqKo8tJRa4X8Opn8Npn43FKRVujdTV6D+WEikxB15OkUh0wzitzJncN/Tb/x9ZiHJ
+         eyy57QwyE49+W8MczY+F76Mi2/LM+wF1ykLPrL0zJ7zQ33VjjexZsbOQRLm3/tRBE4qM
+         0zAmGT47ZpB9sTRsxRkRPJv1WipwnG+XXh0ZDj34kCR4tjhY2USSMLWbYb9E28WiZP5Z
+         U1Z7gMA0/ch7o/lcbIvvHu6C0yMvFvVrfCjaouXHYdy+Ew7dwCialRddZLssP55lzEDU
+         0HFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVEsyVfh5E7yPw/GcookeMNJD6sJttxWNI+pwEjlC2WRFhgJNUpPXFE+m5QJKHLwyHREK/oQB39@vger.kernel.org, AJvYcCWI2nxysK7qlh76jWwxSVONdEVc2TIG8U7c1dnRyaAS0CbMgmLcEfQH8K9bCeql/xktYv3hJXj20M4D+6Ok@vger.kernel.org, AJvYcCXvbhWQyA7idocOAOvEJ0YhwzR9f5Y1wpK/+VcPXj7C68IyXJX4MKXnakqw7ZXblzXO7hb1SZdFdH1SJw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiFd886IamcVO0moShSKto8Enbpk0T2HKNq+bnlcPI+ci5qylZ
+	Eco5Ad6Gp3nWPn/uOqBcNNiexKkFtJ0UkDzEy5Xgo6g54125Mq07CJyAJV019Q==
+X-Gm-Gg: ASbGnctxeVYFN3IbJQ7vOJchbX95JWXx6rD3wrPGm2S1xsjOfXPyvij4SMwC2aSni44
+	/ax7Q+4FSR8OujRl887pJizaqjzdBUv+lzG8KpQPglf4CBnqbQFSv/ChcfjhQxK0CrLzysWQr8O
+	MKeYeKKk8jeCXSbGBenyrbODe6bHHPjsxfB05/zCMj84Qokr4vRU9tuXOLWuNO8ojwTnoVCZeke
+	dffBqm6iU0fpTgkVcW1D3plPUVIvkGGu/hCqcyN7PmgRNie3pmzciQ7g2t+0IYVskxx8DBfhafC
+	ksnEf1mK6H+hn7qxgANhbT5Yy7ysxwyk+YK+n8f/FkOAZBi8Fil9Q3h9UF1JRQ==
+X-Google-Smtp-Source: AGHT+IEcrHyyu/uHxQjOZPheS8C9RZstqQixiusL6ry75Kz6CMmuK/parE3RArKSUGVcZJo+P7ZfJg==
+X-Received: by 2002:a5d:6a07:0:b0:3a5:8d0b:600c with SMTP id ffacd0b85a97d-3a90d0d6ef2mr2281703f8f.3.1751022093976;
+        Fri, 27 Jun 2025 04:01:33 -0700 (PDT)
+Received: from qasdev.Home ([2a02:c7c:f4f0:900:e68e:2662:b817:f55e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a4235cbsm47747135e9.38.2025.06.27.04.01.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 04:01:17 -0700 (PDT)
-Date: Fri, 27 Jun 2025 13:01:10 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Dexuan Cui <decui@microsoft.com>
-Cc: Xuewei Niu <niuxuewei97@gmail.com>, 
-	"davem@davemloft.net" <davem@davemloft.net>, "fupan.lfp@antgroup.com" <fupan.lfp@antgroup.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, "jasowang@redhat.com" <jasowang@redhat.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, KY Srinivasan <kys@microsoft.com>, 
-	"leonardi@redhat.com" <leonardi@redhat.com>, "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mst@redhat.com" <mst@redhat.com>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, "niuxuewei.nxw@antgroup.com" <niuxuewei.nxw@antgroup.com>, 
-	"pabeni@redhat.com" <pabeni@redhat.com>, "stefanha@redhat.com" <stefanha@redhat.com>, 
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, "wei.liu@kernel.org" <wei.liu@kernel.org>, 
-	"xuanzhuo@linux.alibaba.com" <xuanzhuo@linux.alibaba.com>
-Subject: Re: [EXTERNAL] Re: [PATCH net-next v3 1/3] vsock: Add support for
- SIOCINQ ioctl
-Message-ID: <ubgfre6nd4543iu5yybkmnd2ihbzfb6257u7jjfz4xqk4nhfdu@43yfocr4z4st>
-References: <wgyxcpcsnpsta65q4n7pekw2hbedrbzqgtevkzqaqkjrqfjlyo@6jod5pw75lyf>
- <20250626050219.1847316-1-niuxuewei.nxw@antgroup.com>
- <BL1PR21MB3115D30477067C46F5AC86C3BF45A@BL1PR21MB3115.namprd21.prod.outlook.com>
+        Fri, 27 Jun 2025 04:01:33 -0700 (PDT)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: jikos@kernel.org,
+	bentiss@kernel.org
+Cc: gargaditya08@live.com,
+	jirislaby@kernel.org,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2] HID: appletb-kbd: fix memory corruption of input_handler_list
+Date: Fri, 27 Jun 2025 12:01:21 +0100
+Message-Id: <20250627110121.7802-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <BL1PR21MB3115D30477067C46F5AC86C3BF45A@BL1PR21MB3115.namprd21.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 27, 2025 at 08:50:46AM +0000, Dexuan Cui wrote:
->> From: Xuewei Niu <niuxuewei97@gmail.com>
->> Sent: Wednesday, June 25, 2025 10:02 PM
->> > ...
->> > Maybe when you have it tested, post it here as proper patch, and Xuewei
->> > can include it in the next version of this series (of course with you as
->> > author, etc.). In this way will be easy to test/merge, since they are
->> > related.
->> >
->> > @Xuewei @Dexuan Is it okay for you?
->>
->> Yeah, sounds good to me!
->>
->> Thanks,
->> Xuewei
->
->Hi Xuewei, Stefano, I posted the patch here:
->https://lore.kernel.org/virtualization/1751013889-4951-1-git-send-email-decui@microsoft.com/T/#u
+In appletb_kbd_probe an input handler is initialised and then registered
+with input core through input_register_handler(). When this happens input
+core will add the input handler (specifically its node) to the global
+input_handler_list. The input_handler_list is central to the functionality
+of input core and is traversed in various places in input core. An example
+of this is when a new input device is plugged in and gets registered with
+input core.
 
-Great, thanks!
+The input_handler in probe is allocated as device managed memory. If a
+probe failure occurs after input_register_handler() the input_handler
+memory is freed, yet it will remain in the input_handler_list. This
+effectively means the input_handler_list contains a dangling pointer
+to data belonging to a freed input handler.
 
->
->Xuewei, please help to re-post this patch with the next version of your patchset.
->Feel free to add your Signed-off-by, if you need.
->
->Thanks,
->Dexuan
->
+This causes an issue when any other input device is plugged in - in my
+case I had an old PixArt HP USB optical mouse and I decided to
+plug it in after a failure occurred after input_register_handler().
+This lead to the registration of this input device via
+input_register_device which involves traversing over every handler
+in the corrupted input_handler_list and calling input_attach_handler(),
+giving each handler a chance to bind to newly registered device.
+
+The core of this bug is a UAF which causes memory corruption of
+input_handler_list and to fix it we must ensure the input handler is
+unregistered from input core, this is done through
+input_unregister_handler().
+
+[   63.191597] ==================================================================
+[   63.192094] BUG: KASAN: slab-use-after-free in input_attach_handler.isra.0+0x1a9/0x1e0
+[   63.192094] Read of size 8 at addr ffff888105ea7c80 by task kworker/0:2/54
+[   63.192094] 
+[   63.192094] CPU: 0 UID: 0 PID: 54 Comm: kworker/0:2 Not tainted 6.16.0-rc2-00321-g2aa6621d 
+[   63.192094] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.164
+[   63.192094] Workqueue: usb_hub_wq hub_event
+[   63.192094] Call Trace:
+[   63.192094]  <TASK>
+[   63.192094]  dump_stack_lvl+0x53/0x70
+[   63.192094]  print_report+0xce/0x670
+[   63.192094]  kasan_report+0xce/0x100
+[   63.192094]  input_attach_handler.isra.0+0x1a9/0x1e0
+[   63.192094]  input_register_device+0x76c/0xd00
+[   63.192094]  hidinput_connect+0x686d/0xad60
+[   63.192094]  hid_connect+0xf20/0x1b10
+[   63.192094]  hid_hw_start+0x83/0x100
+[   63.192094]  hid_device_probe+0x2d1/0x680
+[   63.192094]  really_probe+0x1c3/0x690
+[   63.192094]  __driver_probe_device+0x247/0x300
+[   63.192094]  driver_probe_device+0x49/0x210
+[   63.192094]  __device_attach_driver+0x160/0x320
+[   63.192094]  bus_for_each_drv+0x10f/0x190
+[   63.192094]  __device_attach+0x18e/0x370
+[   63.192094]  bus_probe_device+0x123/0x170
+[   63.192094]  device_add+0xd4d/0x1460
+[   63.192094]  hid_add_device+0x30b/0x910
+[   63.192094]  usbhid_probe+0x920/0xe00
+[   63.192094]  usb_probe_interface+0x363/0x9a0
+[   63.192094]  really_probe+0x1c3/0x690
+[   63.192094]  __driver_probe_device+0x247/0x300
+[   63.192094]  driver_probe_device+0x49/0x210
+[   63.192094]  __device_attach_driver+0x160/0x320
+[   63.192094]  bus_for_each_drv+0x10f/0x190
+[   63.192094]  __device_attach+0x18e/0x370
+[   63.192094]  bus_probe_device+0x123/0x170
+[   63.192094]  device_add+0xd4d/0x1460
+[   63.192094]  usb_set_configuration+0xd14/0x1880
+[   63.192094]  usb_generic_driver_probe+0x78/0xb0
+[   63.192094]  usb_probe_device+0xaa/0x2e0
+[   63.192094]  really_probe+0x1c3/0x690
+[   63.192094]  __driver_probe_device+0x247/0x300
+[   63.192094]  driver_probe_device+0x49/0x210
+[   63.192094]  __device_attach_driver+0x160/0x320
+[   63.192094]  bus_for_each_drv+0x10f/0x190
+[   63.192094]  __device_attach+0x18e/0x370
+[   63.192094]  bus_probe_device+0x123/0x170
+[   63.192094]  device_add+0xd4d/0x1460
+[   63.192094]  usb_new_device+0x7b4/0x1000
+[   63.192094]  hub_event+0x234d/0x3fa0
+[   63.192094]  process_one_work+0x5bf/0xfe0
+[   63.192094]  worker_thread+0x777/0x13a0
+[   63.192094]  </TASK>
+[   63.192094] 
+[   63.192094] Allocated by task 54:
+[   63.192094]  kasan_save_stack+0x33/0x60
+[   63.192094]  kasan_save_track+0x14/0x30
+[   63.192094]  __kasan_kmalloc+0x8f/0xa0
+[   63.192094]  __kmalloc_node_track_caller_noprof+0x195/0x420
+[   63.192094]  devm_kmalloc+0x74/0x1e0
+[   63.192094]  appletb_kbd_probe+0x39/0x440
+[   63.192094]  hid_device_probe+0x2d1/0x680
+[   63.192094]  really_probe+0x1c3/0x690
+[   63.192094]  __driver_probe_device+0x247/0x300
+[   63.192094]  driver_probe_device+0x49/0x210
+[   63.192094]  __device_attach_driver+0x160/0x320
+[...]
+[   63.192094] 
+[   63.192094] Freed by task 54:
+[   63.192094]  kasan_save_stack+0x33/0x60
+[   63.192094]  kasan_save_track+0x14/0x30
+[   63.192094]  kasan_save_free_info+0x3b/0x60
+[   63.192094]  __kasan_slab_free+0x37/0x50
+[   63.192094]  kfree+0xcf/0x360
+[   63.192094]  devres_release_group+0x1f8/0x3c0
+[   63.192094]  hid_device_probe+0x315/0x680
+[   63.192094]  really_probe+0x1c3/0x690
+[   63.192094]  __driver_probe_device+0x247/0x300
+[   63.192094]  driver_probe_device+0x49/0x210
+[   63.192094]  __device_attach_driver+0x160/0x320
+[...]
+
+Fixes: 7d62ba8deacf ("HID: hid-appletb-kbd: add support for fn toggle between media and function mode")
+Cc: stable@vger.kernel.org
+Reviewed-by: Aditya Garg <gargaditya08@live.com>
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+---
+v2:
+- Use correct "Fixes" tag
+- clean up backtrace by removing "?" entries and a few lower level calls
+
+ drivers/hid/hid-appletb-kbd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/hid/hid-appletb-kbd.c b/drivers/hid/hid-appletb-kbd.c
+index d11c49665147..271d1b27b8dd 100644
+--- a/drivers/hid/hid-appletb-kbd.c
++++ b/drivers/hid/hid-appletb-kbd.c
+@@ -430,13 +430,15 @@ static int appletb_kbd_probe(struct hid_device *hdev, const struct hid_device_id
+ 	ret = appletb_kbd_set_mode(kbd, appletb_tb_def_mode);
+ 	if (ret) {
+ 		dev_err_probe(dev, ret, "Failed to set touchbar mode\n");
+-		goto close_hw;
++		goto unregister_handler;
+ 	}
+ 
+ 	hid_set_drvdata(hdev, kbd);
+ 
+ 	return 0;
+ 
++unregister_handler:
++	input_unregister_handler(&kbd->inp_handler);
+ close_hw:
+ 	if (kbd->backlight_dev) {
+ 		put_device(&kbd->backlight_dev->dev);
+-- 
+2.39.5
 
