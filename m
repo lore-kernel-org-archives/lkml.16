@@ -1,175 +1,99 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D4E136672
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB71423BCF3;
+	Fri, 27 Jun 2025 08:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751013502; cv=none; b=ZXd6XUNf4eM9C1EBVTyovnsxtfTdsnC3vdjeyt8PeRRKdMIDOasiAZKWPckjoFeBnfLn4YWISqJLBOl91qRqIGu5GWg611IOCnYrl4ZPbvFyjENjQi2zohNmAwpbSdci+iEm0d5KUNVNHadwJWkE2+k2x/L+PAtZxJdi4KHl7DY=
+	t=1751013613; cv=none; b=h4r8I92zA7yTUXE3qQTJ/28f52BGMbFJbFcZHN0EIF6u3sQgzlQ/+0rqMyTogvMlbW+7I+aP81oXuP3un5FuS7JXRcarMCRo84/PcJLfBNG8xMsbiGfFwSKn18TFbCs1oDgaF2AzJLjExkLGDvrErfTqa84qKQEul9tSM16nv6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751013502; c=relaxed/simple;
-	bh=TzUxBZ0jKr+AJKxSEA2+sngjqmjJPXQEiz3tBIBFcIw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sxJdP6V6rncPMOcChcvz48a4lgcAeML44Aoqdwi+rm3KNzoKLkXlFcLwfbpoRxQ3hCNk8wjgxRiCTwM5JpbgjF2+sDzwIQkgFzDgkkZZVVQlwivEhHenwrHsF7Q9t5lbGDt7jU23dryWT2qVX1+SjKjxgsR8SAZw0mXOniGMlps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uzWHUoCY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3NZXYOlC; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uzWHUoCY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3NZXYOlC; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751013613; c=relaxed/simple;
+	bh=ZXQv8A7rE1QeYVvPDBbpi00YbXrCjpG5YanCEs6oU/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kut6FRDKU7IJndhQ5Nl4mmxWOJQwCo+2PdjH4NVLd7uFhrvyfqeRU/vJi+4eKSmCFx70yFh5jm3IQ9cg7wOOkFf6Le8gkEBI1FY4DVVBONcLIThhME2dBzWZfXXeJTWKu9eyuRIqQqtk9uc3zAaJxWlCR9LVEBYk7NSE+jQif/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mkm8oHDd; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uzWHUoCY";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3NZXYOlC";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uzWHUoCY";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3NZXYOlC"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 44F211F441;
-	Fri, 27 Jun 2025 08:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751013499; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=p/YMBn099lpIi1h2c5C63/kAMCCX/jJlsExiV5mbvIg=;
-	b=uzWHUoCYFFcC5ibyrl4OfS0xTkGWTsfnRzpBN61wAwfujPtlKJ2xGRIGG4F96veldfzoLP
-	BfxZKbOIYCoSMkqkZ7s0jokf8ud5QaaafXmxV6PAn/58HUAkrFj9k+8dZaDY4v8KH3Z7ls
-	mOaD/BBSStNVFMUezG0vDrCbuZx9gfE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751013499;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=p/YMBn099lpIi1h2c5C63/kAMCCX/jJlsExiV5mbvIg=;
-	b=3NZXYOlCwvlsdlI9SFrPfZaN3U/WjFcpxEGCyJxmb93uDq7+Xmo3USRE5Z38wYBEgpV6uP
-	cxCDOEbIAVcXl8Cg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751013499; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=p/YMBn099lpIi1h2c5C63/kAMCCX/jJlsExiV5mbvIg=;
-	b=uzWHUoCYFFcC5ibyrl4OfS0xTkGWTsfnRzpBN61wAwfujPtlKJ2xGRIGG4F96veldfzoLP
-	BfxZKbOIYCoSMkqkZ7s0jokf8ud5QaaafXmxV6PAn/58HUAkrFj9k+8dZaDY4v8KH3Z7ls
-	mOaD/BBSStNVFMUezG0vDrCbuZx9gfE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751013499;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=p/YMBn099lpIi1h2c5C63/kAMCCX/jJlsExiV5mbvIg=;
-	b=3NZXYOlCwvlsdlI9SFrPfZaN3U/WjFcpxEGCyJxmb93uDq7+Xmo3USRE5Z38wYBEgpV6uP
-	cxCDOEbIAVcXl8Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1D6FB13786;
-	Fri, 27 Jun 2025 08:38:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 5rK7BXtYXmivXQAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 27 Jun 2025 08:38:19 +0000
-Message-ID: <eccdfdf2-6179-402b-bc3d-4467e82ae3de@suse.de>
-Date: Fri, 27 Jun 2025 10:38:18 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mkm8oHDd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751013612; x=1782549612;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZXQv8A7rE1QeYVvPDBbpi00YbXrCjpG5YanCEs6oU/8=;
+  b=Mkm8oHDdkkxCIu0XUVQ9JEGshJjUlYtxy1sw8KcC/8baj4TlcSt80KHs
+   RDPatHb2fn5H3yQWDQ+Yodr3Bxs2rxPE1GcALnLxopl+gaO9XEK5THmw4
+   5Bc5fEZZb2bBGtpSiMJutIshgGpfJQJDYpEckMsgDKW49OAdUGSnX2Ynp
+   77XrUi7NWsEC/8PjeamDz4ow5NanP/07pl3klz0rV8/8DJCAMM8Ik6p73
+   t6L3wGZeCoGDKeNlTx7N1gt7Z1Ve0wCYE51L6PwGRA3ukXbUZl8sJIWPb
+   Q0qBMwGqUt6xhlbNcEh34J97xOEYIzZgOzZJ4RwPtmWjGrorC0kvPJiuW
+   A==;
+X-CSE-ConnectionGUID: XExKbENwS36/LXfNWxX2Xg==
+X-CSE-MsgGUID: r+IeyydqQ1mLlC/ukr/B5g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="57107019"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="57107019"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 01:40:11 -0700
+X-CSE-ConnectionGUID: nREfy643TraafLx5LJBAQg==
+X-CSE-MsgGUID: gmVUi71YTj6P31cJV3iiKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="153246976"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 01:40:08 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uV4cu-0000000AQas-3Itq;
+	Fri, 27 Jun 2025 11:40:04 +0300
+Date: Fri, 27 Jun 2025 11:40:04 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Cc: andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org,
+	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+	skhan@linuxfoundation.com, dan.carpenter@linaro.org,
+	Hans de Goede <hansg@kernel.org>
+Subject: Re: [PATCH v4] staging: media: atomisp: remove debug sysfs
+ attributes active_bo and free_bo
+Message-ID: <aF5Y5MurVIn1mUk1@smile.fi.intel.com>
+References: <20250627072939.21447-1-abdelrahmanfekry375@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/2] firmware: sysfb: Unorphan and fix header
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- linux-kernel@vger.kernel.org
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- Javier Martinez Canillas <javierm@redhat.com>
-References: <20250626172039.329052-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250626172039.329052-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.996];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627072939.21447-1-abdelrahmanfekry375@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi,
+On Fri, Jun 27, 2025 at 10:29:39AM +0300, Abdelrahman Fekry wrote:
+> The sysfs attributes active_bo and free_bo expose internal buffer
+> state used only for debugging purposes. These are not part of
+> any standard kernel ABI, and need to be removed before this
+> driver may be moved out of drivers/staging.
+> 
+> - Remove active_bo and free_bo attributes
+> - Remove group registration calls form hmm_init() and hmm_cleanup()
 
-for the series
+...
 
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+>  	/* free dummy memory first */
+>  	hmm_free(dummy_ptr);
+>  	dummy_ptr = 0;
+> -
+>  	hmm_bo_device_exit(&bo_device);
+>  	hmm_initialized = false;
 
-Best regards
-Thomas
-
-Am 26.06.25 um 19:18 schrieb Andy Shevchenko:
-> It appears that sysfb files became orphaned, reverse that to make
-> the changes visible for the maintainers. Second patch just to drop
-> kernel.h which is not supposed to be included (in the headers).
->
-> Andy Shevchenko (2):
->    firmware: sysfb: Unorphan sysfb files
->    firmware: sysfb: Don't use "proxy" headers
->
->   MAINTAINERS           | 2 ++
->   include/linux/sysfb.h | 6 +++++-
->   2 files changed, 7 insertions(+), 1 deletion(-)
->
+Stray change.
 
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+With Best Regards,
+Andy Shevchenko
+
 
