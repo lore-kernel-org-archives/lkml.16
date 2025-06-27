@@ -1,94 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F962E8E08
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:44:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D03D171C9
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751039083; cv=none; b=FCzGCItNsa79N5BlmRb1bWQyoDCuCWZqJMoWjtSxkwhrxLvuT1XaxAzZmesVACrxf/x4c6wVg7eqOrD0MyWGYx/4mLC2kpkPwTDFcZxOU6bGvUOW0ng47Mnkp7E1Kk3nAVWa2frs7G62oAy0s0HI6JG9ID6f4GsC0WD648noCJw=
+	t=1751039132; cv=none; b=To+BTIA0Nx8xgDzYzU/phYvZnUthyzdo6H5T9Z7NmcFKGNCZToEDNAI4Mr+39Tey7e1pTWXOtM2zD1GW8zdMv0W+ZhSSh6WZ+G+YeX+kX/0dNVsnA2jwvbiQkyIIXEsRbhXwsBF5Y4jP4Kg4XMxkGE0sW+smEqz5UQ83gXPAugg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751039083; c=relaxed/simple;
-	bh=LURfJhqAl+8BHurWPCQDTi9LgUDBYI8WDX+YxZQ2m1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e5tLjIW/GfqB0jAr1iCKzqCYrvqWE3TYI5qZ44ilRZEIHzAt5mijTJxX+tHpN16bPNwxFOTRxYjT6caki620ssafq8Eo6dVwuurw4Bh/zi1XKZ6QBgvxHZ699Co487AUBl7SQI0I2IxLtT8B/bGzIdC1vXAIOC1U/k+7e5fptK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nRHm3PrB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751039132; c=relaxed/simple;
+	bh=dyrNXeueqsvoBFA6tBhA0LImcM48dwOA1AYjkCUCdew=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qatVDvtg5p+VH6o5iYYgW9b02EWdN/M9JDyFUn0c5DF6ESyYlPqkyJTSRc2fXNukGbB/jDar4VkszVlKKHFtwAYqVVaJ3XNGoUPLadgghuDuhUnltnq3U5B8swqv6gmct52Z+1W4ZeVJf1xjgRN7s2YYNjJwofgH9opZ68B+YIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V+HDiJBX; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nRHm3PrB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7FD1C4CEE3;
-	Fri, 27 Jun 2025 15:44:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751039081;
-	bh=LURfJhqAl+8BHurWPCQDTi9LgUDBYI8WDX+YxZQ2m1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nRHm3PrBp3xrpjPdG/q3p1NN7SbpFRbY/cp2+Yg1U1LXnX+Mjt5k+cl/vRUD7I+cY
-	 s+Rg8PwhUP65NeKOB6jURqCNvtRneCRwpgSwQPLuvaqMdf+N7XGZRV/E1R7Z8QBIrV
-	 9k4ceP/niRzMxW/m0bv63AOJG2IRq0Z7Wbre+QO3B+FTyoqD5z27HlQHAc7as7Kz7k
-	 hjtfp8hG1pBlBUc1z5NXaEUhvWZqCiucngIAKy1Ap3o61mV1b+N9Ah15GISkrStWjd
-	 uqv+huheXwTEGoDhnJiGwLF7tmVIjRsBWcTPRmP+8hChd0zBPq/u35P8sv1YtLgwEs
-	 lpOrxiQSkA03Q==
-Date: Fri, 27 Jun 2025 16:44:35 +0100
-From: Will Deacon <will@kernel.org>
-To: Huang Shijie <shijie@os.amperecomputing.com>
-Cc: catalin.marinas@arm.com, anshuman.khandual@arm.com, corbet@lwn.net,
-	patches@amperecomputing.com, cl@linux.com,
-	akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
-	xiongwei.song@windriver.com, ardb@kernel.org,
-	inux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 1/2 fix-v2 ] arm64: refactor the rodata=xxx
-Message-ID: <aF68Y5aQFBqShtjD@willie-the-truck>
-References: <20241212082426.4110-2-shijie@os.amperecomputing.com>
- <20241217071715.24797-1-shijie@os.amperecomputing.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V+HDiJBX"
+Message-ID: <2cee98d1-bdaa-4252-a9a6-15b1bc864ba0@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751039128;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZRFpxZUqLbnyGQPCOgdy9ogKvNkTdMJpkHmLoXCE7sw=;
+	b=V+HDiJBXLTL0WH1AkxHG9YhAVQhuDj2+GdXeZy0A5fCjCrZ9Z7OGImiy9nTZ5amX3VRIuJ
+	hkZFSeOxy8ymkbygPQMSGBUhzV15J8fPCHd0aBJzbFN37uOfR4vsC9G6wfRzW+wlm49bZ1
+	ogp5jNl6yUrR6OwA8aeY4kj2SWoTM2I=
+Date: Fri, 27 Jun 2025 23:45:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241217071715.24797-1-shijie@os.amperecomputing.com>
+Subject: Re: [PATCH v1 3/4] mm: split folio_pte_batch() into folio_pte_batch()
+ and folio_pte_batch_ext()
+Content-Language: en-US
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>, Pedro Falcato <pfalcato@suse.de>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>,
+ Lance Yang <ioworker0@gmail.com>
+References: <20250627115510.3273675-1-david@redhat.com>
+ <20250627115510.3273675-4-david@redhat.com>
+ <CABzRoya5n6ChTnjfsoYpQuQ6Gtuu61kpH5fc_iXv2cAQHS-KKg@mail.gmail.com>
+ <9eb26777-cdfd-49df-9e1f-e326454ab477@redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <9eb26777-cdfd-49df-9e1f-e326454ab477@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Digging up an old thread...
 
-On Tue, Dec 17, 2024 at 03:17:15PM +0800, Huang Shijie wrote:
-> As per admin guide documentation, "rodata=on" should be the default on
-> platforms. Documentation/admin-guide/kernel-parameters.txt describes
-> these options as
+
+On 2025/6/27 23:09, David Hildenbrand wrote:
+> On 27.06.25 16:19, Lance Yang wrote:
+>> On Fri, Jun 27, 2025 at 7:55 PM David Hildenbrand <david@redhat.com> 
+>> wrote:
+>>>
+>>> Many users (including upcoming ones) don't really need the flags etc,
+>>> and can live with a function call.
+>>>
+>>> So let's provide a basic, non-inlined folio_pte_batch().
+>>>
+>>> In zap_present_ptes(), where we care about performance, the compiler
+>>> already seem to generate a call to a common inlined folio_pte_batch()
+>>> variant, shared with fork() code. So calling the new non-inlined variant
+>>> should not make a difference.
+>>
+>> It's always an interesting dance with the compiler when it comes to 
+>> inlining,
+>> isn't it? We want the speed of 'inline' for critical paths, but also a 
+>> compact
+>> binary for the common case ...
+>>
+>> This split is a nice solution to the classic 'inline' vs. code size 
+>> dilemma ;p
 > 
->    rodata=         [KNL,EARLY]
->            on      Mark read-only kernel memory as read-only (default).
->            off     Leave read-only kernel memory writable for debugging.
->            full    Mark read-only kernel memory and aliases as read-only
->                    [arm64]
+> Yeah, in particular when we primarily care about optimizing out all the 
+> unnecessary checks inside the function, not necessarily also inlining 
+> the function call itself.
 > 
-> But on arm64 platform, "rodata=full" is the default instead. This patch
-> implements the following changes.
-> 
->  - Make "rodata=on" behaviour same as the original "rodata=full"
->  - Make "rodata=noalias" (new) behaviour same as the original "rodata=on"
->  - Drop the original "rodata=full"
->  - Add comment for arch_parse_debug_rodata()
->  - Update kernel-parameters.txt as required
-> 
-> After this patch, the "rodata=on" will be the default on arm64 platform
-> as well.
-> 
-> Signed-off-by: Huang Shijie <shijie@os.amperecomputing.com>
-> ---
-> Add more comment for "rodata=noalias" in arch_parse_debug_rodata() from Ard.
-> ---
->  .../admin-guide/kernel-parameters.txt         |  2 +-
->  arch/arm64/include/asm/setup.h                | 28 +++++++++++++++++--
->  2 files changed, 27 insertions(+), 3 deletions(-)
+> If we ever realize we absolute must inline it into a caller, we could 
+> turn folio_pte_batch_ext() into an "__always_inline", but for now it 
+> does not seem like this is really required from my experiments.
 
-Sorry, but I'd missed this as you'd sent it as a reply to an existing
-series. When you send a new version of a patch, please can you post it
-as a new thread with an updated version?
-
-I think the idea of this series is good, so if you send a v5 against
-mainline then I can review it.
-
-Thanks,
-
-Will
+Right, that makes sense. No need to force "__always_inline" prematurely.
