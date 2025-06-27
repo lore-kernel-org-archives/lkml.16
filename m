@@ -1,114 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C212117C21C;
-	Fri, 27 Jun 2025 12:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297ED17C21C;
+	Fri, 27 Jun 2025 12:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751027266; cv=none; b=oejWYIaCQmUlCwagb26AiQbJ/kYn+JpJO0aARFKdu/6cLPsR3aTZMTDYS231ORKgYco3l2hWTDlQDNJrL6aj/cQ4g1pgrws270+vkKGCvyDsgDMzMwj3K7DBFhm+sLYlF/lpW0ChKPJWU0nf8WDPBscN6qNnVNk6htsNoQk7kJU=
+	t=1751027276; cv=none; b=Sr8wJ7KkUPPmKf7c415XfyLJWUVjk8P54IO6ouNIjUU4MY0kKYdPzBejZEjdOyiBhvnvh5DoH1Y+zpb2o7xZnchQZa+YLcPCSIFtrtTVMr0Vt4aCBY4rvVFPgBoiIi4L5JcPBGWRepWMmr4mNtDR2G0Il619pDw0FUNu9mqYGWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751027266; c=relaxed/simple;
-	bh=ko46wf74UPuaBf8qnx6d5+XlMWO0mj08q8KVAwi9ZFE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ez5kOjuLFe1GBEsI8T+RLTBcV3zOy1f3dAsUzm3rrza5pdV/GDakOT8v4fojpjr8gkWKZxLRg1YgpWG957tPeocBtz1mTp4SbH9takN3N39JWryCAlmgmdGoTZ8RVve1OO8KTWh6+BsULnSZFjKja2SI1oxmX4zeGaD+Dcc7SoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J1bxSfWL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J1bxSfWL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43684C4CEF0;
-	Fri, 27 Jun 2025 12:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751027266;
-	bh=ko46wf74UPuaBf8qnx6d5+XlMWO0mj08q8KVAwi9ZFE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J1bxSfWL4g6xsJkilr3TAIfqSUt/R2hOXsMVfmDMZLJ98xgpU0Lp8xnXgpmIQf7ef
-	 O4roDp19sddFW3lpHahY1Ns4binuzsEczk4seEwR/bRad+6Cs7t8nFI8xBTbCCRS3D
-	 7HHAGBMrRyd6YMr6VbYBPa7GPWMBS3OGpHopeFKGXoCReqIBCmevpASFr4n4MxXrD6
-	 VBBwog7JKqzdg5hLLIosguSgpoWMqMgUpt0a5qmHJkconL/hC+U108leCgfvYDH+tn
-	 CixlwGK0bopQzkPhoI8s0a6jF+ne9mgOc7xPMx5z+PAwW59G0ReoiRBjQ36MpWv75Y
-	 Yj/iLtLWAPWOg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uV8BG-000000004eC-3OB0;
-	Fri, 27 Jun 2025 14:27:46 +0200
-Date: Fri, 27 Jun 2025 14:27:46 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Steev Klimaszewski <steev@kali.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH v4 1/8] efi: efivars: don't crash in
- efivar_set_variable{,_locked} in r/o case
-Message-ID: <aF6OQqD9V7AYUkwO@hovoldconsulting.com>
-References: <20250625-more-qseecom-v4-0-aacca9306cee@oss.qualcomm.com>
- <20250625-more-qseecom-v4-1-aacca9306cee@oss.qualcomm.com>
- <aF0bLtnABcGTi0wM@hovoldconsulting.com>
- <zw5u5c2itmpxq34d22y5wmtr32d4zsmjj5clf77ryeqs5jgd4v@t3wjfyj43yra>
- <aF1CX2uWZ_KaMDVR@hovoldconsulting.com>
- <CAO9ioeWwyxSgG9DNYpW-Z_SU_Scv+4sSBs8UeZnxFz+tOaESEQ@mail.gmail.com>
+	s=arc-20240116; t=1751027276; c=relaxed/simple;
+	bh=OKIu7W/RcNJLxYl61nYTQ/+Y9Gmg/tGRmCBvtkwXg8M=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=t7j0ZZQCEaTRSI3RbITdQ278622gsmINHy/CROpp0RYa50kfsvoko3lfT4GqkIC10TB8PuogGjSoKGVo2ebmqmujtHlQ3ehl8p8MHO/k9B/eJYa/QLyeI/xYUKRM6WM1Eipt799ou4NTRJBW443w8bEs03MgeyVrQHoNzMZiX0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bTFDP0tWCz6M4TC;
+	Fri, 27 Jun 2025 20:27:01 +0800 (CST)
+Received: from frapeml100007.china.huawei.com (unknown [7.182.85.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id BBD02140277;
+	Fri, 27 Jun 2025 20:27:49 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100007.china.huawei.com (7.182.85.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 27 Jun 2025 14:27:49 +0200
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Fri, 27 Jun 2025 14:27:49 +0200
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>, "dave@stgolabs.net"
+	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"ming.li@zohomail.com" <ming.li@zohomail.com>,
+	"Smita.KoralahalliChannabasappa@amd.com"
+	<Smita.KoralahalliChannabasappa@amd.com>, "rrichter@amd.com"
+	<rrichter@amd.com>, "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
+	"PradeepVineshReddy.Kodamati@amd.com" <PradeepVineshReddy.Kodamati@amd.com>,
+	"lukas@wunner.de" <lukas@wunner.de>, "Benjamin.Cheatham@amd.com"
+	<Benjamin.Cheatham@amd.com>, "sathyanarayanan.kuppuswamy@linux.intel.com"
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: RE: [PATCH v10 07/17] CXL/PCI: Introduce CXL uncorrectable protocol
+ error recovery
+Thread-Topic: [PATCH v10 07/17] CXL/PCI: Introduce CXL uncorrectable protocol
+ error recovery
+Thread-Index: AQHb5uvfZA3RpW+GBEiRkwmWc42YArQW1HrA
+Date: Fri, 27 Jun 2025 12:27:49 +0000
+Message-ID: <8b09bb6b1c4d4363996368b67a574e1d@huawei.com>
+References: <20250626224252.1415009-1-terry.bowman@amd.com>
+ <20250626224252.1415009-8-terry.bowman@amd.com>
+In-Reply-To: <20250626224252.1415009-8-terry.bowman@amd.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAO9ioeWwyxSgG9DNYpW-Z_SU_Scv+4sSBs8UeZnxFz+tOaESEQ@mail.gmail.com>
 
-On Thu, Jun 26, 2025 at 03:54:11PM +0300, Dmitry Baryshkov wrote:
-> On Thu, 26 Jun 2025 at 15:51, Johan Hovold <johan@kernel.org> wrote:
-> >
-> > On Thu, Jun 26, 2025 at 02:03:44PM +0300, Dmitry Baryshkov wrote:
-> > > On Thu, Jun 26, 2025 at 12:04:30PM +0200, Johan Hovold wrote:
-> > > > On Wed, Jun 25, 2025 at 01:53:20AM +0300, Dmitry Baryshkov wrote:
-> > > > > If efivar implementation doesn't provide write support, then calling
-> > > > > efivar_set_variable() (e.g. when PM8xxx RTC driver tries to update the
-> > > > > RTC offset) will crash the system. Prevent that by checking that
-> > > > > set_variable callback is actually provided and fail with an
-> > > > > EFI_WRITE_PROTECTED if it is not.
-> > > > >
-> > > > > Fixes: 472831d4c4b2 ("efi: vars: Add thin wrapper around EFI get/set variable interface")
-> > > >
-> > > > I don't think a fixes tag is warranted here as it currently appears to
-> > > > be expected that the callers check if setvar is supported before calling
-> > > > this helper (e.g. by calling efivar_supports_writes() as efivarfs does).
-> > >
-> > > It is not documented as such. So, I think, we'd better not crash the
-> > > callers.
-> >
-> > You need to look at the backstory to determine that before jumping to
-> > conclusions (e.g. start by looking at f88814cc2578 ("efi/efivars: Expose
-> > RT service availability via efivars abstraction")).
-> 
-> _documented_. I'll update documentation for efivar_set_variable() in
-> the next iteration and add a check to the RTC driver. However I still
-> think that this patch is valid.
+>-----Original Message-----
+>From: Terry Bowman <terry.bowman@amd.com>
+>Sent: 26 June 2025 23:43
+>To: dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
+>dave.jiang@intel.com; alison.schofield@intel.com; dan.j.williams@intel.com=
+;
+>bhelgaas@google.com; Shiju Jose <shiju.jose@huawei.com>;
+>ming.li@zohomail.com; Smita.KoralahalliChannabasappa@amd.com;
+>rrichter@amd.com; dan.carpenter@linaro.org;
+>PradeepVineshReddy.Kodamati@amd.com; lukas@wunner.de;
+>Benjamin.Cheatham@amd.com;
+>sathyanarayanan.kuppuswamy@linux.intel.com; terry.bowman@amd.com;
+>linux-cxl@vger.kernel.org
+>Cc: linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org
+>Subject: [PATCH v10 07/17] CXL/PCI: Introduce CXL uncorrectable protocol e=
+rror
+>recovery
+>
+>Create cxl_do_recovery() to provide uncorrectable protocol error (UCE)
+>handling. Follow similar design as found in PCIe error driver,
+>pcie_do_recovery(). One difference is cxl_do_recovery() will treat all UCE=
+s as
+>fatal with a kernel panic. This is to prevent corruption on CXL memory.
+>
+>Export the PCI error driver's merge_result() to CXL namespace. Introduce
+>PCI_ERS_RESULT_PANIC and add support in merge_result() routine. This will =
+be
+>used by CXL to panic the system in the case of uncorrectable protocol erro=
+rs. PCI
+>error handling is not currently expected to use the PCI_ERS_RESULT_PANIC.
+>
+>Copy pci_walk_bridge() to cxl_walk_bridge(). Make a change to walk the fir=
+st
+>device in all cases.
+>
+>Copy the PCI error driver's report_error_detected() to
+>cxl_report_error_detected().
+>Note, only CXL Endpoints and RCH Downstream Ports(RCH DSP) are currently
+>supported. Add locking for PCI device as done in PCI's report_error_detect=
+ed().
+>This is necessary to prevent the RAS registers from disappearing before lo=
+gging
+>is completed.
+>
+>Call panic() to halt the system in the case of uncorrectable errors (UCE) =
+in
+>cxl_do_recovery(). Export pci_aer_clear_fatal_status() for CXL to use if a=
+ UCE is
+>not found. In this case the AER status must be cleared and uses
+>pci_aer_clear_fatal_status().
+>
+>Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>---
+> drivers/cxl/core/native_ras.c | 44 +++++++++++++++++++++++++++++++++++
+> drivers/pci/pcie/cxl_aer.c    |  3 ++-
+> drivers/pci/pcie/err.c        |  8 +++++--
+> include/linux/aer.h           | 11 +++++++++
+> include/linux/pci.h           |  3 +++
+> 5 files changed, 66 insertions(+), 3 deletions(-)
+>
+[...]
+>
+> void pci_print_aer(struct pci_dev *dev, int aer_severity, diff --git
+>a/include/linux/pci.h b/include/linux/pci.h index 79326358f641..16a8310e03=
+73
+>100644
+>--- a/include/linux/pci.h
+>+++ b/include/linux/pci.h
+>@@ -868,6 +868,9 @@ enum pci_ers_result {
+>
+> 	/* No AER capabilities registered for the driver */
+> 	PCI_ERS_RESULT_NO_AER_DRIVER =3D (__force pci_ers_result_t) 6,
+>+
+>+	/* System is unstable, panic. Is CXL specific  */
+>+	PCI_ERS_RESULT_PANIC =3D (__force pci_ers_result_t) 7,
+Extra space is present after casting?
+> };
+>
+> /* PCI bus error event callbacks */
+>--
+>2.34.1
 
-Still depends on *how* we want to address this.
-
-> > > > So should perhaps be fixed in the RTC driver if we agree that supporting
-> > > > read-only offsets is indeed something we want.
-> > > >
-> > > > Are there any other current user that may possibly benefit from
-> > > > something like this?
-> > >
-> > > efi-pstore comes to my mind.
-> >
-> > No, that driver is also disabled when efivar_supports_writes() returns
-> > false.
-> 
-> Good.
-
-Ok, so then there are no current drivers that will benefit from your
-change, but you may (or may not) need it if you enable RO efivars on
-this particular platform. That is, this patch is not actually fixing
-anything that is broken currently.
-
-Johan
