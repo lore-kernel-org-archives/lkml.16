@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A086D2E8DE8
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64522ECD36
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751056693; cv=none; b=uH/hwXhuprT/EczIXHnExC7hCfeLnDievgADObAg16nPM1H1mE3qCnh6WQWlTc47skyI0wwwvUQiFXz2oKzXSpZrKyzmQPbALohTjCYo+Gpm7HQI0VrTOg+VsQ3FeNtVesslqLoL377BB+OHyrMXgu3tFMJw0Ng2H0lUbFLbgbc=
+	t=1751056697; cv=none; b=LtJ0clab6SMYy8S8jCD8NgxKig2ugvmk7UKM00SlXFq1/1GOnU0VNWmftjORqoXQiZJnp8ym5YoS4ykkUY+IzCLNMdYWY//pjF94vFGzxNgmcp9z0IUNQQGTGVdZ7qMa8/E6GRb04PH3pGAFIPbbq2bdGfvQ19bHpMXRml+xhqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751056693; c=relaxed/simple;
-	bh=yWmNmWgvKvda0eYoTS5d0V7bZ75rInx7GtYuQcH7ugI=;
+	s=arc-20240116; t=1751056697; c=relaxed/simple;
+	bh=rtQcj5/G+YvdAph34dfSB2n4HO4B/CrzdQJLOznysD8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lEwMCuH6nfyzj8zOcS69L7ph7KEr5kejTZlII754oYvYn4Mgcc/pziwGhaoR/qCqyna+7MSf01S8phDcg1+RWK/uXM/8tM4dMsOSRUptuVn+4T0Fg6LbS8xzhEhSCi8RQhYiHTs/UzgRPjVEIew9dOfhK7zqG0RkM3ECnXa+x0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UIBaws6O; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=eaOPKYoLwSpfTcsYrwRIu02NyF5wCzhEb4S2J6qt3G8/k96roluyv5glbYaJHpwVkLORv8KKzkEPGkBcAOfjZJY3lxxCOzytFwxXv8T4ca9rQ0uefY7X+skWJDfuaR5fijEmxJJswe1LZog5GdjGfdwWZ81AooxrpNyO/BDS5rA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LY9U2N3G; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UIBaws6O"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747cebffd4eso293805b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:38:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LY9U2N3G"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2fb347b3e6so2909194a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:38:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751056691; x=1751661491; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751056695; x=1751661495; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yIXYjl4Oy7cLC2gt6wngeVcZAy4rgnTDnLgmQ+C2I1Y=;
-        b=UIBaws6O0cTTOOV0YukdTNiCbO+s9imOgkFAsENFvlZTmfdFbX2LPRpd5uaq/ysp/c
-         INBow4aK+0arQVdAOWAbVPv0nv3I5hfujNd/SbzZAuYI80oHwlkIaUrEJOFlkN4DLmQu
-         lINuXHBqK/RFZH5PxyoZMh93mpfRjpuQ2vj/cMYuLJ0BHfTiWp69b4SlRK3udVIaqqUa
-         w8g5lPNJOKvac+7FIfvLVqC6BHUCrw4xnJp+QR5rsqIjTJNG3HeWDGqaKP9YNiZ75DHk
-         J6myO4q8nHGgaRoBCFrQ37OZGXkoeFvUeI+fYaSFsbLgpz+4QjDMybjspkkhEDHngZFN
-         stLg==
+        bh=rG0I4EZS/eL2lavIZX7DGorwUd6CPm/AfEhDCj2j1Ug=;
+        b=LY9U2N3GZaunmvb3wrwh13HSuM8v4oMLClaqevjOP4h4sOYfzTCrLX8A2fCNgxEPAp
+         9ldflkBsuZlsObY3hSe/aBW//H2PcmcMVxwOfbKR+Rsyajowxll6YhPscS9uSULkQM44
+         VDEK1JcI/sQ0Kz0bRhuvY5FUgyPYkpCeO8OQOeSsg4efKI0U1AUuvpZN9BTmsVs8s2yV
+         CcYVKL/Bsg74OXStUOrV+WZ6/fAmJLkHaMi3aAGT7BmRWR51nshInUqnkTgE/lxCDEto
+         r2Pz+hw3/NOJV8nd1lL6Zg0GHwzBm2TKABp1JaU78fdVmtOxQiyO3Ew6DgRCtou9t7wA
+         g5SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751056691; x=1751661491;
+        d=1e100.net; s=20230601; t=1751056695; x=1751661495;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yIXYjl4Oy7cLC2gt6wngeVcZAy4rgnTDnLgmQ+C2I1Y=;
-        b=cvsSLcWs0+e04OjIFCv06/fr/t3TRrOuhWuzZkcB1yjw3IRQMsXDL4gU4eEtc0fP2Z
-         zcF3rUWsNbW4cPl/Eslmng3bd9HlXxepfOa9T2Y/6Xt4MuRWZCpM99eSrMX4oSBbN5ae
-         KKW0J25VZvTREg2DGJiV16ut5bz0DU1H0URFg/XbQk/t4VtYcOf/a8EY9EgjWZ0iqkl5
-         VD2czftsHw4YVwri6rT6FLDE7ZMaZyjX60NXZ8ssmeo8VKPDUl6u8IyI1yIOvognfOcE
-         AG+tOli/uApxqpOyFLgCAc2tET13Kpo9bf5BCoiU3NyXnlD83f/0pXggidQ9Mp9BJaS4
-         deWA==
-X-Gm-Message-State: AOJu0YxsF4LuH09ZzptdPs1YqUPGqU7bDiSnr3dytq6iZc3HWXcNLRKx
-	gCy+HYauM23PesIQwYxiPz+iaxQdm5vmyyOOdF2AjmgYjvR6OmZlZaCQ7i6dL154Wva4xT60QHg
-	+Jyzhcx829iVROrQEd+5PxeNllmMuFfa0HagKgUIASu4O5lTNAIgIO3a6+0BG/THO+CmhJUDuZ/
-	0m8QLHsRIKriEGR789850kLlZOpKZglE1cWPA3h2ObCKiubtpGKw==
-X-Google-Smtp-Source: AGHT+IFll0FulHyW9VMZCYoQIDv9dnVSc1Hcz9lJ0e3DmiaUErnZy1nObOA62qZeQpexu559SHLJvcC5Li8g
-X-Received: from pfbic3.prod.google.com ([2002:a05:6a00:8a03:b0:746:2117:6f55])
- (user=ynaffit job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:18a9:b0:748:2d1d:f7b3
- with SMTP id d2e1a72fcca58-74af7027697mr5969044b3a.22.1751056690780; Fri, 27
- Jun 2025 13:38:10 -0700 (PDT)
-Date: Fri, 27 Jun 2025 13:37:43 -0700
+        bh=rG0I4EZS/eL2lavIZX7DGorwUd6CPm/AfEhDCj2j1Ug=;
+        b=RMQWKEtZOlDrJy4vXT9RwXF5Aqy1eEoRbK7A9tuqQAhrkioqcVMMhd73fsEDkSfIW0
+         ANMi0DgnuHG9SiuSCKVciNDnzemCYSd4/8CZMd1gAt8quAGgvF7C4sR9nn4xKRzzOIz9
+         t4oeriF/F+CVziHnl/AQQFlfcv+FNa50hpDPLPa8jnOkqOda0hGJcXpmwz/DhWJluX1B
+         hAIeA6i9zoj8hSbHBkgWMucYXoiaQngt9Z87re0d0MAJKds2zME6X2KGf8RPJ9RQ5TOE
+         iwuOhUb0FWFIcBO8i9lNCNdk1XnaYB/LuFvG63b9D1P0xZO3gYTMqP2pqh3Rm+SBrR7v
+         IVcA==
+X-Gm-Message-State: AOJu0Yy+3vxnPacWf65GfEG76oDF/k3RDTdmMsHXQTI/lC7UTMk28COI
+	G+oi9sxnJ3UByNG8uBYPCqA9aBCFV5pfVDe868VtcmoQWlHx9oz746jlrlTgMEVvgsbVmYdEwnn
+	77aK8aB84Oibv4nPQarSK/Ybm4VRL7FoOpRyAU205j/jdz6bWV+/Cau9RoJZKV/8Es8mVN8tYqq
+	3jNpLYk21eJPB1wDPlr9RQbdmZwLp+tIP40k+L/pXms+32XGfG6A==
+X-Google-Smtp-Source: AGHT+IFxtfrD81QwY3oSvM13Wp5QQaP71rVt8N0WbQdAqBowIqymXLf2AWL6ZuY0IWR3NS5LDTXk+SJYkp3I
+X-Received: from plblf6.prod.google.com ([2002:a17:902:fb46:b0:237:e715:e543])
+ (user=ynaffit job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1388:b0:235:e9fe:83c0
+ with SMTP id d9443c01a7336-23ac462453bmr49518535ad.27.1751056694990; Fri, 27
+ Jun 2025 13:38:14 -0700 (PDT)
+Date: Fri, 27 Jun 2025 13:37:44 -0700
 In-Reply-To: <20250627203748.881022-1-ynaffit@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250627203748.881022-1-ynaffit@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250627203748.881022-3-ynaffit@google.com>
-Subject: [PATCH 2/5] binder: Store lru freelist in binder_alloc
+Message-ID: <20250627203748.881022-4-ynaffit@google.com>
+Subject: [PATCH 3/5] binder: Scaffolding for binder_alloc KUnit tests
 From: Tiffany Yang <ynaffit@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: keescook@google.com, kernel-team@android.com, 
@@ -73,257 +73,420 @@ Cc: keescook@google.com, kernel-team@android.com,
 	kunit-dev@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Store a pointer to the free pages list that the binder allocator should
-use for a process inside of struct binder_alloc. This change allows
-binder allocator code to be tested and debugged deterministically while
-a system is using binder; i.e., without interfering with other binder
-processes and independently of the shrinker. This is necessary to
-convert the current binder_alloc_selftest into a kunit test that does
-not rely on hijacking an existing binder_proc to run.
-
-A binder process's binder_alloc->freelist should not be changed after
-it is initialized. A sole exception is the process that runs the
-existing binder_alloc selftest. Its freelist can be temporarily replaced
-for the duration of the test because it runs as a single thread before
-any pages can be added to the global binder freelist, and the test frees
-every page it allocates before dropping the binder_selftest_lock. This
-exception allows the existing selftest to be used to check for
-regressions, but it will be dropped when the binder_alloc tests are
-converted to kunit in a subsequent patch in this series.
+Add setup and teardown for testing binder allocator code with KUnit.
+Include minimal test cases to verify that tests are initialized
+correctly.
 
 Signed-off-by: Tiffany Yang <ynaffit@google.com>
 ---
- drivers/android/binder_alloc.c          | 25 +++++++----
- drivers/android/binder_alloc.h          |  3 +-
- drivers/android/binder_alloc_selftest.c | 59 ++++++++++++++++++++-----
- 3 files changed, 67 insertions(+), 20 deletions(-)
+ drivers/android/Kconfig                    |  11 ++
+ drivers/android/Makefile                   |   1 +
+ drivers/android/binder.c                   |   5 +-
+ drivers/android/binder_alloc.c             |  15 +-
+ drivers/android/binder_alloc.h             |   6 +
+ drivers/android/binder_internal.h          |   4 +
+ drivers/android/tests/.kunitconfig         |   3 +
+ drivers/android/tests/Makefile             |   3 +
+ drivers/android/tests/binder_alloc_kunit.c | 166 +++++++++++++++++++++
+ include/kunit/test.h                       |  12 ++
+ lib/kunit/user_alloc.c                     |   4 +-
+ 11 files changed, 222 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/android/tests/.kunitconfig
+ create mode 100644 drivers/android/tests/Makefile
+ create mode 100644 drivers/android/tests/binder_alloc_kunit.c
 
+diff --git a/drivers/android/Kconfig b/drivers/android/Kconfig
+index 07aa8ae0a058..b1bc7183366c 100644
+--- a/drivers/android/Kconfig
++++ b/drivers/android/Kconfig
+@@ -47,4 +47,15 @@ config ANDROID_BINDER_IPC_SELFTEST
+ 	  exhaustively with combinations of various buffer sizes and
+ 	  alignments.
+ 
++config ANDROID_BINDER_ALLOC_KUNIT_TEST
++	tristate "KUnit Tests for Android Binder Alloc" if !KUNIT_ALL_TESTS
++	depends on ANDROID_BINDER_IPC && KUNIT
++	default KUNIT_ALL_TESTS
++	help
++	  This feature builds the binder alloc KUnit tests.
++
++	  Each test case runs using a pared-down binder_alloc struct and
++	  test-specific freelist, which allows this KUnit module to be loaded
++	  for testing without interfering with a running system.
++
+ endmenu
+diff --git a/drivers/android/Makefile b/drivers/android/Makefile
+index c9d3d0c99c25..74d02a335d4e 100644
+--- a/drivers/android/Makefile
++++ b/drivers/android/Makefile
+@@ -4,3 +4,4 @@ ccflags-y += -I$(src)			# needed for trace events
+ obj-$(CONFIG_ANDROID_BINDERFS)		+= binderfs.o
+ obj-$(CONFIG_ANDROID_BINDER_IPC)	+= binder.o binder_alloc.o
+ obj-$(CONFIG_ANDROID_BINDER_IPC_SELFTEST) += binder_alloc_selftest.o
++obj-$(CONFIG_ANDROID_BINDER_ALLOC_KUNIT_TEST)	+= tests/
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index c463ca4a8fff..9dfe90c284fc 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -68,6 +68,8 @@
+ #include <linux/sizes.h>
+ #include <linux/ktime.h>
+ 
++#include <kunit/visibility.h>
++
+ #include <uapi/linux/android/binder.h>
+ 
+ #include <linux/cacheflush.h>
+@@ -5956,10 +5958,11 @@ static void binder_vma_close(struct vm_area_struct *vma)
+ 	binder_alloc_vma_close(&proc->alloc);
+ }
+ 
+-static vm_fault_t binder_vm_fault(struct vm_fault *vmf)
++VISIBLE_IF_KUNIT vm_fault_t binder_vm_fault(struct vm_fault *vmf)
+ {
+ 	return VM_FAULT_SIGBUS;
+ }
++EXPORT_SYMBOL_IF_KUNIT(binder_vm_fault);
+ 
+ static const struct vm_operations_struct binder_vm_ops = {
+ 	.open = binder_vma_open,
 diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_alloc.c
-index fcfaf1b899c8..2e89f9127883 100644
+index 2e89f9127883..c79e5c6721f0 100644
 --- a/drivers/android/binder_alloc.c
 +++ b/drivers/android/binder_alloc.c
-@@ -26,7 +26,7 @@
+@@ -23,6 +23,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/highmem.h>
+ #include <linux/sizes.h>
++#include <kunit/visibility.h>
  #include "binder_alloc.h"
  #include "binder_trace.h"
  
--struct list_lru binder_freelist;
-+static struct list_lru binder_freelist;
+@@ -57,13 +58,14 @@ static struct binder_buffer *binder_buffer_prev(struct binder_buffer *buffer)
+ 	return list_entry(buffer->entry.prev, struct binder_buffer, entry);
+ }
  
- static DEFINE_MUTEX(binder_alloc_mmap_lock);
+-static size_t binder_alloc_buffer_size(struct binder_alloc *alloc,
+-				       struct binder_buffer *buffer)
++VISIBLE_IF_KUNIT size_t binder_alloc_buffer_size(struct binder_alloc *alloc,
++						 struct binder_buffer *buffer)
+ {
+ 	if (list_is_last(&buffer->entry, &alloc->buffers))
+ 		return alloc->vm_start + alloc->buffer_size - buffer->user_data;
+ 	return binder_buffer_next(buffer)->user_data - buffer->user_data;
+ }
++EXPORT_SYMBOL_IF_KUNIT(binder_alloc_buffer_size);
  
-@@ -210,7 +210,7 @@ static void binder_lru_freelist_add(struct binder_alloc *alloc,
+ static void binder_insert_free_buffer(struct binder_alloc *alloc,
+ 				      struct binder_buffer *new_buffer)
+@@ -959,7 +961,7 @@ int binder_alloc_mmap_handler(struct binder_alloc *alloc,
+ 			   failure_string, ret);
+ 	return ret;
+ }
+-
++EXPORT_SYMBOL_IF_KUNIT(binder_alloc_mmap_handler);
  
- 		trace_binder_free_lru_start(alloc, index);
+ void binder_alloc_deferred_release(struct binder_alloc *alloc)
+ {
+@@ -1028,6 +1030,7 @@ void binder_alloc_deferred_release(struct binder_alloc *alloc)
+ 		     "%s: %d buffers %d, pages %d\n",
+ 		     __func__, alloc->pid, buffers, page_count);
+ }
++EXPORT_SYMBOL_IF_KUNIT(binder_alloc_deferred_release);
  
--		ret = list_lru_add(&binder_freelist,
-+		ret = list_lru_add(alloc->freelist,
- 				   page_to_lru(page),
- 				   page_to_nid(page),
- 				   NULL);
-@@ -409,7 +409,7 @@ static void binder_lru_freelist_del(struct binder_alloc *alloc,
- 		if (page) {
- 			trace_binder_alloc_lru_start(alloc, index);
+ /**
+  * binder_alloc_print_allocated() - print buffer info
+@@ -1122,6 +1125,7 @@ void binder_alloc_vma_close(struct binder_alloc *alloc)
+ {
+ 	binder_alloc_set_mapped(alloc, false);
+ }
++EXPORT_SYMBOL_IF_KUNIT(binder_alloc_vma_close);
  
--			on_lru = list_lru_del(&binder_freelist,
-+			on_lru = list_lru_del(alloc->freelist,
- 					      page_to_lru(page),
- 					      page_to_nid(page),
- 					      NULL);
-@@ -1007,7 +1007,7 @@ void binder_alloc_deferred_release(struct binder_alloc *alloc)
- 			if (!page)
- 				continue;
- 
--			on_lru = list_lru_del(&binder_freelist,
-+			on_lru = list_lru_del(alloc->freelist,
- 					      page_to_lru(page),
- 					      page_to_nid(page),
- 					      NULL);
-@@ -1229,6 +1229,17 @@ binder_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+ /**
+  * binder_alloc_free_page() - shrinker callback to free pages
+@@ -1229,8 +1233,8 @@ binder_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
  
  static struct shrinker *binder_shrinker;
  
-+static void __binder_alloc_init(struct binder_alloc *alloc,
-+				struct list_lru *freelist)
-+{
-+	alloc->pid = current->group_leader->pid;
-+	alloc->mm = current->mm;
-+	mmgrab(alloc->mm);
-+	mutex_init(&alloc->mutex);
-+	INIT_LIST_HEAD(&alloc->buffers);
-+	alloc->freelist = freelist;
-+}
-+
+-static void __binder_alloc_init(struct binder_alloc *alloc,
+-				struct list_lru *freelist)
++VISIBLE_IF_KUNIT void __binder_alloc_init(struct binder_alloc *alloc,
++					  struct list_lru *freelist)
+ {
+ 	alloc->pid = current->group_leader->pid;
+ 	alloc->mm = current->mm;
+@@ -1239,6 +1243,7 @@ static void __binder_alloc_init(struct binder_alloc *alloc,
+ 	INIT_LIST_HEAD(&alloc->buffers);
+ 	alloc->freelist = freelist;
+ }
++EXPORT_SYMBOL_IF_KUNIT(__binder_alloc_init);
+ 
  /**
   * binder_alloc_init() - called by binder_open() for per-proc initialization
-  * @alloc: binder_alloc for this proc
-@@ -1238,11 +1249,7 @@ static struct shrinker *binder_shrinker;
-  */
- void binder_alloc_init(struct binder_alloc *alloc)
- {
--	alloc->pid = current->group_leader->pid;
--	alloc->mm = current->mm;
--	mmgrab(alloc->mm);
--	mutex_init(&alloc->mutex);
--	INIT_LIST_HEAD(&alloc->buffers);
-+	__binder_alloc_init(alloc, &binder_freelist);
- }
- 
- int binder_alloc_shrinker_init(void)
 diff --git a/drivers/android/binder_alloc.h b/drivers/android/binder_alloc.h
-index feecd7414241..aa05a9df1360 100644
+index aa05a9df1360..dc8dce2469a7 100644
 --- a/drivers/android/binder_alloc.h
 +++ b/drivers/android/binder_alloc.h
-@@ -15,7 +15,6 @@
- #include <linux/list_lru.h>
- #include <uapi/linux/android/binder.h>
+@@ -188,5 +188,11 @@ int binder_alloc_copy_from_buffer(struct binder_alloc *alloc,
+ 				  binder_size_t buffer_offset,
+ 				  size_t bytes);
  
--extern struct list_lru binder_freelist;
- struct binder_transaction;
- 
- /**
-@@ -91,6 +90,7 @@ static inline struct list_head *page_to_lru(struct page *p)
-  * @free_async_space:   VA space available for async buffers. This is
-  *                      initialized at mmap time to 1/2 the full VA space
-  * @pages:              array of struct page *
-+ * @freelist:           lru list to use for free pages (invariant after init)
-  * @buffer_size:        size of address space specified via mmap
-  * @pid:                pid for associated binder_proc (invariant after init)
-  * @pages_high:         high watermark of offset in @pages
-@@ -113,6 +113,7 @@ struct binder_alloc {
- 	struct rb_root allocated_buffers;
- 	size_t free_async_space;
- 	struct page **pages;
-+	struct list_lru *freelist;
- 	size_t buffer_size;
- 	int pid;
- 	size_t pages_high;
-diff --git a/drivers/android/binder_alloc_selftest.c b/drivers/android/binder_alloc_selftest.c
-index 486af3ec3c02..8b18b22aa3de 100644
---- a/drivers/android/binder_alloc_selftest.c
-+++ b/drivers/android/binder_alloc_selftest.c
-@@ -8,8 +8,9 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
--#include <linux/mm_types.h>
- #include <linux/err.h>
-+#include <linux/list_lru.h>
-+#include <linux/mm_types.h>
- #include "binder_alloc.h"
- 
- #define BUFFER_NUM 5
-@@ -18,6 +19,7 @@
- static bool binder_selftest_run = true;
- static int binder_selftest_failures;
- static DEFINE_MUTEX(binder_selftest_lock);
-+static struct list_lru binder_selftest_freelist;
- 
- /**
-  * enum buf_end_align_type - Page alignment of a buffer
-@@ -142,11 +144,6 @@ static void binder_selftest_free_buf(struct binder_alloc *alloc,
- 	for (i = 0; i < BUFFER_NUM; i++)
- 		binder_alloc_free_buf(alloc, buffers[seq[i]]);
- 
--		/**
--		 * Error message on a free page can be false positive
--		 * if binder shrinker ran during binder_alloc_free_buf
--		 * calls above.
--		 */
- 	for (i = 0; i <= (end - 1) / PAGE_SIZE; i++) {
- 		if (list_empty(page_to_lru(alloc->pages[i]))) {
- 			pr_err_size_seq(sizes, seq);
-@@ -162,8 +159,8 @@ static void binder_selftest_free_page(struct binder_alloc *alloc)
- 	int i;
- 	unsigned long count;
- 
--	while ((count = list_lru_count(&binder_freelist))) {
--		list_lru_walk(&binder_freelist, binder_alloc_free_page,
-+	while ((count = list_lru_count(&binder_selftest_freelist))) {
-+		list_lru_walk(&binder_selftest_freelist, binder_alloc_free_page,
- 			      NULL, count);
- 	}
- 
-@@ -187,7 +184,7 @@ static void binder_selftest_alloc_free(struct binder_alloc *alloc,
- 
- 	/* Allocate from lru. */
- 	binder_selftest_alloc_buf(alloc, buffers, sizes, seq);
--	if (list_lru_count(&binder_freelist))
-+	if (list_lru_count(&binder_selftest_freelist))
- 		pr_err("lru list should be empty but is not\n");
- 
- 	binder_selftest_free_buf(alloc, buffers, sizes, seq, end);
-@@ -275,6 +272,20 @@ static void binder_selftest_alloc_offset(struct binder_alloc *alloc,
- 	}
- }
- 
-+int binder_selftest_alloc_get_page_count(struct binder_alloc *alloc)
-+{
-+	struct page *page;
-+	int allocated = 0;
-+	int i;
++#if IS_ENABLED(CONFIG_KUNIT)
++void __binder_alloc_init(struct binder_alloc *alloc, struct list_lru *freelist);
++size_t binder_alloc_buffer_size(struct binder_alloc *alloc,
++				struct binder_buffer *buffer);
++#endif
 +
-+	for (i = 0; i < alloc->buffer_size / PAGE_SIZE; i++) {
-+		page = alloc->pages[i];
-+		if (page)
-+			allocated++;
-+	}
-+	return allocated;
+ #endif /* _LINUX_BINDER_ALLOC_H */
+ 
+diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_internal.h
+index 1ba5caf1d88d..b5d3014fb4dc 100644
+--- a/drivers/android/binder_internal.h
++++ b/drivers/android/binder_internal.h
+@@ -592,4 +592,8 @@ void binder_add_device(struct binder_device *device);
+  */
+ void binder_remove_device(struct binder_device *device);
+ 
++#if IS_ENABLED(CONFIG_KUNIT)
++vm_fault_t binder_vm_fault(struct vm_fault *vmf);
++#endif
++
+ #endif /* _LINUX_BINDER_INTERNAL_H */
+diff --git a/drivers/android/tests/.kunitconfig b/drivers/android/tests/.kunitconfig
+new file mode 100644
+index 000000000000..a73601231049
+--- /dev/null
++++ b/drivers/android/tests/.kunitconfig
+@@ -0,0 +1,3 @@
++CONFIG_KUNIT=y
++CONFIG_ANDROID_BINDER_IPC=y
++CONFIG_ANDROID_BINDER_ALLOC_KUNIT_TEST=y
+diff --git a/drivers/android/tests/Makefile b/drivers/android/tests/Makefile
+new file mode 100644
+index 000000000000..6780967e573b
+--- /dev/null
++++ b/drivers/android/tests/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++obj-$(CONFIG_ANDROID_BINDER_ALLOC_KUNIT_TEST)	+= binder_alloc_kunit.o
+diff --git a/drivers/android/tests/binder_alloc_kunit.c b/drivers/android/tests/binder_alloc_kunit.c
+new file mode 100644
+index 000000000000..4b68b5687d33
+--- /dev/null
++++ b/drivers/android/tests/binder_alloc_kunit.c
+@@ -0,0 +1,166 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Test cases for binder allocator code
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <kunit/test.h>
++#include <linux/anon_inodes.h>
++#include <linux/err.h>
++#include <linux/file.h>
++#include <linux/fs.h>
++#include <linux/mm.h>
++#include <linux/mman.h>
++#include <linux/sizes.h>
++
++#include "../binder_alloc.h"
++#include "../binder_internal.h"
++
++MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
++
++#define BINDER_MMAP_SIZE SZ_128K
++
++struct binder_alloc_test {
++	struct binder_alloc alloc;
++	struct list_lru binder_test_freelist;
++	struct file *filp;
++	unsigned long mmap_uaddr;
++};
++
++static void binder_alloc_test_init_freelist(struct kunit *test)
++{
++	struct binder_alloc_test *priv = test->priv;
++
++	KUNIT_EXPECT_PTR_EQ(test, priv->alloc.freelist,
++			    &priv->binder_test_freelist);
 +}
 +
- /**
-  * binder_selftest_alloc() - Test alloc and free of buffer pages.
-  * @alloc: Pointer to alloc struct.
-@@ -286,6 +297,7 @@ static void binder_selftest_alloc_offset(struct binder_alloc *alloc,
++static void binder_alloc_test_mmap(struct kunit *test)
++{
++	struct binder_alloc_test *priv = test->priv;
++	struct binder_alloc *alloc = &priv->alloc;
++	struct binder_buffer *buf;
++	struct rb_node *n;
++
++	KUNIT_EXPECT_EQ(test, alloc->mapped, true);
++	KUNIT_EXPECT_EQ(test, alloc->buffer_size, BINDER_MMAP_SIZE);
++
++	n = rb_first(&alloc->allocated_buffers);
++	KUNIT_EXPECT_PTR_EQ(test, n, NULL);
++
++	n = rb_first(&alloc->free_buffers);
++	buf = rb_entry(n, struct binder_buffer, rb_node);
++	KUNIT_EXPECT_EQ(test, binder_alloc_buffer_size(alloc, buf),
++			BINDER_MMAP_SIZE);
++	KUNIT_EXPECT_TRUE(test, list_is_last(&buf->entry, &alloc->buffers));
++}
++
++/* ===== End test cases ===== */
++
++static void binder_alloc_test_vma_close(struct vm_area_struct *vma)
++{
++	struct binder_alloc *alloc = vma->vm_private_data;
++
++	binder_alloc_vma_close(alloc);
++}
++
++static const struct vm_operations_struct binder_alloc_test_vm_ops = {
++	.close = binder_alloc_test_vma_close,
++	.fault = binder_vm_fault,
++};
++
++static int binder_alloc_test_mmap_handler(struct file *filp,
++					  struct vm_area_struct *vma)
++{
++	struct binder_alloc *alloc = filp->private_data;
++
++	vm_flags_mod(vma, VM_DONTCOPY | VM_MIXEDMAP, VM_MAYWRITE);
++
++	vma->vm_ops = &binder_alloc_test_vm_ops;
++	vma->vm_private_data = alloc;
++
++	return binder_alloc_mmap_handler(alloc, vma);
++}
++
++static const struct file_operations binder_alloc_test_fops = {
++	.mmap = binder_alloc_test_mmap_handler,
++};
++
++static int binder_alloc_test_init(struct kunit *test)
++{
++	struct binder_alloc_test *priv;
++	int ret;
++
++	priv = kunit_kzalloc(test, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++	test->priv = priv;
++
++	ret = list_lru_init(&priv->binder_test_freelist);
++	if (ret) {
++		kunit_err(test, "Failed to initialize test freelist\n");
++		return ret;
++	}
++
++	/* __binder_alloc_init requires mm to be attached */
++	ret = kunit_attach_mm();
++	if (ret) {
++		kunit_err(test, "Failed to attach mm\n");
++		return ret;
++	}
++	__binder_alloc_init(&priv->alloc, &priv->binder_test_freelist);
++
++	priv->filp = anon_inode_getfile("binder_alloc_kunit",
++					&binder_alloc_test_fops, &priv->alloc,
++					O_RDWR | O_CLOEXEC);
++	if (IS_ERR_OR_NULL(priv->filp)) {
++		kunit_err(test, "Failed to open binder alloc test driver file\n");
++		return priv->filp ? PTR_ERR(priv->filp) : -ENOMEM;
++	}
++
++	priv->mmap_uaddr = kunit_vm_mmap(test, priv->filp, 0, BINDER_MMAP_SIZE,
++					 PROT_READ, MAP_PRIVATE | MAP_NORESERVE,
++					 0);
++	if (!priv->mmap_uaddr) {
++		kunit_err(test, "Could not map the test's transaction memory\n");
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
++static void binder_alloc_test_exit(struct kunit *test)
++{
++	struct binder_alloc_test *priv = test->priv;
++
++	/* Close the backing file to make sure binder_alloc_vma_close runs */
++	if (!IS_ERR_OR_NULL(priv->filp))
++		fput(priv->filp);
++
++	if (priv->alloc.mm)
++		binder_alloc_deferred_release(&priv->alloc);
++
++	/* Make sure freelist is empty */
++	KUNIT_EXPECT_EQ(test, list_lru_count(&priv->binder_test_freelist), 0);
++	list_lru_destroy(&priv->binder_test_freelist);
++}
++
++static struct kunit_case binder_alloc_test_cases[] = {
++	KUNIT_CASE(binder_alloc_test_init_freelist),
++	KUNIT_CASE(binder_alloc_test_mmap),
++	{}
++};
++
++static struct kunit_suite binder_alloc_test_suite = {
++	.name = "binder_alloc",
++	.test_cases = binder_alloc_test_cases,
++	.init = binder_alloc_test_init,
++	.exit = binder_alloc_test_exit,
++};
++
++kunit_test_suite(binder_alloc_test_suite);
++
++MODULE_AUTHOR("Tiffany Yang <ynaffit@google.com>");
++MODULE_DESCRIPTION("Binder Alloc KUnit tests");
++MODULE_LICENSE("GPL");
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index 39c768f87dc9..d958ee53050e 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -531,6 +531,18 @@ static inline char *kunit_kstrdup(struct kunit *test, const char *str, gfp_t gfp
   */
- void binder_selftest_alloc(struct binder_alloc *alloc)
+ const char *kunit_kstrdup_const(struct kunit *test, const char *str, gfp_t gfp);
+ 
++/**
++ * kunit_attach_mm() - Create and attach a new mm if it doesn't already exist.
++ *
++ * Allocates a &struct mm_struct and attaches it to @current. In most cases, call
++ * kunit_vm_mmap() without calling kunit_attach_mm() directly. Only necessary when
++ * code under test accesses the mm before executing the mmap (e.g., to perform
++ * additional initialization beforehand).
++ *
++ * Return: 0 on success, -errno on failure.
++ */
++int kunit_attach_mm(void);
++
+ /**
+  * kunit_vm_mmap() - Allocate KUnit-tracked vm_mmap() area
+  * @test: The test context object.
+diff --git a/lib/kunit/user_alloc.c b/lib/kunit/user_alloc.c
+index 46951be018be..b8cac765e620 100644
+--- a/lib/kunit/user_alloc.c
++++ b/lib/kunit/user_alloc.c
+@@ -22,8 +22,7 @@ struct kunit_vm_mmap_params {
+ 	unsigned long offset;
+ };
+ 
+-/* Create and attach a new mm if it doesn't already exist. */
+-static int kunit_attach_mm(void)
++int kunit_attach_mm(void)
  {
-+	struct list_lru *prev_freelist;
- 	size_t end_offset[BUFFER_NUM];
+ 	struct mm_struct *mm;
  
- 	if (!binder_selftest_run)
-@@ -293,14 +305,41 @@ void binder_selftest_alloc(struct binder_alloc *alloc)
- 	mutex_lock(&binder_selftest_lock);
- 	if (!binder_selftest_run || !alloc->mapped)
- 		goto done;
-+
-+	prev_freelist = alloc->freelist;
-+
-+	/*
-+	 * It is not safe to modify this process's alloc->freelist if it has any
-+	 * pages on a freelist. Since the test runs before any binder ioctls can
-+	 * be dealt with, none of its pages should be allocated yet.
-+	 */
-+	if (binder_selftest_alloc_get_page_count(alloc)) {
-+		pr_err("process has existing alloc state\n");
-+		goto cleanup;
-+	}
-+
-+	if (list_lru_init(&binder_selftest_freelist)) {
-+		pr_err("failed to init test freelist\n");
-+		goto cleanup;
-+	}
-+
-+	alloc->freelist = &binder_selftest_freelist;
-+
- 	pr_info("STARTED\n");
- 	binder_selftest_alloc_offset(alloc, end_offset, 0);
--	binder_selftest_run = false;
- 	if (binder_selftest_failures > 0)
- 		pr_info("%d tests FAILED\n", binder_selftest_failures);
- 	else
- 		pr_info("PASSED\n");
+@@ -49,6 +48,7 @@ static int kunit_attach_mm(void)
  
-+	if (list_lru_count(&binder_selftest_freelist))
-+		pr_err("expect test freelist to be empty\n");
-+
-+cleanup:
-+	/* Even if we didn't run the test, it's no longer thread-safe. */
-+	binder_selftest_run = false;
-+	alloc->freelist = prev_freelist;
-+	list_lru_destroy(&binder_selftest_freelist);
- done:
- 	mutex_unlock(&binder_selftest_lock);
+ 	return 0;
  }
++EXPORT_SYMBOL_GPL(kunit_attach_mm);
+ 
+ static int kunit_vm_mmap_init(struct kunit_resource *res, void *context)
+ {
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
