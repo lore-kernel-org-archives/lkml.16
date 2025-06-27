@@ -1,75 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411FC20B80B;
-	Fri, 27 Jun 2025 20:13:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184C82EBDE5;
+	Fri, 27 Jun 2025 20:14:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751055231; cv=none; b=aeULsdKDNfJ8j1XEtCT5ZszvImxtmIrk8ml83iOoN/3/UKdXpQwLuYK97S4UuTizWmIAIIVLx8WUKt3DAoJPRCAvViaDTZX0geakvRcOCO4NgLX7rffUzcm3j5+M1ZjGFNXB5xqUR2xCavAjsEhpJTDndKwH8Et/r12FLibBZC8=
+	t=1751055246; cv=none; b=RLxxbyL5lVYRpmxzz90yOecbTRrffNWTs5UXy+7+szSB67fXBs9NCt0FVNGZWHkq3OSeqIUUvuyn9FIEGjI+dJ+oAxzCq8iWutjnpYx0PaxaBJQebwgdb3y8znCfd6RKB5W4c8yoWOZzeYVQko2OZegRvJSBKiqx/qEsh0snqeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751055231; c=relaxed/simple;
-	bh=cLh51Nsh/EO5zqZiVH5NCtO8ZnknKTFyQdCvxFnusyA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NnSEDEd6fdvlAqwsfdT4xk5/uSPAHgIaE2Z86YNuRyDY2D+yf2jgmhc1FKZObyopckRCzRsgs4fGD4NbjvXbJfyLMoKdoP1vpjf2i/3U3T6be23vEHDIbg1cTVw4HMiNUog/RsPmVQ0ABKjCikVLtmf+tM4BQhCA1L0PANcOokA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mTEDtLx4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751055246; c=relaxed/simple;
+	bh=VYYXKd4DVhfkDjJTOWxBgy92/r8CsxVv0INxt3+97j4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qECGyPvz9BuEJy2b0hjmHV3KASnS+9Z7n79ke4lT124Pdjs08gavrROk7RczdF5ABbtjszcprKkwQMu7cwx/uZQkG+GWDAo0tAI7+uDVvLGVXJP9x+34cEcqBOXEyPqa76y5+GRjOC9uxVMjzVVfNlhfYiA+8hCqhLvXXLuhOXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z/h+Thul; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mTEDtLx4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 874FBC4CEE3;
-	Fri, 27 Jun 2025 20:13:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z/h+Thul"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE296C4CEE3;
+	Fri, 27 Jun 2025 20:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751055230;
-	bh=cLh51Nsh/EO5zqZiVH5NCtO8ZnknKTFyQdCvxFnusyA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mTEDtLx4bYqToY4UpwyOY84uaqD98k05ByRTYs8Lv5c6hMWxj9bFU8KzMbIhOl3YT
-	 Lmd9mcp3RbT1svEC3sIkrjHeSPVXENjLk07t/zN7aaMCVGH9HO8c8qZD7K984ZfbP6
-	 COWarnWsPU5Qa6DINvxgrUJ66V92TGmqfJIf8c7o9FMCT5nSHQTZ615o/UVlZuPpP1
-	 ZPpjbVC+jrCuPV0W3meOiikoVKJ58Pf+yyPo2CT5h+U8czASSC7dnXYVDVAmoeNOps
-	 AnUj4GQpOyFAZWnGOKCkTpj9Jnn1SLt941ZIdkygOLSrnLc2US2uzMLGdh9P5/jo8X
-	 VB2DXBwWWwAhw==
-From: SeongJae Park <sj@kernel.org>
-To: SeongJae Park <sj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH mm-unstable] mm/damon/sysfs-schemes: make damos_sysfs_action_names static
-Date: Fri, 27 Jun 2025 13:13:46 -0700
-Message-Id: <20250627201346.53536-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250627162806.50589-1-sj@kernel.org>
-References: 
+	s=k20201202; t=1751055245;
+	bh=VYYXKd4DVhfkDjJTOWxBgy92/r8CsxVv0INxt3+97j4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z/h+ThulbxEHu/znIGjOtmBfK3QVP+9m7X7rsOhRBfipwgL6fy267ecQXtR6nHCIW
+	 ei7Z5DrFQx44UYPwalMOGhWVIG4TKI+2bXYZYYKBCou+ua3RmCMQgj4cRaGCMwHEbL
+	 g55YQfwq2jk6wuTm2CgadnwpR2YOOY9U60KRa+e6VUD51yWgMuXukMZm6C6VCnfYUX
+	 18vhQka3tjURh0/9ZNbxCHJVJlSkpSsSHNchQAJinehUZq+C9v1Vp4SL3fUY82HOcK
+	 a+VoYgRb1akhChMPxA3wf3yzWqHV1IFMlEbHCS9jcdPbboSq4Aoqq3Xc3FxTfIyfTO
+	 LYEsckce9Rftw==
+Date: Fri, 27 Jun 2025 15:14:04 -0500
+From: Rob Herring <robh@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: krzk+dt@kernel.org, conor+dt@kernel.org, matthias.bgg@gmail.com,
+	sudeep.holla@arm.com, cristian.marussi@arm.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, arm-scmi@vger.kernel.org,
+	kernel@collabora.com
+Subject: Re: [PATCH v1 1/2] dt-bindings: firmware: Add MediaTek TinySYS SCMI
+ Extension protocol
+Message-ID: <20250627201404.GA4156149-robh@kernel.org>
+References: <20250623120136.109311-1-angelogioacchino.delregno@collabora.com>
+ <20250623120136.109311-2-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623120136.109311-2-angelogioacchino.delregno@collabora.com>
 
-On Fri, 27 Jun 2025 09:28:06 -0700 SeongJae Park <sj@kernel.org> wrote:
-
-> Commit 6812c66db976 ("mm/damon/sysfs-schemes: decouple from
-> damos_action") in mm-unstable is defining damos_sysfs_action_names as
-> non-static, though it is being used only inside sysfs-schemes.c file.
-> Make it static.
+On Mon, Jun 23, 2025 at 02:01:35PM +0200, AngeloGioacchino Del Regno wrote:
+> Add the MediaTek TinySYS SCMI Extension protocol as found on a
+> number of SoCs, including MT6895 and MT8196.
 > 
-> Fixes: 6812c66db976 ("mm/damon/sysfs-schemes: decouple from damos_action") # mm-unstable
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506271655.b8yfEZIT-lkp@intel.com/
+> This includes controls and power state notifications for the GPU,
+> CPU Memory latency Manager (cm_mgr), SLBC, SSPM and others.
 > 
-> Signed-off-by: SeongJae Park <sj@kernel.org>
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> ---
+>  .../firmware/mediatek,mt6895-scmi.yaml        | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/firmware/mediatek,mt6895-scmi.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/mediatek,mt6895-scmi.yaml b/Documentation/devicetree/bindings/firmware/mediatek,mt6895-scmi.yaml
+> new file mode 100644
+> index 000000000000..98a5b81983b1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/firmware/mediatek,mt6895-scmi.yaml
+> @@ -0,0 +1,22 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2025 Collabora Ltd
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/firmware/mediatek,mt6895-scmi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MediaTek System Control and Management Interface(SCMI) Vendor Protocols Extension
+> +
+> +maintainers:
+> +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> +
 
-I forgot noting this patch to the report, and Andrew thankfully made and merged
-a fix[1] that is same to this one.  So this patch may be just ignored in favor
-of the already merged same fix.  Noting it here just for a case of future
-readers.
+This schema will never be applied.
 
-[1] https://lore.kernel.org/20250627125731.19f70c310cb4f315177e41e6@linux-foundation.org
-
-
-Thanks,
-SJ
-
-[...]
+> +properties:
+> +  protocol@80:
+> +    $ref: '/schemas/firmware/arm,scmi.yaml#/$defs/protocol-node'
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      reg:
+> +        const: 0x80
+> +
+> +additionalProperties: true
+> -- 
+> 2.49.0
+> 
