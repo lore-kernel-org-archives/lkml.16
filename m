@@ -1,158 +1,161 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1342ED857
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED01F223DEE
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751057163; cv=none; b=E45lFLeAD+2tglMdkN7n+u5DtvsZKY3UyORqHMaVMLVKPk69g9lnKwDGNxdNPtvcALgvYdDUBd3+ZQeb7h1XAA0w3YzZlm+nhfjE5KNaoynloopU9NX2rbNBp8B+GL/O5UHb/rZbIcpE0mISQmQJOPV+ZuNoTIyr4gyG+GbiJz8=
+	t=1751057165; cv=none; b=o+prtYqPj+8SCK79mDFqrYP5spcHDvY4w917yCnTf5/oXz6qGzGaFRtYXsRHaphyI+2wQaU0qCbdbY5uHFVzBlVjOb6QbwR7ahPvWxqxpW6X4YxvAMOb1wjWRv0xKo/H6gqKZo45jBIiDZ6OdJFEJMczzOU2gYQnk9N1RgkoW+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751057163; c=relaxed/simple;
-	bh=B1amgNphjp1S7GFjFXPs/GcQYxye3YWoYVlI/qcxf/Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C0vZQDW6Ugo2OXXXd9KTDNaKSqNOM68biGf0Zl8tknr2YYiy9SGgfsvof9Mt7WA3UDeQQoRrs3ybo7B8wnf+uFuXE7JqkrR9f0++Ai8LAVsrPh6CfstAZ7qfxP0xDxGH2XxaSqiDH7yhQki954g5cHDd1z5EDdenZV/3pDhyrHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=d3ypjC2v; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="d3ypjC2v"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RCMa7S014518
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:46:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LvmCj0v1cjoY74eE/WOAeBAPKyTiGX4dCvytV+elP2k=; b=d3ypjC2vuoyx12oD
-	8k3PeRG+Wf6owcxXBFDsZJSjn/sCOXVMkGMYfpnZNv/uw0wnJk5vwiDJK7Zz+NlO
-	D0fSn2N33W3369LvFH/9K70cgB1S51+RGdDwQfhKNyZyxePjWky7Q/UZsohks4+u
-	5R2/64ueSt8eRw8qBP8g0w5ny5o12bPjU6CiCYqS0dRsFpvvelLwOFvg6chmnMGm
-	/03ZLxzOzEn/d/2+HVZ0geRg/S8PizRdbHykya5lhod0rSc3GkuQfEUuTsjEGZLs
-	qP80KJBWvLTUg55glWb1xy3M7ZBm9nr3gVS10df5BReP3pcoRYBLVjDLySjCxdck
-	9zb4nQ==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbm26ja7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:46:00 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d09a3b806aso46708685a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:46:00 -0700 (PDT)
+	s=arc-20240116; t=1751057165; c=relaxed/simple;
+	bh=TmaijBzvcXFkUGMpnMPN+z+LEjRYnQbYBF7QdKkwaJU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=eruiTJRWaqQ9HLe+bJkqhHltRYJqtf56gc33Tf5LGGlN0BexrW9AoPcP9tUWje1EkfAOYKtSe4Ba7fzNGC8sz5dN/FGYToW9b0MiubN3NQgGhU4kT0PpVPUOhIKKcA3+3C51IIF5a4NGtqjGv3Uq9vtq7RBaxW4AZV0Pwkim89E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3df309d9842so6563985ab.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:46:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751057159; x=1751661959;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1751057163; x=1751661963;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LvmCj0v1cjoY74eE/WOAeBAPKyTiGX4dCvytV+elP2k=;
-        b=BVHXnQf21T655yUHC7QdyV2cnkYkmcTzhRe4wpx0LB6VBnPBKS44oX+JbAGeni4FAd
-         M1LvGFxZJSwtx2l1uRgnRuAyAn2ay4qX6Oi0sFE2e41r5Zu5JXo4YXsQsYWegDrH3S9m
-         GM9IAXHdzeHk/dIPXauA+GTj6ker4HQrGYBv6GI0GAFGqbiTHHwKFPxNqCCigrVNU2AC
-         CTLlOPjN/Hfd3S0lfa6d7w44OYzg3c1HdUCen0zsXJ0/mI7/HnHE1Ow98JOQ/7JqQuR3
-         ftmiQHk1rhjcwgwH7zRCv1z9MSJtpywYTG03kvF08PE5RTqf8TP6+J3nzRFMF4N1KS0k
-         ASIw==
-X-Forwarded-Encrypted: i=1; AJvYcCVX+JA67hJYJrXncl+ZH80HddvnLATLEUWUC+pXAkSKvFIg6WKtmpoVppoId0A633tpw3bv8WyjrWmeEmM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOKL9PWNLcfLNXhO3jpBdX14AgMC54KarQorcKN7keJD/BNxU7
-	Bc70bYmuPk+X51dakO2sJHB+9lWAOdbT6lQasevpRxrAsm5sLkKW9mEImvIsa+WQPfnnk4xAVG/
-	Z8orVrqtOBn2I2yEmAwNDwFNyAYKEt0x77cf4wGtcBckToWArraAnlSsQNYuqQnqRH/s=
-X-Gm-Gg: ASbGncvc2pu1A2BLbzFZUyPv6UR/GzK/rUNM2IbgWgkutv47DIhSyS9AQZ7vgo5xByc
-	OCMECGWjnwY/XfdF/1DyGhYitk5H6pTKvNiJPLs0gxmejCisyHVWBhNp/MRVJ5NUimEnUdcC49j
-	WrkwSrT2jpXsv8kAJim3h2CDIHXmYw/8DAT97ZUp/9qB/PZ5oyMO9mJFk2N2/Jjgug7ES/Z8IiG
-	2D1NQRzro7FZ2GrVSSZMVRhLK1N/20qknMt1R+faz08Zr5tbSw4Vvt2YFDI7thzwT7os/2gQBbO
-	IcMzzxUAl6HuTs87+cUHeXAhbg5AzCwgJle37SbJhD5DXhVvx4TYT8jU1eZkb3Xz+sz7O4VzXXz
-	sL0k=
-X-Received: by 2002:a05:620a:2b9b:b0:7d0:993c:7163 with SMTP id af79cd13be357-7d44c2a78eamr30937485a.15.1751057159583;
-        Fri, 27 Jun 2025 13:45:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHwFR1XY8aZISqHPCrWFyviC+3MqnKMSTMQkUGTWSkYl0QopZh6D1CRsu1zF3w72yFTsELv0Q==
-X-Received: by 2002:a05:620a:2b9b:b0:7d0:993c:7163 with SMTP id af79cd13be357-7d44c2a78eamr30935085a.15.1751057159165;
-        Fri, 27 Jun 2025 13:45:59 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c831cb724sm1976837a12.53.2025.06.27.13.45.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 13:45:58 -0700 (PDT)
-Message-ID: <c309acd7-e306-48ad-81e1-cb5fdd02b2da@oss.qualcomm.com>
-Date: Fri, 27 Jun 2025 22:45:56 +0200
+        bh=oRm0qcBk4afDT7slNTJNM2b9Ewsq2dOHeRONJZ5bpV4=;
+        b=NDWjMM895xW+MFCSuSJT3vZADHRNLv5U20gTVt3gbeEi9muUo8HByVuECKtcDCkz7R
+         irm6ZkigdSDHYbrVdpDMtOiO0EcSFQRNvBlA5wKcp/XzgLfvfr2k/E9BB+hl79mEsaly
+         jTr5HswPwDwltYM9coHjcCxemfy3DS7lg5vGT6dL3NNFKktUOPdeXJJfR9NOmERahn96
+         z5RpW0eZV7WgMfbQ2HsLBu7E7Wnrc4RAhRYDT4GwkJpBc2TmW3dVFnOZ4OdcS9HhHTHT
+         W2gt4yNPzkiDmDmDVp7ayPvUwcV7cD3q4dpGRHWj0BJrROWc1OVyC8SAUgKOUs3YuuoF
+         Xtgw==
+X-Gm-Message-State: AOJu0Yz2BKM3uIjW6/7tiypuz0i6ctbZhoZDyg5iwAW5vaXnpLekHvj8
+	LporgrhTv3t9pzMc9xifpGxVq+myrP020anE7D2TwrQ1I5+jBdbvWUDJYqw358vZEhRREXRbq7Z
+	Pla9BZpNEEHNIgGjFBbVl0ZkIBhgZC9qXLLqMnC6HvliuKrBNVZ8SZVgID6o=
+X-Google-Smtp-Source: AGHT+IGnABw5MzFRNYgQXsQPwPwvKjExeZ350LKBLpRnacnRhW1+gvf1Y6eiGrhaCUkor8FF2OntoxzMWik7nInD2+Z4oyR7+wom
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Add support for IQ-8275-evk board
-To: Rob Herring <robh@kernel.org>
-Cc: Umang Chheda <umang.chheda@oss.qualcomm.com>,
-        linux-arm-msm@vger.kernel.org,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Konrad Dybcio <konradybcio@kernel.org>, kernel@oss.qualcomm.com,
-        Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-        Bjorn Andersson <andersson@kernel.org>
-References: <20250623130420.3981916-1-umang.chheda@oss.qualcomm.com>
- <175069348269.3797007.5540625905808833666.robh@kernel.org>
- <bcfbfaed-e857-44be-86bd-d4e977fd4d27@oss.qualcomm.com>
- <20250627202313.GA4189710-robh@kernel.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250627202313.GA4189710-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=YYu95xRf c=1 sm=1 tr=0 ts=685f0308 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=gEfo2CItAAAA:8 a=EUspDBNiAAAA:8
- a=tTVXt7mVe-G5UhCDjR8A:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
- a=sptkURWiP4Gy88Gu7hUp:22
-X-Proofpoint-GUID: h_-nz0XnwASDjbFGwzHsfP-vnoc_oYlz
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDE2OCBTYWx0ZWRfXzE7Imx9fldAM
- 0LyHtpiTPcIFGlAcgH6Fjyr74xVSqE/qstKvHOvGWr06dY0pAhwjXZzMGwKL4BvwD1+0ijfO3p5
- ix4lNcUlIhOkejKr1OQyeGynCFbaPMpLU4KMcKSqDuX4CmN80Q8mclL55FMCtxAYtXMr0CRDvLL
- WKD7RaRvV1vAZEIomM9ME0xWqB0e+7xxYF0hhYIafDzI2W5CXTcWd/cjZOgkdJjlWIuF8bB+JQL
- 3uwT7LeCqbls0SbUH/JE5qQlP6iE+Mer3WbCWXoJ+Lcr8zEn3RaMeHc/2Mjb42Qd+n01RYWR6sx
- K8O7Bdw+Qi9g/5sZyiQ/mzUlZC4lNurtFhniWfXRW8ZEW4T2haQxvbG6Xj0xhy/a3vTKguXqFoc
- lBOC7T/1RoFeUXFsPnjsqQqitUhuZtAlEfZ3T4d8e0q67gneI7ns7hGAUdexeedChpB5StnE
-X-Proofpoint-ORIG-GUID: h_-nz0XnwASDjbFGwzHsfP-vnoc_oYlz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 spamscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
- clxscore=1015 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506270168
+X-Received: by 2002:a05:6e02:b2c:b0:3dd:fad4:7c61 with SMTP id
+ e9e14a558f8ab-3df4ab6cb1emr62468745ab.8.1751057163230; Fri, 27 Jun 2025
+ 13:46:03 -0700 (PDT)
+Date: Fri, 27 Jun 2025 13:46:03 -0700
+In-Reply-To: <ea44d9c8-23c3-4bb0-b867-0adf26b330e8@linux.dev>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685f030b.a00a0220.3efde.0002.GAE@google.com>
+Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
+From: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	yanjun.zhu@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/27/25 10:23 PM, Rob Herring wrote:
-> On Mon, Jun 23, 2025 at 05:50:11PM +0200, Konrad Dybcio wrote:
->> On 6/23/25 5:46 PM, 'Rob Herring (Arm)' via kernel wrote:
->>>
->>> On Mon, 23 Jun 2025 18:34:18 +0530, Umang Chheda wrote:
->>>> This series:
->>>>
->>>> Add support for Qualcomm's IQ-8275-evk board using QCS8275 SOC.
->>
->> [...]
->>
->>>>
->>>>  .../devicetree/bindings/arm/qcom.yaml         |   7 +
->>>>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
->>>>  .../boot/dts/qcom/qcs8275-iq-8275-evk.dts     | 241 ++++++++++++++++++
->>>>  3 files changed, 249 insertions(+)
->>>>  create mode 100644 arch/arm64/boot/dts/qcom/qcs8275-iq-8275-evk.dts
->>>>
->>
->> [...]
->>
->>>
->>> New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250623130420.3981916-1-umang.chheda@oss.qualcomm.com:
->>>
->>> arch/arm64/boot/dts/qcom/msm8916-samsung-gt58.dtb: panel@0 (samsung,lsl080al03): 'port' does not match any of the regexes: '^pinctrl-[0-9]+$'
->>> 	from schema $id: http://devicetree.org/schemas/display/panel/samsung,s6d7aa0.yaml#
->>
->> Seems like a fluke..
-> 
-> Yes, I failed to filter that out.
-> 
-> This is just a before and after run with filtering out everything in 
-> before. I suspect that sometimes warning lines get interleaved and these 
-> show up as new.
-> 
-> If QCom was warning free, then this would be less of an issue. :(
+Hello,
 
-We're trying.. not always doing the best, but it's on the agenda!
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+general protection fault in rxe_skb_tx_dtor
 
-Konrad
+Oops: general protection fault, probably for non-canonical address 0xe000bc000000006c: 0000 [#1] SMP KASAN NOPTI
+KASAN: maybe wild-memory-access in range [0x0006000000000360-0x0006000000000367]
+CPU: 0 UID: 0 PID: 1039 Comm: kworker/u4:7 Not tainted 6.16.0-rc3-syzkaller-gc0e71fcff378 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: rxe_wq do_work
+RIP: 0010:rxe_skb_tx_dtor+0x78/0x240 drivers/infiniband/sw/rxe/rxe_net.c:364
+Code: 03 42 80 3c 28 00 74 08 4c 89 f7 e8 72 65 81 f9 4d 8b 36 4d 85 f6 0f 84 c3 00 00 00 4d 8d be 60 03 00 00 4c 89 f8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 77 01 00 00 41 8b 2f 31 ff 89 ee e8 bf
+RSP: 0018:ffffc900000079e8 EFLAGS: 00010206
+RAX: 0000c0000000006c RBX: ffff8880122848c0 RCX: ffff8880330a8000
+RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff8880122848c0
+RBP: 0000000000000000 R08: ffffffff8fa10ef7 R09: 1ffffffff1f421de
+R10: dffffc0000000000 R11: ffffffff88a26c60 R12: dffffc0000000000
+R13: dffffc0000000000 R14: 0006000000000000 R15: 0006000000000360
+FS:  0000000000000000(0000) GS:ffff88808d250000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb0aec28fc8 CR3: 000000004f814000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ skb_release_head_state+0x101/0x250 net/core/skbuff.c:1139
+ napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
+ e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
+ e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
+ e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
+ __napi_poll+0xc7/0x480 net/core/dev.c:7414
+ napi_poll net/core/dev.c:7478 [inline]
+ net_rx_action+0x707/0xe30 net/core/dev.c:7605
+ handle_softirqs+0x286/0x870 kernel/softirq.c:579
+ do_softirq+0xec/0x180 kernel/softirq.c:480
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
+ local_bh_enable include/linux/bottom_half.h:33 [inline]
+ __neigh_event_send+0x9b/0x1560 net/core/neighbour.c:1194
+ neigh_event_send_probe include/net/neighbour.h:463 [inline]
+ neigh_event_send include/net/neighbour.h:469 [inline]
+ neigh_resolve_output+0x198/0x750 net/core/neighbour.c:1496
+ neigh_output include/net/neighbour.h:539 [inline]
+ ip6_finish_output2+0x11fb/0x16a0 net/ipv6/ip6_output.c:141
+ __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
+ ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
+ rxe_send drivers/infiniband/sw/rxe/rxe_net.c:390 [inline]
+ rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:449
+ rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
+ rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
+ do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
+ do_work+0x1b1/0x6c0 drivers/infiniband/sw/rxe/rxe_task.c:187
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:rxe_skb_tx_dtor+0x78/0x240 drivers/infiniband/sw/rxe/rxe_net.c:364
+Code: 03 42 80 3c 28 00 74 08 4c 89 f7 e8 72 65 81 f9 4d 8b 36 4d 85 f6 0f 84 c3 00 00 00 4d 8d be 60 03 00 00 4c 89 f8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 77 01 00 00 41 8b 2f 31 ff 89 ee e8 bf
+RSP: 0018:ffffc900000079e8 EFLAGS: 00010206
+RAX: 0000c0000000006c RBX: ffff8880122848c0 RCX: ffff8880330a8000
+RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff8880122848c0
+RBP: 0000000000000000 R08: ffffffff8fa10ef7 R09: 1ffffffff1f421de
+R10: dffffc0000000000 R11: ffffffff88a26c60 R12: dffffc0000000000
+R13: dffffc0000000000 R14: 0006000000000000 R15: 0006000000000360
+FS:  0000000000000000(0000) GS:ffff88808d250000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb0aec28fc8 CR3: 000000004f814000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	03 42 80             	add    -0x80(%rdx),%eax
+   3:	3c 28                	cmp    $0x28,%al
+   5:	00 74 08 4c          	add    %dh,0x4c(%rax,%rcx,1)
+   9:	89 f7                	mov    %esi,%edi
+   b:	e8 72 65 81 f9       	call   0xf9816582
+  10:	4d 8b 36             	mov    (%r14),%r14
+  13:	4d 85 f6             	test   %r14,%r14
+  16:	0f 84 c3 00 00 00    	je     0xdf
+  1c:	4d 8d be 60 03 00 00 	lea    0x360(%r14),%r15
+  23:	4c 89 f8             	mov    %r15,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax <-- trapping instruction
+  2f:	84 c0                	test   %al,%al
+  31:	0f 85 77 01 00 00    	jne    0x1ae
+  37:	41 8b 2f             	mov    (%r15),%ebp
+  3a:	31 ff                	xor    %edi,%edi
+  3c:	89 ee                	mov    %ebp,%esi
+  3e:	e8                   	.byte 0xe8
+  3f:	bf                   	.byte 0xbf
+
+
+Tested on:
+
+commit:         c0e71fcf RDNA/rxe: Fix rxe_skb_tx_dtor problem
+git tree:       https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
+console output: https://syzkaller.appspot.com/x/log.txt?x=13d9708c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
+dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+
+Note: no patches were applied.
