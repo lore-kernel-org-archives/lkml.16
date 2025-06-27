@@ -1,308 +1,215 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C4E1AB52D;
-	Fri, 27 Jun 2025 07:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1181AB52D
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:29:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751009339; cv=none; b=hdyi9ZXxWABT75SghieaGoBbgb0KhjtPWz1xvl1Ro9uOpwO0b9W8wXBxgmuNwS//m5daxG/5YKShaEDxl9bP0S8necxhrDQFw3hZGx5ACt6ROBLBZeK7hnX6Wd4R3B2D1zfYTgUK/+E9IKng6HYAyCvZwv1YIjxLOqmQKQUz9DE=
+	t=1751009377; cv=none; b=rdO68uwCGDxU9kOzl66DoFr6Y33Ija1D7M7SI06NZH5JGR1NUxk+WM5JhqYYbLY+GaWWrcStNE8R7DRmtGpCkowhgjjJys0sykL0FuLNXk4GBtZH0u9iYzElR69c5doOjznC8jD/tNdtsG/BeS4x21zAiVF+ia9Mw25Xy4CRjFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751009339; c=relaxed/simple;
-	bh=xAwbIpUOopjddcY11bRHkhx/0Ecpy5l/9bzYYgCRJlc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lem4IVTSyBxCRKY+1MGlUuRhjNMklrMdrdnwWyI6WitEa9K47qGixgO2JIONuR9ePGIPksY+8dNB5iojsMm1z1loikM3OORrYls2js3xqDn9K6/JzPynUO6laYcjg71BfVgvWWHKtxJ5a7MMpdCUowC5BB4T7NA+EIdbpkyS2p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PswP3KY8; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751009377; c=relaxed/simple;
+	bh=OiS/bpRXSmhNz+/EPrsvr3tnfdVrFREmT1aYWyq8jUI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eBVtQ1ZbuwgbFwcbTeMhLGzC1uD/7XPMK2R+28Ooo1ZTo6+7lbCklADW3Xgv1ADBJ39DLWafOqAxMOnS658QRM+zCEje9I5sS+44PgfO0FKzixJrAiqtjXsIgdypnHYY6wVIWpjjl1Ao4hpdi0mLstOdbu3Ke5AE0sYCLWMIfF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HdRRu9sr; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PswP3KY8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751009338; x=1782545338;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=xAwbIpUOopjddcY11bRHkhx/0Ecpy5l/9bzYYgCRJlc=;
-  b=PswP3KY8HdHJJj1ghEvswgsP+Tw0rMc/nMO6XHuPp3WCgxIcICvC+qh1
-   NhSsv3myY4AfpKWT/9pLuBKTlhaXwQ/wxIzo9nhbK7udZv0fmSEKNFJXe
-   hqckK/JSeCFB/ErhrQs+tIWHFRdLsGcJkKNlfSAH+uym2Jbvr2ErTl7w0
-   iAA+oWIT34NLw1qKATfT+WD5ieWGuo2ypeKoQNXG4Ne6H3jwu7sYPN5GS
-   ayGEFbEAFFSmKFZmqnhE0rE+dK39Rs0EDPrrIIo5C4MoKEHV1TPEJattD
-   p8XlpgU00oNSb7rySuSmd76ZYI2ADaoeUh8XcmOc53IFuscbLZdimlbVB
-   w==;
-X-CSE-ConnectionGUID: WpXnum9nSuS88q/9z6Ixrw==
-X-CSE-MsgGUID: QpH4bd7XR/eyY6TT3ntNwg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53443068"
-X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
-   d="scan'208";a="53443068"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 00:28:57 -0700
-X-CSE-ConnectionGUID: AJ8fxX0wTR6hNInBYm1AVg==
-X-CSE-MsgGUID: 72VvaYj0TweVXyPOoIacrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
-   d="scan'208";a="157288625"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.71])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 00:28:48 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 27 Jun 2025 10:28:44 +0300 (EEST)
-To: Vishnu Sankar <vishnuocv@gmail.com>
-cc: pali@kernel.org, dmitry.torokhov@gmail.com, hmh@hmh.eng.br, 
-    hansg@kernel.org, tglx@linutronix.de, mingo@kernel.org, jon_xie@pixart.com, 
-    jay_lee@pixart.com, zhoubinbin@loongson.cn, linux-input@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, 
-    platform-driver-x86@vger.kernel.org, vsankar@lenovo.com, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>
-Subject: Re: [PATCH] x86/Mouse: thinkpad_acpi/Trackpoint: Trackpoint Doubletap
- handling
-In-Reply-To: <CABxCQKt7SjMhX33WGOTk8hdZf1Hvkp8YYFWJK5v1xcbQQm14nQ@mail.gmail.com>
-Message-ID: <7ed97f5f-edb2-7f15-1d53-42b7b16a5ae6@linux.intel.com>
-References: <20250620004209.28250-1-vishnuocv@gmail.com> <c7eb2d82-a487-1baa-dd89-4276551974ec@linux.intel.com> <CABxCQKvt+vreQN1+BWr-XBu+pF81n5fh9Fa59UBsV_hLgpvh3A@mail.gmail.com> <4e846cf1-e7c7-3bb9-d8b3-d266b9dfbc4e@linux.intel.com>
- <CABxCQKt7SjMhX33WGOTk8hdZf1Hvkp8YYFWJK5v1xcbQQm14nQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HdRRu9sr"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4531e146a24so9471765e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 00:29:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751009373; x=1751614173; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=90bdELHSHEeKPOaBiZKt2XXQdDJR9fs8Epm5yqsnQkk=;
+        b=HdRRu9srjeof7eRsZPZAcGXzJzaWc87MuK/gKt+Ydy4GKKp0Oo0Df2sLsTa7V2zcRJ
+         gpGv5B8au9eOMzvCla+ixUGXmB1d/qm9n3/yIu4bLZCiwxYOitr0bdxbad0a6VtA+puI
+         J8sqoVBzY+XnO4IHwQrQRoA4ePOcppOmmwb8E1TGUJyKfScxsH2lGCIsOCg6QXHrkob7
+         JvIfigFLnikF2WQAVzki3CaXQPM++CInHIBwifzx9BX1o3KZtOupg1UKVOuS+wi3RsAF
+         Tgda2kPbV02Ok+NG/vDbUo9Zq8i2rLVrxQFL2Q3z15+B5Qh5tBOcqMFWx7Wa0ck++p3E
+         ov6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751009373; x=1751614173;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=90bdELHSHEeKPOaBiZKt2XXQdDJR9fs8Epm5yqsnQkk=;
+        b=YjmXqwYf9LTa0CmhsoD+MCueoGFUSc8Dh3MGdjZsD6wQLQQdVsi+iZGXRC9dE9f5Hq
+         xR1PLay6QCBkgDhxYT/qBRHZpC6y7uhDcnX8QKT0/X/P2pVNVbxqAlvW+UaLILMKnSd9
+         zgIaJ0a45aX83aSbiXlqQZc2dcFyMFIb8+IuJqO82oDGBpjVewi5+ABl+qqJNTyBnqXC
+         MxtTwGDHikNylXHbu7DWPRlmqVdxjawq+hD1elvu/tBxvtkVH/W3LlPjNRN1gU2EzfEE
+         8Qnc6d0wx8BhAmvZ2yhYKnhvzfcmHDnkCxQLH0vZWLS+FILk00I+vTxkT2ooL1tviVfv
+         QHHg==
+X-Forwarded-Encrypted: i=1; AJvYcCWr3GbywBlYwjzijgRYq0MR4ziHOVxno1/nzLHphNKwu5jvibYLCJrGZ1hHXMJPEFOfh9Rd5jFeOxfXbsg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSfztOcjc56Ax8RLTg5ZiNLS3eDNT7bj6aNNLltsWCA2qGthTY
+	00kn7dHYekACKDNV56Be5kBRR+6/+MK4t2XFnkTP90HB+Nt8B9KCyPuzCQ+yhw==
+X-Gm-Gg: ASbGnctJ81xNkLmvkQMBXYNYeFKD64BiY5j+1IfqvodiD0jmCQcUJluqBX6MXPNl4qK
+	CROglPQ6vTf2Xi1Sa+WvNmeg7usXIb6G0iynbsU0mG3/7EB30FcURoTSK7xSC69Op+ZPQ7tX9gz
+	WRGi1vOPX8o3qu5p+z9CZkHG/msVCXWJc1D7oXAoOZOKEmSKo4PRX+cCNuWK/ynZRVAFh/U8cmz
+	mvCgqqClvf4gviruKGMOuWYRiB26bvI4Vaf5VXy8vT0kj99SwWbknRvsxaUZ+2fmDeKfYNv+lD6
+	8DAfgaxaK1egYjeWPqUlZ/BPQ7Ov52v2WpjAY/IYFafIuaP7
+X-Google-Smtp-Source: AGHT+IEgOol+rDyw88ng96qQK5C3s3LAj7Qa4nxh27Jdh6yGRrWRs//2Knx6/2vLI91t9x1FjUi3Lg==
+X-Received: by 2002:a05:600c:530d:b0:442:ffa6:d07e with SMTP id 5b1f17b1804b1-4538ef33a85mr17622685e9.1.1751009372955;
+        Fri, 27 Jun 2025 00:29:32 -0700 (PDT)
+Received: from EBJ9932692.tcent.cn ([2a09:0:1:2::302c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e72b6sm1955665f8f.15.2025.06.27.00.29.27
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 27 Jun 2025 00:29:32 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+X-Google-Original-From: Lance Yang <lance.yang@linux.dev>
+To: akpm@linux-foundation.org
+Cc: zi.li@linux.dev,
+	anna.schumaker@oracle.com,
+	boqun.feng@gmail.com,
+	joel.granados@kernel.org,
+	jstultz@google.com,
+	kent.overstreet@linux.dev,
+	leonylgao@tencent.com,
+	linux-kernel@vger.kernel.org,
+	longman@redhat.com,
+	mhiramat@kernel.org,
+	mingo@redhat.com,
+	mingzhe.yang@ly.com,
+	peterz@infradead.org,
+	rostedt@goodmis.org,
+	senozhatsky@chromium.org,
+	tfiga@chromium.org,
+	will@kernel.org
+Subject: [PATCH 0/3] extend hung task blocker tracking to rwsems
+Date: Fri, 27 Jun 2025 15:29:21 +0800
+Message-ID: <20250627072924.36567-1-lance.yang@linux.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-509316558-1751009008=:1730"
-Content-ID: <57cbe644-7d65-5a9a-b89c-516906ac4fc6@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi all,
 
---8323328-509316558-1751009008=:1730
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <c81ee0c8-a338-e07e-d289-a2db07ee615e@linux.intel.com>
+Inspired by mutex blocker tracking[1], and having already extended it to
+semaphores, let's now add support for reader-writer semaphores (rwsems).
 
-On Fri, 27 Jun 2025, Vishnu Sankar wrote:
+The approach is simple: when a task enters TASK_UNINTERRUPTIBLE while
+waiting for an rwsem, we just call hung_task_set_blocker(). The hung task
+detector can then query the rwsem's owner to identify the lock holder.
 
-> Hi Ilpo,
->=20
-> Thanks a lot for the review.
->=20
-> On Fri, Jun 27, 2025 at 12:09=E2=80=AFAM Ilpo J=C3=A4rvinen <ilpo.jarvine=
-n@linux.intel.com> wrote:
->       On Thu, 26 Jun 2025, Vishnu Sankar wrote:
->=20
->       > Hi Ilpo,
->       >
->       > Thanks a lot for the comments and guidance.
->       > Please find my comments inline below.
->       >
->       > On Wed, Jun 25, 2025 at 9:07 PM Ilpo J=C3=A4rvinen <
->       ilpo.jarvinen@linux.intel.com >
->       > wrote:
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0On Fri, 20 Jun 2025, Vishnu Sankar wrot=
-e:
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0I don't like the shortlog prefixes (in =
-the subject), please don't
->       make
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0confusing prefixes up like that.
->       >
->       > Got it.
->       > I will correct this in V2 (as a patch series).=C2=A0
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> Newer ThinkPads have a doubletap feat=
-ure that needs to be
->       turned
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> ON/OFF via the trackpoint registers.
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0Don't leave lines short mid-paragraph. =
-Either reflow the
->       paragraph or add
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0an empty line in between paragraphs.
->       >
->       > Acked.
->       > Will correct this in V2.=C2=A0=C2=A0
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> Systems released from 2023 have doubl=
-etap disabled by default
->       and
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> need the feature enabling to be usefu=
-l.
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0>
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> This patch introduces support for exp=
-osing and controlling the
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> trackpoint doubletap feature via a sy=
-sfs attribute.
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> /sys/devices/platform/thinkpad_acpi/t=
-p_doubletap
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> This can be toggled by an "enable" or=
- a "disable".
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0This too has too short lines.
->       >
->       > Sorry!=C2=A0
->       > Will do the needful in v2.
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0>
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> With this implemented we can remove t=
-he masking of events, and
->       rely on
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0"With this implemented" is way too vagu=
-e wording.
->       >
->       > Sorry for this!
->       > I will make this better.=C2=A0
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> HW control instead, when the feature =
-is disabled.
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0>
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> Note - Early Thinkpads (pre 2015) use=
-d the same register for
->       hysteris
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0hysteresis ?
->       >
->       > Sorry for not being clear.
->       > It's the trackpoint drag hysteris=C2=A0functionality. Pre-2015 Th=
-inkPads
->       used to have a
->       > user-configurable drag hysterisis=C2=A0register (0x58).
->       > Drag hysterisis is not user configurable now.
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> control, Check the FW IDs to make sur=
-e these are not affected.
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0This Note feels very much disconnected =
-from the rest. Should be
->       properly
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0described and perhaps in own patch (I d=
-on't know)?
->       >
->       > my bad, it's=C2=A0not FW ID, but PnP ID.=C2=A0
->       > The older ThinkPad's trackpoint controllers use the same register
->       (0x58) to control
->       > the drag hysteresis, which is obsolete now.
->       > Now (on newer systems from 2023) the same register (0x58) is rema=
-pped
->       as
->       > doubletap=C2=A0register.=C2=A0=C2=A0
->       > Just to exclude those older systems (with drag hysterisis control=
-), we
->       check the PnP
->       > ID's.
->       >
->       > I will give a better commit message in V2.
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> trackpoint.h is moved to linux/input/=
-=2E
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0This patch doesn't look minimal and see=
-ms to be combining many
->       changes
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0into one. Please make a patch series ou=
-t of changes that can be
->       separated
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0instead of putting all together.
->       >
->       > Understood.
->       > Will make a patch series on V2
->       > 0001: Move trackpoint.h=C2=A0to include/linux/input
->       > 0002: Add new doubletap set/status/capable logics to trackpoint.c
->       > 0003: Add new trackpoint api's and trackpoint sysfs in thinkpad_a=
-cpi.c
->=20
->       Okay, sounds better.
->=20
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +/* List of known incapable device PN=
-P IDs */
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +static const char * const dt_incompa=
-tible_devices[] =3D {
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0"LEN0304",
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0"LEN0306",
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0"LEN0317",
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0"LEN031A",
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0"LEN031B",
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0"LEN031C",
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0"LEN031D",
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +};
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +/*
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> + * checks if it=E2=80=99s a doubleta=
-p capable device
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> + * The PNP ID format eg: is "PNP: LE=
-N030d PNP0f13".
+Tracking works reliably for writers, as there can only be a single writer
+holding the lock, and its task struct is stored in the owner field.
 
-There's case difference between this comment and the list.
+The main challenge lies with readers. The owner field points to only one
+of many concurrent readers, so we might lose track of the blocker if that
+specific reader unlocks, even while others remain. This is not a
+significant issue, however. In practice, long-lasting lock contention is
+almost always caused by a writer. Therefore, reliably tracking the writer
+is the primary goal of this patch series ;)
 
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> + */
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +bool is_trackpoint_dt_capable(const =
-char *pnp_id)
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +{
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0char id[16];
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0/* Make sure str=
-ing starts with "PNP: " */
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0if (strncmp(pnp_=
-id, "PNP: LEN03", 10) !=3D 0)
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0We seem to have strstarts().
->       >
->       > Thanks a lot for the suggestion.
->       > Will make use of this.=C2=A0
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0return false;
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0/* Extract the f=
-irst word after "PNP: " */
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0if (sscanf(pnp_i=
-d + 5, "%15s", id) !=3D 1)
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0return false;
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0/* Check if it's=
- blacklisted */
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0for (size_t i =
-=3D 0; i <
->       ARRAY_SIZE(dt_incompatible_devices); ++i)
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0{
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0> +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0if (strcmp(pnp_id, dt_incompatible_devices[i]) =3D=3D
->       0)
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0Isn't this buggy wrt. the PNP: prefix??
->       >
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0Perhaps it would have been better to ju=
-st do pnp_id +=3D 5 before
->       sscanf()
->       >=C2=A0 =C2=A0 =C2=A0 =C2=A0as you don't care about the prefix afte=
-r that.
->       >
->       >
->       > Understood.
->       > Shall we have something like the following:
->       > =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!strstarts(pnp_id, "PNP: LEN03"))
->       > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return false;
->       >
->       > =C2=A0 =C2=A0 =C2=A0 =C2=A0 id =3D pnp_id + 5;
->       >
->       > =C2=A0 =C2=A0 =C2=A0 =C2=A0 for (size_t i =3D 0; i < ARRAY_SIZE(d=
-t_incompatible_devices);
->       ++i) {
->       > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0if (strncmp(id, dt_incompatible_devices[i],
->       > strlen(dt_incompatible_devices[i])) =3D=3D 0)
->=20
->       Why did you change to strncmp()?
->=20
-> I switched to strncmp() to allow matching just the known prefix part in
-> dt_incompatible_devices, rather than requiring an exact full string match=
-=2E
-> Will keep the original "if (strcmp(id, dt_incompatible_devices[i]) =3D=3D=
- 0) " logic as
-> it serves the purpose.
+With this change, the hung task detector can now show blocker task's info
+like below:
 
-I didn't mean to say the change is necessarily incorrect, I was just=20
-asking for reasonale as it was different from the original.
+[Fri Jun 27 15:21:34 2025] INFO: task cat:28631 blocked for more than 122 seconds.
+[Fri Jun 27 15:21:34 2025]       Tainted: G S                  6.16.0-rc3 #8
+[Fri Jun 27 15:21:34 2025] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[Fri Jun 27 15:21:34 2025] task:cat             state:D stack:0     pid:28631 tgid:28631 ppid:28501  task_flags:0x400000 flags:0x00004000
+[Fri Jun 27 15:21:34 2025] Call Trace:
+[Fri Jun 27 15:21:34 2025]  <TASK>
+[Fri Jun 27 15:21:34 2025]  __schedule+0x7c7/0x1930
+[Fri Jun 27 15:21:34 2025]  ? __pfx___schedule+0x10/0x10
+[Fri Jun 27 15:21:34 2025]  ? policy_nodemask+0x215/0x340
+[Fri Jun 27 15:21:34 2025]  ? _raw_spin_lock_irq+0x8a/0xe0
+[Fri Jun 27 15:21:34 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
+[Fri Jun 27 15:21:34 2025]  schedule+0x6a/0x180
+[Fri Jun 27 15:21:34 2025]  schedule_preempt_disabled+0x15/0x30
+[Fri Jun 27 15:21:34 2025]  rwsem_down_read_slowpath+0x55e/0xe10
+[Fri Jun 27 15:21:34 2025]  ? __pfx_rwsem_down_read_slowpath+0x10/0x10
+[Fri Jun 27 15:21:34 2025]  ? __pfx___might_resched+0x10/0x10
+[Fri Jun 27 15:21:34 2025]  down_read+0xc9/0x230
+[Fri Jun 27 15:21:34 2025]  ? __pfx_down_read+0x10/0x10
+[Fri Jun 27 15:21:34 2025]  ? __debugfs_file_get+0x14d/0x700
+[Fri Jun 27 15:21:34 2025]  ? __pfx___debugfs_file_get+0x10/0x10
+[Fri Jun 27 15:21:34 2025]  ? handle_pte_fault+0x52a/0x710
+[Fri Jun 27 15:21:34 2025]  ? selinux_file_permission+0x3a9/0x590
+[Fri Jun 27 15:21:34 2025]  read_dummy_rwsem_read+0x4a/0x90
+[Fri Jun 27 15:21:34 2025]  full_proxy_read+0xff/0x1c0
+[Fri Jun 27 15:21:34 2025]  ? rw_verify_area+0x6d/0x410
+[Fri Jun 27 15:21:34 2025]  vfs_read+0x177/0xa50
+[Fri Jun 27 15:21:34 2025]  ? __pfx_vfs_read+0x10/0x10
+[Fri Jun 27 15:21:34 2025]  ? fdget_pos+0x1cf/0x4c0
+[Fri Jun 27 15:21:34 2025]  ksys_read+0xfc/0x1d0
+[Fri Jun 27 15:21:34 2025]  ? __pfx_ksys_read+0x10/0x10
+[Fri Jun 27 15:21:34 2025]  do_syscall_64+0x66/0x2d0
+[Fri Jun 27 15:21:34 2025]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[Fri Jun 27 15:21:34 2025] RIP: 0033:0x7f3f8faefb40
+[Fri Jun 27 15:21:34 2025] RSP: 002b:00007ffdeda5ab98 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+[Fri Jun 27 15:21:34 2025] RAX: ffffffffffffffda RBX: 0000000000010000 RCX: 00007f3f8faefb40
+[Fri Jun 27 15:21:34 2025] RDX: 0000000000010000 RSI: 00000000010fa000 RDI: 0000000000000003
+[Fri Jun 27 15:21:34 2025] RBP: 00000000010fa000 R08: 0000000000000000 R09: 0000000000010fff
+[Fri Jun 27 15:21:34 2025] R10: 00007ffdeda59fe0 R11: 0000000000000246 R12: 00000000010fa000
+[Fri Jun 27 15:21:34 2025] R13: 0000000000000003 R14: 0000000000000000 R15: 0000000000000fff
+[Fri Jun 27 15:21:34 2025]  </TASK>
+[Fri Jun 27 15:21:34 2025] INFO: task cat:28631 <reader> blocked on an rw-semaphore likely owned by task cat:28630 <writer>
+[Fri Jun 27 15:21:34 2025] task:cat             state:S stack:0     pid:28630 tgid:28630 ppid:28501  task_flags:0x400000 flags:0x00004000
+[Fri Jun 27 15:21:34 2025] Call Trace:
+[Fri Jun 27 15:21:34 2025]  <TASK>
+[Fri Jun 27 15:21:34 2025]  __schedule+0x7c7/0x1930
+[Fri Jun 27 15:21:34 2025]  ? __pfx___schedule+0x10/0x10
+[Fri Jun 27 15:21:34 2025]  ? __mod_timer+0x304/0xa80
+[Fri Jun 27 15:21:34 2025]  schedule+0x6a/0x180
+[Fri Jun 27 15:21:34 2025]  schedule_timeout+0xfb/0x230
+[Fri Jun 27 15:21:34 2025]  ? __pfx_schedule_timeout+0x10/0x10
+[Fri Jun 27 15:21:34 2025]  ? __pfx_process_timeout+0x10/0x10
+[Fri Jun 27 15:21:34 2025]  ? down_write+0xc4/0x140
+[Fri Jun 27 15:21:34 2025]  msleep_interruptible+0xbe/0x150
+[Fri Jun 27 15:21:34 2025]  read_dummy_rwsem_write+0x54/0x90
+[Fri Jun 27 15:21:34 2025]  full_proxy_read+0xff/0x1c0
+[Fri Jun 27 15:21:34 2025]  ? rw_verify_area+0x6d/0x410
+[Fri Jun 27 15:21:34 2025]  vfs_read+0x177/0xa50
+[Fri Jun 27 15:21:34 2025]  ? __pfx_vfs_read+0x10/0x10
+[Fri Jun 27 15:21:34 2025]  ? fdget_pos+0x1cf/0x4c0
+[Fri Jun 27 15:21:34 2025]  ksys_read+0xfc/0x1d0
+[Fri Jun 27 15:21:34 2025]  ? __pfx_ksys_read+0x10/0x10
+[Fri Jun 27 15:21:34 2025]  do_syscall_64+0x66/0x2d0
+[Fri Jun 27 15:21:34 2025]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[Fri Jun 27 15:21:34 2025] RIP: 0033:0x7f8f288efb40
+[Fri Jun 27 15:21:34 2025] RSP: 002b:00007ffffb631038 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+[Fri Jun 27 15:21:34 2025] RAX: ffffffffffffffda RBX: 0000000000010000 RCX: 00007f8f288efb40
+[Fri Jun 27 15:21:34 2025] RDX: 0000000000010000 RSI: 000000002a4b5000 RDI: 0000000000000003
+[Fri Jun 27 15:21:34 2025] RBP: 000000002a4b5000 R08: 0000000000000000 R09: 0000000000010fff
+[Fri Jun 27 15:21:34 2025] R10: 00007ffffb630460 R11: 0000000000000246 R12: 000000002a4b5000
+[Fri Jun 27 15:21:34 2025] R13: 0000000000000003 R14: 0000000000000000 R15: 0000000000000fff
+[Fri Jun 27 15:21:34 2025]  </TASK>
 
-If you think you it needs to be broader to the match to a prefix only,=20
-I've no problem with that.
+[1] https://lore.kernel.org/all/174046694331.2194069.15472952050240807469.stgit@mhiramat.tok.corp.google.com/
 
---=20
- i.
---8323328-509316558-1751009008=:1730--
+Thanks,
+Lance
+
+---
+RFC -> v1:
+ * Patch #01 #02 Pick RB from Masami - thanks!
+ * Merge [PATCH RFC 2/3] into patch #01 (per Masami)
+ * Add the patch #03 to extend the test module to handle the rwsem
+   blocking case (per Masami)
+ * https://lore.kernel.org/all/20250612042005.99602-1-lance.yang@linux.dev
+
+Lance Yang (2):
+  locking/rwsem: make owner helpers globally available
+  hung_task: extend hung task blocker tracking to rwsems
+
+Zi Li (1):
+  samples: enhance hung_task detector test with read-write semaphore
+    support
+
+ include/linux/hung_task.h           | 18 +++----
+ include/linux/rwsem.h               | 12 +++++
+ kernel/hung_task.c                  | 29 +++++++++--
+ kernel/locking/rwsem.c              | 31 ++++++++---
+ samples/Kconfig                     |  7 ++-
+ samples/hung_task/hung_task_tests.c | 81 ++++++++++++++++++++++++++---
+ 6 files changed, 146 insertions(+), 32 deletions(-)
+
+-- 
+2.49.0
+
