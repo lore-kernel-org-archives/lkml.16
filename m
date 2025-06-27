@@ -1,105 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012041.outbound.protection.outlook.com [52.101.71.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1A42797A3;
-	Fri, 27 Jun 2025 21:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9AF280037;
+	Fri, 27 Jun 2025 21:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751059803; cv=fail; b=AYfyKtiEAJ0tZ/L9ITVqeoNYwBYQfNoQfMI5GQPwxQgo4rb3czMAp51knCXBCVTt1CL0ZhfeOhKMsQQf3Zc8zbqQpNG57g2xJzALM864BrArz1NXODCqOa7SC6csp5DjgNm1bPinCYDPcjcDbm6dfUUk/AsuDe//wIn+iUcmtlQ=
+	t=1751059850; cv=fail; b=guOpSUy+jfVqBqnKvx56Ek6sbDchzAfpp+w+oC04hrLPWL9ShJ4pctBuRDOrmyE+IYrNnTFdW9Cm5pN9J5m/m22TboX0+/V41/FvsVhkxXJ1gY7YRkap1QO4sn4nk/3teqMYwdMh3VfwxwEshKwur6Dxue1DgVl4zzfSlodELK8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751059803; c=relaxed/simple;
-	bh=xVUQIACdl+asOy4y6QkaiCladlqpGhH9db0uLNt0JJA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=cKiMIdiO1RzbXDqzvsEQ3CAVj5iZocjXLo8QUDdGJOykXS2/W7KTWMuMsJLqbMwJhnBQywnY+4gwxcKGx9K+kF1YOvbxDHkjZF9ESwuUdQR80DoT4qHw5ZliKxbWLEYzw5ZPI9c5FCiY7bFnR+O7QUsArOimK37dsETJmZbUiJU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OnDNs+dN; arc=fail smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751059850; c=relaxed/simple;
+	bh=0qsAQ2uhwapYe0JUns7/qMr/pOwn8tjPiM8g3aLoFcA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=pMHK8SZxJpuI78nVpKnChKdH6T/kQfgQj5Cx/36tcpYC+CLgFP+4ZCWqrv7KZMHV2RfJ6yzIwHSaD4dV1R0IPTeXUejrkgtQ4z272ljWiytERBy3KiYn6Cayz/AxFOg3OQoqpeEXS5qYi/CGrN2Ou6g9J7dc/Cybfj0GZvYBkY4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=W/mR8W1K; arc=fail smtp.client-ip=52.101.71.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OnDNs+dN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751059802; x=1782595802;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=xVUQIACdl+asOy4y6QkaiCladlqpGhH9db0uLNt0JJA=;
-  b=OnDNs+dNzxQS7AbpslLxpXWxrxrc/CZ8Uynx7Nu1ZJeMkqZt2DvUibmi
-   vmODwsQAgrwAlmy2vIUsTLnFM2unXS2Ihk9ps/ydNQoSf4HvK67ociZJN
-   zkhKC3iLhKrovCVqLofn1NaoEVHbDJYwUQgS5E8nhMV2hImoMrxzJPwjF
-   EARXCu6kgdXzG0YSYUl5O8mY+IeECVXOo3zniWMMESRQOoupSNS3mXUWl
-   SGm9KXGg3cbLuPcB7YwKdaC/4MxPdAf1nhhx345dTBf8WfZQia9s1fZN9
-   jtDYBRO/vQbKO6bywctpwhLqATEz5Ros6NB0kGMH1GzmP/hJ5rObiYR0M
-   g==;
-X-CSE-ConnectionGUID: bMh2FmO4RUei8R34aDxc8A==
-X-CSE-MsgGUID: 66K+OjB1RuuMOjTNXfWnnw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="52610410"
-X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
-   d="scan'208";a="52610410"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 14:30:00 -0700
-X-CSE-ConnectionGUID: LYTDfCpoSbSg2tj/Dh9Ujw==
-X-CSE-MsgGUID: K2K+i7qtRLGXpNJT7693MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
-   d="scan'208";a="153450756"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 14:30:00 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 27 Jun 2025 14:29:59 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Fri, 27 Jun 2025 14:29:59 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.50) by
- edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 27 Jun 2025 14:29:58 -0700
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="W/mR8W1K"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=n3PQhptR9ud7Et0fGw9em+v0iYDg+NVS+ROVL2rg6HiuHrEoVhl0mtB1ic1COdHEsTXMATw5Xc6YwScsE/MNdt8zorU9N8dn/EUU3WTTwkgkX91YORdz3d1+3j5gqV4OmmU1kYtxisdvFoX2y7TbJx5/P+VfNF+Qs4rM6xg+im/khErJh5cfghkkaEhKTqbp5B16gYeyj2bLac5pjYBxoLhP8yCtimkyCm1SpR96JUZGTwSOqRy+OTgdK2xCKZmPkEa9JEIIUhYHS5XsmV0GXoUMhyKL3IykafLVZRpptIWCnx1BUsLactOYHureZ3r8LlWMFsACYfBXf0bSkXbFpg==
+ b=ZHTFn0noWDQ7dQx9z/iUC2ib3aj+NAUq7HK0D+gCTZYvzjRlPHxEVjyJE7xn4X12dnwEnB5SRxUttayGMvxBRmkRiA1nhsvKkBGSd8xA9RRIINQ5v/TSCCO7ElRV6TzlZ9yguEfeMS9TUhSGb4tDmNDi3eJNiuj135v+qz9d0ocaL/7V2m7sP+X2otOWGcphtaNbPsBZraHIVgK6XoMdeWDxKL0WNoaO0k1K7kL5FoKJLKcppgWJhJlxxPmzekcxWdkshD+V0Dq4g8HaDI4Q8VYxgSXRTzzXhgqwq3SHmPTguD8Ihjay69LlXvVhHIPB/YyISxT94ACCgyNLwhqOgQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ejdHY26fn1BdsW+KLbvOerkiIM9bTcXodJ4wDkTcXTU=;
- b=gjefAGPVxZohFmkLCCQZUIQukXNh+M75eNkN0Qj+I+XpQOD+vuUWgq9qn7iVzeNPIQADR/z62t43h41iA/MR1HX0xVzWyp9WzWBj8i2g9CqLAOLb8RzoeZ8/wuj5gqCfgOcOSXr1OEQOzPZzn24X3TBQLBR7t3iCNWVM0rRPi0A8ycY3WP70jGj/f2uTBOh3N5dpdQ5iKw0uokL7uoVN/8f+Q2xYAuTerQRIT7uoqpqCGO320oCvwMS1TecEQYVDCWnxl7duzfGEOLzw8igRRK5GGGtj9EeRLqtODAGbQasdI6f4RYk4HYhmxjYxPohtdnIp4LAuEGZDGd1s/KztRA==
+ bh=IsWSECNHC+8m9abj5VX8vOO0RUi1qj+Oe3B67CLwdOk=;
+ b=zSEQQHecNWlTmZ65IswjHvKnDCOJf5RRdSUkQztQe4zUP8HhPpzN3igHX/dl/nc9pqOj/IUZjJ/SL6XYmrRA29wMHS8NbRxeXrZ2JPmVAD3F0oPdGHUnYz7gK5ZdwMdiZzqzGYV+r447EEmQPmuiiDnxEUiTlh3LsCVmqa2ajvsaoCJggmEEOaoaD9+k1GvJvMrUGrTeXFgYqglkKSsqx0w99FG9vOKS6tAEtnZ3a1tKhJUFIV+Z1vEbGTaHkAMut+daJlEojDuLMfffa2hmn0i2d59fyr8E++GASXAm/IdV5oiBgdLOMk9Y7Aa/ZSobLnuYh/oddiixstIFmOtn7g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IsWSECNHC+8m9abj5VX8vOO0RUi1qj+Oe3B67CLwdOk=;
+ b=W/mR8W1Kxt9xZqOA9tpWZ5jo9zzywVBF/TfeNUh8wijMRPHffNcFz2rND0Lwp5yDcNw/MDBhdCRyHrbxFFH/TNdnDwL1THV4Bm1WxR5my5oCOVfcVttD8ski/1gOejKBsIkNHychCm4OARPdcoSIilzvpLcWpWsucJdGllIOjBBGcbjDygN5w0Fu/yE2ijw17gIv8tIYzEmRUKpFzlFG/8ayPBx0pQm9Jx+47qQZ6JPmHWLngmvTzomX5TQ3OE1O4g+PMW4udYc5FWgkOiofL+AA+ql5mf/d2IW6FTdMKzTpRM5tAjQXg4aQPP5X/KpUO/Gipe25kzf8MOSdHdNPmw==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CYYPR11MB8430.namprd11.prod.outlook.com (2603:10b6:930:c6::19)
- by MN0PR11MB6159.namprd11.prod.outlook.com (2603:10b6:208:3c9::22) with
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB7790.eurprd04.prod.outlook.com (2603:10a6:102:cc::8)
+ by VI0PR04MB10903.eurprd04.prod.outlook.com (2603:10a6:800:265::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.16; Fri, 27 Jun
- 2025 21:29:56 +0000
-Received: from CYYPR11MB8430.namprd11.prod.outlook.com
- ([fe80::76d2:8036:2c6b:7563]) by CYYPR11MB8430.namprd11.prod.outlook.com
- ([fe80::76d2:8036:2c6b:7563%5]) with mapi id 15.20.8880.015; Fri, 27 Jun 2025
- 21:29:55 +0000
-Date: Fri, 27 Jun 2025 17:29:50 -0400
-From: Rodrigo Vivi <rodrigo.vivi@intel.com>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-CC: Lucas De Marchi <lucas.demarchi@intel.com>, Thomas
- =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, "Jarkko
- Nikula" <jarkko.nikula@linux.intel.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, Mika Westerberg
-	<mika.westerberg@linux.intel.com>, Jan Dabros <jsd@semihalf.com>, Andi Shyti
-	<andi.shyti@kernel.org>, Raag Jadav <raag.jadav@intel.com>, "Tauro, Riana"
-	<riana.tauro@intel.com>, "Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
-	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-	<intel-xe@lists.freedesktop.org>, <linux-i2c@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/4] drm/xe: Support for I2C attached MCUs
-Message-ID: <aF8NTuKbOv-bwZuH@intel.com>
-References: <20250627135314.873972-1-heikki.krogerus@linux.intel.com>
- <20250627135314.873972-3-heikki.krogerus@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
+ 2025 21:30:44 +0000
+Received: from PA4PR04MB7790.eurprd04.prod.outlook.com
+ ([fe80::6861:40f7:98b3:c2bc]) by PA4PR04MB7790.eurprd04.prod.outlook.com
+ ([fe80::6861:40f7:98b3:c2bc%4]) with mapi id 15.20.8880.023; Fri, 27 Jun 2025
+ 21:30:44 +0000
+Date: Sat, 28 Jun 2025 00:30:41 +0300
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Larisa Grigore <larisa.grigore@nxp.com>,
+	Frank Li <Frank.li@nxp.com>, Christoph Hellwig <hch@lst.de>,
+	linux-spi@vger.kernel.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/6] spi: spi-fsl-dspi: Store status directly in
+ cur_msg->status
+Message-ID: <20250627213041.vp6yfcgf4xysdklf@skbuf>
+References: <20250627-james-nxp-spi-dma-v4-0-178dba20c120@linaro.org>
+ <20250627-james-nxp-spi-dma-v4-2-178dba20c120@linaro.org>
+Content-Type: multipart/mixed; boundary="zwdlutain6qm4enm"
 Content-Disposition: inline
-In-Reply-To: <20250627135314.873972-3-heikki.krogerus@linux.intel.com>
-X-ClientProxiedBy: SJ0PR05CA0204.namprd05.prod.outlook.com
- (2603:10b6:a03:330::29) To CYYPR11MB8430.namprd11.prod.outlook.com
- (2603:10b6:930:c6::19)
+In-Reply-To: <20250627-james-nxp-spi-dma-v4-2-178dba20c120@linaro.org>
+X-ClientProxiedBy: VI1PR02CA0066.eurprd02.prod.outlook.com
+ (2603:10a6:802:14::37) To PA4PR04MB7790.eurprd04.prod.outlook.com
+ (2603:10a6:102:cc::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -107,631 +68,534 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR11MB8430:EE_|MN0PR11MB6159:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6ceec5c6-8d04-48a2-3eb2-08ddb5c1c2b4
+X-MS-TrafficTypeDiagnostic: PA4PR04MB7790:EE_|VI0PR04MB10903:EE_
+X-MS-Office365-Filtering-Correlation-Id: 55a0ad5d-4513-45da-5cbe-08ddb5c1df8e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?JKrvZCm6arpVj34s3IGblQGXxCwE5nk9JYby1gRqPMpzIn68NOUvyjGFRQT9?=
- =?us-ascii?Q?j7Tb4guv3Z3NqV3OAHYZYnFsJviYUoWqbtybNqYND7xaYGTkXTtGmq7htKo2?=
- =?us-ascii?Q?CmzkpfjkCr0fwQZWKxjXh81Af3iVY5wd8vKcTvUb80UPPzeeNMu2aJEVCZIv?=
- =?us-ascii?Q?usnO3b8iz0lH1hf8JMGMyCtVUBxtXWTgvr40Dez2mNfqwTJzT143U5aq7Z8g?=
- =?us-ascii?Q?akeWNji2K6wWcKVPaaP6ZrFasZZ/GXwzZBKcMKCVPtvV2c2ZYtEdbD6n00+E?=
- =?us-ascii?Q?xLGEIEoaALH1dbC9l7jmFCjD7TFwHYLqZWAIxC0AA23a52iPFJgh81cynwFv?=
- =?us-ascii?Q?WCx7xIngpUuazMDXiM56XTMrEj/vrO35rRt7rUA40MLCz3GlUX0X+HZxrkrA?=
- =?us-ascii?Q?HL69VGtFN/bkcVkUYVXiU4HKm0n5vH7mV2M7ewvli1puet7vWpXLpHnNtXyW?=
- =?us-ascii?Q?VGt7FGyixa+FnTo2hKo+Zw2XwDpRLda9I/eVxsgmYoo5+VGg+MPdfr+XKMbG?=
- =?us-ascii?Q?fdPxembyFGY7VeY8ZJFCnuXUfW868FNq7eGfd/nH2qK8soW108VvTwETzxWs?=
- =?us-ascii?Q?3UoUtuRjZy6XaC5fth268vyLsa51l4WQJpXchQv3Mwe+J2aDLPrS5h4OZjkb?=
- =?us-ascii?Q?bV+F/2cUSkmUFQ3aPhJuB2Iy+zFD6F9nK1Ull0yFtCJ7vI9eTTUE7A7KCbsI?=
- =?us-ascii?Q?JHQnFBEKqgKb3m+Mnmxm4vQEz7e6UGqZ1nRkNuGfg9kkAQQPiIE5vOUAUvZK?=
- =?us-ascii?Q?EIBiD7Ub9ZXkGFEOBo6R7sABP6l3y2yg8Z28rDE7cmG52T9H3GSlWnKwVjCR?=
- =?us-ascii?Q?8IJVfUNuaqkVkuKP9mODJne18z6kROhtHh6Q0u6WDcf9ECl2aSMlcK8dQNV8?=
- =?us-ascii?Q?tAD8TrmYSg4bP1r3S/SmbbzZU06D7HCwEG5cHuxXRoB7nvbS4UBI0QZuemA2?=
- =?us-ascii?Q?1C/lsEy4COJYJ4L5ItQwIvpRpuA8vfbPqWLvOsjHlxCOVuZuH6FrqHgsAGT6?=
- =?us-ascii?Q?7hJRH/GT3PhiGK5JV7FXrvJfBtdSoCSfeB1c9QNwiZDdVLKDogQGLoB2CrPx?=
- =?us-ascii?Q?vW034+9dX0KFgfpMOyoSlqYTmAl6OXq4eUnVjI1JIRkyUOhhCOcz7LbkGxcU?=
- =?us-ascii?Q?MPw5UsI7OBP0BbRAzj6ccon6W/EUeZBMOneWKrHn3co1jsZQbXGv93JU1Goo?=
- =?us-ascii?Q?yE3b2GoAogQndd3R4SZINdqkps69ZS2nBAc1jKGNYgxi54D1lCgpAmXLG/PB?=
- =?us-ascii?Q?R8/5d0RAtBKwylcr1bTP5ppulT7yjeB7xJKQWYtnNBS1TuzwFo5WRXtkbE+M?=
- =?us-ascii?Q?Q0XBJusnz+jxnIvWYsDQ2Hovb97H/s+iRhxCsLg5gX61iTbrQa5WglCwDKZr?=
- =?us-ascii?Q?98JNG4u12deN7CchCTI36XVShrUMUVZLCJtEW47iYmAuaI1TmonmRzPaox39?=
- =?us-ascii?Q?bNl/+Oeyfg0=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR11MB8430.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|366016|10070799003|4013099003|4053099003|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?W61Bw/0Pl5b2ZODLUCIfB1JDoaAsJz0JUODS/UNxqldMOpAxiT/s8zofYOjB?=
+ =?us-ascii?Q?QcyyJeLz/lG6WAPFwcMge17LjSYfNYXr51uE5IgNOzEd05rssRs/RateM7yx?=
+ =?us-ascii?Q?PrpL5KQjSkErv9pyDmE4SnTjYGHlkF4js8jKz5kjKOeVDmUbEnD8cdxhuVme?=
+ =?us-ascii?Q?sMvDCDBZcFDS/wDo+0PXT4Ps/uzcQ4Pm/hMGljIUOUtUWwqAC0bRRGqf95VY?=
+ =?us-ascii?Q?NAWw7za/v63vnX4s9IFj4QDtha5bZJxkXpjxnERjc+2mFBMn20FQP4ToGSZ3?=
+ =?us-ascii?Q?/Fgf3Jib6Fy1OSG04Bsq/VZD+My/H7b2CjhuvbUrb0+OTFM+mCQyVYFZZ6hZ?=
+ =?us-ascii?Q?K+p1NKjKqC/uZ8JPriXAWAuzjKExuLqLnbMfBPph//6k9EpDIDYFbZWV2SM0?=
+ =?us-ascii?Q?NcvUOh7a4FaRg+4fGgcRj5wYzGjQ7VFbA3OFXXgDp4ymxshsi3ggTdrVDKvQ?=
+ =?us-ascii?Q?1SR6r4eKXgi29D0cbqLBuDeQWaPMbEMj4g0s8gsjfwQBkfR/kpkipVWB58cz?=
+ =?us-ascii?Q?1lmPpi+LTPSuWg2fQt9DY3VZeQ0Xf/LWLk8zJVpArvLvs8LpgnQnOamF3Vk6?=
+ =?us-ascii?Q?0ivVczM+x7itAcomBO3KCQk7lTApvvnMVrIuQLYm0EBJ6rp/kL5MaWtL9qjB?=
+ =?us-ascii?Q?FBzssu8nHms+0MMAj/joh+00I266/7LfM5sKJ8//+Myv2rAu9xzI7Z2r0OFH?=
+ =?us-ascii?Q?F6FAC3oUwJ/K1R3M/UqxdjLRJD81qaVsr6vANlrJhYd+GjbxLwXChtSnJeB3?=
+ =?us-ascii?Q?jFo5w/WeeWOeuNYVzqob0Mounc0zTR+R3Azu8+2AO+zXAq7vmp/GNkJpRg3c?=
+ =?us-ascii?Q?0josocGBR4DC5Be9Z/aAA+K5opaYtfvKKhy9WamFD+suGPAIDZoUoKv0n7iX?=
+ =?us-ascii?Q?NOuX/LbPQCAj0XI4kH3vKd0giqz/0VCubS17zGpPC5vuLWwiL18w/Dn9rs8b?=
+ =?us-ascii?Q?LrPhEeTcwUjVYrtH0z9B3rR3i655AEsR4ke8FEBHakNtlzRLpnJnLrgejhf7?=
+ =?us-ascii?Q?C5Lq3v7EpYLC9ByvSjziczr5oIm8pHPrifpR5xM9DtLXwK+6EI2PiBWxwBX8?=
+ =?us-ascii?Q?uwnZJzfXpt3i+6K9ai6jh0aZl9zJaDsL20ObolzdR22bcPeG6z9iPUUyWVBK?=
+ =?us-ascii?Q?52nI2k4TmdCYl2MccHb6zgVLyjH4ATN7dJ+kwN5fD6NB5KovtV3G9UKXe0eF?=
+ =?us-ascii?Q?m3a/Vzc1Ua8qtLxAj2Hi776WRxUq7u1rpeWSkxpGl9RWkexQTQF1hz0WTK/y?=
+ =?us-ascii?Q?89hAGzm554AF7ygpjXg+6iSsfOKOm9cQ8u2l+8l6jWgl/4ocPdVnGzqEW+l6?=
+ =?us-ascii?Q?3KKYPSBQJIjmAg3ERkjygykoIIm1ktIZiI77wJW5+v1bmCPdRccvn8fuzbQa?=
+ =?us-ascii?Q?MbM0Sc1FCPAmoI/ZnfGi6W7oy9t16o+ymcoC549cm1iCWnAcsQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB7790.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(10070799003)(4013099003)(4053099003)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?b6atskYUfuY6lA4MRWaJJT7OPOWPPHgHzxuDY4S7Se8X19MioYgpM5NYPaJl?=
- =?us-ascii?Q?djdUJmgsJsH8y4VQZdooUsRGXZfFvOFwpfuoXi7dyaWZ0luPnv6LE9lCwdx+?=
- =?us-ascii?Q?zm7oUIJ7LciPvZpB20Vp2cMBIU0iwCkCB4kJhLyjwNWsrye1OnIGzkOYAs1v?=
- =?us-ascii?Q?q2vhrAjZuqDtmupjn/8bX75E1FXke2BG7MCnkC1uGvzWg9+zKLxJfEj9Z8+9?=
- =?us-ascii?Q?mHB9twg6O+ogAJrzkt3HsWT3FJchBPZctwwr/6HrMbv4v25MXyXkWe45QZK+?=
- =?us-ascii?Q?qnLq9yBiC244L/dVaT38e0rQEvJThZEf0Y5e7mnXVG7SZPLrICe5zKZTPNQi?=
- =?us-ascii?Q?MrCCb1TZYSJ2P30JxLKJjitEaIKrjIedvAS4gBjIeasBoH6AY8NKnq336aCd?=
- =?us-ascii?Q?/jjGrqwa0h1ryVns95rrLBE2R8c4kit5MGemtB8lSEVpAO/kmW7lUFMgIoch?=
- =?us-ascii?Q?Tb7GghnfSFHaARWUS1U005xJOFSLvgcQCDDKbR+j4M/FPCr6POD+BqbgV3pU?=
- =?us-ascii?Q?GiVCPl1+Vck5ylSvnPruJJyEd8UABpWBaqN9Vn16JmF8h6AXRpkdiBGnupYi?=
- =?us-ascii?Q?5dNAXAb6jpKVovhr2CxNybzRJorVJ5a4blH+itth8DEYo1fxtn3YAQ3koVeX?=
- =?us-ascii?Q?iBeBgbocCkLNcj02nPA2Qf9rtPPKrKu7gajvhs58mi+toSH7K135gzA3xdtu?=
- =?us-ascii?Q?Tio2xP93AJROADmRxCE2UAMyGOE9q6OyO8/YYFLO8IHsySacM4eCB9If047R?=
- =?us-ascii?Q?kuBBwZcCXNbfJPuekqjGexaSVrWrH2qnuPtK636lejL2nCYL3GpNGm99WWXb?=
- =?us-ascii?Q?1vG6WlWzPXqZmIku5sMzBDNBV2X4f3V5tLc+HccPdZNeRGCkW8DfJQGWXzwu?=
- =?us-ascii?Q?CxJYHhZRENTz6i1DdN8nVfWLXc7pxNMGPyHbmFeNhOpZFVlJp6PDcd6P4JFN?=
- =?us-ascii?Q?C5Bt+2d16RbSTPdm61sFo8iiysnfq/EUcE3ozoxawZspY2NSPyJ9Kmgkyrwj?=
- =?us-ascii?Q?DBthOkbj7OHHx0tPM4C2cllPPE0En7CUWPfn8/uPXhVywWVx+V+Mm/zCb34Q?=
- =?us-ascii?Q?nWeEvdBwftWwTC3kBwJQMhhmpcTmmS+gwgIIqk74pOtimoarD0JVwK/jAT1A?=
- =?us-ascii?Q?miOqCofu33TPdElqlO2o6Mfz2zZoP+mMpSkwWnnzMlMRw0C982Wp1QfvmfGM?=
- =?us-ascii?Q?RtcvvcvsrK6/C73NyPPaTqw6xlETE4FEGNNdQvEiG+bA8ROfAuqMEJ0LrBDI?=
- =?us-ascii?Q?1jnA8uH0FRBT/kBN/p959QRb8YT8vwZcYBjWCkMoy9dA+HDB/zxw2m9XpoeK?=
- =?us-ascii?Q?LD2LiSAb9Gp3bRIuKsjprxutdU4aKZmtEKVRbK0dg8Fg6YMRMyuqGjF7qybV?=
- =?us-ascii?Q?+91F1fMJoFKIIcmDJGYHfwc1Aj4rzhVtvRkSAnuSzF/qPzoE7oqTaOhxz+Nc?=
- =?us-ascii?Q?Jext185SOEEE79WjierWF88+8NH4728vgmmgEm0lPXEs8jCax0S9uuW4kaXL?=
- =?us-ascii?Q?Hdv9zq1TM1dEY4zifqTP23gSWloq82tf1YYdcAWZGHdJCZsgA2z0fIeFlSHJ?=
- =?us-ascii?Q?6XeFY7Ba4yoOQL+dFv7oRJYv6YN+VZQSGdBMc9JyAYrTDYgoO3YxusbAx5NZ?=
- =?us-ascii?Q?eg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ceec5c6-8d04-48a2-3eb2-08ddb5c1c2b4
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR11MB8430.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?A8LdJCRdiLqC1tnf/QQU4loHMSxGNxnFh/ukgxdwCcJCeUcb+ffocpRjIA1W?=
+ =?us-ascii?Q?agpVDkwJ2FQy/4nh7mAvvmoPSJQg6wMrkFT1tdqLzvlid2hH+4JxeK7VFFJa?=
+ =?us-ascii?Q?YO4xacTSvrUQeOUJx28+E+KGBufJlxVybw1dIWxNKiVxETxg102Hq++4EF7S?=
+ =?us-ascii?Q?TuDNOFg0Xh8aDcyIXt01p7F4a3hZfJBTAnAFbJnzTmQnYbSo3WyUh956V1b7?=
+ =?us-ascii?Q?6TcHiJ8z/S5DyIB5pcjTD4quSDYwtQ80mhkyeitU2jPiLcqWquBrolI2flnp?=
+ =?us-ascii?Q?kjxLUwFvJVIu31L9caTzHxfjcPIeSCgvVTIHfE1VfXryxrbrDB8msc80RArt?=
+ =?us-ascii?Q?+rAMI7qKYLzYSEi04Fo+qmd8v6pnxKumWZOFdVv08Hewa5ilWkOdP+xxxunb?=
+ =?us-ascii?Q?7Bu/MitCWetyDrk4RADuWmw0OQJAkRpKX2vvULBwL8Z3syK87RsU25tqOLjg?=
+ =?us-ascii?Q?YRZr/sFExj6GsC2ID/gNEopyPEFonRQbFn2+OYAB25wSSpzfq0pzdC4cnv78?=
+ =?us-ascii?Q?KfygrG//Af+WRyLLQbZVh9qbFhCm9Yboj8PFoj3kq4CEyXekDjsdF2cB5lgE?=
+ =?us-ascii?Q?eEwgdpHYRgs5cFYcuqUr/dSZY/ouvXgq3NcqmnQOcTh/NNAl7g1QlGllqeYh?=
+ =?us-ascii?Q?9wJnXFB5nOglS86yaMrqwOfImEUY8PqfBphaI9xzzfvnWvN6+tJnW6tjh1FW?=
+ =?us-ascii?Q?vyQ3pSz+BvVMPeQmR2CAHzuIKsLiugjAb4Vnq71K2NTC1SJouBO6YHQlyJWw?=
+ =?us-ascii?Q?KF/IAb5bSpvO+hqDm0QwZg4PQbUqBHaZwQn8h8JhTKyDDq3yJbmNESVZuM80?=
+ =?us-ascii?Q?bASEkOBfnWyqMKbcuA/ysIaset7flaI9X+DaWMkYzT+GY9/iZ5Q75eIJYmqH?=
+ =?us-ascii?Q?WQPQvGv+TGTy5oJVIdbUMw5Pp7isVDfziFcFx/YoK/v3YnS1ODXV+Wlc4bYj?=
+ =?us-ascii?Q?my5kb/qyvQ4jmOZeQn5AHQTUQvB5f8lbpji+T5JJ1lj+6lpK+LndKniMBeGl?=
+ =?us-ascii?Q?15YrOHioTMybuX0cWjqsWsXJtjiLI2yWP9nXadJ6pmN64lhvi5k3l7nNWoKq?=
+ =?us-ascii?Q?6OpW0/SWkKGBNsFUxSLaPEnKaGeDaDq9g726SNtVff9bZG/CZAAuZWt34i4E?=
+ =?us-ascii?Q?bAnYsaKPfwOWe7N5d66daIjgCojrcmTlH7jAYqrxdaQvsYNEEl0zkcHDBBOA?=
+ =?us-ascii?Q?uWq5Nwf4djy+iJddKQWxO/11H63e5eSr6FLQATxsDM3Mb51lT/YvzjdHUf9+?=
+ =?us-ascii?Q?5ra+rTwfsdne8QHF9BRihJuYJ7SnzJl0pozoyqKMnBSZseDPAGPsnyN3hRUZ?=
+ =?us-ascii?Q?XH2AN96I+cgfFcOpOaMjpyO7007ohCVrSHeKL/8F5zfrZ/wQzq9g7pH03ekY?=
+ =?us-ascii?Q?s1ZqRTl9B/sXLVBfqWCJjj/T9FZsggVbb6kxaRaBQQzVpJeUFFnWZLlURHzh?=
+ =?us-ascii?Q?VB6Df+JVtjUbmddIQG5xxaVgC4Qzo2UZGD9jm3ckIYe9lMAADX8KM6nhKsam?=
+ =?us-ascii?Q?Yvp0K8vFRMA1vqlBNTO/jXqiTLKBalAYRsYEPL60tf4+rS/arF/mbcs3kD1W?=
+ =?us-ascii?Q?BzpAD2d7QMrtw4Zijuw64oz4h+1270VYcXcLHjfQGrTVCHXFsRz2nT1x6B6k?=
+ =?us-ascii?Q?G4QAqYa2rWVD4yHFBk8npMbPiqI8xXS30iUqcVaQoZtu+rBnKQxNutp7fDY6?=
+ =?us-ascii?Q?TamHyA=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55a0ad5d-4513-45da-5cbe-08ddb5c1df8e
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB7790.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 21:29:55.9145
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 21:30:44.2665
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: S5tKJuHStIjPlhBPRcztjDdlyfz9k+CBao90yPe8M1sbnT07YS6e7XHFnFwrlTFYWMcesE2fnCpzxFXO3GgFHQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6159
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: sbW4Cf26KLwxyjAD46Em+dCyyLnh8WEb7QTapOU+UP5u0eG9biaJxQiO2IxsETzq5U5mH3bruE1tYVZlQsVaGA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10903
 
-On Fri, Jun 27, 2025 at 04:53:12PM +0300, Heikki Krogerus wrote:
-> Adding adaption/glue layer where the I2C host adapter
-> (Synopsys DesignWare I2C adapter) and the I2C clients (the
-> microcontroller units) are enumerated.
+--zwdlutain6qm4enm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Jun 27, 2025 at 11:21:38AM +0100, James Clark wrote:
+> This will allow us to return a status from the interrupt handler in a
+> later commit and avoids copying it at the end of
+> dspi_transfer_one_message(). For consistency make polling and DMA modes
+> use the same mechanism.
 > 
-> The microcontroller units (MCU) that are attached to the GPU
-> depend on the OEM. The initially supported MCU will be the
-> Add-In Management Controller (AMC).
+> Refactor dspi_rxtx() and dspi_poll() to not return -EINPROGRESS because
+> this isn't actually a status that was ever returned to the core layer
+> but some internal state. Wherever that was used we can look at dspi->len
+> instead.
 > 
-
-I hope all Andy's comments got addressed here..
-
-Mine's were. Thank you.
-
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-
-> Originally-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> No functional changes intended.
+> 
+> Signed-off-by: James Clark <james.clark@linaro.org>
 > ---
->  drivers/gpu/drm/xe/Kconfig            |   1 +
->  drivers/gpu/drm/xe/Makefile           |   1 +
->  drivers/gpu/drm/xe/regs/xe_i2c_regs.h |  15 ++
->  drivers/gpu/drm/xe/regs/xe_irq_regs.h |   1 +
->  drivers/gpu/drm/xe/regs/xe_pmt.h      |   2 +-
->  drivers/gpu/drm/xe/regs/xe_regs.h     |   2 +
->  drivers/gpu/drm/xe/xe_device.c        |   5 +
->  drivers/gpu/drm/xe/xe_device_types.h  |   4 +
->  drivers/gpu/drm/xe/xe_i2c.c           | 300 ++++++++++++++++++++++++++
->  drivers/gpu/drm/xe/xe_i2c.h           |  58 +++++
->  drivers/gpu/drm/xe/xe_irq.c           |   2 +
->  11 files changed, 390 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpu/drm/xe/regs/xe_i2c_regs.h
->  create mode 100644 drivers/gpu/drm/xe/xe_i2c.c
->  create mode 100644 drivers/gpu/drm/xe/xe_i2c.h
-> 
-> diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
-> index 553c29e1030b..eb361c202581 100644
-> --- a/drivers/gpu/drm/xe/Kconfig
-> +++ b/drivers/gpu/drm/xe/Kconfig
-> @@ -44,6 +44,7 @@ config DRM_XE
->  	select WANT_DEV_COREDUMP
->  	select AUXILIARY_BUS
->  	select HMM_MIRROR
-> +	select REGMAP if I2C
->  	help
->  	  Driver for Intel Xe2 series GPUs and later. Experimental support
->  	  for Xe series is also available.
-> diff --git a/drivers/gpu/drm/xe/Makefile b/drivers/gpu/drm/xe/Makefile
-> index eee6bac01a00..4b8a8fcd3959 100644
-> --- a/drivers/gpu/drm/xe/Makefile
-> +++ b/drivers/gpu/drm/xe/Makefile
-> @@ -125,6 +125,7 @@ xe-y += xe_bb.o \
->  	xe_wait_user_fence.o \
->  	xe_wopcm.o
->  
-> +xe-$(CONFIG_I2C)	+= xe_i2c.o
->  xe-$(CONFIG_HMM_MIRROR) += xe_hmm.o
->  xe-$(CONFIG_DRM_XE_GPUSVM) += xe_svm.o
->  
-> diff --git a/drivers/gpu/drm/xe/regs/xe_i2c_regs.h b/drivers/gpu/drm/xe/regs/xe_i2c_regs.h
-> new file mode 100644
-> index 000000000000..92dae4487614
-> --- /dev/null
-> +++ b/drivers/gpu/drm/xe/regs/xe_i2c_regs.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: MIT */
-> +#ifndef _XE_I2C_REGS_H_
-> +#define _XE_I2C_REGS_H_
-> +
-> +#include "xe_reg_defs.h"
-> +#include "xe_regs.h"
-> +
-> +#define I2C_BRIDGE_OFFSET		(SOC_BASE + 0xd9000)
-> +#define I2C_CONFIG_SPACE_OFFSET		(SOC_BASE + 0xf6000)
-> +#define I2C_MEM_SPACE_OFFSET		(SOC_BASE + 0xf7400)
-> +
-> +#define REG_SG_REMAP_ADDR_PREFIX	XE_REG(SOC_BASE + 0x0164)
-> +#define REG_SG_REMAP_ADDR_POSTFIX	XE_REG(SOC_BASE + 0x0168)
-> +
-> +#endif /* _XE_I2C_REGS_H_ */
-> diff --git a/drivers/gpu/drm/xe/regs/xe_irq_regs.h b/drivers/gpu/drm/xe/regs/xe_irq_regs.h
-> index f0ecfcac4003..13635e4331d4 100644
-> --- a/drivers/gpu/drm/xe/regs/xe_irq_regs.h
-> +++ b/drivers/gpu/drm/xe/regs/xe_irq_regs.h
-> @@ -19,6 +19,7 @@
->  #define   MASTER_IRQ				REG_BIT(31)
->  #define   GU_MISC_IRQ				REG_BIT(29)
->  #define   DISPLAY_IRQ				REG_BIT(16)
-> +#define   I2C_IRQ				REG_BIT(12)
->  #define   GT_DW_IRQ(x)				REG_BIT(x)
->  
->  /*
-> diff --git a/drivers/gpu/drm/xe/regs/xe_pmt.h b/drivers/gpu/drm/xe/regs/xe_pmt.h
-> index b0efd9b48d1e..2995d72c3f78 100644
-> --- a/drivers/gpu/drm/xe/regs/xe_pmt.h
-> +++ b/drivers/gpu/drm/xe/regs/xe_pmt.h
-> @@ -5,7 +5,7 @@
->  #ifndef _XE_PMT_H_
->  #define _XE_PMT_H_
->  
-> -#define SOC_BASE			0x280000
-> +#include "xe_regs.h"
->  
->  #define BMG_PMT_BASE_OFFSET		0xDB000
->  #define BMG_DISCOVERY_OFFSET		(SOC_BASE + BMG_PMT_BASE_OFFSET)
-> diff --git a/drivers/gpu/drm/xe/regs/xe_regs.h b/drivers/gpu/drm/xe/regs/xe_regs.h
-> index 3abb17d2ca33..1926b4044314 100644
-> --- a/drivers/gpu/drm/xe/regs/xe_regs.h
-> +++ b/drivers/gpu/drm/xe/regs/xe_regs.h
-> @@ -7,6 +7,8 @@
->  
->  #include "regs/xe_reg_defs.h"
->  
-> +#define SOC_BASE				0x280000
-> +
->  #define GU_CNTL_PROTECTED			XE_REG(0x10100C)
->  #define   DRIVERINT_FLR_DIS			REG_BIT(31)
->  
-> diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
-> index 0b73cb72bad1..6db09cfc8eb8 100644
-> --- a/drivers/gpu/drm/xe/xe_device.c
-> +++ b/drivers/gpu/drm/xe/xe_device.c
-> @@ -43,6 +43,7 @@
->  #include "xe_guc_pc.h"
->  #include "xe_hw_engine_group.h"
->  #include "xe_hwmon.h"
-> +#include "xe_i2c.h"
->  #include "xe_irq.h"
->  #include "xe_mmio.h"
->  #include "xe_module.h"
-> @@ -902,6 +903,10 @@ int xe_device_probe(struct xe_device *xe)
->  	if (err)
->  		goto err_unregister_display;
->  
-> +	err = xe_i2c_probe(xe);
-> +	if (err)
-> +		goto err_unregister_display;
-> +
->  	for_each_gt(gt, xe, id)
->  		xe_gt_sanitize_freq(gt);
->  
-> diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
-> index 7e4f6d846af6..ce0c4ed834b8 100644
-> --- a/drivers/gpu/drm/xe/xe_device_types.h
-> +++ b/drivers/gpu/drm/xe/xe_device_types.h
-> @@ -34,6 +34,7 @@ struct dram_info;
->  struct intel_display;
->  struct intel_dg_nvm_dev;
->  struct xe_ggtt;
-> +struct xe_i2c;
->  struct xe_pat_ops;
->  struct xe_pxp;
->  
-> @@ -583,6 +584,9 @@ struct xe_device {
->  	/** @pmu: performance monitoring unit */
->  	struct xe_pmu pmu;
->  
-> +	/** @i2c: I2C host controller */
-> +	struct xe_i2c *i2c;
-> +
->  	/** @atomic_svm_timeslice_ms: Atomic SVM fault timeslice MS */
->  	u32 atomic_svm_timeslice_ms;
->  
-> diff --git a/drivers/gpu/drm/xe/xe_i2c.c b/drivers/gpu/drm/xe/xe_i2c.c
-> new file mode 100644
-> index 000000000000..172271469ceb
-> --- /dev/null
-> +++ b/drivers/gpu/drm/xe/xe_i2c.c
-> @@ -0,0 +1,300 @@
-> +/* SPDX-License-Identifier: GPL-2.0 OR MIT */
-> +/*
-> + * Intel Xe I2C attached Microcontroller Units (MCU)
-> + *
-> + * Copyright (C) 2025 Intel Corporation.
-> + */
-> +
-> +#include <linux/array_size.h>
-> +#include <linux/container_of.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/ioport.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/notifier.h>
-> +#include <linux/pci.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/regmap.h>
-> +#include <linux/sprintf.h>
-> +#include <linux/string.h>
-> +#include <linux/types.h>
-> +#include <linux/workqueue.h>
-> +
-> +#include "regs/xe_i2c_regs.h"
-> +#include "regs/xe_irq_regs.h"
-> +
-> +#include "xe_device.h"
-> +#include "xe_device_types.h"
-> +#include "xe_i2c.h"
-> +#include "xe_mmio.h"
-> +#include "xe_platform_types.h"
-> +
-> +/**
-> + * DOC: Xe I2C devices
-> + *
-> + * Register platform device for the I2C host controller (Synpsys DesignWare I2C)
-> + * if the registers of that controller are mapped to the MMIO, and also the I2C
-> + * client device for the Add-In Management Controller (the MCU) attached to the
-> + * host controller.
-> + *
-> + * See drivers/i2c/busses/i2c-designware-* for more information on the I2C host
-> + * controller.
-> + */
-> +
-> +static const char adapter_name[] = "i2c_designware";
-> +
-> +static const struct property_entry xe_i2c_adapter_properties[] = {
-> +	PROPERTY_ENTRY_STRING("compatible", "intel,xe-i2c"),
-> +	PROPERTY_ENTRY_U32("clock-frequency", I2C_MAX_FAST_MODE_PLUS_FREQ),
-> +	{ }
-> +};
-> +
-> +static inline void xe_i2c_read_endpoint(struct xe_mmio *mmio, void *ep)
-> +{
-> +	u32 *val = ep;
-> +
-> +	val[0] = xe_mmio_read32(mmio, REG_SG_REMAP_ADDR_PREFIX);
-> +	val[1] = xe_mmio_read32(mmio, REG_SG_REMAP_ADDR_POSTFIX);
-> +}
-> +
-> +static void xe_i2c_client_work(struct work_struct *work)
-> +{
-> +	struct xe_i2c *i2c = container_of(work, struct xe_i2c, work);
-> +	struct i2c_board_info info = {
-> +		.type	= "amc",
-> +		.flags	= I2C_CLIENT_HOST_NOTIFY,
-> +		.addr	= i2c->ep.addr[1],
-> +	};
-> +
-> +	i2c->client[0] = i2c_new_client_device(i2c->adapter, &info);
-> +}
-> +
-> +static int xe_i2c_notifier(struct notifier_block *nb, unsigned long action, void *data)
-> +{
-> +	struct xe_i2c *i2c = container_of(nb, struct xe_i2c, bus_notifier);
-> +	struct i2c_adapter *adapter = i2c_verify_adapter(data);
-> +	struct device *dev = data;
-> +
-> +	if (action == BUS_NOTIFY_ADD_DEVICE &&
-> +	    adapter && dev->parent == &i2c->pdev->dev) {
-> +		i2c->adapter = adapter;
-> +		schedule_work(&i2c->work);
-> +		return NOTIFY_OK;
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int xe_i2c_register_adapter(struct xe_i2c *i2c)
-> +{
-> +	struct pci_dev *pci = to_pci_dev(i2c->drm_dev);
-> +	struct platform_device *pdev;
-> +	struct fwnode_handle *fwnode;
-> +	int ret;
-> +
-> +	fwnode = fwnode_create_software_node(xe_i2c_adapter_properties, NULL);
-> +	if (!fwnode)
-> +		return -ENOMEM;
-> +
-> +	/*
-> +	 * Not using platform_device_register_full() here because we don't have
-> +	 * a handle to the platform_device before it returns. xe_i2c_notifier()
-> +	 * uses that handle, but it may be called before
-> +	 * platform_device_register_full() is done.
-> +	 */
-> +	pdev = platform_device_alloc(adapter_name, pci_dev_id(pci));
-> +	if (!pdev) {
-> +		ret = -ENOMEM;
-> +		goto err_fwnode_remove;
-> +	}
-> +
-> +	if (i2c->adapter_irq) {
-> +		struct resource res;
-> +
-> +		res = DEFINE_RES_IRQ_NAMED(i2c->adapter_irq, "xe_i2c");
-> +
-> +		ret = platform_device_add_resources(pdev, &res, 1);
-> +		if (ret)
-> +			goto err_pdev_put;
-> +	}
-> +
-> +	pdev->dev.parent = i2c->drm_dev;
-> +	pdev->dev.fwnode = fwnode;
-> +	i2c->adapter_node = fwnode;
-> +	i2c->pdev = pdev;
-> +
-> +	ret = platform_device_add(pdev);
-> +	if (ret)
-> +		goto err_pdev_put;
-> +
-> +	return 0;
-> +
-> +err_pdev_put:
-> +	platform_device_put(pdev);
-> +err_fwnode_remove:
-> +	fwnode_remove_software_node(fwnode);
-> +
-> +	return ret;
-> +}
-> +
-> +static void xe_i2c_unregister_adapter(struct xe_i2c *i2c)
-> +{
-> +	platform_device_unregister(i2c->pdev);
-> +	fwnode_remove_software_node(i2c->adapter_node);
-> +}
-> +
-> +/**
-> + * xe_i2c_irq_handler: Handler for I2C interrupts
-> + * @xe: xe device instance
-> + * @master_ctl: interrupt register
-> + *
-> + * Forward interrupts generated by the I2C host adapter to the I2C host adapter
-> + * driver.
-> + */
-> +void xe_i2c_irq_handler(struct xe_device *xe, u32 master_ctl)
-> +{
-> +	if (!xe->i2c || !xe->i2c->adapter_irq)
-> +		return;
-> +
-> +	if (master_ctl & I2C_IRQ)
-> +		generic_handle_irq_safe(xe->i2c->adapter_irq);
-> +}
-> +
-> +static int xe_i2c_irq_map(struct irq_domain *h, unsigned int virq,
-> +			  irq_hw_number_t hw_irq_num)
-> +{
-> +	irq_set_chip_and_handler(virq, &dummy_irq_chip, handle_simple_irq);
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops xe_i2c_irq_ops = {
-> +	.map = xe_i2c_irq_map,
-> +};
-> +
-> +static int xe_i2c_create_irq(struct xe_i2c *i2c)
-> +{
-> +	struct irq_domain *domain;
-> +
-> +	if (!(i2c->ep.capabilities & XE_I2C_EP_CAP_IRQ))
-> +		return 0;
-> +
-> +	domain = irq_domain_create_linear(dev_fwnode(i2c->drm_dev), 1, &xe_i2c_irq_ops, NULL);
-> +	if (!domain)
-> +		return -ENOMEM;
-> +
-> +	i2c->adapter_irq = irq_create_mapping(domain, 0);
-> +	i2c->irqdomain = domain;
-> +
-> +	return 0;
-> +}
-> +
-> +static void xe_i2c_remove_irq(struct xe_i2c *i2c)
-> +{
-> +	if (!i2c->irqdomain)
-> +		return;
-> +
-> +	irq_dispose_mapping(i2c->adapter_irq);
-> +	irq_domain_remove(i2c->irqdomain);
-> +}
-> +
-> +static int xe_i2c_read(void *context, unsigned int reg, unsigned int *val)
-> +{
-> +	struct xe_i2c *i2c = context;
-> +
-> +	*val = xe_mmio_read32(i2c->mmio, XE_REG(reg + I2C_MEM_SPACE_OFFSET));
-> +
-> +	return 0;
-> +}
-> +
-> +static int xe_i2c_write(void *context, unsigned int reg, unsigned int val)
-> +{
-> +	struct xe_i2c *i2c = context;
-> +
-> +	xe_mmio_write32(i2c->mmio, XE_REG(reg + I2C_MEM_SPACE_OFFSET), val);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct regmap_config i2c_regmap_config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_read = xe_i2c_read,
-> +	.reg_write = xe_i2c_write,
-> +	.fast_io = true,
-> +};
-> +
-> +static void xe_i2c_remove(void *data)
-> +{
-> +	struct xe_i2c *i2c = data;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < XE_I2C_MAX_CLIENTS; i++)
-> +		i2c_unregister_device(i2c->client[i]);
-> +
-> +	bus_unregister_notifier(&i2c_bus_type, &i2c->bus_notifier);
-> +	xe_i2c_unregister_adapter(i2c);
-> +	xe_i2c_remove_irq(i2c);
-> +}
-> +
-> +/**
-> + * xe_i2c_probe: Probe the I2C host adapter and the I2C clients attached to it
-> + * @xe: xe device instance
-> + *
-> + * Register all the I2C devices described in the I2C Endpoint data structure.
-> + *
-> + * Return: 0 on success, error code on failure
-> + */
-> +int xe_i2c_probe(struct xe_device *xe)
-> +{
-> +	struct device *drm_dev = xe->drm.dev;
-> +	struct xe_i2c_endpoint ep;
-> +	struct regmap *regmap;
-> +	struct xe_i2c *i2c;
-> +	int ret;
-> +
-> +	if (xe->info.platform != XE_BATTLEMAGE)
-> +		return 0;
-> +
-> +	xe_i2c_read_endpoint(xe_root_tile_mmio(xe), &ep);
-> +	if (ep.cookie != XE_I2C_EP_COOKIE_DEVICE)
-> +		return 0;
-> +
-> +	i2c = devm_kzalloc(drm_dev, sizeof(*i2c), GFP_KERNEL);
-> +	if (!i2c)
-> +		return -ENOMEM;
-> +
-> +	INIT_WORK(&i2c->work, xe_i2c_client_work);
-> +	i2c->mmio = xe_root_tile_mmio(xe);
-> +	i2c->drm_dev = drm_dev;
-> +	i2c->ep = ep;
-> +
-> +	regmap = devm_regmap_init(drm_dev, NULL, i2c, &i2c_regmap_config);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> +
-> +	i2c->bus_notifier.notifier_call = xe_i2c_notifier;
-> +	ret = bus_register_notifier(&i2c_bus_type, &i2c->bus_notifier);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = xe_i2c_create_irq(i2c);
-> +	if (ret)
-> +		goto err_unregister_notifier;
-> +
-> +	ret = xe_i2c_register_adapter(i2c);
-> +	if (ret)
-> +		goto err_remove_irq;
-> +
-> +	return devm_add_action_or_reset(drm_dev, xe_i2c_remove, i2c);
-> +
-> +err_remove_irq:
-> +	xe_i2c_remove_irq(i2c);
-> +
-> +err_unregister_notifier:
-> +	bus_unregister_notifier(&i2c_bus_type, &i2c->bus_notifier);
-> +
-> +	return ret;
-> +}
-> diff --git a/drivers/gpu/drm/xe/xe_i2c.h b/drivers/gpu/drm/xe/xe_i2c.h
-> new file mode 100644
-> index 000000000000..7ea40f4e4aa4
-> --- /dev/null
-> +++ b/drivers/gpu/drm/xe/xe_i2c.h
-> @@ -0,0 +1,58 @@
-> +/* SPDX-License-Identifier: MIT */
-> +#ifndef _XE_I2C_H_
-> +#define _XE_I2C_H_
-> +
-> +#include <linux/bits.h>
-> +#include <linux/notifier.h>
-> +#include <linux/types.h>
-> +#include <linux/workqueue.h>
-> +
-> +struct device;
-> +struct fwnode_handle;
-> +struct i2c_adapter;
-> +struct i2c_client;
-> +struct irq_domain;
-> +struct platform_device;
-> +struct xe_device;
-> +struct xe_mmio;
-> +
-> +#define XE_I2C_MAX_CLIENTS		3
-> +
-> +#define XE_I2C_EP_COOKIE_DEVICE		0xde
-> +
-> +/* Endpoint Capabilities */
-> +#define XE_I2C_EP_CAP_IRQ		BIT(0)
-> +
-> +struct xe_i2c_endpoint {
-> +	u8 cookie;
-> +	u8 capabilities;
-> +	u16 addr[XE_I2C_MAX_CLIENTS];
-> +};
-> +
-> +struct xe_i2c {
-> +	struct fwnode_handle *adapter_node;
-> +	struct platform_device *pdev;
-> +	struct i2c_adapter *adapter;
-> +	struct i2c_client *client[XE_I2C_MAX_CLIENTS];
-> +
-> +	struct notifier_block bus_notifier;
-> +	struct work_struct work;
-> +
-> +	struct irq_domain *irqdomain;
-> +	int adapter_irq;
-> +
-> +	struct xe_i2c_endpoint ep;
-> +	struct device *drm_dev;
-> +
-> +	struct xe_mmio *mmio;
-> +};
-> +
-> +#if IS_ENABLED(CONFIG_I2C)
-> +int xe_i2c_probe(struct xe_device *xe);
-> +void xe_i2c_irq_handler(struct xe_device *xe, u32 master_ctl);
-> +#else
-> +static inline int xe_i2c_probe(struct xe_device *xe) { return 0; }
-> +static inline void xe_i2c_irq_handler(struct xe_device *xe, u32 master_ctl) { }
-> +#endif
-> +
-> +#endif
-> diff --git a/drivers/gpu/drm/xe/xe_irq.c b/drivers/gpu/drm/xe/xe_irq.c
-> index 5362d3174b06..c43e62dc692e 100644
-> --- a/drivers/gpu/drm/xe/xe_irq.c
-> +++ b/drivers/gpu/drm/xe/xe_irq.c
-> @@ -18,6 +18,7 @@
->  #include "xe_gt.h"
->  #include "xe_guc.h"
->  #include "xe_hw_engine.h"
-> +#include "xe_i2c.h"
->  #include "xe_memirq.h"
->  #include "xe_mmio.h"
->  #include "xe_pxp.h"
-> @@ -476,6 +477,7 @@ static irqreturn_t dg1_irq_handler(int irq, void *arg)
->  			if (xe->info.has_heci_cscfi)
->  				xe_heci_csc_irq_handler(xe, master_ctl);
->  			xe_display_irq_handler(xe, master_ctl);
-> +			xe_i2c_irq_handler(xe, master_ctl);
->  			gu_misc_iir = gu_misc_irq_ack(xe, master_ctl);
->  		}
->  	}
-> -- 
-> 2.47.2
-> 
+
+This commit doesn't work, please do not merge this patch.
+
+You are changing the logic in DMA mode, interrupt-based FIFO and PIO all
+in one go, in a commit whose title and primary purpose is unrelated to
+that. Just a mention of the type "while at it, also do that". And in
+that process, that bundled refactoring introduces a subtle, but severe bug.
+
+No, that is discouraged. Make one patch per logical change, where only
+one thing is happening and which is obviously correct. It helps you and
+it helps the reviewer.
+
+Please find attached a set of 3 patches that represent a broken down and
+corrected variant of this one. First 2 should be squashed together in
+your next submission, they are just to illustrate the bug that you've
+introduced (which can be reproduced on any SoC in XSPI mode).
+
+The panic message is slightly confusing and does not directly point to
+the issue, I'm attaching it just for the sake of having a future reference.
+
+[    4.154185] DSA: tree 0 setup
+[    4.157380] sja1105 spi2.0: Probed switch chip: SJA1105S
+[    4.173894] sja1105 spi2.0: configuring for fixed/sgmii link mode
+[    4.232527] sja1105 spi2.0: Link is Up - 1Gbps/Full - flow control off
+[    4.312798] sja1105 spi2.0 sw0p0 (uninitialized): PHY [0000:00:00.3:07] driver [RTL8211F Gigabit Ethernet] (irq=POLL)
+[    4.443689] sja1105 spi2.0 sw0p1 (uninitialized): PHY [0000:00:00.3:00] driver [Microsemi GE VSC8502 SyncE] (irq=POLL)
+[    4.575718] sja1105 spi2.0 sw0p2 (uninitialized): PHY [0000:00:00.3:01] driver [Microsemi GE VSC8502 SyncE] (irq=POLL)
+[    4.588012] Unable to handle kernel paging request at virtual address ffff8000801ac000
+[    4.595960] Mem abort info:
+[    4.598757]   ESR = 0x0000000096000007
+[    4.602515]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    4.607843]   SET = 0, FnV = 0
+[    4.610902]   EA = 0, S1PTW = 0
+[    4.614048]   FSC = 0x07: level 3 translation fault
+[    4.618939] Data abort info:
+[    4.621822]   ISV = 0, ISS = 0x00000007, ISS2 = 0x00000000
+[    4.627323]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[    4.632388]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[    4.637714] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000082b7a000
+[    4.644437] [ffff8000801ac000] pgd=0000000000000000, p4d=1000002080020403, pud=1000002080021403, pmd=1000002080022403, pte=0000000000000000
+[    4.657016] Internal error: Oops: 0000000096000007 [#1]  SMP
+[    4.662693] Modules linked in:
+[    4.665756] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.16.0-rc3+ #30 PREEMPT
+[    4.673615] Hardware name: random LS1028A board
+[    4.679116] pstate: 200000c5 (nzCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    4.686103] pc : dspi_8on32_host_to_dev+0x8/0x24
+[    4.690742] lr : dspi_fifo_write+0x178/0x1cc
+[    4.695025] sp : ffff800080003eb0
+[    4.698346] x29: ffff800080003ec0 x28: ffffc25414698b00 x27: ffffc2541464c170
+[    4.705512] x26: 0000000000000001 x25: ffffc25414b06000 x24: 0000000111705fd3
+[    4.712677] x23: ffffc25414257bae x22: ffff8000801ab5e8 x21: 00000000fffffd98
+[    4.719842] x20: 0000000000000000 x19: ffff00200039a480 x18: 0000000000000006
+[    4.727007] x17: ffff3dcc6b076000 x16: ffff800080000000 x15: 0000000078b30c40
+[    4.734171] x14: 0000000000000000 x13: 0000000000000048 x12: 0000000000000128
+[    4.741335] x11: 0000000000000001 x10: 0000000000000000 x9 : 0000000100010001
+[    4.748500] x8 : ffff8000801ac000 x7 : 0000000000000000 x6 : 0000000000000000
+[    4.755664] x5 : 0000000000000000 x4 : ffffc25411a308d0 x3 : 0000000000000000
+[    4.762828] x2 : 0000000000000000 x1 : ffff800080003eb4 x0 : ffff00200039a480
+[    4.769992] Call trace:
+[    4.772441]  dspi_8on32_host_to_dev+0x8/0x24 (P)
+[    4.777074]  dspi_interrupt+0x6c/0xf0
+[    4.780747]  __handle_irq_event_percpu+0x8c/0x160
+[    4.785470]  handle_irq_event+0x48/0xa0
+[    4.789319]  handle_fasteoi_irq+0xf4/0x208
+[    4.793428]  generic_handle_domain_irq+0x40/0x64
+[    4.798060]  gic_handle_irq+0x4c/0x110
+[    4.801820]  call_on_irq_stack+0x24/0x30
+[    4.805757]  el1_interrupt+0x74/0xc0
+[    4.809346]  el1h_64_irq_handler+0x18/0x24
+[    4.813457]  el1h_64_irq+0x6c/0x70
+[    4.816867]  arch_local_irq_enable+0x8/0xc (P)
+[    4.821330]  cpuidle_enter+0x38/0x50
+[    4.824914]  do_idle+0x1c4/0x250
+[    4.828152]  cpu_startup_entry+0x34/0x38
+[    4.832087]  kernel_init+0x0/0x1a0
+[    4.835500]  start_kernel+0x2ec/0x398
+[    4.839175]  __primary_switched+0x88/0x90
+[    4.843200] Code: f9003008 d65f03c0 d503245f f9402c08 (b9400108)
+[    4.849313] ---[ end trace 0000000000000000 ]---
+[    4.853943] Kernel panic - not syncing: Oops: Fatal exception in interrupt
+[    4.860840] SMP: stopping secondary CPUs
+[    4.864788] Kernel Offset: 0x425391a00000 from 0xffff800080000000
+[    4.870900] PHYS_OFFSET: 0xfff1000080000000
+[    4.875093] CPU features: 0x1000,000804b0,02000801,0400421b
+[    4.880683] Memory Limit: none
+[    4.883750] ---[ end Kernel panic - not syncing: Oops: Fatal exception in interrupt ]---
+
+I still intend to do more testing, so please don't send the next version
+just yet. Tracking down this issue took a bit more than I was planning.
+
+--zwdlutain6qm4enm
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-spi-fsl-dspi-avoid-using-EINPROGRESS-error-code.patch"
+
+From 44aad50011575e720633ad1d733fd053e4a862b4 Mon Sep 17 00:00:00 2001
+From: James Clark <james.clark@linaro.org>
+Date: Fri, 27 Jun 2025 23:53:55 +0300
+Subject: [PATCH 1/3] spi: fsl-dspi: avoid using -EINPROGRESS error code
+
+THIS IS BUGGY because it changes the logic. More info in the next patch,
+together with which it should be squashed.
+
+Refactor dspi_rxtx() and dspi_poll() to not return -EINPROGRESS because
+this isn't actually a status that was ever returned to the core layer
+but some internal state. Wherever that was used we can look at dspi->len
+instead.
+
+No functional changes intended.
+
+Signed-off-by: James Clark <james.clark@linaro.org>
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+ drivers/spi/spi-fsl-dspi.c | 38 ++++++++++++++++++++------------------
+ 1 file changed, 20 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 4bd4377551b5..c0a6c6c6459e 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -986,36 +986,38 @@ static void dspi_fifo_write(struct fsl_dspi *dspi)
+ 				dspi->progress, !dspi->irq);
+ }
+ 
+-static int dspi_rxtx(struct fsl_dspi *dspi)
++static void dspi_rxtx(struct fsl_dspi *dspi)
+ {
+ 	dspi_fifo_read(dspi);
+ 
+ 	if (!dspi->len)
+ 		/* Success! */
+-		return 0;
++		return;
+ 
+ 	dspi_fifo_write(dspi);
+-
+-	return -EINPROGRESS;
+ }
+ 
+ static int dspi_poll(struct fsl_dspi *dspi)
+ {
+ 	int tries = 1000;
++	int err = 0;
+ 	u32 spi_sr;
+ 
+-	do {
+-		regmap_read(dspi->regmap, SPI_SR, &spi_sr);
+-		regmap_write(dspi->regmap, SPI_SR, spi_sr);
+-
+-		if (spi_sr & SPI_SR_CMDTCF)
++	while (dspi->len) {
++		for (tries = 1000; tries > 0; --tries) {
++			regmap_read(dspi->regmap, SPI_SR, &spi_sr);
++			regmap_write(dspi->regmap, SPI_SR, spi_sr);
++			if (spi_sr & SPI_SR_CMDTCF)
++				break;
++		}
++		if (!tries) {
++			err = -ETIMEDOUT;
+ 			break;
+-	} while (--tries);
+-
+-	if (!tries)
+-		return -ETIMEDOUT;
++		}
++		dspi_rxtx(dspi);
++	}
+ 
+-	return dspi_rxtx(dspi);
++	return err;
+ }
+ 
+ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+@@ -1029,7 +1031,9 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+ 	if (!(spi_sr & SPI_SR_CMDTCF))
+ 		return IRQ_NONE;
+ 
+-	if (dspi_rxtx(dspi) == 0)
++	dspi_rxtx(dspi);
++
++	if (!dspi->len)
+ 		complete(&dspi->xfer_done);
+ 
+ 	return IRQ_HANDLED;
+@@ -1137,9 +1141,7 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
+ 			if (dspi->irq) {
+ 				wait_for_completion(&dspi->xfer_done);
+ 			} else {
+-				do {
+-					status = dspi_poll(dspi);
+-				} while (status == -EINPROGRESS);
++				status = dspi_poll(dspi);
+ 			}
+ 		}
+ 		if (status)
+-- 
+2.34.1
+
+
+--zwdlutain6qm4enm
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0002-spi-fsl-dspi-fix-logic-bug-introduced-by-previous-co.patch"
+
+From de229c0b2602a2cf3d936993a7946f3cb7a80ef2 Mon Sep 17 00:00:00 2001
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+Date: Fri, 27 Jun 2025 23:57:53 +0300
+Subject: [PATCH 2/3] spi: fsl-dspi: fix logic bug introduced by previous
+ commit
+
+dspi_rxtx() is actually "rx, and then tx if necessary". Refactoring the
+code to look at dspi->len outside of this function means we are losing a
+necessary call to dspi_fifo_read(). This makes XSPI-based transfers
+eventually hang.
+
+I don't necessarily agree with the premise that using an errno value
+privately within the driver is an anti-pattern, but let's at least make
+the code functionally correct and use a boolean to track whether there
+is data left to send, while still allowing data to be received.
+
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+ drivers/spi/spi-fsl-dspi.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index c0a6c6c6459e..e74ff6e9cb02 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -986,15 +986,20 @@ static void dspi_fifo_write(struct fsl_dspi *dspi)
+ 				dspi->progress, !dspi->irq);
+ }
+ 
+-static void dspi_rxtx(struct fsl_dspi *dspi)
++/* Returns false if the buffer to be transmitted is empty, and true if
++ * there is still data to transmit.
++ */
++static bool dspi_rxtx(struct fsl_dspi *dspi)
+ {
+ 	dspi_fifo_read(dspi);
+ 
+ 	if (!dspi->len)
+ 		/* Success! */
+-		return;
++		return false;
+ 
+ 	dspi_fifo_write(dspi);
++
++	return true;
+ }
+ 
+ static int dspi_poll(struct fsl_dspi *dspi)
+@@ -1003,7 +1008,7 @@ static int dspi_poll(struct fsl_dspi *dspi)
+ 	int err = 0;
+ 	u32 spi_sr;
+ 
+-	while (dspi->len) {
++	do {
+ 		for (tries = 1000; tries > 0; --tries) {
+ 			regmap_read(dspi->regmap, SPI_SR, &spi_sr);
+ 			regmap_write(dspi->regmap, SPI_SR, spi_sr);
+@@ -1014,8 +1019,7 @@ static int dspi_poll(struct fsl_dspi *dspi)
+ 			err = -ETIMEDOUT;
+ 			break;
+ 		}
+-		dspi_rxtx(dspi);
+-	}
++	} while (dspi_rxtx(dspi));
+ 
+ 	return err;
+ }
+@@ -1031,9 +1035,7 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+ 	if (!(spi_sr & SPI_SR_CMDTCF))
+ 		return IRQ_NONE;
+ 
+-	dspi_rxtx(dspi);
+-
+-	if (!dspi->len)
++	if (dspi_rxtx(dspi) == false)
+ 		complete(&dspi->xfer_done);
+ 
+ 	return IRQ_HANDLED;
+-- 
+2.34.1
+
+
+--zwdlutain6qm4enm
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0003-spi-fsl-dspi-Store-status-directly-in-cur_msg-status.patch"
+
+From f478ca8a462881249ed65b8d279ae77a9bc1ac52 Mon Sep 17 00:00:00 2001
+From: James Clark <james.clark@linaro.org>
+Date: Sat, 28 Jun 2025 00:08:49 +0300
+Subject: [PATCH 3/3] spi: fsl-dspi: Store status directly in cur_msg->status
+
+This will allow us to return a status from the interrupt handler in a
+later commit and avoids copying it at the end of
+dspi_transfer_one_message(). For consistency make polling and DMA modes
+use the same mechanism.
+
+No functional changes intended.
+
+Signed-off-by: James Clark <james.clark@linaro.org>
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+ drivers/spi/spi-fsl-dspi.c | 36 +++++++++++++++++-------------------
+ 1 file changed, 17 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index e74ff6e9cb02..e586694502eb 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -591,11 +591,10 @@ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
+ 
+ static void dspi_setup_accel(struct fsl_dspi *dspi);
+ 
+-static int dspi_dma_xfer(struct fsl_dspi *dspi)
++static void dspi_dma_xfer(struct fsl_dspi *dspi)
+ {
+ 	struct spi_message *message = dspi->cur_msg;
+ 	struct device *dev = &dspi->pdev->dev;
+-	int ret = 0;
+ 
+ 	/*
+ 	 * dspi->len gets decremented by dspi_pop_tx_pushr in
+@@ -612,14 +611,12 @@ static int dspi_dma_xfer(struct fsl_dspi *dspi)
+ 		message->actual_length += dspi->words_in_flight *
+ 					  dspi->oper_word_size;
+ 
+-		ret = dspi_next_xfer_dma_submit(dspi);
+-		if (ret) {
++		message->status = dspi_next_xfer_dma_submit(dspi);
++		if (message->status) {
+ 			dev_err(dev, "DMA transfer failed\n");
+ 			break;
+ 		}
+ 	}
+-
+-	return ret;
+ }
+ 
+ static int dspi_request_dma(struct fsl_dspi *dspi, phys_addr_t phy_addr)
+@@ -1002,7 +999,7 @@ static bool dspi_rxtx(struct fsl_dspi *dspi)
+ 	return true;
+ }
+ 
+-static int dspi_poll(struct fsl_dspi *dspi)
++static void dspi_poll(struct fsl_dspi *dspi)
+ {
+ 	int tries = 1000;
+ 	int err = 0;
+@@ -1021,7 +1018,7 @@ static int dspi_poll(struct fsl_dspi *dspi)
+ 		}
+ 	} while (dspi_rxtx(dspi));
+ 
+-	return err;
++	dspi->cur_msg->status = err;
+ }
+ 
+ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+@@ -1035,8 +1032,11 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+ 	if (!(spi_sr & SPI_SR_CMDTCF))
+ 		return IRQ_NONE;
+ 
+-	if (dspi_rxtx(dspi) == false)
++	if (dspi_rxtx(dspi) == false) {
++		if (dspi->cur_msg)
++			WRITE_ONCE(dspi->cur_msg->status, 0);
+ 		complete(&dspi->xfer_done);
++	}
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -1066,7 +1066,6 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
+ 	struct spi_device *spi = message->spi;
+ 	struct spi_transfer *transfer;
+ 	bool cs = false;
+-	int status = 0;
+ 	u32 val = 0;
+ 	bool cs_change = false;
+ 
+@@ -1126,7 +1125,7 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
+ 				       dspi->progress, !dspi->irq);
+ 
+ 		if (dspi->devtype_data->trans_mode == DSPI_DMA_MODE) {
+-			status = dspi_dma_xfer(dspi);
++			dspi_dma_xfer(dspi);
+ 		} else {
+ 			/*
+ 			 * Reinitialize the completion before transferring data
+@@ -1140,13 +1139,12 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
+ 
+ 			dspi_fifo_write(dspi);
+ 
+-			if (dspi->irq) {
++			if (dspi->irq)
+ 				wait_for_completion(&dspi->xfer_done);
+-			} else {
+-				status = dspi_poll(dspi);
+-			}
++			else
++				dspi_poll(dspi);
+ 		}
+-		if (status)
++		if (READ_ONCE(message->status))
+ 			break;
+ 
+ 		spi_transfer_delay_exec(transfer);
+@@ -1155,7 +1153,8 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
+ 			dspi_deassert_cs(spi, &cs);
+ 	}
+ 
+-	if (status || !cs_change) {
++	dspi->cur_msg = NULL;
++	if (message->status || !cs_change) {
+ 		/* Put DSPI in stop mode */
+ 		regmap_update_bits(dspi->regmap, SPI_MCR,
+ 				   SPI_MCR_HALT, SPI_MCR_HALT);
+@@ -1164,10 +1163,9 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
+ 			;
+ 	}
+ 
+-	message->status = status;
+ 	spi_finalize_current_message(ctlr);
+ 
+-	return status;
++	return message->status;
+ }
+ 
+ static int dspi_set_mtf(struct fsl_dspi *dspi)
+-- 
+2.34.1
+
+
+--zwdlutain6qm4enm--
