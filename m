@@ -1,132 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F25E1C84C6;
-	Fri, 27 Jun 2025 17:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295BE35957;
+	Fri, 27 Jun 2025 17:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751045493; cv=none; b=UkTn2yYfLvOKMpmMhY52JeimpSAL2ojjl3apz6p+pv1NFbdhkm6/mIXXwtGQksd6dPkBCaH5nDRsiIl8WOOEZivIl+tLg8s5gRfeG3jGo7aDV9Zf8AFq6PCJDa6f7NnSbyyT193FiKZHcI8hficEGPdhccxhqxHruci4JxyYwSQ=
+	t=1751045494; cv=none; b=hijTASbkWQ4SDZHa06h00u0JVGGqRI85zmxJq+yontCyvNlkH6pffKD6d0oP5LS8h2jYXE8+AtdjCsg7gQayQq6SzG/BeEIWRuAIBJBgqk8xL33hIxaYf1StzVS87QQ+jVC9p5wK3aLLypbwqSlEP3384ptbNbZrhdZg5G9Y4hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751045493; c=relaxed/simple;
-	bh=2y4LiuOlJjR+L5bvSaQ8uJfBRplCVc+eNj3QdtNcQfU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=odlGN4MW7zOuMuOOGLh7qyIjwE6zum+6ocm166B+WTlxTyWAVYg5ogRlJpvDywwHm3iQVEfiYFFyBKWNKeqg4Ui3dYv4EM/epp7qtCHgELh9M5rHVqyUUgujMvkjtNxXpNCgN1+HAFMeo87ALJIB1fXwEGTkOe81vBk5WKTaHew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILADB2LJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751045494; c=relaxed/simple;
+	bh=JkQJjF0Qec5T4iobN1AOTeyQ5w/nJDrM5+viPyB3/E0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DBA2lPKciR8nhCh/6zT6ZzodAHplTR5hIyl0ucbBgp0xJjlu9BpECdNiEjS9TiiLbuCePz9CIpbMabtCAni1Ek6CvVMIP/16QfUcQ5+8dLYFoc+xL4BPrEYKIYROX2O3bDuvUDgMAg63vW97pBiNlHRMyf9KqX/UjlRvfHpdwbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OB1NgpfF; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILADB2LJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF5EBC4CEF3;
-	Fri, 27 Jun 2025 17:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751045492;
-	bh=2y4LiuOlJjR+L5bvSaQ8uJfBRplCVc+eNj3QdtNcQfU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ILADB2LJ/2bckd4i7hGoVPC88dNjlVFl4Aiih7dAYsQ13NtbWlBoWdSK02zKXWnX4
-	 yB0AC6W64qxQ4dTs+/QFr0iCGtzCivrc9+x+jrn2azlNNrwqEpVYxm9QTqUZ2ljkSB
-	 OWGJgqYfcHeRsZDnXMCQHfFhnrfApVqfixSKhXCU34uW4DAG2XUSjpASIxq1kt8Pn8
-	 2xB2sXuvx1DQ4B05BX4ovMdg3AWbIQhm5v7ikLO74H0niCLWI6vP7FNxCPgWRLoPwZ
-	 +mV5YFQVs4DQGUf8kIs56XWyn0yHJPy3EPC2PT0UeEF2pgancT4W+pG+UzWuB0djqu
-	 zIoP9nup7ZGhA==
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-739dcdb012fso32716a34.2;
-        Fri, 27 Jun 2025 10:31:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW+4WqWyV/5W8R5FDyyHXF7j1MHzQblzBsFClX4FO/ad4ftFgPDy9Ie+NW4Snw3L8QeWIv903j4Cim2oVg=@vger.kernel.org, AJvYcCWII2Y9QfLCUVlhM6He1quRogpla1HxEQyXiLFJP43djt513ly5uajWehY/Q/ez/+mbVH+i4Co08aM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaE0LRpaQLo4JUeWu1MNlEHEcEzJDiINVYNjRw1QVc7w+Shz2c
-	HLlBZDVwzxjjqJt3fqPtUyw/m8Tru5UMZccKm7GcCb21a601smaImxsxlxJ0BPvF10hPg96BkzD
-	4sh8NDcti9rPxTgWFW9RSvogWfqoW+MQ=
-X-Google-Smtp-Source: AGHT+IHB+/g6e9V47pnpxmAmye3lJ/VxkZKU9rFdui8UdjiRcXh5PipvblPCywHW5A97MRQySwHSI6k66JTeOktv4h8=
-X-Received: by 2002:a05:6830:f98:b0:72b:8c4b:8ef2 with SMTP id
- 46e09a7af769-73afc6bf7f8mr3074163a34.24.1751045492030; Fri, 27 Jun 2025
- 10:31:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OB1NgpfF"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-747ef5996edso149345b3a.0;
+        Fri, 27 Jun 2025 10:31:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751045490; x=1751650290; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oTfVgFtzOFOfg6vIGvu1wxSN1SyeGW/viyLGmJ6OnNo=;
+        b=OB1NgpfFxdCIdbRj1kFd2qqIUpo1cQePUMCXbwRyAX8fpTXPRsiTLIzsoDIu+rVt4H
+         xCEyGkkwvVZqOvzU7gd0XvfEzebSst4M4cU/Awtr/KL0KyRz6ipqiniSoFJvgUNX+cXM
+         6xuE+153b9dnOIfhe5zTGHkq2t9a5ENqIt+7h+mGdit1CUEOWPK3H2WeSbBsJqeoVDHi
+         KvOTnOC/FW/xTOLdOykPJV4hI1yHF38CK9P9WlelBpPcRNdqmpbo0fam8g1TtYSF3XQV
+         kuNVH7xj8kqnnyhPRKZaEWtTImIgK/weWezLtW7Wh7cSePh12w/gxQYN/HmSaUqBm0KZ
+         R53g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751045490; x=1751650290;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oTfVgFtzOFOfg6vIGvu1wxSN1SyeGW/viyLGmJ6OnNo=;
+        b=tjV7ESbC3+uDZBBG2O6xXc/HPLpAZVqUtvmbKMl2YipIop47LigDqQI3exVfCZdKsM
+         Gb0mEFevSCO5wuo1qgZ2anRvnvtBkUjwQOQumO5BoSNFCb70DzJjtT9A/tYHxpwPdurq
+         1eanl0vAaGZ8v3oopwRFnfSz9mk3n3IAZ1yERo23kGWcY+5ghgArluvytl7O9RUOmsnb
+         +WxVTnJZnTmhgPh9chb1G4FaqbzKKmMC0RKKx/6J6ng8TqWKcT0szM86O1dVJjLOnM+G
+         XKm0b7XHJLBBQFKGQLHv/VJDxmPYpyjND8AU74Ygu3eBbkKCo8VWhtEaBjSLpHjO5bDj
+         F1+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWZcWIevbyKe/Wku6gpri/DSdZ7++EzXmtdIOACtlJ9KDlCr4xVew7Xuu8JJ2477O/9bpByQKcdI2ZRpa4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNgYuHKj9X/FxAg1GQsy1i7Dc5WWrMDawfyesOOoOBboqFAnbO
+	ucZ/g0z65E35RqJeNsm4ULvf5zrW93uPtjravWvw+hH/LxMA9NVtxFPL
+X-Gm-Gg: ASbGnct7NOLzYcUNImDxML5cMEqBsWzboXxVu9kMjd4njawmtyyZDDDYbeSnEMaIyoq
+	HV6eCeta8eiYgGGn38I14Q6d1MrGOkUNTWu4pHmiMn5mJ5Sit0WkCNvO+vr1j4g4Yj+VZgHI52c
+	WlXnFPIPD/mng3WSWURyzPkc3+pm5wCVf0n3LRaMUQQtktPrCjmFIIKnToJniWYGNW8Gnlm8WOq
+	rnsHjR5Evo/DXU2OTikczfLgMxZ4fN9/hteUnAjGd1tcDjPXzJ7o53hDrXNIYfwiAQr1D94iI9o
+	5b3W21bqL52BKni4H4nvbRP4tZ2vVE/xHG9R8FeewfRjUg9k9Eu2cQiP2zqExIE=
+X-Google-Smtp-Source: AGHT+IEhIMepfK9nCZUOQR8wWahLBJNCF+QFm2OXbbyiVTTKrfuS1lKZ88tt5z5/UNXFlfl4cLUdMQ==
+X-Received: by 2002:a05:6a00:9094:b0:748:ed51:1300 with SMTP id d2e1a72fcca58-74af6e61c70mr5347132b3a.9.1751045490378;
+        Fri, 27 Jun 2025 10:31:30 -0700 (PDT)
+Received: from muxbit.. ([2401:4900:1cb8:b350:f061:66f3:baf1:5b2c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af557440fsm2907764b3a.74.2025.06.27.10.31.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 10:31:30 -0700 (PDT)
+From: Manish Kumar <manish1588@gmail.com>
+To: sudipm.mukherjee@gmail.com,
+	teddy.wang@siliconmotion.com,
+	gregkh@linuxfoundation.org
+Cc: linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Manish Kumar <manish1588@gmail.com>
+Subject: [PATCH] staging: sm750fb: make g_fbmode[] a read-only pointer array
+Date: Fri, 27 Jun 2025 23:01:20 +0530
+Message-ID: <20250627173120.7639-1-manish1588@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <5011988.GXAFRqVoOG@rjwysocki.net> <CAPDyKFpBTz0M8DmWHLLm7x4c8G5PpQNv0Zj7mrZ9BewTBi1skg@mail.gmail.com>
- <5a6d0684-3340-43ed-b520-933654515943@amd.com> <CAJZ5v0iJ65xxuHtJrWp1sC76FUzPHNpXB+xtHB=e4qTRSgAC4w@mail.gmail.com>
- <0412561d-6ed3-4823-b510-8600fd4fd1fa@amd.com>
-In-Reply-To: <0412561d-6ed3-4823-b510-8600fd4fd1fa@amd.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 27 Jun 2025 19:31:20 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iRomtiFhYTndO016=zH+vDMkxJgq+EvqYfTFs-+cC8tA@mail.gmail.com>
-X-Gm-Features: Ac12FXzzh0eSx2KHI7hyIDyZLwvuHa7xQTAMjvI3UWpAcrW0CcTmHGRyDsKBLD8
-Message-ID: <CAJZ5v0iRomtiFhYTndO016=zH+vDMkxJgq+EvqYfTFs-+cC8tA@mail.gmail.com>
-Subject: Re: [RFT][PATCH v4 0/2] PM: sleep: Handle async suppliers like
- parents and async consumers like children
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Chris Bainbridge <chris.bainbridge@gmail.com>, Saravana Kannan <saravanak@google.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 27, 2025 at 4:01=E2=80=AFPM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> On 6/27/2025 5:40 AM, Rafael J. Wysocki wrote:
-> > On Fri, Jun 27, 2025 at 12:28=E2=80=AFAM Mario Limonciello
-> > <mario.limonciello@amd.com> wrote:
-> >>
-> >> On 6/26/2025 4:46 AM, Ulf Hansson wrote:
-> >>> On Mon, 23 Jun 2025 at 14:55, Rafael J. Wysocki <rjw@rjwysocki.net> w=
-rote:
-> >>>>
-> >>>> Hi Everyone,
-> >>>>
-> >>>> These two patches complement the recently made PM core changes relat=
-ed to
-> >>>> the async suspend and resume of devices.  They should apply on top o=
-f
-> >>>> 6.16-rc3.
-> >>>>
-> >>>> They were sent along with the other changes mentioned above:
-> >>>>
-> >>>> https://lore.kernel.org/linux-pm/2229735.Mh6RI2rZIc@rjwysocki.net/
-> >>>> https://lore.kernel.org/linux-pm/2651185.Lt9SDvczpP@rjwysocki.net/
-> >>>>
-> >>>> (and this is v4 because they have been rebased in the meantime), but=
- they don't
-> >>>> make any difference on my test-bed x86 systems, so I'd appreciate a =
-confirmation
-> >>>> that they are actually needed on ARM (or another architecture using =
-DT).
-> >>>>
-> >>>> Thanks!
-> >>>
-> >>> Hi Rafael,
-> >>>
-> >>> I haven't yet got the time to test these, but the code looks good to
-> >>> me, so feel free to add for the series:
-> >>>
-> >>> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> >>>
-> >>> Kind regards
-> >>> Uffe
-> >>
-> >> I passed this series to some internal guys to test on a wide variety o=
-f
-> >> AMD x86 hardware.  The initial testing looks good.
-> >> Will keep you apprised if anything pops up.
-> >
-> > Thanks!
-> >
-> > It would also help if you could check whether or not there is any
-> > measurable performance (that is, system suspend and resume time)
-> > difference between "before" and "after".
->
-> Sure thing.
->
-> Just to make sure we have an aligned measurement methodology:
->
-> I asked them to do this both with and without the patches.
->
-> * set /sys/power/pm_debug_messages before running and then capture all
-> the timing prints.
-> * add up all suspend events and get a total
-> * add up all resume events and get a total
-> * repeat 5 times
-> * calculate averages for the 5 runs
+This fixes a checkpatch warning by changing the declaration of g_fbmode[]
+from 'static const char *' to 'static const char * const', making both the
+string contents and the array elements read-only.
 
-Sounds good!
+Signed-off-by: Manish Kumar <manish1588@gmail.com>
+---
+ drivers/staging/sm750fb/sm750.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
+index 1d929aca399c..e77ad73f0db1 100644
+--- a/drivers/staging/sm750fb/sm750.c
++++ b/drivers/staging/sm750fb/sm750.c
+@@ -33,7 +33,7 @@
+ static int g_hwcursor = 1;
+ static int g_noaccel;
+ static int g_nomtrr;
+-static const char *g_fbmode[] = {NULL, NULL};
++static const char * const g_fbmode[] = {NULL, NULL};
+ static const char *g_def_fbmode = "1024x768-32@60";
+ static char *g_settings;
+ static int g_dualview;
+-- 
+2.43.0
+
