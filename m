@@ -1,107 +1,108 @@
-Received: from mx10.didiglobal.com (mx10.didiglobal.com [111.202.70.125])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id E365F2D3EC4;
-	Fri, 27 Jun 2025 11:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.125
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F7A2D876B
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751022221; cv=none; b=U+gwBUTmQ4bbNwBorgN5h0R+3mcKE6HeTA60hYeW4najhOtCskvFjaG72eCMY6EiGhBBC7i0JG8Dv+gCobv1V1HfuAgAWYFfym1WXuas9VZDGpyYJu3c0IQQgPHLY1FP+gOKvHJADSZGGSb/K4PDUSQqPw8oS4Ew8VVdxoe4288=
+	t=1751022228; cv=none; b=ewhLDCSxvlxmM7x9b8HSGLHsoPlZcKIOhcLMM8re83wOns3utJOkw/CuIHwyZOml7fuz7nPPInukVLoE9e4pB25dkmUCF2sI6JkZ0HiyqQOWfdPaV6g8GWFIyGBaMWE+1QOeHdUy0cDklZz8SGIEMCm6CdWHvh9CehWkwRrBTzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751022221; c=relaxed/simple;
-	bh=4rXllrq3i00vA/X/MCfjVxkg+yARKY9+OylzC6mFE+c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
-	 MIME-Version; b=qu4l6Dc/IPcjdyWYFv6N/tBWv90qkl1tuU94aStQFju/oizRphFc+fw+zchdkxILbTgNRNO2+0RLHC6QgQ50jiRXnbD3PLUTtl6hVrfYrdXDqd++GN75ci9em48b2vz5HT3AZwwxUoESwd2YInusu/f4tuMallwtlYOVT3VCWAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; dkim=pass (1024-bit key) header.d=didiglobal.com header.i=@didiglobal.com header.b=ehTRUkDp; arc=none smtp.client-ip=111.202.70.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
+	s=arc-20240116; t=1751022228; c=relaxed/simple;
+	bh=NnfDTk1pQjGQ6xz9Gx7UhuPMPvkRSW1fzPZMDObvOG0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NGK+ryBDthX7RdAe9bkGHUmEPkaP1Rbw7+FgrUEjfoqunynsYp34m10Twk3jO/2YRgoOMw8gkPr+uRlIwgAj4byTlO4Km06nK3eM511qQzAfkK2WNzBjhD1x6mSj4kT+DnCdZIOr71WCJCVCoOSLmTe1JyHLrVFo2j3I1ON9TDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aClLUdME; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=didiglobal.com header.i=@didiglobal.com header.b="ehTRUkDp"
-Received: from mail.didiglobal.com (unknown [10.79.71.38])
-	by mx10.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id 69C23180FFD57A;
-	Fri, 27 Jun 2025 19:02:31 +0800 (CST)
-Received: from BJ03-ACTMBX-08.didichuxing.com (10.79.71.35) by
- BJ03-ACTMBX-02.didichuxing.com (10.79.71.38) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Fri, 27 Jun 2025 19:03:14 +0800
-Received: from BJ03-ACTMBX-07.didichuxing.com (10.79.71.34) by
- BJ03-ACTMBX-08.didichuxing.com (10.79.71.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Fri, 27 Jun 2025 19:03:13 +0800
-Received: from BJ03-ACTMBX-07.didichuxing.com ([fe80::2e1a:dd47:6d25:287e]) by
- BJ03-ACTMBX-07.didichuxing.com ([fe80::2e1a:dd47:6d25:287e%7]) with mapi id
- 15.02.1748.010; Fri, 27 Jun 2025 19:03:13 +0800
-X-MD-Sfrom: chentaotao@didiglobal.com
-X-MD-SrcIP: 10.79.71.38
-From: =?gb2312?B?s8LMzszOIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
-To: "tytso@mit.edu" <tytso@mit.edu>, "hch@infradead.org" <hch@infradead.org>,
-	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>, "willy@infradead.org"
-	<willy@infradead.org>, "brauner@kernel.org" <brauner@kernel.org>,
-	"jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-	"rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, "tursulin@ursulin.net"
-	<tursulin@ursulin.net>, "airlied@gmail.com" <airlied@gmail.com>
-CC: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "chentao325@qq.com" <chentao325@qq.com>,
-	"frank.li@vivo.com" <frank.li@vivo.com>,
-	=?gb2312?B?s8LMzszOIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
-Subject: [PATCH v3 4/4] ext4: support uncached buffered I/O
-Thread-Topic: [PATCH v3 4/4] ext4: support uncached buffered I/O
-Thread-Index: AQHb51MTaMwhJCsRP0eEgBCVUoPCoQ==
-Date: Fri, 27 Jun 2025 11:03:13 +0000
-Message-ID: <20250627110257.1870826-5-chentaotao@didiglobal.com>
-In-Reply-To: <20250627110257.1870826-1-chentaotao@didiglobal.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aClLUdME"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751022225;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mtX7I0GPvovEGFWmWQECoN3Ul3jWpNQVGiKa93vT//s=;
+	b=aClLUdMEqah7ZqVxRSPtTgIuCAF8YCBtfkL6DCAu4Cw8sw3R7LYFGAwUO0mK2zwCyVGsfV
+	G4/8e76nUphxMZWiQBjErU3sRqr7bImf0bBFey61GdGepP2BSLpoUUL+jm+5MNChDNZMKv
+	TSkr0qgKbbuRSyyr3+HHHFvCqVmOu4w=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-92-RozzyyWGNOGiXbQB_2VfqQ-1; Fri, 27 Jun 2025 07:03:44 -0400
+X-MC-Unique: RozzyyWGNOGiXbQB_2VfqQ-1
+X-Mimecast-MFC-AGG-ID: RozzyyWGNOGiXbQB_2VfqQ_1751022223
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-452ff9e054eso7933735e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:03:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751022223; x=1751627023;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mtX7I0GPvovEGFWmWQECoN3Ul3jWpNQVGiKa93vT//s=;
+        b=QoxMLNabyCeab7cc5wJEO5fPzll9uVZz2feUlwZzECi6MAwoQ/unHBvo8YGrDqpVUV
+         Zlnte1wnU5nNTCyJRS3EcYp/YRu9yyuPOzevI1TjOWdF9LoAjNu0y8o/FrHBYEOwcJiJ
+         WKF/hNG/Q+nU+JGPTrgj3+Nx69ZZe288B7kJ6E7egwaiC3b2aivYhpgNvb3Z1W75lFFD
+         kJRkcRwE3B4Q8MfrvhQG8I/KQKIte1yjJGscs8mBb6rPmncT+KZceJS0DBaKSjvR8n3R
+         rT5mmZg85XC2ztGcOUiELTaNl8VI5NALWULkWfm1c8Dim0sEqgstOFBFVb7HcCN9LvAN
+         jpYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2GnGKU7zcF5qf2UZV3qCxMGoiavE58wPETn/dF4v4EyfhUv5ukJ36MPylzLDVINowyIbEsPINf51LBRI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSMvXjt99z1zU9K8M8miFWKI9QtxtB7hgHEWbbAL4SmeqbaKrp
+	XWjwJfk5Tv1Leo6UKaGphY+n1wYNQSNZS6FxCeL3VdH8+YTMONuq47dpAY8hubimLshK6m7ZeNc
+	MXTWB2gUL6iSazq1xm4xNaTETx8+oNEeQAl8MUUVfknmZQA6gxj8x+scYMJChRDAPEg==
+X-Gm-Gg: ASbGncvZEt0h/Qd2R0AaF1F6xmvCjaYcDh99+vqn2HCvydOuCimokfrBvdcSTSBhC/K
+	wSWjBO3aQZCv1q6YfxN4ax5cEj9UxFOVtqrlvX77KmOFYCQcUkuhkv5crzex4WSJ78y/esFQ2CV
+	SmJVcO1WPOHS5jvNDV1+KaJ1cYENYAIErVuuFfchUXU1x7+h9/GsubRJIVHGHQqrMWCkFjnhCKr
+	758ne+lyLBRl2DmJsJJW9I7eigMcWlqpXV+kYlJdW3QPOquzf+88b/7dj7AnkvOM18ilaV+xR2M
+	KUk0R17tp5mDVl3YFpsr2RPYsefTKnmm9CWA30l52v7paZxyis0u0euFLWBpO+AkAdxZsc1HTmz
+	iL0nn
+X-Received: by 2002:a05:600c:64c8:b0:450:d3b9:a5fc with SMTP id 5b1f17b1804b1-45392bc7863mr8865535e9.27.1751022223080;
+        Fri, 27 Jun 2025 04:03:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE9SDcCf+mmOjwZCGWKGJgmV5NZ0wW6bs1ldO0KYcIHLiZMF5li0QSbqyGtLk6UFRI7bW16aw==
+X-Received: by 2002:a05:600c:64c8:b0:450:d3b9:a5fc with SMTP id 5b1f17b1804b1-45392bc7863mr8865235e9.27.1751022222610;
+        Fri, 27 Jun 2025 04:03:42 -0700 (PDT)
+Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a40766csm47736185e9.32.2025.06.27.04.03.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 04:03:42 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2 1/1] firmware: sysfb: Don't use "proxy" headers
+In-Reply-To: <20250627103454.702606-1-andriy.shevchenko@linux.intel.com>
+References: <20250627103454.702606-1-andriy.shevchenko@linux.intel.com>
+Date: Fri, 27 Jun 2025 13:03:40 +0200
+Message-ID: <87ikkhbg4z.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=didiglobal.com;
-	s=2025; t=1751022173;
-	bh=4rXllrq3i00vA/X/MCfjVxkg+yARKY9+OylzC6mFE+c=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type;
-	b=ehTRUkDpCbEGkhMZpTTEM7DPSDb/UWxpKKgQP/Vy9sHFH/sbmH4ptirGdI2TC8yxO
-	 mZHpZNlUxGBa0YCbHJ9au4BOMGEAd3oFTVzILrWnaR5BANeKmYT+Ta2GlMcEnb/u4G
-	 uyBuOmOz7hUFR4dKovFjwFMs6SSIi6KRO/Nb5knw=
+Content-Type: text/plain
 
-RnJvbTogVGFvdGFvIENoZW4gPGNoZW50YW90YW9AZGlkaWdsb2JhbC5jb20+DQoNClNldCBGT1Bf
-RE9OVENBQ0hFIGluIGV4dDRfZmlsZV9vcGVyYXRpb25zIHRvIGRlY2xhcmUgc3VwcG9ydCBmb3IN
-CnVuY2FjaGVkIGJ1ZmZlcmVkIEkvTy4NCg0KVG8gaGFuZGxlIHRoaXMgZmxhZywgYWRkIHByb2Nl
-c3NpbmcgZm9yIElPQ0JfRE9OVENBQ0hFIGluDQpleHQ0X3dyaXRlX2JlZ2luKCkgYW5kIGV4dDRf
-ZGFfd3JpdGVfYmVnaW4oKSBieSBwYXNzaW5nIEZHUF9ET05UQ0FDSEUNCnRvIHBhZ2UgY2FjaGUg
-bG9va3Vwcy4NCg0KUGFydCBvZiBhIHNlcmllcyByZWZhY3RvcmluZyBhZGRyZXNzX3NwYWNlX29w
-ZXJhdGlvbnMgd3JpdGVfYmVnaW4gYW5kDQp3cml0ZV9lbmQgY2FsbGJhY2tzIHRvIHVzZSBzdHJ1
-Y3Qga2lvY2IgZm9yIHBhc3Npbmcgd3JpdGUgY29udGV4dCBhbmQNCmZsYWdzLg0KDQpTaWduZWQt
-b2ZmLWJ5OiBUYW90YW8gQ2hlbiA8Y2hlbnRhb3Rhb0BkaWRpZ2xvYmFsLmNvbT4NCi0tLQ0KIGZz
-L2V4dDQvZmlsZS5jICB8IDMgKystDQogZnMvZXh0NC9pbm9kZS5jIHwgNiArKysrKysNCiAyIGZp
-bGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0
-IGEvZnMvZXh0NC9maWxlLmMgYi9mcy9leHQ0L2ZpbGUuYw0KaW5kZXggMjFkZjgxMzQ3MTQ3Li4y
-NzRiNDFhNDc2YzggMTAwNjQ0DQotLS0gYS9mcy9leHQ0L2ZpbGUuYw0KKysrIGIvZnMvZXh0NC9m
-aWxlLmMNCkBAIC05NzcsNyArOTc3LDggQEAgY29uc3Qgc3RydWN0IGZpbGVfb3BlcmF0aW9ucyBl
-eHQ0X2ZpbGVfb3BlcmF0aW9ucyA9IHsNCiAJLnNwbGljZV93cml0ZQk9IGl0ZXJfZmlsZV9zcGxp
-Y2Vfd3JpdGUsDQogCS5mYWxsb2NhdGUJPSBleHQ0X2ZhbGxvY2F0ZSwNCiAJLmZvcF9mbGFncwk9
-IEZPUF9NTUFQX1NZTkMgfCBGT1BfQlVGRkVSX1JBU1lOQyB8DQotCQkJICBGT1BfRElPX1BBUkFM
-TEVMX1dSSVRFLA0KKwkJCSAgRk9QX0RJT19QQVJBTExFTF9XUklURSB8DQorCQkJICBGT1BfRE9O
-VENBQ0hFLA0KIH07DQogDQogY29uc3Qgc3RydWN0IGlub2RlX29wZXJhdGlvbnMgZXh0NF9maWxl
-X2lub2RlX29wZXJhdGlvbnMgPSB7DQpkaWZmIC0tZ2l0IGEvZnMvZXh0NC9pbm9kZS5jIGIvZnMv
-ZXh0NC9pbm9kZS5jDQppbmRleCAwOGMxMDIwMGQ2ZmUuLjYzOWUyZTIzMWM0YiAxMDA2NDQNCi0t
-LSBhL2ZzL2V4dDQvaW5vZGUuYw0KKysrIGIvZnMvZXh0NC9pbm9kZS5jDQpAQCAtMTI3MCw2ICsx
-MjcwLDkgQEAgc3RhdGljIGludCBleHQ0X3dyaXRlX2JlZ2luKGNvbnN0IHN0cnVjdCBraW9jYiAq
-aW9jYiwNCiAJaWYgKHVubGlrZWx5KHJldCkpDQogCQlyZXR1cm4gcmV0Ow0KIA0KKwlpZiAoaW9j
-Yi0+a2lfZmxhZ3MgJiBJT0NCX0RPTlRDQUNIRSkNCisJCWZncCB8PSBGR1BfRE9OVENBQ0hFOw0K
-Kw0KIAl0cmFjZV9leHQ0X3dyaXRlX2JlZ2luKGlub2RlLCBwb3MsIGxlbik7DQogCS8qDQogCSAq
-IFJlc2VydmUgb25lIGJsb2NrIG1vcmUgZm9yIGFkZGl0aW9uIHRvIG9ycGhhbiBsaXN0IGluIGNh
-c2UNCkBAIC0zMDY4LDYgKzMwNzEsOSBAQCBzdGF0aWMgaW50IGV4dDRfZGFfd3JpdGVfYmVnaW4o
-Y29uc3Qgc3RydWN0IGtpb2NiICppb2NiLA0KIAkJCXJldHVybiAwOw0KIAl9DQogDQorCWlmIChp
-b2NiLT5raV9mbGFncyAmIElPQ0JfRE9OVENBQ0hFKQ0KKwkJZmdwIHw9IEZHUF9ET05UQ0FDSEU7
-DQorDQogcmV0cnk6DQogCWZncCB8PSBmZ2Zfc2V0X29yZGVyKGxlbik7DQogCWZvbGlvID0gX19m
-aWxlbWFwX2dldF9mb2xpbyhtYXBwaW5nLCBpbmRleCwgZmdwLA0KLS0gDQoyLjM0LjENCg==
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+
+> Update header inclusions to follow IWYU (Include What You Use)
+> principle.
+>
+> Note that kernel.h is discouraged to be included as it's written
+> at the top of that file.
+>
+> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>
+> v2: dropped first patch, added tags (Javier, Thomas)
+>
+
+Pushed to drm-misc (drm-misc-next). Thanks!
+
+-- 
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
+
