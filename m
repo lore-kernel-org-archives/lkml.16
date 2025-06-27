@@ -1,173 +1,142 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5282957C0;
-	Fri, 27 Jun 2025 09:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E012741A0;
+	Fri, 27 Jun 2025 09:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751015523; cv=none; b=QwDM5SrD+/AL3TZsZYBfIlTlUX+olGUUcYrQFQ5nJZ1Zyu7XRElnYwbFWauLHNrOwj8yedJGhsPOT/MWrZ1HKOqXZxNwg50lQlaGr3Fbi2ylGJSO6jZKBIDdsQ4sacgqmRdhhYMqDrTzaZlVxRr4pdsWMFoOjQp2xqHjgixCfCU=
+	t=1751015552; cv=none; b=cBUfkLEl4KdSBvWbbcY6Wo/lFRT0oO8H7NVYshylrlbAvJJ05w7oG5THqndN86+rBegoosyfR3WxSKA6XnJle4mvkUY6vNkxtjNVZ5/I55EmnRjQnuSiY8C8shTCf1PmDZVaPVrm+CrYRbDgQFvbFnK3A5htdWZ/jkhk3+qrs2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751015523; c=relaxed/simple;
-	bh=GVRCKGSKR6GX4ns1XYW2cgh8ldp9Mp84DNxhiD2jLXA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XzJmTO8z1iO7weK0h+ZaDZP+vTmVTIC/gFqn12ls0F+f1oScimEjTznYXX+MZibqXABhSUKscYWHCzwYYogNAtieoIDeJeuRv8iz4X8NBokhoBZu8vXS0PxyjBx7rFJJwH1aMhQ+sI12/7wMg/m7pxydKB0gXKDlspp+UiTUyx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bT8ny1Slsz10XVg;
-	Fri, 27 Jun 2025 17:07:18 +0800 (CST)
-Received: from kwepemk200016.china.huawei.com (unknown [7.202.194.82])
-	by mail.maildlp.com (Postfix) with ESMTPS id 67EE81400D1;
-	Fri, 27 Jun 2025 17:11:56 +0800 (CST)
-Received: from huawei.com (10.67.174.78) by kwepemk200016.china.huawei.com
- (7.202.194.82) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 27 Jun
- 2025 17:11:55 +0800
-From: Yi Yang <yiyang13@huawei.com>
-To: <yiyang13@huawei.com>
-CC: <corey@minyard.net>, <linux-kernel@vger.kernel.org>,
-	<lujialin4@huawei.com>, <openipmi-developer@lists.sourceforge.net>,
-	<stable@vger.kernel.org>
-Subject: Re: [PATCH] ipmi: fix underflow in ipmi_create_user()
-Date: Fri, 27 Jun 2025 09:02:20 +0000
-Message-ID: <20250627090220.592415-1-yiyang13@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250610121523.252149-1-yiyang13@huawei.com>
-References: <20250610121523.252149-1-yiyang13@huawei.com>
+	s=arc-20240116; t=1751015552; c=relaxed/simple;
+	bh=pA/2XLoSO8QMzw/6J3xr5U+FO1FrMVD9L5FGTWj0y8I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=olRg+E9gbrRdNDZzoW+f5jMinh9FNi8rrG55vFIXa4JHNjc8Hm+gmTjZANi541uzgW3R7YEu/ucSzcgKWAMccRjBaMNa/cSzCVZks4indu+eRP2ze2IvncerdFi8iL1Nxiq1lgMVF8HnbcXwbLBMSg+OlKYVkyJkWL1YJozUhC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jI2mMSNl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jI2mMSNl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EE4AC4CEE3;
+	Fri, 27 Jun 2025 09:12:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751015551;
+	bh=pA/2XLoSO8QMzw/6J3xr5U+FO1FrMVD9L5FGTWj0y8I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jI2mMSNl88IYMGZga3wZMRWakIsMngxDMC9h+SLZ7LkImtXBAfsPUlqOaxNZQ+NaU
+	 uvAyupZzK+b0aVF4zCvqNqyxi7qSJfz9lq7MyucZouLrYBhXaoZ8GCl5D/OJa+7FoD
+	 H5IYHckUvyqoLgu5TYQ/ZA4uJPWmVJsyEsfRjQbKINsI7mjyZCzce1Myob53lWCmrS
+	 x4TE95ktDC2YE82AzYQ++bzgTw9i1E1LxirX2keL7AIggq0NdXoZ0wM/ynXjPVORvD
+	 Owh/GwmJ7o2xIEDRknrQ5BpaDT4aUjlYu1Sr9xOMZmu3IUh/pKdElwKq/2kN/k9ixP
+	 fJQJ8gu8W7bBg==
+Message-ID: <4cbc691e-c725-48eb-9932-4549381fa55b@kernel.org>
+Date: Fri, 27 Jun 2025 11:12:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] arm64: dts: exynos: gs101-pixel-common: add Maxim
+ MAX77759 PMIC
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Peter Griffin <peter.griffin@linaro.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250524-b4-max77759-mfd-dts-v2-0-b479542eb97d@linaro.org>
+ <20250524-b4-max77759-mfd-dts-v2-2-b479542eb97d@linaro.org>
+ <2c491166-d8ae-4fb6-a4f7-74e823e1205d@kernel.org>
+ <b2c3b78d60f3dc3e4576e8b79298e22ea46567c6.camel@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <b2c3b78d60f3dc3e4576e8b79298e22ea46567c6.camel@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemk200016.china.huawei.com (7.202.194.82)
 
-On 2025/6/27 17:10, yiyang wrote:
-> Syzkaller reported this bug:
-> ==================================================================
-> BUG: KASAN: global-out-of-bounds in instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
-> BUG: KASAN: global-out-of-bounds in atomic_dec include/linux/atomic/atomic-instrumented.h:592 [inline]
-> BUG: KASAN: global-out-of-bounds in ipmi_create_user.part.0+0x5e5/0x790 drivers/char/ipmi/ipmi_msghandler.c:1291
-> Write of size 4 at addr ffffffff8fc6a438 by task syz.5.1074/5888
->
-> CPU: 0 PID: 5888 Comm: syz.5.1074 Not tainted 6.6.0+ #60
-> ......
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:88 [inline]
->  dump_stack_lvl+0x72/0xa0 lib/dump_stack.c:106
->  print_address_description.constprop.0+0x6b/0x3d0 mm/kasan/report.c:364
->  print_report+0xba/0x280 mm/kasan/report.c:475
->  kasan_report+0xa9/0xe0 mm/kasan/report.c:588
->  check_region_inline mm/kasan/generic.c:181 [inline]
->  kasan_check_range+0x100/0x1c0 mm/kasan/generic.c:187
->  instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
->  atomic_dec include/linux/atomic/atomic-instrumented.h:592 [inline]
->  ipmi_create_user.part.0+0x5e5/0x790 drivers/char/ipmi/ipmi_msghandler.c:1291
->  ipmi_create_user+0x56/0x80 drivers/char/ipmi/ipmi_msghandler.c:1236
->  ipmi_open+0xac/0x2b0 drivers/char/ipmi/ipmi_devintf.c:97
->  chrdev_open+0x276/0x700 fs/char_dev.c:414
->  do_dentry_open+0x6a7/0x1410 fs/open.c:929
->  vfs_open+0xd1/0x440 fs/open.c:1060
->  do_open+0x957/0x10d0 fs/namei.c:3671
->  path_openat+0x258/0x770 fs/namei.c:3830
->  do_filp_open+0x1c7/0x410 fs/namei.c:3857
->  do_sys_openat2+0x5bd/0x6a0 fs/open.c:1428
->  do_sys_open fs/open.c:1443 [inline]
->  __do_sys_openat fs/open.c:1459 [inline]
->  __se_sys_openat fs/open.c:1454 [inline]
->  __x64_sys_openat+0x17a/0x210 fs/open.c:1454
->  do_syscall_x64 arch/x86/entry/common.c:51 [inline]
->  do_syscall_64+0x59/0x110 arch/x86/entry/common.c:81
->  entry_SYSCALL_64_after_hwframe+0x78/0xe2
-> RIP: 0033:0x54d2cd
-> Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007f4751920048 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-> RAX: ffffffffffffffda RBX: 0000000000796080 RCX: 000000000054d2cd
-> RDX: 0000000000000000 RSI: 0000000020004280 RDI: ffffffffffffff9c
-> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> R10: 000000000000001e R11: 0000000000000246 R12: 000000000079608c
-> R13: 0000000000000000 R14: 0000000000796080 R15: 00007f4751900000
->  </TASK>
->
-> The buggy address belongs to the variable:
->  ipmi_interfaces+0x38/0x40
->
-> The buggy address belongs to the physical page:
-> page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x45a6a
-> flags: 0x3fffff00004000(reserved|node=0|zone=1|lastcpupid=0x1fffff)
-> raw: 003fffff00004000 ffffea0001169a88 ffffea0001169a88 0000000000000000
-> raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->  ffffffff8fc6a300: 00 00 00 00 f9 f9 f9 f9 00 00 00 00 f9 f9 f9 f9
->  ffffffff8fc6a380: 00 00 f9 f9 f9 f9 f9 f9 00 00 00 00 f9 f9 f9 f9
->> ffffffff8fc6a400: 00 00 f9 f9 f9 f9 f9 f9 00 00 00 00 f9 f9 f9 f9
->                                         ^
->  ffffffff8fc6a480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->  ffffffff8fc6a500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f9 f9
-> ==================================================================
->
-> In the ipmi_create_user() function, the intf->nr_users variable has an
-> underflow issue. Specifically, on the exception path (goto out_kfree;)
-> before atomic_add_return(), calling atomic_dec() when intf->nr_users has
-> not been incremented will result in an underflow.
->
-> The relevant code has been completely rewritten in the next tree and has
-> been fixed with commit 9e91f8a6c868 ("ipmi:msghandler: Remove srcu for the
-> ipmi_interfaces list"). However, the issue still exists in the 5.19+
-> stable branches and needs to be fixed on those branches.
->
-> Cc: stable@vger.kernel.org # 5.19+
-> Fixes: 8e76741c3d8b ("ipmi: Add a limit on the number of users that may use IPMI")
-> Signed-off-by: Yi Yang <yiyang13@huawei.com>
-> ---
->  drivers/char/ipmi/ipmi_msghandler.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-> index 186f1fee7534..0293fad2f4f2 100644
-> --- a/drivers/char/ipmi/ipmi_msghandler.c
-> +++ b/drivers/char/ipmi/ipmi_msghandler.c
-> @@ -1246,18 +1246,18 @@ int ipmi_create_user(unsigned int          if_num,
->   found:
->      if (atomic_add_return(1, &intf->nr_users) > max_users) {
->          rv = -EBUSY;
-> -        goto out_kfree;
-> +        goto out_dec;
->      }
->  
->      INIT_WORK(&new_user->remove_work, free_user_work);
->  
->      rv = init_srcu_struct(&new_user->release_barrier);
->      if (rv)
-> -        goto out_kfree;
-> +        goto out_dec;
->  
->      if (!try_module_get(intf->owner)) {
->          rv = -ENODEV;
-> -        goto out_kfree;
-> +        goto out_dec;
->      }
->  
->      /* Note that each existing user holds a refcount to the interface. */
-> @@ -1281,8 +1281,9 @@ int ipmi_create_user(unsigned int          if_num,
->      *user = new_user;
->      return 0;
->  
-> -out_kfree:
-> +out_dec:
->      atomic_dec(&intf->nr_users);
-> +out_kfree:
->      srcu_read_unlock(&ipmi_interfaces_srcu, index);
->      vfree(new_user);
->      return rv;
-> -- 
-> 2.25.1
+On 27/06/2025 10:54, André Draszik wrote:
+> Hi Krzysztof,
+> 
+> On Thu, 2025-06-26 at 21:49 +0200, Krzysztof Kozlowski wrote:
+>> On 24/05/2025 07:21, André Draszik wrote:
+>>> +
+>>> +		gpio {
+>>> +			compatible = "maxim,max77759-gpio";
+>>> +
+>>> +			gpio-controller;
+>>> +			#gpio-cells = <2>;
+>>> +			/*
+>>> +			 * "Human-readable name [SIGNAL_LABEL]" where the
+>>> +			 * latter comes from the schematic
+>>> +			 */
+>>> +			gpio-line-names = "OTG boost [OTG_BOOST_EN]",
+>>> +					  "max20339 IRQ [MW_OVP_INT_L]";
+>>> +
+>>> +			interrupt-controller;
+>>> +			#interrupt-cells = <2>;
+>>> +		};
+>>> +
+>>> +		nvmem-0 {
+>>
+>> Why is this called nvmem-0, not nvmem? Is there nvmem-1? I see binding
+>> does it, but why?
+> 
+> 'nvmem' is used/declared by nvmem-consumer.yaml as a phandle array
+> already so using just 'nvmem' fails validation:
+> 
+> Documentation/devicetree/bindings/mfd/maxim,max77759.example.dtb: pmic@66: nvmem: {'compatible': ['maxim,max77759-nvmem'], 'nvmem-
+> layout': {'compatible': ['fixed-layout'], '#address-cells': 1, '#size-cells': 1, 'reboot-mode@0': {'reg': [[0, 4]]}, 'boot-reason@4':
+> {'reg': [[4, 4]]}, 'shutdown-user-flag@8': {'reg': [[8, 1]]}, 'rsoc@10': {'reg': [[10, 2]]}}} is not of type 'array'
+> 	from schema $id: http://devicetree.org/schemas/nvmem/nvmem-consumer.yaml#
+> 
+> https://lore.kernel.org/all/20250226-max77759-mfd-v2-3-a65ebe2bc0a9@linaro.org/
+Heh, this should have been just folded into the parent as Rob suggested
+during v2. Well, let's just merge it.
 
-ping 
+Best regards,
+Krzysztof
