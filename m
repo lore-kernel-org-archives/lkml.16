@@ -1,145 +1,130 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A4F1DE4E5
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38031DB548
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751000046; cv=none; b=hyfUUYMeuKkHUt1ieq+PKOjN7jVVSMVrCzjlqT4ybMUyGlqxpEnjEFzOzaLTcTTcwGx0kHDNc7tpnvWaxmYlqzMUbiVRfmlZMqCZDLW6xwvlkpDCqyQgOvXywgLxtJsXx2Opou4w4eOinn2JG2SfJSKoAOLu+ievOcA6biBg4k8=
+	t=1751000061; cv=none; b=pKt9/cMwKQIjoE/9SoLqwC/ItilCM4zjozvylHXGTOaV/9+lMbCN7DQzFCp5mQ/T2ICveoRdwBdgtQxh7GSgNhoFYwU7tw1TIlrR4aPmaWC0U1Bjm6sz8Z6IbApvl1wkQSRj1whqljpLyicucDlxypwLyLLJKT/JVz1AMKP4dpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751000046; c=relaxed/simple;
-	bh=vnd2EJcfPh0FKmD/4EacItn7nOzl2cHJ4a1gckne2oc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=upBJRyQDx97y5TfdBnV2y4XDMiiNjUzrYe7AiTl/9+xgE7/8F0PXIl7+a3rt1yC/UU33qslaJ3KcxpEI0NqEPcF+hnaqlo/swjeSjGP8QOOMdgT5SLHARYJt4D11MZlrgokMS+44YPhZAh1Xfh1YqRn6hLC4Fko3WvRzo+/WpF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddafe52d04so43402925ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:54:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751000044; x=1751604844;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BoSG+kEhTdB9dyfvsXn9C4p+CYrh+2w75i9A8qe1xhg=;
-        b=Ty09uWuhpRJ3NTspxxYJ/pg+PMuBZ6ZQXGrq4znbqrDqUIKGSEXtBRMAjIBmWIb6lu
-         ZwCeNCui/2q/R5tfrVggn0Wmtsg0LynDQ5vf3MAbQKsL7m93wyNUvK84sUnh/pCDLDR9
-         AUpX/I3ZKh+Fisz0HoOTBTET33+om/zVzMOzKUNldCwDWHfh84mK8SHzM10l/bNlNqff
-         qt2Y2iwt7hjnGgWKKM3E5EIvcSn+oT4H3V8wsob2YHXVPF8uLV9xH10o5/D3r3hSuAFN
-         G9cLR8Oq4Q3Y2wZhiiGE2tEpjNGZFGVMu0VnIbveYDM4BBFDEYyVSfQfk5fGcqQ7YqjN
-         0RSw==
-X-Gm-Message-State: AOJu0Yzg4zy7G81CJlcIF1TXxR6tqY22J20Jf/RH5tUQ24CqaJ7IeTFB
-	h+cmkopmXEKI77e+GPShD9dJOMvXFj4SJIpNyOrTzcHdhEwzR/O1Egh7fTZFlCHwMmosdA/ykVw
-	UtH2CWYrHlAQE3H82N+I/JHGf0KVghpbs8FvqGNAp6UKIr4Kds5ON+Y1ixzI=
-X-Google-Smtp-Source: AGHT+IEGL+le4krX34hUd1Egm373T9cWzt0Jjb3W59sC5WqVTqVuYBMutH3KJtWhLgu3w2MfG22a05RsxvCaxtqFYdb0gChfsk+E
+	s=arc-20240116; t=1751000061; c=relaxed/simple;
+	bh=Mn91nD8N81a4I8LV9JExL3dkijp9Nz+10fd1guOSSOs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=lwAsYSs8LaLJ1E7H3Kk7Zjb9l9i6QL4KPyMGMsUc4YBnBnoZn2otF9I5od4Ajzf/dGAZp5b39IaS+2kBngckwNuNlEFJno7wR2frlqZ/EpjGRqNwdkyvgb4mLTMA3ullOcqSzflcPwwHqfwyfTSR+m9mjSD1qOWO9OaIh88NGTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=n4Cv2HTp; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="n4Cv2HTp"
+Message-ID: <dbcc14cc-abfa-4486-a642-2fe97b4a0ef3@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751000044;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9a2vQ9ByAahXjvmC4vFJM4DGyfQ2okDu7nWB7feKJaE=;
+	b=n4Cv2HTpgZ1pNqF5WzeMnnw8nyricFS+9qorvbjBMQH3ClH24QQ0iCthatcYUB5USRYdJN
+	x4MYqa37vwXC4fJ0d6a96l9KnH30YgSV6UVSJvuWQxY15MHFCL4xTcaXOD43iqcSyrkTHa
+	g/JA9erJRhMfxhgrMhQiiQr6AuCRVrU=
+Date: Thu, 26 Jun 2025 21:53:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3309:b0:3d6:cbad:235c with SMTP id
- e9e14a558f8ab-3df4ab6244amr27928485ab.6.1751000044268; Thu, 26 Jun 2025
- 21:54:04 -0700 (PDT)
-Date: Thu, 26 Jun 2025 21:54:04 -0700
-In-Reply-To: <20250627032632.2470249-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685e23ec.a00a0220.34b642.014d.GAE@google.com>
-Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
- (3)
-From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
+To: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>,
+ jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+ zyjzyj2000@gmail.com
+References: <685e168e.a00a0220.2e5631.03f4.GAE@google.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <685e168e.a00a0220.2e5631.03f4.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+#syz test: https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-BUG: unable to handle kernel NULL pointer dereference in ioctl
+在 2025/6/26 20:57, syzbot 写道:
+> Hello,
+>
+> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+> WARNING in rxe_skb_tx_dtor
+>
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 3034 at drivers/infiniband/sw/rxe/rxe_net.c:357 rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
+> Modules linked in:
+> CPU: 0 UID: 0 PID: 3034 Comm: kworker/u4:10 Not tainted 6.16.0-rc3-syzkaller-ge9ef70b277ad #0 PREEMPT(full)
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+> Workqueue: rxe_wq do_work
+> RIP: 0010:rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
+> Code: 80 3c 20 00 74 08 4c 89 ff e8 c1 64 81 f9 4d 8b 37 44 89 f6 83 e6 01 31 ff e8 d1 e5 1d f9 41 f6 c6 01 75 0e e8 e6 e0 1d f9 90 <0f> 0b 90 e9 b4 01 00 00 4c 89 ff e8 45 97 fd 01 48 89 c7 be 0e 00
+> RSP: 0018:ffffc900000079e8 EFLAGS: 00010246
+> RAX: ffffffff88a26d8a RBX: ffff8880560d4500 RCX: ffff88801f722440
+> RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff887bc1c4
+> R10: dffffc0000000000 R11: ffffffff88a26d00 R12: dffffc0000000000
+> R13: 1ffff1100ac1a8ab R14: 0000000000025820 R15: ffff888033440000
+> FS:  0000000000000000(0000) GS:ffff88808d250000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f5e595acfc8 CR3: 0000000056029000 CR4: 0000000000352ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   <IRQ>
+>   skb_release_head_state+0x101/0x250 net/core/skbuff.c:1139
+>   napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
+>   e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
+>   e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
+>   e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
+>   __napi_poll+0xc7/0x480 net/core/dev.c:7414
+>   napi_poll net/core/dev.c:7478 [inline]
+>   net_rx_action+0x707/0xe30 net/core/dev.c:7605
+>   handle_softirqs+0x286/0x870 kernel/softirq.c:579
+>   do_softirq+0xec/0x180 kernel/softirq.c:480
+>   </IRQ>
+>   <TASK>
+>   __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
+>   local_bh_enable include/linux/bottom_half.h:33 [inline]
+>   __neigh_event_send+0x9b/0x1560 net/core/neighbour.c:1194
+>   neigh_event_send_probe include/net/neighbour.h:463 [inline]
+>   neigh_event_send include/net/neighbour.h:469 [inline]
+>   neigh_resolve_output+0x198/0x750 net/core/neighbour.c:1496
+>   neigh_output include/net/neighbour.h:539 [inline]
+>   ip6_finish_output2+0x11fb/0x16a0 net/ipv6/ip6_output.c:141
+>   __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
+>   ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
+>   rxe_send drivers/infiniband/sw/rxe/rxe_net.c:391 [inline]
+>   rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:450
+>   rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
+>   rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
+>   do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
+>   do_work+0x1b4/0x6c0 drivers/infiniband/sw/rxe/rxe_task.c:187
+>   process_one_work kernel/workqueue.c:3238 [inline]
+>   process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
+>   worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
+>   kthread+0x70e/0x8a0 kernel/kthread.c:464
+>   ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+>   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+>   </TASK>
+>
+>
+> Tested on:
+>
+> commit:         e9ef70b2 RDNA/rxe: Fix rxe_skb_tx_dtor problem
+> git tree:       https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
+> console output: https://syzkaller.appspot.com/x/log.txt?x=122183d4580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
+> dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+>
+> Note: no patches were applied.
 
-BUG: kernel NULL pointer dereference, address: 0000000000000320
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 8000000047e19067 P4D 8000000047e19067 PUD 0 
-Oops: Oops: 0000 [#1] SMP PTI
-CPU: 1 UID: 0 PID: 6745 Comm: syz.0.16 Not tainted 6.16.0-rc3-syzkaller-g6f2a71a99ebd-dirty #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:vfs_ioctl fs/ioctl.c:51 [inline]
-RIP: 0010:__do_sys_ioctl fs/ioctl.c:907 [inline]
-RIP: 0010:__se_sys_ioctl+0x23f/0x400 fs/ioctl.c:893
-Code: 83 20 03 00 00 00 00 00 00 49 83 fd 04 0f 83 b9 01 00 00 48 8b 7d c8 44 89 e6 48 8b 55 b0 4d 89 f3 2e e8 e0 4a 44 1d 49 89 c6 <44> 8b a3 20 03 00 00 8b 83 a8 0f 00 00 89 45 d4 c7 03 00 00 00 00
-RSP: 0018:ffff88804a3dbe30 EFLAGS: 00010282
-RAX: fffffffffffffff2 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 00000000219e67d0 RSI: 0000000000000001 RDI: ffff8880219e67d0
-RBP: ffff88804a3dbe80 R08: ffffea000000000f R09: 0000000000000000
-R10: ffff8880211e67d0 R11: ffffffff82831f32 R12: 00000000000007a0
-R13: 0000000000000000 R14: fffffffffffffff2 R15: ffff888038101c01
-FS:  00007f0f9a3e76c0(0000) GS:ffff8881aa97d000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000320 CR3: 0000000047176000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
- x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f0f9958e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f0f9a3e7038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f0f997b5fa0 RCX: 00007f0f9958e929
-RDX: 0000200000000140 RSI: 00000000000007a0 RDI: 0000000000000004
-RBP: 00007f0f99610b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f0f997b5fa0 R15: 00007ffe024bc598
- </TASK>
-Modules linked in:
-CR2: 0000000000000320
----[ end trace 0000000000000000 ]---
-RIP: 0010:vfs_ioctl fs/ioctl.c:51 [inline]
-RIP: 0010:__do_sys_ioctl fs/ioctl.c:907 [inline]
-RIP: 0010:__se_sys_ioctl+0x23f/0x400 fs/ioctl.c:893
-Code: 83 20 03 00 00 00 00 00 00 49 83 fd 04 0f 83 b9 01 00 00 48 8b 7d c8 44 89 e6 48 8b 55 b0 4d 89 f3 2e e8 e0 4a 44 1d 49 89 c6 <44> 8b a3 20 03 00 00 8b 83 a8 0f 00 00 89 45 d4 c7 03 00 00 00 00
-RSP: 0018:ffff88804a3dbe30 EFLAGS: 00010282
-RAX: fffffffffffffff2 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 00000000219e67d0 RSI: 0000000000000001 RDI: ffff8880219e67d0
-RBP: ffff88804a3dbe80 R08: ffffea000000000f R09: 0000000000000000
-R10: ffff8880211e67d0 R11: ffffffff82831f32 R12: 00000000000007a0
-R13: 0000000000000000 R14: fffffffffffffff2 R15: ffff888038101c01
-FS:  00007f0f9a3e76c0(0000) GS:ffff8881aa97d000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000320 CR3: 0000000047176000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	83 20 03             	andl   $0x3,(%rax)
-   3:	00 00                	add    %al,(%rax)
-   5:	00 00                	add    %al,(%rax)
-   7:	00 00                	add    %al,(%rax)
-   9:	49 83 fd 04          	cmp    $0x4,%r13
-   d:	0f 83 b9 01 00 00    	jae    0x1cc
-  13:	48 8b 7d c8          	mov    -0x38(%rbp),%rdi
-  17:	44 89 e6             	mov    %r12d,%esi
-  1a:	48 8b 55 b0          	mov    -0x50(%rbp),%rdx
-  1e:	4d 89 f3             	mov    %r14,%r11
-  21:	2e e8 e0 4a 44 1d    	cs call 0x1d444b07
-  27:	49 89 c6             	mov    %rax,%r14
-* 2a:	44 8b a3 20 03 00 00 	mov    0x320(%rbx),%r12d <-- trapping instruction
-  31:	8b 83 a8 0f 00 00    	mov    0xfa8(%rbx),%eax
-  37:	89 45 d4             	mov    %eax,-0x2c(%rbp)
-  3a:	c7 03 00 00 00 00    	movl   $0x0,(%rbx)
-
-
-Tested on:
-
-commit:         6f2a71a9 Merge tag 'bcachefs-2025-06-26' of git://evil..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1720608c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=595d344ff0b23ac5
-dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=103ba08c580000
+-- 
+Best Regards,
+Yanjun.Zhu
 
