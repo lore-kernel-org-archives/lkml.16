@@ -1,108 +1,215 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819F5298CAE;
-	Fri, 27 Jun 2025 14:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF5B2E1C5A;
+	Fri, 27 Jun 2025 14:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751033627; cv=none; b=qmlRy81sO5Lrx7uuRPegtN0XTlfTffI9eh1y0Err8FZ8Jpb1o//5RIOTy4CWIF+9xPn/zTtl/hesT0sRHg64ZfEJiWghoeq7KZiC4yLYYf7pW7pUzy3QC7QdPh+vPg+PSoDQGM45VUaDHb+Gl1leo8wNYFVvZMfrMjpQry0lj2U=
+	t=1751033682; cv=none; b=NTUkyguTP6mXvz94U8e+qA/o5rj95gG++H2IE8CV8JDUU8fh5P86TUz2Lnm3r1y7pOJKS2nUIFqgOhCylu+Xa93ABqWbMpVE2+8/KSfwistkG2OqRdnNkoLqbJfjT/BdCy+EeA0+4GKmU0ZB7NJXDj9rX0ir5OKbkkn4QnuKb9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751033627; c=relaxed/simple;
-	bh=32FONBh62JeuahpO4SNalmBjx2BSgd3T8J+Zdzf/Kbs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pk7Kk+5ASDLbvZ5OOasbeYjSUIuhMoUgq7dQz3WLT1/dhtKDaipMIWIUqvRwFTLNIeiSx+5iaJspBsdEclfA1QUw5BoaGtbp/C6VWA/4r4X85Q6U2T8Glw+ar1O3OfZh+7G5Cnm/5hsAC8WwPXDE47kBoxqYCEL/DNOHaPFP3u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i0OeCbOx; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751033682; c=relaxed/simple;
+	bh=2Q8UEjUaMPywc5hyQXQigtFyP4/maHQ1+o4AIC7RNl8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eZZZAqG6T8G7MkYv/kZvkLAWymUe1l9RQBxSKGhw9cAvNx3ENrquyvthMKCI5j/TP6WlTBjkV78XDd5AEzeWcM9NNwrweeTuPdSC0fha7PumW7qMWPSB50HbB7eLTaD+/RuxVIa5RDjbB0GTkIc9pZ9nrSzBUPXs9nlCbp05JT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vOAp3271; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i0OeCbOx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751033626; x=1782569626;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=32FONBh62JeuahpO4SNalmBjx2BSgd3T8J+Zdzf/Kbs=;
-  b=i0OeCbOxM++2olJ9Gf/3SFPZFpXVngaojPU/1xuH7iT953+zH/j1unT+
-   Q1miMlJnwmMYPw3CNcU6hUC7D1/yAB0ac+uHiCZcI6Y7nalk0JWljU8/P
-   WwRTzxPLLf4NwHTkAT5cFjiRbq7Xlimtp3ZyJPdiXGj1NUo5p72YElM9J
-   Qa0uW/PyAucn+BQ7kG6zapWH7kV+wRLopPHcT4jQVfJvfmoGX+OYotNXe
-   R+FJqPGxQxJhAK69XlVdbEUmJqatzA4gM09syGezfV4iV+KLWaqHRFxXv
-   /o/MxY2WzBPw1lBz7qeaECNwGOknylKChKutEbEkCjdcDgykn22ejKpmy
-   Q==;
-X-CSE-ConnectionGUID: 0xiYKZwoSKmxEoStiJc37Q==
-X-CSE-MsgGUID: 46Jov5FAQo6t2c7+jSPwHA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="53431116"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="53431116"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 07:13:44 -0700
-X-CSE-ConnectionGUID: gszeNA2iR2uE3ieEJVDy/w==
-X-CSE-MsgGUID: usucIBTtQGqZWoiNmz2b9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="183713491"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 07:13:40 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uV9pg-0000000AV7n-3zOe;
-	Fri, 27 Jun 2025 17:13:36 +0300
-Date: Fri, 27 Jun 2025 17:13:36 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
-	Raag Jadav <raag.jadav@intel.com>,
-	"Tauro, Riana" <riana.tauro@intel.com>,
-	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
-	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-	intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/4] i2c: designware: Add quirk for Intel Xe
-Message-ID: <aF6nEOVhLURyf616@smile.fi.intel.com>
-References: <20250627135314.873972-1-heikki.krogerus@linux.intel.com>
- <20250627135314.873972-2-heikki.krogerus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vOAp3271"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C7A1C4CEE3;
+	Fri, 27 Jun 2025 14:14:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751033682;
+	bh=2Q8UEjUaMPywc5hyQXQigtFyP4/maHQ1+o4AIC7RNl8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vOAp3271zcYOmsZhHpe8KweaT83og6A2Rh2VqgZ94zvRnsF/tTggeUcjAZexVZwIv
+	 YZIlCwG5PuGD9Vyuo+zeqcjvbZlgSZjXzbzym3aGEaPGW311XrzhCijRH/Pm5EgfIc
+	 LFGzEVBzUajLcxYTpTlqK7kz1mmKENJoVwnGKsiuwUJvCS56lJQbQZew1eryHWtD5Y
+	 AoVltl5qZlQudROfmHhhNNUanYyjtmbgoBWrTzk445fV7vF/TzpPcfDrq6flMlPZQr
+	 fCtid1j0FUgTdFolZdU7SXos8+8icmWX55HOSvYHGHTguXqpp4ctJnMuQ0YepfD5eh
+	 bWq16gJZsk+Pg==
+Message-ID: <13025910-7639-400b-878a-cd0780c6534c@kernel.org>
+Date: Fri, 27 Jun 2025 16:14:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627135314.873972-2-heikki.krogerus@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
+ system
+To: Mario Limonciello <superm1@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Mika Westerberg <westeri@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <cbbf0caf-82ce-4427-9844-b11e0f5cacdb@kernel.org>
+ <obpakvzyludc4jskqzyxf65dhqds7ie3jkbfsqdve32ouuaili@xvogkmwvbmbf>
+ <284ea5c0-dca5-4e9e-a3e7-705eca794010@kernel.org>
+ <vkau25ybcx3bcoa2jmxlukumunzii5h6em43anh6mmzk2kyiv7@kyych4kxc4zo>
+ <0d71a686-da67-4686-8976-a17d0d1ca923@kernel.org>
+ <CAJZ5v0gKUN1OdqAHnXNcFUAOfhpdRfa_o=L6TA2GZTpe1bMaNQ@mail.gmail.com>
+ <exmgckzoakt2ncsdphqvymcadon7k6tl36a3zvrj2pv23dffps@znq23v3qbcm2>
+ <CAJZ5v0j3ZyuEqSKQ+3K8M3BwPCxn5Z6KOwjyjt4cJW6HfxjPDw@mail.gmail.com>
+ <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
+ <de548b27-4c43-4f30-af9d-b060101e6fd8@kernel.org>
+ <75fixx6rgwsgsw6e765oxdcivcg2nkzx2fp2qywgx4vi3ihywh@ot7gdecsnttw>
+ <1b0d2349-dbf7-47aa-95c9-1974e63d111a@kernel.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <1b0d2349-dbf7-47aa-95c9-1974e63d111a@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 27, 2025 at 04:53:11PM +0300, Heikki Krogerus wrote:
-> The regmap is coming from the parent also in case of Xe
-> GPUs. Reusing the Wangxun quirk for that.
+Hi,
 
-...
+On 27-Jun-25 4:06 PM, Mario Limonciello wrote:
+> On 6/26/2025 11:56 PM, Dmitry Torokhov wrote:
+>> On Thu, Jun 26, 2025 at 05:21:35PM -0500, Mario Limonciello wrote:
+>>> On 6/26/2025 2:40 PM, Dmitry Torokhov wrote:
+>>>> On Thu, Jun 26, 2025 at 09:31:12PM +0200, Rafael J. Wysocki wrote:
+>>>>> On Thu, Jun 26, 2025 at 9:28 PM Dmitry Torokhov
+>>>>> <dmitry.torokhov@gmail.com> wrote:
+>>>>>>
+>>>>>> On Thu, Jun 26, 2025 at 09:18:56PM +0200, Rafael J. Wysocki wrote:
+>>>>>>> On Thu, Jun 26, 2025 at 9:16 PM Hans de Goede <hansg@kernel.org> wrote:
+>>>>>>>>
+>>>>>>>> Hi,
+>>>>>>>>
+>>>>>>>> On 26-Jun-25 21:14, Dmitry Torokhov wrote:
+>>>>>>>>> On Thu, Jun 26, 2025 at 08:57:30PM +0200, Hans de Goede wrote:
+>>>>>>>>>> Hi,
+>>>>>>>>>>
+>>>>>>>>>> On 26-Jun-25 20:48, Dmitry Torokhov wrote:
+>>>>>>>>>>> On Thu, Jun 26, 2025 at 01:20:54PM -0500, Mario Limonciello wrote:
+>>>>>> [...]
+>>>>>>>>>>>> I want to note this driver works quite differently than how ACPI power
+>>>>>>>>>>>> button does.
+>>>>>>>>>>>>
+>>>>>>>>>>>> You can see in acpi_button_notify() that the "keypress" is only forwarded
+>>>>>>>>>>>> when not suspended [1].  Otherwise it's just wakeup event (which is what my
+>>>>>>>>>>>> patch was modeling).
+>>>>>>>>>>>>
+>>>>>>>>>>>> https://github.com/torvalds/linux/blob/v6.16-rc3/drivers/acpi/button.c#L461
+>>>>>>>>>>>> [1]
+>>>>>>>>>>>
+>>>>>>>>>>> If you check acpi_button_resume() you will see that the events are sent
+>>>>>>>>>>> from there. Except that for some reason they chose to use KEY_WAKEUP and
+>>>>>>>>>>> not KEY_POWER, oh well. Unlike acpi button driver gpio_keys is used on
+>>>>>>>>>>> multiple other platforms.
+>>>>>>>>>>
+>>>>>>>>>> Interesting, but the ACPI button code presumably only does this on resume
+>>>>>>>>>> for a normal press while the system is awake it does use KEY_POWER, right ?
+>>>>>>>>>
+>>>>>>>>> Yes. It is unclear to me why they chose to mangle the event on wakeup,
+>>>>>>>>> it does not seem to be captured in the email discussions or in the patch
+>>>>>>>>> description.
+>>>>>>>>
+>>>>>>>> I assume they did this to avoid the immediate re-suspend on wakeup by
+>>>>>>>> power-button issue. GNOME has a workaround for this, but I assume that
+>>>>>>>> some userspace desktop environments are still going to have a problem
+>>>>>>>> with this.
+>>>>>>>
+>>>>>>> It was done for this reason IIRC, but it should have been documented
+>>>>>>> more thoroughly.
+>>>>>>
+>>>>>> I assert that it should not have been done and instead dealt with in
+>>>>>> userspace. There are numerous drivers in the kernel emitting
+>>>>>> KEY_POWER. Let userspace decide how to handle this, what keys to ignore,
+>>>>>> what keys to process and when.
+>>>>>
+>>>>> Please see my last message in this thread (just sent) and see the
+>>>>> changelog of commit 16f70feaabe9 ("ACPI: button: trigger wakeup key
+>>>>> events").
+>>>>>
+>>>>> This appears to be about cases when no event would be signaled to user
+>>>>> space at all (power button wakeup from ACPI S3).
+>>>>
+>>>> Ahh, in S3 we do not know if we've been woken up with Sleep or Power
+>>>> button, right? So we can not send the "right" event code and use
+>>>> "neutral" KEY_WAKEUP for both. Is this right?
+>>>>
+>>>> Thanks.
+>>>>
+>>>
+>>> I did some more experiments with this affected system that started this
+>>> thread (which uses s2idle).
+>>>
+>>> I only applied patch 3 in this series to help the debounce behavior and
+>>> figure out impacts from patch 4 with existing Linux userspace.
+>>>
+>>> If suspended using systemd in GNOME (click the GUI button) on Ubuntu 24.04
+>>> the GNOME workaround mitigates this problem and no visible impact.
+>>>
+>>> If I suspend by hand using the kernel interface and then press power button
+>>> to wake:
+>>>
+>>> # echo mem | sudo tee /sys/power/state:
+>>>
+>>> * When GNOME is running:
+>>> I get the shutdown popup and it eventually shuts down.
+>>>
+>>> * When GNOME isn't running (just on a VT):
+>>> System shuts down.
+>>
+>> For the latter you may want to raise an issue with systemd, and for the
+>> former I guess it is being too clever and does not activate the
+>> workaround if suspend was not initiated by it? I think Gnome is being
+>> too careful.
+>>
+>> Thanks.
+>>
+> 
+> Sure I could file bugs with both the projects.
+> 
+> But before I do if all userspace needs to account for this with a series of workarounds at resume time, you still think that is that really the best way forward?
+> 
+> Hans, you have a lot of experience in the GNOME community.  Your thoughts?
 
->  static int dw_i2c_plat_probe(struct platform_device *pdev)
->  {
-> +	u32 flags = (uintptr_t)device_get_match_data(&pdev->dev);
+I guess it would be good to fix this in the kernel, sending
+KEY_WAKEUP from gpio_key when the event is KEY_POWER and
+we are going through the special wakeup path in gpio_keys.
 
-> -	dev->flags = (uintptr_t)device_get_match_data(device);
->  	if (device_property_present(device, "wx,i2c-snps-model"))
-> -		dev->flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
-> +		flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
->  
->  	dev->dev = device;
->  	dev->irq = irq;
-> +	dev->flags = flags;
+When this was discussed quite a while ago the ACPI button
+driver simply did not send any event at all on wkaeup
+by ACPI power-button. Know that it does send an event
+it would be good to mimic this, at least when the gpio_key
+devices where instantiated by soc_button_array.
 
-Maybe I'm missing something, but why do we need these (above) changes?
+So maybe add a new field to struct gpio_keys_button
+called wakeup_code and when that is not 0 use that
+instead of the plain "code" member on wakeups ?
 
+That would keep the gpio_keys code generic while
+allowing to mimic the ACPI button behavior.
 
--- 
-With Best Regards,
-Andy Shevchenko
+And then set wakeup_code to KEY_WAKEUP for
+the power-button in soc_button_array.
+
+To me this sounds better then trying to fix all userspace
+code which does something on KEY_POWER of which there
+is quite a lot.
+
+The special GNOME power-button handling was always
+a workaround because last time a kernel fix was
+nacked. But now with the KEY_WAKEUP done by the ACPI
+button code it looks like we do have a good way
+to fix this in the kernel, so that would be better
+IMHO.
+
+Dmitry, what do you think of adding a wakeup_code
+field to struct gpio_keys_button and let the code
+creating the gpio_keys_button decide if a different
+code should be used on wakeup or not ?
+
+Regards,
+
+Hans
+
 
 
