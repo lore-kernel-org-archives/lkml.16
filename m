@@ -1,106 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D087224893;
-	Fri, 27 Jun 2025 10:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0BD224893;
+	Fri, 27 Jun 2025 10:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751021738; cv=none; b=r0AUviF/TONEWY5B6+1WXCytH0lbLqihVxhdOhs55LdflaT/1DKkOrAlSE3rtDK3cutpC0KKDn4+NCu5frfMBi+3jwLD/tLxXhyLdHKro922sik4Tm9gQrUBxc4a26GKC7AxF2rU3V/aHP/uHEqVT5MZx3SOodltR32wfi6nAjU=
+	t=1751021801; cv=none; b=sFHyipDbGyr0Ev1dH+T34L7zqyoJ6oXobRmbp2RpU9qa/cgVpFnIOC4L7UDCf3TLz6zLk9ZfoJo4Xhw0j8iDm9Bfjpgc6NhxJj3gsfBBLijpq09oMscjh2UVXRJjWPtgTBuc0hZXkV8T5KMue9ekyk5Tz0FL8mo6tBsmFY7NiTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751021738; c=relaxed/simple;
-	bh=w8uGM8V3BeOaxaupPf60FQSG2Cnb6F/+ZSO18HXNtkc=;
+	s=arc-20240116; t=1751021801; c=relaxed/simple;
+	bh=T3uWh/QcvqROPfZzHSbKKajGRp9ht/LT12j2WdEkiwk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sJeTC5dS56OCuCxu5/Cvcdg6gEmmv6eWoui5xuby8C/DJx57um7ptW96FQbbUYmARMV++KGOKSLKrf1pdxqo9C0g6cS9i5SSi3g1SXSsdqV63eNL7/Eq+ibmPfKglU/mbF5EWjW0v2VSelvp9VU/Jo9gqaFlJqOKPAZuDIUGgpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fj360n+b; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cr67W3yJkwY3dG9WSBxsfTGRyXHpVbNe2kICm27d92xY9h8QLoerfMtVimnl96kbdM+uKClaxITD+SuUWqKtpKkUYB1TJN/4PBpSDPeeEOVdzpAHEWkr8BJCHjt7C16kLUN2yaQjfeSKxoIeWLuSxVbeX3lwVChvjA98thyQ5wY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QEmBjAL4; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fj360n+b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB677C4CEE3;
-	Fri, 27 Jun 2025 10:55:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751021738;
-	bh=w8uGM8V3BeOaxaupPf60FQSG2Cnb6F/+ZSO18HXNtkc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fj360n+blrE4iYL1vzNpEIzzok3rcXkLm2AN1scyQgysvlldpZEhZHz9kA9cud+rM
-	 AYJulATI+pF8PxE1Xce9WqZiS6v2SnyOrJ60B25q3bSU0iBQg5jfDiVQnRm1QdXZmM
-	 X7ibljFytuz/nrxp9j9HodGkOSUks8ovvY1kKYQ7jwBwugNuuzec9nGQkvgqeShwfz
-	 qQ0NcGnoeycpOX6wjlauz/8FFfxHk42dRhSua98b8+t4idIktSr9Wge6Twg8NQ0jjX
-	 ZpFOxChEOHm29VEUyu0GsfpupQtBL70UERgF8DxIyDCGPDWRPjeDdIt9F46tHoHqsD
-	 xxprjRGnLyAog==
-Date: Fri, 27 Jun 2025 11:55:34 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/arm64: Prevent build warnings from
- -Wmaybe-uninitialized
-Message-ID: <aF54phWq1IGlaphz@finisterre.sirena.org.uk>
-References: <20250625020138.3777454-1-anshuman.khandual@arm.com>
- <dd3dee5a-b030-4658-8cef-c777928368d4@sirena.org.uk>
- <af5cbd48-6312-481d-8e91-7739612493c1@arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QEmBjAL4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751021800; x=1782557800;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=T3uWh/QcvqROPfZzHSbKKajGRp9ht/LT12j2WdEkiwk=;
+  b=QEmBjAL4/NCCc7Jz9vgo2OWurfDoZ3YVWgVGUzXvrXlNxzfb/g5gzQiw
+   WLCAW2WCDenqZCdrOrBUL32OlCNDIJGRwBi8Q4vfzI+HaXhzqaz7hGO1m
+   fVtrE6g5NzOQScnhtll1djR4Vx1v3TA9g2ygaIafOOaH+S1nXK1IFjHCu
+   1Y1GucPTJiG9VaijlFEMS0ZPOKiR6hd/xoBhB5dQbuGiS3/wlFooyrE5u
+   2C2bf4F0RUT4ChW041njZa/P+VP4xL0Q27e0wasMi5JA5fX0gd2q4tWgT
+   /cJPNGS7FgPEmgiLa6b+dY47KGt2MBFdKoFs/CSHIp+6neWpH/RiNBjTf
+   g==;
+X-CSE-ConnectionGUID: 1pPkIyPVT/qjbOw8lbJ/2g==
+X-CSE-MsgGUID: 2exypl5EQ7Oluwarat4aSw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="75878678"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="75878678"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:56:39 -0700
+X-CSE-ConnectionGUID: rn9VVUwTSM+F408M91+awQ==
+X-CSE-MsgGUID: snRNiK3sSTWzsuJHRF4Ivg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="152519354"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:56:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uV6l0-0000000ASQB-3aSH;
+	Fri, 27 Jun 2025 13:56:34 +0300
+Date: Fri, 27 Jun 2025 13:56:34 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v18] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <aF544lt-9YJq8r0y@smile.fi.intel.com>
+References: <20250626224805.9034-1-ansuelsmth@gmail.com>
+ <aF5dHDr8yDSKlp5j@smile.fi.intel.com>
+ <685e6544.5d0a0220.20cf55.9440@mx.google.com>
+ <aF5xrHkTr8Tb71ZH@smile.fi.intel.com>
+ <685e73cf.df0a0220.214b10.9998@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="0uBnPjIGKotRgbPj"
-Content-Disposition: inline
-In-Reply-To: <af5cbd48-6312-481d-8e91-7739612493c1@arm.com>
-X-Cookie: Do not cut switchbacks.
-
-
---0uBnPjIGKotRgbPj
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <685e73cf.df0a0220.214b10.9998@mx.google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, Jun 27, 2025 at 04:15:09PM +0530, Anshuman Khandual wrote:
-> On 25/06/25 3:54 PM, Mark Brown wrote:
+On Fri, Jun 27, 2025 at 12:34:49PM +0200, Christian Marangi wrote:
+> On Fri, Jun 27, 2025 at 01:25:48PM +0300, Andy Shevchenko wrote:
+> > On Fri, Jun 27, 2025 at 11:32:46AM +0200, Christian Marangi wrote:
+> > > On Fri, Jun 27, 2025 at 11:58:04AM +0300, Andy Shevchenko wrote:
+> > > > On Fri, Jun 27, 2025 at 12:47:53AM +0200, Christian Marangi wrote:
 
-> >> -	int status;
-> >> +	int status =3D 0;
+...
 
-> > This will shut the warnings up, but it's a bit of a heavy hammer that
-> > means that the warning can never trigger warnings for that variable
-> > being unused.  Is it possible to fix this by updating the control flow
-> > such that the compiler can tell that the initialisation follows the use?
+> > > > > +	/* Global mutex to protect bucket used refcount_t */
+> > > > > +	struct mutex mutex;
+> > > > 
+> > > > This makes a little sense. Either you use refcount_t (which is atomic) or
+> > > > use mutex + regular variable.
+> > > 
+> > > Using a regular variable I lose all the benefits of refcount_t with
+> > > underflow and other checks.
+> > 
+> > Then drop the mutex, atomic operations do not need an additional
+> > synchronisation. Btw, have you looked at kref APIs? Maybe that
+> > would make the intention clearer?
+> 
+> It's needed for
+> 
+> +       mutex_lock(&pc->mutex);
+> +       if (refcount_read(&pc->buckets[bucket].used) == 0) {
+> +               config_bucket = true;
+> +               refcount_set(&pc->buckets[bucket].used, 1);
+> +       } else {
+> +               refcount_inc(&pc->buckets[bucket].used);
+> +       }
+> +       mutex_unlock(&pc->mutex);
+> 
+> the refcount_read + refcount_set.
 
-> The problem might not exist in reality. In the test function test_fork()
-> in the file tools/testing/selftests/arm64/gcs/basic-gcs.c there does not
-> seem to be a path where WIFEXITED(status) might get called when 'status'
-> has not been initialized as there is a preceding waitpid() which would
-> ensure 'status' gets set. Similar scenarios are present in fork_test_c()
-> and write_fork_read() as well.=20
+Which is simply wrong. Nobody should use atomics in such a way.
+Imagine if somebody wants to copy something like this in their
+code (in case of no mutex is there), they most likely won't notice
+this subtle bug.
 
-Yes, it's a fairly common false positive pattern (in this case it'll be
-that the compiler can't understand the constraints with pulling things
-out of the exit status).
+> As you explained there might be case where refcount_read is zero but nother
+> PWM channel is setting the value so one refcount gets lost.
 
-> But the compiler still throws these build warnings. Seems to be false
-> positives and this fix just works around that.
+Right, because you should use refcount_inc_and_test() and initialise it
+to -MAX instead of 0. Or something like this.
 
-Right, the problem is that it works around it with a big hammer that
-just shuts the warning up completely meaning that if we do cause issues
-in the future then the compiler won't be able to tell us about them.  It
-would be better to suppess it by changing the control flow such that the
-compiler can follow it.
+> kref I checked but not useful for the task.
 
---0uBnPjIGKotRgbPj
-Content-Type: application/pgp-signature; name="signature.asc"
+Okay.
 
------BEGIN PGP SIGNATURE-----
+> The logic here is
+> 
+> - refcount init as 0 (bucket unused)
+> - refcount set to 1 on first bucket use (bucket get configured)
+> - refcount increased if already used
+> - refcount decreased when PWM channel released
+> - bucket gets flagged as unused when refcount goes to 0 again
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmheeKAACgkQJNaLcl1U
-h9BoAAf/cLJ4iO8ZRetLgVRyylvU3LbHGcwMSRactvuK8r9ThRrcNDQIDZWvFoVe
-+QensBvEaIO8IrQCbE0FpKQrE199O7hwkT3Lv56V2uMNlXCm8B+Usm+iPLdn8nRO
-8GgVuezQqAJxkjfUA1LBcmblqVikDLtnIGT863TEqd4Wexnliei+Xd/jL5WJJis6
-s1qr7wo83A2RIuMPNPzdEJMiwhkSNRQbenLCXeXiNt754TyQBTnw8BhGf4Uyy6E0
-0sNtuHLmxtxiFqSXJQPDotg04tyrJinM6GlHDjHmRlyDopBKRSaQTZwQHclas/oK
-0klJ3MGVJSlx89Bj/Wyfucqhm6ZEsQ==
-=/LTI
------END PGP SIGNATURE-----
+-- 
+With Best Regards,
+Andy Shevchenko
 
---0uBnPjIGKotRgbPj--
+
