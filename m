@@ -1,166 +1,240 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88A4217648;
-	Fri, 27 Jun 2025 06:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D3D18E750
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 06:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751006904; cv=none; b=F+OEZhMsQdoEoCRyvTD+uAf8AzpUGZXurCCsrHZpCOrD+GSU3d9V7RfVt1gMe3IiC7YyKMAy1XqQ6ey+IFkPlQUgfSWldYTFdXeh8htBtmBaY8tSnPOE1xzMEnA3E1Zr66+L9k7fJourGDF+qjf2uDjsZLv7w0r1fsmjHsj5EVQ=
+	t=1751007076; cv=none; b=Vj0WzK2/Pw1feP/wcCtKGg/goo1Pte2ORKj4TPZjSHWRAHDM6TeqrgIJYlh8ARME/gEtr34FF7x558/REDZ1dSaSbZ7hq24Gfrwz70iom6/sTAD/TbMORqZLihSDrf7r5HVpYLoTwlZmp74d0/gu1g4loBcbcRsqR7PFBpmXCTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751006904; c=relaxed/simple;
-	bh=CPmH2UhNzzOyJtYz2BQ/oL4YX14EzvZdOTMg/i8Nq0U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nrg2BCi3tF2EWuqlkvRI1CHcsshg4E8GwKicOVp74ZBQYSl5rcAHhOU4wZNnX9g+b/m0I3FblSMc/Ggl7LMi8wjwXf5WdfieyxsMV5pReiGF6aSeoC2nrmj4OflWZEmoW18ZKvwfPrTiJrl6kvNOmOEe7xIRaDSGv+BNQ+B5zRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=a0YRaaiX; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751007076; c=relaxed/simple;
+	bh=IsoQY2OF4h28QLFNyHbtWM9Z7+gpRWPjDXcYAxaZTBs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nkY9NNHm0bMs2t32TaJuA7Du4qo6PkvHbR5IXoVOViGMMfNvUAJE3P/xT4/RWYZg/X0KdC+0i7jlwLd5t+ztBchJlNxUaGM37bimA5OsNdc9b5DmG/tljk3PMmvzJU0krHfXo1CXnasw7Pj9O9NC9AzIWpiDbU/hrSnJE/vwYR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=D+V3PWQS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FWyCg1vt; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=D+V3PWQS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FWyCg1vt; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="a0YRaaiX"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55R4D6aQ017705;
-	Fri, 27 Jun 2025 06:48:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	mSsPZr6Ke43hyQo46CPdW0QQxvYRDMtBeeUW7tXGa8Q=; b=a0YRaaiXK3fy6bYV
-	uxoSsQTQy3ytNXmSWZJ+zd6kNzw9PlvTaTu3Ui7X8TKJZzUreJEtwXw+h67m8KkE
-	W4MDh/QTeGc0nMa4wJOyFS/zhvej0bF4VFlrpCwrD56ZPGGHOHmRPHBzMVJUmeML
-	oacmAe9Yb2+qTcuc9y7cd3Z0jDt+tnPxiBBt8p1cBqRMC93nuKGNgN3g/NNDrrjZ
-	A+fhvWgihFqXCijUnJMp4WWNIG7cdY9KaRQoSYnTDoijSlZiWHWPFBTVeuqBZBC5
-	0bbntNrpwv9rgF7gMkAnucPM9uxamJeBYISjOLI3Lj3P+b0s55I0frlrvzocegYb
-	VWY0/w==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fdfx425k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 06:48:16 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55R6mFVe014123
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 06:48:15 GMT
-Received: from [10.216.48.74] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 26 Jun
- 2025 23:48:09 -0700
-Message-ID: <f6ae7d50-e021-bc82-741e-935af3a4496b@quicinc.com>
-Date: Fri, 27 Jun 2025 12:18:03 +0530
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="D+V3PWQS";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FWyCg1vt";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="D+V3PWQS";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FWyCg1vt"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0E4DB2116B;
+	Fri, 27 Jun 2025 06:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751007072; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=g4LXbAAUippkeeXQUWYXMF4i0Pu0+xEpthWYGcl+dNA=;
+	b=D+V3PWQSry1H18jcwfxT2ZiC7vuADMiqtS3LBL5fccyDDX3LWpz5zqZBYpjf7Mstq+3ads
+	XBH5Uh0u3oHI2WnnomoFelU5Nv9mOoHIpwoeX3EprxRhHwGcdr8JOWx0v0iTuZ92lB7dK3
+	Y01nf/Lu+oIp/Tzkj8pYUUSyUHFAHqg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751007072;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=g4LXbAAUippkeeXQUWYXMF4i0Pu0+xEpthWYGcl+dNA=;
+	b=FWyCg1vtGD9HsNCvw4wXl8haw6ZvFY+CBZ9AGTQ2fCqMKSXFJrz0TwMvk4CaLXnVr2+a+J
+	NeTVy0jZMWs/9vAQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751007072; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=g4LXbAAUippkeeXQUWYXMF4i0Pu0+xEpthWYGcl+dNA=;
+	b=D+V3PWQSry1H18jcwfxT2ZiC7vuADMiqtS3LBL5fccyDDX3LWpz5zqZBYpjf7Mstq+3ads
+	XBH5Uh0u3oHI2WnnomoFelU5Nv9mOoHIpwoeX3EprxRhHwGcdr8JOWx0v0iTuZ92lB7dK3
+	Y01nf/Lu+oIp/Tzkj8pYUUSyUHFAHqg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751007072;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=g4LXbAAUippkeeXQUWYXMF4i0Pu0+xEpthWYGcl+dNA=;
+	b=FWyCg1vtGD9HsNCvw4wXl8haw6ZvFY+CBZ9AGTQ2fCqMKSXFJrz0TwMvk4CaLXnVr2+a+J
+	NeTVy0jZMWs/9vAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 69A71138A7;
+	Fri, 27 Jun 2025 06:51:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id s4FiGF8/XmjgPgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 27 Jun 2025 06:51:11 +0000
+Message-ID: <d8ca2ed5-5656-405b-bf30-defcbc20c619@suse.de>
+Date: Fri, 27 Jun 2025 08:51:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH V3 1/4] dt-bindings: mmc: Add dll-hsr-list for HS400 and
- HS200 modes
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 8/9] fbcon: Use screen info to find primary device
+To: Mario Limonciello <superm1@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Lukas Wunner <lukas@wunner.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
+ Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+ "open list:SOUND" <linux-sound@vger.kernel.org>,
+ Daniel Dadap <ddadap@nvidia.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250627043108.3141206-1-superm1@kernel.org>
+ <20250627043108.3141206-9-superm1@kernel.org>
 Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Sachin Gupta
-	<quic_sachgupt@quicinc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>, "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bhupesh Sharma <bhupesh.sharma@linaro.org>
-CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
-        <quic_bhaskarv@quicinc.com>, <quic_mapa@quicinc.com>,
-        <quic_nitirawa@quicinc.com>, <quic_sartgarg@quicinc.com>,
-        <kernel@oss.qualcomm.com>
-References: <20250122094707.24859-1-quic_sachgupt@quicinc.com>
- <20250122094707.24859-2-quic_sachgupt@quicinc.com>
- <72b02fd1-5195-4bb0-b01d-5481b49a5680@kernel.org>
- <379e9199-4a9e-cd38-20cb-0fbd76fa33b3@quicinc.com>
- <abdde4ff-eae2-44c4-8608-89c762790549@kernel.org>
-From: Ram Prakash Gupta <quic_rampraka@quicinc.com>
-In-Reply-To: <abdde4ff-eae2-44c4-8608-89c762790549@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250627043108.3141206-9-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 069sUsop3btBy8DGgJZzhcy9wXDqBk3B
-X-Proofpoint-ORIG-GUID: 069sUsop3btBy8DGgJZzhcy9wXDqBk3B
-X-Authority-Analysis: v=2.4 cv=MtZS63ae c=1 sm=1 tr=0 ts=685e3eb0 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=RBDf3ioivJUjA6cGglgA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDA1MiBTYWx0ZWRfX9lpa1pXDb9Bk
- dGjVD21mfbTT00m4gM9C1BqSOGS9HYpf2PhoOJ4V0VPCdu+Cz+w/Tk3BfX/jgDNrVoWwxLKhYZU
- 8TXJ6F/pkc6wrlyrzoobQaBHpmX1KmuMywMktm4Wq7pcR5GT51RTDPy61WlGW1b9atsPPlM1EMM
- 6BN7aHTdmr+1mOCuzShUEkoVLwRgN8I0hdraE99bCktOjDz2rvqqrkMDjzSwlWxA+R0xUiLg4DK
- qMRLpBjf2goaREdR2Th2+R1tV//cNFLBbQRdS1Pis86TCriOzxe6j3JUANoeTGMocUhOlD4sNyG
- AIvmOzH+pkKu2s0L/QtRvK6IFtXrVzq+ferizxlThhBGTO3HWG/QHYoNNtGUICDI9UAx5SzpDu6
- Hnb8en4Pg75ZhFW3vP9vYHmxRIue1TZDU9XX1+o/Vr3Gu8Spn8E4B17Yw/x0jgKhDVAm8lJV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_02,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 suspectscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 malwarescore=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506270052
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[amd.com,gmail.com,ffwll.ch,wunner.de,linux.intel.com,kernel.org,infradead.org,8bytes.org,arm.com,redhat.com,perex.cz,suse.com,lists.freedesktop.org,vger.kernel.org,lists.linux.dev,nvidia.com];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email]
+X-Spam-Level: 
 
+Hi
 
-On 6/26/2025 11:12 PM, Krzysztof Kozlowski wrote:
-> On 26/06/2025 16:16, Ram Prakash Gupta wrote:
->> On 1/22/2025 3:56 PM, Krzysztof Kozlowski wrote:
->>> On 22/01/2025 10:47, Sachin Gupta wrote:
->>>> Document the 'dll-hsr-list' property for MMC device tree bindings.
->>>> The 'dll-hsr-list' property defines the DLL configurations for HS400
->>>> and HS200 modes.
->>>>
->>>> Signed-off-by: Sachin Gupta <quic_sachgupt@quicinc.com>
->>>> ---
->>>>  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 5 +++++
->>>>  1 file changed, 5 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
->>>> index 8b393e26e025..65dc3053df75 100644
->>>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
->>>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
->>>> @@ -133,6 +133,11 @@ properties:
->>>>      $ref: /schemas/types.yaml#/definitions/uint32
->>>>      description: platform specific settings for DLL_CONFIG reg.
->>>>  
->>>> +  qcom,dll-hsr-list:
->>>> +    maxItems: 10
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> uint32 has only one item. Anyway, there is already DLL there, so don't
->>> duplicate or explain why this is different. Explain also why this is not
->>> deducible from the compatible.
+Am 27.06.25 um 06:31 schrieb Mario Limonciello:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 >
-> Timeline still amazes me. I will be grumpy on this thread.
+> On systems with non VGA GPUs fbcon can't find the primary GPU because
+> video_is_primary_device() only checks the VGA arbiter.
 >
->> I will change it to reflect array from uint32.
->> There is change with artanis DLL hw addition where it need total of 5 entries
->> (dll_config, dll_config_2, dll_config_3, dll_usr_ctl, ddr_config)
->> for each HS400 and HS200 modes, hence the new addition in dt. And these values
->> are not fixed and varies for every SoC, hence this needs to be passed through
->> dt like it was passed earlier for qcom,dll-config & qcom,ddr-config.
+> Add a screen info check to video_is_primary_device() so that callers
+> can get accurate data on such systems.
 >
-> Eh, no. That's not a valid reason. It's still SoC deducible. Don't bring
-> your downstream practices here, but remove EVERYTHING from downstream
-> and start doing things like upstream is doing.
+> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+
+Thanks for sticking with it. This patch is also useful without the sysfs 
+interface.
+
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+
+Best regards
+Thomas
+
+> ---
+> v5:
+>   * Only change video-common.c
+> v4:
+>   * use helper
+> ---
+>   arch/x86/video/video-common.c | 13 ++++++++++++-
+>   1 file changed, 12 insertions(+), 1 deletion(-)
 >
-> Best regards,
-> Krzysztof
+> diff --git a/arch/x86/video/video-common.c b/arch/x86/video/video-common.c
+> index 81fc97a2a837a..917568e4d7fb1 100644
+> --- a/arch/x86/video/video-common.c
+> +++ b/arch/x86/video/video-common.c
+> @@ -9,6 +9,7 @@
+>   
+>   #include <linux/module.h>
+>   #include <linux/pci.h>
+> +#include <linux/screen_info.h>
+>   #include <linux/vgaarb.h>
+>   
+>   #include <asm/video.h>
+> @@ -27,6 +28,7 @@ EXPORT_SYMBOL(pgprot_framebuffer);
+>   
+>   bool video_is_primary_device(struct device *dev)
+>   {
+> +	struct screen_info *si = &screen_info;
+>   	struct pci_dev *pdev;
+>   
+>   	if (!dev_is_pci(dev))
+> @@ -34,7 +36,16 @@ bool video_is_primary_device(struct device *dev)
+>   
+>   	pdev = to_pci_dev(dev);
+>   
+> -	return (pdev == vga_default_device());
+> +	if (!pci_is_display(pdev))
+> +		return false;
+> +
+> +	if (pdev == vga_default_device())
+> +		return true;
+> +
+> +	if (pdev == screen_info_pci_dev(si))
+> +		return true;
+> +
+> +	return false;
+>   }
+>   EXPORT_SYMBOL(video_is_primary_device);
+>   
 
-Sorry I did not get it - you mean to say keep these values in driver file?
-how is it possible to tie these value with only one compatible which can vary
-with every soc or you are suggesting me to make code change in driver for every
-target having artanis dll hw.
-
-And sorry but considering upstream only this design was put in place, its not
-about downstream, since there are already dll_config and ddr_config which are
-passed through dt, its logical here to pass rest of the dll related parameters
-through dt only.
-
-Thanks,
-Ram
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
