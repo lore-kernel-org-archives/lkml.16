@@ -1,54 +1,54 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA36292B25
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 23:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1609292B5E
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 23:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751066343; cv=none; b=c6m97CrdOfy6zBo+FW69SCdQEQNDR+GGsCiX2OwLsb21M10g3rk4RLMJxtuYyUgKqFmntD+SlfD4bncOaS+LZFYJdxaoDgFMA3ywBC+lXVSRdQUHzCwMDvyKSixc5g5GO1v5cgTAgTdJGpnSDgZtnj6t9GLQIX+ri56U4pSj1uQ=
+	t=1751066345; cv=none; b=hJEK7T1okez/2l7SCqoPaEi8ETFG/zSlgpQq+CYHUAqS7We68/Z/t4wBHWGd7RjYLdmJu5KosplgUz+83oMsqwACUEZrgJf0WyxFfeUjMIbAkT543A29gMNVZ9QMLP+6+e0GRUOA6EKymvTj3ZMaWQ7NW2EDqpEpSlXLFFIYEtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751066343; c=relaxed/simple;
-	bh=CCzVBiivBVXMSUo5O7/V/lLtK76aY9HUiuVRZJLegEc=;
+	s=arc-20240116; t=1751066345; c=relaxed/simple;
+	bh=zLOPr23btb/P2Q+bNErI5riOTp9hfWGYj59cKhKyl3M=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=IbsGXC0pIGOjYS/RFFb/VRlxuugfnwRm9Qwvixf9uD5m8FAXIQpjnso4yWBqgKc6NroE0oviMD0LsVvY2crxBZiU87o/taS6PQBNAN7XAFl57/FSlV9l3wYYx6HbUu1oIrIpg01PAHyjcwmRStK9VrZp7MYm4GFpHkG3t4fU8jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mmaurer.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iW5iYdD/; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=lE3DTCYa8iZDH7uF1S3XxIKvaMUfgWnAbHx/+muujp0HCQKvvC3BSJfhzcJb5rsd67Bo+XnU1IMDKhb7xwbDYNbLWxk3kte+XgBAA4f56ogBuO/iwEpXSYXfo7yhHojJAmd2G6Eo5DC0di3CfHUOoEXj7eRLtWZ85tT+2dOaOHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mmaurer.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MwTE/p1f; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mmaurer.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iW5iYdD/"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7377139d8b1so330883b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:19:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MwTE/p1f"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-313fb0ec33bso2355677a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:19:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751066340; x=1751671140; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751066343; x=1751671143; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=R3e8+g6QT9hwNSxzHZzZqHUNIxultYpbJvJe5qexWds=;
-        b=iW5iYdD/4lMbxc9zXjs+BWcm+IBkrYuDvqbW9brB3dJvksupwwuhR2jXIQkelcWa2m
-         tlt7J7tq76/r2Btk5nZEnAHZmsdVyEgvHU+FRXwz5B2ILoY8v0aiHnb/eqXkWNB3W0y5
-         04BUeRBm1s4QfRE7kpb/q2hp5Toc6Ha5/x0LBTOIrfYlJ/S9tMo2BechJpE245kHOBcC
-         2sK6I6D8FX66Z4yhg9cIhC6P+/LZA63zqlIi08ksKKDsyLv48/jLRkugJeZi3AP8sP2T
-         0tWkz2HqkYHX+lZzFRuNW7WaKQdZn5hF/s6q2AE0I8kq7MS8L8xMgxDnzIln1NI7DyvK
-         6UcA==
+        bh=FYSKWILaHkU1OfYdFyMg39AM+0yljyAGiysqEp8n70A=;
+        b=MwTE/p1fE75+Zz3OTjavzk7dUKmYmGiXFNVKVKs/6SFre2H2BADlGlLUrsX+zFzp2/
+         N+YDFO5ZHJ/M/n9BzQR+6vBmCXQOFpyN3jI+7xDajJiMTXODzyTTnE/D3AyGB3T//JWM
+         XLet1tOLlnuuhQ/C0b3SzOxEUWvZguZHe1GqaPZxLSNlJ7NRgst9/4BXlfswQMQz5yAC
+         FrGIs+G4IqBkEP48pkPMzFFCZyCh8Yio9Z9g7Y+yBnu9hwljz4V1yAF2tvT4I9tqu+4+
+         gki0liqlrvjt9cOYIOlRIIAgWTYovqXEO45h31ozSeWyCVJWdqWk53CFgG3PhVhSTc5S
+         Uw8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751066340; x=1751671140;
+        d=1e100.net; s=20230601; t=1751066343; x=1751671143;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=R3e8+g6QT9hwNSxzHZzZqHUNIxultYpbJvJe5qexWds=;
-        b=Btm9VosqRO/OpIQUSnVU1Ld04DhXnxlN1zIN0E1+6uuwQthWIIO+W1lptK5j7mUosM
-         h8iY4tyaKO91rqpAasPaiwe8yvWBIr7clV3+Yx9lDsLwNpqgCKX2S8fmkruMcOjcn7ed
-         pnfl3Bg6y0ap8lQtkReWj7Q8uOcCOhg9yIp8Bn6JRsDBK/esW8qUo+2PLdVvm8qvLhEs
-         AerndmU1kHaFuKcB8Cx1GgO0t1ymKBKbIchzOP2w1ubv9blmlDnEYNJXdwsGuVb+jcCw
-         qyQOWfHDscVsLrSuWQxpulJrAe98Q/GGRmShm61Tfe1Fam9Lkzjf8FFZQFVudyxaH+DW
-         5P2g==
-X-Gm-Message-State: AOJu0YyHLbZRHL4E8SI0TgYHD2jZCGLgeru3QzNn3Ku94ZV/MWT1pWhI
-	HnDzcQCBHSXHIosd9HyNQOAlnYZJbeSE+88tZBklcwjII5Ow1FHBHfNyJbjFnfivlUyetODTRVp
-	p6TU7iV9fKQ==
-X-Google-Smtp-Source: AGHT+IGVBBGm2MURUVDVjdiFxppjr7Yri9nVRQzS7G0XJ7Be6h7Im6R3zQR+XQsT95t1tcbfAJWnoy/wnMMp
-X-Received: from pgac18.prod.google.com ([2002:a05:6a02:2952:b0:b2f:4c1b:e1a0])
- (user=mmaurer job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d08:b0:218:9b3e:e8bd
- with SMTP id adf61e73a8af0-220a12a662fmr7686662637.10.1751066339765; Fri, 27
- Jun 2025 16:18:59 -0700 (PDT)
-Date: Fri, 27 Jun 2025 23:18:27 +0000
+        bh=FYSKWILaHkU1OfYdFyMg39AM+0yljyAGiysqEp8n70A=;
+        b=sluc7MEnJ1Gb2sNCc39O4/lE0jMGbgEt3kQfeLf8tVBJaBbmqdUe8yJyViVyFVDi7B
+         edJ7l9iSzeoV8vYosLLcUKwgXsDRlAvJwCQ4hSQLHmOWnBC4d3nNjr7yJV9nbD1Yd+DB
+         QRsXfycrXeJCOgpsjN7po2P48O/U73Idlzw90Ij3i7Pf315N60rYTjz0P0YiZyR0NC2k
+         gC0SvNBKAm2jVvPz2xT6RIUumVvt+ajJQGcvL9+cmlwVk1i5+zkC9NJFikPdX8jlRpyp
+         TlgK2ji1vlDpZGvzP73nUOYJVaWKlLPoqzbxawXYWnxSVo7I2kFYID5oBjgF3jO5jrUB
+         MGAA==
+X-Gm-Message-State: AOJu0Ywqgddeov6VWUKw6QrH9CuOnvIYy8vsOlLNXWXi/vLSYVlV0omd
+	MEQcivXyVT98DjFX1hP9BUc7Vtgi2ew0xlyLwOMjJWo8S+rH64VFrtGfLu2GmUGUuw5ZEwOzO1g
+	3pVn/RWMp7w==
+X-Google-Smtp-Source: AGHT+IE+Y7GHm/K1Vq+yCasbBH4sgxeF6wx8bTZ4uGjwS1XAJoUvWQvS6NqJ5QvX+Ml437xKVT5J2EZTcIUG
+X-Received: from pjj5.prod.google.com ([2002:a17:90b:5545:b0:314:3438:8e79])
+ (user=mmaurer job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b0d:b0:311:df4b:4b93
+ with SMTP id 98e67ed59e1d1-318c9106951mr7504640a91.7.1751066343031; Fri, 27
+ Jun 2025 16:19:03 -0700 (PDT)
+Date: Fri, 27 Jun 2025 23:18:29 +0000
 In-Reply-To: <20250627-debugfs-rust-v8-0-c6526e413d40@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,13 +58,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250627-debugfs-rust-v8-0-c6526e413d40@google.com>
 X-Developer-Key: i=mmaurer@google.com; a=ed25519; pk=2Ezhl7+fEjTOMVFpplDeak2AdQ8cjJieLRVJdNzrW+E=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751066331; l=10601;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751066331; l=5627;
  i=mmaurer@google.com; s=20250429; h=from:subject:message-id;
- bh=CCzVBiivBVXMSUo5O7/V/lLtK76aY9HUiuVRZJLegEc=; b=G8n4sb4Xu2zurni/h3aQ7uYSYPthrOZaRXO2LJv2K/E21jlFyPU77UIesfpoPrV7LO+Dr1LKu
- 7NQjH2DTrVEBuOOLdpO34CSUDPgWiMmm64GfIfqrbBvP6PUVvsLgpv3
+ bh=zLOPr23btb/P2Q+bNErI5riOTp9hfWGYj59cKhKyl3M=; b=0pqWdWwjSCuBN0BzLJf896SS+iXUk/wx513y49aaWkud6WntkFbHaaTEzJ1okWZl0yAKgDKY2
+ cpJ61WNa5RoBZzpH4tAt/d5kBHlIlf1bHGfak58BZiRVYx4zJ/U4V2L
 X-Mailer: b4 0.14.2
-Message-ID: <20250627-debugfs-rust-v8-4-c6526e413d40@google.com>
-Subject: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing for File
+Message-ID: <20250627-debugfs-rust-v8-6-c6526e413d40@google.com>
+Subject: [PATCH v8 6/6] rust: samples: Add debugfs sample
 From: Matthew Maurer <mmaurer@google.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
 	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
@@ -77,268 +77,145 @@ Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
 	Matthew Maurer <mmaurer@google.com>, Dirk Behme <dirk.behme@de.bosch.com>
 Content-Type: text/plain; charset="utf-8"
 
-This allows `File`s to be backed by `ForeignOwnable` rather than just
-`&'static T`. This means that dynamically allocated objects can be
-attached to `File`s without needing to take extra steps to create a
-pinned reference that's guaranteed to live long enough.
+Provides an example of using the Rust DebugFS bindings.
 
 Tested-by: Dirk Behme <dirk.behme@de.bosch.com>
 Signed-off-by: Matthew Maurer <mmaurer@google.com>
 ---
- rust/kernel/debugfs.rs              | 99 +++++++++++++++++++++++++++++++------
- rust/kernel/debugfs/display_file.rs | 49 +++++++++++-------
- 2 files changed, 115 insertions(+), 33 deletions(-)
+ MAINTAINERS                  |  1 +
+ samples/rust/Kconfig         | 11 +++++++
+ samples/rust/Makefile        |  1 +
+ samples/rust/rust_debugfs.rs | 76 ++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 89 insertions(+)
 
-diff --git a/rust/kernel/debugfs.rs b/rust/kernel/debugfs.rs
-index 1f20d85da56fcb89476552feefc9d97fab43cc04..929e55ee5629f6888edf29997b9ed77d274e11c8 100644
---- a/rust/kernel/debugfs.rs
-+++ b/rust/kernel/debugfs.rs
-@@ -5,11 +5,11 @@
- //!
- //! C header: [`include/linux/debugfs.h`](srctree/include/linux/debugfs.h)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 551e3a6a16d9051a2d58a77614c458287da2bdcc..f55c99cb2907655d109cb1fa248cdec803b5ce9a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7374,6 +7374,7 @@ F:	rust/kernel/devres.rs
+ F:	rust/kernel/driver.rs
+ F:	rust/kernel/faux.rs
+ F:	rust/kernel/platform.rs
++F:	samples/rust/rust_debugfs.rs
+ F:	samples/rust/rust_driver_platform.rs
+ F:	samples/rust/rust_driver_faux.rs
  
--#[cfg(CONFIG_DEBUG_FS)]
--use crate::prelude::GFP_KERNEL;
-+use crate::prelude::*;
- use crate::str::CStr;
- #[cfg(CONFIG_DEBUG_FS)]
- use crate::sync::Arc;
-+use crate::types::ForeignOwnable;
- use core::fmt::Display;
+diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
+index 7f7371a004ee0a8f67dca99c836596709a70c4fa..01101db41ae31b08a86d048cdd27da8ef9bb23a2 100644
+--- a/samples/rust/Kconfig
++++ b/samples/rust/Kconfig
+@@ -62,6 +62,17 @@ config SAMPLE_RUST_DMA
  
- #[cfg(CONFIG_DEBUG_FS)]
-@@ -63,40 +63,52 @@ fn create(_name: &CStr, _parent: Option<&Dir>) -> Self {
-     }
+ 	  If unsure, say N.
  
-     #[cfg(CONFIG_DEBUG_FS)]
--    fn create_file<T: Display + Sized>(&self, name: &CStr, data: &'static T) -> File {
-+    fn create_file<D: ForeignOwnable + Send + Sync>(&self, name: &CStr, data: D) -> File
-+    where
-+        for<'a> D::Borrowed<'a>: Display,
-+    {
-+        let mut file = File {
-+            _entry: Entry::empty(),
-+            _foreign: ForeignHolder::new(data),
-+        };
++config SAMPLE_RUST_DEBUGFS
++	tristate "DebugFS Test Module"
++	depends on DEBUG_FS
++	help
++	  This option builds the Rust DebugFS Test module sample.
 +
-         let Some(parent) = &self.0 else {
--            return File {
--                _entry: Entry::empty(),
--            };
-+            return file;
-         };
++	  To compile this as a module, choose M here:
++	  the module will be called rust_debugfs.
 +
-         // SAFETY:
-         // * `name` is a NUL-terminated C string, living across the call, by `CStr` invariant.
-         // * `parent` is a live `dentry` since we have a reference to it.
-         // * `vtable` is all stock `seq_file` implementations except for `open`.
-         //   `open`'s only requirement beyond what is provided to all open functions is that the
-         //   inode's data pointer must point to a `T` that will outlive it, which we know because
--        //   we have a static reference.
-+        //   we have an owning `D` in the `File`, and we tear down the file during `Drop`.
-         let ptr = unsafe {
-             bindings::debugfs_create_file_full(
-                 name.as_char_ptr(),
-                 0o444,
-                 parent.as_ptr(),
--                data as *const _ as *mut _,
-+                file._foreign.data,
-                 core::ptr::null(),
--                &<T as display_file::DisplayFile>::VTABLE,
-+                &<D as display_file::DisplayFile>::VTABLE,
-             )
-         };
- 
-         // SAFETY: `debugfs_create_file_full` either returns an error code or a legal
-         // dentry pointer, so `Entry::new` is safe to call here.
--        let entry = unsafe { Entry::new(ptr, Some(parent.clone())) };
-+        file._entry = unsafe { Entry::new(ptr, Some(parent.clone())) };
- 
--        File { _entry: entry }
-+        file
-     }
- 
-     #[cfg(not(CONFIG_DEBUG_FS))]
--    fn create_file<T: Display + Sized>(&self, _name: &CStr, _data: &'static T) -> File {
--        File {}
-+    fn create_file<D: ForeignOwnable>(&self, _name: &CStr, data: D) -> File
-+    where
-+        for<'a> D::Borrowed<'a>: Display,
-+    {
-+        File {
-+            _foreign: ForeignHolder::new(data),
-+        }
-     }
- 
-     /// Create a DebugFS subdirectory.
-@@ -127,7 +139,21 @@ pub fn subdir(&self, name: &CStr) -> Self {
-     /// dir.display_file(c_str!("foo"), &200);
-     /// // "my_debugfs_dir/foo" now contains the number 200.
-     /// ```
--    pub fn display_file<T: Display + Sized>(&self, name: &CStr, data: &'static T) -> File {
-+    ///
-+    /// ```
-+    /// # use kernel::c_str;
-+    /// # use kernel::debugfs::Dir;
-+    /// # use kernel::prelude::*;
-+    /// let val = KBox::new(300, GFP_KERNEL)?;
-+    /// let dir = Dir::new(c_str!("my_debugfs_dir"));
-+    /// dir.display_file(c_str!("foo"), val);
-+    /// // "my_debugfs_dir/foo" now contains the number 300.
-+    /// # Ok::<(), Error>(())
-+    /// ```
-+    pub fn display_file<D: ForeignOwnable + Send + Sync>(&self, name: &CStr, data: D) -> File
-+    where
-+        for<'a> D::Borrowed<'a>: Display,
-+    {
-         self.create_file(name, data)
-     }
- 
-@@ -147,6 +173,51 @@ pub fn new(name: &CStr) -> Self {
- 
- /// Handle to a DebugFS file.
- pub struct File {
-+    // This order is load-bearing for drops - `_entry` must be dropped before `_foreign`
-     #[cfg(CONFIG_DEBUG_FS)]
-     _entry: Entry,
-+    _foreign: ForeignHolder,
++	  If unsure, say N.
++
+ config SAMPLE_RUST_DRIVER_PCI
+ 	tristate "PCI Driver"
+ 	depends on PCI
+diff --git a/samples/rust/Makefile b/samples/rust/Makefile
+index bd2faad63b4f3befe7d1ed5139fe25c7a8b6d7f6..61276222a99f8cc6d7f84c26d0533b30815ebadd 100644
+--- a/samples/rust/Makefile
++++ b/samples/rust/Makefile
+@@ -4,6 +4,7 @@ ccflags-y += -I$(src)				# needed for trace events
+ obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
+ obj-$(CONFIG_SAMPLE_RUST_MISC_DEVICE)		+= rust_misc_device.o
+ obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
++obj-$(CONFIG_SAMPLE_RUST_DEBUGFS)		+= rust_debugfs.o
+ obj-$(CONFIG_SAMPLE_RUST_DMA)			+= rust_dma.o
+ obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
+ obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
+diff --git a/samples/rust/rust_debugfs.rs b/samples/rust/rust_debugfs.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..6af9177c711a07764f0323e03a72d115287f1205
+--- /dev/null
++++ b/samples/rust/rust_debugfs.rs
+@@ -0,0 +1,76 @@
++// SPDX-License-Identifier: GPL-2.0
++
++// Copyright (C) 2025 Google LLC.
++
++//! Sample DebugFS exporting module
++
++use core::sync::atomic::{AtomicU32, Ordering};
++use kernel::c_str;
++use kernel::debugfs::{Dir, File};
++use kernel::prelude::*;
++use kernel::sync::{new_mutex, Arc};
++
++module! {
++    type: RustDebugFs,
++    name: "rust_debugfs",
++    authors: ["Matthew Maurer"],
++    description: "Rust DebugFS usage sample",
++    license: "GPL",
 +}
 +
-+struct ForeignHolder {
-+    data: *mut c_void,
-+    drop_hook: unsafe fn(*mut c_void),
++struct RustDebugFs {
++    // As we only hold these for drop effect (to remove the directory/files) we have a leading
++    // underscore to indicate to the compiler that we don't expect to use this field directly.
++    _debugfs: Dir,
++    _subdir: Dir,
++    _file: File,
++    _file_2: File,
 +}
 +
-+// SAFETY: We only construct `ForeignHolder` using a pointer from a `ForeignOwnable` which
-+// is also `Sync`.
-+unsafe impl Sync for ForeignHolder {}
-+// SAFETY: We only construct `ForeignHolder` using a pointer from a `ForeignOwnable` which
-+// is also `Send`.
-+unsafe impl Send for ForeignHolder {}
++static EXAMPLE: AtomicU32 = AtomicU32::new(8);
 +
-+/// Helper function to drop a `D`-typed foreign ownable from its foreign representation, useful for
-+/// cases where you want the type erased.
-+/// # Safety
-+/// * The foreign pointer passed in must have come from `D`'s `ForeignOwnable::into_foreign`
-+/// * There must be no outstanding `ForeignOwnable::borrow{,mut}`
-+/// * The pointer must not have been `ForeignOwnable::from_foreign`'d
-+unsafe fn drop_helper<D: ForeignOwnable>(foreign: *mut c_void) {
-+    // SAFETY: By safetydocs, we meet the requirements for `from_foreign`
-+    drop(unsafe { D::from_foreign(foreign as _) })
-+}
++impl kernel::Module for RustDebugFs {
++    fn init(_this: &'static ThisModule) -> Result<Self> {
++        // Create a debugfs directory in the root of the filesystem called "sample_debugfs".
++        let debugfs = Dir::new(c_str!("sample_debugfs"));
 +
-+impl ForeignHolder {
-+    fn new<D: ForeignOwnable>(data: D) -> Self {
-+        Self {
-+            data: data.into_foreign() as _,
-+            drop_hook: drop_helper::<D>,
-+        }
++        // Create a subdirectory, so "sample_debugfs/subdir" now exists.
++        let sub = debugfs.subdir(c_str!("subdir"));
++
++        // Create a single file in the subdirectory called "example" that will read from the
++        // `EXAMPLE` atomic variable.
++        // We `forget` the result to avoid deleting the file at the end of the scope.
++        let file = sub.fmt_file(c_str!("example"), &EXAMPLE, &|example, f| {
++            writeln!(f, "Reading atomic: {}", example.load(Ordering::Relaxed))
++        });
++        // Now, "sample_debugfs/subdir/example" will print "Reading atomic: 8\n" when read.
++
++        // Change the value in the variable displayed by the file. This is intended to demonstrate
++        // that the module can continue to change the value used by the file.
++        EXAMPLE.store(10, Ordering::Relaxed);
++        // Now, "sample_debugfs/subdir/example" will print "Reading atomic: 10\n" when read.
++
++        // In addition to globals, we can also attach any kind of owned data. Most commonly, this
++        // will look like an `Arc<MyObject>` as those can be shared with the rest of the module.
++        let my_arc = Arc::pin_init(new_mutex!(10), GFP_KERNEL)?;
++        // An `Arc<Mutex<usize>>` doesn't implement display, so let's give explicit instructions on
++        // how to print it
++        let file_2 = sub.fmt_file(c_str!("arc_backed"), my_arc.clone(), &|val, f| {
++            writeln!(f, "locked value: {:#010x}", *val.lock())
++        });
++
++        // Since it's an `Arc` and we cloned it, we continue to have access to `my_arc`. If this
++        // were real, we'd probably stash it in our module struct and do something with it when
++        // handling real calls.
++        *my_arc.lock() = 99;
++
++        // Save the handles we want to preserve to our module object. They will be automatically
++        // cleaned up when our module is unloaded.
++        Ok(Self {
++            _debugfs: debugfs,
++            _subdir: sub,
++            _file: file,
++            _file_2: file_2,
++        })
 +    }
 +}
-+
-+impl Drop for ForeignHolder {
-+    fn drop(&mut self) {
-+        // SAFETY: `drop_hook` corresponds to the original `ForeignOwnable` instance's `drop`.
-+        // This is only used in the case of `File`, so the only place borrows occur is through the
-+        // DebugFS file owned by `_entry`. Since `_entry` occurs earlier in the struct, it will be
-+        // dropped first, so no borrows will be ongoing. We know no `from_foreign` has occurred
-+        // because this pointer is not exposed anywhere that is called.
-+        unsafe { (self.drop_hook)(self.data) }
-+    }
- }
-diff --git a/rust/kernel/debugfs/display_file.rs b/rust/kernel/debugfs/display_file.rs
-index e4b551f7092884ad12e18a32cc243d0d037931a6..0c2dd756fa866425d1b7771beceaa2fb43bf11e5 100644
---- a/rust/kernel/debugfs/display_file.rs
-+++ b/rust/kernel/debugfs/display_file.rs
-@@ -4,42 +4,48 @@
- use crate::prelude::*;
- use crate::seq_file::SeqFile;
- use crate::seq_print;
-+use crate::types::ForeignOwnable;
- use core::fmt::Display;
- 
- /// Implements `open` for `file_operations` via `single_open` to fill out a `seq_file`.
- ///
- /// # Safety
- ///
--/// * `inode`'s private pointer must point to a value of type `T` which will outlive the `inode`
--///   and will not be mutated during this call.
-+/// * `inode`'s private pointer must be the foreign representation of `D`, and no mutable borrows
-+///   are outstanding.
- /// * `file` must point to a live, not-yet-initialized file object.
--pub(crate) unsafe extern "C" fn display_open<T: Display>(
-+pub(crate) unsafe extern "C" fn display_open<D: ForeignOwnable + Sync>(
-     inode: *mut bindings::inode,
-     file: *mut bindings::file,
--) -> c_int {
-+) -> c_int
-+where
-+    for<'a> D::Borrowed<'a>: Display,
-+{
-     // SAFETY:
-     // * `file` is acceptable by caller precondition.
-     // * `print_act` will be called on a `seq_file` with private data set to the third argument,
-     //   so we meet its safety requirements.
--    // * The `data` pointer passed in the third argument is a valid `T` pointer that outlives
--    //   this call by caller preconditions.
--    unsafe { bindings::single_open(file, Some(display_act::<T>), (*inode).i_private) }
-+    // * The `data` pointer passed in the third argument is valid by caller preconditions.
-+    unsafe { bindings::single_open(file, Some(display_act::<D>), (*inode).i_private) }
- }
- 
- /// Prints private data stashed in a seq_file to that seq file.
- ///
- /// # Safety
- ///
--/// `seq` must point to a live `seq_file` whose private data is a live pointer to a `T` which is
--/// not being mutated.
--pub(crate) unsafe extern "C" fn display_act<T: Display>(
-+/// `seq` must point to a live `seq_file` whose private data is the foreign representation of `D`,
-+/// and no mutable borrows are outsstanding.
-+pub(crate) unsafe extern "C" fn display_act<D: ForeignOwnable + Sync>(
-     seq: *mut bindings::seq_file,
-     _: *mut c_void,
--) -> c_int {
--    // SAFETY: By caller precondition, this pointer is live, points to a value of type `T`, and
--    // is not being mutated.
--    let data = unsafe { &*((*seq).private as *mut T) };
--    // SAFETY: By caller precondition, `seq_file` points to a live `seq_file`, so we can lift
-+) -> c_int
-+where
-+    for<'a> D::Borrowed<'a>: Display,
-+{
-+    // SAFETY: By caller precondition, this pointer is live, has the right type, and has no mutable
-+    // borrows outstanding.
-+    let data = unsafe { D::borrow((*seq).private as _) };
-+    // SAFETY: By caller precondition, `seq` points to a live `seq_file`, so we can lift
-     // it.
-     let seq_file = unsafe { SeqFile::from_raw(seq) };
-     seq_print!(seq_file, "{}", data);
-@@ -47,15 +53,20 @@
- }
- 
- // Work around lack of generic const items.
--pub(crate) trait DisplayFile: Display + Sized {
-+pub(crate) trait DisplayFile {
-+    const VTABLE: bindings::file_operations;
-+}
-+
-+impl<D: ForeignOwnable + Sync> DisplayFile for D
-+where
-+    for<'a> D::Borrowed<'a>: Display,
-+{
-     const VTABLE: bindings::file_operations = bindings::file_operations {
-         read: Some(bindings::seq_read),
-         llseek: Some(bindings::seq_lseek),
-         release: Some(bindings::single_release),
--        open: Some(display_open::<Self>),
-+        open: Some(display_open::<D>),
-         // SAFETY: `file_operations` supports zeroes in all fields.
-         ..unsafe { core::mem::zeroed() }
-     };
- }
--
--impl<T: Display + Sized> DisplayFile for T {}
 
 -- 
 2.50.0.727.gbf7dc18ff4-goog
