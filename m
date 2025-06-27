@@ -1,511 +1,246 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719472EAB8D;
-	Fri, 27 Jun 2025 17:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751044329; cv=pass; b=DeIBgGhYS24rBzkYqn7+laURSuFwR1EFmJK5f/yGSXPei0kk0r04fy4Gb5M7jrvBCjgE1ms7sVafs8UcMQGEwiLCuVqiOngKkvoJtDnXici1VUcyc5L4sIaZK+IBs0GAJtaQvZuRuJyx41BVN6eJc8kvQ4fYYbLQNS7KpI0E6Zk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751044329; c=relaxed/simple;
-	bh=iSw1i5y7mhGBwa8HN6WqR9iObFocGIjO8CngultJrRg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ipRP01rZHCTJ+T8q+fha64XWOS3zwOHzr3OSRaBQOVxHjchAUMlR+5MKMPd9Cp9XHbUognXpPDePf6m14/5aQrMWfQqYBaEi4KtW9hjwusKdP0l1MfGUTdZzW9LdRPszT6KjXciPj7h87eUvsR1Y8RXjYPHv1whuz/YsTFypS2I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=dc9MpnZn; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A723EEC0;
+	Fri, 27 Jun 2025 17:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751044581; cv=none; b=Dw/aej9/i36D/TP7bN/WlLt/lkeQa7VM/m2hps63zwSW6FCtl//Vld7VkWCKhsxul7mzfY12C+CTJfk4FE3RJ39UY9WtJIE8BliBOKLFDNYAQhp19SpPx1ajfken8VI55tZTTZf+nHI+xO00Qw50Kl3+tN2tCduzm0X2axFDTFA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751044581; c=relaxed/simple;
+	bh=v6JluZYp6VrxvTUa9qzzZiYMsC1h8CrowPu2zgkGDeg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=uNmGffhpjMcZJZnH/vbLFsrB4iKttmet/P4w+AuLOR++B94ljzf11d1nMcZZ1YxMKNwIUpDMyWXI4XgXLGdBORFqfuBCQ9xzXQHqWoAmVhRRcgXw6txkoDF2sqggGh6Ptj8QxJM011A5smBW3BBliBrS8mhyyQwjjTzJWYUdMyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dXTiUyQ3; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="dc9MpnZn"
-ARC-Seal: i=1; a=rsa-sha256; t=1751044307; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ceGf4ZwsrCslOXz/6cZYDSt6v6YKPtidgTQD1PaJXiQApPD66AMl0rcWfLQPe91mnZpFU3mTMWY4IhLcXPNxnVLTy1+twgb/j1At03GPi7VlTMOlhsE9s/Pcn3u3hJPVSx+D6b8zEr3/gxnuo+zZvRC6DRwG4hG0FDhafK8WkbY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751044307; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=8m0jcIJQ0X11pjJwJWNv9gQucknRPSyHN1P0uRWZWZ4=; 
-	b=E+zeYG1U9AeJLkAr29A26kM9r5q7ycBiAuxO/sdxPfrJ/H1jp3G/eHSTso22soFckaJS9bqbRhngGaRKXqNaueAqzcLDZoMPqhe1PbiY2HNI0eum10kF68Hdh1UR3LUf9bkBdlKZF8uTGXNJ9jM5/YHGVDixjZjSazOIPoVk6G4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751044307;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=8m0jcIJQ0X11pjJwJWNv9gQucknRPSyHN1P0uRWZWZ4=;
-	b=dc9MpnZnaWPkOBiznjBbFFNM/Pkctbkf4Vf09q9EHskN7tn2loVsrzMIC2RmXG7f
-	txtsjOKze0mmFmlUgBymXuqXPGVVhKouJRUB5uHc2TzS+MKbh8UxAVVQLIo1alZRAgF
-	a130IpUWoAc2EZS/ArwA4PAWVTc3Ww6Kxn5ikW+E=
-Received: by mx.zohomail.com with SMTPS id 1751044305711451.13454166466545;
-	Fri, 27 Jun 2025 10:11:45 -0700 (PDT)
-From: Daniel Almeida <daniel.almeida@collabora.com>
-Date: Fri, 27 Jun 2025 14:11:25 -0300
-Subject: [PATCH v6 1/2] rust: regulator: add a bare minimum regulator
- abstraction
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dXTiUyQ3"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RBdliC000970;
+	Fri, 27 Jun 2025 17:16:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	UZFIra0UXLLaPOj2dq0ls6Rbfnvbp1TpqI67B6fogKc=; b=dXTiUyQ3PEG69Yo2
+	hm8BLBCN3tdF1dT2IAbZFRo+4hlQFwfA6vWPoopJ1MmEIuNlLoFEBgKJKO5L/DaU
+	d3X2Ikul2cCuIYDIh776aJjFAWVh0A/oDmDqpek8/J7yLuXTWexwXO/KogcbxGbo
+	OIeRP+pEArtbpQOkHhg5JFmaUcyhziObchSHOs384CL4KH/iZAn/Cjo5TDEwjUSk
+	akMlU5VN6fA6ng7AK9T/0LGXaRDLQxWl5VKsS7UvjI5T6EL9G03GQsh4ISDzcSM4
+	EcPDYBjaFi4P9U9q9Rgp4nGjmmIB8i/497Xo4n1+DmQfyiY2X1acACY6cpxuIGbC
+	EWW3NQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g7tdhk6y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 17:16:10 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55RHGA4m017382
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 17:16:10 GMT
+Received: from [10.50.11.187] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 27 Jun
+ 2025 10:16:06 -0700
+Message-ID: <e80d04cf-d125-1b56-de93-dea93cac4cfb@quicinc.com>
+Date: Fri, 27 Jun 2025 22:46:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250627-topics-tyr-regulator-v6-1-1d015219b454@collabora.com>
-References: <20250627-topics-tyr-regulator-v6-0-1d015219b454@collabora.com>
-In-Reply-To: <20250627-topics-tyr-regulator-v6-0-1d015219b454@collabora.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Boris Brezillon <boris.brezillon@collabora.com>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- Daniel Almeida <daniel.almeida@collabora.com>
-X-Mailer: b4 0.14.2
-X-ZohoMailClient: External
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3 1/5] media: dt-bindings: add non-pixel property in iris
+ schema
+Content-Language: en-US
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dikshita Agarwal
+	<quic_dikshita@quicinc.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        "Mauro
+ Carvalho Chehab" <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
+ <20250627-video_cb-v3-1-51e18c0ffbce@quicinc.com>
+ <5dcc3dc3-ba12-4d66-88e9-5e06bb707135@linaro.org>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <5dcc3dc3-ba12-4d66-88e9-5e06bb707135@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=CPYqXQrD c=1 sm=1 tr=0 ts=685ed1da cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=KKAkSRfTAAAA:8 a=zg6EfX5OJRNpQRXqwCgA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDEzOSBTYWx0ZWRfX3/wGtU3mTEJC
+ rXfagC2U/yYKBosAiTLFgzROO9O6UKKCL3xd0VQpauYTKIM+f27pAwZKp5MfWkpD+vP5T3slseI
+ ZFfo9ZVJgqKbY1HgAyVX35BB/Wy922LOLMMe87gjLpwWl3Nilt3hBV7sLYzOeED/C3XRNxJFvu9
+ OOBaXX5nkYT3adfVYpq+MQxN9qd7Lf8OawVH2iBTTrPgWuAJdRXO4gEx8+FZpYWPc2hXjIGJL8o
+ FqySTAOrXOeeLu3xkmv3P55jUINOCQn2JM+DEDL0froCckxE9fBG53T4Rtzo+S51Yo236OEiS4S
+ w+PVlCTzshcfmXmqjPuzoYsnaY1SV5A2Iamu7ca9cGcFan07vSPwAPTZDJTpeyecmoXSu+5JdKJ
+ HVBsDl0Q2APLxBLtRjGti4U9wyEDB0pdQit5iT6csfb/VF3YkQ05vRMy3v/JYhsesDF9Ahyi
+X-Proofpoint-GUID: qUlLS1drIa4EuFNCyrfy7MVdHHnOKa6J
+X-Proofpoint-ORIG-GUID: qUlLS1drIa4EuFNCyrfy7MVdHHnOKa6J
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 suspectscore=0 clxscore=1015 spamscore=0 priorityscore=1501
+ adultscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506270139
 
-Add a bare minimum regulator abstraction to be used by Rust drivers.
-This abstraction adds a small subset of the regulator API, which is
-thought to be sufficient for the drivers we have now.
 
-Regulators provide the power needed by many hardware blocks and thus are
-likely to be needed by a lot of drivers.
 
-It was tested on rk3588, where it was used to power up the "mali"
-regulator in order to power up the GPU.
+On 6/27/2025 10:01 PM, Bryan O'Donoghue wrote:
+> On 27/06/2025 16:48, Vikash Garodia wrote:
+>> Existing definition limits the IOVA to an addressable range of 4GiB, and
+>> even within that range, some of the space is used by IO registers,
+>> thereby limiting the available IOVA to even lesser. Video hardware is
+>> designed to emit different stream-ID for pixel and non-pixel buffers,
+>> thereby introduce a non-pixel sub node to handle non-pixel stream-ID.
+>>
+>> With this, both iris and non-pixel device can have IOVA range of 0-4GiB
+>> individually. Certain video usecases like higher video concurrency needs
+>> IOVA higher than 4GiB.
+>>
+>> Add reference to the reserve-memory schema, which defines reserved IOVA
+>> regions that are *excluded* from addressable range. Video hardware
+>> generates different stream IDs based on the predefined range of IOVA
+>> addresses. Thereby IOVA addresses for firmware and data buffers need to
+>> be non overlapping. For ex. 0x0-0x25800000 address range is reserved for
+>> firmware stream-ID, while non-pixel (bitstream) stream-ID can be
+>> generated by hardware only when bitstream buffers IOVA address is from
+>> 0x25800000-0xe0000000.
+>> Non-pixel stream-ID can now be part of the new sub-node, hence iommus in
+>> iris node can have either 1 entry for pixel stream-id or 2 entries for
+>> pixel and non-pixel stream-ids.
+>>
+>> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+>> ---
+>>   .../bindings/media/qcom,sm8550-iris.yaml           | 40 ++++++++++++++++++++--
+>>   1 file changed, 38 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>> b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>> index
+>> c79bf2101812d83b99704f38b7348a9f728dff44..4dda2c9ca1293baa7aee3b9ee10aff38d280fe05 100644
+>> --- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>> +++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>> @@ -65,10 +65,31 @@ properties:
+>>         - const: core
+>>       iommus:
+>> +    minItems: 1
+>>       maxItems: 2
+>>       dma-coherent: true
+>>   +  non-pixel:
+>> +    type: object
+>> +    additionalProperties: false
+>> +
+>> +    description:
+>> +      Non pixel context bank is needed when video hardware have distinct iommus
+>> +      for non pixel buffers. Non pixel buffers are mainly compressed and
+>> +      internal buffers.
+> 
+> You do a better job in the cover letter of describing what this is, why its
+> needed etc.
+> 
+> Not asking for this verbatim but its clearer:
+> 
+> "All non pixel buffers, i.e bitstream, HFI queues
+> and internal buffers related to bitstream processing, would be managed
+> by this non_pixel device."
+> 
+> Where does the term "non-pixel" come from if its a meaningful name wrt to the
+> firmware then non-pixel is fine but, consider a name such as "out-of-band" or "oob"
+It is in-sync with firmware and we would be seeing it more when we extend it for
+secure usecases.
 
-Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
----
- rust/bindings/bindings_helper.h |   1 +
- rust/kernel/lib.rs              |   2 +
- rust/kernel/regulator.rs        | 392 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 395 insertions(+)
-
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index ab37e1d35c70d52e69b754bf855bc19911d156d8..e14cce03338ef5f6a09a23fd41ca47b8c913fa65 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -31,6 +31,7 @@
- #include <linux/poll.h>
- #include <linux/property.h>
- #include <linux/refcount.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/sched.h>
- #include <linux/security.h>
- #include <linux/slab.h>
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 28007be98fbad0e875d7e5345e164e2af2c5da32..c8fd7e4e036e9e5b6958acf0dcfa952b916a3d48 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -86,6 +86,8 @@
- pub mod prelude;
- pub mod print;
- pub mod rbtree;
-+#[cfg(CONFIG_REGULATOR)]
-+pub mod regulator;
- pub mod revocable;
- pub mod security;
- pub mod seq_file;
-diff --git a/rust/kernel/regulator.rs b/rust/kernel/regulator.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..dbb4b5c8b06e05aa1e802e2c61c402dd997edfdb
---- /dev/null
-+++ b/rust/kernel/regulator.rs
-@@ -0,0 +1,392 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Regulator abstractions, providing a standard kernel interface to control
-+//! voltage and current regulators.
-+//!
-+//! The intention is to allow systems to dynamically control regulator power
-+//! output in order to save power and prolong battery life. This applies to both
-+//! voltage regulators (where voltage output is controllable) and current sinks
-+//! (where current limit is controllable).
-+//!
-+//! C header: [`include/linux/regulator/consumer.h`](srctree/include/linux/regulator/consumer.h)
-+//!
-+//! Regulators are modeled in Rust with a collection of states. Each state may
-+//! enforce a given invariant, and they may convert between each other where applicable.
-+//!
-+//! See [Voltage and current regulator API](https://docs.kernel.org/driver-api/regulator.html)
-+//! for more information.
-+
-+use crate::{
-+    bindings,
-+    device::Device,
-+    error::{from_err_ptr, to_result, Result},
-+    prelude::*,
-+};
-+
-+use core::{marker::PhantomData, mem::ManuallyDrop, ptr::NonNull};
-+
-+mod private {
-+    pub trait Sealed {}
-+
-+    impl Sealed for super::Enabled {}
-+    impl Sealed for super::Disabled {}
-+    impl Sealed for super::Dynamic {}
-+}
-+
-+/// A trait representing the different states a [`Regulator`] can be in.
-+pub trait RegulatorState: private::Sealed {}
-+
-+/// A state where the [`Regulator`] is known to be enabled.
-+pub struct Enabled;
-+
-+/// A state where this [`Regulator`] handle has not specifically asked for the
-+/// underlying regulator to be enabled. This means that this reference does not
-+/// own an `enable` reference count, but the regulator may still be on.
-+pub struct Disabled;
-+
-+/// A state that models the C API. The [`Regulator`] can be either enabled or
-+/// disabled, and the user is in control of the reference count. This is also
-+/// the default state.
-+///
-+/// Use [`Regulator::is_enabled`] to check the regulator's current state.
-+pub struct Dynamic;
-+
-+impl RegulatorState for Enabled {}
-+impl RegulatorState for Disabled {}
-+impl RegulatorState for Dynamic {}
-+
-+/// A trait that abstracts the ability to check if a [`Regulator`] is enabled.
-+pub trait IsEnabled: RegulatorState {}
-+impl IsEnabled for Disabled {}
-+impl IsEnabled for Dynamic {}
-+
-+/// An error that can occur when trying to convert a [`Regulator`] between states.
-+pub struct Error<State: RegulatorState + 'static> {
-+    /// The error that occurred.
-+    pub error: kernel::error::Error,
-+
-+    /// The regulator that caused the error, so that the operation may be retried.
-+    pub regulator: Regulator<State>,
-+}
-+
-+/// A `struct regulator` abstraction.
-+///
-+/// # Examples
-+///
-+/// ## Enabling a regulator
-+///
-+/// This example uses [`Regulator<Enabled>`], which is suitable for drivers that
-+/// enable a regulator at probe time and leave them on until the device is
-+/// removed or otherwise shutdown.
-+///
-+/// These users can store [`Regulator<Enabled>`] directly in their driver's
-+/// private data struct.
-+///
-+/// ```
-+/// # use kernel::prelude::*;
-+/// # use kernel::c_str;
-+/// # use kernel::device::Device;
-+/// # use kernel::regulator::{Microvolt, Regulator, Disabled, Enabled};
-+/// fn enable(dev: &Device, min_uv: Microvolt, max_uv: Microvolt) -> Result {
-+///     // Obtain a reference to a (fictitious) regulator.
-+///     let regulator: Regulator<Disabled> = Regulator::<Disabled>::get(dev, c_str!("vcc"))?;
-+///
-+///     // The voltage can be set before enabling the regulator if needed, e.g.:
-+///     regulator.set_voltage(min_uv, max_uv)?;
-+///
-+///     // The same applies for `get_voltage()`, i.e.:
-+///     let voltage: Microvolt = regulator.get_voltage()?;
-+///
-+///     // Enables the regulator, consuming the previous value.
-+///     //
-+///     // From now on, the regulator is known to be enabled because of the type
-+///     // `Enabled`.
-+///     //
-+///     // If this operation fails, the `Error` will contain the regulator
-+///     // reference, so that the operation may be retried.
-+///     let regulator: Regulator<Enabled> =
-+///         regulator.try_into_enabled().map_err(|error| error.error)?;
-+///
-+///     // The voltage can also be set after enabling the regulator, e.g.:
-+///     regulator.set_voltage(min_uv, max_uv)?;
-+///
-+///     // The same applies for `get_voltage()`, i.e.:
-+///     let voltage: Microvolt = regulator.get_voltage()?;
-+///
-+///     // Dropping an enabled regulator will disable it. The refcount will be
-+///     // decremented.
-+///     drop(regulator);
-+///
-+///     // ...
-+///
-+///     Ok(())
-+/// }
-+/// ```
-+///
-+/// A more concise shortcut is available for enabling a regulator. This is
-+/// equivalent to `regulator_get_enable()`:
-+///
-+/// ```
-+/// # use kernel::prelude::*;
-+/// # use kernel::c_str;
-+/// # use kernel::device::Device;
-+/// # use kernel::regulator::{Microvolt, Regulator, Enabled};
-+/// fn enable(dev: &Device, min_uv: Microvolt, max_uv: Microvolt) -> Result {
-+///     // Obtain a reference to a (fictitious) regulator and enable it.
-+///     let regulator: Regulator<Enabled> = Regulator::<Enabled>::get(dev, c_str!("vcc"))?;
-+///
-+///     // Dropping an enabled regulator will disable it. The refcount will be
-+///     // decremented.
-+///     drop(regulator);
-+///
-+///     // ...
-+///
-+///     Ok(())
-+/// }
-+/// ```
-+///
-+/// ## Disabling a regulator
-+///
-+/// ```
-+/// # use kernel::prelude::*;
-+/// # use kernel::device::Device;
-+/// # use kernel::regulator::{Regulator, Enabled, Disabled};
-+/// fn disable(dev: &Device, regulator: Regulator<Enabled>) -> Result {
-+///     // We can also disable an enabled regulator without reliquinshing our
-+///     // refcount:
-+///     //
-+///     // If this operation fails, the `Error` will contain the regulator
-+///     // reference, so that the operation may be retried.
-+///     let regulator: Regulator<Disabled> =
-+///         regulator.try_into_disabled().map_err(|error| error.error)?;
-+///
-+///     // The refcount will be decremented when `regulator` is dropped.
-+///     drop(regulator);
-+///
-+///     // ...
-+///
-+///     Ok(())
-+/// }
-+/// ```
-+///
-+/// ## Using [`Regulator<Dynamic>`]
-+///
-+/// This example mimics the behavior of the C API, where the user is in
-+/// control of the enabled reference count. This is useful for drivers that
-+/// might call enable and disable to manage the `enable` reference count at
-+/// runtime, perhaps as a result of `open()` and `close()` calls or whatever
-+/// other driver-specific or subsystem-specific hooks.
-+///
-+/// ```
-+/// # use kernel::prelude::*;
-+/// # use kernel::c_str;
-+/// # use kernel::device::Device;
-+/// # use kernel::regulator::{Regulator, Dynamic};
-+/// struct PrivateData {
-+///     regulator: Regulator<Dynamic>,
-+/// }
-+///
-+/// // A fictictious probe function that obtains a regulator and sets it up.
-+/// fn probe(dev: &Device, data: &mut PrivateData) -> Result<PrivateData> {
-+///     // Obtain a reference to a (fictitious) regulator.
-+///     let mut regulator = Regulator::<Dynamic>::get(dev, c_str!("vcc"))?;
-+///
-+///     // Enable the regulator. The type is still `Regulator<Dynamic>`.
-+///     regulator.enable()?;
-+///
-+///     Ok(PrivateData { regulator })
-+/// }
-+///
-+/// // A fictictious function that indicates that the device is going to be used.
-+/// fn open(dev: &Device, data: &mut PrivateData) -> Result {
-+///     // Increase the `enabled` reference count.
-+///     data.regulator.enable()?;
-+///
-+///     Ok(())
-+/// }
-+///
-+/// fn close(dev: &Device, data: &mut PrivateData) -> Result {
-+///     // Decrease the `enabled` reference count.
-+///     data.regulator.disable()?;
-+///
-+///     Ok(())
-+/// }
-+///
-+/// fn remove(dev: &Device, data: PrivateData) -> Result {
-+///     // `PrivateData` is dropped here, which will drop the
-+///     // `Regulator<Dynamic>` in turn.
-+///     //
-+///     // The reference that was obtained by `regulator_get()` will be
-+///     // released, but it is up to the user to make sure that the number of calls
-+///     // to `enable()` and `disabled()` are balanced before this point.
-+///     Ok(())
-+/// }
-+/// ```
-+///
-+/// # Invariants
-+///
-+/// - `inner` is a non-null wrapper over a pointer to a `struct
-+///   regulator` obtained from [`regulator_get()`].
-+///
-+/// [`regulator_get()`]: https://docs.kernel.org/driver-api/regulator.html#c.regulator_get
-+pub struct Regulator<State = Dynamic>
-+where
-+    State: RegulatorState + 'static,
-+{
-+    inner: NonNull<bindings::regulator>,
-+    _phantom: PhantomData<State>,
-+}
-+
-+impl<T: RegulatorState + 'static> Regulator<T> {
-+    /// Sets the voltage for the regulator.
-+    ///
-+    /// This can be used to ensure that the device powers up cleanly.
-+    pub fn set_voltage(&self, min_uv: Microvolt, max_uv: Microvolt) -> Result {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        to_result(unsafe {
-+            bindings::regulator_set_voltage(self.inner.as_ptr(), min_uv.0, max_uv.0)
-+        })
-+    }
-+
-+    /// Gets the current voltage of the regulator.
-+    pub fn get_voltage(&self) -> Result<Microvolt> {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        let voltage = unsafe { bindings::regulator_get_voltage(self.inner.as_ptr()) };
-+        if voltage < 0 {
-+            Err(kernel::error::Error::from_errno(voltage))
-+        } else {
-+            Ok(Microvolt(voltage))
-+        }
-+    }
-+
-+    fn get_internal(dev: &Device, name: &CStr) -> Result<Regulator<T>> {
-+        // SAFETY: It is safe to call `regulator_get()`, on a device pointer
-+        // received from the C code.
-+        let inner = from_err_ptr(unsafe { bindings::regulator_get(dev.as_raw(), name.as_ptr()) })?;
-+
-+        // SAFETY: We can safely trust `inner` to be a pointer to a valid
-+        // regulator if `ERR_PTR` was not returned.
-+        let inner = unsafe { NonNull::new_unchecked(inner) };
-+
-+        Ok(Self {
-+            inner,
-+            _phantom: PhantomData,
-+        })
-+    }
-+
-+    fn enable_internal(&mut self) -> Result {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        to_result(unsafe { bindings::regulator_enable(self.inner.as_ptr()) })
-+    }
-+
-+    fn disable_internal(&mut self) -> Result {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        to_result(unsafe { bindings::regulator_disable(self.inner.as_ptr()) })
-+    }
-+}
-+
-+impl Regulator<Disabled> {
-+    /// Obtains a [`Regulator`] instance from the system.
-+    pub fn get(dev: &Device, name: &CStr) -> Result<Self> {
-+        Regulator::get_internal(dev, name)
-+    }
-+
-+    /// Attempts to convert the regulator to an enabled state.
-+    pub fn try_into_enabled(mut self) -> Result<Regulator<Enabled>, Error<Disabled>> {
-+        // We will be transferring the ownership of our `regulator_get()` count to
-+        // `Regulator<Enabled>`.
-+        let mut regulator = ManuallyDrop::new(self);
-+
-+        regulator
-+            .enable_internal()
-+            .map(|()| Regulator {
-+                inner: regulator.inner,
-+                _phantom: PhantomData,
-+            })
-+            .map_err(|error| Error {
-+                error,
-+                regulator: ManuallyDrop::into_inner(regulator),
-+            })
-+    }
-+}
-+
-+impl Regulator<Enabled> {
-+    /// Obtains a [`Regulator`] instance from the system and enables it.
-+    ///
-+    /// This is equivalent to calling `regulator_get_enable()` in the C API.
-+    pub fn get(dev: &Device, name: &CStr) -> Result<Self> {
-+        Regulator::<Disabled>::get_internal(dev, name)?
-+            .try_into_enabled()
-+            .map_err(|error| error.error)
-+    }
-+
-+    /// Attempts to convert the regulator to a disabled state.
-+    pub fn try_into_disabled(mut self) -> Result<Regulator<Disabled>, Error<Enabled>> {
-+        // We will be transferring the ownership of our `regulator_get()` count
-+        // to `Regulator<Disabled>`.
-+        let mut regulator = ManuallyDrop::new(self);
-+
-+        regulator
-+            .disable_internal()
-+            .map(|()| Regulator {
-+                inner: regulator.inner,
-+                _phantom: PhantomData,
-+            })
-+            .map_err(|error| Error {
-+                error,
-+                regulator: ManuallyDrop::into_inner(regulator),
-+            })
-+    }
-+}
-+
-+impl Regulator<Dynamic> {
-+    /// Obtains a [`Regulator`] instance from the system. The current state of
-+    /// the regulator is unknown and it is up to the user to manage the enabled
-+    /// reference count.
-+    ///
-+    /// This closely mimics the behavior of the C API and can be used to
-+    /// dynamically manage the enabled reference count at runtime.
-+    pub fn get(dev: &Device, name: &CStr) -> Result<Self> {
-+        Regulator::get_internal(dev, name)
-+    }
-+
-+    /// Increases the `enabled` reference count.
-+    pub fn enable(&mut self) -> Result {
-+        self.enable_internal()
-+    }
-+
-+    /// Decreases the `enabled` reference count.
-+    pub fn disable(&mut self) -> Result {
-+        self.disable_internal()
-+    }
-+}
-+
-+impl<T: IsEnabled> Regulator<T> {
-+    /// Checks if the regulator is enabled.
-+    pub fn is_enabled(&self) -> bool {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        unsafe { bindings::regulator_is_enabled(self.inner.as_ptr()) != 0 }
-+    }
-+}
-+
-+impl<T: RegulatorState + 'static> Drop for Regulator<T> {
-+    fn drop(&mut self) {
-+        if core::any::TypeId::of::<T>() == core::any::TypeId::of::<Enabled>() {
-+            // SAFETY: By the type invariants, we know that `self` owns a
-+            // reference on the enabled refcount, so it is safe to relinquish it
-+            // now.
-+            unsafe { bindings::regulator_disable(self.inner.as_ptr()) };
-+        }
-+        // SAFETY: By the type invariants, we know that `self` owns a reference,
-+        // so it is safe to relinquish it now.
-+        unsafe { bindings::regulator_put(self.inner.as_ptr()) };
-+    }
-+}
-+
-+/// A voltage in microvolts.
-+///
-+/// The explicit type is used to avoid confusion with other multiples of the
-+/// volt, which can be disastrous.
-+#[repr(transparent)]
-+#[derive(Copy, Clone, PartialEq, Eq)]
-+pub struct Microvolt(pub i32);
-
--- 
-2.50.0
-
+Regards,
+Vikash
+> out-of-band is a common term as is "sideband" but sideband I think has a
+> different meaning, really this non-data/non-pixel data stuff is out-of-band.
+> 
+> At least for the way the language pack I have installed in my brain right now,
+> "oob" or "out-of-band" is a more intuitive name. Its really up to you though the
+> main point would be to enumerate the description here with some of the detail
+> you've put into the cover letter.
+> 
+>> +
+>> +    properties:
+>> +      iommus:
+>> +        maxItems: 1
+>> +
+>> +      memory-region:
+>> +        maxItems: 1
+>> +
+>> +    required:
+>> +      - iommus
+>> +      - memory-region
+>> +
+>>     operating-points-v2: true
+> 
+>>     opp-table:
+>> @@ -86,6 +107,7 @@ required:
+>>     allOf:
+>>     - $ref: qcom,venus-common.yaml#
+>> +  - $ref: /schemas/reserved-memory/reserved-memory.yaml
+>>     - if:
+>>         properties:
+>>           compatible:
+>> @@ -117,6 +139,16 @@ examples:
+>>       #include <dt-bindings/power/qcom-rpmpd.h>
+>>       #include <dt-bindings/power/qcom,rpmhpd.h>
+>>   +    reserved-memory {
+>> +      #address-cells = <2>;
+>> +      #size-cells = <2>;
+>> +
+>> +      iris_resv: reservation-iris {
+>> +        iommu-addresses = <&iris_non_pixel 0x0 0x0 0x0 0x25800000>,
+>> +                          <&iris_non_pixel 0x0 0xe0000000 0x0 0x20000000>;
+>> +      };
+>> +    };
+> 
+> iris_oob would be less text in the end.
+> 
+>> +
+>>       video-codec@aa00000 {
+>>           compatible = "qcom,sm8550-iris";
+>>           reg = <0x0aa00000 0xf0000>;
+>> @@ -144,12 +176,16 @@ examples:
+>>           resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
+>>           reset-names = "bus";
+>>   -        iommus = <&apps_smmu 0x1940 0x0000>,
+>> -                 <&apps_smmu 0x1947 0x0000>;
+>> +        iommus = <&apps_smmu 0x1947 0x0000>;
+>>           dma-coherent;
+>>             operating-points-v2 = <&iris_opp_table>;
+>>   +        iris_non_pixel: non-pixel {
+>> +            iommus = <&apps_smmu 0x1940 0x0000>;
+>> +            memory-region = <&iris_resv>;
+>> +        };
+>> +
+>>           iris_opp_table: opp-table {
+>>               compatible = "operating-points-v2";
+>>  
+> 
+> So I was trying to think of a way to catch you out with an ABI break but, I
+> don't see how you add minItems: 1 to the iommus declaration above so dts prior
+> to this change should still be valid.
+> 
+> I think this adds up but, consider oob instead of non-pixel.
+> 
+> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> 
+> ---
+> bod
