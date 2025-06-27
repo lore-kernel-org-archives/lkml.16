@@ -1,285 +1,195 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B441417A2F0;
-	Fri, 27 Jun 2025 12:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C44917A2F0;
+	Fri, 27 Jun 2025 12:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751026966; cv=none; b=RsI98UcZO2UrcGSoVvF9hZAj3gQw9RQB7kYS1JHfQ1MGsf7kgRG6OOmRr8K9y4wcS+Kat8Z/+DmBL1JJs4X/ky+zWORqgpO98HDCCsamSR/yMRaV4mXrHSOp2q/THaWI0O4aZTAYs0k75xLAEStMyqV2cKQQVIBhZudDjtXIJGM=
+	t=1751026971; cv=none; b=DGadXM+/rvAycYtlqfxmMO+PDPtbvx2RAaScV6zYypOXs1E3/jtRykSZnF9NJWIdutKtoCouingonaWHW+gkFkrkbktaRx1m+xAEfsUyN2z371UFMs9tVMuYhGqZCHw5oS405Rxa+Mf82brZNmn6qR8bNXzoKPtAm/bo7lIfTVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751026966; c=relaxed/simple;
-	bh=9qpYac8UwarZka5WXpLgL6ussyD+oXRxLVM+NICyN28=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=B4hDfw3N5Wv+XJqb7xgNJ1WtB5o7vnaOSrNwhCsUJRuO45RV6LGBeQ/Cyytz9sLSNpwchOChMrHg+rvgC9K4jYriN3Xwbx7noyqOuTYTFtoiGp4YY/AtfwZT6rapiJpvaotM04pkkD80KMLVIhWcG9OYBwmziOiStUo4do7DLFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bTF6R3cwlz6M4ct;
-	Fri, 27 Jun 2025 20:21:51 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 248E71402EC;
-	Fri, 27 Jun 2025 20:22:40 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 27 Jun 2025 14:22:39 +0200
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Fri, 27 Jun 2025 14:22:39 +0200
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>, "dave@stgolabs.net"
-	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "bhelgaas@google.com" <bhelgaas@google.com>,
-	"ming.li@zohomail.com" <ming.li@zohomail.com>,
-	"Smita.KoralahalliChannabasappa@amd.com"
-	<Smita.KoralahalliChannabasappa@amd.com>, "rrichter@amd.com"
-	<rrichter@amd.com>, "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
-	"PradeepVineshReddy.Kodamati@amd.com" <PradeepVineshReddy.Kodamati@amd.com>,
-	"lukas@wunner.de" <lukas@wunner.de>, "Benjamin.Cheatham@amd.com"
-	<Benjamin.Cheatham@amd.com>, "sathyanarayanan.kuppuswamy@linux.intel.com"
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: RE: [PATCH v10 12/17] cxl/pci: Unify CXL trace logging for CXL
- Endpoints and CXL Ports
-Thread-Topic: [PATCH v10 12/17] cxl/pci: Unify CXL trace logging for CXL
- Endpoints and CXL Ports
-Thread-Index: AQHb5uwA2IgfeKd+EU2rsxjkddOTWrQW5rQg
-Date: Fri, 27 Jun 2025 12:22:39 +0000
-Message-ID: <6b8b65df7c334043863b1464e04957db@huawei.com>
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
- <20250626224252.1415009-13-terry.bowman@amd.com>
-In-Reply-To: <20250626224252.1415009-13-terry.bowman@amd.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1751026971; c=relaxed/simple;
+	bh=ZH1O5sFB7vO18/fSp54SFUkm5kp1MbIbNtVFxFDzZsU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=o6Kpw7SN1mzR4BZdAJot5WJsfFDr7/yavwCuJVAGdkvpFdDFQdE+4gZwxWV5P0DT4UNtVw/MI/z/8dJHpGvuNtb9zemQLaXjxT+YtK2qXVYy3bFIvd8q8NUSViY0GED9CvkUU2hv5j4pyBu953kaNlMGlSRX8wEBZKTRNuYeTKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rguzkvZm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+bKauc6Q; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rguzkvZm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+bKauc6Q"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751026967;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EtbN+fhOj6879PFfkihHug11BT+rDU03fP9A04+d78s=;
+	b=rguzkvZmWmn+qkAnhyFPWBYKZtbx8NdPU6iB1Pkz+SQR9mobvyF3zUpmEEYfRleHfyT9AP
+	lzaTVHd5SQZuSQLVF2v2ehXjmlOch5uez+AjRcxtJVvGMhCnnogdjd+SKd6F7QpgplkGsq
+	gEcgM941/B9oqB08xWA46yDo54jHcm5UF3KAfM217+kCz8YoS7FsUQ7pQ4LMQ0Yl+HyTON
+	h34lL0M2OgTYh0kLTQcoSJOzSNwAUzKTHIwwEJga6b+Hj1m9bYpmA2WN9NlIw/PrmVHuQI
+	qUfCsXzVj3Mhy6xw1WAwVNg5O26sX4pxsoUraxKNVt73sffKwKxDrnB8Cwv4rg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751026967;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EtbN+fhOj6879PFfkihHug11BT+rDU03fP9A04+d78s=;
+	b=+bKauc6Qa39uLsKZRIKGIGFNi4mBNq3lp25x9xe1M4j06WeBEdZpjVTH1kS4G86M6bexhB
+	RxJSfAQ83AhpKaCA==
+To: =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@igalia.com>, Ingo Molnar
+ <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Waiman Long <longman@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-api@vger.kernel.org, kernel-dev@igalia.com, =?utf-8?Q?Andr=C3=A9?=
+ Almeida
+ <andrealmeid@igalia.com>
+Subject: Re: [PATCH v5 5/7] futex: Remove the limit of elements for
+ sys_set_robust_list2 lists
+In-Reply-To: <20250626-tonyk-robust_futex-v5-5-179194dbde8f@igalia.com>
+References: <20250626-tonyk-robust_futex-v5-0-179194dbde8f@igalia.com>
+ <20250626-tonyk-robust_futex-v5-5-179194dbde8f@igalia.com>
+Date: Fri, 27 Jun 2025 14:22:46 +0200
+Message-ID: <87wm8xnzl5.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
->-----Original Message-----
->From: Terry Bowman <terry.bowman@amd.com>
->Sent: 26 June 2025 23:43
->To: dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
->dave.jiang@intel.com; alison.schofield@intel.com; dan.j.williams@intel.com=
-;
->bhelgaas@google.com; Shiju Jose <shiju.jose@huawei.com>;
->ming.li@zohomail.com; Smita.KoralahalliChannabasappa@amd.com;
->rrichter@amd.com; dan.carpenter@linaro.org;
->PradeepVineshReddy.Kodamati@amd.com; lukas@wunner.de;
->Benjamin.Cheatham@amd.com;
->sathyanarayanan.kuppuswamy@linux.intel.com; terry.bowman@amd.com;
->linux-cxl@vger.kernel.org
->Cc: linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org
->Subject: [PATCH v10 12/17] cxl/pci: Unify CXL trace logging for CXL Endpoi=
-nts
->and CXL Ports
->
->CXL currently has separate trace routines for CXL Port errors and CXL Endp=
-oint
->errors. This is inconvenient for the user because they must enable
->2 sets of trace routines. Make updates to the trace logging such that a si=
-ngle
->trace routine logs both CXL Endpoint and CXL Port protocol errors.
->
->Keep the trace log fields 'memdev' and 'host'. While these are not accurat=
-e for
->non-Endpoints the fields will remain as-is to prevent breaking userspace R=
-AS
->trace consumers.
->
->Add serial number parameter to the trace logging. This is used for EPs and=
- 0 is
->provided for CXL port devices without a serial number.
->
->Below is output of correctable and uncorrectable protocol error logging.
->CXL Root Port and CXL Endpoint examples are included below.
->
->Root Port:
->cxl_aer_correctable_error: memdev=3D0000:0c:00.0 host=3Dpci0000:0c serial:=
- 0
->status=3D'CRC Threshold Hit'
->cxl_aer_uncorrectable_error: memdev=3D0000:0c:00.0 host=3Dpci0000:0c seria=
-l: 0
->status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable P=
-arity
->Error'
->
->Endpoint:
->cxl_aer_correctable_error: memdev=3Dmem3 host=3D0000:0f:00.0 serial=3D0
->status=3D'CRC Threshold Hit'
->cxl_aer_uncorrectable_error: memdev=3Dmem3 host=3D0000:0f:00.0 serial: 0 s=
-tatus:
->'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Er=
-ror'
->
->Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->---
-> drivers/cxl/core/pci.c   | 19 ++++-----
-> drivers/cxl/core/ras.c   | 14 ++++---
-> drivers/cxl/core/trace.h | 84 +++++++++-------------------------------
-> 3 files changed, 37 insertions(+), 80 deletions(-)
->
-[...]
->
-> static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data
->*data) diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h in=
-dex
->25ebfbc1616c..494d6db461a7 100644
->--- a/drivers/cxl/core/trace.h
->+++ b/drivers/cxl/core/trace.h
->@@ -48,49 +48,22 @@
-> 	{ CXL_RAS_UC_IDE_RX_ERR, "IDE Rx Error" }			  \
-> )
->
->-TRACE_EVENT(cxl_port_aer_uncorrectable_error,
->-	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
->-	TP_ARGS(dev, status, fe, hl),
->-	TP_STRUCT__entry(
->-		__string(device, dev_name(dev))
->-		__string(host, dev_name(dev->parent))
->-		__field(u32, status)
->-		__field(u32, first_error)
->-		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
->-	),
->-	TP_fast_assign(
->-		__assign_str(device);
->-		__assign_str(host);
->-		__entry->status =3D status;
->-		__entry->first_error =3D fe;
->-		/*
->-		 * Embed the 512B headerlog data for user app retrieval and
->-		 * parsing, but no need to print this in the trace buffer.
->-		 */
->-		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
->-	),
->-	TP_printk("device=3D%s host=3D%s status: '%s' first_error: '%s'",
->-		  __get_str(device), __get_str(host),
->-		  show_uc_errs(__entry->status),
->-		  show_uc_errs(__entry->first_error)
->-	)
->-);
->-
-> TRACE_EVENT(cxl_aer_uncorrectable_error,
->-	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status, u32 fe, u32
->*hl),
->-	TP_ARGS(cxlmd, status, fe, hl),
->+	TP_PROTO(struct device *dev, u64 serial, u32 status, u32 fe,
->+		 u32 *hl),
->+	TP_ARGS(dev, serial, status, fe, hl),
-> 	TP_STRUCT__entry(
->-		__string(memdev, dev_name(&cxlmd->dev))
->-		__string(host, dev_name(cxlmd->dev.parent))
->+		__string(name, dev_name(dev))
->+		__string(parent, dev_name(dev->parent))
+On Thu, Jun 26 2025 at 14:11, Andr=C3=A9 Almeida wrote:
+> Remove the limit of ROBUST_LIST_LIMIT elements that a robust list can
+> have, for the ones created with the new interface. This is done by
 
-Hi Terry,
+With which new interface?
 
-Thanks for considering the feedback given in v9 regarding the compatibility=
- issue
-with the rasdaemon.
-https://lore.kernel.org/all/959acc682e6e4b52ac0283b37ee21026@huawei.com/
+> overwritten the list as it's proceeded in a way that we avoid circular
 
-Probably some confusion w.r.t the feedback.
-Unfortunately  TP_printk(...) is not an ABI that we need to keep stable,=20
-it's this structure, TP_STRUCT__entry(..) , that matters to the rasdaemon.
+overwriting each processed list entry to point at ...., which eliminates
+a potential circular list.
 
-> 		__field(u64, serial)
-> 		__field(u32, status)
-> 		__field(u32, first_error)
-> 		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
-> 	),
-> 	TP_fast_assign(
->-		__assign_str(memdev);
->-		__assign_str(host);
->-		__entry->serial =3D cxlmd->cxlds->serial;
->+		__assign_str(name);
->+		__assign_str(parent);
->+		__entry->serial =3D serial;
-> 		__entry->status =3D status;
-> 		__entry->first_error =3D fe;
-> 		/*
->@@ -99,8 +72,8 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
-> 		 */
-> 		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
-> 	),
->-	TP_printk("memdev=3D%s host=3D%s serial=3D%lld: status: '%s' first_error=
-:
->'%s'",
->-		  __get_str(memdev), __get_str(host), __entry->serial,
->+	TP_printk("memdev=3D%s host=3D%s serial=3D%lld status=3D'%s'
->first_error=3D'%s'",
->+		  __get_str(name), __get_str(parent), __entry->serial,
-> 		  show_uc_errs(__entry->status),
-> 		  show_uc_errs(__entry->first_error)
-> 	)
->@@ -124,42 +97,23 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
-> 	{ CXL_RAS_CE_PHYS_LAYER_ERR, "Received Error From Physical Layer"
->}	\
-> )
+
+> lists.
 >
->-TRACE_EVENT(cxl_port_aer_correctable_error,
->-	TP_PROTO(struct device *dev, u32 status),
->-	TP_ARGS(dev, status),
->-	TP_STRUCT__entry(
->-		__string(device, dev_name(dev))
->-		__string(host, dev_name(dev->parent))
->-		__field(u32, status)
->-	),
->-	TP_fast_assign(
->-		__assign_str(device);
->-		__assign_str(host);
->-		__entry->status =3D status;
->-	),
->-	TP_printk("device=3D%s host=3D%s status=3D'%s'",
->-		  __get_str(device), __get_str(host),
->-		  show_ce_errs(__entry->status)
->-	)
->-);
->-
-> TRACE_EVENT(cxl_aer_correctable_error,
->-	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status),
->-	TP_ARGS(cxlmd, status),
->+	TP_PROTO(struct device *dev, u64 serial, u32 status),
->+	TP_ARGS(dev, serial, status),
-> 	TP_STRUCT__entry(
->-		__string(memdev, dev_name(&cxlmd->dev))
->-		__string(host, dev_name(cxlmd->dev.parent))
->+		__string(name, dev_name(dev))
->+		__string(parent, dev_name(dev->parent))
+> For the old interface, we keep the limited behavior to avoid changing
 
-Same as above.
-> 		__field(u64, serial)
-> 		__field(u32, status)
-> 	),
-> 	TP_fast_assign(
->-		__assign_str(memdev);
->-		__assign_str(host);
->-		__entry->serial =3D cxlmd->cxlds->serial;
->+		__assign_str(name);
->+		__assign_str(parent);
->+		__entry->serial =3D serial;
-> 		__entry->status =3D status;
-> 	),
->-	TP_printk("memdev=3D%s host=3D%s serial=3D%lld: status: '%s'",
->-		  __get_str(memdev), __get_str(host), __entry->serial,
->+	TP_printk("memdev=3D%s host=3D%s serial=3D%lld status=3D'%s'",
->+		  __get_str(name), __get_str(parent), __entry->serial,
-> 		  show_ce_errs(__entry->status)
-> 	)
-> );
->--
->2.34.1
+s/we//
 
-Thanks,
-Shiju
+> the API.
+
+Which API would be violated?
+
+Overwriting the dying tasks robust list entries is not violating any
+ABI. The task's memory is on the way to be destroyed.
+
+> Signed-off-by: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
+> ---
+>  kernel/futex/core.c | 37 +++++++++++++++++++++++++++++--------
+>  1 file changed, 29 insertions(+), 8 deletions(-)
+>
+> diff --git a/kernel/futex/core.c b/kernel/futex/core.c
+> index 1049f8ef3ce3c611b3be0ca12df34a98f710121d..942b66facdea16cd7be2235d9=
+5c2bbbae8d7cc63 100644
+> --- a/kernel/futex/core.c
+> +++ b/kernel/futex/core.c
+> @@ -1152,7 +1152,8 @@ static inline int fetch_robust_entry(struct robust_=
+list __user **entry,
+>   * We silently return on any sign of list-walking problem.
+>   */
+>  static void exit_robust_list64(struct task_struct *curr,
+> -			       struct robust_list_head __user *head)
+> +			       struct robust_list_head __user *head,
+> +			       bool destroyable)
+>  {
+>  	struct robust_list __user *entry, *next_entry, *pending;
+>  	unsigned int limit =3D ROBUST_LIST_LIMIT, pi, pip;
+> @@ -1196,13 +1197,17 @@ static void exit_robust_list64(struct task_struct=
+ *curr,
+>  		}
+>  		if (rc)
+>  			return;
+> -		entry =3D next_entry;
+> -		pi =3D next_pi;
+> +
+>  		/*
+>  		 * Avoid excessively long or circular lists:
+>  		 */
+> -		if (!--limit)
+> +		if (!destroyable && !--limit)
+>  			break;
+> +		else
+> +			put_user(&head->list, &entry->next);
+
+Unchecked put_user() with zero explanation what it actually does.
+
+> +
+> +		entry =3D next_entry;
+> +		pi =3D next_pi;
+>=20=20
+>  		cond_resched();
+>  	}
+> @@ -1214,7 +1219,8 @@ static void exit_robust_list64(struct task_struct *=
+curr,
+>  }
+>  #else
+>  static void exit_robust_list64(struct task_struct *curr,
+> -			       struct robust_list_head __user *head)
+> +			       struct robust_list_head __user *head,
+> +			       bool destroyable)
+>  {
+>  	pr_warn("32bit kernel should not allow ROBUST_LIST_64BIT");
+>  }
+> @@ -1252,7 +1258,8 @@ fetch_robust_entry32(u32 *uentry, struct robust_lis=
+t __user **entry,
+>   * We silently return on any sign of list-walking problem.
+>   */
+>  static void exit_robust_list32(struct task_struct *curr,
+> -			       struct robust_list_head32 __user *head)
+> +			       struct robust_list_head32 __user *head,
+> +			       bool destroyable)
+>  {
+>  	struct robust_list __user *entry, *next_entry, *pending;
+>  	unsigned int limit =3D ROBUST_LIST_LIMIT, pi, pip;
+
+So this get's a destroyable argument as well, but no implementation?
+
+> @@ -1474,10 +1481,19 @@ static void exit_pi_state_list(struct task_struct=
+ *curr)
+>  static inline void exit_pi_state_list(struct task_struct *curr) { }
+>  #endif
+>=20=20
+> +/*
+> + * futex_cleanup - After the task exists, process the robust lists
+> + *
+> + * Walk through the linked list, parsing robust lists and freeing the
+> + * allocated lists. Lists created with the set_robust_list2 don't have a=
+ limit
+> + * for sizing and can be destroyed while we walk on it to avoid circular=
+ list.
+> + */
+>  static void futex_cleanup(struct task_struct *tsk)
+>  {
+>  	struct robust_list2_entry *curr, *n;
+>  	struct list_head *list2 =3D &tsk->robust_list2;
+> +	bool destroyable =3D true;
+> +	int i =3D 0;
+>=20=20
+>  	/*
+>  	 * Walk through the linked list, parsing robust lists and freeing the
+> @@ -1485,15 +1501,20 @@ static void futex_cleanup(struct task_struct *tsk)
+>  	 */
+>  	if (unlikely(!list_empty(list2))) {
+>  		list_for_each_entry_safe(curr, n, list2, list) {
+> +			destroyable =3D true;
+> +			if (tsk->robust_list_index =3D=3D i)
+> +				destroyable =3D false;
+
+Oh well.....
