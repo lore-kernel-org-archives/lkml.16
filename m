@@ -1,34 +1,34 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB8E2EA748
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1453B2EAB70
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751038053; cv=none; b=Ehmoy93opOkY11DPCfB5VsZyWBpCgXNN8bTDtyhleqIC+gJWKx8Fpb0FQsLHrn6Iv7NFsxG04uM/Q3BGEXpmr/z/Q04qcs+7R4UkshTT+3OsoOalspm/wAtO1OCUv9sagRC+oBZn+ofauV+soC0YHY97zkOenp1yS5Rr1ua4Uqs=
+	t=1751038057; cv=none; b=YGEBBzxZa8lCDjo8o8Wfdx0p8Mi9o/3Y+Uu4L1ARl3Vybgb/D8eFUGkgINPkG+gyURrUoq//dEJLOWZU0aXzR+LUWWg8BE1M07nGzgEADgcKvbAC8gFHl+hGEXeFQYGflzTN1Q9qVsZyld2O/VEjyKV1n+ODQZ4leOtDjP7BkOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751038053; c=relaxed/simple;
-	bh=rF0nR+ZGjjWrOatx6EGJOUBzErZKLCLRQjJyAMPB9s0=;
+	s=arc-20240116; t=1751038057; c=relaxed/simple;
+	bh=05pqTowLjnDViJGWxYMkBBcnQyspvNYYdaCb6Q7B7G4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LftsFqUqaoQYc5UumNUE2bQHNCPfCBEg45cEYXomDM4VIOE4PM+7Jz2f/jqrRQdZUD5ogoBNwxf59zLhzQqR+B52p5pKyojk+OmNMqxKdptQ0i7ZEIIfIKHc6Spbl7Rp+eSRCYgICHvPgXl+Ku5AElULar+VwA3EsF1eVTO5vwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=zegeCMgF; arc=none smtp.client-ip=91.218.175.186
+	 MIME-Version; b=RRMS21dpM3hAyD0VflUyujjtMdEpVtWWvfSXAZYbKU5MEjZE0xz+hsMttLraf0+SCsV7DRPSAUuVv4/BzZQGPZ+RlnMfRoE753DVAS46zIU+FV0zf6PaI6Hfw9uuiUDHVCuhTvE6GKXK4Asc0u0CcZ7/p820wBCRQhUN0zrjxeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=H0f14+DY; arc=none smtp.client-ip=91.218.175.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="zegeCMgF"
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="H0f14+DY"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1751038049;
+	t=1751038053;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kTB3zWm7oNw70pUsCc6ZoGv3uOF6aJxYArBzhguuOPM=;
-	b=zegeCMgFHauTH2R35p0c8FdzreJQoK2TMRMP6hi3anjcv8GpCS6qMdBWFFaLXstfjX0EOI
-	iiTijoKhrp2Ncd6fiVlgYOAotL3KOt/Z7WocZJtEC4/Wv9w/kmzZMRypDaJAri9LSiz2Jm
-	05jEn1GeNLpnl7E1SBvvu/xUE0qOGEvPcSFONs+uK2LwPa4XeU3ex0i3K2Mtpv1uufy08s
-	TkCAX01yTzsz15pK676T/bEljGqzGCn3H80/WlzWBYATv9tjQuWFGrOz9MVr5R8O0rbnUU
-	1s+77xKVKcOvZQkocwL2eZ5HkwvXraoSJ/Y+323RDVzu/+I9p1sdnX46xop7Xg==
+	bh=TMKQA2Hff0W4zw/ZMVDybuR5/9kD8JNjNzdYjPOLJ3Y=;
+	b=H0f14+DYd+SwlsGBPOL62TErrrtwA0SHuFNG59lnsFRuD/aZKiVcPh+0CbYd+5NgOKcM0/
+	mdndG4UFcbpf/TeZ/EkP5om5g7hIj4cTkIYjfV2IQl6c9K1mC96tgtrpQMbHcQe/hePBSP
+	jxxd80MQKPUvZZ5fIxWK3nA9hKPrMxQAAjDsjR3AR5vK/agW0fihZDdh8dkhAakx4k4vf1
+	d3olMJk9TKM6CbRVsiEtqPkKI9QX+LyxDwWMgeuY/p6PtTcmYXSKFhG5meCUDrsPWMuxVx
+	n1pODpYSvgEkgqNQthqihA/loB90k0U1o7xhSTFl2XHYkCnbLqAF6y9CEORbNQ==
 From: Diederik de Haas <didi.debian@cknow.org>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -42,9 +42,9 @@ Cc: Dragan Simic <dsimic@manjaro.org>,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Diederik de Haas <didi.debian@cknow.org>
-Subject: [PATCH 7/8] arm64: dts: rockchip: Drop unneeded address+size-cells on px30
-Date: Fri, 27 Jun 2025 17:16:26 +0200
-Message-ID: <20250627152645.740981-8-didi.debian@cknow.org>
+Subject: [PATCH 8/8] arm64: dts: rockchip: Drop regulator-compatible property on rk3399
+Date: Fri, 27 Jun 2025 17:16:27 +0200
+Message-ID: <20250627152645.740981-9-didi.debian@cknow.org>
 In-Reply-To: <20250627152645.740981-1-didi.debian@cknow.org>
 References: <20250627152645.740981-1-didi.debian@cknow.org>
 Precedence: bulk
@@ -56,43 +56,55 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-On nodes with compatible "rockchip,px30-usb2phy-grf", the #address-cells
-and #size-cells are required and consequently their child nodes should
-have unit addresses. That is not the case for the px30-pmugrf and
-px30-grf nodes, so remove them there.
-
-This fixes the following DTB validation warnings:
-
-  unnecessary #address-cells/#size-cells without "ranges",
-  "dma-ranges" or child "reg" property
+The regulator-compatible property has never existed in the
+regulator/fcs,fan53555.yaml binding, so drop it.
 
 Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
 ---
- arch/arm64/boot/dts/rockchip/px30.dtsi | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts   | 2 --
+ arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts | 2 --
+ 2 files changed, 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index 5034ad8019a8..46f64cd33b9b 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -351,8 +351,6 @@ power-domain@PX30_PD_GPU {
- 	pmugrf: syscon@ff010000 {
- 		compatible = "rockchip,px30-pmugrf", "syscon", "simple-mfd";
- 		reg = <0x0 0xff010000 0x0 0x1000>;
--		#address-cells = <1>;
--		#size-cells = <1>;
- 
- 		pmu_io_domains: io-domains {
- 			compatible = "rockchip,px30-pmu-io-voltage-domain";
-@@ -453,8 +451,6 @@ gic: interrupt-controller@ff131000 {
- 	grf: syscon@ff140000 {
- 		compatible = "rockchip,px30-grf", "syscon", "simple-mfd";
- 		reg = <0x0 0xff140000 0x0 0x1000>;
--		#address-cells = <1>;
--		#size-cells = <1>;
- 
- 		io_domains: io-domains {
- 			compatible = "rockchip,px30-io-voltage-domain";
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+index 81c4fcb30f39..352c8efb37e0 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+@@ -211,7 +211,6 @@ &i2c0 {
+ 	vdd_cpu_b: syr827@40 {
+ 		compatible = "silergy,syr827";
+ 		reg = <0x40>;
+-		regulator-compatible = "fan53555-reg";
+ 		pinctrl-0 = <&vsel1_pin>;
+ 		regulator-name = "vdd_cpu_b";
+ 		regulator-min-microvolt = <712500>;
+@@ -229,7 +228,6 @@ regulator-state-mem {
+ 	vdd_gpu: syr828@41 {
+ 		compatible = "silergy,syr828";
+ 		reg = <0x41>;
+-		regulator-compatible = "fan53555-reg";
+ 		pinctrl-0 = <&vsel2_pin>;
+ 		regulator-name = "vdd_gpu";
+ 		regulator-min-microvolt = <712500>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts
+index 15da5c80d25d..962b8b231c96 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts
+@@ -421,7 +421,6 @@ vdd_cpu_b: regulator@40 {
+ 		compatible = "silergy,syr827";
+ 		reg = <0x40>;
+ 		fcs,suspend-voltage-selector = <1>;
+-		regulator-compatible = "fan53555-reg";
+ 		pinctrl-0 = <&vsel1_gpio>;
+ 		vsel-gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
+ 		regulator-name = "vdd_cpu_b";
+@@ -440,7 +439,6 @@ vdd_gpu: regulator@41 {
+ 		compatible = "silergy,syr828";
+ 		reg = <0x41>;
+ 		fcs,suspend-voltage-selector = <1>;
+-		regulator-compatible = "fan53555-reg";
+ 		pinctrl-0 = <&vsel2_gpio>;
+ 		vsel-gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
+ 		regulator-name = "vdd_gpu";
 -- 
 2.50.0
 
