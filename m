@@ -1,109 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C07029615D;
-	Fri, 27 Jun 2025 10:40:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1847C296169;
+	Fri, 27 Jun 2025 10:41:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751020845; cv=none; b=Ar05dz6X9I5Kydk2beZ93PDxAkoAM7i5K/iURH2GzfB+XT3ke9rLIPhpr/7TxTKRs76wkdSsNiNA/F5yTipBkvjMa7M6hC8zRM+Woin/LujWCIW0L1BxY0D+AVQAdSsHHr921RdnfHPseA6QNO0YfqT1HFzlpIUDnorOUrBd+gc=
+	t=1751020866; cv=none; b=n7fMTjErXDhGS78Yqwhfmlc0uqLGfXQ83AG8MVc+pv+uiVpfESmONLrT7w1ANKVQM7xgf+CKdpDr3d1KPf5sNU1SZEU/6ByFgcft0cPyFl2I6PLJZAuh8h3j+PRvJa6ZW5yK4mfHQ4PT27qLpl1WfNDZyCJOV7fCq2qmXq8RPco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751020845; c=relaxed/simple;
-	bh=7qfv9HgVzOEOTjaIxZhU7hK9cuJpa4FQXmITJTTJBGs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GG9jn1c/tpT+OF23YKy6495I7U5QvlTIV0TEBRkyUo4qUP5Lyf4TEZ8tPLbeVU0+nxuNSuSYwYRYS5en7BFXLv1ygJFZz5CYYy/67sqnIe8UVm0Iz9KnA3HfYxtkDHPZCGXm3yFiMzIAnDZyQ94MVCz6tqWhmg99NLS8SiuWpFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fw0WUk4x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751020866; c=relaxed/simple;
+	bh=rzLraCNuwTpuf/DUAb7YKc3FNpCiMSkIclVF2DPCAuY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i9A3S2asQzcHXgG2sSisq+v5ZMvQHFWQFP6wFbL5A1gdyufxvvVe6bgSYxSvjxxIVZLeqRZgZMT/VMvZBFed7Lxb6ttBhccwVf9R0yHhU9u/gWHFZV6/slcmYXEHdEqtfZ351pPPbj6SP+RESa02KeC7jjiwhCLoUZMoetJzcK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M306hN6G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fw0WUk4x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5AB2C4AF09;
-	Fri, 27 Jun 2025 10:40:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M306hN6G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FB27C4CEE3;
+	Fri, 27 Jun 2025 10:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751020844;
-	bh=7qfv9HgVzOEOTjaIxZhU7hK9cuJpa4FQXmITJTTJBGs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Fw0WUk4xPmRlmgDezc1YKV/cRfHJ4iHucPaAP1v4VFN77pttsoXUwObdNm2IcKlJ0
-	 qHjogcDFJA5WfxRKHNXYgd6r1wpWi/N8CAgl7ezq5lO3NDl45DYxIowXN0fZCQnkAe
-	 RYTGy1+ZhpL0JSIiqt3Q+dArWVxWacu4Crd935iYSh2LIiKVP72DlHDMc9Wt3SxX9I
-	 Oe/FuwzMS6rqIols9lyQgRjgZTCcveSsdo1vFLpM13YrLaoyg2wojsIGDKDxh4lL/k
-	 rFaDNzBomRZwAtv8uqeell5u43H6UM+lVCtTFbTXbSkTs2xIQxe1mucpwgbqKwyGXE
-	 lpZXCjs2rPR7A==
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2ea34731c5dso1235331fac.0;
-        Fri, 27 Jun 2025 03:40:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW0yYLkXxsk5GFm15YcvCWw6gMeoq/RskPHw7OVCTI1SSwurFAgF2jU6mvfPQ4cgMAbWVZFAnR5l6XdpzE=@vger.kernel.org, AJvYcCWXXNFgw1j6IgGXjss2ofQd4rkE6ADNnKG4okdQGwmjOsjnPhphDiFxz3o1RslKo27rXyHhk8ZPAAQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUOmpoTRTQy+z1be4GhRRp/CIZk61HVS7WXoYgy+BRpcl4Kwxx
-	XTslGYuPaVXF+N5P4RIwr53z88POduEIDOumdGC//ft7FaBJSRCYbW7xQ6y4p9qnQiXcV7mFVf8
-	FbZr/yj9V1V8OO97ngLTbFKRSth3WGLA=
-X-Google-Smtp-Source: AGHT+IFhOwiSehvLBkinA4qw2PH2OU6rDaCbd9wuzKMX5ahOUCbBmhxWtwnQNsVCx4C5FPU9zqajspliPpZOhjhh11o=
-X-Received: by 2002:a05:6871:e7c6:b0:29e:65ed:5c70 with SMTP id
- 586e51a60fabf-2efed86efafmr1672430fac.30.1751020844035; Fri, 27 Jun 2025
- 03:40:44 -0700 (PDT)
+	s=k20201202; t=1751020865;
+	bh=rzLraCNuwTpuf/DUAb7YKc3FNpCiMSkIclVF2DPCAuY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M306hN6Gbd1Gc0eJnFzf0djXisEUIKObApc/k5J1CV4qprjUwcg+Mz59+LP32KFL3
+	 GYVIZADFbzS4qNopkBV8ktDgDogH1TqLRM1y/MZk9sPQhCUyZQsr4KvyaZHIvKqWFN
+	 mhl7oc484C7kjweoDcz2qstW5s7qei8lNxdyaOZ3rdRft4GLVL086ncZw5xoGqJTjo
+	 x35XKN5ZczLLlGin5ck3EhmjsUO/iqt3BbCXNyL4Y1dmvs+tXU2w2oSzlYFfTJ00bO
+	 TFAUnUQc1kVBoYoxsusUX2G7iCw6Ssi1np9NmON3IZ6ATy9v3fhbAcFvfzf08x/yqD
+	 3QMnYXhiNHz4w==
+Date: Fri, 27 Jun 2025 12:41:01 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Vitaly Wool <vitaly.wool@konsulko.se>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 2/4] mm/slub: allow to set node and align in k[v]realloc
+Message-ID: <aF51PTZh0gRVFuYu@pollux>
+References: <20250627092901.356909-1-vitaly.wool@konsulko.se>
+ <20250627093714.402989-1-vitaly.wool@konsulko.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <5011988.GXAFRqVoOG@rjwysocki.net> <CAPDyKFpBTz0M8DmWHLLm7x4c8G5PpQNv0Zj7mrZ9BewTBi1skg@mail.gmail.com>
- <5a6d0684-3340-43ed-b520-933654515943@amd.com>
-In-Reply-To: <5a6d0684-3340-43ed-b520-933654515943@amd.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 27 Jun 2025 12:40:32 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iJ65xxuHtJrWp1sC76FUzPHNpXB+xtHB=e4qTRSgAC4w@mail.gmail.com>
-X-Gm-Features: Ac12FXwM-RS_IpmNqOjPxf8-LkqCjGjccQnSq8VTBhiyXJPJXFSHQgRjmlID9gY
-Message-ID: <CAJZ5v0iJ65xxuHtJrWp1sC76FUzPHNpXB+xtHB=e4qTRSgAC4w@mail.gmail.com>
-Subject: Re: [RFT][PATCH v4 0/2] PM: sleep: Handle async suppliers like
- parents and async consumers like children
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Chris Bainbridge <chris.bainbridge@gmail.com>, Saravana Kannan <saravanak@google.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627093714.402989-1-vitaly.wool@konsulko.se>
 
-On Fri, Jun 27, 2025 at 12:28=E2=80=AFAM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> On 6/26/2025 4:46 AM, Ulf Hansson wrote:
-> > On Mon, 23 Jun 2025 at 14:55, Rafael J. Wysocki <rjw@rjwysocki.net> wro=
-te:
-> >>
-> >> Hi Everyone,
-> >>
-> >> These two patches complement the recently made PM core changes related=
- to
-> >> the async suspend and resume of devices.  They should apply on top of
-> >> 6.16-rc3.
-> >>
-> >> They were sent along with the other changes mentioned above:
-> >>
-> >> https://lore.kernel.org/linux-pm/2229735.Mh6RI2rZIc@rjwysocki.net/
-> >> https://lore.kernel.org/linux-pm/2651185.Lt9SDvczpP@rjwysocki.net/
-> >>
-> >> (and this is v4 because they have been rebased in the meantime), but t=
-hey don't
-> >> make any difference on my test-bed x86 systems, so I'd appreciate a co=
-nfirmation
-> >> that they are actually needed on ARM (or another architecture using DT=
-).
-> >>
-> >> Thanks!
-> >
-> > Hi Rafael,
-> >
-> > I haven't yet got the time to test these, but the code looks good to
-> > me, so feel free to add for the series:
-> >
-> > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> >
-> > Kind regards
-> > Uffe
->
-> I passed this series to some internal guys to test on a wide variety of
-> AMD x86 hardware.  The initial testing looks good.
-> Will keep you apprised if anything pops up.
+On Fri, Jun 27, 2025 at 11:37:14AM +0200, Vitaly Wool wrote:
+> Reimplement k[v]realloc_node() to be able to set node and
+> alignment should a user need to do so. In order to do that while
+> retaining the maximal backward compatibility, the following rules
+> are honored:
+> * kmalloc/kzalloc/krealloc remain unchanged
+> * kvmalloc/kvrealloc/kvcalloc remain unchanged
+> * kvrealloc remains unchanged
+> * kvrealloc_node is implemented as a new function taking align and
+>   NUMA id as extra parameters compared to kvrealloc.
+> * krealloc_node is implemented as a new function taking NUMA id
+>   as an extra parameter compared to krealloc
+> * kvmalloc_node/kvzalloc_node/kvcalloc_node get an extra parameter
+>   (alignment)
 
-Thanks!
+I see what you're doing here:
 
-It would also help if you could check whether or not there is any
-measurable performance (that is, system suspend and resume time)
-difference between "before" and "after".
+You created vrealloc_node_noprof() in the previous patch, taking the following
+arguments:
+
+	vrealloc_node_noprof(const void *p, size_t size,
+			     unsigned long align,
+			     gfp_t flags, int nid)
+
+And now you're aligning the newly introduced krealloc_node() and
+kvrealloc_node() with that.
+
+The idea for having an align argument on krealloc_node() simply is that it
+fails if the alignment requirement can't be fulfilled by the corresponding
+kmalloc bucket, such that we can fall back to vrealloc_node() in
+kvrealloc_node().
+
+Generally, this makes sense to me.
+
+However, now you consequently have to add the align argument to kvmalloc_node(),
+kvzalloc_node(), kvcalloc_node() as well.
+
+This is what creates this huge diffstat changing all the users.
+
+IMHO, the problem here was introduced already with vrealloc_node_noprof() taking
+an align argument in your previous patch, since now you have to adjust
+everything else to logically follow the same naming scheme.
+
+Instead, I think you should introduce vrealloc_node_align(),
+kvrealloc_node_align(), etc. This way no existing function signatures, such as
+kvmalloc_node() have to be changed and no users have to be adjusted.
+
+- Danilo
