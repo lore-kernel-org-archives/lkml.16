@@ -1,105 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A6A78F2F;
-	Fri, 27 Jun 2025 10:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9BE218EB7
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751020600; cv=none; b=nH6QkQtU/ikkpKoNpq2lievhBnvTadFhoGrbcMWh7s3PRgvvhzwRNelkKo4kHH3M9Dc2kfH5S2bLz1PHsEakldb76g2xwmQAQNhOXBkatagOgQuVEinrMT7vRWm0dflseyKglG4OL1buDj3mNz8m+Oyg02TNQAyzY7WUMfyBptI=
+	t=1751020624; cv=none; b=Qm91QuF8cuXlw/VUSm1XFKy6P+s70GPszusAPES0EN5/2ymloq7j39XwYC01x0PIzoOixy6AOPjo/VKadr82b3fCu7ABShvQvzBqFGsWNkxEvRguoQyJ1GOTUryzpaAXmwoaVu9r0SvOw+8V1v9kveI1ma2oBZBx44/LnZE3qbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751020600; c=relaxed/simple;
-	bh=F+uRNln6GKUDwBvy95ZRcxSahVIFgheNcF0YXMwj5YA=;
+	s=arc-20240116; t=1751020624; c=relaxed/simple;
+	bh=PftrHSJSMYZ7m6RfvegnAyP7tt3C2p8CyLScg97a/jI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aibp0KZLHdmg08r7/yyo/525debVUnNID73O2LHPQkJGoIvzGqsmYiVE4VA2jiq9GaSZ0FlcgTqrnFyQjFGP8H1q9MsTPoS7AdEdndBrnjvj4hVW9oz1AJtjQB3wtDFLOc4Ly9W/THdpQ9UAzUHeqCQOrPhQMQ5X82or6i/t5+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hBFf+IEC; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=PLrz1PLnikrQcNtTA6fle0H7/zEGQYlT04VAgEvsUysy9p2xa9s8bIBDTAabwr4ggsJ035+iAom+o9IBtrv8M73BwyQ60ldpfM1zYY1bVXTICnAjdb70MkAuHr4Oi+qpqN5m6t5IpZRSbELulSNgWCmobQhjAFRushMmq4Ag6Bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G8kyI+Gm; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hBFf+IEC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751020599; x=1782556599;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=F+uRNln6GKUDwBvy95ZRcxSahVIFgheNcF0YXMwj5YA=;
-  b=hBFf+IEC4+HCAZ1V5QYeV5blp0dds7HdBATDgReWPktpHTVu+2RAGTjL
-   XQQfA/sPm6QhKuccBqjN4H4am3cWS/hIGKEdYwKqiMQelYMTA3bCQbChN
-   tuPBszG7w9q4XrFF/elUqlLXP8itg/VxVXUWwO7qXYUeDNd1W4PVJe6kZ
-   hN2WWchUp7o/tEkgmcJi2mySdHEXe6GGzKy7ud16xmgsEjf7EKetdvjSx
-   8TkZakD6iRAuowIaq/JgC4uNow1t3DtKOe/kuHRBW47Yh2rgtU3ICoE2+
-   b7NhNc+Rk7pGbrAXXXckIaCRRle6OA3JBbtppKzVVvZhu7rRilOAyTK7P
-   w==;
-X-CSE-ConnectionGUID: ETiL+x9ORz+vFPDtkEXjhQ==
-X-CSE-MsgGUID: RaGhCI2wT/yvBbLJwSYsrw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53455544"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="53455544"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:36:39 -0700
-X-CSE-ConnectionGUID: l6OZEQAVQfyxuEWK9z9ljg==
-X-CSE-MsgGUID: avz7HfigQ52NZ1nUh6WloA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="189967185"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by orviesa001.jf.intel.com with SMTP; 27 Jun 2025 03:36:32 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 27 Jun 2025 13:36:31 +0300
-Date: Fri, 27 Jun 2025 13:36:31 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
-	Raag Jadav <raag.jadav@intel.com>,
-	"Tauro, Riana" <riana.tauro@intel.com>,
-	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
-	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-	intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] drm/xe/xe_i2c: Add support for i2c in
- survivability mode
-Message-ID: <aF50L3QcyJQ6VRxQ@kuha.fi.intel.com>
-References: <20250626135610.299943-1-heikki.krogerus@linux.intel.com>
- <20250626135610.299943-5-heikki.krogerus@linux.intel.com>
- <aF1YGk2TNda9r32o@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G8kyI+Gm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751020621;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xM08rJUXb05AQG4eXstXXPFP8RjwRrIPi+WmNXcJ64I=;
+	b=G8kyI+GmNQn9bQGPAAM4zkejLir4dd89djKd9yZJmx0nopOjJEYDFsm3hN8cfQghD/85YX
+	fh33jsEhn5ktKUXuWjbaZMvqwgrHloSYUBOAyht0H0+Gph7cZLKx4bIbZk9pHHisB/EBe4
+	LXHertnkCQ3Ifb0+J4HwsqpBnnhsdpE=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-540-JecMHUuOMKWqxcWMz9GSww-1; Fri, 27 Jun 2025 06:37:00 -0400
+X-MC-Unique: JecMHUuOMKWqxcWMz9GSww-1
+X-Mimecast-MFC-AGG-ID: JecMHUuOMKWqxcWMz9GSww_1751020619
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b26e33ae9d5so2444706a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 03:37:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751020619; x=1751625419;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xM08rJUXb05AQG4eXstXXPFP8RjwRrIPi+WmNXcJ64I=;
+        b=ppnVqyS+bVdLlcxNJl/xyT97ygiYMYthmuYxBxBYsoibcsrx5u0F4CqV26x+mKdvAL
+         xguMmad56t7rFCugZ5D9WEv3cYluqsP7TCBHqwtQb46afr/gI7e0PArUpAQeoJyS+bo5
+         iWq61BHPuZhHZQTjZewui0EaslNE+lMolTTZl5h77PQGeeCJ84pWnCUFC9WLxsDrDOR9
+         ygmcB5XP4tMP01c9ru7g2TeL1rCMaHeQBfpaB1+BmoGAiNIymbctZrUuGF9zK6lp5Va3
+         nqKbObO2Yy5ggp/TOkJxpu87VCA3V+bYLVpRIq786nEfaH1BRJEKAsDER8HVykhvOB07
+         EJCQ==
+X-Gm-Message-State: AOJu0Yz4qiKv64NJV08XEn3ZcnV3VCN8KryEF+Pyo1EsAvTZBEPnL7kl
+	2YD6Xs8kNnq+9z5fdjrAcoVHBnQmiIRQvCekag0dBIFNSfLbyvyo+g8dTPAY0Zs45aX/Grls06m
+	c6FZEXOQwKIP+b8dXlsXUelhwsAlS3ZB516mdLdY0vUpRf/tfiBbbTwMCi+Q+rPumpA==
+X-Gm-Gg: ASbGncsxECBcNuIiBf8IE3n5aKm71xsiUrzcnRp7UNc7EDhZYNI9UHxTI6OepPlIKJs
+	RZBPbw5U4KwLKttCnxNHYksUaq43AY6inUoA9S8zzIL6hKz6u5w7SFdB+U/gTDVwSwSc1/RFRvI
+	EHuxW0nLMN1TdqB/AebYw3lWmQNOrXGZOh63QogDi1EZlsuXd0ha/AH/vbqEfF6rePElZzq91m/
+	GPjBWgBYZHHrPbOrZ2PvNMTzCJhw7UqDf2nY1OHNKMGUZCfT/UbotxtALYaRnXlcq70utRmobRz
+	giGdzZ15SvaEQU4sX5yCc8VAgtg=
+X-Received: by 2002:a17:90b:54d0:b0:311:f99e:7f4b with SMTP id 98e67ed59e1d1-318c926568dmr3705115a91.28.1751020619068;
+        Fri, 27 Jun 2025 03:36:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE2NSMNCRnsJPJF7ZAu3FfPcP3Jvs8X5CeYQn6CTkxq0SuisV7Qqhbya1ObUs6rSXJylkxq5w==
+X-Received: by 2002:a17:90b:54d0:b0:311:f99e:7f4b with SMTP id 98e67ed59e1d1-318c926568dmr3705073a91.28.1751020618513;
+        Fri, 27 Jun 2025 03:36:58 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.150.33])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c14e1f8fsm2013391a91.24.2025.06.27.03.36.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 03:36:58 -0700 (PDT)
+Date: Fri, 27 Jun 2025 12:36:46 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Will Deacon <will@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Keir Fraser <keirf@google.com>, 
+	Steven Moreland <smoreland@google.com>, Frederick Mayle <fmayle@google.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	netdev@vger.kernel.org, virtualization@lists.linux.dev
+Subject: Re: [PATCH 1/5] vhost/vsock: Avoid allocating arbitrarily-sized SKBs
+Message-ID: <7byn5byoqlpcebhahnkpln3o2w2es2ae3jpzocffkni3mfhcd5@b5hfo66jn64o>
+References: <20250625131543.5155-1-will@kernel.org>
+ <20250625131543.5155-2-will@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <aF1YGk2TNda9r32o@smile.fi.intel.com>
+In-Reply-To: <20250625131543.5155-2-will@kernel.org>
 
-On Thu, Jun 26, 2025 at 05:24:26PM +0300, Andy Shevchenko wrote:
-> On Thu, Jun 26, 2025 at 04:56:09PM +0300, Heikki Krogerus wrote:
-> > 
-> > Initialize i2c in survivability mode to allow firmware
-> > update of Add-In Management Controller (AMC) in survivability mode
-> 
-> ...
-> 
-> > +err:
-> > +	/*
-> > +	 * But if it fails, device can't enter survivability
-> > +	 * so move it back for correct error handling
-> 
-> While at it, add a period at the end.
+On Wed, Jun 25, 2025 at 02:15:39PM +0100, Will Deacon wrote:
+>vhost_vsock_alloc_skb() returns NULL for packets advertising a length
+>larger than VIRTIO_VSOCK_MAX_PKT_BUF_SIZE in the packet header. However,
+>this is only checked once the SKB has been allocated and, if the length
+>in the packet header is zero, the SKB may not be freed immediately.
+>
+>Hoist the size check before the SKB allocation so that an iovec larger
+>than VIRTIO_VSOCK_MAX_PKT_BUF_SIZE + the header size is rejected
+>outright. The subsequent check on the length field in the header can
+>then simply check that the allocated SKB is indeed large enough to hold
+>the packet.
 
-OK.
+LGTM, but should we consider this as stable material adding a Fixes tag?
 
-Because of the vacations I'll send v5 already today. There is still a
-failure report from the CI system that I'm not able to interpret, but
-I think it's happening because the I2C endpoint is not accessible on
-every GPU. I'll try to solve that by limiting this to BMG for now like
-it was originally.
+Thanks,
+Stefano
 
-thanks,
+>
+>Signed-off-by: Will Deacon <will@kernel.org>
+>---
+> drivers/vhost/vsock.c | 6 ++++--
+> 1 file changed, 4 insertions(+), 2 deletions(-)
+>
+>diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+>index 802153e23073..66a0f060770e 100644
+>--- a/drivers/vhost/vsock.c
+>+++ b/drivers/vhost/vsock.c
+>@@ -344,6 +344,9 @@ vhost_vsock_alloc_skb(struct vhost_virtqueue *vq,
+>
+> 	len = iov_length(vq->iov, out);
+>
+>+	if (len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE + VIRTIO_VSOCK_SKB_HEADROOM)
+>+		return NULL;
+>+
+> 	/* len contains both payload and hdr */
+> 	skb = virtio_vsock_alloc_skb(len, GFP_KERNEL);
+> 	if (!skb)
+>@@ -367,8 +370,7 @@ vhost_vsock_alloc_skb(struct vhost_virtqueue *vq,
+> 		return skb;
+>
+> 	/* The pkt is too big or the length in the header is invalid */
+>-	if (payload_len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE ||
+>-	    payload_len + sizeof(*hdr) > len) {
+>+	if (payload_len + sizeof(*hdr) > len) {
+> 		kfree_skb(skb);
+> 		return NULL;
+> 	}
+>-- 
+>2.50.0.714.g196bf9f422-goog
+>
+>
 
--- 
-heikki
