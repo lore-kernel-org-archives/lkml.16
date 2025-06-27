@@ -1,51 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C115A20409A;
-	Fri, 27 Jun 2025 19:14:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB2D20A5C4;
+	Fri, 27 Jun 2025 19:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751051668; cv=none; b=ZbTMxgtbFBcRqQ43pbQAMesiwcRh76mlsFyG4CpNwAic+UxQHP1NeCkmD8dIEm27Peyv3C395N9VsmGNj6kdWP695zTx4ElCeRjB19UAGN4WZHlXBSnCT2hjQUq+A1G3VMn+yQ6WTykve4Pk3V32KDTGcbP5rqAUZH3fV2MYzwg=
+	t=1751051673; cv=none; b=kBRXZRnj3VqN0yxG32+4IF6G6LXFivHar9p7T2QrG4wv4sKgSROVhsjhTcbTJp69s6W4+SKRXfNkAYrDn+b/YgGavlVjna1lCWwW3FjQQCt6Zk7HZNI7RZe2I78xdZVBMcJps1mPeBTfy0xYYNZ4rX6Yse3GVUVDCKRXnQ2w7TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751051668; c=relaxed/simple;
-	bh=teaBeVflJzwLOgj3pdIrQdVRadg6BKthTGhmskdlwsQ=;
+	s=arc-20240116; t=1751051673; c=relaxed/simple;
+	bh=7y1ZsRmXi5fixd3yGounAXlhvtOObOS1/eW6qryxfFc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WyKIoe+FTuTmksKDckZgaN6CcTgITrpME3F2czi/3qqCBeTL0fAHARfTHvhSM25F9sYE7S5gaV9aERUgwFPEk8U4ANHq1UThdDGAmIlLymKlID7I3CVdn/yrA75ybhoCpNpht9xXdsg6OvpRVAmPizoXfAC1E65qci8Z6Xq3eww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pvOLcJSU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CBxL5EDd7yIhtDhzq57cX7EiE0PI1x8+O40wTVc3Y1UC0HQI/LlBxwUUfCWPlCZBe+cRV+jwrBrmqdQOuXRAo0y8lCNNlAYZN0Bl9Q6rwWtxCo+8eCkwBYjkVzoJlWI8VzliqCuwG2+DtaHir1kCurnzrTvdDLRahP5FNc7aPxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTrBi/jm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pvOLcJSU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 435DBC4CEE3;
-	Fri, 27 Jun 2025 19:14:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTrBi/jm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 490B6C4CEEB;
+	Fri, 27 Jun 2025 19:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751051668;
-	bh=teaBeVflJzwLOgj3pdIrQdVRadg6BKthTGhmskdlwsQ=;
+	s=k20201202; t=1751051673;
+	bh=7y1ZsRmXi5fixd3yGounAXlhvtOObOS1/eW6qryxfFc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pvOLcJSUDs8C+EDyCzAd5mujAXx45vTaw8vqXSBkMBe7Yx7JShtKAC3SJ3gq1HdY+
-	 M5fL+Ur+1zJTXSlXS6XfrQjXXQr3Zf6pRW7RoP/DvzykSkkBQS1zmEKzHY7L3Mle0X
-	 nPTSZAI+iO26sQHHHojDxTNeLX+pVvBTFZSwbSSckYyYriChQOE+cenPtv5me4bptr
-	 OOenA6HcDmb31Qn2aqyzoVIr1GLirr0MT+ClCVcwRxyqBGGAQpr2zdN+7ASeuxMzOW
-	 R4rdc9giMbTikNt6pv7jfA6YLZBHWI9UOF5ZR3FuYtn1upsJs8BFmrjUtpU3lacNDZ
-	 zBpRh7FuKYWbQ==
-Date: Fri, 27 Jun 2025 14:14:27 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Michael Riesch <michael.riesch@collabora.com>
-Cc: devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	Jagan Teki <jagan@amarulasolutions.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-	Vinod Koul <vkoul@kernel.org>,
-	Collabora Kernel Team <kernel@collabora.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 1/5] dt-bindings: soc: rockchip: add rk3588 csidphy grf
- syscon
-Message-ID: <175105166709.4025295.58399620161615591.robh@kernel.org>
-References: <20250616-rk3588-csi-dphy-v1-0-84eb3b2a736c@collabora.com>
- <20250616-rk3588-csi-dphy-v1-1-84eb3b2a736c@collabora.com>
+	b=BTrBi/jmYNPasQFvmjw61npscaZxr3dckWRLmO9NM8hhIEwWDKBhUKXsi13Xs9yvx
+	 SgwEazEzPozrouuUP0TCbZSTJJWqNQ6kAHqX8XmYlu5F0yPlxf0dhwDTZdIOM6AHTk
+	 IpJuAgefP5L8EyZAP7bamFTWc5A81hKKO5NDPxk0Ka4+pucTdGHp++XVNUU+ljQUai
+	 YZgnKyGyEw6BVX2TWT+XutWKV7hVd4YxtH67AZPGW9oJ+qVaBnT3X+TJQM7ibBm5MO
+	 Yb+EKF7cT0nAN7XVs1kUqJEgpSuoZZdkbZTxhKMrZyetgKdnpIuT2kH9IiDGYM/aVR
+	 TwID+nxa+rmLQ==
+Date: Fri, 27 Jun 2025 21:14:26 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Benno Lossin <lossin@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 5/6] rust: platform: add irq accessors
+Message-ID: <aF7tknVzLbdN71kw@pollux>
+References: <20250627-topics-tyr-request_irq-v5-0-0545ee4dadf6@collabora.com>
+ <20250627-topics-tyr-request_irq-v5-5-0545ee4dadf6@collabora.com>
+ <aF7slhheVOXaGB9T@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,17 +55,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250616-rk3588-csi-dphy-v1-1-84eb3b2a736c@collabora.com>
+In-Reply-To: <aF7slhheVOXaGB9T@pollux>
 
-
-On Tue, 17 Jun 2025 10:54:42 +0200, Michael Riesch wrote:
-> Add CSIDPHY GRF syscon compatible for the Rockchip RK3588.
+On Fri, Jun 27, 2025 at 09:10:22PM +0200, Danilo Krummrich wrote:
+> On Fri, Jun 27, 2025 at 01:21:07PM -0300, Daniel Almeida wrote:
+> > +macro_rules! define_irq_accessor_by_index {
+> > +    ($(#[$meta:meta])* $fn_name:ident, $request_fn:ident, $reg_type:ident, $handler_trait:ident) => {
+> > +        $(#[$meta])*
+> > +        pub fn $fn_name<T: irq::$handler_trait + 'static>(
+> > +            &self,
+> > +            index: u32,
+> > +            flags: irq::flags::Flags,
+> > +            name: &'static CStr,
+> > +            handler: T,
+> > +        ) -> Result<impl PinInit<irq::$reg_type<T>, Error> + '_> {
+> > +            let request = self.$request_fn(index)?;
+> > +
+> > +            Ok(irq::$reg_type::<T>::new(
+> > +                request,
+> > +                flags,
+> > +                name,
+> > +                handler,
+> > +            ))
+> > +        }
+> > +    };
+> > +}
+> > +
+> > +macro_rules! define_irq_accessor_by_name {
+> > +    ($(#[$meta:meta])* $fn_name:ident, $request_fn:ident, $reg_type:ident, $handler_trait:ident) => {
+> > +        $(#[$meta])*
+> > +        pub fn $fn_name<T: irq::$handler_trait + 'static>(
+> > +            &self,
+> > +            irq_name: &'static CStr,
+> > +            name: &'static CStr,
+> > +            flags: irq::flags::Flags,
+> > +            handler: T,
+> > +        ) -> Result<impl PinInit<irq::$reg_type<T>, Error> + '_> {
+> > +            let request = self.$request_fn(irq_name)?;
+> > +
+> > +            Ok(irq::$reg_type::<T>::new(
+> > +                request,
+> > +                flags,
+> > +                name,
+> > +                handler,
+> > +            ))
+> > +        }
+> > +    };
+> > +}
 > 
-> Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
-> ---
->  Documentation/devicetree/bindings/soc/rockchip/grf.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+> NIT: Please make the order of name and flags the same for both macros.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-
+Ideally, first flags, then name, since this is the order used everywhere else.
