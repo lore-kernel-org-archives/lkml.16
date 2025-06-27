@@ -1,151 +1,107 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B6A2F1FC4;
-	Fri, 27 Jun 2025 02:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74360146A60;
+	Fri, 27 Jun 2025 02:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750989695; cv=none; b=mLYXMl8NWDFTorjm+1fSkSTf33AXlHijEyxa1eVAhbUuWPGdgf2l6wdetDb7O5VDGJx3mFfcK1YWzHGFQclqPrE2qk/WYL4RW2+8AdTMiICUntL9+1qw/RsaObxNUhykbZ7tEE1mq+iZJWEb9hbNza3vpIlIBwm0HB9bmmY+5d0=
+	t=1750989765; cv=none; b=utHrv758g2xJu6H6iqllmO24CZk17o7r57VCB9MqdayqQyBpA62yEcgyYdBO5bxCRW6V47zX/GwFNl65kYsWPoelpOB/Oqy2MXxr1Z/9VW0s3r4n1Chx868yxssWQ6zrXH/2KVi6/a/gh7hrfNB9NUNVOCfgZJ4FaTQhpW1mgUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750989695; c=relaxed/simple;
-	bh=fNMOLkjJEnP8Cdvd71Kj0uBYZCipG7yHl6zNB8V0ebM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ik5CtKED//VC3meGGmAHLn3Um4+CA2Q9T1WCrRZal01YnwLGbe7gxUwMYKbhBfX0a3O2yrLuGY+RMMkFnqAgw6cwzd6KROw0GrutSn1dvZcbLjGrLwyV70Bu/gNUxzByfyn9kLpbDYRXQ6JyhG2t21OF1faXxVIl3bCtCssQYkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f0m/UIwE; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0m/UIwE"
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-530d764149eso488792e0c.1;
-        Thu, 26 Jun 2025 19:01:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750989691; x=1751594491; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iv+ULazfCotUfqTUQgUOXEi7/XbND58A2hHC6r5AKlU=;
-        b=f0m/UIwEboLoBA5xRBWN/0ri+5skryLl/MdomrJWZmUh1aqCTSwRCj9SOVMOhuKNtd
-         P8YEp1NgDnbBg+xPHQAjTjjFeYKXZQx6A4xOvOc4brJYYvLEda/H8cetUk5ZJRxMnPac
-         3BvBTYedy0ojlHZ6h2cuQ5tvTswFb5+I8mn+8JhSWpKq8NP1iUb5yjj/ptL6LHGZtz02
-         wXty6KaS/uWMwgh3rZoSquuop91c2B0MOS7PelhVRyTKgRMuX2hmXm4Dh4z5OOCS0EsH
-         /ARgtd6Tj/t9RkhskJiU+7YXdLVr6EcG7rRW7BqYXMyaRrRtavcZp2bOlpMPztUmqDAJ
-         B9Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750989691; x=1751594491;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iv+ULazfCotUfqTUQgUOXEi7/XbND58A2hHC6r5AKlU=;
-        b=szieqtJCfmYFUJmGf3lkLeF6K9G6d1LUqNQaKiVaIRzAWGfzRkoYx0Z6Wx1ZR73Wse
-         TLPaQrFp2uXgvbCBUEWv6MBkoHSsLbELo45PxhSkV1vhjL96hbFcOxpiOz8L16updUxH
-         Vr4glLbWY9gQzYcztLWtocaZcFD2GYfm8xgyM9nQ9DtDWPNV6rb7okH3tzgwsntCHPYD
-         7O0zcJqczCrkuCjnU4szTjDZkkd5iguon5jVCUurxNrfn9J+TKmiG3iPHLliwR9sDk2R
-         vsI2msZcJSj7W+0AT84216C0PjHjhNndt4Q9RdY1Xh2nvjj9yL7D2/ki0KesvFzpRpLc
-         BvsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5DFHCmUGH8GtZ4XLww2t+8LyuamYx4iCyzTYQYTWpX9VkuBwJk5QdTDOr4J1OI4CbADzfmEQTmarObNry26jTz7I=@vger.kernel.org, AJvYcCVvZS6jVGLWnFINm4QtVGnEuFR4WCxB+3OTRMh6KW87mdPMteFKAvcFlW2yog2ji9OmmGIOnawDxuW8yrul@vger.kernel.org, AJvYcCWeCLD5k5yaGAq7TraoMw+eHUuNh1R9VLBkKpTLpS781tZz6NOf3RUxXLr6G1a/wyTlRquzaC8EaT20J9l9@vger.kernel.org
-X-Gm-Message-State: AOJu0YwduSZB/0IK6guMNMEW6AATLWJLbnj2pA0KG0bfIVo/1c5ZupNh
-	6O7jlmeU7vJqgqtVHLpssyV8aejioh/MeDLZMijLejO3/MGhT1Ki6xD9d5RGdRAPfwLPh0nvRw0
-	wbZrVsdXTeYPGvluhgRH756oky6wXpDw=
-X-Gm-Gg: ASbGnctMMVOrZAcUKFJkA4EzHvx8FXDodVie3UOlAuyTbPPzDmwDEhYVCV00Gp+oFQS
-	PpBuZgdwAg8VI0e6GzNwyxIc3i/6VYJGD6fMF8dXpK2FXXelTxeYkrKaY3jgVP9H14+QFvsaOWn
-	LeKGyWMrVE7BrUMpJGLMhIQ1CogK7JZQmJPBo6f36/Rg==
-X-Google-Smtp-Source: AGHT+IEfDkUmXmdGNiYTAmO+fSQE3VFxMdbIHmR6wR3Spz90Kei7f1lHrowLtUvc0N5RL+zWLCQWluZ6/tNtS2e7eSo=
-X-Received: by 2002:a05:6122:21a1:b0:531:4041:c4c7 with SMTP id
- 71dfb90a1353d-5330bfd4563mr1451187e0c.7.1750989691380; Thu, 26 Jun 2025
- 19:01:31 -0700 (PDT)
+	s=arc-20240116; t=1750989765; c=relaxed/simple;
+	bh=Wvk2LUcGoFfjQos10WntkQegPwBeF5dyU/R+7fzYubU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=sD1+Cu3wgb4LX1XHDLurKgjzIywC6l5aZFf+QDEFlip5evFmGwxZ2jpcS4ucK8Nyw5mYawuGwBLlXAIBDYOmgxSwq7h3geJrCyC8zttpdnATd5QwvwCVt7UIZ7n5I3KBppiKBzdhwrZr9ojGAg0wK27wO7aTwvdCz8+BM5sqSFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bSzGr3SXJzCsBL;
+	Fri, 27 Jun 2025 09:58:12 +0800 (CST)
+Received: from dggpemf500013.china.huawei.com (unknown [7.185.36.188])
+	by mail.maildlp.com (Postfix) with ESMTPS id BCBCA18006C;
+	Fri, 27 Jun 2025 10:02:32 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.71) by dggpemf500013.china.huawei.com
+ (7.185.36.188) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 27 Jun
+ 2025 10:02:31 +0800
+Message-ID: <3398cb62-3666-4a79-84c1-3b967059cd77@huawei.com>
+Date: Fri, 27 Jun 2025 10:02:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618-restricted-pointers-drm-v1-0-781e0d88cd92@linutronix.de> <20250618-restricted-pointers-drm-v1-1-781e0d88cd92@linutronix.de>
-In-Reply-To: <20250618-restricted-pointers-drm-v1-1-781e0d88cd92@linutronix.de>
-From: Inki Dae <daeinki@gmail.com>
-Date: Fri, 27 Jun 2025 11:00:55 +0900
-X-Gm-Features: Ac12FXzQxzyREaVVCRYXuMvFKjupkA98dfTPk38AOS_x9wbPi10kqXkSS64ZqjU
-Message-ID: <CAAQKjZNG73CX8ebxqLgcYRGguGya-9zODL3BTdBDgbgJLJZ9jw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] drm/bridge: samsung-dsim: Don't use %pK through printk
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Abhinav Kumar <abhinav.kumar@linux.dev>, Jessica Zhang <jessica.zhang@oss.qualcomm.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] fs/buffer: remove the min and max limit checks in
+ __getblk_slow()
+To: Pankaj Raghav <p.raghav@samsung.com>
+CC: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	<mcgrof@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+	<linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<kernel@pankajraghav.com>, <gost.dev@samsung.com>, Matthew Wilcox
+	<willy@infradead.org>, Zhang Yi <yi.zhang@huawei.com>, Yang Erkun
+	<yangerkun@huawei.com>
+References: <20250626113223.181399-1-p.raghav@samsung.com>
+Content-Language: en-US
+From: Baokun Li <libaokun1@huawei.com>
+In-Reply-To: <20250626113223.181399-1-p.raghav@samsung.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ dggpemf500013.china.huawei.com (7.185.36.188)
 
-Hi,
-
-2025=EB=85=84 6=EC=9B=94 18=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 4:56, T=
-homas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+On 2025/6/26 19:32, Pankaj Raghav wrote:
+> All filesystems will already check the max and min value of their block
+> size during their initialization. __getblk_slow() is a very low-level
+> function to have these checks. Remove them and only check for logical
+> block size alignment.
 >
-> In the past %pK was preferable to %p as it would not leak raw pointer
-> values into the kernel log.
-> Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
-> the regular %p has been improved to avoid this issue.
-> Furthermore, restricted pointers ("%pK") were never meant to be used
-> through printk(). They can still unintentionally leak raw pointers or
-> acquire sleeping locks in atomic contexts.
+> As this check with logical block size alignment might never trigger, add
+> WARN_ON_ONCE() to the check. As WARN_ON_ONCE() will already print the
+> stack, remove the call to dump_stack().
 >
-> Switch to the regular pointer formatting which is safer and
-> easier to reason about.
+> Suggested-by: Matthew Wilcox <willy@infradead.org>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
 
-Applied.
+Makes sense. Feel free to add:
 
-Thanks,
-Inki Dae
+Reviewed-by: Baokun Li <libaokun1@huawei.com>
 
->
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
 > ---
->  drivers/gpu/drm/bridge/samsung-dsim.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Changes since v3:
+> - Use WARN_ON_ONCE on the logical block size check and remove the call
+>    to dump_stack.
+> - Use IS_ALIGNED() to check for aligned instead of open coding the
+>    check.
 >
-> diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/brid=
-ge/samsung-dsim.c
-> index 0014c497e3fe7d8349a119dbdda30d65d816cccf..bccc88d2594840647d7107c13=
-d69104912087384 100644
-> --- a/drivers/gpu/drm/bridge/samsung-dsim.c
-> +++ b/drivers/gpu/drm/bridge/samsung-dsim.c
-> @@ -1095,7 +1095,7 @@ static void samsung_dsim_send_to_fifo(struct samsun=
-g_dsim *dsi,
->         bool first =3D !xfer->tx_done;
->         u32 reg;
+>   fs/buffer.c | 11 +++--------
+>   1 file changed, 3 insertions(+), 8 deletions(-)
 >
-> -       dev_dbg(dev, "< xfer %pK: tx len %u, done %u, rx len %u, done %u\=
-n",
-> +       dev_dbg(dev, "< xfer %p: tx len %u, done %u, rx len %u, done %u\n=
-",
->                 xfer, length, xfer->tx_done, xfer->rx_len, xfer->rx_done)=
-;
+> diff --git a/fs/buffer.c b/fs/buffer.c
+> index d61073143127..565fe88773c2 100644
+> --- a/fs/buffer.c
+> +++ b/fs/buffer.c
+> @@ -1122,14 +1122,9 @@ __getblk_slow(struct block_device *bdev, sector_t block,
+>   {
+>   	bool blocking = gfpflags_allow_blocking(gfp);
+>   
+> -	if (unlikely(size & (bdev_logical_block_size(bdev) - 1) ||
+> -		     (size < 512 || size > PAGE_SIZE))) {
+> -		printk(KERN_ERR "getblk(): invalid block size %d requested\n",
+> -					size);
+> -		printk(KERN_ERR "logical block size: %d\n",
+> -					bdev_logical_block_size(bdev));
+> -
+> -		dump_stack();
+> +	if (WARN_ON_ONCE(!IS_ALIGNED(size, bdev_logical_block_size(bdev)))) {
+> +		printk(KERN_ERR "getblk(): block size %d not aligned to logical block size %d\n",
+> +		       size, bdev_logical_block_size(bdev));
+>   		return NULL;
+>   	}
+>   
 >
->         if (length > DSI_TX_FIFO_SIZE)
-> @@ -1293,7 +1293,7 @@ static bool samsung_dsim_transfer_finish(struct sam=
-sung_dsim *dsi)
->         spin_unlock_irqrestore(&dsi->transfer_lock, flags);
->
->         dev_dbg(dsi->dev,
-> -               "> xfer %pK, tx_len %zu, tx_done %u, rx_len %u, rx_done %=
-u\n",
-> +               "> xfer %p, tx_len %zu, tx_done %u, rx_len %u, rx_done %u=
-\n",
->                 xfer, xfer->packet.payload_length, xfer->tx_done, xfer->r=
-x_len,
->                 xfer->rx_done);
->
->
-> --
-> 2.49.0
->
->
+> base-commit: b39f7d75dc41b5f5d028192cd5d66cff71179f35
+
+
