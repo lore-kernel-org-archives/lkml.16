@@ -1,53 +1,42 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BDB2264B1
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38332264A8;
+	Fri, 27 Jun 2025 07:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751011013; cv=none; b=X9mlaS/skRW/wS6NYPZ+ruG9ydtyT+BwYzqQQc41eh9PEDGi+zaMwUxC0M5yMVTFJh8uikruvtKCk5HjQBJv4sodZE0BdoMtPIljLaGkrmXuqa026PpgB60WSvb8uhRCE1+XoaPcB8vsyX0HFLEpjDZyO4a9Ji5YGJ8AP5Nsvg4=
+	t=1751011043; cv=none; b=p/iSacZiQeH13/SaEWTf6X99FISz4L3wRQHrc6kb5eEfjvSVG80DsNH/J22nZ6IvmGDV0lLW+wk38VgpPxAAehrznQlhEGKnZ6MtEZst7hBIFYtXGi2ifGlnsPk3ly3psTIzKqATg4Fxw57WQwTvjwirLllmMDZ7qgYh4M3b+k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751011013; c=relaxed/simple;
-	bh=o+9R9X4qf1r8j39EZ1mR4c7s9H6+hwicix9ShM9qj5A=;
+	s=arc-20240116; t=1751011043; c=relaxed/simple;
+	bh=zal9xn7yxFRR41i1coZhjVOWt6/9KGWg0tYzL5ntrWk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WMQHeboPHbhe0dd1i5b3nLQ7yaUgEUSRCZIyJA/RO8fpWzrToi949mx0W8Ey2mLljY3goFQPOvtYIz+G5BrYSK+G/VE6tGqo+7dxo9gP7QlexRRBSc1PriXxY94dsptbKCzYqiu+UnUZuOni3l/w5KL24/Qx78RdGEZTzWtTEuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uu7DPQRY; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=TIXNFVTfXlhp4imFh2jYt7Lafq1rQ4GkDDhaTXFpDMA95wUcDv53i0XMavmWxmvri+ASxI8Wq6sorq1NBLXPELEh/IFRc08tGk3VGVSwutM4gJtWSYVvDqjsgitMTGD8TV7IaQ9e12Y+Cj6+aoiGIv03DTKmz+cvL5GTOh0JglE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=48NR5Vqn; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uu7DPQRY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=cZ8KqJeTVmJcdtGEw5MJHSl2d+0iZtEQ4xk1+lQ2oHM=; b=uu7DPQRYdfBrecw83ZfbccZtH+
-	l+npjLCojr/cEvSUFn/3zBRzl1SGprqt5T7eQwkP69Hpp29Vg9IOn1h1g4hEKk1BbCKcs9D3lbVGo
-	6Ys/UmdkLoZao0t0p49bJEuI25JSL2ICzL2kWs96huhCYFPTArHCuwHL48CxG3tNwXCwLPNBbCZZh
-	U+0NGC1A8qwvHsPkMJ2gw3Wdt1q/hV7AK5DQM7g1GNy6xQ19yyOX/V0ubnGsDPRXNp0u9EevumFs1
-	J99YuQWW6g0NjQ3EzzjnIRrT59G4O70/QIzhtuFUUxHC5LMuhrQZBZPEkXwIRWcDRuQ8cFz/+v/at
-	Dnbmqnug==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uV3wy-0000000DYJu-2mB0;
-	Fri, 27 Jun 2025 07:56:44 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4095E300222; Fri, 27 Jun 2025 09:56:43 +0200 (CEST)
-Date: Fri, 27 Jun 2025 09:56:43 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Nikolay Borisov <nik.borisov@suse.com>
-Cc: David Kaplan <david.kaplan@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] x86/bugs: Remove 'force' options for retbleed/ITS
-Message-ID: <20250627075643.GO1613200@noisy.programming.kicks-ass.net>
-References: <20250626142703.716997-1-david.kaplan@amd.com>
- <20250626144047.GN1613200@noisy.programming.kicks-ass.net>
- <295f94d4-f5e2-4849-ab62-9fdc75722e20@suse.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="48NR5Vqn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=XWoXZ540RK4D7pND3FhRUN0tuRirGRAX3dKRq7hFvhE=; b=48NR5VqnRS0Ppkmzn2y+ANOZbN
+	SmXSRHG8weg3pfCCBpdavbsV8doOjDFFWsekMm4vd/S03EMVFZ2k9D+ePD/Fxv+0y34Iu2KXPzfE8
+	yZZJM7v1Z3OqHNCRnNEha+uEVxwK+iN6EeQgkzwxSLlbZ2Hw+aDJz9KUsZVl2cazXmis=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uV3xQ-00H7Th-Q8; Fri, 27 Jun 2025 09:57:12 +0200
+Date: Fri, 27 Jun 2025 09:57:12 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Wen Gu <guwen@linux.alibaba.com>
+Cc: richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	xuanzhuo@linux.alibaba.com, dust.li@linux.alibaba.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] ptp: add Alibaba CIPU PTP clock driver
+Message-ID: <0b0d3dad-3fe2-4b3a-a018-35a3603f8c10@lunn.ch>
+References: <20250627072921.52754-1-guwen@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,25 +45,129 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <295f94d4-f5e2-4849-ab62-9fdc75722e20@suse.com>
+In-Reply-To: <20250627072921.52754-1-guwen@linux.alibaba.com>
 
-On Thu, Jun 26, 2025 at 06:13:05PM +0300, Nikolay Borisov wrote:
+> +#define PTP_CIPU_LOG_SUB(dev, level, type, event, fmt, ...) \
+> +({ \
+> +	static DEFINE_RATELIMIT_STATE(_rs, \
+> +				      DEFAULT_RATELIMIT_INTERVAL, \
+> +				      DEFAULT_RATELIMIT_BURST); \
+> +	if (__ratelimit(&_rs)) \
+> +		dev_printk(level, dev, "[%02x:%02x]: " fmt, \
+> +			   type, event, ##__VA_ARGS__); \
+> +})
 
-> > Testing; I use these things for testing. Makes I don't have to run on
-> > affected hardware, I can just force the feature on and inspect the code
-> > and ensures it runs.
-> > 
-> > If you use force, you get to keep all pieces -- no warranties.
-> 
-> I concur, however using force won't always guarantee that the code runs
-> though, 
+Please don't use such wrappers. Just use dev_dbg_ratelimited() etc.
 
-Which is why you should run gdb on /proc/kcore to check what you ended
-up with :-)
+> +static int cipu_iowrite8_and_check(void __iomem *addr,
+> +				   u8 value, u8 *res)
+> +{
+> +	iowrite8(value, addr);
+> +	if (value != ioread8(addr))
+> +		return -EIO;
+> +	*res = value;
+> +	return 0;
+> +}
 
-> because there can be other condition that must/must not be met i.e
-> trying to run ITS on AMD hw (yeah, yeah I know :) ) also required commenting
-> out some checks in patch_retpoline.
+This probably needs a comment. I assume the hardware is broken and
+sometimes writes don't work? You should state that.
 
-Ah, I might not have hit that, due to not actually having any AMD
-machines for testing :/
+> +static void ptp_cipu_print_dev_events(struct ptp_cipu_ctx *ptp_ctx,
+> +				      int event)
+> +{
+> +	struct device *dev = &ptp_ctx->pdev->dev;
+> +	int type = PTP_CIPU_EVT_TYPE_DEV;
+> +
+> +	switch (event) {
+> +	case PTP_CIPU_EVT_H_CLK_ABN:
+> +		PTP_CIPU_LOG_SUB(dev, KERN_ERR, type, event,
+> +				 "Atomic Clock Error Detected\n");
+> +		break;
+> +	case PTP_CIPU_EVT_H_CLK_ABN_REC:
+> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
+> +				 "Atomic Clock Error Recovered\n");
+> +		break;
+> +	case PTP_CIPU_EVT_H_DEV_MT:
+> +		PTP_CIPU_LOG_SUB(dev, KERN_ERR, type, event,
+> +				 "Maintenance Exception Detected\n");
+> +		break;
+> +	case PTP_CIPU_EVT_H_DEV_MT_REC:
+> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
+> +				 "Maintenance Exception Recovered\n");
+> +		break;
+> +	case PTP_CIPU_EVT_H_DEV_MT_TOUT:
+> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
+> +				 "Maintenance Exception Failed to Recover "
+> +				 "within %d us\n", ptp_ctx->regs.mt_tout_us);
+> +		break;
+> +	case PTP_CIPU_EVT_H_DEV_BUSY:
+> +		PTP_CIPU_LOG_SUB(dev, KERN_ERR, type, event,
+> +				 "PHC Busy Detected\n");
+> +		break;
+> +	case PTP_CIPU_EVT_H_DEV_BUSY_REC:
+> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
+> +				 "PHC Busy Recovered\n");
+> +		break;
+> +	case PTP_CIPU_EVT_H_DEV_ERR:
+> +		PTP_CIPU_LOG_SUB(dev, KERN_ERR, type, event,
+> +				 "PHC Error Detected\n");
+> +		break;
+> +	case PTP_CIPU_EVT_H_DEV_ERR_REC:
+> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
+> +				 "PHC Error Recovered\n");
+
+Are these fatal? Or can the device still be used after these errors
+occur?
+
+> +static int ptp_cipu_enable(struct ptp_clock_info *info,
+> +			   struct ptp_clock_request *request, int on)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static int ptp_cipu_settime(struct ptp_clock_info *p,
+> +			    const struct timespec64 *ts)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static int ptp_cipu_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static int ptp_cipu_adjtime(struct ptp_clock_info *ptp, s64 delta)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+
+I've not looked at the core. Are these actually required? Or if they
+are missing, does the core default to -EOPNOTSUPP?
+
+> +static ssize_t register_snapshot_show(struct device *dev,
+> +				      struct device_attribute *attr, char *buf)
+> +{
+> +	struct ptp_cipu_ctx *ctx = pci_get_drvdata(to_pci_dev(dev));
+> +	struct ptp_cipu_regs *regs = &ctx->regs;
+> +
+> +	return sysfs_emit(buf, "%s 0x%x %s 0x%x %s 0x%x %s 0x%x "
+> +			  "%s 0x%x %s 0x%x %s 0x%x %s 0x%x %s 0x%x "
+> +			  "%s 0x%x %s 0x%x %s 0x%x\n",
+> +			  "device_features", regs->dev_feat,
+> +			  "guest_features", regs->gst_feat,
+> +			  "driver_version", regs->drv_ver,
+> +			  "environment_version", regs->env_ver,
+> +			  "device_status", regs->dev_stat,
+> +			  "sync_status", regs->sync_stat,
+> +			  "time_precision(ns)", regs->tm_prec_ns,
+> +			  "epoch_base(years)", regs->epo_base_yr,
+> +			  "leap_second(s)", regs->leap_sec,
+> +			  "max_latency(ns)", regs->max_lat_ns,
+> +			  "maintenance_timeout(us)", regs->mt_tout_us,
+> +			  "offset_threshold(us)", regs->thresh_us);
+> +}
+
+Is this debug? Maybe it should be placed in debugfs, rather than
+sysfs.
+
+	Andrew
