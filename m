@@ -1,115 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9483C28DB71;
-	Fri, 27 Jun 2025 23:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FEB1E230E
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 23:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751066853; cv=none; b=Vdh54T0qM4OKrOVKwfbX+YGd21EDL9NLCn4E0ADipVGcyjwdtrQIVRJx62rIoFQBYLA3JYrDmFop53WIt2P12RKJDoQlENEdt7mPudCyKlng8nAVGi93vJzLx9EharHeA/C6P5on2rBna07A8yRn+JDzHXR3csuPgnY8jMiDsTY=
+	t=1751067125; cv=none; b=uBHlM4dA7pdq5g8f/2YvnYK6L33SBq6K9RDw2i61koYldalaeKDAg5T46hkQnZFswrsMwQraDVDdMF+O8i0W2D+u121QbyECOlMW1/fVdrk1KIiS3jTIfayyNf/g+0EuFDBPKqQ3Lyr9qcePcXgjbY4uVxv3SLn5UPMD0fyRdLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751066853; c=relaxed/simple;
-	bh=DzeC/ItIJ1IKYPWFENclfRURS3c24iRf6j/N4B8dPAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R4S1Sb2DTrPgj97LxWh5+JG0RgYU1Zy824zikh3Y5oF9biEBVUCinNlNm0abkagmRMuJcV018ohx7ti7fMlPc+ueWJr/RwUSRgQm+dXYAReu0IMc1ABrpdu9w1nTSKes+rj0qHKnc5HMqMtd6GWnklaMEcQbV7j5F2eQABqNUB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bK0v4Sp9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bK0v4Sp9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76827C4CEE3;
-	Fri, 27 Jun 2025 23:27:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751066853;
-	bh=DzeC/ItIJ1IKYPWFENclfRURS3c24iRf6j/N4B8dPAQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bK0v4Sp94EyI0JB5esjyP/GChQ/RNh6VTd1xLu9yUMzfDxVw/JrNjOZyNb0G/IY+P
-	 hDd/jAZe/VQ4DIDgAM+yglQnrvubDPyVtlsm8gIJRBLjRm+SXPXXlPWxNQjlJuBkTg
-	 XjypdGgSO9OBmyJ+d5TTDrJQg1xxTW3SyohShXwP0U7BJXpNhUM9rIUvgEQ5xRWh+U
-	 DxB3GQztByKRGAEp+XSJl+/AFNG7dXcLPk0GdnCoG95ZmZ6GzN0QMBz97AxVoC8Gwe
-	 M5mX1MDcEQnmV0dXqTID2Tcrl3CdjABAvzMqB5q32wq+kVahRmjvlL0mhCn8ynuHHq
-	 PcVPmzyMp87GQ==
-Date: Sat, 28 Jun 2025 04:57:26 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, brgl@bgdev.pl, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, lukas@wunner.de, Jim Quinlan <james.quinlan@broadcom.com>
-Subject: Re: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device()
- definition to drivers/pci/pwrctrl/
-Message-ID: <qy2nfwiu2g7pbzbk37wseapvsen7mx4fgqdkdwjbclsj5dltu5@7o2xtj3qhedm>
-References: <20250616053209.13045-1-mani@kernel.org>
- <20250627224502.GA1687792@bhelgaas>
+	s=arc-20240116; t=1751067125; c=relaxed/simple;
+	bh=HCnnz6zcfpOuLVedgg38avZsWcjVl9nHz0eqLL3LqE8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=tgE1+8hK2yTB/+/mUL59UsBqQ6Vgjp6n5IOA1A42JLO+gUsZR2oKrTQcNeBdxhdOKz2HqiS/lFU/j4O8mdgHz2OGO71M8GJX/56yMY/rbJo4rMQMK/jZqVqGgjiiSj+Xn/1pIYoXs91ib2GnoxCvOfI5EAvNUHN1MBcEPdm32AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddd03db21cso38486325ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:32:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751067122; x=1751671922;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9uRKXH6qyC/WDAHcGCREMD8s2c+oMoaBhENnXhl0imI=;
+        b=OswpZqIqtwsvcQSbcpCo2+NToYFe7+dQ7EC+SX2Jb70TvLjBRPr8SJ4ODmGhxLV4cR
+         uW1raGD8qBfz80MzUNo4TdNuyyhCiIUMrQMRbm2F8+JO3bsiKt0FBVUakAPfuyl9AX6Q
+         TRUprwywDBQm3qaj1ZE4dvsB5W4V09M3pOD9EpUgEH2Czhyq7VPpIkyVjuk41hQwvBhM
+         BWb2Xa+TbJDyYg7WqRMs02Pul3ywy9rYIRjDy51BSo20HtnA/21bC1GhYekFv9gANAzZ
+         nFvYozT9z+YEz1kVeq/vpAMwmRQm0PKAVPcwFHneARbJImhSTYYFlT0J8BICcKut6XH8
+         xaSA==
+X-Gm-Message-State: AOJu0Yy9xgJuF9qOtb1qCKnirR9sGRjJK4RUYTjP3VggiuzWK2dkIyRZ
+	OikCIxtA2cgQ7Td227D7S/AScIrMbjJkK91O3sBIfx/ZiS6S5az8doCwZVwQmEzaBBSc/tvdgoF
+	5KCjgl82T2yZaXk0Iz/RQrp6D57gm5LgMSCu7u6YsUNDmoIWmjG+A290d3cA=
+X-Google-Smtp-Source: AGHT+IGBX+VidVjlJOo0Ko/NElb2ZihUonl1oqqdQXlGzV37O8j51EoMvncViW139btW9qZT/B7pLsaxDGULXO7J7fHKNWTBtZri
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250627224502.GA1687792@bhelgaas>
+X-Received: by 2002:a05:6e02:2287:b0:3df:154d:aa5b with SMTP id
+ e9e14a558f8ab-3df4ab4eac3mr58952745ab.5.1751067122612; Fri, 27 Jun 2025
+ 16:32:02 -0700 (PDT)
+Date: Fri, 27 Jun 2025 16:32:02 -0700
+In-Reply-To: <1109aeb9-1e64-4052-b733-dd4af62019b7@linux.dev>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685f29f2.a00a0220.274b5f.0003.GAE@google.com>
+Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
+From: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	yanjun.zhu@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 27, 2025 at 05:45:02PM -0500, Bjorn Helgaas wrote:
-> On Mon, Jun 16, 2025 at 11:02:09AM +0530, Manivannan Sadhasivam wrote:
-> > pci_pwrctrl_create_device() is a PWRCTRL framework API. So it should be
-> > built only when CONFIG_PWRCTRL is enabled. Currently, it is built
-> > independently of CONFIG_PWRCTRL. This creates enumeration failure on
-> > platforms like brcmstb using out-of-tree devicetree that describes the
-> > power supplies for endpoints in the PCIe child node, but doesn't use
-> > PWRCTRL framework to manage the supplies. The controller driver itself
-> > manages the supplies.
-> > 
-> > But in any case, the API should be built only when CONFIG_PWRCTRL is
-> > enabled. So move its definition to drivers/pci/pwrctrl/core.c and provide
-> > a stub in drivers/pci/pci.h when CONFIG_PWRCTRL is not enabled. This also
-> > fixes the enumeration issues on the affected platforms.
-> 
-> Finally circling back to this since I think brcmstb is broken since
-> v6.15 and we should fix it for v6.16 final.
-> 
+Hello,
 
-Yes! Sorry for the delay. The fact that I switched the job and had to attend OSS
-NA prevented me from reworking this patch.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-> IIUC, v3 is the current patch and needs at least a fix for the build
-> issue [1], and I guess the options are:
-> 
->   1) Make CONFIG_PCI_PWRCTRL bool.  On my x86-64 system
->      pci-pwrctrl-core.o is 8880 bytes, which seems like kind of a lot
->      when only a few systems need it.
-> 
->   2) Leave pci_pwrctrl_create_device() in probe.c.  It gets optimized
->      away if CONFIG_OF=n because of_pci_find_child_device() returns
->      NULL, but still a little ugly for readers.
-> 
->   3) Put pci_pwrctrl_create_device() in a separate
->      drivers/pci/pwrctrl/ file that is always compiled even if PWRCTRL
->      itself is a module.  Ugly because then we sort of have two "core"
->      files (core.c and whatever new file is always compiled).
-> 
+Reported-by: syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com
+Tested-by: syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com
 
-I guess, we could go with option 3 if you prefer. We could rename the existing
-pwrctrl/core.c to pwrctrl/pwrctrl.c and move the definition of
-pci_pwrctrl_create_device() to new pwrctrl/core.c. The new file will depend on
-HAVE_PWRCTRL, which is bool.
+Tested on:
 
-> And I guess all of these options still depend on CONFIG_PCI_PWRCTRL
-> not being enabled in a kernel that has brcmstb enabled?  If so, that
-> seems ugly to me.  We should be able to enable both PWRCTRL and
-> brcmstb at the same time, e.g., for a single kernel image that works
-> both on a brcmstb system and a system that needs pwrctrl.
-> 
+commit:         fac5dcad RDMA/rxe: Fix rxe_skb_tx_dtor problem
+git tree:       https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
+console output: https://syzkaller.appspot.com/x/log.txt?x=17db0982580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
+dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
 
-Right, that would be the end goal. As I explained in the reply to the bug report
-[1], this patch will serve as an interim workaround. Once my pwrctrl rework
-(which I didn't submit yet) is merged, I will move this driver to use the
-pwrctrl framework.
-
-The fact that I missed this driver in the first place during the previous rework
-of the pwrctrl framework is due to devicetree being kept out-of-tree for this
-platform.
-
-- Mani
-
-[1] https://lore.kernel.org/all/vazxuov2hdk5sezrk7a5qfuclv2s3wo5sxhfwuo3o4uedsdlqv@po55ny24ctne/
-
--- 
-மணிவண்ணன் சதாசிவம்
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
