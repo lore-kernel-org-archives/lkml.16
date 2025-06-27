@@ -1,162 +1,189 @@
-Received: from mailrelay-egress12.pub.mailoutpod2-cph3.one.com (mailrelay-egress12.pub.mailoutpod2-cph3.one.com [46.30.211.187])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2050.outbound.protection.outlook.com [40.107.236.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C9628D8C2
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 22:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.187
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751062512; cv=none; b=Ut+OxjwxqKMYIBL6Q/5ARbEtA/4wI4Et5eWaUVU8Dfr1TzeGVnhKarcdz7KVHEgdbZE+4C916ecSWJSy3V93h0Yy1QBpYV8dAp6l4AcCYMhFluZejNJO/kmjhWCZ0JSwXDwgBloFRfbyDpfp7hsqjb56/IpAy5nZeuRT32PT8os=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751062512; c=relaxed/simple;
-	bh=HMUWz03PPVIAStqshFHJPAV94WE1iSKR4w8UcEZFAng=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=EmXeHKdJtzRAYKkYot86nxywJAYyWhUCZsu+nH50RyW4z2O5XFAKrsIEaLDsK+Oj1gOg3xbhPmG2t0a/PHixUlvk9nSdhh1Bv/TAZCNKDn7eEU3k4Zw4Ja+6I1HLNvXi6/toalvoiC3s3KyPWMBtXZq872e2zXp08IpYKzBrrYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=oSMqxT3m; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=bYyN+5qo; arc=none smtp.client-ip=46.30.211.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED47219E8
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 22:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751062558; cv=fail; b=YyrwA5ANgMHcNsBC6ems9WCY1+KGRzZkP3Mvn3fchQ4DtzVm5ppJWulTbd+iuQ7y3Hr3HJh88pluePreyOGnhKr0O4s65yycJd90VSftQjnXuso6ILYrdAeXUce9wwB9Mh7E4dO/j/IIt+YHeHVMHL6p1zhg9YFBEfu7hw7T1DM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751062558; c=relaxed/simple;
+	bh=5fcSgv/PdC+RE/mihJ23Og5j9/4FSK8gpdt0EanIwns=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=pGRWU3fKDaJy6NutLDKdhCyjcDK+aJSFb8+342mzaVeqOq0ufH0PGhQ5dcPe5nA1yTfnGsunWr8D/H9UMAB3N5mi0OXE0LPk8yJPFDLNShZnlxsMqaolJ/JOKA6hFuDDrV7Yif9whl9VnPJ/95TjeTGPMhw39ZhDURy7LDiwrdg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kjSAnMUd; arc=fail smtp.client-ip=40.107.236.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="oSMqxT3m";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="bYyN+5qo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751062507; x=1751667307;
-	d=konsulko.se; s=rsa1;
-	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
-	 subject:mime-version:content-type:from;
-	bh=T13rm+wv6m7Nf4D6++TT2JCiBV05mPjobL0Tfcq7go4=;
-	b=oSMqxT3mVtIgTyhYM6isadJjx8RHx8NrYpsWHnGdCFEgFcp7x6cZt1jTnQnwpQEeyydlI7njLEH2r
-	 e8SEUrF1tTiChSSBlrpNXX2nGnqLgOBlnhXAJCiipkZZHmKww618I5Zo+Ga+sqxpSY9THsDwROy5Rx
-	 yr6C6OIvAv+zfa4N2exSRHayU42eVqubfyyI3NWBP22jCvwCHJ2gJdhEt6cLaBSobhTYiGrYB3Sr7S
-	 wlMkKBTz6s990Plk4bLa4ZCCHTDyPYn0ORS5MekXf9YE0IlDYIt4VCrSUJhcchQGjLDpRo/NqW2ir5
-	 KSa9aWXTXcyF7G4w0nfwqMvI+0jdCjA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751062507; x=1751667307;
-	d=konsulko.se; s=ed1;
-	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
-	 subject:mime-version:content-type:from;
-	bh=T13rm+wv6m7Nf4D6++TT2JCiBV05mPjobL0Tfcq7go4=;
-	b=bYyN+5qobIuCXNTBp5b7opT+/0Ytp0PMyhfzRgPMGd7PzQEpwWHGZiMcsQ4CQzTO1Lf1MLwIaoiA9
-	 SszUceJDQ==
-X-HalOne-ID: 2e079c8b-53a4-11f0-b39e-f78b1f841584
-Received: from smtpclient.apple (c188-150-224-8.bredband.tele2.se [188.150.224.8])
-	by mailrelay1.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
-	id 2e079c8b-53a4-11f0-b39e-f78b1f841584;
-	Fri, 27 Jun 2025 22:15:07 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kjSAnMUd"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YKCvhi7OORH6hpwre3YSUlKCG5pLSmb0515BCBiS3iNunqxgUYC9ciKAVCCRVdvNMz2QLArPOTQaNQYIpVGkEwVY4jZUzGG24BLPv2F3cFS82RAmeDrYUvM8LcUsddP+ERYCaiUoQPKryg8sYSBuZ7et9Jl4zRrtlQnZvjBu9MVj0rbE5zmnsLK+3VdBtglHTJzU+NAVbSR+M323Mqbpi6ni2CqoaYYLBCdX7lXO7J40Wr7WrUHFyKD98lzmZs35Nq8Pcetux2kruPqq4a5+K9dljSm67DN4dERwJl96z8ucCx+KlHqLZx0/U0cIFHcHFFxWaa2S+JTMlToPsJW1BQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5fcSgv/PdC+RE/mihJ23Og5j9/4FSK8gpdt0EanIwns=;
+ b=yBAxcIciNLpuz9o4f99QaOOT/LM3MX7Dnql6637ctdcb2aKt17GJ317bRcRal6af1pmzz56r8k3tKOM9ixGKhKXTY0uKuuppACDyTc037qmWPiy3Xx+tCwBJwYh/75pdyM02f/rl7hVNHGXXxvsSafzCTywRYYRPbGUQVh3OyVLRfAfbhZzrssE00kh9hAC46SoWqtI5D2Wdhnw6UfVWM/gfOUfUUss9dzySotmoHw7TG+K3QGbCZkOUlMq4sRV0uSJIpeJ4ZzWZUrVAz5+jwRar2lpSTI+OVYER3Glpcj6+aFMinbG+w/eFJ5SQep7jZ2AF7hKMcET2Kr5YWerdDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5fcSgv/PdC+RE/mihJ23Og5j9/4FSK8gpdt0EanIwns=;
+ b=kjSAnMUd1TyVNeO5kgEnjhDZuTehnD1BKpOlDTLrzeFwTiykWxDQVDnOSzUQ0MVZTKw/dGeGRv1F1XyD5aa2pw1azahIzjO4W6BeXpAQ/KJMuma6YBwAsFAU2nLMMMhC+eNeAYlGrgkcBPU/Buz733VOdJYe0soQrDR/idHVAEgzBszSBVc9eeuDjnkkIVFDSqh5hUE0NXy9YWfdVrUR3ajzJoF3Eas++CGfWhoqYrMpY3CzLwtqZTOYvzmJQ8lvNvpijpWmrIiFdSzKCCdxjtwDEhcXetYyeni0IWe7yJOyiBmlx2P1hyebTpAswQeso6UDAYB3/ymFwpaIXD45eA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com (2603:10b6:5:42::28) by
+ CH1PR12MB9574.namprd12.prod.outlook.com (2603:10b6:610:2ae::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.24; Fri, 27 Jun
+ 2025 22:15:54 +0000
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2]) by DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2%6]) with mapi id 15.20.8835.027; Fri, 27 Jun 2025
+ 22:15:54 +0000
+Message-ID: <f93b813a-0bb0-4dec-9526-b4f13b967248@nvidia.com>
+Date: Fri, 27 Jun 2025 15:15:51 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 02/30] x86,fs/resctrl: Replace architecture event
+ enabled checks
+To: Tony Luck <tony.luck@intel.com>,
+ Reinette Chatre <reinette.chatre@intel.com>,
+ Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+ Peter Newman <peternewman@google.com>, James Morse <james.morse@arm.com>,
+ Babu Moger <babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>,
+ Dave Martin <Dave.Martin@arm.com>,
+ Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+ Chen Yu <yu.c.chen@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, patches@lists.linux.dev
+References: <20250626164941.106341-1-tony.luck@intel.com>
+ <20250626164941.106341-3-tony.luck@intel.com>
+Content-Language: en-US
+From: Fenghua Yu <fenghuay@nvidia.com>
+In-Reply-To: <20250626164941.106341-3-tony.luck@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PH7PR02CA0019.namprd02.prod.outlook.com
+ (2603:10b6:510:33d::25) To DM6PR12MB2667.namprd12.prod.outlook.com
+ (2603:10b6:5:42::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
-Subject: Re: [PATCH 2/4] mm/slub: allow to set node and align in k[v]realloc
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-In-Reply-To: <aF7a23G6zTtylrzq@pc636>
-Date: Sat, 28 Jun 2025 00:14:57 +0200
-Cc: Danilo Krummrich <dakr@kernel.org>,
- linux-mm@kvack.org,
- akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org,
- Alice Ryhl <aliceryhl@google.com>,
- rust-for-linux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3E1CA84B-3670-4887-ADA1-055E8A5DE806@konsulko.se>
-References: <20250627092901.356909-1-vitaly.wool@konsulko.se>
- <20250627093714.402989-1-vitaly.wool@konsulko.se> <aF51PTZh0gRVFuYu@pollux>
- <aF6DmPmeSpWU3hH_@pc636> <C6331389-1008-4D8B-99AA-C2640671E9A2@konsulko.se>
- <aF7a23G6zTtylrzq@pc636>
-To: Uladzislau Rezki <urezki@gmail.com>
-X-Mailer: Apple Mail (2.3826.200.121)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2667:EE_|CH1PR12MB9574:EE_
+X-MS-Office365-Filtering-Correlation-Id: c0f8e02f-052a-412f-88af-08ddb5c82ebe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Z0EwdTFMVU9DQlFMb1NVOUVyR2ttSkt0VHFlZjM2L1NiNmlnMUVSUWFpQ1Nq?=
+ =?utf-8?B?V3V1cVN0cUIxSWowYUh1SG1zY01LSmhKR2lQUzNFV0JlcG4xUXM4MXR5bWNS?=
+ =?utf-8?B?M0FoTTlyeHVvR0h4VUhaR1E0NG9GNVhHOWFOR0EwMnNXWVRGdkNHcDNFTStt?=
+ =?utf-8?B?cUJZQVJjbi91cmpQTFJSN0RtdzBhckR0WmhWQXVRUFVwOUV1ZWFOUDIzWTFj?=
+ =?utf-8?B?SHJvNEQ4MGhYTEVKeGZBYTZKNG8wRkFBQlpHNVpxODBERVVabzdiVEFJTVF3?=
+ =?utf-8?B?V2dnTnFqQzdoU0Q2Q2gvQk9tWEppL3hkaGoza0lkY0ZWOS93cXJMNFVRRENw?=
+ =?utf-8?B?N253SzRoV2RtV21LNXdjYmtOWDQ1YXFGOUFxZVl4bmtQSW1MdTMvcCsyT1Vy?=
+ =?utf-8?B?d1JIU0d6R29TbWhnVzc4ajRqN1BxOG95MFBDMmoyU2FRR2dIZVFiQjVGays5?=
+ =?utf-8?B?TU1PQTlpMGdSbGxycE14NUNTdFFPM2RaSXFiSjl2WnFtL1E0U2dCc0pRc1F2?=
+ =?utf-8?B?Vk9QWDVmYmhRdGpnQTJjMFFLTWVDbVhBTW84SEJRNnVNNmFRMEp4Z0Zud0Nk?=
+ =?utf-8?B?Zi9RMVF6T2gvTGVpamRlcm1VaEtZczRVZWN5bUlMakkrZmZpUklNMWtKYnpB?=
+ =?utf-8?B?cEhwTnVQZTFjN1dYLzZ0MkVlV2QxT1NreURlSStaL2dqVU12WE9PWVVLOVhm?=
+ =?utf-8?B?SkcyK1YzNHBCV05meHRhVHJQYTdrZUh4YXRxdnNBZkx3cW83bVVtcFNlZDNV?=
+ =?utf-8?B?M0tOT0VLQVAwcjZVdTEzOCtDTWJaNkU2Uk5OYnhGbWdxUlhwbS92U2J6RUs0?=
+ =?utf-8?B?S3MzRE9tKzN1MExCWkRMOFJSRGpSNUk0bFp5ZVhEVTFSYVRDZHRpQ2p0bHlJ?=
+ =?utf-8?B?Sm51eXdMZmlObXl6U2pVcTZNZ3RHZDU4VU03QUVZWWNVaVhITHBEcWVaV0xh?=
+ =?utf-8?B?R1RqN08reWpwbjhUUklXYWZ4cjNoMjlWS0d5RUNtWDZBWVJ5R2RyYm8vTTlZ?=
+ =?utf-8?B?ZXJEanpINTVsRlhobEV6MllMajdNcmtUZ0dNZWtaRVl4Tzg0TE9qVk50Qlow?=
+ =?utf-8?B?dzBxUTJzd2ozalNUZ2VpYm42d3VRZjZmeWNsOWNJNjkyYzFvTVdqZnhZYzlI?=
+ =?utf-8?B?Z042a3J5UEhBMXNnaGlaSDVBS3prQis0SGQ2UTh0WE1nWjRlQVFsOWpzSU1p?=
+ =?utf-8?B?NlZyYTJ2Z1Q3S0U3SGhRaVZUNXoyNktJZE5Ea2NxeXN6UURqaGJsUHNQdnpj?=
+ =?utf-8?B?VjNMc1FRSE1VUFNGdzZOWjRQTi81U2ZKbFM5Ti9KNmdWUlJHNUJtaVhGTEJr?=
+ =?utf-8?B?QmJUSzc5Q3ZJdlRRVjVoNzlRKzlzU015Q3hIc004QWZJaUd1K3BqeG9LY3R3?=
+ =?utf-8?B?RWJvR21FemRjM2RqSjk2TU1PaitVVUFrZlZEbDl5THhGNHJRdXE1UW84bFlR?=
+ =?utf-8?B?ODd5bHRCYVJRcjNlamc1MlpSZ0UyNE1tT2ZGeUtMUmdmNU9haDd0MTNBT000?=
+ =?utf-8?B?cnZyUjQzTHRGRkpmT0ZXbndkU1BMR295dDE3NUh6Qk1jNENyN0pFVkx3ZTlz?=
+ =?utf-8?B?bi9kbkhGNytucjJQbnRWVEtRVTRNV1pRUHRoYUxPeXg2bW01aWpaOFVsSE5R?=
+ =?utf-8?B?Z1NGand4K01zby84T2xsMjZaaGlZWGpaK3BKeG1iZ2MvaDM2Z3AwTnJ4QkE2?=
+ =?utf-8?B?alBNUUFzeHptWFhLeTFsQWFRcnFLV2REaVJjY0E2NG1FU2sxWU43enRiRG9i?=
+ =?utf-8?B?U2ZuemFZNWJBbWtqZFJZay8xLzVnTkFWVjdGYTZPblEvZnJFcjRnYXM1R1hy?=
+ =?utf-8?B?RHhWWDJJNmdsbGVRWnlRc2tVSnMzRi9DTHErYWpER0l3SVR1MncwYitKWFEy?=
+ =?utf-8?B?anVwdVY1NHZNYmVuUHVBU3hiNFYrRWZVZGg3cXk3WFNzUGZEYmtZYXBRc21s?=
+ =?utf-8?B?UC9sY0tzOTZxN3pFZ3Q1cTBOc2MrclBLVGJQcmNHalZXNGJ6MC81cnNlbjUw?=
+ =?utf-8?B?cTZjMW5nZmJnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SVZJUDYzaEhleWhFSkVMY0VUTlRmQlR1WUR2Wm0vMC83ek1janNkOE1CMHkx?=
+ =?utf-8?B?N1VCUGtmcWpCRnVMM2JrcnY2cDhXWVhwVFNVNlZrMkorRHZiWm1mZlByUys5?=
+ =?utf-8?B?L3JtVm80eDdvelArRTIwVlNKY2lpN0E0TTNCTG1laHZady81a1lOYU8ySFha?=
+ =?utf-8?B?bjFzU2hMUSsyWjFZbmlsNFBrSmgzMm90WGEwYXB5MzdsMEZNaW45OHNZbktz?=
+ =?utf-8?B?cGdIYkVoWmhrYlN2RjR5eUlwd01obFJkZmJOTWJZL3BaRFRDTTVGWVdiSFJo?=
+ =?utf-8?B?SHF0RzNYRUNiT0ZtWkpPNll6eVNiVzloN2RoN1lIWmNiL0x2MzVwOGEzV1A1?=
+ =?utf-8?B?ZUNLVHY2andQdE8yak5Bc3BtdGxzSTdJK1o4TWN4dVdxUHhsYWtjdXBFUFVm?=
+ =?utf-8?B?TGJycUlyMHZoY1l6VEx0cGdkako2OVA2czROclRSVmd3bFhOMUJkS2tZd0c2?=
+ =?utf-8?B?UUNhSTk2dlJKbEZDaGxON3ZiTGNXWDdreHdNT3RnK09kWHJkYWNHaGU2ZFNs?=
+ =?utf-8?B?eWxVMWIwTmVsbGNRaVNyOXc1M3FsT0JIV250a2JDakhXaGFqcEw2d05YUm1I?=
+ =?utf-8?B?ekNtYWw5RWVmU0taTEpIMThTbEJvUzBIUnQvKzRVRzI1SjFFTjlNeCt5OWdF?=
+ =?utf-8?B?d1pzREZaUUJjZEE4NDZOQ0hUU29NVjVrY3h4cHJGOTBielkwT3FxeWplZUFS?=
+ =?utf-8?B?VjRsa25ITHBTWnZSNzNHNm9uSjF0N2xtMjFlUXMxZHZTcm9RWm9WMEt1U05z?=
+ =?utf-8?B?OXJqT05iOUxMSkxSUTVxc05RMkdqVzlYWCtmQVRhdmNqTW4vMktTZWlyWStD?=
+ =?utf-8?B?WXRqQ3pncStZc2d2NlJLdjhZcytLcEpjV3VPZDBmbzZISUZ5QWh0OFVPbFN2?=
+ =?utf-8?B?dUJ3SHMzSFJURDBBQis3eVlNRlVYTDJpZWp0VG52MTQrNklGUzB1eUxLMVk0?=
+ =?utf-8?B?aytqRXlvWnhtUzNSRUNETWprVjFIOWZleWJxOFJHcWtiMHB2TEFhS29TU29H?=
+ =?utf-8?B?a0VrVU15VTQ5N0l0ZVdPZ2FEV0tXZGhadmFGSnU4cWwxdkwzOG5KYVhURHZr?=
+ =?utf-8?B?UldMQVlOa3BDTVVSNU41YjJoRFZTbnBOUVdQdEM0TWc3ZkxaNlZQM3ZPZVE4?=
+ =?utf-8?B?RXpndzQxdHBwVTRzbStWei9yd05nUldNRFNoNDZoZXQxWFE0RG5Bb1lrbHdl?=
+ =?utf-8?B?SmttVVNsNHNDVXdQVmZNbUNiVDhXZXhNbUxWVTBqVTBXd3d1ZzRCekIvSHpT?=
+ =?utf-8?B?c002aU5jM1lzWnpEL2ZvSTZGeUp1bHlSSHViT1k4K3JwNEtlaG5WWlRlajVX?=
+ =?utf-8?B?N0I5YWlGYjYzT0Y4bEppRS9sWjVmTHF4SXRNRlAwWTZxUnRHdkRXUElMMFZz?=
+ =?utf-8?B?QXc3djhKcG5uSHpUL2tKSk1TeHZQamN1QkQzNEpPaGtXRFRSR2xVdDVtcUFo?=
+ =?utf-8?B?MVJaQTdPL0Y2ajR4U2tDRjg2SkpzNmFKT0c1U2ZYSklPbFdtQUJCODlpTm4v?=
+ =?utf-8?B?b29DT2tOVzBORGFhOEhjWDBsQlZPOUdHNzV2SWxpWDdUOXhwclB4d0R3Nm5J?=
+ =?utf-8?B?dm9CZ0NPSDBqdkdFSjN1UmloWEdpeDJVaXAyQnFxTGtrNU1Vd21LcXl2VkFv?=
+ =?utf-8?B?ODRNbjBZeTV6c3BZN1FiQjM3QkduaXB1TEdqOVVNSFFzbXVBaCtoYnRrcnJE?=
+ =?utf-8?B?cVpvV3JzOVlaRUIzaVlzdU9tbXhIcHFIaWRSSmpNVVNYWE1IME1EQUtDeENZ?=
+ =?utf-8?B?MW9WNGJmOHl3c2xZM3FQcEwrRzlwRW5QOFlmY0YyVDF3dzQ2dno4MFNGdUZs?=
+ =?utf-8?B?VktoTVQyRStKVDhZV2J6azkxRzZPZ25GWkdJcmhxYjNsM0Izdm5zc3Ruemt0?=
+ =?utf-8?B?SXRBUEhwMklnTEdpT0N5SGt2MDVuQllqVzVzanErZGVFeGQrYXVpSFdXWW5E?=
+ =?utf-8?B?cEYveHNnamhWTTBOSGZYeW9xd0VIQVlPblJucWpHNGp2ZytJT3Z1bWxvd05C?=
+ =?utf-8?B?MjN3a1FDczV2Wm1vZXJtK3hBT2VSSHk2cFdoSXVmV2pmd1dEQi9pYWs4NWlw?=
+ =?utf-8?B?cXMyQnpHdFNSaFZza3J0MzdpZjY1aktDallQUDZzWnRHQ0pQNjVndXJrekFn?=
+ =?utf-8?Q?8mP/2PpK/G4UDIu/nTPq9nGP4?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0f8e02f-052a-412f-88af-08ddb5c82ebe
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2667.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 22:15:54.0815
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZBmhUwWAIhdu204lwJOvfrtSoV0ekx9+3gXhJFB+LHE7MuABmyy0oTa4AZ6u5d7PUUhmjaMVrZbqkNpKZGknkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PR12MB9574
 
 
+On 6/26/25 09:49, Tony Luck wrote:
+> The resctrl file system now has complete knowledge of the status
+> of every event. So there is no need for per-event function calls
+> to check.
+>
+> Replace each of the resctrl_arch_is_{event}enabled() calls with
+> resctrl_is_mon_event_enabled(QOS_{EVENT}).
+>
+> No functional change.
+>
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
 
-> On Jun 27, 2025, at 7:54=E2=80=AFPM, Uladzislau Rezki =
-<urezki@gmail.com> wrote:
->=20
-> On Fri, Jun 27, 2025 at 02:01:23PM +0200, Vitaly Wool wrote:
->>=20
->>=20
->>> On Jun 27, 2025, at 1:42=E2=80=AFPM, Uladzislau Rezki =
-<urezki@gmail.com> wrote:
->>>=20
->>> Hello, Vitaly, Danilo.
->>>=20
->>>> On Fri, Jun 27, 2025 at 11:37:14AM +0200, Vitaly Wool wrote:
->>>>> Reimplement k[v]realloc_node() to be able to set node and
->>>>> alignment should a user need to do so. In order to do that while
->>>>> retaining the maximal backward compatibility, the following rules
->>>>> are honored:
->>>>> * kmalloc/kzalloc/krealloc remain unchanged
->>>>> * kvmalloc/kvrealloc/kvcalloc remain unchanged
->>>>> * kvrealloc remains unchanged
->>>>> * kvrealloc_node is implemented as a new function taking align and
->>>>> NUMA id as extra parameters compared to kvrealloc.
->>>>> * krealloc_node is implemented as a new function taking NUMA id
->>>>> as an extra parameter compared to krealloc
->>>>> * kvmalloc_node/kvzalloc_node/kvcalloc_node get an extra parameter
->>>>> (alignment)
->>>>=20
->>>> I see what you're doing here:
->>>>=20
->>>> You created vrealloc_node_noprof() in the previous patch, taking =
-the following
->>>> arguments:
->>>>=20
->>>> vrealloc_node_noprof(const void *p, size_t size,
->>>>     unsigned long align,
->>>>     gfp_t flags, int nid)
->>>>=20
->>>> And now you're aligning the newly introduced krealloc_node() and
->>>> kvrealloc_node() with that.
->>>>=20
->>>> The idea for having an align argument on krealloc_node() simply is =
-that it
->>>> fails if the alignment requirement can't be fulfilled by the =
-corresponding
->>>> kmalloc bucket, such that we can fall back to vrealloc_node() in
->>>> kvrealloc_node().
->>>>=20
->>>> Generally, this makes sense to me.
->>>>=20
->>>> However, now you consequently have to add the align argument to =
-kvmalloc_node(),
->>>> kvzalloc_node(), kvcalloc_node() as well.
->>>>=20
->>>> This is what creates this huge diffstat changing all the users.
->>>>=20
->>>> IMHO, the problem here was introduced already with =
-vrealloc_node_noprof() taking
->>>> an align argument in your previous patch, since now you have to =
-adjust
->>>> everything else to logically follow the same naming scheme.
->>>>=20
->>>> Instead, I think you should introduce vrealloc_node_align(),
->>>>=20
->>> I am probably missing something. Could you please clarify why do you
->>> need the vrealloc_node_align() and other friends? Do you have users
->>> which require vrealloc() or kvrealloc() to support nid and align =
-from
->>> Rust API point of view?=20
->>>=20
->>>=20
->>=20
->> Alignment for Rust allocators should generally be supported, it=E2=80=99=
-s been listed as TODO for a while.
->> Node awareness is very desirable for e.g. KVBox and for the coming =
-zpool mapping.
->>=20
-> Thank you for clarification. The comment about TODO i saw. Initially i
-> thought that there is a real demand in having it for some users. But
-> this is just for future potential ones. So, maybe the comment should
-> be removed instead? But i do not have a strong opinion here.
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 
-Well, the zpool Rust mapping is in fact ready and will follow shortly =
-after we sort out the issues with this patchset.
+Thanks.
 
-~Vitaly
+-Fenghua
 
->=20
-> vrealloc_node_align() sounds indeed better for that purpose.
->=20
-> --
-> Uladzislau Rezki
-
+[SNIP]
 
