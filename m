@@ -1,166 +1,174 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F2526C393;
-	Fri, 27 Jun 2025 09:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95937293468
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751016776; cv=none; b=rbC7gNPEQ51S3xWKyX/fMZ3ayUbuWXyD6Nbb08qQfWUtB8XdXcx5EkI2a1ZiZETAJmHm90OSV8+mlKOYmWWyow6l/bH6RCamYUpEobjXFUMuiyZsw3QfSwJMds+tYvGyjj3ccuDfYhGHo5yZcFM8jerZjMrayYdKDXtIAv3INmk=
+	t=1751016788; cv=none; b=P07sxezSQtmPfewC2eEU43lPR8WyNNwWPRvYwayc7Del7mEqOResHc4IB9lV/OBAtkGQvw30dS220nDKTs8cHv7+s4Jyqv4CEPMSKNaFWCsm81QVsfvu62IB8D53X/VSyMkr040QtL3GCQRC4X5dWxUTqK9KH9xOVtTzIceG+jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751016776; c=relaxed/simple;
-	bh=KAPbXDbsTbRtLUSJtRih+t68mrh+mORwKv96JxsrrGs=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UNwwO3Qksn3MC8UjdbX2yoYDpTWBlYlNKxtTj2qkXGDignSFu9/Qc77qpBj4SR7Y8dVhjueJEW8+DhGKoLHsjHHGeOtHxMNgLxorlu135sW1LnCgnSgXI1a1yWc8VG7ggLjvEplLyWCqVNtgrv6DwMhs3zYXVNjvz7fQWabB3FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h7iMoMGX; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751016788; c=relaxed/simple;
+	bh=VXByMGvrYIFk6J7l6d66GOgoXAABV8VqYthKY3nfMFk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=hPie4/SGa+wF1puemJFbjR3cXK8yoSS1OJNz8Gh2gu0NfAF2VYVIuco8ev4y1yFiCyR5dMfjZzeVhO5Nb0aZTr3LuEsdx73hPZDhgd08P4Y2cR0NFSaf9pMPFhKuL7BxIZKQNVcCvoplV5Q92EFBGopO+zP6nle5RvsOZQDZJ6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=uCxYqSBQ; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h7iMoMGX"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a54700a46eso993339f8f.1;
-        Fri, 27 Jun 2025 02:32:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751016773; x=1751621573; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZHGbcG/vcFnWjGIjJ/Lfayx844s2gblNTlygOV5e6rY=;
-        b=h7iMoMGXH8vHhKmy8V864Pd/ms7+l9E5Y7jAQL/R+2lfZta+25LHmEilbgJOjIIlJ/
-         qEUr6NBhetyIkKQuDeGcA7Rv68xMSOKY6oqv0yofZJXxSGUXkOeVua2Sa+7H3I6ht+yG
-         dukZJ+jeXahMriQFxL/TFnUghSScdsrmbjE79O74TR9ERZl2xq+/Mw7xhriVGonydw99
-         9viLjROUHXdzVQcagBpfajOJDGks2QhCuhaeprss4nnHQDU83Wl2GTy0TvqxLDWlO4rx
-         KM4seAPTwbWtgluGYxQv/UWsMRC1tOdi9ceGf7BxmIWuN7juoZ1948koVwQiktNdO4QW
-         +VCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751016773; x=1751621573;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZHGbcG/vcFnWjGIjJ/Lfayx844s2gblNTlygOV5e6rY=;
-        b=v1BfuM3/xCAeN4iqjbCJszqrgri1p9fUBJR3bi9FQz0ugZOUKT+ndFsfXF+Qr7jj/u
-         cVrH7Cn19+s8ENC5BKFC1NNWUus0DizAjkgUuRkKeSWzz69lei+sOxo+mfm0tgdxdJGX
-         Lo7TLon0o/Bz5IEt2mkIDtgtx7AJrhb44SpL9VL16yj8i2zwnbVx6V5tUCu/mFwv8f/E
-         RBkVeuwJxxqYLLApUsoLLfBloO6aNcivktM6jTFuy1/gi0/MZWnhMGTYekFev87HxXO1
-         p5mQghUWJjyeY5XYLwUFgDkdKvlpnuC8i7CV4OgS5Qy8Svc/PbyOnwyc5DxwKL6BwsEK
-         4ZaA==
-X-Forwarded-Encrypted: i=1; AJvYcCVsh78P7T+f7I0rqRD6O5vJoGSGgVmnM2kHLqepy7ZJQd0dVIa6J/6M2ldR8pDp9ufdEBA8luKwowsQ@vger.kernel.org, AJvYcCWBJ5wBqtrANvPEi7PaLVJyrVmAfHTsLBEnCB9fMUvyBW83UCPFT6gmhHXMXpdGLoVZfUIFOBDD8ijEm7E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6HbB1DY27Sg1XpgiPqqaEYdpZLHLwNQcBKbzzTG4vUsmzoUDq
-	tILUk/dmiWT2X6HyimQ2T6JsA38rDO8OCrFRYNBaKTsnfP06x5xr9RcfLfbmfg==
-X-Gm-Gg: ASbGnctZBbpzIi3xQDitZLGMzPbMeDltAcv77N7Qf95C+PyPLOMPekkg/Gm/2s3sl8R
-	z5whWtNv66I0EfMW6OHejawX69JAuol0qUH6JE4DufNN3WPLUucWUs3pz41LtR/MsXFpemIVLWo
-	Mp6nb3GWlavuU6RBQ2jSdCz6Txqr+fO2Tj1odBSXZiLq3JbqWBapzFR27UWqsfybP9iddxDekPr
-	W9x5bEuW2ckGAGB5rMcUqC9z9SL5KVRezmQpaffZcuDa/XadWksyAzoN9cNGMNfbjGuW82hEzsu
-	clSpTyXcasREKCEjXCazDRWPIPfOXPi+hlN2YiXfUt+45NHdMAwwo8Pfsh3Xj1ILVGJUsdpfz5c
-	w2nE59u1GUlNkdCYssQ==
-X-Google-Smtp-Source: AGHT+IHtGgW2tRSVkf3orsf3VAHLArXb++bdK4XS57AUO5KdAImNO+BadOSsFZILC8CvPR+AeW8olQ==
-X-Received: by 2002:a5d:5f92:0:b0:3a5:39d8:57e4 with SMTP id ffacd0b85a97d-3a9002968a3mr2333232f8f.41.1751016772461;
-        Fri, 27 Jun 2025 02:32:52 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e528a9sm2215225f8f.60.2025.06.27.02.32.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 02:32:52 -0700 (PDT)
-Message-ID: <685e6544.5d0a0220.20cf55.9440@mx.google.com>
-X-Google-Original-Message-ID: <aF5lPh3XoJLFC1sf@Ansuel-XPS.>
-Date: Fri, 27 Jun 2025 11:32:46 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCH v18] pwm: airoha: Add support for EN7581 SoC
-References: <20250626224805.9034-1-ansuelsmth@gmail.com>
- <aF5dHDr8yDSKlp5j@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uCxYqSBQ"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250627093303epoutp03a16dbc95f79354a85de049f700c6adcb~M3HzBENDO2932429324epoutp035
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:33:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250627093303epoutp03a16dbc95f79354a85de049f700c6adcb~M3HzBENDO2932429324epoutp035
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751016783;
+	bh=803Ryi9f+g9PHC85frY88NRvvDMi88cIW/isNgputhc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uCxYqSBQfBbQ/WsDJJvQGDLQWfB+oc0xyEx0JyHGXoigzZWjwjWW30vl9gpZzObtl
+	 92pYaJB2/ulIL5hd/cIjhnK6JreXJA5Gsqik7Ceg3B/xYJmuSrd2JDR+z1mMfmO+vz
+	 UC1VT/NYLRHjrfOJertXs8iQEtvx9j1nYfVRp4bA=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250627093302epcas5p1a6ad3f06f523f5bccd4d50d2dac71130~M3HyHJ4Ct3060930609epcas5p1X;
+	Fri, 27 Jun 2025 09:33:02 +0000 (GMT)
+Received: from epcpadp2new (unknown [182.195.40.142]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4bT9Mf3Y5Qz2SSKj; Fri, 27 Jun
+	2025 09:33:02 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250627090337epcas5p1c77ffd7260b375241786afa81a1712ce~M2uGkTsPF2989429894epcas5p15;
+	Fri, 27 Jun 2025 09:03:37 +0000 (GMT)
+Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250627090335epsmtip10a1c0b878e5135109f36f5fe1b81d39d~M2uEJ_prp1804518045epsmtip1L;
+	Fri, 27 Jun 2025 09:03:35 +0000 (GMT)
+Date: Fri, 27 Jun 2025 14:33:29 +0530
+From: Neeraj Kumar <s.neeraj@samsung.com>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, a.manzanares@samsung.com, nifan.cxl@gmail.com,
+	anisa.su@samsung.com, vishak.g@samsung.com, krish.reddy@samsung.com,
+	arun.george@samsung.com, alok.rathore@samsung.com, neeraj.kernel@gmail.com,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
+Subject: Re: [RFC PATCH 15/20] cxl: Add a routine to find cxl root decoder
+ on cxl bus
+Message-ID: <1983025922.01751016782483.JavaMail.epsvc@epcpadp2new>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aF5dHDr8yDSKlp5j@smile.fi.intel.com>
+In-Reply-To: <aF2dUqGKcu8-rwaV@aschofie-mobl2.lan>
+X-CMS-MailID: 20250627090337epcas5p1c77ffd7260b375241786afa81a1712ce
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_d1ff6_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250617124049epcas5p1de7eeee3b5ddd12ea221ca3ebf22f6e8
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124049epcas5p1de7eeee3b5ddd12ea221ca3ebf22f6e8@epcas5p1.samsung.com>
+	<1295226194.21750165382072.JavaMail.epsvc@epcpadp2new>
+	<aF2dUqGKcu8-rwaV@aschofie-mobl2.lan>
 
-On Fri, Jun 27, 2025 at 11:58:04AM +0300, Andy Shevchenko wrote:
-> On Fri, Jun 27, 2025 at 12:47:53AM +0200, Christian Marangi wrote:
-> > From: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> > 
-> > Introduce driver for PWM module available on EN7581 SoC.
-> 
-> ...
-> 
-> > + * Copyright 2025 Markus Gothe <markus.gothe@genexis.eu>
-> > + *		  Christian Marangi <ansuelsmth@gmail.com>
-> 
-> I'm not sure you can change the copyright line like this. I would rather expect
-> 
->  * Copyright 2012 Markus Gothe <markus.gothe@genexis.eu>
->  * Copyright 2025 Christian Marangi <ansuelsmth@gmail.com>
-> 
-> (Sorry, I forgot the exact original year there, but you got the point)
-> 
-> ...
-> 
-> > +	/* Global mutex to protect bucket used refcount_t */
-> > +	struct mutex mutex;
-> 
-> This makes a little sense. Either you use refcount_t (which is atomic) or
-> use mutex + regular variable.
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_d1ff6_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
+
+On 26/06/25 12:19PM, Alison Schofield wrote:
+>On Tue, Jun 17, 2025 at 06:09:39PM +0530, Neeraj Kumar wrote:
+>> Add cxl_find_root_decoder to find root decoder on cxl bus. It is used to
+>> find root decoder during region creation
+>
+>Does the existing to_cxl_root_decoder() provide what you need here?
 >
 
-Using a regular variable I lose all the benefits of refcount_t with
-underflow and other checks. 
+Hi Alison,
 
-> ...
-> 
-> > +	/*
-> > +	 * It is necessary to explicitly shift out all zeros after muxing
-> > +	 * to initialize the shift register before enabling PWM
-> > +	 * mode because in PWM mode SIPO will not start shifting until
-> > +	 * it needs to output a non-zero value (bit 31 of led_data
-> > +	 * indicates shifting in progress and it must return to zero
-> > +	 * before led_data can be written or PWM mode can be set)
-> 
-> Missing period at the end.
-> 
-> > +	 */
-> 
-> ...
-> 
-> > +static void airoha_pwm_disable(struct airoha_pwm *pc, struct pwm_device *pwm)
-> > +{
-> > +	/* Disable PWM and release the bucket */
-> > +	airoha_pwm_config_flash_map(pc, pwm->hwpwm, -1);
-> > +	airoha_pwm_release_bucket_config(pc, pwm->hwpwm);
-> > +
-> > +	clear_bit(pwm->hwpwm, pc->initialized);
-> > +
-> > +	/* If no SIPO is used, disable the shift register chip */
-> > +	if (find_next_bit(pc->initialized, AIROHA_PWM_MAX_CHANNELS,
-> > +			  AIROHA_PWM_NUM_GPIO) >= AIROHA_PWM_NUM_GPIO)
-> 
-> This can be rewritten as
-> 
-> 	if (!bitmap_read(pc->initialized, AIROHA_PWM_NUM_GPIO, AIROHA_PWM_NUM_SIPO))
-> 
-> (seems to me that the above code is buggy and has to have a check against the
->  full size of bitmap).
-> 
+Actually, my need is to find decoder0.0 from port1, with which endpoint device is connected.
+Here i am already using to_cxl_root_decoder() inside cxl_find_root_decoder().
+In cxl_find_root_decoder(), First i am finding dev which is required by to_cxl_root_decoder()
 
-Yes I'm confused by find_next_bit. Is the nbits part the rest of the bit
-or the full size of the bitmap?
+	struct cxl_root_decoder *cxl_find_root_decoder(struct cxl_port *port)
+	{
+		struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
+		struct device *dev = device_find_child(&cxl_root->port.dev, NULL, match_root_decoder);
+		return to_cxl_root_decoder(dev);
+	}
 
-Google suggest it should be the full size of the bitmap but I wasn't so
-sure. Anyway I will use bitmap_read since it seems more readable.
 
-> > +		regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
-> > +				  AIROHA_PWM_SERIAL_GPIO_FLASH_MODE);
-> > +}
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Thanks,
+Neeraj
 
--- 
-	Ansuel
+>>
+>> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+>> ---
+>>  drivers/cxl/core/port.c | 26 ++++++++++++++++++++++++++
+>>  drivers/cxl/cxl.h       |  1 +
+>>  2 files changed, 27 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+>> index 2452f7c15b2d..94d9322b8e38 100644
+>> --- a/drivers/cxl/core/port.c
+>> +++ b/drivers/cxl/core/port.c
+>> @@ -513,6 +513,32 @@ struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev)
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(to_cxl_switch_decoder, "CXL");
+>>
+>> +static int match_root_decoder(struct device *dev, void *data)
+>> +{
+>> +	return is_root_decoder(dev);
+>> +}
+>> +
+>> +/**
+>> + * cxl_find_root_decoder() - find a cxl root decoder on cxl bus
+>> + * @port: any descendant port in root-cxl-port topology
+>> + */
+>> +struct cxl_root_decoder *cxl_find_root_decoder(struct cxl_port *port)
+>> +{
+>> +	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
+>> +	struct device *dev;
+>> +
+>> +	if (!cxl_root)
+>> +		return NULL;
+>> +
+>> +	dev = device_find_child(&cxl_root->port.dev, NULL, match_root_decoder);
+>> +
+>> +	if (!dev)
+>> +		return NULL;
+>> +
+>> +	return to_cxl_root_decoder(dev);
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_find_root_decoder, "CXL");
+>> +
+>>  static void cxl_ep_release(struct cxl_ep *ep)
+>>  {
+>>  	put_device(ep->ep);
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 30c80e04cb27..2c6a782d0941 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -871,6 +871,7 @@ bool is_cxl_nvdimm_bridge(struct device *dev);
+>>  int devm_cxl_add_nvdimm(struct cxl_port *parent_port, struct cxl_memdev *cxlmd);
+>>  struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port *port);
+>>  void cxl_region_discovery(struct cxl_port *port);
+>> +struct cxl_root_decoder *cxl_find_root_decoder(struct cxl_port *port);
+>>
+>>  #ifdef CONFIG_CXL_REGION
+>>  bool is_cxl_pmem_region(struct device *dev);
+>> --
+>> 2.34.1
+>>
+>>
+
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_d1ff6_
+Content-Type: text/plain; charset="utf-8"
+
+
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_d1ff6_--
+
