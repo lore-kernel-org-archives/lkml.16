@@ -1,139 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2B2294A11;
-	Fri, 27 Jun 2025 13:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF9F2F1FDF;
+	Fri, 27 Jun 2025 13:36:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751031272; cv=none; b=gNxoOmHHXVRcHT0qWAx1YH4UfCbYOniTLg8c8VXJzkDVaK4p+dvAYILbyggNqMmxWIGiX+zWw1RlYbK+dYgk/F+A2BlLsqDtgVnsOuVFQnqiyf7YI6zhiG68dOy6kGFuGCaG9zhL8Qv2YY36k7XNtZRIX2PUMAm0Z8wJJF4mqHc=
+	t=1751031373; cv=none; b=Ux+pjzNsvCCG6qobpvgUcpfd8/AKksmUCw8p9z8N9bz3q0zZ4a0xHnZ39h+/I6q1LdVhYOq5Y1rlqHKhqX3dhpHuc+cRyXDsNL5RD3Kh9a1JJ/P7i+M/sWqvB2pKE7/N7hJ4Hf8bW6mUCJ8p/j8xbXjp6bztH0g2iRn7mjkpH3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751031272; c=relaxed/simple;
-	bh=IdTDvFP8y9HaGTCvvR1/VaHuRyW7QodsgF7bM8TCSI0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HaS+wc5JkZOe2me+Z7LcxIIMGnf4Jv+0umGTRNzsyrNRgCFZPrWXkJJPcVz50Qck1Zi/SFrdmdE+VDfxCFk1D8qBB94MjLKLgm3/gaZJrGYUoIxDJWbC1sYnCBp6iCMQ2jyX0JzT1P/Ze5sdeGDJESG3XUAqpD8UfUeIKoRGNW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGV9S0Du; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751031373; c=relaxed/simple;
+	bh=b+AqKL/t2Y57F7SFIeF2uOilMxYgh+4DSlllHo4mbfo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mV83OEHy2NTsaAwbWwOtNlk3bwZkl6iyEL1aMCa5ugbbyOKAKDH8hUUv2ZjS/TBaRH9Bi2Hxt0kvVNs477lnNcW7GYXYP38ZhiyCVMfKKi9E8F6hCD4PWhG6PlfIub7ce0C0QKTNjLCcipahkA0YzUa2GCWI0TTvMIXuRHHrTHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJDDw55M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGV9S0Du"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20E84C4AF09;
-	Fri, 27 Jun 2025 13:34:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJDDw55M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E2F3C4CEE3;
+	Fri, 27 Jun 2025 13:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751031272;
-	bh=IdTDvFP8y9HaGTCvvR1/VaHuRyW7QodsgF7bM8TCSI0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dGV9S0DuN0PMGbTcSCHn0V2FGwVDGdhEXR3I4FUJ9/YySKuhAQSzKWPC5ArWakjbs
-	 XMCzbvUTLK5/R4eWuNHhnTwGYwtNaTvcvZbW+yOcOodJ7GCu0IPv3sjktwFI61jyAF
-	 lTQ1sTzZOWVnU/Z1TE+0I0WhZAqmS/cmZhnI+E1OFdwbY3JnZ6CdPRijk0ixaTUovH
-	 d2cDv6ytpRwCYMhPVUxh4+5zaK2odYUEDjwzn6Bh8ltMFRnKzp9MEgNZioFt8bh2tY
-	 KYP7clxaiDJN2XrmKDUc/aMiPoebM6CREcwsnP0YOgS3Ous7gPnpoqOUXsZni2JYii
-	 AFtzOAC3SJMJQ==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-60768f080d8so3820707a12.1;
-        Fri, 27 Jun 2025 06:34:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUsM2TJeCdXlaU1Fnb+0wmEG9C8FPSwvJGpc7CY5F0SiKUEIptFpF4e/Sf9HI807m/9qKSA4eNSc1F9@vger.kernel.org, AJvYcCVxPllmP9ne0g6s/6Lsc97a2zjxQsW1WkZgfqVECjxinFBuargabvaQoRPqMKjN7irD/TgE7CWtm6pBWywi@vger.kernel.org, AJvYcCXMOZYFfQjZ6suYXUsaoW8mMkUXqWXOksJ4GvYbTawE2IBSRRYIAwbZ3Otyn6qFCeSm0JTWwPRHqtSYLA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZapbGPiLWC0AQ46P38+p6fD00hRsS/sspYkPJ/BZxRKUT1KED
-	HQA9IXwhiHFQnngKmBwxLKFyB14KWfbr5EAuQ+DT81HP4qI1StdolYALycc0+YGf6GOM+D4WmIt
-	VOhP705aXn+aFFEbqcyyHpC5Fquwu1w==
-X-Google-Smtp-Source: AGHT+IEVRFNBFlTP6R9fUrxtJFc+ywLiUb4Q+PsDVjgttF7BLiyvAKx8hYh9X9Oqt+d5yA8ADVKHtkuR4NjvhsGbj6E=
-X-Received: by 2002:a17:907:7f14:b0:ae0:c561:b806 with SMTP id
- a640c23a62f3a-ae3500f276fmr296866566b.37.1751031270546; Fri, 27 Jun 2025
- 06:34:30 -0700 (PDT)
+	s=k20201202; t=1751031373;
+	bh=b+AqKL/t2Y57F7SFIeF2uOilMxYgh+4DSlllHo4mbfo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=AJDDw55MJlOCVvTFjNTI1frKXCVh8blcEuVXrNyCokvJAG1kOtlsiSCic2uxm/G58
+	 BrO+Bxxc3pu2lbtt/kDFxhoI3I/Jayc9I8UXOt/zVMasJmI7ZSMEvccLpRS3W2ftKz
+	 vMjX5+nOFC+dlKksOVew1jaDQGTANoYxW54i4uqYAtJAOpT/QPU8bkfmFRKyvO5Z82
+	 OBVExL/AQvGJPwrZmOfv/uLSLHjfEP9SnTogY6JSz7a6Mof3pQ1ypdnBiFhJl5xYqZ
+	 K5yUAUals6BoMVo6oBjiZj6o8Fd79QHkP4M1Nsw6w8w00SrbjZM77B1tghvy3iPl3S
+	 QddlGxg2/VoWg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uV9FS-00AZpT-Nm;
+	Fri, 27 Jun 2025 14:36:11 +0100
+Date: Fri, 27 Jun 2025 14:36:10 +0100
+Message-ID: <86qzz5b92t.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Mingwei Zhang <mizhang@google.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 09/22] KVM: arm64: Correct kvm_arm_pmu_get_max_counters()
+In-Reply-To: <20250626200459.1153955-10-coltonlewis@google.com>
+References: <20250626200459.1153955-1-coltonlewis@google.com>
+	<20250626200459.1153955-10-coltonlewis@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250625085715.889837-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20250625085715.889837-1-daniel.lezcano@linaro.org>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 27 Jun 2025 08:34:18 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLNQ729cwSEUnk5bNMjhJR7WTqcPPh1uL4suN1GhNhRMw@mail.gmail.com>
-X-Gm-Features: Ac12FXxw2NuGvxwtqORXKtaK75DRC2OKF-_MV83Pl275d2zGx8F2rQx8EOkHjI8
-Message-ID: <CAL_JsqLNQ729cwSEUnk5bNMjhJR7WTqcPPh1uL4suN1GhNhRMw@mail.gmail.com>
-Subject: Re: [PATCH RFC] timer: of: Create a platform_device before the
- framework is initialized
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	lorenzo.pieralisi@linaro.org, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Arnd Bergmann <arnd@arndb.de>, John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, 
-	"open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: coltonlewis@google.com, kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, mizhang@google.com, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Jun 25, 2025 at 3:57=E2=80=AFAM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> In the context of the time keeping and the timers, some platforms have
-> timers which need to be initialized very early. It is the case of the
-> ARM platform which do not have the architected timers.
->
-> The macro TIMER_OF_DECLARE adds an entry in the timer init functions
-> array at compile time and the function timer_probe is called from the
-> timer_init() function in kernel/time.c
->
-> This array contains a t-uple with the init function and the compatible
-> string.
->
-> The init function has a device node pointer parameter.
->
-> The timer_probe() function browses the of nodes and find the ones
-> matching the compatible string given when using the TIMER_OF_DECLARE
-> macro. It then calls the init function with the device node as a
-> pointer.
->
-> But there are some platforms where there are multiple timers like the
-> ARM64 with the architected timers. Those are always initialized very
-> early and the other timers can be initialized later.
->
-> For this reason we find timer drivers with the platform_driver
-> incarnation. Consequently their init functions are different, they
-> have a platform_device pointer parameter and rely on the devm_
-> function for rollbacking.
->
-> To summarize, we have:
->  - TIMER_OF_DECLARE with init function prototype:
->    int (*init)(struct device_node *np);
->
->  - module_platform_driver (and variant) with the probe function
->    prototype:
->    int (*init)(struct platform_device *pdev);
->
-> The current situation with the timers is the following:
->
->  - Two platforms can have the same timer hardware, hence the same
->    driver but one without alternate timers and the other with multiple
->    timers. For example, the Exynos platform has only the Exynos MCT on
->    ARM but has the architeched timers in addition on the ARM64.
->
->  - The timer drivers can be modules now which was not the case until
->    recently. TIMER_OF_DECLARE do not allow the build as a module.
->
-> It results in duplicate init functions (one with rollback and one with
-> devm_) and different way to declare the driver (TIMER_OF_DECLARE and
-> module_platform_driver).
->
-> This proposed change is to unify the prototyping of the init functions
-> to receive a platform_device pointer as parameter. Consequently, it
-> will allow a smoother and nicer module conversion and a huge cleanup
-> of the init functions by removing all the rollback code from all the
-> timer drivers. It introduces a TIMER_OF_DECLARE_PDEV macro.
->
-> If the macro is used a platform_device is manually allocated and
-> initialized with the needed information for the probe
-> function. Otherwise module_platform_driver can be use instead with the
-> same probe function without the timer_probe() initialization.
->
-> I don't have an expert knowledge of the platform_device internal
-> subtilitie so I'm not sure if this approach is valid. However, it has
-> been tested on a Rockchip board with the "rockchip,rk3288-timer" and
-> verified the macro and the devm_ rollback work correctly.
+On Thu, 26 Jun 2025 21:04:45 +0100,
+Colton Lewis <coltonlewis@google.com> wrote:
+> 
+> Since cntr_mask is modified when the PMU is partitioned to remove some
+> bits, make sure the missing counters are added back to get the right
+> total.
 
-Have you looked at the SH "early_platform_driver"? How does this
-compare? IIRC, that used to be generally available, but has been
-pushed into SH since that was the only arch using it and no one likes
-it.
+Please fix the subject of the patch to be more descriptive. It is
+worded like a bug fix, while it really is only a step in the patch
+series.
 
-Rob
+Something like "Take partitioning into account for max number of
+counters" would go a long way.
+
+> 
+> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+> ---
+>  arch/arm64/kvm/pmu.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/kvm/pmu.c b/arch/arm64/kvm/pmu.c
+> index 79b7ea037153..67216451b8ce 100644
+> --- a/arch/arm64/kvm/pmu.c
+> +++ b/arch/arm64/kvm/pmu.c
+> @@ -533,6 +533,8 @@ static bool pmu_irq_is_valid(struct kvm *kvm, int irq)
+>  u8 kvm_arm_pmu_get_max_counters(struct kvm *kvm)
+>  {
+>  	struct arm_pmu *arm_pmu = kvm->arch.arm_pmu;
+> +	u8 counters;
+> +
+
+nit: superfluous blank line.
+>  
+>  	/*
+>  	 * PMUv3 requires that all event counters are capable of counting any
+> @@ -545,7 +547,12 @@ u8 kvm_arm_pmu_get_max_counters(struct kvm *kvm)
+>  	 * The arm_pmu->cntr_mask considers the fixed counter(s) as well.
+>  	 * Ignore those and return only the general-purpose counters.
+>  	 */
+> -	return bitmap_weight(arm_pmu->cntr_mask, ARMV8_PMU_MAX_GENERAL_COUNTERS);
+> +	counters = bitmap_weight(arm_pmu->cntr_mask, ARMV8_PMU_MAX_GENERAL_COUNTERS);
+> +
+> +	if (kvm_pmu_is_partitioned(arm_pmu))
+> +		counters += arm_pmu->hpmn_max;
+
+Why the check? Why can't we rely on hpmn_max to always give us the
+correct value?
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
