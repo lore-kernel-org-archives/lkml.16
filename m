@@ -1,261 +1,230 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96856296150;
-	Fri, 27 Jun 2025 21:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7557C1E8322
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 21:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751058327; cv=none; b=pG3DCAyfsnQrD0oPrm4MWbU8yTWcnAOSbDGNMRF8C+zdZSTshTDX3La36f9kWmbr/d2LdMM8bkeV5ktr2FSuChOLXNFxWPr56tGPvd8qi/yYIVpI816+xTaztDJU6WokrO7AakJ5ke7U0isqvmE2DpnGSYjbUJvMJjxtQ2xtSpc=
+	t=1751058372; cv=none; b=fSvamciTBd1jrA1M70LDF4q+8raglQKvnb+LJmdoayoAQyMJbbwpvhrbdsAFpwcvKo4HvukjaWAhMy2+G/PYtC50ENZPqqYflsg6wUt99Yy0JiW4ysBgke5PXnvhp7tuWRcAbb3YK8JIxS2oDlJGd0Yw17ZA1HRScM065qYnC3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751058327; c=relaxed/simple;
-	bh=cR0tx2/QUoO//X9xT2pUdVDrDosFwq7E9WIYzcFoeO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M68QwNhBuzjmvFEwykcy17oRdVYtkCZqlpYz4xiN2XbQVIfJuxjaGqyx4gwfVKw2Og3hMPC+NCg6SU1wTiZpbXmn74IUcZM+7qnLQyArY8fa8rufo7ljECdkM0E90GtLZw1jhXezRc4DgoLU2DbCXJu0oUxEb1Z2wHzksh6TPME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GN7bEPmq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751058372; c=relaxed/simple;
+	bh=gh0jUXN8O9YvCgl8+M/s+gtwbCZXB/Rj1D9P+ER5Qmw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=q7/N2qc/KnoozPz7PWL9f+U0Owq1DiApISSGhX9MSBd86sx3V46zj3J59farhGetobue5YH3SFi3Y+nGmOixcezq7rtmQGBWomdnd5yq6HsqrdITAZYkjSGepCNvNDQDP8oEKMDxDM88qdfUHQfRW+CH2aR3B4AVcyf9yYOp4KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BfCKTlXm; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GN7bEPmq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03572C4CEE3;
-	Fri, 27 Jun 2025 21:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751058327;
-	bh=cR0tx2/QUoO//X9xT2pUdVDrDosFwq7E9WIYzcFoeO0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GN7bEPmq2XwGpEuzcne3OJuXopYSjBGVdHmM+XzBL3JnYn2E0Wd57MgwrXSjQJYbP
-	 Dwhqr7H5e5J5TGdn8FhN5rj+zrizwNlTLwYalngQr3GpFOu2u6rzvWSs02PD4IeTQ1
-	 kPlgg+DdxNpdBBtkhS+AxKqaWJUdSBGBXM2QR9d45nhjuu1ggbqBig5n0DxdDAMD+S
-	 0yIIPeMG8Dwe2LyGHkF2YIe/tv6bIgj4rIdeSfAk5ZYqrgUtkEDqv3CQ+DinLmdCwa
-	 /JK098ygdxr8fjcxi32cUOYaV3kjIWjVbAhht52pELbUojkY2vKBOC8g7ZAxJ83T/1
-	 UEwQnmrzagXFg==
-Date: Fri, 27 Jun 2025 16:05:26 -0500
-From: Rob Herring <robh@kernel.org>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: renesas: document RZ/T2H
- and RZ/N2H SoCs
-Message-ID: <20250627210526.GA128966-robh@kernel.org>
-References: <20250625130712.140778-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250625130712.140778-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BfCKTlXm"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad572ba1347so35706066b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 14:06:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751058369; x=1751663169; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eSYaoh4Yj9Zkb3jRb/C3UshHoF2mGwDZUBrBeoxNDNU=;
+        b=BfCKTlXmnFAR3i7MXep4Jp9Eq+9pwbxIfQRhtA9iSLvXfe5HPTJUUsCPm0HttAZEZa
+         HEzCP5yehdKUZ7EPvYDEClGK1Z+9GRG58dwebSPOLK4UZjlr8r6RSkm1YFm82HzKPbvB
+         xjkSadWaNoKn3zpmvF4b//H/cBa8CUhGxBVLXDH4A88DFu2jeUHR9oLkeNRUYtj7DW5U
+         4hg0ErzpQHB8d3eUpesDVO0N0vWE4AwIY1Ec+sQXhjLwZl8DRV9lWfVlsA+1CjYu5Hio
+         YetAJbvmr+BZKLTvh6C6ugKh3V9WX0FIzGBVfEG2IaQUGqrY24Qw3bVSNNYuTt4PPxxU
+         f0fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751058369; x=1751663169;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eSYaoh4Yj9Zkb3jRb/C3UshHoF2mGwDZUBrBeoxNDNU=;
+        b=S0n203bRSmmhvI4IaucSWxT2eR3krnrgniz9iy3rHeXQhMsoB5saI4afCtd66+qP5W
+         9fH2UvM6VgCofExPMOf5M5MvEOB/6hN9gmxHZagZ4MS9Iu1BfFR+nTqX2/DOF9P74YFZ
+         dI6GtbAsI+WHI05w1ZPfZcCfJLyYKvwfaFLlpOK5lKe39+Ue0r68HS10oTdMgR87vZl9
+         ZPGddYtpDbR8b1niM5ImK7ugKDtYALi2mWiv+qFsXioxY5HUkGQfbQ1Nr9jWJgrU35Hg
+         HFK/reM+3/jZ6gGfnBQozGrW9llM3PrAb4fDkC3q3epwvOuUgRjZD+LsUfWDY2EvQIWh
+         Cxog==
+X-Forwarded-Encrypted: i=1; AJvYcCVM28H/2iWkNj+E2Pw9j/jow7Cr2XSS9mS/CJQmWYokMdAVvTi5d2u2peptDmLH+UIvaWdLb1paDXeOhio=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJ0ywrjbssQ9bV38XrzVkZ1zvx6BXNWL15zVxJhD7WC7nMV4Xr
+	Q7OKMdKlU5V994CIQbspvwW1IJT362Y9YseNFYhcBCUJq8DSMoq1+OqPp6JitFvmEijNMKIF6Lq
+	JyVNVQsuKRi/CwvmW1v80EBtlU6k4PxE=
+X-Gm-Gg: ASbGnctlS++KIb0PeOegQ3hALb+25LXwCb30iDWXXE6bZEBiDgxx3FlfEoPCpMyjriR
+	6RPHxhaEFw1NW1Uyu+Y3CF16g009tIiRsSP+VDXtnk0e6+HJ6+ZriX8SZL0VNIjCR+ee9JHSb8H
+	ElzpStg0Wni1w37DtOJjnCCFRBsfJEwwB1i91uc/Xldp914+qmaOYv
+X-Google-Smtp-Source: AGHT+IGZUTI57KVsgYCiHEJrvVeih/CZV0VDCz3mpT5lhxBjBjnrXq8uakq9lpRyXmdoT6S7lzgYSnGN4HYTC+LSuDA=
+X-Received: by 2002:a17:906:7308:b0:ae0:ad5c:418b with SMTP id
+ a640c23a62f3a-ae3500ff37cmr431380066b.45.1751058368343; Fri, 27 Jun 2025
+ 14:06:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625130712.140778-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Dave Airlie <airlied@gmail.com>
+Date: Sat, 28 Jun 2025 07:05:56 +1000
+X-Gm-Features: Ac12FXxKVxFQX5SfCokGjJXthgR-g7tweuzjxWnSMqqMKCFfZTX517Ve6UycV34
+Message-ID: <CAPM=9tzQhY_VeMkfYO8ZsUYdOrL9bAofZVUHKckjP2zPj_5Q2g@mail.gmail.com>
+Subject: [git pull] drm fixes for 6.16-rc4
+To: Linus Torvalds <torvalds@linux-foundation.org>, Sima Vetter <sima@ffwll.ch>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 25, 2025 at 02:07:10PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> Document the pin and GPIO controller IP for the Renesas RZ/T2H
-> (R9A09G077) and RZ/N2H (R9A09G087) SoCs, and add the shared DTSI
-> header file used by both the bindings and the driver.
-> 
-> The RZ/T2H SoC supports 729 pins, while the RZ/N2H supports 576 pins.
-> Both share the same controller architecture; separate compatible
-> strings are added for each SoC to distinguish them.
-> 
-> Co-developed-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> v1->v2:
-> - Added a new DT binding file
-> ---
->  .../pinctrl/renesas,rzt2h-pinctrl.yaml        | 132 ++++++++++++++++++
->  .../pinctrl/renesas,r9a09g077-pinctrl.h       |  22 +++
->  2 files changed, 154 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml
->  create mode 100644 include/dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..d3886eab93fe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml
-> @@ -0,0 +1,132 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/renesas,rzt2h-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas RZ/T2H Pin and GPIO controller
-> +
-> +maintainers:
-> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> +
-> +description:
-> +  The Renesas RZ/T2H SoC features a combined Pin and GPIO controller.
-> +  Pin multiplexing and GPIO configuration is performed on a per-pin basis.
-> +  Each port features up to 8 pins, each of them configurable for GPIO function
-> +  (port mode) or in alternate function mode.
-> +  Up to 8 different alternate function modes exist for each single pin.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - renesas,r9a09g077-pinctrl # RZ/T2H
-> +      - renesas,r9a09g087-pinctrl # RZ/N2H
-> +
-> +  reg:
-> +    minItems: 1
-> +    items:
-> +      - description: Non-safety I/O Port base
-> +      - description: Safety I/O Port safety region base
-> +      - description: Safety I/O Port Non-safety region base
-> +
-> +  reg-names:
-> +    minItems: 1
-> +    items:
-> +      - const: nsr
-> +      - const: srs
-> +      - const: srn
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +    description:
-> +      The first cell contains the global GPIO port index, constructed using the
-> +      RZT2H_GPIO() helper macro from <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>
-> +      (e.g. "RZT2H_GPIO(3, 0)" for P03_0). The second cell represents the consumer
-> +      flag, as mentioned in ../gpio/gpio.txt.
+Hi Linus,
 
-Don't reference legacy docs.
+Regular weekly drm updates, nothing out of the ordinary, amdgpu, xe,
+i915 and a few misc bits. Seems about right for this time in the
+release cycle.
 
-> +
-> +  gpio-ranges:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +additionalProperties:
+Dave.
 
-This style was for existing bindings which had no node name pattern. 
-Define a pattern for node names.
+drm-fixes-2025-06-28:
+drm fixes for 6.16-rc4
 
-> +  anyOf:
-> +    - type: object
-> +      additionalProperties: false
-> +      allOf:
-> +        - $ref: pincfg-node.yaml#
-> +        - $ref: pinmux-node.yaml#
-> +
-> +      description:
-> +        Pin controller client devices use pin configuration subnodes (children
-> +        and grandchildren) for desired pin configuration.
-> +        Client device subnodes use the below standard properties.
-> +
-> +      properties:
-> +        pinmux:
-> +          description:
-> +            Values are constructed from GPIO port number, pin number, and
-> +            alternate function configuration number using the RZT2H_PORT_PINMUX()
-> +            helper macro from <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>.
-> +        pins: true
-> +        gpio-hog: true
-> +        gpios: true
-> +        input: true
-> +        input-enable: true
-> +        output-enable: true
-> +        output-high: true
-> +        output-low: true
-> +        line-name: true
-> +
-> +    - type: object
-> +      additionalProperties:
-> +        $ref: "#/additionalProperties/anyOf/0"
+core:
+- fix drm_writeback_connector_cleanup function signature
+- use correct HDMI audio bridge in drm_connector_hdmi_audio_init
 
-Do you really need both 1 OR 2 levels of nodes? Can't you decide on one 
-way?
+bridge:
+- SN65DSI86: fix HPD
 
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +  - gpio-ranges
-> +  - clocks
-> +  - power-domains
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h>
-> +    #include <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>
-> +
-> +    pinctrl@802c0000 {
-> +        compatible = "renesas,r9a09g077-pinctrl";
-> +        reg = <0x802c0000 0x2000>,
-> +              <0x812c0000 0x2000>,
-> +              <0x802b0000 0x2000>;
-> +        reg-names = "nsr", "srs", "srn";
-> +        clocks = <&cpg CPG_CORE R9A09G077_CLK_PCLKM>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        gpio-ranges = <&pinctrl 0 0 288>;
-> +        power-domains = <&cpg>;
-> +
-> +        sci_pins: serial0 {
-> +            pinmux = <RZT2H_PORT_PINMUX(38, 0, 1)>, /* Tx */
-> +                     <RZT2H_PORT_PINMUX(38, 1, 1)>; /* Rx */
-> +        };
-> +
-> +        sd1-pwr-en-hog {
-> +            gpio-hog;
-> +            gpios = <RZT2H_GPIO(39, 2) 0>;
-> +            output-high;
-> +            line-name = "sd1_pwr_en";
-> +         };
-> +    };
-> diff --git a/include/dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h b/include/dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h
-> new file mode 100644
-> index 000000000000..c73a7f25ef5c
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h
-> @@ -0,0 +1,22 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-> +/*
-> + * This header provides constants for Renesas RZ/T2H family pinctrl bindings.
-> + *
-> + * Copyright (C) 2025 Renesas Electronics Corp.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_PINCTRL_RENESAS_R9A09G077_PINCTRL_H__
-> +#define __DT_BINDINGS_PINCTRL_RENESAS_R9A09G077_PINCTRL_H__
-> +
-> +#define RZT2H_PINS_PER_PORT	8
-> +
-> +/*
-> + * Create the pin index from its bank and position numbers and store in
-> + * the upper 16 bits the alternate function identifier
-> + */
-> +#define RZT2H_PORT_PINMUX(b, p, f)	((b) * RZT2H_PINS_PER_PORT + (p) | ((f) << 16))
-> +
-> +/* Convert a port and pin label to its global pin index */
-> +#define RZT2H_GPIO(port, pin)	((port) * RZT2H_PINS_PER_PORT + (pin))
-> +
-> +#endif /* __DT_BINDINGS_PINCTRL_RENESAS_R9A09G057_PINCTRL_H__ */
-> -- 
-> 2.49.0
-> 
+amdgpu:
+- Cleaner shader support for additional GFX9 GPUs
+- MES firmware compatibility fixes
+- Discovery error reporting fixes
+- SDMA6/7 userq fixes
+- Backlight fix
+- EDID sanity check
+
+i915:
+- Fix for SNPS PHY HDMI for 1080p@120Hz
+- Correct DP AUX DPCD probe address
+- Followup build fix for GCOV and AutoFDO enabled config
+
+xe:
+- Missing error check
+- Fix xe_hwmon_power_max_write
+- Move flushes
+- Explicitly exit CT safe mode on unwind
+- Process deferred GGTT node removals on device unwind
+The following changes since commit 86731a2a651e58953fc949573895f2fa6d456841:
+
+  Linux 6.16-rc3 (2025-06-22 13:30:08 -0700)
+
+are available in the Git repository at:
+
+  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-06-28
+
+for you to fetch changes up to 9fbceb37c95939182e1409211447a1d3f3db9274:
+
+  Merge tag 'drm-misc-fixes-2025-06-26' of
+https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
+(2025-06-28 06:53:00 +1000)
+
+----------------------------------------------------------------
+drm fixes for 6.16-rc4
+
+core:
+- fix drm_writeback_connector_cleanup function signature
+- use correct HDMI audio bridge in drm_connector_hdmi_audio_init
+
+bridge:
+- SN65DSI86: fix HPD
+
+amdgpu:
+- Cleaner shader support for additional GFX9 GPUs
+- MES firmware compatibility fixes
+- Discovery error reporting fixes
+- SDMA6/7 userq fixes
+- Backlight fix
+- EDID sanity check
+
+i915:
+- Fix for SNPS PHY HDMI for 1080p@120Hz
+- Correct DP AUX DPCD probe address
+- Followup build fix for GCOV and AutoFDO enabled config
+
+xe:
+- Missing error check
+- Fix xe_hwmon_power_max_write
+- Move flushes
+- Explicitly exit CT safe mode on unwind
+- Process deferred GGTT node removals on device unwind
+
+----------------------------------------------------------------
+Alex Deucher (3):
+      drm/amdgpu/mes: add compatibility checks for set_hw_resource_1
+      drm/amdgpu/sdma6: add ucode version checks for userq support
+      drm/amdgpu/sdma7: add ucode version checks for userq support
+
+Ankit Nautiyal (1):
+      drm/i915/snps_hdmi_pll: Fix 64-bit divisor truncation by using div64_u64
+
+Arnd Bergmann (1):
+      drm/i915: fix build error some more
+
+Chaoyi Chen (1):
+      drm/bridge-connector: Fix bridge in drm_connector_hdmi_audio_init()
+
+Dave Airlie (4):
+      Merge tag 'amd-drm-fixes-6.16-2025-25-25' of
+https://gitlab.freedesktop.org/agd5f/linux into drm-fixes
+      Merge tag 'drm-intel-fixes-2025-06-26' of
+https://gitlab.freedesktop.org/drm/i915/kernel into drm-fixes
+      Merge tag 'drm-xe-fixes-2025-06-26' of
+https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
+      Merge tag 'drm-misc-fixes-2025-06-26' of
+https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
+
+Haoxiang Li (1):
+      drm/xe/display: Add check for alloc_ordered_workqueue()
+
+Imre Deak (1):
+      drm/dp: Change AUX DPCD probe address from DPCD_REV to LANE0_1_STATUS
+
+Jayesh Choudhary (1):
+      drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort connector type
+
+Karthik Poosa (1):
+      drm/xe/hwmon: Fix xe_hwmon_power_max_write
+
+Louis Chauvet (1):
+      drm: writeback: Fix drm_writeback_connector_cleanup signature
+
+Maarten Lankhorst (1):
+      drm/xe: Move DSB l2 flush to a more sensible place
+
+Mario Limonciello (2):
+      drm/amd: Adjust output for discovery error handling
+      drm/amd/display: Fix AMDGPU_MAX_BL_LEVEL value
+
+Matthew Auld (1):
+      drm/xe: move DPT l2 flush to a more sensible place
+
+Michal Wajdeczko (2):
+      drm/xe/guc: Explicitly exit CT safe mode on unwind
+      drm/xe: Process deferred GGTT node removals on device unwind
+
+Srinivasan Shanmugam (1):
+      drm/amdgpu/gfx9: Add Cleaner Shader Support for GFX9.x GPUs
+
+Takashi Iwai (1):
+      drm/amd/display: Add sanity checks for drm_edid_raw()
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c      | 28 ++++-----
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c              | 19 ++++++
+ drivers/gpu/drm/amd/amdgpu/mes_v11_0.c             | 10 ++--
+ drivers/gpu/drm/amd/amdgpu/mes_v12_0.c             |  3 +-
+ drivers/gpu/drm/amd/amdgpu/sdma_v6_0.c             | 19 +++++-
+ drivers/gpu/drm/amd/amdgpu/sdma_v7_0.c             | 12 +++-
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  | 10 ++--
+ .../drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c  |  4 ++
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c              | 69 +++++++++++++++++++---
+ drivers/gpu/drm/display/drm_bridge_connector.c     |  7 ++-
+ drivers/gpu/drm/display/drm_dp_helper.c            |  2 +-
+ drivers/gpu/drm/drm_writeback.c                    |  7 ++-
+ drivers/gpu/drm/i915/display/intel_snps_hdmi_pll.c |  4 +-
+ drivers/gpu/drm/i915/i915_pmu.c                    |  2 +-
+ drivers/gpu/drm/xe/display/xe_display.c            |  2 +
+ drivers/gpu/drm/xe/display/xe_dsb_buffer.c         | 11 ++--
+ drivers/gpu/drm/xe/display/xe_fb_pin.c             |  5 +-
+ drivers/gpu/drm/xe/regs/xe_mchbar_regs.h           |  1 +
+ drivers/gpu/drm/xe/xe_ggtt.c                       | 11 ++++
+ drivers/gpu/drm/xe/xe_guc_ct.c                     | 10 ++--
+ drivers/gpu/drm/xe/xe_hwmon.c                      | 34 +++++------
+ 21 files changed, 189 insertions(+), 81 deletions(-)
