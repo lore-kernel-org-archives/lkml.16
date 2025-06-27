@@ -1,155 +1,249 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011010.outbound.protection.outlook.com [52.101.70.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF60A211460
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751054212; cv=none; b=sLdU9O9XEYbf0uq94KYw0AcY/NmY4jKt/XERqlRBEJqBlk/ltR/Ih8U6sBDVzhfA1LMF4djF7Rcg3TaclmtAPFL/i56YAR2JiPq2l0ypcIjpNewtQZQs9MNJsZdvcULty+8pWII3EtxIIiKJRrMRhzZwHfYPm7hA9iBRNm2EWTs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751054212; c=relaxed/simple;
-	bh=YjQ5WYa32mjCnYMxrwt384S4O2wH8ZuFJlgYW5NZY3o=;
-	h=Date:Subject:CC:From:To:Message-ID; b=HXK4cb14XUHFDGs9299Ey9rvag1EzbDz6Ude8kf81AJxg9cXSrZm6AfteQPBUmeedd7EDK8nEVqAs/dP6y5q6ozXjAASaw4R7J0YY0ggbYsFXJ8bWPIM+0I6amfZxmwmeoGSRDgRzxMrHYR2/pJrbOlc7HwRhi9BE+8h5TqfRI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=JzcTcYq9; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3D515E8B;
+	Fri, 27 Jun 2025 19:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751054213; cv=fail; b=U8TKmgB2GhqKhm0fxQLfS1y/VFBRyuDjjcgWedsLgW7MIrKmm1WQ1mI1BCZ+78TyAyAMWrwbF7sscWLJ1W14YKKp82ZCowPqfMF9x8+q2vzHIesSMXRRdg5SuV9d6MM/fpiEE8tbhnsUB2zJsWfH1VeqY0qvmAhYlvOpg+ETy5k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751054213; c=relaxed/simple;
+	bh=A3SGXkBGZADt9YzvaGRVEtPWrEzGJbx8NTwfqsgoVVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=TOaH9I2I5haF1jAZP3G34q4lNGIea38talklFrAwu/mKsS1q9q+/BjB6hXMwQkfhbq7reVH8O5jCPiMRpIvkaRCfaf3gfB5R9kGVclwPZrvSm0Arzwo6L3bIj8hbzQXwHgy9bDJsglCaCtrRuBm8fMpMWX1pXMpC8btDdvqMikw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=TN9+blQv; arc=fail smtp.client-ip=52.101.70.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="JzcTcYq9"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-74264d1832eso590719b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1751054210; x=1751659010; darn=vger.kernel.org;
-        h=message-id:to:from:cc:subject:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kd16DZ58Lx6jlqmHg0BJHa0UNLPbmEfykzddN70SEj8=;
-        b=JzcTcYq9SsSKkrVQ+U6JR4aL8nVNvsRS61PxD2eEkArxWDj5b7qXsKR/yomsZkt+Zo
-         D4KyrwW1fxpST1sZ6xTzIVxMJRgl40t3/a0aT+nYdtK3bvA+th9uPACvaUvbJRu5BACG
-         kGXVKjXL8hTQPaos3IEN7RxIimVCrKvfrVfDjYpRqKzTs4n+x6GB9yJVtNMsWUj14N+V
-         YLYf8Tl3l8yc3bh185EsY6H6e7XXPSGpIZaOvAMJcd9PpEKxM4j3C1y3zw55+bpx7M7H
-         8vk47ivn2lG2us+3pJF2jkGk/KxuLbSZr0UCP8etDLIIQrZcJ/0Yyxed/yaG2GQlG9uX
-         LtkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751054210; x=1751659010;
-        h=message-id:to:from:cc:subject:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kd16DZ58Lx6jlqmHg0BJHa0UNLPbmEfykzddN70SEj8=;
-        b=TpBUGgqhv1VUT+IKKF0Ib1Au0VAUmgUa1IbkKjuQbUy9bzqorX2YXE/KSD0M4fmHq6
-         RXnx+tn2I4803Nib3jBSsQ3S46H9KGrotQ/yPAgmhYGvwSVoxc784NsnNCy8X0pqHhnR
-         SeYCo5TFPOlWE0sLvtJtadd85VE7cr+nL24AODy2tlWhJglyJuSTNNTlJNfcLJqvvymd
-         WzTquu+AvFyvVrfGa3BbdnFxankpn3teJxBTaAQ3+JLdzfWIkMlnjcqAxDZqGtbeiOqt
-         TOCXvBkO+Pdtb5ugmOvIHp7rwmJaYVRLlsPPgCdKf/nqdMUlQoI9nilrmM5+aMD2BnB5
-         rQbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUO9KPyt9RiO9FS5cDBGVSXihJ5miapRfl0mw1y2vfWcbS6lrDQaWJFWJzAjK+Wue5TbBgdw8uJyYpOQS0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPsCG3yuJVkhInqSb67AGO9IL39sKJz/PXg9jaxq/LG4W0G47r
-	k7oWDzO6xtkl1Ur3Un1SihZZCtxXdOjpvhZxr067DcO5L353NJySpHE3cw35QkWqOZXaW41haux
-	CBJL7Xj4=
-X-Gm-Gg: ASbGnctXVFIPMLlHISUwQAszqi0YfIH8TQsNPyognQ5C2B0SUqmbwZq+bEcG5Jz7tlx
-	N0WxNeKs/NqTiuKvShpoVHEOpBwskKW4pLfnn9+yxJ7WEiCCZzpNqOCyDvUtHzuMJKeln1s99tV
-	9atJdh66j7ocirJLNpeQy/9nP9ij4hGb7NlVDaeGz2F8BRKHUQBEZCaGGzMVInie48PyRMABZJP
-	RzI4GEcJIvFuYgnAoxrEospj/h4mmQpYxbZeHIgF45IB3aBsNq0MFp9W8EBBPsUqeE9vlW2hk1b
-	SMoSxLrSIitXBCcqea5e9IWUMUxgBe2v71n+aiWqbVPGoyhbgFG/DP4vOz5B
-X-Google-Smtp-Source: AGHT+IEQsJdpkJDVb09SU1wr49pMTne/iSq+L4sJx5vWT2zoGuZipLcGALrfoeDygSP3qPW8yNJm9A==
-X-Received: by 2002:a05:6a00:4b16:b0:740:aa33:c6f8 with SMTP id d2e1a72fcca58-74af6e662ddmr6737555b3a.7.1751054209885;
-        Fri, 27 Jun 2025 12:56:49 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:500::4:8d10])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74af5574390sm3201286b3a.90.2025.06.27.12.56.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 12:56:49 -0700 (PDT)
-Date: Fri, 27 Jun 2025 12:56:49 -0700 (PDT)
-X-Google-Original-Date: Fri, 27 Jun 2025 12:56:41 PDT (-0700)
-Subject: [GIT PULL] RISC-V Fixes for 5.16-rc4
-CC:         linux-riscv@lists.infradead.org,        linux-kernel@vger.kernel.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Message-ID: <mhng-BFF0FF2C-E730-45D5-8E5F-48D03E841EB2@palmerdabbelt-mac>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="TN9+blQv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lHizczNr+ll7UD1jFShAmgzc5ONjiOmneiYotW7X0dNLqxH8xz7XW9/NfsKoS5Qopf4nvS6i4ysQzcn66RvmvDyRn7SAIFReQFEI3564RjkB0/Y7Zgv4AxwPjMZu3o9ROsdo7L/VuAN4oekP7l1K38PgxuJRZi68W7SeqzHrwZuaS6eeXJxa7iBXaY1fdAWfXN11V0cZaDqfFBbZVYrqjBl3FXpequVkOfJK8VqpmWugPAoJ2fU8/vWqFVIYQ5jdMgINR4TnhlmWimHjehalQMCyvGKt+y5D57u9Pd7YvkLcuXi46+LfurWj20Lh9OCiuWpxXqm3fOBsQkpB0rNlGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+y+Lulm7pLRvs2vGDmM8oPWsg20IWYnlbk0yKRyS1VU=;
+ b=ogUL++kfQWlT2MnEh+I3OoZuK9USfQURAc3o6AUHCwIs3SR+8lGeh6PPFB4fSKe/Ywljg54q655xWJQozHh3IncLNyft4f0J48FLQ54ig/AeGUE5jthexVgQ8Z0ZcjDECIJkhCwRwM9O5g/LsZ+SFyYi/jjgCgx5EMf6rBAcsSW0kgszP9DXfG8R9L0SBJHGhC1cMk2RNWC4BmDf688AqFgj/5pjdZKChBbwTABOYLGoPWIL2iS/OPHaup9ydlWwrTX5YVLA49u6xBih6WrWwTuaJomz26CRQu1lG8MilLPSpDuniU9DZHkurTo1wSkQxxOdOKwt3HCd+6jDDqOlmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+y+Lulm7pLRvs2vGDmM8oPWsg20IWYnlbk0yKRyS1VU=;
+ b=TN9+blQv/NfZ95Cl+zMHxTfletdoTTSXlMClZPaquFgjDlM/Jn0Kx+7GuSLx5LznwbG2K9VBQY3DyLOEqAA9SEAZXfJFk7PKj1CJHmvtVFxoKq9tci6prXCG6LMOnPSCvxPIXgB+E/UjMMO3jHfVmX7jcdCSmAs+4zKkHKSeFqEkVL3WWm/JOdy+mesa86Ae9OLKWOW9yc5KvIp4xQ7rdsFKcBoXvqTKhr1+PRcPBJtSt5oHiYSUcgaIcESnaKzdZMC7e9YIIsAmWfCiyqsB8np2rszNyDOZnGnDK/qBNnfRWvEXi+5Jb3cwXDJ2d1R5HjXiiUlk3xzBhYZZSpl0gA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DB9PR04MB8075.eurprd04.prod.outlook.com (2603:10a6:10:25d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.22; Fri, 27 Jun
+ 2025 19:56:48 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.015; Fri, 27 Jun 2025
+ 19:56:47 +0000
+Date: Fri, 27 Jun 2025 15:56:43 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Larisa Grigore <larisa.grigore@nxp.com>,
+	Christoph Hellwig <hch@lst.de>, linux-spi@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 6/6] spi: spi-fsl-dspi: Report FIFO overflows as errors
+Message-ID: <aF73e/ggeycsYiaD@lizhi-Precision-Tower-5810>
+References: <20250627-james-nxp-spi-dma-v4-0-178dba20c120@linaro.org>
+ <20250627-james-nxp-spi-dma-v4-6-178dba20c120@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627-james-nxp-spi-dma-v4-6-178dba20c120@linaro.org>
+X-ClientProxiedBy: AS4P192CA0020.EURP192.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5e1::6) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB8075:EE_
+X-MS-Office365-Filtering-Correlation-Id: 96c16c3f-736f-4b17-2d1d-08ddb5b4c000
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?qim8SmqpFMWICiE7a9Ieis6ojkdanTPizzGB+eHM3GjqcD57tW1/agnYOSd7?=
+ =?us-ascii?Q?leQs3XirpweIyKFR95kioDdc1X28LmCC+/JccCSQ4rhaIL2v7Vl8NwLderJE?=
+ =?us-ascii?Q?ePyAvHmYyiQxghin968KuvObWSIaOUZ+hAplsR/lyBGRhmtDxD4IfRu3mExp?=
+ =?us-ascii?Q?wgi0AMXACzk3MQhWK53GGqVe8SVdpE9FLb9wg+ibfvSHE0V04NvRsAAgtylK?=
+ =?us-ascii?Q?K5+G2bgC1zpJblDmXDIdxpR3zafYrX+Ov2X/MXBOTSuHKjoTcHAgzgbG7MJN?=
+ =?us-ascii?Q?fU4r0Ympbq8Hpv+LYDUlwthLBGMos3DJTVZcPiFJ8VrFROpVVNzFRAR1v/Lo?=
+ =?us-ascii?Q?qAr9R+FyHqRbo882yETzsLFYCa9biniwDbNJwdkz9J1HtPWNXM1FiolZ1zba?=
+ =?us-ascii?Q?NCond3vFoKPmpFK8tDOJn0LtBaTJX6SzLf0v2Bl5lqrykqP88rsOZ3NOFBoI?=
+ =?us-ascii?Q?qWCvpIUoV9s0FBwCkXQAOSVPg7AnkLted+vUpfJ+gjMQDFlfGOP0gFXDjEsd?=
+ =?us-ascii?Q?RlS7tQgk+JOXV54q1nzNFqFR1v1ohgzXlBYM5fKQImsPDdUw19kz9FgekdTC?=
+ =?us-ascii?Q?Z8zlhV4guptdOzfEXy0oGa0KOe02esjaviUFDDK1UF+iROEoBmMeRTve9Eyc?=
+ =?us-ascii?Q?DW9Z6Wn31yusMdoKgwCKfb1fev6ggAeDT2jZMPNjiCtMfWl+SRhZcd5LXbRh?=
+ =?us-ascii?Q?ozOjmneAclYLHL9ZtAX6/X3z6CFw4ywmCxy53MUvufj71jKCqy4iI6vjeH3d?=
+ =?us-ascii?Q?skEhPAHKI48NBzxNwEervcsXUObbEuOOf9WBf3AIADEm1klf7G0CK6ysj/ra?=
+ =?us-ascii?Q?hx2xA0iZ31wgyuUgDFqUC5AVsUWVniVj2OPk/d05k3bOlVLbhwSWYoLnaOp4?=
+ =?us-ascii?Q?XDF5Vokogo9IkSQ+yOLruHJpxGLXWyiOnkUoQGTSBWt+TRlHswQft6/xBj41?=
+ =?us-ascii?Q?Tv70gQuAMQLbTusBxJWhGOXwdVoJOSdl89FrySGj+HR/0IYGwCBY40s3xTie?=
+ =?us-ascii?Q?CbKErvG6oyY0BroudnUj5eo9UmHEKRUMNjOel24qSjny0oSwUVOoe0Xu5f3b?=
+ =?us-ascii?Q?c30+rrkevWiNJerQ8420PkfQAV8HtyVL/AnipvU0Cr5DPCWUv84ceZGc7Bkx?=
+ =?us-ascii?Q?oGOq9c3DGw2f+yM3DLwY97QfyioQsZuJXrRIihLAQvAeBljP6WoZ/jiNEOOi?=
+ =?us-ascii?Q?gkslPqxWu2XZwUZWsYAsnHX2Z2O/a0tWrvlpNz8vs14mIUsEK+LeSHbTIafZ?=
+ =?us-ascii?Q?c84fR99NsGzmmnnD87N0QtquEDAdCji9LjBxlQ9+ZWGeD2DwchKJJwFChvyl?=
+ =?us-ascii?Q?R2yUVg18DAYTl3Rco09Uz3Ibpzm4NHTksoBQxFEnXmno38CFQecrOQ7n0Un6?=
+ =?us-ascii?Q?gok6T9BbYrGXvH6x/8/msS73eYuiWqBsEloO37Ls8/YlMlKGNaoYg8MDCgVg?=
+ =?us-ascii?Q?hX9zh6G0nlnxjZfP36TBuahZgAhDWWXa+29qQPkzorDVWEnpSi5zjg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?gzfNjDk0ZvNnx+ZDBdJFlX1i3xsGJCy65jhH3pPs8A1T7kLG+//YXUMK9Qdt?=
+ =?us-ascii?Q?EUAlKb6EGB0JqbKUccFOqEJOjWV/BuqUmirIpUvlg77KPDk56xPtglagBJF2?=
+ =?us-ascii?Q?XcE0aMJrqSYwNKePWp44Ka4LovQL8bLaUEKmy2o9fgbMY2iL6nggGto01JYd?=
+ =?us-ascii?Q?FjHE4IBc5m5h1+fIDQ9yekFJ1RYrbmQVWWhPoRMPZLzCdx/lbBP9q7tC+2xh?=
+ =?us-ascii?Q?SfGXhwlESos36TGIJH1mxIQcoWyzbjBOxdNDNr7LacPfMPpDkvRI1Pmb+Qcn?=
+ =?us-ascii?Q?+waW55yXsVUfd9ZturWVrJYzYnmCMfTA+8hKjmlIc3Y6hbbNpV/JBg95PC25?=
+ =?us-ascii?Q?C+OWL5gk/vKtvvFOlj5ZdPv+K3T5+KTGsyxbF+vvm+aibNpoEBqHiZTJjRKL?=
+ =?us-ascii?Q?vLPXgkQujh9p01JE21PR3/f6y/4/3vQxlMx/RoVsohy4WPB0Uhog02hcZTpF?=
+ =?us-ascii?Q?WpPW2Javz7w9lRIyKPMSjGSl5zEPW2MYUNBvtHVacqCfMlpVt4vB2LpSub9m?=
+ =?us-ascii?Q?q3smTY3ytiYQrLQeVajto9nv9C3LTyqwnwW7oZIJTZxIGRYyqH5kBnrZ39+7?=
+ =?us-ascii?Q?v2bowUo/qinG15Sra/P9wkr+XvHkmyZYM+xCDGF4P6TmhoQXCDtH9PtS2/Ab?=
+ =?us-ascii?Q?/QPxkXYJ2Zm5Aq1bxr0VJ9DaysRoE9SozvlmCRNHdGUCSgdsXd1kHciVqBBm?=
+ =?us-ascii?Q?DXeK8i+OdvKub2DhRYT1MVYeclPwmb6gMh1NnwdS/HxvQw8ES2u9MYNgUMOs?=
+ =?us-ascii?Q?Ilg5xQku7Sk3STEK1EfZLBL22sowl8rWRxpzJGZA0DMA/w4pV5h+f0vf55RB?=
+ =?us-ascii?Q?/0/NnZqweSPeRhUVgWDJIoRzDxyTkv+RWv0rKcPtqK+B7fCcLe8t/uA8S9CO?=
+ =?us-ascii?Q?xyHX1DsDwWKqNz7VjIo4wahLqMo5vk4IIiyTWuqTgidbmlTqLrEJ5TSMiO3x?=
+ =?us-ascii?Q?69IsniudEsvwnqotLZkH6AzE1pMemEn0AhWDlUjwltojE5TQqbdY+b4bubWj?=
+ =?us-ascii?Q?P/M7eizRSEh2LLNqI0e00WkrDwWijAymmJrqHUOo3Cq6L+5o2aPgNEgBguqL?=
+ =?us-ascii?Q?O3BpGRQ7B3rxrN52DK6yXAP1W7YrKTjnK17N74Y6S6Az92+7wSd7g6pFk8io?=
+ =?us-ascii?Q?M6jvpFpvA9sKEBPWFqIEXHgxFTBaWSu6g4u42juEm3gt0UJM67afEwWp+HXh?=
+ =?us-ascii?Q?Xbg7rjyfpghRl3ThQ5pIiIDhD8LE3nwI388HhP6NhacQn5c+Q4MBO1wTdZ04?=
+ =?us-ascii?Q?+H1yK6zONvy28DrLnZFrpzl9190m7U5O4brMwbFy5+YdM6TCy7NaBKUiy2CF?=
+ =?us-ascii?Q?c8Xj6ughKUN76uN1McSioIwNq5JGKU3DFJQQ3XTwPYQHjA3eA/zRYL7ipMe8?=
+ =?us-ascii?Q?gn6VJGuUvAdB7NnzIjccZSBVmbLGOVaCkKZdNhmYzQJUdy+20yRf5k314u0W?=
+ =?us-ascii?Q?tXimUD0dUsVuP3C5GDnhOUHQwcEdpM+91fX/tD/FgW1nHD511jx6N6V2XSkw?=
+ =?us-ascii?Q?yNKTtITcIKp1ao3e5AQARAUmjrR35ZqE13IB6o25ZYe6ChcwDMtTZRsPLi4i?=
+ =?us-ascii?Q?HKEewrza9ZVgS3rma+0=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 96c16c3f-736f-4b17-2d1d-08ddb5b4c000
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 19:56:47.8714
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: f33H8THFic3ReeyypmlUwIUwAC+sbALnFF1VWaJHWb5tvp4e3IySQ+A5Vfj7PR2NeQ/exVx0MkJSFGUoVazAjw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8075
 
-The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+On Fri, Jun 27, 2025 at 11:21:42AM +0100, James Clark wrote:
+> In target mode, the host sending more data than can be consumed would be
+> a common problem for any message exceeding the FIFO or DMA buffer size.
+> Cancel the whole message as soon as this condition is hit as the message
+> will be corrupted.
+>
+> Only do this for target mode in a DMA transfer, it's not likely these
+> flags will be set in host mode
 
-  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+"not likely", I think SPI controller should stop CLK if FIFO empty and full.
+It should be "never" happen.
 
-are available in the Git repository at:
+Only check FIFO error flags at target mode because it never happen at host mode.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.16-rc4
+You can remove below whole paragram.
 
-for you to fetch changes up to c5136add3f9b4c23b8bbe5f4d722c95d4cfb936e:
-
-  riscv: export boot_cpu_hartid (2025-06-23 16:30:05 -0700)
-
-----------------------------------------------------------------
-There's a trivial merge conflict in .mailmap that's in next, but seems like
-that's just bad luck on the timing.
-
-----------------------------------------------------------------
-RISC-V Fixes for 5.16-rc4
-
-* .rodata is no longer linkd into PT_DYNAMIC, it was not supposed to be
-  there in the first place and resultst in invalid (but unused) entries.
-  This manifests as at least warnings in llvm-readelf.
-* A fix for runtime constants with all-0 upper 32-bits.  This should
-  only manifest on MMU=n kernels.
-* A fix for context save/restore on systems using the T-Head vector
-  extensions.
-* A fix for a conflicting "+r"/"r" register constraint in the VDSO
-  getrandom syscall wrapper, which is undefined behavior in clang.
-* A fix for a missing register clobber in the RVV raid6 implementation.
-  This manifests as a NULL pointer reference on some compilers, but
-  could trigger in other ways.
-* Misaligned accesses from userspace at faulting addresses are now
-  handled correctly.
-* A fix for an incorrect optimization that allowed access_ok() to mark
-  invalid addresses as accessible, which can result in userspace
-  triggering BUG()s.
-* A few fixes for build warnings, and an update to Drew's email address.
-
-----------------------------------------------------------------
-Alexandre Ghiti (1):
-      riscv: Fix sparse warning in vendor_extensions/sifive.c
-
-Charles Mirabile (1):
-      riscv: fix runtime constant support for nommu kernels
-
-Chunyan Zhang (1):
-      raid6: riscv: Fix NULL pointer dereference caused by a missing clobber
-
-Drew Fustini (1):
-      MAINTAINERS: Update Drew Fustini's email address
-
-Fangrui Song (1):
-      riscv: vdso: Exclude .rodata from the PT_DYNAMIC segment
-
-Han Gao (1):
-      riscv: vector: Fix context save/restore with xtheadvector
-
-Klara Modin (1):
-      riscv: export boot_cpu_hartid
-
-Nam Cao (2):
-      Revert "riscv: misaligned: fix sleeping function called during misaligned access handling"
-      Revert "riscv: Define TASK_SIZE_MAX for __access_ok()"
-
-Palmer Dabbelt (3):
-      Merge tag 'riscv-fixes-6.16-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/alexghiti/linux into fixes
-      Merge patch "Fix a segmentation fault also add raid6test for RISC-V support"
-      RISC-V: uaccess: Wrap the get_user_8 uaccess macro
-
-Xi Ruoyao (1):
-      RISC-V: vDSO: Correct inline assembly constraints in the getrandom syscall wrapper
-
- .mailmap                                     |  1 +
- MAINTAINERS                                  |  2 +-
- arch/riscv/include/asm/pgtable.h             |  1 -
- arch/riscv/include/asm/runtime-const.h       |  2 +-
- arch/riscv/include/asm/uaccess.h             |  3 +-
- arch/riscv/include/asm/vdso/getrandom.h      |  2 +-
- arch/riscv/include/asm/vector.h              | 12 +++----
- arch/riscv/kernel/setup.c                    |  1 +
- arch/riscv/kernel/traps_misaligned.c         |  4 +--
- arch/riscv/kernel/vdso/vdso.lds.S            |  2 +-
- arch/riscv/kernel/vendor_extensions/sifive.c |  2 +-
- lib/raid6/rvv.c                              | 48 ++++++++++++++++------------
- 12 files changed, 45 insertions(+), 35 deletions(-)
+Frank
+> so it's not worth adding extra checks. In
+> IRQ and polling modes we use the same transfer functions for hosts and
+> targets so the error flags always get checked. This is slightly
+> inconsistent but it's not worth doing the check conditionally because it
+> may catch some host programming errors in the future.
+>
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
+>  drivers/spi/spi-fsl-dspi.c | 27 ++++++++++++++++++++++++++-
+>  1 file changed, 26 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+> index 46d3cae9efed..2c2a263c5276 100644
+> --- a/drivers/spi/spi-fsl-dspi.c
+> +++ b/drivers/spi/spi-fsl-dspi.c
+> @@ -478,6 +478,17 @@ static void dspi_push_rx(struct fsl_dspi *dspi, u32 rxdata)
+>  	dspi->dev_to_host(dspi, rxdata);
+>  }
+>
+> +static int dspi_fifo_error(struct fsl_dspi *dspi, u32 spi_sr)
+> +{
+> +	if (spi_sr & (SPI_SR_TFUF | SPI_SR_RFOF)) {
+> +		dev_err_ratelimited(&dspi->pdev->dev, "FIFO errors:%s%s\n",
+> +				    spi_sr & SPI_SR_TFUF ? " TX underflow," : "",
+> +				    spi_sr & SPI_SR_RFOF ? " RX overflow," : "");
+> +		return -EIO;
+> +	}
+> +	return 0;
+> +}
+> +
+>  #if IS_ENABLED(CONFIG_DMA_ENGINE)
+>
+>  /* Prepare one TX FIFO entry (txdata plus cmd) */
+> @@ -566,6 +577,7 @@ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
+>  	struct device *dev = &dspi->pdev->dev;
+>  	struct fsl_dspi_dma *dma = dspi->dma;
+>  	int time_left;
+> +	u32 spi_sr;
+>  	int i;
+>
+>  	for (i = 0; i < dspi->words_in_flight; i++)
+> @@ -614,7 +626,8 @@ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
+>
+>  	if (spi_controller_is_target(dspi->ctlr)) {
+>  		wait_for_completion_interruptible(&dspi->dma->cmd_rx_complete);
+> -		return 0;
+> +		regmap_read(dspi->regmap, SPI_SR, &spi_sr);
+> +		return dspi_fifo_error(dspi, spi_sr);
+>  	}
+>
+>  	time_left = wait_for_completion_timeout(&dspi->dma->cmd_tx_complete,
+> @@ -1067,6 +1080,9 @@ static void dspi_poll(struct fsl_dspi *dspi)
+>  			regmap_read(dspi->regmap, SPI_SR, &spi_sr);
+>  			regmap_write(dspi->regmap, SPI_SR, spi_sr);
+>
+> +			dspi->cur_msg->status = dspi_fifo_error(dspi, spi_sr);
+> +			if (dspi->cur_msg->status)
+> +				return;
+>  			if (spi_sr & SPI_SR_CMDTCF)
+>  				break;
+>  		}
+> @@ -1085,6 +1101,7 @@ static void dspi_poll(struct fsl_dspi *dspi)
+>  static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+>  {
+>  	struct fsl_dspi *dspi = (struct fsl_dspi *)dev_id;
+> +	int status;
+>  	u32 spi_sr;
+>
+>  	regmap_read(dspi->regmap, SPI_SR, &spi_sr);
+> @@ -1093,6 +1110,14 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+>  	if (!(spi_sr & SPI_SR_CMDTCF))
+>  		return IRQ_NONE;
+>
+> +	status = dspi_fifo_error(dspi, spi_sr);
+> +	if (status) {
+> +		if (dspi->cur_msg)
+> +			WRITE_ONCE(dspi->cur_msg->status, status);
+> +		complete(&dspi->xfer_done);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+>  	dspi_rxtx(dspi);
+>
+>  	if (!dspi->len) {
+>
+> --
+> 2.34.1
+>
