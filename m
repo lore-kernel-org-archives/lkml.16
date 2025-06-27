@@ -1,195 +1,120 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C44917A2F0;
-	Fri, 27 Jun 2025 12:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B923298248;
+	Fri, 27 Jun 2025 12:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751026971; cv=none; b=DGadXM+/rvAycYtlqfxmMO+PDPtbvx2RAaScV6zYypOXs1E3/jtRykSZnF9NJWIdutKtoCouingonaWHW+gkFkrkbktaRx1m+xAEfsUyN2z371UFMs9tVMuYhGqZCHw5oS405Rxa+Mf82brZNmn6qR8bNXzoKPtAm/bo7lIfTVE=
+	t=1751027007; cv=none; b=iUB8C+ByCh1GKzR4SkgjplOgiOid8miBtIXLDmHJbq49Xbr8xonCZYNu5Hfl6rLoFMnechRkX+1fj028XaMttLqY9sELplt7+kWivRcDVhK7HPkJsl/DS8nxXaEZWPPfb6y/SQzj/L/ImGTH5pgoKEQj6F4bZTIJuepOg3ZNrfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751026971; c=relaxed/simple;
-	bh=ZH1O5sFB7vO18/fSp54SFUkm5kp1MbIbNtVFxFDzZsU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=o6Kpw7SN1mzR4BZdAJot5WJsfFDr7/yavwCuJVAGdkvpFdDFQdE+4gZwxWV5P0DT4UNtVw/MI/z/8dJHpGvuNtb9zemQLaXjxT+YtK2qXVYy3bFIvd8q8NUSViY0GED9CvkUU2hv5j4pyBu953kaNlMGlSRX8wEBZKTRNuYeTKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rguzkvZm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+bKauc6Q; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751027007; c=relaxed/simple;
+	bh=TKE/PcirYgBaEnKVtc6oY0F6itZHLZa+hSxsQ4xJUJ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XMyOsNeZyJTrFFitwn69zeJQB9o33GdR+UPfOpRIl5dr8uWhISaZGjY9XoVjBYq3gH6Zayi0egwgSaivKgXMK+ipR5FGZJQhgzUSDJ9z/kOAKl/DR8sQkqrPJgU6DbixynX6KCfwf9VCPUhmiagWx2nYcwdP9uuIbIhNoh+clfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iaAia7Bz; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rguzkvZm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+bKauc6Q"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751026967;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EtbN+fhOj6879PFfkihHug11BT+rDU03fP9A04+d78s=;
-	b=rguzkvZmWmn+qkAnhyFPWBYKZtbx8NdPU6iB1Pkz+SQR9mobvyF3zUpmEEYfRleHfyT9AP
-	lzaTVHd5SQZuSQLVF2v2ehXjmlOch5uez+AjRcxtJVvGMhCnnogdjd+SKd6F7QpgplkGsq
-	gEcgM941/B9oqB08xWA46yDo54jHcm5UF3KAfM217+kCz8YoS7FsUQ7pQ4LMQ0Yl+HyTON
-	h34lL0M2OgTYh0kLTQcoSJOzSNwAUzKTHIwwEJga6b+Hj1m9bYpmA2WN9NlIw/PrmVHuQI
-	qUfCsXzVj3Mhy6xw1WAwVNg5O26sX4pxsoUraxKNVt73sffKwKxDrnB8Cwv4rg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751026967;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EtbN+fhOj6879PFfkihHug11BT+rDU03fP9A04+d78s=;
-	b=+bKauc6Qa39uLsKZRIKGIGFNi4mBNq3lp25x9xe1M4j06WeBEdZpjVTH1kS4G86M6bexhB
-	RxJSfAQ83AhpKaCA==
-To: =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@igalia.com>, Ingo Molnar
- <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
- Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>, Arnd
- Bergmann <arnd@arndb.de>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Waiman Long <longman@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-api@vger.kernel.org, kernel-dev@igalia.com, =?utf-8?Q?Andr=C3=A9?=
- Almeida
- <andrealmeid@igalia.com>
-Subject: Re: [PATCH v5 5/7] futex: Remove the limit of elements for
- sys_set_robust_list2 lists
-In-Reply-To: <20250626-tonyk-robust_futex-v5-5-179194dbde8f@igalia.com>
-References: <20250626-tonyk-robust_futex-v5-0-179194dbde8f@igalia.com>
- <20250626-tonyk-robust_futex-v5-5-179194dbde8f@igalia.com>
-Date: Fri, 27 Jun 2025 14:22:46 +0200
-Message-ID: <87wm8xnzl5.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iaAia7Bz"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-451d54214adso14705075e9.3;
+        Fri, 27 Jun 2025 05:23:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751027004; x=1751631804; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8uHDdjuJYEAU1yduIeaRva64ieAw7KTAi6gEOcE+hfA=;
+        b=iaAia7Bz4kXZ0lNWLMftRiRMejO6AFiMgaRJ27Rza3jg11H9wo83qOrV9xnSiIE2R4
+         6qiHkCRVuZzUVWQRr0FnDtFdI/lcNr+/RexxZBNZol7AeRv+8pIArLPJevNQ5xWnkV8o
+         nKx9hEqS2HsygD656x77jmYVy8vjXvfpNsuxaymqNm49M2aNl22ymiyrPBqoUUYXMIG9
+         56CFDwjQTTQZ9zo1EsklQ4qB0DBNNBDvh60L4Bb2ErPZewPcbwgZBYGCU7ydV+X76BMk
+         uvmFr6jN0PYwCI78ssgjp0XNJvv4MzCRIjQO2Nl5wvj061C4k5wm2ej6/dSV4byOD75h
+         cVCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751027004; x=1751631804;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8uHDdjuJYEAU1yduIeaRva64ieAw7KTAi6gEOcE+hfA=;
+        b=MldKRYSIKMJL0uYagKlA0PqyrrbSNKNxzbNfFnq7GkYinzU5tFkniOY0TsGI2cTylj
+         WtWMk4rIXoJ1buJVD+P4eWemWr9d5eJpVI2laHLKbIiB21+oGyrAk299wqtLfjCYUIxL
+         1eabsqpaUZGwxNraPAfv/LH+1hWe5wACuB792TPVGUV4kLMS4vq7RXkQMGqDe24uPLUp
+         QQqBva2XipLL4mNOHpXpDhNLvRU1w+fQVl3lAYawoARU5F2THi2aNLVDDNeKsoM/r8FM
+         tf3KR2wE3hdhBcfsvR6tM6pHQOjPsBFz55/3tRFuHDle1ue1oYarlls1RqFBKvZFyCu1
+         7Jfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMUfDHrPe/CL4HjtDN9oFFaGKRtlHTDcLoXng4IUEAxRqQNIsx88J3cQodT0UmRTRRsUbdZ/MxthOd7Tyi@vger.kernel.org, AJvYcCWEcxt8Nwc3xt2VR2czdi9D6EWPd/G9nnCHKhSVVOPE8bwaV/wECP7mJ66O1yl4CiQ2o9TkoOBTv2I=@vger.kernel.org, AJvYcCXFMJ0+kB0kn48Hj1j5XO0ihIQNEODzBuAwkMdIh5/sZtT7fGBPaaQtrNdPyz30vNiaw4XF1+AesTynUtHn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo8kp5bE4XVEIwL69QV0Jgthib8KJgcZ6rUh8zonB0WptcXAMu
+	4d712fMg6xPEbC8f0LfdvtNPdKLRPdjcJjrqUdqnpS7kP2bUJ44xJJRN+BfbX8jL
+X-Gm-Gg: ASbGncuh/j45iMtu9fQARruyzBi9b1R1V8Smv2U4xsyXWzsgPxmw6jFsP4YMzCEaZuy
+	SWFMOQJnjnRFsH8q5eq55DqADfhQlr3qhgAV3GalV1BA297RXZ5oBcrHxoePi956hv3syKDVKcE
+	0RF76w7HuxvhrT1SlfxekOLBh82/8nQKlPXVfJ6fM5wlGUizXvxa+46uZ4IFKe/WVy6dkc/KHrl
+	u4Mk0r4TZ2LiLOuVhg6juzZBveuRJ0kljmE1ytoy820TVV1uTtIkTQi3aJppDgvQ74sME5o/iFQ
+	hkGV7IB93Y1CCS9M1d69oRRY/0ZZrY7FjblNa3BPiiRxptAzlkgq0n3B7qNdXXfLYE3u4UENdvx
+	eMn+UdWjrSm/VmBT/pBVLFDKYzwY=
+X-Google-Smtp-Source: AGHT+IHHNyiJnortXGltf6dobXUszzMZIiEWCBoSFL/rKagraeF+X9BVsxcCM0pKIkAYOK9PI1rC+A==
+X-Received: by 2002:a05:600c:4446:b0:442:e9eb:cb9e with SMTP id 5b1f17b1804b1-4538ee85917mr28872705e9.26.1751027003516;
+        Fri, 27 Jun 2025 05:23:23 -0700 (PDT)
+Received: from [192.168.20.170] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823c42e1sm78774495e9.37.2025.06.27.05.23.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 05:23:22 -0700 (PDT)
+Message-ID: <85fa756b-9f18-446e-a50a-2aafaa40744c@gmail.com>
+Date: Fri, 27 Jun 2025 14:23:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] interconnect: avoid memory allocation when
+ 'icc_bw_lock' is held
+Content-Language: hu
+To: Johan Hovold <johan@kernel.org>
+Cc: Georgi Djakov <djakov@kernel.org>,
+ Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
+ Johan Hovold <johan+linaro@kernel.org>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, linux-pm@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250625-icc-bw-lockdep-v3-1-2b8f8b8987c4@gmail.com>
+ <aFvr1zSkf4KmIcMT@hovoldconsulting.com>
+ <aFvuiVX0kMIqXQtZ@hovoldconsulting.com>
+ <84b94649-a248-46b0-a401-772aeb8777a2@gmail.com>
+ <aFwBYRF0wJwVDdeX@hovoldconsulting.com>
+ <ac5ba192-b538-457e-acc4-c2d358b1fd0e@gmail.com>
+ <aF0TIWfDI4M1azzc@hovoldconsulting.com>
+ <3b90caec-b4c0-47d8-bdd7-1a7abd5e69d9@gmail.com>
+ <aF5EPhd5smrmB38Q@hovoldconsulting.com>
+ <b960680d-6c5a-4130-b2dd-4ddf1f800430@gmail.com>
+ <aF5nv6TQoyfh7wKS@hovoldconsulting.com>
+From: Gabor Juhos <j4g8y7@gmail.com>
+In-Reply-To: <aF5nv6TQoyfh7wKS@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 26 2025 at 14:11, Andr=C3=A9 Almeida wrote:
-> Remove the limit of ROBUST_LIST_LIMIT elements that a robust list can
-> have, for the ones created with the new interface. This is done by
+2025. 06. 27. 11:43 keltezéssel, Johan Hovold írta:
+> On Fri, Jun 27, 2025 at 11:36:26AM +0200, Gabor Juhos wrote:
+>> 2025. 06. 27. 9:11 keltezéssel, Johan Hovold írta:
+>>> On Thu, Jun 26, 2025 at 05:00:42PM +0200, Gabor Juhos wrote:
+> 
+>>>> Despite the note above, your proposal looks good to me. Would you like to
+>>>> send it as a formal patch, or shall I do it?
+>>>
+>>> I can post it in a bit.
+>>
+>> Great, just saw the final patch. Thank you!
+> 
+> Here it is for reference:
+> 
+> 	https://lore.kernel.org/lkml/20250627075854.26943-1-johan+linaro@kernel.org/
+> 
+> It looks like Georgi picked up the patch from this thread yesterday,
+> which should be fine as well as I only changed the commit message
+> (replacing the ipc splat with one from sc8280xp) before posting it as
+> v4.
 
-With which new interface?
+Yes, it is fine. I have tested the icc-fixes branch which contains the IPQ9574
+specific patch as well.
 
-> overwritten the list as it's proceeded in a way that we avoid circular
-
-overwriting each processed list entry to point at ...., which eliminates
-a potential circular list.
-
-
-> lists.
->
-> For the old interface, we keep the limited behavior to avoid changing
-
-s/we//
-
-> the API.
-
-Which API would be violated?
-
-Overwriting the dying tasks robust list entries is not violating any
-ABI. The task's memory is on the way to be destroyed.
-
-> Signed-off-by: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
-> ---
->  kernel/futex/core.c | 37 +++++++++++++++++++++++++++++--------
->  1 file changed, 29 insertions(+), 8 deletions(-)
->
-> diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-> index 1049f8ef3ce3c611b3be0ca12df34a98f710121d..942b66facdea16cd7be2235d9=
-5c2bbbae8d7cc63 100644
-> --- a/kernel/futex/core.c
-> +++ b/kernel/futex/core.c
-> @@ -1152,7 +1152,8 @@ static inline int fetch_robust_entry(struct robust_=
-list __user **entry,
->   * We silently return on any sign of list-walking problem.
->   */
->  static void exit_robust_list64(struct task_struct *curr,
-> -			       struct robust_list_head __user *head)
-> +			       struct robust_list_head __user *head,
-> +			       bool destroyable)
->  {
->  	struct robust_list __user *entry, *next_entry, *pending;
->  	unsigned int limit =3D ROBUST_LIST_LIMIT, pi, pip;
-> @@ -1196,13 +1197,17 @@ static void exit_robust_list64(struct task_struct=
- *curr,
->  		}
->  		if (rc)
->  			return;
-> -		entry =3D next_entry;
-> -		pi =3D next_pi;
-> +
->  		/*
->  		 * Avoid excessively long or circular lists:
->  		 */
-> -		if (!--limit)
-> +		if (!destroyable && !--limit)
->  			break;
-> +		else
-> +			put_user(&head->list, &entry->next);
-
-Unchecked put_user() with zero explanation what it actually does.
-
-> +
-> +		entry =3D next_entry;
-> +		pi =3D next_pi;
->=20=20
->  		cond_resched();
->  	}
-> @@ -1214,7 +1219,8 @@ static void exit_robust_list64(struct task_struct *=
-curr,
->  }
->  #else
->  static void exit_robust_list64(struct task_struct *curr,
-> -			       struct robust_list_head __user *head)
-> +			       struct robust_list_head __user *head,
-> +			       bool destroyable)
->  {
->  	pr_warn("32bit kernel should not allow ROBUST_LIST_64BIT");
->  }
-> @@ -1252,7 +1258,8 @@ fetch_robust_entry32(u32 *uentry, struct robust_lis=
-t __user **entry,
->   * We silently return on any sign of list-walking problem.
->   */
->  static void exit_robust_list32(struct task_struct *curr,
-> -			       struct robust_list_head32 __user *head)
-> +			       struct robust_list_head32 __user *head,
-> +			       bool destroyable)
->  {
->  	struct robust_list __user *entry, *next_entry, *pending;
->  	unsigned int limit =3D ROBUST_LIST_LIMIT, pi, pip;
-
-So this get's a destroyable argument as well, but no implementation?
-
-> @@ -1474,10 +1481,19 @@ static void exit_pi_state_list(struct task_struct=
- *curr)
->  static inline void exit_pi_state_list(struct task_struct *curr) { }
->  #endif
->=20=20
-> +/*
-> + * futex_cleanup - After the task exists, process the robust lists
-> + *
-> + * Walk through the linked list, parsing robust lists and freeing the
-> + * allocated lists. Lists created with the set_robust_list2 don't have a=
- limit
-> + * for sizing and can be destroyed while we walk on it to avoid circular=
- list.
-> + */
->  static void futex_cleanup(struct task_struct *tsk)
->  {
->  	struct robust_list2_entry *curr, *n;
->  	struct list_head *list2 =3D &tsk->robust_list2;
-> +	bool destroyable =3D true;
-> +	int i =3D 0;
->=20=20
->  	/*
->  	 * Walk through the linked list, parsing robust lists and freeing the
-> @@ -1485,15 +1501,20 @@ static void futex_cleanup(struct task_struct *tsk)
->  	 */
->  	if (unlikely(!list_empty(list2))) {
->  		list_for_each_entry_safe(curr, n, list2, list) {
-> +			destroyable =3D true;
-> +			if (tsk->robust_list_index =3D=3D i)
-> +				destroyable =3D false;
-
-Oh well.....
+Regards,
+Gabor
