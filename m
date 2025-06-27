@@ -1,224 +1,106 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 400942F1FDF;
-	Fri, 27 Jun 2025 13:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AE22D97B6
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751031848; cv=none; b=TBP4TvcSJrzFy8HtDmmlGuTb1baoswa+YsKlw6njr09Md2wN06+AlccBkhLLsTb2XjS74HPxYa3K9scdzH9lOzQN5pbW+9K9tIJeHsUVTaYE1oaM0rowJ3tP/EXVoWkqrFXkJTE9vrLVzx8NZNmUunQspOQHXce30Gmc892Zl84=
+	t=1751031856; cv=none; b=okIcmjiK5p0eUhzPhRzW0OTM6zFdt4u/zQP6v/fDCVjzL6xM+6c/oGIbBtQ68ndbdCp5iGN6z9I6K7np9k6PqmVyczITmzbTmIHS6FxxZxTfScwefqB+xX2ac/Gyk2V70lLZrz3VlxCdT4OgHjjgIWacagqWWAQyypN6juIwDyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751031848; c=relaxed/simple;
-	bh=sKa5RTfY3fKUDBvn1uk9oSPN1RCutNFkSrQa6GYoh+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tu3982nBF8pjbRjHeiY2WCAeEnIAc0dUfXP8j921plkp6w/oxyuEkpz1i2bcFbIOMiexDcmGPn6Rey3R1uFARQfwGMNztkEmKhgymZp1X58HLqIUO2WtW4jF2+U0WGAR8HU4MCVUftik2zU024nD4a9WpP2CRpPKKxnjDeSEkrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71A3F1A00;
-	Fri, 27 Jun 2025 06:43:48 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B62A13F66E;
-	Fri, 27 Jun 2025 06:44:03 -0700 (PDT)
-Date: Fri, 27 Jun 2025 14:44:00 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, arm-scmi@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/7] firmware: arm_scmi: imx: Support getting syslog of
- MISC protocol
-Message-ID: <aF6gIOrY5ODBumkf@pluto>
-References: <20250627-sm-misc-api-v1-v1-0-2b99481fe825@nxp.com>
- <20250627-sm-misc-api-v1-v1-5-2b99481fe825@nxp.com>
+	s=arc-20240116; t=1751031856; c=relaxed/simple;
+	bh=5rws0OIbeHe2CRb1G1qFVEHOO3Qznulp1JmZYPqVS5A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=JKlCCFOjuHNxnlH4jnhBLCeCQcuNNOjMri+3pNt7EWMkqZcKZe4pELw1BRSsWwhAQBiqOWNNCfHm+fjzhnAq04qyug8Ghn80mhzYVEqWW+YwrYJ2lc96OFsQrYuAgU4dy4BZ8ptz8MbOEeSfmYAWpt42kSo5M2nQt/Xw48yLOxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=WhvmDKIT; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WhvmDKIT"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250627134412euoutp0194fd8068b2300c81e88ce2f1dfc90009~M6jFcKaWS0615906159euoutp01r
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:44:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250627134412euoutp0194fd8068b2300c81e88ce2f1dfc90009~M6jFcKaWS0615906159euoutp01r
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751031852;
+	bh=XkLT3H6zpZxdqKr2mL/WBFZuhTWHNBcRcJJv1Mo/N0Y=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=WhvmDKITyLEkhw3MRTwTgoaWKOjFTMjKnV8wJOos+T/cXs8qV0a45KyYKjjHHphNR
+	 ejlC6A7c/3G9ZGM0g5x9rtRdfSUOXwvaNPvqe2cEjseVkiFdxFjJMEeYZdJBH545i+
+	 hY7QPcy7sQUOkaipwLKySn5wWBeenoGfWxQTqISc=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250627134412eucas1p153bc3e4a1c0897bca604e6864667b66d~M6jEutC8v1155611556eucas1p1O;
+	Fri, 27 Jun 2025 13:44:12 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250627134410eusmtip109d5d74275daabf2f21b42eb7440b88b~M6jDFXzcn2675526755eusmtip1I;
+	Fri, 27 Jun 2025 13:44:10 +0000 (GMT)
+Message-ID: <35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
+Date: Fri, 27 Jun 2025 15:44:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627-sm-misc-api-v1-v1-5-2b99481fe825@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman
+	<mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+	<christophe.leroy@csgroup.eu>, Robin Murphy <robin.murphy@arm.com>, Joerg
+	Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, "Michael S.
+	Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
+ <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Alexander Potapenko <glider@google.com>, Marco Elver
+ <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, Andrew Morton
+ <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ iommu@lists.linux.dev, virtualization@lists.linux.dev,
+ kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <cover.1750854543.git.leon@kernel.org>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250627134412eucas1p153bc3e4a1c0897bca604e6864667b66d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf
+X-EPHeader: CA
+X-CMS-RootMailID: 20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf
+References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
+	<cover.1750854543.git.leon@kernel.org>
 
-On Fri, Jun 27, 2025 at 02:03:48PM +0800, Peng Fan wrote:
-> MISC protocol supports getting system log regarding system sleep latency
-> ,wakeup interrupt and etc. Add the API for user to retrieve the
-> information from SM.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  .../firmware/arm_scmi/vendors/imx/imx-sm-misc.c    | 78 ++++++++++++++++++++++
->  include/linux/scmi_imx_protocol.h                  | 19 ++++++
->  2 files changed, 97 insertions(+)
-> 
-> diff --git a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
-> index d5b24bc4d4ca6c19f4cddfaea6e9d9b32a4c92f7..1a6d75357b76ce6bb7d06461999b368c27f1fa43 100644
-> --- a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
-> +++ b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
-> @@ -28,6 +28,7 @@ enum scmi_imx_misc_protocol_cmd {
->  	SCMI_IMX_MISC_DISCOVER_BUILDINFO = 0x6,
->  	SCMI_IMX_MISC_SI_INFO = 0xB,
->  	SCMI_IMX_MISC_CFG_INFO = 0xC,
-> +	SCMI_IMX_MISC_SYSLOG = 0xD,
->  	SCMI_IMX_MISC_CTRL_NOTIFY = 0x8,
->  };
->  
-> @@ -87,6 +88,19 @@ struct scmi_imx_misc_si_info_out {
->  	u8 siname[MISC_MAX_SINAME];
->  };
->  
-> +struct scmi_imx_misc_syslog_in {
-> +	__le32 flags;
-> +	__le32 index;
-> +};
-> +
-> +#define REMAINING(x)	le32_get_bits((x), GENMASK(31, 20))
-> +#define RETURNED(x)	le32_get_bits((x), GENMASK(11, 0))
-> +
-> +struct scmi_imx_misc_syslog_out {
-> +	__le32 numlogflags;
-> +	__le32 syslog[];
-> +};
-> +
->  static int scmi_imx_misc_attributes_get(const struct scmi_protocol_handle *ph,
->  					struct scmi_imx_misc_info *mi)
->  {
-> @@ -368,6 +382,69 @@ static int scmi_imx_misc_silicon_info(const struct scmi_protocol_handle *ph,
->  	return ret;
->  }
->  
-> +struct scmi_imx_misc_syslog_ipriv {
-> +	u32 *array;
-> +};
-> +
-> +static void iter_misc_syslog_prepare_message(void *message, u32 desc_index,
-> +					     const void *priv)
-> +{
-> +	struct scmi_imx_misc_syslog_in *msg = message;
-> +
-> +	msg->flags = cpu_to_le32(0);
-> +	msg->index = cpu_to_le32(desc_index);
-> +}
-> +
-> +static int iter_misc_syslog_update_state(struct scmi_iterator_state *st,
-> +					 const void *response, void *priv)
-> +{
-> +	const struct scmi_imx_misc_syslog_out *r = response;
-> +
-> +	st->num_returned = RETURNED(r->numlogflags);
-> +	st->num_remaining = REMAINING(r->numlogflags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int
-> +iter_misc_syslog_process_response(const struct scmi_protocol_handle *ph,
-> +				  const void *response,
-> +				  struct scmi_iterator_state *st, void *priv)
-> +{
-> +	const struct scmi_imx_misc_syslog_out *r = response;
-> +	struct scmi_imx_misc_syslog_ipriv *p = priv;
-> +
-> +	p->array[st->desc_index + st->loop_idx] =
-> +		le32_to_cpu(r->syslog[st->loop_idx]);
-> +
-> +	return 0;
-> +}
-> +
-> +static int scmi_imx_misc_syslog(const struct scmi_protocol_handle *ph, u16 size,
-> +				void *array)
-> +{
+On 25.06.2025 15:18, Leon Romanovsky wrote:
+> This series refactors the DMA mapping to use physical addresses
+> as the primary interface instead of page+offset parameters. This
+> change aligns the DMA API with the underlying hardware reality where
+> DMA operations work with physical addresses, not page structures.
+>
+> The series consists of 8 patches that progressively convert the DMA
+> mapping infrastructure from page-based to physical address-based APIs:
+>
+> The series maintains backward compatibility by keeping the old
+> page-based API as wrapper functions around the new physical
+> address-based implementations.
 
-...so this size...
+Thanks for this rework! I assume that the next step is to add map_phys 
+callback also to the dma_map_ops and teach various dma-mapping providers 
+to use it to avoid more phys-to-page-to-phys conversions.
 
-> +	struct scmi_iterator_ops ops = {
-> +		.prepare_message = iter_misc_syslog_prepare_message,
-> +		.update_state = iter_misc_syslog_update_state,
-> +		.process_response = iter_misc_syslog_process_response,
-> +	};
-> +	struct scmi_imx_misc_syslog_ipriv ipriv = {
-> +		.array = array,
-> +	};
-> +	void *iter;
-> +
-> +	if (!array || !size)
-> +		return -EINVAL;
-> +
+I only wonder if this newly introduced dma_map_phys()/dma_unmap_phys() 
+API is also suitable for the recently discussed PCI P2P DMA? While 
+adding a new API maybe we should take this into account? My main concern 
+is the lack of the source phys addr passed to the dma_unmap_phys() 
+function and I'm aware that this might complicate a bit code conversion 
+from old dma_map/unmap_page() API.
 
-...which cannot be zero and is passed down to the iterator as max_resources
-is meant to repreent also the length of tthe array passed here as an
-argument and filled-in by the iterators ?
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-...and so basically array bounds-checking is enforced by the iterators
-core code, because no matter what, it is always enforced that
-
-	(returned + remaining <= max_resources (size)
-
-...I am fine with this, I am just trying to understand and see if I can
-find a mishap :D
-
-> +	iter = ph->hops->iter_response_init(ph, &ops, size, SCMI_IMX_MISC_SYSLOG,
-> +					    sizeof(struct scmi_imx_misc_syslog_in),
-> +					    &ipriv);
-> +	if (IS_ERR(iter))
-> +		return PTR_ERR(iter);
-> +
-> +	return ph->hops->iter_response_run(iter);
-> +}
-> +
->  static const struct scmi_imx_misc_proto_ops scmi_imx_misc_proto_ops = {
->  	.misc_cfg_info = scmi_imx_misc_cfg_info,
->  	.misc_ctrl_set = scmi_imx_misc_ctrl_set,
-> @@ -375,6 +452,7 @@ static const struct scmi_imx_misc_proto_ops scmi_imx_misc_proto_ops = {
->  	.misc_ctrl_req_notify = scmi_imx_misc_ctrl_notify,
->  	.misc_discover_build_info = scmi_imx_discover_build_info,
->  	.misc_silicon_info = scmi_imx_misc_silicon_info,
-> +	.misc_syslog = scmi_imx_misc_syslog,
->  };
->  
->  static int scmi_imx_misc_protocol_init(const struct scmi_protocol_handle *ph)
-> diff --git a/include/linux/scmi_imx_protocol.h b/include/linux/scmi_imx_protocol.h
-> index 0e639dfb5d16e281e2ccf006a63694b316c431f4..ff34d974046aa982fa9f5d46fc673412e01a532d 100644
-> --- a/include/linux/scmi_imx_protocol.h
-> +++ b/include/linux/scmi_imx_protocol.h
-> @@ -71,6 +71,23 @@ struct scmi_imx_misc_system_info {
->  	u8 siname[MISC_MAX_SINAME];
->  };
->  
-> +struct scmi_imx_misc_sys_sleep_rec {
-> +	u32 sleepentryusec;
-> +	u32 sleepexitusec;
-> +	u32 sleepcnt;
-> +	u32 wakesource;
-> +	u32 mixpwrstat;
-> +	u32 mempwrstat;
-> +	u32 pllpwrstat;
-> +	u32 syssleepmode;
-> +	u32 syssleepflags;
-> +};
-
-So where is this used ? later in the series ?
-> +
-> +struct scmi_imx_misc_syslog {
-> +	struct scmi_imx_misc_sys_sleep_rec syssleeprecord;
-> +	uint32_t deverrlog;
-> +};
-> +
->  struct scmi_imx_misc_proto_ops {
->  	int (*misc_cfg_info)(const struct scmi_protocol_handle *ph,
->  			     struct scmi_imx_misc_system_info *info);
-> @@ -84,6 +101,8 @@ struct scmi_imx_misc_proto_ops {
->  					struct scmi_imx_misc_system_info *info);
->  	int (*misc_silicon_info)(const struct scmi_protocol_handle *ph,
->  				 struct scmi_imx_misc_system_info *info);
-> +	int (*misc_syslog)(const struct scmi_protocol_handle *ph, u16 size,
-> +			  void *array);
->  };
-> 
-
-Thanks,
-Cristian
