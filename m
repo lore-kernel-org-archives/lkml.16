@@ -1,199 +1,83 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3BC296145;
-	Fri, 27 Jun 2025 10:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA811552FD
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751019883; cv=none; b=Q8nrweB2IgrMHUflY1PHKC8Biio+6J8tjx7VuG2MDRlyEYQg6pxji0Kjn+LurDq/ycV+5Z91gO1SsHNbcrN5mixkkxJF7FlXZUPYhynl3EfhYHvp+GKr1D4J+au67WCqsOatiTGbgNZxwWE1JLX7bHUXTNQAAWjpQHg+UBM1Zmw=
+	t=1751019894; cv=none; b=Uql925JaEnK6QltG/x4pwDriBQtvqeVWPJxh6NVB86OWWsNQT8DX3w0UfO2Cbs/PnvEr6+pO1AyAU7BIqbKAoEdyFBEVbn0LHg3StYJgbDsMIDCw8+P65SYNe2oD7cH1qCPdvGiEmeQj/4slzt/7QCOkofmPFDG5/Lk8nK7uYfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751019883; c=relaxed/simple;
-	bh=BCbatr1KZPFWU9OTfqGjZ/24IBVjG/LV+9y/pRxtkMM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ubJpDTpkqgiO19sPpbQCVnmEutOEJaTuqBO7G2XLv6G2bLjk99R0DaB8uxKk5Kvlci2KYgG5+D9DYnxTOq1zCa0a+ZJ+HgJqcDz0mjh/zB/uN2WPsjDZftFp1P9c7hTvRCLNFJNJSBj0EuX+g5NegvI/YedpUZO4eT6P6JxgQOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bTBVx1RGyz6L50b;
-	Fri, 27 Jun 2025 18:24:25 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 77F431402EC;
-	Fri, 27 Jun 2025 18:24:34 +0800 (CST)
-Received: from localhost (10.48.153.213) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 27 Jun
- 2025 12:24:33 +0200
-Date: Fri, 27 Jun 2025 11:24:29 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v10 05/17] CXL/AER: Introduce kfifo for forwarding CXL
- errors
-Message-ID: <20250627112429.00007155@huawei.com>
-In-Reply-To: <20250626224252.1415009-6-terry.bowman@amd.com>
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
-	<20250626224252.1415009-6-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751019894; c=relaxed/simple;
+	bh=Qh4zx0NXpQRDJAtQDYOZ6OyiO7nv+hOL31XuctNrU1U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C+ZIgFnVl/PFCnx66ugPRmIrdhXWV/0zDMmiN7M0hX7sbFHjlzGvenxiDWkSkWKAqwg2VwoLBkgKqjWmgN0I8T5ZAjnEd/kJV3m7BSMako11bhnKqvNrqmqKfxB/e6FPQyBKrx/3RDb9C+pJirSv/eIhgIXZqs5rPX9yhzaeohE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=BAafPqO5; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="BAafPqO5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:content-transfer-encoding
+	:in-reply-to; s=k1; bh=Gf10sbfZVfzDaBRO3uW31lStUjZogmK6cq/uTGY1k
+	8A=; b=BAafPqO50jolt3SCu6GFfUBIFwbx2lH8w6BLzTUclucpzhyIipJXuRX0T
+	XGrKyGZkJwLss1NqKbkpsQZJpld3aXNXjGOzQHZM0AUMB3gxglQAB/ruvNX/kbkQ
+	hZepdkawZ7hdf+T58PKW/dDiTNnFz+oJL4jYa/ktqeHlGqr7B/psTs2IVUUguXP8
+	0Qxedk9p4FlwwJEEQIju43QVC8hVbRbtG8pksW4rSG87deeWN6E4aNowLUHPfQdz
+	SD4S/VtfRWvdtEWvMrdkMd8hobcOyEUMhCBkw4rG58Bn1JJtbSyqJEmK4rforKyP
+	Aqi7erS5BIY8NJ5t9WQ0byLsuadEQ==
+Received: (qmail 1424160 invoked from network); 27 Jun 2025 12:24:50 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 27 Jun 2025 12:24:50 +0200
+X-UD-Smtp-Session: l3s3148p1@fo+GFos40JQgAwDPXzuUAOCQSK0rM+sw
+Date: Fri, 27 Jun 2025 12:24:49 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Jim Cromie <jim.cromie@gmail.com>,
+	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH] i2c: scx200_acb: add depends on HAS_IOPORT
+Message-ID: <aF5xcWCK_b6pPbGj@shikoro>
+References: <20250615183659.902110-1-rdunlap@infradead.org>
+ <aF5v-dEVBsQGnmit@shikoro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aF5v-dEVBsQGnmit@shikoro>
 
-On Thu, 26 Jun 2025 17:42:40 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
-
-> CXL error handling will soon be moved from the AER driver into the CXL
-> driver. This requires a notification mechanism for the AER driver to share
-> the AER interrupt with the CXL driver. The notification will be used
-> as an indication for the CXL drivers to handle and log the CXL RAS errors.
+On Fri, Jun 27, 2025 at 12:18:33PM +0200, Wolfram Sang wrote:
+> On Sun, Jun 15, 2025 at 11:36:58AM -0700, Randy Dunlap wrote:
+> > The scx200_acb driver uses inb()/outb() without depending on HAS_IOPORT,
+> > which leads to build errors since kernel v6.13-rc1:
+> > commit 6f043e757445 ("asm-generic/io.h: Remove I/O port accessors
+> > for HAS_IOPORT=n")
+> > 
+> > Add the HAS_IOPORT dependency to prevent the build errors.
+> > 
+> > (Found in ARCH=um allmodconfig builds)
+> > 
+> > drivers/i2c/busses/scx200_acb.c: In function ‘scx200_acb_reset’:
+> > include/asm-generic/io.h:596:15: error: call to ‘_outb’ declared with attribute error: outb() requires CONFIG_HAS_IOPORT
+> > 
+> > drivers/i2c/busses/scx200_acb.c:224:26: note: in expansion of macro ‘inb’
+> > include/asm-generic/io.h:542:14: error: call to ‘_inb’ declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
+> >   224 |                 status = inb(ACBST);
+> > 
+> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: Arnd Bergmann <arnd@kernel.org>
+> > Cc: Niklas Schnelle <schnelle@linux.ibm.com>
+> > Cc: Jim Cromie <jim.cromie@gmail.com>
+> > Cc: Andi Shyti <andi.shyti@kernel.org>
+> > Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > Cc: linux-i2c@vger.kernel.org
 > 
-> First, introduce cxl/core/native_ras.c to contain changes for the CXL
-> driver's RAS native handling. This as an alternative to dropping the
-> changes into existing cxl/core/ras.c file with purpose to avoid #ifdefs.
-> Introduce CXL Kconfig CXL_NATIVE_RAS, dependent on PCIEAER_CXL, to
-> conditionally compile the new file.
-> 
-> Add a kfifo work queue to be used by the AER driver and CXL driver. The AER
-> driver will be the sole kfifo producer adding work and the cxl_core will be
-> the sole kfifo consumer removing work. Add the boilerplate kfifo support.
-> 
-> Add CXL work queue handler registration functions in the AER driver. Export
-> the functions allowing CXL driver to access. Implement registration
-> functions for the CXL driver to assign or clear the work handler function.
-> 
-> Introduce 'struct cxl_proto_err_info' to serve as the kfifo work data. This
-> will contain the erring device's PCI SBDF details used to rediscover the
-> device after the CXL driver dequeues the kfifo work. The device rediscovery
-> will be introduced along with the CXL handling in future patches.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Hi Terry,
+> Applied to for-current, thanks!
 
-Whilst it obviously makes patch preparation a bit more time consuming
-for series like this with many patches it can be useful to add a brief
-change log to the individual patches as well as the cover letter.
-That helps reviewers figure out where they need to look again.
-
-A few trivial things inline.
-
-With those fixed up
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-
-Jonathan
-
-
-> ---
->  drivers/cxl/Kconfig           | 14 ++++++++
->  drivers/cxl/core/Makefile     |  1 +
->  drivers/cxl/core/core.h       |  8 +++++
->  drivers/cxl/core/native_ras.c | 26 +++++++++++++++
->  drivers/cxl/core/port.c       |  2 ++
->  drivers/cxl/core/ras.c        |  1 +
->  drivers/cxl/cxlpci.h          |  1 +
->  drivers/pci/pci.h             |  4 +++
->  drivers/pci/pcie/aer.c        |  7 ++--
->  drivers/pci/pcie/cxl_aer.c    | 60 +++++++++++++++++++++++++++++++++++
->  include/linux/aer.h           | 31 ++++++++++++++++++
->  11 files changed, 153 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/cxl/core/native_ras.c
-
-
->  static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 54e219b0049e..6f1396ef7b77 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -4,6 +4,7 @@
->  #define __CXL_PCI_H__
->  #include <linux/pci.h>
->  #include "cxl.h"
-> +#include "linux/aer.h"
-
-Why?  There are no changes in this header other than the include and the changes
-to linux/aer.h are new stuff so I can't see how it becomes necessary if it
-wasn't before.
-
-Might well have always been missing and should have been here. If so separate
-patch to tidy that up.
-
->  
->  #define CXL_MEMORY_PROGIF	0x10
->  
-
-
-> diff --git a/drivers/pci/pcie/cxl_aer.c b/drivers/pci/pcie/cxl_aer.c
-> index b2ea14f70055..846ab55d747c 100644
-> --- a/drivers/pci/pcie/cxl_aer.c
-> +++ b/drivers/pci/pcie/cxl_aer.c
-
->  static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
->  {
->  	struct aer_err_info *info = (struct aer_err_info *)data;
-> @@ -136,3 +152,47 @@ void cxl_rch_enable_rcec(struct pci_dev *rcec)
->  	pci_info(rcec, "CXL: Internal errors unmasked");
->  }
->  
-> +static DEFINE_KFIFO(cxl_proto_err_fifo, struct cxl_proto_err_work_data,
-> +		    CXL_ERROR_SOURCES_MAX);
-> +static DEFINE_SPINLOCK(cxl_proto_err_fifo_lock);
-> +struct work_struct *cxl_proto_err_work;
-
-I'm not seeing a declaration for this in the headers, so can it be static?
-
-This is made a little more confusing as in this patch we have both
-a structure called cxl_proto_err_work and a pointer to it with exactly the
-same name.  Maybe rename this so it's subtly different.  cxl_protocol_err_work
-or something silly like that just to make reviewers life a tiny bit easier!
-
-> +
-
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 02940be66324..24c3d9e18ad5 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -10,6 +10,7 @@
->  
->  #include <linux/errno.h>
->  #include <linux/types.h>
-> +#include <linux/workqueue_types.h>
->  
->  #define AER_NONFATAL			0
->  #define AER_FATAL			1
-> @@ -53,6 +54,26 @@ struct aer_capability_regs {
->  	u16 uncor_err_source;
->  };
->  
-> +/**
-> + * struct cxl_proto_err_info - Error information used in CXL error handling
-> + * @severity: AER severity
-> + * @function: Device's PCI function
-
-Run kernel-doc over the files and fix errors / warning.
-Missed updating this to devfn which it would have shouted about.
-
-> + * @device: Device's PCI device
-> + * @bus: Device's PCI bus
-> + * @segment: Device's PCI segment
-> + */
-> +struct cxl_proto_error_info {
-> +	int severity;
-> +
-> +	u8 devfn;
-> +	u8 bus;
-> +	u16 segment;
-> +};
+Ah, sorry, I already applied an earlier patch...
 
