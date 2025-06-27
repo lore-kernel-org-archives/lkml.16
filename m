@@ -1,187 +1,93 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B739319D8A8;
-	Fri, 27 Jun 2025 19:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B3B19D8A8;
+	Fri, 27 Jun 2025 19:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751054091; cv=none; b=ET7ZNMuYrtjMnGNhcAnddCaJmVucTnE4XZxBASLwdhmLiuy/RQl52JGzixvi+xYWhQrvQ+4BpOM7ASAnXV/AFbZt7bdDz2F5TXmvD5SerEj1aJcChz626CN2cQmcsJD9pb4CvOlm8LFsg3V1Qa1EFr5+sUSXMRxaC5W8Os4L10w=
+	t=1751054156; cv=none; b=iL8HGGFhjcfzfd68UV6JjMsZKdzqpD1lY0FUvZn8+oFon/7jSuwPpCsHvHlnTiFtYcLor80LjKXvg36jh3oZLrzVXNd+wgbS+b53JRaFRWE36y6mZDHxDb/7mkpvtSCQXyV2l/EflnjUe786Tn6WSEF6A6BWbVhQkta8FZ3Jqys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751054091; c=relaxed/simple;
-	bh=ZDOjzFp5DVglqlMo0KWsE8wIRCcNUjkDrIhsGBKkwDU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L0I7d7mTBlURrK0XtK+ETrdtZe8pcdljLfjZmk2f7xgvvATSI+DqNytge2MyxCSdpK5kYlvdNG75Ift+cNSbohx5mTpkJdOEjppWymRT66luiywzM/mtWY63LnAqZ+y8C8yxDhR1u5nKro2nynio4j96pB+tnf7LVTkImXZFWhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=RLW6RE5y; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1751054156; c=relaxed/simple;
+	bh=XADjQZ+TEjgr83+mafE8zfYeP7vysAez4r8bxwUi3g0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R2oj58M9R/mmHKyB8kHyDhhVz5NUu21k4OIhARiObzqqWBnrmZoS53C8ZXpo5T5RPAHOqJgHBbfaOZKCUyPeBFQCm/A9vR6RubL7RfbjZAocexzGpHirDjvhbkOcXh0CFRBr26NxJpHEsLntltf5kn5+9wvX775u+jLsUDnTAl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zq90/u/J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="RLW6RE5y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1751054083; x=1751658883; i=w_armin@gmx.de;
-	bh=D/5d+xVUSKHZ3qJgprcYA91Jvtj/V5Ak6q9D+H+pIH8=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=RLW6RE5yfVQV38a+WCfhkCS5MlQ33hk8B2ARr8KSmSFVvGFK1ZfhesnqrQR4WYyE
-	 ukpD7g2AElR6Rf7X+zn1pMig6cVNQZbwoF1uYRurAW+4W1nORgPikUJeOu2R/BkvE
-	 5v/eNk6fIekJHI9Y4z4VfiqPdNcCnQk2hv0QR30vkglgLY5oyYT3o8c4as9xkft8r
-	 dmoxDyjQA1f+GK/PeyuTQHJNdKNWxDfo2qHoBL646OlJhz8sKWsFxikHqGHryeyzA
-	 Em0vQJfxma9svuXBuJzQMyhjLCOOUc1FLDBmaHXWDwVVNdPYdIeNj+gvQtwEzfdLW
-	 WXJVJgnDiOjbuP6Iiw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MfYPi-1uxhE30FI0-00eOw1; Fri, 27 Jun 2025 21:54:43 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: xy-jackie@139.com,
-	alireza.bestboyy@gmail.com,
-	atescula@gmail.com
-Cc: mpearson-lenovo@squebb.ca,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: lenovo-hotkey: Handle missing hardware features gracefully
-Date: Fri, 27 Jun 2025 21:54:36 +0200
-Message-Id: <20250627195436.3877-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zq90/u/J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B0BFC4CEE3;
+	Fri, 27 Jun 2025 19:55:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751054155;
+	bh=XADjQZ+TEjgr83+mafE8zfYeP7vysAez4r8bxwUi3g0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Zq90/u/J+u8bBdOyYl93oy4wqQhio1FyhxZ7ZnWUicVFv0cI7vr8YMP515kvXHslb
+	 1O5+eZE24GaXV+ZOxBwvJERMGhiY/I6yVMLmuQJ5R8KQTwQdU5nrkP96EiXnWVeT6E
+	 61Bbdsl1JOMzwLT5BicTOMcWmDYLbOeGUhefIOcbu6MuEQwWPNpnet2hBtuWYfygPl
+	 3vMJYcWsexgglxmXI/Se19ZkvQkNdzYT3BHBYP9zK5+nSrEXVehNksSEIiJ99y8xoo
+	 ALxZCYbYlBLgi+g658ocfhiB1xX08XaAezLBINcF4CxmB1p0BenAU+PHbCr0tAXIU8
+	 O1Q0HVOQhhx4w==
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-40a55314d06so857782b6e.1;
+        Fri, 27 Jun 2025 12:55:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUwHSP6hX0UebW/pNsBckOvqtyGA2pcL/wKKVpeAfxYTisYxUmjuoiJEIhcuGoyuxPPBYSoPd14RH0=@vger.kernel.org, AJvYcCVVlcx+zhHbXFCTC5B9sR5Iti6ylTB16YB01Cq75hFi7zpU81a8x0h/601Jzzod3kw/PClQaEwgscrAbuM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGIOmgoALlOnvea/mCdmrdzsUBg/T/2mcMDTKVv9ahVNCEcyFh
+	kL9vUGRmXfBDRhXNldQamS8bihUd7AbGajkoEZpQanzIKfT6d7Cfz4lzYIGQQnytYxGAZVLAUsX
+	wcyWHz/AusGIGBf1kVAnon9V2LyY2Ugc=
+X-Google-Smtp-Source: AGHT+IE0UMt7B5qGD4vFLERyqvD0G9OO0kmcGk69gMwZgWs5sQqQ8LROw46/tWkKjZ0d0Bq8bDfbKOOJtnuehLkKFIs=
+X-Received: by 2002:a05:6870:92c1:b0:2c1:650b:fc86 with SMTP id
+ 586e51a60fabf-2efed430f37mr3119354fac.1.1751054154855; Fri, 27 Jun 2025
+ 12:55:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250612044538.2970661-1-wei.qiao@intel.com> <20250612070613.2995756-1-wei.qiao@intel.com>
+In-Reply-To: <20250612070613.2995756-1-wei.qiao@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 27 Jun 2025 21:55:43 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jPzrRc76qKMH6Uy=YuQg1GY1gyWwhcFxCqxuh-4jCcVA@mail.gmail.com>
+X-Gm-Features: Ac12FXxMFojIMhvONWOReY8H5IeABv_Hwyr3wHiJZ7EiEFWLnDcT8kGqalElQko
+Message-ID: <CAJZ5v0jPzrRc76qKMH6Uy=YuQg1GY1gyWwhcFxCqxuh-4jCcVA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] powercap: intel_rapl: Add support for Bartlett
+ Lake platform
+To: Qiao Wei <wei.qiao@intel.com>
+Cc: rafael@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rui.zhang@intel.com, xiange.pi@intel.com, lili.li@intel.com, 
+	furong.zhou@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:3xLg0CdbNpQcp3oIYz+JaY4n/U0zPKt7TW67cU01vUIOiFAF2YZ
- LqgeAhY1AG2eVhv9dWgcH/GJBUOo++a4cka4mjfZ5o0n2osZt9b5RIBvchON18H2KT+xVPX
- 2hOrIJ6j3AqLOsDZvW7jbHqeWmHofusY2Li5liRqDUeSmCJhe6ZhniDS06Y2/GPPfKFpWfv
- 0jr1Ckxw8MmXE/3Y89qJA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:d64SW3hJl6I=;I7wL9L01FNSxps/HzJkIG87H/EG
- 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
 
-Not all devices support audio mute and microphone mute LEDs, so the
-explicitly checks for hardware support while probing. However missing
-hardware features are treated as errors, causing the driver so fail
-probing on devices that do not support both LEDs.
+On Thu, Jun 12, 2025 at 9:32=E2=80=AFAM Qiao Wei <wei.qiao@intel.com> wrote=
+:
+>
+> Add support for Bartlett Lake platform to the RAPL common driver.
+>
+> Acked-by: Zhang Rui <rui.zhang@intel.com>
+> Signed-off-by: Qiao Wei <wei.qiao@intel.com>
+> ---
+> Changes since V1:
+> - Remove "[linux-driver-review]" prefix in the subject
+> - Add Acked-by tag from Zhang Rui
+> ---
+>  drivers/powercap/intel_rapl_common.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/inte=
+l_rapl_common.c
+> index e3be40adc0d7a..c0789df34b2f7 100644
+> --- a/drivers/powercap/intel_rapl_common.c
+> +++ b/drivers/powercap/intel_rapl_common.c
+> @@ -1261,6 +1261,7 @@ static const struct x86_cpu_id rapl_ids[] __initcon=
+st =3D {
+>         X86_MATCH_VFM(INTEL_RAPTORLAKE,         &rapl_defaults_core),
+>         X86_MATCH_VFM(INTEL_RAPTORLAKE_P,        &rapl_defaults_core),
+>         X86_MATCH_VFM(INTEL_RAPTORLAKE_S,       &rapl_defaults_core),
+> +       X86_MATCH_VFM(INTEL_BARTLETTLAKE,       &rapl_defaults_core),
+>         X86_MATCH_VFM(INTEL_METEORLAKE,         &rapl_defaults_core),
+>         X86_MATCH_VFM(INTEL_METEORLAKE_L,       &rapl_defaults_core),
+>         X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X,   &rapl_defaults_spr_server=
+),
+> --
 
-Fix this by simply ignoring hardware features that are not present.
-This way the driver will properly load on devices not supporting both
-LEDs and will stop throwing error messages on devices with no LEDS
-at all.
-
-Reported-by: Andrei Tescula <atescula@gmail.com>
-Closes: https://https://lore.kernel.org/platform-driver-x86/2eda8f9b-9421-=
-4068-87ae-ccfd834649bc@gmail.com/
-Reported-by: BEST8OY <alireza.bestboyy@gmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220271
-Tested-by: BEST8OY <alireza.bestboyy@gmail.com>
-Fixes: 61250669eaa9 ("platform/x86:lenovo-wmi-hotkey-utilities.c: Support =
-for mic and audio mute LEDs")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- .../platform/x86/lenovo/wmi-hotkey-utilities.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/lenovo/wmi-hotkey-utilities.c b/drivers/=
-platform/x86/lenovo/wmi-hotkey-utilities.c
-index 89153afd7015..44f489336199 100644
-=2D-- a/drivers/platform/x86/lenovo/wmi-hotkey-utilities.c
-+++ b/drivers/platform/x86/lenovo/wmi-hotkey-utilities.c
-@@ -127,21 +127,26 @@ static int lenovo_super_hotkey_wmi_led_init(enum mut=
-e_led_type led_type, struct
- 	else
- 		return -EIO;
-=20
--	wpriv->cdev[led_type].max_brightness =3D LED_ON;
--	wpriv->cdev[led_type].flags =3D LED_CORE_SUSPENDRESUME;
--
- 	switch (led_type) {
- 	case MIC_MUTE:
-+		/*
-+		 * A missing hardware feature is not an error, so do not return
-+		 * an error here.
-+		 */
- 		if (led_version !=3D WMI_LUD_SUPPORT_MICMUTE_LED_VER)
--			return -EIO;
-+			return 0;
-=20
- 		wpriv->cdev[led_type].name =3D "platform::micmute";
- 		wpriv->cdev[led_type].brightness_set_blocking =3D &lsh_wmi_micmute_led_=
-set;
- 		wpriv->cdev[led_type].default_trigger =3D "audio-micmute";
- 		break;
- 	case AUDIO_MUTE:
-+		/*
-+		 * A missing hardware feature is not an error, so do not return
-+		 * an error here.
-+		 */
- 		if (led_version !=3D WMI_LUD_SUPPORT_AUDIOMUTE_LED_VER)
--			return -EIO;
-+			return 0;
-=20
- 		wpriv->cdev[led_type].name =3D "platform::mute";
- 		wpriv->cdev[led_type].brightness_set_blocking =3D &lsh_wmi_audiomute_le=
-d_set;
-@@ -152,6 +157,9 @@ static int lenovo_super_hotkey_wmi_led_init(enum mute_=
-led_type led_type, struct
- 		return -EINVAL;
- 	}
-=20
-+	wpriv->cdev[led_type].max_brightness =3D LED_ON;
-+	wpriv->cdev[led_type].flags =3D LED_CORE_SUSPENDRESUME;
-+
- 	err =3D devm_led_classdev_register(dev, &wpriv->cdev[led_type]);
- 	if (err < 0) {
- 		dev_err(dev, "Could not register mute LED %d : %d\n", led_type, err);
-=2D-=20
-2.39.5
-
+Applied as 6.17 material, thanks!
