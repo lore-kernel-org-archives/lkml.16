@@ -1,141 +1,152 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2523F3234
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 14:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91985FBF6;
+	Fri, 27 Jun 2025 14:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751034696; cv=none; b=HN+nvhI2XwrC6c7q9IpJYRbJtpYxVOcK9Bc8Hw7Gl+w7bzl+800smQJ646A83xru9v2WLLsNTff6Jfw7+g3Xg1MTc37Ckd3M9ziLpbzg8r0oiNlHePKhYj8ISrpoV2yy8HxrgMZZ//oZ4oGhB6Ym+0qI8gLlzHiTn2lTIgOVGy8=
+	t=1751034754; cv=none; b=ddkTnFtoU2MU5tSPh8swfm2xwI8ZLUZ+2YTR/sYDTLaOJdeBs2jSbUgXYc73MWzk+XKUU43/ct3k1fSHvh7k6jpGg5RQ8xSHNu/cSuDBZp7Z8iCEMzGFjPs896Z+6EPLEzfCCBFblmwK8H5yO9hIBrGNeM+JXVec9FY8sIGUvAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751034696; c=relaxed/simple;
-	bh=B1BdE0J+jY6ME5BrRSZux1zOeKpTZZ4DlpXlyhs8zxE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l3mf7f0Dd9UQCodauLSp+Yj8pBBcypk637A1DvCe4kt4fx12YuAt0Y6ceEGliEwtCKk+hTb4bYmfVDvqVeIzUsXELP0UuI33wQJAfaNrG6MSx56eSauf/N3BIb3RQiGwN4bADHKZdhXukKtLqHO9rkzmFVKXWClrd5BeInvLKvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X15TK5B2; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751034754; c=relaxed/simple;
+	bh=FrVhbkkVKeQtsuNIVg2sLAXrQNn1Hy74XCRKIHnkmJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nGhjPh6TFpi9Gy4sGYtUB0YtbpdMFiFrYriabFuQWt0NYoAwyFhoLuopdDIbTY5wIFsRGpSehOGiVmZvPlMbIW5UuttqX85vUE7pKDa5ZJhhQfV/WKmhsXuRJbsWWfts1cRBYyJ6hW6iP8m9hATFiz5IoqTYl7RhB7XozUpzdv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=Qdq/fjGV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JwN1jtOG; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X15TK5B2"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-607434e1821so3210995a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:31:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751034691; x=1751639491; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8o5xo7GeehPDbRd+X/7D8FpirwN/TZkXVzx9zL2sssc=;
-        b=X15TK5B2V1rLeKkJ9wU5Xr0orKYbmRRqGr9S0RVf2ulX2MghILw3tjttiglnpKsyIN
-         CRXcaUxMqgmZwfdT5inUh5hTtd8LF8YFhWlnE9wYyP2T4iDAVSVs8ytbigF9VK/llu9P
-         iD4hW8Jb0DiLH6OXbJxkMEVL5C5qNUxoKevMQZ4IEsHENA4/RThtxOJakLgX7+Nm32HZ
-         e3eXwXlKIoczXAhAGo3cAsKZvWZBGmemfQO6alAIaKrLREmmd1/rs+1+xug+waFxotd3
-         WTUMATMEZB5etKoIISu5G6GiTiIYzaGWAx/glxIY858o9BTWoKCkZO4cI30p8SOJzBDs
-         UKDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751034691; x=1751639491;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8o5xo7GeehPDbRd+X/7D8FpirwN/TZkXVzx9zL2sssc=;
-        b=p94ljND/KiHnYv1+GsU7KwSEk0JthHrlOrYutMyN0b1n1zR2kBz74InNM39OEarpRp
-         LKcfF0bpLSUrZFAO0hX0u4f40TOdJiKw/pHAUUN9YWzf8yJTN4KEv6rd4Z4Jyr6cYvwz
-         yKUC23K/3VO2d9ZbtqfazsuPVMpojqYNk3iQoogVbxH7MDyva3XkUM7+R/YbXUa3vc9F
-         QrZlkebaLlyfwl6FTWH+Y5zYWLZMaA3i6nAJlfn2AjF/dyHQSHuj8Y1VEmLAQatm3HlV
-         QC48PYELbk2wyEsdiJEVGEVbqMFGAQhqMEzw96FZyyb7ABR1k4Uo73oJTyZuafodtWTE
-         a+Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyCX+jSM0AuKxqbkDYT0VbSz9cxWEbDuftj8LJWOIV5fznrIRP96bch0x20xkHPWwGHTF28b72pyQC4ok=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFv10pMSxGM5/nftvP5Piz2W2b3i2Uo8yAS8l5PN0MKza4I6U3
-	OdWFu5qYmgkA0M9RbioxDI5CoV7EfCZQIbSpSYUTiugC9yCKNi99Ix1c+vHKB+G8D01gDvyH5b6
-	33BeqyHEmDclP0pGavyLls4q9UqmNU/C5rWboKKkjKQ==
-X-Gm-Gg: ASbGnctULdAV6BJcoKFY4DIZAtfkxnEq7ux9AOdi9ed0QCNDcOYPmyCnWoudi7opEbK
-	uMeLokafJrE0XGUQE9ogCYCRCv6QqyW2VTPrm+Y+ECor9y/wKH8/SibetcSB/eCmKOHMA1zJLC3
-	UfhuCUa19CpZdCQ0omEhYddItUFwi9y0MKRkZQJrUldzE8AGq5f7Id/pj6qPZUq2b7FbK7cfMtK
-	Brovg==
-X-Google-Smtp-Source: AGHT+IEL785XIeur6WCbc2OIj5nk/sVLVVNkV3GZ+ObEePJ/qNpPBLIGoWwmBJBgA18YqNdBbv+6Y6RgOuBSpzWsw/4=
-X-Received: by 2002:a05:6402:5bc4:b0:607:eeb1:b18b with SMTP id
- 4fb4d7f45d1cf-60c88d9c37dmr2283943a12.8.1751034691378; Fri, 27 Jun 2025
- 07:31:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="Qdq/fjGV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JwN1jtOG"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id D8E6BEC00CE;
+	Fri, 27 Jun 2025 10:32:31 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Fri, 27 Jun 2025 10:32:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1751034751;
+	 x=1751121151; bh=chbCjC3t9JjOmLOSGQMKEQ3r5t5d3Ytx0IJncZGWBQM=; b=
+	Qdq/fjGV5338rPvsM0lAMiBopivn6bYP7Xdh+j3+fYbOzcVHOkIHmbqKIQ3FIgu9
+	RiEV7kfiaxik20A+OoupeLKl0CQTMU0GeaIoIE32t4fjISrp8KLcFWAtX02fFrNt
+	QyONhwtydqEcotsyBvS0ira/J5/m8Z+GyZY0mIFSs44gOg9MSWXYuwAZmx3bX+Pj
+	uTgDOeyM3pg+d0Exzbr3oylcuWSKbDRE2d+pXbH8kafi9Oy062cKQqiHxcaIkTl1
+	XgZWCXUnTo3kc/VpWOKJbON7hCy/RyO5jCmiXDlpjr3ag0H7w/M6vpu7vLl89wiV
+	b/jVcxpQLmztUmyJLH+/tQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1751034751; x=1751121151; bh=chbCjC3t9JjOmLOSGQMKEQ3r5t5d3Ytx0IJ
+	ncZGWBQM=; b=JwN1jtOG9PxlAdco/5FkbwEpbGr7xouXfDtEINjVbLOA335VEA+
+	AancngIM76j0vgLMAWl5ZuuPmei8DI+3aSp0J7C5EBMc7HZj776JCKL8qLJXzmoR
+	d/6dorb64lyBhqcqX01Ck00IumFZia4oLb0PCfNYaeZeUfh3q6d6wqAjM2EvkgPJ
+	pBy0fWwfikOjElifnGbb0xpgPS9IPN/YSqCGG6Jt8xrHnndEWY6k6Glu+CcXsFa1
+	ycDzwPK8MPbUb9kq4lsITqPOkmpgnpWb1Qu1LsVIad4JwGaUn31k+HF3HpM2VBQr
+	sSYXCltzI2GkXCi8QZ8t5DDKQldXyJJf1aQ==
+X-ME-Sender: <xms:f6teaDUVuMTHaB4DaOxKKuiMrM-I1r2pF0aVTuYo7Rbl15TfIH_XSg>
+    <xme:f6teaLnBQPD4CFbf0w-JSYJ_SnD5e0P2UrETuM0UewBmOtqoiFQHyH8Oq14i4aFFN
+    gbF0Q52RCxzRg>
+X-ME-Received: <xmr:f6teaPYJi3VdOGOYa6leOQb4pcyxNDlFMjwXIRNjIA_AbOS8ltfHLlc-Yom4kQsIkqBDAQX6fNWTMply9GXEtZOzN61lVpBzfXM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdeffeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvfevuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrrhgvkhcuofgr
+    rhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomhgrrhhmrghrvghksehinhhvihhsih
+    gslhgvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepieeluddvkeej
+    ueekhfffteegfeeiffefjeejvdeijedvgfejheetuddvkeffudeinecuffhomhgrihhnpe
+    hkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpehmrghrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrd
+    gtohhmpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
+    pehmihhrihgrmhdrrhgrtghhvghlrdhkohhrvghnsghlihhtsehinhhtvghlrdgtohhmpd
+    hrtghpthhtoheptgholhhinhdrihdrkhhinhhgsehgmhgrihhlrdgtohhmpdhrtghpthht
+    oheplhhinhhugidqfihirhgvlhgvshhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvh
+X-ME-Proxy: <xmx:f6teaOWt0b55a6C0BYUvxye25OwMrLA48TSn15K5igQmIdJKJP_qiA>
+    <xmx:f6teaNmM4sKOgJuOw54bQolvNRgst1_3lUAAr8fydJeDvkQu8SvSww>
+    <xmx:f6teaLeK8wsC6P61srHNRiVBIPRyfX0sAEmuVL2Y9PRdd9k9QfjQAg>
+    <xmx:f6teaHELpOpp0amDhYynDwlKd5-sMErFShPm3ICh1QeCOmGskhz1eQ>
+    <xmx:f6teaB80l4ijJQjBi1wti_YKQA05yOm9AdFUNC0MpCSJ4ChszBXmWkhN>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 27 Jun 2025 10:32:30 -0400 (EDT)
+Date: Fri, 27 Jun 2025 16:32:28 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Colin Ian King <colin.i.king@gmail.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: iwlwifi stopped working with AX200 (6.16-rc3 regression)
+Message-ID: <aF6rfM-RFrwFyoEw@mail-itl>
+References: <aF35FqJAw63NSl63@mail-itl>
+ <aF35tbqxHtyj9fJO@mail-itl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626215911.5992-1-hiagofranco@gmail.com>
-In-Reply-To: <20250626215911.5992-1-hiagofranco@gmail.com>
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Date: Fri, 27 Jun 2025 08:31:20 -0600
-X-Gm-Features: Ac12FXyLrcISUGMKifq1LXY0djWn87ywvC4vhLqatRfOsnXR-16wTizuirmCxWY
-Message-ID: <CANLsYkzo32BHkxRzSLY1U_PcidMPOaz7xZjDs8HKtTCQ0ZpF=g@mail.gmail.com>
-Subject: Re: [PATCH v6 0/3] remoteproc: imx_rproc: allow attaching to running
- core kicked by the bootloader
-To: Hiago De Franco <hiagofranco@gmail.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org, 
-	linux-remoteproc@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
-	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Peng Fan <peng.fan@oss.nxp.com>, daniel.baluta@nxp.com, iuliana.prodan@oss.nxp.com, 
-	"Rafael J . Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4mRJGigGX3Xsa7Rl"
+Content-Disposition: inline
+In-Reply-To: <aF35tbqxHtyj9fJO@mail-itl>
 
-On Thu, 26 Jun 2025 at 15:59, Hiago De Franco <hiagofranco@gmail.com> wrote:
->
-> From: Hiago De Franco <hiago.franco@toradex.com>
->
-> This patch series depends on Ulf's patches that are currently under
-> review, "pmdomain: Add generic ->sync_state() support to genpd" [1].
-> Without them, this series is not going to work.
->
 
-I thought we agreed to repost when the feature referred to above and
-the work in drivers/pmdomain/core.c will be merge.  I'm not sure what
-to do with this patchset.
+--4mRJGigGX3Xsa7Rl
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 27 Jun 2025 16:32:28 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Colin Ian King <colin.i.king@gmail.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: iwlwifi stopped working with AX200 (6.16-rc3 regression)
 
-> For the i.MX8X and i.MX8 family SoCs, currently when the remotecore is
-> started by the bootloader and the M core and A core are in the same
-> partition, the driver is not capable to detect the remote core and
-> report the correct state of it.
->
-> This patch series implement a new function, dev_pm_genpd_is_on(), which
-> returns the power status of a given power domain (M core power domains
-> IMX_SC_R_M4_0_PID0 and IMX_SC_R_M4_0_MU_1A in this case). If it is
-> already powered on, the driver will attach to it.
->
-> Finally, the imx_rproc_clk_enable() function was also changed to make it
-> return before dev_clk_get() is called, as it currently generates an SCU
-> fault reset if the remote core is already running and the kernel tries
-> to enable the clock again. These changes are a follow up from a v1 sent
-> to imx_rproc [2] and from a reported regression [3].
->
-> [1] https://lore.kernel.org/all/20250523134025.75130-1-ulf.hansson@linaro.org/
-> [2] https://lore.kernel.org/lkml/20250423155131.101473-1-hiagofranco@gmail.com/
-> [3] https://lore.kernel.org/lkml/20250404141713.ac2ntcsjsf7epdfa@hiago-nb/
->
-> v6:
-> - Added "reviewed by" from Ulf and Bjorn.
-> - Fixed and improved commit descriptions of patches 2 and 3.
-> - Improved the comment inside imx_rproc.c file.
-> v5:
-> - https://lore.kernel.org/all/20250617193450.183889-1-hiagofranco@gmail.com/
-> v4:
-> - https://lore.kernel.org/lkml/20250602131906.25751-1-hiagofranco@gmail.com/
-> v3:
-> - https://lore.kernel.org/all/20250519171514.61974-1-hiagofranco@gmail.com/
-> v2:
-> - https://lore.kernel.org/lkml/20250507160056.11876-1-hiagofranco@gmail.com/
-> v1:
-> - https://lore.kernel.org/lkml/20250505154849.64889-1-hiagofranco@gmail.com/
->
-> Hiago De Franco (3):
->   pmdomain: core: introduce dev_pm_genpd_is_on()
->   remoteproc: imx_rproc: skip clock enable when M-core is managed by the
->     SCU
->   remoteproc: imx_rproc: detect and attach to pre-booted remote cores
->
->  drivers/pmdomain/core.c        | 33 +++++++++++++++++++++++++++
->  drivers/remoteproc/imx_rproc.c | 41 ++++++++++++++++++++++++++++------
->  include/linux/pm_domain.h      |  6 +++++
->  3 files changed, 73 insertions(+), 7 deletions(-)
->
-> --
-> 2.39.5
->
+On Fri, Jun 27, 2025 at 03:53:57AM +0200, Marek Marczykowski-G=C3=B3recki w=
+rote:
+> On Fri, Jun 27, 2025 at 03:51:18AM +0200, Marek Marczykowski-G=C3=B3recki=
+ wrote:
+> > I see the only change there between rc2 and rc3 is fixing that WARN_ON
+> > condition. Unfortunately, I don't know what cmd_ver value I have there,
+> > but apparently it's outside of that range (and yet, the driver worked
+> > fine before).
+> >=20
+> > The device is:
+> > 02:00.0 Network controller [0280]: Intel Corporation Wi-Fi 6 AX200 [808=
+6:2723] (rev 1a)
+> >     Subsystem: Intel Corporation Wi-Fi 6 AX200NGW [8086:0084]
+> >=20
+> > #regzbot introduced: v6.16-rc2..v6.16-rc3
+>=20
+> Oh, I see it might be already fixed by
+> https://lore.kernel.org/linux-wireless/20250623111351.1819915-1-miriam.ra=
+chel.korenblit@intel.com/,
+> I'll test it.
+
+Yes, it does fix the issue.
+
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+
+--4mRJGigGX3Xsa7Rl
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmheq30ACgkQ24/THMrX
+1yzvlwf/bo+OfRHbn4oHUi9G7NMHLS6YFNOdGC5vN0cgQuodid1A8EwsekXbID12
+xxorMjqSx1KzwZO+JLG5ZStXxK5yZ2SIJ6bwA2WS7625jnxxOXaXOuUO/GoJWfd8
+e7F1HFxP9eYXvjKA76qwIM5u8jCwWkHtZErGxfBfQrFJ5MVWWH15/VIZav5dQrNi
+gO2MIK/EQQU6IIUf16Qr0ZiNc1XUJiRUtDmGdmswEOateUDryUjd3Cz6wKcubk1G
+94tq1pBsXA+gtr5ygpDkPuCfx11IENO12gq98BaVFv6PwO2tzzyxaCQon7Gv9k3R
+GkV1Tn4GOkHJ9dvvxkqFFcpr3W/0uw==
+=OMSN
+-----END PGP SIGNATURE-----
+
+--4mRJGigGX3Xsa7Rl--
