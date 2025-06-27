@@ -1,125 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9CB21A421;
-	Fri, 27 Jun 2025 08:03:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED9C22FF35;
+	Fri, 27 Jun 2025 08:05:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751011437; cv=none; b=ThesSFdiJSeYTjFZdS1pBkNCy9g/zaudpvpsvwMMGNfx8wU30/j2+44cn1MUYW9KFlgMyoplU9Dh7063ESCs68yyRzI6rf7mYZu/obiQmqUrq8wjBhPI5cqlUsUwt98EVUPF7595i9qtY27lj6A/nD47siQW2DlRvvIl7tcKwLI=
+	t=1751011511; cv=none; b=lsxL5HVndw33eRnLunPwOlI/tvwuDgfsxpldMY3O7IB43vSwQl7fIkoQHcqc0z3kgzRWZowRlVF/4LyA8yaeb69n0lzTXORP279QaBDHZKMahdu9E7bg0JIXr9qYYs1TTZMmz10KXZ52p7ZwOVIw06oss/qIm3rw9kvEhx+lXNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751011437; c=relaxed/simple;
-	bh=DR0iURhckp5XfzMvSk4LgMuAnciQyHbp2E9NxNgrSgc=;
+	s=arc-20240116; t=1751011511; c=relaxed/simple;
+	bh=HqW5pj+WKoWW4akYDyiA8eDyDswOGGO/4zZsR0+1BBA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UpxIhiAxeu9VHkW1Hj+D1Ws/YlIw/60vkckBAvZY1e/BVdttSYJ2ngKRpcbFMOn/B8JvNpkCK4cz6cb3VoSUlAJPU+eipaeMAtRMeDrJ54aCPThyrN+392xXXT0G2H+esLwvqxVpZwc3jepeoMvTarbm3cN/TFXeqVC/p0rT/po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tKdPvAM1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=STnWqnAbc2IntVygJ/q6/gCQmugC/Xs3LVGhi/c7LrPLuMLUDmci6+5prd3lRYy2kTLarhB0uvsGRXjxBQw2HzE/Qvo6mUYjZiN+2XzCvgdJWxXVSOR+P1xDlBu38ZlH3MW7ue3EVyYimfpgE3dnWpFVLRMK3tk/O8SOy88s3No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BwDkmHTe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tKdPvAM1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 674EEC4CEE3;
-	Fri, 27 Jun 2025 08:03:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BwDkmHTe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CC9FC4CEE3;
+	Fri, 27 Jun 2025 08:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751011437;
-	bh=DR0iURhckp5XfzMvSk4LgMuAnciQyHbp2E9NxNgrSgc=;
+	s=k20201202; t=1751011510;
+	bh=HqW5pj+WKoWW4akYDyiA8eDyDswOGGO/4zZsR0+1BBA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tKdPvAM1SwN5SgSDdLEEOTC9vk+owg/oWIwcT5dP3WpUetyEuoQJKkYwXDxEENE5d
-	 vhX35a6Tlr+PsBjbSwQsd2vHWBj8o5AXfAvF6Sq2OmK/2ncWANrWkVK2HkzAzb7WBJ
-	 H5K2MrlZgoLw0qghldvzWZPN+SagJ80l+TdWZmIVhMAUL5LqYKCxZrRtpFgIFQ8cWy
-	 UMBU9QnzwkCqklZecwcMC2WZ15qgXZTNPAOvDzoocBmoqHWN2G0PW3bXLW0TBaVAcK
-	 WZzAqZI1E3ygtO0naX4bqMfIPaEcZttCIt1lTS6SjItT1jt9sGcuJ9sDt306SR7Kkh
-	 5RztUAAts5Fpg==
-Date: Fri, 27 Jun 2025 10:03:53 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Yao Zi <ziyao@disroot.org>
-Cc: Yinbo Zhu <zhuyinbo@loongson.cn>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH v2 1/8] dt-bindings: clock: loongson2: Add Loongson
- 2K0300 compatible
-Message-ID: <20250627-gay-sepia-reindeer-2fde2a@krzk-bin>
-References: <20250617162426.12629-1-ziyao@disroot.org>
- <20250617162426.12629-2-ziyao@disroot.org>
+	b=BwDkmHTeV4OZHhIeHRkvq5+nb5iIqAaBSg7lNbjoF3hxM51baZI5tDEziLqPxblnW
+	 B+BWTiBo2ARL59nqE6oA6qtKIBeb9XbGEBZeeQ+EnYaUPqNqVU3m0ZfnVzi/jf/S1g
+	 uwP9Yc6VjNhsDczo0HXe1kBXCqTvoSanDQTWiIzNMoy76qnYBjKVOdODIOQkQ05uzK
+	 gOCDCd+AnqvKh7P5wcOy8iKDpOGZa5rf5Oos3vntmgWEhH4TcCncA6HSY136NO+P3Y
+	 mm0KqsK3L0zW6jCOy/UagqlvxWynHFj76lUIK3vQjfgZscGTmjvYe3iTWugO8E7zx+
+	 PansuTIOHDKBQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uV458-000000007BS-395Y;
+	Fri, 27 Jun 2025 10:05:10 +0200
+Date: Fri, 27 Jun 2025 10:05:10 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Gabor Juhos <j4g8y7@gmail.com>
+Cc: Georgi Djakov <djakov@kernel.org>,
+	Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
+	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] interconnect: increase ICC_DYN_ID_START
+Message-ID: <aF5Qtp-szaN8VADF@hovoldconsulting.com>
+References: <20250625-icc-dyn-id-fix-v1-1-127cb5498449@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250617162426.12629-2-ziyao@disroot.org>
+In-Reply-To: <20250625-icc-dyn-id-fix-v1-1-127cb5498449@gmail.com>
 
-On Tue, Jun 17, 2025 at 04:24:19PM +0000, Yao Zi wrote:
-> Document the clock controller shipped in Loongson 2K0300 SoC, which
-> generates various clock signals for SoC peripherals.
+On Wed, Jun 25, 2025 at 03:34:23PM +0200, Gabor Juhos wrote:
+> Since commit d30f83d278a9 ("interconnect: core: Add dynamic id allocation
+> support"), interconnect node ids greater than or equal to ICC_DYN_ID_START
+> are reserved for dynamic id allocation. Yet the icc_node_create_nolock()
+> function allows to directly use such ids for creating nodes. This can
+> cause problems by executing dynamic id related codepaths even for nodes
+> intended to use static ids.
 > 
-> Differing from previous generations of SoCs, 2K0300 requires a 120MHz
-> external clock input, and a separate dt-binding header is used for
-> cleanness.
+> For example, the 'nsscc-ipq9574' driver creates interconnect nodes with
+> static ids starting from 19148. Because these ids belongs to the dynamic
+> id range, the icc_node_add() function replaces the node names
+> unexpectedly.
 > 
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  .../bindings/clock/loongson,ls2k-clk.yaml     | 26 ++++++---
->  MAINTAINERS                                   |  1 +
->  .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
->  3 files changed, 75 insertions(+), 6 deletions(-)
->  create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
+> The node names looked like this before the change:
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> index 4f79cdb417ab..3e0a894cfb2f 100644
-> --- a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> +++ b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> @@ -16,6 +16,7 @@ description: |
->  properties:
->    compatible:
->      enum:
-> +      - loongson,ls2k0300-clk
->        - loongson,ls2k0500-clk
->        - loongson,ls2k-clk  # This is for Loongson-2K1000
->        - loongson,ls2k2000-clk
-> @@ -24,19 +25,32 @@ properties:
->      maxItems: 1
->  
->    clocks:
-> -    items:
-> -      - description: 100m ref
-> +    maxItems: 1
->  
-> -  clock-names:
-> -    items:
-> -      - const: ref_100m
-> +  clock-names: true
+>   # grep nss_cc /sys/kernel/debug/interconnect/interconnect_summary
+>   nss_cc_nssnoc_ppe_clk_master                          0            0
+>   nss_cc_nssnoc_ppe_clk_slave                           0            0
+>   nss_cc_nssnoc_ppe_cfg_clk_master                      0            0
+>   ...
+> 
+> And those have an unexpected suffix now:
+> 
+>   # grep nss_cc /sys/kernel/debug/interconnect/interconnect_summary
+>   nss_cc_nssnoc_ppe_clk_master@39b00000.clock-controller            0            0
+>   nss_cc_nssnoc_ppe_clk_slave@39b00000.clock-controller            0            0
+>   nss_cc_nssnoc_ppe_cfg_clk_master@39b00000.clock-controller            0            0
+>   ...
+> 
+> Increase the value of ICC_DYN_ID_START to avoid this.
+> 
+> Also, add sanity check to the icc_node_create_nolock() function to prevent
+> directly creating nodes with ids reserved for dynamic allocation in order
+> to detect these kind of problems.
+> 
+> Fixes: d30f83d278a9 ("interconnect: core: Add dynamic id allocation support")
+> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
 
-No. How does this implement my comment?
-
-It makes no sense, why 100m even appeared here. I already objected last
-time!
-
-
->  
->    '#clock-cells':
->      const: 1
->      description:
->        The clock consumer should specify the desired clock by having the clock
->        ID in its "clocks" phandle cell. See include/dt-bindings/clock/loongson,ls2k-clk.h
-> -      for the full list of Loongson-2 SoC clock IDs.
-> +      and include/dt-bindings/clock/loongson,ls2k0300-clk.h for the full list of
-> +      Loongson-2 SoC clock IDs.
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: loongson,ls2k0300-clk
-> +    then:
-> +      properties:
-> +        clock-names:
-> +          const: ref_120m
-
-NAK, stop doing this pattern. You already got comment on this.
-
-Best regards,
-Krzysztof
-
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
