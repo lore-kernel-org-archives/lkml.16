@@ -1,248 +1,195 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B299B29CB4D;
-	Fri, 27 Jun 2025 11:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9FE2BDC28
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751022483; cv=none; b=HtNLcuYyT7H+WGp7Tl1Y0ycJOEZpgPJgHs/I0GN7NU7CE9pVK2m/UURMsVV4APo4FHYJYHQ5mWUX/4IjcYUsLP45r+LWuvm5nV5l7H//L4IybcxOs5rj5OOwRvHoaiSy/btrHEgWa6J5zE5AMaHukRYPOIkciY1n/rt9+z7YKXI=
+	t=1751022511; cv=none; b=Hzp5gpDmv/Imx+9E9pe7OKuB6206CTLMMBu8ZzlYZGLlIpiWY5i2HMH6x8dCgea5r8fiwEav5+kYDVmZmMGXh73ZUn+M1CSrAKq1AtFSjqLV93bbmPKnoFrAjUWum8D/3SR3WSLzIuQgDGQJulhIdYrczv5LDENp5HMK+KkFgPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751022483; c=relaxed/simple;
-	bh=vEJ0SNYzIuiaPdHCwmeGsa2q7tEZtHeKUIRkUu+FC3E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mYMQR6s7sYrJuM2MX1ohyXoorvMbWiHlNz7tVu3AziaOKu7KyWI2WLPvOMX9SonJZRAnpfSnibLgk2lS34qwJ2TL4R6pK1B8E95AylpLHsCwFEp1BtahwTwjS0FZ3yIobzHycPPI5IVLaWU0dXsdLuHqyZwf76HthbVdJJvYD8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7B651A00;
-	Fri, 27 Jun 2025 04:07:43 -0700 (PDT)
-Received: from [10.57.30.59] (unknown [10.57.30.59])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 758323F762;
-	Fri, 27 Jun 2025 04:07:58 -0700 (PDT)
-Message-ID: <f3164113-a834-4b22-adb4-9da1e7ca2c73@arm.com>
-Date: Fri, 27 Jun 2025 12:07:56 +0100
+	s=arc-20240116; t=1751022511; c=relaxed/simple;
+	bh=7ugzM4uspoLtfWDt8GfrQU5dwt5jEr6ElA9Z8NKjIig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NdonyambC2wJqpp4mUpYAnbl+a8sLjqkSICmub+H9GYf9EXenT5Tdw9E7uh57sPuSVZtARTE951NZUVDzuDq0Ue5cEbRlY2O/De+NEOEIfYGtTwNDAPBrrFwQhYNhnBnhsR1Uuv5LWY2r99KONl1TFkPOP1Vo1NxrYsJmw0v3qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=WHDXRG2r; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="WHDXRG2r"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a57c8e247cso1736137f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:08:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1751022508; x=1751627308; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=a48amvWaBrmppZvZlzwfqLpxi2tXYrpQyg/hl/oSFIo=;
+        b=WHDXRG2rdX2nS1mdGgY1MlF3WF3qUcG449j1sn+8B1Pe9jwl/K1dpsz3lWlrL5h7hz
+         vsrNo6ym6TXONbK3k23TnzYeGEwLBF6eT0Qln/FMJm/4msjoZF25R4gif/QkjNs2GvcJ
+         X4yf0wlcr8fmUVOHxCmxrrTqOy+X8NAoY5NpUCEtOO23EgxYXzaZs9sY+Lc5aQVWRAs4
+         D8Gh04h0Jr950L5rK7Z95bRCR6tkdUn61HU42qzpapoWFAG2OyJHxOumTKVNhHDYV7Mp
+         5j/FxB6Hend1ITAUk0pTCOkn44jzN/Td138almWjrdFGV7K0Py610c4Zk9+Sw4iQysAs
+         Pcgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751022508; x=1751627308;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a48amvWaBrmppZvZlzwfqLpxi2tXYrpQyg/hl/oSFIo=;
+        b=JXUG4R8uq00AYRJhPudPr+3AeJXONoLLJBeCbIMkHnFZZiZpUije82/kHrFscvpd2E
+         ZD9HkmsvrtL7x2JOA4JjfxGBJzxRsvbgkCxnVkCTra8zgB6tUFQtIfMZafibehxkyVPt
+         Ns58mnGWpGjqlz9S8O5Yi2WToLE3IM9HrVVkraS57Z1dzt0f3dd1F1lXNIsxbRwkewn/
+         K1xHIaDSxhnQHSQ58cTI5/1nzZQYo9pqxsph6SeJ3mavq0gPHnd9gcdT/gqdPIe+kDco
+         Ur0Pg+ywqxBqDdfSPzfgmCZjKn7Rw4/YUNbcc7mkYKSjkmxFgHi6b849da6kn8X916i8
+         Hf2w==
+X-Forwarded-Encrypted: i=1; AJvYcCWZbYm2q9AbzsXLivX6JP1/Du+uy+vnMcUq5/k9Me2J3w8gWlLlsb0qQRugZVEOy1LxwoTbXHNBg4WW4gE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzMRwPlPhYbuHgdDBpVS6q1UCBDFyg6lE7vS4Qgb93fUaV53Bt
+	yXIIgLlW1zaVRNAZK8ImlKwkei8nXbMFRVkgv7DiHHIhLLcfEy3wX6p5U9E3/4ZfPak=
+X-Gm-Gg: ASbGncs9Ic/wi4/JPH9Uy0rYNquAK51TDj2u/cmcQfoOpga/MhioB1WVo2Q+zLT6AQx
+	kkOEy+XDZ0QzPiOS3mkiozZ7BFxjqZLWB4ck1whVpgGUTn2XHYshWJL3zczoWv7YMwRPK3HI31v
+	beE05sZRCq4ggJ0rWb6WP+dEYswqT01D6LpKcLyPKZo/zjLcQk1sCndovhmUWr4gLg+6tMF6l2A
+	BvPEuFbpO7rphmXsP6/FM21i0/IL94ilphKgzjDUJtITxAPKAEMzfqtNyoeSkVdzR1dJaPwjRD+
+	ESnZoOPst9tYXuhe7dD96SeHBMobxFVaEENiZQdfIx5+O47WEz5KOXvoFYc2
+X-Google-Smtp-Source: AGHT+IE5/2rEcOurq0i4r3UBWagstXkpcBbzvpVFrD4zlfeAeRf1yuqnsNuKAi0pzOZ6VwxcyTisjA==
+X-Received: by 2002:a05:6000:1a8f:b0:3a4:dd16:b287 with SMTP id ffacd0b85a97d-3a8f482bfdemr2459993f8f.19.1751022507363;
+        Fri, 27 Jun 2025 04:08:27 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200::5485])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52ca4sm2423718f8f.58.2025.06.27.04.08.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 04:08:26 -0700 (PDT)
+Date: Fri, 27 Jun 2025 13:08:26 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+Cc: "alex@ghiti.fr" <alex@ghiti.fr>, 
+	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"conor@kernel.org" <conor@kernel.org>, "corbet@lwn.net" <corbet@lwn.net>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"devnull+aleksa.paunovic.htecgroup.com@kernel.org" <devnull+aleksa.paunovic.htecgroup.com@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
+	"palmer@sifive.com" <palmer@sifive.com>, "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, 
+	"robh@kernel.org" <robh@kernel.org>
+Subject: Re: [PATCH v4 6/7] riscv: Add tools support for xmipsexectl
+Message-ID: <20250627-4830df29795364099432e6ee@orel>
+References: <20250626-af013235ad8d22421b2fe5b1@orel>
+ <b579eb63-c465-45df-9558-a11c02fdb02b@htecgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/8] docs: dma-api: update streaming DMA API physical
- address constraints
-To: Petr Tesarik <ptesarik@suse.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
- Andrew Morton <akpm@linux-foundation.org>, Leon Romanovsky
- <leon@kernel.org>, Keith Busch <kbusch@kernel.org>,
- Caleb Sander Mateos <csander@purestorage.com>,
- Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
- John Garry <john.g.garry@oracle.com>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>, iommu@lists.linux.dev
-References: <20250624133923.1140421-1-ptesarik@suse.com>
- <20250624133923.1140421-8-ptesarik@suse.com> <aFynHWAYtKPFT55P@archie.me>
- <20250626070602.3d42b607@mordecai.tesarici.cz>
- <bdb3a37a-a9d3-44c1-8eb7-41912c976ad1@arm.com>
- <20250626154818.46b0cfb1@mordecai.tesarici.cz>
- <0f95be6d-2e13-4281-98b5-6d4311a3b98f@arm.com>
- <20250626214038.2d005bb5@mordecai.tesarici.cz>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250626214038.2d005bb5@mordecai.tesarici.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b579eb63-c465-45df-9558-a11c02fdb02b@htecgroup.com>
 
-On 2025-06-26 8:40 pm, Petr Tesarik wrote:
-> On Thu, 26 Jun 2025 17:45:18 +0100
-> Robin Murphy <robin.murphy@arm.com> wrote:
+On Fri, Jun 27, 2025 at 08:40:53AM +0000, Aleksa Paunovic wrote:
+> On 26. 6. 25. 12:49, Andrew Jones wrote:> On Thu, Jun 26, 2025 at 11:34:21AM +0200, Andrew Jones wrote:
+> >> On Thu, Jun 26, 2025 at 11:21:10AM +0200, Andrew Jones wrote:
+> >>> On Wed, Jun 25, 2025 at 04:21:01PM +0200, Aleksa Paunovic via B4 Relay wrote:
+> >>>> From: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+> >>>>
+> >>>> Use the hwprobe syscall to decide which PAUSE instruction to execute in
+> >>>> userspace code.
+> >>>>
+> >>>> Signed-off-by: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+> >>>> ---
+> >>>>  tools/arch/riscv/include/asm/vdso/processor.h | 27 +++++++++++++++++----------
+> >>>>  1 file changed, 17 insertions(+), 10 deletions(-)
+> >>>>
+> >>>> diff --git a/tools/arch/riscv/include/asm/vdso/processor.h b/tools/arch/riscv/include/asm/vdso/processor.h
+> >>>> index 662aca03984817f9c69186658b19e9dad9e4771c..027219a486b7b93814888190f8224af29498707c 100644
+> >>>> --- a/tools/arch/riscv/include/asm/vdso/processor.h
+> >>>> +++ b/tools/arch/riscv/include/asm/vdso/processor.h
+> >>>> @@ -4,26 +4,33 @@
+> >>>>
+> >>>>  #ifndef __ASSEMBLY__
+> >>>>
+> >>>> +#include <asm/hwprobe.h>
+> >>>> +#include <sys/hwprobe.h>
+> >>>> +#include <asm/vendor/mips.h>
+> >>>>  #include <asm-generic/barrier.h>
+> >>>>
+> >>>>  static inline void cpu_relax(void)
+> >>>>  {
+> >>>> + struct riscv_hwprobe pair;
+> >>>> + bool has_mipspause;
+> >>>>  #ifdef __riscv_muldiv
+> >>>>   int dummy;
+> >>>>   /* In lieu of a halt instruction, induce a long-latency stall. */
+> >>>>   __asm__ __volatile__ ("div %0, %0, zero" : "=r" (dummy));
+> >>>>  #endif
+> >>>>
+> >>>> -#ifdef CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE
+> >>>> - /*
+> >>>> -  * Reduce instruction retirement.
+> >>>> -  * This assumes the PC changes.
+> >>>> -  */
+> >>>> - __asm__ __volatile__ ("pause");
+> >>>> -#else
+> >>>> - /* Encoding of the pause instruction */
+> >>>> - __asm__ __volatile__ (".4byte 0x100000F");
+> >>>> -#endif
+> >>>> + pair.key = RISCV_HWPROBE_KEY_VENDOR_EXT_MIPS_0;
+> >>>> + __riscv_hwprobe(&pair, 1, 0, NULL, 0);
+> >>>> + has_mipspause = pair.value & RISCV_HWPROBE_VENDOR_EXT_XMIPSEXECTL;
+> >>>> +
+> >>>> + if (has_mipspause) {
+> >>>> +         /* Encoding of the mips pause instruction */
+> >>>> +         __asm__ __volatile__(".4byte 0x00501013");
+> >>>> + } else {
+> >>>> +         /* Encoding of the pause instruction */
+> >>>> +         __asm__ __volatile__(".4byte 0x100000F");
+> >>>> + }
+> >>>> +
+> >>>
+> >>> cpu_relax() is used in places where we cannot afford the overhead nor call
+> >>> arbitrary functions which may take locks, etc. We've even had trouble
+> >>> using a static key here in the past since this is inlined and it bloated
+> >>> the size too much. You'll need to use ALTERNATIVE().
+> >>
+> >> Oh, I see now that the next patch is handling the kernel cpu_relax with
+> >> ALTERNATIVE and this was just the tools cpu_relax. We don't want to make
+> >> a syscall inside cpu_relax though either, since it gets called in loops.
+> > 
+> > (Another follow up to myself...)
+> > 
+> > I guess with the vdso cached result it should only be a handful of
+> > instructions, but it still seems odd to embed a call in cpu_relax.
+> >
+>   
+> Hi Andrew,
 > 
->> On 26/06/2025 2:48 pm, Petr Tesarik wrote:
->>> On Thu, 26 Jun 2025 10:58:00 +0100
->>> Robin Murphy <robin.murphy@arm.com> wrote:
->>>    
->>>> On 2025-06-26 6:06 am, Petr Tesarik wrote:
->>>>> On Thu, 26 Jun 2025 08:49:17 +0700
->>>>> Bagas Sanjaya <bagasdotme@gmail.com> wrote:
->>>>>       
->>>>>> On Tue, Jun 24, 2025 at 03:39:22PM +0200, Petr Tesarik wrote:
->>>>>>> diff --git a/Documentation/core-api/dma-api.rst b/Documentation/core-api/dma-api.rst
->>>>>>> index cd432996949c..65132ec88104 100644
->>>>>>> --- a/Documentation/core-api/dma-api.rst
->>>>>>> +++ b/Documentation/core-api/dma-api.rst
->>>>>>> @@ -210,18 +210,12 @@ DMA_BIDIRECTIONAL	direction isn't known
->>>>>>>     	this API should be obtained from sources which guarantee it to be
->>>>>>>     	physically contiguous (like kmalloc).
->>>>>>>     
->>>>>>> -	Further, the DMA address of the memory must be within the dma_mask of
->>>>>>> -	the device.  To ensure that the memory allocated by kmalloc is within
->>>>>>> -	the dma_mask, the driver may specify various platform-dependent flags
->>>>>>> -	to restrict the DMA address range of the allocation (e.g., on x86,
->>>>>>> -	GFP_DMA guarantees to be within the first 16MB of available DMA
->>>>>>> -	addresses, as required by ISA devices).
->>>>>>> -
->>>>>>> -	Note also that the above constraints on physical contiguity and
->>>>>>> -	dma_mask may not apply if the platform has an IOMMU (a device which
->>>>>>> -	maps an I/O DMA address to a physical memory address).  However, to be
->>>>>>> -	portable, device driver writers may *not* assume that such an IOMMU
->>>>>>> -	exists.
->>>>>>> +	Mapping may also fail if the memory is not within the DMA mask of the
->>>>>>> +	device.  However, this constraint does not apply if the platform has
->>>>>>> +	an IOMMU (a device which maps an I/O DMA address to a physical memory
->>>>>>> +	address), or the kernel is configured with SWIOTLB (bounce buffers).
->>>>>>> +	It is reasonable to assume that at least one of these mechanisms
->>>>>>> +	allows streaming DMA to any physical address.
->>>>>
->>>>> Now I realize this last sentence may be contentious...
->>>>
->>>> The whole paragraph is wrong as written, not least because it is
->>>> conflating two separate things: "any physical address" is objectively
->>>> untrue, since SWIOTLB can only bounce from buffers within by the
->>>> kernel's linear/direct map, i.e. not highmem, not random memory
->>>> carveouts, and and definitely not PAs which are not RAM at all.
->>>
->>> I see, saying "any" was indeed too strong.
->>>    
->>>> Secondly, even if the source buffer *is* bounceable/mappable, there is
->>>> still no guarantee at all that it can actually be made to appear at a
->>>> DMA address within an arbitrary DMA mask. We aim for a general
->>>> expectation that 32-bit DMA masks should be well-supported (but still
->>>> not 100% guaranteed), but anything smaller can absolutely still have a
->>>> high chance of failing, e.g. due to the SWIOTLB buffer being allocated
->>>> too high or limited IOVA space.
->>>
->>> Of course this cannot be guaranteed. The function may always fail and
->>> return DMA_MAPPING_ERROR. No doubts about it.
->>>    
->>>>> @Marek, @Robin Do you agree that device drivers should not be concerned
->>>>> about the physical address of a buffer passed to the streaming DMA API?
->>>>>
->>>>> I mean, are there any real-world systems with:
->>>>>      * some RAM that is not DMA-addressable,
->>>>>      * no IOMMU,
->>>>>      * CONFIG_SWIOTLB is not set?
->>>>
->>>> Yes, almost certainly, because "DMA-addressable" depends on individual
->>>> devices. You can't stop a user from sticking, say, a Broadcom 43xx WiFi
->>>> card into a PCI slot on an i.MX6 board with 2GB of RAM that *starts*
->>>> just above its 31-bit DMA capability. People are still using AMD Seattle
->>>> machines, where even though arm64 does have SWIOTLB it's essentially
->>>> useless since RAM starts up around 40 bits IIRC (and although they do
->>>> also have SMMUs for PCI, older firmware didn't advertise them).
->>>
->>> Some of these scenarios can never work properly because of hardware
->>> limitations. There's nothing software can do about a bus master which
->>> cannot address any RAM in the machine. I'm not trying to claim that an
->>> operating system kernel can do magic and square the circle. If that's
->>> how it sounded, then my wording needs to be improved.
->>>
->>> IIUC the expected audience of this document are device driver authors.
->>> They want a clear guidance on how they should allocate buffers for the
->>> streaming DMA API. Now, it is my understanding that device drivers
->>> should *not* have to care about the physical location of a buffer
->>> passed to the streaming DMA API.
->>>
->>> Even if a bus master implements less than 32 address bits in hardware,
->>> I'm convinced that device drivers should not have to examine the system
->>> to check if an IOMMU is available and try to guess whether a buffer
->>> must be bounced, and how exactly the bounce buffer should be allocated.
->>
->> It's never been suggested that drivers should do that; indeed trying to
->> poke into and second-guess the DMA API implementation is generally even
->> less OK than making blind assumptions about what it might do. The
->> overall message here is essentially "if you want to do streaming DMA
->> then you may need to be wary of where your memory comes from." We can't
->> just throw that out and say "Yeah it's fine now, whatever you do the API
->> will deal with it" because that simply isn't true as a general
->> statement; drivers dealing with limited DMA masks *do* still need to be
->> concerned with GFP_DMA (or even GFP_DMA32 might still be advisable in
->> certain cases) if they want to have an appreciable chance of success.
->> All that's different these days is that notion of "limited" generally
->> meaning "32 bits or smaller".
+> Thank you for your comments!
 > 
-> We're on the same page then. I'm going to make a better explanation of
-> how things work and what is expected from DMA API users.
+> > Thanks,
+> > drew
+> > 
+> >> It'd be better to just call the standard pause (0x100000F) even if it
+> >> does nothing. Or maybe there's some define that can be added/used to
+> >> select the correct instruction?
+> >>
 > 
-> Thank you very much for your feedback! I'm sure it will be greatly
-> appreciated by future generations of device driver authors.
+> We did try using an ifdef/else in v3, but since that would have to be marked
+> non-portable, we decided to go with a hwprobe call. 
+> Since the MIPS pause should behave as a nop on other CPUs,
+> would leaving both the standard pause and the MIPS pause calls be an acceptable solution?
 > 
->>> If we can agree on this, I can iron out the details for a v2 of this
->>> patch series.
->>>    
->>>>> FWIW if _I_ received a bug report that a device driver fails to submit
->>>>> I/O on such a system, I would politely explain the reporter that their
->>>>> kernel is misconfigured, and they should enable CONFIG_SWIOTLB.
->>>>
->>>> It's not really that simple. SWIOTLB, ZONE_DMA, etc. require platform
->>>> support, which end users can't just turn on if it's not there to begin with.
->>>
->>> I know this very well. As you may not be aware, my ultimate goal is to
->>> get rid of ZONE_DMA and instead enhance the buddy allocator to allow
->>> allocations within an arbitrary physical address range, which will not
->>> rely on platform support. But that's another story; for now, let's just
->>> agree on how the DMA API is supposed to work.
->>
->> Indeed that might actually end up pushing things in the opposite
->> direction, at least in some cases. Right now, a driver with, say, a
->> 40-bit DMA mask is usually better off not special-casing DMA buffers,
->> and just making plain GFP_KERNEL allocations for everything (on the
->> assumption that 64-bit systems with masses of memory *should* have
->> SWIOTLB to cover things in the worst case), vs. artificially
->> constraining its DMA buffers to GFP_DMA32 and having to deal with
->> allocation failure more often. However with a more precise and flexible
->> allocator, there's then a much stronger incentive for such drivers to
->> explicitly mark *every* allocation that may be used for DMA, in order to
->> get the optimal behaviour.
-> 
-> I have a different opinion. Most buffers that are passed to the
-> streaming DMA API are I/O data (data read from/written to disk, or
-> received from/sent to network). For the write/send case, these pages
-> were previously allocated by user space, and at that point the kernel
-> had no clue that they would be later used for device I/O.
-> 
-> For example, consider this user-space sequence:
-> 
-> 	buffer = malloc(BUFFER_SIZE);
-> 	fill_in_data(buffer);
-> 	res = write(fd, buffer, BUFFER_SIZE);
-> 
-> The write(2) syscall will try to do zero copy, and that's how the
-> buffer address is passed down to a device driver. If the buffer is not
-> directly accessible by the device, its content must be copied to a
-> different physical location. That should be done by SWIOTLB, not the
-> device driver. Last chance to chose a better placement for the buffer
-> was at malloc(3) time, but at that time the device driver was not
-> involved at all. Er, yes, we may want to provide an ioctl to allocate
-> a suitable buffer for a target device. I think DRM even had such an
-> ioctl once and then removed it, because it was not used in any released
-> userspace code...
-> 
-> In short, the device driver has no control of how these buffers were
-> allocated, and it's not fair to expect anything from the driver.
+> That said, I am not sure how this would behave on future MIPS CPUs in case they support both encodings.
 
-Indeed, for true zero-copy to existing userspace memory then there's not 
-much anyone can change, hence "at least in some cases". However, there 
-are an awful lot of drivers/subsystems which use streaming DMA on their 
-own relatively short-lived kmalloc() allocations - the first example 
-which always comes to mind is all the interfaces like SPI, I2C, UART, 
-etc. which are either dmaengine clients or have their own DMA (and 
-indeed some of which were historically trying to do it from temporary 
-buffers on the stack). Heck, even alloc_skb() might end up being 
-commonly used if this "ethernet" thing ever catches on...
+We should probably avoid assuming that undefined custom instructions will
+behave as nops everywhere, meaning it should remain guarded. This seems
+like a problem we should try to solve before we get even more pause
+instructions or whatever that need dynamic selection in userspace, but I
+can't think of anything reasonable atm. For now, we may need to live with
+vdso hwprobe calls in places like cpu_relax. I'll stop complaining about
+this patch as I can't think of anything better.
 
 Thanks,
-Robin.
+drew
 
-> Sure, there are also control data structures, e.g. Tx/Rx rings, but
-> they are typically allocated during device initialization (or ndo_open)
-> using the coherent DMA API and reused for all subsequent I/O.
 > 
-> In summary, yes, it would be great if we could reduce bouncing, but
-> most of that work has already been done, and there's little left for
-> improvement. So, why am I working on a PAR (Physical Address Range)
-> Allocator? Certainly not to help users of the streaming DMA API. No,
-> but it should help dynamic SWIOTLB when the primary SWIOTLB is
-> allocated in an unsuitable physical location.
+> Best regards,
+> Aleksa
 > 
-> Petr T
-
+> >> Thanks,
+> >> drew
