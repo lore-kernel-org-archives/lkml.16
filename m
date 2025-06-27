@@ -1,115 +1,121 @@
-Received: from mailrelay-egress12.pub.mailoutpod2-cph3.one.com (mailrelay-egress12.pub.mailoutpod2-cph3.one.com [46.30.211.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1533B293C6E
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E2A293C76
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751017165; cv=none; b=eF7aRPIwAZ7h8Joi3J4xGvXIJMd+EohsDuahJ5cELlvsT4cuFdH4yk3+MWwmZLByDcKy5IOMyXC9KBKy2OMckST1vc0CioIWpesvtBUuckBFkdxtngBCcyl7Wz6e3ACWp1Ciqv2WfZijj9QkkMSic/8ZstcyW6215XeJ0BfFzsk=
+	t=1751017171; cv=none; b=llTPFWeJoemhSTpNL+XPrvhVTvoCi2ttbGdgHJkcFVQ26ndznVcFrSuCaOmrOhLK+FSPDE/opUJ3VL5fjd8zUgpXQpWu/Naeqk02n+RQaXdlnvFcxDJyn/cendfXwXnSFp5rMA7L9W60PnBpKk9fJjc7mYsfsch5RNnZMPqwDfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751017165; c=relaxed/simple;
-	bh=cMBPS7UL7Z9M3GsM6vxgAs14SnbamdvW0l1fLWM1wYo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NyxYTA+w/q8JpIa4RW9xKCekbiaSuSX9p1WH2/P4WlXE+uVL5/LQHzrPK0jOfYc/3c/shQz03X3M4aUeJ+ZwQlYCbMu083Tc6KgXCtiu7Trpgcul4s1gjzgoeYtcUGNXxHZKU8iKuH90O4yxTzvmCey5qmbLG5RYDfPN9Nw/TiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=5M0z4Bkc; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=Mriq9ZxF; arc=none smtp.client-ip=46.30.211.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
+	s=arc-20240116; t=1751017171; c=relaxed/simple;
+	bh=sqHLSnoPdND2n2YqIlO9rU36LPxSklJW5fcjecRMfIU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PN2+Q96QUxnzVztEpdEtMrEpsOWeDMPYS5CcuFBh2Escfwj2seOUCrq5swV+0YsFjEuvfeiDQNWC2ok/RNJDHlqZAWHQCk/0WqW0PxxrgklzregWXgOiWg6oqHbXsBLsZLXoZsSU73X39v20M2DWuy5LpNfRhutryJUr7mx/S7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b=iQpTZMnt; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="5M0z4Bkc";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="Mriq9ZxF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751017162; x=1751621962;
-	d=konsulko.se; s=rsa1;
-	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
-	 subject:cc:to:from:from;
-	bh=iZmlSFy4KF+5xgzlYCUJvQ/v8BY1pzWF9k3tLUMOd/w=;
-	b=5M0z4BkcQJPtMNSk1YM1oSuYfov1jWqF/cQNd3w52dHdjZN3zMOcG0YoYxwbfioEKKKkMNEDH61Bz
-	 fAxfevYEfbeAqjnpwSDp9AW7seGmpjAcjVQZfuz2MMHxNcq7TGqmAQHOyjY7OtaQOtZ/9ulLtcFZ0I
-	 vZEE9Wojt1jL8BWhyPUPi0+WvcIvVszByrgXgzNrLb4raBgADaxMiBKoavMdJdCr9gmBlNHcgjoGco
-	 RF8ySaydBmQyXNhhY3WgTaS4J5AAxO/Pjn1HcrI3nvzn0Kp+IyHxtcNk8Y2+VeOl3Sl5+BEslLI4i5
-	 YbefVxx8caSXYJc4sPCC5/A4DbkvaWQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751017162; x=1751621962;
-	d=konsulko.se; s=ed1;
-	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
-	 subject:cc:to:from:from;
-	bh=iZmlSFy4KF+5xgzlYCUJvQ/v8BY1pzWF9k3tLUMOd/w=;
-	b=Mriq9ZxFe+umxklzgZa0m3XrQgsem7CIrFuK4VBWmaIwDf/1rqvhYlj9gO3ioVs2z8KAwqx77XOIz
-	 M6hhnyqDw==
-X-HalOne-ID: 9a50b852-533a-11f0-83cc-e90f2b8e16ca
-Received: from slottsdator.home (host-90-238-19-233.mobileonline.telia.com [90.238.19.233])
-	by mailrelay2.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
-	id 9a50b852-533a-11f0-83cc-e90f2b8e16ca;
-	Fri, 27 Jun 2025 09:39:22 +0000 (UTC)
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-To: linux-mm@kvack.org
-Cc: akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	rust-for-linux@vger.kernel.org,
-	Vitaly Wool <vitaly.wool@konsulko.se>
-Subject: [PATCH v5 4/4] rust: support large alignments in allocations
-Date: Fri, 27 Jun 2025 11:39:18 +0200
-Message-Id: <20250627093918.415888-1-vitaly.wool@konsulko.se>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250627092901.356909-1-vitaly.wool@konsulko.se>
-References: <20250627092901.356909-1-vitaly.wool@konsulko.se>
+	dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b="iQpTZMnt"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3138b2f0249so1719653a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 02:39:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=futuring-girl.com; s=google; t=1751017169; x=1751621969; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7EoXolbAXfPP7jncmJ+OthdgINgb5uiOwXnkRnnjQZQ=;
+        b=iQpTZMntS1cfqk91R40wtBZthKh0HYZdXof1ML/IjyPPHjGkpK0m8zr/OgErcECd2H
+         Y7oqc5J8KSDO7gcsVXIwICuk2pzqalXutB4zrYB040oRGvNkE48htrA1KLyD/FYVLUXe
+         WcrDQa07TC8b0GTNAGFo8NhxQUC7tWy0OGNuzau7A0Lw/VK8qjdJNc5f4PPS8CbpWl3P
+         izOtG1P5QUj1f8EmL6hVh+ujtWrkGq47VXX405oYT/V+as9lvx3Oh6F+TVSdUpXl4vFW
+         du4MWaM6qnV+/PxXDdI3jw/oQBbJFrFSyZkQsW5qgJAujSJWfqVW6gX0OPo6irV1GO+N
+         drKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751017169; x=1751621969;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7EoXolbAXfPP7jncmJ+OthdgINgb5uiOwXnkRnnjQZQ=;
+        b=nJge6tcoxeTQM3FPESSspy06mGafY8aFQvxaz1KyU77QgpKqLLV8XQmLChDvef/pdd
+         9wOEIya9y5M+4HULp8k+Zzx+U0HjQJXeTHDYtoAht9ATfolP4VHa5t95x2XaTp0LZ7mo
+         yNUvGwiGAKNsenz4f3uiwlWSjuppqIq3wbl4QXjijh/PzihriwQHd8khKliFJ0oiYoxH
+         giw8KOunLd0by8WWTliytT5HNLjDWEap7nRdf+LLk3qsxWn1L9WwrVxRVwlffUREKAvY
+         LvJkrlJKv2iJN1XIowbRJ/B5hX2rAzZfWrqQzkHErEv+g+SJKxttaJoMWTEKKhwgk2F9
+         AslQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVqBoDeMzH+83GyDHCufRUw/G4YrqBcWMg55dNMyNiU1HPb5eVIkDv/gPV6eIBpwEYhDs1QnanFRV0CZyw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvWvAN35Y1oi8vVVwNOiPM0PZcdI35iIuktsNsLKH1NCG8FY6w
+	DybEofxySpmhAbtEXL9/1ccIOHCYYy+dyujPRJjhMYuY2SW0Evf2cKihvA994u+XQjZVs1x9n/+
+	iIwx+SSmr6CIoqYMhW6p2zz0fGpBaLbXaMuGTuJFIjg==
+X-Gm-Gg: ASbGncvH6t7dOldc5lmLH9oPAjDuiDVwUjGEeqy2ZWUeB016b+3eira53I41/vmUKWU
+	oMttvTFQFF9u3hoaxyRBvEKXy1oQJoIIZHbkyhxY+FhlmOrdETLXqt+oRNZpptZnzn6l+RBnz91
+	hzxeFcdPQjITY8UjRpkDwVvpJJGEOepH2GvEiybQevjNs=
+X-Google-Smtp-Source: AGHT+IGP36mzrkCAQx/61O1uVwnGrnhnEFQFaqi7Au+tCZKEUAsLtA9E3QNCQ4g5Lbjr9hqyOV0ruBng7xb3pRA7xMQ=
+X-Received: by 2002:a17:90a:f94d:b0:311:c5d9:2c7c with SMTP id
+ 98e67ed59e1d1-318c9250375mr2738869a91.23.1751017169338; Fri, 27 Jun 2025
+ 02:39:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250626105243.160967269@linuxfoundation.org>
+In-Reply-To: <20250626105243.160967269@linuxfoundation.org>
+From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
+Date: Fri, 27 Jun 2025 18:39:13 +0900
+X-Gm-Features: Ac12FXzLbc93PcgOHbJI6EISu6a8l58rrpz2xfCSW65gNinqzCCU2fndTSOrQ-Q
+Message-ID: <CAKL4bV5mKKAAE2AXWDVLRhzUNiG51Q7jsx0FhKx_GsDJMRGpjQ@mail.gmail.com>
+Subject: Re: [PATCH 6.15 000/589] 6.15.4-rc3 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add support for large (> PAGE_SIZE) alignments in Rust allocators.
-With _NODE primitives introduced in the previous patch, we actually
-have all the infractructure in place so let's just start using it.
+Hi Greg
 
-Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
----
- rust/kernel/alloc/allocator.rs | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
+On Thu, Jun 26, 2025 at 7:56=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.15.4 release.
+> There are 589 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 28 Jun 2025 10:51:38 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.15.4-rc3.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.15.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-diff --git a/rust/kernel/alloc/allocator.rs b/rust/kernel/alloc/allocator.rs
-index 4f0fe2b67593..75c9e4220ac3 100644
---- a/rust/kernel/alloc/allocator.rs
-+++ b/rust/kernel/alloc/allocator.rs
-@@ -118,7 +118,7 @@ unsafe fn call(
-         // - Those functions provide the guarantees of this function.
-         let raw_ptr = unsafe {
-             // If `size == 0` and `ptr != NULL` the memory behind the pointer is freed.
--            self.0(ptr.cast(), size, 1, flags.0, c_nid).cast()
-+            self.0(ptr.cast(), size, layout.align(), flags.0, c_nid).cast()
-         };
- 
-         let ptr = if size == 0 {
-@@ -162,12 +162,6 @@ unsafe fn realloc(
-         flags: Flags,
-         nid: Option<i32>,
-     ) -> Result<NonNull<[u8]>, AllocError> {
--        // TODO: Support alignments larger than PAGE_SIZE.
--        if layout.align() > bindings::PAGE_SIZE {
--            pr_warn!("Vmalloc does not support alignments larger than PAGE_SIZE yet.\n");
--            return Err(AllocError);
--        }
--
-         // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
-         // allocated with this `Allocator`.
-         unsafe { ReallocFunc::VREALLOC_NODE.call(ptr, layout, old_layout, flags, nid) }
-@@ -187,12 +181,6 @@ unsafe fn realloc(
-         flags: Flags,
-         nid: Option<i32>,
-     ) -> Result<NonNull<[u8]>, AllocError> {
--        // TODO: Support alignments larger than PAGE_SIZE.
--        if layout.align() > bindings::PAGE_SIZE {
--            pr_warn!("KVmalloc does not support alignments larger than PAGE_SIZE yet.\n");
--            return Err(AllocError);
--        }
--
-         // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
-         // allocated with this `Allocator`.
-         unsafe { ReallocFunc::KVREALLOC_NODE.call(ptr, layout, old_layout, flags, nid) }
--- 
-2.39.2
+6.15.4-rc3 tested.
 
+Build successfully completed.
+Boot successfully completed.
+No dmesg regressions.
+Video output normal.
+Sound output normal.
+
+Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
+
+[    0.000000] Linux version 6.15.4-rc3rv-gd93bc5feded1
+(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 15.1.1 20250425, GNU ld (GNU
+Binutils) 2.44.0) #2 SMP PREEMPT_DYNAMIC Fri Jun 27 11:57:58 JST 2025
+
+Thanks
+
+Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
