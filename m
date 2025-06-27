@@ -1,43 +1,39 @@
 Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D30288A2
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375A210F1
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:21:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750987290; cv=none; b=uXorVw0r61i9OIDIHTB85EfpYvCefYG3XlhZq4qgognbICr9gaZ4NVpC0FxNMYSzZixEvC+wK5jKSMj08lP24rRWohIK/q5qXzLufFES7kelfX3WX1VfsT0b+V7ltnljI3IXJhJ2h8hBwFIucbidGDhjSk9INOAdVW/FOp5c5V4=
+	t=1750987295; cv=none; b=FckBbMsUS9Aui/x0nH7O3LjZv/4cGLXtlAqeqRO/vOE9gaP1b/OTcbSNnwFtQneqWwbRa//sRtm8UyYqFvujwoqEJjWOSCh24J+nWYsJfcxlgYB3MyqwyOZ9VGEfnPUbdBE+9qYYDTCPzpfLxVMPOYUFvROmcFZLSIFQN8wEEr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750987290; c=relaxed/simple;
-	bh=zmp2BR+LTEf7nbM86yaKod0xJjE/UEAE9LnZE2XqcGg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VtPBCsJ9WFxMa+J54Ec7aqOQjVysuJllF6Yzm8rpxez72Wr8gI/fz2MTDIgi4QtVqIIvdx6/iHaeCno5mgMBX23Qb3m1RzqTd5eBI/eYy1fnh509ePdy90T2dl6i0ela8lUpstLpzxhYfPS7noCPEWyrqrX4IlhwxOeuwQN6HsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RSk8vOQP; arc=none smtp.client-ip=91.218.175.185
+	s=arc-20240116; t=1750987295; c=relaxed/simple;
+	bh=tRBEWWDSpswFz6OdbmJC8DxaO0ElnlwwezA1904IvzQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sRhMZfGsM+8OWYgScvUfTBGOKNFTxiMAWc9hn4fumhV8d9LXLMd4LPHI3YqcSbvOX/7ZqWWdStYpqPRjCPVY190TkhFTmLdVEUd/rv1E4BJmyrg1HIqP4rF+yj87xf9CVy8aUlgfWVGp4ViOPjMynDfXfFv6R9fdZW9FpyWZiEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZeNCeW35; arc=none smtp.client-ip=91.218.175.185
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RSk8vOQP"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZeNCeW35"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750987286;
+	t=1750987282;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0jHEVG0rfttzRt1zyd21KTlJWuRDVM5oEXRmSZeoKDs=;
-	b=RSk8vOQPFq4ETnChYLalTFfcHWw9GLAtRMv8dOJszpR0mafoZfH+KvuhcMXWX3eNq48LHI
-	0Ve31zltOxka+N54YfBTl5rWlFIok0U7vIaCF6SW/+7INL/AEkhN5GHSKUJEbbNwa3XhqT
-	kHVtEloisuubpG13sa60Kx43IW6KVi4=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=eFLrizrm7Gptxh7hNHxwVX2g3KSt3HdrF2K1MScmkcE=;
+	b=ZeNCeW35ktdPs2AsRcHL7bb/1nLCBzBKOal5x9clTHY1FP6aqQw7XGZ/WRyZT7xIhlipJZ
+	pFaETAlsiHgSdUw7+gAZT5i/QxoCvhFmAIn2+1VbD95NHdoAmkDqGNbL7ew4yZNlDnppac
+	quqcxgd6ZZxInJiuhd7vANxC2RKYlG8=
 From: Youling Tang <youling.tang@linux.dev>
 To: Kent Overstreet <kent.overstreet@linux.dev>
 Cc: linux-bcachefs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	youling.tang@linux.dev,
 	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH 3/3] bcachefs: Spilt bchfs_fallocate() into two functions
-Date: Fri, 27 Jun 2025 09:21:04 +0800
-Message-Id: <20250627012104.222703-3-youling.tang@linux.dev>
-In-Reply-To: <20250627012104.222703-1-youling.tang@linux.dev>
-References: <20250627012104.222703-1-youling.tang@linux.dev>
+Subject: [PATCH 1/3] bcachefs: Removes NULL pointer checks for filemap_lock_folio() return values
+Date: Fri, 27 Jun 2025 09:21:02 +0800
+Message-Id: <20250627012104.222703-1-youling.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,173 +45,27 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Youling Tang <tangyouling@kylinos.cn>
 
-Separating bchfs_fallocate() into two functions to handle
-FALLOC_FL_ALLOCATE_RANGE and FALLOC_FL_ZERO_RANGE respectively makes the
-code more readable.
+__filemap_get_folio the return value cannot be NULL, so unnecessary checks
+are removed.
 
 Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
 ---
- fs/bcachefs/fs-io.c | 111 ++++++++++++++++++++++++++++++--------------
- 1 file changed, 77 insertions(+), 34 deletions(-)
+ fs/bcachefs/fs-io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/bcachefs/fs-io.c b/fs/bcachefs/fs-io.c
-index 69d3ddd4c6a1..430b59c7b7a3 100644
+index dc5f713e209c..74841b1dc8ca 100644
 --- a/fs/bcachefs/fs-io.c
 +++ b/fs/bcachefs/fs-io.c
-@@ -627,7 +627,7 @@ static noinline long bchfs_fcollapse_finsert(struct bch_inode_info *inode,
- 	return ret;
- }
+@@ -289,7 +289,7 @@ static int __bch2_truncate_folio(struct bch_inode_info *inode,
+ 	u64 end_pos;
  
--static noinline int __bchfs_fallocate(struct bch_inode_info *inode, int mode,
-+static noinline int bchfs_fallocate(struct bch_inode_info *inode, int mode,
- 			     u64 start_sector, u64 end_sector)
- {
- 	struct bch_fs *c = inode->v.i_sb->s_fs_info;
-@@ -757,59 +757,100 @@ static noinline int __bchfs_fallocate(struct bch_inode_info *inode, int mode,
- 	return ret;
- }
- 
--static noinline long bchfs_fallocate(struct bch_inode_info *inode, int mode,
-+static int bchfs_falloc_newsize(struct file *file, int mode, loff_t offset,
-+				loff_t len, loff_t *new_size)
-+{
-+	struct inode *inode = file_inode(file);
-+
-+	if ((mode & FALLOC_FL_KEEP_SIZE) || offset + len <= i_size_read(inode))
-+		return 0;
-+	*new_size = offset + len;
-+	return inode_newsize_ok(inode, *new_size);
-+}
-+
-+static int bchfs_falloc_setsize(struct bch_fs *c, struct bch_inode_info *inode,
-+				loff_t new_size)
-+{
-+	int ret;
-+
-+	spin_lock(&inode->v.i_lock);
-+	i_size_write(&inode->v, new_size);
-+	spin_unlock(&inode->v.i_lock);
-+
-+	mutex_lock(&inode->ei_update_lock);
-+	ret = bch2_write_inode_size(c, inode, new_size, 0);
-+	mutex_unlock(&inode->ei_update_lock);
-+
-+	return ret;
-+}
-+
-+static noinline long bchfs_falloc_allocate_range(struct file *file, int mode,
- 			    loff_t offset, loff_t len)
- {
-+	struct bch_inode_info *inode = file_bch_inode(file);
- 	struct bch_fs *c = inode->v.i_sb->s_fs_info;
- 	u64 end		= offset + len;
-+	loff_t new_size = 0;
- 	u64 block_start	= round_down(offset,	block_bytes(c));
- 	u64 block_end	= round_up(end,		block_bytes(c));
-+	int ret;
-+
-+	ret = bchfs_falloc_newsize(file, mode, offset, len, &new_size);
-+	if (ret)
-+		return ret;
-+
-+	ret = bchfs_fallocate(inode, mode, block_start >> 9, block_end >> 9);
-+	if (ret)
-+		return ret;
-+
-+	if (mode & FALLOC_FL_KEEP_SIZE && end > inode->v.i_size)
-+		new_size = inode->v.i_size;
-+
-+	if (new_size)
-+		ret = bchfs_falloc_setsize(c, inode, new_size);
-+
-+	return ret;
-+}
-+
-+static noinline long bchfs_falloc_zero_range(struct file *file, int mode,
-+			    loff_t offset, loff_t len)
-+{
-+	struct bch_inode_info *inode = file_bch_inode(file);
-+	struct bch_fs *c = inode->v.i_sb->s_fs_info;
-+	u64 end		= offset + len;
-+	loff_t new_size = 0;
-+	u64 block_start	= round_up(offset,	block_bytes(c));
-+	u64 block_end	= round_down(end,	block_bytes(c));
- 	bool truncated_last_page = false;
- 	int ret, ret2 = 0;
- 
--	if (!(mode & FALLOC_FL_KEEP_SIZE) && end > inode->v.i_size) {
--		ret = inode_newsize_ok(&inode->v, end);
--		if (ret)
--			return ret;
--	}
--
--	if (mode & FALLOC_FL_ZERO_RANGE) {
--		ret = bch2_truncate_folios(inode, offset, end);
--		if (unlikely(ret < 0))
--			return ret;
-+	ret = bchfs_falloc_newsize(file, mode, offset, len, &new_size);
-+	if (ret)
-+		return ret;
- 
--		truncated_last_page = ret;
-+	ret = bch2_truncate_folios(inode, offset, end);
-+	if (unlikely(ret < 0))
-+		return ret;
- 
--		truncate_pagecache_range(&inode->v, offset, end - 1);
-+	truncated_last_page = ret;
- 
--		block_start	= round_up(offset,	block_bytes(c));
--		block_end	= round_down(end,	block_bytes(c));
--	}
-+	truncate_pagecache_range(&inode->v, offset, end - 1);
- 
--	ret = __bchfs_fallocate(inode, mode, block_start >> 9, block_end >> 9);
-+	ret = bchfs_fallocate(inode, mode, block_start >> 9, block_end >> 9);
- 
- 	/*
- 	 * On -ENOSPC in ZERO_RANGE mode, we still want to do the inode update,
- 	 * so that the VFS cache i_size is consistent with the btree i_size:
- 	 */
--	if (ret &&
--	    !(bch2_err_matches(ret, ENOSPC) && (mode & FALLOC_FL_ZERO_RANGE)))
-+	if (ret && !(bch2_err_matches(ret, ENOSPC)))
- 		return ret;
- 
- 	if (mode & FALLOC_FL_KEEP_SIZE && end > inode->v.i_size)
--		end = inode->v.i_size;
--
--	if (end >= inode->v.i_size &&
--	    (((mode & FALLOC_FL_ZERO_RANGE) && !truncated_last_page) ||
--	     !(mode & FALLOC_FL_KEEP_SIZE))) {
--		spin_lock(&inode->v.i_lock);
--		i_size_write(&inode->v, end);
--		spin_unlock(&inode->v.i_lock);
--
--		mutex_lock(&inode->ei_update_lock);
--		ret2 = bch2_write_inode_size(c, inode, end, 0);
--		mutex_unlock(&inode->ei_update_lock);
--	}
-+		new_size = inode->v.i_size;
-+
-+	if (new_size &&
-+	    ((!truncated_last_page) || !(mode & FALLOC_FL_KEEP_SIZE)))
-+		ret2 = bchfs_falloc_setsize(c, inode, new_size);
- 
- 	return ret ?: ret2;
- }
-@@ -843,8 +884,10 @@ long bch2_fallocate_dispatch(struct file *file, int mode,
- 
- 	switch (mode & FALLOC_FL_MODE_MASK) {
- 	case FALLOC_FL_ALLOCATE_RANGE:
-+		ret = bchfs_falloc_allocate_range(file, mode, offset, len);
-+		break;
- 	case FALLOC_FL_ZERO_RANGE:
--		ret = bchfs_fallocate(inode, mode, offset, len);
-+		ret = bchfs_falloc_zero_range(file, mode, offset, len);
- 		break;
- 	case FALLOC_FL_PUNCH_HOLE:
- 		ret = bchfs_fpunch(inode, offset, len);
+ 	folio = filemap_lock_folio(mapping, index);
+-	if (IS_ERR_OR_NULL(folio)) {
++	if (IS_ERR(folio)) {
+ 		/*
+ 		 * XXX: we're doing two index lookups when we end up reading the
+ 		 * folio
 -- 
 2.34.1
 
