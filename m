@@ -1,145 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB4B171C9;
-	Fri, 27 Jun 2025 15:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E142E9751
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751039497; cv=none; b=Fq272AjbPnM1HRVNB94YEWpboSRkXqo9pNh8HqZ1/bz2g5Ay2RVIcM6uXH+b+ooEyd7cJJfQHphM9lpuAbzI5oDeJN3qoVlSq+1LYcSdzQJpWseIFX45pXbumfxmrnNumECzi/cMNAyLqIlgW9LCLr9RHwPSh6KpiuNi9V7EvQg=
+	t=1751039499; cv=none; b=f735rxOpxQ99H1wMo74A5Vk8eL9Z9zGHJ3X/dwOUulnEkCzJwnf1EpLMBMBbM/RolUYYoJg1nSaKe3dQUQjOeMzOP9RvIj6tO+I2U6Jg4fc6I3Wav2YGBxpilgsnpZ94ZrWuhA5tnPNLFVOehw7kbA9yGTqO5AENitzMxg5glHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751039497; c=relaxed/simple;
-	bh=dBajdsA/Qa7LcDIvcw0Z/OjuZVFOCfMxd181T0knkJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=juTybjNySEK72Xj8z/QY5EeUlrV/S+qmEqcEN/36ILPiIG+qjc+c19nNKxN2iWp/ONw943tqlXjJg2rQ/+eijHU1lia+nkst2Gz+FIoZXWEWSEvTaAgv7DcTEwGdCcBGKC3wBlVKOqvd/KdEvdCWLOLiv0t8EOvlA8uxCVpezBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pXr6Ef0E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751039499; c=relaxed/simple;
+	bh=5hD/cXUbagplk3UVhcm2A2EqQSEIHADTEb57WitDj/Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cBdqkj8o/+Hp6ctRu/kG3wTGcwoogUJpIhLg3AHDROnrxqXEAhXiHLIcsvU8l1fH1ZHH+7uDewr31Qc8KUJ1+17ckKrpNo71THVIRGeznsip4Xnf/uSxrB1zmDbp9KX2SKVpHaOTyWvNh4CQDywrLXfIu6UtU3hmixQEWsmoLks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=joCX8u5O; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pXr6Ef0E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BE7AC4CEE3;
-	Fri, 27 Jun 2025 15:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751039494;
-	bh=dBajdsA/Qa7LcDIvcw0Z/OjuZVFOCfMxd181T0knkJw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=pXr6Ef0EoBPkb7OSCBb6uvRYd2ndTtPg6blj9ZW/5UbkhETOBkece8YO9NEo+FVhP
-	 h3pPQDW+LsSQfM4lhv3NWX73Yv0d1eLm9A5lBVxbg7Tw3c96Uvqlg7BdEMLqpuJUUY
-	 mJBtZYLO4mLCH93sLrZeEsI/W3whKfvavaASMNRAArVdNS4/5KfMd4RRoIXrQVNpvC
-	 JyOo1Gl18U1TOfK/autsMTGmkfsgVuyegZN/QGfwg250sep15aNPU9EguWIHnJVtAO
-	 FpFGKci0ruSM68jeVVZ16VJZAQUfe59YwMrRePs93we3I7RMwuW9jq+e6Yq7mTEaNV
-	 EF1NlnJrJw0bQ==
-Date: Fri, 27 Jun 2025 10:51:33 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>,
-	Vipin Sharma <vipinsh@google.com>,
-	Aaron Lewis <aaronlewis@google.com>
-Subject: Re: [RFC PATCH] PCI: Support Immediate Readiness on devices without
- PM capabilities
-Message-ID: <20250627155133.GA1669946@bhelgaas>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="joCX8u5O"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RBu3vQ009871
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:51:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=OVY990Jukt4echo3RExNnA9BOKm7fyhFlYx
+	ouIGS2vU=; b=joCX8u5Ox4s3iYKTy220awF9UlwYq7mZJAzoEjecIBvrTODCDZa
+	Y0brMQybHXtJmLbSY5zjnzKSsd7Ty0Wrx+uQGkWdr0l/df53ZIEA0Q1d8zMdLQ1m
+	iTevFgEhKCOCMkuQcLmmAUZEBaNy6zj+c8/eEE1WLDjDdGiYFaHngRp0lMnrz5vz
+	TEDuQcuY+5Z8YpPXXykfWcFYLCDssKxOnAuvyaCcUd1/HZD/AqCsijKIXQN3zVi5
+	XxeNkql/yp688IZ1Zr2dzY9FKk674sAwtyKFZjDGpNu7MEdm+LWeP2Olwx8vTYNi
+	ngoeAW/dqlWRCVgn2KdkPLh6iEQTrw+NrDQ==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g88fh2mp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:51:37 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d09ed509aaso325152085a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:51:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751039496; x=1751644296;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OVY990Jukt4echo3RExNnA9BOKm7fyhFlYxouIGS2vU=;
+        b=tUH6XH/k+4SIKb0h/n4cu39LpkQurEJStEvKTyPI68xme2yOurBJhX8HeqZQUuufLP
+         biK1NAEAUB5yw9rEehzHufX0V3dEeeNctonE31TvaV3iUUmFLXD9/W39R0B/stcybuC+
+         30OfmXTn5Pc0XB+MQlfmwX7V62SAai1Ijx9Ipj0OV+Zfnj1Ik429nCGFnzIpIIiSyxfV
+         feV6OjmcOnSD8kimvWEHWGN8SXdjJx8S7K/flglKoDat8yV5IipRdniWzf29zA1EcOsp
+         MrxKVIWQCbXGf7MjgukoYiBOSOtxGblWUh7lEFIxXeOu7+zE1V7X/zHEUeOOMIfAA3gg
+         u6Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCXTrWRY55/SKjNb2DxbXBDE0wxgbjyeZdjAXk6QltLtksvCH2lvzy/F0wszvXWdQ9RJwtLbA5A7sONfAqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxft+71HTZiRW4Q/L9I+SHLfCAJVDGQJGBEoWRBu45rbjDJnJbe
+	3nR8Cmbb79kUrcECbSMhnzoEgDxETgv34EcG0ztQGzi7mgPmd8dMt+mccvwcn6CYMg7Sg1UvjYc
+	mCzbd+vC7W9UlEbldrruiR5SiQeM+hWqb41bNLrUBfps1vA9XrWB7zl3xrmyppZBidzU=
+X-Gm-Gg: ASbGnctb5UNfmRhISkufYtuk4bERXkfn8WNe8Aj2PWOH+JPb3KskCrL3WonTmpmScnt
+	kPT+tAeClDY2fpbPTdY6ITPiiDWe2AhaP71cOqdjSw/kxpFYkC7VdMjLDo6jIwMfYllPpQc+dL5
+	ptDyLvGQOjayn0iDseYe1e09eEkcpaM6AvOQn7VFEwtsfh25oJX1kXkouiZcheWRiASQLZigi+A
+	gNkAeP5POOy+qs36FPz68OW5eBYbjJGg0w9C112MqTAmbzxFdmCs520g64Flw12vuMfAvULkry8
+	v+4cH+UzoQbwdSRejt5Tixp6nha01Hr+nlSlYh6VRGvFQweF488RLGo=
+X-Received: by 2002:a05:620a:1723:b0:7d3:8472:7f9f with SMTP id af79cd13be357-7d4439b744bmr582491885a.50.1751039496134;
+        Fri, 27 Jun 2025 08:51:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEJ3ebcyYFds6UbAx+BvNEutdtfVQuzxIsWg5tnkn1hy8H8wtGUG+i3Ja19Fih2KXpJLlElNQ==
+X-Received: by 2002:a05:620a:1723:b0:7d3:8472:7f9f with SMTP id af79cd13be357-7d4439b744bmr582486385a.50.1751039495492;
+        Fri, 27 Jun 2025 08:51:35 -0700 (PDT)
+Received: from localhost.localdomain ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f8absm3082663f8f.95.2025.06.27.08.51.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 08:51:35 -0700 (PDT)
+From: srinivas.kandagatla@oss.qualcomm.com
+To: vkoul@kernel.org, broonie@kernel.org
+Cc: yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        krzysztof.kozlowski@linaro.org, linux-kernel@vger.kernel.org,
+        linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+Subject: [PATCH 0/4] ASoC: codecs: wcd937x/8x/9x: cleanup
+Date: Fri, 27 Jun 2025 16:50:59 +0100
+Message-ID: <20250627155103.441547-1-srinivas.kandagatla@oss.qualcomm.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aF3HDIzpe3vnpBdj@google.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDEyOCBTYWx0ZWRfX+S4XjMv3P9k8
+ sT01XavLZel61FtP1GW/XKLe8av/i75qUNk+UAAZdPubH98ubl6MQSVPELVfz0bVXmoo+U+FylP
+ GobiI2ohJox6EcUt+IALMW5KWTI6H5dzw4WoRpA7Y6tC7RBKjDxrAWV8pI2eDiAkAv2oq04rqsC
+ 9O2RT0hndS19I3r2I3OA3pRSP3e0lkXBjYYm3pji5zv1uX+Yhpmj8ME5Buo+XK1pQ4T9vA9KsvI
+ /IivNc71vOyeKO0Kyb5bZTywdTy5t/+LG9BIGfEe3WoLdxEGBiQPGD/e2C3jSBPSICO+Phs6ZPG
+ k5GUBgG/IDfznMvXF/ys4+3CggHac0mkxkLCCVUi25aNPczqbcyYDyCNYO7hebfRE7TEHUdLWJr
+ RQWUJqwT8cPRtOfv+m4GUKhDZHUhrpibPZMhZzkatMm+gp+ksxJEcp5ywdFzGvylgJYKHJ0X
+X-Proofpoint-ORIG-GUID: 0431FShHJuIZhHUzc_YhUVfwiB0oh3mH
+X-Proofpoint-GUID: 0431FShHJuIZhHUzc_YhUVfwiB0oh3mH
+X-Authority-Analysis: v=2.4 cv=LNNmQIW9 c=1 sm=1 tr=0 ts=685ebe09 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=ZsC4DHZuhs/kKio7QBcDoQ==:17
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=Ja3qRCn7lQV6jF_xop4A:9
+ a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=679
+ impostorscore=0 mlxscore=0 clxscore=1015 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506270128
 
-On Thu, Jun 26, 2025 at 03:17:48PM -0700, Sean Christopherson wrote:
-> On Wed, Jun 25, 2025, Bjorn Helgaas wrote:
-> > On Tue, Jun 24, 2025 at 10:16:37AM -0700, Sean Christopherson wrote:
-> > > +void pci_pm_init(struct pci_dev *dev)
-> > > +{
-> > > +	u16 status;
-> > > +
-> > > +	device_enable_async_suspend(&dev->dev);
-> > > +	dev->wakeup_prepared = false;
-> > > +
-> > > +	dev->pm_cap = 0;
-> > > +	dev->pme_support = 0;
-> > > +
-> > > +	/*
-> > > +	 * Note, support for the PCI PM spec is optional for legacy PCI devices
-> > > +	 * and for VFs.  Continue on even if no PM capabilities are supported.
-> > > +	 */
-> > > +	__pci_pm_init(dev);
-> > >  
-> > >  	pci_read_config_word(dev, PCI_STATUS, &status);
-> > >  	if (status & PCI_STATUS_IMM_READY)
-> > >  		dev->imm_ready = 1;
-> > 
-> > I would rather just move this PCI_STATUS read to somewhere else.  I
-> > don't think there's a great place to put it.  We could put it in
-> > set_pcie_port_type(), which is sort of a grab bag of PCIe-related
-> > things.
-> > 
-> > I don't know if it's necessarily even a PCIe-specific thing, but it
-> > would be unexpected if somebody made a conventional PCI device that
-> > set it, since the bit was reserved (and should be zero) in PCI r3.0
-> > and defined in PCIe r4.0.
-> > 
-> > Maybe we should put it in pci_setup_device() close to where we call
-> > pci_intx_mask_broken()?
-> 
-> Any reason not to throw it in pci_init_capabilities()?  That has the
-> advantage of minimizing the travel distance, e.g. to avoid
-> introducing a goof similar to what happened with 4d4c10f763d7 ("PCI:
-> Explicitly put devices into D0 when initializing").
+From: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
 
-The only reason I suggested doing it earlier was to enable a potential
-pci_find_capability() optimization.  But this could easily be moved
-if/when that happens, so I think the patch below would be fine.
+All these 3 codecs have been duplicating two of the soundwire
+functions. Noticed another new driver starting to do the same, its time
+to make some helpers so that we do not duplicate these functions.
 
-> E.g. something silly like this?  Or maybe pci_misc_init() or so?
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 9e42090fb108..4a1ba5c017cd 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3205,7 +3205,6 @@ void pci_pm_power_up_and_verify_state(struct pci_dev *pci_dev)
->  void pci_pm_init(struct pci_dev *dev)
->  {
->         int pm;
-> -       u16 status;
->         u16 pmc;
->  
->         device_enable_async_suspend(&dev->dev);
-> @@ -3266,9 +3265,6 @@ void pci_pm_init(struct pci_dev *dev)
->                 pci_pme_active(dev, false);
->         }
->  
-> -       pci_read_config_word(dev, PCI_STATUS, &status);
-> -       if (status & PCI_STATUS_IMM_READY)
-> -               dev->imm_ready = 1;
->  poweron:
->         pci_pm_power_up_and_verify_state(dev);
->         pm_runtime_forbid(&dev->dev);
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 4b8693ec9e4c..d33b8af37247 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2595,6 +2595,15 @@ void pcie_report_downtraining(struct pci_dev *dev)
->         __pcie_print_link_status(dev, false);
->  }
->  
-> +static void pci_imm_ready_init(struct pci_dev *dev)
-> +{
-> +       u16 status;
-> +
-> +       pci_read_config_word(dev, PCI_STATUS, &status);
-> +       if (status & PCI_STATUS_IMM_READY)
-> +               dev->imm_ready = 1;
-> +}
-> +
->  static void pci_init_capabilities(struct pci_dev *dev)
->  {
->         pci_ea_init(dev);               /* Enhanced Allocation */
-> @@ -2604,6 +2613,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
->         /* Buffers for saving PCIe and PCI-X capabilities */
->         pci_allocate_cap_save_buffers(dev);
->  
-> +       pci_imm_ready_init(dev);        /* Immediate Ready */
->         pci_pm_init(dev);               /* Power Management */
->         pci_vpd_init(dev);              /* Vital Product Data */
->         pci_configure_ari(dev);         /* Alternative Routing-ID Forwarding */
+I have added two helpers of_sdw_find_device_by_node() and
+sdw_slave_get_current_bank() in soundwire layer for the codecs to use them.
+
+Srinivas Kandagatla (4):
+  soundwire: bus: add of_sdw_find_device_by_node helper
+  soundwire: bus: add sdw_slave_get_current_bank helper
+  ASoC: codecs: wcdxxxx: use of_sdw_find_device_by_node helper
+  ASoC: codecs: wcdxxxx: use sdw_slave_get_current_bank helper
+
+ drivers/soundwire/bus.c        |  7 +++++++
+ drivers/soundwire/slave.c      |  6 ++++++
+ include/linux/soundwire/sdw.h  | 17 +++++++++++++++++
+ sound/soc/codecs/wcd937x-sdw.c |  6 ------
+ sound/soc/codecs/wcd937x.c     |  4 ++--
+ sound/soc/codecs/wcd937x.h     |  2 --
+ sound/soc/codecs/wcd938x-sdw.c | 17 -----------------
+ sound/soc/codecs/wcd938x.c     |  7 +++----
+ sound/soc/codecs/wcd938x.h     | 13 -------------
+ sound/soc/codecs/wcd939x-sdw.c | 13 -------------
+ sound/soc/codecs/wcd939x.c     |  6 +++---
+ sound/soc/codecs/wcd939x.h     | 13 -------------
+ 12 files changed, 38 insertions(+), 73 deletions(-)
+
+-- 
+2.49.0
+
