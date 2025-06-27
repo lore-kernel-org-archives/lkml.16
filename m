@@ -1,72 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A6021323C
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:24:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C7521C16D
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:24:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751016254; cv=none; b=KCK7OtKb9KmQFd7YKUsMU+x12eaEMxsDPprooyuI/tjNBC3M9wfxz8rTn3ovdLwnkcmH+t5jR7gLIgyI37EwhQ69tg66677rH/b082rYGIVf0E4FCZVX7dR8a5D37n0Luv7/yD/BcMbNN08rdk2P9OQCUsTU0uU6lj39qhyxqhU=
+	t=1751016277; cv=none; b=KMo4J4dqZw9rr1mdc+31QyqrcM6V3fWE/Zv4Y18zT/heOwYZQbtETfaGlOuEeCV7jGz5LgUOc+BcZvv1SltVEbO1AAdNcCIXW0uXnzz0cja5KaFj68lulHUXsHnfcVPAQF4vUjf5/ylGJD8Iinn5IOuu+SLlXmm6ZZcHltnnIjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751016254; c=relaxed/simple;
-	bh=+Od3wE0MGFoGPTGx1Gj5nP+HNuBZqUzPen/YCc0gtO0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DH7J4o/yQa0qpM2/oXNbkA1Ip+k9Zxh+JNm3t0REU1nu3fLq4KGruBOpdzYhqrczhKf2pBELvfCP8ZbUf2mjVP9wCzDzebdMNIVOGTX0zrbeVHJciJkuohUJLR4wF9aEVvaKig4U/RG2q9UUFM1v10x8zwHZx6rez5fpvM23Atc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYsmuVEK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751016277; c=relaxed/simple;
+	bh=RTKwzPM6lesauXZU7R3+oVNk0/n5J2iK/snjSi0tsQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GTj5i+TIi5YngR/PEwkRqJ8qAqnpNWt72Sj1IZz0+xFG3tSFqDEghpCTH9SA07EK5c8LqICK6EXIZL5/IzxngFkNGyZB0ZUK1VzOpH8TaENWm9Bbz+IgB2nB1mvk98vzQps/EVikmEailQYkFhJAMtxlILSxRhg3YwydJNZKpb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P1WuRnH+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYsmuVEK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22C54C4CEE3;
-	Fri, 27 Jun 2025 09:24:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1WuRnH+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 380F9C4CEE3;
+	Fri, 27 Jun 2025 09:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751016253;
-	bh=+Od3wE0MGFoGPTGx1Gj5nP+HNuBZqUzPen/YCc0gtO0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JYsmuVEKovtOUzfIabnNWZx4uk3ktHt55QJP98lONt/RCoDY6q8uRP68Rv/g1HxBJ
-	 tD1TyUtxMwOZuhEEGrRIjXqgGsepStH/ZK+jKbG21kqv/yrYrFBkEHHdCw68vT8P6J
-	 m39Irtk75Z4KpExqt90GKottBh0p8QfOkhadJnGVVW18ymWWLlNTQeyZrUOz1SZ3Wq
-	 gzB4IvtqIiF3Gsq1Au7YbZe9hooVjD556gsGjyEnriNSVuw7a11Y9h3q4mZ8J6TrtM
-	 ZGoYp1c+EQy3mqLEQbURVrKYJLu/MU6rKbAYc6COo+e1iQQtCOSzuEJ9zDQmg1HyL/
-	 bEFWDRiWYCVDw==
+	s=k20201202; t=1751016277;
+	bh=RTKwzPM6lesauXZU7R3+oVNk0/n5J2iK/snjSi0tsQ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P1WuRnH+XcNAo7Ngg2G+U/r9+Cr8AWK9aF2jmYf9wV9rhTMmiTTH3ybWnE5j8tVUf
+	 jcqk1Ikm03ED65y4kgWu3FN4M1KEC9+BiC9J1BYUzFYcnmd0S6TD9dYOMZmxjmZe4o
+	 MPzqpWjO2K/NQf4s64CtQxrGusKEpTthUwdYtpYEpB3TgBCf/DbgWZfwTuMp/YDMAT
+	 ZbDWzolNyaNEqa8DGZoBUF8MQ/QcQOx1yxzHef1FcEpiyRitsnAKzqsvdV1NHKbyXB
+	 IJV4KoobJJB59+fj+4rggyoxJWDdu7RgjxDbYk4UOqLwB2DKtsrkpsrneEh1uycetS
+	 pjXwDaaM8prvA==
+Date: Fri, 27 Jun 2025 11:24:35 +0200
 From: Maxime Ripard <mripard@kernel.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Anusha Srivatsa <asrivats@redhat.com>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Maxime Ripard <mripard@kernel.org>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Anusha Srivatsa <asrivats@redhat.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2 0/5] drm/panel: panel-simple: Fix panel-dpi probe error
-Date: Fri, 27 Jun 2025 11:24:08 +0200
-Message-ID: <175101624570.44642.13183466384528927408.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250626-drm-panel-simple-fixes-v2-0-5afcaa608bdc@kernel.org>
+Message-ID: <20250627-crafty-taupe-hoatzin-ffd456@houat>
 References: <20250626-drm-panel-simple-fixes-v2-0-5afcaa608bdc@kernel.org>
+ <aF0fKHQywtoG63wT@gaggiata.pivistrello.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="bf3dbobd655mefge"
+Content-Disposition: inline
+In-Reply-To: <aF0fKHQywtoG63wT@gaggiata.pivistrello.it>
 
-On Thu, 26 Jun 2025 12:04:58 +0200, Maxime Ripard wrote:
-> Here's a series fixing (hopefully) the panel-simple regression for
-> panels with a panel-dpi compatible.
-> 
-> It's only build tested, so if you could give that series a try
-> Francesco, I'd really appreciate it.
-> 
-> Thanks!
-> Maxime
-> 
-> [...]
 
-Applied to misc/kernel.git (drm-misc-fixes).
+--bf3dbobd655mefge
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 0/5] drm/panel: panel-simple: Fix panel-dpi probe error
+MIME-Version: 1.0
 
-Thanks!
+Hi,
+
+On Thu, Jun 26, 2025 at 12:21:28PM +0200, Francesco Dolcini wrote:
+> Hello Maxime,
+> it works for me, thanks!
+>=20
+> On Thu, Jun 26, 2025 at 12:04:58PM +0200, Maxime Ripard wrote:
+> > Here's a series fixing (hopefully) the panel-simple regression for
+> > panels with a panel-dpi compatible.
+> >=20
+> > It's only build tested, so if you could give that series a try
+> > Francesco, I'd really appreciate it.
+> >=20
+> > Thanks!
+> > Maxime=20
+> >=20
+> > Link: https://lore.kernel.org/dri-devel/20250612081834.GA248237@frances=
+co-nb/
+> > Signed-off-by: Maxime Ripard <mripard@kernel.org>
+>=20
+> For the whole series,
+>=20
+> Tested-by: Francesco Dolcini <francesco.dolcini@toradex.com> # Toradex Co=
+libri iMX6
+
+Thanks again for testing, and sorry for the regression
+
 Maxime
+
+--bf3dbobd655mefge
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaF5jUgAKCRAnX84Zoj2+
+dj4cAXkBZ9mAxRPFYp48ud3HArgZVTHAid8L6IlGVu3HKUVTCEh1Sf9luhFwO77g
+LEXZZ/sBgLlEmCDyeSROl49mzc+CL1c1KA8sDj5ARnnDWdq2RCiBioTCT8xRDjEN
+pTYgmSW9HQ==
+=FKFr
+-----END PGP SIGNATURE-----
+
+--bf3dbobd655mefge--
