@@ -1,196 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA8F1DE2D7;
-	Fri, 27 Jun 2025 04:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEA21C5D55
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750998698; cv=none; b=fhRJc5H24s2nricNm5HKMnjAQNL9gi1etZ1+MwpmUK0wCS39p/Pq9fhiMRICrr5DY3C15FeAAwS9t2+Y1Cn+P5Bjewifd6MwhX11PHU1T0FB+jUR8ZSzRTYif+Z6y3DQg4wWlqlQtsHlM03CB4jPoaTxasQXbayxoyben2D4Iwk=
+	t=1750998716; cv=none; b=mCKt4t/CFmLa2vY1rrioy2BXkJA4kWmu0HSOYJarFyxbHbQVEje97QSZ29N+1kqejSJ3QMEEBTdMIwuomJjG3v9ddR2u1efHFOsujfMud//BAKOtR24bZXfLHrdFLiuXZPHSLlKPww2wjcpo7T0BqwtbwPxS0OMWLNXLPT24Ea8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750998698; c=relaxed/simple;
-	bh=wM5TClw82+g+f6tTVZpsOWcLA2SCBE+v6qAmnJL26dg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E71NNGVVYD4wFnP0OCiGv9gADJDygJPl1z024DtlhrEx+9XYbIxUO/ShB8ld7Irg/IVccYrtpxxkBVPGTWLnFR56jGtvwuOV1LEzabZtRCPNZsfpISzigrkArFc3n7Ws2u1H88H2zzVSNkhaVGkz5xmsfljZeqUYOT0+Z58iqeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TyBp7Exh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750998716; c=relaxed/simple;
+	bh=aSS61x7QxUVX5LHjhVG9mpyAuio6UUIkxWqfveR0i8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BY2r9OxojbYtwfQXmc6C5L/MK7amHYtmcgRMVicdQYE94f6lA9aFZ8nLgegvhFVhio0d7ypt41ir8AHWD+9VobWeFZt2idnWet0fuY89d4vTzWm+IcSZyqXnwYH4H8/iSHzj+ei83Rz8bnDvsuTmyDv6K6ggvsj5Y54fAMPsRHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=itz7cGWo; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TyBp7Exh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DC04C4CEEB;
-	Fri, 27 Jun 2025 04:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750998698;
-	bh=wM5TClw82+g+f6tTVZpsOWcLA2SCBE+v6qAmnJL26dg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TyBp7Exh1zUlLHHkHOA8PkAI5rInJOVDVZwtpuqi67FZ4fdGvEHRo6GMm5D1DlpKy
-	 d1EeX3yqogTDFj0B0IYKcsxtuZDBpT8Gx5h8KaZV6k4GFtPjEmn3D+Gv80L4uS92H7
-	 oQ3KJAPnROQReELH/VMeLqO7/fZOxgrwjBYcQ8Ckd/viHQzGw3bURRXjezKAVDmwqY
-	 SBKQBOujgECCL6MiHhRwja7T/GkmdLA4NHAm677pKzhmZXZ7+CK0DGfyToQ21grjMX
-	 pKXGUt0f4do2wBJQ5YgznQPO1zOVTqaajqY/66jnb6HG3y8StmRxs0ckNlQY+Rn85g
-	 TBj6z0uy0uHcQ==
-From: Mario Limonciello <superm1@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Lukas Wunner <lukas@wunner.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-kernel@vger.kernel.org (open list),
-	iommu@lists.linux.dev (open list:INTEL IOMMU (VT-d)),
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	kvm@vger.kernel.org (open list:VFIO DRIVER),
-	linux-sound@vger.kernel.org (open list:SOUND),
-	Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v6 9/9] PCI: Add a new 'boot_display' attribute
-Date: Thu, 26 Jun 2025 23:31:08 -0500
-Message-ID: <20250627043108.3141206-10-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250627043108.3141206-1-superm1@kernel.org>
-References: <20250627043108.3141206-1-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="itz7cGWo"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7d38b84984dso261440485a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:31:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1750998713; x=1751603513; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AK4VOOLTD1hGNQ+BsO/cCMm/PctZ7mlNTcGJ9xnEe40=;
+        b=itz7cGWooWeZigvYEC2P/lkqQgqvBkjxwLT1DB5TCVBUUBQCQ6nJm3XKMzDyyrAEBd
+         KjrkMGhF+Ug10doKASpOVmdRto4sDjmy/cXhC0sPxln7qFW77s3V1N+lT7B+x9LDCSgh
+         WH/parCyxQ/cviwVokHgNl6PyA7VvA8kPEjbICeWGl8jD4yNx8b6yzSorGRnDg3srnqY
+         jKrcQiK363Y+XCpDOE7Dqs3A6PWdfxqB2pMC2EDzeIZVkTEFq18jlZouZfyhprSt/3UU
+         zgcPvYgXkvthf4WUVIgUtucMBZXtZv82qs/X3H54IqfWkp5yO/6CZwUdYx+dnFoOje1t
+         +Pkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750998713; x=1751603513;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AK4VOOLTD1hGNQ+BsO/cCMm/PctZ7mlNTcGJ9xnEe40=;
+        b=TVSdVc8G8H3UFLmPdPLthWltf3PEteCZRx3oXUJmICKa91RTS1gmBpLBqZEJjpRR4C
+         4mShoiOSjcwzEq0wpS3HsWIAMx2YmOnHSTD80yxkoZZ1zSCq6cXyvoecQUwQOpEpP7r9
+         /90d36A2jylYqooJSpqlfoN/NP1uyYDfNKMeJI4S2Hbj3jWwXv8aR1vQSxaM1wFL1Rdt
+         qbC0lwqi6rGTP85YRulRL4XxtKZJ6PVYVzrFXHuBk/VlRzhAHnI/ZVrAnxrDnUFuTsAR
+         dSB6Q63yTMF5y1ySOW5U9gMl11JA/OP+PgT2zMcE06y4JkBzcvQ4a2ekLKHxEhSrTC2K
+         rWzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4Put5hcuBEi7zFOkB1RsVy/iF1HxHxfxD8T0JaMbzJdipFqwA4OZ1wFb1E0lw+HX/pDyaW3E2+FoD+3A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqzUh1EmozgllF0rzUOMcvTBOXX6+h5l5gabyPKETfx3IF1ep9
+	2sErZJmKXc4sMtclvs5DZc8YCYYxu5YW9NyTa+UmCVHWJZijhzdfT4zyAhfNo910uuFlDbwsw8e
+	RbEys
+X-Gm-Gg: ASbGncsZkkKjOfMHs17eRqlsilxtQseUOSCl84/lluD+tqbVq00TshMoj7HiIcHI0Rz
+	oOQtL30/pFQsVfvgWlZT5CbNp2gjV9WY6tP5RGC+5YEQSJ8M5n9MDcAvxP73Bs/NitqpYI3uRtB
+	mPea1828yhP6dvbEeA7d7D52tj/DxFCWpV6jCbfFnh+f3J5aMu3kh2iL37bgEl4OcuCof0q2fly
+	zXGleiunkEzWcX00Qx3qfWdvJv3WGc77ZjyixGf0Hm6YCpHAqvc50IXb+Rg+Oijz8Vm1jqFFbkF
+	HKljQhJcoc4SNiTPs0Y+AM84TmNl9PUskyjK51SVDZR6AdKBBAXbF0Qgj7A0n8plhxftlmt2uFl
+	J2xvRM9/y0xHSoKrI/ir13XVJs7J570T4pMSpksaBVQ==
+X-Google-Smtp-Source: AGHT+IH1qhiDneuCGwRTL1z4mVoftoxpeVCWpGYeP8yiqZyGuT4TqPRiebMHNkC9qWIOQXsZpT71+w==
+X-Received: by 2002:a05:620a:458a:b0:7d4:295c:884c with SMTP id af79cd13be357-7d443926eb9mr310862885a.7.1750998713547;
+        Thu, 26 Jun 2025 21:31:53 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d443223219sm75897285a.84.2025.06.26.21.31.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 21:31:53 -0700 (PDT)
+Date: Fri, 27 Jun 2025 00:31:51 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Byungchul Park <byungchul@sk.com>,
+	David Hildenbrand <david@redhat.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Ying Huang <ying.huang@linux.alibaba.com>, Zi Yan <ziy@nvidia.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH 1/2] mm/mempolicy: Simplify weighted interleave bulk
+ alloc calculations
+Message-ID: <aF4etw9dELyW7FEZ@gourry-fedora-PF4VCD3F>
+References: <20250626200936.3974420-1-joshua.hahnjy@gmail.com>
+ <20250626200936.3974420-2-joshua.hahnjy@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626200936.3974420-2-joshua.hahnjy@gmail.com>
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Thu, Jun 26, 2025 at 01:09:33PM -0700, Joshua Hahn wrote:
+> Simplify the math used to figure out how many pages should be allocated
+> per node. Instead of making conditional additions and deletions, we can just
+> make them unconditional by using min(). No functional changes intended.
+> 
+> Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
 
-On systems with multiple GPUs there can be uncertainty which GPU is the
-primary one used to drive the display at bootup. In order to disambiguate
-this add a new sysfs attribute 'boot_display' that uses the output of
-video_is_primary_device() to populate whether a PCI device was used for
-driving the display.
+you're better at concise math than I am :]
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v6:
- * Only show for the device that is boot display
- * Only create after PCI device sysfs files are initialized to ensure
-   that resources are ready.
-v4:
- * new patch
----
- Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
- drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 69f952fffec72..8b455b1a58852 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -612,3 +612,11 @@ Description:
- 
- 		  # ls doe_features
- 		  0001:01        0001:02        doe_discovery
-+
-+What:		/sys/bus/pci/devices/.../boot_display
-+Date:		October 2025
-+Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
-+Description:
-+		This file indicates the device was used as a boot
-+		display. If the device was used as the boot display, the file
-+		will be present and contain "1".
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 268c69daa4d57..cc766461de1da 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -30,6 +30,7 @@
- #include <linux/msi.h>
- #include <linux/of.h>
- #include <linux/aperture.h>
-+#include <asm/video.h>
- #include "pci.h"
- 
- #ifndef ARCH_PCI_DEV_GROUPS
-@@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
- 	NULL,
- };
- 
-+static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
-+				 char *buf)
-+{
-+	return sysfs_emit(buf, "1\n");
-+}
-+static DEVICE_ATTR_RO(boot_display);
-+
- static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf)
- {
-@@ -1246,6 +1254,37 @@ static int pci_create_attr(struct pci_dev *pdev, int num, int write_combine)
- 	return 0;
- }
- 
-+/**
-+ * pci_create_boot_display_file - create a file in sysfs for @dev
-+ * @pdev: dev in question
-+ *
-+ * Creates a file `boot_display` in sysfs for the PCI device @pdev
-+ * if it is the boot display device.
-+ */
-+static int pci_create_boot_display_file(struct pci_dev *pdev)
-+{
-+#ifdef CONFIG_VIDEO
-+	if (video_is_primary_device(&pdev->dev))
-+		return sysfs_create_file(&pdev->dev.kobj, &dev_attr_boot_display.attr);
-+#endif
-+	return 0;
-+}
-+
-+/**
-+ * pci_remove_boot_display_file - remove the boot display file for @dev
-+ * @pdev: dev in question
-+ *
-+ * Removes the file `boot_display` in sysfs for the PCI device @pdev
-+ * if it is the boot display device.
-+ */
-+static void pci_remove_boot_display_file(struct pci_dev *pdev)
-+{
-+#ifdef CONFIG_VIDEO
-+	if (video_is_primary_device(&pdev->dev))
-+		sysfs_remove_file(&pdev->dev.kobj, &dev_attr_boot_display.attr);
-+#endif
-+}
-+
- /**
-  * pci_create_resource_files - create resource files in sysfs for @dev
-  * @pdev: dev in question
-@@ -1654,9 +1693,15 @@ static const struct attribute_group pci_dev_resource_resize_group = {
- 
- int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
- {
-+	int retval;
-+
- 	if (!sysfs_initialized)
- 		return -EACCES;
- 
-+	retval = pci_create_boot_display_file(pdev);
-+	if (retval)
-+		return retval;
-+
- 	return pci_create_resource_files(pdev);
- }
- 
-@@ -1671,6 +1716,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
- 	if (!sysfs_initialized)
- 		return;
- 
-+	pci_remove_boot_display_file(pdev);
- 	pci_remove_resource_files(pdev);
- }
- 
--- 
-2.43.0
-
+> 
+> ---
+>  mm/mempolicy.c | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
+> 
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 3b1dfd08338b..78ad74a0e249 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -2645,18 +2645,15 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
+>  	for (i = 0; i < nnodes; i++) {
+>  		node = next_node_in(prev_node, nodes);
+>  		weight = weights[node];
+> -		node_pages = weight * rounds;
+> -		/* If a delta exists, add this node's portion of the delta */
+> -		if (delta > weight) {
+> -			node_pages += weight;
+> -			delta -= weight;
+> -		} else if (delta) {
+> -			/* when delta is depleted, resume from that node */
+> -			node_pages += delta;
+> +		/* when delta is depleted, resume from that node */
+> +		if (delta && delta < weight) {
+>  			resume_node = node;
+>  			resume_weight = weight - delta;
+> -			delta = 0;
+>  		}
+> +		/* Add the node's portion of the delta, if there is one */
+> +		node_pages = weight * rounds + min(delta, weight);
+> +		delta -= min(delta, weight);
+> +
+>  		/* node_pages can be 0 if an allocation fails and rounds == 0 */
+>  		if (!node_pages)
+>  			break;
+> -- 
+> 2.47.1
