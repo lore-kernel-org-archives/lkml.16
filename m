@@ -1,184 +1,206 @@
-Received: from mailrelay-egress12.pub.mailoutpod2-cph3.one.com (mailrelay-egress12.pub.mailoutpod2-cph3.one.com [46.30.211.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52824278741
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 21:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40ED325DAFF;
+	Fri, 27 Jun 2025 21:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751059585; cv=none; b=EZF8HoBebkya3HwdK8gvtXcjbQDS0zz3PLCx0HUJiMPcejuhSgFBqf0VyrlZzH2GlQsfqh1QcHJetSO67bQX/S8z0oCLAaJjiRG9N8dsguAKPsSTz1emy8f0NCmbZPMPyPLt62Oeid8m7ew2o3lySi2CbEvjXHlzt+nAuBdGOI0=
+	t=1751059766; cv=none; b=dP8VmYUoGIII/WRsbeTHPkMeOrYRttO7dm2qoxURQkcOr9FXX6Hq0bvZEOUtoMbMsJhhCh05nRkVkUW+U8E95TVVCfZO7aWnpbmv6GfZJxfNCSIHDeAfccINixewChC+370TcpxsHamhfNvubyPhdXskAHuL1A6fGIOePaPRGH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751059585; c=relaxed/simple;
-	bh=+icoHdD16rtAElqIFrplkTciRveLhQeWCFCs/gsB+ig=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EEgyTYtHWk8JLz1gNsjfpZYhJUbCGBA08nP5c3E7cPH0JWsvuNoPx9kne1+fxfbitxnUm2vZSP7idxjK6TuvMoKy49pVhRUxhraus/bsP5EDcit9wI+qUO5ZdQVhVSE9bkGaT5T8CEzE6jz18dsa/aQmHpL2gDRITfU85RbgSUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=Gz5A6VFe; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=///1GzXm; arc=none smtp.client-ip=46.30.211.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
+	s=arc-20240116; t=1751059766; c=relaxed/simple;
+	bh=N97nvFwtdl90865mk771PfQ/KF4VVJLYZIN6Cs6jKAE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=P2VnPGg7Abpc5UIuoYZgzoiVEilsbIIqtIJDQkzCfriCgUJSF3ErdJJMh/V7VDj8vfbI1tQ7NCYoQ8dri5qHGBJih1GOc3hvcjzjQcmL9904XfIu+PnquY/AXm3zrD7gklgxYlioGuvd2v8NeaxaS1kR59H0oBJYsoElVJ+e0hQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PsriAmDK; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="Gz5A6VFe";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="///1GzXm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751059582; x=1751664382;
-	d=konsulko.se; s=rsa1;
-	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
-	 subject:cc:to:from:from;
-	bh=xlhdGuz/Z+dkJo2xYiSj4xZE1JqckJSK1NBWLMJ0VOE=;
-	b=Gz5A6VFeSO753UAcSLu/qYqVAig1R6dM2/XcUCoD6L7WUPlYX9zrcDp4wTARcTYG4A61wIQSfSZ0T
-	 s6HI7yqGgtshRTuJ/QwJ5eDZ5dajrOVa4GsXCnpOKqI4AFXkSroPV6fy8DEBmHbFOz9v2MEIas5LNA
-	 KZyknULVvsBvhH9Syut0G3WSadCj3qW9j8yMvvPiLuxDM+XZjmZ9sGz3f1M1FFDpa+ql+oklwtgmML
-	 LVqpI6jDm5OUlebAYJ1W2F1JTLUBvQiGy7q2TKMO0r/WCYJwKVecCuGlC8cAcyuc+1eOdanWYHvtfM
-	 0Q/W6PqIE7ijmM9+YK7uG300G47YHHQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751059582; x=1751664382;
-	d=konsulko.se; s=ed1;
-	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
-	 subject:cc:to:from:from;
-	bh=xlhdGuz/Z+dkJo2xYiSj4xZE1JqckJSK1NBWLMJ0VOE=;
-	b=///1GzXmu36VL+aGYgMpb3bktZ4JyJXqKjBUbfcv+HYUehQMGuoKEPwE51RGuDmtj2ViR09N+hFmO
-	 qYgPADsCg==
-X-HalOne-ID: 5ec8b48c-539d-11f0-bb6d-4f541c8bf1cc
-Received: from localhost.localdomain (host-90-238-19-233.mobileonline.telia.com [90.238.19.233])
-	by mailrelay3.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
-	id 5ec8b48c-539d-11f0-bb6d-4f541c8bf1cc;
-	Fri, 27 Jun 2025 21:26:22 +0000 (UTC)
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-To: linux-mm@kvack.org
-Cc: akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	rust-for-linux@vger.kernel.org,
-	Vitaly Wool <vitaly.wool@konsulko.se>
-Subject: [PATCH v7 4/4] rust: support large alignments in allocations
-Date: Fri, 27 Jun 2025 23:26:17 +0200
-Message-Id: <20250627212617.2181779-1-vitaly.wool@konsulko.se>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250627212451.2181627-1-vitaly.wool@konsulko.se>
-References: <20250627212451.2181627-1-vitaly.wool@konsulko.se>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsriAmDK"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-313154270bbso31136a91.2;
+        Fri, 27 Jun 2025 14:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751059764; x=1751664564; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PzJSDyiIELqDj/d+NVM8mR/dEA9dW0Mg1tiXeZEkSJs=;
+        b=PsriAmDKicaNAwsitlrW5PSoDbGr8BXzK2oIn/ihKklGoX457xEB0pxINIuip8oqGv
+         4U8jjolSY1AQswqu7upbJ9l8El4qFCgPbpdGFCzu+0Mat5kaZ2iY6P+dMe5xqD7gE7Xs
+         uUOW1b95wL5rG2BLO6CDJCBf4ztihic+6fAM++/AW3u0aiuwZFU6otqnUm3R8CQVHzvS
+         wznrIMTlk/ThsaUixIEE5LhpxPO1oCmWpqvNwB8XIgDnnbBTX7hwsolzP2u7pujoe55p
+         pTHSimNj9yDYcC7/hu4FJF38RNUn+ITUq8RkKYYx0Ym1pOom2CFz1Oj8G6NpQTk8WmGr
+         xYGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751059764; x=1751664564;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PzJSDyiIELqDj/d+NVM8mR/dEA9dW0Mg1tiXeZEkSJs=;
+        b=FlBNo8A0j3TbOLS9eE2HJuyiwM3XuBRu6ALNlRW5i9o0s9XPVgIw1aRGa4A0IKmhhO
+         JpJ9iNEvs09Iv81C+FgILwMFP1KS0RgkSnWB4SVDh795ymjxGLZzZxq2BZ9ibuxi0f4C
+         dCjzF8sCBPmVw88kVwI3avwRbqu2kyt4mD3YnuoFYsjyHYgGfvty5mk54LLMvZg++jkR
+         TydWDCu3AMFoaKfsqr3qW/a8n4Uyy0OsfZI74kjoucUx1c5m2acDmgQyIW6ucf+Lr+iX
+         ZZl+IxLdX9FuuBBykgCBEPsgBSRbyu5Opz4ZjRuD0/jp3yd8O97fFRHNOBu03pp4ARaB
+         ZBSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWyNczGdUQwrFVik6EINd/GM9YUxlagPNefsHIjByf3VFg9G0XArrXYeOxGD/jC3Cig7/sOLWh/h8PXni7CiQuIj4kIQg==@vger.kernel.org, AJvYcCXz3WEU4vQdMOICo+DG1Ixcx7kHTYvvYlQAgNvbW2w0dnVcr73ZomaRsUmDBVVYNqq2bcibe2vOUB+ddso=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYWlilEKihnOW8eDtIN4jeeQD07CaaiSxI59rDahRwGTgM553f
+	wjPDbkEBFgIo2Iph0dDFnyg5bQh+OD8ACfkve2YBgtsRwHX+vv1UX6/P
+X-Gm-Gg: ASbGncueWcmuIABi/ubnehr7LYQFHAj74d0M6gucJxAJvtWC3M8nO/YA4xvDHnA4Y2Z
+	BQwI/Jdgc/YEUskwmTE5B1iuSHosHwRynDb9PCFX4iSPrNDfnsD0heuRbwHIuUw8D6bTc9AdX2V
+	JLh7JkEl5LC97BRaHcj7eiD4/I/QrQMFHej3IXFBYVl1Ps0oh7wKNRJ691ssT/trLjb30p6j+rD
+	7cbCDPocS7h662SBdqYskA2CKbY11387G3+Snet9/OartX2mdhRkdJn4gl9syIstpwlqMmZpmyU
+	4wzJRI2RY615a6qI0LP1gBSjFJDwncCsdzOtLHgzlRzDNMfG8hgSi60=
+X-Google-Smtp-Source: AGHT+IFf3HpHm+vMMOuNPlSgz7AefKhyzkVVTh0a7NTYXytjvSZGJ7HwbUbw1GuEXetgUUo5Qgz6Sg==
+X-Received: by 2002:a17:90a:d603:b0:313:db0b:75e4 with SMTP id 98e67ed59e1d1-318c9288263mr7791368a91.33.1751059764387;
+        Fri, 27 Jun 2025 14:29:24 -0700 (PDT)
+Received: from localhost ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c150d959sm3108624a91.38.2025.06.27.14.29.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 14:29:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+ boundary=f9fa37f2e671fa9a6c56202a7260752149da78fe6b978ac304144ee9d19f;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Fri, 27 Jun 2025 18:29:19 -0300
+Message-Id: <DAXMVOI4AXHY.18HUV9THTG0DJ@gmail.com>
+Cc: <mpearson-lenovo@squebb.ca>, <hdegoede@redhat.com>,
+ <ilpo.jarvinen@linux.intel.com>, <platform-driver-x86@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: lenovo-hotkey: Handle missing hardware
+ features gracefully
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Armin Wolf" <W_Armin@gmx.de>, <xy-jackie@139.com>,
+ <alireza.bestboyy@gmail.com>, <atescula@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250627195436.3877-1-W_Armin@gmx.de>
+ <DAXLSMRH9E6Y.3Q8Z59YG2B50C@gmail.com>
+ <fb08672d-881b-458c-b8ed-1a27ca93fe7d@gmx.de>
+In-Reply-To: <fb08672d-881b-458c-b8ed-1a27ca93fe7d@gmx.de>
 
-Add support for large (> PAGE_SIZE) alignments in Rust allocators.
-All the preparations on the C side are already done, we just need
-to add bindings for <alloc>_node_align() functions and start
-using those.
+--f9fa37f2e671fa9a6c56202a7260752149da78fe6b978ac304144ee9d19f
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
----
- rust/helpers/slab.c            | 10 ++++++----
- rust/helpers/vmalloc.c         |  5 +++--
- rust/kernel/alloc/allocator.rs | 28 ++++++++--------------------
- 3 files changed, 17 insertions(+), 26 deletions(-)
+On Fri Jun 27, 2025 at 6:17 PM -03, Armin Wolf wrote:
+> Am 27.06.25 um 22:38 schrieb Kurt Borja:
+>
+>> Hi Armin,
+>>
+>> On Fri Jun 27, 2025 at 4:54 PM -03, Armin Wolf wrote:
+>>> Not all devices support audio mute and microphone mute LEDs, so the
+>>> explicitly checks for hardware support while probing. However missing
+>>> hardware features are treated as errors, causing the driver so fail
+>>> probing on devices that do not support both LEDs.
+>>>
+>>> Fix this by simply ignoring hardware features that are not present.
+>>> This way the driver will properly load on devices not supporting both
+>>> LEDs and will stop throwing error messages on devices with no LEDS
+>>> at all.
+>> This patch makes me wonder what is the policy around issues like this.
+>> In fact I've submitted and changes that do the exact opposite :p
+>> Like commit: 4630b99d2e93 ("platform/x86: dell-pc: Propagate errors when
+>> detecting feature support")
+>>
+>> IMO missing features should be treated as errors. i.e. The probe should
+>> fail.
+>
+> IMHO the probe should only fail if some features are deemed essential, li=
+ke
+> required ACPI methods. Optional features like in this case LEDs should be
+> handled by the driver in a graceful manner if possible.
+>
+>>
+>> Quoting documentation [1]:
+>>
+>> 	If a match is found, the device=E2=80=99s driver field is set to the
+>> 	driver and the driver=E2=80=99s probe callback is called. This gives th=
+e
+>> 	driver a chance to verify that it really does support the
+>> 	hardware, and that it=E2=80=99s in a working state.
+>>
+>> And again [2]:
+>>
+>> 	This callback holds the driver-specific logic to bind the driver
+>> 	to a given device. That includes verifying that the device is
+>> 	present, that it=E2=80=99s a version the driver can handle, that driver
+>> 	data structures can be allocated and initialized, and that any
+>> 	hardware can be initialized.
+>>
+>> Both of these makes me wonder if such a "fail" or error message should
+>> be fixed in the first place. In this case the probe correctly checks for
+>> device support and fails if it's not found, which is suggested to be the
+>> correct behavior.
+>
+> The driver should only fail probing if it cannot handle some missing feat=
+ures.
+> In this case however both features (audio mute LED and mic mute LED) are =
+completely
+> optional and the driver should not fail to load just because one of them =
+is absent.
 
-diff --git a/rust/helpers/slab.c b/rust/helpers/slab.c
-index 8472370a4338..d729be798f31 100644
---- a/rust/helpers/slab.c
-+++ b/rust/helpers/slab.c
-@@ -3,13 +3,15 @@
- #include <linux/slab.h>
- 
- void * __must_check __realloc_size(2)
--rust_helper_krealloc_node(const void *objp, size_t new_size, gfp_t flags, int node)
-+rust_helper_krealloc_node_align(const void *objp, size_t new_size, unsigned long align,
-+				gfp_t flags, int node)
- {
--	return krealloc_node(objp, new_size, flags, node);
-+	return krealloc_node_align(objp, new_size, align, flags, node);
- }
- 
- void * __must_check __realloc_size(2)
--rust_helper_kvrealloc_node(const void *p, size_t size, gfp_t flags, int node)
-+rust_helper_kvrealloc_node_align(const void *p, size_t size, unsigned long align,
-+				gfp_t flags, int node)
- {
--	return kvrealloc_node(p, size, flags, node);
-+	return kvrealloc_node_align(p, size, align, flags, node);
- }
-diff --git a/rust/helpers/vmalloc.c b/rust/helpers/vmalloc.c
-index 62d30db9a1a6..7d7f7336b3d2 100644
---- a/rust/helpers/vmalloc.c
-+++ b/rust/helpers/vmalloc.c
-@@ -3,7 +3,8 @@
- #include <linux/vmalloc.h>
- 
- void * __must_check __realloc_size(2)
--rust_helper_vrealloc_node(const void *p, size_t size, gfp_t flags, int node)
-+rust_helper_vrealloc_node_align(const void *p, size_t size, unsigned long align,
-+				gfp_t flags, int node)
- {
--	return vrealloc_node(p, size, flags, node);
-+	return vrealloc_node_align(p, size, align, flags, node);
- }
-diff --git a/rust/kernel/alloc/allocator.rs b/rust/kernel/alloc/allocator.rs
-index 2e86e9839a1b..58e5bf78c159 100644
---- a/rust/kernel/alloc/allocator.rs
-+++ b/rust/kernel/alloc/allocator.rs
-@@ -59,19 +59,19 @@ fn aligned_size(new_layout: Layout) -> usize {
- /// One of the following: `krealloc`, `vrealloc`, `kvrealloc`.
- struct ReallocFunc(
-     unsafe extern "C" fn(
--        *const crate::ffi::c_void, usize,  u32, crate::ffi::c_int,
-+        *const crate::ffi::c_void, usize, crate::ffi::c_ulong, u32, crate::ffi::c_int,
-     ) -> *mut crate::ffi::c_void,
- );
- 
- impl ReallocFunc {
--    // INVARIANT: `krealloc_node` satisfies the type invariants.
--    const KREALLOC: Self = Self(bindings::krealloc_node);
-+    // INVARIANT: `krealloc_node_align` satisfies the type invariants.
-+    const KREALLOC: Self = Self(bindings::krealloc_node_align);
- 
--    // INVARIANT: `vrealloc_node` satisfies the type invariants.
--    const VREALLOC: Self = Self(bindings::vrealloc_node);
-+    // INVARIANT: `vrealloc_node_align` satisfies the type invariants.
-+    const VREALLOC: Self = Self(bindings::vrealloc_node_align);
- 
--    // INVARIANT: `kvrealloc_node` satisfies the type invariants.
--    const KVREALLOC: Self = Self(bindings::kvrealloc_node);
-+    // INVARIANT: `kvrealloc_node_align` satisfies the type invariants.
-+    const KVREALLOC: Self = Self(bindings::kvrealloc_node_align);
- 
-     /// # Safety
-     ///
-@@ -113,7 +113,7 @@ unsafe fn call(
-         // - Those functions provide the guarantees of this function.
-         let raw_ptr = unsafe {
-             // If `size == 0` and `ptr != NULL` the memory behind the pointer is freed.
--            self.0(ptr.cast(), size, flags.0, nid.0).cast()
-+            self.0(ptr.cast(), size, layout.align(), flags.0, nid.0).cast()
-         };
- 
-         let ptr = if size == 0 {
-@@ -157,12 +157,6 @@ unsafe fn realloc_node(
-         flags: Flags,
-         nid: NumaNode,
-     ) -> Result<NonNull<[u8]>, AllocError> {
--        // TODO: Support alignments larger than PAGE_SIZE.
--        if layout.align() > bindings::PAGE_SIZE {
--            pr_warn!("Vmalloc does not support alignments larger than PAGE_SIZE yet.\n");
--            return Err(AllocError);
--        }
--
-         // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
-         // allocated with this `Allocator`.
-         unsafe { ReallocFunc::VREALLOC.call(ptr, layout, old_layout, flags, nid) }
-@@ -182,12 +176,6 @@ unsafe fn realloc_node(
-         flags: Flags,
-         nid: NumaNode,
-     ) -> Result<NonNull<[u8]>, AllocError> {
--        // TODO: Support alignments larger than PAGE_SIZE.
--        if layout.align() > bindings::PAGE_SIZE {
--            pr_warn!("KVmalloc does not support alignments larger than PAGE_SIZE yet.\n");
--            return Err(AllocError);
--        }
--
-         // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
-         // allocated with this `Allocator`.
-         unsafe { ReallocFunc::KVREALLOC.call(ptr, layout, old_layout, flags, nid) }
--- 
-2.39.2
+I agree, both are individually optional, but at least one should be
+required.
 
+>
+> Just think about machines supporting only a single LED (audio or mic mute=
+). Currently
+> the driver would fail to load on such devices leaving the users with noth=
+ing.
+
+That's very true.
+
+But I do still think if both fail the probe should still fail. Maybe
+there is a way to accomplish this?
+
+I'm thinking of something like
+
+if (lenovo_super_hotkey_wmi_led_init(MIC_MUTE, dev) ||
+    lenovo_super_hotkey_wmi_led_init(AUDIO_MUTE, dev))
+    return -ENODEV;
+
+What do you think?
+
+>
+>>
+>> BTW this also leaks `wpriv`, which would remain allocated for no reason.
+>
+> wpriv will be freed using devres, so no memory leak here. However i admit=
+ that there is
+> some room for optimizations, however i leave this to the maintainer of th=
+e driver in
+> question.
+
+Leak was a bit of an overstatement :) But if both features are missing
+it would be kinda leaked, in practice.
+
+>
+> Thanks,
+> Armin Wolf
+>
+>>
+>>
+>> [1] https://docs.kernel.org/driver-api/driver-model/binding.html
+>> [2] https://docs.kernel.org/driver-api/driver-model/driver.html
+>>
+
+
+--=20
+ ~ Kurt
+
+
+--f9fa37f2e671fa9a6c56202a7260752149da78fe6b978ac304144ee9d19f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaF8NMwAKCRAWYEM49J/U
+Zq/MAP43RcMOug9PHqtyPp8hxLwpmiw1OL2C+HeGNdgROp7aLwD+IMFNPVSATQBt
+ypCbYADZoqn9p6xC69w7/74Y88YqJgw=
+=4GiE
+-----END PGP SIGNATURE-----
+
+--f9fa37f2e671fa9a6c56202a7260752149da78fe6b978ac304144ee9d19f--
