@@ -1,188 +1,118 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2961299A93;
-	Fri, 27 Jun 2025 10:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6291DF980;
+	Fri, 27 Jun 2025 10:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751019251; cv=none; b=gIM56plqA5rmfAa+u60tbU0MfKtZTKZk4J8zw6U62BZOYoq2hfzVDu5605uBfimY7HVCIVZ5IKtfF2uGP9l+fVwpJMXK3uwq1OkWBv/bwryMokyzBq/lsrodYsZI1o7ptYQi0joBYMbD+ZHMaUPns0K+F1SRw98WsI6UifrI70c=
+	t=1751019337; cv=none; b=s9gOhZfgXqg1p/50KUqc4EODFG67eEBozDeTCt/Fj/5M24CZLXaBKV7gtUMuLwt93YCvfnA+6ZxesyKF/fPcC31IvU0eUhfmsG+C43lfTdqISEyV38FPiI4Pb8aO7cYVniJ0TGe7hiHMmQC8TCx10o3aLzUbDd9eI08o8ruhttI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751019251; c=relaxed/simple;
-	bh=8BWuLnGZyNe1IdI4PvN5SHysfziaBNx00RMaZBO2Z64=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=m0Vo0XKbBEwNk8JuP88hIYTN5OmcZAsqGx2uXuu0xErfuf8VYvXIH/Dqy65ywLR527K1TfGhYwXs72MdgSJv4dib8KPDA/K9gxmnN7k6cc/Rl05iqVDfoWLzyw/UV0wCK/dh92fvDs0yuSXYP3x8y3CxEnnju0y4Gz8SYai87G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IyM2L3Rw; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751019337; c=relaxed/simple;
+	bh=kWqlKO5PmJMlK30Hu/nszvcABWtwmUQaTNNfj6O7HXU=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=BFiSl1UIxp9+pOcvEEcJhPUJQv9gFQhVwRX7JU2+PSPzs+DzME8fqQDV3bZDixPy4TijAa2M9JGeHvslFWU6+A2zF9AjkP01Qg01ADrIlnSmYvHwxy+ke+oFMuiu0Y0TPAV1yYjKgsIeapFu8Kc7A5dW05jbRbC6Gre/KyCoUik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=TUnaDvBd; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IyM2L3Rw"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55R4D2UE027381;
-	Fri, 27 Jun 2025 10:14:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	o9gExB8qngC32GYREHosqCK0Ok2ayEYAjcDkJDPTGGs=; b=IyM2L3Rw+7gMNeTt
-	qHyjo+jyAnNc6fn2mSYg+5bnLbUoKABJR3a8/pO9qjLTAr9pLYySYHPZZIi1TJlf
-	92bSO4df5TyRRhrF173AcscW5HcLSNyDXSbk3G2ua+GxQOj16drKfzPTuUJuSYof
-	S+B1yrfzuHqooGfZA6FRucdoefKO+anNGc32H1XgQKaaXKArhx3Z+yZ64ht7BzB3
-	G/RB+HvkTvw/SskE1klXcTHGdxZXCe97E6OoSFwa0odIry5IyBYJZheoyVs3fKOA
-	8GBPpYDBuNfCUOBK34NrJMFUPwYkOPIaF2pzMsVdhVd3PIJNiFjtxHseNSAMFCeY
-	6hfZ2Q==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ec26gu7a-1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="TUnaDvBd"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55R8PVHO022240;
+	Fri, 27 Jun 2025 12:15:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=mVBgEXGskFGd1kZHXy9461
+	TXv3u/WKz4hFmABhGynE8=; b=TUnaDvBduVytL1jo7TCMT9l4v5t7cPtAhaslCI
+	eeZG5KnvL8984S665vwrxF/h4FgS4nXZxGIK9p6whXltR+1tDJ7Jmcl1Ti59j4NK
+	vGqwCJK64JivfCHSFmbBgzPdxilY07HaDRQrJjzs89Q4xJRp/LkSzeDZJrQYWRFJ
+	IxP5ewno/C/wLfzG0JkMXJalE2neRoa6xAvnfm2rsa/aC3dGU+pMbEn7VhFsA3lj
+	Uq+VN7TNk7brpGOrICzNwHFseHDg5eZmV8A+R7fFP1CWYExducr04tVQpbuLGIUx
+	Fm6p7wNA9o0qdtgKICgU64mQYM6/fjktlUGIn0lB8Wcs8jHg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dj5p3xqf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 10:14:00 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55RADxfB032595
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 10:13:59 GMT
-Received: from [10.217.217.109] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 27 Jun
- 2025 03:13:54 -0700
-Message-ID: <44dddd3f-d2d2-4d4b-831a-21e6d9050445@quicinc.com>
-Date: Fri, 27 Jun 2025 15:43:49 +0530
+	Fri, 27 Jun 2025 12:15:12 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 00FB840045;
+	Fri, 27 Jun 2025 12:13:48 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 75734B65697;
+	Fri, 27 Jun 2025 12:12:57 +0200 (CEST)
+Received: from localhost (10.48.86.185) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 27 Jun
+ 2025 12:12:57 +0200
+From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+Subject: [PATCH v2 0/3] Fix STM32 I2C dma operations
+Date: Fri, 27 Jun 2025 12:12:55 +0200
+Message-ID: <20250627-i2c-upstream-v2-0-8c14523481dc@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 01/10] clk: qcom: clk-alpha-pll: Add support for
- dynamic update for slewing PLLs
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        "Catalin
- Marinas" <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Ajit
- Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        "Jagadeesh Kona" <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250625-qcs615-mm-v10-clock-controllers-v10-0-ec48255f90d8@quicinc.com>
- <20250625-qcs615-mm-v10-clock-controllers-v10-1-ec48255f90d8@quicinc.com>
- <trwdfk2oz2udtbiqxh3ybuqbvasfqywmqxgi4xyvsknz6svs2r@icpp7snpq6c5>
-Content-Language: en-US
-From: Taniya Das <quic_tdas@quicinc.com>
-In-Reply-To: <trwdfk2oz2udtbiqxh3ybuqbvasfqywmqxgi4xyvsknz6svs2r@icpp7snpq6c5>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDA4MyBTYWx0ZWRfXxDbfDPh9Gw4w
- QQLNMYHi4qFHyxMn7xxfy4p1gRsc3ksdmHLT5Q9wZ9T1hskLSYVH3MQQyKjicJLi794AVtmBgLv
- hu/ne5ZPeHGv+1QANVvbly8f5+uvlWTNYL+bIle/9ch6cPyUZY914wgGL11HUgmSHLaxgtpHjDw
- xwb1QFSlU5BRY59jvoLjyky+I15UAIzNWSZgRqr8zDCn1d/0pKeH6QJv9/ZeKGdVw6Dqi92FvqY
- NGjd/XIA8HMFqxzEituAcf2jluLbQa5DnhGUhTugtIK6AVFQ6/t0hNCPBXL2KBh2Fp+5DI8AqHl
- 3jI5FuBvf/3+gXrYOI6wdU7CMiRTcP9ZRFvzLrD4g1Jp8jy6etiMCR4bnGhsWPtIrY/+a1K3BaV
- 2Hdm3S1PkHAYdumjSSVItsqsOWvc9u++niSgHvxNIfDtNJcI9YBubDPh6AZDL/ZuYFin6Ubf
-X-Authority-Analysis: v=2.4 cv=XPQwSRhE c=1 sm=1 tr=0 ts=685e6ee8 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=25x4RPGbu_Wr1P5MSWYA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 600Aztl8yIgBolypmsQcXWRCeJsUqr6X
-X-Proofpoint-ORIG-GUID: 600Aztl8yIgBolypmsQcXWRCeJsUqr6X
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAKduXmgC/1XMQQ6CMBCF4auQWVvSFqYEV9zDsEAYZBZQ0qlEQ
+ 7i7FVcu/5e8bwehwCRwzXYItLGwX1LYSwb91C0PUjykBqstarSVYtur5yoxUDcrwrurUZsC6w7
+ SZQ008uvkbm3qiSX68D71zXzXH+SM+4c2o7Qq7VAMWFQlOWxGL5JLzHs/Q3scxwcajC4EqgAAA
+ A==
+X-Change-ID: 20250527-i2c-upstream-e5b69501359a
+To: Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
+        Alain Volmat
+	<alain.volmat@foss.st.com>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        "Maxime
+ Coquelin" <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "M'boumba Cedric
+ Madianga" <cedric.madianga@gmail.com>,
+        Wolfram Sang <wsa@kernel.org>
+CC: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>,
+        =?utf-8?q?Cl=C3=A9ment_Le_Goffic?=
+	<clement.legoffic@foss.st.com>
+X-Mailer: b4 0.15-dev-07fe9
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-06-27_03,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 impostorscore=0 clxscore=1015 suspectscore=0 mlxscore=0
- spamscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
- priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506270083
 
+This patch series aims to fix some issues inside the driver's DMA
+handling.
+It also uses newer I2C DMA API.
 
+Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+---
+Changes in v2:
+- Fix the dev used in dma_unmap also in the error path of
+  `stm32_i2c_prep_dma_xfer`
+- Add a dma_unmap_single also in the ITs error handler
+- Add Alain Volmat's "Acked-by" on patch 3
+- Link to v1: https://lore.kernel.org/r/20250616-i2c-upstream-v1-0-42d3d5374e65@foss.st.com
 
-On 6/25/2025 5:17 PM, Dmitry Baryshkov wrote:
-> On Wed, Jun 25, 2025 at 04:13:26PM +0530, Taniya Das wrote:
->> The alpha PLLs which slew to a new frequency at runtime would require
->> the PLL to calibrate at the mid point of the VCO. Add the new PLL ops
->> which can support the slewing of the PLL to a new frequency.
->>
->> Reviewed-by: Imran Shaik <quic_imrashai@quicinc.com>
->> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
->> ---
->>  drivers/clk/qcom/clk-alpha-pll.c | 169 +++++++++++++++++++++++++++++++++++++++
->>  drivers/clk/qcom/clk-alpha-pll.h |   1 +
->>  2 files changed, 170 insertions(+)
->>
+---
+Clément Le Goffic (3):
+      i2c: stm32: fix the device used for the DMA map
+      i2c: stm32f7: unmap DMA mapped buffer
+      i2c: stm32f7: support i2c_*_dma_safe_msg_buf APIs
 
->> +	/*
->> +	 * Dynamic pll update will not support switching frequencies across
->> +	 * vco ranges. In those cases fall back to normal alpha set rate.
->> +	 */
->> +	if (curr_vco->val != vco->val)
->> +		return clk_alpha_pll_set_rate(hw, rate, parent_rate);
->> +
->> +	a <<= ALPHA_REG_BITWIDTH - ALPHA_BITWIDTH;
->> +
->> +	regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
->> +	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), lower_32_bits(a));
->> +	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL_U(pll), upper_32_bits(a));
-> 
-> We have code that does this in __clk_alpha_pll_set_rate() and now you
-> are adding two more copies. Please extract PLL_L_VAL, PLL_ALPHA_VAL and
-> PLL_USER_CTL / PLL_VCO_MASK into a helper function.
-> 
+ drivers/i2c/busses/i2c-stm32.c   |  4 ++--
+ drivers/i2c/busses/i2c-stm32f7.c | 42 +++++++++++++++++++++++++++++-----------
+ 2 files changed, 33 insertions(+), 13 deletions(-)
+---
+base-commit: 86731a2a651e58953fc949573895f2fa6d456841
+change-id: 20250527-i2c-upstream-e5b69501359a
 
-Dmitry, I was thinking of implementing the following as a reusable
-helper since it can be leveraged by most of the functions. I'd
-appreciate your suggestions or feedback.
-
-static void clk_alpha_pll_update_configs(struct clk_alpha_pll *pll,
-const struct pll_vco *vco, u32 l, u64 a, u32 alpha_width, bool alpha_en)
-{
-	regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
-
-	if (alpha_width > ALPHA_BITWIDTH)
-		a <<= alpha_width - ALPHA_BITWIDTH;
-
-	if (alpha_width > 32)
-		regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL_U(pll), upper_32_bits(a));
-
-	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), lower_32_bits(a));
-
-	if (vco) {
-		regmap_update_bits(pll->clkr.regmap, PLL_USER_CTL(pll),
-				   PLL_VCO_MASK << PLL_VCO_SHIFT,
-				   vco->val << PLL_VCO_SHIFT);
-	}
-
-	if (alpha_en)
-		regmap_set_bits(pll->clkr.regmap, PLL_USER_CTL(pll), PLL_ALPHA_EN);
-}
-
-
->> +
->> +	/* Ensure that the write above goes before slewing the PLL */
->> +	mb();
->> +
->> +	if (clk_hw_is_enabled(hw))
->> +		return clk_alpha_pll_slew_update(pll);
->> +
->> +	return 0;
->> +}
->> +
->> +/*
->> + * Slewing plls should be bought up at frequency which is in the middle of the
->> + * desired VCO range. So after bringing up the pll at calibration freq, set it
->> + * back to desired frequency(that was set by previous clk_set_rate).
-
->>
-> 
+Best regards,
+--  
+Clément Le Goffic <clement.legoffic@foss.st.com>
 
