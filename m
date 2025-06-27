@@ -1,130 +1,96 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3265821772D;
-	Fri, 27 Jun 2025 06:57:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91EB21ADAE;
+	Fri, 27 Jun 2025 06:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751007468; cv=none; b=N0lLh+TMqtEn7IiJfGLiDeg7wSWRtYSwVU1bBtSP1bjJRlQLpVmbK2o2OJetxS3fa2atU10aaU36zUmxwevliX+4RhkqnIto3WwdDmYRK48CVQDFXt02Y1Ibm1oI7HEGpS5lhD/gY8gpEUxLy1kEd5YUCYuwT7Q5PB+mI9eUQjE=
+	t=1751007562; cv=none; b=d+dE6UGk43Otiz3rZOW1uekGFrMjuxQ4xH5CunVlgddVI/LX0NlpQf8YPKg4Q7n9MJlq/Um+t9L/sRandV0d4hP/452xWabF5d9gx0HBr4af8VNOkdPx/ifAmh6nyJs6gA0YcYcIc88nyfflVlotP0s2RbpcbUyjk5vV4RjdYb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751007468; c=relaxed/simple;
-	bh=Uo4olL5yDw0YFadlO02NXTHa38+zQf05vr91IvJyStY=;
+	s=arc-20240116; t=1751007562; c=relaxed/simple;
+	bh=WdWVEfpJgxRMWzUF0VMsgV/Wr9vf2FxeqiqykC9OATQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XiF9RLnj0btB0ZNJ9MXizVRo9zEwman7nG02be/LXLETFK5krzl9BdCX37sZq9Ik/ImGaUC3+6O52GbTAppwwRuPXlNDsGMXnTMRcEuo8yVapRiAeBf1jbWlVuHc5UDiTrmpqw/XdZL89suwyInV4kfMmX2YgxBVTr+QPjFiR+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UegOdAV/; arc=none smtp.client-ip=209.85.218.42
+	 To:Cc:Content-Type; b=u5H7wL7sPqH01dw0i0C/1Q1PxnXCYH0+QTn5LbbNSF6z+rvDrhhQl7cYaMEbtWpo9vvo2MVsGpJdWHelWACH6v49674JuhzOxJkq1/rhGhSXFsaCGkH9mXMaAW11hzPVeFHOZvRUFcP7jiLkTjU+Y3Fi3kneXBM/7D4gWMmuXdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RbMattDY; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UegOdAV/"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-acb5ec407b1so314972666b.1;
-        Thu, 26 Jun 2025 23:57:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RbMattDY"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ae0d4451a3fso289658866b.1;
+        Thu, 26 Jun 2025 23:59:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751007464; x=1751612264; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751007559; x=1751612359; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=M4eds/rIFq5zfoX/63Svgj/d7xGIUzwYOHndRisqlgQ=;
-        b=UegOdAV/OeQzs2NlpRfgit54yD3qmDqLUfGPlGV38BLg336iljLWmtaJ/WXbS9A60G
-         x/+rTHkXo6QrNOyd+draerBE3np7oJDS981qghwuYTD4ArzXk+ZQeTlB0ak9ZOL0U0zV
-         a7ZtBPHT6g3sZeIKb/+GnTsurDslsAq0T9up4XUi8k5C7jq32PtnPlmNy/Vo4abJo9hf
-         K6a5CoXByxbJ4pbOdX7y/KhZzPLS05aOZ1JjJgtcwf3W0U0LwUrdpYCa1CyHAXrvBaRc
-         iMUtPgBM7u/KaDCaL+YrPQfE4X6YcAXjUJBRa6ZpU57daJmXnqZW3v7Ztkg8Iao3Qqw2
-         7wSQ==
+        bh=HlXypzUn9k5HtMzPQR4dnvaBprfSwN8h+TU/oblYn18=;
+        b=RbMattDY6k1PHke+lENHn3/WWJ+wsHUSkOda6v7iTxQWtq/6ZzihfPG4XBNj8HNGvQ
+         stYA4rP3X0otUQvCjvE68I+cdrppVUZFzXb+HcfIlFJP42JWfnOOZ8B7vPg6l0aFHuyv
+         OtiicNJyXqQ83Xwi7TDr7yThJ21QdKTzVdDzH5hKMOyvVAjVgHdZO2MLOi1EXre/V12g
+         4K7yUQg9nkRsv5OIErpQDmBQTYr54zivlqGxCaJdi3hMPNXbJFjjqDdKF83zJixvlNLx
+         wqBzryoIa7pILBESi8fYZj752DwxsopFKIVxF5Jt4lozXgxgiZNK4ysbubNsPTNeMo+i
+         WeqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751007464; x=1751612264;
+        d=1e100.net; s=20230601; t=1751007559; x=1751612359;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=M4eds/rIFq5zfoX/63Svgj/d7xGIUzwYOHndRisqlgQ=;
-        b=HrxgBUcCu6pe6T/ohscZNK+Ge6fZnE+PqZoruvsK9Ks/K4A1jZves4+K9IH1F5eyMB
-         AncbLRUpqTkdtt5hJ+JNogpnzeZbVHaqTnO9OdUxFBLbrF2xYx8eN/rSMfUhELXIo2KV
-         ehcbQx9TRcIe1WZ1VZBRnxmq/j193/5XJXKlCDZnCIqb00H5GAdrXFSVkj3Hh+76Lq/e
-         pNlBzx8JJ7y5uFFbmsuoGnx6iDmMzifb5+RaLeBeUNJ0K2TOrcO7xlYnQKLMpiS8Oe32
-         8ezdrtndCpCztNSRsnr5uHRuOiw/lfv8P4V5ArrQYlOtdMw5whoXoDMlEiHgaSXgbGbR
-         HnLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxlisPyfaqrSFX8EKDdpXX8KUmbBKl27xEwj89fTpoZxdwvNxy+OqcfXe+ajvyiN0O4K8GHSVArUnWYGz7@vger.kernel.org, AJvYcCXQiMPYuRKit7WDUK8+NU8Xw4win9740bE4ExEtLpj+qtQDRDpYtqnT3nPQnkkTR5yDENApbziNmng=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ+rvLcvwCVK4mWYS8iyBQzaEH/wNWY6Ya1w5zxzYCwbGsv1LU
-	OqhcHE9ZN2JkLsdMjYs4DYDVPsThkpCMAm+5rIFjjGYmy1HLgWvbVTmcMnv42wqMW3W+qrW5F+d
-	rYZ7b3O/GAot/qVYodqWsgvV6HmgIoGg=
-X-Gm-Gg: ASbGncvSc81TJbl3eJ2P2HMAa3Nh3mG2X5tdI0py9Tdv0JikYfIy0THDTjQCQcfFZHx
-	YHxBY86+vI8cnYJurr9f4zHlxxcZic/XHhV9Ka/aGFiq86rETgVbsoXrkTIn/+1E7RyyuktJsFW
-	8DEYoK3UMyPS4qYeuq84InWAJFOVsDWEGFge/O06Z5BVMXMQ==
-X-Google-Smtp-Source: AGHT+IHJSsyMeqRr5intkwBWnKyNtk3g0mX7tSg7DFc2b0s9uH+82/Y88uv28Rky7EHgItkJ470zIsHiOfZBX18e8pM=
-X-Received: by 2002:a17:906:c154:b0:adb:229f:6b71 with SMTP id
- a640c23a62f3a-ae34fce7aaemr184521966b.5.1751007464308; Thu, 26 Jun 2025
- 23:57:44 -0700 (PDT)
+        bh=HlXypzUn9k5HtMzPQR4dnvaBprfSwN8h+TU/oblYn18=;
+        b=cueLSefokhiLjFpTGx4w4/kvryxydPuTMvqJe4AcFn9jdbOTBlXt9GkJaktttHS/8Y
+         heBedBNomEvAblus9OoOHOWiS2lAsdjUEzuElYMqIMJNkDCaOB2W5PKSIPFx4ODOg608
+         cMk7iD3yAyJT0Kq5ttddGnha6xv7h6mXJN9jOj5l7abZ4zftIRJgfAt6QK85A4Tmoj5T
+         9B3xLX5dLhHhEECPzRkspi4I9qprJSamz6R7zB/4YgsVBZQdfbvddbp09XkiQ4QOo44+
+         +2o/+N1+uuQbv72rpa6V8SxxDpbOYM5kqXXnGGY6LGVVhx2dkPT2cUZMjESWYfizGcB3
+         codw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIw+aJOptBlq1XvoErfVUJRDAVYW+G3HGp/lxPkGbG13LzSH6U7NX+ZlAVMbqUffj8qnGAWehjVGGsZB8=@vger.kernel.org, AJvYcCXoSxSB6Wqta7tka7C3oabuzEujcOKY9Y/oWve2orTd+pqw6FANzcP6tIUUDJZuiMa+adGJSVs2/XtE+nU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrN9fW/Dj1ZBJpXt7KPkKc2VSHApEpp3x1Zvi1tc1S4L6bDr3i
+	83A+GX7qeCyzaGt+YuciwdPSx2/wAB8is9wtIdP6Hc1AgrBfnakZ5d8dqQOmL7pNRi+jzl0Pw4n
+	Y/72oPn0M871O6byTLvv1B2x0kpOvtqhWq0VF
+X-Gm-Gg: ASbGncsBZh8ve75ZFOZ8bSVzPHOCQEcxEGX7lQQgPg/7BhjwI/Nl0rlOHnKEY0ojLzo
+	1xqkkbCzoraBap5DG6kmm9sdBFxf4BoiK30aPZQBcKnMFcqMkOX5sxsckiFiAWsVtN30cvPXVVM
+	twAOjOoM0Yp5gS5sSfReMAN3WT1ACHhEwaKWu3/r8g+QCYSA==
+X-Google-Smtp-Source: AGHT+IEmWbRtk76xsYUG7tUxzQkRkJ1wrXitDqF+1SHZis5RQWtxqj7D4XE70D3ATd2L8od2NXySpP+GMSxtY+FbAJM=
+X-Received: by 2002:a17:907:c15:b0:ad8:9c97:c2eb with SMTP id
+ a640c23a62f3a-ae34fd88214mr167722766b.19.1751007559028; Thu, 26 Jun 2025
+ 23:59:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404053614.3096769-1-yi.sun@intel.com> <175097809157.79884.15067500318866840512.b4-ty@kernel.org>
- <aF4YdFZnAWcZlpbW@surfacebook.localdomain> <aF46cRgzYE4N3A25@ysun46-mobl.ccr.corp.intel.com>
-In-Reply-To: <aF46cRgzYE4N3A25@ysun46-mobl.ccr.corp.intel.com>
+References: <20250624170746.47188-1-abdelrahmanfekry375@gmail.com>
+ <fdaedc62-2beb-4f18-9e4f-f60ef35e1b38@suswa.mountain> <CAGn2d8ND8Gm8E=CwyNbejmOeuqwk32zNCV-EW-k_N6GTOn7aZw@mail.gmail.com>
+In-Reply-To: <CAGn2d8ND8Gm8E=CwyNbejmOeuqwk32zNCV-EW-k_N6GTOn7aZw@mail.gmail.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 27 Jun 2025 09:57:07 +0300
-X-Gm-Features: Ac12FXz2y3A_ioqrN6rCHgk48H91jo-Ky6pl0Onf28Kg7scL2GJHNLk-quO9dO8
-Message-ID: <CAHp75VciZKX8uyZvYsrG6-ffrZbzDEPU4UH06eh9X23qBC0LYg@mail.gmail.com>
-Subject: Re: [PATCH v2] dmaengine: idxd: Remove __packed from structures
-To: Yi Sun <yi.sun@intel.com>
-Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, gordon.jin@intel.com, yi.sun@linux.intel.com, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Fenghua Yu <fenghuay@nvidia.com>
+Date: Fri, 27 Jun 2025 09:58:42 +0300
+X-Gm-Features: Ac12FXx-PMWf0TVMwD4Ez26sP2r6fcj0O18xN9CPdd3xTV4ObZol-SVTCmOY_30
+Message-ID: <CAHp75VfQ9geeSOjSq8GoBuk_8ZrrCrkgpLxn1nXWgHU0dLnavg@mail.gmail.com>
+Subject: Re: [PATCH v3] staging: media: atomisp: remove debug sysfs attributes
+ active_bo and free_bo
+To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, andy@kernel.org, hdegoede@redhat.com, 
+	mchehab@kernel.org, sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-staging@lists.linux.dev, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 27, 2025 at 9:30=E2=80=AFAM Yi Sun <yi.sun@intel.com> wrote:
->
-> On 27.06.2025 07:05, Andy Shevchenko wrote:
-> >Thu, Jun 26, 2025 at 03:48:11PM -0700, Vinod Koul kirjoitti:
-> >>
-> >> On Fri, 04 Apr 2025 13:36:14 +0800, Yi Sun wrote:
-> >> > The __packed attribute introduces potential unaligned memory accesse=
-s
-> >> > and endianness portability issues. Instead of relying on compiler-sp=
-ecific
-> >> > packing, it's much better to explicitly fill structure gaps using pa=
-dding
-> >> > fields, ensuring natural alignment.
-> >> >
-> >> > Since all previously __packed structures already enforce proper alig=
-nment
-> >> > through manual padding, the __packed qualifiers are unnecessary and =
-can be
-> >> > safely removed.
-> >
-> >[...]
-> >
-> >> Applied, thanks!
-> >
-> >Please, don't or fix it ASAP. This patch is broken in the formal things,
-> >i.e. changelog entry must not disrupt SoB chain. I'm not sure if Stephen=
-'s
-> >scripts will catch this up on Linux Next integration, though.
-> >
-> >--
-> >With Best Regards,
-> >Andy Shevchenko
-> >
-> >
->
-> Hi Andy
->
->  From what I understand, changelog comments are ignored by git am and do =
-not
-> interfere with the SoB chain. They appear after the "---" separator and
-> aren't part of the actual commit message. So it should be safe and won't
-> break anything during the integration.
->
-> Let me know if there's something I might have missed.
+On Fri, Jun 27, 2025 at 9:39=E2=80=AFAM Abdelrahman Fekry
+<abdelrahmanfekry375@gmail.com> wrote:
+> On Fri, Jun 27, 2025 at 12:32=E2=80=AFAM Dan Carpenter <dan.carpenter@lin=
+aro.org> wrote:
 
-Please, look how it looks in the repository:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git/com=
-mit/?id=3D671a654aecc710a278bdd30cfd2afef2d4e0828f
-This is wrong.
+...
 
+> > The other things we discussed can be done separately.  It's also fine
+> > to never do them.  I'm not your boss.  ;)
+> >
+> I think I will continue working on it. I'm very excited to contribute
+> to something as big as this .
+
+This driver is a rabbit hole. You've been warned! :-)
 
 --=20
 With Best Regards,
