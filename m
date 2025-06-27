@@ -1,153 +1,110 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903252F1FE2
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0322F1FE2;
+	Fri, 27 Jun 2025 05:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751001241; cv=none; b=EGQCa74X4VBAuX9WtC0t3NorgetwKn8EAcmDeaC6HvcKuTIGDKmhg841H8T6cevwenEGyrlBlJt6+2p1YR48alxz+dQB3wRHTbpPTjPZuHc3wkIG0E7nVdWFR1oZyKJ2yXEL7/L4Vw/su5/Zs7xk9sEmWQKHZOYaYFry7+QxYQk=
+	t=1751001270; cv=none; b=tImik74VErPlXFiCMFa6zMlR6ymfd2/xxmql13xhRHqwYsxzlYMQEarnCr7oY523X/ptTMcRJoX3BtercxIAv3ayP7aHGuyF2/l+29pPNJa5k6HaIAG/QHchQbEKvdcSaTZ57SIIfKytXzWVKlAQ+cgCkcMPj5Xnpka+FiTyh9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751001241; c=relaxed/simple;
-	bh=hZkEnK92kDWug5Thj0Tt1emB9OIed+JIJ9DyrUGQRFI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Jc4kcyHLoHtreuFX0J++sEl5HJLHXdoRIwmY0L6LQDuFgJQmvzB8TYd8j21Zi5U4L6VSSzBCLa0d6/suq30PwMNLLs4IAZg6bqBRpMFxRLU8D5wXTBFw9cUOIkpbXmAEjjZOj+APvYJrNw7SXJYGOiE/CqYGnPrsuPQgDS1epfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uV1PK-00083P-Fh; Fri, 27 Jun 2025 07:13:50 +0200
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uV1PH-005YyH-1I;
-	Fri, 27 Jun 2025 07:13:47 +0200
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uV1PH-0019oO-10;
-	Fri, 27 Jun 2025 07:13:47 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
-	Rengarajan Sundararajan <Rengarajan.S@microchip.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com,
-	Phil Elwell <phil@raspberrypi.org>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	Simon Horman <horms@kernel.org>
-Subject: [PATCH net v1 1/1] net: usb: lan78xx: fix WARN in __netif_napi_del_locked on disconnect
-Date: Fri, 27 Jun 2025 07:13:46 +0200
-Message-Id: <20250627051346.276029-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1751001270; c=relaxed/simple;
+	bh=o8ZQHp4/hDL23QfIAn8Wt8PvTC8gS76JqKcuZRP/FWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gX9lwNIfxMz06mF2C4p4/BvKC4cMAZrgAvuKsfQ55d7Is03KaPvfHUMrn3ly78das/Tt3cR26S+CFbxyzbo+G3yc0odD2WJ6yfI5kKofOrI4tN2/joqIm5UHNDOCvEAlYzQ0tNPkQk3Y3Xk/83oKFgrEFS4DLfVlf2qLIYeVuH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nDezvZ+M; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nDezvZ+M"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-73c17c770a7so2078592b3a.2;
+        Thu, 26 Jun 2025 22:14:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751001269; x=1751606069; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bhc4F3bUMNlVYBI4FrEiquw9o4SRTI6Gsg6n63VV2NE=;
+        b=nDezvZ+MU53VusahGb1HXaZQTmswJItaNOSdH4ZpPgbdzFKE/oAYR7TzH7q9WpovYy
+         vzjNZ1j6prJ0Pi9julfCo+vLwJjBaoDxnUxWQwEm8zSaF5sDSx2/oyujtBXZgjQF2wrH
+         AO2bR0M3fZLq2pINmhgLM2+SJHrTMu1qOsTi7nWc+gwKSwNsd/UFpzwkuTcU0h8byhyy
+         7tQOFGivXQogOzuns3Ig55MuPBxYVK4dJlbkyXpkFOqLjp9Ked1iN+Z7kSqhFSzV5Jt+
+         kqKcpL2inzF2IET51B4CPyEfH0NBeB81mvvMwBq2FGvcpoGg0vaIMdN6M+zFMviwxu/b
+         f5UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751001269; x=1751606069;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bhc4F3bUMNlVYBI4FrEiquw9o4SRTI6Gsg6n63VV2NE=;
+        b=nCmF91UvrUTMhMWaLeijSzmwvhX1Njd2l91jCkO4Jk34itjeh1ZhXIWNuEj/a2Sn9f
+         qzbizkW/1LP6ENXAIUCPVNvkKbOa39fc3a7jinHlS3Pvtxpl7UE3a4uI9JFSSrPPN+sV
+         88cNBvnoJwMbNeo+ZhyKw0yvOgHLO7FLS1/1IeBTuGyw4/3LuWsQeYDWPbJIHy/lhL4t
+         le06YwfCjFqW5FMddHA8bfF5pNtrP/Tc5/Ze6leXYl67q2mUjGUFFMqM39/tpQd2efUs
+         thcoHs7XgaBc7HH/jMmleEG/gyX7kaObkyYe7E4PVDMEvfJxWau37bfONnOAkdvGXb2n
+         83gw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWsPTmPMvsRQG5lKNIhCaSJR25jjjWU3H5lePgqr7RUGyuVOAGrh6RJaD4oV0GcOemDtqhlFbbrTqoA882@vger.kernel.org, AJvYcCVs9TS2r5pCiPc1HM4rH3eB+RBYlovnYCVlWPcGkVOl31wybRQzi5wOjoEyCQ2NUBa2FPQZHMzbd5T25Q==@vger.kernel.org, AJvYcCXoUT8/z1aYLXpSsTe3mqbscb1WsqWiRZrfbrGGCoMZXHV2Ocif+GbwmJLKYSivo2VAkYnNWKqnZ8t4arZxD21YDCEQVw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YypXmkqyzDrXM0iquCyThmJSv95sWfXQcxwE2+tb+7O4bKp6HH8
+	E/05X74inSXb6YpQO/fAvB0h9QfTjhzNBbTvvMvMfTjum7wx+K7f+81Q
+X-Gm-Gg: ASbGncu62on+inPuhsm2YlOqEJ+zTRMJ0Kqcvo/BUUi+jy3wbULrp32fuBWm1+tn/wv
+	7u3AUTzCNJM1H+kwUkECwbZ7KWylJVgdyhoedAV6MqJRqWvauCQZTME8erT88mUNxa3y8848xgi
+	R5BNdE+zUidlEuy/Tiy8o5qb2aXv15e4iKeIJYgditZZMZ62zSDjVoyDlESN6aGmaVAcMhDNBRd
+	8241ub7VjthGWuAErV3+qQBsaAieksJrRKRkcFF7TpGoGJhSLTOEo4/hkZMtwGT8R3LPeT8Pxpo
+	chLZFR0KkFQa0v7LwEkQA/MViJlee7SeKBaIBFYp1LjGGZQLLfs6nNjXuUoX1Q==
+X-Google-Smtp-Source: AGHT+IFXEsyBMb/CAdGfjgJitTkGAT8Tvs9bfEcnJN13gSVQY2QQe/8p4thG2wM4PAe2ueMPgyt9Pw==
+X-Received: by 2002:a05:6a21:328c:b0:1f5:931d:ca6d with SMTP id adf61e73a8af0-220a113ca68mr2413528637.1.1751001268908;
+        Thu, 26 Jun 2025 22:14:28 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:d0c7:d92:6a17:eb62])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af557b3adsm1228434b3a.106.2025.06.26.22.14.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 22:14:28 -0700 (PDT)
+Date: Thu, 26 Jun 2025 22:14:25 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Vishnu Sankar <vishnuocv@gmail.com>
+Cc: pali@kernel.org, hmh@hmh.eng.br, hansg@kernel.org, 
+	ilpo.jarvinen@linux.intel.com, tglx@linutronix.de, mingo@kernel.org, jon_xie@pixart.com, 
+	jay_lee@pixart.com, zhoubinbin@loongson.cn, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
+	platform-driver-x86@vger.kernel.org, vsankar@lenovo.com, Mark Pearson <mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH] x86/Mouse: thinkpad_acpi/Trackpoint: Trackpoint
+ Doubletap handling
+Message-ID: <5jgix7znkfrkopmwnmwkxx35dj2ovvdpplhadcozbpejm32o2j@yxnbfvmealtl>
+References: <20250620004209.28250-1-vishnuocv@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620004209.28250-1-vishnuocv@gmail.com>
 
-Remove redundant netif_napi_del() call from disconnect path.
+Hi Vishnu,
 
-A WARN may be triggered in __netif_napi_del_locked() during USB device
-disconnect:
+On Fri, Jun 20, 2025 at 09:42:08AM +0900, Vishnu Sankar wrote:
+> Newer ThinkPads have a doubletap feature that needs to be turned
+> ON/OFF via the trackpoint registers.
+> Systems released from 2023 have doubletap disabled by default and
+> need the feature enabling to be useful.
+> 
+> This patch introduces support for exposing and controlling the
+> trackpoint doubletap feature via a sysfs attribute.
+> /sys/devices/platform/thinkpad_acpi/tp_doubletap
+> This can be toggled by an "enable" or a "disable".
+> 
+> With this implemented we can remove the masking of events, and rely on
+> HW control instead, when the feature is disabled.
+> 
+> Note - Early Thinkpads (pre 2015) used the same register for hysteris
+> control, Check the FW IDs to make sure these are not affected.
+> 
+> trackpoint.h is moved to linux/input/.
 
-  WARNING: CPU: 0 PID: 11 at net/core/dev.c:7417 __netif_napi_del_locked+0x2b4/0x350
+No, please keep everything private to trackpoint.c and do not involve
+thinkpad_acpi driver. By doing so you are introducing unwanted
+dependencies (for both module loading, driver initialization, and
+operation) and unsafe use of non-owned pointers/dangling pointers, etc.
 
-This happens because netif_napi_del() is called in the disconnect path while
-NAPI is still enabled. However, it is not necessary to call netif_napi_del()
-explicitly, since unregister_netdev() will handle NAPI teardown automatically
-and safely. Removing the redundant call avoids triggering the warning.
+Thanks.
 
-Full trace:
- lan78xx 1-1:1.0 enu1: Failed to read register index 0x000000c4. ret = -ENODEV
- lan78xx 1-1:1.0 enu1: Failed to set MAC down with error -ENODEV
- lan78xx 1-1:1.0 enu1: Link is Down
- lan78xx 1-1:1.0 enu1: Failed to read register index 0x00000120. ret = -ENODEV
- ------------[ cut here ]------------
- WARNING: CPU: 0 PID: 11 at net/core/dev.c:7417 __netif_napi_del_locked+0x2b4/0x350
- Modules linked in: flexcan can_dev fuse
- CPU: 0 UID: 0 PID: 11 Comm: kworker/0:1 Not tainted 6.16.0-rc2-00624-ge926949dab03 #9 PREEMPT
- Hardware name: SKOV IMX8MP CPU revC - bd500 (DT)
- Workqueue: usb_hub_wq hub_event
- pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
- pc : __netif_napi_del_locked+0x2b4/0x350
- lr : __netif_napi_del_locked+0x7c/0x350
- sp : ffffffc085b673c0
- x29: ffffffc085b673c0 x28: ffffff800b7f2000 x27: ffffff800b7f20d8
- x26: ffffff80110bcf58 x25: ffffff80110bd978 x24: 1ffffff0022179eb
- x23: ffffff80110bc000 x22: ffffff800b7f5000 x21: ffffff80110bc000
- x20: ffffff80110bcf38 x19: ffffff80110bcf28 x18: dfffffc000000000
- x17: ffffffc081578940 x16: ffffffc08284cee0 x15: 0000000000000028
- x14: 0000000000000006 x13: 0000000000040000 x12: ffffffb0022179e8
- x11: 1ffffff0022179e7 x10: ffffffb0022179e7 x9 : dfffffc000000000
- x8 : 0000004ffdde8619 x7 : ffffff80110bcf3f x6 : 0000000000000001
- x5 : ffffff80110bcf38 x4 : ffffff80110bcf38 x3 : 0000000000000000
- x2 : 0000000000000000 x1 : 1ffffff0022179e7 x0 : 0000000000000000
- Call trace:
-  __netif_napi_del_locked+0x2b4/0x350 (P)
-  lan78xx_disconnect+0xf4/0x360
-  usb_unbind_interface+0x158/0x718
-  device_remove+0x100/0x150
-  device_release_driver_internal+0x308/0x478
-  device_release_driver+0x1c/0x30
-  bus_remove_device+0x1a8/0x368
-  device_del+0x2e0/0x7b0
-  usb_disable_device+0x244/0x540
-  usb_disconnect+0x220/0x758
-  hub_event+0x105c/0x35e0
-  process_one_work+0x760/0x17b0
-  worker_thread+0x768/0xce8
-  kthread+0x3bc/0x690
-  ret_from_fork+0x10/0x20
- irq event stamp: 211604
- hardirqs last  enabled at (211603): [<ffffffc0828cc9ec>] _raw_spin_unlock_irqrestore+0x84/0x98
- hardirqs last disabled at (211604): [<ffffffc0828a9a84>] el1_dbg+0x24/0x80
- softirqs last  enabled at (211296): [<ffffffc080095f10>] handle_softirqs+0x820/0xbc8
- softirqs last disabled at (210993): [<ffffffc080010288>] __do_softirq+0x18/0x20
- ---[ end trace 0000000000000000 ]---
- lan78xx 1-1:1.0 enu1: failed to kill vid 0081/0
-
-Suggested-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
-changes v2:
-- Do not move NAPI enable/disable to link up/down callbacks.
-- Remove redundant netif_napi_del() call from disconnect path.
-- Update commit message to accurately describe the root cause and solution,
-  following feedback from maintainer.
----
- drivers/net/usb/lan78xx.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index f53e255116ea..e3ca6e91efe1 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -4567,8 +4567,6 @@ static void lan78xx_disconnect(struct usb_interface *intf)
- 	if (!dev)
- 		return;
- 
--	netif_napi_del(&dev->napi);
--
- 	udev = interface_to_usbdev(intf);
- 	net = dev->net;
- 
 -- 
-2.39.5
-
+Dmitry
