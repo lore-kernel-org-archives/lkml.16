@@ -1,250 +1,630 @@
-Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011013.outbound.protection.outlook.com [40.107.74.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496E9EAD0
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750999956; cv=fail; b=TdPZtdd8wNa3roH5asHYQGwGB+6kAO14HOxlr7Qx+kExSkpIsJjYp4Fs7huhOsOxDxwaTe4rDone/yZkXT/mFatgTOaCqDfEFiCsVYsSv+cnVVancXuQweDAUxswMqA5zHFctpNOkIKt7e+2FyJqW4cdcqSFT8hCi8qe3BDNl9w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750999956; c=relaxed/simple;
-	bh=WdZpcgbwZni+8hw/qAzHZhIFVmJEq55d217UsCt7gJ4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=aITwbnxUHWLSd8w06quW564cXfGHneUgxim7YUfHYPJMe/Ox3SMRhV37mEUwWFoc95maO82rtkE8C9T+Y8DRQJVSkHF0+RvNjDJWwpVUWz4YuLQ9OfrPeoZowJEMUUB0gmmW9u4GC0Gc4i24WjvYXRcrXKz04Dmytc7jkVy9D+0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=NDZC0Oyo; arc=fail smtp.client-ip=40.107.74.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE931D5CF2
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751000041; cv=none; b=hHrE1JT/wQ/wejCJEIexs9rKwYPCY3mp1FIik+2nr6W849AJfZ3JfnQLkeNOYxgbItGXBN8rJ/VujUelWO/PghHswMnRBMG8aqR/Gccup5Vk4l6IG1b3UEhH29H887NtR7QFG5KWYy8LsDdpgXZvyS3MyUmPnI92BHfNSWemvIY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751000041; c=relaxed/simple;
+	bh=483uB6UzX2TgzfCyZzzGHymgeL//x7AkYDxxGnp6K6I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZvOZ8EYiqtV/Zw8jM1iCB/5HCJYleSQDDHsHf1i9RN2qRrfAUQkkn2WJv80jCUgf3yUaMQXZhe8prbv0ciIbqo5geNTaCk44ZHnvHh7UD3k0i4ZakLOo8xvH2ViEFoMee4ZE/8amoKUk971WlampBzbZNukmf8x0jUhrLiqHNE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mymVmmFu; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="NDZC0Oyo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hP36VL1LhaA/zvklg1EJJMECGJOTLsuACukGuXRZuOYLeN/erflv2QQ3xacvs4AErI7bdhzp3MCRcBKKWc8JpPzAZbiWB4JkWj4ATZGeQQPXK9eKnrld5Ljmffp5fU7AzqjDj+XnnbquvKOmae2BHWkc2OKFwdyq6CWY2XZL7u6geG5eAmC+cxXDsOSRXDg6qkjTZzeu20zR0EVrsfDdVSsc8SBHFjTMZPiKOuhm3pl3edXVfhvjwGY0OM2+yThGT1I0iDJ0HrWJfzJ1Exttl7tDtfJlaSlak1qbI/I3m2XqJFb1ac+QpOYkGa0XxK78oUUl2mFF2PSRrCzkxujnFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5DDjxyeBKImDzw9xh6AGx1+8rPWRDpNBVrFACoWSbOY=;
- b=f3/ksKhTSS0iyQBeiGbJ2SrqE+b7t11+J7x8phSFO0TO2nJd71yZG4QIiXyWCDkLWOsDoZq1teh/oVvtxRCEuRBxeohrwqNtyLZXb81bVAxRnNUd9gOjS38cLqHTbff2XfXxR6sv2F18kjcnTAmTkV1BaXnnh6GibWzLZlrOIHbdVwh0owpjeMgi7MWdlD/KLLso1ntQNDGCBQ+4TsE9P3WLcJIRkP2TDWNedcwTXj489rmCKiFjlJwhX0UPW3uS5aXlDszb7x4XoxN6k8Pn/JmKiGuE96wEIza4dE9puFUt/MZUPJ1mQqXhaMgGbTuyIRNM8naYuCFYsizrl4pcPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5DDjxyeBKImDzw9xh6AGx1+8rPWRDpNBVrFACoWSbOY=;
- b=NDZC0OyofIMcvxQ0QP2wTCaCzz6M/lApbql5FVAjji4Z744TnOGHsxdeo69RvjpT4o+sUMLher2RnGhmP/jE9eUJVXbOaHIBcPucDwePUUWB+BnFiPf+fqmgWjNyVO4GrpBrwzckfj09fJZuyYoxFFaO+cOtNEZodnSAHo5/Eug=
-Received: from TY4PR01MB14282.jpnprd01.prod.outlook.com (2603:1096:405:20d::9)
- by OS7PR01MB14882.jpnprd01.prod.outlook.com (2603:1096:604:39a::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.26; Fri, 27 Jun
- 2025 04:52:31 +0000
-Received: from TY4PR01MB14282.jpnprd01.prod.outlook.com
- ([fe80::37ea:efd9:8ca0:706a]) by TY4PR01MB14282.jpnprd01.prod.outlook.com
- ([fe80::37ea:efd9:8ca0:706a%6]) with mapi id 15.20.8857.026; Fri, 27 Jun 2025
- 04:52:28 +0000
-From: Michael Dege <michael.dege@renesas.com>
-To: Vinod Koul <vkoul@kernel.org>
-CC: Kishon Vijay Abraham I <kishon@kernel.org>, Yoshihiro Shimoda
-	<yoshihiro.shimoda.uh@renesas.com>, Uwe Kleine-Koenig
-	<u.kleine-koenig@baylibre.com>, "linux-phy@lists.infradead.org"
-	<linux-phy@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 0/2 RESEND] phy: renesas: r8a779f0-ether-serdes: driver
- enhancement
-Thread-Topic: [PATCH v3 0/2 RESEND] phy: renesas: r8a779f0-ether-serdes:
- driver enhancement
-Thread-Index: AQHb5nLHBZp8vIQSbEWglXyRyngmqrQWDtmAgABhEEA=
-Date: Fri, 27 Jun 2025 04:52:27 +0000
-Message-ID:
- <TY4PR01MB142825081D5279CA2D8251EBE8245A@TY4PR01MB14282.jpnprd01.prod.outlook.com>
-References: <20250626081723.1924070-1-michael.dege@renesas.com>
- <aF3Qp730y_Vusb-z@vaman>
-In-Reply-To: <aF3Qp730y_Vusb-z@vaman>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY4PR01MB14282:EE_|OS7PR01MB14882:EE_
-x-ms-office365-filtering-correlation-id: 6c357c49-fa4a-43bc-a166-08ddb5366abb
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?E3PAT8eT8/vwVHIxVMpe0uyKEsgTi36u69CesgYTCjf5/xhm+iDLEh/ZA7v2?=
- =?us-ascii?Q?sscCY12914dFUL7ygZSYTnnlhIkRxF6mmyKKfLcV6eToUOBNU3YLN2UIkxop?=
- =?us-ascii?Q?LftKHtZf8m9iZu8Sf3lV1JMCpCmryB8zFYLx5sJr4bBLdp68K69WOAH+nlvW?=
- =?us-ascii?Q?Kh4Pvl9uiMpGH9OIA8F5kJV2g85KoKopgSf2NBvhkN11djdU/kcDtSgz9RwW?=
- =?us-ascii?Q?/9GBq5Ed52qjVoGLyxCRLXOsAtRbsnqiEk6z4/xTluB6FXi+EXX84YmPN+hN?=
- =?us-ascii?Q?c0Xedyq8FSKRRHOfYiPu0JEM33DF1En4JMTVKrpF9I47jDB9ldLczKd6/x9C?=
- =?us-ascii?Q?pRuGD4OI0uh8WMIeK9X+skTwrkB+5W2PM0XBZ8cxEgXQimwPsZepZ5G78Bfz?=
- =?us-ascii?Q?FtCIxa8dTipF/bsmlJilY8FlOPT2gRcfnFWn33/RFE20IfXC5pOAvJZxAfQA?=
- =?us-ascii?Q?HvBtWU5YV/3xgkyapC0QPC6ryFFlbrXadDECyjDLSA3G++/YolTa/uIq6ca5?=
- =?us-ascii?Q?d/YY7SCXNWDyW8c81A61pmBumwGQ1B8iGKs/cUtuG8TznxXfNFec1mXJWy1V?=
- =?us-ascii?Q?7MrlblL/vDGYG7l7/pnXtwgIwEByYQNbnP73klV58jHBA7nBBe1kyin/8GLB?=
- =?us-ascii?Q?IHNhBtuFLEw0dBwuv8HrI1X55KWRROKkPshKInj+AUBzZegvtck3X2TfKfNP?=
- =?us-ascii?Q?QBJjuQ5jAfqCm5jXscsspwUY9BgZZF+m/8ZIBJgF2QrhhhtK3b8kKGcY5J+I?=
- =?us-ascii?Q?UMjdX3FlsPetTwVc4q2OQEF/d/fBDkLFtLbc7iD/KlI6wcyMotHrOr7a2a41?=
- =?us-ascii?Q?QIn+0J+fhpe3Ao5bNN+C8k9BJce8TZMOStvqFIvmhvwB7Q5yU2CaYzp+Cz62?=
- =?us-ascii?Q?A+JBKwI6gLv3aAEYHilhf5PWZftlQfYj+FkAj29ubVdBwuBtxgUD+lEHb/+d?=
- =?us-ascii?Q?SwLSaRDojQqUESlPdxt2EOWeFeyyW79OJsvJ4FAeGiBJGJ9pSgdfVtXe8I1o?=
- =?us-ascii?Q?nVq+H/iHl9NZqTqLhn51ml2F/08Okp24EzpKehwFjNgf95psKJ5Ivlwo68cF?=
- =?us-ascii?Q?oDd2UoDXvTxsHVpuJY5JhhLw2had3Ittu5TcCLwaUB99Pg6AJCyT5Fo4I3Tz?=
- =?us-ascii?Q?vh6l13I828ytAXPIJ0DmPgcGPJ9YYx77bNWcqVWsiq9qR2hvacbilWQp+4FI?=
- =?us-ascii?Q?P3zP+xy3CqSBQLpm3jYTtUU41dY/utNECbp4672YjlvKAPG+wQKPxVjF23SY?=
- =?us-ascii?Q?FCRUVOPCB3Yr2DPzRGQmHQdFUYXYJVBBd1k3XC7aKxVLbKJRGAL109ul+mfa?=
- =?us-ascii?Q?taw1l0WQ8w+Ew9YoRC2dtJDBteYBBMGjh25CKRJK+ClX7TMOGh3SDo1/Exn9?=
- =?us-ascii?Q?jefCW7gMVZq1roIszGoG5TkeBls2Ijc1dJQ2tw2ePJB0cHiQrrDPqDPAOsT8?=
- =?us-ascii?Q?7M3LN2MAZepudZyOmgSnL6Jl3d3EEtt3wvaKgOpS4oGiTpr5V0hDGw=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY4PR01MB14282.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?rfuiYqBf8js47Fyt/1oSMX8KoT/M5SJ/UrSp1QQ6kqFARf3pIUMJEM5oxyC+?=
- =?us-ascii?Q?efDzK9MZuNd/wt5xuwwaha5c6GMyqno9IU3iqT0VgCNCYdafxiDl6Z9MEJqJ?=
- =?us-ascii?Q?YVjgC7+kB0x1udajyRlu1R2Vbp6iqiPzBMUs4V3yFDRppBLHcqknMkGl7IBL?=
- =?us-ascii?Q?7JT3AfNfauBogyzN1LpsLzcYo9Hq5IFiOX/JthCpQViH1+bj4zg3LfY5eTsu?=
- =?us-ascii?Q?Y6QX9FtpnbuduedxSHiF5IIuxXKU4A4WR26SToZoLofKBmG3zxjKtUBUjrXj?=
- =?us-ascii?Q?2Ti74TxVAimx3Q4BZW2qjpGAQ0EeYXzfCf226X9F8mqMzPx02M3bqVbKLAxO?=
- =?us-ascii?Q?QnLwYKZUt/0qXUnkcCKDJQbxSf0UEuWVJu8AUzZxqjjxxN2XW2aKfQ7NSddz?=
- =?us-ascii?Q?t0ZcB/j+VORkd480Mq75mEk1mMmu/qaZK8h5WIUvTudY/2nInNfzyHw9Bv3E?=
- =?us-ascii?Q?UAxamEng2OKaLb+vFnMQpFj3NlCSSOKqLc6rMzvUxIPJ3t7OrlVCQU+CBNAf?=
- =?us-ascii?Q?gFWygz5DI7OARJsm5ZMbUvAQykZMMjtGd5BSgmUubWJSOOAIMEvuoLivRUbu?=
- =?us-ascii?Q?56+hCYaBiLohyoHkjfuw0hdLcWDdpfMrYvU6/eXo2JUIfufvlNRnQ6kByIOw?=
- =?us-ascii?Q?ZXkFd1ckAbAw2NQx5MVyeCZDcMaz7nCKTn6jnRhYeN4iwr4bkFvpPtvDmUEN?=
- =?us-ascii?Q?9iO5pOQDjZ7zNM54+OT4Ya8UvNSvJQlrfks8uA9rIS26xyz0bo1LdD0S54cp?=
- =?us-ascii?Q?ZhzxI7LrgU4silLjxdu9eAJOioHjdCRcRCdS5GevYR2o5s86e0p+SR2wUFNO?=
- =?us-ascii?Q?fWPUKei0KyXKVIn3YKUIUn5My49fFExr9xRUScr5Gl36RPpcm4405RNaj+Z2?=
- =?us-ascii?Q?D6AE3UvpHzGIhTkLbieOS8ppjEsu98cWDV+OgoHH6nfhEql30DgChwV+INoK?=
- =?us-ascii?Q?n3a9HaTXj/BrX7xO8y/GcjdEeWAT5pUTKEzu66jhPt+Ws9RXxSoIUnAu43ec?=
- =?us-ascii?Q?SLu+21OZevAG2QmBe+LDRHoJtXxnHdp+0k5mZB0hUpujKwM1Bt3T0T/qsaRv?=
- =?us-ascii?Q?cs3uZKTbOzfLM1A6AUdrYSEoeEafYTFv5MSSXkE08M7SEL555OY1ag6PMoWR?=
- =?us-ascii?Q?TkQpulzNr/51CSYkeZDXOuQ+IvKG5uufQsZHKJ60NyAXVYO7bRcWf0jDOLoL?=
- =?us-ascii?Q?db9gNrAVqzhDx2LnXyK/jFGJpynEf0vkHfV91YG5vWi/viRzpwlMJ5BTGxT6?=
- =?us-ascii?Q?imCUaejbU4j5BGe1NxPQg42/9/VIlfigqAkmx01mhCQMM5wZYVn9xpUopwqd?=
- =?us-ascii?Q?vB9mGNPdK75QEcJg0zBD2buda9RurkPN+rT7rUU9Q35Lq9q7xoWpPvmV1//T?=
- =?us-ascii?Q?uKLkKnQz4F+RZRIcjP74EYavIdP6QfFNkkKf0qpx6Saz/n3YBbA7dkXErQHG?=
- =?us-ascii?Q?SO15be4Bo88x86kgLAi3FKfG8OiKgn0zu97W5UHFrfcEP1+HvXUoz7iS6kUC?=
- =?us-ascii?Q?jOa9MP2D4H/VSHaeuUQoFAiB+Fvnq6ksmuBkLtHOlt+sKIPZVoflZ98bpvXz?=
- =?us-ascii?Q?9nIuIKyfRwS5XymLxZPnz/ihtZSxZVsLop92DT5i?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mymVmmFu"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-237f270513bso74695ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:53:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751000038; x=1751604838; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DtGyqXmElvAld4zBVXkgxOmHALsnPQCTadiFmCBdWaw=;
+        b=mymVmmFuNagM1bLnkwA+QbAnjJj+KRJhvyTIKF9bews5RIiU1XZwrk1H3SrXo3Gx6Z
+         ZskB5VCFyx5RZcVZTVlyQeDI4Wi4KoJ6EQ5A9Q9K7SbP2Gdfi+l/IgYbK7xUh3KvIoYE
+         GWuLe7PhTHskq5QVvt5aTE2ymgEnR7FoTHMiDCeiV09lmnur78TQJrZHyPEmU2Mure+s
+         42kaaW4Dmk3cZeTCifLpFK+V9z4+BdaO1qi0KM/sN2m3fm25+xFKDGMZUTctW5eMsp8L
+         6mADiyU+sK02PXFgpecvGc/1OdvUaiHKZ3VrK3BGYdZSS6b8L/wlaqQfuNVFdBw1oPsS
+         +RkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751000038; x=1751604838;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DtGyqXmElvAld4zBVXkgxOmHALsnPQCTadiFmCBdWaw=;
+        b=GHcGrhheA2Z7XDGnj0DOb0GttQyEiTWHkgKljVN1Zhg+VCeDjVJB7uTFWWC8bfUNon
+         FsxtBU6I6tT8O5KdH34wCr13NYCBeSFzgxeQrFNGgVEKFzzdKTg2deFqEa7yahW5FJqa
+         P0japjduwcjPBlxN27pLGVACOaKb/tilDsVNLuEHS3eG24fruDzPMu34vYGVTykO4ows
+         w3NDjKWozrj9+ZMt9T/rofxycMCwDE7igIedwmpxYvdE3qwD7ACd55w2/a5gavwWEPdP
+         uGeOoawmiB/8Jap51OBX8yzk2NnymNJNZU8zoNLQtfAae0BD1OAGZ8PdRsPqVoja695a
+         SKNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUI2SzIAudQbZBoHBO8RuvupOuaYMCDgqLYxnTlTFUlC9Cp9Oa9aQ/+4KNSph6gxLgUDRqX71ZCQN+/ko=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1FCI5mVt5qIWxwndIz0Ow7WFLE7cWbkIQsRKLkHybcj5iqtpS
+	ccNfY1FerOz1t+2jDBWxc9xwoFU2Z5qqHLjxIPaOGw/S5YyqPlkNblger6ZSViXYbV3PjdMkOwh
+	if6ONSbVJdCEFatIKUhomHubpP+gVNy/SwYqbbefp
+X-Gm-Gg: ASbGnctsyH3J1SMW/0UcKfMHHGwBAx13qm1pef5TWt+zpW7C4e/5oRQWXZWUApNAvIs
+	das4O1SSYWFVlV2uOOOfZKnw95p/2r2ypKPhmbiBD0gnUkrs3nds7acV1ejHHi8vZNxipyMud+n
+	+mfBCrePSmdHG3DlCR1wgUaIaCNYBYoPUWyArH8ZXDZK/o
+X-Google-Smtp-Source: AGHT+IFzJBBQmFYQ7cI3zeLxgkj3kZjv08y1P1BPNH+vs22PKstYf/pcm/7eHWqo/C7HnJCN2nOoS4/62QqjCLEYKY0=
+X-Received: by 2002:a17:903:1b04:b0:22c:3cda:df11 with SMTP id
+ d9443c01a7336-23ac4be08camr1874065ad.10.1751000038176; Thu, 26 Jun 2025
+ 21:53:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY4PR01MB14282.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c357c49-fa4a-43bc-a166-08ddb5366abb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2025 04:52:27.9416
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: y/1mCX1ju6+YW5xdq2IrO3xm0CLppO68WqmN+qS7qv1o5Zvx2duqeQ5T6uw578aaFB3VzWj3ytTOS7PJuwQmygfmGJLkr3FlIf9xlK3raFo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB14882
+References: <20250417230740.86048-1-irogers@google.com> <20250417230740.86048-7-irogers@google.com>
+ <aF3Vd0C-7jqZwz91@google.com>
+In-Reply-To: <aF3Vd0C-7jqZwz91@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 26 Jun 2025 21:53:45 -0700
+X-Gm-Features: Ac12FXx6BrCLeEYICFnuYkeyjAzfSWOJvLC5yE48R4tIzxAMokm7LIFabW4mKME
+Message-ID: <CAP-5=fV4x0q7YdeYJd6GAHXd48Qochpa-+jq5jsRJWK36v7rSA@mail.gmail.com>
+Subject: Re: [PATCH v4 06/19] perf capstone: Support for dlopen-ing libcapstone.so
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Vinod,
-
-> -----Original Message-----
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: Friday, June 27, 2025 12:59 AM
-> To: Michael Dege <michael.dege@renesas.com>
-> Cc: Kishon Vijay Abraham I <kishon@kernel.org>; Yoshihiro Shimoda <yoshih=
-iro.shimoda.uh@renesas.com>;
-> Uwe Kleine-Koenig <u.kleine-koenig@baylibre.com>; linux-phy@lists.infrade=
-ad.org; linux-
-> kernel@vger.kernel.org
-> Subject: Re: [PATCH v3 0/2 RESEND] phy: renesas: r8a779f0-ether-serdes: d=
-river enhancement
+On Thu, Jun 26, 2025 at 4:19=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
+> On Thu, Apr 17, 2025 at 04:07:27PM -0700, Ian Rogers wrote:
+> > If perf wasn't built against libcapstone, no HAVE_LIBCAPSTONE_SUPPORT,
+> > support dlopen-ing libcapstone.so and then calling the necessary
+> > functions by looking them up using dlsym. Reverse engineer the types
+> > in the API using pahole, adding only what's used in the perf code or
+> > necessary for the sake of struct size and alignment.
 >
-> Hi,
+> I still think it's simpler to require capstone headers at build time and
+> add LIBCAPSTONE_DYNAMIC=3D1 or something to support dlopen.
+
+I agree, having a header file avoids the need to declare the header
+file values. This is simpler. Can we make the build require
+libcapstone and libLLVM in the same way that libtraceevent is
+required? That is you have to explicitly build with NO_LIBTRACEEVENT=3D1
+to get a no libtraceevent build to succeed. If we don't do this then
+having LIBCAPSTONE_DYNAMIC will most likely be an unused option and
+not worth carrying in the code base, I think that's sad. If we require
+the libraries I don't like the idea of people arguing, "why do I need
+to install libcapstone and libLLVM just to get the kernel/perf to
+build now?" The non-simple, but still not very complex, approach taken
+here was taken as a compromise to get the best result (a perf that
+gets faster, BPF support, .. when libraries are available without
+explicitly depending on them) while trying not to offend kernel
+developers who are often trying to build on minimal systems.
+
+Thanks,
+Ian
+
+> Thanks,
+> Namhyung
 >
-> On 26-06-25, 10:17, Michael Dege wrote:
-> > Hi,
 > >
-> > This patch set adds the following to the r8a779f0-ether-serdes driver:
->
-> I have a v3 and v3 resend and both are not threaded properly, Please post=
- properly as a series which
-> is threaded and not broken...
-
-Please bear with me this is the first attempt to upstream a patch. I used b=
-4 to produce and send this
-patch series. I did have trouble when I tried to use b4 to resend. And ende=
-d up using "git send-email"
-to resend.
-I don't quite understand what you mean by threaded and what is broken. Coul=
-d you please give
-me a hint what is wrong? I am willing to learn and would like to get it rig=
-ht.
-
-Best regards,
-
-Michael
-
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/capstone.c | 287 ++++++++++++++++++++++++++++++++-----
+> >  1 file changed, 248 insertions(+), 39 deletions(-)
 > >
-> >  * USXGMII mode support for 2.5GBit/s ethernet Phys
-> >  * A new configuration step suggested by the latest R-Car S4-8 users
-> >    manual V. 1.20.
+> > diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
+> > index c9845e4d8781..8d65c7a55a8b 100644
+> > --- a/tools/perf/util/capstone.c
+> > +++ b/tools/perf/util/capstone.c
+> > @@ -11,19 +11,249 @@
+> >  #include "print_insn.h"
+> >  #include "symbol.h"
+> >  #include "thread.h"
+> > +#include <dlfcn.h>
+> >  #include <fcntl.h>
+> > +#include <inttypes.h>
+> >  #include <string.h>
 > >
-> > Changes in v3:
-> > - Fixed wrong macro (reported by kernel test bot).
-> > - Link to v2:
-> > https://jpn01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flor=
-e
-> > .kernel.org%2Fr%2F20250527-renesas-serdes-update-v2-0-ef17c71cd94c%40r
-> > enesas.com&data=3D05%7C02%7Cmichael.dege%40renesas.com%7C7e7e33dfe98345=
-c
-> > af5e308ddb5050507%7C53d82571da1947e49cb4625a166a4a2a%7C0%7C0%7C6388657
-> > 55354137682%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLj
-> > AuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7
-> > C&sdata=3D9sa0DnmyB5rRb4DSOlzz4%2BguzMxaMcP8W40OVS1ABZU%3D&reserved=3D0
+> >  #ifdef HAVE_LIBCAPSTONE_SUPPORT
+> >  #include <capstone/capstone.h>
+> > +#else
+> > +typedef size_t csh;
+> > +enum cs_arch {
+> > +     CS_ARCH_ARM =3D 0,
+> > +     CS_ARCH_ARM64 =3D 1,
+> > +     CS_ARCH_X86 =3D 3,
+> > +     CS_ARCH_SYSZ =3D 6,
+> > +};
+> > +enum cs_mode {
+> > +     CS_MODE_ARM =3D 0,
+> > +     CS_MODE_32 =3D 1 << 2,
+> > +     CS_MODE_64 =3D 1 << 3,
+> > +     CS_MODE_V8 =3D 1 << 6,
+> > +     CS_MODE_BIG_ENDIAN =3D 1 << 31,
+> > +};
+> > +enum cs_opt_type {
+> > +     CS_OPT_SYNTAX =3D 1,
+> > +     CS_OPT_DETAIL =3D 2,
+> > +};
+> > +enum cs_opt_value {
+> > +     CS_OPT_SYNTAX_ATT =3D 2,
+> > +     CS_OPT_ON =3D 3,
+> > +};
+> > +enum cs_err {
+> > +     CS_ERR_OK =3D 0,
+> > +     CS_ERR_HANDLE =3D 3,
+> > +};
+> > +enum x86_op_type {
+> > +     X86_OP_IMM =3D 2,
+> > +     X86_OP_MEM =3D 3,
+> > +};
+> > +enum x86_reg {
+> > +     X86_REG_RIP =3D 41,
+> > +};
+> > +typedef int32_t x86_avx_bcast;
+> > +struct x86_op_mem {
+> > +     enum x86_reg segment;
+> > +     enum x86_reg base;
+> > +     enum x86_reg index;
+> > +     int scale;
+> > +     int64_t disp;
+> > +};
+> > +
+> > +struct cs_x86_op {
+> > +     enum x86_op_type type;
+> > +     union {
+> > +             enum x86_reg  reg;
+> > +             int64_t imm;
+> > +             struct x86_op_mem mem;
+> > +     };
+> > +     uint8_t size;
+> > +     uint8_t access;
+> > +     x86_avx_bcast avx_bcast;
+> > +     bool avx_zero_opmask;
+> > +};
+> > +struct cs_x86_encoding {
+> > +     uint8_t modrm_offset;
+> > +     uint8_t disp_offset;
+> > +     uint8_t disp_size;
+> > +     uint8_t imm_offset;
+> > +     uint8_t imm_size;
+> > +};
+> > +typedef int32_t  x86_xop_cc;
+> > +typedef int32_t  x86_sse_cc;
+> > +typedef int32_t  x86_avx_cc;
+> > +typedef int32_t  x86_avx_rm;
+> > +struct cs_x86 {
+> > +     uint8_t prefix[4];
+> > +     uint8_t opcode[4];
+> > +     uint8_t rex;
+> > +     uint8_t addr_size;
+> > +     uint8_t modrm;
+> > +     uint8_t sib;
+> > +     int64_t disp;
+> > +     enum x86_reg sib_index;
+> > +     int8_t sib_scale;
+> > +     enum x86_reg sib_base;
+> > +     x86_xop_cc xop_cc;
+> > +     x86_sse_cc sse_cc;
+> > +     x86_avx_cc avx_cc;
+> > +     bool avx_sae;
+> > +     x86_avx_rm avx_rm;
+> > +     union {
+> > +             uint64_t eflags;
+> > +             uint64_t fpu_flags;
+> > +     };
+> > +     uint8_t op_count;
+> > +     struct cs_x86_op operands[8];
+> > +     struct cs_x86_encoding encoding;
+> > +};
+> > +struct cs_detail {
+> > +     uint16_t regs_read[12];
+> > +     uint8_t regs_read_count;
+> > +     uint16_t regs_write[20];
+> > +     uint8_t regs_write_count;
+> > +     uint8_t groups[8];
+> > +     uint8_t groups_count;
+> > +
+> > +     union {
+> > +             struct cs_x86 x86;
+> > +     };
+> > +};
+> > +struct cs_insn {
+> > +     unsigned int id;
+> > +     uint64_t address;
+> > +     uint16_t size;
+> > +     uint8_t bytes[16];
+> > +     char mnemonic[32];
+> > +     char op_str[160];
+> > +     struct cs_detail *detail;
+> > +};
+> > +#endif
+> > +
+> > +#ifndef HAVE_LIBCAPSTONE_SUPPORT
+> > +static void *perf_cs_dll_handle(void)
+> > +{
+> > +     static bool dll_handle_init;
+> > +     static void *dll_handle;
+> > +
+> > +     if (!dll_handle_init) {
+> > +             dll_handle_init =3D true;
+> > +             dll_handle =3D dlopen("libcapstone.so", RTLD_LAZY);
+> > +             if (!dll_handle)
+> > +                     pr_debug("dlopen failed for libcapstone.so\n");
+> > +     }
+> > +     return dll_handle;
+> > +}
+> > +#endif
+> > +
+> > +static enum cs_err perf_cs_open(enum cs_arch arch, enum cs_mode mode, =
+csh *handle)
+> > +{
+> > +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> > +     return cs_open(arch, mode, handle);
+> > +#else
+> > +     static bool fn_init;
+> > +     static enum cs_err (*fn)(enum cs_arch arch, enum cs_mode mode, cs=
+h *handle);
+> > +
+> > +     if (!fn_init) {
+> > +             fn =3D dlsym(perf_cs_dll_handle(), "cs_open");
+> > +             if (!fn)
+> > +                     pr_debug("dlsym failed for cs_open\n");
+> > +             fn_init =3D true;
+> > +     }
+> > +     if (!fn)
+> > +             return CS_ERR_HANDLE;
+> > +     return fn(arch, mode, handle);
+> > +#endif
+> > +}
+> > +
+> > +static enum cs_err perf_cs_option(csh handle, enum cs_opt_type type, s=
+ize_t value)
+> > +{
+> > +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> > +     return cs_option(handle, type, value);
+> > +#else
+> > +     static bool fn_init;
+> > +     static enum cs_err (*fn)(csh handle, enum cs_opt_type type, size_=
+t value);
+> > +
+> > +     if (!fn_init) {
+> > +             fn =3D dlsym(perf_cs_dll_handle(), "cs_option");
+> > +             if (!fn)
+> > +                     pr_debug("dlsym failed for cs_option\n");
+> > +             fn_init =3D true;
+> > +     }
+> > +     if (!fn)
+> > +             return CS_ERR_HANDLE;
+> > +     return fn(handle, type, value);
+> > +#endif
+> > +}
+> > +
+> > +static size_t perf_cs_disasm(csh handle, const uint8_t *code, size_t c=
+ode_size,
+> > +                     uint64_t address, size_t count, struct cs_insn **=
+insn)
+> > +{
+> > +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> > +     return cs_disasm(handle, code, code_size, address, count, insn);
+> > +#else
+> > +     static bool fn_init;
+> > +     static enum cs_err (*fn)(csh handle, const uint8_t *code, size_t =
+code_size,
+> > +                              uint64_t address, size_t count, struct c=
+s_insn **insn);
+> > +
+> > +     if (!fn_init) {
+> > +             fn =3D dlsym(perf_cs_dll_handle(), "cs_disasm");
+> > +             if (!fn)
+> > +                     pr_debug("dlsym failed for cs_disasm\n");
+> > +             fn_init =3D true;
+> > +     }
+> > +     if (!fn)
+> > +             return CS_ERR_HANDLE;
+> > +     return fn(handle, code, code_size, address, count, insn);
+> >  #endif
+> > +}
 > >
-> > Changes from v1:
-> >  - Modify this driver for the R-Car S4-8 only
-> >  - So, this patch set drops the followings:
-> >  -- any dt doc modification
-> >  -- X5H support.
-> >  -- 5GBASER support
-> >  -- Registers' macros
+> > +static void perf_cs_free(struct cs_insn *insn, size_t count)
+> > +{
+> >  #ifdef HAVE_LIBCAPSTONE_SUPPORT
+> > +     cs_free(insn, count);
+> > +#else
+> > +     static bool fn_init;
+> > +     static void (*fn)(struct cs_insn *insn, size_t count);
+> > +
+> > +     if (!fn_init) {
+> > +             fn =3D dlsym(perf_cs_dll_handle(), "cs_free");
+> > +             if (!fn)
+> > +                     pr_debug("dlsym failed for cs_free\n");
+> > +             fn_init =3D true;
+> > +     }
+> > +     if (!fn)
+> > +             return;
+> > +     fn(insn, count);
+> > +#endif
+> > +}
+> > +
+> > +static enum cs_err perf_cs_close(csh *handle)
+> > +{
+> > +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> > +     return cs_close(handle);
+> > +#else
+> > +     static bool fn_init;
+> > +     static enum cs_err (*fn)(csh *handle);
+> > +
+> > +     if (!fn_init) {
+> > +             fn =3D dlsym(perf_cs_dll_handle(), "cs_close");
+> > +             if (!fn)
+> > +                     pr_debug("dlsym failed for cs_close\n");
+> > +             fn_init =3D true;
+> > +     }
+> > +     if (!fn)
+> > +             return CS_ERR_HANDLE;
+> > +     return fn(handle);
+> > +#endif
+> > +}
+> > +
+> >  static int capstone_init(struct machine *machine, csh *cs_handle, bool=
+ is64,
+> >                        bool disassembler_style)
+> >  {
+> > -     cs_arch arch;
+> > -     cs_mode mode;
+> > +     enum cs_arch arch;
+> > +     enum cs_mode mode;
 > >
-> > Thanks,
+> >       if (machine__is(machine, "x86_64") && is64) {
+> >               arch =3D CS_ARCH_X86;
+> > @@ -44,7 +274,7 @@ static int capstone_init(struct machine *machine, cs=
+h *cs_handle, bool is64,
+> >               return -1;
+> >       }
 > >
-> > Michael
+> > -     if (cs_open(arch, mode, cs_handle) !=3D CS_ERR_OK) {
+> > +     if (perf_cs_open(arch, mode, cs_handle) !=3D CS_ERR_OK) {
+> >               pr_warning_once("cs_open failed\n");
+> >               return -1;
+> >       }
+> > @@ -56,27 +286,25 @@ static int capstone_init(struct machine *machine, =
+csh *cs_handle, bool is64,
+> >                * is set via annotation args
+> >                */
+> >               if (disassembler_style)
+> > -                     cs_option(*cs_handle, CS_OPT_SYNTAX, CS_OPT_SYNTA=
+X_ATT);
+> > +                     perf_cs_option(*cs_handle, CS_OPT_SYNTAX, CS_OPT_=
+SYNTAX_ATT);
+> >               /*
+> >                * Resolving address operands to symbols is implemented
+> >                * on x86 by investigating instruction details.
+> >                */
+> > -             cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
+> > +             perf_cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
+> >       }
 > >
-> > Michael Dege (2):
-> >   phy: renesas: r8a779f0-ether-serdes: add USXGMII mode
-> >   phy: renesas: r8a779f0-ether-serdes: add new step added to latest
-> >     datasheet
+> >       return 0;
+> >  }
+> > -#endif
 > >
-> >  drivers/phy/renesas/r8a779f0-ether-serdes.c | 97
-> > ++++++++++++++++++---
-> >  1 file changed, 85 insertions(+), 12 deletions(-)
+> > -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> > -static size_t print_insn_x86(struct thread *thread, u8 cpumode, cs_ins=
+n *insn,
+> > +static size_t print_insn_x86(struct thread *thread, u8 cpumode, struct=
+ cs_insn *insn,
+> >                            int print_opts, FILE *fp)
+> >  {
+> >       struct addr_location al;
+> >       size_t printed =3D 0;
 > >
+> >       if (insn->detail && insn->detail->x86.op_count =3D=3D 1) {
+> > -             cs_x86_op *op =3D &insn->detail->x86.operands[0];
+> > +             struct cs_x86_op *op =3D &insn->detail->x86.operands[0];
+> >
+> >               addr_location__init(&al);
+> >               if (op->type =3D=3D X86_OP_IMM &&
+> > @@ -94,7 +322,6 @@ static size_t print_insn_x86(struct thread *thread, =
+u8 cpumode, cs_insn *insn,
+> >       printed +=3D fprintf(fp, "%s %s", insn[0].mnemonic, insn[0].op_st=
+r);
+> >       return printed;
+> >  }
+> > -#endif
+> >
+> >
+> >  ssize_t capstone__fprintf_insn_asm(struct machine *machine __maybe_unu=
+sed,
+> > @@ -105,9 +332,8 @@ ssize_t capstone__fprintf_insn_asm(struct machine *=
+machine __maybe_unused,
+> >                                  uint64_t ip __maybe_unused, int *lenp =
+__maybe_unused,
+> >                                  int print_opts __maybe_unused, FILE *f=
+p __maybe_unused)
+> >  {
+> > -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> >       size_t printed;
+> > -     cs_insn *insn;
+> > +     struct cs_insn *insn;
+> >       csh cs_handle;
+> >       size_t count;
+> >       int ret;
+> > @@ -117,7 +343,7 @@ ssize_t capstone__fprintf_insn_asm(struct machine *=
+machine __maybe_unused,
+> >       if (ret < 0)
+> >               return ret;
+> >
+> > -     count =3D cs_disasm(cs_handle, code, code_size, ip, 1, &insn);
+> > +     count =3D perf_cs_disasm(cs_handle, code, code_size, ip, 1, &insn=
+);
+> >       if (count > 0) {
+> >               if (machine__normalized_is(machine, "x86"))
+> >                       printed =3D print_insn_x86(thread, cpumode, &insn=
+[0], print_opts, fp);
+> > @@ -125,20 +351,16 @@ ssize_t capstone__fprintf_insn_asm(struct machine=
+ *machine __maybe_unused,
+> >                       printed =3D fprintf(fp, "%s %s", insn[0].mnemonic=
+, insn[0].op_str);
+> >               if (lenp)
+> >                       *lenp =3D insn->size;
+> > -             cs_free(insn, count);
+> > +             perf_cs_free(insn, count);
+> >       } else {
+> >               printed =3D -1;
+> >       }
+> >
+> > -     cs_close(&cs_handle);
+> > +     perf_cs_close(&cs_handle);
+> >       return printed;
+> > -#else
+> > -     return -1;
+> > -#endif
+> >  }
+> >
+> > -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> > -static void print_capstone_detail(cs_insn *insn, char *buf, size_t len=
+,
+> > +static void print_capstone_detail(struct cs_insn *insn, char *buf, siz=
+e_t len,
+> >                                 struct annotate_args *args, u64 addr)
+> >  {
+> >       int i;
+> > @@ -153,7 +375,7 @@ static void print_capstone_detail(cs_insn *insn, ch=
+ar *buf, size_t len,
+> >               return;
+> >
+> >       for (i =3D 0; i < insn->detail->x86.op_count; i++) {
+> > -             cs_x86_op *op =3D &insn->detail->x86.operands[i];
+> > +             struct cs_x86_op *op =3D &insn->detail->x86.operands[i];
+> >               u64 orig_addr;
+> >
+> >               if (op->type !=3D X86_OP_MEM)
+> > @@ -194,9 +416,7 @@ static void print_capstone_detail(cs_insn *insn, ch=
+ar *buf, size_t len,
+> >               break;
+> >       }
+> >  }
+> > -#endif
+> >
+> > -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> >  struct find_file_offset_data {
+> >       u64 ip;
+> >       u64 offset;
+> > @@ -213,9 +433,7 @@ static int find_file_offset(u64 start, u64 len, u64=
+ pgoff, void *arg)
+> >       }
+> >       return 0;
+> >  }
+> > -#endif
+> >
+> > -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> >  static u8 *
+> >  read_symbol(const char *filename, struct map *map, struct symbol *sym,
+> >           u64 *len, bool *is_64bit)
+> > @@ -262,13 +480,11 @@ read_symbol(const char *filename, struct map *map=
+, struct symbol *sym,
+> >       free(buf);
+> >       return NULL;
+> >  }
+> > -#endif
+> >
+> >  int symbol__disassemble_capstone(const char *filename __maybe_unused,
+> >                                struct symbol *sym __maybe_unused,
+> >                                struct annotate_args *args __maybe_unuse=
+d)
+> >  {
+> > -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> >       struct annotation *notes =3D symbol__annotation(sym);
+> >       struct map *map =3D args->ms.map;
+> >       u64 start =3D map__rip_2objdump(map, sym->start);
+> > @@ -279,7 +495,7 @@ int symbol__disassemble_capstone(const char *filena=
+me __maybe_unused,
+> >       bool needs_cs_close =3D false;
+> >       u8 *buf =3D NULL;
+> >       csh handle;
+> > -     cs_insn *insn =3D NULL;
+> > +     struct cs_insn *insn =3D NULL;
+> >       char disasm_buf[512];
+> >       struct disasm_line *dl;
+> >       bool disassembler_style =3D false;
+> > @@ -316,7 +532,7 @@ int symbol__disassemble_capstone(const char *filena=
+me __maybe_unused,
+> >
+> >       needs_cs_close =3D true;
+> >
+> > -     free_count =3D count =3D cs_disasm(handle, buf, len, start, len, =
+&insn);
+> > +     free_count =3D count =3D perf_cs_disasm(handle, buf, len, start, =
+len, &insn);
+> >       for (i =3D 0, offset =3D 0; i < count; i++) {
+> >               int printed;
+> >
+> > @@ -355,9 +571,9 @@ int symbol__disassemble_capstone(const char *filena=
+me __maybe_unused,
+> >
+> >  out:
+> >       if (needs_cs_close) {
+> > -             cs_close(&handle);
+> > +             perf_cs_close(&handle);
+> >               if (free_count > 0)
+> > -                     cs_free(insn, free_count);
+> > +                     perf_cs_free(insn, free_count);
+> >       }
+> >       free(buf);
+> >       return count < 0 ? count : 0;
+> > @@ -377,16 +593,12 @@ int symbol__disassemble_capstone(const char *file=
+name __maybe_unused,
+> >       }
+> >       count =3D -1;
+> >       goto out;
+> > -#else
+> > -     return -1;
+> > -#endif
+> >  }
+> >
+> >  int symbol__disassemble_capstone_powerpc(const char *filename __maybe_=
+unused,
+> >                                        struct symbol *sym __maybe_unuse=
+d,
+> >                                        struct annotate_args *args __may=
+be_unused)
+> >  {
+> > -#ifdef HAVE_LIBCAPSTONE_SUPPORT
+> >       struct annotation *notes =3D symbol__annotation(sym);
+> >       struct map *map =3D args->ms.map;
+> >       struct dso *dso =3D map__dso(map);
+> > @@ -499,7 +711,7 @@ int symbol__disassemble_capstone_powerpc(const char=
+ *filename __maybe_unused,
+> >
+> >  out:
+> >       if (needs_cs_close)
+> > -             cs_close(&handle);
+> > +             perf_cs_close(&handle);
+> >       free(buf);
+> >       return count < 0 ? count : 0;
+> >
+> > @@ -508,7 +720,4 @@ int symbol__disassemble_capstone_powerpc(const char=
+ *filename __maybe_unused,
+> >               close(fd);
+> >       count =3D -1;
+> >       goto out;
+> > -#else
+> > -     return -1;
+> > -#endif
+> >  }
 > > --
-> > 2.25.1
->
-> --
-> ~Vinod
-________________________________
-
-Renesas Electronics Europe GmbH
-Registered Office: Arcadiastrasse 10
-DE-40472 Duesseldorf
-Commercial Registry: Duesseldorf, HRB 3708
-Managing Director: Carsten Jauch
-VAT-No.: DE 14978647
-Tax-ID-No: 105/5839/1793
-
-Legal Disclaimer: This e-mail communication (and any attachment/s) is confi=
-dential and contains proprietary information, some or all of which may be l=
-egally privileged. It is intended solely for the use of the individual or e=
-ntity to which it is addressed. Access to this email by anyone else is unau=
-thorized. If you are not the intended recipient, any disclosure, copying, d=
-istribution or any action taken or omitted to be taken in reliance on it, i=
-s prohibited and may be unlawful.
+> > 2.49.0.805.g082f7c87e0-goog
+> >
