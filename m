@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4016D29DB6B;
-	Fri, 27 Jun 2025 11:08:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEB72980B4;
+	Fri, 27 Jun 2025 11:10:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751022531; cv=none; b=NQlsjfo7rU4nD4bmbhHWIwrjteV1xR0z5PugpvwRYp8NOJi5q6y5AoLU03fd9nb7dGP+Rv0/GKak1eDVVijwAwEn8qVYKQMRW+pkJV5zUDx0JKhV23mgY3V1aGrjaHey9NtdHafIz9+drn1AFz65ueCthwJP1Vm2ICjGNCvxbBQ=
+	t=1751022625; cv=none; b=WG44ngWxuphQw/YXn+4l+ECt0Qjs/gnLIJMmAecq/URuVgMonvx9txQnuxiUTFX6ih6F8GY6dlLtprMozAYPwAF13lz6hHvKGnHh/BNHCaTlmTvued7lRBJbqMT/Bc+iiCcM3Sb3Rf7qyKMhCnQEdoJ5Zk9dqEnIBBH0iXIAYGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751022531; c=relaxed/simple;
-	bh=oDXi3+L82y/mdd5opEhSbT+ju5BwjkSShkLIrL1LkwM=;
+	s=arc-20240116; t=1751022625; c=relaxed/simple;
+	bh=mGMGfBohkZ1WPzOd7l0m/Nelbywkij2anI7hHz+8Wtg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dJuXrOVvra4MJRM5WbhP2kmaVdBApnXnJrCu7SirNxP4gp8tkR6CWiRxmKMmrIr1ZC/aUIz1AmA1Pv0iD9QJYQ6/BfiIsuXWsmqCi3dh+k20emkXJ//9iWO91ZvzC1v8MCs13sdJnXyskLn4PHmzkPnCRhq3X3AWF04EvN+w7fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fJ3FdMvl; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=kuynsI9VW7I+lq3bqjYmaLKGDORejbwrn7Q9CwQoAc3ZJvfcB1EmQhbyMuwyidf+B+Vi0/rfM58HGiOUfZY5smMw3ZEo02YjTjU5QZ/n1pTWu+2y5jIlOXhkt2pMk9qcCilfoy1EU462r0T8d2KGibVfXrw8GQNbqVoiVzp8BdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IIMwd5af; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fJ3FdMvl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4256C4CEE3;
-	Fri, 27 Jun 2025 11:08:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IIMwd5af"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B02D5C4CEE3;
+	Fri, 27 Jun 2025 11:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751022530;
-	bh=oDXi3+L82y/mdd5opEhSbT+ju5BwjkSShkLIrL1LkwM=;
+	s=k20201202; t=1751022625;
+	bh=mGMGfBohkZ1WPzOd7l0m/Nelbywkij2anI7hHz+8Wtg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fJ3FdMvlJFLzTR4tz5kdgVQqi/EDQtRP81fmbJ3oXz2wwJ2D+Iisnf5DPlHakrK4i
-	 i3Tk7/kVWoFS3meq4EuVcWnENllM6GPbOkKQu+J0iNP+F6+EbqyCdE9DUQxrwXQPvD
-	 yCFCJsNkB3ZR577eA0VZYsnrbPDuEI/JXrlYKyiOcG8dBPF5zxzmvC9TxMpKPEE5fn
-	 aJEAthkmiE0nPADMxGKpJ5KIH2a7wII0+mupRqtTN9a5CgqShuAxGfKETv31ptwnJb
-	 OjXq4gtuE0d0KHCOW2ig8T0cuWWDhIJPD4H1wtFHD0JsGJsZ6EWHBbM9lTrJ9NQ6WO
-	 7D+wNRYaqxsUA==
-Message-ID: <a3e42c2d-0a43-4fe7-8be5-96a3dff723d2@kernel.org>
-Date: Fri, 27 Jun 2025 12:08:48 +0100
+	b=IIMwd5afvL0J/BPxLK6qEbVvjUxRT5d3rknTaZM9WrdHd8lyYqOmr4faeVqoQbv9A
+	 zFLWXY6pifR+dc3jVcynzhPcSoqUw/bjuLO16NQMRL3IbMXoeQFD3wAc1unC/B2xRo
+	 fXZN/irWwTW4V69YlaOZCyDJrw75cGKi3a1hUee3+MvzPxU4BbBK8iN0F5j/6AW8QM
+	 Lzbli/VLSYDfFxzNXv0wsScHhUGDO7ytjshn+VJc+8XTqxPbf8rwhoyhBfSu2jT6qg
+	 Xaba5+y0sfXJINzM+ZuwAghARcnWnqWFCpAsRNf2aNw0spdKADrCkN4NJ+TcUlwM+X
+	 DHxNNlgHHTpHw==
+Message-ID: <7dd6cb50-78bc-4d44-afc1-9e0fb99a5e49@kernel.org>
+Date: Fri, 27 Jun 2025 06:10:22 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,106 +35,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] bpftool: Add CET-aware symbol matching for x86_64
- architectures
-To: Yuan Chen <chenyuan_fl@163.com>, ast@kernel.org
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yuan Chen <chenyuan@kylinos.cn>, Jiri Olsa <jolsa@kernel.org>
-References: <20250626061158.29702-1-chenyuan_fl@163.com>
- <20250626074930.81813-1-chenyuan_fl@163.com>
-From: Quentin Monnet <qmo@kernel.org>
-Content-Language: en-GB
-In-Reply-To: <20250626074930.81813-1-chenyuan_fl@163.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v6] dt-bindings: net: Convert socfpga-dwmac bindings to
+ yaml
+To: Matthew Gerlach <matthew.gerlach@altera.com>,
+ Rob Herring <robh@kernel.org>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+ maxime.chevallier@bootlin.com, mcoquelin.stm32@gmail.com,
+ alexandre.torgue@foss.st.com, richardcochran@gmail.com,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, Mun Yew Tham <mun.yew.tham@altera.com>
+References: <20250613225844.43148-1-matthew.gerlach@altera.com>
+ <20250626234816.GB1398428-robh@kernel.org>
+ <fe705ffc-9a4c-462c-a1bf-e14c55cdb2cd@altera.com>
+Content-Language: en-US
+From: Dinh Nguyen <dinguyen@kernel.org>
+In-Reply-To: <fe705ffc-9a4c-462c-a1bf-e14c55cdb2cd@altera.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Thanks! Next time, please try to add all relevant maintainers as
-recipients or in copy of your message when submitting patches. You can
-get the list with get_maintainer.pl, try running it on your patch or with
-"./scripts/get_maintainer.pl -f tools/bpf/bpftool/link.c"
-
-2025-06-26 15:49 UTC+0800 ~ Yuan Chen <chenyuan_fl@163.com>
-> From: Yuan Chen <chenyuan@kylinos.cn>
+On 6/26/25 20:40, Matthew Gerlach wrote:
 > 
-> Adjust symbol matching logic to account for Control-flow Enforcement
-> Technology (CET) on x86_64 systems. CET prefixes functions with a 4-byte
-> 'endbr' instruction, shifting the actual entry point to symbol + 4.
 > 
-> Signed-off-by: Yuan Chen <chenyuan@kylinos.cn>
-> ---
->  tools/bpf/bpftool/link.c | 30 ++++++++++++++++++++++++++++--
->  1 file changed, 28 insertions(+), 2 deletions(-)
+> On 6/26/25 4:48 PM, Rob Herring wrote:
+>> On Fri, Jun 13, 2025 at 03:58:44PM -0700, Matthew Gerlach wrote:
+>> > Convert the bindings for socfpga-dwmac to yaml. Since the original
+>> > text contained descriptions for two separate nodes, two separate
+>> > yaml files were created.
+>>
+>> Sigh I just reviewed a conversion from Dinh:
+>>
+>> https://lore.kernel.org/all/20250624191549.474686-1-dinguyen@kernel.org/
+>>
+>> I prefer this one as it has altr,gmii-to-sgmii-2.0.yaml, but I see some
+>> issues compared to Dinh's.
+
+Apologies for the duplicate review. I was planning to convert the dwmac 
+first then add on to the gmii. We should continue with Matthew's version.
+
+> I am sorry for my part in the duplicate review. I just rechecked the 
+> output of get_maintainers.pl, and Dinh was not listed, and I should have 
+> known better.
 > 
-> diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
-> index 03513ffffb79..dfd192b4c5ad 100644
-> --- a/tools/bpf/bpftool/link.c
-> +++ b/tools/bpf/bpftool/link.c
-> @@ -307,8 +307,21 @@ show_kprobe_multi_json(struct bpf_link_info *info, json_writer_t *wtr)
->  		goto error;
->  
->  	for (i = 0; i < dd.sym_count; i++) {
-> -		if (dd.sym_mapping[i].address != data[j].addr)
-> +		if (dd.sym_mapping[i].address != data[j].addr) {
-> +#if defined(__x86_64__) || defined(__amd64__)
+> I am happy to do the work to resolve the differences and resubmit with 
+> Dinh as the maintainer.
+> 
 
+I'm not the maintainer of this. Maxime Chevalier is. Please don't add me.
 
-I'm not familiar with CET, but from what I read, it's been around since
-Tiger Lake processors (2020). Do we have a risk of false positive with
-older CPUs? Maybe check that the instruction at
-dd.sym_mapping[i].address is endbr32 or endbr34?
-
-
-> +			/*
-> +			 * On x86_64 architectures with CET (Control-flow Enforcement Technology),
-> +			 * function entry points have a 4-byte 'endbr' instruction prefix.
-> +			 * This causes the actual function address = symbol address + 4.
-> +			 * Here we check if this symbol matches the target address minus 4,
-> +			 * indicating we've found a CET-enabled function entry point.
-> +			 */
-> +			if (dd.sym_mapping[i].address == data[j].addr - 4)
-> +				goto found;
-> +#endif
->  			continue;
-> +		}
-> +found:
->  		jsonw_start_object(json_wtr);
->  		jsonw_uint_field(json_wtr, "addr", dd.sym_mapping[i].address);
-
-
-I suppose we still want to print dd.sym_mapping[i].address (and not
-data[j].addr) when we found it with the CET offset here - just
-double-checking.
-
-
->  		jsonw_string_field(json_wtr, "func", dd.sym_mapping[i].name);
-> @@ -744,8 +757,21 @@ static void show_kprobe_multi_plain(struct bpf_link_info *info)
->  
->  	printf("\n\t%-16s %-16s %s", "addr", "cookie", "func [module]");
->  	for (i = 0; i < dd.sym_count; i++) {
-> -		if (dd.sym_mapping[i].address != data[j].addr)
-> +		if (dd.sym_mapping[i].address != data[j].addr) {
-> +#if defined(__x86_64__) || defined(__amd64__)
-> +			/*
-> +			 * On x86_64 architectures with CET (Control-flow Enforcement Technology),
-> +			 * function entry points have a 4-byte 'endbr' instruction prefix.
-> +			 * This causes the actual function address = symbol address + 4.
-> +			 * Here we check if this symbol matches the target address minus 4,
-> +			 * indicating we've found a CET-enabled function entry point.
-> +			 */
-> +			if (dd.sym_mapping[i].address == data[j].addr - 4)
-> +				goto found;
-> +#endif
-
-
-Given that we have twice the same check, I'd move this to a dedicated
-wrapper function that we could call from both show_kprobe_multi_json()
-and show_kprobe_multi_plain().
-
-
->  			continue;
-> +		}
-> +found:
->  		printf("\n\t%016lx %-16llx %s",
->  		       dd.sym_mapping[i].address, data[j].cookie, dd.sym_mapping[i].name);
->  		if (dd.sym_mapping[i].module[0] != '\0')
-
+Dinh
