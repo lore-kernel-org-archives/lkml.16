@@ -1,128 +1,117 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435F71D63FC
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44521DDC18
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751000945; cv=none; b=eCZxMy+ca5eNVg9k5jitKj3aQyG4wReiV/nmLPc1Q3AdcrUEXnNHrNdd9Luht5pq8EXq+n9Rge4OEkwbPxm4Ye3We5sY3Z0NswUTFwf1glYuuel4bKc0RR7H1hcasEsvp3QG4IPT72ePjCB0dvvpJ7RHD9Icn2Pktlg6YoTmo/Y=
+	t=1751001110; cv=none; b=sGyuaObqFkCbRXjvNhIU2dBlF0W5gL4qsPSacjionw4sUrkUqnMSxLgamCmJp2lCKBut9Goit3kqe7K5AvYkbbWP7l9rwotyJ4LuBecddd6pk39Ua5w0zackRDNNp3oBuA9UJRx5HGHNOqWHoy0fux3rNjdmXFtspoGD87a96FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751000945; c=relaxed/simple;
-	bh=tS91fUKJnG7xEbHUuJba73xjgk1END/TdxZYugArOqs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=URPY82ZVDwNAhcBa96ZoI64K/bcyszb/1sZtiILL5mCqK4IxWYIWpuFsuYoLyh0tfmajqLc23G5/5lZFC/5h/S+3Ker3ED1tzZVH+V0q5wxa+hrBNws+XPtZm1R1E+wnvmWHdGadKSUFRSdHpk+PJ7gR7kVswH443pUI/WESNQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddce213201so16839755ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:09:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751000943; x=1751605743;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7SjSHWtKKAWBkyHw90coRJONi4bokcUWVgqJ/CVLeS8=;
-        b=CiHVWX5hCRJVlmmoiRHp2433K3e9esNvg3KlUU+mLCtGu3bavink2QtT8BXidVeNyL
-         w+0o33uh/85/3SOYA/QIVkYzl1DF6jfpz35dYPS+l2t9d8aivXIQOimp/xc8zqFZyutk
-         rHKupVgV4C4uhqfGPbdQPf08AujqcQdeRy3Pv++ORWTZT5NgXpyT8+v8NezBBLMphjqQ
-         cTNUFE/mbOROQ8IrunbKsYNwBu6FDT4K9LJP9cXhYj0Q11qbb1Rl8LE4gqj/huHr/KbR
-         qtcOowDDzePXawR5/Uhq/VOp1ZcfjiDcnhzncJRoKxu+ZdI7AILiQoVloyQk1cTCrSxb
-         J7JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHpUuDqVCGx8fE7seebuVXXJLjWW+I9aMSLeu/5lfF25UrCRfrF3zx1yxoWXARl/1TX2TSIB2wYZX0MDU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynQ0bgFfo5akHd6bGuCbUrorRcTdSIS8UfzeGdwJudvaekAx4A
-	74JIW9DKzt/m6gPDsqegbSEHkaSH5N+b2s5A/bfhkQBqJXx4uECEcFsz5BSGBeXQUVpBm3sfdOY
-	GFI9YLhJcO91mUV006xkhlEEtdkJO3D/LR4B111WvnY+bZaxzhISWyk4Qun0=
-X-Google-Smtp-Source: AGHT+IFwHpgIzqV9CHS/eJjXj6F4wpRY5pxFrBgLLyDgH8bnh7YnwXfXbWvfrWiBBG37D+yFkuzMfL2lT24ZUbgorOFDPxgEXCeP
+	s=arc-20240116; t=1751001110; c=relaxed/simple;
+	bh=MJvRIhPa9PArrO7PG94uOGF9pwk6XLUMymLUuFR8d3w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oyXAws4vsOPOLAKHVKekKGs2dDOg6+IygJlFbmC2kX9n0wbyuj/FpwyBK8kIXysST5MhZ3sy/MUBEAJOtgzVSMIjFbkWyqHpbrq+bqcgUdap6MbKU0bH5lxCiokBgSWMv7FeZjhFtW22fRJ4w2ZkjGFQ1W/SPlGfYsI8bWH2PC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=a9Bk/ijF; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="a9Bk/ijF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1751001106;
+	bh=MJvRIhPa9PArrO7PG94uOGF9pwk6XLUMymLUuFR8d3w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a9Bk/ijFnQpWL7GCR4DrZ83hbmg1qjtU/zgLImzt0inXWZNATUvxyP81lWN/8LuDu
+	 bsXCY2P6K9T8R8p+2GCNu0K+iGANnlvoBS2kFDpn170ksSF0Qwt36l6gLN8z8iOKkO
+	 BH+gcSmMednHwwOhU7F3RyLTH4bdPQDE001U6q1c=
+Date: Fri, 27 Jun 2025 07:11:45 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Willy Tarreau <w@1wt.eu>, 
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, linux-kernel@vger.kernel.org, 
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [RFC PATCH 3/3] tools/nolibc: add a new "install_all_archs"
+ target
+Message-ID: <89a2e713-edfd-4556-b321-cdccc3437a43@t-8ch.de>
+References: <20250620103705.10208-1-w@1wt.eu>
+ <20250620103705.10208-4-w@1wt.eu>
+ <92eda9ff-116e-4ec1-930c-7474da9652fc@t-8ch.de>
+ <b14da196-84cc-4d13-baa2-952ba22f5a3e@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3708:b0:3dd:f02d:2d26 with SMTP id
- e9e14a558f8ab-3df4b3b6f61mr25048595ab.2.1751000943281; Thu, 26 Jun 2025
- 22:09:03 -0700 (PDT)
-Date: Thu, 26 Jun 2025 22:09:03 -0700
-In-Reply-To: <dbcc14cc-abfa-4486-a642-2fe97b4a0ef3@linux.dev>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685e276f.a00a0220.2e5631.0408.GAE@google.com>
-Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
-From: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>
-To: jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	yanjun.zhu@linux.dev, zyjzyj2000@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b14da196-84cc-4d13-baa2-952ba22f5a3e@app.fastmail.com>
 
-Hello,
+On 2025-06-26 23:15:07+0200, Arnd Bergmann wrote:
+> On Thu, Jun 26, 2025, at 22:18, Thomas Weißschuh wrote:
+> > On 2025-06-20 12:37:05+0200, Willy Tarreau wrote:
+> >> This installs all supported archs together, both from nolibc and kernel
+> >> headers. The arch-specific asm/ subdirs are renamed to asm-arch-$arch,
+> >> and asm/ is rebuilt from all these files in order to include the right
+> >> one depending on the build architecture.
+> >> 
+> >> This allows to use a single unified sysroot for all archs, and to only
+> >> change the compiler or the target architecture. This way, a complete
+> >> sysroot is much easier to use (a single directory is needed) and much
+> >> smaller.
+> >> 
+> >> +	$(Q)rm -rf "$(OUTPUT)sysroot/include/asm"
+> >> +	$(Q)mkdir -p "$(OUTPUT)sysroot/include/asm"
+> >> +	@# Now install headers for all archs
+> >> +	$(Q)for arch in $(patsubst aarch64,arm64,$(nolibc_supported_archs)); do \
+> >> +		echo "# installing $$arch"; \
+> >> +		if ! [ -d $(OUTPUT)sysroot/include/asm-arch-$$arch ]; then \
+> >> +			$(MAKE) -C $(srctree) ARCH=$$arch mrproper; \
+> >> +			$(MAKE) -C $(srctree) ARCH=$$arch headers_install no-export-headers= \
+> >> +				INSTALL_HDR_PATH="$(OUTPUT)sysroot/include/$$arch" >/dev/null; \
+> 
+> >
+> > I'm not a fan of the loop to build the ifdeffery. It is a duplication
+> > of what we have in tools/include/nolibc/arch.h and horrible to look at.
+> > Can we stick this into a reusable header file?
+> > Something along the lines of this:
+> >
+> > 	/* asm/foo.h */
+> > 	#define _NOLIBC_PER_ARCH_HEADER "foo.h"
+> > 	#include "_nolibc_include_per_arch_header.h"
+> >
+> >
+> > 	/* _nolibc_include_per_arch_header.h */
+> > 	#if defined(__i386__)
+> > 	#include CONCAT("asm-arch-x86/", _NOLIBC_PER_ARCH_HEADER)
+> > 	#elif
+> > 	...
+> >
+> > However, so far I couldn't get it to work.
+> > Also it would be great if we can use it for the current arch.h, too.
+> 
+> I'm not sure either of those is better than the version we
+> had until commit f3c8d4c7a728 ("kbuild: remove headers_{install,check}_all").
+> which simply relied on a symlink to the architecture specific
+> directory to be set.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-WARNING in rxe_skb_tx_dtor
+Thanks for the pointer, that probably answers the question if this could
+be part of kbuild proper. It shouldn't.
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1039 at drivers/infiniband/sw/rxe/rxe_net.c:360 rxe_skb_tx_dtor+0x94/0x2b0 drivers/infiniband/sw/rxe/rxe_net.c:360
-Modules linked in:
-CPU: 0 UID: 0 PID: 1039 Comm: kworker/u4:7 Not tainted 6.16.0-rc3-syzkaller-gc2b99574e921 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: rxe_wq do_work
-RIP: 0010:rxe_skb_tx_dtor+0x94/0x2b0 drivers/infiniband/sw/rxe/rxe_net.c:360
-Code: 80 3c 20 00 74 08 4c 89 ff e8 b8 64 81 f9 4d 8b 37 44 89 f6 83 e6 01 31 ff e8 c8 e5 1d f9 41 f6 c6 01 75 0e e8 dd e0 1d f9 90 <0f> 0b 90 e9 b4 01 00 00 4c 89 ff e8 4c 97 fd 01 48 89 c7 be 0e 00
-RSP: 0018:ffffc900000079e8 EFLAGS: 00010246
-RAX: ffffffff88a26d93 RBX: ffff88804844d000 RCX: ffff88800037a440
-RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff887bc1c4
-R10: dffffc0000000000 R11: ffffffff88a26d00 R12: dffffc0000000000
-R13: 1ffff11009089a0b R14: 0000000000025820 R15: ffff8880333d0000
-FS:  0000000000000000(0000) GS:ffff88808d250000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f12ddf0ffc8 CR3: 00000000550c0000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- skb_release_head_state+0xfe/0x250 net/core/skbuff.c:1139
- napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
- e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
- e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
- e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
- __napi_poll+0xc4/0x480 net/core/dev.c:7414
- napi_poll net/core/dev.c:7478 [inline]
- net_rx_action+0x707/0xe30 net/core/dev.c:7605
- handle_softirqs+0x286/0x870 kernel/softirq.c:579
- do_softirq+0xec/0x180 kernel/softirq.c:480
- </IRQ>
- <TASK>
- __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
- local_bh_enable include/linux/bottom_half.h:33 [inline]
- __neigh_event_send+0x9b/0x1560 net/core/neighbour.c:1194
- neigh_event_send_probe include/net/neighbour.h:463 [inline]
- neigh_event_send include/net/neighbour.h:469 [inline]
- neigh_resolve_output+0x198/0x750 net/core/neighbour.c:1496
- neigh_output include/net/neighbour.h:539 [inline]
- ip6_finish_output2+0x11fb/0x16a0 net/ipv6/ip6_output.c:141
- __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
- ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
- rxe_send drivers/infiniband/sw/rxe/rxe_net.c:394 [inline]
- rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:453
- rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
- rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
- do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
- do_work+0x1b4/0x6c0 drivers/infiniband/sw/rxe/rxe_task.c:187
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+With the symlink, a given generic UAPI tree can be specialized to one
+specific architecture. But here we want to create a full sysroot that works
+for all architectures *at the same time*. So a symlink would not be enough.
+
+> If it's indeed possible to concatenate the path name (I couldn't
+> figure that out either), that could also be done in place of the
+> symlink but simpler than the #if/#elif/#elif/... block, like
+> 
+> #include <arch.h> // defines ARCH_PREFIX
+> #include CONCAT(ARCH_PREFIX, ioctl.h)
+
+If we can't get it to work like this I would still prefer to have a
+template header file which gets specialized with sed instead of the
+Makefile loop.
 
 
-Tested on:
-
-commit:         c2b99574 RDNA/rxe: Fix rxe_skb_tx_dtor problem
-git tree:       https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
-console output: https://syzkaller.appspot.com/x/log.txt?x=12e983d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
-dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-
-Note: no patches were applied.
+Thomas
