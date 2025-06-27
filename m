@@ -1,42 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7C621D3C6;
-	Fri, 27 Jun 2025 20:27:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF7DC2FB;
+	Fri, 27 Jun 2025 20:28:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751056052; cv=none; b=ITKvA76y7csT3BE+QmRhGvoDrEMZCm/4S/eqZUNnS6K3873g8bayg/4UPhRfgnPB1zQQr+6YEivQtV429mQ0914XUxeZEoqizSoQ9OmZXU0gGyqfUGd3jo15x38AYuWF54+6O3moykBOYw9eYXkUXh03sQQeJGGUAqOw+tYxP5U=
+	t=1751056115; cv=none; b=BFw0uy0GelsMyKcxmglk4WyGKkzF62O7gC9pU+eAE7kKlX50i1qxWa67uDX1uj+l/C67k7RbLMua+Doq3OOUNdkSUve0sBst0GUzk7jdcPrfLSKITYd7oS0QknCBK2xsoOj9GPjYIe0vqoPmVk4eTV8Yp0qKXVn3kCNccmS3UEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751056052; c=relaxed/simple;
-	bh=QDKVwtK2TEwDIXhfVWLXDxgF4PMvRsSYsSJwf6t+eWA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=dDRD+SaOBY2JGKUNL5pWsj9+CfJxu8e/PvPLniXfQWbCoYeO7FopRkJ+DXbdsMhdCIsd9K6A4TCYJ4Js7qyNl0KFtHfj4amHrIzK/+K4zqWxsGSuoKLClG/w5tzZovbyN8aZToiGFjKv9B55f1K20BhkSknmZ8akMouxqPXWhDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pXerUr1Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751056115; c=relaxed/simple;
+	bh=l5bThpeYgD4nwLUsGFwxtgtbBvr/hpMTIowA58WLrsw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TNJaQR9jSwppfvr+3TqVd95Fiay2rMlBXshzFypVI0h/akOpfbIoFwWovg1iYD9yW4Cij5DLcXCLKoH7MwSIbXv/M+VapeIpAK1OKgD8ddpG4jt1ohN6zd+eHsdVZ2RQqpYNg9arXFUjurYP4v2Q1Nct/LQS+uEjkRHekdR1XUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5yqlZCz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pXerUr1Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 975AFC4CEE3;
-	Fri, 27 Jun 2025 20:27:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5yqlZCz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AADAEC4CEE3;
+	Fri, 27 Jun 2025 20:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751056051;
-	bh=QDKVwtK2TEwDIXhfVWLXDxgF4PMvRsSYsSJwf6t+eWA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=pXerUr1ZpL/lyDDuhY/20jjRuDzMsyOFBtnNOAMyFpscGHNnKV6o45N97kY3KI01y
-	 e+CgI0IGH8h+k7mS1gJW/FgKKjNim+vQ1Ydqnihq1FCbtpbXWS0LxziElz66+y2JiR
-	 eJc3OgL3hbmTaMjBME2hTcOubf1+5YRnWJGQgZSPGzzHi1eQS5KHKz4QDUn3C6AU63
-	 ARfsp9UCYTCAJjQ5Sa4zbCn2KSSEfMpkRZdPFWwKJ1Vzfkww/E7Me5YxiEZYk+eBWK
-	 wULPZF/nV9hj3L1E0OUvPKefyeXBcPNgWgzi9h+LsiTkGFL3akU92y1s6vsaHV3c/3
-	 6ekqNtJysygNw==
-Date: Fri, 27 Jun 2025 15:27:30 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: [GIT PULL] PCI fixes for v6.16
-Message-ID: <20250627202730.GA1683609@bhelgaas>
+	s=k20201202; t=1751056114;
+	bh=l5bThpeYgD4nwLUsGFwxtgtbBvr/hpMTIowA58WLrsw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k5yqlZCzC+s9BYC0oBPqjqjF9B5PII9nJmRMoxO7g+8Jb3eKovxDYc/ezeL2hutE/
+	 V9jpKQnCsByJTXd79boeLzq9eLIm8PSuy3ppQUiys+bCw/v1BRt+2SmRZ+vE2fWej2
+	 fmLtfhMmVZikXVUQ6xER+7hT2dteoPVHJlDNuy0I0eVwtbc49mvhJkl6aPzeSNTxgj
+	 YMZXXeO2LxSNBFoQnvxEFVj3LNlTuCQGYmL+NJLlSoHIg2XohETTC/h8BBpUGX/bq4
+	 HQPjeX1ZBQ6M1jHw+oryFTqVti5ddJVj3ajNWpFOUdIWXHT76KdX7RaCPKvbzg03xB
+	 fpE1EYfJ7pLcA==
+Date: Fri, 27 Jun 2025 15:28:33 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc: Mark Brown <broonie@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-spi@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 2/6] spi: dt-bindings: Document the RZ/V2H(P) RSPI
+Message-ID: <175105611355.30065.8146598698552154225.robh@kernel.org>
+References: <20250624192304.338979-1-fabrizio.castro.jz@renesas.com>
+ <20250624192304.338979-3-fabrizio.castro.jz@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,27 +48,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250624192304.338979-3-fabrizio.castro.jz@renesas.com>
 
-The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
 
-  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+On Tue, 24 Jun 2025 20:23:00 +0100, Fabrizio Castro wrote:
+> Add dt-bindings for the RSPI IP found inside the Renesas RZ/V2H(P)
+> SoC.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> ---
+>  .../bindings/spi/renesas,rzv2h-rspi.yaml      | 96 +++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/renesas,rzv2h-rspi.yaml
+> 
 
-are available in the Git repository at:
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.16-fixes-2
-
-for you to fetch changes up to 5aa326a6a2ff0a7e7c6e11777045e66704c2d5e4:
-
-  PCI/PTM: Build debugfs code only if CONFIG_DEBUG_FS is enabled (2025-06-23 12:55:49 -0500)
-
-----------------------------------------------------------------
-
-- Fix a PTM debugfs build error with CONFIG_DEBUG_FS=n && CONFIG_PCIE_PTM=y
-  (Manivannan Sadhasivam)
-
-----------------------------------------------------------------
-Manivannan Sadhasivam (1):
-      PCI/PTM: Build debugfs code only if CONFIG_DEBUG_FS is enabled
-
- drivers/pci/pcie/ptm.c | 2 ++
- 1 file changed, 2 insertions(+)
