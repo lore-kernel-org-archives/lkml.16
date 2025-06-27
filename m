@@ -1,123 +1,135 @@
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766FC1DB356
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E68213AA2F;
+	Fri, 27 Jun 2025 05:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751000553; cv=none; b=FowPFq6F7aUg2L2rU68ekbj8wzSquiVDmUwjaVg9kLyHjByTsXkw0KpJtnfggezmMFuj6mi+SubHb0S2mMpXZ/fuh66MUN3wcnQFZwv8n20QFX1r76BK49j2fdr1AvZScVvFVFztOZfCNOW89WsdrXFMvQmw0atmTr0ONfnrZ+c=
+	t=1751000596; cv=none; b=ApdMfYtWrg0uEhSY73lHFrxbbhjKa0LZ/cLFctDK61oOiIjvbNh4dTLM3ZAuBG8noFa7scVQp9aI/OB7zAvohp8Tt8dkQDFGZcKW5p08WguQuFtzfb0wJX11+IKS28Wy0GsklynpkJ0GFugbH4FXHA/stRV/wBgrfZWQuf8Pulo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751000553; c=relaxed/simple;
-	bh=yEyVocKnMCps8xWL9t4dI9N+dVYbiLKomAWOYOvHcuE=;
+	s=arc-20240116; t=1751000596; c=relaxed/simple;
+	bh=bCxLgBWa7qh7fI3aJyT2Vs16rxfLHHiT+sd7cIbc8xM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vAdEeIXwpVIf6iv+Yvm6zf4lGPCz83ZNSthd4xQcPIVRHko1BTVbm5FJL6KoN4CwEV4h55MmGzwwpKaH1aiAI3pnnvUAT9OxHURgo4oDNzYDTL9Q/urA927rrWVMUwNFdrZTopqpYioGQhZuTT59rZUU+tVfPcGZ0vnzpcJST1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vg8Es8Bf; arc=none smtp.client-ip=209.85.217.46
+	 To:Cc:Content-Type; b=dFfq61ZjkdQZZGXhPenNAyKPZNQ+oLDWqWNpyMEviqVX/cexajfyhtOHIPT6FxynFXR9X3lFeDj1l4+dutWRtEdPxyE6xIxs2zE3z/L6nJ/YHBik7G1MSG5xvITKT+hoHMpkio/T4kAJCdvQ9R8SsnZk4dq5jzTQdbuZ8wsMD7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jE3vtlam; arc=none smtp.client-ip=209.85.222.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vg8Es8Bf"
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4e7fc3309f2so375910137.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:02:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jE3vtlam"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-88150e9fba7so1048840241.1;
+        Thu, 26 Jun 2025 22:03:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751000551; x=1751605351; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751000594; x=1751605394; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yEyVocKnMCps8xWL9t4dI9N+dVYbiLKomAWOYOvHcuE=;
-        b=Vg8Es8Bfhr55E2WZc+J/6c9X898i+8Yi/qcLD7bUnx4lRvxtHGPWJOmBqONTyLNWL+
-         9HkRx2sOMM2y/sVM2grsgZ1K87tvh4O/AVPEJR/i0ZXbbB9DOlFRqI45Zpkm/109SQXo
-         9DfUjrR0RW2xQPQ4kPb8ZI8gRiGsc1k9KfsJCqfLwqqVlmGXqxsbv6tcTDNAZCIovgHI
-         r9v2OZVgEcg0UNVWTkWpIfkxx3JglpNrsEZHyPNHfp/ChzDXGr0fLs2wNmL6Ob31mNLO
-         Swa7HqkFf7MZZSdLjdqM0af1mtNi5yd6x182RLV8scmWfzAkMnbgBj9HyAB1ojREw5gA
-         Y/Mg==
+        bh=Sm4hHqZdHlJKjq+/RMjrxVZ+kQH4qjoP0GpZOg4z/2c=;
+        b=jE3vtlamoDFV7/RkgghW2tuSjtPepjWeWJJd9OpGNG9vb6LrqX/ViQcNuxaEhudlgb
+         tD9TIgQoSAwzr2m/a5zmnBkd0lZkqaC6plpK5z1vzzmWdXjWRRtCiG41WbQRbPmY3nTp
+         N90XBMwsxJGNo3rkr0EmO06bFfuPZQaF7zNx1jeWeFWEavRDsi3+Z8gPrrFEIGRNjcJp
+         os3aSghE5+QeP1SkaBL8igLWZBlVIgYRiu9rqV8uqDXRLj6b3/jx5DotMOj8JYqk60ME
+         pNk6b7FbsHJ92fAV0NSRptYhwrJVVfMiPH5he+SMaif4WOS5wam9byzjOKD2kB3gcrWs
+         Cz1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751000551; x=1751605351;
+        d=1e100.net; s=20230601; t=1751000594; x=1751605394;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yEyVocKnMCps8xWL9t4dI9N+dVYbiLKomAWOYOvHcuE=;
-        b=HfjvKmQtiMMUeL9IB0l0/PTqazu7u5b4o4nS8p2YQM3bwzegTTIFClvhoX/+uqi8cJ
-         UcY9Hj2cuqSX9n4SC3wuv/e2jITElE+okWXEBkQ51a+zAFgHLvilrhOw/KQJCNuNDUxa
-         ugbSugyuEu3BOSiWWUTv+JYgmbbZRRYcoe4c4asOuqe4r2jRrKWDy8iZooP31em9xICa
-         RTKVBuqnXc8hBahrRTKF0/VrAV7Ga+hfH8q58V+ZKusiOW+25I3pZNMIxYFKpGagoALH
-         MkOOQ0DAWiPkcltqzqxuyYyVhmaB9xR1e7x1y/wOncIDhZgAsvFvaB9bV2G7D+Mq7qc0
-         8nOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUMuQROa8uh1XvGYQb1Fx+/sUfr4T1dtnYM78kW75MFp91lOAmGyVaKvpShgFOfSBuqX+uu2NxCxC6nTgk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+TD908lTzjqesfwG4PlvcYLgQ5AsuviRdGUZpDi6H7ncW2Wmz
-	oxyMaX7Brx7/i9c90AZ6YcFjjLkNK0yQBNEkEhIyVmkc/YoiDdgqu95DFvPMtf7jmdjcTm/Qy7l
-	+UvGwrpkK7Vt/NT+QFephg4IVtZLUZkU=
-X-Gm-Gg: ASbGncvDME7R8+ia9YtZgsXzDHjMeQX+ooLX59jNiGnC+xzg2Tc71yN4f4mitBen16n
-	ra9lC4f+k9/YAmaFf/nsxlDSU/geYiGK2hPnDH4HMuKK4WZAHXr6TDigc4OHtCjZ/xZG+jN7LRP
-	2S6k1rtsxabQBxBfa/KOiUZWwCYaZD5Av2rcZ38Z6VtF4=
-X-Google-Smtp-Source: AGHT+IEvQnJ4QRqSGP2qB52UDJLc95vE2WmXbirVa0pHP16TPMhIb8u9XNfVSz15xZVnzrhavxHSi3E8vgSvANL5nrA=
-X-Received: by 2002:a05:6102:149e:b0:4ec:c50c:399f with SMTP id
- ada2fe7eead31-4ee4f692664mr1810518137.11.1751000551372; Thu, 26 Jun 2025
- 22:02:31 -0700 (PDT)
+        bh=Sm4hHqZdHlJKjq+/RMjrxVZ+kQH4qjoP0GpZOg4z/2c=;
+        b=ED58i52qfMiYSQtBkyBvrTzAfwgveGGODBaLu/OrEF7kDYmXwk+sLEKCQAF3Dm/965
+         GzDHK6cwb95WVbF/V6SUUcNItEB+NKvN0HbEEYV/646pY6LotTqRnvDYXLDFMSAiU3sW
+         h0IezKVa8CuLI4b/YZLMIyeMLAHeoB8N0nIzhPMm5yBd5arkPj/7cyKyZT6nbWwuCG9x
+         5ZfkIuHIJ2FkeBR/qycw564xFNi6TsQfuBig++2BkZ4ofpbPtp3F9fpsDETNmcVUiITp
+         s41ehWXiyfCssJRYIEPTlwWLcHECG6twoNr9udPOk619xDIWeooXxYZwvSC8C2xgJy3F
+         7WAg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/Y0Jqu4x6uUPDidKpvr1InYHu1eAji/odweVNWpjlZt1nTvjNtxD/Af5IjI1uLch8NdwToqW1wi0BDHHE@vger.kernel.org, AJvYcCUZl0L2WPA4/mgMdW4ZIq+ideu9KD0iGuOy62zvZrm34qGMOonkKuB62j1H3ixDPrEOz+G+dgzZBgKhOmpw/5yrlvg=@vger.kernel.org, AJvYcCXJ/WUXMUTpWZd5V1Oh86RnFfDdKEJBUJJQbmJX4ibpTcgae+rXbEPauFAUcZQN2bdeRvtfPvNz6EYe@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7zXzaZ32ezsti6Y8lXfJiAuhqTPFDqsEleJYDtOVzOI+PYYoj
+	wQSLOipS6TlzIsPYn39tZFAvJvqjf80/SIjM9myK9+/XzgtIRKsFO+YmILIPvK2DandgqQwVVLT
+	tZqZpXWwOJiiHY83A+Ux0ov3AC/+A+bI=
+X-Gm-Gg: ASbGncuNHv1osFn77NtPetZvvDQtyQ/Dw1v8O7P5+iIrzJcddIDsKqQskFvnydwh6ru
+	VfXM5buai21WO9FJFmQKFxg8vwQn5WzLRvqVcKG+P9kXOFksT6PXSjx61fW3pJ2oK/oaGeLi9rJ
+	6c976ubKQsBckjb30SpVXIzM4hVf8q+spyC4eIQdcZOtVIY0VCKSij
+X-Google-Smtp-Source: AGHT+IF4cUJtxH83RDJft3O2FqQ5XUKOZe1zx/Bmli/7Ru2jER/I3z6z3oYtVafld19HMBo5LW8Ej/HPfe6pAovzDOo=
+X-Received: by 2002:a05:6102:2ac3:b0:4ec:e1fa:ed7b with SMTP id
+ ada2fe7eead31-4ee50a67c4bmr1229948137.9.1751000593950; Thu, 26 Jun 2025
+ 22:03:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627025214.30887-1-lance.yang@linux.dev>
-In-Reply-To: <20250627025214.30887-1-lance.yang@linux.dev>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 27 Jun 2025 17:02:20 +1200
-X-Gm-Features: Ac12FXywX0xekxUXC52Wn56ratHki1z8cUWVFBJGFLSfqAnwCvDX9QWChaOYL38
-Message-ID: <CAGsJ_4yjvHzeUTDoALafLddTCTOSzYiFQNvAmSQORLJV1HPhPQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm/rmap: make folio unmap batching safe and support
- partial batches
-To: Lance Yang <ioworker0@gmail.com>
-Cc: akpm@linux-foundation.org, david@redhat.com, baolin.wang@linux.alibaba.com, 
-	chrisl@kernel.org, kasong@tencent.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-riscv@lists.infradead.org, lorenzo.stoakes@oracle.com, 
-	ryan.roberts@arm.com, v-songbaohua@oppo.com, x86@kernel.org, 
-	huang.ying.caritas@gmail.com, zhengtangquan@oppo.com, riel@surriel.com, 
-	Liam.Howlett@oracle.com, vbabka@suse.cz, harry.yoo@oracle.com, 
-	mingzhe.yang@ly.com, Lance Yang <lance.yang@linux.dev>
+References: <20250627-exynosdrm-decon-v3-0-5b456f88cfea@disroot.org> <20250627-exynosdrm-decon-v3-1-5b456f88cfea@disroot.org>
+In-Reply-To: <20250627-exynosdrm-decon-v3-1-5b456f88cfea@disroot.org>
+From: Inki Dae <daeinki@gmail.com>
+Date: Fri, 27 Jun 2025 14:02:37 +0900
+X-Gm-Features: Ac12FXz2dc5tsxsGmjdAH92okDL5yeiAijcWTCVAjDOYfNAbUY5poc38568eg-s
+Message-ID: <CAAQKjZPAsE8LGE00fWE1aPj03b6tu1rk9ScTDSN+HeKzVXMZvw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: display: samsung,exynos7-decon: add
+ properties for iommus and ports
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, 
+	Ajay Kumar <ajaykumar.rs@samsung.com>, Akshu Agrawal <akshua@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 27, 2025 at 2:53=E2=80=AFPM Lance Yang <ioworker0@gmail.com> wr=
-ote:
+2025=EB=85=84 6=EC=9B=94 27=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 4:21, K=
+austabh Chakraborty <kauschluss@disroot.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=
+=84=B1:
 >
-> From: Lance Yang <lance.yang@linux.dev>
+> Similar to FIMD and Exynos5433's DECON, the Exynos7 DECON hardware:
+> - May optionally require an IOMMU to initialize a display region.
+> - May require a port connection to another block, say an MIC or a DSI
+>   master.
 >
-> As pointed out by David[1], the batched unmap logic in try_to_unmap_one()
-> can read past the end of a PTE table if a large folio is mapped starting =
-at
-> the last entry of that table.
->
-> So let's fix the out-of-bounds read by refactoring the logic into a new
-> helper, folio_unmap_pte_batch().
->
-> The new helper now correctly calculates the safe number of pages to scan =
-by
-> limiting the operation to the boundaries of the current VMA and the PTE
-> table.
->
-> In addition, the "all-or-nothing" batching restriction is removed to
-> support partial batches. The reference counting is also cleaned up to use
-> folio_put_refs().
->
-> [1] https://lore.kernel.org/linux-mm/a694398c-9f03-4737-81b9-7e49c857fcbe=
-@redhat.com
->
-> Fixes: 354dffd29575 ("mm: support batched unmap for lazyfree large folios=
- during reclamation")
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Suggested-by: Barry Song <baohua@kernel.org>
-> Signed-off-by: Lance Yang <lance.yang@linux.dev>
+> Document these bindings in the devicetree schema.
 
-I'd prefer changing the subject to something like
-"Fix potential out-of-bounds page table access during batched unmap"
+Applied.
 
-Supporting partial batching is a cleanup-related benefit of this fix.
-It's worth mentioning that the affected cases are quite rare,
-since MADV_FREE typically performs split_folio().
+Thanks,
+Inki Dae
 
-Also, we need to Cc stable.
-
-Thanks
-Barry
+>
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> ---
+>  .../bindings/display/samsung/samsung,exynos7-decon.yaml           | 8 ++=
+++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/samsung/samsung,ex=
+ynos7-decon.yaml b/Documentation/devicetree/bindings/display/samsung/samsun=
+g,exynos7-decon.yaml
+> index 53916e4c95d8c0369138941a556c23f5d42fbd39..1e9500c86590d555cfa6f0479=
+0e2b64da291b78b 100644
+> --- a/Documentation/devicetree/bindings/display/samsung/samsung,exynos7-d=
+econ.yaml
+> +++ b/Documentation/devicetree/bindings/display/samsung/samsung,exynos7-d=
+econ.yaml
+> @@ -80,6 +80,14 @@ properties:
+>        - const: vsync
+>        - const: lcd_sys
+>
+> +  iommus:
+> +    maxItems: 1
+> +
+> +  ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
+> +    description:
+> +      Contains a port which is connected to mic or dsim node.
+> +
+>    power-domains:
+>      maxItems: 1
+>
+>
+> --
+> 2.49.0
+>
+>
