@@ -1,133 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A08219E8;
-	Fri, 27 Jun 2025 02:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10D81362;
+	Fri, 27 Jun 2025 02:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750993008; cv=none; b=dpYIUWKpCyck6P4QYO+TFgjMekkSbZGi46Op3iTVy6omoxsu/S5x+TquigVCA6MUJC2/IkHzEHIE0H3m9KLjSADAUUpYbwnB3Ste0Nx9vPyT0kpD3MKaQFW8T5MQvOnhNAj4eoir32gsOXzSBJMJQhycts8+/nv67vcVyuOBWw8=
+	t=1750993096; cv=none; b=PDRb75nzje/mTKHAFjLpD8jbTaXvv0otOQrXZCiQRvjeE6XS5ZHvGIF5Fda0G2YBIMsHAaJP9Gtn0T8I/zivOOEQNIwwCXzpXk7XKnFYZgAqin/q4+uKdbQitL/rWcAhJHeMv30a4hEmZI5zcA5ruzZCXlzh1RJnpSqOYjrZVR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750993008; c=relaxed/simple;
-	bh=6HaipL2Nb3QqfyHkXwTX10Vg5Q0zLosiWZASw1iDunI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iygLSTWcfVFe73Ih9S0g7nScfwqovRsLZBtKjIbZygZZLLw0UvPFs2m4rj8TyTIOiio6qYdhYMGiV4i+PqUsTeg9f/UkqjgUHqb3d2tcYXeN6XdhT7V/F2jhMXba/v6LHDN7XCB+RRja6MFwQ26AFR3VgpQAIunoVNNQtmgoxME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OdfZsgQJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750993096; c=relaxed/simple;
+	bh=Do34ts/POB3SPVNCWTjYk641I1WSgzqH0QCzIHTOszY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sfPoC1r/9pLGqppbxETkEWr0qmNcFAu3nQU5Lb2VzfEXpa9crsuo8rmoNp2uAX2UV7TvGeTImslppnvjn/r0x0qbMi2FjAxfrg6nSkjFjYWtU/YC0HjiENPGo3idjkzrqP6bKFNXIVdm25yx+FgvYJzEAI0dFgZWfz97K8AhZ6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=gowXgdXn; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OdfZsgQJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECAB8C4CEEE;
-	Fri, 27 Jun 2025 02:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750993008;
-	bh=6HaipL2Nb3QqfyHkXwTX10Vg5Q0zLosiWZASw1iDunI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=OdfZsgQJGCnp3QbzwZi/zpPrlV5AoEmH+oQkmwbR6fdiolFsnMuFy5CbxALNOtiIl
-	 K3izNJ445A48065KWMd5dheH849l83Vg0XMaYNBhLm/OHhNIMjXaWIAMIyuVXX1oHj
-	 8ST9CyjCzuLKEuS6AE3RJY1depX4h/si9ywALa8ffHaOKsQEI7czwRP/P4hOmBzHTL
-	 OYSohwCRSgjkzUGQQTKYP6tl5FEs0XMZ0lIalMChEoUf33q/JnyYOB+RIxzXSE8QQG
-	 36bti5RB2cXv7p2zSLKRKySeQrSPbG5gyEzSFr01Z9EIFDkIW2IhWckSxMUE7rmMJt
-	 HDlifh/m7lBFQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 99F29CE0C3C; Thu, 26 Jun 2025 19:56:47 -0700 (PDT)
-Date: Thu, 26 Jun 2025 19:56:47 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>, linux-kernel@vger.kernel.org,
-	rcu@vger.kernel.org, lkmm@lists.linux.dev,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>, Breno Leitao <leitao@debian.org>,
-	aeh@meta.com, netdev@vger.kernel.org, edumazet@google.com,
-	jhs@mojatatu.com, kernel-team@meta.com,
-	Erik Lundgren <elundgren@meta.com>
-Subject: Re: [PATCH 0/8] Introduce simple hazard pointers for lockdep
-Message-ID: <a8e06076-3f66-441f-9ccb-0b368d95e1a1@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250625031101.12555-1-boqun.feng@gmail.com>
- <aFvl96hO03K1gd2m@infradead.org>
- <aFwC-dvuyYRYSWpY@Mac.home>
- <aF0eEfoWVCyoIAgx@infradead.org>
- <aF1rjV8XQozi7hXB@Mac.home>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gowXgdXn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1750993083;
+	bh=A8X8e5bE1iuLOEfVaOHH29HSozNnnErvuoEviaz3Fiw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=gowXgdXnmnBlfrBlRRw8JF7Rbfgs9ccWs3B5i3NFxHIjK1fJNZExXkz5oMWkXV8l9
+	 DjB7KahJusieRnlYiTWRk9XBc4tBtWOwmeSTe977ehzuwLoXgnv7BIUPC10yG3qelX
+	 9pDKHETpt20TvxfcrmqcEEwDpL5yRtBG5jRuu4Ga8ukVw6jHNZbQ1aMn8WxbCk+gfv
+	 6CEy0BIlRPeKq6Iv8QW9Hg4uiVyBpLYaUTIm1QtDoyIIr8va4Pp9Y9xdMh8DM7eMCD
+	 DZe4jSxsSb9K8qVeexDV/YEctU6Mb0UP56kMgzVUcYmy7LFYn7/FiRUrR5lPFrE41K
+	 nUxVQ61HdAEaA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bT0bt4Dn1z4wyh;
+	Fri, 27 Jun 2025 12:58:02 +1000 (AEST)
+Date: Fri, 27 Jun 2025 12:58:01 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Dave Airlie <airlied@redhat.com>
+Cc: DRI <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Maarten Lankhorst <dev@lankhorst.se>, Michal
+ Wajdeczko <michal.wajdeczko@intel.com>, Thomas =?UTF-8?B?SGVsbHN0csO2bQ==?=
+ <thomas.hellstrom@linux.intel.com>
+Subject: linux-next: manual merge of the drm tree with the drm-fixes tree
+Message-ID: <20250627125801.53203be5@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aF1rjV8XQozi7hXB@Mac.home>
+Content-Type: multipart/signed; boundary="Sig_/ofP6NELqW_yRXUluNun=XkR";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Thu, Jun 26, 2025 at 08:47:25AM -0700, Boqun Feng wrote:
-> On Thu, Jun 26, 2025 at 03:16:49AM -0700, Christoph Hellwig wrote:
-> > On Wed, Jun 25, 2025 at 07:08:57AM -0700, Boqun Feng wrote:
-> > > Sure, I will put one for the future version, here is the gist:
-> > 
-> > Thanks a lot!
-> > 
-> > > The updater's wait can finish immediately if no one is accessing 'a', in
-> > > other words it doesn't need to wait for reader 2.
-> > 
-> > So basically it is the RCU concept, but limited to protecting exactly
-> > one pointer update per critical section with no ability for the read
-> > to e.g. acquire a refcount on the objected pointed to by that pointer?
-> 
-> For the current simple hazard pointer, yes. But simple hazard pointers
-> is easily to extend so support reading:
-> 
-> 	{ gp is a global pointer }
-> 
-> 	Reader				Updater
-> 	======				=======
-> 	g = shazptr_acquire(p):
-> 	      WRITE_ONCE(*this_cpu_ptr(slot), gp);
-> 	      smp_mb();
-> 	
-> 	if (READ_ONCE(gp) == *this_cpu_ptr(slot)) {
-> 	    // still being protected.
-> 	    <can read gp here>
-> 					to_free = READ_ONCE(gp);
-> 					WRITE_ONCE(gp, new);
-> 					synchronize_shazptr(to_free):
-> 					  smp_mb();
-> 					  // wait on the slot of reader
-> 					  // CPU being 0.
-> 					  READ_ONCE(per_cpu(reader, slot));
-> 	}
-> 
-> 	shazptr_clear(g):
-> 	  WRITE_ONCE(*this_cpu_ptr(slot), NULL); // unblock synchronize_shazptr()
-> 
-> 
-> Usually the shazptr_acqurie() + "pointer comparison"* is called
-> shazptr_try_protect().
-> 
-> I will add a document about this in the next version along with other
-> bits of hazard pointers.
-> 
-> [*]: The pointer comparison is more complicated topic, but Mathieu has
->      figured out how to do it correctly:
-> 
->      https://lore.kernel.org/lkml/20241008135034.1982519-2-mathieu.desnoyers@efficios.com/
+--Sig_/ofP6NELqW_yRXUluNun=XkR
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-It might be helpful to add that, at a high level, hazard pointers
-are a scalable replacement for reference counting.  At a similarly
-high level, RCU is a scalable replacement for reader-writer locking.
-At lower levels, there is considerable overlap in applicability, so that
-you can use RCU to replace many reference-counting use cases and hazard
-pointers to replace many reader-writer-locking use cases..
+Hi all,
 
-Plus, as both Mathieu and Boqun pointed out, both RCU and hazard pointers
-can be combined with other synchronization mechanisms, including each
-other.
+Today's linux-next merge of the drm tree got a conflict in:
 
-							Thanx, Paul
+  drivers/gpu/drm/xe/xe_ggtt.c
+
+between commit:
+
+  af2b588abe00 ("drm/xe: Process deferred GGTT node removals on device unwi=
+nd")
+
+from the drm-fixes tree and commit:
+
+  b2d6fd7ac598 ("drm/xe: Do not rely on GGTT internals in xe_guc_buf kunit =
+tests")
+
+from the drm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/xe/xe_ggtt.c
+index 2c799958c1e4,7b11fa1356f0..000000000000
+--- a/drivers/gpu/drm/xe/xe_ggtt.c
++++ b/drivers/gpu/drm/xe/xe_ggtt.c
+@@@ -201,13 -222,22 +222,29 @@@ static const struct xe_ggtt_pt_ops xelp
+  	.ggtt_set_pte =3D xe_ggtt_set_pte_and_flush,
+  };
+ =20
+ +static void dev_fini_ggtt(void *arg)
+ +{
+ +	struct xe_ggtt *ggtt =3D arg;
+ +
+ +	drain_workqueue(ggtt->wq);
+ +}
+ +
++ static void __xe_ggtt_init_early(struct xe_ggtt *ggtt, u32 reserved)
++ {
++ 	drm_mm_init(&ggtt->mm, reserved,
++ 		    ggtt->size - reserved);
++ 	mutex_init(&ggtt->lock);
++ 	primelockdep(ggtt);
++ }
++=20
++ int xe_ggtt_init_kunit(struct xe_ggtt *ggtt, u32 reserved, u32 size)
++ {
++ 	ggtt->size =3D size;
++ 	__xe_ggtt_init_early(ggtt, reserved);
++ 	return 0;
++ }
++ EXPORT_SYMBOL_IF_KUNIT(xe_ggtt_init_kunit);
++=20
+  /**
+   * xe_ggtt_init_early - Early GGTT initialization
+   * @ggtt: the &xe_ggtt to be initialized
+@@@ -264,12 -290,8 +297,12 @@@ int xe_ggtt_init_early(struct xe_ggtt *
+  	if (err)
+  		return err;
+ =20
+ +	err =3D devm_add_action_or_reset(xe->drm.dev, dev_fini_ggtt, ggtt);
+ +	if (err)
+ +		return err;
+ +
+  	if (IS_SRIOV_VF(xe)) {
+- 		err =3D xe_gt_sriov_vf_prepare_ggtt(xe_tile_get_gt(ggtt->tile, 0));
++ 		err =3D xe_tile_sriov_vf_prepare_ggtt(ggtt->tile);
+  		if (err)
+  			return err;
+  	}
+
+--Sig_/ofP6NELqW_yRXUluNun=XkR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmheCLkACgkQAVBC80lX
+0GxRSgf9GQKT6emBuigjyr500/ciuU+U7OChBkvALDEiC4U4z3e2SOrXbIEMegr9
+eo1NGsYBzqEoEE72v/Wj74TPPbb27wUeg5adxJi/GlWkauLd83AYoJBAVjCZFSJm
+6/9DZ53ncr6rJD/f6/Am0UmiPJDN+sw1d5lVHnMdkDtuQGQ9WFXUHsJkSbYTU66n
+isdQDbr58nEK8tzoHCdDlqAYMFtL+8G7oqP0VD1vUE2agsUV/HRiaK057LJHqQ3+
+SJz67MRM/SHPxYhjuCQMomY8epAqckD3QsTDv60Y3EETAIWz7G5dDNTvvlR8mux/
+BblKGz/EvJRGOUgt2Cct5DT/A2D8Nw==
+=H6SJ
+-----END PGP SIGNATURE-----
+
+--Sig_/ofP6NELqW_yRXUluNun=XkR--
