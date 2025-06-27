@@ -1,174 +1,134 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E3314EC73
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB2119F422;
+	Fri, 27 Jun 2025 16:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751040138; cv=none; b=BJcZ9osk7bEge1bEZ5EZVFji96oFTuE4feMylcusdetK/tOtRaLlC9N76MljYnPq4fyxy6UoJPqK9H7hgyul7yCM/dIWNIpgnlx3Tr/cdsFGtfw2jIMEOA2tWWRU8c3cbi52zA5+jv/HRh82/EsT7RgID87OBdkDQ+APSLsFREY=
+	t=1751040154; cv=none; b=VF8zo6g8nx1ApVlT8JcYEqN+caZ20zMzXaaE0KsRUJfP1GjQDqHVYH4HV99VEcNJGp3iSlkb/Z//wXlLMqaoR5z+rCraTg3oYpETM9AdIsaeZAgi38BHA5nFCDIuSdc22A23wSpWKoeJhAAiKFK13h4fLBS9yB/nrrSuQxo5HwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751040138; c=relaxed/simple;
-	bh=GldpBUfQxusdRLQisJudA/HXkddw/PUvTkMxa+47M6o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=d+kDClgoSzODm1OZA8CK+FmSkBhw8meYV8vzwXbXaEHAPGjlp9jyUA8xfhu9hEwyw0f40uif3+rzGM7XAsZevVMJDs3Mzfm2+S1xrmI3D6kcPAiM8ufBvt8bJoNyJxJOUCKaF7r+mcbmcLp5iqbzymOEw+fZS8cheYC+CngUKBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uVBWT-00038m-D8; Fri, 27 Jun 2025 18:01:53 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uVBWS-005dyk-2s;
-	Fri, 27 Jun 2025 18:01:52 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uVBWS-000Olw-2X;
-	Fri, 27 Jun 2025 18:01:52 +0200
-Message-ID: <905dc44cf6e7fc4d4500b47f493ec073991a849b.camel@pengutronix.de>
-Subject: Re: [PATCH v3 4/9] reset: mpfs: add non-auxiliary bus probing
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Conor Dooley <conor@kernel.org>, sboyd@kernel.org
-Cc: Conor Dooley <conor.dooley@microchip.com>, Daire McNamara
- <daire.mcnamara@microchip.com>, pierre-henry.moussay@microchip.com, 
- valentina.fernandezalanis@microchip.com, Michael Turquette
- <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Lee
- Jones <lee@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, 
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Date: Fri, 27 Jun 2025 18:01:52 +0200
-In-Reply-To: <20250623-equate-ogle-0ce3293567e2@spud>
-References: <20250623-levitate-nugget-08c9a01f401d@spud>
-	 <20250623-equate-ogle-0ce3293567e2@spud>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1751040154; c=relaxed/simple;
+	bh=L+EH8xUN/kTamOCel3cN068LKn0HdNYIsmWH8Px/0sQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NKFXXSFMd+2P5jNrePRN1+xLiX1xNofrp7+arechZcpGtUTUnTQZwp/Q+XgHnTeDFfJd1N/hCNUVkEfqMNQCI9a9Zm53gSpMLV82Vgk4IAkLbtENKfM7Vf8xPjl31xfsmdSvdIGquCvQCTxegliNxbE1hjPhrCc67YbI8jR1hX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LmoJR5AV; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmoJR5AV"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4538a2fc7ffso15261735e9.0;
+        Fri, 27 Jun 2025 09:02:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751040151; x=1751644951; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KyLLRbISSweC81aqmpyBtxhoJFl2pqPLdoDYJV2N3oA=;
+        b=LmoJR5AV80T86m6GMONTPeKkCyxSLeEgqTGqDqnQCg2N5p/Y6j653vg0bRpGzlMirQ
+         8DnOaLOaZqbtHcMw1pkZz8t73vegMMtGpdTg0/k6ARex+0hAxgvwlP2qK9EH0Lf25hDZ
+         N2V2ElQyqQl2qiE4jq5jpUfNnv4i2eMf8qFMkh0U2fn2yMl6Tmdz7GZkuSXyvOLqrNus
+         +FlR6hHZ4gnnIHXZUk/GpMQGBtluIiQ7FXVP/bmLeJ0XriSZHeCXKiN33Dt+jlj54pxI
+         W1i4nV+LOCRUiZnFJW+CALUoesM6BWbIJ/oWVd8elsC0qhgept0oKZygCRvSn3l1u5Va
+         tRAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751040151; x=1751644951;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KyLLRbISSweC81aqmpyBtxhoJFl2pqPLdoDYJV2N3oA=;
+        b=E1/fIyIAZ4bdCX0RhN1zWimnFH8khtiWqb2xkwCNNpZgFien7DQ04e413oLNbLkhg1
+         gN7GU6DMm89qYsOQ0D3v08tEDb2PhBziWgQ4MGbRJAV6I+ug+C/L1AEfFLsDC+8j08lS
+         YcNijlRs23N62vIptvncOxSMhHOqDfmQvgfKi5VFnw/SdzyLsxU66Yhb5xytOsxci3aA
+         gW9RPEBAmkvpydYpJyc9gHx7/q/g7T6f7ARE10913Hp6b2GBHnh1frtOe6H8xgdbRJFP
+         9YMUgv3CsBryDo/dRCyX1bqNl2aBnVgVbaN1cj/0OC/yIY/WTyy6BBWzG9j/sqaOqRRr
+         Ux8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUr4X4zS31WqFyEFP5SlUwTe8Riz8jwf2EnX52X/d48MSJ2kG2SbdUoa3+sDdLWnnDsUoJvDksrFweT@vger.kernel.org, AJvYcCUtC+uXJ4XmlzOUoIuJgYZmoy+sgdsaGdKS3DW4rw1JVl3QDdWL7CdJfvZaCZEBvl8rO5WYQ0bMvZmJ0GcR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4AWCuqg0hPzoudT2kOA3rq3m6YnKbhcl7s3+AgSVjOR7PiM9h
+	9FwAtjHn4T5GJfSvtQJ5WolSQa96weVoXeTt9cZ/5uJCXeqff2TLkcg2
+X-Gm-Gg: ASbGncuMhQHGgQunnzQMl0rcfozBSJzdsJ1bKGf2E2dMRALFH1WD5U6BCMBuXF8mdm8
+	fHgnHrzLdDIZr7MvVfHBIaYUTFkIbpRpMluCOjWRjpyaqvMaSvDublnWhmgMXpIogZDCJW1fuA/
+	lKQVc6XLww8ifxfZ9vDBX1/DMde7AFpTfEkt+OgnEunEwfqvEPj2TTewGKWVsOdt+VcbQnnrKjP
+	2l5QwK5G7cmwVT5aIPuq/Hwc9m3fT2uuMlOcOUFynGe9xCI/uzWT+OXXkXoBLLhjGt9H9XfEJEP
+	0iGX1aCY8W+34oXy/oxMtbMDnyl9/oOPp97eZBmVq60pQP1EFz453DdN04vtbC6TOS2AKS6yHA5
+	p0g0nBfo=
+X-Google-Smtp-Source: AGHT+IGO7G80owL1UgXjlNkD6fOUWrTlmMT/3NWx91C6Idl3MW0ZTwFQqisHo2CQ/VPPMeqo+HL21g==
+X-Received: by 2002:a05:600c:8184:b0:453:92e:a459 with SMTP id 5b1f17b1804b1-4538ad600f0mr72891895e9.16.1751040149634;
+        Fri, 27 Jun 2025 09:02:29 -0700 (PDT)
+Received: from HYB-DlYm71t3hSl.ad.analog.com ([137.71.226.91])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a306a01sm57556615e9.0.2025.06.27.09.02.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 09:02:29 -0700 (PDT)
+Date: Fri, 27 Jun 2025 18:02:26 +0200
+From: Jorge Marques <gastmaier@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Jorge Marques <jorge.marques@analog.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: i3c: Add adi-i3c-master
+Message-ID: <cfi6rzhco2ba6pcbk57l7tblimuks5jnpgaly7nbedbrpyhtma@u46if22kurwk>
+References: <20250626-adi-i3c-master-v4-0-3846a1f66d5e@analog.com>
+ <20250626-adi-i3c-master-v4-1-3846a1f66d5e@analog.com>
+ <20250627-steadfast-ferret-of-expertise-5c8ff2@krzk-bin>
+ <tl5fckhrivaqfyzwyb2o2a7gykpigwend7z2nduqgbbej3hqbs@vxxtsadhtdmt>
+ <41782ded-908b-46ef-8f75-4d2565476b7c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <41782ded-908b-46ef-8f75-4d2565476b7c@kernel.org>
 
-On Mo, 2025-06-23 at 13:56 +0100, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
->=20
-> While the auxiliary bus was a nice bandaid, and meant that re-writing
-> the representation of the clock regions in devicetree was not required,
-> it has run its course. The "mss_top_sysreg" region that contains the
-> clock and reset regions, also contains pinctrl and an interrupt
-> controller, so the time has come rewrite the devicetree and probe the
-> reset controller from an mfd devicetree node, rather than implement
-> those drivers using the auxiliary bus. Wanting to avoid propagating this
-> naive/incorrect description of the hardware to the new pic64gx SoC is a
-> major motivating factor here.
->=20
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
-> v2:
-> Implement the request to use regmap_update_bits(). I found that I then
-> hated the read/write helpers since they were just bloat, so I ripped
-> them out. I replaced the regular spin_lock_irqsave() stuff with a
-> guard(spinlock_irqsave), since that's a simpler way of handling the two
-> different paths through such a trivial pair of functions.
-> ---
->  drivers/reset/reset-mpfs.c | 81 ++++++++++++++++++++++++++++++--------
->  1 file changed, 65 insertions(+), 16 deletions(-)
->=20
-> diff --git a/drivers/reset/reset-mpfs.c b/drivers/reset/reset-mpfs.c
-> index 574e59db83a4f..9c3e996f3a099 100644
-> --- a/drivers/reset/reset-mpfs.c
-> +++ b/drivers/reset/reset-mpfs.c
-> @@ -7,12 +7,15 @@
->   *
->   */
->  #include <linux/auxiliary_bus.h>
-> +#include <linux/cleanup.h>
->  #include <linux/delay.h>
->  #include <linux/io.h>
-> +#include <linux/mfd/syscon.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
-> +#include <linux/regmap.h>
+On Fri, Jun 27, 2025 at 04:49:19PM +0200, Krzysztof Kozlowski wrote:
+> On 27/06/2025 16:38, Jorge Marques wrote:
+> > On Fri, Jun 27, 2025 at 08:56:55AM +0200, Krzysztof Kozlowski wrote:
+> >> On Thu, Jun 26, 2025 at 12:07:36PM +0200, Jorge Marques wrote:
+> >>> Add bindings doc for ADI I3C Controller IP core, a FPGA synthesizable IP
+> >>> core that implements the MIPI I3C Basic controller specification.
+> >>
+> >> How did you resolve my last comment? I don't see any explanation -
+> >> neither here nor in the binding description. Binding description is
+> >> actually better place, I think now.
+> >>
+> >> Best regards,
+> >> Krzysztof
+> >>
+> > 
+> > Hi Krzysztof,
+> > 
+> > I forgot to condense out discussion on v4.
+> > What about this binding description:
+> > 
+> >   description: |
+> >     FPGA-based I3C controller designed to interface with I3C and I2C
+> >     peripherals, implementing a subset of the I3C-basic specification.
+> >     The IP core is tested on arm, microblaze, and arm64 architectures.
+> >     It takes one or two clocks, axi and i3c. If only axi is provided,
+> >     then there is no clock signal to the i3c input clock pin and axi
+> 
+> This is obvious from the schema, drop.
+Ack.
 
-Maybe sort these alphabetically.
+> 
+> >     clock drives the whole IP. The compatible is suffixed by 1.00.a
+> >     foreseeing future controllers by Analog Devices Inc. and breaking
+> >     changes.
+> 
+> I don't understand that. How are you breaking any changes? And how
+> 1.00.a predicts future? I don't think this reflects previous discussion.
+> Why you were asked to go with v1.00.a?
+The -1.00.a suffix came from this discussion:
+  
+  https://lore.kernel.org/linux-i3c/ildi2pup2zkyv4stuknkrjysex3yzsbrrsrwbgcc4xgvdhwrdd@7qh4y6mutgy2/
 
->  #include <linux/reset-controller.h>
->  #include <dt-bindings/clock/microchip,mpfs-clock.h>
->  #include <soc/microchip/mpfs.h>
-> @@ -27,11 +30,14 @@
->  #define MPFS_SLEEP_MIN_US	100
->  #define MPFS_SLEEP_MAX_US	200
-> =20
-> +#define REG_SUBBLK_RESET_CR	0x88u
-> +
->  /* block concurrent access to the soft reset register */
->  static DEFINE_SPINLOCK(mpfs_reset_lock);
-> =20
->  struct mpfs_reset {
->  	void __iomem *base;
-> +	struct regmap *regmap;
->  	struct reset_controller_dev rcdev;
->  };
-> =20
-> @@ -46,41 +52,50 @@ static inline struct mpfs_reset *to_mpfs_reset(struct=
- reset_controller_dev *rcde
->  static int mpfs_assert(struct reset_controller_dev *rcdev, unsigned long=
- id)
->  {
->  	struct mpfs_reset *rst =3D to_mpfs_reset(rcdev);
-> -	unsigned long flags;
->  	u32 reg;
-> =20
-> -	spin_lock_irqsave(&mpfs_reset_lock, flags);
-> +	guard(spinlock_irqsave)(&mpfs_reset_lock);
-> +
-> +	if (rst->regmap) {
-> +		regmap_update_bits(rst->regmap, REG_SUBBLK_RESET_CR, BIT(id), BIT(id))=
-;
+Other adi bindings use this suffix. I personally wouldn't add any suffix
+unless told otherwise, as I expressed on the thread. Should I drop it?
+or suffix it with something else?
+> 
+> Best regards,
+> Krzysztof
 
-mpfs_reset_lock is only needed for the readl()/writel() below.
-regmap has its own locking.
-
-> +		return 0;
-> +	}
-> =20
->  	reg =3D readl(rst->base);
->  	reg |=3D BIT(id);
->  	writel(reg, rst->base);
-> =20
-> -	spin_unlock_irqrestore(&mpfs_reset_lock, flags);
-> -
->  	return 0;
->  }
-> =20
->  static int mpfs_deassert(struct reset_controller_dev *rcdev, unsigned lo=
-ng id)
->  {
->  	struct mpfs_reset *rst =3D to_mpfs_reset(rcdev);
-> -	unsigned long flags;
->  	u32 reg;
-> =20
-> -	spin_lock_irqsave(&mpfs_reset_lock, flags);
-> +	guard(spinlock_irqsave)(&mpfs_reset_lock);
-> +
-> +	if (rst->regmap) {
-> +		regmap_update_bits(rst->regmap, REG_SUBBLK_RESET_CR, BIT(id), 0);
-
-Same as above.
-
-
-regards
-Philipp
+Best regards,
+Jorge
