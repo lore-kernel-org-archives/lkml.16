@@ -1,114 +1,104 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3862951D2;
-	Fri, 27 Jun 2025 10:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3B32951D2;
+	Fri, 27 Jun 2025 10:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751019353; cv=none; b=ng3KGiM+XNn9E9XnoR7QNxs3oxFXGuEM6oeR1DA0DeH2irTs4CHPimk6fUqtl30RGEJPe/d0tJAWCKUOd5f613/xaq8VOZwd8hu1miriGeKwyvv97SGvj5EKjnDJiMV+KM0ZWuNue8cpWAVp/nr4R7dvRz4SPTK5ISbH2izE590=
+	t=1751019359; cv=none; b=Iuz2j7N7txsGR8pjLPR0vThMruJgotvbLAuh7+hHX2Cfv2q2YEMKsJ1gLrYVXNbRvPTzdaOrrviInuQQInR0C0sfNDDBt/HWqgeron0aZSuwwCc8MsGaQMPcUkLOejv9pxHELgDav9ViWakcGHhyF96KfIJlYVQGTUW5RiVjYZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751019353; c=relaxed/simple;
-	bh=pW074c8bdu9mmtPtvWTBAb36uXFMxr1vMpn/ANOpnqI=;
+	s=arc-20240116; t=1751019359; c=relaxed/simple;
+	bh=3s6q/x000fxdjTd8nipUwFWpBcy6fLFPtzHW1ADaES8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=otdKfNOjgeyYt8Ggnt9NkM8H9jhRpfMBKjVRZqFTaBosa+kct5VC/R4GcMPoS3rw4EQPdi7XXPOBLZz7Nl9CkYuHZoWr16B79aJhy3w0kL1eSnYhOK0Lgy6o4Hx6iuWsGOM07Ie5edG+SFB6vYnYqd8SQcOiakuY0Lvu3pW/d0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MU2Le/vc; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=fhAily4XV08BLCRzWQ12AbSc+i3nGNj/piPCnJIQr6ptqXWRYEP8Czt7Ylc/t8wIrfInBKz5Y5Bz+xxUbqtb9U3dWW5bA3Vl6+zRGHN6Wr/Ko1i5pt7bKE5CoIl2qjbvqES1lJUepKdStgjjheW4reIXruXcfbDKkJM3XF6EDlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tnhnTgEo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MU2Le/vc"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-87f04817bf6so1323180241.0;
-        Fri, 27 Jun 2025 03:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751019351; x=1751624151; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W3qFR7cfAS/X16LAzwLj/wNbMxrS9YVqLflPC6mFUYo=;
-        b=MU2Le/vctrfqhSR0jvozhjIcwuVE1JNhQPN6E8QBuTofxBTYtUJ3dscCr5WeWGjBhY
-         BX1Tga4tWbX/tzKAu9ssq4cHNbZTb7KlzJDYfx4U0x22hqobNGSzYGmYyQ/7ii4+nXRA
-         Zl9YCpF+xQ0lDK/wCQ4iD/sbq1dyVAM6+qEwJVbL2PYsKuEE6UYbi80pW1Mx1OyiP69M
-         OG9AHcz2wqX4jC/83xrJkOkDZQP2Y8WPOnq62AWnpTeFZWdsuaN4RqsbbscYL+5XbIwk
-         RhYq1eICNc39D8cfI11RxjUri7PbcNJAP5jz8dl96fv/HbKDBFHfj5um1Ri1L1TwltX5
-         qwFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751019351; x=1751624151;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W3qFR7cfAS/X16LAzwLj/wNbMxrS9YVqLflPC6mFUYo=;
-        b=sB4p+UjlhAion9Wxc1mDLu09H4Jhu5DwTh8OCEn0GUpiL0Qul+KDn0k4I0y4Bh0Tf7
-         9nIF85x43IiQQGWZOsuQ1lOwlMoO0xqECPtyMsdhnie7x99GfeghazLZEyTybUncPuIF
-         6IHsZSSj5L9miphkv0B0M0I83ENrRUoJyz72IrvjpVrsqeuPYjn48XQMyZOCbv21Ec+n
-         Vcx39FBJrTXrm34Ng78VnAQwiIfei+gBkiKhsj5iS//xICACVVrD8QvcSUdxqGb+nDwD
-         YEKVbPQhewMvmeiykG4WEcUozhtnn2sIYuzYXTiLCGD4slLLApErSdeEEfWs0x8qPPg9
-         Q5NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGRIOhgEq/ESPRYEvm20Xixl7yiQsiKSLYsYjVY/ceCn/8flplVX1vlITk0nZIrI6rPt08+rcM0n0Z@vger.kernel.org, AJvYcCV5uTO9fwiRmV8rI1a/6Lw3QOcs9I+hterHEFydvuasxtAbUA7p7+WgkIocasnFMDL066FagBQ4btUU+hpO@vger.kernel.org, AJvYcCVqiTOQp4hvhC0Bn02bnsR9uWrfRlfeYRDkiCPUemp6PzL7kOE82omQMG/UMFQCURBebjxzf7V7GzfBZ0GOPXEK6OU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwqOrhVw4RFs+D2Ua7j/Pl9PMdcfMilzRqAZqwQQdGMRnXYa4Q
-	iqCXvGqAzNmdcYbE5sEyg95GOODUm7kDeIyRfrLFLccEzK03yubDb6v6Ubhdvdh0S8uLU8jlIPw
-	InYzNlB+A7WnocsNKSvv43Fy01Uf+xYM=
-X-Gm-Gg: ASbGnctIpdYgX10TiHzMB5tvD4UUXsshbrOLPkpI8MBRmGupz52O9kSuBUEFnyQdvuu
-	S1yUENKSgpocuqSlTqHiRsbFd6l/ARZw4n2I3CJjnw5uxE2LMjBt+HNs+hTCCnVmr6l7rwP59bE
-	wlohl2UaavkHDBG2868EljNz9g9VVtNEesoAwsvv4y8w==
-X-Google-Smtp-Source: AGHT+IF+zTXlE8TphxlFmfZTtMV7oCo6MYa180Y0AG9PxdjoTKxOQADyJ71mo4br1mdkRgwuFP5aO2OpnO/3e6XLJPA=
-X-Received: by 2002:a05:6102:440e:b0:4c5:4591:ffda with SMTP id
- ada2fe7eead31-4ee4f78a70fmr1764599137.21.1751019350729; Fri, 27 Jun 2025
- 03:15:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tnhnTgEo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FEE9C4CEEB;
+	Fri, 27 Jun 2025 10:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751019359;
+	bh=3s6q/x000fxdjTd8nipUwFWpBcy6fLFPtzHW1ADaES8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tnhnTgEoCUVtmDaHRWJU/1Hn/S2PMjvOoZDeIQ6We3xo1I3Qrbj9qsK/+5GbQNx65
+	 H0aZDYLAvG3HmDDaHLeyPpwzl+/rTchbLjTGfuG6oLTVnYKydKVEX8XUcLDUJXc51Z
+	 lGZCr12WwxZwvqk1yUCDRx2GI0GGLq46v5mMztLbfpDFIOQXj7ax9UfD9Uz6IfdXqK
+	 aPnfUJ1npAwsypLnjLZBobK7BkIAwBacWsSeyFHyDGnlnBxqPSf8G0vYLqBg9kN+kr
+	 7pCwayqp0Ikrfdkm3PTl3dvD9ZYP9rljQzzpy95zWMFZPIZx9SRWbtTYXibFMx5OPC
+	 GEyqnE0r78hKQ==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60c79bedc19so2363445a12.3;
+        Fri, 27 Jun 2025 03:15:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUhxYS8XZ80mZnCEDRgycyxjAbDYlR9yuP15s26h4jaADlK6zXO/JlXtJmhyhaZnjX/dgzvIV/Ww4QbNZIy@vger.kernel.org, AJvYcCWFwYfZWT/HLL7fWshBCRmDM8KxfseRGStVA2zaM1s7pTSSrBvEKewWTr+RKhbmekErZvT1ROahuH1lvwI=@vger.kernel.org, AJvYcCXsPy33xS7l2M1K+9bmxn/TaY+CYJxcCLysMl3tE2K8Gggs0zoJmPTRpFJ5P8b2TU8eo86ZqjMpN3MBKFmEWmb2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8WvqCx62M/DkpdQiju5t5lqUc5hDcXxxNXdxFKVE4B22gLjDE
+	5GGI3VDGU9o98whN+/D2Pl5Xac3dGOv3gdhhLwmFPyU4Z4LqGQgweH3G4XC2kChfG8uj3Gt9L5s
+	9V0s28ZbnrAITI3VHIw7eu9yfDR4BvUI=
+X-Google-Smtp-Source: AGHT+IEC0RlMZ0dBSk+i/oRcQH/9JIC09lTKPfqTuntyMRorx+R8qqxJK7/9jgwr4DviueaaQI2nTlixyx18/q/CnoY=
+X-Received: by 2002:aa7:d98f:0:b0:60c:42ce:27e2 with SMTP id
+ 4fb4d7f45d1cf-60c88ec2ademr1766441a12.30.1751019357555; Fri, 27 Jun 2025
+ 03:15:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627-exynosdrm-decon-v3-0-5b456f88cfea@disroot.org>
- <20250627-exynosdrm-decon-v3-1-5b456f88cfea@disroot.org> <CAAQKjZPAsE8LGE00fWE1aPj03b6tu1rk9ScTDSN+HeKzVXMZvw@mail.gmail.com>
- <20250627-garrulous-cuddly-flamingo-b4ebcf@krzk-bin>
-In-Reply-To: <20250627-garrulous-cuddly-flamingo-b4ebcf@krzk-bin>
-From: Inki Dae <daeinki@gmail.com>
-Date: Fri, 27 Jun 2025 19:15:12 +0900
-X-Gm-Features: Ac12FXzHboYrFxSlMZbUjKMAban_KcR6H0q7HqOUTH-xXDeKHhkBse3ecLJumpQ
-Message-ID: <CAAQKjZO4grfoT=NYATNV5JojYgOyD=WwH4DgFTVcXEagXoFf8g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: display: samsung,exynos7-decon: add
- properties for iommus and ports
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Kaustabh Chakraborty <kauschluss@disroot.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, 
-	Ajay Kumar <ajaykumar.rs@samsung.com>, Akshu Agrawal <akshua@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
+References: <20250619025138.2854-1-zhaoqunqin@loongson.cn> <20250619025138.2854-4-zhaoqunqin@loongson.cn>
+ <aFs2RDOeOKvWUN2L@kernel.org> <20250625080527.GN795775@google.com>
+ <aFvhorr3kZSuzVpv@kernel.org> <20250625134047.GX795775@google.com>
+ <aFwsIs6ri3HZictC@kernel.org> <20250626103030.GA10134@google.com>
+ <aF0oHDVQKVfGZNV2@kernel.org> <CAAhV-H7nyKHS70BGh7nwjuGwSWayCbUY=1-zWMU4N3bJZtH1gQ@mail.gmail.com>
+ <aF2Rn0R4AlopEwz8@kernel.org> <86b5e396-54d4-7b36-8848-06f41083ba59@loongson.cn>
+In-Reply-To: <86b5e396-54d4-7b36-8848-06f41083ba59@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 27 Jun 2025 18:15:45 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5JkzOOq-1pJFXmGLLtXmrDEErfTfvcQUe-9bzCJ9znWA@mail.gmail.com>
+X-Gm-Features: Ac12FXzDlC7jJ5hahCiQAD4Tlirbeiu71uFZpCn5cbdTSSpq6MQ0DvfKW-Bp0ag
+Message-ID: <CAAhV-H5JkzOOq-1pJFXmGLLtXmrDEErfTfvcQUe-9bzCJ9znWA@mail.gmail.com>
+Subject: Re: [PATCH v11 3/4] tpm: Add a driver for Loongson TPM device
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>, Lee Jones <lee@kernel.org>, herbert@gondor.apana.org.au, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, davem@davemloft.net, 
+	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca, 
+	linux-integrity@vger.kernel.org, Yinggang Gu <guyinggang@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-2025=EB=85=84 6=EC=9B=94 27=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 4:51, K=
-rzysztof Kozlowski <krzk@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+On Fri, Jun 27, 2025 at 2:47=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
+> wrote:
 >
-> On Fri, Jun 27, 2025 at 02:02:37PM +0900, Inki Dae wrote:
-> > 2025=EB=85=84 6=EC=9B=94 27=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 4:2=
-1, Kaustabh Chakraborty <kauschluss@disroot.org>=EB=8B=98=EC=9D=B4 =EC=9E=
-=91=EC=84=B1:
-> > >
-> > > Similar to FIMD and Exynos5433's DECON, the Exynos7 DECON hardware:
-> > > - May optionally require an IOMMU to initialize a display region.
-> > > - May require a port connection to another block, say an MIC or a DSI
-> > >   master.
-> > >
-> > > Document these bindings in the devicetree schema.
+>
+> =E5=9C=A8 2025/6/27 =E4=B8=8A=E5=8D=882:29, Jarkko Sakkinen =E5=86=99=E9=
+=81=93:
+> > On Thu, Jun 26, 2025 at 08:48:35PM +0800, Huacai Chen wrote:
+> >> But there is another coherency, you can see this in the 1st patch:
+> >>
+> >> +static const struct mfd_cell engines[] =3D {
+> >> + { .name =3D "loongson-rng" },
+> >> + { .name =3D "loongson-tpm" },
+> >> +};
+> > I thought already after ffa driver from ARM that I need to fix up
+> > the naming a bit before it explodes. Thus, I'll stick to this.
 > >
-> > Applied.
+> > And e.g., I could easily find DRM driver with opposite order.
+> Next revision:
 >
-> Please wait for DT review, giving us few hours is not enough. Please
-> drop the patchset, needs fixes.
+> +static const struct mfd_cell engines[] =3D {
+> +       { .name =3D "loongson-rng" },
+> +       { .name =3D "tpm_loongson" },
+> +};
+> Then
+> "loongson-rng" can match MFD and Crypto subsystem naming convention.
+> "tpm_loongson" can match TPM subsystem naming convention.
+If possible, I prefer the old names.
 
-Got it. Reverted.
-
-Thanks,
-Inki Dae
+Huacai
 
 >
-> Best regards,
-> Krzysztof
+>
+> Thanks,
+> Qunqin
+>
+> >> Huacai
+> > BR, Jarkko
 >
