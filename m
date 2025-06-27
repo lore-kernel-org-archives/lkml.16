@@ -1,108 +1,140 @@
-Received: from kurisu.lahfa.xyz (kurisu.lahfa.xyz [163.172.69.160])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EDE22156A;
-	Fri, 27 Jun 2025 10:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.69.160
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63CD298270
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:42:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751020909; cv=none; b=CIrk4oeoZ1ZehykYUGLK1aL9xePuEYAg/exvn112TBoB/xrOaGuAZdLQ8ZaYKi2CRLoh8UjIM3K/l2YqIDlIgvOSIKI8dXkHTxpgzs54jxiDpnC8Ewz6aD3tR6F7wqQdo/fozmXbPekjde3xxTVVRQh2xhRveVhFBghIMvwW6Mc=
+	t=1751020927; cv=none; b=YqzZbHPv4QXW0ksqP7AJLwkcnkfI9EnC3zFI/BPCfET+7+/ccGxcFrWa8BFbcRayM9iVdtqjVPI2qQfizZD3t2BwzC6xmuTQ1f/BuhNdFxOjv/9WwXpIf/aTqk/gREr9vwoUYHPE29EGFVOJXdu3SAf4szwtf0sPYMk+Uock4F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751020909; c=relaxed/simple;
-	bh=yhF0gvpQ2LingrBx1HYPfc8w3xJ+F33erqmQmXW9kPg=;
+	s=arc-20240116; t=1751020927; c=relaxed/simple;
+	bh=YDMMLOTxS78FCUcrDJt19rSCZOgABNO62CdcDVjYmWA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cxp6Sa86smWRidCSbD/YxrKZbVj3MBMTAwjSRr0o2FtU8ccEfMbBHhxmpufbalLfla+kHI8hm41A0tw/WfbkCMD07qufkyo3rBv7fx7P2NbtQg1HMX9GZnVUHPzB5ZKZT1fLOlBtQ0p7f2Tgo9UFcpu8yfpGFwNiATzRUmxMprs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lahfa.xyz; spf=pass smtp.mailfrom=lahfa.xyz; dkim=pass (1024-bit key) header.d=lahfa.xyz header.i=@lahfa.xyz header.b=KIX31bsi; arc=none smtp.client-ip=163.172.69.160
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lahfa.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lahfa.xyz
+	 Content-Type:Content-Disposition:In-Reply-To; b=rVgt4AC3shU/5RECuMCYIdM3safe40IyqcXRhaoJ07ESvBuAzARu930nFpD6yZY04G3U2g1e0UWB2kv26f+QPIq2ptSjxxkprrsmauC8nsY6RSDNx+7tbRj8mf3gAPdSfv6Sw/GGKbJaluzP0EnDP6QKCg+zUNIx7uKzd/aMPiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hOWVwNV/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lahfa.xyz header.i=@lahfa.xyz header.b="KIX31bsi"
-Date: Fri, 27 Jun 2025 12:33:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lahfa.xyz; s=kurisu;
-	t=1751020405;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hOWVwNV/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751020924;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XKbXq1dbdhV8xumU0aZAN+tBsL+injlXBseZI72UWGQ=;
-	b=KIX31bsiJiF4FTf1m/nQ2lEmj9X0nb+B1EjYYq+QrDCcZ8lrVU5vVNzzvuJnhN1083vDrI
-	NrnzfKSvauvRKKJSrXC7hlw/ZqkztctbMnQDGxytK3R7L/TPLtZ5KOt58YJy+MEoSadumY
-	TtjeSwIdF4YwE8q9BJsTmXDGDK+5fto=
-From: Ryan Lahfa <ryan@lahfa.xyz>
-To: David Howells <dhowells@redhat.com>
-Cc: Antony Antony <antony.antony@secunet.com>, 
-	Antony Antony <antony@phenome.org>, Christian Brauner <brauner@kernel.org>, 
-	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	Sedat Dilek <sedat.dilek@gmail.com>, Maximilian Bosch <maximilian@mbosch.me>, 
-	regressions@lists.linux.dev, v9fs@lists.linux.dev, netfs@lists.linux.dev, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] 9pfs issues on 6.12-rc1
-Message-ID: <gnji275b4iqotq3x3sa3igwa3vczk6tqtfcxpbv6k47hinrj2j@3wrm3id43qgj>
-References: <w5ap2zcsatkx4dmakrkjmaexwh3mnmgc5vhavb2miaj6grrzat@7kzr5vlsrmh5>
- <ZxFQw4OI9rrc7UYc@Antony2201.local>
- <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me>
- <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info>
- <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me>
- <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com>
- <3327438.1729678025@warthog.procyon.org.uk>
- <ZxlQv5OXjJUbkLah@moon.secunet.de>
- <1641293.1751018406@warthog.procyon.org.uk>
+	bh=Eq+61IIf8U2MG+TUGf81YCWex3B4uWo1eFJJF8gAeVs=;
+	b=hOWVwNV/K0s+x9EY4xg2F55T3Vxl/wfJW4/vFUf1cwj9JEd9bfVMTNhWjiNlszeRFO5QFF
+	ztzApB94ZpXau4sGdpkwPafxe6W3sd4bpMFbvcU73V3XCC6idwLYrUMj8WhiQOQuEcWp2m
+	N1XWYntpM01P0wDs3Lg83NKEXt3Yexs=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-682-PDB7jPXcN4G6UBa0luuoPw-1; Fri, 27 Jun 2025 06:42:03 -0400
+X-MC-Unique: PDB7jPXcN4G6UBa0luuoPw-1
+X-Mimecast-MFC-AGG-ID: PDB7jPXcN4G6UBa0luuoPw_1751020922
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-31220ecc586so2039791a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 03:42:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751020922; x=1751625722;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Eq+61IIf8U2MG+TUGf81YCWex3B4uWo1eFJJF8gAeVs=;
+        b=UddobD7s8A/ov3MwJyZNH0i78pwwOHRt0KM8yUi50HvJ0liYt6AL4dRDuoixMXBJmh
+         6GSPLSBc92e2ZWV/6jFqTGTF6Ydik2FyXDNpigYPvmgbeeRtOes6IkaYbvEYfqRytdcG
+         aPmbfM96KeWR71x4Hm/ue8v1VEXvXuffxSeVGHHqFbnZbnoDt0KdNFEioV4RV8Ef96jn
+         sU9yg1iGLWiVqI+obYOJYfrWF/C4Y02OI/CN3APoSlptxu6d5YumwtlvfL4xN8xMuZlu
+         5rsTsQWQJZxFu0IRs9L67LeqWlul5NHWOIPfRxvJ4BP5rpL0oXqeFvE5UAo31hNe7Ck+
+         b3Ew==
+X-Gm-Message-State: AOJu0YwffUNel2eBWXJg//mTXWB8MPUZko9/U1jO2ehpKPELUKjgOVDg
+	f3/RLghM1+uVRtz6ZH6rrpADVcKRt/0VRkNRuFJGLZfLDx8AdnTRUsnHvpy3QkQQ6TRYQPyX03J
+	iHs29EQTsXKv7vpdGZez5pWSwLShZ7h0RPe9o7xjGS2Omsu62TulpBDZt+hiwK+KCZfuJlmQMsg
+	==
+X-Gm-Gg: ASbGnctTk7TXUmPqcSLD/za+TbE+Cl1gXgWS5GcBMlKfBL082yYHnG3ROZzZd39F1fN
+	SYyCVCDPkFl46WKRGLpQzdOB/1uTHf82MgpX/vL9BzxurMyfu4yqXr2RBfQxv0Zye1Gj6K6yAGk
+	WKN68p30gdjM0qRa9yFtCPHfWhnmdm1fKiNvBlk1qzyl+fJjAQWV5H1nFpzy6MhwDG9CGuP7035
+	MVdp+1rK3tMpRX0rJke6QjGLq2nDGu7cQDXNOKwT/RnYKoVepy+mUjv0HL/09eX7pja2VPoHw43
+	6ibASJE31sywHoNPlV1l/5WChng=
+X-Received: by 2002:a17:90a:d88c:b0:315:b07a:ac12 with SMTP id 98e67ed59e1d1-318c9225ecbmr4389575a91.14.1751020921918;
+        Fri, 27 Jun 2025 03:42:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF+VYLk3yg6ZtWzngleQFQrjV6eQzaFY2eMafnD1MIJ2M0SYc8xq7tio6475lHd9a4WuJerDQ==
+X-Received: by 2002:a17:90a:d88c:b0:315:b07a:ac12 with SMTP id 98e67ed59e1d1-318c9225ecbmr4389548a91.14.1751020921576;
+        Fri, 27 Jun 2025 03:42:01 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.150.33])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f539e6b5sm6241273a91.13.2025.06.27.03.41.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 03:42:01 -0700 (PDT)
+Date: Fri, 27 Jun 2025 12:41:48 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Will Deacon <will@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Keir Fraser <keirf@google.com>, 
+	Steven Moreland <smoreland@google.com>, Frederick Mayle <fmayle@google.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	netdev@vger.kernel.org, virtualization@lists.linux.dev
+Subject: Re: [PATCH 2/5] vsock/virtio: Resize receive buffers so that each
+ SKB fits in a page
+Message-ID: <rl5x3fw5rgyrptof2h7qc2wgimxd4ldh4tp4yhm52n4utksjdm@zei2wzme65jj>
+References: <20250625131543.5155-1-will@kernel.org>
+ <20250625131543.5155-3-will@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1641293.1751018406@warthog.procyon.org.uk>
+In-Reply-To: <20250625131543.5155-3-will@kernel.org>
 
-Hi David,
+On Wed, Jun 25, 2025 at 02:15:40PM +0100, Will Deacon wrote:
+>When allocating receive buffers for the vsock virtio RX virtqueue, an
+>SKB is allocated with a 4140 data payload (the 44-byte packet header +
+>VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE). Even when factoring in the SKB
+>overhead, the resulting 8KiB allocation thanks to the rounding in
+>kmalloc_reserve() is wasteful (~3700 unusable bytes) and results in a
+>higher-order page allocation for the sake of a few hundred bytes of
+>packet data.
+>
+>Limit the vsock virtio RX buffers to a page per SKB, resulting in much
+>better memory utilisation and removing the need to allocate higher-order
+>pages entirely.
+>
+>Signed-off-by: Will Deacon <will@kernel.org>
+>---
+> include/linux/virtio_vsock.h | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
+>
+>diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+>index 36fb3edfa403..67ffb64325ef 100644
+>--- a/include/linux/virtio_vsock.h
+>+++ b/include/linux/virtio_vsock.h
+>@@ -111,7 +111,8 @@ static inline size_t virtio_vsock_skb_len(struct sk_buff *skb)
+> 	return (size_t)(skb_end_pointer(skb) - skb->head);
+> }
+>
+>-#define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(1024 * 4)
+>+#define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(SKB_WITH_OVERHEAD(PAGE_SIZE) \
+>+						 - VIRTIO_VSOCK_SKB_HEADROOM)
 
-Le Fri, Jun 27, 2025 at 11:00:06AM +0100, David Howells a écrit :
-> Ryan Lahfa <ryan@lahfa.xyz> wrote:
-> 
-> > Here is how to reproduce it:
-> > 
-> > $ git clone https://gerrit.lix.systems/lix
-> > $ cd lix
-> > $ git fetch https://gerrit.lix.systems/lix refs/changes/29/3329/8 && git checkout FETCH_HEAD
-> > $ nix-build -A hydraJobs.tests.local-releng
-> 
-> How do I build and run this on Fedora is the problem :-/
+This is only used in net/vmw_vsock/virtio_transport.c :
 
-This may introduce another layer but you could use a Docker container
-(Lix has http://ghcr.io/lix-project/lix) and run these instructions
-inside that context.
+static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
+{
+	int total_len = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE + VIRTIO_VSOCK_SKB_HEADROOM;
 
-Alternatives are the following:
 
-- static binary for Nix, I can build one for you and make it available.
-- the Lix installer, https://lix.systems/install/ (curl | sh but it does
-  prompt you for any step and tell you what it does, it should also be
-  very easy to uninstall!).
-- Debian has Nix packaged: https://packages.debian.org/sid/nix-bin (not
-  Lix, but doesn't matter for this reproducer).
-- Can install a remote VM for you with Fedora with one of the previous
-  option and give you root@ over there.
+What about just remove VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE and use
+`SKB_WITH_OVERHEAD(PAGE_SIZE)` there? (maybe with a comment summarizing
+the issue we found).
 
-Let me know how I can help.
+Thanks,
+Stefano
 
-> > [1]: https://gist.dgnum.eu/raito/3d1fa61ebaf642218342ffe644fb6efd
-> 
-> Looking at this, it looks very much like a page may have been double-freed.
-> 
-> Just to check, what are you using 9p for?  Containers?  And which transport is
-> being used, the virtio one?
+> #define VIRTIO_VSOCK_MAX_BUF_SIZE		0xFFFFFFFFUL
+> #define VIRTIO_VSOCK_MAX_PKT_BUF_SIZE		(1024 * 64)
+>
+>-- 
+>2.50.0.714.g196bf9f422-goog
+>
+>
 
-9p is used in QEMU in this context.
-NixOS has a framework of end to end testing à la OpenQA from OpenSUSE
-that makes use of 9pfs to mount the host Nix store inside the guest VM
-to avoid copying back'n'forth things that are not under test.
-
-Yep, transport is virtio.
-
-Kind regards,
--- 
-Ryan Lahfa
