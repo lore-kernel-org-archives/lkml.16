@@ -1,130 +1,237 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E704C2D3EE0
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98E2C2BD025
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751024775; cv=none; b=adv3uFSKbq65F8+oo2ekLpdqgX7Up9vpdDkzeBuzC3CP14XUnjCrQLCKzTmOM8reMGJEL/ByjsBLv529ezE7JOc6IkcxVNN+p0Rj82GfgwVZZFf2UL+W5/wpJmA140ikPdqlDAcz0Lc1jYest1YzwP4zXXUHUGvwJ8GpAMUvYmQ=
+	t=1751024791; cv=none; b=IALurXxZDqdRfoqY3oo/m+aROwSfHS4wVc6SbupuWAxdt4JxqGPOPxjbQWPlk13TCx7AMgt+nBKmyNurgYvwcU1AZtnF8FzgHoALiBNoWZRXgmEi6j0vuvxfFvZ8t/ka53ma0itA63Y94py5yA6Z9jJbKbmCKGqyw+nOpSANqaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751024775; c=relaxed/simple;
-	bh=JdVJnpaEZtLd9FeCCX+vyHrDD6OuJkB7SDth8D47IME=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ud0taWCCNTMnY6LQeGD1qhswNlomwFanLCo4tIdPTp1emwe3TzrYpgFovwkc88PqTcsVYozA/cHf4TbcZFdWKn0yzS4Ce4UraPAqypCm3xKXuZgQWqhXySrY5++qbGGMLJz3sKqmi0VQAQdYSUXMTyO/EFgFIiypy7M55tOXUb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from dude05.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::54])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uV7Wi-0004N2-Gc; Fri, 27 Jun 2025 13:45:52 +0200
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v2 0/4] drm/bridge: samsung-dsim: Stop controlling vsync
- display FIFO flush in panels
-Date: Fri, 27 Jun 2025 13:45:37 +0200
-Message-Id: <20250627-dsi-vsync-flush-v2-0-4066899a5608@pengutronix.de>
+	s=arc-20240116; t=1751024791; c=relaxed/simple;
+	bh=2d3eA8NOOmlrIUKCz8tahImDM0fhIk951AVN5hvROWc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P2RlE01UL9RqGcUU2A8H/JR6vMh7ehbqU04ERFKP6FO0fvZp1H0kctnmJiy5dTwuvnD2HOELd+mBmllLdanxB15DJv8ELNqLBXop41Z4MKppSmchuVJqVsZoQ3KoeUZOsa4CeJIa63BKUGMD9W2Iq8+/M7bBRbqVVD+NTNrXYt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B141F1A00;
+	Fri, 27 Jun 2025 04:46:09 -0700 (PDT)
+Received: from [10.57.30.59] (unknown [10.57.30.59])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C02FD3F66E;
+	Fri, 27 Jun 2025 04:46:25 -0700 (PDT)
+Message-ID: <d0769d8c-a31f-412a-8a15-8bae3fa7deb4@arm.com>
+Date: Fri, 27 Jun 2025 12:46:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGGEXmgC/3WNQQqDMBBFryKz7pQYYtWuvEdxYeNEB0qUjAZFv
- HtT912+B//9A4QCk8AzOyBQZOHJJ9C3DOzY+YGQ+8SglS5UoUvshTHK7i26zyojVq6yts67h1M
- G0moO5Hi7iq828ciyTGG/DmL+s/9bMUeF9dtQZ4qyKnXdzOSHdQmT5+3eE7TneX4BgS3PbbMAA
- AA=
-X-Change-ID: 20250527-dsi-vsync-flush-8f8cc91a6f04
-To: Inki Dae <inki.dae@samsung.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, 
- Marek Szyprowski <m.szyprowski@samsung.com>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Artur Weber <aweber.kernel@gmail.com>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Jessica Zhang <jessica.zhang@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- kernel@pengutronix.de, Philipp Zabel <p.zabel@pengutronix.de>
-X-Mailer: b4 0.14.2
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::54
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iommu/amd: clear SME flag for mmio pages
+To: Wencheng Yang <east.moutain.yang@gmail.com>
+Cc: "joro@8bytes.org" <joro@8bytes.org>,
+ "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
+ "will@kernel.org" <will@kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <CALrP2iVs0AcmJYShyFDVBdnN-yvY3Zq7tENXdLF-SBqEcoYOBQ@mail.gmail.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <CALrP2iVs0AcmJYShyFDVBdnN-yvY3Zq7tENXdLF-SBqEcoYOBQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-This series enables the vsync flush feature in the samsung-dsim driver
-unconditionally and removes the MIPI_DSI_MODE_VSYNC_FLUSH flag.
+On 2025-06-26 8:12 am, Wencheng Yang wrote:
+> Hi, Robin
+> 
+> 
+> 
+>> Arguably it also doesn't make sense for callers to be mapping MMIO
+> 
+>> addresses without IOMMU_MMIO...
+> 
+> 
+> 
+> Do you mean that SME flag on pte  should depend on IOMMU_MMIO  flag?
 
-Background: I've recently seen shifted display issues on two different
-i.MX8MM boards (mxsfb + samsung-dsim) with different DSI panels.
-The symptoms were horizonally shifted display contents, with a stable
-offset, in about 0.1 to 0.6 percent of modesets.
-Enabling the MIPI_DSI_MODE_VSYNC_FLUSH flag in the panels' mode_flags
-fixed the issue in both cases.
+I mean if you're sure that encrypted MMIO will never be a thing for 
+peer-to-peer (the existence of ioremap_encrypted() suggests it might be 
+in general), then from a design point of view it would make sense that 
+if you see IOMMU_MMIO here then you know you shouldn't set the SME bit. 
+Then it's just a case of making sure that callers can pass that 
+appropriately (e.g. we do in iommu_dma_map_resource(), I guess maybe we 
+should for PCI_P2PDMA_MAP_THRU_HOST_BRIDGE in iommu_dma_map_sg() too?)
 
-The samsung-dsim driver is the only DSI bridge driver that uses this
-flag: If the flag is absent, the driver sets the DSIM_MFLUSH_VS bit in
-the DSIM_CONFIG_REG register, which disables the vsync flush feature.
-The reset value of this bit is cleared (vsync flush is default-enabled).
-According to the i.MX8MM reference manual,
+However, what we should definitely avoid is overloading IOMMU_MMIO to be 
+a de-facto encryption flag on x86 just because it happens not to have 
+much other significance there. If you think that encryption status may 
+end up wanting to be orthogonal to whether the target address represents 
+something "MMIO" or "memory-like", and that callers may want the choice, 
+then it would really want its own distinct flag (e.g. 
+IOMMU_UNENCRYPTED). And we do need to think about this now, before we 
+make a potential mess by creating opposing default behaviours for MMIO 
+and not-MMIO.
 
-    "It needs that Main display FIFO should be flushed for deleting
-     garbage data."
+Thanks,
+Robin.
 
-This appears to match the comment in mxsfb_reset_block() in mxsfb_kms.c:
-
-    /*
-     * It seems, you can't re-program the controller if it is still
-     * running. This may lead to shifted pictures (FIFO issue?), so
-     * first stop the controller and drain its FIFOs.
-     */
-
-Now I wonder why the bit is controlled by a flag in the panel drivers.
-Whether the display controller pushes up to a FIFO worth of garbage data
-into the DSI bridge during initialization seems to be a property of the
-display controller / DSI bridge integration (whether this is due to
-hardware or driver bugs), not a specific requirement of the panel.
-Surely no panel needs to receive a partial line of garbage data in front
-of the first frame?
-
-Instead of adding the flag to every panel connected to affected SoCs,
-the vsync flush feature could just be enabled unconditionally.
-Clearing an already-empty display FIFO should have no effect, unless
-I'm missing something? With that, the MIPI_DSI_MODE_VSYNC_FLUSH flag
-would not be used anymore and could be removed.
-
-regards
-Philipp
-
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
-Changes in v2:
-- Collect Marek's Acked-by.
-- Drop RFC tag.
-- No further changes.
-- Link to v1: https://lore.kernel.org/r/20250527-dsi-vsync-flush-v1-0-9b4ea4578729@pengutronix.de
-
----
-Philipp Zabel (4):
-      drm/bridge: samsung-dsim: Always flush display FIFO on vsync pulse
-      drm/panel: samsung-s6d7aa0: Drop MIPI_DSI_MODE_VSYNC_FLUSH flag
-      drm/panel: samsung-s6e8aa0: Drop MIPI_DSI_MODE_VSYNC_FLUSH flag
-      drm/mipi-dsi: Drop MIPI_DSI_MODE_VSYNC_FLUSH flag
-
- drivers/gpu/drm/bridge/samsung-dsim.c         | 2 --
- drivers/gpu/drm/panel/panel-samsung-s6d7aa0.c | 2 +-
- drivers/gpu/drm/panel/panel-samsung-s6e8aa0.c | 2 +-
- include/drm/drm_mipi_dsi.h                    | 2 --
- 4 files changed, 2 insertions(+), 6 deletions(-)
----
-base-commit: b462b0ef4d788d56f0e575406e58450358dcbd96
-change-id: 20250527-dsi-vsync-flush-8f8cc91a6f04
-
-Best regards,
--- 
-Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> 
+> 
+>> As usual, pfn_valid() isn't really appropriate for this anyway, since
+> 
+>> all it means is "does a struct page exist?", and in general it is
+> 
+>> entirely possible for (reserved) pages to exist for non-RAM addresses.
+> 
+> 
+> 
+> You are right, pfn_valid() is not resonable, it can’t filter out reserved
+> pages.
+> 
+> Refer to kvm module, kvm_is_mmio_pfn() uses e820__mapped_raw_any() to judge
+> 
+> Mmio pfn, I think it should be okay.
+> 
+> 
+> 
+> Thanks,
+> 
+> Wencheng.
+> 
+> 
+> 
+> On 2025/6/25, 20:29, "Robin Murphy" <robin.murphy@arm.com> wrote:
+> 
+> On 2025-06-25 7:48 am, YangWencheng wrote:
+> 
+>> If paddr is a mmio address, clear the SME flag. It makes no sense to
+> 
+>> set SME bit on MMIO address.
+> 
+> 
+> 
+> Arguably it also doesn't make sense for callers to be mapping MMIO
+> 
+> addresses without IOMMU_MMIO...
+> 
+> 
+> 
+>> ---
+> 
+>>    drivers/iommu/amd/io_pgtable.c    | 6 ++++--
+> 
+>>    drivers/iommu/amd/io_pgtable_v2.c | 6 +++++-
+> 
+>>    2 files changed, 9 insertions(+), 3 deletions(-)
+> 
+>>
+> 
+>> diff --git a/drivers/iommu/amd/io_pgtable.c
+> b/drivers/iommu/amd/io_pgtable.c
+> 
+>> index 4d308c071134..88b204449c2c 100644
+> 
+>> --- a/drivers/iommu/amd/io_pgtable.c
+> 
+>> +++ b/drivers/iommu/amd/io_pgtable.c
+> 
+>> @@ -352,15 +352,17 @@ static int iommu_v1_map_pages(struct io_pgtable_ops
+> *ops, unsigned long iova,
+> 
+>>                                              updated = true;
+> 
+>>
+> 
+>>                              if (count > 1) {
+> 
+>> -                                          __pte =
+> PAGE_SIZE_PTE(__sme_set(paddr), pgsize);
+> 
+>> +                                         __pte = PAGE_SIZE_PTE(paddr,
+> pgsize);
+> 
+>>                                              __pte |= PM_LEVEL_ENC(7) |
+> IOMMU_PTE_PR | IOMMU_PTE_FC;
+> 
+>>                              } else
+> 
+>> -                                          __pte = __sme_set(paddr) |
+> IOMMU_PTE_PR | IOMMU_PTE_FC;
+> 
+>> +                                         __pte = paddr | IOMMU_PTE_PR |
+> IOMMU_PTE_FC;
+> 
+>>
+> 
+>>                              if (prot & IOMMU_PROT_IR)
+> 
+>>                                              __pte |= IOMMU_PTE_IR;
+> 
+>>                              if (prot & IOMMU_PROT_IW)
+> 
+>>                                              __pte |= IOMMU_PTE_IW;
+> 
+>> +                         if (pfn_valid(__phys_to_pfn(paddr)))
+> 
+> 
+> 
+> As usual, pfn_valid() isn't really appropriate for this anyway, since
+> 
+> all it means is "does a struct page exist?", and in general it is
+> 
+> entirely possible for (reserved) pages to exist for non-RAM addresses.
+> 
+> 
+> 
+> Thanks,
+> 
+> Robin.
+> 
+> 
+> 
+>> +                                         __pte = __sme_set(__pte);
+> 
+>>
+> 
+>>                              for (i = 0; i < count; ++i)
+> 
+>>                                              pte[i] = __pte;
+> 
+>> diff --git a/drivers/iommu/amd/io_pgtable_v2.c
+> b/drivers/iommu/amd/io_pgtable_v2.c
+> 
+>> index b47941353ccb..b301fb8e58fa 100644
+> 
+>> --- a/drivers/iommu/amd/io_pgtable_v2.c
+> 
+>> +++ b/drivers/iommu/amd/io_pgtable_v2.c
+> 
+>> @@ -65,7 +65,11 @@ static u64 set_pte_attr(u64 paddr, u64 pg_size, int
+> prot)
+> 
+>>    {
+> 
+>>              u64 pte;
+> 
+>>
+> 
+>> -          pte = __sme_set(paddr & PM_ADDR_MASK);
+> 
+>> +         if (pfn_valid(__phys_to_pfn(paddr)))
+> 
+>> +                         pte = __sme_set(paddr & PM_ADDR_MASK);
+> 
+>> +         else
+> 
+>> +                         pte = paddr & PM_ADDR_MASK;
+> 
+>> +
+> 
+>>              pte |= IOMMU_PAGE_PRESENT | IOMMU_PAGE_USER;
+> 
+>>              pte |= IOMMU_PAGE_ACCESS | IOMMU_PAGE_DIRTY;
+> 
+>>
+> 
 
