@@ -1,216 +1,156 @@
-Received: from smtp.smtpout.orange.fr (smtp-22.smtpout.orange.fr [80.12.242.22])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FF91DA61B;
-	Fri, 27 Jun 2025 17:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE911A5B86;
+	Fri, 27 Jun 2025 17:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751044709; cv=none; b=azsbb1mOVDAV9fMhaMZhpkSX+Y9U8CIW2bJW+k7tCeVXoP7ehx++3hCr2ORbscC9G2DvnCVMxLaFk1REHX05K3+P9NarGF2AEnX6vx93leNiUh4UWBbznxVPqwIYjrXaeyzOO4y4DuttsrkGJPxTBwCpiui6mKP0kKmmeg0yncI=
+	t=1751044782; cv=none; b=R+hHD0OUc+m8CXC+Odz93pjNZxHM/YFllXg71ZswcCTQDPhqJeSXVwQ3SI0TmtwB/3fgKz2+QpfSNozC1P20GT9M4er/jkhecT1CzRO6/LaNACv5BB3pH6r4IAxYbrLr+uVL7F7HKi1BBBjGw/ZnBPSzkQCEV6i+X63/mBRkVTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751044709; c=relaxed/simple;
-	bh=qekrEVqL5xGZYqbqiBYa/pSYw69lavty2tkv5dhvUFU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PZ2ZeeKwIXzCGfrxy4BRV8TLPfE+5fC5i+vVo6dzwH20ipYs/8gdgT8Z6+ZNyECdRM7fCgZhchQIpW5AQb7GDMk/Jms51chzXW/tHZBSSGy8t00yttQgntlQcCEM2tLa6zus09jGJ3CjJduamGMIPz7qHPAM/+G5nA8nAy7mmH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=LA+83kj0; arc=none smtp.client-ip=80.12.242.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="LA+83kj0"
-Received: from fedora.home ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id VCiOuiqRroUtIVCiOujFMI; Fri, 27 Jun 2025 19:18:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1751044698;
-	bh=vZ0gXsMEUL07BRPgj8DtIwElSztAZLrFwXzdLM5hlqM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=LA+83kj0CfW1YPfcqXYO4cgzjLTsPpFen5MEjY/lDm1UN0o4nomUj/DhNkAcW2yyj
-	 zi8WiU146Sqk21qOUpTYC58RtWB+ViVQTBFJLF992oO4bMaC6DFIW+p7tTAKGB3rH/
-	 Wj0ZXTsJ26OWrIJjElAm806Sf0BbD1A0DsyFI+5zizNV7rZY7EzD6akezIiGoijp0W
-	 Dr+C0q/iKnlZUtu7itgXJOqNT7LFBtGsdK5zimb3SW7y4K2pMifiin1hgIaBhX4wAo
-	 xsMIfMyw466LRoYpSGoY0Zh/HkzL2h9NonFsMzj2RTV3qXioGikGUVopOVjFDDTudQ
-	 gJO25WEyQFHJA==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 27 Jun 2025 19:18:18 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Rob Clark <robin.clark@oss.qualcomm.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Abhinav Kumar <abhinav.kumar@linux.dev>,
-	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org
-Subject: [PATCH] drm/msm/mdp4: Consistently use the "mdp4_" namespace
-Date: Fri, 27 Jun 2025 19:18:03 +0200
-Message-ID: <6b9076268548c52ec371e9ed35fee0dd8fcb46ef.1751044672.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.50.0
+	s=arc-20240116; t=1751044782; c=relaxed/simple;
+	bh=rCcbxMhqpoQ6osINMU5jCxlvC/HTzhRZbLAl8Q/QT3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YNgzAlJw3axPrtLAPqpsWwx3MsUd9tjIuNRNFlQloS5f3/oQPCOjOgX3u7WUIJbI90NvF0ekHV+mzCFn0MJ8HgRJLiIdvLr9mefgh8bxyv8+CxymTEJUq72uR/rH7ludQ/YQwQAgcnjQDPp/azMF9tuBDAFuCTu6dDW+pHq9iAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8082C4CEE3;
+	Fri, 27 Jun 2025 17:19:35 +0000 (UTC)
+Date: Fri, 27 Jun 2025 18:19:33 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>,
+	Deepak Gupta <debug@rivosinc.com>,
+	Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+	"H.J. Lu" <hjl.tools@gmail.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	Will Deacon <will@kernel.org>, jannh@google.com,
+	Yury Khrustalev <yury.khrustalev@arm.com>,
+	Wilco Dijkstra <wilco.dijkstra@arm.com>,
+	linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org,
+	Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH RFT v17 4/8] fork: Add shadow stack support to clone3()
+Message-ID: <aF7SpWSKfjEFTHBk@arm.com>
+References: <20250609-clone3-shadow-stack-v17-0-8840ed97ff6f@kernel.org>
+ <20250609-clone3-shadow-stack-v17-4-8840ed97ff6f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609-clone3-shadow-stack-v17-4-8840ed97ff6f@kernel.org>
+X-TUID: NZDNe86Lhaxu
 
-Functions and other stuff all start with "mdp4_", except a few ones that
-start with "mpd4_" (d and p switched)
+On Mon, Jun 09, 2025 at 01:54:05PM +0100, Mark Brown wrote:
+> +int arch_shstk_validate_clone(struct task_struct *tsk,
+> +			      struct vm_area_struct *vma,
+> +			      struct page *page,
+> +			      struct kernel_clone_args *args)
+> +{
+> +	unsigned long gcspr_el0;
+> +	int ret = 0;
+> +
+> +	/* Ensure that a token written as a result of a pivot is visible */
+> +	gcsb_dsync();
+> +	gcspr_el0 = args->shadow_stack_token;
+> +	if (!gcs_consume_token(vma, page, gcspr_el0))
+> +		return -EINVAL;
+> +
+> +	tsk->thread.gcspr_el0 = gcspr_el0 + sizeof(u64);
+> +
+> +	/* Ensure that our token consumption visible */
+> +	gcsb_dsync();
+> +
+> +	return ret;
+> +}
 
-Make things consistent and use "mdp4_" everywhere.
+What are the scenarios where we need the barriers? We have one via
+map_shadow_stack() that would cover the first one. IIUC, GCSSS2 also
+generates a GCSB event (or maybe I got it all wrong; I need to read the
+spec).
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-The change has been done with:
-   sed -i s/mpd4/mdp4/g *
-and the modified files have been compile tested.
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 1ee8eb11f38b..89c19996235d 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1902,6 +1902,51 @@ static bool need_futex_hash_allocate_default(u64 clone_flags)
+>  	return true;
+>  }
+>  
+> +static int shstk_validate_clone(struct task_struct *p,
+> +				struct kernel_clone_args *args)
+> +{
+> +	struct mm_struct *mm;
+> +	struct vm_area_struct *vma;
+> +	struct page *page;
+> +	unsigned long addr;
+> +	int ret;
+> +
+> +	if (!IS_ENABLED(CONFIG_ARCH_HAS_USER_SHADOW_STACK))
+> +		return 0;
+> +
+> +	if (!args->shadow_stack_token)
+> +		return 0;
+> +
+> +	mm = get_task_mm(p);
+> +	if (!mm)
+> +		return -EFAULT;
+> +
+> +	mmap_read_lock(mm);
+> +
+> +	addr = untagged_addr_remote(mm, args->shadow_stack_token);
 
-Maybe the comment "/* TODO: do we need different pll in other cases? */" in
-mpd4_lvds_pll_init() can be removed as well.
-A similar comment was removed in mdp4_lcdc_encoder_init() in commit
-9c2f63da6a70 ("drm/msm/mdp4: register the LVDS PLL as a clock provider")
+I think down the line, get_user_page_vma_remote() already does an
+untagged_addr_remote(). But it does it after the vma look-up, so we
+still need the untagging early.
 
-This has been waiting in my own tree for years, and popped-up recently
-because of other changes in the same area.
----
- drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h      |  2 +-
- .../gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c |  2 +-
- drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c | 38 +++++++++----------
- 3 files changed, 21 insertions(+), 21 deletions(-)
+That said, would we ever allowed a tagged pointer for the shadow stack?
 
-diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h
-index f9d988076337..9a1e4daa8e8d 100644
---- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h
-+++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h
-@@ -202,6 +202,6 @@ static inline struct drm_encoder *mdp4_dsi_encoder_init(struct drm_device *dev)
- }
- #endif
- 
--struct clk *mpd4_get_lcdc_clock(struct drm_device *dev);
-+struct clk *mdp4_get_lcdc_clock(struct drm_device *dev);
- 
- #endif /* __MDP4_KMS_H__ */
-diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c
-index 06a307c1272d..1051873057f6 100644
---- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c
-@@ -375,7 +375,7 @@ struct drm_encoder *mdp4_lcdc_encoder_init(struct drm_device *dev)
- 
- 	drm_encoder_helper_add(encoder, &mdp4_lcdc_encoder_helper_funcs);
- 
--	mdp4_lcdc_encoder->lcdc_clk = mpd4_get_lcdc_clock(dev);
-+	mdp4_lcdc_encoder->lcdc_clk = mdp4_get_lcdc_clock(dev);
- 	if (IS_ERR(mdp4_lcdc_encoder->lcdc_clk)) {
- 		DRM_DEV_ERROR(dev->dev, "failed to get lvds_clk\n");
- 		return ERR_CAST(mdp4_lcdc_encoder->lcdc_clk);
-diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c
-index fa2c29470510..4612886f0e49 100644
---- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c
-+++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c
-@@ -54,7 +54,7 @@ static const struct pll_rate *find_rate(unsigned long rate)
- 	return &freqtbl[i-1];
- }
- 
--static int mpd4_lvds_pll_enable(struct clk_hw *hw)
-+static int mdp4_lvds_pll_enable(struct clk_hw *hw)
- {
- 	struct mdp4_lvds_pll *lvds_pll = to_mdp4_lvds_pll(hw);
- 	struct mdp4_kms *mdp4_kms = get_kms(lvds_pll);
-@@ -80,7 +80,7 @@ static int mpd4_lvds_pll_enable(struct clk_hw *hw)
- 	return 0;
- }
- 
--static void mpd4_lvds_pll_disable(struct clk_hw *hw)
-+static void mdp4_lvds_pll_disable(struct clk_hw *hw)
- {
- 	struct mdp4_lvds_pll *lvds_pll = to_mdp4_lvds_pll(hw);
- 	struct mdp4_kms *mdp4_kms = get_kms(lvds_pll);
-@@ -91,21 +91,21 @@ static void mpd4_lvds_pll_disable(struct clk_hw *hw)
- 	mdp4_write(mdp4_kms, REG_MDP4_LVDS_PHY_PLL_CTRL_0, 0x0);
- }
- 
--static unsigned long mpd4_lvds_pll_recalc_rate(struct clk_hw *hw,
-+static unsigned long mdp4_lvds_pll_recalc_rate(struct clk_hw *hw,
- 				unsigned long parent_rate)
- {
- 	struct mdp4_lvds_pll *lvds_pll = to_mdp4_lvds_pll(hw);
- 	return lvds_pll->pixclk;
- }
- 
--static long mpd4_lvds_pll_round_rate(struct clk_hw *hw, unsigned long rate,
-+static long mdp4_lvds_pll_round_rate(struct clk_hw *hw, unsigned long rate,
- 		unsigned long *parent_rate)
- {
- 	const struct pll_rate *pll_rate = find_rate(rate);
- 	return pll_rate->rate;
- }
- 
--static int mpd4_lvds_pll_set_rate(struct clk_hw *hw, unsigned long rate,
-+static int mdp4_lvds_pll_set_rate(struct clk_hw *hw, unsigned long rate,
- 		unsigned long parent_rate)
- {
- 	struct mdp4_lvds_pll *lvds_pll = to_mdp4_lvds_pll(hw);
-@@ -114,26 +114,26 @@ static int mpd4_lvds_pll_set_rate(struct clk_hw *hw, unsigned long rate,
- }
- 
- 
--static const struct clk_ops mpd4_lvds_pll_ops = {
--	.enable = mpd4_lvds_pll_enable,
--	.disable = mpd4_lvds_pll_disable,
--	.recalc_rate = mpd4_lvds_pll_recalc_rate,
--	.round_rate = mpd4_lvds_pll_round_rate,
--	.set_rate = mpd4_lvds_pll_set_rate,
-+static const struct clk_ops mdp4_lvds_pll_ops = {
-+	.enable = mdp4_lvds_pll_enable,
-+	.disable = mdp4_lvds_pll_disable,
-+	.recalc_rate = mdp4_lvds_pll_recalc_rate,
-+	.round_rate = mdp4_lvds_pll_round_rate,
-+	.set_rate = mdp4_lvds_pll_set_rate,
- };
- 
--static const struct clk_parent_data mpd4_lvds_pll_parents[] = {
-+static const struct clk_parent_data mdp4_lvds_pll_parents[] = {
- 	{ .fw_name = "pxo", .name = "pxo", },
- };
- 
- static struct clk_init_data pll_init = {
--	.name = "mpd4_lvds_pll",
--	.ops = &mpd4_lvds_pll_ops,
--	.parent_data = mpd4_lvds_pll_parents,
--	.num_parents = ARRAY_SIZE(mpd4_lvds_pll_parents),
-+	.name = "mdp4_lvds_pll",
-+	.ops = &mdp4_lvds_pll_ops,
-+	.parent_data = mdp4_lvds_pll_parents,
-+	.num_parents = ARRAY_SIZE(mdp4_lvds_pll_parents),
- };
- 
--static struct clk_hw *mpd4_lvds_pll_init(struct drm_device *dev)
-+static struct clk_hw *mdp4_lvds_pll_init(struct drm_device *dev)
- {
- 	struct mdp4_lvds_pll *lvds_pll;
- 	int ret;
-@@ -156,14 +156,14 @@ static struct clk_hw *mpd4_lvds_pll_init(struct drm_device *dev)
- 	return &lvds_pll->pll_hw;
- }
- 
--struct clk *mpd4_get_lcdc_clock(struct drm_device *dev)
-+struct clk *mdp4_get_lcdc_clock(struct drm_device *dev)
- {
- 	struct clk_hw *hw;
- 	struct clk *clk;
- 
- 
- 	/* TODO: do we need different pll in other cases? */
--	hw = mpd4_lvds_pll_init(dev);
-+	hw = mdp4_lvds_pll_init(dev);
- 	if (IS_ERR(hw)) {
- 		DRM_DEV_ERROR(dev->dev, "failed to register LVDS PLL\n");
- 		return ERR_CAST(hw);
+> @@ -2840,6 +2891,27 @@ static inline bool clone3_stack_valid(struct kernel_clone_args *kargs)
+>  	return true;
+>  }
+>  
+> +/**
+> + * clone3_shadow_stack_valid - check and prepare shadow stack
+> + * @kargs: kernel clone args
+> + *
+> + * Verify that shadow stacks are only enabled if supported.
+> + */
+> +static inline bool clone3_shadow_stack_valid(struct kernel_clone_args *kargs)
+> +{
+> +	if (!kargs->shadow_stack_token)
+> +		return true;
+> +
+> +	if (!IS_ALIGNED(kargs->shadow_stack_token, sizeof(void *)))
+> +		return false;
+> +
+> +	/*
+> +	 * The architecture must check support on the specific
+> +	 * machine.
+> +	 */
+> +	return IS_ENABLED(CONFIG_ARCH_HAS_USER_SHADOW_STACK);
+
+I don't understand the comment here. It implies some kind of fallback
+for further arch checks but it's just a return.
+
+BTW, clone3_stack_valid() has an access_ok() check as well. Shall we add
+it here? That's where the size would have come in handy but IIUC the
+decision was to drop it (fine by me, just validate that the token is
+accessible).
+
 -- 
-2.50.0
-
+Catalin
