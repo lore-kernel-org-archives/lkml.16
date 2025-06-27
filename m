@@ -1,97 +1,108 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CAB293C66;
-	Fri, 27 Jun 2025 09:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94822293C68
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751015606; cv=none; b=lUaE+VmLQcUE5lDcaztPsotj/pRamfEsViGnk7cZWn3QFGyvkmd8GN6wqLatdHVOqGpcR4xrQw2JM+cRKp82e733uv9uMXUjkdUALvz0MZoFQyWk7qR4XgH+wE8U92lIQDwYBX9ulTvABcfgN+W1F5MFyi5B9gz02MAuRgHSyJs=
+	t=1751015645; cv=none; b=NnRE3taKPIUMnry4IeyMI/+iaA+CpY/tuPq2WVkb+D0ZLHSpq0cv10BLfxIBUpUlQ/0MRJ1E6B3NRJtM5HUnE484KAlrEsXxNqlNJ9cVV3RWpPouIzhQEhs/oPG8MiJ2mECpAK2e6hGtkCRb1qzPwOPRUXxtRYtpLWW5V0h8jUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751015606; c=relaxed/simple;
-	bh=poWVzOnHetZgZU7IdKfAmHG/waKkAXe7Ld6cd9s7APc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M5MK8fWV3iYfxFWXr6BF8btHtVb9jyjdbfpFjZOpabIDixcj76OVhTf7bkQbzWYcVeodwKZIQlfN8/lNgileu2d6U5PKk0Dxiw4x4m5ZsghUhV+LsN0d8TL0CJd7+6LfjLCOCNlS9domi2U1JuknW+hByOVvke3AYYSWgW0Vk4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bwkUVUgA; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751015645; c=relaxed/simple;
+	bh=fUxAP9bw7/20q3oYHqFFlLas5FT4SMsrKlcyWatvlYw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gDfeFfvFpS9wtcSptXRUoxh1S8lBOdZtnxwiv15F7CEkO4L1nwnXiudNWiBqtYUuBxYLg4CApPNlj3V2UIU/SxwtgXDDEN6fyqlDfk30HIOeqWXdiq403YNE2tTRFlhwV0qKDUPyLzCLhmXpXN/A3oM6DBFWY2qkmRijfKWAE+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MHNxj9hq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bwkUVUgA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=jm4R/gQ1agew1insNV1QFxJtrJoIL+kzIrLuWUHpbLw=; b=bwkUVUgA1yQ6yfsPR8uVtfI39r
-	KN4WCmC9f8s3NSJujCXr7Zi4Sk18FCbCBFmxt4XhBQbgPHlFdy3u5cUZVaEJuYAg9n40KyepMrbQK
-	RwYW/bObLrrdSsPZjZppOyfH+6jS1JqfO4qLsn2LvpmQXsLBIarS4i5Db3EF1PckJZdeneDwTPw8K
-	Rij7AoW/mHkOAzv4G6iUHGgNXiSDsRMGV5iHO68UsMnYpSu516bbEzebbtstDkhsRGheE5Wkzpi6T
-	zNm+yukOhGzytWL/l7BaWD9nHQqvsrhHECwXQ9GlIDk+dkmUVWoZaC5HojsVvDMKRVqt7x74dHgS3
-	DCVMovCQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uV58x-00000006HbP-3n0F;
-	Fri, 27 Jun 2025 09:13:12 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B81ED300222; Fri, 27 Jun 2025 11:13:10 +0200 (CEST)
-Date: Fri, 27 Jun 2025 11:13:10 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
-	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
-	Marcos Paulo de Souza <mpdesouza@suse.com>,
-	Weinan Liu <wnliu@google.com>,
-	Fazla Mehrab <a.mehrab@bytedance.com>,
-	Chen Zhongjin <chenzhongjin@huawei.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Dylan Hatch <dylanbhatch@google.com>
-Subject: Re: [PATCH v3 17/64] objtool: Fix weak symbol detection
-Message-ID: <20250627091310.GT1613200@noisy.programming.kicks-ass.net>
-References: <cover.1750980516.git.jpoimboe@kernel.org>
- <19b1efe3f1f6bac2268497e609d833903aa99599.1750980517.git.jpoimboe@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MHNxj9hq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751015642;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WHEPPQypc7TyMROzb6/6mBy5qbiegeyIWkWEFfEU5dw=;
+	b=MHNxj9hq+mx50peQwnnFJkFnVYGUq4bj2QHzNmOHNpvujKNMREGdtjT8w9kmzLc2/t6FZz
+	5fPG5EO7pZC9I/8iqB1CZqG7p52YfYtnyFphnrcFtxmiZZOzJJV6DR0qYxcgbJBTznWZGc
+	kEsjW27ZY10adkv7usMOS7yKyPsyYrQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-434-SvHBsNIbOye1Bmpi5858EA-1; Fri, 27 Jun 2025 05:14:00 -0400
+X-MC-Unique: SvHBsNIbOye1Bmpi5858EA-1
+X-Mimecast-MFC-AGG-ID: SvHBsNIbOye1Bmpi5858EA_1751015639
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450df53d461so14218535e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 02:14:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751015639; x=1751620439;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WHEPPQypc7TyMROzb6/6mBy5qbiegeyIWkWEFfEU5dw=;
+        b=Qu0tNK4hiF4Xi0bFQ6McFFnUgWbJOT/cQIQ4azGShB/JwRkpLGUrxInGfP4HT9Ig8e
+         yJGiltq5315Ma9t9OF3JAAESjKXLSFz3PPus2m1Tc8vdx83DYXI2nGZ/vprwPORBHrCU
+         ju1Q6VrRLrbYu0JtfWr99CgooxRIwqYOK4MfCKSz25UNtcFHcAyFCuOZK6kR2ChTd697
+         mRJppdMb9D7gsz8bsPhgYwHdO3x5k6Tcwk19LoRWtNmF8Fbd6TZ6NlDHEVeSnbggoLbs
+         wIHVvWiDy/QWGnCJqe0D3ZSITZdSfu6WeXkPTOfPHYW5tuJjJzkI+9wIF33RuHMI7tS/
+         HwTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVjSmowN2PAGSp2J5fPrF9GJTCtelj+MrIL9rT5DiHOHPmmry7keLoVr17HhB2SL8AfgJZ584lUwlcIKvQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3ytIAMgV/8JQMwEkCoDhcRf2SUGx6/gbfLEGzdv1iBcPEjnny
+	f9XxArZtqagiJA9G9LCfpFlodd5HrP5A6Ph0BFzOv3u1U3IJZS2+77IoRzWNYGTdu3XQZo3C3+J
+	jd6KA85las4Ughrm+v769nxoP3QQ9HGGpz1VjLU6/z4N1rUYLwiGZxx3JuIfdv86flg==
+X-Gm-Gg: ASbGncuCe/8zct/aYQK5X/CR5gAJBm7q62cJhQzCPFmkRTe80+/Ob2PNpb7ke0TwRl6
+	3y4VYjt/LVmgTAEwyyZkQ+ikxqQU+a6s+dIDnxJeNibhCO0KFtHpADRpGg7Ej9OdngjXr2HUvea
+	lcrcmUIqdMV+tEkMZ3ItZUcRPfOS1jyyiP+HtoTDGYx23O93IUftl/H566m/EVQToprV76CNrVQ
+	XHaG/mzPFdCdlYGP8XAL+KzLsaDeXfoxrai3w31th1Ni3R8Eq1wnD7F4k4aBsFo2PRLe77n6REs
+	JL9M8A7u/+JlD9xKzOLMsrAmcZdbGRJtBU5glYY8lYfGmr387MIU6gVz8K/9duF213yiEFAVYhT
+	Metmr
+X-Received: by 2002:a05:600c:a009:b0:453:dbe:7574 with SMTP id 5b1f17b1804b1-453902d3100mr14621145e9.12.1751015639270;
+        Fri, 27 Jun 2025 02:13:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHB0tCkdXhhhl/gt6aOIt9w77OJs1cM1dc5CK6KjZ2iCBIKXV50/rEpY9ZALrkejqxwGPFrZA==
+X-Received: by 2002:a05:600c:a009:b0:453:dbe:7574 with SMTP id 5b1f17b1804b1-453902d3100mr14620745e9.12.1751015638873;
+        Fri, 27 Jun 2025 02:13:58 -0700 (PDT)
+Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538234b6b3sm76386695e9.13.2025.06.27.02.13.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 02:13:58 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Maxime Ripard <mripard@kernel.org>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Luca Ceresoli <luca.ceresoli@bootlin.com>, Anusha
+ Srivatsa <asrivats@redhat.com>, Francesco Dolcini <francesco@dolcini.it>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Maxime
+ Ripard <mripard@kernel.org>
+Subject: Re: [PATCH v2 5/5] drm/panel: panel-simple: get rid of panel_dpi hack
+In-Reply-To: <20250626-drm-panel-simple-fixes-v2-5-5afcaa608bdc@kernel.org>
+References: <20250626-drm-panel-simple-fixes-v2-0-5afcaa608bdc@kernel.org>
+ <20250626-drm-panel-simple-fixes-v2-5-5afcaa608bdc@kernel.org>
+Date: Fri, 27 Jun 2025 11:13:57 +0200
+Message-ID: <87zfdtbl7u.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19b1efe3f1f6bac2268497e609d833903aa99599.1750980517.git.jpoimboe@kernel.org>
+Content-Type: text/plain
 
-On Thu, Jun 26, 2025 at 04:55:04PM -0700, Josh Poimboeuf wrote:
-> find_symbol_hole_containing() fails to find a symbol hole (aka stripped
-> weak symbol) if its section has no symbols before the hole.  This breaks
-> weak symbol detection if -ffunction-sections is enabled.
-> 
-> Fix that by allowing the interval tree to contain section symbols, which
-> are always at offset zero for a given section.
-> 
-> Fixes a bunch of (-ffunction-sections) warnings like:
-> 
->   vmlinux.o: warning: objtool: .text.__x64_sys_io_setup+0x10: unreachable instruction
-> 
-> Fixes: 4adb23686795 ("objtool: Ignore extra-symbol code")
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Maxime Ripard <mripard@kernel.org> writes:
+
+> The empty panel_dpi struct was only ever used as a discriminant, but
+> it's kind of a hack, and with the reworks done in the previous patches,
+> we shouldn't need it anymore.
+>
+> Let's get rid of it.
+>
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
 > ---
->  tools/include/linux/interval_tree_generic.h | 2 +-
->  tools/objtool/elf.c                         | 8 ++++----
->  2 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/include/linux/interval_tree_generic.h b/tools/include/linux/interval_tree_generic.h
-> index aaa8a0767aa3..c0ec9dbdfbaf 100644
-> --- a/tools/include/linux/interval_tree_generic.h
-> +++ b/tools/include/linux/interval_tree_generic.h
-> @@ -77,7 +77,7 @@ ITSTATIC void ITPREFIX ## _remove(ITSTRUCT *node,			      \
->   *   Cond2: start <= ITLAST(node)					      \
->   */									      \
->  									      \
-> -static ITSTRUCT *							      \
-> +ITSTATIC ITSTRUCT *							      \
->  ITPREFIX ## _subtree_search(ITSTRUCT *node, ITTYPE start, ITTYPE last)	      \
->  {									      \
->  	while (true) {							      \
 
-IIRC this file is a direct copy from the kernel; this should probably be
-changed in both?
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+
+-- 
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
+
