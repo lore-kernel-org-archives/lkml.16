@@ -1,92 +1,92 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C881DDC1E;
-	Fri, 27 Jun 2025 11:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5284E29AB10
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751024928; cv=none; b=RmQ0UpBP3J6wTuP/nmwmxlHFAIHwec4RZdxwayMudRJqRpFczaZkeqifbLGueEYaKEuBRYFFosugtPfLQU44xWSvulmCXM+Bxt7Tkzfk5NorlrPdsP9bAllxIaDHmuCmGxlJk5NHoL4RTwoVs+lgFVC/XFB28/8CE74y8I82Yu0=
+	t=1751024965; cv=none; b=OnZJjiYOf/+aAV3fYuNoeLeNSKEeD259pCHkOoDB51V8aZfIPJYeKzIkQm4al6Xw+NVK5+4fwp6yatmSpDhAKz+/JhLZr8pRc/3XzCszBelAqH+TnLWfiy90cYJH9cx3GCKrXoMo7RyRxqlqn2ueZKkduv0ZCXVxm41RjmQphmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751024928; c=relaxed/simple;
-	bh=rMdY4LGMe/vXofAe3cP4wjwPAua87drI2R+LIiqSjsA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LYq+OB/QCvy7+K5M0yWvqmTGmfiFlsPPxgyZQ+spe/TftkckQL2wdDJ4wVMqO+SkyfbpkP93IxtGv65ZFx4u7pzPru1V8b1Tj0aJEiJ4RKcct7UozColD1/vq6vk+2uEBQ7aRZuZVq/vVXqnqpBqxNTLZrjuW9FdXtTzoBOmMZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bTDK826rdz6L5H9;
-	Fri, 27 Jun 2025 19:46:04 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9691E140417;
-	Fri, 27 Jun 2025 19:48:42 +0800 (CST)
-Received: from localhost (10.48.153.213) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 27 Jun
- 2025 13:48:41 +0200
-Date: Fri, 27 Jun 2025 12:48:39 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v10 13/17] cxl/pci: Update cxl_handle_cor_ras() to
- return early if no RAS errors
-Message-ID: <20250627124839.000056b3@huawei.com>
-In-Reply-To: <20250626224252.1415009-14-terry.bowman@amd.com>
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
-	<20250626224252.1415009-14-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751024965; c=relaxed/simple;
+	bh=QSPA9Vq9QwLyFxZjw2c7vBxmpc8LwxweFdE+X7XBa94=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UiTzLjrAODe7xRfp+NNdZQtC8fC4n6c8vdduc4Tnt+Sfbp9oDJBaqpEIZP7iT9BRcaG9FGXR3r8RUxNvZ42pnPhYJZ5Ie4AwgM4GioW98Ddz3xQIJ6xjEaK2pmeCw9Rcse5FsVmmW/Zt23HJCTsZlkyePJMckQxYh9sSdFF9ZTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uV7Zv-0008OW-6o; Fri, 27 Jun 2025 13:49:11 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uV7Zu-005bfA-0b;
+	Fri, 27 Jun 2025 13:49:10 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uV7Zu-000Cjy-0K;
+	Fri, 27 Jun 2025 13:49:10 +0200
+Message-ID: <d21382cf4ff508fb4b21536373875f5566b6d35e.camel@pengutronix.de>
+Subject: Re: [PATCH 0/2] drm/bridge: samsung-dsim: Small cleanups
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Inki Dae <inki.dae@samsung.com>, Jagan Teki
+ <jagan@amarulasolutions.com>,  Marek Szyprowski <m.szyprowski@samsung.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,  Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>,  Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	kernel@pengutronix.de
+Date: Fri, 27 Jun 2025 13:49:09 +0200
+In-Reply-To: <20250527-samsung-dsim-v1-0-5be520d84fbb@pengutronix.de>
+References: <20250527-samsung-dsim-v1-0-5be520d84fbb@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, 26 Jun 2025 17:42:48 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
-
-> Update cxl_handle_cor_ras() to exit early in the case there is no RAS
-> errors detected after applying the status mask. This change will make
-> the correctable handler's implementation consistent with the uncorrectable
-> handler, cxl_handle_ras().
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-
+On Di, 2025-05-27 at 16:21 +0200, Philipp Zabel wrote:
+> Replace an open-coded goto-again construct with a while loop and a
+> custom MHZ macro with the common HZ_PER_MHZ.
+>=20
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 > ---
->  drivers/cxl/core/pci.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 156ce094a8b9..887b54cf3395 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -677,10 +677,11 @@ static void cxl_handle_cor_ras(struct device *dev, u64 serial,
->  
->  	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
->  	status = readl(addr);
-> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> -		trace_cxl_aer_correctable_error(dev, serial, status);
-> -	}
-> +	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK))
-> +		return;
-> +	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> +
-> +	trace_cxl_aer_correctable_error(dev, serial, status);
->  }
->  
->  /* CXL spec rev3.0 8.2.4.16.1 */
+> Philipp Zabel (2):
+>       drm/bridge: samsung-dsim: use while loop in samsung_dsim_transfer_s=
+tart
+>       drm/bridge: samsung-dsim: Use HZ_PER_MHZ macro from units.h
+>=20
+>  drivers/gpu/drm/bridge/samsung-dsim.c | 77 +++++++++++++++--------------=
+------
+>  1 file changed, 33 insertions(+), 44 deletions(-)
+> ---
+> base-commit: 99764593528f9e0ee9509f9e4a4eb21db99d0681
+> change-id: 20250527-samsung-dsim-2bae3b45f77b
+>=20
+> Best regards,
 
+Applied to drm-misc-next.
+
+[1/2] drm/bridge: samsung-dsim: use while loop in samsung_dsim_transfer_sta=
+rt
+      commit: bafc628678796e3a05bd54c30280f4ecdaf3ebba
+[2/2] drm/bridge: samsung-dsim: Use HZ_PER_MHZ macro from units.h
+      commit: b462b0ef4d788d56f0e575406e58450358dcbd96
+
+regards
+Philipp
