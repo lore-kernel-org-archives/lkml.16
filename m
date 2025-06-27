@@ -1,141 +1,294 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AC727EFE2;
-	Fri, 27 Jun 2025 08:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF96229B15;
+	Fri, 27 Jun 2025 08:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751014692; cv=none; b=aFGzvJ4vdjm9jwfYNOWhfo9OaHo8zGV3qCizrLFpEDiC9NSPj/fGYcnEUmU40aJyJJ2NEyGUaajYurmFBzqYsbGR/Dob12KUQYYSMXcJkhnCj3+BNt0EB0EDEFUzffSDZxILVxThct5IqhhmXihOwTTDEB036aKaRgfjzgiBePg=
+	t=1751014730; cv=none; b=J33f3BgNDFQKl/u3vE1zGOyHZ9F4t5kROuxx1Oxo7LIPzbOnMBpItLFBgPQI7ZIeNezv5WwpIkYEBPYQiDM4ug5IoqwWLjEM2Zg5JqdMGSTAjX8X+yJ87uw3xnztisZrh9RDUOV95g2/tLI/y3ZNX3KapaBq8hsXPw3Iy30BsM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751014692; c=relaxed/simple;
-	bh=nbuhWX5emK/YLqNw/+CpsP9Pgd7XXNY62ss/pevIhXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TRInDIZs3+QhD4dFjlUI1+HWFis7sNe7eDXhpKrqNu724/JC3FZ4rmfM5JjAiP58pgrOaK9vC6nh3gKrmzPNt0gQdw6J67/qonh6voyjvLLnFzJeyEcx2mY5SRGOeSUbZZJ+sd8tl6Dv/yxgP31LHq3+UJCwAAcbd5mWsr+irpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mRGV3oVP; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751014730; c=relaxed/simple;
+	bh=7Q0EJNGfoLDItxk7UkA5TTYdcSirFMepdH0/ItIQbdY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=JSTux3G4EmE5UWMHX3fsgsNh7P0Mtlv++onlJY1c5fAjC3DF6CdVOPrCoEe+FOt+djDhtKtqePvmX9OiWnORBn/i8x/chtnz/YlIkuwEGIq1US1wBV4m6y/+QV+tPXb4yPK7TUqyOmVgcQ4EC6yQcOcLGXX2XqWTiCI3GBOgEf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KZ1uBfMr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mRGV3oVP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751014691; x=1782550691;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nbuhWX5emK/YLqNw/+CpsP9Pgd7XXNY62ss/pevIhXg=;
-  b=mRGV3oVPneel35oJYfDoas7T3hm90+/LXpOzhRBQ+oxCOXsa+TcoD48X
-   eZGPc0TltxXJhmoSHas/CjgM1a2rC1IQYGorzFrImunYzKeH2k4IeNNu9
-   zuy/G25lpzdmsBEPVutCJ+UEr2nTIs2VoL0EycIVAgY+LbSx/2Gty2963
-   OkjC+8izyq7s7MT/5WffRIsHClT3ArXk0CKvKkrrSpR4abs/tdcLpG9dh
-   HyAO/BphYEzTLfPOoN2VBR2Jj6Vv+JTeMk0JuiTC5QRams9MGrxXHHxze
-   uOpS93Zu5I8ruNzsP9Pltz7MXpCRwPfARPViG3q+OOSKWCy8WQyn7Yglu
-   A==;
-X-CSE-ConnectionGUID: WI6vdy4wQhG4hNedDxvVpA==
-X-CSE-MsgGUID: Yr6Flw8nRhOV8HwIp/54LA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53405410"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="53405410"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 01:58:10 -0700
-X-CSE-ConnectionGUID: wwio2xF1QRiPH1MFGu7XYg==
-X-CSE-MsgGUID: q9JSefTxRVy52YZ8ho543Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="158485292"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 01:58:08 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uV4uK-0000000AQp5-369i;
-	Fri, 27 Jun 2025 11:58:04 +0300
-Date: Fri, 27 Jun 2025 11:58:04 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCH v18] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <aF5dHDr8yDSKlp5j@smile.fi.intel.com>
-References: <20250626224805.9034-1-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KZ1uBfMr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BED55C4CEED;
+	Fri, 27 Jun 2025 08:58:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751014730;
+	bh=7Q0EJNGfoLDItxk7UkA5TTYdcSirFMepdH0/ItIQbdY=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=KZ1uBfMrQUHPPAz+Nq7hNbEKd+DazgJ4hhbGGNZtF9sYEAlWqDk2hUkgp7CKHbPZA
+	 PO/Z9Cliyx8yWpvUSSEujEPB1WvTpUjeI1WDsbW4IFZFM+1AHCqcwgmxGtdFfxbgQA
+	 jfkCYhDr/6x73ihykZhMxtylSWREa8Xi2d5+JXzvIKNB6cjyVeRl5lpkIVh/hSFAuU
+	 RdDgcJM09g7WpkXSL4Ql/h3MBBWjipOU/ep4M0Omk8e8+JzYDSEy2nqzC6JwEzlBXh
+	 xzFkJ6yUCLBTg5s4xlDLtk5mqiS1gdWDZER9SHXYxBjCzfjORcsL3+MFb95ngw4LFn
+	 SyMyA004Wxi1w==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626224805.9034-1-ansuelsmth@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 27 Jun 2025 10:58:43 +0200
+Message-Id: <DAX6WZ87S99G.1CMIN6IQXJYPL@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
+ "Will Deacon" <will@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>,
+ "Mark Rutland" <mark.rutland@arm.com>, "Wedson Almeida Filho"
+ <wedsonaf@gmail.com>, "Viresh Kumar" <viresh.kumar@linaro.org>, "Lyude
+ Paul" <lyude@redhat.com>, "Ingo Molnar" <mingo@kernel.org>, "Mitchell Levy"
+ <levymitchell0@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Linus Torvalds"
+ <torvalds@linux-foundation.org>, "Thomas Gleixner" <tglx@linutronix.de>
+Subject: Re: [PATCH v5 05/10] rust: sync: atomic: Add atomic {cmp,}xchg
+ operations
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <lkmm@lists.linux.dev>,
+ <linux-arch@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+ <20250618164934.19817-6-boqun.feng@gmail.com>
+In-Reply-To: <20250618164934.19817-6-boqun.feng@gmail.com>
 
-On Fri, Jun 27, 2025 at 12:47:53AM +0200, Christian Marangi wrote:
-> From: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> 
-> Introduce driver for PWM module available on EN7581 SoC.
-
-...
-
-> + * Copyright 2025 Markus Gothe <markus.gothe@genexis.eu>
-> + *		  Christian Marangi <ansuelsmth@gmail.com>
-
-I'm not sure you can change the copyright line like this. I would rather expect
-
- * Copyright 2012 Markus Gothe <markus.gothe@genexis.eu>
- * Copyright 2025 Christian Marangi <ansuelsmth@gmail.com>
-
-(Sorry, I forgot the exact original year there, but you got the point)
-
-...
-
-> +	/* Global mutex to protect bucket used refcount_t */
-> +	struct mutex mutex;
-
-This makes a little sense. Either you use refcount_t (which is atomic) or
-use mutex + regular variable.
-
-...
-
-> +	/*
-> +	 * It is necessary to explicitly shift out all zeros after muxing
-> +	 * to initialize the shift register before enabling PWM
-> +	 * mode because in PWM mode SIPO will not start shifting until
-> +	 * it needs to output a non-zero value (bit 31 of led_data
-> +	 * indicates shifting in progress and it must return to zero
-> +	 * before led_data can be written or PWM mode can be set)
-
-Missing period at the end.
-
-> +	 */
-
-...
-
-> +static void airoha_pwm_disable(struct airoha_pwm *pc, struct pwm_device *pwm)
+On Wed Jun 18, 2025 at 6:49 PM CEST, Boqun Feng wrote:
+> +impl<T: AllowAtomic> Atomic<T>
+> +where
+> +    T::Repr: AtomicHasXchgOps,
 > +{
-> +	/* Disable PWM and release the bucket */
-> +	airoha_pwm_config_flash_map(pc, pwm->hwpwm, -1);
-> +	airoha_pwm_release_bucket_config(pc, pwm->hwpwm);
+> +    /// Atomic exchange.
+> +    ///
+> +    /// # Examples
+> +    ///
+> +    /// ```rust
+> +    /// use kernel::sync::atomic::{Atomic, Acquire, Relaxed};
+> +    ///
+> +    /// let x =3D Atomic::new(42);
+> +    ///
+> +    /// assert_eq!(42, x.xchg(52, Acquire));
+> +    /// assert_eq!(52, x.load(Relaxed));
+> +    /// ```
+> +    #[doc(alias("atomic_xchg", "atomic64_xchg"))]
+> +    #[inline(always)]
+> +    pub fn xchg<Ordering: All>(&self, v: T, _: Ordering) -> T {
+
+Can we name this `exchange`?
+
+> +        let v =3D T::into_repr(v);
+> +        let a =3D self.as_ptr().cast::<T::Repr>();
 > +
-> +	clear_bit(pwm->hwpwm, pc->initialized);
+> +        // SAFETY:
+> +        // - For calling the atomic_xchg*() function:
+> +        //   - `self.as_ptr()` is a valid pointer, and per the safety re=
+quirement of `AllocAtomic`,
+> +        //      a `*mut T` is a valid `*mut T::Repr`. Therefore `a` is a=
+ valid pointer,
+> +        //   - per the type invariants, the following atomic operation w=
+on't cause data races.
+> +        // - For extra safety requirement of usage on pointers returned =
+by `self.as_ptr():
+> +        //   - atomic operations are used here.
+> +        let ret =3D unsafe {
+> +            match Ordering::TYPE {
+> +                OrderingType::Full =3D> T::Repr::atomic_xchg(a, v),
+> +                OrderingType::Acquire =3D> T::Repr::atomic_xchg_acquire(=
+a, v),
+> +                OrderingType::Release =3D> T::Repr::atomic_xchg_release(=
+a, v),
+> +                OrderingType::Relaxed =3D> T::Repr::atomic_xchg_relaxed(=
+a, v),
+> +            }
+> +        };
 > +
-> +	/* If no SIPO is used, disable the shift register chip */
-> +	if (find_next_bit(pc->initialized, AIROHA_PWM_MAX_CHANNELS,
-> +			  AIROHA_PWM_NUM_GPIO) >= AIROHA_PWM_NUM_GPIO)
+> +        T::from_repr(ret)
+> +    }
+> +
+> +    /// Atomic compare and exchange.
+> +    ///
+> +    /// Compare: The comparison is done via the byte level comparison be=
+tween the atomic variables
+> +    /// with the `old` value.
+> +    ///
+> +    /// Ordering: When succeeds, provides the corresponding ordering as =
+the `Ordering` type
+> +    /// parameter indicates, and a failed one doesn't provide any orderi=
+ng, the read part of a
+> +    /// failed cmpxchg should be treated as a relaxed read.
 
-This can be rewritten as
+This is a bit confusing to me. The operation has a store and a load
+operation and both can have different orderings (at least in Rust
+userland) depending on the success/failure of the operation. In
+userland, I can supply `AcqRel` and `Acquire` to ensure that I always
+have Acquire semantics on any read and `Release` semantics on any write
+(which I would think is a common case). How do I do this using your API?
 
-	if (!bitmap_read(pc->initialized, AIROHA_PWM_NUM_GPIO, AIROHA_PWM_NUM_SIPO))
+Don't I need `Acquire` semantics on the read in order for
+`compare_exchange` to give me the correct behavior in this example:
 
-(seems to me that the above code is buggy and has to have a check against the
- full size of bitmap).
+    pub struct Foo {
+        data: Atomic<u64>,
+        new: Atomic<bool>,
+        ready: Atomic<bool>,
+    }
 
-> +		regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
-> +				  AIROHA_PWM_SERIAL_GPIO_FLASH_MODE);
+    impl Foo {
+        pub fn new() -> Self {
+            Self {
+                data: Atomic::new(0),
+                new: Atomic::new(false),
+                ready: Atomic::new(false),
+            }
+        }
+
+        pub fn get(&self) -> Option<u64> {
+            if self.new.compare_exchange(true, false, Release).is_ok() {
+                let val =3D self.data.load(Acquire);
+                self.ready.store(false, Release);
+                Some(val)
+            } else {
+                None
+            }
+        }
+
+        pub fn set(&self, val: u64) -> Result<(), u64> {
+            if self.ready.compare_exchange(false, true, Release).is_ok() {
+                self.data.store(val, Release);
+                self.new.store(true, Release);
+            } else {
+                Err(val)
+            }
+        }
+    }
+
+IIUC, you need `Acquire` ordering on both `compare_exchange` operations'
+reads for this to work, right? Because if they are relaxed, this could
+happen:
+
+                    Thread 0                    |                    Thread=
+ 1
+------------------------------------------------|--------------------------=
+----------------------
+ get() {                                        | set(42) {
+                                                |   if ready.cmpxchg(false,=
+ true, Rel).is_ok() {
+                                                |     data.store(42, Rel)
+                                                |     new.store(true, Rel)
+   if new.cmpxchg(true, false, Rel).is_ok() {   |
+     let val =3D self.data.load(Acq); // reads 0  |
+     ready.store(false, Rel);                   |
+     Some(val)                                  |
+   }                                            |   }
+ }                                              | }
+=20
+So essentially, the `data.store` operation is not synchronized, because
+the read on `new` is not `Acquire`.
+
+> +    ///
+> +    /// Returns `Ok(value)` if cmpxchg succeeds, and `value` is guarante=
+ed to be equal to `old`,
+> +    /// otherwise returns `Err(value)`, and `value` is the value of the =
+atomic variable when
+> +    /// cmpxchg was happening.
+> +    ///
+> +    /// # Examples
+> +    ///
+> +    /// ```rust
+> +    /// use kernel::sync::atomic::{Atomic, Full, Relaxed};
+> +    ///
+> +    /// let x =3D Atomic::new(42);
+> +    ///
+> +    /// // Checks whether cmpxchg succeeded.
+> +    /// let success =3D x.cmpxchg(52, 64, Relaxed).is_ok();
+> +    /// # assert!(!success);
+> +    ///
+> +    /// // Checks whether cmpxchg failed.
+> +    /// let failure =3D x.cmpxchg(52, 64, Relaxed).is_err();
+> +    /// # assert!(failure);
+> +    ///
+> +    /// // Uses the old value if failed, probably re-try cmpxchg.
+> +    /// match x.cmpxchg(52, 64, Relaxed) {
+> +    ///     Ok(_) =3D> { },
+> +    ///     Err(old) =3D> {
+> +    ///         // do something with `old`.
+> +    ///         # assert_eq!(old, 42);
+> +    ///     }
+> +    /// }
+> +    ///
+> +    /// // Uses the latest value regardlessly, same as atomic_cmpxchg() =
+in C.
+> +    /// let latest =3D x.cmpxchg(42, 64, Full).unwrap_or_else(|old| old)=
+;
+> +    /// # assert_eq!(42, latest);
+> +    /// assert_eq!(64, x.load(Relaxed));
+> +    /// ```
+> +    #[doc(alias(
+> +        "atomic_cmpxchg",
+> +        "atomic64_cmpxchg",
+> +        "atomic_try_cmpxchg",
+> +        "atomic64_try_cmpxchg"
+> +    ))]
+> +    #[inline(always)]
+> +    pub fn cmpxchg<Ordering: All>(&self, mut old: T, new: T, o: Ordering=
+) -> Result<T, T> {
+
+`compare_exchange`?
+
+> +    /// Atomic compare and exchange and returns whether the operation su=
+cceeds.
+> +    ///
+> +    /// "Compare" and "Ordering" part are the same as [`Atomic::cmpxchg(=
+)`].
+> +    ///
+> +    /// Returns `true` means the cmpxchg succeeds otherwise returns `fal=
+se` with `old` updated to
+> +    /// the value of the atomic variable when cmpxchg was happening.
+> +    #[inline(always)]
+> +    fn try_cmpxchg<Ordering: All>(&self, old: &mut T, new: T, _: Orderin=
+g) -> bool {
+
+`try_compare_exchange`?
+
+---
+Cheers,
+Benno
+
+> +        let old =3D (old as *mut T).cast::<T::Repr>();
+> +        let new =3D T::into_repr(new);
+> +        let a =3D self.0.get().cast::<T::Repr>();
+> +
+> +        // SAFETY:
+> +        // - For calling the atomic_try_cmpchg*() function:
+> +        //   - `self.as_ptr()` is a valid pointer, and per the safety re=
+quirement of `AllowAtomic`,
+> +        //      a `*mut T` is a valid `*mut T::Repr`. Therefore `a` is a=
+ valid pointer,
+> +        //   - per the type invariants, the following atomic operation w=
+on't cause data races.
+> +        //   - `old` is a valid pointer to write because it comes from a=
+ mutable reference.
+> +        // - For extra safety requirement of usage on pointers returned =
+by `self.as_ptr():
+> +        //   - atomic operations are used here.
+> +        unsafe {
+> +            match Ordering::TYPE {
+> +                OrderingType::Full =3D> T::Repr::atomic_try_cmpxchg(a, o=
+ld, new),
+> +                OrderingType::Acquire =3D> T::Repr::atomic_try_cmpxchg_a=
+cquire(a, old, new),
+> +                OrderingType::Release =3D> T::Repr::atomic_try_cmpxchg_r=
+elease(a, old, new),
+> +                OrderingType::Relaxed =3D> T::Repr::atomic_try_cmpxchg_r=
+elaxed(a, old, new),
+> +            }
+> +        }
+> +    }
 > +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
 
