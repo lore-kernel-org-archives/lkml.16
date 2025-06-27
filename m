@@ -1,251 +1,148 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F3E2EBDE3;
-	Fri, 27 Jun 2025 18:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1662EBB90;
+	Fri, 27 Jun 2025 18:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751049562; cv=none; b=fcExPqVfYanV+LQX0Fw7ohfOt/ICyX9VaN7urCn5rzYADFu8X9eVql/mMiDHGg1hMjBFEy5od8cDDfF9P6YrPGmbicsWu48dMJYaSfF5lN7RyCMTgSIfjcbJJaKb7CpQQDvgfQgfGAWREgoNlAfKiWTpcBhzxxSLMr64+PQMGVc=
+	t=1751049602; cv=none; b=BbJcwfZM4BYfc4qRVS3z+/RcerIiZBm56BTHBhrPtEwaG3YfbVFOQzHQcFlkzTzVmgkTyyOYcj/4P3Ynq17zAcYVb+JcbO3uMcyL5Jg+X+2PgcAAt8ISHLp8e6l5WesUo9AdnvzP0GgCG0ZZ3gcerXShmNy1lZgtGfOkKGIQbBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751049562; c=relaxed/simple;
-	bh=kp9PjL3LKMGL9g360pD7nujdbMdW2nJiaqTDB5QV9Uk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VWsqSfrG6/N+eFEHSDJmz96OnaDKs/OsBd/hyukO7dxtEpL1MAdRTOYK2vCx0bhiVXP4cMf2uiAXXo4FRVb5j1RXb2Arm8ONdgllNK1qdw6vwS4fURUwzld7e8xhEacRWkET6MZanBEy2FgB/gSL+hWeeagjTm5Dzeskii1l2sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Prwmv6iK; arc=none smtp.client-ip=209.85.219.42
+	s=arc-20240116; t=1751049602; c=relaxed/simple;
+	bh=nVbFmmLKmZhzB8RvT3vMX9q7B5LYHhf8kIaqheREoPk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QAmqPBLngxPwsCdguYoPYu6oN7fQEk0IUqE8Or1dKweg242wooa2nDCod2EK0/KzRG0IberSmAAjOb+7GJ9/FZ79y1XcvbXGiSNrhknsti06JzGEgWfZ6e/1Xs/ijoX0pCAXiHeXLvlY1DxukJrRzdZMo7mB7KuJpgfkY8a/OoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aNEjvHVm; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Prwmv6iK"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6f8aa9e6ffdso26832376d6.3;
-        Fri, 27 Jun 2025 11:39:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNEjvHVm"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-747fc7506d4so265491b3a.0;
+        Fri, 27 Jun 2025 11:40:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751049560; x=1751654360; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1751049601; x=1751654401; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oM6ZlLkA8V2xRq6NqZMaoWitJ+r31gMnv4g5wXZZ+Bo=;
-        b=Prwmv6iK4pYn8p+wnMcm/H+ImPu+7LRk09/9m0yujmDJhO2eXDe6jN7K6mHpx9sd8j
-         PoOMC6qGhQrO4V5mUhUr2XusUDbtAgVBkk1lH4rpUT+DWD9FQOyorQp40v2/D4uyCH1t
-         o2qiGCy07Jp89hAifBiHvwJ9cd8kLeqclHq4Ct6SL1vKNLR7Afmw+G+2EbtYeX3d4kc4
-         gcPpSv8neNfDRfvxl/iNSn1pyQ//RjogxiJ9XmF+ArYDPiSaxApO29RAd/g5iIyPOroR
-         ww+dvnhV8kYMg7n9IyB/lMbfkNDYk+yybJtwJBwmgOg8YVqDSoqk+IcicaCcle+W/PZw
-         G/Dw==
+        bh=siWhviHf5s5kb5i61JeksO/RFhcaUxLVRTQZ76XuioA=;
+        b=aNEjvHVmP8UM+rcvDQxA2Yp3V7+htk8A525O2APuo094Ytibu8KXfl6O0NfBlqcI3v
+         o9NlMtW0btjEXW4mmhDWRZzJFPQW1mQr+V0BF9xbWCl84hfj+qazoT2P7XwDCGO2n6R7
+         EqDJgrjMsgp/xTMytDxSsWsgoauKwuH+H2mgyCjjjLBYS6leNyXemmPaFLTjguBZxu+6
+         6mcIrLXdQ5aMIhh6UthUivH/dDUTrDZkXuH/HvhuSvpFX899jPS9umO3N4J7oDYUNxfJ
+         dJU1RgQh/6Xh9/ZTD7SDUiAYjKcdhriNNDxyCa80PJYkgXuSzMXHN3cmAdJ29bDvcwjv
+         bW7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751049560; x=1751654360;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751049601; x=1751654401;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oM6ZlLkA8V2xRq6NqZMaoWitJ+r31gMnv4g5wXZZ+Bo=;
-        b=IyjtEKfI+clHPCH3k8i7JeioUeXYgg2YBnp7tMwcvKL2KPn5L8Jw4vSA528grVq/V6
-         uQMPpJT9uIHuWIvw5d90XV3PTRuCsmAnYpHpswUnUlL+hsYJT1oPr+SvXEmvE5pUP5OG
-         ugKdKfVcToB/viZwU5uMtl/RUEQNywnHa1vhVegdEa5z4/kAxFZn6OYQytd0TXmeYq/t
-         Zs/ds4iHYd+8/GdBjaz2V88UPE7/UVmCqULF1fw2jLpRQ7EjsM/N1fM9TsctUKB/ROzA
-         4PE8lrYZcOUq8KKmVW9jiF6vZYehY0RNCdbJJ8eNrq6vYnmlkF5ZYNUAhH/IzzATItj6
-         R/Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5sV80iUrWxPhPNK3yRRKq0IWQj/dGRdjCMfJV/HLmsUHlO/0djBJoff5SlxADms+sIPkxp0uH/Ze8lJ4=@vger.kernel.org, AJvYcCV8B9FYW4RjyRxyLeB1FHtL9r2fIrSy8/antSa0wrDbMpUlyLNKK8zfS+IOJfqh9wJLwrzYsDyDoOerb51xEk8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yypfk++/QjM75zd5yi0my10q+v/pApSu2TUtWzPp+mMtxYSamI2
-	W9p96zph2d9qp2NeFDHDpuWQx6yKIt/APY7B+jN+lCLrpaWOirkyYIdJ
-X-Gm-Gg: ASbGncthlzyO/D6+Hf/nXIfKyGnJqsYeF7HUO5oDrXsr3wbsUtkNm86af29HjRHtpcS
-	SgwvBvVqBzl9zHiYo5X3VX5bD+E08K4hbLbrCAjAE4nR4Q/0qJuhLDKXJTS3UXa2GQNiqAngHto
-	imrxlyv/RHpZCq8uHGiLsapypSph8lrTI07rHZnVzExVIx5uKS0afvj9TRgLanTSk3vBADUrwGH
-	vt4wbq9goEmpOI+fk5fm6r8YjOvMPENAxYJZ6DHxbwJBw8NWdoGajAqtgPsL7YsRaceptoI/kwA
-	PvL6shm0FjWQG1RDQVTnw7m3YjRsBkG4uzT2jrXpTMIC35P6RX4gdr4LwQw/TIdW4T26yRityZ3
-	BNbl+/oEu+cYmLVq5NIQbx2I9SKlJOcqYVSkg0CGU6TXk7nn9PWAp
-X-Google-Smtp-Source: AGHT+IF2WYuaGhvNjjpH48pnA/M56cZCufsyNtwIk/4pBAJO9HLCeIyLTH3Ags+JPYYAtsqE4nL3IQ==
-X-Received: by 2002:a05:6214:1c47:b0:6e8:fe16:4d44 with SMTP id 6a1803df08f44-700134a81d5mr87297906d6.31.1751049559942;
-        Fri, 27 Jun 2025 11:39:19 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44313695dsm176318385a.1.2025.06.27.11.39.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 11:39:19 -0700 (PDT)
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id A0ACBF40066;
-	Fri, 27 Jun 2025 14:39:18 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Fri, 27 Jun 2025 14:39:18 -0400
-X-ME-Sender: <xms:VuVeaHiEq2PLdenDqBdVpDQkTEwhoeVn4YSNfjyBu_lodRjleFdCXA>
-    <xme:VuVeaEBTof8MjoaKSYa46MxXXVN8i7Glzj1o7wnjPbr0dampKhdB5F-l9CGncvWem
-    XmB-s_IzqHnL5Xgnw>
-X-ME-Received: <xmr:VuVeaHFK3P4tvD0-O0BuEYAEU0rPrUaMpnUJkbyaT67NrBSYvjZdLmYM4xA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefkedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgv
-    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
-    hnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueevieduffeivden
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquh
-    hnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudej
-    jeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrd
-    hnrghmvgdpnhgspghrtghpthhtohepudeipdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopegrlhhitggvrhihhhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehtjheskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhope
-    hjihgrnhhgshhhrghnlhgrihesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhies
-    ghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonh
-    hmrghilhdrtghomhdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepthhmghhrohhsshesuhhmihgthhdrvgguuh
-X-ME-Proxy: <xmx:VuVeaESkvFESkXSCsvXg1MWojjFFS7Nvv10pBXUSbttIgV4JBiTrbg>
-    <xmx:VuVeaEzN2uujjLvhwJZwD3a1kbYGa4Sh7jLgjYQTOiSHHw5Owd-Odw>
-    <xmx:VuVeaK5NkqvkiiurUWcdagi5si0qdwOouLVng4hGMS5_0zPGuOKfFA>
-    <xmx:VuVeaJz4GnInp8uaXMOoOY56ZXA1zXtwMBG_uJROy4s7d2CGGWSwFg>
-    <xmx:VuVeaEjPWFEoOp97DP_PZUpQIPcAN--776P_kvghWO9hSpBSNoDfl8Hl>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 27 Jun 2025 14:39:18 -0400 (EDT)
-Date: Fri, 27 Jun 2025 11:39:17 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Tejun Heo <tj@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Benno Lossin <lossin@kernel.org>
-Subject: Re: [PATCH v2] workqueue: rust: add delayed work items
-Message-ID: <aF7lVYl7p33kByoK@tardis.local>
-References: <20250627-workqueue-delay-v2-1-84b046fdb4fc@google.com>
+        bh=siWhviHf5s5kb5i61JeksO/RFhcaUxLVRTQZ76XuioA=;
+        b=Jmm+o3zzPgYpTSFNuAnJOnGtGx4xzo6hRftBUGeKla8HqHdlFX5939P1HloOAUqkJ0
+         Hfeggj8gn9bl57lbti4oFBYY+0NKpKBU273H4poKs0FN/CFAHXygv29bGJev1VmxRlZ6
+         UUEXvDHr7PRyge8xnYqZGOVagvOzJA95heoQ+q9OfkPr2dtR5oRgdcvJWwxeu+JOGILW
+         BnVzh5cjeLHzr27AJRuOMWvwIk5A5mvL42hlhe3TQQi49usWBlIrtnNDNMOcl5N2kVmT
+         FAO1FfDTnOKJ5L0S6RF8jvsGumecFRigCLJZYtER0yc/zvGiYSjHlyLepitFDxKDG3MJ
+         RcTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6QirY42HqnuY5pfoP2zy69DXIVA46ZNHbyBGvLSADh5eCTwhNPu0h/bww/zcwHVV2hvY0EtSBzTLpC70U@vger.kernel.org, AJvYcCXyEgZFnQ4NNJD/5OR5YmSCB1usK6sH93F4t6DxKZQxE3ggvWBrjyFqjaDR9qjzwc67qxVoBRK6b57F@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXy2gRaGKo9E4M9UTZPe3JeelD28HE4SuJkIDNBErEuzvz5Z/m
+	zeTlB9cY2CEQN6gQJ/XmWyzgNct9E/spkpK+dPTew1zq6cUG3GxR+NX9zbgbF7syDG65I+vJb4C
+	NugiRqKptsRImT75aDcW3xqng6j9BPG0=
+X-Gm-Gg: ASbGncs/VikfyHfFvtL2mZjZQSSt2M0yYbB4iNb/y20+GA6v0FHvs7WoMJHjXTkTKHJ
+	TFBLhYaUjdEQzQH4/FKnNIxPZHi6yQWjF7Nzgn0Cy8qaUfK6JvPsnZ9a2o9OPhhOeUfllX9Y7Bf
+	qYIwthFpzYm4vVyF017SwDA+aYV3ceM5/SEYOumNRwrJs=
+X-Google-Smtp-Source: AGHT+IG7DXpgyz78HE/l0Kl92IMNPGEMkpBChVBoXCc4zEE1USg0kAy1xclBltkrt4z/w0HTXdSmRFpCE0CJy5cjrH8=
+X-Received: by 2002:a05:6a00:9283:b0:736:3979:369e with SMTP id
+ d2e1a72fcca58-74af6ee09d2mr5846339b3a.9.1751049600545; Fri, 27 Jun 2025
+ 11:40:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627-workqueue-delay-v2-1-84b046fdb4fc@google.com>
+References: <20250620213447.56392-1-aford173@gmail.com> <CAJ+vNU0caeeC6in5dO_jkkbYNAnTL7drBZcmNBsstbrPWqUkHw@mail.gmail.com>
+In-Reply-To: <CAJ+vNU0caeeC6in5dO_jkkbYNAnTL7drBZcmNBsstbrPWqUkHw@mail.gmail.com>
+From: Adam Ford <aford173@gmail.com>
+Date: Fri, 27 Jun 2025 13:39:48 -0500
+X-Gm-Features: Ac12FXwEbq0LZniaWzZz7izf_58TqugWsShMRtxczDzTY_dudWpf8_R6poipXQI
+Message-ID: <CAHCN7x++XGXu6DsPaOc2EpAbxzy+RZbDq5A5-j5a4roGDhv4fQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: imx8mm-beacon: Fix HS400 USDHC clock speed
+To: Tim Harvey <tharvey@gateworks.com>
+Cc: linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, 
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 27, 2025 at 09:38:42AM +0000, Alice Ryhl wrote:
-[...]
-> diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
-> index d092112d843f3225ea582e013581b39e36652a84..3a7ab7d078fc2091ad556bfde997b9f73f618773 100644
-> --- a/rust/kernel/workqueue.rs
-> +++ b/rust/kernel/workqueue.rs
-> @@ -131,10 +131,69 @@
->  //! # print_2_later(MyStruct::new(41, 42).unwrap());
->  //! ```
->  //!
-> +//! This example shows how you can schedule delayed work items:
-> +//!
-> +//! ```
-> +//! use kernel::sync::Arc;
-> +//! use kernel::workqueue::{self, impl_has_delayed_work, new_delayed_work, DelayedWork, WorkItem};
-> +//!
-> +//! #[pin_data]
-> +//! struct MyStruct {
-> +//!     value: i32,
-> +//!     #[pin]
-> +//!     work: DelayedWork<MyStruct>,
-> +//! }
-> +//!
-> +//! impl_has_delayed_work! {
-> +//!     impl HasDelayedWork<Self> for MyStruct { self.work }
-> +//! }
-> +//!
-> +//! impl MyStruct {
-> +//!     fn new(value: i32) -> Result<Arc<Self>> {
-> +//!         Arc::pin_init(
-> +//!             pin_init!(MyStruct {
-> +//!                 value,
-> +//!                 work <- new_delayed_work!("MyStruct::work"),
-> +//!             }),
-> +//!             GFP_KERNEL,
-> +//!         )
-> +//!     }
-> +//! }
-> +//!
-> +//! impl WorkItem for MyStruct {
-> +//!     type Pointer = Arc<MyStruct>;
-> +//!
-> +//!     fn run(this: Arc<MyStruct>) {
-> +//!         pr_info!("The value is: {}\n", this.value);
-> +//!     }
-> +//! }
-> +//!
-> +//! /// This method will enqueue the struct for execution on the system workqueue, where its value
-> +//! /// will be printed 42 jiffies later.
-> +//! fn print_later(val: Arc<MyStruct>) {
-> +//!     let _ = workqueue::system().enqueue_delayed(val, 42);
+On Fri, Jun 27, 2025 at 12:56=E2=80=AFPM Tim Harvey <tharvey@gateworks.com>=
+ wrote:
+>
+> On Fri, Jun 20, 2025 at 2:52=E2=80=AFPM Adam Ford <aford173@gmail.com> wr=
+ote:
+> >
+> > The reference manual for the i.MX8MM states the clock rate in
+> > MMC mode is 1/2 of the input clock, therefore to properly run
+> > at HS400 rates, the input clock must be 400MHz to operate at
+> > 200MHz.  Currently the clock is set to 200MHz which is half the
+> > rate it should be, so the throughput is half of what it should be
+> > for HS400 operation.
+> >
+> > Fixes: 593816fa2f35 ("arm64: dts: imx: Add Beacon i.MX8m-Mini developme=
+nt kit")
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi b/arc=
+h/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
+> > index 21bcd82fd092..8287a7f66ed3 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
+> > @@ -294,6 +294,8 @@ &usdhc3 {
+> >         pinctrl-0 =3D <&pinctrl_usdhc3>;
+> >         pinctrl-1 =3D <&pinctrl_usdhc3_100mhz>;
+> >         pinctrl-2 =3D <&pinctrl_usdhc3_200mhz>;
+> > +       assigned-clocks =3D <&clk IMX8MM_CLK_USDHC3>;
+> > +       assigned-clock-rates =3D <400000000>;
+> >         bus-width =3D <8>;
+> >         non-removable;
+> >         status =3D "okay";
+> > --
+> > 2.48.1
+> >
+> >
+>
+> Hi Adam,
+>
+> This caught my interest. Where in the IMX8MMRM do you see this and
+> would it also apply to the IMX8MP? (You've patched your IMX8MM and
+> IMX8MN boards).
 
-Nit: maybe use a different jiffies value? Because you call
-MyStruct::new(42) later, and we want to demonstrate that the '42' in
-enqueue_delayed() is the value for delay, not the '42' in
-MyStruct::new() ;-)
+My 8MP board already appears to be running at 400MHz, but I did check.
+The reference I found was in the 8MM TRM, under 10.3.3.5 Clock
+generator, there is a note:
 
-Just use 10 jiffies, maybe?
+CLK is different for the SDR and DDR modes.
+- In the SDR mode, CLK is equal to the internal working clock (card_clk).
+- In the DDR mode, CLK is equal to card_clk/2.
 
-> +//! }
-> +//!
-> +//! /// It is also possible to use the ordinary `enqueue` method together with `DelayedWork`. This
-> +//! /// is equivalent to calling `enqueue_delayed` with a delay of zero.
-> +//! fn print_now(val: Arc<MyStruct>) {
-> +//!     let _ = workqueue::system().enqueue(val);
-> +//! }
-> +//! # print_later(MyStruct::new(42).unwrap());
-> +//! # print_now(MyStruct::new(42).unwrap());
-> +//! ```
-> +//!
->  //! C header: [`include/linux/workqueue.h`](srctree/include/linux/workqueue.h)
->  
-> -use crate::alloc::{AllocError, Flags};
-> -use crate::{prelude::*, sync::Arc, sync::LockClassKey, types::Opaque};
-> +use crate::{
-> +    alloc::{AllocError, Flags},
-> +    container_of,
-> +    prelude::*,
-> +    sync::Arc,
-> +    sync::LockClassKey,
-> +    time::Jiffies,
-> +    types::Opaque,
-> +};
->  use core::marker::PhantomData;
->  
->  /// Creates a [`Work`] initialiser with the given name and a newly-created lock class.
-> @@ -146,6 +205,33 @@ macro_rules! new_work {
->  }
->  pub use new_work;
->  
-> +/// Creates a [`DelayedWork`] initialiser with the given name and a newly-created lock class.
-> +#[macro_export]
-> +macro_rules! new_delayed_work {
-> +    () => {
-> +        $crate::workqueue::DelayedWork::new(
-> +            $crate::c_str!(::core::concat!(::core::file!(), ":", ::core::line!())),
+>
+> Have you encountered any issues when running eMMC at HS400 due to this
+> or is it just something you noticed in the RM more recently like with
 
-We can use `optional_name!()` for this.
+One of my colleagues reported that the eMMC was running slower than he
+expected, and I looked at the reference clock and noticed the 200MHz.
+He asked if it needed to run 2x that since HS400 clocks on both edges.
+I looked it up and found the note from above.  When I increased the
+rate to 400MHz from 200MHz, the throughput doubled. I also noticed
+some other boards, including the reference from NXP had the clock rate
+set to 400MHz, so I don't think anything unreasonable.
 
-> +            $crate::static_lock_class!(),
-> +            $crate::c_str!(::core::concat!(
-> +                ::core::file!(),
-> +                ":",
-> +                ::core::line!(),
-> +                "_timer"
-> +            )),
+adam
 
-and maybe extend `optional_name!()` to support a suffix? Or we make a
-concat!() for `CStr`? Anyway I don't think this blocks the patch, if you
-don't have time, I will create an issue for this.
-
-With the above fixed, feel free to add:
-
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-
-Regards,
-Boqun
-
-> +            $crate::static_lock_class!(),
-> +        )
-> +    };
-> +    ($name:literal) => {
-> +        $crate::workqueue::DelayedWork::new(
-> +            $crate::c_str!($name),
-> +            $crate::static_lock_class!(),
-> +            $crate::c_str!(::core::concat!($name, "_timer")),
-> +            $crate::static_lock_class!(),
-> +        )
-> +    };
-> +}
-[...]
+> my recent patch that lowers SPI clock due to an obscure RM note [1]
+>
+> Best Regards,
+>
+> Tim
+> [1] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=3D=
+965976&archive=3Dboth
