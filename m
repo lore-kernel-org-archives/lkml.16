@@ -1,79 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06109460;
-	Fri, 27 Jun 2025 00:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86182F4A;
+	Fri, 27 Jun 2025 00:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750983592; cv=none; b=NZEo0Y6Jt7Vjqg/LfrAYZvHrh+5UNifNn9myIIkrQ0kGvyY+UagxdkVTJaq1ke8DNxl1B2qpp0AT/QEWASEeI6UYHpP5ZlEqAzVxfxHauIY5o/hkJpnvWjOX7JXGNekfv6+ObZCyV8gX2rlhgjFj/uHd4dAVWAryCeUR4gbTEh8=
+	t=1750983609; cv=none; b=u7EYoorNHJc4p+C5X3S0XLDOhtuLskN83YK1lKUpbOgTplkY7aUebpwhTMniUSqcq5DSNL1JuQuT8fMC07G2CpnumVaxfaRgTu2buiAoYux4O0RKeeD3m5WPmTV8Vi9OjpqlI+TH5SfRZ8lVInGaT2gOqqM/IXjvnD8uxKtWwr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750983592; c=relaxed/simple;
-	bh=RrmsbVmyogoXW9Ko+aax+pPbyYQ0NRNNiGyXTQbNfws=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=cxJlUQazjLcjFNwWP//soOFmhp/QB3DaKeMb3YwA9DPt/OPYYRlBpNP45jcvAqWcG8xUW3LZLUiRfhBh5llcrDZFOsV6fkONTt4pzUkKIqR7S/JHLSUnBesl2Vwm9XwVThH33l1MVQ8NdYekRpoVR4uuf68iVFO0MXjXKNjvoFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUgrR31X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750983609; c=relaxed/simple;
+	bh=PKky7IbbIFiq2DgbdU65Z9zZBJsDd8cpZP8lF8C1OOs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E+V522+dIJCiHb2LSjCfhvDkkpu4/dikSVTc5gpV1Gqo9S/GwC00ma2g5WzWSfp15vQBmicUbatDe8lk3FKNJ2YrDB09q3O3+EqcIkbFbDGFXoFpitueN4EwLQuJzyapwOfJbzNOwoDWkkY47FGIpJTdTIyOWe9bji8NysFco7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i+gO6oNl; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUgrR31X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BFAEC4CEEB;
-	Fri, 27 Jun 2025 00:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750983592;
-	bh=RrmsbVmyogoXW9Ko+aax+pPbyYQ0NRNNiGyXTQbNfws=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gUgrR31XVX2D9PNxb2xoqJcgtfunntbCmCWaCWUo90b2DiSHb6+7Zz1RoY43IH/Ga
-	 6MlqTnRN8a4gYNVJOuDGUkt4tPFgjSe3nB1ReWEu3nyNagbRTAZa9AIKrxFMIaLzuZ
-	 IvXYj8Aebh6sX0py5t0sb1pzgRVTy/RK5nGZ2K3ye6DTjqH1WPjYdUO/w2xxwPeH9H
-	 SGHI7TCaAJmKl5g84b1mjfzB/PM7A94x6k4a9GoluF8ETPjFwXL+V/EwNKnctyVDEO
-	 BX5LNBShG1naOeSlLGUzIiKTg3VlNtr3P7Cv8j6sMvs8YIjWVOuhztfQNOL6dldaqb
-	 REuTIxh9XOnXw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE1AF3A40FCB;
-	Fri, 27 Jun 2025 00:20:19 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+gO6oNl"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7490702fc7cso1145579b3a.1;
+        Thu, 26 Jun 2025 17:20:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750983607; x=1751588407; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gZQojmcQydldQjb4UI2zP2jf0B6n8+rV1pAko5QeeAY=;
+        b=i+gO6oNl6MGR42MtVEUD3IsC91U6SAm0S2nB55nlCW6Zo0L+N9fJmgjTMmPGPrdHs9
+         B0uxM1BR1EKEAL7e8M1eJy5NCb2/g2Yym3D0sWO3pqG1mOys/ToxkC75NN6rapcU2Hmd
+         jUMc6jQHpO2LnYM1z2MWjU4RdwFsfZpjyXaUPRXu8MXGxq6lg8UV8DLuA+8Z4ZFIYZU3
+         lcCg6AvyR4LgqXpPlH8FpyAnK9ef4h+w7KgZjhlM82DfiSuhzHGQdr6koMq5JHe/QYs+
+         c2l2Ucja5JsXNXbTj1Ehh0CoZiZbIq3/5NcUtZIuDUzcDEnm5NI0yA4Uilc2Htbke1EE
+         Yo3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750983607; x=1751588407;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gZQojmcQydldQjb4UI2zP2jf0B6n8+rV1pAko5QeeAY=;
+        b=UjoYXXyZM1lhfn2f/kVM703SNl7YlbarzxmLS+gv9vmfX0fXExJNo8/t344swO/kqP
+         3gua9cq1VpvUHRwfFx1l5S5rcOj4FPNVb+dohf8i1SPZFoVDCEiYIoVFRHiWCOLTqeUR
+         Rskf1pH+tuvRpk1J0NhrC7eaYbq2OFWGFnAVb9NHDieBEP7mZXcYvNIWs0pFFtaOqJCv
+         MlX4xPLlZikMIX9Ms4/yn2AwYCIHT9UKR/f8HB2ugzGDHwBMPfQi7qP6QGVlSAeka/zQ
+         Qg/jzT4Otf+g8vOX69PTLt3NA3cIPtKPjPlbtN+X4TPzNaBj8RPSjMFzMogDphLDS3Z8
+         TeHw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNB7R61cyFWVIb9nRu9tg5y2+qgIJsvzImzzUjvX42IjlKkQs83IaKmDd7PJSu3MTB3+MtTvjR34VDRZXW@vger.kernel.org, AJvYcCWX21qCY45xCH+eJeS14B6VMHrNLCcwN+qBXn/ETsy8GAr+bu+mK4f00rko0SsdIOrpPvwNXHeW6Pw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuPnE9OSvB8vdwxthrGuxwhNSLPUnIhKh63SVgtAibBy6TscKh
+	W/Btg4a4heIaCTgDhu0sd5vckYUxw74+NQdjw90LcCG3hzu+mo71d9Ge
+X-Gm-Gg: ASbGnct42I0o9kT//TTsvrvpGwGhMUd1tmA6PUsd/8NOcmqzN2DMyd8R8ReY6I7aXmI
+	BQaA70HxTaXKpw41rRvTQn+bguXo2QXWk2mwObgIhteQUrKZw8/L+To9vVn7pZXHPNqvuE2THAH
+	+w9Ha+JIMQzfOnDpEfFtgY5b4KzQiSG+C0CQ89KbBXsklCNnDe241TklwJ2vL5M6wIv9B71FpmT
+	GQpe0hKA1/hgcjZxP6rKhJ90Bhu6R06opz9uVjcycPo6Jj1D5eIieBiMABrN7zjRLbJstt9t1QV
+	W1U+r+jF7nVSZiJNJrqiB6bVxzferE9T9NSNJDvm77jvwS4kox2oFQsnh+Lu5g==
+X-Google-Smtp-Source: AGHT+IFfcKOr44kTaqlIcQVea5gmzizTb5lvMRwigGECKk10wnTLCRW9K8fkWSfPBmdHhXrjm+JdEw==
+X-Received: by 2002:a05:6a20:1586:b0:215:e43a:29b9 with SMTP id adf61e73a8af0-220a16db22amr1204311637.33.1750983606796;
+        Thu, 26 Jun 2025 17:20:06 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e31bea22sm230934a12.38.2025.06.26.17.20.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 17:20:05 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id EF60C4207D0B; Fri, 27 Jun 2025 07:20:01 +0700 (WIB)
+Date: Fri, 27 Jun 2025 07:20:01 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Federico Vaga <federico.vaga@vaga.pv.it>,
+	Akira Yokosawa <akiyks@gmail.com>,
+	Carlos Bilbao <carlos.bilbao@kernel.org>,
+	Avadhut Naik <avadhut.naik@amd.com>, Alex Shi <alexs@kernel.org>,
+	Yanteng Si <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	David Vernet <void@manifault.com>, Miguel Ojeda <ojeda@kernel.org>,
+	James Seo <james@equiv.tech>,
+	Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: Re: [PATCH RFC] Documentation: typography refresh
+Message-ID: <aF3jsR6d2gC_CvoE@archie.me>
+References: <20250619042318.17325-2-bagasdotme@gmail.com>
+ <87wm8z8xs7.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2] net: mana: Fix build errors when
- CONFIG_NET_SHAPER is disabled
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175098361824.1380299.7391305111038301717.git-patchwork-notify@kernel.org>
-Date: Fri, 27 Jun 2025 00:20:18 +0000
-References: <1750851355-8067-1-git-send-email-ernis@linux.microsoft.com>
-In-Reply-To: <1750851355-8067-1-git-send-email-ernis@linux.microsoft.com>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed, 25 Jun 2025 04:35:55 -0700 you wrote:
-> Fix build errors when CONFIG_NET_SHAPER is disabled, including:
-> 
-> drivers/net/ethernet/microsoft/mana/mana_en.c:804:10: error:
-> 'const struct net_device_ops' has no member named 'net_shaper_ops'
-> 
->      804 |         .net_shaper_ops         = &mana_shaper_ops,
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,v2] net: mana: Fix build errors when CONFIG_NET_SHAPER is disabled
-    https://git.kernel.org/netdev/net-next/c/11cd02069872
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="n2Nz9B8Ft9sZeJJ8"
+Content-Disposition: inline
+In-Reply-To: <87wm8z8xs7.fsf@trenco.lwn.net>
 
 
+--n2Nz9B8Ft9sZeJJ8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 25, 2025 at 12:46:16PM -0600, Jonathan Corbet wrote:
+> Bagas Sanjaya <bagasdotme@gmail.com> writes:
+>=20
+> > At present, kernel documentation uses system serif font for body text.
+> > Some people, however, objected to it and instead prefer that the
+> > typography choice must be legible, consistent, and accessible (after
+> > all, the audience ranges developers peeking into kernel internals to
+> > ordinary users that skimmed through Documentation/admin-guide/).
+>=20
+> So I have not seen the objections from "some people"; can you point to
+> them, please?
+
+None really but I feel that sans-serif looks aesthetically more pleasant
+(to my eyes) on screen than bare Times New Roman.
+
+>=20
+> > To tackle the problem, follow Wikimedia's typography refresh [1].
+> > For the font choices, instead of using web fonts as in previous
+> > attempt [2], use:
+> >
+> >   * Linux Libertine, Georgia, Times for serif (used in h1 and h2
+> >     headings)
+> >   * system font for sans-serif and monospace
+> >
+> > This allows for more readability and consistency without sacrificing
+> > page load times and bandwidth, as the font choices is most likely
+> > already available on many platforms.
+>=20
+> I am open to style changes to make the docs more readable, but I am far
+> from convinced that this is it.  Mixing font styles in that way will not
+> be universally popular, the claim of "more readability" is
+> unsubstantiated, and "consistency" seems out of place when you're making
+> the fonts deliberately inconsistent...?
+
+Because I don't have anything else to say in my mind as ideas when writing
+this RFC.
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--n2Nz9B8Ft9sZeJJ8
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaF3jrQAKCRD2uYlJVVFO
+o7dOAQCtMP/tRlf6i5sdRHW7Dg8T3Xw1LbXap5cyGYX4DiiMGQD+PcHawpD1JGxQ
+a4ISmyWG33/Yrnfg+8pxT4t9CZg1kgM=
+=iqx/
+-----END PGP SIGNATURE-----
+
+--n2Nz9B8Ft9sZeJJ8--
