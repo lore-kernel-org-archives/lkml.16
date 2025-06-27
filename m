@@ -1,158 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2963819E990;
-	Fri, 27 Jun 2025 15:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25BB19E990;
+	Fri, 27 Jun 2025 15:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751039919; cv=none; b=bR9chPMaORbaIfQnOBSduck6sEDrjc5b6Vjdb0mXWFtcgQaj+9mvp6Lv8cTMv9q6qcj+Eb82xNsumsGSvn1dP9bosnFe5mBYrDu7OXaHvaCJLSpcU4PEYni3rgoODNvxI9sBnkhZAEgTOxM20JAQu9NSdcgVqKDC8ILRGxymOgA=
+	t=1751039981; cv=none; b=e/TzdVki8Fz7EktPHKKeN7iAAwC8LVLmupv+zoS3vDcfaV8cW173waxxyhwc/JnEOBAnUZT8NLAu/G6vSLPpXNZBRhmFJ2rNO6j8KvNpIqzABjLgp1uOMjzyiBFLLA66rgQNLAsPyfWTqSgLv/DZHFwT7AsAfEVPrWMHq83hERk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751039919; c=relaxed/simple;
-	bh=tBv0zN4w3fBWkY/nFOn0k+IhVxh6OQEYPfuuw9vKCvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jfiq9Wl2ge9Vvl0GWciZkfrZXqScZ6GVoCwn9lxxARBLQfVGwjv/C+rjGj183umfD84M0ykVcv904w5kHF6kMdnc1IXNyaPrhZFrvXB1snWQSI1Pm2Oaa8DM0JKGqXh/hbc1KT2oqYVQjcm8VKfB41D7bjDWZzZ1pZMiham4WgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b4tJ94JZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751039981; c=relaxed/simple;
+	bh=UL5P2G8QwWKYeIIOTiUC5tzsMqmjCmX1SN6IgdbYSZc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JD46EK2i8UnwB45DupS1z+yUvOm6fO71P8tBq3g1Zk5zTnvFzg40/DCNsHq4UtwAh8d6wBOpY41g6rgBQj4nNhy9qpC4V9DGIUTCdjgbRPZpcZx9H62+TsDSQgC7Ru6f4ZLC1fZL8rPZdYNZCdApQsEdnRxtILw/xtc9gUzAzv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PGsj/jY5; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b4tJ94JZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D7B3C4CEE3;
-	Fri, 27 Jun 2025 15:58:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751039918;
-	bh=tBv0zN4w3fBWkY/nFOn0k+IhVxh6OQEYPfuuw9vKCvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b4tJ94JZTjGfbHmZDMM8bIuOky0BWZylZfr+Z7v8HXEL7evqfsEWw1BgYoEYnFfpX
-	 SdKj4hkTwOEnNMp6O4y/hMVwX+Tk/9SY3kG6RNby6zDETioc5MDSawDH9+LcaRgrsG
-	 Pz3RCeX3aRYkjYStdMtyjYME4zWrNpS+iykXmBun6VP+XXrF6ivxSzv5WeRN87gV/M
-	 HLSMkb13vj/LZuOP9gKQN4koUKfveUcJGZoe0jAWfkjC9sE+Y1rfFm+XLyHfVaaSV5
-	 SQAYvDPy3PQkLshJCnEyhDpwGRkyX80rd1xx5d7Iwju+Cm+YcCtjz9Kx4UzxQ1xIYx
-	 RCWGTryFzxJ0Q==
-Date: Fri, 27 Jun 2025 10:58:37 -0500
-From: Rob Herring <robh@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 00/28] lan966x pci device: Add support for SFPs
-Message-ID: <20250627155837.GC3234475-robh@kernel.org>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PGsj/jY5"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a6f2c6715fso2437632f8f.1;
+        Fri, 27 Jun 2025 08:59:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751039978; x=1751644778; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UL5P2G8QwWKYeIIOTiUC5tzsMqmjCmX1SN6IgdbYSZc=;
+        b=PGsj/jY5lECkMQTXDIJ66wMwZNWBA5xUKpsiZHOvbEh3Eg3TtOOm069JA1kz+k3gDR
+         EOcrB9GX7iQ1+V8Vq3v7yMAWqk8phoUcTgfnM7YDtQQP9mEdtJD1wg3O7t7rE8tykKtk
+         1NyiFL7n6m48rMCeMNK5BiZwXX9VVDxKoUFA1T9yGkYJgZA0FFPVz+d29TZ1/cS1Ve9A
+         /FBHrB6+KtOsMdtWA14N/eK15xEXnw3YHekuWZNWmYWKlibcBZEOHARJ4XjKQkdAC0Cg
+         ZG+jFRtMRgKd5U4TBYqpdJisZ1PPEEng38lnfb4sEdTZVqPhLQKKKKOwe/qcCTJ9DogK
+         TcPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751039978; x=1751644778;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UL5P2G8QwWKYeIIOTiUC5tzsMqmjCmX1SN6IgdbYSZc=;
+        b=h0McMvDxk1bNMUZyL7u18cbdYJJfQw+rVVwgIkAqt9YLxmgWpc2TEG8k5vCf27zuxc
+         poj9a0E6VCyco1qM16i6u2zpHk41Cgz1/Pj/lOAWk6XjmkZEryLhKJd110T2cmLtS71k
+         0pwiAQbbMj2oegA/l8rJv0NTzIKTzOYl03d5PkdrL/v13qFZyDCp/hPhI/3u0CkF5aio
+         jSL5YhqMxctkDXG6OqifXS9wUXZ5hBopuAZVqZTFN2rnT0W5hL44M/+BsKNvCC9wMj3F
+         f/w6q2Rd2e+ILlSINZ74VsxyFhFcpzMA0yXoY6wmlrnGIK5h0lX0mmSsKNJ/uGW4I9Ls
+         +YAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBMR/cvCrblVr2vmtMWzRr6ExtSamvhhco4zPw5DpfrbgQag7+vnEwlRHGq0akDTntEKne5vCl9du85uBl@vger.kernel.org, AJvYcCUQ3oUhw/qQjNgH45QpXeB8s0lROIKIWNPGRQGQBWs1uA1gZ1Mr7gry4JI/w66+cgwuXucqqQdQV2E4qafvuJFUuMsZdxQZ@vger.kernel.org, AJvYcCW6yCgRUZp9ptyha1Ps0xL1Ecs4fzfVRN387C8VokquuUEo5lt3wBV8uA9hT7hgk/2U7f7vNSg5mdjLiLMaGA==@vger.kernel.org, AJvYcCXOxRnCpSOp4JXwlk3/Z3KAys8E0ITD2Lo0Zy6DszM9uZzGKqnlTR8zsU1uxkapNHjaU0Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGczBG6PdD6NZFh00iSJV0HshLHLHvF972LKwm1p3qZ87PqtxH
+	V78iYztrlANfNSB2FrmzEkY2uUgQUX4N9CeHbCvKxify9AlP/xupqnJafNLVeMdQpThehcXCedL
+	o/AG19H6sFm5WA4QQ+b4+YOj3M/KiWHQ=
+X-Gm-Gg: ASbGncuFmG5AFab2KoHUvrTvFawgfm1BSnpra+Lf+4Z4Ibzjoi9FjA+k8H5lQEoURFV
+	lKrxuNodhMkPs8Zl91sDRfeEIQmmYSYUriM8MMcodydGpm1Tvkl4AhJvHD92zeRIyJE7vWm+2i6
+	P4ebX6q0ip5PHhcpoiNONiss47flqYbkBucYgDToPPcz9YWxDDJAV5eZI6Ze2Ae95wIVbyxRWk
+X-Google-Smtp-Source: AGHT+IF1U4dcY9xhsGy4rlWEcfGwUP3bOoZNh7p3VrXI1JSMiPPMIzqk94XvixfjE42EY3uQb8qxFRdvlbjNH2ISQ9I=
+X-Received: by 2002:a05:6000:2711:b0:3a4:f7d9:3f56 with SMTP id
+ ffacd0b85a97d-3a8f435e574mr2894930f8f.2.1751039977933; Fri, 27 Jun 2025
+ 08:59:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613134817.681832-1-herve.codina@bootlin.com>
+References: <20250623063854.1896364-1-song@kernel.org> <20250623-rebel-verlust-8fcd4cdd9122@brauner>
+ <CAADnVQ+iqMi2HEj_iH7hsx+XJAsqaMWqSDe4tzcGAnehFWA9Sw@mail.gmail.com> <CAPhsuW7JAgXUObzkMAs_B=O09uHfhkgSuFV5nvUJbsv=Fh8JyA@mail.gmail.com>
+In-Reply-To: <CAPhsuW7JAgXUObzkMAs_B=O09uHfhkgSuFV5nvUJbsv=Fh8JyA@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 27 Jun 2025 08:59:26 -0700
+X-Gm-Features: Ac12FXxIczTM5K68rlq_78aPZtKoDWfs-hoiBCYqfl1f8Bf6HdGD3OkhePHxzBk
+Message-ID: <CAADnVQKNR1QES31HPNriYBAzmoxdG=sWyqwvDTtthROgezah3w@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 0/4] Introduce bpf_cgroup_read_xattr
+To: Song Liu <song@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>, Kernel Team <kernel-team@meta.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+	Amir Goldstein <amir73il@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Tejun Heo <tj@kernel.org>, Daan De Meyer <daan.j.demeyer@gmail.com>, bpf <bpf@vger.kernel.org>, 
+	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 03:47:40PM +0200, Herve Codina wrote:
-> Hi,
-> 
-> This series add support for SFPs ports available on the LAN966x PCI
-> device. In order to have the SFPs supported, additional devices are
-> needed such as clock controller and I2C.
-> 
-> As a reminder, the LAN966x PCI device driver use a device-tree overlay
-> to describe devices available on the PCI board. Adding support for SFPs
-> ports consists in adding more devices in the already existing
-> device-tree overlay.
-> 
-> With those devices added, the device-tree overlay is more complex and
-> some consumer/supplier relationship are needed in order to remove
-> devices in correct order when the LAN966x PCI driver is removed.
-> 
-> Those links are typically provided by fw_devlink and we faced some
-> issues with fw_devlink and overlays.
-> 
-> This series gives the big picture related to the SFPs support from
-> fixing issues to adding new devices. Of course, it can be split if
-> needed.
-> 
-> The first part of the series (patch 1, 2 and 3) fixes fw_devlink when it
-> is used with overlay. Patches 1 and 3 were previously sent by Saravana
-> [0]. I just rebased them on top of v6.15-rc1 and added patch 2 in order
-> to take into account feedback received on the series sent by Saravana.
-> 
-> Those modification were not sufficient in our case and so, on top of
-> that, patch 4 and 5 fix some more issues related to fw_devlink.
-> 
-> Patches 6 to 12 introduce and use fw_devlink_set_device() in already
-> existing code.
-> 
-> Patches 13 and 14 are related also to fw_devlink but specific to PCI and
-> the device-tree nodes created during enumeration.
-> 
-> Patches 15, 15 and 17 are related fw_devlink too but specific to I2C
-> muxes. Patches purpose is to correctly set a link between an adapter
-> supplier and its consumer. Indeed, an i2c mux adapter's parent is not
-> the i2c mux supplier but the adapter the i2c mux is connected to. Adding
-> a new link between the adapter supplier involved when i2c muxes are used
-> avoid a freeze observed during device removal.
-> 
-> Patch 18 adds support for fw_delink on x86. fw_devlink is needed to have
-> the consumer/supplier relationship between devices in order to ensure a
-> correct device removal order. Adding fw_devlink support for x86 has been
-> tried in the past but was reverted [1] because it broke some systems.
-> Instead of enabling fw_devlink on *all* x86 system or on *all* x86
-> system except on those where it leads to issue, enable it only on system
-> where it is needed.
-> 
-> Patches 19 and 20 allow to build clock and i2c controller used by the
-> LAN966x PCI device when the LAN966x PCI device is enabled.
-> 
-> Patches 21 to 25 are specific to the LAN966x. They touch the current
-> dtso, split it in dtsi/dtso files, rename the dtso and improve the
-> driver to allow easier support for other boards.
-> 
-> The next patch (patch 26) update the LAN966x device-tree overlay itself
-> to have the SPF ports and devices they depends on described.
-> 
-> The last two patches (patches 27 and 28) sort the existing drivers in
-> the needed driver list available in the Kconfig help and add new drivers
-> in this list keep the list up to date with the devices described in the
-> device-tree overlay.
-> 
-> Once again, this series gives the big picture and can be split if
-> needed. Let me know.
+On Thu, Jun 26, 2025 at 9:04=E2=80=AFPM Song Liu <song@kernel.org> wrote:
+>
+> On Thu, Jun 26, 2025 at 7:14=E2=80=AFPM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> [...]
+> > ./test_progs -t lsm_cgroup
+> > Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+> > ./test_progs -t lsm_cgroup
+> > Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+> > ./test_progs -t cgroup_xattr
+> > Summary: 1/8 PASSED, 0 SKIPPED, 0 FAILED
+> > ./test_progs -t lsm_cgroup
+> > test_lsm_cgroup_functional:PASS:bind(ETH_P_ALL) 0 nsec
+> > (network_helpers.c:121: errno: Cannot assign requested address) Failed
+> > to bind socket
+> > test_lsm_cgroup_functional:FAIL:start_server unexpected start_server:
+> > actual -1 < expected 0
+> > (network_helpers.c:360: errno: Bad file descriptor) getsockopt(SOL_PROT=
+OCOL)
+> > test_lsm_cgroup_functional:FAIL:connect_to_fd unexpected
+> > connect_to_fd: actual -1 < expected 0
+> > test_lsm_cgroup_functional:FAIL:accept unexpected accept: actual -1 < e=
+xpected 0
+> > test_lsm_cgroup_functional:FAIL:getsockopt unexpected getsockopt:
+> > actual -1 < expected 0
+> > test_lsm_cgroup_functional:FAIL:sk_priority unexpected sk_priority:
+> > actual 0 !=3D expected 234
+> > ...
+> > Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
+> >
+> >
+> > Song,
+> > Please follow up with the fix for selftest.
+> > It will be in bpf-next only.
+>
+> The issue is because cgroup_xattr calls "ip link set dev lo up"
+> in setup, and calls "ip link set dev lo down" in cleanup. Most
+> other tests only call "ip link set dev lo up". IOW, it appears to
+> me that cgroup_xattr is doing the cleanup properly. To fix this,
+> we can either remove "dev lo down" from cgroup_xattr, or add
+> "dev lo up" to lsm_cgroups. Do you have any preference one
+> way or another?
 
-Please suggest how you think this should get merged? There's 8 
-maintainer trees involved here. Some parts can be merged independently? 
-We need to spread over 2 cycles? Greg just takes it all?
-
-Rob
+It messes with "lo" without switching netns? Ouch.
+Not sure what tests you copied that code from,
+but all "ip" commands, ping_group_range, and sockets
+don't need to be in the test. Instead of triggering
+progs through lsm/socket_connect hook can't you use
+a simple hook like lsm/bpf or lsm/file_open that doesn't require
+networking setup ?
