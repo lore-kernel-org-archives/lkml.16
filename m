@@ -1,38 +1,37 @@
 Received: from relay16.mail.gandi.net (relay16.mail.gandi.net [217.70.178.236])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F79299957
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F0A299929
 	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:12:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.236
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751015578; cv=none; b=rjENYi/IyIMjRv1LnlkpNqqm3vG3QgDXlp4BrNiTZhesc1d+4ZPRVLuwdNiR2yrP4Xmuw4GbpIMh1mLq6jGsgFQGQ2SHEhUeAKh3O0mxrY0C3nKy+h/255dv09k4eHZcEHwQe/yrOM5jcA6L1KXN0QKr/UwE+UcIyhAPYPGbql0=
+	t=1751015578; cv=none; b=uEJPvq/bztVy7E7Q1979j/WiUtwfUwXDgWNdJniVRjzFCdVNkEE2cde3rK+S8zibwQ5ETDIBv2PcbMKS6ci59w7A3tX1XtdnFpVhu00LPHNMUM100gznNhLh4XFI1YaGcRP8eFrRDd9N6lmdYGq53ZbpH2HX9oGuwc/T69bbTjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751015578; c=relaxed/simple;
-	bh=QFgxyFHAJEf2laxUq9BXmSxgh7oBLS7xSxpQoHg3nhI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=do5Q3VOK02ks7KLlLdE9olWvcA+m5ng41pcnirtdaZVaJSQUDtWJMEhMjAIeiTVHaEhVbqP5eavPJnw82rmxkT3nmbKmnm7zGncHFUu067tx8sg4qb8s1QHmvcWjR89iURzIs9ia+vIeQWdrUWD1JKAXSBNEQqUkUyTHrmL+ZIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ekVeFaP/; arc=none smtp.client-ip=217.70.178.236
+	bh=j205EYLjzOUu5rmW2oUGimRr250dsQmrzW5+uyLHUG4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nW0byc5gSo3R455ZzLeRO43ISBK4wCVzJ8V0lwGPNQcxgRAcf6+s9X9fEX7KFqEVOK67Y/4yvkaR1pWazGKLzvkpDpDp+HvoiY+O0i69iJlDgDjH3KTsM9KHPLjVdECDEiDA+sIvOeKJQZKMHd1lV5IjZwDXGXgsGRvA0uJcJWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UEJbey2a; arc=none smtp.client-ip=217.70.178.236
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ekVeFaP/"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B16654395D;
-	Fri, 27 Jun 2025 09:12:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UEJbey2a"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B7EC14388C;
+	Fri, 27 Jun 2025 09:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751015574;
+	t=1751015569;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YQ8d/WjZleZAjhhPje5wk6/z6NUbO/uvPr/KAPPpwLk=;
-	b=ekVeFaP/27NfYOsVSqLh1kGPFQN8h5JowJEjTZiEAjc3s0Sb85hC1BIqOW/gb02/RBVggX
-	owKy2pNXRZ9ygfz3HU+v5LEZW/ZerFdVMVD5O42iq7lXdDkcdxqEReZWRIo1TlDT2iDcyg
-	yj4kPHDHbTspW1eU/pT202mxabVaXHIvQKe3Sk7ukoDHZzL2Cna6E6o1ON3ShQaIshJ865
-	ts4uve460b+SNtWGuXgONj2T+9fld5BpdyzMS0xgdB14hiejtTzwPNepSFFowu/lLT6BWN
-	2Bv6IpDECk4j3zDVrxEdqbP7rF/GWsmU7wi06OrgjisEC4BVH8aB4TDWZKmj5A==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jMMS4ea1lRKR0o6OKvXdrGiucNnIGPkdr5Jn9qFP87U=;
+	b=UEJbey2aMdghOOt1fBRUZu5HuQXA3IxGl2hx8t31+2ZHNrPjAODP7uuOHtkScBv8tLSVdC
+	aNHvhfCIJx5K9a70NGmOJ1fzsQafUB6iFix9J7cJRFHBVB+ffazQkbD5qcOrFX5Q0lQR6L
+	Dh0oM88ScCktL9gaYJRflw9QRT79LaLpvpv+epORKRntvUoYkbWMGcGT9gZNwAu3mxOyz5
+	n4GK89PCozZkC5AD51tVsiNoVMkOOcnw93b2cni/wD3XV+txT9K8yYcM32Cbp+7rI5J9+w
+	THfcJIr9k5swqp53S89UGnKtPaVf7SIb96a7JVoIYjE5Rqb6nDra3xYSlYHwCQ==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Fri, 27 Jun 2025 11:12:36 +0200
-Subject: [PATCH v5 5/8] drm/vkms: Add support for RGB888 formats
+Subject: [PATCH v5 0/8] drm/vkms: Add support for multiple plane formats
+Date: Fri, 27 Jun 2025 11:12:31 +0200
+Message-Id: <20250627-b4-new-color-formats-v5-0-94452f119c72@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,10 +39,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250627-b4-new-color-formats-v5-5-94452f119c72@bootlin.com>
-References: <20250627-b4-new-color-formats-v5-0-94452f119c72@bootlin.com>
-In-Reply-To: <20250627-b4-new-color-formats-v5-0-94452f119c72@bootlin.com>
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAH9gXmgC/33RzU4DIRAH8FfZcC7K57L05HsYDwsMlqQsCrjWN
+ H13aTfVNHW9MSTzm+HPERXIAQradkeUYQ4lpKkVctMhuxunV8DBtRoxwgThlGEj8ASf2KZ9yti
+ nHMdaMDWgXT8MhtERtda3DD4cLuzzS6t3odSUvy5TZnq+XUBJ+7/BmWKClbBeeyCKU/VkUqr7M
+ D3YFNGZnNkvM1CxwrDGDIYLra0HTeCG2SzPooSof9qdUG6UxIleifst+M8WlLKVdGbeGMa9Uqq
+ nWll9z4grI4nkZIURjQEvWyZi4Kq3t8xpyT3D+0f7xbqEj8xYoDkxhrrtXI44hmIfr4c25VBb6
+ +kboQy/eQgCAAA=
+X-Change-ID: 20240312-b4-new-color-formats-1be9d688b21a
 To: Melissa Wen <melissa.srw@gmail.com>, 
  =?utf-8?q?Ma=C3=ADra_Canal?= <mairacanal@riseup.net>, 
  Haneen Mohammed <hamohammed.sa@gmail.com>, 
@@ -59,78 +62,89 @@ Cc: dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net,
  Louis Chauvet <louis.chauvet@bootlin.com>, 
  =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2003;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2619;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=QFgxyFHAJEf2laxUq9BXmSxgh7oBLS7xSxpQoHg3nhI=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBoXmCNrE8LTStOIfN73gnB68k0X7H9lUnyqLiX2
- n+TirrSdqWJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCaF5gjQAKCRAgrS7GWxAs
- 4qNKD/9d7X0Laq422DloJZQEcw7Nwxph8vOUWpdJNTkazqpzbMRLGGn/nltXKm6Js47C1nqmDsD
- Wur2sHjjgv9b2ZEbfaJhCOmPXpYju2J2wR4m5pb4U9YlCf6T6s5pxQ3NNtzVwr9Nn3UbJFdEfSQ
- kpEqXId4iYfS09TDObk0E4jgZDpjC+3NK39NLKoDlqFJiuk+duD0PeELGP9KrCDcw/l1jq7g6Ov
- IFBMQRukRBNgPY6W9tIvl/dFAC7+wa/+KLZ3rGUiiJJM9Ayplaa5FWgG2YYGT706bhGrqHTYwCF
- QCOGlHICwTt1lkKJGhZ0AWPcg51EXIxCtrhQ8scgm1oPqp9KIQgDIJ/bV591+px+vzzgSbPVs5l
- p14yUOMh4edKOcoADaNOSPW5zsLJEtxa7lNiQP8YASvH35m6gb7s3HVtaP3qyw1RSeBPKrmFt9V
- MGVhAD5gsAfUu2JQba9t9URklPxD5JPmgOgcuRouHNqhSj0czs56B/9gb5p0Ljj2GArcI91We9q
- nM5Lif/sor0Y8w7y990Woxgi65A5fMNlvDkI/aieB34jgvJwZbX2aAVvDlLHJrKXrTSOP1fQ+G3
- M4IYRz5LUsvdgPVxKtt6CjHA3RUZil4OTl0DUt0qVFf/jAoORxVmnvUuscqLU70RRNSzwkZ0k2I
- lbvRlMAGxi/4xPQ==
+ bh=j205EYLjzOUu5rmW2oUGimRr250dsQmrzW5+uyLHUG4=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBoXmCH80JevWz0vzrlM/lG8lV0MRm01bgrCPx8T
+ HhQNL6Bw8uJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCaF5ghwAKCRAgrS7GWxAs
+ 4pomD/93nbTLzVjNebVf4lLWqb7YPbgHlGEi21o944mf1He7BJ6rTmwihelVRpSOFCA6ctA6wzA
+ 6V8juC4fOnQA+hD4j2iy7RZ7B+lGa0XgVCSAYufmqoNzCi1JAZf2eydMshf2l82ZQH+bov6WJDv
+ 7k8vwUhBDInWz+TV6I2MGxI/ykembRSDQgjjcTgjiCz8Eg+WHPaSxIIpXhj9SCBBK8W2XOBoodJ
+ pVfHywD520emUcK62bZXaIGggPpuAg/cqu0DTZeME12iwyLtK468aoV8/Gs/2lnNKAkhuOleq8v
+ uAEptegAMi1sHmsAcee1qEj6PynYkZjTuUqrBj3m7vRDCfnO9KVEQNAsQ8FazNdTY6T4gr9gteK
+ DEa0DA3t4G6DIyUdaBbtxUOpFNetux8pZktkVKUcPUOaLhlkRbUZ6VIwuh6nUnEJX+jbhbGxmux
+ vEutO7Mx9Qi7tXmDjNsIHXU1oRA//lwx3obXNlKf2Z+d2Cxv3SGnXtM9JahjjJcxc1YpGgndxaW
+ mI1EpoxiE6pu6PwhL435GQWINojiolnl1IlFJU6hidIppAe1o5+bl2tRE5Sxdd8a8cxvj8FO1nx
+ bMZCAHVvXv5HXncYHVNEcidXUT/MpZakIJBfY67RJDaTVEpMYZUcf85ZuYGGR6H0RpQOkyqrGsf
+ rDisECYwC5b5xXg==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvieeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredtjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtieevieduhedttdfgtefhuddufeffudetkeegveeuteduveehheeivedttddtkeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrdegvddrieejngdpmhgrihhlfhhrohhmpehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopehmrghirhgrtggrnhgrlhesrhhishgvuhhprdhnvghtpdhrtghpthhtohepshhiqhhuvghirhgrsehighgrlhhirgdrtghomhdprhgtphhtthhopegrrhhthhhurhhgrhhilhhlohesrhhishgvuhhprdhnvghtpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtt
- hhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehjvghrvghmihgvrdgurghuthhhvghrihgsvghssegsohhothhlihhnrdgtohhm
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvieeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejleduffeikeefkeejvdejffffueevfeeigefhiefhudegkefhjeejvefhvdefjeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrgedvrdeijegnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddtpdhrtghpthhtohepmhgrihhrrggtrghnrghlsehrihhsvghuphdrnhgvthdprhgtphhtthhopehsihhquhgvihhrrgesihhgrghlihgrrdgtohhmpdhrtghpthhtoheprghrthhhuhhrghhrihhllhhosehrihhsvghuphdrnhgvthdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrm
+ hgrnhhnsehsuhhsvgdruggvpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepjhgvrhgvmhhivgdruggruhhthhgvrhhisggvshessghoohhtlhhinhdrtghomh
 
-Add the support for:
-- RGB888
-- BGR888
+This series introduce a macro to generate a function to read simple
+formats. It avoid duplication of the same logic for similar formats.
 
-Reviewed-by: Maíra Canal <mcanal@igalia.com>
+In addition, it also introduce multiple "easy" formats (rgb888 variants)
+and also 16 bits yuv support (P01* formats).
+
+PATCH 1 is the introduction of the macro and adaptation of the existing
+code to avoid duplication
+PATCH 2-5 introduce new formats with the help of this macro.
+PATCH 6 adds support for 16-bit yuv formats
+PATCH 7 introduces a macro to reduce code duplication between yuv formats
+PATCH 8 adds support for P01* formats
+
+I tested the implementation using kms_plane.
+
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- drivers/gpu/drm/vkms/vkms_formats.c | 7 +++++++
- drivers/gpu/drm/vkms/vkms_plane.c   | 2 ++
- 2 files changed, 9 insertions(+)
+Changes in v5:
+- Avoid code duplication in RGB565 and BRG565 readline functions
+- Properly rename yuv_u8 to yuv_u16
+- Fix useless indentatin
+- Remove untested formats
+- Link to v4: https://lore.kernel.org/r/20250530-b4-new-color-formats-v4-0-ef5f9f48376c@bootlin.com
 
-diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-index c4c623472e04..5b50e8622521 100644
---- a/drivers/gpu/drm/vkms/vkms_formats.c
-+++ b/drivers/gpu/drm/vkms/vkms_formats.c
-@@ -449,6 +449,9 @@ READ_LINE_ARGB8888(ABGR8888_read_line, px, px[3], px[0], px[1], px[2])
- READ_LINE_ARGB8888(RGBA8888_read_line, px, px[0], px[3], px[2], px[1])
- READ_LINE_ARGB8888(BGRA8888_read_line, px, px[0], px[1], px[2], px[3])
- 
-+READ_LINE_ARGB8888(RGB888_read_line, px, 0xFF, px[2], px[1], px[0])
-+READ_LINE_ARGB8888(BGR888_read_line, px, 0xFF, px[0], px[1], px[2])
-+
- READ_LINE_le16161616(ARGB16161616_read_line, px, px[3], px[2], px[1], px[0])
- READ_LINE_le16161616(ABGR16161616_read_line, px, px[3], px[0], px[1], px[2])
- READ_LINE_le16161616(XRGB16161616_read_line, px, cpu_to_le16(0xFFFF), px[2], px[1], px[0])
-@@ -670,6 +673,10 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
- 		return &XRGB8888_read_line;
- 	case DRM_FORMAT_XBGR8888:
- 		return &XBGR8888_read_line;
-+	case DRM_FORMAT_RGB888:
-+		return &RGB888_read_line;
-+	case DRM_FORMAT_BGR888:
-+		return &BGR888_read_line;
- 	case DRM_FORMAT_ARGB16161616:
- 		return &ARGB16161616_read_line;
- 	case DRM_FORMAT_ABGR16161616:
-diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-index 6e7597ab935d..9f34f3a18d8c 100644
---- a/drivers/gpu/drm/vkms/vkms_plane.c
-+++ b/drivers/gpu/drm/vkms/vkms_plane.c
-@@ -19,6 +19,8 @@ static const u32 vkms_formats[] = {
- 	DRM_FORMAT_RGBA8888,
- 	DRM_FORMAT_XRGB8888,
- 	DRM_FORMAT_XBGR8888,
-+	DRM_FORMAT_RGB888,
-+	DRM_FORMAT_BGR888,
- 	DRM_FORMAT_XRGB16161616,
- 	DRM_FORMAT_XBGR16161616,
- 	DRM_FORMAT_ARGB16161616,
+Changes in v4:
+- Update tests to test yuv 16 bits conversions, not only 8 bits
+- Link to v3: https://lore.kernel.org/r/20241122-b4-new-color-formats-v3-0-23f7776197c9@bootlin.com
 
+Changes in v3:
+- Rebased on new YUV iterations
+- Link to v2: https://lore.kernel.org/r/20241007-b4-new-color-formats-v2-0-d47da50d4674@bootlin.com
+
+Changes in v2:
+- Add proper casting/type to __le16 when needed to avoid warnings with
+  sparse
+- Change the function argb_u16_from_yuv8888 to argb_u16_from_yuv161616 to
+  support 16 bits values.
+- Add support for P010/P012/P016 format
+- Link to v1: https://lore.kernel.org/r/20240516-b4-new-color-formats-v1-0-74cf9fe07317@bootlin.com
+
+---
+Louis Chauvet (8):
+      drm/vkms: Create helpers macro to avoid code duplication in format callbacks
+      drm/vkms: Add support for ARGB8888 formats
+      drm/vkms: Add support for ARGB16161616 formats
+      drm/vkms: Add support for RGB565 formats
+      drm/vkms: Add support for RGB888 formats
+      drm/vkms: Change YUV helpers to support u16 inputs for conversion
+      drm/vkms: Create helper macro for YUV formats
+      drm/vkms: Add P01* formats
+
+ drivers/gpu/drm/vkms/tests/vkms_format_test.c | 139 +++++------
+ drivers/gpu/drm/vkms/vkms_formats.c           | 325 +++++++++++++-------------
+ drivers/gpu/drm/vkms/vkms_formats.h           |   4 +-
+ drivers/gpu/drm/vkms/vkms_plane.c             |  13 +-
+ 4 files changed, 244 insertions(+), 237 deletions(-)
+---
+base-commit: bb8aa27eff6f3376242da37c2d02b9dcc66934b1
+change-id: 20240312-b4-new-color-formats-1be9d688b21a
+
+Best regards,
 -- 
-2.49.0
+Louis Chauvet <louis.chauvet@bootlin.com>
 
