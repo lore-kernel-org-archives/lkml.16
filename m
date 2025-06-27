@@ -1,89 +1,72 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F702737F9
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A6021323C
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751016246; cv=none; b=gJ/prLnzOQT45XT3xg8HZJbiKms5uBI/nnFEsvuGfjcjmG65+PXpLR2/Li5nhAR9cLdHLIR3wyQbiugY8vKfFOps3fzccOPiyIPw8fakSXUycmJRusvazmQIHuU2gapSip9C/4guW7pVHuLFpdEQHF2lXoDxdyntQhnNe/D3k/o=
+	t=1751016254; cv=none; b=KCK7OtKb9KmQFd7YKUsMU+x12eaEMxsDPprooyuI/tjNBC3M9wfxz8rTn3ovdLwnkcmH+t5jR7gLIgyI37EwhQ69tg66677rH/b082rYGIVf0E4FCZVX7dR8a5D37n0Luv7/yD/BcMbNN08rdk2P9OQCUsTU0uU6lj39qhyxqhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751016246; c=relaxed/simple;
-	bh=VKQBj2stu7iXeJd9KQUHIkIoUgY637IlmEQqau/g0Jk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lcwP7i7E3z4ZSNcVEMlOm99rgulbzWA6RNsXwATNYFZtkvoC/TKTNB0tuLvSWqo00lbdoOp40H+J9tm6qtWLrlew5vooKgRw7sdY5JVABsTdcn40YGEVdvOHMwctldjlqEY14RM9nKGvF8jmPRbsvY3RDXMGPmd5o+8BoL3n43M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=r6Tgp/P6; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1751016254; c=relaxed/simple;
+	bh=+Od3wE0MGFoGPTGx1Gj5nP+HNuBZqUzPen/YCc0gtO0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DH7J4o/yQa0qpM2/oXNbkA1Ip+k9Zxh+JNm3t0REU1nu3fLq4KGruBOpdzYhqrczhKf2pBELvfCP8ZbUf2mjVP9wCzDzebdMNIVOGTX0zrbeVHJciJkuohUJLR4wF9aEVvaKig4U/RG2q9UUFM1v10x8zwHZx6rez5fpvM23Atc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYsmuVEK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="r6Tgp/P6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=J4ZjnT6oCMq1CKTCNR3HCJ0iSz8drwLRwfHKoiq9yKA=;
-	t=1751016245; x=1752225845; b=r6Tgp/P6/GUZOIbQebXQIaXw2CEvcGL7OY/jmZ5zZvjVD1k
-	3NAHvd01qqLsW9qFufVCRlSs+ws5ykLZXxPWU+G+0Q/ySsDzcRXDLpF8wrfYDbyXgwCVec14wAffx
-	J4yQpI1ki4dVOIMNsYmkalYvIcpAfec0bynflemxLp9UkcEA3pSt/C4Mtqyfo8/vGzzhMi7ZCECVp
-	GpDsr9JWidX+9yuayDuUJnbgNh5aMz0Jn5eztaCZzlqFSKYXK9nhevPLQSRA+EAqhoZm7qNiyMGDa
-	eC7ieUUByA/uUqIDmFcVpXOvsf4McGUKFK7AmqpCe94K1FV0434P4dB9eZp16crQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uV5JP-0000000DS2I-3RBo;
-	Fri, 27 Jun 2025 11:24:00 +0200
-Message-ID: <94de787f4c3ad6fc3a44c50c2a5d5311861ddd6c.camel@sipsolutions.net>
-Subject: Re: [PATCH 1/1] um: virt-pci: Switch to
- msi_create_parent_irq_domain()
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Richard Weinberger
-	 <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
-Date: Fri, 27 Jun 2025 11:23:58 +0200
-In-Reply-To: <20250627084943.nCYOI4Vp@linutronix.de>
-References: <cover.1750947651.git.namcao@linutronix.de>
-	 <b911c2f15c031354850eee277a773832890c3c17.1750947651.git.namcao@linutronix.de>
-	 <45f44f0298259abf1862b965805307b7c01a279d.camel@sipsolutions.net>
-	 <20250627084943.nCYOI4Vp@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYsmuVEK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22C54C4CEE3;
+	Fri, 27 Jun 2025 09:24:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751016253;
+	bh=+Od3wE0MGFoGPTGx1Gj5nP+HNuBZqUzPen/YCc0gtO0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JYsmuVEKovtOUzfIabnNWZx4uk3ktHt55QJP98lONt/RCoDY6q8uRP68Rv/g1HxBJ
+	 tD1TyUtxMwOZuhEEGrRIjXqgGsepStH/ZK+jKbG21kqv/yrYrFBkEHHdCw68vT8P6J
+	 m39Irtk75Z4KpExqt90GKottBh0p8QfOkhadJnGVVW18ymWWLlNTQeyZrUOz1SZ3Wq
+	 gzB4IvtqIiF3Gsq1Au7YbZe9hooVjD556gsGjyEnriNSVuw7a11Y9h3q4mZ8J6TrtM
+	 ZGoYp1c+EQy3mqLEQbURVrKYJLu/MU6rKbAYc6COo+e1iQQtCOSzuEJ9zDQmg1HyL/
+	 bEFWDRiWYCVDw==
+From: Maxime Ripard <mripard@kernel.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Anusha Srivatsa <asrivats@redhat.com>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Maxime Ripard <mripard@kernel.org>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] drm/panel: panel-simple: Fix panel-dpi probe error
+Date: Fri, 27 Jun 2025 11:24:08 +0200
+Message-ID: <175101624570.44642.13183466384528927408.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250626-drm-panel-simple-fixes-v2-0-5afcaa608bdc@kernel.org>
+References: <20250626-drm-panel-simple-fixes-v2-0-5afcaa608bdc@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2025-06-27 at 10:49 +0200, Nam Cao wrote:
->=20
-> Thanks for testing! The later kernel crash should be fixed with:
->=20
-> diff --git a/arch/um/drivers/virt-pci.c b/arch/um/drivers/virt-pci.c
-> index e51a9357934da..557d93aea00a1 100644
-> --- a/arch/um/drivers/virt-pci.c
-> +++ b/arch/um/drivers/virt-pci.c
-> @@ -407,7 +407,6 @@ static const struct irq_domain_ops um_pci_inner_domai=
-n_ops =3D {
-> =20
->  #define UM_PCI_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS		| \
->  				   MSI_FLAG_USE_DEF_CHIP_OPS		| \
-> -				   MSI_FLAG_PCI_MSI_MASK_PARENT		| \
->  				   MSI_FLAG_NO_AFFINITY)
+On Thu, 26 Jun 2025 12:04:58 +0200, Maxime Ripard wrote:
+> Here's a series fixing (hopefully) the panel-simple regression for
+> panels with a panel-dpi compatible.
+> 
+> It's only build tested, so if you could give that series a try
+> Francesco, I'd really appreciate it.
+> 
+> Thanks!
+> Maxime
+> 
+> [...]
 
-Can confirm that.
+Applied to misc/kernel.git (drm-misc-fixes).
 
-> I have no immediate idea about the lockdep warn, I don't see how the
-> MSI_FLAG_PCI_MSI_MASK_PARENT flag can be related to that. Probably there'=
-s
-> another problem, let me stare at it..
-
-Seems to go away as well, perhaps it's due to taking some wrong path
-with the flag just prior to the crash?
-
-IOW, works for me with the above change with no crash and no lockdep
-warning either.
-
-johannes
+Thanks!
+Maxime
