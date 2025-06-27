@@ -1,63 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FDFE1362
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792DE19992C
 	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 02:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750992216; cv=none; b=vFqb+YRG4S6Pns17j2aX024ZLzv8qkzi5KNLT0wTmRHtN/3C6TUyHinv5x9nIEwCe3ryUJD0hMBzQap5rbyZwv53id9wzyZAjOr2rmGs1gHYHYO66sMElqcVL/foVuYWL3wHeE5DUjfhJAcAf8sp17bJkBIR1q7dvQy5x/oqtCY=
+	t=1750992219; cv=none; b=KJoq1tcAJAxFE5o4RA3XQvgVztxyU0re1eUdjW82zl9FVYJMLyfSrN5rccFYeRTv3LCCq0QdlE4A0TtdpU+u1TAF+iBsBkuhry5FIVgQoGuLib/aPcCJW81RJWjgf162ByMce0UqqZlW8wovoiakZWX9qAJ7ANg0MqDaqAaD7jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750992216; c=relaxed/simple;
-	bh=n/nstBsO1bgKBTSEh4ZMaH5ZH0MJ/EIw9FCOKOtoaSw=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=rGfiiAqli8NxSIpNfzNeO4DVLpUFXt23YnylumRejom3cGivK1rMLZggUTpOvFzxNheGFP2bzBNnP3slhwx6zGv0+OHF29hec5nn0C52taOlMzk2GCLu81E2yHn0rRl2V6ekwIL1XIfYHvTi8ZrePPooBc+3pydIFzbrDXYNuiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aj/dP3OP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750992219; c=relaxed/simple;
+	bh=RXC4Rxkam+ZBAOFfCItPQiQAgEwB6Nk3xgueJRX/EL4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qOx9ObmN+oq8e5gjlwtN9rp5O3k11SoLELqTG7YTR77VJ5glNs+0wOc7djs46WLwNYP0eWDr1CnPV+hvk2vIBDi2NDPFcxjZtazVAOJq5kLTBFnXLpgOnr3xYw5FJcTIPPmL3Zu3AsFZ64i5XzH71rvh8Czz9yupdYpx98HMH+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f+OpDwJ8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aj/dP3OP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11806C4CEEE;
-	Fri, 27 Jun 2025 02:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750992216;
-	bh=n/nstBsO1bgKBTSEh4ZMaH5ZH0MJ/EIw9FCOKOtoaSw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=aj/dP3OPYwe6gTp8ajqI66LiQ2tyFvLh25zBIxaWJAq2fNWmxbq1ItE4pDMLr/pZ9
-	 wQB8ud2e9alS1027Hax1SrHdxHh7cUFlQVS2ZLr0Kqfl6HqkTbgzETl+1f0gjMQJIS
-	 r+IwvT7aGoJ3q69vxeM9h4xQuW9ma5pt9IX+dfr/T2MEUTN38OdC4+sF1UnfAn+J57
-	 ojWSPEqzQ0FB6dJYiskKA8hbZ7/cRkFyZ1L9Shm8J6zWZwczJBjAME6R+GFBBMQ4+W
-	 Td725AtlXbjFomutR1UicfTtc+xnH7qdKm0jFhWwgqH1AwPE2UFv5w4WW4dShNQe9V
-	 QGnjvoKq8E9OQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 710553A40FCB;
-	Fri, 27 Jun 2025 02:44:03 +0000 (UTC)
-Subject: Re: [GIT PULL] HID fixes
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <87p88249-s198-rq33-77p1-17qnr911436o@xreary.bet>
-References: <87p88249-s198-rq33-77p1-17qnr911436o@xreary.bet>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <87p88249-s198-rq33-77p1-17qnr911436o@xreary.bet>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git tags/hid-for-linus-2025062701
-X-PR-Tracked-Commit-Id: a8905238c3bbe13db90065ed74682418f23830c3
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8a20830f2dd180064f25254d9c55beb243fe9223
-Message-Id: <175099224214.1407206.13630347143954633918.pr-tracker-bot@kernel.org>
-Date: Fri, 27 Jun 2025 02:44:02 +0000
-To: Jiri Kosina <jikos@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f+OpDwJ8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750992215;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RXC4Rxkam+ZBAOFfCItPQiQAgEwB6Nk3xgueJRX/EL4=;
+	b=f+OpDwJ8InoOr8JvoeuHxbODQk0deDxL8X3f+/xEylGS2Lac9HO8f9BbGjU33L6z2e2caC
+	xuJafinTLHXaeLRMu3UTElGML4az6V/ipbfDkmA7sd65FxjVMSKQp4jselapY2+2WG/YmX
+	0Vp+fgbZ2FvOrpX9kuXYUrh5J1swJZ8=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-2-niTauyTyP8-W6O2dF97-wA-1; Thu, 26 Jun 2025 22:43:33 -0400
+X-MC-Unique: niTauyTyP8-W6O2dF97-wA-1
+X-Mimecast-MFC-AGG-ID: niTauyTyP8-W6O2dF97-wA_1750992212
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-311ae2b6647so1089988a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 19:43:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750992212; x=1751597012;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RXC4Rxkam+ZBAOFfCItPQiQAgEwB6Nk3xgueJRX/EL4=;
+        b=T4GAcIHPERNE4GzgvQkC/h7asT04dyrwaRQM5TrkRJy5pZiC+nuYIcah7Af+m0OyVx
+         jAL4dD5N5cI4hGjl0vz+dIEgFN/g5dMoUCeTzHsDZjw1gdewL0qbLPTnNHwVYcNrLCL+
+         CBU82X2gX3Ad/WisSjmx4Lxw0KSzCqoFuGVVkM1iBSSjsAn9ED3tgzOOACWYaWy//6y2
+         QIRq+hGBvW9gnD1Feu+EnqZ/FIL3CQKjswIaEdCIDRmReh8vUvX0RegZ/Pz4q8fnfNx0
+         boxBewwtHMGadSjHbR35+cNgPCKSqEZ009QTEidjD8klDOtsbkMp0rjgOrqy8F39vRuG
+         cqmw==
+X-Forwarded-Encrypted: i=1; AJvYcCV6yuB9m3E5h9gogWEKkKTwZ0P06Z6vRBfW4x0E6FmziKlEUuXZgLkAeNC6Gsmut1OyUeG7OhFUH8bh3FI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwtFYWz83fMipfV7KJXTCBmWeenJ6sGKJgdGQ1haR9cgzm94VP
+	0ffMv9OY8vcuGCFh3CMmE27XUyF66fwVnDK4diwHysPM0vfoAnICrgFSsyeolWpI6WO6prbd/ta
+	gJl19Hw+63jdB6XZBmuNGxRmMT0YNxAw8juyKgTI+Hg1ifxeDplFADL+h00Hm8Gnq4ZI3tZWtQv
+	zSSj+zogn69s6i5g/kDlIkJ1PuyUIecGX/zrJTJxVF
+X-Gm-Gg: ASbGnct63fDvqJlTxUoBWzjeg09cFtuRLDdmpL64XLj+2bJerxs7w7kBkC7EZbIyiFk
+	DTIU/28Nzt52lEGCjfWwD1Nm/2AjggFdecwKyi6KELWHDukFISg2Q7Z4harvK0IJZdxg0vRzGT+
+	lp
+X-Received: by 2002:a17:90a:d64b:b0:312:1dc9:9f67 with SMTP id 98e67ed59e1d1-318c9107a53mr2192669a91.2.1750992212426;
+        Thu, 26 Jun 2025 19:43:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGJM16rdnxRskTxwuXyeMZbSoBcs9q4++zM+ywcskISDMXjQ0J0UHxMNSH2KE2x3C2uBazsSFuOebCMbQTd6Tc=
+X-Received: by 2002:a17:90a:d64b:b0:312:1dc9:9f67 with SMTP id
+ 98e67ed59e1d1-318c9107a53mr2192640a91.2.1750992212056; Thu, 26 Jun 2025
+ 19:43:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250625160849.61344-1-minhquangbui99@gmail.com>
+ <20250625160849.61344-4-minhquangbui99@gmail.com> <CACGkMEvY9pvvfq3Ok=55O1t3+689RCfqQJqaWjLcduHJ79CDWA@mail.gmail.com>
+ <8f0927bf-dc2f-4a20-887a-6d8529623dd7@gmail.com>
+In-Reply-To: <8f0927bf-dc2f-4a20-887a-6d8529623dd7@gmail.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Fri, 27 Jun 2025 10:43:20 +0800
+X-Gm-Features: Ac12FXyeaiRss6v-acFo0ljDViofeaY9eNXnTbOP2WE1qi3Xv2JlKX1swLORs6U
+Message-ID: <CACGkMEvf18Dmo5Wzdq-GnJf-jOrzKMQ7epZA+ssWPzXvCnCXvw@mail.gmail.com>
+Subject: Re: [PATCH net 3/4] virtio-net: create a helper to check received
+ mergeable buffer's length
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	Stanislav Fomichev <sdf@fomichev.me>, virtualization@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Fri, 27 Jun 2025 00:15:30 +0200 (CEST):
+On Thu, Jun 26, 2025 at 11:38=E2=80=AFPM Bui Quang Minh
+<minhquangbui99@gmail.com> wrote:
+>
+> On 6/26/25 09:38, Jason Wang wrote:
+> > On Thu, Jun 26, 2025 at 12:10=E2=80=AFAM Bui Quang Minh
+> > <minhquangbui99@gmail.com> wrote:
+> >> Currently, we have repeated code to check the received mergeable buffe=
+r's
+> >> length with allocated size. This commit creates a helper to do that an=
+d
+> >> converts current code to use it.
+> >>
+> >> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+> > I think it would be better to introduce this as patch 1, so a
+> > mergeable XDP path can use that directly.
+> >
+> > This will have a smaller changeset.
+>
+> I'm just concerned that it might make backporting the fix harder because
+> the fix depends on this refactor and this refactor touches some function
+> that may create conflict.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git tags/hid-for-linus-2025062701
+We can make it a single patch that contains:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8a20830f2dd180064f25254d9c55beb243fe9223
+1) new helper
+2) fixes
 
-Thank you!
+as long as the changeset meets the requirement of -stable.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks
+
+>
+> Thanks,
+> Quang Minh.
+>
+
