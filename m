@@ -1,41 +1,63 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969C01E521D;
-	Fri, 27 Jun 2025 23:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C456284671
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 23:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751065280; cv=none; b=eshmvrfsZ42s7TGmNubWm2FHz+h4qPN3Sga2iBht3v3EGgbGYhCaVXkf02aqw8LlNEQAeqLKTZCAW7U4vX7IODE6ZkfYXcfzKzqAwigH4P+kmmyZAtj/f0HeSEaZELZBBmw6IPiqfx4zZVGbSU1/VlmsFb9o6+IFr9dqqLl3+e8=
+	t=1751065691; cv=none; b=bsea7gdDV976wY6ULPWiY+Qs5wwMrT+rDS7FDFRSpiqEVbQEmHxUgrmDMWd40fs7iZKCwMZo1JoBQUVftNQcqq0y763ggSuFzUZYHT7rd01tv2o4NA0b0Sp/08HLttyac/D0Z5yGOh/ohICPN2D4VOlQrBSN3jS0b3P6uuQ7Ras=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751065280; c=relaxed/simple;
-	bh=UphjruZ7ku5y054XVzILDzzMMQ+jyk8kILerc8SVjjo=;
+	s=arc-20240116; t=1751065691; c=relaxed/simple;
+	bh=+MHR3P+rgWKvsJl8Dr+njdhZKG4cwvmvL/+imvJxRxw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TSz4N/b8wWLS30hpXFaUh6NFCjOMg/TAcay7Un22C+LMiNxee3SC28aQ1ksOinbIDP5W2DF5b7WDxXe7CMFdlS2u65BMqecop6nG3pAsx9nkEBky9L3Czc+PhTYCYgIa1Nof21+/uDANiqsCsbbkd456Y6K/Thjsf6FY/98nIHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=YkrMtLgO; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	 In-Reply-To:Content-Type; b=p4aOVKUT5MlL01kvVXhi5y6C0zlum/w1zRf2RVzxcSxMkVExAN8+4wVfDhTV/ZWWQS/pGfORQ8DKG3op07CKqClC5xGX9HUXpsJBpxdrjBDcii/9eCp6gQfaBp+CkkSPe0E6GfnCfCFmTG/QmDH86QwrarErbNeax/You2AB6p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=bsUTvqle; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="YkrMtLgO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1751065264; x=1751670064; i=w_armin@gmx.de;
-	bh=Os6H+MV8daYceFBocNQgXHKEVFSkyxfMDj45sTAz04Y=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=YkrMtLgObqnWJ8m33e7iehfiax/Dth8eM/KRLbXpJm6RdBk+VonmAoCT1WlDyvbh
-	 UsLWF49SY0P7uqCEkGIckNeI8zgJTGbPI0mvyq6wjt7gK2yASvI5K8ZYthJJj7PrT
-	 PwRkNYDqp7QOlE/selI+fch2tS2ZwdRUAOtCGmb9Q9aLieg9iPmnA2sGl89jBqOtA
-	 r7pBndxj2ZcO8EmNjnppShoNZ0KCtoFY5EYZT0+k8p4VaTNptujtLGBqEdq8Il9vw
-	 VNG5tq7SenjXllLtVhlWmAM2Z/YK1WahFzsWI2shslrAqPQ62Ao2jjsiHOJLcDJtg
-	 LRlP9sgL1B9EMI9eXg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M1psI-1uT6D21Iqm-000ftL; Sat, 28
- Jun 2025 01:01:04 +0200
-Message-ID: <50361e3c-c947-4df8-97fd-4963d18ee4f2@gmx.de>
-Date: Sat, 28 Jun 2025 01:01:01 +0200
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="bsUTvqle"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-748e378ba4fso4184246b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:08:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1751065689; x=1751670489; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=rx+DkWxUORnFAHBKMIRQ/YDScdVvTEMyH1ysFWC0iSo=;
+        b=bsUTvqleOev8S41ASVI/adSCi7kLKl/tTLC7vj+sqpv/2RcYEKGKychKa6yfM0YKOe
+         4vZPcyVlk11g5bNDqG2+NQjNLHQBjAdCvHFe0zKijjHDHuwr/9EwzPzkD58zyVmCx0fv
+         oTIXun2ddeKAobF3fpFtL4glic7ND4WdjMDiY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751065689; x=1751670489;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rx+DkWxUORnFAHBKMIRQ/YDScdVvTEMyH1ysFWC0iSo=;
+        b=w/eOpp3SqYP6neTeOH7xhaImHFiouIB/0f02VBTkXInte0HuHdbAg8eOZ+pZOhXaNz
+         XGRx9p2RiKuw6nUiCYZkAhYZQgnYPZ99nJ1f9d6eQpy8n2nd6cIZDKtSgYrMdmYXlSvP
+         PPaRWXcciRQ7RlDUVXky+E8OsPnTNIGT01wXrqGt8aXdf1gr1+fJb3MEoAyTe6bDNB6A
+         ZS/Dlv8LrlbbITvkMts8NkLstXkglm8LGQkFjwy0G1PN8ZyAfI6lqj4EOrdYrGD48GYW
+         2TF0uJJLGkftSu/5rCcyEjX/BqWL7ckaX8u3Gsielu/YY5pztaGIwTG9z+0xkf7DHnYT
+         xI4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVkd9apY3b3YI45PsqRQWFc4ylR9ys/XcSy9CPF0VhyvkuX+cS7vrV+DYTQj2CHEJ70BdDzwN9bNNPlu+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1oZ9/x//9tGim2XgEjij5t3RnY03H+2B7THfw1VMBf1HDGfjl
+	2KEyOocrRteF2P1OMi9ekIM6vlkXag89pfyI4Jdxj9mhg3MQ105qSfOZAh97rNVsRA==
+X-Gm-Gg: ASbGncu/xBbRZA2b/qcEYyuteqQ1usVYb+kdbq8PMkrRwtO1aC1WGGjfg2OHzAYWwAK
+	guxZHvx5A7yXOks9f8QuDx/C5s8PKByHtQAHmN0Ke7zFfYN1qbFOthBYkyxRs1amW7Bg+nEPBtF
+	29eeZNN/hohrEeJbyZtlAexbpEKkFRjv5ABUswJtTwifaeMOBYbuBI0tHyBZHggvn6FmzqTyqjf
+	GmY+wJ9hB7hu0K/6i7WnOvwQ3NNyMJ97zcakAnTG/qenYL9rW97NhZ/9G7vXnDULaLipzPMBW+g
+	e8Rr50kb5+8/mJ2abZEXB+f78L+Armpl5iZlo63UC67uIgFed/q/sCPqWiYeX53rF3lPxoWDk1t
+	5+IYaIVvZRJotl3CRwfNT7GgNBqCQ6qg+LxON
+X-Google-Smtp-Source: AGHT+IEmJFnvIQyaGe8snuurKxiaz9FSD9LcLtKohAtEMbsBYRoZ6w6EteCQBij/i7wuFHb1nT+wDQ==
+X-Received: by 2002:a05:6a00:885:b0:749:464a:a77b with SMTP id d2e1a72fcca58-74af6f6f9d0mr7406755b3a.18.1751065689536;
+        Fri, 27 Jun 2025 16:08:09 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af55c6c67sm3183896b3a.110.2025.06.27.16.08.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 16:08:08 -0700 (PDT)
+Message-ID: <a4ee184b-f2f8-4c0b-97c3-c853ac375f63@broadcom.com>
+Date: Fri, 27 Jun 2025 16:08:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,192 +65,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: lenovo-hotkey: Handle missing hardware
- features gracefully
-To: Kurt Borja <kuurtb@gmail.com>, xy-jackie@139.com,
- alireza.bestboyy@gmail.com, atescula@gmail.com
-Cc: mpearson-lenovo@squebb.ca, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250627195436.3877-1-W_Armin@gmx.de>
- <DAXLSMRH9E6Y.3Q8Z59YG2B50C@gmail.com>
- <fb08672d-881b-458c-b8ed-1a27ca93fe7d@gmx.de>
- <DAXMVOI4AXHY.18HUV9THTG0DJ@gmail.com>
+Subject: Re: [RFC PATCH net-next 0/6] net: dsa: b53: mmap: Add bcm63xx EPHY
+ power and reset control
+To: Kyle Hendry <kylehendrydev@gmail.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Russell King <linux@armlinux.org.uk>
+Cc: noltari@gmail.com, jonas.gorski@gmail.com, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250620134132.5195-1-kylehendrydev@gmail.com>
 Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <DAXMVOI4AXHY.18HUV9THTG0DJ@gmail.com>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250620134132.5195-1-kylehendrydev@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JoE1U66/T66GLnjsMNtM/BckH5sx3eU/885pIQtsjmF4ierjeDE
- gtqxH/s+HOmI1YacKKMnr8oArF4+RV5K1Jlnjq+zJ8YuzIZOu2L8KidRWJ/0ueTulUq7/9g
- RSTxW/6vnelJyR9mbOJL4hSSmfcqXWVdkCFPyQLG8mnSbbkOCO6xlgPMEVKOmbpBg5H2X2n
- 2aMhcJ0LjtTr7AdcY83ug==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lG550R3BJLU=;h6xK6C0qLx3iml8tcIuVEZNLb+K
- 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
+Content-Transfer-Encoding: 7bit
 
-Am 27.06.25 um 23:29 schrieb Kurt Borja:
+On 6/20/25 06:41, Kyle Hendry wrote:
+> Some bcm63268 bootloaders hold the fast ethernet phys in reset
+> causing an error when they're probed. The resets are controlled
+> by a register in the gpio controller, and would need a minimal
+> driver to set. However, that register also controls the
+> power states of the EPHYs. I'm trying to implement both
+> functionalities at the same time to make sure that they don't
+> interfere with eachother. These patches allow control of the
+> ephy register from the b53 switch driver.
+> 
+> Is this the right place for this code, or should it be in a
+> power domain? Should the resets be handled by a separate reset
+> controller?
 
-> On Fri Jun 27, 2025 at 6:17 PM -03, Armin Wolf wrote:
->> Am 27.06.25 um 22:38 schrieb Kurt Borja:
->>
->>> Hi Armin,
->>>
->>> On Fri Jun 27, 2025 at 4:54 PM -03, Armin Wolf wrote:
->>>> Not all devices support audio mute and microphone mute LEDs, so the
->>>> explicitly checks for hardware support while probing. However missing
->>>> hardware features are treated as errors, causing the driver so fail
->>>> probing on devices that do not support both LEDs.
->>>>
->>>> Fix this by simply ignoring hardware features that are not present.
->>>> This way the driver will properly load on devices not supporting both
->>>> LEDs and will stop throwing error messages on devices with no LEDS
->>>> at all.
->>> This patch makes me wonder what is the policy around issues like this.
->>> In fact I've submitted and changes that do the exact opposite :p
->>> Like commit: 4630b99d2e93 ("platform/x86: dell-pc: Propagate errors wh=
-en
->>> detecting feature support")
->>>
->>> IMO missing features should be treated as errors. i.e. The probe shoul=
-d
->>> fail.
->> IMHO the probe should only fail if some features are deemed essential, =
-like
->> required ACPI methods. Optional features like in this case LEDs should =
-be
->> handled by the driver in a graceful manner if possible.
->>
->>> Quoting documentation [1]:
->>>
->>> 	If a match is found, the device=E2=80=99s driver field is set to the
->>> 	driver and the driver=E2=80=99s probe callback is called. This gives =
-the
->>> 	driver a chance to verify that it really does support the
->>> 	hardware, and that it=E2=80=99s in a working state.
->>>
->>> And again [2]:
->>>
->>> 	This callback holds the driver-specific logic to bind the driver
->>> 	to a given device. That includes verifying that the device is
->>> 	present, that it=E2=80=99s a version the driver can handle, that driv=
-er
->>> 	data structures can be allocated and initialized, and that any
->>> 	hardware can be initialized.
->>>
->>> Both of these makes me wonder if such a "fail" or error message should
->>> be fixed in the first place. In this case the probe correctly checks f=
-or
->>> device support and fails if it's not found, which is suggested to be t=
-he
->>> correct behavior.
->> The driver should only fail probing if it cannot handle some missing fe=
-atures.
->> In this case however both features (audio mute LED and mic mute LED) ar=
-e completely
->> optional and the driver should not fail to load just because one of the=
-m is absent.
-> I agree, both are individually optional, but at least one should be
-> required.
->
->> Just think about machines supporting only a single LED (audio or mic mu=
-te). Currently
->> the driver would fail to load on such devices leaving the users with no=
-thing.
-> That's very true.
->
-> But I do still think if both fail the probe should still fail. Maybe
-> there is a way to accomplish this?
->
-> I'm thinking of something like
->
-> if (lenovo_super_hotkey_wmi_led_init(MIC_MUTE, dev) ||
->      lenovo_super_hotkey_wmi_led_init(AUDIO_MUTE, dev))
->      return -ENODEV;
->
-> What do you think?
+Good question, it seems like a reset controller might work with one 
+reset per port being defined? Unfortunately the register in the GPIO 
+controller is not logically part of a GPIO interface, it's just where it 
+landed because that was convenient for the designer.
+-- 
+Florian
 
-Normally i would agree to such a thing, but in this case the underlying WM=
-I device
-supports many more functions that are currently not supported by this driv=
-er. Additionally
-the driver cannot control when the WMI device is registered, so it has to =
-be prepared to
-encounter a device without the features it supports.
-
-Also keep in mind that a failing probe attempt produces a irritating error=
- message.
-
->>> BTW this also leaks `wpriv`, which would remain allocated for no reaso=
-n.
->> wpriv will be freed using devres, so no memory leak here. However i adm=
-it that there is
->> some room for optimizations, however i leave this to the maintainer of =
-the driver in
->> question.
-> Leak was a bit of an overstatement :) But if both features are missing
-> it would be kinda leaked, in practice.
-
-I see, however i would leave this to the maintainer of the driver because =
-i have no hardware
-to test the resulting patches :/.
-
-Thanks,
-Armin Wolf
-
->> Thanks,
->> Armin Wolf
->>
->>>
->>> [1] https://docs.kernel.org/driver-api/driver-model/binding.html
->>> [2] https://docs.kernel.org/driver-api/driver-model/driver.html
->>>
->
