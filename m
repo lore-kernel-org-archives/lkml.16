@@ -1,119 +1,197 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F602BD5A2
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBFB1922FA
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751024615; cv=none; b=CeWINS8lrIoQq2nH1CDuhfxacPu3XsvY63YCgppYWi8JOSt5Y7p3B3zhHCpozQLuoqRkjP9ISi12H75cPAKWVlAQ9UFu7PfLrU59Cwu5+ldsiDRTPNL/UycaXiSd8wfTid4eGAkyMKzKBtKjuDVoBh6S2qSbszSzRmFci672y/A=
+	t=1751024668; cv=none; b=sPs5HkRoMw90KsSH1JTE65zwoW/dfmYsP5yqk08IZ6uUIQb+BnLTgZn4AZBoPZGYT0Df5zQI35SDZUXCZ251HqEMyr4Vhyl0A+2+xhlhYsqLw9TdXke+RlHMmXzYbFNz/2SJyIM3wcaZrHT6jDESTuiKzik4OKOF7/mHmOEDLw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751024615; c=relaxed/simple;
-	bh=+iGcw+PtfwIM7ievMJRC8fS+eyL4YN2rOv9Hq1pYiqU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=o9awNQlldDHsczIOYB2EWp8XJhp4ugxXoOSRHcC8j5GWs40m3Qmely5dXW76D6s4JpxF05MYhU+2Ku79qUNp5m2vLEdkY6Meso1ODjbrbKbnQYOFJs2GvC5oWPWQ70UCa98C6553rvuG6c2xygLnWkSbmqH3BLWUl0d/8kWu8ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K1e6F4Mc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K1e6F4Mc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751024613;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jUmKLkX17iXsI2jcTtKOQRw0H+vEuZMVGDpj7iIwmzA=;
-	b=K1e6F4McSJ3QCQJkkZqsDByzJdFwefpEp1qoyVgvNCD8X9Qyv47RwGSrUceYrEdlgS23w8
-	dhnDHwHcnmUAJ6MYuqEjSmDH1BFOd3yRUyTkMCm42n0p6QgQ5xFC49xI+JxgOhelXAwoOo
-	aXCa5gtTDV4ztZaTVe9+NQpmlFZZ9cA=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-301-etGtSgDbN9y6AQcsk37laA-1; Fri, 27 Jun 2025 07:43:32 -0400
-X-MC-Unique: etGtSgDbN9y6AQcsk37laA-1
-X-Mimecast-MFC-AGG-ID: etGtSgDbN9y6AQcsk37laA_1751024611
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f858bc5eso1449902f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:43:31 -0700 (PDT)
+	s=arc-20240116; t=1751024668; c=relaxed/simple;
+	bh=LypsnHfjUJ/MQWcPoyl8T1d6zmfjblGzB4a3dMrK1JA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=nhoyar6bZGG7be6MWQZz7thAjrRhG3zG/SkDdJZM38O/u19YhSLAoLLOtsOKDZDxys4BADKco68Ik2aMYcmd2AQ+2H5B7g7oIyTaxUYNT/UDEljM2MiH9ah2fLn2HdhxzkVd2Q0RgkXbf1eF/nWmEqaDkim94BBp4psHPhP01+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddd5311fd3so18139205ab.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:44:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751024611; x=1751629411;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jUmKLkX17iXsI2jcTtKOQRw0H+vEuZMVGDpj7iIwmzA=;
-        b=hIE6aOf4S3Bok1vqhcaJYaGPD+S7FhCc0FFECFKZrVOIqR04u+s/R25XBLlid4MLoQ
-         vADjWtZ+dMwvyZREzRCckh3UcVwXSXBhcawWFSN+4G4X0qRlBAlR1D17B+sYyqDL1JQY
-         N2/Jywz6CrpLmAyXcAjutzN+V//LIrvOSGjgM2tY571jyNvQux7qcbB/OoOAi1EopJao
-         k/ssp1opWmWW2AJFuLQkDX6gtlDZU/8+aVJNbnnkmcWqDJwERdR/bFdgdUTayPnp8Cuf
-         T/R5bgpUGOjCKfLE5v31Cou7CeZK++TlEKh6LIE65n0t55S4k9+URHco1Zx/cAbS1EKO
-         Wk3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWifobhAlkKVicTDAjk2gbBUJ2z0XWg8rKWYQ8+Bpj5WGu/7SmMVR3sujmW/u6LoeLELVp/yNBgwsvzzIo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXHW9THPJFRhjYE3gny7rD25jTp8BXGpz46eWckV60JWdy6fi0
-	uSgt/uuruqzZ9TbPKq1Wdmp6NFQquMwCXFr2doO78B3Pnu5jIJZUiCOCiEt77ewK3CJOQIqc/mV
-	B9elqxyH53/Myj+ARKdLc6NsnpjTlP7GVcl8u/0nc1yVrVdgvp2FYuk5DN12NjzhWcA==
-X-Gm-Gg: ASbGnctWYRfuViPUKnBO0tVkJbk6zpQ/SNgBJDteTRIQRPWtQFzNlhjSsCmmCtU/Jn8
-	f/miU7J3a++lE/qOjQGH17YzGAfTUd7+YIk5DI9U/VUp8tAshsp1Gg1kXqaSZfmlpAw4JbS4GZ0
-	ajW7l5N2x4xWwzEekNBLnSRYiwVtw0GFne9lEvCqjh7LPZVKHLg7Au84BO+nGt1sLhnV9/eTrwW
-	w33AO8jZ/BhqK7sp13XfzckjWA6VV9Raz3qfqL52UOvPm6tAX6kgf+NLtHZeMFnbbess9xYQYg6
-	CjFXcWVvKVtfUj+h3uYZBNyleCJXyiZMUNa6BUJl9dM5LydbgjzPbk127kkWgbuM8pTgiCrLcM+
-	BRkET
-X-Received: by 2002:a05:6000:2082:b0:3a6:f2d7:e22b with SMTP id ffacd0b85a97d-3a8f482ce2dmr3118524f8f.18.1751024610703;
-        Fri, 27 Jun 2025 04:43:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHqa9ksaS7DGTCCj2sUyTBC9ZYvO5eiqt8mHI65N4aQiSc8WyhN8W3ePYCE3h36zJaWTbQjjw==
-X-Received: by 2002:a05:6000:2082:b0:3a6:f2d7:e22b with SMTP id ffacd0b85a97d-3a8f482ce2dmr3118496f8f.18.1751024610179;
-        Fri, 27 Jun 2025 04:43:30 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52ad2sm2454072f8f.48.2025.06.27.04.43.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 04:43:29 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, Luca Weiss
- <luca.weiss@fairphone.com>, Hans de Goede <hdegoede@redhat.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Helge Deller
- <deller@gmx.de>
-Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] fbdev/simplefb: Add support for interconnect paths
-In-Reply-To: <f7c816a7-e93e-4146-80dc-8fec6113fcea@suse.de>
-References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
- <20250623-simple-drm-fb-icc-v2-5-f69b86cd3d7d@fairphone.com>
- <87ldpdd3dn.fsf@minerva.mail-host-address-is-not-set>
- <f7c816a7-e93e-4146-80dc-8fec6113fcea@suse.de>
-Date: Fri, 27 Jun 2025 13:43:28 +0200
-Message-ID: <87cyapbean.fsf@minerva.mail-host-address-is-not-set>
+        d=1e100.net; s=20230601; t=1751024666; x=1751629466;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LcNzehwuovaQpYuSLQaGBibTim5vKH876zH5zSg7PqM=;
+        b=cyr9ZnxaKNzAE6ZRV9+L59F166rTp29k8Sv7l0XLUsyD2VNz5kXBf3q8yWPz/7rVIn
+         zYM+k3y4BWv4JXnXX3a2v9Q9+Njy35tJnhtMU0OovJtiaGgeqxxVRvk6lhwdM9+1g+Cr
+         2z1V2nFysOHyQhIBicPgUOsj8YEe0S++FAnMtLhgy4k1Er9JZl/eZ+Z3f8PCpVAFlw2E
+         DkTHnnQ8uzrQnyQdp6cnWlvE2X3DOtn2Ag9V9xi94IcZRdgILUQMJYcfh6TQECVs+exB
+         xkctkqWrmYp0YuL3+hAmnz0DTQrzfu5OIHXS6qyJ7Zd8zEWt8q7eFgHhdli0XGjS/bul
+         FSGA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMzesA/gOE3XCT8ze6XNb6MqOWgNuI3ruKIyKZ2C+NgpTW5EDC+QcxheB1DGaKDLYJDOmzUvpUL82p6j0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yye4EiOlV5Ynnp0D2kdDmlM3VlrVs6lFBE+6yydMhEqtrzBfSI8
+	X7IpFoEfM0sdU3wr/5vU5Y3NdjDYpv/tSJ312sou7X5AYKjDWjUlh/lkTMfdWDSA14EvfUo1Ds/
+	h7wiWhA4ruepOXMMaV+eDQLCU7NNqLybs4hyq6GNcN1rLlB1kIbxenZsUHdE=
+X-Google-Smtp-Source: AGHT+IEAfg2yIhYyQDwlT8K8xZcVXGXvfML2KOrIA1eVXjUIR6IBI5ghrW0aa5ddHuN3wR+c6aXNXEMKHStBdEPUjOxWRTkrscKa
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Received: by 2002:a05:6e02:3111:b0:3df:2f47:dc21 with SMTP id
+ e9e14a558f8ab-3df4acc64a1mr34190715ab.22.1751024666209; Fri, 27 Jun 2025
+ 04:44:26 -0700 (PDT)
+Date: Fri, 27 Jun 2025 04:44:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685e841a.a00a0220.129264.0002.GAE@google.com>
+Subject: [syzbot] [net?] WARNING in ip_mr_output
+From: syzbot <syzbot+f02fb9e43bd85c6c66ae@syzkaller.appspotmail.com>
+To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Thomas Zimmermann <tzimmermann@suse.de> writes:
+Hello,
 
-> Hi
+syzbot found the following issue on:
 
-[...]
+HEAD commit:    fc4842cd0f11 Merge branch 'netconsole-msgid' into main
+git tree:       net-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=10d0be82580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8a808a5ba3697f99
+dashboard link: https://syzkaller.appspot.com/bug?extid=f02fb9e43bd85c6c66ae
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=152d0d0c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132d0d0c580000
 
->> These two functions contain the same logic that you are using in the
->> simpledrm driver. I wonder if could be made helpers so that the code
->> isn't duplicated in both drivers.
->
-> No please not!. Any work should rather be directed towards deleting 
-> simplefb entirely.
->
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/8929e479b95b/disk-fc4842cd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3b2cb79509fb/vmlinux-fc4842cd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/60acef195b6f/bzImage-fc4842cd.xz
 
-That is a good point. You are correct that having some duplication to
-make easier to get rid of the fbdev driver is a much better approach.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f02fb9e43bd85c6c66ae@syzkaller.appspotmail.com
 
-> Best regards
-> Thomas
->
+WARNING: CPU: 0 PID: 5859 at net/ipv4/ipmr.c:2302 ip_mr_output+0xbb1/0xe70 net/ipv4/ipmr.c:2302
+Modules linked in:
+CPU: 0 UID: 0 PID: 5859 Comm: syz-executor357 Not tainted 6.16.0-rc1-syzkaller-00413-gfc4842cd0f11 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:ip_mr_output+0xbb1/0xe70 net/ipv4/ipmr.c:2302
+Code: df e9 63 f6 ff ff e8 8e 72 c6 f7 48 8b 74 24 18 45 31 f6 31 ff ba 02 00 00 00 e8 ea 14 4c ff e9 45 f6 ff ff e8 70 72 c6 f7 90 <0f> 0b 90 e9 94 f5 ff ff e8 62 72 c6 f7 90 0f 0b 90 42 80 3c 2b 00
+RSP: 0018:ffffc90000007900 EFLAGS: 00010246
+RAX: ffffffff89f9ec80 RBX: ffff888033053780 RCX: ffff8880277c9e00
+RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc90000007a10 R08: 0000000000000000 R09: ffffffff89d71b5d
+R10: dffffc0000000000 R11: ffffffff89f9e0d0 R12: 0000000000000010
+R13: dffffc0000000000 R14: ffff888075dfb100 R15: 0000000000000000
+FS:  000055557e793380(0000) GS:ffff888125c52000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fe8999b9270 CR3: 00000000291c0000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ igmp_send_report+0x89e/0xdb0 net/ipv4/igmp.c:799
+ igmp_timer_expire+0x204/0x510 net/ipv4/igmp.c:-1
+ call_timer_fn+0x17e/0x5f0 kernel/time/timer.c:1747
+ expire_timers kernel/time/timer.c:1798 [inline]
+ __run_timers kernel/time/timer.c:2372 [inline]
+ __run_timer_base+0x61a/0x860 kernel/time/timer.c:2384
+ run_timer_base kernel/time/timer.c:2393 [inline]
+ run_timer_softirq+0xb7/0x180 kernel/time/timer.c:2403
+ handle_softirqs+0x286/0x870 kernel/softirq.c:579
+ __do_softirq kernel/softirq.c:613 [inline]
+ invoke_softirq kernel/softirq.c:453 [inline]
+ __irq_exit_rcu+0xca/0x1f0 kernel/softirq.c:680
+ irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1050 [inline]
+ sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1050
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
+RIP: 0010:_raw_spin_unlock_irqrestore+0xa8/0x110 kernel/locking/spinlock.c:194
+Code: 74 05 e8 cb 4e 5f f6 48 c7 44 24 20 00 00 00 00 9c 8f 44 24 20 f6 44 24 21 02 75 4f f7 c3 00 02 00 00 74 01 fb bf 01 00 00 00 <e8> d3 3a 28 f6 65 8b 05 bc 43 34 07 85 c0 74 40 48 c7 04 24 0e 36
+RSP: 0018:ffffc9000445f640 EFLAGS: 00000206
+RAX: 718848643f7ff500 RBX: 0000000000000a02 RCX: 718848643f7ff500
+RDX: 0000000000000006 RSI: ffffffff8d982ba6 RDI: 0000000000000001
+RBP: ffffc9000445f6c0 R08: ffffffff8fa10ff7 R09: 1ffffffff1f421fe
+R10: dffffc0000000000 R11: fffffbfff1f421ff R12: dffffc0000000000
+R13: ffffffff8f574a40 R14: ffffffff8f574a00 R15: 1ffff9200088bec8
+ spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
+ __wake_up_common_lock+0x190/0x1f0 kernel/sched/wait.c:108
+ netlink_unlock_table net/netlink/af_netlink.c:462 [inline]
+ netlink_broadcast_filtered+0x108a/0x1140 net/netlink/af_netlink.c:1526
+ nlmsg_multicast_filtered include/net/netlink.h:1151 [inline]
+ nlmsg_multicast include/net/netlink.h:1170 [inline]
+ nlmsg_notify+0xf0/0x1a0 net/netlink/af_netlink.c:2577
+ vif_add+0x93f/0x1420 net/ipv4/ipmr.c:894
+ ip_mroute_setsockopt+0xe12/0xf60 net/ipv4/ipmr.c:1455
+ do_ip_setsockopt+0xf11/0x2d00 net/ipv4/ip_sockglue.c:948
+ ip_setsockopt+0x66/0x110 net/ipv4/ip_sockglue.c:1417
+ do_sock_setsockopt+0x25a/0x3e0 net/socket.c:2342
+ __sys_setsockopt net/socket.c:2367 [inline]
+ __do_sys_setsockopt net/socket.c:2373 [inline]
+ __se_sys_setsockopt net/socket.c:2370 [inline]
+ __x64_sys_setsockopt+0x18b/0x220 net/socket.c:2370
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fe8999384c9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 01 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffcd7ef3cc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
+RAX: ffffffffffffffda RBX: 0000000000016417 RCX: 00007fe8999384c9
+RDX: 00000000000000ca RSI: 0000000000000000 RDI: 0000000000000004
+RBP: 0000000000000000 R08: 0000000000000010 R09: 0000000000000000
+R10: 0000200000003d80 R11: 0000000000000246 R12: 00007ffcd7ef3cec
+R13: 00007ffcd7ef3d20 R14: 00007ffcd7ef3d00 R15: 0000000000000001
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	74 05                	je     0x7
+   2:	e8 cb 4e 5f f6       	call   0xf65f4ed2
+   7:	48 c7 44 24 20 00 00 	movq   $0x0,0x20(%rsp)
+   e:	00 00
+  10:	9c                   	pushf
+  11:	8f 44 24 20          	pop    0x20(%rsp)
+  15:	f6 44 24 21 02       	testb  $0x2,0x21(%rsp)
+  1a:	75 4f                	jne    0x6b
+  1c:	f7 c3 00 02 00 00    	test   $0x200,%ebx
+  22:	74 01                	je     0x25
+  24:	fb                   	sti
+  25:	bf 01 00 00 00       	mov    $0x1,%edi
+* 2a:	e8 d3 3a 28 f6       	call   0xf6283b02 <-- trapping instruction
+  2f:	65 8b 05 bc 43 34 07 	mov    %gs:0x73443bc(%rip),%eax        # 0x73443f2
+  36:	85 c0                	test   %eax,%eax
+  38:	74 40                	je     0x7a
+  3a:	48                   	rex.W
+  3b:	c7                   	.byte 0xc7
+  3c:	04 24                	add    $0x24,%al
+  3e:	0e                   	(bad)
+  3f:	36                   	ss
 
--- 
-Best regards,
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
