@@ -1,53 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6401F14A82;
-	Fri, 27 Jun 2025 09:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F2526C393;
+	Fri, 27 Jun 2025 09:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751016697; cv=none; b=StfTJvkVZsRIdZ8KeDAEh1x3BFceBFlQkrHbNuBpd2eh6y9eXKxg3BrPegE+13ZcY/F7oMdCQ+ah3ilvdSTBnDUhypm8P2XYPH5nRGwyyxQIRlENk48NVhJkWw/Nwo3PvOtzouMhWsBtvXhkbkpgB6GChGLgeDR6YwVkgKtu+Dg=
+	t=1751016776; cv=none; b=rbC7gNPEQ51S3xWKyX/fMZ3ayUbuWXyD6Nbb08qQfWUtB8XdXcx5EkI2a1ZiZETAJmHm90OSV8+mlKOYmWWyow6l/bH6RCamYUpEobjXFUMuiyZsw3QfSwJMds+tYvGyjj3ccuDfYhGHo5yZcFM8jerZjMrayYdKDXtIAv3INmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751016697; c=relaxed/simple;
-	bh=VVXzjakLrbQT4ZfJ9FQFUeBjGu5c9RhpGPfJmxmATuo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f3Kp4dY1B8k5lQpapXYads3XgYaZ44CKYJVI/cICMg7EH59uS3UYtphqFFIOCIZmHodE+hiKjXtcPRt75HGnRjcX5HegqfCjIQtAoG//LVjuflrO9OX7owMWxkf3SqIMRaxcAEH+UUWSdWeMQvsVi1gb/3Kgf0tMv0N7VTQ2Fq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3QCbd3a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751016776; c=relaxed/simple;
+	bh=KAPbXDbsTbRtLUSJtRih+t68mrh+mORwKv96JxsrrGs=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UNwwO3Qksn3MC8UjdbX2yoYDpTWBlYlNKxtTj2qkXGDignSFu9/Qc77qpBj4SR7Y8dVhjueJEW8+DhGKoLHsjHHGeOtHxMNgLxorlu135sW1LnCgnSgXI1a1yWc8VG7ggLjvEplLyWCqVNtgrv6DwMhs3zYXVNjvz7fQWabB3FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h7iMoMGX; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3QCbd3a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38D03C4CEE3;
-	Fri, 27 Jun 2025 09:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751016697;
-	bh=VVXzjakLrbQT4ZfJ9FQFUeBjGu5c9RhpGPfJmxmATuo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h3QCbd3a3WNQO6uK0sf1DKlI8wHjWukKpFM/KjCKtA+rSTrUNhlikURX0cRcKGFka
-	 DVAew2kURrmw64+U+ImSg1Jism4TRa/lRm1w/ax6ym4YoQk7WAcKZZeCgk3GA6b9yg
-	 FQAogSMZPMWSsAHHg3X/B5h1Crf+Q1g6gRUP+tSvtA+pMzsD+kuilwxzzYKXIf3Sk0
-	 jq+W2CecRi5eekzvv2aTVf6RVsrf6Qe9vDxshtrOqIs8OZlwo5uxZJYuDafFah0sBQ
-	 iVdqrDmapGye4qXlYSW0sumwt8+CWiq80IDs7IXMHc50VynCUPpfvZ0SUa67ZvzJeY
-	 78t0FRuqcZ2TA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uV5Qn-000000000FB-1fEb;
-	Fri, 27 Jun 2025 11:31:37 +0200
-Date: Fri, 27 Jun 2025 11:31:37 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
-	mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
-	kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
-	kw@linux.com, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-	qiang.yu@oss.qualcomm.com, quic_krichai@quicinc.com,
-	quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v7 1/5] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
- Update pcie phy bindings for qcs8300
-Message-ID: <aF5k-Scgk6KTI_uQ@hovoldconsulting.com>
-References: <20250625092539.762075-1-quic_ziyuzhan@quicinc.com>
- <20250625092539.762075-2-quic_ziyuzhan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h7iMoMGX"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a54700a46eso993339f8f.1;
+        Fri, 27 Jun 2025 02:32:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751016773; x=1751621573; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZHGbcG/vcFnWjGIjJ/Lfayx844s2gblNTlygOV5e6rY=;
+        b=h7iMoMGXH8vHhKmy8V864Pd/ms7+l9E5Y7jAQL/R+2lfZta+25LHmEilbgJOjIIlJ/
+         qEUr6NBhetyIkKQuDeGcA7Rv68xMSOKY6oqv0yofZJXxSGUXkOeVua2Sa+7H3I6ht+yG
+         dukZJ+jeXahMriQFxL/TFnUghSScdsrmbjE79O74TR9ERZl2xq+/Mw7xhriVGonydw99
+         9viLjROUHXdzVQcagBpfajOJDGks2QhCuhaeprss4nnHQDU83Wl2GTy0TvqxLDWlO4rx
+         KM4seAPTwbWtgluGYxQv/UWsMRC1tOdi9ceGf7BxmIWuN7juoZ1948koVwQiktNdO4QW
+         +VCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751016773; x=1751621573;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZHGbcG/vcFnWjGIjJ/Lfayx844s2gblNTlygOV5e6rY=;
+        b=v1BfuM3/xCAeN4iqjbCJszqrgri1p9fUBJR3bi9FQz0ugZOUKT+ndFsfXF+Qr7jj/u
+         cVrH7Cn19+s8ENC5BKFC1NNWUus0DizAjkgUuRkKeSWzz69lei+sOxo+mfm0tgdxdJGX
+         Lo7TLon0o/Bz5IEt2mkIDtgtx7AJrhb44SpL9VL16yj8i2zwnbVx6V5tUCu/mFwv8f/E
+         RBkVeuwJxxqYLLApUsoLLfBloO6aNcivktM6jTFuy1/gi0/MZWnhMGTYekFev87HxXO1
+         p5mQghUWJjyeY5XYLwUFgDkdKvlpnuC8i7CV4OgS5Qy8Svc/PbyOnwyc5DxwKL6BwsEK
+         4ZaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVsh78P7T+f7I0rqRD6O5vJoGSGgVmnM2kHLqepy7ZJQd0dVIa6J/6M2ldR8pDp9ufdEBA8luKwowsQ@vger.kernel.org, AJvYcCWBJ5wBqtrANvPEi7PaLVJyrVmAfHTsLBEnCB9fMUvyBW83UCPFT6gmhHXMXpdGLoVZfUIFOBDD8ijEm7E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6HbB1DY27Sg1XpgiPqqaEYdpZLHLwNQcBKbzzTG4vUsmzoUDq
+	tILUk/dmiWT2X6HyimQ2T6JsA38rDO8OCrFRYNBaKTsnfP06x5xr9RcfLfbmfg==
+X-Gm-Gg: ASbGnctZBbpzIi3xQDitZLGMzPbMeDltAcv77N7Qf95C+PyPLOMPekkg/Gm/2s3sl8R
+	z5whWtNv66I0EfMW6OHejawX69JAuol0qUH6JE4DufNN3WPLUucWUs3pz41LtR/MsXFpemIVLWo
+	Mp6nb3GWlavuU6RBQ2jSdCz6Txqr+fO2Tj1odBSXZiLq3JbqWBapzFR27UWqsfybP9iddxDekPr
+	W9x5bEuW2ckGAGB5rMcUqC9z9SL5KVRezmQpaffZcuDa/XadWksyAzoN9cNGMNfbjGuW82hEzsu
+	clSpTyXcasREKCEjXCazDRWPIPfOXPi+hlN2YiXfUt+45NHdMAwwo8Pfsh3Xj1ILVGJUsdpfz5c
+	w2nE59u1GUlNkdCYssQ==
+X-Google-Smtp-Source: AGHT+IHtGgW2tRSVkf3orsf3VAHLArXb++bdK4XS57AUO5KdAImNO+BadOSsFZILC8CvPR+AeW8olQ==
+X-Received: by 2002:a5d:5f92:0:b0:3a5:39d8:57e4 with SMTP id ffacd0b85a97d-3a9002968a3mr2333232f8f.41.1751016772461;
+        Fri, 27 Jun 2025 02:32:52 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e528a9sm2215225f8f.60.2025.06.27.02.32.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 02:32:52 -0700 (PDT)
+Message-ID: <685e6544.5d0a0220.20cf55.9440@mx.google.com>
+X-Google-Original-Message-ID: <aF5lPh3XoJLFC1sf@Ansuel-XPS.>
+Date: Fri, 27 Jun 2025 11:32:46 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v18] pwm: airoha: Add support for EN7581 SoC
+References: <20250626224805.9034-1-ansuelsmth@gmail.com>
+ <aF5dHDr8yDSKlp5j@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,26 +78,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250625092539.762075-2-quic_ziyuzhan@quicinc.com>
+In-Reply-To: <aF5dHDr8yDSKlp5j@smile.fi.intel.com>
 
-On Wed, Jun 25, 2025 at 05:25:35PM +0800, Ziyue Zhang wrote:
-> The gcc_aux_clk is not required by the PCIe PHY on qcs8300 and is not
-> specified in the device tree node. Hence, move the qcs8300 phy
-> compatibility entry into the list of PHYs that require six clocks.
+On Fri, Jun 27, 2025 at 11:58:04AM +0300, Andy Shevchenko wrote:
+> On Fri, Jun 27, 2025 at 12:47:53AM +0200, Christian Marangi wrote:
+> > From: Benjamin Larsson <benjamin.larsson@genexis.eu>
+> > 
+> > Introduce driver for PWM module available on EN7581 SoC.
 > 
-> As no compatible need the entry which require seven clocks, delete it.
+> ...
+> 
+> > + * Copyright 2025 Markus Gothe <markus.gothe@genexis.eu>
+> > + *		  Christian Marangi <ansuelsmth@gmail.com>
+> 
+> I'm not sure you can change the copyright line like this. I would rather expect
+> 
+>  * Copyright 2012 Markus Gothe <markus.gothe@genexis.eu>
+>  * Copyright 2025 Christian Marangi <ansuelsmth@gmail.com>
+> 
+> (Sorry, I forgot the exact original year there, but you got the point)
+> 
+> ...
+> 
+> > +	/* Global mutex to protect bucket used refcount_t */
+> > +	struct mutex mutex;
+> 
+> This makes a little sense. Either you use refcount_t (which is atomic) or
+> use mutex + regular variable.
+>
 
-Please add the missing Fixes tag.
+Using a regular variable I lose all the benefits of refcount_t with
+underflow and other checks. 
 
-> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
+> ...
+> 
+> > +	/*
+> > +	 * It is necessary to explicitly shift out all zeros after muxing
+> > +	 * to initialize the shift register before enabling PWM
+> > +	 * mode because in PWM mode SIPO will not start shifting until
+> > +	 * it needs to output a non-zero value (bit 31 of led_data
+> > +	 * indicates shifting in progress and it must return to zero
+> > +	 * before led_data can be written or PWM mode can be set)
+> 
+> Missing period at the end.
+> 
+> > +	 */
+> 
+> ...
+> 
+> > +static void airoha_pwm_disable(struct airoha_pwm *pc, struct pwm_device *pwm)
+> > +{
+> > +	/* Disable PWM and release the bucket */
+> > +	airoha_pwm_config_flash_map(pc, pwm->hwpwm, -1);
+> > +	airoha_pwm_release_bucket_config(pc, pwm->hwpwm);
+> > +
+> > +	clear_bit(pwm->hwpwm, pc->initialized);
+> > +
+> > +	/* If no SIPO is used, disable the shift register chip */
+> > +	if (find_next_bit(pc->initialized, AIROHA_PWM_MAX_CHANNELS,
+> > +			  AIROHA_PWM_NUM_GPIO) >= AIROHA_PWM_NUM_GPIO)
+> 
+> This can be rewritten as
+> 
+> 	if (!bitmap_read(pc->initialized, AIROHA_PWM_NUM_GPIO, AIROHA_PWM_NUM_SIPO))
+> 
+> (seems to me that the above code is buggy and has to have a check against the
+>  full size of bitmap).
+> 
 
-This patch depends on
+Yes I'm confused by find_next_bit. Is the nbits part the rest of the bit
+or the full size of the bitmap?
 
-	https://lore.kernel.org/lkml/20250625090048.624399-2-quic_ziyuzhan@quicinc.com/
+Google suggest it should be the full size of the bitmap but I wasn't so
+sure. Anyway I will use bitmap_read since it seems more readable.
 
-(which you point out in the cover letter), but you should be removing
-the bogus 'phy_aux' clock when removing the last user and not before.
+> > +		regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
+> > +				  AIROHA_PWM_SERIAL_GPIO_FLASH_MODE);
+> > +}
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
 
-Johan
+-- 
+	Ansuel
