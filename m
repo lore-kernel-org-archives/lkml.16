@@ -1,40 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD73D2EA47F;
-	Fri, 27 Jun 2025 16:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAE5293C63
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751042183; cv=none; b=M2iOO/mWwD2nbOXCb5h3ogJIgC/NrLFwjgBy4d+MMPaU+Ju245CRqBq3wizAU1yr/j/8c/fdWhmIke5cSpHPjzbdsSZqMKcmcz5MWJvVegWQKFS/7Zjff+BxJ7fz9Zld5rItEwPWcTnub6KZVUByfEfKtZ1ibrBt3AtIG99IhEc=
+	t=1751042284; cv=none; b=QBYw2uAiJDrDf6cn9EJZxcVimPtgkrgWK4HucF3gEGORevr1YOqovD2DhDLa116kSedd2v09fvg/EZO+veQkl3z6lp/r5yQrWfTpuIYueQBsSKqFkd4SNyS8NigSf0GvVcRbB8+0AaqmCypHPmQTmQjhkj7dk5nUw9mfhBLHC94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751042183; c=relaxed/simple;
-	bh=U36zvCdwxVpbXVC99b1oNGYhCohLlD3gx4t7Uaf0r+Q=;
+	s=arc-20240116; t=1751042284; c=relaxed/simple;
+	bh=6bVXfbauPon3jvhbH6VNjykGWMiSG8cMS2Q9MuQav90=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j0/UYT7fw1iQ3VuxDqpcE9Td1hTR+iaefk3MZkEGuFiR84U+EYBbzO9Tv8/t3zoTW7IrMZEN+cmXmKbuvsYYDntGtLpxziOu+oa7EgnXfOsDRSns563jXIixWpgCfvzTfsMOOPDrn50eA5hM33g0FxWDunALM6npwqDXz9159YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N7GvYWfC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=n44rcV211iO4AJw2zbmWXre9UFuhl6rR5/nFS3drYrtCBMAvEszZ8n44ZE6hWoZxov3CqRgARKNsXvkyGEYWTn5eJYe7gDlVCxYgPPd/vtvjLo9LrS3CNMbrHDPLeiMwvUZJzjiiOZ6j6TEgyO1NGC0ka+KdP/0hjVPpat705V0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=IFhi9UDW; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N7GvYWfC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60DF7C4CEE3;
-	Fri, 27 Jun 2025 16:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751042183;
-	bh=U36zvCdwxVpbXVC99b1oNGYhCohLlD3gx4t7Uaf0r+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N7GvYWfCJAF6tR7ODY7v7AWWFlwxJDlPbXhF5erD91FVrNvI5Iky3uIJb5Q2vp93R
-	 lHPWGcOwrNHsji67WzlTB9Gt8MREUm57zOf/b1ZVCKhgrr/eqC28uK8eDPBtGUjbxl
-	 pboQLkuqEHyCRdfB6VPTCpHWQEsKNJN4ErsL/ZswNH1EYOwi9REzGKZd0b99xxjQeY
-	 kCGZphrswQreUvquNPwpe2dN5EvzmRG1CRy9w7xuyFtEmHb2HqsHvButxdXLXxFDLj
-	 jr3RTY1wZ4MeQqku/H8aeeBYCWHnVBGNjIONzcc+FNproAI3iuFMOTcCytvSXBpEg2
-	 0emZRPrqi3B2A==
-Date: Fri, 27 Jun 2025 09:36:23 -0700
-From: Kees Cook <kees@kernel.org>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] fortify: add branch hints on unlikely
- fortify_panic paths
-Message-ID: <202506270935.283087E22D@keescook>
-References: <20250625161221.295575-1-colin.i.king@gmail.com>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="IFhi9UDW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qcgYB/L+MAgbsVQxdELUqSoMZHigAhYi8l56ZYN8m0w=; b=IFhi9UDWUOFGZLudEihbLDNXay
+	oOnEB0//BgIkQO++otWoplWLde5UYkspTeRucEjeQw7n8kz82FkDmn29be6Ot+40TrjDkXeMEPstP
+	bsjum7SQRUBpTb1r+VozS5DqCX7ZYctN5JAORwOHpID2uOxT5q1oZgKMr/RjgqMWRyjLvlhr9Sj8q
+	+0vog0qzCw7iU6hTmTAlpwdG7htvcdBuLj2t7wCa8mLRx99cm8AzNjAkgxQHELGBevU8V/HQHMc/f
+	MwNtipglpgevco9BoCpwF0ZeAPKJQoJCO04RIvJbJnDJ7M2gGj1bb+VJa+U8x7BwvhRZEGwKXDpGR
+	7ulSc01w==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uVC5O-0000000AgRb-19db;
+	Fri, 27 Jun 2025 16:37:58 +0000
+Date: Fri, 27 Jun 2025 17:37:58 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: ritu pal <ritupal888@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>,
+	NeilBrown <neil@brown.name>, Chen Ni <nichen@iscas.ac.cn>
+Subject: Re: ipc/mqueue: release spinlock before freeing node_cache in
+ mqueue_evict_inode()
+Message-ID: <20250627163758.GV1880847@ZenIV>
+References: <CAEy91+YpzU5tKEfsjt1_Hh0fsiCfVVK099EztXOPFGHFYyA1KQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,31 +46,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250625161221.295575-1-colin.i.king@gmail.com>
+In-Reply-To: <CAEy91+YpzU5tKEfsjt1_Hh0fsiCfVVK099EztXOPFGHFYyA1KQ@mail.gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Wed, Jun 25, 2025 at 05:12:20PM +0100, Colin Ian King wrote:
-> Analysis with gcov while running the stress-ng urandom stressor
-> shows that there are a couple of fortify panic paths that are highly
-> unlikely to be executed for well-behaving code. Adding appropriate
-> branch hints improves the stress-ng urandom stressor my a small
-> but statistically measureable amount. Ran 100 x 1 minute tests and
-> measured the stressor bogo-op rates on a Debian based Intel(R)
-> Core(TM) Ultra 9 285K with a 6.15 kernel with turbo disabled to
-> reduce jitter.
+On Fri, Jun 27, 2025 at 06:11:14PM +0530, ritu pal wrote:
+> Hi,
 > 
-> Results based on a Geometic Mean of 100 tests:
-> 
-> Without patch: 50512.95 bogo-ops/sec
-> With patch:    50819.58 bogo-ops/sec
-> 
-> %Std.Deviation of ~0.18%, so low jitter in results, improvement of ~0.6%
-> 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> Currently, mqueue_evict_inode() holds info->lock while freeing
+> info->node_cache
+> with kfree(). Although kfree() does not sleep, it may take a non-trivial
+> amount
+> of time, increasing the duration the spinlock is held and potentially
+> impacting
+> concurrency.
 
-Nice find! It seems some ftrace configs are unhappy with this change,
-though?
-
--Kees
-
--- 
-Kees Cook
+That spinlock is inside the inode in question; what exactly is going to be
+on the other side of contention?  Note that none of the file methods
+are going to run concurrent with that...
