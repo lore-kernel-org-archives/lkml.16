@@ -1,141 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CA92BD5A2;
-	Fri, 27 Jun 2025 12:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4BF2BD5A2;
+	Fri, 27 Jun 2025 12:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751029089; cv=none; b=NpZk1B7+nMym7dJIAy6MDQ0/9kWJOf66mOcpcKhz/nI0Bsk6oRZLVqzWgJWqyOo0l3Ld0nl0p+E0NXfi1UpCV9h4o12DsRcq4wZ6ULlSgvp8sRTbH/3wqzdZ7L8bg0HHg12oQGSGLvcyh9a6a3N3x7GujfeF3VmsX4GyL58ujcs=
+	t=1751029099; cv=none; b=NejzDApUDDlEXclt1KetBPiUeeYwh4pM7m7zYO4ViqIUCYR6gJzE/TvXFLyVlTpGARI3Ec8N8xshi47SCBBoOi0oQMtmwSd8Q1BeppG9gX3V5Ba5wmIs/p7a9ugCFhvPK1cKa3CEaEWbij+4pDURYPgFH2Ydck5E70K1ZPRAsEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751029089; c=relaxed/simple;
-	bh=Xs7fsDzv9nj/Wqz0gkonZDBgpUmilrNg7jSH3i0VaIU=;
+	s=arc-20240116; t=1751029099; c=relaxed/simple;
+	bh=NLK9LVywafopxTYCHb6PiC+xCymbm8kdUK/ydn2ddaA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rWTmrkvf7LqKzeLwZRdiEEMcw9+P1d/6sr2S+Txiz9dy5Tc6Qw5SdGOOdVk9BCl9nEhp2JbkRC91HFe5dk6wDMmAJ3RVbqrGJvOYcU1t0LwMxCx9QHxHFoGgmaubhV0Z4+SrBjzjtMRk4mvb7BO/kcIRi45K7rjP6lDQsJqj9/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S8bRDulS; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=D+IHR7aTP33/ASF5XRA1c7IrIrKgePGDDx6TjC+8SOBpW2rpZkQjlaliZWiOH2J6llhaQrvqw8tJkctf8gGE4D8xB8v4rGXsIqZnS5RM26wxpW1hpB6JWwE+iwZfLaN39AIGQIOB6d6sSIyK70rprNe7vPYWMoMg8MO9i1HYyNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HkV4kRSM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S8bRDulS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751029087; x=1782565087;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Xs7fsDzv9nj/Wqz0gkonZDBgpUmilrNg7jSH3i0VaIU=;
-  b=S8bRDulSiL5yEs/IWGwSAYbP3VjCwXcc9YwF44XQYJcnSpikvEeDRene
-   3YgJ5RGk+fOqWX0PrEvC5BkdCRCqr6WGtuDfI6Zzr75q1XwBcaCAjCyPF
-   tnig7mMVq2jtNOTSeu4Q95BnDKRfnMfSCpItHMXt46OvW/9rtZO8LFUWf
-   xqOmWKM5CyIVAHJ9iVGMamsHRNgb+dwE1Zug57BgBFHqsXlylu1u5HuYN
-   aknKR3/3l+gHxumxVAukshq6wRkff6R6xaPU3MwmO85HT3f1fnlicVnqn
-   vTM3e0YXxpFQSdNU9ELfW3PSCiyIxpfM3BLtS0bX1PN2LhgKIxKOPn95U
-   A==;
-X-CSE-ConnectionGUID: U08iwxhYTsaV4n8DYeg37Q==
-X-CSE-MsgGUID: qMgoYGEPRNK/gT4XDL1TgA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53422123"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="53422123"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 05:58:07 -0700
-X-CSE-ConnectionGUID: wa5IQcybT6231sVgkaOj6Q==
-X-CSE-MsgGUID: wUkHkpEqRIife2UL4mbufw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="156846790"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by fmviesa003.fm.intel.com with SMTP; 27 Jun 2025 05:58:01 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 27 Jun 2025 15:58:00 +0300
-Date: Fri, 27 Jun 2025 15:58:00 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HkV4kRSM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E882CC4CEED;
+	Fri, 27 Jun 2025 12:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751029097;
+	bh=NLK9LVywafopxTYCHb6PiC+xCymbm8kdUK/ydn2ddaA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HkV4kRSM6WLllV0xsEAvUFoZk1GvCn53VzRv3t61qWGvnreGTEheBvBqyMY5aM6vx
+	 x/xBD6cnT+/ST1+thGTWUjz+Goxq7Zygw5g0d087qaDjhUMGQ6POj9RcpurfFvMZGL
+	 denfCzTOvqn8ICVFS2Mud3bfr9DiOPBbEGn8m7UeOFqE3JHbuDCiSQQooQxDxPdLbu
+	 ioVjA7tzZWmHKG6xjBXjMVr2onRxqvDzDkxw+1fe1JIRJ8uYj94w6b3gz+1N14HNSw
+	 9xUgjaPxZ3GPTb23QufuJThE38C4PM1PvpUaAiCNTyNDH0oGtwS5WQ5+7eOH5BrUAN
+	 DV8ti1P7umYCw==
+Date: Fri, 27 Jun 2025 13:58:11 +0100
+From: Lee Jones <lee@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>,
+	Will Deacon <will@kernel.org>, Han Xu <han.xu@nxp.com>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Yogesh Gaur <yogeshgaur.83@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Andrew Davis <afd@ti.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
-	"Tauro, Riana" <riana.tauro@intel.com>,
-	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
-	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-	intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Karthik Poosa <karthik.poosa@intel.com>
-Subject: Re: [PATCH v4 3/4] drm/xe/pm: Wire up suspend/resume for I2C
- controller
-Message-ID: <aF6VWADKrLbw1Pbl@kuha.fi.intel.com>
-References: <20250626135610.299943-1-heikki.krogerus@linux.intel.com>
- <20250626135610.299943-4-heikki.krogerus@linux.intel.com>
- <aF6SaLLw7HlSxagh@black.fi.intel.com>
+	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-spi@vger.kernel.org, imx@lists.linux.dev,
+	linux-leds@vger.kernel.org
+Subject: Re: (subset) [PATCH v7 2/3] leds: lp8860: Check return value of
+ devm_mutex_init()
+Message-ID: <20250627125811.GH10134@google.com>
+References: <20250617-must_check-devm_mutex_init-v7-2-d9e449f4d224@weissschuh.net>
+ <175033649656.801367.11888454651585197053.b4-ty@kernel.org>
+ <f1cc8959-d420-4ba3-922f-ed7c6f054f22@t-8ch.de>
+ <20250625090439.GQ795775@google.com>
+ <e340b32d-8839-43b0-8662-edef1729ad6e@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aF6SaLLw7HlSxagh@black.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e340b32d-8839-43b0-8662-edef1729ad6e@t-8ch.de>
 
-On Fri, Jun 27, 2025 at 03:45:28PM +0300, Raag Jadav wrote:
-> Hi Heikki,
-> 
-> Thanks for picking this up.
-> 
-> On Thu, Jun 26, 2025 at 04:56:08PM +0300, Heikki Krogerus wrote:
-> > From: Raag Jadav <raag.jadav@intel.com>
+On Thu, 26 Jun 2025, Thomas Weißschuh wrote:
+
+> On 2025-06-25 10:04:39+0100, Lee Jones wrote:
+> > On Thu, 19 Jun 2025, Thomas Weißschuh wrote:
+> > > On 2025-06-19 13:34:56+0100, Lee Jones wrote:
+> > > > On Tue, 17 Jun 2025 19:08:13 +0200, Thomas Weißschuh wrote:
+> > > > > devm_mutex_init() can fail. With CONFIG_DEBUG_MUTEXES=y the mutex will be
+> > > > > marked as unusable and trigger errors on usage.
+> > > > > 
+> > > > > Add the missed check.
+> > > > 
+> > > > Applied, thanks!
+> > > > 
+> > > > [2/3] leds: lp8860: Check return value of devm_mutex_init()
+> > > >       commit: 426e0c8e8eed26b67bbbd138483bb5973724adae
+> > > 
+> > > Thanks, but (as mentioned in the cover letter) these patches should go
+> > > together through the mutex/locking tree.
+> > > Could you drop it on your side and give an Ack instead?
 > > 
-> > Wire up suspend/resume handles for I2C controller to match its power
-> > state with SGUnit.
+> > There has to be good reasons to do this.
+> >
+> > I didn't see any dependents or dependencies in this patch.
 > 
-> ...
+> Patch 3 depends on patch 1 and 2.
 > 
-> > diff --git a/drivers/gpu/drm/xe/xe_i2c.c b/drivers/gpu/drm/xe/xe_i2c.c
-> > index bfbfe1de7f77..0227fcba2168 100644
-> > --- a/drivers/gpu/drm/xe/xe_i2c.c
-> > +++ b/drivers/gpu/drm/xe/xe_i2c.c
-> > @@ -227,6 +227,31 @@ static const struct regmap_config i2c_regmap_config = {
-> >  	.fast_io = true,
-> >  };
-> >  
-> > +void xe_i2c_pm_suspend(struct xe_device *xe)
-> > +{
-> > +	struct xe_mmio *mmio = xe_root_tile_mmio(xe);
-> > +
-> > +	if (!xe->i2c || xe->i2c->ep.cookie != XE_I2C_EP_COOKIE_DEVICE)
-> > +		return;
-> > +
-> > +	xe_mmio_rmw32(mmio, I2C_CONFIG_PMCSR, PCI_PM_CTRL_STATE_MASK, PCI_D3hot);
+> It will break the build for each instance of an ignored return value
+> of devm_mutex_init(). Therefore all such instances need to be resolved
+> before the patch can be applied.
+> So the patches can't go through different trees.
 > 
-> I just realized the power modes will need (__force u32) casting to make
-> sparse happy. If you're planning another version, can you please include
-> it? If not, we can have a quick fix later on.
+> In theory we could fix the drivers in this cycle and then change
+> devm_mutex_init() in the next one. But new regressions are introduced
+> over and over. This patch is already in the third cycle...
 
-I can include the casting, np. Is it enough to cast PCI_D3hot?
+Fair point.
 
-thanks,
+Acked-by: Lee Jones <lee@kernel.org>
 
-> > +	drm_dbg(&xe->drm, "pmcsr: 0x%08x\n", xe_mmio_read32(mmio, I2C_CONFIG_PMCSR));
-> > +}
-> > +
-> > +void xe_i2c_pm_resume(struct xe_device *xe, bool d3cold)
-> > +{
-> > +	struct xe_mmio *mmio = xe_root_tile_mmio(xe);
-> > +
-> > +	if (!xe->i2c || xe->i2c->ep.cookie != XE_I2C_EP_COOKIE_DEVICE)
-> > +		return;
-> > +
-> > +	if (d3cold)
-> > +		xe_mmio_rmw32(mmio, I2C_CONFIG_CMD, 0, PCI_COMMAND_MEMORY);
-> > +
-> > +	xe_mmio_rmw32(mmio, I2C_CONFIG_PMCSR, PCI_PM_CTRL_STATE_MASK, PCI_D0);
-> 
-> Ditto.
-> 
-> > +	drm_dbg(&xe->drm, "pmcsr: 0x%08x\n", xe_mmio_read32(mmio, I2C_CONFIG_PMCSR));
-> > +}
-> 
-> Raag
+And patch removed from LEDs.
 
 -- 
-heikki
+Lee Jones [李琼斯]
