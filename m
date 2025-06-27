@@ -1,75 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailrelay-egress12.pub.mailoutpod2-cph3.one.com (mailrelay-egress12.pub.mailoutpod2-cph3.one.com [46.30.211.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44ED4273D70;
-	Fri, 27 Jun 2025 21:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3032652A6
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 21:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751059405; cv=none; b=JiFVtqS9kp+CsjJ+ZPln936mKgTgm2RAJhr6vVA1L8juI0ClnCYjVKm+0h61kNoc+qP0f5yEnXe27A7Qo/n18rXZWuZCl5tekakkcoYPBFVL0ixiwtjCR6eVTUXLnhg2isJNHxXy11GJo+CkvHCrubg6ZFeCyZBAEW1wuRDECeY=
+	t=1751059510; cv=none; b=BCtNCGF7DA3ba1a923w7z0BZGOVScXkd0PEKw+xpV9dIE5gyifK6w2PeNE9T/FfuOTT7aFVSIj/3jASzskDEW8PDtDY/Y5twOccjb8BY3ba8Tr6KPyfXHHxFRyEuryyS2e9yO5ZZBv5XTSSTqHtaxl0EronsHZJz63MTgAk9u2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751059405; c=relaxed/simple;
-	bh=eJFxYUVuTiYmn7RP5+jGfs2IdBuQ1seJOqX9HC6rdao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sxb0aUEQhp2Q4MRTdfiNQLRTwM2p44Q/O9x5SXLPSy/4MQLpTFuD1Q7Z7IzrneuaOzKk7eWTrH+D8CwjrQ6GunvcgMw/p/rm5H0DOCk3ztWx4va4lGMNTKfPTi0BUlWuzDA9qnzqcKoPyTgrnM4li3FwyMOCM+S8f+3LR2xyTT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZaVSjkB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751059510; c=relaxed/simple;
+	bh=Cl/F68/WK5XrJ6XvRUuGsOqyQMCE+IfVmht+m+da248=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Pb8MeyxLnjS+jFU0ax0r6NWETggJWozyAhsqIRByHc7JkQuMnj7DGS4ATcSMROsvEWVhO6QilsKpUeOwX5Dblj4qopnN+PLqPY4XQujjvgNYHL5frx57q5ewNzgmK1n7Yq+bDAOSDQYhf7jkU+qIjwJBbgGG6S+0M5P/vHM/CWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=rIQ2pMpv; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=4enDKfXj; arc=none smtp.client-ip=46.30.211.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZaVSjkB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBB0DC4CEE3;
-	Fri, 27 Jun 2025 21:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751059404;
-	bh=eJFxYUVuTiYmn7RP5+jGfs2IdBuQ1seJOqX9HC6rdao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bZaVSjkBqdnNT0peaZv6ETmCYkq+FDmct4kamm4Gftide9hPz1b6ZIZ0Z5OAzqEMX
-	 LJ3R5wCvC+FxOC8l9kO0f94lQh0mO8lgBZlGr/7cIXeg2BjQEN1/1km6EuzS2Uj6jM
-	 QpXp+oiPmpju1r0CZFoI4Gy5BRBn7a6ZBllXipZupSAWKWwbF3gHJFNPAUA+dHufmi
-	 HMcVStRTYoSPDZR7IvHSgYkujoFqxYcETVGCHatR2kpIHNjpxo5hM9Q6vR44FDnJPs
-	 SQOxL0OOdtyMpZR2g888TF1EcnOjaqdRHO9UTB1UAtGZR1ovHm3AjMnTawrF3tArhD
-	 EzJ1QzegVxM8Q==
-Date: Fri, 27 Jun 2025 16:23:24 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Max Shevchenko <wctrl@proton.me>
-Cc: Conor Dooley <conor+dt@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	devicetree@vger.kernel.org,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Russell King <linux@armlinux.org.uk>, linux-serial@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Sean Wang <sean.wang@mediatek.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/11] dt-bindings: arm: mediatek: add boards based on
- the MT6572 SoC
-Message-ID: <175105940347.167208.8424905965473353735.robh@kernel.org>
-References: <20250626-mt6572-v2-0-f7f842196986@proton.me>
- <20250626-mt6572-v2-6-f7f842196986@proton.me>
+	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="rIQ2pMpv";
+	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="4enDKfXj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751059505; x=1751664305;
+	d=konsulko.se; s=rsa1;
+	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
+	 from;
+	bh=U4CnvzeAUDkTiiObQEooy+CGcM4uqIv1lPLEWTjEViE=;
+	b=rIQ2pMpv8Cqb5ViJp6UfhcpX5O1CGU2hvsPXNenyva3o9jHbCRgwt6tgUInUgmrSkQ1OVgc6DXFfU
+	 9wgkCIT2Jtkj/CCzz0g2gi+KIh3Kuh2OTGrkDArGpQH1gmyNvkhvnyZTh2nymZuAlYQejrpgc7vMrg
+	 ElEbgH9ts/cH9Z9aAhBNVIa3U+LPfpHUm1KIaC27tOeAJn5Mn3oNc0E2kG+FzivWaHsXzWyilF9mNS
+	 quEadn48MM/hd+ObmKYn4LUvBykvLEA7IiGTWZPWOr8kIftHrTknB4xxG1IDzWy8/CjqEafkr6qfC9
+	 waDr4mPkXWJXshy9XYlGRYGRmnFLuUA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751059505; x=1751664305;
+	d=konsulko.se; s=ed1;
+	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
+	 from;
+	bh=U4CnvzeAUDkTiiObQEooy+CGcM4uqIv1lPLEWTjEViE=;
+	b=4enDKfXjyD5XtC+t6O9KGhgnQsaIqyG+AaFElTfgX7vDawXeK8v89uobXRBshe+B8IGKPVFywDJDp
+	 /RK1d+ZCA==
+X-HalOne-ID: 3015eec2-539d-11f0-8e72-e90f2b8e16ca
+Received: from localhost.localdomain (host-90-238-19-233.mobileonline.telia.com [90.238.19.233])
+	by mailrelay2.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
+	id 3015eec2-539d-11f0-8e72-e90f2b8e16ca;
+	Fri, 27 Jun 2025 21:25:04 +0000 (UTC)
+From: Vitaly Wool <vitaly.wool@konsulko.se>
+To: linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	rust-for-linux@vger.kernel.org,
+	Vitaly Wool <vitaly.wool@konsulko.se>
+Subject: [PATCH v7 0/4] support large align and nid in Rust allocators
+Date: Fri, 27 Jun 2025 23:24:51 +0200
+Message-Id: <20250627212451.2181627-1-vitaly.wool@konsulko.se>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626-mt6572-v2-6-f7f842196986@proton.me>
+Content-Transfer-Encoding: 8bit
 
+The coming patches provide the ability for Rust allocators to set
+NUMA node and large alignment.
 
-On Thu, 26 Jun 2025 11:53:59 +0300, Max Shevchenko wrote:
-> Add entries for the JTY D101 tablet and the Lenovo A369i smartphone.
-> 
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Signed-off-by: Max Shevchenko <wctrl@proton.me>
-> ---
->  Documentation/devicetree/bindings/arm/mediatek.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
+Changelog:
+v2 -> v3:
+* fixed the build breakage for non-MMU configs
+v3 -> v4:
+* added NUMA node support for k[v]realloc (patch #2)
+* removed extra logic in Rust helpers
+* patch for Rust allocators split into 2 (align: patch #3 and
+  NUMA ids: patch #4)
+v4 -> v5:
+* reworked NUMA node support for k[v]realloc for all 3 <alloc>_node
+  functions to have the same signature
+* all 3 <alloc>_node slab/vmalloc functions now support alignment
+  specification
+* Rust helpers are extended with new functions, the old ones are left
+  intact
+* Rust support for NUMA nodes comes first now (as patch #3)
+v5 -> v6:
+* added <alloc>_node_align functions to keep the existing interfaces
+  intact
+* clearer separation for Rust support of MUNA ids and large alignments
+v6 -> v7:
+* NUMA identifier as a new Rust type (NumaNode)
+* better documentation for changed and new functions and constants
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-
+Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
