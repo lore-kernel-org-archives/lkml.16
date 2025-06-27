@@ -1,277 +1,159 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CD62D97B5
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B881C6FE1
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751053716; cv=none; b=PuiX4eRA02kzDglnEtm7YtBxA4WxkAocpxW18KukvuP2XTlKacKfZ3O/OBHW3uvrvYbVY0w9GNfloG2IIoTvq98CTdQt7aCt4wTb6A5c9IwXBQBWv2JAMWO5156EYIFYaTKEE38WjKpFm5mW32YfSi2EjVP7mTAJ0y1ZkBn4iEk=
+	t=1751053806; cv=none; b=CGv1gwK+WpyRTWc5t+27yCgQPoPc9mZqYmBvNso8ky6KZNNeQSb1AO4lKqUU1H4gQ6wWBakmWMvHTyXGEZeitlISwRL5EpLHvtwzvtB+6KMUMuBc3CKcifFp3I8sH0NL8TvS7AWlUiOuakzgHaaxDHQrDkhASxDIXhSnDfJOk7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751053716; c=relaxed/simple;
-	bh=nMS5gvRnB8iFHWWe9Z/+BocySw+E+oISgb0lIZGQ4mw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NhHsG5vtnFuxOHw9EPKEI2cN+jsUabw1v7XrVOlznEOOdxTbwknHL0DBPH9AVuO0MQzIUULK365lwbNmD8awrCmXMXrPLVVQyQPyS3Bo+YaxRwYjTXcb7Lwn0W0Skm+C+pt2eAr25l3sRL2+cn4XnltaoyamgHmKzUlqayrgXc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=px0IywtZ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="px0IywtZ"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RBmJLq027894
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:48:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XqEtBo1jQOvR+LgMxe85gP0xuHDuAtLZcp3UvPcyCQk=; b=px0IywtZ4oeH8MNf
-	ThWflDYhnKTfOmG6IzSeR8j8AqOlMWePoFuUjqy7XCL7/XKSUFWKwTtcuwTK0CHU
-	dlibwy+nOB7AehHlqAagsLI1gjfyjrucKPAy2ND6EwD3wPPGaZDNiYBAUzBI5fMH
-	4RsjI/s0VUzBAETRT0duV/ImNEhbi0/lgV4rpNrSPdiuZmQSgbKWJVd8Y0y/nGI6
-	4oS3DixOjtwIfCuetrIWLvX38uSCS9yT1fgiAbpw9R1LFUwoQdoRdiiIE7QITgsq
-	6CTYN+XRaWJJqCFNnlZQ4EMV5y5m2ffa4/uxFrsl5CMrxcQmpBN4ri0/ybr0J3Tv
-	3z+dAw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ec26j9r5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:48:33 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d09a3b806aso45902985a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:48:33 -0700 (PDT)
+	s=arc-20240116; t=1751053806; c=relaxed/simple;
+	bh=0bx15Ga9KKtV6ccONC9aABs1p9CHq1I6Zb5PI4b0/yg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=KiJUK64ZLJGd3Ww+XI9TvqHnwkzmCeIagbqh3bCL6jVPB0M0hgIwVxDWuJ9Gz9HrmYSBgUAN1u4Tc9Vz/AYcNyqqxOi1H53m8JZV1UtVyLOuOqCthlBAYNEGGeNOQEKEIYxEzTy6HBoqrPq8/ipmP0Sy1jbTnq31J8znL+MG7Zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3df2d0b7c50so2831435ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:50:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751053712; x=1751658512;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1751053803; x=1751658603;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XqEtBo1jQOvR+LgMxe85gP0xuHDuAtLZcp3UvPcyCQk=;
-        b=uCKjfxwybkCBIIGf313c5olpJ/aAmTZFwKIndT0f3nm6LIpDoklHy54AH1uKWDl5Jk
-         glvCiCQwzP2lXouC0kv9jnyk/hLtQLNkKHQENW4wf8ThAe7O+IdfFtcgCmCgkIeN5Bl2
-         yBDv/WyQ2rVmMNFoFaThh5PZhVkU3doy/BxTFQ4oCEo/Ec5OhbXF9gA2Cp0HKJ8vKfX5
-         S3Ds3J/kSbZbHcx5xAph0a8JwvH2kkheZ+lk0sC38O2EaJhb3bMleoc+Ad/Nu5GijU40
-         1U/WfbeAkWqc0q/7nwiK1Pl+a0TKxMMeSpNG35jKgdse/b2jo3tqslb0xsSWgGH6STWy
-         E/VA==
-X-Forwarded-Encrypted: i=1; AJvYcCXuBwpNaOoy8jERqnEZytzL39X9b2gHM/XASc3GS5o/cmEWi7+IX8bQx3zhKdlIEK2T6u6tcSXqIHZ0NjU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzyvzanclj+5td+eC9oYaxFwlRgGH3+Hz6m3+BwtuGlzYh1CKQN
-	Kp8H6WXEQfwew6P2tVvlalthcoHa0t0oQ1t9zXQ3mlauFs+FkPSDcTMW+ws+JN5x98niS5vDKGS
-	LQkC91hyDyj1h7JVatxmWa9i1HAxLmkvQld3nmQE3tdxWofPlrL6wB8nKzV5o5t1GKG4=
-X-Gm-Gg: ASbGncuccfVhOSKCA9KGbUk8JMJV3R8tIdoIAUeYbTvbChayZZXWTTZsyWtULWODD17
-	ldTWk6Uy+J/PnDAmW99qk0b0727jusJYPWDMw8mqLv4/HqKbWgiNLWsMl4x0Y1Asb/xMPAAtNeM
-	hwJuVSJKchESdSd/F9ARkucLC/P9E+/U56TFsWwkqnPnZxHFrH8CSW7unF7HxYYjpyj+Ccd6I4z
-	iXVfF/VUEipJo2VfwG2sR7DCVbx7mE9lTb19ZsuVmsycWGuoaUTdd40egyWxYyssCT9yt21ZVZ/
-	kMMAbQrWAePw9zm6EYbCK0itzsXPLG25VASusV4kx06fCgiD9wWUjDsFW4043cLx7vZbIMKROOq
-	jO3c=
-X-Received: by 2002:a05:620a:2911:b0:7c7:a574:c6d2 with SMTP id af79cd13be357-7d44c26c479mr24140485a.9.1751053711898;
-        Fri, 27 Jun 2025 12:48:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGuo69OZ1gPlnL8mmmPx8kVRl+wj2GVKlqnxh/y2aknDxvte0VDP27AkH9DGLYNw2bZWacjuA==
-X-Received: by 2002:a05:620a:2911:b0:7c7:a574:c6d2 with SMTP id af79cd13be357-7d44c26c479mr24137985a.9.1751053711386;
-        Fri, 27 Jun 2025 12:48:31 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c6bb6dsm180072466b.120.2025.06.27.12.48.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 12:48:30 -0700 (PDT)
-Message-ID: <de111b27-9126-4c03-a7bb-8cce9ea2780e@oss.qualcomm.com>
-Date: Fri, 27 Jun 2025 21:48:27 +0200
+        bh=55MkMsIShdAi1d6dksv8W1d5vJZCgwy+c/fGr5t36CA=;
+        b=wIKr13r5N36Cdk7C3L3V2bl21yFEOLv5VAsrX+IevK0FI5ImLMaiirRIQD7v6+z2ox
+         Ewx3Wo8D38sgaOf5jc20P0Gkm9WCWeIuL+WiULPKIwbxfQMMZCfnb1xgw8qZuMjo/bk4
+         tAo4t4fEgDvw3pUHGNNEJZ/hzpj4FsZr5SYO/lnytByFP0aeJiq4SYWnnS28epfu91nY
+         T8Np+2CtNi2sUzs4Jfsgbatm6wp84oc++BwILBHA0UoCbjZ/3ttuv54Gfj5f0LcJKx+9
+         oiCqgnFzNa7G4RibhcLa312wrRq4Wr+pRk72ZeD2faTCFacx/UthZX2mQp+2AVlKocap
+         opkg==
+X-Gm-Message-State: AOJu0YzhecijcQXLlDIRI/horusLfI0kU1BSBNhA9WQeRtl5PRkxqwrQ
+	aEWvB8TULhc/dXiQgKgzrRyQiFk3S9GSfmx/5L7H4BK+6ZVbCYQOBVxwgm3VlvcXA7n3q2dHJKQ
+	WxjbFot2FLMUS3YlzwbzmxrE5dCczST+AjcG0FuTk5IIt/spQwmMkneP/tBY=
+X-Google-Smtp-Source: AGHT+IFXN6IzpLLUzBLxMcY50rpG1OMj5AIhwuppVDIm3tLNF1ne+L0iMu9g8gbOR0B7Ry2jBbt0UcpvkCM+8FuNPhrQJmOCCIiK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] arm64: dts: qcom: sc8280xp: Add initial support for
- Ntmer TW220
-To: Pengyu Luo <mitltlatltl@gmail.com>,
-        Bjorn Andersson
- <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Eric Biggers <ebiggers@google.com>,
-        Len Brown <len.brown@intel.com>, Benno Lossin <lossin@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-        Joel Granados <joel.granados@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Alice Ryhl <aliceryhl@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hong Zhu <vanyang@smail.nju.edu.cn>
-References: <20250617092929.1492750-1-mitltlatltl@gmail.com>
- <20250617092929.1492750-4-mitltlatltl@gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250617092929.1492750-4-mitltlatltl@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDE2MCBTYWx0ZWRfXwrz/U1FnSRZv
- gtzuTZHY6nYs0helRhcM6RR+sEZGbkml6pS1GwO/tyadzgzVi1BLtU7bjUV5cV+mBNQ932hkQpb
- rtHB+5u1bwR9OHPfUWMMbsTKKDccedOh039EJ2RwxoAb+kwXEjSHj/qKED/AiIsmhDpujeFat7W
- 6UEuF8yYfLf/+OzDf08tYdA+zSVZE8cPDIdqqemJEBcl9VOeeb0s+5q7q80kKMO4BIO6umtUDm6
- nuuSzeij5q6kytC/Voq4FL2cLC4jpWZsV1l1iVpQadcJGAebquekB/TJtQH+2S4zYWKDaOl7VER
- x8+1pmQGOCEwKoYT8w0c/KJoOgY7tN3JoRxZsu6daYt2gMJQlD/EiowNX+SgUA7j1TPt30U6A7I
- RABSWx4EoyILlLEAQKMwTxxGIfYNTP34e2z7xhAc96STvSuhzX/Z4PA0UMTIxvTLqI44J+j2
-X-Authority-Analysis: v=2.4 cv=XPQwSRhE c=1 sm=1 tr=0 ts=685ef591 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
- a=MkzzvC3VeMUM0ldRBtYA:9 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-GUID: -SMqmI_0us9f-hfLSwmWvM2HofGExViD
-X-Proofpoint-ORIG-GUID: -SMqmI_0us9f-hfLSwmWvM2HofGExViD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 impostorscore=0 clxscore=1015 suspectscore=0 mlxscore=0
- spamscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
- priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506270160
+X-Received: by 2002:a92:ca48:0:b0:3df:306f:3b25 with SMTP id
+ e9e14a558f8ab-3df4abac665mr49151565ab.16.1751053803694; Fri, 27 Jun 2025
+ 12:50:03 -0700 (PDT)
+Date: Fri, 27 Jun 2025 12:50:03 -0700
+In-Reply-To: <c15f999a-7fe1-463a-b9e2-ef145c3afe81@linux.dev>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685ef5eb.a00a0220.274b5f.0000.GAE@google.com>
+Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
+From: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	yanjun.zhu@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/17/25 11:29 AM, Pengyu Luo wrote:
-> The Ntmer TW220 is a WOS tablet based on the Qualcomm SC8280XP platform,
-> also known as the Robo&Kala 2-in-1 Laptop. Thanks to Hong for providing
-> the unlocked device and early development work. This patch adds an
-> initial device tree to enable basic functionality.
-> 
-> Currently supported components include:
-> - Bluetooth & Wi-Fi (board file regeneration required)
-> - Battery charging (up to 15V/3A fixed PDO) and reporting via pmic-glink
-> - Flash LEDs (front and rear)
-> - Hall sensor (lid detection)
-> - Keyboard (via Bluetooth or USB)
-> - NVMe SSD
-> - Power and volume keys
-> - Simple-framebuffer
-> - Sound (playback and capture; top-left DMIC only, top-right works only
->   on Windows)
-> - Touchscreen and stylus (requires GPI DMA support [1] and stylus support [2])
-> - USB Type-C ports
-> 
-> The following components are currently non-functional:
-> - Cameras (GalaxyCore GC5035; only sensor ID is detectable, no frames in libcamera;
->   partial driver can be found on LKML archives)
-> - DSI display (blank screen with `dsi_err_worker: status=4`; primary DSI register
->   dump included below)
-> - Stylus wireless charger (CPS4035)
-> - UCSI over GLINK
-> 
-> [1]: https://lore.kernel.org/linux-arm-msm/20250617090032.1487382-3-mitltlatltl@gmail.com
-> [2]: https://lore.kernel.org/linux-input/20250605054855.403487-2-mitltlatltl@gmail.com
-> 
-> Note: This series does **not** include any confidential material. Those
-> who wish to run Linux on this device should contact Ntmer, as the
-> bootloader is locked via secure boot.
-> 
-> Co-developed-by: Hong Zhu <vanyang@smail.nju.edu.cn>
-> Signed-off-by: Hong Zhu <vanyang@smail.nju.edu.cn>
-> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-> 
-> dsi_ctrl, reg = <0 0x0ae94000 0 0x400>;
-> 0xae94000 20050001 000001f3 0000000b dddd1011
+Hello,
 
-This is not something we want in the commit log
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+general protection fault in rxe_skb_tx_dtor
 
-[...]
-
-> +	gpio-leds {
-> +		compatible = "gpio-leds";
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&camf_indicator_en>, <&camr_indicator_en>;
-
-property-n
-property-names
-
-in that order, across the file, please
-
-[...]
-
-> +		wsa-dai-link {
-> +			link-name = "WSA Playback";
-> +
-> +			cpu {
-> +				sound-dai = <&q6apmbedai WSA_CODEC_DMA_RX_0>;
-> +			};
-> +
-> +			codec {
-
-'co'dec < 'cp'u
-
-[...]
-
-> +/*
-> + * cci0_i2c1
-> + * sda: gpio115, scl: gpio116
-> + *
-> + * CAMI ov9234 @36 @48
-> + *
-> + * power on sequence
-> + * gpio7 out low
-> + * l3q 1p8
-> + * l6q 2p8
-> + * l2q 1p2
-> + * gpio7 out high
-> + * msleep 5
-> + * cam_cc_mclk4_clk 2.4MHz (gpio6)
-> + */
-
-It would be useful to enable these buses and set up what we can,
-otherwise this is quite a lot of text for comments..
-
-[...]
-
-> +&spi22 {
-> +	status = "okay";
-> +	pinctrl-0 = <&spi22_default>;
-> +	pinctrl-names = "default";
-
-status should be the last property (before subnodes), preferably
-with a newline before it, so:
-
-pinctrl-0 = <&spi22_default>;
-pinctrl-names = "default";
-
-status = "okay";
+Oops: general protection fault, probably for non-canonical address 0xe000bc000000006c: 0000 [#1] SMP KASAN NOPTI
+KASAN: maybe wild-memory-access in range [0x0006000000000360-0x0006000000000367]
+CPU: 0 UID: 0 PID: 1088 Comm: kworker/u4:10 Not tainted 6.16.0-rc3-syzkaller-g907cb0dfd322 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: rxe_wq do_work
+RIP: 0010:rxe_skb_tx_dtor+0x78/0x240 drivers/infiniband/sw/rxe/rxe_net.c:364
+Code: 03 42 80 3c 28 00 74 08 4c 89 f7 e8 72 65 81 f9 4d 8b 36 4d 85 f6 0f 84 c3 00 00 00 4d 8d be 60 03 00 00 4c 89 f8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 77 01 00 00 41 8b 2f 31 ff 89 ee e8 bf
+RSP: 0018:ffffc900000079e8 EFLAGS: 00010206
+RAX: 0000c0000000006c RBX: ffff88804e71d140 RCX: ffff8880357ac880
+RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff88804e71d140
+RBP: 0000000000000000 R08: ffffffff8fa10ef7 R09: 1ffffffff1f421de
+R10: dffffc0000000000 R11: ffffffff88a26c60 R12: dffffc0000000000
+R13: dffffc0000000000 R14: 0006000000000000 R15: 0006000000000360
+FS:  0000000000000000(0000) GS:ffff88808d250000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9de1ffdfc8 CR3: 00000000441ff000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ skb_release_head_state+0x101/0x250 net/core/skbuff.c:1139
+ napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
+ e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
+ e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
+ e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
+ __napi_poll+0xc7/0x480 net/core/dev.c:7414
+ napi_poll net/core/dev.c:7478 [inline]
+ net_rx_action+0x707/0xe30 net/core/dev.c:7605
+ handle_softirqs+0x286/0x870 kernel/softirq.c:579
+ do_softirq+0xec/0x180 kernel/softirq.c:480
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
+ local_bh_enable include/linux/bottom_half.h:33 [inline]
+ rcu_read_unlock_bh include/linux/rcupdate.h:910 [inline]
+ __dev_queue_xmit+0x1cd7/0x3a70 net/core/dev.c:4740
+ neigh_output include/net/neighbour.h:539 [inline]
+ ip6_finish_output2+0x11fb/0x16a0 net/ipv6/ip6_output.c:141
+ __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
+ ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
+ rxe_send drivers/infiniband/sw/rxe/rxe_net.c:390 [inline]
+ rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:449
+ rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
+ rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
+ do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
+ do_work+0x1b1/0x6c0 drivers/infiniband/sw/rxe/rxe_task.c:187
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:rxe_skb_tx_dtor+0x78/0x240 drivers/infiniband/sw/rxe/rxe_net.c:364
+Code: 03 42 80 3c 28 00 74 08 4c 89 f7 e8 72 65 81 f9 4d 8b 36 4d 85 f6 0f 84 c3 00 00 00 4d 8d be 60 03 00 00 4c 89 f8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 77 01 00 00 41 8b 2f 31 ff 89 ee e8 bf
+RSP: 0018:ffffc900000079e8 EFLAGS: 00010206
+RAX: 0000c0000000006c RBX: ffff88804e71d140 RCX: ffff8880357ac880
+RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff88804e71d140
+RBP: 0000000000000000 R08: ffffffff8fa10ef7 R09: 1ffffffff1f421de
+R10: dffffc0000000000 R11: ffffffff88a26c60 R12: dffffc0000000000
+R13: dffffc0000000000 R14: 0006000000000000 R15: 0006000000000360
+FS:  0000000000000000(0000) GS:ffff88808d250000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9de1ffdfc8 CR3: 00000000441ff000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	03 42 80             	add    -0x80(%rdx),%eax
+   3:	3c 28                	cmp    $0x28,%al
+   5:	00 74 08 4c          	add    %dh,0x4c(%rax,%rcx,1)
+   9:	89 f7                	mov    %esi,%edi
+   b:	e8 72 65 81 f9       	call   0xf9816582
+  10:	4d 8b 36             	mov    (%r14),%r14
+  13:	4d 85 f6             	test   %r14,%r14
+  16:	0f 84 c3 00 00 00    	je     0xdf
+  1c:	4d 8d be 60 03 00 00 	lea    0x360(%r14),%r15
+  23:	4c 89 f8             	mov    %r15,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax <-- trapping instruction
+  2f:	84 c0                	test   %al,%al
+  31:	0f 85 77 01 00 00    	jne    0x1ae
+  37:	41 8b 2f             	mov    (%r15),%ebp
+  3a:	31 ff                	xor    %edi,%edi
+  3c:	89 ee                	mov    %ebp,%esi
+  3e:	e8                   	.byte 0xe8
+  3f:	bf                   	.byte 0xbf
 
 
-> +
-> +	touchscreen@0 {
-> +		/*
-> +		 * The ACPI device ID is GXTS7986, its exact suffix is unknown.
-> +		 * The Windows driver suggests it is a GTBerlinB variant and
-> +		 * communicates via HID over SPI, which aligns with the Linux
-> +		 * driver `drivers/hid/hid-goodix-spi.c`.
-> +		 *
-> +		 * However, the HID descriptor read from the device appears
-> +		 * garbled, preventing proper probe with the HID driver. In
-> +		 * contrast, the driver at
-> +		 * `drivers/input/touchscreen/goodix_berlin_spi.c` shares many
-> +		 * similarities and functions correctly with this hardware.
-> +		 *
-> +		 * Therefore, we choose to use the goodix_berlin_spi driver
-> +		 * instead.
+Tested on:
 
-Is this something you could work out with the aforementioned drivers'
-maintainers?
+commit:         907cb0df RDNA/rxe: Fix rxe_skb_tx_dtor problem
+git tree:       https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
+console output: https://syzkaller.appspot.com/x/log.txt?x=109be08c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
+dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
 
-[...]
-
-> +&pcie4_port0 {
-> +	wifi@0 {
-> +		compatible = "pci17cb,1103";
-> +		reg = <0x10000 0x0 0x0 0x0 0x0>;
-> +
-> +		vddrfacmn-supply = <&vreg_pmu_rfa_cmn_0p8>;
-> +		vddaon-supply = <&vreg_pmu_aon_0p8>;
-> +		vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
-> +		vddwlmx-supply = <&vreg_pmu_wlmx_0p8>;
-> +		vddpcie1p8-supply = <&vreg_pmu_pcie_1p8>;
-> +		vddpcie0p9-supply = <&vreg_pmu_pcie_0p9>;
-> +		vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
-> +		vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
-> +		vddrfa1p8-supply = <&vreg_pmu_rfa_1p7>;
-> +
-> +		/*
-> +		 * bus=pci,vendor=17cb,device=1103,subsystem-vendor=17cb,
-> +		 * subsystem-device=0108,qmi-chip-id=18,qmi-board-id=255
-> +		 *
-> +		 * Regenerate board file, x13s one works well
-
-Please post on the ath11k mailing list and propose and ask for
-that variant to be included
-
-Konrad
+Note: no patches were applied.
