@@ -1,165 +1,239 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3224F299AAB
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A432329DB7F;
+	Fri, 27 Jun 2025 11:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751022271; cv=none; b=YTtoQfY+O3css7tlznsO8ZpbNS/Q0s61RJalrazJ4Z4Zj/y67GQBrRDL9R9Ef52FBaD+WTELNCZB2xZfEJ2ciS6GvwqEgulHYNHqJzEO6zt2MFbVntQMtbqPhM5kVXWftjm6EPa6oYaViNbRTC60YhIG6YOElAXzbEBHotQwLdQ=
+	t=1751022297; cv=none; b=R/JS9IZntiOpZUT6tYa6+qX6nhf3b0X3G7v64GQ0EK/JkL+SgH1FNiGlo1KUB+HKRAjPIrGZ/Vf35mnmfo4P5eMldDIdWLMtwICMavD+PqV9yW24nheBsrpkEkJcXVdPa2wkSDiHRIGU7/abV4/RfCjkjXBhLoGScq6EWn8PPhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751022271; c=relaxed/simple;
-	bh=fjH0JhH6D7x/OD2TdOZ50ouYuHiuH5jEFF3eIdj3weA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qMZN+TN0vY3Z8Hjk1UHZ9UQ6u4Qys63YExRaoKzyzF0lxgdEV4zznyntTZBAxyPs6mA+Lnj4N7i6M1YI1/6fplJRzlb7D3ZvKIw6YbBsHjUVJcCTldmpJb4gefuFL6wDjiZq2AM3psC2xCCh45VIp6tyPgpJ+myVXO1SFs0O/a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QaLdDQQX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751022297; c=relaxed/simple;
+	bh=UXA/DCfJJfynwzqK4+DzTCalL4EQVESHifFAflGK+pI=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=WXkBTopR2j7qol2ee9k9p/P29BG1ISZeyND0QtSbGeVCxaTiHAjLAE3qqxfSr2/f8mypFNo08W2x/ilQY77+MlJQXPpD4tTIjyo5auyIAWG9H5rhkrGI/3tunX9D0r7iQiUVvD166FMtsRGucPOj0rOEyuxrnaVNnYhfRiTLUq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=adl5nFO0; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QaLdDQQX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751022268;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gpNlNCAbYqrGZEBTx3NoAjbHoc60DnHuxuxn14zXNOc=;
-	b=QaLdDQQXC+vfjbJeWlcqsUl8dTRMdHpYVdKLfvCttysV13dQ4r26LVJYZVi45i94vi51bg
-	AfMOY+BcDaC/ubLnbdU+spQPpXs6VXW+40O0FrXTRSAcucRE4xjUgZBwdJpjYeFRjiFcZp
-	zfnPSGBMNZP67ps+7wBSXqWR1zmqN7U=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-64-NRJ_f5qoOhOeG1mpRRY4XA-1; Fri,
- 27 Jun 2025 07:04:24 -0400
-X-MC-Unique: NRJ_f5qoOhOeG1mpRRY4XA-1
-X-Mimecast-MFC-AGG-ID: NRJ_f5qoOhOeG1mpRRY4XA_1751022263
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F0DD618DA5C0;
-	Fri, 27 Jun 2025 11:04:21 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.105])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 683E830001BC;
-	Fri, 27 Jun 2025 11:04:10 +0000 (UTC)
-Date: Fri, 27 Jun 2025 19:04:01 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: josef@toxicpanda.com, axboe@kernel.dk, hch@infradead.org,
-	nilay@linux.ibm.com, hare@suse.de, linux-block@vger.kernel.org,
-	nbd@other.debian.org, linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: Re: [PATCH] nbd: fix false lockdep deadlock warning
-Message-ID: <aF56oVEzTygIOUTN@fedora>
-References: <20250627092348.1527323-1-yukuai1@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adl5nFO0"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-45377776935so21744805e9.3;
+        Fri, 27 Jun 2025 04:04:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751022294; x=1751627094; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LrT0rtgl/4Y4s9eIDFIiuoNzQHixBqPthpAEA+N878k=;
+        b=adl5nFO0HlC/5wl87HV7yLr6iDR6xPfbEfyRZYb5BAxxws+Rk+w+vy/MBftNJ3Qpcg
+         2xLr36FgaAtnbIs8cq30KjwsenHsRYOt7Escopyyv1nKp2Xdv823J74kKnszEJ0VG3et
+         fTjJciXqQLlOwAdVVBFKSMBQ5pDwIkVsUwc2bZXjR7zA/SR6J7nSVNQtZiMejqQ3pCdn
+         mZlp8QO1e+zQ719YLVScEs3IOSZRmp1JcY3mS0oryoifM2AETHTpe9MKuJbKo2m37F2/
+         c5h9DxZ42ltFpJ/nGFe95Eit+DKgdg3vvKeSwRp2IWMaqTjXc6W982CT25Nxmy3f3iDA
+         PL/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751022294; x=1751627094;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LrT0rtgl/4Y4s9eIDFIiuoNzQHixBqPthpAEA+N878k=;
+        b=mbVkx1P6jfS7ib+VuyLsHItATPNRRt4v1ci2LO9zZs/KAIbe95pV+Dq0JlzygxR3Nx
+         jvP4/VpS7NNceA4dOHhMkk/xDZV5/fYPOg1Y9chE7SeMZc7L1cbmF2WQD4fOdQUq4E6K
+         HOzALk7CqakaYVkHB2HPASHvq6KcSABdIbbViy3UU4wND4qWSTSl2QrcLFLB8iqjM654
+         y5/Kc4NcdnfozfN5DOHXHguHx/h08B1KW3iUI1z88ZAFCvCwnDQinN2gwC05gRqvwgVG
+         qWAg0wfcuuUnBtxeNR84hop6LutsGOq6OPc9oCTQHwXDf0d5MD4eaLqJ3Vdlmkr//O+T
+         8b5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVuTWBifClmhljj/W6FV7o1AZXW/GhXvr7JZO9Bw7zznes9aeDdcHoS4jAwkgpQWrrTYeJhFWiYOoaiMX4=@vger.kernel.org, AJvYcCX/QKoSiec+jIe0jlk5KFk7bjEB8Z45fA7lVS4jP6pGZYOK/SDiaCNAP2YTbkh6QsQcD9VhEbnC@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywps3iUgwWrgqXbY/xaQ6G4qcuREj6nuA0UOn8uTX0fEZOYaifu
+	4EhEX4gnDiLlh6vBm8zpubFJyi9nHnxWOBctxnlGkFsef9uEHwznWD3b
+X-Gm-Gg: ASbGncvhObV9qsieUoa/kesnRODgBUf8xYnhdg4vu67QmmHn4QoEd55+ixLmlZHvpaD
+	meVMLmUXtlJp6deJqVjlT4BTv7SbK3e57WJckX+tZ7+JDyuyzQ3wCVYdg24eqkIxBMtNyGnUl+W
+	C5O/Kb8HP4cMaiiGrQ1l10L3C0CNBzeCub4OHat/nw1UgHZgU8ur4zJLG4tJ94Mf+PmWYBhTUNB
+	Y4T+cYgpF/fdPwgM7KIJGTR6cCBS+6sG081jNpWwhy/C2Jr0066UgW+PWiV3zDgZHnt5u4fRz/M
+	5fXe4qMld62zbfPcTXwZqR/0UrZh2kd8e4V2R2MxDxcgEF/zw173F6hYGARvyh9lUoW9c+SJug=
+	=
+X-Google-Smtp-Source: AGHT+IFux+ewCwtnJcEJvrjwqlskPEmkgrl1E+OU03sLHBdk11oKlm1P+t6SRfzMLWPuNppfl0p/OQ==
+X-Received: by 2002:a05:600c:c163:b0:443:48:66d2 with SMTP id 5b1f17b1804b1-4538ee7db55mr33679085e9.16.1751022293718;
+        Fri, 27 Jun 2025 04:04:53 -0700 (PDT)
+Received: from imac ([2a02:8010:60a0:0:40b8:18e0:8ac6:da0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a390d05sm48152745e9.2.2025.06.27.04.04.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 04:04:53 -0700 (PDT)
+From: Donald Hunter <donald.hunter@gmail.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  Jonathan Corbet
+ <corbet@lwn.net>,  "Akira Yokosawa" <akiyks@gmail.com>,  "Breno Leitao"
+ <leitao@debian.org>,  "David S. Miller" <davem@davemloft.net>,  "Eric
+ Dumazet" <edumazet@google.com>,  "Ignacio Encinas Rubio"
+ <ignacio@iencinas.com>,  "Jan Stancek" <jstancek@redhat.com>,  "Marco
+ Elver" <elver@google.com>,  "Paolo Abeni" <pabeni@redhat.com>,  "Randy
+ Dunlap" <rdunlap@infradead.org>,  "Ruben Wauters" <rubenru09@aol.com>,
+  "Shuah Khan" <skhan@linuxfoundation.org>,  joel@joelfernandes.org,
+  linux-kernel-mentees@lists.linux.dev,  linux-kernel@vger.kernel.org,
+  lkmm@lists.linux.dev,  netdev@vger.kernel.org,  peterz@infradead.org,
+  stern@rowland.harvard.edu
+Subject: Re: [PATCH v8 05/13] docs: sphinx: add a parser for yaml files for
+ Netlink specs
+In-Reply-To: <8373667e90bf5b184dfd28393fe6a955cdb4bbb7.1750925410.git.mchehab+huawei@kernel.org>
+Date: Fri, 27 Jun 2025 11:25:54 +0100
+Message-ID: <m21pr5a3bh.fsf@gmail.com>
+References: <cover.1750925410.git.mchehab+huawei@kernel.org>
+	<8373667e90bf5b184dfd28393fe6a955cdb4bbb7.1750925410.git.mchehab+huawei@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627092348.1527323-1-yukuai1@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain
 
-On Fri, Jun 27, 2025 at 05:23:48PM +0800, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> The deadlock is reported because there are circular dependency:
-> 
-> t1: disk->open_mutex -> nbd->config_lock
-> 
->  blkdev_release
->   bdev_release
->    //lock disk->open_mutex)
->    blkdev_put_whole
->     nbd_release
->      nbd_config_put
->         refcount_dec_and_mutex_lock
->         //lock nbd->config_lock
-> 
-> t2: nbd->config_lock -> set->update_nr_hwq_lock
-> 
->  nbd_genl_connect
->   //lock nbd->config_lock
->   nbd_start_device
->    blk_mq_update_nr_hw_queues
->    //lock set->update_nr_hwq_lock
-> 
-> t3: set->update_nr_hwq_lock -> disk->open_mutex
-> 
->  nbd_dev_remove_work
->   nbd_dev_remove
->    del_gendisk
->     down_read(&set->update_nr_hwq_lock);
->     __del_gendisk
->     mutex_lock(&disk->open_mutex);
-> 
-> This is false warning because t1 and t2 should be synchronized by
-> nbd->refs, and t1 is still holding the reference while t2 is triggered
-> when the reference is decreased to 0. However the lock order is broken.
-> 
-> Fix the problem by breaking the dependency from t2, by calling
-> blk_mq_update_nr_hw_queues() outside of nbd internal config_lock, since
-> now other context can concurrent with nbd_start_device(), also make sure
-> they will still return -EBUSY, the difference is that they will not wait
-> for nbd_start_device() to be done.
-> 
-> Fixes: 98e68f67020c ("block: prevent adding/deleting disk during updating nr_hw_queues")
-> Reported-by: syzbot+2bcecf3c38cb3e8fdc8d@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/all/6855034f.a00a0220.137b3.0031.GAE@google.com/
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+
+> Add a simple sphinx.Parser to handle yaml files and add the
+> the code to handle Netlink specs. All other yaml files are
+> ignored.
+>
+> The code was written in a way that parsing yaml for different
+> subsystems and even for different parts of Netlink are easy.
+>
+> All it takes to have a different parser is to add an
+> import line similar to:
+>
+> 	from netlink_yml_parser import YnlDocGenerator
+
+This should be: from doc_generator import YnlDocGenerator
+
+> adding the corresponding parser somewhere at the extension:
+>
+> 	netlink_parser = YnlDocGenerator()
+>
+> And then add a logic inside parse() to handle different
+> doc outputs, depending on the file location, similar to:
+>
+>         if "/netlink/specs/" in fname:
+>             msg = self.netlink_parser.parse_yaml_file(fname)
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  drivers/block/nbd.c | 28 ++++++++++++++++++++++------
->  1 file changed, 22 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-> index 7bdc7eb808ea..d43e8e73aeb3 100644
-> --- a/drivers/block/nbd.c
-> +++ b/drivers/block/nbd.c
-> @@ -1457,10 +1457,13 @@ static void nbd_config_put(struct nbd_device *nbd)
->  	}
->  }
->  
-> -static int nbd_start_device(struct nbd_device *nbd)
-> +static int nbd_start_device(struct nbd_device *nbd, bool netlink)
-> +	__releases(&nbd->config_lock)
-> +	__acquires(&nbd->config_lock)
->  {
->  	struct nbd_config *config = nbd->config;
->  	int num_connections = config->num_connections;
-> +	struct task_struct *old;
->  	int error = 0, i;
->  
->  	if (nbd->pid)
-> @@ -1473,8 +1476,21 @@ static int nbd_start_device(struct nbd_device *nbd)
->  		return -EINVAL;
->  	}
->  
-> -	blk_mq_update_nr_hw_queues(&nbd->tag_set, config->num_connections);
-> +	/*
-> +	 * synchronize with concurrent nbd_start_device() and
-> +	 * nbd_add_socket()
-> +	 */
->  	nbd->pid = task_pid_nr(current);
-> +	if (!netlink) {
-> +		old = nbd->task_setup;
-> +		nbd->task_setup = current;
-> +	}
+>  Documentation/sphinx/parser_yaml.py | 104 ++++++++++++++++++++++++++++
+>  1 file changed, 104 insertions(+)
+>  create mode 100755 Documentation/sphinx/parser_yaml.py
+>
+> diff --git a/Documentation/sphinx/parser_yaml.py b/Documentation/sphinx/parser_yaml.py
+> new file mode 100755
+> index 000000000000..585a7ec81ba0
+> --- /dev/null
+> +++ b/Documentation/sphinx/parser_yaml.py
+> @@ -0,0 +1,104 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright 2025 Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > +
-> +	mutex_unlock(&nbd->config_lock);
-> +	blk_mq_update_nr_hw_queues(&nbd->tag_set, config->num_connections);
-> +	mutex_lock(&nbd->config_lock);
-> +	if (!netlink)
-> +		nbd->task_setup = old;
+> +"""
+> +Sphinx extension for processing YAML files
+> +"""
+> +
+> +import os
+> +import re
+> +import sys
+> +
+> +from pprint import pformat
+> +
+> +from docutils.parsers.rst import Parser as RSTParser
+> +from docutils.statemachine import ViewList
+> +
+> +from sphinx.util import logging
+> +from sphinx.parsers import Parser
+> +
+> +srctree = os.path.abspath(os.environ["srctree"])
+> +sys.path.insert(0, os.path.join(srctree, "tools/net/ynl/pyynl"))
 
-I guess the patch in the following link may be simper, both two take
-similar approach:
+So that it doesn't need to be changed in a later patch, this should be:
 
-https://lore.kernel.org/linux-block/aFjbavzLAFO0Q7n1@fedora/
+... "tools/net/ynl/pyynl/lib"
 
+> +
+> +from netlink_yml_parser import YnlDocGenerator        # pylint: disable=C0413
 
-thanks,
-Ming
+So that it doesn't need to be changed in a later patch, this should be:
 
+from doc_generator ...
+
+> +logger = logging.getLogger(__name__)
+> +
+> +class YamlParser(Parser):
+> +    """
+> +    Kernel parser for YAML files.
+> +
+> +    This is a simple sphinx.Parser to handle yaml files inside the
+> +    Kernel tree that will be part of the built documentation.
+> +
+> +    The actual parser function is not contained here: the code was
+> +    written in a way that parsing yaml for different subsystems
+> +    can be done from a single dispatcher.
+> +
+> +    All it takes to have parse YAML patches is to have an import line:
+> +
+> +            from some_parser_code import NewYamlGenerator
+> +
+> +    To this module. Then add an instance of the parser with:
+> +
+> +            new_parser = NewYamlGenerator()
+> +
+> +    and add a logic inside parse() to handle it based on the path,
+> +    like this:
+> +
+> +            if "/foo" in fname:
+> +                msg = self.new_parser.parse_yaml_file(fname)
+> +    """
+> +
+> +    supported = ('yaml', )
+> +
+> +    netlink_parser = YnlDocGenerator()
+> +
+> +    def rst_parse(self, inputstring, document, msg):
+> +        """
+> +        Receives a ReST content that was previously converted by the
+> +        YAML parser, adding it to the document tree.
+> +        """
+> +
+> +        self.setup_parse(inputstring, document)
+> +
+> +        result = ViewList()
+> +
+> +        try:
+> +            # Parse message with RSTParser
+> +            for i, line in enumerate(msg.split('\n')):
+> +                result.append(line, document.current_source, i)
+> +
+> +            rst_parser = RSTParser()
+> +            rst_parser.parse('\n'.join(result), document)
+> +
+> +        except Exception as e:
+> +            document.reporter.error("YAML parsing error: %s" % pformat(e))
+> +
+> +        self.finish_parse()
+> +
+> +    # Overrides docutils.parsers.Parser. See sphinx.parsers.RSTParser
+> +    def parse(self, inputstring, document):
+> +        """Check if a YAML is meant to be parsed."""
+> +
+> +        fname = document.current_source
+> +
+> +        # Handle netlink yaml specs
+> +        if "/netlink/specs/" in fname:
+> +            msg = self.netlink_parser.parse_yaml_file(fname)
+> +            self.rst_parse(inputstring, document, msg)
+> +
+> +        # All other yaml files are ignored
+> +
+> +def setup(app):
+> +    """Setup function for the Sphinx extension."""
+> +
+> +    # Add YAML parser
+> +    app.add_source_parser(YamlParser)
+> +    app.add_source_suffix('.yaml', 'yaml')
+> +
+> +    return {
+> +        'version': '1.0',
+> +        'parallel_read_safe': True,
+> +        'parallel_write_safe': True,
+> +    }
