@@ -1,44 +1,82 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D4A264A83
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA7229898C;
+	Fri, 27 Jun 2025 10:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751020313; cv=none; b=jBhtyvs1WLG2HVYDNIvUZMUmtAR6iFDobmr2JlYNjr/oAuEpUaMTUlN9qUJXZ5Y+uzmXo2hjx7HETDFqqd18TRVeRAtjsUpP/3mriXlmMV127q8Vj/GErZjhFe2LRIFw17oLhKvAUFA9x7joH+65QGgyBoo8kEoVjw3z9/sphu8=
+	t=1751020319; cv=none; b=DYngL48tXCRkYxZemVyrkNgkSfVop4UyspkWamz5qE5ZBDa9VV8qHzrsLA8OlCAQjiZf9JFL4WBg4GGyfD1JIDaVOFKWBvkphbFs8Uga+61kC6w9dqafm/dfEI97n8C2zMSY4RnLIppb37UfJAemXRbcdb0+01Bz4Te+vutuyVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751020313; c=relaxed/simple;
-	bh=UNpZ3FeVZSvkZA9sSSV65o6uo4BPpcch9WQyiYk8qns=;
+	s=arc-20240116; t=1751020319; c=relaxed/simple;
+	bh=W2Bg30qV1ZfFbZr7Wq/g5PCtFv368PERSSRJrjS6UTk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PZu144Mg0rE+qn9jLDPUkVAUUiBAFlbOKRhMlABD5c+0RvKacL4zLrGZvJ3KmZoyRRNuC6e2qCdaF73/0efpfJz06PDX9Atpr8uvCQYkhTSiQ8Zf6/AZso7kSGDsqpx1f3y0qiRyIMVcoLSaGCTfKkFVbHxNkRD0jS9OdViDdd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=ehkXgSfD; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fJOVQyNPMyA3tCzTlmOelOkrqEIGEiPX//6o8o+cjr60U5P3syfaZXv9sAnV7LrlDuKY59JMvHA97VD0kI4POy4uNVatE5n2yeWTmrKcLkEfg13Ok3BbVfjh2DEVqvXgDxHgZxITs0pIb5Pycda7i6DuHuoY8zG/OlGeg7ZFbvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XBn6+XQ0; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ehkXgSfD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=Pdto
-	B2fLiH/LE1HGtoWY8dhCiyMSGf1v1rk5ANx6UNI=; b=ehkXgSfDFbX/XztMuoLY
-	DZ+8o4l/H02gt+DX7n3Jl79ucniJUM/zn0R4twBf0u4flV7sJQoWdqhEVGIn6pBZ
-	FmzRJDqKY49W5Ekg6j+hp9j7X8tjQtRPA9M9H+JNeGP0qLPhxrTYrQMo1ODZPYD8
-	of2hjTMS48NyryQjfV08k+vwrYALpCmrELjC5fzvLETGNoUbJx2yOPSnRCreY+FS
-	IOpUnwuKy9X4pASX7a8+Z362jX7d5FnnTeT1IJAYtxVH1hQOUdS8SzJwrV4kYlHt
-	LK61ShKKF5avS5zkEhz9a/fxVRZk/pc4UMUSCU/z7M+jvyuFnd3+jhoC+wp6Wyte
-	oQ==
-Received: (qmail 1426905 invoked from network); 27 Jun 2025 12:31:48 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 27 Jun 2025 12:31:48 +0200
-X-UD-Smtp-Session: l3s3148p1@LvVvL4s4KJMgAwDPXzuUAOCQSK0rM+sw
-Date: Fri, 27 Jun 2025 12:31:47 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] drivers: i2c: Geode ACCESS.bus depends on HAS_IOPORT
-Message-ID: <aF5zE6PC5SO0nacS@shikoro>
-References: <20250606075651.10883-2-johannes@sipsolutions.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XBn6+XQ0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751020318; x=1782556318;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=W2Bg30qV1ZfFbZr7Wq/g5PCtFv368PERSSRJrjS6UTk=;
+  b=XBn6+XQ0we69PWQLYggoBPGIO1Ag0H3WPj0ge3oMoSb0lzJxI1iHgrvj
+   4K4Xt7dkENbAanSJNIwIFJolGqk3u6J7SDchxy51+G62l0S6YYveigFO5
+   itOXZGlpJz5jYAg1QaQBdEKWNeZ5tj+Pgsp3Z/RTKwpa0/CNThAHLnJEG
+   OuboCkRArHZkeX1NlCxP2weoVmV2dCZPnMKDSUfnxZ685U+EgB3IrQ7x4
+   5GDn6ZlLf25LynS40IjRX+J2eVHwDR1i8PVNza6vsj/w0EM47gAJWu4lo
+   fFIZjpLSvqHjxBk73wr/tKTd0cMYxMFYJOIVkCXHEO+zUi5muvGAo32eN
+   A==;
+X-CSE-ConnectionGUID: 7pX/i8XGRnqSTNQKMf5a3Q==
+X-CSE-MsgGUID: 0/hFG1OnT7yo2QCEgERjxQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53273433"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="53273433"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:31:57 -0700
+X-CSE-ConnectionGUID: mSOf9phKQ8mXRoDpmTh3ng==
+X-CSE-MsgGUID: j0xk4bnTShW880YXbbD4CA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="156817812"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa003.fm.intel.com with ESMTP; 27 Jun 2025 03:31:46 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id A0FEA6A; Fri, 27 Jun 2025 13:31:44 +0300 (EEST)
+Date: Fri, 27 Jun 2025 13:31:44 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Xin Li <xin@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
+	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
+	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
+	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
+	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
+	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
+	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-mm@kvack.org
+Subject: Re: [PATCHv7 13/16] x86/traps: Handle LASS thrown #SS
+Message-ID: <lvutnc4et6r4a5eayoweb5butpspvop2m2pjioiudjwa3mkpo7@drcsdchj66w5>
+References: <20250625125112.3943745-1-kirill.shutemov@linux.intel.com>
+ <20250625125112.3943745-15-kirill.shutemov@linux.intel.com>
+ <c704ea9a-8c73-46c2-80d1-f7b93a221908@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,20 +85,108 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250606075651.10883-2-johannes@sipsolutions.net>
+In-Reply-To: <c704ea9a-8c73-46c2-80d1-f7b93a221908@zytor.com>
 
-On Fri, Jun 06, 2025 at 09:56:52AM +0200, Johannes Berg wrote:
-> From: Johannes Berg <johannes.berg@intel.com>
+On Thu, Jun 26, 2025 at 10:57:47AM -0700, Xin Li wrote:
+> On 6/25/2025 5:51 AM, Kirill A. Shutemov wrote:
+> > LASS throws a #GP for any violations except for stack register accesses,
+> > in which case it throws a #SS instead. Handle this similarly to how other
+> > LASS violations are handled.
+> > 
+> > In case of FRED, before handling #SS as LASS violation, kernel has to
+> > check if there's a fixup for the exception. It can address #SS due to
+> > invalid user context on ERETU[1]. See 5105e7687ad3 ("x86/fred: Fixup
 > 
-> It already depends on X86_32, but that's also set for ARCH=um.
-> Recent changes made UML no longer have IO port access since
-> it's not needed, but this driver uses it. Build it only for
-> HAS_IOPORT. This is pretty much the same as depending on X86,
-> but on the off-chance that HAS_IOPORT will ever be optional
-> on x86 HAS_IOPORT is the real prerequisite.
+> Forgot to put the link to [1]?  Maybe just remove "[1]"?
+
+I will add the link. It is important context.
+
+> > fault on ERETU by jumping to fred_entrypoint_user") for more details.
+> > 
+> > Co-developed-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > ---
+> >   arch/x86/kernel/traps.c | 39 +++++++++++++++++++++++++++++++++------
+> >   1 file changed, 33 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> > index e2ad760b17ea..f1f92e1ba524 100644
+> > --- a/arch/x86/kernel/traps.c
+> > +++ b/arch/x86/kernel/traps.c
+> > @@ -418,12 +418,6 @@ DEFINE_IDTENTRY_ERRORCODE(exc_segment_not_present)
+> >   		      SIGBUS, 0, NULL);
+> >   }
+> > -DEFINE_IDTENTRY_ERRORCODE(exc_stack_segment)
+> > -{
+> > -	do_error_trap(regs, error_code, "stack segment", X86_TRAP_SS, SIGBUS,
+> > -		      0, NULL);
+> > -}
+> > -
+> >   DEFINE_IDTENTRY_ERRORCODE(exc_alignment_check)
+> >   {
+> >   	char *str = "alignment check";
+> > @@ -866,6 +860,39 @@ DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
+> >   	cond_local_irq_disable(regs);
+> >   }
+> > +#define SSFSTR "stack segment fault"
+> > +
+> > +DEFINE_IDTENTRY_ERRORCODE(exc_stack_segment)
+> > +{
+> > +	if (user_mode(regs))
+> > +		goto error_trap;
+> > +
+> > +	if (cpu_feature_enabled(X86_FEATURE_FRED) &&
+> > +	    fixup_exception(regs, X86_TRAP_SS, error_code, 0))
+> > +		return;
+> > +
 > 
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+> Thanks for making the change for FRED.
+> 
+> > +	if (cpu_feature_enabled(X86_FEATURE_LASS)) {
+> > +		enum kernel_gp_hint hint;
+> > +		unsigned long gp_addr;
+> > +
+> > +		hint = get_kernel_gp_address(regs, &gp_addr);
+> > +		if (hint != GP_NO_HINT) {
+> > +			printk(SSFSTR ", %s 0x%lx", kernel_gp_hint_help[hint],
+> > +			       gp_addr);
+> > +		}
+> > +
+> > +		if (hint != GP_NON_CANONICAL)
+> > +			gp_addr = 0;
+> 
+> Nit: GP/gp don't seem fit here, maybe we need a more generic name?
+> 
+> Sorry I don't have a recommendation.
 
-Applied to for-current, thanks!
+Naming is hard.
 
+Maybe get_kernel_exc_address()/kernel_exc_hint_help/EXC_NO_HINT/... ?
+
+> > +
+> > +		die_addr(SSFSTR, regs, error_code, gp_addr);
+> > +		return;
+> > +	}
+> > +
+> > +error_trap:
+> > +	do_error_trap(regs, error_code, "stack segment", X86_TRAP_SS, SIGBUS,
+> > +		0, NULL);
+> 
+> The indentation has changed; I believe the original formatting is
+> preferable.
+> 
+> > +}
+> > +
+> >   static bool do_int3(struct pt_regs *regs)
+> >   {
+> >   	int res;
+> 
+> Just minor comments, so
+> 
+> Reviewed-by: Xin Li (Intel) <xin@zytor.com>
+
+Thanks.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
