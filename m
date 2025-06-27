@@ -1,159 +1,93 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from e3i282.smtp2go.com (e3i282.smtp2go.com [158.120.85.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9F92ECEAE;
-	Fri, 27 Jun 2025 20:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FC12ECD1F
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:51:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.85.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751057507; cv=none; b=GjW7G8mvaW9ZlOc6Ey93rr5D5qj6GxwgcNu5kcBNItLNM+lvo0DGr5D761GnhSGvym2WPcyhMlm4R1kb29HqXKDB0JWjdhqw99UZy7IXa9XnK99Cbe34xtukali1tJOJ/etXWhBWBhMORg/W2Z0KXOc9Sn8PhZ5kUGUYR7X9fT0=
+	t=1751057522; cv=none; b=C7I/7tKZhVuwVX42cyT4Lb5mEBsA0WM9CCCL4kQKEyFyAIikW8Q6gb7RAjbUiDM4pDR9PoD5lX3M9rtsCnfgwCQzxygTe68MXmc9Ac5jaIMOykxZ1R6htBzaQEchHLWRS1+eYig+GXPNRh3H2hXnzk8G/knm9uvtrhc/5pkq8lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751057507; c=relaxed/simple;
-	bh=KjMUJVcwN4e2wA+enjyaCPLTrfrzx9wCh24MNovogHo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SxDTG4w/1tF4wOOqnTVa5dVAwanYqRLZXE9zULiIB3ZwlOa07nc0ITIK9caJABRAkfbDgLvDVRo+yeO7j65hemBSAw9tyvrOphBsn3S1H3Fe9czdykQ4k4nN+HTcCWu1NjrHZ+Mky7THoZJvALYt3usmcLe1snToDseErLDtIFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=YynT5htg; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1751057522; c=relaxed/simple;
+	bh=hnIQiztxMqZWdOo1P+htuYxmTRJegAPaInqW5mKJO1o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GkAm/ODqXhpXycOIewewsR9lve/eVao15SPBlpaJJUGglEwEdMt80Etkoq+bG/16mYzJGhGLLaIs8AzxRM9hTjfAPd3l1kteb8kylLtpmsnZU8ooHPxd5qIrMwIvUz2lLvWV/IZYAucOguYEndxukh2/OfJD7NIYSSLNk7Cme6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev; spf=pass smtp.mailfrom=em1255854.medip.dev; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=av4kSKYL; dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b=Ly+Zqvtq; arc=none smtp.client-ip=158.120.85.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1255854.medip.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="YynT5htg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1751057495; x=1751662295; i=w_armin@gmx.de;
-	bh=GkpwTbp/au2bsPcIPtH+WBjZffEsEK9oTVTyL1IPBHU=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=YynT5htgPE8317tuZqKFJNC1uaxZKWER/cdAeUgZ3y1npGClsJ8KesPFgDmx2a9R
-	 bIsA8eZADQ/UC99038GgF5OHUISl2ghtOYtM+lI4Ud+ZwcFkE3JN0UcU1nBr1v8O6
-	 A/yDgNNhSxxq1q6RkgCwlUXGlxFegVk2oW4X+gHdYYxJc29ikjQWYwbpQyRrEi1rl
-	 IgTqg4UJY8w/UpZq/80FZQROj8iOQNFOtGhbc6eLDgbk60cJSowJhTv6mGYIdSqfA
-	 O1z1CwVsbu8KcR5VOnwSGBzgykuUrB6KoL1aWgo/ZkSvitcqfg12Pg0Em+pMel0oS
-	 OHomx5rWpPmi+rm2IA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1McYCl-1v11Yp1RoD-00b5Xd; Fri, 27 Jun 2025 22:51:34 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: sre@kernel.org,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: linux-pm@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] platform/x86: dell-ddv: Fix taking the psy->extensions_sem lock twice
-Date: Fri, 27 Jun 2025 22:51:24 +0200
-Message-Id: <20250627205124.250433-3-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250627205124.250433-1-W_Armin@gmx.de>
-References: <20250627205124.250433-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="av4kSKYL";
+	dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b="Ly+Zqvtq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpservice.net;
+ i=@smtpservice.net; q=dns/txt; s=a1-4; t=1751056609; h=feedback-id :
+ x-smtpcorp-track : date : message-id : to : subject : from : reply-to
+ : sender : list-unsubscribe : list-unsubscribe-post;
+ bh=TqdWV7/vA1rvF4B46py+BIoi1Rg8y4mycuMpMH6ZDBQ=;
+ b=av4kSKYLDByvQKFQewI0AeGRQpE6TT14Rq5yCQFv4TWsXzWEsYGmLRMBKtZrdqq+sMGnw
+ n/auzkCIDFCoZ9/ij8jENxRfo23x9Ig+j3y1QYzIwtBPoQ2quxdOM6iPvUrjdMlRdVmHu0c
+ h+GgDJLXt/NF0a7WPdKnpR7k+WDfVL/DSGRLvKZ31TfFhewvWlxTfmlafxdMD+ZN5RHHT0H
+ u3dweNETCHu+2BMFXkTmYdBYAR47l1S0PttPcvQmty6bgQ9K4arLwVcmjnbqXAlqkrvaqYM
+ GOJeQ8Zcl9zYI7PyYTdfDPXhVV5xMYyzFXiEhnYULm1npdsuD9JZfhORU2yg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=medip.dev;
+ i=@medip.dev; q=dns/txt; s=s1255854; t=1751056609; h=from : subject :
+ to : message-id : date;
+ bh=TqdWV7/vA1rvF4B46py+BIoi1Rg8y4mycuMpMH6ZDBQ=;
+ b=Ly+ZqvtqFPf8NbXHLWbg+++xHg3waNOtJWTSkUTj73ev2ALh1+ispds0Q/DV6fgFHlMNZ
+ 6Q++LHGodnUuyPTZ2aO1XRe34/9isRyKhtTeY5Gjc69WwBQPadbc+lrBGGRrUbWlsDOoxXU
+ eAsgWK9g/GcHz8m5hf93w81yBTom8hukDiVYqRS0woXOby2fa6JxDNYfEcw7fW46iNGwcG3
+ bhTembhvviKpxEillyvXrHws+omWleXDc5qDnpDSBH9TZnQAP/gaOxiB5R7ienZDwsGPMb0
+ ph+tNtopb+m/l52lXir5id1REt8yVLRZdKhTmkzahTNpLrX17RLfIrherKJA==
+Received: from [10.152.250.198] (helo=vilez)
+	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1-S2G)
+	(envelope-from <edip@medip.dev>)
+	id 1uVFoO-FnQW0hPsXUs-39tC;
+	Fri, 27 Jun 2025 20:36:41 +0000
+From: edip@medip.dev
+To: perex@perex.cz,
+	tiwai@suse.com
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Edip Hazuri <edip@medip.dev>,
+	stable@vger.kernel.org
+Subject: [PATCH] ALSA: hda/realtek - Add mute LED support for HP Victus 15-fb2xxx
+Date: Fri, 27 Jun 2025 23:34:16 +0300
+Message-ID: <20250627203415.56785-2-edip@medip.dev>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:YYtU0Gp+p1hgigDy++sgnL5bdPxmPbN//p722amhc01dQ8hd5ga
- uWqaFi6LPNR776+onfaQO9a0XrmZnvrlSVf0HYlUlRhlmjxmRv1cIpYefSCtRJJxIJhJrCv
- ZULJSO2Em2SlRsw4j9HnrkVFDb8NIQs7H22ciIH3syKX809AM88ZmIMeCh5tzQ4P9iSGxd9
- 2G6KTpibnYt6kUzcxWA8Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:RKO+pJ/AOfA=;YcLW8S4YG7rts4WQSj+gFOJp8Zp
- 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
- /g==
+Content-Transfer-Encoding: 8bit
+X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
+Feedback-ID: 1255854m:1255854ay30w_v:1255854sS8hnAP156
+X-smtpcorp-track: UnwhM9mHtMbX.i6ZMZODIbA4Z.-5GMkAxhpj1
 
-Calling power_supply_get_property() inside
-dell_wmi_ddv_battery_translate() can cause a deadlock since this
-function is also being called from the power supply extension code,
-in which case psy->extensions_sem is already being held.
+From: Edip Hazuri <edip@medip.dev>
 
-Fix this by using the new power_supply_get_property_direct() function
-to ignore any power supply extensions when retrieving the battery
-serial number.
+The mute led on this laptop is using ALC245 but requires a quirk to work
+This patch enables the existing quirk for the device.
 
-Tested on a Dell Inspiron 3505.
+Tested on my friend's Victus 15-fb2xxx Laptop. The LED behaviour works as intended.
 
-Reported-by: Hans de Goede <hansg@kernel.org>
-Fixes: 058de163a376 ("platform/x86: dell-ddv: Implement the battery matchi=
-ng algorithm")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/dell/dell-wmi-ddv.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Edip Hazuri <edip@medip.dev>
+---
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x=
-86/dell/dell-wmi-ddv.c
-index 67f3d7158403..62e3d060f038 100644
-=2D-- a/drivers/platform/x86/dell/dell-wmi-ddv.c
-+++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
-@@ -689,9 +689,13 @@ static int dell_wmi_ddv_battery_translate(struct dell=
-_wmi_ddv_data *data,
-=20
- 	dev_dbg(&data->wdev->dev, "Translation cache miss\n");
-=20
--	/* Perform a translation between a ACPI battery and a battery index */
--
--	ret =3D power_supply_get_property(battery, POWER_SUPPLY_PROP_SERIAL_NUMB=
-ER, &val);
-+	/*
-+	 * Perform a translation between a ACPI battery and a battery index.
-+	 * We have to use power_supply_get_property_direct() here because this
-+	 * function will also get called from the callbacks of the power supply
-+	 * extension.
-+	 */
-+	ret =3D power_supply_get_property_direct(battery, POWER_SUPPLY_PROP_SERI=
-AL_NUMBER, &val);
- 	if (ret < 0)
- 		return ret;
-=20
-=2D-=20
-2.39.5
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 5d6d01ecf..a33e8a654 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -10881,6 +10881,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x8ce0, "HP SnowWhite", ALC287_FIXUP_CS35L41_I2C_2_HP_GPIO_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x8cf5, "HP ZBook Studio 16", ALC245_FIXUP_CS35L41_SPI_4_HP_GPIO_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x8d01, "HP ZBook Power 14 G12", ALC285_FIXUP_HP_GPIO_LED),
++	SND_PCI_QUIRK(0x103c, 0x8d07, "HP Victus 15-fb2xxx (MB 8D07)", ALC245_FIXUP_HP_MUTE_LED_COEFBIT),
+ 	SND_PCI_QUIRK(0x103c, 0x8d18, "HP EliteStudio 8 AIO", ALC274_FIXUP_HP_AIO_BIND_DACS),
+ 	SND_PCI_QUIRK(0x103c, 0x8d84, "HP EliteBook X G1i", ALC285_FIXUP_HP_GPIO_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x8d85, "HP EliteBook 14 G12", ALC285_FIXUP_HP_GPIO_LED),
+-- 
+2.50.0
 
