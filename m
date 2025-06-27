@@ -1,119 +1,161 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C0F2980BF
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73539339A8;
+	Fri, 27 Jun 2025 10:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751021557; cv=none; b=kdUBBCCClNtvfxlnAhQbqcx4eeF5konKh1iTvESBH0K9e3n0iNkA76SrcJAgPE8CB+Gq2apaQyXo6p4es/uHDpfIw2khEQQ4XhBZeFXHqo0yfQpdlFOzs3tI8f/WmnuQ8AeWI5K+/yPC86RvWjULlbz1zK4xLD459OHoEGHdnxc=
+	t=1751021585; cv=none; b=nli1R21PfGL8yu9I2kPQjuYusuf1vHlqc3seir8jwuM63aPIEGUejkpttmPy3jTBlRW+hKJzLD47v5VKMBhXTmSuFhTMVG1odiKpfMLRLKSZ0L0/ZBJ+lx9KoYiEY0p/WyOYDut8ewnYo5y/HFu6xP5UJtYH9a1tMsN9m6pAwgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751021557; c=relaxed/simple;
-	bh=mPOghuxsj47lwq8oIa4sXfWI/aVeJZPiSsLaEJNGW4o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=R1BnU9vtlK7EhbP2tROpgN0fzO/LsBgfgHmDIJeVeuWV3jsBtXE92B1z/wnS1dZpMmThKu5AFjcz7qKH03ehty3F4MKi14HJvM+7j8CG3eDia8iiKSch8m8dJttlret4coLxDNw5Rcx/lFIFUIqdHSc+/3QROe+NYWb+6UOX2XQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ceE+V8FP; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1751021585; c=relaxed/simple;
+	bh=K4XpAjTa7+hKIgq7u8CKdwP6yqA/xD2glJZeavWK7Ho=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gaXUwSiWyuiBwxKcwxJCowpUrri8lpRr/B8ipgAIi3A2GxGpRV59rruR40eFwMjFciMWKlF6MwH3i/rf6h9lLflNO1UxHGcjl8HhpjsSq+E1HSubMZ0TwATS0CBhlyr7xCnlqpioq7jwra9w5I1a9dICqxhRKBye6sDjbGfT0zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAuVz6pF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ceE+V8FP"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RAbIaI000435;
-	Fri, 27 Jun 2025 10:52:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=corp-2025-04-25; bh=dV61dEVtvyb8fbrV
-	Vm6gOlkX1KSxV9hG1v71rMs4zx8=; b=ceE+V8FPHNHcb+g3IT4H84byNtByVWpH
-	NQ8d3VylIQ38drH/th9VB33SWZNqm0cz0x+U6pjIothjyVyCYRpYn+r8rPlGn+l1
-	CFil93zvw4FAeoYPFtiX9dN29imXBvw2bC1va3hNw4mVO9oA45oiErHLzjdeBZz2
-	O/+wjoZ/dS8eDteucRoJds9K0Iaiz7I9ybcwkBEzrEl2s1ULiPC8fgqr/LenWaje
-	VgPKwWEoAUSOLykNc8cgLxCUMazs8/vAJr66GOadnTuekpUdCHe8v9ZM89utrWgI
-	0kaD+ChwOCtQKtpyRpO3l2PhxqLXkm7s2PWzoxTzHzbpZtVPvP4Jpg==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47ds8ybq0h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 27 Jun 2025 10:52:11 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55R9eRo7017913;
-	Fri, 27 Jun 2025 10:52:10 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47ehw16x4c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 27 Jun 2025 10:52:10 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55RAq9dU014292;
-	Fri, 27 Jun 2025 10:52:09 GMT
-Received: from lab61.no.oracle.com (lab61.no.oracle.com [10.172.144.82])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 47ehw16x33-1;
-	Fri, 27 Jun 2025 10:52:09 +0000
-From: =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>
-To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
-Cc: =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] wait: Relate wait_event_cmd() to its userspace equivalence
-Date: Fri, 27 Jun 2025 12:52:06 +0200
-Message-ID: <20250627105207.1613044-1-haakon.bugge@oracle.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAuVz6pF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8387C4CEF2;
+	Fri, 27 Jun 2025 10:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751021584;
+	bh=K4XpAjTa7+hKIgq7u8CKdwP6yqA/xD2glJZeavWK7Ho=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uAuVz6pFEKbocjVvpbM6rYL/y1pxfzqTeU2lLOucXiyZXaJ3jN1l8fdzoid8Urxf1
+	 c5eT03JfanyIx54HrwoMNYnwdoJf1xOUtF3S5btvG7vtAqgfk8lsC0MKbw3lXJxQ/x
+	 NNYdMzpoA8/RUSZ4tgiezTHDp7Ei8kBaS98afaDDtNCw9CDig/kyrw6bL55cofD7hN
+	 WP+q4Nw+tf+aBceGBbhGETZfJUfjeJgMnsT0w6YvWpIGdKd0dPF8UTzAgxvWQAUtN8
+	 1HBF8jpNJGVLUlvUJq/r8tk7tdYwy6WrrjXySE+fqWjxoiKDlWljQtlju26uoy4hvI
+	 DeCUGez17OFLg==
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-40b1c099511so1201451b6e.0;
+        Fri, 27 Jun 2025 03:53:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVBttQevcfvqNpdtE4zsh2qLVAexTFFYGNsHSgm8H/znDN9g0DTfE6LMaXO20KyEgtUisACYdVPv9PD@vger.kernel.org, AJvYcCVPsudfaOFdzS/DjkFKsj7hjAcIFTOjBKkbBXww8eeK2Yb31xj80KVwQzp3TT/GDPWnBK0vYWYY729P@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIM7911X5Ng02AOboLTOeFZ77GbNXg8+kfQ1ySj4os2ugXXmWF
+	ozgjcxPvWX4Dgd40ixkWNA+taOYX6Gq2MDx9J54uWsPgKkPwCLc7/y3JBdrNc54/sBjEzUbMJYK
+	HVQcbmkF3UcVTx/3iIupI05kw7lCc52s=
+X-Google-Smtp-Source: AGHT+IGF5o3JdiAyonVr5J6bCA8gf3fqFl/nAXMHCfe9W09f17nIkklyMepiatGdtSYaCw/7Ez4+TL6U4SyEGXl6bDI=
+X-Received: by 2002:a05:6808:2124:b0:407:a0ea:a233 with SMTP id
+ 5614622812f47-40b1caac7b6mr5565686b6e.10.1751021584137; Fri, 27 Jun 2025
+ 03:53:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_04,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 spamscore=0
- phishscore=0 adultscore=0 malwarescore=0 suspectscore=0 mlxlogscore=961
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506270088
-X-Proofpoint-ORIG-GUID: OPucuTbyZnZNYufnqbL2msAf_dXKlFEA
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDA4OSBTYWx0ZWRfX3ApYphz0iL2G CYBljnYl06Gb/iiiRxpchOx8i4odDWiAF4nUj4JBzcUXu25Jor7eeEWGDNjj6/9tU6P9QXdAKGk 7PJmlPOOzZ1omOoBuC/92txt+9tO4choAlXuKNZv0679XqaVc117eJaKO+dM0y7bMLQLWrKCASQ
- N/O9Vav06dWFMo6MBHQPi0RGOHfIiCAD35N8vvUzj+wwNI7bjxo2Kphbo6gM0o2Rrd1zSp4BkEa TwjpVMmBsgP4jBSuhqzXDN3nzCdXgFBEDknr5DYFX5d/T8Py8B9qwXlAQnrMsdt2ZwDtUAt05u8 Q1HC2YieETJkUH7K6Otm8LnoFdIXgkVdukIiS4PeUi/WfyUGnvA29HiDN8qUL31Px71y7ch1NKj
- EUHEWjOAs3vYQzDevuJwgOH33QTN3YXHGganRQloi+OaOv2OSJiLzMsP/RWmYrhQxO2lmBX9
-X-Proofpoint-GUID: OPucuTbyZnZNYufnqbL2msAf_dXKlFEA
-X-Authority-Analysis: v=2.4 cv=PqSTbxM3 c=1 sm=1 tr=0 ts=685e77db b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=M51BFTxLslgA:10 a=yPCof4ZbAAAA:8 a=wEmhiZHmUTMBQUX5UU0A:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 cc=ntf awl=host:14723
+References: <5015172.GXAFRqVoOG@rjwysocki.net> <2336655.iZASKD2KPV@rjwysocki.net>
+In-Reply-To: <2336655.iZASKD2KPV@rjwysocki.net>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 27 Jun 2025 12:52:52 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0h4AMFfyBugjBwQOV=xY-Hq5kL_vB7Gwrj06N8vo6GQtg@mail.gmail.com>
+X-Gm-Features: Ac12FXwpg9AnVFZosYa_eZDnu0_6_9S_gG---O66k8-4K1sDgRQ8bmySwBdfXks
+Message-ID: <CAJZ5v0h4AMFfyBugjBwQOV=xY-Hq5kL_vB7Gwrj06N8vo6GQtg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/9] PM: Check power.needs_force_resume in pm_runtime_force_suspend()
+To: Linux PM <linux-pm@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Relate wait_event_cmd() to userspace's pthread_cond_wait(). This
-because when searching for functionality comparable to
-pthread_cond_wait(), it is very hard to find wait_event_cmd().
+On Thu, Jun 26, 2025 at 8:15=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.ne=
+t> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Add a power.needs_force_resume check to pm_runtime_force_suspend() so
+> it need not rely on the runtime PM status of the device when deciding
+> whether or not to return early.
+>
+> With the new check in place, pm_runtime_force_suspend() will also skip
+> devices with the runtime PM status equal to RPM_ACTIVE if they have
+> power.needs_force_resume set, so it won't need to change the RPM
+> status of the device to RPM_SUSPENDED in addition to setting
+> power.needs_force_resume in the case when pm_runtime_need_not_resume()
+> return false.
+>
+> This allows the runtime PM status update to be removed from
+> pm_runtime_force_resume(), so the runtime PM status remains unchanged
+> between the pm_runtime_force_suspend() and pm_runtime_force_resume()
+> calls.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>
+> v1 -> v2: Corresponds to patch [2/9] (that was posted as [0/9] by mistake=
+) in v1.
+>
+> ---
+>  drivers/base/power/runtime.c |   21 ++++++++-------------
+>  1 file changed, 8 insertions(+), 13 deletions(-)
+>
+> --- a/drivers/base/power/runtime.c
+> +++ b/drivers/base/power/runtime.c
+> @@ -1973,7 +1973,7 @@
+>         int ret;
+>
+>         pm_runtime_disable(dev);
+> -       if (pm_runtime_status_suspended(dev))
+> +       if (pm_runtime_status_suspended(dev) || dev->power.needs_force_re=
+sume)
+>                 return 0;
+>
+>         callback =3D RPM_GET_CALLBACK(dev, runtime_suspend);
+> @@ -1988,15 +1988,16 @@
+>         /*
+>          * If the device can stay in suspend after the system-wide transi=
+tion
+>          * to the working state that will follow, drop the children count=
+er of
+> -        * its parent, but set its status to RPM_SUSPENDED anyway in case=
+ this
+> -        * function will be called again for it in the meantime.
+> +        * its parent and the usage counters of its suppliers.  Otherwise=
+, set
+> +        * power.needs_force_resume to let pm_runtime_force_resume() know=
+ that
+> +        * the device needs to be taken care of and to prevent this funct=
+ion
+> +        * from handling the device again in case the device is passed to=
+ it
+> +        * once more subsequently.
+>          */
+> -       if (pm_runtime_need_not_resume(dev)) {
+> +       if (pm_runtime_need_not_resume(dev))
+>                 pm_runtime_set_suspended(dev);
+> -       } else {
+> -               __update_runtime_status(dev, RPM_SUSPENDED);
+> +       else
+>                 dev->power.needs_force_resume =3D true;
+> -       }
 
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+I kind of see that this change may confuse other things looking at the
+PM runtime status to determine whether or not the device needs to be
+suspended that possibly run after pm_runtime_force_suspend().
 
---
+I'm also not quite sure why I thought that this patch would be
+necessary in this series because the [5/9] should just work without
+it.
 
-v1 -> v2:
-      * Split original patch into two
-      * Wordsmithing as suggested by Matthew
----
- include/linux/wait.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Please disregard it unless you see why it is needed here.
 
-diff --git a/include/linux/wait.h b/include/linux/wait.h
-index 965a19809c7e5..62df98193a3a7 100644
---- a/include/linux/wait.h
-+++ b/include/linux/wait.h
-@@ -469,6 +469,14 @@ do {										\
-  *
-  * wake_up() has to be called after changing any variable that could
-  * change the result of the wait condition.
-+ *
-+ * This is the kernel's polymorphic implementation of userspace's
-+ * pthread_cond_wait().
-+ *
-+ * When calling this function, cmd1 is typically a lock-release call
-+ * and cmd2 a lock-acquire call. The locking primitive can be chosen,
-+ * contrary to pthread_cond_wait(), where the locking type is cast in
-+ * stone and is a pthread_mutex_t.
-  */
- #define wait_event_cmd(wq_head, condition, cmd1, cmd2)				\
- do {										\
--- 
-2.43.5
-
+>
+>         return 0;
+>
+> @@ -2029,12 +2030,6 @@
+>         if (!dev->power.needs_force_resume)
+>                 goto out;
+>
+> -       /*
+> -        * The value of the parent's children counter is correct already,=
+ so
+> -        * just update the status of the device.
+> -        */
+> -       __update_runtime_status(dev, RPM_ACTIVE);
+> -
+>         callback =3D RPM_GET_CALLBACK(dev, runtime_resume);
+>
+>         dev_pm_disable_wake_irq_check(dev, false);
+>
+>
+>
+>
