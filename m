@@ -1,215 +1,206 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B3C2DA766
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F032DA745
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751032698; cv=none; b=MWdINozt5rk1K5H32yGdfzbAutD7vRTeCiuruiGpz74gG3YPPbMCWSCMMfgO4QcJ1YKU4st1JpD5mX8XrG5EQ0bTWfI3vH7zGGne5is8V/igQN9Nl7NRNbMKd4iTxOmq3gDcSjGVbx9QqOg0z1mHBnbTehtJsf6Qx1NoWELK38c=
+	t=1751032780; cv=none; b=p3egaLpCBymp7oZwRA82+qhtoAzr5Ak5V8CPlWMpJewiEiHfN1ZWcZx+5GDz6OhOoLxjxvoxV7Y2EqLNFIkIKiFPBYYWI5x4bPK83z0CvOX7xZyGUA0bEYyQrx8dbBzM3EPfnbvP/0DmfYQkYfzrAjyalUJJ5UNkpKralQZwMoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751032698; c=relaxed/simple;
-	bh=b77O1oHzVJc9Ti8JGlDRhvAzjUbmcBSv05XZUCJ8kF0=;
+	s=arc-20240116; t=1751032780; c=relaxed/simple;
+	bh=7Iy/S3aZEhunHTqfooRy1l5brhhXQ2/JeIl+IFc7gb0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ttTVtasXacn/INn+AXaA43egX07p3n0I7/Uh34OrrAnEnmkhWLgIA18lnQryWu0cBUL4IRfrkpptEIj89EXCznZBvr3bDXHPDRbgk+TB3GAyQSep0jkT1+XmOkp/X/zvOPyqMROfbRSQT5UyTZLqZVG44U3cRP9wKzUVLwVyeq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JBXs7b6p; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=ThYDkIO2vgCFBPOlnfR8epQJd0fsMhb/8kNDVUg7h5KXs5YQD3/93plS0kxbv4YyKLNOzxs5EfQgqhzEcWvZKx/vKcnTBrWL0JiUAAPBONS11a/IeK35KnoS/dyF1S+td+UUW0VUhYiifpQN61pOPoaTHDitGh9cZqCcVBECjeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wxk35mWw; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JBXs7b6p"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6fb1be9ba89so18543176d6.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 06:58:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wxk35mWw"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6fad3400ea3so20070236d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 06:59:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751032695; x=1751637495; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751032777; x=1751637577; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xPp/ClYZgzM+1U+QFbDcHJs/6imwSQiPcKsdqOO410E=;
-        b=JBXs7b6pBy3KS+n2S/t6J7lC7Jv0x8HLm9rZVu47yG7ixEhUGE3FASeXk7uYPbenYA
-         Pmh2H6f9jPl3PYMZVUq2bdqK5XSpNDvjcVeBtKHqW2QSqfd1Arff429wWJ0PwA8ipU32
-         InX+Gm87P2cFIaTGEsm4OtOPmykIsAAKxZt0/Kib+AUjxvyx4arey2W96wFQMPA+RGVD
-         7xEwIJKi8XRU04stNkdhW2tqAbB9w4HVFrDO5v06ySoFijYQfXep4usnkgYNxSMB+siW
-         H7+N2ESbaFdJsGynqBDqBidmd7Y3KXP9SjmSwE7NZh6ndJwdfcs605ZLVpa97rr2gHz/
-         rkxA==
+        bh=nQ6o3V9npnsh5kXG6EvAXWC21LHYKK26r/BWHZxcoSc=;
+        b=Wxk35mWwcg5r9mx/BxBw3DBvDS57KlLRJAdO8sfsLuIO2YSC5jdEOOcIqcPn+Mlo+5
+         +5xwOe8DexW+Ym0phFy/GxGD/Dq39NlEMsML3+46JOv+ubkBADJtvYEgsgEkLHva3KwK
+         WRgcKTdtB+9/eJs+8C/+WqK9PanBLaUakITOdjZ96ukwsZ1/oDbubeT9r5Lb3NQ6W9rI
+         DyLlNCNvcKP8gc/Pi48yDk4RgRAVFB4e2bIYatXIqKRc7fNMhWoczKyOJToNm1BioAiM
+         S1GfitPDarPPv6TWjoJk1GRU+h5MwMDjVisTNFHCC54WBeB3G+4hlQaKgqyWEZH4m7tH
+         LBsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751032695; x=1751637495;
+        d=1e100.net; s=20230601; t=1751032777; x=1751637577;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xPp/ClYZgzM+1U+QFbDcHJs/6imwSQiPcKsdqOO410E=;
-        b=vixdxMeWTJ8dChFgrOaAC2KyUqplTP+zXNRynXEDKXFqSh07BHA7hbpmDI8xPHBUNl
-         YClPKj+MviCxpAmHEmnzSzf46NRUH5mAAY3MCV3vo7z1EgDzFhhVK4VWb0mvl/cyzsNj
-         O90Cqqk4XyK52Xto/VPa/uiECN+gGTBTnxMnpt3wPeFSCyABAs+wbADZfubu/eb3kb18
-         qEPKXttuOyM1n8O5NPveKgd0E0azXH0XMO9Wd0yHglG105j/rm8mknfhV/hFjBWoVf0Y
-         5w/OyhcDP3OVDw+Lo3dC0XBZgy7YBgg5yEJ45k7p4fxL8JMAafj4JvYWgfePY1gzfD3i
-         A8HQ==
-X-Gm-Message-State: AOJu0YylEwG0Ty8HH5VQuDOfYq1MDQwmoLLlcuqD438v1LEccv/JBr7+
-	D192s3LyRVrpcMlqvv3qxJeIrHqxFTon1L31TjhQIq4PuY5pYaCxjwFW+vcaKUnuNH22wOTra9/
-	NnzhjHliyw6TbKgHKq6bBAUJHq7bqYfo=
-X-Gm-Gg: ASbGncvGEkVYxqOhbzBTKXp/ha9EE8DcSyjfFpnKDd3Px4+bYHZVwZC5W0Tprb10hRA
-	qYauyOoLXF3S1YOQ8qJQ10Q82BH+xV/ZfsMho9xz/50ienV60p9/fH4R0/2MU4C4jLwfYo2fzvG
-	m6zPi8eNeVq1iG5TpuTIUPCI7E/aidesQgSUl6IgSPLbZrB3s=
-X-Google-Smtp-Source: AGHT+IFpz83flyurGfNPQ8AbMQA21CHaV6uWbep69Uq7TnkmpyxVeWsBqTGWH7RYjX9d4WBpwpvNCs9ZJfQpXumdBHY=
-X-Received: by 2002:ad4:5bcf:0:b0:6fb:4caf:5d04 with SMTP id
- 6a1803df08f44-700031c6a5bmr53652566d6.45.1751032694524; Fri, 27 Jun 2025
- 06:58:14 -0700 (PDT)
+        bh=nQ6o3V9npnsh5kXG6EvAXWC21LHYKK26r/BWHZxcoSc=;
+        b=e9F0+nlDza3mkepAGtz3/2akuYItQB9pGr1UChhMuLs1WP76Oi6WpX3Q+dVwyFiuBr
+         JfXwNr42kwFH+IOu26qWz0YCqA9XNugXtAPFjtagvaxPNMQqHX8KWGsB9hkQ54VlstqO
+         f9okIliV+DaSUz4pwVo6d/z9GDlD4dxZMX9H5kaXPhg5lIFezdDm5BGqN0bZ/Gzu/lky
+         6BIUtRgy+wy2SkOiyDcUZBQqQKPM5H3Yw4Xl3hrcvauLh8yaFzrbNWBywWVdeCJI3GBo
+         J2knSovcKeBGTbLdg2x2ZTOlPqsA6aqHPXF7HpYgx1h/gCngbo//zAIllyn/5dRwz2qk
+         hCIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUp3DUt5sQA/1qAkL8SoMqVj5ybgsvqG816o+0Pp5MOXU83ZbTCk8qxeymWS//+LfxnXt3/2wpiXNddFII=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVAqyY4ar6C8dAerrgSaQoSxX451iTlGuTFwR8RJrcZ80Hr4a4
+	cfvSISDerLm4orGEm0e4W4q4OEi9JCOcYJIabW0br1CZ+12QutVGLUv1LqLa7OAa75dTl+ck6GE
+	Q9U6THjfakioxHBC5CZlXUSYmdlCh0xeo6C/diqdi
+X-Gm-Gg: ASbGncv1ELCLaNRSD6YiZ/3dKHofhfr4wGPtIitudZIodsvd5xkKlbGMAOUp5nom4Go
+	yFYeflkbOFtpuzJUULzjMRn2teKAy5PcUctOhkr2l/Co7C8fX1Tm3mAok9tdVYiIH0F/GSkkUCk
+	BgDhu+2LxvZOenJ0FQj/ALBBNh2XHW0yjzq1vyQCgmX+1bzhzOms/ZZVwVWKgc7GJqZJbwWJ9Sl
+	g==
+X-Google-Smtp-Source: AGHT+IHFWYANVpGK9HJ0ObJlII94wAcR4bB0Evwh5tJ7H+kH51JGPm7ZBEdW/ugFcw6HQvAlvWfth+nEW24K91YYn2w=
+X-Received: by 2002:a05:6214:2266:b0:6fd:1687:2e1b with SMTP id
+ 6a1803df08f44-70002ee6947mr70996486d6.27.1751032776825; Fri, 27 Jun 2025
+ 06:59:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627115510.3273675-1-david@redhat.com> <20250627115510.3273675-3-david@redhat.com>
-In-Reply-To: <20250627115510.3273675-3-david@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Fri, 27 Jun 2025 21:58:00 +0800
-X-Gm-Features: Ac12FXzXEXO95rUOIhdNLv7ixexjXu4CIZwfTgmr5h-Nl8qkP697ay-q0c7YJ5k
-Message-ID: <CABzRoyZKgWm=uQ2FioFyxStH+5z5OenX+BKEbfDQg+1546dsHg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] mm: smaller folio_pte_batch() improvements
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Jann Horn <jannh@google.com>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
-	Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
-	Pedro Falcato <pfalcato@suse.de>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>
+References: <20250626134158.3385080-1-glider@google.com> <20250626134158.3385080-9-glider@google.com>
+ <20250627082730.GS1613200@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250627082730.GS1613200@noisy.programming.kicks-ass.net>
+From: Alexander Potapenko <glider@google.com>
+Date: Fri, 27 Jun 2025 15:58:59 +0200
+X-Gm-Features: Ac12FXxMNEt1qGUjodKMiPINFABXeRDpEWe9lZCBGKZ_sY2yk46vnyO5SyFSoxY
+Message-ID: <CAG_fn=Utve6zTW9kxwVbqpbQTRMtJPbvtyV3QkQ3yuinizF44Q@mail.gmail.com>
+Subject: Re: [PATCH v2 08/11] kcov: add ioctl(KCOV_UNIQUE_ENABLE)
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org, 
+	kasan-dev@googlegroups.com, Aleksandr Nogikh <nogikh@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Marco Elver <elver@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 27, 2025 at 7:55=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
+On Fri, Jun 27, 2025 at 10:27=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
+rg> wrote:
 >
-> Let's clean up a bit:
+> On Thu, Jun 26, 2025 at 03:41:55PM +0200, Alexander Potapenko wrote:
+> > ioctl(KCOV_UNIQUE_ENABLE) enables collection of deduplicated coverage
+> > in the presence of CONFIG_KCOV_ENABLE_GUARDS.
+> >
+> > The buffer shared with the userspace is divided in two parts, one holdi=
+ng
+> > a bitmap, and the other one being the trace. The single parameter of
+> > ioctl(KCOV_UNIQUE_ENABLE) determines the number of words used for the
+> > bitmap.
+> >
+> > Each __sanitizer_cov_trace_pc_guard() instrumentation hook receives a
+> > pointer to a unique guard variable. Upon the first call of each hook,
+> > the guard variable is initialized with a unique integer, which is used =
+to
+> > map those hooks to bits in the bitmap. In the new coverage collection m=
+ode,
+> > the kernel first checks whether the bit corresponding to a particular h=
+ook
+> > is set, and then, if it is not, the PC is written into the trace buffer=
+,
+> > and the bit is set.
 >
-> (1) No need for start_ptep vs. ptep anymore, we can simply use ptep
->
-> (2) Let's switch to "unsigned int" for everything
->
-> (3) We can simplify the code by leaving the pte unchanged after the
->     pte_same() check.
->
-> (4) Clarify that we should never exceed a single VMA; it indicates a
->     problem in the caller.
->
-> No functional change intended.
+> I am somewhat confused; the clang documentation states that every edge
+> will have a guard variable.
 
-Nice cleanup! Simplifying the loop and removing the temporary variables
-makes the code much easier to follow.
+There are two modes, -fsanitize-coverage=3Dedge and
+-fsanitize-coverage=3Dbb, with edge being the default one.
 
-Also, clarifying the caller's responsibility to stay within a single VMA
-and page table is a nice change ;)
+When instrumenting basic blocks, the compiler inserts a call to
+__sanitizer_cov_trace_pc at the beginning of every basic block in the
+LLVM IR (well, not exactly, because some basic blocks are considered
+redundant; this behavior can be disabled by passing
+-fsanitize-coverage=3Dno-prune).
 
-Feel free to add:
-Reviewed-by: Lance Yang <lance.yang@linux.dev>
+Now, instrumenting the edges is actually very similar to basic blocks:
+we just find critical edges of the callgraph, add a new basic block in
+the middle of those edges, then instrument basic blocks like we did
+before.
+For what it's worth, the number of coverage hooks does not usually
+become quadratic when instrumenting edges, we only add a handful of
+new basic blocks.
 
-Thanks,
-Lance
+>
+> So if I have code like:
+>
+> foo:    Jcc     foobar
+> ...
+> bar:    Jcc     foobar
+> ...
+> foobar:
+>
+> Then we get two guard variables for the one foobar target?
+
+Correct.
+Note that in this sense coverage guards behave exactly similar to
+-fsanitize-coverage=3Dtrace-pc that we used before.
+
+Consider the following example (also available at
+https://godbolt.org/z/TcMT8W45o):
+
+void bar();
+void foo(int *a) {
+  if (a)
+    *a =3D 0;
+  bar();
+}
+
+Compiling it with different coverage options may give an idea of how
+{trace-pc,trace-pc-guard}x{bb,edge} relate to each other:
+
+# Coverage we use today, instrumenting edges:
+$ clang -fsanitize-coverage=3Dtrace-pc -S -O2
+# Guard coverage proposed in the patch, instrumenting edges
+$ clang -fsanitize-coverage=3Dtrace-pc-guard -S -O2
+# PC coverage with basic block instrumentation
+$ clang -fsanitize-coverage=3Dtrace-pc,bb -S -O2
+# Guard coverage with basic block instrumentation
+$ clang -fsanitize-coverage=3Dtrace-pc-guard,bb -S -O2
+
+The number of coverage calls doesn't change if I change trace-pc to
+trace-pc-guard.
+-fsanitize-coverage=3Dbb produces one call less than
+-fsanitize-coverage=3Dedge (aka the default mode).
 
 >
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/internal.h | 37 +++++++++++++++----------------------
->  1 file changed, 15 insertions(+), 22 deletions(-)
+> But from a coverage PoV you don't particularly care about the edges; you
+> only care you hit the instruction.
+
+Fuzzing engines care about various signals of program state, not just
+basic block coverage.
+There's a tradeoff between precisely distinguishing between two states
+(e.g. "last time I called a()-->b()->c() to get to this line, now this
+is a()->d()->e()->f()-c(), let's treat it differently") and bloating
+the fuzzing corpus with redundant information.
+Our experience shows that using such makeshift edge coverage produces
+better results than just instrumenting basic blocks, but collecting
+longer traces of basic blocks is unnecessary.
+
+> Combined with the naming of the hook:
+> 'trace_pc_guard', which reads to me like: program-counter guard, suggesti=
+ng
+> the guard is in fact per PC or target node, not per edge.
 >
-> diff --git a/mm/internal.h b/mm/internal.h
-> index 9690c75063881..ca6590c6d9eab 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -221,7 +221,7 @@ static inline pte_t __pte_batch_clear_ignored(pte_t p=
-te, fpb_t flags)
->   * folio_pte_batch - detect a PTE batch for a large folio
->   * @folio: The large folio to detect a PTE batch for.
->   * @addr: The user virtual address the first page is mapped at.
-> - * @start_ptep: Page table pointer for the first entry.
-> + * @ptep: Page table pointer for the first entry.
->   * @pte: Page table entry for the first page.
->   * @max_nr: The maximum number of table entries to consider.
->   * @flags: Flags to modify the PTE batch semantics.
-> @@ -233,24 +233,24 @@ static inline pte_t __pte_batch_clear_ignored(pte_t=
- pte, fpb_t flags)
->   *               first one is dirty.
->   *
->   * Detect a PTE batch: consecutive (present) PTEs that map consecutive
-> - * pages of the same large folio.
-> + * pages of the same large folio in a single VMA and a single page table=
-.
->   *
->   * All PTEs inside a PTE batch have the same PTE bits set, excluding the=
- PFN,
->   * the accessed bit, writable bit, dirty bit (unless FPB_HONOR_DIRTY is =
-set) and
->   * soft-dirty bit (unless FPB_HONOR_SOFT_DIRTY is set).
->   *
-> - * start_ptep must map any page of the folio. max_nr must be at least on=
-e and
-> - * must be limited by the caller so scanning cannot exceed a single page=
- table.
-> + * @ptep must map any page of the folio. max_nr must be at least one and
-> + * must be limited by the caller so scanning cannot exceed a single VMA =
-and
-> + * a single page table.
->   *
->   * Return: the number of table entries in the batch.
->   */
-> -static inline int folio_pte_batch(struct folio *folio, unsigned long add=
-r,
-> -               pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
-> +static inline unsigned int folio_pte_batch(struct folio *folio, unsigned=
- long addr,
-> +               pte_t *ptep, pte_t pte, unsigned int max_nr, fpb_t flags,
->                 bool *any_writable, bool *any_young, bool *any_dirty)
->  {
-> -       pte_t expected_pte, *ptep;
-> -       bool writable, young, dirty;
-> -       int nr, cur_nr;
-> +       unsigned int nr, cur_nr;
-> +       pte_t expected_pte;
+> So which is it?
+
+The same hook is used in both the BB and the edge modes, because in
+both cases we are actually instrumenting basic blocks.
+
 >
->         if (any_writable)
->                 *any_writable =3D false;
-> @@ -267,29 +267,22 @@ static inline int folio_pte_batch(struct folio *fol=
-io, unsigned long addr,
->         max_nr =3D min_t(unsigned long, max_nr,
->                        folio_pfn(folio) + folio_nr_pages(folio) - pte_pfn=
-(pte));
+> Also, dynamic edges are very hard to allocate guard variables for, while
+> target guards are trivial, even in the face of dynamic edges.
+
+All edges are known statically, because they are within the same
+function - calls between functions are not considered edges.
+
+> A further consideration is that the number of edges can vastly outnumber
+> the number of nodes, again suggesting that node guards might be better.
 >
-> -       nr =3D pte_batch_hint(start_ptep, pte);
-> +       nr =3D pte_batch_hint(ptep, pte);
->         expected_pte =3D __pte_batch_clear_ignored(pte_advance_pfn(pte, n=
-r), flags);
-> -       ptep =3D start_ptep + nr;
-> +       ptep =3D ptep + nr;
->
->         while (nr < max_nr) {
->                 pte =3D ptep_get(ptep);
-> -               if (any_writable)
-> -                       writable =3D !!pte_write(pte);
-> -               if (any_young)
-> -                       young =3D !!pte_young(pte);
-> -               if (any_dirty)
-> -                       dirty =3D !!pte_dirty(pte);
-> -               pte =3D __pte_batch_clear_ignored(pte, flags);
->
-> -               if (!pte_same(pte, expected_pte))
-> +               if (!pte_same(__pte_batch_clear_ignored(pte, flags), expe=
-cted_pte))
->                         break;
->
->                 if (any_writable)
-> -                       *any_writable |=3D writable;
-> +                       *any_writable |=3D pte_write(pte);
->                 if (any_young)
-> -                       *any_young |=3D young;
-> +                       *any_young |=3D pte_young(pte);
->                 if (any_dirty)
-> -                       *any_dirty |=3D dirty;
-> +                       *any_dirty |=3D pte_dirty(pte);
->
->                 cur_nr =3D pte_batch_hint(ptep, pte);
->                 expected_pte =3D pte_advance_pfn(expected_pte, cur_nr);
-> --
-> 2.49.0
->
->
+
+For the above reason, this isn't a problem.
+In the current setup (with edges, without guards), the number of
+instrumentation points in vmlinux is on the order of single-digit
+millions.
