@@ -1,80 +1,67 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03E13C01
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B83224AE0;
+	Fri, 27 Jun 2025 08:13:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751011980; cv=none; b=qfAGu+gYY3chPY7YcaBZxddrJXsajwdnzffpEMAkdnxqdWPicsFzY3LUGaiLZzTT0HUzm52QkvfrLJBO3aAFcp1hSvnIqUaZVwTfPNg7ctFIylGJVya6l41L1osnbFKiFd05qifDcO/ie9fKQy/VyC1vNtkim4TZ8W+0Kc62Uvk=
+	t=1751012029; cv=none; b=sFEXyOiMtl6miwoyP+kUpsjN53hHG4DzVtVKrVE2WkyRPSHOyxnzxCvLVrdRQBB0nFmESJPYhnt1fr/qEaaY5AzN7nE3RAuNiiqIifEHAJEFKd24yXJWWMR58Ym7hir89y9M63tBAr2iyLgMQpc0KdTjmT49RQ/dlKTfwsIQTfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751011980; c=relaxed/simple;
-	bh=MmzRy/whRvcy82thtC2Nk5U1J3RZ1iRR+gRyljDAXNQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IpUhd2dS2yoRyO/Rq9wq84YgP43dwbr6UJyFj9OLwyhh9xxKCor47sEiemK7WP96yUWI0veaIij+7n4q26cztO/WBMKL8iO6HpI2FFQ5e/k9lh12FK5r1YUK/E1iVo/IFWPst/SErlFk5clUhE9/v7E9FuC3/QLBPIa801z1n+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fXFGhRjA; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9MomQVUN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XVDGRrq8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VelFmmdY; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751012029; c=relaxed/simple;
+	bh=o6hJzsHfwa7l8QymsFAPFL0BssPaa5+yNqxXr8OOqGI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=f/Y2L+NuT6jdHrL2YQbQkKJMZXCgBUzvGgNVgSBCocLo5cUDrBADALtAqhRLml0rj/AHKZPvcLgCf+JMaRTatf4YLVtif4EBRrYElw2ynXzZCeToTgWW6Rd+CnbddKrOrLlGgSShhoxKLx0mu0+7gPcdF0VBJ2aSJo8A5jpgl6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gsdC/VKN; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fXFGhRjA";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9MomQVUN";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XVDGRrq8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VelFmmdY"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A96C22115A;
-	Fri, 27 Jun 2025 08:12:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751011975; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+EKL9IP5PBZojuf6AbEw8yBhzz00CC8nXzVeGoylU2E=;
-	b=fXFGhRjANK4MSP4UyxbEsoxdJnl3Ta7DPGy69wiT2byJestAIiMyWLnQWtBZT+4RS0L6w3
-	EhXCS5IzccgkPC2fqQ1y3XjbvI+EN/GYp221XF+nBGE3Bhegn8az0soFMcaq0s96BZefia
-	uENIbJFq6HkRWd3rbaOYCA0Ff8Xt4l0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751011975;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+EKL9IP5PBZojuf6AbEw8yBhzz00CC8nXzVeGoylU2E=;
-	b=9MomQVUNibhW5iNhVOq5WAwqBt4Itsx7Q/+j01kSEHKZ2HKWSsWGbS4j+kC9RZ9+HWvdKj
-	tObNPaDwIWlhSrDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751011973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+EKL9IP5PBZojuf6AbEw8yBhzz00CC8nXzVeGoylU2E=;
-	b=XVDGRrq82P3xO32ZqrTW+0nVuCWziETTK1l3r75Z5ihMm/vBC+S66whKZS8dGSQtpA2Vln
-	Wif9WzOaz5diZS61xgcBUbGfS+oRsgT5S6QQZKCASVdhYwNyRIaRI0ytNyIu//JmQJwJD/
-	ehguBs3DXVirqhBpn+zCgdWK6jjv+mY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751011973;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+EKL9IP5PBZojuf6AbEw8yBhzz00CC8nXzVeGoylU2E=;
-	b=VelFmmdYL9Rnb6oDTcQYNKVgVDPcPFGVT0xsduWI8vBflEXf8N0SccZKmFEJA0cqvNSxu7
-	Exn3lz6Y7UNIPuAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 71AD713786;
-	Fri, 27 Jun 2025 08:12:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nyJUGoVSXmgwVgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 27 Jun 2025 08:12:53 +0000
-Message-ID: <855d6faa-9f72-466e-9294-d6059bb9d920@suse.de>
-Date: Fri, 27 Jun 2025 10:12:53 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gsdC/VKN"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QMGbdt019573;
+	Fri, 27 Jun 2025 08:13:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=FRv+jf
+	+H2WOoOyo2DrESPYPWQcOAbheMqs0hH1dSsC0=; b=gsdC/VKNSU+UJ+Kcn/+wtu
+	yJCxzlTOYh3GGpn1VLdgrMabickgPWQEi7EDVtMgY/nTKEFysxFiFHb+oRYm7XpN
+	V/qlAKAc4U+71qUzZet1qHqVWu2L+yMyUslWkUyeTyCO3NXXt913EnJ/DBtaxFzD
+	bggmXNoGq/14AL781KTrszjV00NDUKV0OmZbmMR4xHZXWwzXVe1nzugMNgebXrwe
+	ynzCKJgbVLVk+hO84zW+2yyLrN79I8rhJ331Lfscbas64hXXiOjyW8M31xUyoD9R
+	U6s62xYtD4m4zTL7kPEjT/AVQh3TJcGlnuykaiDCwzq3Ak/1WfPO8R2ZDfIJ5+ng
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dmf3kgva-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 08:13:43 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55R8BC8A015251;
+	Fri, 27 Jun 2025 08:13:43 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dmf3kgv8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 08:13:43 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55R4OUEJ031277;
+	Fri, 27 Jun 2025 08:13:42 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e7f0b8su-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 08:13:42 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55R8Dc6F56295772
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 27 Jun 2025 08:13:39 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CED5C2004B;
+	Fri, 27 Jun 2025 08:13:38 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4D0C920040;
+	Fri, 27 Jun 2025 08:13:38 +0000 (GMT)
+Received: from [9.111.10.20] (unknown [9.111.10.20])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 27 Jun 2025 08:13:38 +0000 (GMT)
+Message-ID: <283e109b-9eb5-4e7d-b7df-215f54496503@linux.ibm.com>
+Date: Fri, 27 Jun 2025 10:13:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,307 +69,150 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fbdev: efifb: do not load efifb if PCI BAR has changed
- but not fixuped
-To: Shixiong Ou <oushixiong1025@163.com>, Helge Deller <deller@gmx.de>
-Cc: Peter Jones <pjones@redhat.com>, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Shixiong Ou <oushixiong@kylinos.cn>
-References: <20250626094937.515552-1-oushixiong1025@163.com>
- <ecf7f260-4c5f-45fc-be8d-0361b00af6a3@suse.de>
- <24f53098-710a-43f9-8d1c-d809fb5354eb@163.com>
+Subject: [Ping][PATCH] perf list: Add IBM z17 event descriptions
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
+        japo@linux.ibm.com
+References: <20250623132731.899525-1-tmricht@linux.ibm.com>
+ <CAP-5=fV_hXzq0A-91NakejcQGnvPp+uJGGe=vccwM+47JVCmtA@mail.gmail.com>
+ <ad905a68-a89b-458d-8a8b-2081a6656b91@linux.ibm.com>
 Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <24f53098-710a-43f9-8d1c-d809fb5354eb@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Organization: IBM
+In-Reply-To: <ad905a68-a89b-458d-8a8b-2081a6656b91@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_TO(0.00)[163.com,gmx.de];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[163.com,gmx.de];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,kylinos.cn:email,patchwork.freedesktop.org:url]
-X-Spam-Level: 
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=M5FNKzws c=1 sm=1 tr=0 ts=685e52b8 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=NzcymgBwEkHtfacI-E8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDA2MiBTYWx0ZWRfX+Z3hlRaHsMty 5w8fwgVXRRbsE8H9zke3lhvmZyEMj6pDkpSDpASIrAw90DYXYcLuya9GZ+i+3P+XYNdQryLdP+b 3/iNWPpCv3jTDTJXWkp+LahcZil7g29OdYO/SEE7UFLR03KqI9JDFbm1/RbxYsDVPJw4iDENfhd
+ XHoArKJo+GTqD+fHMaDXKVC1R5kJCv/aI+z6rvSBGMePajpZdvVNJjYUR/Z/MCNx8lZwOMY4iNc Xuw6iu7pVXkOieCvCaVDseecUDcrNf7Y6mwf+x0La1zy5ad/zi0bKO3Ynz4UtvZphHkhuCsBBXr qyrknjgSxa2VDGlcovmYMlPqlp5/Ylvbmv2Wdy94+0KOW/pbtkIIZFysuOkdyMnSzeSjxb14WQW
+ 1yCS3RcWUqC9GaXOoEYkeNQaFpNWDDIG11VGdD0ZJmFl0Do1JVwLatz2Gm8+5IOKiM0Gpngy
+X-Proofpoint-GUID: H2R94vQXsgPCdjztjCGfVvEv9kHIMcb_
+X-Proofpoint-ORIG-GUID: USYL82GF2n57L5lrjJkladDPLAScSt2A
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_02,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 malwarescore=0 impostorscore=0 suspectscore=0
+ priorityscore=1501 phishscore=0 spamscore=0 clxscore=1015 adultscore=0
+ mlxscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506270062
 
-Hi
+On 6/24/25 08:35, Thomas Richter wrote:
 
-Am 27.06.25 um 10:07 schrieb Shixiong Ou:
->
-> 在 2025/6/26 18:31, Thomas Zimmermann 写道:
->> Hi
->>
->> Am 26.06.25 um 11:49 schrieb oushixiong1025@163.com:
->>> From: Shixiong Ou <oushixiong@kylinos.cn>
->>>
->>> [WHY]
->>> On an ARM machine, the following log is present:
->>> [    0.900884] efifb: framebuffer at 0x1020000000, using 3072k, 
->>> total 3072k
->>> [    2.297884] amdgpu 0000:04:00.0: 
->>> remove_conflicting_pci_framebuffers: bar 0: 0x1000000000 -> 
->>> 0x100fffffff
->>> [    2.297886] amdgpu 0000:04:00.0: 
->>> remove_conflicting_pci_framebuffers: bar 2: 0x1010000000 -> 
->>> 0x10101fffff
->>> [    2.297888] amdgpu 0000:04:00.0: 
->>> remove_conflicting_pci_framebuffers: bar 5: 0x58200000 -> 0x5823ffff
->>>
->>> It show that the efifb framebuffer base is out of PCI BAR, and this
->>
->> The patch at
->>
->>   https://patchwork.freedesktop.org/series/148057/
->>
->> is supposed to fix the problem. It has been merged with v6.16-rc1 as 
->> commit 2f29b5c23101 ("video: screen_info: Relocate framebuffers 
->> behind PCI bridges"). It is in your tree?
->>
->> Best regards
->> Thomas
->>
-> yeah, this patch is in my tree. but do not fix the problem.
+Gently Ping
 
-The patch's final revision had a rough development. Just for testing 
-purposes, could you revert the commit and instead apply the patch's 
-earlier revision from
-
-https://patchwork.freedesktop.org/patch/649527/?series=148057&rev=1
-
-?
+Ian, I have responded to your comments some days ago.
+See below.
 
 Thanks a lot.
 
-Best regards
-Thomas
-
->
-> this is some message:
->
-> kylin@kylin-pc:~$ dmesg | grep BAR
-> [    0.688192] pci 0000:00:03.0: BAR 15: assigned [mem 
-> 0x1000000000-0x101fffffff 64bit pref]
-> [    0.688200] pci 0000:00:00.0: BAR 0: assigned [mem 
-> 0x1020000000-0x10200fffff 64bit pref]
-> [    0.688205] pci 0000:00:00.0: BAR 14: assigned [mem 
-> 0x58000000-0x580fffff]
-> [    0.688210] pci 0000:00:01.0: BAR 0: assigned [mem 
-> 0x1020100000-0x10201fffff 64bit pref]
-> [    0.688215] pci 0000:00:02.0: BAR 0: assigned [mem 
-> 0x1020200000-0x10202fffff 64bit pref]
-> [    0.688221] pci 0000:00:02.0: BAR 14: assigned [mem 
-> 0x58100000-0x581fffff]
-> [    0.688225] pci 0000:00:03.0: BAR 0: assigned [mem 
-> 0x1020300000-0x10203fffff 64bit pref]
-> [    0.688231] pci 0000:00:03.0: BAR 14: assigned [mem 
-> 0x58200000-0x585fffff]
-> [    0.688237] pci 0000:00:04.0: BAR 0: assigned [mem 
-> 0x1020400000-0x10204fffff 64bit pref]
-> [    0.688243] pci 0000:00:05.0: BAR 0: assigned [mem 
-> 0x1020500000-0x10205fffff 64bit pref]
-> [    0.688249] pci 0000:00:05.0: BAR 14: assigned [mem 
-> 0x58600000-0x586fffff]
-> [    0.688253] pci 0000:01:00.0: BAR 0: assigned [mem 
-> 0x58000000-0x58003fff 64bit]
-> [    0.688290] pci 0000:03:00.0: BAR 6: assigned [mem 
-> 0x58100000-0x5817ffff pref]
-> [    0.688296] pci 0000:03:00.0: BAR 0: assigned [mem 
-> 0x58180000-0x58181fff]
-> [    0.688303] pci 0000:03:00.0: BAR 5: assigned [mem 
-> 0x58182000-0x58183fff]
-> [    0.688317] pci 0000:04:00.0: BAR 1: assigned [mem 
-> 0x1000000000-0x101fffffff 64bit pref]
-> [    0.688326] pci 0000:04:00.0: BAR 0: assigned [mem 
-> 0x58200000-0x583fffff]
-> [    0.688332] pci 0000:04:00.0: BAR 6: assigned [mem 
-> 0x58400000-0x584fffff pref]
-> [    0.688336] pci 0000:04:00.1: BAR 0: assigned [mem 
-> 0x58500000-0x58503fff]
-> [    0.688360] pci 0000:06:00.0: BAR 0: assigned [mem 
-> 0x58600000-0x58601fff 64bit]
-> kylin@kylin-pc:~$ dmesg | grep framebuffer
-> [    1.137536] efifb: framebuffer at 0x1020000000, using 3072k, total 
-> 3072k
->
-> the efifb base address is still at 0x1020000000 after calling 
-> pcibios_bus_to_resource().
->
->
->>> results in both efi-framebuffer and amdgpudrmfb co-existing.
+> On 6/23/25 19:53, Ian Rogers wrote:
+>> On Mon, Jun 23, 2025 at 6:35 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
 >>>
->>> The fbcon will be bound to efi-framebuffer by default and cannot be 
->>> used.
+>>> Update IBM z17 counter description using document SA23-2260-08:
+>>> "The Load-Program-Parameter and the CPU-Measurement Facilities"
+>>> released in May 2025 to include counter definitions for IBM z17
+>>> counter sets:
+>>> * Basic counter set
+>>> * Problem/user counter set
+>>> * Crypto counter set.
 >>>
->>> [HOW]
->>> Do not load efifb driver if PCI BAR has changed but not fixuped.
->>> In the following cases:
->>>     1. screen_info_lfb_pdev is NULL.
->>>     2. __screen_info_relocation_is_valid return false.
+>>> Use document SA23-2261-09:
+>>> "The CPU-Measurement Facility Extended Counters Definition
+>>>  for z10, z196/z114, zEC12/zBC12, z13/z13s, z14, z15, z16 and z17"
+>>> released on April 2025 to include counter definitions for IBM z17
+>>> * Extended counter set
+>>> * MT-Diagnostic counter set.
 >>>
->>> Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
->>> ---
->>>   drivers/video/fbdev/efifb.c     |  4 ++++
->>>   drivers/video/screen_info_pci.c | 24 ++++++++++++++++++++++++
->>>   include/linux/screen_info.h     |  5 +++++
->>>   3 files changed, 33 insertions(+)
+>>> Use document SA22-7832-14:
+>>> "z/Architecture Principles of Operation."
+>>> released in April 2025 to include counter definitions for IBM z17
+>>> * PAI-Crypto counter set
+>>> * PAI-Extention counter set.
 >>>
->>> diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
->>> index 0e1bd3dba255..de8d016c9a66 100644
->>> --- a/drivers/video/fbdev/efifb.c
->>> +++ b/drivers/video/fbdev/efifb.c
->>> @@ -303,6 +303,10 @@ static void efifb_setup(struct screen_info *si, 
->>> char *options)
->>>     static inline bool fb_base_is_valid(struct screen_info *si)
->>>   {
->>> +    /* check whether fb_base has changed but not fixuped */
->>> +    if (!screen_info_is_useful())
->>> +        return false;
->>> +
->>>       if (si->lfb_base)
->>>           return true;
->>>   diff --git a/drivers/video/screen_info_pci.c 
->>> b/drivers/video/screen_info_pci.c
->>> index 66bfc1d0a6dc..ac57dcaf0cac 100644
->>> --- a/drivers/video/screen_info_pci.c
->>> +++ b/drivers/video/screen_info_pci.c
->>> @@ -9,6 +9,8 @@ static struct pci_dev *screen_info_lfb_pdev;
->>>   static size_t screen_info_lfb_bar;
->>>   static resource_size_t screen_info_lfb_res_start; // original 
->>> start of resource
->>>   static resource_size_t screen_info_lfb_offset; // framebuffer 
->>> offset within resource
->>> +static bool screen_info_changed;
->>> +static bool screen_info_fixuped;
->>>     static bool __screen_info_relocation_is_valid(const struct 
->>> screen_info *si, struct resource *pr)
->>>   {
->>> @@ -24,6 +26,24 @@ static bool 
->>> __screen_info_relocation_is_valid(const struct screen_info *si, stru
->>>       return true;
->>>   }
->>>   +bool screen_info_is_useful(void)
->>> +{
->>> +    unsigned int type;
->>> +    const struct screen_info *si = &screen_info;
->>> +
->>> +    type = screen_info_video_type(si);
->>> +    if (type != VIDEO_TYPE_EFI)
->>> +        return true;
->>> +
->>> +    if (screen_info_changed && !screen_info_fixuped) {
->>> +        pr_warn("The screen_info has changed but not fixuped");
->>> +        return false;
->>> +    }
->>> +
->>> +    pr_info("The screen_info is useful");
->>> +    return true;
->>> +}
->>> +
->>>   void screen_info_apply_fixups(void)
->>>   {
->>>       struct screen_info *si = &screen_info;
->>> @@ -32,18 +52,22 @@ void screen_info_apply_fixups(void)
->>>           struct resource *pr = 
->>> &screen_info_lfb_pdev->resource[screen_info_lfb_bar];
->>>             if (pr->start != screen_info_lfb_res_start) {
->>> +            screen_info_changed = true;
->>>               if (__screen_info_relocation_is_valid(si, pr)) {
->>>                   /*
->>>                    * Only update base if we have an actual
->>>                    * relocation to a valid I/O range.
->>>                    */
->>>                   __screen_info_set_lfb_base(si, pr->start + 
->>> screen_info_lfb_offset);
->>> +                screen_info_fixuped = true;
->>>                   pr_info("Relocating firmware framebuffer to offset 
->>> %pa[d] within %pr\n",
->>>                       &screen_info_lfb_offset, pr);
->>>               } else {
->>>                   pr_warn("Invalid relocating, disabling firmware 
->>> framebuffer\n");
->
-> And should something be done after __screen_info_relocation_is_valid() 
-> return false?
->
-> Best regards
-> Shixiong.
->
->>>               }
->>>           }
->>> +    } else {
->>> +        screen_info_changed = true;
->>>       }
->>>   }
->>>   diff --git a/include/linux/screen_info.h 
->>> b/include/linux/screen_info.h
->>> index 923d68e07679..632cdbb1adbe 100644
->>> --- a/include/linux/screen_info.h
->>> +++ b/include/linux/screen_info.h
->>> @@ -138,9 +138,14 @@ ssize_t screen_info_resources(const struct 
->>> screen_info *si, struct resource *r,
->>>   u32 __screen_info_lfb_bits_per_pixel(const struct screen_info *si);
->>>     #if defined(CONFIG_PCI)
->>> +bool screen_info_is_useful(void);
->>>   void screen_info_apply_fixups(void);
->>>   struct pci_dev *screen_info_pci_dev(const struct screen_info *si);
->>>   #else
->>> +bool screen_info_is_useful(void)
->>> +{
->>> +    return true;
->>> +}
->>>   static inline void screen_info_apply_fixups(void)
->>>   { }
->>>   static inline struct pci_dev *screen_info_pci_dev(const struct 
->>> screen_info *si)
+>>> Use document
+>>> "CPU MF Formulas and Updates April 2025"
+>>> released in April 2025 to include metric calculations.
+>>>
+>>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>>> Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
 >>
->
+>> [snip]
+>>
+>>> +       {
+>>> +               "Unit": "CPU-M-CF",
+>>> +               "EventCode": "143",
+>>> +               "EventName": "L1C_TLB2_MISSES",
+>>> +               "BriefDescription": "L1C TLB2 Misses",
+>>> +               "PublicDescription": "Increments by one for any cycle where a Level-1 cache or Level-2 TLB miss is in progress."
+>>> +       },
+>>
+>> [snip]
+>>
+>>> +  {
+>>> +    "BriefDescription": "Cycles per Instructions from Finite cache/memory",
+>>> +    "MetricName": "finite_cpi",
+>>> +    "MetricExpr": "L1C_TLB2_MISSES / INSTRUCTIONS if has_event(L1C_TLB2_MISSES) else 0"
+>>> +  },
+>>> +  {
+>>> +    "BriefDescription": "Estimated Instruction Complexity CPI infinite Level 1",
+>>> +    "MetricName": "est_cpi",
+>>> +    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INSTRUCTIONS) if has_event(INSTRUCTIONS) else 0"
+>>> +  },
+>>> +  {
+>>> +    "BriefDescription": "Estimated Sourcing Cycles per Level 1 Miss",
+>>> +    "MetricName": "scpl1m",
+>>> +    "MetricExpr": "L1C_TLB2_MISSES / (L1I_DIR_WRITES + L1D_DIR_WRITES) if has_event(L1C_TLB2_MISSES) else 0"
+>>> +  },
+>>
+>> Just a quick check. If the PMU CPU-M-CF is always present then the
+>> "has_event(L1C_TLB2_MISSES)" check will always be true as the event is
+>> in json and not in sysfs. I'm guessing this is being done for the
+>> benefit of hypervisors.
+>>
+> 
+> The issue is indeed with z/VM, where the CPU Measurement facility is not exported to
+> any guest OS including linux.
+> If you run Linux on top of z/VM then these events do not exist.
+> 
+> # uname -a
+> Linux a8345022.lnxne.boe 6.16.0-rc1m-perf #14 SMP Tue Jun 10 07:39:06 CEST 2025 s390x GNU/Linux
+> # grep VM /proc/sysinfo 
+> VM00 Name:            A8345022
+> VM00 Control Program: z/VM    7.4.0   
+> VM00 Adjustment:      50
+> VM00 CPUs Total:      4
+> VM00 CPUs Configured: 4
+> VM00 CPUs Standby:    0
+> VM00 CPUs Reserved:   0
+> # lscpumf 
+> lscpumf: No CPU-measurement facilities detected
+> # 
+> 
+> Without this if..else the perf stat -e metric fail when Linux is installed on top of z/VM systems.
+> See commit c2f3d7dfc7373 ("perf stat: Do not fail on metrics on s390 z/VM systems")
+> 
+> which fixed it for z16 machine generation.
+> 
+> Hope this helps.
+> 
+>> Thanks,
+>> Ian
+> 
+> 
 
 -- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
 --
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+IBM Deutschland Research & Development GmbH
 
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
