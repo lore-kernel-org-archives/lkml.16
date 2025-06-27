@@ -1,72 +1,70 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A112F852
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD923165F13
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751003044; cv=none; b=DrNeHDS9Sc7quUhZfwPgiIAjx5c/hLLb74mU6Li23zSTPlEbImlHGwlvWEZkryDqYHAZofUvaaw1nlMLydU4FvxsmHdiW7kmBTi8VlufJpa3yLrLovTqSWv0gs7Z0ksoawd9NY2sOWyaqSHMKK05c+xeXcvPTvdAYSi5bon+bh4=
+	t=1751003191; cv=none; b=DtZolHiuxkIk2sgPK6pLiq5JpmVehRlo7dvZxqifpKvwg2JlCuDkSbFkI8mfyIm54OHDStcd9LJwFYfrDaZUe/eLeOkOU13PsKK6kkalKm57wfHUY7W13JodLS/DdCFvz9ThpzXRT4i1mpUdMgTzeyjQIcWYkubB+LMLbbHB8AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751003044; c=relaxed/simple;
-	bh=soSTAGmaFQ30rdWSI32v3PHsN9vFxhd0C7khwWjTrWk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=fFtKTKv/AhWee/UEzt5HS8TGWLlkJNeKFr8atR8vGEH62GWO+1D9dvx2fkPEWsqyXknIbAWQK1YNyjJsfckmV8J59QYwWE/rPRuhVh4v2BemHqpYrBuLE8FcWrRoGgkQgoofSlMZGYq7wHuL5999mUUHEA/2wxPfvDUrKoWkt9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddafe52d04so44412385ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:44:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751003042; x=1751607842;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Pd432zo7LFGK6KOyiXTXMOvwX3eozzXxwAFL1DPThI=;
-        b=w6gUfwX4pvdTHEr9XE1STjjO81IPs+aG4DJUX8nYJOMRO0fkRc9gHD7E8iLPTTwOHk
-         MtYGVbDEq4NGZSfAwFNYVoI0TrlqcS4GO4mjt1y5t2wZxs6eTPz9+HxPRAC1O0jZqRqv
-         OSUvhTZB/jJbynJ09Z3Tl2rW5yp8BV42YoWG3qK8CzMTM3LswMDkJoYsZhNFMhQE6q7T
-         YMqyvFBBedFmTAulyrGK14D0lSZQDrHpW2uZYW06+2bOOsadGndcmSkDq2YvmcmR8o/R
-         iDgucK9b9jQMROOkcjimT0l7Q93hDekb1lT48pR0ARIEqGpHMDYjhs3EyEGkgKLyyYl7
-         lf/Q==
-X-Gm-Message-State: AOJu0YxPDeu70GgW0pf0Wwvf98J1Po5Zjgv8D61dvaI1b9Qc5hkfhqbD
-	Enl1HDtGQBtVu9pwNkq5DW+jlve5Nxu1PA3lDLVU0whIKh3z+UnfBDLOjghjXnHvRpwYjozQLDY
-	ODajcYS+PDt7+ZHTgA57be/E1JRgiuWWlw9lGSzm0mLl8CL0rzRFHL4Vjj9E=
-X-Google-Smtp-Source: AGHT+IHVpClRtlO3j1SYzj+w0FS7Z69fNeAIKojFmVrL8DN54Qr0A+mFUE6fB0bTOnj/NargK9mVhJOPLJXKzrLRHsIad62GHlLS
+	s=arc-20240116; t=1751003191; c=relaxed/simple;
+	bh=3cwPAuT/GBOjsOhU3h6oBD1dITjG5pglG/5gH09gX7A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CaW8BtXvfMeBvvweZd3CB2B7e6WdD4H2mOP0tW2TamAfBSEgCHwa/bh8Em9uKBiS4TuedlAX0Hs/KjaaGB6xf+xqpXv0WxxjMEdjXSmwU+AT05yGWVgH9xEk2E4OCt+bBGp0YiCdv7AjIqpSaIj9SiFUyCFK/YBYxaK0ToJcbsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 55R5kIb2004544;
+	Fri, 27 Jun 2025 07:46:18 +0200
+Date: Fri, 27 Jun 2025 07:46:18 +0200
+From: Willy Tarreau <w@1wt.eu>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+        linux-kernel@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [RFC PATCH 3/3] tools/nolibc: add a new "install_all_archs"
+ target
+Message-ID: <20250627054618.GA4540@1wt.eu>
+References: <20250620103705.10208-1-w@1wt.eu>
+ <20250620103705.10208-4-w@1wt.eu>
+ <92eda9ff-116e-4ec1-930c-7474da9652fc@t-8ch.de>
+ <b14da196-84cc-4d13-baa2-952ba22f5a3e@app.fastmail.com>
+ <89a2e713-edfd-4556-b321-cdccc3437a43@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:194d:b0:3dd:c40d:787e with SMTP id
- e9e14a558f8ab-3df4ab56738mr27583995ab.2.1751003041875; Thu, 26 Jun 2025
- 22:44:01 -0700 (PDT)
-Date: Thu, 26 Jun 2025 22:44:01 -0700
-In-Reply-To: <20250627051303.2837086-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685e2fa1.a00a0220.34b642.0154.GAE@google.com>
-Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl
- (3)
-From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <89a2e713-edfd-4556-b321-cdccc3437a43@t-8ch.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hello,
+On Fri, Jun 27, 2025 at 07:11:45AM +0200, Thomas Weißschuh wrote:
+> On 2025-06-26 23:15:07+0200, Arnd Bergmann wrote:
+(...)
+> With the symlink, a given generic UAPI tree can be specialized to one
+> specific architecture. But here we want to create a full sysroot that works
+> for all architectures *at the same time*. So a symlink would not be enough.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Exactly!
 
-Reported-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
-Tested-by: syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com
+> > If it's indeed possible to concatenate the path name (I couldn't
+> > figure that out either), that could also be done in place of the
+> > symlink but simpler than the #if/#elif/#elif/... block, like
+> > 
+> > #include <arch.h> // defines ARCH_PREFIX
+> > #include CONCAT(ARCH_PREFIX, ioctl.h)
+> 
+> If we can't get it to work like this I would still prefer to have a
+> template header file which gets specialized with sed instead of the
+> Makefile loop.
 
-Tested on:
+The thing is that it's not a single header, it's for each header file
+present in asm/. And we can't request that anyone adding anything into
+asm would also have to maintain one extra template for each of them.
 
-commit:         67a99386 Merge tag 'v6.16-p6' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=134d3b70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=595d344ff0b23ac5
-dashboard link: https://syzkaller.appspot.com/bug?extid=9b9124ae9b12d5af5d95
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=134a808c580000
+Or I'm simply not getting how you would envision it maybe.
 
-Note: testing is done by a robot and is best-effort only.
+Willy
