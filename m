@@ -1,97 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E2C298249;
-	Fri, 27 Jun 2025 09:31:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6401F14A82;
+	Fri, 27 Jun 2025 09:31:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751016673; cv=none; b=WflkjUdIupQekIbZ995lSHOCtv//f95hexuFCq5WPfyAe95ogoXS4RAw/6Opbtrx4FN9JLcL0LxptuL3XvTJ16IHqKEf2SuWZf/0G8Fgp4wc2H1Wu0qBn8H1YhbVKPBH0QIQL0Bg1YuSrPiINlr02t+OAqspO2Z7qMLKvPmpmmM=
+	t=1751016697; cv=none; b=StfTJvkVZsRIdZ8KeDAEh1x3BFceBFlQkrHbNuBpd2eh6y9eXKxg3BrPegE+13ZcY/F7oMdCQ+ah3ilvdSTBnDUhypm8P2XYPH5nRGwyyxQIRlENk48NVhJkWw/Nwo3PvOtzouMhWsBtvXhkbkpgB6GChGLgeDR6YwVkgKtu+Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751016673; c=relaxed/simple;
-	bh=PfLvLuu3VqBR8of5r4wurKyduxqxtC+tsoMskrI7zzU=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=O+tL2HNaEZ6u3gEu3Aai/HIqIzFsbIJrxh6sIni9FRG/AgUPoWDsi6HIuwvQvAMgA7Iyt9Rc4vq25gKt7yfw52APitbCeV4cXwd6efO8amE8ulBbQNLJM6nOuYjQHKIDRllviShnrKRfQc3Wyi6hacM3Ffst3VaP5b3I3Z5FNIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqf9iZNK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751016697; c=relaxed/simple;
+	bh=VVXzjakLrbQT4ZfJ9FQFUeBjGu5c9RhpGPfJmxmATuo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f3Kp4dY1B8k5lQpapXYads3XgYaZ44CKYJVI/cICMg7EH59uS3UYtphqFFIOCIZmHodE+hiKjXtcPRt75HGnRjcX5HegqfCjIQtAoG//LVjuflrO9OX7owMWxkf3SqIMRaxcAEH+UUWSdWeMQvsVi1gb/3Kgf0tMv0N7VTQ2Fq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3QCbd3a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqf9iZNK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 177BBC4CEE3;
-	Fri, 27 Jun 2025 09:31:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3QCbd3a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38D03C4CEE3;
+	Fri, 27 Jun 2025 09:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751016673;
-	bh=PfLvLuu3VqBR8of5r4wurKyduxqxtC+tsoMskrI7zzU=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=nqf9iZNKeurHEpBJ8I5dLQUSCiQCfdApL+fh0X80KJK6cdKMXJKXccwoUbwOjz3M+
-	 f5EwllrcdrMU1NZ7NHMz3j7VGWBwebCwKbuyVUN7wri9vOfo49ymroy97DWFN0z1+5
-	 DGAZrG/ID0Z9FmW7gDLwbkcZ8yZpLprTm5oUy9+oH7fR3AZcIf5Oj0wO8fWqXAHqZ/
-	 R5/t3R1e2Wg0UbvTUjtifqg3v7mzYA17Yc52aKSzfeOmN+TQjSGJUBZ4Sef8TheX+v
-	 MgV4mjJo67GrmGjCnfWBt9pK/dyG2qjqja706gQT/lA2MsVzNISTgoOl9GuV0gRcqk
-	 TuuE0RhJmeBVQ==
-Date: Fri, 27 Jun 2025 04:31:12 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1751016697;
+	bh=VVXzjakLrbQT4ZfJ9FQFUeBjGu5c9RhpGPfJmxmATuo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h3QCbd3a3WNQO6uK0sf1DKlI8wHjWukKpFM/KjCKtA+rSTrUNhlikURX0cRcKGFka
+	 DVAew2kURrmw64+U+ImSg1Jism4TRa/lRm1w/ax6ym4YoQk7WAcKZZeCgk3GA6b9yg
+	 FQAogSMZPMWSsAHHg3X/B5h1Crf+Q1g6gRUP+tSvtA+pMzsD+kuilwxzzYKXIf3Sk0
+	 jq+W2CecRi5eekzvv2aTVf6RVsrf6Qe9vDxshtrOqIs8OZlwo5uxZJYuDafFah0sBQ
+	 iVdqrDmapGye4qXlYSW0sumwt8+CWiq80IDs7IXMHc50VynCUPpfvZ0SUa67ZvzJeY
+	 78t0FRuqcZ2TA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uV5Qn-000000000FB-1fEb;
+	Fri, 27 Jun 2025 11:31:37 +0200
+Date: Fri, 27 Jun 2025 11:31:37 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
+	mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
+	kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+	kw@linux.com, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+	qiang.yu@oss.qualcomm.com, quic_krichai@quicinc.com,
+	quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v7 1/5] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
+ Update pcie phy bindings for qcs8300
+Message-ID: <aF5k-Scgk6KTI_uQ@hovoldconsulting.com>
+References: <20250625092539.762075-1-quic_ziyuzhan@quicinc.com>
+ <20250625092539.762075-2-quic_ziyuzhan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-leds@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Vincent Knecht <vincent.knecht@mailoo.org>, Lee Jones <lee@kernel.org>, 
- Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- linux-arm-kernel@lists.infradead.org, linux-phy@lists.infradead.org, 
- imx@lists.linux.dev, devicetree@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@kernel.org>, 
- Li Jun <jun.li@nxp.com>, Fabio Estevam <festevam@gmail.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250627-dt-bindings-db-v1-2-d5c7072acbee@linaro.org>
-References: <20250627-dt-bindings-db-v1-0-d5c7072acbee@linaro.org>
- <20250627-dt-bindings-db-v1-2-d5c7072acbee@linaro.org>
-Message-Id: <175101667122.2392436.17662976986893381131.robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: phy: fsl,imx8mq-usb: Drop 'db' suffix
- duplicating dtschema
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625092539.762075-2-quic_ziyuzhan@quicinc.com>
 
+On Wed, Jun 25, 2025 at 05:25:35PM +0800, Ziyue Zhang wrote:
+> The gcc_aux_clk is not required by the PCIe PHY on qcs8300 and is not
+> specified in the device tree node. Hence, move the qcs8300 phy
+> compatibility entry into the list of PHYs that require six clocks.
+> 
+> As no compatible need the entry which require seven clocks, delete it.
 
-On Fri, 27 Jun 2025 10:01:52 +0200, Krzysztof Kozlowski wrote:
-> A common property unit suffix '-db' was added to dtschema, thus
-> in-kernel bindings should not reference the type.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
+Please add the missing Fixes tag.
+
+> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
-> 
-> RFC because this depends on dtschema changes and should be accepted
-> after new dtschema is released with this merged:
-> https://github.com/devicetree-org/dt-schema/pull/166
-> ---
->  Documentation/devicetree/bindings/phy/fsl,imx8mq-usb-phy.yaml | 1 -
->  1 file changed, 1 deletion(-)
-> 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+This patch depends on
 
-yamllint warnings/errors:
+	https://lore.kernel.org/lkml/20250625090048.624399-2-quic_ziyuzhan@quicinc.com/
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/fsl,imx8mq-usb-phy.yaml: fsl,phy-pcs-tx-deemph-3p5db-attenuation-db: missing type definition
+(which you point out in the cover letter), but you should be removing
+the bogus 'phy_aux' clock when removing the last user and not before.
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250627-dt-bindings-db-v1-2-d5c7072acbee@linaro.org
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Johan
