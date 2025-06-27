@@ -1,81 +1,126 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp-1909.mail.infomaniak.ch (smtp-1909.mail.infomaniak.ch [185.125.25.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC469298CAB;
-	Fri, 27 Jun 2025 10:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF69339A8
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751021618; cv=none; b=D/D73PvdmTNYO4FQOLDBddowdFjCs27k5X5fDjMHKyrWPaCnrLbipRRvk5hEbTyIrAl007cghRDOgmKTv63FRYCn/iI1IHUJ72pmdFI1mnn8Urx23b7zQkryfOSAMu635zSIsv8Z+GYAmG8SXFgmOnJJywgkaGwfN4Z5v2CgCBI=
+	t=1751021663; cv=none; b=QA5XPls5os6BWPWvzjhSkgJWfBJdSprFwJOVOzFdU+acdySHL9as0Wz6gYaLLmmfWI7jIQQVlVMLgQvB44zlErAOY3ncVYgPZT9d2NsgNLfZ2dyJ2+U5+CDSsgTNcOViVqMFJ7lbfl2dWW5kTGZz8ydf6MbuGIuDVsTb/z/bIdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751021618; c=relaxed/simple;
-	bh=pxfn6oqKdlWo0GE6HNa/lOA15Wgs5GoyzyY0cfYI/yY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VBVaNU5LjAp9VK5chG86d3+vBvXYlPj8vIpWPLwYpjUoMrw6U0LISezQ2eCf/XvcUu/tm1cYTnHdmxoZmJgOFaDCuboQ8gXjgGrSGwy2m6AZQbqytu252/dkpFFueLB4wFRlHZQ7lRmal0Xnk084IhJQ+tQ0gQk1nIkAN8/JjOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=N2fbB8AQ; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N2fbB8AQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=yCxgES6+AiHPFhHwzvZQriIUuOAhP73ey2SdBgFz/io=; b=N2fbB8AQAxXkgTuwSRm3lirbgY
-	Fr/CG3CxVovqXOyEBuQuoCvNL7ZrEEPq0MDA8nPN7C6lOfXmC035UazzdKQ33I/le4S7i4A/zMRHR
-	/BfH0T1GC8C3OWJLXHMHsb1gB46TxliXFBvsNAsA+OGhQ8lvbxKFeo8pzx4PTo69FBFUt+R288JNP
-	8k41oO+e45FzSn+NWw3Qo4goR1118JiUYo56O9WyuI3bKuPF61Nbs6ZfpPnj0TnDXjNaWdVsutCZA
-	mhKyPvcFFtE6HgDvfz7mvvKjsD7ygpivWkx1Q26bjc9OrO2x1BZHsc1g0R5woFGd7axMGMpBSsqL+
-	Naol2nfg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uV6i1-00000006J3B-00U4;
-	Fri, 27 Jun 2025 10:53:29 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 911C1300222; Fri, 27 Jun 2025 12:53:28 +0200 (CEST)
-Date: Fri, 27 Jun 2025 12:53:28 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
-	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
-	Marcos Paulo de Souza <mpdesouza@suse.com>,
-	Weinan Liu <wnliu@google.com>,
-	Fazla Mehrab <a.mehrab@bytedance.com>,
-	Chen Zhongjin <chenzhongjin@huawei.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Dylan Hatch <dylanbhatch@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [PATCH v3 42/64] kbuild,x86: Fix special section module
- permissions
-Message-ID: <20250627105328.GZ1613200@noisy.programming.kicks-ass.net>
-References: <cover.1750980516.git.jpoimboe@kernel.org>
- <cf1cfb9042005be7bf0a1c3f2bdbeebc769e3ee4.1750980517.git.jpoimboe@kernel.org>
+	s=arc-20240116; t=1751021663; c=relaxed/simple;
+	bh=ps8TnDc3mwOIZCMqh0n9tjAgd+5Ba8NAdAEEqvpYOjA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Ee4eVq/jT2HSQSG7xDlSvH6arFJQKVn2IcqNS9mDqoPULB5Z0l1GtU7MfGk+i4Nynr4YbcVW+yY1tZM5dhLr33nqtJPEx3e4QtH9L69ntP+X5Z7VHXp3h/jILis/oOHmCX6tVBVashIfCNL9tUJzWNmmEmeofdUb753cUhN3/Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=185.125.25.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bTC9K2yQlzYWw;
+	Fri, 27 Jun 2025 12:54:13 +0200 (CEST)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bTC9J29nszy7b;
+	Fri, 27 Jun 2025 12:54:12 +0200 (CEST)
+From: Quentin Schulz <foss+kernel@0leil.net>
+Date: Fri, 27 Jun 2025 12:53:53 +0200
+Subject: [PATCH v4 1/5] dt-bindings: mfd: rk806: allow to customize PMIC
+ reset mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cf1cfb9042005be7bf0a1c3f2bdbeebc769e3ee4.1750980517.git.jpoimboe@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250627-rk8xx-rst-fun-v4-1-ce05d041b45f@cherry.de>
+References: <20250627-rk8xx-rst-fun-v4-0-ce05d041b45f@cherry.de>
+In-Reply-To: <20250627-rk8xx-rst-fun-v4-0-ce05d041b45f@cherry.de>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Lukasz Czechowski <lukasz.czechowski@thaumatec.com>, 
+ Daniel Semkowicz <dse@thaumatec.com>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Quentin Schulz <quentin.schulz@cherry.de>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Infomaniak-Routing: alpha
 
-On Thu, Jun 26, 2025 at 04:55:29PM -0700, Josh Poimboeuf wrote:
-> An upcoming patch will add the SHF_MERGE flag to x86 __jump_table and
-> __bug_table so their entry sizes can be defined in inline asm.
-> 
-> However, those sections have SHF_WRITE, which the Clang linker (lld)
-> explicitly forbids combining with SHF_MERGE.
-> 
-> Those sections are modified at runtime and must remain writable.  While
-> SHF_WRITE is ignored by vmlinux, it's still needed for modules.
-> 
-> To work around the linker interference, remove SHF_WRITE during
-> compilation and restore it after linking the module.
+From: Quentin Schulz <quentin.schulz@cherry.de>
 
-This is vile... but I'm not sure I have a better solution.
+The RK806 PMIC allows to configure its reset/restart behavior whenever
+the PMIC is reset either programmatically or via some external pins
+(e.g. PWRCTRL or RESETB).
 
-Eventually we should get the toolchains fixed, but we can't very well
-mandate clang-21+ to build x86 just yet.
+The following modes exist:
+ - 0; restart PMU,
+ - 1; reset all power off reset registers and force state to switch to
+   ACTIVE mode,
+ - 2; same as mode 1 and also pull RESETB pin down for 5ms,
+
+For example, some hardware may require a full restart (mode 0) in order
+to function properly as regulators are shortly interrupted in this mode.
+
+This is the case for RK3588 Jaguar and RK3588 Tiger which have a
+companion microcontroller running on an independent power supply and
+monitoring the PMIC power rail to know the state of the main system.
+When it detects a restart, it resets its own IPs exposed to the main
+system as if to simulate its own reset. Failing to perform this fake
+reset of the microcontroller may break things (e.g. watchdog not
+automatically disabled, buzzer still running until manually disabled,
+leftover configuration from previous main system state, etc...).
+
+Some other systems may be depending on the power rails to not be
+interrupted even for a small amount of time[1].
+
+This allows to specify how the PMIC should perform on the hardware level
+and may differ between harwdare designs, so a DT property seems
+warranted. I unfortunately do not see how this could be made generic
+enough to make it a non-vendor property.
+
+[1] https://lore.kernel.org/linux-rockchip/2577051.irdbgypaU6@workhorse/
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+ .../devicetree/bindings/mfd/rockchip,rk806.yaml     | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml b/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml
+index 3c2b06629b75ea94f90712470bf14ed7fc16d68d..eb5bca31948ef0d39c46025d0cca65b8b4105a50 100644
+--- a/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml
++++ b/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml
+@@ -31,6 +31,27 @@ properties:
+ 
+   system-power-controller: true
+ 
++  rockchip,reset-mode:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 1, 2]
++    description:
++      Mode to use when a reset of the PMIC is triggered.
++
++      The reset can be triggered either programmatically, via one of
++      the PWRCTRL pins (provided additional configuration) or
++      asserting RESETB pin low.
++
++      The following modes are supported
++
++      - 0; restart PMU,
++      - 1; reset all power off reset registers and force state to
++        switch to ACTIVE mode,
++      - 2; same as mode 1 and also pull RESETB pin down for 5ms,
++
++      For example, some hardware may require a full restart (mode 0)
++      in order to function properly as regulators are shortly
++      interrupted in this mode.
++
+   vcc1-supply:
+     description:
+       The input supply for dcdc-reg1.
+
+-- 
+2.50.0
+
