@@ -1,128 +1,157 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F5A29824B;
-	Fri, 27 Jun 2025 10:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E49E4EB38
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751020327; cv=none; b=iE/SrSTj4qsbOVWjILI2OuN76TSVtUhT8LPsi5AyFsnQZ+GhG47ROxbISIms0Fstae09Z+qSzW1lNBWjfZbfH1bId6fcmIWPFqJe4pX9w6lLo5W6mDIIGHQMBz6QgCG0v3EC3ILOBSIM1HvJ3MF96QjZrNCRDqPkjSQwJRbHoak=
+	t=1751020419; cv=none; b=mmqjI/2/tgf2hJNQIjwrzxQBgCIgHZj6GBQ49MTnA7i9Nvvl5IgYG+nO+pPsmYjxyNZMUt6n3fpyzpU/YsBjlOHLfssTC334aFVO0kF8iNYpNvJsBS7r4ZJZy+9xfa9GP+vak4v8CotW2P6WVbehePS6+PfOofU0Q60d3jcWVGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751020327; c=relaxed/simple;
-	bh=dqWLPFhz8rc1ZTXlMaJumoRCie1NT15EY7+LO9HcNC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IaYCW9+YeGfFuf6ts201KsR8FY4N2mmYhb9X/rsus5xaT89c8YZeVuiWniRaym5tHLQlDY8B48ceCpZ4rZOQxktLywS+ZB2LT1e80RN2aZJrYF1if4Bh8r7meaA4sbrwxaG3VMz5zA/VqWsvuQe6oP+wg2H7WtwArXr2RudWHvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UoviRh7l; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751020419; c=relaxed/simple;
+	bh=aIbu24VZKsQ0mNNKyKVSxFOTzJ56cEmLBlpiEyUahzA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Y3hxWjaXHxqJk5UocFapHjm6m2endxEpbGUnNtji6I/ALtueY8T9w84LnNwwXy4QML8MPbPVMDu0NPQWiPcZBFe44qs0ceovZ5wNOc0XTmoKD+HK/DRpEUCFe8OYBK6QTrVBqHhYHfSLsvO0GwMMv8d1Z74j55eemUNn2Zi11Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CBKmPHtc; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UoviRh7l"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=a5DbHwM2RC/F41mKJ6XtRMRcJqm5DzALFSyCg+z/++Y=; b=UoviRh7l6mtdS4pvSN45NIy1GS
-	Q1xm1CVZa0z5bPkHbwkuDfLXc0hMptb5m/xORqfEiqT7sBQP0QUe0sX2uRp5yoYVei+Y+qB+bIwxS
-	g4HTETlpY8Tb0RvGNptLJo52+FkJxz55DgWNclVcnXeAz+a1CPwG4ojcOkGivHp4yS3QOq9lq+yOJ
-	hnD4b8USppfLMAV5pcJ2McDMP3TtbthuEeRGT6eGb5EqzGjCG2vToYO840NZSX+m+rS6USYox+gRT
-	t5VtAg5Yq4uyhNV3iFAtxvl8ZkRkShBxsFEtCP0pThZOfyknCw31i3rSsY/8h+u876MCgicV9733n
-	2Z2pFScg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uV6NC-0000000Dptg-3zkC;
-	Fri, 27 Jun 2025 10:31:59 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 88146300192; Fri, 27 Jun 2025 12:31:58 +0200 (CEST)
-Date: Fri, 27 Jun 2025 12:31:58 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
-	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
-	Marcos Paulo de Souza <mpdesouza@suse.com>,
-	Weinan Liu <wnliu@google.com>,
-	Fazla Mehrab <a.mehrab@bytedance.com>,
-	Chen Zhongjin <chenzhongjin@huawei.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Dylan Hatch <dylanbhatch@google.com>
-Subject: Re: [PATCH v3 29/64] objtool: Mark prefix functions
-Message-ID: <20250627103158.GV1613200@noisy.programming.kicks-ass.net>
-References: <cover.1750980516.git.jpoimboe@kernel.org>
- <f277ca3e78d662268d6303637b1bba71c2a22b1f.1750980517.git.jpoimboe@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CBKmPHtc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751020416;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Dulzs6tJ70GQvmeyAReKMXNerxvTVJjW28pt4S38/Hw=;
+	b=CBKmPHtcC6Wp2NRfTsfsbYbI6fHOeC0/z0KgDSUWOTK81rosXTooEdo/2yPMzakfTedFsL
+	5BnQtbNHrSoVO9ofECqyM+S9am3lMMwYGcVh0l9a0CVbGnaLs64LIWrMwmRUJn7U3ScXyq
+	xBOkGAEfw5BwrOf6y/ctvoq5A74uLQQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-633-X7inpYuvMXOVb8u0c_It4g-1; Fri, 27 Jun 2025 06:33:35 -0400
+X-MC-Unique: X7inpYuvMXOVb8u0c_It4g-1
+X-Mimecast-MFC-AGG-ID: X7inpYuvMXOVb8u0c_It4g_1751020414
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4e9252ba0so1266156f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 03:33:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751020414; x=1751625214;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dulzs6tJ70GQvmeyAReKMXNerxvTVJjW28pt4S38/Hw=;
+        b=XmWO7ns7CMQy5AxBOZDiR6buawcWHe+L69DeIgVzPNoqd7awBGguQ8dSXVnGES7qt1
+         gWf6egcuiLJRBEKo7BCSemHjEAU9AjmX5f3hfJNit8ZhSCK/BXisKpzDsYkw4ybGpGtk
+         KgRqXuinS/xSaotz747QpaK3fZ9KjyRVXmiHWYaocx4mPsPfFBajKSfqElr/R6NlxiQs
+         AcdQxkfiXvRY4j9kptehnlkslEhip9UWOpTjjMcSqs2zarpY8hMV9nso7NOxZDsa0qku
+         9pmzSMaNx+UbPwsxMI3uFTRPmdR8nNGrUza0X6+I5mi5fucwXs/5UKaG0Hb4HnnW2l1y
+         +Ycg==
+X-Gm-Message-State: AOJu0YyNq+702x5uabtrv/bmMILayUbpRSwfL+Wa8CT+oDHYHgB8fk8S
+	ioJW8MQBHMRxlmWeoa1d0vvbKI7u95GMF0KVuvKotUU2LZnw334sX7lQjsemjUjfJYkU+W5knbW
+	J20sAdzOhEXauScGmF4p+09bAWb3j/psf631Gwn3wdLNoH9fSEfHGhXkfPuPR6lEBng==
+X-Gm-Gg: ASbGncswyq6dNHrxCzt+4EvxyIk0Gfg0jCqFpfQ0A6Lz9eAPQSJMYWSgSSHU0/u304/
+	cRM3vuHUQgrbU1SGxiC045y02PYxrKzYyJoJxQ9cyuxtsoDfpgnvPi2LyST9SWu1RSwXyH2Fja4
+	uVKmqivyfAvFoqFOxL/RnQSS0XGx3fhWPCop1F+7ixXl3LZDLRS1zjgkAphNMdyKatXybnAz+Ui
+	0VKlR3rL6rZaFKbjvv5/QR/rtNRkXLX3nrPi4z9iwWjK9QLBy553Fa3cAJlcpTVxZcYqXyiIhAK
+	TcuHfIB6aKhDCDfd23KjjyU7Ex/OdP2RqGODt7p7oDaYuMm1BSPgpXzCHi5Wlmrag9V7WusUu+N
+	Lkxym
+X-Received: by 2002:a05:6000:649:b0:3a4:d4cd:b06 with SMTP id ffacd0b85a97d-3a8fee65059mr2554129f8f.34.1751020414134;
+        Fri, 27 Jun 2025 03:33:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGr8/RKNk/JTVd5LqMGQVf2Ns+S9uVp6luEws4kRt9cVcCSr6ObG/jWvZ4ZnNoCEPUruiIDIw==
+X-Received: by 2002:a05:6000:649:b0:3a4:d4cd:b06 with SMTP id ffacd0b85a97d-3a8fee65059mr2554114f8f.34.1751020413648;
+        Fri, 27 Jun 2025 03:33:33 -0700 (PDT)
+Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7facf9sm2309041f8f.22.2025.06.27.03.33.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 03:33:32 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH v1 1/2] firmware: sysfb: Unorphan sysfb files
+In-Reply-To: <aF5w4QTbSkebYbk2@smile.fi.intel.com>
+References: <20250626172039.329052-1-andriy.shevchenko@linux.intel.com>
+ <20250626172039.329052-2-andriy.shevchenko@linux.intel.com>
+ <87ikkhd0uv.fsf@minerva.mail-host-address-is-not-set>
+ <aF5eL1o3WNo3Q7_p@smile.fi.intel.com>
+ <87wm8xbkyh.fsf@minerva.mail-host-address-is-not-set>
+ <aF5w4QTbSkebYbk2@smile.fi.intel.com>
+Date: Fri, 27 Jun 2025 12:33:31 +0200
+Message-ID: <87ldpdbhj8.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f277ca3e78d662268d6303637b1bba71c2a22b1f.1750980517.git.jpoimboe@kernel.org>
+Content-Type: text/plain
 
-On Thu, Jun 26, 2025 at 04:55:16PM -0700, Josh Poimboeuf wrote:
-> In preparation for the objtool klp diff subcommand, introduce a flag to
-> identify __pfx_*() and __cfi_*() functions in advance so they don't need
-> to be manually identified every time a check is needed.
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> ---
->  tools/objtool/check.c               | 3 +--
->  tools/objtool/elf.c                 | 4 ++++
->  tools/objtool/include/objtool/elf.h | 6 ++++++
->  3 files changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 80bafcdb42af..55cc3a2a21c9 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -3564,8 +3564,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->  
->  		if (func && insn_func(insn) && func != insn_func(insn)->pfunc) {
->  			/* Ignore KCFI type preambles, which always fall through */
-> -			if (!strncmp(func->name, "__cfi_", 6) ||
-> -			    !strncmp(func->name, "__pfx_", 6))
-> +			if (is_prefix_func(func))
->  				return 0;
->  
->  			if (file->ignore_unreachables)
-> diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-> index 59568381486c..1bb86151243a 100644
-> --- a/tools/objtool/elf.c
-> +++ b/tools/objtool/elf.c
-> @@ -442,6 +442,10 @@ static void elf_add_symbol(struct elf *elf, struct symbol *sym)
->  	elf_hash_add(symbol, &sym->hash, sym->idx);
->  	elf_hash_add(symbol_name, &sym->name_hash, str_hash(sym->name));
->  
-> +	if (is_func_sym(sym) &&
-> +	    (strstarts(sym->name, "__pfx_") || strstarts(sym->name, "__cfi_")))
-> +		sym->prefix = 1;
-> +
->  	if (is_func_sym(sym) && strstr(sym->name, ".cold"))
->  		sym->cold = 1;
->  	sym->pfunc = sym->cfunc = sym;
-> diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-> index f41496b0ad8f..842faec1b9a9 100644
-> --- a/tools/objtool/include/objtool/elf.h
-> +++ b/tools/objtool/include/objtool/elf.h
-> @@ -72,6 +72,7 @@ struct symbol {
->  	u8 frame_pointer     : 1;
->  	u8 ignore	     : 1;
->  	u8 cold		     : 1;
-> +	u8 prefix	     : 1;
->  	struct list_head pv_target;
->  	struct reloc *relocs;
->  	struct section *group_sec;
-> @@ -229,6 +230,11 @@ static inline bool is_local_sym(struct symbol *sym)
->  	return sym->bind == STB_LOCAL;
->  }
->  
-> +static inline bool is_prefix_func(struct symbol *sym)
-> +{
-> +	return is_func_sym(sym) && sym->prefix;
-> +}
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-func_is_prefix() ?
+[...]
 
-Also, since we only ever set sym->prefix when is_func_sym(), this helper
-could avoid checking that again.
+>> 
+>> That's just because there is an entry for arch/x86/. The problem then is
+>> that there isn't an entry for drivers/firmware. It was orphaned then just
+>> because it was moved to a directory that has no entry in MAINTAINERS.
+>> 
+>> > See the difference?
+>> 
+>> There is no need to have such a rude tone.
+>
+> It wasn't meant to be rude, sorry. The point is that any change in
+
+No worries.
+
+> drivers/firmware/sysfb* and respective include are not visible to (any)
+> maintainers, they just might be sent for a luck of somebody to pick
+> them up by browsing the LKML for such things.
+>
+
+Right. But get_maintainer.pl still reports I think the correct people to Cc:
+
+./scripts/get_maintainer.pl -f -- drivers/firmware/sysfb*
+Thomas Zimmermann <tzimmermann@suse.de> (commit_signer:4/4=100%,authored:2/4=50%,added_lines:11/43=26%,removed_lines:5/11=45%,commit_signer:1/1=100%,authored:1/1=100%,added_lines:1/1=100%,removed_lines:30/30=100%)
+Javier Martinez Canillas <javierm@redhat.com> (commit_signer:4/4=100%,authored:1/4=25%,added_lines:19/43=44%,commit_signer:1/1=100%)
+Alex Deucher <alexander.deucher@amd.com> (commit_signer:3/4=75%,authored:1/4=25%,added_lines:13/43=30%,removed_lines:6/11=55%)
+Tzung-Bi Shih <tzungbi@kernel.org> (commit_signer:1/4=25%)
+linux-kernel@vger.kernel.org (open list)
+
+In my opinion both Thomas and me have much more context and knowledge of
+the sysfb codebase than the x86 maintainers. It was just for historical
+reasons that the sysfb code ended in the arch/x86/ sub-directory.
+
+But you are correct that dri-devel at least should also be in the Cc list.
+
+> ...
+>
+>> >> > +F:	drivers/firmware/sysfb*.c
+>> >
+>> >> I would prefer these to be in the "DRM DRIVER FOR FIRMWARE FRAMEBUFFERS"
+>> >> entry instead of "DRM DRIVERS" since the former is what has most of the
+>> >> code for the sysfb infrastructure.
+>> >
+>> > Then do it, please, fix the above.
+>> 
+>> Part of the review process is to give feedback to patch authors. I don't
+>> understand why you expect me to fix an issue you brought up just because
+>> I ask you to rework your patch a little.
+>
+> In my humble opinion, the author of the patch that makes the problem appear
+> can help to fix that as well. Are my expectations too high?
+>
+> In any case, this was an ad-hoc patch due to the second one, so this one
+> may be considered as a administrative bug report.
+>
+
+That's OK, but it wasn't framed as a bug report but as a patch and that's why
+I gave my feedback. But I'll post a patch and add a Reported-by tag from you.
+
+Thomas, I think we can then only merge patch #2 and I will take care of #1.
+
+-- 
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
+
