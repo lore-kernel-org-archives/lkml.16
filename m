@@ -1,337 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF8F2E92CA;
-	Fri, 27 Jun 2025 15:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC7C2E92AD
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751038170; cv=none; b=SDLR2LFhADWKAQSg11sCyklB0MrU92J8sqUAyUIKr8T2KgBCYKCz/Wxz6sX+g93kQuvbOl3tx540H/N7oMam8T7vCVC0DsxSWr86UV+pKQ9KaGysZiwmfZ4FRfjHYdx2Mk/W1NMljhSUMgc4cQpVZJEunv1Sz4L8N6abQXpwoK8=
+	t=1751038193; cv=none; b=aCXyNYjk76AfNVZIjqi3FFe25htUoaLvY11+IpFWa5naPA+1UQ6bLz+gkdG+ZU+q32+biD3VnjKZoc8elgnuj0PHBqh6UzB5/3svPrOS8TGF1iNYgFGTC7e7RWXv+AebM5p91RhlyR/GXmNs64h7QqjDfIn8bQKsiA3u803nCgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751038170; c=relaxed/simple;
-	bh=bhvlZxpF344s3Cn9ppDtECocZaX1zt5idxwPfkm+U2o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ReaxlrIWJ2pYEUVOJOSC8UCrNFpSVjuwbviT9Tg/F9K8DHPTcVqzqikEVNcNWXeWB+ulWFpOV7QTmaGjI/7lufuh+MUd6V6jxQE6uUdlxeXmw93w7aye8GQWbhKn1XXK1vzxUiTVJMQGElqEhEg6C9gKTIzaRO4toXMc3SZ9asM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JkGB5Sru; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751038193; c=relaxed/simple;
+	bh=9aycGSq3aS/GqzzreilPYPPBxPAckX6Dfr9ZfVljmg4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H2lItznWKod9dDa4zV2Yz7xXpBaSztgezIEYu0W0sV+5cj7NeyjkJIVS2Sc8CyCHZ2EsNu82HZqYXiQKxTVAiSMpWSAyhal8NNzP1R0csV7mpVJOeV4eyBMnydeQqviwThFxZ4UVv07FEl0Zqrm/i8EhIyFYOYG26cFlXoIXmpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jojdp3aJ; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JkGB5Sru"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DDE8C4CEED;
-	Fri, 27 Jun 2025 15:29:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751038169;
-	bh=bhvlZxpF344s3Cn9ppDtECocZaX1zt5idxwPfkm+U2o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JkGB5SruwGHa7bhPahYo6Ha4osWfBPDQBjj9IKPRyIjusvaMwmsipcrvxRJGvVk3K
-	 Po1Z4uq+VMj0Z/joaBfC/2ajkUW4yIfutqFcJXUgczFMTjaWARBItsazPLcSHPRReY
-	 TdEwem2snEQ7H8BwwB9j2jCGQYR3VRW3ky2gtNxLtA0R0SI5f1Ykl1NGH+TJEEm1Tw
-	 KLrAL4nevPFY/U+irslJ2qiqQrMpAZSy+UY4RWj/VV+7XQb1mAyerrGJLPKDX6XCH/
-	 4ufLxjcL44NQnUq7Tz/9n1PBCJSylPFAIgh9j+FTJjcFSpox9yI87mSzNT0D30btgd
-	 Ezy/vmu9AY8bw==
-Received: by wens.tw (Postfix, from userid 1000)
-	id 39E2A5FFBC; Fri, 27 Jun 2025 23:29:27 +0800 (CST)
-From: Chen-Yu Tsai <wens@kernel.org>
-To: Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej@kernel.org>,
-	Samuel Holland <samuel@sholland.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Andre Przywara <andre.przywara@arm.com>,
-	linux-sunxi@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH 3/4] pmdomain: sunxi: add driver for Allwinner A523's PCK-600 power controller
-Date: Fri, 27 Jun 2025 23:29:17 +0800
-Message-Id: <20250627152918.2606728-4-wens@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250627152918.2606728-1-wens@kernel.org>
-References: <20250627152918.2606728-1-wens@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jojdp3aJ"
+Message-ID: <530101b3-34d2-49bb-9a12-c7036b0c0a69@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751038189;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sLiuMRtcmExZlAb2vPZafFZMyEqiWSdyJ2XHpTWjryU=;
+	b=jojdp3aJ6B+Xgwpz/k6+OhYLJXmPgXf95Us1PNv0bB6R1+gv6FBAjoT2fm5yhc9bnqacrM
+	dJgOVT4u5v1BYJtWnvmK5l8QzMJqxt7gFKd8YtXf0nkUr4H7+W/qnhtPH/Z0E7K4fZlxiG
+	YH3Sa6PrtnlBPZ17rz56nOlQAruaDLA=
+Date: Fri, 27 Jun 2025 23:29:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH v2 1/1] mm/rmap: fix potential out-of-bounds page table
+ access during batched unmap
+Content-Language: en-US
+To: David Hildenbrand <david@redhat.com>, Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, baolin.wang@linux.alibaba.com,
+ chrisl@kernel.org, kasong@tencent.com, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-riscv@lists.infradead.org, lorenzo.stoakes@oracle.com,
+ ryan.roberts@arm.com, v-songbaohua@oppo.com, x86@kernel.org,
+ huang.ying.caritas@gmail.com, zhengtangquan@oppo.com, riel@surriel.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, harry.yoo@oracle.com,
+ mingzhe.yang@ly.com, stable@vger.kernel.org, Lance Yang <ioworker0@gmail.com>
+References: <20250627062319.84936-1-lance.yang@linux.dev>
+ <CAGsJ_4xQW3O=-VoC7aTCiwU4NZnK0tNsG1faAUgLvf4aZSm8Eg@mail.gmail.com>
+ <CAGsJ_4z+DU-FhNk9vkS-epdxgUMjrCvh31ZBwoAs98uWnbTK-A@mail.gmail.com>
+ <1d39b66e-4009-4143-a8fa-5d876bc1f7e7@linux.dev>
+ <CAGsJ_4xX+kW1msaXpEPqX7aQ-GYG9QVMo+JYBc18BfLCs8eFyA@mail.gmail.com>
+ <609409c7-91a8-4898-ab29-fa00eb36df02@redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <609409c7-91a8-4898-ab29-fa00eb36df02@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Chen-Yu Tsai <wens@csie.org>
 
-Allwinner A523 family has a second power controller, named PCK-600 in
-the datasheets and BSP. It is likely based on ARM's PCK-600 hardware
-block, with some additional delay controls. The only documentation for
-this hardware is the BSP driver. The standard registers defined in ARM's
-Power Policy Unit Architecture Specification line up. Some extra delay
-controls are found in the reserved range of registers.
 
-Add a driver for this power controller. Delay control register values
-and power domain names are from the BSP driver.
+On 2025/6/27 18:13, David Hildenbrand wrote:
+> On 27.06.25 09:36, Barry Song wrote:
+>> On Fri, Jun 27, 2025 at 7:15 PM Lance Yang <lance.yang@linux.dev> wrote:
+>>>
+>>>
+>>>
+>>> On 2025/6/27 14:55, Barry Song wrote:
+>>>> On Fri, Jun 27, 2025 at 6:52 PM Barry Song <21cnbao@gmail.com> wrote:
+>>>>>
+>>>>> On Fri, Jun 27, 2025 at 6:23 PM Lance Yang <ioworker0@gmail.com> 
+>>>>> wrote:
+>>>>>>
+>>>>>> From: Lance Yang <lance.yang@linux.dev>
+>>>>>>
+>>>>>> As pointed out by David[1], the batched unmap logic in 
+>>>>>> try_to_unmap_one()
+>>>>>> can read past the end of a PTE table if a large folio is mapped 
+>>>>>> starting at
+>>>>>> the last entry of that table. It would be quite rare in practice, as
+>>>>>> MADV_FREE typically splits the large folio ;)
+>>>>>>
+>>>>>> So let's fix the potential out-of-bounds read by refactoring the 
+>>>>>> logic into
+>>>>>> a new helper, folio_unmap_pte_batch().
+>>>>>>
+>>>>>> The new helper now correctly calculates the safe number of pages 
+>>>>>> to scan by
+>>>>>> limiting the operation to the boundaries of the current VMA and 
+>>>>>> the PTE
+>>>>>> table.
+>>>>>>
+>>>>>> In addition, the "all-or-nothing" batching restriction is removed to
+>>>>>> support partial batches. The reference counting is also cleaned up 
+>>>>>> to use
+>>>>>> folio_put_refs().
+>>>>>>
+>>>>>> [1] https://lore.kernel.org/linux-mm/ 
+>>>>>> a694398c-9f03-4737-81b9-7e49c857fcbe@redhat.com
+>>>>>>
+>>>>>
+>>>>> What about ?
+>>>>>
+>>>>> As pointed out by David[1], the batched unmap logic in 
+>>>>> try_to_unmap_one()
+>>>>> may read past the end of a PTE table when a large folio spans 
+>>>>> across two PMDs,
+>>>>> particularly after being remapped with mremap(). This patch fixes the
+>>>>> potential out-of-bounds access by capping the batch at vm_end and 
+>>>>> the PMD
+>>>>> boundary.
+>>>>>
+>>>>> It also refactors the logic into a new helper, 
+>>>>> folio_unmap_pte_batch(),
+>>>>> which supports batching between 1 and folio_nr_pages. This improves 
+>>>>> code
+>>>>> clarity. Note that such cases are rare in practice, as MADV_FREE 
+>>>>> typically
+>>>>> splits large folios.
+>>>>
+>>>> Sorry, I meant that MADV_FREE typically splits large folios if the 
+>>>> specified
+>>>> range doesn't cover the entire folio.
+>>>
+>>> Hmm... I got it wrong as well :( It's the partial coverage that triggers
+>>> the split.
+>>>
+>>> how about this revised version:
+>>>
+>>> As pointed out by David[1], the batched unmap logic in 
+>>> try_to_unmap_one()
+>>> may read past the end of a PTE table when a large folio spans across two
+>>> PMDs, particularly after being remapped with mremap(). This patch fixes
+>>> the potential out-of-bounds access by capping the batch at vm_end and 
+>>> the
+>>> PMD boundary.
+>>>
+>>> It also refactors the logic into a new helper, folio_unmap_pte_batch(),
+>>> which supports batching between 1 and folio_nr_pages. This improves code
+>>> clarity. Note that such boundary-straddling cases are rare in 
+>>> practice, as
+>>> MADV_FREE will typically split a large folio if the advice range does 
+>>> not
+>>> cover the entire folio.
+>>
+>> I assume the out-of-bounds access must be fixed, even though it is very
+>> unlikely. It might occur after a large folio is marked with MADV_FREE and
+>> then remapped to an unaligned address, potentially crossing two PTE 
+>> tables.
+> 
+> Right. If it can be triggered from userspace, it doesn't matter how 
+> likely/common/whatever it is. It must be fixed.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- drivers/pmdomain/sunxi/Kconfig         |   8 +
- drivers/pmdomain/sunxi/Makefile        |   1 +
- drivers/pmdomain/sunxi/sun55i-pck600.c | 225 +++++++++++++++++++++++++
- 3 files changed, 234 insertions(+)
- create mode 100644 drivers/pmdomain/sunxi/sun55i-pck600.c
+Agreed. It must be fixed regardless of how rare the scenario is ;)
 
-diff --git a/drivers/pmdomain/sunxi/Kconfig b/drivers/pmdomain/sunxi/Kconfig
-index 43eecb3ea981..3e2b77cd9a2b 100644
---- a/drivers/pmdomain/sunxi/Kconfig
-+++ b/drivers/pmdomain/sunxi/Kconfig
-@@ -18,3 +18,11 @@ config SUN50I_H6_PRCM_PPU
- 	  Say y to enable the Allwinner H6/H616 PRCM power domain driver.
- 	  This is required to enable the Mali GPU in the H616 SoC, it is
- 	  optional for the H6.
-+
-+config SUN55I_PCK600
-+	bool "Allwinner A523 PCK-600 power domain driver"
-+	depends on PM
-+	select PM_GENERIC_DOMAINS
-+	help
-+	  Say y to enable the PCK-600 power domain driver. This saves power
-+	  when certain peripherals, such as the video engine, are idle.
-diff --git a/drivers/pmdomain/sunxi/Makefile b/drivers/pmdomain/sunxi/Makefile
-index c1343e123759..e344b232fc9f 100644
---- a/drivers/pmdomain/sunxi/Makefile
-+++ b/drivers/pmdomain/sunxi/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_SUN20I_PPU)		+= sun20i-ppu.o
- obj-$(CONFIG_SUN50I_H6_PRCM_PPU)	+= sun50i-h6-prcm-ppu.o
-+obj-$(CONFIG_SUN55I_PCK600)		+= sun55i-pck600.o
-diff --git a/drivers/pmdomain/sunxi/sun55i-pck600.c b/drivers/pmdomain/sunxi/sun55i-pck600.c
-new file mode 100644
-index 000000000000..7248f6113665
---- /dev/null
-+++ b/drivers/pmdomain/sunxi/sun55i-pck600.c
-@@ -0,0 +1,225 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Allwinner PCK-600 power domain support
-+ *
-+ * Copyright (c) 2025 Chen-Yu Tsai <wens@csie.org>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/container_of.h>
-+#include <linux/device.h>
-+#include <linux/dev_printk.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_domain.h>
-+#include <linux/reset.h>
-+#include <linux/slab.h>
-+#include <linux/string_choices.h>
-+
-+#define PPU_PWPR    0x0
-+#define PPU_PWSR    0x8
-+#define	PPU_DCDR0   0x170
-+#define PPU_DCDR1   0x174
-+
-+#define PPU_PWSR_PWR_STATUS	GENMASK(3, 0)
-+#define PPU_POWER_MODE_ON	0x8
-+#define PPU_POWER_MODE_OFF	0x0
-+
-+#define PPU_REG_SIZE	0x1000
-+
-+struct sunxi_pck600_desc {
-+	const char * const *pd_names;
-+	unsigned int num_domains;
-+	u32 logic_power_switch0_delay_offset;
-+	u32 logic_power_switch1_delay_offset;
-+	u32 off2on_delay_offset;
-+	u32 device_ctrl0_delay;
-+	u32 device_ctrl1_delay;
-+	u32 logic_power_switch0_delay;
-+	u32 logic_power_switch1_delay;
-+	u32 off2on_delay;
-+};
-+
-+struct sunxi_pck600_pd {
-+	struct generic_pm_domain genpd;
-+	struct sunxi_pck600 *pck;
-+	void __iomem *base;
-+};
-+
-+struct sunxi_pck600 {
-+	struct device *dev;
-+	struct genpd_onecell_data genpd_data;
-+	struct sunxi_pck600_pd pds[];
-+};
-+
-+#define to_sunxi_pd(gpd) container_of(gpd, struct sunxi_pck600_pd, genpd)
-+
-+static int sunxi_pck600_pd_set_power(struct sunxi_pck600_pd *pd, bool on)
-+{
-+	struct sunxi_pck600 *pck = pd->pck;
-+	struct generic_pm_domain *genpd = &pd->genpd;
-+	int ret;
-+	u32 val, reg;
-+
-+	val = on ? PPU_POWER_MODE_ON : PPU_POWER_MODE_OFF;
-+
-+	reg = readl(pd->base + PPU_PWPR);
-+	FIELD_MODIFY(PPU_PWSR_PWR_STATUS, &reg, val);
-+	writel(reg, pd->base + PPU_PWPR);
-+
-+	/* push write out to hardware */
-+	reg = readl(pd->base + PPU_PWPR);
-+
-+	ret = readl_poll_timeout_atomic(pd->base + PPU_PWSR, reg,
-+					FIELD_GET(PPU_PWSR_PWR_STATUS, reg) == val,
-+					0, 10000);
-+	if (ret)
-+		dev_err(pck->dev, "failed to turn domain \"%s\" %s: %d\n",
-+			genpd->name, str_on_off(on), ret);
-+
-+	return ret;
-+}
-+
-+static int sunxi_pck600_power_on(struct generic_pm_domain *domain)
-+{
-+	struct sunxi_pck600_pd *pd = to_sunxi_pd(domain);
-+
-+	return sunxi_pck600_pd_set_power(pd, true);
-+}
-+
-+static int sunxi_pck600_power_off(struct generic_pm_domain *domain)
-+{
-+	struct sunxi_pck600_pd *pd = to_sunxi_pd(domain);
-+
-+	return sunxi_pck600_pd_set_power(pd, false);
-+}
-+
-+static void sunxi_pck600_pd_setup(struct sunxi_pck600_pd *pd,
-+				  const struct sunxi_pck600_desc *desc)
-+{
-+	writel(desc->device_ctrl0_delay, pd->base + PPU_DCDR0);
-+	writel(desc->device_ctrl1_delay, pd->base + PPU_DCDR1);
-+	writel(desc->logic_power_switch0_delay,
-+	       pd->base + desc->logic_power_switch0_delay_offset);
-+	writel(desc->logic_power_switch1_delay,
-+	       pd->base + desc->logic_power_switch1_delay_offset);
-+	writel(desc->off2on_delay, pd->base + desc->off2on_delay_offset);
-+}
-+
-+static int sunxi_pck600_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	const struct sunxi_pck600_desc *desc;
-+	struct genpd_onecell_data *genpds;
-+	struct sunxi_pck600 *pck;
-+	struct reset_control *rst;
-+	struct clk *clk;
-+	void __iomem *base;
-+	int i, ret;
-+
-+	desc = of_device_get_match_data(dev);
-+
-+	pck = devm_kzalloc(dev, struct_size(pck, pds, desc->num_domains), GFP_KERNEL);
-+	if (!pck)
-+		return -ENOMEM;
-+
-+	pck->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, pck);
-+
-+	genpds = &pck->genpd_data;
-+	genpds->num_domains = desc->num_domains;
-+	genpds->domains = devm_kcalloc(dev, desc->num_domains,
-+				       sizeof(*genpds->domains), GFP_KERNEL);
-+	if (!genpds->domains)
-+		return -ENOMEM;
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	rst = devm_reset_control_get_exclusive_released(dev, NULL);
-+	if (IS_ERR(rst))
-+		return dev_err_probe(dev, PTR_ERR(rst), "failed to get reset control\n");
-+
-+	clk = devm_clk_get_enabled(dev, NULL);
-+	if (IS_ERR(clk))
-+		return dev_err_probe(dev, PTR_ERR(clk), "failed to get clock\n");
-+
-+	for (i = 0; i < desc->num_domains; i++) {
-+		struct sunxi_pck600_pd *pd = &pck->pds[i];
-+
-+		pd->genpd.name = desc->pd_names[i];
-+		pd->genpd.power_off = sunxi_pck600_power_off;
-+		pd->genpd.power_on = sunxi_pck600_power_on;
-+		pd->base = base + PPU_REG_SIZE * i;
-+
-+		sunxi_pck600_pd_setup(pd, desc);
-+		ret = pm_genpd_init(&pd->genpd, NULL, false);
-+		if (ret) {
-+			dev_err_probe(dev, ret, "failed to initialize power domain\n");
-+			goto err_remove_pds;
-+		}
-+
-+		genpds->domains[i] = &pd->genpd;
-+	}
-+
-+	ret = of_genpd_add_provider_onecell(dev_of_node(dev), genpds);
-+	if (ret) {
-+		dev_err_probe(dev, ret, "failed to add PD provider\n");
-+		goto err_remove_pds;
-+	}
-+
-+	return 0;
-+
-+err_remove_pds:
-+	for (i--; i >= 0; i--)
-+		pm_genpd_remove(genpds->domains[i]);
-+
-+	return ret;
-+}
-+
-+static const char * const sun55i_a523_pck600_pd_names[] = {
-+	"VE", "GPU", "VI", "VO0", "VO1", "DE", "NAND", "PCIE"
-+};
-+
-+static const struct sunxi_pck600_desc sun55i_a523_pck600_desc = {
-+	.pd_names = sun55i_a523_pck600_pd_names,
-+	.num_domains = ARRAY_SIZE(sun55i_a523_pck600_pd_names),
-+	.logic_power_switch0_delay_offset = 0xc00,
-+	.logic_power_switch1_delay_offset = 0xc04,
-+	.off2on_delay_offset = 0xc10,
-+	.device_ctrl0_delay = 0xffffff,
-+	.device_ctrl1_delay = 0xffff,
-+	.logic_power_switch0_delay = 0x8080808,
-+	.logic_power_switch1_delay = 0x808,
-+	.off2on_delay = 0x8
-+};
-+
-+static const struct of_device_id sunxi_pck600_of_match[] = {
-+	{
-+		.compatible	= "allwinner,sun55i-a523-pck-600",
-+		.data		= &sun55i_a523_pck600_desc,
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, sunxi_pck600_of_match);
-+
-+static struct platform_driver sunxi_pck600_driver = {
-+	.probe = sunxi_pck600_probe,
-+	.driver = {
-+		.name   = "sunxi-pck-600",
-+		.of_match_table = sunxi_pck600_of_match,
-+		/* Power domains cannot be removed if in use. */
-+		.suppress_bind_attrs = true,
-+	},
-+};
-+module_platform_driver(sunxi_pck600_driver);
-+
-+MODULE_DESCRIPTION("Allwinner PCK-600 power domain driver");
-+MODULE_AUTHOR("Chen-Yu Tsai <wens@csie.org>");
-+MODULE_LICENSE("GPL");
--- 
-2.39.5
+> 
+>>
+>> A batch size between 2 and nr_pages - 1 is practically rare, as we 
+>> typically
+>> split large folios when MADV_FREE does not cover the entire folio range.
+>> Cases where a batch of size 2 or nr_pages - 1 occurs may only happen if a
+>> large folio is partially unmapped after being marked MADV_FREE, which is
+>> quite an unusual pattern in userspace.
+> 
+> I think the point is rather "Simplify the code by not special-casing for 
+> completely mapped folios, there is no real reason why we cannot batch 
+> ranges that don't cover the complete folio.".
+
+Yeah. That makes the code cleaner and more generic, as there is no
+strong reason to special-case for fully mapped folios ;)
+
+Based on that, I think we're on the same page now. I'd like to post
+the following commit message for the next version:
+
+```
+As pointed out by David[1], the batched unmap logic in try_to_unmap_one()
+may read past the end of a PTE table when a large folio's PTE mappings
+are not fully contained within a single page table.
+
+While this scenario might be rare, an issue triggerable from userspace must
+be fixed regardless of its likelihood. This patch fixes the out-of-bounds
+access by refactoring the logic into a new helper, folio_unmap_pte_batch().
+
+The new helper correctly calculates the safe batch size by capping the
+scan at both the VMA and PMD boundaries. To simplify the code, it also
+supports partial batching (i.e., any number of pages from 1 up to the
+calculated safe maximum), as there is no strong reason to special-case
+for fully mapped folios.
+```
+
+So, wdyt?
+
+Thanks,
+Lance
+
+
+
 
