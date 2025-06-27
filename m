@@ -1,159 +1,178 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58980262D14
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 23:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B387128D8C7
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 23:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751065855; cv=none; b=ppHdrJRsmqVP0CPyHzzjOhEbO8FUCg/p8/ZqOTMQGD4NqvDUsn5WFauBU/ICN2p2FZ/bfwXJf3b8g4fs8gT4reN7onKty/A/ZtLycos0nB+mtN+t+4f9KkqtS3/MNCjxtfTewvdslL8XJfDTTJI6+dNRxbcJHm6Tb4Ti1BstR4g=
+	t=1751065876; cv=none; b=jLAgRRaVH6UKfPqC0DFOGj03jWUHG1Nynd0PWdMJ0sG9FPzk32jbI5SU2jnBpTjgq+JzOd2sr3euztfDshhhITeXs4evxfyj+DPHh+ygvKwxhCUVKHwQS4l9qQUDTn7CpLfH5E/EzXKTh95/bqRtaoR44cileAYJQ5HKM1nH2aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751065855; c=relaxed/simple;
-	bh=LpFM7L8AHpBWBjCFaSLD4sn+R7RxcGe4IQ2vW+3wuN4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=m8p678yUTOMMNoSjNOjPFat2pyLcSAS5ln9/rmidwagq4iIpT829P/+YPpzXmCOIutzJ9Fu6wmCRQuiBzoVHadhVlZUCf06sKynBkUYKcX3neSw47B7uTOK8qM+BZB1us/K41nT4Unwno2d6r4iqVJ+7Z9GnoefB07PnlFO/h58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KzNpiuSk; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751065876; c=relaxed/simple;
+	bh=BAMzKo8cv7ru+aWsN4XS2dPIapPyqPMn5l1eLT4nrvc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qgpMZeeAfrO3ub0tOi5m5wYzUXpSSZ/F5Q3LBbkjLZNG1S9y0fj6pnIuJHXSkaVkXXUpUUZU/+JxcaJJD2oEzlkrPOS+if/19ClX/dMMSC+dTRLmVazUtTjsvM1YVPUgRFY55Fm7OLf0fUWH5jHJ3nknjgYghWSUKmvs7D2kZbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dsk3g/3Q; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KzNpiuSk"
-Message-ID: <1109aeb9-1e64-4052-b733-dd4af62019b7@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751065849;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CPCe6Tcr4w/qutC4mIds2r6y/+g1SeYgO+CKCZrb6HI=;
-	b=KzNpiuSkfJh9cXqTtNOrAOURSzChir6c4+hxtQ97bnMQ2NTE8GIh8Bnp+eO+Bkg/4WD/u4
-	REZ1O8HQajiCJFp6N9t82et7zg1aYCA35h/SSy/A2E3xK1oMeKuIKWre0rtUNF//15UUHS
-	xio1pyFelznABzT7yurv3hSyxf4SbG8=
-Date: Fri, 27 Jun 2025 16:10:45 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dsk3g/3Q"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so55305ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:11:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751065874; x=1751670674; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+r1k/4QEtOdvaCXklZVZbc3BxCMGTSAo6KfvEM+1WJU=;
+        b=dsk3g/3Qk9BZULFQya3YSOtM+XYDZ+g/BeXxFnHZNpgUl5QthxMy6cQj9g6Jtcs8SS
+         iiOG07mvRp3eVpxupK0VjOq46flaV/wBbdZiL7+XK+IOhMkdyCyDR3S3mVOtRan6IzlK
+         BOcwZ75VzZyJVAh0ekozeV7opO7XFDUGwr1E6gOB8odw/kqzfAjt7rQuLB2Dhc5HgzTL
+         8bPwc32nZZvXo/Jyrfakoq5KpDMGnycW6QnjDCLRTrwlrqd9caLSQadG1un7BuRFZxou
+         0zrsSe82XkAUok7g12MXaLDDJnAsa7H4ZHu8KhIspyeUWmxYDY2EMkqNB4fxaDWljNqD
+         PPFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751065874; x=1751670674;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+r1k/4QEtOdvaCXklZVZbc3BxCMGTSAo6KfvEM+1WJU=;
+        b=nSDkTadKrh7P8KT/geAqiO6f0DagkV/1T8giHp9JZjlDMMzXrjJxmsKquN9LWiJ6uf
+         1ZecOZDjkSr6Fd453ojI4EfuPROkiiONojEkg0l/Jk4RKqF3X543Pbv6J9pOCdiT8jcX
+         KN/ok+JFnE9jQzX0RDTL3joGUbBaxuYOFZQ3Xp/Qr3oI4vZakxNgf8U7rr3+cQ2sWg/A
+         RulDrfuPpxrzP+oVvt8l3Eyfspq1KterV4PHZj0pJfThSuTT+wjN17xGklVjeOjQkdFH
+         sjMp0mqxk9/+qyTDyx0/qve4DtYpfYB58Dby3s0cqNPEabHgTSHrurgEy8q/nm0tNejK
+         QEQw==
+X-Forwarded-Encrypted: i=1; AJvYcCVZQgqlWhAYfhZ7PwhwzxIOUEDxkljD4qAIMqAKvtqTR5jLtMYIG7j0UsoWCKkDXYv9pjGB4pMAU9QhwEo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVhdslncG9kKEXf4BZDDy4a9c4VpZngyNq8ASx57QSUO1mEsKc
+	h3z1WLoWqEbN8Ge5rSWkdqkG0HnPiBa9IEa5t1GOAV5CrpTo6sYoc1tJUfMLjLstguOZeZ4uHYZ
+	azjIdmMynPhPXUrMb5BVcs7uyx7ihg02h0pPeswI8
+X-Gm-Gg: ASbGnctif8gVJ35rRYqeL5yRrVCe9ewR9rnaLv0d8pK2wwAWW3ky38euyL65O0v75di
+	0AXExGThRkfku99LWHMzrnrvxrqz9ualYq+9KrSAXcbMEf6/QqsfHT2gERB5tBDcCRiRthha0vI
+	ctSsqRMgespwyID3o2flCCpkvqQnd80iAOvsqSbqnWDNSc
+X-Google-Smtp-Source: AGHT+IHOrtjjnavLeFmnxRzUKctDiOqRlZqpa3B6VBvWXIZQMbA5CqO1kSxXEHqdcMJotrOKU1tEB580gSfXEF5bIO4=
+X-Received: by 2002:a05:6e02:11:b0:3dd:b59b:8da5 with SMTP id
+ e9e14a558f8ab-3df55381c7amr1542175ab.0.1751065873440; Fri, 27 Jun 2025
+ 16:11:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
-To: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>,
- linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <685f030b.a00a0220.3efde.0002.GAE@google.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Yanjun.Zhu" <yanjun.zhu@linux.dev>
-In-Reply-To: <685f030b.a00a0220.3efde.0002.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250417230740.86048-1-irogers@google.com> <20250417230740.86048-7-irogers@google.com>
+ <aF3Vd0C-7jqZwz91@google.com> <CAP-5=fV4x0q7YdeYJd6GAHXd48Qochpa-+jq5jsRJWK36v7rSA@mail.gmail.com>
+ <CAP-5=fXLUO3yvSmM4nSnNV_qQGGLP_XTcfPgOhgOkuaNnr3Hvw@mail.gmail.com> <aF7wesWHTv_Wp-8y@google.com>
+In-Reply-To: <aF7wesWHTv_Wp-8y@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 27 Jun 2025 16:11:02 -0700
+X-Gm-Features: Ac12FXyr3ntBENxGcNDQ5WuQEl_ZSKMbc68-z87tHPtttLtfqAEggfiOqd6-r3s
+Message-ID: <CAP-5=fU+t=pB1TmE5DBGphaunZLCdGnRtHdxy3suCQMhxFjOiQ@mail.gmail.com>
+Subject: Re: [PATCH v4 06/19] perf capstone: Support for dlopen-ing libcapstone.so
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-#syz test: https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
+On Fri, Jun 27, 2025 at 12:26=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> On Fri, Jun 27, 2025 at 09:44:02AM -0700, Ian Rogers wrote:
+> > On Thu, Jun 26, 2025 at 9:53=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > On Thu, Jun 26, 2025 at 4:19=E2=80=AFPM Namhyung Kim <namhyung@kernel=
+.org> wrote:
+> > > >
+> > > > On Thu, Apr 17, 2025 at 04:07:27PM -0700, Ian Rogers wrote:
+> > > > > If perf wasn't built against libcapstone, no HAVE_LIBCAPSTONE_SUP=
+PORT,
+> > > > > support dlopen-ing libcapstone.so and then calling the necessary
+> > > > > functions by looking them up using dlsym. Reverse engineer the ty=
+pes
+> > > > > in the API using pahole, adding only what's used in the perf code=
+ or
+> > > > > necessary for the sake of struct size and alignment.
+> > > >
+> > > > I still think it's simpler to require capstone headers at build tim=
+e and
+> > > > add LIBCAPSTONE_DYNAMIC=3D1 or something to support dlopen.
+> > >
+> > > I agree, having a header file avoids the need to declare the header
+> > > file values. This is simpler. Can we make the build require
+> > > libcapstone and libLLVM in the same way that libtraceevent is
+> > > required? That is you have to explicitly build with NO_LIBTRACEEVENT=
+=3D1
+> > > to get a no libtraceevent build to succeed. If we don't do this then
+> > > having LIBCAPSTONE_DYNAMIC will most likely be an unused option and
+> > > not worth carrying in the code base, I think that's sad. If we requir=
+e
+> > > the libraries I don't like the idea of people arguing, "why do I need
+> > > to install libcapstone and libLLVM just to get the kernel/perf to
+> > > build now?" The non-simple, but still not very complex, approach take=
+n
+> > > here was taken as a compromise to get the best result (a perf that
+> > > gets faster, BPF support, .. when libraries are available without
+> > > explicitly depending on them) while trying not to offend kernel
+> > > developers who are often trying to build on minimal systems.
+> >
+> > Fwiw, a situation that I think is analogous (and was playing on my
+> > mind while writing the code) is that we don't require python to build
+> > perf and carry around empty-pmu-events.c:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/perf/pmu-events/empty-pmu-events.c?h=3Dperf-tools-next
+> > It would be simpler (in the code base and in general) to require
+> > everyone building perf to have python.
+> > Having python on a system seems less of a stretch than requiring
+> > libcapstone and libLLVM.
+> >
+> > If we keep the existing build approach, optional capstone and libLLVM
+> > by detecting it as a feature, then just linking against the libraries
+> > is natural. Someone would need to know they care about optionality and
+> > enable LIBCAPSTONE_DYNAMIC=3D1. An average build where the libraries
+> > weren't present would lose the libcapstone and libLLVM support. We
+> > could warn about this situation but some people are upset about build
+> > warnings, and if we do warn we could be pushing people into just
+> > linking against libcapstone and libLLVM which seems like we'll fall
+> > foul of the, "perf has too many library dependencies," complaint. We
+> > could warn about linking against libraries when there is a _DYNAMIC
+> > alternative like this available, but again people don't like build
+> > warnings and they could legitimately want to link against libcapstone
+> > or libLLVM.
+> >
+> > Anyway, that's why I ended up with the code in this state, to best try
+> > to play off all the different compromises and complaints that have
+> > been dealt with in the past.
+>
+> I can see your point.  Adding new build flags is likely to be unused and
+> forgotten.
 
-On 6/27/25 1:46 PM, syzbot wrote:
-> Hello,
+There's also more code to support the neither linked or nor dlopened approa=
+ch.
+
+> But I also think is that this dlopen support is mostly useful to distro
+> package managers who want to support more flexible environment and
+> regular dynamic linking is preferred to local builds over dlopen.  Then
+> adding a note to a pull request and contacting them directly (if needed)
+> might work?
+
+If you want to run with this then I don't mind.
+
+Thanks,
+Ian
+
+> Thanks,
+> Namhyung
 >
-> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-> general protection fault in rxe_skb_tx_dtor
->
-> Oops: general protection fault, probably for non-canonical address 0xe000bc000000006c: 0000 [#1] SMP KASAN NOPTI
-> KASAN: maybe wild-memory-access in range [0x0006000000000360-0x0006000000000367]
-> CPU: 0 UID: 0 PID: 1039 Comm: kworker/u4:7 Not tainted 6.16.0-rc3-syzkaller-gc0e71fcff378 #0 PREEMPT(full)
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> Workqueue: rxe_wq do_work
-> RIP: 0010:rxe_skb_tx_dtor+0x78/0x240 drivers/infiniband/sw/rxe/rxe_net.c:364
-> Code: 03 42 80 3c 28 00 74 08 4c 89 f7 e8 72 65 81 f9 4d 8b 36 4d 85 f6 0f 84 c3 00 00 00 4d 8d be 60 03 00 00 4c 89 f8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 77 01 00 00 41 8b 2f 31 ff 89 ee e8 bf
-> RSP: 0018:ffffc900000079e8 EFLAGS: 00010206
-> RAX: 0000c0000000006c RBX: ffff8880122848c0 RCX: ffff8880330a8000
-> RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff8880122848c0
-> RBP: 0000000000000000 R08: ffffffff8fa10ef7 R09: 1ffffffff1f421de
-> R10: dffffc0000000000 R11: ffffffff88a26c60 R12: dffffc0000000000
-> R13: dffffc0000000000 R14: 0006000000000000 R15: 0006000000000360
-> FS:  0000000000000000(0000) GS:ffff88808d250000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007fb0aec28fc8 CR3: 000000004f814000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   <IRQ>
->   skb_release_head_state+0x101/0x250 net/core/skbuff.c:1139
->   napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
->   e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
->   e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
->   e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
->   __napi_poll+0xc7/0x480 net/core/dev.c:7414
->   napi_poll net/core/dev.c:7478 [inline]
->   net_rx_action+0x707/0xe30 net/core/dev.c:7605
->   handle_softirqs+0x286/0x870 kernel/softirq.c:579
->   do_softirq+0xec/0x180 kernel/softirq.c:480
->   </IRQ>
->   <TASK>
->   __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
->   local_bh_enable include/linux/bottom_half.h:33 [inline]
->   __neigh_event_send+0x9b/0x1560 net/core/neighbour.c:1194
->   neigh_event_send_probe include/net/neighbour.h:463 [inline]
->   neigh_event_send include/net/neighbour.h:469 [inline]
->   neigh_resolve_output+0x198/0x750 net/core/neighbour.c:1496
->   neigh_output include/net/neighbour.h:539 [inline]
->   ip6_finish_output2+0x11fb/0x16a0 net/ipv6/ip6_output.c:141
->   __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
->   ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
->   rxe_send drivers/infiniband/sw/rxe/rxe_net.c:390 [inline]
->   rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:449
->   rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
->   rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
->   do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
->   do_work+0x1b1/0x6c0 drivers/infiniband/sw/rxe/rxe_task.c:187
->   process_one_work kernel/workqueue.c:3238 [inline]
->   process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
->   worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
->   kthread+0x70e/0x8a0 kernel/kthread.c:464
->   ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
->   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
->   </TASK>
-> Modules linked in:
-> ---[ end trace 0000000000000000 ]---
-> RIP: 0010:rxe_skb_tx_dtor+0x78/0x240 drivers/infiniband/sw/rxe/rxe_net.c:364
-> Code: 03 42 80 3c 28 00 74 08 4c 89 f7 e8 72 65 81 f9 4d 8b 36 4d 85 f6 0f 84 c3 00 00 00 4d 8d be 60 03 00 00 4c 89 f8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 77 01 00 00 41 8b 2f 31 ff 89 ee e8 bf
-> RSP: 0018:ffffc900000079e8 EFLAGS: 00010206
-> RAX: 0000c0000000006c RBX: ffff8880122848c0 RCX: ffff8880330a8000
-> RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff8880122848c0
-> RBP: 0000000000000000 R08: ffffffff8fa10ef7 R09: 1ffffffff1f421de
-> R10: dffffc0000000000 R11: ffffffff88a26c60 R12: dffffc0000000000
-> R13: dffffc0000000000 R14: 0006000000000000 R15: 0006000000000360
-> FS:  0000000000000000(0000) GS:ffff88808d250000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007fb0aec28fc8 CR3: 000000004f814000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> ----------------
-> Code disassembly (best guess):
->     0:	03 42 80             	add    -0x80(%rdx),%eax
->     3:	3c 28                	cmp    $0x28,%al
->     5:	00 74 08 4c          	add    %dh,0x4c(%rax,%rcx,1)
->     9:	89 f7                	mov    %esi,%edi
->     b:	e8 72 65 81 f9       	call   0xf9816582
->    10:	4d 8b 36             	mov    (%r14),%r14
->    13:	4d 85 f6             	test   %r14,%r14
->    16:	0f 84 c3 00 00 00    	je     0xdf
->    1c:	4d 8d be 60 03 00 00 	lea    0x360(%r14),%r15
->    23:	4c 89 f8             	mov    %r15,%rax
->    26:	48 c1 e8 03          	shr    $0x3,%rax
-> * 2a:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax <-- trapping instruction
->    2f:	84 c0                	test   %al,%al
->    31:	0f 85 77 01 00 00    	jne    0x1ae
->    37:	41 8b 2f             	mov    (%r15),%ebp
->    3a:	31 ff                	xor    %edi,%edi
->    3c:	89 ee                	mov    %ebp,%esi
->    3e:	e8                   	.byte 0xe8
->    3f:	bf                   	.byte 0xbf
->
->
-> Tested on:
->
-> commit:         c0e71fcf RDNA/rxe: Fix rxe_skb_tx_dtor problem
-> git tree:       https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13d9708c580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
-> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
->
-> Note: no patches were applied.
