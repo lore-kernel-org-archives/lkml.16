@@ -1,187 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B457280CF6;
-	Fri, 27 Jun 2025 11:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0FD1A841C;
+	Fri, 27 Jun 2025 11:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751022893; cv=none; b=YwnrF+lJpIphD5TX8JvI6JLunWbjNH9fKB2kEWjjZrw2U5v4PpZRtVRbXvkBmiWa8bTq52xiNbAnp1RYb2Axl7dYYb+zi7Q2nYHhCK8s5U1fYte/HRIO5fAD5YVuflshKUZsbY796eyUbeLxZywMIGDp6w4lM5E4e+oKQOr8i5w=
+	t=1751023024; cv=none; b=e8v7FHfswXmuYHG4EXH5Lfwlah/5pKEsrP3jKQLXWBRtdaPk1rJq6HU74bY2zYhsVsraKd7Wf9HW1OjR3sXeWJGuQUS82aPVyipP/0XXuLn/UAI45ACr+nt24wS8Ubff56H2OdsYgqVQVHYEYllsDuMNVQfk/NcW2heyRDw/2lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751022893; c=relaxed/simple;
-	bh=LlNXjuxd1lLlCWM3y57Dwt1ibKE5jXZxaa8JZNOTkUA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dLFD37TSsPgse8gUbqfNytjVV4yCql4JicoRxDlUAn8BuJ/GYvpyB1G12hy0WRZYwlYY7eMya/4911f3zxDnAn8a4Q91HJ2pFt1M1Eo8IXdJ6rOugt9sPHd+MLNlcJ+vwzyP2cUlgHO/DYk3dCXWJFh85G47cRjGohOkajeYG4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTn3TdKn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751023024; c=relaxed/simple;
+	bh=XE+SNt4kCGXPHHVnVBp5uHmdhW6OwyVs1LNsF1QzHQU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XHCgZEssZA962Pb4JpQEWRALoqSb61uL77wTMG8XLtWb/dCFt23IdIRf9+Gy3953ZpQ29mPSK6lXbntPGpj50tKkxyK1ldesODb1N4hWLUL0SUlLIFNYposqgQEeunsZPZoz6o27YlcPX3GjcQ3RnnWATLE7+7bIbeUlSeTFoaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HwUpA+xb; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTn3TdKn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D23C5C4CEE3;
-	Fri, 27 Jun 2025 11:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751022892;
-	bh=LlNXjuxd1lLlCWM3y57Dwt1ibKE5jXZxaa8JZNOTkUA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nTn3TdKnMGd7f0uDS9+uSuOk0qitc5hQft4SstpYXZBragL13VQesT5i+Uxd1Nmi4
-	 /eD5fhpqkSMqHc0bcG7KxtKCLsuWU53SdixMEPzx5K/cdHOyqRlVV6mvFLNEyQzlTk
-	 4gBeF5RRzNmIZYy7CpNzHZvOTMp55+sox/pN3AqmvdwSphzUGFF86FNWukX3KiVRAF
-	 Aih/7RxcBD83zyGAkf6kYLz4G8sUyLRnTBgiB/xdhUFLkjYqDPDReXIOXdGSWOqRyt
-	 Bm1jPk5RaC2n9gHQuf8YuIWcw7vacVqXWzqfose/mJ+W9l0wBriZbmcojdrT/dH9cG
-	 /Js/QzYmdALiw==
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-60efc773b5fso1032530eaf.3;
-        Fri, 27 Jun 2025 04:14:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVgwA29g+q4dOIk2iuUw6vU+fLeKdfE6LTE0qtOGlvCk9n6SKWkiMKXGK2VhdnZyhyJmBGYqb38Vjcy@vger.kernel.org, AJvYcCXwg9uBf+cMEIHfO/2qCVRSkbdXHvzsPbcuXPneEz/G6jkCnIiyh17yS2HcpSj8XFqkdF3joEeuT0Lg@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhY862FuKCMeZRaq1uTAG+ARd/bLLabc+43sybV0OMAjxMPOca
-	MgtvzftStwOchzicOI0+lta6KbKSBdsoCyK7scIj5vtHdKU9yC+67Xd80aUE+8wEC2/X+PBiuL+
-	C5Zh7Y+/yFXwQN5O3jeQ/KvZuESayqtU=
-X-Google-Smtp-Source: AGHT+IFQVxX4WH/Cb65IXJpVCKwU7owSN3U3ENrl3vl2gB3cUZovGm8T4mZsyKFPeotBV4rWHfsHm+od3VTYBzpCPms=
-X-Received: by 2002:a05:6820:180c:b0:611:b85f:b159 with SMTP id
- 006d021491bc7-611b9015d61mr1942787eaf.1.1751022892079; Fri, 27 Jun 2025
- 04:14:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HwUpA+xb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751023023; x=1782559023;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XE+SNt4kCGXPHHVnVBp5uHmdhW6OwyVs1LNsF1QzHQU=;
+  b=HwUpA+xb0nv5HIyiuI/OaFoGiI8wbsp7H4wbm5OEnb9QW5daj0JTV72k
+   fAULeZXNzjcRSGgEEGDxCYLfcvzAxjSR44x6+RmIMEOaCyUlxC7yapvQJ
+   2Jvwy7kcZnflQjCCTGPboO9I5uLk5j8jTvLoSBrOSNpNpp/qomqoA8ZTB
+   pYd50K9lIXqRBTNIhKdYmO8xDnfdpRrVmTdR+a528yagtCpK6Punw/oy2
+   QX9whLgbnUm2TGkL1SA85lASJ7Z12ksWpAl49Oq8/E2ln5pEGaZB3A6LA
+   7R3tumFbumsM5NOzF7cQgiZnv4IpMZlrn8Nafr8fPHubvSn4VeqO4u2GT
+   A==;
+X-CSE-ConnectionGUID: 5a0fFqfHQ9miVNRS/raolw==
+X-CSE-MsgGUID: ff9w2114QJai1ECmAiqnrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="75881763"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="75881763"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 04:17:02 -0700
+X-CSE-ConnectionGUID: dIAnwJDEQ7WGLe82EQUPNQ==
+X-CSE-MsgGUID: Wx7byjf+QAyzYlBWvWrgKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="183679231"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 04:16:58 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uV74h-0000000ASge-0kdF;
+	Fri, 27 Jun 2025 14:16:55 +0300
+Date: Fri, 27 Jun 2025 14:16:54 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
+	Raag Jadav <raag.jadav@intel.com>,
+	"Tauro, Riana" <riana.tauro@intel.com>,
+	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
+	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+	intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] drm/xe: Support for I2C attached MCUs
+Message-ID: <aF59pnqrLEzSiKVL@smile.fi.intel.com>
+References: <20250626135610.299943-1-heikki.krogerus@linux.intel.com>
+ <20250626135610.299943-3-heikki.krogerus@linux.intel.com>
+ <aF1XTr2y1EmkRT_8@smile.fi.intel.com>
+ <aF5c02pfI_3FirXD@kuha.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <5015172.GXAFRqVoOG@rjwysocki.net> <2336655.iZASKD2KPV@rjwysocki.net>
- <CAJZ5v0h4AMFfyBugjBwQOV=xY-Hq5kL_vB7Gwrj06N8vo6GQtg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0h4AMFfyBugjBwQOV=xY-Hq5kL_vB7Gwrj06N8vo6GQtg@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 27 Jun 2025 13:14:40 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h1F-N3-Ue5OqUPoORDtR=qwknX-yDNuqxbogEjidxooQ@mail.gmail.com>
-X-Gm-Features: Ac12FXya15hOE4Ngrfdl2VtlXT84PHm_94erZvkil5gb3JYjBEpALp5Mz78nYbs
-Message-ID: <CAJZ5v0h1F-N3-Ue5OqUPoORDtR=qwknX-yDNuqxbogEjidxooQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/9] PM: Check power.needs_force_resume in pm_runtime_force_suspend()
-To: Linux PM <linux-pm@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
-	Linux PCI <linux-pci@vger.kernel.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aF5c02pfI_3FirXD@kuha.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, Jun 27, 2025 at 12:52=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.o=
-rg> wrote:
->
-> On Thu, Jun 26, 2025 at 8:15=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.=
-net> wrote:
-> >
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Add a power.needs_force_resume check to pm_runtime_force_suspend() so
-> > it need not rely on the runtime PM status of the device when deciding
-> > whether or not to return early.
-> >
-> > With the new check in place, pm_runtime_force_suspend() will also skip
-> > devices with the runtime PM status equal to RPM_ACTIVE if they have
-> > power.needs_force_resume set, so it won't need to change the RPM
-> > status of the device to RPM_SUSPENDED in addition to setting
-> > power.needs_force_resume in the case when pm_runtime_need_not_resume()
-> > return false.
-> >
-> > This allows the runtime PM status update to be removed from
-> > pm_runtime_force_resume(), so the runtime PM status remains unchanged
-> > between the pm_runtime_force_suspend() and pm_runtime_force_resume()
-> > calls.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >
-> > v1 -> v2: Corresponds to patch [2/9] (that was posted as [0/9] by mista=
-ke) in v1.
-> >
-> > ---
-> >  drivers/base/power/runtime.c |   21 ++++++++-------------
-> >  1 file changed, 8 insertions(+), 13 deletions(-)
-> >
-> > --- a/drivers/base/power/runtime.c
-> > +++ b/drivers/base/power/runtime.c
-> > @@ -1973,7 +1973,7 @@
-> >         int ret;
-> >
-> >         pm_runtime_disable(dev);
-> > -       if (pm_runtime_status_suspended(dev))
-> > +       if (pm_runtime_status_suspended(dev) || dev->power.needs_force_=
-resume)
-> >                 return 0;
-> >
-> >         callback =3D RPM_GET_CALLBACK(dev, runtime_suspend);
-> > @@ -1988,15 +1988,16 @@
-> >         /*
-> >          * If the device can stay in suspend after the system-wide tran=
-sition
-> >          * to the working state that will follow, drop the children cou=
-nter of
-> > -        * its parent, but set its status to RPM_SUSPENDED anyway in ca=
-se this
-> > -        * function will be called again for it in the meantime.
-> > +        * its parent and the usage counters of its suppliers.  Otherwi=
-se, set
-> > +        * power.needs_force_resume to let pm_runtime_force_resume() kn=
-ow that
-> > +        * the device needs to be taken care of and to prevent this fun=
-ction
-> > +        * from handling the device again in case the device is passed =
-to it
-> > +        * once more subsequently.
-> >          */
-> > -       if (pm_runtime_need_not_resume(dev)) {
-> > +       if (pm_runtime_need_not_resume(dev))
-> >                 pm_runtime_set_suspended(dev);
-> > -       } else {
-> > -               __update_runtime_status(dev, RPM_SUSPENDED);
-> > +       else
-> >                 dev->power.needs_force_resume =3D true;
-> > -       }
->
-> I kind of see that this change may confuse other things looking at the
-> PM runtime status to determine whether or not the device needs to be
-> suspended that possibly run after pm_runtime_force_suspend().
->
-> I'm also not quite sure why I thought that this patch would be
-> necessary in this series because the [5/9] should just work without
-> it.
->
-> Please disregard it unless you see why it is needed here.
+On Fri, Jun 27, 2025 at 11:56:51AM +0300, Heikki Krogerus wrote:
+> On Thu, Jun 26, 2025 at 05:21:02PM +0300, Andy Shevchenko wrote:
+> > On Thu, Jun 26, 2025 at 04:56:07PM +0300, Heikki Krogerus wrote:
 
-Well, not quite.
+...
 
-It is needed, but not at this point.  That is,patch [5/9] will work
-without it, but then it is needed for the PCI and ACPI PM to work with
-pm_runtime_force_suspend().
+> > > +	regmap = devm_regmap_init(i2c->drm_dev, NULL, i2c, &i2c_regmap_config);
+> > 
+> > Use of i2c->drm_dev makes harder to maintain and understand the code.
+> > Managed resources should be carefully attached to the correct device,
+> > otherwise it's inevitable object lifetime related issues.
+> > 
+> > With
+> > 
+> > 	struct device *dev = xe->drm.dev;
+> > 
+> > and using local dev, it becomes easier to get and avoid such subtle mistakes.
+> 
+> I have to disagree with you on this one. Local dev pointers create
+> problems because of the assumption that there is only a single device
+> in the function to deal with (especially if they are named "dev"),
+> which is almost never the case - this function is no exception.
 
-Namely, say DPM_FLAG_SMART_SUSPEND is set and
-pm_runtime_force_suspend() is used as a driver callback in the
-"suspend" phase.  The PCI PM sets strict_midlayer, so
-pm_runtime_force_suspend() runs the driver runtime PM callback
-directly, but power still needs to be removed from the device.
-However, pci_pm_suspend_noirq() checks dev_pm_skip_suspend() and it
-will bail out if the device is RPM_SUSPENDED.
+Hmm... In my experience more than 70% of the drivers are okay with this
+approach as they do *not* use multiple device pointers. Usually, if we
+take IIO for the example, they have a physical device, which is depicted
+by the local variable named 'dev' and a Linux IIO device, which is container
+that has struct device inside, but it's not used explicitly, IIO APIs use
+the pointer to the container (and of course its name differs).
 
-I guess I should reorder the patches and add the above bit of
-explanation to the changelog of the $subject one.
+That said, it seems we have different experience (you are most likely talking
+about USB cases, where that is indeed quite complicated already).
 
-If you can review patches [2-3/9] from this series, I'll be able to go
-ahead with the first half of it and the rest can be resent separately.
+> But I'll add the local variable as you requested - I'll just name it
+> carefully.
 
-Sorry for the confusion!
+Sure.
 
-> >
-> >         return 0;
-> >
-> > @@ -2029,12 +2030,6 @@
-> >         if (!dev->power.needs_force_resume)
-> >                 goto out;
-> >
-> > -       /*
-> > -        * The value of the parent's children counter is correct alread=
-y, so
-> > -        * just update the status of the device.
-> > -        */
-> > -       __update_runtime_status(dev, RPM_ACTIVE);
-> > -
-> >         callback =3D RPM_GET_CALLBACK(dev, runtime_resume);
-> >
-> >         dev_pm_disable_wake_irq_check(dev, false);
-> >
-> >
-> >
-> >
+...
+
+> This kinda related but off topic. IMO in cases like this the regmap
+> should be assigned to the child device that is being created instead
+> of the parent device. That is currently prevented by the current
+> regmap API - the device has to be fully registered before the regmap
+> can be assigned (and I'm not referring to the resource managed devm_*
+> API), but I'm not convinced that it has to be like that. The problem
+> is that the parent device may have multiple child devices that each
+> need a dedicated regmag. So just as a note to self: check if we can
+> improve the regmap API.
+
+I'm not sure I follow. The (some of) MFD drivers, for instance, work
+with many children and one regmapi that is split over the devices.
+I don't see any issue with that. The problem is when one tries to mix
+regmap and non-regmap approaches in the same (big) driver. That's
+a road to mine field.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
