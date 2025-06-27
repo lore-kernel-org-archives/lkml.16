@@ -1,289 +1,142 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CAF221FA4
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CDC339A8;
+	Fri, 27 Jun 2025 07:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751009407; cv=none; b=M1eqReyWcljP9wqFynN7193VGoO3smj15Y/BtxcgkBErwiQluj/LLxZrW65x2K/2yYnseRYoP/IQ7yXQbv4FgCqXowGbyMerWAiDnGGxnjGDQHl/7FFN9MnX1POqFrYGDQaqjPZfkDM4MF91pzZC54ayvCa7JF1oHtQkQAEbR6Y=
+	t=1751009497; cv=none; b=HumRjWSL6eCYXZlzxRWtY0nFxhU+N3UjU2BHv34xcahVkeMfYdUBRBGmzLQIw9mh0mmFzCGx0SQXipOSSEiuPNcYu7IiK4haExsK9Qvx28ie71KhduAQFzarNHciFzNshkBjZ8Mc+P0yraU/A0QRe0XIMW8s1HNI1JPI2WnHOU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751009407; c=relaxed/simple;
-	bh=gLq5QR5UkZcDNZ4qEDEV0UgI3bwdOXiGKr7EDDC5UEg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aH3P7+BA5cPBwSiR3DCpWVVTjZiB3VJTeztCOehHP0E/5PaPut+RwLrkyOKy3c0EN+pDPAXm0zh6oBBoTrPhmZ9YgkIIO0BXpTKyeWfzrL65iGh5o/vXFg/bUWwYNNnCh7hfwfcrpytIVNwP+JHa10tWeD9M6hiAWv/hkt9S/Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jx1B+4/Z; arc=none smtp.client-ip=209.85.221.54
+	s=arc-20240116; t=1751009497; c=relaxed/simple;
+	bh=9fRWkgV+8VP7UmRHkuiRfuz5hfvvERiwtk8L614dD50=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=br+ohkAuCi14X88cnKvWYLND5boTVui0hY653b53LXsAiVP4VeBR7AiDSRSzGyDATHdcjrP4rVPeAmwZjlynOpZpO88dVITGNLCQJgXl6DCwpdSKrmfFmewxA+V5Aj8u5d5mjoBpay0WtuIhuQ8iM//KV/YXrpEkuLkOxV5NciU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KSlQgiBh; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jx1B+4/Z"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a57ae5cb17so1075914f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 00:30:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSlQgiBh"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-74931666cbcso1742807b3a.0;
+        Fri, 27 Jun 2025 00:31:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751009404; x=1751614204; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sZx7HLeDxFUsTV7MB27dJE7edqAxtdtwVAh6e83NzOY=;
-        b=jx1B+4/ZaITLW7T3f5modf4Q44sMWwaaTUcHE/eUzcPTe1AcrYKehHiEzTfiCfmO4r
-         nK6Xz0hTJdvv9gWuRoQtRuN4/qHDriOFjSZNLBDiP7bNXxSoiPN93jp0vw1P0NfjxLTd
-         1T8CBIkCnIv7mHqBJgKelRtDy1gqAMxbSooQQCNhJaI5qWqcgt64EV7R3oVeSAYIdSNb
-         QKM86Z9whqbE6cR++ManLg398hUZLJYIdmXSXE9yNY0gJC8+2ATTH3kqz+Fl5rsd92n4
-         LYSyZtFcs4MgI4INpX3OvkSVHjwpucTi8R0nWd6dvtDV/XaC7fQA4mczp+xOx+/k6kP/
-         Xq4A==
+        d=gmail.com; s=20230601; t=1751009495; x=1751614295; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Ulo2IqCqK6lmTR1n2ctrbmpkiinWsFuA6QDYyT+/w0=;
+        b=KSlQgiBh5Wrs1PB4IvFaDIwzP0uL0ce+b1WSCkaoEE6WOALgks5FvfRuObD6J9HUkv
+         WIF7YlWrDDt9Uw2SEjp48MJ827SM9pZ8hwn+MzSxrXdaoEuh2mi8FSg94N48iM2Xkha5
+         Xlgwhv//sfqESxAx7/s8F8iMUveNKbNE7YFcWa8zM5Z+/EHEambV6Qp9NhDY9Z7EerOF
+         K1IGmpz5r+NOcXJcwojIqqUhWgR0AkJSXA/sTOMwh5ndbbBdg2tevHof/CKTI8WFcx3E
+         ZQD6Yud14Jgheqdv/1iNz+4EnRf//CAsPGUvaD/+b/wGlY4gahdf6n7IzfvqzS+a9jlf
+         nTnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751009404; x=1751614204;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sZx7HLeDxFUsTV7MB27dJE7edqAxtdtwVAh6e83NzOY=;
-        b=OQ7mGI0G5kf7ZknKOQ4cohTdF6Pi3le6C1nq7EWnawNHQpLXIfDpj3ohYTpEr2oo3b
-         3wPrbMJpQhRe0rEyZSqBcWPayXea+KQ6xn7N06Z5QoVqDHGQM+btjSWYNFwsHyKhOOFZ
-         3VCVycaFlr57OAUDXoySaTnK1+9Q6SaMYwr1eVsOoKimkDeC1GOQyXK7jI8U96LepLsG
-         4AAzfgnvxEGieW/uoBn/5Vdzh+X3K1qhHH3McaWmkdqeAYLapgzyFcFX9lQQBw6Ft6H2
-         +oXK39KEbEA/dKG9n5lieVhWxFsmtlo2FGMRYwI68KNRvcYQxBW2Q4b/Y+i5SiUaXJrl
-         L4zw==
-X-Forwarded-Encrypted: i=1; AJvYcCXkBw+RulktkBOMv80oaQ2Ur3oVzmcX4kjoT7EHcStmtK/O6amcs/KTDhY83tqbL9a5IN/wXy7KSIB3L1o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaxtCA9cr2FMkk876B4Tk74X+k1flSCY/j2Bx1OlHSmfUORDo+
-	SPemOdctCmTyL1uokU0ARwOF+UQxBy3HgEq/mkWQ6iQNECF6BO/dEIZy
-X-Gm-Gg: ASbGncsWSjPklUvawTZPB+VkH0aV7YYXib9V9IuKTCgckhVkhosw9/hSBrGXKBoxxis
-	YlRG6gE7GQlMSMVY9Q3jgYE57VlOqTkzOtT4u/JOGdbDuTVDnrFr7n9W9+rE8BsF8eE9ILh2ZIn
-	jmTNZooMkjKAPjo7B1RbT+j3NnKbbrSo/or9Cc7ppSkRh0z7D0FTkR7pG0JVCEWv5/7IjWDjakm
-	UpcOY+lRnV22gQ0hUf2lWEhsKOJsgiY1f7mhKQKeGk53XirsowakIq1bcioagPx4QAXR/EsgQAW
-	HCC3E2lq268YVB8G7Wk1g7VcqqMSB1lZU2pxq30SdI2kImSI
-X-Google-Smtp-Source: AGHT+IHLxuzOhCr2ZOuAnoMckWZohG8XUTUNZtVdZrbctK4w8YIIgD/ecNFvLienpmYMqTMQ43Nwvg==
-X-Received: by 2002:a5d:59c9:0:b0:3a3:6b07:20a1 with SMTP id ffacd0b85a97d-3a8feb851f2mr1958251f8f.40.1751009403503;
-        Fri, 27 Jun 2025 00:30:03 -0700 (PDT)
-Received: from EBJ9932692.tcent.cn ([2a09:0:1:2::302c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e72b6sm1955665f8f.15.2025.06.27.00.29.58
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 27 Jun 2025 00:30:03 -0700 (PDT)
-From: Lance Yang <ioworker0@gmail.com>
-X-Google-Original-From: Lance Yang <lance.yang@linux.dev>
-To: akpm@linux-foundation.org
-Cc: zi.li@linux.dev,
-	anna.schumaker@oracle.com,
-	boqun.feng@gmail.com,
-	joel.granados@kernel.org,
-	jstultz@google.com,
-	kent.overstreet@linux.dev,
-	leonylgao@tencent.com,
-	linux-kernel@vger.kernel.org,
-	longman@redhat.com,
-	mhiramat@kernel.org,
-	mingo@redhat.com,
-	mingzhe.yang@ly.com,
-	peterz@infradead.org,
-	rostedt@goodmis.org,
-	senozhatsky@chromium.org,
-	tfiga@chromium.org,
-	will@kernel.org
-Subject: [PATCH 3/3] samples: enhance hung_task detector test with read-write semaphore support
-Date: Fri, 27 Jun 2025 15:29:24 +0800
-Message-ID: <20250627072924.36567-4-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250627072924.36567-1-lance.yang@linux.dev>
-References: <20250627072924.36567-1-lance.yang@linux.dev>
+        d=1e100.net; s=20230601; t=1751009495; x=1751614295;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9Ulo2IqCqK6lmTR1n2ctrbmpkiinWsFuA6QDYyT+/w0=;
+        b=rTdfc42Jf4zwXcRUwORk88M0DFty+XGf/BmJV8MuVr6zpjyRMMpzeie0w5k1yjZj3n
+         eOj9MXxyFZ2bvG0ChioB8d1YdpyY1iSMO9SnWY9vnuO8A+7W9UYNun2V4UL02QETL9ax
+         nN+U1ksY5KMKHmrwl0U97gICKeOhAvklyhuMMRsoGWb/NMGtOqXwLPPkfXkFCyocKdff
+         erPYePeseaU10IuJ3gp0lmWAa0bFldsxLP5H32qIQGJ+MmREZXQVqKMNUMmPeeMMA71z
+         Ve4oNzupntJ/hTTd96/APWXzyn2/k5qLz5+zi5fHo/gvvgtvAk6YVUMy1Bp53/WZrGEe
+         oafA==
+X-Forwarded-Encrypted: i=1; AJvYcCUitTm+DXIntx8jtOLIp56/V3MwC+13ZlkvbOkWDXtqVjnjtPHLL+GBYGujOOSoJveCdcE0+YDZ8O8K46fj62NK/H8=@vger.kernel.org, AJvYcCWR15cRrIr8oXiy/UQDmpmulxhVkznDvY25wK1kA9bODxhp+1cWZbMlbTMbcyR0uRWPcDgeBqr5gQkaRPzd@vger.kernel.org, AJvYcCWpOKagm436bKHIsk0dFFTOC1NxOMCF0IyevVWd8YlVs9d91BLwf793Q1Y7BiejuxdwiwgGa/IquD2P1w0Hxb4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeLRpH/15ODMkJoG85LvBL8oFDKsiwCR23Ux5pGi9J4Mp8KhhH
+	XzaIFPJOt2XFpDEb5dKVeoOsSSmhKrgs25tcEBj/xv9ys05xhL2xqse0
+X-Gm-Gg: ASbGnctbb5XDxRPM963WiOKTwDW1ywkHF2rFZ6NX3vq6ibroCrYOzLehfdTHGwA7hnA
+	yq0nwJ/QYpFvCOxOOTgamhLwIEyte8uHI5NIB2s/1Q1cGVQZuB7Ceo/LTw9682WF9m+Xi21qEcT
+	aikCCgVERJ+p9JYnOH9YCY+QhtnvTWSS43f99cp9ry06E4eliVPKoEkp9fN5yiUxDsqCxF0pWKX
+	/MB7IS7CMLtcOZTFuDI9ed8mWR9x/I7CZZc68Uf8I0gCkIgl9DoT6CDirL6vqXKjnd874qN1Pg2
+	Tz2qQo+5vzZQ9H4eZwtOo5KaIbFAsSw9Y6U3jv+EsNBx9FWjNWK/SWUrIDDcNVZ12TlsrrAuV90
+	M+g5ao3y4y8I9z8DHk5I0EMnGUQgpn5A=
+X-Google-Smtp-Source: AGHT+IHWPxrtW7uCSMjhE308lVU3QsfpWpHidLpZ/iou98J5zU0NWKBg4cfBpKfITecjKJM3Ydlp0Q==
+X-Received: by 2002:a05:6a00:18a7:b0:736:4644:86ee with SMTP id d2e1a72fcca58-74af6f4078bmr2943654b3a.14.1751009494749;
+        Fri, 27 Jun 2025 00:31:34 -0700 (PDT)
+Received: from [172.17.0.2] (125-227-29-20.hinet-ip.hinet.net. [125.227.29.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af540a8f6sm1628646b3a.12.2025.06.27.00.31.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 00:31:34 -0700 (PDT)
+From: Leo Wang <leo.jt.wang@gmail.com>
+X-Google-Original-From: Leo Wang <leo.jt.wang@fii-foxconn.com>
+Subject: [PATCH v5 0/2] ARM: dts: Add support for Meta Clemente BMC
+Date: Fri, 27 Jun 2025 15:31:20 +0800
+Message-Id: <20250627-add-support-for-meta-clemente-bmc-v5-0-038ed6f1cb9f@fii-foxconn.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMhIXmgC/5XNTWrDMBCG4asErauif1dd9R4lC3k80whqyUiuS
+ Qi+e+WsDM3CXX7D8Lx3VrFErOz9dGcFl1hjTm3YlxODS0hfyOPQNlNCWeHkGw/DwOvPNOUyc8q
+ FjzgHDt84YpqR9yNwb2QwzvdglWbNmQpSvD4an+e2L7HOudweyUVu1//oi+SCo4XgnEc0Xf9BM
+ bbfK+SUXiGPbGssaucqecRVzXVgkYT10nh47uq9q4+4urmglCYCMg7ouWv2bnfENZuLHZHSxgk
+ wf911XX8B8kX8AOABAAA=
+X-Change-ID: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ bruce.jy.hung@fii-foxconn.com, george.kw.lee@fii-foxconn.com, 
+ Leo Wang <leo.jt.wang@fii-foxconn.com>, Leo Wang <leo.jt.wang@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751009491; l=1868;
+ i=leo.jt.wang@fii-foxconn.com; s=20250618; h=from:subject:message-id;
+ bh=9fRWkgV+8VP7UmRHkuiRfuz5hfvvERiwtk8L614dD50=;
+ b=0XsbKwFEd4w+7PzCss2Nmt2rO/8TFCmbSJs+qdTQwzawMciw4D7RjYyp2vdqVWZKISYobWBP4
+ UD6tzE6U0MHCxtObyeLMadTp/GYPRXTWeuWWAPR/jwtI7cNH8Isi1zI
+X-Developer-Key: i=leo.jt.wang@fii-foxconn.com; a=ed25519;
+ pk=x+DKjAtU/ZbbMkkAVdwfZzKpvNUVgiV1sLJbidVIwSQ=
 
-From: Zi Li <zi.li@linux.dev>
+This series adds initial support for the Meta Clemente BMC based on the ASPEED AST2600 SoC.
 
-Extend the hung_task detector test module to include read-write semaphore
-support alongside existing mutex and semaphore tests. This module now
-creates additional debugfs files under <debugfs>/hung_task, namely
-'rw_semaphore_read' and 'rw_semaphore_write', in addition to 'mutex' and
-'semaphore'. Reading these files with multiple processes triggers a
-prolonged sleep (256 seconds) while holding the respective lock, enabling
-hung_task detector testing for various locking mechanisms.
+Patch 1 documents the compatible string.
+Patch 2 adds the device tree for the board.
 
-This change builds on the extensible hung_task_tests module, adding
-read-write semaphore functionality to improve test coverage for kernel
-locking primitives. The implementation ensures proper lock handling and
-includes checks to prevent redundant data reads.
-
-Usage is:
-
-        > cd /sys/kernel/debug/hung_task
-        > cat mutex & cat mutex           # Test mutex blocking
-        > cat semaphore & cat semaphore   # Test semaphore blocking
-        > cat rw_semaphore_write \
-            & cat rw_semaphore_read       # Test rwsem blocking
-        > cat rw_semaphore_write \
-            & cat rw_semaphore_write      # Test rwsem blocking
-
-Update the Kconfig description to reflect the addition of read-write
-semaphore debugfs files.
-
-Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Zi Li <zi.li@linux.dev>
+Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
 ---
- samples/Kconfig                     |  7 ++-
- samples/hung_task/hung_task_tests.c | 81 ++++++++++++++++++++++++++---
- 2 files changed, 77 insertions(+), 11 deletions(-)
+Changes in v5:
+- Remove accidently pasted texts.
+- Link to v4: https://lore.kernel.org/r/20250627-add-support-for-meta-clemente-bmc-v4-0-ce7ff23460c4@fii-foxconn.com
 
-diff --git a/samples/Kconfig b/samples/Kconfig
-index ffef99950206..a8880c62d4c8 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -316,10 +316,9 @@ config SAMPLE_HUNG_TASK
- 	depends on DETECT_HUNG_TASK && DEBUG_FS
- 	help
- 	  Build a module that provides debugfs files (e.g., mutex, semaphore,
--	  etc.) under <debugfs>/hung_task. If user reads one of these files,
--	  it will sleep long time (256 seconds) with holding a lock. Thus,
--	  if 2 or more processes read the same file concurrently, it will
--	  be detected by the hung_task watchdog.
-+	  rw_semaphore_read, rw_semaphore_write) under <debugfs>/hung_task.
-+	  Reading these files with multiple processes triggers hung task
-+	  detection by holding locks for a long time (256 seconds).
- 
- source "samples/rust/Kconfig"
- 
-diff --git a/samples/hung_task/hung_task_tests.c b/samples/hung_task/hung_task_tests.c
-index a5c09bd3a47d..0360ec916890 100644
---- a/samples/hung_task/hung_task_tests.c
-+++ b/samples/hung_task/hung_task_tests.c
-@@ -4,11 +4,12 @@
-  * semaphore, etc.
-  *
-  * Usage: Load this module and read `<debugfs>/hung_task/mutex`,
-- *        `<debugfs>/hung_task/semaphore`, etc., with 2 or more processes.
-+ *        `<debugfs>/hung_task/semaphore`, `<debugfs>/hung_task/rw_semaphore_read`,
-+ *        `<debugfs>/hung_task/rw_semaphore_write`, etc., with 2 or more processes.
-  *
-  * This is for testing kernel hung_task error messages with various locking
-- * mechanisms (e.g., mutex, semaphore, etc.). Note that this may freeze
-- * your system or cause a panic. Use only for testing purposes.
-+ * mechanisms (e.g., mutex, semaphore, rw_semaphore_read, rw_semaphore_write, etc.).
-+ * Note that this may freeze your system or cause a panic. Use only for testing purposes.
-  */
- 
- #include <linux/debugfs.h>
-@@ -17,21 +18,29 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/semaphore.h>
-+#include <linux/rwsem.h>
- 
--#define HUNG_TASK_DIR		"hung_task"
--#define HUNG_TASK_MUTEX_FILE	"mutex"
--#define HUNG_TASK_SEM_FILE	"semaphore"
--#define SLEEP_SECOND		256
-+#define HUNG_TASK_DIR			"hung_task"
-+#define HUNG_TASK_MUTEX_FILE		"mutex"
-+#define HUNG_TASK_SEM_FILE		"semaphore"
-+#define HUNG_TASK_RWSEM_READ_FILE	"rw_semaphore_read"
-+#define HUNG_TASK_RWSEM_WRITE_FILE	"rw_semaphore_write"
-+#define SLEEP_SECOND			256
- 
- static const char dummy_string[] = "This is a dummy string.";
- static DEFINE_MUTEX(dummy_mutex);
- static DEFINE_SEMAPHORE(dummy_sem, 1);
-+static DECLARE_RWSEM(dummy_rwsem);
- static struct dentry *hung_task_dir;
- 
- /* Mutex-based read function */
- static ssize_t read_dummy_mutex(struct file *file, char __user *user_buf,
- 				size_t count, loff_t *ppos)
- {
-+	/* Check if data is already read */
-+	if (*ppos >= sizeof(dummy_string))
-+		return 0;
-+
- 	/* Second task waits on mutex, entering uninterruptible sleep */
- 	guard(mutex)(&dummy_mutex);
- 
-@@ -46,6 +55,10 @@ static ssize_t read_dummy_mutex(struct file *file, char __user *user_buf,
- static ssize_t read_dummy_semaphore(struct file *file, char __user *user_buf,
- 				    size_t count, loff_t *ppos)
- {
-+	/* Check if data is already read */
-+	if (*ppos >= sizeof(dummy_string))
-+		return 0;
-+
- 	/* Second task waits on semaphore, entering uninterruptible sleep */
- 	down(&dummy_sem);
- 
-@@ -58,6 +71,46 @@ static ssize_t read_dummy_semaphore(struct file *file, char __user *user_buf,
- 				       sizeof(dummy_string));
- }
- 
-+/* Read-write semaphore read function */
-+static ssize_t read_dummy_rwsem_read(struct file *file, char __user *user_buf,
-+				     size_t count, loff_t *ppos)
-+{
-+	/* Check if data is already read */
-+	if (*ppos >= sizeof(dummy_string))
-+		return 0;
-+
-+	/* Acquires read lock, allowing concurrent readers but blocks if write lock is held */
-+	down_read(&dummy_rwsem);
-+
-+	/* Sleeps here, potentially triggering hung task detection if lock is held too long */
-+	msleep_interruptible(SLEEP_SECOND * 1000);
-+
-+	up_read(&dummy_rwsem);
-+
-+	return simple_read_from_buffer(user_buf, count, ppos, dummy_string,
-+				       sizeof(dummy_string));
-+}
-+
-+/* Read-write semaphore write function */
-+static ssize_t read_dummy_rwsem_write(struct file *file, char __user *user_buf,
-+				      size_t count, loff_t *ppos)
-+{
-+	/* Check if data is already read */
-+	if (*ppos >= sizeof(dummy_string))
-+		return 0;
-+
-+	/* Acquires exclusive write lock, blocking all other readers and writers */
-+	down_write(&dummy_rwsem);
-+
-+	/* Sleeps here, potentially triggering hung task detection if lock is held too long */
-+	msleep_interruptible(SLEEP_SECOND * 1000);
-+
-+	up_write(&dummy_rwsem);
-+
-+	return simple_read_from_buffer(user_buf, count, ppos, dummy_string,
-+				       sizeof(dummy_string));
-+}
-+
- /* File operations for mutex */
- static const struct file_operations hung_task_mutex_fops = {
- 	.read = read_dummy_mutex,
-@@ -68,6 +121,16 @@ static const struct file_operations hung_task_sem_fops = {
- 	.read = read_dummy_semaphore,
- };
- 
-+/* File operations for rw_semaphore read */
-+static const struct file_operations hung_task_rwsem_read_fops = {
-+	.read = read_dummy_rwsem_read,
-+};
-+
-+/* File operations for rw_semaphore write */
-+static const struct file_operations hung_task_rwsem_write_fops = {
-+	.read = read_dummy_rwsem_write,
-+};
-+
- static int __init hung_task_tests_init(void)
- {
- 	hung_task_dir = debugfs_create_dir(HUNG_TASK_DIR, NULL);
-@@ -79,6 +142,10 @@ static int __init hung_task_tests_init(void)
- 			    &hung_task_mutex_fops);
- 	debugfs_create_file(HUNG_TASK_SEM_FILE, 0400, hung_task_dir, NULL,
- 			    &hung_task_sem_fops);
-+	debugfs_create_file(HUNG_TASK_RWSEM_READ_FILE, 0400, hung_task_dir, NULL,
-+			    &hung_task_rwsem_read_fops);
-+	debugfs_create_file(HUNG_TASK_RWSEM_WRITE_FILE, 0400, hung_task_dir, NULL,
-+			    &hung_task_rwsem_write_fops);
- 
- 	return 0;
- }
+Changes in v4:
+- Move properties of nodes defined in the same file from label ref back to where they belong.
+- Move pinctrl default configs for ncsi3 and ncsi4 to aspeed-g6-pinctrl.dtsi.
+- Add properties to i2c10 and i2c15 to enable MCTP.
+- Link to v3: https://lore.kernel.org/r/20250623-add-support-for-meta-clemente-bmc-v3-0-c223ffcf46cf@fii-foxconn.com
+
+Changes in v3:
+- Modify leakage sensor to reflect current design.
+- Link to v2: https://lore.kernel.org/r/20250621-add-support-for-meta-clemente-bmc-v2-0-6c5ef059149c@fii-foxconn.com
+
+Changes in v2:
+- Fix patch 1/2 subject line to match dt-bindings convention.
+- Reorder device tree nodes in patch 2/2 to follow upstream DTS style.
+- Link to v1: https://lore.kernel.org/r/20250618-add-support-for-meta-clemente-bmc-v1-0-e5ca669ee47b@fii-foxconn.com
+
+---
+Leo Wang (2):
+      dt-bindings: arm: aspeed: add Meta Clemente board
+      ARM: dts: aspeed: clemente: add Meta Clemente BMC
+
+ .../devicetree/bindings/arm/aspeed/aspeed.yaml     |    1 +
+ arch/arm/boot/dts/aspeed/Makefile                  |    1 +
+ .../dts/aspeed/aspeed-bmc-facebook-clemente.dts    | 1291 ++++++++++++++++++++
+ arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi    |   11 +
+ 4 files changed, 1304 insertions(+)
+---
+base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+change-id: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
+
+Best regards,
 -- 
-2.49.0
+Leo Wang <leo.jt.wang@fii-foxconn.com>
 
