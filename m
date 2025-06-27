@@ -1,170 +1,181 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FE22DD5E7;
-	Fri, 27 Jun 2025 14:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36722DE1E7;
+	Fri, 27 Jun 2025 14:06:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751033173; cv=none; b=L715xn9WlqQSrMTrYJ7ngTFDtXFm+PLwoVSFh1AOjFbNa+DE8hLCt5Cii9iX5Jrs1du4Sts2/CGINekzhNzc8KKqG76q8FSqwWBaqb+Rsf66yzZzAUSomPNeUFyXYE71t6dtHJLJSlaAyPalhwS+kUy/RUiXvRIEbqhoYoaiMaw=
+	t=1751033192; cv=none; b=nBhDeiHBv0fk3sGuZF1d1qwAnkTYVKjs2nMVfFi17PFkgtmAkSXetGqGSLHaTqMZ4MQQpGjVQI/+H374wUiHQq4YfKPSs60m0JGCaTPzrJYaM5T3YCrJTAXzrG+rYnKvcguUFBKlvSaFmEG3Tv8PHfspIggcclr/VVL92DM9HgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751033173; c=relaxed/simple;
-	bh=5W+oZzTTB+4rVXd1JXNGCD611xXo1F4FQJhxF29NZcM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZB8XepB7n7MsEQLu93zf1Sp2iBN1dlm+dEvccont5HSlodjyCMIVz79++moDsSuDUUOK7crrKYWIEPybVCDXZ3nKQhqGtfn6dbAMQa0FjwwPxS1dyNobW21D1nlkJ0LV3Pskzlp5EZdXhZX0m3FfK1/ty3CJimGNHRNEsi2kuYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OeW7pb3H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751033192; c=relaxed/simple;
+	bh=adVsjIBtKgCgfvIZbKXclC2cbdubaiTo5YZIsWYdjqA=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=Ueo8liShSRdEkkeG6WfYzBZj9xQtKLAqzyrNcOAWHyZjbhtc2lHm2ed7PuiMgnOpt1AW1Rd6zoikuIdfnCR0/TsZVm5m9700d/w3jgRbrwZIVNVEZHbkNXDKsBFkx12ljI16IF6FRzlmbEwZ7pUafxbKnitLaA5F6BZ/XlKyNJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jZ5t9e4S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OeW7pb3H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A83FC4CEE3;
-	Fri, 27 Jun 2025 14:06:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZ5t9e4S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD77FC4CEE3;
+	Fri, 27 Jun 2025 14:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751033172;
-	bh=5W+oZzTTB+4rVXd1JXNGCD611xXo1F4FQJhxF29NZcM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OeW7pb3HT5rxyoWJmyLCVyxgjnJsYpB8GgwGSY5N1+i6Q6eXieRfR4nO6Iem87BhE
-	 7q0pCTKMeKpZoqqGoXKDaQcmm4ip+n9D+8a3UeMtLSMbfm7FufdPBk2RckrkcQeXG2
-	 Nrj+WG/KJ4Sk7Zd2SO+lxvEz5KEzhto6WSL6tXRYb9Xg3o1rkZodSQWsGPAOH/Josn
-	 b+iiupoL502dq8D7+rbZZjaClcgCoFQTn8Yx72zRFcFdSzwulzf+1rQ5f4Mjci9WMi
-	 /G14PeRxfIJ0Qy90mQHjWtr2CQ6lqknpCvMBrYFhdvvWIPG4JrqVywk2clmHZEXxlI
-	 u3KobtwsdKNVQ==
-Message-ID: <1b0d2349-dbf7-47aa-95c9-1974e63d111a@kernel.org>
-Date: Fri, 27 Jun 2025 09:06:10 -0500
+	s=k20201202; t=1751033191;
+	bh=adVsjIBtKgCgfvIZbKXclC2cbdubaiTo5YZIsWYdjqA=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=jZ5t9e4SSWnGYL0n2bI4xn1iOrlC+e/Nf4REXNYlxgqerKtOjjvsgPzXd1jxylOOC
+	 84facDh65ry5zHJWSewulap42brLM0ofT6G9YDow0rqvEv2ZEv9FUwfkB3V7NuuZgT
+	 BS5i2jX/1UV7J5+17yFOh59uv2yqTerAkTBlzgDobTE/JotqgYrOayXgfGoYjZfcbK
+	 zUHOG+bOV+n8B+jSldNIDoD9lfP3PJses40Iu4uoW6i732j0lHhxu+N6H02JPMF2O7
+	 NZ0/POcs7Vy+K2OHvbulthQwNu9CNHwasY/HT99WUhkBpc3SmaKB9v55/wvz3KlXtg
+	 W4HI7DsBO2ymw==
+Date: Fri, 27 Jun 2025 09:06:30 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
- system
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Hans de Goede <hansg@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <cbbf0caf-82ce-4427-9844-b11e0f5cacdb@kernel.org>
- <obpakvzyludc4jskqzyxf65dhqds7ie3jkbfsqdve32ouuaili@xvogkmwvbmbf>
- <284ea5c0-dca5-4e9e-a3e7-705eca794010@kernel.org>
- <vkau25ybcx3bcoa2jmxlukumunzii5h6em43anh6mmzk2kyiv7@kyych4kxc4zo>
- <0d71a686-da67-4686-8976-a17d0d1ca923@kernel.org>
- <CAJZ5v0gKUN1OdqAHnXNcFUAOfhpdRfa_o=L6TA2GZTpe1bMaNQ@mail.gmail.com>
- <exmgckzoakt2ncsdphqvymcadon7k6tl36a3zvrj2pv23dffps@znq23v3qbcm2>
- <CAJZ5v0j3ZyuEqSKQ+3K8M3BwPCxn5Z6KOwjyjt4cJW6HfxjPDw@mail.gmail.com>
- <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
- <de548b27-4c43-4f30-af9d-b060101e6fd8@kernel.org>
- <75fixx6rgwsgsw6e765oxdcivcg2nkzx2fp2qywgx4vi3ihywh@ot7gdecsnttw>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <75fixx6rgwsgsw6e765oxdcivcg2nkzx2fp2qywgx4vi3ihywh@ot7gdecsnttw>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Leo Wang <leo.jt.wang@fii-foxconn.com>, 
+ Magnus Damm <magnus.damm@gmail.com>, george.kw.lee@fii-foxconn.com, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-aspeed@lists.ozlabs.org, 
+ linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ linux-arm-kernel@lists.infradead.org, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, 
+ linux-renesas-soc@vger.kernel.org, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, bruce.jy.hung@fii-foxconn.com, 
+ linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>, 
+ devicetree@vger.kernel.org
+To: Leo Wang <leo.jt.wang@gmail.com>
+In-Reply-To: <20250627-add-support-for-meta-clemente-bmc-v5-0-038ed6f1cb9f@fii-foxconn.com>
+References: <20250627-add-support-for-meta-clemente-bmc-v5-0-038ed6f1cb9f@fii-foxconn.com>
+Message-Id: <175103315156.3220577.5517131859109984485.robh@kernel.org>
+Subject: Re: [PATCH v5 0/2] ARM: dts: Add support for Meta Clemente BMC
 
-On 6/26/2025 11:56 PM, Dmitry Torokhov wrote:
-> On Thu, Jun 26, 2025 at 05:21:35PM -0500, Mario Limonciello wrote:
->> On 6/26/2025 2:40 PM, Dmitry Torokhov wrote:
->>> On Thu, Jun 26, 2025 at 09:31:12PM +0200, Rafael J. Wysocki wrote:
->>>> On Thu, Jun 26, 2025 at 9:28 PM Dmitry Torokhov
->>>> <dmitry.torokhov@gmail.com> wrote:
->>>>>
->>>>> On Thu, Jun 26, 2025 at 09:18:56PM +0200, Rafael J. Wysocki wrote:
->>>>>> On Thu, Jun 26, 2025 at 9:16 PM Hans de Goede <hansg@kernel.org> wrote:
->>>>>>>
->>>>>>> Hi,
->>>>>>>
->>>>>>> On 26-Jun-25 21:14, Dmitry Torokhov wrote:
->>>>>>>> On Thu, Jun 26, 2025 at 08:57:30PM +0200, Hans de Goede wrote:
->>>>>>>>> Hi,
->>>>>>>>>
->>>>>>>>> On 26-Jun-25 20:48, Dmitry Torokhov wrote:
->>>>>>>>>> On Thu, Jun 26, 2025 at 01:20:54PM -0500, Mario Limonciello wrote:
->>>>> [...]
->>>>>>>>>>> I want to note this driver works quite differently than how ACPI power
->>>>>>>>>>> button does.
->>>>>>>>>>>
->>>>>>>>>>> You can see in acpi_button_notify() that the "keypress" is only forwarded
->>>>>>>>>>> when not suspended [1].  Otherwise it's just wakeup event (which is what my
->>>>>>>>>>> patch was modeling).
->>>>>>>>>>>
->>>>>>>>>>> https://github.com/torvalds/linux/blob/v6.16-rc3/drivers/acpi/button.c#L461
->>>>>>>>>>> [1]
->>>>>>>>>>
->>>>>>>>>> If you check acpi_button_resume() you will see that the events are sent
->>>>>>>>>> from there. Except that for some reason they chose to use KEY_WAKEUP and
->>>>>>>>>> not KEY_POWER, oh well. Unlike acpi button driver gpio_keys is used on
->>>>>>>>>> multiple other platforms.
->>>>>>>>>
->>>>>>>>> Interesting, but the ACPI button code presumably only does this on resume
->>>>>>>>> for a normal press while the system is awake it does use KEY_POWER, right ?
->>>>>>>>
->>>>>>>> Yes. It is unclear to me why they chose to mangle the event on wakeup,
->>>>>>>> it does not seem to be captured in the email discussions or in the patch
->>>>>>>> description.
->>>>>>>
->>>>>>> I assume they did this to avoid the immediate re-suspend on wakeup by
->>>>>>> power-button issue. GNOME has a workaround for this, but I assume that
->>>>>>> some userspace desktop environments are still going to have a problem
->>>>>>> with this.
->>>>>>
->>>>>> It was done for this reason IIRC, but it should have been documented
->>>>>> more thoroughly.
->>>>>
->>>>> I assert that it should not have been done and instead dealt with in
->>>>> userspace. There are numerous drivers in the kernel emitting
->>>>> KEY_POWER. Let userspace decide how to handle this, what keys to ignore,
->>>>> what keys to process and when.
->>>>
->>>> Please see my last message in this thread (just sent) and see the
->>>> changelog of commit 16f70feaabe9 ("ACPI: button: trigger wakeup key
->>>> events").
->>>>
->>>> This appears to be about cases when no event would be signaled to user
->>>> space at all (power button wakeup from ACPI S3).
->>>
->>> Ahh, in S3 we do not know if we've been woken up with Sleep or Power
->>> button, right? So we can not send the "right" event code and use
->>> "neutral" KEY_WAKEUP for both. Is this right?
->>>
->>> Thanks.
->>>
->>
->> I did some more experiments with this affected system that started this
->> thread (which uses s2idle).
->>
->> I only applied patch 3 in this series to help the debounce behavior and
->> figure out impacts from patch 4 with existing Linux userspace.
->>
->> If suspended using systemd in GNOME (click the GUI button) on Ubuntu 24.04
->> the GNOME workaround mitigates this problem and no visible impact.
->>
->> If I suspend by hand using the kernel interface and then press power button
->> to wake:
->>
->> # echo mem | sudo tee /sys/power/state:
->>
->> * When GNOME is running:
->> I get the shutdown popup and it eventually shuts down.
->>
->> * When GNOME isn't running (just on a VT):
->> System shuts down.
+
+On Fri, 27 Jun 2025 15:31:20 +0800, Leo Wang wrote:
+> This series adds initial support for the Meta Clemente BMC based on the ASPEED AST2600 SoC.
 > 
-> For the latter you may want to raise an issue with systemd, and for the
-> former I guess it is being too clever and does not activate the
-> workaround if suspend was not initiated by it? I think Gnome is being
-> too careful.
+> Patch 1 documents the compatible string.
+> Patch 2 adds the device tree for the board.
 > 
-> Thanks.
+> Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
+> ---
+> Changes in v5:
+> - Remove accidently pasted texts.
+> - Link to v4: https://lore.kernel.org/r/20250627-add-support-for-meta-clemente-bmc-v4-0-ce7ff23460c4@fii-foxconn.com
+> 
+> Changes in v4:
+> - Move properties of nodes defined in the same file from label ref back to where they belong.
+> - Move pinctrl default configs for ncsi3 and ncsi4 to aspeed-g6-pinctrl.dtsi.
+> - Add properties to i2c10 and i2c15 to enable MCTP.
+> - Link to v3: https://lore.kernel.org/r/20250623-add-support-for-meta-clemente-bmc-v3-0-c223ffcf46cf@fii-foxconn.com
+> 
+> Changes in v3:
+> - Modify leakage sensor to reflect current design.
+> - Link to v2: https://lore.kernel.org/r/20250621-add-support-for-meta-clemente-bmc-v2-0-6c5ef059149c@fii-foxconn.com
+> 
+> Changes in v2:
+> - Fix patch 1/2 subject line to match dt-bindings convention.
+> - Reorder device tree nodes in patch 2/2 to follow upstream DTS style.
+> - Link to v1: https://lore.kernel.org/r/20250618-add-support-for-meta-clemente-bmc-v1-0-e5ca669ee47b@fii-foxconn.com
+> 
+> ---
+> Leo Wang (2):
+>       dt-bindings: arm: aspeed: add Meta Clemente board
+>       ARM: dts: aspeed: clemente: add Meta Clemente BMC
+> 
+>  .../devicetree/bindings/arm/aspeed/aspeed.yaml     |    1 +
+>  arch/arm/boot/dts/aspeed/Makefile                  |    1 +
+>  .../dts/aspeed/aspeed-bmc-facebook-clemente.dts    | 1291 ++++++++++++++++++++
+>  arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi    |   11 +
+>  4 files changed, 1304 insertions(+)
+> ---
+> base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+> change-id: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
+> 
+> Best regards,
+> --
+> Leo Wang <leo.jt.wang@fii-foxconn.com>
+> 
+> 
 > 
 
-Sure I could file bugs with both the projects.
 
-But before I do if all userspace needs to account for this with a series 
-of workarounds at resume time, you still think that is that really the 
-best way forward?
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-Hans, you have a lot of experience in the GNOME community.  Your thoughts?
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: using specified base-commit 52da431bf03b5506203bca27fe14a97895c80faf
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/aspeed/' for 20250627-add-support-for-meta-clemente-bmc-v5-0-038ed6f1cb9f@fii-foxconn.com:
+
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: timer (arm,armv7-timer): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/timer/arm,arch_timer.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /sdram@1e6e0000: failed to match any schema with compatible: ['aspeed,ast2600-sdram-edac', 'syscon']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: bus@1e600000 (aspeed,ast2600-ahbc): compatible: ['aspeed,ast2600-ahbc', 'syscon'] is too long
+	from schema $id: http://devicetree.org/schemas/bus/aspeed,ast2600-ahbc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: syscon@1e6e2000 (aspeed,ast2600-scu): 'smp-memram@180' does not match any of the regexes: '^interrupt-controller@[0-9a-f]+$', '^p2a-control@[0-9a-f]+$', '^pinctrl(@[0-9a-f]+)?$', '^pinctrl-[0-9]+$', '^silicon-id@[0-9a-f]+$'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed,ast2x00-scu.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/syscon@1e6e2000/smp-memram@180: failed to match any schema with compatible: ['aspeed,ast2600-smpmem']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/display@1e6e6000: failed to match any schema with compatible: ['aspeed,ast2600-gfx', 'syscon']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@1e6e9000 (aspeed,ast2600-adc0): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@1e6e9100 (aspeed,ast2600-adc1): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: crypto@1e6fa000 (aspeed,ast2600-acry): 'aspeed,ahbc' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/crypto/aspeed,ast2600-acry.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/timer@1e782000: failed to match any schema with compatible: ['aspeed,ast2600-timer']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): reg-io-width: 4 is not of type 'object'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): lpc-snoop@80: 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@24 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@28 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@2c (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@114 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/lpc@1e789000/lhc@a0: failed to match any schema with compatible: ['aspeed,ast2600-lhc']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/lpc@1e789000/ibt@140: failed to match any schema with compatible: ['aspeed,ast2600-ibt-bmc']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740100:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
+	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740200:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
+	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/sdc@1e740000/sdhci@1e740100: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/sdc@1e740000/sdhci@1e740200: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@34 (maxim,max1363): '#address-cells', '#size-cells', 'channel@0', 'channel@1', 'channel@2', 'channel@3' do not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/maxim,max1363.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@35 (maxim,max1363): '#address-cells', '#size-cells', 'channel@0', 'channel@1', 'channel@2', 'channel@3' do not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/maxim,max1363.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: fsi@1e79b000 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
+	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/fsi@1e79b000: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: fsi@1e79b100 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
+	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/fsi@1e79b100: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/dma-controller@1e79e000: failed to match any schema with compatible: ['aspeed,ast2600-udma']
+
+
+
+
+
