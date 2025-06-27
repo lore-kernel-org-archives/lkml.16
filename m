@@ -1,192 +1,151 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B23D2F1FC4;
-	Fri, 27 Jun 2025 02:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B6A2F1FC4;
+	Fri, 27 Jun 2025 02:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750989629; cv=none; b=haZw+kGSi5lzrfq0jAB51YSpUU+uUPk0nc4sm7CBX2vTzwT/R1J0Ro8hUldoBs6hmF2ejCpEdFc0yBAK1SLufn5HvsgeXZzEHibhx2Sn3hH3Lfu5EHvU1q+ITgpIFO5RUNwY68xmqZuSD4UOuZ8JZ1nMZlYIZb3ylWbSd86JZkI=
+	t=1750989695; cv=none; b=mLYXMl8NWDFTorjm+1fSkSTf33AXlHijEyxa1eVAhbUuWPGdgf2l6wdetDb7O5VDGJx3mFfcK1YWzHGFQclqPrE2qk/WYL4RW2+8AdTMiICUntL9+1qw/RsaObxNUhykbZ7tEE1mq+iZJWEb9hbNza3vpIlIBwm0HB9bmmY+5d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750989629; c=relaxed/simple;
-	bh=8pfx7o+jP061JxfRlafuH62c2GtBr5C7HiHxOY1JtUE=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=TbMSjxWpuBEJ+x7+3h33izZN4rqIArEeMpVTS5gCkO5yM4VaAMG4JhVqHogoETxt+h+DYRhHjI5R9g++j74ENILAFqn6Gtf7F2X9cVS6tDcoz9aItmJ/fHpvEDqD4VE/pzsy6mZf52R44uF7TOAqH5GqCr3i+n99scDDcMTNSdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxPOI0+11opP8dAQ--.25563S3;
-	Fri, 27 Jun 2025 10:00:20 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMCxLcUw+11ogkUsAQ--.708S3;
-	Fri, 27 Jun 2025 10:00:19 +0800 (CST)
-Subject: Re: [PATCH v3 9/9] LoongArch: KVM: INTC: Add address alignment check
-To: Huacai Chen <chenhuacai@kernel.org>,
- David Laight <david.laight.linux@gmail.com>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
- Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250611014651.3042734-1-maobibo@loongson.cn>
- <20250611015145.3042884-1-maobibo@loongson.cn>
- <CAAhV-H6Eru5e6+_i+4DY9qwshibY43hjbS-QC-fhLD04-4mOGw@mail.gmail.com>
- <20250621122059.6caf299a@pumpkin>
- <CAAhV-H7Wnk7j1ukDLT+KZ6+tJuxMFv5qG-YGsJsXfB=2-eC=Ow@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <6068ef0b-bf04-03f7-b867-02d8a450d392@loongson.cn>
-Date: Fri, 27 Jun 2025 09:58:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1750989695; c=relaxed/simple;
+	bh=fNMOLkjJEnP8Cdvd71Kj0uBYZCipG7yHl6zNB8V0ebM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ik5CtKED//VC3meGGmAHLn3Um4+CA2Q9T1WCrRZal01YnwLGbe7gxUwMYKbhBfX0a3O2yrLuGY+RMMkFnqAgw6cwzd6KROw0GrutSn1dvZcbLjGrLwyV70Bu/gNUxzByfyn9kLpbDYRXQ6JyhG2t21OF1faXxVIl3bCtCssQYkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f0m/UIwE; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0m/UIwE"
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-530d764149eso488792e0c.1;
+        Thu, 26 Jun 2025 19:01:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750989691; x=1751594491; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iv+ULazfCotUfqTUQgUOXEi7/XbND58A2hHC6r5AKlU=;
+        b=f0m/UIwEboLoBA5xRBWN/0ri+5skryLl/MdomrJWZmUh1aqCTSwRCj9SOVMOhuKNtd
+         P8YEp1NgDnbBg+xPHQAjTjjFeYKXZQx6A4xOvOc4brJYYvLEda/H8cetUk5ZJRxMnPac
+         3BvBTYedy0ojlHZ6h2cuQ5tvTswFb5+I8mn+8JhSWpKq8NP1iUb5yjj/ptL6LHGZtz02
+         wXty6KaS/uWMwgh3rZoSquuop91c2B0MOS7PelhVRyTKgRMuX2hmXm4Dh4z5OOCS0EsH
+         /ARgtd6Tj/t9RkhskJiU+7YXdLVr6EcG7rRW7BqYXMyaRrRtavcZp2bOlpMPztUmqDAJ
+         B9Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750989691; x=1751594491;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iv+ULazfCotUfqTUQgUOXEi7/XbND58A2hHC6r5AKlU=;
+        b=szieqtJCfmYFUJmGf3lkLeF6K9G6d1LUqNQaKiVaIRzAWGfzRkoYx0Z6Wx1ZR73Wse
+         TLPaQrFp2uXgvbCBUEWv6MBkoHSsLbELo45PxhSkV1vhjL96hbFcOxpiOz8L16updUxH
+         Vr4glLbWY9gQzYcztLWtocaZcFD2GYfm8xgyM9nQ9DtDWPNV6rb7okH3tzgwsntCHPYD
+         7O0zcJqczCrkuCjnU4szTjDZkkd5iguon5jVCUurxNrfn9J+TKmiG3iPHLliwR9sDk2R
+         vsI2msZcJSj7W+0AT84216C0PjHjhNndt4Q9RdY1Xh2nvjj9yL7D2/ki0KesvFzpRpLc
+         BvsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5DFHCmUGH8GtZ4XLww2t+8LyuamYx4iCyzTYQYTWpX9VkuBwJk5QdTDOr4J1OI4CbADzfmEQTmarObNry26jTz7I=@vger.kernel.org, AJvYcCVvZS6jVGLWnFINm4QtVGnEuFR4WCxB+3OTRMh6KW87mdPMteFKAvcFlW2yog2ji9OmmGIOnawDxuW8yrul@vger.kernel.org, AJvYcCWeCLD5k5yaGAq7TraoMw+eHUuNh1R9VLBkKpTLpS781tZz6NOf3RUxXLr6G1a/wyTlRquzaC8EaT20J9l9@vger.kernel.org
+X-Gm-Message-State: AOJu0YwduSZB/0IK6guMNMEW6AATLWJLbnj2pA0KG0bfIVo/1c5ZupNh
+	6O7jlmeU7vJqgqtVHLpssyV8aejioh/MeDLZMijLejO3/MGhT1Ki6xD9d5RGdRAPfwLPh0nvRw0
+	wbZrVsdXTeYPGvluhgRH756oky6wXpDw=
+X-Gm-Gg: ASbGnctMMVOrZAcUKFJkA4EzHvx8FXDodVie3UOlAuyTbPPzDmwDEhYVCV00Gp+oFQS
+	PpBuZgdwAg8VI0e6GzNwyxIc3i/6VYJGD6fMF8dXpK2FXXelTxeYkrKaY3jgVP9H14+QFvsaOWn
+	LeKGyWMrVE7BrUMpJGLMhIQ1CogK7JZQmJPBo6f36/Rg==
+X-Google-Smtp-Source: AGHT+IEfDkUmXmdGNiYTAmO+fSQE3VFxMdbIHmR6wR3Spz90Kei7f1lHrowLtUvc0N5RL+zWLCQWluZ6/tNtS2e7eSo=
+X-Received: by 2002:a05:6122:21a1:b0:531:4041:c4c7 with SMTP id
+ 71dfb90a1353d-5330bfd4563mr1451187e0c.7.1750989691380; Thu, 26 Jun 2025
+ 19:01:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7Wnk7j1ukDLT+KZ6+tJuxMFv5qG-YGsJsXfB=2-eC=Ow@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxLcUw+11ogkUsAQ--.708S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWrWUuw47KF45CF47Jr4rXrc_yoWrXw18pr
-	WUAFs0ka15Xry7Jw1qqwnYgFnrtw4vqr18XryDta4a9F4vvF17Jry8ArWj9Fyjkw1fKF40
-	qF4YgrWfuFWYy3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUU
-	U
+References: <20250618-restricted-pointers-drm-v1-0-781e0d88cd92@linutronix.de> <20250618-restricted-pointers-drm-v1-1-781e0d88cd92@linutronix.de>
+In-Reply-To: <20250618-restricted-pointers-drm-v1-1-781e0d88cd92@linutronix.de>
+From: Inki Dae <daeinki@gmail.com>
+Date: Fri, 27 Jun 2025 11:00:55 +0900
+X-Gm-Features: Ac12FXzQxzyREaVVCRYXuMvFKjupkA98dfTPk38AOS_x9wbPi10kqXkSS64ZqjU
+Message-ID: <CAAQKjZNG73CX8ebxqLgcYRGguGya-9zODL3BTdBDgbgJLJZ9jw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] drm/bridge: samsung-dsim: Don't use %pK through printk
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Abhinav Kumar <abhinav.kumar@linux.dev>, Jessica Zhang <jessica.zhang@oss.qualcomm.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
+2025=EB=85=84 6=EC=9B=94 18=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 4:56, T=
+homas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> In the past %pK was preferable to %p as it would not leak raw pointer
+> values into the kernel log.
+> Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
+> the regular %p has been improved to avoid this issue.
+> Furthermore, restricted pointers ("%pK") were never meant to be used
+> through printk(). They can still unintentionally leak raw pointers or
+> acquire sleeping locks in atomic contexts.
+>
+> Switch to the regular pointer formatting which is safer and
+> easier to reason about.
 
-On 2025/6/21 下午9:04, Huacai Chen wrote:
-> Hi, David,
-> 
-> On Sat, Jun 21, 2025 at 7:21 PM David Laight
-> <david.laight.linux@gmail.com> wrote:
->>
->> On Thu, 19 Jun 2025 16:47:22 +0800
->> Huacai Chen <chenhuacai@kernel.org> wrote:
->>
->>> Hi, Bibo,
->>>
->>> On Wed, Jun 11, 2025 at 9:51 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>> IOCSR instruction supports 1/2/4/8 bytes access, the address should
->>>> be naturally aligned with its access size. Here address alignment
->>>> check is added in eiointc kernel emulation.
->>>>
->>>> At the same time len must be 1/2/4/8 bytes from iocsr exit emulation
->>>> function kvm_emu_iocsr(), remove the default case in switch case
->>>> statements.
->>> Robust code doesn't depend its callers do things right, so I suggest
->>> keeping the default case, which means we just add the alignment check
->>> here.
->>
->> kernel code generally relies on callers to DTRT - except for values
->> that come from userspace.
->>
->> Otherwise you get unreadable and slow code that continuously checks
->> for things that can't happen.
-> Generally you are right - but this patch is not the case.
-> 
-> Adding a "default" case here doesn't make code slower or unreadable,
-> and the code becomes more robust.
-By my understanding, the default case cannot happen never with iocsr 
-emulation function kvm_emu_iocsr() in kernel in the previous patch.
+Applied.
 
-David suggests that default case can be removed since it will not 
-happen. It actually makes code quicker if compared with assembly 
-language, since there is one if-else comparison reduction.
+Thanks,
+Inki Dae
 
-Regards
-Bibo Mao
-
-> 
-> Huacai
-> 
->>
->>          David
->>
->>>
->>> And I think this patch should also Cc stable and add a Fixes tag.
->>>
->>>
->>> Huacai
->>>
->>>>
->>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>> ---
->>>>   arch/loongarch/kvm/intc/eiointc.c | 21 +++++++++++++--------
->>>>   1 file changed, 13 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
->>>> index 8b0d9376eb54..4e9d12300cc4 100644
->>>> --- a/arch/loongarch/kvm/intc/eiointc.c
->>>> +++ b/arch/loongarch/kvm/intc/eiointc.c
->>>> @@ -311,6 +311,12 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
->>>>                  return -EINVAL;
->>>>          }
->>>>
->>>> +       /* len must be 1/2/4/8 from function kvm_emu_iocsr() */
->>>> +       if (addr & (len - 1)) {
->>>> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
->>>> +               return -EINVAL;
->>>> +       }
->>>> +
->>>>          vcpu->stat.eiointc_read_exits++;
->>>>          spin_lock_irqsave(&eiointc->lock, flags);
->>>>          switch (len) {
->>>> @@ -323,12 +329,9 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
->>>>          case 4:
->>>>                  ret = loongarch_eiointc_readl(vcpu, eiointc, addr, val);
->>>>                  break;
->>>> -       case 8:
->>>> +       default:
->>>>                  ret = loongarch_eiointc_readq(vcpu, eiointc, addr, val);
->>>>                  break;
->>>> -       default:
->>>> -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, size %d\n",
->>>> -                                               __func__, addr, len);
->>>>          }
->>>>          spin_unlock_irqrestore(&eiointc->lock, flags);
->>>>
->>>> @@ -682,6 +685,11 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
->>>>                  return -EINVAL;
->>>>          }
->>>>
->>>> +       if (addr & (len - 1)) {
->>>> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
->>>> +               return -EINVAL;
->>>> +       }
->>>> +
->>>>          vcpu->stat.eiointc_write_exits++;
->>>>          spin_lock_irqsave(&eiointc->lock, flags);
->>>>          switch (len) {
->>>> @@ -694,12 +702,9 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
->>>>          case 4:
->>>>                  ret = loongarch_eiointc_writel(vcpu, eiointc, addr, val);
->>>>                  break;
->>>> -       case 8:
->>>> +       default:
->>>>                  ret = loongarch_eiointc_writeq(vcpu, eiointc, addr, val);
->>>>                  break;
->>>> -       default:
->>>> -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, size %d\n",
->>>> -                                               __func__, addr, len);
->>>>          }
->>>>          spin_unlock_irqrestore(&eiointc->lock, flags);
->>>>
->>>> --
->>>> 2.39.3
->>>>
->>>
->>
-
+>
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> ---
+>  drivers/gpu/drm/bridge/samsung-dsim.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/brid=
+ge/samsung-dsim.c
+> index 0014c497e3fe7d8349a119dbdda30d65d816cccf..bccc88d2594840647d7107c13=
+d69104912087384 100644
+> --- a/drivers/gpu/drm/bridge/samsung-dsim.c
+> +++ b/drivers/gpu/drm/bridge/samsung-dsim.c
+> @@ -1095,7 +1095,7 @@ static void samsung_dsim_send_to_fifo(struct samsun=
+g_dsim *dsi,
+>         bool first =3D !xfer->tx_done;
+>         u32 reg;
+>
+> -       dev_dbg(dev, "< xfer %pK: tx len %u, done %u, rx len %u, done %u\=
+n",
+> +       dev_dbg(dev, "< xfer %p: tx len %u, done %u, rx len %u, done %u\n=
+",
+>                 xfer, length, xfer->tx_done, xfer->rx_len, xfer->rx_done)=
+;
+>
+>         if (length > DSI_TX_FIFO_SIZE)
+> @@ -1293,7 +1293,7 @@ static bool samsung_dsim_transfer_finish(struct sam=
+sung_dsim *dsi)
+>         spin_unlock_irqrestore(&dsi->transfer_lock, flags);
+>
+>         dev_dbg(dsi->dev,
+> -               "> xfer %pK, tx_len %zu, tx_done %u, rx_len %u, rx_done %=
+u\n",
+> +               "> xfer %p, tx_len %zu, tx_done %u, rx_len %u, rx_done %u=
+\n",
+>                 xfer, xfer->packet.payload_length, xfer->tx_done, xfer->r=
+x_len,
+>                 xfer->rx_done);
+>
+>
+> --
+> 2.49.0
+>
+>
