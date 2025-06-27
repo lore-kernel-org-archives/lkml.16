@@ -1,180 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A116518DB35;
-	Fri, 27 Jun 2025 04:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCF4192B96
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751000291; cv=none; b=DNRaAcNBqogCuAd1KmzmukqH4BFu+9IxPhwXXQJgDGxCqcKPJwlQZe5x8uhp/xTUFWpUOZc0sKwLDQEm6vxsFrHp9TYKDvXYrhz64w016ObdIuEwl0kdtlXrzyeoEqlbJSK4CBGboVflCR+5rPo0WEu5yKVEEJ5fciGKv04Ysx0=
+	t=1751000462; cv=none; b=p3EwkZlIm0ha1KjL0b9U92bB4x3FfW2ry6cENXZWXlzGvm9wxfEHYxBZeVJpr/eOd3VYBx5n8gbXwuZOKMQvOGujUiNvHSVRTUGo74l5nuYZGy03cK3K7TWOC+pu7h2UgDWSGrL8x8toBwlIGcqI2sUeMWq/65rDg0woaM6HKk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751000291; c=relaxed/simple;
-	bh=hh+Pcw6Bm2ZODy21sOTBGqmuusQEsI7aY0o1WB0Nl1c=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=hbaZolug4bh5M/Lh7yVjoE6WEbJ9QumOFEYopu0yQzHD86vwgW0cXFQA/f7Ne0QiKaKYDp/Hr3RKUl5aMemPfOOj6EI9QJcbCccDToxU2YlrejsYyCP5142xbbwZr2lRMz9hxvJtG116qXd1VwGtaZkico6RKOqroLVEwJmGNIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MAsE4uBQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751000462; c=relaxed/simple;
+	bh=5sxsybdkrGUBKXYDIe9p1RkmhM54REE83fhDh4dcVmw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iJWTZUjDIbcuNHhwmpeXeCf0/dJOTH+ocyRx/ftgCG/8HPwWcIyn7AUvuK4vZ9N3YjtMPZR4wChBpegkuljtxqcQlq0hlmPr4sbp8K1TJ3skP1Dk0TGfaCmudiL9lqYN9MW+gg+Dh3qSuRbkcQClF1Z4ezjbnF2XMMEjcoZwwIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ToLZklSG; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MAsE4uBQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24FDEC4CEE3;
-	Fri, 27 Jun 2025 04:58:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751000291;
-	bh=hh+Pcw6Bm2ZODy21sOTBGqmuusQEsI7aY0o1WB0Nl1c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MAsE4uBQf9SAwhj9bFX1fXZozhWsCTxbzvleDxq+MTF5eYPJWzDUxYEDKM0R3vZ4S
-	 tnbI0Hs3qmWu474Zuv8EyE0L/ws6cADfKbe4fZ+sdG/kSEASjLuAv7eElKd+qrRCoE
-	 uYonxwEDCFhUobdkI1iw7+oyn1QiCJvyzCxxJv9gdXIHboqmCjArGQ+AEmTGBPxNH9
-	 DguOSfCVnDnGax6XYad+DAZKO6JhuMrSB019kM2StIzoBz2DMRfKFrWLxPIRDam1GU
-	 b/C8q0E1zxVXFhnJS/DCpGQi5UIFk1XFlnzB9pXbGLlKBV7F/e7LS+XSSanUCVwXKn
-	 xF+fpi08z4TNQ==
-Date: Fri, 27 Jun 2025 13:58:07 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
- <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
- <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Alan Maguire
- <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, Thomas
- =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas@t-8ch.de>, Ingo Molnar
- <mingo@kernel.org>
-Subject: Re: [PATCHv3 perf/core 07/22] uprobes: Add do_ref_ctr argument to
- uprobe_write function
-Message-Id: <20250627135807.dd97ddf4cb6910df3c56e654@kernel.org>
-In-Reply-To: <aFwRjTkluiE-g-Ab@krava>
-References: <20250605132350.1488129-1-jolsa@kernel.org>
-	<20250605132350.1488129-8-jolsa@kernel.org>
-	<20250625154259.4a092f0213739404a0e9b210@kernel.org>
-	<aFwRjTkluiE-g-Ab@krava>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ToLZklSG"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-551fc6d4a76so1663148e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751000459; x=1751605259; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sR7cWCLMq3WenuSXEigSyJAepuKCkZmxv9Gwd3tBBUg=;
+        b=ToLZklSGOkPtFPZZWuR6NcV5H+o/JuuyEyVpFIY0mM82JdZecd7d7kBfdyR4mFTnSr
+         MHqkRg+v/lo8kSgXXPxs0xLYqI+O4e8FC8rLwgDOnetIctvjzMqTphwVbBu7jD+eIR2U
+         lQSmxx0yC6131nCzrZn3Jw4mDU/OfOnBWBe6Ea9e8KKmxlqJyLfNTAtpyBVutTneP3rI
+         Woo0PGYFnpNSuFAk37dmmh/fnrGotJ/RR0QFn3n25DrSKNRR0kMfqR3NM/EzF49ORsX2
+         ypdJqIH6YuqHcHkMcsbEr6QKYsqsZ7VZLywM6IjG0V86h/RAxA1U5KI0lwzoZAy4uG7b
+         vGVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751000459; x=1751605259;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sR7cWCLMq3WenuSXEigSyJAepuKCkZmxv9Gwd3tBBUg=;
+        b=n2kVGcmOrVR/bUFg/cNYaGbLrzpr/BdIl9VjKbi8a4dpxrFpsZyHWBDGnQmw+lLC0P
+         hZbjJHLB3F7YvYl+iOT1lahD2oD83ZOtZewJQL5jlrS7HGCxm1tzLY/nvJrvllfV6EJb
+         CegY8mvRtithX4D5Bwnrsu2X9GXKIzs2KEnoDypq7Iz/6RnAqTEvOVX7zlsqU6Y3A5dU
+         TTBVRyMXktfgl9NDdogaPIrjQhQcnEv596EvvXs5YerqTR76Wi+kkdCWVznpboaCcA0O
+         67f1YOLLP7BMDQoep6wX2EvVPVaj65y3Lv3kkqcIoH1sj6+HGohkxr21e1uHWrP+3kvR
+         YwSw==
+X-Gm-Message-State: AOJu0Yw6E4yv3BH6z403JmErdO+vDjHpW44ub6plkrqMSajVYf0XUxDg
+	oCs+xDc5BV1WI+G86WrxxYIX43vTrm/+1HnA7mcaCamBBjpYVHljz2gjP+uHGPeqUsGT5tkW+zJ
+	cYkZag618XAm/mDmVyVjmhQBjrnEsLFeuK+X7Wjw=
+X-Gm-Gg: ASbGncuNvM/FlJ/eW2O6ZfuLGDSEZfPxuFDoWtzc2V4jq/+H+E/B9SVNQED9wUrsgkT
+	5qfTf/yTq36y/V3FtZaNjVFGN5sSZHhuCFosCYibqyWXCcXEMLiyspU6fk3B4cmx/n3nTpDt+ce
+	8rtJNXBgsizg5UGVCHveCW4KchdB+QpLKqGAtHCIaruFvVoxFUbsJPDHiAvxPPklgkthp3ISx9
+X-Google-Smtp-Source: AGHT+IEO2uMlU4rN6MBnIyvwrGM1yh/mJea89i3Hmq8wQ6a2bo5jIt5NoGFTwwlABG8RudFiMl+2V4oucyLUfHnSqjU=
+X-Received: by 2002:a05:6512:138a:b0:553:2d93:d31 with SMTP id
+ 2adb3069b0e04-5550b84f9f6mr673078e87.22.1751000458926; Thu, 26 Jun 2025
+ 22:00:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250625182951.587377878@linutronix.de> <20250625183758.253203783@linutronix.de>
+In-Reply-To: <20250625183758.253203783@linutronix.de>
+From: John Stultz <jstultz@google.com>
+Date: Thu, 26 Jun 2025 22:00:47 -0700
+X-Gm-Features: Ac12FXybFViwuxBjL7kR7zDd-ff0Ky-2hj1TeYZ2UKuwfof9-sf8-ZR30AbwiSc
+Message-ID: <CANDhNCqY5TzY5qWLrZMJYrmwW3XUStvrut2Dd8pc9T+LMaibpg@mail.gmail.com>
+Subject: Re: [patch V3 08/11] timekeeping: Prepare do_adtimex() for auxiliary clocks
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
+	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Miroslav Lichvar <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, 
+	David Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Kurt Kanzenbach <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, 
+	Antoine Tenart <atenart@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 25 Jun 2025 17:11:09 +0200
-Jiri Olsa <olsajiri@gmail.com> wrote:
+On Wed, Jun 25, 2025 at 11:38=E2=80=AFAM Thomas Gleixner <tglx@linutronix.d=
+e> wrote:
+>
+> Exclude ADJ_TAI, leap seconds and PPS functionality as they make no sense
+> in the context of auxiliary clocks and provide a time stamp based on the
+> actual clock.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  kernel/time/timekeeping.c |   39 ++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 36 insertions(+), 3 deletions(-)
+> ---
+>
+> --- a/kernel/time/timekeeping.c
+> +++ b/kernel/time/timekeeping.c
+> @@ -2562,6 +2573,21 @@ static int timekeeping_validate_timex(co
+>                         return -EINVAL;
+>         }
+>
+> +       if (!aux_clock)
+> +               return 0;
+> +
+> +       /* Auxiliary clocks are similar to TAI and do not have leap secon=
+ds */
+> +       if (txc->status & (STA_INS | STA_DEL))
+> +               return -EINVAL;
+> +
+> +       /* No TAI offset setting */
+> +       if (txc->modes & ADJ_TAI)
+> +               return -EINVAL;
+> +
+> +       /* No PPS support either */
+> +       if (txc->status & (STA_PPSFREQ | STA_PPSTIME))
+> +               return -EINVAL;
+> +
 
-> On Wed, Jun 25, 2025 at 03:42:59PM +0900, Masami Hiramatsu wrote:
-> > On Thu,  5 Jun 2025 15:23:34 +0200
-> > Jiri Olsa <jolsa@kernel.org> wrote:
-> > 
-> > > Making update_ref_ctr call in uprobe_write conditional based
-> > > on do_ref_ctr argument. This way we can use uprobe_write for
-> > > instruction update without doing ref_ctr_offset update.
-> > > 
-> > 
-> > Can we just decouple this update from uprobe_write()?
-> > If we do this exclusively, I think we can do something like;
-> > 
-> > lock()
-> > update_ref_ctr(uprobe, mm, +1);
-> > ...
-> > ret = uprobe_write();
-> > ...
-> > if (ret < 0)
-> >   update_ref_ctr(uprobe, mm, -1);
-> > unlock()
-> > 
-> > Thank you,
-> 
-> it was the intention in the v1 but as Oleg pointed out [1] it won't
-> work, because the set_orig_refctr part of this change does not know
-> if the refctr should be really updated or not
+Just a taste issue, but I think it would be more clear if these checks
+were nested under the
+  if (aux_clock) {
+      ...
+  }
 
-Ah, uprobe_unregister() can not check the given uprobe failed to
-update the code for each mm....
+As otherwise if you read-over and miss the !aux_clock early return it
+seems like you're erroring out on normally valid cases.
 
-> 
-> while inside uprobe_write it happens right after verify callback and
-> we make sure to update refctr only if the instruction was updated
-
-OK. But this is very complicated. Eventually I think uprobe should
-have a list of mm(or refcnt) to manage whether it is updated the
-refcounter.
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
-
-> 
-> thanks,
-> jirka
-> 
-> 
-> [1] https://lore.kernel.org/bpf/20250427141335.GA9350@redhat.com/
-> 
-> > 
-> > 
-> > > Acked-by: Oleg Nesterov <oleg@redhat.com>
-> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > ---
-> > >  include/linux/uprobes.h | 2 +-
-> > >  kernel/events/uprobes.c | 8 ++++----
-> > >  2 files changed, 5 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> > > index 518b26756469..5080619560d4 100644
-> > > --- a/include/linux/uprobes.h
-> > > +++ b/include/linux/uprobes.h
-> > > @@ -200,7 +200,7 @@ extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
-> > >  extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr, uprobe_opcode_t,
-> > >  			       bool is_register);
-> > >  extern int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma, const unsigned long opcode_vaddr,
-> > > -			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify, bool is_register);
-> > > +			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify, bool is_register, bool do_update_ref_ctr);
-> > >  extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
-> > >  extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
-> > >  extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
-> > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > > index 1e5dc3b30707..6795b8d82b9c 100644
-> > > --- a/kernel/events/uprobes.c
-> > > +++ b/kernel/events/uprobes.c
-> > > @@ -492,12 +492,12 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> > >  		bool is_register)
-> > >  {
-> > >  	return uprobe_write(auprobe, vma, opcode_vaddr, &opcode, UPROBE_SWBP_INSN_SIZE,
-> > > -			    verify_opcode, is_register);
-> > > +			    verify_opcode, is_register, true /* do_update_ref_ctr */);
-> > >  }
-> > >  
-> > >  int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> > >  		 const unsigned long insn_vaddr, uprobe_opcode_t *insn, int nbytes,
-> > > -		 uprobe_write_verify_t verify, bool is_register)
-> > > +		 uprobe_write_verify_t verify, bool is_register, bool do_update_ref_ctr)
-> > >  {
-> > >  	const unsigned long vaddr = insn_vaddr & PAGE_MASK;
-> > >  	struct mm_struct *mm = vma->vm_mm;
-> > > @@ -538,7 +538,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> > >  	}
-> > >  
-> > >  	/* We are going to replace instruction, update ref_ctr. */
-> > > -	if (!ref_ctr_updated && uprobe->ref_ctr_offset) {
-> > > +	if (do_update_ref_ctr && !ref_ctr_updated && uprobe->ref_ctr_offset) {
-> > >  		ret = update_ref_ctr(uprobe, mm, is_register ? 1 : -1);
-> > >  		if (ret) {
-> > >  			folio_put(folio);
-> > > @@ -590,7 +590,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> > >  
-> > >  out:
-> > >  	/* Revert back reference counter if instruction update failed. */
-> > > -	if (ret < 0 && ref_ctr_updated)
-> > > +	if (do_update_ref_ctr && ret < 0 && ref_ctr_updated)
-> > >  		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
-> > >  
-> > >  	/* try collapse pmd for compound page */
-> > > -- 
-> > > 2.49.0
-> > > 
-> > 
-> > 
-> > -- 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+But it's a minor thing.
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> @@ -2592,15 +2618,22 @@ static int __do_adjtimex(struct tk_data
+>         struct timekeeper *tks =3D &tkd->shadow_timekeeper;
+>         struct timespec64 ts;
+>         s32 orig_tai, tai;
+> +       bool aux_clock;
+>         int ret;
+>
+> +       aux_clock =3D IS_ENABLED(CONFIG_POSIX_AUX_CLOCKS) && tkd->timekee=
+per.id !=3D TIMEKEEPER_CORE;
+> +
+
+Again, the is_core_timekeeper() check would be helpful here (or
+alternatively is_aux_timekeeper())
+
+Otherwise:
+Acked-by: John Stultz <jstultz@google.com>
+
+thanks
+-john
