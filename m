@@ -1,246 +1,202 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011050.outbound.protection.outlook.com [52.101.70.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5DF2E1C7A
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751040602; cv=none; b=ZPJHC4pXcMYQjMzxxGXFQNjRKfSWeyHiHwbn6Z3bqQdT0qSUlMqhxW6f85t/la7PyyVzKB71W50KgBbHNQBoxtNqeF+7t06tqsPYmFWtbhBKhK0f9xrNEzX1dPGdnuCQWfAoT3++VlhgpHb5uRbaX/ULm1qGwKSC+tnhbJnj2XM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751040602; c=relaxed/simple;
-	bh=IH2+O5cU6bMl3dQgfqyetZYxS7jXnkdNLnvW+qxsQ88=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WTHkvq7uXjr0bZWdANqDE39zKlkOSiyzoKnTuwF3hzELjXIS/xxGK1UQSezJInHOb9BhAUxPMHGVLMXFvoBcsVMZAVRvp3klySPezvkCR/X2/nP8s6SG79MQZNeNJRtznFLUe2QDle49L1aWM4hK/L8RsymEsobuJvvm1k7orhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=H4dCPw8k; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E272EA158;
+	Fri, 27 Jun 2025 16:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751040641; cv=fail; b=e1htW0hLtPK/Qae2HFjspvk3Xu+6DopDDDp6LAPXbMKZ/3p2NwN4hDkLCZ6qbnWxV5ng3Kq7NI/hjWGO808I/EJ+4UFl3hn6J9Nt93FImBfXeZQdWuF7tW+u2PRUVKDPi0pFrTV9STpOukk11N8oDBU15CIrKf9dD/y0lwmnLBQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751040641; c=relaxed/simple;
+	bh=ZNf/XLU1xtXjT8cN+8GLjjsqqwjfEi9Jf5QIPy/d0TM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=bMf7kuIxxrgpi3noZKY2/mnn+zfA06OQRERx86ZM7BXMtITHcHa9Nl0EUGakXPmS2cCl8h6dFN3Mnqbubd2HgsY36F624W6MMwuWOEvTzUEaaD5LslRUgBRBvnL/fZDSiKd7g1yK+TNRAiAWZmtVsR7adzbgKlyScc1Z1kkBHok=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=I28HWF7G; arc=fail smtp.client-ip=52.101.70.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="H4dCPw8k"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7494999de5cso1860997b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:10:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1751040600; x=1751645400; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=6tajG5R3MCsrP/w0wwPMIBf3LF9dc2Wm7Uf1cjFJKdc=;
-        b=H4dCPw8kainQkV3U88q1ykgWUxcyaUhGqNx70wITre5B9Uqg0J5ACangeMO0rF8x6v
-         I86lecQmRle0IXAfhBiPjb3MOiHCqYYTthU4m0LlPGixC1QoSv64F+UuBk7yeSTdgtsy
-         2VaZFR3XhvRA9jigy235+wgd3/xBOuEZOA5KE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751040600; x=1751645400;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6tajG5R3MCsrP/w0wwPMIBf3LF9dc2Wm7Uf1cjFJKdc=;
-        b=i58vjhW/e69T63kiVUPTdLahbUMlPPmljsvtk+RzJw74laVAEa6s852Jh8ikJIqLi7
-         Wcn2BT69pUdFFy0aySw1f8rOtAqh+RI9E0K1qGqbm8ufHnTUK/Rk/PSSSCMV48jzVjyn
-         f1aMA9c7EZl2+RMKtgTb3zyvl3azTSXdNvZWlHM1F1c4KXhSCvyUJOCNG787MNgY6Eq6
-         p2y2j8qhZgQqjqTvROdZM+wcmkt5NgWgL4vBDmPRAr8/vopHL+whYBvludk7BhmITWG7
-         Jvnxkl/xoxXIGimyvi483hB/7Hg+o3LAzopwpIiBUoZMIwtKiFnUuy1JnW7LCENzs0Ru
-         EiFw==
-X-Forwarded-Encrypted: i=1; AJvYcCWkv00HtI0hWvppT0KvIXL56lmegGm1ydiWCTEKGz+3GKxYlLj+2kcir+9mEd8gwDrH6Al101q5n2ugMNo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5I+VbRgTNDlpDWLlSPHQGrFU2GYpmPhzMXZJZWWy5YgpGnkmn
-	tLWou5AMpw6M6CKnyvOchKXKtp2GmEayGPM1X/ndvwXRqQ3zRmnNAhzMtoMYa2HSTQ==
-X-Gm-Gg: ASbGncs4bEiE7mZCTgtSEhku1pNFJNAuIAOHLo17FasdF6FtqynAUeqNVwvMOPXWtn6
-	lBQgVzRMEEeYktgN3362GVi9hgi2frm6oUoKaXJfskeg2hb7nWbjaj45h4VtoTtpOvhoTbt9Kga
-	v9YVUvy0dq2Cv+XVmQ9zkXA2pNX6o5CsaANbEfRXc7YM72VrvIU9X20NOa3WbFhtI3UbHFqr5d8
-	8z3BW1HId2iipiWCTehYQyn8GkHFDAsljKuweKEQU2htrPn9v7FH9sbKp5boZO9PMsOwH9I6s/x
-	JszuMlHScOHvQLEwOLt4eCCN9R8z1tQhxNqLvvIJx7IvZszGN1z+c3EGVUZpnGDPEQ599fS1SWT
-	4oe4ljjuPFFNeHI57Ns9YIiFYcg==
-X-Google-Smtp-Source: AGHT+IGphu6TPIxsadsg8AJvhSvpk9h0/WSLUUO4UG0XTFbdDPP5hlzrX20zsMC3uarGOiW78rocGg==
-X-Received: by 2002:a17:902:f709:b0:235:779:edea with SMTP id d9443c01a7336-23ac465d24fmr64232725ad.38.1751040599657;
-        Fri, 27 Jun 2025 09:09:59 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2e1b3esm18966805ad.35.2025.06.27.09.09.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 09:09:58 -0700 (PDT)
-Message-ID: <cc36310a-c390-42f0-9c82-5b0236a9abfa@broadcom.com>
-Date: Fri, 27 Jun 2025 09:09:53 -0700
+	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="I28HWF7G"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FML2eITx+gpAuu7VOeA0GhQe9u7t3hHQCVLQocLAhz4cbu9g4Udy3sSN8ZwB0+MMv+VfYiMP+jxYg/MWfzUJlaexgon1KBZwwNOqz7SYjQv+JSeEoEP3PtTKUFGOMOioAOv0aZk0lcJNTbbCbrhaJY+qOjKNWrFSbrPdP3LmPMh9zD0jK7AM3m6tWUyoF0zsi5pgo+wlAx+afQKMSPgBF+HEi2URs5+z10qLQr/yfusZgZqL2CsOBI1Qdr/18HtVkW1spUeW1CwJajRBlZs8H1IkNJYK7yaX9DdFXbahN+vCXWZ5XJcXYCHgavdnGVFWh6G4lJr0KIOAt2GmxEhYGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/iWQ0IUzMmAmnZqCF42sy3SPdl0255YmRxdRT+U19qA=;
+ b=rVDaT0EpowJ2JzaAhS56wmQTY3DDw+dNECm51LkFE9Nh4luAOvU7IGp0XYdLaFuD50iRDOrGk0CVPK18AR8wieRRAtWk4Hnhtmgoak+h8JWepvCG08b5G9VLLbQO7YMpiYNhnRlo6ljIj3qCCBeVXQrFoO80JVLFY/D7VKIWS1+zdTQIAsAZKfiZPujyHzPL0zXv1pqI1urcmM/Zma+1nmatf7oFx7oaEQqSXX2qQudhr8J0j9SX61k+55W7OCPOLjf3NB0vxHJQ6v7p5n8op+Fu4P8OaC/dmfq94w+cQ8S/3onm4dplSUKSKmv+EBKfF5gUwdu+jON9l7Kh87GaJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/iWQ0IUzMmAmnZqCF42sy3SPdl0255YmRxdRT+U19qA=;
+ b=I28HWF7G0MFi949c+KeiHujrdkR+6/1eKKSVRZpl3BYrccl/X+P8v5GyXmP9eNWz1+SALRtub7thoeZ0vSHlv5PYz5xQ4lMONMNe6Nv8Sn3ne6W85+TGz9j36AbCbUFUumgv9VNMfZLhpDsI6TOzOGuVVZWRT/5RxGRml7iW/JU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
+ by AS8PR04MB7493.eurprd04.prod.outlook.com (2603:10a6:20b:293::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.18; Fri, 27 Jun
+ 2025 16:10:33 +0000
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::5ee:7297:93b4:a8d1]) by AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::5ee:7297:93b4:a8d1%4]) with mapi id 15.20.8880.021; Fri, 27 Jun 2025
+ 16:10:32 +0000
+Message-ID: <b1c789bf-1369-42ec-8bb3-d7a45c92abf0@cherry.de>
+Date: Fri, 27 Jun 2025 18:10:31 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/8] arm64: dts: rockchip: Refactor DSI nodes on rk3399
+ boards
+To: Diederik de Haas <didi.debian@cknow.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Dragan Simic <dsimic@manjaro.org>, Johan Jonker <jbx6244@gmail.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250627152645.740981-1-didi.debian@cknow.org>
+ <20250627152645.740981-3-didi.debian@cknow.org>
+Content-Language: en-US
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <20250627152645.740981-3-didi.debian@cknow.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: VI1PR0502CA0026.eurprd05.prod.outlook.com
+ (2603:10a6:803:1::39) To AS8PR04MB8897.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42c::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/16] MAINTAINERS: Include GDB scripts under their
- relevant subsystems
-To: Jan Kara <jack@suse.cz>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
- Kieran Bingham <kbingham@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Dennis Zhou <dennis@kernel.org>,
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
- John Ogness <john.ogness@linutronix.de>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, Thomas Gleixner <tglx@linutronix.de>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Alexander Potapenko <glider@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, Kent Overstreet <kent.overstreet@linux.dev>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
- Matthew Wilcox <willy@infradead.org>,
- Kuan-Ying Lee <kuan-ying.lee@canonical.com>,
- Ilya Leoshkevich <iii@linux.ibm.com>, Etienne Buira <etienne.buira@free.fr>,
- Antonio Quartulli <antonio@mandelbit.com>, Illia Ostapyshyn
- <illia@yshyn.com>, "open list:COMMON CLK FRAMEWORK"
- <linux-clk@vger.kernel.org>,
- "open list:PER-CPU MEMORY ALLOCATOR" <linux-mm@kvack.org>,
- "open list:GENERIC PM DOMAINS" <linux-pm@vger.kernel.org>,
- "open list:KASAN" <kasan-dev@googlegroups.com>,
- "open list:MAPLE TREE" <maple-tree@lists.infradead.org>,
- "open list:MODULE SUPPORT" <linux-modules@vger.kernel.org>,
- "open list:PROC FILESYSTEM" <linux-fsdevel@vger.kernel.org>
-References: <20250625231053.1134589-1-florian.fainelli@broadcom.com>
- <fynmrmsglw4liexcb37ykutf724lh7zbibilcjpysbmvgtkmes@mtjrfkve4av7>
- <c66deb8f-774e-4981-accf-4f507943e08c@broadcom.com>
- <iup2plrwgkxlnywm3imd2ctkbqzkckn4t3ho56kq4y4ykgzvbk@cefy6hl7yu6c>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <iup2plrwgkxlnywm3imd2ctkbqzkckn4t3ho56kq4y4ykgzvbk@cefy6hl7yu6c>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|AS8PR04MB7493:EE_
+X-MS-Office365-Filtering-Correlation-Id: 05fbc504-b44e-4a10-a5a2-08ddb5952496
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MkR2UUNEQ1dwdDZ2enlHcFNYOUNPcWpJbjNvN2NQaUNMV09qTmNDVTc1djVP?=
+ =?utf-8?B?K21HbVF0ak1FcGd6RnNVQ1N3TjZKYm9CZm0yK1NSWkpHMUMrczFtNlEyVVNl?=
+ =?utf-8?B?RHQ0dlZkSmtKazBTRGJ0b1VORlQwYjNhZDVHdmNjTGdZdEF6eGJJWEJ6NDlw?=
+ =?utf-8?B?QWlMVWNiTEQ5L2lGOE1YL3ZiaTNraERTVFFXY0hVN0ZaZmZIT2Q1QVhrUUVu?=
+ =?utf-8?B?WFBlZ0FyQUxqR0V4NlF0SmhHdmorQ2dpc3pJczc0MHVZODNJeDN3UlowZ2h3?=
+ =?utf-8?B?bGZtMzAzRGdYekU3T1hkWDRMUnk5QlNrMHYrS0xyZEJpTUNCdmNWSTduSGN2?=
+ =?utf-8?B?aklvUnhGbi8vU3gxbi9DSnZQRmYydkphVTdHL3VLVEIvSU5sRzQyZC8rUDhK?=
+ =?utf-8?B?RE1uOEdpVCtmUlhnaXhEQkVac0dNNEhBQ2pPTkxKU1Y1NzZzdWkrdXhPczVQ?=
+ =?utf-8?B?VG9GT0Ewd3ArR214ZjJHSmgxeGRsSEF4cmxaRXY0aW51S3JVMFUzNjB3MDQw?=
+ =?utf-8?B?cmRnR0JkNEk2OFVRVFpEZEQzY2llV1VTVUJqTmNZWFpXWVFSUDEybGVJMWpz?=
+ =?utf-8?B?SVFlUmpUWUs4QXhRTlNGL1JnNmdZMW5Vc1B4V0E5eGZFZlJFTmU1K25ScUxM?=
+ =?utf-8?B?OFAzZm4vd1pUY0NUVUdGUUxIT0ovQncvTDErSDZhSGJLT3hRY0VSQ2IrRmts?=
+ =?utf-8?B?Wk5MYVNjWjhGQjl4czZuWU1FcVR4NFZiVXMxMDRMcW5OYUlXNnQ0dEhxTTkv?=
+ =?utf-8?B?Tm5vYUVmTUVBeVdpelBoTmZKc0FuN0M5ZEgzTmgxUGtxMWZFV1phVjZtYWx0?=
+ =?utf-8?B?SVhWTy8zRTVLMG1wVy9LcC94NFBhb09aWFJQRml0M1VUWkVvMWhUNjNNQ3VO?=
+ =?utf-8?B?b1o1blRncHQrcjNsK2NHTHNMYVdqZ0VBbkI3ZXByWGJvUXJtU1kyODNqbG5N?=
+ =?utf-8?B?NnI4Y2pLSlcyY3ZqNVk0VDFhaGpub0NENUR1S21VeC9vM0J1WmYrZEpuaU40?=
+ =?utf-8?B?aEM3RFZQMTVKU01kUTFtNkprUVRnT3dkVGRsaktqTkpLOWlJeE1HNmNNaHN6?=
+ =?utf-8?B?MklkL1JIK1RtQUYvam1rdXI3OUtVdTFxSUpIdFFHV1ZmaEhuL3Zrekdlejky?=
+ =?utf-8?B?UUtuS0h1Wkw2Vmh5Q21aM05QNk52ZWloNWwzTWFNaHBQVTBJYTRCQmk2T1BS?=
+ =?utf-8?B?R1IzSFVZdGtMdFFiYTA1NWJUdjRUcnRwdDBJYUYxdi9LNzl2Wi84bGw5RjIr?=
+ =?utf-8?B?RnFkbGp1Y2o0SjlTV3ZwK3FrVGYrbG9GRWpEcUxGdXNnL3FOSHJ1MlkxUFli?=
+ =?utf-8?B?Y2FJbzArMFQ2U0V5bUd5U0Zxbm52Q0syWG5pVm53TjB6R2tlbSttWGZzckQ4?=
+ =?utf-8?B?K2pVbkhSZm5WdG5KVkVBU0l3N2lSeitoWHoxWklZM1VUdGFmV2o5SXR0Kyt2?=
+ =?utf-8?B?SDNYeFpYTER1SUdqZjFUVVFMUE1RQkk2d3JsR3VaQ3BTSjg5UWYrZHIydXls?=
+ =?utf-8?B?cGorOUplMDRWVWh0OW16cTNuRENSK3RTUUZKR0ZDRFJlZG5OTEdObXBmQUE5?=
+ =?utf-8?B?cGJvenhaU0h0ZXR4VkM0T2JNTDBLM0NqQ0V4R1p5QkZrMEdiS3JsZEpiNXNT?=
+ =?utf-8?B?VmZGUnNwMjk1Z1ZvNzNPMUFSSUhQeEZqTG9BL3FuRTRleFAzVnFRa1UxSHMx?=
+ =?utf-8?B?aTdXVGVYVEY0b2R6dlBxYXNIdXJqV0taT3VBL1Z4Z0pVcUk1akIrWDhYbVFv?=
+ =?utf-8?B?djE1cGVLMmxra3FVUHp6ejV2UlY0TTFnSnZTRTFtcFI0ZXJZdTBpdHA1NDdU?=
+ =?utf-8?B?VWhrOWl2S3ZCL1FNMjVGMnV4Vnp2N1lpd2Q5b2J5MFZSaG9iWk1mc3B3a2F1?=
+ =?utf-8?B?b0dSTURFNWlEU1NMRjBONXZvdFhGTlJlaEJKT2Z4aEh0eWY4dWpwWDdCK1B4?=
+ =?utf-8?Q?kxrG9CFjV2E=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bmRYb05VS3VxSTZrSTJqNnR5Z2xub2FTQ2xYM2FHeVVQeWFQMVg2T3U0NmM5?=
+ =?utf-8?B?OG5FUDN6MjdxRFhhMnpOMysxaC9VMFNhOG9IREtJbVI4cXdVS1E4dDAyL0VN?=
+ =?utf-8?B?MVhwUG5BSUtFcStSSHRHYnlJK0Zpc0NNQmZzRDVINXVDVEVPMmR2UkEzbjFn?=
+ =?utf-8?B?ZlVPdjl4bXJ0WGpKWldVSTUyeDdEakdVSjYvUmNncHpnRmZac3dabTNHcXZs?=
+ =?utf-8?B?Z0dOSExmYUgxTDhBbTRKQjFoNm1QUDB3U0hJU0VPd21YVXNmSTZRR1ZPK0xr?=
+ =?utf-8?B?TUpyNTVoSjBIWGxSRVRjNnpONjN3emZiYkYvUFJIeWhNbDFXWnRIUDBhbHRM?=
+ =?utf-8?B?UEVhd1cwN2RvckF5TVliTGxZeTB5OHp0dFJsS29QanFLV3cyNHU4M3lMOXFt?=
+ =?utf-8?B?dXpXS2RBZUJKRWVqYkFhWVRQbHl1RkFVOWVzTUpXa2Z6Njd1RE5ualZ0MFQw?=
+ =?utf-8?B?d2ZnL2ZJd0FEQnN3RzhmK1p4SDROMUFMcjE4YlhLZXRnVm12Z0txblRTbTZC?=
+ =?utf-8?B?c3VxdGttN0VyRXBLV3d6RDJWM2pKKzFtUjhOemZOWmNOK05QbE9uY3NEaUpQ?=
+ =?utf-8?B?bWtDVTJocnlDZmJpVUNuKzh0bkF6aC9sYUtURjl4cHZEaWJsODU1aHZ4WHZW?=
+ =?utf-8?B?UUl1TjU4Nys0cklRcmVZZVZLeW1nUFBrRExkd3JBbS9nTWNaRFc2eS9KdHpQ?=
+ =?utf-8?B?N0JaSm5tYkpLODVrZ1FMMXdidG80djRBcG5iRjBoUjlIZHltbEN3ZkJvUVk2?=
+ =?utf-8?B?U3NFdFJiejZpZFBMbnVwVFBRWmJrdGw2SnlzUVlFRnBINkpmaHlBb25pOVJF?=
+ =?utf-8?B?aC9hNEJRVksyVU43YXdTaGhycklnUkdmZ3hMbGh6ZEJYRGg2dEZxVi9HQmJw?=
+ =?utf-8?B?QUh2ei9MZzFoY21ZYlpHdXN4bzBUeHp0UUhMR3Q5Wk5LZEM2VHY5YksvOWhD?=
+ =?utf-8?B?VFp6T3ZxSGRDQmFENVV4SkdhK09pazhrSXZNWkxLUHhOT0lSaCtzWUhFQ2R6?=
+ =?utf-8?B?YmlweFlBN2M1T2xpYjVJT2Fjbys2UTErdVZ1d1pGaWJEcE90VFR6WDlicnNQ?=
+ =?utf-8?B?QVFIc29IRnFoa3dvbWNuT1FvaUpJcEd5THRqSHVwWFlVWlJnODZmampoVWFZ?=
+ =?utf-8?B?Wng2eDdlRXdxN3gzU1R6TVJPcDR2RVUvaExBZXdzclpoRDZPU2NrRGExRWRn?=
+ =?utf-8?B?MEdBZi9QTlh2RkpnT2pwTEtUZzlYNmpoa1VmM0JiZ3FSVlN0SkI0cSs3MUN2?=
+ =?utf-8?B?VGhORlgzZUx4U1NJOW1kSFpYSVRvLzNMZW4yZ3UzOVNYNkdsSjhHb1IvL0hB?=
+ =?utf-8?B?Z3ZFZ2lXY2FlejRhN2FlZ05yb2JPUVdMMXlicUFWcDBHMnhrbzREUFRCWWNY?=
+ =?utf-8?B?WWk0RUhiKzJ1SUFQRktFczMxQk10RWJzNVpjSW5JZ2dvODQ2a1ZXSTd3dStx?=
+ =?utf-8?B?Z0FWOS9qM2R4NVkyc2pFTHlMV2hzLzlsZ2E1SUZxcVB4ZHh2N1d4dXJkL0pE?=
+ =?utf-8?B?VFlpYlBTbDdNZE5HU0czQUlXRnJLTGNDQ044TjZXdnBjbEZWemU4SGJLcytp?=
+ =?utf-8?B?K3hKSVQ5Zlh3VmpySVBCcmQ3WDVNRWRSUnh5S3NvTlAxOFgrZHdScEJ2NUFX?=
+ =?utf-8?B?cGFxMkY2eE1vT2xGclF0L2ZndjJqdTkwZGY2SXNXV3VMcHZMdXhMNkZqSEJO?=
+ =?utf-8?B?cEFWb2JKaFhtT1Z0L21uLzkrbzhMYVYzV3lOY3RZUWV4OEhtUzBuQkhKcUI1?=
+ =?utf-8?B?RWloZXJrcEJWempITll3ZGowSFVRU3p0VlZXQVUweVludWxwcTV0ekpuWFRt?=
+ =?utf-8?B?R3JtK0IwaUh5ZE9NMTBkTm0rQXNnVzQwZFlxQkJxN2VmcHVUOFUxS2Y5cTky?=
+ =?utf-8?B?YngwZThJdWVORmlOek8vWGVpejNHNnZ6TnpPK2ZVOFJTVWVOSmtHZDQxREtI?=
+ =?utf-8?B?K3FyTEpwQjhmdU9YaHNNclBNK0QzVVNhZDExTkpDbTZHUXN2MHZrQWgzZVRx?=
+ =?utf-8?B?QUN5b1U5bUpmVHZuQjl1NE9FS2tvQkNHQjBiR2t0L2FYOWtUWnU3RkJGQkJ3?=
+ =?utf-8?B?QkRWbVgrMWVPS2M1Y1RkL0p5WWNDVDQ5OU03cmJsaStQZjlCWTRYQWcyVEtO?=
+ =?utf-8?B?b2Z3bk4wQWZJMWRSeC9PMXVvM0RLdXhIaXBLeGpUT29QRkE5UDFvS0YzbHBs?=
+ =?utf-8?B?N3c9PQ==?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05fbc504-b44e-4a10-a5a2-08ddb5952496
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 16:10:32.6588
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KmFayoARmmGnDCrzzg1RODNAFrptoXNZY7m4xsoG3tWMDLYK3GOuQX0378C6oHde4Jnfc4qLhrQhzqnz7Sq54tUQH8FZKHRetCnBq92L+Yc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7493
 
-On 6/27/25 00:55, Jan Kara wrote:
-> On Thu 26-06-25 09:39:36, Florian Fainelli wrote:
->> On 6/26/25 09:17, Liam R. Howlett wrote:
->>> * Florian Fainelli <florian.fainelli@broadcom.com> [250625 19:13]:
->>>> Linux has a number of very useful GDB scripts under scripts/gdb/linux/*
->>>> that provide OS awareness for debuggers and allows for debugging of a
->>>> variety of data structures (lists, timers, radix tree, mapletree, etc.)
->>>> as well as subsystems (clocks, devices, classes, busses, etc.).
->>>>
->>>> These scripts are typically maintained in isolation from the subsystem
->>>> that they parse the data structures and symbols of, which can lead to
->>>> people playing catch up with fixing bugs or updating the script to work
->>>> with updates made to the internal APIs/objects etc. Here are some
->>>> recents examples:
->>>>
->>>> https://lore.kernel.org/all/20250601055027.3661480-1-tony.ambardar@gmail.com/
->>>> https://lore.kernel.org/all/20250619225105.320729-1-florian.fainelli@broadcom.com/
->>>> https://lore.kernel.org/all/20250625021020.1056930-1-florian.fainelli@broadcom.com/
->>>>
->>>> This patch series is intentionally split such that each subsystem
->>>> maintainer can decide whether to accept the extra
->>>> review/maintenance/guidance that can be offered when GDB scripts are
->>>> being updated or added.
->>>
->>> I don't see why you think it was okay to propose this in the way you
->>> have gone about it.  Looking at the mailing list, you've been around for
->>> a while.
->>
->> This should probably have been posted as RFC rather than PATCH, but as I
->> indicate in the cover letter this is broken down to allow maintainers like
->> yourself to accept/reject
->>
->>>
->>> The file you are telling me about seems to be extremely new and I needed
->>> to pull akpm/mm-new to discover where it came from.. because you never
->>> Cc'ed me on the file you are asking me to own.
->>
->> Yes, that file is very new indeed, and my bad for not copying you on it.
->>
->> I was not planning on burning an entire day worth of work to transition the
->> GDB scripts dumping the interrupt tree away from a radix tree to a maple
->> tree. All of which happens with the author of that conversion having
->> absolutely no idea that broke anything in the tree because very few people
->> know about the Python GDB scripts that Linux has. It is not pleasant to be
->> playing catch when it would have take maybe an extra couple hours for
->> someone intimately familiar with the maple tree to come up with a suitable
->> implementation replacement for mtree_load().
->>
->> So having done it felt like there is a maintenance void that needs to be
->> filled, hence this patch set.
+Hi Diederik,
+
+On 6/27/25 5:16 PM, Diederik de Haas wrote:
+> The #address-cells and #size-cells properties are not useful on the DSI
+> controller nodes; they are only useful/required on ports and panel(s).
+> So remove them from the controller node and add them where actually
+> needed on the various rk3399 based boards.
 > 
-> I can see that it takes a lot of time to do a major update of a gdb
-> debugging script after some refactoring like this. OTOH mandating some gdb
-> scripts update is adding non-trivial amount of work to changes that are
-> already hard enough to do as is. 
+> Next to that, there were several (exact) redefinitions of nodes which
+> are already present in rk3399-base.dtsi to add a mipi_out endpoint.
+> Simplify that by referencing the mipi_out phandle and add the endpoint
+> to that, which allows the removeal of the ports redefinition.
+> 
+> And fix 1 instance where the mipi_out referenced node was not sorted
+> correctly.
+> 
+> This fixes the following DTB validation warnings:
+> 
+>    unnecessary #address-cells/#size-cells without "ranges",
+>    "dma-ranges" or child "reg" property
+> 
 
-This really should have been posted as RFC, because I can see how 
-posting this as PATCH would be seen as coercing maintainers into taking 
-those GDB scripts under their umbrella.
+Too many unrelated changes in this commit, please split into multiple 
+commits.
 
-> And the obvious question is what is the
-> value? I've personally never used these gdb scripts and never felt a strong
-> need for something like that. People have various debugging aids (like BPF
-> scripts, gdb scripts, there's crash tool and drgn, and many more) lying
-> around. 
+I could identify:
 
-Those are valuable tools in the tool box, but GDB scripts can work when 
-your only debug tool accessible is JTAG for instance, I appreciate this 
-is typically miles away from what most of the kernel community does, but 
-this is quite typical and common in embedded systems. When you operate 
-in that environment, having a decent amount of debugger awareness of 
-what is being debugged is immensely valuable in saving time.
+- moving address-cells/size-cells from SoC.dtsi to board dts(i)s,
+- reordering properties to better match DT coding style 
+https://www.kernel.org/doc/html/latest/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
+- use phandle to directly access ports,
+- reorder DT node to better match DT coding style 
+https://www.kernel.org/doc/html/latest/devicetree/bindings/dts-coding-style.html#order-of-nodes
 
-> I'm personally of an opinion that it is not a responsibility of
-> the person doing refactoring to make life easier for them or even fixing
-> them and I don't think that the fact that some debug aid is under
-> scripts/gdb/ directory is making it more special. 
+The change for RK3399 Puma Haikou Video Demo DTSO is fine for me.
 
-That is really the question that I am trying to get answered with this 
-patch series. IMHO as a subsystem maintainer it is not fair to be 
-completely oblivious to scripts that live in the source tree, even if 
-you are not aware of those.
-
- > So at least as far as I'm> concerned (VFS, fsnotify and other 
-filesystem related stuff) I don't plan
-> on requiring updates to gdb scripts from people doing changes or otherwise
-> actively maintain them.
-
-vfs.py script is beyond trivial, the largest and most complicated IMHO 
-is mapletree.py which had to be recently developed to continue to 
-support parsing the interrupt descriptor tree in the kernel, I can 
-maintain that one now that I know a lot more than I ever wished I knew 
-about maple trees. So really the burden is not as big as it may seem but 
-it's fair not to be taking on more work as a maintainer, I get that.
-
-Thanks for your feedback!
--- 
-Florian
+Cheers,
+Quentin
