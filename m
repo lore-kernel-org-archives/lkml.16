@@ -1,161 +1,259 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06AF293C67;
-	Fri, 27 Jun 2025 11:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D25293C67
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751024137; cv=none; b=q8I22aVhRyUdjZ/TwUGPh8wkzZ1ntO3Tw/Lpa23Oj9OtrjKuYkMJVBNrzdAWzt61Tlfuf9mOGxzcXtB5+Igt5CHZbMfp6m/qsEuWvVXUY6Nj2zze3zYVGaNAymwPjXuq/AqbCJmMktop3WWfIHz46VqfJnEEcM1MSi5PN++OSXo=
+	t=1751024179; cv=none; b=lBdzuLpViX5LxIP5G04SuZG78W4938CXb/hUPe0vk971PqzlkeDGblkm3YR/QMBQIa6AHNfA90fMrW/7uCRfwinRAmFglrP3RiXtvWA8+1a4kPPWpJHkhqQKzwRNX5mR+M+ge3i0sv2t00h2Ei4YMnDHahxL8wcJOiHimSJpmpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751024137; c=relaxed/simple;
-	bh=eXvK7190AFJgHbf6OzHmasFyFsoUL6SVhDPs+jciPZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XnIT8Y+tm2hH3wlA5UAwww+HjH+p4t5g+22Wt6t+ciBIunhmvMVdF6EE0fZ58/XskjRiNNbjwbodDpYF6/97RX00GSULf39Tl4cLIqHf84244F0Nlokz9ui1tCi99AMESo5YwfOBDTqsaeJzpDs9pmO6a+MZe/o2u9imGsS4284=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eiEIn019; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751024179; c=relaxed/simple;
+	bh=T+RnV55Ns0OukqlE0mSplQ+wePPn0Sgv83kWWLGyJJg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eV1dfHeTpkHZmefjDZFgNXEbJT3JFt+gl5VnOueXJyv7czmvOuYD5RAHcejmHOmGQhcuBbA/bCgKLCBw1eMN3jqy+9dj19WUnLdtgvfkcburRi+Lp9NfmhXE6khkrHXv5T09DMAA23EDLf4Hzap23EkqvwyPrPzfgRd2IybSJlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AxAVE4Pi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FDP2bQxz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LF4mjw0J; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3cNaFWgD; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eiEIn019"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751024135; x=1782560135;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=eXvK7190AFJgHbf6OzHmasFyFsoUL6SVhDPs+jciPZg=;
-  b=eiEIn01967K6AffU/nKAEsOIaedithXWaIgdsT1sGzAal6054SQYPcbx
-   d4vezMcq6sIO2hMQqAK2o/+ac88GFCuXuHNwdh7SDduGaPnJEFjvAapdE
-   fLpIXZcAP1rGUpDMkHHYAo1eVMi+e07io3GsznarkHfppBmslYgvTUB6R
-   1SsguddpkBg1DfrtZsaxdRt3YEW7MhTULqdC3XUAIxDh8tuyEHo2lKhhH
-   XGAqmaFggYBlZsPZ422E7nB3qOil7Gf/ZwkBH4O0X0VHeVWcy44fOX5ac
-   8oYovPhqrmlfoaSK7vqEiFEtSbVYv914ZtBR80RDks6hTZfD/apxtIVj8
-   A==;
-X-CSE-ConnectionGUID: I8t/gfRdRDe+A9XUnlEedg==
-X-CSE-MsgGUID: ok/V4+y0Rxe8F0ik14rsJQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="64393550"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="64393550"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 04:35:35 -0700
-X-CSE-ConnectionGUID: KYNGm1WHQTqPlkR0ucTwBA==
-X-CSE-MsgGUID: jaMngmLTSFaOD7MhI+c4jQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="152526268"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa009.jf.intel.com with ESMTP; 27 Jun 2025 04:35:31 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 34F686A; Fri, 27 Jun 2025 14:35:30 +0300 (EEST)
-Date: Fri, 27 Jun 2025 14:35:30 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"seanjc@google.com" <seanjc@google.com>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
-	"Gao, Chao" <chao.gao@intel.com>, "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
-	"bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2 03/12] x86/virt/tdx: Allocate reference counters for
- PAMT memory
-Message-ID: <c6i6lttkkeupbyfwy42byin7ccxh6rwznvgwsyjmvzeb5rbblv@ge3agfvfyn4e>
-References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
- <20250609191340.2051741-4-kirill.shutemov@linux.intel.com>
- <104abe744282dba34456d467e4730058ec2e7d99.camel@intel.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AxAVE4Pi";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FDP2bQxz";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LF4mjw0J";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3cNaFWgD"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A724F21168;
+	Fri, 27 Jun 2025 11:36:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751024169; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0AlFsNqL4V3TGcpyjHJNDkkPEW0oP8NBHquJ8G7mlNM=;
+	b=AxAVE4PijmKzTOshxXrRtObTf1ZSDah/5zvkf171z0oCE8QwQ8e2HymJNtIP1zM/1/Bc4F
+	zyaPlIBy/4d2O2CFs5jVmJ29A8iW6YhUd6k/lYes7BZwnY9aOI/ThY4zYVdyjWRQHNj034
+	ave+1ibdkb2CoZb3qz4E/p33trQSia0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751024169;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0AlFsNqL4V3TGcpyjHJNDkkPEW0oP8NBHquJ8G7mlNM=;
+	b=FDP2bQxzNfeGTge555MjRRldFBLu3vSYYHICR01/t71URX7lIaSZlC5y93DhLrsbM3gy3B
+	JKl9K4BrYUPcFqBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751024168; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0AlFsNqL4V3TGcpyjHJNDkkPEW0oP8NBHquJ8G7mlNM=;
+	b=LF4mjw0JaGUkjvau6jmklBM6G371b0uYK+OxbNrxPPoSUOE2+jphTEw7wpUZ7OxOeyU2lJ
+	EpHX2BsQS7S+JibxbJh20AMopisR8n9qpZJHw/Ef4+67N/2ZevagPMbZ+gsCGFGf553KXE
+	fvnMsB78mV3Dn+MsYW36p6RaLDeW6m8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751024168;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0AlFsNqL4V3TGcpyjHJNDkkPEW0oP8NBHquJ8G7mlNM=;
+	b=3cNaFWgDUKFjAto26V44rYvq0mp5Bi+qsI4XQFHWHZeHAbkVV5TRoIb2t9pWQsKMCUFkNt
+	HDNpGGe/9W8ENFBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4E8ED138A7;
+	Fri, 27 Jun 2025 11:36:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ieT+ESiCXmjQGQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 27 Jun 2025 11:36:08 +0000
+Message-ID: <f7c816a7-e93e-4146-80dc-8fec6113fcea@suse.de>
+Date: Fri, 27 Jun 2025 13:36:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <104abe744282dba34456d467e4730058ec2e7d99.camel@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] fbdev/simplefb: Add support for interconnect paths
+To: Javier Martinez Canillas <javierm@redhat.com>,
+ Luca Weiss <luca.weiss@fairphone.com>, Hans de Goede <hdegoede@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Helge Deller <deller@gmx.de>
+Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
+ <20250623-simple-drm-fb-icc-v2-5-f69b86cd3d7d@fairphone.com>
+ <87ldpdd3dn.fsf@minerva.mail-host-address-is-not-set>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <87ldpdd3dn.fsf@minerva.mail-host-address-is-not-set>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[redhat.com,fairphone.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch,gmx.de];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TAGGED_RCPT(0.00)[dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo,fairphone.com:email]
+X-Spam-Level: 
 
-On Thu, Jun 26, 2025 at 12:53:29AM +0000, Huang, Kai wrote:
-> 
-> > +static int init_pamt_metadata(void)
-> > +{
-> > +	size_t size = max_pfn / PTRS_PER_PTE * sizeof(*pamt_refcounts);
-> > +	struct vm_struct *area;
-> > +
-> > +	if (!tdx_supports_dynamic_pamt(&tdx_sysinfo))
-> > +		return 0;
-> > +
-> > +	/*
-> > +	 * Reserve vmalloc range for PAMT reference counters. It covers all
-> > +	 * physical address space up to max_pfn. It is going to be populated
-> > +	 * from init_tdmr() only for present memory that available for TDX use.
-> 		^
-> 		build_tdx_memlist()
+Hi
 
-Ack.
+Am 27.06.25 um 09:56 schrieb Javier Martinez Canillas:
+> Luca Weiss <luca.weiss@fairphone.com> writes:
+>
+>> Some devices might require keeping an interconnect path alive so that
+>> the framebuffer continues working. Add support for that by setting the
+>> bandwidth requirements appropriately for all provided interconnect
+>> paths.
+>>
+>> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>> ---
+>>   drivers/video/fbdev/simplefb.c | 83 ++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 83 insertions(+)
+>>
+> [...]
+>
+>> +static void simplefb_detach_icc(void *res)
+>> +{
+>> +	struct simplefb_par *par = res;
+>> +	int i;
+>> +
+>> +	for (i = par->icc_count - 1; i >= 0; i--) {
+>> +		if (!IS_ERR_OR_NULL(par->icc_paths[i]))
+>> +			icc_put(par->icc_paths[i]);
+>> +	}
+>> +}
+>> +
+>> +static int simplefb_attach_icc(struct simplefb_par *par,
+>> +			       struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	int ret, count, i;
+>> +
+>> +	count = of_count_phandle_with_args(dev->of_node, "interconnects",
+>> +							 "#interconnect-cells");
+>> +	if (count < 0)
+>> +		return 0;
+>> +
+>> +	/* An interconnect path consists of two elements */
+>> +	if (count % 2) {
+>> +		dev_err(dev, "invalid interconnects value\n");
+>> +		return -EINVAL;
+>> +	}
+>> +	par->icc_count = count / 2;
+>> +
+>> +	par->icc_paths = devm_kcalloc(dev, par->icc_count,
+>> +				      sizeof(*par->icc_paths),
+>> +				      GFP_KERNEL);
+>> +	if (!par->icc_paths)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < par->icc_count; i++) {
+>> +		par->icc_paths[i] = of_icc_get_by_index(dev, i);
+>> +		if (IS_ERR_OR_NULL(par->icc_paths[i])) {
+>> +			ret = PTR_ERR(par->icc_paths[i]);
+>> +			if (ret == -EPROBE_DEFER)
+>> +				goto err;
+>> +			dev_err(dev, "failed to get interconnect path %u: %d\n", i, ret);
+>> +			continue;
+>> +		}
+>> +
+>> +		ret = icc_set_bw(par->icc_paths[i], 0, UINT_MAX);
+>> +		if (ret) {
+>> +			dev_err(dev, "failed to set interconnect bandwidth %u: %d\n", i, ret);
+>> +			continue;
+>> +		}
+>> +	}
+>> +
+>> +	return devm_add_action_or_reset(dev, simplefb_detach_icc, par);
+>> +
+>> +err:
+>> +	while (i) {
+>> +		--i;
+>> +		if (!IS_ERR_OR_NULL(par->icc_paths[i]))
+>> +			icc_put(par->icc_paths[i]);
+>> +	}
+>> +	return ret;
+>> +}
+>> +#else
+> These two functions contain the same logic that you are using in the
+> simpledrm driver. I wonder if could be made helpers so that the code
+> isn't duplicated in both drivers.
 
-> 
-> > +	 */
-> > +	area = get_vm_area(size, VM_IOREMAP);
-> 
-> I am not sure why VM_IOREMAP is used? 
+No please not!. Any work should rather be directed towards deleting 
+simplefb entirely.
 
-It follows vmap_pfn() pattern as usage is similar.
+Best regards
+Thomas
 
-It seems the flag allows vread_iter() to work correct on sparse mappings.
-
-> > +	if (!area)
-> > +		return -ENOMEM;
-> > +
-> > +	pamt_refcounts = area->addr;
-> > +	return 0;
-> > +}
-> > +
-> > +static void free_pamt_metadata(void)
-> > +{
-> > +	size_t size = max_pfn / PTRS_PER_PTE * sizeof(*pamt_refcounts);
-> > +
-> > +	if (!tdx_supports_dynamic_pamt(&tdx_sysinfo))
-> > +		return;
-> > +
-> > +	size = round_up(size, PAGE_SIZE);
-> > +	apply_to_existing_page_range(&init_mm,
-> > +				     (unsigned long)pamt_refcounts,
-> > +				     size, pamt_refcount_depopulate,
-> > +				     NULL);
-> > +	vfree(pamt_refcounts);
-> > +	pamt_refcounts = NULL;
-> > +}
-> > +
-> >  /*
-> >   * Add a memory region as a TDX memory block.  The caller must make sure
-> >   * all memory regions are added in address ascending order and don't
-> > @@ -248,6 +347,10 @@ static int build_tdx_memlist(struct list_head *tmb_list)
-> >  		ret = add_tdx_memblock(tmb_list, start_pfn, end_pfn, nid);
-> >  		if (ret)
-> >  			goto err;
-> > +
-> > +		ret = alloc_pamt_refcount(start_pfn, end_pfn);
-> > +		if (ret)
-> > +			goto err;
-> 
-> So this would goto the error path, which only calls free_tdx_memlist(),
-> which frees all existing TDX memory blocks that have already created.
-> 
-> Logically, it would be great to also free PAMT refcount pages too, but they
-> all can be freed at free_pamt_metadata() eventually, so it's OK.
-> 
-> But I think it would still be helpful to put a comment before
-> free_tdx_memlist() in the error path to call out.  Something like:
-> 
-> err:
-> 	/*
-> 	 * This only frees all TDX memory blocks that have been created.
-> 	 * All PAMT refcount pages will be freed when init_tdx_module() 
-> 	 * calls free_pamt_metadata() eventually.
-> 	 */
-> 	free_tdx_memlist(tmb_list);
-> 	return ret;
-
-Okay.
+>
+> But in any case it could be a follow-up of your series I think.
+>
+> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+>
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
