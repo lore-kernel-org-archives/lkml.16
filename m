@@ -1,99 +1,114 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F4D17A2FB
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7950E2E9720;
+	Fri, 27 Jun 2025 15:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751038871; cv=none; b=foC2X+p79INp5Dqtx+cBfb5Oun8iVumUqO8GB9BAFmjbBQ3G7ogTN7A2lWNg3KM1z2fAGpZd1EPEOoX4hJWRhM8IwQy4kAYy4SEfC8zjF/GP2KNUgi/g/x6VK3JBnleFpo4++lhdFm5IN2hSfjEAwMUHIbJwJA4OHwyTIBm9n2I=
+	t=1751038887; cv=none; b=cMxS4pU1vjFeiGzTgSIipiF0UPleUp86JZgETxNCK7MX2UcZqT6RttWGC1iDeq+GVLBViN9TTiu78OQNO08p5dJzt0M6q+1I+A0FoDxKwZyMA0zEAiPepiFK34Ofpke+lYiH0r9U0/rypHw5tPtEkkE3/pfsq4/uc0gcq5F3jGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751038871; c=relaxed/simple;
-	bh=NzkTbihNw5/mMwQ2vQfgIuDlNTI7oOfN6jzOilGXkHw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BNK1H8q5626xrLqKaOdUOD05VcDs/Fo1DeolnIfVI/xItWM4xpKFdkacmocMJcPb3QzyRXMn5D4IukZZPnkboKnVwYs0zpWUJFumLSThUWbecE/RniJ8khPGkgm3hN77YUSE6kUxiQ245aEbrldTAz+W5STXn459TiCqS1qKDxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=A6KB+5Kr; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751038887; c=relaxed/simple;
+	bh=AMMhxPjfPHiKsXXCrVY3AlFG6GR2RMVIafGOqDBRDAw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LxyIgYDww94tz+8REYxspHUMSShdQ+jDqbXBWBhO2rsv9eNP6bWVG93rwTiS7SoUPeqxYIkfH7/9g06JQvb56wIIHSSh6MixD9mPBBsJy1pvu0ZK06N4AFgxIq9vnkDQQ1mELC9o/ztFgJA/4FgkUvBX51lOj8nmT3mBQt4u9go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lyeUzAJX; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="A6KB+5Kr"
-Message-ID: <62c00c9e-1ba4-46dd-a6e0-18e9eee7f93a@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751038867;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+uh7nr2QVWHptEpAnjQihyKbhrhglo9WQLFj8/DJXyI=;
-	b=A6KB+5Kr3BDZXeLJWAdUA+Qbqh46nbflrRZ0WDh1vwtVvuN1LIuR639CI9SJDnT/NYa0YA
-	zg25fHaBbEC7iCgO6lx6xBEqL2M1WksjFO/qZp2Ix/RLqTxhlX12ecDrrsLgxbCrdcQGFU
-	BoWGakogT5WEytrx6fiUJQXNzTE0Pnc=
-Date: Fri, 27 Jun 2025 23:40:55 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lyeUzAJX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751038885; x=1782574885;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AMMhxPjfPHiKsXXCrVY3AlFG6GR2RMVIafGOqDBRDAw=;
+  b=lyeUzAJX4fM3519iYjrZm0Z9DgT+dPBKs2DaXiFE9pdzayJ5VC1j9iQ9
+   dVUcyK44AnUWGimkRQy/OqMvSwkz24I4ac3OEopApFIIgK7y1lAiDlnPn
+   hZUTxb9XuJ+524yIpHLsCVY5zSWyY65vtmqWl3WGQrXi8nE1EnCjC2Rl2
+   WiR4ylhFEai69kG3+E8lThCjS/vlRhGiPQe7ALV6/3BG0nAqDNAHvaIQl
+   uBe9D8Ld4J88izHDBTNmhLdpEFIcaQnx6FV3ueQoO7TgKrgzoAvTZ3Eic
+   QGPM+nh1vkQkDClFAX3H8ooQiBw1xKZE6Iax6HcGAA0NnKhCQef+uBGqT
+   Q==;
+X-CSE-ConnectionGUID: Vbsz8A1rSYSmz0XwVNWpGQ==
+X-CSE-MsgGUID: 1CJBV7MIQlmEdTiNHMM0dQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="57161860"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="57161860"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 08:41:24 -0700
+X-CSE-ConnectionGUID: h1Q+P2efRs+Y4U7Kz5IDaQ==
+X-CSE-MsgGUID: RWi81dJLR8OELq/E3CcPtQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="183736007"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP; 27 Jun 2025 08:41:22 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id CF5212BA; Fri, 27 Jun 2025 18:41:20 +0300 (EEST)
+Date: Fri, 27 Jun 2025 18:41:20 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	Kent Gibson <warthog618@gmail.com>,
+	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
+	Marek Vasut <marex@denx.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 4/9] gpio: sysfs: don't use driver data in sysfs
+ callbacks for line attributes
+Message-ID: <aF67oAqLmRJzy4Zt@black.fi.intel.com>
+References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org>
+ <20250623-gpio-sysfs-chip-export-v2-4-d592793f8964@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1 4/4] mm: remove boolean output parameters from
- folio_pte_batch_ext()
-Content-Language: en-US
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>, Pedro Falcato <pfalcato@suse.de>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>,
- Lance Yang <ioworker0@gmail.com>
-References: <20250627115510.3273675-1-david@redhat.com>
- <20250627115510.3273675-5-david@redhat.com>
- <CABzRoyarK=NnwXis3PUAC_x4YpULUQv_jq-upNpnNQhAPypR1w@mail.gmail.com>
- <ea2d92fe-3083-4aaf-b8ae-1dc950a01d0e@redhat.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <ea2d92fe-3083-4aaf-b8ae-1dc950a01d0e@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623-gpio-sysfs-chip-export-v2-4-d592793f8964@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-
-On 2025/6/27 23:11, David Hildenbrand wrote:
-> On 27.06.25 16:34, Lance Yang wrote:
->> On Fri, Jun 27, 2025 at 7:55 PM David Hildenbrand <david@redhat.com> 
->> wrote:
->>>
->>> Instead, let's just allow for specifying through flags whether we want
->>> to have bits merged into the original PTE.
->>>
->>> For the madvise() case, simplify by having only a single parameter for
->>> merging young+dirty. For madvise_cold_or_pageout_pte_range() merging the
->>> dirty bit is not required, but also not harmful. This code is not that
->>> performance critical after all to really force all micro-optimizations.
->>
->> IIRC, this work you've wanted to do for a long time - maybe even a 
->> year ago?
+On Mon, Jun 23, 2025 at 10:59:52AM +0200, Bartosz Golaszewski wrote:
 > 
-> Heh, maybe, I don't remember.
+> Currently each exported GPIO is represented in sysfs as a separate class
+> device. This allows us to simply use dev_get_drvdata() to retrieve the
+> pointer passed to device_create_with_groups() from sysfs ops callbacks.
 > 
-> For this user here, I realized that we might already check the existence 
-> of any_dirty at runtime -- because the compiler will not necessarily 
-> create two optimized functions.
-
-Ah, I see! That's a very sharp observation about the compiler's behavior ;)
-
+> However, we're preparing to add a parallel set of per-line sysfs
+> attributes that will live inside the associated gpiochip group. They are
+> not registered as class devices and so have the parent device passed as
+> argument to their callbacks (the GPIO chip class device).
 > 
-> So we already have runtime checks ... instead of checking whether 
-> any_dirty == NULL, we now simply do the merging (checking for 
-> pte_young() instead) now.
+> Put the attribute structs inside the GPIO descriptor data and
+> dereference the relevant ones using container_of() in the callbacks.
+> This way, we'll be able to reuse the same code for both the legacy and
+> new GPIO attributes.
 
-Thanks for the lesson!
-Lance
+...
+
+> -	struct gpiod_data *data = dev_get_drvdata(dev);
+> +	struct gpiod_data *data = container_of(attr, struct gpiod_data,
+> +					       dir_attr);
+
+Defining once something like
+
+#define to_gpiod_data() ...
+
+we may leave this and others as one-liners.
+
+...
+
+> +	attrs[GPIO_SYSFS_LINE_ATTR_ACTIVE_LOW] =
+> +						&data->active_low_attr.attr;
+
+What's the point of two lines here?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
