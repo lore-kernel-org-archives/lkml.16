@@ -1,111 +1,85 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51583264FBB;
-	Fri, 27 Jun 2025 12:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CDF2BDC37;
+	Fri, 27 Jun 2025 12:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751028865; cv=none; b=iI1YRwlxj8zFisYYsOv3eWZ2j6UgiyYdBgQc/cNcmrs7lbDI1P76MtVgjLA2VdER9OGWOazo4oP1xBI8Sd+JXHYlgRT1sDBRLzrQ9Z43GAnYjDGqYlgIbXr1aQHbx3tTwoAytB9+m+2yMusBqgb8CEWztY34cTK9YmpV3pscXk8=
+	t=1751028914; cv=none; b=QNZmtQyfh3/NlCJP9t5ELVlzuXqHddjh+8FD3CIywlytSGcdB9oZASESxkyfzwG0TpQ6rH2Rof0sdzrmodfIo44ZcRqoLvVlZDaIrwd01nuPWc6wm7t7UKsRNt4Q1URg1NGIezpJj+6TO/Us2sYyvdncaBVqz2entSCcemd5ibg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751028865; c=relaxed/simple;
-	bh=CsVnaF/Eh3p9OwhSPjGCnz0lOWWPvKUupyYNi601i1g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CUY0ZEYbSCPZME438DK6T8qOWJCcHMTqdp6fedG0AktgW2dr8WuwXEak20xu0+yPMSoAO0CdOAUfvyN+JfOISeTKy6tm5mSCqq6B/vRYogNrN3gNAv7OPH5Rrb3Je3vw1hxZgTDV1o6zb5SCs2rMXHlIWjgAIkyyeefcjD/JpWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b5m/FJ6J; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751028914; c=relaxed/simple;
+	bh=Pyv3EyLqRCbsOiLWzm9uRUYi+AEgSp16/LtTEHWb65k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PEPTcIPU6D18uyXkC+v52iyn4XudAIZUbyuC9mWSZPMIXMyjbvbqcKDd9A3j3kQWEDJ3OC1LKXaJkKZDOhY+3ETBe8k14L+k9Z1xATNPkCoIPYxigRfcyUdgOxncro6qRVcnjOnh2LCBSiqHxCFg1AWkRbGPL6uzpEXCtAl5jJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=himbi5l2; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5m/FJ6J"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-453647147c6so23391855e9.2;
-        Fri, 27 Jun 2025 05:54:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751028862; x=1751633662; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jaJ3Cx6DcSgbse+UDo1cFmYk+teUuZEfclXtMnc3Iec=;
-        b=b5m/FJ6JrVE+ScAfNS2yDYoxtC0KYKDBENlNEmCfgfHDQ2K6qLZnrHfq53hIek0ijW
-         Va+xnSZgEsKJ65DftZUujNWiDVghSj2zkB/YtLTluUJM1DXSlOQAVzCxzdNvGbYnmw5I
-         Tsozq5WNk8PH1auqTVJ9qk/C1QYUatJTwdUpQkoXn7FAptMHd+RwyqfhZw+Qt3R8czEI
-         QEieALltu8Rl3nN4sb4827H8utF+GMm+FMdL/odQeQ8mTCczlg6Q84zeLvEobw89EESY
-         I9/s5XL7N7+bnwxrMZscg0SE9+SRsfwG8j1DKy92l9kW7mueADzu1R0jDZ9BgGOP+m03
-         8JAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751028862; x=1751633662;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jaJ3Cx6DcSgbse+UDo1cFmYk+teUuZEfclXtMnc3Iec=;
-        b=ti0XmyAJyCA5aHMehOXyREKgNoESjVI+VpfwgvqiPU+BAV0Pti5zUitNQFKOdipGqW
-         6Ni6hbbBKJoKYyOOLyYyzVWsjM5ExiEQ30v6V3lxzR2ITaKqx1dZkEUsuJWfOaenE2BS
-         wLSscMWhZxlCrkb0FICXcWT0ETTwnuS1qybnfkxV1M+WKwglcurRtls/QPxXeOzCIsBD
-         NZ2y/FmiEMxgxhwLkQd1IqttZKX40rElwSKtfoIG76ftjGI0yx0EyOY/nPqO+b5jBufN
-         3wvUC2laGeGKNwpUeEzxeUikEyJrCB8E6nArCPf3Ce+H7r/v/y8Qze34YF8LMElxphia
-         0bWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGfXs7strlNQ94DPvHuSMrTw28ZoMezWdLq7h/dmIwGDTLwXcLvF7qSSktlcx6igp6AM8mhTfRD9TojyzbPI8jC4Y=@vger.kernel.org, AJvYcCWHL/pRy2nlREbkRPF0W7+X/WLa3pvEma3RY2hhIiMsJ1cyHLtvSkmz6qH2sWHike9OOi0RlhyKAA4DU2wk@vger.kernel.org, AJvYcCXit5iz76v6hzTphYed1Vq8pB1B+MBGFIfdr6Gk1Lyz2N40ljKOhd3VxXFOeSpwW4OvPrMILq7FOT9T@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXzQxoTcIIbOJasp11/dPKhefmRQ0TGVhSxFSfV6EMbBBR8rly
-	ymtxvi/riaabH2NVvnE2koJV4PfF9dSAbeWPdwNiEHnJn4ufhffg80XKvuj4goRCleJMVlMYg1z
-	u0JuQx4ZCgMxQth3HGvXPeE4P/kMiSGk=
-X-Gm-Gg: ASbGncssNKJMNIka7qxyZ2LzFxhIH0MEcm7/wvYDKoJvfSdum4GDoDH2FSeX4gjLL2r
-	yrR/H8qUwDxi2ByKqRc27/Qnk+Bm1XchjabIG61hwcuDqi4DbNT3VZbSVaiAFkeGP351SZJE/Kx
-	3EU5jRNuEJVx/AaGelD5nUELQe/ZolbFkFOdjGA1iUpFx+OunzYVOUxFBRv/EHXBkWeIPwaw92P
-	B0=
-X-Google-Smtp-Source: AGHT+IGfXhJYyRHcjfBzH3E/Np7+WxNYEs/xRPKs+t1hrWzSZI6HjdEh4sxpFfRuFAr4vLNu0c2ndW3IV75njl2FMgM=
-X-Received: by 2002:adf:9d81:0:b0:3a5:39a8:199c with SMTP id
- ffacd0b85a97d-3a9186566d4mr2664298f8f.53.1751028862280; Fri, 27 Jun 2025
- 05:54:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="himbi5l2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=JLh1a4F/KVPFfD1Tvld6lVqzRCFWHuF/VLub0i+DEYk=; b=himbi5l294pIBKqqGRPoqM0Pxp
+	sZPWnzzy6U05h1grfxbJTmvWdHZNDiQirdJCreIG0yxMe3cdjNk6Jvj1YH8e/gfg/Js4lgy5SFJlY
+	m3yHAfhxbhxCPC+H6Re64nkQuGXdlzaCYu/6DUtlflKejlG+ksjvEiAX6OT/XavbJA7aDEIqRrL7m
+	ns5UhtkQqqE/QvjaKOQg08safjiQnvyvVBBZU4cUHCtq5j8AR/NwWPFyHI3cfJhGgSdXAv1Wt/NFw
+	zMjMIBKeMTR3kUXBh9ePkCjRa0niDtTRomaGZ0GZ906mXuitz/OUG/IrXi5w4U2KEP8w4gzq7necr
+	0GOCHg7A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uV8bl-0000000EhXo-2MAI;
+	Fri, 27 Jun 2025 12:55:09 +0000
+Date: Fri, 27 Jun 2025 05:55:09 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Petr Tesarik <ptesarik@suse.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Leon Romanovsky <leon@kernel.org>, Keith Busch <kbusch@kernel.org>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+	John Garry <john.g.garry@oracle.com>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+	iommu@lists.linux.dev
+Subject: Re: [PATCH 7/8] docs: dma-api: update streaming DMA API physical
+ address constraints
+Message-ID: <aF6Urf667AKtVGXr@infradead.org>
+References: <20250624133923.1140421-1-ptesarik@suse.com>
+ <20250624133923.1140421-8-ptesarik@suse.com>
+ <aFynHWAYtKPFT55P@archie.me>
+ <20250626070602.3d42b607@mordecai.tesarici.cz>
+ <bdb3a37a-a9d3-44c1-8eb7-41912c976ad1@arm.com>
+ <20250626154818.46b0cfb1@mordecai.tesarici.cz>
+ <0f95be6d-2e13-4281-98b5-6d4311a3b98f@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625153042.159690-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWFvRJoa9uhmUKYaMTB=eAYURfSJ6ebekDornY5O5aLXw@mail.gmail.com>
-In-Reply-To: <CAMuHMdWFvRJoa9uhmUKYaMTB=eAYURfSJ6ebekDornY5O5aLXw@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 27 Jun 2025 13:53:56 +0100
-X-Gm-Features: Ac12FXyaV0N2Ji6yym-tyLlWm1nqp4jELVVzRhl43VsKlnpvxJBV2_ZYETXP8tc
-Message-ID: <CA+V-a8v36ygwPhLjkcgDUrRgU-f6BLSeL0J90QOmrvMi8iwFoQ@mail.gmail.com>
-Subject: Re: [PATCH 0/6] arm64: dts: renesas: Add I2C and SDHI nodes for
- RZ/T2H and RZ/N2H SoCs
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0f95be6d-2e13-4281-98b5-6d4311a3b98f@arm.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi Geert,
+On Thu, Jun 26, 2025 at 05:45:18PM +0100, Robin Murphy wrote:
+> Indeed that might actually end up pushing things in the opposite direction,
+> at least in some cases. Right now, a driver with, say, a 40-bit DMA mask is
+> usually better off not special-casing DMA buffers, and just making plain
+> GFP_KERNEL allocations for everything (on the assumption that 64-bit systems
+> with masses of memory *should* have SWIOTLB to cover things in the worst
+> case), vs. artificially constraining its DMA buffers to GFP_DMA32 and having
+> to deal with allocation failure more often. However with a more precise and
+> flexible allocator, there's then a much stronger incentive for such drivers
+> to explicitly mark *every* allocation that may be used for DMA, in order to
+> get the optimal behaviour.
 
-On Thu, Jun 26, 2025 at 3:26=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Wed, 25 Jun 2025 at 17:30, Prabhakar <prabhakar.csengg@gmail.com> wrot=
-e:
-> > This patch series adds I2C and SDHI nodes for the Renesas RZ/T2H
-> > (R9A09G077) and RZ/N2H (R9A09G087) SoCs. The I2C/SDHI nodes are added
-> > to the respective SoC DTSI files. Additionally, user LEDs are added
-> > to the RZ/T2H EVK and RZ/N2H EVK boards.
->
-> Thanks for your series!
->
-> > Note, these patches apply on top of the series:
-> > https://lore.kernel.org/all/20250617171957.162145-1-prabhakar.mahadev-l=
-ad.rj@bp.renesas.com/
-> > https://lore.kernel.org/all/20250617162810.154332-1-prabhakar.mahadev-l=
-ad.rj@bp.renesas.com/
->
-> FTR, the LED patches also depend on:
->   - Adding the pinctrl nodes,
->   - Including dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>,
->   - Adding RZN2H_*() macros.
->
-Oops, thanks for pointing this out. I missed to mention this dependency,
+It really should be using dma_alloc_pages to ensure it gets addressable
+memory for these cases.  For sub-page allocations it could use dmapool,
+but that's a little annoying because it does coherent allocations which
+95% of the users don't actually need.
 
-Cheers,
-Prabhakar
