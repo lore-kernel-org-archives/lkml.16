@@ -1,206 +1,134 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40ED325DAFF;
-	Fri, 27 Jun 2025 21:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05453278E79
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 21:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751059766; cv=none; b=dP8VmYUoGIII/WRsbeTHPkMeOrYRttO7dm2qoxURQkcOr9FXX6Hq0bvZEOUtoMbMsJhhCh05nRkVkUW+U8E95TVVCfZO7aWnpbmv6GfZJxfNCSIHDeAfccINixewChC+370TcpxsHamhfNvubyPhdXskAHuL1A6fGIOePaPRGH4=
+	t=1751059798; cv=none; b=CNbwexV80hSZ3YdiFhGmSxfclXhU2xedZBaxlaFVTbofkoPJaNvBwmADu1ZnC9LLPaHEaMNS3wEl1mJv09Zl5Ub6lM3/ocIs5+rPNa822UKCI/1q+nWwlOk/1LtcryEhPSrumaKEPhtXc5e2SAQiyHgCEPZMUza9b997CmY69RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751059766; c=relaxed/simple;
-	bh=N97nvFwtdl90865mk771PfQ/KF4VVJLYZIN6Cs6jKAE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=P2VnPGg7Abpc5UIuoYZgzoiVEilsbIIqtIJDQkzCfriCgUJSF3ErdJJMh/V7VDj8vfbI1tQ7NCYoQ8dri5qHGBJih1GOc3hvcjzjQcmL9904XfIu+PnquY/AXm3zrD7gklgxYlioGuvd2v8NeaxaS1kR59H0oBJYsoElVJ+e0hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PsriAmDK; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751059798; c=relaxed/simple;
+	bh=DDrlIsBowQIoYj42JBQiuKWXbnIzuVcfTZ6WW+6h26k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GQL96lm2a8+6w//58axx/A7RQcAsg9dUW5lsD56b04HBPLS62eJ75pr+72JOE2ZPhmr3XZbjxD9c9fAnGfuE+AJ3q8ejNWSkdPDaJVEIR5zRj+HeTB9b1slo7czR6RGa83ecgbSjpKSDU2OI5gKwPiS/KCHw6aBQ+WPty39FMCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=koGqEnCi; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsriAmDK"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-313154270bbso31136a91.2;
-        Fri, 27 Jun 2025 14:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751059764; x=1751664564; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PzJSDyiIELqDj/d+NVM8mR/dEA9dW0Mg1tiXeZEkSJs=;
-        b=PsriAmDKicaNAwsitlrW5PSoDbGr8BXzK2oIn/ihKklGoX457xEB0pxINIuip8oqGv
-         4U8jjolSY1AQswqu7upbJ9l8El4qFCgPbpdGFCzu+0Mat5kaZ2iY6P+dMe5xqD7gE7Xs
-         uUOW1b95wL5rG2BLO6CDJCBf4ztihic+6fAM++/AW3u0aiuwZFU6otqnUm3R8CQVHzvS
-         wznrIMTlk/ThsaUixIEE5LhpxPO1oCmWpqvNwB8XIgDnnbBTX7hwsolzP2u7pujoe55p
-         pTHSimNj9yDYcC7/hu4FJF38RNUn+ITUq8RkKYYx0Ym1pOom2CFz1Oj8G6NpQTk8WmGr
-         xYGQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="koGqEnCi"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RBu3K4009871
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 21:29:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	j+VclKGpJtOMeG2/CBYjO907O4spsZFF4G3PlFZVFvU=; b=koGqEnCim5hP7+EU
+	LHS0XQuPw/A3zDmAwwWpmZcjPaA1rivwkrl4wCpl4zGemNcPKZ0up794iytwe8sv
+	nMYE/6UBcZxT3HS1deXpSuawI/QwHWGCaqYypHhxEfzmxrQhiPWyyRAtWiZw2aF2
+	X2OLqLQSCKYxR1CYo3X+xmwrcjA8smYtQuYPIPNd+0wl+bQMAtAnhggqUarWrESH
+	pHSa7s5oOF1JKtI9WQ/E4B+Gftsq/J+AWMh39c5L2L6LEd+xyXyeSaksx1j1dxjZ
+	Yq7VmeTYHnylnhlhiMIgLp0LsBBWceQKvMKCIwzKr/REMwPNRkTusclbPXXcovwH
+	SrvWvQ==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g88fhrj7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 21:29:54 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d0976a24ceso69443785a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 14:29:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751059764; x=1751664564;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PzJSDyiIELqDj/d+NVM8mR/dEA9dW0Mg1tiXeZEkSJs=;
-        b=FlBNo8A0j3TbOLS9eE2HJuyiwM3XuBRu6ALNlRW5i9o0s9XPVgIw1aRGa4A0IKmhhO
-         JpJ9iNEvs09Iv81C+FgILwMFP1KS0RgkSnWB4SVDh795ymjxGLZzZxq2BZ9ibuxi0f4C
-         dCjzF8sCBPmVw88kVwI3avwRbqu2kyt4mD3YnuoFYsjyHYgGfvty5mk54LLMvZg++jkR
-         TydWDCu3AMFoaKfsqr3qW/a8n4Uyy0OsfZI74kjoucUx1c5m2acDmgQyIW6ucf+Lr+iX
-         ZZl+IxLdX9FuuBBykgCBEPsgBSRbyu5Opz4ZjRuD0/jp3yd8O97fFRHNOBu03pp4ARaB
-         ZBSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWyNczGdUQwrFVik6EINd/GM9YUxlagPNefsHIjByf3VFg9G0XArrXYeOxGD/jC3Cig7/sOLWh/h8PXni7CiQuIj4kIQg==@vger.kernel.org, AJvYcCXz3WEU4vQdMOICo+DG1Ixcx7kHTYvvYlQAgNvbW2w0dnVcr73ZomaRsUmDBVVYNqq2bcibe2vOUB+ddso=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYWlilEKihnOW8eDtIN4jeeQD07CaaiSxI59rDahRwGTgM553f
-	wjPDbkEBFgIo2Iph0dDFnyg5bQh+OD8ACfkve2YBgtsRwHX+vv1UX6/P
-X-Gm-Gg: ASbGncueWcmuIABi/ubnehr7LYQFHAj74d0M6gucJxAJvtWC3M8nO/YA4xvDHnA4Y2Z
-	BQwI/Jdgc/YEUskwmTE5B1iuSHosHwRynDb9PCFX4iSPrNDfnsD0heuRbwHIuUw8D6bTc9AdX2V
-	JLh7JkEl5LC97BRaHcj7eiD4/I/QrQMFHej3IXFBYVl1Ps0oh7wKNRJ691ssT/trLjb30p6j+rD
-	7cbCDPocS7h662SBdqYskA2CKbY11387G3+Snet9/OartX2mdhRkdJn4gl9syIstpwlqMmZpmyU
-	4wzJRI2RY615a6qI0LP1gBSjFJDwncCsdzOtLHgzlRzDNMfG8hgSi60=
-X-Google-Smtp-Source: AGHT+IFf3HpHm+vMMOuNPlSgz7AefKhyzkVVTh0a7NTYXytjvSZGJ7HwbUbw1GuEXetgUUo5Qgz6Sg==
-X-Received: by 2002:a17:90a:d603:b0:313:db0b:75e4 with SMTP id 98e67ed59e1d1-318c9288263mr7791368a91.33.1751059764387;
-        Fri, 27 Jun 2025 14:29:24 -0700 (PDT)
-Received: from localhost ([181.88.247.122])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c150d959sm3108624a91.38.2025.06.27.14.29.21
+        d=1e100.net; s=20230601; t=1751059794; x=1751664594;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j+VclKGpJtOMeG2/CBYjO907O4spsZFF4G3PlFZVFvU=;
+        b=LEgAZcYWT8czBGcb3k8J5uTQnSXib48algb9rm20DsMwYZCe+4B4rtNfeKO4YhWbxK
+         oXWMENAOK3Bw38q4AFiX7QVeT98kLV3oIHuttZ5rjnV1iT+HyVtu0CppXY5G5kFf8E14
+         c7dNK57w0hs1f+QZ0RAHn4e5Y768No1A3MAgh1ZpzMNbApxI07Ikkn4taP+j7cHLPrnL
+         3ZEVzJCPY9DkbN/BAOiggL/F46lOo6ZDfcbDE3r32o+FX+v6O6QfNMHak8StzPIPxiZj
+         vsJeatJYfNeVtJR+8h4kdtd5bSp4Iifz4hFaK42kvyFBjEXilIei0iAiDL+obvKQdCWq
+         Qd2g==
+X-Forwarded-Encrypted: i=1; AJvYcCWztv/m/MgfLs8vaeDZMsEJMB7tIkuaByQxyoRWwGpPUdgkWtP52fTVWih/pjOWFNWYmIk5RFDjRq3oYvE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+PNWswtT7VKqn57beE77TtXKzyN6aE6qBC1fAbaoEGJFCjEhp
+	NhmvTQT6rLNSOLKT9/CC/1xBg0em7XPuNOsBOrs1Ca/AUE/jpGTmyDPqyBZFqvYYk2V6AEQBQpm
+	e+HS2k2LjcvRPP2OWcLeudEt9r4vWCje2nrCaE7b8ww5LtRV91MxhSwjdGUV7j4QvWiY=
+X-Gm-Gg: ASbGncsOZaBkUD/b7JSyg1lPqbKFNQPPn1DIyHbRUrBNHkXVig/8YoMF+WIHsF9pLXJ
+	+tXBeVKMRwtgLAu9CVYrmXyPI/HgSiXQ6xoHOV3ND/MB03nvbGwccmPDsHypY9qyCyjhjwJHA2O
+	PPw74/3FlGOkI+V5CyAG3uRf/77I9wUufOfPYdDvC7Z6uFQzhYP5mUErKj87METK/ZuCY/kQA6W
+	0a9cGc+cEWFPjkO1rWm3khRDWFVy9nt18tDRLUwcy6cA5mcobbK8+Q0C8QJMdD+lLBCDsoG4Nlb
+	ALWcJqJjdLUA01iHLPsAfyARdvdES4nL53izxEC49fWN6qmIHh4ulKZXCddjtEb0Q6DTT3z6yT5
+	MlXA=
+X-Received: by 2002:a05:620a:26a8:b0:7c5:9ab7:3012 with SMTP id af79cd13be357-7d44c27a0e5mr34981085a.11.1751059793932;
+        Fri, 27 Jun 2025 14:29:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF6O61YOi4A2FE/HAM5495f3Lx0kZsOuxdmkU5HT7ZQwhZfq27mgtK/+v+5AKGJA2+aDJAuWA==
+X-Received: by 2002:a05:620a:26a8:b0:7c5:9ab7:3012 with SMTP id af79cd13be357-7d44c27a0e5mr34978485a.11.1751059793400;
+        Fri, 27 Jun 2025 14:29:53 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35365a95esm195682966b.59.2025.06.27.14.29.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 14:29:23 -0700 (PDT)
+        Fri, 27 Jun 2025 14:29:52 -0700 (PDT)
+Message-ID: <6e4854e7-1bb6-436e-958b-382e26beee04@oss.qualcomm.com>
+Date: Fri, 27 Jun 2025 23:29:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=f9fa37f2e671fa9a6c56202a7260752149da78fe6b978ac304144ee9d19f;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Fri, 27 Jun 2025 18:29:19 -0300
-Message-Id: <DAXMVOI4AXHY.18HUV9THTG0DJ@gmail.com>
-Cc: <mpearson-lenovo@squebb.ca>, <hdegoede@redhat.com>,
- <ilpo.jarvinen@linux.intel.com>, <platform-driver-x86@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: lenovo-hotkey: Handle missing hardware
- features gracefully
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Armin Wolf" <W_Armin@gmx.de>, <xy-jackie@139.com>,
- <alireza.bestboyy@gmail.com>, <atescula@gmail.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250627195436.3877-1-W_Armin@gmx.de>
- <DAXLSMRH9E6Y.3Q8Z59YG2B50C@gmail.com>
- <fb08672d-881b-458c-b8ed-1a27ca93fe7d@gmx.de>
-In-Reply-To: <fb08672d-881b-458c-b8ed-1a27ca93fe7d@gmx.de>
-
---f9fa37f2e671fa9a6c56202a7260752149da78fe6b978ac304144ee9d19f
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] clk: qcom: tcsrcc-sm8650: Add support for SM7635 SoC
+To: Luca Weiss <luca.weiss@fairphone.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Taniya Das <quic_tdas@quicinc.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250625-sm7635-clocks-misc-v1-0-45fea645d39b@fairphone.com>
+ <20250625-sm7635-clocks-misc-v1-4-45fea645d39b@fairphone.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250625-sm7635-clocks-misc-v1-4-45fea645d39b@fairphone.com>
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDE3NCBTYWx0ZWRfX+j1Rj3HbZhug
+ TbxdXclEhwbDkIN849JCbFcLZRlcyt92JrBDQZdbY/yd1oMOXBG62YfFXbWfQLd62ge4GcDWW3W
+ IVz+q9ix/12TpqnNP71sompbZmMXTln/Gv/XBQmTWWLlXV5fn9RQypZOCMgXK4Ayd8hRnK1cglG
+ FEW9X1XoAATgKdztPlz8OzoyQ5FoLWNWQMpE4EEZXHIknV6/y5K48YA6yFY0BPkexVpJUqwTnhE
+ nrqa3MAzz4ICSi7d+UEKpIxIYfgGa7b2V2pMWHA2ksns774IJqIl/0TYGJF0R0q1tz2rL9mBLZn
+ GUPsz2ILq8T3Lbh+pnVXUbVG/SQ6VMJjGsscONw1B1XCvaOlis013XxM53wgCd8MoagYo5yTYLk
+ 5WlcKkRaDgwp8AqDGXk0/PNLLOiSS9rFLdki7iaq6HVWeLomSWrPRvisVdcaCfcC+BZsX2mw
+X-Proofpoint-ORIG-GUID: M5r367f4Wi_WHDqi-5e-aYuiZxDiLPvR
+X-Proofpoint-GUID: M5r367f4Wi_WHDqi-5e-aYuiZxDiLPvR
+X-Authority-Analysis: v=2.4 cv=LNNmQIW9 c=1 sm=1 tr=0 ts=685f0d52 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=6H0WHjuAAAAA:8 a=EUspDBNiAAAA:8
+ a=vTaQQWYYi_PMaXEYf6cA:9 a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+ a=Soq9LBFxuPC4vsCAQt-j:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=836
+ impostorscore=0 mlxscore=0 clxscore=1015 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506270174
 
-On Fri Jun 27, 2025 at 6:17 PM -03, Armin Wolf wrote:
-> Am 27.06.25 um 22:38 schrieb Kurt Borja:
->
->> Hi Armin,
->>
->> On Fri Jun 27, 2025 at 4:54 PM -03, Armin Wolf wrote:
->>> Not all devices support audio mute and microphone mute LEDs, so the
->>> explicitly checks for hardware support while probing. However missing
->>> hardware features are treated as errors, causing the driver so fail
->>> probing on devices that do not support both LEDs.
->>>
->>> Fix this by simply ignoring hardware features that are not present.
->>> This way the driver will properly load on devices not supporting both
->>> LEDs and will stop throwing error messages on devices with no LEDS
->>> at all.
->> This patch makes me wonder what is the policy around issues like this.
->> In fact I've submitted and changes that do the exact opposite :p
->> Like commit: 4630b99d2e93 ("platform/x86: dell-pc: Propagate errors when
->> detecting feature support")
->>
->> IMO missing features should be treated as errors. i.e. The probe should
->> fail.
->
-> IMHO the probe should only fail if some features are deemed essential, li=
-ke
-> required ACPI methods. Optional features like in this case LEDs should be
-> handled by the driver in a graceful manner if possible.
->
->>
->> Quoting documentation [1]:
->>
->> 	If a match is found, the device=E2=80=99s driver field is set to the
->> 	driver and the driver=E2=80=99s probe callback is called. This gives th=
-e
->> 	driver a chance to verify that it really does support the
->> 	hardware, and that it=E2=80=99s in a working state.
->>
->> And again [2]:
->>
->> 	This callback holds the driver-specific logic to bind the driver
->> 	to a given device. That includes verifying that the device is
->> 	present, that it=E2=80=99s a version the driver can handle, that driver
->> 	data structures can be allocated and initialized, and that any
->> 	hardware can be initialized.
->>
->> Both of these makes me wonder if such a "fail" or error message should
->> be fixed in the first place. In this case the probe correctly checks for
->> device support and fails if it's not found, which is suggested to be the
->> correct behavior.
->
-> The driver should only fail probing if it cannot handle some missing feat=
-ures.
-> In this case however both features (audio mute LED and mic mute LED) are =
-completely
-> optional and the driver should not fail to load just because one of them =
-is absent.
+On 6/25/25 11:12 AM, Luca Weiss wrote:
+> The SM7635 has a very similar tcsrcc block, only TCSR_UFS_CLKREF_EN uses
+> different regs, and both TCSR_USB2_CLKREF_EN and TCSR_USB3_CLKREF_EN are
+> not present.
+> 
+> Modify these resources at probe if we're probing for sm7635.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
 
-I agree, both are individually optional, but at least one should be
-required.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
->
-> Just think about machines supporting only a single LED (audio or mic mute=
-). Currently
-> the driver would fail to load on such devices leaving the users with noth=
-ing.
-
-That's very true.
-
-But I do still think if both fail the probe should still fail. Maybe
-there is a way to accomplish this?
-
-I'm thinking of something like
-
-if (lenovo_super_hotkey_wmi_led_init(MIC_MUTE, dev) ||
-    lenovo_super_hotkey_wmi_led_init(AUDIO_MUTE, dev))
-    return -ENODEV;
-
-What do you think?
-
->
->>
->> BTW this also leaks `wpriv`, which would remain allocated for no reason.
->
-> wpriv will be freed using devres, so no memory leak here. However i admit=
- that there is
-> some room for optimizations, however i leave this to the maintainer of th=
-e driver in
-> question.
-
-Leak was a bit of an overstatement :) But if both features are missing
-it would be kinda leaked, in practice.
-
->
-> Thanks,
-> Armin Wolf
->
->>
->>
->> [1] https://docs.kernel.org/driver-api/driver-model/binding.html
->> [2] https://docs.kernel.org/driver-api/driver-model/driver.html
->>
-
-
---=20
- ~ Kurt
-
-
---f9fa37f2e671fa9a6c56202a7260752149da78fe6b978ac304144ee9d19f
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaF8NMwAKCRAWYEM49J/U
-Zq/MAP43RcMOug9PHqtyPp8hxLwpmiw1OL2C+HeGNdgROp7aLwD+IMFNPVSATQBt
-ypCbYADZoqn9p6xC69w7/74Y88YqJgw=
-=4GiE
------END PGP SIGNATURE-----
-
---f9fa37f2e671fa9a6c56202a7260752149da78fe6b978ac304144ee9d19f--
+Konrad
