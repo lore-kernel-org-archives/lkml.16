@@ -1,130 +1,151 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38031DB548
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668521D5CF2
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751000061; cv=none; b=pKt9/cMwKQIjoE/9SoLqwC/ItilCM4zjozvylHXGTOaV/9+lMbCN7DQzFCp5mQ/T2ICveoRdwBdgtQxh7GSgNhoFYwU7tw1TIlrR4aPmaWC0U1Bjm6sz8Z6IbApvl1wkQSRj1whqljpLyicucDlxypwLyLLJKT/JVz1AMKP4dpY=
+	t=1751000090; cv=none; b=u/Mjef/i/lQCZoZ7WxH+Q+7sG8t+nyucI8o2VfhDKcS6sAKY1kmii10zss/FFOfb7vYdxwQbzI6+nHYnJDVLhKh9svyS21jdrk8DvIMuu55mqmvPDd+C1AkYU+guOG8RPOVB10FBAFvpaoYYoghrRhZcwjp+5jWgL3ax9ZmXyBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751000061; c=relaxed/simple;
-	bh=Mn91nD8N81a4I8LV9JExL3dkijp9Nz+10fd1guOSSOs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=lwAsYSs8LaLJ1E7H3Kk7Zjb9l9i6QL4KPyMGMsUc4YBnBnoZn2otF9I5od4Ajzf/dGAZp5b39IaS+2kBngckwNuNlEFJno7wR2frlqZ/EpjGRqNwdkyvgb4mLTMA3ullOcqSzflcPwwHqfwyfTSR+m9mjSD1qOWO9OaIh88NGTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=n4Cv2HTp; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751000090; c=relaxed/simple;
+	bh=v35BJ34lgvcP6bUBnuX4G37d0j4fI/MWcYfFOIx0kO8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=glhTKEtPxGG/rDi31zmo0fRkCoeAQlWjziHQ35vzwdNIMw4PcC8kl0bkP2Vf7Wy1vAIG4xD+NCOb86ON5jQ8yTE8hNHimdb8ehbkB1SZgZZ3B8nllKAkHjlJx+4hxyYHjzEsdOXKiG5AgPaJdHC3PY8SVspKWDtESZ1mKKDnJ08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K1iDnaF+; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="n4Cv2HTp"
-Message-ID: <dbcc14cc-abfa-4486-a642-2fe97b4a0ef3@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751000044;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9a2vQ9ByAahXjvmC4vFJM4DGyfQ2okDu7nWB7feKJaE=;
-	b=n4Cv2HTpgZ1pNqF5WzeMnnw8nyricFS+9qorvbjBMQH3ClH24QQ0iCthatcYUB5USRYdJN
-	x4MYqa37vwXC4fJ0d6a96l9KnH30YgSV6UVSJvuWQxY15MHFCL4xTcaXOD43iqcSyrkTHa
-	g/JA9erJRhMfxhgrMhQiiQr6AuCRVrU=
-Date: Thu, 26 Jun 2025 21:53:47 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K1iDnaF+"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553dceb342fso1544026e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:54:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751000086; x=1751604886; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4MwcYSCU7O2wVwCmP9UL7U8eP3yLNVSRm6pslGgCVSM=;
+        b=K1iDnaF+qKBWsSBNqp6JAVI/oDurIrZTpw7ZACPvuljb7herIil72xeW1Lrn42jwf3
+         rMFaUBWG6LzQhPKrTJz6WtjZ2s9mL/KrHPgdw0rb9VRrhzd7Ml6h1tg13+bhLiOGGBbI
+         /WRLr1Nu8Pxv9bfijcyG1LJmZy/6LgDxRCLScj363rJKhKwQx7Sy5kYhd4d9JNaQmvOS
+         SmDCmgGb5QPXAJWhuSRpw/lE4Zz0BlFSed7Ua3dkZ1xm9IciV6jRvvlkvmC/uyiyQWGs
+         jIj+bDH5Kv1D+LuPDU/l7ETBMKl+3kcJebjUjKBalIVCbEe8iv8i6zXSh/nG2l2+wFcv
+         jx8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751000086; x=1751604886;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4MwcYSCU7O2wVwCmP9UL7U8eP3yLNVSRm6pslGgCVSM=;
+        b=LzXEHKzpI+yQlV68UrdM8dY9mkpy9VDLsZzxZNvspae9WVFDb+EyvRbFzQ1+991e0a
+         vnLaKHwNQAW/FHq0WprG6BxAeXs3NWZ2+euOhv0YM7ttZ73GGIJQ/+iEuof7IGdfA4Dg
+         k1QwS6TXpgDtS6Asb+LUAhd83S3R8oEz5TZJ8+JBl0cAKvJmu3F3AWvw6cVTXiaErdmI
+         iwyKeAbJoXE17ckp3hKxssEIbgqcg33j4fhGn+gZuRZB+allQ3pMJszto/R5q7fANPQD
+         2BJSu3KCF/YboWTtIpR6HLgCwQTiMSoxw0WyKp+mQxa0pgKlwXOvXoh405LN424DHHRV
+         XoeA==
+X-Gm-Message-State: AOJu0YzVut0badIpjLDOgwmrFfj1EliWfcnOmXDvT95rGmItNd94n8qv
+	0J4X8Ky6rpRggFYswqsm9uQ1g8Ttast/P4H2RGpc34uZ4tLVyj5ig6Wdjj2jGJ3jIvF6748nm55
+	YfGQh+xaz9+eMGQD6F/YnLDhpzet7GTUWcFPJ9ZM5TH9AcQN34anOl1TeEQ==
+X-Gm-Gg: ASbGnctZz2Pmpz94bSYBtrWLjnasJH8tvk35+20198NHOgEeQhbgPGsoW0PuUFZBnVf
+	sjBg/2OBcwbTzV2wD3T5ZugH1J9m0VgVC2IltgXtXxu7MnFnAye0fm1zOe2LGW1zDIAx8aLzOH4
+	HBc3v1cdZmRlAT3Lt3c+Y+5Waype693pcPzSbRC8TX3csSNuuNIAgqqM5Msb+JYMKOVPo2TeqDT
+	FEEjacm1T0=
+X-Google-Smtp-Source: AGHT+IFpLSv3KdtEC81mfx9MJueqJy1tKEIWQAG2KaGeBxgKAmIeLcw+2jgK0HvCMltj6Jh83tRtGXnZN4SOR/0Vcrc=
+X-Received: by 2002:a05:6512:220d:b0:554:f76a:baaf with SMTP id
+ 2adb3069b0e04-5550b9ee1c0mr598894e87.56.1751000086251; Thu, 26 Jun 2025
+ 21:54:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
-To: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>,
- jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com,
- zyjzyj2000@gmail.com
-References: <685e168e.a00a0220.2e5631.03f4.GAE@google.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <685e168e.a00a0220.2e5631.03f4.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250625182951.587377878@linutronix.de> <20250625183758.124057787@linutronix.de>
+In-Reply-To: <20250625183758.124057787@linutronix.de>
+From: John Stultz <jstultz@google.com>
+Date: Thu, 26 Jun 2025 21:54:34 -0700
+X-Gm-Features: Ac12FXw_Je7fjw68q5uLeLBiIbu4q7GMysmzcodNlFFbo38SspffgCM3lhGSYcA
+Message-ID: <CANDhNCqhaezCu=+JiJ0GOMaOAJZN6Cu8FbchW3Fy_8tzXi3K1g@mail.gmail.com>
+Subject: Re: [patch V3 06/11] timekeeping: Add auxiliary clock support to __timekeeping_inject_offset()
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
+	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Miroslav Lichvar <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, 
+	David Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Kurt Kanzenbach <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, 
+	Antoine Tenart <atenart@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-#syz test: https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
+On Wed, Jun 25, 2025 at 11:38=E2=80=AFAM Thomas Gleixner <tglx@linutronix.d=
+e> wrote:
+>
+> Redirect the relative offset adjustment to the auxiliary clock offset
+> instead of modifying CLOCK_REALTIME, which has no meaning in context of
+> these clocks.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  kernel/time/timekeeping.c |   34 ++++++++++++++++++++++++++--------
+>  1 file changed, 26 insertions(+), 8 deletions(-)
+> ---
+>
+> --- a/kernel/time/timekeeping.c
+> +++ b/kernel/time/timekeeping.c
+> @@ -1448,16 +1448,34 @@ static int __timekeeping_inject_offset(s
+>
+>         timekeeping_forward_now(tks);
+>
+> -       /* Make sure the proposed value is valid */
+> -       tmp =3D timespec64_add(tk_xtime(tks), *ts);
+> -       if (timespec64_compare(&tks->wall_to_monotonic, ts) > 0 ||
+> -           !timespec64_valid_settod(&tmp)) {
+> -               timekeeping_restore_shadow(tkd);
+> -               return -EINVAL;
+> +       if (!IS_ENABLED(CONFIG_POSIX_AUX_CLOCKS) || tks->id =3D=3D TIMEKE=
+EPER_CORE) {
 
-在 2025/6/26 20:57, syzbot 写道:
-> Hello,
->
-> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-> WARNING in rxe_skb_tx_dtor
->
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 3034 at drivers/infiniband/sw/rxe/rxe_net.c:357 rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
-> Modules linked in:
-> CPU: 0 UID: 0 PID: 3034 Comm: kworker/u4:10 Not tainted 6.16.0-rc3-syzkaller-ge9ef70b277ad #0 PREEMPT(full)
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> Workqueue: rxe_wq do_work
-> RIP: 0010:rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
-> Code: 80 3c 20 00 74 08 4c 89 ff e8 c1 64 81 f9 4d 8b 37 44 89 f6 83 e6 01 31 ff e8 d1 e5 1d f9 41 f6 c6 01 75 0e e8 e6 e0 1d f9 90 <0f> 0b 90 e9 b4 01 00 00 4c 89 ff e8 45 97 fd 01 48 89 c7 be 0e 00
-> RSP: 0018:ffffc900000079e8 EFLAGS: 00010246
-> RAX: ffffffff88a26d8a RBX: ffff8880560d4500 RCX: ffff88801f722440
-> RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff887bc1c4
-> R10: dffffc0000000000 R11: ffffffff88a26d00 R12: dffffc0000000000
-> R13: 1ffff1100ac1a8ab R14: 0000000000025820 R15: ffff888033440000
-> FS:  0000000000000000(0000) GS:ffff88808d250000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f5e595acfc8 CR3: 0000000056029000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   <IRQ>
->   skb_release_head_state+0x101/0x250 net/core/skbuff.c:1139
->   napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
->   e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
->   e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
->   e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
->   __napi_poll+0xc7/0x480 net/core/dev.c:7414
->   napi_poll net/core/dev.c:7478 [inline]
->   net_rx_action+0x707/0xe30 net/core/dev.c:7605
->   handle_softirqs+0x286/0x870 kernel/softirq.c:579
->   do_softirq+0xec/0x180 kernel/softirq.c:480
->   </IRQ>
->   <TASK>
->   __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
->   local_bh_enable include/linux/bottom_half.h:33 [inline]
->   __neigh_event_send+0x9b/0x1560 net/core/neighbour.c:1194
->   neigh_event_send_probe include/net/neighbour.h:463 [inline]
->   neigh_event_send include/net/neighbour.h:469 [inline]
->   neigh_resolve_output+0x198/0x750 net/core/neighbour.c:1496
->   neigh_output include/net/neighbour.h:539 [inline]
->   ip6_finish_output2+0x11fb/0x16a0 net/ipv6/ip6_output.c:141
->   __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
->   ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
->   rxe_send drivers/infiniband/sw/rxe/rxe_net.c:391 [inline]
->   rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:450
->   rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
->   rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
->   do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
->   do_work+0x1b4/0x6c0 drivers/infiniband/sw/rxe/rxe_task.c:187
->   process_one_work kernel/workqueue.c:3238 [inline]
->   process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
->   worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
->   kthread+0x70e/0x8a0 kernel/kthread.c:464
->   ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
->   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
->   </TASK>
->
->
-> Tested on:
->
-> commit:         e9ef70b2 RDNA/rxe: Fix rxe_skb_tx_dtor problem
-> git tree:       https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
-> console output: https://syzkaller.appspot.com/x/log.txt?x=122183d4580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
-> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
->
-> Note: no patches were applied.
+I feel like this should be in something like:
+  static inline bool is_core_timekeeper(tsk)
 
--- 
-Best Regards,
-Yanjun.Zhu
 
+> +               /* Make sure the proposed value is valid */
+> +               tmp =3D timespec64_add(tk_xtime(tks), *ts);
+> +               if (timespec64_compare(&tks->wall_to_monotonic, ts) > 0 |=
+|
+> +                   !timespec64_valid_settod(&tmp)) {
+> +                       timekeeping_restore_shadow(tkd);
+> +                       return -EINVAL;
+> +               }
+> +
+> +               tk_xtime_add(tks, ts);
+> +               tk_set_wall_to_mono(tks, timespec64_sub(tks->wall_to_mono=
+tonic, *ts));
+> +       } else {
+> +               struct tk_read_base *tkr_mono =3D &tks->tkr_mono;
+> +               ktime_t now, offs;
+> +
+> +               /* Get the current time */
+> +               now =3D ktime_add_ns(tkr_mono->base, timekeeping_get_ns(t=
+kr_mono));
+> +               /* Add the relative offset change */
+> +               offs =3D ktime_add(tks->offs_aux, timespec64_to_ktime(*ts=
+));
+> +
+> +               /* Prevent that the resulting time becomes negative */
+> +               if (ktime_add(now, offs) < 0) {
+> +                       timekeeping_restore_shadow(tkd);
+> +                       return -EINVAL;
+> +               }
+> +               tks->offs_aux =3D offs;
+
+I'd also consider moving this else into a aux helper function as well,
+but I'm not 100% on that.
+
+Other than the is_core_timekeeper (or timekeeper_is_core() maybe?)
+suggestion above:
+ Acked-by: John Stultz <jstultz@google.com>
+
+thanks
+-john
