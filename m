@@ -1,118 +1,97 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from e2i340.smtp2go.com (e2i340.smtp2go.com [103.2.141.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986E42ECE86
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08EB62ECD33
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.141.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751057749; cv=none; b=mZYnZyDBJbp02xIMBkiK+48SJ5afoXIeUsFZNdU7w156EZUrXU1tYtLusicom3s/3W7L+dmVd79qBz5rbc3cG13fe3sQ1XaUAadq/YZp3K+o+U3rpVgz832WgvH4xQeXjpZsbvgsTi/JqDr3UBP6xmAuXthjQOozBT7kUNorVuw=
+	t=1751057796; cv=none; b=uhR6R7f16/42yWqpcrhJh48XY9Zy1Y3g7ULg2dSQBfeA3Td14fnVslrrZyIjIzzDc57+D9ZGYcZhM+oPdqa5CPHJ1qR9vQg9kVBM30O/Yqw+YrXQTzC7oe4YB6Qgv/Cs2myM/nuMf15M3TAxIC9lpvV5g3jqvV0urFH1Q5QDrn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751057749; c=relaxed/simple;
-	bh=38GaMaW/B7zHBvh1tFU9ANgBBdPtUjqbBkbeYoWb7Go=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L1Q1QOXBNXXizaT5RqsdhThTMVpnLFL8JzYMKgwxFVlrEh7MSCir7HYEQpnVinIVDpk06+r+DGqmOuTKDQ6jb5JAKazgZMciDoB3bS1sfYKSZfCegd/pppcNOmapQU3jq37BlkmigRB6GY8+CKSBZLn1GS6hys33O3sPzNCxNDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ryxq9xyO; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751057796; c=relaxed/simple;
+	bh=EqsjFcnoV7wkCfCblGpMw/2Zo+KMh0FeYoLwiaCPx8I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=JGH+T+bd4Szu3oqSn2ZFAQPPjgZhHssQjLZIW1C19igfPfoFWcBqJQdNYHT7WSRr4LaVWAxz2yAQ/j66bS9CRmYw3UhgXOht3H+YokhCXqfxLOHsOmy4kH3nJTMJkail3Lq7tyQwBOuAKAjLjTOJg+SCmFht4YYixWBDAVFguuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=triplefau.lt; spf=pass smtp.mailfrom=em510616.triplefau.lt; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=it7cKOFv reason="unknown key version"; dkim=pass (2048-bit key) header.d=triplefau.lt header.i=@triplefau.lt header.b=F5qUsqRX; arc=none smtp.client-ip=103.2.141.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=triplefau.lt
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em510616.triplefau.lt
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ryxq9xyO"
-Date: Fri, 27 Jun 2025 13:55:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751057734;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1AMsankqQ7fXut//cwhaRHpcwwLLJJgqr0ZblnCJIz0=;
-	b=ryxq9xyOHz5HcEmHKXHWirB5Xpi7L1zTlBdjMXx/7++C8tCcdl/h+rYXtM3iVSXvEC7B7P
-	11j/UAoaFs0ZNl9IKeMbblgKhnCbvPA0ZkwN1k+IBnrMoa6O9wiT7rXXgf42CoURxWxwZk
-	pXvRVVgsa3Hiney2sAnFfkyylePCAqU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: Ben Horgan <ben.horgan@arm.com>, kvm@vger.kernel.org,
-	pbonzini@redhat.com, corbet@lwn.net, linux@armlinux.org.uk,
-	catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
-	mizhang@google.com, joey.gouly@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 02/22] arm64: Generate sign macro for sysreg Enums
-Message-ID: <aF8FPTupC_VnAldN@linux.dev>
-References: <603eb4c7-5570-438c-b747-cdcc67b09ea6@arm.com>
- <gsntecv49aml.fsf@coltonlewis-kvm.c.googlers.com>
+	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="it7cKOFv";
+	dkim=pass (2048-bit key) header.d=triplefau.lt header.i=@triplefau.lt header.b="F5qUsqRX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpservice.net; s=maxzs0.a1-4.dyn; x=1751058694; h=Feedback-ID:
+	X-Smtpcorp-Track:Message-Id:Date:Subject:To:From:Reply-To:Sender:
+	List-Unsubscribe:List-Unsubscribe-Post;
+	bh=EPjNXSD+QUTAQdHPBF1PZFOR+NJM45qYXx5B36QYUrI=; b=it7cKOFvqyVyYcFSrfbRdoewyh
+	UFcfT3Yw7VjN9tfj9AF3PR4wYPpBDElU6g8bputf2LJ391K4UIbDfoROuBY0lIpOIIuMa4P0nyj+4
+	nHD0QkK/zpWeuoQhxyLfZn1Ci67JPK8iNNludzglGSKR6YKTw6lzZvC2J18QwDLBH4gDWBA2nC5nE
+	iV0IgkocQP2fw9wFWv1lRULcRlIChY0f8lZExulJrqUxhp6Rmas3YCINJm3opyNem93mjrtTUba5Z
+	52puz7JgjdiwOwoDUC2ZfloXysLZqYs8nUIBMnyxB9bw76vULZRksJ0JlSUAhv83irmg1CIuPw+0D
+	8E7SWCcA==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=triplefau.lt;
+ i=@triplefau.lt; q=dns/txt; s=s510616; t=1751057794; h=from : subject
+ : to : message-id : date;
+ bh=EPjNXSD+QUTAQdHPBF1PZFOR+NJM45qYXx5B36QYUrI=;
+ b=F5qUsqRXDyTcx6V+IZZljLVtUA+PwAlWQA4izgEfdnu8oJGGT66xy7l6umrmFa/U491gu
+ 4LE6GI+YY+3kBrUxf7StBOZbJ2Idtqy/AOrDOR5umZ/9KfxqabpqE51zFMcsHQipQ6BsiYZ
+ N4NKkcuProtDFsg6l67JTiIzmzDIUAai7g2WNsFHL6tX3AVpqPGFct/AejmCjbKKO/5wREq
+ cEgdOa666PbIpUwEPSW4FRuUUls6kHpU2CySIv2G4R5n0j5mXKuF7IM+0eKCMo17mfHyzZI
+ pGbVnh2c8Pp7b9NXCupBC/O0KFdbXWXYP2/ETZQwOxUO9jFynFhPYB3vteAg==
+Received: from [10.176.58.103] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <repk@triplefau.lt>)
+ id 1uVG7V-TRk3aB-BP; Fri, 27 Jun 2025 20:56:25 +0000
+Received: from [10.12.239.196] (helo=localhost) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.98.1-S2G) (envelope-from <repk@triplefau.lt>)
+ id 1uVG7V-4o5NDgrjV9w-omjN; Fri, 27 Jun 2025 20:56:25 +0000
+From: Remi Pommarel <repk@triplefau.lt>
+To: linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+ Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH wireless-next 3/3] wifi: mac80211: Correctly init MLO link in
+ ieee80211_8023_xmit()
+Date: Fri, 27 Jun 2025 22:46:49 +0200
+Message-Id: <8ddf1dd6362e0ad57a98505b0d195554ebc91b7c.1751057146.git.repk@triplefau.lt>
+X-Mailer: git-send-email 2.40.0
+In-Reply-To: <cover.1751057146.git.repk@triplefau.lt>
+References: <cover.1751057146.git.repk@triplefau.lt>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <gsntecv49aml.fsf@coltonlewis-kvm.c.googlers.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-Smtpcorp-Track: Nz5J7QcA5snT.TjIl-KkFGOci.EDlO-gMB_5u
+Feedback-ID: 510616m:510616apGKSTK:510616s0p5iKs-_9
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
 
-On Fri, Jun 27, 2025 at 08:45:38PM +0000, Colton Lewis wrote:
-> Hi Ben. Thanks for the review.
-> 
-> Ben Horgan <ben.horgan@arm.com> writes:
-> 
-> > Hi Colton,
-> 
-> > On 6/26/25 21:04, Colton Lewis wrote:
-> > > There's no reason Enums shouldn't be equivalent to UnsignedEnums and
-> > > explicitly specify they are unsigned. This will avoid the annoyance I
-> > > had with HPMN0.
-> > An Enum can be annotated with the field's sign by updating it to
-> > UnsignedEnum or SignedEnum. This is explained in [1].
-> 
-> > With this change ID_AA64PFR1_EL1.MTE_frac would be marked as unsigned
-> > when it should really be considered signed.
-> 
-> > Enum	43:40	MTE_frac
-> > 	0b0000	ASYNC
-> > 	0b1111	NI
-> > EndEnum
-> 
-> Thanks for the explanation. I made this a separate commit because I
-> considered people might object and HPMN0 is already an UnsignedEnum in
-> my previous commit.
-> 
-> Do you think it would be a good idea to make plain Enums signed by
-> default or should I just remove this commit from the series?
+The IEEE80211_TX_CTRL_MLO_LINK info is the only part of
+ieee80211_tx_control where a 0 value has a specific meaning. Thus this
+should always be initialized with IEEE80211_LINK_UNSPECIFIED if there is
+no MLO link information associated with the skb, even using when 802.11
+hw encap offloading.
 
-It is presumptive to associate a sign with an enumeration. Generally
-speaking, the only fields that can do signed / unsigned comparisons are
-the Feature ID register fields.
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+ net/mac80211/tx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-So please drop this and only keep the change for HPMN0.
+diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+index d58b80813bdd..f65fb96a498e 100644
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -4637,6 +4637,8 @@ static void ieee80211_8023_xmit(struct ieee80211_sub_if_data *sdata,
+ 
+ 	info->flags |= IEEE80211_TX_CTL_HW_80211_ENCAP;
+ 	info->control.vif = &sdata->vif;
++	info->control.flags |= u32_encode_bits(IEEE80211_LINK_UNSPECIFIED,
++					       IEEE80211_TX_CTRL_MLO_LINK);
+ 
+ 	if (key)
+ 		info->control.hw_key = &key->conf;
+-- 
+2.40.0
 
-Thanks,
-Oliver
-
-> > > Signed-off-by: Colton Lewis <coltonlewis@google.com>
-> > > ---
-> > >    arch/arm64/tools/gen-sysreg.awk | 1 +
-> > >    1 file changed, 1 insertion(+)
-> 
-> > > diff --git a/arch/arm64/tools/gen-sysreg.awk
-> > > b/arch/arm64/tools/gen-sysreg.awk
-> > > index f2a1732cb1f6..fa21a632d9b7 100755
-> > > --- a/arch/arm64/tools/gen-sysreg.awk
-> > > +++ b/arch/arm64/tools/gen-sysreg.awk
-> > > @@ -308,6 +308,7 @@ $1 == "Enum" && (block_current() == "Sysreg" ||
-> > > block_current() == "SysregFields
-> > >    	parse_bitdef(reg, field, $2)
-> 
-> > >    	define_field(reg, field, msb, lsb)
-> > > +	define_field_sign(reg, field, "false")
-> 
-> > >    	next
-> > >    }
-> 
-> > Thanks,
-> 
-> > Ben
-> 
-> > [1]
-> > https://lore.kernel.org/all/20221207-arm64-sysreg-helpers-v4-1-25b6b3fb9d18@kernel.org/
