@@ -1,88 +1,139 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026352DBF4F
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB25293C44
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751019746; cv=none; b=NiFWf2YgUuGshkf16+jD5YKYSbVAq2WJrr+BuHiOmAJ8+9nVcGjAsMJgIG/JoVLI34Y3ceb+Xt2CGnHy6xm6N2JwsEFbTVTJW0nxDetEJaT8FvZKpeG7D2kXpaCh2Bvmhm+5gnDUkK+ziCxEO2vddXUc/m9q2ovnflNhA6o5z1o=
+	t=1751019753; cv=none; b=ERbj7VAmY5TzqUGgXvs+D+SbS4lJJu16zAzB+qPDnepluhm3B2HoZmw3BLfuEmyCvnl+nZpIMnPNMASiYbdqgALT3vrehAuEAtbMlEOxlrmff3KUepatD0TAlOIQuLA7DB2VsamAFYyMPbEZZXUN+keRhwjhXuUPQSgiFGUtCn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751019746; c=relaxed/simple;
-	bh=1pqLbaouR2VFInPq4KWQCoFeBItmWNB5BJNKIcl3qoE=;
+	s=arc-20240116; t=1751019753; c=relaxed/simple;
+	bh=NsAXgbPIuhG4Q23J1SjnSjnBmQPBArQnGyTazc+XHgs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nCLHQVIArpuZCBfKa+py7Q0XJW0CHekkTzPU8QaFvvDasKnDmFYac55NnT2JTd7Hz9mqUoyd4PObTwHXri819vIpoogLi91BY7aG4WkepFec+Qpldd1PYsH2k/LU7KeXVUPGYelRkP2tlQycR89dGvFGa+CBlEbD+WMvhd2C3/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=RktgclJL; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=R67MHXbiCQsstyvz+PFm0zLUAO3/ktn3BkVCJMGtc8QDngGaQRVORNL+2BPQX7WbvfL8+o22ZcxVVd1A8w3WwRx3i4KC10zbvCvfSk5OmpAZz66YeAzHdjB/UoWyYxMI0OsAEGMOFJ2QTgKe36iwQNHnabEz9aaw09LpqUUKPGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qp90pKW4; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="RktgclJL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=1pqL
-	baouR2VFInPq4KWQCoFeBItmWNB5BJNKIcl3qoE=; b=RktgclJLDDahrKZkgxrA
-	oSA7b7bMsyx+L4/rCKZBD/FR+KUaa0MfqPzhIUTq0LaqYfSxW03fG0lU/RuwrB0E
-	2Ax5/jr5ji9FFtg7GFHkw/oFv/yftz7JX2isgVp8slaBUeYz6pq13bJv42biConK
-	iPaSPthMvBUMt45UZrY4tKnJtqxa0rl1Ol+5LhSyJ8Zw0oQR7X0q6PPDuirmYO7n
-	5f6AaVSzU1t1Sue7tefoxCmKOQ1h+XRO8E9m77PySi9gKgzN8utIw31RIrDnm24F
-	1jl41m3DKag+B2CUdZQyt1DiqZhFA7+6HMqwRspMPQ7jMidVZK0GpSPgDRFCsIvV
-	Gw==
-Received: (qmail 1423167 invoked from network); 27 Jun 2025 12:22:23 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 27 Jun 2025 12:22:23 +0200
-X-UD-Smtp-Session: l3s3148p1@WRrEDYs4WN8gAwDPXzuUAOCQSK0rM+sw
-Date: Fri, 27 Jun 2025 12:22:22 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Randolph Ha <rha051117@gmail.com>, linux-i2c@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mika Westerberg <westeri@kernel.org>
-Subject: Re: [PATCH v1 1/1] i2c: acpi: Replace custom code with
- device_match_acpi_handle()
-Message-ID: <aF5w3vHNfN14dgBc@shikoro>
-References: <20250623134521.158447-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qp90pKW4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751019753; x=1782555753;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NsAXgbPIuhG4Q23J1SjnSjnBmQPBArQnGyTazc+XHgs=;
+  b=Qp90pKW4wd6n+/dmUf+uEzR19KG9wlG9mnBeVY9HdosVFs38IVzYTnSD
+   izMaPTxyl3PEleBrUMU5BrT1CjwEuzbIS4uNQRGYqGj2T/1S4zn5ZQRHL
+   4zhd9jv1o68/yFh3XTOmoBoyLRDDCD/j3ZqEJ8t81STIWhSWxG6M0PISo
+   bUcwUY3eTMX9hXT2fch+isXbk8c0dvJ20A/9fj+pwlFfW0GBbP8JexUV8
+   SezZW7fHHRMkSreiDEpjVJU+iYwyVLD/c0cLKimm6IvHZxl1tZYYXRNjS
+   tD4fg+A/Wbl06ejlsT4Hx8zLpC/hADMytbbFcj9BVmC2w1EBiN4vhnNwF
+   w==;
+X-CSE-ConnectionGUID: gp8a/HPmRhmRlK4w8BUm+g==
+X-CSE-MsgGUID: EVqxOT7LSdqQMh59XLGDCg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53296781"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="53296781"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:22:31 -0700
+X-CSE-ConnectionGUID: 0/pMAkkVSM2pMoQMhzbowQ==
+X-CSE-MsgGUID: JS41YD7HQpqIXOTYkGiYog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="158253066"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:22:29 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uV6Dy-0000000ARwa-1SVa;
+	Fri, 27 Jun 2025 13:22:26 +0300
+Date: Fri, 27 Jun 2025 13:22:25 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Javier Martinez Canillas <javierm@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH v1 1/2] firmware: sysfb: Unorphan sysfb files
+Message-ID: <aF5w4QTbSkebYbk2@smile.fi.intel.com>
+References: <20250626172039.329052-1-andriy.shevchenko@linux.intel.com>
+ <20250626172039.329052-2-andriy.shevchenko@linux.intel.com>
+ <87ikkhd0uv.fsf@minerva.mail-host-address-is-not-set>
+ <aF5eL1o3WNo3Q7_p@smile.fi.intel.com>
+ <87wm8xbkyh.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jihlUMXufe6nnsDN"
-Content-Disposition: inline
-In-Reply-To: <20250623134521.158447-1-andriy.shevchenko@linux.intel.com>
-
-
---jihlUMXufe6nnsDN
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87wm8xbkyh.fsf@minerva.mail-host-address-is-not-set>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Jun 23, 2025 at 04:45:21PM +0300, Andy Shevchenko wrote:
-> Since driver core provides a generic device_match_acpi_handle()
-> we may replace the custom code with it.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Fri, Jun 27, 2025 at 11:19:34AM +0200, Javier Martinez Canillas wrote:
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+> > On Fri, Jun 27, 2025 at 10:50:48AM +0200, Javier Martinez Canillas wrote:
+> >> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-Applied to for-next, thanks!
+> >> > The commit d391c5827107 ("drivers/firmware: move x86 Generic
+> >> > System Framebuffers support") moved some code to the common
+> >> > folders and effectively orphaned it without any reason. Put
+> >> > it back under DRM MISC record.
+> >> 
+> >> What do you mean that it was "orphaned without any reason" ? There were no
+> >> regex matchs for the old file paths in MAINTAINERS either before that commit.
+> >
+> > There were maintainers for that code before. The change in question dropped that.
+> >
+> > [((bf44e8cecc03...))]$ scripts/get_maintainer.pl -f arch/x86/kernel/sysfb*
+> > Thomas Gleixner <tglx@linutronix.de> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+> > Ingo Molnar <mingo@redhat.com> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+> > Borislav Petkov <bp@alien8.de> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+> > x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+> > "H. Peter Anvin" <hpa@zytor.com> (reviewer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+> > linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+> >
+> > [((d391c5827107...))]$ scripts/get_maintainer.pl -f drivers/firmware/sysfb*
+> > linux-kernel@vger.kernel.org (open list)
+> 
+> That's just because there is an entry for arch/x86/. The problem then is
+> that there isn't an entry for drivers/firmware. It was orphaned then just
+> because it was moved to a directory that has no entry in MAINTAINERS.
+> 
+> > See the difference?
+> 
+> There is no need to have such a rude tone.
+
+It wasn't meant to be rude, sorry. The point is that any change in
+drivers/firmware/sysfb* and respective include are not visible to (any)
+maintainers, they just might be sent for a luck of somebody to pick
+them up by browsing the LKML for such things.
+
+...
+
+> >> > +F:	drivers/firmware/sysfb*.c
+> >
+> >> I would prefer these to be in the "DRM DRIVER FOR FIRMWARE FRAMEBUFFERS"
+> >> entry instead of "DRM DRIVERS" since the former is what has most of the
+> >> code for the sysfb infrastructure.
+> >
+> > Then do it, please, fix the above.
+> 
+> Part of the review process is to give feedback to patch authors. I don't
+> understand why you expect me to fix an issue you brought up just because
+> I ask you to rework your patch a little.
+
+In my humble opinion, the author of the patch that makes the problem appear
+can help to fix that as well. Are my expectations too high?
+
+In any case, this was an ad-hoc patch due to the second one, so this one
+may be considered as a administrative bug report.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---jihlUMXufe6nnsDN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhecN4ACgkQFA3kzBSg
-KbaIMw/9EiRCwxXaijKVtTdRjiW7GOqJB3pguSByO2o2d/u0sEEuTyLN3l+wIgCB
-9/n+p1ugt0rq+gtRH6l/+ECQM3ImfSR9JKrAYNengJmzmQpL2Qh303SEnMgAaa/s
-qmDm4vrvAZfkVwRbh8hHA3CmvnxpxA/t2UJ51U9lkQQGkGvl4Ybk/jS0lcOYdBmZ
-A1E1ohURsDku7H/7mNqpjUK2VjBuCj/h7jZmuSJGog4X8aiiQVNNwoMCiPybYn5L
-1JISAnJzOQzgoBBUiKGfPHOlrmqdttWIDNr1rKR9dAicMAysYKNjuWme5Fmif0Y4
-SWfIvawn6MdtfUhRRYdjfk6c7dmqKAs4Th/J9+qDAViTJHHUiFP/UxwLpSfDGtQz
-C8YCFNIdHx74FjPZOqllfPgT+w3GjjqcCmTXJHOAJtVAhfcFjvJfHpNpYh/pvP0x
-2WX4FrkgYpJMGENEU/v4b5ls59iSSjqvfS5sFRpjAyO1wlGfDEzbk+vQuwuCOFsG
-74YhGgHDXSoQZYGhnYcPvXPZbYe+In2pNc1TMgUbCLSrHikp1InC1K2RMlm/JvvC
-kMH4JNMSVKvsSyVAoIDrrrMFuPXOxqfyLkJwKHc143+6HU15ch2woaL09wSsG4sE
-i/YK8pOSDM9oqI6U1PVGguLuPLOjTEDbp463eIqlvTooX3cZFYY=
-=aQ+Z
------END PGP SIGNATURE-----
-
---jihlUMXufe6nnsDN--
