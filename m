@@ -1,123 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E148B1CEACB;
-	Fri, 27 Jun 2025 16:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B94F02EA495
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751042319; cv=none; b=jmLj0Ry+eL0m5R/kYk3eB00e3ptc1SoNwlQmonR1seCo78tagUsNHX49U9sD+5xBReCSzEjLLrPcs6FRjeJG883ySv6zwHD80VMBOn6tXfM0SWYXeC5CDZEQOzd9Qkro9HRC0eL/H55QdoGsQkVRt9hYcCkW1HELVeizvinuo/k=
+	t=1751042323; cv=none; b=HJtcTN4uHq9qj/m8tyqcM4N4RQz9KSCByByZawJd4D7iKunPiIL0AauttyJ7XQknNBo5eHp/JidyApKfC28gxHooA4aTftrULr527B3fnn7tY7yQcNGXuJ8IcSz8M0Sx5SIuiw98+Sjtp2YuVPVbV6jhacrb/6uNnKRXLVeuI6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751042319; c=relaxed/simple;
-	bh=coqZ9AH1Xr1um42/coQFhzI7vkhc87lz2XE5hH6j06E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hlR2KvWTMwERv0aq9O301H/vNeziAM8XaPkvdPAnJ614y37XZ8UFjqdZDPMWIGMrFiG56FRwBYU4LlSPlVHzjcbtD23uiRVZJg3xWTM3Y5jDr6RW9Stz7oNAy282lxnjIM0GhfxzRuSXbe/8yV0BoQR3078t7jQNj8+oHKinNjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IhPfEbY2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IhPfEbY2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0634AC4CEE3;
-	Fri, 27 Jun 2025 16:38:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751042318;
-	bh=coqZ9AH1Xr1um42/coQFhzI7vkhc87lz2XE5hH6j06E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IhPfEbY2+HwqyBANIIHVqgsNnv3Dt3vs/UmkZ1zL9GaWbeB1CsBKmLf1el5oVs8XB
-	 /s0+EHW0upWhq00JieL0lJZ09vHA0Kp4kESHLHYFuONBarUpO8G1SHAznlII33rJeG
-	 hTkeb3BlwMgl1hmti3OSVywYrN3bCqE/RxfOA/8WscD2ABXA3Gx6pv7EFFyOEes66b
-	 bAOA7PDZMaghkgDifyjEklqQbeNE5tnWvwTFZe6YPIvZM0q5CY6I5q8xICnnCCl8pT
-	 eNG3n9m49HR5cS8I/63Vlh48zn+IDq5IHfM7azUItXVQOrTlKQ9Q2hSuR99Z6PBqqr
-	 GrC5lwV/jFLpA==
-Date: Fri, 27 Jun 2025 09:38:35 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Liang Kan <kan.liang@linux.intel.com>,
-	Yuzhuo Jing <yuzhuo@google.com>
-Subject: Re: [PATCH v3 1/4] perf build: enable -fno-strict-aliasing
-Message-ID: <aF7JC8zkG5-_-nY_@google.com>
-References: <20250625202311.23244-1-ebiggers@kernel.org>
- <20250625202311.23244-2-ebiggers@kernel.org>
+	s=arc-20240116; t=1751042323; c=relaxed/simple;
+	bh=A1MfYjfC2Qc4xBmDLjcOEpJYWjzkr9xA1YQcLlLnjmo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g0nGnN0rD6INBW4jmbqusgrmdn5sT/Vi+eC50pjV3wX+yWbIdi3/uFdwhNDTyq5mO8KHz5B6v0gyS9xJGWmBI7z8sA7AyvC8yJUsQEDBqN64zYOPzlWV2V+Xuz0jAGBkHiIN9WoHrbQ6EHuWCjdvtzMfl9NUm6Kf4dt4ROyhG2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E571F1A00;
+	Fri, 27 Jun 2025 09:38:23 -0700 (PDT)
+Received: from [10.1.197.43] (eglon.cambridge.arm.com [10.1.197.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E83CE3F58B;
+	Fri, 27 Jun 2025 09:38:39 -0700 (PDT)
+Message-ID: <ee08ba7e-2669-447f-ae04-5a6b00a16e77@arm.com>
+Date: Fri, 27 Jun 2025 17:38:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] cacheinfo: Add arch hook to compress CPU h/w id into
+ 32 bits for cache-id
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, sudeep.holla@arm.com,
+ Ben Horgan <ben.horgan@arm.com>
+References: <20250613130356.8080-1-james.morse@arm.com>
+ <20250613130356.8080-3-james.morse@arm.com>
+ <CAL_Jsq+rsBq1Dsw4+hfkMhopN9Pdwyp9JJbqeT6yB+d++s4v7g@mail.gmail.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <CAL_Jsq+rsBq1Dsw4+hfkMhopN9Pdwyp9JJbqeT6yB+d++s4v7g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250625202311.23244-2-ebiggers@kernel.org>
 
-On Wed, Jun 25, 2025 at 01:23:08PM -0700, Eric Biggers wrote:
-> perf pulls in code from kernel headers that assumes it is being built
-> with -fno-strict-aliasing, namely put_unaligned_*() from
-> <linux/unaligned.h> which write the data using packed structs that lack
-> the may_alias attribute.  Enable -fno-strict-aliasing to prevent
-> miscompilations in sha1.c which would otherwise occur due to this issue.
-> 
-> Signed-off-by: Eric Biggers <ebiggers@kernel.org>
-> ---
->  tools/perf/Makefile.config | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 24736b0bbb302..70a3e771c7c08 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -17,10 +17,14 @@ detected     = $(shell echo "$(1)=y"       >> $(OUTPUT).config-detected)
->  detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
->  
->  CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
->  HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
->  
-> +# This is required because the kernel is built with this and some of the code
-> +# borrowed from kernel headers depends on it, e.g. put_unaligned_*().
-> +CFLAGS += -fno-strict-aliasing
+Hi Rob,
 
-This makes a build error with REFCNT_CHECKING=1.
+On 23/06/2025 15:48, Rob Herring wrote:
+> On Fri, Jun 13, 2025 at 8:04 AM James Morse <james.morse@arm.com> wrote:
+>> Filesystems like resctrl use the cache-id exposed via sysfs to identify
+>> groups of CPUs. The value is also used for PCIe cache steering tags. On
+>> DT platforms cache-id is not something that is described in the
+>> device-tree, but instead generated from the smallest CPU h/w id of the
+>> CPUs associated with that cache.
+>>
+>> CPU h/w ids may be larger than 32 bits.
+>>
+>> Add a hook to allow architectures to compress the value from the devicetree
+>> into 32 bits. Returning the same value is always safe as cache_of_set_id()
+>> will stop if a value larger than 32 bits is seen.
+>>
+>> For example, on arm64 the value is the MPIDR affinity register, which only
+>> has 32 bits of affinity data, but spread across the 64 bit field. An
+>> arch-specific bit swizzle gives a 32 bit value.
 
-  In file included from util/symbol.c:27:
-  In function ‘dso__set_symbol_names_len’,
-      inlined from ‘dso__sort_by_name’ at util/symbol.c:638:4:
-  util/dso.h:654:46: error: ‘len’ may be used uninitialized [-Werror=maybe-uninitialized]
-    654 |         RC_CHK_ACCESS(dso)->symbol_names_len = len;
-        |                                              ^
-  util/symbol.c: In function ‘dso__sort_by_name’:
-  util/symbol.c:634:24: note: ‘len’ was declared here
-    634 |                 size_t len;
-        |                        ^~~
+> What's missing here is why do we need the cache id to be only 32-bits?
+> I suppose it is because the sysfs 'id' file has been implicitly that?
 
-I'll simply add this to work around it:
+Yup, and its too late to change.
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 8b30c6f16a9eeac1..73dab94fab74e829 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -631,7 +631,7 @@ void dso__sort_by_name(struct dso *dso)
- {
-        mutex_lock(dso__lock(dso));
-        if (!dso__sorted_by_name(dso)) {
--               size_t len;
-+               size_t len = 0;
- 
-                dso__set_symbol_names(dso, symbols__sort_by_name(dso__symbols(dso), &len));
-                if (dso__symbol_names(dso)) {
+
+> Why can't we just allow 64-bit values there? Obviously, you can't have
+> a 64-bit value on x86 because that might break existing userspace.
+
+It's the same user-space. Users of resctrl should be portable between architectures.
+Resctrl isn't the only user, of the cache-id field.
+
+
+> But for Arm, there is no existing userspace to break.
+
+libvirt: https://github.com/libvirt/libvirt/blob/master/src/util/virresctrl.c#L1588
+DPDK: http://inbox.dpdk.org/dev/20241021015246.304431-2-wathsala.vithanage@arm.com/
+
+
+> Even with 32-bits,
+> it is entirely possible that an existing userspace assumed values less
+> than 32-bits and would be broken for Arm as-is.
+
+Sure, but I've not found a project where that is broken yet.
+
+
+> It is obviously nice
+> if we can avoid modifying userspace, but I don't think that's a
+> requirement and I'd be surprised if there's not other things that need
+> to be adapted for MPAM support.
+
+The whole multi-year effort has been to make existing user-space work without any ABI
+changes. The effect is some platforms have features that can't be used because resctrl
+expects things to be Xeon shaped.
+But if your platform looks a bit like a Xeon (cache portion controls on the L3, memory
+bandwidth controls somewhere that is believably the L3), then resctrl works as it does on
+Intel. The only thing that has come a little unstuck is the 'num_rmid' property where MPAM
+doesn't have an equivalent, so '1' is exposed as a safe value.
+
+
+> Also, what if an architecture can't swizzle their value into 32-bits?
+> They would be stuck with requiring userspace to deal with 64-bit
+> values.
+
+Remap them in a more complicated way. Chances are there aren't 2^32 CPUs.
+
+
+I'll add something about the libvirt example to the commit message.
+
 
 Thanks,
-Namhyung
 
-> +
->  # Enabled Wthread-safety analysis for clang builds.
->  ifeq ($(CC_NO_CLANG), 0)
->    CFLAGS += -Wthread-safety
->  endif
->  
-> -- 
-> 2.50.0
-> 
+James
