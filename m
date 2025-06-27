@@ -1,176 +1,134 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C5D1F17E8;
-	Fri, 27 Jun 2025 20:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B1B1F17E8
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751056453; cv=none; b=RZ73V0MVt1gPUr0Y3O3d3jSuY1hRfvfP29D2nNpG64YxehXmmUOgg38WfH9CflB3/6DvdbfikMlqYaqCdeFlWXkic3yF33DtJTd5JBoMee1LvYmyphwBJT0b0t3uL+aQEYwfr2BURT7Eht/8vx1aj5esrmVCKl1GfNVlIV+hP6I=
+	t=1751056578; cv=none; b=R3TJYAUFBHjeOEeILA5TDZK837YbWo+2MxoYmPVJR2vwuhoBo+62oBlc8DxcF+C4yD8eGTklcwjbDwMvaGtFtkmdq4kzzJP+3FJK7PmBv1P8clHyPuPcYu8iO9zWlOhYrDALRjgns6pPDG1+UYBUbYQotmd0cFA/pCv2vfcShLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751056453; c=relaxed/simple;
-	bh=iiUQq76IQA17+Pru1iWcynDOuQvwdeIl3L2j6A40dus=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Aigt9s9NSUdoP/i9bKv97VNPgxNeegz3AXBhUponb/i1rtfwyiPaqFRNcRDZpIX9jORwG9aoCRrl7vMFN37SAPRxUwZu5zoY5Hf4oZeTacTnLFLH2Y5hZ9IMTsy6UgTCsujL6FjOkp5SUpbUDnl0IAZQYS09rZ/1LYSJHSx4lUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nrDkSTxZ; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751056578; c=relaxed/simple;
+	bh=wsoDeNMNkj+hLwQ1DwNHFKqpC6UssNz+leDyWs6Tw2M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=n5z6zi08kKOr1gLNRdoAqY9hFL2ha2zHEsFCGfDJQgXwNtQr/qLfx+f3yIjhsOh24D7SW2r70BdQ87KsEqzVURt4LhQ3t59K/i6QJUcgqIuzWDm9tKLInYS17tLvWMqsElygrzGMddiyPFnPPeLme+onoPF4m+V6ZurW5ql9i/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LlJgQf5o; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nrDkSTxZ"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-453608ed113so3074385e9.0;
-        Fri, 27 Jun 2025 13:34:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751056450; x=1751661250; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RpiQyytJ0KMzWWY5PNEIWElmrKBfnMQjCYIhq/3zCbQ=;
-        b=nrDkSTxZzA5vARAisCFnKvQKIK7+8Xmem8IoBdPjPT/nNTa9pzHr+X+W0XzpwjJJJ2
-         6ekvQzIbDKQRyzqxsBxQKe0/VgjXZIHeo3Pavretpj1Z65Z7j9c5xlbyIMObz7ytNzFE
-         KU9Mz7z9UAFwUQ8n1patDUh46VBar8G++ZFAWPmmibgL+rbH/uEVr7wwh3fRVr0F5zo0
-         1HFMblRF8IF0Q+Usx+KeHrj24Lg3ab84h7OtGL8yrQ6dUfN5xgrXu5+/WU5BmY+lsAaj
-         SmqZtJi6MzssFnTcYmQ9IkdAyb0txevWZhkmsqHBIKMa1iIywiBIhoAGguotbcf5p38k
-         145Q==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LlJgQf5o"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RBxmSK027381
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:36:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	dKmlYnBP9zOMxT8PZn1r52h16H/B0zHwpvwe0daHy0k=; b=LlJgQf5o0xsZZxNA
+	RYCIxKueCv6zkmlNfPlFNVx+Q2Wdc6us2nG5NjDezr6G3fTqvFTGDbwy5GCVY1gp
+	Z2d7w6LerftUaeJ4Jd8mwJEwlEw4w7cvjjGqyZz/igqRkfi6SZZIQd+NzhmTWwhd
+	5L7g7yg0EHRV8tqPQv6hSOjjPk9t0Lfo4h9qPm6VfXmJISMXzoRqRptSsLAfmIyy
+	dNbABuBECfU9jqU9xEcBX5nX6BKHi5b93F/SVOxpC81UOZPHE0d841JDTRjsDoWN
+	O6tH+V3KMne2ALQ3e/XzA+jQ9sdWQ6JxjTHlyBZPgkRMm8NJcAIrfpxH+Jkiq5wA
+	tOxCYg==
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ec26jc5d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:36:15 +0000 (GMT)
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-748f13ef248so296896b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:36:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751056450; x=1751661250;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751056575; x=1751661375;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RpiQyytJ0KMzWWY5PNEIWElmrKBfnMQjCYIhq/3zCbQ=;
-        b=a0QwpOxz5rBY3G6ujsiKKdUfjqRefXDl3cKnAINtui/2MxpmgmV7878i93ohmFeQHR
-         96/+/zu729/iQpEJ0YshwCYJa9bUG8vfJNCH8DZ31yntVlBHGVRaEg152j+6Mi3XEkbj
-         faxyMlG9EsZGponBYMQl8N8IGCJnEpokAvWHgJYrzxNw6clhlsubAcXR6xlP2LxudsyO
-         Qgo2VKsGb/3eYu8jCxV0OlScCu2weXj66e4vE2w4SqfKnKKI1i/bFjzPntROObDVK3CX
-         5RL5aazZnoC0cs68DTL7mLlPn1x+vDWvQEXfUEmyhv4kCeMNrroKie4qOGC9BDcYZfJU
-         675A==
-X-Forwarded-Encrypted: i=1; AJvYcCVRGKvQBvBNYc1Uvv4FTak8iXpf88wKA/WZQSF9L5OPe7bvgj0Eyh1UDo0xf5cvx445ORHzAY3KDa+JVX6yAHY6E4k=@vger.kernel.org, AJvYcCW1Owy5GTVhOkPgFNl5I/MCgmh2Ld2CgnDZSzP/8JB7PFdsb9frMab1RddhjZF/rlPkFax1w7ODSbF7QQo1@vger.kernel.org, AJvYcCWnlJ079hqmrCq8zhchqpn9MO12ESI3wcW8f3NEAKFDQfiacsjhW5lhHfdV4qef/LxqaBu/pynSw4Ky@vger.kernel.org, AJvYcCXPdWlPTWEPkmo5UEz7CoQEDwHQd862SGcjtC2BE6yRrKtoJYM318LOitsSZYjpfo3MXewc5cksFbT6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGFYGy0gOF++Jt/OhEbtjMdN3lkCCRzoawqd1U544rXFVBBZny
-	a7sy2/8s2aDPlyPebq6hvT2jZhfFvpzRYEYWYVG8B/TzV/DjIQACc6hKYR9dbO1lhewx/bRsRRb
-	Tsu1QQ+zHdO12IoX92KGKUjhX8FrHIt8=
-X-Gm-Gg: ASbGnctemjWRcLb9DEpW6ekDx5sIdUH+vJDITJj36nZ8xopAJKuT4yrH/cfZ619i3TQ
-	E0/txwPP21bgycqryCV7Q+noqaA7VkQPoWeVGQdNpmxmETAH8SAV2m5LWHG3Hu8xAaJrglAMQns
-	RUHjit6vhw57ts/2op/DPH3XfgMx7Ti0wt9Yj3Kwyly7Y7W4Tkx7Kx3mZ9fXUf33JwHB8x/98ns
-	9o=
-X-Google-Smtp-Source: AGHT+IH1we4l8TSLRHqWA9UawCQgS0sZUtmWk4EfDQsVgWet8wb0/4Ml2IXH7vL2eKFsllpPVAEOxRuEa+K9dz5AeMU=
-X-Received: by 2002:a05:6000:20c4:b0:3a4:e7d3:bd9c with SMTP id
- ffacd0b85a97d-3a8f52b64fdmr2956569f8f.17.1751056449449; Fri, 27 Jun 2025
- 13:34:09 -0700 (PDT)
+        bh=dKmlYnBP9zOMxT8PZn1r52h16H/B0zHwpvwe0daHy0k=;
+        b=gS+X67yxY91N8Rsb8to0imuYfiG52VvLLlQlHCc3Fg9vimAgqOfxm4bY5M9ZEQAT97
+         0e3UPqzy2b9WAcA4Nz5zyu4MZuZIRjXcUYkVJhPzEQLe2PgEzT6LS09YBtvIhQ23cgLz
+         mbZDvBCdsv6vWBC73HSdRivjJJ9PgVJrIb9tKeUuMiQ7BJ/6ikq9I6r/TRTowH24itCG
+         b0dpNmUrXWJ8cnudGY49fmQm/M8HhOgd1irj6NM0w6kIFux484HKikCeclBsMefJ/GUu
+         7W4YIe5rG8ol+UYv+l4Lt5aDAlQyEjZpHmfczAvS+zsM71EhQkjz0IBNZnR1j1OqHPwf
+         X22A==
+X-Forwarded-Encrypted: i=1; AJvYcCWcIqzr6l+1vWv7FaTFTwwzSie2keMXzWdY/L9EyizHPHl4sVzYoMixrFUTCc41GtVVyYz1qgsPAlONUYA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyry7VSZiVJGVlLoqURKWTS8eQ795wGkktBfjAWqwL7g6AtkP8F
+	MHScBxDzbHyaeP/+X5AJN8bs09uGLBzCkXORGo0m6Td1gWMUEzpvlmkGOil6aofHIAj96CkehCU
+	UznhwWbO/XKZZD69e+csuBlJutFc0j7LTRR89rRrSjhEcDp60qtnVzfmwmccNsyfbILs=
+X-Gm-Gg: ASbGnctPWORce647niBtK0Al1ToW8+uvr/OA4o7axNnmrPvg4oBPAmZkPe3OZ6aRKgm
+	1eKDcJaIH6pIdpLL48SaYk42TI2oVxPkhmCM3IsK4aly7m5YuyyXSHJoSxWxHpYjy2owIzmrpRP
+	+kaIIGunzfTrnEObtSjlMipanhm0qYOgbUj0xt7QDCcoTXPXjG4PwaJiLTHJubolYXKziM38/OO
+	eHtauW+jbzwD5pjbGcm35equMxJaEaThgy4J+VDABNshljy6MKKCYQ58itf2uk7BFsWUR645U01
+	l+SmXhJxrVr71OdAJy8et6pRPMazOt4rSOm6Tg8nV1yGOrgRclxSRnrxsDw=
+X-Received: by 2002:a05:6a20:7d8b:b0:218:17c4:248c with SMTP id adf61e73a8af0-220a1696400mr7154812637.22.1751056574743;
+        Fri, 27 Jun 2025 13:36:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFvRRER8EH+IDOvZPMZ8NqWYOV/aI1CaW87KVYa2720l/lwfwzGQgiN3cck/ApDlyzqHXs54w==
+X-Received: by 2002:a05:6a20:7d8b:b0:218:17c4:248c with SMTP id adf61e73a8af0-220a1696400mr7154773637.22.1751056574326;
+        Fri, 27 Jun 2025 13:36:14 -0700 (PDT)
+Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e31bea0bsm2240472a12.41.2025.06.27.13.36.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 13:36:13 -0700 (PDT)
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+To: Jeff Johnson <jjohnson@kernel.org>,
+        Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>,
+        Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Kang Yang <kang.yang@oss.qualcomm.com>
+In-Reply-To: <20250626-fix_timeout_during_interface_creation-v1-1-90a7fdc222d4@oss.qualcomm.com>
+References: <20250626-fix_timeout_during_interface_creation-v1-1-90a7fdc222d4@oss.qualcomm.com>
+Subject: Re: [PATCH ath-current] wifi: ath12k: fix timeout while waiting
+ for regulatory update during interface creation
+Message-Id: <175105657343.1441396.2046714051243602990.b4-ty@oss.qualcomm.com>
+Date: Fri, 27 Jun 2025 13:36:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624173030.472196-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250624173030.472196-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWsA4mC+D8ftx74_XeuBjpv-9EQN0rgVLPsxjmrO3+rWg@mail.gmail.com>
-In-Reply-To: <CAMuHMdWsA4mC+D8ftx74_XeuBjpv-9EQN0rgVLPsxjmrO3+rWg@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 27 Jun 2025 21:33:43 +0100
-X-Gm-Features: Ac12FXy9AMVc6a5m4cjCAXc_6PL2PvT_9O5j-pCG6-K-7YQ1SyWLo-YIppgIWEk
-Message-ID: <CA+V-a8ubw=1JdnH-Sr0xj222e0-+Q97KYAYqUPMVU4N3siL5jw@mail.gmail.com>
-Subject: Re: [PATCH 4/6] clk: renesas: rzv2h: Add fixed-factor module clocks
- with status reporting
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDE2NiBTYWx0ZWRfX3WXPHNVgWLTm
+ HwmMWwxaQwIOeNdhDgodES+OUXho44qR0OPBi2Li9eZZqx9S5mmD05l3OHwFRrC/OxHWBTF2Iv/
+ tIb51lerx1DbPS7qobVQU0EMMC7nZHYYF58YIT4xfZCznxho5i1pNjoJ7re+9a7NnmNP8sN410n
+ 9ysYItfKCicQ3IvgupUZQpMd2CFY4gDbMlYRJMf7YXY4DwLs6L7SjbLK34owRGzW9rSH29IlU/+
+ JvSnz9qq17wVHL9TUTCNZUeUkv5QUy2v4boCQ1DaVzhPzNoZgqvCX6u1jnGG9noZaoeJyWF/YOq
+ 8tYCJpSn8CifjgUKVzxXe9PEM1nKetH+RoyYG3ic/sT996JofHrs2/m4muEjhP0CYwO6rYDZQlR
+ 48pY1JTKbwgFIg/bO7oO2Kv4pnkBjq2NWUZmX4k3Ph6p31D7V4OiygbHMrLAjzhfIcSy1luu
+X-Authority-Analysis: v=2.4 cv=XPQwSRhE c=1 sm=1 tr=0 ts=685f00bf cx=c_pps
+ a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=xtsjAY5F9q7pcwWWpd4A:9
+ a=QEXdDO2ut3YA:10 a=OpyuDcXvxspvyRM73sMx:22
+X-Proofpoint-GUID: VKWI6H9zJFX7M2BUMFakzbQln3KgZcqF
+X-Proofpoint-ORIG-GUID: VKWI6H9zJFX7M2BUMFakzbQln3KgZcqF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 impostorscore=0 clxscore=1015 suspectscore=0 mlxscore=0
+ spamscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
+ priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506270166
 
-Hi Geert,
 
-Thank you for the review.
+On Thu, 26 Jun 2025 10:49:56 +0530, Aditya Kumar Singh wrote:
+> During interface creation, following print is observed on the console -
+> 
+>   Timeout while waiting for regulatory update
+> 
+> This occurs due to commit 906619a00967 ("wifi: ath12k: handle regulatory
+> hints during mac registration"), which introduced a completion mechanism to
+> synchronize the regulatory update process. The intent behind this change is
+> to coordinate the timing between when the firmware sends regulatory data to
+> the driver and when the driver processes that data.
+> 
+> [...]
 
-On Thu, Jun 26, 2025 at 2:22=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Tue, 24 Jun 2025 at 19:30, Prabhakar <prabhakar.csengg@gmail.com> wrot=
-e:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add support for fixed-factor module clocks that can report their enable
-> > status through the module status monitor. Introduce a new clock type,
-> > CLK_TYPE_FF_MOD_STATUS, and define the associated structure,
-> > rzv2h_ff_mod_status_clk, to manage these clocks.
-> >
-> > Implement the .is_enabled callback by reading the module status registe=
-r
-> > using monitor index and bit definitions. Provide a helper macro,
-> > DEF_FIXED_MOD_STATUS, to simplify the definition of such clocks.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> One early review comment below...
->
-> > --- a/drivers/clk/renesas/rzv2h-cpg.c
-> > +++ b/drivers/clk/renesas/rzv2h-cpg.c
->
-> > +static struct clk_ops rzv2h_clk_ff_mod_status_ops;
->
-> This is an empty block of 200 bytes, consuming memory even when running
-> on a different platform.
->
-Agreed.
+Applied, thanks!
 
-> > +static struct clk * __init
-> > +rzv2h_cpg_fixed_mod_status_clk_register(const struct cpg_core_clk *cor=
-e,
-> > +                                       struct rzv2h_cpg_priv *priv)
-> > +{
-> > +       struct rzv2h_ff_mod_status_clk *clk_hw_data;
-> > +       struct clk_init_data init =3D { };
-> > +       struct clk_fixed_factor *fix;
-> > +       const struct clk *parent;
-> > +       const char *parent_name;
-> > +       int ret;
-> > +
-> > +       WARN_DEBUG(core->parent >=3D priv->num_core_clks);
-> > +       parent =3D priv->clks[core->parent];
-> > +       if (IS_ERR(parent))
-> > +               return ERR_CAST(parent);
-> > +
-> > +       parent_name =3D __clk_get_name(parent);
-> > +       parent =3D priv->clks[core->parent];
-> > +       if (IS_ERR(parent))
-> > +               return ERR_CAST(parent);
-> > +
-> > +       clk_hw_data =3D devm_kzalloc(priv->dev, sizeof(*clk_hw_data), G=
-FP_KERNEL);
-> > +       if (!clk_hw_data)
-> > +               return ERR_PTR(-ENOMEM);
-> > +
-> > +       clk_hw_data->priv =3D priv;
-> > +       clk_hw_data->conf =3D core->cfg.fixed_mod;
-> > +
-> > +       rzv2h_clk_ff_mod_status_ops =3D clk_fixed_factor_ops;
->
-> This overwrites rzv2h_clk_ff_mod_status_ops in every call (currently
-> there is only one).
->
-Good point.
+[1/1] wifi: ath12k: fix timeout while waiting for regulatory update during interface creation
+      commit: 6e17bbb5a86e6c68d65e38dfc850699e7a0706cb
 
-> > +       rzv2h_clk_ff_mod_status_ops.is_enabled =3D rzv2h_clk_ff_mod_sta=
-tus_is_enabled;
->
-> If there would be multiple calls, there is a short time window where
-> rzv2h_clk_ff_mod_status_ops.is_enabled is NULL, possibly affecting
-> already-registered clocks of the same type.
->
-Yes agreed.
+Best regards,
+-- 
+Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 
-> Hence I think you better store rzv2h_clk_ff_mod_status_ops inside
-> rzv2h_cpg_priv (so it is allocated dynamically), and initialize it from
-> rzv2h_cpg_probe (so it is initialized once).
->
-Sure, I'll update as above, that is allocate only when needed (and only onc=
-e).
-
-Cheers,
-Prabhakar
