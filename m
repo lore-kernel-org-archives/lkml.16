@@ -1,87 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885532E9743;
-	Fri, 27 Jun 2025 19:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048572EBBA3;
+	Fri, 27 Jun 2025 19:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751052701; cv=none; b=ZKccxwItlZpQ9qXdAaFBCt9Plyutr4rpgJOg4Tdx72cXFYx6ABdOgRquMFcnM1eACpSEJqdq7Bs7pSLgC/kS8vsyA0X+eRAv6IFxVcxs563DfKrIluFUkiGDu/r4XLdxOl6NboJ1PhRGknQo0GyzhyzGV8HX/FEUv5yaKPtAo2M=
+	t=1751052726; cv=none; b=i4tQ7nZSXvRS1Pb0f0XDwpzK626rTUIGUfTRt0CDMcfHNnhjdy91R0aOB8PSkYr+Uc8m+xhjJkx4KuzH4TqIDA8OPkLc/vS4SGXPoYbGYm0nlDJgNo6g3/pfTbXTJtkkTWPHEl9C4o9AhJnrbF3/OjBB1G86UvYL5F0FgytyW/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751052701; c=relaxed/simple;
-	bh=7qJt+JZrMa7ENp/lVXjk8y8PZgvTiFRz9BX8bJrZ4Dc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D8qLpa4EhRMnXv4cafPCFiw2y+2FVoo1EFh3ivVEn/QtVIIhmJij+OL0iM25joh2HcwlhIaZ0+HoUuiItU6ZcZtxTs3xcrDZ7ZhwdZc3PewVcSng/zQ9LbhAhtzj9Y34PMYOKjnbZRpETIWU50edVIaorVUPjfYxbQE+YE7G7nI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJ6JYnBz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751052726; c=relaxed/simple;
+	bh=OmkwvJTCg9uftU+D1x+MegluB/qmhXQnYLMchcdtboI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VU0BKuQFnq0/7SkhM01MVT8TAQOzX7qlp0g3JKGPHg6bJ8VB6wpcq89k7iBDcKuNgTExwXWFshkUQS3oaTTZ6vTznoNCvzCB/n/q17RHUndPTm2DAUi8V0LEKecd8wF9j/5E6NJbWSyQtDFJ+LlK+MZKmMwA1SekYVt+QSnnXb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pDQSiQ1+; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJ6JYnBz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7577BC4CEE3;
-	Fri, 27 Jun 2025 19:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751052701;
-	bh=7qJt+JZrMa7ENp/lVXjk8y8PZgvTiFRz9BX8bJrZ4Dc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EJ6JYnBzP5xDUEux438qdxDuNACuYgYIF9OmRH+NiuVhMLI7YKevewJLF+PpswSm7
-	 ahkXL8PRgfHqvyh7pWw3PgZ9P+xllqrO/igMdCveW88bSkHX3lT2ys3octO9ciq0ZV
-	 fE/agIWxep8+U7OpcT3Jbv1XbHAv/LtRejpGoQUu8pLfwBBaGP8pqLGCH64RfuYbgU
-	 MPPtbtnGjYjtyEDGdwLb0PC5st5P0yj50KlbgC8gBnIA/c/UpvBt6IBSYVWZf/lu8x
-	 JBoq3in10UIQnqwFrOwWtHAZmjVDe+PC820xkAizjSVGGtNNp0Vs7pBdgaHIhVIHQN
-	 YyESVguNxO8RA==
-Date: Fri, 27 Jun 2025 21:31:34 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Benno Lossin <lossin@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 4/6] rust: irq: add support for threaded IRQs and
- handlers
-Message-ID: <aF7xlhJeb-t_blHf@pollux>
-References: <20250627-topics-tyr-request_irq-v5-0-0545ee4dadf6@collabora.com>
- <20250627-topics-tyr-request_irq-v5-4-0545ee4dadf6@collabora.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pDQSiQ1+"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55RJVppO2496974;
+	Fri, 27 Jun 2025 14:31:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751052711;
+	bh=IsmC7YBYLmO/IpP84oFzjb88vBYm7nSf6TjgsuwpSqY=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=pDQSiQ1+cQqO547LwgYMRGy+oMhly/INy1eCQ2edPoQus286hjCKMwI10wdtSzA+7
+	 6YbgIMShghzvNO+fsMnfbyJZ3SKFQigpgnEnZFKgY50j92rAfsEkDjcRZTce1PMulu
+	 QAnM12CWoI83aCJ6KhpGBSuayRO47Rc90f4kpVjA=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55RJVp4Q3531647
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Fri, 27 Jun 2025 14:31:51 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 27
+ Jun 2025 14:31:50 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Fri, 27 Jun 2025 14:31:50 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55RJVo3k3598018;
+	Fri, 27 Jun 2025 14:31:50 -0500
+Date: Fri, 27 Jun 2025 14:31:50 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+CC: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
+        <rogerq@kernel.org>, <tony@atomide.com>, <lee@kernel.org>,
+        <d-gole@ti.com>, <robertcnelson@gmail.com>, <jkridner@gmail.com>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <m-leonard@ti.com>, <praneeth@ti.com>, <afd@ti.com>
+Subject: Re: [PATCH v2] regulator: tps65219: Fix devm_kmalloc size allocation
+Message-ID: <20250627193150.nxer4zuowaejzp4v@unarmored>
+References: <20250620154541.2713036-1-s-ramamoorthy@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20250627-topics-tyr-request_irq-v5-4-0545ee4dadf6@collabora.com>
+In-Reply-To: <20250620154541.2713036-1-s-ramamoorthy@ti.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, Jun 27, 2025 at 01:21:06PM -0300, Daniel Almeida wrote:
-> +/// Callbacks for a threaded IRQ handler.
-> +pub trait ThreadedHandler: Sync {
-> +    /// The actual handler function. As usual, sleeps are not allowed in IRQ
-> +    /// context.
+On 10:45-20250620, Shree Ramamoorthy wrote:
+> In probe(), two arrays of structs are allocated with the devm_kmalloc()
+> function, but the memory size of the allocations were given as the arrays'
+> length (pmic->common_irq_size for the first call and pmic->dev_irq_size for
+> the second devm_kmalloc call). The memory size should have been the total
+> memory needed.
+> 
+> This led to a heap overflow when the struct array was used. The issue was
+> first discovered with the PocketBeagle2 and BeaglePlay. The common and
+> device-specific structs are now allocated one at a time within the loop.
+> 
+> Fixes: 38c9f98db20a ("regulator: tps65219: Add support for TPS65215 Regulator IRQs")
+> Reported-by: Dhruva Gole <d-gole@ti.com>
+> Closes: https://lore.kernel.org/all/20250619153526.297398-1-d-gole@ti.com/
+> Tested-by: Robert Nelson <robertcnelson@gmail.com>
+> Acked-by: Andrew Davis <afd@ti.com>
+> Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+> ---
+> v2: Update commit message explanation & tags.
+> ---
 
-I'd rather say:
+Kasan also reports the same on latest next :(
+https://gist.github.com/nmenon/a0a020e8417c198d2f366fa00b900e12
 
-	/// The hard IRQ handler.
-	///
-	/// This is executed in interrupt context, hence all corresponding
-	/// limitations do apply. All work that does not necessarily need to be
-	/// executed from interrupt context, should be deferred to the threaded
-	/// handler, i.e. [`ThreadedHandler::handle_on_thread`].
+Could this be routed to master please?
 
-> +    fn handle(&self) -> ThreadedIrqReturn;
+Reviewed-by: Nishanth Menon <nm@ti.com>
+
+>  drivers/regulator/tps65219-regulator.c | 28 +++++++++++++-------------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/regulator/tps65219-regulator.c b/drivers/regulator/tps65219-regulator.c
+> index b16b300d7f45..5e67fdc88f49 100644
+> --- a/drivers/regulator/tps65219-regulator.c
+> +++ b/drivers/regulator/tps65219-regulator.c
+> @@ -436,46 +436,46 @@ static int tps65219_regulator_probe(struct platform_device *pdev)
+>  					     pmic->rdesc[i].name);
+>  	}
+>  
+> -	irq_data = devm_kmalloc(tps->dev, pmic->common_irq_size, GFP_KERNEL);
+> -	if (!irq_data)
+> -		return -ENOMEM;
+> -
+>  	for (i = 0; i < pmic->common_irq_size; ++i) {
+>  		irq_type = &pmic->common_irq_types[i];
+>  		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
+>  		if (irq < 0)
+>  			return -EINVAL;
+>  
+> -		irq_data[i].dev = tps->dev;
+> -		irq_data[i].type = irq_type;
+> +		irq_data = devm_kmalloc(tps->dev, sizeof(*irq_data), GFP_KERNEL);
+> +		if (!irq_data)
+> +			return -ENOMEM;
 > +
-> +    /// The threaded handler function. This function is called from the irq
-> +    /// handler thread, which is automatically created by the system.
+> +		irq_data->dev = tps->dev;
+> +		irq_data->type = irq_type;
+>  		error = devm_request_threaded_irq(tps->dev, irq, NULL,
+>  						  tps65219_regulator_irq_handler,
+>  						  IRQF_ONESHOT,
+>  						  irq_type->irq_name,
+> -						  &irq_data[i]);
+> +						  irq_data);
+>  		if (error)
+>  			return dev_err_probe(tps->dev, PTR_ERR(rdev),
+>  					     "Failed to request %s IRQ %d: %d\n",
+>  					     irq_type->irq_name, irq, error);
+>  	}
+>  
+> -	irq_data = devm_kmalloc(tps->dev, pmic->dev_irq_size, GFP_KERNEL);
+> -	if (!irq_data)
+> -		return -ENOMEM;
+> -
+>  	for (i = 0; i < pmic->dev_irq_size; ++i) {
+>  		irq_type = &pmic->irq_types[i];
+>  		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
+>  		if (irq < 0)
+>  			return -EINVAL;
+>  
+> -		irq_data[i].dev = tps->dev;
+> -		irq_data[i].type = irq_type;
+> +		irq_data = devm_kmalloc(tps->dev, sizeof(*irq_data), GFP_KERNEL);
+> +		if (!irq_data)
+> +			return -ENOMEM;
+> +
+> +		irq_data->dev = tps->dev;
+> +		irq_data->type = irq_type;
+>  		error = devm_request_threaded_irq(tps->dev, irq, NULL,
+>  						  tps65219_regulator_irq_handler,
+>  						  IRQF_ONESHOT,
+>  						  irq_type->irq_name,
+> -						  &irq_data[i]);
+> +						  irq_data);
+>  		if (error)
+>  			return dev_err_probe(tps->dev, PTR_ERR(rdev),
+>  					     "Failed to request %s IRQ %d: %d\n",
+> 
+> base-commit: 75f5f23f8787c5e184fcb2fbcd02d8e9317dc5e7
+> -- 
+> 2.43.0
+> 
+> 
 
-	/// The threaded IRQ handler.
-	///
-	/// This is executed in process context. The kernel creates a dedicated
-	/// kthread for this purpose.
-
-> +    fn handle_on_thread(&self) -> IrqReturn;
-
-Personally, I'd prefer `handle_threaded()`.
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
