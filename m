@@ -1,122 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BD74431;
-	Fri, 27 Jun 2025 13:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4562D97B1
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751029324; cv=none; b=UJDHO+QRJfE123W7YNw6FvlQMH3DMXewYwaYTdky5AfjNuf7IOGwmNtMGg4DEMOiw3gyoplIK1YvQKVl0HZW3npEV80Wy+NAbfDIJFZ8JAEWPPhnpip/I9byobRNhnlEeUiCKAgGwT30j9atOlXmvvp1PVIlPZAv1hP0z0jgZHo=
+	t=1751029328; cv=none; b=UPaTKA4oVdYgBZ7+iZc1nJMSEtNcf5cb6T+8f6FHqe+uOW8xdAh+UWYrPAV6EL5Nvnq09Y4N6BhBZy4JFHz9W/Jxbdr/MiwbtbXfPRqxUwGpJa0b8JsG0JgEKGdsD3yfAsrFCd/RgaWHp2n6rwmCmULKdWhKVYtB5ousBBA0JeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751029324; c=relaxed/simple;
-	bh=gp0epzP3egqUiKQR6pxigJkagwhLBDTL6iCWSDgXGW8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DMXNPjYVGtTGsSPR4A/VSBOnNM8YlsOtMnCJGALZOy8wtJvHf+uxRUXQfF5Wy5jXph4bzdC7GH1ClH3Lbr4xPJ5nR7D4H45meCpd2p8oGIRMfyD0C60Bke/vgRiWGNVFjj1LOObOQApjXJJ8xfRhLw9JcbCxfxXJTHzGxl7MGoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mf92O7bq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751029328; c=relaxed/simple;
+	bh=F8EDOzjXrDbWmnlmZz1t7I4za8xIMeSWdmVPPoPujGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=G1RD79HjHXiH329dxaQc0W9lmf8mStNRPLbkChUiGdat+MHr09FDa2lt9HXOVxUQjfZvZgCRTRf5eiFWjp/nokcZ5lO1lZ9iXiTAur3QYvrC4yO999nZDzvAkOFeUl72En/70oZF1BfUTqb1xnwhAOnzmdxQDhuC6ZDMwi+h7NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TjHOIKIG; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mf92O7bq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6C1AC4CEED;
-	Fri, 27 Jun 2025 13:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751029323;
-	bh=gp0epzP3egqUiKQR6pxigJkagwhLBDTL6iCWSDgXGW8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Mf92O7bqAm0yXgSgJJHXrBRLCx2b7byyy6lPi78UfDbAB7PkOHyPZd3YNeI0ILwOI
-	 GY6x6hbdFTyOQ2LBLZUKbH7UdrQ+CFwPS5/4aKnQJPutnbN1iewB4PxkdeZ1iPTp45
-	 /dp6KNaKFRCeSmQEoFd09vt+XFIRGA6ZFlCjponUXeSAMVyzqcfJyBjOvdE128/90a
-	 ipbTOmHrfwLKAm9qHHYvLzyFK3rDxxBx5UO8by6HUipMXcLQREbBLnAQdoj4LqeiPH
-	 eB9W1kUck0QmVAAivR4sXVZdySBhqee5Kqe/JquE9QCgBcJkveO26vPhrw2TUZhJoc
-	 Oi1/ft61NHVGA==
-Message-ID: <26bc75ab-5bae-49e5-baaa-155599ab8903@kernel.org>
-Date: Fri, 27 Jun 2025 14:01:59 +0100
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TjHOIKIG"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4eb4dfd8eso312697f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 06:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1751029325; x=1751634125; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=22QdyLiFVtJ8aqoY0Hwoc5WCRF3aJ1CurJSMqFHJ5LM=;
+        b=TjHOIKIGsTToYCvmb1pMomrug+hddc6M7/A6WuC/SDHTKFjXa1/72SHQ6yzY/CCXyU
+         kwQ3UINLco0d5hiB86/u8OSWxEnrmBfUwuk6PsAm2HVdWVxfkhYy+lq3c8nXatxDx3RO
+         e+JMAqNTd8N1HXCj11RWq/NBbBbgqsXng+IVVl4d6M9Uy4hkQjphEVs/f+HWkmUcFp9L
+         vn7tqqMHvODkjWBcliiZbUSTk5W43zyQkg6Hkbzcf7+i+6bJkwxXUMelQgV7wy8pYY75
+         FDRP3Fgr806mIasmnAm+0FFolQItsbn7WtrwiekoGhbkI0Mag/8cl3ISrKDFo1opy8vQ
+         mrOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751029325; x=1751634125;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=22QdyLiFVtJ8aqoY0Hwoc5WCRF3aJ1CurJSMqFHJ5LM=;
+        b=jR/YO+tlWjNxgT8VD+7OrJO7Ivi/VZ4yi32ZJYlvjoneuFYSCzXjaW4UZd04QL32JM
+         TGKWa7UNnqIDGh0FUKzQdBmFLZ5zDiOzkDfm32iBc0PB/1d7hqNa10eJIZPOnqItXryL
+         Be+EeVJfF1LBiNbtR68XVj7l3TCpmBT4VGn/ePfQoWu1SdAzFR0q4W11Y+2bEwg+o+eA
+         7bUmSU8aX4qnLlnG2H9sKlTbb/RlpGwMno0XHgEuPLGUYy0jEmTaPTTzyDdY+/i/Wudn
+         7Me6jzVG8M+BtogkjHoO+gDboP34/JvZXLNbUrCsHqRvruONPqikucRA9l6rWgUKtq7b
+         5Leg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAsksbPvf1JSbz8NWvdgHmhDizMkCrVC4t4FqX4Cv5hpAoYukyVxu99LWpjJ3rrIuug/22jJd5JAQ5Bw0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhSu7S4RlWymfua35r6qbAZl15S7MwADzntjYiZdAjDPB/OOvE
+	hiBYi4YZ6PQlTPFDCMhO2JtWcnEsXPUPfkUNQ4dv2yMObIp5h5JTjNzuTeGWcBiHEJo=
+X-Gm-Gg: ASbGncsrbcJk9P2fjjtSfzRDKe6Vd26+Onl7sj76MbUV6NsucyO521DzGZI6bDTd4ea
+	LhYD0NFK+1z8CLMNyrnUpORDXKFCSUyrXim/7Kij8tFWFSSJHrfoF0iEFGoBOpYv0yv1ejFQpcD
+	SPu/Yb+fkYtwerhosyHDMrLBWIgIB9xK5hszQKxRWEkT/4lUQopoQR3lUx0AbYuwTUkM2gLDiTd
+	z63Dqd5ZZDx4uweWxz+WT6hwDscAueJOGyJbRwxm9nNRK9gGNNraGF9GHi3jLBGm37xruDZ4wAL
+	1cxwMjqOVRSnDw8JZ3hxcDKmfifjHobGCLK8K3sSBgKhVaXAgTn9PKbYVRrqqgkyxK57uBEfp6X
+	SNj/FQM8sUrLrvby9ZyXZsaFD83rNDkO8SVWgQQwjdIhX/sSPHKN1AydLMg0hG0da3UrwgYcTGY
+	l6IQ==
+X-Google-Smtp-Source: AGHT+IE+dpgMJXXbb3Q0ZAuKEMDWMdgM8HtfCx3M03+1P4Vz5NMyiQcifzE/Bk4mh1MZJwWBbhP/JQ==
+X-Received: by 2002:a05:600c:8b22:b0:453:76e2:5b16 with SMTP id 5b1f17b1804b1-4538ee5dc7cmr13153575e9.0.1751029324438;
+        Fri, 27 Jun 2025 06:02:04 -0700 (PDT)
+Received: from mordecai.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a406ab6sm50817745e9.30.2025.06.27.06.02.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 06:02:03 -0700 (PDT)
+Date: Fri, 27 Jun 2025 15:02:00 +0200
+From: Petr Tesarik <ptesarik@suse.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Jonathan
+ Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, Leon
+ Romanovsky <leon@kernel.org>, Keith Busch <kbusch@kernel.org>, Caleb Sander
+ Mateos <csander@purestorage.com>, Sagi Grimberg <sagi@grimberg.me>, Jens
+ Axboe <axboe@kernel.dk>, John Garry <john.g.garry@oracle.com>, "open
+ list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list
+ <linux-kernel@vger.kernel.org>, "open list:MEMORY MANAGEMENT"
+ <linux-mm@kvack.org>, iommu@lists.linux.dev
+Subject: Re: [PATCH 7/8] docs: dma-api: update streaming DMA API physical
+ address constraints
+Message-ID: <20250627150200.2192c6b1@mordecai.tesarici.cz>
+In-Reply-To: <aF6Urf667AKtVGXr@infradead.org>
+References: <20250624133923.1140421-1-ptesarik@suse.com>
+	<20250624133923.1140421-8-ptesarik@suse.com>
+	<aFynHWAYtKPFT55P@archie.me>
+	<20250626070602.3d42b607@mordecai.tesarici.cz>
+	<bdb3a37a-a9d3-44c1-8eb7-41912c976ad1@arm.com>
+	<20250626154818.46b0cfb1@mordecai.tesarici.cz>
+	<0f95be6d-2e13-4281-98b5-6d4311a3b98f@arm.com>
+	<aF6Urf667AKtVGXr@infradead.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] misc: fastrpc: Refactor domain ID to enforce
- strict mapping
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Ling Xu <quic_lxu5@quicinc.com>, srini@kernel.org, amahesh@qti.qualcomm.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, arnd@arndb.de,
- gregkh@linuxfoundation.org
-Cc: quic_kuiw@quicinc.com, ekansh.gupta@oss.qualcomm.com,
- devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-References: <20250627103319.2883613-1-quic_lxu5@quicinc.com>
- <20250627103319.2883613-4-quic_lxu5@quicinc.com>
- <084ec69f-7b52-468b-8561-de4c1f517a21@oss.qualcomm.com>
-Content-Language: en-US
-From: Srinivas Kandagatla <srini@kernel.org>
-In-Reply-To: <084ec69f-7b52-468b-8561-de4c1f517a21@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Fri, 27 Jun 2025 05:55:09 -0700
+Christoph Hellwig <hch@infradead.org> wrote:
 
+> On Thu, Jun 26, 2025 at 05:45:18PM +0100, Robin Murphy wrote:
+> > Indeed that might actually end up pushing things in the opposite direction,
+> > at least in some cases. Right now, a driver with, say, a 40-bit DMA mask is
+> > usually better off not special-casing DMA buffers, and just making plain
+> > GFP_KERNEL allocations for everything (on the assumption that 64-bit systems
+> > with masses of memory *should* have SWIOTLB to cover things in the worst
+> > case), vs. artificially constraining its DMA buffers to GFP_DMA32 and having
+> > to deal with allocation failure more often. However with a more precise and
+> > flexible allocator, there's then a much stronger incentive for such drivers
+> > to explicitly mark *every* allocation that may be used for DMA, in order to
+> > get the optimal behaviour.  
+> 
+> It really should be using dma_alloc_pages to ensure it gets addressable
+> memory for these cases.  For sub-page allocations it could use dmapool,
+> but that's a little annoying because it does coherent allocations which
+> 95% of the users don't actually need.
 
-On 6/27/25 1:23 PM, Konrad Dybcio wrote:
-> On 6/27/25 12:33 PM, Ling Xu wrote:
->> Currently, domain ids are added for each instance, which is not a scalable.
-> 
-> 's/ a//g'
-> 
-> [...]
-> 
->> -		/* Unsigned PD offloading is only supported on CDSP and CDSP1 */
->> +		/* Unsigned PD offloading is only supported on CDSP*/
-> 
-> missing space before comment end
-> 
-> [...]
-> 
->> index f33d914d8f46..b890f8042e86 100644
->> --- a/include/uapi/misc/fastrpc.h
->> +++ b/include/uapi/misc/fastrpc.h
->> @@ -18,6 +18,13 @@
->>  #define FASTRPC_IOCTL_MEM_UNMAP		_IOWR('R', 11, struct fastrpc_mem_unmap)
->>  #define FASTRPC_IOCTL_GET_DSP_INFO	_IOWR('R', 13, struct fastrpc_ioctl_capability)
->>  
->> +#define ADSP_DOMAIN_ID (0)
->> +#define MDSP_DOMAIN_ID (1)
->> +#define SDSP_DOMAIN_ID (2)
->> +#define CDSP_DOMAIN_ID (3)
-> 
-Pl move the defines back to driver, see below comments.
+Wow, thank you for this insight! There's one item on my TODO list:
+convert SLAB_CACHE_DMA caches to dmapool. But now I see it would
+introduce a regression (accessing DMA-coherent pages may be much
+slower). I could implement a variant of dmapool which allocates normal
+pages from a given physical address range, and it seems it would be
+actually useful.
 
-> No need to include parentheses, as you're not interacting with any
-> variables
-> 
->> +#define FASTRPC_DOMAIN_MAX    3
-> 
-> #define FASTRPC_DOMAIN_MAX CDSP_DOMAIN_ID?
-> 
-> What I meant in the previous revision is that you can not move
-> data inside the fastrpc_ioctl_capability struct, but you can
-> definitely add a comment like:
-> 
-> struct fastrpc_ioctl_capability {
->         __u32 domain; /* Retired in v6.whatever, now ignored by the kernel */
-
-hmm, If the plan is to make this field deprecated then why are we adding
-the defines to UAPI, it does not make sense.
-Also like Konrad suggested
->         __u32 domain; /* deprecated, ignored by the kernel */
-
-
-Also please move this change as a new patch incase you plan to add the
-deprecation along with checks in the kernel to make sure no one is
-actually passing data in this member.
-
---srini
-
-
->         __u32 attribute_id;
->         __u32 capability;   /* dsp capability */
->         __u32 reserved[4];
-> };
-> 
-> Konrad
-
+Petr T
