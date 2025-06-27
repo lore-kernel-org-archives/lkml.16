@@ -1,73 +1,99 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6142E266C;
-	Fri, 27 Jun 2025 14:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE922E2659;
+	Fri, 27 Jun 2025 14:18:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751033873; cv=none; b=ht26HD1AgIz7RVXRvSW2b+ywYuacXEBxILMQY6BgNkzow4i13zPHzQmcajV42K1UQYwtq8+8N9pUr3jx+bf/qtGZB6yAYpLz5xcs5BRWrnueuofSV/JswxlH/52aX8eqmwMyJGhBStXZirtJvUMqxMz0MyCtqSqXfQmY71Zqy3k=
+	t=1751033890; cv=none; b=tCSTBrCrsLARG3b+4NpTNGdJbCJlbqWoaIAoz6iJ/Blm92a6RZqoGQgJYXVMdcoplx5YI19o2LWb0eNOdrJCgBJuoHVoY+zdwDBIbdUI1hbKXYBmqjNpbi/LL+4nMgOyugg/JOAUFtEFZNKq5HCTqq6w1glce5cGhGSVJqUeCwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751033873; c=relaxed/simple;
-	bh=9N4BsFtxYHDtZ6fcQvtVbeKzC3miVFJq8VROpg0ox40=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VpWc2MICl/npf7tRi4Spc56F5KzqDuVUiIVOJcNvSpVgS73M4svsxGU5m/HB6kbpmcq1U6rqlbn1A9sbBwXJNr63JYIA4ohj1EGSZacDooq9pu3VFEXVdPNoChU+nbuUBAKzoR2S6Afndjnfln8OsjrgmtdoC+aMPU9TiYw4vCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rz4iNDCZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YUpJtwtp; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1751033890; c=relaxed/simple;
+	bh=+pi/wIlcbLNnuX1RBlHCp/Nab1wavZUXPEn3t0yFunw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PWEH241TdVpYusXB5BjcDp4aTdU9bnMfS90R3KjewrAU2J6X863+udK3d+IDXoFQZ6Vnw7pfQXsHwQWkANX3S4D6MEZTPQg0AAD+isH/Nt3nsP3nsAmXjTTB2enDi7wi7VWtlHu73SDhwA5+vsSA2sNwMU2m84giFCglbGJDMmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JTPcY4Ho; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=q3EcjBDw; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rz4iNDCZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YUpJtwtp"
-Date: Fri, 27 Jun 2025 16:17:44 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JTPcY4Ho";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q3EcjBDw"
+From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751033869;
+	s=2020; t=1751033886;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=r8Ide64yaresq/HYNRHld+wPyxzNMOOriEtiS6XtR3U=;
-	b=rz4iNDCZFpMYiyWYIU5H4AxyIrulVw7rHFnmaTsHW7GLdDAi35egu9Cy/Go/z5xNpdSDuT
-	qIEeHmSnROIHZiMZhs0c5EFYaeUXB915AXIbk+LNFBSDkRGCKhUL8DG0vLbpbpTSZ+0r85
-	7+rwVae2ckT2kcTJ8HpZwUnD8b58OcqQaG0nIvsZthuBmhPP7kitkt0gbVODvZCc9TX254
-	19r1RRJcNnLT18EuFAgR5o1afFuemizjwSe/xGE46OFA1Lt38EOxZxBB0ThhN6kaV6R/sR
-	8I2fKRoLvtl2FMR0vn2fqQf1ENXYhacMf0t5vta2RGzqbEnLJzR1x6178G4WqQ==
+	bh=+pi/wIlcbLNnuX1RBlHCp/Nab1wavZUXPEn3t0yFunw=;
+	b=JTPcY4HoWZjBfcsbsJvA20ZnzRcsLjqZpqs0Jlsl3cDrD5fEbEdlxzCcLfv+V5H3VIF5Ia
+	WJSYgj7fV3v8zsIDuYccFnqV8Lsvj+7zYNTC8ocHNb0y2El6cDfDgSoIDhhb+18yIiMlrV
+	MQIFYflQnev9ornTwTrbf02qojHXO5rrdhaBHZkALH+cJIerWy8VPU1lZB0Q7Qtu9XmJCg
+	UvyqUwsuc6MRISQxYKe6kQRo2/cBXjdFfdp/co+esDkEoYxgFEQpgxXBeEobAcAp6pduZa
+	khGakssZhUgJR4unZsJgwBNpw7SIbi7CHfxCTmstt6pjHZ3TAi4CKseThnKfvQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751033869;
+	s=2020e; t=1751033886;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=r8Ide64yaresq/HYNRHld+wPyxzNMOOriEtiS6XtR3U=;
-	b=YUpJtwtp9N6uCkfrsLnmHK8k9MoVqbi3i3exwveAUL8kDDRw+18ZwOXo79Jl6ESCOg6Abf
-	xgGAAyMIQazhM0Aw==
-From: Nam Cao <namcao@linutronix.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de
-Subject: Re: [PATCH v10 00/19] RV: Linear temporal logic monitors for RT
- application
-Message-ID: <20250627141744.yTIdgd2m@linutronix.de>
-References: <cover.1749547399.git.namcao@linutronix.de>
- <20250627124248.fpuBrdWJ@linutronix.de>
- <20250627101631.59bd7ab0@gandalf.local.home>
+	bh=+pi/wIlcbLNnuX1RBlHCp/Nab1wavZUXPEn3t0yFunw=;
+	b=q3EcjBDwDSlN5SU0XlMs2o0HMzKupClunf6b0FpPvH0MA5Ck52MaMeWKpP4eEXeeMW4l9B
+	3OwavwLkwWlcU/DA==
+To: John Stultz <jstultz@google.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, Richard
+ Cochran <richardcochran@gmail.com>, Christopher Hall
+ <christopher.s.hall@intel.com>, Frederic Weisbecker <frederic@kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Miroslav Lichvar
+ <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, David
+ Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, Thomas
+ =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, Kurt
+ Kanzenbach
+ <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, Antoine Tenart
+ <atenart@kernel.org>
+Subject: Re: [patch V3 04/11] timekeeping: Provide time setter for auxiliary
+ clocks
+In-Reply-To: <CANDhNCpu5+ZVxFg0XVU4KYEWnNCbSruPob9dOeF3btxqJ1N70g@mail.gmail.com>
+References: <20250625182951.587377878@linutronix.de>
+ <20250625183757.995688714@linutronix.de>
+ <CANDhNCpu5+ZVxFg0XVU4KYEWnNCbSruPob9dOeF3btxqJ1N70g@mail.gmail.com>
+Date: Fri, 27 Jun 2025 16:18:05 +0200
+Message-ID: <87ldpdnu8y.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627101631.59bd7ab0@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 27, 2025 at 10:16:31AM -0400, Steven Rostedt wrote:
-> On Fri, 27 Jun 2025 14:42:48 +0200
-> Nam Cao <namcao@linutronix.de> wrote:
-> 
-> > Is there any chance this series could be applied soon? I have some more
-> > patches which depend on this series, so it is holding up the show. I think
-> > Gabriele needs this applied for his patches as well.
-> 
-> I'll try to take a look at these today.
+On Thu, Jun 26 2025 at 21:23, John Stultz wrote:
+> On Wed, Jun 25, 2025 at 11:38=E2=80=AFAM Thomas Gleixner <tglx@linutronix=
+.de> wrote:
+>>
+>> Add clock_settime(2) support for auxiliary clocks. The function affects =
+the
+>> AUX offset which is added to the "monotonic" clock readout of these cloc=
+ks.
+>>
+>> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>> ---
+>
+> Minor fretting: I worry a little that the difference here between the
+> default timekeeper where set adjusts the REALTIME offset from
+> MONOTONIC, and here where it directly adjusts "mono" might confuse
+> later readers?
 
-Thanks!
+Actually it's not really that different.
 
-Nam
+In both cases the new offset to the monotonic clock is calculated and
+stored in the relevant tk::offs_* member.
+
+The difference is that the core timekeeper operates on xtime, but for
+simplicity I chose to calculate the resulting tk::offs_aux directly from
+the monotonic base. That's valid with the aux clocks as they don't
+need any of the xtime parts.
+
+I added some blurb to it.
+
+
