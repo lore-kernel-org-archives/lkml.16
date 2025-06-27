@@ -1,202 +1,221 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011050.outbound.protection.outlook.com [52.101.70.50])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E272EA158;
-	Fri, 27 Jun 2025 16:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751040641; cv=fail; b=e1htW0hLtPK/Qae2HFjspvk3Xu+6DopDDDp6LAPXbMKZ/3p2NwN4hDkLCZ6qbnWxV5ng3Kq7NI/hjWGO808I/EJ+4UFl3hn6J9Nt93FImBfXeZQdWuF7tW+u2PRUVKDPi0pFrTV9STpOukk11N8oDBU15CIrKf9dD/y0lwmnLBQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751040641; c=relaxed/simple;
-	bh=ZNf/XLU1xtXjT8cN+8GLjjsqqwjfEi9Jf5QIPy/d0TM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=bMf7kuIxxrgpi3noZKY2/mnn+zfA06OQRERx86ZM7BXMtITHcHa9Nl0EUGakXPmS2cCl8h6dFN3Mnqbubd2HgsY36F624W6MMwuWOEvTzUEaaD5LslRUgBRBvnL/fZDSiKd7g1yK+TNRAiAWZmtVsR7adzbgKlyScc1Z1kkBHok=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=I28HWF7G; arc=fail smtp.client-ip=52.101.70.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4CB2E973C;
+	Fri, 27 Jun 2025 16:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751040729; cv=none; b=TQBeHlHlzkj4JW7o2coIAC61Sb+q44kfLsqlnt06YBot5aoMFFecGgoPd7T/PRLIeXbZE8977ifl3hzJnXVRmzb0LCbIxeDQo7j58MKdBR4thu4oAyt6ir2yzm6Nauc66LA/Bw5yRbQwhzykKFE6FKAf0danyGxtCFSZJtGRY1g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751040729; c=relaxed/simple;
+	bh=LK6QY4UU3h9fKPWEGu4Bo9w7QBVoPO0VsOonrKWs6Zw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pegE/WU399NzMDDf3DEGJLoOHgFyiF9yfGYlA7FnZnBR1GswgPOjxVH7XRnVBSv663t4KzCUnut79NiqXdeocEI8pad4SERSo57kGll72r1oT+eYJxiWlIjhwrllsKsMSZlEyF4bq8EeQ3sIyNIf/qifBDvpkgnYxU2Hgg23y3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=da/fyb7J; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="I28HWF7G"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FML2eITx+gpAuu7VOeA0GhQe9u7t3hHQCVLQocLAhz4cbu9g4Udy3sSN8ZwB0+MMv+VfYiMP+jxYg/MWfzUJlaexgon1KBZwwNOqz7SYjQv+JSeEoEP3PtTKUFGOMOioAOv0aZk0lcJNTbbCbrhaJY+qOjKNWrFSbrPdP3LmPMh9zD0jK7AM3m6tWUyoF0zsi5pgo+wlAx+afQKMSPgBF+HEi2URs5+z10qLQr/yfusZgZqL2CsOBI1Qdr/18HtVkW1spUeW1CwJajRBlZs8H1IkNJYK7yaX9DdFXbahN+vCXWZ5XJcXYCHgavdnGVFWh6G4lJr0KIOAt2GmxEhYGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/iWQ0IUzMmAmnZqCF42sy3SPdl0255YmRxdRT+U19qA=;
- b=rVDaT0EpowJ2JzaAhS56wmQTY3DDw+dNECm51LkFE9Nh4luAOvU7IGp0XYdLaFuD50iRDOrGk0CVPK18AR8wieRRAtWk4Hnhtmgoak+h8JWepvCG08b5G9VLLbQO7YMpiYNhnRlo6ljIj3qCCBeVXQrFoO80JVLFY/D7VKIWS1+zdTQIAsAZKfiZPujyHzPL0zXv1pqI1urcmM/Zma+1nmatf7oFx7oaEQqSXX2qQudhr8J0j9SX61k+55W7OCPOLjf3NB0vxHJQ6v7p5n8op+Fu4P8OaC/dmfq94w+cQ8S/3onm4dplSUKSKmv+EBKfF5gUwdu+jON9l7Kh87GaJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/iWQ0IUzMmAmnZqCF42sy3SPdl0255YmRxdRT+U19qA=;
- b=I28HWF7G0MFi949c+KeiHujrdkR+6/1eKKSVRZpl3BYrccl/X+P8v5GyXmP9eNWz1+SALRtub7thoeZ0vSHlv5PYz5xQ4lMONMNe6Nv8Sn3ne6W85+TGz9j36AbCbUFUumgv9VNMfZLhpDsI6TOzOGuVVZWRT/5RxGRml7iW/JU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
- by AS8PR04MB7493.eurprd04.prod.outlook.com (2603:10a6:20b:293::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.18; Fri, 27 Jun
- 2025 16:10:33 +0000
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::5ee:7297:93b4:a8d1]) by AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::5ee:7297:93b4:a8d1%4]) with mapi id 15.20.8880.021; Fri, 27 Jun 2025
- 16:10:32 +0000
-Message-ID: <b1c789bf-1369-42ec-8bb3-d7a45c92abf0@cherry.de>
-Date: Fri, 27 Jun 2025 18:10:31 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/8] arm64: dts: rockchip: Refactor DSI nodes on rk3399
- boards
-To: Diederik de Haas <didi.debian@cknow.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Dragan Simic <dsimic@manjaro.org>, Johan Jonker <jbx6244@gmail.com>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250627152645.740981-1-didi.debian@cknow.org>
- <20250627152645.740981-3-didi.debian@cknow.org>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <20250627152645.740981-3-didi.debian@cknow.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VI1PR0502CA0026.eurprd05.prod.outlook.com
- (2603:10a6:803:1::39) To AS8PR04MB8897.eurprd04.prod.outlook.com
- (2603:10a6:20b:42c::20)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="da/fyb7J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751040728; x=1782576728;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=LK6QY4UU3h9fKPWEGu4Bo9w7QBVoPO0VsOonrKWs6Zw=;
+  b=da/fyb7Joao/zJBzRMpyCnEUA/YFUtDi10/l2GFLxpsaiKTw6Ue+IA4c
+   srWChAkOcPsnNQqT6HwIt4vUwtpojvHsQ3tJuRyur6Wl2234JqSMXoHfx
+   UPtOZKvc0bJntN5qVm1uJWujoQ/s7BZO+mmijTRDR3SmQhkh5nOURIB7y
+   MoonWrrNj7SXj9Mg9FrWwpHx39SXr93dGe7YwLxeOKOK1bHzVWgh1K3x8
+   l82IfaHQBT/SIJyAgelZElGA/dsaX2nfOOncC+HJg7+o2/e5n0HBM+IJG
+   +sN3CEOHPGOPoda3UIJoT5Ovo8TXAEYSB95iM42UXen9b9V+BydtdYxlZ
+   g==;
+X-CSE-ConnectionGUID: SzVTDHwORbao+UOWY1akZQ==
+X-CSE-MsgGUID: BCjxxpiLTWq9ZdORyvmV6Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="53300162"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="53300162"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 09:12:07 -0700
+X-CSE-ConnectionGUID: 3vZf4p7YShCaX9YgHIgV4g==
+X-CSE-MsgGUID: kFOld4pyTzmSLJZqhgzLiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="183880396"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 09:12:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uVBgG-0000000AX0g-3lpA;
+	Fri, 27 Jun 2025 19:12:00 +0300
+Date: Fri, 27 Jun 2025 19:12:00 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Mario Limonciello <superm1@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
+ system
+Message-ID: <aF7C0B038Qi-CUSk@smile.fi.intel.com>
+References: <CAJZ5v0gKUN1OdqAHnXNcFUAOfhpdRfa_o=L6TA2GZTpe1bMaNQ@mail.gmail.com>
+ <exmgckzoakt2ncsdphqvymcadon7k6tl36a3zvrj2pv23dffps@znq23v3qbcm2>
+ <CAJZ5v0j3ZyuEqSKQ+3K8M3BwPCxn5Z6KOwjyjt4cJW6HfxjPDw@mail.gmail.com>
+ <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
+ <de548b27-4c43-4f30-af9d-b060101e6fd8@kernel.org>
+ <75fixx6rgwsgsw6e765oxdcivcg2nkzx2fp2qywgx4vi3ihywh@ot7gdecsnttw>
+ <1b0d2349-dbf7-47aa-95c9-1974e63d111a@kernel.org>
+ <13025910-7639-400b-878a-cd0780c6534c@kernel.org>
+ <4ajmcrl3bqeikki2etek5bafzszelgevr322tvuubx4pxxyju2@qqxz6lzcb6e5>
+ <fdd635ce-5e8e-4123-8e8e-241a57b4d7fe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|AS8PR04MB7493:EE_
-X-MS-Office365-Filtering-Correlation-Id: 05fbc504-b44e-4a10-a5a2-08ddb5952496
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MkR2UUNEQ1dwdDZ2enlHcFNYOUNPcWpJbjNvN2NQaUNMV09qTmNDVTc1djVP?=
- =?utf-8?B?K21HbVF0ak1FcGd6RnNVQ1N3TjZKYm9CZm0yK1NSWkpHMUMrczFtNlEyVVNl?=
- =?utf-8?B?RHQ0dlZkSmtKazBTRGJ0b1VORlQwYjNhZDVHdmNjTGdZdEF6eGJJWEJ6NDlw?=
- =?utf-8?B?QWlMVWNiTEQ5L2lGOE1YL3ZiaTNraERTVFFXY0hVN0ZaZmZIT2Q1QVhrUUVu?=
- =?utf-8?B?WFBlZ0FyQUxqR0V4NlF0SmhHdmorQ2dpc3pJczc0MHVZODNJeDN3UlowZ2h3?=
- =?utf-8?B?bGZtMzAzRGdYekU3T1hkWDRMUnk5QlNrMHYrS0xyZEJpTUNCdmNWSTduSGN2?=
- =?utf-8?B?aklvUnhGbi8vU3gxbi9DSnZQRmYydkphVTdHL3VLVEIvSU5sRzQyZC8rUDhK?=
- =?utf-8?B?RE1uOEdpVCtmUlhnaXhEQkVac0dNNEhBQ2pPTkxKU1Y1NzZzdWkrdXhPczVQ?=
- =?utf-8?B?VG9GT0Ewd3ArR214ZjJHSmgxeGRsSEF4cmxaRXY0aW51S3JVMFUzNjB3MDQw?=
- =?utf-8?B?cmRnR0JkNEk2OFVRVFpEZEQzY2llV1VTVUJqTmNZWFpXWVFSUDEybGVJMWpz?=
- =?utf-8?B?SVFlUmpUWUs4QXhRTlNGL1JnNmdZMW5Vc1B4V0E5eGZFZlJFTmU1K25ScUxM?=
- =?utf-8?B?OFAzZm4vd1pUY0NUVUdGUUxIT0ovQncvTDErSDZhSGJLT3hRY0VSQ2IrRmts?=
- =?utf-8?B?Wk5MYVNjWjhGQjl4czZuWU1FcVR4NFZiVXMxMDRMcW5OYUlXNnQ0dEhxTTkv?=
- =?utf-8?B?Tm5vYUVmTUVBeVdpelBoTmZKc0FuN0M5ZEgzTmgxUGtxMWZFV1phVjZtYWx0?=
- =?utf-8?B?SVhWTy8zRTVLMG1wVy9LcC94NFBhb09aWFJQRml0M1VUWkVvMWhUNjNNQ3VO?=
- =?utf-8?B?b1o1blRncHQrcjNsK2NHTHNMYVdqZ0VBbkI3ZXByWGJvUXJtU1kyODNqbG5N?=
- =?utf-8?B?NnI4Y2pLSlcyY3ZqNVk0VDFhaGpub0NENUR1S21VeC9vM0J1WmYrZEpuaU40?=
- =?utf-8?B?aEM3RFZQMTVKU01kUTFtNkprUVRnT3dkVGRsaktqTkpLOWlJeE1HNmNNaHN6?=
- =?utf-8?B?MklkL1JIK1RtQUYvam1rdXI3OUtVdTFxSUpIdFFHV1ZmaEhuL3Zrekdlejky?=
- =?utf-8?B?UUtuS0h1Wkw2Vmh5Q21aM05QNk52ZWloNWwzTWFNaHBQVTBJYTRCQmk2T1BS?=
- =?utf-8?B?R1IzSFVZdGtMdFFiYTA1NWJUdjRUcnRwdDBJYUYxdi9LNzl2Wi84bGw5RjIr?=
- =?utf-8?B?RnFkbGp1Y2o0SjlTV3ZwK3FrVGYrbG9GRWpEcUxGdXNnL3FOSHJ1MlkxUFli?=
- =?utf-8?B?Y2FJbzArMFQ2U0V5bUd5U0Zxbm52Q0syWG5pVm53TjB6R2tlbSttWGZzckQ4?=
- =?utf-8?B?K2pVbkhSZm5WdG5KVkVBU0l3N2lSeitoWHoxWklZM1VUdGFmV2o5SXR0Kyt2?=
- =?utf-8?B?SDNYeFpYTER1SUdqZjFUVVFMUE1RQkk2d3JsR3VaQ3BTSjg5UWYrZHIydXls?=
- =?utf-8?B?cGorOUplMDRWVWh0OW16cTNuRENSK3RTUUZKR0ZDRFJlZG5OTEdObXBmQUE5?=
- =?utf-8?B?cGJvenhaU0h0ZXR4VkM0T2JNTDBLM0NqQ0V4R1p5QkZrMEdiS3JsZEpiNXNT?=
- =?utf-8?B?VmZGUnNwMjk1Z1ZvNzNPMUFSSUhQeEZqTG9BL3FuRTRleFAzVnFRa1UxSHMx?=
- =?utf-8?B?aTdXVGVYVEY0b2R6dlBxYXNIdXJqV0taT3VBL1Z4Z0pVcUk1akIrWDhYbVFv?=
- =?utf-8?B?djE1cGVLMmxra3FVUHp6ejV2UlY0TTFnSnZTRTFtcFI0ZXJZdTBpdHA1NDdU?=
- =?utf-8?B?VWhrOWl2S3ZCL1FNMjVGMnV4Vnp2N1lpd2Q5b2J5MFZSaG9iWk1mc3B3a2F1?=
- =?utf-8?B?b0dSTURFNWlEU1NMRjBONXZvdFhGTlJlaEJKT2Z4aEh0eWY4dWpwWDdCK1B4?=
- =?utf-8?Q?kxrG9CFjV2E=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bmRYb05VS3VxSTZrSTJqNnR5Z2xub2FTQ2xYM2FHeVVQeWFQMVg2T3U0NmM5?=
- =?utf-8?B?OG5FUDN6MjdxRFhhMnpOMysxaC9VMFNhOG9IREtJbVI4cXdVS1E4dDAyL0VN?=
- =?utf-8?B?MVhwUG5BSUtFcStSSHRHYnlJK0Zpc0NNQmZzRDVINXVDVEVPMmR2UkEzbjFn?=
- =?utf-8?B?ZlVPdjl4bXJ0WGpKWldVSTUyeDdEakdVSjYvUmNncHpnRmZac3dabTNHcXZs?=
- =?utf-8?B?Z0dOSExmYUgxTDhBbTRKQjFoNm1QUDB3U0hJU0VPd21YVXNmSTZRR1ZPK0xr?=
- =?utf-8?B?TUpyNTVoSjBIWGxSRVRjNnpONjN3emZiYkYvUFJIeWhNbDFXWnRIUDBhbHRM?=
- =?utf-8?B?UEVhd1cwN2RvckF5TVliTGxZeTB5OHp0dFJsS29QanFLV3cyNHU4M3lMOXFt?=
- =?utf-8?B?dXpXS2RBZUJKRWVqYkFhWVRQbHl1RkFVOWVzTUpXa2Z6Njd1RE5ualZ0MFQw?=
- =?utf-8?B?d2ZnL2ZJd0FEQnN3RzhmK1p4SDROMUFMcjE4YlhLZXRnVm12Z0txblRTbTZC?=
- =?utf-8?B?c3VxdGttN0VyRXBLV3d6RDJWM2pKKzFtUjhOemZOWmNOK05QbE9uY3NEaUpQ?=
- =?utf-8?B?bWtDVTJocnlDZmJpVUNuKzh0bkF6aC9sYUtURjl4cHZEaWJsODU1aHZ4WHZW?=
- =?utf-8?B?UUl1TjU4Nys0cklRcmVZZVZLeW1nUFBrRExkd3JBbS9nTWNaRFc2eS9KdHpQ?=
- =?utf-8?B?N0JaSm5tYkpLODVrZ1FMMXdidG80djRBcG5iRjBoUjlIZHltbEN3ZkJvUVk2?=
- =?utf-8?B?U3NFdFJiejZpZFBMbnVwVFBRWmJrdGw2SnlzUVlFRnBINkpmaHlBb25pOVJF?=
- =?utf-8?B?aC9hNEJRVksyVU43YXdTaGhycklnUkdmZ3hMbGh6ZEJYRGg2dEZxVi9HQmJw?=
- =?utf-8?B?QUh2ei9MZzFoY21ZYlpHdXN4bzBUeHp0UUhMR3Q5Wk5LZEM2VHY5YksvOWhD?=
- =?utf-8?B?VFp6T3ZxSGRDQmFENVV4SkdhK09pazhrSXZNWkxLUHhOT0lSaCtzWUhFQ2R6?=
- =?utf-8?B?YmlweFlBN2M1T2xpYjVJT2Fjbys2UTErdVZ1d1pGaWJEcE90VFR6WDlicnNQ?=
- =?utf-8?B?QVFIc29IRnFoa3dvbWNuT1FvaUpJcEd5THRqSHVwWFlVWlJnODZmampoVWFZ?=
- =?utf-8?B?Wng2eDdlRXdxN3gzU1R6TVJPcDR2RVUvaExBZXdzclpoRDZPU2NrRGExRWRn?=
- =?utf-8?B?MEdBZi9QTlh2RkpnT2pwTEtUZzlYNmpoa1VmM0JiZ3FSVlN0SkI0cSs3MUN2?=
- =?utf-8?B?VGhORlgzZUx4U1NJOW1kSFpYSVRvLzNMZW4yZ3UzOVNYNkdsSjhHb1IvL0hB?=
- =?utf-8?B?Z3ZFZ2lXY2FlejRhN2FlZ05yb2JPUVdMMXlicUFWcDBHMnhrbzREUFRCWWNY?=
- =?utf-8?B?WWk0RUhiKzJ1SUFQRktFczMxQk10RWJzNVpjSW5JZ2dvODQ2a1ZXSTd3dStx?=
- =?utf-8?B?Z0FWOS9qM2R4NVkyc2pFTHlMV2hzLzlsZ2E1SUZxcVB4ZHh2N1d4dXJkL0pE?=
- =?utf-8?B?VFlpYlBTbDdNZE5HU0czQUlXRnJLTGNDQ044TjZXdnBjbEZWemU4SGJLcytp?=
- =?utf-8?B?K3hKSVQ5Zlh3VmpySVBCcmQ3WDVNRWRSUnh5S3NvTlAxOFgrZHdScEJ2NUFX?=
- =?utf-8?B?cGFxMkY2eE1vT2xGclF0L2ZndjJqdTkwZGY2SXNXV3VMcHZMdXhMNkZqSEJO?=
- =?utf-8?B?cEFWb2JKaFhtT1Z0L21uLzkrbzhMYVYzV3lOY3RZUWV4OEhtUzBuQkhKcUI1?=
- =?utf-8?B?RWloZXJrcEJWempITll3ZGowSFVRU3p0VlZXQVUweVludWxwcTV0ekpuWFRt?=
- =?utf-8?B?R3JtK0IwaUh5ZE9NMTBkTm0rQXNnVzQwZFlxQkJxN2VmcHVUOFUxS2Y5cTky?=
- =?utf-8?B?YngwZThJdWVORmlOek8vWGVpejNHNnZ6TnpPK2ZVOFJTVWVOSmtHZDQxREtI?=
- =?utf-8?B?K3FyTEpwQjhmdU9YaHNNclBNK0QzVVNhZDExTkpDbTZHUXN2MHZrQWgzZVRx?=
- =?utf-8?B?QUN5b1U5bUpmVHZuQjl1NE9FS2tvQkNHQjBiR2t0L2FYOWtUWnU3RkJGQkJ3?=
- =?utf-8?B?QkRWbVgrMWVPS2M1Y1RkL0p5WWNDVDQ5OU03cmJsaStQZjlCWTRYQWcyVEtO?=
- =?utf-8?B?b2Z3bk4wQWZJMWRSeC9PMXVvM0RLdXhIaXBLeGpUT29QRkE5UDFvS0YzbHBs?=
- =?utf-8?B?N3c9PQ==?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05fbc504-b44e-4a10-a5a2-08ddb5952496
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 16:10:32.6588
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KmFayoARmmGnDCrzzg1RODNAFrptoXNZY7m4xsoG3tWMDLYK3GOuQX0378C6oHde4Jnfc4qLhrQhzqnz7Sq54tUQH8FZKHRetCnBq92L+Yc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7493
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fdd635ce-5e8e-4123-8e8e-241a57b4d7fe@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Diederik,
+On Fri, Jun 27, 2025 at 05:56:05PM +0200, Hans de Goede wrote:
+> On 27-Jun-25 4:44 PM, Dmitry Torokhov wrote:
+> > On Fri, Jun 27, 2025 at 04:14:38PM +0200, Hans de Goede wrote:
+> >> On 27-Jun-25 4:06 PM, Mario Limonciello wrote:
+> >>> On 6/26/2025 11:56 PM, Dmitry Torokhov wrote:
 
-On 6/27/25 5:16 PM, Diederik de Haas wrote:
-> The #address-cells and #size-cells properties are not useful on the DSI
-> controller nodes; they are only useful/required on ports and panel(s).
-> So remove them from the controller node and add them where actually
-> needed on the various rk3399 based boards.
+...
+
+> >>> Hans, you have a lot of experience in the GNOME community.  Your thoughts?
+> >>
+> >> I guess it would be good to fix this in the kernel, sending
+> >> KEY_WAKEUP from gpio_key when the event is KEY_POWER and
+> >> we are going through the special wakeup path in gpio_keys.
+> >>
+> >> When this was discussed quite a while ago the ACPI button
+> >> driver simply did not send any event at all on wkaeup
+> >> by ACPI power-button. Know that it does send an event
+> >> it would be good to mimic this, at least when the gpio_key
+> >> devices where instantiated by soc_button_array.
+> >>
+> >> So maybe add a new field to struct gpio_keys_button
+> >> called wakeup_code and when that is not 0 use that
+> >> instead of the plain "code" member on wakeups ?
+> >>
+> >> That would keep the gpio_keys code generic while
+> >> allowing to mimic the ACPI button behavior.
+> >>
+> >> And then set wakeup_code to KEY_WAKEUP for
+> >> the power-button in soc_button_array.
+> >>
+> >> To me this sounds better then trying to fix all userspace
+> >> code which does something on KEY_POWER of which there
+> >> is quite a lot.
+> >>
+> >> The special GNOME power-button handling was always
+> >> a workaround because last time a kernel fix was
+> >> nacked. But now with the KEY_WAKEUP done by the ACPI
+> >> button code it looks like we do have a good way
+> >> to fix this in the kernel, so that would be better
+> >> IMHO.
+> >>
+> >> Dmitry, what do you think of adding a wakeup_code
+> >> field to struct gpio_keys_button and let the code
+> >> creating the gpio_keys_button decide if a different
+> >> code should be used on wakeup or not ?
+> > 
+> > And what is the plan on dealing with all other drivers that emit
+> > KEY_POWER?
 > 
-> Next to that, there were several (exact) redefinitions of nodes which
-> are already present in rk3399-base.dtsi to add a mipi_out endpoint.
-> Simplify that by referencing the mipi_out phandle and add the endpoint
-> to that, which allows the removeal of the ports redefinition.
+> There actually aren't that many that I'm aware of.
 > 
-> And fix 1 instance where the mipi_out referenced node was not sorted
-> correctly.
+> Note that this gpio_keys KEY_POWER evdev event generation
+> on resume issue goes way back until the last time we had
+> this conversation and it still has not really been fixed.
 > 
-> This fixes the following DTB validation warnings:
+> And I've not seen any bug-reports about the same problem
+> with any other drivers.
 > 
->    unnecessary #address-cells/#size-cells without "ranges",
->    "dma-ranges" or child "reg" property
+> > What about acpi button behavior when using S0ix?
 > 
+> AFAIK it is the same as with S3, at least it is not
+> causing any issues. I've never seen the ACPI button code
+> cause re-suspend immediately on wakeup by what for all
+> intends and purposes is a spurious KEY_POWER event.
+> 
+> Last time we discussed this I wasn't really happy with
+> the outcome of the discussion but I just went for it
+> because of Android's reliance on the event and we
+> lacked a better plan.
+> 
+> Now that we've a fix for this in the form of KEY_WAKEUP
+> it is time to properly fix this instead of doing userspace
+> kludges.
+> 
+> > What about
+> > holding power button for too long so that normal reporting "catches" the
+> > pressed state?
+> 
+> The key-down event is send as KEY_WAKEUP instead,
+> so userspace sees KEY_WAKEUP pressed not KEY_POWER.
+> 
+> > Kernel reports hardware events, interpreting them and applying certain
+> > policies is task for userspace.
+> 
+> And atm it is actually doing a shitty job of reporting
+> hwevents because there is no way for userspace to be able
+> to differentiate between:
+> 
+> 1. User pressed power-button to wakeup system
+> 2. User pressed power-button after resume to do
+>    power-button-action (e.g. suspend system)
+> 
+> Even though *the kernel* does *know* the difference.
+> 
+> So the suggested change actually makes the kernel
+> do its job of reporting hw-events better by making
+> the reporting more accurate.
+> 
+> ATM if I resume say a tablet with GNOME and then
+> change my mind and press the power button within
+> 3 seconds of resume to suspend it again the second
+> power-button press will outright be ignored
+> 
+> The current userspace workaround is racy like this,
+> again the whole workaround in GNOME is just an ugly
+> kludge which I did back then because we couldn't
+> agree on a better way to deal with this in the kernel /
+> because just suppressing sending KEY_POWER would break
+> Android.
+> 
+> The suggested use of KEY_WAKEUP is lightyears better
+> then doing ignore KEY_POWER events for xx seconds
+> after resume which is simply always going to be racy
+> and always was just an ugly hack / never was
+> a great solution.
 
-Too many unrelated changes in this commit, please split into multiple 
-commits.
+My take away from this discussion that in a sleep state the power button
+(or actually any wakeup source) should tell userspace "hey, we want to wake
+up". It doesn't tell "hey, we want to wake to power off".
+This sounds good to me as a user. Yes, if laptop is sleeping we need to wake
+it up to continue, the power off is just a next step of this flow.
+The  expected hot topic here is the longer presses of power button, but I think
+if we have a timer and tell after say 3 second that the K_WUP was up and K_PW
+is down is not a solution, it will be always flaky.
 
-I could identify:
+Just my 2c.
 
-- moving address-cells/size-cells from SoC.dtsi to board dts(i)s,
-- reordering properties to better match DT coding style 
-https://www.kernel.org/doc/html/latest/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
-- use phandle to directly access ports,
-- reorder DT node to better match DT coding style 
-https://www.kernel.org/doc/html/latest/devicetree/bindings/dts-coding-style.html#order-of-nodes
+-- 
+With Best Regards,
+Andy Shevchenko
 
-The change for RK3399 Puma Haikou Video Demo DTSO is fine for me.
 
-Cheers,
-Quentin
