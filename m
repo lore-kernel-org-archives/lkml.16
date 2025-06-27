@@ -1,74 +1,41 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772AB2165E9
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5E6CA6F;
+	Fri, 27 Jun 2025 19:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751053169; cv=none; b=QWYq56MRAkBRHjaRnMuAHzc9tnfYCi4AphNp+DvzDQ35J6LDWJPNDfyhxQxEFRid1jwg8Pgb2elZdxCIwrBYwrOafAyN4/XVIrbcbVDW9J1DnzI8You44uI8W0iIaxVwKWvJ4tIEFug+JTscz/cDrADNPdftdrj4ZqNbJu58oMQ=
+	t=1751053209; cv=none; b=gyrH++avsTiD1io13pfFob+7SMPb393L33QGuIdJOyRJUoUekT7w8M0cyybz6kxsbYSCdwaYBLN1l+Fhkm326Yqpzrw1a36JimGnncQ52VlQdteTFIPLAN6Q7NU21a/F4mTybPQ3ZMGLsajE/Rmdq1gb3KVGsGAt1y9CP3rqoLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751053169; c=relaxed/simple;
-	bh=fN0Kh2ojk27IcYub4BPpYkImoeGoFKi6u7WjndHiWkA=;
+	s=arc-20240116; t=1751053209; c=relaxed/simple;
+	bh=QBQ5PbKZcuWX1G/YfP/veVQZ4ZF54IS/+gFkJ/EWdDY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XegQJwB98OBqcs+WbY0X6AuaS/WdTtCN/cr5UEvUHrKdbgorjJcsDr0WgGqaLbhrU/xcJKrOBTKBlQcW3V226pc53oEj60g7PLNMlEb5qxxrlLQaYvkriHoY3ofYMEfbEuWq/DYyzvtyKeAzsl4M838Rg9xBt8nHjIXRWnWy4Kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ClbQgmRd; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=o9Axn4+2nve9rirFaJBDiuuDaMDCvsTWTRGvJZ1qabpcvEbGYr0xdjJamjnLynPFt95jbpNoiQDidnkYcz4Ns4ws3KJm6xzWPQwuvoJIiJ+HzSjzlDWXYeqj1L5a3YyfAB48MbxGTzMrhyWvUGFsxzk/+u1v0lR4QY3VmY0K9xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQ1rcBXH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ClbQgmRd"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-6118b000506so762918eaf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:39:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751053166; x=1751657966; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=suI3XDptlOt7dxiujjvASAv8boeYPAFXuAl8v0Kjmgk=;
-        b=ClbQgmRdxBmEgEXLif5gvb9zYhGpMr7rh2gVVmWCY5DlCow7eWtUty7FvDby/QWYgi
-         Di7Fj8kTIiNDa3EtwsZKeQSxLHWDDZlIWuUr/k5/z6QtyZK3vvXh3Z6J83ToIneKDwoL
-         2CET2ktqtjDh9/GFCHc8Xq4nqKlxwX6AjYBjHlUG8NQv1OT9CldWle9GPHLEA8A4XSEn
-         XR6O8Ql4+LAlz3oJkCg50s3XT2n7dWwIXD8Z9z4phojBcGgdNZkYjKCuO56hkrtNX1Vi
-         NpGL+U/+q4VAPuvH+eusloNmFjDxWXM2s+WrrYhYxBXynSlu9jLlvf7ObeolTMX70hJ5
-         oVkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751053166; x=1751657966;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=suI3XDptlOt7dxiujjvASAv8boeYPAFXuAl8v0Kjmgk=;
-        b=kAx4/OMpnad50WUSSLqedUXI05OO6fa9rCuAmdGEqeDnjfympsM7N73Jiq1ybT+gRr
-         PnsCgfYt4JR0DykPZ49T4B29ZgeMMZrTtluTyQ0r0h6/nhkv26Wfs0q+3amFTGadK7Ac
-         oiI9a+x3ErsGYDRH9tACrRi20lfDE9Ql86t2vjA6LF3bFk1Bw/8xuU67hBYeGDghTLKk
-         XvVxgLGTYxlJSTk8iykdoiTW3Fv20GeE6Rxf/sam7YulD8uBOotuH7ch2UokqSE6P8JG
-         g8rOYeQ+8FwazxQjvz2FT8WAr54E8Xo2Z5PhPDuIh8R/XLbU+Krv7zX+z4SBIF5JnJYi
-         i8kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyj9EK+z95K7hibCrWQERGa5YafE1qCym9pbu+MOLiQ/oKAa3FW2nfBp3uKLtJ+dEuPva83JcW04pvJBo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXzXweq59dwenkDu5GmfmqazWxg80yhGQ4iTtU7N5jdTFt7J88
-	x/JeEoshBe/vOLduej9VkozboJTgEfUp6phpxC45WU5UrJiSvf3wXNuuLX5E7zzA3Kw=
-X-Gm-Gg: ASbGncs8b35qsJ+b44iQ4qB7qY5O/TCJcR0IJR9rPo//Hsjabxh3BvTbHJvFPm/JISp
-	Kz5yHnLZayD837nUQCcLWBs+0K3kCQ+l1OViu82toJeNtMR6x3XU9LsgbtM1T0aXmiKDh1FCoHk
-	FKMp7BTjJhGfi7scJt1yt5laZZm+yKEH8Y2OcD6jqhYp85MCpFqNoBUUfMIeuoGZYx/CEMUr/3I
-	NPA6T1Ed19BWbYzLS1Qg1wih/In3k3ThqUT2s3xKG/3htw0Bj/3vK0/LyLhYfQmm3x5jHaWaf/C
-	UppZ/vaxbzG5lKV97QJMP08YG78gqxcJ6DE6NaRoVWoV/mKgDtMtWPA/sJhvMySQhunOjw==
-X-Google-Smtp-Source: AGHT+IF/5yUXUJ1U/LstDtUP6YpGrdRLcEbQGFsZNqCq52p8mdReUkf+RyutYfRViO/wlG1V6E9mTw==
-X-Received: by 2002:a4a:e90b:0:b0:611:80f3:eb44 with SMTP id 006d021491bc7-611b90eca36mr3218582eaf.3.1751053166574;
-        Fri, 27 Jun 2025 12:39:26 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:f3a4:7b11:3bf4:5d7b])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-611b848d77fsm311990eaf.14.2025.06.27.12.39.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 12:39:26 -0700 (PDT)
-Date: Fri, 27 Jun 2025 22:39:23 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Abdalla Al-Dalleh <abdalla.ahmad@sesame.org.jo>
-Cc: Dave Penkler <dpenkler@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Michael Rubin <matchstick@neverthere.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Paul =?iso-8859-1?Q?Retourn=E9?= <paul.retourne@orange.fr>,
-	"open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drivers: staging: gpib: minor fixes for some C macros.
-Message-ID: <4edd380e-6314-4fa0-8051-ac55144e061d@suswa.mountain>
-References: <20250627193613.552193-1-abdalla.ahmad@sesame.org.jo>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQ1rcBXH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C76E3C4CEE3;
+	Fri, 27 Jun 2025 19:40:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751053208;
+	bh=QBQ5PbKZcuWX1G/YfP/veVQZ4ZF54IS/+gFkJ/EWdDY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QQ1rcBXHg3aw9LDgs/KzYu8roJFYuFH+VxcwSO/Mk0opubVEpt9SIZa30d1gbhdau
+	 3Pt00B/ImQEwKkR6tyiHphSqGBlzwOaaemO1QoRnI4WadQ+BKRPiHY90HlQIumk/l2
+	 qZ0+EApyeTZcPBg19qzQlNs0b1bjbi4wxSDylK3vS5GUqlR8oCdKCej3pLvqpJRd6w
+	 2JPdL0tlzRu/WCv4UGHQmPaft6ht06WaD7HjToIk9HtiMGylnzwjWYs1WvqjohXNge
+	 UzuoWaVzpju/jUiRxOCH1LLWyv1soBzqG0fKo8Xaf/0hZ8mc+MFkbNDkc/b7yqnYMN
+	 E7no2SG8Ww+4Q==
+Date: Fri, 27 Jun 2025 14:40:08 -0500
+From: Rob Herring <robh@kernel.org>
+To: Sayali Lokhande <quic_sayalil@quicinc.com>
+Cc: andersson@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 2/2] dt-bindings: mmc: Add sdhci compatible for qcs8300
+Message-ID: <20250627194008.GA4055609-robh@kernel.org>
+References: <20250619070224.23428-1-quic_sayalil@quicinc.com>
+ <20250619070224.23428-3-quic_sayalil@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,38 +44,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250627193613.552193-1-abdalla.ahmad@sesame.org.jo>
+In-Reply-To: <20250619070224.23428-3-quic_sayalil@quicinc.com>
 
-On Fri, Jun 27, 2025 at 10:36:13PM +0300, Abdalla Al-Dalleh wrote:
-> Ran checkpatch.pl on drivers/staging/gpib/, found the following:
->  - gpio: gpib_bitbang.c: wrapped LINVAL macro w/ parenthesis.
->  - hp_82341: hp_82341.c: Used comments instead of "#if 0"
->  - tnt4882: tnt4882_gpib.c: Used comments instead of "#if 0"
+On Thu, Jun 19, 2025 at 12:32:24PM +0530, Sayali Lokhande wrote:
+> Document the sdhci compatible for Qualcomm qcs8300
+> to support function for emmc on the Soc.
 > 
-> Signed-off-by: Abdalla Al-Dalleh <abdalla.ahmad@sesame.org.jo>
+> Signed-off-by: Sayali Lokhande <quic_sayalil@quicinc.com>
 > ---
->  drivers/staging/gpib/gpio/gpib_bitbang.c    |  4 ++--
->  drivers/staging/gpib/hp_82341/hp_82341.c    | 14 +++++++-------
->  drivers/staging/gpib/tnt4882/tnt4882_gpib.c | 14 +++++++-------
->  3 files changed, 16 insertions(+), 16 deletions(-)
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+
+Bindings come before users.
+
 > 
-> diff --git a/drivers/staging/gpib/gpio/gpib_bitbang.c b/drivers/staging/gpib/gpio/gpib_bitbang.c
-> index 625fef24a0bf..45cf4571c58d 100644
-> --- a/drivers/staging/gpib/gpio/gpib_bitbang.c
-> +++ b/drivers/staging/gpib/gpio/gpib_bitbang.c
-> @@ -47,10 +47,10 @@
->  			dev_dbg(board->gpib_dev, frm, ## __VA_ARGS__); } \
->  	while (0)
->  
-> -#define LINVAL gpiod_get_value(DAV),		\
-> +#define LINVAL (gpiod_get_value(DAV),		\
->  		gpiod_get_value(NRFD),		\
->  		gpiod_get_value(NDAC),		\
-> -		gpiod_get_value(SRQ)
-> +		gpiod_get_value(SRQ))
-
-This breaks the build.
-
-regards,
-dan carpenter
-
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+> index 2b2cbce2458b..5ba2da8dbc7d 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+> @@ -45,6 +45,7 @@ properties:
+>                - qcom,qcm2290-sdhci
+>                - qcom,qcs404-sdhci
+>                - qcom,qcs615-sdhci
+> +              - qcom,qcs8300-sdhci
+>                - qcom,qdu1000-sdhci
+>                - qcom,sar2130p-sdhci
+>                - qcom,sc7180-sdhci
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
