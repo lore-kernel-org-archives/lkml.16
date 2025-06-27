@@ -1,145 +1,91 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29E11D86FF;
-	Fri, 27 Jun 2025 04:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C861DE2C9
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751000205; cv=none; b=dU1uc9H32lj/uipZjB9smR8w0Nkq/fjJNJsXvolkkbJDqA/02Ic7ljGnXiw6RFKRft79nR0bhrqCdUg15lGpLTknE9ssXPY4KXIs2A7jVOhJQtlH+d4XknwyhsE48iLWm/XpSP3guS7ZxRdm4CUrf4bhSOfr0JCHPSFQ+LHBJ+I=
+	t=1751000210; cv=none; b=ny58zaieQzYpAcmpzipEkl014AX9sm1k+XTFH1xH703UabYnDHxNeJfb8DsJ1oKgkzGLGD25oq4ACWTCY00024tJmVy8NG6b7Cs2yVRrfIYohXuwgBbfY3rWW40XZUGjTPQJNbygt5pzg9KeXK3Jm80TKdI6f36W1Pu8rphv/dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751000205; c=relaxed/simple;
-	bh=83afpayJE6U1T0aoAEzP5u1PnMIk9sJYc8MFC9piAA0=;
+	s=arc-20240116; t=1751000210; c=relaxed/simple;
+	bh=Zv6mkUr/Euphf/sOKT6hhTVY3yWD7uxMOkBVG4NiSjU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PAQoupKIhsAXw+RGSdezRaPjnGVNL8q+V/HkHlr5LY5va6eBk/oqyaLIcRe/g5XlZKTSuCV6ojbSUFzk8caJD4kjo3kwSXpyF+Dxh4UqFgheiJScB7PG/h97jT2nHR8S16AY4s1Ob8OwSgwBzcIRj2p+7X5oncRru9mu8GL2Was=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AizqWq9j; arc=none smtp.client-ip=209.85.217.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=R80mUZp1biZyosORBLYG9xpPsNlq8+Vdp3uQd2fOlNfrnUGZSSc+FBJ2EzwICO/aljCTsqWZVsD/1/z5baBFKxT1vcOToW6QUySKvGFD79p6WRA4PFY9Mmx0Z7wbCnTycUvXvhRbO+hGurVoqNKRLirX9t/hEBu4MYXmNMngPJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qKs9Izyi; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AizqWq9j"
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4e7fb730078so522610137.1;
-        Thu, 26 Jun 2025 21:56:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qKs9Izyi"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-553b9eb2299so2534515e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:56:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751000203; x=1751605003; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751000207; x=1751605007; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a2HGv8LGZ8DzKrZFUO2v+eei1l2wUynW3XD4JObL1Tw=;
-        b=AizqWq9jmfpAVQ3p9F0+bryXy5gdrRLRTBjknoYuEcW+5TAXm0nu5Dxc8awZAXyePE
-         4LxJCgk4r3GKkNcP1iV2fusXsg1De0dD2gJ2Z5uszU6d3Oe9jw6LmGUgbrwl+aghvRlw
-         Mn0VFcCjRWD/Xr6caegQc0YIJjFQoQJKMzk2vl+/VlOrJWZk0NTKZ6zhU5dOAk2SNjpK
-         VtiuLfdHkViJm0q+ciYlaYEfCW1KJxgJFbpOXu6/OPf4nqo/E57XQMz4QenaAibuUhn9
-         osZ7Poig5rVqoukUsv9EvyS9rQjyYfS4y4gaY1c7yGrw5/1PMGIGN4UWyBeyiU88jiKo
-         2vSg==
+        bh=Zv6mkUr/Euphf/sOKT6hhTVY3yWD7uxMOkBVG4NiSjU=;
+        b=qKs9IzyiNAOboJEot+SNUHhEzuhHsvA1jIrxFy+w9JpE4J8quvwyKmj0wVXO6vok3p
+         A40oWC1L+GLfOn2SEfMN7ogMIC2PZaMu8wIlDMSsZ/HYiPsjAc/LjQvLuT4qNltGGBEq
+         1yEF8hF4bt0M18zYjpuZn4RyeaHPROIVQE7K3vk1O0aEUh/MdKAMPy98980Uww5duXUr
+         K3+koPksfmFpYccegTg7+GK0+mOtUvIFDhC2YeFlPqoJCafJbFCA8n8urCJ5s9Xu/svM
+         EQizxr1YsSovG2+jTQiZ1D6jgyNHu60n7pPkit1lbgJX2EAm5mSfEuK4TSV6uB8lmnzM
+         aNRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751000203; x=1751605003;
+        d=1e100.net; s=20230601; t=1751000207; x=1751605007;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a2HGv8LGZ8DzKrZFUO2v+eei1l2wUynW3XD4JObL1Tw=;
-        b=jKDuGo/QMnPuI0ZObINmnWq5LnKwR4JVWRcehDxVjxZWAjGBSvgsq/+C7dG/rl8k2m
-         LEwBV3qGGAbXDwP2OTR6gpeZACj2/7/OCZbHHHQqGyiNuP5LtuARsP32RM9RVJ2pD1hz
-         PdjTUIc8V3HoFozoREzRbBVhLPdO3Fuqe4FO6mdlpgWJSbSCXhxNmZSHSaZMOdE5frSI
-         rvhzN/o+jh02pB/fczVXhimTVwIUI1TQ3uVfzR+ciQ+UAZUPw/8qPCBJmIvHNHKq0EWA
-         FN4DqV+6C73zOrHmt7OGKwKJD8D3bA3foCTSZLvKrmEZjPo6KCnzjemeaD2gatTzipir
-         Ks7g==
-X-Forwarded-Encrypted: i=1; AJvYcCUG8daHG8TPRwysqkCMShSwkAHlqF6c3RIb4E6G341gPsGQt/CMjhWzGIYH9DfoalLw3GxbbIQJUxgi@vger.kernel.org, AJvYcCVPPblp0g0PmdFB03nOqYaJ7UsYVERYTy1Q7e/GfsaVGT+x8QgAuVb3BrLgT9B95zUxgsZenuzj@vger.kernel.org, AJvYcCVi+znc5rg5zGZsBNJ4KGqy+yU1LyQfwyT2Ke5wTu4rygr3/wBd7YakMeMRJJGF1dsDOQv9pJFREyubkmhbaKr7B8s=@vger.kernel.org, AJvYcCX+aDL5K7ZC9rE32kn2aVSN48IHN+SMxtALDKDLQQJus2/LvX7ghrKV40br6qhN0IAJByQjUtek75EUs6G0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy22Q52/M1oiU0SEeCre4vY/jUz6SFVShuj0jWKvNO0ArQJ3mld
-	eJBlGvzmxAk7sh1HIYt1yLtmsPaFrFd1KQVAnzCjW3smY71w/xLz2f4dCs5cU8Ux3zvk/5VXXlV
-	cXDz1Xznpf7GL6vPZHhyFU0j4hkZ5uvU=
-X-Gm-Gg: ASbGnctEc/7me0VPEtAuSiGHoD96I5ZmoFj/PE/ZrX4aWBz0svbol4No2mLL8zRdpsF
-	11mFyoy6MBUR0Qm7MSgYu7fqoY5/LSjYowP/U5FpQv9PLGRx6aUNC1JaY2kTgq7evT90++gkC8h
-	jE4eHG6KIAjM89cm4eQSdRaR3RPCXk4/T1juFW1tHvfg==
-X-Google-Smtp-Source: AGHT+IE+07qHBqPDCXthKdPHB/7LUX6RLsYmY1o5ORrW1h7tii2FCLcpiV2074k1N7ZSn36YN5VNYrTVJdSCyPltG5g=
-X-Received: by 2002:a05:6102:442b:b0:4e7:b728:e34b with SMTP id
- ada2fe7eead31-4ee4f57ed09mr1865136137.3.1751000202837; Thu, 26 Jun 2025
- 21:56:42 -0700 (PDT)
+        bh=Zv6mkUr/Euphf/sOKT6hhTVY3yWD7uxMOkBVG4NiSjU=;
+        b=M9opZYCOvIL50GZDIOXkTnXdHtALbyySNRUFOAFFcjms2c8KWwQnFPQhrHCdF+gTtn
+         qQAEU1MUyCoCn459cvf7GCDQeTLzT241dYvk65LMXx2AufNBaM0wd25rAOjF85BaR+V9
+         HTf3qsOYmocSxkM8dFlhW8xwO7soytn4vItNIQw6Y8ILICmZ6ozqPfhaEgNQ+FlSZtxA
+         SJXQYjUdAFuXAErBWGHfGdDW1cIIWVlmcJGn5IKfbSytKFS9YimNFnYWNfGVStge/gSr
+         eeHv9uwhBNb+aF8MOKHngLv6Zw2QJ6EJoUmQGvowqjh107WbgK4sGxMP7+CzhkCYF+Bo
+         r7cg==
+X-Gm-Message-State: AOJu0Yw7wyxjXYI3Gx8a9HorrFD7mvlTS9kxYXYl+qV+4BWPWiM+V2nq
+	A13H4Hkr27jjVL9alkg92w0GszAYfMoYMjojjyNwkg+i5jTTBFdRjWA24M/zxcstxWbqq0SYHCk
+	2grarsiGgKl5+lSikTx89EK+PTMAfpprMII2eFGo=
+X-Gm-Gg: ASbGncs6IEQ2o6+i6p2GuUXPEvq9ZBf9BY4yfqtP+MOeSaHi+dgKkgg09DOijpOP5rn
+	oLDmsnuoos4rvz5kajKT2noHHROVaeWUJflpzPGWu+/iebUXcQ12IeHUT8qF8iMWH2zN3Tgw4Uc
+	1eQhy2yAzu6kwLAH8S3708muiTdNxcuTnECnRBr912hkPpilzipobVZze7IGTI1hPEfbsHfDwr
+X-Google-Smtp-Source: AGHT+IG1WjlZkyIbsccktZjNQrYIsbUfTY10eKJpeHSrD2SHzIU3QkMBbhEO25oUaZ630Tmra/pi6PFRBg57ie5hXyM=
+X-Received: by 2002:a05:6512:2353:b0:553:2159:8716 with SMTP id
+ 2adb3069b0e04-5550c35c0famr449258e87.26.1751000207239; Thu, 26 Jun 2025
+ 21:56:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627-exynosdrm-decon-v3-0-5b456f88cfea@disroot.org> <20250627-exynosdrm-decon-v3-3-5b456f88cfea@disroot.org>
-In-Reply-To: <20250627-exynosdrm-decon-v3-3-5b456f88cfea@disroot.org>
-From: Inki Dae <daeinki@gmail.com>
-Date: Fri, 27 Jun 2025 13:56:06 +0900
-X-Gm-Features: Ac12FXyCRtmqlVxLH-ZQ8PS-fwNE9eVFG2Sf48qY_m8XFevvCiJLCVczBK1_h0o
-Message-ID: <CAAQKjZNbEAiDC_2dUMKZHyPO4nS9TM7TrdjyNx0uLcjvh=PyZw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] drm/exynos: exynos7_drm_decon: add vblank check in
- IRQ handling
-To: Kaustabh Chakraborty <kauschluss@disroot.org>
-Cc: Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, 
-	Ajay Kumar <ajaykumar.rs@samsung.com>, Akshu Agrawal <akshua@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, stable@vger.kernel.org
+References: <20250625182951.587377878@linutronix.de> <20250625183758.187322876@linutronix.de>
+In-Reply-To: <20250625183758.187322876@linutronix.de>
+From: John Stultz <jstultz@google.com>
+Date: Thu, 26 Jun 2025 21:56:35 -0700
+X-Gm-Features: Ac12FXxThCCAUfCE9_7KpBD3nksP3SCcmnqrN5H6dj6J3m5deRuxRVa_3JHc-uY
+Message-ID: <CANDhNCqXP-S_ebrHeGMGgE+vqMaAjOzC7p2hzRxff8JrRrpkzg@mail.gmail.com>
+Subject: Re: [patch V3 07/11] timekeeping: Make do_adjtimex() reusable
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
+	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Miroslav Lichvar <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, 
+	David Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Kurt Kanzenbach <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, 
+	Antoine Tenart <atenart@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-2025=EB=85=84 6=EC=9B=94 27=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 4:21, K=
-austabh Chakraborty <kauschluss@disroot.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=
-=84=B1:
+On Wed, Jun 25, 2025 at 11:38=E2=80=AFAM Thomas Gleixner <tglx@linutronix.d=
+e> wrote:
 >
-> If there's support for another console device (such as a TTY serial),
-> the kernel occasionally panics during boot. The panic message and a
-> relevant snippet of the call stack is as follows:
+> Split out the actual functionality of adjtimex() and make do_adjtimex() a
+> wrapper which feeds the core timekeeper into it and handles the result
+> including audit at the call site.
 >
->   Unable to handle kernel NULL pointer dereference at virtual address 000=
-000000000000
->   Call trace:
->     drm_crtc_handle_vblank+0x10/0x30 (P)
->     decon_irq_handler+0x88/0xb4
->     [...]
+> This allows to reuse the actual functionality for auxiliary clocks.
 >
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-It seems that if the display is already enabled by the bootloader
-during the boot process, a vblank interrupt may be triggered before
-the initialization of drm_dev is complete. This could be the root
-cause of the issue.
-
-Applied.
-
-Thanks,
-Inki Dae
-
-> Otherwise, the panics don't happen. This indicates that it's some sort
-> of race condition.
->
-> Add a check to validate if the drm device can handle vblanks before
-> calling drm_crtc_handle_vblank() to avoid this.
->
-> Cc: stable@vger.kernel.org
-> Fixes: 96976c3d9aff ("drm/exynos: Add DECON driver")
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> ---
->  drivers/gpu/drm/exynos/exynos7_drm_decon.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/gpu/drm/exynos/exynos7_drm_decon.c b/drivers/gpu/drm=
-/exynos/exynos7_drm_decon.c
-> index 43bcbe2e2917df43d7c2d27a9771e892628dd682..c0c0f23169c993ac315fc8d7b=
-cbd09ea6ec9966a 100644
-> --- a/drivers/gpu/drm/exynos/exynos7_drm_decon.c
-> +++ b/drivers/gpu/drm/exynos/exynos7_drm_decon.c
-> @@ -636,6 +636,10 @@ static irqreturn_t decon_irq_handler(int irq, void *=
-dev_id)
->         if (!ctx->drm_dev)
->                 goto out;
->
-> +       /* check if crtc and vblank have been initialized properly */
-> +       if (!drm_dev_has_vblank(ctx->drm_dev))
-> +               goto out;
-> +
->         if (!ctx->i80_if) {
->                 drm_crtc_handle_vblank(&ctx->crtc->base);
->
->
-> --
-> 2.49.0
->
->
+Acked-by: John Stultz <jstultz@google.com>
