@@ -1,198 +1,204 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C3217A306
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEA32EA72B
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751043681; cv=none; b=gLEPiQ2Mj+w2J9Q1ehuW2X/IBW1wkRScYh1dqegeoyrfFXDEjwP1PCMV2GX7Xe6SmABMdQUt017LK9CcO37/aLhBPzGc53GQIgRfH6VxSRs1xCZwNzhNYR/CNoTmQWqpnk1KyWC9cmgA86YtRe50uSh5bBxQyXAfVjwICOf5TwI=
+	t=1751043685; cv=none; b=iH75DI7v+6lbJZz1dzFRPxIb2IL7Apw7c/J3XJkLYYVUNhLmo595QaLG9JLWbJM5BLDhgB/AZQdgmKRBnbadwStlBqwF12UpAgdcrM1BpGDIW82ZWxSA0BldYjrk1mqZ+UyNutIAffTJKC16sZrz01lN+SdvAAWmB8W6ORQY0Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751043681; c=relaxed/simple;
-	bh=6Po6Tys/cawtmKgVnCBdOs2Jv9ue2yUoscY2Y82XtxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=foakT+Edz+YDvfWRmMmr6iTY+xXuCZT7jVVcz9Te2QVrXNirs25Nma3DBuXNDJjURLLHCG9XsNz3LebYRQFS54kckOObytWR3sOX0eWzXo6fOWn8xTfYUmAc83t4agGbDh8keNcMMrZgWpgLuwBN1gMvihpSZVPnrZUXqTu1IYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NCm1xx2h; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751043685; c=relaxed/simple;
+	bh=lHbO0UGT1K01ZQwT9cq1DDJpCnVz2zT/PIhuDzJDkf8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HC0Ixz1RqzYmGoaBMpclpwmyH8LnBlva7huduqdCKP49lYx3bUMigLM+2eRCA0zazhuB46mv2bZTVOC1t4zwhnB+Ibu8EIS5AH5/XH+ny34lzro3DMWqTC0OWtULXeQEvu+zZFVaerYscmkxeyuWCrfcPuWzhIYS8oZvbBO8RdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CukjMR3S; arc=none smtp.client-ip=209.85.128.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NCm1xx2h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751043679; x=1782579679;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=6Po6Tys/cawtmKgVnCBdOs2Jv9ue2yUoscY2Y82XtxE=;
-  b=NCm1xx2hhPIjq3eXPWpA5IfsKHOX5W99FQsj+oTx5GAMi9/qFxFUUSkh
-   QlokDsyUTCEx0KpLw/mh8977setrC+YV9GdFquQxTqHvELgVFZ9guNd9x
-   ImxXCr8ko8OEqTHHLmGtqNYgpES36WSGy8zxLN6kTSw7CQHQY0AyRpz7F
-   T6aOhk8ZJ8/ZNJFTbshYi+aFmNNXgOdcOELv7gmUvGgxY66TkKcnJgGRN
-   sSIK5Vk7cu++K5kr0sjgdZkIxa6FHna4xw677QlI/stzWVzQHCQQx2cYh
-   ePfmJM//kyKSuIdwi+HbZo/ufJhZbabewivLcHbQ0vu5TVeZrFhDDSv41
-   w==;
-X-CSE-ConnectionGUID: o8YkIexKS/2b+zsDqJLn9g==
-X-CSE-MsgGUID: GbyRg3B1TWeY2XAgQ9cCLw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="53224163"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="53224163"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 10:01:19 -0700
-X-CSE-ConnectionGUID: MSgg9RLpTeifEd1dm4llrw==
-X-CSE-MsgGUID: VEGh0DTfSMyyvNK3bicy1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="153566144"
-Received: from igk-lkp-server01.igk.intel.com (HELO e588e990b675) ([10.91.175.65])
-  by fmviesa010.fm.intel.com with ESMTP; 27 Jun 2025 10:01:17 -0700
-Received: from kbuild by e588e990b675 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uVCRv-0000h9-0E;
-	Fri, 27 Jun 2025 17:01:15 +0000
-Date: Fri, 27 Jun 2025 19:00:41 +0200
-From: kernel test robot <lkp@intel.com>
-To: Nicolas Pitre <npitre@baylibre.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: security/keys/proc.c:211:19: warning: '%llu' directive writing
- between 1 and 18 bytes into a region of size 16
-Message-ID: <202506271922.h8h9N24f-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CukjMR3S"
+Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-453643020bdso21604095e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:01:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751043682; x=1751648482; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2YpSie4wuvd5wd6ByN3oROE5g8OLzPqoz+ipBhoImJk=;
+        b=CukjMR3SQS1jrKnXBHHbRB/qeYMYnEjJuZPu3Go6j6K5473CN8aZ1kVgfQow1wPUYh
+         pwc2JN00wifpK7t+WEEiPufRuoiFQbYwGQkeGj+fhtO/rFwxcgnc+4OBJRTnFiXyXwfA
+         OC+gVjTkkLk+acBmlFKgAFb1bfL/nMdJGN/bGHPlR3/qShNOs4ntEjpAVo46C7KGxzy8
+         E7BB3HP0l0RKr/EjOI0+rBbIeejYch1ia2YUcgbMWUWUzLJTzj05ZisX3nXnc6mx2QtB
+         15lmxJbhhYCMBWM2gImhWE/HIkgTMs50+JcVeSNHvdKYNdb6WL5uFZAg4uzj8JK+oYfr
+         fItw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751043682; x=1751648482;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2YpSie4wuvd5wd6ByN3oROE5g8OLzPqoz+ipBhoImJk=;
+        b=PhFrrat2GpsXcSOSrVFh9elntI397DFAdk7NOwEVrhvswwCFFKhwqFRx3lfaBofUU0
+         AXOzEud2ZOyuUYmsFbNdaHThuSQcvBeEcsh+Walo747GD50SB7CU1GIgAmQg3uiYPUAm
+         O7QHKxRQ0vLfqH/heKpeuxZhke+NIXPC2j7/UmTEVftd4uzMeuzqIWJezpoNbhh+qdGY
+         3cVJpRptgh1NErtjMqPoF1vzbnp0k2hjl2znYA16N231ZuJ+U69L4KmEJzcVhpzbSNv6
+         rUIzloO0ac9xgghAoLdOtCdF7EJhPgiO7YPGHhmlgMV7BlxOZ0t4Ky2HBQMVU9TohQcY
+         Wr4A==
+X-Forwarded-Encrypted: i=1; AJvYcCWckCgzujOGyCYt0RDedJOHets5tSijZ3ilTZlLDjDEe/e+61Y8AGMUYmuV0f244dY/RxLyurWtkj2D4gY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzmc9zmz/patvJf1018cWupzDJykDc5j040PYtHzpPd86+ahpL+
+	NyUH824DOcLbIER+EJKaVZ05IwtZYHtmZHLpY9p2JuFKbnHYvfxmFNi0yzzjjoHLq0s=
+X-Gm-Gg: ASbGncvxp68XQsF7WRg5gUVwOKxilii5ugcvyNJmRjgMDNZBks96zXwcBW/ylypEjqz
+	DY6Bl7cVE1Ch8rK7adWkZQiWC0lpTpDHVNPn9N251w7N2x9xVF12V9oIG4dZSJAt10f3aY69lLA
+	DO+gafD92b8Dju6ZB/IWHVAoleeSNkyh8vJj8+vnJxyCfPyDkIIAk3bZ2W0oghGDiVVX8P3pPQG
+	uGzEUEcyTAPGvztPAxjDFGveG2DV+QPfHy1vs4M0NqAfqJBRUFOZntFyv5YYDV2r1Zkqn9j/l6a
+	k6uhiNqzRNb9mf6oG2vNDEnRzlrO+27CFdq370zs6TqQHMPm+YTRyK1i1cJq97pTtkidWY8NmEs
+	TsGXcTY0qwsiKrAAqlt9U1VF/+V0zDUY/pSUQig==
+X-Google-Smtp-Source: AGHT+IGJE/lVWrUbPn9cVPurqMto/Wq/31An/pK5gHn7R5YbeaOLrBXTzFVGUl2kOUkfpHa5GTpd2A==
+X-Received: by 2002:a05:600c:35c2:b0:441:ac58:ead5 with SMTP id 5b1f17b1804b1-4538ee96560mr49860365e9.31.1751043681643;
+        Fri, 27 Jun 2025 10:01:21 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f923sm3090516f8f.89.2025.06.27.10.01.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 10:01:21 -0700 (PDT)
+Message-ID: <0bcabd65-e9d1-40dc-ad84-87ed53b44755@linaro.org>
+Date: Fri, 27 Jun 2025 18:01:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/5] media: iris: register and configure non-pixel node
+ as platform device
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
+ <20250627-video_cb-v3-2-51e18c0ffbce@quicinc.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Content-Language: en-US
+In-Reply-To: <20250627-video_cb-v3-2-51e18c0ffbce@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   e540341508ce2f6e27810106253d5de194b66750
-commit: 00a31dd3acea0f88f947fc71e268ebb34b59f218 asm-generic/div64: optimize/simplify __div64_const32()
-date:   8 months ago
-config: powerpc-randconfig-2006-20250626 (https://download.01.org/0day-ci/archive/20250627/202506271922.h8h9N24f-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250627/202506271922.h8h9N24f-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506271922.h8h9N24f-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   security/keys/proc.c: In function 'proc_keys_show':
-   security/keys/proc.c:217:24: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
-       sprintf(xbuf, "%lluw", div_u64(timo, 60 * 60 * 24 * 7));
-                           ^
-   security/keys/proc.c:217:4: note: 'sprintf' output between 3 and 17 bytes into a destination of size 16
-       sprintf(xbuf, "%lluw", div_u64(timo, 60 * 60 * 24 * 7));
-       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   security/keys/proc.c:215:24: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
-       sprintf(xbuf, "%llud", div_u64(timo, 60 * 60 * 24));
-                           ^
-   security/keys/proc.c:215:4: note: 'sprintf' output between 3 and 17 bytes into a destination of size 16
-       sprintf(xbuf, "%llud", div_u64(timo, 60 * 60 * 24));
-       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   security/keys/proc.c:213:23: warning: 'h' directive writing 1 byte into a region of size between 0 and 15 [-Wformat-overflow=]
-       sprintf(xbuf, "%lluh", div_u64(timo, 60 * 60));
-                          ^
-   security/keys/proc.c:213:4: note: 'sprintf' output between 3 and 18 bytes into a destination of size 16
-       sprintf(xbuf, "%lluh", div_u64(timo, 60 * 60));
-       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> security/keys/proc.c:211:19: warning: '%llu' directive writing between 1 and 18 bytes into a region of size 16 [-Wformat-overflow=]
-       sprintf(xbuf, "%llum", div_u64(timo, 60));
-                      ^~~~
-   security/keys/proc.c:211:18: note: directive argument in the range [0, 576460752303423487]
-       sprintf(xbuf, "%llum", div_u64(timo, 60));
-                     ^~~~~~~
-   security/keys/proc.c:211:4: note: 'sprintf' output between 3 and 20 bytes into a destination of size 16
-       sprintf(xbuf, "%llum", div_u64(timo, 60));
-       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for GET_FREE_REGION
-   Depends on [n]: SPARSEMEM [=n]
-   Selected by [y]:
-   - RESOURCE_KUNIT_TEST [=y] && RUNTIME_TESTING_MENU [=y] && KUNIT [=y]
-
-
-vim +211 security/keys/proc.c
-
-^1da177e4c3f41 Linus Torvalds 2005-04-16  152  
-^1da177e4c3f41 Linus Torvalds 2005-04-16  153  static int proc_keys_show(struct seq_file *m, void *v)
-^1da177e4c3f41 Linus Torvalds 2005-04-16  154  {
-^1da177e4c3f41 Linus Torvalds 2005-04-16  155  	struct rb_node *_p = v;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  156  	struct key *key = rb_entry(_p, struct key, serial_node);
-ab5c69f01313c8 Eric Biggers   2017-09-27  157  	unsigned long flags;
-927942aabbbe50 David Howells  2010-06-11  158  	key_ref_t key_ref, skey_ref;
-074d58989569b3 Baolin Wang    2017-11-15  159  	time64_t now, expiry;
-03dab869b7b239 David Howells  2016-10-26  160  	char xbuf[16];
-363b02dab09b32 David Howells  2017-10-04  161  	short state;
-074d58989569b3 Baolin Wang    2017-11-15  162  	u64 timo;
-06ec7be557a125 Michael LeMay  2006-06-26  163  	int rc;
-06ec7be557a125 Michael LeMay  2006-06-26  164  
-4bdf0bc3003141 David Howells  2013-09-24  165  	struct keyring_search_context ctx = {
-ede0fa98a900e6 Eric Biggers   2019-02-22  166  		.index_key		= key->index_key,
-4aa68e07d84556 Eric Biggers   2017-09-18  167  		.cred			= m->file->f_cred,
-462919591a1791 David Howells  2014-09-16  168  		.match_data.cmp		= lookup_user_key_possessed,
-462919591a1791 David Howells  2014-09-16  169  		.match_data.raw_data	= key,
-462919591a1791 David Howells  2014-09-16  170  		.match_data.lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
-dcf49dbc8077e2 David Howells  2019-06-26  171  		.flags			= (KEYRING_SEARCH_NO_STATE_CHECK |
-dcf49dbc8077e2 David Howells  2019-06-26  172  					   KEYRING_SEARCH_RECURSE),
-4bdf0bc3003141 David Howells  2013-09-24  173  	};
-4bdf0bc3003141 David Howells  2013-09-24  174  
-028db3e290f15a Linus Torvalds 2019-07-10  175  	key_ref = make_key_ref(key, 0);
-927942aabbbe50 David Howells  2010-06-11  176  
-927942aabbbe50 David Howells  2010-06-11  177  	/* determine if the key is possessed by this process (a test we can
-927942aabbbe50 David Howells  2010-06-11  178  	 * skip if the key does not indicate the possessor can view it
-927942aabbbe50 David Howells  2010-06-11  179  	 */
-028db3e290f15a Linus Torvalds 2019-07-10  180  	if (key->perm & KEY_POS_VIEW) {
-028db3e290f15a Linus Torvalds 2019-07-10  181  		rcu_read_lock();
-e59428f721ee09 David Howells  2019-06-19  182  		skey_ref = search_cred_keyrings_rcu(&ctx);
-028db3e290f15a Linus Torvalds 2019-07-10  183  		rcu_read_unlock();
-927942aabbbe50 David Howells  2010-06-11  184  		if (!IS_ERR(skey_ref)) {
-927942aabbbe50 David Howells  2010-06-11  185  			key_ref_put(skey_ref);
-927942aabbbe50 David Howells  2010-06-11  186  			key_ref = make_key_ref(key, 1);
-927942aabbbe50 David Howells  2010-06-11  187  		}
-927942aabbbe50 David Howells  2010-06-11  188  	}
-927942aabbbe50 David Howells  2010-06-11  189  
-4aa68e07d84556 Eric Biggers   2017-09-18  190  	/* check whether the current task is allowed to view the key */
-f5895943d91b41 David Howells  2014-03-14  191  	rc = key_task_permission(key_ref, ctx.cred, KEY_NEED_VIEW);
-06ec7be557a125 Michael LeMay  2006-06-26  192  	if (rc < 0)
-028db3e290f15a Linus Torvalds 2019-07-10  193  		return 0;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  194  
-074d58989569b3 Baolin Wang    2017-11-15  195  	now = ktime_get_real_seconds();
-^1da177e4c3f41 Linus Torvalds 2005-04-16  196  
-028db3e290f15a Linus Torvalds 2019-07-10  197  	rcu_read_lock();
-028db3e290f15a Linus Torvalds 2019-07-10  198  
-^1da177e4c3f41 Linus Torvalds 2005-04-16  199  	/* come up with a suitable timeout value */
-ab5c69f01313c8 Eric Biggers   2017-09-27  200  	expiry = READ_ONCE(key->expiry);
-39299bdd254668 David Howells  2023-12-09  201  	if (expiry == TIME64_MAX) {
-^1da177e4c3f41 Linus Torvalds 2005-04-16  202  		memcpy(xbuf, "perm", 5);
-074d58989569b3 Baolin Wang    2017-11-15  203  	} else if (now >= expiry) {
-^1da177e4c3f41 Linus Torvalds 2005-04-16  204  		memcpy(xbuf, "expd", 5);
-7b1b9164598286 David Howells  2009-09-02  205  	} else {
-074d58989569b3 Baolin Wang    2017-11-15  206  		timo = expiry - now;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  207  
-^1da177e4c3f41 Linus Torvalds 2005-04-16  208  		if (timo < 60)
-074d58989569b3 Baolin Wang    2017-11-15  209  			sprintf(xbuf, "%llus", timo);
-^1da177e4c3f41 Linus Torvalds 2005-04-16  210  		else if (timo < 60*60)
-074d58989569b3 Baolin Wang    2017-11-15 @211  			sprintf(xbuf, "%llum", div_u64(timo, 60));
-^1da177e4c3f41 Linus Torvalds 2005-04-16  212  		else if (timo < 60*60*24)
-074d58989569b3 Baolin Wang    2017-11-15  213  			sprintf(xbuf, "%lluh", div_u64(timo, 60 * 60));
-^1da177e4c3f41 Linus Torvalds 2005-04-16  214  		else if (timo < 60*60*24*7)
-074d58989569b3 Baolin Wang    2017-11-15 @215  			sprintf(xbuf, "%llud", div_u64(timo, 60 * 60 * 24));
-^1da177e4c3f41 Linus Torvalds 2005-04-16  216  		else
-074d58989569b3 Baolin Wang    2017-11-15  217  			sprintf(xbuf, "%lluw", div_u64(timo, 60 * 60 * 24 * 7));
-^1da177e4c3f41 Linus Torvalds 2005-04-16  218  	}
-^1da177e4c3f41 Linus Torvalds 2005-04-16  219  
-363b02dab09b32 David Howells  2017-10-04  220  	state = key_read_state(key);
-363b02dab09b32 David Howells  2017-10-04  221  
-
-:::::: The code at line 211 was first introduced by commit
-:::::: 074d58989569b39f04294c90ef36dd82b8c2cc1a security: keys: Replace time_t/timespec with time64_t
-
-:::::: TO: Baolin Wang <baolin.wang@linaro.org>
-:::::: CC: David Howells <dhowells@redhat.com>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On 27/06/2025 16:48, Vikash Garodia wrote:
+> Register "non_pixel" child node as a platform device, and configure its
+> DMA via of_dma_configure(). This ensures proper IOMMU attachment and DMA
+> setup for the "non_pixel" device.
+> All non pixel memory, i.e bitstream buffers, HFI queues and internal
+> buffers related to bitstream processing, would be managed by non_pixel
+> device.
+> 
+> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> ---
+>   drivers/media/platform/qcom/iris/iris_core.h  |  2 ++
+>   drivers/media/platform/qcom/iris/iris_probe.c | 50 ++++++++++++++++++++++++++-
+>   2 files changed, 51 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_core.h b/drivers/media/platform/qcom/iris/iris_core.h
+> index aeeac32a1f6d9a9fa7027e8e3db4d95f021c552e..757efd16870876bd2b1d5b1e4103b2d2326b5f49 100644
+> --- a/drivers/media/platform/qcom/iris/iris_core.h
+> +++ b/drivers/media/platform/qcom/iris/iris_core.h
+> @@ -65,6 +65,7 @@ struct icc_info {
+>    * @sys_error_handler: a delayed work for handling system fatal error
+>    * @instances: a list_head of all instances
+>    * @inst_fw_caps: an array of supported instance capabilities
+> + * @np_dev: device to represent non pixel node
+>    */
+>   
+>   struct iris_core {
+> @@ -105,6 +106,7 @@ struct iris_core {
+>   	struct delayed_work			sys_error_handler;
+>   	struct list_head			instances;
+>   	struct platform_inst_fw_cap		inst_fw_caps[INST_FW_CAP_MAX];
+> +	struct device				*np_dev;
+>   };
+>   
+>   int iris_core_init(struct iris_core *core);
+> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
+> index 9a7ce142f7007ffcda0bd422c1983f2374bb0d92..8fe87e30bd40f3c67ec41305c7d73520fbc9db7b 100644
+> --- a/drivers/media/platform/qcom/iris/iris_probe.c
+> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
+> @@ -6,6 +6,8 @@
+>   #include <linux/clk.h>
+>   #include <linux/interconnect.h>
+>   #include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>   #include <linux/pm_domain.h>
+>   #include <linux/pm_opp.h>
+>   #include <linux/pm_runtime.h>
+> @@ -127,6 +129,46 @@ static int iris_init_resets(struct iris_core *core)
+>   				     core->iris_platform_data->controller_rst_tbl_size);
+>   }
+>   
+> +static int iris_init_non_pixel_node(struct iris_core *core)
+> +{
+> +	struct platform_device_info info;
+> +	struct platform_device *pdev;
+> +	struct device_node *np_node;
+> +	int ret;
+> +
+> +	np_node = of_get_child_by_name(core->dev->of_node, "non_pixel");
+> +	if (!np_node)
+> +		return 0;
+> +
+> +	memset(&info, 0, sizeof(info));
+> +	info.fwnode = &np_node->fwnode;
+> +	info.parent = core->dev;
+> +	info.name = np_node->name;
+> +	info.dma_mask = DMA_BIT_MASK(32);
+> +
+> +	pdev = platform_device_register_full(&info);
+> +	if (IS_ERR(pdev)) {
+> +		of_node_put(np_node);
+> +		return PTR_ERR(pdev);
+> +	}
+> +	pdev->dev.of_node = np_node;
+> +
+> +	ret = of_dma_configure(&pdev->dev, np_node, true);
+> +	if (ret)
+> +		goto err_unregister;
+> +
+> +	core->np_dev = &pdev->dev;
+> +
+> +	of_node_put(np_node);
+> +
+> +	return 0;
+> +
+> +err_unregister:
+> +	platform_device_unregister(pdev);
+> +	of_node_put(np_node);
+> +	return ret;
+> +}
+> +
+>   static int iris_init_resources(struct iris_core *core)
+>   {
+>   	int ret;
+> @@ -143,7 +185,11 @@ static int iris_init_resources(struct iris_core *core)
+>   	if (ret)
+>   		return ret;
+>   
+> -	return iris_init_resets(core);
+> +	ret = iris_init_resets(core);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return iris_init_non_pixel_node(core);
+>   }
+>   
+>   static int iris_register_video_device(struct iris_core *core)
+> @@ -188,6 +234,8 @@ static void iris_remove(struct platform_device *pdev)
+>   
+>   	iris_core_deinit(core);
+>   
+> +	platform_device_unregister(to_platform_device(core->np_dev));
+> +
+>   	video_unregister_device(core->vdev_dec);
+>   
+>   	v4l2_device_unregister(&core->v4l2_dev);
+> 
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
