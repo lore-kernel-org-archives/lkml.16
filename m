@@ -1,307 +1,246 @@
-Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9707B19A288;
-	Fri, 27 Jun 2025 16:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5DF2E1C7A
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751040556; cv=none; b=ZezYd6EY5sUqlQ5t1kNs06kIWNv/ZeRoFoMjtpw+rPQE6bzSxHuAz9axtBOCxIcg0wJn/ypvvPmebdErcW2uN7sgfkAj8ndpVJX/NnN54ZtLCitVWDYExpDVO3p2LoEW5hLbBf+vk3y7tA69U8a8au2XSacMg+hBsil8M69mtyw=
+	t=1751040602; cv=none; b=ZPJHC4pXcMYQjMzxxGXFQNjRKfSWeyHiHwbn6Z3bqQdT0qSUlMqhxW6f85t/la7PyyVzKB71W50KgBbHNQBoxtNqeF+7t06tqsPYmFWtbhBKhK0f9xrNEzX1dPGdnuCQWfAoT3++VlhgpHb5uRbaX/ULm1qGwKSC+tnhbJnj2XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751040556; c=relaxed/simple;
-	bh=uV6O5HmIwzaalO/a2iRBmdUQS9q71BBclJdamW0QU60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P1NVvTIyz9RgucrXi1v+8R4+N6SXggMUEKlDhSK5eQXk6YqjvTT9mL0q6FiUtK5rzmqhJbnZ6AZudllBamTFqa3Il58PLXDIC7YIocVwAnkUdYl8/WVBW+kGna/d//NR2VE7YXK3+tQ6kbyJWL7Yz43hQiA3CbKCtA1agHut5aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
-Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
-	by leonov.paulk.fr (Postfix) with ESMTPS id B78451F00056;
-	Fri, 27 Jun 2025 16:08:55 +0000 (UTC)
-Received: by laika.paulk.fr (Postfix, from userid 65534)
-	id 424B7AC87BE; Fri, 27 Jun 2025 16:08:54 +0000 (UTC)
-X-Spam-Level: 
-Received: from collins (unknown [192.168.1.1])
-	by laika.paulk.fr (Postfix) with ESMTPSA id 11857AC87B0;
-	Fri, 27 Jun 2025 16:08:48 +0000 (UTC)
-Date: Fri, 27 Jun 2025 18:08:46 +0200
-From: Paul Kocialkowski <paulk@sys-base.io>
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Corentin Labbe <clabbe.montjoie@gmail.com>,
-	Yixun Lan <dlan@gentoo.org>, Maxime Ripard <mripard@kernel.org>,
-	netdev@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH net-next] net: stmmac: sun8i: drop unneeded default
- syscon value
-Message-ID: <aF7CDjRCYEa0CpqH@collins>
-References: <20250423095222.1517507-1-andre.przywara@arm.com>
+	s=arc-20240116; t=1751040602; c=relaxed/simple;
+	bh=IH2+O5cU6bMl3dQgfqyetZYxS7jXnkdNLnvW+qxsQ88=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WTHkvq7uXjr0bZWdANqDE39zKlkOSiyzoKnTuwF3hzELjXIS/xxGK1UQSezJInHOb9BhAUxPMHGVLMXFvoBcsVMZAVRvp3klySPezvkCR/X2/nP8s6SG79MQZNeNJRtznFLUe2QDle49L1aWM4hK/L8RsymEsobuJvvm1k7orhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=H4dCPw8k; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="H4dCPw8k"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7494999de5cso1860997b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:10:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1751040600; x=1751645400; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=6tajG5R3MCsrP/w0wwPMIBf3LF9dc2Wm7Uf1cjFJKdc=;
+        b=H4dCPw8kainQkV3U88q1ykgWUxcyaUhGqNx70wITre5B9Uqg0J5ACangeMO0rF8x6v
+         I86lecQmRle0IXAfhBiPjb3MOiHCqYYTthU4m0LlPGixC1QoSv64F+UuBk7yeSTdgtsy
+         2VaZFR3XhvRA9jigy235+wgd3/xBOuEZOA5KE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751040600; x=1751645400;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6tajG5R3MCsrP/w0wwPMIBf3LF9dc2Wm7Uf1cjFJKdc=;
+        b=i58vjhW/e69T63kiVUPTdLahbUMlPPmljsvtk+RzJw74laVAEa6s852Jh8ikJIqLi7
+         Wcn2BT69pUdFFy0aySw1f8rOtAqh+RI9E0K1qGqbm8ufHnTUK/Rk/PSSSCMV48jzVjyn
+         f1aMA9c7EZl2+RMKtgTb3zyvl3azTSXdNvZWlHM1F1c4KXhSCvyUJOCNG787MNgY6Eq6
+         p2y2j8qhZgQqjqTvROdZM+wcmkt5NgWgL4vBDmPRAr8/vopHL+whYBvludk7BhmITWG7
+         Jvnxkl/xoxXIGimyvi483hB/7Hg+o3LAzopwpIiBUoZMIwtKiFnUuy1JnW7LCENzs0Ru
+         EiFw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkv00HtI0hWvppT0KvIXL56lmegGm1ydiWCTEKGz+3GKxYlLj+2kcir+9mEd8gwDrH6Al101q5n2ugMNo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5I+VbRgTNDlpDWLlSPHQGrFU2GYpmPhzMXZJZWWy5YgpGnkmn
+	tLWou5AMpw6M6CKnyvOchKXKtp2GmEayGPM1X/ndvwXRqQ3zRmnNAhzMtoMYa2HSTQ==
+X-Gm-Gg: ASbGncs4bEiE7mZCTgtSEhku1pNFJNAuIAOHLo17FasdF6FtqynAUeqNVwvMOPXWtn6
+	lBQgVzRMEEeYktgN3362GVi9hgi2frm6oUoKaXJfskeg2hb7nWbjaj45h4VtoTtpOvhoTbt9Kga
+	v9YVUvy0dq2Cv+XVmQ9zkXA2pNX6o5CsaANbEfRXc7YM72VrvIU9X20NOa3WbFhtI3UbHFqr5d8
+	8z3BW1HId2iipiWCTehYQyn8GkHFDAsljKuweKEQU2htrPn9v7FH9sbKp5boZO9PMsOwH9I6s/x
+	JszuMlHScOHvQLEwOLt4eCCN9R8z1tQhxNqLvvIJx7IvZszGN1z+c3EGVUZpnGDPEQ599fS1SWT
+	4oe4ljjuPFFNeHI57Ns9YIiFYcg==
+X-Google-Smtp-Source: AGHT+IGphu6TPIxsadsg8AJvhSvpk9h0/WSLUUO4UG0XTFbdDPP5hlzrX20zsMC3uarGOiW78rocGg==
+X-Received: by 2002:a17:902:f709:b0:235:779:edea with SMTP id d9443c01a7336-23ac465d24fmr64232725ad.38.1751040599657;
+        Fri, 27 Jun 2025 09:09:59 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2e1b3esm18966805ad.35.2025.06.27.09.09.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 09:09:58 -0700 (PDT)
+Message-ID: <cc36310a-c390-42f0-9c82-5b0236a9abfa@broadcom.com>
+Date: Fri, 27 Jun 2025 09:09:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="YU83H7T/fcLTVoMZ"
-Content-Disposition: inline
-In-Reply-To: <20250423095222.1517507-1-andre.przywara@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/16] MAINTAINERS: Include GDB scripts under their
+ relevant subsystems
+To: Jan Kara <jack@suse.cz>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
+ Kieran Bingham <kbingham@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ John Ogness <john.ogness@linutronix.de>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Alexander Potapenko <glider@google.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
+ <da.gomez@samsung.com>, Kent Overstreet <kent.overstreet@linux.dev>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
+ Matthew Wilcox <willy@infradead.org>,
+ Kuan-Ying Lee <kuan-ying.lee@canonical.com>,
+ Ilya Leoshkevich <iii@linux.ibm.com>, Etienne Buira <etienne.buira@free.fr>,
+ Antonio Quartulli <antonio@mandelbit.com>, Illia Ostapyshyn
+ <illia@yshyn.com>, "open list:COMMON CLK FRAMEWORK"
+ <linux-clk@vger.kernel.org>,
+ "open list:PER-CPU MEMORY ALLOCATOR" <linux-mm@kvack.org>,
+ "open list:GENERIC PM DOMAINS" <linux-pm@vger.kernel.org>,
+ "open list:KASAN" <kasan-dev@googlegroups.com>,
+ "open list:MAPLE TREE" <maple-tree@lists.infradead.org>,
+ "open list:MODULE SUPPORT" <linux-modules@vger.kernel.org>,
+ "open list:PROC FILESYSTEM" <linux-fsdevel@vger.kernel.org>
+References: <20250625231053.1134589-1-florian.fainelli@broadcom.com>
+ <fynmrmsglw4liexcb37ykutf724lh7zbibilcjpysbmvgtkmes@mtjrfkve4av7>
+ <c66deb8f-774e-4981-accf-4f507943e08c@broadcom.com>
+ <iup2plrwgkxlnywm3imd2ctkbqzkckn4t3ho56kq4y4ykgzvbk@cefy6hl7yu6c>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <iup2plrwgkxlnywm3imd2ctkbqzkckn4t3ho56kq4y4ykgzvbk@cefy6hl7yu6c>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 6/27/25 00:55, Jan Kara wrote:
+> On Thu 26-06-25 09:39:36, Florian Fainelli wrote:
+>> On 6/26/25 09:17, Liam R. Howlett wrote:
+>>> * Florian Fainelli <florian.fainelli@broadcom.com> [250625 19:13]:
+>>>> Linux has a number of very useful GDB scripts under scripts/gdb/linux/*
+>>>> that provide OS awareness for debuggers and allows for debugging of a
+>>>> variety of data structures (lists, timers, radix tree, mapletree, etc.)
+>>>> as well as subsystems (clocks, devices, classes, busses, etc.).
+>>>>
+>>>> These scripts are typically maintained in isolation from the subsystem
+>>>> that they parse the data structures and symbols of, which can lead to
+>>>> people playing catch up with fixing bugs or updating the script to work
+>>>> with updates made to the internal APIs/objects etc. Here are some
+>>>> recents examples:
+>>>>
+>>>> https://lore.kernel.org/all/20250601055027.3661480-1-tony.ambardar@gmail.com/
+>>>> https://lore.kernel.org/all/20250619225105.320729-1-florian.fainelli@broadcom.com/
+>>>> https://lore.kernel.org/all/20250625021020.1056930-1-florian.fainelli@broadcom.com/
+>>>>
+>>>> This patch series is intentionally split such that each subsystem
+>>>> maintainer can decide whether to accept the extra
+>>>> review/maintenance/guidance that can be offered when GDB scripts are
+>>>> being updated or added.
+>>>
+>>> I don't see why you think it was okay to propose this in the way you
+>>> have gone about it.  Looking at the mailing list, you've been around for
+>>> a while.
+>>
+>> This should probably have been posted as RFC rather than PATCH, but as I
+>> indicate in the cover letter this is broken down to allow maintainers like
+>> yourself to accept/reject
+>>
+>>>
+>>> The file you are telling me about seems to be extremely new and I needed
+>>> to pull akpm/mm-new to discover where it came from.. because you never
+>>> Cc'ed me on the file you are asking me to own.
+>>
+>> Yes, that file is very new indeed, and my bad for not copying you on it.
+>>
+>> I was not planning on burning an entire day worth of work to transition the
+>> GDB scripts dumping the interrupt tree away from a radix tree to a maple
+>> tree. All of which happens with the author of that conversion having
+>> absolutely no idea that broke anything in the tree because very few people
+>> know about the Python GDB scripts that Linux has. It is not pleasant to be
+>> playing catch when it would have take maybe an extra couple hours for
+>> someone intimately familiar with the maple tree to come up with a suitable
+>> implementation replacement for mtree_load().
+>>
+>> So having done it felt like there is a maintenance void that needs to be
+>> filled, hence this patch set.
+> 
+> I can see that it takes a lot of time to do a major update of a gdb
+> debugging script after some refactoring like this. OTOH mandating some gdb
+> scripts update is adding non-trivial amount of work to changes that are
+> already hard enough to do as is. 
 
---YU83H7T/fcLTVoMZ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This really should have been posted as RFC, because I can see how 
+posting this as PATCH would be seen as coercing maintainers into taking 
+those GDB scripts under their umbrella.
 
-Hi Andre,
+> And the obvious question is what is the
+> value? I've personally never used these gdb scripts and never felt a strong
+> need for something like that. People have various debugging aids (like BPF
+> scripts, gdb scripts, there's crash tool and drgn, and many more) lying
+> around. 
 
-Le Wed 23 Apr 25, 10:52, Andre Przywara a =C3=A9crit :
-> For some odd reason we are very picky about the value of the EMAC clock
-> register from the syscon block, insisting on a certain reset value and
-> only doing read-modify-write operations on that register, even though we
-> pretty much know the register layout.
-> This already led to a basically redundant variant entry for the H6, which
-> only differs by that value. We will have the same situation with the new
-> A523 SoC, which again is compatible to the A64, but has a different syscon
-> reset value.
->=20
-> Drop any assumptions about that value, and set or clear the bits that we
-> want to program, from scratch (starting with a value of 0). For the
-> remove() implementation, we just turn on the POWERDOWN bit, and deselect
-> the internal PHY, which mimics the existing code.
+Those are valuable tools in the tool box, but GDB scripts can work when 
+your only debug tool accessible is JTAG for instance, I appreciate this 
+is typically miles away from what most of the kernel community does, but 
+this is quite typical and common in embedded systems. When you operate 
+in that environment, having a decent amount of debugger awareness of 
+what is being debugged is immensely valuable in saving time.
 
-I was confused about why this existed as well and think this change makes a=
- lot
-of sense!
+> I'm personally of an opinion that it is not a responsibility of
+> the person doing refactoring to make life easier for them or even fixing
+> them and I don't think that the fact that some debug aid is under
+> scripts/gdb/ directory is making it more special. 
 
-I just tested it on my V3s Lichee Pi Zero dock, which uses the internal EPHY
-(configured via this register) and it all looks good to me.
+That is really the question that I am trying to get answered with this 
+patch series. IMHO as a subsystem maintainer it is not fair to be 
+completely oblivious to scripts that live in the source tree, even if 
+you are not aware of those.
 
-Tested-by: Paul Kocialkowski <paulk@sys-base.io>
-Reviewed-by: Paul Kocialkowski <paulk@sys-base.io>
+ > So at least as far as I'm> concerned (VFS, fsnotify and other 
+filesystem related stuff) I don't plan
+> on requiring updates to gdb scripts from people doing changes or otherwise
+> actively maintain them.
 
-Note that my previous patch fixing the PHY address retrieval conflicts with
-this, so you might want to spin up a new version, or it might be adapted wh=
-en
-this patch is picked-up. It's very straightforward to resolve.
+vfs.py script is beyond trivial, the largest and most complicated IMHO 
+is mapletree.py which had to be recently developed to continue to 
+support parsing the interrupt descriptor tree in the kernel, I can 
+maintain that one now that I know a lot more than I ever wished I knew 
+about maple trees. So really the burden is not as big as it may seem but 
+it's fair not to be taking on more work as a maintainer, I get that.
 
-Thanks for this cleanup!
-
-Paul
-
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
-> Hi,
->=20
-> if anyone can shed some light on why we had this value and its handling
-> in the first place, I would be grateful. I don't really get its purpose,
-> and especially the warning message about the reset value seems odd.
-> I briefly tested this on A523, H3, H6, but would be glad to see more
-> testing on this.
->=20
-> Cheers,
-> Andre
->=20
->  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 47 ++-----------------
->  1 file changed, 4 insertions(+), 43 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/=
-net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> index 85723a78793ab..0f8d29763a909 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> @@ -31,10 +31,6 @@
->   */
-> =20
->  /* struct emac_variant - Describe dwmac-sun8i hardware variant
-> - * @default_syscon_value:	The default value of the EMAC register in sysc=
-on
-> - *				This value is used for disabling properly EMAC
-> - *				and used as a good starting value in case of the
-> - *				boot process(uboot) leave some stuff.
->   * @syscon_field		reg_field for the syscon's gmac register
->   * @soc_has_internal_phy:	Does the MAC embed an internal PHY
->   * @support_mii:		Does the MAC handle MII
-> @@ -48,7 +44,6 @@
->   *				value of zero indicates this is not supported.
->   */
->  struct emac_variant {
-> -	u32 default_syscon_value;
->  	const struct reg_field *syscon_field;
->  	bool soc_has_internal_phy;
->  	bool support_mii;
-> @@ -94,7 +89,6 @@ static const struct reg_field sun8i_ccu_reg_field =3D {
->  };
-> =20
->  static const struct emac_variant emac_variant_h3 =3D {
-> -	.default_syscon_value =3D 0x58000,
->  	.syscon_field =3D &sun8i_syscon_reg_field,
->  	.soc_has_internal_phy =3D true,
->  	.support_mii =3D true,
-> @@ -105,14 +99,12 @@ static const struct emac_variant emac_variant_h3 =3D=
- {
->  };
-> =20
->  static const struct emac_variant emac_variant_v3s =3D {
-> -	.default_syscon_value =3D 0x38000,
->  	.syscon_field =3D &sun8i_syscon_reg_field,
->  	.soc_has_internal_phy =3D true,
->  	.support_mii =3D true
->  };
-> =20
->  static const struct emac_variant emac_variant_a83t =3D {
-> -	.default_syscon_value =3D 0,
->  	.syscon_field =3D &sun8i_syscon_reg_field,
->  	.soc_has_internal_phy =3D false,
->  	.support_mii =3D true,
-> @@ -122,7 +114,6 @@ static const struct emac_variant emac_variant_a83t =
-=3D {
->  };
-> =20
->  static const struct emac_variant emac_variant_r40 =3D {
-> -	.default_syscon_value =3D 0,
->  	.syscon_field =3D &sun8i_ccu_reg_field,
->  	.support_mii =3D true,
->  	.support_rgmii =3D true,
-> @@ -130,7 +121,6 @@ static const struct emac_variant emac_variant_r40 =3D=
- {
->  };
-> =20
->  static const struct emac_variant emac_variant_a64 =3D {
-> -	.default_syscon_value =3D 0,
->  	.syscon_field =3D &sun8i_syscon_reg_field,
->  	.soc_has_internal_phy =3D false,
->  	.support_mii =3D true,
-> @@ -141,7 +131,6 @@ static const struct emac_variant emac_variant_a64 =3D=
- {
->  };
-> =20
->  static const struct emac_variant emac_variant_h6 =3D {
-> -	.default_syscon_value =3D 0x50000,
->  	.syscon_field =3D &sun8i_syscon_reg_field,
->  	/* The "Internal PHY" of H6 is not on the die. It's on the
->  	 * co-packaged AC200 chip instead.
-> @@ -933,25 +922,11 @@ static int sun8i_dwmac_set_syscon(struct device *de=
-v,
->  	struct sunxi_priv_data *gmac =3D plat->bsp_priv;
->  	struct device_node *node =3D dev->of_node;
->  	int ret;
-> -	u32 reg, val;
-> -
-> -	ret =3D regmap_field_read(gmac->regmap_field, &val);
-> -	if (ret) {
-> -		dev_err(dev, "Fail to read from regmap field.\n");
-> -		return ret;
-> -	}
-> -
-> -	reg =3D gmac->variant->default_syscon_value;
-> -	if (reg !=3D val)
-> -		dev_warn(dev,
-> -			 "Current syscon value is not the default %x (expect %x)\n",
-> -			 val, reg);
-> +	u32 reg =3D 0, val;
-> =20
->  	if (gmac->variant->soc_has_internal_phy) {
->  		if (of_property_read_bool(node, "allwinner,leds-active-low"))
->  			reg |=3D H3_EPHY_LED_POL;
-> -		else
-> -			reg &=3D ~H3_EPHY_LED_POL;
-> =20
->  		/* Force EPHY xtal frequency to 24MHz. */
->  		reg |=3D H3_EPHY_CLK_SEL;
-> @@ -965,11 +940,6 @@ static int sun8i_dwmac_set_syscon(struct device *dev,
->  		 * address. No need to mask it again.
->  		 */
->  		reg |=3D 1 << H3_EPHY_ADDR_SHIFT;
-> -	} else {
-> -		/* For SoCs without internal PHY the PHY selection bit should be
-> -		 * set to 0 (external PHY).
-> -		 */
-> -		reg &=3D ~H3_EPHY_SELECT;
->  	}
-> =20
->  	if (!of_property_read_u32(node, "allwinner,tx-delay-ps", &val)) {
-> @@ -980,8 +950,6 @@ static int sun8i_dwmac_set_syscon(struct device *dev,
->  		val /=3D 100;
->  		dev_dbg(dev, "set tx-delay to %x\n", val);
->  		if (val <=3D gmac->variant->tx_delay_max) {
-> -			reg &=3D ~(gmac->variant->tx_delay_max <<
-> -				 SYSCON_ETXDC_SHIFT);
->  			reg |=3D (val << SYSCON_ETXDC_SHIFT);
->  		} else {
->  			dev_err(dev, "Invalid TX clock delay: %d\n",
-> @@ -998,8 +966,6 @@ static int sun8i_dwmac_set_syscon(struct device *dev,
->  		val /=3D 100;
->  		dev_dbg(dev, "set rx-delay to %x\n", val);
->  		if (val <=3D gmac->variant->rx_delay_max) {
-> -			reg &=3D ~(gmac->variant->rx_delay_max <<
-> -				 SYSCON_ERXDC_SHIFT);
->  			reg |=3D (val << SYSCON_ERXDC_SHIFT);
->  		} else {
->  			dev_err(dev, "Invalid RX clock delay: %d\n",
-> @@ -1008,11 +974,6 @@ static int sun8i_dwmac_set_syscon(struct device *de=
-v,
->  		}
->  	}
-> =20
-> -	/* Clear interface mode bits */
-> -	reg &=3D ~(SYSCON_ETCS_MASK | SYSCON_EPIT);
-> -	if (gmac->variant->support_rmii)
-> -		reg &=3D ~SYSCON_RMII_EN;
-> -
->  	switch (plat->mac_interface) {
->  	case PHY_INTERFACE_MODE_MII:
->  		/* default */
-> @@ -1039,9 +1000,9 @@ static int sun8i_dwmac_set_syscon(struct device *de=
-v,
-> =20
->  static void sun8i_dwmac_unset_syscon(struct sunxi_priv_data *gmac)
->  {
-> -	u32 reg =3D gmac->variant->default_syscon_value;
-> -
-> -	regmap_field_write(gmac->regmap_field, reg);
-> +	if (gmac->variant->soc_has_internal_phy)
-> +		regmap_field_write(gmac->regmap_field,
-> +				   (H3_EPHY_SHUTDOWN | H3_EPHY_SELECT));
->  }
-> =20
->  static void sun8i_dwmac_exit(struct platform_device *pdev, void *priv)
-> --=20
-> 2.25.1
->=20
->=20
-
---=20
-Paul Kocialkowski,
-
-Independent contractor - sys-base - https://www.sys-base.io/
-Free software developer - https://www.paulk.fr/
-
-Expert in multimedia, graphics and embedded hardware support with Linux.
-
---YU83H7T/fcLTVoMZ
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAmhewg4ACgkQhP3B6o/u
-lQyMOQ//RS+2/2CofBmwqDF0tdPx5od/nOTVjjlmfMbBiz0EMN1VutnRtQRnMj/X
-5k3xE0LZdi91+01xyGDS3JaGc/4Q5Dhmybwu5RC2a1vZ18mj2gdQBDGXzANpXUML
-m+mmq1o8bqWKecA/eYnSKjCdyYOUgWAhCCCwjNWsBrzbOpsHOmu1nYaB+lvMSFWZ
-y83uFmzkUqjWFcXlfRvRQxrYctCgMXUrSzn0nd32yIbOwTe+dk/uKSRgiU/mtTFa
-ORaxRV6Ohx6V+EZ8Sv962pqvp8xRRaBOW84OnD6wbOmgyxzgXogeaQdsEaKitc8K
-ZXl+5koviMPyQUmQzWuySSLIT2nsHBaCTH9tck6DeIqi2gcGRkHzss22OcpAtNa7
-KZ6Vfo+22CMNepDugBravEzuKfktOxz0udMBB7MYTMNiL4PHT2YXidcV7bV/WThl
-d64ghZbvLWq2kAKFIjIeUv4vg4zIICVhcheieEKdApc6KqyJV1myZ8/uTcSaJPLw
-RYWQMiyChxIkpo02HggzWO2gyhCQgkDNLZ4wzLEKJxyfan81T1leuPRZQT6XXW0P
-w+xSBrPTI8qwHxHDZLknr0mzMUSG/X86vQeDrxj+5HvL1HInIOdBhOGvvDOUHGdY
-jGbMv0cw+NfG3MUm2Jc+n1gu+QyGQYyvpIMyjwk9gzdsb6R8aM0=
-=y+k3
------END PGP SIGNATURE-----
-
---YU83H7T/fcLTVoMZ--
+Thanks for your feedback!
+-- 
+Florian
