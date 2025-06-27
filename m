@@ -1,99 +1,143 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DF04323E;
-	Fri, 27 Jun 2025 06:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3A0323E;
+	Fri, 27 Jun 2025 06:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751006851; cv=none; b=GOVYz4I1tLhX18RErLy1r8tzkzuSFZ2ON1xUewcDNM46WWZiXNZEp2np4z8ghtgqTGNrPbaDhDUaaRobZqx9jbBlJTK9gMkBtTd0BjDTyvjHAe8jhI3zBMAsDH1ImpkAymrc+/UJOvM7hacuVTLQ6S9cB+NhFbQdAd5IrpZbDz8=
+	t=1751006902; cv=none; b=F5HRPYZvxle5+6bt7wHDG31FHZiF1RF0B28vQnCVQzPGGdIys1HySglN1uXjOiAsy9p+kWA3ZyiCwGI3Di/6tb9mPPIEcqqZS4QlHt/v6FftLO5V88glnaJhDrrBdqnSx7c22svo+7vhPY76ckeisvCJ11M/GvjJFLvYDadl9UI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751006851; c=relaxed/simple;
-	bh=YdDjLHd/fBPgvr7y93fqf+nWxku2PSXueKPC9DfCgJM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Re46ARgSFktWxmI299CKb11zDH/Yp8ddzhqvA4Op0wDe2mXrDT46edd5v9p4AvX6eKOZldN+moJnvPfqCUc5erXnD6ZqeTk4VlbnMI2HAQ+j8Ge8I8aPwOIYX0u6H2Vo4Y6ucZRJi38N9BzcCLqFWnk9ZxIkh3m4d/NMotR80Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8AxHHJ2Pl5oyx8eAQ--.1233S3;
-	Fri, 27 Jun 2025 14:47:18 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowJAxz8NwPl5oLgsAAA--.15S2;
-	Fri, 27 Jun 2025 14:47:14 +0800 (CST)
-Subject: Re: [PATCH v11 3/4] tpm: Add a driver for Loongson TPM device
-To: Jarkko Sakkinen <jarkko@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- Lee Jones <lee@kernel.org>, herbert@gondor.apana.org.au
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- davem@davemloft.net, linux-crypto@vger.kernel.org, peterhuewe@gmx.de,
- jgg@ziepe.ca, linux-integrity@vger.kernel.org,
- Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
-References: <20250619025138.2854-1-zhaoqunqin@loongson.cn>
- <20250619025138.2854-4-zhaoqunqin@loongson.cn> <aFs2RDOeOKvWUN2L@kernel.org>
- <20250625080527.GN795775@google.com> <aFvhorr3kZSuzVpv@kernel.org>
- <20250625134047.GX795775@google.com> <aFwsIs6ri3HZictC@kernel.org>
- <20250626103030.GA10134@google.com> <aF0oHDVQKVfGZNV2@kernel.org>
- <CAAhV-H7nyKHS70BGh7nwjuGwSWayCbUY=1-zWMU4N3bJZtH1gQ@mail.gmail.com>
- <aF2Rn0R4AlopEwz8@kernel.org>
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Message-ID: <86b5e396-54d4-7b36-8848-06f41083ba59@loongson.cn>
-Date: Fri, 27 Jun 2025 14:46:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1751006902; c=relaxed/simple;
+	bh=Gk61ujEoSEVxxkZaVv4tUnsHFqXUUAQCjXVa3r0CnDY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MJDAxz53z/hB8cWdppDX9hZ9m8bXYAhN5oodHNiWam6dOljwaUnlKD93S3sV/jsLlJmmPUTJDc9+rBFur5+e42HHxAiJMMpK4AxAHo7Ny7d+WfYstWoZX5wsjd9O4oclwUxRd4BOer2Mr/5SjDfIh25KxycowlVNibvy8TpONhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t08uwEq6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t08uwEq6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8465FC4CEE3;
+	Fri, 27 Jun 2025 06:48:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751006901;
+	bh=Gk61ujEoSEVxxkZaVv4tUnsHFqXUUAQCjXVa3r0CnDY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=t08uwEq64ptQhfSGo4H8UuSvXroAFX2X+2ikEziO04jWE0rsW4zd0KIOUK/5v7Qcs
+	 LZsFAvWLC0LKJJ5VcE4xawcYpe+OC8GLHHfkJZxdA2Z3TYw+Qhh/DsvDR8g9yKaMnx
+	 wzyD0GvJ0uYsEYYqLvKiP5QEhL/1Te++/hiGz391m4zorOEaf2SWmPjjwX2uJF5i34
+	 MR+DnD1Fnnt1bUSpq5MbG0qsy2jRmBXK5VthA2n9737ulzhiIKW7sXqwkokWI2hJ9m
+	 5t+EPRor34f1aW4Xw/xdPqyddGr+RyPrTtZ/34rRU4fmjb++BBCGwG95wLbuDf7RHt
+	 MuWbbjAF61ZcA==
+Date: Fri, 27 Jun 2025 08:48:14 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Akira Yokosawa <akiyks@gmail.com>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, Breno Leitao <leitao@debian.org>, "David S. Miller"
+ <davem@davemloft.net>, Donald Hunter <donald.hunter@gmail.com>, Eric
+ Dumazet <edumazet@google.com>, Ignacio Encinas Rubio
+ <ignacio@iencinas.com>, Jan Stancek <jstancek@redhat.com>, Marco Elver
+ <elver@google.com>, Paolo Abeni <pabeni@redhat.com>, Randy Dunlap
+ <rdunlap@infradead.org>, Ruben Wauters <rubenru09@aol.com>, Shuah Khan
+ <skhan@linuxfoundation.org>, joel@joelfernandes.org,
+ linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
+ lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
+ stern@rowland.harvard.edu
+Subject: Re: [PATCH v8 13/13] docs: parser_yaml.py: fix backward
+ compatibility with old docutils
+Message-ID: <20250627084814.7f4a43d4@foz.lan>
+In-Reply-To: <ebdb0f12-0573-4023-bb7f-c51a94dedb27@gmail.com>
+References: <cover.1750925410.git.mchehab+huawei@kernel.org>
+	<d00a73776167e486a1804cf87746fa342294c943.1750925410.git.mchehab+huawei@kernel.org>
+	<ebdb0f12-0573-4023-bb7f-c51a94dedb27@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <aF2Rn0R4AlopEwz8@kernel.org>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJAxz8NwPl5oLgsAAA--.15S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWruF47Xr1kGrWfZr4DtryktFc_yoW3ZrXEka
-	yxtF1kZr13Jr97tayagr1xAFn7XayqqasI9340vrs7XayFyF9Ykw4qkwn7CFyUXrn5Jrn8
-	GF4fXrW8Cr1SvosvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbDxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
-	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1l
-	Yx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI
-	0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC2
-	0s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr
-	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-	W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
-	cVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+Hi Akira,
 
-ÔÚ 2025/6/27 ÉÏÎç2:29, Jarkko Sakkinen Ð´µÀ:
-> On Thu, Jun 26, 2025 at 08:48:35PM +0800, Huacai Chen wrote:
->> But there is another coherency, you can see this in the 1st patch:
->>
->> +static const struct mfd_cell engines[] = {
->> + { .name = "loongson-rng" },
->> + { .name = "loongson-tpm" },
->> +};
-> I thought already after ffa driver from ARM that I need to fix up
-> the naming a bit before it explodes. Thus, I'll stick to this.
->
-> And e.g., I could easily find DRM driver with opposite order.
-Next revision:
+Em Fri, 27 Jun 2025 08:59:16 +0900
+Akira Yokosawa <akiyks@gmail.com> escreveu:
 
-+static const struct mfd_cell engines[] = {
-+	{ .name = "loongson-rng" },
-+	{ .name = "tpm_loongson" },
-+};
-Then
-"loongson-rng" can match MFD and Crypto subsystem naming convention.
-"tpm_loongson" can match TPM subsystem naming convention.
+> Hi Mauro,
+> 
+> On Thu, 26 Jun 2025 10:13:09 +0200, Mauro Carvalho Chehab wrote:
+> > As reported by Akira, older docutils versions are not compatible
+> > with the way some Sphinx versions send tab_width. Add a code to
+> > address it.
+> >   
+> 
+> Tested OK against debian:11's and almalinux:9's Sphinx 3.4.3, both of
+> which have docutils 0.16 bundled.
+> 
+> opensuse/leap:15.6's Sphinx 4.2.0 has docutils 0.16 with it, but it is
+> python 3.6 base and it does't work with the ynl integration.
+> As opensuse/leap:15.6 provides Sphinx 7.2.6 (on top of python 3.11) as
+> an alternative, obsoleting it should be acceptable.  
+
+Thank you for the tests! At changes.rst we updated the minimum
+python requirement to:
+
+	Python (optional)      3.9.x            python3 --version
+
+So, I guess we can keep this way. 
+
+The 3.9 requirement reflects the needs of most scripts. Still, for doc build, 
+the min requirement was to support f-string, so Python 3.6.
+
+In this specific case, it is likely some minor incompatibility, as vermin 
+tool thinks that 3.6 would be enough: 
+
+	$ vermin --no-tips --hidden --pessimistic -v tools/net/ynl/pyynl/ynl_gen_rst.py Documentation/sphinx/parser_yaml.py tools/net/ynl/pyynl/lib/*.py
+	Detecting python files..
+	Analyzing 6 files using 24 processes..
+	2.3, 3.0     /new_devel/v4l/docs/Documentation/sphinx/parser_yaml.py
+	~2, ~3       /new_devel/v4l/docs/tools/net/ynl/pyynl/lib/__init__.py
+	!2, 3.6      /new_devel/v4l/docs/tools/net/ynl/pyynl/lib/doc_generator.py
+	!2, 3.6      /new_devel/v4l/docs/tools/net/ynl/pyynl/lib/nlspec.py
+	!2, 3.6      /new_devel/v4l/docs/tools/net/ynl/pyynl/lib/ynl.py
+	!2, 3.4      /new_devel/v4l/docs/tools/net/ynl/pyynl/ynl_gen_rst.py
+	Minimum required versions: 3.6
+	Incompatible versions:     2
+
+If the change is minimal, I don't mind having it fixed.
+
+Anyway, IMO we need to add a checker at scripts/sphinx-pre-install to
+warn against too old Python versions.
+
+> 
+> Reported-by: Akira Yokosawa <akiyks@gmail.com>
+> > Closes: https://lore.kernel.org/linux-doc/598b2cb7-2fd7-4388-96ba-2ddf0ab55d2a@gmail.com/
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
+> Tested-by: Akira Yokosawa <akiyks@gmail.com>
+> 
+>         Thanks, Akira
+> 
+> > ---
+> >  Documentation/sphinx/parser_yaml.py | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/Documentation/sphinx/parser_yaml.py b/Documentation/sphinx/parser_yaml.py
+> > index 8288e2ff7c7c..1602b31f448e 100755
+> > --- a/Documentation/sphinx/parser_yaml.py
+> > +++ b/Documentation/sphinx/parser_yaml.py
+> > @@ -77,6 +77,10 @@ class YamlParser(Parser):
+> >  
+> >                  result.append(line, document.current_source, lineoffset)
+> >  
+> > +            # Fix backward compatibility with docutils < 0.17.1
+> > +            if "tab_width" not in vars(document.settings):
+> > +                document.settings.tab_width = 8
+> > +
+> >              rst_parser = RSTParser()
+> >              rst_parser.parse('\n'.join(result), document)
+> >    
+> 
+
 
 
 Thanks,
-Qunqin
-
->> Huacai
-> BR, Jarkko
-
+Mauro
