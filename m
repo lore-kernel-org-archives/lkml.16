@@ -1,99 +1,117 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE922E2659;
-	Fri, 27 Jun 2025 14:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059372E2652;
+	Fri, 27 Jun 2025 14:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751033890; cv=none; b=tCSTBrCrsLARG3b+4NpTNGdJbCJlbqWoaIAoz6iJ/Blm92a6RZqoGQgJYXVMdcoplx5YI19o2LWb0eNOdrJCgBJuoHVoY+zdwDBIbdUI1hbKXYBmqjNpbi/LL+4nMgOyugg/JOAUFtEFZNKq5HCTqq6w1glce5cGhGSVJqUeCwc=
+	t=1751033928; cv=none; b=GefjOijEj2Ek8NvH9Vpn2M+N+li3JpaCu0uDaGiQ/XXEOI71ZtithJDEUxkorb5mkUmCxPoRUhS2nTNxUgfE14QdFQfj+EO01QP+5/fKFSb/L/xUNHu9lteiPaOShq+11QTMTA0q6cnCql+zPeTE/pGO5a48jqMF5EpyDBuTHEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751033890; c=relaxed/simple;
-	bh=+pi/wIlcbLNnuX1RBlHCp/Nab1wavZUXPEn3t0yFunw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PWEH241TdVpYusXB5BjcDp4aTdU9bnMfS90R3KjewrAU2J6X863+udK3d+IDXoFQZ6Vnw7pfQXsHwQWkANX3S4D6MEZTPQg0AAD+isH/Nt3nsP3nsAmXjTTB2enDi7wi7VWtlHu73SDhwA5+vsSA2sNwMU2m84giFCglbGJDMmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JTPcY4Ho; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=q3EcjBDw; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751033928; c=relaxed/simple;
+	bh=TaiQW3c+noRyzXQvsLousUbpwR3hV32c+YniAy5VZUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uFNbUlpVuEtVIuomElPS/dw9NID2yPJPxjq14B6Nr8hJRMbxl/RBDabziUP2hc8oZrCdB+BSaP2l5e0owXMHlQhwDkj4GrR2xF3/Ty9Upf/aS2d8pgtLA3PhF0PP5bEdItn2T5YsxaU7MEqz5+rAsL+92jBgLIt49yYMlDxOj24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMFvBsxh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JTPcY4Ho";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q3EcjBDw"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751033886;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+pi/wIlcbLNnuX1RBlHCp/Nab1wavZUXPEn3t0yFunw=;
-	b=JTPcY4HoWZjBfcsbsJvA20ZnzRcsLjqZpqs0Jlsl3cDrD5fEbEdlxzCcLfv+V5H3VIF5Ia
-	WJSYgj7fV3v8zsIDuYccFnqV8Lsvj+7zYNTC8ocHNb0y2El6cDfDgSoIDhhb+18yIiMlrV
-	MQIFYflQnev9ornTwTrbf02qojHXO5rrdhaBHZkALH+cJIerWy8VPU1lZB0Q7Qtu9XmJCg
-	UvyqUwsuc6MRISQxYKe6kQRo2/cBXjdFfdp/co+esDkEoYxgFEQpgxXBeEobAcAp6pduZa
-	khGakssZhUgJR4unZsJgwBNpw7SIbi7CHfxCTmstt6pjHZ3TAi4CKseThnKfvQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751033886;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+pi/wIlcbLNnuX1RBlHCp/Nab1wavZUXPEn3t0yFunw=;
-	b=q3EcjBDwDSlN5SU0XlMs2o0HMzKupClunf6b0FpPvH0MA5Ck52MaMeWKpP4eEXeeMW4l9B
-	3OwavwLkwWlcU/DA==
-To: John Stultz <jstultz@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, Richard
- Cochran <richardcochran@gmail.com>, Christopher Hall
- <christopher.s.hall@intel.com>, Frederic Weisbecker <frederic@kernel.org>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Miroslav Lichvar
- <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, David
- Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, Thomas
- =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, Kurt
- Kanzenbach
- <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, Antoine Tenart
- <atenart@kernel.org>
-Subject: Re: [patch V3 04/11] timekeeping: Provide time setter for auxiliary
- clocks
-In-Reply-To: <CANDhNCpu5+ZVxFg0XVU4KYEWnNCbSruPob9dOeF3btxqJ1N70g@mail.gmail.com>
-References: <20250625182951.587377878@linutronix.de>
- <20250625183757.995688714@linutronix.de>
- <CANDhNCpu5+ZVxFg0XVU4KYEWnNCbSruPob9dOeF3btxqJ1N70g@mail.gmail.com>
-Date: Fri, 27 Jun 2025 16:18:05 +0200
-Message-ID: <87ldpdnu8y.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMFvBsxh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA384C4CEE3;
+	Fri, 27 Jun 2025 14:18:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751033927;
+	bh=TaiQW3c+noRyzXQvsLousUbpwR3hV32c+YniAy5VZUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JMFvBsxh25QJ2POJpnOoSHcIiORn+haen7v9wCSZAqbRWEWR8rp168/xP5JajxRet
+	 ABSMKTjuxgMOqYpqxHoeQAIY1ZO/1qnNPS1mZwEAmC6ZGJ+7oPy6aIr9chIwI3mMzx
+	 1LwQNtcBxXDKjAqya0P7p7/blBNf1PY42VO6WrZJIuY+dkKjUMVR2n25EtXJNAYBR9
+	 AXfHsrTv4FYdFOr/WwX1bKOOoWsBgt46qpWbERDFD3NLDjmQReTG1ZBzJlC2KUu2aT
+	 lgwUVSvQu451wB1EMcCCl1itmRUz/iFxcC0/eMTNQtR8zSTF1A1AGP4bgUwFaT/d6Y
+	 QSo2Oo2lIP7sA==
+Date: Fri, 27 Jun 2025 09:18:46 -0500
+From: Rob Herring <robh@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 02/28] driver core: Rename get_dev_from_fwnode()
+ wrapper to get_device_from_fwnode()
+Message-ID: <20250627141846.GA3234475-robh@kernel.org>
+References: <20250613134817.681832-1-herve.codina@bootlin.com>
+ <20250613134817.681832-3-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613134817.681832-3-herve.codina@bootlin.com>
 
-On Thu, Jun 26 2025 at 21:23, John Stultz wrote:
-> On Wed, Jun 25, 2025 at 11:38=E2=80=AFAM Thomas Gleixner <tglx@linutronix=
-.de> wrote:
->>
->> Add clock_settime(2) support for auxiliary clocks. The function affects =
-the
->> AUX offset which is added to the "monotonic" clock readout of these cloc=
-ks.
->>
->> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->> ---
->
-> Minor fretting: I worry a little that the difference here between the
-> default timekeeper where set adjusts the REALTIME offset from
-> MONOTONIC, and here where it directly adjusts "mono" might confuse
-> later readers?
+On Fri, Jun 13, 2025 at 03:47:42PM +0200, Herve Codina wrote:
+> get_dev_from_fwnode() calls get_device() and so it acquires a reference
+> on the device returned.
+> 
+> In order to be more obvious that this wrapper is a get_device() variant,
+> rename it to get_device_from_fwnode().
+> 
+> Suggested-by: Mark Brown <broonie@kernel.org>
+> Link: https://lore.kernel.org/lkml/CAGETcx97QjnjVR8Z5g0ndLHpK96hLd4aYSV=iEkKPNbNOccYmA@mail.gmail.com/
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Saravana Kannan <saravanak@google.com>
+> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> ---
+>  drivers/base/core.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index cbc0099d8ef2..36ccee91ba9a 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -1881,7 +1881,7 @@ static void fw_devlink_unblock_consumers(struct device *dev)
+>  	device_links_write_unlock();
+>  }
+>  
+> -#define get_dev_from_fwnode(fwnode)	get_device((fwnode)->dev)
+> +#define get_device_from_fwnode(fwnode)	get_device((fwnode)->dev)
 
-Actually it's not really that different.
+In patch 3, you add the same define. Is there some reason to not move it 
+to a header?
 
-In both cases the new offset to the monotonic clock is calculated and
-stored in the relevant tk::offs_* member.
-
-The difference is that the core timekeeper operates on xtime, but for
-simplicity I chose to calculate the resulting tk::offs_aux directly from
-the monotonic base. That's valid with the aux clocks as they don't
-need any of the xtime parts.
-
-I added some blurb to it.
-
-
+Rob
