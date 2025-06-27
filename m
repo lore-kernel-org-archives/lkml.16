@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79103217659
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C2E20A5DD
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751052269; cv=none; b=LD0k5YAmWNKte5zgiRoR1U2x0duoK4A3mC/SrDuvT3yBMuYk3PoSOMTbBGPf7T4b73IRgSDYEckw9rzwkHyD03OwR86PZrFmvTz1nTkCjduKCDqcsJbd3TLbm6SnilVFpf5asNQBej4m0kLGHw+HtOQ7dYxkvzibtcspbMaxGmY=
+	t=1751052271; cv=none; b=RZQY7BS5L5Ea5aKO+1keA6i6YXnPI+Ar21/rkKORMZ1pUp9ys7BnNfAxL15LpdoJfyfnWfB1aFkAbK+bx3r2qnh8Y7oBegV9ZKIkZlgl79wc+V+VK/JY3jQZupL+6XRAdublnum2cCobvUEyZlV+/z0QU/iZGTNLRZueaUkJtpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751052269; c=relaxed/simple;
-	bh=8cwlAfASgjDaBAw+Dh0fOpNhqH2F4FYnFY1DzsrvDBs=;
+	s=arc-20240116; t=1751052271; c=relaxed/simple;
+	bh=dVViqCmusnN5RUFVuc4ZulRAN9goYmkUJllZ6fYirJk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=E+ii7qM5VYjOPxVjrk4WlogJ+47y2/nix2naLhfNl3x2EUcqYGz7ZVmVt6MJ087guYjnjJ8TytMyKHC1xRKFdxA5T35u8ZPqG0ycF8yv134ENdEkrzcpYbBPiKfAJcIFtALQGY7NlHuLNxNR6pQRHQhWZ93SCpCVo1s41zgIRjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SXr3wGkW; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=piWz7MLje+RaHIYxgljn7oX/Gvlm+6FMCO2l0J9RNYlvSakDJmM3BFkdKMSHIx0sm12crYG0x+KwdlTgFr0Ip0lGaM03K7ehD9KBgqZoxHUV/fwm9g+6Gz9nurVRzoEGsF3Vjrbm0i2vEZe8j/hb1pYd/YjQNxTbwnQRy9D7uVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mgld8tfy; arc=none smtp.client-ip=209.85.160.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SXr3wGkW"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2fb347b3e6so2786492a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:24:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mgld8tfy"
+Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2ef38fe89d9so1530333fac.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:24:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751052268; x=1751657068; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751052269; x=1751657069; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=bHyTiYq3fNklZMY+gxa5ISx5FFJqebiuY8EWbLD3ebA=;
-        b=SXr3wGkW7Ii+aP8kPhBODPq630KwvzwyksAi+9weSWcuixRVZierLi9sj4SGaawgk9
-         VkxFUcxOseNf2OUdyUTWUoGLzRP9MCagTAuAXEFkdqMANg/OM8+nt6XEkXFafuvNbrS6
-         McdaRq9Muqi/2ixK9d1pPe/KlxxSu5yK3Xl5DDOujsPiSyuu7EnAbh/z/PHy/+Ww7pUm
-         lYsxlzh1stWKKQHA0a1D6aXD3IjRlNGSxlhEY8pJ3v9dJbp3AcDj2GK2Luz/d++/I/LZ
-         pMRmoX1AzxbVBOY8qpo+WnSy59AUa2k04qYdTOC5v/0Yr154pgvXCt0MC7rFUylIJScS
-         VaKQ==
+        bh=9nV5bVvayoyTyNMPh50De+OAEo7DL4+9cdaEzSi+im0=;
+        b=mgld8tfyvOg1uGjED4mzwWuu9eFV7L/ct+qqdg1Ahy8IAD+TumNhHAk/MTYM8eDql6
+         +zW+0CVWlQljv2putpqjsg1b5X8aX0FAZx9ZvKzXEBvmskc8q/aDG2ca9V9oe9b6wvOB
+         vuAOHepZ0esUAQzOheV+TET45rK2g1c1TrCbJIw8k+EFi9XkynHp4eN0eHyc/qV8jEck
+         51qw/wjx2ppz9ZXaWfUuT/k8xC3slbkBLRWsuFFRyi/4t165XP+AerTDt5gapvIZFvIQ
+         duZnheKFeTbNzoQIOKQuViv743fDIJXlrFrELeajGn24qiDkKXbXmBUtLi4wR+x+0+dm
+         FCBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751052268; x=1751657068;
+        d=1e100.net; s=20230601; t=1751052269; x=1751657069;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bHyTiYq3fNklZMY+gxa5ISx5FFJqebiuY8EWbLD3ebA=;
-        b=NsgcTSfBmKzoVpSZ4vuvbr4MTsGIxexI5oGaw4SoZJ+cmFlRJtLAJyA63vDRVUTiFN
-         TM2mGxXu29VcRhg8OhEUv50zIzUIoDxCad5g8O8m7asc4l0RBLz9kTTc45k0Lq+OVWb7
-         LDQQWinZpIUpw5VGfw88yU4z1eCuVhX9Zc3JMZ1TtnUMr4H6tzbl9evdFVygNkQqbFuM
-         EAH+pIoalKh3a20waFwBomqqPYLLMFd0vhop2f/0gNsKczzNQDlEvBBW5Q8fCb2hjDxD
-         K1q+jUGKD6nPOe+E3PYAm/U3ZYIPjhiVFKTaNQYqTlJjmWe16YOGZa1HNnPDqnxyMLof
-         +FcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPLa6YGCE6aWwhyLOV3B/TPf8XSI4CkeY+stMYPHFf8ofWdb73PAZBT0urvVholf8dTZH7SgPFAKgj+QI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZzqkOjuAIT3OnudEIONshRoUsGvfUD/+3WAOsm7qwsmwNsxcL
-	QABUnhrWD4vv08zM+YwlCqghbWS73Vxyeos13WReAYGThBXS0oypdp4vll46FmPB7g9T8gJsozD
-	kgl1mdLS10Q==
-X-Google-Smtp-Source: AGHT+IGTxwiUsCQVubSoLszlIZQZgfIIbhwFOc4KJ1lT0sZ+++wmkWp+9wQn4qXcOje47blqHHETLOxC8xbg
-X-Received: from plkb7.prod.google.com ([2002:a17:903:fa7:b0:234:c2e4:1df6])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:19e8:b0:238:120:134a
- with SMTP id d9443c01a7336-23ac45c1d67mr84881305ad.22.1751052267794; Fri, 27
- Jun 2025 12:24:27 -0700 (PDT)
-Date: Fri, 27 Jun 2025 12:24:08 -0700
+        bh=9nV5bVvayoyTyNMPh50De+OAEo7DL4+9cdaEzSi+im0=;
+        b=euqnOrHbY136PYrHitzE3tmiCcPqYl+Ca3SWoQbSLE5nVXkHFQou7GL1T3s9bHVh+t
+         6cgKmOLzl/Aa6NGJtTkadymNQ7TCPt8TOXDpXq7gnd/6apN8IZ7x7SJtrMulosdheQ+E
+         m7PmiWBo8LqQHJPS0aAcilvXDEevUkahnLmzm4npHy5TS05X5aassOSgsVPwfVOu/InB
+         2MiVs4bXJmKrzhZwoz7D2a4W+yveEctRJwKyWA+69hU8Ah1HSdTuqFPgsEYDDJGVGlgo
+         yEkBZ6QyQOVC1CXibIGqMb9Hy89tre9NMqq9OCs1MCkMvyfAa4za4NwXs1xGos5WtKq/
+         wfKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQqxFVn5Cj3yRftouVBP3kQNeezsHqBaphJw3X5VWiEvyxOqooDNm4YwSPEUjnju1ndWJGJfBCiR8a4Tw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyshZh+TXJessa61C4Ed3759u2szoGznng8Q3hFQwkDwOQexUKW
+	IQsmDmnjhf3arOFhooimToWJP+qHCFwGPFv1OB4wXl+wRSnT0HHHdxw5YrVNLLYfTmXNHXLYO60
+	zbD6S6JZpbw==
+X-Google-Smtp-Source: AGHT+IFNCUxEUiyLdVvcT9lNT2EQpgKf5ie5NGJ4wgyjmV1TUh8aP4lQE4E6/WPuYgaTNMQG/UaaM/LTBCSK
+X-Received: from oabqp4.prod.google.com ([2002:a05:6870:ff84:b0:2b8:4b50:daff])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6871:4e44:b0:29e:559b:d694
+ with SMTP id 586e51a60fabf-2efed7297f5mr3001891fac.32.1751052269450; Fri, 27
+ Jun 2025 12:24:29 -0700 (PDT)
+Date: Fri, 27 Jun 2025 12:24:09 -0700
 In-Reply-To: <20250627192417.1157736-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250627192417.1157736-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250627192417.1157736-4-irogers@google.com>
-Subject: [PATCH v1 03/12] perf stat: Don't size aggregation ids from user_requested_cpus
+Message-ID: <20250627192417.1157736-5-irogers@google.com>
+Subject: [PATCH v1 04/12] perf parse-events: Allow the cpu term to be a PMU
 From: Ian Rogers <irogers@google.com>
 To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,33 +77,88 @@ To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.or
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-As evsels may have additional CPU terms, the user_requested_cpus may
-not reflect all the CPUs requested. Use evlist->all_cpus to size the
-array as that reflects all the CPUs potentially needed by the evlist.
+On hybrid systems, events like msr/tsc/ will aggregate counts across
+all CPUs. Often metrics only want a value like msr/tsc/ for the cores
+on which the metric is being computed. Listing each CPU with terms
+cpu=0,cpu=1.. is laborious and would need to be encoded for all
+variations of a CPU model.
+
+Allow the cpumask from a PMU to be an argument to the cpu term. For
+example in the following the cpumask of the cstate_pkg PMU selects the
+CPUs to count msr/tsc/ counter upon:
+```
+$ cat /sys/bus/event_source/devices/cstate_pkg/cpumask
+0
+$ perf stat -A -e 'msr/tsc,cpu=cstate_pkg/' -a sleep 0.1
+
+ Performance counter stats for 'system wide':
+
+CPU0          252,621,253      msr/tsc,cpu=cstate_pkg/
+
+       0.101184092 seconds time elapsed
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ tools/perf/util/parse-events.c | 37 +++++++++++++++++++++++++---------
+ 1 file changed, 28 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 803bdcf89c0d..ff726f3e42ea 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1513,11 +1513,8 @@ static int perf_stat_init_aggr_mode(void)
- 	 * taking the highest cpu number to be the size of
- 	 * the aggregation translate cpumap.
- 	 */
--	if (!perf_cpu_map__is_any_cpu_or_is_empty(evsel_list->core.user_requested_cpus))
--		nr = perf_cpu_map__max(evsel_list->core.user_requested_cpus).cpu;
--	else
--		nr = 0;
--	stat_config.cpus_aggr_map = cpu_aggr_map__empty_new(nr + 1);
-+	nr = perf_cpu_map__max(evsel_list->core.all_cpus).cpu + 1;
-+	stat_config.cpus_aggr_map = cpu_aggr_map__empty_new(nr);
- 	return stat_config.cpus_aggr_map ? 0 : -ENOMEM;
- }
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 7a32d5234a64..ef38eb082342 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -192,10 +192,20 @@ static struct perf_cpu_map *get_config_cpu(const struct parse_events_terms *head
  
+ 	list_for_each_entry(term, &head_terms->terms, list) {
+ 		if (term->type_term == PARSE_EVENTS__TERM_TYPE_CPU) {
+-			struct perf_cpu_map *cpu = perf_cpu_map__new_int(term->val.num);
++			struct perf_cpu_map *term_cpus;
+ 
+-			perf_cpu_map__merge(&cpus, cpu);
+-			perf_cpu_map__put(cpu);
++			if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM) {
++				term_cpus = perf_cpu_map__new_int(term->val.num);
++			} else {
++				struct perf_pmu *pmu = perf_pmus__find(term->val.str);
++
++				if (perf_cpu_map__is_empty(pmu->cpus))
++					term_cpus = pmu->is_core ? cpu_map__online() : NULL;
++				else
++					term_cpus = perf_cpu_map__get(pmu->cpus);
++			}
++			perf_cpu_map__merge(&cpus, term_cpus);
++			perf_cpu_map__put(term_cpus);
+ 		}
+ 	}
+ 
+@@ -1054,12 +1064,21 @@ do {									   \
+ 		}
+ 		break;
+ 	case PARSE_EVENTS__TERM_TYPE_CPU:
+-		CHECK_TYPE_VAL(NUM);
+-		if (term->val.num >= (u64)cpu__max_present_cpu().cpu) {
+-			parse_events_error__handle(err, term->err_val,
+-						strdup("too big"),
+-						NULL);
+-			return -EINVAL;
++		if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM) {
++			if (term->val.num >= (u64)cpu__max_present_cpu().cpu) {
++				parse_events_error__handle(err, term->err_val,
++							strdup("too big"),
++							/*help=*/NULL);
++				return -EINVAL;
++			}
++		} else {
++			assert(term->type_val == PARSE_EVENTS__TERM_TYPE_STR);
++			if (perf_pmus__find(term->val.str) == NULL) {
++				parse_events_error__handle(err, term->err_val,
++							strdup("not a valid PMU"),
++							/*help=*/NULL);
++				return -EINVAL;
++			}
+ 		}
+ 		break;
+ 	case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
