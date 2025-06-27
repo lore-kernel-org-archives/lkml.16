@@ -1,46 +1,54 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC6425E452;
-	Fri, 27 Jun 2025 21:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7827621ADAE;
+	Fri, 27 Jun 2025 21:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751059151; cv=none; b=o4/Qym9AVJOrdCI6KkfoGfsvtRCjuJFDZuATeQ9ZEYseWmdeDplma4bgbd+r1yCvhk7KeaI2GMBrbbsXFAGUhsRvVPQh8rN1Ak+d+BSrxgsYWcHaQj9mZ04FA8hoXF1GgCa4zRMn1xHpo0/Vuhv/hV8dRPdD9Q0HizjYzT5Khfw=
+	t=1751059152; cv=none; b=DCT/1RSGvTK7Lcc03Nq8m8vtG0kEKHShrdZ1LOudWt5EouvAczrwctXhQWMJS86+IaOLyzl84b68il1Mdq5NCK/+uE9q2MK4uxkIaYHpeN316WNTGFsNoraoJD3EijU1a0uMu9pGUDWePVBN7iiugFot44qU/boaiWp2ce7PvO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751059151; c=relaxed/simple;
-	bh=DJo/Xw/Bqco4vBD6Mqkh+C8Ix5OPOEQ1fzty/x4dnyk=;
+	s=arc-20240116; t=1751059152; c=relaxed/simple;
+	bh=CSDmqDjEEPtE67ns1OANFYqHt5N2irhJTWhyp+Bnppk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tNM/ob9thseS/aOl+kOfQd7x132CdAq8ZMoKcq5WA3aMFM19f/UFDd7SLKlQJD4ImDArSoYMvk4wuQKiTZ2q+6Keeoyx7NaD6numWcDMV+Dla7FBg1tYt+PQnY+YCE15/YFOAcz7XVuM0h7dooOohhchRIFJxJbVvPliTbt13/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gQD4SIMF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=O96Ibk8skI8NIrZS765idLk4mM/6G97EL9EO67QhxakK27AknhYzIxAgD4vl4pWaBp+6yzaxAxp2y+wYdM+7uS3GAKA/1AVB1R3+P+bp21t99qUZKiXufKO7+DW9vuBOLtuX/Y+Rumnch511Upck5YUbulw1PdZViFoXShoM56o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=V2yC73wF; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gQD4SIMF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58D82C4CEE3;
-	Fri, 27 Jun 2025 21:19:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751059150;
-	bh=DJo/Xw/Bqco4vBD6Mqkh+C8Ix5OPOEQ1fzty/x4dnyk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gQD4SIMFHjE7kHEjfbyq8Bv9jRE3HgswR1vZshITIExP2INHjVXbvpQjvn/cMhU2k
-	 yTVaVahdRv/vWLPArfKV1XPJiIWWwt+HMY/k05nw4CuTX3XKYL5kepGomHutsXuOSF
-	 elS3CPQ9zaP+SnJZrxHBFwvojxvhvz1y4eZw9bthfI5YTUl0ib81mTB6fGG+1yfR2h
-	 6LSlcDATwYmPn5eJZItgVH3aUPfUqOSr9XCjhT2Z2QKNoE6gwEpcGSDm1cbKVpq5Aj
-	 +KWf5WXxSOW/Q5iPVmQU+dzLty/ZZGeXxaLryvfb9alyGhPZLGbeU69ho8KIbpozyc
-	 xsRljQdH2oBWg==
-Date: Fri, 27 Jun 2025 16:19:09 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH v2 1/1] dt-bindings: usb: convert lpc32xx-udc.txt to yaml
- format
-Message-ID: <175105914924.160757.6319015774337763114.robh@kernel.org>
-References: <20250625214357.2620682-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V2yC73wF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=TK6YsxLqexPCwLZ//8Bes1uH4QD/vwQuoEwg7UlOgrc=; b=V2yC73wF9tfyUWoyl4YZZwayUa
+	3S/LisvhLTv+iP6YAqO7t7bEI10d7/yNV7xh/4K2f/jfmUTzE1lS9gDN3V9ji+gx1pNHD/lEyozou
+	MmT3K/BClKIqeCXdsFOYY5hMYiuVORKPNT3Pq09vuI6kHHo2QEbdfgdBxLCXM2ofp2Ofvua5flAyJ
+	1REKmhqmyf+NWavmLa25R+9V3AHXJe44DuSdO3PiZJ9mCCkLLSKRTPtyVIdax9ZkQ3YIfKD6VrUQk
+	Bc/3y3ScyurVqPMe5X4uW6Ai2QbOFrGSvxPoWOkUGcAN2preRlEz5wc55PWAR3IgMByNyEZHdDItD
+	W703Mxhw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uVGTQ-0000000F0iH-2ZlW;
+	Fri, 27 Jun 2025 21:19:04 +0000
+Date: Fri, 27 Jun 2025 22:19:04 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Dave Chinner <david@fromorbit.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Yafang Shao <laoar.shao@gmail.com>,
+	Jeff Layton <jlayton@kernel.org>, djwong@kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, yc1082463@gmail.com
+Subject: Re: [PATCH] xfs: report a writeback error on a read() call
+Message-ID: <aF8KyEQIhA-7GfAq@casper.infradead.org>
+References: <aFuezjrRG4L5dumV@infradead.org>
+ <88e4b40b61f0860c28409bd50e3ae5f1d9c0410b.camel@kernel.org>
+ <aFvbr6H3WUyix2fR@infradead.org>
+ <6ac46aa32eee969d9d8bc55be035247e3fdc0ac8.camel@kernel.org>
+ <aFvkAIg4pAeCO3PN@infradead.org>
+ <11735cf2e1893c14435c91264d58fae48be2973d.camel@kernel.org>
+ <CALOAHbDtFh5P_P0aTzaKRcwGfQmkrhgmk09BQ1tu9ZdXvKi8vQ@mail.gmail.com>
+ <aFzFR6zD7X1_9bWj@dread.disaster.area>
+ <aF0gEWcA6bX1eNzU@infradead.org>
+ <aF3IPcneKbUe9IdH@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,28 +57,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250625214357.2620682-1-Frank.Li@nxp.com>
+In-Reply-To: <aF3IPcneKbUe9IdH@dread.disaster.area>
 
-
-On Wed, 25 Jun 2025 17:43:53 -0400, Frank Li wrote:
-> Convert lpc32xx-udc.txt to yaml format.
+On Fri, Jun 27, 2025 at 08:22:53AM +1000, Dave Chinner wrote:
+> On Thu, Jun 26, 2025 at 03:25:21AM -0700, Christoph Hellwig wrote:
+> > On Thu, Jun 26, 2025 at 01:57:59PM +1000, Dave Chinner wrote:
+> > > writeback errors. Because scientists and data analysts that wrote
+> > > programs to chew through large amounts of data didn't care about
+> > > persistence of their data mid-processing. They just wanted what they
+> > > wrote to be there the next time the processing pipeline read it.
+> > 
+> > That's only going to work if your RAM is as large as your permanent
+> > storage :)
 > 
-> Additional changes:
-> - add clocks and put it into required list to match existed lp32xx.dtsi.
-> - remove usb-transceiver@2c at examples.
+> No, the old behaviour worked just fine with data sets larger than
+> RAM. When there is a random writeback error in a big data stream,
+> only those pages remained dirty and so never get tossed out of RAM. Hence
+> when a re-read of that file range occurred, the data was already in
+> RAM and the read succeeded, regardless of the fact that writeback
+> has been failing.
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> changes in v2
-> - update commit message by add "additional changes"
-> - add clocks to required list
-> ---
->  .../devicetree/bindings/usb/lpc32xx-udc.txt   | 28 ----------
->  .../bindings/usb/nxp,lpc3220-udc.yaml         | 54 +++++++++++++++++++
->  2 files changed, 54 insertions(+), 28 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/usb/lpc32xx-udc.txt
->  create mode 100644 Documentation/devicetree/bindings/usb/nxp,lpc3220-udc.yaml
+> IOWs the behavioural problems that the user is reporting are present
+> because we got rid of the historic XFS writeback error handling
+> (leave the dirty pages in RAM and retry again later) and replaced it
+> with the historic Linux behaviour (toss the data out and mark the
+> mapping with an error).
 > 
+> The result of this change is exactly what the OP is having problems
+> with - reread of a range that had a writeback failure returns zeroes
+> or garbage, not the original data. If we kept the original XFS
+> behaviour, the user applications would handle these flakey writeback
+> failures just fine...
+> 
+> Put simply: we used to have more robust writeback failure handling
+> than we do now. That could (and probably should) be considered a
+> regression....
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-
+When you say "used to" and "the old behaviour", when are you referring
+to, exactly?  When I came to XFS/iomap, the behaviour on writeback errors
+was to clear the Uptodate flag on writeback, which definitely did throw
+away the written data and forced a re-read from storage.
