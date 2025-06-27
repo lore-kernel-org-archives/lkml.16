@@ -1,73 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFB041A8F;
-	Fri, 27 Jun 2025 10:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC469298CAB;
+	Fri, 27 Jun 2025 10:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751021612; cv=none; b=kmzlFnUZC8xfGoH3PRiI+ieXFqGPpllxw3cWpEfTDrm6mf4EG6d2X2icEniA3V8BVuye/ECZPiD2aYmSE4b607Xy8XgWX7e0xh+xOt0DiS/ozZe+wwkDFdHFkUxsy8qq/S0y1T/Xa5bzkb2BuKkRH5l31ZMLqIabfscWAXnpKgw=
+	t=1751021618; cv=none; b=D/D73PvdmTNYO4FQOLDBddowdFjCs27k5X5fDjMHKyrWPaCnrLbipRRvk5hEbTyIrAl007cghRDOgmKTv63FRYCn/iI1IHUJ72pmdFI1mnn8Urx23b7zQkryfOSAMu635zSIsv8Z+GYAmG8SXFgmOnJJywgkaGwfN4Z5v2CgCBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751021612; c=relaxed/simple;
-	bh=VCjbvRdf6XSyodZZQyEnO3752BxeuOjhcMPqXymOMWU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=iXXxUTEj+Fnbd83LOpiFzeXh1G4fNWQBAs8IxwAjs5OJgenMkziknZuK6+uaKEaG0C9Er6eloLavYs/WZlliCVwr07ezu+RIzb2bTkW4BsPtmbIJqSHDXMYqkzPGV1lQFqOB1B1OYoiCEmcu+mpj+OLdUyIs7x3BP82GTsIQ3GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kwzJ9fZi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751021618; c=relaxed/simple;
+	bh=pxfn6oqKdlWo0GE6HNa/lOA15Wgs5GoyzyY0cfYI/yY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VBVaNU5LjAp9VK5chG86d3+vBvXYlPj8vIpWPLwYpjUoMrw6U0LISezQ2eCf/XvcUu/tm1cYTnHdmxoZmJgOFaDCuboQ8gXjgGrSGwy2m6AZQbqytu252/dkpFFueLB4wFRlHZQ7lRmal0Xnk084IhJQ+tQ0gQk1nIkAN8/JjOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=N2fbB8AQ; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kwzJ9fZi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36CC2C4CEE3;
-	Fri, 27 Jun 2025 10:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751021611;
-	bh=VCjbvRdf6XSyodZZQyEnO3752BxeuOjhcMPqXymOMWU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=kwzJ9fZiZW0Z7dWIRbocLMuMAmCxPeBuzff8/2znikaRc1brjLdOwsYYf2XesGt1d
-	 duvcWDO8WMkc4zpbViTfwO/sg3qDNiOdTBOn1GFuvls0iP8rAu1Mz0RkaFkXx0Vvb2
-	 ge/2qRgFkb66/3uv4nwbwV9pDqZl0lakEs8KP0lQsAJEww0LVJ+vSNSC09pg4O1VXT
-	 cE/0Z6NocHUxvdPi8s1MfCCau6V+qftv/mVkKVCekNLTzR3ypRxUJPqSbOZBmTAxSK
-	 zVIFkX6ZroP0LjIUo88wDbNQDZtNeOdfBcGR3K1kpUmXP6qWIdIZDT2mT98EDZ8eKe
-	 FQ7MnywY0WvcQ==
-From: Srinivas Kandagatla <srini@kernel.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Janne Grunau <j@jannau.net>, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
- Hector Martin <marcan@marcan.st>, Sven Peter <sven@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Sasha Finkelstein <fnkl.kernel@gmail.com>, asahi@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20250610-nvmem-bit-pattern-v1-0-55ed5c1b369c@kernel.org>
-References: <20250610-nvmem-bit-pattern-v1-0-55ed5c1b369c@kernel.org>
-Subject: Re: (subset) [PATCH 0/2] Extend nvmem patternProperties and then
- fix W=1 warnings in Apple dts
-Message-Id: <175102160789.6398.6252477701848323795.b4-ty@kernel.org>
-Date: Fri, 27 Jun 2025 11:53:27 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N2fbB8AQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=yCxgES6+AiHPFhHwzvZQriIUuOAhP73ey2SdBgFz/io=; b=N2fbB8AQAxXkgTuwSRm3lirbgY
+	Fr/CG3CxVovqXOyEBuQuoCvNL7ZrEEPq0MDA8nPN7C6lOfXmC035UazzdKQ33I/le4S7i4A/zMRHR
+	/BfH0T1GC8C3OWJLXHMHsb1gB46TxliXFBvsNAsA+OGhQ8lvbxKFeo8pzx4PTo69FBFUt+R288JNP
+	8k41oO+e45FzSn+NWw3Qo4goR1118JiUYo56O9WyuI3bKuPF61Nbs6ZfpPnj0TnDXjNaWdVsutCZA
+	mhKyPvcFFtE6HgDvfz7mvvKjsD7ygpivWkx1Q26bjc9OrO2x1BZHsc1g0R5woFGd7axMGMpBSsqL+
+	Naol2nfg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uV6i1-00000006J3B-00U4;
+	Fri, 27 Jun 2025 10:53:29 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 911C1300222; Fri, 27 Jun 2025 12:53:28 +0200 (CEST)
+Date: Fri, 27 Jun 2025 12:53:28 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Weinan Liu <wnliu@google.com>,
+	Fazla Mehrab <a.mehrab@bytedance.com>,
+	Chen Zhongjin <chenzhongjin@huawei.com>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Dylan Hatch <dylanbhatch@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH v3 42/64] kbuild,x86: Fix special section module
+ permissions
+Message-ID: <20250627105328.GZ1613200@noisy.programming.kicks-ass.net>
+References: <cover.1750980516.git.jpoimboe@kernel.org>
+ <cf1cfb9042005be7bf0a1c3f2bdbeebc769e3ee4.1750980517.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cf1cfb9042005be7bf0a1c3f2bdbeebc769e3ee4.1750980517.git.jpoimboe@kernel.org>
 
-
-On Tue, 10 Jun 2025 17:17:33 +0000, Sven Peter wrote:
-> This brief series fixes a W=1 warning recently introduced with the Apple
-> Silicon PMIC NVMEM nodes. We have cells that are the same bytes but a
-> different bit offset and these currently result in the same node name.
-> The legcy layout already allows to specify the bit offset in the name as
-> a suffix but this isn't possible in the new fixed-layout.
-> Thus first adjust the fixed-layout cell patternProperties to the same pattern
-> as the legacy one and then fix the node names in our device tree files.
+On Thu, Jun 26, 2025 at 04:55:29PM -0700, Josh Poimboeuf wrote:
+> An upcoming patch will add the SHF_MERGE flag to x86 __jump_table and
+> __bug_table so their entry sizes can be defined in inline asm.
 > 
-> [...]
+> However, those sections have SHF_WRITE, which the Clang linker (lld)
+> explicitly forbids combining with SHF_MERGE.
+> 
+> Those sections are modified at runtime and must remain writable.  While
+> SHF_WRITE is ignored by vmlinux, it's still needed for modules.
+> 
+> To work around the linker interference, remove SHF_WRITE during
+> compilation and restore it after linking the module.
 
-Applied, thanks!
+This is vile... but I'm not sure I have a better solution.
 
-[1/2] dt-bindings: nvmem: fixed-layout: Allow optional bit positions
-      commit: 6aa656ce94693c8712c004045375e2221b157659
-
-Best regards,
--- 
-Srinivas Kandagatla <srini@kernel.org>
-
+Eventually we should get the toolchains fixed, but we can't very well
+mandate clang-21+ to build x86 just yet.
