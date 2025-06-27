@@ -1,94 +1,114 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E586293C48;
-	Fri, 27 Jun 2025 09:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C62F293B44;
+	Fri, 27 Jun 2025 09:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751015069; cv=none; b=bkbJb3V4wbvE7lpLAz+TaxvOH9tiUC7LDEA4zZ9tJRpJumqF2w7agpXoW8FkRPv28zNDMtIpHKEdpKMReF43Ccr00lJaT4v6nXN9msCTLgTH0LWUVEZOmnhCNTsyE4m2hJHi34Vi4R0lX2GDIudq1hFRXNcsIqweNkVUS8QTPqc=
+	t=1751015097; cv=none; b=hgW9IZfEPQy+jzZ5Jd1F+jF1BrNfg8gyvizwuQvm7LEEjFgt091IujVo9cU20N86LJQAXE9Ts1koipaAcdyJ7ufrMino7CD/mO/yJLdCe1AghdWh3LyDsTLTJx6p6fWLv4AHJ9d0q2V8+HGzeBuhpEiBGNYhD/dokWq2UrPGPGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751015069; c=relaxed/simple;
-	bh=WK6qQPO9YtNDQ0NAVtBK294K4n0DYb70ujFjHoVezxo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UbR/J9kUcr9s9gRLw2+N7Q21tyey5mdZur2MevJDKQvvDBCTAvt3pNQeshLmAbfNU7g3sz85RbE3t7xvmAzcNk8XGelFjXC77651N8GHG0+O8kWgeiJCo6aKDLl6Cei55cV6tTxxyGN+FToDQ7KPMZBQeIIpYRxJAQiQM//ZIsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FDAA1A00;
-	Fri, 27 Jun 2025 02:04:09 -0700 (PDT)
-Received: from [10.1.196.46] (e134344.arm.com [10.1.196.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F7633F762;
-	Fri, 27 Jun 2025 02:04:23 -0700 (PDT)
-Message-ID: <603eb4c7-5570-438c-b747-cdcc67b09ea6@arm.com>
-Date: Fri, 27 Jun 2025 10:04:21 +0100
+	s=arc-20240116; t=1751015097; c=relaxed/simple;
+	bh=yURdhbEwnnJumfHvPTjAkd6H7BvKAAun9yVi+i2aN8U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JFB3xJERPSjJZbiRkKbn0O3PVNjXcX7mErsJuHq6nzoBSN42ieYWF/joh7PD7jUPu+HCJGAtJiD3YZ6LtEbf3FIhiaMBi7Sx3Ip6iGTdmGHW3ZhQnFaFQywtV8whLisGc/+XU4DheHmeaG8B9Bqcr6BrsoMny/eBDb9Fzryx1YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cluPxEQ2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cluPxEQ2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DC81C4CEEB;
+	Fri, 27 Jun 2025 09:04:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751015097;
+	bh=yURdhbEwnnJumfHvPTjAkd6H7BvKAAun9yVi+i2aN8U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cluPxEQ2/Yw+lsaExWQSqim8gpaPow1MuzmH6AJPjA6FYxLuqysrYot+32JDncobl
+	 oRO+xLlxLqHtZfrpee0p2DEjeZOAEtTLveW4sMHVn9km8Veeu8h1JBo7WTsJizO8O5
+	 XtaR8ANNpH18kayVwYm4qKjXo0l++K34oakdNEZJNRVffeCuditeRs2YUFlut+QRUg
+	 feNsquTpuXRv82ePwbI6/KPObvz7O09jtagsltOnaY2G47TgUPjATvnx10rfXMMLP0
+	 nqWQJxiYTDr2WzLm74YsyXLf59wtGxrK4K6fYkkSKcQ6QRibNY37kgjtOgcC6iAuve
+	 6AEmdfBqvv7Ww==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5535652f42cso2203101e87.2;
+        Fri, 27 Jun 2025 02:04:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU0H/e4FyrdoYc+MIRxtTrBwKWWzKUdP2x3mfpRe7Z+w39boLXkzddgpvTAowEs81evSroi43Z1iNp3k61K@vger.kernel.org, AJvYcCVg1PlV7bdUVCcKLmLqcdW5w5PBqrxiuzQwFkmy8VKXLLw8VWOXnxMoLmrXXM8C4Poaop/O0/LQxGQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIcVuow9H8v1GFQyuSRk7zhNIBEyztQziE4348ok0BTO/EN7TI
+	UJfz13CfUXXBmIp5DZXi+jQ0WMLXKM2/3UdbCSMFtCev/YJ2QLaMKURTsDQninI/yzxoIwd/WyV
+	1JWwWlN8Pt0t64VQ0i+jthEwOuTehyX8=
+X-Google-Smtp-Source: AGHT+IGWLtzS7qhakWBsIJmXdocEsS4KtnbetBMcTYRSWbAXF/NDfP4A6g/gxgSSz3n8B6djS8GoEVU9YUJHB1nVLJw=
+X-Received: by 2002:a05:6512:ea5:b0:553:a469:3fed with SMTP id
+ 2adb3069b0e04-5550b7e7b6fmr802342e87.11.1751015095791; Fri, 27 Jun 2025
+ 02:04:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/22] arm64: Generate sign macro for sysreg Enums
-To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>,
- Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20250626200459.1153955-1-coltonlewis@google.com>
- <20250626200459.1153955-3-coltonlewis@google.com>
-Content-Language: en-US
-From: Ben Horgan <ben.horgan@arm.com>
-In-Reply-To: <20250626200459.1153955-3-coltonlewis@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250627030612.3887582-1-rdunlap@infradead.org>
+In-Reply-To: <20250627030612.3887582-1-rdunlap@infradead.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 27 Jun 2025 18:04:18 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARmi687t4YhCTaVXKr6EKCrNo_zNxzzfVEvDPUs0EGMew@mail.gmail.com>
+X-Gm-Features: Ac12FXxO8KMj-DIflB5rQ2UimD06Fs03oI0CCUSQcPokBTFrC6-Lh3hwhtt6SKQ
+Message-ID: <CAK7LNARmi687t4YhCTaVXKr6EKCrNo_zNxzzfVEvDPUs0EGMew@mail.gmail.com>
+Subject: Re: [PATCH] docs: kbuild/kconfig: add alldefconfig to the all*configs
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Colton,
-
-On 6/26/25 21:04, Colton Lewis wrote:
-> There's no reason Enums shouldn't be equivalent to UnsignedEnums and
-> explicitly specify they are unsigned. This will avoid the annoyance I
-> had with HPMN0.
-An Enum can be annotated with the field's sign by updating it to 
-UnsignedEnum or SignedEnum. This is explained in [1].
-
-With this change ID_AA64PFR1_EL1.MTE_frac would be marked as unsigned 
-when it should really be considered signed.
-
-Enum	43:40	MTE_frac
-	0b0000	ASYNC
-	0b1111	NI
-EndEnum
-
-
-> 
-> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+On Fri, Jun 27, 2025 at 12:06=E2=80=AFPM Randy Dunlap <rdunlap@infradead.or=
+g> wrote:
+>
+> Add "alldefconfig" to the explanation of the KCONFIG_ALLCONFIG
+> environment variable usage so that all targets that use KCONFIG_ALLCONFIG
+> are listed.
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nicolas Schier <nicolas.schier@linux.dev>
+> Cc: linux-kbuild@vger.kernel.org
 > ---
->   arch/arm64/tools/gen-sysreg.awk | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/tools/gen-sysreg.awk b/arch/arm64/tools/gen-sysreg.awk
-> index f2a1732cb1f6..fa21a632d9b7 100755
-> --- a/arch/arm64/tools/gen-sysreg.awk
-> +++ b/arch/arm64/tools/gen-sysreg.awk
-> @@ -308,6 +308,7 @@ $1 == "Enum" && (block_current() == "Sysreg" || block_current() == "SysregFields
->   	parse_bitdef(reg, field, $2)
->   
->   	define_field(reg, field, msb, lsb)
-> +	define_field_sign(reg, field, "false")
->   
->   	next
->   }
 
-Thanks,
+Applied to linux-kbuild.
+Thanks.
 
-Ben
 
-[1] 
-https://lore.kernel.org/all/20221207-arm64-sysreg-helpers-v4-1-25b6b3fb9d18@kernel.org/
+>  Documentation/kbuild/kconfig.rst |    8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> --- lnx-616-rc3.orig/Documentation/kbuild/kconfig.rst
+> +++ lnx-616-rc3/Documentation/kbuild/kconfig.rst
+> @@ -67,12 +67,12 @@ Environment variables for ``*config``:
+>      with its value when saving the configuration, instead of using the
+>      default, ``CONFIG_``.
+>
+> -Environment variables for ``{allyes/allmod/allno/rand}config``:
+> +Environment variables for ``{allyes/allmod/allno/alldef/rand}config``:
+>
+>  ``KCONFIG_ALLCONFIG``
+> -    The allyesconfig/allmodconfig/allnoconfig/randconfig variants can al=
+so
+> -    use the environment variable KCONFIG_ALLCONFIG as a flag or a filena=
+me
+> -    that contains config symbols that the user requires to be set to a
+> +    The allyesconfig/allmodconfig/alldefconfig/allnoconfig/randconfig va=
+riants
+> +    can also use the environment variable KCONFIG_ALLCONFIG as a flag or=
+ a
+> +    filename that contains config symbols that the user requires to be s=
+et to a
+>      specific value.  If KCONFIG_ALLCONFIG is used without a filename whe=
+re
+>      KCONFIG_ALLCONFIG =3D=3D "" or KCONFIG_ALLCONFIG =3D=3D "1", ``make =
+*config``
+>      checks for a file named "all{yes/mod/no/def/random}.config"
 
+
+
+--=20
+Best Regards
+Masahiro Yamada
