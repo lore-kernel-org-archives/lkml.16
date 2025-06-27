@@ -1,176 +1,202 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2050.outbound.protection.outlook.com [40.107.92.50])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D225A14A82;
-	Fri, 27 Jun 2025 10:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751018789; cv=fail; b=T4Lydbimnx9MR2i5muDm+3WErybG/KCMpbabYpYHcDvdlMlbYgKzmrLzV4L7cc6WEeh9m+PX3/DVSPpDn28N7X1JxNYKO/yPN4HTJQg2+9YlnVRn9YeHw1gbnh3EX4QE/I8DqQ+yENiA2Qwk89qB5nd6T9ZQ3evjuh4nY9jUTcs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751018789; c=relaxed/simple;
-	bh=UJ/Oqmx3Go3wWshC+lfG6XNZsX7NHVCHncmtrS2gmj4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jeRa38GSluJRXgRQpkoQZa6ua1Jqp6fouTp551Clmjval8adPvlYIpEtZ2bkZ/DElXyf2uzplDUzpnvA2N0/RXMPL6mmfyjade1/mv7lbb7d3+lTxDWg+Py4zrBSQWXs83RlFoHwrQ3b5zmI/qJ9eeZUpTxDNQd1Pk9YFkyEBOo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=O84Zivax; arc=fail smtp.client-ip=40.107.92.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EA514A82;
+	Fri, 27 Jun 2025 10:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751018806; cv=none; b=RnPE55tePpWSRLZ3n++AvLlXt0enkycJbdWRfkvZvJIOAvZJomKGJFIFjB42V7l9DBVB8JBazg/EnBAArwuT5xHPjVlS45oNDvYFlOXDDApGd9DxrcEc2yV8qJ5j+4lk1E+72srGni5ougsmEgqEvLdqP3QtLCriTbA2FZHahJ8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751018806; c=relaxed/simple;
+	bh=fFvzkvZn0bd2VOmS1GX3tRdsOr2lpN9Cu344yzpEDcY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pGnXNxFDazVVXJpSPBR0T81rn8lk0qe1EQzOXBSmHaH+OcZVN3pg9eiaaegRRrFQDYlQ4joA8RJJYK8BYitNw83PYVufouIpi44IgaMwp7HEWQCTe5a+gU715AbU5cjmKu87gakA3KH89zkbvJwH6gSDlKKQ0VbdWcsLyhmHTn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dnl2p/3W; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="O84Zivax"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cnZTxHF+ARWOjgx7fgDuUUlDZalmyEQaBFUdPPtb32/9dnZsyuNZ3YRzV0tqLBt86bkdjkokrXI2WtmJK/+4IEPdy9uIkHoUtJPSwmCUPu+w+pj/lu+Cg94/redTVtPnMw7kTE4pWT13CtnNMArrzn4MMgRiRvUO7HRUO10Y2J2y2d98YtKpIAAtoBtJ5YG0iP88xjsiZ5fPVw68+suZJomn9DswCwaT70G/xlaOo2x49J26GUPCJzyCaYkDucz9577t3bvNs8Iqk00QgLkoC5SPbpzcC6xa5J27JIGTre1P5VznA26q9nWIUGi2o/tBY3NjjPZau0hVaRBmqwhzIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UJ/Oqmx3Go3wWshC+lfG6XNZsX7NHVCHncmtrS2gmj4=;
- b=BgZs9rRHmQYM5xP9WV3iMAHn3CEK2PZ80BEiTL2l2DWQHPE5ip24UnLyjDP3d5+oFWOSQIxBbPqbDBSE3Kv5e0MppCEgTd9lnSaJwpyhtMjxPAKtR4VUBCLWCxA87ehK7wzvCI7ncuydLYDf8pMXIcBtszL43V79LTNgZnkcfi46lWPR1vC93NDCwguh2BV8t7645BYSq8xci52HdUnNDbvoy4ypMckeRT6nX/E83a4n3S53Ir/UufBCzJccRVhijE0BkXk7gwbS+27CurHU5IgFTG1BuCQ9Uw8DLYfuejwVoRGNzj5S+pMmlldJHtbNTELNIQb8msrfCfoyJ5rpIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UJ/Oqmx3Go3wWshC+lfG6XNZsX7NHVCHncmtrS2gmj4=;
- b=O84Zivax6IE/L6dB9QcREg0k8CKSQlAOemRPIWLAo6e9fu+Jdb1/J5AIRKetz/UMhEP1FmdrhHEVK5slVEvh3BAK6w6COckIcMu80UaEmmOd0e2EjHNZE/gauplVYwEYJ6+aAdJVcgVRvAce+044Jl2n6ZDZgc9cLMMf+vOWR78=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB9066.namprd12.prod.outlook.com (2603:10b6:510:1f6::5)
- by MW6PR12MB9019.namprd12.prod.outlook.com (2603:10b6:303:23f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.21; Fri, 27 Jun
- 2025 10:06:24 +0000
-Received: from PH7PR12MB9066.namprd12.prod.outlook.com
- ([fe80::954d:ca3a:4eac:213f]) by PH7PR12MB9066.namprd12.prod.outlook.com
- ([fe80::954d:ca3a:4eac:213f%7]) with mapi id 15.20.8880.015; Fri, 27 Jun 2025
- 10:06:24 +0000
-Message-ID: <68b70504-b9dc-4997-96fe-0ae0e6b7a205@amd.com>
-Date: Fri, 27 Jun 2025 15:36:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v3 00/14] Introduce AMD Pensando RDMA driver
-Content-Language: en-US
-To: Leon Romanovsky <leon@kernel.org>
-Cc: shannon.nelson@amd.com, brett.creeley@amd.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net,
- jgg@ziepe.ca, andrew+netdev@lunn.ch, allen.hubbe@amd.com,
- nikhil.agarwal@amd.com, linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250624121315.739049-1-abhijit.gangurde@amd.com>
- <20250626070748.GH17401@unreal>
-From: Abhijit Gangurde <abhijit.gangurde@amd.com>
-In-Reply-To: <20250626070748.GH17401@unreal>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN4P287CA0077.INDP287.PROD.OUTLOOK.COM
- (2603:1096:c01:26b::13) To PH7PR12MB9066.namprd12.prod.outlook.com
- (2603:10b6:510:1f6::5)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dnl2p/3W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751018804; x=1782554804;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fFvzkvZn0bd2VOmS1GX3tRdsOr2lpN9Cu344yzpEDcY=;
+  b=Dnl2p/3WcR+OGeGatg9kT2A3Duvk7fW8aiaYnIDe0C7q4GQ18d41M3LO
+   +Yo6cn69qnim5qiOEVlzbB3opOxGiHQGrtQN2KSGqe/uWHKJ29CV4qwiT
+   nUbSlciKCmXi9T0Ywc4byS5s1VD57zsXOAe1wCwpG2ENOgvWHBZhbHN2O
+   Xf/RmMas0manYRThd0m48UiQZTGht1h1GDkKiiaXgyPTi6TKkDwhUrGtK
+   odGq+xaDxjSHjaB41mdfn9lUv3VVusfxi5hn/dDSre3bRle34P3jT067G
+   fzy/zbsmV1lVXDM6BB8UtUg0sZ2lN6ibirrXYtANNQgYyIajZoksdPske
+   w==;
+X-CSE-ConnectionGUID: sZ44wPE+TfWccksXNza/ug==
+X-CSE-MsgGUID: QgBUEjdkR7aL4WbjnhBYgQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53426425"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="53426425"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:06:44 -0700
+X-CSE-ConnectionGUID: ZukoQkmRTSy9ssUnn59tcw==
+X-CSE-MsgGUID: bVCMUO8tQGmNUpGo6cPWvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="189962410"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 27 Jun 2025 03:06:42 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uV5yh-000W34-1K;
+	Fri, 27 Jun 2025 10:06:39 +0000
+Date: Fri, 27 Jun 2025 18:06:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, linux-fpga@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Moritz Fischer <mdf@kernel.org>,
+	Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>
+Subject: Re: [PATCH v1 1/1] fpga: altera-cvp: Use pci_find_vsec_capability()
+ when probing FPGA device
+Message-ID: <202506271724.dQ1jAckC-lkp@intel.com>
+References: <20250627061431.522016-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB9066:EE_|MW6PR12MB9019:EE_
-X-MS-Office365-Filtering-Correlation-Id: 400ff8c1-da41-47dc-074f-08ddb56245e8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VkxCM2FsNnUrdGtuMU1CMUdqeSsxaGRoS0syc2EzUmpVTGpzZkJCa0dUbzlR?=
- =?utf-8?B?QkZ4bmlsdTZZZzRKN0VFYnRVZS9vQUNDVUpBWjdmUjFLdnRyeWVFQStIb21O?=
- =?utf-8?B?bURPVDFZM3dnWmNJL0F3VDE0UVdVYVAwQkRJUWQ5REtFTlNoalk1QXFzYmZ5?=
- =?utf-8?B?REVwTWh2OUlBT0FsM0hGSlMyVk94QU9kZXpWMkF3QmllZmRPa0xLcURZWHNF?=
- =?utf-8?B?ekpPYlNSbUhQbjlUbnFLSjY1bTI0cDZnZGhsVERWaklPc25MTldVYkR4dHgr?=
- =?utf-8?B?eThTSXB1cmJVMmlZZmdVZm4wTGttK0cxVFc3QnJjUzBqdW1aZWIvVDZTcmRj?=
- =?utf-8?B?RFFNYU9rQk5CK2JuZ00vKzNmRm5TZnFvbGtaU1Rza3FLeE8vT0NZNDBvQW8w?=
- =?utf-8?B?cnJqVGcwMk1qVUdTejlNN21CZkhzLzJ3cXpVekpqU1NGaTdaV3hZTSt3cXZq?=
- =?utf-8?B?QjZCY0JtTXh1cEJiUi94OUxyOXVrUkYrYi9BdTl2Zy9GYzhlU0VETWxjNHRU?=
- =?utf-8?B?QWY5bmVyQ295QlZ2NG1jVFJMWVUyNlhEWHpVVSs2WlNZckl4bi84eStDQmFj?=
- =?utf-8?B?Z0J4M3IxYjV3U0ZLZW1uMi9mTVIrUmJWbDVqMHFuaW11MTIxOVZTWG4rOEox?=
- =?utf-8?B?RzM5ckFUMmk0aTN1OXVEdVQyY283RE9hWkcrMnNMSmVQbG84UjZpb2ZjSkVT?=
- =?utf-8?B?MFVkd0p5VE01M0lxeDBBM1Y3V21MR2dIc1pDUnVFdHJBeWJQRHVrTmwxbHFP?=
- =?utf-8?B?MzZ4aWlEL3ZiYmZKMW1mQnQvUktmaEdhdEJCQzZTOUJqeDRPUDVYOHJ0cWlM?=
- =?utf-8?B?a0V2MVJxeTVma2VxSisxcXppRGkvZ2ppQlZUL3VHVzA3RmNjVzFRb2tzSWE2?=
- =?utf-8?B?NnplNUljT09kVmJOTFNlc1QxbENLS0N5eTVHUjNWSjlCOGhTNmZLTUNqQzhy?=
- =?utf-8?B?WnMrY3h5N2VhNUFaK2MwZW8wbmplVzBuUlc3a2FSeFJ3bUN0ZGNiaTZkV29E?=
- =?utf-8?B?cnVrRlo5YStXQnA1RE5vaDFSYy8xaC9IaG53T2FKR3l5Q3BjR1hLUWlkR1dj?=
- =?utf-8?B?dWtuNnE5ZlJ1N3ZJM2tvZjN4b0J0cjZmRDYrOTdleEQvSExXUy8vdGw3d2Rk?=
- =?utf-8?B?aUJhK0l6enVBWHUzMEM5SmpIamM4L1BQdHB1a3BxRHNnMG9abnR0ZFl0YjVm?=
- =?utf-8?B?Q0JyRmY1UElONnRUMTNqVCtLTkRWeWJSMDE0TEMvMW5yYVhBdS9RSTA5aGw1?=
- =?utf-8?B?RGUzWmFwOERDTG9EVXl5NTlaNXpZM2QwMENEVmZkY2lmTXNBTndwZnpkOWts?=
- =?utf-8?B?SUZRZlRCZE40NzlGcStlZmpCbHJhQ0lwSjRVUmd6bjFwVVFRZUsvR3c4UWg0?=
- =?utf-8?B?L3I1b1kyQzNYMG5mQUc0Q0hOTldKS0JPU0syRlcwSDVhSTlJeVFPazZhNkhQ?=
- =?utf-8?B?U3JDUGgweStkeXVpM21Hd3FSV1FLTUdIYXQvcnJXSXhOSE5lZWJxVUpwQ3JH?=
- =?utf-8?B?bE5uMk1Tei9NUTk4QjNJTko4TnBGQitTcnBmRXFNVWJnVTl0aVErNzlaWmVS?=
- =?utf-8?B?d0lGemJjckp2M3htdzNNb2U2dGxiRlBMSEc4emVkUUtrM1hEUXFiV0NPT1pp?=
- =?utf-8?B?Njl0T01KUUlCbmY1Z2VBcS90eTNFU2FyQWJ3QjJuYVFkeVNOK1ljNXlyaFNs?=
- =?utf-8?B?REUrbTRPTytyQ0pLR3ZWWlAvKzdxQ202dXRpVTJFU3d0cmx2Nnh4Ym1sUjZB?=
- =?utf-8?B?MytsZ1M0UlJkODJsNTl5NEJGcTlkaTVmdVZTaS9mNXg5SS9JY3hJZWZwREtk?=
- =?utf-8?B?VGk5WXZwTk83eGVFMkNXdkVTcHk2T29waEFLeXNqLzRUcm5VY2Q0NXF0aXBD?=
- =?utf-8?B?ODF3N1FpYkZWTGg1NnhhMGY5VHdjOVhVdzNWcHBBQ1MzS2ZmeFVCUVdoamtJ?=
- =?utf-8?Q?YfOlgu2JJD0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB9066.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aERhN2xNWEc2YUtsTmZzemJtWU9VVFJoWGVBUElqMUIxSm15eHBQUWpJbnll?=
- =?utf-8?B?OXFPYnlQdmcyZzF3bWdPanBwNEdwTDRmS1ZQT0dhdHoybml6SU9URFYrc2oy?=
- =?utf-8?B?MHhRWUl2YkpGekFjVGFORjlJZndVVEtldksxUldPUktNR3FDTnJwQ05zVUk1?=
- =?utf-8?B?QnNXU2pkYVJBODd5Rk5VU2ZGeEVOQ3o1WFNHMUZnVWIxSFdjck1NbG9pWHl6?=
- =?utf-8?B?QWp6Uk8wc2JFZ083M21QYjdZRnlZS2JqeVdWRGZiczQrTlliV0dHRGQ4c05i?=
- =?utf-8?B?UE1xOTVudGwrM0VZZzBaa25UQW5OaDlDSFQ2ZEU5UjI0RmlidDgyLzBYdmFO?=
- =?utf-8?B?OGNyNTdZaGc2dnR6OVlTakZXRGZVN2xoa2pCM3VDdmxGMVJldXdVUjFjeWV2?=
- =?utf-8?B?NmZvdUcvRjJiTHZXYXBicDNLUGFHQ0s3RGcybTBPb2pQNWJXbUg5OHo0MytP?=
- =?utf-8?B?NnhxcGJZUzh3N0prdGZVcXJFYzBUVkFDcm5qQmwxVVllOVpzL3ZLSjk0dzdl?=
- =?utf-8?B?NHhwUm13enB5VzVvd2dReVN3N2U2SEZLa0xZN0xkak1Ba2k1dStOdGVzUm9n?=
- =?utf-8?B?OFRxN2wvVjR3NG9NSk5OdTlwaTE2M2pIbDBOTlJQbTZ6VWhHVzhod213UGVZ?=
- =?utf-8?B?Y25TUk4rYlRlalJmMExycitmeFFMZ2lNeEsrcGxOYXFuUXBaNnpZQXM3NEI3?=
- =?utf-8?B?R2FrY0FPRjRRRGJ0L1haZEVjZlVhY21ITEQyMFRId2tqV1lQWWszZWpVZU5P?=
- =?utf-8?B?WnBTZnFEU1ZubFBFMDI0SXV6RUFLOGV1Rk5jSFlKWklaQ2xXSGxTWXA4c0Mw?=
- =?utf-8?B?dFEzWFZZOCtwbDNVNEthdzFhdDN4b1FoNHY0UXV6b2tUbWt0REMzT1hBSDRI?=
- =?utf-8?B?OWFzODMwbkk4ODlYbGRJRzVTUkxYQm9zeW9WMTJWRlhPNWZ6bmd1cUxUQU9C?=
- =?utf-8?B?ZGtsQUt4TDlzYVNHZU9jTy84VVBna2h4bmNLcmFSMnBjRERWaHI0bi91SWoy?=
- =?utf-8?B?Ky9Qd3hBUGsvTHJpRDRqaXgzRkVRT1dTV2kxYUNKeVQ3YzBnZTZDdk9wcmda?=
- =?utf-8?B?KzBCVUw4YndvNjAyRjRYaWVyektrUTZLOVJGdDU5WldySEx5RHN2ZXVxbkRt?=
- =?utf-8?B?YUdPdG9wRWsyeGFneVhtTTdqY2Q3KzVUR2s3ckZ3WDkxQjI1SnE2TFBYdjk5?=
- =?utf-8?B?YVlLRkJ6RmNnQXlsam41OTM0UVZYeloyN1F5d3FWa0xZUjVTQUZVb1ZDcnZZ?=
- =?utf-8?B?b2taU21pODhhSGVDOHFJc2hra3VZcTl1N3NVSUpHckdqYWtHbmZiNzMzV01Y?=
- =?utf-8?B?Q3J4TDc4WjQwY2V5Z1ZUU25CcElVbzc4elJKaWtMZGJ0bWNnZFlzRmhtM3Rr?=
- =?utf-8?B?QTd2ZmRkS1U5YVp1aThwL1NId2JEaUhzNWQ0bUoveEpmTVA1ckx6WFZoQmJi?=
- =?utf-8?B?YlpoUFJZeDVHWHhmblArVGNpRlkzaUo5d2E3UjVJcXltall1ajFYVmhDYm1Z?=
- =?utf-8?B?aCtrOGEvOFNjdnRVWm5YQ2pQdXoveEsyQlZvSnpUMTR6RU11TTAyNmtmNk4y?=
- =?utf-8?B?QjhxNnFoWDdMWFkvM1NDQzhwYjZJeGlqbTNvUE95OFUvU01pcTU3UmZsRmRk?=
- =?utf-8?B?TjNpcnIwZXhZZGM1MkFSUk5YcUJZT2xhZjJkeWZnbWpCTE5ERU5QRkIyYWNm?=
- =?utf-8?B?L003d2Q4RUpVdVFSWmhpaEczUzhkeSswdzhXMjl1K1pYQVdubnFrekNBbUJs?=
- =?utf-8?B?YkZmR0hqTmdTd21uYmc2VDA3S3Z2bGF0dkR5MTlzQ3oyUkdVMDVaamRFUk9i?=
- =?utf-8?B?VDhGUTYxZk8vdmZpSGI5cDNzWHZYL3BqNDA3aEZhd2JEVGx5SEs3NjZDUlMz?=
- =?utf-8?B?cW8xSU1oK3YwT2k1NFVUd1FreUJOdk9QeE5Lc0xYeWZFM0JxbElrcXpsd1Jq?=
- =?utf-8?B?SHZOZkZpNVdaM1FWN3pQd1BkNElNTFBJdTlGUUJvcTc5UnFTNEpzN1kxeGM3?=
- =?utf-8?B?VVM1OXRXSHJMVU9CME5NU3JSMVdvWFJveUw2eUlOaUxqOXFkK0tNOHdTK2RV?=
- =?utf-8?B?YXZRdm42SkRBdlovV2diWmpCV2lCMnNGdmtUdTVtMldoMU1mU3dsOEVBdnl1?=
- =?utf-8?Q?dCaQAEucbmOsPi2iwRQIhFZ26?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 400ff8c1-da41-47dc-074f-08ddb56245e8
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB9066.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 10:06:24.7090
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QJo+OWxoxG8RulJMn9QARZvkCJHRAr2vWgVh7e81y6wZzZ/aDBq0o05uZ7sbAr+C2aZe/qTallVXWUCcKzqAUg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB9019
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627061431.522016-1-andriy.shevchenko@linux.intel.com>
+
+Hi Andy,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.16-rc3 next-20250626]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/fpga-altera-cvp-Use-pci_find_vsec_capability-when-probing-FPGA-device/20250627-142050
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250627061431.522016-1-andriy.shevchenko%40linux.intel.com
+patch subject: [PATCH v1 1/1] fpga: altera-cvp: Use pci_find_vsec_capability() when probing FPGA device
+config: i386-buildonly-randconfig-001-20250627 (https://download.01.org/0day-ci/archive/20250627/202506271724.dQ1jAckC-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250627/202506271724.dQ1jAckC-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506271724.dQ1jAckC-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/fpga/altera-cvp.c: In function 'altera_cvp_probe':
+>> drivers/fpga/altera-cvp.c:577:18: warning: unused variable 'val' [-Wunused-variable]
+     577 |         u16 cmd, val;
+         |                  ^~~
 
 
-On 6/26/25 12:37, Leon Romanovsky wrote:
-> On Tue, Jun 24, 2025 at 05:43:01PM +0530, Abhijit Gangurde wrote:
->> This patchset introduces an RDMA driver for the AMD Pensando adapter.
-> Please send PR with user-space part for this driver.
-> https://github.com/linux-rdma/rdma-core/pulls
->
-> Thanks
+vim +/val +577 drivers/fpga/altera-cvp.c
 
-I have raised a PR https://github.com/linux-rdma/rdma-core/pull/1620
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  571  
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  572  static int altera_cvp_probe(struct pci_dev *pdev,
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  573  			    const struct pci_device_id *dev_id)
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  574  {
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  575  	struct altera_cvp_conf *conf;
+7085e2a94f7df5 Alan Tull          2018-05-16  576  	struct fpga_manager *mgr;
+34d1dc17ce978a Anatolij Gustschin 2017-06-14 @577  	u16 cmd, val;
+823fd4b4a8bd1f Andy Shevchenko    2025-06-27  578  	u16 offset;
+68f60538daa4bc Andreas Puhm       2018-11-07  579  	u32 regval;
+823fd4b4a8bd1f Andy Shevchenko    2025-06-27  580  	int ret;
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  581  
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  582  	/*
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  583  	 * First check if this is the expected FPGA device. PCI config
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  584  	 * space access works without enabling the PCI device, memory
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  585  	 * space access is enabled further down.
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  586  	 */
+823fd4b4a8bd1f Andy Shevchenko    2025-06-27  587  	offset = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_ALTERA, 0);
+823fd4b4a8bd1f Andy Shevchenko    2025-06-27  588  	if (!offset) {
+823fd4b4a8bd1f Andy Shevchenko    2025-06-27  589  		dev_err(&pdev->dev, "Wrong EXT_CAP_ID value\n");
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  590  		return -ENODEV;
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  591  	}
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  592  
+eb12511f0d47b4 Thor Thayer        2019-08-19  593  	pci_read_config_dword(pdev, offset + VSE_CVP_STATUS, &regval);
+68f60538daa4bc Andreas Puhm       2018-11-07  594  	if (!(regval & VSE_CVP_STATUS_CVP_EN)) {
+68f60538daa4bc Andreas Puhm       2018-11-07  595  		dev_err(&pdev->dev,
+68f60538daa4bc Andreas Puhm       2018-11-07  596  			"CVP is disabled for this device: CVP_STATUS Reg 0x%x\n",
+68f60538daa4bc Andreas Puhm       2018-11-07  597  			regval);
+68f60538daa4bc Andreas Puhm       2018-11-07  598  		return -ENODEV;
+68f60538daa4bc Andreas Puhm       2018-11-07  599  	}
+68f60538daa4bc Andreas Puhm       2018-11-07  600  
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  601  	conf = devm_kzalloc(&pdev->dev, sizeof(*conf), GFP_KERNEL);
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  602  	if (!conf)
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  603  		return -ENOMEM;
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  604  
+eb12511f0d47b4 Thor Thayer        2019-08-19  605  	conf->vsec_offset = offset;
+eb12511f0d47b4 Thor Thayer        2019-08-19  606  
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  607  	/*
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  608  	 * Enable memory BAR access. We cannot use pci_enable_device() here
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  609  	 * because it will make the driver unusable with FPGA devices that
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  610  	 * have additional big IOMEM resources (e.g. 4GiB BARs) on 32-bit
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  611  	 * platform. Such BARs will not have an assigned address range and
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  612  	 * pci_enable_device() will fail, complaining about not claimed BAR,
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  613  	 * even if the concerned BAR is not needed for FPGA configuration
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  614  	 * at all. Thus, enable the device via PCI config space command.
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  615  	 */
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  616  	pci_read_config_word(pdev, PCI_COMMAND, &cmd);
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  617  	if (!(cmd & PCI_COMMAND_MEMORY)) {
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  618  		cmd |= PCI_COMMAND_MEMORY;
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  619  		pci_write_config_word(pdev, PCI_COMMAND, cmd);
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  620  	}
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  621  
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  622  	ret = pci_request_region(pdev, CVP_BAR, "CVP");
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  623  	if (ret) {
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  624  		dev_err(&pdev->dev, "Requesting CVP BAR region failed\n");
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  625  		goto err_disable;
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  626  	}
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  627  
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  628  	conf->pci_dev = pdev;
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  629  	conf->write_data = altera_cvp_write_data_iomem;
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  630  
+e58915179f3f4a Thor Thayer        2019-08-19  631  	if (conf->vsec_offset == V1_VSEC_OFFSET)
+e58915179f3f4a Thor Thayer        2019-08-19  632  		conf->priv = &cvp_priv_v1;
+e58915179f3f4a Thor Thayer        2019-08-19  633  	else
+e58915179f3f4a Thor Thayer        2019-08-19  634  		conf->priv = &cvp_priv_v2;
+e58915179f3f4a Thor Thayer        2019-08-19  635  
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  636  	conf->map = pci_iomap(pdev, CVP_BAR, 0);
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  637  	if (!conf->map) {
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  638  		dev_warn(&pdev->dev, "Mapping CVP BAR failed\n");
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  639  		conf->write_data = altera_cvp_write_data_config;
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  640  	}
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  641  
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  642  	snprintf(conf->mgr_name, sizeof(conf->mgr_name), "%s @%s",
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  643  		 ALTERA_CVP_MGR_NAME, pci_name(pdev));
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  644  
+4ba0b2c294fe69 Russ Weight        2021-11-18  645  	mgr = fpga_mgr_register(&pdev->dev, conf->mgr_name,
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  646  				&altera_cvp_ops, conf);
+4ba0b2c294fe69 Russ Weight        2021-11-18  647  	if (IS_ERR(mgr)) {
+4ba0b2c294fe69 Russ Weight        2021-11-18  648  		ret = PTR_ERR(mgr);
+122c5770cff2c1 Christophe Jaillet 2018-06-27  649  		goto err_unmap;
+122c5770cff2c1 Christophe Jaillet 2018-06-27  650  	}
+7085e2a94f7df5 Alan Tull          2018-05-16  651  
+7085e2a94f7df5 Alan Tull          2018-05-16  652  	pci_set_drvdata(pdev, mgr);
+7085e2a94f7df5 Alan Tull          2018-05-16  653  
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  654  	return 0;
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  655  
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  656  err_unmap:
+187fade88ca0ff Anatolij Gustschin 2018-11-07  657  	if (conf->map)
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  658  		pci_iounmap(pdev, conf->map);
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  659  	pci_release_region(pdev, CVP_BAR);
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  660  err_disable:
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  661  	cmd &= ~PCI_COMMAND_MEMORY;
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  662  	pci_write_config_word(pdev, PCI_COMMAND, cmd);
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  663  	return ret;
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  664  }
+34d1dc17ce978a Anatolij Gustschin 2017-06-14  665  
 
-Thanks,
-Abhijit
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
