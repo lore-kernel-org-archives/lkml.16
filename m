@@ -1,182 +1,259 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EF52264D9
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E37C32264D9;
+	Fri, 27 Jun 2025 08:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751011679; cv=none; b=LUJgz5EQ8g5YP1LZBFfRpQrgg/D4znspIM+WZzj1L6JYqQMUr/4wTJjPrvEm0qi7EL66bx5TIgwBg6zJ0hM28rgqidDVicb8FRVEZKgFCGyPmqJYoVG1ms8D91eLcFn+TSzl56k1b3HOxCyolnWqg6feylJhyaNMW6yTPFCVgCA=
+	t=1751011697; cv=none; b=HOitsRoJGQpKWj1Adkdlc7TchZDmYJgbSuZXO1aJQkBWyAz6u1z6x26qiWcmKxJvOUNmEqP9KgexPSVjvu4NV6X0I1tHFiuVXdynH963mbZMCy7ZKGbDCZ8j4IXMxEGJEmChsW9qDoNqkTg7+GoAguvbXKQzhz5rLb2NW8mtXrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751011679; c=relaxed/simple;
-	bh=TNnLQEhUfqgFW5GGqcIGj22wIpx9IjiCVQYfYRXw3z8=;
-	h=Date:Message-ID:From:To:Cc:Subject:MIME-Version:Content-Type; b=gEpYZN5pzqczC6mmT0cgoNxls9xBadMT5fVsO+/9mi73KQYowlVSDjW9eJtZSm7E9yulr3m3JKufEJNhD5Mf/gdjdRP4TLM/zAUhm4hAIgg+FZbd+ifpffVD4W9aYsoKes7FovXoT8qiEtOsKx6lYShHn7wwvm+t7Zq/m0RIXLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ylGHKGOz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wIqNCvLY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ylGHKGOz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wIqNCvLY; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751011697; c=relaxed/simple;
+	bh=fpia9a6iKw8L0D4wNnYihrwFfdgdJwMKsA+2bNyr2Ag=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RZgPySOWgy6PRprTo5IVe2HXejEZ/a7icICmpQxpkw844o6/b2+u9cfDAIHKLRkvCZJu7o9WpcHEYLHZb789iczzjQMSI/ez0jBaK5afj9+VIP6ozSvBgLCIPOMUmA2goxkDXrlAU/wTjEBYdfvtu30eks/MI0ooRC/SWdAoSj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ClxbQwWK; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ylGHKGOz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wIqNCvLY";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ylGHKGOz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wIqNCvLY"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 16A4A1F387;
-	Fri, 27 Jun 2025 08:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751011675; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=+XGSxsmp+fpITZ1AeCPa0Th2Qzu1Sb/brzkLAhI5QQM=;
-	b=ylGHKGOzpt5pcHQOEXt32zLyfX3kG+ivN+gjTeGGlya9G7uQF24Bsozdi6eOIJZJ15wHKi
-	MreGEQr0B7sjmQ+MeugsN/e3oTtlatDxxVVoDtAoefCF3ugL/T4X/5Ol3ERcE0AF5Wdyjd
-	vby5KVNbTqCIbDa/5ibaBdBWgnc1s00=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751011675;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=+XGSxsmp+fpITZ1AeCPa0Th2Qzu1Sb/brzkLAhI5QQM=;
-	b=wIqNCvLY6rWpHGPzLUO2GDn9HYPZBF9oviy7ONR0U/W1Fi1R/ZmyMx2CD8LW1kzInAfzmX
-	kaYgI7HvOG555BCw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751011675; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=+XGSxsmp+fpITZ1AeCPa0Th2Qzu1Sb/brzkLAhI5QQM=;
-	b=ylGHKGOzpt5pcHQOEXt32zLyfX3kG+ivN+gjTeGGlya9G7uQF24Bsozdi6eOIJZJ15wHKi
-	MreGEQr0B7sjmQ+MeugsN/e3oTtlatDxxVVoDtAoefCF3ugL/T4X/5Ol3ERcE0AF5Wdyjd
-	vby5KVNbTqCIbDa/5ibaBdBWgnc1s00=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751011675;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=+XGSxsmp+fpITZ1AeCPa0Th2Qzu1Sb/brzkLAhI5QQM=;
-	b=wIqNCvLY6rWpHGPzLUO2GDn9HYPZBF9oviy7ONR0U/W1Fi1R/ZmyMx2CD8LW1kzInAfzmX
-	kaYgI7HvOG555BCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E418A13786;
-	Fri, 27 Jun 2025 08:07:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id UPyHNlpRXmjIVAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 27 Jun 2025 08:07:54 +0000
-Date: Fri, 27 Jun 2025 10:07:54 +0200
-Message-ID: <87tt41hajp.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Linux Sound Mailing List <linux-sound@vger.kernel.org>, Linux Kernel
- Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] sound fixes for 6.16-rc4
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ClxbQwWK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=rh9oVjrrQM8DPbLLaBegPR7NE0t6yE6U1DfP0BdJbRI=;
+	b=ClxbQwWKsZjVjRh6bo2jM0tkvPv2Oe6+8DdhVtzjEAfYetwC3jintuBn59AdEF
+	MXw5CCk5FgF2XqKHEkmDo+pStUT0F59LBMXxJa0F7JutcfHGHWzYvjCQMbmlSM5Z
+	osAg6zICS53xfxwozAPCdM8QKHNd02YsC33MPG3i16QT8=
+Received: from [10.42.20.80] (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD337RWUV5olYa1Aw--.44459S2;
+	Fri, 27 Jun 2025 16:07:51 +0800 (CST)
+Message-ID: <24f53098-710a-43f9-8d1c-d809fb5354eb@163.com>
+Date: Fri, 27 Jun 2025 16:07:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_DN_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fbdev: efifb: do not load efifb if PCI BAR has changed
+ but not fixuped
+To: Thomas Zimmermann <tzimmermann@suse.de>, Helge Deller <deller@gmx.de>
+Cc: Peter Jones <pjones@redhat.com>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Shixiong Ou <oushixiong@kylinos.cn>
+References: <20250626094937.515552-1-oushixiong1025@163.com>
+ <ecf7f260-4c5f-45fc-be8d-0361b00af6a3@suse.de>
+From: Shixiong Ou <oushixiong1025@163.com>
+In-Reply-To: <ecf7f260-4c5f-45fc-be8d-0361b00af6a3@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD337RWUV5olYa1Aw--.44459S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxtr4UuF43ZryfuFy3ur47twb_yoW3JF1fpF
+	4fKw43uF48XF1xGws8Ca1DCr1Svr4v9FyqkFsxK34UA34UGF10vr97C3yq9ryUZr48Jr1x
+	tw4Dtw12kF15uaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UatCcUUUUU=
+X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXQd5D2heTgpVUQAAsa
 
-Linus,
 
-please pull sound fixes for v6.16-rc4 from:
+在 2025/6/26 18:31, Thomas Zimmermann 写道:
+> Hi
+>
+> Am 26.06.25 um 11:49 schrieb oushixiong1025@163.com:
+>> From: Shixiong Ou <oushixiong@kylinos.cn>
+>>
+>> [WHY]
+>> On an ARM machine, the following log is present:
+>> [    0.900884] efifb: framebuffer at 0x1020000000, using 3072k, total 
+>> 3072k
+>> [    2.297884] amdgpu 0000:04:00.0: 
+>> remove_conflicting_pci_framebuffers: bar 0: 0x1000000000 -> 0x100fffffff
+>> [    2.297886] amdgpu 0000:04:00.0: 
+>> remove_conflicting_pci_framebuffers: bar 2: 0x1010000000 -> 0x10101fffff
+>> [    2.297888] amdgpu 0000:04:00.0: 
+>> remove_conflicting_pci_framebuffers: bar 5: 0x58200000 -> 0x5823ffff
+>>
+>> It show that the efifb framebuffer base is out of PCI BAR, and this
+>
+> The patch at
+>
+>   https://patchwork.freedesktop.org/series/148057/
+>
+> is supposed to fix the problem. It has been merged with v6.16-rc1 as 
+> commit 2f29b5c23101 ("video: screen_info: Relocate framebuffers behind 
+> PCI bridges"). It is in your tree?
+>
+> Best regards
+> Thomas
+>
+yeah, this patch is in my tree. but do not fix the problem.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-6.16-rc4
+this is some message:
 
-The topmost commit is 7ab6847a03229e73bb7c58ca397630f699e79b53
+kylin@kylin-pc:~$ dmesg | grep BAR
+[    0.688192] pci 0000:00:03.0: BAR 15: assigned [mem 
+0x1000000000-0x101fffffff 64bit pref]
+[    0.688200] pci 0000:00:00.0: BAR 0: assigned [mem 
+0x1020000000-0x10200fffff 64bit pref]
+[    0.688205] pci 0000:00:00.0: BAR 14: assigned [mem 
+0x58000000-0x580fffff]
+[    0.688210] pci 0000:00:01.0: BAR 0: assigned [mem 
+0x1020100000-0x10201fffff 64bit pref]
+[    0.688215] pci 0000:00:02.0: BAR 0: assigned [mem 
+0x1020200000-0x10202fffff 64bit pref]
+[    0.688221] pci 0000:00:02.0: BAR 14: assigned [mem 
+0x58100000-0x581fffff]
+[    0.688225] pci 0000:00:03.0: BAR 0: assigned [mem 
+0x1020300000-0x10203fffff 64bit pref]
+[    0.688231] pci 0000:00:03.0: BAR 14: assigned [mem 
+0x58200000-0x585fffff]
+[    0.688237] pci 0000:00:04.0: BAR 0: assigned [mem 
+0x1020400000-0x10204fffff 64bit pref]
+[    0.688243] pci 0000:00:05.0: BAR 0: assigned [mem 
+0x1020500000-0x10205fffff 64bit pref]
+[    0.688249] pci 0000:00:05.0: BAR 14: assigned [mem 
+0x58600000-0x586fffff]
+[    0.688253] pci 0000:01:00.0: BAR 0: assigned [mem 
+0x58000000-0x58003fff 64bit]
+[    0.688290] pci 0000:03:00.0: BAR 6: assigned [mem 
+0x58100000-0x5817ffff pref]
+[    0.688296] pci 0000:03:00.0: BAR 0: assigned [mem 0x58180000-0x58181fff]
+[    0.688303] pci 0000:03:00.0: BAR 5: assigned [mem 0x58182000-0x58183fff]
+[    0.688317] pci 0000:04:00.0: BAR 1: assigned [mem 
+0x1000000000-0x101fffffff 64bit pref]
+[    0.688326] pci 0000:04:00.0: BAR 0: assigned [mem 0x58200000-0x583fffff]
+[    0.688332] pci 0000:04:00.0: BAR 6: assigned [mem 
+0x58400000-0x584fffff pref]
+[    0.688336] pci 0000:04:00.1: BAR 0: assigned [mem 0x58500000-0x58503fff]
+[    0.688360] pci 0000:06:00.0: BAR 0: assigned [mem 
+0x58600000-0x58601fff 64bit]
+kylin@kylin-pc:~$ dmesg | grep framebuffer
+[    1.137536] efifb: framebuffer at 0x1020000000, using 3072k, total 3072k
 
-----------------------------------------------------------------
+the efifb base address is still at 0x1020000000 after calling 
+pcibios_bus_to_resource().
 
-sound fixes for 6.16-rc4
 
-A collection of small fixes again:
-- A regression fix for hibernation bug in ASoC SoundWire
-- Fixes for the new Qualcomm USB offload stuff
-- A potential OOB access fix in USB-audio
-- A potential memleadk fix in ASoC Intel
-- Quirks for HD-audio and ASoC AMD ACP
+>> results in both efi-framebuffer and amdgpudrmfb co-existing.
+>>
+>> The fbcon will be bound to efi-framebuffer by default and cannot be 
+>> used.
+>>
+>> [HOW]
+>> Do not load efifb driver if PCI BAR has changed but not fixuped.
+>> In the following cases:
+>>     1. screen_info_lfb_pdev is NULL.
+>>     2. __screen_info_relocation_is_valid return false.
+>>
+>> Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+>> ---
+>>   drivers/video/fbdev/efifb.c     |  4 ++++
+>>   drivers/video/screen_info_pci.c | 24 ++++++++++++++++++++++++
+>>   include/linux/screen_info.h     |  5 +++++
+>>   3 files changed, 33 insertions(+)
+>>
+>> diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+>> index 0e1bd3dba255..de8d016c9a66 100644
+>> --- a/drivers/video/fbdev/efifb.c
+>> +++ b/drivers/video/fbdev/efifb.c
+>> @@ -303,6 +303,10 @@ static void efifb_setup(struct screen_info *si, 
+>> char *options)
+>>     static inline bool fb_base_is_valid(struct screen_info *si)
+>>   {
+>> +    /* check whether fb_base has changed but not fixuped */
+>> +    if (!screen_info_is_useful())
+>> +        return false;
+>> +
+>>       if (si->lfb_base)
+>>           return true;
+>>   diff --git a/drivers/video/screen_info_pci.c 
+>> b/drivers/video/screen_info_pci.c
+>> index 66bfc1d0a6dc..ac57dcaf0cac 100644
+>> --- a/drivers/video/screen_info_pci.c
+>> +++ b/drivers/video/screen_info_pci.c
+>> @@ -9,6 +9,8 @@ static struct pci_dev *screen_info_lfb_pdev;
+>>   static size_t screen_info_lfb_bar;
+>>   static resource_size_t screen_info_lfb_res_start; // original start 
+>> of resource
+>>   static resource_size_t screen_info_lfb_offset; // framebuffer 
+>> offset within resource
+>> +static bool screen_info_changed;
+>> +static bool screen_info_fixuped;
+>>     static bool __screen_info_relocation_is_valid(const struct 
+>> screen_info *si, struct resource *pr)
+>>   {
+>> @@ -24,6 +26,24 @@ static bool 
+>> __screen_info_relocation_is_valid(const struct screen_info *si, stru
+>>       return true;
+>>   }
+>>   +bool screen_info_is_useful(void)
+>> +{
+>> +    unsigned int type;
+>> +    const struct screen_info *si = &screen_info;
+>> +
+>> +    type = screen_info_video_type(si);
+>> +    if (type != VIDEO_TYPE_EFI)
+>> +        return true;
+>> +
+>> +    if (screen_info_changed && !screen_info_fixuped) {
+>> +        pr_warn("The screen_info has changed but not fixuped");
+>> +        return false;
+>> +    }
+>> +
+>> +    pr_info("The screen_info is useful");
+>> +    return true;
+>> +}
+>> +
+>>   void screen_info_apply_fixups(void)
+>>   {
+>>       struct screen_info *si = &screen_info;
+>> @@ -32,18 +52,22 @@ void screen_info_apply_fixups(void)
+>>           struct resource *pr = 
+>> &screen_info_lfb_pdev->resource[screen_info_lfb_bar];
+>>             if (pr->start != screen_info_lfb_res_start) {
+>> +            screen_info_changed = true;
+>>               if (__screen_info_relocation_is_valid(si, pr)) {
+>>                   /*
+>>                    * Only update base if we have an actual
+>>                    * relocation to a valid I/O range.
+>>                    */
+>>                   __screen_info_set_lfb_base(si, pr->start + 
+>> screen_info_lfb_offset);
+>> +                screen_info_fixuped = true;
+>>                   pr_info("Relocating firmware framebuffer to offset 
+>> %pa[d] within %pr\n",
+>>                       &screen_info_lfb_offset, pr);
+>>               } else {
+>>                   pr_warn("Invalid relocating, disabling firmware 
+>> framebuffer\n");
 
-----------------------------------------------------------------
+And should something be done after __screen_info_relocation_is_valid() 
+return false?
 
-Chris Chiu (1):
-      ALSA: hda/realtek: fix mute/micmute LEDs for HP EliteBook 6 G1a
+Best regards
+Shixiong.
 
-Harshit Mogalapalli (1):
-      ALSA: qc_audio_offload: Fix missing error code in prepare_qmi_response()
-
-Jack Yu (1):
-      ASoC: rt721-sdca: fix boost gain calculation error
-
-Luca Weiss (1):
-      ASoC: qcom: sm8250: Fix possibly undefined reference
-
-Oliver Schramm (1):
-      ASoC: amd: yc: Add DMI quirk for Lenovo IdeaPad Slim 5 15
-
-Pei Xiao (1):
-      ALSA: usb: qcom: fix NULL pointer dereference in qmi_stop_session
-
-Salvatore Bonaccorso (1):
-      ALSA: hda/realtek: Fix built-in mic on ASUS VivoBook X507UAR
-
-Takashi Iwai (1):
-      ALSA: hda/realtek: Add mic-mute LED setup for ASUS UM5606
-
-Tamura Dai (1):
-      ASoC: SOF: Intel: hda: Use devm_kstrdup() to avoid memleak.
-
-Tim Crawford (1):
-      ALSA: hda/realtek: Add quirks for some Clevo laptops
-
-Vijendar Mukunda (1):
-      ASoC: amd: ps: fix for soundwire failures during hibernation exit sequence
-
-Yasmin Fitzgerald (1):
-      ALSA: hda/realtek - Enable mute LED on HP Pavilion Laptop 15-eg100
-
-Youngjun Lee (1):
-      ALSA: usb-audio: Fix out-of-bounds read in snd_usb_get_audioformat_uac3()
-
-Yuzuru10 (1):
-      ASoC: amd: yc: add quirk for Acer Nitro ANV15-41 internal mic
-
----
- sound/pci/hda/patch_realtek.c     | 10 ++++++++++
- sound/soc/amd/ps/acp63.h          |  4 ++++
- sound/soc/amd/ps/ps-common.c      | 18 ++++++++++++++++++
- sound/soc/amd/yc/acp6x-mach.c     | 14 ++++++++++++++
- sound/soc/codecs/rt721-sdca.c     | 23 +++++++++++++++++++----
- sound/soc/qcom/Kconfig            |  1 +
- sound/soc/sof/intel/hda.c         |  6 +++---
- sound/usb/qcom/qc_audio_offload.c | 16 ++++++++--------
- sound/usb/stream.c                |  2 ++
- 9 files changed, 79 insertions(+), 15 deletions(-)
+>>               }
+>>           }
+>> +    } else {
+>> +        screen_info_changed = true;
+>>       }
+>>   }
+>>   diff --git a/include/linux/screen_info.h b/include/linux/screen_info.h
+>> index 923d68e07679..632cdbb1adbe 100644
+>> --- a/include/linux/screen_info.h
+>> +++ b/include/linux/screen_info.h
+>> @@ -138,9 +138,14 @@ ssize_t screen_info_resources(const struct 
+>> screen_info *si, struct resource *r,
+>>   u32 __screen_info_lfb_bits_per_pixel(const struct screen_info *si);
+>>     #if defined(CONFIG_PCI)
+>> +bool screen_info_is_useful(void);
+>>   void screen_info_apply_fixups(void);
+>>   struct pci_dev *screen_info_pci_dev(const struct screen_info *si);
+>>   #else
+>> +bool screen_info_is_useful(void)
+>> +{
+>> +    return true;
+>> +}
+>>   static inline void screen_info_apply_fixups(void)
+>>   { }
+>>   static inline struct pci_dev *screen_info_pci_dev(const struct 
+>> screen_info *si)
+>
 
