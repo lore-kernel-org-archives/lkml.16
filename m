@@ -1,137 +1,96 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D3729DB86;
-	Fri, 27 Jun 2025 11:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7662980A5;
+	Fri, 27 Jun 2025 11:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751022349; cv=none; b=cqSpZGpHuCX7wAZPPA+QfYhwZYfBZG9wSS/ozmB/oDswavyoQbcFEk3SC9es6+3bM+dcEsU0PPtyb57Id4cYX5BHZK2LoSmWH7qSD9Yk4BqGTNk/U+kPEGv+Ovs/OpBlfmQSop7FjySsv4zd61HbabjhFco9XnSiY9jS4AyzZI0=
+	t=1751022467; cv=none; b=ieCkh0Yt/9rjIJZgnqeQfzjE16u0OuqfkspD9nt7j4clFnyCSkeGDXtbWjZsxRZczDvYknvyruSgKb0IhfqCdOjGS8GN3tylopDkUkj8CEm5sZv2w9saVOqdidEBHUBIBjvc2gXoNjzVphZPsqqmBg2bRw4i5c0CYN3+LRiK5bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751022349; c=relaxed/simple;
-	bh=dVaxlZR2NnqX9HVJNPgzIQOX2qLh/5lVHVRI7hu+OqA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ihKU1dNf1HJXLmbrvet8OBR1D+a3M7SL2U++4GlAD3necuP79vRvVRUpbAkqLJ7sMMvXaChcSUzj/kDu66HFMv0IwWF5YUdVNpMqqKHkmTpoqHcWbU8IGmwDjFoWEX+T3HAx5WFqSl/R1IUieqvehLhkdtYxYph3CmnDTgTHb+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bTCPg51DBz6M4WJ;
-	Fri, 27 Jun 2025 19:04:55 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 40CBB14011D;
-	Fri, 27 Jun 2025 19:05:44 +0800 (CST)
-Received: from localhost (10.48.153.213) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 27 Jun
- 2025 13:05:43 +0200
-Date: Fri, 27 Jun 2025 12:05:41 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v10 07/17] CXL/PCI: Introduce CXL uncorrectable protocol
- error recovery
-Message-ID: <20250627120541.00003a14@huawei.com>
-In-Reply-To: <20250626224252.1415009-8-terry.bowman@amd.com>
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
-	<20250626224252.1415009-8-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751022467; c=relaxed/simple;
+	bh=+F4+PRH6RZeS8ugoToiy4TCKLKkcYPK+TGHSXOUNJ18=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mskfV7IjoiFEA46IbGGGEfdglrZdfQo9LMQxM0kfHnJp3L+DTWjMmEScqa2R8o72qnUeraivqrgla4IRMC2UCQIJcUfaCwlmC704x2buAbTPj/9jdDnnPAPA8/JCunFfZandbhOoGpLuT2Jhprkhm4vz9jNRbtmOFuKg9f9OkJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NhrvX4V6; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NhrvX4V6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751022467; x=1782558467;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+F4+PRH6RZeS8ugoToiy4TCKLKkcYPK+TGHSXOUNJ18=;
+  b=NhrvX4V6DkzlA6WcbF8LuqO3gQ1pX/5MaVdAGCgPPV0z5Hp5+QDtxMUv
+   ESkDvLJyBSBSx4ODcm7DCNx1VsBAtdCx/x4fM24GfEW4uPZ8EgNAhMGRj
+   b5HuBlPwCB2N03fPeai4KDswkUfGkfRpPIqw8obqVsSlM80Swz8nbRFVj
+   iCfX+nDgwp49YozuNfkkdnkYw0TEeGnKIcFLRek/WVaUyzcQRrs6OWsqM
+   0kbzps/Ln4Ts1lfVa+zOi0BGreQ2K7u6L1/JJrj+eYvll1O2pWzyRGfd7
+   o+Gmh45oAh7hHxvgG78Anc8R2MVkbsXITCL2pIpn/fFt+i1yH6aGoJhGV
+   w==;
+X-CSE-ConnectionGUID: h8WznA35ScC42ywar9RMmA==
+X-CSE-MsgGUID: ezpQrNjwQzWQYxh/qEo2CA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="64772542"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="64772542"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 04:07:45 -0700
+X-CSE-ConnectionGUID: 6KDakIrXREWbY/0lrldFZA==
+X-CSE-MsgGUID: Fpu8o9HZTqm4cjPeGaFeug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="153494856"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 04:07:40 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uV6vh-0000000ASaL-04jT;
+	Fri, 27 Jun 2025 14:07:37 +0300
+Date: Fri, 27 Jun 2025 14:07:36 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	Abdun Nihaal <abdun.nihaal@gmail.com>, andy@kernel.org,
+	gregkh@linuxfoundation.org, lorenzo.stoakes@oracle.com,
+	tzimmermann@suse.de, riyandhiman14@gmail.com, willy@infradead.org,
+	notro@tronnes.org, thomas.petazzoni@free-electrons.com,
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: fbtft: fix potential memory leak in
+ fbtft_framebuffer_alloc()
+Message-ID: <aF57eMeNafg1w9Qw@smile.fi.intel.com>
+References: <20250626172412.18355-1-abdun.nihaal@gmail.com>
+ <aF2Ic8BP0zWS6R19@smile.fi.intel.com>
+ <0327da98-8a7c-4db8-8bcd-4179b87a9486@suswa.mountain>
+ <aF3CwnHyW5HHzDSG@surfacebook.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aF3CwnHyW5HHzDSG@surfacebook.localdomain>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, 26 Jun 2025 17:42:42 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
+On Fri, Jun 27, 2025 at 12:59:30AM +0300, Andy Shevchenko wrote:
+> Thu, Jun 26, 2025 at 11:11:39PM +0300, Dan Carpenter kirjoitti:
+> > On Thu, Jun 26, 2025 at 08:50:43PM +0300, Andy Shevchenko wrote:
+> > > On Thu, Jun 26, 2025 at 10:54:10PM +0530, Abdun Nihaal wrote:
 
-> Create cxl_do_recovery() to provide uncorrectable protocol error (UCE)
-> handling. Follow similar design as found in PCIe error driver,
-> pcie_do_recovery(). One difference is cxl_do_recovery() will treat all UCEs
-> as fatal with a kernel panic. This is to prevent corruption on CXL memory.
-> 
-> Export the PCI error driver's merge_result() to CXL namespace.
+...
 
-I think this may be a confusion from earlier review.  Anyhow, it should
-be namespaced in the sense of not exporting something the vague name of
-merge_result but it's PCI code, not CXL code and we don't have the dangerous
-interface argument to justify putting it in the CXL namespace so I think
-a namespaced EXPORT makes little sense for this one.
+> Ah, you have a point. Yes, the moving vmem allocation will solve the ordering
+> issue.
 
-Jonathan
+...with moving from devm for the txbuf. Otherwise we would still have a
+problematic ordering with it.
 
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> Introduce
-> PCI_ERS_RESULT_PANIC and add support in merge_result() routine. This will
-> be used by CXL to panic the system in the case of uncorrectable protocol
-> errors. PCI error handling is not currently expected to use the
-> PCI_ERS_RESULT_PANIC.
-> 
-> Copy pci_walk_bridge() to cxl_walk_bridge(). Make a change to walk the
-> first device in all cases.
-> 
-> Copy the PCI error driver's report_error_detected() to cxl_report_error_detected().
-> Note, only CXL Endpoints and RCH Downstream Ports(RCH DSP) are currently
-> supported. Add locking for PCI device as done in PCI's report_error_detected().
-> This is necessary to prevent the RAS registers from disappearing before
-> logging is completed.
-> 
-> Call panic() to halt the system in the case of uncorrectable errors (UCE)
-> in cxl_do_recovery(). Export pci_aer_clear_fatal_status() for CXL to use
-> if a UCE is not found. In this case the AER status must be cleared and
-> uses pci_aer_clear_fatal_status().
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-
-
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index de6381c690f5..63fceb3e8613 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -21,9 +21,12 @@
->  #include "portdrv.h"
->  #include "../pci.h"
->  
-> -static pci_ers_result_t merge_result(enum pci_ers_result orig,
-> -				  enum pci_ers_result new)
-> +pci_ers_result_t merge_result(enum pci_ers_result orig,
-> +			      enum pci_ers_result new)
->  {
-> +	if (new == PCI_ERS_RESULT_PANIC)
-> +		return PCI_ERS_RESULT_PANIC;
-> +
->  	if (new == PCI_ERS_RESULT_NO_AER_DRIVER)
->  		return PCI_ERS_RESULT_NO_AER_DRIVER;
->  
-> @@ -45,6 +48,7 @@ static pci_ers_result_t merge_result(enum pci_ers_result orig,
->  
->  	return orig;
->  }
-> +EXPORT_SYMBOL_NS_GPL(merge_result, "CXL"); 
-
-Do we care about namespacing this?  I think not given it is PCIe code
-and hardly destructive for other drivers to mess with it if they like.
-
-I would namespace it in the sense of renaming it to make it clear
-it's about pci errors though.
-
-pci_ers_merge_result() perhaps?
-
-Do that as a percursor patch.
-
-
->  
->  static int report_error_detected(struct pci_dev *dev,
->  				 pci_channel_state_t state,
 
