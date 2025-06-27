@@ -1,188 +1,145 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFFE18DB35;
-	Fri, 27 Jun 2025 04:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29E11D86FF;
+	Fri, 27 Jun 2025 04:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751000173; cv=none; b=JXBdxSoW87TEiZAYRbUIKsrH1Rjf2hrRxyNpKA72+aARPa4kvAKZD7SbHyziK24mohH5fCoYk/Zh+u8Oz2QEREhyP73BQzlEjzgLcWnlWI+oSLxcB6rLr3cw/JcAVFolJZF9rAYE/J8KSf2RyqslNFGqJoBm0ZE3EZwKWfBRcq0=
+	t=1751000205; cv=none; b=dU1uc9H32lj/uipZjB9smR8w0Nkq/fjJNJsXvolkkbJDqA/02Ic7ljGnXiw6RFKRft79nR0bhrqCdUg15lGpLTknE9ssXPY4KXIs2A7jVOhJQtlH+d4XknwyhsE48iLWm/XpSP3guS7ZxRdm4CUrf4bhSOfr0JCHPSFQ+LHBJ+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751000173; c=relaxed/simple;
-	bh=IhiRrVHyVPn0A/ZdPezR9EoQUvZL5nukWhH425d93Dw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i72FXxSjIJAgNIOePBLEaIf2EsdBI2qAWpAuB1ZayGAnd0KJCV/iEJzttC8ceuZau8izs2VNWznHYE90zXnyJRZMSsYFmuQOFvWNKnfjC7kPiqBNVjOrW0BMb19QE61ydsF19fa2dGk0fJYPEdai/uwAr3ACKGPMXKy6496Pr00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=klArCB9U; arc=none smtp.client-ip=209.85.210.181
+	s=arc-20240116; t=1751000205; c=relaxed/simple;
+	bh=83afpayJE6U1T0aoAEzP5u1PnMIk9sJYc8MFC9piAA0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PAQoupKIhsAXw+RGSdezRaPjnGVNL8q+V/HkHlr5LY5va6eBk/oqyaLIcRe/g5XlZKTSuCV6ojbSUFzk8caJD4kjo3kwSXpyF+Dxh4UqFgheiJScB7PG/h97jT2nHR8S16AY4s1Ob8OwSgwBzcIRj2p+7X5oncRru9mu8GL2Was=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AizqWq9j; arc=none smtp.client-ip=209.85.217.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klArCB9U"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-748f5a4a423so1248675b3a.1;
-        Thu, 26 Jun 2025 21:56:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AizqWq9j"
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4e7fb730078so522610137.1;
+        Thu, 26 Jun 2025 21:56:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751000171; x=1751604971; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+MrdyFOXIC4Y5u1TiDSz8/gmnYUkl1eoQe+EDX6yl88=;
-        b=klArCB9U+yXd6vX5OtoFIsLRZNWznbTtni8CTt3RVEr7TBYdsa2EoUN3P+0prPAXfv
-         x6sJaXKImLE3Iai75kDOKk/WhviZAQulpA7vn7Mfbm3S/eF+yPJV3KtveL7q0ibUjrnq
-         TEbNSJQuJhLykFIU1MwgDB+JGZFhEkuilwRN7tptmDaqaTW7GjrCJmV0GGx/sn1B6lDu
-         t5DRi4lXr4WVv3lM/DK5TODoPtylWLvezqzDXYxzv3OqMV1kWCuJYUzzOx6CuyZqYdn5
-         o6HU3fsMWDjJXZJI6Es6yJbypqVrMsQEtS8qOrLo8XFRTEpVUA1fI7ESQfl1G2Q8veN6
-         +waw==
+        d=gmail.com; s=20230601; t=1751000203; x=1751605003; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a2HGv8LGZ8DzKrZFUO2v+eei1l2wUynW3XD4JObL1Tw=;
+        b=AizqWq9jmfpAVQ3p9F0+bryXy5gdrRLRTBjknoYuEcW+5TAXm0nu5Dxc8awZAXyePE
+         4LxJCgk4r3GKkNcP1iV2fusXsg1De0dD2gJ2Z5uszU6d3Oe9jw6LmGUgbrwl+aghvRlw
+         Mn0VFcCjRWD/Xr6caegQc0YIJjFQoQJKMzk2vl+/VlOrJWZk0NTKZ6zhU5dOAk2SNjpK
+         VtiuLfdHkViJm0q+ciYlaYEfCW1KJxgJFbpOXu6/OPf4nqo/E57XQMz4QenaAibuUhn9
+         osZ7Poig5rVqoukUsv9EvyS9rQjyYfS4y4gaY1c7yGrw5/1PMGIGN4UWyBeyiU88jiKo
+         2vSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751000171; x=1751604971;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+MrdyFOXIC4Y5u1TiDSz8/gmnYUkl1eoQe+EDX6yl88=;
-        b=NvxoRQvmkUKGI7CaoA6YVJi4wTiGDga+WBXKmK2fCDL1QtTOFflwLmRh1DILn/7xJL
-         PiqCQ5kYzwIYkM5thqHXtyaeQhddbLG90KNYsGnbu0rIUgPvVNDzWlpadjRuDoHLrqXM
-         QzNMqjb2H1UnhxvkUytumORYPkzGvoT9IyczZxPK/Fv/ekO/ddT1tUQ9Z4GD2brPpmBK
-         6X6db6V18wRebDUyHAiKun+CSFhehND45lTL7gnMY1qMeUtxl7NneI+mt1ZSc5jci7UW
-         lixWgNC3hBrFSKG7+zs2bvfWJ64LJuRsVIzf+jQGe4fvv9A9En5u+aUbCc1xs0+agLxj
-         hvDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUzqAmUrTfke1YmN7PE7mF9/HbLI2mwdYbNkXN7TZNSXu++F6I5fZ9xKFeCQ+NhaiKteMeRB/cjsMFY1zrH@vger.kernel.org, AJvYcCV7RSA7KpZSGySMs8TiQ1FIuRI4K503tlPNIf8mvTigLcqnl3Mt7yd/rFiLy3lXAK5M1hlEdEKeqvXa5g==@vger.kernel.org, AJvYcCWOQbuCwvyQ/+sYwP7o8nY2iQnpRh6qqUMOPw+nPNkLFjzyJQEgaBrYtAGwS/mEMEZI5DV2iFAG8vc+WD0=@vger.kernel.org, AJvYcCX+CXBSS/GVJ2slCn7iJ9ovnhYMzFoTxB224FNCZrwl2HKm7sPk4pUlOd7CIFKItW7oBapfHotR8klP@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvwUY9msAE2YctmEY6i3XzQfuQ03iz+CqfIjs/euPi5Dcus6iV
-	bgn1mUz4TR0Fca5AaW5KmSIkMSDPw2oV5mARMgRab61LxOZyG05/DtED
-X-Gm-Gg: ASbGncsG2nJALl8uvpccAwr2O3XgNryoroR1MADT6NZiCcoTTeDVFxMP8bmEnrIWmCA
-	t7rtJesKZttEmfnRs43GQhELttV4qPPQiO8hW5XdkSZbDc0U/VDE66yecJlPwHWm62ZRVZyJnSP
-	CBqQX6VrWEBPhPYMWFTFTOI4PIKDSXbcL60RwR3nwgBwtBHd3BTFKE+lbL7kQzcBLNnrRUROocB
-	RWI7HNVrrah20WCdn4QBZsn+wBFoHmvWaTaqXVTYMswXkjcBwc206IjsW6ABdx3PdpbTZa9VkQY
-	xaDWt+hrRk0FDFRCSBwcODmotJPyZt7pnA3bcD3/bCbO4pyjGmhkpoU+SlrfOw==
-X-Google-Smtp-Source: AGHT+IHznONadMYPcgLTqG7+syOd2eJWTrjST0N+svkcTt1ke5FV1m9p3Ui18oLYEM06Tm5z8MkI+Q==
-X-Received: by 2002:a05:6a00:1820:b0:749:4cd:108e with SMTP id d2e1a72fcca58-74af6ef37e8mr2475301b3a.10.1751000170868;
-        Thu, 26 Jun 2025 21:56:10 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:d0c7:d92:6a17:eb62])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5574390sm1329989b3a.90.2025.06.26.21.56.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 21:56:10 -0700 (PDT)
-Date: Thu, 26 Jun 2025 21:56:07 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>, 
-	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
- system
-Message-ID: <75fixx6rgwsgsw6e765oxdcivcg2nkzx2fp2qywgx4vi3ihywh@ot7gdecsnttw>
-References: <cbbf0caf-82ce-4427-9844-b11e0f5cacdb@kernel.org>
- <obpakvzyludc4jskqzyxf65dhqds7ie3jkbfsqdve32ouuaili@xvogkmwvbmbf>
- <284ea5c0-dca5-4e9e-a3e7-705eca794010@kernel.org>
- <vkau25ybcx3bcoa2jmxlukumunzii5h6em43anh6mmzk2kyiv7@kyych4kxc4zo>
- <0d71a686-da67-4686-8976-a17d0d1ca923@kernel.org>
- <CAJZ5v0gKUN1OdqAHnXNcFUAOfhpdRfa_o=L6TA2GZTpe1bMaNQ@mail.gmail.com>
- <exmgckzoakt2ncsdphqvymcadon7k6tl36a3zvrj2pv23dffps@znq23v3qbcm2>
- <CAJZ5v0j3ZyuEqSKQ+3K8M3BwPCxn5Z6KOwjyjt4cJW6HfxjPDw@mail.gmail.com>
- <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
- <de548b27-4c43-4f30-af9d-b060101e6fd8@kernel.org>
+        d=1e100.net; s=20230601; t=1751000203; x=1751605003;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a2HGv8LGZ8DzKrZFUO2v+eei1l2wUynW3XD4JObL1Tw=;
+        b=jKDuGo/QMnPuI0ZObINmnWq5LnKwR4JVWRcehDxVjxZWAjGBSvgsq/+C7dG/rl8k2m
+         LEwBV3qGGAbXDwP2OTR6gpeZACj2/7/OCZbHHHQqGyiNuP5LtuARsP32RM9RVJ2pD1hz
+         PdjTUIc8V3HoFozoREzRbBVhLPdO3Fuqe4FO6mdlpgWJSbSCXhxNmZSHSaZMOdE5frSI
+         rvhzN/o+jh02pB/fczVXhimTVwIUI1TQ3uVfzR+ciQ+UAZUPw/8qPCBJmIvHNHKq0EWA
+         FN4DqV+6C73zOrHmt7OGKwKJD8D3bA3foCTSZLvKrmEZjPo6KCnzjemeaD2gatTzipir
+         Ks7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUG8daHG8TPRwysqkCMShSwkAHlqF6c3RIb4E6G341gPsGQt/CMjhWzGIYH9DfoalLw3GxbbIQJUxgi@vger.kernel.org, AJvYcCVPPblp0g0PmdFB03nOqYaJ7UsYVERYTy1Q7e/GfsaVGT+x8QgAuVb3BrLgT9B95zUxgsZenuzj@vger.kernel.org, AJvYcCVi+znc5rg5zGZsBNJ4KGqy+yU1LyQfwyT2Ke5wTu4rygr3/wBd7YakMeMRJJGF1dsDOQv9pJFREyubkmhbaKr7B8s=@vger.kernel.org, AJvYcCX+aDL5K7ZC9rE32kn2aVSN48IHN+SMxtALDKDLQQJus2/LvX7ghrKV40br6qhN0IAJByQjUtek75EUs6G0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy22Q52/M1oiU0SEeCre4vY/jUz6SFVShuj0jWKvNO0ArQJ3mld
+	eJBlGvzmxAk7sh1HIYt1yLtmsPaFrFd1KQVAnzCjW3smY71w/xLz2f4dCs5cU8Ux3zvk/5VXXlV
+	cXDz1Xznpf7GL6vPZHhyFU0j4hkZ5uvU=
+X-Gm-Gg: ASbGnctEc/7me0VPEtAuSiGHoD96I5ZmoFj/PE/ZrX4aWBz0svbol4No2mLL8zRdpsF
+	11mFyoy6MBUR0Qm7MSgYu7fqoY5/LSjYowP/U5FpQv9PLGRx6aUNC1JaY2kTgq7evT90++gkC8h
+	jE4eHG6KIAjM89cm4eQSdRaR3RPCXk4/T1juFW1tHvfg==
+X-Google-Smtp-Source: AGHT+IE+07qHBqPDCXthKdPHB/7LUX6RLsYmY1o5ORrW1h7tii2FCLcpiV2074k1N7ZSn36YN5VNYrTVJdSCyPltG5g=
+X-Received: by 2002:a05:6102:442b:b0:4e7:b728:e34b with SMTP id
+ ada2fe7eead31-4ee4f57ed09mr1865136137.3.1751000202837; Thu, 26 Jun 2025
+ 21:56:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <de548b27-4c43-4f30-af9d-b060101e6fd8@kernel.org>
+References: <20250627-exynosdrm-decon-v3-0-5b456f88cfea@disroot.org> <20250627-exynosdrm-decon-v3-3-5b456f88cfea@disroot.org>
+In-Reply-To: <20250627-exynosdrm-decon-v3-3-5b456f88cfea@disroot.org>
+From: Inki Dae <daeinki@gmail.com>
+Date: Fri, 27 Jun 2025 13:56:06 +0900
+X-Gm-Features: Ac12FXyCRtmqlVxLH-ZQ8PS-fwNE9eVFG2Sf48qY_m8XFevvCiJLCVczBK1_h0o
+Message-ID: <CAAQKjZNbEAiDC_2dUMKZHyPO4nS9TM7TrdjyNx0uLcjvh=PyZw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] drm/exynos: exynos7_drm_decon: add vblank check in
+ IRQ handling
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, 
+	Ajay Kumar <ajaykumar.rs@samsung.com>, Akshu Agrawal <akshua@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 05:21:35PM -0500, Mario Limonciello wrote:
-> On 6/26/2025 2:40 PM, Dmitry Torokhov wrote:
-> > On Thu, Jun 26, 2025 at 09:31:12PM +0200, Rafael J. Wysocki wrote:
-> > > On Thu, Jun 26, 2025 at 9:28 PM Dmitry Torokhov
-> > > <dmitry.torokhov@gmail.com> wrote:
-> > > > 
-> > > > On Thu, Jun 26, 2025 at 09:18:56PM +0200, Rafael J. Wysocki wrote:
-> > > > > On Thu, Jun 26, 2025 at 9:16 PM Hans de Goede <hansg@kernel.org> wrote:
-> > > > > > 
-> > > > > > Hi,
-> > > > > > 
-> > > > > > On 26-Jun-25 21:14, Dmitry Torokhov wrote:
-> > > > > > > On Thu, Jun 26, 2025 at 08:57:30PM +0200, Hans de Goede wrote:
-> > > > > > > > Hi,
-> > > > > > > > 
-> > > > > > > > On 26-Jun-25 20:48, Dmitry Torokhov wrote:
-> > > > > > > > > On Thu, Jun 26, 2025 at 01:20:54PM -0500, Mario Limonciello wrote:
-> > > > [...]
-> > > > > > > > > > I want to note this driver works quite differently than how ACPI power
-> > > > > > > > > > button does.
-> > > > > > > > > > 
-> > > > > > > > > > You can see in acpi_button_notify() that the "keypress" is only forwarded
-> > > > > > > > > > when not suspended [1].  Otherwise it's just wakeup event (which is what my
-> > > > > > > > > > patch was modeling).
-> > > > > > > > > > 
-> > > > > > > > > > https://github.com/torvalds/linux/blob/v6.16-rc3/drivers/acpi/button.c#L461
-> > > > > > > > > > [1]
-> > > > > > > > > 
-> > > > > > > > > If you check acpi_button_resume() you will see that the events are sent
-> > > > > > > > > from there. Except that for some reason they chose to use KEY_WAKEUP and
-> > > > > > > > > not KEY_POWER, oh well. Unlike acpi button driver gpio_keys is used on
-> > > > > > > > > multiple other platforms.
-> > > > > > > > 
-> > > > > > > > Interesting, but the ACPI button code presumably only does this on resume
-> > > > > > > > for a normal press while the system is awake it does use KEY_POWER, right ?
-> > > > > > > 
-> > > > > > > Yes. It is unclear to me why they chose to mangle the event on wakeup,
-> > > > > > > it does not seem to be captured in the email discussions or in the patch
-> > > > > > > description.
-> > > > > > 
-> > > > > > I assume they did this to avoid the immediate re-suspend on wakeup by
-> > > > > > power-button issue. GNOME has a workaround for this, but I assume that
-> > > > > > some userspace desktop environments are still going to have a problem
-> > > > > > with this.
-> > > > > 
-> > > > > It was done for this reason IIRC, but it should have been documented
-> > > > > more thoroughly.
-> > > > 
-> > > > I assert that it should not have been done and instead dealt with in
-> > > > userspace. There are numerous drivers in the kernel emitting
-> > > > KEY_POWER. Let userspace decide how to handle this, what keys to ignore,
-> > > > what keys to process and when.
-> > > 
-> > > Please see my last message in this thread (just sent) and see the
-> > > changelog of commit 16f70feaabe9 ("ACPI: button: trigger wakeup key
-> > > events").
-> > > 
-> > > This appears to be about cases when no event would be signaled to user
-> > > space at all (power button wakeup from ACPI S3).
-> > 
-> > Ahh, in S3 we do not know if we've been woken up with Sleep or Power
-> > button, right? So we can not send the "right" event code and use
-> > "neutral" KEY_WAKEUP for both. Is this right?
-> > 
-> > Thanks.
-> > 
-> 
-> I did some more experiments with this affected system that started this
-> thread (which uses s2idle).
-> 
-> I only applied patch 3 in this series to help the debounce behavior and
-> figure out impacts from patch 4 with existing Linux userspace.
-> 
-> If suspended using systemd in GNOME (click the GUI button) on Ubuntu 24.04
-> the GNOME workaround mitigates this problem and no visible impact.
-> 
-> If I suspend by hand using the kernel interface and then press power button
-> to wake:
-> 
-> # echo mem | sudo tee /sys/power/state:
-> 
-> * When GNOME is running:
-> I get the shutdown popup and it eventually shuts down.
-> 
-> * When GNOME isn't running (just on a VT):
-> System shuts down.
+2025=EB=85=84 6=EC=9B=94 27=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 4:21, K=
+austabh Chakraborty <kauschluss@disroot.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=
+=84=B1:
+>
+> If there's support for another console device (such as a TTY serial),
+> the kernel occasionally panics during boot. The panic message and a
+> relevant snippet of the call stack is as follows:
+>
+>   Unable to handle kernel NULL pointer dereference at virtual address 000=
+000000000000
+>   Call trace:
+>     drm_crtc_handle_vblank+0x10/0x30 (P)
+>     decon_irq_handler+0x88/0xb4
+>     [...]
+>
 
-For the latter you may want to raise an issue with systemd, and for the
-former I guess it is being too clever and does not activate the
-workaround if suspend was not initiated by it? I think Gnome is being
-too careful.
+It seems that if the display is already enabled by the bootloader
+during the boot process, a vblank interrupt may be triggered before
+the initialization of drm_dev is complete. This could be the root
+cause of the issue.
 
-Thanks.
+Applied.
 
--- 
-Dmitry
+Thanks,
+Inki Dae
+
+> Otherwise, the panics don't happen. This indicates that it's some sort
+> of race condition.
+>
+> Add a check to validate if the drm device can handle vblanks before
+> calling drm_crtc_handle_vblank() to avoid this.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 96976c3d9aff ("drm/exynos: Add DECON driver")
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> ---
+>  drivers/gpu/drm/exynos/exynos7_drm_decon.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/exynos/exynos7_drm_decon.c b/drivers/gpu/drm=
+/exynos/exynos7_drm_decon.c
+> index 43bcbe2e2917df43d7c2d27a9771e892628dd682..c0c0f23169c993ac315fc8d7b=
+cbd09ea6ec9966a 100644
+> --- a/drivers/gpu/drm/exynos/exynos7_drm_decon.c
+> +++ b/drivers/gpu/drm/exynos/exynos7_drm_decon.c
+> @@ -636,6 +636,10 @@ static irqreturn_t decon_irq_handler(int irq, void *=
+dev_id)
+>         if (!ctx->drm_dev)
+>                 goto out;
+>
+> +       /* check if crtc and vblank have been initialized properly */
+> +       if (!drm_dev_has_vblank(ctx->drm_dev))
+> +               goto out;
+> +
+>         if (!ctx->i80_if) {
+>                 drm_crtc_handle_vblank(&ctx->crtc->base);
+>
+>
+> --
+> 2.49.0
+>
+>
