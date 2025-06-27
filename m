@@ -1,88 +1,52 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11388205E3E
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C015F20A5C4;
+	Fri, 27 Jun 2025 19:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751052894; cv=none; b=GA/4X/1lMc7BPA/sBspHnHWX/CJPEi4k2wI2zfOGSUQlCEfImhOjq1aSrh2Me/yr7zau2LsZGrB3Scw81SsRdhqxg3VhyrP0dMkafk4bVodsuBJ+K+u5r9IdTIc+5DR/B+zbmeMUSzxTX4uejYBfzlYUhEuhGZ/tGGz20muQyqE=
+	t=1751052911; cv=none; b=mgvK8T/mZW8RpON6I+rrVnfqq/SPZ72GZw8ja9ntsuuL+ZTlG5lYNZDVExpUbXr0r0lX97hO28paVNf4DpbK9WGoAayUfhPWllLkOj4GvJdq6Wm9JyjW8ypuJF/oPdAz2SRBivs57R3PAYnNfYEZMr2z6DEgtb5ysRPx4Q98Bd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751052894; c=relaxed/simple;
-	bh=x2btc7zpsPfEH8LJTiqnoU8xEsX4OQijHFTLD8cKJ84=;
+	s=arc-20240116; t=1751052911; c=relaxed/simple;
+	bh=KaGGXelm7CxuRTdflOr0Te0HdQDqVfIaKK0kiCSCgFg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Juvd9ap6s8osZYFDWLBaWyx2LaywW/YrseByzHKe4mqEhqTNG91uh5kM6E90TZS6O6Dj85QOm9edT0QtjB+GUMD9RMdFtDlMwov9oB44O9OQFQO/1jGIZwr1GgM5EouT7vSDolSoKeJ/eJF8jbKqSuD5IRZkBGQF96V8mSwLwIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=m5nR2kfT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5Pnlu9zE; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=m5nR2kfT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5Pnlu9zE; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=V2foMYpu83xGh00uE1WGt2Me7H3jYl8v48pKcuAMz8AiO54QpqeGcM1lpBWdVN9OcAtWe1J899in+LMW2roRZ3W7jJZck6wO0YoJ9DRewJdhq1N31zJFCB/t9j9U0J1RN2EC+/bWltYsnEQr/Go532+NS2QCra43w7ECNkG8oWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aykXgHCH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="m5nR2kfT";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5Pnlu9zE";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="m5nR2kfT";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5Pnlu9zE"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2D11521180;
-	Fri, 27 Jun 2025 19:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751052890; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jP2THP74KFsduCJsyg6L0wSX1PMWOGo99jfXkrSBM3I=;
-	b=m5nR2kfTy84+NOdliWdMFhoUxhtbRJvmi0SE+iOc9BUJwijTbDRhTu4E6cA/2rUwJ7P3I1
-	AcC2g1R+bkxDCB5VTc/i8CFwSsUUPH74c44L+TZZc3l/ztVbadmjWIVMtvb+XFL+rbX55W
-	kQNrLHjeyVSxMhgh7k69zd9Ocpf70og=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751052890;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jP2THP74KFsduCJsyg6L0wSX1PMWOGo99jfXkrSBM3I=;
-	b=5Pnlu9zEcK1plO+kck/0GmbYf7n+g/gIHyu2AMIjKGS3pq3XQazyUwYKcdSCmkKU+UA34/
-	lM38SX+y+KgzEDAw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=m5nR2kfT;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=5Pnlu9zE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751052890; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jP2THP74KFsduCJsyg6L0wSX1PMWOGo99jfXkrSBM3I=;
-	b=m5nR2kfTy84+NOdliWdMFhoUxhtbRJvmi0SE+iOc9BUJwijTbDRhTu4E6cA/2rUwJ7P3I1
-	AcC2g1R+bkxDCB5VTc/i8CFwSsUUPH74c44L+TZZc3l/ztVbadmjWIVMtvb+XFL+rbX55W
-	kQNrLHjeyVSxMhgh7k69zd9Ocpf70og=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751052890;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jP2THP74KFsduCJsyg6L0wSX1PMWOGo99jfXkrSBM3I=;
-	b=5Pnlu9zEcK1plO+kck/0GmbYf7n+g/gIHyu2AMIjKGS3pq3XQazyUwYKcdSCmkKU+UA34/
-	lM38SX+y+KgzEDAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A3FB9138A7;
-	Fri, 27 Jun 2025 19:34:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id IwkGKFnyXmiwJAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 27 Jun 2025 19:34:49 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 152D9A08D2; Fri, 27 Jun 2025 21:34:45 +0200 (CEST)
-Date: Fri, 27 Jun 2025 21:34:45 +0200
-From: Jan Kara <jack@suse.cz>
-To: Baokun Li <libaokun1@huawei.com>
-Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, jack@suse.cz, 
-	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, linux-kernel@vger.kernel.org, 
-	yi.zhang@huawei.com, yangerkun@huawei.com, stable@vger.kernel.org
-Subject: Re: [PATCH v2 10/16] ext4: fix largest free orders lists corruption
- on mb_optimize_scan switch
-Message-ID: <a4rctz75l4c6vejweqq67ptzojs276eicqp6kqegpxinirk32n@dnhg6h4pbvdr>
-References: <20250623073304.3275702-1-libaokun1@huawei.com>
- <20250623073304.3275702-11-libaokun1@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aykXgHCH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9BD9C4CEE3;
+	Fri, 27 Jun 2025 19:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751052911;
+	bh=KaGGXelm7CxuRTdflOr0Te0HdQDqVfIaKK0kiCSCgFg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aykXgHCHt6ckjvgTXd4MUO0oQ989jBketGAkoTdyFQcRaXXtvEMQt93B4iAKEGrC/
+	 sadxFkEXW6frjvhCfOPM2FxYDuesYEz70VnPmTP6pSX8Q9XHepSubm1a3FbVcrV+ku
+	 N3Xd1pQ6Y1gBDtFb7aIbncDD0UIjPHw7YO1e8pWUQcnRvE6YBEV2j3ltwpuX+a/KTa
+	 7Hb1b/0fAUehSe1vAJ74sIWuS/9k9viYbrWApMj6lOivJ/GtSW5xTbfL4JzUhZh2Hy
+	 bCk4T1oxsCmTdmGhOgR1mRSY7QPrLOR1sZDvpZPM08+r6DI8R9/B1Wv+CPg5OdESSo
+	 HzRUfnEs8MwSQ==
+Date: Fri, 27 Jun 2025 21:35:04 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Benno Lossin <lossin@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 3/6] rust: irq: add support for non-threaded IRQs and
+ handlers
+Message-ID: <aF7yaGPIxTDhAtlj@pollux>
+References: <20250627-topics-tyr-request_irq-v5-0-0545ee4dadf6@collabora.com>
+ <20250627-topics-tyr-request_irq-v5-3-0545ee4dadf6@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,163 +55,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250623073304.3275702-11-libaokun1@huawei.com>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 2D11521180
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DWL_DNSWL_BLOCKED(0.00)[suse.cz:dkim];
-	TO_DN_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:email];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Score: -4.01
-X-Spam-Level: 
+In-Reply-To: <20250627-topics-tyr-request_irq-v5-3-0545ee4dadf6@collabora.com>
 
-On Mon 23-06-25 15:32:58, Baokun Li wrote:
-> The grp->bb_largest_free_order is updated regardless of whether
-> mb_optimize_scan is enabled. This can lead to inconsistencies between
-> grp->bb_largest_free_order and the actual s_mb_largest_free_orders list
-> index when mb_optimize_scan is repeatedly enabled and disabled via remount.
-> 
-> For example, if mb_optimize_scan is initially enabled, largest free
-> order is 3, and the group is in s_mb_largest_free_orders[3]. Then,
-> mb_optimize_scan is disabled via remount, block allocations occur,
-> updating largest free order to 2. Finally, mb_optimize_scan is re-enabled
-> via remount, more block allocations update largest free order to 1.
-> 
-> At this point, the group would be removed from s_mb_largest_free_orders[3]
-> under the protection of s_mb_largest_free_orders_locks[2]. This lock
-> mismatch can lead to list corruption.
-> 
-> To fix this, a new field bb_largest_free_order_idx is added to struct
-> ext4_group_info to explicitly track the list index. Then still update
-> bb_largest_free_order unconditionally, but only update
-> bb_largest_free_order_idx when mb_optimize_scan is enabled. so that there
-> is no inconsistency between the lock and the data to be protected.
-> 
-> Fixes: 196e402adf2e ("ext4: improve cr 0 / cr 1 group scanning")
-> CC: stable@vger.kernel.org
-> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+On Fri, Jun 27, 2025 at 01:21:05PM -0300, Daniel Almeida wrote:
+> +/// Callbacks for an IRQ handler.
+> +pub trait Handler: Sync {
+> +    /// The actual handler function. As usual, sleeps are not allowed in IRQ
+> +    /// context.
 
-Hum, rather than duplicating index like this, couldn't we add to
-mb_set_largest_free_order():
+What about:
 
-	/* Did mb_optimize_scan setting change? */
-	if (!test_opt2(sb, MB_OPTIMIZE_SCAN) &&
-	    !list_empty(&grp->bb_largest_free_order_node)) {
-		write_lock(&sbi->s_mb_largest_free_orders_locks[old]);
-		list_del_init(&grp->bb_largest_free_order_node);
-		write_unlock(&sbi->s_mb_largest_free_orders_locks[old]);
-	}
+	/// The hard IRQ handler.
+	///
+	/// This is executed in interrupt context, hence all corresponding
+	/// limitations do apply.
+	///
+	/// All work that does not necessarily need to be executed from
+	/// interrupt context, should be deferred to a threaded handler.
+	/// See also [`ThreadedRegistration`].
 
-Also arguably we should reinit bb lists when mb_optimize_scan gets
-reenabled because otherwise inconsistent lists could lead to suboptimal
-results... But that's less important to fix I guess.
-
-								Honza
-
-> ---
->  fs/ext4/ext4.h    |  1 +
->  fs/ext4/mballoc.c | 35 ++++++++++++++++-------------------
->  2 files changed, 17 insertions(+), 19 deletions(-)
-> 
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 003b8d3726e8..0e574378c6a3 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -3476,6 +3476,7 @@ struct ext4_group_info {
->  	int		bb_avg_fragment_size_order;	/* order of average
->  							   fragment in BG */
->  	ext4_grpblk_t	bb_largest_free_order;/* order of largest frag in BG */
-> +	ext4_grpblk_t	bb_largest_free_order_idx; /* index of largest frag */
->  	ext4_group_t	bb_group;	/* Group number */
->  	struct          list_head bb_prealloc_list;
->  #ifdef DOUBLE_CHECK
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index e6d6c2da3c6e..dc82124f0905 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -1152,33 +1152,29 @@ static void
->  mb_set_largest_free_order(struct super_block *sb, struct ext4_group_info *grp)
->  {
->  	struct ext4_sb_info *sbi = EXT4_SB(sb);
-> -	int i;
-> +	int new, old = grp->bb_largest_free_order_idx;
->  
-> -	for (i = MB_NUM_ORDERS(sb) - 1; i >= 0; i--)
-> -		if (grp->bb_counters[i] > 0)
-> +	for (new = MB_NUM_ORDERS(sb) - 1; new >= 0; new--)
-> +		if (grp->bb_counters[new] > 0)
->  			break;
-> +
-> +	grp->bb_largest_free_order = new;
->  	/* No need to move between order lists? */
-> -	if (!test_opt2(sb, MB_OPTIMIZE_SCAN) ||
-> -	    i == grp->bb_largest_free_order) {
-> -		grp->bb_largest_free_order = i;
-> +	if (!test_opt2(sb, MB_OPTIMIZE_SCAN) || new == old)
->  		return;
-> -	}
->  
-> -	if (grp->bb_largest_free_order >= 0) {
-> -		write_lock(&sbi->s_mb_largest_free_orders_locks[
-> -					      grp->bb_largest_free_order]);
-> +	if (old >= 0) {
-> +		write_lock(&sbi->s_mb_largest_free_orders_locks[old]);
->  		list_del_init(&grp->bb_largest_free_order_node);
-> -		write_unlock(&sbi->s_mb_largest_free_orders_locks[
-> -					      grp->bb_largest_free_order]);
-> +		write_unlock(&sbi->s_mb_largest_free_orders_locks[old]);
->  	}
-> -	grp->bb_largest_free_order = i;
-> -	if (grp->bb_largest_free_order >= 0 && grp->bb_free) {
-> -		write_lock(&sbi->s_mb_largest_free_orders_locks[
-> -					      grp->bb_largest_free_order]);
-> +
-> +	grp->bb_largest_free_order_idx = new;
-> +	if (new >= 0 && grp->bb_free) {
-> +		write_lock(&sbi->s_mb_largest_free_orders_locks[new]);
->  		list_add_tail(&grp->bb_largest_free_order_node,
-> -		      &sbi->s_mb_largest_free_orders[grp->bb_largest_free_order]);
-> -		write_unlock(&sbi->s_mb_largest_free_orders_locks[
-> -					      grp->bb_largest_free_order]);
-> +			      &sbi->s_mb_largest_free_orders[new]);
-> +		write_unlock(&sbi->s_mb_largest_free_orders_locks[new]);
->  	}
->  }
->  
-> @@ -3391,6 +3387,7 @@ int ext4_mb_add_groupinfo(struct super_block *sb, ext4_group_t group,
->  	INIT_LIST_HEAD(&meta_group_info[i]->bb_avg_fragment_size_node);
->  	meta_group_info[i]->bb_largest_free_order = -1;  /* uninit */
->  	meta_group_info[i]->bb_avg_fragment_size_order = -1;  /* uninit */
-> +	meta_group_info[i]->bb_largest_free_order_idx = -1;  /* uninit */
->  	meta_group_info[i]->bb_group = group;
->  
->  	mb_group_bb_bitmap_alloc(sb, meta_group_info[i], group);
-> -- 
-> 2.46.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> +    fn handle(&self) -> IrqReturn;
+> +}
