@@ -1,116 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E224201004;
-	Fri, 27 Jun 2025 07:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B26421638D;
+	Fri, 27 Jun 2025 07:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751009792; cv=none; b=ADFOzjzk1EBW+mmXCbjlZToPUjaT7dfihtUnIWa+6Pn79EXmhnAWzCUd71vPbe9GWGipbsEJnhgcWqOno3K1TnQ4sv23U5bn2jzAzwi9AD22KGcyUSnaxJkFkg1mfj53g3oIBNzdKdWu/UBfIzBQjzhSbGb0/Avx4IqHhMSt4W8=
+	t=1751009831; cv=none; b=nMHF66hKjqGJeMBOtRelUBxTRt7rHyxK81bjwEY/FpX1T7GpqodQYV6ttbi0P9iG3FSSxgtj0CuqpmbYD8YEfN3mfZZgIcPfdsKyOyhHoZ+SFFytys0kfBzNBur01wnO7wJNcu7d0S4WiCxgMnBFDK3+vwPaMO72v1CjUVlW4cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751009792; c=relaxed/simple;
-	bh=R7MFiZ9r/m2icBqFE8z942btjxdQ3uI5L9jjyYNHCUk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sl4zZehs/iqXHb38p3tKV0S2TfiatNrkWdRSgPl502ec3/gqwGpqf3D2XazlBpaKAkoFXslotYosW16MNwba37XBt59hyWm51g84xMaDG/MCnY/lmXl1gPVqrgDVPXvqhZfKfKjouNjXEhFNqKHjNWCdEqX2wDob+QkgJE+f5cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SngtEmeg; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751009831; c=relaxed/simple;
+	bh=h04dW7cvq5MsrTLRcy+l7A8vi+WnZaRzq7TXJn2e26A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sp80k8SMpd6qZFys5LMH7lMsOf3I5Z99f/qd4iXLxWVdos3kgibPKlJL44q62AuM15l8s7K/kE8IVA7ZUGcKJQAXhtLTCxtYWA2mFVgg3b99fNG7a1Bh6y38BxU9FTOthYtA6dRiQvCY1JuEXqSFpyYuN9TvOPT+FUEjK1OMElw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FGSGJ0Mp; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SngtEmeg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751009792; x=1782545792;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=R7MFiZ9r/m2icBqFE8z942btjxdQ3uI5L9jjyYNHCUk=;
-  b=SngtEmegXuBEkY4VT25y9JMPKFNUeFsyWKqyTTaR7xAQeL3MwEzl73Ex
-   /mRfA6D7TQM5LeOsW/bbRNyZXEVSeICxyh/HV0ZiO6I2A+V0wsBac8Efy
-   ojSbWS8NFIS80sYih0a5tizG4PoN26Gx7kgKosFrBmAgwx8okEzy+lelv
-   eCB6GwYS8dOnfkZ9u22ALzxfw0yv0sbJC98PPYRFjWnziyo4W/VrVofbm
-   mrF/RJAJ4jOzfCO2KqZ3JF0wLN1J6QwAoGrESVkxAzLJMoxAgJRorEQMG
-   UCfIaFGPiEwcHnzKmBEofJAlRFoYxS6d/d4s8ICU1RnHKQHoo/5OS3wlL
-   w==;
-X-CSE-ConnectionGUID: wJX46o5SRoO9nxLIynDtgg==
-X-CSE-MsgGUID: qHkfZyK4QNiqY22oiEJnfQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53190634"
-X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
-   d="scan'208";a="53190634"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 00:36:31 -0700
-X-CSE-ConnectionGUID: Kh5t6bgAQ1+j0Xkx9PE3SA==
-X-CSE-MsgGUID: j0Uw8pEZQUqEGpTzy5l4rg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
-   d="scan'208";a="153256700"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 27 Jun 2025 00:36:26 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uV3dI-000VvV-0Y;
-	Fri, 27 Jun 2025 07:36:24 +0000
-Date: Fri, 27 Jun 2025 15:35:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Taniya Das <quic_tdas@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Ajit Pandey <quic_ajipan@quicinc.com>,
-	Imran Shaik <quic_imrashai@quicinc.com>,
-	Jagadeesh Kona <quic_jkona@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Taniya Das <quic_tdas@quicinc.com>,
-	Dmitry Baryshkov <lumag@kernel.org>
-Subject: Re: [PATCH v10 07/10] clk: qcom: gpucc-qcs615: Add QCS615 graphics
- clock controller driver
-Message-ID: <202506271519.GYlfvTOB-lkp@intel.com>
-References: <20250625-qcs615-mm-v10-clock-controllers-v10-7-ec48255f90d8@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FGSGJ0Mp"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-53185535ed9so1785495e0c.0;
+        Fri, 27 Jun 2025 00:37:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751009829; x=1751614629; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h04dW7cvq5MsrTLRcy+l7A8vi+WnZaRzq7TXJn2e26A=;
+        b=FGSGJ0MpSUM6ByQ+kGPNxA2KQfs2ywZAh2i0RlHhzx4kgiPqySR5+Z8ylsC/+is0pU
+         D2+xd6ZSHCRLwPWhq5xTrUoOSW7/if16K/zIqgmQdGJ0i5K8Q8xTfX35hiZi52K7JQUO
+         7/Qzko+3rJqJ7peJEiz/fPYL7uEtH0US8KcdQrQSpQmcheTEupFMC+zJHn5Ovv4aCAQ2
+         RJDEsiyFwMsmK3vECounrhtTmoyDOmtAXlodHFNorZkyr3Cj+BWoen+ZaHCML1ilePmH
+         413J7VCSl8gTPc5RNgb17ck87iHv/nC6PLEjt+y2k8tWci0efglasOSTsU0fEnO4URvn
+         VCGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751009829; x=1751614629;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h04dW7cvq5MsrTLRcy+l7A8vi+WnZaRzq7TXJn2e26A=;
+        b=ZqSbOJSZyJichBsF6vGNQWYNLnDhMgiipmPsLx4TC76e/DJy8xXWZSEV4Col5rCtmF
+         yucVXBH4wUzmveMVz6ODinw4EIjC2onCC0BV+LM17od7zeDad+/5XUcBMnvSYiNQ316s
+         VjLyOjMoFQJFfTCEngbam/9a9xMZhsBJ1L3Y60MVRSHYPo6UP1rs94FqJZ/coUn+3PnN
+         1l0dpuoD6gtac7TeCaStfGTEQtlx6/XuPG0GgqUv0BJCoQQgmoVhUi7aZf/BB+1hAeL8
+         Svrb8pO5EUPDwZRrxrWUuxXt2SHy1mLSXDUY1Zn1UV0mD1686t8zEAWTyYhhAdwBUd4d
+         Wk2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVPV5vzxc6ukVToyj16OnD+FlwrWMgd6y9IZtVY5EurdYVkIr2O2GTE9f/n75LISz3gS8WF6Z0j@vger.kernel.org, AJvYcCVyPcs83VnRAzDEQiAnYHzBgvpIlgyXmhqz7EfQs0SY5J2zpJY8w3qFlOcIRIQASsrjCKzM64Oo7PfRWgA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnDPUFCIpPJDR051EoAS8IYgwcK2SP22hsXA5Rj+qkZB13WPfl
+	/ujs5k2lG9T2ctoIgf2gjUXJhYFoxaqOtlhOamcPTyEs64V7lsd1+KXNE5jiNqsPlPxjP2P2fiH
+	T3BmltSr06bf6pxUaZ0I128xquk/wfys=
+X-Gm-Gg: ASbGncuekx93YSPNxOFLHCa2AR75O8KQzDGF/J54/oYfPJ6EDA/LpgHJxGx0vaEiFuC
+	EG5wFuq+ZFa4CtjKn5+muC7WJL4HXt8qstUTA+KDBkdCGdnGJ/J/MQGQnk2ZZoL/TJeEF9opW89
+	HzouSRIfeAjLZ3V4hHHgOS+ffLe6l5rnph/cn4Gu4p7/0=
+X-Google-Smtp-Source: AGHT+IHo8FRikknOYfNn2v3zzQQPaCulI/LItL1n+PBYdAHqbmLkfddAtgEKwDf2Q40GboOB26M3NfwuovgELxUJcjQ=
+X-Received: by 2002:a05:6122:a05:b0:531:1314:618d with SMTP id
+ 71dfb90a1353d-5330c227301mr1950474e0c.0.1751009828926; Fri, 27 Jun 2025
+ 00:37:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625-qcs615-mm-v10-clock-controllers-v10-7-ec48255f90d8@quicinc.com>
+References: <20250627062319.84936-1-lance.yang@linux.dev> <CAGsJ_4xQW3O=-VoC7aTCiwU4NZnK0tNsG1faAUgLvf4aZSm8Eg@mail.gmail.com>
+ <CAGsJ_4z+DU-FhNk9vkS-epdxgUMjrCvh31ZBwoAs98uWnbTK-A@mail.gmail.com> <1d39b66e-4009-4143-a8fa-5d876bc1f7e7@linux.dev>
+In-Reply-To: <1d39b66e-4009-4143-a8fa-5d876bc1f7e7@linux.dev>
+From: Barry Song <21cnbao@gmail.com>
+Date: Fri, 27 Jun 2025 19:36:57 +1200
+X-Gm-Features: Ac12FXz5tlMnNgK9S5wGn1B_aw1xub8A6xmoNvbFnezBsQjuxTcX4VyZtOeiAwc
+Message-ID: <CAGsJ_4xX+kW1msaXpEPqX7aQ-GYG9QVMo+JYBc18BfLCs8eFyA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] mm/rmap: fix potential out-of-bounds page table
+ access during batched unmap
+To: Lance Yang <lance.yang@linux.dev>
+Cc: akpm@linux-foundation.org, david@redhat.com, baolin.wang@linux.alibaba.com, 
+	chrisl@kernel.org, kasong@tencent.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-riscv@lists.infradead.org, lorenzo.stoakes@oracle.com, 
+	ryan.roberts@arm.com, v-songbaohua@oppo.com, x86@kernel.org, 
+	huang.ying.caritas@gmail.com, zhengtangquan@oppo.com, riel@surriel.com, 
+	Liam.Howlett@oracle.com, vbabka@suse.cz, harry.yoo@oracle.com, 
+	mingzhe.yang@ly.com, stable@vger.kernel.org, Lance Yang <ioworker0@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Taniya,
+On Fri, Jun 27, 2025 at 7:15=E2=80=AFPM Lance Yang <lance.yang@linux.dev> w=
+rote:
+>
+>
+>
+> On 2025/6/27 14:55, Barry Song wrote:
+> > On Fri, Jun 27, 2025 at 6:52=E2=80=AFPM Barry Song <21cnbao@gmail.com> =
+wrote:
+> >>
+> >> On Fri, Jun 27, 2025 at 6:23=E2=80=AFPM Lance Yang <ioworker0@gmail.co=
+m> wrote:
+> >>>
+> >>> From: Lance Yang <lance.yang@linux.dev>
+> >>>
+> >>> As pointed out by David[1], the batched unmap logic in try_to_unmap_o=
+ne()
+> >>> can read past the end of a PTE table if a large folio is mapped start=
+ing at
+> >>> the last entry of that table. It would be quite rare in practice, as
+> >>> MADV_FREE typically splits the large folio ;)
+> >>>
+> >>> So let's fix the potential out-of-bounds read by refactoring the logi=
+c into
+> >>> a new helper, folio_unmap_pte_batch().
+> >>>
+> >>> The new helper now correctly calculates the safe number of pages to s=
+can by
+> >>> limiting the operation to the boundaries of the current VMA and the P=
+TE
+> >>> table.
+> >>>
+> >>> In addition, the "all-or-nothing" batching restriction is removed to
+> >>> support partial batches. The reference counting is also cleaned up to=
+ use
+> >>> folio_put_refs().
+> >>>
+> >>> [1] https://lore.kernel.org/linux-mm/a694398c-9f03-4737-81b9-7e49c857=
+fcbe@redhat.com
+> >>>
+> >>
+> >> What about ?
+> >>
+> >> As pointed out by David[1], the batched unmap logic in try_to_unmap_on=
+e()
+> >> may read past the end of a PTE table when a large folio spans across t=
+wo PMDs,
+> >> particularly after being remapped with mremap(). This patch fixes the
+> >> potential out-of-bounds access by capping the batch at vm_end and the =
+PMD
+> >> boundary.
+> >>
+> >> It also refactors the logic into a new helper, folio_unmap_pte_batch()=
+,
+> >> which supports batching between 1 and folio_nr_pages. This improves co=
+de
+> >> clarity. Note that such cases are rare in practice, as MADV_FREE typic=
+ally
+> >> splits large folios.
+> >
+> > Sorry, I meant that MADV_FREE typically splits large folios if the spec=
+ified
+> > range doesn't cover the entire folio.
+>
+> Hmm... I got it wrong as well :( It's the partial coverage that triggers
+> the split.
+>
+> how about this revised version:
+>
+> As pointed out by David[1], the batched unmap logic in try_to_unmap_one()
+> may read past the end of a PTE table when a large folio spans across two
+> PMDs, particularly after being remapped with mremap(). This patch fixes
+> the potential out-of-bounds access by capping the batch at vm_end and the
+> PMD boundary.
+>
+> It also refactors the logic into a new helper, folio_unmap_pte_batch(),
+> which supports batching between 1 and folio_nr_pages. This improves code
+> clarity. Note that such boundary-straddling cases are rare in practice, a=
+s
+> MADV_FREE will typically split a large folio if the advice range does not
+> cover the entire folio.
 
-kernel test robot noticed the following build warnings:
+I assume the out-of-bounds access must be fixed, even though it is very
+unlikely. It might occur after a large folio is marked with MADV_FREE and
+then remapped to an unaligned address, potentially crossing two PTE tables.
 
-[auto build test WARNING on 2ae2aaafb21454f4781c30734959cf223ab486ef]
+A batch size between 2 and nr_pages - 1 is practically rare, as we typicall=
+y
+split large folios when MADV_FREE does not cover the entire folio range.
+Cases where a batch of size 2 or nr_pages - 1 occurs may only happen if a
+large folio is partially unmapped after being marked MADV_FREE, which is
+quite an unusual pattern in userspace.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Taniya-Das/clk-qcom-clk-alpha-pll-Add-support-for-dynamic-update-for-slewing-PLLs/20250625-184903
-base:   2ae2aaafb21454f4781c30734959cf223ab486ef
-patch link:    https://lore.kernel.org/r/20250625-qcs615-mm-v10-clock-controllers-v10-7-ec48255f90d8%40quicinc.com
-patch subject: [PATCH v10 07/10] clk: qcom: gpucc-qcs615: Add QCS615 graphics clock controller driver
-config: arc-randconfig-r121-20250627 (https://download.01.org/0day-ci/archive/20250627/202506271519.GYlfvTOB-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 13.3.0
-reproduce: (https://download.01.org/0day-ci/archive/20250627/202506271519.GYlfvTOB-lkp@intel.com/reproduce)
+Let's wait for David's feedback before preparing a new version :-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506271519.GYlfvTOB-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/clk/qcom/gpucc-qcs615.c:396:15: sparse: sparse: symbol 'gpu_cc_qcs615_hws' was not declared. Should it be static?
-
-vim +/gpu_cc_qcs615_hws +396 drivers/clk/qcom/gpucc-qcs615.c
-
-   395	
- > 396	struct clk_hw *gpu_cc_qcs615_hws[] = {
-   397		[CRC_DIV_PLL0] = &crc_div_pll0.hw,
-   398		[CRC_DIV_PLL1] = &crc_div_pll1.hw,
-   399	};
-   400	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks
+Barry
