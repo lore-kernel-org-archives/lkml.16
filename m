@@ -1,63 +1,63 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EAF2E426C
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 14:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364642E3395
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 14:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751034205; cv=none; b=e6kjyuiTKvCOIulQ8XAUBtEfv1KZnRNvLhlLcPX6AVp2hr/fjE5wTJsosgPOMjp5TN90UHGWM0xVwug+/H/JXVlZPSKaMUo7xFY1Q7KG20XnSnK0v+foKC4oGENGWZx/NRbB0wBOFwh871esmmGYMsQ1vgY9cSp8k2VMILZQMlg=
+	t=1751034205; cv=none; b=a7+NlEGKuv0vScD8nSP2jGTmbM8pStjEbRhEwL8DW20B80TsfEeIwiewTuLLOpyed6zT1G3DuQrrWJ0f1HoSACxRaGDlR+6+3q7bYbkdkwwyffBqFaBivtggjGSxQLYk9b9NZRJRNpUV6E8go+p9A49qCACz+zgQtsjIxGKyUFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751034205; c=relaxed/simple;
-	bh=E/I9W6fX+DhSmsmtI3yC9YfnKc4TowcG2XvObw3IonQ=;
+	bh=PfwZzjjqJBdpG245rW9fZ43Yt8RFpe6Kf9hR0M/wvXw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ju4cUJxOJTf9tmXsWUAVYwGvCHJoDTPA8xHJiwrRK9jwvdkKKeh6pSFP5oeJQ9vHlOJpxhKwePHeziJ4JJyziMkSG0lKbGZqnFgEDVTw46U9pQIoV8L+ry5DOug4cICkXw6W6ynoSQLKyQWcCGOYDYeVBYQSm5h7/hVfwFixdS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=vyOnL0Sc; arc=none smtp.client-ip=209.85.222.171
+	 MIME-Version; b=WKVNOAZWVi2uknomEbtuZKqBSaludoGBFKaS23ewMX1rQJm8M1A+eP/VRj4B9lZjaruckBbqOokd+pHq0msGB+CuwKlYrF/Ix0e+9fliok50Cb98cjAMHag3kKfOP+pAWb71b64rS7Sc2BOGahKTyVcMJqk3VvkaEY+z52UIFXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=bo3+biOD; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="vyOnL0Sc"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7d098f7bd77so251451685a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:23:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="bo3+biOD"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7d3dd14a7edso306736585a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:23:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1751034203; x=1751639003; darn=vger.kernel.org;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1751034201; x=1751639001; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bpaBoGbv3UwS2ctJ5MNrLd4WnRBIdXYjgTh8qQmsLHk=;
-        b=vyOnL0ScpdHDCvKl57jCczsekDM9IM1QoaW+iyOJlWxRzrOUhBr16IPASxwBTGflyK
-         ted2mCV9+ImgzVD0BxXBqjybykmqTYUytYVaDqUjhoUBVi72v9x0ts7BS/Fydg69C75X
-         MT2btvkVIY/0Esfgz83iESJo/GJNNvTNdDMz3sdSLAbc0P9tdUG6Kp5sSJ2RNaF770Ct
-         TBSeNMnsMELfSFM36W72FIY1L+glqtZbB5lpeYN0aARIWETa/nLY9Rvhi5ISTOSgV0Xw
-         WZYlgzRgHQIFLQIK4mOfWQbWQ/cWvKayh8jxVAImPWeJ8o6D9fFH9q0XfVGNyK4cG1e7
-         YKzg==
+        bh=NWnze/SjFdW+lfNDCsnEitBUx1r5ZcEMc14OReZ/axQ=;
+        b=bo3+biODD7LGhBMJw9JZexn307AmIA2AtUnAF5Cjl/lX8LYCg5ZkdIWaU4QrG7VtoU
+         kHjewxGKCQ0YfPzX/9YwY0H8HmFsQXGIMcCfgfSYmgubfPoN+1iejl6NxOqQUYQqmY1C
+         Y3vqwah+1m/vS9f2ASOFSBkhPJA+x9eAIXCCNaOZH/g8dTxICtfkQ6gwtlqpxW9sTQWs
+         PUeugbP9/KDQSKWMxtgfv+8PnONY3zFt+s4QievGN8KAn1IWZNxR1J75wyI5HV/d8sTI
+         KHZR4ObeKzMg0bJ6C6U1/6xtcd75TYRLNfQDtYlwR+uUWeTjMVnoHnQ/tNLJUZZCqwN+
+         L3YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751034203; x=1751639003;
+        d=1e100.net; s=20230601; t=1751034201; x=1751639001;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bpaBoGbv3UwS2ctJ5MNrLd4WnRBIdXYjgTh8qQmsLHk=;
-        b=B7P/gGFN99BdlYNYWzPtLBySGPICc1qov3bRx5dC4GleYcY8Ny9A8e9n52UBTpA6ds
-         Qet/CW/JoWmdJhuD3/1xGMBVBfpjqa4F5jVu4SiYlB4jKLW62C6n0B92kBYYXWCy4XX2
-         e+0mmUYtTQqiCYH2F4V6ltkN5f6xLMkLbAFx1hSzH45CMN3ez4EVdLdjEPJmxxGLdbbo
-         baIt9Ok90ErQrrwfwPOqGdoPSuizEYuXEJ++fSgIsgwjF5LqRVB66pC4s2D7ki+6k1hJ
-         7QstwhOmwJTnUtCo4TqZt1ySlXXhaBNj6HBL3NfOURlkQfDuKh3NbyRQjj3N/N2/VtNJ
-         ysZA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4ucFuF6wM6OOL7ejaXtfmYeM+EYI5NvdN9PIRlthI63nbTB+2xWzXfSWXApF1Uq7GriDq0jg0RwYjCF4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAlZZi55k55J36Gd6lUMjl15+OO1dcn1slfKxL3xGuMgk2Kt5x
-	pGMBhnf++UrqjmzaBDZjwz69swGLuQk35DgiK/UbRpaIrZDx0z/2FRHypofBXGqF4pM=
-X-Gm-Gg: ASbGncuNZKtSd2peTLw1Cpx6RLfbBr9VINChfDoBwSl/C5euPWfTc/dbJbf6Gcx0L5s
-	ONQfXe15VP+yYBVfozVXqq0Qu1Nq4nlRBUnTtdVeH1ERxYme2jTUAJ1C8+J2WdojWnwDSHMvADn
-	yhdRIdhxP6H+3oIck8llLEr4Iy0iWB+aybsTKDN1ZEtyPLkWTNuNlczoRBm+13VF4t0jVNs2aaj
-	nZCftL+7lGPt5yENnObrp2K9MDaZ+VjETcV+giVkLu1Y1u7oPmvh751XViIHWcYX1Y1gkUgzzN5
-	LoTsQmdK4W16HEfu/q+Ople1pUdKvLrov0XAoTV9wK9ZLSV2kaudIUwIbTUV9Camzx3utvQ2387
-	NEp/omAMBTM9fNL4HfqEwSUpjS6CyeqZ9gLA=
-X-Google-Smtp-Source: AGHT+IE88bXOLiCjUu2+zVcecKfJf8g4CQ5BFAJMyhK2OHk7mseb/EKQgLzh833iCYXdtJd2+G7LJg==
-X-Received: by 2002:a05:620a:2729:b0:7d3:a7d9:1120 with SMTP id af79cd13be357-7d43bc15837mr1028658485a.24.1751034202759;
-        Fri, 27 Jun 2025 07:23:22 -0700 (PDT)
+        bh=NWnze/SjFdW+lfNDCsnEitBUx1r5ZcEMc14OReZ/axQ=;
+        b=NbF0jn7KqmmwdwnOn0I8NYn3kGEu+jJG8rw58wG50YVtd/Yjsvle7bxJmXAdRuTrT0
+         khxFltmpbAOwFN5tGUcjSeh39iCiUHIE57/LDZCwaDORjU7Cw2WpQPP67rje+Jf9m3e3
+         7/J9YWfU3UCvtuf1Zu/dAU6IKd3IU+CAhjH/sIug1b6L4a7vHA6frwt9fE68zw26woTb
+         p7suuzP9cVhbhvJlFcoC8mO4SedxA55/m/mfJiHKyxb0fJRhSN6CHNjvD5N5A9Zdkuhd
+         xdSF9VJOhJjxcokn+k1bspExYm4qfyq47TeI+g0RCQVzERT3A9RYuonGIWeR67PBtP7H
+         h+RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXVwbua8PEK1QIMG+79/e1f0Q0BMMXD0UHXk/HEyXixvUH7ZPmn3gc9gDyocAxNq7hDJedSjGlqIwnmNMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2PVsLgvogK0pjJ9HqIagryJGEVFt64vJXM4id+QgzFLvBxhGu
+	ChJudKDa9qpC7IQo+iNqKtftTYXRKFraK7ysAJMrdgqH2dWgmgnkoSYGoQboMbD1MDI=
+X-Gm-Gg: ASbGncuziqdShcVullgoBoCjxqOjICFUeSPoZTj4cLAs593TkEFj8GWk40c6otO7H/X
+	WLal3P4cfGBxexe7ODCmIDYIFX5wtitcr5wZx7j6hG3POStwi7+fdSVYXgQNHNBRaE30/hjMv2Q
+	UFfJNgnM3cuSWwThpVF4oeoQUewlQNmWhH0eA/+N22RFZ+2FEsUC+bJTzvg2vH6Wdx5s6MM3ins
+	ih1vNpQsOlo79Ycj/vvlOIOzkJv4jT3LUqduEbto7uE6/rp4E9zHK8ai97paSnJpGwnvpEbKbn4
+	bDSMehtDClZtCrhJZOKQIoFEEQgnN558PyARE5enb/noX9GBOJUbxNqSeR71Uv8OJ8qdbgCviwq
+	qN5mp8AJp8vFIknraPiZYXE0uel2uNzUxKIs=
+X-Google-Smtp-Source: AGHT+IGbR8LfUszD/aEIdWwkUQ61eynSIqFyVoyDA8206vPOUxXJejP9vRZ618fRX8/VdY8/tjO/YQ==
+X-Received: by 2002:a05:620a:198b:b0:7d3:9113:7902 with SMTP id af79cd13be357-7d44397f5e8mr481566285a.38.1751034201091;
+        Fri, 27 Jun 2025 07:23:21 -0700 (PDT)
 Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44323b4c4sm135708785a.106.2025.06.27.07.23.21
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44323b4c4sm135708785a.106.2025.06.27.07.23.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 07:23:22 -0700 (PDT)
+        Fri, 27 Jun 2025 07:23:20 -0700 (PDT)
 From: Alex Elder <elder@riscstar.com>
 To: lee@kernel.org,
 	lgirdwood@gmail.com,
@@ -79,9 +79,9 @@ Cc: mat.jonczyk@o2.pl,
 	linux-riscv@lists.infradead.org,
 	spacemit@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 7/8] riscv: dts: spacemit: define fixed regulators
-Date: Fri, 27 Jun 2025 09:23:06 -0500
-Message-ID: <20250627142309.1444135-8-elder@riscstar.com>
+Subject: [PATCH v6 6/8] riscv: dts: spacemit: enable the i2c8 adapter
+Date: Fri, 27 Jun 2025 09:23:05 -0500
+Message-ID: <20250627142309.1444135-7-elder@riscstar.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250627142309.1444135-1-elder@riscstar.com>
 References: <20250627142309.1444135-1-elder@riscstar.com>
@@ -93,44 +93,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Define the DC power input and the 4v power as fixed supplies in the
-Banana Pi BPI-F3.
+Define properties for the I2C adapter that provides access to the
+SpacemiT P1 PMIC.  Enable this adapter on the Banana Pi BPI-F3.
 
 Signed-off-by: Alex Elder <elder@riscstar.com>
 ---
- .../boot/dts/spacemit/k1-bananapi-f3.dts      | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 15 +++++++++++++++
+ arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi    |  7 +++++++
+ arch/riscv/boot/dts/spacemit/k1.dtsi            | 11 +++++++++++
+ 3 files changed, 33 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 7c9f91c88e01a..a1c184b814262 100644
+index fe22c747c5012..7c9f91c88e01a 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-@@ -28,6 +28,25 @@ led1 {
- 			default-state = "on";
- 		};
- 	};
-+
-+	reg_dc_in: dc-in-12v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "dc_in_12v";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	reg_vcc_4v: vcc-4v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_4v";
-+		regulator-min-microvolt = <4000000>;
-+		regulator-max-microvolt = <4000000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+		vin-supply = <&reg_dc_in>;
-+	};
+@@ -40,6 +40,21 @@ &emmc {
+ 	status = "okay";
  };
  
- &emmc {
++&i2c8 {
++	pinctrl-0 = <&i2c8_cfg>;
++	pinctrl-names = "default";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++
++	pmic@41 {
++		compatible = "spacemit,p1";
++		reg = <0x41>;
++		interrupts = <64>;
++		status = "okay";
++	};
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_2_cfg>;
+diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
+index 283663647a86f..9d6d4503fe751 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
+@@ -11,6 +11,13 @@
+ #define K1_GPIO(x)	(x / 32) (x % 32)
+ 
+ &pinctrl {
++	i2c8_cfg: i2c8-cfg {
++		i2c8-0-pins {
++			pinmux = <K1_PADCONF(93, 0)>,	/* PWR_SCL */
++				 <K1_PADCONF(94, 0)>;	/* PWR_SDA */
++		};
++	};
++
+ 	uart0_2_cfg: uart0-2-cfg {
+ 		uart0-2-pins {
+ 			pinmux = <K1_PADCONF(68, 2)>,
+diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+index 14097f1f6f447..a85239e8e430b 100644
+--- a/arch/riscv/boot/dts/spacemit/k1.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+@@ -483,6 +483,17 @@ gpio: gpio@d4019000 {
+ 				      <&pinctrl 3 0 96 32>;
+ 		};
+ 
++		i2c8: i2c@d401d800 {
++			compatible = "spacemit,k1-i2c";
++			reg = <0x0 0xd401d800 0x0 0x38>;
++			interrupts = <19>;
++			clocks = <&syscon_apbc CLK_TWSI8>,
++				 <&syscon_apbc CLK_TWSI8_BUS>;
++			clock-names = "func", "bus";
++			clock-frequency = <400000>;
++			status = "disabled";
++		};
++
+ 		pinctrl: pinctrl@d401e000 {
+ 			compatible = "spacemit,k1-pinctrl";
+ 			reg = <0x0 0xd401e000 0x0 0x400>;
 -- 
 2.45.2
 
