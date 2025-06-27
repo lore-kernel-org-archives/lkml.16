@@ -1,145 +1,129 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFD72C15BD;
-	Fri, 27 Jun 2025 11:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255A72BF3FC
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751025131; cv=none; b=OO7rMF15EgItllWQ13boOxyGngn0zdDfZla1ninVFiDyYhA68J6YFZkem7qAysovwargyafBz1R/DvMaFDjxR/7Df11MDOT9JadDerYs2EHtg84JKKs6mufATdthd483WCKGV+QNG+LY0qUMgHdSaomi8F4LVu0/PdUKDD3BG+Q=
+	t=1751025133; cv=none; b=HOfRtZeQI4AofDA+2h7Pm7iN8D2nLA4kqNV0ZPIb9VVNw+9wDWkuG8juBqbdTRLcTliapBdASIrMoyMHA9PeJlbf7JfuBhH/1YWzglFhz1LgXr196RX/yAP8+xLm3We3FuF1L5MOCZFlLSBcytpP/GofuySSvJj9XncWUx9UXPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751025131; c=relaxed/simple;
-	bh=XsFBoM55j4bAYZ7L9ORFlVbOLZCzG1Kh4FVMZp84x5c=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hDyZZ7k4vM6KqhiKJYRpFSXImgLXtgTY6SkyKARBGJ7SZvZcg+eX66XsfwdWVEgzO4hMn/kI/1ETjUs1VtYUZlNS9aLWGLbOINNHtSZ+R7w+4Aauu2mGh95u9rrs0F3nk1jU957CDpzU9WWICp8TKb1yTMuVyP3yRlq/e+2TkHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bTDRw3mZ5z6L5K9;
-	Fri, 27 Jun 2025 19:51:56 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 04ADC14011D;
-	Fri, 27 Jun 2025 19:52:06 +0800 (CST)
-Received: from localhost (10.48.153.213) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 27 Jun
- 2025 13:52:04 +0200
-Date: Fri, 27 Jun 2025 12:52:03 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v10 14/17] cxl/pci: Introduce CXL Endpoint protocol
- error handlers
-Message-ID: <20250627125203.00002564@huawei.com>
-In-Reply-To: <20250626224252.1415009-15-terry.bowman@amd.com>
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
-	<20250626224252.1415009-15-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751025133; c=relaxed/simple;
+	bh=B1fDgTPvcW5CNOENUIG20E3kZIfrYCCjaLOj12iKS54=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JekGIRmPCEwfuRUgL2NyPKcX7NIbkMGKokAWetPimHxrx12ZKpkLxxlNYTzk2Ffm33t3v8WH9ug8sj0obqlaVc1wt2VBDFzMiyibd6RTenA1DetXPpMMIYwgTXqarGi42lEqEs+HLP2wnAF3Kbu0vhzeKNHWjv1EVxAa5GfvlaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cbi11tNe; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cbi11tNe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751025131;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I5vSNy0YZG1hcCr6zeagT5BwkVdXA07NqtiRR9wtVcQ=;
+	b=cbi11tNe1dd1XRQxM2MfkM37lL5URIhj9LbdCUyRych2epZmbIy/sq0hYP/gJpfaDfcK2a
+	0MBCec1uQ+w/E7gRBRaeECAfYGQhClqelzmzfzR2kd73Rij/qQDDxwIy3WT/Md+OiCl5T9
+	xJGYXmvA84ag5CURYR8uM7EHgquQf3E=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-684-hv7pZnlCN1mjkOBSAXu05Q-1; Fri,
+ 27 Jun 2025 07:52:07 -0400
+X-MC-Unique: hv7pZnlCN1mjkOBSAXu05Q-1
+X-Mimecast-MFC-AGG-ID: hv7pZnlCN1mjkOBSAXu05Q_1751025126
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 147421801BD8;
+	Fri, 27 Jun 2025 11:52:06 +0000 (UTC)
+Received: from jlelli-thinkpadt14gen4.remote.csb (unknown [10.44.32.84])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0E10E19560AB;
+	Fri, 27 Jun 2025 11:52:00 +0000 (UTC)
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <llong@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>,
+	Luca Abeni <luca.abeni@santannapisa.it>,
+	Juri Lelli <juri.lelli@redhat.com>
+Subject: [PATCH 3/5] sched/deadline: Fix accounting after global limits change
+Date: Fri, 27 Jun 2025 13:51:16 +0200
+Message-ID: <20250627115118.438797-4-juri.lelli@redhat.com>
+In-Reply-To: <20250627115118.438797-1-juri.lelli@redhat.com>
+References: <20250627115118.438797-1-juri.lelli@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Thu, 26 Jun 2025 17:42:49 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
+A global limits change (sched_rt_handler() logic) currently leaves stale
+and/or incorrect values in variables related to accounting (e.g.
+extra_bw).
 
-> CXL Endpoint protocol errors are currently handled using PCI error
-> handlers. The CXL Endpoint requires CXL specific handling in the case of
-> uncorrectable error (UCE) handling not provided by the PCI handlers.
-> 
-> Add CXL specific handlers for CXL Endpoints. Rename the existing
-> cxl_error_handlers to be pci_error_handlers to more correctly indicate
-> the error type and follow naming consistency.
-> 
-> The PCI handlers will be called if the CXL device is not trained for
-> alternate protocol (CXL). Update the CXL Endpoint PCI handlers to call the
-> CXL UCE handlers.
-> 
-> The existing EP UCE handler includes checks for various results. These are
-> no longer needed because CXL UCE recovery will not be attempted. Implement
-> cxl_handle_ras() to return PCI_ERS_RESULT_NONE or PCI_ERS_RESULT_PANIC. The
-> CXL UCE handler is called by cxl_do_recovery() that acts on the return
-> value. In the case of the PCI handler path, call panic() if the result is
-> PCI_ERS_RESULT_PANIC.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Properly clean up per runqueue variables before implementing the change
+and rebuild scheduling domains (so that accounting is also properly
+restored) after such a change is complete.
 
-A few minor comments inline.
+Reported-by: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+---
+ kernel/sched/deadline.c | 4 +++-
+ kernel/sched/rt.c       | 6 ++++++
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-J
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 887b54cf3395..7209ffb5c2fe 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 7a3b556d45a99..187f324565f92 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -3166,6 +3166,9 @@ void sched_dl_do_global(void)
+ 	if (global_rt_runtime() != RUNTIME_INF)
+ 		new_bw = to_ratio(global_rt_period(), global_rt_runtime());
+ 
++	for_each_possible_cpu(cpu)
++		init_dl_rq_bw_ratio(&cpu_rq(cpu)->dl);
++
+ 	for_each_possible_cpu(cpu) {
+ 		rcu_read_lock_sched();
+ 
+@@ -3181,7 +3184,6 @@ void sched_dl_do_global(void)
+ 		raw_spin_unlock_irqrestore(&dl_b->lock, flags);
+ 
+ 		rcu_read_unlock_sched();
+-		init_dl_rq_bw_ratio(&cpu_rq(cpu)->dl);
+ 	}
+ }
+ 
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index 15d5855c542cb..be6e9bcbe82b6 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -2886,6 +2886,12 @@ static int sched_rt_handler(const struct ctl_table *table, int write, void *buff
+ 	sched_domains_mutex_unlock();
+ 	mutex_unlock(&mutex);
+ 
++	/*
++	 * After changing maximum available bandwidth for DEADLINE, we need to
++	 * recompute per root domain and per cpus variables accordingly.
++	 */
++	rebuild_sched_domains();
++
+ 	return ret;
+ }
+ 
+-- 
+2.49.0
 
-
->  
-> -	scoped_guard(device, dev) {
-> -		if (!dev->driver) {
-> +pci_ers_result_t cxl_error_detected(struct device *dev)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> +	struct device *cxlmd_dev = &cxlds->cxlmd->dev;
-> +	pci_ers_result_t ue;
-> +
-> +	scoped_guard(device, cxlmd_dev) {
-I think there is nothing much happening after this (maybe introduced in later
-patches in which case ignore this comment).
-
-So can you just use a guard and reduce the indent of the rest?
-
-> +
-> +		if (!cxlmd_dev->driver) {
->  			dev_warn(&pdev->dev,
->  				 "%s: memdev disabled, abort error handling\n",
->  				 dev_name(dev));
-> -			return PCI_ERS_RESULT_DISCONNECT;
-> +			return PCI_ERS_RESULT_PANIC;
->  		}
->  
->  		if (cxlds->rcd)
-> @@ -881,29 +888,23 @@ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
->  		ue = cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
-
-little hard to tell from this code blob but can you return here?
-
->  	}
->  
-> -
-> -	switch (state) {
-> -	case pci_channel_io_normal:
-> -		if (ue) {
-> -			device_release_driver(dev);
-> -			return PCI_ERS_RESULT_NEED_RESET;
-> -		}
-> -		return PCI_ERS_RESULT_CAN_RECOVER;
-> -	case pci_channel_io_frozen:
-> -		dev_warn(&pdev->dev,
-> -			 "%s: frozen state error detected, disable CXL.mem\n",
-> -			 dev_name(dev));
-> -		device_release_driver(dev);
-> -		return PCI_ERS_RESULT_NEED_RESET;
-> -	case pci_channel_io_perm_failure:
-> -		dev_warn(&pdev->dev,
-> -			 "failure state error detected, request disconnect\n");
-> -		return PCI_ERS_RESULT_DISCONNECT;
-> -	}
-> -	return PCI_ERS_RESULT_NEED_RESET;
-> +	return ue;
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_error_detected, "CXL");
