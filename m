@@ -1,72 +1,73 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5BD22AE6F
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177191F4608
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751026582; cv=none; b=HSvNSssrnm/bxCH4pupG7vHxoVtq0jiizj2TbcBFXhN0HQHJBEAQqcFyG/CLN5xqnoXJ2oTZ9xZDHjlQ9vb2Uh64T/EVvrqF5vAdTRcJhxYyvuVbkSzuHkGkjmCfz6CjLNen0v43shuO6+2cDb+rwlYAOH6b+6hzHZqJYRzpbc0=
+	t=1751026602; cv=none; b=YmiKFsWsSglnXQVS5YulPhFvbn43kr/Q6A31srkS4BDQJL+lZ+SFKJfUhfti3R+ZdikTD/rk8BfI+JeyARn6DVumqkRG2NmcbFQIfPmquhmMJWGjHp28glsbtWyd0ymP24WU8A1nxC6h4hX1VfKtuxzU8Kbl/mM4iLg8lQnIq0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751026582; c=relaxed/simple;
-	bh=/xFnVyAzk16zZpIqNtiCHChTJBM1y49oYqwHRM0PMcY=;
+	s=arc-20240116; t=1751026602; c=relaxed/simple;
+	bh=Z89CgsstUwddzJ6TKHqJ9RzUkAp8PFPXDoB684QD71s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uBgfEqZO9al4JnDmXDa115dqnAYBFaBHx559jSklKe86O8HiiShClNaOBm165n7I+b9bs+uIe0hqy7E5QgoiS+CoW/xh0pqFzFiv5Gjp0LAx6jcB6Z3rv1ia3iyf5XrdOchzAlv0dPczvdtpa9PwGWOZBIr15pFvSnUY6ZvYtRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oyrw6Tuy; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=UHD32lKcbMrcfTp6S/zRs69zjKz4CkM6Vv6uQRfzlaFoRGaA5XqFOuln1UuwSOyavRvCK4LaZDlmm2aWG8z9YJfNlm5E1LHUCveiOe7Dtvg0Ifu4kKWx933ojNDK9GYlgaS9PAQc9QUG6+XsQt9MTxZd0z0ZDIRi6dwy0aI89Eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O1+4S4L5; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oyrw6Tuy"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RCFhiL007132
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:16:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	lU0WIMQMpWLmZZYn9MfMQsBWefoG4LKIkwcYF1KthQY=; b=oyrw6TuyD/2F9rjn
-	0CCVlmlfrnQCU189qrbmshgZk8Evy4cEdRj7jn0Ks2qro3lT1hviFeV3tjJv0M50
-	OEWpQ3LrhHI94PB86OXB4pQu0+5WmY5akDCUBYlfQyiD6wOnuvud1GD13H6uchvK
-	w/+ksdtmJzKtyQq2n/ftB6F+48PzevpT7MllQtQT9J+o2MNTGBhfp7ZmfvLiZee5
-	1kA3L7OYMbi8EyfP94nNFoAEigRWhbW6L1eWw6w+oU8xdTi7P9H4arGtdcWG2HD2
-	5pE6Vn9oTtDfbv+vXnacwTCs7zA++YE3882sRpeYHtD8+cuFIXFIDAqd9NAFLtOj
-	7McuJw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47evc5yy63-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:16:19 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5e2a31f75so606630185a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:16:18 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O1+4S4L5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751026599;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=z5iXgYBlAwd33V1zlwBhehhaKVgL6D6G6eNQgnNmF2Q=;
+	b=O1+4S4L59cEXY4u9w5b04QyaUQFNOs8P0Lnwx7jDpIPN0Xc+xxtlNdGnKtuLIZE4A9R9Q9
+	OwCkG91wj3ANWrfela/SS3tpSO7OxgBrKkumu3ltyxAR4GyiDtUfQSDwX3TwUSDTICV5Lc
+	6tNTvQXK2eZiO+YbkvuH5Fr93aeAng0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-52-0U5Tmmc-MSm3ODIQxA7FLA-1; Fri, 27 Jun 2025 08:16:38 -0400
+X-MC-Unique: 0U5Tmmc-MSm3ODIQxA7FLA-1
+X-Mimecast-MFC-AGG-ID: 0U5Tmmc-MSm3ODIQxA7FLA_1751026597
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4f858bc5eso1475791f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:16:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751026578; x=1751631378;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lU0WIMQMpWLmZZYn9MfMQsBWefoG4LKIkwcYF1KthQY=;
-        b=ZxfhHcVYEq0R6r+U9IOdq4Ic7q5k8KgTY6sugIeAG9iL77dz2iASaRArqbfprPCc76
-         EUlbB4XnvHPm5kCJdaaxuTJJGN7wxmRAABjiX41GgBj5vOZWQOv+8n2qFaAFT3pCLzDk
-         GvMyUAnhZloDCcyjDT79z/tj7HYFB8k0i7dmX53jmZEbkiiQbFyaFuncseejPnibF+VO
-         ZQT4/L4AX9Mcf4uC9ZWWHLT2v7w7Hw3LaIgZ6kIUdFnPD70gb8/wcl638jhR3NwJHbCa
-         IfxT7JlXUsN6Tn51X2FcuvFIlszqKaCcITKVIlyaAdl39zZHuC1eEQJU4VXHTcy7JTGw
-         XgFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXCygqir4rf/FYVPQ8tQ60KsWn8Ni5RSfMxqhWvC9Uq1SXrcMpWiA4CueoeiQheU7KzsQ8HeolBLpd3Ip0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7Fhi57j2IZHo5xedwZQjzTdtve/gzH/A8bTgkEUCH2HIBiTnH
-	GJGvZMgCI8oYSba9K5YIXrziBjl0pa7Rm0USKL1OepFbEiz4TY0OEc1q3wQFXmrsbg2CRvsBK23
-	7KrV400MyhiluLNG7L47RyiJNhwovSxusvtYNWFlX1liEV12aqCtOZobBJe+BuCwaMu8=
-X-Gm-Gg: ASbGnctxzhs76FAN21yBGEMFnlR7wLE3fJpxlL3BIOLRDg/x+S8a0ZSr4IDmgk8eYd7
-	gCnaFjXomDOLkq5sHlac292liNSWE5KkPbl/3jEUPEzZxsssHd/kB/lrEjdJqWWnHJkvp5PAMrq
-	OGg3OuXAYYprWcd1QkuTelsr2TZn24LYzFrf1hz0exR9vBu3sprCn5+uWABaQLIg4WtODej/kKI
-	4rXssfyAQi+b6D8gLyeLmx3fUyDYkhwtxX10RVHxWkHKrn65F68I2REhFfTBLVi6xgNfDqUE3bn
-	zHuBhXawxedQ88b1vQddG/Wj9j68kYzz9Sf+J57BIfjZtXvz
-X-Received: by 2002:a05:620a:470a:b0:7d3:c381:f653 with SMTP id af79cd13be357-7d4439b8895mr471213985a.56.1751026577492;
-        Fri, 27 Jun 2025 05:16:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEUE6WsBFESfsW2EmUTOcwR3CqmOd/OTjwz/cqEShKqDwwXxfASft7QAm8ulgo8Q1dlk+4uww==
-X-Received: by 2002:a05:620a:470a:b0:7d3:c381:f653 with SMTP id af79cd13be357-7d4439b8895mr471208685a.56.1751026577083;
-        Fri, 27 Jun 2025 05:16:17 -0700 (PDT)
-Received: from [192.168.68.113] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a892e6214fsm2565424f8f.98.2025.06.27.05.16.16
+        d=1e100.net; s=20230601; t=1751026597; x=1751631397;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=z5iXgYBlAwd33V1zlwBhehhaKVgL6D6G6eNQgnNmF2Q=;
+        b=e5AGm4HjX9+518UjjY6YqKxCADKfgfdcnNHBmEix5wKRSmWeAWLKLmU3ZgOKkDHb5B
+         tZqbdmEbZ5A8DJTGE31H2sy4bOeiC8E+3KDpXMD1vty0+o89XfTfsACAKIyXT5kcRNJo
+         /jBfQ9dvFRI8cvPIcNTJLN7gGltCyw2VlFR+GYZLfT0mnfilXXAuDvly+DtZakJOMPNa
+         66jz93OyszjHpESUHNof8/5QElJagFgxs7/5jSclgdXi4DIuePB4StbNI2IopMhGm7K+
+         m5YAY2cyFFgcOYQZXXPIMVoQzlAr4G7CBzSNpo3gIStcxYUM9nHy0N65woGVn6MejfOo
+         9jtg==
+X-Forwarded-Encrypted: i=1; AJvYcCX6CVxcayxvUyzpsWpwUqHMfJYaXa88mWXGx/fJdQ/OonZA7tAFcGD/xKjpyd3+VkLggmB1Clz1xkf8qSk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv4TlwbXiHfzfsBgSArIQoZfpW9vUH0952Z50RbpUn+co3LnfH
+	ZtZKtvmfkdN7qtKo4wW4GavM6gH/l9VWXnEDekTkZyAFboedjqhBBiPT2Oby6w/IL8tnU1oB8P8
+	A6JaGGVBglEpJwCN7hhsODGQ4PonJ6yC22p4ZD59GqdYi1saV/2YytYDvEvmUn27rrA==
+X-Gm-Gg: ASbGnct7xrown/nGxAsuJERIkiNIIexUSHe1cGtjL9H/Axbb7q9fnYdRBw6svCLk0mD
+	ZDcw/gSY7XI+SOryk4f0A5tVnSK1nkgpeX3Bsezx//9WQnQrq3VNDMkEyOJ5dbnC1vl/PfpRPaO
+	Cn7y5FwKgAi4ZAhyEziP39K64PgBBT4JcW2YwQLBIwgUhttUPRWTgBu4LgTKX293J4NqlGalobf
+	0uCYnBv1518Nx7Bdwh2UH0BU3sDIctx8+J1MLb8/73TxCAtc918rokpIQrF5or4xqlaJz4OegPC
+	7sG7BQcSi9xwgacbZhCK3RmrWqw0gDtNOA3GK7ln+GeAtlKOciRIrZHcMPPtfmZmRVe3CumT5sB
+	6FT8H3PQ+yWCe8kIJyOXBumS/WRblPLkOXsVwYSzGZwJhk1DgZA==
+X-Received: by 2002:a05:6000:1acc:b0:3a5:2e59:833a with SMTP id ffacd0b85a97d-3a8f435e017mr2954028f8f.1.1751026597260;
+        Fri, 27 Jun 2025 05:16:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHFXCaDmfg79ltzhkJvrafzPaymAbe7A7YchbEapX8dANRC8wG38l5KXwh1B/WTFpadmove+w==
+X-Received: by 2002:a05:6000:1acc:b0:3a5:2e59:833a with SMTP id ffacd0b85a97d-3a8f435e017mr2953995f8f.1.1751026596736;
+        Fri, 27 Jun 2025 05:16:36 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f2d:5d00:f1a3:2f30:6575:9425? (p200300d82f2d5d00f1a32f3065759425.dip0.t-ipconnect.de. [2003:d8:2f2d:5d00:f1a3:2f30:6575:9425])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f8e1sm2528578f8f.88.2025.06.27.05.16.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 05:16:16 -0700 (PDT)
-Message-ID: <c609cafa-5970-4694-9b6e-b5536df72eb7@oss.qualcomm.com>
-Date: Fri, 27 Jun 2025 13:16:15 +0100
+        Fri, 27 Jun 2025 05:16:36 -0700 (PDT)
+Message-ID: <053f8c6d-0acd-465b-8d9f-a46d50ccce71@redhat.com>
+Date: Fri, 27 Jun 2025 14:16:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,118 +75,115 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] arm64: dts: qcom: sc7280: Add memory region for
- audiopd
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Ling Xu <quic_lxu5@quicinc.com>, cros-qcom-dts-watchers@chromium.org,
-        andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ekansh.gupta@oss.qualcomm.com
-References: <20250516110029.1637270-1-quic_lxu5@quicinc.com>
- <20250516110029.1637270-2-quic_lxu5@quicinc.com>
- <uzyxagnmxz5tsjy32mfro2alwdpcq5kybwzcbsysul7u6adgdf@x7katw7eme6u>
- <b90ee18a-5e88-4c36-a623-ae9447c53a46@quicinc.com>
- <2mu3bncxoq57rxi22dyd6ys2wa5n3wmtadfvixozshxgenutai@dlkbqgplzrrd>
- <46caa88e-790b-4733-83bc-75ed6c7ca2d8@quicinc.com>
- <CAO9ioeVoqQhDhBW_fVU8kkt=3trV9YhEDUO0izdf8cuCDqU4Tw@mail.gmail.com>
- <76071cc9-b052-4628-9890-239b0acd260f@oss.qualcomm.com>
- <fd2vic3g5jjk22y7yv24mtwr27ies2my5lih3zfj6yw4zd2obo@artndh3vepbb>
+Subject: Re: [PATCH v3 3/5] kdump, documentation: describe craskernel CMA
+ reservation
+To: Baoquan He <bhe@redhat.com>, Jiri Bohac <jbohac@suse.cz>,
+ David Hildenbrand <dhildenb@redhat.com>
+Cc: akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>,
+ Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
+ Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+ Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
+ linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.cz>
+References: <Z9H10pYIFLBHNKpr@dwarf.suse.cz> <Z9H4E82EslkGR7pV@dwarf.suse.cz>
+ <Z9Of+RYjpcDN7+ji@MiWiFi-R3L-srv>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-In-Reply-To: <fd2vic3g5jjk22y7yv24mtwr27ies2my5lih3zfj6yw4zd2obo@artndh3vepbb>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: JYnGPNXrm6Ge6dePf8poLTKHCBf0zIKF
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDEwMSBTYWx0ZWRfXyVTC3xTOA2+r
- hP4cCt8NCyHDNmJfYYAzzt0T09baG8/M0IJigGJioFvX8bI4/XetsEg+DRHsaDwOb2JQpmS5m5d
- bGTI+GQmoNPSkiVNn6NKdxzPQb0AmIuRQP/0EMtT1Qz0vptRFID1VxlK7JZoTJt8d8tc+yuczZB
- Eb4kKkaQl6WMNpcRMte7WYSNgQX0U1tpgF5rmXQxeJXpIQEgNRl1pSLWW3x4BswbeL7UBYUVXGy
- GKiZgTUrZoFm506GZKzTweuUxwaOKeoaHqr4zrOtwLVaatXwCEKML5kQQVIV99QSO/qvMs98Xrv
- FamNoH9G8w9nrYX0RB7vk1CptDVjohOm+zwvdXuquqzVtN/vrttVo4Q9nQjD80YsITvgOTPxPsn
- wygM8Av44+q64yuHL0VLypLtXlOJW44zpSM02kFUqaqkQ+Ed4RRosH/3PxGNjzm19zT9QiY+
-X-Authority-Analysis: v=2.4 cv=caHSrmDM c=1 sm=1 tr=0 ts=685e8b93 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=ZsC4DHZuhs/kKio7QBcDoQ==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
- a=COk6AnOGAAAA:8 a=BHjmFTkj5n41xVJOCs4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: JYnGPNXrm6Ge6dePf8poLTKHCBf0zIKF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_04,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxlogscore=867 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
- malwarescore=0 phishscore=0 clxscore=1015 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506270101
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Z9Of+RYjpcDN7+ji@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 5/22/25 7:51 PM, Dmitry Baryshkov wrote:
-> On Thu, May 22, 2025 at 08:27:40PM +0200, Konrad Dybcio wrote:
->> On 5/22/25 2:16 PM, Dmitry Baryshkov wrote:
->>> On Thu, 22 May 2025 at 13:44, Ling Xu <quic_lxu5@quicinc.com> wrote:
->>>>
->>>> 在 5/20/2025 9:53 PM, Dmitry Baryshkov 写道:
->>>>> On Tue, May 20, 2025 at 02:41:22PM +0800, Ling Xu wrote:
->>>>>> 在 5/17/2025 5:47 AM, Dmitry Baryshkov 写道:
->>>>>>> On Fri, May 16, 2025 at 04:30:27PM +0530, Ling Xu wrote:
->>>>>>>> Add reserved memory region and VMIDs for audio PD dynamic loading and
->>>>>>>> remote heap memory requirements.
->>>>>>>
->>>>>>> Why? Was it not working without this heap?
->>>>>>
->>>>>> yes, it will not working without this heap.
->>>>>> Memory region is required for audio PD for dynamic loading and remote heap memory
->>>>>> requirements. For more info, please refer below patches, it has provided a more
->>>>>> detailed explanation.
->>>>>> https://lore.kernel.org/all/bb68da04-ef52-4172-8b6e-f4027bcc2786@oss.qualcomm.com/
->>>>>> https://lore.kernel.org/all/effea02f-6ffb-42e9-87df-081caafab728@oss.qualcomm.com/
->>>>>
->>>>> This triggers a bunch of questions:
->>>>>
->>>>> - What is audio PD?
->>>>>
->>>> Audio PD is a protection domain which is running on DSP for audio
->>>> specific processing.
->>>>> - Is it a required component?
->>>> yes. it is needed wherever there is some audio use cases where
->>>> DSP audio PD dynamic loading is needed.
->>>
->>> Which use cases?
->>>
-
-Usecase is for audio compress offload, ex: when we play mp3 or any other
-compress format, we need audio pd support.
-
-
-
-thanks,
-Srini
->>>>> - For which platforms ?
->>>>>
->>>> For platforms that require dynamic loading of DSP audio PD.
->>>
->>> Please be more specific, we are not playing a guessing game here.
->>>
->>>>> - What happens if there is a memory region, but it is not used by the
->>>>>   driver (SM8650, SM8550).
->>>>>
->>>> It won't be used.
->>>
->>> So, what happens? DSP crash? system reboot? blue smoke coming from the SoC?
->>>
->>> I'm asking all those questions to understand:
->>> - whether this is applicable to previous SC7280 platforms or just RB3Gen2 / IDP
->>> - whether this needs to be backported or not
->>> - whether a similar fix should be applied to other platforms.
->>
->> I wouldn't worry about FP5 too much (albeit it's apparently not easy
->> to test it out and even having spent some time trying to, I couldn't
->> figure out how these things connect), but the chromebooks may be
->> potentially problematic. That said, we can overwrite it in sc7280-chrome
->> if necessary
+On 14.03.25 04:18, Baoquan He wrote:
+> Hi Jiri,
 > 
-> What about NothingPhone?
+> On 03/12/25 at 10:09pm, Jiri Bohac wrote:
+> ......
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index fb8752b42ec8..895b974dc3bb 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -987,6 +987,28 @@
+>>   			0: to disable low allocation.
+>>   			It will be ignored when crashkernel=X,high is not used
+>>   			or memory reserved is below 4G.
+>> +	crashkernel=size[KMG],cma
+>> +			[KNL, X86] Reserve additional crash kernel memory from
+>> +			CMA. This reservation is usable by the first system's
+>> +			userspace memory and kernel movable allocations (memory
+>> +			balloon, zswap). Pages allocated from this memory range
+>> +			will not be included in the vmcore so this should not
+>> +			be used if dumping of userspace memory is intended and
+>> +			it has to be expected that some movable kernel pages
+>> +			may be missing from the dump.
 > 
+> Since David and Don expressed concern about the missing kernel pages
+> allocated from CMA area in v2, and you argued this is still useful for
+> VM system, I would like to invite David to help evaluate the whole
+> series if it's worth from the VM and MM point of view.
+
+Balloon pages will not be dumped either way (PageOffline), so that is 
+not a convern.
+
+Zsmalloc pages ... are probably fine right now. They should likely only 
+be storing compressed user data. (not sure if they also store some other 
+datastructures, I think no, but might be wrong)
+
+My comment was rather forward-looking: that CMA memory only contains 
+user space memory is already not the case (but the existing cases might 
+be okay). In the future, as we support other movable allocations (as 
+raised, leaf page tables at some point, and there were discussions about 
+movable slab pages, although that might be challenging) this can change 
+(unless we find ways of not placing these allocations on CMA memory).
+
+So as is, this should be fine, but it's certainly something to be aware 
+of in the future.
+
+-- 
+Cheers,
+
+David / dhildenb
 
