@@ -1,80 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03EF14F9D6;
-	Fri, 27 Jun 2025 22:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B9228A3EC;
+	Fri, 27 Jun 2025 22:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751062787; cv=none; b=J4sZ/GMM5O2O4SsqR99cdiwfHCjdD/aQ730UDD1pBwdGNyEDbyo8v/IP37IQrx/KMZ71J3guIqHiJi9u9LPfrhbbVxNRbYJzU5FqJz06Wnds+nnmI61pRajH4YWHLY3Hlwi0/rjPOlWHSAHu8XlSegknnr3BGYZ+opstgVoYUTE=
+	t=1751062855; cv=none; b=Em/RsU3fzqMT9EC6w1D8GbpCr1ExL6ixoRNURxdTiFou+Ey7hkXoiIOFk9Ll+F9zJCV02R1tj9sjnEhLV+QSlnwssCupWezVmESIxsW1cjG/xxRsuoDJ6y1TC65Ckn48YuheuC9NzgSn65y0uELQrZmRmnLeEyq/8bj4K8lY17k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751062787; c=relaxed/simple;
-	bh=N0V4BZdMH/VMOZWlTiUnUi2RLPy+t6c7H7VRP1hkvI4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Pvvg1sA15DdHU1oTEzJOwMD6sVruAtxMD6ctob0Ue/kILa203NJK414/AXfSwq/+EhO79nf5I5Hhv1vdHHqI3gNioRXrp6zZP35AIHanR8BjemgZdFzBGK6o7lwYsFciPN0Ez1LUrZ0azNIDlcLNXatgd5HxbQLFoqQmvTEzReU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TeVBI21d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751062855; c=relaxed/simple;
+	bh=9L0ixXMRbVqYGzBnfUXhugHIfiWqtm/lpXgHMiILOps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cMkL6u1qTbOV8+PAhUWOJwTuKqXvakt/EVPpvV6ii8Rt9ekpdJEPluSaOL/CvvT3Fco+L0u3d8qQRHJ/tMcMym1GiSU7M4MhT1LbLcgF2wTCYQTCH9RL25UL6/rhZLVq6IBLAo0MdzlIa5+Q15p14lcdHAgse6YCc9NwK6vR8Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=djw67N73; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TeVBI21d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49578C4CEE3;
-	Fri, 27 Jun 2025 22:19:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751062787;
-	bh=N0V4BZdMH/VMOZWlTiUnUi2RLPy+t6c7H7VRP1hkvI4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=TeVBI21dhl1/DYXVMMVKW2B705RhlpboV6f4DisDbPbjiTsap8ypete8NTP5D4fec
-	 pzvE+wXwp/Xm302YK9sP3ZJ+WAn20UiKglAwi/eAfO5BrBX1YBGe6xbt1NhzUO50fP
-	 p9oIAFBcIk1ONe4Smm4GRmG/id1OvEoRFXKKVw/AZ0YhugVKHL/ub6/5vCzdafl10V
-	 x22tJi6dzPbpsrmbVS5zoGNYtVOq428UeFc705zAGJoG4RCRe7rpUn1pHE/d/jr5oS
-	 /C9aBmRP3RcfHvVR/RB9wYfPBRPdXZgwABvdkXdoZnivnunjpcSOH8rVUjzluDqFtP
-	 cFr1fiazE3ZXA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70DA238111CE;
-	Fri, 27 Jun 2025 22:20:14 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="djw67N73"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751062854; x=1782598854;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9L0ixXMRbVqYGzBnfUXhugHIfiWqtm/lpXgHMiILOps=;
+  b=djw67N73ktSDG/aAzbauhF/+Ec5uAv4OIscBeEJ1/hAA6DiPMyK+vF/p
+   QLl7s8S3I+qWN57IUzsvEkxpE0PT2d8z+qa+kabulI04vyJzmhcFRzJh1
+   hddxLBrxIilooWKYK5EzGolDULI4Q9WZsCzG8tfzU5T3v/f2VulbeJDQh
+   aZJnXx+016TyDBEWaYhW0aXStQrE4m+4r1dfWolAiy483BuCFOqVG7T+e
+   /zR3VEIaN+yqmrJtOFQ37igCpjEBGNMWf8tz8EgQqeIYg0Kw9Gxb2qVa7
+   xjX5MuF43+o1Xo+Huw/6xZzgcN5Zv+HRVMz2A8GWlzIJhOeUomwRX2wyd
+   Q==;
+X-CSE-ConnectionGUID: Od122P7QTZOORZK4JP0Axw==
+X-CSE-MsgGUID: Nk0JDsI8TZeEf+rk3XOXnQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="53509083"
+X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
+   d="scan'208";a="53509083"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 15:20:54 -0700
+X-CSE-ConnectionGUID: rpVEiyRYQB+NIypkshJRVw==
+X-CSE-MsgGUID: 6rfxsHhQR1ysfl3rVu0jWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
+   d="scan'208";a="153095261"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 27 Jun 2025 15:20:52 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uVHRA-000WaM-2O;
+	Fri, 27 Jun 2025 22:20:48 +0000
+Date: Sat, 28 Jun 2025 06:20:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
+	bhelgaas@google.com, mani@kernel.org, kwilczynski@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, robh@kernel.org, jingoohan1@gmail.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: Re: [PATCH v3] PCI: dwc: Refactor code by using
+ dw_pcie_clear_and_set_dword()
+Message-ID: <202506280542.6ttkdrur-lkp@intel.com>
+References: <20250626145040.14180-3-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3 0/2] NFC: trf7970a: Add option to reduce antenna gain
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175106281324.2076129.2162106005861598496.git-patchwork-notify@kernel.org>
-Date: Fri, 27 Jun 2025 22:20:13 +0000
-References: <20250626141242.3749958-1-paul.geurts@prodrive-technologies.com>
-In-Reply-To: <20250626141242.3749958-1-paul.geurts@prodrive-technologies.com>
-To: Paul Geurts <paul.geurts@prodrive-technologies.com>
-Cc: mgreer@animalcreek.com, krzk@kernel.org, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- robh@kernel.org, conor+dt@kernel.org, linux-wireless@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, martijn.de.gouw@prodrive-technologies.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626145040.14180-3-18255117159@163.com>
 
-Hello:
+Hi Hans,
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+kernel test robot noticed the following build errors:
 
-On Thu, 26 Jun 2025 16:12:40 +0200 you wrote:
-> The TRF7970a device is sensitive to RF disturbances, which can make it
-> hard to pass some EMC immunity tests. By reducing the RX antenna gain,
-> the device becomes less sensitive to EMC disturbances, as a trade-off
-> against antenna performance.
-> 
-> Signed-off-by: Paul Geurts <paul.geurts@prodrive-technologies.com>
-> 
-> [...]
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus linus/master v6.16-rc3 next-20250627]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Here is the summary with links:
-  - [v3,1/2] dt-bindings: net/nfc: ti,trf7970a: Add ti,rx-gain-reduction-db option
-    https://git.kernel.org/netdev/net-next/c/2bee162a28fb
-  - [v3,2/2] NFC: trf7970a: Create device-tree parameter for RX gain reduction
-    https://git.kernel.org/netdev/net-next/c/5d69351820ea
+url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-dwc-Refactor-code-by-using-dw_pcie_clear_and_set_dword/20250627-031223
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250626145040.14180-3-18255117159%40163.com
+patch subject: [PATCH v3] PCI: dwc: Refactor code by using dw_pcie_clear_and_set_dword()
+config: arc-randconfig-001-20250628 (https://download.01.org/0day-ci/archive/20250628/202506280542.6ttkdrur-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250628/202506280542.6ttkdrur-lkp@intel.com/reproduce)
 
-You are awesome, thank you!
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506280542.6ttkdrur-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/pci/controller/dwc/pcie-amd-mdb.c:21:
+   drivers/pci/controller/dwc/pcie-designware.h: In function 'dw_pcie_dbi_ro_wr_en':
+>> drivers/pci/controller/dwc/pcie-designware.h:712:2: error: implicit declaration of function 'dw_pcie_clear_and_set_dword'; did you mean 'pcie_capability_set_dword'? [-Werror=implicit-function-declaration]
+     dw_pcie_clear_and_set_dword(pci, PCIE_MISC_CONTROL_1_OFF,
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+     pcie_capability_set_dword
+   cc1: some warnings being treated as errors
+
+
+vim +712 drivers/pci/controller/dwc/pcie-designware.h
+
+   709	
+   710	static inline void dw_pcie_dbi_ro_wr_en(struct dw_pcie *pci)
+   711	{
+ > 712		dw_pcie_clear_and_set_dword(pci, PCIE_MISC_CONTROL_1_OFF,
+   713					    0, PCIE_DBI_RO_WR_EN);
+   714	}
+   715	
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
