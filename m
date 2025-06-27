@@ -1,61 +1,39 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2C85C603
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E804A0C
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751002431; cv=none; b=e3xHtKfaaxdmS4WtwXboithAqgEDayL+pDS9wLfmwAA+1IV/M46Ms6DYIZE3UOTPGAKlg8z7CYgVMKcpXN9LgSQ7i8k1kbC7bdPtieaV1wx9ZUPAKL3LeKKorY8Xi1H4e2GN4pKxZDSgrJvUXJiGjKNlGlfSAyYLJIVs9LDXfN4=
+	t=1751002486; cv=none; b=Oh3MVMd0QU7Wft7sskFRnjjgL0E1IavIgbkxERv3O+59wOfI8V3oRLMfxVWcGHu1hdJVKx4am+HNWkztrTLsRElyagH9L/U55OdXftZrN4BcQRrHX8Qm4ZNp8/uEU9oVXjuM1Dv8bwcvsEDPZBf34SKQiikNeySfLdME8H/w3Ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751002431; c=relaxed/simple;
-	bh=Ms2iiL6xHTka+KbRnWw4lch5UjQ/8n+zuH+88WExL5c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=vFVwq03N8zhyNUzoSsKL1XQ2H3hxm9vEj0tfv1lL5rrwHbEdBeu6uSktONk4Z8veLhlnId0BAiivNGhEcJvXfd1Zvlrw43PfTjOAxxoRxbBP2WaCrbH9CqVCV58nNdjjRvFSreH6O7+3/xG5By6YQ1mkRoF8MPPEW90RdYe2IV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Tlc18/1G; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751002486; c=relaxed/simple;
+	bh=gRMvd6yyd2T+iGylj2sKhhUXMBLmLgTjGCZzVuzoA9E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nbwotLtqpwUnowQP1NSESjzNfukIayv9OD7mig4j6cn4Hio2e30cbgoXJTWaYW1V5ylD5KYFgKZ79mWRjUv3t73dNt9WPmHCEEyng9SnSvmEZU+nVlkLiPqlOmnV2CrhUoNstRSgOb8bGsgNb+FU+1eE346wHVw942+JlmPSxcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Wz4mlBfN; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Tlc18/1G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751002427;
-	bh=Ms2iiL6xHTka+KbRnWw4lch5UjQ/8n+zuH+88WExL5c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Tlc18/1GHDYGFI/whANjkPRjiKXbXElX917+cIdO5Zmav24KJxbb92ZQLvZ54tguq
-	 zoJU8VqWws8FhTMQnbxvUGfBn+gRe5nNVHnUfvq2kBqifLqbunZ3mwKoI6+ewgsSww
-	 lRw9imU+JK/5Akjod/g1FG3CdeiyDAvH7R3nrGeK95uiWzy58x0ykPE7dfr9euxsro
-	 2NPHwNKdzghpZzd+jsmIwEGxcVprhoT+rrl7vkt1/5isSz04ZP4RXBqRzW5uJvQn7X
-	 P4Rhs/xfQPPUma8KkUgQSZEH++Q+4k3hLUiXmusaQp46Q4J6wi8YnvVE4ED6lfV3OC
-	 Wm0lhja6Pwyog==
-Received: from debian.. (unknown [171.76.82.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4E3B217E04AA;
-	Fri, 27 Jun 2025 07:33:43 +0200 (CEST)
-From: Vignesh Raman <vignesh.raman@collabora.com>
-To: dri-devel@lists.freedesktop.org
-Cc: daniels@collabora.com,
-	daniel@fooishbar.org,
-	helen.fornazier@gmail.com,
-	airlied@gmail.com,
-	simona.vetter@ffwll.ch,
-	robdclark@gmail.com,
-	robin.clark@oss.qualcomm.com,
-	guilherme.gallo@collabora.com,
-	sergi.blanch.torne@collabora.com,
-	valentine.burley@collabora.com,
-	lumag@kernel.org,
-	dmitry.baryshkov@oss.qualcomm.com,
-	quic_abhinavk@quicinc.com,
-	mripard@kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	tzimmermann@suse.de,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] drm/ci: i915: cml: Fix the runner tag
-Date: Fri, 27 Jun 2025 11:03:19 +0530
-Message-ID: <20250627053321.283208-1-vignesh.raman@collabora.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Wz4mlBfN"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751002482;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=R+XanjQCXGfmpNHqAkipJpPWqbw+txEndPBxVTTVf9Q=;
+	b=Wz4mlBfNkzZHxRl4mDzlmhBoWxIgQAahFtv8GuiQNOVhV/PjkVPqgZK1LMf7gcu6skoodI
+	CWD1LF/4cJB48yeVNQX6bHLaN9SMZTZsumin2neCuhoHs4tF+n6Scl+gNAZrRonOR5xgxS
+	t6cvTl+94zwRxL6wzlR3zseVHoN/lq0=
+From: Youling Tang <youling.tang@linux.dev>
+To: Carlos Maiolino <cem@kernel.org>
+Cc: linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	youling.tang@linux.dev,
+	Youling Tang <tangyouling@kylinos.cn>
+Subject: [PATCH] xfs: add FALLOC_FL_ALLOCATE_RANGE to supported flags mask
+Date: Fri, 27 Jun 2025 13:33:44 +0800
+Message-Id: <20250627053344.245197-1-youling.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,39 +41,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-The GitLab runner tags are case sensitive, and Flip-hatch's tag was
-incorrectly lowercase. This prevented jobs from being picked up
-by the runner. Fix the runner tag for Flip-hatch.
+From: Youling Tang <tangyouling@kylinos.cn>
 
-Based on https://gitlab.freedesktop.org/mesa/mesa/-/commit/03b480d3
+Add FALLOC_FL_ALLOCATE_RANGE to the set of supported fallocate flags in
+XFS_FALLOC_FL_SUPPORTED. This change improves code clarity and maintains
+by explicitly showing this flag in the supported flags mask.
 
-Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+Note that since FALLOC_FL_ALLOCATE_RANGE is defined as 0x00, this addition
+has no functional modifications.
+
+Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
 ---
+ fs/xfs/xfs_file.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-v1:
-  - MR - https://gitlab.freedesktop.org/drm/msm/-/merge_requests/174
-    This series depends on,
-    https://lore.kernel.org/all/20250514050340.1418448-1-vignesh.raman@collabora.com/
-    https://gitlab.freedesktop.org/drm/msm/-/merge_requests/169
-
----
- drivers/gpu/drm/ci/test.yml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
-index 795a2631833b..01bb38842123 100644
---- a/drivers/gpu/drm/ci/test.yml
-+++ b/drivers/gpu/drm/ci/test.yml
-@@ -322,7 +322,7 @@ i915:cml:
-   variables:
-     DEVICE_TYPE: asus-C436FA-Flip-hatch
-     GPU_VERSION: cml
--    RUNNER_TAG: mesa-ci-x86-64-lava-asus-C436FA-flip-hatch
-+    RUNNER_TAG: mesa-ci-x86-64-lava-asus-C436FA-Flip-hatch
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index 48254a72071b..d7f6b078d413 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -1335,7 +1335,8 @@ xfs_falloc_allocate_range(
+ }
  
- i915:tgl:
-   extends:
+ #define	XFS_FALLOC_FL_SUPPORTED						\
+-		(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE |		\
++		(FALLOC_FL_KEEP_SIZE |					\
++		 FALLOC_FL_ALLOCATE_RANGE | FALLOC_FL_PUNCH_HOLE |	\
+ 		 FALLOC_FL_COLLAPSE_RANGE | FALLOC_FL_ZERO_RANGE |	\
+ 		 FALLOC_FL_INSERT_RANGE | FALLOC_FL_UNSHARE_RANGE)
+ 
 -- 
-2.47.2
+2.34.1
 
