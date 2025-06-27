@@ -1,479 +1,367 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1862B2F1FCB
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 21:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751058290; cv=fail; b=c0tCTh1c8zlkuroyuJy3f9KTuKWM48j2K/hau/meuJRS+dOdU4LG5hDEc56kwt4BRuIHDvhsHDc2tQaa1hWeo45RzISSSHHtIEC/dD/C2bA17pltI2l1u8PVEy7gBI3EBUJq6VWdbUSaF3daZjEie4SitLwCEQmEzJOBBAWamZY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751058290; c=relaxed/simple;
-	bh=NJH5/GTk8nQLzL+mhDS8xCwymf0iyFTYzPP0mJqtkbA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=LZZem/6DkQoGJnZL9Tn6JWsa82XKHylvcFJuwNoFfVkXaQlSkMJxNSRLoJuFdWuddt4lvRthGT2YaLs8UN3jnYf6c3Xpvah6nzBApBCbhuYRP8gb/tdf68pSN4ybw5jv09jGM/slQOKrZvY5RCkaUhgFoVtO2Gj6ox2bVQKRHqs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F+bzyslC; arc=fail smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8581F3BA9;
+	Fri, 27 Jun 2025 21:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751058292; cv=none; b=lYqdjxNZU64z07sKm7tWQc8cwbTlmvDZFEd0ZDFj/S08dIbgdxJgh77YRsStkFHmGz9pyJ+3xrvZUnQTO5gvDjXkaE3N5IuvVs/9beukWn5/i4OsrwAQ6CckmLKjrKzOWvXH+LtnBCmOsEHCKd08WwKTBndNI+6bJUde/5EUbN4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751058292; c=relaxed/simple;
+	bh=mq9KQCan7JFRFTHlAnoG3cKyo0JGbSZs98TC5zf0rPw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SYag7VMXM6gHLTDUCZWua6MBWeghwFvXQu7YaYsk5dxKfpMi+T2VbDf+nF2sbTJHJcV+QFfLexODxuQxqNxSIyZ2IdRHDW9xYv86/n/kP6C93M8MjJVmYbFczDQHJ4sGBYLI5+YG7C1b4EcHrUS/ps5dgCAPc8jETYS8TjCjc/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DzxmAYGA; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F+bzyslC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DzxmAYGA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751058288; x=1782594288;
+  t=1751058289; x=1782594289;
   h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=NJH5/GTk8nQLzL+mhDS8xCwymf0iyFTYzPP0mJqtkbA=;
-  b=F+bzyslCuKErYeGNwMUme4Jsg56uSoDwH7h7LN5eg/FiRXHbCbC5moLS
-   n97DsfqrS2+eoxGOVh6Uzax0wwQIBsAXP7sfhdy8QCjQTVH23vK05501Z
-   fhzAas4vsh0UnwPCtyKEyGMlOUyuZxqH1YyW5A5GAw+KIbYWCFuL8M3uZ
-   bw8YqEG18exLlcpsVPfmvahwrKnxT3+t45P1hBGwX3zY2VkQWdnmEjXLE
-   WQuIi/ahQijdKgJcUVr/f85MJLb7qZkr7nTNGOvGqdZ/hbwwVVRLryVNI
-   BDjeVXJsxDoBCGVGW82y8TYwYUcVq70FwL+EkpyxTMGno4+OtFiwb9lJX
+   mime-version:in-reply-to;
+  bh=mq9KQCan7JFRFTHlAnoG3cKyo0JGbSZs98TC5zf0rPw=;
+  b=DzxmAYGAx4eVTLxPsO8WLBJ9zvwqlN5TH6Vpp+o0WylmFwQ+onVnS8S6
+   gxEfn53crLvu7CzrLCE+eqbP+L7wjJ3VGO48DIhQFshhtUYIkFY1YbJ9v
+   NIk+MzVxlTgzFDQK/hFRUgiZB+re2vDCKYkWom6R+abm6LYLWYfNGtQsN
+   G1q48qyu797Qv2DcgxzLHMWsndpaIlTlQmM9f5z+MxPCFJdxCAx4g/BoP
+   UeF8Rp+nFC1EvaBObHJrhGX9Dx/HqQy4K1gvQ2BKkcNzDpFHTTFSvgDPC
+   zj+QyJyj6Yo5YX11jdUGxV5MNA2Qc8E5iScUMqjYZaDgtGGiNfokXTFS9
    A==;
-X-CSE-ConnectionGUID: zID1eW8rTQOXYdDAdKYMTQ==
-X-CSE-MsgGUID: s0sDfBhCRY+a2CtwXsEKcQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="53320455"
+X-CSE-ConnectionGUID: 7Ay+XGljRBiXLpYH3wlhZA==
+X-CSE-MsgGUID: p4hTCNsWSyKNIieCE0wM+g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="53534868"
 X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
-   d="scan'208";a="53320455"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 14:04:47 -0700
-X-CSE-ConnectionGUID: R5kAL3bZTB2GOobbziHmwQ==
-X-CSE-MsgGUID: SoqWSvhdQfmNeUlgZZNy9w==
+   d="scan'208";a="53534868"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 14:04:49 -0700
+X-CSE-ConnectionGUID: RygQbJXHRM2F9TXTm3WCjw==
+X-CSE-MsgGUID: Xx2vBOxzTdCS9EH4kU37Sw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
-   d="scan'208";a="152416267"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 14:04:48 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 27 Jun 2025 14:04:46 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Fri, 27 Jun 2025 14:04:46 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.56)
- by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 27 Jun 2025 14:04:45 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jg98s5QPshJKXv9Y39aq6PhZpWugFQev6xCZ6+t4pRlttfJ5m532GIR8/E7VsPOlEFPSlXg6JBK6BiTH1qkXF9Rn9oLgcXUK3ID5/FbQl4e8VfU+pjCMm9Mpiolwow2ryiVriSTFkpwfXayx/v66Im+45XkyZLntN3REro/dFaUn20JC7kNdT8KCJPcPdaaULIqDgpmNUvSvFLwgBPwqLw7KSQglH91rlOgxMJwZiL0FTdp4fiD/kAe+ssVvbaifGREKuaoh6eQUERIzxWlXfGSvg2HSHGVAt6vF1ncL2dCjanVCtB+swOr8ODwZDOwGmL7ZzujGPO99KJfxGTXdFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yQiwmBpEOTqni3G5On02wZXsmvUiapPHp2Rp9PPIUDk=;
- b=RezGDB+yusLR8+3SFGPh45D4fkc+Umuz//d7whXN1uaueVKhOwEoSA3GKWPyBGEC2TWhUo67X39dhZzKfAnwvwuSvxu6h+oKjGFJJgIxeUoiMN1amr0F9FY6PRD2RKIjAheXPNrkhraQS6l3d3wwvOFYRFovANvd2/YyY0qXR/b/hCYQTN1wUEaHDTxBvVze56wHuI1Zu5chv/qH+sSZiElSV58Z0Lgaqu+7k0goE2I49xnO8/y5r8FGSgpOWmVsOY3tCH/9HsEQIR8zGdq59AATmwURu9w6XT+GjQdoR2f3zqoiDg4KRDTsXog9i/zwzCzd81DvHlp/mLqO38MnTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CYYPR11MB8430.namprd11.prod.outlook.com (2603:10b6:930:c6::19)
- by DS4PPF814058951.namprd11.prod.outlook.com (2603:10b6:f:fc02::36) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Fri, 27 Jun
- 2025 21:04:29 +0000
-Received: from CYYPR11MB8430.namprd11.prod.outlook.com
- ([fe80::76d2:8036:2c6b:7563]) by CYYPR11MB8430.namprd11.prod.outlook.com
- ([fe80::76d2:8036:2c6b:7563%5]) with mapi id 15.20.8880.015; Fri, 27 Jun 2025
- 21:04:29 +0000
-Date: Fri, 27 Jun 2025 17:04:24 -0400
-From: Rodrigo Vivi <rodrigo.vivi@intel.com>
-To: Badal Nilawar <badal.nilawar@intel.com>
-CC: <intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <anshuman.gupta@intel.com>,
-	<alexander.usyskin@intel.com>, <gregkh@linuxfoundation.org>,
-	<daniele.ceraolospurio@intel.com>
-Subject: Re: [PATCH v4 03/10] drm/xe/xe_late_bind_fw: Introducing
- xe_late_bind_fw
-Message-ID: <aF8HWPn87kiP9-cO@intel.com>
-References: <20250625170015.33912-1-badal.nilawar@intel.com>
- <20250625170015.33912-4-badal.nilawar@intel.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250625170015.33912-4-badal.nilawar@intel.com>
-X-ClientProxiedBy: SJ0PR03CA0133.namprd03.prod.outlook.com
- (2603:10b6:a03:33c::18) To CYYPR11MB8430.namprd11.prod.outlook.com
- (2603:10b6:930:c6::19)
+   d="scan'208";a="152291990"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 27 Jun 2025 14:04:44 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uVGFW-000WXi-1X;
+	Fri, 27 Jun 2025 21:04:42 +0000
+Date: Sat, 28 Jun 2025 05:03:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nam Cao <namcao@linutronix.de>,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Nam Cao <namcao@linutronix.de>
+Subject: Re: [PATCH 1/1] x86/hyperv: Switch to msi_create_parent_irq_domain()
+Message-ID: <202506280404.eZJ6vN93-lkp@intel.com>
+References: <0eafade05acb51022242635750cd4990f3adb0ac.1750947640.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR11MB8430:EE_|DS4PPF814058951:EE_
-X-MS-Office365-Filtering-Correlation-Id: e6b6ee0d-4c99-4d9c-7482-08ddb5be34dd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?z1+uAI5byaUBMwDqSK31zd/m2J9Xr8hpQA18xKLM97ZHfkUpdA6HcO2+Wn?=
- =?iso-8859-1?Q?g+yZ3jNntvwCF5gxfbfCyVMjYoCIt2QX36HrYbtgPeWwldLyfHXqfTgHZw?=
- =?iso-8859-1?Q?PUR2s7qin/LwCP3tmoDv9ss+AWKc3+qJMH2DS05GZMHKpwVYA6/X9qhk0d?=
- =?iso-8859-1?Q?h2txZIXLuY5hBikjxXnVhFvPhl2gDcs3gkk8+P+tmfhJFJYjEzZB1haBrj?=
- =?iso-8859-1?Q?eVIBlJYLnUg+ONr8bhkoo4I6lJPX6Rxjc+W82hX7wLgWk814MADzF5OQqS?=
- =?iso-8859-1?Q?rq8VQbWtQ4TgQYg6CUcsxuujscEgpTNWctHjRd2pzHpqvavxLAcukUbBeU?=
- =?iso-8859-1?Q?KgG7rShGw0VT5+irwDvqCfHSZN9PjTUMorIdQa0F/fb6Ukz1tq5AcUn9Ja?=
- =?iso-8859-1?Q?GJ4grlU6vSIg1A7FZk0UoAryO3R6qLkxbA8J6PtfczfxhrqBAe/WOS0GC+?=
- =?iso-8859-1?Q?EWGCvhf3f19KGAw5wVp03mlHf1q0fk2QUrFGazTlWRsULH+h3QgbddVo6v?=
- =?iso-8859-1?Q?DHTY2cUeFnplRGfn42mwoyJGSBYy0OFlaoB+VSm80E2hjvnhe/qQz7EPEH?=
- =?iso-8859-1?Q?66zaKkwFb2rwcKmEqDdbBhOzYm/HPWsuHyzsDD4wgwrOItqyTWVv825EJR?=
- =?iso-8859-1?Q?42i41m03o5BJgAUfVAvvGsdaSH3sYvoZ6wK7kyo0n7JrzeBffcOII4DQLv?=
- =?iso-8859-1?Q?xlFnZZIayzWEFB9DLfhc5g6eTkjpwp50iYTA1qg6jT57Q+HRJRlUvyWaBj?=
- =?iso-8859-1?Q?OTw8l7crY9pvRjRWJlims7a7ZjvMbQh8uI79Xhz/QAwPCjP7gf+b/oVshn?=
- =?iso-8859-1?Q?yqnuA5mlDm7pm/GGQfgQ2MA7Y3qzJG2oKJEKWj9nPTv9aVg5fcOGVjVk6n?=
- =?iso-8859-1?Q?h0AP3WkpdGu8+ES2Gc0+jE4/3wr8ZKvWntARXDuvI0PStSpV1YymGgSNmU?=
- =?iso-8859-1?Q?Ez3HimbHxdNYsMjEVST8UYEYEcVU/7zP/L6aLst10s+0oK1eRPHtA3x3zQ?=
- =?iso-8859-1?Q?BmnWCyf49pZS32shNo+2YN/mtPlWJVSzVtKkrIBhew4f78hqMo/Q33gqRM?=
- =?iso-8859-1?Q?+xR8kqH3eStJEf2m7KVSiNMj1GhF8mPaZTLRE+8SYIVGdBgGxGzkI52GYQ?=
- =?iso-8859-1?Q?FQYx/t6AD4+8rg3ipj+p7zRXabC4gsfOwsMZIOV6ZwyM3kn3DSkYZVOujn?=
- =?iso-8859-1?Q?hFSe5Ujs3um5BxV/9lGVaMV+oNB9TEmGQMIl9ggnkteF/1ddhiDm8mkA+/?=
- =?iso-8859-1?Q?b07E5+DTQ7VqjKtOltJWytS522ZEtapipKuWPOFawKiEeve97jO/KnFO+w?=
- =?iso-8859-1?Q?c7Vh+yn3nYgpryNW573PwlxN+J40pTlbEImPJkE4pxvgZ9QGnZ7t4JDQ/3?=
- =?iso-8859-1?Q?JnVZi5CWYQrGCLVAsAgV1dFHsn7NYhz7yi0U7Y3DY0i5iR9pKhcPY=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR11MB8430.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?oXvrG7Pn4lmxE4pyl5yKAgecl9QpU+8WFUaQj2PxR0zl172sDL4pDnax9I?=
- =?iso-8859-1?Q?MOoOSCxppIugTsTMnUFqoEZ3TrGaOgokJGaM1QbXNYYeutUN9da2a1a9R6?=
- =?iso-8859-1?Q?yEUzO3kibnm+CGszSrDjNM/dFSDtcUJR7JjALsMoNvs1I6ApTgw1LuE+Jv?=
- =?iso-8859-1?Q?iVwnlnIW3dw7ygrsqkF32FwVjWTRb5lj/vxObM00ihtyHPVb0cT4Y/eOp2?=
- =?iso-8859-1?Q?/CVzd/447mo648kuhzsLSfZQdooinF5P1sSUX1sejTB+sxaYOzHWHhX6TY?=
- =?iso-8859-1?Q?VHgpG9YuZxI7VJEngC6ls5Lnct2vm0Z0zVsArByUokkeGMGxIlp2ZfjuR2?=
- =?iso-8859-1?Q?5/1GnbE8JTdeL3prcEfzOoRdmnfPWD+Jw6quh2Ll98NtX4T78RhLI1V32y?=
- =?iso-8859-1?Q?Lufwz72fPmzbGcCwdxJzcY+w8lHKz0acx1kGN0z9XDHZhqXmaWGf1Me6yz?=
- =?iso-8859-1?Q?AwtST83bMbiiqXVm5RCPunJQ7NXHiRk0tk2CrIfB3eG7IBAFT5+or11CBC?=
- =?iso-8859-1?Q?5cLEDtC0s17NkctGXcmprQ7kx0yT4CEcWM6MKe+i9EgUlfMcbEOMhN5QsJ?=
- =?iso-8859-1?Q?CQ1QJEYG5dQkBM2vlj/UgheNMpdmSDnh/uuAAnQUc+/IlUwlT4BXDpkoey?=
- =?iso-8859-1?Q?SQcGl/nPxngr7Tpd/BYovISe8f0wLgHNOaUd7AbJ0wAl+4+2jqsF68wr7e?=
- =?iso-8859-1?Q?6EnV8a/nOqI98mp1QfOmDlePxT3lVlhlYAhxjrr8p7CENoefBtbGgnDBdh?=
- =?iso-8859-1?Q?6WlJ4bWiZo+M+qNwvws7F+INILZGZVFlTVVKHCjrneAyFxxCkpBVr2byK1?=
- =?iso-8859-1?Q?V2KmExiIoWfTYlnmjWClWJNYeHmH9DGD6k+1AvaswZdJ8S/R7mW7gSbFpi?=
- =?iso-8859-1?Q?26Zuu/h72ECFzQAkPBHXQ4gBWr29yoH1Ma0g5/zPxokyUVXXmjLKbl5VHD?=
- =?iso-8859-1?Q?tV/VxUVLytMnguiSw/lkEsRJmrb0TyBC+weXzuaBSPrPk1yqK3FTnrmYT3?=
- =?iso-8859-1?Q?oRsQZjA9jU4uQ/CD+g3O4tM3fj1M+l/G9M8XQADFtmyPqfKaMmr5lMCJIU?=
- =?iso-8859-1?Q?Y1R7oOy10j7cAJiCIcNinUaUBXm/2nbMiWJ4u4JEWkrGSRwoyhwXeD+Hyl?=
- =?iso-8859-1?Q?7alMDunYNO22Welqtu8BhuPvOUUxdtWsDWeitDQSv2SyPQHyHORvKkrHIU?=
- =?iso-8859-1?Q?khCeW4np06gyvik3TFYXv283EypkHWX7oSciQedwh5XT6j8/DWk23/AcGA?=
- =?iso-8859-1?Q?zj3YsqsUQeejw2ZjeyiH6THJD8OulEQjH0OtPbTw8uuFrep0R1WNiRqgT5?=
- =?iso-8859-1?Q?QOkbLPZYMj4fKKcBUXW1TXM6UzHQnO71XhyRBQCPYvGT2FKOlSwS75gOHg?=
- =?iso-8859-1?Q?7ZZGqNhU99zUW7MC20MPyju60n4zaaSKVeBYJV5W2qckeFl047+hmdScJd?=
- =?iso-8859-1?Q?BuUR6H2Tr2aKvMgiL3Vqznny7H4oq+8k8qcEqG5fuHrqB63dFCedNSAgMt?=
- =?iso-8859-1?Q?siho3mH+qCYPDn//rTkkIbUUsqiETL8yo+xfmAihgFmm4VV6j2scmm5yuL?=
- =?iso-8859-1?Q?Amis8m9GMLV5bAbK++BPvoJWAak3RoH6IYZq11OPDUAWSWSn3mOWUOhFrG?=
- =?iso-8859-1?Q?IjyPT4BbkGGxHCmA5eIXU2eAU2NkBbAzuy?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6b6ee0d-4c99-4d9c-7482-08ddb5be34dd
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR11MB8430.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 21:04:29.4031
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Wg/Iempm1mN/J0I2kNivjYmTfbc9ecRj44aybHfD/v7p8PJwk0i97hVonGZpdHN82+FNVYAvpUy1uchkhXOoxg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PPF814058951
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0eafade05acb51022242635750cd4990f3adb0ac.1750947640.git.namcao@linutronix.de>
 
-On Wed, Jun 25, 2025 at 10:30:08PM +0530, Badal Nilawar wrote:
-> Introducing xe_late_bind_fw to enable firmware loading for the devices,
-> such as the fan controller, during the driver probe. Typically,
-> firmware for such devices are part of IFWI flash image but can be
-> replaced at probe after OEM tuning.
-> This patch binds mei late binding component to enable firmware loading.
-> 
-> v2:
->  - Add devm_add_action_or_reset to remove the component (Daniele)
->  - Add INTEL_MEI_GSC check in xe_late_bind_init() (Daniele)
-> v3:
->  - Fail driver probe if late bind initialization fails,
->    add has_late_bind flag (Daniele)
-> v4:
->  - %S/I915_COMPONENT_LATE_BIND/INTEL_COMPONENT_LATE_BIND/
-> 
-> Reviewed-by: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
-> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
-> ---
->  drivers/gpu/drm/xe/Makefile                |  1 +
->  drivers/gpu/drm/xe/xe_device.c             |  5 ++
->  drivers/gpu/drm/xe/xe_device_types.h       |  6 ++
->  drivers/gpu/drm/xe/xe_late_bind_fw.c       | 90 ++++++++++++++++++++++
->  drivers/gpu/drm/xe/xe_late_bind_fw.h       | 15 ++++
->  drivers/gpu/drm/xe/xe_late_bind_fw_types.h | 37 +++++++++
->  drivers/gpu/drm/xe/xe_pci.c                |  3 +
->  7 files changed, 157 insertions(+)
->  create mode 100644 drivers/gpu/drm/xe/xe_late_bind_fw.c
->  create mode 100644 drivers/gpu/drm/xe/xe_late_bind_fw.h
->  create mode 100644 drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-> 
-> diff --git a/drivers/gpu/drm/xe/Makefile b/drivers/gpu/drm/xe/Makefile
-> index 7c039caefd00..521547d78fd2 100644
-> --- a/drivers/gpu/drm/xe/Makefile
-> +++ b/drivers/gpu/drm/xe/Makefile
-> @@ -76,6 +76,7 @@ xe-y += xe_bb.o \
->  	xe_hw_fence.o \
->  	xe_irq.o \
->  	xe_lrc.o \
-> +	xe_late_bind_fw.o \
->  	xe_migrate.o \
->  	xe_mmio.o \
->  	xe_mocs.o \
-> diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
-> index cd17c1354ab3..584acd63b0d9 100644
-> --- a/drivers/gpu/drm/xe/xe_device.c
-> +++ b/drivers/gpu/drm/xe/xe_device.c
-> @@ -44,6 +44,7 @@
->  #include "xe_hw_engine_group.h"
->  #include "xe_hwmon.h"
->  #include "xe_irq.h"
-> +#include "xe_late_bind_fw.h"
->  #include "xe_memirq.h"
->  #include "xe_mmio.h"
->  #include "xe_module.h"
-> @@ -889,6 +890,10 @@ int xe_device_probe(struct xe_device *xe)
->  	if (err)
->  		return err;
->  
-> +	err = xe_late_bind_init(&xe->late_bind);
-> +	if (err && err != -ENODEV)
-> +		return err;
-> +
->  	err = xe_oa_init(xe);
->  	if (err)
->  		return err;
-> diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
-> index 6aca4b1a2824..321f9e9a94f6 100644
-> --- a/drivers/gpu/drm/xe/xe_device_types.h
-> +++ b/drivers/gpu/drm/xe/xe_device_types.h
-> @@ -16,6 +16,7 @@
->  #include "xe_devcoredump_types.h"
->  #include "xe_heci_gsc.h"
->  #include "xe_lmtt_types.h"
-> +#include "xe_late_bind_fw_types.h"
->  #include "xe_memirq_types.h"
->  #include "xe_oa_types.h"
->  #include "xe_platform_types.h"
-> @@ -323,6 +324,8 @@ struct xe_device {
->  		u8 has_heci_cscfi:1;
->  		/** @info.has_heci_gscfi: device has heci gscfi */
->  		u8 has_heci_gscfi:1;
-> +		/** @info.has_late_bind: Device has firmware late binding support */
-> +		u8 has_late_bind:1;
->  		/** @info.has_llc: Device has a shared CPU+GPU last level cache */
->  		u8 has_llc:1;
->  		/** @info.has_mbx_power_limits: Device has support to manage power limits using
-> @@ -555,6 +558,9 @@ struct xe_device {
->  	/** @nvm: discrete graphics non-volatile memory */
->  	struct intel_dg_nvm_dev *nvm;
->  
-> +	/** @late_bind: xe mei late bind interface */
-> +	struct xe_late_bind late_bind;
-> +
->  	/** @oa: oa observation subsystem */
->  	struct xe_oa oa;
->  
-> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.c b/drivers/gpu/drm/xe/xe_late_bind_fw.c
-> new file mode 100644
-> index 000000000000..eaf12cfec848
-> --- /dev/null
-> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw.c
-> @@ -0,0 +1,90 @@
-> +// SPDX-License-Identifier: MIT
-> +/*
-> + * Copyright © 2025 Intel Corporation
-> + */
-> +
-> +#include <linux/component.h>
-> +#include <linux/delay.h>
-> +
-> +#include <drm/drm_managed.h>
-> +#include <drm/intel/i915_component.h>
-> +#include <drm/intel/late_bind_mei_interface.h>
-> +#include <drm/drm_print.h>
-> +
-> +#include "xe_device.h"
-> +#include "xe_late_bind_fw.h"
-> +
-> +static struct xe_device *
-> +late_bind_to_xe(struct xe_late_bind *late_bind)
-> +{
-> +	return container_of(late_bind, struct xe_device, late_bind);
-> +}
-> +
-> +static int xe_late_bind_component_bind(struct device *xe_kdev,
-> +				       struct device *mei_kdev, void *data)
-> +{
-> +	struct xe_device *xe = kdev_to_xe_device(xe_kdev);
-> +	struct xe_late_bind *late_bind = &xe->late_bind;
-> +
-> +	mutex_lock(&late_bind->mutex);
-> +	late_bind->component.ops = data;
-> +	late_bind->component.mei_dev = mei_kdev;
-> +	mutex_unlock(&late_bind->mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +static void xe_late_bind_component_unbind(struct device *xe_kdev,
-> +					  struct device *mei_kdev, void *data)
-> +{
-> +	struct xe_device *xe = kdev_to_xe_device(xe_kdev);
-> +	struct xe_late_bind *late_bind = &xe->late_bind;
-> +
-> +	mutex_lock(&late_bind->mutex);
-> +	late_bind->component.ops = NULL;
-> +	mutex_unlock(&late_bind->mutex);
-> +}
-> +
-> +static const struct component_ops xe_late_bind_component_ops = {
-> +	.bind   = xe_late_bind_component_bind,
-> +	.unbind = xe_late_bind_component_unbind,
-> +};
-> +
-> +static void xe_late_bind_remove(void *arg)
-> +{
-> +	struct xe_late_bind *late_bind = arg;
-> +	struct xe_device *xe = late_bind_to_xe(late_bind);
-> +
-> +	component_del(xe->drm.dev, &xe_late_bind_component_ops);
-> +	mutex_destroy(&late_bind->mutex);
-> +}
-> +
-> +/**
-> + * xe_late_bind_init() - add xe mei late binding component
-> + *
-> + * Return: 0 if the initialization was successful, a negative errno otherwise.
-> + */
-> +int xe_late_bind_init(struct xe_late_bind *late_bind)
-> +{
-> +	struct xe_device *xe = late_bind_to_xe(late_bind);
-> +	int err;
-> +
-> +	if (!xe->info.has_late_bind)
-> +		return 0;
-> +
-> +	mutex_init(&late_bind->mutex);
-> +
-> +	if (!IS_ENABLED(CONFIG_INTEL_MEI_LATE_BIND) || !IS_ENABLED(CONFIG_INTEL_MEI_GSC)) {
-> +		drm_info(&xe->drm, "Can't init xe mei late bind missing mei component\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	err = component_add_typed(xe->drm.dev, &xe_late_bind_component_ops,
-> +				  INTEL_COMPONENT_LATE_BIND);
-> +	if (err < 0) {
-> +		drm_info(&xe->drm, "Failed to add mei late bind component (%pe)\n", ERR_PTR(err));
-> +		return err;
-> +	}
-> +
-> +	return devm_add_action_or_reset(xe->drm.dev, xe_late_bind_remove, late_bind);
-> +}
-> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.h b/drivers/gpu/drm/xe/xe_late_bind_fw.h
-> new file mode 100644
-> index 000000000000..4c73571c3e62
-> --- /dev/null
-> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: MIT */
-> +/*
-> + * Copyright © 2025 Intel Corporation
-> + */
-> +
-> +#ifndef _XE_LATE_BIND_FW_H_
-> +#define _XE_LATE_BIND_FW_H_
-> +
-> +#include <linux/types.h>
-> +
-> +struct xe_late_bind;
-> +
-> +int xe_late_bind_init(struct xe_late_bind *late_bind);
-> +
-> +#endif
-> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-> new file mode 100644
-> index 000000000000..1156ef94f0d5
-> --- /dev/null
-> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-> @@ -0,0 +1,37 @@
-> +/* SPDX-License-Identifier: MIT */
-> +/*
-> + * Copyright © 2025 Intel Corporation
-> + */
-> +
-> +#ifndef _XE_LATE_BIND_TYPES_H_
-> +#define _XE_LATE_BIND_TYPES_H_
-> +
-> +#include <linux/iosys-map.h>
-> +#include <linux/mutex.h>
-> +#include <linux/types.h>
-> +
-> +/**
-> + * struct xe_late_bind_component - Late Binding services component
-> + * @mei_dev: device that provide Late Binding service.
-> + * @ops: Ops implemented by Late Binding driver, used by Xe driver.
-> + *
-> + * Communication between Xe and MEI drivers for Late Binding services
-> + */
-> +struct xe_late_bind_component {
-> +	/** @late_bind_component.mei_dev: mei device */
-> +	struct device *mei_dev;
-> +	/** @late_bind_component.ops: late binding ops */
-> +	const struct late_bind_component_ops *ops;
-> +};
-> +
-> +/**
-> + * struct xe_late_bind
-> + */
-> +struct xe_late_bind {
-> +	/** @late_bind.component: struct for communication with mei component */
-> +	struct xe_late_bind_component component;
-> +	/** @late_bind.mutex: protects the component binding and usage */
+Hi Nam,
 
-Please, before submitting another re-spin of this series, refactor
-this mutex. This is absolutely not acceptable.
+kernel test robot noticed the following build errors:
 
-https://blog.ffwll.ch/2022/07/locking-engineering.html
+[auto build test ERROR on tip/master]
+[also build test ERROR on linus/master v6.16-rc3 next-20250627]
+[cannot apply to tip/x86/core tip/auto-latest]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-This is protecting the code and not the data. If binding or usage
-happens you need to have other ways of dealing with it.
+url:    https://github.com/intel-lab-lkp/linux/commits/Nam-Cao/x86-hyperv-Switch-to-msi_create_parent_irq_domain/20250626-225420
+base:   tip/master
+patch link:    https://lore.kernel.org/r/0eafade05acb51022242635750cd4990f3adb0ac.1750947640.git.namcao%40linutronix.de
+patch subject: [PATCH 1/1] x86/hyperv: Switch to msi_create_parent_irq_domain()
+config: i386-randconfig-014-20250628 (https://download.01.org/0day-ci/archive/20250628/202506280404.eZJ6vN93-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250628/202506280404.eZJ6vN93-lkp@intel.com/reproduce)
 
-The lock needs to be reduced to the data you are trying to protect.
-Perhaps around the state/status or to certain register, but using
-a big mutex like you use in the patch 5 of this series and stating
-that it is to protect the code is not the right way.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506280404.eZJ6vN93-lkp@intel.com/
 
-Sorry for not having looked at this earlier.
+All error/warnings (new ones prefixed by >>):
 
-> +	struct mutex mutex;
-> +};
-> +
-> +#endif
-> diff --git a/drivers/gpu/drm/xe/xe_pci.c b/drivers/gpu/drm/xe/xe_pci.c
-> index 08e21d4099e0..e5018d3ae74f 100644
-> --- a/drivers/gpu/drm/xe/xe_pci.c
-> +++ b/drivers/gpu/drm/xe/xe_pci.c
-> @@ -66,6 +66,7 @@ struct xe_device_desc {
->  	u8 has_gsc_nvm:1;
->  	u8 has_heci_gscfi:1;
->  	u8 has_heci_cscfi:1;
-> +	u8 has_late_bind:1;
->  	u8 has_llc:1;
->  	u8 has_mbx_power_limits:1;
->  	u8 has_pxp:1;
-> @@ -355,6 +356,7 @@ static const struct xe_device_desc bmg_desc = {
->  	.has_mbx_power_limits = true,
->  	.has_gsc_nvm = 1,
->  	.has_heci_cscfi = 1,
-> +	.has_late_bind = true,
->  	.needs_scratch = true,
->  };
->  
-> @@ -600,6 +602,7 @@ static int xe_info_init_early(struct xe_device *xe,
->  	xe->info.has_gsc_nvm = desc->has_gsc_nvm;
->  	xe->info.has_heci_gscfi = desc->has_heci_gscfi;
->  	xe->info.has_heci_cscfi = desc->has_heci_cscfi;
-> +	xe->info.has_late_bind = desc->has_late_bind;
->  	xe->info.has_llc = desc->has_llc;
->  	xe->info.has_pxp = desc->has_pxp;
->  	xe->info.has_sriov = desc->has_sriov;
-> -- 
-> 2.34.1
-> 
+   In file included from drivers/irqchip/irq-msi-lib.c:7:
+>> include/linux/irqchip/irq-msi-lib.h:25:39: warning: 'struct msi_domain_info' declared inside parameter list will not be visible outside of this definition or declaration
+      25 |                                struct msi_domain_info *info);
+         |                                       ^~~~~~~~~~~~~~~
+>> drivers/irqchip/irq-msi-lib.c:28:39: warning: 'struct msi_domain_info' declared inside parameter list will not be visible outside of this definition or declaration
+      28 |                                struct msi_domain_info *info)
+         |                                       ^~~~~~~~~~~~~~~
+>> drivers/irqchip/irq-msi-lib.c:26:6: error: conflicting types for 'msi_lib_init_dev_msi_info'; have 'bool(struct device *, struct irq_domain *, struct irq_domain *, struct msi_domain_info *)' {aka '_Bool(struct device *, struct irq_domain *, struct irq_domain *, struct msi_domain_info *)'}
+      26 | bool msi_lib_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/irqchip/irq-msi-lib.h:23:6: note: previous declaration of 'msi_lib_init_dev_msi_info' with type 'bool(struct device *, struct irq_domain *, struct irq_domain *, struct msi_domain_info *)' {aka '_Bool(struct device *, struct irq_domain *, struct irq_domain *, struct msi_domain_info *)'}
+      23 | bool msi_lib_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/irqchip/irq-msi-lib.c: In function 'msi_lib_init_dev_msi_info':
+>> drivers/irqchip/irq-msi-lib.c:30:56: error: 'struct irq_domain' has no member named 'msi_parent_ops'
+      30 |         const struct msi_parent_ops *pops = real_parent->msi_parent_ops;
+         |                                                        ^~
+>> drivers/irqchip/irq-msi-lib.c:31:37: error: invalid use of undefined type 'struct msi_domain_info'
+      31 |         struct irq_chip *chip = info->chip;
+         |                                     ^~
+>> drivers/irqchip/irq-msi-lib.c:43:38: error: invalid use of undefined type 'const struct msi_parent_ops'
+      43 |         if (domain->bus_token == pops->bus_select_token) {
+         |                                      ^~
+   drivers/irqchip/irq-msi-lib.c:51:30: error: invalid use of undefined type 'const struct msi_parent_ops'
+      51 |         required_flags = pops->required_flags;
+         |                              ^~
+   drivers/irqchip/irq-msi-lib.c:54:20: error: invalid use of undefined type 'struct msi_domain_info'
+      54 |         switch(info->bus_token) {
+         |                    ^~
+   In file included from arch/x86/include/asm/bug.h:103,
+                    from arch/x86/include/asm/alternative.h:9,
+                    from arch/x86/include/asm/barrier.h:5,
+                    from include/asm-generic/bitops/generic-non-atomic.h:7,
+                    from include/linux/bitops.h:28,
+                    from include/linux/of.h:15,
+                    from include/linux/irqdomain.h:14,
+                    from include/linux/irqchip/irq-msi-lib.h:9:
+   drivers/irqchip/irq-msi-lib.c:68:38: error: invalid use of undefined type 'struct msi_domain_info'
+      68 |                 if (WARN_ON_ONCE(info->flags))
+         |                                      ^~
+   include/asm-generic/bug.h:117:32: note: in definition of macro 'WARN_ON_ONCE'
+     117 |         int __ret_warn_on = !!(condition);                      \
+         |                                ^~~~~~~~~
+   drivers/irqchip/irq-msi-lib.c:72:21: error: invalid use of undefined type 'struct msi_domain_info'
+      72 |                 info->flags = MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS | MSI_FLAG_FREE_MSI_DESCS;
+         |                     ^~
+>> drivers/irqchip/irq-msi-lib.c:72:31: error: 'MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS' undeclared (first use in this function)
+      72 |                 info->flags = MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS | MSI_FLAG_FREE_MSI_DESCS;
+         |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/irqchip/irq-msi-lib.c:72:31: note: each undeclared identifier is reported only once for each function it appears in
+>> drivers/irqchip/irq-msi-lib.c:72:65: error: 'MSI_FLAG_FREE_MSI_DESCS' undeclared (first use in this function)
+      72 |                 info->flags = MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS | MSI_FLAG_FREE_MSI_DESCS;
+         |                                                                 ^~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/irqchip/irq-msi-lib.c:76:36: error: 'MSI_FLAG_PCI_MSI_MASK_PARENT' undeclared (first use in this function)
+      76 |                 required_flags &= ~MSI_FLAG_PCI_MSI_MASK_PARENT;
+         |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/irqchip/irq-msi-lib.c:91:13: error: invalid use of undefined type 'struct msi_domain_info'
+      91 |         info->flags                     &= pops->supported_flags;
+         |             ^~
+   drivers/irqchip/irq-msi-lib.c:91:48: error: invalid use of undefined type 'const struct msi_parent_ops'
+      91 |         info->flags                     &= pops->supported_flags;
+         |                                                ^~
+   drivers/irqchip/irq-msi-lib.c:93:13: error: invalid use of undefined type 'struct msi_domain_info'
+      93 |         info->flags                     |= required_flags;
+         |             ^~
+   drivers/irqchip/irq-msi-lib.c:96:36: error: invalid use of undefined type 'const struct msi_parent_ops'
+      96 |         if (!chip->irq_eoi && (pops->chip_flags & MSI_CHIP_FLAG_SET_EOI))
+         |                                    ^~
+>> drivers/irqchip/irq-msi-lib.c:96:51: error: 'MSI_CHIP_FLAG_SET_EOI' undeclared (first use in this function)
+      96 |         if (!chip->irq_eoi && (pops->chip_flags & MSI_CHIP_FLAG_SET_EOI))
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~
+   drivers/irqchip/irq-msi-lib.c:98:36: error: invalid use of undefined type 'const struct msi_parent_ops'
+      98 |         if (!chip->irq_ack && (pops->chip_flags & MSI_CHIP_FLAG_SET_ACK))
+         |                                    ^~
+>> drivers/irqchip/irq-msi-lib.c:98:51: error: 'MSI_CHIP_FLAG_SET_ACK' undeclared (first use in this function)
+      98 |         if (!chip->irq_ack && (pops->chip_flags & MSI_CHIP_FLAG_SET_ACK))
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~
+   drivers/irqchip/irq-msi-lib.c:113:46: error: invalid use of undefined type 'struct msi_domain_info'
+     113 |         if (!chip->irq_set_affinity && !(info->flags & MSI_FLAG_NO_AFFINITY))
+         |                                              ^~
+>> drivers/irqchip/irq-msi-lib.c:113:56: error: 'MSI_FLAG_NO_AFFINITY' undeclared (first use in this function)
+     113 |         if (!chip->irq_set_affinity && !(info->flags & MSI_FLAG_NO_AFFINITY))
+         |                                                        ^~~~~~~~~~~~~~~~~~~~
+>> drivers/irqchip/irq-msi-lib.c:114:42: error: 'msi_domain_set_affinity' undeclared (first use in this function); did you mean 'msi_domain_get_virq'?
+     114 |                 chip->irq_set_affinity = msi_domain_set_affinity;
+         |                                          ^~~~~~~~~~~~~~~~~~~~~~~
+         |                                          msi_domain_get_virq
+   In file included from drivers/irqchip/irq-msi-lib.c:5:
+   drivers/irqchip/irq-msi-lib.c: At top level:
+   drivers/irqchip/irq-msi-lib.c:117:19: error: conflicting types for 'msi_lib_init_dev_msi_info'; have 'bool(struct device *, struct irq_domain *, struct irq_domain *, struct msi_domain_info *)' {aka '_Bool(struct device *, struct irq_domain *, struct irq_domain *, struct msi_domain_info *)'}
+     117 | EXPORT_SYMBOL_GPL(msi_lib_init_dev_msi_info);
+         |                   ^~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/export.h:76:28: note: in definition of macro '__EXPORT_SYMBOL'
+      76 |         extern typeof(sym) sym;                                 \
+         |                            ^~~
+   include/linux/export.h:90:41: note: in expansion of macro '_EXPORT_SYMBOL'
+      90 | #define EXPORT_SYMBOL_GPL(sym)          _EXPORT_SYMBOL(sym, "GPL")
+         |                                         ^~~~~~~~~~~~~~
+   drivers/irqchip/irq-msi-lib.c:117:1: note: in expansion of macro 'EXPORT_SYMBOL_GPL'
+     117 | EXPORT_SYMBOL_GPL(msi_lib_init_dev_msi_info);
+         | ^~~~~~~~~~~~~~~~~
+   include/linux/irqchip/irq-msi-lib.h:23:6: note: previous declaration of 'msi_lib_init_dev_msi_info' with type 'bool(struct device *, struct irq_domain *, struct irq_domain *, struct msi_domain_info *)' {aka '_Bool(struct device *, struct irq_domain *, struct irq_domain *, struct msi_domain_info *)'}
+      23 | bool msi_lib_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/irqchip/irq-msi-lib.c: In function 'msi_lib_irq_domain_select':
+   drivers/irqchip/irq-msi-lib.c:134:45: error: 'struct irq_domain' has no member named 'msi_parent_ops'
+     134 |         const struct msi_parent_ops *ops = d->msi_parent_ops;
+         |                                             ^~
+   drivers/irqchip/irq-msi-lib.c:144:29: error: invalid use of undefined type 'const struct msi_parent_ops'
+     144 |         if (bus_token == ops->bus_select_token)
+         |                             ^~
+   drivers/irqchip/irq-msi-lib.c:147:22: error: invalid use of undefined type 'const struct msi_parent_ops'
+     147 |         return !!(ops->bus_select_mask & busmask);
+         |                      ^~
+>> drivers/irqchip/irq-msi-lib.c:148:1: warning: control reaches end of non-void function [-Wreturn-type]
+     148 | }
+         | ^
+
+
+vim +26 drivers/irqchip/irq-msi-lib.c
+
+72e257c6f05803 Thomas Gleixner   2024-06-23    8  
+72e257c6f05803 Thomas Gleixner   2024-06-23    9  /**
+72e257c6f05803 Thomas Gleixner   2024-06-23   10   * msi_lib_init_dev_msi_info - Domain info setup for MSI domains
+72e257c6f05803 Thomas Gleixner   2024-06-23   11   * @dev:		The device for which the domain is created for
+72e257c6f05803 Thomas Gleixner   2024-06-23   12   * @domain:		The domain providing this callback
+72e257c6f05803 Thomas Gleixner   2024-06-23   13   * @real_parent:	The real parent domain of the domain to be initialized
+72e257c6f05803 Thomas Gleixner   2024-06-23   14   *			which might be a domain built on top of @domain or
+72e257c6f05803 Thomas Gleixner   2024-06-23   15   *			@domain itself
+72e257c6f05803 Thomas Gleixner   2024-06-23   16   * @info:		The domain info for the domain to be initialize
+72e257c6f05803 Thomas Gleixner   2024-06-23   17   *
+72e257c6f05803 Thomas Gleixner   2024-06-23   18   * This function is to be used for all types of MSI domains above the root
+72e257c6f05803 Thomas Gleixner   2024-06-23   19   * parent domain and any intermediates. The topmost parent domain specific
+72e257c6f05803 Thomas Gleixner   2024-06-23   20   * functionality is determined via @real_parent.
+72e257c6f05803 Thomas Gleixner   2024-06-23   21   *
+72e257c6f05803 Thomas Gleixner   2024-06-23   22   * All intermediate domains between the root and the device domain must
+72e257c6f05803 Thomas Gleixner   2024-06-23   23   * have either msi_parent_ops.init_dev_msi_info = msi_parent_init_dev_msi_info
+72e257c6f05803 Thomas Gleixner   2024-06-23   24   * or invoke it down the line.
+72e257c6f05803 Thomas Gleixner   2024-06-23   25   */
+72e257c6f05803 Thomas Gleixner   2024-06-23  @26  bool msi_lib_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+72e257c6f05803 Thomas Gleixner   2024-06-23   27  			       struct irq_domain *real_parent,
+72e257c6f05803 Thomas Gleixner   2024-06-23  @28  			       struct msi_domain_info *info)
+72e257c6f05803 Thomas Gleixner   2024-06-23   29  {
+72e257c6f05803 Thomas Gleixner   2024-06-23  @30  	const struct msi_parent_ops *pops = real_parent->msi_parent_ops;
+1c000dcaad2bef Thomas Gleixner   2025-02-17  @31  	struct irq_chip *chip = info->chip;
+8c41ccec839c62 Thomas Gleixner   2024-06-23   32  	u32 required_flags;
+72e257c6f05803 Thomas Gleixner   2024-06-23   33  
+72e257c6f05803 Thomas Gleixner   2024-06-23   34  	/* Parent ops available? */
+72e257c6f05803 Thomas Gleixner   2024-06-23   35  	if (WARN_ON_ONCE(!pops))
+72e257c6f05803 Thomas Gleixner   2024-06-23   36  		return false;
+72e257c6f05803 Thomas Gleixner   2024-06-23   37  
+72e257c6f05803 Thomas Gleixner   2024-06-23   38  	/*
+72e257c6f05803 Thomas Gleixner   2024-06-23   39  	 * MSI parent domain specific settings. For now there is only the
+72e257c6f05803 Thomas Gleixner   2024-06-23   40  	 * root parent domain, e.g. NEXUS, acting as a MSI parent, but it is
+72e257c6f05803 Thomas Gleixner   2024-06-23   41  	 * possible to stack MSI parents. See x86 vector -> irq remapping
+72e257c6f05803 Thomas Gleixner   2024-06-23   42  	 */
+72e257c6f05803 Thomas Gleixner   2024-06-23  @43  	if (domain->bus_token == pops->bus_select_token) {
+72e257c6f05803 Thomas Gleixner   2024-06-23   44  		if (WARN_ON_ONCE(domain != real_parent))
+72e257c6f05803 Thomas Gleixner   2024-06-23   45  			return false;
+72e257c6f05803 Thomas Gleixner   2024-06-23   46  	} else {
+72e257c6f05803 Thomas Gleixner   2024-06-23   47  		WARN_ON_ONCE(1);
+72e257c6f05803 Thomas Gleixner   2024-06-23   48  		return false;
+72e257c6f05803 Thomas Gleixner   2024-06-23   49  	}
+72e257c6f05803 Thomas Gleixner   2024-06-23   50  
+8c41ccec839c62 Thomas Gleixner   2024-06-23   51  	required_flags = pops->required_flags;
+8c41ccec839c62 Thomas Gleixner   2024-06-23   52  
+72e257c6f05803 Thomas Gleixner   2024-06-23   53  	/* Is the target domain bus token supported? */
+72e257c6f05803 Thomas Gleixner   2024-06-23   54  	switch(info->bus_token) {
+8c41ccec839c62 Thomas Gleixner   2024-06-23   55  	case DOMAIN_BUS_PCI_DEVICE_MSI:
+8c41ccec839c62 Thomas Gleixner   2024-06-23   56  	case DOMAIN_BUS_PCI_DEVICE_MSIX:
+8c41ccec839c62 Thomas Gleixner   2024-06-23   57  		if (WARN_ON_ONCE(!IS_ENABLED(CONFIG_PCI_MSI)))
+8c41ccec839c62 Thomas Gleixner   2024-06-23   58  			return false;
+8c41ccec839c62 Thomas Gleixner   2024-06-23   59  
+496436f4a514a3 Thomas Gleixner   2024-06-23   60  		break;
+496436f4a514a3 Thomas Gleixner   2024-06-23   61  	case DOMAIN_BUS_DEVICE_MSI:
+496436f4a514a3 Thomas Gleixner   2024-06-23   62  		/*
+496436f4a514a3 Thomas Gleixner   2024-06-23   63  		 * Per device MSI should never have any MSI feature bits
+496436f4a514a3 Thomas Gleixner   2024-06-23   64  		 * set. It's sole purpose is to create a dumb interrupt
+496436f4a514a3 Thomas Gleixner   2024-06-23   65  		 * chip which has a device specific irq_write_msi_msg()
+496436f4a514a3 Thomas Gleixner   2024-06-23   66  		 * callback.
+496436f4a514a3 Thomas Gleixner   2024-06-23   67  		 */
+496436f4a514a3 Thomas Gleixner   2024-06-23   68  		if (WARN_ON_ONCE(info->flags))
+496436f4a514a3 Thomas Gleixner   2024-06-23   69  			return false;
+496436f4a514a3 Thomas Gleixner   2024-06-23   70  
+496436f4a514a3 Thomas Gleixner   2024-06-23   71  		/* Core managed MSI descriptors */
+496436f4a514a3 Thomas Gleixner   2024-06-23  @72  		info->flags = MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS | MSI_FLAG_FREE_MSI_DESCS;
+64a855324311dd Thomas Gleixner   2024-06-23   73  		fallthrough;
+64a855324311dd Thomas Gleixner   2024-06-23   74  	case DOMAIN_BUS_WIRED_TO_MSI:
+496436f4a514a3 Thomas Gleixner   2024-06-23   75  		/* Remove PCI specific flags */
+496436f4a514a3 Thomas Gleixner   2024-06-23  @76  		required_flags &= ~MSI_FLAG_PCI_MSI_MASK_PARENT;
+8c41ccec839c62 Thomas Gleixner   2024-06-23   77  		break;
+72e257c6f05803 Thomas Gleixner   2024-06-23   78  	default:
+72e257c6f05803 Thomas Gleixner   2024-06-23   79  		/*
+72e257c6f05803 Thomas Gleixner   2024-06-23   80  		 * This should never be reached. See
+72e257c6f05803 Thomas Gleixner   2024-06-23   81  		 * msi_lib_irq_domain_select()
+72e257c6f05803 Thomas Gleixner   2024-06-23   82  		 */
+72e257c6f05803 Thomas Gleixner   2024-06-23   83  		WARN_ON_ONCE(1);
+72e257c6f05803 Thomas Gleixner   2024-06-23   84  		return false;
+72e257c6f05803 Thomas Gleixner   2024-06-23   85  	}
+72e257c6f05803 Thomas Gleixner   2024-06-23   86  
+72e257c6f05803 Thomas Gleixner   2024-06-23   87  	/*
+72e257c6f05803 Thomas Gleixner   2024-06-23   88  	 * Mask out the domain specific MSI feature flags which are not
+72e257c6f05803 Thomas Gleixner   2024-06-23   89  	 * supported by the real parent.
+72e257c6f05803 Thomas Gleixner   2024-06-23   90  	 */
+72e257c6f05803 Thomas Gleixner   2024-06-23   91  	info->flags			&= pops->supported_flags;
+72e257c6f05803 Thomas Gleixner   2024-06-23   92  	/* Enforce the required flags */
+8c41ccec839c62 Thomas Gleixner   2024-06-23   93  	info->flags			|= required_flags;
+72e257c6f05803 Thomas Gleixner   2024-06-23   94  
+72e257c6f05803 Thomas Gleixner   2024-06-23   95  	/* Chip updates for all child bus types */
+1c000dcaad2bef Thomas Gleixner   2025-02-17  @96  	if (!chip->irq_eoi && (pops->chip_flags & MSI_CHIP_FLAG_SET_EOI))
+1c000dcaad2bef Thomas Gleixner   2025-02-17   97  		chip->irq_eoi = irq_chip_eoi_parent;
+1c000dcaad2bef Thomas Gleixner   2025-02-17  @98  	if (!chip->irq_ack && (pops->chip_flags & MSI_CHIP_FLAG_SET_ACK))
+1c000dcaad2bef Thomas Gleixner   2025-02-17   99  		chip->irq_ack = irq_chip_ack_parent;
+72e257c6f05803 Thomas Gleixner   2024-06-23  100  
+72e257c6f05803 Thomas Gleixner   2024-06-23  101  	/*
+72e257c6f05803 Thomas Gleixner   2024-06-23  102  	 * The device MSI domain can never have a set affinity callback. It
+72e257c6f05803 Thomas Gleixner   2024-06-23  103  	 * always has to rely on the parent domain to handle affinity
+72e257c6f05803 Thomas Gleixner   2024-06-23  104  	 * settings. The device MSI domain just has to write the resulting
+72e257c6f05803 Thomas Gleixner   2024-06-23  105  	 * MSI message into the hardware which is the whole purpose of the
+72e257c6f05803 Thomas Gleixner   2024-06-23  106  	 * device MSI domain aside of mask/unmask which is provided e.g. by
+72e257c6f05803 Thomas Gleixner   2024-06-23  107  	 * PCI/MSI device domains.
+06526443a34c06 Marc Zyngier      2025-05-13  108  	 *
+06526443a34c06 Marc Zyngier      2025-05-13  109  	 * The exception to the rule is when the underlying domain
+06526443a34c06 Marc Zyngier      2025-05-13  110  	 * tells you that affinity is not a thing -- for example when
+06526443a34c06 Marc Zyngier      2025-05-13  111  	 * everything is muxed behind a single interrupt.
+72e257c6f05803 Thomas Gleixner   2024-06-23  112  	 */
+06526443a34c06 Marc Zyngier      2025-05-13 @113  	if (!chip->irq_set_affinity && !(info->flags & MSI_FLAG_NO_AFFINITY))
+1c000dcaad2bef Thomas Gleixner   2025-02-17 @114  		chip->irq_set_affinity = msi_domain_set_affinity;
+72e257c6f05803 Thomas Gleixner   2024-06-23  115  	return true;
+72e257c6f05803 Thomas Gleixner   2024-06-23  116  }
+72e257c6f05803 Thomas Gleixner   2024-06-23  117  EXPORT_SYMBOL_GPL(msi_lib_init_dev_msi_info);
+72e257c6f05803 Thomas Gleixner   2024-06-23  118  
+72e257c6f05803 Thomas Gleixner   2024-06-23  119  /**
+72e257c6f05803 Thomas Gleixner   2024-06-23  120   * msi_lib_irq_domain_select - Shared select function for NEXUS domains
+72e257c6f05803 Thomas Gleixner   2024-06-23  121   * @d:		Pointer to the irq domain on which select is invoked
+72e257c6f05803 Thomas Gleixner   2024-06-23  122   * @fwspec:	Firmware spec describing what is searched
+72e257c6f05803 Thomas Gleixner   2024-06-23  123   * @bus_token:	The bus token for which a matching irq domain is looked up
+72e257c6f05803 Thomas Gleixner   2024-06-23  124   *
+72e257c6f05803 Thomas Gleixner   2024-06-23  125   * Returns:	%0 if @d is not what is being looked for
+72e257c6f05803 Thomas Gleixner   2024-06-23  126   *
+72e257c6f05803 Thomas Gleixner   2024-06-23  127   *		%1 if @d is either the domain which is directly searched for or
+72e257c6f05803 Thomas Gleixner   2024-06-23  128   *		   if @d is providing the parent MSI domain for the functionality
+72e257c6f05803 Thomas Gleixner   2024-06-23  129   *			 requested with @bus_token.
+72e257c6f05803 Thomas Gleixner   2024-06-23  130   */
+72e257c6f05803 Thomas Gleixner   2024-06-23  131  int msi_lib_irq_domain_select(struct irq_domain *d, struct irq_fwspec *fwspec,
+72e257c6f05803 Thomas Gleixner   2024-06-23  132  			      enum irq_domain_bus_token bus_token)
+72e257c6f05803 Thomas Gleixner   2024-06-23  133  {
+72e257c6f05803 Thomas Gleixner   2024-06-23  134  	const struct msi_parent_ops *ops = d->msi_parent_ops;
+72e257c6f05803 Thomas Gleixner   2024-06-23  135  	u32 busmask = BIT(bus_token);
+72e257c6f05803 Thomas Gleixner   2024-06-23  136  
+880799fc7a3a12 Maxime Chevallier 2024-08-23  137  	if (!ops)
+880799fc7a3a12 Maxime Chevallier 2024-08-23  138  		return 0;
+880799fc7a3a12 Maxime Chevallier 2024-08-23  139  
+72e257c6f05803 Thomas Gleixner   2024-06-23  140  	if (fwspec->fwnode != d->fwnode || fwspec->param_count != 0)
+72e257c6f05803 Thomas Gleixner   2024-06-23  141  		return 0;
+72e257c6f05803 Thomas Gleixner   2024-06-23  142  
+72e257c6f05803 Thomas Gleixner   2024-06-23  143  	/* Handle pure domain searches */
+72e257c6f05803 Thomas Gleixner   2024-06-23  144  	if (bus_token == ops->bus_select_token)
+72e257c6f05803 Thomas Gleixner   2024-06-23  145  		return 1;
+72e257c6f05803 Thomas Gleixner   2024-06-23  146  
+880799fc7a3a12 Maxime Chevallier 2024-08-23  147  	return !!(ops->bus_select_mask & busmask);
+72e257c6f05803 Thomas Gleixner   2024-06-23 @148  }
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
