@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9CD293C59;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2201293C71;
 	Fri, 27 Jun 2025 09:29:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751016589; cv=none; b=bXZVYJ8hPOupHDa6AO5dn2W6ZfZgNgVd9O4c93lySl9MMBKQLHI05ymrT5OL66Tjs+VORiw57DZDuIyhs710l+uY3ADwlqINe1mZIoWqlLURx/0oIqKuol8i53uownI0Pdz3h8a3vtr0VSL99uxdwzn3K+VebVyRZeNmrCaTWCM=
+	t=1751016590; cv=none; b=mSxBnAYQFydPYplhdhYH7sC3SrzwJVMW/SE0C5XJXO2L5diYZ6/e3PwT6iNSQiu/Zf1p+Ax5Up+0tDRq4zYtZ3EwuWBImH8rEoegXCFrWxQz7c7j2MwPk2oem6kjDz+tMJZi6v68KN8ua13113HREX1UjI3H2Nwabz5LKQxyq1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751016589; c=relaxed/simple;
-	bh=VlBSbuV26ATgj5QJpDedzhjO9BPdGw9zgUZj/bdJy/U=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=W2HylxbqaN5cxOS97mrdmaOgE/qAtPfJjeYyy/GJqJhSKzoxFXVK7ISgyqmA7rQAmKNKGUlZx4ZqHv4pWQW7bAl8QljdzHaADNMiuEr8BKiNLj58kMMlt+KwB0xHqoay2xM1cbt61qqWc78myXds7aBGUFqf9xfqToKeXasNzh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jA3YFp32; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751016590; c=relaxed/simple;
+	bh=hgTq3HJakHDLAQL9R275nXbuleoJE/PtptKFtlOZlIs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=etaz7QroIdq0KMnV1GVVX8odozbLf1wpS5DQltenh7mqPBvnczvWmAgrNzjLyVD0id1IobH3zs6dovwP9pt2hS7ehHGG/IgGrGfDufXKSbNSsGbv/cM0imgbLTywuho4eysba8yYXq3AjcrX9Tyj+0g4eB3GKdd1bp0m4wMud0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e//iFiMP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jA3YFp32"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5CA4DC4CEE3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e//iFiMP"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8DBBEC4CEF5;
 	Fri, 27 Jun 2025 09:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751016589;
-	bh=VlBSbuV26ATgj5QJpDedzhjO9BPdGw9zgUZj/bdJy/U=;
-	h=From:Subject:Date:To:Cc:From;
-	b=jA3YFp32S8voInFY0AkXyPdLJe794lc9uFxDS6Zd1OYUKiW8HhNkR4EouulK0p5G3
-	 DzoPA6RcUY+nkTPfXMbXILcLRUm/AYw3kklJrYyq+dCF6SEewQe8FrrrveZCdO5Hyz
-	 ylDDTBS2qi+hdz+WXsKzrAoSJDR+RBCOiKsV1z/TGGL6tnPYenMVTdrfL+hGZ44fW0
-	 j1OV1B6PYAJ1IzFxf6PvBtxjSNw+lPudzDKTPPPo2bMzaypoN/H4dg34t4Lep6PJ61
-	 VCr3dAhQ94gXoolHQkWyCOW90drzlOwhsgEx4Mb4LqZVz1IKWjnekcIlOSL1481uRb
-	 aGf6evz42rk8A==
+	bh=hgTq3HJakHDLAQL9R275nXbuleoJE/PtptKFtlOZlIs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=e//iFiMPG+kIkeO00iAQNxm07FQ6j2M1qk0oKOOKOLL3oSeAAPYsGvpgzDVoYsZwi
+	 0+DKO0BGz+UO3uRTIZJTD894Xo5vUWEO2MleVFIaoklqTbNrp78OdpbZDY8c0YL4Ce
+	 eXcLvcNi5CKzu31hSFcdleggATqu/i/OK2TeEU8O1hTO9yquSoxDNvfwpzckWiEtF5
+	 /6ApimCDO9x/WIZ6qFbhVxuuFB/WnqxUzDLSMQrtwnoz20ANfBl4iRlhB216WVXtCS
+	 X52ZltH9rkhF253xXEhfIkA1xLDncoZVIT4c1oFH4dOoTpRUf7Enan/7R/1vUBAs9B
+	 ZaujDl2Q1qkug==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42040C7EE2A;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856E6C83000;
 	Fri, 27 Jun 2025 09:29:49 +0000 (UTC)
 From: Joel Granados <joel.granados@kernel.org>
-Subject: [PATCH 0/5] sysctl: Remove last two ctl_tables from the kern_table
- array
-Date: Fri, 27 Jun 2025 11:27:24 +0200
-Message-Id: <20250627-jag-sysctl-v1-0-20dd9801420b@kernel.org>
+Date: Fri, 27 Jun 2025 11:27:29 +0200
+Subject: [PATCH 5/5] sysctl: rename kern_table -> sysctl_subsys_table
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,11 +39,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAPxjXmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDMyNz3azEdN3iyuLkkhxdCyPjxJQ0U3Njo6RUJaCGgqLUtMwKsGHRsbW
- 1ABCM55RcAAAA
-X-Change-ID: 20250627-jag-sysctl-823adf5732be
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250627-jag-sysctl-v1-5-20dd9801420b@kernel.org>
+References: <20250627-jag-sysctl-v1-0-20dd9801420b@kernel.org>
+In-Reply-To: <20250627-jag-sysctl-v1-0-20dd9801420b@kernel.org>
 To: Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
@@ -52,74 +50,105 @@ To: Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>,
 Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
  linux-kselftest@vger.kernel.org, Joel Granados <joel.granados@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2264;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2432;
  i=joel.granados@kernel.org; h=from:subject:message-id;
- bh=VlBSbuV26ATgj5QJpDedzhjO9BPdGw9zgUZj/bdJy/U=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGheZG85WIoisMVONIVO95YWzjTczwH2jER2l
- i8nRrb3TqJUaIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJoXmRvAAoJELqXzVK3
- lkFPAiAL/3vF4gCqCRj8+Iw00lNSe6lSk5rEbDjpvuYQtRTvudFemFMWd/pSUgG7RGr6Ouyq48D
- dZVeueDgS/pqxA5bAb4+nmEpDLHxQUf6Xmkt6BH3T9Sw0l4PqXSpFDwMBXoOd8/KY5y8Lpk2gpE
- MM+w2343xdxTsoEaEzt5l4ZlWIL7QEh9DcKQ8xjOpyo6t2yt85XMf+OjIZntTOZ/BMotfkZxi/9
- wLHB1MYC/lY+o5yoHA31ZRhHPA/XGJKA5C1fWpl10orbvQpXTX8MlnOY9yfMejUtGhFLSavqR6r
- RmQzMQii6xhmb0M+1gGd7mICt7Bk9DFoNMRACH2hknP5bzVsEQPd104ZgdW8PuCjOqEM4cgMGyX
- IJWgYPYHK5HZV0DMSyViXtfFujyUad0Xle4n/O6Txlm3YOR9EupiLVKXjLlKxBH5RHxe0lWGH8s
- tGajcvqo3SvWL9O/emhv8kIU/tKFi0yLVQe7yjtUPyCaAYqnYS8Zok/1VFNsVxUH65G4Hr6oCW5
- SA=
+ bh=hgTq3HJakHDLAQL9R275nXbuleoJE/PtptKFtlOZlIs=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGheZItRvg7iUt/llY0jbi3S8p4tXdqPpP3ES
+ PH4SAld/qySPIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJoXmSLAAoJELqXzVK3
+ lkFPkkcL/0kQbR1sj7lbluFeCpSjtNkpKm+jLiXZcrRmAe9K4iSgODeEZRXR7j+6fu9IqphE3Gm
+ Z5lm4OhRmxF/P21L5oBXMHdsBsmEyFU5qQVQTGTCq+qZIHJSm7p+XsvQ04r/vBDcVjWHiSVDnOH
+ 4fF+pPRuoPm2EQP/q2zT4tYvaajLN/8mBOVDxiokci+6K8PDk/O6dn97UYlQIS4gX8qj6CFHE1H
+ N5dz1iSBTb5coUDKVmuBbaqEL8r1MXo4fiVeVtX3qvha4mEB4QdwZhL0U/DtNXzu0KGhEhtu0vB
+ ZdautBKdIG/ui5nC7p5HUam91iIVu0bnfrHmZ1VNuFkk5nSSGEV/APDcz5AbIpzAWhzYTfore0h
+ 6erbmuF00MVdrGY9W/T+rFU6pYYy6q/ftmH8yZzRds0H30FAjmj/CEIxlxv74C53FXR+TQvcwEK
+ OrCAqwpvdhNlacaC3dvBEwF8mPBZ7cR+czVEYERECXdd+RYsqgyPDgsjPCc3Cq+9eZFI4Ujo3f6
+ fE=
 X-Developer-Key: i=joel.granados@kernel.org; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for joel.granados@kernel.org/default with
  auth_id=239
 
-This is the last series to relocate sysctl tables from kernel/sysctl.c
-into their respective subsystems. After the move of two ctl_tables
-(uevent_helper & overflow{uid,gid}), five remain. They either handle
-variables defined within sysctl.c or serve as a common place for
-variables that are defined in different architectures. These five will
-not be moved. Note that this series includes two auxiliary changes:
-Removal of an unused variable and Nix-based rework of sysctl.sh test
-script
+Renamed sysctl table from kern_table to sysctl_subsys_table and grouped
+the two arch specific ctls to the end of the array.
 
-By decentralizing sysctl registrations, subsystem maintainers regain
-control over their sysctl interfaces, improving maintainability and
-reducing the likelihood of merge conflicts. All this is made possible by
-the work done to reduce the ctl_table memory footprint in commit
-d7a76ec87195 ("sysctl: Remove check for sentinel element in ctl_table
-arrays").
-
-A few comments on the process:
-1. If you prefer to merge this through a non-sysctl tree, please let me
-   know so I can avoid conflicts in linux-next.
-2. Apologies if you were copied by mistake—let me know if you'd like to
-   be removed.
-3. This series builds on [1], so please rebase accordingly for clean
-   application.
-4. Testing done by running sysctl selftests on x86_64 and 0-day.
-
-Comments/Suggestions greatly appreciated
-
-[1] https://lore.kernel.org/20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org
+This is part of a greater effort to move ctl tables into their
+respective subsystems which will reduce the merge conflicts in
+kernel/sysctl.c.
 
 Signed-off-by: Joel Granados <joel.granados@kernel.org>
 ---
-Joel Granados (5):
-      sysctl: Nixify sysctl.sh
-      sysctl: Removed unused variable
-      uevent: mv uevent_helper into kobject_uevent.c
-      kernel/sys.c: Move overflow{uid,gid} sysctl into kernel/sys.c
-      sysctl: rename kern_table -> sysctl_subsys_table
+ kernel/sys.c    |  1 -
+ kernel/sysctl.c | 22 +++++++++++-----------
+ 2 files changed, 11 insertions(+), 12 deletions(-)
 
- include/linux/sysctl.h                   |  1 -
- kernel/sys.c                             | 29 +++++++++++++++++++
- kernel/sysctl.c                          | 49 +++++++-------------------------
- lib/kobject_uevent.c                     | 20 +++++++++++++
- tools/testing/selftests/sysctl/sysctl.sh |  2 +-
- 5 files changed, 61 insertions(+), 40 deletions(-)
----
-base-commit: 501dd0fbc76bcae57902ea000d9c6ccd9d5f226e
-change-id: 20250627-jag-sysctl-823adf5732be
+diff --git a/kernel/sys.c b/kernel/sys.c
+index bbeee62f9abcdf18cdf5cdb06271476b048357ae..18a037cc6f61a339f1f21af9c26b25ecca1ae43c 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -210,7 +210,6 @@ static int __init init_overflow_sysctl(void)
+ 
+ postcore_initcall(init_overflow_sysctl);
+ 
+-
+ /*
+  * Returns true if current's euid is same as p's uid or euid,
+  * or has CAP_SYS_NICE to p's user_ns.
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 21b70443aea75ae3212f70e5ce7efbfdf8a4f75b..cb6196e3fa993daa21704d190baf366084e014f7 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1454,7 +1454,7 @@ int proc_do_static_key(const struct ctl_table *table, int write,
+ 	return ret;
+ }
+ 
+-static const struct ctl_table kern_table[] = {
++static const struct ctl_table sysctl_subsys_table[] = {
+ #ifdef CONFIG_PROC_SYSCTL
+ 	{
+ 		.procname	= "sysctl_writes_strict",
+@@ -1465,15 +1465,6 @@ static const struct ctl_table kern_table[] = {
+ 		.extra1		= SYSCTL_NEG_ONE,
+ 		.extra2		= SYSCTL_ONE,
+ 	},
+-#endif
+-#ifdef CONFIG_SYSCTL_ARCH_UNALIGN_ALLOW
+-	{
+-		.procname	= "unaligned-trap",
+-		.data		= &unaligned_enabled,
+-		.maxlen		= sizeof (int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
+-	},
+ #endif
+ 	{
+ 		.procname	= "ngroups_max",
+@@ -1489,6 +1480,15 @@ static const struct ctl_table kern_table[] = {
+ 		.mode		= 0444,
+ 		.proc_handler	= proc_dointvec,
+ 	},
++#ifdef CONFIG_SYSCTL_ARCH_UNALIGN_ALLOW
++	{
++		.procname	= "unaligned-trap",
++		.data		= &unaligned_enabled,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++	},
++#endif
+ #ifdef CONFIG_SYSCTL_ARCH_UNALIGN_NO_WARN
+ 	{
+ 		.procname	= "ignore-unaligned-usertrap",
+@@ -1502,7 +1502,7 @@ static const struct ctl_table kern_table[] = {
+ 
+ int __init sysctl_init_bases(void)
+ {
+-	register_sysctl_init("kernel", kern_table);
++	register_sysctl_init("kernel", sysctl_subsys_table);
+ 
+ 	return 0;
+ }
 
-Best regards,
 -- 
-Joel Granados <joel.granados@kernel.org>
+2.47.2
 
 
