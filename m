@@ -1,96 +1,202 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEF3BE4A;
-	Fri, 27 Jun 2025 12:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1331BBE4A
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751028626; cv=none; b=r1lH0tXTIoln1Cw02yqWRfyKF0FohNwYP12Ldh2B9S0GUXIUsZQHobFV8YTRxir3ZHYqL2vAJbwcXMBaZ9qmf9NF9pNVk30y4hjv4by+74/J/HNbgeiv6N60uCa9kC32SKJ3f9bXCWWjotmC8er6MH71FokWkJeg22QKBCBLzMs=
+	t=1751028658; cv=none; b=LNQnmS5PvsZv7CR/teIbKwhEAaxPsrxdpKQJUWbE8dFQ6q57C/Bf2i3IYvju8YQvwxYqM/qtwe4sPXtQvZuYys+K885Z4k1WEJb3KA74/UHKzmy7ihReaZxd0iuoblA8UCs7BFKzEav+v9z5QVDSzEKJICuUvoI2PYrzyMv2jUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751028626; c=relaxed/simple;
-	bh=apcScWYertfmVCc5s0nVnezatVqNPQZKD26Xobpb+uA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g9EUCWHcRcCedOesDKV+eXky55cob+cZGdi4W6Kq/sHCw5NXdMawR05UGJKqRChEkJt9K/WdfnjiTgb33jz1NckFL+bLmzhwq50J8vbka/z7JVkKfYKcj6+7TCi19s2QJl7Grd/hzryYxo9Qt0wDEq+e5KlAtROpW1gwkxLkGDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWJm1SqE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751028658; c=relaxed/simple;
+	bh=QCJARtglO2LaY2IHKh5t2U/Tlklxb0ibISPLcSbmuzU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m2SwxhQa5salepn08KP9t7X8vb3qYFwA/Oc8T9DCvjnAmm8u0qe9YlyNjdVSTmhZF6H8RZHSPVovaWpY2cfNAEP36z+Eyi8hiuf7bW1KDuJ9O1XfN1Ym6TpuYbUunXzYplCVkJRbRFq2rodfnMEMYb6+VLiWNaHvEiRqWdg70m0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nGUio8BS; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWJm1SqE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C78CC4CEE3;
-	Fri, 27 Jun 2025 12:50:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751028625;
-	bh=apcScWYertfmVCc5s0nVnezatVqNPQZKD26Xobpb+uA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aWJm1SqETG/HN3wItNy/D0gKz9Nr9hMyfHi0n7kpgWMpOk8ikhBNBt50s2ubCA+AA
-	 jxqqZ8P8k0K1td9tmsAB9A/7fX+ZycBSYTgIXjwTAW/Lrpl5oQxvToL8vjuOpWSc+U
-	 2pVifHdTiWqUiTB2lXSlktwdRkg4VkxCn7BrlUQQZOGXPFYJAPMXOD0ar5C/eOI/YG
-	 K9iMAvBSF6ZA3zZMAfJSdCjbcEo7HVJMC0aZuNp7//JC++xlzasP6FmPI7e8hJ6ucQ
-	 uDtHSkbnvFy77bj5bAgBSW3UvQKJzgt5ph5DCBpCjnGxUunkT29XmwRRpodZoqfwN0
-	 BYiP1CcN+V5hg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uV8XC-000000004yD-1W3O;
-	Fri, 27 Jun 2025 14:50:26 +0200
-Date: Fri, 27 Jun 2025 14:50:26 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Steev Klimaszewski <steev@kali.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH v4 5/8] firmware; qcom: scm: enable QSEECOM on SC8280XP
- CRD
-Message-ID: <aF6Tkh75LRym8MQY@hovoldconsulting.com>
-References: <20250625-more-qseecom-v4-0-aacca9306cee@oss.qualcomm.com>
- <20250625-more-qseecom-v4-5-aacca9306cee@oss.qualcomm.com>
- <e5e3e8f1-4328-4929-825a-3d8e836cf072@oss.qualcomm.com>
- <95c46d39-5b4a-46dd-aa73-1b3b9bf81019@oss.qualcomm.com>
- <aF6NUeNLPrR5vqEf@hovoldconsulting.com>
- <f55a057d-2cdd-411e-97b9-5ede1300a4e9@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nGUio8BS"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6ecf99dd567so24407796d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:50:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751028656; x=1751633456; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=idturYgqav2RqhmzofSv+DJRMZDL8II+nd4+G+NHC8w=;
+        b=nGUio8BS6ZlpExukdx8F5eRR6u8EPnB6A4rMQ0cs9cYdcQQKNn7KIpobF07TbqpCdS
+         kAr85FID+gXteQZ62QDRuQdm8Cvp+kzD+s5Wwc/FKmPCk9QXPGHp50EhwXeXLne4H5Q7
+         Y7rz4pbrGRALARcJkKhORsSCV6tIS5AAI/zvU3VG7BdQZkdlmM4iA/4UpXkI/L5xzLyS
+         9ohdDPGoeJ09gygD44xZlj484s7plGa/KLosYmI4s7iz4wagD9QxynMW6l/oFZFPNQND
+         84zGA7J5mDEdM3J1fc+/mIbFbbFaOkqaUdhPehtaTkSgUwQR6gzvpTtFNY21FUD4OD+T
+         KfAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751028656; x=1751633456;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=idturYgqav2RqhmzofSv+DJRMZDL8II+nd4+G+NHC8w=;
+        b=ncrsBQFf8tZD1ckIAbMy8EqdyDQehoEkU8GEITCa7Mbwzek5B5hdKKuld0KixDloxV
+         CZmj/aaYtT/RZJ87Q/V977DAHaKZtscX86eqlR7rE+SwrmnagWdCJ5Nw3TOFRsopjc0h
+         QFdMjOYl7sL+RqkIsYMTIo7Z3usfJT/l0M2oTSHWTNjwAV4lEF9adKCcPhFcfrMUiuv3
+         JZQY1wnE1sCllqT669mXcu79islg7x5DPm5eG1qvC725NY2h6BXwvQdNaNDOdrGqMFS1
+         jRcvot2wH1GxR34G23bz5vEsVQIjIDmif21PdMrzWHleT38CF8+K/Xgx7Vsl2MgbVzK/
+         16zA==
+X-Forwarded-Encrypted: i=1; AJvYcCXBcdgVLNuUn/fHhhquCw+sFwudN47nwCbLWtrqhhTm6ga1I+rxF++qyGArLq4ZCBusZesM1DOt+LTv2l4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuinMj3x+N9wyYbuVvGdhUEw0wZIo8EiuoEvHYr8gPU0NXZleD
+	kvugvimSJ+DLX3ZJPbrPrG0A+m8pUE3M3hbBFnR7yXtMqN9qxCIyLOKgPSeefuNicem0tDiRQHQ
+	XZX5YBB7z8cnPQM+KYe8C/xy5tuHOJCSHz1CTc6oB
+X-Gm-Gg: ASbGncvVy0pf7K0hW9DmyGHdDoV1DkA35JpljQkZ9U+Q77kMQk/BzKyVrP5BpleSDcz
+	C9YIaP4KTL/+EbKbZQGVuRhud11iYpV0nvM7/1q50qA+1LRrsBUg1nrn0CbA5YOeZdR6cGFVTvs
+	S8q/znaw/zONeGs/bPWg4ZnEdMJLuiqK6IV1sCOvZEcNW6XwhZ+Yv0tDDciMM8GTuDYQMCcauAe
+	zDuh/rZvT42
+X-Google-Smtp-Source: AGHT+IHIU4LDEs67YWr+lK5C2TD7HbosAimrfZGq5Uf+Lz6Ud+fdIxcudZiyYZLVcgNSr+MlK/m5GD+tabyL7OnlGNM=
+X-Received: by 2002:a05:6214:459a:b0:6fd:a382:f86f with SMTP id
+ 6a1803df08f44-7001413116cmr59746306d6.34.1751028655727; Fri, 27 Jun 2025
+ 05:50:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f55a057d-2cdd-411e-97b9-5ede1300a4e9@oss.qualcomm.com>
+References: <20250626134158.3385080-1-glider@google.com> <20250626134158.3385080-3-glider@google.com>
+ <20250627080248.GQ1613200@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250627080248.GQ1613200@noisy.programming.kicks-ass.net>
+From: Alexander Potapenko <glider@google.com>
+Date: Fri, 27 Jun 2025 14:50:18 +0200
+X-Gm-Features: Ac12FXwxKj33euY6ZH-yL0eZIHyMTugesDF-zJKSuw4473Kt_nozRUjRKba6tvg
+Message-ID: <CAG_fn=XCEHppY3Fn+x_JagxTjHYyi6C=qt-xgGmHq7xENVy4Jw@mail.gmail.com>
+Subject: Re: [PATCH v2 02/11] kcov: apply clang-format to kcov code
+To: Peter Zijlstra <peterz@infradead.org>, Miguel Ojeda <ojeda@kernel.org>
+Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org, 
+	kasan-dev@googlegroups.com, Aleksandr Nogikh <nogikh@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Marco Elver <elver@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 27, 2025 at 02:26:41PM +0200, Konrad Dybcio wrote:
-> On 6/27/25 2:23 PM, Johan Hovold wrote:
-> > On Fri, Jun 27, 2025 at 01:54:37AM +0200, Konrad Dybcio wrote:
-> >> On 6/27/25 1:34 AM, Konrad Dybcio wrote:
-> >>> On 6/25/25 12:53 AM, Dmitry Baryshkov wrote:
+On Fri, Jun 27, 2025 at 10:02=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
+rg> wrote:
+>
+> On Thu, Jun 26, 2025 at 03:41:49PM +0200, Alexander Potapenko wrote:
+> > kcov used to obey clang-format style, but somehow diverged over time.
+> > This patch applies clang-format to kernel/kcov.c and
+> > include/linux/kcov.h, no functional change.
+>
+> I'm not sure I agree this is in fact a good thing. Very questionable
+> style choices made.
 
-> >>>> As reported by Johan, this platform also doesn't currently support
-> >>>> updating of the UEFI variables. In preparation to reworking match list
-> >>>> for QSEECOM mark this platform as supporting QSEECOM with R/O UEFI
-> >>>> variables.
+Adding Miguel, who maintains clang-format.
 
-> >>>> +	{ .compatible = "qcom,sc8280xp-crd", .data = &qcom_qseecom_ro_uefi, },
-> >>>
-> >>> R/W works for me (tm).. the META version may be (inconclusive) 2605
-> >>
-> >> Looked at the wrong SoC META table.. the build date is 05/25/2023
-> > 
-> > Could be that my machine was not provisioned properly. Do you boot from
-> > UFS or NVMe?
-> > 
-> > My fw is also older: 01/10/2022.
-> 
-> The machine has UFS, NVME and SPINOR, however the boot log definitely says:
-> 
-> S - Boot Interface: SPI
+> I had to kill clang-format hard in my nvim-lsp-clangd setup, because
+> clang-format is such a piece of shit.
 
-Mine says:
+Random fact that I didn't know before: 1788 out of 35503 kernel .c
+files are already formatted according to the clang-format style.
+(I expected the number to be much lower)
 
-S - Boot Interface: UFS
+>
+> > -static inline void kcov_task_init(struct task_struct *t) {}
+> > -static inline void kcov_task_exit(struct task_struct *t) {}
+> > -static inline void kcov_prepare_switch(struct task_struct *t) {}
+> > -static inline void kcov_finish_switch(struct task_struct *t) {}
+> > -static inline void kcov_remote_start(u64 handle) {}
+> > -static inline void kcov_remote_stop(void) {}
+> > +static inline void kcov_task_init(struct task_struct *t)
+> > +{
+> > +}
+> > +static inline void kcov_task_exit(struct task_struct *t)
+> > +{
+> > +}
+> > +static inline void kcov_prepare_switch(struct task_struct *t)
+> > +{
+> > +}
+> > +static inline void kcov_finish_switch(struct task_struct *t)
+> > +{
+> > +}
+> > +static inline void kcov_remote_start(u64 handle)
+> > +{
+> > +}
+> > +static inline void kcov_remote_stop(void)
+> > +{
+> > +}
+>
+> This is not an improvement.
 
-Johan
+Fair enough.
+I think we can fix this by setting AllowShortFunctionsOnASingleLine:
+Empty, SplitEmptyFunction: false in .clang-format
+
+Miguel, do you think this is a reasonable change?
+
+
+> >
+> >  struct kcov_percpu_data {
+> > -     void                    *irq_area;
+> > -     local_lock_t            lock;
+> > -
+> > -     unsigned int            saved_mode;
+> > -     unsigned int            saved_size;
+> > -     void                    *saved_area;
+> > -     struct kcov             *saved_kcov;
+> > -     int                     saved_sequence;
+> > +     void *irq_area;
+> > +     local_lock_t lock;
+> > +
+> > +     unsigned int saved_mode;
+> > +     unsigned int saved_size;
+> > +     void *saved_area;
+> > +     struct kcov *saved_kcov;
+> > +     int saved_sequence;
+> >  };
+> >
+> >  static DEFINE_PER_CPU(struct kcov_percpu_data, kcov_percpu_data) =3D {
+>
+> This is just plain wrong. Making something that was readable into a
+> trainwreck.
+
+Setting AlignConsecutiveDeclarations: AcrossEmptyLinesAndComments will
+replace the above with the following diff:
+
+ struct kcov_percpu_data {
+-       void                    *irq_area;
+-       local_lock_t            lock;
+-
+-       unsigned int            saved_mode;
+-       unsigned int            saved_size;
+-       void                    *saved_area;
+-       struct kcov             *saved_kcov;
+-       int                     saved_sequence;
++       void        *irq_area;
++       local_lock_t lock;
++
++       unsigned int saved_mode;
++       unsigned int saved_size;
++       void        *saved_area;
++       struct kcov *saved_kcov;
++       int          saved_sequence;
+ };
+
+(a bit denser, plus it aligns the variable names, not the pointer signs)
+Does this look better?
+
+>
+> Please either teach clang-format sensible style choices, or refrain from
+> using it.
+
+
+
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Liana Sebastian
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
