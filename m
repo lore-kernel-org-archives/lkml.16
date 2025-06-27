@@ -1,160 +1,144 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3614E2D9787
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3D12E54D5;
+	Fri, 27 Jun 2025 16:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751042025; cv=none; b=AatPqCT3YAQoOFVlXO6jE6+ob85kCZWFsvO/VKUQC+RuiEy3v8ef3uph+3YR9iPmDpKiF8mcMCHHe322XLsVi2xUhxTxT6F1kSNSsgrvEuqKk03Y6AG1HXvC2dZxCTSkE9hMu/6GLXqsHE1XC/xQ1tgqtr91Va+iK9CnJQJiuiY=
+	t=1751042038; cv=none; b=X6sSAq91vp5va2C6qBSrFMnhmZ4h/IXLXcfclbs3QFhFNZxYo2ftun0cXA8xv5xrEVzrH46o0O+l6Dga5ZnaJn8nykmrBEjVzBXrdeSeLqy9GvdGcYMW7srxLJq9D4rywev+ZYrQ01jEVcKoXbYXLCLvI2gSA+YX4XmTXdj8VbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751042025; c=relaxed/simple;
-	bh=dXpLHx9bw5vHEwTl6YxNtXihrgpgrvwSzKzcW4eOMZI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l20b9EbCjqTdvhrF2cuD+IuzZ5DzrKYXfWBpijhY0z4/eXEQkETBi7jbZ+Uuxq5YwDGbUKCISy8SxL8umArUNqbggSKs2NIkIf6AnwoCmMOis4WIBJT/Q2NqlGRjFgpWzvs1ohOmCfWMmhqMkovGc89KPSNCJS28axX9pth0N0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=QNBLUm4o; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751042038; c=relaxed/simple;
+	bh=Y2MaEeceKNbv4yiFNLVL6EuLylExKPZ4w7oafZAoUjc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UIZC0YPj4qLUWOWmpjAGtffE3Cu588GxX+irDgvlQxOgRF7RcdYc3vQ9UYz1mhcnop/tQ1RRwAiprHlqDETcbFXzcXxJYS5BDbf9UmyG2yYJu3xf78wKgx67TZAypToBeAjiOsuzeJ3xwgyJHnCka6CQiigahlH2dg5kJKpITtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fs2Ad+ug; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="QNBLUm4o"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2e95ab2704fso45422fac.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:33:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751042022; x=1751646822; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bmp7ryV5xjFvyB+Tl1aiIRJO+LGmYWq5ipUqtE2nDIk=;
-        b=QNBLUm4o1dAn/I4+sFGYz0LNxVxmrGf3w9+z0HVb6ed3LkpKV7C9zk0iQVRO1Y42GF
-         jTzJb4axom+2E95Jjuo1bEgLcJYEVlSwmsx3VjnHcqg4i4CX4ynW1n5jlxxSfKtN3IbQ
-         bcbG57EeIJfMbTSx8DDHV4+UxW7r4gtvnFy1z7qKIEj1WUE2KHyEhh2THQdNAfpDiAHc
-         HCz1nE0wSdsFHbajU9lrHY7k9EFHhGUDD4pAgNU84zaENxdGC0dM9RgJxM4gdTX6RAJU
-         Y2o6JA1f2t/DIdhG6n+uBav6eo8Z6R89+3qt5MkFzZzimct9bC3Cn44YSwSPn/J2hxWN
-         9rdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751042022; x=1751646822;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bmp7ryV5xjFvyB+Tl1aiIRJO+LGmYWq5ipUqtE2nDIk=;
-        b=YOmMf9kj732Rsd6nK0LlaaXXLUKmLdAOQfgxFkZ6TAGOjQqamKkmXMySb2rW2daeO5
-         bpPG6mTLlfb+DYwAK1bCY+ci0bxlxOXRhiZfOE+vIuAJ7BbPTezsdAyuP7CThjK/jk6V
-         AD+xYdqKjpFApD9v0Dl638qDGP0NLuGoyrS8qLG7DphgpC2XR88/Zay3YMJ1OgUcnhJv
-         hX8/asU7PFMd1IPIqQQoEplGTq6QeOgPc6hIjN0RErIE2kESGrSkGBOaABnjfvhdP6+s
-         Rke0yQMsxnzNv2QN4FaP8f+pyd0/I880wTI9T0jdjHnTk3S/aT03fye97lySuN9FAmau
-         aDSA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0MYZV3c/YdDaUf7dtJDhmntOAIgTrAuerqXjBRWzIeQTsM4pxFJcj22FjYjzHQpbjadQYd8OBHUqnXXI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2lSgNiZlBf1UpqV4O1zZY3xYNkqQID6u8wFWo5JV4m9x1HMSu
-	GZ2i+g6CGjhuMCjLBXufdUlr+TMvm9lIH1WhcTbCWnWAvZfxyrh4fYMMkjDlULYqMpk=
-X-Gm-Gg: ASbGnctjd0y4WF0gEAjVDmxPAhuV5Up0w8VNSwxWt/TeJh3ZGZheD4fDcWOWDO7Zzsx
-	IsLWZjHQko1OQQ9J2ISThAYUi0iCr3ZEi5x6zEBau5PQjujCdNNUAbY0wgMehzVBkOr+s8TMa6O
-	1ZtCcR1yr6Euy9S3/vARIar45EyMYjE4AKgrKEpyatWn8yez69faADzDzzxuf/GlrD7tecQdAV7
-	2NCO1DHVjjmt8reQbOUDXGBQiAE/D2GNTfytis64WctiiYaRZAvAgw68gOaWRJXUFZOKm7tUHcH
-	Me4EEoJnqXgAlLdIGmfQH5DUYL/oA0Qy7tGLR69ELRnRgCBk7rykgZ8mSOaNpROz+sAdNM3lSNW
-	2HlPUy/DwuX96JMudh3eEgM7h2ZpLLqvtjNb2
-X-Google-Smtp-Source: AGHT+IG9PvaUabFgVJrthR0i8DVI9WzDhHa//CNFrdsvKRueO/M97DcW61/F3jaCSrG4SYNr0EfeAg==
-X-Received: by 2002:a05:6870:9450:b0:2e9:9e9:d94b with SMTP id 586e51a60fabf-2efed8eff8cmr2582939fac.39.1751042022103;
-        Fri, 27 Jun 2025 09:33:42 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:1715:453e:e133:7d6? ([2600:8803:e7e4:1d00:1715:453e:e133:7d6])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd4ea5a35sm946883fac.2.2025.06.27.09.33.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 09:33:41 -0700 (PDT)
-Message-ID: <1a8dc586-6f22-4583-8692-084813f2df7d@baylibre.com>
-Date: Fri, 27 Jun 2025 11:33:41 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fs2Ad+ug"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751042037; x=1782578037;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Y2MaEeceKNbv4yiFNLVL6EuLylExKPZ4w7oafZAoUjc=;
+  b=Fs2Ad+ugEnW8qSsWArq7KVp/lsBNdKr6NrF7KParsLYBR7T+yEk/tJaU
+   dyJPDQmYz4KYZ6Su5/F793XJ0LVHZv5x4RKaroLfBoCkROG6Ygnjr7ygv
+   Rowen59uXo/Ceoz/Bx0T675mCWUlY85IT+yQh3gWEVpQ0S1Z+d9xWyIqR
+   DiG59v7XJ/QOfNdmCCIvyzGsZ1ai7wd1kJ3ECMn+h/Nh8c1CmbFdy2Hwh
+   YdW8uiMPCnRuGzYhQYU7ZMShL/imkbJm+EoSxZp9qWL1yzewGX/yKik6J
+   +dnhKUOCC6BxPOaMZjTaDXUe3BSz+TNDA7Spespo1jEHMrac/0b+ufLVT
+   Q==;
+X-CSE-ConnectionGUID: aDwHT5DZTHaKji7HqORHCQ==
+X-CSE-MsgGUID: 5gb/9b34S5CPJ/EWiYVXyQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="53079635"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="53079635"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 09:33:56 -0700
+X-CSE-ConnectionGUID: 1C2IXb2STTuL8X3DDhbOyQ==
+X-CSE-MsgGUID: danC++UFS6ObVuVtA6jiVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="157388500"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 09:33:45 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uVC1D-0000000AXHz-2uXB;
+	Fri, 27 Jun 2025 19:33:39 +0300
+Date: Fri, 27 Jun 2025 19:33:39 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 18/28] of: property: Allow fw_devlink device-tree on
+ x86 when PCI device-tree node creation is enabled
+Message-ID: <aF7H4-toeb7Ouz3d@smile.fi.intel.com>
+References: <20250613134817.681832-1-herve.codina@bootlin.com>
+ <20250613134817.681832-19-herve.codina@bootlin.com>
+ <20250627162245.GA3513535-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] iio: adc: ti-adc128s052: add support for
- adc121s021
-To: Lothar Rubusch <l.rubusch@gmail.com>, mazziesaccount@gmail.com,
- jic23@kernel.org, nuno.sa@analog.com, andy@kernel.org
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250625170218.545654-1-l.rubusch@gmail.com>
- <20250625170218.545654-2-l.rubusch@gmail.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250625170218.545654-2-l.rubusch@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627162245.GA3513535-robh@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On 6/25/25 12:02 PM, Lothar Rubusch wrote:
-> Add support for the single channel variant(s) of this ADC.
+On Fri, Jun 27, 2025 at 11:22:45AM -0500, Rob Herring wrote:
+> On Fri, Jun 13, 2025 at 03:47:58PM +0200, Herve Codina wrote:
+
+...
+
+> > -	if (IS_ENABLED(CONFIG_X86))
+> > +	if (IS_ENABLED(CONFIG_X86) && !IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES))
 > 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> ---
->  drivers/iio/adc/ti-adc128s052.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
+> I really want CONFIG_PCI_DYNAMIC_OF_NODES to go away at some point, not 
+> add more users. 
 > 
-> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-> index 1b46a8155803..cf271c39e663 100644
-> --- a/drivers/iio/adc/ti-adc128s052.c
-> +++ b/drivers/iio/adc/ti-adc128s052.c
-> @@ -7,6 +7,7 @@
->   * https://www.ti.com/lit/ds/symlink/adc128s052.pdf
->   * https://www.ti.com/lit/ds/symlink/adc122s021.pdf
->   * https://www.ti.com/lit/ds/symlink/adc124s021.pdf
-> + * https://www.ti.com/lit/ds/symlink/adc121s021.pdf
->   */
->  
->  #include <linux/cleanup.h>
-> @@ -110,6 +111,10 @@ static const struct iio_chan_spec adc128s052_channels[] = {
->  	ADC128_VOLTAGE_CHANNEL(7),
->  };
->  
-> +static const struct iio_chan_spec adc121s021_channels[] = {
-> +	ADC128_VOLTAGE_CHANNEL(0),
-> +};
-> +
->  static const struct iio_chan_spec adc122s021_channels[] = {
->  	ADC128_VOLTAGE_CHANNEL(0),
->  	ADC128_VOLTAGE_CHANNEL(1),
-> @@ -143,6 +148,10 @@ static const struct adc128_configuration adc128_config[] = {
->  		.refname = "vdd",
->  		.other_regulators = &bd79104_regulators,
->  		.num_other_regulators = 1,
-> +	}, {
-> +		.channels = adc121s021_channels,
-> +		.num_channels = ARRAY_SIZE(adc121s021_channels),
-> +		.refname = "vref",
->  	},
+> I think this should instead check for specific platforms not with 
+> kconfig symbols but DT properties. For ce4100, you can just check the 
+> root compatible string. For OLPC, there isn't a root compatible (in the 
+> DT I have). You could check for /architecture == OLPC instead. There's 
+> some virtualization guests using DT now too. I would think their DT's 
+> are simple enough to avoid any fw_devlink issues. 
 
+I don't think this is good approach. The above check is more reliable in my
+opinion.
 
-Let's try to keep these sorted rather than having rohm in the middle
-of ti chips.
+> Alternatively, we could perhaps make x86 fw_devlink default off
 
-Same applies to the rest of the changes in this patch as well (other
-than adc121s021_channels[] which look to be in a logical order already).
+For my (little) knowledge I believe this is not feasible anymore.
+Some x86 code (drivers) relies on fw_devlink nowadays. But take
+this with grain of salt, I may be way mistaken.
 
+> and then enable it only when you create nodes. Maybe it has to be restricted
+> a sub tree of the DT to avoid any later interactions if devices are unbound
+> and rebound. Not a fully fleshed out idea...
 
->  };
->  
-> @@ -207,7 +216,10 @@ static const struct of_device_id adc128_of_match[] = {
->  	{ .compatible = "ti,adc124s051", .data = &adc128_config[2] },
->  	{ .compatible = "ti,adc124s101", .data = &adc128_config[2] },
->  	{ .compatible = "rohm,bd79104", .data = &adc128_config[3] },
-> -	{ }
-> +	{ .compatible = "ti,adc121s021", .data = &adc128_config[4] },
-> +	{ .compatible = "ti,adc121s051", .data = &adc128_config[4] },
-> +	{ .compatible = "ti,adc121s101", .data = &adc128_config[4] },
+-- 
+With Best Regards,
+Andy Shevchenko
 
-We'll need another patch to add these compatible strings to
-Documentation/devicetree/bindings/iio/adc/ti,adc128s052.yaml
-
-> +	{ },
->  };
->  MODULE_DEVICE_TABLE(of, adc128_of_match);
->  
-> @@ -220,6 +232,9 @@ static const struct spi_device_id adc128_id[] = {
->  	{ "adc124s051", (kernel_ulong_t)&adc128_config[2] },
->  	{ "adc124s101", (kernel_ulong_t)&adc128_config[2] },
->  	{ "bd79104", (kernel_ulong_t)&adc128_config[3] },
-> +	{ "adc121s021", (kernel_ulong_t)&adc128_config[4] },
-> +	{ "adc121s051", (kernel_ulong_t)&adc128_config[4] },
-> +	{ "adc121s101", (kernel_ulong_t)&adc128_config[4] },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(spi, adc128_id);
 
