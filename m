@@ -1,105 +1,93 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7B72BF017;
-	Fri, 27 Jun 2025 11:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269442D97A5
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751022301; cv=none; b=YUkmdb0iYnGBXJePYrnk63ScM4s4WD6fyDHSJGQznk0xjar2I54et01G0sRM6HTIF9KmwYHMXa5lkZl7XvIYoxoPR95WTudakXpQEPjVrs76aztCTo2zS0iNQdOyt0RQhUE1E5EIhGnIkT8NvbDwqTZZJ+d0KBsgOgA7kbDt8Kg=
+	t=1751022302; cv=none; b=WAA/mL5w5/udwM7wlGMofE8baNGW7FMt19+NZIagAbZhskLvmD3S8es9nGtU+a8A6PhfYktkZp3E4hsHA4r+hOO2s02HsI/1DyLo0xfy+VDzdOVCFGw9RytNgk0zdGEBKbewYLI74KiweWi8m9xNZSh/O2KsJIJ1g3ylhBgp++o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751022301; c=relaxed/simple;
-	bh=Gab9HlTdevtNeTDMwimxTwHY16y/zKL0OdzGVNj+iY0=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type; b=b5AqN3VfqB+ikWSJNIODMLgBT1vT1YPlSwmvYuKrquvdX/F0zWhJIDnQO15phTwe7n0czKcQjM8Y9y90y7Mw309YhuoAEgW+bAwu4FBJWxmVQHsOBCp8F7Hd1kp8m7S9S24pr09SKGtdvp4VWPN5qou1rw4Ax8DnRWhZftYYu6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XQw6iH+u; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751022302; c=relaxed/simple;
+	bh=53SUZkKkjxscIAqlkQITcQ1KZr4z6o4imOL4pAKn8R4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TdoJoVrEDfhz0GH5fxo6sl/DAVXbu50jOhb6FCwhH4bqIP7g894UoEqr+A5h5kAVFKQLt2RIvN+zqj52+kSJ/nn9Pp7CNeX6hJ+gXnhIpYqMNwe9BNOkLB2G3ciGel/WpGEYlcKMAjl018H8wYjFyyNpy99+3lejnx+KEJyTve4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hMcgpgz8; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQw6iH+u"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a582e09144so1306514f8f.1;
-        Fri, 27 Jun 2025 04:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751022298; x=1751627098; darn=vger.kernel.org;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fe9OQkLMXpO2IZiw3ZWA9BPKAW+1uGPTqT4qLkMzqak=;
-        b=XQw6iH+uPUnpy+0w+VVQ6WrzgO5BJyO3Q3k0VOPpUo/vUfnfIE36djEqd94/rHK/Fm
-         7bBJPkBvDYdN/rL9dUMSJPd8ciNWmoFSRKaSMseLqGmTCGYFCdolDEt0z5kKTklucLsd
-         hYVf6G7lfI0CJnXKLjAaGuENL9u05Z6GKw4orfVpllb3PaIEqAXtqOX6iW19J/iNOPcO
-         FdWwCskX3hpVK67cJ1mCYIaotQmvJiJURMYQ5AioJnb8z8S2U55Eds/EOwmOcYizR2fQ
-         X35rQxS9E+oNqCagkE5fWtCgCPdCAT4VAFlodGvyMrPh+2aGNaqCcfwdJhLysolg8QCc
-         4BPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751022298; x=1751627098;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fe9OQkLMXpO2IZiw3ZWA9BPKAW+1uGPTqT4qLkMzqak=;
-        b=qD2/gApJ2e5Xfxa0YiT8JBy0RppyXWMaCm4A5x/7wEU5NOQHHbokBvkGMxfd/xpmYC
-         povVmy2TmsByIbf4mP2TYRKGBIXTRmjEtmLhFACvWu0iAZRvBmIzqKd+tHI1NJPKxWY3
-         eoTh4y63ru1UF4DPI9NzZMNZNZkXnNOzCGbTBpYiG+i07wrK6zmqVv5vvZ1tbAH5pSV9
-         ide3TT/5wcsEOUoS6AOK9j4xIzgOAUwNEvz3738v6Jg1cEHH6sveVKXmJWcYywWRHJZe
-         YdYiM/UpEuPpqOvYin5FVWhR1deiitoR9l6eQfgwVYdOf3rT6bh2jvYtWKeN6dn+e7Zu
-         Jcmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVi1iu4iPlyAPq1Ywk0q2SkQh3plByJNgfZYyArZ8cefruDpKxknzPGzwjvZ/nh2Woz+mvjfhUt@vger.kernel.org, AJvYcCWLDjyOi5VEPU9NGT2u41jUWS55nrJoOk/qnAee/IvKFMdMoea0hg+EFIGdL3oymHGyptlZbYxAWQiK4W8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjQp2fCLgXXsuc78k4yv7rWfQ+GMt0gFJqbFfKRUk80qaJd3cm
-	s3IFR2yh9hcEnkmRBI9n9OSdnFluk+iAvvDhWhuV35tCIckfq2P5u2wL
-X-Gm-Gg: ASbGncuALWL2XV9nnEMmpFIlNHAJKOF1Tw21QKf6XRwRQvml6ItHl6DMmBhCr6K0Luv
-	/9TGHRcLF4lBpSVvNuv5zfpfnwsMzKjG5hYqRYhTUdNYUrh7e6QNRZvg3yyIohkprecpOcO9G29
-	S8m3L4HfTNAggVXZaoc2KQYczRCNVfs8erGpZIp/r34epgFMGr7PiDETBIgUwULcIqaefKTF4W7
-	UXzAyPFv0fUarPxl28Po5heDsssDEOFIr024JMPHP1V3CXH2nF5Fpjw3ZDDd0RXAL7ki4L3qN1g
-	CrurKx67qPDxrF45ENofXtxdwOpA7VfpigvY86zs2JHv1PZC9k4dSw0qarvEgGox/qFaytXxjg=
-	=
-X-Google-Smtp-Source: AGHT+IFVcMpR0rLM6VYkpxbugODonjletnVYfb7gUIKV7lAQ+3Nt5KGTvKv9ehhSsIEGXJogIF2sYg==
-X-Received: by 2002:adf:9d91:0:b0:3a4:f744:e00c with SMTP id ffacd0b85a97d-3a8ff51fcc6mr2124588f8f.29.1751022297497;
-        Fri, 27 Jun 2025 04:04:57 -0700 (PDT)
-Received: from imac ([2a02:8010:60a0:0:40b8:18e0:8ac6:da0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f8absm2432679f8f.95.2025.06.27.04.04.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 04:04:57 -0700 (PDT)
-From: Donald Hunter <donald.hunter@gmail.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  Jonathan Corbet
- <corbet@lwn.net>,  "Akira Yokosawa" <akiyks@gmail.com>,  "Breno Leitao"
- <leitao@debian.org>,  "David S. Miller" <davem@davemloft.net>,  "Eric
- Dumazet" <edumazet@google.com>,  "Ignacio Encinas Rubio"
- <ignacio@iencinas.com>,  "Jan Stancek" <jstancek@redhat.com>,  "Marco
- Elver" <elver@google.com>,  "Paolo Abeni" <pabeni@redhat.com>,  "Randy
- Dunlap" <rdunlap@infradead.org>,  "Ruben Wauters" <rubenru09@aol.com>,
-  "Shuah Khan" <skhan@linuxfoundation.org>,  joel@joelfernandes.org,
-  linux-kernel-mentees@lists.linux.dev,  linux-kernel@vger.kernel.org,
-  lkmm@lists.linux.dev,  netdev@vger.kernel.org,  peterz@infradead.org,
-  stern@rowland.harvard.edu
-Subject: Re: [PATCH v8 02/13] tools: ynl_gen_rst.py: Split library from
- command line tool
-In-Reply-To: <bf7908e3b23ff85e245e4ea151d8b5be69de0814.1750925410.git.mchehab+huawei@kernel.org>
-Date: Fri, 27 Jun 2025 11:29:39 +0100
-Message-ID: <m2sejl8oks.fsf@gmail.com>
-References: <cover.1750925410.git.mchehab+huawei@kernel.org>
-	<bf7908e3b23ff85e245e4ea151d8b5be69de0814.1750925410.git.mchehab+huawei@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hMcgpgz8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=owxRs8KmguaiUoSu/NbuS4i+zoSOnNsktkyd1wxEyDI=; b=hMcgpgz82uy42WSk4TbgQlNl/P
+	g/Vjmu5YcIgozIdljJjX/go0h+PL1TPLA5lGApYXSDoYStRzm5r+Z34AbyU/TAxPRNwUT9kgeWPpw
+	Pg1vP3KHT6LkZgEWbCB33CfQ+mgB/yir8YYKds7gFGVPODeyJPE5WrI0NvgGrQhsC3Nw6l8IOPaCC
+	QJpEzHO8GCD6bJ0UmkvKe1DV1arUFA/f71F05wPgyyPSxAUhvyKCqPH/D0NO7M7MM0QpsPVNfkG6v
+	U38x6GdR4pnxkinBaZFfchdWvnFF2w0Y9olxyeJaWDJ7ghAWy1T2B/kM03SZAH9QrGzikb9hpcRJK
+	ccQEqj2Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uV6t8-00000006JkQ-2qCO;
+	Fri, 27 Jun 2025 11:04:58 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 00FEC30023C; Fri, 27 Jun 2025 13:04:57 +0200 (CEST)
+Date: Fri, 27 Jun 2025 13:04:57 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Chris Mason <clm@meta.com>, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: futex performance regression from "futex: Allow automatic
+ allocation of process wide futex hash"
+Message-ID: <20250627110457.GA1613200@noisy.programming.kicks-ass.net>
+References: <3ad05298-351e-4d61-9972-ca45a0a50e33@meta.com>
+ <20250604092815.UtG-oi0v@linutronix.de>
+ <372d8277-7edb-4f78-99bd-6d23b8f94984@meta.com>
+ <20250604200808.hqaWJdCo@linutronix.de>
+ <aa6154d1-726c-4da1-a27b-69d2e8b449c6@meta.com>
+ <20250606070638.2Wk45AMk@linutronix.de>
+ <20250624190118.GB1490279@noisy.programming.kicks-ass.net>
+ <71ea52f2-f6bf-4a55-84ba-d1442d13bc82@meta.com>
+ <20250626131715.GI1613200@noisy.programming.kicks-ass.net>
+ <20250626135034.18sab4Xp@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626135034.18sab4Xp@linutronix.de>
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+On Thu, Jun 26, 2025 at 03:50:34PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2025-06-26 15:17:15 [+0200], Peter Zijlstra wrote:
+> > > I'd vote for defaulting to global for one more release.
+> > 
+> > Probably best to do that; means we don't have to rush crazy code :-)
+> 
+> If we do that, that means we need to ensure that the private hash is not
+> deployed while a thread is created and the prctl() function can only
+> work create the private hash if the application is single threaded.
 
-> As we'll be using the Netlink specs parser inside a Sphinx
-> extension, move the library part from the command line parser.
->
-> While here, change the code which generates an index file
-> to parse inputs from both .rst and .yaml extensions. With
-> that, the tool can easily be tested with:
->
-> 	tools/net/ynl/pyynl/ynl_gen_rst.py -x -o Documentation/netlink/specs/foo.rst
->
-> Without needing to first generate a temp directory with the
-> rst files.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+I was thinking something like so..
 
-Reviewed-by: Donald Hunter <donald.hunter@gmail.com>
+---
+diff --git a/init/Kconfig b/init/Kconfig
+index af4c2f085455..666783eb50ab 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1716,9 +1716,13 @@ config FUTEX_PI
+ 	depends on FUTEX && RT_MUTEXES
+ 	default y
+ 
++#
++# marked broken for performance reasons; gives us one more cycle to sort things out.
++#
+ config FUTEX_PRIVATE_HASH
+ 	bool
+ 	depends on FUTEX && !BASE_SMALL && MMU
++	depends on BROKEN
+ 	default y
+ 
+ config FUTEX_MPOL
