@@ -1,86 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499D625F78A;
-	Fri, 27 Jun 2025 09:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5039425F78A;
+	Fri, 27 Jun 2025 09:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751017408; cv=none; b=ITtE5WYMin4iDIOYZ2t8i/fLJDBHi8bMdbDE3l56NWU0ntf94Hp+9EVxxOOzWgwXB28HVjLvj6lVj1gAMNEs14ZpvC0vnvuOQRAIjE4Ejlbp/L0OYVEpjWgtXo5DneANwIs/ioOFefp6FEabOfHcwudnVWjrGDyNk5iix/CMeIU=
+	t=1751017484; cv=none; b=ni1pBn9dxCm4cp+I2JtKB3G6+RSM6IYJa5eSwtr6TjuM5Nttf/bkTWd+/YNImSiv78ZOKqUZQ48I7dZCa0e8Dv8wz1qNZzOKRfzmsatsHDCt0IyTvBfeKy2tYBr6OLP67pho2CZXLITkQRIUqf/MMMeCEYgaCUIa8YRflfcXg7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751017408; c=relaxed/simple;
-	bh=ngQ6R8Q7RFtEfkc0s81vKQLJQh7gq65r5WAROHbGqPQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i6AHpuiB9x2r3m05qdXGeXmDAtN2K5nzBde5vrbKbkajGuIwJwXNNDSX/ElHpXmG10vdJBCUbHtuY/TlUQftKM3NFrwYemAl1McdWXeM1X85dqO5h53n6nzRVLSRTKya25lJ8irSZjTXBFOUmqZnx7AjcthOoKICUuvqsAAJts4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n23E/N/G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751017484; c=relaxed/simple;
+	bh=M9WdmJkU6298jjaKINzNf+tAkCNpglCxAoM6CXnDBXQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KaeluUQX8eV0ke+rWG3nK4Gh0mJlajXoHMMZ8d/gl62T4Sg82slucHdvZRyirfE/qkdEPj8DtNz5hk/vbqIcpI2fD5/d0/7HA3MF6xiGFpJrwK9nCUlrbqMWV65pMdVQKD6QSlr3KlRUD1ZgH4ziSO+x5YPyL19DqcZCTrN6SO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=U57TunGZ; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n23E/N/G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B66DCC4CEE3;
-	Fri, 27 Jun 2025 09:43:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751017407;
-	bh=ngQ6R8Q7RFtEfkc0s81vKQLJQh7gq65r5WAROHbGqPQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n23E/N/GoDphO9m5at0H5Ohu/mB4/Lyn7IXvno7I3e12cZfUUf1y9yA4BOmlB8QGT
-	 mpnMMoTgdPyfUY4fZJLS5D3rDzPkMBBXhxg/UKe2DYNVDf9BWFuOTyTQE2QxtIBtoG
-	 fgRg3oxCVUeiUirEij94ch9QE0DcCHceByoQUhX+Etw7w+RlY30sFyekBLX8GmHlns
-	 b0ZwcW/CvPYk6/HUpYmiU5la90TuWpLNGKwFCOLj+Bp0dTtirdwlC1l3djuMEKAlar
-	 dcX5m6dZDtUeM6ebC3AptqAwYSvDmLcoQaLwgLT00lEWexaVtrde+0gZpmPMwvjYIL
-	 GUIISfTng1p9w==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uV5cF-000000000Ug-2baj;
-	Fri, 27 Jun 2025 11:43:28 +0200
-Date: Fri, 27 Jun 2025 11:43:27 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Gabor Juhos <j4g8y7@gmail.com>
-Cc: Georgi Djakov <djakov@kernel.org>,
-	Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] interconnect: avoid memory allocation when
- 'icc_bw_lock' is held
-Message-ID: <aF5nv6TQoyfh7wKS@hovoldconsulting.com>
-References: <20250625-icc-bw-lockdep-v3-1-2b8f8b8987c4@gmail.com>
- <aFvr1zSkf4KmIcMT@hovoldconsulting.com>
- <aFvuiVX0kMIqXQtZ@hovoldconsulting.com>
- <84b94649-a248-46b0-a401-772aeb8777a2@gmail.com>
- <aFwBYRF0wJwVDdeX@hovoldconsulting.com>
- <ac5ba192-b538-457e-acc4-c2d358b1fd0e@gmail.com>
- <aF0TIWfDI4M1azzc@hovoldconsulting.com>
- <3b90caec-b4c0-47d8-bdd7-1a7abd5e69d9@gmail.com>
- <aF5EPhd5smrmB38Q@hovoldconsulting.com>
- <b960680d-6c5a-4130-b2dd-4ddf1f800430@gmail.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="U57TunGZ"
+X-UUID: 55df660c533b11f0b1510d84776b8c0b-20250627
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=jreIx6PtT6w4BeFa0dDuav4vW2DugASqzYf5r6DK060=;
+	b=U57TunGZD5Y2k+AvAiTKcyNyrC/krbuxptVD+XTIEfT5iFEcIe7Z74u4kP7o8Fo9F2kD/KQF4QID5rIHJxDF/Tf/FMkP7O5q89iiLmYRw3sw08i0b9nuznB+T/L0pJgplDg8W4jC6zg7602ERUi8aQNqdZUhFAsacuFxtYN9mkk=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.2,REQID:0b1a884d-3726-476d-8e13-12f8eecb81ee,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:9eb4ff7,CLOUDID:9dda4482-cc21-4267-87cf-e75829fa6365,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 55df660c533b11f0b1510d84776b8c0b-20250627
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
+	(envelope-from <ot_zexin.wang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 199619063; Fri, 27 Jun 2025 17:44:35 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Fri, 27 Jun 2025 17:44:32 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Fri, 27 Jun 2025 17:44:32 +0800
+From: Zexin Wang <ot_zexin.wang@mediatek.com>
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
+	<linux@roeck-us.net>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>
+CC: <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	<linux-watchdog@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, Zexin Wang <ot_zexin.wang@mediatek.com>
+Subject: [PATCH 0/2] watchdog: mediatek: Add compatible for MT8189
+Date: Fri, 27 Jun 2025 17:44:18 +0800
+Message-ID: <20250627094431.11772-1-ot_zexin.wang@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b960680d-6c5a-4130-b2dd-4ddf1f800430@gmail.com>
+Content-Type: text/plain
 
-On Fri, Jun 27, 2025 at 11:36:26AM +0200, Gabor Juhos wrote:
-> 2025. 06. 27. 9:11 keltezéssel, Johan Hovold írta:
-> > On Thu, Jun 26, 2025 at 05:00:42PM +0200, Gabor Juhos wrote:
+This patch series introduces support for the MT8189 watchdog driver
+by add compatible.
 
-> >> Despite the note above, your proposal looks good to me. Would you like to
-> >> send it as a formal patch, or shall I do it?
-> > 
-> > I can post it in a bit.
-> 
-> Great, just saw the final patch. Thank you!
+Zexin Wang (2):
+  watchdog: mediatek: Add compatible for MT8189
+  dt-bindings: watchdog: mediatek: Add support for MT8189
 
-Here it is for reference:
+ Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml | 1 +
+ drivers/watchdog/mtk_wdt.c                                       | 1 +
+ 2 files changed, 2 insertions(+)
 
-	https://lore.kernel.org/lkml/20250627075854.26943-1-johan+linaro@kernel.org/
+-- 
+2.45.2
 
-It looks like Georgi picked up the patch from this thread yesterday,
-which should be fine as well as I only changed the commit message
-(replacing the ipc splat with one from sc8280xp) before posting it as
-v4.
-
-Johan
