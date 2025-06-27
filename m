@@ -1,197 +1,137 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861EB2E7625;
-	Fri, 27 Jun 2025 14:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6479C29DB6B;
+	Fri, 27 Jun 2025 14:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751036324; cv=none; b=LuHrYaxYcZDYkAdoXl4VScxDs7WZvAHv9yA6PMQT8ZjoA52ztgEsfM16QJ+REPUZ1crAlVZ9sC9U70QuMxXHXji82XVyBLXOJk6S0WCM+Rl4EbxxKZNB6Z5GMtGitGjpWTCvBAVJBDJu7zidGln1PugWYFGe08hYIDwD9lZFDGg=
+	t=1751036382; cv=none; b=BtbMBsi2X0oQfPe3oTZ694CiizSVa+trKPxr4Y21BR++kbDeijB2C3UPF308joSsQiTz3BlRrgyLzBhB+ZEazzy42C18P2Pv0Zkrnx4FuvhRLpE+xDef1B9PUjyP5fy5ngAu40Dn2jU0/SBGbSSNhOY6VDuc1cTz1XefXEbq284=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751036324; c=relaxed/simple;
-	bh=IYziUMcQc2l0WrjC52KQUdKcBdCbKEvbSAKgkqLgl0k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IhhiFRqAwhZLBKhKAEVsLsOiFNwZFCxFXOnI1f+CZNalS7DlFzDDjWttemiZgMRhkUGFduAoU8Vvc8gF0LyrT45830+iio76XDRrhIL761rCWsrz0PoA9fKac5eZBn0nxzsWGfRh3VcK6xvjcVtZu1HPOKFCHr/id37ZPMlb+Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OLxcsoBe; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751036382; c=relaxed/simple;
+	bh=Q624Qj2i25nnhuv7Bqn+nxJwHsYhIYSd8aBORWKkTDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GUxZ3siR29RkQQ3hzSfsF44cAPFhjlhJ6OB2O3hSA4TH4oGbLanc5cOK52bK4uIWzSJk+A7IUTKYhUMkX5DhGcX5zjFA2sNGueFn266b/SfmpFXanXICW3iE52T9S5uAsM3KYyLCWvTKRZ//U1L+IIKjmxmT0GPEeSj248SfJYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AZZxZg1s; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OLxcsoBe"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RC9hO2011346;
-	Fri, 27 Jun 2025 14:58:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	gkweCfiBn/+1OBVWhFD+keR5SD5p17o52DoHPi+qi/o=; b=OLxcsoBeYVdb/Y/O
-	+CtCVPnGX/q2dUrYIJSN7PH0dnMMrWmmUYH3O4GyGnVDiuuQgTh1ErDmwX5fwKAr
-	9Gl0NRGCTY3sLiXqW2zMncXD4uN2cvBJVHkzzdRAOSNHOdRhRUrBuQmmyYqbNocK
-	dJwvtBXQ9dABorfyhyfmirZ5qoNKUFAZc87gdpKbWDGzttDbVzu/sin9bUuGOLRe
-	oTa81SjLfkYZOS1svyBwfyJJM/E1C5PykOjF3zgGVS8WCDlTQW5JFqRNmqCxUl77
-	hHZ+c0jZtnqhFHmPk16QKbIvviiXlRrPWHnPej3geUkyrwQzI8uwrZPrwcBQfH4H
-	lYN1Kw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f3bgq5j2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 14:58:36 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55REwZQJ000778
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 14:58:35 GMT
-Received: from [10.50.11.187] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 27 Jun
- 2025 07:58:32 -0700
-Message-ID: <2722e70a-1080-c9f3-eb56-4a6e79084bdc@quicinc.com>
-Date: Fri, 27 Jun 2025 20:28:29 +0530
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AZZxZg1s"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B280243914;
+	Fri, 27 Jun 2025 14:59:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751036376;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ThiterbTvL+mYGXh+idmEWQ5hcYVOVl2geFkwk5TYJc=;
+	b=AZZxZg1sYkT9vHUrIb2/97+6gfdNO4TtsAae3Q97XVRt49b0/Vi8ATyjffit62MZ37kfFL
+	ymp82e/YrnESaBvIOQpjbOf2NByT+aIPb77AUb4LL4j2gswmjCDrkd8q8JlI9EKD/dTAGv
+	ehdRnIQrsEL+gjpbp5/HZ3gDsDO5/1suKp3xnM2E14rmnSJF/7NfSxhMn203GJECVD9In9
+	m8CXZqLY8ct1ish67IsDUCaBumDTG5qcx7dEbGr9De+dkZwMfiwoTHf5QNh6Zrf48SviUx
+	IemOqFS+LYffkXWwV86Y/xGnsTH8VmnMH3qqowHZYUhXdCZGAKaDau1hHDHE3g==
+Date: Fri, 27 Jun 2025 16:59:30 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Saravana Kannan <saravanak@google.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
+ Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
+ Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len Brown
+ <lenb@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Daniel Scally <djrscally@gmail.com>, Heikki Krogerus
+ <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso
+ <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+ <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
+ Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 06/28] driver core: fw_devlink: Introduce
+ fw_devlink_set_device()
+Message-ID: <20250627165930.344b429c@bootlin.com>
+In-Reply-To: <20250616090406.32f62ca4@bootlin.com>
+References: <20250613134817.681832-1-herve.codina@bootlin.com>
+	<20250613134817.681832-7-herve.codina@bootlin.com>
+	<CAGETcx9u-7TJ6_J5HdmDT=7A6Z08P-rUC0n+qnBoBi+ejRc2SQ@mail.gmail.com>
+	<20250616090406.32f62ca4@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v5 5/5] arm64: dts: qcom: qcm2290: Add venus video node
-To: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>
-CC: <krzk+dt@kernel.org>, <bryan.odonoghue@linaro.org>,
-        <quic_dikshita@quicinc.com>, <mchehab@kernel.org>, <robh@kernel.org>,
-        <conor+dt@kernel.org>, <konradybcio@kernel.org>,
-        <andersson@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250626135931.700937-1-jorge.ramirez@oss.qualcomm.com>
- <20250626135931.700937-6-jorge.ramirez@oss.qualcomm.com>
- <6e330e8f-5856-ef8e-5fe3-52bd61b59e02@quicinc.com> <aF6PqCY/E6H0Mc2/@trex>
-Content-Language: en-US
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <aF6PqCY/E6H0Mc2/@trex>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: TR9uuurdnKAnQXTs1UT3iuQbljsruGFi
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDEyMiBTYWx0ZWRfX4bv+H6gL7qLN
- UV8+r2XZpl77MbCuz1YnMzaLwE6dAIBv70AgVJD0OlrcteViOOjW8CQv83o+2p13JWgQmLMav3X
- AqD8TgABBGahrFBXFdeY191tUoe7ecE5xwte9MLwHWf7FEpUcwUzJjRJTeFTNAuwiAIpmHqPWvf
- +Tcj4MtLzbC6MFfkzIkg4Mmy59qFVfBjpTJkjWUNn/Nikv75NoHJIQjos1NM6fNG/w1OrRV9a0V
- gzbiviAbmNNASLd4CkYxJ+ntSKBdis60s3/YrWzSbgTJDrTH7ntMoloJcRsrGYHrSQND3HCeAo8
- DR4yrqOOAOH+sBqgutqpXIt+dP2G0mIHfd7sYHiT72g5H9jwC2DOXM0QQnNzoWE0yh8weDEHWtV
- KsErSFo5T0AhKgp+rXOHsw8apWtPCBvCZlBlVwJ2rZ31nem20nuc90e3IPFsHuxPDMcc8ny1
-X-Authority-Analysis: v=2.4 cv=L4kdQ/T8 c=1 sm=1 tr=0 ts=685eb19c cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8
- a=s3_BAN2U_F-k673gM8kA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: TR9uuurdnKAnQXTs1UT3iuQbljsruGFi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_04,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1015 suspectscore=0
- adultscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- spamscore=0 phishscore=0 mlxlogscore=999 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506270122
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdeffeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegkedprhgtphhtthhopehsrghrrghvrghnrghksehgohhoghhlvgdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnv
+ ghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvg
+X-GND-Sasl: herve.codina@bootlin.com
 
+Hi Saravana,
 
-On 6/27/2025 6:03 PM, Jorge Ramirez wrote:
-> On 27/06/25 17:40:19, Vikash Garodia wrote:
->>
->> On 6/26/2025 7:29 PM, Jorge Ramirez-Ortiz wrote:
->>> Add DT entries for the qcm2290 venus encoder/decoder.
->>>
->>> Co-developed-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
->>> Signed-off-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
->>> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
->>> ---
->>>  arch/arm64/boot/dts/qcom/qcm2290.dtsi | 57 +++++++++++++++++++++++++++
->>>  1 file changed, 57 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/qcm2290.dtsi b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
->>> index f49ac1c1f8a3..5326c91a0ff0 100644
->>> --- a/arch/arm64/boot/dts/qcom/qcm2290.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
->>> @@ -1628,6 +1628,63 @@ adreno_smmu: iommu@59a0000 {
->>>  			#iommu-cells = <2>;
->>>  		};
->>>  
->>> +		venus: video-codec@5a00000 {
->>> +			compatible = "qcom,qcm2290-venus";
->>> +			reg = <0 0x5a00000 0 0xf0000>;
->>> +			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
->>> +
->>> +			power-domains = <&gcc GCC_VENUS_GDSC>,
->>> +					<&gcc GCC_VCODEC0_GDSC>,
->>> +					<&rpmpd QCM2290_VDDCX>;
->>> +			power-domain-names = "venus",
->>> +					     "vcodec0",
->>> +					     "cx";
->>> +			operating-points-v2 = <&venus_opp_table>;
->>> +
->>> +			clocks = <&gcc GCC_VIDEO_VENUS_CTL_CLK>,
->>> +				 <&gcc GCC_VIDEO_AHB_CLK>,
->>> +				 <&gcc GCC_VENUS_CTL_AXI_CLK>,
->>> +				 <&gcc GCC_VIDEO_THROTTLE_CORE_CLK>,
->>> +				 <&gcc GCC_VIDEO_VCODEC0_SYS_CLK>,
->>> +				 <&gcc GCC_VCODEC0_AXI_CLK>;
->>> +			clock-names = "core",
->>> +				      "iface",
->>> +				      "bus",
->>> +				      "throttle",
->>> +				      "vcodec0_core",
->>> +				      "vcodec0_bus";
->>> +
->>> +			memory-region = <&pil_video_mem>;
->>> +			iommus = <&apps_smmu 0x860 0x0>,
->>> +				 <&apps_smmu 0x880 0x0>,
->>> +				 <&apps_smmu 0x861 0x04>,
->>> +				 <&apps_smmu 0x863 0x0>,
->>> +				 <&apps_smmu 0x804 0xe0>;
->> keep only the non secure ones.
+On Mon, 16 Jun 2025 09:04:06 +0200
+Herve Codina <herve.codina@bootlin.com> wrote:
+
+> Hi Saravana,
 > 
-> ok
+> On Fri, 13 Jun 2025 14:13:49 -0700
+> Saravana Kannan <saravanak@google.com> wrote:
 > 
->>> +
->>> +			interconnects = <&mmnrt_virt MASTER_VIDEO_P0 RPM_ALWAYS_TAG
->>> +					 &bimc SLAVE_EBI1 RPM_ALWAYS_TAG>,
->>> +					<&bimc MASTER_APPSS_PROC RPM_ACTIVE_TAG
->>> +					 &config_noc SLAVE_VENUS_CFG RPM_ACTIVE_TAG>;
->>> +			interconnect-names = "video-mem",
->>> +					     "cpu-cfg";
->>> +
->>> +			status = "okay";
->>> +
->>> +			venus_opp_table: opp-table {
->>> +				compatible = "operating-points-v2";
->>> +
->>> +				opp-133000000 {
->>> +					opp-hz = /bits/ 64 <133000000>;
->>> +					required-opps = <&rpmpd_opp_low_svs>;
->>> +				};
->> Fix the corner freq value
+> > On Fri, Jun 13, 2025 at 6:49 AM Herve Codina <herve.codina@bootlin.com> wrote:  
+> > >
+> > > Setting fwnode->dev is specific to fw_devlink.
+> > >
+> > > In order to avoid having a direct 'fwnode->dev = dev;' in several
+> > > place in the kernel, introduce fw_devlink_set_device() helper to perform
+> > > this operation.
+> > >    
+> > 
+> > This should not be set anywhere outside the driver core files. I'll
+> > get to reviewing the series, but until then, NACK to this.
+> > 
+> > Is there a specific patch that explain why we need to set this outside
+> > driver core?  
 > 
-> can you add some reference please?
+> We need to set it in case of creating device-tree node for PCI.
 > 
-> I took this data from an internal document - not sure why the downstream
-> driver supports different values or where those were taken from (AFAIK
-> they are not supported)
-Most likely you have referred incorrect downstream file. Refer scuba-vidc.dtsi.
-Again, good reference for such cases would IP catalogues and if not, gcc driver
-in this case which have structures defining different corners for video.
+> Usually, fwnode are created (based on DT or ACPI) and then, dev are
+> created.
 > 
+> In the PCI DT node creation case, device are already created and then, based
+> on information already computed by the kernel, DT node are created.
 > 
->>
->> Regards,
->> Vikash
->>> +
->>> +				opp-240000000 {
->>> +					opp-hz = /bits/ 64 <240000000>;
->>> +					required-opps = <&rpmpd_opp_svs>;
->>> +				};
->>> +			};
->>> +		};
->>> +
->>>  		mdss: display-subsystem@5e00000 {
->>>  			compatible = "qcom,qcm2290-mdss";
->>>  			reg = <0x0 0x05e00000 0x0 0x1000>;
+> You can see that on patch 11 (dev setting was already upstream and it is
+> replace by a call to the helper for PCI host bridge) and on patch 13 (PCI
+> device).
+> 
+> Other patches (8, 9 and 10) replace the existing direct setting of the dev
+> member by a call to the helper.
+> 
+
+Have you got time to look at the series, patches I pointed out and the reply
+from Andy?
+
+Are modifications still nacked on your side?
+If so, what kind of modification would you like to see in order to move
+forward?
+
+Best regards,
+Hervé
