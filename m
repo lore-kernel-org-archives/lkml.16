@@ -1,171 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0014938F80;
-	Fri, 27 Jun 2025 13:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BD74431;
+	Fri, 27 Jun 2025 13:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751029256; cv=none; b=IKbwuDmmQHR03IsUJDWXfKbfmSgQJ+XvOv5y3XatXxPKkwd3/P54MCmZ6SCpxbG/7wteo+YEIJdYWsHcupiGDkIlo9Acs51mf4mUor0tHxzkM33cfZ1BYhsopKQ92rkIZFjgR0BljvhXmVEPp7j3v/oDYIhWhvcSd01a1xz2YRU=
+	t=1751029324; cv=none; b=UJDHO+QRJfE123W7YNw6FvlQMH3DMXewYwaYTdky5AfjNuf7IOGwmNtMGg4DEMOiw3gyoplIK1YvQKVl0HZW3npEV80Wy+NAbfDIJFZ8JAEWPPhnpip/I9byobRNhnlEeUiCKAgGwT30j9atOlXmvvp1PVIlPZAv1hP0z0jgZHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751029256; c=relaxed/simple;
-	bh=1KduQflUx5PWgx69L9xIAgh4GnKwc1j7d9n9HVvizXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jImVZ3P3zCrSGv+Z8pNfXx1kqTOL+f8UH1jq6SSE+6o931XBT6ZeDcqWHSLW/bHIoM6m0LB7f3+Gm4xEnsiAwIh7ipoeAKYutO5Nmrn7vC7kzQYH6iwdpnhOwUHJqDcyqcIHTTXBgAUv1g80edt6a/5LqBy+u674Y5PIqar1/pY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f5MflKJH; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751029324; c=relaxed/simple;
+	bh=gp0epzP3egqUiKQR6pxigJkagwhLBDTL6iCWSDgXGW8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DMXNPjYVGtTGsSPR4A/VSBOnNM8YlsOtMnCJGALZOy8wtJvHf+uxRUXQfF5Wy5jXph4bzdC7GH1ClH3Lbr4xPJ5nR7D4H45meCpd2p8oGIRMfyD0C60Bke/vgRiWGNVFjj1LOObOQApjXJJ8xfRhLw9JcbCxfxXJTHzGxl7MGoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mf92O7bq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f5MflKJH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751029255; x=1782565255;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1KduQflUx5PWgx69L9xIAgh4GnKwc1j7d9n9HVvizXY=;
-  b=f5MflKJHxUKVyxw7lBlrHeAKImP3RJPUvVMw9HRGg0mezZx0htO5DLHc
-   9eAOOTNpzl3HIIQonjdmI4PJFF/XXsM/MV2cJS1jYoQOiLFssia67jhhG
-   k4fIXHicmoSgAyZ13HvD/tLh1wkqoFlgc9mwm21ckRCExkASNBroqFj++
-   kxeXbMTcNX+jw1Z1Dj3Di1k3Ri6O60uJ1GQq/zrA3y89AoTl9yhoGI8il
-   xMDF3f6SQZPClD4gL0PQ7TDxyDU65EGGAiMW1wxoUFVOlbwZmJ1ttwqrU
-   ZkyX71F37pPJbrVLrLpP5s70iEgbbayG0MnLhqnNxTjd1fnPWVErqy+zM
-   A==;
-X-CSE-ConnectionGUID: VHI5FNy4R4+8UY1XJzWy1Q==
-X-CSE-MsgGUID: 1ymzMJioQKiOcs9rmyBihg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53215158"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="53215158"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 06:00:54 -0700
-X-CSE-ConnectionGUID: hf8G9/jFRSCfVPp1wMkX0g==
-X-CSE-MsgGUID: oU6oojOAR/Wlpq5meRaIhA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="157347865"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa004.jf.intel.com with ESMTP; 27 Jun 2025 06:00:50 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 34B536A; Fri, 27 Jun 2025 16:00:49 +0300 (EEST)
-Date: Fri, 27 Jun 2025 16:00:49 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: pbonzini@redhat.com, seanjc@google.com, dave.hansen@linux.intel.com, 
-	rick.p.edgecombe@intel.com, isaku.yamahata@intel.com, kai.huang@intel.com, 
-	yan.y.zhao@intel.com, chao.gao@intel.com, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, kvm@vger.kernel.org, x86@kernel.org, linux-coco@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 04/12] x86/virt/tdx: Add tdx_alloc/free_page() helpers
-Message-ID: <scebxrgqi7dgnyv6kjjpbcpijl4juita4lnq76jpw47rs5q2mc@xnbyphvk6vhv>
-References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
- <20250609191340.2051741-5-kirill.shutemov@linux.intel.com>
- <fd9ebb1c-8a5a-44c5-869b-810bb5e7436c@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mf92O7bq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6C1AC4CEED;
+	Fri, 27 Jun 2025 13:02:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751029323;
+	bh=gp0epzP3egqUiKQR6pxigJkagwhLBDTL6iCWSDgXGW8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Mf92O7bqAm0yXgSgJJHXrBRLCx2b7byyy6lPi78UfDbAB7PkOHyPZd3YNeI0ILwOI
+	 GY6x6hbdFTyOQ2LBLZUKbH7UdrQ+CFwPS5/4aKnQJPutnbN1iewB4PxkdeZ1iPTp45
+	 /dp6KNaKFRCeSmQEoFd09vt+XFIRGA6ZFlCjponUXeSAMVyzqcfJyBjOvdE128/90a
+	 ipbTOmHrfwLKAm9qHHYvLzyFK3rDxxBx5UO8by6HUipMXcLQREbBLnAQdoj4LqeiPH
+	 eB9W1kUck0QmVAAivR4sXVZdySBhqee5Kqe/JquE9QCgBcJkveO26vPhrw2TUZhJoc
+	 Oi1/ft61NHVGA==
+Message-ID: <26bc75ab-5bae-49e5-baaa-155599ab8903@kernel.org>
+Date: Fri, 27 Jun 2025 14:01:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fd9ebb1c-8a5a-44c5-869b-810bb5e7436c@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/4] misc: fastrpc: Refactor domain ID to enforce
+ strict mapping
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Ling Xu <quic_lxu5@quicinc.com>, srini@kernel.org, amahesh@qti.qualcomm.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ andersson@kernel.org, konradybcio@kernel.org, arnd@arndb.de,
+ gregkh@linuxfoundation.org
+Cc: quic_kuiw@quicinc.com, ekansh.gupta@oss.qualcomm.com,
+ devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+References: <20250627103319.2883613-1-quic_lxu5@quicinc.com>
+ <20250627103319.2883613-4-quic_lxu5@quicinc.com>
+ <084ec69f-7b52-468b-8561-de4c1f517a21@oss.qualcomm.com>
+Content-Language: en-US
+From: Srinivas Kandagatla <srini@kernel.org>
+In-Reply-To: <084ec69f-7b52-468b-8561-de4c1f517a21@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 25, 2025 at 01:02:38PM -0700, Dave Hansen wrote:
-> On 6/9/25 12:13, Kirill A. Shutemov wrote:
-> >  arch/x86/include/asm/tdx.h       |   3 +
-> >  arch/x86/include/asm/tdx_errno.h |   6 +
-> >  arch/x86/virt/vmx/tdx/tdx.c      | 205 +++++++++++++++++++++++++++++++
-> >  arch/x86/virt/vmx/tdx/tdx.h      |   2 +
-> >  4 files changed, 216 insertions(+)
-> 
-> Please go through this whole series and add appropriate comments and
-> explanations.
-> 
-> There are 4 lines of comments in the 216 lines of new code.
 
-Will do.
 
-> I'll give some examples:
+On 6/27/25 1:23 PM, Konrad Dybcio wrote:
+> On 6/27/25 12:33 PM, Ling Xu wrote:
+>> Currently, domain ids are added for each instance, which is not a scalable.
 > 
-> > +static int tdx_nr_pamt_pages(void)
+> 's/ a//g'
 > 
-> Despite the naming this function does not return the number of TDX
-> PAMT pages. It returns the number of pages needed for each *dynamic*
-> PAMT granule.
+> [...]
+> 
+>> -		/* Unsigned PD offloading is only supported on CDSP and CDSP1 */
+>> +		/* Unsigned PD offloading is only supported on CDSP*/
+> 
+> missing space before comment end
+> 
+> [...]
+> 
+>> index f33d914d8f46..b890f8042e86 100644
+>> --- a/include/uapi/misc/fastrpc.h
+>> +++ b/include/uapi/misc/fastrpc.h
+>> @@ -18,6 +18,13 @@
+>>  #define FASTRPC_IOCTL_MEM_UNMAP		_IOWR('R', 11, struct fastrpc_mem_unmap)
+>>  #define FASTRPC_IOCTL_GET_DSP_INFO	_IOWR('R', 13, struct fastrpc_ioctl_capability)
+>>  
+>> +#define ADSP_DOMAIN_ID (0)
+>> +#define MDSP_DOMAIN_ID (1)
+>> +#define SDSP_DOMAIN_ID (2)
+>> +#define CDSP_DOMAIN_ID (3)
+> 
+Pl move the defines back to driver, see below comments.
 
-tdx_nr_dpamt_pages_per_2m()? This gets ugly.
+> No need to include parentheses, as you're not interacting with any
+> variables
+> 
+>> +#define FASTRPC_DOMAIN_MAX    3
+> 
+> #define FASTRPC_DOMAIN_MAX CDSP_DOMAIN_ID?
+> 
+> What I meant in the previous revision is that you can not move
+> data inside the fastrpc_ioctl_capability struct, but you can
+> definitely add a comment like:
+> 
+> struct fastrpc_ioctl_capability {
+>         __u32 domain; /* Retired in v6.whatever, now ignored by the kernel */
 
-> The naming is not consistent with something used only for dynamic PAMT
-> support. This kind of comment would help, but is not a replacement for
-> good naming:
-> 
-> /*
->  * How many pages are needed for the TDX
->  * dynamic page metadata for a 2M region?
->  */
-> 
-> Oh, and what the heck is with the tdx_supports_dynamic_pamt() check?
-> Isn't it illegal to call these functions without dynamic PAMT in
-> place? Wouldn't the TDH_PHYMEM_PAMT_ADD blow up if you hand it 0's
-> in args.rdx?
+hmm, If the plan is to make this field deprecated then why are we adding
+the defines to UAPI, it does not make sense.
+Also like Konrad suggested
+>         __u32 domain; /* deprecated, ignored by the kernel */
 
-Returning zero for !tdx_supports_dynamic_pamt() helps to avoid branches in
-mmu_topup_memory_caches(). This way we pre-allocate zero pages in PAMPT
-page cache.
 
-> > +static int tdx_nr_pamt_pages(void)
-> > +{
-> > +	if (!tdx_supports_dynamic_pamt(&tdx_sysinfo))
-> > +		return 0;
-> > +
-> > +	return tdx_sysinfo.tdmr.pamt_4k_entry_size * PTRS_PER_PTE / PAGE_SIZE;
-> > +}
-> > +
-> > +static u64 tdh_phymem_pamt_add(unsigned long hpa,
-> > +			       struct list_head *pamt_pages)
-> > +{
-> > +	struct tdx_module_args args = {
-> > +		.rcx = hpa,
-> > +	};
-> > +	struct page *page;
-> > +	u64 *p;
-> > +
-> > +	WARN_ON_ONCE(!IS_ALIGNED(hpa & PAGE_MASK, PMD_SIZE));
-> > +
-> > +	p = &args.rdx;
-> > +	list_for_each_entry(page, pamt_pages, lru) {
-> > +		*p = page_to_phys(page);
-> > +		p++;
-> > +	}
-> 
-> This is sheer voodoo. Voodoo on its own is OK. But uncommented voodoo
-> is not.
-> 
-> Imagine what would happen if, for instance, someone got confused and did:
-> 
-> 	tdx_alloc_pamt_pages(&pamd_pages);
-> 	tdx_alloc_pamt_pages(&pamd_pages);
-> 	tdx_alloc_pamt_pages(&pamd_pages);
+Also please move this change as a new patch incase you plan to add the
+deprecation along with checks in the kernel to make sure no one is
+actually passing data in this member.
 
-I think tdx_alloc_pamt_pages() has to flag non-empty pamt_pages list.
+--srini
 
-> It would *work* because the allocation function would just merrily
-> shove lots of pages on the list. But when it's consumed you'd run off
-> the end of the data structure in this function far, far away from the
-> bug site.
-> 
-> The least you can do here is comment what's going on. Because treating
-> a structure like an array is obtuse at best.
-> 
-> Even better would be to have a check to ensure that the pointer magic
-> doesn't run off the end of the struct:
-> 
-> 	if (p - &args.rcx >= sizeof(args)/sizeof(u64)) {
-> 		WARN_ON_ONCE(1);
-> 		break;
-> 	}
-> 
-> or some other pointer voodoo.
 
-Will do.
+>         __u32 attribute_id;
+>         __u32 capability;   /* dsp capability */
+>         __u32 reserved[4];
+> };
+> 
+> Konrad
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
