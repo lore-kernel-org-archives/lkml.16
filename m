@@ -1,113 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50E13C01;
-	Fri, 27 Jun 2025 02:33:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F0A3C01
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 02:38:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750991610; cv=none; b=ZJlaMzjZjpC7+34c0iFMdR04maOTF+NiShoL0awth/m9FTeXvfdVOo5VfutmRy8n0kxv2yXQVZtKKj0CpnkC2HQtUHZrv4vuaj2htTAfGPxW+qxEaf8lxJf587iAv/rPLTWL0nLRmBUbsLJvjPEQwTpoX1UPpz5pUXF9qEKNFbo=
+	t=1750991921; cv=none; b=pGVhh9bDxYtN2mBvXjlc/+cpycEP4dMEnRaJQ/N684asDXhgUxfSBPwjjttkpB4br0OWOXJlOHztIoyfyvJC9HBKIDloEvwDMIuNyWbyl4GUGZbJYs5qHpS1jdRh7fJiucf9XDGx0Ar63zjx5M7tqO2usFUQOUnQBeFWqI54aNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750991610; c=relaxed/simple;
-	bh=gHGYNPYhShRWmQvxWAaMeepdnoomSGWX9jaXgQSZmJs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MgPEp80b6ReK4Z8yAURjcWPUea+pQNKx5aTxW5VsIIoc3m8TXfZ4HbE2yoBCj/djiEnA7FaHLmYtPQmQ1gM4J5rH5NMMJhgkl6Z3VhGKB3+2UdoOFFGDAZowfYx/4cVAsb5shHt8pJs/z4QWHxm0N0Zl86pWrCdbBg5xng6nhrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aTQURb/B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750991921; c=relaxed/simple;
+	bh=oMsLvDUkqKgim7HwPwGvDv4iUc8AjPZwg/gdL6qiTaY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sG2AiEa+9VIn9WrJ4DmlPHN93U+D3xcYH0ydAgXqMMZzceLUu2++A279Ne5d/yeS/Uv2nPyd9HNCvyHUO+pJPMcDuHdo0l1e3T7IvvaVCmLCzcZXnlkBwsRPride8Ss6QL3nPQyWckI/X/S82rRdRKv1sb9nsnX6/Wb5y0qzfJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CUJZKxi7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aTQURb/B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD0B9C4CEEB;
-	Fri, 27 Jun 2025 02:33:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CUJZKxi7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48B03C4CEEB;
+	Fri, 27 Jun 2025 02:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750991609;
-	bh=gHGYNPYhShRWmQvxWAaMeepdnoomSGWX9jaXgQSZmJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aTQURb/BIhrvPTITPp6EYH0nis5OTl6TL7fC58Q4Dq0e+fb4VcVR64w1EE5iA7jG5
-	 nHSyhUm8QBSIvVyNbtdm3BoEhoXNqs7Da+E9Gnt9OJzm5YCw4K9zFmYs8nLqzsjats
-	 nUJpa01hBVsnG//tBuNvb+Yo3SvLe4SRZKcIx7h8QnBVMDEvqD1sLdVpAFJ8Ub/XEB
-	 Fow3756xPDoVqMCOlzLxKIoMl5vqa+05aCYdvYF3aB9Kip//KMgPtEvRd0kQcjIGhV
-	 Nz4/e1tQ9tMwO5TTwng+dfDZeGYVab/NgZEXqxlaknAFngA7HYMegFIzpaBIxd1BMh
-	 yeCHzf9gpAdlg==
-Date: Fri, 27 Jun 2025 02:33:26 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Michal Gorlas <michal.gorlas@9elements.com>
-Cc: Brian Norris <briannorris@chromium.org>,
-	Julius Werner <jwerner@chromium.org>, linux-kernel@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	Marcello Sylvester Bauer <marcello.bauer@9elements.com>
-Subject: Re: [PATCH v2 2/3] firmware: coreboot: loader for Linux-owned SMI
- handler
-Message-ID: <aF4C9rPD1xWc0MrP@google.com>
-References: <20250616-coreboot-payload-mm-v2-0-5d679b682e13@9elements.com>
- <20250616-coreboot-payload-mm-v2-2-5d679b682e13@9elements.com>
- <aFuQHqSd9kT87tsF@google.com>
- <aFvq49ODR3XfcwZJ@cyber-t14sg4>
+	s=k20201202; t=1750991920;
+	bh=oMsLvDUkqKgim7HwPwGvDv4iUc8AjPZwg/gdL6qiTaY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CUJZKxi7fIu66jBVxtJyVEK0n/7U/XDMJeZ2WWj2XtNqnPmMRbvSO2l3mJgEsBe1q
+	 NaISllSVG1/M381wZ4x9fWeNoZKVj8KdOn8hnC7ZIZ38BCurFZqpTcIVj+37p9k44y
+	 TmLgTuRnhGQoDn+QnElM67JFmoHHWgIPp/7X1rTyzeP1/fg6EXqJG4Iwz2gsSgGnd9
+	 foz5aRdRJ/Gq06Fk4lDFpHGdOnyaady6jqxCRrpKe7aj1KKYls2FDBCGVYF9kmr4oN
+	 Waob/Yng9EsRnWyq6+AnTxtF1OINVuLKyOprzhTOUm73J9lp+8ZB0Y/FUZGPJPTqKj
+	 T73mm4TdFvpFg==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>,
+	Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH 1/2] f2fs: fix to check upper boundary for gc_valid_thresh_ratio
+Date: Fri, 27 Jun 2025 10:38:17 +0800
+Message-ID: <20250627023818.146534-1-chao@kernel.org>
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFvq49ODR3XfcwZJ@cyber-t14sg4>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 25, 2025 at 02:26:11PM +0200, Michal Gorlas wrote:
-> On Wed, Jun 25, 2025 at 05:58:54AM +0000, Tzung-Bi Shih wrote:
-> > > +obj-$(CONFIG_COREBOOT_PAYLOAD_MM)		+= payload-mm.o
-> > > +
-> > > +$(obj)/mm_blob.o: $(obj)/mm_handler/handler.bin
-> > > +
-> > > +$(obj)/mm_handler/handler.bin: FORCE
-> > > +	$(Q)$(MAKE) $(build)=$(obj)/mm_handler $@
-> > 
-> > mm_handler/ isn't visible to this patch. Separate them into the following
-> > patch of series?
-> > 
-> > > diff --git a/drivers/firmware/google/mm_blob.S b/drivers/firmware/google/mm_blob.S
-> > > [...]
-> > > +SYM_DATA_START(mm_blob)
-> > > +	.incbin	"drivers/firmware/google/mm_handler/handler.bin"
-> > > +SYM_DATA_END_LABEL(mm_blob, SYM_L_GLOBAL, mm_blob_end)
-> > > +
-> > > +SYM_DATA_START(mm_relocs)
-> > > +	.incbin	"drivers/firmware/google/mm_handler/handler.relocs"
-> > > +SYM_DATA_END(mm_relocs)
-> > 
-> > mm_handler/ isn't visible to this patch. Separate them into the following
-> > patch of series?
-> > 
-> 
-> Would it make sense then to merge patch 2/3 and 3/3 into one? mm_loader
-> depends on mm_blob, and mm_blob depends on mm_handler/ being visible.
-> I wanted to split these initially as the 3rd patch is already terrible
-> to read because of all the assembly code in mm_handler/. But if it makes
-> sense to have them as one patch, I'll do that.
+This patch adds missing upper boundary check while setting
+gc_valid_thresh_ratio via sysfs.
 
-Yes, please merge them if that makes sense. Otherwise, you could still
-separate them via providing a "nop" mm_handler (e.g. just returns success)
-in the 2nd patch and implement the handler details in the 3rd patch.
+Fixes: e791d00bd06c ("f2fs: add valid block ratio not to do excessive GC for one time GC")
+Cc: Daeho Jeong <daehojeong@google.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ fs/f2fs/sysfs.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> > > +static int trigger_smi(u64 cmd, u64 arg, u64 retry)
-> > > +{
-> > > +	u64 status;
-> > > [...]
-> > > +
-> > > +	if (status == cmd || status == PAYLOAD_MM_RET_FAILURE)
-> > > +		status = PAYLOAD_MM_RET_FAILURE;
-> > > +	else
-> > > +		status = PAYLOAD_MM_RET_SUCCESS;
-> > 
-> > No. Please use -errno in the kernel.
-> > 
-> 
-> In which line here exactly? In the conditional statement I explicitly
-> check for RAX (and hence status) being 1. Not sure if status == EPERM
-> would make any sense here. I guess you meant specifically 
-> status = PAYLOAD_MM_RET_FAILURE? Then what would be appropriate -errno?
-> I think it could be -EREMOTEIO or -EIO, since the APMC SMI which
-> trigger_smi does is an I/O write. But I am not sure if that's the
-> appropriate errno.
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index 2b5c35ce7b8c..d74472d96026 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -635,6 +635,13 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
+ 		return count;
+ 	}
+ 
++	if (!strcmp(a->attr.name, "gc_valid_thresh_ratio")) {
++		if (t > 100)
++			return -EINVAL;
++		*ui = (unsigned int)t;
++		return count;
++	}
++
+ #ifdef CONFIG_F2FS_IOSTAT
+ 	if (!strcmp(a->attr.name, "iostat_enable")) {
+ 		sbi->iostat_enable = !!t;
+-- 
+2.49.0
 
-Let trigger_smi() return 0 on success; or, -errno. Eliminate the 2 macros
-(PAYLOAD_MM_RET_*).
-
--EIO makes sense.
