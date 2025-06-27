@@ -1,129 +1,148 @@
-Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE2F22A4E5;
-	Fri, 27 Jun 2025 08:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000C11DC9B8;
+	Fri, 27 Jun 2025 08:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751012394; cv=none; b=uRru/oqSXoQYLX+nXimq1BwfvHUuum0IfhafOgHv3+vA/V/j4pje4PDK3VyCSGX7/oA3kP4JluFfj1BPmJWbDQ5xUPAxdUN0XLca8jcIytoP3e9crqjuw81OqJYjV0yGaI/OCqM+gOLQgMEgqkDR/Ex1SxrXx7UrUqZ437JHmMY=
+	t=1751012426; cv=none; b=B2YtOM0bw9TjhVzC9gFjBt4nya9ypvcicptT5HZE4M/yYTXfeAAJxRGy3/Z+HK4mDO+gBfheFGeLv537+Y+ctRTbwsklly0UgwywyUVVn5Layv0UsF+g8waqPG/yrqPcLIt5bVzztpF5dplXiNF3UnfX0ATCGw/9TA9mDACJ5bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751012394; c=relaxed/simple;
-	bh=4beAEC+PdvGn8CoJoq0DioHaeqHFZ4gvl3Dqyq4zRWE=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=nG7cY4MuBZBcCfzSUmO0M0yIsUQ/BOVq+Mk3boPTTBnEnxbtsymA2g6x6Ca3AVIt/oTP4nVYEdl3QhQ7xGFoJ/hjgB4KijZi8ZZzawT3d5y3PXA+sRgcT+55ekiDcSZSHt4rIhpIKy/bOZa7giUJ6QlsTCUmotHH+Duv90+kJqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=Ucl8wNjh; arc=none smtp.client-ip=212.122.41.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+	s=arc-20240116; t=1751012426; c=relaxed/simple;
+	bh=Oh4TD3SGQIYcYPmXM4CeF0rb8he7Z8jtXWch8rytSpA=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iHfA+9NmQ4dAP2HGAuUyCBbtPW2hhCT2gyyMasUshXLb1lS9IF4HU7iEAQ/wXe1EM19tPBTy2g6N8ppPwqISD4x3b4ZF34YESZqjXf8acmurUm6WKaDiJqmpZynD8eQgfrbdsZkVO9vaw9WVRoZg2bWP1bnRjmMRqmd5LClWYa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kY8bbLyV; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="Ucl8wNjh"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
-	s=mail; t=1751012388;
-	bh=4beAEC+PdvGn8CoJoq0DioHaeqHFZ4gvl3Dqyq4zRWE=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=Ucl8wNjhmiXld55MdSlJ/V2tB2hQ5iHUjmZeaHIl7zTcVoMJpq+1wyPpvmemnZKNg
-	 iBvv3HcKwEdkMbJC8pFYj5Y51vSErP7Qg6ugLW1VyZunLExxOpVY+DyYYfIgmqPsV9
-	 hqgQJIl/J/7YseEWzCUx/RletOZVOgSLM8MJoCwI=
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kY8bbLyV"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4ef2c2ef3so1674796f8f.2;
+        Fri, 27 Jun 2025 01:20:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751012423; x=1751617223; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=IWBRBcY6kXuI6+1Do3ghha4t7BmkCU/pF8IxkFP+m00=;
+        b=kY8bbLyVM8RZnEyJtoRtoBge3f7aOfqzKBZLBIbLekKKwCBWLjwq3XiVxTCP5hQLwn
+         hehQU3xP3sWMvnMgyXJQxhlEWt8+ErF3vxCb+XAgVS2U+0ArwBbav18ah3ltHe5aeADI
+         reohYZtC4AUpQbU1Cn82G5hZoKrCfVfzvrGXgzHUaGNNrFSKmJy1bDhJ0Yz3LAGflPQS
+         DTJg+us7fFKITMJyfSSaS7FHp3tMAnS7VCfgsHzz84xzpav5NS7h8qP3r8MrWWurxVCo
+         WTuis5DBdd4dllHFkls1VgxGGSo4NsLAVD40wWLGOI6vGYOVnOi6t2TurfWGF/vetuzd
+         p/Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751012423; x=1751617223;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IWBRBcY6kXuI6+1Do3ghha4t7BmkCU/pF8IxkFP+m00=;
+        b=kuHMGvmBzqOULld4keVT6+Uxh7yThI9jxgGaWFD/sEH7ycdxTr87tFrE5+NqJJOb38
+         vmQ/N6X8/A08Vhb7m888QgDQUZeiYJzOHToYp/JdOx6Ihth325lOoLfvxOJNX4/6Zq7J
+         3n5jD+XjkhvcguFaXCgKFGzIeQntlMmeJ6S+Fo4x0YB612Rbh8nIxZkjfZAlXb+OQacd
+         +vMxX9jHIUlH2sjs9XhFCkTzI5LVnx2+YcydaTmCf8y2B0Pal21OYUBl8/AaTc1Sl1uL
+         vAw/y4c0hUh8omXCvmMHpqjK6iOEJwDHS7X84mSiC0q5eBNVt4YNtQuNRt32S6bJE9PW
+         6f6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVH5AIlOtTuHiQee6HzKiIJuzWGFXqQ6u/fgTyhekOibYkID9KSxhw761HefEZEdXzsDaKSMFmS36vp@vger.kernel.org, AJvYcCWQwiCO9OaxBWCeokhx6BzYF0tdkOnvs0vhJKxH/v9t16ngfr7mm26g/izgWn09UkoafhVOW+c5471beM3r@vger.kernel.org, AJvYcCXmO9XZBuqe8YCU+YgajPDRrneM+96y2cg6OAMsAdzSeaF9daepcYH1WLiD1Begtahvi6kreVOuSoqq@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVQAXoMbdzTACXk58ym9N3cYikV7chb8qUyNtWtEnj1gxRMlDV
+	c0cjYl/QlzGkroxxhN6ymP97nidVPoBbbI0vRk9Aj1v4KcnGtBI+zgO/
+X-Gm-Gg: ASbGncvLttxiWV9FTabWm/FY3zrvHmiy0n69t32r0GDBaWApE1rxgYKB45PgW2vbLRH
+	iuSqcDc9tgzv+WAsAq/vnOhyNOCBSUPpnBeDu0TlMJu5vN8hTuqJ9wOTgxS7IsXfz5zQ+nk5lTL
+	2eYVzpqd8lk/wOwxZRjfO+sTgUXpF2UFnLRHzufGdO/IocvDCyR0Ppt2IgzEKjsiAYdLgvV2xWI
+	Naa09gCoES1T4kpRXUl9UiN5FIGTVay9OjpklePfyXgABfI5UENlbrNWoxMAt3JQ0J9kNw66QDK
+	aKz+W5Z+qMZlIaC/NHwjCEkd/q47YAYzSSYZg1Fwxz0Z/1yhr1BofgxCIoWaXTNIS29UjxvRoOl
+	T1p4akl1xcjXz8B6VdxULJqjMrp9U
+X-Google-Smtp-Source: AGHT+IFyrWOPafLVznMIr337ZwVduzg2vwEuHZZVpqaz1/9FfTAHeXsSa1kc2uxwBBxJaIqMooSWoQ==
+X-Received: by 2002:a05:6000:2893:b0:3a9:dc5:df15 with SMTP id ffacd0b85a97d-3a90dc5df54mr2292293f8f.13.1751012423025;
+        Fri, 27 Jun 2025 01:20:23 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7ec6aesm2009045f8f.5.2025.06.27.01.20.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 01:20:22 -0700 (PDT)
+Message-ID: <685e5446.df0a0220.369e9e.8cb1@mx.google.com>
+X-Google-Original-Message-ID: <aF5UQC9s3T1sDuzo@Ansuel-XPS.>
+Date: Fri, 27 Jun 2025 10:20:16 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Felix Fietkau <nbd@nbd.name>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/10] dt-bindings: clock: airoha: Document new
+ property airoha,chip-scu
+References: <20250617130455.32682-1-ansuelsmth@gmail.com>
+ <20250617130455.32682-7-ansuelsmth@gmail.com>
+ <20250627-determined-helpful-rabbit-be2dfe@krzk-bin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [REGRESSION] 9pfs issues on 6.12-rc1
-From: Christian Theune <ct@flyingcircus.io>
-In-Reply-To: <aF49vp50BkfjJOTG@codewreck.org>
-Date: Fri, 27 Jun 2025 10:19:34 +0200
-Cc: David Howells <dhowells@redhat.com>,
- Ryan Lahfa <ryan@lahfa.xyz>,
- Antony Antony <antony.antony@secunet.com>,
- Antony Antony <antony@phenome.org>,
- Christian Brauner <brauner@kernel.org>,
- Eric Van Hensbergen <ericvh@kernel.org>,
- Latchesar Ionkov <lucho@ionkov.net>,
- Christian Schoenebeck <linux_oss@crudebyte.com>,
- Sedat Dilek <sedat.dilek@gmail.com>,
- Maximilian Bosch <maximilian@mbosch.me>,
- regressions@lists.linux.dev,
- v9fs@lists.linux.dev,
- netfs@lists.linux.dev,
- linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F6CB6E77-082D-442A-A3C9-F2D955E1D285@flyingcircus.io>
-References: <ZxFQw4OI9rrc7UYc@Antony2201.local>
- <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me>
- <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info>
- <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me>
- <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com>
- <3327438.1729678025@warthog.procyon.org.uk>
- <ZxlQv5OXjJUbkLah@moon.secunet.de>
- <w5ap2zcsatkx4dmakrkjmaexwh3mnmgc5vhavb2miaj6grrzat@7kzr5vlsrmh5>
- <C7DAFD20-65D2-4B61-A612-A25FCC0C9573@flyingcircus.io>
- <aF49vp50BkfjJOTG@codewreck.org>
-To: Dominique Martinet <asmadeus@codewreck.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627-determined-helpful-rabbit-be2dfe@krzk-bin>
 
-Hi,
+On Fri, Jun 27, 2025 at 09:59:34AM +0200, Krzysztof Kozlowski wrote:
+> On Tue, Jun 17, 2025 at 03:04:49PM +0200, Christian Marangi wrote:
+> > Document new property airoha,chip-scu used on new Airoha SoC to
+> > reference the Chip SCU syscon node used for PCIe configuration.
+> > 
+> > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> > ---
+> >  .../devicetree/bindings/clock/airoha,en7523-scu.yaml      | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/airoha,en7523-scu.yaml b/Documentation/devicetree/bindings/clock/airoha,en7523-scu.yaml
+> > index fe2c5c1baf43..bce77a14c938 100644
+> > --- a/Documentation/devicetree/bindings/clock/airoha,en7523-scu.yaml
+> > +++ b/Documentation/devicetree/bindings/clock/airoha,en7523-scu.yaml
+> > @@ -49,6 +49,11 @@ properties:
+> >      description: ID of the controller reset line
+> >      const: 1
+> >  
+> > +  airoha,chip-scu:
+> 
+> So the scu has phandle to scu... That's not what we discussed. Your
+> changelog also is very vague here, no links to previous discussions does
+> not make reviewing it easier.
+>
 
-> On 27. Jun 2025, at 08:44, Dominique Martinet <asmadeus@codewreck.org> =
-wrote:
->=20
-> Hi all,
->=20
-> sorry for the slow reply; I wasn't in Cc of most of the mails back in
-> October so this is a pain to navigate... Let me recap a bit:
-> - stuff started failing in 6.12-rc1
+Do you think it might be better to add to the changlog link to the
+previous version?
 
-yes, to my knowledge and interpretation of this thread.
+> You clearly said you have SCU node wich clocks and now you claim you
+> have here some different device thus you need phandle. This is what your
+> schema says.
+> 
 
-> - David first posted "9p: Don't revert the I/O iterator after
-> reading"[1], which fixed the bug, but then found a "better" fix as
-> "iov_iter: Fix iov_iter_get_pages*() for folio_queue" [2] which was
-> merged instead (so the first patch was not merged)
->=20
-> But it turns out the second patch is not enough (or causes another
-> issue?), and the reverting it + applying first one works, is that
-> correct?
-> What happens if you keep [2] and just apply [1], does that still bug?
+There is "SCU" and "Chip SCU". This new schema is to keep consistency
+with an7581 as MFD is quite problematic.
 
-I tried that and the test that so far under all the variations reliably
-crashed (or not) is not crashing in this case.
+Also I implemented the current mdio schema with 2 line with compatible
+and reg from suggestion of Rob review.
 
-> (I've tried reading through the thread now and I don't even see what =
-was
-> the "bad" patch in the first place, although I assume it's =
-ee4cdf7ba857
-> ("netfs: Speed up buffered reading") -- was that confirmed?)
+> No.
+> 
+> Where is the DTS with COMPLETE picture?
+> 
+> 
 
-I was late to the party, to, so I=E2=80=99ll defer to the others.
+Here the current DTS [1]. Nothing is stable for this and we can change
+it but I want to stress that the current HW block are VERY CONFUSING and
+SCRAMBELED. So it's really a matter of finding the least bad solution.
 
-> David, as you worked on this at the time it'd be great if you could =
-have
-> another look, I have no idea what made you try [1] in the first place
-> but unless you think 9p is doing something wrong like double-reverting
-> on error or something like that I'd like to understand a bit more what
-> happens... Although given 6.12 is getting used more now it could make
-> sense to just apply [1] first until we understand, and have a proper =
-fix
-> come second -- if someone can confirm we don't need to revert [2].
+In SCU there are:
+- PART fot the clock register
+- 2 MDIO controller register
 
-I guess I confirmed this. However, I=E2=80=99m just barely better than a =
-monkey
-here so I can=E2=80=99t tell whether this makes sense from the internal =
-logic of
-things.
+In chip SCU:
+- Other part of the clock register
+- Thermal driver register
+- PART of the pinctrl register
 
-To repeat, for safety: my test case worked with the situation you =
-described and suggested:
-[1] applied on top of 6.12.34 and *not* having [2] reverted.
+[1] https://github.com/Ansuel/openwrt/blob/openwrt-24.10-airoha-an7581-stable/target/linux/airoha/dts/an7583.dtsi#L361
 
-Christian
-
---=20
-Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
-Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
-Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
-HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
-Christian Zagrodnick
-
+-- 
+	Ansuel
