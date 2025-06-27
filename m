@@ -1,116 +1,123 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88DB917741;
-	Fri, 27 Jun 2025 08:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFE225C81F;
+	Fri, 27 Jun 2025 08:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751013896; cv=none; b=WO5QVqyOuEv2lQ2iK0yaLymAzLz97xL5mKedTEkxnO5N4zK4L/OhikP0fqpdK02zoZmvPM3n3h1t/p/gDtkhqvk6uuy+MvJIT0ICoirDKegn/H0SqXpkrMffo4gm5MOI7nabV4xG09aN7OMT+4ir3Z2TE6WMMQPkuyuXfW2iPD8=
+	t=1751013916; cv=none; b=nGC5AaoKiBI1lv7zdzbxVSjp1Zlf40PdyBnzOryahW2NnggUIA6NfrU1TJWD7CAozKvmVtmQOJZyc2/N5cxShPhoCv2XFVsPokD1dOJzHthrVInwzqT2B6osDUOuXQivLItPLIpFcAIBQ0R6+KPO5T0Y4QrAsLdgi+UFyWTLrP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751013896; c=relaxed/simple;
-	bh=8ESayO/o4fZLFo6BTDMsLxcg6Akk7tZYwJwweA8EbdQ=;
-	h=From:To:Subject:Date:Message-Id; b=AsSMXq5XCFSzDcl4/q9fqv8gH7+eCtqdwQTgfIEpVpdO9dAc50AeqApxC8lLu4pPwNwGUgRNBLSi+uARQhgkjvk4Qr+5rozRfzQn8gqkSMMiMmkvw2wtlJgpIY9Kc+Zr590B4LXQkpEuTmGBvRhdnOuQY9NjV8pjnI0iMIYftq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1009)
-	id 01BAA204159D; Fri, 27 Jun 2025 01:44:54 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 01BAA204159D
-From: Dexuan Cui <decui@microsoft.com>
-To: niuxuewei97@gmail.com,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	sgarzare@redhat.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	linux-hyperv@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] hv_sock: Return the readable bytes in hvs_stream_has_data()
-Date: Fri, 27 Jun 2025 01:44:49 -0700
-Message-Id: <1751013889-4951-1-git-send-email-decui@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1751013916; c=relaxed/simple;
+	bh=8w5TeuyPxlptFjUY6ArFjdkAPl+REWCj4tvTr+seV7o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ON4K1MpgAWNmUCPrfVh4yWo027dExlDLE1rmGMlzSlJDzHPDhAqHkQK1HUHsWnRsgfok4M6Tx7lSZLr/uDz/R4EO0j9YnHWA7FWRL4ACt2PNE3/N70B2RhgxvvZQdVzUimz0yKrxsHfDVTqtQgmOF7ftzcgVKZ+qBL0neMs6QYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=de.ibm.com; spf=pass smtp.mailfrom=de.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PLfnY8P3; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=de.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PLfnY8P3"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QMWGsp031577;
+	Fri, 27 Jun 2025 08:45:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=fN8e7t
+	+1zr8+1WCchHeHmB33VLUmUSL2gWn8n+v4ZwM=; b=PLfnY8P3CTO8+u0sBkpsmN
+	bz06r0RYT3xKFRGX0Oize/oQkRn246TvocnNCyctAHOU7ZVWsCQ/BUJf9l9VaaYD
+	dTtVML8//DwIOabmp3bRwKQm5mLOHLV+1ft9Oc/6i06LshDlJJWRVkFopI51dOYe
+	DhWTrSrnUajK561opa9CdlvQXflKzo7KnpDbrLgO11Fr34oGBy1Iz19X9rz17NDo
+	dhcWGbZpr1KDkfIIbHjeR9RalqQkB+UOxNdrc6G89cr2qBECL4voC59KeKKupDp1
+	CiJUiusCiQIZaF8Yvo5ITBhm+5DkH0WDt2WdDk4lCeU1fA2r08cy+legI/2pKerQ
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dj5uc23h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 08:45:11 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55R81lYO014987;
+	Fri, 27 Jun 2025 08:45:10 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e72u3f5u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 08:45:10 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55R8j6U458786234
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 27 Jun 2025 08:45:07 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DB5822004D;
+	Fri, 27 Jun 2025 08:45:06 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3355E20043;
+	Fri, 27 Jun 2025 08:45:06 +0000 (GMT)
+Received: from [9.111.32.43] (unknown [9.111.32.43])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 27 Jun 2025 08:45:06 +0000 (GMT)
+Message-ID: <faa9ad1e-2497-42da-a825-c25986251005@de.ibm.com>
+Date: Fri, 27 Jun 2025 10:45:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/5] KVM: s390: remove unneeded srcu lock
+To: Nina Schoetterl-Glausch <nsg@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        seiden@linux.ibm.com, nrb@linux.ibm.com, david@redhat.com,
+        hca@linux.ibm.com, agordeev@linux.ibm.com, svens@linux.ibm.com,
+        gor@linux.ibm.com
+References: <20250514163855.124471-1-imbrenda@linux.ibm.com>
+ <20250514163855.124471-3-imbrenda@linux.ibm.com>
+ <8373c4a476e6a8f714a559d0fad8f3fed66089f1.camel@linux.ibm.com>
+ <0b90cd0ad24727c9d7b110f09fd79b2525b4fbe1.camel@linux.ibm.com>
+Content-Language: en-US
+From: Christian Borntraeger <borntraeger@de.ibm.com>
+In-Reply-To: <0b90cd0ad24727c9d7b110f09fd79b2525b4fbe1.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: GlP2qVrpn1eigaspF6t0UFwcJnru7XY_
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDA2NiBTYWx0ZWRfXys4I6R2dq0fP +t0MSeD4Rqlp6ZkQ9JscAnrYVxuspA6H5PzYnCfsUa5SHuT7bSKihMzCvN6f1zNUyrnVfjbZgWJ UPailssoTf3pdwrgkkX7wzpcN3noc5e/4PjIcoUS/FlLAPDyaTDCE+y/WegkqCVz74TYkisim9b
+ XNvB9GM4Z63wtDpwXKyIp8ezOm52n1bBUNKh4uEnGtokVLxopvkpNN1Exe6MyUennVPPP9ZrtSI B/ZasfFIX8at9UITA1Rf8l6+cs+2PEMiiPAgf08ADhnzKVP2SdjOBdpXbRo7xoRQnBzNvfN/hz1 iVr4Ef/MtEC4gufJeOoT/KoGSZrFUEF7hHosXmTFSOdRQPMA9hJ57zRH9mU9KrLI4wWfT4KaUuH
+ 6HFSQnNmKE6R9Mz4zk8i6dwg0lWyGE6zleRDwR0GHGc65VzM5J5Yvxdnzti1oKPI8NupZRUz
+X-Authority-Analysis: v=2.4 cv=MshS63ae c=1 sm=1 tr=0 ts=685e5a17 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=zO_5yEawC278s_0qgMcA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: GlP2qVrpn1eigaspF6t0UFwcJnru7XY_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_03,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 spamscore=0 mlxlogscore=618 impostorscore=0
+ clxscore=1015 phishscore=0 malwarescore=0 suspectscore=0 adultscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506270066
 
-When hv_sock was originally added, __vsock_stream_recvmsg() and
-vsock_stream_has_data() actually only needed to know whether there
-is any readable data or not, so hvs_stream_has_data() was written to
-return 1 or 0 for simplicity.
 
-However, now hvs_stream_has_data() should return the readable bytes
-because vsock_data_ready() -> vsock_stream_has_data() needs to know the
-actual bytes rather than a boolean value of 1 or 0.
 
-The SIOCINQ ioctl support also needs hvs_stream_has_data() to return
-the readable bytes.
+Am 20.05.25 um 16:34 schrieb Nina Schoetterl-Glausch:
+> On Mon, 2025-05-19 at 16:42 +0200, Nina Schoetterl-Glausch wrote:
+>> On Wed, 2025-05-14 at 18:38 +0200, Claudio Imbrenda wrote:
+>>> All paths leading to handle_essa() already hold the kvm->srcu.
+>>> Remove unneeded srcu locking from handle_essa().
+>>>
+>>> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+>>
+>> Reviewed-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+>>
+>> Why are you removing it tho?
+>> It should be very low cost and it makes the code more robust,
+>> since handle_essa itself ensures that it has the lock.
+>> It is also easier to understand which synchronization the function does.
+>> You could of course add a comment stating that the kvm srcu read side needs
+>> to be held. I think this would be good to have if you really don't want the
+>> srcu_read_lock here.
+>> But then you might also want that documented up the call chain.
+> 
+> Actually, can we use __must_hold or have some assert?
 
-Let hvs_stream_has_data() return the readable bytes of the payload in
-the next host-to-guest VMBus hv_sock packet.
-
-Note: there may be multpile incoming hv_sock packets pending in the
-VMBus channel's ringbuffer, but so far there is not a VMBus API that
-allows us to know all the readable bytes in total without reading and
-caching the payload of the multiple packets, so let's just return the
-readable bytes of the next single packet. In the future, we'll either
-add a VMBus API that allows us to know the total readable bytes without
-touching the data in the ringbuffer, or the hv_sock driver needs to
-understand the VMBus packet format and parse the packets directly.
-
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
-
-Hi maintainers, please don't take the patch for now.
-
-Hi Xuewei Niu, please help to re-post this patch with the next version
-of your patchset "vsock: Introduce SIOCINQ ioctl support". See
-https://lore.kernel.org/virtualization/BL1PR21MB3115F69C544B0FAA145FA4EABF7BA@BL1PR21MB3115.namprd21.prod.outlook.com/#t
-https://lore.kernel.org/virtualization/20250626050219.1847316-1-niuxuewei.nxw@antgroup.com/
-Feel free to add your Signed-off-by, if you need.
-
- net/vmw_vsock/hyperv_transport.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-index 31342ab502b4..64f1290a9ae7 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -694,15 +694,25 @@ static ssize_t hvs_stream_enqueue(struct vsock_sock *vsk, struct msghdr *msg,
- static s64 hvs_stream_has_data(struct vsock_sock *vsk)
- {
- 	struct hvsock *hvs = vsk->trans;
-+	bool need_refill = !hvs->recv_desc;
- 	s64 ret;
- 
- 	if (hvs->recv_data_len > 0)
--		return 1;
-+		return hvs->recv_data_len;
- 
- 	switch (hvs_channel_readable_payload(hvs->chan)) {
- 	case 1:
--		ret = 1;
--		break;
-+		if (!need_refill)
-+			return -EIO;
-+
-+		hvs->recv_desc = hv_pkt_iter_first(hvs->chan);
-+		if (!hvs->recv_desc)
-+			return -ENOBUFS;
-+
-+		ret = hvs_update_recv_data(hvs);
-+		if (ret)
-+			return ret;
-+		return hvs->recv_data_len;
- 	case 0:
- 		vsk->peer_shutdown |= SEND_SHUTDOWN;
- 		ret = 0;
--- 
-2.49.0
+Yes, that might be the best way.
 
