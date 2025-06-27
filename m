@@ -1,172 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1F412E7E;
-	Fri, 27 Jun 2025 04:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B241C5D77
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750998219; cv=none; b=OPyfqzSGD0hJkOevIEaVVVxCP0J6pQNFhXROfpYiziNMNN0EUqwTYHdDi7vFHJvY684AdHlxET2shLAmtQYYUJJ/qIx/6z69Ye1Bv2c+9kV1oAcirgvSaZ5+XYA1ajdF7hDzm1YGJSwuaR2xM3s5/7wj/MEGTl3rgjctJXkek/k=
+	t=1750998242; cv=none; b=D6pzP3QSvjf2g1yMYJWJ1r/XrRcuYtDiVcyaM3IOIw6daj9QQwwNEwX/dOVYnLUuiNlZCDzNGPlxGO7ONCbB5Mo78On+7g5N995sZU83GkET8MVNxP2JVRZT7aQQxU4OqO88cePXXulxMKnqzkH1xeYjy7kBRUevuXapGhwFrAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750998219; c=relaxed/simple;
-	bh=jy2eZg+uXPJrBRxAvyi26d2byWjavPhu3O44lmmHi+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=anr6AEmdezUjUHfeUCGC8ZEJJ7EKQgZr2J+ABp5Z9JfoXVLnvVv8PS1nPoJecQZz2mSG5FJeZRaSoUVRbij344nSj4nVGnoBFYgjWZ94uqzw7m/OrHquN5WT2Vkio4vX7AvZTEfxMdsmJ7fCJeWWVFxPQ5wizO+WCegGGOrSla8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S95c5P3Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750998242; c=relaxed/simple;
+	bh=AQk8u+AukaF097t6/dIKRIcXHl5qFFYU0nRqmvxCwTg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZYMAi3e7FHPhIqrbi3vKGVGHDKYUFS8pJUswDYVWqnx1q/6n3pWxAY9xncDhRQ6sC+u0g3IqySLGF0yxPeDB7U9ov2OuQ5m1zbE0YVRPyiEoQr/5OJqnTyBPDte7VZjYb/Ce8ksmBSBRBUVeHI9/o9S1QDLVhk/Fqz2GUt6Z/xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SJuc/hGO; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S95c5P3Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7440C4CEE3;
-	Fri, 27 Jun 2025 04:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750998218;
-	bh=jy2eZg+uXPJrBRxAvyi26d2byWjavPhu3O44lmmHi+0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S95c5P3Y4LCtfalo5wbu1pHmxS4VgQhtSApY6Mb8ZWi/Qk5VBLeN+vULpuCGC38H8
-	 7t3HFlj2oT8HJgY4AamVvtdaNx/sTz1Ox3Oyh3WefjjdYo4v7/eqwGg9ndVrEmR/Bw
-	 qv+ns/DRuezEDrICnebBQMQ6l4xMRdZwadduHXvNYT3wq536rtFPYx3OD2b34+RJ8i
-	 O/b9NyWRw0wcgEEt1sFUBMM+Et0GlDXKhZeCYkp0fObcfqFbeciizh+tAkXgCs80eP
-	 VkAPGETOB+EAWbRAEqHXyPwWAoRwvoIFnAYIT3JE9fgnV9HOSQKu9dTrrY6VC5iEv0
-	 042RaGxznd2lw==
-Date: Fri, 27 Jun 2025 06:23:26 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Vincent Lefevre <vincent@vinc17.net>, 
-	Jilayne Lovejoy <opensource@jilayne.com>, seabass-labrax@gmx.com
-Cc: Carlos O'Donell <carlos@redhat.com>, "Andries E. Brouwer" <aeb@cwi.nl>, 
-	linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
-Subject: Re: man-pages-6.14 released
-Message-ID: <wwtmtg6ar6gfxvezbcendmcuo3zzgferrmqvhvutos7vp3er2q@xljv6kkogidj>
-References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
- <20250509112627.GA924923@if>
- <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
- <20250509121454.GA952723@if>
- <3e82680d-149c-4a67-b838-bc73c0be3e4e@redhat.com>
- <e363mzanav4inu3wtk5pmyzfwlquxr5kwh7ytk5emtayizi7qi@dqxritlnl22g>
- <42dad79f-e0f2-4731-ac14-0189f5d278a0@redhat.com>
- <20250627002011.GA431181@qaa.vinc17.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SJuc/hGO"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553b6a349ccso1919878e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:24:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750998238; x=1751603038; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AQk8u+AukaF097t6/dIKRIcXHl5qFFYU0nRqmvxCwTg=;
+        b=SJuc/hGOJNhUK27NV1GiW2kjlcMttBuZzKSS1HSPU1NUhdKe95SxyaxZz8rx3WU5+S
+         DPHZ9gGs6DoSP8L/n/KTE9MATC/ZlTVX0G7ZJ+/eYGxxVjK97KMETr3Yoqe4S7DfkEXF
+         uqMVRaiE6dq3lTehf6V7BUuhm7Io2p2hu2sQsyZsB6axyIj9c4qlMYCBVcgRGq20akQX
+         3w5wNSb78Hn+vxtPJ7gW9CMVASfYkKd4Q+bKEMOuGR1S0p11izDeTKhb2tVy79VXFJiC
+         8C2IMa0p3edS29zGiPziJDVJUfsmgzdB+yK00S0jADn2RDc7X+a0LAv/vRmIcZ5Mc8O7
+         TVYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750998238; x=1751603038;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AQk8u+AukaF097t6/dIKRIcXHl5qFFYU0nRqmvxCwTg=;
+        b=v8MfOJuIrvh9mSk53vJ2u7fjTtlSDIeIiNobJcCsaL8aXxajG+Ix2JttxD9PVcxzCb
+         KfS/2HAufpidrBzFUUV13l5jRiUvZ8NLVwsTV2Rx6RXaubt4IuxwzYsfjT2w6D+QhHEj
+         ayW1kE2APWNE0HkTk0GJOgG/MFZzwkTSYe0qgS8j3mi/dm/psVwZQ1iRy5oBMGFvVi1B
+         v23mj328Z7pRgHVVnFvuIe0d9nIV12lvIMlaN6b2YomRbJpWStuv9Np+zkakpII06rnw
+         N9vS2ZOwSadsJh+KrbrFrXTTI/c9fR7ckPD7AKZouyzNWPRghQH0h+KrwjnXRJ1Y5Leo
+         UICQ==
+X-Gm-Message-State: AOJu0YxveMO/OL4tY0RBporXsbwl5VCzaXIVqhM1jpqrgqiQfoN86Q8d
+	g85afeFiQrYqW8ju5aot/nliapLgeYcLhPHKgKWcORu/x4P8L2teSD6msnQZsJkRrcCpvmX122O
+	Hx17ot0eqDjvm6GBd6Ln418m0L35bXUGin/SRa2g=
+X-Gm-Gg: ASbGncsPavehTZYREi42KAb30qerzZdedvblaV5BbJH8ffs03GfqiaFGnXWGsr/F2Sl
+	grqT+9yhdNAInc/V0UojlRLfrLFj+vttXVSXfE0bNa4yqWByxJ6POozySxhPw+smcyLObFiodHq
+	rWquC2IqV/pPS55C+g1cs6oYaf2XuCAmKktcIX5EkNC+96MsMZsvf52xO/xGgfizG0neLoFABAW
+	UuOkJbADMI=
+X-Google-Smtp-Source: AGHT+IFbw9uwqwYDro8uwfyG3XZHTePS4XI+ezN8utGdLDHt/1r8QpA2Og7uGGqfEAZ6R6+ZtyZzkp10+9C3zYEbPNs=
+X-Received: by 2002:a05:6512:10cf:b0:553:25b2:fd28 with SMTP id
+ 2adb3069b0e04-5550b8bdfd5mr636360e87.42.1750998238298; Thu, 26 Jun 2025
+ 21:23:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="eeajxjql6wn5j7ej"
-Content-Disposition: inline
-In-Reply-To: <20250627002011.GA431181@qaa.vinc17.org>
-
-
---eeajxjql6wn5j7ej
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20250625182951.587377878@linutronix.de> <20250625183757.995688714@linutronix.de>
+In-Reply-To: <20250625183757.995688714@linutronix.de>
+From: John Stultz <jstultz@google.com>
+Date: Thu, 26 Jun 2025 21:23:46 -0700
+X-Gm-Features: Ac12FXzuHfHFWe7nf24S9nkWLlVYSMh-w9sEZOHfKbzqb2or0rs6hY-DP5_ZNg0
+Message-ID: <CANDhNCpu5+ZVxFg0XVU4KYEWnNCbSruPob9dOeF3btxqJ1N70g@mail.gmail.com>
+Subject: Re: [patch V3 04/11] timekeeping: Provide time setter for auxiliary clocks
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
+	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Miroslav Lichvar <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, 
+	David Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Kurt Kanzenbach <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, 
+	Antoine Tenart <atenart@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Vincent Lefevre <vincent@vinc17.net>, 
-	Jilayne Lovejoy <opensource@jilayne.com>, seabass-labrax@gmx.com
-Cc: Carlos O'Donell <carlos@redhat.com>, "Andries E. Brouwer" <aeb@cwi.nl>, 
-	linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
-Subject: Re: man-pages-6.14 released
-References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
- <20250509112627.GA924923@if>
- <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
- <20250509121454.GA952723@if>
- <3e82680d-149c-4a67-b838-bc73c0be3e4e@redhat.com>
- <e363mzanav4inu3wtk5pmyzfwlquxr5kwh7ytk5emtayizi7qi@dqxritlnl22g>
- <42dad79f-e0f2-4731-ac14-0189f5d278a0@redhat.com>
- <20250627002011.GA431181@qaa.vinc17.org>
-MIME-Version: 1.0
-In-Reply-To: <20250627002011.GA431181@qaa.vinc17.org>
 
-Hi,
+On Wed, Jun 25, 2025 at 11:38=E2=80=AFAM Thomas Gleixner <tglx@linutronix.d=
+e> wrote:
+>
+> Add clock_settime(2) support for auxiliary clocks. The function affects t=
+he
+> AUX offset which is added to the "monotonic" clock readout of these clock=
+s.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
 
-TO +=3D Jilayne, Sebastian
+Minor fretting: I worry a little that the difference here between the
+default timekeeper where set adjusts the REALTIME offset from
+MONOTONIC, and here where it directly adjusts "mono" might confuse
+later readers?
+Would something about that be useful to have in a comment?
 
-On Fri, Jun 27, 2025 at 02:20:11AM +0200, Vincent Lefevre wrote:
-> On 2025-06-26 19:01:24 -0400, Carlos O'Donell wrote:
-> > On 6/26/25 5:04 PM, Alejandro Colomar wrote:
-> > > The thing is, as someone else mentioned, removals happen also implici=
-tly
->=20
-> This was me, there:
->=20
-> https://lore.kernel.org/linux-man/u2ogua4573d2xm2p2oiuna67kydkr3e26pt6lix=
-eidezdw34dg@nvn64na3cptt/T/#me71349fc15520d5c183311dfaf85667903c07d9d
-
-Thanks!
-
-> > > by moving text from one page to another and not copying copyright
-> > > notices, so how much does it matter an intentional rewrite of the
-> > > copyright notices into a different form (but which keeps their
-> > > copyright, as part of the AUTHORS file), compared to an unintentional
-> > > removal of copyright by moving the text (these do actually remove
-> > > copyright, so these are the problematic ones).
-> >=20
-> > Both are legally mistakes.
->=20
-> Mistakes, yes (as long as copyright notices are per-file).
-> But legally? Why?
->=20
-> I've always heard that a copyright notice was optional and only
-> informative (so, in particular, there are no requirements to have
-> per-file copyright notices instead of a single one for the work).
-
-I tend to agree with you.  I'll invoke some SPDX people, which might
-clarify our legal doubts.  I suspect they're lawyers or have contact
-with lawyers.
-
-For context to the SPDX people, we're discussing if the following is
-valid or not:
-
-There were a lot of old copyright notices, each with its own format,
-some more formal, some less...
-
-That was a huge mess, and the copyright notices were not always
-respected: for example, in cases code has been moved from one file to
-another, and the copyright notices weren't carried over.  In other
-cases, some people (including myself) significantly modified some files,
-but forgot to add a copyright notice for themselves.
-
-So, I eventually decided to unify the copyright notices for the entire
-project, so that the copyright notices would look like
-
-	Copyright, the authors of the Linux man-pages project
-
-And then a top-level AUTHORS file would list every author.  This is
-quite more accurate than the previous copyright notices.  However, some
-contributors are concerned that it might be illegal to modify those
-copyright notices without express written permission.
-
-I've sent email to everyone whose copyright notice has been modified,
-and I got around a third of explicit approvals, but the other two thirds
-remained silent (in some cases, the emails probably don't exist, the
-people are dead, or they don't read the email anymore).  Notably, nobody
-has explicitly said no.
-
-What do you think?
-
-
-Have a lovely day!
-Alex
-
---=20
-<https://www.alejandro-colomar.es/>
-
---eeajxjql6wn5j7ej
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIyBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmheHLcACgkQ64mZXMKQ
-wqmfGQ/4ohky6UbzcAPoYFmiSOQAl+mBDRvRMmlkMSqKDYMaz9iNeYdxUj60egGn
-MDNSm4HvTr3WW7DajQ9gNTwTJT+oKCRUFeQVyRZJcygsKyFKHPdjq0ZissHCgiqo
-wlRnzVv1NVJ3ufMXkn+XSXHMHpDaXz0CUtBTWOGThR5k/vt6cuCacm/yVGWD3VcO
-xkaZrynldPw9B/T7NPk5z3GItTgcXR85aIJlBjog9h7uPJ4NBll1a/b7SR4vlcpP
-ANzk+J1AzpLhQ5Tn2SiEfOTxe5ekzHHUzoK7hm72oqREWDnNfEvm06AEhB6gEmsW
-K6PkMPfmIad/AT/M3gGNqfHfnQmMfW9S4hCN5eLVOvoswchgeWN6EQo9KmIwi+SL
-Fx1O5fUjxb+fofSWMj1TqufD8CcAy6ogBYLChk2CSF+iUEMICzOHhaKMXRyxnTpP
-JWPtUpyVDEMF3Go5tRCMZcmvxH0hkFWyhdPQAYPSrkGA2kFD2KYwtaqBG41HyAmU
-LuKGDrZ5SbLbET+Iz8kG+jzyfSO3ii2V0b+QtPAJz6Zl6vPiy+j22eI8gsee5Dhs
-A1mIQoPhO2TiuJKHzTJtFomozDZVeoekq57OLzcB5UYKmKQKxp+iE4qQ1CjtU/ZD
-ecIKjFhuFZ6wkj69FO28neYJky4fQuA1KzppQSlggbjX//0fPg==
-=XJVW
------END PGP SIGNATURE-----
-
---eeajxjql6wn5j7ej--
+Either way,
+Acked-by: John Stultz <jstultz@google.com>
