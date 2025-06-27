@@ -1,87 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873A32E92DE;
-	Fri, 27 Jun 2025 19:57:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF18F212D97;
+	Fri, 27 Jun 2025 19:59:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751054228; cv=none; b=gBrN3QfzVS21qb2kJI9iig2mJXEoyIO3c1cnnrnKp4OZloFtI8La0v9EFTaeKvw6xTcLyl8sTeMeyELjkGgOUPoHjPxaq6aeI/f/n2B63fgbyzOtE7TCQ8/nvBEXd5xHatM/2Qxba76qTB2O4PL9tfH4LVlDjtG9FhTsL1inwTs=
+	t=1751054362; cv=none; b=Ahx7ccoGknFsTO1bTYeDSG2NZGE0EeBFCiQvZJ8iQTFb5t9ZZVqpjaRfD6FUZoaqOXVlyiyCUbgOMTXE9lFMKAFEbmprXAEeG5gHZzvij4kf7vtjWXdlcRYvSzRhRIfLEfiLgGTW9x0pBYou5C6RdpXA8THxraArIuzS7PeSZ3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751054228; c=relaxed/simple;
-	bh=52RIw6noQLlbTckB9hEH3eigLjcCeFsGu7yQ+rD9Iyo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HMvB766ULB2HUpiVmmBfiLWbAnylLPyUbqe+VJIKIrT058h20XObfaXyCK0oK1+B/0SE+rzjaeeaJQNcBhVW7r8BtFt/u76ljqvTh663wg9DuBIjhoo+A6blBok2DqmMIjnlyu8K19x7e0s9ozUB1BfGRyDSgGiDDII6TBOn0u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u0KlnfpA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751054362; c=relaxed/simple;
+	bh=FxCyO5AUIucb+mVJoILJ0mKThytxO5/jSMZ6GOpF2B0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=SMoCFOlsT8QPAOrJpbrs0L9yXluY1CnIUDhAjjQn64Xpir2JL2ebL/gWwbf3xTD/9U+DtLKSqYICtvQuu59qNuxV39oWfMFAMe/csh4oAQKPo4kiEYMZ9V4gzkVKuO61jk2vEr4TPCvIhOIKFTjAFTdKzEfFUiYDtJqtLjEynUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNdX04SC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u0KlnfpA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E505CC4CEEB;
-	Fri, 27 Jun 2025 19:57:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNdX04SC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8075C4CEE3;
+	Fri, 27 Jun 2025 19:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751054228;
-	bh=52RIw6noQLlbTckB9hEH3eigLjcCeFsGu7yQ+rD9Iyo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u0KlnfpAmh157gMJwfnjdUKE6NE6pF+FX2VU4RCzk7grvCcKcW7sOII36K6qGPo/S
-	 GeMy+sFZszKY/DVgSQpXObGGzjpztEnWYP+pMGeFXPCRXZ1nQXCsvAcul1XFIh7dQ0
-	 T+MLpNPAQlcx51BMue+yS+CYIU5Y0NnGvDqNa/ttGTAShxID8BubGW/6+bj8nSg+5c
-	 U0Zn/0H6CGzejK3rgLShmwo5B0Pt20va+HEJTHBR2kg2L6NfuGxMmll60V624BUhcP
-	 uCZsy10dFPpBOzOCfBaDHP5V4h7d1gbNme0EKbwP8OAraSsFjlQ8TM1X7Zwq5TmaKs
-	 qdwLeSwEr9Y4g==
-Date: Fri, 27 Jun 2025 14:57:07 -0500
-From: Rob Herring <robh@kernel.org>
-To: Kyle Hendry <kylehendrydev@gmail.com>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Russell King <linux@armlinux.org.uk>, noltari@gmail.com,
-	jonas.gorski@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH net-next 3/6] dt-bindings: net: dsa: b53: Document
- brcm,gpio-ctrl property
-Message-ID: <20250627195707.GA4075889-robh@kernel.org>
-References: <20250620134132.5195-1-kylehendrydev@gmail.com>
- <20250620134132.5195-4-kylehendrydev@gmail.com>
+	s=k20201202; t=1751054361;
+	bh=FxCyO5AUIucb+mVJoILJ0mKThytxO5/jSMZ6GOpF2B0=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=VNdX04SC6YCuEldsxezVQLGuSgcUiOD+kH+dnNiqydVt5ERJbYrvGjy2FRCfHshmw
+	 Xs2Qv0xDqqtCjqYYFBl9JWzOXnHeOiWVYGT2xqnLLueDU6y/LlqMFGjaopfQCB+Yqm
+	 bqc8TVR+KEs9I1RP0axg2VaDmmbBvMXMALTTn2Ly0wTUGhdNZOCF6Y7IVp8XlDuahF
+	 2by3IM1C8I+njjz3hwUbXurHHMcDJFTtso9rqYgaV3xn0BsUn5QzZiz1YEiBUTnybC
+	 x9DM2hDg7yFRzAyzu6Tk8fVJQsa2RMbKbQO9QPSl5h0jv2o7cG29u0Qtnrjcf0e2v/
+	 NCJKv30GeBb8A==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620134132.5195-4-kylehendrydev@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 27 Jun 2025 21:59:14 +0200
+Message-Id: <DAXKYPCR5D4I.1B44OH77BGRTQ@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
+ <kwilczynski@kernel.org>, <bhelgaas@google.com>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v4 3/5] rust: devres: get rid of Devres' inner Arc
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250626200054.243480-1-dakr@kernel.org>
+ <20250626200054.243480-4-dakr@kernel.org>
+In-Reply-To: <20250626200054.243480-4-dakr@kernel.org>
 
-On Fri, Jun 20, 2025 at 06:41:18AM -0700, Kyle Hendry wrote:
-> Add description for bcm63xx gpio-ctrl phandle
-> 
-> Signed-off-by: Kyle Hendry <kylehendrydev@gmail.com>
+On Thu Jun 26, 2025 at 10:00 PM CEST, Danilo Krummrich wrote:
+> So far Devres uses an inner memory allocation and reference count, i.e.
+> an inner Arc, in order to ensure that the devres callback can't run into
+> a use-after-free in case where the Devres object is dropped while the
+> devres callback runs concurrently.
+>
+> Instead, use a completion in order to avoid a potential UAF: In
+> Devres::drop(), if we detect that we can't remove the devres action
+> anymore, we wait for the completion that is completed from the devres
+> callback. If, in turn, we were able to successfully remove the devres
+> action, we can just go ahead.
+>
+> This, again, allows us to get rid of the internal Arc, and instead let
+> Devres consume an `impl PinInit<T, E>` in order to return an
+> `impl PinInit<Devres<T>, E>`, which enables us to get away with less
+> memory allocations.
+>
+> Additionally, having the resulting explicit synchronization in
+> Devres::drop() prevents potential subtle undesired side effects of the
+> devres callback dropping the final Arc reference asynchronously within
+> the devres callback.
+>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+
+With the invariants section moved:
+
+Reviewed-by: Benno Lossin <lossin@kernel.org>
+
+---
+Cheers,
+Benno
+
 > ---
->  Documentation/devicetree/bindings/net/dsa/brcm,b53.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/brcm,b53.yaml b/Documentation/devicetree/bindings/net/dsa/brcm,b53.yaml
-> index d6c957a33b48..c40ebd1ddffb 100644
-> --- a/Documentation/devicetree/bindings/net/dsa/brcm,b53.yaml
-> +++ b/Documentation/devicetree/bindings/net/dsa/brcm,b53.yaml
-> @@ -66,6 +66,11 @@ properties:
->                - brcm,bcm63268-switch
->            - const: brcm,bcm63xx-switch
->  
-> +  brcm,gpio-ctrl:
-> +    description:
-> +      A phandle to the syscon node of the bcm63xx gpio controller
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-
-GPIO? Why aren't you using the GPIO binding?
-
-> +
->  required:
->    - compatible
->    - reg
-> -- 
-> 2.43.0
-> 
+>  drivers/gpu/nova-core/driver.rs |   7 +-
+>  drivers/gpu/nova-core/gpu.rs    |   6 +-
+>  rust/kernel/devres.rs           | 213 +++++++++++++++++++-------------
+>  rust/kernel/pci.rs              |  20 +--
+>  samples/rust/rust_driver_pci.rs |  19 +--
+>  5 files changed, 154 insertions(+), 111 deletions(-)
