@@ -1,136 +1,167 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mailrelay-egress12.pub.mailoutpod2-cph3.one.com (mailrelay-egress12.pub.mailoutpod2-cph3.one.com [46.30.211.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13015293C59;
-	Fri, 27 Jun 2025 09:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27239293C42
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751016917; cv=none; b=RlW7XLfwSS2MXrzgF1ewcljCIMbvpO4uLBGZF58/Rj4DUyBG9cM0dUUFUMs3ibqtyBSD22y9qSZPZAoCx+R73G99J/J5BhggwLF6MDvToOOCghXQVV6o/t5hjPl9alUCN4o1SBS3o0+IUOH4hTgYfdjQ845MaOjwEN8tfAlr+kY=
+	t=1751016950; cv=none; b=Y4Nt5DtH/TKFkcoVWPTW75REdp2K++SAHUcVFs9lG2xJ0NsshVZ71nsM/DOrzbDNVyu5h4UQNllhitiTt5L7kkSKWT1Op4jdsd6ibVKqak773uDFhezBaVdyJpLjDEITEEII5n3ovp943zPaWjLI9msNT29pmtL6wWLUSE524l8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751016917; c=relaxed/simple;
-	bh=aYHAzugYLIyEa4ubHqJEW6Mwulpb4MIrhv4Bu5CACas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JdSaMyFCwx3of3nY+/Nk7J9Rjgsh+6IwRiQ205B1j6sb2Yn6iDfSIGRgofogF3Ge/C97jq1zr2DxzNyJCkTpc86OAcV6PhAkD55qEATw9/5Q7BVNp+PGDMGpnvuGOYa62pQ8gPL0Cwx/G5Op+qcEyneOdbo4587hN5cQ7A1uH9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hOECxpHa; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751016950; c=relaxed/simple;
+	bh=3IEBar6mLVB3kmmqhzy1fX6Y8cIw4YGiIaa7fdoQdlw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=JFzABOZ8YLS1JqOKP87tqJeSiRhe8kS3sNcH5/FVKCIa9QCNeJyoxrh86v/XGjATJ0zNhzT7oKKC7SG86d6ZNwln482e9tO88Wt2Nd43hpyEGW+C6tOWgRwMBFe20TIVX198dxxEA2oiQP0o/KIXDVn2vo5kS1tncZOssKGQLAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=YaSWyKXm; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=Bzs1mKGt; arc=none smtp.client-ip=46.30.211.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hOECxpHa"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55R7isu9010455;
-	Fri, 27 Jun 2025 09:34:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=G0u0oILqVCwN5YUicdQ8F58a/l2fSa
-	z5vBpoIL/fgcc=; b=hOECxpHab0pd1lQLbO94DDi+tVmhTcPM0YC/YmWzrIE5qW
-	CHsbryJViYWNX4TXY+EKOELPrfu3UWGZVfzEKXvef2vR2C9lvc/h5KhgwmvlIZTn
-	yeiSKz/etytIFC9UsRghFBSLtkCsoC/Ahy9MKy4XcMuMBSSXAYD7f9Tvr9QYs3pG
-	3xU7d3oS5H0dbNHyiCJ2zYA5E5BATpYlmQu8Tq+kBGzdNfWQti0iVNjbmTgcbg/O
-	lC63M487nFeAyGO76yj/nq1Ev0dc65wZgnZPBenCk7niia/rt2WBAb68IhWeaIvv
-	vBD/9bnLJe6O24COKHNZqYFaIvvx+jUghSo9X21A==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47gspht8gy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 09:34:49 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55R9UOCd020374;
-	Fri, 27 Jun 2025 09:34:49 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47gspht8gt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 09:34:48 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55R96m62003994;
-	Fri, 27 Jun 2025 09:34:47 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e99m385d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 09:34:47 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55R9YiWn59441650
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 27 Jun 2025 09:34:44 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2440920063;
-	Fri, 27 Jun 2025 09:34:44 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 428E920067;
-	Fri, 27 Jun 2025 09:34:43 +0000 (GMT)
-Received: from osiris (unknown [9.87.133.27])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 27 Jun 2025 09:34:43 +0000 (GMT)
-Date: Fri, 27 Jun 2025 11:34:41 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-        Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org,
-        Song Liu <song@kernel.org>, laokz <laokz@foxmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Marcos Paulo de Souza <mpdesouza@suse.com>,
-        Weinan Liu <wnliu@google.com>, Fazla Mehrab <a.mehrab@bytedance.com>,
-        Chen Zhongjin <chenzhongjin@huawei.com>,
-        Puranjay Mohan <puranjay@kernel.org>,
-        Dylan Hatch <dylanbhatch@google.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: Re: [PATCH v3 01/64] s390/vmlinux.lds.S: Prevent thunk functions
- from getting placed with normal text
-Message-ID: <20250627093441.13723Cc6-hca@linux.ibm.com>
-References: <cover.1750980516.git.jpoimboe@kernel.org>
- <aa748165bf9888b0a7bd36dc505dfe8b237f9c62.1750980517.git.jpoimboe@kernel.org>
+	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="YaSWyKXm";
+	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="Bzs1mKGt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751016940; x=1751621740;
+	d=konsulko.se; s=rsa1;
+	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
+	 subject:cc:to:from:from;
+	bh=zkwJ4i4dwDao2rWYOJehq905CyIjzLTLMDu2gHmT6vw=;
+	b=YaSWyKXmot4ncdE1drt7pMeviwBdIcXqNoGY6NnytCBGbPkJX1xNXgA0MIBpC6okkiNTFDfQ0V8EJ
+	 CuekJCuGEPlainh8aj2VEeFrFMXUsjzgjerhC8zO6zOECq5RCUWVr29wSPRU/iHuePLowbM191wn5w
+	 B1k6uJQ32mgdd/pUG/mN5UUOWPBIOtfMAqN/AeZorsB3PTj7WKq6jn41HTR3vU701QwHMLl1Fx+unW
+	 nFezrdhwhJY96HA99BRw1dwu6VQSPwKIg/rgWBCY56L+sCo1YOh7nBeARmNumwVGe+gGh1LykHx2ls
+	 CDncwNGw2R5KujtjU61XzUudSB5tSaw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751016940; x=1751621740;
+	d=konsulko.se; s=ed1;
+	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
+	 subject:cc:to:from:from;
+	bh=zkwJ4i4dwDao2rWYOJehq905CyIjzLTLMDu2gHmT6vw=;
+	b=Bzs1mKGtY2ZkvDPgn4Jsuquqs4SwAtKFF7QBvPxrxar+jfnNHX/5QUBRHAib5ALJZLOWEY3N11pxU
+	 Rle9gJJAQ==
+X-HalOne-ID: 1567cdf5-533a-11f0-83c2-e90f2b8e16ca
+Received: from slottsdator.home (host-90-238-19-233.mobileonline.telia.com [90.238.19.233])
+	by mailrelay2.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
+	id 1567cdf5-533a-11f0-83c2-e90f2b8e16ca;
+	Fri, 27 Jun 2025 09:35:39 +0000 (UTC)
+From: Vitaly Wool <vitaly.wool@konsulko.se>
+To: linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	rust-for-linux@vger.kernel.org,
+	Vitaly Wool <vitaly.wool@konsulko.se>
+Subject: [PATCH v5 1/4] mm/vmalloc: allow to set node and align in vrealloc
+Date: Fri, 27 Jun 2025 11:35:29 +0200
+Message-Id: <20250627093529.389311-1-vitaly.wool@konsulko.se>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250627092901.356909-1-vitaly.wool@konsulko.se>
+References: <20250627092901.356909-1-vitaly.wool@konsulko.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aa748165bf9888b0a7bd36dc505dfe8b237f9c62.1750980517.git.jpoimboe@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: fe3LNM31hmI-ErQ5KLeZVwQYtEaINleh
-X-Proofpoint-ORIG-GUID: c13wTOi2JO6eUTq-HbyluyI3E9FBmqDF
-X-Authority-Analysis: v=2.4 cv=Hul2G1TS c=1 sm=1 tr=0 ts=685e65b9 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=awXcams9sirMRC52x60A:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDA3NSBTYWx0ZWRfXxllruMVAWW6w KEi2biYzA3K0u+UNfuWl70ba+fUPbMx9FLt9ZqIZlFthnje/ctkWyYBwOSncozIOXRTG3hI++U9 O4SWtnRPC6BtPXRhZF77NAWTfAio/8xSE3ZweThFC252NuTUDz/xQT1lPI7D1Ifjyx6NfXUwMI7
- 5qf2pS42mKljBPp9/ccGMShOd6I5tmd2vwxQtIlojjfDybxnLKO2AZ7gPilVpoD5PHXi77q7DYY asN7Ik3Xq6tfAkcRvy5c2s8iY8ZbBHaftmp91qgK+vAn9Pxs0FKxejKBYCQteC4T+/HBLKgDbek NDAsWP4mELniCi395n0BOwAgkBTIQ3TJBM39e5eq/NFuonbz87fppct1cRnCPulnAzLZy2rSfpn
- KgiEOvB3wqufv+sHxVS16a9pqpKHULVmA8/0qflzWy0vCFdivnOWZe9UtfURUe8tNqHlb9Ek
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_03,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=530 bulkscore=0 mlxscore=0 adultscore=0 spamscore=0
- impostorscore=0 clxscore=1011 priorityscore=1501 lowpriorityscore=0
- suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506270075
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 26, 2025 at 04:54:48PM -0700, Josh Poimboeuf wrote:
-> The s390 indirect thunks are placed in the .text.__s390_indirect_jump_*
-> sections.
-> 
-> Certain config options which enable -ffunction-sections have a custom
-> version of the TEXT_TEXT macro:
-> 
->   .text.[0-9a-zA-Z_]*
-> 
-> That unintentionally matches the thunk sections, causing them to get
-> grouped with normal text rather than being handled by their intended
-> rule later in the script:
-> 
->   *(.text.*_indirect_*)
-> 
-> Fix that by adding another period to the thunk section names, following
-> the kernel's general convention for distinguishing code-generated text
-> sections from compiler-generated ones.
-> 
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> ---
->  arch/s390/include/asm/nospec-insn.h | 2 +-
->  arch/s390/kernel/vmlinux.lds.S      | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+Reimplement vrealloc() to be able to set node and alignment should
+a user need to do so. Rename the function to vrealloc_node() to
+better match what it actually does now and introduce a macro for
+vrealloc() for backward compatibility.
 
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
+With that change we also provide the ability for the Rust part of
+the kernel to set node and aligmnent in its allocations.
+
+Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+Reviewed-by: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+---
+ include/linux/vmalloc.h |  8 +++++---
+ mm/nommu.c              |  3 ++-
+ mm/vmalloc.c            | 16 +++++++++++++---
+ 3 files changed, 20 insertions(+), 7 deletions(-)
+
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index fdc9aeb74a44..7d5251287687 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -197,9 +197,11 @@ extern void *__vcalloc_noprof(size_t n, size_t size, gfp_t flags) __alloc_size(1
+ extern void *vcalloc_noprof(size_t n, size_t size) __alloc_size(1, 2);
+ #define vcalloc(...)		alloc_hooks(vcalloc_noprof(__VA_ARGS__))
+ 
+-void * __must_check vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+-		__realloc_size(2);
+-#define vrealloc(...)		alloc_hooks(vrealloc_noprof(__VA_ARGS__))
++void *__must_check vrealloc_node_noprof(const void *p, size_t size,
++		unsigned long align, gfp_t flags, int nid) __realloc_size(2);
++#define vrealloc_noprof(p, s, f)	vrealloc_node_noprof(p, s, 1, f, NUMA_NO_NODE)
++#define vrealloc_node(...)		alloc_hooks(vrealloc_node_noprof(__VA_ARGS__))
++#define vrealloc(...)			alloc_hooks(vrealloc_noprof(__VA_ARGS__))
+ 
+ extern void vfree(const void *addr);
+ extern void vfree_atomic(const void *addr);
+diff --git a/mm/nommu.c b/mm/nommu.c
+index 87e1acab0d64..6cec05c3312c 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -119,7 +119,8 @@ void *__vmalloc_noprof(unsigned long size, gfp_t gfp_mask)
+ }
+ EXPORT_SYMBOL(__vmalloc_noprof);
+ 
+-void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
++void *vrealloc_node_noprof(const void *p, size_t size, unsigned long align,
++			   gfp_t flags, int nid)
+ {
+ 	return krealloc_noprof(p, size, (flags | __GFP_COMP) & ~__GFP_HIGHMEM);
+ }
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 6dbcdceecae1..412bf5b8d3ff 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -4089,10 +4089,12 @@ void *vzalloc_node_noprof(unsigned long size, int node)
+ EXPORT_SYMBOL(vzalloc_node_noprof);
+ 
+ /**
+- * vrealloc - reallocate virtually contiguous memory; contents remain unchanged
++ * vrealloc_node - reallocate virtually contiguous memory; contents remain unchanged
+  * @p: object to reallocate memory for
+  * @size: the size to reallocate
++ * @align: requested alignment
+  * @flags: the flags for the page level allocator
++ * @nid: node id
+  *
+  * If @p is %NULL, vrealloc() behaves exactly like vmalloc(). If @size is 0 and
+  * @p is not a %NULL pointer, the object pointed to is freed.
+@@ -4111,7 +4113,7 @@ EXPORT_SYMBOL(vzalloc_node_noprof);
+  * Return: pointer to the allocated memory; %NULL if @size is zero or in case of
+  *         failure
+  */
+-void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
++void *vrealloc_node_noprof(const void *p, size_t size, unsigned long align, gfp_t flags, int nid)
+ {
+ 	struct vm_struct *vm = NULL;
+ 	size_t alloced_size = 0;
+@@ -4135,6 +4137,13 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+ 		if (WARN(alloced_size < old_size,
+ 			 "vrealloc() has mismatched area vs requested sizes (%p)\n", p))
+ 			return NULL;
++		if (WARN(nid != NUMA_NO_NODE && nid != page_to_nid(vmalloc_to_page(p)),
++			 "vrealloc() has mismatched nids\n"))
++			return NULL;
++		if (WARN((uintptr_t)p & (align - 1),
++			 "will not reallocate with a bigger alignment (0x%lx)\n",
++			 align))
++			return NULL;
+ 	}
+ 
+ 	/*
+@@ -4166,7 +4175,8 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+ 	}
+ 
+ 	/* TODO: Grow the vm_area, i.e. allocate and map additional pages. */
+-	n = __vmalloc_noprof(size, flags);
++	n = __vmalloc_node_noprof(size, align, flags, nid, __builtin_return_address(0));
++
+ 	if (!n)
+ 		return NULL;
+ 
+-- 
+2.39.2
+
