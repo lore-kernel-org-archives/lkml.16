@@ -1,152 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B60293B7D
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E586293C48;
+	Fri, 27 Jun 2025 09:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751015064; cv=none; b=iNBQrl7l0R+LZQr9sx8SARJF4V6fKGx2MSioWu1Ie86ZdSFmaH3l2VUPD92PUw+AvHky51tOK0GFVpzfADZXIwb/8ggPARXSHPeK/3fQdashCj+gZ1nfHNRAR8tDQ8KmFAONDKvtKkFPTzO8jSjvmLkJvqHMsiySIjCa2dL6v7I=
+	t=1751015069; cv=none; b=bkbJb3V4wbvE7lpLAz+TaxvOH9tiUC7LDEA4zZ9tJRpJumqF2w7agpXoW8FkRPv28zNDMtIpHKEdpKMReF43Ccr00lJaT4v6nXN9msCTLgTH0LWUVEZOmnhCNTsyE4m2hJHi34Vi4R0lX2GDIudq1hFRXNcsIqweNkVUS8QTPqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751015064; c=relaxed/simple;
-	bh=6mBWTKa6P/+vCpBZT8W6CcoZks7wq0ID1jI5oyoVOgE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=c33LR6YlXC35dM79XGJ8nFqgHcmUXjrFfR2yQK29nWIatmOMD4FLynbOu/14aDMq7oy4QJ/oXvnbmxUr5H5Y37/Ysx2LSSv7XECLMbcRVWgFQbOD6SRQ5kPcGwuN2jJb4fU+we1GisN41o1C7YNxNN9UIyjtm6sdQJXmcl4uvKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TO+bQ5Sf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TO+bQ5Sf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751015061;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3KmsmsR1zkdWGHUqUCVWxvNYYetoO/L55l7eas6vaQU=;
-	b=TO+bQ5Sf4QwOq1GGEtK343EvC7EtuHf3htGAbybTbPUhSEMHxfsBhzLhvvUfE9bDKnVYQk
-	tm9MtlOx+XLq1ZY791T531AEhoEzbnMT0fEo7DVeiEY8fyYZhb6sdNm9l0Z6Plcm/4NHrS
-	kw0YwtCzSJATxxu87Q2SrVBycKaZ3ko=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-228-R2gfavTaPKiQcpKrN1f0TQ-1; Fri, 27 Jun 2025 05:04:20 -0400
-X-MC-Unique: R2gfavTaPKiQcpKrN1f0TQ-1
-X-Mimecast-MFC-AGG-ID: R2gfavTaPKiQcpKrN1f0TQ_1751015059
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4e713e05bso1046974f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 02:04:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751015059; x=1751619859;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3KmsmsR1zkdWGHUqUCVWxvNYYetoO/L55l7eas6vaQU=;
-        b=O7YO12hoPI4hR0G/Q0oth9u9W4/PV6eULabwmKIyLuKt5G0yjd8C2gFjFig/YSmEyA
-         T8j9DzeRLP4Z3C2l2vg0jkBWIhmYZAGpt2zF8NJNBQWDw5hBcPRSA7UALHTVX1Q2EwEC
-         LNao/pWGiYFIdWVHpzUbUeLmc3gFLeY5ufXjJfRqYkW/dDyccJIfBvS7f70E3um+Jsff
-         zMeAA3uVwEfMcNDmuY3oetOfEv560gLxMvXAFcqJnr0OJ7SkD2OK0RtYqVd0VNBHL31Z
-         w8/CUcoY4K1D0Ic3UA0unBZq2ViC1p4RTQeqScXxzDB0QR/xgMl0sasxAAJGpZS1ZwzY
-         j1xA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5t6/iOvvDER2Z9yV4E4rLdk3A5kNWuN+X297wyhLk3+MWegSTygZxCDMjD4ATgA5r2gGUU2kjgSHrnWI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxcfk0tz9xAakOrMhK9EjErIylXtdWLVuhA8zhz6e+Kjnxj0Fm0
-	jIkbRPuJkKAU1xKb496R9OMzDtUZWfcdHGdiD264dxm0/q5d4dXLtCkVIJdN6ZVrLuPIvblFk9o
-	mcRPDDr3iznfZ18N8L7b2l6okHDYqHxWBg5igk2lYzzbkHCOY0jgRmmehz/4PjEm2VA==
-X-Gm-Gg: ASbGnctlm2n2X8YqPvOSmqHNvMQwMdIkztKG5KadCLIA7jfE/D3OfA0Cl8eF0icaiVM
-	0Zn3hnemBhMaIGmz4M6xY7907Jo1kSQiQa0C/pah/GAbuL0Ks5oGR7WczNjHAgyMaNcVFKSUhv6
-	uYvjRlWr1xA3Hu6/KZOlf3Sc5wFZmfjSgug1aJHadym2a9F6HlsHokmnIXC5qu2VKlLqCXNfC0M
-	n8gQ8vzOmSYyn33MQd7t0469jDu+gNt1yXZ/JfCdSXOMRvhYzDRbhkrr9WIx6Xk6+7rMEzQyZQs
-	Ohch8A5gYR+kqlN8k2PINu1EMzAZ3fjmCiQ5pAuFbo7Ei2A5rYivhoPsmljco8524jTYDtp1bIu
-	VWvzB
-X-Received: by 2002:a05:6000:23c3:b0:3a4:c8c1:aed8 with SMTP id ffacd0b85a97d-3a8ff9ea18bmr1806169f8f.39.1751015058653;
-        Fri, 27 Jun 2025 02:04:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFvtbVNhtoT88g8GCP3xDLM03Xs+KFxLUDU0up7wRpfFhdOnPdXOQT+WY57/deJVibdF9AU1g==
-X-Received: by 2002:a05:6000:23c3:b0:3a4:c8c1:aed8 with SMTP id ffacd0b85a97d-3a8ff9ea18bmr1806130f8f.39.1751015058205;
-        Fri, 27 Jun 2025 02:04:18 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fb20esm2169081f8f.36.2025.06.27.02.04.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 02:04:17 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Maxime Ripard <mripard@kernel.org>, Neil Armstrong
- <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Luca Ceresoli <luca.ceresoli@bootlin.com>, Anusha
- Srivatsa <asrivats@redhat.com>, Francesco Dolcini <francesco@dolcini.it>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Maxime
- Ripard <mripard@kernel.org>
-Subject: Re: [PATCH v2 1/5] drm/mipi-dsi: Add dev_is_mipi_dsi function
-In-Reply-To: <20250626-drm-panel-simple-fixes-v2-1-5afcaa608bdc@kernel.org>
-References: <20250626-drm-panel-simple-fixes-v2-0-5afcaa608bdc@kernel.org>
- <20250626-drm-panel-simple-fixes-v2-1-5afcaa608bdc@kernel.org>
-Date: Fri, 27 Jun 2025 11:04:16 +0200
-Message-ID: <87cyapd08f.fsf@minerva.mail-host-address-is-not-set>
+	s=arc-20240116; t=1751015069; c=relaxed/simple;
+	bh=WK6qQPO9YtNDQ0NAVtBK294K4n0DYb70ujFjHoVezxo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UbR/J9kUcr9s9gRLw2+N7Q21tyey5mdZur2MevJDKQvvDBCTAvt3pNQeshLmAbfNU7g3sz85RbE3t7xvmAzcNk8XGelFjXC77651N8GHG0+O8kWgeiJCo6aKDLl6Cei55cV6tTxxyGN+FToDQ7KPMZBQeIIpYRxJAQiQM//ZIsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FDAA1A00;
+	Fri, 27 Jun 2025 02:04:09 -0700 (PDT)
+Received: from [10.1.196.46] (e134344.arm.com [10.1.196.46])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F7633F762;
+	Fri, 27 Jun 2025 02:04:23 -0700 (PDT)
+Message-ID: <603eb4c7-5570-438c-b747-cdcc67b09ea6@arm.com>
+Date: Fri, 27 Jun 2025 10:04:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 02/22] arm64: Generate sign macro for sysreg Enums
+To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>,
+ Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20250626200459.1153955-1-coltonlewis@google.com>
+ <20250626200459.1153955-3-coltonlewis@google.com>
+Content-Language: en-US
+From: Ben Horgan <ben.horgan@arm.com>
+In-Reply-To: <20250626200459.1153955-3-coltonlewis@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Maxime Ripard <mripard@kernel.org> writes:
+Hi Colton,
 
-Hello Maxime,
+On 6/26/25 21:04, Colton Lewis wrote:
+> There's no reason Enums shouldn't be equivalent to UnsignedEnums and
+> explicitly specify they are unsigned. This will avoid the annoyance I
+> had with HPMN0.
+An Enum can be annotated with the field's sign by updating it to 
+UnsignedEnum or SignedEnum. This is explained in [1].
 
-> This will be especially useful for generic panels (like panel-simple)
-> which can take different code path depending on if they are MIPI-DSI
-> devices or platform devices.
->
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+With this change ID_AA64PFR1_EL1.MTE_frac would be marked as unsigned 
+when it should really be considered signed.
+
+Enum	43:40	MTE_frac
+	0b0000	ASYNC
+	0b1111	NI
+EndEnum
+
+
+> 
+> Signed-off-by: Colton Lewis <coltonlewis@google.com>
 > ---
->  drivers/gpu/drm/drm_mipi_dsi.c | 3 ++-
->  include/drm/drm_mipi_dsi.h     | 3 +++
->  2 files changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
-> index e5184a0c24651756ee0b1eb27d94083d63eb35a7..21fd647f8ce1a6a862e2f8fb5320e701f26f614f 100644
-> --- a/drivers/gpu/drm/drm_mipi_dsi.c
-> +++ b/drivers/gpu/drm/drm_mipi_dsi.c
-> @@ -89,16 +89,17 @@ static const struct dev_pm_ops mipi_dsi_device_pm_ops = {
->  	.thaw = pm_generic_thaw,
->  	.poweroff = pm_generic_poweroff,
->  	.restore = pm_generic_restore,
->  };
->  
-> -static const struct bus_type mipi_dsi_bus_type = {
-> +const struct bus_type mipi_dsi_bus_type = {
->  	.name = "mipi-dsi",
->  	.match = mipi_dsi_device_match,
->  	.uevent = mipi_dsi_uevent,
->  	.pm = &mipi_dsi_device_pm_ops,
->  };
-> +EXPORT_SYMBOL_GPL(mipi_dsi_bus_type);
->  
->  /**
->   * of_find_mipi_dsi_device_by_node() - find the MIPI DSI device matching a
->   *    device tree node
->   * @np: device tree node
-> diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
-> index b37860f4a895c25ef8ba1c5b3f44827ef53aa100..6d2c08e8110151a97620389197f1ef79c058329d 100644
-> --- a/include/drm/drm_mipi_dsi.h
-> +++ b/include/drm/drm_mipi_dsi.h
-> @@ -221,10 +221,13 @@ struct mipi_dsi_multi_context {
->  
->  #define MIPI_DSI_MODULE_PREFIX "mipi-dsi:"
->  
->  #define to_mipi_dsi_device(__dev)	container_of_const(__dev, struct mipi_dsi_device, dev)
->  
-> +extern const struct bus_type mipi_dsi_bus_type;
-> +#define dev_is_mipi_dsi(dev)	((dev)->bus == &mipi_dsi_bus_type)
-> +
+>   arch/arm64/tools/gen-sysreg.awk | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/tools/gen-sysreg.awk b/arch/arm64/tools/gen-sysreg.awk
+> index f2a1732cb1f6..fa21a632d9b7 100755
+> --- a/arch/arm64/tools/gen-sysreg.awk
+> +++ b/arch/arm64/tools/gen-sysreg.awk
+> @@ -308,6 +308,7 @@ $1 == "Enum" && (block_current() == "Sysreg" || block_current() == "SysregFields
+>   	parse_bitdef(reg, field, $2)
+>   
+>   	define_field(reg, field, msb, lsb)
+> +	define_field_sign(reg, field, "false")
+>   
+>   	next
+>   }
 
-Usually I prefer to have static inline functions instead of macros to have
-type checking. I see that this header has a mix of both, so I don't have a
-strong opinion on what to use in this case.
+Thanks,
 
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+Ben
 
--- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+[1] 
+https://lore.kernel.org/all/20221207-arm64-sysreg-helpers-v4-1-25b6b3fb9d18@kernel.org/
 
