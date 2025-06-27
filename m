@@ -1,92 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF18F212D97;
-	Fri, 27 Jun 2025 19:59:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC7F212D97;
+	Fri, 27 Jun 2025 19:59:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751054362; cv=none; b=Ahx7ccoGknFsTO1bTYeDSG2NZGE0EeBFCiQvZJ8iQTFb5t9ZZVqpjaRfD6FUZoaqOXVlyiyCUbgOMTXE9lFMKAFEbmprXAEeG5gHZzvij4kf7vtjWXdlcRYvSzRhRIfLEfiLgGTW9x0pBYou5C6RdpXA8THxraArIuzS7PeSZ3E=
+	t=1751054394; cv=none; b=mSK/STpPSdxMOr/FPXM5owd/P2sg+SFiIbZALslxsK2x2TU4kxyrzOTeuXb5O+jqr+PNYpAYodyQPDCEcH/6c/QWc5sl/YYKVgCOAWcnrZk1OcjpuU8+YJLr2125rDD3+LL3OmUvSb00cTZAkVfG+wwQN/mzMxPvucL4qjQfB9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751054362; c=relaxed/simple;
-	bh=FxCyO5AUIucb+mVJoILJ0mKThytxO5/jSMZ6GOpF2B0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=SMoCFOlsT8QPAOrJpbrs0L9yXluY1CnIUDhAjjQn64Xpir2JL2ebL/gWwbf3xTD/9U+DtLKSqYICtvQuu59qNuxV39oWfMFAMe/csh4oAQKPo4kiEYMZ9V4gzkVKuO61jk2vEr4TPCvIhOIKFTjAFTdKzEfFUiYDtJqtLjEynUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNdX04SC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751054394; c=relaxed/simple;
+	bh=4mRsa86Oo0RFDcooBdEjv4m67WRLaTXVEDibhrLW7SY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F/e1eSWbacYi9qgJWYusqOXIyuhawaXAnLPJ3WZybY7ll28Hb8ZRlp4m+NP6bQ/jH+jPfs3cWk9g14hVyzQPZG38rkivsLVoiZ+U5u1zVmqKU8l2uK4oASsDHvZd6Q31DdrClDFK6Ar662UUAh8Ac/Az5V7DxV4a6auTCUBqzcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jl75e3BH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNdX04SC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8075C4CEE3;
-	Fri, 27 Jun 2025 19:59:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jl75e3BH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A629EC4CEE3;
+	Fri, 27 Jun 2025 19:59:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751054361;
-	bh=FxCyO5AUIucb+mVJoILJ0mKThytxO5/jSMZ6GOpF2B0=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=VNdX04SC6YCuEldsxezVQLGuSgcUiOD+kH+dnNiqydVt5ERJbYrvGjy2FRCfHshmw
-	 Xs2Qv0xDqqtCjqYYFBl9JWzOXnHeOiWVYGT2xqnLLueDU6y/LlqMFGjaopfQCB+Yqm
-	 bqc8TVR+KEs9I1RP0axg2VaDmmbBvMXMALTTn2Ly0wTUGhdNZOCF6Y7IVp8XlDuahF
-	 2by3IM1C8I+njjz3hwUbXurHHMcDJFTtso9rqYgaV3xn0BsUn5QzZiz1YEiBUTnybC
-	 x9DM2hDg7yFRzAyzu6Tk8fVJQsa2RMbKbQO9QPSl5h0jv2o7cG29u0Qtnrjcf0e2v/
-	 NCJKv30GeBb8A==
+	s=k20201202; t=1751054393;
+	bh=4mRsa86Oo0RFDcooBdEjv4m67WRLaTXVEDibhrLW7SY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jl75e3BHTr61OF4y9Ruh5ZrjXbWeATtjFLcSR4SLt8Y7t+ldMj3iilKEXNTROseP8
+	 ugBzgD8m/W+9q1q/+7hHmEiV4mwrPx6vyQfXxuxjMMAJtUdhN63fzVt6KiBr+cixed
+	 95ljvUeD31tVeHd9TBFjpPnlda4XFeel3/f8THBjIFion7z6/iQpVqAy+NfCzHWMOE
+	 jwf/vNK9/PPg0Peon5qT+yPaCwTRowUFGMWp+/cFRdb2Nel1A+UlM3R8vv3H2nx0tC
+	 EraGgWC2idAENTo3Cf6NN3DY2jRcpJsz+Ri6C2Xu8RHkscCP2Ou2ItrUSSsIkAXiBz
+	 DucY2roYat2dQ==
+Date: Fri, 27 Jun 2025 14:59:52 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
+	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-spi@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>
+Subject: Re: [PATCH 6/9] dt-bindings: trigger-source: add ADI Util
+ Sigma-Delta SPI
+Message-ID: <175105439247.4081173.1981785333834339523.robh@kernel.org>
+References: <20250620-iio-adc-ad7173-add-spi-offload-support-v1-0-0766f6297430@baylibre.com>
+ <20250620-iio-adc-ad7173-add-spi-offload-support-v1-6-0766f6297430@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 27 Jun 2025 21:59:14 +0200
-Message-Id: <DAXKYPCR5D4I.1B44OH77BGRTQ@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
- <kwilczynski@kernel.org>, <bhelgaas@google.com>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v4 3/5] rust: devres: get rid of Devres' inner Arc
-From: "Benno Lossin" <lossin@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250626200054.243480-1-dakr@kernel.org>
- <20250626200054.243480-4-dakr@kernel.org>
-In-Reply-To: <20250626200054.243480-4-dakr@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620-iio-adc-ad7173-add-spi-offload-support-v1-6-0766f6297430@baylibre.com>
 
-On Thu Jun 26, 2025 at 10:00 PM CEST, Danilo Krummrich wrote:
-> So far Devres uses an inner memory allocation and reference count, i.e.
-> an inner Arc, in order to ensure that the devres callback can't run into
-> a use-after-free in case where the Devres object is dropped while the
-> devres callback runs concurrently.
->
-> Instead, use a completion in order to avoid a potential UAF: In
-> Devres::drop(), if we detect that we can't remove the devres action
-> anymore, we wait for the completion that is completed from the devres
-> callback. If, in turn, we were able to successfully remove the devres
-> action, we can just go ahead.
->
-> This, again, allows us to get rid of the internal Arc, and instead let
-> Devres consume an `impl PinInit<T, E>` in order to return an
-> `impl PinInit<Devres<T>, E>`, which enables us to get away with less
-> memory allocations.
->
-> Additionally, having the resulting explicit synchronization in
-> Devres::drop() prevents potential subtle undesired side effects of the
-> devres callback dropping the final Arc reference asynchronously within
-> the devres callback.
->
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
-With the invariants section moved:
-
-Reviewed-by: Benno Lossin <lossin@kernel.org>
-
----
-Cheers,
-Benno
-
+On Fri, 20 Jun 2025 17:20:12 -0500, David Lechner wrote:
+> Add new binding for the ADI Util Sigma-Delta SPI FPGA IP Core.
+> 
+> This is used to trigger a SPI offload based on a RDY signal from the
+> ADC while masking out other signals on the same line.
+> 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 > ---
->  drivers/gpu/nova-core/driver.rs |   7 +-
->  drivers/gpu/nova-core/gpu.rs    |   6 +-
->  rust/kernel/devres.rs           | 213 +++++++++++++++++++-------------
->  rust/kernel/pci.rs              |  20 +--
->  samples/rust/rust_driver_pci.rs |  19 +--
->  5 files changed, 154 insertions(+), 111 deletions(-)
+>  .../trigger-source/adi,util-sigma-delta-spi.yaml   | 49 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  5 +++
+>  2 files changed, 54 insertions(+)
+> 
+
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+
