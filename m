@@ -1,106 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4BF2BD5A2;
-	Fri, 27 Jun 2025 12:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8121DA5F;
+	Fri, 27 Jun 2025 12:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751029099; cv=none; b=NejzDApUDDlEXclt1KetBPiUeeYwh4pM7m7zYO4ViqIUCYR6gJzE/TvXFLyVlTpGARI3Ec8N8xshi47SCBBoOi0oQMtmwSd8Q1BeppG9gX3V5Ba5wmIs/p7a9ugCFhvPK1cKa3CEaEWbij+4pDURYPgFH2Ydck5E70K1ZPRAsEU=
+	t=1751029188; cv=none; b=mbbHvdtpVnor+eyt2FEEHwUziEqcVl8UfHU9mwKqdTvW7Oz6mz/kxrSgZTR5Uu2xPkTiE1/CaJObB8JN2uWoFbGVjY9wy2iPGZsI87VfGWzB85bMrf0zOTFs85FsO56H7HlZfDHQjbSSrlY5PSCCTG+3tBd+HC72StQuWiVmI0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751029099; c=relaxed/simple;
-	bh=NLK9LVywafopxTYCHb6PiC+xCymbm8kdUK/ydn2ddaA=;
+	s=arc-20240116; t=1751029188; c=relaxed/simple;
+	bh=sxxrsQ5znIOR0zAZ9VFlPXrvegzb/RjwRIfKwJxWkgQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D+IHR7aTP33/ASF5XRA1c7IrIrKgePGDDx6TjC+8SOBpW2rpZkQjlaliZWiOH2J6llhaQrvqw8tJkctf8gGE4D8xB8v4rGXsIqZnS5RM26wxpW1hpB6JWwE+iwZfLaN39AIGQIOB6d6sSIyK70rprNe7vPYWMoMg8MO9i1HYyNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HkV4kRSM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ees12D8TuopFzVspuW+njdITthB8qsncrdxGPcCOX+XcIk8X9lGdo6O4/NJh930GGJ2Qz/ExJJVuDlNhM/Sv/WIqJfgqb7WRQ9O4kEBgtrKvvYzXBLG7KD0gOzcc1exqEHh8lI8ZgrrQK6nVB9inhAmUz5XXCu1yNV1fvQ/h56k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Hh//5ggT; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HkV4kRSM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E882CC4CEED;
-	Fri, 27 Jun 2025 12:58:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751029097;
-	bh=NLK9LVywafopxTYCHb6PiC+xCymbm8kdUK/ydn2ddaA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HkV4kRSM6WLllV0xsEAvUFoZk1GvCn53VzRv3t61qWGvnreGTEheBvBqyMY5aM6vx
-	 x/xBD6cnT+/ST1+thGTWUjz+Goxq7Zygw5g0d087qaDjhUMGQ6POj9RcpurfFvMZGL
-	 denfCzTOvqn8ICVFS2Mud3bfr9DiOPBbEGn8m7UeOFqE3JHbuDCiSQQooQxDxPdLbu
-	 ioVjA7tzZWmHKG6xjBXjMVr2onRxqvDzDkxw+1fe1JIRJ8uYj94w6b3gz+1N14HNSw
-	 9xUgjaPxZ3GPTb23QufuJThE38C4PM1PvpUaAiCNTyNDH0oGtwS5WQ5+7eOH5BrUAN
-	 DV8ti1P7umYCw==
-Date: Fri, 27 Jun 2025 13:58:11 +0100
-From: Lee Jones <lee@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>,
-	Will Deacon <will@kernel.org>, Han Xu <han.xu@nxp.com>,
-	Haibo Chen <haibo.chen@nxp.com>,
-	Yogesh Gaur <yogeshgaur.83@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Andrew Davis <afd@ti.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-spi@vger.kernel.org, imx@lists.linux.dev,
-	linux-leds@vger.kernel.org
-Subject: Re: (subset) [PATCH v7 2/3] leds: lp8860: Check return value of
- devm_mutex_init()
-Message-ID: <20250627125811.GH10134@google.com>
-References: <20250617-must_check-devm_mutex_init-v7-2-d9e449f4d224@weissschuh.net>
- <175033649656.801367.11888454651585197053.b4-ty@kernel.org>
- <f1cc8959-d420-4ba3-922f-ed7c6f054f22@t-8ch.de>
- <20250625090439.GQ795775@google.com>
- <e340b32d-8839-43b0-8662-edef1729ad6e@t-8ch.de>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Hh//5ggT"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751029175; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=y1HmmioUmA1Hiu866s5sKEElL12eyROC1gMmhCxYxu4=;
+	b=Hh//5ggTLAe5h6J/MPYVf+QvQSINvf7oLcgYRj2hltxmZpnBxMHn1+9BT+bGFotFLao73C/FCwL8pvzKsGRL5dw0SfnDh4vWtX5kbaYkrO6SbGYgQ8uZVmyzyGHz4uoS5PZqYWC5xF1+PiYuTDCbQnuERSMEReGMLAjGP5X7sb0=
+Received: from localhost(mailfrom:dust.li@linux.alibaba.com fp:SMTPD_---0WfX.dqD_1751029173 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 27 Jun 2025 20:59:33 +0800
+Date: Fri, 27 Jun 2025 20:59:33 +0800
+From: Dust Li <dust.li@linux.alibaba.com>
+To: Michal Luczaj <mhal@rbox.co>, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	David Ahern <dsahern@kernel.org>,
+	Boris Pismenny <borisp@nvidia.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Ayush Sawal <ayush.sawal@chelsio.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	Jan Karcher <jaka@linux.ibm.com>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH net-next v2 7/9] net/smc: Drop nr_pages_max initialization
+Message-ID: <20250627125933.GE10186@linux.alibaba.com>
+Reply-To: dust.li@linux.alibaba.com
+References: <20250626-splice-drop-unused-v2-0-3268fac1af89@rbox.co>
+ <20250626-splice-drop-unused-v2-7-3268fac1af89@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e340b32d-8839-43b0-8662-edef1729ad6e@t-8ch.de>
+In-Reply-To: <20250626-splice-drop-unused-v2-7-3268fac1af89@rbox.co>
 
-On Thu, 26 Jun 2025, Thomas Weißschuh wrote:
+On 2025-06-26 10:33:40, Michal Luczaj wrote:
+>splice_pipe_desc::nr_pages_max was initialized unnecessarily in
+>commit b8d199451c99 ("net/smc: Allow virtually contiguous sndbufs or RMBs
+>for SMC-R"). Struct's field is unused in this context.
+>
+>Remove the assignment. No functional change intended.
+>
+>Suggested-by: Simon Horman <horms@kernel.org>
+>Signed-off-by: Michal Luczaj <mhal@rbox.co>
 
-> On 2025-06-25 10:04:39+0100, Lee Jones wrote:
-> > On Thu, 19 Jun 2025, Thomas Weißschuh wrote:
-> > > On 2025-06-19 13:34:56+0100, Lee Jones wrote:
-> > > > On Tue, 17 Jun 2025 19:08:13 +0200, Thomas Weißschuh wrote:
-> > > > > devm_mutex_init() can fail. With CONFIG_DEBUG_MUTEXES=y the mutex will be
-> > > > > marked as unusable and trigger errors on usage.
-> > > > > 
-> > > > > Add the missed check.
-> > > > 
-> > > > Applied, thanks!
-> > > > 
-> > > > [2/3] leds: lp8860: Check return value of devm_mutex_init()
-> > > >       commit: 426e0c8e8eed26b67bbbd138483bb5973724adae
-> > > 
-> > > Thanks, but (as mentioned in the cover letter) these patches should go
-> > > together through the mutex/locking tree.
-> > > Could you drop it on your side and give an Ack instead?
-> > 
-> > There has to be good reasons to do this.
-> >
-> > I didn't see any dependents or dependencies in this patch.
-> 
-> Patch 3 depends on patch 1 and 2.
-> 
-> It will break the build for each instance of an ignored return value
-> of devm_mutex_init(). Therefore all such instances need to be resolved
-> before the patch can be applied.
-> So the patches can't go through different trees.
-> 
-> In theory we could fix the drivers in this cycle and then change
-> devm_mutex_init() in the next one. But new regressions are introduced
-> over and over. This patch is already in the third cycle...
+Reviewed-by: Dust Li <dust.li@linux.alibaba.com>
 
-Fair point.
-
-Acked-by: Lee Jones <lee@kernel.org>
-
-And patch removed from LEDs.
-
--- 
-Lee Jones [李琼斯]
+>---
+> net/smc/smc_rx.c | 1 -
+> 1 file changed, 1 deletion(-)
+>
+>diff --git a/net/smc/smc_rx.c b/net/smc/smc_rx.c
+>index e7f1134453ef40dd81a9574d6df4ead95acd8ae5..bbba5d4dc7eb0dbb31a9800023b0caab33e87842 100644
+>--- a/net/smc/smc_rx.c
+>+++ b/net/smc/smc_rx.c
+>@@ -202,7 +202,6 @@ static int smc_rx_splice(struct pipe_inode_info *pipe, char *src, size_t len,
+> 			offset = 0;
+> 		}
+> 	}
+>-	spd.nr_pages_max = nr_pages;
+> 	spd.nr_pages = nr_pages;
+> 	spd.pages = pages;
+> 	spd.partial = partial;
+>
+>-- 
+>2.49.0
+>
