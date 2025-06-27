@@ -1,89 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA48E2206A6;
-	Fri, 27 Jun 2025 10:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69289266EE7;
+	Fri, 27 Jun 2025 10:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751019927; cv=none; b=X3i7hHn+sXGrUiEeLxk4qm005lytVRmu/yxwHaWUHTKksPtk2zR+Fu0Yd0EtBflrisQszeDc2hBUG2L9F7RzMTiB80xqFJHCRpHedCqmZM5idu9SwyeZTy2OuQMT1k/Vf4MhSc+zeo3yCF0NWnR5BRRRdxmwuWXuymWRf/joP1U=
+	t=1751019955; cv=none; b=BC5PXA0rokfABKT4JvMe7CKY+RJZXcMRtp+4tp8eVrwNY+bmRZAhOiG6KhfEkhz7CrjV/l7uE33tkz8e8E8H5MInSbFRFCsIawsHN6M8bHZgvUR4aKVaqTqEPemS4rpGxeLJWmWfpEyRgHNmQTIZfdtrGEcHBiC2im5jyaQdwy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751019927; c=relaxed/simple;
-	bh=ia6n5UXAj5uKiKTZr/E2V2AjNnYEG4HQ2T/pwQJGYEo=;
+	s=arc-20240116; t=1751019955; c=relaxed/simple;
+	bh=pleE2a99A3MjFvbNJRK8AZZQWTV88MHknWRXe5Y2Z7M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HlgM4dkpHAtH70UaLfZeFuaLaiy5MV/LAF1/OXEdULrqbGfSl4ptob+VBTs8vAF7oNM46cy8hZMb/Jw59JqHZWfDgaM4VljV5UPWOvEzVUkx0EyTE3zlnelQmZC84wfBSPu/a8fvLMbuxOlOHoI8Z1hc9MhwUg+hQXHqzp7uJdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SD5zDaXY; arc=none smtp.client-ip=198.175.65.12
+	 Content-Type:Content-Disposition:In-Reply-To; b=e8lW5e6AF4D6vbKzTFK5XivMMMm8pss77BJQIK4J5QjUsWNzZBu69qVbKE1GGOOJ6t+s1KtOcTSs1I7F1NwkHVyG7uDdqRRSLj6aoonjSIKQYNuZBhScFXuGWVxbyBbY+TsZ63YeSNgUbf6aKcwZ5Ql/PAEsnLTsfZV6q75J75o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=leb5l7OW; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SD5zDaXY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="leb5l7OW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751019925; x=1782555925;
+  t=1751019955; x=1782555955;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=ia6n5UXAj5uKiKTZr/E2V2AjNnYEG4HQ2T/pwQJGYEo=;
-  b=SD5zDaXYCDeltaRq901L7qOgd9rv5QxSh63nanHPWiJMwTyg4e5tD+aQ
-   TFFPsbS5S0vorIvy6hcem5vMTK8u381Dl06G9NKl3T8oeTH0XjSN+Y/3U
-   wDscF/X2JkS9ekPPq9h+pZLD9BBy6h6rwLHUhvtU2F5LfbHaqNXTJauCz
-   2EaJNzj6Ucc2wMLVGd2twoM+9A3f4SoJxMjTbHZZ/dOm1IL6XsLRH/5q7
-   i0EVLdShT8h5EZtui0HF12R2HyF19NR8plMnsDW7sNyyKlgcFUhLTlpzo
-   phmfqxqc04ZcLSsuJrudhYpG3x1nRFuiiLkzLAjAVsK5BqPzOlghUDvxh
-   w==;
-X-CSE-ConnectionGUID: f+XGZkaqT5mcq2wq6GZ0vg==
-X-CSE-MsgGUID: jkjcPHP7Tfi5L4MUZPq0wQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="64769546"
+  bh=pleE2a99A3MjFvbNJRK8AZZQWTV88MHknWRXe5Y2Z7M=;
+  b=leb5l7OWmBBwOK8De1sBg+M8W2m7d15tyKUSdVssqPWyRAVDeQDh0hT1
+   ljpM8GDlgWQ/oAJ+493hO/DFcTtsa9YI1AA19WRWIvNGolDn5QSoNLUdv
+   VuZwTh9tblPhpoUXWosHA+nPTfDnOLW274ZJR22cKESS3PN0Nq/WM+NOI
+   m4bcmiHoIFijZirUp2t/h7NuMQfgLasxMZ66baDqSli/JJTbvSnV+KdiS
+   SKN6SWc+ycTdgEQJw+7+bI+B3QnY12DbfyMwGJpl4ZeM6txH9uU1J3Ya/
+   dvsOlS6Cxw/pqFlUvNVonliDS2qBI0CBCjt5tvMH5Q5hj4QwXCjdfZH11
+   g==;
+X-CSE-ConnectionGUID: gEi4cP/KQvG7r9VdfNf+Bg==
+X-CSE-MsgGUID: ENWprTcqRWOSA5xBDux7Cw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="57009870"
 X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="64769546"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:25:25 -0700
-X-CSE-ConnectionGUID: mXCvdDVURbaMvopFv8zAUg==
-X-CSE-MsgGUID: 3qOmJE47RxSQg2u5J9xsPQ==
+   d="scan'208";a="57009870"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:25:54 -0700
+X-CSE-ConnectionGUID: hQINK6DNSEaj1f3dq7r5KA==
+X-CSE-MsgGUID: qfRwwSYxTG2HlmKWAt6p+A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="153071076"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 27 Jun 2025 03:25:14 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id A5BAD6A; Fri, 27 Jun 2025 13:25:12 +0300 (EEST)
-Date: Fri, 27 Jun 2025 13:25:12 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
-	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
-	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
-	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
-	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
-	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
-	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-mm@kvack.org, Yian Chen <yian.chen@intel.com>
-Subject: Re: [PATCHv6 01/16] x86/cpu: Enumerate the LASS feature bits
-Message-ID: <h47uwzno7oqer72sjwyc4spxaduggqi4meccjvai6v42iwnqnh@uhloooww25mo>
-References: <20250620135325.3300848-2-kirill.shutemov@linux.intel.com>
- <20250620163504.GCaFWNuI-8QFqAM0yI@fat_crate.local>
- <6y2iqv6c2idn7yebaec7tyhzl5zcsrwqq4lcsokumlqeophzaf@ljnmxorblgcj>
- <20250620182943.GDaFWolxhwogB2tTxb@fat_crate.local>
- <tmd5llufitosphzhiik2tlemjuwyi7xkcjlhbqhibrgjjhsqcj@b3xtgub42p45>
- <20250623102105.GCaFkqkatFSbyl1YeN@fat_crate.local>
- <ztkgdk72p2z3q6z4hslfg4gj6pejirh7cnssxhd7u72mo4enn4@viqrwrycderf>
- <20250626151837.GFaF1kzfLtesXLqaAQ@fat_crate.local>
- <20250626160707.GGaF1wK5tW37P6xt0O@fat_crate.local>
- <2768baad-1b1f-40c2-9cd9-9f4489e14f4d@intel.com>
+   d="scan'208";a="152163043"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:25:52 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uV6HF-0000000ARzc-0CRM;
+	Fri, 27 Jun 2025 13:25:49 +0300
+Date: Fri, 27 Jun 2025 13:25:48 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v18] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <aF5xrHkTr8Tb71ZH@smile.fi.intel.com>
+References: <20250626224805.9034-1-ansuelsmth@gmail.com>
+ <aF5dHDr8yDSKlp5j@smile.fi.intel.com>
+ <685e6544.5d0a0220.20cf55.9440@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,37 +68,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2768baad-1b1f-40c2-9cd9-9f4489e14f4d@intel.com>
+In-Reply-To: <685e6544.5d0a0220.20cf55.9440@mx.google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Jun 26, 2025 at 10:21:23AM -0700, Dave Hansen wrote:
-> On 6/26/25 09:07, Borislav Petkov wrote:
-> >> Makes more sense?
-> > I meant this crap, ofc:
+On Fri, Jun 27, 2025 at 11:32:46AM +0200, Christian Marangi wrote:
+> On Fri, Jun 27, 2025 at 11:58:04AM +0300, Andy Shevchenko wrote:
+> > On Fri, Jun 27, 2025 at 12:47:53AM +0200, Christian Marangi wrote:
+
+...
+
+> > > +	/* Global mutex to protect bucket used refcount_t */
+> > > +	struct mutex mutex;
 > > 
-> >         switch (bug) {
-> >         case X86_BUG_CPU_MELTDOWN:
-> >                 if (boot_cpu_has(X86_FEATURE_PTI))
-> >                         return sysfs_emit(buf, "Mitigation: PTI\n");
-> > 
-> > This should say "Mitigation: LASS" if LASS is enabled...
-> > 
-> > Which begs the question: how do LASS and PTI interact now?
+> > This makes a little sense. Either you use refcount_t (which is atomic) or
+> > use mutex + regular variable.
 > 
-> Maybe my babbling about LASS mitigation Meltdown was ill considered. It
-> seems that I've just muddied the waters.
-> 
-> All the real LASS-capable hardware also has RDCL_NO=1 which is the
-> _actual_ x86 Meltdown mitigation. Those systems are not vulnerable to
-> Meltdown in the first place.
-> 
-> They should say: "Not affected" for Meltdown, both before and after LASS.
+> Using a regular variable I lose all the benefits of refcount_t with
+> underflow and other checks.
 
-Right. To best of my knowledge, SLAM is the only known vulnerability LASS
-fixes directly so far.
-
-So, we want an entry for SLAM?
-
-I don't think it is very useful as we don't allow LAM if LASS is missing.
+Then drop the mutex, atomic operations do not need an additional
+synchronisation. Btw, have you looked at kref APIs? Maybe that
+would make the intention clearer?
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+With Best Regards,
+Andy Shevchenko
+
+
