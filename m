@@ -1,91 +1,216 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-22.smtpout.orange.fr [80.12.242.22])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407E81DF244
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FF91DA61B;
+	Fri, 27 Jun 2025 17:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751044690; cv=none; b=mjvlQUtJSUH9Ftk3Qim2CLX5VbNSVbKLnkuBvr7UFWDabw4lcbZmjQnU5nhHOFe1zyXUlbVSx4XUU9/vijQpSu++W2I1VeXvlI5XJBC8mhkASHjWk6Ee7ASp51MXeZkEEV+ctztnZ7FB995NczbxD4x24KjcALOEAmd3hxYeb+Q=
+	t=1751044709; cv=none; b=azsbb1mOVDAV9fMhaMZhpkSX+Y9U8CIW2bJW+k7tCeVXoP7ehx++3hCr2ORbscC9G2DvnCVMxLaFk1REHX05K3+P9NarGF2AEnX6vx93leNiUh4UWBbznxVPqwIYjrXaeyzOO4y4DuttsrkGJPxTBwCpiui6mKP0kKmmeg0yncI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751044690; c=relaxed/simple;
-	bh=NLX9SbHhgJ2ZYzaQ/Iwrr7y+VTFqKbjsoqNKxm7jvRs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lHnjuh1hKZs5S5mMlW9r50t2s7ecIlZyzh+n2sv+PulelwohHnPZJBuCKT6Js7UP20P9ZE8s/zOx3J/Y0w6UjMRnaUMJ8dflT8fQKaBHgJRmrKyeQ4mUF9ygg+iLnBBAAwZrcJbYiNvWwI2PsU9r0T0dhtwM4dlXo6iWo5AJZoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GPxM4YA5; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751044709; c=relaxed/simple;
+	bh=qekrEVqL5xGZYqbqiBYa/pSYw69lavty2tkv5dhvUFU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PZ2ZeeKwIXzCGfrxy4BRV8TLPfE+5fC5i+vVo6dzwH20ipYs/8gdgT8Z6+ZNyECdRM7fCgZhchQIpW5AQb7GDMk/Jms51chzXW/tHZBSSGy8t00yttQgntlQcCEM2tLa6zus09jGJ3CjJduamGMIPz7qHPAM/+G5nA8nAy7mmH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=LA+83kj0; arc=none smtp.client-ip=80.12.242.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GPxM4YA5"
-Date: Fri, 27 Jun 2025 10:17:51 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751044676;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fYWgHymkoVzb35T69i1z7qhWfmrbkaY7mAFuq52RhI0=;
-	b=GPxM4YA5OYWBBbWd+VerIZDiDk1YBIgol2ghwEO6nV7CnXwliNQih4FfJy0T/zHOxGHtFs
-	IFYtdFztKjhh2Chgwp+opmjYm1RXayXXBVBWVnRgsjxjQn+xPdmrZX2XHrWNLNEAK1Rt7u
-	zF7R1bvsJEXIADC5BDpmNXPeAfjnVLs=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: "Wlodarczyk, Bertrand" <bertrand.wlodarczyk@intel.com>
-Cc: "tj@kernel.org" <tj@kernel.org>, 
-	"hannes@cmpxchg.org" <hannes@cmpxchg.org>, "mkoutny@suse.com" <mkoutny@suse.com>, 
-	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"inwardvessel@gmail.com" <inwardvessel@gmail.com>
-Subject: Re: [PATCH v2] cgroup/rstat: change cgroup_base_stat to atomic
-Message-ID: <wbff6zths3lvd7df2lblcyzzabovxkjrbxt7x734mdt7qdr3kh@v3urgrdibben>
-References: <20250624144558.2291253-1-bertrand.wlodarczyk@intel.com>
- <ykbwsq7xckhjaeoe6ba7tqm55vxrth74tmep4ey7feui3lblcf@vt43elwkqqf7>
- <CH3PR11MB7894DDEE6C630D5A3A4D23A1F145A@CH3PR11MB7894.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="LA+83kj0"
+Received: from fedora.home ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id VCiOuiqRroUtIVCiOujFMI; Fri, 27 Jun 2025 19:18:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1751044698;
+	bh=vZ0gXsMEUL07BRPgj8DtIwElSztAZLrFwXzdLM5hlqM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=LA+83kj0CfW1YPfcqXYO4cgzjLTsPpFen5MEjY/lDm1UN0o4nomUj/DhNkAcW2yyj
+	 zi8WiU146Sqk21qOUpTYC58RtWB+ViVQTBFJLF992oO4bMaC6DFIW+p7tTAKGB3rH/
+	 Wj0ZXTsJ26OWrIJjElAm806Sf0BbD1A0DsyFI+5zizNV7rZY7EzD6akezIiGoijp0W
+	 Dr+C0q/iKnlZUtu7itgXJOqNT7LFBtGsdK5zimb3SW7y4K2pMifiin1hgIaBhX4wAo
+	 xsMIfMyw466LRoYpSGoY0Zh/HkzL2h9NonFsMzj2RTV3qXioGikGUVopOVjFDDTudQ
+	 gJO25WEyQFHJA==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 27 Jun 2025 19:18:18 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Rob Clark <robin.clark@oss.qualcomm.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org
+Subject: [PATCH] drm/msm/mdp4: Consistently use the "mdp4_" namespace
+Date: Fri, 27 Jun 2025 19:18:03 +0200
+Message-ID: <6b9076268548c52ec371e9ed35fee0dd8fcb46ef.1751044672.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH3PR11MB7894DDEE6C630D5A3A4D23A1F145A@CH3PR11MB7894.namprd11.prod.outlook.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 27, 2025 at 01:15:31PM +0000, Wlodarczyk, Bertrand wrote:
-> > The kernel faces scalability issues when multiple userspace programs 
-> > attempt to read cgroup statistics concurrently.
-> > 
-> > The primary bottleneck is the css_cgroup_lock in cgroup_rstat_flush, 
-> > which prevents access and updates to the statistics of the css from 
-> > multiple CPUs in parallel.
-> > 
-> > Given that rstat operates on a per-CPU basis and only aggregates 
-> > statistics in the parent cgroup, there is no compelling reason why 
-> > these statistics cannot be atomic.
-> > By eliminating the lock during CPU statistics access, each CPU can 
-> > traverse its rstat hierarchy independently, without blocking.
-> > Synchronization is achieved during parent propagation through atomic 
-> > operations.
-> > 
-> > This change significantly enhances performance on commit
-> > 8dcb0ed834a3ec03 ("memcg: cgroup: call css_rstat_updated irrespective 
-> > of in_nmi()") in scenarios where multiple CPUs accessCPU rstat within 
-> > a single cgroup hierarchy, yielding a performance improvement of around 40 times.
-> > Notably, performance for memory and I/O rstats remains unchanged, as 
-> > the lock remains in place for these usages.
-> > 
-> > Additionally, this patch addresses a race condition detectable in the 
-> > current mainline by KCSAN in __cgroup_account_cputime, which occurs 
-> > when attempting to read a single hierarchy from multiple CPUs.
-> > 
-> > Signed-off-by: Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>
-> 
-> > This patch breaks memory controller as explained in the comments on the previous version.
-> 
-> Ekhm... no? I addressed the issue and v2 has lock back and surrounding the call to dependent submodules? 
-> The behavior is the same as before patching.
-> 
+Functions and other stuff all start with "mdp4_", except a few ones that
+start with "mpd4_" (d and p switched)
 
-Oh you have moved the rstat lock just around pos->ss->css_rstat_flush().
+Make things consistent and use "mdp4_" everywhere.
 
-Have you checked if __css_process_update_tree() is safe from concurrent
-flushers for a given cpu and css?
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+The change has been done with:
+   sed -i s/mpd4/mdp4/g *
+and the modified files have been compile tested.
+
+Maybe the comment "/* TODO: do we need different pll in other cases? */" in
+mpd4_lvds_pll_init() can be removed as well.
+A similar comment was removed in mdp4_lcdc_encoder_init() in commit
+9c2f63da6a70 ("drm/msm/mdp4: register the LVDS PLL as a clock provider")
+
+This has been waiting in my own tree for years, and popped-up recently
+because of other changes in the same area.
+---
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h      |  2 +-
+ .../gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c |  2 +-
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c | 38 +++++++++----------
+ 3 files changed, 21 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h
+index f9d988076337..9a1e4daa8e8d 100644
+--- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h
++++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h
+@@ -202,6 +202,6 @@ static inline struct drm_encoder *mdp4_dsi_encoder_init(struct drm_device *dev)
+ }
+ #endif
+ 
+-struct clk *mpd4_get_lcdc_clock(struct drm_device *dev);
++struct clk *mdp4_get_lcdc_clock(struct drm_device *dev);
+ 
+ #endif /* __MDP4_KMS_H__ */
+diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c
+index 06a307c1272d..1051873057f6 100644
+--- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c
++++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c
+@@ -375,7 +375,7 @@ struct drm_encoder *mdp4_lcdc_encoder_init(struct drm_device *dev)
+ 
+ 	drm_encoder_helper_add(encoder, &mdp4_lcdc_encoder_helper_funcs);
+ 
+-	mdp4_lcdc_encoder->lcdc_clk = mpd4_get_lcdc_clock(dev);
++	mdp4_lcdc_encoder->lcdc_clk = mdp4_get_lcdc_clock(dev);
+ 	if (IS_ERR(mdp4_lcdc_encoder->lcdc_clk)) {
+ 		DRM_DEV_ERROR(dev->dev, "failed to get lvds_clk\n");
+ 		return ERR_CAST(mdp4_lcdc_encoder->lcdc_clk);
+diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c
+index fa2c29470510..4612886f0e49 100644
+--- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c
++++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c
+@@ -54,7 +54,7 @@ static const struct pll_rate *find_rate(unsigned long rate)
+ 	return &freqtbl[i-1];
+ }
+ 
+-static int mpd4_lvds_pll_enable(struct clk_hw *hw)
++static int mdp4_lvds_pll_enable(struct clk_hw *hw)
+ {
+ 	struct mdp4_lvds_pll *lvds_pll = to_mdp4_lvds_pll(hw);
+ 	struct mdp4_kms *mdp4_kms = get_kms(lvds_pll);
+@@ -80,7 +80,7 @@ static int mpd4_lvds_pll_enable(struct clk_hw *hw)
+ 	return 0;
+ }
+ 
+-static void mpd4_lvds_pll_disable(struct clk_hw *hw)
++static void mdp4_lvds_pll_disable(struct clk_hw *hw)
+ {
+ 	struct mdp4_lvds_pll *lvds_pll = to_mdp4_lvds_pll(hw);
+ 	struct mdp4_kms *mdp4_kms = get_kms(lvds_pll);
+@@ -91,21 +91,21 @@ static void mpd4_lvds_pll_disable(struct clk_hw *hw)
+ 	mdp4_write(mdp4_kms, REG_MDP4_LVDS_PHY_PLL_CTRL_0, 0x0);
+ }
+ 
+-static unsigned long mpd4_lvds_pll_recalc_rate(struct clk_hw *hw,
++static unsigned long mdp4_lvds_pll_recalc_rate(struct clk_hw *hw,
+ 				unsigned long parent_rate)
+ {
+ 	struct mdp4_lvds_pll *lvds_pll = to_mdp4_lvds_pll(hw);
+ 	return lvds_pll->pixclk;
+ }
+ 
+-static long mpd4_lvds_pll_round_rate(struct clk_hw *hw, unsigned long rate,
++static long mdp4_lvds_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+ 		unsigned long *parent_rate)
+ {
+ 	const struct pll_rate *pll_rate = find_rate(rate);
+ 	return pll_rate->rate;
+ }
+ 
+-static int mpd4_lvds_pll_set_rate(struct clk_hw *hw, unsigned long rate,
++static int mdp4_lvds_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+ 		unsigned long parent_rate)
+ {
+ 	struct mdp4_lvds_pll *lvds_pll = to_mdp4_lvds_pll(hw);
+@@ -114,26 +114,26 @@ static int mpd4_lvds_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+ }
+ 
+ 
+-static const struct clk_ops mpd4_lvds_pll_ops = {
+-	.enable = mpd4_lvds_pll_enable,
+-	.disable = mpd4_lvds_pll_disable,
+-	.recalc_rate = mpd4_lvds_pll_recalc_rate,
+-	.round_rate = mpd4_lvds_pll_round_rate,
+-	.set_rate = mpd4_lvds_pll_set_rate,
++static const struct clk_ops mdp4_lvds_pll_ops = {
++	.enable = mdp4_lvds_pll_enable,
++	.disable = mdp4_lvds_pll_disable,
++	.recalc_rate = mdp4_lvds_pll_recalc_rate,
++	.round_rate = mdp4_lvds_pll_round_rate,
++	.set_rate = mdp4_lvds_pll_set_rate,
+ };
+ 
+-static const struct clk_parent_data mpd4_lvds_pll_parents[] = {
++static const struct clk_parent_data mdp4_lvds_pll_parents[] = {
+ 	{ .fw_name = "pxo", .name = "pxo", },
+ };
+ 
+ static struct clk_init_data pll_init = {
+-	.name = "mpd4_lvds_pll",
+-	.ops = &mpd4_lvds_pll_ops,
+-	.parent_data = mpd4_lvds_pll_parents,
+-	.num_parents = ARRAY_SIZE(mpd4_lvds_pll_parents),
++	.name = "mdp4_lvds_pll",
++	.ops = &mdp4_lvds_pll_ops,
++	.parent_data = mdp4_lvds_pll_parents,
++	.num_parents = ARRAY_SIZE(mdp4_lvds_pll_parents),
+ };
+ 
+-static struct clk_hw *mpd4_lvds_pll_init(struct drm_device *dev)
++static struct clk_hw *mdp4_lvds_pll_init(struct drm_device *dev)
+ {
+ 	struct mdp4_lvds_pll *lvds_pll;
+ 	int ret;
+@@ -156,14 +156,14 @@ static struct clk_hw *mpd4_lvds_pll_init(struct drm_device *dev)
+ 	return &lvds_pll->pll_hw;
+ }
+ 
+-struct clk *mpd4_get_lcdc_clock(struct drm_device *dev)
++struct clk *mdp4_get_lcdc_clock(struct drm_device *dev)
+ {
+ 	struct clk_hw *hw;
+ 	struct clk *clk;
+ 
+ 
+ 	/* TODO: do we need different pll in other cases? */
+-	hw = mpd4_lvds_pll_init(dev);
++	hw = mdp4_lvds_pll_init(dev);
+ 	if (IS_ERR(hw)) {
+ 		DRM_DEV_ERROR(dev->dev, "failed to register LVDS PLL\n");
+ 		return ERR_CAST(hw);
+-- 
+2.50.0
 
