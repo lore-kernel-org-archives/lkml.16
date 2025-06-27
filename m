@@ -1,173 +1,89 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62B9202C5C;
-	Fri, 27 Jun 2025 19:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0501212D97;
+	Fri, 27 Jun 2025 19:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751053586; cv=none; b=gblM/Z75IG6oU5e9hEyvuqPE/TAw5fNcemJczAEciGSazO87d9GszfPP7AA1QTd+443NhtvhYle1EKj5jN7TRVRwJYbQDOGLvFnFR2g0MS6UA58STe/KXLSWlic/N8M7nVwwSam/w0JVDcLq0cqdWk9kOLSvLmfcMAdE5iosTG0=
+	t=1751053679; cv=none; b=dW+b2eYUcoWFdkuL9CNNurpmr4lbXIcgMFywUOfnNsoRo+Fs4dzjYVfc13+ORLRPcKzxx1oWw97jDvNTFJBv3cbY7ZeEDylLHd5gfsILbGl2wEh1ViI9vs8i9pTh9K5az2jBDE0dXMTxKa2TrSUt7MSCBLBRtlwUdEVX2RvNIhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751053586; c=relaxed/simple;
-	bh=VOBCXV0CKr44wJuR1Lg4EdQ5VWo96IQEDBZbwiKnuQk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bgqtGLsL8zqOQn8yztBg3+zILn5vFYFNBQFAHbCcSSbX1rBSm09t/9rGOzHxh85cSvtQ/4qaJXJs6dOIyUdxMAvhAxe+4DLHcYkZAxlpESVA12Ly8kOe3HN+IfSQXSHtsp65KYnyRx6yT54OE4nh/zGVQeHrZkMqQDsIfEnHM3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=AGzePPsy; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1751053679; c=relaxed/simple;
+	bh=qSFxmn8zMD2j4jiMzR4R/375FMeVfeiJxiC4gUPGm7Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bsUwpk5uA4yD1+ouDsgjMopg/lBCaZYSnXeznTsPv4G0DQqmPslKNz3zIJ+4wyDWefbH3A6w2e2IpBH47j2VWclYC6QWLjigW1Z6HNUAWsoV1cOEdWb59s0ByXPonnq3YMbCJxY+dQS859vGksPoYCpsmOYDta/aJMd5OGjtOf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSp31Htf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AGzePPsy"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55RJk0Di2830451;
-	Fri, 27 Jun 2025 14:46:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1751053560;
-	bh=XaNSvm9pSF0zWjuaRWJ5vl/F50pP41vqNiDr0DDg/dk=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=AGzePPsyzwsxgdsuLGxEn8/PC/oMrK6gjQE9NDHN0MsKrrVZovCu+yJPwuyOXVEhE
-	 uK/MFwkhe/gM+TDGlgbJ40zqvtJA3PLlv5jNmj+ANegre15gJKPzvHXKAjoS+r6+B9
-	 UvXfcOkAaqDK/HA+QBVZZNJhUU1sZ3F/nlPyThgA=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55RJk0rM672309
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 27 Jun 2025 14:46:00 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 27
- Jun 2025 14:45:59 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Fri, 27 Jun 2025 14:45:59 -0500
-Received: from [10.249.33.232] ([10.249.33.232])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55RJjwaL3348056;
-	Fri, 27 Jun 2025 14:45:58 -0500
-Message-ID: <fcd02d29-3d39-49fe-8ec5-97f2db024f1f@ti.com>
-Date: Fri, 27 Jun 2025 14:45:58 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSp31Htf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47CAEC4AF0B;
+	Fri, 27 Jun 2025 19:47:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751053679;
+	bh=qSFxmn8zMD2j4jiMzR4R/375FMeVfeiJxiC4gUPGm7Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GSp31HtfQLnBral28TfLQvRx010Epl9hR19y9111ibsCt/UwddvdsJKpVOtQo3ZZP
+	 BJwaZWRLE5rrfOiJf1F6EEeJDX7SNf5PZsVv7woUUG9GHPNH3Q/e8kFT6/LTmfRlBZ
+	 JLDfMi5/q0/tVRF/bC0NT6qCbWq9pH2SQL/wy54MFI9tvwIVvvYhd6dS2+E2flnRWG
+	 HQ4c+8sQVFWVaVUv3EZqZ75JWV/eo/05/BZ8B5Bu1H9FhQLShPQuQc7vOTUFuFIcRd
+	 GbklTYnPOb0cHVXarxyWmTmxWbl0lqAbDFoQReYaX6IVcTfQ1vvDnPr3CEwTL71qAl
+	 tOMbfnfsBZkaQ==
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-60d5c665fceso110061eaf.1;
+        Fri, 27 Jun 2025 12:47:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW0NrW2KwqnapqG7K1tXPrjkLjSkL3UUpNbk+m3tLpc64gEBl7vZHSI9244SXx40cwfK0HYz3h6PCD9O3c=@vger.kernel.org, AJvYcCXTCds3OyW6PEuNOQfoSpqjzoZKUx1pI7IJXGsNuytj2fw40KYw4NsLEo0BeLuGVjwOaBejkBXSs28=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwetXws20+kip/HtsDsycJfcueZprLxESYEBNkd9XPNusArWCRB
+	D6ZkB35HqWb7n+F2traEt/eXyAxx+lZ4kPlbYCCC6VfxzERlFHod3KoDyZK9iwH+7XIv2qHT5ar
+	hgwyQlcINjsQ2uZkOMTVD1/vQNINzoTo=
+X-Google-Smtp-Source: AGHT+IFIdkTX35vYH56ZqzJMeHfewRj+zYRHyAze0G05YjdlyfHn6jVAJqRX6vVYzK3qxXdFZTewgDanf1gfQlSQA9I=
+X-Received: by 2002:a05:6820:4de7:b0:611:9fd4:ac26 with SMTP id
+ 006d021491bc7-611b911d923mr2696321eaf.5.1751053678537; Fri, 27 Jun 2025
+ 12:47:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] regulator: tps65219: Fix devm_kmalloc size allocation
-To: Nishanth Menon <nm@ti.com>
-CC: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
-        <rogerq@kernel.org>, <tony@atomide.com>, <lee@kernel.org>,
-        <d-gole@ti.com>, <robertcnelson@gmail.com>, <jkridner@gmail.com>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <m-leonard@ti.com>, <praneeth@ti.com>, <afd@ti.com>,
-        <broonie@kernel.org>
-References: <20250620154541.2713036-1-s-ramamoorthy@ti.com>
- <20250627193150.nxer4zuowaejzp4v@unarmored>
-Content-Language: en-US
-From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-In-Reply-To: <20250627193150.nxer4zuowaejzp4v@unarmored>
+References: <20250625020522.253548-1-rui.zhang@intel.com>
+In-Reply-To: <20250625020522.253548-1-rui.zhang@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 27 Jun 2025 21:47:47 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jVbc76E0jJA7S4N1xN1ESjuNO0xvfGk9wqDwNVOzBVkg@mail.gmail.com>
+X-Gm-Features: Ac12FXyGNoB1Z0y_1SWfLTkjesRNP8aP5qzLamzRDvOc1UvafelIKdzPm3sUnPM
+Message-ID: <CAJZ5v0jVbc76E0jJA7S4N1xN1ESjuNO0xvfGk9wqDwNVOzBVkg@mail.gmail.com>
+Subject: Re: [PATCH] powercap: intel_rapl_msr: Add PL4 support for PantherLake
+To: Zhang Rui <rui.zhang@intel.com>
+Cc: rafael.j.wysocki@intel.com, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, srinivas.pandruvada@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: quoted-printable
 
-+Mark. Sorry, missed cc'ing you on this series!
+On Wed, Jun 25, 2025 at 4:05=E2=80=AFAM Zhang Rui <rui.zhang@intel.com> wro=
+te:
+>
+> Add PantherLake to the list of processors where PL4 is supported.
+>
+> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+> ---
+> The PL4 support for Arrowlake-S and Lunarlake are also missing for now.
+> We will add them later when there is a real need. I'm also checking
+> internally to see if it is required or not.
+> ---
+>  drivers/powercap/intel_rapl_msr.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/powercap/intel_rapl_msr.c b/drivers/powercap/intel_r=
+apl_msr.c
+> index 8ad2115d65f6..4ed06c71a3ac 100644
+> --- a/drivers/powercap/intel_rapl_msr.c
+> +++ b/drivers/powercap/intel_rapl_msr.c
+> @@ -150,6 +150,7 @@ static const struct x86_cpu_id pl4_support_ids[] =3D =
+{
+>         X86_MATCH_VFM(INTEL_METEORLAKE_L, NULL),
+>         X86_MATCH_VFM(INTEL_ARROWLAKE_U, NULL),
+>         X86_MATCH_VFM(INTEL_ARROWLAKE_H, NULL),
+> +       X86_MATCH_VFM(INTEL_PANTHERLAKE_L, NULL),
+>         {}
+>  };
+>
+> --
 
-On 6/27/2025 2:31 PM, Nishanth Menon wrote:
-> On 10:45-20250620, Shree Ramamoorthy wrote:
->> In probe(), two arrays of structs are allocated with the devm_kmalloc()
->> function, but the memory size of the allocations were given as the arrays'
->> length (pmic->common_irq_size for the first call and pmic->dev_irq_size for
->> the second devm_kmalloc call). The memory size should have been the total
->> memory needed.
->>
->> This led to a heap overflow when the struct array was used. The issue was
->> first discovered with the PocketBeagle2 and BeaglePlay. The common and
->> device-specific structs are now allocated one at a time within the loop.
->>
->> Fixes: 38c9f98db20a ("regulator: tps65219: Add support for TPS65215 Regulator IRQs")
->> Reported-by: Dhruva Gole <d-gole@ti.com>
->> Closes: https://lore.kernel.org/all/20250619153526.297398-1-d-gole@ti.com/
->> Tested-by: Robert Nelson <robertcnelson@gmail.com>
->> Acked-by: Andrew Davis <afd@ti.com>
->> Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
->> ---
->> v2: Update commit message explanation & tags.
->> ---
-> Kasan also reports the same on latest next :(
-> https://gist.github.com/nmenon/a0a020e8417c198d2f366fa00b900e12
->
-> Could this be routed to master please?
->
-> Reviewed-by: Nishanth Menon <nm@ti.com>
->
->>  drivers/regulator/tps65219-regulator.c | 28 +++++++++++++-------------
->>  1 file changed, 14 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/regulator/tps65219-regulator.c b/drivers/regulator/tps65219-regulator.c
->> index b16b300d7f45..5e67fdc88f49 100644
->> --- a/drivers/regulator/tps65219-regulator.c
->> +++ b/drivers/regulator/tps65219-regulator.c
->> @@ -436,46 +436,46 @@ static int tps65219_regulator_probe(struct platform_device *pdev)
->>  					     pmic->rdesc[i].name);
->>  	}
->>  
->> -	irq_data = devm_kmalloc(tps->dev, pmic->common_irq_size, GFP_KERNEL);
->> -	if (!irq_data)
->> -		return -ENOMEM;
->> -
->>  	for (i = 0; i < pmic->common_irq_size; ++i) {
->>  		irq_type = &pmic->common_irq_types[i];
->>  		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
->>  		if (irq < 0)
->>  			return -EINVAL;
->>  
->> -		irq_data[i].dev = tps->dev;
->> -		irq_data[i].type = irq_type;
->> +		irq_data = devm_kmalloc(tps->dev, sizeof(*irq_data), GFP_KERNEL);
->> +		if (!irq_data)
->> +			return -ENOMEM;
->> +
->> +		irq_data->dev = tps->dev;
->> +		irq_data->type = irq_type;
->>  		error = devm_request_threaded_irq(tps->dev, irq, NULL,
->>  						  tps65219_regulator_irq_handler,
->>  						  IRQF_ONESHOT,
->>  						  irq_type->irq_name,
->> -						  &irq_data[i]);
->> +						  irq_data);
->>  		if (error)
->>  			return dev_err_probe(tps->dev, PTR_ERR(rdev),
->>  					     "Failed to request %s IRQ %d: %d\n",
->>  					     irq_type->irq_name, irq, error);
->>  	}
->>  
->> -	irq_data = devm_kmalloc(tps->dev, pmic->dev_irq_size, GFP_KERNEL);
->> -	if (!irq_data)
->> -		return -ENOMEM;
->> -
->>  	for (i = 0; i < pmic->dev_irq_size; ++i) {
->>  		irq_type = &pmic->irq_types[i];
->>  		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
->>  		if (irq < 0)
->>  			return -EINVAL;
->>  
->> -		irq_data[i].dev = tps->dev;
->> -		irq_data[i].type = irq_type;
->> +		irq_data = devm_kmalloc(tps->dev, sizeof(*irq_data), GFP_KERNEL);
->> +		if (!irq_data)
->> +			return -ENOMEM;
->> +
->> +		irq_data->dev = tps->dev;
->> +		irq_data->type = irq_type;
->>  		error = devm_request_threaded_irq(tps->dev, irq, NULL,
->>  						  tps65219_regulator_irq_handler,
->>  						  IRQF_ONESHOT,
->>  						  irq_type->irq_name,
->> -						  &irq_data[i]);
->> +						  irq_data);
->>  		if (error)
->>  			return dev_err_probe(tps->dev, PTR_ERR(rdev),
->>  					     "Failed to request %s IRQ %d: %d\n",
->>
->> base-commit: 75f5f23f8787c5e184fcb2fbcd02d8e9317dc5e7
->> -- 
->> 2.43.0
->>
->>
+Applied as 6.17 material, thanks!
