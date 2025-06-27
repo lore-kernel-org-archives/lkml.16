@@ -1,45 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B99E55B;
-	Fri, 27 Jun 2025 00:47:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AF62BAF7;
+	Fri, 27 Jun 2025 00:47:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750985226; cv=none; b=EFJ3pHL15oqZHLDCTbIuLY/JZKdqE6Pailds5m97LLWhuZ7JUu6Gz4XQ9vumj/NUWc0ASsectcmu2iOib2koOWnw5KnEE7k3FvoNb2Fehi+1FZWzXNF7OErEGzWm9HYan0V0m3z6HXgR/SoAq3kkCaI4ZOoUrywBqvb/k+iGmJk=
+	t=1750985227; cv=none; b=V57dTvTQiP3FSCP6xQEE0R8HV6hJ5YAkoK6VigH365kb4o3LMPWR534HnwzzjJeLesU2qoG1YRywj1oGNsRqSgSfC7TCQCXHmRh2MRI8m2BoyhQTrKxK5wfjjwM0W1m4CqS8yr3vrdzWs0DCKxLoeUFsmvU5aOCSmsnQfzQ9GZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750985226; c=relaxed/simple;
-	bh=hgeVknDOC/0zBF1/a5xJ9tCtK3wFHkbZAPTH1sx75Dg=;
+	s=arc-20240116; t=1750985227; c=relaxed/simple;
+	bh=f9xFZ64ZazYnbLcMEuHUS/mLu2nEZaRiRv2AuGm800M=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=DLkfQSZUsGbHrQy6gD/LORvIswmTqS0ORd0YfxF39JBWskV+fTvIo4V4Oh1xezDE2iX9ZCBtWOVQi4sWUzRWa38hNyPgim6BOBbGcdNNhMX2oGWkx4apUZsyjZraX9S6JJ2UrCcMeMO7n6+K6ODrNvbblzc7PTqrbAPvYIFQ/40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G73Nw3t8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=gPPPyFRYjCoyebb2cqkayGmbx1BANT5ajPZbu3lQLakm98AeJPQYbW5a6A61M0O/kQiGg4UXUh8M7cCNyk0b5UB/CCzKFSNV/7PTu76NqsNyLE4sy65uamHu7MNQVvYK2uzMjgeO5+PHECz0FlA+43DjcONH3e25M8bjrDFGIy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nvWJwdqy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G73Nw3t8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B421BC4CEED;
-	Fri, 27 Jun 2025 00:47:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nvWJwdqy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A253DC4CEF0;
+	Fri, 27 Jun 2025 00:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750985226;
-	bh=hgeVknDOC/0zBF1/a5xJ9tCtK3wFHkbZAPTH1sx75Dg=;
+	s=k20201202; t=1750985227;
+	bh=f9xFZ64ZazYnbLcMEuHUS/mLu2nEZaRiRv2AuGm800M=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=G73Nw3t83ZFM7Yc59Z15z979dAfVLGLng642E0ZsWHFjctl+bLIiBeI623MLDasLT
-	 8bz+amtyntoCCeDDwJUDJ3wx0ftmEInKVSce90M/DGZ6sGH92/fSbKVwHf4Z6N6Vv8
-	 mhU/BuWoEa/+uM5cBh930HisLc97kcs3h299T2SL4mMTsnlfft9hINYPtZa7F2PXpr
-	 5yE7JVWu5lQBSx/YkR4CQeTz4MzRwj1iJyQOCCzcoMuS+zJiZmZjo1tlM5ZBJzKsh8
-	 ogqW5FJzHR27hJgmwf3aak6VCGHc1ynBXyCiSZ2GBJ32QnG393coY8eXexl6W4Ae2u
-	 AY2Smj0jiQ8Tw==
+	b=nvWJwdqy7TwhmBM9D+f5VSB0SvOc1HrP+YkKvTPGB7MLFGqyNlAC7qi1wwrDHoyTW
+	 wJy9dkBUwCIm/1VHf1fEXy7XYZOBZ2jxT5pM18Bnp1dmqf94L+d3Vsh8CD+NNA+/Sj
+	 KxlhUfIGeXSfrqCkSGd6Ye/AWk0Sk7NBz/sfzFVQPpYc8+4pmlIuXtPOiDsFs4HNnF
+	 EcIaDXxcFRpegrWL1QbqAy6joYt+IYEuDf0ye2KqsX4fWW9KYlpn2qgRKs2uCIEUVd
+	 QxNBXjk6doje1WEurdmNt+YZx63isDnKzE/2pX9FHKPRMaI2XoYmV5soe5CQBDXygq
+	 yGJ260AOYwoRA==
 From: Vinod Koul <vkoul@kernel.org>
 To: Kishon Vijay Abraham I <kishon@kernel.org>, 
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Khuong Dinh <khuong@os.amperecomputing.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <5b8e9b4f645bcac9d50059e513abba4db7e1aaea.1750771156.git.geert+renesas@glider.be>
-References: <5b8e9b4f645bcac9d50059e513abba4db7e1aaea.1750771156.git.geert+renesas@glider.be>
-Subject: Re: [PATCH] dt-bindings: phy: apm,xgene-phy: Remove trailing
- whitespace
-Message-Id: <175098522563.106297.14885803182264962743.b4-ty@kernel.org>
-Date: Thu, 26 Jun 2025 17:47:05 -0700
+ Conor Dooley <conor+dt@kernel.org>, Abel Vesa <abel.vesa@linaro.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Luca Weiss <luca.weiss@fairphone.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+In-Reply-To: <20250617-eusb2-repeater-tuning-v2-0-ed6c484f18ee@fairphone.com>
+References: <20250617-eusb2-repeater-tuning-v2-0-ed6c484f18ee@fairphone.com>
+Subject: Re: (subset) [PATCH v2 0/2] Fix tuning on eUSB2 repeater
+Message-Id: <175098522656.106297.12274853092906224270.b4-ty@kernel.org>
+Date: Thu, 26 Jun 2025 17:47:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,15 +52,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Tue, 24 Jun 2025 15:22:29 +0200, Geert Uytterhoeven wrote:
-> Remove trailing whitespace which hurts my eyes.
+On Tue, 17 Jun 2025 10:26:34 +0200, Luca Weiss wrote:
+> Update the dt-bindings to remove the 'default' tuning values, since they
+> depend on the PMIC and are not guaranteed to be the same.
 > 
+> And add a fix into the driver to not zero-out all tuning registers if
+> they are not specified in the "init sequence", since zero is not the
+> reset value for most parameter and will lead to very unexpected tuning.
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: phy: apm,xgene-phy: Remove trailing whitespace
-      commit: 05c6f31991300f1c0e5e80eb1f66a580b9b5ca5f
+[1/2] dt-bindings: phy: qcom,snps-eusb2-repeater: Remove default tuning values
+      commit: db9f3e3ff9347a233a17eadefae9c1b29ec8f3ed
 
 Best regards,
 -- 
