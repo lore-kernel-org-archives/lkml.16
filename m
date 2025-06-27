@@ -1,237 +1,60 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98E2C2BD025
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BBF1DDC1E;
+	Fri, 27 Jun 2025 11:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751024791; cv=none; b=IALurXxZDqdRfoqY3oo/m+aROwSfHS4wVc6SbupuWAxdt4JxqGPOPxjbQWPlk13TCx7AMgt+nBKmyNurgYvwcU1AZtnF8FzgHoALiBNoWZRXgmEi6j0vuvxfFvZ8t/ka53ma0itA63Y94py5yA6Z9jJbKbmCKGqyw+nOpSANqaM=
+	t=1751024913; cv=none; b=icWggSSpywnhMzei8Pqqw0jIlx0pM3lTgePSbSVU2uTKMw1Vk9+x8oChGML7HpntAo0pNoIrwhsG5rK5XBWFs4lDYEU3U8KiH0r+ROpuebz6mjB0EwCasO+e1DI4s0xFCbPJZKDxeCc03RHd42ZfR9kmgt7I5TGUDpaQh3rePtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751024791; c=relaxed/simple;
-	bh=2d3eA8NOOmlrIUKCz8tahImDM0fhIk951AVN5hvROWc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P2RlE01UL9RqGcUU2A8H/JR6vMh7ehbqU04ERFKP6FO0fvZp1H0kctnmJiy5dTwuvnD2HOELd+mBmllLdanxB15DJv8ELNqLBXop41Z4MKppSmchuVJqVsZoQ3KoeUZOsa4CeJIa63BKUGMD9W2Iq8+/M7bBRbqVVD+NTNrXYt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B141F1A00;
-	Fri, 27 Jun 2025 04:46:09 -0700 (PDT)
-Received: from [10.57.30.59] (unknown [10.57.30.59])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C02FD3F66E;
-	Fri, 27 Jun 2025 04:46:25 -0700 (PDT)
-Message-ID: <d0769d8c-a31f-412a-8a15-8bae3fa7deb4@arm.com>
-Date: Fri, 27 Jun 2025 12:46:23 +0100
+	s=arc-20240116; t=1751024913; c=relaxed/simple;
+	bh=Tz7ZazmH8VZpU3H9X18vpBaQvz1SlkHxHCwJEZz0pl0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NkP2wGfMIj7qZxFJThqxQjHVMYaDdg/hLg0YjmyHRF3LtexVK9oLRsU16RVYn1Vdd1/8AlJRSSQsphApt5kmwQ/E6twdq1J73flVIzppytFFV4MAN94f6OUpENRus0t45zVN49y+BF+jA65rpQCaaIV+CqbTaFaS9o/DbTwMRmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CIjuLCQ2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CIjuLCQ2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CEC5C4CEE3;
+	Fri, 27 Jun 2025 11:48:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751024912;
+	bh=Tz7ZazmH8VZpU3H9X18vpBaQvz1SlkHxHCwJEZz0pl0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CIjuLCQ2krFbQld+sSWXC3gVvkcJLU3xoWCZGxguLJ4cz7RLvuFyrokM9tAFdTlxM
+	 Zeb22B51PEfT0A0Zx8xC8TLc6r6pKh5tVty9ry2SJNgan6NO2XNa1jqohXY42yHDab
+	 3gpsGZzGzbZU6QwxkSlM6xDQQE99jmypEVC2x/l54bLsrHIrOaNkgaZvbF5aDjZceH
+	 6M1i5O28xmHo7uvpWMkTytrtgBWoFgkssCNDsNwEQVXuC+xblzYdAA4Ya4WmD2luux
+	 BXS4I136knZKZ/UBOihepf08WzBGpA8F2Nnyw8D12+v+IOc1yL7O88+Q38J38t1ImU
+	 BdP85Fk7Ud6tw==
+Date: Fri, 27 Jun 2025 12:48:28 +0100
+From: Simon Horman <horms@kernel.org>
+To: Fushuai Wang <wangfushuai@baidu.com>
+Cc: ioana.ciornei@nxp.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2] dpaa2-eth: fix xdp_rxq_info leak
+Message-ID: <20250627114828.GA1776@horms.kernel.org>
+References: <20250626133003.80136-1-wangfushuai@baidu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iommu/amd: clear SME flag for mmio pages
-To: Wencheng Yang <east.moutain.yang@gmail.com>
-Cc: "joro@8bytes.org" <joro@8bytes.org>,
- "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
- "will@kernel.org" <will@kernel.org>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <CALrP2iVs0AcmJYShyFDVBdnN-yvY3Zq7tENXdLF-SBqEcoYOBQ@mail.gmail.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <CALrP2iVs0AcmJYShyFDVBdnN-yvY3Zq7tENXdLF-SBqEcoYOBQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626133003.80136-1-wangfushuai@baidu.com>
 
-On 2025-06-26 8:12 am, Wencheng Yang wrote:
-> Hi, Robin
+On Thu, Jun 26, 2025 at 09:30:03PM +0800, Fushuai Wang wrote:
+> The driver registered xdp_rxq_info structures via xdp_rxq_info_reg()
+> but failed to properly unregister them in error paths and during
+> removal.
 > 
-> 
-> 
->> Arguably it also doesn't make sense for callers to be mapping MMIO
-> 
->> addresses without IOMMU_MMIO...
-> 
-> 
-> 
-> Do you mean that SME flag on pte  should depend on IOMMU_MMIO  flag?
+> Fixes: d678be1dc1ec ("dpaa2-eth: add XDP_REDIRECT support")
+> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
+> ---
 
-I mean if you're sure that encrypted MMIO will never be a thing for 
-peer-to-peer (the existence of ioremap_encrypted() suggests it might be 
-in general), then from a design point of view it would make sense that 
-if you see IOMMU_MMIO here then you know you shouldn't set the SME bit. 
-Then it's just a case of making sure that callers can pass that 
-appropriately (e.g. we do in iommu_dma_map_resource(), I guess maybe we 
-should for PCI_P2PDMA_MAP_THRU_HOST_BRIDGE in iommu_dma_map_sg() too?)
+Thanks for the update.
+I think this covers all the bases.
 
-However, what we should definitely avoid is overloading IOMMU_MMIO to be 
-a de-facto encryption flag on x86 just because it happens not to have 
-much other significance there. If you think that encryption status may 
-end up wanting to be orthogonal to whether the target address represents 
-something "MMIO" or "memory-like", and that callers may want the choice, 
-then it would really want its own distinct flag (e.g. 
-IOMMU_UNENCRYPTED). And we do need to think about this now, before we 
-make a potential mess by creating opposing default behaviours for MMIO 
-and not-MMIO.
-
-Thanks,
-Robin.
-
-> 
-> 
-> 
->> As usual, pfn_valid() isn't really appropriate for this anyway, since
-> 
->> all it means is "does a struct page exist?", and in general it is
-> 
->> entirely possible for (reserved) pages to exist for non-RAM addresses.
-> 
-> 
-> 
-> You are right, pfn_valid() is not resonable, it can’t filter out reserved
-> pages.
-> 
-> Refer to kvm module, kvm_is_mmio_pfn() uses e820__mapped_raw_any() to judge
-> 
-> Mmio pfn, I think it should be okay.
-> 
-> 
-> 
-> Thanks,
-> 
-> Wencheng.
-> 
-> 
-> 
-> On 2025/6/25, 20:29, "Robin Murphy" <robin.murphy@arm.com> wrote:
-> 
-> On 2025-06-25 7:48 am, YangWencheng wrote:
-> 
->> If paddr is a mmio address, clear the SME flag. It makes no sense to
-> 
->> set SME bit on MMIO address.
-> 
-> 
-> 
-> Arguably it also doesn't make sense for callers to be mapping MMIO
-> 
-> addresses without IOMMU_MMIO...
-> 
-> 
-> 
->> ---
-> 
->>    drivers/iommu/amd/io_pgtable.c    | 6 ++++--
-> 
->>    drivers/iommu/amd/io_pgtable_v2.c | 6 +++++-
-> 
->>    2 files changed, 9 insertions(+), 3 deletions(-)
-> 
->>
-> 
->> diff --git a/drivers/iommu/amd/io_pgtable.c
-> b/drivers/iommu/amd/io_pgtable.c
-> 
->> index 4d308c071134..88b204449c2c 100644
-> 
->> --- a/drivers/iommu/amd/io_pgtable.c
-> 
->> +++ b/drivers/iommu/amd/io_pgtable.c
-> 
->> @@ -352,15 +352,17 @@ static int iommu_v1_map_pages(struct io_pgtable_ops
-> *ops, unsigned long iova,
-> 
->>                                              updated = true;
-> 
->>
-> 
->>                              if (count > 1) {
-> 
->> -                                          __pte =
-> PAGE_SIZE_PTE(__sme_set(paddr), pgsize);
-> 
->> +                                         __pte = PAGE_SIZE_PTE(paddr,
-> pgsize);
-> 
->>                                              __pte |= PM_LEVEL_ENC(7) |
-> IOMMU_PTE_PR | IOMMU_PTE_FC;
-> 
->>                              } else
-> 
->> -                                          __pte = __sme_set(paddr) |
-> IOMMU_PTE_PR | IOMMU_PTE_FC;
-> 
->> +                                         __pte = paddr | IOMMU_PTE_PR |
-> IOMMU_PTE_FC;
-> 
->>
-> 
->>                              if (prot & IOMMU_PROT_IR)
-> 
->>                                              __pte |= IOMMU_PTE_IR;
-> 
->>                              if (prot & IOMMU_PROT_IW)
-> 
->>                                              __pte |= IOMMU_PTE_IW;
-> 
->> +                         if (pfn_valid(__phys_to_pfn(paddr)))
-> 
-> 
-> 
-> As usual, pfn_valid() isn't really appropriate for this anyway, since
-> 
-> all it means is "does a struct page exist?", and in general it is
-> 
-> entirely possible for (reserved) pages to exist for non-RAM addresses.
-> 
-> 
-> 
-> Thanks,
-> 
-> Robin.
-> 
-> 
-> 
->> +                                         __pte = __sme_set(__pte);
-> 
->>
-> 
->>                              for (i = 0; i < count; ++i)
-> 
->>                                              pte[i] = __pte;
-> 
->> diff --git a/drivers/iommu/amd/io_pgtable_v2.c
-> b/drivers/iommu/amd/io_pgtable_v2.c
-> 
->> index b47941353ccb..b301fb8e58fa 100644
-> 
->> --- a/drivers/iommu/amd/io_pgtable_v2.c
-> 
->> +++ b/drivers/iommu/amd/io_pgtable_v2.c
-> 
->> @@ -65,7 +65,11 @@ static u64 set_pte_attr(u64 paddr, u64 pg_size, int
-> prot)
-> 
->>    {
-> 
->>              u64 pte;
-> 
->>
-> 
->> -          pte = __sme_set(paddr & PM_ADDR_MASK);
-> 
->> +         if (pfn_valid(__phys_to_pfn(paddr)))
-> 
->> +                         pte = __sme_set(paddr & PM_ADDR_MASK);
-> 
->> +         else
-> 
->> +                         pte = paddr & PM_ADDR_MASK;
-> 
->> +
-> 
->>              pte |= IOMMU_PAGE_PRESENT | IOMMU_PAGE_USER;
-> 
->>              pte |= IOMMU_PAGE_ACCESS | IOMMU_PAGE_DIRTY;
-> 
->>
-> 
-
+Reviewed-by: Simon Horman <horms@kernel.org>
