@@ -1,38 +1,38 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4776D21C183
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 22:45:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4F8266EE7
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 22:45:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751064334; cv=none; b=BSeN3rf0VjtERU+xCY/bpEUPKDlYWrge6aqnw3BYjpRvUfydZhYx5yxMwERUdZI5Jet0TU81JDO9wctggKbAXXb3Fs/U4u+oeqmxuTpwJVnCw7FGsyijM1IkWaKxuShTS16T1g5ZtTh1f7054Lo1Q+ikoOeXDpNW/UZsSoz39Y8=
+	t=1751064335; cv=none; b=Qy7NF++HiirI4RVW7Rlr4KOovKMYw+trAweXYUm5c604RP2L/ChzSy+xI7tGQ8ySztXQxsPATZYXyl4i0Zo1E55WLEhoTNIVTbxDJxvHDvjp4pjxR7tBum3D7rEY0vL+ZhhI0vpIeaJFR9OGcL8IXiWQt+7d3+3w6wuN4iVyMYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751064334; c=relaxed/simple;
-	bh=6rCEsWIq5fbxDFsCRxdoRDtJo224kyW+P6LIRsIuwz4=;
+	s=arc-20240116; t=1751064335; c=relaxed/simple;
+	bh=eek1CthCd1RvO7Qs2r4Pe4gz/Q4+jCBePgrtnVHKvNE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iCapK7so6mOYqyqx9Yx1OGsvIkD5VD2RFC9WwbAvCP0oZwGGXvirjhAomFglLrgYHmMBMPedIb84No4X5tiNdBMXwdhQJKHdAR3z1cJecdsyCb/gc4ZSXEMdus7sP9tz0nYBSnknbQYUGnJ33gveONQ4qNw0a/8wzEf6gHMDqOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=g/TXlo54; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=RPycSoFUArI4yvxLyE+AuCnjcayDShOyKre0cMpIFLpaM5DxO7uWVWX43yrv+GnNZDCIOzWjSAiNER8o4QFbhaaSqhCaqPHftuHm5Dq3Mw8uQ/egK6/SYx16h3RHmUSSP6i7tgK/JYdMoRqa/sir96uy7V/9S0fumezUUdbDIKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MH5KqBfc; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="g/TXlo54"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AA11243AD5;
-	Fri, 27 Jun 2025 22:45:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MH5KqBfc"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 852CC43ACE;
+	Fri, 27 Jun 2025 22:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751064330;
+	t=1751064326;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cQGedsYFUprS2h2wsTHDGgsQPvYO+g5TGBKhmE6wtXc=;
-	b=g/TXlo54jV6OrvpbJDhh+I9L7O0S1ukpavi9b9p3iwb+geK5mvNJup2+MQG1YsQGwpCivX
-	/h2Se4OIXw9rGLZKqqO+s72dd8bX3eXZ2TlzrzxiB+9s6dBPvFDh2WsuoyB5eXolXm8aoj
-	eDa7ew0JT8Cv0aYnpkzWJhp3UQpDv/HJAKedcSu1L/GJLpD6Ez7+nrJYBbYEVai4U75MDB
-	G+LsFqyIu9MZomElLYv4zXZCVsPcLuNmZ3Z0IuXfnToDfwBF9mqgpYR2MrvNiN7h89t3Rp
-	84X7FXB0dQ3sD6psdFdjvsRKCdFJHsBg47nwZwGzqaPR3jfnXBbGbAh7BRHyew==
+	bh=vr0T2pNUq0SPCwrqPVAq1LbhS4QqKuEpfagCHD6VWH8=;
+	b=MH5KqBfckc0MkhvBwntAvU+TP0K9vEcIhRjVzOaiPx/X0HBRIHWOoK+QxJrVoTpM/MInyO
+	hfgN/2vEqFkMsmq+OB+KvYXkoYr87mX7z39BxsDbJuRaIPey5Fgjn5T9fFvcYmJV0Pl0C4
+	y5gruayQq4KaE24FkZqlQGUYnu1/ZZrEHBTCR54kTDjhU86bi/cwzYCZQWH3wbNpwdRf5F
+	N4CDl3H5XgjRq8VteNc43KpejBii2zYuJE0DObs+zLSczKUTDeg5i2pJ/ZdVnrr7Ktj6GB
+	dvvF6H1EmRt0UHarRHcGE3jj+1u54o3HPXXNJ5BNIkq/wPunjPLluElZBn1txg==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Sat, 28 Jun 2025 00:45:21 +0200
-Subject: [PATCH v6 7/8] drm/vkms: Create helper macro for YUV formats
+Date: Sat, 28 Jun 2025 00:45:17 +0200
+Subject: [PATCH v6 3/8] drm/vkms: Add support for ARGB16161616 formats
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250628-b4-new-color-formats-v6-7-2125b193f91a@bootlin.com>
+Message-Id: <20250628-b4-new-color-formats-v6-3-2125b193f91a@bootlin.com>
 References: <20250628-b4-new-color-formats-v6-0-2125b193f91a@bootlin.com>
 In-Reply-To: <20250628-b4-new-color-formats-v6-0-2125b193f91a@bootlin.com>
 To: Melissa Wen <melissa.srw@gmail.com>, 
@@ -59,136 +59,82 @@ Cc: dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net,
  Louis Chauvet <louis.chauvet@bootlin.com>, 
  =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5260;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2135;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=6rCEsWIq5fbxDFsCRxdoRDtJo224kyW+P6LIRsIuwz4=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBoXx7/jhvlF6vejDgffhNwlvnrkroUZSKCzeKqj
- 9NcW20kK5GJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCaF8e/wAKCRAgrS7GWxAs
- 4mn+EACc6EhDZpe9x7ZEAipuUCE6MNsbXRR6j8KKo6Ry5CzM45V/Bsj0sgwx+Nvi22ED8wNH8EY
- ZDCl1C2MxaI+6FwkhZsqVgadsM/5Jxnz8Q9A9KXyYQGZojz5TjXKofK22VLFwjTLK2cyHGLqxqV
- mZrOa87zeBzmmcn+V77POUCFKumEU4wb1ln8GlMpceVC2OZpqZb+VIE3xI9ulg2C2ODfYV7cKiM
- cB1M5Z1n7Ejk++tOQeGo8ECzVL04E7kWQzQFI+10uwtwwjGjgD9gpv0501ZCy8fbMxirGAu58la
- PJBOuHP/zgHc4z80cVgRU1ETtiRRxN3QV4n+9XQ2J2zfAPRYMbl+dLzFCvrWftg7CCLtc2Yk3qh
- ihSxbRmyoWIf7Sk13Wbxxz9eoZuJXoEqBCieorEcsHOSS1I32fZ2V0XUK3QcfV0BMf3us7FGEMf
- 8Lb40QtlxXBdJvuIgHip0xq1WgPLO4oiWeZUr5sHnv2jcvjgWm+QdnCWvEBmtgMc90VMaS76X+E
- yx7wePSmqUgCSuc+TjwOo0e8hnFgscpIKakI3pXSe0j78QByK1Zfv/zvxUBbV+ei8FNChX4yw7M
- WLX5HE8A+31dDGTm1wcJPGZ0xYvT82Vyy/nG8mvybFjdmVrRFu4WxTID5OGUAl0Xxk41I9cXd7s
- vcGHq6tRD3D92JQ==
+ bh=eek1CthCd1RvO7Qs2r4Pe4gz/Q4+jCBePgrtnVHKvNE=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBoXx7+3wErRNdfVFU23ynpVlDjnWphyQfAV3ibB
+ dqnmOz7epKJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCaF8e/gAKCRAgrS7GWxAs
+ 4npuD/45Tn6SRR/zMLF/C5+/vqBfqz3S6NOkUclA2Ge2HMn83NXWtp17/tHgARI+UfA54IyqoPs
+ H2tsPIgaXqNzkQZSqZp3G9fJQsH5J8jhm5oV38VP6mafDuelZG3mHL6e8PQnq25cR9sDJhqYg8O
+ Z728iIRJXwtxdEly/cPlNklB7pdKr+l+rILJldVs23C97FUEstIminB13Cg7AAZ9i8ibXZ4iJEY
+ xm/U10f1exQDwKHFLSUCd1IQpTjdhxW4Y7XTHbsJgwJepvB+dac+xdZsS7HBcwMvIxvWCk3mF67
+ TRgTzDak4//yI617cYWnuavQh8pxMtNzLof8Cg3J8uvkLDgwc2DihXkImhvT8pJnSI21UwN8d2K
+ jb3Yg0bG5/WMfHqD5Jy6amRizZpSuiz7UDE2ywuaH6+9jsRPk6Tfcd/XG2cyMPqhegvjatp3N6I
+ LdvFWMUqIgHVp8plvpiTAUhMMj6pB8ZUaR7JbSARLczW85PntLKM4c9ZkBtB4Z6FlFA4H2iRIGa
+ Zte0JfFV+fedKyzFyKTpoDB5AhOY18OgxjuRG+m4K2GWuQw+oqCtYJ7D7owLyJGy4Eyi6DLOdGQ
+ QHBf4WdkxP7Pm5+14XcwD4ZLKQfXYSjdJXpaVHEBlA+CYxF/nnc41wUcUBK8JKMU8+zJxc92lZk
+ H2iTzHh4kgcSeIg==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegvdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredtjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtieevieduhedttdfgtefhuddufeffudetkeegveeuteduveehheeivedttddtkeenucfkphepvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehnecuvehluhhsthgvrhfuihiivgepheenucfrrghrrghmpehinhgvthepvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehpdhhvghloheplgduledvrdduieekrddurddvjegnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddtpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgvrghnphgruhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehjvghrvghmihgvrdgurghuthhhvghrihgsvghssegsohhothhlihhnrdgtohhmpdhrtghpt
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegvdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredtjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtieevieduhedttdfgtefhuddufeffudetkeegveeuteduveehheeivedttddtkeenucfkphepvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehpdhhvghloheplgduledvrdduieekrddurddvjegnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddtpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgvrghnphgruhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehjvghrvghmihgvrdgurghuthhhvghrihgsvghssegsohhothhlihhnrdgtohhmpdhrtghpt
  hhtohepshhiqhhuvghirhgrsehighgrlhhirgdrtghomhdprhgtphhtthhopehsihhmohhnrgdrvhgvthhtvghrsehffhiflhhlrdgthhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtohephhgrmhhohhgrmhhmvggurdhsrgesghhmrghilhdrtghomhdprhgtphhtthhopegrrhhthhhurhhgrhhilhhlohesrhhishgvuhhprdhnvght
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-The callback functions for line conversion are almost identical for
-semi-planar formats. The generic READ_LINE_YUV_SEMIPLANAR macro
-generate all the required boilerplate to process a line from a
-semi-planar format.
+The formats XRGB16161616 and ARGB16161616 were already supported.
+Add the support for:
+- ABGR16161616
+- XBGR16161616
 
 Reviewed-by: Maíra Canal <mcanal@igalia.com>
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- drivers/gpu/drm/vkms/vkms_formats.c | 75 ++++++++++++++++++++++++-------------
- 1 file changed, 48 insertions(+), 27 deletions(-)
+ drivers/gpu/drm/vkms/vkms_formats.c | 6 ++++++
+ drivers/gpu/drm/vkms/vkms_plane.c   | 2 ++
+ 2 files changed, 8 insertions(+)
 
 diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-index 03eb73f4caef..b18d67436e1d 100644
+index 231b327e86b3..44547f56e4b2 100644
 --- a/drivers/gpu/drm/vkms/vkms_formats.c
 +++ b/drivers/gpu/drm/vkms/vkms_formats.c
-@@ -473,35 +473,56 @@ READ_LINE(R8_read_line, px, u8, argb_u16_from_gray8, *px)
-  * - Convert YUV and YVU with the same function (a column swap is needed when setting up
-  * plane->conversion_matrix)
-  */
--static void semi_planar_yuv_read_line(const struct vkms_plane_state *plane, int x_start,
--				      int y_start, enum pixel_read_direction direction, int count,
--				      struct pixel_argb_u16 out_pixel[])
--{
--	u8 *y_plane;
--	u8 *uv_plane;
--
--	packed_pixels_addr_1x1(plane->frame_info, x_start, y_start, 0,
--			       &y_plane);
--	packed_pixels_addr_1x1(plane->frame_info,
--			       x_start / plane->frame_info->fb->format->hsub,
--			       y_start / plane->frame_info->fb->format->vsub, 1,
--			       &uv_plane);
--	int step_y = get_block_step_bytes(plane->frame_info->fb, direction, 0);
--	int step_uv = get_block_step_bytes(plane->frame_info->fb, direction, 1);
--	int subsampling = get_subsampling(plane->frame_info->fb->format, direction);
--	int subsampling_offset = get_subsampling_offset(direction, x_start, y_start);
--	const struct conversion_matrix *conversion_matrix = &plane->conversion_matrix;
+@@ -440,7 +440,9 @@ READ_LINE_ARGB8888(RGBA8888_read_line, px, px[0], px[3], px[2], px[1])
+ READ_LINE_ARGB8888(BGRA8888_read_line, px, px[0], px[1], px[2], px[3])
  
--	for (int i = 0; i < count; i++) {
--		*out_pixel = argb_u16_from_yuv161616(conversion_matrix, y_plane[0] * 257,
--						     uv_plane[0] * 257, uv_plane[1] * 257);
--		out_pixel += 1;
--		y_plane += step_y;
--		if ((i + subsampling_offset + 1) % subsampling == 0)
--			uv_plane += step_uv;
--	}
-+/**
-+ * READ_LINE_YUV_SEMIPLANAR() - Generic generator for a read_line function which can be used for yuv
-+ * formats with two planes and block_w == block_h == 1.
-+ *
-+ * @function_name: Function name to generate
-+ * @pixel_1_name: temporary pixel name for the first plane used in the @__VA_ARGS__ parameters
-+ * @pixel_2_name: temporary pixel name for the second plane used in the @__VA_ARGS__ parameters
-+ * @pixel_1_type: Used to specify the type you want to cast the pixel pointer on the plane 1
-+ * @pixel_2_type: Used to specify the type you want to cast the pixel pointer on the plane 2
-+ * @callback: Callback to call for each pixels. This function should take
-+ *            (struct conversion_matrix*, @__VA_ARGS__) as parameter and return a pixel_argb_u16
-+ * @__VA_ARGS__: Argument to pass inside the callback. You can use @pixel_1_name and @pixel_2_name
-+ *               to access current pixel values
-+ */
-+#define READ_LINE_YUV_SEMIPLANAR(function_name, pixel_1_name, pixel_2_name, pixel_1_type,	\
-+				 pixel_2_type, callback, ...)					\
-+static void function_name(const struct vkms_plane_state *plane, int x_start,			\
-+		 int y_start, enum pixel_read_direction direction, int count,			\
-+		 struct pixel_argb_u16 out_pixel[])						\
-+{												\
-+	u8 *plane_1;										\
-+	u8 *plane_2;										\
-+												\
-+	packed_pixels_addr_1x1(plane->frame_info, x_start, y_start, 0,				\
-+			       &plane_1);							\
-+	packed_pixels_addr_1x1(plane->frame_info,						\
-+			       x_start / plane->frame_info->fb->format->hsub,			\
-+			       y_start / plane->frame_info->fb->format->vsub, 1,		\
-+			       &plane_2);							\
-+	int step_1 = get_block_step_bytes(plane->frame_info->fb, direction, 0);			\
-+	int step_2 = get_block_step_bytes(plane->frame_info->fb, direction, 1);			\
-+	int subsampling = get_subsampling(plane->frame_info->fb->format, direction);		\
-+	int subsampling_offset = get_subsampling_offset(direction, x_start, y_start);		\
-+	const struct conversion_matrix *conversion_matrix = &plane->conversion_matrix;		\
-+												\
-+	for (int i = 0; i < count; i++) {							\
-+		pixel_1_type *(pixel_1_name) = (pixel_1_type *)plane_1;				\
-+		pixel_2_type *(pixel_2_name) = (pixel_2_type *)plane_2;				\
-+		*out_pixel = (callback)(conversion_matrix, __VA_ARGS__);			\
-+		out_pixel += 1;									\
-+		plane_1 += step_1;								\
-+		if ((i + subsampling_offset + 1) % subsampling == 0)				\
-+			plane_2 += step_2;							\
-+	}											\
- }
+ READ_LINE_le16161616(ARGB16161616_read_line, px, px[3], px[2], px[1], px[0])
++READ_LINE_le16161616(ABGR16161616_read_line, px, px[3], px[0], px[1], px[2])
+ READ_LINE_le16161616(XRGB16161616_read_line, px, cpu_to_le16(0xFFFF), px[2], px[1], px[0])
++READ_LINE_le16161616(XBGR16161616_read_line, px, cpu_to_le16(0xFFFF), px[0], px[1], px[2])
  
-+READ_LINE_YUV_SEMIPLANAR(YUV888_semiplanar_read_line, y, uv, u8, u8, argb_u16_from_yuv161616,
-+			 y[0] * 257, uv[0] * 257, uv[1] * 257)
-+
- /*
-  * This callback can be used for YUV format where each color component is
-  * stored in a different plane (often called planar formats). It will
-@@ -697,7 +718,7 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
- 	case DRM_FORMAT_NV21:
- 	case DRM_FORMAT_NV61:
- 	case DRM_FORMAT_NV42:
--		return &semi_planar_yuv_read_line;
-+		return &YUV888_semiplanar_read_line;
- 	case DRM_FORMAT_YUV420:
- 	case DRM_FORMAT_YUV422:
- 	case DRM_FORMAT_YUV444:
+ READ_LINE(RGB565_read_line, px, __le16, argb_u16_from_RGB565, px)
+ 
+@@ -659,8 +661,12 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
+ 		return &XBGR8888_read_line;
+ 	case DRM_FORMAT_ARGB16161616:
+ 		return &ARGB16161616_read_line;
++	case DRM_FORMAT_ABGR16161616:
++		return &ABGR16161616_read_line;
+ 	case DRM_FORMAT_XRGB16161616:
+ 		return &XRGB16161616_read_line;
++	case DRM_FORMAT_XBGR16161616:
++		return &XBGR16161616_read_line;
+ 	case DRM_FORMAT_RGB565:
+ 		return &RGB565_read_line;
+ 	case DRM_FORMAT_NV12:
+diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
+index 01fed722808b..d4c51b4486f7 100644
+--- a/drivers/gpu/drm/vkms/vkms_plane.c
++++ b/drivers/gpu/drm/vkms/vkms_plane.c
+@@ -20,7 +20,9 @@ static const u32 vkms_formats[] = {
+ 	DRM_FORMAT_XRGB8888,
+ 	DRM_FORMAT_XBGR8888,
+ 	DRM_FORMAT_XRGB16161616,
++	DRM_FORMAT_XBGR16161616,
+ 	DRM_FORMAT_ARGB16161616,
++	DRM_FORMAT_ABGR16161616,
+ 	DRM_FORMAT_RGB565,
+ 	DRM_FORMAT_NV12,
+ 	DRM_FORMAT_NV16,
 
 -- 
 2.49.0
