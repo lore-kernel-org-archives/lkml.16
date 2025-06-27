@@ -1,60 +1,69 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93EF2BF017
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:34:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8F82D3EDD
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:35:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751027703; cv=none; b=Gx9eiKH9HNeT4HGbicFeZxyR6+6WnRn9rm6LuytAKTbSbRJUgep7xNnsVkcSCQkW3E5GEVQme7z0Fh85KSUgXKWLeDIR9MV0WX15xH/ZCKv33dM3Qo4uNhuw+69pccwSayFJKR5rYPI+tfm1CETXMpOzAK0PIYPmouvXO9D6ioE=
+	t=1751027704; cv=none; b=P3aA3CX0BDKpnzBth14a87lw31FPxGXcGWyQfWb+cysM3fPX9y6jhxPuU15L40DO1w1gfEwCZyPpgkBwZXAnv3SMNNSIMqMQjefKQHVwfhDOy3cQvQ1oiPLXHxKeOZ4x3LZwD0lrx4n66giI6RHlefqIYLVK+BBONXbN1WwDRss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751027703; c=relaxed/simple;
-	bh=giKwvD9FmkObc/sVBDj9Rpevs1csotbjyPiB76fVtXY=;
+	s=arc-20240116; t=1751027704; c=relaxed/simple;
+	bh=lAbjC1rMmOpw3Y5SIUdpktKEiwkYb7MTJbo/4rGAvsM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PoO3z+nyidPxZ7QyS+YTa72HcCBSHHUBO6LahwF7jU67HLGVFNZYZODI0modiCJnSH/YAmq1sZ1zHVpK8tS9xgIPH7nbpYLlHA6gtG/HbBO6YBgLvQNPjqz8SKEpcyH8zTrWTnLWJGos55GOROoPmazvQBOfH2HpioXbKLdlk/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CRnWzedT; arc=none smtp.client-ip=192.198.163.19
+	 Content-Type:Content-Disposition:In-Reply-To; b=szo/4aFcQJX+hkcz5C5t+dVFkwsM21H66+nRK915iLe1qFDHmTszlsFNBYbDejDu0wsxD65QT1EyCdBzUgLXrvvSIY2io0AZ6TEV/FKHL1wfBdroUjF2D82v+1G7GZ2iKSIlKAwbCaAYhF6SDLLd8gq2DoUkbVXr8wnUaC/WsKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lSfSjODz; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CRnWzedT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lSfSjODz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751027700; x=1782563700;
+  t=1751027703; x=1782563703;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=giKwvD9FmkObc/sVBDj9Rpevs1csotbjyPiB76fVtXY=;
-  b=CRnWzedT3DFuJkAB6uSNvdhD1KTkRSZLLrQIVM0eXuko9j1/jYdfTZH0
-   NYhhGIxnabsU8cm3Dkk0KutFc55gnA9BjFUoqPn3hy8pUKHCyMbkh7nii
-   McQ39RNe7lr+JHLb/OvGGAFyYvX8WxrVOU5L33FXcnNXZa6AIPuCW7FOS
-   BypUNwbuOk9w/Cmt79jQxHLHJn949tLFAukWuZG2hxaPcb1EOWDPht7hj
-   sfrmZOjsGPLhZZmUOU434CvJ6AKRatVcrkmyyklo7bZKREF87A1hXQIxn
-   jJtauoD5tVKdetet68Vbcda6xPXI4hq7JujfHURvP0dVqmJDTpiCgmdAo
-   g==;
-X-CSE-ConnectionGUID: TAZj540UQyqg5EXdd+gOdw==
-X-CSE-MsgGUID: JM8qp2OOTrWhlxUDtxCJQw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="52458912"
+  bh=lAbjC1rMmOpw3Y5SIUdpktKEiwkYb7MTJbo/4rGAvsM=;
+  b=lSfSjODzmNUOHpOuvTrjxHMEhDMhy5bJO/uwg4Pitu2kZBZFmFhfU3VU
+   0Q2PAKSEBOC4Cg3FCbj0jhyrjpvB8WFvbxwdYNSYcHTWt2PeBZdonR26J
+   5YK7OQdGxZYu9QdmAIEj7MwpOAchDolqaZf+v+A/JIfevYHw/HhzRKOSa
+   DSJ0f1c+qxV6D3TebG/sqET99dX4Vk5bKLB3+g5rX8vm3qf2O5T0J2Hg3
+   H5lnNV6OO5YruilEg6nqpifuVvtHJnb+8Cyv2PwtpunO1vQvAW5kPn8t8
+   bU9fN3UHdAhx75eg3cWehWqBdBje4wb5RlDL9vQaeBClTQ3ryMgEKStKU
+   Q==;
+X-CSE-ConnectionGUID: DexytiOWT2ye89sHruCy3A==
+X-CSE-MsgGUID: uw4Dl7lIQSyB0+5BRSfBIQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="52458922"
 X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="52458912"
+   d="scan'208";a="52458922"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 05:34:59 -0700
-X-CSE-ConnectionGUID: ZNFs/MgxT9OLevTvP6QapQ==
-X-CSE-MsgGUID: 1ADOusCdQ1qRjOeOPZRvJw==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 05:35:01 -0700
+X-CSE-ConnectionGUID: Ecej+RiLT062BvHRv6nqPA==
+X-CSE-MsgGUID: TygrQ0gfTjeljWcCgm8jFw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="157176714"
+   d="scan'208";a="157176713"
 Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
   by orviesa003.jf.intel.com with ESMTP; 27 Jun 2025 05:34:58 -0700
 Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uV8IB-000WA6-19;
+	id 1uV8IB-000WA8-1F;
 	Fri, 27 Jun 2025 12:34:55 +0000
-Date: Fri, 27 Jun 2025 20:34:31 +0800
+Date: Fri, 27 Jun 2025 20:34:24 +0800
 From: kernel test robot <lkp@intel.com>
-To: Bo Liu <liubo03@inspur.com>, phillip@squashfs.org.uk
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Bo Liu <liubo03@inspur.com>
-Subject: Re: [PATCH] Squashfs: add page cache share support
-Message-ID: <202506272051.Ho8GUiyW-lkp@intel.com>
-References: <20250626003644.3675-1-liubo03@inspur.com>
+To: Alexander Potapenko <glider@google.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com, Aleksandr Nogikh <nogikh@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 07/11] kcov: add trace and trace_size to struct
+ kcov_state
+Message-ID: <202506271946.HACEE9U0-lkp@intel.com>
+References: <20250626134158.3385080-8-glider@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,136 +72,117 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250626003644.3675-1-liubo03@inspur.com>
+In-Reply-To: <20250626134158.3385080-8-glider@google.com>
 
-Hi Bo,
+Hi Alexander,
 
-kernel test robot noticed the following build errors:
+kernel test robot noticed the following build warnings:
 
-[auto build test ERROR on v6.16-rc3]
-[also build test ERROR on linus/master next-20250627]
+[auto build test WARNING on tip/x86/core]
+[cannot apply to akpm-mm/mm-everything tip/sched/core arnd-asm-generic/master akpm-mm/mm-nonmm-unstable masahiroy-kbuild/for-next masahiroy-kbuild/fixes shuah-kselftest/next shuah-kselftest/fixes linus/master mcgrof/modules-next v6.16-rc3 next-20250627]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bo-Liu/Squashfs-add-page-cache-share-support/20250626-084010
-base:   v6.16-rc3
-patch link:    https://lore.kernel.org/r/20250626003644.3675-1-liubo03%40inspur.com
-patch subject: [PATCH] Squashfs: add page cache share support
-config: sparc64-randconfig-r054-20250627 (https://download.01.org/0day-ci/archive/20250627/202506272051.Ho8GUiyW-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250627/202506272051.Ho8GUiyW-lkp@intel.com/reproduce)
+url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Potapenko/x86-kcov-disable-instrumentation-of-arch-x86-kernel-tsc-c/20250626-214703
+base:   tip/x86/core
+patch link:    https://lore.kernel.org/r/20250626134158.3385080-8-glider%40google.com
+patch subject: [PATCH v2 07/11] kcov: add trace and trace_size to struct kcov_state
+config: x86_64-buildonly-randconfig-004-20250627 (https://download.01.org/0day-ci/archive/20250627/202506271946.HACEE9U0-lkp@intel.com/config)
+compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250627/202506271946.HACEE9U0-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506272051.Ho8GUiyW-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506271946.HACEE9U0-lkp@intel.com/
 
-All errors (new ones prefixed by >>):
+All warnings (new ones prefixed by >>):
 
-   In file included from fs/squashfs/pagecache_share.c:16:
-   fs/squashfs/xattr.h: In function 'squashfs_read_xattr_id_table':
-   fs/squashfs/xattr.h:22:13: error: implicit declaration of function 'squashfs_read_table'; did you mean 'squashfs_read_xattr_id_table'? [-Werror=implicit-function-declaration]
-     id_table = squashfs_read_table(sb, start, sizeof(*id_table));
-                ^~~~~~~~~~~~~~~~~~~
-                squashfs_read_xattr_id_table
->> fs/squashfs/xattr.h:22:51: error: dereferencing pointer to incomplete type 'struct squashfs_xattr_id_table'
-     id_table = squashfs_read_table(sb, start, sizeof(*id_table));
-                                                      ^~~~~~~~~
-   fs/squashfs/xattr.h:29:2: error: implicit declaration of function 'ERROR'; did you mean 'ERR_PTR'? [-Werror=implicit-function-declaration]
-     ERROR("Xattrs in filesystem, these will be ignored\n");
-     ^~~~~
-     ERR_PTR
-   In file included from fs/squashfs/pagecache_share.c:18:
-   fs/squashfs/squashfs.h: At top level:
-   fs/squashfs/squashfs.h:25:12: warning: 'struct squashfs_page_actor' declared inside parameter list will not be visible outside of this definition or declaration
-        struct squashfs_page_actor *);
-               ^~~~~~~~~~~~~~~~~~~
-   fs/squashfs/squashfs.h:40:14: error: conflicting types for 'squashfs_read_table'
-    extern void *squashfs_read_table(struct super_block *, u64, int);
-                 ^~~~~~~~~~~~~~~~~~~
-   In file included from fs/squashfs/pagecache_share.c:16:
-   fs/squashfs/xattr.h:22:13: note: previous implicit declaration of 'squashfs_read_table' was here
-     id_table = squashfs_read_table(sb, start, sizeof(*id_table));
-                ^~~~~~~~~~~~~~~~~~~
-   In file included from fs/squashfs/pagecache_share.c:18:
-   fs/squashfs/squashfs.h:49:26: warning: 'struct squashfs_sb_info' declared inside parameter list will not be visible outside of this definition or declaration
-     void * (*create)(struct squashfs_sb_info *msblk, void *comp_opts);
-                             ^~~~~~~~~~~~~~~~
-   fs/squashfs/squashfs.h:50:25: warning: 'struct squashfs_sb_info' declared inside parameter list will not be visible outside of this definition or declaration
-     void (*destroy)(struct squashfs_sb_info *msblk);
-                            ^~~~~~~~~~~~~~~~
-   fs/squashfs/squashfs.h:52:37: warning: 'struct squashfs_page_actor' declared inside parameter list will not be visible outside of this definition or declaration
-         int offset, int length, struct squashfs_page_actor *output);
-                                        ^~~~~~~~~~~~~~~~~~~
-   fs/squashfs/squashfs.h:51:27: warning: 'struct squashfs_sb_info' declared inside parameter list will not be visible outside of this definition or declaration
-     int (*decompress)(struct squashfs_sb_info *msblk, struct bio *bio,
-                              ^~~~~~~~~~~~~~~~
-   In file included from include/uapi/linux/posix_types.h:5,
-                    from include/uapi/linux/types.h:14,
-                    from include/linux/types.h:6,
-                    from include/linux/kasan-checks.h:5,
-                    from include/asm-generic/rwonce.h:26,
-                    from ./arch/sparc/include/generated/asm/rwonce.h:1,
-                    from include/linux/compiler.h:390,
-                    from include/linux/build_bug.h:5,
-                    from include/linux/bits.h:32,
-                    from include/linux/bitops.h:6,
-                    from include/linux/bitmap.h:8,
-                    from include/linux/xarray.h:12,
-                    from fs/squashfs/pagecache_share.c:5:
-   include/linux/stddef.h:8:16: error: expected identifier or '(' before 'void'
-    #define NULL ((void *)0)
-                   ^~~~
-   fs/squashfs/xattr.h:39:28: note: in expansion of macro 'NULL'
-    #define squashfs_listxattr NULL
-                               ^~~~
-   fs/squashfs/squashfs.h:93:16: note: in expansion of macro 'squashfs_listxattr'
-    extern ssize_t squashfs_listxattr(struct dentry *, char *, size_t);
-                   ^~~~~~~~~~~~~~~~~~
-   include/linux/stddef.h:8:23: error: expected ')' before numeric constant
-    #define NULL ((void *)0)
-                          ^
-   fs/squashfs/xattr.h:39:28: note: in expansion of macro 'NULL'
-    #define squashfs_listxattr NULL
-                               ^~~~
-   fs/squashfs/squashfs.h:93:16: note: in expansion of macro 'squashfs_listxattr'
-    extern ssize_t squashfs_listxattr(struct dentry *, char *, size_t);
-                   ^~~~~~~~~~~~~~~~~~
-   include/linux/stddef.h:8:16: error: expected identifier or '(' before 'void'
-    #define NULL ((void *)0)
-                   ^~~~
-   fs/squashfs/xattr.h:40:33: note: in expansion of macro 'NULL'
-    #define squashfs_xattr_handlers NULL
-                                    ^~~~
-   fs/squashfs/squashfs.h:119:43: note: in expansion of macro 'squashfs_xattr_handlers'
-    extern const struct xattr_handler * const squashfs_xattr_handlers[];
-                                              ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/stddef.h:8:23: error: expected ')' before numeric constant
-    #define NULL ((void *)0)
-                          ^
-   fs/squashfs/xattr.h:40:33: note: in expansion of macro 'NULL'
-    #define squashfs_xattr_handlers NULL
-                                    ^~~~
-   fs/squashfs/squashfs.h:119:43: note: in expansion of macro 'squashfs_xattr_handlers'
-    extern const struct xattr_handler * const squashfs_xattr_handlers[];
-                                              ^~~~~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
+>> kernel/kcov.c:1013:15: warning: variable 'trace' set but not used [-Wunused-but-set-variable]
+    1013 |         void *area, *trace;
+         |                      ^
+>> kernel/kcov.c:1014:21: warning: variable 'trace_size' set but not used [-Wunused-but-set-variable]
+    1014 |         unsigned int size, trace_size;
+         |                            ^
+   2 warnings generated.
 
 
-vim +22 fs/squashfs/xattr.h
+vim +/trace +1013 kernel/kcov.c
 
-f37aa4c7366e23f Phillip Lougher 2021-02-09 @22  	id_table = squashfs_read_table(sb, start, sizeof(*id_table));
-f37aa4c7366e23f Phillip Lougher 2021-02-09  23  	if (IS_ERR(id_table))
-f37aa4c7366e23f Phillip Lougher 2021-02-09  24  		return (__le64 *) id_table;
-f37aa4c7366e23f Phillip Lougher 2021-02-09  25  
-f37aa4c7366e23f Phillip Lougher 2021-02-09  26  	*xattr_table_start = le64_to_cpu(id_table->xattr_table_start);
-f37aa4c7366e23f Phillip Lougher 2021-02-09  27  	kfree(id_table);
-f37aa4c7366e23f Phillip Lougher 2021-02-09  28  
-01e5b4e4e897fce Phillip Lougher 2010-05-17  29  	ERROR("Xattrs in filesystem, these will be ignored\n");
-01e5b4e4e897fce Phillip Lougher 2010-05-17  30  	return ERR_PTR(-ENOTSUPP);
-01e5b4e4e897fce Phillip Lougher 2010-05-17  31  }
-01e5b4e4e897fce Phillip Lougher 2010-05-17  32  
+  1006	
+  1007	/* See the comment before kcov_remote_start() for usage details. */
+  1008	void kcov_remote_stop(void)
+  1009	{
+  1010		struct task_struct *t = current;
+  1011		struct kcov *kcov;
+  1012		unsigned int mode;
+> 1013		void *area, *trace;
+> 1014		unsigned int size, trace_size;
+  1015		int sequence;
+  1016		unsigned long flags;
+  1017	
+  1018		if (!in_task() && !in_softirq_really())
+  1019			return;
+  1020	
+  1021		local_lock_irqsave(&kcov_percpu_data.lock, flags);
+  1022	
+  1023		mode = READ_ONCE(t->kcov_mode);
+  1024		barrier();
+  1025		if (!kcov_mode_enabled(mode)) {
+  1026			local_unlock_irqrestore(&kcov_percpu_data.lock, flags);
+  1027			return;
+  1028		}
+  1029		/*
+  1030		 * When in softirq, check if the corresponding kcov_remote_start()
+  1031		 * actually found the remote handle and started collecting coverage.
+  1032		 */
+  1033		if (in_serving_softirq() && !t->kcov_softirq) {
+  1034			local_unlock_irqrestore(&kcov_percpu_data.lock, flags);
+  1035			return;
+  1036		}
+  1037		/* Make sure that kcov_softirq is only set when in softirq. */
+  1038		if (WARN_ON(!in_serving_softirq() && t->kcov_softirq)) {
+  1039			local_unlock_irqrestore(&kcov_percpu_data.lock, flags);
+  1040			return;
+  1041		}
+  1042	
+  1043		kcov = t->kcov;
+  1044		area = t->kcov_state.area;
+  1045		size = t->kcov_state.size;
+  1046		trace = t->kcov_state.trace;
+  1047		trace_size = t->kcov_state.trace_size;
+  1048		sequence = t->kcov_state.sequence;
+  1049	
+  1050		kcov_stop(t);
+  1051		if (in_serving_softirq()) {
+  1052			t->kcov_softirq = 0;
+  1053			kcov_remote_softirq_stop(t);
+  1054		}
+  1055	
+  1056		spin_lock(&kcov->lock);
+  1057		/*
+  1058		 * KCOV_DISABLE could have been called between kcov_remote_start()
+  1059		 * and kcov_remote_stop(), hence the sequence check.
+  1060		 */
+  1061		if (sequence == kcov->state.sequence && kcov->remote)
+  1062			kcov_move_area(kcov->mode, kcov->state.area, kcov->state.size,
+  1063				       area);
+  1064		spin_unlock(&kcov->lock);
+  1065	
+  1066		if (in_task()) {
+  1067			spin_lock(&kcov_remote_lock);
+  1068			kcov_remote_area_put(area, size);
+  1069			spin_unlock(&kcov_remote_lock);
+  1070		}
+  1071	
+  1072		local_unlock_irqrestore(&kcov_percpu_data.lock, flags);
+  1073	
+  1074		/* Get in kcov_remote_start(). */
+  1075		kcov_put(kcov);
+  1076	}
+  1077	EXPORT_SYMBOL(kcov_remote_stop);
+  1078	
 
 -- 
 0-DAY CI Kernel Test Service
