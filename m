@@ -1,33 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B7E211460;
-	Fri, 27 Jun 2025 19:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62B9202C5C;
+	Fri, 27 Jun 2025 19:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751053556; cv=none; b=pUQOMvppUP7HE8ZMQWpnnG0MTNqdAbhe6yY0hQG0ckDIFGhoqNnHeJKgapw5r/DGDdRGVNTiUJVwVtDp2H7w62b7bPxIbqpOk0RysTgZBmHCmN6WI8qpSk0WiTPlgflHhuHhgiU7lCAlB0fb2Vq85xDTtWjur6/elkj/pU5HPxg=
+	t=1751053586; cv=none; b=gblM/Z75IG6oU5e9hEyvuqPE/TAw5fNcemJczAEciGSazO87d9GszfPP7AA1QTd+443NhtvhYle1EKj5jN7TRVRwJYbQDOGLvFnFR2g0MS6UA58STe/KXLSWlic/N8M7nVwwSam/w0JVDcLq0cqdWk9kOLSvLmfcMAdE5iosTG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751053556; c=relaxed/simple;
-	bh=nybGHUl0eKRvrlbvr0hzyiokVYz+dFJp2PTtyQdcxc0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HajY90fKHS4yJ4Cvr9zOEajNu2b+iRT/xO65LNgchmqE/I8ufL2auPvvKh0jtqDO6mTuG7hLGeKZDpf32+6hTRqvmeHY74HO8IL8/+S95CinVy1DTOWXuq/EOVjfcMYXavgruJlmHRyLVx+ZW/FiS0X6dtZQzmOK0AVFf31jBTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mDXLkkkk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751053586; c=relaxed/simple;
+	bh=VOBCXV0CKr44wJuR1Lg4EdQ5VWo96IQEDBZbwiKnuQk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bgqtGLsL8zqOQn8yztBg3+zILn5vFYFNBQFAHbCcSSbX1rBSm09t/9rGOzHxh85cSvtQ/4qaJXJs6dOIyUdxMAvhAxe+4DLHcYkZAxlpESVA12Ly8kOe3HN+IfSQXSHtsp65KYnyRx6yT54OE4nh/zGVQeHrZkMqQDsIfEnHM3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=AGzePPsy; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mDXLkkkk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2272C4CEE3;
-	Fri, 27 Jun 2025 19:45:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751053556;
-	bh=nybGHUl0eKRvrlbvr0hzyiokVYz+dFJp2PTtyQdcxc0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mDXLkkkkNlwRMffFHNuDjksIX7ei9J32Efy0q8vMOlM19YDCpkEnMuzf7PR9osJ5g
-	 QE4Pys/SHveMMhvmOa+jF1Qoam8l5ICKxte7Nyy9hQu1EmjXQUzpiBcdu6spl4O2Pc
-	 pCZxNLjGrs3X9JJxe07Ee/+ljbdTptvAox6XfjEmk8XgQDg+UfnbZAl/0Y4iaNy1xs
-	 o3Y6FcuGuAxBjm29lmbKAUofdDJ7bs5Hu+I3a0xpfgTZ7NhBqe7aAttoDC09bLfGkd
-	 0fYj3hb1xSyfabh5m+BqGYSpUs2fZTSZtTYfzqph1rnWFC9PFCIUwpfcExypalzcA1
-	 HJcD8inGqUr5A==
-Message-ID: <5224077f-4262-425b-8183-9cc7673e381e@kernel.org>
-Date: Fri, 27 Jun 2025 14:45:53 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AGzePPsy"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55RJk0Di2830451;
+	Fri, 27 Jun 2025 14:46:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751053560;
+	bh=XaNSvm9pSF0zWjuaRWJ5vl/F50pP41vqNiDr0DDg/dk=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=AGzePPsyzwsxgdsuLGxEn8/PC/oMrK6gjQE9NDHN0MsKrrVZovCu+yJPwuyOXVEhE
+	 uK/MFwkhe/gM+TDGlgbJ40zqvtJA3PLlv5jNmj+ANegre15gJKPzvHXKAjoS+r6+B9
+	 UvXfcOkAaqDK/HA+QBVZZNJhUU1sZ3F/nlPyThgA=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55RJk0rM672309
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Fri, 27 Jun 2025 14:46:00 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 27
+ Jun 2025 14:45:59 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Fri, 27 Jun 2025 14:45:59 -0500
+Received: from [10.249.33.232] ([10.249.33.232])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55RJjwaL3348056;
+	Fri, 27 Jun 2025 14:45:58 -0500
+Message-ID: <fcd02d29-3d39-49fe-8ec5-97f2db024f1f@ti.com>
+Date: Fri, 27 Jun 2025 14:45:58 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,91 +50,124 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
- system
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <CAJZ5v0j3ZyuEqSKQ+3K8M3BwPCxn5Z6KOwjyjt4cJW6HfxjPDw@mail.gmail.com>
- <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
- <de548b27-4c43-4f30-af9d-b060101e6fd8@kernel.org>
- <75fixx6rgwsgsw6e765oxdcivcg2nkzx2fp2qywgx4vi3ihywh@ot7gdecsnttw>
- <1b0d2349-dbf7-47aa-95c9-1974e63d111a@kernel.org>
- <13025910-7639-400b-878a-cd0780c6534c@kernel.org>
- <4ajmcrl3bqeikki2etek5bafzszelgevr322tvuubx4pxxyju2@qqxz6lzcb6e5>
- <fdd635ce-5e8e-4123-8e8e-241a57b4d7fe@kernel.org>
- <eaf7bva2skjz6oo2s2f4agooplthvuztyr6tssa7rux764qw35@kscd3rtejfvn>
- <9f5e0c21-bc25-44d0-a4d4-6fd6e58a9f2e@kernel.org>
- <ly3mww7nq7uuqvdx7p2uzcrphhboeuep3yuwbaxwfimesitjaa@hf72i4vu5quo>
+Subject: Re: [PATCH v2] regulator: tps65219: Fix devm_kmalloc size allocation
+To: Nishanth Menon <nm@ti.com>
+CC: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
+        <rogerq@kernel.org>, <tony@atomide.com>, <lee@kernel.org>,
+        <d-gole@ti.com>, <robertcnelson@gmail.com>, <jkridner@gmail.com>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <m-leonard@ti.com>, <praneeth@ti.com>, <afd@ti.com>,
+        <broonie@kernel.org>
+References: <20250620154541.2713036-1-s-ramamoorthy@ti.com>
+ <20250627193150.nxer4zuowaejzp4v@unarmored>
 Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <ly3mww7nq7uuqvdx7p2uzcrphhboeuep3yuwbaxwfimesitjaa@hf72i4vu5quo>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+In-Reply-To: <20250627193150.nxer4zuowaejzp4v@unarmored>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 6/27/2025 2:18 PM, Dmitry Torokhov wrote:
-> On Fri, Jun 27, 2025 at 01:56:53PM -0500, Mario Limonciello wrote:
->> On 6/27/2025 1:36 PM, Dmitry Torokhov wrote:
->>> On Fri, Jun 27, 2025 at 05:56:05PM +0200, Hans de Goede wrote:
-> 
-> [ ... trim ... ]
-> 
->>>
->>> 2. There is a patch from Mario (a8605b0ed187) suppressing sending
->>> KEY_POWER as part of "normal" wakeup handling, pretty much the same as
->>> what he and you are proposing to do in gpio-keys (and eventually in
->>> every driver keyboard or button driver in the kernel). This means we no
->>> longer can tell if wakeup is done by power button or sleep button (on
->>> systems with dual-button models, see ACPI 4.8.3.1).
++Mark. Sorry, missed cc'ing you on this series!
+
+On 6/27/2025 2:31 PM, Nishanth Menon wrote:
+> On 10:45-20250620, Shree Ramamoorthy wrote:
+>> In probe(), two arrays of structs are allocated with the devm_kmalloc()
+>> function, but the memory size of the allocations were given as the arrays'
+>> length (pmic->common_irq_size for the first call and pmic->dev_irq_size for
+>> the second devm_kmalloc call). The memory size should have been the total
+>> memory needed.
 >>
->> Actually a8605b0ed187 was about a runtime regression not a suspend
->> regression.  I didn't change anything with sending KEY_POWER during wakeup
->> handling.
-> 
-> Ah, right, ignorng events for "suspended" buttons was done in
-> e71eeb2a6bcc ("ACPI / button: Do not propagate wakeup-from-suspend
-> events"). Again trying to add heuristic to the kernel instead of
-> enlightening userspace.
-> 
-> I am curious why the system is sending "Notify Wake" events when not
-> sleeping though?
-
-I wondered the same thing.  My guess is this is a BIOS bug.
-
-> 
-> [ .. skip .. ]
-> 
+>> This led to a heap overflow when the struct array was used. The issue was
+>> first discovered with the PocketBeagle2 and BeaglePlay. The common and
+>> device-specific structs are now allocated one at a time within the loop.
 >>
->> FTR I did test Hans suggestion and it does work effectively (code below).
+>> Fixes: 38c9f98db20a ("regulator: tps65219: Add support for TPS65215 Regulator IRQs")
+>> Reported-by: Dhruva Gole <d-gole@ti.com>
+>> Closes: https://lore.kernel.org/all/20250619153526.297398-1-d-gole@ti.com/
+>> Tested-by: Robert Nelson <robertcnelson@gmail.com>
+>> Acked-by: Andrew Davis <afd@ti.com>
+>> Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+>> ---
+>> v2: Update commit message explanation & tags.
+>> ---
+> Kasan also reports the same on latest next :(
+> https://gist.github.com/nmenon/a0a020e8417c198d2f366fa00b900e12
+>
+> Could this be routed to master please?
+>
+> Reviewed-by: Nishanth Menon <nm@ti.com>
+>
+>>  drivers/regulator/tps65219-regulator.c | 28 +++++++++++++-------------
+>>  1 file changed, 14 insertions(+), 14 deletions(-)
 >>
->> diff --git a/drivers/input/keyboard/gpio_keys.c
->> b/drivers/input/keyboard/gpio_keys.c
->> index f9db86da0818b..3bc8c95e9943b 100644
->> --- a/drivers/input/keyboard/gpio_keys.c
->> +++ b/drivers/input/keyboard/gpio_keys.c
->> @@ -425,7 +425,8 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void
->> *dev_id)
->>                           * already released by the time we got interrupt
->>                           * handler to run.
->>                           */
->> -                       input_report_key(bdata->input, button->code, 1);
->> +                       input_report_key(bdata->input, *bdata->code, 1);
->> +                       input_sync(bdata->input);
-> 
-> I start wondering if we should keep the fake press given that we do not
-> know for sure if wakeup truly happened because of this button press...
-> 
-> Can we track back to the wakeup source and determine this? It will not
-> help your problem, but I still believe userspace is where policy should
-> live.
-> 
-> Thanks.
-> 
-
+>> diff --git a/drivers/regulator/tps65219-regulator.c b/drivers/regulator/tps65219-regulator.c
+>> index b16b300d7f45..5e67fdc88f49 100644
+>> --- a/drivers/regulator/tps65219-regulator.c
+>> +++ b/drivers/regulator/tps65219-regulator.c
+>> @@ -436,46 +436,46 @@ static int tps65219_regulator_probe(struct platform_device *pdev)
+>>  					     pmic->rdesc[i].name);
+>>  	}
+>>  
+>> -	irq_data = devm_kmalloc(tps->dev, pmic->common_irq_size, GFP_KERNEL);
+>> -	if (!irq_data)
+>> -		return -ENOMEM;
+>> -
+>>  	for (i = 0; i < pmic->common_irq_size; ++i) {
+>>  		irq_type = &pmic->common_irq_types[i];
+>>  		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
+>>  		if (irq < 0)
+>>  			return -EINVAL;
+>>  
+>> -		irq_data[i].dev = tps->dev;
+>> -		irq_data[i].type = irq_type;
+>> +		irq_data = devm_kmalloc(tps->dev, sizeof(*irq_data), GFP_KERNEL);
+>> +		if (!irq_data)
+>> +			return -ENOMEM;
+>> +
+>> +		irq_data->dev = tps->dev;
+>> +		irq_data->type = irq_type;
+>>  		error = devm_request_threaded_irq(tps->dev, irq, NULL,
+>>  						  tps65219_regulator_irq_handler,
+>>  						  IRQF_ONESHOT,
+>>  						  irq_type->irq_name,
+>> -						  &irq_data[i]);
+>> +						  irq_data);
+>>  		if (error)
+>>  			return dev_err_probe(tps->dev, PTR_ERR(rdev),
+>>  					     "Failed to request %s IRQ %d: %d\n",
+>>  					     irq_type->irq_name, irq, error);
+>>  	}
+>>  
+>> -	irq_data = devm_kmalloc(tps->dev, pmic->dev_irq_size, GFP_KERNEL);
+>> -	if (!irq_data)
+>> -		return -ENOMEM;
+>> -
+>>  	for (i = 0; i < pmic->dev_irq_size; ++i) {
+>>  		irq_type = &pmic->irq_types[i];
+>>  		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
+>>  		if (irq < 0)
+>>  			return -EINVAL;
+>>  
+>> -		irq_data[i].dev = tps->dev;
+>> -		irq_data[i].type = irq_type;
+>> +		irq_data = devm_kmalloc(tps->dev, sizeof(*irq_data), GFP_KERNEL);
+>> +		if (!irq_data)
+>> +			return -ENOMEM;
+>> +
+>> +		irq_data->dev = tps->dev;
+>> +		irq_data->type = irq_type;
+>>  		error = devm_request_threaded_irq(tps->dev, irq, NULL,
+>>  						  tps65219_regulator_irq_handler,
+>>  						  IRQF_ONESHOT,
+>>  						  irq_type->irq_name,
+>> -						  &irq_data[i]);
+>> +						  irq_data);
+>>  		if (error)
+>>  			return dev_err_probe(tps->dev, PTR_ERR(rdev),
+>>  					     "Failed to request %s IRQ %d: %d\n",
+>>
+>> base-commit: 75f5f23f8787c5e184fcb2fbcd02d8e9317dc5e7
+>> -- 
+>> 2.43.0
+>>
+>>
