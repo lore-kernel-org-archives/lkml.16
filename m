@@ -1,241 +1,479 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5274D1ACED5;
-	Fri, 27 Jun 2025 21:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751058215; cv=none; b=lSGCihLpBmXXWRn9pmTeRjuX9QyNgVIIrIHIUdaEsZ6sU4kFss13aqvE8xpRpT9vjP1KpSebeVhFIjGo+mdFtANRh7Cz2iVUjO16klFjx/t0n5IjRQvCDRQi9B67TTVhQ/wa2jbbf6+Fs7MDJ5fN9Vp1d1FssM6gYB9gO18FSTI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751058215; c=relaxed/simple;
-	bh=0W8W59iot3FeAisR7nDyXzE2AYNn9ZHtEufvzCTXQoc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZIP2IMUXAdszzLLZeMz3+24i+UGhSb5mFVp4CaWMckgk3lCe5l+hHjcZuOZsp4EaoOldpq61JQlJVvTG2ylGMhA6zb7734/+g6rNm3O7iKq2tySkBZsFKcL6i8eRvT3DtryLYcqh892dqtLS6AsOZozeIRJqO1SLSK0PL7l7Y/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z0cPlhJH; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1862B2F1FCB
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 21:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751058290; cv=fail; b=c0tCTh1c8zlkuroyuJy3f9KTuKWM48j2K/hau/meuJRS+dOdU4LG5hDEc56kwt4BRuIHDvhsHDc2tQaa1hWeo45RzISSSHHtIEC/dD/C2bA17pltI2l1u8PVEy7gBI3EBUJq6VWdbUSaF3daZjEie4SitLwCEQmEzJOBBAWamZY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751058290; c=relaxed/simple;
+	bh=NJH5/GTk8nQLzL+mhDS8xCwymf0iyFTYzPP0mJqtkbA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=LZZem/6DkQoGJnZL9Tn6JWsa82XKHylvcFJuwNoFfVkXaQlSkMJxNSRLoJuFdWuddt4lvRthGT2YaLs8UN3jnYf6c3Xpvah6nzBApBCbhuYRP8gb/tdf68pSN4ybw5jv09jGM/slQOKrZvY5RCkaUhgFoVtO2Gj6ox2bVQKRHqs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F+bzyslC; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z0cPlhJH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88FEDC4CEE3;
-	Fri, 27 Jun 2025 21:03:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751058213;
-	bh=0W8W59iot3FeAisR7nDyXzE2AYNn9ZHtEufvzCTXQoc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z0cPlhJHHV1gWR9CVc54A+0kWgk2xzw+lPg30UvCw1DWA622U11UjYQKmkaTcczMb
-	 aLN/ElG8454hcSLsEahyoDqaseMHkZ9uDhlqG8pWgu+sx3ZYVpwDKUND30HEFrSqW2
-	 PgGgBCzELuj6xs5m+oWUsQawUxeNVdphmKCMEYWSCNx5QJQOk/EVWAfanVOgKcJOcc
-	 xoub/hFy7cOolETgoSoQmO4T5bljvkuIpErPWKq/wEiHbGAZ24U2tO88HBdbVQhv9S
-	 2Oe98MyRu/tpZPPnKbNzHZsNDgn47BW8QsNruVWrLVemaCn6sU2/7voTg5PGeCaC1d
-	 8zpgaWuXdDbwA==
-Received: by pali.im (Postfix)
-	id 35CD9798; Fri, 27 Jun 2025 23:03:31 +0200 (CEST)
-Date: Fri, 27 Jun 2025 23:03:31 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Steve French <sfrench@samba.org>
-Cc: Paulo Alcantara <pc@manguebit.org>, Remy Monsen <monsen@monsen.cc>,
-	linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cifs: Fix lstat() and AT_SYMLINK_NOFOLLOW to work on
- broken symlink nodes
-Message-ID: <20250627210331.qpp7bmpjnux63eow@pali>
-References: <20250610213404.16288-1-pali@kernel.org>
- <26e59412fa2c70efad5f9c585bfc198f@manguebit.org>
- <20250621122139.3xq675cbs5kgkd7t@pali>
- <82bf746b2c44f9cccd7e3f4ca349d145@manguebit.org>
- <20250621165246.5yvdolrrdchrbe22@pali>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F+bzyslC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751058288; x=1782594288;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=NJH5/GTk8nQLzL+mhDS8xCwymf0iyFTYzPP0mJqtkbA=;
+  b=F+bzyslCuKErYeGNwMUme4Jsg56uSoDwH7h7LN5eg/FiRXHbCbC5moLS
+   n97DsfqrS2+eoxGOVh6Uzax0wwQIBsAXP7sfhdy8QCjQTVH23vK05501Z
+   fhzAas4vsh0UnwPCtyKEyGMlOUyuZxqH1YyW5A5GAw+KIbYWCFuL8M3uZ
+   bw8YqEG18exLlcpsVPfmvahwrKnxT3+t45P1hBGwX3zY2VkQWdnmEjXLE
+   WQuIi/ahQijdKgJcUVr/f85MJLb7qZkr7nTNGOvGqdZ/hbwwVVRLryVNI
+   BDjeVXJsxDoBCGVGW82y8TYwYUcVq70FwL+EkpyxTMGno4+OtFiwb9lJX
+   A==;
+X-CSE-ConnectionGUID: zID1eW8rTQOXYdDAdKYMTQ==
+X-CSE-MsgGUID: s0sDfBhCRY+a2CtwXsEKcQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="53320455"
+X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
+   d="scan'208";a="53320455"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 14:04:47 -0700
+X-CSE-ConnectionGUID: R5kAL3bZTB2GOobbziHmwQ==
+X-CSE-MsgGUID: SoqWSvhdQfmNeUlgZZNy9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
+   d="scan'208";a="152416267"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 14:04:48 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 27 Jun 2025 14:04:46 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 27 Jun 2025 14:04:46 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.56)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 27 Jun 2025 14:04:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jg98s5QPshJKXv9Y39aq6PhZpWugFQev6xCZ6+t4pRlttfJ5m532GIR8/E7VsPOlEFPSlXg6JBK6BiTH1qkXF9Rn9oLgcXUK3ID5/FbQl4e8VfU+pjCMm9Mpiolwow2ryiVriSTFkpwfXayx/v66Im+45XkyZLntN3REro/dFaUn20JC7kNdT8KCJPcPdaaULIqDgpmNUvSvFLwgBPwqLw7KSQglH91rlOgxMJwZiL0FTdp4fiD/kAe+ssVvbaifGREKuaoh6eQUERIzxWlXfGSvg2HSHGVAt6vF1ncL2dCjanVCtB+swOr8ODwZDOwGmL7ZzujGPO99KJfxGTXdFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yQiwmBpEOTqni3G5On02wZXsmvUiapPHp2Rp9PPIUDk=;
+ b=RezGDB+yusLR8+3SFGPh45D4fkc+Umuz//d7whXN1uaueVKhOwEoSA3GKWPyBGEC2TWhUo67X39dhZzKfAnwvwuSvxu6h+oKjGFJJgIxeUoiMN1amr0F9FY6PRD2RKIjAheXPNrkhraQS6l3d3wwvOFYRFovANvd2/YyY0qXR/b/hCYQTN1wUEaHDTxBvVze56wHuI1Zu5chv/qH+sSZiElSV58Z0Lgaqu+7k0goE2I49xnO8/y5r8FGSgpOWmVsOY3tCH/9HsEQIR8zGdq59AATmwURu9w6XT+GjQdoR2f3zqoiDg4KRDTsXog9i/zwzCzd81DvHlp/mLqO38MnTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CYYPR11MB8430.namprd11.prod.outlook.com (2603:10b6:930:c6::19)
+ by DS4PPF814058951.namprd11.prod.outlook.com (2603:10b6:f:fc02::36) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Fri, 27 Jun
+ 2025 21:04:29 +0000
+Received: from CYYPR11MB8430.namprd11.prod.outlook.com
+ ([fe80::76d2:8036:2c6b:7563]) by CYYPR11MB8430.namprd11.prod.outlook.com
+ ([fe80::76d2:8036:2c6b:7563%5]) with mapi id 15.20.8880.015; Fri, 27 Jun 2025
+ 21:04:29 +0000
+Date: Fri, 27 Jun 2025 17:04:24 -0400
+From: Rodrigo Vivi <rodrigo.vivi@intel.com>
+To: Badal Nilawar <badal.nilawar@intel.com>
+CC: <intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>, <anshuman.gupta@intel.com>,
+	<alexander.usyskin@intel.com>, <gregkh@linuxfoundation.org>,
+	<daniele.ceraolospurio@intel.com>
+Subject: Re: [PATCH v4 03/10] drm/xe/xe_late_bind_fw: Introducing
+ xe_late_bind_fw
+Message-ID: <aF8HWPn87kiP9-cO@intel.com>
+References: <20250625170015.33912-1-badal.nilawar@intel.com>
+ <20250625170015.33912-4-badal.nilawar@intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250625170015.33912-4-badal.nilawar@intel.com>
+X-ClientProxiedBy: SJ0PR03CA0133.namprd03.prod.outlook.com
+ (2603:10b6:a03:33c::18) To CYYPR11MB8430.namprd11.prod.outlook.com
+ (2603:10b6:930:c6::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250621165246.5yvdolrrdchrbe22@pali>
-User-Agent: NeoMutt/20180716
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CYYPR11MB8430:EE_|DS4PPF814058951:EE_
+X-MS-Office365-Filtering-Correlation-Id: e6b6ee0d-4c99-4d9c-7482-08ddb5be34dd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?z1+uAI5byaUBMwDqSK31zd/m2J9Xr8hpQA18xKLM97ZHfkUpdA6HcO2+Wn?=
+ =?iso-8859-1?Q?g+yZ3jNntvwCF5gxfbfCyVMjYoCIt2QX36HrYbtgPeWwldLyfHXqfTgHZw?=
+ =?iso-8859-1?Q?PUR2s7qin/LwCP3tmoDv9ss+AWKc3+qJMH2DS05GZMHKpwVYA6/X9qhk0d?=
+ =?iso-8859-1?Q?h2txZIXLuY5hBikjxXnVhFvPhl2gDcs3gkk8+P+tmfhJFJYjEzZB1haBrj?=
+ =?iso-8859-1?Q?eVIBlJYLnUg+ONr8bhkoo4I6lJPX6Rxjc+W82hX7wLgWk814MADzF5OQqS?=
+ =?iso-8859-1?Q?rq8VQbWtQ4TgQYg6CUcsxuujscEgpTNWctHjRd2pzHpqvavxLAcukUbBeU?=
+ =?iso-8859-1?Q?KgG7rShGw0VT5+irwDvqCfHSZN9PjTUMorIdQa0F/fb6Ukz1tq5AcUn9Ja?=
+ =?iso-8859-1?Q?GJ4grlU6vSIg1A7FZk0UoAryO3R6qLkxbA8J6PtfczfxhrqBAe/WOS0GC+?=
+ =?iso-8859-1?Q?EWGCvhf3f19KGAw5wVp03mlHf1q0fk2QUrFGazTlWRsULH+h3QgbddVo6v?=
+ =?iso-8859-1?Q?DHTY2cUeFnplRGfn42mwoyJGSBYy0OFlaoB+VSm80E2hjvnhe/qQz7EPEH?=
+ =?iso-8859-1?Q?66zaKkwFb2rwcKmEqDdbBhOzYm/HPWsuHyzsDD4wgwrOItqyTWVv825EJR?=
+ =?iso-8859-1?Q?42i41m03o5BJgAUfVAvvGsdaSH3sYvoZ6wK7kyo0n7JrzeBffcOII4DQLv?=
+ =?iso-8859-1?Q?xlFnZZIayzWEFB9DLfhc5g6eTkjpwp50iYTA1qg6jT57Q+HRJRlUvyWaBj?=
+ =?iso-8859-1?Q?OTw8l7crY9pvRjRWJlims7a7ZjvMbQh8uI79Xhz/QAwPCjP7gf+b/oVshn?=
+ =?iso-8859-1?Q?yqnuA5mlDm7pm/GGQfgQ2MA7Y3qzJG2oKJEKWj9nPTv9aVg5fcOGVjVk6n?=
+ =?iso-8859-1?Q?h0AP3WkpdGu8+ES2Gc0+jE4/3wr8ZKvWntARXDuvI0PStSpV1YymGgSNmU?=
+ =?iso-8859-1?Q?Ez3HimbHxdNYsMjEVST8UYEYEcVU/7zP/L6aLst10s+0oK1eRPHtA3x3zQ?=
+ =?iso-8859-1?Q?BmnWCyf49pZS32shNo+2YN/mtPlWJVSzVtKkrIBhew4f78hqMo/Q33gqRM?=
+ =?iso-8859-1?Q?+xR8kqH3eStJEf2m7KVSiNMj1GhF8mPaZTLRE+8SYIVGdBgGxGzkI52GYQ?=
+ =?iso-8859-1?Q?FQYx/t6AD4+8rg3ipj+p7zRXabC4gsfOwsMZIOV6ZwyM3kn3DSkYZVOujn?=
+ =?iso-8859-1?Q?hFSe5Ujs3um5BxV/9lGVaMV+oNB9TEmGQMIl9ggnkteF/1ddhiDm8mkA+/?=
+ =?iso-8859-1?Q?b07E5+DTQ7VqjKtOltJWytS522ZEtapipKuWPOFawKiEeve97jO/KnFO+w?=
+ =?iso-8859-1?Q?c7Vh+yn3nYgpryNW573PwlxN+J40pTlbEImPJkE4pxvgZ9QGnZ7t4JDQ/3?=
+ =?iso-8859-1?Q?JnVZi5CWYQrGCLVAsAgV1dFHsn7NYhz7yi0U7Y3DY0i5iR9pKhcPY=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR11MB8430.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?oXvrG7Pn4lmxE4pyl5yKAgecl9QpU+8WFUaQj2PxR0zl172sDL4pDnax9I?=
+ =?iso-8859-1?Q?MOoOSCxppIugTsTMnUFqoEZ3TrGaOgokJGaM1QbXNYYeutUN9da2a1a9R6?=
+ =?iso-8859-1?Q?yEUzO3kibnm+CGszSrDjNM/dFSDtcUJR7JjALsMoNvs1I6ApTgw1LuE+Jv?=
+ =?iso-8859-1?Q?iVwnlnIW3dw7ygrsqkF32FwVjWTRb5lj/vxObM00ihtyHPVb0cT4Y/eOp2?=
+ =?iso-8859-1?Q?/CVzd/447mo648kuhzsLSfZQdooinF5P1sSUX1sejTB+sxaYOzHWHhX6TY?=
+ =?iso-8859-1?Q?VHgpG9YuZxI7VJEngC6ls5Lnct2vm0Z0zVsArByUokkeGMGxIlp2ZfjuR2?=
+ =?iso-8859-1?Q?5/1GnbE8JTdeL3prcEfzOoRdmnfPWD+Jw6quh2Ll98NtX4T78RhLI1V32y?=
+ =?iso-8859-1?Q?Lufwz72fPmzbGcCwdxJzcY+w8lHKz0acx1kGN0z9XDHZhqXmaWGf1Me6yz?=
+ =?iso-8859-1?Q?AwtST83bMbiiqXVm5RCPunJQ7NXHiRk0tk2CrIfB3eG7IBAFT5+or11CBC?=
+ =?iso-8859-1?Q?5cLEDtC0s17NkctGXcmprQ7kx0yT4CEcWM6MKe+i9EgUlfMcbEOMhN5QsJ?=
+ =?iso-8859-1?Q?CQ1QJEYG5dQkBM2vlj/UgheNMpdmSDnh/uuAAnQUc+/IlUwlT4BXDpkoey?=
+ =?iso-8859-1?Q?SQcGl/nPxngr7Tpd/BYovISe8f0wLgHNOaUd7AbJ0wAl+4+2jqsF68wr7e?=
+ =?iso-8859-1?Q?6EnV8a/nOqI98mp1QfOmDlePxT3lVlhlYAhxjrr8p7CENoefBtbGgnDBdh?=
+ =?iso-8859-1?Q?6WlJ4bWiZo+M+qNwvws7F+INILZGZVFlTVVKHCjrneAyFxxCkpBVr2byK1?=
+ =?iso-8859-1?Q?V2KmExiIoWfTYlnmjWClWJNYeHmH9DGD6k+1AvaswZdJ8S/R7mW7gSbFpi?=
+ =?iso-8859-1?Q?26Zuu/h72ECFzQAkPBHXQ4gBWr29yoH1Ma0g5/zPxokyUVXXmjLKbl5VHD?=
+ =?iso-8859-1?Q?tV/VxUVLytMnguiSw/lkEsRJmrb0TyBC+weXzuaBSPrPk1yqK3FTnrmYT3?=
+ =?iso-8859-1?Q?oRsQZjA9jU4uQ/CD+g3O4tM3fj1M+l/G9M8XQADFtmyPqfKaMmr5lMCJIU?=
+ =?iso-8859-1?Q?Y1R7oOy10j7cAJiCIcNinUaUBXm/2nbMiWJ4u4JEWkrGSRwoyhwXeD+Hyl?=
+ =?iso-8859-1?Q?7alMDunYNO22Welqtu8BhuPvOUUxdtWsDWeitDQSv2SyPQHyHORvKkrHIU?=
+ =?iso-8859-1?Q?khCeW4np06gyvik3TFYXv283EypkHWX7oSciQedwh5XT6j8/DWk23/AcGA?=
+ =?iso-8859-1?Q?zj3YsqsUQeejw2ZjeyiH6THJD8OulEQjH0OtPbTw8uuFrep0R1WNiRqgT5?=
+ =?iso-8859-1?Q?QOkbLPZYMj4fKKcBUXW1TXM6UzHQnO71XhyRBQCPYvGT2FKOlSwS75gOHg?=
+ =?iso-8859-1?Q?7ZZGqNhU99zUW7MC20MPyju60n4zaaSKVeBYJV5W2qckeFl047+hmdScJd?=
+ =?iso-8859-1?Q?BuUR6H2Tr2aKvMgiL3Vqznny7H4oq+8k8qcEqG5fuHrqB63dFCedNSAgMt?=
+ =?iso-8859-1?Q?siho3mH+qCYPDn//rTkkIbUUsqiETL8yo+xfmAihgFmm4VV6j2scmm5yuL?=
+ =?iso-8859-1?Q?Amis8m9GMLV5bAbK++BPvoJWAak3RoH6IYZq11OPDUAWSWSn3mOWUOhFrG?=
+ =?iso-8859-1?Q?IjyPT4BbkGGxHCmA5eIXU2eAU2NkBbAzuy?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6b6ee0d-4c99-4d9c-7482-08ddb5be34dd
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR11MB8430.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 21:04:29.4031
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Wg/Iempm1mN/J0I2kNivjYmTfbc9ecRj44aybHfD/v7p8PJwk0i97hVonGZpdHN82+FNVYAvpUy1uchkhXOoxg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PPF814058951
+X-OriginatorOrg: intel.com
 
-So what would be the next steps here?
+On Wed, Jun 25, 2025 at 10:30:08PM +0530, Badal Nilawar wrote:
+> Introducing xe_late_bind_fw to enable firmware loading for the devices,
+> such as the fan controller, during the driver probe. Typically,
+> firmware for such devices are part of IFWI flash image but can be
+> replaced at probe after OEM tuning.
+> This patch binds mei late binding component to enable firmware loading.
+> 
+> v2:
+>  - Add devm_add_action_or_reset to remove the component (Daniele)
+>  - Add INTEL_MEI_GSC check in xe_late_bind_init() (Daniele)
+> v3:
+>  - Fail driver probe if late bind initialization fails,
+>    add has_late_bind flag (Daniele)
+> v4:
+>  - %S/I915_COMPONENT_LATE_BIND/INTEL_COMPONENT_LATE_BIND/
+> 
+> Reviewed-by: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
+> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+> ---
+>  drivers/gpu/drm/xe/Makefile                |  1 +
+>  drivers/gpu/drm/xe/xe_device.c             |  5 ++
+>  drivers/gpu/drm/xe/xe_device_types.h       |  6 ++
+>  drivers/gpu/drm/xe/xe_late_bind_fw.c       | 90 ++++++++++++++++++++++
+>  drivers/gpu/drm/xe/xe_late_bind_fw.h       | 15 ++++
+>  drivers/gpu/drm/xe/xe_late_bind_fw_types.h | 37 +++++++++
+>  drivers/gpu/drm/xe/xe_pci.c                |  3 +
+>  7 files changed, 157 insertions(+)
+>  create mode 100644 drivers/gpu/drm/xe/xe_late_bind_fw.c
+>  create mode 100644 drivers/gpu/drm/xe/xe_late_bind_fw.h
+>  create mode 100644 drivers/gpu/drm/xe/xe_late_bind_fw_types.h
+> 
+> diff --git a/drivers/gpu/drm/xe/Makefile b/drivers/gpu/drm/xe/Makefile
+> index 7c039caefd00..521547d78fd2 100644
+> --- a/drivers/gpu/drm/xe/Makefile
+> +++ b/drivers/gpu/drm/xe/Makefile
+> @@ -76,6 +76,7 @@ xe-y += xe_bb.o \
+>  	xe_hw_fence.o \
+>  	xe_irq.o \
+>  	xe_lrc.o \
+> +	xe_late_bind_fw.o \
+>  	xe_migrate.o \
+>  	xe_mmio.o \
+>  	xe_mocs.o \
+> diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
+> index cd17c1354ab3..584acd63b0d9 100644
+> --- a/drivers/gpu/drm/xe/xe_device.c
+> +++ b/drivers/gpu/drm/xe/xe_device.c
+> @@ -44,6 +44,7 @@
+>  #include "xe_hw_engine_group.h"
+>  #include "xe_hwmon.h"
+>  #include "xe_irq.h"
+> +#include "xe_late_bind_fw.h"
+>  #include "xe_memirq.h"
+>  #include "xe_mmio.h"
+>  #include "xe_module.h"
+> @@ -889,6 +890,10 @@ int xe_device_probe(struct xe_device *xe)
+>  	if (err)
+>  		return err;
+>  
+> +	err = xe_late_bind_init(&xe->late_bind);
+> +	if (err && err != -ENODEV)
+> +		return err;
+> +
+>  	err = xe_oa_init(xe);
+>  	if (err)
+>  		return err;
+> diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
+> index 6aca4b1a2824..321f9e9a94f6 100644
+> --- a/drivers/gpu/drm/xe/xe_device_types.h
+> +++ b/drivers/gpu/drm/xe/xe_device_types.h
+> @@ -16,6 +16,7 @@
+>  #include "xe_devcoredump_types.h"
+>  #include "xe_heci_gsc.h"
+>  #include "xe_lmtt_types.h"
+> +#include "xe_late_bind_fw_types.h"
+>  #include "xe_memirq_types.h"
+>  #include "xe_oa_types.h"
+>  #include "xe_platform_types.h"
+> @@ -323,6 +324,8 @@ struct xe_device {
+>  		u8 has_heci_cscfi:1;
+>  		/** @info.has_heci_gscfi: device has heci gscfi */
+>  		u8 has_heci_gscfi:1;
+> +		/** @info.has_late_bind: Device has firmware late binding support */
+> +		u8 has_late_bind:1;
+>  		/** @info.has_llc: Device has a shared CPU+GPU last level cache */
+>  		u8 has_llc:1;
+>  		/** @info.has_mbx_power_limits: Device has support to manage power limits using
+> @@ -555,6 +558,9 @@ struct xe_device {
+>  	/** @nvm: discrete graphics non-volatile memory */
+>  	struct intel_dg_nvm_dev *nvm;
+>  
+> +	/** @late_bind: xe mei late bind interface */
+> +	struct xe_late_bind late_bind;
+> +
+>  	/** @oa: oa observation subsystem */
+>  	struct xe_oa oa;
+>  
+> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.c b/drivers/gpu/drm/xe/xe_late_bind_fw.c
+> new file mode 100644
+> index 000000000000..eaf12cfec848
+> --- /dev/null
+> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw.c
+> @@ -0,0 +1,90 @@
+> +// SPDX-License-Identifier: MIT
+> +/*
+> + * Copyright © 2025 Intel Corporation
+> + */
+> +
+> +#include <linux/component.h>
+> +#include <linux/delay.h>
+> +
+> +#include <drm/drm_managed.h>
+> +#include <drm/intel/i915_component.h>
+> +#include <drm/intel/late_bind_mei_interface.h>
+> +#include <drm/drm_print.h>
+> +
+> +#include "xe_device.h"
+> +#include "xe_late_bind_fw.h"
+> +
+> +static struct xe_device *
+> +late_bind_to_xe(struct xe_late_bind *late_bind)
+> +{
+> +	return container_of(late_bind, struct xe_device, late_bind);
+> +}
+> +
+> +static int xe_late_bind_component_bind(struct device *xe_kdev,
+> +				       struct device *mei_kdev, void *data)
+> +{
+> +	struct xe_device *xe = kdev_to_xe_device(xe_kdev);
+> +	struct xe_late_bind *late_bind = &xe->late_bind;
+> +
+> +	mutex_lock(&late_bind->mutex);
+> +	late_bind->component.ops = data;
+> +	late_bind->component.mei_dev = mei_kdev;
+> +	mutex_unlock(&late_bind->mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static void xe_late_bind_component_unbind(struct device *xe_kdev,
+> +					  struct device *mei_kdev, void *data)
+> +{
+> +	struct xe_device *xe = kdev_to_xe_device(xe_kdev);
+> +	struct xe_late_bind *late_bind = &xe->late_bind;
+> +
+> +	mutex_lock(&late_bind->mutex);
+> +	late_bind->component.ops = NULL;
+> +	mutex_unlock(&late_bind->mutex);
+> +}
+> +
+> +static const struct component_ops xe_late_bind_component_ops = {
+> +	.bind   = xe_late_bind_component_bind,
+> +	.unbind = xe_late_bind_component_unbind,
+> +};
+> +
+> +static void xe_late_bind_remove(void *arg)
+> +{
+> +	struct xe_late_bind *late_bind = arg;
+> +	struct xe_device *xe = late_bind_to_xe(late_bind);
+> +
+> +	component_del(xe->drm.dev, &xe_late_bind_component_ops);
+> +	mutex_destroy(&late_bind->mutex);
+> +}
+> +
+> +/**
+> + * xe_late_bind_init() - add xe mei late binding component
+> + *
+> + * Return: 0 if the initialization was successful, a negative errno otherwise.
+> + */
+> +int xe_late_bind_init(struct xe_late_bind *late_bind)
+> +{
+> +	struct xe_device *xe = late_bind_to_xe(late_bind);
+> +	int err;
+> +
+> +	if (!xe->info.has_late_bind)
+> +		return 0;
+> +
+> +	mutex_init(&late_bind->mutex);
+> +
+> +	if (!IS_ENABLED(CONFIG_INTEL_MEI_LATE_BIND) || !IS_ENABLED(CONFIG_INTEL_MEI_GSC)) {
+> +		drm_info(&xe->drm, "Can't init xe mei late bind missing mei component\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	err = component_add_typed(xe->drm.dev, &xe_late_bind_component_ops,
+> +				  INTEL_COMPONENT_LATE_BIND);
+> +	if (err < 0) {
+> +		drm_info(&xe->drm, "Failed to add mei late bind component (%pe)\n", ERR_PTR(err));
+> +		return err;
+> +	}
+> +
+> +	return devm_add_action_or_reset(xe->drm.dev, xe_late_bind_remove, late_bind);
+> +}
+> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.h b/drivers/gpu/drm/xe/xe_late_bind_fw.h
+> new file mode 100644
+> index 000000000000..4c73571c3e62
+> --- /dev/null
+> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: MIT */
+> +/*
+> + * Copyright © 2025 Intel Corporation
+> + */
+> +
+> +#ifndef _XE_LATE_BIND_FW_H_
+> +#define _XE_LATE_BIND_FW_H_
+> +
+> +#include <linux/types.h>
+> +
+> +struct xe_late_bind;
+> +
+> +int xe_late_bind_init(struct xe_late_bind *late_bind);
+> +
+> +#endif
+> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
+> new file mode 100644
+> index 000000000000..1156ef94f0d5
+> --- /dev/null
+> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
+> @@ -0,0 +1,37 @@
+> +/* SPDX-License-Identifier: MIT */
+> +/*
+> + * Copyright © 2025 Intel Corporation
+> + */
+> +
+> +#ifndef _XE_LATE_BIND_TYPES_H_
+> +#define _XE_LATE_BIND_TYPES_H_
+> +
+> +#include <linux/iosys-map.h>
+> +#include <linux/mutex.h>
+> +#include <linux/types.h>
+> +
+> +/**
+> + * struct xe_late_bind_component - Late Binding services component
+> + * @mei_dev: device that provide Late Binding service.
+> + * @ops: Ops implemented by Late Binding driver, used by Xe driver.
+> + *
+> + * Communication between Xe and MEI drivers for Late Binding services
+> + */
+> +struct xe_late_bind_component {
+> +	/** @late_bind_component.mei_dev: mei device */
+> +	struct device *mei_dev;
+> +	/** @late_bind_component.ops: late binding ops */
+> +	const struct late_bind_component_ops *ops;
+> +};
+> +
+> +/**
+> + * struct xe_late_bind
+> + */
+> +struct xe_late_bind {
+> +	/** @late_bind.component: struct for communication with mei component */
+> +	struct xe_late_bind_component component;
+> +	/** @late_bind.mutex: protects the component binding and usage */
 
-On Saturday 21 June 2025 18:52:46 Pali Roh√°r wrote:
-> On Saturday 21 June 2025 12:38:34 Paulo Alcantara wrote:
-> > Pali Roh√°r <pali@kernel.org> writes:
-> > 
-> > > On Friday 20 June 2025 20:44:37 Paulo Alcantara wrote:
-> > >> Pali Roh√°r <pali@kernel.org> writes:
-> > >> 
-> > >> > Currently Linux SMB client returns EIO for lstat() and AT_SYMLINK_NOFOLLOW
-> > >> > calls on symlink node when the symlink target location is broken or cannot
-> > >> > be read or parsed.
-> > >> >
-> > >> > Fix this problem by relaxing the errors from various locations which parses
-> > >> > information about symlink file node (UNIX SMB1, native SMB2+, NFS-style,
-> > >> > WSL-style) and let readlink() syscall to return EIO when the symlink target
-> > >> > location is not available.
-> > >> 
-> > >> Please, don't.  We still want those validations for the other types of
-> > >> symlinks.
-> > >
-> > > Well, validation was not removed. Validation is still there, just the
-> > > error is signalled by the readlink() syscall instead of the lstat() or
-> > > AT_SYMLINK_NOFOLLOW syscalls.
-> > >
-> > > My opinion is that the lstat() or AT_SYMLINK_NOFOLLOW should work on
-> > > symlink node independently of where the symlink points (and whether the
-> > > symlink target is valid POSIX path or not). That is because the lstat()
-> > > and AT_SYMLINK_NOFOLLOW says that the symlink target location must not
-> > > be used and must not be resolved.
-> > >
-> > > But still the invalid / incorrect / broken or non-representable symlink
-> > > target path in POSIX notation should be reported as an issue and the
-> > > readlink() is the correct syscall which should report these errors.
-> > 
-> > The only issue is breaking existing customer or user applications that
-> > really don't care if cifs.ko could follow those kind of symlinks.
-> > 
-> > Samba create symlinks to represent DFS links with targets like
-> > 'msdfs:srv1\share,srv2\share', which are not valid POSIX paths.  Does
-> > that mean the filesystem should not allow readlink(2) to succeed just
-> > because it is not a valid POSIX path?  Is that what you mean?
+Please, before submitting another re-spin of this series, refactor
+this mutex. This is absolutely not acceptable.
+
+https://blog.ffwll.ch/2022/07/locking-engineering.html
+
+This is protecting the code and not the data. If binding or usage
+happens you need to have other ways of dealing with it.
+
+The lock needs to be reduced to the data you are trying to protect.
+Perhaps around the state/status or to certain register, but using
+a big mutex like you use in the patch 5 of this series and stating
+that it is to protect the code is not the right way.
+
+Sorry for not having looked at this earlier.
+
+> +	struct mutex mutex;
+> +};
+> +
+> +#endif
+> diff --git a/drivers/gpu/drm/xe/xe_pci.c b/drivers/gpu/drm/xe/xe_pci.c
+> index 08e21d4099e0..e5018d3ae74f 100644
+> --- a/drivers/gpu/drm/xe/xe_pci.c
+> +++ b/drivers/gpu/drm/xe/xe_pci.c
+> @@ -66,6 +66,7 @@ struct xe_device_desc {
+>  	u8 has_gsc_nvm:1;
+>  	u8 has_heci_gscfi:1;
+>  	u8 has_heci_cscfi:1;
+> +	u8 has_late_bind:1;
+>  	u8 has_llc:1;
+>  	u8 has_mbx_power_limits:1;
+>  	u8 has_pxp:1;
+> @@ -355,6 +356,7 @@ static const struct xe_device_desc bmg_desc = {
+>  	.has_mbx_power_limits = true,
+>  	.has_gsc_nvm = 1,
+>  	.has_heci_cscfi = 1,
+> +	.has_late_bind = true,
+>  	.needs_scratch = true,
+>  };
+>  
+> @@ -600,6 +602,7 @@ static int xe_info_init_early(struct xe_device *xe,
+>  	xe->info.has_gsc_nvm = desc->has_gsc_nvm;
+>  	xe->info.has_heci_gscfi = desc->has_heci_gscfi;
+>  	xe->info.has_heci_cscfi = desc->has_heci_cscfi;
+> +	xe->info.has_late_bind = desc->has_late_bind;
+>  	xe->info.has_llc = desc->has_llc;
+>  	xe->info.has_pxp = desc->has_pxp;
+>  	xe->info.has_sriov = desc->has_sriov;
+> -- 
+> 2.34.1
 > 
-> But this is something totally different thing.
-> 
-> Here you are referring to the behavior of Samba server, which interprets
-> symlink node stored on local filesystem named e.g. "link1" pointing to
-> target relative file name 'msdfs:srv1\share,srv2\share' specially.
-> 
-> Calling "ln -s 'msdfs:srv1\share,srv2\share' link1" is perfectly fine on
-> the ext4 filesystem. It creates a relative symlink to the specified
-> file.
-> 
-> And if you call "echo test > 'msdfs:srv1\share,srv2\share'" then it would
-> world correctly and "cat link1" will print "test".
-> 
-> The 'msdfs:srv1\share,srv2\share' is a valid POSIX path and it is stored
-> on the local Linux filesystem. So I do not see anything wrong with it or
-> reason why local filesystem should disallow creating such symlink or why
-> would realink() should fail on such node.
-> 
-> 
-> That example has nothing with symlinks stored on NTFS-compatible
-> filesystems which has ability to store symlinks pointing to non-POSIX
-> NT object model paths.
-> 
-> Here the issue is with symlink target locations which are coming from
-> the remote NT server and are pointing to location which cannot be
-> directly represented by the Linux system. The translation needs to be
-> done in both directions and reversible. Otherwise moving the file or
-> symlink from cifs to ext4 and back would damage the file or symlink.
-> 
-> > >> The problem is just that cifs.ko can't handle absolute
-> > >> symlink targets in the form of '\??\UNC\srv\share\foo', while Windows
-> > >> client can.  They are still valid symlink targets, but cifs.ko doesn't
-> > >> know how to follow them.
-> > >
-> > > Windows client can represent and follow such symlink because the symlink
-> > > is in the NT style format and Windows kernel uses NT style of paths
-> > > internally. Linux kernel uses POSIX paths and POSIX does not contain any
-> > > GLOBAL?? namespace for NT object hierarchy.
-> > >
-> > > Leaking raw NT object hierarchy from SMB to POSIX userspace via
-> > > readlink() syscall is a bad idea. Applications are really not expecting
-> > > that the readlink() syscall will return NT kernel internals (exported
-> > > over SMB protocol and passed to cifs.ko).
-> > >
-> > > For UNC paths encoded in NT object hierarchy, which is just some subset
-> > > of all possible NT paths, I had an idea that we could convert these
-> > > paths to some format like:
-> > >
-> > >    <prefix>/server/share/path...
-> > >
-> > > Where <prefix> would be specified by the string mount option. So user
-> > > could say that wants all UNC symlinks pointing to /mnt/unc/.
-> > >
-> > > And in the same way if user would want to create symlink pointing to
-> > > /mnt/unc/server/share/path... then cifs.ko will transform it into valid
-> > > NT UNC path and create a symlink to this location.
-> > 
-> > That's really a terrible idea.  The symlink targets in the form of
-> > '\??\UNC\...' could be resolved by cifs.ko.  The ones that refer to a
-> > file outside the mounted share, we would set those as automounts.
-> 
-> I agree that above is not the best idea, but I wrote at least something
-> as an idea as I do not know how it could be solved in better way.
-> 
-> And I do not see how it could be resolved by cifs.ko somehow
-> automatically. I'm not sure to which you refer how it can be resolved by
-> cifs.ko. I understood you message as it could automount another share
-> and do the whole path symlink resolving in cifs.ko.
-> 
-> And I think that this is even worse idea than mine. Because that
-> automount means that symlinks pointing outside of the share would start
-> behaving like a mount point. Such thing can cause even a security issues
-> if not used carefully.
-> 
-> But moreover there is a big difference between symlink and mount point.
-> Symlinks are not resolved by filesystem itself (but rather by the VFS,
-> to ensure that all access checks are applied) and also moving the
-> symlink between filesystems should not break them. In this idea when the
-> symlink is going to be moved from smb share to e.g. ext4 local fs, then
-> it would stops working (if the path resolved is in the cifs.ko) as
-> ext4.ko would not be able to process special cifs.ko symlinks.
-> 
-> > > But this would solve only problem with UNC symlink, not symlinks
-> > > pointing to NT object hierarchy in general.
-> > >
-> > >> The following should do it and then restore old behavior
-> > >> 
-> > >> diff --git a/fs/smb/client/reparse.c b/fs/smb/client/reparse.c
-> > >> index bb25e77c5540..11d44288e75a 100644
-> > >> --- a/fs/smb/client/reparse.c
-> > >> +++ b/fs/smb/client/reparse.c
-> > >> @@ -875,15 +875,8 @@ int smb2_parse_native_symlink(char **target, const char *buf, unsigned int len,
-> > >>  			abs_path += sizeof("\\DosDevices\\")-1;
-> > >>  		else if (strstarts(abs_path, "\\GLOBAL??\\"))
-> > >>  			abs_path += sizeof("\\GLOBAL??\\")-1;
-> > >> -		else {
-> > >> -			/* Unhandled absolute symlink, points outside of DOS/Win32 */
-> > >> -			cifs_dbg(VFS,
-> > >> -				 "absolute symlink '%s' cannot be converted from NT format "
-> > >> -				 "because points to unknown target\n",
-> > >> -				 smb_target);
-> > >> -			rc = -EIO;
-> > >> -			goto out;
-> > >> -		}
-> > >> +		else
-> > >> +			goto out_unhandled_target;
-> > >>  
-> > >>  		/* Sometimes path separator after \?? is double backslash */
-> > >>  		if (abs_path[0] == '\\')
-> > >> @@ -910,13 +903,7 @@ int smb2_parse_native_symlink(char **target, const char *buf, unsigned int len,
-> > >>  			abs_path++;
-> > >>  			abs_path[0] = drive_letter;
-> > >>  		} else {
-> > >> -			/* Unhandled absolute symlink. Report an error. */
-> > >> -			cifs_dbg(VFS,
-> > >> -				 "absolute symlink '%s' cannot be converted from NT format "
-> > >> -				 "because points to unknown target\n",
-> > >> -				 smb_target);
-> > >> -			rc = -EIO;
-> > >> -			goto out;
-> > >> +			goto out_unhandled_target;
-> > >>  		}
-> > >>  
-> > >>  		abs_path_len = strlen(abs_path)+1;
-> > >> @@ -966,6 +953,7 @@ int smb2_parse_native_symlink(char **target, const char *buf, unsigned int len,
-> > >>  		 * These paths have same format as Linux symlinks, so no
-> > >>  		 * conversion is needed.
-> > >>  		 */
-> > >> +out_unhandled_target:
-> > >>  		linux_target = smb_target;
-> > >>  		smb_target = NULL;
-> > >>  	}
-> > >
-> > > I'm really not sure if removing the messages and error reporting about
-> > > symlinks which cannot be represented in POSIX system is a good idea.
-> > 
-> > Those messages are just useless and noisy.  Do you think it's useful
-> > printing that message for _every_ symlink when someone is calling
-> > readdir(2) in a directory that contain such files?
-> 
-> I though that for any debugging purposes these messages are useful.
-> Now I see that VFS level is printed always, so maybe the FYI level could
-> be better. Or do you really think that it is useless even for debugging?
