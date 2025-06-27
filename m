@@ -1,120 +1,108 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5523A4C8E;
-	Fri, 27 Jun 2025 14:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819F5298CAE;
+	Fri, 27 Jun 2025 14:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751033538; cv=none; b=mjU5oKbvBgBVQKGmB8h+/WxAnFCVA+SASekxOiSFpzBRE/SYYsQeemHkTEKWlnZD2883h9OH8cxH42UX+Az5Tv+j+u+fi6R56HkSwaV0REUcS+KhKVAMvgmNK3Gis0aC1zgv552UgHJXp5sp9ScSTFvuMfhS11/iwIl3Wd6m3OU=
+	t=1751033627; cv=none; b=qmlRy81sO5Lrx7uuRPegtN0XTlfTffI9eh1y0Err8FZ8Jpb1o//5RIOTy4CWIF+9xPn/zTtl/hesT0sRHg64ZfEJiWghoeq7KZiC4yLYYf7pW7pUzy3QC7QdPh+vPg+PSoDQGM45VUaDHb+Gl1leo8wNYFVvZMfrMjpQry0lj2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751033538; c=relaxed/simple;
-	bh=hVxsob2gMzK+yoGT2YTNMVPDuNbFcM9jirOwFff9BWY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=rp72CX6Yc3jjC3Ats8Dk5lbiREM1DNWEJwgVHgjduPp56VdB0420sa9mltowvS+rB23X+qdSMjCpaxICFp5cueJqKJcJtBUeiwFoIcmsN1cmVUAuFDQ0+R8ESV0jk2nxez7nLRk9THOkm6O4GlDzV7lu2nIOl7DqbJUsqRRn2UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mPGjOoYm; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751033627; c=relaxed/simple;
+	bh=32FONBh62JeuahpO4SNalmBjx2BSgd3T8J+Zdzf/Kbs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pk7Kk+5ASDLbvZ5OOasbeYjSUIuhMoUgq7dQz3WLT1/dhtKDaipMIWIUqvRwFTLNIeiSx+5iaJspBsdEclfA1QUw5BoaGtbp/C6VWA/4r4X85Q6U2T8Glw+ar1O3OfZh+7G5Cnm/5hsAC8WwPXDE47kBoxqYCEL/DNOHaPFP3u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i0OeCbOx; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mPGjOoYm"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d3f192a64eso199491985a.2;
-        Fri, 27 Jun 2025 07:12:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751033536; x=1751638336; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=N383MBQJeLK+4T/1dattnFOwTJK4B0ZF2Q3FHLC9rnI=;
-        b=mPGjOoYmym24QSLggjMzruxmj/IyvddDRo1CQr5GfjSg/CzGYX0uAXldLWQUe5lSET
-         MdQfj0q0OYPUbFcJGydNSbuStgsHPbO3q5bZJzpz8tJEbyJtQ9rWOp/V20XILIYqpOd2
-         iujtpGnYFqRRosorM6qP+epssp0cUWL7k7+8TyvfUZSxzjz9yp3FpeuJkt45y9mmqoXi
-         MkZUsnddDcr5XqUPjUK3/TgIDOgwZua+LNydN2DAAoo0DR8u5lJxX84QEBhK4Iv2F1dy
-         Aji59D+PRIZvUR7EBz7kZYm3L4JO94fitK2P9RTr1AFzto85Nv1+01ihZB5KyFeIXawV
-         Z88Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751033536; x=1751638336;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=N383MBQJeLK+4T/1dattnFOwTJK4B0ZF2Q3FHLC9rnI=;
-        b=GbE76RGNHVOKRePZ+eM+s8rqOW4pE32FPuu9FkWGiTVOsgwyVC9a+Y+cIhuLyHCDVi
-         h21muVKVEetUwrcVaaBdIQvEr/34SPDKD3q7epTdnecrr048yFbXvo193hmd1xkXPQT9
-         rpSANvGeWGtjPEn34IYDvMTCyQcmVzlXYpx/gDddkQe5Hl+048rbp96bKKSzJdccsQ+c
-         Fy3KkgQAsZSECAfmBgr4D5yGz3kCnqVBBEk/nz37JOpEwPbd8vReMyDm7niuG7hJ7eGs
-         8MYytFnwXd4zxGVCrOJO8aDtj996czWrhPWnCbZDIzr4Z0Ri7YF4a9IqLbPYTT3HDyiT
-         edvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/ZrEvITq/oX6FHMB9PhFSk0wXrW1z3vJPIXGK/JGILTitHeQFKfgt7/Vn6jGdj06Wbvhe05YLwq9cnAco@vger.kernel.org, AJvYcCXtIcRc0AaYq6+nIDPB5VhHFUKKOocBIL0J4vnLEW9UgWmIobFueIsRp4BGt2pTLhTrN/6Ctq34Yw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJx0z2bsAPjtDXXdzxOA8yLRngA6d6wDL1Zgc81zAD5XkCsa2T
-	iqKu0B7rR4EpAP4bcoGxua++59EATJR9yG5KY4rb1gj+FNVvERJ2OzBt6hT6Zrut2hWZctToCIp
-	q8rvWMa2eDaQ6Sj9dBUmSXSkGMG7CJNM=
-X-Gm-Gg: ASbGnctqIR26KRRaPjMQLSlrY6F9v78otnCwAyxVY4/x4xbT1Tuc3QdhW4yWZHUaoKJ
-	APdNQVaMt5GoMegNqvJ18Ypchv/b1yrOirJMjatLCJurxlxfxgpdTtkAEFfgFqp3sp69b8Hf3TL
-	8/gS6hQHl0rzMfkP1qmzAQurGU+0bNLKqQIhnBBhK+N8RHzZOesCPL5HjhPoaocv7SyMFkU+5uB
-	/nD
-X-Google-Smtp-Source: AGHT+IGCshPgaxEYsmETIaKF+DIOhmRobs4aM3xROcJI8wsF0mS20ESHDA8BhIyLKEBvDSxZeaqOD+gAJSRl1sdvNMg=
-X-Received: by 2002:a05:620a:1710:b0:7d4:29a5:8143 with SMTP id
- af79cd13be357-7d443920a06mr539226085a.6.1751033536067; Fri, 27 Jun 2025
- 07:12:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i0OeCbOx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751033626; x=1782569626;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=32FONBh62JeuahpO4SNalmBjx2BSgd3T8J+Zdzf/Kbs=;
+  b=i0OeCbOxM++2olJ9Gf/3SFPZFpXVngaojPU/1xuH7iT953+zH/j1unT+
+   Q1miMlJnwmMYPw3CNcU6hUC7D1/yAB0ac+uHiCZcI6Y7nalk0JWljU8/P
+   WwRTzxPLLf4NwHTkAT5cFjiRbq7Xlimtp3ZyJPdiXGj1NUo5p72YElM9J
+   Qa0uW/PyAucn+BQ7kG6zapWH7kV+wRLopPHcT4jQVfJvfmoGX+OYotNXe
+   R+FJqPGxQxJhAK69XlVdbEUmJqatzA4gM09syGezfV4iV+KLWaqHRFxXv
+   /o/MxY2WzBPw1lBz7qeaECNwGOknylKChKutEbEkCjdcDgykn22ejKpmy
+   Q==;
+X-CSE-ConnectionGUID: 0xiYKZwoSKmxEoStiJc37Q==
+X-CSE-MsgGUID: 46Jov5FAQo6t2c7+jSPwHA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="53431116"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="53431116"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 07:13:44 -0700
+X-CSE-ConnectionGUID: gszeNA2iR2uE3ieEJVDy/w==
+X-CSE-MsgGUID: usucIBTtQGqZWoiNmz2b9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="183713491"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 07:13:40 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uV9pg-0000000AV7n-3zOe;
+	Fri, 27 Jun 2025 17:13:36 +0300
+Date: Fri, 27 Jun 2025 17:13:36 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
+	Raag Jadav <raag.jadav@intel.com>,
+	"Tauro, Riana" <riana.tauro@intel.com>,
+	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
+	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+	intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/4] i2c: designware: Add quirk for Intel Xe
+Message-ID: <aF6nEOVhLURyf616@smile.fi.intel.com>
+References: <20250627135314.873972-1-heikki.krogerus@linux.intel.com>
+ <20250627135314.873972-2-heikki.krogerus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: ritu pal <ritupal888@gmail.com>
-Date: Fri, 27 Jun 2025 19:42:03 +0530
-X-Gm-Features: Ac12FXwl8FSUxystsBE8Cczyv48plmtJeMuC6TbzwCD4uh8t1JhyYcPzuBfN224
-Message-ID: <CAEy91+b+GN1CoX7Y7RVHq2sxjU=OrrPqmbsFuVW3da4YNTH+XQ@mail.gmail.com>
-Subject: [PATCH] certs/blacklist: add error logging for hash blacklisting failures
-To: David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, keyrings@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ritu pal <ritupal888@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627135314.873972-2-heikki.krogerus@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-[PATCH] certs/blacklist: add error logging for hash blacklisting failures
+On Fri, Jun 27, 2025 at 04:53:11PM +0300, Heikki Krogerus wrote:
+> The regmap is coming from the parent also in case of Xe
+> GPUs. Reusing the Wangxun quirk for that.
 
-Previously, errors returned by mark_hash_blacklisted() could be
-silently ignored by callers,
-such as uefi_blacklist_x509_tbs() and uefi_blacklist_binary(),
-which do not check or log the return value.
-This can make it difficult to detect and diagnose failures to add
-hashes to the system blacklist.
+...
 
-This change adds a pr_err() message in mark_hash_blacklisted() to log
-any failure to blacklist a hash,
-including the error code. This ensures that all blacklisting failures
-are visible in the kernel log,
-improving debuggability and system integrity monitoring, even if the
-upper layers do not handle the error.
+>  static int dw_i2c_plat_probe(struct platform_device *pdev)
+>  {
+> +	u32 flags = (uintptr_t)device_get_match_data(&pdev->dev);
 
-No functional changes are made to the blacklisting logic.
+> -	dev->flags = (uintptr_t)device_get_match_data(device);
+>  	if (device_property_present(device, "wx,i2c-snps-model"))
+> -		dev->flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
+> +		flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
+>  
+>  	dev->dev = device;
+>  	dev->irq = irq;
+> +	dev->flags = flags;
 
-Signed-off-by: Ritu Pal  <ritupal888@gmail.com>
----
- certs/blacklist.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Maybe I'm missing something, but why do we need these (above) changes?
 
-diff --git a/certs/blacklist.c b/certs/blacklist.c
-index 675dd7a8f07a..0f5ff29ccb3d 100644
---- a/certs/blacklist.c
-+++ b/certs/blacklist.c
-@@ -208,8 +208,10 @@ int mark_hash_blacklisted(const u8 *hash, size_t hash_len,
-  int err;
 
-  buffer = get_raw_hash(hash, hash_len, hash_type);
-- if (IS_ERR(buffer))
-+ if (IS_ERR(buffer)) {
-+ pr_err("Failed to blacklist hash: %pe\n", buffer);
-  return PTR_ERR(buffer);
-+ }
-  err = mark_raw_hash_blacklisted(buffer);
-  kfree(buffer);
-  return err;
-@@ -229,8 +231,10 @@ int is_hash_blacklisted(const u8 *hash, size_t hash_len,
-  int ret = 0;
+-- 
+With Best Regards,
+Andy Shevchenko
 
-  buffer = get_raw_hash(hash, hash_len, hash_type);
-- if (IS_ERR(buffer))
-+ if (IS_ERR(buffer)) {
-+ pr_err("Failed to blacklist hash: %pe\n", buffer);
-  return PTR_ERR(buffer);
-+ }
-  kref = keyring_search(make_key_ref(blacklist_keyring, true),
-        &key_type_blacklist, buffer, false);
-  if (!IS_ERR(kref)) {
---
+
