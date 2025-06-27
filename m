@@ -1,118 +1,270 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5651C6FE8
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FFB2DE20E
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751037278; cv=none; b=e6CTQee02WMD2ZBTXCiBPVtTSBOHH8HhcZxjulHRrK6cAKy+M0D+Gu7uOFTXvs7GuO2cH8MH4FS4DvFoGna/+9l9PM+VlzQx63FaM5px1SI34RMc9MnymrcloY94SaGc1LFbsrjgBOgUkESg3lq9QvBCaUq+x8Sjc2/ztmDoFOw=
+	t=1751037469; cv=none; b=EIe6ZiojNsmmSQAYdzSWc9b7gK+J7AQmY/HyFDnatlEp4nr5uq/ukbLWNGdPZ4bem5L34JGpQyDpVVYRBh+0MBbRQAx/nyoN9eNq+GXB6BBM0Glj4NNT6/FidNCjjndEp3MkDHsWuUgPb+iVJ5ZtH3r+bjRAbxELhYSXw/m0+9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751037278; c=relaxed/simple;
-	bh=9xXvH/B+/8ovxyiaGuMlHCWofUTZqieLqJyknmO4BWc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=QUZM0Ot7UFbsfot4qZ9WHj7r9eklZFyvwxErv+xVlrUCpENvcMEDcT4a3lKsRC0uZSSMH0U/jHOQvJMRod+2Higp1LEOwcptbjdCZJcylAx9qLixn57QFVT87SRBbLaN2tinbLORAlp6/we1rdfpwErqVV/71x5rIDaU2JaB3cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=I2YkeXsc; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1751037469; c=relaxed/simple;
+	bh=duqGKW964qjNwuxPqetVf/TrjZYvTw13+ovFDc1dkxw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XPlxxWnIx5S6AGqdHDGzvQxlk17M3m9/OBRUegIr7eMsoXVtsaNbAp8/e6Sqbg1xphxCRDQrUzAaWEptV0HEC+SNGJE0HYjY+v9cKlJB0sjl/Ub9u1Hb5RkfEe9F/sRlVEdziKm91opfFBuUAjvDTX72zz4waowWB6aRhdj84mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bC5xhPrn; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="I2YkeXsc"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-606b58241c9so3785053a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:14:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bC5xhPrn"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so235205ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:17:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1751037274; x=1751642074; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1751037467; x=1751642267; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4YdwBq8x/9yTkh9TL6YeeP2ANBhnQ2yJ1UlsY3OJMpQ=;
-        b=I2YkeXscYPiN5DOWsol9nyFJ1uwD/uU109bB+OU8zaelyHH2VWoPjPmrhpNIw8Feff
-         +TYD95Q4jwbMd8jh5wC+f8tZ4P2kW7cKtHtDq2q3oZW6uLy+i7BC/ihEBlJbPeRWG1YJ
-         ZHVr2VXNytYyN3YvjxAKj4+2HJWy+hmsb9qhj1jglrigO40T1ABM8VhfX61Bb/9eowtd
-         oNjj3LTj4IdICvQHQ7s40CBDMh8geJsuoT0XTIFV/yflmcZFW/OINt59Ez4JfuAP9CdL
-         JjN8CyWCMPYbBHu1VrRPe0UsX4TnPbxGHzjzhzN6P6rD/3E4O88bJslKCmKbf1jp1kUk
-         Qn5g==
+        bh=Ctaq7Efseld3m3PwMhLwojtbJNBExDIWVuNO2ad89Gw=;
+        b=bC5xhPrnk30A6esUoF1tTDyw8qSDGKl8ap9F2fK5g2uVMAnXFKB9dj9syGpwhpUto3
+         4OVTElAwBjz2T0ZZyALwTVglQ/GRkm8GLjGm0sUOkGbQROAxTs3eFtB/5KppOdhQRhiS
+         /7EmQwDS9ZPPY8U78NNfFjctlC9XIB5jURJkQOHmN8EscagB48g3M1j3RWlfIFBKP1LJ
+         gdkKI1y9cZLOVnhsMjM6SIHoMDQGhONPeB8y+rngKhEQwskIBGfht9gXFWbPStBL4Xpa
+         J/cxRkdk6V50pr4jQA64PusxOBIfL/OLBt/1BMgyQo8r5UQj4ECUxXqSKCDL/GwHS5Mx
+         JPrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751037274; x=1751642074;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4YdwBq8x/9yTkh9TL6YeeP2ANBhnQ2yJ1UlsY3OJMpQ=;
-        b=AGlOLwPi+0D83r2rIXoEsH7S6NZWwMQ7Duwkj/cdrN4daYrOcA5SXlFdNq62P2R7ds
-         lsv1p7EDsB27RLOxbhLx3wyOXuc1P1bjeYwFTYkQg2+KyjNbepB0o9uip4s+QmmSfGQ9
-         74HxdyRRPlJW9JuYCQz4WRp+HQdNqqrSR8FKVDz7yqUs3HfRUxCIp0jq7sbNrpVWtXGW
-         cziolxrQta4K46EBdHPwoL+qIILp/3SoeNCqcEC5WQPq8CCkADgdrpPYJ1Qh70El9vaf
-         JSIAejNEOLV6VK+5SowsfI8YvEY2HYGlaqI7vqUVOHHRupMSd6V9CVcTX9KANRk+VsJa
-         XiHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWq7FzXmjfmHm9PulsuwPi0gPwNxEV/X8Mm6BFhHKCSwqDHZAUtRcCi/C61pXnF60Zc6bQ43tOUpRPB8R8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUbUbc2Z2X5Bwv8QIAAYUMowYLAdoMcvnn+5u7ICQk8vnEU8GH
-	N2JDt3ofkiUA357NJv8wSTG0xV0oEqe2thouEvztI8xXI95sQpZxeSQh4Hr1tCc7lvE=
-X-Gm-Gg: ASbGncvdL9WDOeBif6OLyXiko1DIgR9lGtcORIpVM2GlELmW4JvHzGsybSpfKUd/+6L
-	j22F+G8NUY6RA1zgo3ErgnD4umKD0CQToh40+Gosd+75CEfd3KRqdoIJFXW/eF54DuRmXAV0Biu
-	J4dsv3dhjqrULqtvr+13KhD+oE9Uq4IodwWf+xLniK7AtMrrPTUEhtqNeoruHREDGbuRL77kN49
-	7fH8DpghXFz7saG8rlR88aHENqhqQLT0HQOGGLr4dxlLMEaShCajFT9QtcjhxM6tx67Uh5v0Muc
-	igGUVyYKp68H84IK7CcZn0Y/LiNGLPUI4yeC+aO8Q2TkYmZS2Q82fr2tj1NLUKAHeuUMmmVL4/v
-	n8b8fQfAAfjoN60qXEKYeJr93EGJt0lg=
-X-Google-Smtp-Source: AGHT+IGXK10sOdRHQiQDlGMMOAu00b6+1HTHgeTGZsSXRorQQ5K4SHjAIMDlViazK5Rw9QI+EWq3mQ==
-X-Received: by 2002:a05:6402:2063:b0:602:36ce:d0e7 with SMTP id 4fb4d7f45d1cf-60c88dd63d7mr2289708a12.14.1751037274070;
-        Fri, 27 Jun 2025 08:14:34 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c828bbea9sm1617466a12.1.2025.06.27.08.14.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 08:14:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751037467; x=1751642267;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ctaq7Efseld3m3PwMhLwojtbJNBExDIWVuNO2ad89Gw=;
+        b=cg7SwoVKzS3u0FVS2srfKIXJe2IOMLht5irSFbrPpBhCLZceFjnTQMTI0nq3RoMBDS
+         OLq4IAWLDXMPuZ8rczl43Ud7UrBvtAT1WzTLH7XzQmGVkmbWCcVfnGQzaoMln8Gyc0EN
+         QYe3BJFUji8nEb74v60MbLFEvH8gc2IZrJAISxh4T2Ycq++IhtcFQ2dwNdL2+dikbEET
+         XBmzUTSYc/o7jUHYzYqU6796ONDEA6ke/8Li//KCFl7kBh46dsSDa/tvZwpkdEVLv3GG
+         Ahp8piGGah5Y8b6CKRgmse4DufhHMb2tR7o4dmukNcr9v/q6jb3duqtaipGnRYoDjOf/
+         zqcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVfujzcdo2+Ocyic5bNLiSPjCgae/g9DcnE6gWoxp6BIVrZLtcBFpgCdj32t745LxcqL1hxOOh5h2hQjwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr6Vee/3LTZhJf5xG7Dq/53tx97G/rRb1blVP4ik1uG4H7gW+E
+	BiKtbRo/p/tf25r0s5sRt7A39hVWw91amNs1zaH7o7hwcpLXHQo6Em7VBUZDnYa5Y+WdwB9h/CN
+	pky1C/pLvBuWd7O/0Tppe4DC1hWYNeziaxPwuT0Uh
+X-Gm-Gg: ASbGncvEcelytDjEHFUsXPmqPvZ6ZRlJhnzH1CgCBkzKLQwizYEdONXos4OJkxmp5Wk
+	BgwockVmJ1W3z886R+00Z6qoTKH7Ds4n5PmcQQ/lkQ9QYYGEqQ7J+LgjuAQN2BVBXKHsnrWRBlL
+	Rt91266IgrlwI8LKsveWyWdqSdGOTO8FZ7iZJo8pDP5XKx7oPV5KOIvoBaM3d7XxGdj82Zd7v1s
+	OZFUobl8y25s/Y=
+X-Google-Smtp-Source: AGHT+IEb+xxzVEl4IYeZdvYpF90TB/n7ds2F+wk1b/UN6A6zXnHR6Y9V2ll0YmyvEsQKpdZrsBliB1gS8siVMNUIbc0=
+X-Received: by 2002:a17:902:c94f:b0:234:a469:62ef with SMTP id
+ d9443c01a7336-23ae4da691bmr146245ad.3.1751037466544; Fri, 27 Jun 2025
+ 08:17:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <cover.1747264138.git.ackerleytng@google.com> <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
+ <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
+ <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com>
+ <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
+ <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
+ <9502503f-e0c2-489e-99b0-94146f9b6f85@amd.com> <20250624130811.GB72557@ziepe.ca>
+ <CAGtprH_qh8sEY3s-JucW3n1Wvoq7jdVZDDokvG5HzPf0HV2=pg@mail.gmail.com> <31beeed3-b1be-439b-8a5b-db8c06dadc30@amd.com>
+In-Reply-To: <31beeed3-b1be-439b-8a5b-db8c06dadc30@amd.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Fri, 27 Jun 2025 08:17:34 -0700
+X-Gm-Features: Ac12FXyPZKiqBA6vQz47UeBICglaWzMRTynZ4wc-OUKHNtdWirkqG5VqjYk0knQ
+Message-ID: <CAGtprH9gojp6hit2SZ0jJBJnzuRvpfRhSa334UhAMFYPZzp4PA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
+ KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Fuad Tabba <tabba@google.com>, 
+	Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, 
+	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
+	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
+	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
+	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
+	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
+	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
+	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
+	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
+	james.morse@arm.com, jarkko@kernel.org, jgowans@amazon.com, 
+	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
+	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
+	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
+	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
+	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
+	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
+	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
+	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
+	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
+	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
+	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, 
+	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 27 Jun 2025 17:14:33 +0200
-Message-Id: <DAXEWQ93VELV.3HJXPNWASYBT7@fairphone.com>
-Cc: <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
- <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/10] Add clock drivers for SM7635
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Bjorn Andersson"
- <andersson@kernel.org>, "Michael Turquette" <mturquette@baylibre.com>,
- "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250625-sm7635-clocks-v1-0-ca3120e3a80e@fairphone.com>
- <68056b4a-b1c3-401f-8720-8e0c3cda6249@oss.qualcomm.com>
-In-Reply-To: <68056b4a-b1c3-401f-8720-8e0c3cda6249@oss.qualcomm.com>
 
-On Fri Jun 27, 2025 at 5:10 PM CEST, Konrad Dybcio wrote:
-> On 6/25/25 11:12 AM, Luca Weiss wrote:
->> Document and add the clock drivers for GCC, CAMCC, DISPCC, GPUCC and
->> VIDEOCC on the SM7635 SoC.
->>=20
->> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->> ---
->> Luca Weiss (10):
->>       dt-bindings: clock: qcom: document the SM7635 Global Clock Control=
-ler
->>       clk: qcom: Add Global Clock controller (GCC) driver for SM7635
->>       dt-bindings: clock: qcom: document the SM7635 Camera Clock Control=
-ler
->>       clk: qcom: Add Camera Clock controller (CAMCC) driver for SM7635
->>       dt-bindings: clock: qcom: document the SM7635 Display Clock Contro=
-ller
->>       clk: qcom: Add Display Clock controller (DISPCC) driver for SM7635
->>       dt-bindings: clock: qcom: document the SM7635 GPU Clock Controller
->>       clk: qcom: Add Graphics Clock controller (GPUCC) driver for SM7635
->>       dt-bindings: clock: qcom: document the SM7635 Video Clock Controll=
-er
->>       clk: qcom: Add Video Clock controller (VIDEOCC) driver for SM7635
+On Thu, Jun 26, 2025 at 9:50=E2=80=AFPM Alexey Kardashevskiy <aik@amd.com> =
+wrote:
 >
-> We had a massive yak shaving patchset go in this season, please move
-> the magic settings in .probe to qcom_cc_driver_data {}
+>
+>
+> On 25/6/25 00:10, Vishal Annapurve wrote:
+> > On Tue, Jun 24, 2025 at 6:08=E2=80=AFAM Jason Gunthorpe <jgg@ziepe.ca> =
+wrote:
+> >>
+> >> On Tue, Jun 24, 2025 at 06:23:54PM +1000, Alexey Kardashevskiy wrote:
+> >>
+> >>> Now, I am rebasing my RFC on top of this patchset and it fails in
+> >>> kvm_gmem_has_safe_refcount() as IOMMU holds references to all these
+> >>> folios in my RFC.
+> >>>
+> >>> So what is the expected sequence here? The userspace unmaps a DMA
+> >>> page and maps it back right away, all from the userspace? The end
+> >>> result will be the exactly same which seems useless. And IOMMU TLB
+> >
+> >   As Jason described, ideally IOMMU just like KVM, should just:
+> > 1) Directly rely on guest_memfd for pinning -> no page refcounts taken
+> > by IOMMU stack
+> > 2) Directly query pfns from guest_memfd for both shared/private ranges
+> > 3) Implement an invalidation callback that guest_memfd can invoke on
+> > conversions.
 
-Okay cool, I found them
-https://lore.kernel.org/linux-arm-msm/174970084192.547582.61230540758298270=
-6.b4-ty@kernel.org/
+Conversions and truncations both.
+
+> >
+> > Current flow:
+> > Private to Shared conversion via kvm_gmem_convert_range() -
+> >      1) guest_memfd invokes kvm_gmem_invalidate_begin() for the ranges
+> > on each bound memslot overlapping with the range
+> >           -> KVM has the concept of invalidation_begin() and end(),
+> > which effectively ensures that between these function calls, no new
+> > EPT/NPT entries can be added for the range.
+> >       2) guest_memfd invokes kvm_gmem_convert_should_proceed() which
+> > actually unmaps the KVM SEPT/NPT entries.
+> >       3) guest_memfd invokes kvm_gmem_execute_work() which updates the
+> > shareability and then splits the folios if needed
+> >
+> > Shared to private conversion via kvm_gmem_convert_range() -
+> >      1) guest_memfd invokes kvm_gmem_invalidate_begin() for the ranges
+> > on each bound memslot overlapping with the range
+> >       2) guest_memfd invokes kvm_gmem_convert_should_proceed() which
+> > actually unmaps the host mappings which will unmap the KVM non-seucure
+> > EPT/NPT entries.
+> >       3) guest_memfd invokes kvm_gmem_execute_work() which updates the
+> > shareability and then merges the folios if needed.
+> >
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> >
+> > For IOMMU, could something like below work?
+> >
+> > * A new UAPI to bind IOMMU FDs with guest_memfd ranges
+>
+> Done that.
+>
+> > * VFIO_DMA_MAP/UNMAP operations modified to directly fetch pfns from
+> > guest_memfd ranges using kvm_gmem_get_pfn()
+>
+> This API imho should drop the confusing kvm_ prefix.
+>
+> >      -> kvm invokes kvm_gmem_is_private() to check for the range
+> > shareability, IOMMU could use the same or we could add an API in gmem
+> > that takes in access type and checks the shareability before returning
+> > the pfn.
+>
+> Right now I cutnpasted kvm_gmem_get_folio() (which essentially is filemap=
+_lock_folio()/filemap_alloc_folio()/__filemap_add_folio()) to avoid new lin=
+ks between iommufd.ko and kvm.ko. It is probably unavoidable though.
+
+I don't think that's the way to avoid links between iommufd.ko and
+kvm.ko. Cleaner way probably is to have gmem logic built-in and allow
+runtime registration of invalidation callbacks from KVM/IOMMU
+backends. Need to think about this more.
 
 >
-> Konrad
+>
+> > * IOMMU stack exposes an invalidation callback that can be invoked by
+> > guest_memfd.
+> >
+> > Private to Shared conversion via kvm_gmem_convert_range() -
+> >      1) guest_memfd invokes kvm_gmem_invalidate_begin() for the ranges
+> > on each bound memslot overlapping with the range
+> >       2) guest_memfd invokes kvm_gmem_convert_should_proceed() which
+> > actually unmaps the KVM SEPT/NPT entries.
+> >             -> guest_memfd invokes IOMMU invalidation callback to zap
+> > the secure IOMMU entries.
+> >       3) guest_memfd invokes kvm_gmem_execute_work() which updates the
+> > shareability and then splits the folios if needed
+> >       4) Userspace invokes IOMMU map operation to map the ranges in
+> > non-secure IOMMU.
+> >
+> > Shared to private conversion via kvm_gmem_convert_range() -
+> >      1) guest_memfd invokes kvm_gmem_invalidate_begin() for the ranges
+> > on each bound memslot overlapping with the range
+> >       2) guest_memfd invokes kvm_gmem_convert_should_proceed() which
+> > actually unmaps the host mappings which will unmap the KVM non-seucure
+> > EPT/NPT entries.
+> >           -> guest_memfd invokes IOMMU invalidation callback to zap the
+> > non-secure IOMMU entries.
+> >       3) guest_memfd invokes kvm_gmem_execute_work() which updates the
+> > shareability and then merges the folios if needed.
+> >       4) Userspace invokes IOMMU map operation to map the ranges in sec=
+ure IOMMU.
+>
+>
+> Alright (although this zap+map is not necessary on the AMD hw).
 
+IMO guest_memfd ideally should not directly interact or cater to arch
+specific needs, it should implement a mechanism that works for all
+archs. KVM/IOMMU implement invalidation callbacks and have all the
+architecture specific knowledge to take the right decisions.
+
+>
+>
+> > There should be a way to block external IOMMU pagetable updates while
+> > guest_memfd is performing conversion e.g. something like
+> > kvm_invalidate_begin()/end().
+> >
+> >>> is going to be flushed on a page conversion anyway (the RMPUPDATE
+> >>> instruction does that). All this is about AMD's x86 though.
+> >>
+> >> The iommu should not be using the VMA to manage the mapping. It should
+> >
+> > +1.
+>
+> Yeah, not doing this already, because I physically cannot map gmemfd's me=
+mory in IOMMU via VMA (which allocates memory via gup() so wrong memory is =
+mapped in IOMMU). Thanks,
+>
+>
+> >> be directly linked to the guestmemfd in some way that does not disturb
+> >> its operations. I imagine there would be some kind of invalidation
+> >> callback directly to the iommu.
+> >>
+> >> Presumably that invalidation call back can include a reason for the
+> >> invalidation (addr change, shared/private conversion, etc)
+> >>
+> >> I'm not sure how we will figure out which case is which but guestmemfd
+> >> should allow the iommu to plug in either invalidation scheme..
+> >>
+> >> Probably invalidation should be a global to the FD thing, I imagine
+> >> that once invalidation is established the iommu will not be
+> >> incrementing page refcounts.
+> >
+> > +1.
+>
+> Alright. Thanks for the comments.
+>
+> >
+> >>
+> >> Jason
+>
+> --
+> Alexey
+>
