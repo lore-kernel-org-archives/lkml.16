@@ -1,79 +1,73 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6472E54D5;
-	Fri, 27 Jun 2025 16:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD73D2EA47F;
+	Fri, 27 Jun 2025 16:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751042182; cv=none; b=IBqREuI7HRtczXHeelOHntZ36fYJMHYbW0MYIWf9j8gYzXa4/QwfsNtmISN2nJ+aqN/5XFl4TSE8EbAfc/dA4D+lgZo/zBpAuy4MXG1+xFk9A/VwtgIqpKs+cRQac9uxWgU9tpuuPS1tb88FStmzCk+LEl8/xWrwmP6ywzZK1qY=
+	t=1751042183; cv=none; b=M2iOO/mWwD2nbOXCb5h3ogJIgC/NrLFwjgBy4d+MMPaU+Ju245CRqBq3wizAU1yr/j/8c/fdWhmIke5cSpHPjzbdsSZqMKcmcz5MWJvVegWQKFS/7Zjff+BxJ7fz9Zld5rItEwPWcTnub6KZVUByfEfKtZ1ibrBt3AtIG99IhEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751042182; c=relaxed/simple;
-	bh=lHSOozi2XZFmcbKE/yvMC5A+P89S6+ByHXRgK//y00s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gUNHZLQ4+AS6bPs5gbpKXE7aElsjqUeY3r/j+oVA3gV6/8y5X/10tD69mixsSd9IbPID/D9jWEkJ1jnjPewbDc2D3f/Q6Hzhdoq/QbbGXeq1t+nS1U0fHSORQ5OVEJY2ZHwKNo1WaCDzC8PXkNKyqCwNFrqJgFTZdmThDC1ZjpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=djAWL+Mm; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1751042183; c=relaxed/simple;
+	bh=U36zvCdwxVpbXVC99b1oNGYhCohLlD3gx4t7Uaf0r+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j0/UYT7fw1iQ3VuxDqpcE9Td1hTR+iaefk3MZkEGuFiR84U+EYBbzO9Tv8/t3zoTW7IrMZEN+cmXmKbuvsYYDntGtLpxziOu+oa7EgnXfOsDRSns563jXIixWpgCfvzTfsMOOPDrn50eA5hM33g0FxWDunALM6npwqDXz9159YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N7GvYWfC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="djAWL+Mm"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net C8791406FC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1751042174; bh=kInmtXquqmIK/r68eyZas1KLXdq7ekeHM4fZoyEUvUQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=djAWL+Mm2QsUh8+3s46zSV4dan/Bx0Qi8fLiCLzKURMBu0YkWNFsh82QQ+aZMIFGS
-	 emDbgom+w86Hw9mWK60wUDYaqQ2JYCWEQtr85VNFSy9rG+NcaA179kacOMHjjlkKw7
-	 U/9R2Aw7bPWrRmPK7i6QYLeRrQ/770t6wWLfEuk1FKXgRsfFfe0tC8cKe857ffGml5
-	 LHeAi2XjqY6n7U4K0zW+iMfKLU+/uSp7T1NDFmgk+uZWjwHwW1keUmpmBqb3NXeskw
-	 BcKKb5tRBGlDk3Qqj7R67r1RxGX0hQVePUO2tCm4OvHZEyT7j7MSp94oALrwdIW7F3
-	 oDUva59p/NDJQ==
-Received: from localhost (c-73-14-55-248.hsd1.co.comcast.net [73.14.55.248])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id C8791406FC;
-	Fri, 27 Jun 2025 16:36:13 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
- List <linux-doc@vger.kernel.org>
-Cc: linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>, Sai
- Vishnu M <saivishnu725@gmail.com>
-Subject: Re: [PATCH 0/3] Translate sphinx-pre-install to Python
-In-Reply-To: <20250627171233.66c825ca@sal.lan>
-References: <cover.1750924501.git.mchehab+huawei@kernel.org>
- <20250627171233.66c825ca@sal.lan>
-Date: Fri, 27 Jun 2025 10:36:13 -0600
-Message-ID: <871pr5gn0i.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N7GvYWfC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60DF7C4CEE3;
+	Fri, 27 Jun 2025 16:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751042183;
+	bh=U36zvCdwxVpbXVC99b1oNGYhCohLlD3gx4t7Uaf0r+Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N7GvYWfCJAF6tR7ODY7v7AWWFlwxJDlPbXhF5erD91FVrNvI5Iky3uIJb5Q2vp93R
+	 lHPWGcOwrNHsji67WzlTB9Gt8MREUm57zOf/b1ZVCKhgrr/eqC28uK8eDPBtGUjbxl
+	 pboQLkuqEHyCRdfB6VPTCpHWQEsKNJN4ErsL/ZswNH1EYOwi9REzGKZd0b99xxjQeY
+	 kCGZphrswQreUvquNPwpe2dN5EvzmRG1CRy9w7xuyFtEmHb2HqsHvButxdXLXxFDLj
+	 jr3RTY1wZ4MeQqku/H8aeeBYCWHnVBGNjIONzcc+FNproAI3iuFMOTcCytvSXBpEg2
+	 0emZRPrqi3B2A==
+Date: Fri, 27 Jun 2025 09:36:23 -0700
+From: Kees Cook <kees@kernel.org>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] fortify: add branch hints on unlikely
+ fortify_panic paths
+Message-ID: <202506270935.283087E22D@keescook>
+References: <20250625161221.295575-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625161221.295575-1-colin.i.king@gmail.com>
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+On Wed, Jun 25, 2025 at 05:12:20PM +0100, Colin Ian King wrote:
+> Analysis with gcov while running the stress-ng urandom stressor
+> shows that there are a couple of fortify panic paths that are highly
+> unlikely to be executed for well-behaving code. Adding appropriate
+> branch hints improves the stress-ng urandom stressor my a small
+> but statistically measureable amount. Ran 100 x 1 minute tests and
+> measured the stressor bogo-op rates on a Debian based Intel(R)
+> Core(TM) Ultra 9 285K with a 6.15 kernel with turbo disabled to
+> reduce jitter.
+> 
+> Results based on a Geometic Mean of 100 tests:
+> 
+> Without patch: 50512.95 bogo-ops/sec
+> With patch:    50819.58 bogo-ops/sec
+> 
+> %Std.Deviation of ~0.18%, so low jitter in results, improvement of ~0.6%
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-> Em Thu, 26 Jun 2025 10:06:28 +0200
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
->
->> As part of my efforts to make the doc build system more modern, it
->> follows a patch series converting sphinx-pre-install to python.
->> 
->> The first patch contains a small fix to the Perl version. It is
->> interesting to have, as otherwise regression tests fail.
->> 
->> The conversion itself was not hard. Most of the time I spent writing
->> scripts to test it.
->
-> Hi Jon,
->
-> Please see this as a RFC. There is a trivial bug here when sphinx-build
-> is found (m1 and m2 variables were renamed to match). Easy to fix,
-> but I'm doing other cleanups, and I'm planning to improve the regression
-> test coverage.
->
-> I'll be sending you a new version next week.
+Nice find! It seems some ftrace configs are unhappy with this change,
+though?
 
-OK, great, thanks for the heads-up.
+-Kees
 
-jon
+-- 
+Kees Cook
