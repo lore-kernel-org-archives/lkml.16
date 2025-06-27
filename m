@@ -1,63 +1,63 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C342BEFFF
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA38E2BF015
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751019030; cv=none; b=tn+wVLkBcDL3VgCa7Mv9CPs48ba4poQLlqBczUYpp64JRftBWbgktf6bs4b3RY2/G83yPTKX7IReEk6+3MQnqpkcUkvxrq0XhRJAUg2g0KbUjR6x0MERF2HMTzSquCSgB377mEAaPzndZ+pZAKAspENf9X9l96ZfMlki+joMb9w=
+	t=1751019032; cv=none; b=HHmoGj1sbEuKkoDBcQvjstCmeI1o0t/GVeyMJinx5wFrVRdwEumVyFpIjJujx8sYkrP/IBzsa+gSFtak8omtyA1dKaGf6LTGeiKGH1z0Oo+fJQJ9AHN3S+gcL72MTzN9vrrQXwDE3+EOrLp21KuH6R0KFmOweJxPfvgS6LK5zpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751019030; c=relaxed/simple;
-	bh=VO+P2GSdqpL3yvynRfRhH8v4iWnJAPq8glERuUFSA90=;
+	s=arc-20240116; t=1751019032; c=relaxed/simple;
+	bh=+x3y1vqW9Z5Car8CAaRNk20tbSowY5YAsoM75/r+qO8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rnP5uKcQRlOs1Fw3OJ4lLNM/In2/Z4W4BkaPbJ/wDCQmsR5+p23hiZSKIPm1w6Qt9f5Bnli2d/jYWtRCcgTlOrEeBcR1/gjeteeiKT5RxXuiXydeUPRfXWl/u1dhZLg1tdaTEd3AyPwvqXBjkmpGUpCZG4OWRbDx1WLFxZ2HR0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EPOyqSa4; arc=none smtp.client-ip=209.85.221.41
+	 MIME-Version; b=n3OLXwyZibj+6O9L5P7xUOmFEc866Fj5om6Q0Cs7xlqGKku/p9Sd7QYzcuPvu65fhiymLB8SyqvKGHkL3UjKEraPwCXomD3e7tOdC59YmZ60Q38EfpWt0blp9DBJpp4YVUOJxBaMd/T5gmpVzWSBtp96YvOulIVrjg6dANQPyWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bKsSAa+H; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EPOyqSa4"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4eed70f24so299793f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 03:10:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bKsSAa+H"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a52878d37aso249242f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 03:10:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751019027; x=1751623827; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1751019029; x=1751623829; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JnKlnox89+aqxPWrx0LhOdTGwWWYyCW4d7dddKDwsrg=;
-        b=EPOyqSa4sLtNfz6F+fZjtxU7guHSqmnRK9lTe3fPDrBIwVwr5JwapU3SjlSWk+6Q8S
-         KMNk79u2AsVOdJ70jQtssaDRgrleLfpFp3SVGDMmnzdXsVivCmD8Lo9gkcXjLKmuN9qM
-         Y5MjsFny1VkrzPMOwdUIxKiG8tGbRQ22FPoATxIvmzs+WNjiv5+I8c4p9cj6JOE0MXY/
-         1ayrWA5YhZXbuUfqgW2YjZ5PleBeqAuga3eW8JhCG/UpgmdazkxSRACei9rH1bzZwjdW
-         WjsKc8zohjvLg+YWh94eWbMbCpiqxsv5q45H4zPFPZXSkbr8KwQEaRTde7RngjhaOO/o
-         D3jw==
+        bh=5atQvWZ5XtF65GtICFYcWzizaeglvYjKjJ357iLMqgU=;
+        b=bKsSAa+HtNk1Fy6+0XLGMARaYyOGlRb8lAJbIYRcZyfC1jV5Y5SvH3HjEGOMnkBuW5
+         zD5gstFkTWsa42wMr5/m1FsilGDrjLgroyE4N7p18yq+5uYwbiINcQ1gsKWd452NJW58
+         R+i8EATQUHIg5ur00+aKLZzWecIWWRQTBoVl3bao0eYWLzb1fZI5ZtRa/OZP7MnpCad9
+         MGzT6L8VJLmi+5Iz4d0YhFL2c8/uwOkSCoJBpTyLdSRzWBZMf6xvS0MTrIqFQGtUTQX1
+         2tUJhOtAq5fsQQgtpc80waqRoDMsB04DTONVBC4gwa/UNv1Gj355a/Fw/OmJ+dhPrwbj
+         VNsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751019027; x=1751623827;
+        d=1e100.net; s=20230601; t=1751019029; x=1751623829;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JnKlnox89+aqxPWrx0LhOdTGwWWYyCW4d7dddKDwsrg=;
-        b=pimEUjKnTWWwQn2HXIHNxASFFKdkyk1EIM2PlTEBVENBX3Hg0K59CIDTEFDIhEjbW4
-         JuHy6lFDesyW3g7WY7IF8zFrKuE2ZkgqcVRCtIWjibJK2UJADSbc4j3GEaPcUGKqY3M2
-         tDAJLxpHsXAYnv0O3SLrcl9ngpULaa3S2X4nbj/+obF5R8fCvEbLcMz1jHdLX81jB26M
-         lkkF7LaBd9GTlJdlOZSPtex+S+P1aX5OBGi/nobq97BSOJ611aTZ3exvPmZ3QlmVphl3
-         PrdnFR5Zt0vRt9hQ9f/6BV1EdXURjXQUqdQ/UyhLk4obvKfUP+rBHt4X8WrlOYcum/q1
-         MwgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX5WxRyJBZ0VDlRNKrySR6QScdenp6yKMFGLdbrDaQVyRyI2Y4QLYQeVUBs4yEx6s2RWH0o4HHEWcIqTUk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwGfv4S6dQq1h3orDtsi/Hua2fj//dJcerOviR5y32QPIk3ebV
-	GA1MsOwmn19MGTJ9b/cZNOSxNG/FVyRUZfPeBSV7QJAGtH+4NwuWHt/BdwT0KhXQ+og=
-X-Gm-Gg: ASbGncvAWl842024kT0JVTdJO1FbQft87D88etiqhxY30peYu8iA6wB8YaXsXLrEsFq
-	VjC89dar3I71tN7nhADXWq187qyAdkL/S9xaVfPCWvsBa8rKFT+UgFvnGvZ2zD1qyvHw7g9cX2i
-	KPOlBxDeF9ZocpNexaTDka6l6sF9mJQqwreoYblVBsz9O4WHKulCdguqvCgDJNtqNGaXamZ/pRD
-	DScvuwslaCw/lQ5gW5Z0VVT7KldIkMHovFIfIJt+1FAnb/UbaJKYgg/LIm2xVaeaNSGvjZAzYXB
-	88tsf1YTs9mSpIrrau7hUeimI2yDbujNfj78jY+aqNHLBUqF057XC1pHsZQmG9Rdjk3DPW7i61k
-	CJ/Rh6BpOGJWxI4q9NpWBWMfaTlXUYfA88MGTAk1ys4YzUUrcOBnb
-X-Google-Smtp-Source: AGHT+IHuMh68Tyv7KxWY4j2dyJ3BwGirI46s8aecbMNC3bBEbknxdDdWsYm9o5PlniB0HBGERk1eWA==
-X-Received: by 2002:adf:9ccb:0:b0:3a4:f7ae:7801 with SMTP id ffacd0b85a97d-3a8fe79bb3cmr805861f8f.8.1751019026969;
-        Fri, 27 Jun 2025 03:10:26 -0700 (PDT)
+        bh=5atQvWZ5XtF65GtICFYcWzizaeglvYjKjJ357iLMqgU=;
+        b=fHwtqgRqDtZlM2bGlfDS02PLpcr6WmygVjFn6g35XXdOcoUZ5Hlz+V0ZmykMpHc1TW
+         j/3Tj2XAzlbuMihBOELPpJLNCrrtdEle7W3CaXewKisYTPF3gESXV4M3YL8ko2FNzamv
+         XNUxvxovw+sb9XWvNb4NKUQT2cZC3MuzCpO0xckIAj+bfMrwhLWwuK2fVpmBudpkjJaw
+         anWGDVlC7w/Fnd4cN4OJSXRxAFgPKavGM11XnsUcNAYfW33zWXCwoAPpac2PKD3/aHQu
+         KTaFaRvh1mGsMEb2lydrVboGsucjTgPeTBpeA1J6jJ8K9kEZbayv8QQepsVyjL4D4FDv
+         6CWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWC+N3eVfC9iUjRda0yz5IEypiVmfowFSKwUa+6SuYFsNf6KHtWvsKYeK551bZyHJgmzK2suAP8bBftJRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzou35h05mi5fGq6bVeK02QGQMEY/KjZXsYiq/RHqoy/eywtOKd
+	odU8JDI2M9X9x6z510fTWIYpPQ2SbkoipVRHm8iu31ZfjbFv28j203JFRGeY0kdzAr8=
+X-Gm-Gg: ASbGncuq+CLGLmenkKN9+lcNSMJIVf9sOBqperK4UAQgVQ50EY4dbvMcH4c2eQAPMdt
+	cGSJn/hjQBVv0Ni7VyeIyBKfqrUT/eXRp2O9nKzciDfiwaUyN6FcE3kAqXEcMedB1sffnPx3FFR
+	7MErPbEjbDQz9hrTRG7IwwV3FgUOuGMAtw5va/2JVfiCMqrpqhMe30210E0TuZ+XgkKZ9txL4g9
+	dnoGbBYJ7UGgLKPzPF74KGg5ETND85r+/tHxVSfyWTbj1Meek+0IxjFaJWOOmXzyxLDpxfe3NLp
+	Z3X+WKPTi4kUX5nKJ4gimk4jttMDKbD0dxG8NMX7oDW5F4iTcX25MOgWPhwhTrNcHeQR2mK2RqS
+	g2Ox7Vou6qaL9u/AZrxFxi/e4t38SxYOPhUeXtzMgDswvJT/ySnH4gcMdOwMz+j4=
+X-Google-Smtp-Source: AGHT+IGZE2klh6TBPD0rO9TA6JzZZw9l9tj4iEA/pqRFAVww2T2OERx45EFu4KjvgIYNex31bGtc7A==
+X-Received: by 2002:adf:b612:0:b0:3a4:dc42:a09e with SMTP id ffacd0b85a97d-3a8fe1dee45mr758781f8f.5.1751019029122;
+        Fri, 27 Jun 2025 03:10:29 -0700 (PDT)
 Received: from localhost (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4538a3a5599sm46934265e9.13.2025.06.27.03.10.26
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-453823ad20bsm76001965e9.20.2025.06.27.03.10.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 03:10:26 -0700 (PDT)
+        Fri, 27 Jun 2025 03:10:28 -0700 (PDT)
 From: Petr Tesarik <ptesarik@suse.com>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Randy Dunlap <rdunlap@infradead.org>,
@@ -71,9 +71,9 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org (open list),
 	linux-mm@kvack.org (open list:MEMORY MANAGEMENT),
 	Petr Tesarik <ptesarik@suse.com>
-Subject: [PATCH v2 3/8] docs: dma-api: remove remnants of PCI DMA API
-Date: Fri, 27 Jun 2025 12:10:10 +0200
-Message-ID: <20250627101015.1600042-4-ptesarik@suse.com>
+Subject: [PATCH v2 4/8] docs: dma-api: add a kernel-doc comment for dma_pool_zalloc()
+Date: Fri, 27 Jun 2025 12:10:11 +0200
+Message-ID: <20250627101015.1600042-5-ptesarik@suse.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250627101015.1600042-1-ptesarik@suse.com>
 References: <20250627101015.1600042-1-ptesarik@suse.com>
@@ -85,82 +85,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The wording sometimes suggests there are multiple functions for an
-operation. This was in fact the case before PCI DMA API was removed, but
-since there is only one API now, the documentation has become confusing.
-
-To improve readability:
-
-* Remove implicit references to the PCI DMA API (plurals, use of "both",
-  etc.)
-
-* Where possible, refer to an actual function rather than a more generic
-  description of the operation.
+Document the dma_pool_zalloc() wrapper.
 
 Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 ---
- Documentation/core-api/dma-api.rst | 25 ++++++++++---------------
- 1 file changed, 10 insertions(+), 15 deletions(-)
+ Documentation/core-api/mm-api.rst | 2 ++
+ include/linux/dmapool.h           | 8 ++++++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/Documentation/core-api/dma-api.rst b/Documentation/core-api/dma-api.rst
-index c0a2cc7d0b959..3e89e3b0ecfd2 100644
---- a/Documentation/core-api/dma-api.rst
-+++ b/Documentation/core-api/dma-api.rst
-@@ -53,10 +53,9 @@ minimum allocation length may be as big as a page, so you should
- consolidate your requests for coherent memory as much as possible.
- The simplest way to do that is to use the dma_pool calls (see below).
+diff --git a/Documentation/core-api/mm-api.rst b/Documentation/core-api/mm-api.rst
+index af8151db88b28..a61766328ac06 100644
+--- a/Documentation/core-api/mm-api.rst
++++ b/Documentation/core-api/mm-api.rst
+@@ -97,6 +97,8 @@ DMA pools
+ .. kernel-doc:: mm/dmapool.c
+    :export:
  
--The flag parameter (dma_alloc_coherent() only) allows the caller to
--specify the ``GFP_`` flags (see kmalloc()) for the allocation (the
--implementation may choose to ignore flags that affect the location of
--the returned memory, like GFP_DMA).
-+The flag parameter allows the caller to specify the ``GFP_`` flags (see
-+kmalloc()) for the allocation (the implementation may ignore flags that affect
-+the location of the returned memory, like GFP_DMA).
++.. kernel-doc:: include/linux/dmapool.h
++
+ More Memory Management Functions
+ ================================
  
- ::
+diff --git a/include/linux/dmapool.h b/include/linux/dmapool.h
+index 06c4de602b2f3..c0c7717d3ae7b 100644
+--- a/include/linux/dmapool.h
++++ b/include/linux/dmapool.h
+@@ -60,6 +60,14 @@ static inline struct dma_pool *dma_pool_create(const char *name,
+ 				    NUMA_NO_NODE);
+ }
  
-@@ -64,13 +63,12 @@ the returned memory, like GFP_DMA).
- 	dma_free_coherent(struct device *dev, size_t size, void *cpu_addr,
- 			  dma_addr_t dma_handle)
- 
--Free a region of coherent memory you previously allocated.  dev,
--size and dma_handle must all be the same as those passed into
--dma_alloc_coherent().  cpu_addr must be the virtual address returned by
--the dma_alloc_coherent().
-+Free a previously allocated region of coherent memory.  dev, size and dma_handle
-+must all be the same as those passed into dma_alloc_coherent().  cpu_addr must
-+be the virtual address returned by dma_alloc_coherent().
- 
--Note that unlike their sibling allocation calls, these routines
--may only be called with IRQs enabled.
-+Note that unlike the sibling allocation call, this routine may only be called
-+with IRQs enabled.
- 
- 
- Part Ib - Using small DMA-coherent buffers
-@@ -246,9 +244,7 @@ Part Id - Streaming DMA mappings
- Maps a piece of processor virtual memory so it can be accessed by the
- device and returns the DMA address of the memory.
- 
--The direction for both APIs may be converted freely by casting.
--However the DMA API uses a strongly typed enumerator for its
--direction:
-+The DMA API uses a strongly typed enumerator for its direction:
- 
- ======================= =============================================
- DMA_NONE		no direction (used for debugging)
-@@ -325,8 +321,7 @@ DMA_BIDIRECTIONAL	direction isn't known
- 			 enum dma_data_direction direction)
- 
- Unmaps the region previously mapped.  All the parameters passed in
--must be identical to those passed in (and returned) by the mapping
--API.
-+must be identical to those passed to (and returned by) dma_map_single().
- 
- ::
- 
++/**
++ * dma_pool_zalloc - Get a zero-initialized block of DMA coherent memory.
++ * @pool: dma pool that will produce the block
++ * @mem_flags: GFP_* bitmask
++ * @handle: pointer to dma address of block
++ *
++ * Same as @dma_pool_alloc, but the returned memory is zeroed.
++ */
+ static inline void *dma_pool_zalloc(struct dma_pool *pool, gfp_t mem_flags,
+ 				    dma_addr_t *handle)
+ {
 -- 
 2.49.0
 
