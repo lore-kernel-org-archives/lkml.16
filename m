@@ -1,86 +1,133 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D49D1C860A
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361B31D63D8
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750998747; cv=none; b=aiRMVIS9KP0McfwsnhI1b8r2uFaOvq/eLsmPRlyngPNmkfE8iuyMrJt87X+BjP7rHW6zFqKXBIXrAahO1Iq5hiS1BdgmSgtcNeGWRWkeLYhY+VcR2znX9t2BZeLGQJxwiWlv0mg8rGLwVXQiIbgDukFAHUyfZo4alS2rjl0AJl8=
+	t=1750998844; cv=none; b=L8U3H2kEyueSSDNL2OlE8+hvKJ6u6XMAs1+5mtHVoKy97+//3JlONOMSPnaogsDs2jURToJ2AcDLyXZnnos2PDemKTDQ7a23ZLNXjJs9GgxR0gJERMgOSUNEhlcGiUMkLGw1TvRT5qCo/yWnpVdsMSX2PGls2RE8Wcoxy1chgDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750998747; c=relaxed/simple;
-	bh=v+42VstUVNPd2mezC8iuO8gwNNt9a6yuYkzSDlyNOJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZRqfMhc8+ipTbKG8PWHpipTi+c1vbJiopLrVdMpfw3edWMR74oiukDrZpyPaGXliwRMQsjCBvjumdHC0m8pflxnnGrQcovTifo7JQTUQeWkpUhFqAviAmy+EjMnnIT+A2mDvDh5UXzNV5eS2VykK4bozC9FByRJ3feREP9VAO7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RW4L2mvJ; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1750998844; c=relaxed/simple;
+	bh=eZ0Rf9mlp7Cj3j+IUsCW0PLrSzyzYNYVR0q4LVXX8Og=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=An291YOKMWuPLoKjXvYI/h/z/h+Z0VCbEX+PdTXsYY+MGKlNqkH8Olv2cjCV3W3ymsF0s5GgpCD0svoIlPauLKN8pOxW089iGDoUBIeTKLPWkk3/2Y97p7AmZWnR9O5kl8ODF6vQduRr65g3GyOyKbEjZ41h/ozR5jSotpQpAYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NhJtW8tY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RW4L2mvJ"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-747fc77bb2aso1744394b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750998745; x=1751603545; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Et1vKrANEWd1oLPdiIp7rldoq/gXylaA1yJpyMaOcf8=;
-        b=RW4L2mvJNwHOs0eG0IS2BOMXmejQTJNxSRGD7LHHivfRGniaeE7W0eCoegiQ/SlGW+
-         sx/j2EGg3nHuo7MIcy4r2tdPYEbEWlaRTGcTBxhOm103W2efBnzcvOjL/Jamj+46hu5C
-         32fRo25FztWUMeHAJfLHxw0WuufHI4K/HPRY8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750998745; x=1751603545;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Et1vKrANEWd1oLPdiIp7rldoq/gXylaA1yJpyMaOcf8=;
-        b=agB5HKKGz1wLoRrulY6CQHzOPWyMC8d0Bh5rrHmfWUtwwPX/QvS9Hjoty33qD2g4iF
-         nxFRrbOW1d/jUGqgUOfsr37kHigBCPvqtMl+cE29iYp+zv4EyhBs/ik2EyLU/ymi0Uul
-         +jphS1ONsdFFf5xXK9GauARufDQ7c3dr4lyE1pJ0AsilEzUkh8UgfHo4UJgATugbNXuZ
-         eUvk/6cxGFGWc8gq3NOEthO2WXd44ljb81bG9bI7nqajOQfCaa86wvZtFvVgZg3qUFxE
-         LPVP2XE2+tJkstp6K+IpW9DRNdp5cGKEL0aeeBSMi0LmhTQGTyvQsrHeXjCbEiz/bQJk
-         gbBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgXHbV+4ClzL29mTZq8cUC/RRQgd9pv2HJTBRpH2Cm0CflFUKGWLmwtHzPkOokJDug7NplC5XsQEOlh6w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpnIbX/pqpja97znXereokIXK4F14128gymQSVgZ/CcniKCSJg
-	CK2NCLQnofJPaRLtmMIBQRE7NRjVuSTGV8lbBJLEG0WWpFNPQ+mSSIJnPnVNWb0jnQ==
-X-Gm-Gg: ASbGnculI3ddnPdNWeBKGFri8qejvGzJLX4Q5+RvjI3me/pmARnio/ZGnbttNElUUll
-	DXuHmt5AEAqEbJCaH4+uFdDs4qzHqybNxKxZjM2opyxSpCtmH7J09orYkSo+pKFJPjFqQOAkcdV
-	6/vWeXikBefviFOLyWTFJeKpelTjTWBEAR1ytGUi8z9ODZMA2esuoRQb6sgkIMtBC1kgVTTnUCX
-	h+UlykiSwPrU0CLAExvBeEoJIO8Wyen6DEntUgdt1Q6fixkn/ev4EFBxwQ5Jhc4grZOnXq4sylX
-	ACOFWpzw4Z1mDNWFoZugrqZJaErMPx3bbGOY4IPNkrekbymz99oOVzoYmRAFA4jr3w==
-X-Google-Smtp-Source: AGHT+IFsUUHvXLkVnFLLwlY36+r3+Fgx+TFevhxTOC4GjFZoOrSNFaMyU9W5wFF/BGs6YIpTwbjcOg==
-X-Received: by 2002:a05:6a00:23cb:b0:736:4d05:2e2e with SMTP id d2e1a72fcca58-74af6e60f24mr2433036b3a.6.1750998744783;
-        Thu, 26 Jun 2025 21:32:24 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:de1c:e88f:de93:cd95])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af540b37bsm1190315b3a.24.2025.06.26.21.32.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 21:32:24 -0700 (PDT)
-Date: Fri, 27 Jun 2025 13:32:20 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Jens Axboe <axboe@kernel.dk>, Rahul Kumar <rk0006818@gmail.com>
-Cc: minchan@kernel.org, senozhatsky@chromium.org, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org
-Subject: Re: [PATCH] block: zram: replace scnprintf() with sysfs_emit() in
- *_show() functions
-Message-ID: <zzscki3fdg75nl4gojsqo7exhwodt6sm66avcwmmhnz5yvc5sm@sld334al6udp>
-References: <20250627035256.1120740-1-rk0006818@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NhJtW8tY"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55R4DCeF014521;
+	Fri, 27 Jun 2025 04:33:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	K6Br1bux+uto34hrOpRBdkZiWcPdqetSr/kBiy2hggA=; b=NhJtW8tYUV3h9F0r
+	YCdxz84zFOeQJf1e+1KSouF5SmwRMEsmBG4odOI7tzjpxde0qM0x9R08iN6OLH7d
+	Y3zr2Q6UwaJ1k1OoqUs4WMuiuAmrsR5MstnSvesDvrxJ11FKFbVCTvb5yh5toQO8
+	q5y8G9mswFqvKYt5TQ/MrE3+1KwvweKMKasPej89J+dQ4RKbeMOQVOBzPvkyth3T
+	XL1voXrJLgsXa8M5TAFxtxUNDuFBNotPD8XOHQJjEkEcZ6HH4u5QQm0wFD9YHsp7
+	0QAb9Y+LuIu7LxyT6g3NokiAmOfNriVoRKIppda7+wkQyyB+bz1eum6092MbPweT
+	YI6MUQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbm241rx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 04:33:23 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55R4XMC2030809
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 04:33:22 GMT
+Received: from [10.253.36.2] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 26 Jun
+ 2025 21:33:17 -0700
+Message-ID: <a3498578-e3ef-4c63-a132-56ba6ac24900@quicinc.com>
+Date: Fri, 27 Jun 2025 12:33:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627035256.1120740-1-rk0006818@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] coccinelle: misc: Add field_modify script
+To: Markus Elfring <Markus.Elfring@web.de>, <cocci@inria.fr>,
+        Catalin Marinas
+	<catalin.marinas@arm.com>,
+        Joey Gouly <joey.gouly@arm.com>, Julia Lawall
+	<Julia.Lawall@inria.fr>,
+        Marc Zyngier <maz@kernel.org>, Nicolas Palix
+	<nicolas.palix@imag.fr>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        "Rasmus
+ Villemoes" <linux@rasmusvillemoes.dk>,
+        Suzuki Poulose
+	<suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>, Yury Norov
+	<yury.norov@gmail.com>,
+        Zenghui Yu <yuzenghui@huawei.com>
+CC: LKML <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+        Andrew Lunn
+	<andrew@lunn.ch>,
+        Kiran Kumar C.S.K <quic_kkumarcs@quicinc.com>,
+        Lei Wei
+	<quic_leiwei@quicinc.com>,
+        Pavithra R <quic_pavir@quicinc.com>,
+        "Suruchi
+ Agarwal" <quic_suruchia@quicinc.com>,
+        <quic_linchen@quicinc.com>
+References: <20250626-field_modify-v6-1-200dffa38a07@quicinc.com>
+ <e52cb86b-01be-4560-a1da-a6b07108d651@web.de>
+Content-Language: en-US
+From: Luo Jie <quic_luoj@quicinc.com>
+In-Reply-To: <e52cb86b-01be-4560-a1da-a6b07108d651@web.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=YYu95xRf c=1 sm=1 tr=0 ts=685e1f13 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=8AHkEIZyAAAA:8
+ a=uPLpxg-qKf-oJQXuHx4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=4NdJUZNqX0cA:10
+X-Proofpoint-GUID: 1615e4W39KXNXAtpa1cLcQpMTxbj-kP_
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDAzMyBTYWx0ZWRfX0MTFlVem0EDG
+ qYepEKcTPilRd4UMCp9Wrc3DLOqGO7a4axgWd0j3W29rPtxkTxv/XtVpLIz3SubKFxEpnQzZI+l
+ ME85y8Ho32cC+7l7/CvpiSXZhSmN/wbtiyp5dFB0I7Bgh2h6krzZ/Yc6ZxCOPLV0EXi9L9dsFTA
+ UFv3AMpuiX3C1/UsWIBOgXrSnsZqC2nhp6bfdEgoTzkyzYARWLMzUgSgXL/QDTD8bpbDpcYhv6q
+ 9REWwd34mYZNo9lLuQEnqxXbo2Vv4ekhZoAG7QXIQNgy2PRs+GBt7mwp8uj+qMtF3pa6+9UETuG
+ sVcm7e4XSJJKw6EhMYWh2gsh//v2wlL1/pgffVf6Jo7bMihC0qEn4nPd1xFyDVVUjNN4BExqyOT
+ 9TSrAZaDmG4/Lv1a5EWRAvMLHJ8AFm9mTWAaRurNsRPq7otpg4yFFDR0uku92cQgfTU2B3gs
+X-Proofpoint-ORIG-GUID: 1615e4W39KXNXAtpa1cLcQpMTxbj-kP_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_01,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
+ clxscore=1015 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506270033
 
-On (25/06/27 09:22), Rahul Kumar wrote:
-> Replace scnprintf() with sysfs_emit() or sysfs_emit_at() in sysfs
-> *_show() functions in zram_drv.c to follow the kernel's guidelines
-> from Documentation/filesystems/sysfs.rst.
-> 
-> This improves consistency, safety, and makes the code easier to
-> maintain and update in the future.
-> 
-> Signed-off-by: Rahul Kumar <rk0006818@gmail.com>
 
-Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+
+On 6/26/2025 3:43 PM, Markus Elfring wrote:
+>> +coccilib.report.print_report(p[0], "WARNING: Consider using FIELD_MODIFY helper on %s" % (x))
+> 
+> Would you find it a bit nicer to use also another formatted string literal
+> as a function call parameter?
+> (The recent code adjustment indicated something for the operation mode “org”.)
+> https://docs.python.org/3/reference/lexical_analysis.html#f-strings
+> 
+> Regards,
+> Markus
+
+Sure, I agree that using a formatted string literal as a function call
+parameter will make the code cleaner. I will update the function call
+as shown below in the next revision.
+
+coccilib.report.print_report(p[0], f"WARNING: Consider using 
+FIELD_MODIFY helper on {x}")
