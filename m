@@ -1,83 +1,102 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4611D213245
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94CD266B67
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751021976; cv=none; b=TwefqXJkaehHTEGq9iFFds0OcPFKmEEeERFvwxC2MSHQaGJ5ZRcvc1U+3KGhTr02B+KIU5FYUhJJ8Ts0EURTqhbdOgxDqUycl8yJOHdHdTp2EIFgfyJKpN/iXVcqrID+nf9aCoD1YbCf4lG0c2LxndeDQmRqa7nqXHLy01+ccgo=
+	t=1751022005; cv=none; b=d5Sk6Ccv33wMfpXERg6AXv7THhKZHoJYXXh4+dw8b70xDGOGd8xhJf3r+eEWoYRX0lgwYnJXBWxAgBHRfkueWHD+rWoS95v6AywbF2Pp51Yp9Hw44xCzznxzlbuIneBSdw+OQwtGAVVLkNhHeLbkpaoFa9pv/kTi/IGhV8xIDNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751021976; c=relaxed/simple;
-	bh=39gN++uwgGwGLSo2gokp672iTbncWZeBhi5bw8aVGIw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OFauIqt0s8fGm8P4vF5786LEiJ233/u5gCCRMB7dg2xZHLq7hUQD0Pz/uVNhKuoj1SmBimIUGTaxTNqBKcUAAG4cZzb5uHlAcfvg9zrPZS1cuIm3D/bMrMc1MNJkabNF/uz44yjGDCwxvlZAhNwM2qEQXQ3dd1xxwtSP4TTuOuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XHxE/uur; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751022005; c=relaxed/simple;
+	bh=vLo5INOPS/WDpIxNx5EixrWME6bTViVtqYq5HO8ajvQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=mlCW93gMkGk5EcKhPH4yAUlSSF4Tq2aRB4zuak77o0TWkbzWIQE30knL+kT6jXNjxS1D3LsIhzNpj+0U3V3JbZjkgmfpc4jMVjZGVdeiEsmrczob09hELTySnXPuEILY9/I7J6ER1zW18/XZnjKmdnEY6n0K83jzYN9CyPIm8l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=c6urAryN; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XHxE/uur"
-Message-ID: <99debaac-3768-45f5-b7e0-ec89704e39eb@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751021962;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JjguqjJZC4qCc9HtUNpoE0e/vnTdVxVLwPIy2Ll+L7w=;
-	b=XHxE/uur93hLzj36h+LmCV8eehMuMM7Cq6rRf3AJmJ4uIK9hPJcLBSXXD/LJM61yoo9xcp
-	O23Yiuv8UkhzT5JrwnUQ2mqaF9qidQBtUCpHllOE1yZkBSbrHJJlpJeaQA9AQx+bK9f05R
-	AZZsSv9TQ0NrHWHJH8aUizEQbuRMxY4=
-Date: Fri, 27 Jun 2025 11:59:19 +0100
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="c6urAryN"
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250627110001epoutp01f8e8dfb3b3dd84cf5ebf676fb599d5aa~M4Tu0-EBl3204232042epoutp01V
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:00:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250627110001epoutp01f8e8dfb3b3dd84cf5ebf676fb599d5aa~M4Tu0-EBl3204232042epoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751022001;
+	bh=+ENfZgyXG6LRtkLsvTjegXsc5nM6Q4iQE+wp1eC5dN0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=c6urAryNFOrLbEjPvy+dNYuBLBOACYyYsVD7KypMRs90ko1mcGgdm+K7/UUqIJM22
+	 9CdPopiDEALv2u/dDI3JOFQc15+eZ/lj6bv7ouR37IUsnq7Z6umaKMMUh8ctXlrd90
+	 20qN/G/YIKVKXrsBGpwesXbOD+oPVrgZje+xjX20=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas1p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250627110001epcas1p21f2a1180b51fc82517facb6b9f247e14~M4TuV63LA0253702537epcas1p2E;
+	Fri, 27 Jun 2025 11:00:01 +0000 (GMT)
+Received: from epcas1p2.samsung.com (unknown [182.195.36.223]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4bTCJ057Wzz6B9m5; Fri, 27 Jun
+	2025 11:00:00 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250627105959epcas1p168bbbe460ee1f081e67723505e1f57c9~M4TsoWor_2955029550epcas1p1Z;
+	Fri, 27 Jun 2025 10:59:59 +0000 (GMT)
+Received: from U20PB1-1082.tn.corp.samsungelectronics.net (unknown
+	[10.91.135.33]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250627105959epsmtip21aa89321785c91e7dfb1e50c794acb7e~M4TsjuKwn3127031270epsmtip2N;
+	Fri, 27 Jun 2025 10:59:59 +0000 (GMT)
+From: "Peter GJ. Park" <gyujoon.park@samsung.com>
+To: pabeni@redhat.com
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	gyujoon.park@samsung.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org, netdev@vger.kernel.org, oneukum@suse.com
+Subject: [PATCH net v2] net: usb: usbnet: fix use-after-free in race on
+ workqueue
+Date: Fri, 27 Jun 2025 19:59:53 +0900
+Message-Id: <20250627105953.2711808-1-gyujoon.park@samsung.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <87a7f8a6-71b1-4b90-abc7-0a680f2a99cf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v2] ptp: add Alibaba CIPU PTP clock driver
-To: Andrew Lunn <andrew@lunn.ch>, Wen Gu <guwen@linux.alibaba.com>
-Cc: richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- xuanzhuo@linux.alibaba.com, dust.li@linux.alibaba.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627072921.52754-1-guwen@linux.alibaba.com>
- <0b0d3dad-3fe2-4b3a-a018-35a3603f8c10@lunn.ch>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <0b0d3dad-3fe2-4b3a-a018-35a3603f8c10@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250627105959epcas1p168bbbe460ee1f081e67723505e1f57c9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+cpgsPolicy: CPGSC10-711,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250627105959epcas1p168bbbe460ee1f081e67723505e1f57c9
+References: <87a7f8a6-71b1-4b90-abc7-0a680f2a99cf@redhat.com>
+	<CGME20250627105959epcas1p168bbbe460ee1f081e67723505e1f57c9@epcas1p1.samsung.com>
 
-On 27/06/2025 08:57, Andrew Lunn wrote:
+When usbnet_disconnect() queued while usbnet_probe() processing,
+it results to free_netdev before kevent gets to run on workqueue,
+thus workqueue does assign_work() with referencing freeed memory address.
 
->> +static int ptp_cipu_enable(struct ptp_clock_info *info,
->> +			   struct ptp_clock_request *request, int on)
->> +{
->> +	return -EOPNOTSUPP;
->> +}
->> +
->> +static int ptp_cipu_settime(struct ptp_clock_info *p,
->> +			    const struct timespec64 *ts)
->> +{
->> +	return -EOPNOTSUPP;
->> +}
->> +
->> +static int ptp_cipu_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
->> +{
->> +	return -EOPNOTSUPP;
->> +}
->> +
->> +static int ptp_cipu_adjtime(struct ptp_clock_info *ptp, s64 delta)
->> +{
->> +	return -EOPNOTSUPP;
->> +}
-> 
-> I've not looked at the core. Are these actually required? Or if they
-> are missing, does the core default to -EOPNOTSUPP?
-> 
+For graceful disconnect and to prevent use-after-free of netdev pointer,
+the fix adds canceling work and timer those are placed by usbnet_probe()
 
-I was going to say that these are not needed because posix clocks do
-check if callbacks are assigned and return -EOPNOTSUPP if they are not.
-That's why ptp_clock_* functions do call these callbacks without checks.
+Signed-off-by: Peter GJ. Park <gyujoon.park@samsung.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+---
+ drivers/net/usb/usbnet.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+index c04e715a4c2a..3c5d9ba7fa66 100644
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -1660,6 +1660,9 @@ void usbnet_disconnect (struct usb_interface *intf)
+ 	usb_free_urb(dev->interrupt);
+ 	kfree(dev->padding_pkt);
+
++	timer_delete_sync(&dev->delay);
++	tasklet_kill(&dev->bh);
++	cancel_work_sync(&dev->kevent);
+ 	free_netdev(net);
+ }
+ EXPORT_SYMBOL_GPL(usbnet_disconnect);
+--
+2.25.1
+
