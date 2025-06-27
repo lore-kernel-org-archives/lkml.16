@@ -1,109 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1718E3398B
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:35:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594D61C1741;
+	Fri, 27 Jun 2025 16:36:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751042146; cv=none; b=oPSKcHQkCFQn7aGPnuxR0VKF/3vGYfaXZslsbeey+ZsrYFHtrTQIw6rFBA+TJXNoZWFRyfMwIwluXiTPah8gFMqFUGLHZpX/zCvOqF/iYA4Aiur8OhyqJrpqNqf6+rcWNHcjC7jsNb6OONnYO6rj2zFNRnMrl0k5s1XAi3PQ8TM=
+	t=1751042172; cv=none; b=MtuUcFmghfqIR4muha+xSo6BXnP5UxvDqPafh2RkQSipNBNotHbExYShFJCjvDAqZ1jFAFUPoyuiSD3HFmUYFBMo7srG4kYPDDUwqAZ1thB9zmXJOG8QDwsyfDW0yxkGgjf3Esck2bKPMqejwRUU3SA+edBkCzToNSvrIDpJebw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751042146; c=relaxed/simple;
-	bh=l7tSd5gSPxM/86AZB06VAUDNcgycMyZieHlzXXcZFY0=;
+	s=arc-20240116; t=1751042172; c=relaxed/simple;
+	bh=68erTh6FWYp/Sj54YCsq7ymlLRmTSgRaYhiJuroh+xA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uWQ9542lPbg3d27Qm1fc4B1t+b0HVvfRyZPMwg2UFbP8elTGDsYjSdIlHvIXkWR3ZMYM3ilTcgJiaXdaADYOcSAYNtEstx8xDK4Uj9bp8MB/YyWBvTBb4MkwsMPLU/K4bQAmBrHcNGpd+D9oMrthgdDGeUxwNI00zalh2OoRUB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oiEZ1zWz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uSK1eEbrueK44jgps9tUpOYvvKZdJxXz537N3+N+27C3GzWz/Ffx2dIyrRtcqbnVVbRu96N6xe+QTXy+nn8U8Yh4QhFAdJM6ECim8bZZj8dIk4HBP38llHw3bmsNF+2PfzB/DHBN1c1375vO2Fb39mQBbVHVwevWkZmQZHtBibA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTRYrLo0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oiEZ1zWz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AA68C4CEE3;
-	Fri, 27 Jun 2025 16:35:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTRYrLo0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91061C4CEE3;
+	Fri, 27 Jun 2025 16:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751042145;
-	bh=l7tSd5gSPxM/86AZB06VAUDNcgycMyZieHlzXXcZFY0=;
+	s=k20201202; t=1751042171;
+	bh=68erTh6FWYp/Sj54YCsq7ymlLRmTSgRaYhiJuroh+xA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oiEZ1zWzEdFto7YPnOEge4Gy34mew+fU1lBX8PxOA3MF8lEUlrt8yi2r25ZJ8WHap
-	 pRcgK2ig38p/sIr5eY1aWs9pClVqJq0ySIVIDUAHj80gypA4iuarn/CwRGZVMBENo/
-	 f4MzedQrV9fyO5fV3vMNusdxe6b8kXjlMTCt9UmVli4eLqveHgK0TkKb9Op6eY4KMd
-	 dFOS6xbJAEjvWI/47+BxKbAxUrAJnUzCvnJLJUdmepeH5KKXIJEa50AiCpuvybdwqU
-	 8aVVjqmuya1mfXVKRd1jVILe7+ZyW/hpBOfta65C5nrOHiaIq9DbPCn/vSfyTPlqNq
-	 nTcSqFglyqcYw==
-Date: Fri, 27 Jun 2025 09:35:45 -0700
-From: Kees Cook <kees@kernel.org>
-To: YinFengwei <fengwei_yin@linux.alibaba.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	zhourundong.zrd@linux.alibaba.com
-Subject: Re: [Question] About the elf program header size
-Message-ID: <202506270854.A729825@keescook>
-References: <sxokzxpo74u7yhrhfrmgtdvkpshwl464jicrwwkwtvkwl5d5dj@fqto77h2prj2>
+	b=uTRYrLo0Nuyp3YIjRN05J/HL5a4ynKCIBFjd0nZ8N1cQQQDpJacV3NE4KfiDqDjzv
+	 MCHPv/6U2aaKy7UMP/TciS/Y2zHiUaOMmRPKM6XSIcNvKnp+g2K4G0TBFrevHtc7h3
+	 Idye/C3v/WLupL/ODUAYrAd2KsWc6g1KVrQHjCQUTtxo6bWSNjcLg8HOw2z70nGclp
+	 +l6F39LEGPNoXIWvdgpCXSSlv6ZuYtoFMtd66cBdm1sup6dfKzTVUUrfrLA02KbeE8
+	 l1j+4ip9QyfgCirD9ax4YmWHH+4mf/O/e3Ecm8QqF23mvm5F+bPahusrJWJ18JhMXh
+	 F5NqTuq2mS8yQ==
+Date: Fri, 27 Jun 2025 09:36:08 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, 
+	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, Song Liu <song@kernel.org>, 
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
+	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
+	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>, Dylan Hatch <dylanbhatch@google.com>
+Subject: Re: [PATCH v3 26/64] objtool: Add section/symbol type helpers
+Message-ID: <arotzpll7djck5kivv3d4bz2jpkitpejkppaaevoqk5hqddr57@aunxxyjwnrxz>
+References: <cover.1750980516.git.jpoimboe@kernel.org>
+ <c897dc0a55a84f9992b8c766214ff38b0f597583.1750980517.git.jpoimboe@kernel.org>
+ <20250627102930.GU1613200@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <sxokzxpo74u7yhrhfrmgtdvkpshwl464jicrwwkwtvkwl5d5dj@fqto77h2prj2>
+In-Reply-To: <20250627102930.GU1613200@noisy.programming.kicks-ass.net>
 
-On Fri, Jun 27, 2025 at 09:04:11AM +0800, YinFengwei wrote:
-> We had a script generated assembly code. built it with gcc and the
-> output elf file had 78 program headers.
-
-Why so many?
-
-> On an arm64 platform, if we have 64KB base page size, the elf can
-> be started correctly. But if we have 4KB base page size, the elf
-> can NOT be started with:
->     cannot execute binary file: Exec format error
+On Fri, Jun 27, 2025 at 12:29:30PM +0200, Peter Zijlstra wrote:
+> Naming seems inconsistent, there are:
+>
+>   sym_has_sec(), sec_changed() and sec_size()
+>
+> which have the object first, but then most new ones are:
 > 
-> Look at the function load_elf_phdrs():
->         if (size == 0 || size > 65536 || size > ELF_MIN_ALIGN)
-> 	                goto out;
+>   is_foo_sym() and is_foo_sec()
 > 
-> ELF_MIN_ALIGN is defined as PAGE_SIZE on arm64. Which can explain
-> above inconsistent behaviors (from user perspetive).
-> 
-> I didn't find the limitation definition in ELF spec(Maybe I missed
-> some obvious info there). If I remove "size > ELF_MIN_ALIGN", the
-> same elf can be started correctly even with 4KB page size.
-> 
-> So my question is why we limit the who program headers total size
-> to PAGE_SIZE? git history couldn't tell anything because the
-> limitation was introduced when whole linux kernel tree was migrated
-> to git. Is there a possible constrain on other architecture? Thanks.
+> which have the object last.
 
-Looking through
-https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git
-(which doesn't have linked history, so you have to examine explicit "pre
-git" tags), I see:
+For the "is_()" variants, I read them as:
 
-4779b38bcb96 ("[PATCH] Linux-0.99.13 (September 19, 1993)")
-Which says "ELF binary support it a notable change." Here, the PAGE_SIZE
-check does not exist. When ELF interp support was added in
-9e11983a5a3e ("Import 0.99.15f"), we see the check appear, and I can
-find no rationale.
+  "is a(n) <adjective> <noun>"
 
-And with 6a8d38945cf4 ("binfmt_elf: Hoist ELF program header loading to
-a function"), the PAGE_SIZE check is _added_ for non-interp loads.
+e.g.:
 
-It seems the 64K count limit is sufficient? (If the goal was to avoid
-large memory allocations happening from userspace, we're way past
-PAGE_SIZE these days between IPC, BPF, etc.) Does this work for you?
+  is_undef_sym(): "is an UNDEF symbol"
+  is_file_sym():  "is a FILE symbol"
+  is_string_sec() "is a STRING section"
 
+Nerding out on English for a second, many of those adjectives can be
+read as noun adjuncts, e.g. "chicken soup", where a noun functions as an
+adjective.
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index a43363d593e5..92de44b8765f 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -519,7 +519,7 @@ static struct elf_phdr *load_elf_phdrs(const struct elfhdr *elf_ex,
- 	/* Sanity check the number of program headers... */
- 	/* ...and their total size. */
- 	size = sizeof(struct elf_phdr) * elf_ex->e_phnum;
--	if (size == 0 || size > 65536 || size > ELF_MIN_ALIGN)
-+	if (size == 0 || size > 65536)
- 		goto out;
- 
- 	elf_phdata = kmalloc(size, GFP_KERNEL);
+If we changed those to:
 
+  "is <noun> <adjective>?"
+
+or
+
+  "is <noun> a <noun>?"
+
+then it doesn't always read correctly:
+
+  is_sym_file():   "is symbol a file?"
+  is_sec_string(): "is section a string?"
 
 -- 
-Kees Cook
+Josh
