@@ -1,114 +1,121 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BE22E2640;
-	Fri, 27 Jun 2025 14:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E64E2F1FD0
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 14:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751034013; cv=none; b=fKk6b1Tb9c1LjlNkwPTu7pAAHKk5Gs5j8QgHtB4896KC8HdalK/vab8kTJ3IefZBVxdxpgD+Mjh1F9Ocoqk4RkwiIfEKalmP0hFFgTX7Kw7XIuv8RLjp38koazFXKRUCQyUJr5415uWBYT6PAnDfF2f0JynbVzZSSCiQXvM16vo=
+	t=1751034019; cv=none; b=AqAWncaCDdlGo+sOyl+oSmzCsds5lfBrDItZUimC0+urZCpSJ3a4cOybQHNPEjvYMwaETn+ngjEhMAA1ZgM4y+4h+WYB554LKDMgMmyLXBmzzS18XvBckBBgIr8ikpW/MWv/ppnIPfEK0Xjnx9zZBcgT6kw03IZw26jZo17GoMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751034013; c=relaxed/simple;
-	bh=EzhCQPgT4q4FikRj54oTe+DHEuehnFQRnWTjIramQHY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=lucWkMJhSSygG+Cl1KsrPFiD64PhxLqQmyhGDgKGcvnzJWtcQOOqZinuHggxgUsYJ7pGz7e9JCLGrSRxFlRPDq+/lv/d1Jdu1N2p/TScrM6WG22KmDE3LjMz1hzPxrgRLCeKRtMDHtPsWKih4ZpyHUAb9tKOM4WF5Ji8V4X0fGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55REJVmB024488;
-	Fri, 27 Jun 2025 23:19:31 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55REJUl8024484
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 27 Jun 2025 23:19:31 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <d84dc916-2982-45dc-a9a5-a6255cbc62bd@I-love.SAKURA.ne.jp>
-Date: Fri, 27 Jun 2025 23:19:30 +0900
+	s=arc-20240116; t=1751034019; c=relaxed/simple;
+	bh=jcgyQ/Wb57DmrTUIgukktQYvJFH3Ks7NSRCZ88mZKhA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VW0QERFq7FbfIT30f2cYp2zfmqPHC2mfS8mc8cArGqblJuVwBNp2u8mQZkM1pMaUawa4+FCVKefNFe5DDdjQz/mBA8tg/0r1Wf+JKLss31s3fwUnZMdyFBhtmk166we6Z/Bs9mMPwHbMEJJ+U+BdOwmlma8zc48kyJ5x3TTWnkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wj5HvjzU; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wj5HvjzU"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4536b8c183cso13745785e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:20:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751034013; x=1751638813; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ewNn7TbsI9nptiuY+MPrd3pQGAHs48Wda8epNcT5ov8=;
+        b=Wj5HvjzUmphSjCjlc0YseYt6jUPSbqWIMrqtwWUI/5HIotpAQ5pt21iGxJbOMFyqVT
+         G3Xh3aXYpGAGNiYbyFrUvGwjsHw+7EK3zpGnhpEH1/bR3rQWspqs8Ln8mGIRKoBETcWZ
+         5XasAQg/R9cYqnGnuUTyCjVvtrPHjHXHDkQdV3SbsrsihDv6LLcmrzNj8hRktupShbrw
+         YnM3om895qAQLG6KU4/mS+6JglDdw3cyWr12PTVLVMj3AE+Q1/+qkxMc0m0LarI2PQRa
+         sKhuYMW2JqxqFOMAd+R09BNqS2hD6U/40WVJnCuFgqC4MJ0EqrPuX0N6ZhsMtP8pLEru
+         ofiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751034013; x=1751638813;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ewNn7TbsI9nptiuY+MPrd3pQGAHs48Wda8epNcT5ov8=;
+        b=FudIjnpcqEcq4b1EnxdpdGpMPID8+s0w0gVyNkHvQEInv8w84C8Qcnq14x2vZ+e7T9
+         +0OYlaYvpEhh1PeKxSqlo9MJVRZN/yNGrfPVRN8Benz66kjZ42FApc/hUghwZJIV4XSf
+         zI5549ZEl51kgk2MYDvMSKX5gebESD+Cq4nonkSgAbRGmHRm5x8SOGu4xAper/QWPhQ0
+         LQO7ub1aew5g5OxO34VMQMPVMPHAFKmh5JIgLTd+v1AJgDL0rBz2qmhzltcbT249te93
+         LPWs0faFZ/NEKhUw8guYXYmf6P06ZARDLBCQ/Sdmg7LMC7Db/ptJiFMlY9r21Vo3AMYz
+         4dEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGihxwuaMyeZbLNOeEapsfLP1sK3yJBPPPRReij7VagSVR7BD/U/aME78oqYCN9aECYIaaPOm7P+WTMTU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/gWbg/A15j5QGOZjQilHf4b5LjM5nt1fheNTUDPYP1FTvfKvF
+	QqjNSZFtbpyu4UlGSkW3TNzzV/hnsJGCW1fHJDhxVBxF62/vQNh/Q9iaXDZ7H732KJwxwPWQ/mu
+	fK8XV99EjQOew/oNq3VdFf9OHkDklT9QHVFiPAZsu
+X-Gm-Gg: ASbGnctlT4qFiLcdwjESMd54QWn7dQnAH+Uv/Hj+QHwkW6E2zLu4/Uj70PxWldqh5UA
+	SyZCxmNt8GBnXSbzELcblZwNzSRD4N159Jh5MEIAcmiig5bW8dt3H49j3wu6YKlwNuSkThnWIHu
+	VXq0qdYL7SECI9mRh3P3oga7JLhAAYge0+DEEdSu+IwKG1
+X-Google-Smtp-Source: AGHT+IGGHWkxWyyUt6W5NvWAowE9TgOpr1q1dTjlOVA298j2/3hVnCN4kkLIkapxhylrsGEkNu9XQ0BMWNlolyX/fns=
+X-Received: by 2002:a05:600c:8b35:b0:453:79e8:e92d with SMTP id
+ 5b1f17b1804b1-4538897ac42mr78218735e9.5.1751034013197; Fri, 27 Jun 2025
+ 07:20:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v2] ocfs2: update d_splice_alias() return code checking
-To: Al Viro <viro@zeniv.linux.org.uk>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Richard Weinberger <richard@nod.at>, ocfs2-devel@lists.linux.dev,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <d689279f-03ed-4f9b-8fde-713b2431f303@I-love.SAKURA.ne.jp>
- <20250626033411.GU1880847@ZenIV>
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <20250626033411.GU1880847@ZenIV>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Anti-Virus-Server: fsav101.rs.sakura.ne.jp
-X-Virus-Status: clean
+References: <20250612-pointed-to-v3-0-b009006d86a1@kernel.org>
+In-Reply-To: <20250612-pointed-to-v3-0-b009006d86a1@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 27 Jun 2025 16:20:00 +0200
+X-Gm-Features: Ac12FXyulcsSB1OX5HOWOJW9F1TKemz6x-0C4Ue0kt788UFAeHm37sy4APARLhw
+Message-ID: <CAH5fLghdgP7aBBv3aMrvWP3sfRjM_cc72Wsp=CZczh9dfem3Ow@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] rust: improve `ForeignOwnable`
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When commit d3556babd7fa ("ocfs2: fix d_splice_alias() return code
-checking") was merged into v3.18-rc3, d_splice_alias() was returning
-one of a valid dentry, NULL or an ERR_PTR.
+On Thu, Jun 12, 2025 at 3:11=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
+.org> wrote:
+>
+> This series improves `ForeignOwnable` by:
+>
+>  - changing the way we assert pointer allignment,
+>  - improving the safety requirements of the trait.
+>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> ---
+> Changes in v3:
+> - Remove more instances of absolute paths to `ffi` types.
+> - Reword safety requirements in terms of function guarantees.
+> - Add a patch to restrict use of null pointers with `ForeignOwnable`.
+> - Link to v2: https://lore.kernel.org/r/20250610-pointed-to-v2-1-fad8f92c=
+f1e5@kernel.org
+>
+> Changes in v2:
+> - Replace qualified path with `use` for `crate::ffi::c_void`.
+> - Fix a typo and rephrase docs for `ForeignOwnable`.
+> - Reorganize docs for `ForeignOwnable::into_foreign`.
+> - Link to v1: https://lore.kernel.org/r/20250605-pointed-to-v1-1-ee1e2629=
+12cc@kernel.org
+>
+> ---
+> Andreas Hindborg (2):
+>       rust: types: add FOREIGN_ALIGN to ForeignOwnable
+>       rust: types: require `ForeignOwnable::into_foreign` return non-null
+>
+>  rust/kernel/alloc/kbox.rs | 41 +++++++++++++++++++++++------------------
+>  rust/kernel/miscdevice.rs | 10 +++++-----
+>  rust/kernel/pci.rs        |  2 +-
+>  rust/kernel/platform.rs   |  2 +-
+>  rust/kernel/sync/arc.rs   | 24 +++++++++++++-----------
+>  rust/kernel/types.rs      | 46 +++++++++++++++++++++++------------------=
+-----
+>  rust/kernel/xarray.rs     |  9 +++++----
+>  7 files changed, 71 insertions(+), 63 deletions(-)
 
-When commit b5ae6b15bd73 ("merge d_materialise_unique() into
-d_splice_alias()") was merged into v3.19-rc1, d_splice_alias() started
-returning -ELOOP as one of ERR_PTR values.
-
-Now, when syzkaller mounts a crafted ocfs2 filesystem image that hits
-d_splice_alias() == -ELOOP case from ocfs2_lookup(), ocfs2_lookup() fails
-to handle -ELOOP case and generic_shutdown_super() hits "VFS: Busy inodes
-after unmount" message.
-
-Instead of calling ocfs2_dentry_attach_lock() or ocfs2_dentry_attach_gen()
-when d_splice_alias() returned an ERR_PTR value, change ocfs2_lookup() to
-bail out immediately.
-
-Also, ocfs2_lookup() needs to call dupt() when ocfs2_dentry_attach_lock()
-returned an ERR_PTR value.
-
-Reported-by: syzbot <syzbot+1134d3a5b062e9665a7a@syzkaller.appspotmail.com>
-Closes: https://syzkaller.appspot.com/bug?extid=1134d3a5b062e9665a7a
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
- fs/ocfs2/namei.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/fs/ocfs2/namei.c b/fs/ocfs2/namei.c
-index 99278c8f0e24..f75fd19974bc 100644
---- a/fs/ocfs2/namei.c
-+++ b/fs/ocfs2/namei.c
-@@ -142,6 +142,8 @@ static struct dentry *ocfs2_lookup(struct inode *dir, struct dentry *dentry,
- 
- bail_add:
- 	ret = d_splice_alias(inode, dentry);
-+	if (IS_ERR(ret))
-+		goto bail_unlock;
- 
- 	if (inode) {
- 		/*
-@@ -154,13 +156,12 @@ static struct dentry *ocfs2_lookup(struct inode *dir, struct dentry *dentry,
- 		 * NOTE: This dentry already has ->d_op set from
- 		 * ocfs2_get_parent() and ocfs2_get_dentry()
- 		 */
--		if (!IS_ERR_OR_NULL(ret))
--			dentry = ret;
--
--		status = ocfs2_dentry_attach_lock(dentry, inode,
-+		status = ocfs2_dentry_attach_lock(ret ? ret : dentry, inode,
- 						  OCFS2_I(dir)->ip_blkno);
- 		if (status) {
- 			mlog_errno(status);
-+			if (ret)
-+				dput(ret);
- 			ret = ERR_PTR(status);
- 			goto bail_unlock;
- 		}
--- 
-2.50.0
-
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
