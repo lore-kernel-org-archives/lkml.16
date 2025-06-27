@@ -1,189 +1,154 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DC6E1419A9;
-	Fri, 27 Jun 2025 02:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5DF4430;
+	Fri, 27 Jun 2025 02:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750990440; cv=none; b=UIXcmMdS4UagQQZCCxj9R9xXLlRXUZOThCRJsANPD6EMH97fYYg29Qa4Ak8Q+e7MPb9WL3nGc46lW6OfzlpgNlXR0m95PN9TlMUoqErEs9k1HeVyUYTZe+vBQQAGJFyXbAyDEMkvpbY15pwajPLjTk9EMHvKjE3WrIZUsKErD1U=
+	t=1750990474; cv=none; b=pnCtCPubbQYdMOzFyeqWVf8F6dXEC4IhueU2iWYThuWNlKXbL+chtS1jGahAkfLE6H6dkbr5ryQ7LpSv8yglLHBmtRDZXMpn/Kl3kGHv8HBtWPmjqqheT3j+ihGSMdqITBxkNYYvXjdhMMJFdJYs09bkeyREoxKMmY5/6dKv7VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750990440; c=relaxed/simple;
-	bh=oX1+/bEP2JkZNHL+Cgz3QMSSFl5NYS8vyK8F/jstr64=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=WH2ZFIWAhnSYVdAdJ16Ln3zudmQAW9+vO2P/Fzzia84uwGW0QCTP+4/Jfur+4xZeyWj6sYm8dc63JH0hjC2LQ3vSsbhxH224RZKIHRcgCWk3/PLXi3WjZW/vkiiTrqUBPCL/xcvoKSTKXIzXXhh+lEeFn9nou3Qlh06wGlc6bBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxPOJd_l1oBwEeAQ--.25577S3;
-	Fri, 27 Jun 2025 10:13:49 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMBx3MRZ_l1oCEksAQ--.1461S3;
-	Fri, 27 Jun 2025 10:13:48 +0800 (CST)
-Subject: Re: [PATCH v3 9/9] LoongArch: KVM: INTC: Add address alignment check
-To: Huacai Chen <chenhuacai@kernel.org>,
- David Laight <david.laight.linux@gmail.com>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
- Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250611014651.3042734-1-maobibo@loongson.cn>
- <20250611015145.3042884-1-maobibo@loongson.cn>
- <CAAhV-H6Eru5e6+_i+4DY9qwshibY43hjbS-QC-fhLD04-4mOGw@mail.gmail.com>
- <20250621122059.6caf299a@pumpkin>
- <CAAhV-H7Wnk7j1ukDLT+KZ6+tJuxMFv5qG-YGsJsXfB=2-eC=Ow@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <5b9ed28a-8c25-520b-0663-844c7014d078@loongson.cn>
-Date: Fri, 27 Jun 2025 10:12:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1750990474; c=relaxed/simple;
+	bh=dI4gZ+8FzlaNHjUsB5SGQuiANMweHx2aAKZjzQFvAaA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V2cRjN9/YbhFOjD6N2DNB74CGgeCdpQRc8e1XTWQg8YyQPvNGex1YLVL0UP7V6nrnzgcVyV07kMkcj073fspy/N5AmhP1+SvDn5ejdF75/D4xD+zRXN7q6HJi1b066sQXchul/dhObfPyz2ea9/jKKhHol6Vy89tv27UfhF7TSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IMfbi+44; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMfbi+44"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a588da60dfso1074930f8f.1;
+        Thu, 26 Jun 2025 19:14:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750990471; x=1751595271; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E4lNwGl5/Jt7PfY8MgdOgaaMPKP74HZQfLuN1tx9Z0E=;
+        b=IMfbi+44J7GzX39UYP6f6MKKG6yHX0QWjLGmln9EQRoeISrZU18uT6KZJUHrfnf3zj
+         ATK9UzsRIio+s8zMuMoBreELjTvWD1+XWvbt84QUtY0IZ1EPXSqg7qzF3vKC6Nm2vuNm
+         HWaT3JWxi+dCdSmsPhsGoTEoy+494BVCQHPjlKWfe2T4ndIZtvbb5s0kZXS5sEGBzD9n
+         XwQDFOHKsnIZB8DxkClRLD42dFSqgrt4rx9kVc3Mq7l7UASof8ZHXsN9PznTR8jRlKoJ
+         0XzC5udPdsw4Q+qHeDJvu09r94hy/ZWqr59kGqQLHA1f58ghmU9ZI9+7fJa3ek0XzGSI
+         0u5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750990471; x=1751595271;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E4lNwGl5/Jt7PfY8MgdOgaaMPKP74HZQfLuN1tx9Z0E=;
+        b=nK/wKbFt0RssoCMRH6xqiHadLWdGajR4KxxJzLOInJEnPImJpgUgbXs8vsF7i+4fVg
+         dVkZMDVPnn6zSrA9EL5/YIUn2K3kff2droZMhjupkSYz+J96QIC6e08ApiRDmVQfSfn+
+         TFGCGyl6IL8pBK2nxtbHP4HGruWbd/OWY+yLX2bWRpvS7NRsv3BWz4FTd8xZRVGcXaCK
+         T7MVH7+PgS3OWvNHsy+GW9CMSu9eWjps8iichngafdCm+/Od6M0OMlvpJpC+0i9nuT6o
+         YYngXTmKno9aQaqpjL4xvoywbW/zNlhDGYDkhMzdWx0G9n68aLHwn0RL1uGT5DFtQG9t
+         VoKw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+t3Rl9PUIPRLgqfd09rBVnuUlROqAOdfWU1EabwC/VYDDGPgvo5do/X7ZyqvZ0PxacsA=@vger.kernel.org, AJvYcCUJzvPG6P5UdIkPD+oPHAHlzTpG92u1rjcWOEv7jt/NALlsyH9FumjNBElavmomqMP4349Z5GaOW+NhxtqbbyWD9bHhczJv@vger.kernel.org, AJvYcCVNBQJD8TQtpsURyJE/vDWKtusOuzCcbOkO73vdmrgFk2yjt/odDCR+RSxSD06xaWv/tXi3x1gf87GANNv3tA==@vger.kernel.org, AJvYcCWE7ULaXRSBvnuFBWilUVNtTjXx8r3ISzvbP5pAPnyfXdiWbn/3JxxsnGrnpmpHXDvyjyx0Y4NWyR1VtP8K@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJzxTYBnSq4C6V9l5zH0c4+ZXIRVi0KE6EWnASzKzDCMB9Lh9d
+	nQdt69r6FVVsXc9mSO2ifUItBVeBbTFjoC/SHHkLo6wCQyI3fGY9UsKq3nzYuoqe4DBfQ/PNX0/
+	bGid47EWZAmE0toqBBYOtDumLraMyDc0=
+X-Gm-Gg: ASbGncv42M8qhCoIVNl7zCEqRvdNWgPA02ddt2uOdRd1RhtGqY2f6SiadwSzXdW6Vh2
+	O4anP1VgOKmMbdsrWZDwYUDGIwCybHVaYZTPjdcQucKHanfuqKo2Vq4FweZGhrozHxZSTQBhj5U
+	zIh9wse1+Kdh8Fq4VrRak+TZUOPFFUPkFEhJwG9uxeqxQI2QFXStTxn+csBtVtqUvak8MIqv8u
+X-Google-Smtp-Source: AGHT+IHhQq7iiVPbFftO+a9tCi+ffYjvL3dZ8R3tbTzTtJ2i3ocuYXdA43JAjuSzuyh6wsuSStT9cpvNEaKlLt5V1bI=
+X-Received: by 2002:adf:b603:0:b0:3a8:38b4:1d55 with SMTP id
+ ffacd0b85a97d-3a8fe5b1dc2mr1023815f8f.28.1750990471164; Thu, 26 Jun 2025
+ 19:14:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7Wnk7j1ukDLT+KZ6+tJuxMFv5qG-YGsJsXfB=2-eC=Ow@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBx3MRZ_l1oCEksAQ--.1461S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGr1fuF4DGr43Zw4UKr17Jwc_yoWrXF4rpr
-	WUAFs8Ca15Xry7Jw1qqwn0g3Zrt39Ygr18Xw1Dtaya9F1vvF17try8C3yj9Fy0k3WfKF40
-	qF4YqrWfuF4Yy3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
-	6r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
-	Ja73UjIFyTuYvjxU7MmhUUUUU
+References: <20250623063854.1896364-1-song@kernel.org> <20250623-rebel-verlust-8fcd4cdd9122@brauner>
+In-Reply-To: <20250623-rebel-verlust-8fcd4cdd9122@brauner>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 26 Jun 2025 19:14:20 -0700
+X-Gm-Features: Ac12FXzZ4cgBuecloSupKKY-UlToperUwwsAUxig5haY8CRIzCHHMpN-6hUT62U
+Message-ID: <CAADnVQ+iqMi2HEj_iH7hsx+XJAsqaMWqSDe4tzcGAnehFWA9Sw@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 0/4] Introduce bpf_cgroup_read_xattr
+To: Christian Brauner <brauner@kernel.org>
+Cc: Song Liu <song@kernel.org>, Kernel Team <kernel-team@meta.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+	Amir Goldstein <amir73il@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Tejun Heo <tj@kernel.org>, Daan De Meyer <daan.j.demeyer@gmail.com>, bpf <bpf@vger.kernel.org>, 
+	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-That is a little different with x86/arm64 kvm.
-With iocsr address space, there is access size with 1/2/4/8. With IO 
-memory address space, there is generic access size with 1/2/4/8, however 
-if irqchip driver of VM is deployed in user space, it will be possible 
-with 16/32 bytes with SIMD instruction.
+On Mon, Jun 23, 2025 at 4:03=E2=80=AFAM Christian Brauner <brauner@kernel.o=
+rg> wrote:
+>
+> On Sun, 22 Jun 2025 23:38:50 -0700, Song Liu wrote:
+> > Introduce a new kfunc bpf_cgroup_read_xattr, which can read xattr from
+> > cgroupfs nodes. The primary users are LSMs, cgroup programs, and sched_=
+ext.
+> >
+>
+> Applied to the vfs-6.17.bpf branch of the vfs/vfs.git tree.
+> Patches in the vfs-6.17.bpf branch should appear in linux-next soon.
 
-Regards
-Bibo Mao
+Thanks.
+Now merged into bpf-next/master as well.
 
-On 2025/6/21 下午9:04, Huacai Chen wrote:
-> Hi, David,
-> 
-> On Sat, Jun 21, 2025 at 7:21 PM David Laight
-> <david.laight.linux@gmail.com> wrote:
->>
->> On Thu, 19 Jun 2025 16:47:22 +0800
->> Huacai Chen <chenhuacai@kernel.org> wrote:
->>
->>> Hi, Bibo,
->>>
->>> On Wed, Jun 11, 2025 at 9:51 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>> IOCSR instruction supports 1/2/4/8 bytes access, the address should
->>>> be naturally aligned with its access size. Here address alignment
->>>> check is added in eiointc kernel emulation.
->>>>
->>>> At the same time len must be 1/2/4/8 bytes from iocsr exit emulation
->>>> function kvm_emu_iocsr(), remove the default case in switch case
->>>> statements.
->>> Robust code doesn't depend its callers do things right, so I suggest
->>> keeping the default case, which means we just add the alignment check
->>> here.
->>
->> kernel code generally relies on callers to DTRT - except for values
->> that come from userspace.
->>
->> Otherwise you get unreadable and slow code that continuously checks
->> for things that can't happen.
-> Generally you are right - but this patch is not the case.
-> 
-> Adding a "default" case here doesn't make code slower or unreadable,
-> and the code becomes more robust.
-> 
-> Huacai
-> 
->>
->>          David
->>
->>>
->>> And I think this patch should also Cc stable and add a Fixes tag.
->>>
->>>
->>> Huacai
->>>
->>>>
->>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>> ---
->>>>   arch/loongarch/kvm/intc/eiointc.c | 21 +++++++++++++--------
->>>>   1 file changed, 13 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
->>>> index 8b0d9376eb54..4e9d12300cc4 100644
->>>> --- a/arch/loongarch/kvm/intc/eiointc.c
->>>> +++ b/arch/loongarch/kvm/intc/eiointc.c
->>>> @@ -311,6 +311,12 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
->>>>                  return -EINVAL;
->>>>          }
->>>>
->>>> +       /* len must be 1/2/4/8 from function kvm_emu_iocsr() */
->>>> +       if (addr & (len - 1)) {
->>>> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
->>>> +               return -EINVAL;
->>>> +       }
->>>> +
->>>>          vcpu->stat.eiointc_read_exits++;
->>>>          spin_lock_irqsave(&eiointc->lock, flags);
->>>>          switch (len) {
->>>> @@ -323,12 +329,9 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
->>>>          case 4:
->>>>                  ret = loongarch_eiointc_readl(vcpu, eiointc, addr, val);
->>>>                  break;
->>>> -       case 8:
->>>> +       default:
->>>>                  ret = loongarch_eiointc_readq(vcpu, eiointc, addr, val);
->>>>                  break;
->>>> -       default:
->>>> -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, size %d\n",
->>>> -                                               __func__, addr, len);
->>>>          }
->>>>          spin_unlock_irqrestore(&eiointc->lock, flags);
->>>>
->>>> @@ -682,6 +685,11 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
->>>>                  return -EINVAL;
->>>>          }
->>>>
->>>> +       if (addr & (len - 1)) {
->>>> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
->>>> +               return -EINVAL;
->>>> +       }
->>>> +
->>>>          vcpu->stat.eiointc_write_exits++;
->>>>          spin_lock_irqsave(&eiointc->lock, flags);
->>>>          switch (len) {
->>>> @@ -694,12 +702,9 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
->>>>          case 4:
->>>>                  ret = loongarch_eiointc_writel(vcpu, eiointc, addr, val);
->>>>                  break;
->>>> -       case 8:
->>>> +       default:
->>>>                  ret = loongarch_eiointc_writeq(vcpu, eiointc, addr, val);
->>>>                  break;
->>>> -       default:
->>>> -               WARN_ONCE(1, "%s: Abnormal address access: addr 0x%llx, size %d\n",
->>>> -                                               __func__, addr, len);
->>>>          }
->>>>          spin_unlock_irqrestore(&eiointc->lock, flags);
->>>>
->>>> --
->>>> 2.39.3
->>>>
->>>
->>
+> Please report any outstanding bugs that were missed during review in a
+> new review to the original patch series allowing us to drop it.
 
+bugs :(
+
+> It's encouraged to provide Acked-bys and Reviewed-bys even though the
+> patch has now been applied. If possible patch trailers will be updated.
+
+Pls don't. Keep it as-is, otherwise there will be merge conflicts
+during the merge window.
+
+> Note that commit hashes shown below are subject to change due to rebase,
+> trailer updates or similar. If in doubt, please check the listed branch.
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+> branch: vfs-6.17.bpf
+>
+> [1/4] kernfs: remove iattr_mutex
+>       https://git.kernel.org/vfs/vfs/c/d1f4e9026007
+> [2/4] bpf: Introduce bpf_cgroup_read_xattr to read xattr of cgroup's node
+>       https://git.kernel.org/vfs/vfs/c/535b070f4a80
+> [3/4] bpf: Mark cgroup_subsys_state->cgroup RCU safe
+>       https://git.kernel.org/vfs/vfs/c/1504d8c7c702
+> [4/4] selftests/bpf: Add tests for bpf_cgroup_read_xattr
+>       https://git.kernel.org/vfs/vfs/c/f4fba2d6d282
+
+Something wrong with this selftest.
+Cleanup is not done correctly.
+
+./test_progs -t lsm_cgroup
+Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+./test_progs -t lsm_cgroup
+Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+./test_progs -t cgroup_xattr
+Summary: 1/8 PASSED, 0 SKIPPED, 0 FAILED
+./test_progs -t lsm_cgroup
+test_lsm_cgroup_functional:PASS:bind(ETH_P_ALL) 0 nsec
+(network_helpers.c:121: errno: Cannot assign requested address) Failed
+to bind socket
+test_lsm_cgroup_functional:FAIL:start_server unexpected start_server:
+actual -1 < expected 0
+(network_helpers.c:360: errno: Bad file descriptor) getsockopt(SOL_PROTOCOL=
+)
+test_lsm_cgroup_functional:FAIL:connect_to_fd unexpected
+connect_to_fd: actual -1 < expected 0
+test_lsm_cgroup_functional:FAIL:accept unexpected accept: actual -1 < expec=
+ted 0
+test_lsm_cgroup_functional:FAIL:getsockopt unexpected getsockopt:
+actual -1 < expected 0
+test_lsm_cgroup_functional:FAIL:sk_priority unexpected sk_priority:
+actual 0 !=3D expected 234
+...
+Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
+
+
+Song,
+Please follow up with the fix for selftest.
+It will be in bpf-next only.
