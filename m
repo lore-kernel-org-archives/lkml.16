@@ -1,52 +1,52 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD15817741
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 21:45:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843D119992D
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 21:45:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751060748; cv=none; b=a7GJeByWbKHaWzoogI/BZFzdbYGX9thXjArQBOEcfHtRDocjqwJ9p85Ddc/cEKQ5AYwXUpqr7U/K1cVtCnLUZ0fnyfcqFIJGPB/kosilwhzQI6g5Z4OBSS+wMMZHgPsmd9fcD4Z/KlAXFvepR8hN0c1aY5JzTY6C6B1Gm+R4XNI=
+	t=1751060748; cv=none; b=ebifTfN9+ULlZgxUMUXlpEV7Mn625O+epB1yFdeWMM0pEj6rkOCxI0SXq+NSz++mQFfFKoNG4rI/1+m+D/C8L0H4eB1ld3MLdCI3q8D1x4EA9kP2CVGUfr1MRoXiLVdMxQFL05ldNSMper0EsD0Qmr46Rf+jB+vzd+60mFww87s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751060748; c=relaxed/simple;
-	bh=Ib/qYtkNBuD2ULEkcWydKJN8EeTwxREYetARM8T/PiU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SQT6phwZ9h2u/qf8LTSBVn4aT0GtDsxDQEryAdqV/d4F96DB1duYzvjXZFpP0Ib89SGK5oAxUqpSd7YyO0y02wFoxljmZIhlz1MMTQdXS4T42o1USJ5WAeE6lBoZsmJe9R5UZ9F2J3bcE9TV+EEV40QTEAsl83xw7K60fO+QFQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YuDZEEQO; arc=none smtp.client-ip=198.175.65.15
+	bh=7YqlhjvelHHRmIPxxW3bFPLGOmOO13E0rrCXAYV/vfg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=SyktF3cHToHPs8HR84C3G2+2sbrs7libJ+eIXNb5Gr6hoWT5TU2Af2e0Ohq2jkijlgtcHDQ1OCPp2JHvPIjKSq9WeZGD3soZv6CwMNEZZ4mh/SINzQibmhrq3Ml/9m+FG4+r3J+JZc8oe9nwGq9V3IjDEQU9Sv9FhOZqNgbO+t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b2aL3zbl; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YuDZEEQO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b2aL3zbl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751060746; x=1782596746;
-  h=from:subject:date:message-id:mime-version:
-   content-transfer-encoding:to:cc;
-  bh=Ib/qYtkNBuD2ULEkcWydKJN8EeTwxREYetARM8T/PiU=;
-  b=YuDZEEQOsRsP0aEwe6UFdKKqf95TSITUHruBxHFFRrw0YycClrtVCYxj
-   ov5IWEsLecOTC6jvyuQkIAFxmRXm114AuBa2ht5I/cHx6WOIs5ZJFZCSn
-   C7Y1SB7q34mKX7YKz9jUqmTPJnbkmd5LIjSBBcKWqZ08xlQUWA0ZDaz3H
-   pmaXwykX/O0FCouWKKX+VXYLzGqgVyxOy4qlQgDsfWD/b9MXBMYBhimRc
-   0Ps3E3xTDscJLEdqNDM1bm+Cv5WCE4lrINX0d0EP2cRI+OqyAliue2d5W
-   6O94AHhlZiErtT4+QxXACWibz1V2z96JhGltc3mZ6KESkKPqlkP3EsZOx
-   g==;
-X-CSE-ConnectionGUID: oqgAMY1ERFm0Wwzoz3qf9A==
-X-CSE-MsgGUID: MtJRTVG/QPuRj8BjXax0Jw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="57063769"
+  t=1751060747; x=1782596747;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=7YqlhjvelHHRmIPxxW3bFPLGOmOO13E0rrCXAYV/vfg=;
+  b=b2aL3zbl3ZTks+pJAgZ0EIkCMP5rZhXEa1OB0qU8cvq17XRfHOptXVv1
+   GtVKeIjR2XriMhknBsLczQ9+l2mMlvPolSrZgB4qf7diRGsQexFFv2VUw
+   jJ5BU+0NN5YSEE34C0x9uaAV8uDtmnMU1rD5o47rwZYCxZOG6ZRSm5Tld
+   7Vmw9aTkg3o2S9x/L8HRlCAkSJxLXhaacP+si0BUq7urM9oaS/HK7ldq5
+   B4StB5KWpmMG+cMeZuJP0ZlyjXZadVt+CWbqHD64m0IHmdvp3XrJH3JO6
+   K6xqYxgCkS1PbRiz3CEwVn6oQ3T9ko7LBZ5Yikk0h3l4/ffVKxBQDX69b
+   w==;
+X-CSE-ConnectionGUID: 6Muj57jyQ+q8cd9HIAeWxA==
+X-CSE-MsgGUID: 84hsq0O7RtmN+fYi+xvpPQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="57063777"
 X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
-   d="scan'208";a="57063769"
+   d="scan'208";a="57063777"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
   by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 14:45:46 -0700
-X-CSE-ConnectionGUID: 0VlZhW4NRGu1pkIN7wRHTA==
-X-CSE-MsgGUID: hToZ26LsS4+KEi6tGBjkiA==
+X-CSE-ConnectionGUID: Q0XYEZ7rQoSNOap9C+w9Sg==
+X-CSE-MsgGUID: bl7IABFHStun07tCMa1xXQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
-   d="scan'208";a="190092819"
+   d="scan'208";a="190092826"
 Received: from unknown (HELO [172.25.112.21]) ([172.25.112.21])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 14:45:45 -0700
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 14:45:46 -0700
 From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Subject: [PATCH 0/4] sched: Fix cluster scheduling in the presence of
- asymmetric capacity
-Date: Fri, 27 Jun 2025 14:45:26 -0700
-Message-Id: <20250627-rneri-fix-cas-clusters-v1-0-121ffb50bbc7@linux.intel.com>
+Date: Fri, 27 Jun 2025 14:45:27 -0700
+Subject: [PATCH 1/4] sched/fair: Always skip fully_busy higher-capacity
+ groups for load balance
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,9 +55,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPYQX2gC/x2MywqDQAwAf0VybmA3+Cj+ivSga9SAbCXRUhD/3
- eBxYGZOMFZhg7Y4QfknJt/sEF8FpKXPM6OMzkCBqlBTQM0e4CR/TL1hWg/bWQ2HoaR3M0aOFYH
- Hm7I7z7j7XNcNkTpV2mgAAAA=
+Message-Id: <20250627-rneri-fix-cas-clusters-v1-1-121ffb50bbc7@linux.intel.com>
+References: <20250627-rneri-fix-cas-clusters-v1-0-121ffb50bbc7@linux.intel.com>
+In-Reply-To: <20250627-rneri-fix-cas-clusters-v1-0-121ffb50bbc7@linux.intel.com>
 To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
  Juri Lelli <juri.lelli@redhat.com>, 
  Vincent Guittot <vincent.guittot@linaro.org>, 
@@ -69,80 +69,74 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
  ricardo.neri@intel.com, linux-kernel@vger.kernel.org, 
  Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751060764; l=3148;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751060764; l=2176;
  i=ricardo.neri-calderon@linux.intel.com; s=20250602;
- h=from:subject:message-id; bh=Ib/qYtkNBuD2ULEkcWydKJN8EeTwxREYetARM8T/PiU=;
- b=S6SalDCyv7qpIbCjRiYKbGr24mdIDE8b/BUOM3j6/c02ehgMV6k+gqFT5jJFfUagRe1B4Gqsx
- lkbyLfGweI5B+JLd0wc6RHdQ0Fn74AfU4P83A4oUk2EJw7nGqBNtDJc
+ h=from:subject:message-id; bh=7YqlhjvelHHRmIPxxW3bFPLGOmOO13E0rrCXAYV/vfg=;
+ b=Sb9BplYPGiDxmeREwxAZVNDpA0JTwBBK/X9c9RbOxLd0sUzkiF7m28s5x+xXOFmbREiMlbXRJ
+ BsvnJm//zWSDIDMJElygYm9vrQwSLTqCZxa1FdYKhFehU/RNHFFt8P+
 X-Developer-Key: i=ricardo.neri-calderon@linux.intel.com; a=ed25519;
  pk=NfZw5SyQ2lxVfmNMaMR6KUj3+0OhcwDPyRzFDH9gY2w=
 
-Cluster scheduling balances load among clusters of CPUs sharing a resource
-[1]. It was broken on Intel hybrid processors using asymmetric packing of
-tasks. Tim fixed that [2]. It is broken again when combined with asymmetric
-CPU capacity.
+update_sd_pick_busiest() is supposed to avoid picking as busiest a
+candidate scheduling group with no more than one task if its per-CPU
+capacity is greater than that of the destination CPU.
 
-The diagram below shows a processor with big (B) and small (s) CPUs. Also,
-small CPUs are grouped in cluster sharing mid-level cache. This topology is
-common in Intel hybrid processors.
+update_sd_pick_busiest() selects as busiest a group if its type is greater
+than has_spare (the type of the busiest group is initialized as has_spare).
+As a result, a fully_busy group with higher per-CPU capacity can still
+be selected as busiest.
 
-         ------   ------
-         | B  |   | B  |   -----------------   -----------------
-         |    |   |    |   | s | s | s | s |   | s | s | s | s |
-         ------   ------   -----------------   -----------------
-         | L2 |   | L2 |   |      L2       |   |       L2      |
-         -------------------------------------------------------
-         |                          L3                         |
-         -------------------------------------------------------
+Relocate the existing comparison of capacities to occur before comparing
+the types of the candidate and busiest groups.
 
-On a partially busy system (one with idle CPUs; busy CPUs have one task
-each), scheduling for asymmetric capacity ensures that misfit tasks are
-placed on the big CPUs. The remaining tasks, misfit or not, run on the
-small CPUs. If CONFIG_SCHED_CLUSTER is enabled, these remaining tasks
-should be evenly spread between the two small-CPU clusters.
+Remove unnecessary parentheses while here.
 
-This does not happen today because various checks in the load balancer
-prevent a small CPU in one cluster from pulling tasks from another:
-
-  * A bug in update_sd_pick_busiest() causes it to not check for capacity
-    when preferring a fully_busy big CPU (which it cannot help) vs a has_
-    spare small-CPU cluster (which it can).
-
-  * Accounting misfit load in a group is pointless if the destination CPU
-    is equally a small CPU. Moreover, update_sd_pick_busiest() will not
-    pick such group as busiest anyway.
-
-  * Once a busiest group has been identified, sched_balance_find_src_rq()
-    will refuse to migrate tasks to CPUs of equal capacity.
-
-  * The SD_PREFER_SIBLING flag is removed from scheduling domains with
-    asymmetric capacity.
-
-I address these issues in this series. Details are in the changelog of each
-patch.
-
-I tested these patches on an Alder Lake system with Hyper-Threading
-disabled. I also tested with CONFIG_SCHED_CLUSTER=n to ensure that
-processors without clusters continue to work.
-
-[1]. https://lore.kernel.org/r/20210924085104.44806-1-21cnbao@gmail.com/
-[2]. https://lore.kernel.org/r/cover.1688770494.git.tim.c.chen@linux.intel.com/
-
+Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 ---
-Ricardo Neri (4):
-      sched/fair: Always skip fully_busy higher-capacity groups for load balance
-      sched/fair: Ignore misfit load if the destination CPU cannot help
-      sched/fair: Allow load balancing between CPUs of equal capacity
-      sched/topology: Keep SD_PREFER_SIBLING for domains with clusters
+ kernel/sched/fair.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
- kernel/sched/fair.c     | 27 +++++++++++++++------------
- kernel/sched/topology.c | 11 +++++++++--
- 2 files changed, 24 insertions(+), 14 deletions(-)
----
-base-commit: e51a38e71974982abb3f2f16141763a1511f7a3f
-change-id: 20250620-rneri-fix-cas-clusters-bb4287d1e152
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 7e2963efe800..9da5014f8387 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -10372,6 +10372,17 @@ static bool update_sd_pick_busiest(struct lb_env *env,
+ 	     sds->local_stat.group_type != group_has_spare))
+ 		return false;
+ 
++	/*
++	 * Candidate sg has no more than one task per CPU and has higher
++	 * per-CPU capacity. Migrating tasks to less capable CPUs may harm
++	 * throughput. Maximize throughput, power/energy consequences are not
++	 * considered.
++	 */
++	if (env->sd->flags & SD_ASYM_CPUCAPACITY &&
++	    sgs->group_type <= group_fully_busy &&
++	    capacity_greater(sg->sgc->min_capacity, capacity_of(env->dst_cpu)))
++		return false;
++
+ 	if (sgs->group_type > busiest->group_type)
+ 		return true;
+ 
+@@ -10474,17 +10485,6 @@ static bool update_sd_pick_busiest(struct lb_env *env,
+ 		break;
+ 	}
+ 
+-	/*
+-	 * Candidate sg has no more than one task per CPU and has higher
+-	 * per-CPU capacity. Migrating tasks to less capable CPUs may harm
+-	 * throughput. Maximize throughput, power/energy consequences are not
+-	 * considered.
+-	 */
+-	if ((env->sd->flags & SD_ASYM_CPUCAPACITY) &&
+-	    (sgs->group_type <= group_fully_busy) &&
+-	    (capacity_greater(sg->sgc->min_capacity, capacity_of(env->dst_cpu))))
+-		return false;
+-
+ 	return true;
+ }
+ 
 
-Best regards,
 -- 
-Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+2.43.0
 
