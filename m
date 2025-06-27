@@ -1,126 +1,63 @@
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059CF18E750;
-	Fri, 27 Jun 2025 06:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5CB8139D1B
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 06:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751007177; cv=none; b=HhXej+WrRp9COv4AfDJgg8g2osIUW1icaoHTIYuyk461uBS/4G7DxWlhwmT+sjx2oiA5Op1QfaixA4FvEKOfei1snTeDYjSvzLHUY1HB2GmarO232NhTUxgG0k0bRfDhP5/h/jUWnenGXB4tl77YeivqRxJbLDcVT8jfEbzBUuU=
+	t=1751007228; cv=none; b=DnzrBp3EtWbLID7pEhNgXPRris8QcLCiE9gd/HKC+B4/JhrrZXx+gJo4zc8fsNljDhRwhRuG9GNNUZLsvui8FfXF4Cceh5mJiF9EtrcQR7sGbcKq2yhJn31z+cZ26Bx1veAxpttsVmDyxaA4AYTYsPseLIv4OvGZyn3SvJ7WSjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751007177; c=relaxed/simple;
-	bh=EaFMQmISe8mwMKslzDhJXe2N9mtx8GidIaMXPAK04mQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eJRmMuTsQLBg+wukL/AdUUgANXt4LOM//etqViel4bNkIKMEQd0v8BJ+GN9RCQoPxdcQdtUj7KPZ+b/tpTJLI24MsE2gDjPaq/iNJ1GDFM9UGJ0is7yHkeS+HWJfdUXfPT+JcpFFipVhvt76tGTG2YLY3cpbYtrpdQJx0JSPPuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jtDOTIcq; arc=none smtp.client-ip=209.85.217.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751007228; c=relaxed/simple;
+	bh=Yo3z90k4twSlPMQYzOIKH9VTAjl/qG2Op4HCeH55WXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U9ksOnoDeGudVB3LYi6jDfLkdD0nDIEkHjk0XvBA5cLvZDLKA6o6nJ9tho9MWEcTwlx6srzvoKqsZgj/tmUXBeCuQ0nJQv9Lj0LZ6im18ev4JH6yXxPGUJJNwmJSXh4kByF/Yc+M8B0jSxlv/mZ9nUI+rySCGKVKi9IR7sHoZ2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=GIeiHA7U; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtDOTIcq"
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4e80d19c7ebso1043759137.3;
-        Thu, 26 Jun 2025 23:52:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751007175; x=1751611975; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EaFMQmISe8mwMKslzDhJXe2N9mtx8GidIaMXPAK04mQ=;
-        b=jtDOTIcqHlIkhkMGD29J8MHuHgohtSncLG5R+FPSh+UT5YwLsEIyNQu4OMEWz4H21k
-         63Mmj7HzWr7W5pOCzgUIoaGvaGFCzF3U4PdvZuvacphmPelEj1UncH5gwF9WK/7DO98K
-         CPocvSAfjVlf8oCjQGN71O1eXPFY4Od4UKxDJpLGVgitY3tVuaPgg8XLplNLlZtj2E3i
-         svZlYzjPiYp6qPQOGlHR3wMU9cCWzvEeIIo6M/6DYWInztFsF9JjqmjgfMLqBDPKMLIJ
-         xF1baQfKX+xowEEsNl9Bie/5SEcHCRsZhZdiBdhV2ImRw0DAjmo8v5LQCwOq21f624Iq
-         mCrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751007175; x=1751611975;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EaFMQmISe8mwMKslzDhJXe2N9mtx8GidIaMXPAK04mQ=;
-        b=UzywMXznJ726i2qp+imKsRPPTAUndjKWfhU9J1GGHvY4RvZwH8LrKoGM7G2EGVKdqa
-         HGZnsxo7r+9uwJmcLDMbZ4u4zGkbGAOJ8WhHFJqj0rc2oTdrL3Dme7DdUGkMXQ9TYitM
-         tc5GNzdYRu+9nUj1rzmga+qq5vunzHVNoOYwdMceYICEzsAh0KgomJA/hMJdJWuFcHS4
-         YukNd3nNQpj2MqzfebMqtdEXfqg8tm6pJMTcbUtQYDsisHV1yAwjDTxza28rHhG8+j6X
-         vPvZFVlbVniATGG4G2quBsjhBp08WxzRTjZXSVaN8TrpEn48wrVQjNnsxY/+MEiC5I4W
-         V42A==
-X-Forwarded-Encrypted: i=1; AJvYcCUptbW+aY252DIAlDHfFhzqYQZ7lTdf96sK4tf5qLOnqto90u36dZranKVVs/Cl/VXeyESqlH5aGd8Ckvs=@vger.kernel.org, AJvYcCWJ3u3tUfwVraXZAwsESjvVH3fTsdsNOXqDN618I8fCW1beM6hijJs1RWuqTi/03nyF92LqXyby@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy93AOpQ7xLLDP7Pe34hRhr3JRCU20Ge8sdPZxHNKzgiMtVq9Ky
-	oOqpjdRmAYKk4BKo8bT5OEghrIhtpNzbAOupD87zFdxTR7MiNtIUX1yMybk+6EyYeyBmaIvZVwx
-	kF60DvkObc7eUlizCUa9pQ7h16OoswMM=
-X-Gm-Gg: ASbGncsCkwBg4Xbanb3GEvp6M6s3T99RH77PWsrXJR8JPAFr2hmAY0NauMwhA8mB3cP
-	64EsYXSeujSz0kGWacOcrcthQdyWN+6tpegnKq8cmD0dmeTYFlbZmAUagzeX5KnGemCIsyn5H53
-	PVJp3BtHmBUelt+khXnBs3Qto5C2gbkFaKBnXivbESchE=
-X-Google-Smtp-Source: AGHT+IH6bDiCYOYL1uwyhCR37thkVbMFzWqTF1MJ7TonqI/9c72618WAPYRenRHgD5d7gIqLvS+7c3Y3eFAsHo5tk2Q=
-X-Received: by 2002:a05:6102:50a8:b0:4e5:9138:29ab with SMTP id
- ada2fe7eead31-4ee4f6f7c8fmr1635839137.15.1751007174693; Thu, 26 Jun 2025
- 23:52:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="GIeiHA7U"
+Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 0651C4D686;
+	Fri, 27 Jun 2025 08:53:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1751007226;
+	bh=Yo3z90k4twSlPMQYzOIKH9VTAjl/qG2Op4HCeH55WXk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GIeiHA7U0rvouipHa47iAzncUxTCQ+sl6rHavIs/5wTRL/9XtEcDm0e4w6pxYJg1/
+	 UeIxlB/kbUkgCj3T42D0ZDsfIHTHmMHkZz9kPBG3vmt7QgB9f8Pua4LXvJmPwmsXVV
+	 +jgsJVxe/yslNZpeI31FDAadS2E0eup7b77vUkMAKcwKUdvtsoE7CITl952Vfta98n
+	 pQmK033gtIOZgohl50TNLLO87RORo5Yg4kwKp0pCUdplhGlrXxpaBbq1QGC+rnt64Q
+	 qmYMKQ37X5SJACBLMNEH7Z4wvYELZ6LieKGqDey3MBb2jHlKDEH+i3hZME/TFat5+c
+	 cAnyrgs25gZKw==
+Date: Fri, 27 Jun 2025 08:53:44 +0200
+From: Joerg Roedel <joro@8bytes.org>
+To: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
+Cc: suravee.suthikulpanit@amd.com, will@kernel.org, robin.murphy@arm.com,
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+	Vasant.Hegde@amd.com
+Subject: Re: [PATCH v6 0/8] Introduce debugfs support in IOMMU
+Message-ID: <aF4_-F4utWGgcwWY@8bytes.org>
+References: <20250604163647.1439-1-dheerajkumar.srivastava@amd.com>
+ <dbec455c-74a0-4f91-8b8c-7b995c6e3e9c@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627062319.84936-1-lance.yang@linux.dev>
-In-Reply-To: <20250627062319.84936-1-lance.yang@linux.dev>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 27 Jun 2025 18:52:43 +1200
-X-Gm-Features: Ac12FXzKrRSpHCQX4R2-HXu3dI84IogjSfBJMN0ktRq8apwqIcoJ13xTkDhUr9k
-Message-ID: <CAGsJ_4xQW3O=-VoC7aTCiwU4NZnK0tNsG1faAUgLvf4aZSm8Eg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] mm/rmap: fix potential out-of-bounds page table
- access during batched unmap
-To: Lance Yang <ioworker0@gmail.com>
-Cc: akpm@linux-foundation.org, david@redhat.com, baolin.wang@linux.alibaba.com, 
-	chrisl@kernel.org, kasong@tencent.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-riscv@lists.infradead.org, lorenzo.stoakes@oracle.com, 
-	ryan.roberts@arm.com, v-songbaohua@oppo.com, x86@kernel.org, 
-	huang.ying.caritas@gmail.com, zhengtangquan@oppo.com, riel@surriel.com, 
-	Liam.Howlett@oracle.com, vbabka@suse.cz, harry.yoo@oracle.com, 
-	mingzhe.yang@ly.com, stable@vger.kernel.org, 
-	Lance Yang <lance.yang@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dbec455c-74a0-4f91-8b8c-7b995c6e3e9c@amd.com>
 
-On Fri, Jun 27, 2025 at 6:23=E2=80=AFPM Lance Yang <ioworker0@gmail.com> wr=
-ote:
->
-> From: Lance Yang <lance.yang@linux.dev>
->
-> As pointed out by David[1], the batched unmap logic in try_to_unmap_one()
-> can read past the end of a PTE table if a large folio is mapped starting =
-at
-> the last entry of that table. It would be quite rare in practice, as
-> MADV_FREE typically splits the large folio ;)
->
-> So let's fix the potential out-of-bounds read by refactoring the logic in=
-to
-> a new helper, folio_unmap_pte_batch().
->
-> The new helper now correctly calculates the safe number of pages to scan =
-by
-> limiting the operation to the boundaries of the current VMA and the PTE
-> table.
->
-> In addition, the "all-or-nothing" batching restriction is removed to
-> support partial batches. The reference counting is also cleaned up to use
-> folio_put_refs().
->
-> [1] https://lore.kernel.org/linux-mm/a694398c-9f03-4737-81b9-7e49c857fcbe=
-@redhat.com
->
+Hi Dheeraj,
 
-What about ?
+On Thu, Jun 26, 2025 at 11:27:54AM +0530, Dheeraj Kumar Srivastava wrote:
+> Just a friendly reminder to review the patch series. Your valuable feedback
+> would be greatly appreciated to help us move forward.
 
-As pointed out by David[1], the batched unmap logic in try_to_unmap_one()
-may read past the end of a PTE table when a large folio spans across two PM=
-Ds,
-particularly after being remapped with mremap(). This patch fixes the
-potential out-of-bounds access by capping the batch at vm_end and the PMD
-boundary.
+Will merge once acked/reviewed by Suravee or Vasant.
 
-It also refactors the logic into a new helper, folio_unmap_pte_batch(),
-which supports batching between 1 and folio_nr_pages. This improves code
-clarity. Note that such cases are rare in practice, as MADV_FREE typically
-splits large folios.
+Regards,
 
-Thanks
-Barry
+	Joerg
