@@ -1,103 +1,71 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E111F9A8B
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 06:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700121E5702;
+	Fri, 27 Jun 2025 06:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751004885; cv=none; b=NqBys3Y6HWKgy8JlEjk7Zc+t1YnfEFBsZYuAi3oG3t/vRzvRqyOfSAjNJbZ+TqfOLegFhkKcpB62I1HoQW/gW8U9DAG/R69c8KusTL0NZ3wVcDrcmqM5a70yN5zRB1yX+RVG8cJnKW7JqA3WxlM12Lw8kpcCgTqIl5l2HTSCxF0=
+	t=1751004897; cv=none; b=dOIGEaolPkOkWXdr1piDNOfnKHw6oXarozTMx7KGlcbuPs7IDTy6T45y+JoXKmOFXlQaizDt1yqBovT56tHZ8UVrQcPLUHGmMqNFqSKSEnV6KHbDiUDH9fdf/P7SGSV3KjBBq6MWdMi7bq3VO46HEXH2mU/tJkDfSbLxsodW/08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751004885; c=relaxed/simple;
-	bh=s20/Ee1rJ6rBoOY7u3AJ4u2WbhNf9ZVzZJHhv8LQ6K8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tqrqelLZTOICKVoQfv5t7faS8uoW+oaZwN+YthOuZCaKj9M8cX6opNgK7kinp20hwJrZubbhFMPCt9+AksRHWxDnf6ooS2I4F+BAYZn+3n/1xd54Wb9hC5fvc+wC/vryLXwiPZU0VPOLCYrxtjQtwbZBasKgPW63FSDKbeEbUig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YfudznCY; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YfudznCY"
-Message-ID: <e33bbf93-ed78-4cbd-9ed7-1e36453549c0@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751004880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RIqr1G8w341JdjB67nlcBhtQ9EOdz3z9dERZmNVdkZk=;
-	b=YfudznCYk3WoX9DBBDdaJTY5VlTsRNSRfpU+C/HCgg4VyCUC021HG0XVnTunKtN57mjv5I
-	P9Md7kHGGVfC0XgIc8DZFDdo/bVJqb8S9fohOQPbyv4PUceTJBy2Cwl1fATsK446rJr5f1
-	YBewEH6Gy68GWtDSCHkKRwOtL6+xozs=
-Date: Fri, 27 Jun 2025 14:14:32 +0800
+	s=arc-20240116; t=1751004897; c=relaxed/simple;
+	bh=vDmXOaFg61Wb877I3fCvD/03Zl6rNBUVdNz0g55bENs=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=t/za7AwrF8+PVOoicggXJ5QZKMlmP+Vz4AQHXPzJb7QhPkg4sEVBpaccPAgLkvH4SKXjaLhMTILQjHRPMXj/5lriiaGdCZv+0hscKJeXY/XPzUvp6h0pe/7b/5pijtFeUFG3xcU73zfP1cADdE9oGRZJDeh32i6yO+ObvX7wjOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bT4yv2PNxz4x5q1;
+	Fri, 27 Jun 2025 14:14:47 +0800 (CST)
+Received: from njy2app08.zte.com.cn ([10.40.13.206])
+	by mse-fl2.zte.com.cn with SMTP id 55R6EWhc085784;
+	Fri, 27 Jun 2025 14:14:32 +0800 (+08)
+	(envelope-from jiang.kun2@zte.com.cn)
+Received: from mapi (njy2app01[null])
+	by mapi (Zmail) with MAPI id mid204;
+	Fri, 27 Jun 2025 14:14:33 +0800 (CST)
+Date: Fri, 27 Jun 2025 14:14:33 +0800 (CST)
+X-Zmail-TransId: 2af9685e36c96f3-85425
+X-Mailer: Zmail v1.0
+Message-ID: <202506271414338240Wfd8DAvsUIAhMka4zvEZ@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/1] mm/rmap: make folio unmap batching safe and support
- partial batches
-Content-Language: en-US
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, david@redhat.com,
- baolin.wang@linux.alibaba.com, chrisl@kernel.org, kasong@tencent.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-riscv@lists.infradead.org,
- lorenzo.stoakes@oracle.com, ryan.roberts@arm.com, v-songbaohua@oppo.com,
- x86@kernel.org, huang.ying.caritas@gmail.com, zhengtangquan@oppo.com,
- riel@surriel.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
- harry.yoo@oracle.com, mingzhe.yang@ly.com, Lance Yang <ioworker0@gmail.com>
-References: <20250627025214.30887-1-lance.yang@linux.dev>
- <CAGsJ_4yjvHzeUTDoALafLddTCTOSzYiFQNvAmSQORLJV1HPhPQ@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <CAGsJ_4yjvHzeUTDoALafLddTCTOSzYiFQNvAmSQORLJV1HPhPQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+From: <jiang.kun2@zte.com.cn>
+To: <alexs@kernel.org>, <si.yanteng@linux.dev>, <corbet@lwn.net>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Cc: <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>, <wang.yaxin@zte.com.cn>,
+        <fan.yu9@zte.com.cn>, <he.peilin@zte.com.cn>, <tu.qiang35@zte.com.cn>,
+        <qiu.yutan@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
+        <ye.xingchen@zte.com.cn>, <jiang.kun2@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIHYzIDAvMyBsaW51eCBuZXh0XSBEb2NzL3poX0NOOiBUcmFuc2xhdGUKIG5ldHdvcmtpbmcgZG9jcyB0byBTaW1wbGlmaWVkIENoaW5lc2U=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 55R6EWhc085784
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 685E36D7.001/4bT4yv2PNxz4x5q1
 
+From: Wang Yaxin <wang.yaxin@zte.com.cn>
 
+translate networking docs to Simplified Chinese
 
-On 2025/6/27 13:02, Barry Song wrote:
-> On Fri, Jun 27, 2025 at 2:53 PM Lance Yang <ioworker0@gmail.com> wrote:
->>
->> From: Lance Yang <lance.yang@linux.dev>
->>
->> As pointed out by David[1], the batched unmap logic in try_to_unmap_one()
->> can read past the end of a PTE table if a large folio is mapped starting at
->> the last entry of that table.
->>
->> So let's fix the out-of-bounds read by refactoring the logic into a new
->> helper, folio_unmap_pte_batch().
->>
->> The new helper now correctly calculates the safe number of pages to scan by
->> limiting the operation to the boundaries of the current VMA and the PTE
->> table.
->>
->> In addition, the "all-or-nothing" batching restriction is removed to
->> support partial batches. The reference counting is also cleaned up to use
->> folio_put_refs().
->>
->> [1] https://lore.kernel.org/linux-mm/a694398c-9f03-4737-81b9-7e49c857fcbe@redhat.com
->>
->> Fixes: 354dffd29575 ("mm: support batched unmap for lazyfree large folios during reclamation")
->> Suggested-by: David Hildenbrand <david@redhat.com>
->> Suggested-by: Barry Song <baohua@kernel.org>
->> Signed-off-by: Lance Yang <lance.yang@linux.dev>
-> 
-> I'd prefer changing the subject to something like
-> "Fix potential out-of-bounds page table access during batched unmap"
+Wang Yaxin (3):
+  Docs/zh_CN: Translate netif-msg.rst to Simplified Chinese
+  Docs/zh_CN: Translate xfrm_proc.rst to Simplified Chinese
+  Docs/zh_CN: Translate netmem.rst to Simplified Chinese
 
-Yep, that's much better.
+ .../translations/zh_CN/networking/index.rst   |   6 +-
+ .../zh_CN/networking/netif-msg.rst            |  92 +++++++++++++
+ .../translations/zh_CN/networking/netmem.rst  |  92 +++++++++++++
+ .../zh_CN/networking/xfrm_proc.rst            | 126 ++++++++++++++++++
+ 4 files changed, 313 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/translations/zh_CN/networking/netif-msg.rst
+ create mode 100644 Documentation/translations/zh_CN/networking/netmem.rst
+ create mode 100644 Documentation/translations/zh_CN/networking/xfrm_proc.rst
 
-> 
-> Supporting partial batching is a cleanup-related benefit of this fix.
-> It's worth mentioning that the affected cases are quite rare,
-> since MADV_FREE typically performs split_folio().
-
-Yeah, it would be quite rare in practice ;)
-
-> 
-> Also, we need to Cc stable.
-
-Thanks! Will do.
-
+-- 
+2.25.1
