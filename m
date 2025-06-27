@@ -1,202 +1,138 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1331BBE4A
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A5D2BEC35;
+	Fri, 27 Jun 2025 12:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751028658; cv=none; b=LNQnmS5PvsZv7CR/teIbKwhEAaxPsrxdpKQJUWbE8dFQ6q57C/Bf2i3IYvju8YQvwxYqM/qtwe4sPXtQvZuYys+K885Z4k1WEJb3KA74/UHKzmy7ihReaZxd0iuoblA8UCs7BFKzEav+v9z5QVDSzEKJICuUvoI2PYrzyMv2jUQ=
+	t=1751028686; cv=none; b=kvB2y2nOGrsrLBVSBo8GvrkTB8uCD1Z6bx8U2PwB6M6JP4GbvBvO0LwhfBe+xe7NmMs2y9MRuI/oQsW7RfKMuezv9/GhccFYuNR5siPqKX4lSO8Vh4yeuKe3f1JlFLljoN42dXUuKxpWCSkuVculcRl/oQWxSzVKZf6miB9/b48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751028658; c=relaxed/simple;
-	bh=QCJARtglO2LaY2IHKh5t2U/Tlklxb0ibISPLcSbmuzU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m2SwxhQa5salepn08KP9t7X8vb3qYFwA/Oc8T9DCvjnAmm8u0qe9YlyNjdVSTmhZF6H8RZHSPVovaWpY2cfNAEP36z+Eyi8hiuf7bW1KDuJ9O1XfN1Ym6TpuYbUunXzYplCVkJRbRFq2rodfnMEMYb6+VLiWNaHvEiRqWdg70m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nGUio8BS; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751028686; c=relaxed/simple;
+	bh=vkTWHdyY2LgTLEhdW6ywJcKCt9UErdA7gq50ddD4J7U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o4W8zAfcKoT2n21niLyWR28MRLWfNgy/v7dztc5DowTtiVr76bo0AoLAPwANioNShWiu6lmJmw9hlGj+5mL1jpH9xziwWSsq/fiyyma6PnZ8VVsKRvC0Wo96prtp3jI0DPtKGZzRZXycuiA5Sw5Xh1mL5yJmIqVr4XqUkfDOsQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EY1X793v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nGUio8BS"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6ecf99dd567so24407796d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:50:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751028656; x=1751633456; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=idturYgqav2RqhmzofSv+DJRMZDL8II+nd4+G+NHC8w=;
-        b=nGUio8BS6ZlpExukdx8F5eRR6u8EPnB6A4rMQ0cs9cYdcQQKNn7KIpobF07TbqpCdS
-         kAr85FID+gXteQZ62QDRuQdm8Cvp+kzD+s5Wwc/FKmPCk9QXPGHp50EhwXeXLne4H5Q7
-         Y7rz4pbrGRALARcJkKhORsSCV6tIS5AAI/zvU3VG7BdQZkdlmM4iA/4UpXkI/L5xzLyS
-         9ohdDPGoeJ09gygD44xZlj484s7plGa/KLosYmI4s7iz4wagD9QxynMW6l/oFZFPNQND
-         84zGA7J5mDEdM3J1fc+/mIbFbbFaOkqaUdhPehtaTkSgUwQR6gzvpTtFNY21FUD4OD+T
-         KfAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751028656; x=1751633456;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=idturYgqav2RqhmzofSv+DJRMZDL8II+nd4+G+NHC8w=;
-        b=ncrsBQFf8tZD1ckIAbMy8EqdyDQehoEkU8GEITCa7Mbwzek5B5hdKKuld0KixDloxV
-         CZmj/aaYtT/RZJ87Q/V977DAHaKZtscX86eqlR7rE+SwrmnagWdCJ5Nw3TOFRsopjc0h
-         QFdMjOYl7sL+RqkIsYMTIo7Z3usfJT/l0M2oTSHWTNjwAV4lEF9adKCcPhFcfrMUiuv3
-         JZQY1wnE1sCllqT669mXcu79islg7x5DPm5eG1qvC725NY2h6BXwvQdNaNDOdrGqMFS1
-         jRcvot2wH1GxR34G23bz5vEsVQIjIDmif21PdMrzWHleT38CF8+K/Xgx7Vsl2MgbVzK/
-         16zA==
-X-Forwarded-Encrypted: i=1; AJvYcCXBcdgVLNuUn/fHhhquCw+sFwudN47nwCbLWtrqhhTm6ga1I+rxF++qyGArLq4ZCBusZesM1DOt+LTv2l4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuinMj3x+N9wyYbuVvGdhUEw0wZIo8EiuoEvHYr8gPU0NXZleD
-	kvugvimSJ+DLX3ZJPbrPrG0A+m8pUE3M3hbBFnR7yXtMqN9qxCIyLOKgPSeefuNicem0tDiRQHQ
-	XZX5YBB7z8cnPQM+KYe8C/xy5tuHOJCSHz1CTc6oB
-X-Gm-Gg: ASbGncvVy0pf7K0hW9DmyGHdDoV1DkA35JpljQkZ9U+Q77kMQk/BzKyVrP5BpleSDcz
-	C9YIaP4KTL/+EbKbZQGVuRhud11iYpV0nvM7/1q50qA+1LRrsBUg1nrn0CbA5YOeZdR6cGFVTvs
-	S8q/znaw/zONeGs/bPWg4ZnEdMJLuiqK6IV1sCOvZEcNW6XwhZ+Yv0tDDciMM8GTuDYQMCcauAe
-	zDuh/rZvT42
-X-Google-Smtp-Source: AGHT+IHIU4LDEs67YWr+lK5C2TD7HbosAimrfZGq5Uf+Lz6Ud+fdIxcudZiyYZLVcgNSr+MlK/m5GD+tabyL7OnlGNM=
-X-Received: by 2002:a05:6214:459a:b0:6fd:a382:f86f with SMTP id
- 6a1803df08f44-7001413116cmr59746306d6.34.1751028655727; Fri, 27 Jun 2025
- 05:50:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EY1X793v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD1F4C4CEE3;
+	Fri, 27 Jun 2025 12:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751028686;
+	bh=vkTWHdyY2LgTLEhdW6ywJcKCt9UErdA7gq50ddD4J7U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EY1X793vtCOEYQVu60/1GWtMu/J/QR4ff5coXtHaO1S5KX6WWx1sz8cpC9H43vD92
+	 PbDEyMg3DoFr6qAsB6Hc10WJTPqHvzt8umwtLBIX1gl2a5R3vaINtixLt9jZtacy38
+	 WRbCMgIlkSnT8OWPnKsGZDgn/EziNXBzClIPsvxM+SEKHO8hwyCgtEOUvLC+qR7kYI
+	 qBcNdQ127+NSLu3G/FW8GtY/PN5fOF5qObxDiUgfh4Tts28h32mOi4HzAABvUhHOJ1
+	 Pw3p19wn+i9kRDjuDONH7oqhuXX5uPrkr7dQ135iWCKjcAab4aUXloJ+tnm9jz6Bya
+	 gtHC0gMJMd1fQ==
+Date: Fri, 27 Jun 2025 13:51:19 +0100
+From: Lee Jones <lee@kernel.org>
+To: Alex Elder <elder@riscstar.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, alexandre.belloni@bootlin.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	mat.jonczyk@o2.pl, dlan@gentoo.org, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	troymitchell988@gmail.com, linux-rtc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/7] mfd: simple-mfd-i2c: add SpacemiT P1 support
+Message-ID: <20250627125119.GF10134@google.com>
+References: <20250625164119.1068842-1-elder@riscstar.com>
+ <20250625164119.1068842-3-elder@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626134158.3385080-1-glider@google.com> <20250626134158.3385080-3-glider@google.com>
- <20250627080248.GQ1613200@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250627080248.GQ1613200@noisy.programming.kicks-ass.net>
-From: Alexander Potapenko <glider@google.com>
-Date: Fri, 27 Jun 2025 14:50:18 +0200
-X-Gm-Features: Ac12FXwxKj33euY6ZH-yL0eZIHyMTugesDF-zJKSuw4473Kt_nozRUjRKba6tvg
-Message-ID: <CAG_fn=XCEHppY3Fn+x_JagxTjHYyi6C=qt-xgGmHq7xENVy4Jw@mail.gmail.com>
-Subject: Re: [PATCH v2 02/11] kcov: apply clang-format to kcov code
-To: Peter Zijlstra <peterz@infradead.org>, Miguel Ojeda <ojeda@kernel.org>
-Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com, Aleksandr Nogikh <nogikh@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Marco Elver <elver@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250625164119.1068842-3-elder@riscstar.com>
 
-On Fri, Jun 27, 2025 at 10:02=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
->
-> On Thu, Jun 26, 2025 at 03:41:49PM +0200, Alexander Potapenko wrote:
-> > kcov used to obey clang-format style, but somehow diverged over time.
-> > This patch applies clang-format to kernel/kcov.c and
-> > include/linux/kcov.h, no functional change.
->
-> I'm not sure I agree this is in fact a good thing. Very questionable
-> style choices made.
+On Wed, 25 Jun 2025, Alex Elder wrote:
 
-Adding Miguel, who maintains clang-format.
+> Enable support for the RTC and regulators found in the SpacemiT P1
+> PMIC.  Support is implemented by the simple I2C MFD driver.
+> 
+> The P1 PMIC is normally implemented with the SpacemiT K1 SoC.  This
+> PMIC provides 6 buck converters and 12 LDO regulators.  It also
+> implements a switch, watchdog timer, real-time clock, and more.
+> Initially its RTC and regulators are supported.
+> 
+> Signed-off-by: Alex Elder <elder@riscstar.com>
+> ---
+> v4: - Add a dependency on I2C, to avoid a CROSS_COMPILE build error
+> 
+>  drivers/mfd/Kconfig          | 11 +++++++++++
+>  drivers/mfd/simple-mfd-i2c.c | 18 ++++++++++++++++++
+>  2 files changed, 29 insertions(+)
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 6fb3768e3d71c..01805c3eec57d 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1182,6 +1182,17 @@ config MFD_QCOM_RPM
+>  	  Say M here if you want to include support for the Qualcomm RPM as a
+>  	  module. This will build a module called "qcom_rpm".
+>  
+> +config MFD_SPACEMIT_P1
+> +	tristate "SpacemiT P1 PMIC"
+> +	depends on I2C
+> +	select MFD_SIMPLE_MFD_I2C
+> +	help
+> +	  This option supports the I2C-based SpacemiT P1 PMIC, which
+> +	  contains regulators, a power switch, GPIOs, an RTC, and more.
+> +	  This option is selected when any of the supported sub-devices
+> +	  is configured.  The basic functionality is implemented by the
+> +	  simple MFD I2C driver.
+> +
+>  config MFD_SPMI_PMIC
+>  	tristate "Qualcomm SPMI PMICs"
+>  	depends on ARCH_QCOM || COMPILE_TEST
+> diff --git a/drivers/mfd/simple-mfd-i2c.c b/drivers/mfd/simple-mfd-i2c.c
+> index 22159913bea03..026cd92e20ad3 100644
+> --- a/drivers/mfd/simple-mfd-i2c.c
+> +++ b/drivers/mfd/simple-mfd-i2c.c
+> @@ -93,12 +93,30 @@ static const struct simple_mfd_data maxim_mon_max77705 = {
+>  	.mfd_cell_size = ARRAY_SIZE(max77705_sensor_cells),
+>  };
+>  
+> +static const struct regmap_config spacemit_p1_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = 0xaa,
+> +};
 
-> I had to kill clang-format hard in my nvim-lsp-clangd setup, because
-> clang-format is such a piece of shit.
+Suggest making this more widely useful by adding the 'max_register'
+attribute to 'struct simple_mfd' and conditionally overriding
+regmap_config_8r_8v's value during probe.
 
-Random fact that I didn't know before: 1788 out of 35503 kernel .c
-files are already formatted according to the clang-format style.
-(I expected the number to be much lower)
+> +static const struct mfd_cell spacemit_p1_cells[] = {
+> +	{ .name = "spacemit-p1-regulator", },
+> +	{ .name = "spacemit-p1-rtc", },
+> +};
+> +
+> +static const struct simple_mfd_data spacemit_p1 = {
+> +	.regmap_config = &spacemit_p1_regmap_config,
+> +	.mfd_cell = spacemit_p1_cells,
+> +	.mfd_cell_size = ARRAY_SIZE(spacemit_p1_cells),
+> +};
+> +
+>  static const struct of_device_id simple_mfd_i2c_of_match[] = {
+>  	{ .compatible = "kontron,sl28cpld" },
+>  	{ .compatible = "silergy,sy7636a", .data = &silergy_sy7636a},
+>  	{ .compatible = "maxim,max5970", .data = &maxim_max5970},
+>  	{ .compatible = "maxim,max5978", .data = &maxim_max5970},
+>  	{ .compatible = "maxim,max77705-battery", .data = &maxim_mon_max77705},
+> +	{ .compatible = "spacemit,p1", .data = &spacemit_p1, },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, simple_mfd_i2c_of_match);
+> -- 
+> 2.45.2
+> 
 
->
-> > -static inline void kcov_task_init(struct task_struct *t) {}
-> > -static inline void kcov_task_exit(struct task_struct *t) {}
-> > -static inline void kcov_prepare_switch(struct task_struct *t) {}
-> > -static inline void kcov_finish_switch(struct task_struct *t) {}
-> > -static inline void kcov_remote_start(u64 handle) {}
-> > -static inline void kcov_remote_stop(void) {}
-> > +static inline void kcov_task_init(struct task_struct *t)
-> > +{
-> > +}
-> > +static inline void kcov_task_exit(struct task_struct *t)
-> > +{
-> > +}
-> > +static inline void kcov_prepare_switch(struct task_struct *t)
-> > +{
-> > +}
-> > +static inline void kcov_finish_switch(struct task_struct *t)
-> > +{
-> > +}
-> > +static inline void kcov_remote_start(u64 handle)
-> > +{
-> > +}
-> > +static inline void kcov_remote_stop(void)
-> > +{
-> > +}
->
-> This is not an improvement.
-
-Fair enough.
-I think we can fix this by setting AllowShortFunctionsOnASingleLine:
-Empty, SplitEmptyFunction: false in .clang-format
-
-Miguel, do you think this is a reasonable change?
-
-
-> >
-> >  struct kcov_percpu_data {
-> > -     void                    *irq_area;
-> > -     local_lock_t            lock;
-> > -
-> > -     unsigned int            saved_mode;
-> > -     unsigned int            saved_size;
-> > -     void                    *saved_area;
-> > -     struct kcov             *saved_kcov;
-> > -     int                     saved_sequence;
-> > +     void *irq_area;
-> > +     local_lock_t lock;
-> > +
-> > +     unsigned int saved_mode;
-> > +     unsigned int saved_size;
-> > +     void *saved_area;
-> > +     struct kcov *saved_kcov;
-> > +     int saved_sequence;
-> >  };
-> >
-> >  static DEFINE_PER_CPU(struct kcov_percpu_data, kcov_percpu_data) =3D {
->
-> This is just plain wrong. Making something that was readable into a
-> trainwreck.
-
-Setting AlignConsecutiveDeclarations: AcrossEmptyLinesAndComments will
-replace the above with the following diff:
-
- struct kcov_percpu_data {
--       void                    *irq_area;
--       local_lock_t            lock;
--
--       unsigned int            saved_mode;
--       unsigned int            saved_size;
--       void                    *saved_area;
--       struct kcov             *saved_kcov;
--       int                     saved_sequence;
-+       void        *irq_area;
-+       local_lock_t lock;
-+
-+       unsigned int saved_mode;
-+       unsigned int saved_size;
-+       void        *saved_area;
-+       struct kcov *saved_kcov;
-+       int          saved_sequence;
- };
-
-(a bit denser, plus it aligns the variable names, not the pointer signs)
-Does this look better?
-
->
-> Please either teach clang-format sensible style choices, or refrain from
-> using it.
-
-
-
---=20
-Alexander Potapenko
-Software Engineer
-
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
-
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Liana Sebastian
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+-- 
+Lee Jones [李琼斯]
