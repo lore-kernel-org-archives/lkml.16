@@ -1,128 +1,94 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp233.sjtu.edu.cn (smtp233.sjtu.edu.cn [202.120.2.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FFE1A705C
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 03:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3473E19F420;
+	Fri, 27 Jun 2025 03:58:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.120.2.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750996625; cv=none; b=SMA6J7ikwEkR79d3BZAKWdCDCEMQ+jFu3nLYfpwrgZ2rhnVPDhpeahxFj98NLlg+6MWqvzpqLMpYQAkbNRu3teTK7UYBOpFadN5cm66dSI13oSGTCe4nJuuCv9wp4q2GMw860YeyNOjAbAnTZrW7+45ZfCuroljbfKiZsVgD1bA=
+	t=1750996715; cv=none; b=Mkysr/raNNRrA1+sh7ONOaN2eypg9DyuHej5Fe81GpuGFk/G3s+4nPANOIKjt+j0QqME1cZa70uByJLa7OqOg/DSiSXw2m6EbLYyqHOXxUQ1gwQW73ioetNaPag/h7TymN6n+QBRS8XL90pneuKRUPkxIvNmBs33hFE14xrsXbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750996625; c=relaxed/simple;
-	bh=iGtsc2zIpestiI1LiwAjLp7hMhvKPPtvOJ/nYZ4+MNM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=g3v6NvlS81/iRRMmJkdMP12jA0BHaWzwSYuQXisuHM3U+RyySqG2ZIa8SYXzEhB4Cz8bCsM5//91hqX+mVdquE4YSYpK//XRW/GS6VrnNjO+GVJzN8w8ABlGgvUPL/NaVRDT4MiEFVDsdOfjeW+pp97fyK0xAQciOP0E7p8XR8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3de3b5b7703so10845195ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 20:57:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750996623; x=1751601423;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Edqk8b6TRexhsTMFdiRMX8dpvvT0ITdG0FS3RQnqiFI=;
-        b=UB/IVdymPQRy+MWJXBulMYtmJsWru3qozAI3CpfLaiBTI0uDzF22TJT8P5wMOCci0/
-         vLt8IK5RzoIDhfDrU7nnrHSih3RmErfJW0GyUVfInGlq5n/tpTdqZInagGpmeTzGquWq
-         zIesbq5nBw3ASs/LJpNce4GcPCHjO6QLYwLPRgNb2dvxDfNqmP9tajPo9uDDbT/3ZcDX
-         YOQ5aipp0A3hwUJuQyt5YC4ZW4S1W7Gho8MzbEd2h631zdjHIKdqkFJbfE2CYKW+c702
-         HW28o9/yU72WXF3CJ1rvwsHVgGyvvGi/FSBQJGA6+fiI1fEwleJDIA9g+5OZqvzlBsDS
-         sZ5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXfq1VJL3CLZHqPCkAyioIde+5zY/quYr+TGHQRMUtdpwGNhBc7O9Rlrz7jamsIwDU4Wj+X80RtYIo3098=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlsmqEvSGlqe6uhihbye/0vnLb1MiDlU0MhO98L5rnVg/bAuoY
-	lGgoEFD5AOf+7/Vsy9P2FWK785MhQmVeBL/LjqcPdds+Cq4lFzkQUl5PCs4hG2UNIR9zARLTsxZ
-	nwi4fYqUGiM3dcFEy7YkfOb3qe6EdhZiVGF/OaLGlF6jsJ0au6H/ppn6ig2k=
-X-Google-Smtp-Source: AGHT+IESmmH/HGBBLnn5qK3lcAscrw/OP1YEPEl9mM72nxERUyiHuxuBc3rKf/ewxGsGgPCjey5/xnQS+m0G9gbqergdnAxYbm5I
+	s=arc-20240116; t=1750996715; c=relaxed/simple;
+	bh=KWYG+KDmZ23DgBo9d2D5szE4ZJeBNWiYsvY7c/LCezw=;
+	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=Ks0TAyNQ1bcWQWeUOjRspvkzHnptVwK6i5IBiRRTU1UJEbCymkbEBW6MIYqDQNZJkJimZVOaytM20O1ScFbm4AIyBYw8FNezG8PdU38sCZZnzP04G8aVkCpLg+X8oKTxSznCK/RgzEsqbFmUxuETfeyGKxbus9jRic629ilsU6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn; spf=pass smtp.mailfrom=sjtu.edu.cn; arc=none smtp.client-ip=202.120.2.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjtu.edu.cn
+Received: from mta90.sjtu.edu.cn (unknown [10.118.0.90])
+	by smtp233.sjtu.edu.cn (Postfix) with ESMTPS id 1D16D1009E7B2;
+	Fri, 27 Jun 2025 11:52:28 +0800 (CST)
+Received: from mstore132.sjtu.edu.cn (unknown [10.118.0.132])
+	by mta90.sjtu.edu.cn (Postfix) with ESMTP id B834237D65C;
+	Fri, 27 Jun 2025 11:52:27 +0800 (CST)
+Date: Fri, 27 Jun 2025 11:52:27 +0800 (CST)
+From: =?gb2312?B?s8LA1g==?= <tom2cat@sjtu.edu.cn>
+To: bpf@vger.kernel.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <1444123482.1827743.1750996347470.JavaMail.zimbra@sjtu.edu.cn>
+Subject: [BUG][BPF] Kernel Bug Triggered when Ebpf Verifier Check Fails
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:18ce:b0:3dd:cc26:61c7 with SMTP id
- e9e14a558f8ab-3df4acf1885mr22597545ab.20.1750996622691; Thu, 26 Jun 2025
- 20:57:02 -0700 (PDT)
-Date: Thu, 26 Jun 2025 20:57:02 -0700
-In-Reply-To: <95a8efa9-eca2-4b07-a762-e08de6ae61b3@linux.dev>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685e168e.a00a0220.2e5631.03f4.GAE@google.com>
-Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
-From: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>
-To: jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	yanjun.zhu@linux.dev, zyjzyj2000@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=GB2312
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 10.0.14_GA_4767 (ZimbraWebClient - GC137 (Win)/10.0.15_GA_4781)
+Thread-Index: +aKzrn/MfADNs/QCqWSK6DYv606TCw==
+Thread-Topic: Kernel Bug Triggered when Ebpf Verifier Check Fails
 
-Hello,
+Hi BPF maintainers,
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-WARNING in rxe_skb_tx_dtor
+I'm reporting a bug I encountered in the BPF subsystem on Linux kernel version <<5.19.5>>, <<6.15.0-rc2-00577-g8066e388be48-dirty>>,  <<6.15.3>>.
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 3034 at drivers/infiniband/sw/rxe/rxe_net.c:357 rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
-Modules linked in:
-CPU: 0 UID: 0 PID: 3034 Comm: kworker/u4:10 Not tainted 6.16.0-rc3-syzkaller-ge9ef70b277ad #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: rxe_wq do_work
-RIP: 0010:rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
-Code: 80 3c 20 00 74 08 4c 89 ff e8 c1 64 81 f9 4d 8b 37 44 89 f6 83 e6 01 31 ff e8 d1 e5 1d f9 41 f6 c6 01 75 0e e8 e6 e0 1d f9 90 <0f> 0b 90 e9 b4 01 00 00 4c 89 ff e8 45 97 fd 01 48 89 c7 be 0e 00
-RSP: 0018:ffffc900000079e8 EFLAGS: 00010246
-RAX: ffffffff88a26d8a RBX: ffff8880560d4500 RCX: ffff88801f722440
-RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff887bc1c4
-R10: dffffc0000000000 R11: ffffffff88a26d00 R12: dffffc0000000000
-R13: 1ffff1100ac1a8ab R14: 0000000000025820 R15: ffff888033440000
-FS:  0000000000000000(0000) GS:ffff88808d250000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f5e595acfc8 CR3: 0000000056029000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- skb_release_head_state+0x101/0x250 net/core/skbuff.c:1139
- napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
- e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
- e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
- e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
- __napi_poll+0xc7/0x480 net/core/dev.c:7414
- napi_poll net/core/dev.c:7478 [inline]
- net_rx_action+0x707/0xe30 net/core/dev.c:7605
- handle_softirqs+0x286/0x870 kernel/softirq.c:579
- do_softirq+0xec/0x180 kernel/softirq.c:480
- </IRQ>
- <TASK>
- __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
- local_bh_enable include/linux/bottom_half.h:33 [inline]
- __neigh_event_send+0x9b/0x1560 net/core/neighbour.c:1194
- neigh_event_send_probe include/net/neighbour.h:463 [inline]
- neigh_event_send include/net/neighbour.h:469 [inline]
- neigh_resolve_output+0x198/0x750 net/core/neighbour.c:1496
- neigh_output include/net/neighbour.h:539 [inline]
- ip6_finish_output2+0x11fb/0x16a0 net/ipv6/ip6_output.c:141
- __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
- ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
- rxe_send drivers/infiniband/sw/rxe/rxe_net.c:391 [inline]
- rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:450
- rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
- rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
- do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
- do_work+0x1b4/0x6c0 drivers/infiniband/sw/rxe/rxe_task.c:187
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+I wrote a BPF program that triggered a verifier rejection, but at the same time, the kernel emitted a BUG() warning at <<kernel/bpf/hashtab.c:222>>, suggesting a potential kernel-side issue rather than just verifier rejection. Later on, I discovered that constructing any ebpf Verifier rejection behavior within the specified code snippets would trigger this kernel bug.
+
+- Miniest poc code:
+
+#include "vmlinux.h"
+#include <bpf/bpf_helpers.h>
+
+struct mac_table_entry
+{
+    struct bpf_timer expiration_timer;
+    __u32 ifindex;
+    __u64 last_seen_timestamp_ns;
+    struct in_addr border_ip;
+};
+
+struct
+{
+    __uint(type, BPF_MAP_TYPE_HASH);
+    __type(key, struct mac_address);
+    __type(value, struct mac_table_entry);
+    __uint(max_entries, 4 * 1024 * 1024);
+    __uint(pinning, LIBBPF_PIN_BY_NAME);
+} mac_table SEC(".maps");
+
+SEC("xdp.frags")
+long mac_xdp_func(struct xdp_md *ctx)
+{
+    // Constructing any code segment that does not meet the requirements of BPF Validator
+    // can trigger a kernel BUG: sleeping function called from invalid context at kernel/bpf/hashtab.c:222:
+    while(1){
+        __u32 j;
+    }
+    return XDP_PASS;
+}
+
+char LICENSE[] SEC("license") = "Dual BSD/GPL";
+
+- Kernel version: <<6.15.3...>>
+- Architecture: <<x86_64>>
+- dmesg excerpt: <<BUG: sleeping function called from invalid context at kernel/bpf/hashtab.c:222>>
+
+Detailed info including reproducible BPF program and kernel logs have been filed on Bugzilla:
+
+  https://bugzilla.kernel.org/show_bug.cgi?id=220278
 
 
-Tested on:
+Please let me know if you need more information or if I can help test a patch.
 
-commit:         e9ef70b2 RDNA/rxe: Fix rxe_skb_tx_dtor problem
-git tree:       https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
-console output: https://syzkaller.appspot.com/x/log.txt?x=122183d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
-dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-
-Note: no patches were applied.
+Thanks,  
+Le Chen;  
+tom2cat@sjtu.edu.cn; 
