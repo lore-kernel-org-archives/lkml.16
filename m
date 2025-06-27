@@ -1,610 +1,238 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934FE194098;
-	Fri, 27 Jun 2025 07:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751010793; cv=none; b=R8/MPAMEJsGxaTkVT1CGgrZ2faampqCL/iM6Em7lwCr6UtaJnStXdsYeCqAYshmgfTT5vvCSD8iOnL9U6POOEjqRjZ0EBUGxRWRgBhvcuiGO0hSEtPIdV8SNknUo59SJeP65Kh+nnfyH0FWPDN4gb6TmUZwwhAoWZg68IFCMpHg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751010793; c=relaxed/simple;
-	bh=cnOtDTp49rcGs+oKyn1qPvt4zibTiJOGHiRVh6sqg5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QEkcKNmcyJA6rXul3rg0nm9ZBlwEgCy4xt686ofu0suyOj/rR5vEJwePIsk1SKlqwunCQnIuU2hbS3tI4VbEmqDTrEz8IRdu2qcDwUE4IHs5JVk7VC6iCnapsDBICeNisNBgQRJH3YGtTYJN1liWXfkKUH0EbWbjES0nGk3HMOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MgzprAem; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B527F225785
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751010812; cv=fail; b=aWnujPAQKxKGUULUyU2oe7CdZSFwuqT8/FeOi+GBBjtMSXSkrX8iJe3j4wkYyNmlm3650j3JGeBTHk16mOkF/hSH65vqH0oLqKKAMhl7LsmPtKSAU0dmCOl1VlrAfbid5H0eGTznuJvH5Q09auA5+qTfRooahvY9vLM8ohlhBu0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751010812; c=relaxed/simple;
+	bh=JB4yXLKMOC7p61i47h1OEWzMHYxLuLsihG9UBuKPNRE=;
+	h=Message-ID:Date:Subject:From:To:CC:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=P/OuBlIkyKsu+RB+mxCC4Coj9AFpBA8uUmzVaSKsd8xxdrZHYKnHgkhmFxKCeqf5C4IiKduhxB+xraL6lCQ7haBrWhk3EeeFYt0/Np2S0DAKHjz+gmwmpQ3RotXOuQ0gqeVTaWuLJjoNw6ubtXHg4RVSXLncfg2uH6tb0NdDqA0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SLXAFpmK; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MgzprAem"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EC5AC4CEE3;
-	Fri, 27 Jun 2025 07:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751010793;
-	bh=cnOtDTp49rcGs+oKyn1qPvt4zibTiJOGHiRVh6sqg5w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MgzprAemHfjAlJ8lIn/YpzWjZGUKUS3rcrrqCNZvVG7vQfU8NjU1e2/s8712GUPAO
-	 Dca7Ng1MiEbwQS6wabeT8GlQS30a4OtPb0kyxxoBW8Zk9Vvqyn058aX7SHUMpaf03x
-	 p5Y10Dv38l3KG5Mj5z5vrfTuqEgrrKCGlGBsc1oBLekdXxIWORMwwWg+bSnmohA9+W
-	 JcbPrdbhALddbk1KYTVOl/LB3MLYGLRJPX4t1WnqDIZVfWUgWHNszxKKVFkUvM6QD3
-	 rc7MqkahkJszRoFzPsOcjZpx9IRJ2MIwS85xerEtl/RWpacg+7W9m0B4oMC5f081BZ
-	 8/PFAMjwzI9nA==
-Date: Fri, 27 Jun 2025 07:53:10 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Dawid Niedzwiecki <dawidn@google.com>
-Cc: Benson Leung <bleung@chromium.org>, chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org, chromeos-krk-upstreaming@google.com,
-	=?utf-8?Q?=C5=81ukasz?= Bartosik <ukaszb@chromium.org>
-Subject: Re: [PATCH] platform/chrome: Add ChromeOS EC USB driver
-Message-ID: <aF5N5jrRUlj3SUGS@google.com>
-References: <20250624110028.409318-1-dawidn@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SLXAFpmK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751010811; x=1782546811;
+  h=message-id:date:subject:from:to:cc:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=JB4yXLKMOC7p61i47h1OEWzMHYxLuLsihG9UBuKPNRE=;
+  b=SLXAFpmK5UnOpNv2z6sx8w3MwGORH2Fqhtbq0Kr1fzXy22JEUBk01gkb
+   QRt/2wL700fyh8zRLsCIt/xMaw8y1dcrf19k9uKDjr81SFi5eVWX10XZ9
+   11YGp4BDL1k1P+qUkcCWWnXrEID0q+zlAr/FRAgyOz2RrvpWCEvafzCG8
+   j77vEvyOo6G8Gb5+iGONsV1l965bQTlpuia3K7bm5Qrvp1i79ftk0gr3g
+   reummgRmlduRokOZqZdhWmUnIh7cVww+BgkCFO+vWI22/YexOEqCh0nZN
+   3yRzuNW5pUhnFK0A510njT/GKrYNInnVXePwtS1Nep+Vu+/k1M52uQ+zP
+   w==;
+X-CSE-ConnectionGUID: Vw1PYdvURXqRvRa0UkTp4g==
+X-CSE-MsgGUID: pn89/kFlSX6PTxN+9gJJ6Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="78759284"
+X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
+   d="scan'208";a="78759284"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 00:53:30 -0700
+X-CSE-ConnectionGUID: OkFpqHktTZSuanWjxCSgYw==
+X-CSE-MsgGUID: MkPQBy2VS924bJROK7juzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,269,1744095600"; 
+   d="scan'208";a="152479246"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 00:53:28 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 27 Jun 2025 00:53:27 -0700
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 27 Jun 2025 00:53:27 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.47)
+ by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 27 Jun 2025 00:53:27 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ENujdn7z7awD22LmSd9p8KbpxJgH1yaZQHHS5SKtVYsjq84a9UrxejT6AiUVHonLj2g28U0iu1myuTVm1quIMyIR3gc1GRb5nEWeF41HYxpaCuHXMf4CV2ry1+QrrJVEMnOpKCUhgfsCvTeWB2z+X2qBTBAQyF0U/7RHyP3cKrGA5WsN4EiStzEGSGMMKmXLdP7oQwJwL3T/XxQ+ncNHGI5LadL7uCY15I1Tf6dMJeNEIzWgYr4eUO2JGpnoPOz2/e5ooJbu/wLpmige7vtdCgUSUT+jAPh9Efp4CivYL0MJWrAJjTRLN3/4K8pebdkemyMOiiNjcJeN2EY4BsKlZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7rLy8a7arPDDG4mlFhEORvCw7hODINttA0YZXtdCqUs=;
+ b=t3VQoKOOqVuaq7/V0IvtP4HjGmTRSK/UjI8Aw7JH8eGHK4SjKQL3Cgv6n8l1PPK0e7pO3HkOnUC1LloCMztlAcx+gXc1ELEX3TuG8GNYm1stSADyB/XclSoVHow9Cnc+Apcrkfs0686OpFMzog5mtOlcM0X9GY4oP+ToY88vm05JNpQri8JCEkr+9Jpaq77gPyfKRXQqOP9hR5kC9+QTbl+eJtOrytWHfpva1XZTz5a3xFSMjXu9aoRb1awo1G957zRnp6DQmIZ9BRgxoj6JLYN0ymJoTZ4t4aQScvHf9SmtE3gDZFzcqRxwnxlUdwbJfBG0hrhMLFz610KkGoRksA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BN9PR11MB5530.namprd11.prod.outlook.com (2603:10b6:408:103::8)
+ by DS0PR11MB7481.namprd11.prod.outlook.com (2603:10b6:8:14b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.17; Fri, 27 Jun
+ 2025 07:53:24 +0000
+Received: from BN9PR11MB5530.namprd11.prod.outlook.com
+ ([fe80::13bd:eb49:2046:32a9]) by BN9PR11MB5530.namprd11.prod.outlook.com
+ ([fe80::13bd:eb49:2046:32a9%4]) with mapi id 15.20.8880.015; Fri, 27 Jun 2025
+ 07:53:24 +0000
+Message-ID: <20bdbd2a-4ee6-492b-9ceb-13a70cd2d767@intel.com>
+Date: Fri, 27 Jun 2025 13:23:16 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 07/10] drm/xe/xe_late_bind_fw: Reload late binding fw
+ during system resume
+From: "Nilawar, Badal" <badal.nilawar@intel.com>
+To: <intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>, Daniele Ceraolo Spurio
+	<daniele.ceraolospurio@intel.com>
+CC: <anshuman.gupta@intel.com>, <rodrigo.vivi@intel.com>,
+	<alexander.usyskin@intel.com>, <gregkh@linuxfoundation.org>
+References: <20250625170015.33912-1-badal.nilawar@intel.com>
+ <20250625170015.33912-8-badal.nilawar@intel.com>
+Content-Language: en-US
+In-Reply-To: <20250625170015.33912-8-badal.nilawar@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA0PR01CA0021.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:b8::9) To BN9PR11MB5530.namprd11.prod.outlook.com
+ (2603:10b6:408:103::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624110028.409318-1-dawidn@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN9PR11MB5530:EE_|DS0PR11MB7481:EE_
+X-MS-Office365-Filtering-Correlation-Id: ef4b0c85-ab6c-4fcb-4970-08ddb54fb197
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?NnRidDI5V0lpeEFQbkF3L0szV2hNenNRV3FYRUZETmpOQ0ptTjl1YzhOWG01?=
+ =?utf-8?B?SlZEKzEyMWw4bnJPU3Fwdzc0WjlNTVBBVG5ZSnZtTlc2bTIweldpVHZ1ejBo?=
+ =?utf-8?B?a3hwbHA2d0ttY04yWnBQcUJIdEVkMzkyTkFmYy9naTk1Q1JEK2VaeENtYVBu?=
+ =?utf-8?B?YlY2NXpuZ1I2akUvWE5RUHY0d3NGaDh0ZXZWTXhISjN6bUQwSW9CTFJZMkND?=
+ =?utf-8?B?cmJ1a1M2L2lsZnkwNTJIM25qeXA1S2FvWTNtQldvOTlRbkswUjFSdFV3TzF5?=
+ =?utf-8?B?cHM2MTV6dFVmYmF0S0JUZjk1Mkl0ZTJDcmlWbDhqZnJVbnhRV0hNaWdjSzNV?=
+ =?utf-8?B?L0hCVmZqUlpBOUI5TmZUU2RjbmM3RUlpS1JlQTVqTXp3U3RrR0UrUXJmQXpM?=
+ =?utf-8?B?Y3dGQTNmVFdGTGlwamJWMjUyZkxLUUNwU3BjcHdTdmZRckVSbSt4dktPRith?=
+ =?utf-8?B?ZWNCcG5aQU1EVTVRVVhhdS9CdW1CSzd0VUJMbWJxUG9wTmJDUm5nVE9GMjR5?=
+ =?utf-8?B?OU40eW1FekF3UEszMDdJUnhiWWVOdGxDL0l3YTB5M09hUmNNb3ZqM0NzUElH?=
+ =?utf-8?B?eEo5UjhMVytUR1h0N0k4VkRMdUNOMTZzMnhhbjRBdGZlR1NBMld5Y0ZYQ1Fl?=
+ =?utf-8?B?cUt0RzFkODUwWXJWTUJVdEVGUVlDT0UxdGl2ak55U0Vld29nTEhZSDFQWWlh?=
+ =?utf-8?B?MVdZQUdneU5KbzJ2elpxczliNWcxdnZNL0prQ0k3VmNUdmdjSkFKMFJxMklZ?=
+ =?utf-8?B?djZwbDhSdEdLN3IvUkpsMjM3R3hOdXYra3UzQjhmczc1a0p3bUVSc2tkMGRo?=
+ =?utf-8?B?dE5SemRNMEpDZTQvMnQ4bDJFN3hzc2NKd3JXNTRVZHVHVnFNdk9oOFJlNk82?=
+ =?utf-8?B?ZXR2cTExSWZHNlIvTGhpV0JxZEs1Q1lSN0FlYWpNTTdzZnptUUswdUd5eFdo?=
+ =?utf-8?B?Q05GZUxkdDR4WmY4TmpTQ3R5QXFmZzVxWDhCNHZTcGl6eFhBbVJMNy9kcmJY?=
+ =?utf-8?B?cTZBRmZoYmp4aHh0YkJJRW92WVRycWUwQjFGWmRuK0dpSHY5cE5pVUFqcTln?=
+ =?utf-8?B?V1lrSlYzWUJZQ1VtWFZsaGljMWlCWUdjRXViSjJ0T21mZk0vTlFTdGhxL2R0?=
+ =?utf-8?B?SXNBbTVrdEhHeEdETjVTQjV6TFNxakhHSkEyTGFWNTNYT0pGY2hLV1RoS0hp?=
+ =?utf-8?B?MC9iUTcxU1dBOHl0OURiU1FuMFBzK2hvaXVpM01rWDVrNndnSC9RRk56eEtI?=
+ =?utf-8?B?NFQranJYZFgxMkN3MWRoOE55c2dDaFBGUnJySzR0WW1xQ1pDelJtemt4cDVZ?=
+ =?utf-8?B?Q2E2cTExZW1xUGhadTZjcVVrUFhzQ2ZLTWF6dTlkbjBGeTk1WDhIdkhyaDI5?=
+ =?utf-8?B?TW9TaVJkanQvRWdTUGZlWU5sb3VrSTV4NkpGUERpaStsY29OcU5wcVIwRXND?=
+ =?utf-8?B?WHNUUXlTMmlvdk4zTTNrYm1Da002enp1ZEVKeE5ScmFyVEE1RmQ3WXZpV1lL?=
+ =?utf-8?B?WTRFYkZSRU4wTEZ2dFk2UU9FUTZzRkxtWXhkYmMwUlhkV2h3dFFKRDI3ZEtp?=
+ =?utf-8?B?Wkx0azJSeTJSNXVaVjJodlJIMVc0UjkycHpqUjQ0MUlpakFyM3o1dkptUlhD?=
+ =?utf-8?B?V2VtcDAvZHRteTkzazVzTTE2VHdHUmRmUzRsejU5NG9CUUxGc05NNTF4V0lm?=
+ =?utf-8?B?SVJuNkVVTFo2c0hDR0ZkeXA2UDM5NWdqTUk0N3ZLZE93bHM1VE8yU2RpVC9Y?=
+ =?utf-8?B?cnhRMHd6b3ViM1pMY2FiQmdHZ0xsb0lqSi9YOGdSMDFRM2NVd3pvUUxYSk1Y?=
+ =?utf-8?B?V1hlZlk4SytLdll0cjVwdXRCeWJvZjBUQTUrMDE3RGkrNmU1WVNJcE9zdDl0?=
+ =?utf-8?B?MUR4Q2Mwd0ZHRlFESmhqMENSZm1WZ0RYcHpETU5tVHJMeDluU3dkOXZXVnlT?=
+ =?utf-8?Q?JzOTiOeMdaE=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5530.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QUlPNTNIamczQWFVcTV3NVhhMnR3eE1pRFZadmh1SXZoNTN5d1l2UWlVbHZC?=
+ =?utf-8?B?a0FqRXFCSnIwQ0lsR1JsK2YxZ2tKMm9oMkpVZ29LTzR2enA5dTdXV2VYMWpB?=
+ =?utf-8?B?eGs4Sm1TVEJ0TVlHREs4U2JVSXh6S09FbHRnbzNWcStzMFRaUW5UWU9mNkJW?=
+ =?utf-8?B?Zm1id3c0emc2c2w4dUwvZjdtK3o2VkMycCtVUGdoUGRZaDR0ZEg3ejBNV1hV?=
+ =?utf-8?B?bCs0ODVmK09aMUhEZ3hZVzE1ZkJwMHU4dHI5Mjd6TXh3OWQyWVl3Q3JQMVNE?=
+ =?utf-8?B?bTJlbitURnBjcWJQZXhySHJ3RG52NThZRlpSdituU0dsVWZ1SUltSWpBQWJL?=
+ =?utf-8?B?NjVlWHNsdW1QSXJCWVlEcldIdVNjWEdvbFVhT0xBNFl0L2RyQVhzSTQ2M3or?=
+ =?utf-8?B?cUxuazh6Q2hrNVJ6MEhFdVAyWGZRSHI2bGV2VlZDYUFTWXNyK2dkaTB4Q0Ns?=
+ =?utf-8?B?WDFSdUdjYnNwcHlPcmJNNVQxZm5rNXNXam9hbzQ1eTZWUFR5QytQRUJJNHlo?=
+ =?utf-8?B?a0FpN3E1OTlSVytyR056Q296SlMwTEQxemxlUk1tQlQwYW1lRlhSWDlXYlc5?=
+ =?utf-8?B?anBVQXVVdHJsR2kyMnA2SXYzU0RldWZQY2k0dTZXcEU5SFhUQ0ZPUlcyamhZ?=
+ =?utf-8?B?SlFLbTdVeldGS2FKN2F5UGE0U2xqZjBqcElPZlpaMm1pbHZQbjk2YTNEejgw?=
+ =?utf-8?B?ZXJ6U3dYM0NLUlpTM2tJdWh3RVlOODcvdHZSVjBVOHFpZk9YZEhadzB3cFpQ?=
+ =?utf-8?B?dFNNVVdINTFzM1lUQU1BaEdZVmhxbmRVMEJ1N1V0bXNVN0VUWTFiNElRa01F?=
+ =?utf-8?B?U3NxQnhCNWdoVUd3d1J1RTcxcEhKUFNhZkJ5a0N1MUNGdHp0eFNoZ1h2ZU1l?=
+ =?utf-8?B?S2tOUWwwWi91a1IxaWJMVVlWUXhwOFMwVWxCRm5rYnI4ZHovZkJ5YlhrNVd1?=
+ =?utf-8?B?SzhKWWorUzkzNTVtSjFod2FmRkZ0S01Zdm1sRWtNRnZiWElkY01EbEI0eXQy?=
+ =?utf-8?B?clVxWmNQR1FMSkF0VnpiS0FJaEpQd3Zjd3JLMzhnbmE2RjNBMHFOMGc2aHlz?=
+ =?utf-8?B?TlJCVm1XR1h2TEhlRUowMzZtQ3hpekpVcUR1SzhYWFd3cmJKdGNRUmpVeTd1?=
+ =?utf-8?B?RGRUUFhYcTRqM2FMOTVYbmZGVm5nbnNRNklRRVZYZng3Wk8yV3FSQjNEbk1R?=
+ =?utf-8?B?c0lPSnQ5ekZiWlFlSEo2TzFtWE9qbmlERXc0b205R2h1ZVlJVHQzOVRweG5D?=
+ =?utf-8?B?aG5Jd0tZcGdyWEx3NVBrbjNMTlUxVXF2dHdkNy9jbFFrcEdmd2hZNXVpME1B?=
+ =?utf-8?B?UzBpSVRBQzdYNkhFMmM5SmNvaU1Wb1YyOE5RNk9lbGlrYnpaWXdDM1lWWVl2?=
+ =?utf-8?B?NUY3OTAxdG9HUmp3WnQ0ZndtZ1N2VEFBejRLVjU4UnFZQndmWnliSWJXTktt?=
+ =?utf-8?B?U3NMMGJRci94QlZvL09HeVA5eGlQaHFTWnBnSFlvWUlTODlYL3hHaUR5YWww?=
+ =?utf-8?B?ZG94QjZOeXZYK3FsSVBhZUpqU2pOQUQ0dmdEcVUvNkphTys2c2pwb09HUFNl?=
+ =?utf-8?B?ZlNVbXVpNTl3MFdPQWU4a2R1SXJBOHloMEszQTV3TDR2OGRsaXZUZTNBTUg4?=
+ =?utf-8?B?WXFRbnA2d2Nzc25WZW82TmNpZERGRXdiUnVzVUFOMXluUzJqTU5CUWVJdFhC?=
+ =?utf-8?B?NksrR1luaktUS2J0MmtxbmVrK2o0Nk1SSkx0bEdXYUNZTVE3OWprYW5iOGts?=
+ =?utf-8?B?UDFRK1V2ZlJtM2pVUjNEMTVZcXlXMHJQaU9yRTAwVUIyenArWGhFeTZUMHRJ?=
+ =?utf-8?B?WEdyUmhXWjhaaXVnVmJjMmJ4cldKSXhxME1DaDV1OFlIK2ZhdjZWZjZSc1Fz?=
+ =?utf-8?B?amlSUktoZDVheDBQdU11dzdiZ0JBZThSYWw3SDdYTXl3L1NBNk9ETHh4bFh4?=
+ =?utf-8?B?WnhiaUNvcmR3RHUwdFB5NnVVMlFTdkZJWEREbFZTN3BiUW9ObkwwNUdOdk4z?=
+ =?utf-8?B?WWFHZkhmODBCRjBkekdoZ0hqbkVCVStjL1U4VXVKbzlsR05uNmUrZ0twd1pR?=
+ =?utf-8?B?YXFWb3UxOXlic055WGJDekNqUnNzMG14STJBUzJ3UWM2d2FoZjBZOFA4ZjlM?=
+ =?utf-8?B?dzZlZ05pYmpvekxJS01tVG1UcTB4QzFLaG5iaUpKcmhLbTVSNVd3RTN3dFl6?=
+ =?utf-8?B?OXc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef4b0c85-ab6c-4fcb-4970-08ddb54fb197
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5530.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 07:53:24.6800
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: A+0gFcLGR5okmRFJxbL8l7gJPOiMDz8e0FdCAkKY+RkLI0dDgqBpEeJFISDCT+ZUyHP0t/WdTcLfA63+eZCRSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7481
+X-OriginatorOrg: intel.com
 
-On Tue, Jun 24, 2025 at 11:00:28AM +0000, Dawid Niedzwiecki wrote:
-> This uses USB to talk to the ChromeOS EC. The protocol
-> is defined by the EC and is fairly simple, with a length byte,
-> checksum, command byte and version byte in the header.
-> 
-> The driver uses vendor defined usb interface with in/out
-> endpoints to transfer requests and responses. The driver also
-> uses one interrupt in endpoint which signals readiness of response
-> and pending events on the EC side.
+Hi Daniele,
 
-s/This//;s/The driver// and modify the rest of sentences accordingly.
-Not a hard requirement but [1]("imperative mood").
-
-[1]: https://www.kernel.org/doc/html/latest/process/submitting-patches.html
-
-Some part of code is not easy to read to me. I'd suggest to consider to:
-- Use shorter local variable names.
-- Don't wrap lines whenever it's still under 100-cols.
-- Put more relevant pieces of code closer.
-- Insert blank lines for separating logic blocks.
-- Drop redundant comments if the code is clear.
-It doesn't need to be overkill as long as that makes sense.
-
-> diff --git a/drivers/platform/chrome/cros_ec_usb.c b/drivers/platform/chrome/cros_ec_usb.c
-> [...]
-> +#include "cros_ec.h"
+On 25-06-2025 22:30, Badal Nilawar wrote:
+> Reload late binding fw during resume from system suspend
+>
+> v2:
+>    - Unconditionally reload late binding fw (Rodrigo)
+>    - Flush worker during system suspend
+>
+> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+> ---
+>   drivers/gpu/drm/xe/xe_pm.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
+> index 91923fd4af80..f49b7b6eab97 100644
+> --- a/drivers/gpu/drm/xe/xe_pm.c
+> +++ b/drivers/gpu/drm/xe/xe_pm.c
+> @@ -127,6 +127,8 @@ int xe_pm_suspend(struct xe_device *xe)
+>   	if (err)
+>   		goto err;
+>   
+> +	xe_late_bind_wait_for_worker_completion(&xe->late_bind);
 > +
-> +/* Google */
 
-Drop this comment which makes less sense.
+During system suspend, MEI will unbind the component. This flush is 
+unnecessary because it takes place within 
+xe_late_bind_component_unbind(). I will remove this call.
 
-> [...]
-> +/* table of devices that work with this driver */
+Badal
 
-Drop the comment.
-
-> +static const struct usb_device_id cros_ec_usb_table[] = {
-> +	{ USB_VENDOR_AND_INTERFACE_INFO(USB_VENDOR_ID_GOOGLE,
-> +					USB_CLASS_VENDOR_SPEC,
-> +					USB_SUBCLASS_GOOGLE_EC_HOST_CMD,
-> +					USB_PROTOCOL_GOOGLE_EC_HOST_CMD) },
-> +	{} /* Terminating entry */
-
-Drop the comment which is a very clear intent.
-
-> +};
-> +MODULE_DEVICE_TABLE(usb, cros_ec_usb_table);
-
-I'd prefer to move the device_id definition just right before the struct
-usb_driver.
-
-> +/* Structure to hold all of our device specific stuff */
-
-Drop the comment.
-
-> +struct cros_ec_usb {
-
-For readability, insert some blank lines in the struct.
-
-> +	/* the usb device for this device */
-> +	struct usb_device *udev;
-> +	/* the interface for this device */
-> +	struct usb_interface *interface;
-> +	/* Cros EC device structure */
-> +	struct cros_ec_device *ec_dev;
-
-Maybe insert a blank line here.
-
-> +	/* the buffer to receive data from bulk ep */
-> +	u8 *bulk_in_buffer;
-> +	/* the buffer to receive data from int ep */
-> +	u8 *int_in_buffer;
-> +	/* the urb to receive data from int ep */
-> +	struct urb *int_in_urb;
-> +	/* the size of the receive buffer from bulk ep */
-> +	size_t bulk_in_size;
-> +	/* the size of the receive buffer from int ep */
-> +	size_t int_in_size;
-
-Maybe insert a blank line here.
-
-> +	/* the pipe of the bulk in ep */
-> +	unsigned int bulk_in_pipe;
-> +	/* the pipe of the bulk out ep */
-> +	unsigned int bulk_out_pipe;
-> +	/* the pipe of the int in ep */
-> +	unsigned int int_in_pipe;
-> +	/* the interval of the int in ep */
-> +	uint8_t int_in_interval;
-
-Maybe insert a blank line here.
-
-`./scripts/checkpatch.pl --strict` complains about:
-CHECK: Prefer kernel type 'u8' over 'uint8_t'
-
-> [...]
-> +struct int_msg {
-> +	uint8_t int_type;
-> +} __packed;
-
-`./scripts/checkpatch.pl --strict` complains about:
-CHECK: Prefer kernel type 'u8' over 'uint8_t'
-
-> +static void cros_ec_int_callback(struct urb *urb);
-
-Move just right before submit_int_urb() to make the intent more clear?
-
-> +static int expected_response_size(const struct ec_host_response *host_response)
-> +{
-> +	/* Check host request version */
-> +	if (host_response->struct_version != 3)
-> +		return 0;
+>   	for_each_gt(gt, xe, id)
+>   		xe_gt_suspend_prepare(gt);
+>   
+> @@ -205,6 +207,8 @@ int xe_pm_resume(struct xe_device *xe)
+>   
+>   	xe_pxp_pm_resume(xe->pxp);
+>   
+> +	xe_late_bind_fw_load(&xe->late_bind);
 > +
-> +	/* Reserved byte should be 0 */
-> +	if (host_response->reserved)
-> +		return 0;
-> +
-> +	return sizeof(*host_response) + host_response->data_len;
-> +}
-
-Wondering if the function really helps readability. Maybe just inline to
-do_cros_ec_pkt_xfer_usb()?
-
-> +static int cros_ec_usb_register(u16 idProduct, struct cros_ec_usb *ec_usb)
-> +{
-> +	struct registered_ec *ec;
-> +
-> +	ec = kzalloc(sizeof(*ec), GFP_KERNEL);
-
-kmalloc() should be sufficient. The member fields are going to be overridden
-anyway.
-
-> +static int submit_int_urb(struct cros_ec_device *ec_dev)
-> +{
-> +	struct cros_ec_usb *ec_usb = ec_dev->priv;
-> +	struct usb_device *usb_dev = interface_to_usbdev(ec_usb->interface);
-> +	int ret;
-> +
-> +	/* Submit the INT URB. */
-> +	usb_fill_int_urb(ec_usb->int_in_urb, usb_dev, ec_usb->int_in_pipe,
-> +			 ec_usb->int_in_buffer, ec_usb->int_in_size,
-> +			 cros_ec_int_callback, ec_usb, ec_usb->int_in_interval);
-> +	ret = usb_submit_urb(ec_usb->int_in_urb, GFP_KERNEL);
-> +
-> +	return ret;
-
-Eliminate the `ret`. Just return usb_submit_urb(...).
-
-> +static void cros_ec_int_callback(struct urb *urb)
-> +{
-> +	struct cros_ec_usb *ec_usb = urb->context;
-> +	struct cros_ec_device *ec_dev = ec_usb->ec_dev;
-> +	int ret;
-> +
-> [...]
-> +	if (urb->actual_length >= sizeof(struct int_msg)) {
-> +		struct int_msg *int_msg =
-> +			(struct int_msg *)ec_usb->int_in_buffer;
-> +		enum cros_ec_usb_int_type int_type =
-> +			(enum cros_ec_usb_int_type)int_msg->int_type;
-
-Maybe insert a blank line here.
-
-> +		switch (int_type) {
-> +		case INT_TYPE_EVENT_OCCURED:
-> +			if (ec_usb->registered) {
-> +				ec_dev->last_event_time = cros_ec_get_time_ns();
-> +				schedule_work(&ec_usb->work_ec_evt);
-> +			}
-> +			break;
-> +		case INT_TYPE_RESPONSE_READY:
-> +			ec_usb->resp_ready = true;
-> +			wake_up(&ec_usb->resp_ready_wait);
-> +			break;
-
-I'm wondering who fills the `int_type` (i.e. 0 and 1) here? EC? If so, why
-aren't they in cros_ec_command.h?
-
-> +		default:
-> +			dev_err(ec_dev->dev, "Unrecognized event: %d\n",
-> +				int_type);
-> +		}
-> +	} else {
-> +		dev_err(ec_dev->dev, "Incorrect int transfer len: %d\n",
-> +			urb->actual_length);
-> +	}
-
-So in either cases, all of them need to resubmit the URB? Doesn't some of
-them just need to return?
-
-> +
-> +resubmit:
-> +	/* Resubmit the INT URB. */
-> +	ret = submit_int_urb(ec_dev);
-> +	if (ret)
-> +		dev_err(ec_dev->dev, "Failed to resumbit int urb: %d", ret);
-> +}
-> +
-> +static int do_cros_ec_pkt_xfer_usb(struct cros_ec_device *ec_dev,
-> +				   struct cros_ec_command *ec_msg)
-> +{
-> +	struct cros_ec_usb *ec_usb = ec_dev->priv;
-> +	struct ec_host_response *host_response;
-> +	int req_size, ret, actual_length, expected_resp_size, resp_size;
-> +	const int header_size = sizeof(*host_response);
-> +	const int max_resp_size = header_size + ec_msg->insize;
-> +	const int bulk_in_size = umin(ec_usb->bulk_in_size, ec_dev->din_size);
-> +	uint8_t sum = 0;
-
-`./scripts/checkpatch.pl --strict` complains about:
-CHECK: Prefer kernel type 'u8' over 'uint8_t'
-
-> [...]
-> +	/* Get first part of response that contains a header. */
-> +	ret = usb_bulk_msg(ec_usb->udev, ec_usb->bulk_in_pipe, ec_dev->din,
-> +			   bulk_in_size, &actual_length,
-> +			   BULK_TRANSFER_TIMEOUT_MS);
-> +	if (ret) {
-> +		dev_err(ec_dev->dev, "Failed to get response: %d\n", ret);
-> +		goto exit;
-> +	}
-> +
-> +	/* Verify number of received bytes. */
-> +	if (actual_length < header_size) {
-> +		dev_err(ec_dev->dev, "Received too little bytes: %d\n",
-> +			actual_length);
-
-Is it possible that the `actual_length < header_size` just because it needs
-to further read? I.e. need a read loop for waiting EOF or
-`actual_length >= header_size`?
-
-> +		ret = -ENOSPC;
-> +		goto exit;
-> +	}
-> +	expected_resp_size =
-> +		expected_response_size((struct ec_host_response *)ec_dev->din);
-> +	if ((expected_resp_size > max_resp_size) || (expected_resp_size == 0) ||
-> +	    (actual_length > expected_resp_size)) {
-> +		dev_err(ec_dev->dev, "Incorrect number of expected bytes: %d\n",
-> +			expected_resp_size);
-> +		ret = -ENOSPC;
-> +		goto exit;
-> +	}
-
-Maybe insert a blank line here.
-
-> +	resp_size = actual_length;
-
-Move next to the following line of the comment.
-
-> +	/* Get the rest of the response if needed. */
-> +	if (resp_size < expected_resp_size) {
-> +		ret = usb_bulk_msg(ec_usb->udev, ec_usb->bulk_in_pipe,
-> +				   ec_dev->din + resp_size,
-> +				   expected_resp_size - resp_size,
-> +				   &actual_length, BULK_TRANSFER_TIMEOUT_MS);
-> +		if (ret) {
-> +			dev_err(ec_dev->dev,
-> +				"Failed to get second part of response: %d\n",
-> +				ret);
-> +			goto exit;
-> +		}
-> +		resp_size += actual_length;
-
-Same here: doesn't it need a read loop for waiting EOF or
-`resp_size >= expected_resp_size`?
-
-> +	}
-> +
-> +	/* Check if number of received of bytes is correct. */
-> +	if (resp_size != expected_resp_size) {
-> +		dev_err(ec_dev->dev,
-> +			"Received incorrect number of bytes: %d, expected: %d\n",
-> +			resp_size, expected_resp_size);
-> +		ret = -ENOSPC;
-> +		goto exit;
-> +	}
-> +
-> +	/* Validate checksum */
-> +	host_response = (struct ec_host_response *)ec_dev->din;
-> +	for (int i = 0; i < sizeof(*host_response) + host_response->data_len;
-                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-I.e. expected_resp_size.
-
-> +	     i++) {
-> +		sum += ec_dev->din[i];
-> +	}
-
-Drop the {} pair.
-
-> +	if (sum) {
-> +		dev_err(ec_dev->dev, "Bad packet checksum calculated %x\n",
-> +			sum);
-> +		ret = -EBADMSG;
-> +		goto exit;
-> +	}
-> +
-> +	ec_msg->result = host_response->result;
-> +	memcpy(ec_msg->data, ec_dev->din + sizeof(*host_response),
-
-header_size == sizeof(*host_response). Either drop `header_size` or use it.
-
-> +/**
-> + * usb_evt_handler - USB to AP event handler
-> + * @work: Work struct
-> + */
-
-Maybe drop the comment?
-
-> +static int cros_ec_usb_probe(struct usb_interface *intf,
-> +			     const struct usb_device_id *id)
-> +{
-> +	struct usb_device *usb_dev = interface_to_usbdev(intf);
-> +	struct usb_endpoint_descriptor *bulk_in, *bulk_out, *int_in;
-> +	struct device *if_dev = &intf->dev;
-> +	struct cros_ec_device *ec_dev;
-> +	const u16 idProduct = usb_dev->descriptor.idProduct;
-> +	struct cros_ec_usb *ec_usb = cros_ec_usb_get_registered(idProduct);
-> +	const bool is_registered = ec_usb != NULL;
-
-Or !!ec_usb.
-
-> +	int retval;
-> +
-> +	/*
-> +	 * Do not register the same EC device twice. The probing is performed every
-> +	 * reboot, sysjump, crash etc. Recreating the /dev/cros_X file every time
-> +	 * would force all application to reopen the file, which is not a case for
-> +	 * other cros_ec_x divers. Instead, keep the cros_ec_device and cros_ec_usb
-> +	 * structures constant and replace USB related structures for the same EC
-> +	 * that is reprobed.
-> +	 *
-> +	 * The driver doesn't support handling two devices with the same idProduct,
-> +	 * but it will never be a real usecase.
-> +	 */
-
-I don't quite understand why does it need to memorize the registered ECs.
-Supposedly, the probe function is only called few times during booting, and
-gets success once. Hot-plugs?
-
-> +	if (!is_registered)
-> +		ec_usb = kzalloc(sizeof(*ec_usb), GFP_KERNEL);
-> +
-> +	if (!ec_usb)
-> +		return -ENOMEM;
-> +
-> +	if (!is_registered) {
-> +		mutex_init(&ec_usb->io_mutex);
-> +		ec_dev = kzalloc(sizeof(*ec_dev), GFP_KERNEL);
-> +		if (!ec_dev) {
-> +			retval = -ENOMEM;
-> +			goto error;
-> +		}
-> +		ec_usb->ec_dev = ec_dev;
-> +	} else {
-> +		ec_dev = ec_usb->ec_dev;
-> +	}
-
-The `!ec_usb` check is only needed after kzalloc(). Thus, the code block
-could be simplified to:
-
-        if (!is_registered) {
-                ec_usb = kzalloc(...);
-                if (!ec_usb)
-                        return -ENOMEM
-
-                ec_dev = kzalloc(...);
-
-                /* initialized ec_usb and ec_dev */
-                mutex_init(...);
-                ec_usb->...
-        }
-        ec_dev = ec_usb->ec_dev;
-
-> +
-> +	ec_usb->udev = usb_get_dev(usb_dev);
-> +	ec_usb->interface = usb_get_intf(intf);
-
-Maybe insert a blank line here.
-
-> +	/* Use first bulk-in/out endpoints + int-in endpoint */
-> +	retval = usb_find_common_endpoints(intf->cur_altsetting, &bulk_in,
-> +					   &bulk_out, &int_in, NULL);
-> +	if (retval) {
-> +		dev_err(if_dev,
-> +			"Could not find bulk-in, bulk-out or int-in endpoint\n");
-> +		goto error;
-> +	}
-
-Maybe insert a blank line here.
-
-> +	/* Bulk endpoints have to be capable of sending headers in one transfer. */
-> +	if ((usb_endpoint_maxp(bulk_out) < sizeof(struct ec_host_request)) ||
-> +	    (usb_endpoint_maxp(bulk_in) < sizeof(struct ec_host_response)) ||
-> +	    (usb_endpoint_maxp(int_in)) < sizeof(struct int_msg)) {
-> +		retval = -ENOSPC;
-> +		dev_err(if_dev, "Incorrect max packet size\n");
-> +		goto error;
-> +	}
-
-Maybe insert a blank line here.
-
-> +	ec_usb->bulk_out_pipe =
-> +		usb_sndbulkpipe(ec_usb->udev, bulk_out->bEndpointAddress);
-> +	ec_usb->bulk_in_size = usb_endpoint_maxp(bulk_in);
-> +	ec_usb->bulk_in_pipe =
-> +		usb_rcvbulkpipe(ec_usb->udev, bulk_in->bEndpointAddress);
-> +	ec_usb->bulk_in_buffer = kmalloc(ec_usb->bulk_in_size, GFP_KERNEL);
-> +	if (!ec_usb->bulk_in_buffer) {
-> +		dev_err(if_dev, "Failed to allocate bulk in buffer\n");
-> +		retval = -ENOMEM;
-> +		goto error;
-> +	}
-
-Maybe insert a blank line here.
-
-> +	ec_usb->int_in_size = usb_endpoint_maxp(int_in);
-> +	ec_usb->int_in_pipe =
-> +		usb_rcvintpipe(ec_usb->udev, int_in->bEndpointAddress);
-> +	ec_usb->int_in_interval = int_in->bInterval;
-> +	ec_usb->int_in_buffer = kmalloc(ec_usb->int_in_size, GFP_KERNEL);
-> +	if (!ec_usb->int_in_buffer) {
-> +		dev_err(if_dev, "Failed to allocate int in buffer\n");
-> +		retval = -ENOMEM;
-> +		goto error;
-> +	}
-> +	ec_usb->int_in_urb = usb_alloc_urb(0, GFP_KERNEL);
-> +	if (!ec_usb->int_in_urb) {
-> +		dev_err(if_dev, "Failed to allocate int in urb\n");
-> +		retval = -ENOMEM;
-> +		goto error;
-> +	}
-> +
-> +	ec_dev->dev = if_dev;
-> +	ec_dev->phys_name = dev_name(if_dev);
-> +	if (!is_registered) {
-> +		ec_dev->priv = ec_usb;
-> +		/* EC uses int endpoint to signal events. */
-> +		ec_dev->irq = 0;
-> +		ec_dev->cmd_xfer = NULL;
-> +		ec_dev->pkt_xfer = do_cros_ec_pkt_xfer_usb;
-> +		ec_dev->din_size = sizeof(struct ec_host_response) +
-> +				sizeof(struct ec_response_get_protocol_info);
-> +		ec_dev->dout_size = sizeof(struct ec_host_request) +
-> +				sizeof(struct ec_params_rwsig_action);
-> +		INIT_WORK(&ec_usb->work_ec_evt, usb_evt_handler);
-> +		init_waitqueue_head(&ec_usb->resp_ready_wait);
-> +	} else {
-> +		/*
-> +		 * We need to allocate dout and din buffers, because cros_ec_register
-> +		 * won't be called. These buffers were freed once previous usb device was
-> +		 * disconnected. Use buffer sizes from the last query.
-> +		 * The EC_HOST_EVENT_INTERFACE_READY event will be triggered at the end
-> +		 * of a boot, which calls cros_ec_query_all function, that reallocates
-> +		 * buffers.
-> +		 */
-> +		ec_dev->din = devm_kzalloc(ec_dev->dev, ec_dev->din_size, GFP_KERNEL);
-> +		if (!ec_dev->din) {
-> +			retval = -ENOMEM;
-> +			dev_err(if_dev, "Failed to allocate din buffer\n");
-> +			goto error;
-> +		}
-> +		ec_dev->dout = devm_kzalloc(ec_dev->dev, ec_dev->dout_size, GFP_KERNEL);
-> +		if (!ec_dev->dout) {
-> +			retval = -ENOMEM;
-> +			dev_err(if_dev, "Failed to allocate dout buffer\n");
-> +			goto error;
-> +		}
-> +	}
-
-This whole block for initializing `ec_dev` can be done earlier. See another
-`!is_registered` above.
-
-> +
-> +	/* Needed by ec register function */
-
-Drop the comment.
-
-> +	usb_set_intfdata(intf, ec_dev);
-
-This also can be done earlier when `ec_dev` is determined.
-
-> +
-> +	mutex_lock(&ec_usb->io_mutex);
-> +	ec_usb->disconnected = false;
-> +	mutex_unlock(&ec_usb->io_mutex);
-
-Wondering if it really needs to acquire the lock? Probe functions usually
-don't need to as there is no possible concurrent paths yet.
-
-> [...]
-> +error:
-> +	/* Free allocated memory */
-> +	cros_ec_usb_delete(ec_usb);
-
-Be careful to make sure whether cancel_work_sync() works even if
-`&ec_usb->work_ec_evt` is uninitialized.
-
-> +static void cros_ec_usb_disconnect(struct usb_interface *intf)
-> +{
-> +	struct cros_ec_device *ec_dev = usb_get_intfdata(intf);
-> +	struct cros_ec_usb *ec_usb = ec_dev->priv;
-> +
-> +	/* prevent more I/O from starting */
-> +	mutex_lock(&ec_usb->io_mutex);
-> +	ec_usb->disconnected = true;
-> +	mutex_unlock(&ec_usb->io_mutex);
-> +
-> +	cros_ec_usb_delete(ec_usb);
-> +
-> +	dev_info(&intf->dev, "Disconnected\n");
-
-This is the only dev_info() in the various callbacks. Consider to drop
-it if it might not very useful.
-
-> +static int cros_ec_usb_resume(struct usb_interface *intf)
-> +{
-> +	struct cros_ec_device *ec_dev = usb_get_intfdata(intf);
-> +	int err;
-> +
-> +	/* URB is killed during suspend. */
-> +	err = submit_int_urb(ec_dev);
-> +	if (err) {
-> +		dev_err(ec_dev->dev,
-> +			"Failed to sumbit int urb after resume: %d\n", err);
-> +	}
-> +
-> +	return 0;
-
-Doesn't it need to return `err`?
-
-> +static int cros_ec_usb_post_reset(struct usb_interface *intf)
-> +{
-> +	struct cros_ec_device *ec_dev = usb_get_intfdata(intf);
-> +	struct cros_ec_usb *ec_usb = ec_dev->priv;
-> +	int err;
-> +
-> +	err = submit_int_urb(ec_dev);
-> +	if (err) {
-> +		dev_err(ec_dev->dev,
-> +			"Failed to sumbit int urb after reset: %d\n", err);
-> +	}
-> +	mutex_unlock(&ec_usb->io_mutex);
-> +
-> +	return 0;
-
-Doesn't it need to return `err`?
-
-> +static struct usb_driver cros_ec_usb = {
-> +	.name = "cros-ec-usb",
-> +	.probe = cros_ec_usb_probe,
-> +	.disconnect = cros_ec_usb_disconnect,
-> +	.suspend = cros_ec_usb_suspend,
-> +	.resume = cros_ec_usb_resume,
-> +	.pre_reset = cros_ec_usb_pre_reset,
-> +	.post_reset = cros_ec_usb_post_reset,
-> +	.id_table = cros_ec_usb_table,
-> +	/* Do not autosuspend EC */
-> +	.supports_autosuspend = 0,
-> +};
-
-Most .X callbacks are named cros_ec_usb_X. Only the .id_table is different.
-To be neat, I'd suggest to use `cros_ec_usb_id_table`.
+>   	drm_dbg(&xe->drm, "Device resumed\n");
+>   	return 0;
+>   err:
