@@ -1,170 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E6529898B;
-	Fri, 27 Jun 2025 17:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B5E12E5D
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751045658; cv=none; b=R03m+7O4qLLH51UWmbof/RyUrqVsFJ/J7r0jn3vqcf3qEqrIO2QmtzyCTTcFGy1e5dWFGqwNaHkvCAGQSrkeREeZn1CW4/woLAqVQgOMbRJio8aDSOCCq/StRN0vF4mDrJoTJlCJh6L5yoswvelM5iSg3AeEkm/qvrRqQyxMztc=
+	t=1751045722; cv=none; b=rjuc1EL7kRfJgG9phkK7DBTdN2zGy8XP6uCeP8ZecpGksCGpSbkb7dnX4705k/ufj0xnyKi+ChAw8LkwPCzZ8oc7YbOKmB+cn4UkUHYXw5K0g4t4/IlunWuyfRZUscmFI7f8KY1F50vjmks5LsaAHglVjIICzwDnSvAAGIwl52I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751045658; c=relaxed/simple;
-	bh=scIUg8oZn6v9KjoDf9+/e3ggrQ+szZUhAp6+utGEK7o=;
+	s=arc-20240116; t=1751045722; c=relaxed/simple;
+	bh=OOACCwPSww+nakVoXLJXnwuALHZbONvPwuZkfSXf220=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HmTMYAYQgaf2h4mUZrMpQoY7qXEbi6K2QY2Glfkci5Tct4ytdAS+NqgKPRwESET6cy7vx00MZPfbgJmS2qp8sQfDUWElWZw8C+tZ8KWZMlemRqmSjRHddwcmCBU7x8hZaq0JZVJeC+qZ4RhG8VsNLb4UcjOp7nCIguaMr/4pqzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rd86oQeu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mCrtcOnHtrBcQI7ei0lpH2x1VqQUU6yrEvIxTl9mP56hQMpJBhY7cXBXTaMmlBfnIK5mEPf7Ggqw/mLnFKqfGzWKNgr5COgpw6NfBWXGZa2aZEDyOo+icNE5E/T0C1etV3Kv1KpN29wE0midE/KUEIIhAGGT9iU+A+scfBVsLtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p3uPGaRI; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rd86oQeu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAA72C4CEE3;
-	Fri, 27 Jun 2025 17:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751045658;
-	bh=scIUg8oZn6v9KjoDf9+/e3ggrQ+szZUhAp6+utGEK7o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rd86oQeuOpOZOWgaBJlSjcHu4r8b+IQwmbPHDdf4E69tv5Ng3BRt95OplczO9kdT0
-	 0Cc1FbOSqU7WkGNf0kz4mAGo5LH0zKz6w4SMwvzXgTrVTAyt6OBHmZdFnGdBKInWs3
-	 wYuwktQeiuFqC+04Z39xbcVJcUwiR63TirMYygsBO4k/I66MyEtDvSrL7Ua1PRFymg
-	 zDgHn1dBWv3OP8WywLcI8rIn8R2nMEI9xSLj0x1ngEahLofw1qenciTuAGZO4urSyF
-	 TeQljAziqqpsiAS4Wfn2A/NjXLCE1dRh+DWiR3KearDBAZCfKFCcxI4c3rA4XxQBYv
-	 TM1ANHkK6Y3cA==
-Date: Fri, 27 Jun 2025 10:34:15 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, 
-	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, Song Liu <song@kernel.org>, 
-	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
-	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
-	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
-	Puranjay Mohan <puranjay@kernel.org>, Dylan Hatch <dylanbhatch@google.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [PATCH v3 42/64] kbuild,x86: Fix special section module
- permissions
-Message-ID: <4ezl3egjv36fjkxkkswcianc5cg7ui6jpqw56e4ohlwipmuxai@kvgemh72rmga>
-References: <cover.1750980516.git.jpoimboe@kernel.org>
- <cf1cfb9042005be7bf0a1c3f2bdbeebc769e3ee4.1750980517.git.jpoimboe@kernel.org>
- <20250627105328.GZ1613200@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p3uPGaRI"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-40ab5bd9088so1576701b6e.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:35:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751045720; x=1751650520; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9kg2kWtBf4IBcW3c+iSCFB6Ml1Oao6RTyx5C3qf0IPM=;
+        b=p3uPGaRIMXYhrRIv88zO6ViYQXKC6e52PuEQSBp+fH+F4pH8Bu9MNnpWu49w9Uz0sa
+         0FenFSZ2hvuAp1znoPzEFAW+1jv4YuFVnegDb6MuImVwVmn1xev9U/sMbfOXyuKnwEJI
+         /de7iQY+dg1CyRRQ9h70O3sptJUBJiP2LxQezcIVVNKM1DokGhdPGISpBga/eXtH/3yo
+         ayBCT5MOBnS1mQb9twI/7+qUv7k9NXV+cRxg1jyNRbmD6iOxL2Z/9oYftP0RoT7rVfrY
+         etCnh9dVPVQjAhLj3G3AjHIq4ON5C3SuW57h4Re2LE8HTOZ82STPNmd88KDCxxj/g7TE
+         Jsgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751045720; x=1751650520;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9kg2kWtBf4IBcW3c+iSCFB6Ml1Oao6RTyx5C3qf0IPM=;
+        b=iFS68mbjneDO+6FXrKNd90Ku1gP0sQlrWJSm/IsK8G4Zf/Og8/3r6j+wq0KMowp1yO
+         cDgaIXcs2Dk0JrrnXCzT8+53cRgOX8kAArRXL5F9vR2zeu/wHOgGpYaYWetfCWdsFVQ4
+         8jxsp6s92QYESaBCa8QmOgrGpcNMmwhkgok4nzW451tj4dksrxsZ1fDDW85bLxBcNHWX
+         Z9zr07d2vm9sIqfnuNSH8FjQ5orN9Z43gZSrpNQbsN9jGq6uCM6MEOH3W1hGdOWV9VPU
+         p/WSAImkAv3OcFYsZHeg/NcyFknyrUlHmE1KrBfwe9kJZhKwFEeMGFJ1g8cJ7Fd0rN+D
+         RNYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVbieNHspXZQVYI8v9tbP15dF8clC4AaTOPUVfmHptZ/0IyaLur7ilLAx+F2VPc7T59LEr1Wz3due7Ve7Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqcfqYD+4VMqeSUynDUTrhZaweZAqvXEjxidwr0rRw/wEXNIju
+	T/dGU6m3e8pW9YBcGYbdatTHm8xuz/vUR7rVNsAd43CKbsZuR2LfurxzRZhw2LU1L/Y=
+X-Gm-Gg: ASbGncu30G2sQJN1JingK/725oh/ONl40FPRTNBa7S35/BJifTSmHHNT3TsKd0yNNRW
+	l+P1tiyAwFRXDKIMflF5j9RCiqQmHE+4+cI9DmOzkDbWP+lct33kCKlRKk7be3QHM5PfhNipymg
+	KxKwdNSAq2Hmdb8LgINI4IoatZ/zgBZULn3HwmDbaW7YBQybg0clxj+PJNmE3N6fs7qa1VRr2yy
+	JXD4ww1H2HVujrsG7F2LRKfpbNOaL9RlLtiluaGbB1Cm7fn1FN/3QqsgkD0KyuOcKJ9/pYnLxBd
+	0se6US2ylBhQCDxFnoWgpqIHW9WvVQP7Fh2v2/CC1YEnFRB4Jcnw10rQGBttL8cMktb2sA==
+X-Google-Smtp-Source: AGHT+IFf5eWy1kO/K6jVYD16XsJwEx0QOq1FyauR/umecLHRc0ZN+z3ZkHsKlonhP8bD8EpUmoiswg==
+X-Received: by 2002:a05:6808:2f11:b0:403:56f4:8780 with SMTP id 5614622812f47-40b33d7a583mr3749189b6e.9.1751045719766;
+        Fri, 27 Jun 2025 10:35:19 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:f3a4:7b11:3bf4:5d7b])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b3240548csm429800b6e.28.2025.06.27.10.35.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 10:35:19 -0700 (PDT)
+Date: Fri, 27 Jun 2025 20:35:17 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Manish Kumar <manish1588@gmail.com>
+Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+	gregkh@linuxfoundation.org, linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: sm750fb: make g_fbmode[] a read-only pointer
+ array
+Message-ID: <c8f5f917-8412-408d-9dd9-6635af8825a7@suswa.mountain>
+References: <20250627173120.7639-1-manish1588@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250627105328.GZ1613200@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250627173120.7639-1-manish1588@gmail.com>
 
-On Fri, Jun 27, 2025 at 12:53:28PM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 26, 2025 at 04:55:29PM -0700, Josh Poimboeuf wrote:
-> > An upcoming patch will add the SHF_MERGE flag to x86 __jump_table and
-> > __bug_table so their entry sizes can be defined in inline asm.
-> > 
-> > However, those sections have SHF_WRITE, which the Clang linker (lld)
-> > explicitly forbids combining with SHF_MERGE.
-> > 
-> > Those sections are modified at runtime and must remain writable.  While
-> > SHF_WRITE is ignored by vmlinux, it's still needed for modules.
-> > 
-> > To work around the linker interference, remove SHF_WRITE during
-> > compilation and restore it after linking the module.
+On Fri, Jun 27, 2025 at 11:01:20PM +0530, Manish Kumar wrote:
+> This fixes a checkpatch warning by changing the declaration of g_fbmode[]
+> from 'static const char *' to 'static const char * const', making both the
+> string contents and the array elements read-only.
 > 
-> This is vile... but I'm not sure I have a better solution.
-> 
-> Eventually we should get the toolchains fixed, but we can't very well
-> mandate clang-21+ to build x86 just yet.
+> Signed-off-by: Manish Kumar <manish1588@gmail.com>
 
-Yeah, I really hate this too.  I really tried to find something better,
-including mucking with the linker script, but this was unfortunately the
-only thing that worked.
+This breaks the build.  Now we can't change the pointer to anythine else
+except NULL.
 
-Though, looking at it again, I realize we can localize the pain to Clang
-(and the makefile) by leaving the code untouched and instead strip
-SHF_WRITE before the link and re-add it afterwards.  Then we can tie
-this horrible hack to specific Clang versions when it gets fixed.
+regards,
+dan carpenter
 
-Something like so:
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index a3308a220f86..350ea5df5e8d 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -1314,6 +1314,9 @@ config HAVE_NOINSTR_HACK
- config HAVE_NOINSTR_VALIDATION
- 	bool
- 
-+config NEED_MODULE_PERMISSIONS_FIX
-+	bool
-+
- config HAVE_UACCESS_VALIDATION
- 	bool
- 	select OBJTOOL
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 71019b3b54ea..0cac13c03a90 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -310,6 +310,7 @@ config X86
- 	select HOTPLUG_SPLIT_STARTUP		if SMP && X86_32
- 	select IRQ_FORCED_THREADING
- 	select LOCK_MM_AND_FIND_VMA
-+	select NEED_MODULE_PERMISSIONS_FIX	if LD_IS_LLD
- 	select NEED_PER_CPU_EMBED_FIRST_CHUNK
- 	select NEED_PER_CPU_PAGE_FIRST_CHUNK
- 	select NEED_SG_DMA_LENGTH
-diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-index 542ba462ed3e..cbc3213427ba 100644
---- a/scripts/Makefile.modfinal
-+++ b/scripts/Makefile.modfinal
-@@ -28,12 +28,37 @@ ccflags-remove-y := $(CC_FLAGS_CFI)
- .module-common.o: $(srctree)/scripts/module-common.c FORCE
- 	$(call if_changed_rule,cc_o_c)
- 
-+
-+ifdef CONFIG_NEED_MODULE_PERMISSIONS_FIX
-+
-+# The LLVM linker forbids SHF_MERGE+SHF_WRITE.  Hack around that by
-+# temporarily removing SHF_WRITE from affected sections before linking.
-+
-+cmd_fix_mod_permissions_pre_link =					\
-+	$(OBJCOPY) --set-section-flags __jump_table=alloc,readonly	\
-+		   --set-section-flags __bug_table=alloc,readonly $@	\
-+		   --set-section-flags .static_call_sites=alloc,readonly $@
-+
-+cmd_fix_mod_permissions_post_link =					\
-+	$(OBJCOPY) --set-section-flags __jump_table=alloc,data		\
-+		   --set-section-flags __bug_table=alloc,data $@	\
-+		   --set-section-flags .static_call_sites=alloc,data $@
-+
-+endif # CONFIG_NEED_MODULE_PERMISSIONS_FIX
-+
-+
- quiet_cmd_ld_ko_o = LD [M]  $@
-       cmd_ld_ko_o =							\
- 	$(LD) -r $(KBUILD_LDFLAGS)					\
- 		$(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)		\
- 		-T $(objtree)/scripts/module.lds -o $@ $(filter %.o, $^)
- 
-+define rule_ld_ko_o
-+	$(call cmd,fix_mod_permissions_pre_link)
-+	$(call cmd_and_savecmd,ld_ko_o)
-+	$(call cmd,fix_mod_permissions_post_link)
-+endef
-+
- quiet_cmd_btf_ko = BTF [M] $@
-       cmd_btf_ko = 							\
- 	if [ ! -f $(objtree)/vmlinux ]; then				\
-@@ -46,14 +71,11 @@ quiet_cmd_btf_ko = BTF [M] $@
- # Same as newer-prereqs, but allows to exclude specified extra dependencies
- newer_prereqs_except = $(filter-out $(PHONY) $(1),$?)
- 
--# Same as if_changed, but allows to exclude specified extra dependencies
--if_changed_except = $(if $(call newer_prereqs_except,$(2))$(cmd-check),      \
--	$(cmd);                                                              \
--	printf '%s\n' 'savedcmd_$@ := $(make-cmd)' > $(dot-target).cmd, @:)
-+if_changed_rule_except = $(if $(call newer_prereqs_except,$(2))$(cmd-check),$(rule_$(1)),@:)
- 
- # Re-generate module BTFs if either module's .ko or vmlinux changed
- %.ko: %.o %.mod.o .module-common.o $(objtree)/scripts/module.lds $(and $(CONFIG_DEBUG_INFO_BTF_MODULES),$(KBUILD_BUILTIN),$(objtree)/vmlinux) FORCE
--	+$(call if_changed_except,ld_ko_o,$(objtree)/vmlinux)
-+	+$(call if_changed_rule_except,ld_ko_o,$(objtree)/vmlinux)
- ifdef CONFIG_DEBUG_INFO_BTF_MODULES
- 	+$(if $(newer-prereqs),$(call cmd,btf_ko))
- endif
