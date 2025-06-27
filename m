@@ -1,141 +1,132 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC181DFE1
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F25E1C84C6;
+	Fri, 27 Jun 2025 17:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751045319; cv=none; b=NnVvLbYW58uShNWqQX/1vW/9AOX31PbAF0jAziCNjawD1muwpbhcuBNuw7u724kOdFO5nh1KVT42H0aETt/b1Vm2nd3RkU73HSyA/BmpdE2lVFNZEMBHh9XJObXgta/QVrRStvIcUadfW8JECDdSwzRDo2GVICfosKGd8D/y80U=
+	t=1751045493; cv=none; b=UkTn2yYfLvOKMpmMhY52JeimpSAL2ojjl3apz6p+pv1NFbdhkm6/mIXXwtGQksd6dPkBCaH5nDRsiIl8WOOEZivIl+tLg8s5gRfeG3jGo7aDV9Zf8AFq6PCJDa6f7NnSbyyT193FiKZHcI8hficEGPdhccxhqxHruci4JxyYwSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751045319; c=relaxed/simple;
-	bh=+0C2Py53QX3fVfhJen5AoFbcBsazdegSy9P4LgV3ZNY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o2GlRkeCM1oJ9v0vhrvRs20son9Xa8SFL+ApFWselU9Gu+TBYfxZanD/0jeRJVl5R7rSXWVzygyfPuXxsbwOeoSrsggogW0583a2h22Nr5RkbhnjAl7RxQIpXDV//M3dIq4ij/soLEdJT/g8r/bWhvFv98wriIGrx8HL50k9Uf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uVCs3-0005XS-EX; Fri, 27 Jun 2025 19:28:15 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uVCs1-005eW0-2n;
-	Fri, 27 Jun 2025 19:28:13 +0200
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uVCs1-003eZ4-2O;
-	Fri, 27 Jun 2025 19:28:13 +0200
-Date: Fri, 27 Jun 2025 19:28:13 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Russ Weight <russ.weight@linux.dev>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Marco Felsch <kernel@pengutronix.de>,
-	Henrik Rydberg <rydberg@bitmath.org>,
-	Danilo Krummrich <dakr@redhat.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] firmware_loader: expand firmware error codes with
- skip error
-Message-ID: <20250627172813.x2bgp6frsjrzgx7l@pengutronix.de>
-References: <20250529-v6-10-topic-touchscreen-axiom-v2-0-a5edb105a600@pengutronix.de>
- <20250529-v6-10-topic-touchscreen-axiom-v2-1-a5edb105a600@pengutronix.de>
- <b5jlh7ngl64aqrm7b2hkpafvfk6rmuyhwshzogxqozpal3owmj@u26s6bpwbax7>
+	s=arc-20240116; t=1751045493; c=relaxed/simple;
+	bh=2y4LiuOlJjR+L5bvSaQ8uJfBRplCVc+eNj3QdtNcQfU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=odlGN4MW7zOuMuOOGLh7qyIjwE6zum+6ocm166B+WTlxTyWAVYg5ogRlJpvDywwHm3iQVEfiYFFyBKWNKeqg4Ui3dYv4EM/epp7qtCHgELh9M5rHVqyUUgujMvkjtNxXpNCgN1+HAFMeo87ALJIB1fXwEGTkOe81vBk5WKTaHew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILADB2LJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILADB2LJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF5EBC4CEF3;
+	Fri, 27 Jun 2025 17:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751045492;
+	bh=2y4LiuOlJjR+L5bvSaQ8uJfBRplCVc+eNj3QdtNcQfU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ILADB2LJ/2bckd4i7hGoVPC88dNjlVFl4Aiih7dAYsQ13NtbWlBoWdSK02zKXWnX4
+	 yB0AC6W64qxQ4dTs+/QFr0iCGtzCivrc9+x+jrn2azlNNrwqEpVYxm9QTqUZ2ljkSB
+	 OWGJgqYfcHeRsZDnXMCQHfFhnrfApVqfixSKhXCU34uW4DAG2XUSjpASIxq1kt8Pn8
+	 2xB2sXuvx1DQ4B05BX4ovMdg3AWbIQhm5v7ikLO74H0niCLWI6vP7FNxCPgWRLoPwZ
+	 +mV5YFQVs4DQGUf8kIs56XWyn0yHJPy3EPC2PT0UeEF2pgancT4W+pG+UzWuB0djqu
+	 zIoP9nup7ZGhA==
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-739dcdb012fso32716a34.2;
+        Fri, 27 Jun 2025 10:31:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW+4WqWyV/5W8R5FDyyHXF7j1MHzQblzBsFClX4FO/ad4ftFgPDy9Ie+NW4Snw3L8QeWIv903j4Cim2oVg=@vger.kernel.org, AJvYcCWII2Y9QfLCUVlhM6He1quRogpla1HxEQyXiLFJP43djt513ly5uajWehY/Q/ez/+mbVH+i4Co08aM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaE0LRpaQLo4JUeWu1MNlEHEcEzJDiINVYNjRw1QVc7w+Shz2c
+	HLlBZDVwzxjjqJt3fqPtUyw/m8Tru5UMZccKm7GcCb21a601smaImxsxlxJ0BPvF10hPg96BkzD
+	4sh8NDcti9rPxTgWFW9RSvogWfqoW+MQ=
+X-Google-Smtp-Source: AGHT+IHB+/g6e9V47pnpxmAmye3lJ/VxkZKU9rFdui8UdjiRcXh5PipvblPCywHW5A97MRQySwHSI6k66JTeOktv4h8=
+X-Received: by 2002:a05:6830:f98:b0:72b:8c4b:8ef2 with SMTP id
+ 46e09a7af769-73afc6bf7f8mr3074163a34.24.1751045492030; Fri, 27 Jun 2025
+ 10:31:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b5jlh7ngl64aqrm7b2hkpafvfk6rmuyhwshzogxqozpal3owmj@u26s6bpwbax7>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <5011988.GXAFRqVoOG@rjwysocki.net> <CAPDyKFpBTz0M8DmWHLLm7x4c8G5PpQNv0Zj7mrZ9BewTBi1skg@mail.gmail.com>
+ <5a6d0684-3340-43ed-b520-933654515943@amd.com> <CAJZ5v0iJ65xxuHtJrWp1sC76FUzPHNpXB+xtHB=e4qTRSgAC4w@mail.gmail.com>
+ <0412561d-6ed3-4823-b510-8600fd4fd1fa@amd.com>
+In-Reply-To: <0412561d-6ed3-4823-b510-8600fd4fd1fa@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 27 Jun 2025 19:31:20 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iRomtiFhYTndO016=zH+vDMkxJgq+EvqYfTFs-+cC8tA@mail.gmail.com>
+X-Gm-Features: Ac12FXzzh0eSx2KHI7hyIDyZLwvuHa7xQTAMjvI3UWpAcrW0CcTmHGRyDsKBLD8
+Message-ID: <CAJZ5v0iRomtiFhYTndO016=zH+vDMkxJgq+EvqYfTFs-+cC8tA@mail.gmail.com>
+Subject: Re: [RFT][PATCH v4 0/2] PM: sleep: Handle async suppliers like
+ parents and async consumers like children
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Chris Bainbridge <chris.bainbridge@gmail.com>, Saravana Kannan <saravanak@google.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 25-06-04, Russ Weight wrote:
-> On Thu, May 29, 2025 at 12:08:42AM +0200, Marco Felsch wrote:
-> > Add FW_UPLOAD_ERR_SKIP to allow drivers to inform the firmware_loader
-> > framework that the update is not required. This can be the case if the
-> > user provided firmware matches the current running firmware.
-> 
-> The changes below look fine, but the commit message is inconsistent
-> with the actual changes. The commit message should reference
-> FW_UPLOAD_ERR_DUPLICATE instead of FW_UPLOAD_ERR_SKIP.
+On Fri, Jun 27, 2025 at 4:01=E2=80=AFPM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> On 6/27/2025 5:40 AM, Rafael J. Wysocki wrote:
+> > On Fri, Jun 27, 2025 at 12:28=E2=80=AFAM Mario Limonciello
+> > <mario.limonciello@amd.com> wrote:
+> >>
+> >> On 6/26/2025 4:46 AM, Ulf Hansson wrote:
+> >>> On Mon, 23 Jun 2025 at 14:55, Rafael J. Wysocki <rjw@rjwysocki.net> w=
+rote:
+> >>>>
+> >>>> Hi Everyone,
+> >>>>
+> >>>> These two patches complement the recently made PM core changes relat=
+ed to
+> >>>> the async suspend and resume of devices.  They should apply on top o=
+f
+> >>>> 6.16-rc3.
+> >>>>
+> >>>> They were sent along with the other changes mentioned above:
+> >>>>
+> >>>> https://lore.kernel.org/linux-pm/2229735.Mh6RI2rZIc@rjwysocki.net/
+> >>>> https://lore.kernel.org/linux-pm/2651185.Lt9SDvczpP@rjwysocki.net/
+> >>>>
+> >>>> (and this is v4 because they have been rebased in the meantime), but=
+ they don't
+> >>>> make any difference on my test-bed x86 systems, so I'd appreciate a =
+confirmation
+> >>>> that they are actually needed on ARM (or another architecture using =
+DT).
+> >>>>
+> >>>> Thanks!
+> >>>
+> >>> Hi Rafael,
+> >>>
+> >>> I haven't yet got the time to test these, but the code looks good to
+> >>> me, so feel free to add for the series:
+> >>>
+> >>> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> >>>
+> >>> Kind regards
+> >>> Uffe
+> >>
+> >> I passed this series to some internal guys to test on a wide variety o=
+f
+> >> AMD x86 hardware.  The initial testing looks good.
+> >> Will keep you apprised if anything pops up.
+> >
+> > Thanks!
+> >
+> > It would also help if you could check whether or not there is any
+> > measurable performance (that is, system suspend and resume time)
+> > difference between "before" and "after".
+>
+> Sure thing.
+>
+> Just to make sure we have an aligned measurement methodology:
+>
+> I asked them to do this both with and without the patches.
+>
+> * set /sys/power/pm_debug_messages before running and then capture all
+> the timing prints.
+> * add up all suspend events and get a total
+> * add up all resume events and get a total
+> * repeat 5 times
+> * calculate averages for the 5 runs
 
-Argh.. you're right. Will fix this in the v3, thanks.
-
-> 
-> - Russ
-> 
-> > 
-> > Sync lib/test_firmware.c file accordingly.
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> >  drivers/base/firmware_loader/sysfs_upload.c | 1 +
-> >  include/linux/firmware.h                    | 2 ++
-> >  lib/test_firmware.c                         | 1 +
-> >  3 files changed, 4 insertions(+)
-> > 
-> > diff --git a/drivers/base/firmware_loader/sysfs_upload.c b/drivers/base/firmware_loader/sysfs_upload.c
-> > index 829270067d1632f92656859fb9143e3fa9635670..0a583a1b3f4fde563257566426d523fbf839b13f 100644
-> > --- a/drivers/base/firmware_loader/sysfs_upload.c
-> > +++ b/drivers/base/firmware_loader/sysfs_upload.c
-> > @@ -28,6 +28,7 @@ static const char * const fw_upload_err_str[] = {
-> >  	[FW_UPLOAD_ERR_RW_ERROR]     = "read-write-error",
-> >  	[FW_UPLOAD_ERR_WEAROUT]	     = "flash-wearout",
-> >  	[FW_UPLOAD_ERR_FW_INVALID]   = "firmware-invalid",
-> > +	[FW_UPLOAD_ERR_DUPLICATE]    = "firmware-duplicate",
-> >  };
-> >  
-> >  static const char *fw_upload_progress(struct device *dev,
-> > diff --git a/include/linux/firmware.h b/include/linux/firmware.h
-> > index aae1b85ffc10e20e9c3c9b6009d26b83efd8cb24..fe7797be4c08cd62cdad9617b8f70095d5e0af2f 100644
-> > --- a/include/linux/firmware.h
-> > +++ b/include/linux/firmware.h
-> > @@ -29,6 +29,7 @@ struct firmware {
-> >   * @FW_UPLOAD_ERR_RW_ERROR: read or write to HW failed, see kernel log
-> >   * @FW_UPLOAD_ERR_WEAROUT: FLASH device is approaching wear-out, wait & retry
-> >   * @FW_UPLOAD_ERR_FW_INVALID: invalid firmware file
-> > + * @FW_UPLOAD_ERR_DUPLICATE: firmware is already up to date (duplicate)
-> >   * @FW_UPLOAD_ERR_MAX: Maximum error code marker
-> >   */
-> >  enum fw_upload_err {
-> > @@ -41,6 +42,7 @@ enum fw_upload_err {
-> >  	FW_UPLOAD_ERR_RW_ERROR,
-> >  	FW_UPLOAD_ERR_WEAROUT,
-> >  	FW_UPLOAD_ERR_FW_INVALID,
-> > +	FW_UPLOAD_ERR_DUPLICATE,
-> >  	FW_UPLOAD_ERR_MAX
-> >  };
-> >  
-> > diff --git a/lib/test_firmware.c b/lib/test_firmware.c
-> > index 211222e63328f970228920f5662ee80cc7f51215..603c3a4b385c849944a695849a1894693234b5eb 100644
-> > --- a/lib/test_firmware.c
-> > +++ b/lib/test_firmware.c
-> > @@ -1133,6 +1133,7 @@ static const char * const fw_upload_err_str[] = {
-> >  	[FW_UPLOAD_ERR_RW_ERROR]     = "read-write-error",
-> >  	[FW_UPLOAD_ERR_WEAROUT]	     = "flash-wearout",
-> >  	[FW_UPLOAD_ERR_FW_INVALID]   = "firmware-invalid",
-> > +	[FW_UPLOAD_ERR_DUPLICATE]    = "firmware-duplicate",
-> >  };
-> >  
-> >  static void upload_err_inject_error(struct test_firmware_upload *tst,
-> > 
-> > -- 
-> > 2.39.5
-> > 
-> 
+Sounds good!
