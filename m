@@ -1,123 +1,89 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EF23C01
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 02:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36F33C01;
+	Fri, 27 Jun 2025 02:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750991975; cv=none; b=H0YYF1NE6S2Q7ynVU/7B/kaFodNmxqDkQ8UCNLqZZ3hNwueJ+W6ruBiVB0rCAtMuXSRBlgYNqkysXoKjRMUbapaGbd2CHPyrGhzsy0TbuzS/GsYaFHsAz1BdXD2xsSCy1ozZKwlCaSap8Ihegngse2Yi2C6gn+WPvjy95VRoFz0=
+	t=1750992099; cv=none; b=e2eQE7Al8xw7MFiDG0Cdg++ImOHHzdB5PxqD1VEp6ky+lwFKi4u849VvqV85A/YASHiex7mgdZT8d/ilxaHnjBvR7sBKdpTlhtyhWXlFOqJmRvkl6vaa6qDQ263OGElkNRuUY7zdHkAlZLmX+eSn+LZI5OhpQLdTwtcLloJM+bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750991975; c=relaxed/simple;
-	bh=vvXfD1IfkO52OboqRZXTZrSZOnFkJz+wyFRQ1bQn7AY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dAfoidvX5WFO+o9c7TW/TQSM6bbZnICy+vlKSt9oztpuv64vKfBycpHaSBt0vILOx8DrKHj4L9rZXB7e0p1W7M9rzA98pxxztj58x0TVz3ofRjvMLsXFsP0EeLoIeQLFJgOUK6lIWUGxe3XgX1wd/8xEpFxuUZHg4BdyHiyD6/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TGvuTDS/; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750992099; c=relaxed/simple;
+	bh=bjSC1GOvCkB3dcQCEkA48aQBF8HgMA07pqD3eC+Cjm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WXuDVjDOqAKjO1KL9Azq1IKLwZW80iNelQolPjsb7ZchiAu8xE5BYz+TfgKDJER7pBV8ZAmX8DaVx+bXYn0eEdZzqpSbqs03uzYtYK2FdE+2uf3CqYoxNIJ7UXUj7kbQp/Nz3hf/FywGqdenwBIcPtIeRgxlctgYpy4X6Tmjy5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bgDrLief; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGvuTDS/"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-235f9e87f78so21505935ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 19:39:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750991973; x=1751596773; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q+Xmpn0m1NNRLGqOUCu2eX/6jrBk9qwF49IxfMBhpEU=;
-        b=TGvuTDS/0uxFbVg7HA5nPq9CLc/BGFF4X+mIOWkUwneNqsw3kDoeVmVNTj04ez7iuI
-         zaC3VZHX3LQ8r23v0bF2A5ZJHeQPs/4gTol9lB08MwyulufMAhKsU69y6FATZR4Oz1XG
-         u9o3y3g+IDXuDWghLmpL8Ej5fHchofBVAzan9f1uNK9NUW4ExCKSNvSDjT/9WlmfsMlm
-         NU8v4XtV5iBPnZYwyZ8615u2QqhbwufHULkWjFoTwOj5DRRAP/3FcJBr2sC9fNAMAxG8
-         KR9M0YS1Fn2j4Uk5AlfnK6Ib0wHi0f6MPIR3glMWdRRPOp8B/3f5015qECtR5eI2svZf
-         FcrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750991973; x=1751596773;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q+Xmpn0m1NNRLGqOUCu2eX/6jrBk9qwF49IxfMBhpEU=;
-        b=jAoja0IWV/FmgzExQxjz/Aoz2S1rFxatlhbi871Vh0get5wSxzmqNjCDy2pJQpRMzg
-         7cw1+y0SOlnoO3I0pX1UVt7NSMi61cZ6nr8XvJ4poMc8U0ZCTDUFqDKlOBLGsQDCo8sY
-         9++HUMqtEdRCvYoaG7zBpmI3/hPlck9YdRxhP8bAdiMbW3LhlfNd+3tq/Uj/SK4vQoAS
-         VectO8RiFgQH2v+vvR8cdWcOdxAwfP+d054I7oku8ls7T+Nxb9jsdhacLXo2e5VLGzpp
-         KsAoLMqJ7GTaQ3SxXEtInhUPQpBrkXaFRGvzuijuH+45mDivckQaeevMUTQUS/MZSOj3
-         PF4g==
-X-Forwarded-Encrypted: i=1; AJvYcCVfGCZvhXQtePvtutccWUDsGkZozW/2SmOuZLGfYSclq1occ8q0Xr3Mcl04sRZeFDWbp0R6y+j4x4uHCXQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKEUhiuikvcRfbqgKT811Gq/+rwy0K1p9BhXLn7HNmwycxcRkL
-	nS8GoEygii7TwGjUnuMBu/Aoa595s8DgohdP8XcWlZdq/j4VNvNRHd+d
-X-Gm-Gg: ASbGnctW30ziCOgobdJTRwVP/8tC80NIv2qB1sE397iB8BvymaEz3l2SSBDvX0PljPK
-	P5mo4AE6Wx3Yin1pjmoXW9YeTltauwMvGPjCExy9AvRxwxDYzirkAR14tjpXFWAjuxo/TGCzB8f
-	mUKMWgZBqE3QV8l9v/jE9UzIk+tjXjqqv/Jv3KNghjPPw/3N+xqvZzAfakiX2Sh7xTeBNlwypth
-	Kuw6fiHltTmGUcMNgQaQ8bFIPj4DZkOgr2PllSpWAtVdrTHF+Ydwh5TaFuRDG4k1wSfpT5mJ+vS
-	vqZUpds+3i9BO/28zSTi/K89i9GAYZxSE1GyV/UEFKqU5xYlI4dHr06l6t+4uTiZTZYUWRy4Rwd
-	GrymJ//kF4tTG2GuWjrkZs6HkaG7/Wz9wFAnEBQ==
-X-Google-Smtp-Source: AGHT+IGT6mSXkMoZBI9eS+i+6n5dkAlAiLro6eu3jOH5Rab/6j/ltru+m7KO0gmlC0KataXVrNbGHA==
-X-Received: by 2002:a17:903:2f4c:b0:234:eb6:a35d with SMTP id d9443c01a7336-23ac4606503mr22426855ad.27.1750991972966;
-        Thu, 26 Jun 2025 19:39:32 -0700 (PDT)
-Received: from ipravd-Nitro-AN515-55.hsd1.ca.comcast.net ([2601:646:a000:5fc0:ac9:41cf:eabf:a84b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3c5bc7sm4037755ad.221.2025.06.26.19.39.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 19:39:32 -0700 (PDT)
-From: Ivan Pravdin <ipravdin.official@gmail.com>
-To: mark@fasheh.com,
-	jlbec@evilplan.org,
-	joseph.qi@linux.alibaba.com,
-	ocfs2-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Ivan Pravdin <ipravdin.official@gmail.com>,
-	syzbot+20282c1b2184a857ac4c@syzkaller.appspotmail.com
-Subject: [PATCH] ocfs2: Avoid NULL pointer dereference in dx_dir_lookup_rec()
-Date: Thu, 26 Jun 2025 22:38:30 -0400
-Message-ID: <20250627023830.150291-1-ipravdin.official@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bgDrLief"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5433AC4CEEB;
+	Fri, 27 Jun 2025 02:41:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750992096;
+	bh=bjSC1GOvCkB3dcQCEkA48aQBF8HgMA07pqD3eC+Cjm4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bgDrLiefS/HPpb+VmjhqWsF1t3ouj5zOZkjYUHLP+B8J2HUb/gBySwAzVAc42xaKw
+	 YyYUfVbsiQREy9qluLwAfs/5IbNOKQFCw9OiG/mRW3V6ixjSPvS+ARDiYfxUlHAxd5
+	 AyE5/GuwZ9VvD+2/OfNjWd8gezTvHMvNSDYlw+MK8WcCq7C8+VRI3qaIeH84gqX/pW
+	 /wTIa7k/khFtDOVEBoBxMaMRZ4FLtj6wIt+Er7yPQmvzx0MX9qYRsC8rdl0hlaPajX
+	 vh93FlroEXR6hjnJrR9Z12SRUzeRIWAS+1mr30IB99Ap1tdnpN0DQx2fbhfskjebJU
+	 nz/XvJyHxj2rA==
+Date: Thu, 26 Jun 2025 21:41:35 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
+Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+	git@amd.com, devicetree@vger.kernel.org, conor+dt@kernel.org,
+	miquel.raynal@bootlin.com, krzk+dt@kernel.org, richard@nod.at,
+	amitrkcian2002@gmail.com, vigneshr@ti.com
+Subject: Re: [PATCH v14 1/3] dt-bindings: mtd: Describe MTD partitions
+ concatenation
+Message-ID: <175099209513.1650937.6817719319563715561.robh@kernel.org>
+References: <20250623105445.2394825-1-amit.kumar-mahapatra@amd.com>
+ <20250623105445.2394825-2-amit.kumar-mahapatra@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623105445.2394825-2-amit.kumar-mahapatra@amd.com>
 
-When a directory entry is not found, ocfs2_dx_dir_lookup_rec() prints an
-error message that unconditionally dereferences the 'rec' pointer.
-However, if 'rec' is NULL, this leads to a NULL pointer dereference and
-a kernel panic.
 
-Add an explicit check for a NULL 'rec' and use an alternate error
-message in that case to avoid unsafe access.
+On Mon, 23 Jun 2025 16:24:43 +0530, Amit Kumar Mahapatra wrote:
+> The AMD QSPI controller supports an advanced connection modes called
+> Stacked mode which allow the controller to treat two different flashes
+> as one storage.
+> 
+> In Stacked connection mode flashes share the same SPI bus, but different CS
+> line, controller driver asserts the CS of the flash to which it needs to
+> communicate. Stacked mode is a software abstraction rather than a
+> controller feature or capability. At any given time, the controller
+> communicates with one of the two connected flash devices, as determined by
+> the requested address and data length. If an operation starts on one flash
+> and ends on the other, the mtd layer needs to split it into two separate
+> operations and adjust the data length accordingly. For more information on
+> the modes please feel free to go through the controller flash interface
+> below [1].
+> 
+> To support stacked mode, the existing MTD concat driver has been extended
+> to be more generic, enabling multiple sets of MTD partitions to be
+> virtually concatenated, with each set forming a distinct logical MTD
+> device.
+> 
+> A new Device Tree property is introduced to facilitate this, containing
+> phandles of the partitions to be concatenated with the one where the
+> property is defined. This approach supports multiple sets of concatenated
+> partitions.
+> 
+> [1] https://docs.amd.com/r/en-US/am011-versal-acap-trm/QSPI-Flash-Device-Interface
+> 
+> Suggested-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
+> ---
+>  .../bindings/mtd/partitions/partition.yaml    | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
 
-Reported-by: syzbot+20282c1b2184a857ac4c@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/67483b75.050a0220.253251.007c.GAE@google.com/T/
-Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
----
- fs/ocfs2/dir.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/fs/ocfs2/dir.c b/fs/ocfs2/dir.c
-index 7799f4d16ce9..dccf0349e523 100644
---- a/fs/ocfs2/dir.c
-+++ b/fs/ocfs2/dir.c
-@@ -809,11 +809,17 @@ static int ocfs2_dx_dir_lookup_rec(struct inode *inode,
- 	}
- 
- 	if (!found) {
--		ret = ocfs2_error(inode->i_sb,
--				  "Inode %lu has bad extent record (%u, %u, 0) in btree\n",
--				  inode->i_ino,
--				  le32_to_cpu(rec->e_cpos),
--				  ocfs2_rec_clusters(el, rec));
-+		if (rec) {
-+			ret = ocfs2_error(inode->i_sb,
-+					"Inode %lu has bad extent record (%u, %u, 0) in btree\n",
-+					inode->i_ino,
-+					le32_to_cpu(rec->e_cpos),
-+					ocfs2_rec_clusters(el, rec));
-+		} else {
-+			ret = ocfs2_error(inode->i_sb,
-+					"Inode %lu has no extent records in btree\n",
-+					inode->i_ino);
-+		}
- 		goto out;
- 	}
- 
--- 
-2.45.2
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
