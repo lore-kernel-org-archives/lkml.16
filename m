@@ -1,83 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E69EEDE;
-	Fri, 27 Jun 2025 16:55:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13352EA72A;
+	Fri, 27 Jun 2025 16:55:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751043334; cv=none; b=VS1wZ6FbpqMgn82rNlAgy6rnZ3NY8JJY4ouF3ReVe3Es1d1HpxD0vvFoW4upZ9+FwuwgRlxEDXYQLpUF4qBn/9fYfpoN1+k5J5dWtjLtueStwvjHzX515fnN3qzkD47J+VKcy79sfyIH8k1upvNp0Wtxnzz0hjh8h/mHrQYbSFw=
+	t=1751043348; cv=none; b=H48YN3Rr+5+mFuqQBwpSE/rtTjdk5c7cGB8N0jy2FO71JEtt/+1IYh66QwgoDB24VpOHC2Uluc0yrYo/NBHlVPgY7DE/8YUYoBW95I0PAiCjLEh+G7FTMuw5SybhPgQ8mWAGZiKRMLNlT+v+3+lMoIuxXo0KVKrZXv70NU/PEN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751043334; c=relaxed/simple;
-	bh=Yp5x1qAvIVckjNxZdzXQoxusyqiTWxQXK0b6azS+QuQ=;
+	s=arc-20240116; t=1751043348; c=relaxed/simple;
+	bh=Ru+vXHBV8y+6Bsp5bc2kVjvc7h7M/KrKuaxCk5SRMDg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QTrTke00pwRHzwSN3J1CnoqSo5q3W1cFUmyzcBiUSm1X7P/em8Y0KII1OIGG8I63BiwyLQyGsme/HI2tJqba95/Fhvgohm56Z4B8UAkQ7/XCNP40hSIZM3gYld8HCFl78M684JRzIHk17ysJwxJ/eRKgYuE15hi/cWddEPMx3/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nCWLsIdC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=k2JJFXVwSZvy68/gjQJt0+Gb11Rl+FcVD2C8KCJN6F0QU0ncNJI3gwNAxuFVYFgQuZCrmR/DPFsC4rAbmEWe6vJH+yr+9UNs+qu5s0RCRMf8OedjL0FKIYIKVOV3TTefdGpx/QhVXKeQnLpwgZ82DUJi7NWzbK+WlkJqIASYn08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EC0nrlmw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nCWLsIdC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D23C4CEE3;
-	Fri, 27 Jun 2025 16:55:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EC0nrlmw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62F01C4CEE3;
+	Fri, 27 Jun 2025 16:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751043333;
-	bh=Yp5x1qAvIVckjNxZdzXQoxusyqiTWxQXK0b6azS+QuQ=;
+	s=k20201202; t=1751043347;
+	bh=Ru+vXHBV8y+6Bsp5bc2kVjvc7h7M/KrKuaxCk5SRMDg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nCWLsIdCFXGSMIWDscE5n0stzwsjApyob+KlQk7bl+ibo3bXvfmtfzO21wijG17JH
-	 mXmstkHmLOo2bvxvLgVXRpST0vM0ZETNZv++7Nlj7fGMTuDsBGWc2HUaHnwyyC9ELp
-	 vDYP98p9lV+d6QKLcJh7BNjEw3DPnErLSinXlhG7F24n7qPQElbtnAPBJ9yyXw1Od7
-	 49ZMdsGn8HGp/mETG2riqQaQQXSmK+WH2eIlKj3L1qyOe0oQaq0dgINqiay+Lwt6HF
-	 79u2I9rLOIbaT29OurYwRIlGWu2T9eKqTiYU+WHJ2zkg+uJPfeyIXeZUtH3TtUNF1f
-	 vHQ+dEFCrCPxQ==
-Date: Fri, 27 Jun 2025 09:55:30 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, 
-	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, Song Liu <song@kernel.org>, 
-	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
-	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
-	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
-	Puranjay Mohan <puranjay@kernel.org>, Dylan Hatch <dylanbhatch@google.com>
-Subject: Re: [PATCH v3 44/64] x86/jump_label: Define ELF section entry size
- for jump labels
-Message-ID: <dhuk7aokj2hpqy3q65uqpv7bz4pwvg2zhngyfh44y7gmiujg4y@h6s354xixgf2>
-References: <cover.1750980516.git.jpoimboe@kernel.org>
- <7217634a8158e56703dfe22199f1b9c08c501ae3.1750980517.git.jpoimboe@kernel.org>
- <20250627104818.GW1613200@noisy.programming.kicks-ass.net>
+	b=EC0nrlmwfOMi0lYaBe9mBqhAcEdP04DXeSoAAG0O3fTue9Onl3312Nub3JSY2aeXW
+	 tERxqOV8nAvSOOrOHcyDC6pSIO1BSqR8IMCh1rhAjI7iX8tYjk4qD9BKdLlIFfOhuH
+	 v9hw0BlGYRzpMxZDbePM/X4tfEzUTg66Hp5OkMuSpPsVghZHp4XNXsMXv06epWSXqe
+	 LbnsZwaYHfRd596FlGFbDXlJCnSTgmXsmm2Y1gdvaJ9wLnpQMqR9pKjqHuS8XAzxXt
+	 8ZGdVydbYtAHnJJHs3Eb/gQAjpcKpyCO3dddgJGIRrrI26bB3tlrN+JxZFVsNcP1dX
+	 S7WWAKJa+9waQ==
+Date: Fri, 27 Jun 2025 06:55:46 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Benno Lossin <lossin@kernel.org>
+Subject: Re: [PATCH v2] workqueue: rust: add delayed work items
+Message-ID: <aF7NEkFJne9Cn1Wr@slm.duckdns.org>
+References: <20250627-workqueue-delay-v2-1-84b046fdb4fc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250627104818.GW1613200@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250627-workqueue-delay-v2-1-84b046fdb4fc@google.com>
 
-On Fri, Jun 27, 2025 at 12:48:18PM +0200, Peter Zijlstra wrote:
-> > +#define JUMP_TABLE_ENTRY(key, label)				\
-> > +	".pushsection __jump_table,  \"aM\", @progbits, "	\
-> > +	__stringify(JUMP_ENTRY_SIZE) "\n\t"			\
+On Fri, Jun 27, 2025 at 09:38:42AM +0000, Alice Ryhl wrote:
+> This patch is being sent for use in the various Rust GPU drivers that
+> are under development. It provides the additional feature of work items
+> that are executed after a delay.
 > 
-> Argh, can you please not do this line-break. Yes it'll be long, but this
-> is most confusing.
-
-Yeah, I'll go indent that like the extable one.
-
-> > @@ -29,6 +30,9 @@ int main(void)
-> >  #else
-> >  	DEFINE(LRU_GEN_WIDTH, 0);
-> >  	DEFINE(__LRU_REFS_WIDTH, 0);
-> > +#endif
-> > +#if defined(CONFIG_HAVE_ARCH_JUMP_LABEL_RELATIVE) && defined(CONFIG_JUMP_LABEL)
+> The design of the existing workqueue is rather extensible, as most of
+> the logic is reused for delayed work items even though a different work
+> item type is required. The new logic consists of:
 > 
-> How is HAVE_ARCH_JUMP_LABEL_RELATIVE relevant here?
+> * A new DelayedWork struct that wraps struct delayed_work.
+> * A new impl_has_delayed_work! macro that provides adjusted versions of
+>   the container_of logic, that is suitable with delayed work items.
+> * A `enqueue_delayed` method that can enqueue a delayed work item.
+> 
+> This patch does *not* rely on the fact that `struct delayed_work`
+> contains `struct work_struct` at offset zero. It will continue to work
+> even if the layout is changed to hold the `work` field at a different
+> offset.
+> 
+> Please see the example introduced at the top of the file for example
+> usage of delayed work items.
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-#ifdef CONFIG_HAVE_ARCH_JUMP_LABEL_RELATIVE
+Acked-by: Tejun Heo <tj@kernel.org>
 
-struct jump_entry {
-	s32 code;
-	s32 target;
-	long key;	// key may be far away from the core kernel under KASLR
-};
+Thanks.
 
 -- 
-Josh
+tejun
