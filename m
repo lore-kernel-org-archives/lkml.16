@@ -1,202 +1,233 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EA514A82;
-	Fri, 27 Jun 2025 10:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0EB2980CD;
+	Fri, 27 Jun 2025 10:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751018806; cv=none; b=RnPE55tePpWSRLZ3n++AvLlXt0enkycJbdWRfkvZvJIOAvZJomKGJFIFjB42V7l9DBVB8JBazg/EnBAArwuT5xHPjVlS45oNDvYFlOXDDApGd9DxrcEc2yV8qJ5j+4lk1E+72srGni5ougsmEgqEvLdqP3QtLCriTbA2FZHahJ8=
+	t=1751018810; cv=none; b=ZUfbL6fmLcxVFY+5cMEGhBp8REecg9MLc/y8cr9K7dD7Lj5L00SAjR2N7WIOW3gywZMCuXQEqIA9j3jLn++gbg9xExBA1kAQzV1d1u+f8oUk6a1o1K3lsXdwSlPk72Nr3HA1DqX3OCaU2yoY1MUDxW7JZEtl+o7ypFcN5HdQWy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751018806; c=relaxed/simple;
-	bh=fFvzkvZn0bd2VOmS1GX3tRdsOr2lpN9Cu344yzpEDcY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pGnXNxFDazVVXJpSPBR0T81rn8lk0qe1EQzOXBSmHaH+OcZVN3pg9eiaaegRRrFQDYlQ4joA8RJJYK8BYitNw83PYVufouIpi44IgaMwp7HEWQCTe5a+gU715AbU5cjmKu87gakA3KH89zkbvJwH6gSDlKKQ0VbdWcsLyhmHTn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dnl2p/3W; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751018810; c=relaxed/simple;
+	bh=r0YnwAalgTRGHMtfmaMXLEDkTNOEImu3iRSewaoDnpk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MbWuXKlQP4fvWco1jeZAIdMa21k+RdNs7z6M+EJzq1r22PvMLx5aDnvNJMoX3tk207nMCkZNLJ0Ar2LvFab9J7qu3YOGGvLHOFObHDagJoow3+qonrJouxLeNfvx+KgZRteiMH7raiR2dasprje+xT2lXVmNTJ1WpMedXuxkV4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jlcSzDPR; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dnl2p/3W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751018804; x=1782554804;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fFvzkvZn0bd2VOmS1GX3tRdsOr2lpN9Cu344yzpEDcY=;
-  b=Dnl2p/3WcR+OGeGatg9kT2A3Duvk7fW8aiaYnIDe0C7q4GQ18d41M3LO
-   +Yo6cn69qnim5qiOEVlzbB3opOxGiHQGrtQN2KSGqe/uWHKJ29CV4qwiT
-   nUbSlciKCmXi9T0Ywc4byS5s1VD57zsXOAe1wCwpG2ENOgvWHBZhbHN2O
-   Xf/RmMas0manYRThd0m48UiQZTGht1h1GDkKiiaXgyPTi6TKkDwhUrGtK
-   odGq+xaDxjSHjaB41mdfn9lUv3VVusfxi5hn/dDSre3bRle34P3jT067G
-   fzy/zbsmV1lVXDM6BB8UtUg0sZ2lN6ibirrXYtANNQgYyIajZoksdPske
-   w==;
-X-CSE-ConnectionGUID: sZ44wPE+TfWccksXNza/ug==
-X-CSE-MsgGUID: QgBUEjdkR7aL4WbjnhBYgQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53426425"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="53426425"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 03:06:44 -0700
-X-CSE-ConnectionGUID: ZukoQkmRTSy9ssUnn59tcw==
-X-CSE-MsgGUID: bVCMUO8tQGmNUpGo6cPWvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="189962410"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 27 Jun 2025 03:06:42 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uV5yh-000W34-1K;
-	Fri, 27 Jun 2025 10:06:39 +0000
-Date: Fri, 27 Jun 2025 18:06:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, linux-fpga@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Moritz Fischer <mdf@kernel.org>,
-	Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>
-Subject: Re: [PATCH v1 1/1] fpga: altera-cvp: Use pci_find_vsec_capability()
- when probing FPGA device
-Message-ID: <202506271724.dQ1jAckC-lkp@intel.com>
-References: <20250627061431.522016-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jlcSzDPR"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a577f164c8so275756f8f.2;
+        Fri, 27 Jun 2025 03:06:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751018807; x=1751623607; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JxXlLI+5RHgcRNLRoMQn0tLo5umStcod1M6mXH84eyE=;
+        b=jlcSzDPRu9NsUsYc+JrqOHwG2ZID3Xfgj3VFsVNiRuEOgJczt6YnywkNSToRPAFbQz
+         OWBPm1yDjq8AFWEFSr47GPia2NTPxq0ziwYPNduVCxsZ7ada/oNZ/nGQoMk0kIW1pws4
+         Nc9IdHhjetOSEKzByhfm6Smau/FVgZ4I/R/DRKRM0LO8V9XZznrQw7ILrfJkpW2cSfRK
+         PTPow5puKf2TQms0i4RhFFP276Ug5NEIQd7jXuOpA4J0/WHP9qWyFPdF0xeVhUY+tUbo
+         Eu3iv6+BJLCJ/CWg63sIz+uesE7RweCmBFPhI0vWvLILwEiI5yRLLzPadkIt4ygiXwIp
+         0GSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751018807; x=1751623607;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JxXlLI+5RHgcRNLRoMQn0tLo5umStcod1M6mXH84eyE=;
+        b=KsbQe2NOuVl+UxYgC9kxw9JVkb0B0IvE/2JesOUTomcGbsgB8qAYpCIgBVPLS4YkMo
+         otK0wqVagmFSSjJr3PxNnhdJ9hjByvj1HOhsUMMCr30xXxEPPSWnYWWLtAWe3ndNov5O
+         T43C+/Gl/i76WOEKsMIDabPvq4WQ6PCPBwFMmn1gYeDY7opY2pPDPZpeuDgmw2G4ZgoR
+         YJwvYfoow+92CoYFI3W+zq/zd5M50kWRkR4xOXCL/Vm5Fq10z8PGBriMGW7VkIWoDciU
+         q3bY+l3/UQQj/Qah9URMszUQLcIw7hh8bRET5o1q3qUQhCtc/EOimqGtLdYHb9KRZNk9
+         /g5g==
+X-Forwarded-Encrypted: i=1; AJvYcCV1DjnFFrKO3Jw2jgW8z8qupS9GfMGTA+Xx0ljna/d99492mEhWTmjjWv2+B3O+2HF8O30ELdQGJZQEyAI=@vger.kernel.org, AJvYcCVYjkMk3cGo7aVDpIVd9u/2drAlrhCDfxzv3q9pqos/aSNAbMlb/asbxGE9A4CrL42gKMRWx/osLyt7FM0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsfIUA3YTTWWJQkaVzDlnhbG9x9vsNLHNZVu8YCrTa2L+r6xho
+	4vdLYg9OXkNxCvOtRCQp9KCwYZv83qV5UR7eHUPufUeUp/Z5uZ1nOX8X
+X-Gm-Gg: ASbGnctiVPg0eGme8X0aN2di5jDl7yoS/BjP+xYE+n5gTW/OTwf2mTY8AJCvvUWqs4K
+	ylYEjZUeUqyjuxUsGCH+bp/sPj9hzk3sPj3QDCaSg08zfikZjs6IyGbiuH8RjBSXCjSdLxNkEAE
+	swSxrfTfEoK+uHFPJijTnzTCKjDP4N60qcQBobKIA6wI/XVF1lBrAVqpT6tcCN84BM+sM6dEfAc
+	nWt4xhKmT64a0CyYm9V29l4oZsMwyZ9P64+jWk7DnVRlD9Q2OMpc2EovHOJM+bmxIMaTbzyPqtQ
+	1Y70LdcVyWFGYSGfEWa9lS14bO9MWxymR5lRl42Q8ZABkjqwbtZuzrlMWbaiXBrlX95NPizNnRu
+	6KryJ5i8U2yQEJUBNc7KIUk1q
+X-Google-Smtp-Source: AGHT+IGPWENIh37fy0usHQ/GxRQDWqrtNlHrDfI+wS47KXWgE9P6pSxGpvKCA6RJwezPYbisfZU3uw==
+X-Received: by 2002:a05:600c:358d:b0:453:8c5:95d3 with SMTP id 5b1f17b1804b1-4538ee5d303mr10792245e9.7.1751018806659;
+        Fri, 27 Jun 2025 03:06:46 -0700 (PDT)
+Received: from localhost.localdomain ([156.208.147.213])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538233c05csm75908545e9.5.2025.06.27.03.06.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 03:06:46 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+To: andy@kernel.org,
+	hdegoede@redhat.com,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.com,
+	gregkh@linuxfoundation.org
+Cc: linux-kernel-mentees@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	skhan@linuxfoundation.com,
+	dan.carpenter@linaro.org,
+	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>,
+	Hans de Goede <hansg@kernel.org>
+Subject: [PATCH v5] staging: media: atomisp: remove debug sysfs attributes active_bo and free_bo
+Date: Fri, 27 Jun 2025 13:06:04 +0300
+Message-Id: <20250627100604.29061-1-abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627061431.522016-1-andriy.shevchenko@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Andy,
+The sysfs attributes active_bo and free_bo expose internal buffer
+state used only for debugging purposes. These are not part of
+any standard kernel ABI, and need to be removed before this
+driver may be moved out of drivers/staging.
 
-kernel test robot noticed the following build warnings:
+- Remove active_bo and free_bo attributes
+- Remove group registration calls form hmm_init() and hmm_cleanup()
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.16-rc3 next-20250626]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Suggested-by: Hans de Goede <hansg@kernel.org>
+Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+---
+v5:
+- remove stray change
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/fpga-altera-cvp-Use-pci_find_vsec_capability-when-probing-FPGA-device/20250627-142050
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250627061431.522016-1-andriy.shevchenko%40linux.intel.com
-patch subject: [PATCH v1 1/1] fpga: altera-cvp: Use pci_find_vsec_capability() when probing FPGA device
-config: i386-buildonly-randconfig-001-20250627 (https://download.01.org/0day-ci/archive/20250627/202506271724.dQ1jAckC-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250627/202506271724.dQ1jAckC-lkp@intel.com/reproduce)
+v4: https://lore.kernel.org/all/20250627072939.21447-1-abdelrahmanfekry375@gmail.com/
+- fix typos
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506271724.dQ1jAckC-lkp@intel.com/
+v3: https://lore.kernel.org/all/20250624170746.47188-1-abdelrahmanfekry375@gmail.com/
+- remove blank line
 
-All warnings (new ones prefixed by >>):
+v2: https://lore.kernel.org/all/20250624144943.39297-1-abdelrahmanfekry375@gmail.com/
+- add Suggested-by line
+- remove unnecessary comments
 
-   drivers/fpga/altera-cvp.c: In function 'altera_cvp_probe':
->> drivers/fpga/altera-cvp.c:577:18: warning: unused variable 'val' [-Wunused-variable]
-     577 |         u16 cmd, val;
-         |                  ^~~
+v1: https://lore.kernel.org/all/20250624130841.34693-1-abdelrahmanfekry375@gmail.com/
 
+---
+ drivers/staging/media/atomisp/pci/hmm/hmm.c | 91 ---------------------
+ 1 file changed, 91 deletions(-)
 
-vim +/val +577 drivers/fpga/altera-cvp.c
+diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+index 84102c3aaf97..f998b57f90c4 100644
+--- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
++++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+@@ -28,88 +28,6 @@ struct hmm_bo_device bo_device;
+ static ia_css_ptr dummy_ptr = mmgr_EXCEPTION;
+ static bool hmm_initialized;
 
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  571  
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  572  static int altera_cvp_probe(struct pci_dev *pdev,
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  573  			    const struct pci_device_id *dev_id)
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  574  {
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  575  	struct altera_cvp_conf *conf;
-7085e2a94f7df5 Alan Tull          2018-05-16  576  	struct fpga_manager *mgr;
-34d1dc17ce978a Anatolij Gustschin 2017-06-14 @577  	u16 cmd, val;
-823fd4b4a8bd1f Andy Shevchenko    2025-06-27  578  	u16 offset;
-68f60538daa4bc Andreas Puhm       2018-11-07  579  	u32 regval;
-823fd4b4a8bd1f Andy Shevchenko    2025-06-27  580  	int ret;
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  581  
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  582  	/*
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  583  	 * First check if this is the expected FPGA device. PCI config
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  584  	 * space access works without enabling the PCI device, memory
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  585  	 * space access is enabled further down.
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  586  	 */
-823fd4b4a8bd1f Andy Shevchenko    2025-06-27  587  	offset = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_ALTERA, 0);
-823fd4b4a8bd1f Andy Shevchenko    2025-06-27  588  	if (!offset) {
-823fd4b4a8bd1f Andy Shevchenko    2025-06-27  589  		dev_err(&pdev->dev, "Wrong EXT_CAP_ID value\n");
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  590  		return -ENODEV;
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  591  	}
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  592  
-eb12511f0d47b4 Thor Thayer        2019-08-19  593  	pci_read_config_dword(pdev, offset + VSE_CVP_STATUS, &regval);
-68f60538daa4bc Andreas Puhm       2018-11-07  594  	if (!(regval & VSE_CVP_STATUS_CVP_EN)) {
-68f60538daa4bc Andreas Puhm       2018-11-07  595  		dev_err(&pdev->dev,
-68f60538daa4bc Andreas Puhm       2018-11-07  596  			"CVP is disabled for this device: CVP_STATUS Reg 0x%x\n",
-68f60538daa4bc Andreas Puhm       2018-11-07  597  			regval);
-68f60538daa4bc Andreas Puhm       2018-11-07  598  		return -ENODEV;
-68f60538daa4bc Andreas Puhm       2018-11-07  599  	}
-68f60538daa4bc Andreas Puhm       2018-11-07  600  
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  601  	conf = devm_kzalloc(&pdev->dev, sizeof(*conf), GFP_KERNEL);
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  602  	if (!conf)
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  603  		return -ENOMEM;
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  604  
-eb12511f0d47b4 Thor Thayer        2019-08-19  605  	conf->vsec_offset = offset;
-eb12511f0d47b4 Thor Thayer        2019-08-19  606  
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  607  	/*
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  608  	 * Enable memory BAR access. We cannot use pci_enable_device() here
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  609  	 * because it will make the driver unusable with FPGA devices that
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  610  	 * have additional big IOMEM resources (e.g. 4GiB BARs) on 32-bit
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  611  	 * platform. Such BARs will not have an assigned address range and
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  612  	 * pci_enable_device() will fail, complaining about not claimed BAR,
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  613  	 * even if the concerned BAR is not needed for FPGA configuration
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  614  	 * at all. Thus, enable the device via PCI config space command.
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  615  	 */
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  616  	pci_read_config_word(pdev, PCI_COMMAND, &cmd);
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  617  	if (!(cmd & PCI_COMMAND_MEMORY)) {
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  618  		cmd |= PCI_COMMAND_MEMORY;
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  619  		pci_write_config_word(pdev, PCI_COMMAND, cmd);
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  620  	}
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  621  
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  622  	ret = pci_request_region(pdev, CVP_BAR, "CVP");
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  623  	if (ret) {
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  624  		dev_err(&pdev->dev, "Requesting CVP BAR region failed\n");
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  625  		goto err_disable;
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  626  	}
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  627  
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  628  	conf->pci_dev = pdev;
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  629  	conf->write_data = altera_cvp_write_data_iomem;
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  630  
-e58915179f3f4a Thor Thayer        2019-08-19  631  	if (conf->vsec_offset == V1_VSEC_OFFSET)
-e58915179f3f4a Thor Thayer        2019-08-19  632  		conf->priv = &cvp_priv_v1;
-e58915179f3f4a Thor Thayer        2019-08-19  633  	else
-e58915179f3f4a Thor Thayer        2019-08-19  634  		conf->priv = &cvp_priv_v2;
-e58915179f3f4a Thor Thayer        2019-08-19  635  
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  636  	conf->map = pci_iomap(pdev, CVP_BAR, 0);
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  637  	if (!conf->map) {
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  638  		dev_warn(&pdev->dev, "Mapping CVP BAR failed\n");
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  639  		conf->write_data = altera_cvp_write_data_config;
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  640  	}
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  641  
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  642  	snprintf(conf->mgr_name, sizeof(conf->mgr_name), "%s @%s",
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  643  		 ALTERA_CVP_MGR_NAME, pci_name(pdev));
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  644  
-4ba0b2c294fe69 Russ Weight        2021-11-18  645  	mgr = fpga_mgr_register(&pdev->dev, conf->mgr_name,
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  646  				&altera_cvp_ops, conf);
-4ba0b2c294fe69 Russ Weight        2021-11-18  647  	if (IS_ERR(mgr)) {
-4ba0b2c294fe69 Russ Weight        2021-11-18  648  		ret = PTR_ERR(mgr);
-122c5770cff2c1 Christophe Jaillet 2018-06-27  649  		goto err_unmap;
-122c5770cff2c1 Christophe Jaillet 2018-06-27  650  	}
-7085e2a94f7df5 Alan Tull          2018-05-16  651  
-7085e2a94f7df5 Alan Tull          2018-05-16  652  	pci_set_drvdata(pdev, mgr);
-7085e2a94f7df5 Alan Tull          2018-05-16  653  
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  654  	return 0;
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  655  
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  656  err_unmap:
-187fade88ca0ff Anatolij Gustschin 2018-11-07  657  	if (conf->map)
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  658  		pci_iounmap(pdev, conf->map);
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  659  	pci_release_region(pdev, CVP_BAR);
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  660  err_disable:
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  661  	cmd &= ~PCI_COMMAND_MEMORY;
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  662  	pci_write_config_word(pdev, PCI_COMMAND, cmd);
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  663  	return ret;
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  664  }
-34d1dc17ce978a Anatolij Gustschin 2017-06-14  665  
+-/*
+- * p: private
+- * v: vmalloc
+- */
+-static const char hmm_bo_type_string[] = "pv";
+-
+-static ssize_t bo_show(struct device *dev, struct device_attribute *attr,
+-		       char *buf, struct list_head *bo_list, bool active)
+-{
+-	ssize_t ret = 0;
+-	struct hmm_buffer_object *bo;
+-	unsigned long flags;
+-	int i;
+-	long total[HMM_BO_LAST] = { 0 };
+-	long count[HMM_BO_LAST] = { 0 };
+-	int index1 = 0;
+-	int index2 = 0;
+-
+-	ret = scnprintf(buf, PAGE_SIZE, "type pgnr\n");
+-	if (ret <= 0)
+-		return 0;
+-
+-	index1 += ret;
+-
+-	spin_lock_irqsave(&bo_device.list_lock, flags);
+-	list_for_each_entry(bo, bo_list, list) {
+-		if ((active && (bo->status & HMM_BO_ALLOCED)) ||
+-		    (!active && !(bo->status & HMM_BO_ALLOCED))) {
+-			ret = scnprintf(buf + index1, PAGE_SIZE - index1,
+-					"%c %d\n",
+-					hmm_bo_type_string[bo->type], bo->pgnr);
+-
+-			total[bo->type] += bo->pgnr;
+-			count[bo->type]++;
+-			if (ret > 0)
+-				index1 += ret;
+-		}
+-	}
+-	spin_unlock_irqrestore(&bo_device.list_lock, flags);
+-
+-	for (i = 0; i < HMM_BO_LAST; i++) {
+-		if (count[i]) {
+-			ret = scnprintf(buf + index1 + index2,
+-					PAGE_SIZE - index1 - index2,
+-					"%ld %c buffer objects: %ld KB\n",
+-					count[i], hmm_bo_type_string[i],
+-					total[i] * 4);
+-			if (ret > 0)
+-				index2 += ret;
+-		}
+-	}
+-
+-	/* Add trailing zero, not included by scnprintf */
+-	return index1 + index2 + 1;
+-}
+-
+-static ssize_t active_bo_show(struct device *dev, struct device_attribute *attr,
+-			      char *buf)
+-{
+-	return bo_show(dev, attr, buf, &bo_device.entire_bo_list, true);
+-}
+-
+-static ssize_t free_bo_show(struct device *dev, struct device_attribute *attr,
+-			    char *buf)
+-{
+-	return bo_show(dev, attr, buf, &bo_device.entire_bo_list, false);
+-}
+-
+-
+-static DEVICE_ATTR_RO(active_bo);
+-static DEVICE_ATTR_RO(free_bo);
+-
+-static struct attribute *sysfs_attrs_ctrl[] = {
+-	&dev_attr_active_bo.attr,
+-	&dev_attr_free_bo.attr,
+-	NULL
+-};
+-
+-static struct attribute_group atomisp_attribute_group[] = {
+-	{.attrs = sysfs_attrs_ctrl },
+-};
+-
+ int hmm_init(void)
+ {
+ 	int ret;
+@@ -130,14 +48,6 @@ int hmm_init(void)
+ 	 */
+ 	dummy_ptr = hmm_alloc(1);
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-	if (!ret) {
+-		ret = sysfs_create_group(&atomisp_dev->kobj,
+-					 atomisp_attribute_group);
+-		if (ret)
+-			dev_err(atomisp_dev,
+-				"%s Failed to create sysfs\n", __func__);
+-	}
+-
+ 	return ret;
+ }
+
+@@ -145,7 +55,6 @@ void hmm_cleanup(void)
+ {
+ 	if (dummy_ptr == mmgr_EXCEPTION)
+ 		return;
+-	sysfs_remove_group(&atomisp_dev->kobj, atomisp_attribute_group);
+
+ 	/* free dummy memory first */
+ 	hmm_free(dummy_ptr);
+--
+2.25.1
+
