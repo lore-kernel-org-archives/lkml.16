@@ -1,132 +1,84 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25BB19E990;
-	Fri, 27 Jun 2025 15:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13961DFCB
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751039981; cv=none; b=e/TzdVki8Fz7EktPHKKeN7iAAwC8LVLmupv+zoS3vDcfaV8cW173waxxyhwc/JnEOBAnUZT8NLAu/G6vSLPpXNZBRhmFJ2rNO6j8KvNpIqzABjLgp1uOMjzyiBFLLA66rgQNLAsPyfWTqSgLv/DZHFwT7AsAfEVPrWMHq83hERk=
+	t=1751040047; cv=none; b=pIHieg0TAh0JDqgAugVZp1dxrtB4thSDaa/D6D5nXFOVe1O3H6/xuAiXMLUPLBpYjAXR44fX0x1JvC5NDw98DA9+5qIW+C0Go/kN8kbhORmHoWIzP7xRvholf21MsShYvw5ykidoWDcjM3P7xUYJWZgb6cT6HNLAN4tLlzo7P7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751039981; c=relaxed/simple;
-	bh=UL5P2G8QwWKYeIIOTiUC5tzsMqmjCmX1SN6IgdbYSZc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JD46EK2i8UnwB45DupS1z+yUvOm6fO71P8tBq3g1Zk5zTnvFzg40/DCNsHq4UtwAh8d6wBOpY41g6rgBQj4nNhy9qpC4V9DGIUTCdjgbRPZpcZx9H62+TsDSQgC7Ru6f4ZLC1fZL8rPZdYNZCdApQsEdnRxtILw/xtc9gUzAzv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PGsj/jY5; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751040047; c=relaxed/simple;
+	bh=eBobpTH5dO5aFYWBOFgi7YHuDOocnJlbZIlJ/t4tWrA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d+lv+/vknLK2acgJVI7s6VfFKpJv2B4vBQ0D6Wbra1ihrGDNqBLFp2zQl/27cBTwD5IbPmFDNGlqxrtJ8prXdJR/OR4pivbuNnvGtbTmwgFvhZmVxy8U6gRC5h3RfsBESrbYqBzVlKKaJjZbgUCotI5k2unnG1gMYGEEqTwE07Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wtfC1lj8; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PGsj/jY5"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a6f2c6715fso2437632f8f.1;
-        Fri, 27 Jun 2025 08:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751039978; x=1751644778; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UL5P2G8QwWKYeIIOTiUC5tzsMqmjCmX1SN6IgdbYSZc=;
-        b=PGsj/jY5lECkMQTXDIJ66wMwZNWBA5xUKpsiZHOvbEh3Eg3TtOOm069JA1kz+k3gDR
-         EOcrB9GX7iQ1+V8Vq3v7yMAWqk8phoUcTgfnM7YDtQQP9mEdtJD1wg3O7t7rE8tykKtk
-         1NyiFL7n6m48rMCeMNK5BiZwXX9VVDxKoUFA1T9yGkYJgZA0FFPVz+d29TZ1/cS1Ve9A
-         /FBHrB6+KtOsMdtWA14N/eK15xEXnw3YHekuWZNWmYWKlibcBZEOHARJ4XjKQkdAC0Cg
-         ZG+jFRtMRgKd5U4TBYqpdJisZ1PPEEng38lnfb4sEdTZVqPhLQKKKKOwe/qcCTJ9DogK
-         TcPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751039978; x=1751644778;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UL5P2G8QwWKYeIIOTiUC5tzsMqmjCmX1SN6IgdbYSZc=;
-        b=h0McMvDxk1bNMUZyL7u18cbdYJJfQw+rVVwgIkAqt9YLxmgWpc2TEG8k5vCf27zuxc
-         poj9a0E6VCyco1qM16i6u2zpHk41Cgz1/Pj/lOAWk6XjmkZEryLhKJd110T2cmLtS71k
-         0pwiAQbbMj2oegA/l8rJv0NTzIKTzOYl03d5PkdrL/v13qFZyDCp/hPhI/3u0CkF5aio
-         jSL5YhqMxctkDXG6OqifXS9wUXZ5hBopuAZVqZTFN2rnT0W5hL44M/+BsKNvCC9wMj3F
-         f/w6q2Rd2e+ILlSINZ74VsxyFhFcpzMA0yXoY6wmlrnGIK5h0lX0mmSsKNJ/uGW4I9Ls
-         +YAg==
-X-Forwarded-Encrypted: i=1; AJvYcCUBMR/cvCrblVr2vmtMWzRr6ExtSamvhhco4zPw5DpfrbgQag7+vnEwlRHGq0akDTntEKne5vCl9du85uBl@vger.kernel.org, AJvYcCUQ3oUhw/qQjNgH45QpXeB8s0lROIKIWNPGRQGQBWs1uA1gZ1Mr7gry4JI/w66+cgwuXucqqQdQV2E4qafvuJFUuMsZdxQZ@vger.kernel.org, AJvYcCW6yCgRUZp9ptyha1Ps0xL1Ecs4fzfVRN387C8VokquuUEo5lt3wBV8uA9hT7hgk/2U7f7vNSg5mdjLiLMaGA==@vger.kernel.org, AJvYcCXOxRnCpSOp4JXwlk3/Z3KAys8E0ITD2Lo0Zy6DszM9uZzGKqnlTR8zsU1uxkapNHjaU0Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGczBG6PdD6NZFh00iSJV0HshLHLHvF972LKwm1p3qZ87PqtxH
-	V78iYztrlANfNSB2FrmzEkY2uUgQUX4N9CeHbCvKxify9AlP/xupqnJafNLVeMdQpThehcXCedL
-	o/AG19H6sFm5WA4QQ+b4+YOj3M/KiWHQ=
-X-Gm-Gg: ASbGncuFmG5AFab2KoHUvrTvFawgfm1BSnpra+Lf+4Z4Ibzjoi9FjA+k8H5lQEoURFV
-	lKrxuNodhMkPs8Zl91sDRfeEIQmmYSYUriM8MMcodydGpm1Tvkl4AhJvHD92zeRIyJE7vWm+2i6
-	P4ebX6q0ip5PHhcpoiNONiss47flqYbkBucYgDToPPcz9YWxDDJAV5eZI6Ze2Ae95wIVbyxRWk
-X-Google-Smtp-Source: AGHT+IF1U4dcY9xhsGy4rlWEcfGwUP3bOoZNh7p3VrXI1JSMiPPMIzqk94XvixfjE42EY3uQb8qxFRdvlbjNH2ISQ9I=
-X-Received: by 2002:a05:6000:2711:b0:3a4:f7d9:3f56 with SMTP id
- ffacd0b85a97d-3a8f435e574mr2894930f8f.2.1751039977933; Fri, 27 Jun 2025
- 08:59:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wtfC1lj8"
+Date: Fri, 27 Jun 2025 12:00:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751040043;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EFd2TeDZePnyevS06G3vybw5Qpi1D8XzIEjoYS75/gg=;
+	b=wtfC1lj8G/k/A9owK6q8rE9rsVurmiVwBf4wimjSsEF5e6ddfCeAq/aGw2cLEAzOgwj2tZ
+	JASy5Wswd+rz0+X1pUTPxiXnGiqZ0uLNY2fGmI8/4WOGS5AOfq9j9Wi6H2mgO9WfNZ9+CI
+	++SNdvcrMRbAsON5PUDtgMkGkizYlK0=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+Cc: linux-bcachefs@vger.kernel.org, shuah@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev, 
+	syzbot+029d1989099aa5ae3e89@syzkaller.appspotmail.com
+Subject: Re: [PATCH] bcachefs: use mustfix to check invalid btree IDs
+Message-ID: <j2sx5unznfhswob6iuzeh5fp6tirxrbktdxkeednh7p7lfbemv@2ywasorzlvg3>
+References: <20250627084033.614376-2-bharadwaj.raju777@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623063854.1896364-1-song@kernel.org> <20250623-rebel-verlust-8fcd4cdd9122@brauner>
- <CAADnVQ+iqMi2HEj_iH7hsx+XJAsqaMWqSDe4tzcGAnehFWA9Sw@mail.gmail.com> <CAPhsuW7JAgXUObzkMAs_B=O09uHfhkgSuFV5nvUJbsv=Fh8JyA@mail.gmail.com>
-In-Reply-To: <CAPhsuW7JAgXUObzkMAs_B=O09uHfhkgSuFV5nvUJbsv=Fh8JyA@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 27 Jun 2025 08:59:26 -0700
-X-Gm-Features: Ac12FXxIczTM5K68rlq_78aPZtKoDWfs-hoiBCYqfl1f8Bf6HdGD3OkhePHxzBk
-Message-ID: <CAADnVQKNR1QES31HPNriYBAzmoxdG=sWyqwvDTtthROgezah3w@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 0/4] Introduce bpf_cgroup_read_xattr
-To: Song Liu <song@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Kernel Team <kernel-team@meta.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
-	Amir Goldstein <amir73il@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Tejun Heo <tj@kernel.org>, Daan De Meyer <daan.j.demeyer@gmail.com>, bpf <bpf@vger.kernel.org>, 
-	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627084033.614376-2-bharadwaj.raju777@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jun 26, 2025 at 9:04=E2=80=AFPM Song Liu <song@kernel.org> wrote:
->
-> On Thu, Jun 26, 2025 at 7:14=E2=80=AFPM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> [...]
-> > ./test_progs -t lsm_cgroup
-> > Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-> > ./test_progs -t lsm_cgroup
-> > Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-> > ./test_progs -t cgroup_xattr
-> > Summary: 1/8 PASSED, 0 SKIPPED, 0 FAILED
-> > ./test_progs -t lsm_cgroup
-> > test_lsm_cgroup_functional:PASS:bind(ETH_P_ALL) 0 nsec
-> > (network_helpers.c:121: errno: Cannot assign requested address) Failed
-> > to bind socket
-> > test_lsm_cgroup_functional:FAIL:start_server unexpected start_server:
-> > actual -1 < expected 0
-> > (network_helpers.c:360: errno: Bad file descriptor) getsockopt(SOL_PROT=
-OCOL)
-> > test_lsm_cgroup_functional:FAIL:connect_to_fd unexpected
-> > connect_to_fd: actual -1 < expected 0
-> > test_lsm_cgroup_functional:FAIL:accept unexpected accept: actual -1 < e=
-xpected 0
-> > test_lsm_cgroup_functional:FAIL:getsockopt unexpected getsockopt:
-> > actual -1 < expected 0
-> > test_lsm_cgroup_functional:FAIL:sk_priority unexpected sk_priority:
-> > actual 0 !=3D expected 234
-> > ...
-> > Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
-> >
-> >
-> > Song,
-> > Please follow up with the fix for selftest.
-> > It will be in bpf-next only.
->
-> The issue is because cgroup_xattr calls "ip link set dev lo up"
-> in setup, and calls "ip link set dev lo down" in cleanup. Most
-> other tests only call "ip link set dev lo up". IOW, it appears to
-> me that cgroup_xattr is doing the cleanup properly. To fix this,
-> we can either remove "dev lo down" from cgroup_xattr, or add
-> "dev lo up" to lsm_cgroups. Do you have any preference one
-> way or another?
+On Fri, Jun 27, 2025 at 02:10:32PM +0530, Bharadwaj Raju wrote:
+> Checking for invalid IDs was introduced in 9e7cfb35e266 ("bcachefs: Check for invalid btree IDs")
+> to prevent an invalid shift later, but since 141526548052 ("bcachefs: Bad btree roots are now autofix")
+> made the parent class btree_root_bkey_invalid FSCK_AUTOFIX, fsck_err_on
+> no longer works for this check.
+> 
+> Change the condition to use mustfix_fsck_err_on instead.
 
-It messes with "lo" without switching netns? Ouch.
-Not sure what tests you copied that code from,
-but all "ip" commands, ping_group_range, and sockets
-don't need to be in the test. Instead of triggering
-progs through lsm/socket_connect hook can't you use
-a simple hook like lsm/bpf or lsm/file_open that doesn't require
-networking setup ?
+We can mark this one autofix instead
+
+> 
+> Reported-by: syzbot+029d1989099aa5ae3e89@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=029d1989099aa5ae3e89
+> Fixes: 141526548052 ("bcachefs: Bad btree roots are now autofix")
+> 
+> Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+> ---
+>  fs/bcachefs/recovery.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/bcachefs/recovery.c b/fs/bcachefs/recovery.c
+> index d0b7e3a36a54..abcaa0e3e2e6 100644
+> --- a/fs/bcachefs/recovery.c
+> +++ b/fs/bcachefs/recovery.c
+> @@ -489,7 +489,7 @@ static int journal_replay_entry_early(struct bch_fs *c,
+>  		if (unlikely(!entry->u64s))
+>  			return 0;
+>  
+> -		if (fsck_err_on(entry->btree_id >= BTREE_ID_NR_MAX,
+> +		if (mustfix_fsck_err_on(entry->btree_id >= BTREE_ID_NR_MAX,
+>  				c, invalid_btree_id,
+>  				"invalid btree id %u (max %u)",
+>  				entry->btree_id, BTREE_ID_NR_MAX))
+> -- 
+> 2.50.0
+> 
