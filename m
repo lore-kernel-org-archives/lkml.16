@@ -1,88 +1,153 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9332A1DE2C9
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC33B295502
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 10:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751018633; cv=none; b=QGyBXERW7m2MnjuYJqXJ39oMtmFXUU8/FnjhGtHQT5wRL1yWerSxcs6BA5EcdnbtPVP9T9rkCYMcHHyuNMrajc5t3kU5Uln0zwxb++B2aKrxznOZWb9hX5fLQMnmyy7fm43Er/lxDn3mi/WhbZAUod+7AAxAG4gbQPfdsK5lVnc=
+	t=1751018712; cv=none; b=XbmnaMk1F5/sznbIyfVglHiRh6YqpC1IGG25l+3TQni0vrhRI/1Wz2mBmcLfOVrpFjYUMzHuZOUoJmFyiXpybT0w1Fu55GS/xmvi3YZuGfKcPKrpoJ2OMWuw8AtBiEynKenTeOMhMBxM5eyDeFbDr2FvchkuUI+ul9QCvO3rp4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751018633; c=relaxed/simple;
-	bh=T2nOxSJO+3aD6pj2YVFHst7Rt/ootjE2VC1St3irjHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jwP7JuvmhGqUpVZIZjDbRAJDOo83zYjJDC3uyp0pAv/5bvUhvNU7hde7LHM5ig7lZVOY+ibogVXxmMqyHb8x/fqez/l2L1q6pd2ehASVPAhUssGYmj4gLE7lW1VtMCufeOxAkGGXX55IwsVJiH0Bs1RUh9UJCE1jtaOXOfEpKNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=eOhNzCOf; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1751018712; c=relaxed/simple;
+	bh=PzodW/i76HLnJ/LNXOIZcjxrEUiZHsILg7HZqKuQym0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=qhBGh9f2QC67/5mtYfxLrgT12WlOJfs0YNEO1UDPbGFQFSqtmhHmCq6bpyBaIwGiYCIIH+GUQPZsd/ql90czKbU4fD0Mp0nEuulzpb6dS4EC7UKaXUlp/Kj7nd+EVVth6O+mAGTTFKLW0IIC/Y4FzbeDR5WkD2pgWl/O3aFBLYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=IMYu/edv; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="eOhNzCOf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=M/uP
-	gWCmGezyUxogkSTfZ1uXa9HK2g1Qg3jFyj9fYWs=; b=eOhNzCOf69+AlE8rUm9s
-	e/AhcLLd3Q37NxyZkq5GzVtcSY6cDHPupe3OPNkMgosyrVUYkwfTFCYzMeIWevWF
-	We9br/ydGdAAchJ0QyxpCE21UTgMn7pYitTsEOIuwj/pXubtk+eezYX/8vdPmlXC
-	AOrl9rFfRRpShJ6N+6yE1i3bsm8EVUfThBoQkmh9wHamDEC9TEoUFYyFeBEiu2Ch
-	GXwqrcTsBnfs7H7TF0a4jRqdT/ay0kG0QhVLiCmEk12L99hxUKah1bTbmcj9cBnZ
-	NTSIGrjFNghagmKPgwG4y65WxTytPvFGU3JqOk1eue9LdnVvJy5z2HpPOQ8yCM+2
-	xg==
-Received: (qmail 1416444 invoked from network); 27 Jun 2025 12:03:40 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 27 Jun 2025 12:03:40 +0200
-X-UD-Smtp-Session: l3s3148p1@9nzfyoo4dLogAwDPXzuUAOCQSK0rM+sw
-Date: Fri, 27 Jun 2025 12:03:40 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: lkml <linux-kernel@vger.kernel.org>,
-	linux-i2c <linux-i2c@vger.kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [GIT PULL] i2c-host-fixes for v6.16-rc4
-Message-ID: <aF5sfAwym8XpVhYc@shikoro>
-References: <7rnodnh6pww34mtj2rj4t5dnaj6gnngink3xkx2ijm73cyawlm@qtrv6kkhkjxp>
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="IMYu/edv"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ae0dad3a179so272447166b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 03:05:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1751018709; x=1751623509; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=anf81smqJchGsOVnXL8fS0CnM4B+sUev4ipz3NBZjL0=;
+        b=IMYu/edvz6R/wTiowuSLY7bajTgBUW6dIUbFr21K2rZsozX0X8MI3GEaj1y5tskZPg
+         J3dtKSBNh/ClN1IjKS0Iz8SGe98n4vQuu9GGsWt6BPQ6nKldsl1NkbqVvANXo035qqKf
+         lXVB8FK6XRcg36jo+XsUP9eTfRBNhHluLrvN86Xk7MJ7fgI/wQKN3fNwCgHUfZbQ1y9a
+         9cmL4/AoKZKoIxGrIYU3s1pml3BnnxGdOjxlBzP8qmaNk/S3wQnYu1OAGV2XJqEoDNZW
+         X7xEJex3PsfApdsPLEiqhxerwQbMZg4HnHnlAFYbQDmNYVB+KvVsNvkKh4Fpup8ZXafy
+         cemg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751018709; x=1751623509;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=anf81smqJchGsOVnXL8fS0CnM4B+sUev4ipz3NBZjL0=;
+        b=G+Zc3MZF+/W+SxGx2EOBfdFabx18fBSqbYhci1gTRD+ZoW+0kNPF7t6VVivdCGo6ur
+         N7+rxLSjLbJ409xZ9mOh7w59fPyeACEN5etVLshLr33SvVD3gRwqc/lnqwVqgKdlKmeQ
+         WU8VS8WWN985++0HVc/wiKq1iqgoMryYbT7g19CuwkxEd2wABAc+vA1GcAlwyVEpbLPv
+         H7K5QlKs7k7yzJ85MLoXrr/IDsvzTBX/YIYm/JLHHXASs/ICVoglL5pELCbuo7hRJqA/
+         V4O+5DnnJfDU8zplGTjqfZGoiiCUFvawHZ1RJC+xybfctQ+XfWLpmLLDpVIApIVh6xIA
+         hNXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXz2+R1Nw3Tk6KjHGlukmeoHFVkWrFvNIb1t2W2NlJoZMXgj3UOSUHUR1Q4mRawLQqZK0BZ7RuaFfyAyFY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdggzNbjk7xXmmQOKkzaj82lDN9Qsi8rlDn5vROiwzJNRVLGlo
+	yGsC4xV7n/3z1JQD88sKfJcv/5Z+Gc/hLuJ7V1tMzwjc2Og1cSEcBWLxGji0wxrnY1k=
+X-Gm-Gg: ASbGncvbDJ+1sppfOuFWcRxT7xLU21sgP6symAnwIlRXvkZVsfBHc+YOPyXpBDHL1Cr
+	JuoOBv60QBFr374isQZlALPLbAI4Dj1wRaEq0Vsne1ncqkahoBrJRk9z3PkUayGAzondE9JvSjr
+	iw7Ffwegsf4rhH9oXBdnsUeMoO4w5XiIkyF8PXCH0FATFHchZvSU1lhthi0CP8Ol92kN3KPaGZz
+	Omg2jhMkngz9TpLjYF1K4R791ssue/X2ApYkdDP8o1RWWWvoKUbzBf27MYD0ECGuND8bSSoRHbH
+	yfZjYT0mWvbvRJW76dM7+vH9sBLuZnbLt3KDcBDDh+AfqNU0BqO8CSl1sqOXzaATwmPWc1K0uQ6
+	radhU5QtrVWnd69K921gOlL5x/UBO3VA=
+X-Google-Smtp-Source: AGHT+IFwWC1PMDQhvOXj2QsK6RpzwF856rVEhA2uY1DKJrMoYsifyAHyLePMov9FHDkbpt1Ej/CUTg==
+X-Received: by 2002:a17:907:d24:b0:ae0:a1c2:262e with SMTP id a640c23a62f3a-ae35018f138mr209250666b.50.1751018709055;
+        Fri, 27 Jun 2025 03:05:09 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353ca217asm94148666b.161.2025.06.27.03.05.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 03:05:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="UcD/j3BeGuKAUrsq"
-Content-Disposition: inline
-In-Reply-To: <7rnodnh6pww34mtj2rj4t5dnaj6gnngink3xkx2ijm73cyawlm@qtrv6kkhkjxp>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 27 Jun 2025 12:05:08 +0200
+Message-Id: <DAX8BTNMDC8Z.182KEGJF2XRDF@fairphone.com>
+To: "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>
+Cc: "Lee Jones" <lee@kernel.org>, "Pavel Machek" <pavel@kernel.org>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Fenglin Wu"
+ <quic_fenglinw@quicinc.com>, "Stephen Boyd" <sboyd@kernel.org>, "Bjorn
+ Andersson" <andersson@kernel.org>, "Konrad Dybcio"
+ <konradybcio@kernel.org>, <~postmarketos/upstreaming@lists.sr.ht>,
+ <phone-devel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+ <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] Add support for PMXR2230 PMIC
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250625-sm7635-pmxr2230-v1-0-25aa94305f31@fairphone.com>
+ <zmqkdpmji2uodm3mxcteteyhfkef47kihola6vtxb4mhuynqwz@hvgfd2637mhz>
+ <DAVPDN4U6FSJ.1MHMT5G04KSKA@fairphone.com>
+ <6zut6hiwig4qanrmloqvibx4tmpb6iv23s3hp7bb4ja6jzzia3@wnre6i3mukbp>
+In-Reply-To: <6zut6hiwig4qanrmloqvibx4tmpb6iv23s3hp7bb4ja6jzzia3@wnre6i3mukbp>
 
+On Wed Jun 25, 2025 at 11:03 PM CEST, Dmitry Baryshkov wrote:
+> On Wed, Jun 25, 2025 at 05:01:29PM +0200, Luca Weiss wrote:
+>> On Wed Jun 25, 2025 at 4:25 PM CEST, Dmitry Baryshkov wrote:
+>> > On Wed, Jun 25, 2025 at 11:18:36AM +0200, Luca Weiss wrote:
+>> >> The PMXR2230 PMIC is used in conjuction with SM7635. Add binding docs
+>> >> and the devicetree description for it.
+>> >
+>> >
+>> > Please use PM7550 instead.
+>>=20
+>> I'm happy to not follow downstream naming conventions if being told, but
+>> do you have any details whether PMXR2230 =3D=3D PM7550, or PM7550 is jus=
+t
+>> another SW-compatible PMIC as PMXR2230.
+>
+> It is PM7550.
 
---UcD/j3BeGuKAUrsq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ok, will update in v2.
 
-Hi Andi,
+>
+>>=20
+>> Also we already have qcom,pmxr2230-gpio upstream, so that would need to
+>> get updated for the PM7550 name.
+>
+> No, leave it be. We should not change existing compats for no reason.
 
-> Thank you and I wish you a great weekend,
+The compatible is not used in upstream dts though, and cleaning up some
+old naming for the PMIC would be good, no?
 
-Thank you, pulled!
+But I can leave it for now, and we can potentially take care of it
+later.
 
-All the best,
+Regards
+Luca
 
-   Wolfram
+>
+>>=20
+>> Regards
+>> Luca
+>>=20
+>> >
+>> >>=20
+>> >> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>> >> ---
+>> >> Luca Weiss (3):
+>> >>       dt-bindings: leds: qcom,spmi-flash-led: Add PMXR2230
+>> >>       dt-bindings: mfd: qcom-spmi-pmic: Document PMXR2230 PMIC
+>> >>       arm64: dts: qcom: Add PMXR2230 PMIC
+>> >>=20
+>> >>  .../bindings/leds/qcom,spmi-flash-led.yaml         |  1 +
+>> >>  .../devicetree/bindings/mfd/qcom,spmi-pmic.yaml    |  1 +
+>> >>  arch/arm64/boot/dts/qcom/pmxr2230.dtsi             | 63 ++++++++++++=
+++++++++++
+>> >>  3 files changed, 65 insertions(+)
+>> >> ---
+>> >> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+>> >> change-id: 20250620-sm7635-pmxr2230-ee55a86a8c2b
+>> >>=20
+>> >> Best regards,
+>> >> --=20
+>> >> Luca Weiss <luca.weiss@fairphone.com>
+>> >>=20
+>>=20
 
-
---UcD/j3BeGuKAUrsq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhebHgACgkQFA3kzBSg
-KbaiTw//VRVPWv7uC6dSdMvt5AYBZnsE4/xc264PdqYk3cMbV5HyNLgjNAz2WoDp
-M62xktsQj2BK8j4ADvMOttuXm+drhDL7rCACtnnvc0tMyqROEw3lLeQ61MmApH3A
-bWJqFr2SHYlzRsH3kWXCe/6Lx6yxnRPpSUA7ky53SKZj9JZnUfPsuLloiKKri6GG
-nrLUa7J2tgDn+Yp3FdJoVofi1gfd9Y92yRRJ93UGO9ci5sNmivXoQQrD6Idcx0VL
-70i6lfLsBrUhjvDDME6viA3FwBV46KtmZCramFctt42Su/2SgWXioLLq0j1kvggN
-wmn8K3Ph23T3Gt+OIpvwhJl+hGjhtvhXQxKji7m4MhAzJDmgKuPtzNyMr2gMFMRe
-hvE0pIism9+V/AUVIBaXdlRhHPNm3rsVE26egkAbU9ZrRbkZyuqH+UHG39lyLLf3
-SyBjV9QV/ZBN+DCcjuBZI95DaLFUIujBdnKfM2AqaBxzJeJI5fA/jAIovzOdEuSp
-/PEbuD0vrQPhLjeOlBMCQz/a+fbBDEjLO7c12fPkLp7YC3vKRDkkK3ayOJA4b/DH
-8t3rLP2c/MwpbVl+3Sjy1GVtf1ZYH7BdWtOf03bHMrHINzGlBsAY4khk9zlLAO/7
-/bzb+Dg3Vr4D0kBMWqnIX/nPseEE6BCsHFiL5d6L5f51EYJjto0=
-=8ZWW
------END PGP SIGNATURE-----
-
---UcD/j3BeGuKAUrsq--
