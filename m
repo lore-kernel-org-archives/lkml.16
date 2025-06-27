@@ -1,89 +1,120 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9F721A458
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B472F1FEA
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751008479; cv=none; b=HvBljSbKzlot77iYj3wa5JPXbaAdC1qLFdaXf04gqqQ1ugvYIOYKIRKxr85SJYAQhgFQvpAbDlJudeALjO09pZExYZLX1CHw2DJhrha+6MiPJajTxWcfq7tFTiOjJQGmUSd74Pw156W8HETUJWwGZhrujw4lAw8c5iIegocIrAY=
+	t=1751008555; cv=none; b=S9mi9uH9kRum7AP8jLeJ0PzSLpDR+Hrq0hDCKlEX3M1b02hjapy5JHefPt4LBJQ9/dK7wHnIJhbuGitefaZlx9QqwIJbEt4AVC7YeYmoAf4qcscaE4zL1TW0fkWUI3RkUiPkCSD/UeiGmBiaRtxJ4gAcuOcfcfnttx22NvJ+0mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751008479; c=relaxed/simple;
-	bh=wx0LqKlXVv8c72e871dc4Fp+9Lt/Vb3P1h0YRmNbohI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dwrN+B66p/iun7MpT7Lhgcq2AUDapot3GBVSHCBQ0M6jvy7JjIpvfGSXeekQkuE0AhekEEajYlOKkkhZlse2HdkLHuzRXnJCy7c9q89opb0ZRxUa3SFJ2ZX3bLmYDjFnklOjRU0w8L/16hsd5d9xR4MvJs3+Up4rzzyM4NVZaoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NYM52+wS; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1751008555; c=relaxed/simple;
+	bh=rA+y5NpRXe9kGcVuR99+0+fM6zcY4gHnctZTjGOOKS0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QKn4mIRrd+Em46DCvUNQaTyFtQj4vsApO16EH8gFk7UmHW3RSP7M9bJ5YUiwA4cMWPsD4+NBXBy4ap+rXFi+0q6grK3V3krCPKYvI9GAW4r1x0nbBbUQLNWvR59SGoqaEizRcwDeZ1OBqvpCeUfMkDdCObf6UhwDmbHm6WtJVMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=b/S9FkV1; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NYM52+wS"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so1723120a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 00:14:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1751008475; x=1751613275; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AQQGZP8E3Mk3yAfl5AsQy1iQwJzm3BFEFB1Lc1DUr9w=;
-        b=NYM52+wSWuUIInGYzhFsHmjTbwqNkiUcRyYdt/a12FDjPzHT4cvki6J3Ef9pgROLSm
-         3DwOXTT3f0VcSGhpAf3N8u+nL+FBCPuck/SQKrmG0rpShEEni0Q2s9edLCiptc7DZTmu
-         YDxNApJXC2jyj3sW3K1Yi61FRu2w3eVCIhT3M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751008475; x=1751613275;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AQQGZP8E3Mk3yAfl5AsQy1iQwJzm3BFEFB1Lc1DUr9w=;
-        b=dCjg7aHbY9MfYoCJ7+6Lba87p+BaNmYglalcAKRfHkD3G3qRZp/9kT8IwtPndCXXa8
-         +tnlsLPM7kJfOcr91SD4ePh6EC+Y+Jmg+ZqajSQ4qHUm/Dcjlmn47MUPI2gBh5ekKDX+
-         fj/l4W5/D+zfqLHLoEWKrhhyJBQKReUzeo816NQD0/zeeJAcyi5isHHvC0MPEwaYYov9
-         ZRYQf7xQekI1Bbnve8W92oJXOcV3N2YwMozczDT/ZWvNx9GaY4kkRZhNYdzjNnjYgycX
-         cMrqWsAIV3De8eQaszVj8b1sMeE4tV3CEDxGmMSdKJCtMdGFAq8BdMraH43i+NNglGBd
-         TbNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNfCFS0Qv8V+MEReBk5cw2Ln7xWPTS8bgPOJnX0lxZaerSxDY07KOkFzZkMB19Lk2qKnjknuzxiXej8OA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxT8CdTxlbcST3pnIpPaPsWlVwfMiW+33p/b+eSkTr4Pz4+IP0F
-	xsqp0Pz2XXh7AWORM9UPDAQenK61l0Bkyj78mZeCNilFnuck6sVPwHyhSVIYEl8xsw==
-X-Gm-Gg: ASbGnctwwSwmlO2P0d5/M6Dc+2KYnggCPG/UOMusrPFPsSKEteVtGTzq3wdrcodRiwm
-	10g5ut6ocz0ZfCkvu0iHTny07wy8zJtXjopQh6P39FzlHJoLDamaMYfEO2Tg4Fc0ZxzspTfJuKF
-	a+cyGdFdFvXy8UAzrzWKJdN/jzkCewAkaWhXt30vCvJ4JlMZ7iAyzWb6EKi1RZWtn6vtQZ5Ffmj
-	uY5sOgoT77m+2MsYOarhA4+yRhxuWNyhqkc8JPi1pWLb8DX915Z9HfI5ao5suyHrOtC2XDMsZiV
-	PRv9wBfBfp3Yo78P8XKz6aS0qyGfPv0nE0SCAwYcw7CyDGn35HC/P1gtEUK3ANtmjmqotZGJTtP
-	C
-X-Google-Smtp-Source: AGHT+IFEeMckAwHl2Wie4Br0EJx5o3lYirvV/GsaZHYr3pkQ1uZ7EgbwhvZytiHcoLlJBTmyb7T0Sg==
-X-Received: by 2002:a17:90b:1844:b0:311:c1ec:7d0a with SMTP id 98e67ed59e1d1-318c92ee554mr2959524a91.25.1751008475565;
-        Fri, 27 Jun 2025 00:14:35 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:de1c:e88f:de93:cd95])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f539e69fsm6373395a91.11.2025.06.27.00.14.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 00:14:34 -0700 (PDT)
-Date: Fri, 27 Jun 2025 16:14:29 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Jens Axboe <axboe@kernel.dk>, Rahul Kumar <rk0006818@gmail.com>
-Cc: minchan@kernel.org, senozhatsky@chromium.org, axboe@kernel.dk, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org
-Subject: Re: [PATCH] block: zram: replace scnprintf() with sysfs_emit() in
- *_show() functions
-Message-ID: <2tckds345fhwxxxfjxsvbvktz7tdnd5mt7yvksoel7hpq4qewd@3uubp65rld3d>
-References: <20250627035256.1120740-1-rk0006818@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="b/S9FkV1"
+Message-ID: <1d39b66e-4009-4143-a8fa-5d876bc1f7e7@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751008550;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2YlWsvrV7BaACfyKv597+qNsvY3pISsv0aYbyAd91Ns=;
+	b=b/S9FkV17dZyBU9gyIoqvCZ9lEWKMXK/izhpXtTf2yF3lzMVVnGX5YDWIEAMOyw+JsnWYy
+	ZS/rlXdv+yGYpIGe7LtEkl5IvH7HC+w5BVIfUfUlYeVeQFfEQNv2+ilmf3FIPf6WpIp1B5
+	GZr8YjBl/kjDa13f8vVty5wzMBiXjgI=
+Date: Fri, 27 Jun 2025 15:15:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627035256.1120740-1-rk0006818@gmail.com>
+Subject: Re: [PATCH v2 1/1] mm/rmap: fix potential out-of-bounds page table
+ access during batched unmap
+Content-Language: en-US
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, david@redhat.com,
+ baolin.wang@linux.alibaba.com, chrisl@kernel.org, kasong@tencent.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+ lorenzo.stoakes@oracle.com, ryan.roberts@arm.com, v-songbaohua@oppo.com,
+ x86@kernel.org, huang.ying.caritas@gmail.com, zhengtangquan@oppo.com,
+ riel@surriel.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ harry.yoo@oracle.com, mingzhe.yang@ly.com, stable@vger.kernel.org,
+ Lance Yang <ioworker0@gmail.com>
+References: <20250627062319.84936-1-lance.yang@linux.dev>
+ <CAGsJ_4xQW3O=-VoC7aTCiwU4NZnK0tNsG1faAUgLvf4aZSm8Eg@mail.gmail.com>
+ <CAGsJ_4z+DU-FhNk9vkS-epdxgUMjrCvh31ZBwoAs98uWnbTK-A@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <CAGsJ_4z+DU-FhNk9vkS-epdxgUMjrCvh31ZBwoAs98uWnbTK-A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On (25/06/27 09:22), Rahul Kumar wrote:
-[..]
->  static void reset_bdev(struct zram *zram)
-> @@ -1292,7 +1292,7 @@ static ssize_t recomp_algorithm_show(struct device *dev,
->  		if (!zram->comp_algs[prio])
->  			continue;
->  
-> -		sz += scnprintf(buf + sz, PAGE_SIZE - sz - 2, "#%d: ", prio);
-> +		sz += sysfs_emit_at(buf, sz, "#%d: ", prio);
->  		sz += __comp_algorithm_show(zram, prio, buf + sz);
 
-Actually, there is a tiny bug in zcomp.  It's unrelated to this
-patch, but I'll send a fix as followup, to avoid any conflicts.
+
+On 2025/6/27 14:55, Barry Song wrote:
+> On Fri, Jun 27, 2025 at 6:52 PM Barry Song <21cnbao@gmail.com> wrote:
+>>
+>> On Fri, Jun 27, 2025 at 6:23 PM Lance Yang <ioworker0@gmail.com> wrote:
+>>>
+>>> From: Lance Yang <lance.yang@linux.dev>
+>>>
+>>> As pointed out by David[1], the batched unmap logic in try_to_unmap_one()
+>>> can read past the end of a PTE table if a large folio is mapped starting at
+>>> the last entry of that table. It would be quite rare in practice, as
+>>> MADV_FREE typically splits the large folio ;)
+>>>
+>>> So let's fix the potential out-of-bounds read by refactoring the logic into
+>>> a new helper, folio_unmap_pte_batch().
+>>>
+>>> The new helper now correctly calculates the safe number of pages to scan by
+>>> limiting the operation to the boundaries of the current VMA and the PTE
+>>> table.
+>>>
+>>> In addition, the "all-or-nothing" batching restriction is removed to
+>>> support partial batches. The reference counting is also cleaned up to use
+>>> folio_put_refs().
+>>>
+>>> [1] https://lore.kernel.org/linux-mm/a694398c-9f03-4737-81b9-7e49c857fcbe@redhat.com
+>>>
+>>
+>> What about ?
+>>
+>> As pointed out by David[1], the batched unmap logic in try_to_unmap_one()
+>> may read past the end of a PTE table when a large folio spans across two PMDs,
+>> particularly after being remapped with mremap(). This patch fixes the
+>> potential out-of-bounds access by capping the batch at vm_end and the PMD
+>> boundary.
+>>
+>> It also refactors the logic into a new helper, folio_unmap_pte_batch(),
+>> which supports batching between 1 and folio_nr_pages. This improves code
+>> clarity. Note that such cases are rare in practice, as MADV_FREE typically
+>> splits large folios.
+> 
+> Sorry, I meant that MADV_FREE typically splits large folios if the specified
+> range doesn't cover the entire folio.
+
+Hmm... I got it wrong as well :( It's the partial coverage that triggers 
+the split.
+
+how about this revised version:
+
+As pointed out by David[1], the batched unmap logic in try_to_unmap_one()
+may read past the end of a PTE table when a large folio spans across two
+PMDs, particularly after being remapped with mremap(). This patch fixes
+the potential out-of-bounds access by capping the batch at vm_end and the
+PMD boundary.
+
+It also refactors the logic into a new helper, folio_unmap_pte_batch(),
+which supports batching between 1 and folio_nr_pages. This improves code
+clarity. Note that such boundary-straddling cases are rare in practice, as
+MADV_FREE will typically split a large folio if the advice range does not
+cover the entire folio.
+
