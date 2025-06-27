@@ -1,143 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3A0323E;
-	Fri, 27 Jun 2025 06:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88A4217648;
+	Fri, 27 Jun 2025 06:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751006902; cv=none; b=F5HRPYZvxle5+6bt7wHDG31FHZiF1RF0B28vQnCVQzPGGdIys1HySglN1uXjOiAsy9p+kWA3ZyiCwGI3Di/6tb9mPPIEcqqZS4QlHt/v6FftLO5V88glnaJhDrrBdqnSx7c22svo+7vhPY76ckeisvCJ11M/GvjJFLvYDadl9UI=
+	t=1751006904; cv=none; b=F+OEZhMsQdoEoCRyvTD+uAf8AzpUGZXurCCsrHZpCOrD+GSU3d9V7RfVt1gMe3IiC7YyKMAy1XqQ6ey+IFkPlQUgfSWldYTFdXeh8htBtmBaY8tSnPOE1xzMEnA3E1Zr66+L9k7fJourGDF+qjf2uDjsZLv7w0r1fsmjHsj5EVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751006902; c=relaxed/simple;
-	bh=Gk61ujEoSEVxxkZaVv4tUnsHFqXUUAQCjXVa3r0CnDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MJDAxz53z/hB8cWdppDX9hZ9m8bXYAhN5oodHNiWam6dOljwaUnlKD93S3sV/jsLlJmmPUTJDc9+rBFur5+e42HHxAiJMMpK4AxAHo7Ny7d+WfYstWoZX5wsjd9O4oclwUxRd4BOer2Mr/5SjDfIh25KxycowlVNibvy8TpONhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t08uwEq6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751006904; c=relaxed/simple;
+	bh=CPmH2UhNzzOyJtYz2BQ/oL4YX14EzvZdOTMg/i8Nq0U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nrg2BCi3tF2EWuqlkvRI1CHcsshg4E8GwKicOVp74ZBQYSl5rcAHhOU4wZNnX9g+b/m0I3FblSMc/Ggl7LMi8wjwXf5WdfieyxsMV5pReiGF6aSeoC2nrmj4OflWZEmoW18ZKvwfPrTiJrl6kvNOmOEe7xIRaDSGv+BNQ+B5zRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=a0YRaaiX; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t08uwEq6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8465FC4CEE3;
-	Fri, 27 Jun 2025 06:48:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751006901;
-	bh=Gk61ujEoSEVxxkZaVv4tUnsHFqXUUAQCjXVa3r0CnDY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=t08uwEq64ptQhfSGo4H8UuSvXroAFX2X+2ikEziO04jWE0rsW4zd0KIOUK/5v7Qcs
-	 LZsFAvWLC0LKJJ5VcE4xawcYpe+OC8GLHHfkJZxdA2Z3TYw+Qhh/DsvDR8g9yKaMnx
-	 wzyD0GvJ0uYsEYYqLvKiP5QEhL/1Te++/hiGz391m4zorOEaf2SWmPjjwX2uJF5i34
-	 MR+DnD1Fnnt1bUSpq5MbG0qsy2jRmBXK5VthA2n9737ulzhiIKW7sXqwkokWI2hJ9m
-	 5t+EPRor34f1aW4Xw/xdPqyddGr+RyPrTtZ/34rRU4fmjb++BBCGwG95wLbuDf7RHt
-	 MuWbbjAF61ZcA==
-Date: Fri, 27 Jun 2025 08:48:14 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Akira Yokosawa <akiyks@gmail.com>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, Breno Leitao <leitao@debian.org>, "David S. Miller"
- <davem@davemloft.net>, Donald Hunter <donald.hunter@gmail.com>, Eric
- Dumazet <edumazet@google.com>, Ignacio Encinas Rubio
- <ignacio@iencinas.com>, Jan Stancek <jstancek@redhat.com>, Marco Elver
- <elver@google.com>, Paolo Abeni <pabeni@redhat.com>, Randy Dunlap
- <rdunlap@infradead.org>, Ruben Wauters <rubenru09@aol.com>, Shuah Khan
- <skhan@linuxfoundation.org>, joel@joelfernandes.org,
- linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
- lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
- stern@rowland.harvard.edu
-Subject: Re: [PATCH v8 13/13] docs: parser_yaml.py: fix backward
- compatibility with old docutils
-Message-ID: <20250627084814.7f4a43d4@foz.lan>
-In-Reply-To: <ebdb0f12-0573-4023-bb7f-c51a94dedb27@gmail.com>
-References: <cover.1750925410.git.mchehab+huawei@kernel.org>
-	<d00a73776167e486a1804cf87746fa342294c943.1750925410.git.mchehab+huawei@kernel.org>
-	<ebdb0f12-0573-4023-bb7f-c51a94dedb27@gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="a0YRaaiX"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55R4D6aQ017705;
+	Fri, 27 Jun 2025 06:48:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	mSsPZr6Ke43hyQo46CPdW0QQxvYRDMtBeeUW7tXGa8Q=; b=a0YRaaiXK3fy6bYV
+	uxoSsQTQy3ytNXmSWZJ+zd6kNzw9PlvTaTu3Ui7X8TKJZzUreJEtwXw+h67m8KkE
+	W4MDh/QTeGc0nMa4wJOyFS/zhvej0bF4VFlrpCwrD56ZPGGHOHmRPHBzMVJUmeML
+	oacmAe9Yb2+qTcuc9y7cd3Z0jDt+tnPxiBBt8p1cBqRMC93nuKGNgN3g/NNDrrjZ
+	A+fhvWgihFqXCijUnJMp4WWNIG7cdY9KaRQoSYnTDoijSlZiWHWPFBTVeuqBZBC5
+	0bbntNrpwv9rgF7gMkAnucPM9uxamJeBYISjOLI3Lj3P+b0s55I0frlrvzocegYb
+	VWY0/w==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fdfx425k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 06:48:16 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55R6mFVe014123
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Jun 2025 06:48:15 GMT
+Received: from [10.216.48.74] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 26 Jun
+ 2025 23:48:09 -0700
+Message-ID: <f6ae7d50-e021-bc82-741e-935af3a4496b@quicinc.com>
+Date: Fri, 27 Jun 2025 12:18:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH V3 1/4] dt-bindings: mmc: Add dll-hsr-list for HS400 and
+ HS200 modes
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Sachin Gupta
+	<quic_sachgupt@quicinc.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>, "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bhupesh Sharma <bhupesh.sharma@linaro.org>
+CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
+        <quic_bhaskarv@quicinc.com>, <quic_mapa@quicinc.com>,
+        <quic_nitirawa@quicinc.com>, <quic_sartgarg@quicinc.com>,
+        <kernel@oss.qualcomm.com>
+References: <20250122094707.24859-1-quic_sachgupt@quicinc.com>
+ <20250122094707.24859-2-quic_sachgupt@quicinc.com>
+ <72b02fd1-5195-4bb0-b01d-5481b49a5680@kernel.org>
+ <379e9199-4a9e-cd38-20cb-0fbd76fa33b3@quicinc.com>
+ <abdde4ff-eae2-44c4-8608-89c762790549@kernel.org>
+From: Ram Prakash Gupta <quic_rampraka@quicinc.com>
+In-Reply-To: <abdde4ff-eae2-44c4-8608-89c762790549@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-
-Hi Akira,
-
-Em Fri, 27 Jun 2025 08:59:16 +0900
-Akira Yokosawa <akiyks@gmail.com> escreveu:
-
-> Hi Mauro,
-> 
-> On Thu, 26 Jun 2025 10:13:09 +0200, Mauro Carvalho Chehab wrote:
-> > As reported by Akira, older docutils versions are not compatible
-> > with the way some Sphinx versions send tab_width. Add a code to
-> > address it.
-> >   
-> 
-> Tested OK against debian:11's and almalinux:9's Sphinx 3.4.3, both of
-> which have docutils 0.16 bundled.
-> 
-> opensuse/leap:15.6's Sphinx 4.2.0 has docutils 0.16 with it, but it is
-> python 3.6 base and it does't work with the ynl integration.
-> As opensuse/leap:15.6 provides Sphinx 7.2.6 (on top of python 3.11) as
-> an alternative, obsoleting it should be acceptable.  
-
-Thank you for the tests! At changes.rst we updated the minimum
-python requirement to:
-
-	Python (optional)      3.9.x            python3 --version
-
-So, I guess we can keep this way. 
-
-The 3.9 requirement reflects the needs of most scripts. Still, for doc build, 
-the min requirement was to support f-string, so Python 3.6.
-
-In this specific case, it is likely some minor incompatibility, as vermin 
-tool thinks that 3.6 would be enough: 
-
-	$ vermin --no-tips --hidden --pessimistic -v tools/net/ynl/pyynl/ynl_gen_rst.py Documentation/sphinx/parser_yaml.py tools/net/ynl/pyynl/lib/*.py
-	Detecting python files..
-	Analyzing 6 files using 24 processes..
-	2.3, 3.0     /new_devel/v4l/docs/Documentation/sphinx/parser_yaml.py
-	~2, ~3       /new_devel/v4l/docs/tools/net/ynl/pyynl/lib/__init__.py
-	!2, 3.6      /new_devel/v4l/docs/tools/net/ynl/pyynl/lib/doc_generator.py
-	!2, 3.6      /new_devel/v4l/docs/tools/net/ynl/pyynl/lib/nlspec.py
-	!2, 3.6      /new_devel/v4l/docs/tools/net/ynl/pyynl/lib/ynl.py
-	!2, 3.4      /new_devel/v4l/docs/tools/net/ynl/pyynl/ynl_gen_rst.py
-	Minimum required versions: 3.6
-	Incompatible versions:     2
-
-If the change is minimal, I don't mind having it fixed.
-
-Anyway, IMO we need to add a checker at scripts/sphinx-pre-install to
-warn against too old Python versions.
-
-> 
-> Reported-by: Akira Yokosawa <akiyks@gmail.com>
-> > Closes: https://lore.kernel.org/linux-doc/598b2cb7-2fd7-4388-96ba-2ddf0ab55d2a@gmail.com/
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
-> Tested-by: Akira Yokosawa <akiyks@gmail.com>
-> 
->         Thanks, Akira
-> 
-> > ---
-> >  Documentation/sphinx/parser_yaml.py | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/Documentation/sphinx/parser_yaml.py b/Documentation/sphinx/parser_yaml.py
-> > index 8288e2ff7c7c..1602b31f448e 100755
-> > --- a/Documentation/sphinx/parser_yaml.py
-> > +++ b/Documentation/sphinx/parser_yaml.py
-> > @@ -77,6 +77,10 @@ class YamlParser(Parser):
-> >  
-> >                  result.append(line, document.current_source, lineoffset)
-> >  
-> > +            # Fix backward compatibility with docutils < 0.17.1
-> > +            if "tab_width" not in vars(document.settings):
-> > +                document.settings.tab_width = 8
-> > +
-> >              rst_parser = RSTParser()
-> >              rst_parser.parse('\n'.join(result), document)
-> >    
-> 
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 069sUsop3btBy8DGgJZzhcy9wXDqBk3B
+X-Proofpoint-ORIG-GUID: 069sUsop3btBy8DGgJZzhcy9wXDqBk3B
+X-Authority-Analysis: v=2.4 cv=MtZS63ae c=1 sm=1 tr=0 ts=685e3eb0 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=RBDf3ioivJUjA6cGglgA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDA1MiBTYWx0ZWRfX9lpa1pXDb9Bk
+ dGjVD21mfbTT00m4gM9C1BqSOGS9HYpf2PhoOJ4V0VPCdu+Cz+w/Tk3BfX/jgDNrVoWwxLKhYZU
+ 8TXJ6F/pkc6wrlyrzoobQaBHpmX1KmuMywMktm4Wq7pcR5GT51RTDPy61WlGW1b9atsPPlM1EMM
+ 6BN7aHTdmr+1mOCuzShUEkoVLwRgN8I0hdraE99bCktOjDz2rvqqrkMDjzSwlWxA+R0xUiLg4DK
+ qMRLpBjf2goaREdR2Th2+R1tV//cNFLBbQRdS1Pis86TCriOzxe6j3JUANoeTGMocUhOlD4sNyG
+ AIvmOzH+pkKu2s0L/QtRvK6IFtXrVzq+ferizxlThhBGTO3HWG/QHYoNNtGUICDI9UAx5SzpDu6
+ Hnb8en4Pg75ZhFW3vP9vYHmxRIue1TZDU9XX1+o/Vr3Gu8Spn8E4B17Yw/x0jgKhDVAm8lJV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_02,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 impostorscore=0 suspectscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 malwarescore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1015 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506270052
 
 
+On 6/26/2025 11:12 PM, Krzysztof Kozlowski wrote:
+> On 26/06/2025 16:16, Ram Prakash Gupta wrote:
+>> On 1/22/2025 3:56 PM, Krzysztof Kozlowski wrote:
+>>> On 22/01/2025 10:47, Sachin Gupta wrote:
+>>>> Document the 'dll-hsr-list' property for MMC device tree bindings.
+>>>> The 'dll-hsr-list' property defines the DLL configurations for HS400
+>>>> and HS200 modes.
+>>>>
+>>>> Signed-off-by: Sachin Gupta <quic_sachgupt@quicinc.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 5 +++++
+>>>>  1 file changed, 5 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+>>>> index 8b393e26e025..65dc3053df75 100644
+>>>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+>>>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+>>>> @@ -133,6 +133,11 @@ properties:
+>>>>      $ref: /schemas/types.yaml#/definitions/uint32
+>>>>      description: platform specific settings for DLL_CONFIG reg.
+>>>>  
+>>>> +  qcom,dll-hsr-list:
+>>>> +    maxItems: 10
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> uint32 has only one item. Anyway, there is already DLL there, so don't
+>>> duplicate or explain why this is different. Explain also why this is not
+>>> deducible from the compatible.
+>
+> Timeline still amazes me. I will be grumpy on this thread.
+>
+>> I will change it to reflect array from uint32.
+>> There is change with artanis DLL hw addition where it need total of 5 entries
+>> (dll_config, dll_config_2, dll_config_3, dll_usr_ctl, ddr_config)
+>> for each HS400 and HS200 modes, hence the new addition in dt. And these values
+>> are not fixed and varies for every SoC, hence this needs to be passed through
+>> dt like it was passed earlier for qcom,dll-config & qcom,ddr-config.
+>
+> Eh, no. That's not a valid reason. It's still SoC deducible. Don't bring
+> your downstream practices here, but remove EVERYTHING from downstream
+> and start doing things like upstream is doing.
+>
+> Best regards,
+> Krzysztof
+
+Sorry I did not get it - you mean to say keep these values in driver file?
+how is it possible to tie these value with only one compatible which can vary
+with every soc or you are suggesting me to make code change in driver for every
+target having artanis dll hw.
+
+And sorry but considering upstream only this design was put in place, its not
+about downstream, since there are already dll_config and ddr_config which are
+passed through dt, its logical here to pass rest of the dll related parameters
+through dt only.
 
 Thanks,
-Mauro
+Ram
+
