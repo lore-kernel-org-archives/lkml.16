@@ -1,228 +1,216 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011032.outbound.protection.outlook.com [52.101.70.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB9B29A9C9;
-	Fri, 27 Jun 2025 11:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751023413; cv=fail; b=STi9oR4yrf4v4HzQu3gqI/KkgSkQNXjC3AIuLwU/sEZUC53y/U+ma2s+hPJ/IATfcDfZFlBWRfai3xOd8yKffIo2vB/sR3oQYYAGSNBx/qXIgIxZ1PFS5C6qKoRtS7T71G3AWFVcPTmNNiuOl7DPrCFgH9w2W6pUFIC0VCvRpGk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751023413; c=relaxed/simple;
-	bh=KWKuxv9G3Nz7I8evOgJMDbytUcw2Xcxnop0DEu4RB0I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ufKXSs+FL5IjB2OSe6y3tEsU1ppTwfTqjSb7qJ/sAh8nPjVFDyT7NSVPjhODGr/iyxL6VbCnzWAWlKhU+WksFPeUww4q25bs33cWL3ZENp8xfisCdnIphcHjkDklEOiL3GuclD0P6kpMl2uU1dliciuwL43WvRFi+NdtFrCvwSc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=2n.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=c47gY6Ot; arc=fail smtp.client-ip=52.101.70.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=2n.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F1629A9E4
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751023414; cv=none; b=tq2vLgx+RlGNjL3/jT2Z+tZBuLp9hxUo2lUBwtKVIQN0sLlpg+ovk9wA8rqv7sT41hRoLPfYgcmAYL/zFQ6gFxx054zsBncMZfzJ+CUI6zOS26HD454+oN/3Ij5hu0oU8lZhpOI1ANjaUDrR0lY+tdZqp0EzMhHenRPdI7tbmOI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751023414; c=relaxed/simple;
+	bh=avxtm9tRxoS2zNKPMFem+AIRUXJax9YQN0ZSTamMQDE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mgGhowFoPKrVMw0D4lal1T4aJtsdBi1FqPT1VCgaLsuakzWaVSMKLfzprYoidJFdL7d8y7i61aJVD7wZt7CvzUvjn+2m+/N2HXK6MDtSzQsl8pGtKf0qiOm4XN5Tgj+uspTdF7kzXD+rnqhJzVBE9jND7Quw6IZ/e02fYZtgJMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rigtTqqp; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="c47gY6Ot"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Jad46KvXzLCpFqJchJ6nCPmtNC534ltlFGY0YPquZEX7/++9CSyZQqh0NZL5YzqR3OPl4OzgE+wfwxOv+ee9St5g37Ps3SgPL8U9oRvDNUY0Hvg5zeg9mGtdgdU2YBkVb9EBMc2mSEjG3Dv9kUE2s6pHFCpzrXxZ79IyTltcSAq3cF9HCn6xy4ENidzlXzzqu66IlL20smwMjtOAZGkXLo1lPZlyR8QJbfBMp6GFDj9YBfPQsUcSuoMNWj6s3A8LhEIHuOrbIN+b1dLzOSW4pCyzlxmh7AMgGcQVHSpI0cepOd/LMuL813hICDRyUhZegw54w+RBWCGkr5emlijtgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xnd5mDNNmEH7bSz3i2HcGCcnIY6VGQ7LcTsjRCu4tpg=;
- b=tWGae8d7ER2TTuNinLb2P6CwvaJMTMrVFz5yNRUt0FRjiQz6quT1dJyIPdqsKaPfG850dUKlxvblq4/6jpjd9TfPt2f0Vx2ss2YqfMtk9DM+UKHan9+ysYTqzSZE5JrRZ90zbfnHJ/pDGvTtHRQEVbb62f4ZBcjgNLv40IW14Yqs6QjAZ+Tc3ZV4GnbXP9mask6230EykkWqXsLaXPq2j42J+Y//npe2te+9H+m9X/pcDzX5qGJlGhLfl8LbBXsg2nY/c0N9IqiZIh8K1sJHZEgljMLmz4QLG9ETAnu2RoVbLWKx7OuRf2lWpgVTR+EwUUf2pgLXhfnZg3FPqB1P+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 195.60.68.100) smtp.rcpttodomain=broadcom.com smtp.mailfrom=2n.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=axis.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xnd5mDNNmEH7bSz3i2HcGCcnIY6VGQ7LcTsjRCu4tpg=;
- b=c47gY6OtF3VAEecZn79hClbz2FwhXD5IUB6QFYBm00rZbSO2BhAUS+zA0MdK4XlHw/XISbjE4oBJO46vA3hJuWNvOdAPKE3m9xyqnWVIu83jXOMXPQur0czoiqwyemuJcfFnoyYN8kKdHG4/kRfVBdEZyWZ30FNKmnd21JRh5MQ=
-Received: from AM5PR0101CA0027.eurprd01.prod.exchangelabs.com
- (2603:10a6:206:16::40) by PAWPR02MB9856.eurprd02.prod.outlook.com
- (2603:10a6:102:2e4::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Fri, 27 Jun
- 2025 11:23:26 +0000
-Received: from AM2PEPF0001C70A.eurprd05.prod.outlook.com
- (2603:10a6:206:16:cafe::1) by AM5PR0101CA0027.outlook.office365.com
- (2603:10a6:206:16::40) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.21 via Frontend Transport; Fri,
- 27 Jun 2025 11:23:21 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
- smtp.mailfrom=2n.com; dkim=none (message not signed) header.d=none;dmarc=fail
- action=none header.from=axis.com;
-Received-SPF: Pass (protection.outlook.com: domain of 2n.com designates
- 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com; pr=C
-Received: from mail.axis.com (195.60.68.100) by
- AM2PEPF0001C70A.mail.protection.outlook.com (10.167.16.198) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8880.14 via Frontend Transport; Fri, 27 Jun 2025 11:23:26 +0000
-Received: from pcczc3457tyd.2n.cz.axis.com (10.4.0.13) by se-mail01w.axis.com
- (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Fri, 27 Jun
- 2025 13:23:25 +0200
-From: =?UTF-8?q?Kamil=20Hor=C3=A1k=20-=202N?= <kamilh@axis.com>
-To: <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
-	<andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <kamilh@axis.com>, <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <f.fainelli@gmail.com>, <robh@kernel.org>,
-	<andrew+netdev@lunn.ch>
-Subject: [PATCH net v2 1/4] net: phy: MII-Lite PHY interface mode
-Date: Fri, 27 Jun 2025 13:23:03 +0200
-Message-ID: <20250627112306.1191223-2-kamilh@axis.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250627112306.1191223-1-kamilh@axis.com>
-References: <20250627112306.1191223-1-kamilh@axis.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rigtTqqp"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a6e2d85705so1200867f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:23:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751023410; x=1751628210; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/GADAYPYH6XtwZCwZvDUpQ7sXCaWC25QDTPuEwyrGf8=;
+        b=rigtTqqpMFWHlagmaqgyirNORK3mQg5+2XquvfVSZTw+3Xq4Ejxtk4XJRHarbJsRxF
+         xuHr/qxPsEIpuEXfXWykKAUjTItzM4zNfGpoZwKhiLs6wk/Nbykmm2Z2ZmVnoFHOiGyc
+         EPxn86zmjSELR9lW3iaYrgw78QKd/g5nxwOEca8f9E/j31NQddp2PNaLQ3pdSNkU5f9B
+         aRgX+DWy1wss8FdH7wr1f4eL71iNeRq3TuDPDO3newQBKM/HfGhAoO26amuR53Wo1bX1
+         uqO5ixIUuPOo8/pXsA1w1LUEVLtx1YBRpjy3jZNsKNaDaKaUIrgJzziujc3fQCef9nKW
+         /LYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751023410; x=1751628210;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/GADAYPYH6XtwZCwZvDUpQ7sXCaWC25QDTPuEwyrGf8=;
+        b=XtxUQTl06PUTeuEt0LgPaa9fJ9LyILGc1aRtW/F97ZXFznf5MDN6xYxr053M1qMhI+
+         XBCMflzlEdRNR1dSuwDGb5JEAjumhCkuttIi1F56vH+uND0vr5tL/AI+lO8pp2rOi/vC
+         ubgxzuBKit1WyOQGTVPdIV7zJMm8mH9Ki7JzxTDHPVONgRLj+9d0yYoLjKL5CZPK+FTH
+         cXImBZlzTuj9F7OOmlUKToVf33HDJH5wqlOvKf+y2Mw+zA/bWAymKMh9cSBqhsWm9IFY
+         LvDfpJx2vbdzvobb1Y6gLE8sDfX8Ai4DVH2lPYd4IkXUH07uCHYXCE6vpYS0euKdQZw3
+         nvYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvP4UVXP5lJsEzi+m5aa7CyBEnlC7vB/7g6IUyIk6XeBhi7sZUXM7bA2vstHP+vlScbhg7ozzapoN5MJo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTyr7JjN5GCLQ/F2GVymLehtnhBmzEW8tnCHBwAzqH50HsgoTv
+	SPab1UmIlSUIp7HRiS4UliJ4RJh0TiGG3NsfQZhqxnPjktwtsn39Fqxu/ggiF8mlytk=
+X-Gm-Gg: ASbGnctTTE5vRgSVoqWPm+8Rfl591gOP7H1pA0w8TSlpJ/cK6SZS70Qgvgh5pPN0qQF
+	JQ6lTcfSUmOxUEn7lFUjC9znGFrCrEHvpPPMVXriT/JMRzJqhyMafwIhjcKi8t227O7tChT8lgx
+	B6BUnQn9acXQaIe9HoLT32EHR9GhySmdiZt3ijtgyG0FeT3cjuvguIBVpUehaiXtyiZflUxuRlY
+	LrCT5DaCTbmvqyhWcx6BVz90f7dWPxFSF6/K3QOqFWflT69FrZfCOOsylGjZ3bgrRHsnAXGXSuF
+	M0J5wcWAxkpQWHNy+iy8I18RclqZ9NqRzaz2/Un6igCC9l5uETyeekgnjPWcP41e2FM=
+X-Google-Smtp-Source: AGHT+IHpjRR+lhjSBz+H5Y+FWjh/7wV/egv/qDnpzKkXfpV6p0HxBrpcsCDQ+17zG3AKUjPpxcqhvw==
+X-Received: by 2002:adf:b608:0:b0:3a4:cbc6:9db0 with SMTP id ffacd0b85a97d-3a902d88058mr2114575f8f.51.1751023410387;
+        Fri, 27 Jun 2025 04:23:30 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fa750sm2416679f8f.25.2025.06.27.04.23.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 04:23:29 -0700 (PDT)
+Message-ID: <78f2179d-26c2-47f0-bc19-b72e5e51ad29@linaro.org>
+Date: Fri, 27 Jun 2025 12:23:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail01w.axis.com
- (10.20.40.7)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM2PEPF0001C70A:EE_|PAWPR02MB9856:EE_
-X-MS-Office365-Filtering-Correlation-Id: 491d3f61-d474-41f4-ccfb-08ddb56d08f5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?amlON2M2bVZqR1JGQmEvNzFZcURmdWhINHdueGNtTktJZ1QrWXRNSXhwbzNk?=
- =?utf-8?B?NDNLVEhXTFVyTXFMVlRyVzM3aUFlOW56TFVodGM3b01JRDhGRHRraVBWMi8x?=
- =?utf-8?B?SG4yRGFWeHBRRzkvZVBvRVNXdEU5UTllRjlEb2hFb1pvNU9CQVErV1pkdVNn?=
- =?utf-8?B?ZjNWWGxEMVgvQ0Mwd3NoS3N4enJ1azhYVmFzMWJJd2xTRTJ0bFVtcEQydjBm?=
- =?utf-8?B?T0Z3ZXJwdjhaZEVXTmtOWDY2SldPOHNDOTVFU0Z2NXkxUFFzT2ZvR0VMNThP?=
- =?utf-8?B?QlNqWXgwWFFqeCtMNXRjNGtoV292U0xXaWJXZUNhRllrN2c5ZGQ2bVd6RXFE?=
- =?utf-8?B?c0RlaWcxUkU5ZkRGWlp2SVBGc3g0cTI5b1RHQ2dHMmRQT1NiSlBsTWdieDcz?=
- =?utf-8?B?d0lpQnpFVGU0ZFd1ck9KbVJpajhvRDhQR1l3dWMzZ2NWTnplNDFjaUpVa2xy?=
- =?utf-8?B?MjZsU2dSTGUzQnBZQlY4ZUszT0NCeVF2MkxhRjNxUEh6RXcxNmgwRnV3YWt5?=
- =?utf-8?B?dVlOcWZJMC82cTlNSEFrUTc3akRjMlBxODRrbkl5SkpiejcxWk9STmt1QkZz?=
- =?utf-8?B?ZGVIeWQydGFITEhvaCtvUVdNb01uVzh5NjlZdUEwd21SWWRubmdPQ1AxaWZx?=
- =?utf-8?B?UjYyK1BFUnptQ2NZaWlTUDVrOTlabERTK2lGNHU2QXRXcUlpVFcwMldyRnpk?=
- =?utf-8?B?aEUwTk9VRUh2S3VZVm1RQWV6MTF1M3pyYlFkV2d4WE4wajMySzJ1ZlpOTFZC?=
- =?utf-8?B?RVhYOEErS0xEUFRreU10eW1tSlZETjZBcEdKY0UwNjJVeVFnYVhORW1kS3JC?=
- =?utf-8?B?dGsyOWVaMmM1UGIxbU9lL1A1Mk1TMTRiWDZKVzhlRWt3NVZyZGd5eVdCM0Ju?=
- =?utf-8?B?NE9MNmhIbHZVczQ0Y0RzOGxaZmhKU2VVcG5iUkJhd29PVEx0SFdmS090NjJx?=
- =?utf-8?B?YjZPc2lYYXdFY01KcW1iak9GWmhJUFU0eHlBWWEwbmthWmNQRzMzS25VWWVV?=
- =?utf-8?B?SlRqNU9PT09qbWRTTlBXVVVHSU5pb3dBNzlxenorU1h4eWlVOExYaGFwNjRQ?=
- =?utf-8?B?R2lra2VjYmtPNm9PZFBVaDhXSkZYdEtrTGVnVUQ0MSt4N2xFa3o4L0NhRFhj?=
- =?utf-8?B?WDAyVFZFaGxQOG5hSkdiVzlTcHN0K2c5NHRwRGVaWmJEZVpXMWtQWHFEbXZk?=
- =?utf-8?B?Rjg0cmM0YnBDb0hIYmxpNnd6UDZudDZKRUl1ZXJFWmx4cy9RNE03M3pTUFJG?=
- =?utf-8?B?N3hWci9mbmdPa3NFZWRIZXV0TUhKL29jM3NPVGxwWVQrU0ZWQlpNVUhyY2pz?=
- =?utf-8?B?TDlrV0VNRnhOVUpJb3ZIU2pOeUZHck0rb0crL0dBZDd4N2ErbDU4VzBhbkx1?=
- =?utf-8?B?Uy9meEJkN0c1MWpmY2txNUVNaTE4aUJrV0daTk9rRWp6bE54d2pZbnFHUHpi?=
- =?utf-8?B?L0RtOG5tMXlwWHgwZERxQVBHRXVxWXQwM0FEaU5mTTN2cHV2WlRGNFB4ZUl5?=
- =?utf-8?B?dzV2M0NFbWttdS90Z21ORGVtNUxSbTU3OUYySUFhSE1HWXRHUUxHaFpIdUtG?=
- =?utf-8?B?RFhMVkNnbmdRbTZFMGNsazh1Z2Q1djl4WE5FYm9VZUdSaGV5a3dmY3FUMGdD?=
- =?utf-8?B?eGVCMVRmQ0RleTViK2xxbFJkb0hVZEVGKzBBelM3clpPdlcrUU15SStSK2xn?=
- =?utf-8?B?T1UrSCtqcHllVmVDejNKZlNLM09KMVB0M2kxZXozY29xdkhacElibnM0VW1G?=
- =?utf-8?B?WTNGSUc0Y2lGYk5KSGJoN1ROeU5iTy9UYWE5ckduNmt6VE1la1BYMWtCSzhK?=
- =?utf-8?B?TDBmL0RDT2ZXNmhhbGRwVWZKcDhwK2ZoVmRlWlRKd2xaSVUxczlWdHdxaXJ4?=
- =?utf-8?B?NTdhS085amsrWnkraVFqU1VFbFhwK1BLb0JTSmZtSFRCTXVMbHJ3TWp1aDh1?=
- =?utf-8?B?TzJJYitNa2lkTW1iRFNZWXlIK1d1RlR5ZWkyR3JXdFh4MWxIaG91b1RLTXZQ?=
- =?utf-8?B?TWlISXBEUElXdEw5dzNVaEw5WEtuVHkvamhwVVkzR0QrVlRvYlZVS2dmNTdJ?=
- =?utf-8?B?bWY3Z3QrdFFKVTl2dWNRNjFFTEowdUxtSHFGZz09?=
-X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026)(7416014)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 11:23:26.2445
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 491d3f61-d474-41f4-ccfb-08ddb56d08f5
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM2PEPF0001C70A.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR02MB9856
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] coresight-tmc: Add configurable timeout for flush and
+ tmcready
+To: Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, Leo Yan <leo.yan@arm.com>
+Cc: kernel@oss.qualcomm.com, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+References: <20250627-flush_timeout-v1-1-2f46a8e9f842@quicinc.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250627-flush_timeout-v1-1-2f46a8e9f842@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Some Broadcom PHYs are capable to operate in simplified MII mode,
-without TXER, RXER, CRS and COL signals as defined for the MII.
-The MII-Lite mode can be used on most Ethernet controllers with full
-MII interface by just leaving the input signals (RXER, CRS, COL)
-inactive. The absence of COL signal makes half-duplex link modes
-impossible but does not interfere with BroadR-Reach link modes on
-Broadcom PHYs, because they are all full-duplex only.
 
-Add MII-Lite interface mode, especially for Broadcom two-wire PHYs.
 
-Signed-off-by: Kamil Horák - 2N <kamilh@axis.com>
----
- drivers/net/phy/phy-core.c | 1 +
- drivers/net/phy/phy_caps.c | 4 ++++
- drivers/net/phy/phylink.c  | 1 +
- include/linux/phy.h        | 4 ++++
- 4 files changed, 10 insertions(+)
+On 27/06/2025 12:10 pm, Yuanfang Zhang wrote:
+> The current implementation uses a fixed timeout via
+> coresight_timeout(), which may be insufficient when multiple
+> sources are enabled or under heavy load, leading to TMC
+> readiness or flush completion timeout.
+> 
+> This patch introduces a configurable timeout mechanism for
+> flush and tmcready.
+> 
 
-diff --git a/drivers/net/phy/phy-core.c b/drivers/net/phy/phy-core.c
-index e177037f9110..b2df06343b7e 100644
---- a/drivers/net/phy/phy-core.c
-+++ b/drivers/net/phy/phy-core.c
-@@ -115,6 +115,7 @@ int phy_interface_num_ports(phy_interface_t interface)
- 		return 0;
- 	case PHY_INTERFACE_MODE_INTERNAL:
- 	case PHY_INTERFACE_MODE_MII:
-+	case PHY_INTERFACE_MODE_MIILITE:
- 	case PHY_INTERFACE_MODE_GMII:
- 	case PHY_INTERFACE_MODE_TBI:
- 	case PHY_INTERFACE_MODE_REVMII:
-diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
-index 38417e288611..b4a4dea3e756 100644
---- a/drivers/net/phy/phy_caps.c
-+++ b/drivers/net/phy/phy_caps.c
-@@ -316,6 +316,10 @@ unsigned long phy_caps_from_interface(phy_interface_t interface)
- 		link_caps |= BIT(LINK_CAPA_100HD) | BIT(LINK_CAPA_100FD);
- 		break;
- 
-+	case PHY_INTERFACE_MODE_MIILITE:
-+		link_caps |= BIT(LINK_CAPA_10FD) | BIT(LINK_CAPA_100FD);
-+		break;
-+
- 	case PHY_INTERFACE_MODE_TBI:
- 	case PHY_INTERFACE_MODE_MOCA:
- 	case PHY_INTERFACE_MODE_RTBI:
-diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index 0faa3d97e06b..766cad40f1b8 100644
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -234,6 +234,7 @@ static int phylink_interface_max_speed(phy_interface_t interface)
- 	case PHY_INTERFACE_MODE_SMII:
- 	case PHY_INTERFACE_MODE_REVMII:
- 	case PHY_INTERFACE_MODE_MII:
-+	case PHY_INTERFACE_MODE_MIILITE:
- 		return SPEED_100;
- 
- 	case PHY_INTERFACE_MODE_TBI:
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index e194dad1623d..6aad4b741c01 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -103,6 +103,7 @@ extern const int phy_basic_ports_array[3];
-  * @PHY_INTERFACE_MODE_QUSGMII: Quad Universal SGMII
-  * @PHY_INTERFACE_MODE_1000BASEKX: 1000Base-KX - with Clause 73 AN
-  * @PHY_INTERFACE_MODE_10G_QXGMII: 10G-QXGMII - 4 ports over 10G USXGMII
-+ * @PHY_INTERFACE_MODE_MIILITE: MII-Lite - MII without RXER TXER CRS COL
-  * @PHY_INTERFACE_MODE_MAX: Book keeping
-  *
-  * Describes the interface between the MAC and PHY.
-@@ -144,6 +145,7 @@ typedef enum {
- 	PHY_INTERFACE_MODE_QUSGMII,
- 	PHY_INTERFACE_MODE_1000BASEKX,
- 	PHY_INTERFACE_MODE_10G_QXGMII,
-+	PHY_INTERFACE_MODE_MIILITE,
- 	PHY_INTERFACE_MODE_MAX,
- } phy_interface_t;
- 
-@@ -260,6 +262,8 @@ static inline const char *phy_modes(phy_interface_t interface)
- 		return "qusgmii";
- 	case PHY_INTERFACE_MODE_10G_QXGMII:
- 		return "10g-qxgmii";
-+	case PHY_INTERFACE_MODE_MIILITE:
-+		return "mii-lite";
- 	default:
- 		return "unknown";
- 	}
--- 
-2.39.5
+What kind of values are you using? Is there a reason to not increase the 
+global one?
+
+I don't think it's important what value we choose because it's only to 
+stop hangs and make it terminate eventually. As far as I can see it 
+wouldn't matter if we set it to a huge value like 1 second. That would 
+only cause a big delay when something has actually gone wrong. Under 
+normal circumstances the timeout won't be hit so it doesn't really need 
+to be configurable.
+
+> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+> ---
+>   drivers/hwtracing/coresight/coresight-tmc-core.c | 43 ++++++++++++++++++++++--
+>   1 file changed, 41 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-core.c b/drivers/hwtracing/coresight/coresight-tmc-core.c
+> index 88afb16bb6bec395ba535155228d176250f38625..286d56ce88fe80fbfa022946dc798f0f4e72f961 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
+> @@ -8,6 +8,7 @@
+>   #include <linux/kernel.h>
+>   #include <linux/init.h>
+>   #include <linux/types.h>
+> +#include <linux/delay.h>
+>   #include <linux/device.h>
+>   #include <linux/idr.h>
+>   #include <linux/io.h>
+> @@ -35,13 +36,31 @@ DEFINE_CORESIGHT_DEVLIST(etb_devs, "tmc_etb");
+>   DEFINE_CORESIGHT_DEVLIST(etf_devs, "tmc_etf");
+>   DEFINE_CORESIGHT_DEVLIST(etr_devs, "tmc_etr");
+>   
+> +static u32 tmc_timeout;
+> +
+> +static void tmc_extend_timeout(struct csdev_access *csa, u32 offset, int pos, int val)
+> +{
+> +	int i;
+> +
+> +	for (i = tmc_timeout; i > 0; i--) {
+> +		if (i - 1)
+
+I didn't get what the if is for here? Removing it does basically the 
+same thing, but if you do want to keep it maybe if (i > 1) is more 
+explanatory.
+
+> +			udelay(1);
+
+Can you not do udelay(tmc_timeout)?
+
+> +	}
+> +}
+> +
+> +static int tmc_wait_status(struct csdev_access *csa, u32 offset, int pos, int val)
+> +{
+> +	return coresight_timeout_action(csa, offset, pos, val,
+> +			tmc_extend_timeout);
+> +}
+> +
+>   int tmc_wait_for_tmcready(struct tmc_drvdata *drvdata)
+>   {
+>   	struct coresight_device *csdev = drvdata->csdev;
+>   	struct csdev_access *csa = &csdev->access;
+>   
+>   	/* Ensure formatter, unformatter and hardware fifo are empty */
+> -	if (coresight_timeout(csa, TMC_STS, TMC_STS_TMCREADY_BIT, 1)) {
+> +	if (tmc_wait_status(csa, TMC_STS, TMC_STS_TMCREADY_BIT, 1)) {
+>   		dev_err(&csdev->dev,
+>   			"timeout while waiting for TMC to be Ready\n");
+>   		return -EBUSY;
+> @@ -61,7 +80,7 @@ void tmc_flush_and_stop(struct tmc_drvdata *drvdata)
+>   	ffcr |= BIT(TMC_FFCR_FLUSHMAN_BIT);
+>   	writel_relaxed(ffcr, drvdata->base + TMC_FFCR);
+>   	/* Ensure flush completes */
+> -	if (coresight_timeout(csa, TMC_FFCR, TMC_FFCR_FLUSHMAN_BIT, 0)) {
+> +	if (tmc_wait_status(csa, TMC_FFCR, TMC_FFCR_FLUSHMAN_BIT, 0)) {
+>   		dev_err(&csdev->dev,
+>   		"timeout while waiting for completion of Manual Flush\n");
+>   	}
+> @@ -561,11 +580,31 @@ static ssize_t stop_on_flush_store(struct device *dev,
+>   
+>   static DEVICE_ATTR_RW(stop_on_flush);
+>   
+> +static ssize_t timeout_cfg_show(struct device *dev,
+> +				struct device_attribute *attr, char *buf)
+> +{
+> +	return scnprintf(buf, PAGE_SIZE, "%d\n", tmc_timeout);
+> +}
+> +
+> +static ssize_t timeout_cfg_store(struct device *dev,
+> +				 struct device_attribute *attr,
+> +				 const char *buf, size_t size)
+> +{
+> +	unsigned long val;
+> +
+> +	if (kstrtoul(buf, 0, &val))
+> +		return -EINVAL;
+> +	tmc_timeout = val;
+> +
+> +	return size;
+> +}
+> +static DEVICE_ATTR_RW(timeout_cfg);
+>   
+
+Seeing as the existing timeout is global for all devices, if we do want 
+a configurable one shouldn't we make the global one configurable rather 
+than per-device? That seems too fine grained to me.
+
+>   static struct attribute *coresight_tmc_attrs[] = {
+>   	&dev_attr_trigger_cntr.attr,
+>   	&dev_attr_buffer_size.attr,
+>   	&dev_attr_stop_on_flush.attr,
+> +	&dev_attr_timeout_cfg.attr,
+>   	NULL,
+>   };
+>   
+> 
+> ---
+> base-commit: 408c97c4a5e0b634dcd15bf8b8808b382e888164
+> change-id: 20250627-flush_timeout-a598b4c0ce7b
+> 
+> Best regards,
 
