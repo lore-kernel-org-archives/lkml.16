@@ -1,116 +1,218 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861EE8F54
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35402D3EFC
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751030427; cv=none; b=cfQrmZoh8jkHnFbU1PG6nrVyNLglkawbqmbcd9U2mWn8/GFzsVFKXbNPmPXJwWHbPzVGcgyuzQ5s2B3JETv+G0RXSH49DUM9Tml+J5hntvDyGJvepHgdhkaP4Xhud0Bd5s2b5i8Yltpuz2yLBlrPx24vS1GPDvYruPjwzPrhlZs=
+	t=1751030512; cv=none; b=a4CfKGGXkeFpGsYQKKf1gGbXnIyxjwKSO24vCYFIKzUpwquRbCm5irddtAXuSyo4JlkXusjgf4bF7huUrdS2OtzVdojxlxC94OhXuxpGeeQ6peUQSK7gNNg2T7dQvDPA9uBmXsDFg7/+y5KWJ8QRfkrX5tcea/c37TDW4nxLjEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751030427; c=relaxed/simple;
-	bh=+IqDP/5D898mg5bRqXoKKwUlqIdUkK66zr4cFdrzj/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p2YXddD8+FBJCplfKncjtYPhUujxqfaN3i4avQJe5pJCQx5hCmHjzWHK5Yjc5Oe8QlCK49y7Pi/3eStR/m4S5yowp6MeT/mFli8GMy7URKzYqPXJdvF2btMl4cxNbFGhSxx8XN5e0bFSTffCuixS/HDrWGr76sDU7nYJG21Ko1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com; spf=none smtp.mailfrom=readmodwrite.com; dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b=WwRuREss; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=readmodwrite.com
+	s=arc-20240116; t=1751030512; c=relaxed/simple;
+	bh=BvrWBqLyXSgGHcj6myuVrrhwlg3RU4CI/Jsa3Ytk9zM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tAKMXe9TiqqpBkbghD/z1eNjJqV/QEWBMtb4qqrlNTXUgxfA97CKRJLIpnbjTmiYT3ues7dL5xnt8CRHhhT1aqj8PCBN0V3XmuMABmoUCDIneLDfjllGir5vXvs/JnPbXuPcX+V6KonOLNCY70sIHB5Jur3/S4bMZEudxjwDiiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WTNKf26q; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b="WwRuREss"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3122368d7cfso1612881a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 06:20:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=readmodwrite-com.20230601.gappssmtp.com; s=20230601; t=1751030426; x=1751635226; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e0DTgOdoz4H3xcb51586P+FsHsDxKEsY87FUj2jmH+o=;
-        b=WwRuREssm5SXWM04k7JDNWw5jpQMSUjMeaXkbY8HMMT2sp+iTv5YpwR+xjLik7xQOh
-         LxeNrtOwtn4bdGYtJzISFgvF/pD1m9bFtYAJ2xFGCX7ErqtMiNWolgbK1FMpc9RtGltG
-         Nv6cDsWc/e9f605MmS8GxRfZhO4csHd7n3LhYO7G5WXib4fW9ax58mzA5VT3oVDASlWT
-         OkQmf7NajcEWbwGoo/1A4/f5mwLmkEVmOYgLKaukogKgBMdnNe3HXunRlQVAl47M1aME
-         +4aXPfi9VoU9zA+5BpxXWhwyGBrOBS2JPGoJLB53bAlrVRhXOUrqSRuy7kfQGVkRKUrU
-         PhZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751030426; x=1751635226;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e0DTgOdoz4H3xcb51586P+FsHsDxKEsY87FUj2jmH+o=;
-        b=EF2j19HK2st8c4XoaSk0FcX7AOAvZlNlbYcmdpf28v/qei6elIEMnD6FwKLGHAzuFk
-         UcfRMhoHTF7bBaLqq2trrI3FtjZp89BSDZ6QguONxNC6hzVRoHKAoM1/AxaNtYuMX37/
-         HUEfSJfaOKxJofA77atk2Y6J3ofLFJI5BIOE6ywtxXiaX5crY0Dgr3wIJ1+qXZc+oW8O
-         0T0xwDTZt49/ZkD7WrTpkq736fCnYxVgn60J2teeuGd7Kh4F45BXmsWXi0VsVtxFAWyJ
-         To1oNCyz3oy+MBPVMVZtsruY9ey98GVAnHSh/P8iNX9vazgtfRcJ3ra/iDc3bb6lJQvP
-         wYhg==
-X-Forwarded-Encrypted: i=1; AJvYcCU7Sq0LGy73YbL0o6wGQ4B4GG6+BXavLqHPw2Kop7N+EEJLn0JykJ+2VP2Y2K++16PAxLAmAWFHPaf+hb0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFFQWEqFKGHEfhWzx31+0bBcztjOkTuUjuksVuKXUGVv+GTtck
-	RVd6XyzdAyMfWQxzDKBWTw5vgYT9fH2LfaElkPM4W/QaDOEKan3cJYE7oZFDl245iTT5969NvhG
-	KjLP10BACFD3hvdFCrmoJkYtE8Q0+XI9/KZv3AFxY8g==
-X-Gm-Gg: ASbGncvHPRAexBNOQXfsSZh6pL/9yIU+feRb4BjTrdSQ2xTXUbWyK6/teujpUJfNRYL
-	ZbgS8pKTQapezF5k+ntENgp595hmpntqNmJbqTXkOmVI3nIbVt8pw2LdvA/hlwcT3plVHjvOmKH
-	ARNrzYc06rWAUaUMjXslrDM/wxGuo1kLQUBAcxz2f1v1n7isbO/scgdNrNFp4=
-X-Google-Smtp-Source: AGHT+IEfj6KWipNOilgU4YAc6TRKNgw7uKe++fgodC0wL269iBd+x+gRxeTrV3RpsmYi3DyHH9GA8SPgWGIDzBMmowM=
-X-Received: by 2002:a17:90b:5285:b0:311:e8cc:425e with SMTP id
- 98e67ed59e1d1-318c93054fbmr4060647a91.31.1751030425647; Fri, 27 Jun 2025
- 06:20:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WTNKf26q"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C070343858;
+	Fri, 27 Jun 2025 13:21:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751030501;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BvoxXLiJKYkcxVq8w0AjJEeDHxcdcgc8ch+zOAoK0Gk=;
+	b=WTNKf26q52UzqmBYCwJ3mult6ORsCCi668+f64WGIETx52P/ALNXwo0qYx5sBehozitdF1
+	FveXA2ObLpNjpI6cBsBvR/Zn7AiigOBRzhS7PaNffTt50bBj5QyKuC0p6t85PeRHwgQPBX
+	aocReRVaflrGjyuA9goGRPM6vrV4nayQ/8nKpeRSs3p17FBgw9Tfo2iWXeX4n2Ntpmx5PA
+	Bix6uq1aDadRXTtMeqiyEcl/qIen6VFMNvQuyLr1pJJ0CsmWSfwfw+/FZ4Akcl3V76iriD
+	9Ni0b7QZdeuAtlEDT58p3yF8qMRekkuly7+ZzVQ6Ue1S+YuW58zQ1/M9fc7q0A==
+Message-ID: <e40cf0f1-278e-4e30-ae96-23e03517a12d@bootlin.com>
+Date: Fri, 27 Jun 2025 15:21:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616095532.47020-1-matt@readmodwrite.com> <CAPhsuW4ie=vvDSc97pk5qH+faoKjz+b51MDYGA3shaJwNd677Q@mail.gmail.com>
- <CAENh_SQPLHC8pswTRoqh0bQR84HHQmnO3bM07UQa1Xu9uY_3WA@mail.gmail.com>
- <CAADnVQ+QyPqi7XJ2p=S9FVDbOxMXvVPU859n+2ApuRQv5T2S5w@mail.gmail.com>
- <CAENh_SQgZ5yVpshKRhiezhGMDAMvgV7SmwD_8u++mACE33oNrg@mail.gmail.com>
- <CAADnVQJgOyBCCySnBkTk-VCsz0dy+ppdGHpggxbtDpBBGhaXVg@mail.gmail.com>
- <CALrw=nFvUwmpjUMYh5iJqjo6SbAO8fZt8pkys7iDjZHfpF2DxQ@mail.gmail.com> <CAADnVQLC44+D-FAW=k=iw+RQA057_ohTdwTYePm5PVMY-BEyqw@mail.gmail.com>
-In-Reply-To: <CAADnVQLC44+D-FAW=k=iw+RQA057_ohTdwTYePm5PVMY-BEyqw@mail.gmail.com>
-From: Matt Fleming <matt@readmodwrite.com>
-Date: Fri, 27 Jun 2025 14:20:14 +0100
-X-Gm-Features: Ac12FXyVwOidNZ4qxei2Emn8exOPUtr44eKiQ-2QcFU7sANj636wNy52geb6bpk
-Message-ID: <CAENh_SSduKpUtkW_=L5Gg0PYcgDCpkgX4g+7grm4kxucWmq0Ag@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Call cond_resched() to avoid soft lockup in trie_free()
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Ignat Korchagin <ignat@cloudflare.com>, Song Liu <song@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	kernel-team <kernel-team@cloudflare.com>, Matt Fleming <mfleming@cloudflare.com>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/8] drm/vkms: Add support for ARGB8888 formats
+To: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>,
+ Melissa Wen <melissa.srw@gmail.com>,
+ Haneen Mohammed <hamohammed.sa@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rodrigo Siqueira <siqueira@igalia.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net,
+ linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+ miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+ seanpaul@google.com, nicolejadeyee@google.com
+References: <20250627-b4-new-color-formats-v5-0-94452f119c72@bootlin.com>
+ <20250627-b4-new-color-formats-v5-2-94452f119c72@bootlin.com>
+ <0fc35309-f487-4aa2-b0df-c9b0e2b51fb7@igalia.com>
+Content-Language: en-US
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
+ 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
+In-Reply-To: <0fc35309-f487-4aa2-b0df-c9b0e2b51fb7@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefudejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekieevtdefgedtkeehteehtddttdefhffhgeejleejjeeluddvhfdugedvkeehveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudekpdhrtghpthhtohepmhgtrghnrghlsehighgrlhhirgdrtghomhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhgrmhhohhgrmhhmvggurdhsrgesghhmrghilhdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmp
+ dhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-On Wed, Jun 18, 2025 at 3:50=E2=80=AFPM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> Do your homework pls.
-> Set max_entries to 100G and report back.
-> Then set max_entries to 1G _with_ cond_rescehd() hack and report back.
 
-Hi,
 
-I put together a small reproducer
-https://github.com/xdp-project/bpf-examples/pull/130 which gives the
-following results on an AMD EPYC 9684X 96-Core machine:
+Le 27/06/2025 à 15:17, Maíra Canal a écrit :
+> Hi Louis,
+> 
+> On 27/06/25 06:12, Louis Chauvet wrote:
+>> The formats XRGB8888 and ARGB8888 were already supported. Add the
+>> support for: - XBGR8888 - RGBX8888 - BGRX8888 - ABGR8888 - RGBA8888 -
+>> BGRA8888
+> 
+> Please, remove RGBX8888 and BGRX8888 from this list. Also, for
+> readability, it would be great if you add each format in one separate
+> line.
 
-| Num of map entries | Linux 6.12.32 |  KASAN  | cond_resched |
-|--------------------|---------------|---------|--------------|
-| 1K                 | 0ms           | 4ms     | 0ms          |
-| 10K                | 2ms           | 50ms    | 2ms          |
-| 100K               | 32ms          | 511ms   | 32ms         |
-| 1M                 | 427ms         | 5478ms  | 420ms        |
-| 10M                | 5056ms        | 55714ms | 5040ms       |
-| 100M               | 67253ms       | *       | 62630ms      |
+Indeed, I will wait for review on 6/8 and 8/8, but I will definitely 
+make those changes for apply/next revision!
 
-* - I gave up waiting after 11.5 hours
+Thanks a lot for your reviews!
 
-Enabling KASAN makes the durations an order of magnitude bigger. The
-cond_resched() patch eliminates the soft lockups with no effect on the
-times.
+Louis Chauvet
 
-Thanks,
-Matt
+> Apart from that,
+> 
+> Reviewed-by: Maíra Canal <mcanal@igalia.com>
+> 
+> Best Regards,
+> - Maíra
+> 
+>>
+>> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+>> ---
+>>    drivers/gpu/drm/vkms/vkms_formats.c | 13 +++++++++++--
+>>    drivers/gpu/drm/vkms/vkms_plane.c   |  5 ++++-
+>>    2 files changed, 15 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+>> index a9c624081dac..231b327e86b3 100644
+>> --- a/drivers/gpu/drm/vkms/vkms_formats.c
+>> +++ b/drivers/gpu/drm/vkms/vkms_formats.c
+>> @@ -432,9 +432,12 @@ static void R4_read_line(const struct vkms_plane_state *plane, int x_start,
+>>    
+>>    
+>>    READ_LINE_ARGB8888(XRGB8888_read_line, px, 0xFF, px[2], px[1], px[0])
+>> +READ_LINE_ARGB8888(XBGR8888_read_line, px, 0xFF, px[0], px[1], px[2])
+>>    
+>>    READ_LINE_ARGB8888(ARGB8888_read_line, px, px[3], px[2], px[1], px[0])
+>>    READ_LINE_ARGB8888(ABGR8888_read_line, px, px[3], px[0], px[1], px[2])
+>> +READ_LINE_ARGB8888(RGBA8888_read_line, px, px[0], px[3], px[2], px[1])
+>> +READ_LINE_ARGB8888(BGRA8888_read_line, px, px[0], px[1], px[2], px[3])
+>>    
+>>    READ_LINE_le16161616(ARGB16161616_read_line, px, px[3], px[2], px[1], px[0])
+>>    READ_LINE_le16161616(XRGB16161616_read_line, px, cpu_to_le16(0xFFFF), px[2], px[1], px[0])
+>> @@ -644,10 +647,16 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
+>>    	switch (format) {RGBA8888
+>>    	case DRM_FORMAT_ARGB8888:
+>>    		return &ARGB8888_read_line;
+>> -	case DRM_FORMAT_XRGB8888:
+>> -		return &XRGB8888_read_line;
+>>    	case DRM_FORMAT_ABGR8888:
+>>    		return &ABGR8888_read_line;
+>> +	case DRM_FORMAT_BGRA8888:
+>> +		return &BGRA8888_read_line;
+>> +	case DRM_FORMAT_RGBA8888:
+>> +		return &RGBA8888_read_line;
+>> +	case DRM_FORMAT_XRGB8888:
+>> +		return &XRGB8888_read_line;
+>> +	case DRM_FORMAT_XBGR8888:
+>> +		return &XBGR8888_read_line;
+>>    	case DRM_FORMAT_ARGB16161616:
+>>    		return &ARGB16161616_read_line;
+>>    	case DRM_FORMAT_XRGB16161616:
+>> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
+>> index e3fdd161d0f0..01fed722808b 100644
+>> --- a/drivers/gpu/drm/vkms/vkms_plane.c
+>> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
+>> @@ -14,8 +14,11 @@
+>>    
+>>    static const u32 vkms_formats[] = {
+>>    	DRM_FORMAT_ARGB8888,
+>> -	DRM_FORMAT_XRGB8888,
+>>    	DRM_FORMAT_ABGR8888,
+>> +	DRM_FORMAT_BGRA8888,
+>> +	DRM_FORMAT_RGBA8888,
+>> +	DRM_FORMAT_XRGB8888,
+>> +	DRM_FORMAT_XBGR8888,
+>>    	DRM_FORMAT_XRGB16161616,
+>>    	DRM_FORMAT_ARGB16161616,
+>>    	DRM_FORMAT_RGB565,
+>>
+> 
+
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
