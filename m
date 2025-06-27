@@ -1,278 +1,208 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8D529DB96
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24AA293C67
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751024042; cv=none; b=YunvNFK7m/Qp4qpNJQZuJmrz9TfXFoXd6sX4qnpSM7HkOPm4Ng5pyNuw6QqB8dg7T7I43iOjeYrEX9y1833DYsGVpD3mYpcPF0+JOQneY8ectixflGHwfiaTumytZjAUhv4+37TbL3rWpLvSPzkc5DQxpzqlBUxrzrAt7JV6Abg=
+	t=1751024078; cv=none; b=l9FmulS4+sX6UZGsNGUT3pwAbcBLz8q+gmNRyPxdv2vXHvbaArsdTt7poI0lgN/DTDS6mAwZEfg9H+YLLyDebNvcAJCPGG6nCZB4adVwmeMZ31CZBfY0oiicZG2EW2OqpND1fjEmuFnHhcihR0PhFvxH4X9ULMLMXB8fRdbiKTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751024042; c=relaxed/simple;
-	bh=nrg/5Cr/Ct/L2mrn4jAnolMDR4V2365AXYCSvZSKjPs=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Szgy0LbpiSNwj2/givm2KRodXKpf3AoziSDMV3E9IEhJSYPBVkg+fAQa0rTAcWcO6AFofk2zpMOC+kVQB75wVgCQlr5F81GwH/NfAj6foQ2sqi3mTDmMzPqj0isOcR8FseKejT/jbpddMl20Co60B3bZftfkg61V3swZ06D6IzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=m65ozer2; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1751024078; c=relaxed/simple;
+	bh=Cxl0PT1tlzkUzqSYIq90sIxpDpwge4A3Mg5t0K9mOGg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GHNRJvu54CUR4yLLdLmLY7c3JABTS04P+xyYbBuQOmqZWviZU7/3JoGZlCoZuvdOVdnE6hYoLivzhdgr+jNuAD16F7uw7OLc10Qgcy9laqDwWEnNj2nM1lObnryZOitxyw5g+puz6QPSGnUCSrfThKLZ29cBdDOfHTHjzy1I5ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=G3SFsz1p; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PcnoCRN1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wq5RicCj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6EGkozuQ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="m65ozer2"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60c93c23b08so678349a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:33:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1751024038; x=1751628838; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8TQIk1vNThf+KbhPSV308tydy65v8ZFP99g2fX+hJzE=;
-        b=m65ozer2x2+YrV6OGSlVtJtLgt3AN5unm8zC2OlARa+S5ZKLL3S0PNEJQhU8PrsbfP
-         TBMJonQayyP0LxMWECp2zT4KNGaHy3mdGnYpuVwrLeaKok4AlEoH4CtWgLr+xnJrgpZ9
-         qOZEZ7pfq0WO8ZuUBwI82SphF0OGKJd+qDG02c+Wf++qW+nwDHeFYdVOWO4DAx4GW4cT
-         NbAk+13orgzXztKq8gEkXb1i1o59oksbsfWDsiO0H9+kKKgLNfLoUCh1fPA/1WcMlEte
-         79k4s3F5a19N+8FYmUdL3Mfvg85txlmbTMh2EjJ07PNjqOSVY5w1whI1uQUjx93Prgtu
-         xJTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751024038; x=1751628838;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8TQIk1vNThf+KbhPSV308tydy65v8ZFP99g2fX+hJzE=;
-        b=Ms7CGc+LYOi8YRbWm/YGDn4f0wNvfw6y8qLqtP9gc32hUEiAqPKENaW+1ITUsBeNjO
-         U+BBrOQg5vZ3Qh1RlH5ElJ+Smn7/JkrNJnDVKSjdxNJwda9nv6m97VyN7OwXZ6RI1I7g
-         cavHo9kQaIrB6uAilYM2jyTw6aE/OPHvvEJnd6b2fMnqua6LfSTy7A994s71eStaXX+K
-         tR8phvq+gYfD+pNg12bi8IB3CVvTGyysmFohBXrB8BOm4cpKkB7iaooUIa82Rg+biTPy
-         HEVy/DHugkPFzy7dFM9DFfx6lLLdan7/F15qzX01XDxJwHkQipebqhCI9kCUOSmYCmNf
-         8WsA==
-X-Forwarded-Encrypted: i=1; AJvYcCXT4r30LRgwK0i4XsmPnyNJ4onGQtDR7U50C5J98lUqJGPpt++Fx1u6+4ne+7At2QAn27fUBDrgKhhHDJA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxn6L4/1VVLT2GUBiso4wx0013Mxr4+5nq2ZIixt9bnRpFjB54s
-	zjN7MbgI0K9z6Mo+w4nw2++GIWkoNyMMebX28i+or4Pj1hgTaXJaAT3Ok/xoS9k1htA=
-X-Gm-Gg: ASbGncv0tpl3tXkHJ6moNahQHSvWO4JlEnOQMW41swpst6c5UFNoc240eo2PYgfJE6i
-	nRkTUilEeOlo8lCORP0mYr0bBcMOiaQDNtoLmsfC/gGZfRYNa7pFAubmIqfh7DYZCbwn8huL5ML
-	YVNQcktIPciZi4L8EaJ6DEKYMhjDubiOw0GC9l8J/uuhzbRsgO6qtS+b2MOPycmVk+blpg+iNpH
-	QIvlkzkE8NtMh5Q/vmn/AEJ6UiRaVMmRq8q08nbnW5rgDVLgeygEa4/0x5Z8UqdqmabhsVI+KMa
-	+eqlJifb1wJIZpoPJDG1Nj+TY/qemerL37sR2HXVSP390mVSkLoacRH2U6SQn43586Bifjh3F4C
-	c0k5tT9D7N1o2qeO1TS79EXyseFJMmNw=
-X-Google-Smtp-Source: AGHT+IFTB4ZISQsWRjBnTltqxZ+EzRDnHXDtrROSz2QQZgqYVC+7zZ8R4yhdcBmhaWSRI1bSl9PUhg==
-X-Received: by 2002:a17:906:7951:b0:ad8:a935:b905 with SMTP id a640c23a62f3a-ae34fddeae3mr245758066b.22.1751024037927;
-        Fri, 27 Jun 2025 04:33:57 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c6bdafsm108070066b.143.2025.06.27.04.33.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 04:33:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G3SFsz1p";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PcnoCRN1";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wq5RicCj";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6EGkozuQ"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9FDBD1F390;
+	Fri, 27 Jun 2025 11:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751024075; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=J2w6JT5rxuIanonscqD5z4HJGg/A/iwQzqqXpzmRpCo=;
+	b=G3SFsz1pHuUGmozcYKkgfAS9Ad8W/pAqzey/nHwPXL0Wp0JvtJUwisSO8zq/dturKDvJdv
+	75wxd+yipGrd6i5EdinG1t+W1klNWZrxJHza1jLHvclwRhSgopJgHAdKRXHD3iW65yAGOx
+	OOlTiNE1BK54Smhh2PCsBiN/hiwpOAw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751024075;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=J2w6JT5rxuIanonscqD5z4HJGg/A/iwQzqqXpzmRpCo=;
+	b=PcnoCRN1xNYivCfDNJ9YWeiW3xpa3QOkS1F0BNqka0tipS94aIxCqXgtGGZjHVUqbkCXSh
+	+rAOygPl8kzvj1CQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751024073; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=J2w6JT5rxuIanonscqD5z4HJGg/A/iwQzqqXpzmRpCo=;
+	b=wq5RicCjDEdtnbNUPhYGc7G2Wo+j/PMOw+EwBNYfJECIoIHd8x8vawq2cBSu/nJX2qHsPr
+	6fvA/c1T3x0DnrbUNoQ/s1ygjhzqqfkzOLVAG1gO++chTlsJpBlXQm9Vs0mhBtHegQDjsX
+	epw7Vl/s+bnhZ/EkHVniJD8XQTeWosQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751024073;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=J2w6JT5rxuIanonscqD5z4HJGg/A/iwQzqqXpzmRpCo=;
+	b=6EGkozuQFnF6T/hXJ/0kEkp+Vl/afa9JmMIgWkobWbD/Zp/pzf0CLK0TRY2OfJLlL7laq8
+	QC1G1ROx3uEokTCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 356E2138A7;
+	Fri, 27 Jun 2025 11:34:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 18+jC8mBXmhXGQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 27 Jun 2025 11:34:33 +0000
+Message-ID: <d8d85415-efc4-4a11-842e-23272cae29f7@suse.de>
+Date: Fri, 27 Jun 2025 13:34:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 27 Jun 2025 13:33:56 +0200
-Message-Id: <DAXA7TKVM4GI.J6C7M3D1J1XF@fairphone.com>
-Cc: <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pm@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
- <linux-crypto@vger.kernel.org>, <dmaengine@vger.kernel.org>,
- <linux-mmc@vger.kernel.org>
-Subject: Re: [PATCH 14/14] arm64: dts: qcom: Add The Fairphone (Gen. 6)
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Will Deacon"
- <will@kernel.org>, "Robin Murphy" <robin.murphy@arm.com>, "Joerg Roedel"
- <joro@8bytes.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Rafael J.
- Wysocki" <rafael@kernel.org>, "Viresh Kumar" <viresh.kumar@linaro.org>,
- "Manivannan Sadhasivam" <mani@kernel.org>, "Herbert Xu"
- <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
- "Vinod Koul" <vkoul@kernel.org>, "Bjorn Andersson" <andersson@kernel.org>,
- "Konrad Dybcio" <konradybcio@kernel.org>, "Robert Marko"
- <robimarko@gmail.com>, "Das Srinagesh" <quic_gurus@quicinc.com>, "Thomas
- Gleixner" <tglx@linutronix.de>, "Jassi Brar" <jassisinghbrar@gmail.com>,
- "Amit Kucheria" <amitk@kernel.org>, "Thara Gopinath"
- <thara.gopinath@gmail.com>, "Daniel Lezcano" <daniel.lezcano@linaro.org>,
- "Zhang Rui" <rui.zhang@intel.com>, "Lukasz Luba" <lukasz.luba@arm.com>,
- "Ulf Hansson" <ulf.hansson@linaro.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250625-sm7635-fp6-initial-v1-0-d9cd322eac1b@fairphone.com>
- <20250625-sm7635-fp6-initial-v1-14-d9cd322eac1b@fairphone.com>
- <4200b3b8-5669-4d5a-a509-d23f921b0449@oss.qualcomm.com>
-In-Reply-To: <4200b3b8-5669-4d5a-a509-d23f921b0449@oss.qualcomm.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] dt-bindings: display: simple-framebuffer: Add
+ interconnects property
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Luca Weiss <luca.weiss@fairphone.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Javier Martinez Canillas <javierm@redhat.com>,
+ Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
+ <20250623-simple-drm-fb-icc-v2-1-f69b86cd3d7d@fairphone.com>
+ <20250627-mysterious-optimistic-bird-acaafb@krzk-bin>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250627-mysterious-optimistic-bird-acaafb@krzk-bin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[dt];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch,gmx.de,vger.kernel.org,lists.freedesktop.org];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
 
-On Wed Jun 25, 2025 at 4:38 PM CEST, Konrad Dybcio wrote:
-> On 6/25/25 11:23 AM, Luca Weiss wrote:
->> Add a devicetree for The Fairphone (Gen. 6) smartphone, which is based
->> on the SM7635 SoC.
->
-> [...]
->
->> +	/* Dummy panel for simple-framebuffer dimension info */
->> +	panel: panel {
->> +		compatible =3D "boe,bj631jhm-t71-d900";
->> +		width-mm =3D <65>;
->> +		height-mm =3D <146>;
->> +	};
->
-> I haven't ran through all the prerequisite-xx-id, but have
-> you submitted a binding for this?
+Hi
 
-Actually not, kind of forgot about this. I believe I can create a
-(mostly?) complete binding for the panel, but this simple description
-for only width-mm & height-mm will differ from the final one, which will
-have the DSI port, pinctrl, reset-gpios and various supplies.
-
-I think I'll just drop it from v2 and keep it locally only, to get the
-simpledrm scaling right.
-
->
-> [...]
->
->> +	reserved-memory {
->> +		/*
->> +		 * ABL is powering down display and controller if this node is
->> +		 * not named exactly "splash_region".
->> +		 */
->> +		splash_region@e3940000 {
->> +			reg =3D <0x0 0xe3940000 0x0 0x2b00000>;
->> +			no-map;
->> +		};
->> +	};
->
-> :/ maybe we can convince ABL not to do it..
-
-Yes, we talked about that. I will look into getting "splash-region" and
-"splash" also into the ABL (edk2) build for the phone. Still won't
-resolve that for any other brand of devices.
-
->
-> [...]
->
->> +		vreg_l12b: ldo12 {
->> +			regulator-name =3D "vreg_l12b";
->> +			/*
->> +			 * Skip voltage voting for UFS VCC.
->> +			 */
->
-> Why so?
-
-From downstream:
-
-		/*
-		 * This is for UFS Peripheral,which supports 2 variants
-		 * UFS 3.1 ,and UFS 2.2 both require different voltages.
-		 * Hence preventing voltage voting as per previous targets.
-		 */
-
-I haven't (successfully) brought up UFS yet, so I haven't looked more
-into that.
-
-The storage on FP6 is UFS 3.1 though fwiw.
-
->
-> [...]
->
->> +&gpi_dma0 {
->> +	status =3D "okay";
->> +};
+Am 27.06.25 um 10:08 schrieb Krzysztof Kozlowski:
+> On Mon, Jun 23, 2025 at 08:44:45AM +0200, Luca Weiss wrote:
+>> Document the interconnects property which is a list of interconnect
+>> paths that is used by the framebuffer and therefore needs to be kept
+>> alive when the framebuffer is being used.
+>>
+>> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>> ---
+>>   Documentation/devicetree/bindings/display/simple-framebuffer.yaml | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>> index 296500f9da05e296dbbeec50ba5186b6b30aaffc..f0fa0ef23d91043dfb2b220c654b80e2e80850cd 100644
+>> --- a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>> +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>> @@ -79,6 +79,9 @@ properties:
+>>     power-domains:
+>>       description: List of power domains used by the framebuffer.
+>>   
+>> +  interconnects:
+>> +    description: List of interconnect paths used by the framebuffer.
 >> +
->> +&gpi_dma1 {
->> +	status =3D "okay";
->> +};
->
-> These can be enabled in SoC DTSI.. it's possible that the secure=20
-> configuration forbids access to one, but these are generally made
-> per-platform
+> maxItems: 1, or this is not a simple FB anymore. Anything which needs
+> some sort of resources in unknown way is not simple anymore. You need
+> device specific bindings.
 
-Ack
+In this context, 'simple' means that this device cannot change display 
+modes or do graphics acceleration. The hardware itself is not 
+necessarily simple. As Javier pointed out, it's initialized by firmware 
+on the actual hardware. Think of 'VGA-for-ARM'. We need these resources 
+to keep the display working.
 
->
-> [...]
->
->> +&pm8550vs_d {
->> +	status =3D "disabled";
->> +};
->> +
->> +&pm8550vs_e {
->> +	status =3D "disabled";
->> +};
->> +
->> +&pm8550vs_g {
->> +	status =3D "disabled";
->> +};
->
-> Hm... perhaps we should disable these by deafult
-
-Do you want me to do this in this patchset, or we clean this up later at
-some point? I'd prefer not adding even more dependencies to my patch
-collection right now.
+Best regards
+Thomas
 
 >
-> [...]
+> Best regards,
+> Krzysztof
 >
->> +&pmr735b_gpios {
->> +	pm8008_reset_n_default: pm8008-reset-n-default-state {
->> +		pins =3D "gpio3";
->> +		function =3D PMIC_GPIO_FUNC_NORMAL;
->> +		bias-pull-down;
->> +	};
->> +
->> +	s1j_enable_default: s1j-enable-default-state {
->> +		pins =3D "gpio1";
->> +		function =3D PMIC_GPIO_FUNC_NORMAL;
->> +		power-source =3D <0>;
->> +		bias-disable;
->> +		output-low;
->> +	};
 >
-> ordering by pin ID makes more sense, here and in tlmm
->
-> (and is actually written down)
-> https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-o=
-f-nodes
 
-Ah, that's news to me. Thanks!
-
->
-> [...]
->
->> +&pon_resin {
->> +	linux,code =3D <KEY_VOLUMEDOWN>;
->> +	status =3D "okay";
->
-> \n before status consistently, please
-
-Ack
-
->
-> [...]
->
->> +&tlmm {
->> +	/*
->> +	 * 8-11: Fingerprint SPI
->> +	 * 13: NC
->> +	 * 63-64: WLAN UART
->> +	 */
->> +	gpio-reserved-ranges =3D <8 4>, <13 1>, <63 2>;
->
-> Please match the style in x1-crd.dtsi
-
-Ack
-
->
-> [...]
->
->> +&usb_1 {
->> +	dr_mode =3D "otg";
->> +
->> +	/* USB 2.0 only */
->
-> Because there's no usb3phy description yet, or due to hw design?
-
-HW design. Funnily enough with clk_ignore_unused this property is not
-needed, and USB(2.0) works fine then. Just when (I assume) the USB3
-clock is turned off which the bootloader has enabled, USB stops working.
-
-Regards
-Luca
-
->
-> Konrad
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
