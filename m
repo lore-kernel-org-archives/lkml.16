@@ -1,52 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB2D20A5C4;
-	Fri, 27 Jun 2025 19:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7270720409A
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751051673; cv=none; b=kBRXZRnj3VqN0yxG32+4IF6G6LXFivHar9p7T2QrG4wv4sKgSROVhsjhTcbTJp69s6W4+SKRXfNkAYrDn+b/YgGavlVjna1lCWwW3FjQQCt6Zk7HZNI7RZe2I78xdZVBMcJps1mPeBTfy0xYYNZ4rX6Yse3GVUVDCKRXnQ2w7TE=
+	t=1751051675; cv=none; b=k0xRgAmuUTOcC43FgUSCBukG1Uw7NxaPHatjatxrV9kF8u71nLlxYVL8actPUDGPnhHyBdJ4NHDPvmYB6ljkZG5+WzvCFVLXAgVeDNoo0+lG//o/ATV5hAfM2HR2VGECwsyRsDnB6+F4htcE3UER4WpPOsqRfpJWEp4IxWnfyZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751051673; c=relaxed/simple;
-	bh=7y1ZsRmXi5fixd3yGounAXlhvtOObOS1/eW6qryxfFc=;
+	s=arc-20240116; t=1751051675; c=relaxed/simple;
+	bh=LKuZ/WhnJ5ed70h2mbTh2fwu9CwkQKi/+gt3+E4rfqk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CBxL5EDd7yIhtDhzq57cX7EiE0PI1x8+O40wTVc3Y1UC0HQI/LlBxwUUfCWPlCZBe+cRV+jwrBrmqdQOuXRAo0y8lCNNlAYZN0Bl9Q6rwWtxCo+8eCkwBYjkVzoJlWI8VzliqCuwG2+DtaHir1kCurnzrTvdDLRahP5FNc7aPxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTrBi/jm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qiYLsAoc9mxz6B/J6oKlE0ocLedf8I8klF+YGh3XQhXPi96kbOMv5N8rn9uCYojT0gKnrYPhpqw1EOuOakEJiaR7LnBU1CcR4OhC8CFp6t+iZ/F6fl5cBhQKhQglCRvbMOvJwhN5pTZa/ocHCqiCsuHq+3pVxH83bml4VpTMqN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=szAfs6T5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=DaGiEprG; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=szAfs6T5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=DaGiEprG; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTrBi/jm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 490B6C4CEEB;
-	Fri, 27 Jun 2025 19:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751051673;
-	bh=7y1ZsRmXi5fixd3yGounAXlhvtOObOS1/eW6qryxfFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BTrBi/jmYNPasQFvmjw61npscaZxr3dckWRLmO9NM8hhIEwWDKBhUKXsi13Xs9yvx
-	 SgwEazEzPozrouuUP0TCbZSTJJWqNQ6kAHqX8XmYlu5F0yPlxf0dhwDTZdIOM6AHTk
-	 IpJuAgefP5L8EyZAP7bamFTWc5A81hKKO5NDPxk0Ka4+pucTdGHp++XVNUU+ljQUai
-	 YZgnKyGyEw6BVX2TWT+XutWKV7hVd4YxtH67AZPGW9oJ+qVaBnT3X+TJQM7ibBm5MO
-	 Yb+EKF7cT0nAN7XVs1kUqJEgpSuoZZdkbZTxhKMrZyetgKdnpIuT2kH9IiDGYM/aVR
-	 TwID+nxa+rmLQ==
-Date: Fri, 27 Jun 2025 21:14:26 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Benno Lossin <lossin@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 5/6] rust: platform: add irq accessors
-Message-ID: <aF7tknVzLbdN71kw@pollux>
-References: <20250627-topics-tyr-request_irq-v5-0-0545ee4dadf6@collabora.com>
- <20250627-topics-tyr-request_irq-v5-5-0545ee4dadf6@collabora.com>
- <aF7slhheVOXaGB9T@pollux>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="szAfs6T5";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="DaGiEprG";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="szAfs6T5";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="DaGiEprG"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A88742115E;
+	Fri, 27 Jun 2025 19:14:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751051671; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=79reliRkh+Qi9AXkJF3yFkRiQKDl+EyPIWYZV31rWp0=;
+	b=szAfs6T5vQC1DxDzxGM08PLs5gR9M4BwiToxJ/c4I+SJ01ywObxm/8quu1JojqPSsFKfp4
+	xFLEnqudwjwfU0a9e+ELR24EGyfIDpaBASU+D9QYDgiiVAiT96uEakncLcRbw+qtXQD2BL
+	0thCoeRzam32uzQHb2mk7KkxUvlgKnE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751051671;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=79reliRkh+Qi9AXkJF3yFkRiQKDl+EyPIWYZV31rWp0=;
+	b=DaGiEprGjyTTS5m38qAiD6vnWxIbJBT2Ka9nP95Dd+qLp7fM+sryDvjQvXdOaZSwG3JswJ
+	ifjspZLF9cPjNdAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751051671; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=79reliRkh+Qi9AXkJF3yFkRiQKDl+EyPIWYZV31rWp0=;
+	b=szAfs6T5vQC1DxDzxGM08PLs5gR9M4BwiToxJ/c4I+SJ01ywObxm/8quu1JojqPSsFKfp4
+	xFLEnqudwjwfU0a9e+ELR24EGyfIDpaBASU+D9QYDgiiVAiT96uEakncLcRbw+qtXQD2BL
+	0thCoeRzam32uzQHb2mk7KkxUvlgKnE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751051671;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=79reliRkh+Qi9AXkJF3yFkRiQKDl+EyPIWYZV31rWp0=;
+	b=DaGiEprGjyTTS5m38qAiD6vnWxIbJBT2Ka9nP95Dd+qLp7fM+sryDvjQvXdOaZSwG3JswJ
+	ifjspZLF9cPjNdAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 98F3C138A7;
+	Fri, 27 Jun 2025 19:14:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jhwKJZftXmiIHwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 27 Jun 2025 19:14:31 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 44936A08D2; Fri, 27 Jun 2025 21:14:31 +0200 (CEST)
+Date: Fri, 27 Jun 2025 21:14:31 +0200
+From: Jan Kara <jack@suse.cz>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, jack@suse.cz, 
+	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, linux-kernel@vger.kernel.org, 
+	yi.zhang@huawei.com, yangerkun@huawei.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2 09/16] ext4: fix zombie groups in average fragment
+ size lists
+Message-ID: <pouh5hfd7lswwhczu667k2pywuawaetvv4lr44zinexbb75jeu@rgaaqa5myop7>
+References: <20250623073304.3275702-1-libaokun1@huawei.com>
+ <20250623073304.3275702-10-libaokun1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,54 +90,118 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aF7slhheVOXaGB9T@pollux>
+In-Reply-To: <20250623073304.3275702-10-libaokun1@huawei.com>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-On Fri, Jun 27, 2025 at 09:10:22PM +0200, Danilo Krummrich wrote:
-> On Fri, Jun 27, 2025 at 01:21:07PM -0300, Daniel Almeida wrote:
-> > +macro_rules! define_irq_accessor_by_index {
-> > +    ($(#[$meta:meta])* $fn_name:ident, $request_fn:ident, $reg_type:ident, $handler_trait:ident) => {
-> > +        $(#[$meta])*
-> > +        pub fn $fn_name<T: irq::$handler_trait + 'static>(
-> > +            &self,
-> > +            index: u32,
-> > +            flags: irq::flags::Flags,
-> > +            name: &'static CStr,
-> > +            handler: T,
-> > +        ) -> Result<impl PinInit<irq::$reg_type<T>, Error> + '_> {
-> > +            let request = self.$request_fn(index)?;
-> > +
-> > +            Ok(irq::$reg_type::<T>::new(
-> > +                request,
-> > +                flags,
-> > +                name,
-> > +                handler,
-> > +            ))
-> > +        }
-> > +    };
-> > +}
-> > +
-> > +macro_rules! define_irq_accessor_by_name {
-> > +    ($(#[$meta:meta])* $fn_name:ident, $request_fn:ident, $reg_type:ident, $handler_trait:ident) => {
-> > +        $(#[$meta])*
-> > +        pub fn $fn_name<T: irq::$handler_trait + 'static>(
-> > +            &self,
-> > +            irq_name: &'static CStr,
-> > +            name: &'static CStr,
-> > +            flags: irq::flags::Flags,
-> > +            handler: T,
-> > +        ) -> Result<impl PinInit<irq::$reg_type<T>, Error> + '_> {
-> > +            let request = self.$request_fn(irq_name)?;
-> > +
-> > +            Ok(irq::$reg_type::<T>::new(
-> > +                request,
-> > +                flags,
-> > +                name,
-> > +                handler,
-> > +            ))
-> > +        }
-> > +    };
-> > +}
+On Mon 23-06-25 15:32:57, Baokun Li wrote:
+> Groups with no free blocks shouldn't be in any average fragment size list.
+> However, when all blocks in a group are allocated(i.e., bb_fragments or
+> bb_free is 0), we currently skip updating the average fragment size, which
+> means the group isn't removed from its previous s_mb_avg_fragment_size[old]
+> list.
 > 
-> NIT: Please make the order of name and flags the same for both macros.
+> This created "zombie" groups that were always skipped during traversal as
+> they couldn't satisfy any block allocation requests, negatively impacting
+> traversal efficiency.
+> 
+> Therefore, when a group becomes completely free, bb_avg_fragment_size_order
+					     ^^^ full
 
-Ideally, first flags, then name, since this is the order used everywhere else.
+> is now set to -1. If the old order was not -1, a removal operation is
+> performed; if the new order is not -1, an insertion is performed.
+> 
+> Fixes: 196e402adf2e ("ext4: improve cr 0 / cr 1 group scanning")
+> CC: stable@vger.kernel.org
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+
+Good catch! The patch looks good. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/ext4/mballoc.c | 36 ++++++++++++++++++------------------
+>  1 file changed, 18 insertions(+), 18 deletions(-)
+> 
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index 94950b07a577..e6d6c2da3c6e 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -841,30 +841,30 @@ static void
+>  mb_update_avg_fragment_size(struct super_block *sb, struct ext4_group_info *grp)
+>  {
+>  	struct ext4_sb_info *sbi = EXT4_SB(sb);
+> -	int new_order;
+> +	int new, old;
+>  
+> -	if (!test_opt2(sb, MB_OPTIMIZE_SCAN) || grp->bb_fragments == 0)
+> +	if (!test_opt2(sb, MB_OPTIMIZE_SCAN))
+>  		return;
+>  
+> -	new_order = mb_avg_fragment_size_order(sb,
+> -					grp->bb_free / grp->bb_fragments);
+> -	if (new_order == grp->bb_avg_fragment_size_order)
+> +	old = grp->bb_avg_fragment_size_order;
+> +	new = grp->bb_fragments == 0 ? -1 :
+> +	      mb_avg_fragment_size_order(sb, grp->bb_free / grp->bb_fragments);
+> +	if (new == old)
+>  		return;
+>  
+> -	if (grp->bb_avg_fragment_size_order != -1) {
+> -		write_lock(&sbi->s_mb_avg_fragment_size_locks[
+> -					grp->bb_avg_fragment_size_order]);
+> +	if (old >= 0) {
+> +		write_lock(&sbi->s_mb_avg_fragment_size_locks[old]);
+>  		list_del(&grp->bb_avg_fragment_size_node);
+> -		write_unlock(&sbi->s_mb_avg_fragment_size_locks[
+> -					grp->bb_avg_fragment_size_order]);
+> -	}
+> -	grp->bb_avg_fragment_size_order = new_order;
+> -	write_lock(&sbi->s_mb_avg_fragment_size_locks[
+> -					grp->bb_avg_fragment_size_order]);
+> -	list_add_tail(&grp->bb_avg_fragment_size_node,
+> -		&sbi->s_mb_avg_fragment_size[grp->bb_avg_fragment_size_order]);
+> -	write_unlock(&sbi->s_mb_avg_fragment_size_locks[
+> -					grp->bb_avg_fragment_size_order]);
+> +		write_unlock(&sbi->s_mb_avg_fragment_size_locks[old]);
+> +	}
+> +
+> +	grp->bb_avg_fragment_size_order = new;
+> +	if (new >= 0) {
+> +		write_lock(&sbi->s_mb_avg_fragment_size_locks[new]);
+> +		list_add_tail(&grp->bb_avg_fragment_size_node,
+> +				&sbi->s_mb_avg_fragment_size[new]);
+> +		write_unlock(&sbi->s_mb_avg_fragment_size_locks[new]);
+> +	}
+>  }
+>  
+>  /*
+> -- 
+> 2.46.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
