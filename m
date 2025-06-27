@@ -1,71 +1,74 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13AC2F1FD0
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 14:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A652E2E264B
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 14:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751033828; cv=none; b=jm6+80qjggVSHFuRzr/5MkdAO6Y07fpV/+6FwXOYKbFBDu6+uavArzrePCDOJw5XxbWpjMAyEFayswoKCnwXc0oJmfN+vwfNQWZvW/oqvl/g33VGC1uZo6JMKwB9DXNL5M+kW8VJQ4aVSFDJ/1MQDcV++/NKCAqFgG+H9LqvOEo=
+	t=1751033871; cv=none; b=RDd4Z+vOT8iRIaB/Da/qW3ZdPjdy8gfRspu1uwW0j93G2xi69eVXsEpEKaXyOgnsOk9S4Iw0gwouYFBKnm55jQKU+3Y6kWxS7l2UxXTYVF0EKRXyG6LSm9lti5PGhUyFF5Yu5iv3RZdV2hgxZdfQ48aBLOsL08EZz9tTSn0uAEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751033828; c=relaxed/simple;
-	bh=xPwsVyexVDseD2IT1tZXS22jYy3h4kMgwhDONvuB4+A=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=BrUHQngPew0y4n7GsY5vuib6R3J/jjigV3WbQMNdZ1GCdSXrcsFDC1YuhE9pH7OADLzqasqy7QoqtMDA0R9mcqMirAdULvNaJ5xOGmmHnk7Ylvbe1ZoX6BRr0gtzORzUT3dKyl3gAqPGuSL+cYC3pmNP2KcRwhrfnwNb4D9OL7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddc0a6d4bdso25253665ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 07:17:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751033826; x=1751638626;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/twUQzG38wLJmcYzIGmO9pQOGEEODnWK0Ty6MAw9Hl0=;
-        b=jdU0rMc0oy2HGXewLjTwvm4BMWIxFl9yCoOeS6xhcsLSOIaKmBj+ZPlq16YeKGyT3+
-         k9cCidRyWVQQiQbqBmFJW/THtS8NDcVSIHIrYHyeW3lSjduWfMs+KRDtjADls+SJP2zC
-         pLd7YVscNFVOPa+doN/tvBS7Yfi2zfqMmu7eqwrwE6MNH7mOfb7YaN0f4+OBywQmMEHQ
-         0yYlW3anont8uvf4EQEl/6t+vwR9ISVhr80/BZM+wu1k3tRjv+juQWXrTlzNKrPL8CFK
-         LzTCW0GY8ke2N6FnOfDY4FsIR0NzyeEweKNDrw9yOK8x0Mb9cqGJpt0EaIXjkpRpco5n
-         z7/Q==
-X-Gm-Message-State: AOJu0YzVe2hSfKw3iy3PqIWWhaO4CNMV5Lkv/ywHkuuLfHKFLkIg0sXb
-	CJWCdP2lUFaTcEFPtm0vvTvNe7k2RyM5L/NYi/aml5t+NloIIqKuz85jyFH13fCLbfZdIX5y1b7
-	49aH2BJnyE24kUkGi+PkipENgswEqsSUq2RqcptHdJMsWXcZtau244qtN+is=
-X-Google-Smtp-Source: AGHT+IGAqQ7A1f5OnzxEkv9s8qIYPOuyxirXjuB2awjtMPCuBREhm75vbrr9YSs0FFt1/sjNQStZCSkxsrbwGS64lB0BETV9zUl/
+	s=arc-20240116; t=1751033871; c=relaxed/simple;
+	bh=SIDSxPACo3swYolhYSJkG/ZrpWuC2ELMGnQmef6BVPY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nAig2irvM5q0v1bjn1BJjVHUICPIhtC6YU9y0Jm9AIuNNscObWpK9QqMmAt3ShLmVeg7b0GKAKUdF/goh6Y3kqMt0C6qGwLC78/dlivqVtd6yFYDZOVA5fXXDdZc68JLu/KSQxVC/tAr2j03ySmB3Aub6iMudB0edKdgsWzP6gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5571C1A00;
+	Fri, 27 Jun 2025 07:17:31 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 252213F58B;
+	Fri, 27 Jun 2025 07:17:48 -0700 (PDT)
+Date: Fri, 27 Jun 2025 15:17:45 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>, kernel@oss.qualcomm.com,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: Re: [PATCH] coresight-tmc: Add configurable timeout for flush and
+ tmcready
+Message-ID: <20250627141745.GS794930@e132581.arm.com>
+References: <20250627-flush_timeout-v1-1-2f46a8e9f842@quicinc.com>
+ <78f2179d-26c2-47f0-bc19-b72e5e51ad29@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:378b:b0:3dd:d6d5:2d03 with SMTP id
- e9e14a558f8ab-3df4abae94fmr35252455ab.11.1751033821893; Fri, 27 Jun 2025
- 07:17:01 -0700 (PDT)
-Date: Fri, 27 Jun 2025 07:17:01 -0700
-In-Reply-To: <8bd7960a-540c-426f-8c47-620d66fbdfb4@I-love.SAKURA.ne.jp>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685ea7dd.a00a0220.129264.000a.GAE@google.com>
-Subject: Re: [syzbot] [btrfs?] VFS: Busy inodes after unmount (use-after-free) (2)
-From: syzbot <syzbot+1134d3a5b062e9665a7a@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, penguin-kernel@i-love.sakura.ne.jp, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78f2179d-26c2-47f0-bc19-b72e5e51ad29@linaro.org>
 
-Hello,
+On Fri, Jun 27, 2025 at 12:23:29PM +0100, James Clark wrote:
+> 
+> 
+> On 27/06/2025 12:10 pm, Yuanfang Zhang wrote:
+> > The current implementation uses a fixed timeout via
+> > coresight_timeout(), which may be insufficient when multiple
+> > sources are enabled or under heavy load, leading to TMC
+> > readiness or flush completion timeout.
+> > 
+> > This patch introduces a configurable timeout mechanism for
+> > flush and tmcready.
+> > 
+> 
+> What kind of values are you using? Is there a reason to not increase the
+> global one?
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+IIUC, this patch is related to patch [1].
 
-Reported-by: syzbot+1134d3a5b062e9665a7a@syzkaller.appspotmail.com
-Tested-by: syzbot+1134d3a5b062e9665a7a@syzkaller.appspotmail.com
+It seems to me that both patches aim to address the long latency when
+flushing the TMC, but take different approaches. In the earlier patch,
+both Mike and I questioned how the timeout occurred in hardware, but
+no information provided about the cause.
 
-Tested on:
+I would suggest that we first make clear if this is a hardware quirk or
+a common issue in Arm CoreSight.
 
-commit:         67a99386 Merge tag 'v6.16-p6' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17e4708c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=28cc6f051378bb16
-dashboard link: https://syzkaller.appspot.com/bug?extid=1134d3a5b062e9665a7a
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1317f182580000
+Thanks,
+Leo
 
-Note: testing is done by a robot and is best-effort only.
+[1] https://lore.kernel.org/linux-arm-kernel/CAJ9a7Vgre_3mkXB_xeVx5N9BqPTa2Ai4_8E+daDZ-yAUv44A9g@mail.gmail.com/
