@@ -1,102 +1,273 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B83A2750E7;
-	Fri, 27 Jun 2025 15:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419102E88BB
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751038665; cv=none; b=qU6BW6D9xi3fWqGPJ8cWWWcyU0EMuZWkmDltzaJd4T/crwH8c5utEriBJXiP0g5YRMZc+MXnankqWz6vdflilj42nOWp4UbRM6tN1tCHu0tLu9wdy2hPZ0n8vqFxZH7pgws3qF+8wpwGvzc5OnP/exE1azUXUWc3EYHu4/X+Ha8=
+	t=1751038842; cv=none; b=gRY5dtgwvqpTaUg722mle57GnZmzLrXyczRY5B+oNMR2QagujPIbhU7C3lN3viv9UekL1Ed3eHZPgvm6O/oYA/ZMXReA1YIWw6PR2pr+FozNvdq6EBCe7H8i6IpyRpInyoEyv4pPPJT+CxNeLNhbNy2VADtka83oehhwDS8ZM8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751038665; c=relaxed/simple;
-	bh=ZCmaznIAEW9CdV0v3lggh2s8vZKtTSHxMp/86AwX+Gs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YKO4Rah1L8D4N0vwCXze+O8/Z9R/GKa81rQXfk6fVEGz3QCH/gSU1Q2RvfZiZ1PZnGPNIiYI9t2phabqGkbWgxc1SpGBBOXUem9Txna1ZkXbbaWsQRntGvW8MrHalA9f5AJhSnrB9OURSRFiDQHVlQntTA2HRnTjmqVVSPr66eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xf+kGXdR; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751038842; c=relaxed/simple;
+	bh=uqxNoP0aScxvHUJUFb6AHeHCsVbbhBRCbyQSpDhJLZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nLTm8qYDSZJ5u3VC8U4WzTd8LGmxJHx9bNwpFD580424194G3ikswr5+MeRu1HGZgn5i/aKhZMuBcDpz8rECfaBDnl4IKste9SLOk0HVZSrhKbIA9ONioAv+EbsMVDbd9xGZneOOZxLrE2NDsxVDsZB5gTwhmHTthy3Kr3bgahQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XZ7A6BEy; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xf+kGXdR"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b34b770868dso304386a12.2;
-        Fri, 27 Jun 2025 08:37:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751038663; x=1751643463; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZCmaznIAEW9CdV0v3lggh2s8vZKtTSHxMp/86AwX+Gs=;
-        b=Xf+kGXdRN64JXlEbj4Hnub96fcoc8vnE2cmZSQStNqdUOfj1t2t6LEmiUAS4AvsgJa
-         WwQ3GckPqmsYzqud1hCJq0USFuHIUAPuUMMJEjS9EJT5vrbV4EwjL6XRkw2MweX3Ql4f
-         vw1TFZNzPFXP5BQshIfgyuevAgMlcz23vm5qmdG1Yr502WzdRaXK7G44/ytpHANOmcWM
-         YfP7mQWAEA8HDhQYk2JLK+amNmcBgAGj5iEfZ6O1DdLYy8eYtl/LAG9EFS8VhG0HvYMc
-         XSSo3I+spGeR9viKfmN2zYBUS1Oa8sd9U7QlEbOx0LioBvC8KMRSmWtmA0+rYCTGXpze
-         5EXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751038663; x=1751643463;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZCmaznIAEW9CdV0v3lggh2s8vZKtTSHxMp/86AwX+Gs=;
-        b=frHABHgurbfoG1SKKwXy3AkBVRqgaJB3qr/6VjakQdbAFAAiWdy2yi5PiSIP1DK8sq
-         H+Rq+IMjK4pJCPNr6FTsHCtsgLtXLe8OikoHERFJNh6dTDjSb3wxvgzfT0iUtcQ5UgtY
-         1s2FXfASOnYs4aiX1rQMtfYe3BjJVWeHIs/RIh1wpnMgRncsS5p0ycNk2aiSxlA/qAQh
-         uXAZ549B4yEE5drvD5Qy47wOjrgliab4ecWKb7evLjgbrJgKwj4HfV4U+EZoufMJ2PhC
-         jVQGsmyW3wGUc9baj5RLxjwp2zv+IDdyQny4xaLIN0H/NVrLTrsxcp1H2Oj1KLftCJce
-         5khA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgGkb+sgw37KsnKTX45d27Ntf8PcwpupMkDcs0nSRVAma3GPzJNUr8B9b4c08rAQ+sA7vvB50tRuTIQ0se@vger.kernel.org, AJvYcCVs0Rf5X/vjdFmT/dcKV6FUOHgU92P71qBiedc6JBVqPcXBApQ6JOH2Z6UaDfdBTAfUrbQtK80Adieo@vger.kernel.org, AJvYcCWFeJMCh6xRE131gdjQr4xD+QS06dKMA6Dt3gtvzkE9pTyYS1sJQvj5IiDzsg5YXDZ+1R84ovlB2ACL@vger.kernel.org, AJvYcCWg4LzE5NsgXRJpKPWOolaONrfXfD9n4QKxcg3sJYmxkdLvXnNMamUGGkuuDfKhFLE1+RfEHwe3CbhkgWlcuhI=@vger.kernel.org, AJvYcCWwNRs2VQKTYuB8CjOy2osA4O4ELGyvzF/cafal8+uFbL78HO9NPafyGHrd0dTHNHE3Txp7b6xuZKAV@vger.kernel.org
-X-Gm-Message-State: AOJu0YymAQ1bBobeXeiUk+FNpGtgHYBpvYAu03EFYxSGYzzGcLTMctjf
-	3YEovNcF9fiwZPVeB5xuAxHZxO6D1QZceLj+fb/YX59qw8Zzk5isRmBCGT8sZCxnoYfhtcfWgQf
-	qeWDQkBas4Ij39hQjN+wJMlrypsHFz6Y=
-X-Gm-Gg: ASbGncsDaps+bOj2Wywtwz1V1GI83ht5D/e2H2e83QVorMZe5K6UUBKo6ensONlsJdX
-	pH8VM3SB+NiwuTQ+EW+Pa8rF6PfZv+MXSrUzS2DQbzaBPDkCKS0JFqDO13zWWguvmAKQ+U6Qf+6
-	mKuQvbDp4WWgVY53Z3BvOxs4TV/r2qTG+XeE9h9ItrZyg=
-X-Google-Smtp-Source: AGHT+IGml+/wI/ttVJxoSaAeHmsEJgv1Qyo+AziT1f7C4wzb0+XtAzoRAvO/6UJcBeBiENnHea2kADFQnSSIKre+AeI=
-X-Received: by 2002:a17:90a:e7ca:b0:312:639:a06d with SMTP id
- 98e67ed59e1d1-318c925acf9mr1963338a91.5.1751038663269; Fri, 27 Jun 2025
- 08:37:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XZ7A6BEy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751038840; x=1782574840;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=uqxNoP0aScxvHUJUFb6AHeHCsVbbhBRCbyQSpDhJLZQ=;
+  b=XZ7A6BEy5rO6o6HzZpBFll5kKQ6UJYXoo6qU+hcaXV4k4/0oyoB0ypDl
+   x9niHY5iqFt85zqoNAw4YyD17E024LAT396cIX3oT+2QN1oN5TYNjm4o4
+   mricuc8ismuVY2rygSSpGiH3emhoT4KhFU3xtNY2ZBoaTpqLwt+w7o/Qi
+   mZmyfbcqGS/wo+LYaheJZkJrltB5WY0GnvI5ovfgPtw4fMxHkx+Unhnu5
+   60PqgTVEiChHfeZdb98DzARor/9MIE8pFVOuV4l3z4QVrKf/MdPa6aqnX
+   gyrLpZKyOQrTjHvzcJtRONeVqESVsMzYUHm/rjY0VSeoep9vG8wwIaxnZ
+   g==;
+X-CSE-ConnectionGUID: hKkvjks3SzGM7vzLRdOggg==
+X-CSE-MsgGUID: iFA4AHLITRSGEg+Byk2vPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="70925825"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="70925825"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 08:40:40 -0700
+X-CSE-ConnectionGUID: mFKKxv6IRjWsuzHEsjJFuQ==
+X-CSE-MsgGUID: 8MXOkRJHRnKxY6VezkdaBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="158564829"
+Received: from opintica-mobl1 (HELO stinkbox) ([10.245.245.146])
+  by orviesa005.jf.intel.com with SMTP; 27 Jun 2025 08:40:36 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Fri, 27 Jun 2025 18:40:35 +0300
+Date: Fri, 27 Jun 2025 18:40:35 +0300
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To: Jani Nikula <jani.nikula@intel.com>
+Cc: intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+	Imre Deak <imre.deak@intel.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Matt Wagantall <mattw@codeaurora.org>,
+	Dejin Zheng <zhengdejin5@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 18/18] drm/i915/ddi: prefer read_poll_timeout() over
+ readx_poll_timeout()
+Message-ID: <aF67cxjlfWiWMx-4@intel.com>
+References: <cover.1751023767.git.jani.nikula@intel.com>
+ <59bcc15dd4debf00ee0c7b430a3b701462ac9de7.1751023767.git.jani.nikula@intel.com>
+ <aF6UOCLdO0fGHGA9@intel.com>
+ <f922ec0a42855e17228d3f22d7291b389abe2df0@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623-rust-next-pwm-working-fan-for-sending-v5-0-0ca23747c23e@samsung.com>
- <CGME20250623180858eucas1p1815f6d6815b1c715baad94810cefacd5@eucas1p1.samsung.com>
- <20250623-rust-next-pwm-working-fan-for-sending-v5-1-0ca23747c23e@samsung.com>
- <q7sz7uci5vnyc24laqzs56vgt4i2jamb3ifyxkqom6qcml5kkv@642prvwxjkxc>
-In-Reply-To: <q7sz7uci5vnyc24laqzs56vgt4i2jamb3ifyxkqom6qcml5kkv@642prvwxjkxc>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 27 Jun 2025 17:37:31 +0200
-X-Gm-Features: Ac12FXyJg4tT9bxwLEYb_HLIZtlp-3_A8C-ynNyjXzmSe2QQtKFWNglZwQDRbqQ
-Message-ID: <CANiq72nZzuqgNRU7RnUP+D2R+Oj8q9Nhje2XiyauW8Pby6UxPw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/9] rust: pwm: Add Kconfig and basic data structures
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Michal Wilczynski <m.wilczynski@samsung.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Drew Fustini <drew@pdp7.com>, 
-	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f922ec0a42855e17228d3f22d7291b389abe2df0@intel.com>
+X-Patchwork-Hint: comment
 
-On Fri, Jun 27, 2025 at 5:10=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek@ker=
-nel.org> wrote:
->
-> Currently CONFIG_PWM is a bool, so it cannot be =3Dm. But I considered
-> making PWM a tristate variable. How would that interfere with Rust
-> support?
+On Fri, Jun 27, 2025 at 04:34:23PM +0300, Jani Nikula wrote:
+> On Fri, 27 Jun 2025, Ville Syrjälä <ville.syrjala@linux.intel.com> wrote:
+> > On Fri, Jun 27, 2025 at 02:36:32PM +0300, Jani Nikula wrote:
+> >> Unify on using read_poll_timeout() throughout instead of mixing with
+> >> readx_poll_timeout(). While the latter can be ever so slightly simpler,
+> >> they are both complicated enough that it's better to unify on one
+> >> approach only.
+> >> 
+> >> While at it, better separate the handling of error returns from
+> >> drm_dp_dpcd_readb() and the actual status byte. This is best achieved by
+> >> inlining the read_fec_detected_status() function.
+> >> 
+> >> Cc: Imre Deak <imre.deak@intel.com>
+> >> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+> >> ---
+> >>  drivers/gpu/drm/i915/display/intel_ddi.c | 33 +++++++++---------------
+> >>  1 file changed, 12 insertions(+), 21 deletions(-)
+> >> 
+> >> diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
+> >> index 0405396c7750..fc4587311607 100644
+> >> --- a/drivers/gpu/drm/i915/display/intel_ddi.c
+> >> +++ b/drivers/gpu/drm/i915/display/intel_ddi.c
+> >> @@ -2339,34 +2339,25 @@ static void intel_dp_sink_set_fec_ready(struct intel_dp *intel_dp,
+> >>  		drm_dbg_kms(display->drm, "Failed to clear FEC detected flags\n");
+> >>  }
+> >>  
+> >> -static int read_fec_detected_status(struct drm_dp_aux *aux)
+> >> -{
+> >> -	int ret;
+> >> -	u8 status;
+> >> -
+> >> -	ret = drm_dp_dpcd_readb(aux, DP_FEC_STATUS, &status);
+> >> -	if (ret < 0)
+> >> -		return ret;
+> >> -
+> >> -	return status;
+> >> -}
+> >> -
+> >>  static int wait_for_fec_detected(struct drm_dp_aux *aux, bool enabled)
+> >>  {
+> >>  	struct intel_display *display = to_intel_display(aux->drm_dev);
+> >>  	int mask = enabled ? DP_FEC_DECODE_EN_DETECTED : DP_FEC_DECODE_DIS_DETECTED;
+> >> -	int status;
+> >> -	int err;
+> >> +	u8 status = 0;
+> >> +	int ret, err;
+> >>  
+> >> -	err = readx_poll_timeout(read_fec_detected_status, aux, status,
+> >> -				 status & mask || status < 0,
+> >> -				 10000, 200000);
+> >> +	ret = read_poll_timeout(drm_dp_dpcd_readb, err,
+> >> +				err || (status & mask),
+> >> +				10 * 1000, 200 * 1000, false,
+> >> +				aux, DP_FEC_STATUS, &status);
+> >
+> > I think I hate these macros. It's very hard to tell from this
+> > soup what is actually being done here.
+> 
+> The thing is, I hate __wait_for(), wait_for(), wait_for_us(),
+> wait_for_atomic_us(), and wait_for_atomic() even more.
+> 
+> It's also very hard to figure out what is actually going on with
+> them. The timeouts are arbitrarily either ms or us. wait_for_us() is
+> atomic depending on the timeout. __wait_for() Wmax parameter actually
+> isn't the max sleep, it's 2*Wmax-2. Some of them have exponentially
+> growing sleeps, while some arbitrarily don't.
+> 
+> It's a fscking mess, and people randomly choose whichever version with
+> no idea what's actually going on behind the scenes.
+> 
+> > The 'val', 'op', and 'args' look very disconnected here even though
+> > they are always part of the same thing. Is there a reason they can't
+> > just be a single 'op' parameter like we have in wait_for() so you can
+> > actually see the code?
+> >
+> > Ie.
+> > read_poll_timeout(err = drm_dp_dpcd_readb(aux, DP_FEC_STATUS, &status),
+> > 		  err || (status & mask),
+> >                   10 * 1000, 200 * 1000, false);
+> > ?
+> 
+> Internally the macro has:
+> 
+> #define read_poll_timeout(op, val, cond, sleep_us, timeout_us, \
+> 				sleep_before_read, args...) \
+> 
+> ...
+> 
+> 		(val) = op(args); \
+> 
+> So you do need to provide an lvalue val, and you need to be able to add
+> () after op. I think GCC allows not passing varargs. IOW you'd need to
+> implement another macro (which could be used to implement the existing
+> one, but not the other way round).
 
-At the moment, the requirement would still need to be `PWM=3Dy` until
-the `kernel` crate is split, which I guess is why this was here (I
-assume copied from elsewhere).
+Just get rid of the 'args' and 'val' and it'll work just fine.
+Then it'll be almost identical to wait_for() (basically just missing the
+increasing backoff stuff).
 
-Cheers,
-Miguel
+AFAICS this thing was originally added just for reading a single
+register and checking some bit/etc, so the name made some sense.
+But now we're abusing it for all kinds of random things, so even
+the name no longer makes that much sense.
+
+So I think just something like this would work fine for us:
+
+diff --git a/include/linux/iopoll.h b/include/linux/iopoll.h
+index 91324c331a4b..9c38fd732028 100644
+--- a/include/linux/iopoll.h
++++ b/include/linux/iopoll.h
+@@ -14,27 +14,24 @@
+ #include <linux/io.h>
+ 
+ /**
+- * read_poll_timeout - Periodically poll an address until a condition is
+- *			met or a timeout occurs
+- * @op: accessor function (takes @args as its arguments)
+- * @val: Variable to read the value into
+- * @cond: Break condition (usually involving @val)
+- * @sleep_us: Maximum time to sleep between reads in us (0 tight-loops). Please
+- *            read usleep_range() function description for details and
++ * poll_timeout - Periodically poll and perform an operaion until
++ *                a condition is met or a timeout occurs
++ *
++ * @op: Operation
++ * @cond: Break condition
++ * @sleep_us: Maximum time to sleep between operations in us (0 tight-loops).
++ *            Please read usleep_range() function description for details and
+  *            limitations.
+  * @timeout_us: Timeout in us, 0 means never timeout
+- * @sleep_before_read: if it is true, sleep @sleep_us before read.
+- * @args: arguments for @op poll
++ * @sleep_before_read: if it is true, sleep @sleep_us before operation.
+  *
+  * When available, you'll probably want to use one of the specialized
+  * macros defined below rather than this macro directly.
+  *
+- * Returns: 0 on success and -ETIMEDOUT upon a timeout. In either
+- * case, the last read value at @args is stored in @val. Must not
++ * Returns: 0 on success and -ETIMEDOUT upon a timeout. Must not
+  * be called from atomic context if sleep_us or timeout_us are used.
+  */
+-#define read_poll_timeout(op, val, cond, sleep_us, timeout_us, \
+-				sleep_before_read, args...) \
++#define poll_timeout(op, cond, sleep_us, timeout_us, sleep_before_read) \
+ ({ \
+ 	u64 __timeout_us = (timeout_us); \
+ 	unsigned long __sleep_us = (sleep_us); \
+@@ -43,12 +40,12 @@
+ 	if (sleep_before_read && __sleep_us) \
+ 		usleep_range((__sleep_us >> 2) + 1, __sleep_us); \
+ 	for (;;) { \
+-		(val) = op(args); \
++		op; \
+ 		if (cond) \
+ 			break; \
+ 		if (__timeout_us && \
+ 		    ktime_compare(ktime_get(), __timeout) > 0) { \
+-			(val) = op(args); \
++			op; \
+ 			break; \
+ 		} \
+ 		if (__sleep_us) \
+@@ -58,6 +55,30 @@
+ 	(cond) ? 0 : -ETIMEDOUT; \
+ })
+ 
++/**
++ * read_poll_timeout - Periodically poll an address until a condition is
++ *                     met or a timeout occurs
++ * @op: accessor function (takes @args as its arguments)
++ * @val: Variable to read the value into
++ * @cond: Break condition (usually involving @val)
++ * @sleep_us: Maximum time to sleep between reads in us (0 tight-loops). Please
++ *            read usleep_range() function description for details and
++ *            limitations.
++ * @timeout_us: Timeout in us, 0 means never timeout
++ * @sleep_before_read: if it is true, sleep @sleep_us before read.
++ * @args: arguments for @op poll
++ *
++ * When available, you'll probably want to use one of the specialized
++ * macros defined below rather than this macro directly.
++ *
++ * Returns: 0 on success and -ETIMEDOUT upon a timeout. In either
++ * case, the last read value at @args is stored in @val. Must not
++ * be called from atomic context if sleep_us or timeout_us are used.
++ */
++#define read_poll_timeout(op, val, cond, sleep_us, timeout_us, \
++			  sleep_before_read, args...) \
++	poll_timeout((val) = op(args), cond, sleep_us, timeout_us, sleep_before_read)
++
+ /**
+  * read_poll_timeout_atomic - Periodically poll an address until a condition is
+  * 				met or a timeout occurs
+-- 
+2.49.0
+
+-- 
+Ville Syrjälä
+Intel
