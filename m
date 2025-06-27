@@ -1,78 +1,207 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D468165F13
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F994A21;
+	Fri, 27 Jun 2025 05:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751003367; cv=none; b=MbuTwUPRO/0jV5QGda46o2411HOML8TBTEm+wRMrZc2G3KWGkaT384vTnB7jrsUplbdyJmAgv1/tA6rVwXuX/nR0+JPUB7lkNkPmArtVkZ1dTCvleDchPJmuYLZxaXzjf37P6Dz8Aa5ggnPaXfRWOLLxtGMSSYNu5pReb46o44o=
+	t=1751003552; cv=none; b=Yo3q0SDSR+sgyO7aReIrI/PmJF8swkdr1V4NW66IqeXlxSebefmOokJqNZuoD/dNuWAtYaMWJkH/lbkiU3BZ8qplGDC0tqlJF7QTKXuq4N2Pq1koTCCv1go37IoHsYuulxmJWJaGwxkXkvTQq0Co5/V1dYTnAtZA1NBZvMtzVhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751003367; c=relaxed/simple;
-	bh=ChyohPaImGg58G8gTAviECxWU4CbNaXsWkcq5juHCkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q9ewTHHZ6us2mh9/NbK/8rOAkDy7KGMogVdW+4cnT2MvTDx4vwsnPvqaTV29wd5TjdzkLBVAo+mYUdJKQQNaobtnog6gh1jVOVV6QHXtyN6vcsncn3TKYMXbHT8uYbwpGxqv+po4YGc5KMhDSI0QYGDTP3fjs+oteElfWDODmu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 55R5nIte004554;
-	Fri, 27 Jun 2025 07:49:18 +0200
-Date: Fri, 27 Jun 2025 07:49:18 +0200
-From: Willy Tarreau <w@1wt.eu>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-        linux-kernel@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [RFC PATCH 3/3] tools/nolibc: add a new "install_all_archs"
- target
-Message-ID: <20250627054918.GB4540@1wt.eu>
-References: <20250620103705.10208-1-w@1wt.eu>
- <20250620103705.10208-4-w@1wt.eu>
- <92eda9ff-116e-4ec1-930c-7474da9652fc@t-8ch.de>
- <b14da196-84cc-4d13-baa2-952ba22f5a3e@app.fastmail.com>
- <89a2e713-edfd-4556-b321-cdccc3437a43@t-8ch.de>
- <20250627054618.GA4540@1wt.eu>
+	s=arc-20240116; t=1751003552; c=relaxed/simple;
+	bh=I+cyzXXEFsVaAY+O6/we7LXtcWZMrSXWgPA81FRNw4c=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ZxNrFPMicuowjVKuEBF34vY8ukOizREkCskBjT1rYXDwbe+crFvn8BK8tkb0Jk3ju2li+CK8j379kDrQzr0AlPgTwCtFFtahv8vAi8uv0kM0eYap44cUIGfLAiiJs6t7Pp1fQ84eZ2AsTo4sy0ceXH7kgnWVPB4+e11XDXNEAzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=NUg3Q+FS; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="NUg3Q+FS"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1751003086;
+	bh=UyV35LOM07P/PALS6LcEMleCj1no3wxnvAIeYWaEtMU=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=NUg3Q+FSo4ZvGRStNFZRcyBK2LQb6PdQnA/gJ9PlV5t7nFWQSPNUt3RjFyklTZ+HC
+	 iXPD48xk53aOi7RlCQXLB0Orsic0/wjL9ImhlnrVhMz0XcN68kVY4/fHrIjaliksWB
+	 ojxzRZjZeTqF6MG9YpIg6T86PnpEhMf8g2ubuyd8=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250627054618.GA4540@1wt.eu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [REGRESSION] 9pfs issues on 6.12-rc1
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <w5ap2zcsatkx4dmakrkjmaexwh3mnmgc5vhavb2miaj6grrzat@7kzr5vlsrmh5>
+Date: Fri, 27 Jun 2025 07:44:31 +0200
+Cc: Antony Antony <antony.antony@secunet.com>,
+ David Howells <dhowells@redhat.com>,
+ Antony Antony <antony@phenome.org>,
+ Christian Brauner <brauner@kernel.org>,
+ Eric Van Hensbergen <ericvh@kernel.org>,
+ Latchesar Ionkov <lucho@ionkov.net>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Christian Schoenebeck <linux_oss@crudebyte.com>,
+ Sedat Dilek <sedat.dilek@gmail.com>,
+ Maximilian Bosch <maximilian@mbosch.me>,
+ regressions@lists.linux.dev,
+ v9fs@lists.linux.dev,
+ netfs@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C7DAFD20-65D2-4B61-A612-A25FCC0C9573@flyingcircus.io>
+References: <ZxFQw4OI9rrc7UYc@Antony2201.local>
+ <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me>
+ <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info>
+ <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me>
+ <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com>
+ <3327438.1729678025@warthog.procyon.org.uk>
+ <ZxlQv5OXjJUbkLah@moon.secunet.de>
+ <w5ap2zcsatkx4dmakrkjmaexwh3mnmgc5vhavb2miaj6grrzat@7kzr5vlsrmh5>
+To: Ryan Lahfa <ryan@lahfa.xyz>
 
-On Fri, Jun 27, 2025 at 07:46:18AM +0200, Willy Tarreau wrote:
-> On Fri, Jun 27, 2025 at 07:11:45AM +0200, Thomas Weißschuh wrote:
-> > On 2025-06-26 23:15:07+0200, Arnd Bergmann wrote:
-> (...)
-> > With the symlink, a given generic UAPI tree can be specialized to one
-> > specific architecture. But here we want to create a full sysroot that works
-> > for all architectures *at the same time*. So a symlink would not be enough.
-> 
-> Exactly!
-> 
-> > > If it's indeed possible to concatenate the path name (I couldn't
-> > > figure that out either), that could also be done in place of the
-> > > symlink but simpler than the #if/#elif/#elif/... block, like
-> > > 
-> > > #include <arch.h> // defines ARCH_PREFIX
-> > > #include CONCAT(ARCH_PREFIX, ioctl.h)
-> > 
-> > If we can't get it to work like this I would still prefer to have a
-> > template header file which gets specialized with sed instead of the
-> > Makefile loop.
-> 
-> The thing is that it's not a single header, it's for each header file
-> present in asm/. And we can't request that anyone adding anything into
-> asm would also have to maintain one extra template for each of them.
-> 
-> Or I'm simply not getting how you would envision it maybe.
+Hi,
 
-Or do you mean a template that contains all #ifdef/#include for all
-archs, that serves as the basis to rebuild all headers, and that we
-still have the loop on all files in the makefile ? I.e. you simply
-want to drop the arch loop ? If that's it, yes I'm fine with this as
-well and can give it a try.
+we=E2=80=99re experiencing the same issue with a number of NixOS tests =
+that are heavy in operations copying from the v9fs mounted nix store.
 
-Willy
+> On 13. Jun 2025, at 00:24, Ryan Lahfa <ryan@lahfa.xyz> wrote:
+>=20
+> Hi everyone,
+>=20
+> Le Wed, Oct 23, 2024 at 09:38:39PM +0200, Antony Antony a =C3=A9crit :
+>> On Wed, Oct 23, 2024 at 11:07:05 +0100, David Howells wrote:
+>>> Hi Antony,
+>>>=20
+>>> I think the attached should fix it properly rather than working =
+around it as
+>>> the previous patch did.  If you could give it a whirl?
+>>=20
+>> Yes this also fix the crash.
+>>=20
+>> Tested-by: Antony Antony <antony.antony@secunet.com>
+>=20
+> I cannot confirm this fixes the crash for me. My reproducer is =
+slightly
+> more complicated than Max's original one, albeit, still on NixOS and
+> probably uses 9p more intensively than the automated NixOS testings
+> workload.
+>=20
+> Here is how to reproduce it:
+>=20
+> $ git clone https://gerrit.lix.systems/lix
+> $ cd lix
+> $ git fetch https://gerrit.lix.systems/lix refs/changes/29/3329/8 && =
+git checkout FETCH_HEAD
+> $ nix-build -A hydraJobs.tests.local-releng
+>=20
+> I suspect the reason for why Antony considers the crash to be fixed is
+> that the workload used to test it requires a significant amount of
+> chance and retries to trigger the bug.
+>=20
+> On my end, you can see our CI showing the symptoms:
+> =
+https://buildkite.com/organizations/lix-project/pipelines/lix/builds/2357/=
+jobs/019761e7-784e-4790-8c1b-f609270d9d19/log.
+>=20
+> We retried probably hundreds of times and saw different corruption
+> patterns, Python getting confused, ld.so getting confused, systemd
+> sometimes too. Python had a much higher chance of crashing in many of
+> our tests. We reproduced it over aarch64-linux (Ampere Altra Q80-30) =
+but
+> also Intel and AMD CPUs (~5 different systems).
+
+Yeah. We=E2=80=99re on AMD CPUs and it wasn=E2=80=99t hardware-bound.=20
+
+The errors we saw where:=20
+
+- malloc(): unaligned tcache chunk detected
+- segfaulting java processes
+- misbehaving filesystems (errors about internal structures in ext4, =
+incorrect file content in xfs)
+- crashing kernels when dealing with the outfall of those errors
+
+> As soon as we reverted to Linux 6.6 series, the bug went away.
+
+Same here, the otherway around: we came from 6.6.94 and updated to =
+6.12.34 and immediately saw a number of tests failing, all of which were =
+heavy in copying data from v9fs to the root filesystem in the VM.
+
+> We bisected but we started to have weirder problems, this is because =
+we
+> encountered the original regression mentioned in October 2024 and for =
+a
+> certain range of commits, we were unable to bisect anything further.
+
+I had already found the issue from last October when started bisecting, =
+I later got in touch with Ryan who recognized that we were chasing the =
+same issue. I stopped bisecting at that point - the bisect was already =
+homing in around the time of the changes in last October.
+
+> So I switched my bisection strategy to understand when the bug was
+> fixed, this lead me on the commit
+> e65a0dc1cabe71b91ef5603e5814359451b74ca7 which is the proper fix
+> mentioned here and on this discussion.
+>=20
+> Reverting this on the top of 6.12 cause indeed a massive amount of
+> traces, see this gist [1] for examples.
+
+Yeah. During bisect I noticed it flapping around with the original =
+October issues crashing immediately during boot.
+
+> Applying the "workaround patch" aka "[PATCH] 9p: Don't revert the I/O
+> iterator after reading" after reverting e65a0dc1cabe makes the problem
+> go away after 5 tries (5 tries were sufficient to trigger with the
+> proper fix).
+
+Yup, I applied the revert and workaround patch on top of 6.12.34 and the =
+reliably broken test became reliably green again.
+
+Our test can be reproduced, too:
+
+$ git clone https://github.com/flyingcircusio/fc-nixos.git
+$ cd fc-nixos
+$ eval $(./dev-setup)
+$ nix-build tests/matomo.nix
+
+The test will fail with ext4 complaining something like this:
+
+machine # [ 42.596728] =
+vn2haz1283lxz6iy0rai850a7jlgxbja-matomo-setup-update-pre[1233]: Copied =
+files, updating package link in /var/lib/matomo/current-package.
+machine # [ 42.788956] EXT4-fs error (device vda): =
+htree_dirblock_to_tree:1109: inode #13138: block 5883: comm setfacl: bad =
+entry in directory: rec_len % 4 !=3D 0 - offset=3D0, inode=3D606087968, =
+rec_len=3D31074, size=3D4096 fake=3D0
+machine # [ 42.958590] EXT4-fs error (device vda): =
+htree_dirblock_to_tree:1109: inode #13138: block 5883: comm chown: bad =
+entry in directory: rec_len % 4 !=3D 0 - offset=3D0, inode=3D606087968, =
+rec_len=3D31074, size=3D4096 fake=3D0
+machine # [ 43.068003] EXT4-fs error (device vda): =
+htree_dirblock_to_tree:1109: inode #13138: block 5883: comm chmod: bad =
+entry in directory: rec_len % 4 !=3D 0 - offset=3D0, inode=3D606087968, =
+rec_len=3D31074, size=3D4096 fake=3D0
+machine # [ 43.004098] =
+vn2haz1283lxz6iy0rai850a7jlgxbja-matomo-setup-update-pre[1233]: Giving =
+matomo read+write access to /var/lib/matomo/share/matomo.js, =
+/var/lib/matomo/share/piwik.js, /var/lib/matomo/share/config, =
+/var/lib/matomo/share/misc/user, /var/lib/matomo/share/js, =
+/var/lib/matomo/share/tmp, /var/lib/matomo/share/misc
+machine # [ 43.201319] EXT4-fs error (device vda): =
+htree_dirblock_to_tree:1109: inode #13138: block 5883: comm setfacl: bad =
+entry in directory: rec_len % 4 !=3D 0 - offset=3D0, inode=3D606087968, =
+rec_len=3D31074, size=3D4096 fake=3D0
+
+I=E2=80=99m also available for testing and further diagnosis.
+
+Christian
+
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
+
