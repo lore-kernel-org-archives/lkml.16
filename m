@@ -1,129 +1,85 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2579B42AA6
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 23:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031982F1FCB;
+	Fri, 27 Jun 2025 23:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751067979; cv=none; b=OkeSbn1fH3Sk/E9GQipNRlOeD0kl9iqCjE4bdNOSKG3VnQEa5+b+Ghx6O5atdecVd9Nk5EpOHVSq7Iu9oaEVJMPJqyBOCm/xJ6AE3aXviN5dHHZfNA5L699FA6+FQuIFZ0XAAQYfeDU4pSTo4jLjGGUzD1MYKFSWc1VBPtgaP+k=
+	t=1751068185; cv=none; b=VnbmGti5dA9Pnl1UF7JswaUdfCFu5JC4fSeYvHi9Th3NQiPjLS/OCC3zKDIgQYHLRAOuzv/eGtFv4bpxYFvCU4XISeEzjg5hcPtjEwZk7tZdpTsYZfg+Mc3A2aKJR7y4lGH/Tx27kPZB/NOi7MmYIzebAh3QcXjUiRUF4ZuF74Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751067979; c=relaxed/simple;
-	bh=Lrhi2gkCItdv5YXx85FF9R2huyOdFHn1PCllkjvLZA8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OXTia0swOmZY/7Vwv1wKDvT9xCFvnx/mw6bjvph5xpxs95QLavWel9Gduq0Eq5Zvh3ALD/mG93zlgZ/pJ99+Yf6c46UnliVnFbGk2Od7R3XJMK5xcdMwUeGQvt2LX1z1i/XiPV4r65pbEc8YoO2kaX3aR7sqjiCH+YsYjOhJypE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oOUws00F; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751068185; c=relaxed/simple;
+	bh=mlmZEjXG7JbeCyDnmaOEUzGlG9f+Aalt/BuH5agK3xQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=AeQF+hs0mdyewIA71cG8leO0guP4ENcg1p6ctwLPIxEEP3HWn2c50/FOQxw99U1hyGmRMrZfCmXk7t7b2PF2d/pwZ5t3ctdysSC23VlcJjLTe1sdqWJ9RF9dpiBPanh1cAveaGSLocNH5i0G3eireXW0PNgYGh6DbE8DT3T95Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yh1yIhKf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oOUws00F"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-60b86fc4b47so2361a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:46:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751067976; x=1751672776; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gxi0tOD/7IOqoceOZy5x8NvkHomJG1RzyOwutiJktbU=;
-        b=oOUws00FPo/R4Rpz9XEihgdiNKppC1aPK20zB0OOJMT6aW3w9VP7nSgaSa9Yj2rmdg
-         a1oz4Ae6hUzic22z2fa821JlsPxz/igiYlTob/t4JDLzf/L89DdzgkYYfmFp2g/aWxkp
-         xNK713FKcT9pTb8x7lA+/4PsM3S1n1CMJ/f1X7Nt5k8AUwfGIWvw5xKf7Aq2O8E5djpY
-         eBmBGL0/+r2+QbCZOBhnEx7hwX4shA/yTivS+quz6iGFRMfCYN4wx1wtWPzs4ZMEZ6iZ
-         0BK4GLiBd20ap9QEQX0H1kBOSn4rEwPBKUPIIW/Zm4Cu3bQjUfvFGkoBbF1OJ4dbsmxs
-         ItgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751067976; x=1751672776;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gxi0tOD/7IOqoceOZy5x8NvkHomJG1RzyOwutiJktbU=;
-        b=XbZxvYmLDtsH2Hfd7UxAp2Y2sA0uS3QU2yPvXaMh/HP64i2c4FyRz3u2iT8gFM036g
-         FBR6vZnKz7+eoD9aZJZTQt04bVz+W/Un5HgI54kvpFHygt2ARSUE8DwflrpA5d18V7w8
-         StZdOvR4z+JNc9hZnB5kekxaaItdACVaU+4e9w9DPqBumwr/5FFLxeA5CGVRC5TDML8D
-         l9vHnaMPf/DqS28D5MlQiegQ/AdYPHPuKMdr3BtMmy78e8UQmdbILPi8jGJaFCNJi2pH
-         /KDw/G1sxVqlY/2CiBvZXCP2mPHaAYBmDhfgYRDsSxwVGzCtybtqk/GAUneHVRr9r4aE
-         PZcA==
-X-Forwarded-Encrypted: i=1; AJvYcCUxWuk+eunuZ1aGc15A1C0srTnpgUj3Fm0uNRntp0idVIzbGCXIHsPPVO6V3fC9uQmgzDtf7jQDTolHxeU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyH9k4fBuD4cC4mREKAyZbE2Yrq+vernhTiJnD4G+/kfuowx5EM
-	PvGS4j8dFCnVfNhkPk1QRuwUEgMOrWjCi0nFf4Jbjz8cEN85Uq6lllIpt0gnirlIOCFtO80V84H
-	IjbvTQaCvOU18Bgf3+I223X96rhq6kMBCu6dofK8+
-X-Gm-Gg: ASbGncsPLzRye0LBOhmBpu92uAhMLI5RggDNxgZNF1KhEIDjnQ125etvQMbQtMdXUoq
-	BAIunpcAkVa3wfDHMk5xeiLXkVvwtoHPT5CIix6dwdNSAfuAX6x4vJEwQTQC5GTg0C/yRY9dfPK
-	mXkjgwQelvX2sy2zMLMlVoHtoKkACeiRdCTswE/JPl1H/+AvjV0IQ7MalpEj1Q55Hx4Xz0ty/Xj
-	Q==
-X-Google-Smtp-Source: AGHT+IGGvQWrUecDT2rO9N2vQpFIU/bJH+u5vvObubXckN3HH16OSwQ49/u15QPNM7qmIVHk5rbm5B2QhToBhmNUEME=
-X-Received: by 2002:a05:6402:414b:b0:607:41dd:5fe7 with SMTP id
- 4fb4d7f45d1cf-60ca582499dmr27121a12.1.1751067976395; Fri, 27 Jun 2025
- 16:46:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yh1yIhKf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47CCCC4CEE3;
+	Fri, 27 Jun 2025 23:49:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751068184;
+	bh=mlmZEjXG7JbeCyDnmaOEUzGlG9f+Aalt/BuH5agK3xQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Yh1yIhKfhuWBncSI/r9zubrT7sZsms2KKYD0++g4aSKqVLr4cb6akeoC7FSShF+/u
+	 pz/bmqgsZt4hjyClp0S4ysIstnMCgxmJXc49gcN9RAjJN1AgRSt+lxLcxNEi+ravfo
+	 PpvWVyTUI/QfpLZtFTCk2JAQOyx2GcRPdz9DTY6Y7LKx9JGlK/nQz9IRM7jjQYKECy
+	 ol0e0ByVk6SjtvTKVPLEGUn/KPFskSCRg9cuDVNzJQ/yuQHiW2fXNSI5mx4l7hWbXn
+	 eTmutLw4H3DmPxHeCmWhWgUvWQBrDmdM0tplcgtbRjlyhnxYcSBAd+/2r+ZjmZ8Ah+
+	 RLVF4Fb3h1j+A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E9938111CE;
+	Fri, 27 Jun 2025 23:50:11 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627-linux-miscident-v1-1-d37c870550ef@google.com>
-In-Reply-To: <20250627-linux-miscident-v1-1-d37c870550ef@google.com>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Fri, 27 Jun 2025 16:46:04 -0700
-X-Gm-Features: Ac12FXzltduGfJCCaSruSW9Vc7bAJam5uXPuyh9cD2kBqzctmGZLsOCdZjPGjmE
-Message-ID: <CAGSQo03_FTLyYpvLRO8pFzZ1_aCu+i2-Xp5GVYVDzEg5MKGyPQ@mail.gmail.com>
-Subject: Re: [PATCH] rust: miscdevice: Export vtable testing
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, "Isaac J. Manjarres" <isaacmanjarres@google.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v7 0/3] dpll: add Reference SYNC feature
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175106821026.2091805.3166945763972558199.git-patchwork-notify@kernel.org>
+Date: Fri, 27 Jun 2025 23:50:10 +0000
+References: <20250626135219.1769350-1-arkadiusz.kubalewski@intel.com>
+In-Reply-To: <20250626135219.1769350-1-arkadiusz.kubalewski@intel.com>
+To: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Cc: donald.hunter@gmail.com, kuba@kernel.org, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
+ vadim.fedorenko@linux.dev, jiri@resnulli.us, anthony.l.nguyen@intel.com,
+ przemyslaw.kitszel@intel.com, andrew+netdev@lunn.ch,
+ aleksandr.loktionov@intel.com, corbet@lwn.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+ linux-rdma@vger.kernel.org, linux-doc@vger.kernel.org
 
-On Fri, Jun 27, 2025 at 4:42=E2=80=AFPM Matthew Maurer <mmaurer@google.com>=
- wrote:
->
-> A common pattern in the kernel is to test whether a file belongs to a
-> particular driver by checking its `f_op` struct against an expected
-> value. This provides a safe way to perform that test for `MiscDevice`
-> implementations without needing to directly expose the vtable.
->
-> Signed-off-by: Matthew Maurer <mmaurer@google.com>
+Hello:
 
-Additionally, we have a sample user[1] of this in the Android ashmem
-wrapper. They're currently working around it by grabbing the vtable
-out of the registration and testing manually.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-[1]: https://android-review.git.corp.google.com/c/kernel/common/+/3477511
+On Thu, 26 Jun 2025 15:52:16 +0200 you wrote:
+> The device may support the Reference SYNC feature, which allows the
+> combination of two inputs into a input pair. In this configuration,
+> clock signals from both inputs are used to synchronize the DPLL device.
+> The higher frequency signal is utilized for the loop bandwidth of the DPLL,
+> while the lower frequency signal is used to syntonize the output signal of
+> the DPLL device. This feature enables the provision of a high-quality loop
+> bandwidth signal from an external source.
+> 
+> [...]
 
-> ---
->  rust/kernel/miscdevice.rs | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
-> index 939278bc7b03489a647b697012e09223871c90cd..5f59eda57c38be5f0d54fa969=
-2fe5b2819e31480 100644
-> --- a/rust/kernel/miscdevice.rs
-> +++ b/rust/kernel/miscdevice.rs
-> @@ -177,6 +177,14 @@ fn show_fdinfo(
->      }
->  }
->
-> +/// Determines whether a given `File` is backed by the `T` `MiscDevice` =
-based on vtable matching.
-> +pub fn is_miscdevice_file<T: MiscDevice>(file: &File) -> bool {
-> +    let vtable =3D core::ptr::from_ref(&MiscdeviceVTable::<T>::VTABLE);
-> +    // SAFETY: `f_op` is not mutated after file creation
-> +    let file_vtable =3D unsafe { (*file.as_ptr()).f_op };
-> +    vtable =3D=3D file_vtable
-> +}
-> +
->  /// A vtable for the file operations of a Rust miscdevice.
->  struct MiscdeviceVTable<T: MiscDevice>(PhantomData<T>);
->
->
-> ---
-> base-commit: 86731a2a651e58953fc949573895f2fa6d456841
-> change-id: 20250627-linux-miscident-7b67db234a5c
->
-> Best regards,
-> --
-> Matthew Maurer <mmaurer@google.com>
->
+Here is the summary with links:
+  - [net-next,v7,1/3] dpll: add reference-sync netlink attribute
+    https://git.kernel.org/netdev/net-next/c/7f15ee35972d
+  - [net-next,v7,2/3] dpll: add reference sync get/set
+    https://git.kernel.org/netdev/net-next/c/58256a26bfb3
+  - [net-next,v7,3/3] ice: add ref-sync dpll pins
+    https://git.kernel.org/netdev/net-next/c/5bcea241335b
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
