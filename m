@@ -1,126 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792DE19992C
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 02:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6292F2F1FCB;
+	Fri, 27 Jun 2025 02:46:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750992219; cv=none; b=KJoq1tcAJAxFE5o4RA3XQvgVztxyU0re1eUdjW82zl9FVYJMLyfSrN5rccFYeRTv3LCCq0QdlE4A0TtdpU+u1TAF+iBsBkuhry5FIVgQoGuLib/aPcCJW81RJWjgf162ByMce0UqqZlW8wovoiakZWX9qAJ7ANg0MqDaqAaD7jU=
+	t=1750992394; cv=none; b=ruOBtuju1hAaqXrCf+rCOr11ljj6nV5tzg2jlC4BYVmzt+b/unTmEGp5s+a+tWvacvod5PQtWaOstCFwO/GO6YqNpjwZVT/fYfIhXEghppkRXx+Jw957kpOYtS2PNse9A7NxULfbAPwBSQjsL7a915ccy0x1a+2gfdCRlMmKlMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750992219; c=relaxed/simple;
-	bh=RXC4Rxkam+ZBAOFfCItPQiQAgEwB6Nk3xgueJRX/EL4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qOx9ObmN+oq8e5gjlwtN9rp5O3k11SoLELqTG7YTR77VJ5glNs+0wOc7djs46WLwNYP0eWDr1CnPV+hvk2vIBDi2NDPFcxjZtazVAOJq5kLTBFnXLpgOnr3xYw5FJcTIPPmL3Zu3AsFZ64i5XzH71rvh8Czz9yupdYpx98HMH+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f+OpDwJ8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750992394; c=relaxed/simple;
+	bh=LQms1tNsqpQ+nXQaH2KYlSJYLllazDGuxMMHkBk5CDs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XqVL5kHcAWinNgK/daDirLarsxyhIOMLwyAhTIQSkheHjH4BjDW3dwljZIY4P62K7u9fq5IuN9ZOVQSIfBv3m5IArEezi+6LHwRdH9z+4wKcKPlEGx0+XmaOG6bSnpALJ5qXKLmC0cZnuzSbQPeOBtlAlgPpM18UUpfRAMlkLV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FUmEdZKy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f+OpDwJ8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750992215;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RXC4Rxkam+ZBAOFfCItPQiQAgEwB6Nk3xgueJRX/EL4=;
-	b=f+OpDwJ8InoOr8JvoeuHxbODQk0deDxL8X3f+/xEylGS2Lac9HO8f9BbGjU33L6z2e2caC
-	xuJafinTLHXaeLRMu3UTElGML4az6V/ipbfDkmA7sd65FxjVMSKQp4jselapY2+2WG/YmX
-	0Vp+fgbZ2FvOrpX9kuXYUrh5J1swJZ8=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-2-niTauyTyP8-W6O2dF97-wA-1; Thu, 26 Jun 2025 22:43:33 -0400
-X-MC-Unique: niTauyTyP8-W6O2dF97-wA-1
-X-Mimecast-MFC-AGG-ID: niTauyTyP8-W6O2dF97-wA_1750992212
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-311ae2b6647so1089988a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 19:43:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750992212; x=1751597012;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RXC4Rxkam+ZBAOFfCItPQiQAgEwB6Nk3xgueJRX/EL4=;
-        b=T4GAcIHPERNE4GzgvQkC/h7asT04dyrwaRQM5TrkRJy5pZiC+nuYIcah7Af+m0OyVx
-         jAL4dD5N5cI4hGjl0vz+dIEgFN/g5dMoUCeTzHsDZjw1gdewL0qbLPTnNHwVYcNrLCL+
-         CBU82X2gX3Ad/WisSjmx4Lxw0KSzCqoFuGVVkM1iBSSjsAn9ED3tgzOOACWYaWy//6y2
-         QIRq+hGBvW9gnD1Feu+EnqZ/FIL3CQKjswIaEdCIDRmReh8vUvX0RegZ/Pz4q8fnfNx0
-         boxBewwtHMGadSjHbR35+cNgPCKSqEZ009QTEidjD8klDOtsbkMp0rjgOrqy8F39vRuG
-         cqmw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6yuB9m3E5h9gogWEKkKTwZ0P06Z6vRBfW4x0E6FmziKlEUuXZgLkAeNC6Gsmut1OyUeG7OhFUH8bh3FI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwtFYWz83fMipfV7KJXTCBmWeenJ6sGKJgdGQ1haR9cgzm94VP
-	0ffMv9OY8vcuGCFh3CMmE27XUyF66fwVnDK4diwHysPM0vfoAnICrgFSsyeolWpI6WO6prbd/ta
-	gJl19Hw+63jdB6XZBmuNGxRmMT0YNxAw8juyKgTI+Hg1ifxeDplFADL+h00Hm8Gnq4ZI3tZWtQv
-	zSSj+zogn69s6i5g/kDlIkJ1PuyUIecGX/zrJTJxVF
-X-Gm-Gg: ASbGnct63fDvqJlTxUoBWzjeg09cFtuRLDdmpL64XLj+2bJerxs7w7kBkC7EZbIyiFk
-	DTIU/28Nzt52lEGCjfWwD1Nm/2AjggFdecwKyi6KELWHDukFISg2Q7Z4harvK0IJZdxg0vRzGT+
-	lp
-X-Received: by 2002:a17:90a:d64b:b0:312:1dc9:9f67 with SMTP id 98e67ed59e1d1-318c9107a53mr2192669a91.2.1750992212426;
-        Thu, 26 Jun 2025 19:43:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGJM16rdnxRskTxwuXyeMZbSoBcs9q4++zM+ywcskISDMXjQ0J0UHxMNSH2KE2x3C2uBazsSFuOebCMbQTd6Tc=
-X-Received: by 2002:a17:90a:d64b:b0:312:1dc9:9f67 with SMTP id
- 98e67ed59e1d1-318c9107a53mr2192640a91.2.1750992212056; Thu, 26 Jun 2025
- 19:43:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FUmEdZKy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF0CC4CEEE;
+	Fri, 27 Jun 2025 02:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750992394;
+	bh=LQms1tNsqpQ+nXQaH2KYlSJYLllazDGuxMMHkBk5CDs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FUmEdZKy5Pt85iIZINjlu6Rlw+WTOVjloMjWfOUMo1LHk6H53Te0c1wsyd8N4vhTL
+	 53kUWt5yc9a3iKDuavEg64TN6Q43K99IAq3pPC9PcKgpI2GIS6qBzQuYO1on5nVrYR
+	 s/RG/HdAzJaAfI7nPRGHfihNXYmCSy6JFzq/V+1VKJVbAVezkkf5RpbZ9e37qV1vuL
+	 2x0VbbiTZXMQQOMyud6dJRU217TdKsz5QbnJHwoljbfbZAha6cxt4d2MdAbgZaAfB2
+	 vYXACkfMBqv7cZhM2n833mbduEvSFugpShoskJ6/RhxH1RGxrtHdftTa4CBFseiqjV
+	 XaffibLNkkX2A==
+Date: Thu, 26 Jun 2025 21:46:33 -0500
+From: Rob Herring <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"open list:FREESCALE SOC DRIVERS" <linuxppc-dev@lists.ozlabs.org>,
+	"moderated list:FREESCALE SOC DRIVERS" <linux-arm-kernel@lists.infradead.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH v2 1/1] dt-bindings: soc: add vf610 reboot syscon
+ controller
+Message-ID: <20250627024633.GA1656962-robh@kernel.org>
+References: <20250617155231.2023977-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625160849.61344-1-minhquangbui99@gmail.com>
- <20250625160849.61344-4-minhquangbui99@gmail.com> <CACGkMEvY9pvvfq3Ok=55O1t3+689RCfqQJqaWjLcduHJ79CDWA@mail.gmail.com>
- <8f0927bf-dc2f-4a20-887a-6d8529623dd7@gmail.com>
-In-Reply-To: <8f0927bf-dc2f-4a20-887a-6d8529623dd7@gmail.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Fri, 27 Jun 2025 10:43:20 +0800
-X-Gm-Features: Ac12FXyeaiRss6v-acFo0ljDViofeaY9eNXnTbOP2WE1qi3Xv2JlKX1swLORs6U
-Message-ID: <CACGkMEvf18Dmo5Wzdq-GnJf-jOrzKMQ7epZA+ssWPzXvCnCXvw@mail.gmail.com>
-Subject: Re: [PATCH net 3/4] virtio-net: create a helper to check received
- mergeable buffer's length
-To: Bui Quang Minh <minhquangbui99@gmail.com>
-Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	Stanislav Fomichev <sdf@fomichev.me>, virtualization@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617155231.2023977-1-Frank.Li@nxp.com>
 
-On Thu, Jun 26, 2025 at 11:38=E2=80=AFPM Bui Quang Minh
-<minhquangbui99@gmail.com> wrote:
->
-> On 6/26/25 09:38, Jason Wang wrote:
-> > On Thu, Jun 26, 2025 at 12:10=E2=80=AFAM Bui Quang Minh
-> > <minhquangbui99@gmail.com> wrote:
-> >> Currently, we have repeated code to check the received mergeable buffe=
-r's
-> >> length with allocated size. This commit creates a helper to do that an=
-d
-> >> converts current code to use it.
-> >>
-> >> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
-> > I think it would be better to introduce this as patch 1, so a
-> > mergeable XDP path can use that directly.
-> >
-> > This will have a smaller changeset.
->
-> I'm just concerned that it might make backporting the fix harder because
-> the fix depends on this refactor and this refactor touches some function
-> that may create conflict.
+On Tue, Jun 17, 2025 at 11:52:30AM -0400, Frank Li wrote:
+> Add vf610 reboot controller, which used to reboot whole system. Fix below
+> CHECK_DTB warnings:
+> 
+> arch/arm/boot/dts/nxp/vf/vf610-bk4.dtb: /soc/bus@40000000/src@4006e000:
+>     failed to match any schema with compatible: ['fsl,vf610-src', 'syscon']
+> 
+> IC reference manual call it as system reset controller(SRC), but it is not
+> module as linux reset controller, which used to reset individual device.
+> SRC work as reboot controller, which reboot whole system. It provides a
+> syscon interface to syscon-reboot.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Change in v2
+> - change description to avoid confuse about reset controller.
+> - it is legacy device, more than 10 year. So try keep existed dts as it.
+> ---
+>  .../bindings/soc/fsl/fsl,vf610-src.yaml       | 47 +++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/fsl/fsl,vf610-src.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/fsl/fsl,vf610-src.yaml b/Documentation/devicetree/bindings/soc/fsl/fsl,vf610-src.yaml
+> new file mode 100644
+> index 0000000000000..cb8aa510a21f7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/fsl/fsl,vf610-src.yaml
+> @@ -0,0 +1,47 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas//soc/fsl/fsl,vf610-src.yaml#
 
-We can make it a single patch that contains:
+Double '/'
 
-1) new helper
-2) fixes
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale vf610 System Reset Controller (SRC)
+> +
+> +maintainers:
+> +  - Frank Li <Frank.Li@nxp.com>
+> +
+> +description: |
 
-as long as the changeset meets the requirement of -stable.
+Don't need '|'
 
-Thanks
-
->
-> Thanks,
-> Quang Minh.
->
-
+> +  IC reference manual call it as SRC, but it is not module as linux reset
+> +  controller, which used to reset individual device. SRC work as reboot
+> +  controller, which reboot whole system. It provide a syscon interface to
+> +  syscon-reboot.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - fsl,vf610-src
+> +      - const: syscon
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    syscon@4006e000 {
+> +        compatible = "fsl,vf610-src", "syscon";
+> +        reg = <0x4006e000 0x1000>;
+> +        interrupts = <96 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> +
+> -- 
+> 2.34.1
+> 
