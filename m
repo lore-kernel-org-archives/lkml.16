@@ -1,107 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp153-166.sina.com.cn (smtp153-166.sina.com.cn [61.135.153.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126C3FBF6
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 00:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02555C2FB
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 00:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.135.153.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750984008; cv=none; b=ZZhrrafmLM5J1JNa7IdYa/TFS3KHzBZ1xsKbSwIlIQ5AmvVjoZ0aEyBmNgpnWzOMyIFkUhyR8JwNjOq7hMbLllAlh4d5il2KO1D44nMnbd3NZVuRjjSUt9rdqVo0H/dwLflAiSE8G2rDhgdrSYSeMb9vVvWun/ueBkbd4Hi+sag=
+	t=1750984046; cv=none; b=rxC9DCgWQ5PI3I10sPTVPpWF7DRAzrzgNkASc74oEW7lKAxGlSXeUKeMobbkPN2INQEnbZcr8i1FfIvT0wC75vEWOL/1wX4wHtv1CduKrYvrQNHAgUFFhJsCBDvc4LIlRLCu03mg/A0p54NUaQrFbh3mnxLa2k1pfBcVr9XwcDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750984008; c=relaxed/simple;
-	bh=2jlhl1pT0vOK+0eJYYLHSdYMDOjk44bGVrpxsdU43YA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GlwEFFqYqfJFfeiFnQttAy+jEeY4ZR9HRhlBMdaJa1ClVibwlXW7iQux4/tv/+E/ODmqtYaG1iqzQYd8fZrrXx6D02zN4jb5o1TUF3TTmJLHxzWmc+Aqe3rh82c26B+D+YuVaGza9s129QppDi7PykVcj0/AmKKnO7iKebGV2v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fPeK/WbX; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fPeK/WbX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750984007; x=1782520007;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2jlhl1pT0vOK+0eJYYLHSdYMDOjk44bGVrpxsdU43YA=;
-  b=fPeK/WbX/iPwPVa80AxaYDiVD3Fo1QtneTLTPzUAjejyYFPrXQXRBJOh
-   MoEkxfTUAK+/lgArYm5tkIYCcJer7NiU6u1U50Vro3nFkaLLrHG6j4zt2
-   JxCO5visTjFaHMIEYH5ixEBnbMKqfIWqZWfpBY6PHEL/YRsVx98mXlJ/B
-   EziyVSfIyGX6QSdCypuETnj/zYtfQfiQO10/BjVB0D4fpSFwIBIRVKcbs
-   P2vrlcRBZQQLdr2ASJXuCfCxNdRSc2IgKbwcPaankQpMvtLStKo3hj6XQ
-   8jsql3wUVjk9W46b1owF8ZQXiEDvZ4yo/S23LhUSQQ4i6JfT+v2G0kXss
-   Q==;
-X-CSE-ConnectionGUID: STq53I7aRTiEB9mkcLVDKg==
-X-CSE-MsgGUID: DLJaHZ8iTXSGQX4GPhIysQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="75842877"
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="75842877"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 17:26:47 -0700
-X-CSE-ConnectionGUID: o4gK8dzQTaKbZnIK+5LjZg==
-X-CSE-MsgGUID: 3j2suu7bTYe+PJ9hcPFwMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="189855296"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 17:26:47 -0700
-Date: Thu, 26 Jun 2025 17:26:44 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Fenghua Yu <fenghuay@nvidia.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH v6 00/30] x86,fs/resctrl telemetry monitoring
-Message-ID: <aF3lRKURweT4mhAj@agluck-desk3>
-References: <20250626164941.106341-1-tony.luck@intel.com>
+	s=arc-20240116; t=1750984046; c=relaxed/simple;
+	bh=lb/r+tSHRlvc3LCBgtEyhMXAD0xeZec+acCZr6fYzp4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dJaMpwQfG426FEv0xKZZGHcZbbmW2PtM3eQ47t1vsAC8vqOcOqFTN38TLoR2qH3t9lcZzR0wcA+cvBTz7J22peZBFC9n8XeB49I8uDlH30jQfVhvXlvPkqe04EQ8JeXijQTCohB7LZgJYoOKTM9IM8bVQf+4i3dIMlLz/GwKmrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=61.135.153.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
+	by sina.com (10.54.253.33) with ESMTP
+	id 685DE55F00007B68; Fri, 27 Jun 2025 08:27:13 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 6481486685182
+X-SMAIL-UIID: CE6BBDA348B44F55AF616AB41B4BDDAE-20250627-082713-1
+From: Hillf Danton <hdanton@sina.com>
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: peterz@infradead.org,
+	kprateek.nayak@amd.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC v2 1/9] sched/docs: Document avoid_cpu_mask and avoid CPU concept
+Date: Fri, 27 Jun 2025 08:27:01 +0800
+Message-ID: <20250627002702.1942-1-hdanton@sina.com>
+In-Reply-To: <15328540-0c0a-4076-8ec8-77661b984fba@linux.ibm.com>
+References: <20250625191108.1646208-1-sshegde@linux.ibm.com> <20250626062749.1854-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626164941.106341-1-tony.luck@intel.com>
+Content-Transfer-Encoding: 8bit
 
-Bother. Just got e-mail after posting v6 from lkp. Apparently
-I applied the fixes to avoid "'d' used before set" in
-domain_remove_cpu_ctrl() and domain_remove_cpu_mon() to some
-other branch than the one that made it to my final version.
-
-Please imagine the hunks below merged into patches 7 & 8.
-
--Tony
-
----
-
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 3ec8fbd2f778..39cee572a121 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -651,8 +651,8 @@ static void domain_remove_cpu_ctrl(int cpu, struct rdt_resource *r)
- 	if (!domain_header_is_valid(hdr, RESCTRL_CTRL_DOMAIN, r->rid))
- 		return;
- 
--	cpumask_clear_cpu(cpu, &d->hdr.cpu_mask);
--	if (!cpumask_empty(&d->hdr.cpu_mask))
-+	cpumask_clear_cpu(cpu, &hdr->cpu_mask);
-+	if (!cpumask_empty(&hdr->cpu_mask))
- 		return;
- 
- 	d = container_of(hdr, struct rdt_ctrl_domain, hdr);
-@@ -696,8 +696,8 @@ static void domain_remove_cpu_mon(int cpu, struct rdt_resource *r)
- 	if (!domain_header_is_valid(hdr, RESCTRL_MON_DOMAIN, r->rid))
- 		return;
- 
--	cpumask_clear_cpu(cpu, &d->hdr.cpu_mask);
--	if (!cpumask_empty(&d->hdr.cpu_mask))
-+	cpumask_clear_cpu(cpu, &hdr->cpu_mask);
-+	if (!cpumask_empty(&hdr->cpu_mask))
- 		return;
- 
- 	switch (r->rid) {
+On Thu, 26 Jun 2025 20:16:36 +0530 Shrikanth Hegde wrote
+> > On Thu, 26 Jun 2025 00:41:00 +0530 Shrikanth Hegde wrote
+> >> This describes what avoid CPU means and what scheduler aims to do
+> >> when a CPU is marked as avoid.
+> >>
+> >> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+> >> ---
+> >>   Documentation/scheduler/sched-arch.rst | 25 +++++++++++++++++++++++++
+> >>   1 file changed, 25 insertions(+)
+> >>
+> >> diff --git a/Documentation/scheduler/sched-arch.rst b/Documentation/scheduler/sched-arch.rst
+> >> index ed07efea7d02..d32755298fca 100644
+> >> --- a/Documentation/scheduler/sched-arch.rst
+> >> +++ b/Documentation/scheduler/sched-arch.rst
+> >> @@ -62,6 +62,31 @@ Your cpu_idle routines need to obey the following rules:
+> >>   arch/x86/kernel/process.c has examples of both polling and
+> >>   sleeping idle functions.
+> >>   
+> >> +CPU Avoid
+> >> +=========
+> >> +
+> >> +Under paravirt conditions it is possible to overcommit CPU resources.
+> >> +i.e sum of virtual CPU(vCPU) of all VM is greater than number of physical
+> >> +CPUs(pCPU). Under such conditions when all or many VM have high utilization,
+> >> +hypervisor won't be able to satisfy the requirement and has to context switch
+> >> +within or across VM. VM level context switch is more expensive compared to
+> >> +task context switch within the VM.
+> >> +
+> > Sounds like VMs not well configured (or pCPUs not well partationed).
+> 
+> No. That's how VMs under paravirtulized case configured as i understand.
+> Correct me if i am wrong.
+> 
+> On powerpc, we have Shared Processor Logical partitions (SPLPAR) which allows overcommit.
+> When other LPAR(VM) are idle, by having overcommit one could get more work done. This allows one
+> to configure more VMs too. The said issue happens only when every/most VMs ask for
+> CPU at the same time.
+> 
+After putting virtualization aside, lets see a simpler case where more
+than 1024 apps are bound to a single (ppc having 4 CPUs for instance) CPU,
+what can we do wrt app responsibility in kernel? Nothing because
+resource/budget is never enough without sane config.
