@@ -1,68 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4215F3FF1;
-	Fri, 27 Jun 2025 20:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619D62E92DE
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751054648; cv=none; b=TxY5HOqi+mWXtkLQ1qxRLnXoWfg18A5HhT31urnuTQVNaNr0slUAc0wgvqDVA9Mx/GYe9PSMs6hgIbaVTNYKosNRgxsx5+Wgj6eufSXdDrmDDjUfnT19aQJwezQdVxem6iIm5shki1Spgh5kbej2Y/TjYcOBF/pzgiGV93nXd3A=
+	t=1751054745; cv=none; b=ZKytcr1jZlHv1bfxZj0i/tLbJecSityKUdALEOn9qH/auQ9xdMoMyt93zTDZuR/BRpSs4aUHnW+rhZnd+Gi+ZCcYtLW+aFq7tap+bI+jZGFjJG+cYW2EfZn/r952jQX77+u20vNHOJig2BkOF1knEgC+qzlrydIBYLZumxN0ZYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751054648; c=relaxed/simple;
-	bh=tgwNd1+4u4rC2Sp0anrqTJg1qUn+7u4c6tn8yXP30sQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rpB8UgFO+4xu7NEBE3BDRvmomsaGUFcvlcJvdsbvbivr1O2fnFq0peF9v5GAX4laP6+Vie88QK50Q6O96VZCKcbIxtcW2pyU/F/cM2DDwpIIGpNuBbzdpK+k7wDNjBU+WXq6l+DUQ5ndUZT9UTI1lrmrMSMRxCBi9zoX61BR/mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KDbSwn3P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751054745; c=relaxed/simple;
+	bh=58VetzeaoTTUO6xje0ZO9jyJyh/pGGsMiDy6XnPNWFI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=lR/sdJroTKfaPujnfZQMO5Lx4XUK5poSCCf0mys3/A7Jvpo9Q/GuWMq2z0/DSJAptJ/VTm718tUCc3Gr5XJMRjNhg8XUpdubH9XBjmtFb17p7uWTJTCxyRjyFEJQTDYPAlW0UjpVYf9G0CTU4dflSTl8VRPUYapcyZKE2az2sWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dKh/KZGT; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDbSwn3P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ED8CC4CEE3;
-	Fri, 27 Jun 2025 20:04:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751054647;
-	bh=tgwNd1+4u4rC2Sp0anrqTJg1qUn+7u4c6tn8yXP30sQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KDbSwn3PG6J7xcqj4WyOyCLZ1D2ALUJQcdlUyS40uZlTCkMNukQxkz2Rhi8iAdmtU
-	 0WLParewBb/lZrCh8C/zZCz6viU1ie2dvVFSty8gADvJG36hKRHvTSouRNJgBE5hzQ
-	 WcDMc5/nf/g/nCBG0nWJQQNqZbS9SK+6FH5Z/OlDt2jRw2dkihyuYyuoMJl3BVupP7
-	 KpV3ilsPXVPIUyynaPLwpl9i90nP9YlVgGoHhyVuob9T2AbMmFUgDOyh/gVETrbnRk
-	 TpdNtnC4fNA3vmNhlsqBYcsc45dfLjPol2s54kCQZ7ZVxFxYf2q16VRy6bbZc1KoEj
-	 KzgPDTSsR2oaQ==
-Date: Fri, 27 Jun 2025 15:04:06 -0500
-From: Rob Herring <robh@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
-	andy@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	matthias.bgg@gmail.com, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v1 2/5] dt-bindings: iio: adc: mt6359: Add bindings for
- MT6373 PMIC AuxADC
-Message-ID: <20250627200406.GA4090376-robh@kernel.org>
-References: <20250623120028.108809-1-angelogioacchino.delregno@collabora.com>
- <20250623120028.108809-3-angelogioacchino.delregno@collabora.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dKh/KZGT"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2fdba7f818so476805a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:05:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751054744; x=1751659544; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vF3w72k6M2FJsnp0yQuYIlc0wWajODBZmfeD8ZMb3YY=;
+        b=dKh/KZGTJJmmyZVnLiXJt6/T/jXdsjmoeSKouw2rnvrwgoui/FoqpND1oeCoX9KnRy
+         yYxiOOw1lMUnaKVN00CExAQ12AlU8kl0qEqyvKi4VduQSx7Xoe55NJNLCbwjnMDgEY/4
+         R5w8o6UBzwXPWyQI9FPJDcOokiMIj27kgLXjqfBadhVmW4o93AMAo6CsfLngSmowdKK/
+         NGn842CF7seV+gnkvEzAco4tFHxRawItzMtg7kO6vXHhQ5Mxxsj4Sctsi8ubwO/yJkJt
+         3FmuktSXFwtCqmLeXdpacWSmeOptXW3vJgCLiCmr/1oP9A3cI6limxXysgj2kS26Tl+p
+         ZxGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751054744; x=1751659544;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vF3w72k6M2FJsnp0yQuYIlc0wWajODBZmfeD8ZMb3YY=;
+        b=p8l9TQ+Uo5vCNsdM2q03nskrLnF/yfxX4C6begkzQAeEEgO3lEx8yqzMBbbjPMyWsH
+         9xIh3huxhCk2enX/4mlWG3AMbBypxbW6iBvqa9Zfd8pWdmLXPRoONtrusCr17nIMWOVI
+         hzQQDOj3KS26i73QUXtNWT2F7mJjAi9WU90cQR0bN9JSbrFERLHYYNj9UOW4G9oQC7qz
+         EcXd2qjGTfR3hZ/tW9JTABHZ+f/6mg1GxWaig5BkKJ6eK/rngB2enxTrNB3oWG9KvKTP
+         qOlD3auqezmKaSOqvZWVRkQm881os8Zq/kshgP0VCpYpXMgsZz5DtJzzzR21x7ElzV+r
+         chbw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvONyOOcMu0/jQ9Pb0hLrlCNwDSmcksSqbjayQMDJjMUBlP0y8bJLUuneZyiszqv3GhT8hU1QZTMPnIdA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv91zhlXMl+j1/anZolptaev17wT7XG/h0kjS+peLGQwHO2Nrc
+	/wC524hHb75TZLbFymX2nwOPyvOKImBsgvmmgkqf7XjBD8+J2rsJLvktvjPjGg7WvsdXr5oSrum
+	4vf2TInqwnc88oV47R34rMBYxpA==
+X-Google-Smtp-Source: AGHT+IGgA2AyrASEeQalRWqmeezLlku7J3nX7jKNCFbgJ5auTtUg89qGUZ4YgwmCCUCUy/MWeJoqjGwBDkr/pL380g==
+X-Received: from pjbnb6.prod.google.com ([2002:a17:90b:35c6:b0:311:8076:14f1])
+ (user=almasrymina job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:5683:b0:313:23ed:6ff with SMTP id 98e67ed59e1d1-318c8ff234emr5811759a91.1.1751054743828;
+ Fri, 27 Jun 2025 13:05:43 -0700 (PDT)
+Date: Fri, 27 Jun 2025 20:04:51 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623120028.108809-3-angelogioacchino.delregno@collabora.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250627200501.1712389-1-almasrymina@google.com>
+Subject: [PATCH net-next v1 1/2] selftests: pp-bench: remove unneeded linux/version.h
+From: Mina Almasry <almasrymina@google.com>
+To: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+	"=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?=" <toke@redhat.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jun 23, 2025 at 02:00:25PM +0200, AngeloGioacchino Del Regno wrote:
-> Add a compatible and channel bindings for MediaTek's MT6373 PMIC,
-> featuring an Auxiliary ADC IP with 15 ADC channels for external
-> (SoC) temperatures and external voltage inputs.
-> 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  .../iio/adc/mediatek,mt6359-auxadc.yaml       |  1 +
->  .../iio/adc/mediatek,mt6373-auxadc.h          | 19 +++++++++++++++++++
->  2 files changed, 20 insertions(+)
->  create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6373-auxadc.h
+linux/version.h was used by the out-of-tree version, but not needed in
+the upstream one anymore.
 
-You can drop 'bindings for ' in the subject. We already said 'bindings' 
-once.
+While I'm at it, sort the includes.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202506271434.Gk0epC9H-lkp@intel.com/
+Signed-off-by: Mina Almasry <almasrymina@google.com>
+---
+ .../selftests/net/bench/page_pool/bench_page_pool_simple.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c b/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c
+index f183d5e30dc6..1cd3157fb6a9 100644
+--- a/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c
++++ b/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c
+@@ -5,15 +5,12 @@
+  */
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/interrupt.h>
++#include <linux/limits.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+-
+-#include <linux/version.h>
+ #include <net/page_pool/helpers.h>
+ 
+-#include <linux/interrupt.h>
+-#include <linux/limits.h>
+-
+ #include "time_bench.h"
+ 
+ static int verbose = 1;
+
+base-commit: 8efa26fcbf8a7f783fd1ce7dd2a409e9b7758df0
+-- 
+2.50.0.727.gbf7dc18ff4-goog
+
