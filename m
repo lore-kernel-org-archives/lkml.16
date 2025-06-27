@@ -1,242 +1,260 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D25A2EA485
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E023208;
+	Fri, 27 Jun 2025 15:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751039504; cv=none; b=MpVwL+SPzl7ZnS07ocSbfr9umiPwrmfx5EvIEkYw8/q9gW2n8H3dNxg/ln0RY6SZS6tegncjJhdvGa/tWCFneQtb2NCShw6Z0eqPn7X2bLJn6EOEHpCQ7B7Ooerfa7VeplX2kNLE6MHXDzMq0bz28RQqqWsP44PKc/JrWDPBUhU=
+	t=1751039519; cv=none; b=tpC7weadFjETYtab6ISKMXUvnQcj+4FjJEhWkBzyaGhH4tlzhMqwmPiFFQyL7zwuSqcszH+Y3NqRF97jMWmR7S9BMJL6Q5e3lS7Ss5b0XUez2e7pGAGEafP9J4XQVyTEJjUmQ82/L3N2IjExEw810oXy/gteeFyZtRMIm+RMIEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751039504; c=relaxed/simple;
-	bh=VszKiwE03t1FNDyd3+/PG4rNfxJCf7hH5fFaj1c3B+M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R/uqi6BTIFmgOjLmrwYivt7fPRJXuQk43geUFLUH0zJCYSMJs2N3ei5C+3dUYyALrlcKYE7CC1ZKfncR4k7Z1lpSvqkhxjDVzgNpX9mEd74bHI9EMtdD/KnboKfzh4sGGMSDO5Yf0OqVGbCCi2FBSZDWRiOwpiDylGOYDJrDIbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Of4iI84/; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751039519; c=relaxed/simple;
+	bh=bGfjl2sUihQ7mzvP4bjc2BtmGohmlSO93LcIHTk+1dM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X2/XUAJ8B3AGrUY3cJvZ3Ej9oteffkmx+6jFggWOp8GU0Ia4TP1rUuUosjybuJ/h4ySpwj1KIsHhh0wNIESCAhtqYdzLS4etOyMuJgTbJ6Og8twsAFGrO/skS6xUqvjES4wLSmc4l1/Am3bKAZ/DuSOle2V+rdHmK/FGBjH2LEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mfgw/3z0; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Of4iI84/"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RCGOiG015139
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:51:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=Mxfmtrvq+gi
-	LYyamC8Jt+iTgA2yVNVmMcYpWvKggyC0=; b=Of4iI84/gzV90+ks43um52HnGk9
-	ZFqFw4iI54qVqlQhGWmPZc7bWzwXek8tLS5hPpssQnPsRDikmKMqHNdiMPQejx1s
-	+Wbbl0WnF2oHptagJffCAdehOzN2RhVsfFdRCZxFinLb9w5m7YDM5JjrMFB4FYpH
-	ZQ1izbsATDD0mnqYZWsIQtFWH+OYfDNets+BBlRSuKgdIGL1yUJe/0hDx1gDzKCk
-	8a5Szf6h/3wg8hyjRMAxcu9dQERn4tcDU2oOZDRcNeDt3c42bBqJCHwB99wTv1C9
-	7zTN1RFJ9+qixDBsvdILW/4xLtWJhEqC7PfdW0m6V44+aETg6RNnmO7Cw3g==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbm25xg8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:51:41 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d413a10b4cso377966985a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:51:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mfgw/3z0"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so311715e9.1;
+        Fri, 27 Jun 2025 08:51:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751039516; x=1751644316; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xErbCK7925kvFk/0rsz3sjYja8g59D1L7zl8Xa9niCg=;
+        b=Mfgw/3z0pEnQRyy4XNoxisYgXPeK96watLz1ZkHpxUbKsRQGDvn3/NJ55GP1iweKck
+         x9mGLG2HGym3AsJNmxy/Qnp4tps/TmF0hlE1qFE/WpfoYblsWlRaYWT26HNhpMRPbhM1
+         uFpGKm4mmBMRS+EZuoo7pM/8m5Q8rCtzcFylNnEzZext65A6WD28U2c1FJlKTK0d+HtI
+         GSE2xU2C+4VoWfWEEdmyDTedddTYzVHCYwzJj7NLw1hyi3rUskox4eHJ5FoCPRwDk2oJ
+         sWNR1lCbQeNZnZftXv7c6vm9QBQzUl7vXJ9Tg6mOp2wM/JUchauWgn5mxhKPD4gcqlaD
+         i5VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751039500; x=1751644300;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751039516; x=1751644316;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Mxfmtrvq+giLYyamC8Jt+iTgA2yVNVmMcYpWvKggyC0=;
-        b=YJ9K6eVPojRzzQ/PFgThOOerDt6h2mVyMF7AdFPx5pXWXBhZ9F3s5cHxK0ysoqmDHa
-         FfGKXIQwbGKFKsz/WYs2bgiUYcH7JcXqSHV3RTPf5R7xMnqkNcJCTbX1LtZc56ZA55bv
-         fGNWeMz+iJGW87smBuCCjzHr8twvttBNDbDn5gNcaZh2l0sNZMZ9jAjdjf2MsEnG/l/T
-         zfkvhTiaR2RKoRCbotiZ/YD9bk6ptPndYnKOKOrXlE+WqFAjhizrxQYcdiS7iUW0qKU4
-         Itx6GWAbEgKj2JeXtxGUHW3BcEwu3iKNVyTc0H01huOxjWHpks9o5Vi06qOmf94sUzmz
-         em6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVVynZtk66SWfQ2Rq3p4uPNXM/lLwd6Yc0i4lD0GUAUwswO4gSdiYgiX69feorDSMa+Flhb+/g/xhz/WCc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuYXfrdk5+T8ExsEro3S8vmyKEPsaaNujXPkMx6opJGu+lTNFR
-	UOmmv38HZqksZ0H2q8B5gZHj/jT4RDS8L12KNo+5V7WEr7IRSBAOhea5K8e+/dIxzMQjR2oU1xD
-	vddLaLSeyXfwu/p3vb/BWBrtsYnFfj29tdHdZu8taHepFGbd6ZfPM90Rbe8I89e+QHCM=
-X-Gm-Gg: ASbGncvvnY5ZfRwPHCeGbxyjnzr6j400icEsi6SZfOw/RSYbcoX5SHB/dGXkf7eIbf4
-	/XjnDg7B7SCi/6ByUTQvkfexGf/sv9KDu9S2pxR5mvuOlfkF3CgYWj9iF24/WqVh/j1dWvzCqzr
-	j9rQbt6qM0jEQzcnwBMst4hKKLQ2jIJplN9RfTEUdid8YNpnHAXCB9hruk3NCb5vMhUiOtwVtxv
-	08Tb7dJTMRrsGEZAeUQVSm5UqrRU2NfS3NmbXpABX8miuIOBIH5Kxh50dGwhjuL+hhjxnvrkOar
-	ppdOrWQeiWx7EUXJVdwjMx+FF7cKP3F5+/zF7sEHgoQdBbeA1IsPdwI=
-X-Received: by 2002:a05:620a:4547:b0:7cd:45ed:c4a5 with SMTP id af79cd13be357-7d44385e947mr497082985a.0.1751039500220;
-        Fri, 27 Jun 2025 08:51:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG+PxZlXtSSHqqv60AqWQfGMamHBF1e3cuJ6Z+/HPHmbzZbS06rUYAe0pTdNDgxbScKp+W+FQ==
-X-Received: by 2002:a05:620a:4547:b0:7cd:45ed:c4a5 with SMTP id af79cd13be357-7d44385e947mr497078485a.0.1751039499757;
-        Fri, 27 Jun 2025 08:51:39 -0700 (PDT)
-Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f8absm3082663f8f.95.2025.06.27.08.51.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 08:51:39 -0700 (PDT)
-From: srinivas.kandagatla@oss.qualcomm.com
-To: vkoul@kernel.org, broonie@kernel.org
-Cc: yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        krzysztof.kozlowski@linaro.org, linux-kernel@vger.kernel.org,
-        linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-Subject: [PATCH 4/4] ASoC: codecs: wcdxxxx: use sdw_slave_get_current_bank helper
-Date: Fri, 27 Jun 2025 16:51:03 +0100
-Message-ID: <20250627155103.441547-5-srinivas.kandagatla@oss.qualcomm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250627155103.441547-1-srinivas.kandagatla@oss.qualcomm.com>
-References: <20250627155103.441547-1-srinivas.kandagatla@oss.qualcomm.com>
+        bh=xErbCK7925kvFk/0rsz3sjYja8g59D1L7zl8Xa9niCg=;
+        b=VBQAQ9OBh/0eTIyg8pm8HBSN9c2WaTSK+LuEzjdhDKYD9pOTCkxXVKQ5vFlwu4WkvL
+         zJpUeHgsa9Vro3qsEGTF8SaX4D9iOSWQnmAFxMPOBn5Y6mDjoTY/TO4YQ4Tfd73EFSY8
+         4vy+uKRmRSiSsvBUSQBB3qBzOLYdBxxrLxyQ8E4DiWRhrWMV+X/GfApQQJW/t10nRhS0
+         ZCrX25TmnPvjT6tuqdOEtVeLGPbgAtRnbYS6+0x1u8C7YDw68o/WDrEj0af8QoysYFxT
+         boH3LfSQt2NMErGvTsJ+aKm0d+KJ2lTzU5awv9qIibMvA2E97CltIYDcfjSaelceCX7z
+         CqXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUt8QDV1PGqWB2vVKLv5rC/SxfQW7H9Ot1aeb4ZOyrt7eVWkmoWmjg5xhj1rISq695Hm0XPap0Lekei@vger.kernel.org, AJvYcCX02Le5vvy4udoY/okf4+eFvTXDBC+xwCMqfpXNCEepw9b+wRwupnqmHxFYDjyRKkhOVYTpa5ZfBZ/kss+3M56Uvys=@vger.kernel.org, AJvYcCXPD/tDvGzL0QsO0pNCwOeT1KhsIEZ5wIuOVgtuOJmeFyfJeJgLTCnOJ+h6Z0fjg59VEW1B4mLSPgzQ0dGm@vger.kernel.org
+X-Gm-Message-State: AOJu0YxP1Y+GpQyQWONbSh+1C7ZcRC3dFYZyf7yim2a4GmaeY9NSbT30
+	s92vVWpoPYQkDy9y/TRiEBUcsosmR3G/6RN8nfLLTorRkvwtIYo+/bM2BQ2bAh5DM8he58C7kKK
+	JKB9whTc3HBSRM2vXeZ3lBTtCmHAShlHClTEvJYs=
+X-Gm-Gg: ASbGncuyoGamwrLTlnpJ2L0UL4xONHA3Ie2CFsjwccA3QsBGl2QQ3W4mjdjyNbHTAU2
+	YpPo/4I+flviydFDqYzH8g328af65FEBj6psv49XGW+vA+f8Ofqrmxx/+kIOpo8ecE+r6sLWbZR
+	xMvWtoBKiA4xW8ieH9S1zpa+yIMk+mVRpEL6QR6BGa4P5qMDaZpBqX4D8tB9BIxtD3pK4nAqsCN
+	sQ=
+X-Google-Smtp-Source: AGHT+IHoGOIuIcCHNU7ehWANyO0hybfEtrv1QBleE6G/veH3aPXy5pDsZb/da0AHyQkIGtPpxU2PdHgkT7ypskkygzQ=
+X-Received: by 2002:a05:600c:8b02:b0:453:6b3a:6c06 with SMTP id
+ 5b1f17b1804b1-4538ee84eeemr39416815e9.29.1751039515324; Fri, 27 Jun 2025
+ 08:51:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=YYu95xRf c=1 sm=1 tr=0 ts=685ebe0d cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=ZsC4DHZuhs/kKio7QBcDoQ==:17
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=WmG1VI7HpiTX60UEcG8A:9
- a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-GUID: G4yFz2DVMiZ8a764GLvz1NsIX7oV91Pu
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDEyOSBTYWx0ZWRfXxc6uNa/eYYY2
- TCfKQhC1luB4v7XbAJ40f08lwIRavHmK+GoWvCYQDqHyrGPF2hM23YtLUWrcq6FM5ONPxmXo4Gq
- TShh8IZk+yGGf69ChgmIjHBWtaAqvHix4wGMWoQ2KwoZFOGKdalY84QoCewDFQH1t4uodpjzC0b
- Yk7KoqraWD1CDiIdICJu5V7/JacT3XXT4P7XuBIZVMYgKMbbDk0wrfL+cHm+rlLlDS6vT2UHU8v
- f2yDuHEZS2Y4U1N03yiO6U5VWIk4DrjYHkP7q3ZYKzYbJPw4DDnNs7tGP2WWJpk1OimaVxEa5Z4
- y5Kv8I9tyWkHbuPTYR2RnVEQs4PwiMLQEqlxCKMcZjfoHQScGxwa4LTHDDBgXqUswI50ijy0l7M
- cl8UGnA5gtUBbL0MbKrnCZwO92S5OQXzA4evPiKRwNkPkvmzqhXEYARIMpNSbdvV5qsM+fxh
-X-Proofpoint-ORIG-GUID: G4yFz2DVMiZ8a764GLvz1NsIX7oV91Pu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_05,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 spamscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
- clxscore=1015 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506270129
+References: <20250620121045.56114-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250620121045.56114-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXP95AsuS2E=SWvzfo89y_VtyXPWoZUKT6mjj_xeLb=Eg@mail.gmail.com>
+In-Reply-To: <CAMuHMdXP95AsuS2E=SWvzfo89y_VtyXPWoZUKT6mjj_xeLb=Eg@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 27 Jun 2025 16:51:29 +0100
+X-Gm-Features: Ac12FXyquorNg5tQJSXyw5uJ1-zkqWxkCxxP3QulkZKFjkS6d1PH2dMUnpaiPB0
+Message-ID: <CA+V-a8skTzgWr3Eo1ZNH-BVyUAW8cvGMAxJEWTy9FFPoK=sWgA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] arm64: dts: renesas: Add CN15 eMMC and SD overlays
+ for RZ/V2N EVK
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+Hi Geert,
 
-use sdw_slave_get_current_bank() helper function, rather than duplicating
-this function in every codec driver.
+Thank you for the review.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
----
- sound/soc/codecs/wcd938x-sdw.c | 10 ----------
- sound/soc/codecs/wcd938x.c     |  3 +--
- sound/soc/codecs/wcd938x.h     |  7 -------
- sound/soc/codecs/wcd939x-sdw.c |  7 -------
- sound/soc/codecs/wcd939x.c     |  2 +-
- sound/soc/codecs/wcd939x.h     |  7 -------
- 6 files changed, 2 insertions(+), 34 deletions(-)
+On Thu, Jun 26, 2025 at 12:58=E2=80=AFPM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Fri, 20 Jun 2025 at 14:10, Prabhakar <prabhakar.csengg@gmail.com> wrot=
+e:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Introduce device tree overlays to support the eMMC (RTK0EF0186B02000BJ)
+> > and microSD (RTK0EF0186B01000BJ) sub-boards via the CN15 connector on t=
+he
+> > RZ/V2N EVK. These overlays enable SDHI0 with appropriate pinctrl settin=
+gs,
+> > regulator configurations, and GPIO handling.
+> >
+> > Shared DTSI fragments (rzv2-evk-cn15-emmc-common.dtsi and
+> > rzv2-evk-cn15-sd-common.dtsi) provide reusable configurations for both
+> > RZ/V2N and RZ/V2H EVKs, as both support the same CN15 sub-boards.
+> >
+> > Additionally, the base board DTS is updated to define an `mmc0` alias
+> > pointing to `&sdhi0`, and to add a fixed 1.8V regulator node (`reg_1p8v=
+`)
+> > intended for use by the optional eMMC sub-board and, in the future, the
+> > ADV7535 HDMI encoder (not yet enabled in the DTS).
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk-cn15-emmc.dtso
+> > @@ -0,0 +1,15 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree overlay for the RZ/V2N EVK with the eMMC sub-board
+> > + * (RTK0EF0186802000BJ) connected to the CN15 connector.
+> > + *
+> > + * Copyright (C) 2025 Renesas Electronics Corp.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +/plugin/;
+> > +
+> > +#define RZV2N_PA               10
+>
+> This is duplicated from r9a09g056.dtsi, but unused?
+>
+Ouch, I'll drop this and the below macro too.
 
-diff --git a/sound/soc/codecs/wcd938x-sdw.c b/sound/soc/codecs/wcd938x-sdw.c
-index b4a0b66b34df..9e411d906354 100644
---- a/sound/soc/codecs/wcd938x-sdw.c
-+++ b/sound/soc/codecs/wcd938x-sdw.c
-@@ -82,16 +82,6 @@ static struct sdw_dpn_prop wcd938x_dpn_prop[WCD938X_MAX_SWR_PORTS] = {
- 	}
- };
- 
--int wcd938x_swr_get_current_bank(struct sdw_slave *sdev)
--{
--	int bank;
--
--	bank  = sdw_read(sdev, SDW_SCP_CTRL);
--
--	return ((bank & 0x40) ? 1 : 0);
--}
--EXPORT_SYMBOL_GPL(wcd938x_swr_get_current_bank);
--
- int wcd938x_sdw_hw_params(struct wcd938x_sdw_priv *wcd,
- 			  struct snd_pcm_substream *substream,
- 			  struct snd_pcm_hw_params *params,
-diff --git a/sound/soc/codecs/wcd938x.c b/sound/soc/codecs/wcd938x.c
-index 7c345217298d..7e1e99b22cb8 100644
---- a/sound/soc/codecs/wcd938x.c
-+++ b/sound/soc/codecs/wcd938x.c
-@@ -1097,8 +1097,7 @@ static int wcd938x_tx_swr_ctrl(struct snd_soc_dapm_widget *w,
- 	int bank;
- 	int rate;
- 
--	bank = (wcd938x_swr_get_current_bank(wcd938x->sdw_priv[AIF1_CAP]->sdev)) ? 0 : 1;
--	bank = bank ? 0 : 1;
-+	bank = sdw_slave_get_current_bank(wcd938x->sdw_priv[AIF1_CAP]->sdev);
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
-diff --git a/sound/soc/codecs/wcd938x.h b/sound/soc/codecs/wcd938x.h
-index dbafcae247f4..54ee56b7fbd6 100644
---- a/sound/soc/codecs/wcd938x.h
-+++ b/sound/soc/codecs/wcd938x.h
-@@ -669,9 +669,6 @@ int wcd938x_sdw_hw_params(struct wcd938x_sdw_priv *wcd,
- 			  struct snd_pcm_substream *substream,
- 			  struct snd_pcm_hw_params *params,
- 			  struct snd_soc_dai *dai);
--
--int wcd938x_swr_get_current_bank(struct sdw_slave *sdev);
--
- #else
- 
- static inline int wcd938x_sdw_free(struct wcd938x_sdw_priv *wcd,
-@@ -696,9 +693,5 @@ static inline int wcd938x_sdw_hw_params(struct wcd938x_sdw_priv *wcd,
- 	return -EOPNOTSUPP;
- }
- 
--static inline int wcd938x_swr_get_current_bank(struct sdw_slave *sdev)
--{
--	return 0;
--}
- #endif /* CONFIG_SND_SOC_WCD938X_SDW */
- #endif /* __WCD938X_H__ */
-diff --git a/sound/soc/codecs/wcd939x-sdw.c b/sound/soc/codecs/wcd939x-sdw.c
-index e487a1bb0194..477d6cf27d32 100644
---- a/sound/soc/codecs/wcd939x-sdw.c
-+++ b/sound/soc/codecs/wcd939x-sdw.c
-@@ -128,13 +128,6 @@ static struct sdw_dpn_prop wcd939x_tx_dpn_prop[WCD939X_MAX_TX_SWR_PORTS] = {
- 	}
- };
- 
--unsigned int wcd939x_swr_get_current_bank(struct sdw_slave *sdev)
--{
--	return FIELD_GET(SDW_SCP_STAT_CURR_BANK,
--			 sdw_read(sdev, SDW_SCP_CTRL));
--}
--EXPORT_SYMBOL_GPL(wcd939x_swr_get_current_bank);
--
- int wcd939x_sdw_hw_params(struct wcd939x_sdw_priv *wcd,
- 			  struct snd_pcm_substream *substream,
- 			  struct snd_pcm_hw_params *params,
-diff --git a/sound/soc/codecs/wcd939x.c b/sound/soc/codecs/wcd939x.c
-index 0727af4789cb..f59bda0ad089 100644
---- a/sound/soc/codecs/wcd939x.c
-+++ b/sound/soc/codecs/wcd939x.c
-@@ -1014,7 +1014,7 @@ static int wcd939x_tx_swr_ctrl(struct snd_soc_dapm_widget *w,
- 	int bank;
- 	int rate;
- 
--	bank = wcd939x_swr_get_current_bank(wcd939x->sdw_priv[AIF1_CAP]->sdev);
-+	bank = sdw_slave_get_current_bank(wcd939x->sdw_priv[AIF1_CAP]->sdev);
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
-diff --git a/sound/soc/codecs/wcd939x.h b/sound/soc/codecs/wcd939x.h
-index 3f189e5cafd5..e70445b1a4bc 100644
---- a/sound/soc/codecs/wcd939x.h
-+++ b/sound/soc/codecs/wcd939x.h
-@@ -930,8 +930,6 @@ int wcd939x_sdw_hw_params(struct wcd939x_sdw_priv *wcd,
- 			  struct snd_pcm_hw_params *params,
- 			  struct snd_soc_dai *dai);
- 
--unsigned int wcd939x_swr_get_current_bank(struct sdw_slave *sdev);
--
- struct regmap *wcd939x_swr_get_regmap(struct wcd939x_sdw_priv *wcd);
- #else
- 
-@@ -957,11 +955,6 @@ static inline int wcd939x_sdw_hw_params(struct wcd939x_sdw_priv *wcd,
- 	return -EOPNOTSUPP;
- }
- 
--static inline unsigned int wcd939x_swr_get_current_bank(struct sdw_slave *sdev)
--{
--	return 0;
--}
--
- struct regmap *wcd939x_swr_get_regmap(struct wcd939x_sdw_priv *wcd)
- {
- 	return PTR_ERR(-EINVAL);
--- 
-2.49.0
+> > +#define EMMC_GPIO(port, pin)   RZG2L_GPIO(RZV2N_P##port, pin)
+>
+> Unused?
+>
+> > +
+> > +#include "rzv2-evk-cn15-emmc-common.dtsi"
+>
+> Hence you can just have a single rzv2-evk-cn15-emmc.dtso that works
+> on both RZ/V2H and RZ/V2N.
+>
+Agreed (I will squash patch 3/3 into the same patch).
 
+> > diff --git a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk-cn15-sd=
+.dtso b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk-cn15-sd.dtso
+> > new file mode 100644
+> > index 000000000000..6268dda138ab
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk-cn15-sd.dtso
+> > @@ -0,0 +1,16 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree overlay for the RZ/V2N EVK with the SD sub-board
+> > + * (RTK0EF0186B01000BJ) connected to the CN15 connector.
+> > + *
+> > + * Copyright (C) 2025 Renesas Electronics Corp.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +/plugin/;
+> > +
+> > +#define RZV2N_PA               10
+>
+> This is duplicated from r9a09g056.dtsi. Can we avoid that?
+> If not, I think we found the justification for moving these definitions
+> to include/dt-bindings/pinctrl/renesas,r9a09g056-pinctrl.h...
+>
+> > +#define SD_GPIO(port, pin)     RZG2L_GPIO(RZV2N_P##port, pin)
+> > +#define SD_PORT_PINMUX(b, p, f)        RZG2L_PORT_PINMUX(RZV2N_P##b, p=
+, f)
+> > +
+> > +#include "rzv2-evk-cn15-sd-common.dtsi"
+> > diff --git a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts b/a=
+rch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
+> > index b63ee1ff18d5..795d9f6b9651 100644
+> > --- a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
+> > +++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
+> > @@ -24,6 +24,7 @@ aliases {
+> >                 i2c6 =3D &i2c6;
+> >                 i2c7 =3D &i2c7;
+> >                 i2c8 =3D &i2c8;
+> > +               mmc0 =3D &sdhi0;
+>
+> While (out-of-tree) dynamic DT overlays do not support updating aliases
+> yet, this logically belongs in the overlay, so please move it there.
+>
+Ok, I'll move it to the overlay as `mmc0 =3D "/soc/mmc@15c00000";`
+
+> >                 mmc1 =3D &sdhi1;
+> >                 serial0 =3D &scif;
+> >         };
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/rzv2-evk-cn15-emmc-common.dtsi
+> > @@ -0,0 +1,46 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Shared DT include for the eMMC Sub Board (RTK0EF0186B02000BJ), whic=
+h
+> > + * is connected to the CN15 connector on the RZ/V2H and RZ/V2N EVKs.
+> > + *
+> > + * Contains common pinctrl and SDHI0 definitions.
+> > + *
+> > + * Copyright (C) 2025 Renesas Electronics Corp.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +/plugin/;
+>
+> These two directives belong in the .dtso files (and you already have
+> them there).
+>
+Agreed, I will drop them.
+
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/rzv2-evk-cn15-sd-common.dtsi
+> > @@ -0,0 +1,67 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Shared DT include for the microSD Sub Board (RTK0EF0186B01000BJ), w=
+hich
+> > + * is connected to the CN15 connector on the RZ/V2H and RZ/V2N EVKs.
+> > + *
+> > + * Contains common pinctrl and SDHI0 definitions.
+> > + *
+> > + * Copyright (C) 2025 Renesas Electronics Corp.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +/plugin/;
+>
+> Likewise.
+>
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
+> > +
+> > +&{/} {
+> > +       vqmmc_sdhi0: regulator-vqmmc-sdhi0 {
+> > +               compatible =3D "regulator-gpio";
+> > +               regulator-name =3D "SDHI0 VqmmC";
+> > +               gpios =3D <&pinctrl SD_GPIO(A, 0) GPIO_ACTIVE_HIGH>;
+>
+> If you use a macro to abstract the GPIO number, please include the
+> bank and port number in the abstraction.
+>
+> Alternatively, as both RZ/V2H and RZ/V2N use PA0, you can use
+> RZG2L_GPIO(10, 10) directly.  That just leaves us with a desire to
+> express "A" instead of 10...
+>
+> Note that you end up with the exact same .dtbo for RZ/V2H and RZ/V2N
+> again...
+>
+Good point, I will switch to RZG2L_GPIO(10, x).
+
+Cheers,
+Prabhakar
