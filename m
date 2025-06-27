@@ -1,147 +1,160 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264162206A6;
-	Fri, 27 Jun 2025 12:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EF42D8796
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751028843; cv=none; b=BlhX0YyrBTcZtPOL2OeQCz7yo+F7tEvuO1qWvodVEmwD+SaTP7YKuLKqzBuUh33NzoB3CYU2xu8qee0pnXH0y0y2EURC3XZmXoyxLsjv47F4gocJGXOUHeyZQ77oOo49jkDeaNY9sgqLKZtI22o8AfPaptq9nm7VsdEagdZRtVc=
+	t=1751028864; cv=none; b=baKYkuj2zwq9m+S7PpVgb8KXaLnh5nt1BwwUdFXrujRvTowpVYXYkXia9Aa3K6pPUbWVCjb+biUzPfpCGHceW0+aINQ+E3kqLb7Q7tPXc4mQMY60cJtIxQ5dQA6ZgHbgFCiuekNjQX6Z825FEvVy7t473cBBJRfUBLu0PTcHBFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751028843; c=relaxed/simple;
-	bh=saqz6BlFQr0m4M/mU7Qnz/3rJIYjIiNg+AsFwW3PpIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O7TTGB05vBGeEJQBR6y3X6S1jz3CFrF3416opl4lCQOy2ADHlRUOtEi/Ii6RjTA1yJM0GRYRxJd7UJCycx02301V8Zm7iO1e8qtefDIFCCI7ggPNuCrFbD5GfCmuqGal0BLxvjyx95dIsmTuajamrjf9RfzsqwvSyRujjYz20g4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zd/tD2VO; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751028864; c=relaxed/simple;
+	bh=Du0b+TeI3ZTwjyWt4pvKm1qINJzsD733zYyEarZI+ak=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=tCMrUqoYoH7TtmQplGi17quL1QIjTz+WGjBh6BdNeWHr29S6w7IVZ4oXn79WF6p81f0vfNpNZrbKZBUANb44VuaHG8uLlJvpWF2W8c5gDG4OSnGpVmeOPfVr+2JE/vSy2FpaqgiLIv7cr4kQd3GgHHSoSTfLu9v8M4uxmRC9WVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=kwKZnHLI; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zd/tD2VO"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a77ea7ed49so33039131cf.0;
-        Fri, 27 Jun 2025 05:54:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="kwKZnHLI"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ae0de1c378fso229183366b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:54:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751028841; x=1751633641; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0+gbguBFKXfSpjf/gN8iCO7iVT7YM1v5J/bh+qAGVa0=;
-        b=Zd/tD2VOgI5gjyhQzR/9Te6fH7eFMp+dG8inZ8umO2nVVlthiu6Qbxqzgs2p1hx0N3
-         vuXz3X4270w25HQm5Np3KkLdbKXnuZhKEF7SE5FGtIOiK10uGZX9l2lZ4/2fsvyWxdAZ
-         QBBpWOu/laQGJPvOlCtKI15iQWBafAuSf30FKFFMHcEOB8Co34GB/F880w6lDU9+RTBx
-         HR375q6MrS3M8ckT1xGsNrZq4qEbHK2Gghy36UNX7LK8Xgu4h1vRvi8ABQdtWhsZONMr
-         PVgOdlwJLCuV1eOLkqX9fAzcCTKAPoyVVsz8rJdQufO2UHXNIO0gZyBdZMGbtfuBguQp
-         YfCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751028841; x=1751633641;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=fairphone.com; s=fair; t=1751028861; x=1751633661; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0+gbguBFKXfSpjf/gN8iCO7iVT7YM1v5J/bh+qAGVa0=;
-        b=T0dMQFJ9k+3pha4rB8HvlrWfLreqrxED91UrLvYcIGwFhSoKZE1TWuwGuekPpNYGah
-         e62Qu5OJ0MzhiulwK+Li7Cb3GTOLrnVupa5Z7cIrFNU8P4VMa9BzQk98BVfzw35fTckk
-         NdU8hljcoZGhTAgYyamXi4QhRYH/6wwZbnc9Q2ksIsz1r2njVL/KEFBCZaBUA5E87Epa
-         oAGMqwlu8rXyGBf5IEFeV0+GXLhtyCrAnTW2WymYIC7nNsVNbCkqkthyyQUKInLIRUCA
-         qyaaj+gBJVNJRWogzc0/+/eZYY2yibTDKFTad0rSvronM1A3usaHUz8WiKVYr5/clfNd
-         bF/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVCIILbF6EBuHIK0ZSnDJ3+UYx0mwfXM/ms6NNAeU3Zi/O+oszFbU/n1U8BN9gu7a4GEiztGqe+oqmqUIv7rp5bFA==@vger.kernel.org, AJvYcCWZX6iAh3jmxGIwaRejZFcac/M8fhQVHbdKmWOeKzuIYwuL26QwwJ4m0J6Riebl8cHEsxpCCX3ayJ0=@vger.kernel.org, AJvYcCWifSjKjfEXWUSe5epHcUCL/a4AM3qmFWM0BF/W/64wbY54aI/0zYfgzeeAiG5UWtXyiCQJbuWbaw11u84=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnGOIiiVB3gbTuP7gj2HLjOWeh4rkEaXzwIB8o9AQTWfSFB6Zg
-	RsQaVe+jYHOvLWw1Oq0AaG8O87BrfVDy6s+QYGHhB3RyYiPN49g2NVnn
-X-Gm-Gg: ASbGncsJyTGq/ilwPf28i5VDQN6Jw90zkxJU2ijbOqGWwzLKdJ+IGwojC5e7dhgWtL+
-	iQ3GGKMlh9s2f/+fwuYBtaw86cRargmEa/LupzSRyHAGEgcsgl2jwa1S0/ybod1D1F5WlTcocAd
-	sJD3qOO3kqX98cFkv8OwgYN2cYm5JuKEie5GFavGYAuHL0QM7Equ+HbChfK7S7WIFy6IOpNJ7Qw
-	hbU6lCJQTNN6R/xMS73LwMrzi673EAu5LC1/Q3WAMMM4FcAmQ3mzElUmu2g53iSMUeyAaMk0LHa
-	D5uvqh/Y9lkFdQ3oscmjQaNdqQafNpkjnySoKfjLUFtEsiBgExQ4tCazBbys
-X-Google-Smtp-Source: AGHT+IETveSWoXC/08GsXfLK3MH9fUuvjqdK0l7+CppsFqhkxU9gg79wiKfc6Glf1WTlwpf/BCm4jg==
-X-Received: by 2002:a05:622a:4112:b0:494:7043:8a2 with SMTP id d75a77b69052e-4a7f2e86617mr128632811cf.16.1751028840824;
-        Fri, 27 Jun 2025 05:54:00 -0700 (PDT)
-Received: from hiagonb ([2804:1b3:a7c3:c88d:6da3:af6d:a237:3289])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc5a3b92sm11378121cf.76.2025.06.27.05.53.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 05:53:59 -0700 (PDT)
-Date: Fri, 27 Jun 2025 09:53:53 -0300
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@oss.nxp.com>, daniel.baluta@nxp.com,
-	iuliana.prodan@oss.nxp.com,
-	"Rafael J . Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v6 0/3] remoteproc: imx_rproc: allow attaching to running
- core kicked by the bootloader
-Message-ID: <20250627125353.2wuozc5in2ijnbi3@hiagonb>
-References: <20250626215911.5992-1-hiagofranco@gmail.com>
+        bh=+nhdHiI1mmifgnWppwRjST41ES3N+612bitCEUi1kbU=;
+        b=kwKZnHLIudBDOYp0TsE/PcyW4o/D77UX8c/+mzMnR9hyQgmWVSOfrmWp6UiPLCLiNl
+         JsOFHN8WY54Q7tW07j/1I1TVgdVIT8byUpmJBWXhmcQh0SEqoemGNCr8cYAm0aylCGQj
+         uXal0qpCzCM2WyTFSvFazoJ+kVrCGdSZIegRoKdAiBRVxWq+Y8a7m5lsRlmJ66zHr0n1
+         cJ/b1p32A+S6Jin1xysI0ynRFZPoqq0N9WiGHa53/uq1i+VP+Pr9FdCRTKeSqieXl9um
+         IelpFnI/oW9EET6O7isLuWYfHt2/S19lFOlJTaZaRRo//9ZnKXj8tH9NvmkuAeHjaFfO
+         gOiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751028861; x=1751633661;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+nhdHiI1mmifgnWppwRjST41ES3N+612bitCEUi1kbU=;
+        b=BTdmUXPPf9S8Lqewc1r4FwiGTm/udkXJztC5FDVtNfbknB1aCW3cySx8cvzGpiuK2g
+         LMVzJZ6131IrCumivN2KDuC2jc24/FdZozCjyyIJTglIAib3ywenLPXJrsj914Yvsfit
+         aOt71T4dhNPaT53m9AkTsGgXJ7bZxImvAz8nZY9twcZHXPkrkWOhqbpAp0rdy7F/NmV3
+         BUnr7wFhhCa5TvujYh3SHIHpxEY6cz+OIHvEnkjhl3dmI66x5+/fIY/z+YlAqf2QWkiU
+         W9FHwg5fglYvDGMy2Eg9/ncxx7tQIuza8EfCuG2701V5tSUgKIaJi7WeWNM72Sbibvwj
+         ZIew==
+X-Forwarded-Encrypted: i=1; AJvYcCVUF2WwYoGHfHyIiYasLJV+WhapxAtwFmGZQq212RilbGfirN/taiptCoJ59YQqrPq1aeEjJ1MR6FQrHEA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6whwNy/I6Hws4TzEzOmv846pBaDKd6tPCyCHBZlVvVyTPy+kx
+	ehWFdZxfoHcjiWXShgWcD8NlMBhz2bcPME22jOtAsmUl+9F/YvzL6folNXVyPGD8bpU=
+X-Gm-Gg: ASbGncuqd3le3DqW2azYZ1XelQrdbHP6UzqD7AG4KJDe+5gVWe0f3afE0E+/ayzcVjU
+	imf1RNfHLrwObn8APuD0iHTh207oyVvpPcwwAPTVteVA3IGxTy4hHn8A6eCvtR29TlUVWb/Ww5i
+	UKAWwnhLGsaFngL3IWONvdTjpo8N/ibjtw0b6WDkjqyXcekw99ZD79yBT1HVohcAnbrjygpBqHv
+	F9WiLflCAGavUc7dEylSX/puBFPiarJhzGourNMmu0nkAe8Yzg0Tq2h+qI1JCrSrPLZL+PzKcIR
+	Qm/LQqq98/xQITd7sSWeRTT8Lxd1JRnYrPFBMRPbliw9pL0mKd6PyEj9LSLpgMygDgPPycR68OX
+	MZZyDKnGmiBa5dv699F5o6Rre0fOGgEM=
+X-Google-Smtp-Source: AGHT+IFsbMB++QIubPPkEjUAaoqBr8kfEWyj7SeiVTthlBeTY5ebiAvDyXm55/dHcIfRL97TTYOl8A==
+X-Received: by 2002:a17:907:3c89:b0:ad2:417b:2ab5 with SMTP id a640c23a62f3a-ae3501b9be9mr278351166b.60.1751028860934;
+        Fri, 27 Jun 2025 05:54:20 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353659efbsm118554866b.46.2025.06.27.05.54.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 05:54:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626215911.5992-1-hiagofranco@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 27 Jun 2025 14:54:20 +0200
+Message-Id: <DAXBXDDJAXDE.2V71E3E8F3GIH@fairphone.com>
+Cc: <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
+ <linux-arm-msm@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: Add PMXR2230 PMIC
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Lee Jones"
+ <lee@kernel.org>, "Pavel Machek" <pavel@kernel.org>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, "Fenglin Wu" <quic_fenglinw@quicinc.com>,
+ "Stephen Boyd" <sboyd@kernel.org>, "Bjorn Andersson"
+ <andersson@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250625-sm7635-pmxr2230-v1-0-25aa94305f31@fairphone.com>
+ <20250625-sm7635-pmxr2230-v1-3-25aa94305f31@fairphone.com>
+ <bced42f0-bc9a-47e6-bbdf-c49657d2e18b@oss.qualcomm.com>
+In-Reply-To: <bced42f0-bc9a-47e6-bbdf-c49657d2e18b@oss.qualcomm.com>
 
-On Thu, Jun 26, 2025 at 06:59:08PM -0300, Hiago De Franco wrote:
-> From: Hiago De Franco <hiago.franco@toradex.com>
-> 
-> This patch series depends on Ulf's patches that are currently under
-> review, "pmdomain: Add generic ->sync_state() support to genpd" [1].
-> Without them, this series is not going to work.
-> 
-> For the i.MX8X and i.MX8 family SoCs, currently when the remotecore is
-> started by the bootloader and the M core and A core are in the same
-> partition, the driver is not capable to detect the remote core and
-> report the correct state of it.
-> 
-> This patch series implement a new function, dev_pm_genpd_is_on(), which
-> returns the power status of a given power domain (M core power domains
-> IMX_SC_R_M4_0_PID0 and IMX_SC_R_M4_0_MU_1A in this case). If it is
-> already powered on, the driver will attach to it.
-> 
-> Finally, the imx_rproc_clk_enable() function was also changed to make it
-> return before dev_clk_get() is called, as it currently generates an SCU
-> fault reset if the remote core is already running and the kernel tries
-> to enable the clock again. These changes are a follow up from a v1 sent
-> to imx_rproc [2] and from a reported regression [3].
-> 
-> [1] https://lore.kernel.org/all/20250523134025.75130-1-ulf.hansson@linaro.org/
-> [2] https://lore.kernel.org/lkml/20250423155131.101473-1-hiagofranco@gmail.com/
-> [3] https://lore.kernel.org/lkml/20250404141713.ac2ntcsjsf7epdfa@hiago-nb/
+On Wed Jun 25, 2025 at 3:20 PM CEST, Konrad Dybcio wrote:
+> On 6/25/25 11:18 AM, Luca Weiss wrote:
+>> Add a dts for the PMIC used e.g. with SM7635 devices.
+>>=20
+>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>> ---
+>>  arch/arm64/boot/dts/qcom/pmxr2230.dtsi | 63 +++++++++++++++++++++++++++=
++++++++
+>>  1 file changed, 63 insertions(+)
+>>=20
+>> diff --git a/arch/arm64/boot/dts/qcom/pmxr2230.dtsi b/arch/arm64/boot/dt=
+s/qcom/pmxr2230.dtsi
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..a7650f3230c01422b76ef78e=
+897e5e7ae2f20cc6
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/pmxr2230.dtsi
+>> @@ -0,0 +1,63 @@
+>> +// SPDX-License-Identifier: BSD-3-Clause
+>> +/*
+>> + * Copyright (c) 2025, Luca Weiss <luca.weiss@fairphone.com>
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/spmi/spmi.h>
+>> +
+>> +/ {
+>> +	thermal-zones {
+>> +		pmxr2230_thermal: pmxr2230-thermal {
+>> +			polling-delay-passive =3D <100>;
+>> +
+>> +			thermal-sensors =3D <&pmxr2230_temp_alarm>;
+>> +
+>> +			trips {
+>> +				pmxr2230_trip0: trip0 {
+>> +					temperature =3D <95000>;
+>> +					hysteresis =3D <0>;
+>> +					type =3D "passive";
+>> +				};
+>> +
+>> +				pmxr2230_crit: pmxr2230-crit {
+>
+> This name is "meh", please change to tripN
+>
+>> +					temperature =3D <115000>;
+>
+> Unless there's some actual electrical/physical SKU differences,
+> downstream lists 145C as critical for a PMIC carrying the same
+> name
 
-Sorry I missed the reviewed by from Peng, I will be fixing this in the
-next revision today.
+[    0.085990] spmi-temp-alarm c400000.spmi:pmic@1:temp-alarm@a00: No ADC i=
+s configured and critical temperature 145000 mC is above the maximum stage =
+2 threshold of 125000 mC! Configuring stage 2 shutdown at 125000 mC.
 
-Best regards,
-Hiago.
+Same for the PMIV0104:
 
-> 
-> v6:
-> - Added "reviewed by" from Ulf and Bjorn.
-> - Fixed and improved commit descriptions of patches 2 and 3.
-> - Improved the comment inside imx_rproc.c file.
-> v5:
-> - https://lore.kernel.org/all/20250617193450.183889-1-hiagofranco@gmail.com/
-> v4:
-> - https://lore.kernel.org/lkml/20250602131906.25751-1-hiagofranco@gmail.com/
-> v3:
-> - https://lore.kernel.org/all/20250519171514.61974-1-hiagofranco@gmail.com/
-> v2:
-> - https://lore.kernel.org/lkml/20250507160056.11876-1-hiagofranco@gmail.com/
-> v1:
-> - https://lore.kernel.org/lkml/20250505154849.64889-1-hiagofranco@gmail.com/
-> 
-> Hiago De Franco (3):
->   pmdomain: core: introduce dev_pm_genpd_is_on()
->   remoteproc: imx_rproc: skip clock enable when M-core is managed by the
->     SCU
->   remoteproc: imx_rproc: detect and attach to pre-booted remote cores
-> 
->  drivers/pmdomain/core.c        | 33 +++++++++++++++++++++++++++
->  drivers/remoteproc/imx_rproc.c | 41 ++++++++++++++++++++++++++++------
->  include/linux/pm_domain.h      |  6 +++++
->  3 files changed, 73 insertions(+), 7 deletions(-)
-> 
-> -- 
-> 2.39.5
-> 
+[    0.086556] spmi-temp-alarm c400000.spmi:pmic@7:temp-alarm@a00: No ADC i=
+s configured and critical temperature 145000 mC is above the maximum stage =
+2 threshold of 125000 mC! Configuring stage 2 shutdown at 125000 mC.
+
+What shall I do?
+
+Regards
+Luca
+
+
+>
+> with that:
+>
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>
+> Konrad
+
