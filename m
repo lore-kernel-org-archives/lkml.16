@@ -1,204 +1,142 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25ACE294A1A
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A0629DB6C
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751024266; cv=none; b=qdt1RI1wgCa4ILY97gujyP5bIS8w8H+MMkCZcslPan/17dmcGi+Y6vcOPjG61y+uy9qwAgMhYavlMAyT93YGVxFyqpLWeandGECZ+oJ4l7urH0G+5BG8rZnF2toawz28O+4y+atUO2jITNHzE27W9NpcOUZhhi5jzNeko99X2dI=
+	t=1751024466; cv=none; b=aKBJQRHaOI4qZtSN23giXKtDnLnyO/llilTWDEwuGWIOZPNlOLiBx0C7hNzWb8HUvfau9U8jVCSFhVfEICaJNdNDGvZYqFQiKqMXhmH/tAoUxmRKr4g7AH1zDjkDXlY7t9Yxs4/7FK6DPSLcIqkX6r9FC33EXoo2gNrLHI9Ju2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751024266; c=relaxed/simple;
-	bh=JJQbvY3ZcP94pVgKZtPFzeMUJY123sAp8Hdj7ayKGeU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TWE6kjX9wGje1OtMS4DgZVjE24WEuC/cXRxXfrVPKVhD5fMms2JvbmFvL1zo8BdQj2OHK7N2vKjzY4lepVGm4uPbInRI1Y/MelemX6T59Z9qV9JF+AX6FjPy/YZS6vI3gne6qdO0sAC0nOqo29woqrfQWVH7R1wTRmjj9krBbLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cDECC+Rp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xkQuQgeb; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cDECC+Rp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xkQuQgeb; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751024466; c=relaxed/simple;
+	bh=fl5PplXrSvYrXkPFIRlB9i9CTn2b94Avf8dhkd9p2/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E9srk8pRmqaIZdAbnYd2Nrj0Vhus+pXh9TXjN7dMBsU2sZK54hZbyOuxBLRXRunpQYdEg3c8vddm1GA+BGXOT0pQdY+lFJR1f+hOVFfndWfxR8E7hsOW8J5qBgKvpre2eIplfdDL1gmlJ1vp5xBkZL2LP1BV3VKJaf68rWd9pJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=XVWWW7bp; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cDECC+Rp";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xkQuQgeb";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cDECC+Rp";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xkQuQgeb"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 591AD21168;
-	Fri, 27 Jun 2025 11:37:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751024263; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xOi80KgJJGfs4Z0qBe9yUoo/PBZSmOofcA/2YNxGQRg=;
-	b=cDECC+RpxJDDgG5W/8oaU+W4fkJO0MrSyw3P4mlFbZH7mt7zz57zv4ButOAN8qLP2IahpE
-	peChbq9YAsPuiy7VjgzvuPuQpyLymoXKppM6pP2cPIToQyUEvdIAyXq5TG4eGtCceiuiBi
-	KGnOq/8xYfqnBGV9wD/b6P2pEuDzmYs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751024263;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xOi80KgJJGfs4Z0qBe9yUoo/PBZSmOofcA/2YNxGQRg=;
-	b=xkQuQgebGHm5WbqZJKEQtWEusArhI+OXxLHEDTcU5YqEQNf5oLUeW9taCFJaOm3GRLCfB5
-	gy5HMY9aWBn9M3DA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751024263; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xOi80KgJJGfs4Z0qBe9yUoo/PBZSmOofcA/2YNxGQRg=;
-	b=cDECC+RpxJDDgG5W/8oaU+W4fkJO0MrSyw3P4mlFbZH7mt7zz57zv4ButOAN8qLP2IahpE
-	peChbq9YAsPuiy7VjgzvuPuQpyLymoXKppM6pP2cPIToQyUEvdIAyXq5TG4eGtCceiuiBi
-	KGnOq/8xYfqnBGV9wD/b6P2pEuDzmYs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751024263;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xOi80KgJJGfs4Z0qBe9yUoo/PBZSmOofcA/2YNxGQRg=;
-	b=xkQuQgebGHm5WbqZJKEQtWEusArhI+OXxLHEDTcU5YqEQNf5oLUeW9taCFJaOm3GRLCfB5
-	gy5HMY9aWBn9M3DA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 20B3C138A7;
-	Fri, 27 Jun 2025 11:37:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LHDFBoeCXmhOGgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 27 Jun 2025 11:37:43 +0000
-Message-ID: <3534599c-107d-4efe-b868-2d1de5681356@suse.de>
-Date: Fri, 27 Jun 2025 13:37:42 +0200
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="XVWWW7bp"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so19542685e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 04:41:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=9elements.com; s=google; t=1751024462; x=1751629262; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+f+ZsWg0Gmymqmi+4OUAMPiH1U0HhSSc/DH6fljnhAA=;
+        b=XVWWW7bpjPDN6QmmxJ7yYPSNzM48auOVrB7VVVW5aGKKztGXzPSIsmpujzQqAx55ub
+         pDESo3Rd1WiAUjiQ+Ou7mzSQDHiF5bFvvuaFp3C8gi/27WQYMrUZE1b/bWKcyE2k8LkD
+         O6qCzokuO657/7WX5fndeuppYP52dgME+gG1n/cbncqPOZJ8drb7YdcjfKopBhSTxQwJ
+         SMA5rQ9EOhFu6q/zHKqGdsWcSjUUsk/mxvj/XdQ3MDuO+Dqw91bucvtdKZePCgfbUjFt
+         0YGzytUtOyeDGxZpJAfrIiGWuLunnH1rVaY4CkKXFcV2FDwYxGfqtTxYtg9u5ff/nNlX
+         +ZcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751024462; x=1751629262;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+f+ZsWg0Gmymqmi+4OUAMPiH1U0HhSSc/DH6fljnhAA=;
+        b=Bu2hVgAJ5HvTQPkqAIaZS+J/Y160xZfqRgtwbVk+yc9yjjsVKhUwsyX4PJSn2YFJrq
+         z7Uy64JAMTfA7hZ3o/G78jzRsJncuYSaJcqRDHzLxwoCm4GsdEg1JTSR1MHxn8ThYcqC
+         mfyFIqyqpuW0hV3UUJ2zhonQRT3c1IrquRvM8JpU1uFrsYW6aS/VcKGlYdFlGD46ylCs
+         MOGU9FMnS4isTZYw9mpGAbQcQSKvpVv3P86O5kvB4wqmhcDF4c/zOxPElJApoDEhe4nC
+         qRT8yKYxHM3nxlOxFz3SiZScJnZv9wf1qsyI+/5cgY6CYIzXFE3LRevSb1llM4W0Yj/b
+         NLSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWjZK5ujzc2GbsZmx6e0v8Mlapa1klkoZaKzHq9QBGbhrt4mSDaP5MOKiG8CX4Kt6qJ2LfOYn60vnDT5Ww=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGHAtSSkeMP6ThfQYTm37J0Xyqx8te+eObqF5Nk1ZRx1H4eAMZ
+	9hJkmTcz2PI0zWgDGILSaDNmsJ3v3e3qtwdJ36/7+vSsTv4mDqhHvMcBrRoHqcmTxg==
+X-Gm-Gg: ASbGncsO6sWdeKFahDbCkB7VrA6vs1QQi8uSkhhXK0I5IXCwgcUWzAVcSryFvrX9yYc
+	D3nbFTzaBBd/sor9AX/p/nkgLlvdYYpMJrTwNGZcb2acZN3KqsgAzWwyOtYHGONy21jzJvgxunA
+	OtlMyVV3dSaoMxpcQ7rlMnGc3RS64nps60zhb2Mmv8uDZnbbVsdIkJzqCE61hcWvu3KU44Peqo8
+	lcT9cqfly+EEpVenTmlUWFyRpjesVzEzBoC90yl38uTalSwwkLl07uoHPYJPmSEeVHvpgA/P3/C
+	gq9QRz/Vbc9jfmeMr7tW7n2F+zbcQ2g0JDh7d+qVuwss+DUodvQLKNjf45CYyjrwq5d+MxajBHl
+	hahYxkpKmXge6cTVptZWFoOI7IWNXZG33KqdnCloP5A==
+X-Google-Smtp-Source: AGHT+IE5U0WFB3xmAQyJW31NBkdohL+E1I8yjzg0yul66CSK8NPf4uCADLUurvYUtJNKZDRdAmrH0g==
+X-Received: by 2002:a05:600c:a40e:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-4538f8836bcmr21511545e9.30.1751024461841;
+        Fri, 27 Jun 2025 04:41:01 -0700 (PDT)
+Received: from cyber-t14sg4 (ip-078-094-000-050.um19.pools.vodafone-ip.de. [78.94.0.50])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a390d3fsm49139535e9.1.2025.06.27.04.41.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 04:41:01 -0700 (PDT)
+Date: Fri, 27 Jun 2025 13:40:29 +0200
+From: Michal Gorlas <michal.gorlas@9elements.com>
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: Brian Norris <briannorris@chromium.org>,
+	Julius Werner <jwerner@chromium.org>, linux-kernel@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	Marcello Sylvester Bauer <marcello.bauer@9elements.com>
+Subject: Re: [PATCH v2 2/3] firmware: coreboot: loader for Linux-owned SMI
+ handler
+Message-ID: <aF6DLQfKq-bpEmnr@cyber-t14sg4>
+References: <20250616-coreboot-payload-mm-v2-0-5d679b682e13@9elements.com>
+ <20250616-coreboot-payload-mm-v2-2-5d679b682e13@9elements.com>
+ <aFuQHqSd9kT87tsF@google.com>
+ <aFvq49ODR3XfcwZJ@cyber-t14sg4>
+ <aF0x-d-uBbMQxrxO@cyber-t14sg4>
+ <aF4GsTGNSHQKn7Ms@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: Add missing sysfb files to firmware
- framebuffers entry
-To: Javier Martinez Canillas <javierm@redhat.com>,
- linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, dri-devel@lists.freedesktop.org,
- Borislav Petkov <bp@suse.de>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Simona Vetter <simona.vetter@ffwll.ch>
-References: <20250627113328.2703491-1-javierm@redhat.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250627113328.2703491-1-javierm@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.freedesktop.org:email,gitlab.freedesktop.org:url,intel.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aF4GsTGNSHQKn7Ms@google.com>
 
-Hi
+On Fri, Jun 27, 2025 at 02:49:21AM +0000, Tzung-Bi Shih wrote:
+> On Thu, Jun 26, 2025 at 01:41:45PM +0200, Michal Gorlas wrote:
+> > On Wed, Jun 25, 2025 at 02:26:11PM +0200, Michal Gorlas wrote:
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * Gives SMI some time in case it takes longer than expected.
+> > > > > +	 * Only useful on real hardware (tested on RaptorLake), not needed on emulation.
+> > > > > +	 */
+> > > > > +	mdelay(100);
+> > > > 
+> > > > This looks weird. Are there some ways for Linux to be aware of the SMI has
+> > > > completed?
+> > > 
+> > > Not in a straight forward fashion. On Intel SoCs we could read MSR_SMI_COUNT
+> > > [1] before and after sending an SMI, and wait till it increments. I am
+> > > not aware about any unified way that works for AMD SoCs. However, so far
+> > > none of the AMD boards supported by coreboot was tested with MM payload,
+> > > so to make it Intel-only in v3 is not a bad idea.
+> > > 
+> > > [1]: https://elixir.bootlin.com/linux/v6.16-rc3/source/arch/x86/include/asm/msr-index.h#L880
+> > 
+> > As a follow-up here, making COREBOOT_PAYLOAD_MM dependent on !SMP
+> > resolves the need of acknowledging SMI completion. If SMI takes longer,
+> > Linux is just stalled until SMI handler gives the CPU back to the caller.
+> > I think for this case it could be the way, LinuxBoot is by default
+> > compiled without SMP support anyways when used as coreboot's payload [1],
+> > [2].
+> > 
+> > [1]: https://github.com/coreboot/coreboot/blob/main/payloads/external/LinuxBoot/x86_64/defconfig
+> > [2]: https://github.com/coreboot/coreboot/blob/main/payloads/external/LinuxBoot/i386/defconfig
+> 
+> To make sure I understand: do you mean the trigger_smi() becomes a blocking
+> call without a timeout?
 
-Am 27.06.25 um 13:33 schrieb Javier Martinez Canillas:
-> The commit d391c5827107 ("drivers/firmware: move x86 Generic System
-> Framebuffers support") moved the sysfb*.c source files from arch/x86
-> to drivers/firmware, because the logic wasn't x86 specific and could
-> be used by other architectures.
->
-> But the drivers/firmware path is not listed in MAINTAINERS, which led
-> to the files being orphaned and scripts/get_maintainer.pl not listing
-> a mailing list to Cc anymore.
->
-> Now that we have an entry for all the firmware-provided framebuffer code,
-> add the missing sysfb files to make sure correct folks and list is Cc'ed.
->
-> Fixes: d391c5827107 ("drivers/firmware: move x86 Generic System Framebuffers support")
-> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Closes: https://lore.kernel.org/lkml/aF53djlieUNF_-aV@smile.fi.intel.com/
-> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+Short answer: potentially yes. Longer answer:
 
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+ "mov	%[apmc_port], %%dx\n\t"
+ "outb	%%al, %%dx\n\t"
 
-Thank you for doing this.
+in trigger_smi() will switch CPU context to SMM, meaning, current state
+is saved and CPU starts executing whatever instructions are under the
+address stored under SMBASE register. At this point, Linux has no control
+over that CPU, which can cause chaos, particulary on real hardware.
+I am not an expert on how the scheduler is implemented, but I can imagine
+it will assign next not-blocked CPU to execute the instructions coming
+after trigger_smi(), while SMI is still being handled on other CPU.
 
-Best regards
-Thomas
+> 
+> I may misunderstand: depends on !SMP which also means it can't use on most
+> modern architectures.
 
-> ---
->
->   MAINTAINERS | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ac6f0547cd32..f69a86b9610a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7497,10 +7497,12 @@ M:	Javier Martinez Canillas <javierm@redhat.com>
->   L:	dri-devel@lists.freedesktop.org
->   S:	Maintained
->   T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
-> +F:	drivers/firmware/sysfb*.c
->   F:	drivers/gpu/drm/sysfb/
->   F:	drivers/video/aperture.c
->   F:	drivers/video/nomodeset.c
->   F:	include/linux/aperture.h
-> +F:	include/linux/sysfb.h
->   F:	include/video/nomodeset.h
->   
->   DRM DRIVER FOR GENERIC EDP PANELS
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+Not necessarily. This driver is useful only if Linux is used to be
+coreboot payload (aka LinuxBoot). As far as I know there is no real need
+to have SMP enabled there, sole responsibility of the LinuxBoot is to
+bring-up remaining hardware (similar to Driver Execution Environment (DXE)
+responsibilities when booting with UEFI), and kexec to the OS kernel,
+which is likely built with SMP.
