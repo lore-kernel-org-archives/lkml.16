@@ -1,170 +1,173 @@
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023102.outbound.protection.outlook.com [40.107.44.102])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FAC296163;
-	Fri, 27 Jun 2025 09:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.102
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751015489; cv=fail; b=b/dSJwu+pFIjtmtNel7aPzS830yZ54jqT67W82tJXJ0ltxHYelZ8HTFF6hVgIbSs6aeme8HxJBDOCXV+jdh5EeKHJcSlrunM05dDfQzNZh69eJ0wjZ4G3Ovsfpp8u3pm+nrN0bcOKhA/ninDE5o/9YmFyQ9IA1gJ6VSaVaKSUOY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751015489; c=relaxed/simple;
-	bh=wdlW0bwbSjbF6m8wDvrcMr8Cz/dZf8AwlfQURTBwv8o=;
-	h=Message-ID:Date:From:Subject:To:Cc:Content-Type:MIME-Version; b=hbSn/RQra4KN2rffqNOQj44ozQYWaoKcrUyJCZG1Rlya8eZjdVQqJTxzjt16YxR6GvP7vlp3MIReasNIpBnPKiDkpJi2npQW6I4WhgNVPRiDTcdXclzsVxfHRRlmm6FE0FQMLtNQblrAY8Scll9WwByJqn9l4F7MDRqzkiR+Vb8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw; spf=pass smtp.mailfrom=portwell.com.tw; dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b=JN5YE6oH; arc=fail smtp.client-ip=40.107.44.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=portwell.com.tw
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b="JN5YE6oH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JMejpSfr2135/ji48SjFgFAQcwK8TI8Foza9Z+9IAk2BtCCsNtYqxIWreuz25gnFOznVhUKDqPPRDRST3AQs7ry7O/SYKKcO3uue6J8XQLn+4blXhZA9JtDvgUYX5d7SEm/gxwZk7ky30yNRuogs0q5muNBaREDl5uDLiide4ZpxDq8YIxdnJxfJx/SAm3FV5ZKMBCjjLAhl2lvTVPSPFwthScohD3Sj5a3KB1gD76KB8MWiHIpvFOHeIZpru/YxYui/ifr+eO0ELbXlsQXetVw3gDY1KLuXuG1B/anLU+knnymO61wVauNyrh9p606Vr7IPhlmj5JzGDnK9weGQ/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DNw/tlNwB9cvrfwejePN76STFX0ILAi/lbbe9kjSnIk=;
- b=wQ/rc2LhAuq+Dj8IBUD+UiE3s7SnR4ppMLmkJ0X7/jZ1LTybNCPsPh0iGBDlrUPjQ9gGMWIFtW79JxIPjynkf1mDgfxCKWDBxJEtqR2at973xhTWl9BbCKYd2sDZiFymefjS+hgJWUiZvEuCglCh1UbeWw3hlrMjh73Id+XpJUwtdKC/Q7tj/HD4kE1JXphlrZQULt0cSzm3TsKJn3UcOUSCjpXABFyZlzWBymRZGQ6SKEQukbuCg+uknRybg4UYDEWjwW9brRtivTgwomKMtmG1V27vGsu3LxjymW6G96mHBLlqalswqF7T5+XwFYKh0aqv7RrZazS3/Z0+vGs2YA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=portwell.com.tw; dmarc=pass action=none
- header.from=portwell.com.tw; dkim=pass header.d=portwell.com.tw; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fetCA905017.onmicrosoft.com; s=selector1-fetCA905017-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DNw/tlNwB9cvrfwejePN76STFX0ILAi/lbbe9kjSnIk=;
- b=JN5YE6oHhL9PExTrBdAft9zD6zKW32O877uhGeLKgW1P2prxZtR0ZZXaYuxM0dRfNHSKXTay9xxVn7Ssb0cKh7nrfuvSbucylUB6+pZqAF/Pu7V/LIiWYzs5VaEurIClY+QoLWKIkOAUsr1UdPBxJQg9TFRt4PfCVy+QE78AvAio90LZujMtvLAhImoRL9MfzfCE0ZoGpO+ovDN8KWDZ0t1E1le/v9XakjTOabEnXZDYhgYlm8x6mRIg52WDD9zFvepqjr4XLsO+Qbh4dnfv3+EtgfHk1aC5JopRFP/crqUyS7TDR/X4pKrcEisufI+iTydSW1oc4qVWbMUIj0swbQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=portwell.com.tw;
-Received: from KL1PR06MB6395.apcprd06.prod.outlook.com (2603:1096:820:e7::10)
- by TYZPR06MB5999.apcprd06.prod.outlook.com (2603:1096:400:33d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.17; Fri, 27 Jun
- 2025 09:11:21 +0000
-Received: from KL1PR06MB6395.apcprd06.prod.outlook.com
- ([fe80::9235:5570:71b3:224]) by KL1PR06MB6395.apcprd06.prod.outlook.com
- ([fe80::9235:5570:71b3:224%6]) with mapi id 15.20.8880.015; Fri, 27 Jun 2025
- 09:11:21 +0000
-Message-ID: <8bf959d1-bfa0-4546-bbdf-396ec8ffddd9@portwell.com.tw>
-Date: Fri, 27 Jun 2025 17:11:18 +0800
-User-Agent: Mozilla Thunderbird
-From: Yen-Chi Huang <jesse.huang@portwell.com.tw>
-Subject: [PATCH 0/2] platform/x86: portwell-ec: Add watchdog suspend/resume
- and hwmon
-To: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, jdelvare@suse.com,
- linux@roeck-us.net
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-hwmon@vger.kernel.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TPYP295CA0017.TWNP295.PROD.OUTLOOK.COM (2603:1096:7d0:a::9)
- To KL1PR06MB6395.apcprd06.prod.outlook.com (2603:1096:820:e7::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5282957C0;
+	Fri, 27 Jun 2025 09:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751015523; cv=none; b=QwDM5SrD+/AL3TZsZYBfIlTlUX+olGUUcYrQFQ5nJZ1Zyu7XRElnYwbFWauLHNrOwj8yedJGhsPOT/MWrZ1HKOqXZxNwg50lQlaGr3Fbi2ylGJSO6jZKBIDdsQ4sacgqmRdhhYMqDrTzaZlVxRr4pdsWMFoOjQp2xqHjgixCfCU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751015523; c=relaxed/simple;
+	bh=GVRCKGSKR6GX4ns1XYW2cgh8ldp9Mp84DNxhiD2jLXA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XzJmTO8z1iO7weK0h+ZaDZP+vTmVTIC/gFqn12ls0F+f1oScimEjTznYXX+MZibqXABhSUKscYWHCzwYYogNAtieoIDeJeuRv8iz4X8NBokhoBZu8vXS0PxyjBx7rFJJwH1aMhQ+sI12/7wMg/m7pxydKB0gXKDlspp+UiTUyx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bT8ny1Slsz10XVg;
+	Fri, 27 Jun 2025 17:07:18 +0800 (CST)
+Received: from kwepemk200016.china.huawei.com (unknown [7.202.194.82])
+	by mail.maildlp.com (Postfix) with ESMTPS id 67EE81400D1;
+	Fri, 27 Jun 2025 17:11:56 +0800 (CST)
+Received: from huawei.com (10.67.174.78) by kwepemk200016.china.huawei.com
+ (7.202.194.82) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 27 Jun
+ 2025 17:11:55 +0800
+From: Yi Yang <yiyang13@huawei.com>
+To: <yiyang13@huawei.com>
+CC: <corey@minyard.net>, <linux-kernel@vger.kernel.org>,
+	<lujialin4@huawei.com>, <openipmi-developer@lists.sourceforge.net>,
+	<stable@vger.kernel.org>
+Subject: Re: [PATCH] ipmi: fix underflow in ipmi_create_user()
+Date: Fri, 27 Jun 2025 09:02:20 +0000
+Message-ID: <20250627090220.592415-1-yiyang13@huawei.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250610121523.252149-1-yiyang13@huawei.com>
+References: <20250610121523.252149-1-yiyang13@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: KL1PR06MB6395:EE_|TYZPR06MB5999:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8255bc20-63ad-4b69-e400-08ddb55a9518
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cStzRklMdU5LNTRPZ09VZWVyTDZEZ1lPNTZnbGFaVURpS2Jhd1dSVmNYMFc4?=
- =?utf-8?B?VXgybFVYK2JYRFk4U1RmVFlMQzNzb1hXL1hyQzE3OUhGeGdMS1htcTlTc0dx?=
- =?utf-8?B?eVllVzczd1VoRitLbG9TK1plRVE3aXZsWHpqU1YrZXJZVnY5Y2VqdFRWNXMv?=
- =?utf-8?B?dUJYZFFmMVpudnRkdnNMQ1Rwd0J3YXJBcnZiTE9rUWNSWVVDOFpxK2piQUlM?=
- =?utf-8?B?QlJXck9PRHFpd0VTaUVINFdmQndPMWs2bWNJd2RKMXRQbFdmWDJvL2o3RDVu?=
- =?utf-8?B?Q0Q1c0c4NVVxbDFud1J3V1N4VjVDUmh0M25samJoTnlSc0kvelFRcFlhZFNw?=
- =?utf-8?B?OURwd2FCajlLQ3RHRitiekl6ZGhJaXpJY045VjFVNE9NYTBvQVl1dWRZZUhL?=
- =?utf-8?B?KysvSEVnN2VIT1RIYmNIdFRhbWhweHhYWktNdExXOG1uQ21XdXNuM2h0ekxm?=
- =?utf-8?B?QldtWCtmNlZINncrTUtmWVQxd1FucEs3Q1hjTjcyQStFOTkyT0pEMCt3RFdm?=
- =?utf-8?B?VlZvZDFTOTkyaG5oTnBMVGtLL0NzREFGeWg4cStURW9ldzk0dDJXMVdweGov?=
- =?utf-8?B?czVicDJCZi9zd0ZQQmpDNEVtYXJCQ1RLbnVLa2wwNEQ2eFJndU1jNFg3VHdi?=
- =?utf-8?B?dDNiT0EvN0NuSUtBRVdiRHhYVUUwbEFiR0ZCbURjNTUyWEt2cEhwYjJJTlRw?=
- =?utf-8?B?N0tIaWpIQzZReFlHSitNdjNSU2syUWNqSXZ6OGhnUEVHRjhsUzI5bDE4dEVS?=
- =?utf-8?B?SGgyeFN1UWdwQjgwM1BORGk5Rkg4aFRpMDBkTVBtbFovMVFYeXh6QjdPMTB0?=
- =?utf-8?B?RS9QU2hwOGdFQ09qS1orM0ZrTC82ek5EOUJxYmhINVl5bVIvL2tvanYrajIr?=
- =?utf-8?B?dEw4QjIvT0VkMkZvZkJJK0pIODFLZFl1UXgyZ2d0dkpPU1JNaTBJOXdpUDBE?=
- =?utf-8?B?M0pacDkwNFFRYzB1bGc1aXlvV1ZyVFFkQ2xHUGpuSGhxdG5uT2JxNVFKVjR3?=
- =?utf-8?B?VkVMaFBqQlRwbDFRaDFRQ01PVkhhbzlOUzFURTk1SDNrTk5abFdBN0QvWWtO?=
- =?utf-8?B?K2Y5T3orV2pWWk1MVWkyQXVrVDhmMWlNdGc2QlpIdVZVcS9RQ0o0OEt5emtO?=
- =?utf-8?B?V1dSYk80V1R5cHdicEI5M0NQR0FxcmovVFdBVnFERURQYWpVeXZtS1JRN1Jx?=
- =?utf-8?B?ak10YlI3NWJkRTRwRndZd1FDTXhyNXNsb2dLWnUrSnAzSFpVU0hVSTVSYjRo?=
- =?utf-8?B?UXVWSEozUHlLVHBlemhjZEJ3bFZwaGxKSkYvZFd3M2lpMFdwTGVZaUZPVk8w?=
- =?utf-8?B?cEVNdXNVQUo3dFo4KzZEbndOUi9WWkNOT213OTI2UDgyRm9UNE1tK3BTSkho?=
- =?utf-8?B?VGVyazNxRHh2MDdKdWM1amhnL1cvVmVKWmpjQ1F2VUZ4c0NWR2NDczBIMkQ3?=
- =?utf-8?B?K2M2Ky9CM2RiR1QwanVhTTB0MU9uTXU4eHBqWEVRRDNBMmNsVTE0N3grbUJD?=
- =?utf-8?B?dTJWNXc4eG1FcVpEU0lFcU0xOTZDSnB1Q1Y2d3hsY1BEeWl5Q2graGtGcEV5?=
- =?utf-8?B?eW1BVDgyUmE4VjIvT3NyL0tJazlBbTZzcHAzM3FXWDcybFJjeVI1UlBsc0kv?=
- =?utf-8?B?Vm96cU1WUEtUQndpZHNLSVQ0UVAzWFlvWThhSDh3RFB4azlJaE1pYVJuSG1P?=
- =?utf-8?B?K0tKMGo1NUJZbGxlWWI3d2J5dzNDa3hJWVBvMzh3TjB2b0Z2ZVc4aDM1WmE2?=
- =?utf-8?B?bG8yMXJtempLSXhwTWxFaFBDd2J2WTUyRFIxOVF0bElCWU1MR3hzTEN6SDZB?=
- =?utf-8?B?QTVUc1hKMlR0aVBFQWtiRGRNbmY3UXBTdmpJQk5Ld1VZSnBrTFdaVzAwTFdW?=
- =?utf-8?B?VzAvVEpTSDhqQ0wzYVpxNEpTMmNWNFJpb0NwMlVYL3NPaUlKN296SXpTSE1P?=
- =?utf-8?Q?0ulNfo6bKJc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB6395.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aFplSDRWUG9mU0xPazB1MDVnZ3BZSGNtcjU5ZDdFYjNtVFMxdGhIcmY0Q2RP?=
- =?utf-8?B?NThWMTJXVUcvUEh2Y1Y1enlIdGFnalBLNnpIdmFaYzlYYlJtN2NzV1lZSVFH?=
- =?utf-8?B?cTMwUEVNcFpKUi9mRmlOc003MEErTkRXQ1ducHJ5TlZScjFWY0tsR1d5NTMw?=
- =?utf-8?B?eTBkRXA1TTFodlRBQmFPeUxISEoxeGlpaE44U1FwQnl1cGZoSWg3cnJvWXlj?=
- =?utf-8?B?c0RwK0RmaWl6QWVwK2NTcGJlUnh0cGFVY2ZlbFpoRUp1WGZucTRBaE5QQmxS?=
- =?utf-8?B?WTRlQ3I3MVhNYmxiU1Q4SUtrRTFJQnZmKy9vYnlBV0JiNU5YdWV5TWRWMFBN?=
- =?utf-8?B?QTJEc1c3bHlGVkhIMkJLcXU2cXhNQjE4TmJ1R1ZxamppSk1uWFRYTWtFVW90?=
- =?utf-8?B?aDd4QzNRVDdGZzlpckZzNXlNZGdOSDNPUjI4OUhXUTdKN011WnRDQ3RydXE1?=
- =?utf-8?B?akNqZEZLdkZVcVhTZzVpdktNWFRkMzFvNTZVQ0h5MytZWDM0TVA1by9wVU4w?=
- =?utf-8?B?VVBnY0VjVVlRam54TlVFZWhCTGtnc0ltdklVNjFSOEEwU1BBb05jZjhmdVpW?=
- =?utf-8?B?TmdsWTRRNUYra0dSYm1VMTZodDVqUTVtNEkzRzREbXl5cXJxVFloL1YzNk94?=
- =?utf-8?B?MFpkWG9zSGovSzIrcWlLRmlUVDM3WWx5YnFrMnBCUE5LOXZhL2s2V05xa1Ir?=
- =?utf-8?B?Zm05Q2l5bGRWSXpabitVeElMbDFoUjI4c3RwWEVNQjZhb1lEbkYrNThLRHc3?=
- =?utf-8?B?VW5LdmtmUEkvUGhTOVNSTHdkeDd4Mk9LNlhMeEc2TGsvRzMzZmd5RTR5UVI2?=
- =?utf-8?B?QmJ5ZG5qd3hYamo2bVFqSUJobEdNRW5wN20vRzcwR2ljc3R5TVEraktUOFJD?=
- =?utf-8?B?eEFqMHN2aHIzQ0tjVHJYRzRpTzllQ0MxdVllMHFrN3JuVmhWc0pWTXAreG1G?=
- =?utf-8?B?b1YwZ28vbVVreEE0V3ZvQ1FkYWVZRGJ4Y3poZklWWnUvTndta1dlTVJWSEFs?=
- =?utf-8?B?bHRWV2hGa0RtT1RJODN0R0J4RjZGU090d1A0bENZd2M1dFptakVxeHVWc3p3?=
- =?utf-8?B?L2hGakE5V1RQOGNxVURqTnNkS28zU09oR3MvUjNUWnBQTjh2ZXlXTWUzemtl?=
- =?utf-8?B?em9YckJubVIydFU5NE43aldTQVFwNXdjeGZkNVZNcFJhMTFvckVRT0NVZW9t?=
- =?utf-8?B?RzRGUXRqTDhnOStDZEVQV1BJc1ozS2E0WmF3R05MUURTM0NPVlBudDUzajFm?=
- =?utf-8?B?djNjLzhTYVMvWWpmSFJEQTJlamxIalZQcEVyaWZYcnRyQ2QwNDlXQnBGQnNX?=
- =?utf-8?B?Qm13S0owS2ozNng0TEU4M3VLVlF6THNSZmRPcCtCQVBPdmxvNERwMmtJeUM0?=
- =?utf-8?B?WHQ1dlFwaDhZejFDcGlRQ3FJdHVPVFVNeEttSWMwRExnMGFhQU1HYlFVOTBn?=
- =?utf-8?B?N2dnN1FwSGM0YTV4SDRJbHM2Q1FWSGFOZEpHWjBLQVZ3V3IwSEYxWVppSWNX?=
- =?utf-8?B?SU5LNzNMREFxUTNWWnpWMDd5OEdtdGp3TmljWUZibTE5MGc0ZTFaT2htaUh3?=
- =?utf-8?B?SVMyYmI0aXBYUE4wV3R3cmtKbkxRQ3hJTisxeEVKYWEwQlVqbHpJanJ1RWh2?=
- =?utf-8?B?UFVXMmRJcllCaXRUZklRKy90REtBVHJCdW1OckIwZWxBK0dJMnRZUHIxYUVT?=
- =?utf-8?B?OHg1d1dkUW8yWVBVZG12Rk5iZk5nYkYwdjRYVGV5SWpRSEhyNnd5TUFST1Bu?=
- =?utf-8?B?OXdXSndhaFgrUktoS0s0eXBzMmFLS0tBWmhUSnk3WHZ6Vm9VSUNOTTI1WmZQ?=
- =?utf-8?B?Ny9IYTVWS0w0WHlmWW5uK3RYeDVpVVR4ekRsclU2R0FJZS9KWWhxR0hTV3dn?=
- =?utf-8?B?ejVQYUg1dVRSbWlRaUpyY3owYWVRZmxpYnIwZ1BuWFBNbEFZaVpNVzg2OXp1?=
- =?utf-8?B?U213bW9QeXlaQ1ZRWjdFVWpiUzZPVUc4QXk1VEpUcDY5dlZBckNKZ0l1OEVV?=
- =?utf-8?B?dk51Ujg3THNId0xOOGptM1ptMGExWnhidXBSSTNNSi91Nlg2MVlKdmRzS095?=
- =?utf-8?B?WDFNNzBVSDM4Si9PT1RNL3dWWWhXL0pyT3MwcWd3Ymw1TE5PN0tVcW9rbm9Y?=
- =?utf-8?B?RVN5a1ZZaEFoTTErN2FUOHllSFY1WWlmZG5GRUU2eklJNFROVURYZ09jMnJW?=
- =?utf-8?B?bHc9PQ==?=
-X-OriginatorOrg: portwell.com.tw
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8255bc20-63ad-4b69-e400-08ddb55a9518
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB6395.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 09:11:21.2616
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e309f7e-c3ee-443b-8668-97701d998b2c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9BOo3In1yMK1Z05xe3ytsR/Qnbc4oNlYPVI++H/JKOunKtDytckoco6DoMIttCE51orsa9Y76DIpZR6iXFy5VbQi6Bw8/o2PNnrYMDPQF/U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB5999
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemk200016.china.huawei.com (7.202.194.82)
 
-Add suspend/resume support for watchdog and hwmon monitoring functionality
-to the Portwell EC driver, enabling better power management and sensor
-reporting.
+On 2025/6/27 17:10, yiyang wrote:
+> Syzkaller reported this bug:
+> ==================================================================
+> BUG: KASAN: global-out-of-bounds in instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
+> BUG: KASAN: global-out-of-bounds in atomic_dec include/linux/atomic/atomic-instrumented.h:592 [inline]
+> BUG: KASAN: global-out-of-bounds in ipmi_create_user.part.0+0x5e5/0x790 drivers/char/ipmi/ipmi_msghandler.c:1291
+> Write of size 4 at addr ffffffff8fc6a438 by task syz.5.1074/5888
+>
+> CPU: 0 PID: 5888 Comm: syz.5.1074 Not tainted 6.6.0+ #60
+> ......
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:88 [inline]
+>  dump_stack_lvl+0x72/0xa0 lib/dump_stack.c:106
+>  print_address_description.constprop.0+0x6b/0x3d0 mm/kasan/report.c:364
+>  print_report+0xba/0x280 mm/kasan/report.c:475
+>  kasan_report+0xa9/0xe0 mm/kasan/report.c:588
+>  check_region_inline mm/kasan/generic.c:181 [inline]
+>  kasan_check_range+0x100/0x1c0 mm/kasan/generic.c:187
+>  instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
+>  atomic_dec include/linux/atomic/atomic-instrumented.h:592 [inline]
+>  ipmi_create_user.part.0+0x5e5/0x790 drivers/char/ipmi/ipmi_msghandler.c:1291
+>  ipmi_create_user+0x56/0x80 drivers/char/ipmi/ipmi_msghandler.c:1236
+>  ipmi_open+0xac/0x2b0 drivers/char/ipmi/ipmi_devintf.c:97
+>  chrdev_open+0x276/0x700 fs/char_dev.c:414
+>  do_dentry_open+0x6a7/0x1410 fs/open.c:929
+>  vfs_open+0xd1/0x440 fs/open.c:1060
+>  do_open+0x957/0x10d0 fs/namei.c:3671
+>  path_openat+0x258/0x770 fs/namei.c:3830
+>  do_filp_open+0x1c7/0x410 fs/namei.c:3857
+>  do_sys_openat2+0x5bd/0x6a0 fs/open.c:1428
+>  do_sys_open fs/open.c:1443 [inline]
+>  __do_sys_openat fs/open.c:1459 [inline]
+>  __se_sys_openat fs/open.c:1454 [inline]
+>  __x64_sys_openat+0x17a/0x210 fs/open.c:1454
+>  do_syscall_x64 arch/x86/entry/common.c:51 [inline]
+>  do_syscall_64+0x59/0x110 arch/x86/entry/common.c:81
+>  entry_SYSCALL_64_after_hwframe+0x78/0xe2
+> RIP: 0033:0x54d2cd
+> Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007f4751920048 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+> RAX: ffffffffffffffda RBX: 0000000000796080 RCX: 000000000054d2cd
+> RDX: 0000000000000000 RSI: 0000000020004280 RDI: ffffffffffffff9c
+> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> R10: 000000000000001e R11: 0000000000000246 R12: 000000000079608c
+> R13: 0000000000000000 R14: 0000000000796080 R15: 00007f4751900000
+>  </TASK>
+>
+> The buggy address belongs to the variable:
+>  ipmi_interfaces+0x38/0x40
+>
+> The buggy address belongs to the physical page:
+> page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x45a6a
+> flags: 0x3fffff00004000(reserved|node=0|zone=1|lastcpupid=0x1fffff)
+> raw: 003fffff00004000 ffffea0001169a88 ffffea0001169a88 0000000000000000
+> raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>  ffffffff8fc6a300: 00 00 00 00 f9 f9 f9 f9 00 00 00 00 f9 f9 f9 f9
+>  ffffffff8fc6a380: 00 00 f9 f9 f9 f9 f9 f9 00 00 00 00 f9 f9 f9 f9
+>> ffffffff8fc6a400: 00 00 f9 f9 f9 f9 f9 f9 00 00 00 00 f9 f9 f9 f9
+>                                         ^
+>  ffffffff8fc6a480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>  ffffffff8fc6a500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f9 f9
+> ==================================================================
+>
+> In the ipmi_create_user() function, the intf->nr_users variable has an
+> underflow issue. Specifically, on the exception path (goto out_kfree;)
+> before atomic_add_return(), calling atomic_dec() when intf->nr_users has
+> not been incremented will result in an underflow.
+>
+> The relevant code has been completely rewritten in the next tree and has
+> been fixed with commit 9e91f8a6c868 ("ipmi:msghandler: Remove srcu for the
+> ipmi_interfaces list"). However, the issue still exists in the 5.19+
+> stable branches and needs to be fixed on those branches.
+>
+> Cc: stable@vger.kernel.org # 5.19+
+> Fixes: 8e76741c3d8b ("ipmi: Add a limit on the number of users that may use IPMI")
+> Signed-off-by: Yi Yang <yiyang13@huawei.com>
+> ---
+>  drivers/char/ipmi/ipmi_msghandler.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+> index 186f1fee7534..0293fad2f4f2 100644
+> --- a/drivers/char/ipmi/ipmi_msghandler.c
+> +++ b/drivers/char/ipmi/ipmi_msghandler.c
+> @@ -1246,18 +1246,18 @@ int ipmi_create_user(unsigned int          if_num,
+>   found:
+>      if (atomic_add_return(1, &intf->nr_users) > max_users) {
+>          rv = -EBUSY;
+> -        goto out_kfree;
+> +        goto out_dec;
+>      }
+>  
+>      INIT_WORK(&new_user->remove_work, free_user_work);
+>  
+>      rv = init_srcu_struct(&new_user->release_barrier);
+>      if (rv)
+> -        goto out_kfree;
+> +        goto out_dec;
+>  
+>      if (!try_module_get(intf->owner)) {
+>          rv = -ENODEV;
+> -        goto out_kfree;
+> +        goto out_dec;
+>      }
+>  
+>      /* Note that each existing user holds a refcount to the interface. */
+> @@ -1281,8 +1281,9 @@ int ipmi_create_user(unsigned int          if_num,
+>      *user = new_user;
+>      return 0;
+>  
+> -out_kfree:
+> +out_dec:
+>      atomic_dec(&intf->nr_users);
+> +out_kfree:
+>      srcu_read_unlock(&ipmi_interfaces_srcu, index);
+>      vfree(new_user);
+>      return rv;
+> -- 
+> 2.25.1
 
-Yen-Chi Huang (2):
-  platform/x86: portwell-ec: Add suspend/resume support for watchdog
-  platform/x86: portwell-ec: Add hwmon support for voltage and temperature
-
- drivers/platform/x86/portwell-ec.c | 206 ++++++++++++++++++++++++++++-
- 1 file changed, 204 insertions(+), 2 deletions(-)
-
--- 
-2.34.1
+ping 
