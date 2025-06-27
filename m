@@ -1,136 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xmbghk7.mail.qq.com (xmbghk7.mail.qq.com [43.163.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6292F2F1FCB;
-	Fri, 27 Jun 2025 02:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518FE26281;
+	Fri, 27 Jun 2025 02:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.163.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750992394; cv=none; b=ruOBtuju1hAaqXrCf+rCOr11ljj6nV5tzg2jlC4BYVmzt+b/unTmEGp5s+a+tWvacvod5PQtWaOstCFwO/GO6YqNpjwZVT/fYfIhXEghppkRXx+Jw957kpOYtS2PNse9A7NxULfbAPwBSQjsL7a915ccy0x1a+2gfdCRlMmKlMc=
+	t=1750992428; cv=none; b=fwGXHUBxAIa6zT7i8WS1k5s/lxeus97Pj/4tPa8Stm9YTGl+i1sPDOM7YbkyA0G8RRXBUMwx1dSFVCiMDdgJAHbVVPlEZzr8c9Dcpja3csP5rK17UjxrTyQRwpZ5Qvzfr9RNbr87OjJ3JpEwJ5OgKhBVsadXzsRh8eT1Plqs7rA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750992394; c=relaxed/simple;
-	bh=LQms1tNsqpQ+nXQaH2KYlSJYLllazDGuxMMHkBk5CDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XqVL5kHcAWinNgK/daDirLarsxyhIOMLwyAhTIQSkheHjH4BjDW3dwljZIY4P62K7u9fq5IuN9ZOVQSIfBv3m5IArEezi+6LHwRdH9z+4wKcKPlEGx0+XmaOG6bSnpALJ5qXKLmC0cZnuzSbQPeOBtlAlgPpM18UUpfRAMlkLV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FUmEdZKy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750992428; c=relaxed/simple;
+	bh=WQLNRAGTO03Ea/3tQ6gRyiAtgMsPG1wwx2zGsAwYKSk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XoLUQd0apEEbdsJvtanJlioVR1EK4gewUnB+TlXjl1s5i1g+uaQmL99cQYVyBKzx4Cz7ptUSXK/uM0kQQqKQr/LaIiGxnbgJgmAg42/SCeiAdF88jnFM6JkPpNfOMogoYB7KDOtGq1Ao8nXrV1J+OJ22TktujW65dn4r3LQoFYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=lQSdPlm5; arc=none smtp.client-ip=43.163.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FUmEdZKy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF0CC4CEEE;
-	Fri, 27 Jun 2025 02:46:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750992394;
-	bh=LQms1tNsqpQ+nXQaH2KYlSJYLllazDGuxMMHkBk5CDs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FUmEdZKy5Pt85iIZINjlu6Rlw+WTOVjloMjWfOUMo1LHk6H53Te0c1wsyd8N4vhTL
-	 53kUWt5yc9a3iKDuavEg64TN6Q43K99IAq3pPC9PcKgpI2GIS6qBzQuYO1on5nVrYR
-	 s/RG/HdAzJaAfI7nPRGHfihNXYmCSy6JFzq/V+1VKJVbAVezkkf5RpbZ9e37qV1vuL
-	 2x0VbbiTZXMQQOMyud6dJRU217TdKsz5QbnJHwoljbfbZAha6cxt4d2MdAbgZaAfB2
-	 vYXACkfMBqv7cZhM2n833mbduEvSFugpShoskJ6/RhxH1RGxrtHdftTa4CBFseiqjV
-	 XaffibLNkkX2A==
-Date: Thu, 26 Jun 2025 21:46:33 -0500
-From: Rob Herring <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"open list:FREESCALE SOC DRIVERS" <linuxppc-dev@lists.ozlabs.org>,
-	"moderated list:FREESCALE SOC DRIVERS" <linux-arm-kernel@lists.infradead.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH v2 1/1] dt-bindings: soc: add vf610 reboot syscon
- controller
-Message-ID: <20250627024633.GA1656962-robh@kernel.org>
-References: <20250617155231.2023977-1-Frank.Li@nxp.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="lQSdPlm5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1750992414; bh=Pu0jA1GVRoKDx2l6du1YCcmFc4TR2c85F/Sld/qZPu4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=lQSdPlm5fiG5AxnyTsXZTrkD9Sw3jm7nCDQH75MdVkvw8U0VpZBv7lbPAQiIyKQBy
+	 4YnBLnkK8uA8+uLkqmK+9cJ+ovmtKTQFclaYvNpcAPFIg+pktnqZJkAdUGyFh1VtJ/
+	 ZDZH+OXVQpLcUYJZJXeTl/ptCiLYEeRVHXLK7sGc=
+Received: from [172.25.20.158] ([111.202.154.66])
+	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
+	id A2A3B4EF; Fri, 27 Jun 2025 10:40:42 +0800
+X-QQ-mid: xmsmtpt1750992042t5ouc00kx
+Message-ID: <tencent_5B902C24516F8FB647C156B41596BF68E70A@qq.com>
+X-QQ-XMAILINFO: OIJV+wUmQOUAf2UFzEHsFZTqx+Kq6+t/DjOoALtts+bmxTDYe0aOhXVnuSwlBh
+	 IKwrkPpmAPshTmKQvzmwkCKcnTChguPERIY3OFEg0UHXTqoUrZRp2DDlAO+zFQL43ghY2PXedN0N
+	 v8yTrkQcBKQXpry/j0lTZgxTRyMAJ4il5YSrVQ49OOvk7MOOXLV05fMdiFvaAzTH/AyBkC/8onJx
+	 fGCrWZ6Kc1086A9ImQRn8VYJhRsJ2A0ajoWlmFyH/RMMrgB+du2d3S5ta6e1sIqRWANj6DaSBB/Z
+	 0H9/sugRPpHBgWCYNx0zR4SZV+D9aVueby9w0rHO8uiZchZTQ55JEiGAU+zYCwUEnpO/WrQquPrS
+	 xNORxDZhqJvu3bpgFlZuUB2or5Lb138OPPBVk7ISqU7M9BBuVNhOAABrKgy88NMMi3v7RE5NmASd
+	 bsqw5KWSGbMh07yPp6WqG7AbWmS6f+8NMhKaGFBrzr8G31elIiLR0nBUI5Hq+4hzlmKOb4pJPYl4
+	 K7dCql/f4y0YBj9NR4/zukyH8EbMDdqBMv5KWHeqTg0br5FOrW3Vf2cgQnlbgpeADTVolKDZCQXU
+	 YvFE7JYMY6cWF5Lbz2XGMTgX/PuvSTc7+VlaJ0KCKC36LdQIub3IYqgAYHlqka42BjVm+2rQnIcW
+	 drCOo/tZbyhVd3A9q9ehEgnJ7LRGMQngSn1TiWgra5iFlb6L2UAknqV687ygfwTjMMM6SFmyGzKf
+	 TJj38y0CFzTSxkhVcKswqdpAyGx5Iyv4ZIue+K43wEjB8Opss/jsbBlrwBU40X9Znabyx/nUnLfy
+	 6cr3oIyu9m1nQZpc9UuJMwfrSU/V51GolaiyJW1CvRALeD6jxrTKx2ZYlVX/+QW67bN3K7D9FJCx
+	 Wdpk5o2c9KC/id7uBgDRKQXndyxAXpa2USSSOtHHe1iTSMZvWKw+fPK30Lh5vaJqcMkhQnSUsOFx
+	 rlUJPhp6v1cO2wygZAmvfIo/alad3u5jx2A2RXxVFTLQaz9X0RlA==
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-OQ-MSGID: <3753a0b7-fed3-4391-9fc4-fade83c89a34@qq.com>
+Date: Fri, 27 Jun 2025 10:40:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617155231.2023977-1-Frank.Li@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/5] fs: change write_begin/write_end interface to take
+ struct kiocb *
+To: Christian Brauner <brauner@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>
+Cc: =?UTF-8?B?6ZmI5rab5rabIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>,
+ "tytso@mit.edu" <tytso@mit.edu>, "hch@infradead.org" <hch@infradead.org>,
+ "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+ "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+ "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+ "tursulin@ursulin.net" <tursulin@ursulin.net>,
+ "airlied@gmail.com" <airlied@gmail.com>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250624121149.2927-1-chentaotao@didiglobal.com>
+ <20250624121149.2927-4-chentaotao@didiglobal.com>
+ <aFqfZ9hiiW4qnYtO@casper.infradead.org>
+ <20250625-erstklassig-stilvoll-273282f0dd1b@brauner>
+From: Chen Taotao <chentao325@qq.com>
+In-Reply-To: <20250625-erstklassig-stilvoll-273282f0dd1b@brauner>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 17, 2025 at 11:52:30AM -0400, Frank Li wrote:
-> Add vf610 reboot controller, which used to reboot whole system. Fix below
-> CHECK_DTB warnings:
-> 
-> arch/arm/boot/dts/nxp/vf/vf610-bk4.dtb: /soc/bus@40000000/src@4006e000:
->     failed to match any schema with compatible: ['fsl,vf610-src', 'syscon']
-> 
-> IC reference manual call it as system reset controller(SRC), but it is not
-> module as linux reset controller, which used to reset individual device.
-> SRC work as reboot controller, which reboot whole system. It provides a
-> syscon interface to syscon-reboot.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> Change in v2
-> - change description to avoid confuse about reset controller.
-> - it is legacy device, more than 10 year. So try keep existed dts as it.
-> ---
->  .../bindings/soc/fsl/fsl,vf610-src.yaml       | 47 +++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/fsl/fsl,vf610-src.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/fsl/fsl,vf610-src.yaml b/Documentation/devicetree/bindings/soc/fsl/fsl,vf610-src.yaml
-> new file mode 100644
-> index 0000000000000..cb8aa510a21f7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/fsl/fsl,vf610-src.yaml
-> @@ -0,0 +1,47 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas//soc/fsl/fsl,vf610-src.yaml#
 
-Double '/'
+在 2025/6/25 16:04, Christian Brauner 写道:
+> On Tue, Jun 24, 2025 at 01:51:51PM +0100, Matthew Wilcox wrote:
+>> On Tue, Jun 24, 2025 at 12:12:08PM +0000, 陈涛涛 Taotao Chen wrote:
+>>> -static int blkdev_write_end(struct file *file, struct address_space *mapping,
+>>> +static int blkdev_write_end(struct kiocb *iocb, struct address_space *mapping,
+>>>   		loff_t pos, unsigned len, unsigned copied, struct folio *folio,
+>>>   		void *fsdata)
+>>>   {
+>>>   	int ret;
+>>> -	ret = block_write_end(file, mapping, pos, len, copied, folio, fsdata);
+>>> +	ret = block_write_end(iocb->ki_filp, mapping, pos, len, copied, folio, fsdata);
+>> ... huh.  I thought block_write_end() had to have the same prototype as
+>> ->write_end because it was used by some filesystems as the ->write_end.
+>> I see that's not true (any more?).  Maybe I was confused with
+>> generic_write_end().  Anyway, block_write_end() doesn't use it's file
+>> argument, and never will, so we can just remove it.
+>>
+>>> +++ b/include/linux/fs.h
+>>> @@ -446,10 +446,10 @@ struct address_space_operations {
+>>>   
+>>>   	void (*readahead)(struct readahead_control *);
+>>>   
+>>> -	int (*write_begin)(struct file *, struct address_space *mapping,
+>>> +	int (*write_begin)(struct kiocb *, struct address_space *mapping,
+>>>   				loff_t pos, unsigned len,
+>>>   				struct folio **foliop, void **fsdata);
+>>> -	int (*write_end)(struct file *, struct address_space *mapping,
+>>> +	int (*write_end)(struct kiocb *, struct address_space *mapping,
+>>>   				loff_t pos, unsigned len, unsigned copied,
+>>>   				struct folio *folio, void *fsdata);
+>> Should we make this a 'const struct kiocb *'?  I don't see a need for
+>> filesystems to be allowed to modify the kiocb in future, but perhaps
+>> other people have different opinions.
+> Given I picked up Willy's change I'll wait for a resubmit of this series
+> on top of vfs-6.17.misc unless I hear otherwise?
+Sure, I’ll update the series on top of vfs-6.17.misc and resend it as 
+soon as possible.
 
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale vf610 System Reset Controller (SRC)
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +description: |
+Best regards,
+Taotao Chen
 
-Don't need '|'
-
-> +  IC reference manual call it as SRC, but it is not module as linux reset
-> +  controller, which used to reset individual device. SRC work as reboot
-> +  controller, which reboot whole system. It provide a syscon interface to
-> +  syscon-reboot.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - fsl,vf610-src
-> +      - const: syscon
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    syscon@4006e000 {
-> +        compatible = "fsl,vf610-src", "syscon";
-> +        reg = <0x4006e000 0x1000>;
-> +        interrupts = <96 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> +
-> -- 
-> 2.34.1
-> 
