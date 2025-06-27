@@ -1,82 +1,382 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C009E2BEC35;
-	Fri, 27 Jun 2025 12:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501802D3EE7
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751028177; cv=none; b=hJs7dxYHxPq6VHXY9tD6aERv9CXkCHhuUts+Uv0NDfaYxN99x0U9D33MOhWM0YUBjBKiwYHPqY3lQfv0MsKVmifKmRSPjUIBUavp4dd3615r2VZtGhpO57MbuEiy5n/z6+SawgdNNYRpa4HWnwknjthcgc+a7h3SwuwaU7Xwg9k=
+	t=1751028274; cv=none; b=FYQo2UlyIWoi+K4Yr8VjbOc8hRJAA566VDLufYzXcf2pFFQq2HtV4WFNXQB2RMSmoCL1mwGQRHwM9KRVfuIvWvUPrX2Lk9atl8EFYD5aR6K/MOeyVp0YELIz+Ns8Ldalh3YoiB29h6OFQAN4CHen1TGISmeIFZAHFem+f7HojiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751028177; c=relaxed/simple;
-	bh=ubEtR9R5kWBifbEQQgrU4ba85V/db/Ip3fJrYVWhXW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h4Q0xVmNESg+SaM/cAEvMXUobuXioNxpQ86grrhj3sb6XdBJ+1j0VjdOG/70xBLNCA3x0jT8fp/j6Wpmq0htaEjJyqONo9gNIZDbNx7DAd8PQgY2rgA0zdx8uH2viktYqCitP5OJnnsZK0mwVIygYUFx4diK/ayNCK5D/8ueVFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kBMxQne4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eTSCEMC9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751028274; c=relaxed/simple;
+	bh=rQEKGVSFoH/L1t5XQA0tCWSJfWMC9SFAeOpwiRe2Vy8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WKpINqvrRa+G08gTgoHwAr2tme9K4X1eyxHJ5mvfvfcSAAkBQ46TqiNmapFOBXmqPKPnGexTVnwpXhz+48oykyrkquW+QAMCOik/o36jLyf9Fhj3S5e7zm3g10QOG26oOfwXE6kYqe8AgOF7vt6m8hOnzGkoqvJT4S9CYDd3DeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=i11h9Hi6; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kBMxQne4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eTSCEMC9"
-Date: Fri, 27 Jun 2025 14:42:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751028174;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I0cdH9AbsDi9cOvGMuZ/YHlpDL+qgXIFG21O180RDIY=;
-	b=kBMxQne4sMCFAfdTQjt0V9wOknq6dkzUUmodR5ImDbjhiR81CXk1grNhsNZqz4CmkCijZL
-	R0WsINweshhs1Mafhx4/1/cKgVxDFkdre0PmWy7nOIz6j6kEMxfpVuxe0GM2JyCTMfeJSQ
-	z6JebjSDjHPNgC5Kr0b3mR15fvK8u9gO1J3+ykDhFO8EcKleM3CfNMxrS1digy/Q6Rj/tM
-	2XuCZXq5AQGWuSzb2ub3Q0aaUjnBE/4p0YWhzcR5QkEddbeRhIaYdSoJRWMkf7j+5sLZlK
-	vHl9f9nTQB5/BaiFgaSYQ187e5xiV1PMISNYL3lRob2iibmZHQT6r2y+GrrlUA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751028174;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I0cdH9AbsDi9cOvGMuZ/YHlpDL+qgXIFG21O180RDIY=;
-	b=eTSCEMC9KF84uvwGrVlz2d43pt7Dsifs6agerMg3qKYs7V9VRIMXJ6sy+cHVtaWULWD3fG
-	IYRC8uwDvKPNjcBQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.ogness@linutronix.de
-Subject: Re: [PATCH v10 00/19] RV: Linear temporal logic monitors for RT
- application
-Message-ID: <20250627124248.fpuBrdWJ@linutronix.de>
-References: <cover.1749547399.git.namcao@linutronix.de>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="i11h9Hi6"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RBRrsr009570
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:44:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	NiGNHk8ZmGuLkSms/e3E52/NCPaXLmYD0fKKiCL3D9A=; b=i11h9Hi60sIE8J9v
+	P9eQ0XjA7VAp6IGuEDy4cVfPJXuOirswR4jjqMzEApZDI9fWrot0Ckqk4A31CwcT
+	D4msHAOnmwI48e1e6Tmwj1mRpBh758vQRUoA9vKjA5vsr8I8nLSgfodVgR0HBUeW
+	w9mbaBgvkwJ39h06BZBI/2r0lbXebdUPgK/iuad1tCvRQA8eSQdTrioZZm7z0h8+
+	SGk79fSe9CP+RoVpv1osGGz6KyD+4+MY3xoLgkQ+7reEZHxf1dbQFXInmD/Rzb2r
+	XwV8UsOBGnMfwpbWNyQnow/3s+p3q6ogEQL4c3qgG70yIDL9eKH0X0bn+wg/jqfM
+	TfhlgQ==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f4b46s46-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:44:31 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5e2a31f75so614995985a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:44:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751028270; x=1751633070;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NiGNHk8ZmGuLkSms/e3E52/NCPaXLmYD0fKKiCL3D9A=;
+        b=djstjMIKa01sOAo+bEOnmz7kE9jQrEatSRTGwYrLzC0aRLcItE1d0E/vq1HyJUuP6Z
+         GMNeU4ByI7122EYbNV4fT+5ttF0q2BEu4fwX5F+h4NRxhgnjWSmnz4w7U4QLYEIpsg+6
+         2MCdGZdwpnh7J7gvC9hxLDfwFitUOcnJr9ePkT23EmiOM/jR1mvotzksKQbnVDjDbJFQ
+         2Ea0rT75/6WDSiOzytGyX6ZB1HZXmtLgBkHFrgYMcFRVQmzrjXbw3WW5EdcSg7uFJJ0h
+         VhimaPnnARhH/uYuynmA5aZslgpX2GfwMBQCYLJa8yA8EG6qs84kF0E5CP08EaDBYuCS
+         CP1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW5D28Sje5zZBpB7scvQyBVGW+SO8nba3MDRlCCokUNctvaRNUjNVb+eHMiw6zGezq9GK0MGwhcstgqpeU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd7tZq2B/rqb4SbBzD8T9sBe77sxTQ1GsyBGb8fM0xvy87dad+
+	wvY7VIGaxRNp9P2N207eg3+uS/tBP+1bI1ZosrcGcKPE9RR/+/VVX5ogAw1ejirzJhOKDfy3YMJ
+	1fKI34SifGvzH0TZAr6HUSdYDpmkFA5rlHuPgkiM6o1qbZqNDonidZtYEZE4AAXPxnKc=
+X-Gm-Gg: ASbGncuNpgArtch6AMKEK/7l56UGr743vOz/O8Zx14aepFzkeb8zjGKMSsd8pAtpZBv
+	bnvIxnatQ2LDuOruLkrhWaFXI1RFt6++5CR4o4xyDVrlBsAQjO8FFl64YcwzuEF40SVT+SuxvBZ
+	374XTXTQGGjvkOTPWnSxB5oKYJ54nKi6XGAgSn6kcI7rKLhuhb6ZszOdsKrM9+waIUFhL2yVoST
+	PszYoBIVFPlBPDs+5VBNikwx8tSMTHSSZsc46kJlNdvQWOAIHpeTs3vMB5SWUwx2oUcrTBkxXCY
+	kNuzBzSlJNXuujWWGFn1TilErzweMcUg602TJxCi1C52kTqm/BgSphFKsSvJPJrz9CJQZSdK
+X-Received: by 2002:a05:620a:2712:b0:7d3:f99b:96ea with SMTP id af79cd13be357-7d4439a678dmr494892885a.40.1751028269497;
+        Fri, 27 Jun 2025 05:44:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFP9ck85sFk8WjIf/d2svxkt1Wd1bdX5L/bBOQhBn5YE9w86XYX/MhBRWyTqY3mZI9Wf+Lxmw==
+X-Received: by 2002:a05:620a:2712:b0:7d3:f99b:96ea with SMTP id af79cd13be357-7d4439a678dmr494887785a.40.1751028268930;
+        Fri, 27 Jun 2025 05:44:28 -0700 (PDT)
+Received: from [10.185.26.70] (37-33-181-83.bb.dnainternet.fi. [37.33.181.83])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b24d53esm438250e87.55.2025.06.27.05.44.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 05:44:28 -0700 (PDT)
+Message-ID: <26f21464-022b-460a-92f2-0ea626cfd262@oss.qualcomm.com>
+Date: Fri, 27 Jun 2025 15:44:32 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1749547399.git.namcao@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/38] drm/msm/dp: remove dp_display's dp_mode and use
+ dp_panel's instead
+To: Yongxing Mou <quic_yongmou@quicinc.com>
+Cc: Rob Clark <robin.clark@oss.qualcomm.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>
+References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
+ <20250609-msm-dp-mst-v2-2-a54d8902a23d@quicinc.com>
+ <kq6tb2wnte6v5z7uxgzc22kjwcevgvcdluzqbelvnbpbxlkotd@ltlv3u2guj4u>
+ <1be2238d-7bb2-4ef9-9c7c-81dab0dcb559@quicinc.com>
+ <4jrpa7iyygciuy2k4ydk7cpm5isdrddclljf6gbyvkiqc645tx@idyds4tkstkx>
+ <9358a017-81ed-4db7-8e35-955922287c76@quicinc.com>
+Content-Language: en-US
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+In-Reply-To: <9358a017-81ed-4db7-8e35-955922287c76@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDEwNSBTYWx0ZWRfX4HIrkRDvvt2z
+ e6NAugbKGmFbpL4wa4UMkFGRW9n8220gmosprJlmSp2hzDd2UKXHqJBgzYx1FlmctKSzNCusNCY
+ JrOnDJHYcK9FC1j77F7f01UnmweU9yzua4vsBRzFxoTJCoYvmBToZwJFFPWzwptN1Gw1Z3cQ2pf
+ PoF7XjVFlJou6AgsiPmhoNQhC/Z45d+H3Yg2dxhInb4MP8BTS4IUuKTDx4mNPBdvCJboiv/QH7F
+ lTFcH+t8Y2AImGVAgxoTraWPI6j3PJTYqtwhaxu6qH/UhiaizSUYwZ9enPQcFZ2bLrTk3eKCPs0
+ W+AykR7pHmEELAhlW+vTV38U+oBGLinVVsmsDfRHcehmoIMJemZBGgLhpRdK16r/kn4c8bapIQs
+ OXCPYCFzxr+lXuozuX/KeSxDaAogrLoTFSUauUtVpqubFPenQljG9UXqVcvyczr+VI8V3l5h
+X-Proofpoint-ORIG-GUID: UodHn3p9jPafA8lfMaNquvn6WdtxmudO
+X-Proofpoint-GUID: UodHn3p9jPafA8lfMaNquvn6WdtxmudO
+X-Authority-Analysis: v=2.4 cv=A8BsP7WG c=1 sm=1 tr=0 ts=685e922f cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=a09MB1VsJqAZHPW3esczKA==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=e5mUnYsNAAAA:8 a=COk6AnOGAAAA:8
+ a=oBoqDFdXD1tkhslXpxIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=IoWCM6iH3mJn3m4BftBB:22 a=Vxmtnl_E_bksehYqCbjh:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_04,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0
+ phishscore=0 adultscore=0 impostorscore=0 suspectscore=0 mlxscore=0
+ clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506270105
 
-Hi Steven,
-
-On Tue, Jun 10, 2025 at 11:43:25AM +0200, Nam Cao wrote:
-> Real-time applications may have design flaws causing them to have
-> unexpected latency. For example, the applications may raise page faults, or
-> may be blocked trying to take a mutex without priority inheritance.
+On 27/06/2025 11:40, Yongxing Mou wrote:
 > 
-> However, while attempting to implement DA monitors for these real-time
-> rules, deterministic automaton is found to be inappropriate as the
-> specification language. The automaton is complicated, hard to understand,
-> and error-prone.
 > 
-> For these cases, linear temporal logic is found to be more suitable. The
-> LTL is more concise and intuitive.
+> On 2025/6/25 22:03, Dmitry Baryshkov wrote:
+>> On Wed, Jun 25, 2025 at 08:34:18PM +0800, Yongxing Mou wrote:
+>>>
+>>>
+>>> On 2025/6/9 20:48, Dmitry Baryshkov wrote:
+>>>> On Mon, Jun 09, 2025 at 08:21:21PM +0800, Yongxing Mou wrote:
+>>>>> From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>>>>>
+>>>>> dp_display caches the current display mode and then passes it onto
+>>>>> the panel to be used for programming the panel params. Remove this
+>>>>> two level passing and directly populated the panel's dp_display_mode
+>>>>> instead.
+>>>>
+>>>> - Why do we need to cache / copy it anyway? Can't we just pass the
+>>>>     corresponding drm_atomic_state / drm_crtc_state / 
+>>>> drm_display_mode ?
+>>>>
+>>> This part works as follows: .mode_set() copies the adjusted_mode into
+>>> msm_dp_display_private->msm_dp_display_mode, and also parses and stores
+>>> variables such as v_active_low/h_active_low/out_fmt_is_yuv_420 
+>>> and ... When
+>>> @drm_bridge_funcs.atomic_enable() is called, it copies
+>>> msm_dp_display->msm_dp_mode into dp_panel->msm_dp_mode and initializes
+>>> panel_info in msm_dp_display_set_mode(). Then when go to
+>>> msm_dp_ctrl_on_stream(), the parameters are updated into the 
+>>> corresponding
+>>> hardware registers.
+>>
+>> So, if we do everything during .atomic_enable(), there would be no need
+>> to store and/or copy anything. All the data is available and can be used
+>> as is.
+>>
+> Got it. Let me confirm—can we keep msm_dp_mode or drm_display_mode in 
+> msm_dp_panel? Mabey debug node will use this ..
+
+Please don't. I really dislike storing drm_atomic_state-related 
+variables in a non-state structure. I think it makes it easier to 
+mistakenly update or to use a stale value.
+
+Debug code already prints modes in debugfs/dri/N/state. If we need any 
+other state-related prints, they should go to the same file.
+
+>>>
+>>> This design has been in place since the first version of the DP 
+>>> driver and
+>>> has remained largely unchanged.
+>>
+>> Yes... The point is that you are touching this piece of code anyway,
+>> let's make it nicer.
+>>
+> Agree with this point.
+>>> Originally, the drm_mode would be passed in
+>>> two stages: from msm_dp_display->msm_dp_mode to dp_panel- 
+>>> >msm_dp_mode. Since
+>>> in MST mode each stream requires its own drm_mode and stored in 
+>>> dp_panel, we
+>>> simplified the two-stage transfer into a single step (.mode_set() do all
+>>> things and store in msm_dp_panel). Meanwhile we modified the
+>>> msm_dp_display_set_mode function to accept a msm_dp_panel parameter,
+>>> allowing the MST bridge funcs' mode_set() to reuse this part code.
+>>>
+>>> The following patches:
+>>> https://patchwork.freedesktop.org/patch/657573/?series=142207&rev=2 and
+>>> https://patchwork.freedesktop.org/patch/657593/?series=142207&rev=2,
+>>> introduce msm_dp_display_*_helper functions to help reuse common code 
+>>> across
+>>> MST/SST/eDP drm_bridge_funcs.
+>>>
+>>> If we drop msm_dp_mode from dp_panel and use drm_display_mode, it might
+>>> introduce a large number of changes that are not directly related to 
+>>> MST.
+>>> Actually i think the presence of msm_dp_display_mode seems to 
+>>> simplify the
+>>> work in msm_dp_panel_timing_cfg(), this patch series we want to focus 
+>>> on MST
+>>> parts, so would we consider optimizing them later?
+>>
+>> Sure... But then you have to change two places. If you optimize it
+>> first, you have to touch only place. And it can be even submitted
+>> separately.
+>>
+> Understood, that’s indeed the case. I just want to prioritize the MST 
+> patch and have it merged first, since it involves changes to lots of 
+> files. Thanks~~
+>>>
+>>> Thanks~
+>>>>>
+>>>>> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>>>>> Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
+>>>>> ---
+>>>>>    drivers/gpu/drm/msm/dp/dp_display.c | 76 +++++++++++++ 
+>>>>> +-----------------------
+>>>>>    1 file changed, 29 insertions(+), 47 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/ 
+>>>>> msm/dp/dp_display.c
+>>>>> index 
+>>>>> 4a9b65647cdef1ed6c3bb851f93df0db8be977af..9d2db9cbd2552470a36a63f70f517c35436f7280 100644
+>>>>> --- a/drivers/gpu/drm/msm/dp/dp_display.c
+>>>>> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
+>>>>> @@ -92,7 +92,6 @@ struct msm_dp_display_private {
+>>>>>        struct msm_dp_panel   *panel;
+>>>>>        struct msm_dp_ctrl    *ctrl;
+>>>>> -    struct msm_dp_display_mode msm_dp_mode;
+>>>>>        struct msm_dp msm_dp_display;
+>>>>>        /* wait for audio signaling */
+>>>>> @@ -806,16 +805,29 @@ static int msm_dp_init_sub_modules(struct 
+>>>>> msm_dp_display_private *dp)
+>>>>>    }
+>>>>>    static int msm_dp_display_set_mode(struct msm_dp *msm_dp_display,
+>>>>> -                   struct msm_dp_display_mode *mode)
+>>>>> +                   const struct drm_display_mode *adjusted_mode,
+>>>>> +                   struct msm_dp_panel *msm_dp_panel)
+>>>>>    {
+>>>>> -    struct msm_dp_display_private *dp;
+>>>>> +    u32 bpp;
+>>>>> -    dp = container_of(msm_dp_display, struct 
+>>>>> msm_dp_display_private, msm_dp_display);
+>>>>> +    drm_mode_copy(&msm_dp_panel->msm_dp_mode.drm_mode, 
+>>>>> adjusted_mode);
+>>>>> +
+>>>>> +    if (msm_dp_display_check_video_test(msm_dp_display))
+>>>>> +        bpp = msm_dp_display_get_test_bpp(msm_dp_display);
+>>>>> +    else
+>>>>> +        bpp = msm_dp_panel->connector->display_info.bpc * 3;
+>>>>> +
+>>>>> +    msm_dp_panel->msm_dp_mode.bpp = bpp;
+>>>>> +
+>>>>> +    msm_dp_panel->msm_dp_mode.v_active_low =
+>>>>> +        !!(adjusted_mode->flags & DRM_MODE_FLAG_NVSYNC);
+>>>>> +    msm_dp_panel->msm_dp_mode.h_active_low =
+>>>>> +        !!(adjusted_mode->flags & DRM_MODE_FLAG_NHSYNC);
+>>>>> +    msm_dp_panel->msm_dp_mode.out_fmt_is_yuv_420 =
+>>>>> +        drm_mode_is_420_only(&msm_dp_panel->connector- 
+>>>>> >display_info, adjusted_mode) &&
+>>>>> +        msm_dp_panel->vsc_sdp_supported;
+>>>>> -    drm_mode_copy(&dp->panel->msm_dp_mode.drm_mode, &mode->drm_mode);
+>>>>> -    dp->panel->msm_dp_mode.bpp = mode->bpp;
+>>>>> -    dp->panel->msm_dp_mode.out_fmt_is_yuv_420 = mode- 
+>>>>> >out_fmt_is_yuv_420;
+>>>>> -    msm_dp_panel_init_panel_info(dp->panel);
+>>>>> +    msm_dp_panel_init_panel_info(msm_dp_panel);
+>>>>>        return 0;
+>>>>>    }
+>>>>> @@ -1431,10 +1443,13 @@ bool msm_dp_needs_periph_flush(const struct 
+>>>>> msm_dp *msm_dp_display,
+>>>>>    bool msm_dp_wide_bus_available(const struct msm_dp *msm_dp_display)
+>>>>>    {
+>>>>>        struct msm_dp_display_private *dp;
+>>>>> +    struct msm_dp_panel *dp_panel;
+>>>>>        dp = container_of(msm_dp_display, struct 
+>>>>> msm_dp_display_private, msm_dp_display);
+>>>>> -    if (dp->msm_dp_mode.out_fmt_is_yuv_420)
+>>>>> +    dp_panel = dp->panel;
+>>>>> +
+>>>>> +    if (dp_panel->msm_dp_mode.out_fmt_is_yuv_420)
+>>>>>            return false;
+>>>>>        return dp->wide_bus_supported;
+>>>>> @@ -1496,10 +1511,6 @@ void msm_dp_bridge_atomic_enable(struct 
+>>>>> drm_bridge *drm_bridge,
+>>>>>        bool force_link_train = false;
+>>>>>        msm_dp_display = container_of(dp, struct 
+>>>>> msm_dp_display_private, msm_dp_display);
+>>>>> -    if (!msm_dp_display->msm_dp_mode.drm_mode.clock) {
+>>>>> -        DRM_ERROR("invalid params\n");
+>>>>> -        return;
+>>>>> -    }
+>>>>>        if (dp->is_edp)
+>>>>>            msm_dp_hpd_plug_handle(msm_dp_display, 0);
+>>>>> @@ -1517,15 +1528,6 @@ void msm_dp_bridge_atomic_enable(struct 
+>>>>> drm_bridge *drm_bridge,
+>>>>>            return;
+>>>>>        }
+>>>>> -    rc = msm_dp_display_set_mode(dp, &msm_dp_display->msm_dp_mode);
+>>>>> -    if (rc) {
+>>>>> -        DRM_ERROR("Failed to perform a mode set, rc=%d\n", rc);
+>>>>> -        mutex_unlock(&msm_dp_display->event_mutex);
+>>>>> -        return;
+>>>>> -    }
+>>>>
+>>>> It should be done other way around: keep this call and drop
+>>>> msm_dp_bridge_mode_set().
+>>>>
+>>> Emm as reply in last comments..
+>>
+>> Yep. Drop .mode_set, the callback is even described as deprecated.
+>>
+> Thanks, the documentation does state that.
+>>>>> -
+>>>>> -    hpd_state =  msm_dp_display->hpd_state;
+>>>>> -
+>>>>>        if (hpd_state == ST_CONNECTED && !dp->power_on) {
+>>>>>            msm_dp_display_host_phy_init(msm_dp_display);
+>>>>>            force_link_train = true;
+>>>>> @@ -1604,33 +1606,13 @@ void msm_dp_bridge_mode_set(struct 
+>>>>> drm_bridge *drm_bridge,
+>>>>>        msm_dp_display = container_of(dp, struct 
+>>>>> msm_dp_display_private, msm_dp_display);
+>>>>>        msm_dp_panel = msm_dp_display->panel;
+>>>>> -    memset(&msm_dp_display->msm_dp_mode, 0x0, sizeof(struct 
+>>>>> msm_dp_display_mode));
+>>>>> -
+>>>>> -    if (msm_dp_display_check_video_test(dp))
+>>>>> -        msm_dp_display->msm_dp_mode.bpp = 
+>>>>> msm_dp_display_get_test_bpp(dp);
+>>>>> -    else /* Default num_components per pixel = 3 */
+>>>>> -        msm_dp_display->msm_dp_mode.bpp = dp->connector- 
+>>>>> >display_info.bpc * 3;
+>>>>> -
+>>>>> -    if (!msm_dp_display->msm_dp_mode.bpp)
+>>>>> -        msm_dp_display->msm_dp_mode.bpp = 24; /* Default bpp */
+>>>>> -
+>>>>> -    drm_mode_copy(&msm_dp_display->msm_dp_mode.drm_mode, 
+>>>>> adjusted_mode);
+>>>>> -
+>>>>> -    msm_dp_display->msm_dp_mode.v_active_low =
+>>>>> -        !!(msm_dp_display->msm_dp_mode.drm_mode.flags & 
+>>>>> DRM_MODE_FLAG_NVSYNC);
+>>>>> -
+>>>>> -    msm_dp_display->msm_dp_mode.h_active_low =
+>>>>> -        !!(msm_dp_display->msm_dp_mode.drm_mode.flags & 
+>>>>> DRM_MODE_FLAG_NHSYNC);
+>>>>> -
+>>>>> -    msm_dp_display->msm_dp_mode.out_fmt_is_yuv_420 =
+>>>>> -        drm_mode_is_420_only(&dp->connector->display_info, 
+>>>>> adjusted_mode) &&
+>>>>> -        msm_dp_panel->vsc_sdp_supported;
+>>>>> +    msm_dp_display_set_mode(dp, adjusted_mode, msm_dp_panel);
+>>>>>        /* populate wide_bus_support to different layers */
+>>>>> -    msm_dp_display->ctrl->wide_bus_en =
+>>>>> -        msm_dp_display->msm_dp_mode.out_fmt_is_yuv_420 ? false : 
+>>>>> msm_dp_display->wide_bus_supported;
+>>>>> -    msm_dp_display->catalog->wide_bus_en =
+>>>>> -        msm_dp_display->msm_dp_mode.out_fmt_is_yuv_420 ? false : 
+>>>>> msm_dp_display->wide_bus_supported;
+>>>>> +    msm_dp_display->ctrl->wide_bus_en = msm_dp_panel- 
+>>>>> >msm_dp_mode.out_fmt_is_yuv_420 ?
+>>>>> +        false : msm_dp_display->wide_bus_supported;
+>>>>> +    msm_dp_display->catalog->wide_bus_en = msm_dp_panel- 
+>>>>> >msm_dp_mode.out_fmt_is_yuv_420 ?
+>>>>> +        false : msm_dp_display->wide_bus_supported;
+>>>>>    }
+>>>>>    void msm_dp_bridge_hpd_enable(struct drm_bridge *bridge)
+>>>>>
+>>>>> -- 
+>>>>> 2.34.1
+>>>>>
+>>>>
+>>>
+>>
 > 
-> This series adds support for LTL RV monitor, and use it to implement two
-> monitors for reporting problems with real-time tasks.
 
-Is there any chance this series could be applied soon? I have some more
-patches which depend on this series, so it is holding up the show. I think
-Gabriele needs this applied for his patches as well.
 
-Best regards,
-Nam
+-- 
+With best wishes
+Dmitry
