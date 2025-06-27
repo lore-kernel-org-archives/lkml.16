@@ -1,89 +1,166 @@
-Received: from mailrelay-egress12.pub.mailoutpod2-cph3.one.com (mailrelay-egress12.pub.mailoutpod2-cph3.one.com [46.30.211.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226F7212B3D
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE07E1E1E0B;
+	Fri, 27 Jun 2025 19:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751053394; cv=none; b=sCz2MjvQrCKX7PvUVQd/0yQFtw1dEyMwKHyWXfD9nFYK1+Ac4Ad9PA5jZGuCnzSfcTE33HSKQLhqR/fcOhi9H89tDK3ZX3Zev65kt/Y0w0pWcczfEal9OCLRke8KDoO29pP3a4+291FiZC7/EaBCXa+iFRRRguAIkFkwyRPdqqs=
+	t=1751053491; cv=none; b=iJjCDCDs+yotvgJn2IOnr4YlFb1Zu/iAaiv1y45fu0YU2B2GSGXjemXyyT+DfovGzMT/sS09eNhgMGQfJQ32GSxJr3IgO10OFh02/QttlG54jlJHbyZBTzcu8ldgZtUAOTEqhF82gLxssh5a+8faEi61k5L6Wp4hJXYCjaNB8Xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751053394; c=relaxed/simple;
-	bh=kip3maXOLhHraRuZCsgnHfHjSz1/RRGdLakbVWQIGCU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=PUSbLGWvuYRQJkKvJ4hBg9BGv9g7wrSnUD43sNlsv+QQPe1AXTG0uZQ+TEsHTkcEBw0AZuVuTcT28FoYuwMHlvYwEvf6CAb+Lu433Oy1u+EkseF7tuomiTXKEfMpIxX+w8zXOIRW97GP9oM2fb+ImBRA2GxcOAGxP3xI6BTgpSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=nhKx0Tpw; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=hvVysKG+; arc=none smtp.client-ip=46.30.211.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
+	s=arc-20240116; t=1751053491; c=relaxed/simple;
+	bh=vyPl7psIWgxL6AREWQvWFWFrhiVjOlOl5pAw152YybA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ACWXZjFRLkPLcNjNSYpsjAazN5HSIddnjZg9juP9Rtz6e6pqGslLYjIhdI8anuCzUbRf3Yg+FrhYzdkUpxkNBT/ILFKnLkD09a+4L9D8pecenUfhJSdR7uO44yUts5c4Sc/xh5PtmnrIhSduK4qFSvFweJgaFvYXbsz4OmTNWlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ueEGhmNM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="nhKx0Tpw";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="hvVysKG+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751053390; x=1751658190;
-	d=konsulko.se; s=rsa1;
-	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
-	 subject:mime-version:content-type:from;
-	bh=kip3maXOLhHraRuZCsgnHfHjSz1/RRGdLakbVWQIGCU=;
-	b=nhKx0TpwpR1Q4EEI1eKXo4iE+0w6MO6l1JqE9jkr7/k6K/5oyn5/HOiHpVJ42ACvYpzdP13OrMFxl
-	 OQHDswdqs8bE2sNFOcGmdWiC/zrd5BdvyCGns5BjNHFeYEPzoZIVzeo+1UwnTKsiSEooZ66vxTDlcj
-	 nXk7r2yTWWwEIHAHaKp1BFVXoXGRiZ6kWdbU68Zx2tVk9a75Zt5O7kN1Siq/PZTRURnU0p4iwBnYjm
-	 iJtu7mkiWe/KYsu7A+AMXjv0+FGYJOzVWEr9W5ibbOaPeZDSixJ6aH34+vpbo46VhSRzNqatw0tBLn
-	 3KlQbXocjuMmhJOtgyAnoNV/0JFBheg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751053390; x=1751658190;
-	d=konsulko.se; s=ed1;
-	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
-	 subject:mime-version:content-type:from;
-	bh=kip3maXOLhHraRuZCsgnHfHjSz1/RRGdLakbVWQIGCU=;
-	b=hvVysKG+OEzQSEGEPSRVQhnvKz1kZm0qnr+5Uzn59+GV/cP5isf4RK2KeQslXaOtRr0T+a9Xtnyux
-	 tI1oKScBA==
-X-HalOne-ID: f34261ec-538e-11f0-a53b-85eb291bc831
-Received: from smtpclient.apple (c188-150-224-8.bredband.tele2.se [188.150.224.8])
-	by mailrelay5.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
-	id f34261ec-538e-11f0-a53b-85eb291bc831;
-	Fri, 27 Jun 2025 19:43:09 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ueEGhmNM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39291C4CEE3;
+	Fri, 27 Jun 2025 19:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751053490;
+	bh=vyPl7psIWgxL6AREWQvWFWFrhiVjOlOl5pAw152YybA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ueEGhmNMhX58p20oawzzKbyZ+IbEWr4EuGKoHc6+jnGXC7kjaFRoTo22KS20CiKOV
+	 Ku/aCXW4NSB6hWJssTEblxmKcgwkNVcW4VuMwNZ5EdZGXJmkhWjlAumNn24egeUNpM
+	 gFfq5Z+VFUYfp/xb47pWjZeQZmPSyJwfk851PkoJRlBC93TFJ5bnJ6K6d5Wd5Yhdeg
+	 xIffgZ4NK6W6AcC0JAks8iOga29v742UeJr/EReVB6cC5ZUYgSMEpHrj9DAav7JJAG
+	 YzjaU0zyB4IHPRlxo2S8FhXLC78jamFnRpRIOupSZiV7b2KEVDd002cje4BDLRiU73
+	 ue9gQxTEec5yQ==
+Message-ID: <e0469bf9-f12a-48a7-bd58-3ae346354987@kernel.org>
+Date: Fri, 27 Jun 2025 14:44:48 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
-Subject: Re: [PATCH v6 3/4] rust: add support for NUMA ids in allocations
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-In-Reply-To: <aF7km7nm9ggoj2AW@pollux>
-Date: Fri, 27 Jun 2025 21:42:58 +0200
-Cc: linux-mm@kvack.org,
- akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org,
- Uladzislau Rezki <urezki@gmail.com>,
- Alice Ryhl <aliceryhl@google.com>,
- rust-for-linux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EFAE3F9B-645F-4121-9B9A-7D7EE5B072ED@konsulko.se>
-References: <20250627181505.2080916-1-vitaly.wool@konsulko.se>
- <20250627181638.2081102-1-vitaly.wool@konsulko.se> <aF7km7nm9ggoj2AW@pollux>
-To: Danilo Krummrich <dakr@kernel.org>
-X-Mailer: Apple Mail (2.3826.200.121)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
+ system
+To: Hans de Goede <hansg@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Mika Westerberg <westeri@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <CAJZ5v0j3ZyuEqSKQ+3K8M3BwPCxn5Z6KOwjyjt4cJW6HfxjPDw@mail.gmail.com>
+ <hyvpl4gvxc6h2r3itfofjduwb3vpobyo7a7z6g3zapzscqtafh@ixsd4amyljva>
+ <de548b27-4c43-4f30-af9d-b060101e6fd8@kernel.org>
+ <75fixx6rgwsgsw6e765oxdcivcg2nkzx2fp2qywgx4vi3ihywh@ot7gdecsnttw>
+ <1b0d2349-dbf7-47aa-95c9-1974e63d111a@kernel.org>
+ <13025910-7639-400b-878a-cd0780c6534c@kernel.org>
+ <4ajmcrl3bqeikki2etek5bafzszelgevr322tvuubx4pxxyju2@qqxz6lzcb6e5>
+ <fdd635ce-5e8e-4123-8e8e-241a57b4d7fe@kernel.org>
+ <eaf7bva2skjz6oo2s2f4agooplthvuztyr6tssa7rux764qw35@kscd3rtejfvn>
+ <9f5e0c21-bc25-44d0-a4d4-6fd6e58a9f2e@kernel.org>
+ <ly3mww7nq7uuqvdx7p2uzcrphhboeuep3yuwbaxwfimesitjaa@hf72i4vu5quo>
+ <584af55f-1b73-4c17-bf85-c2d3ecf6692e@kernel.org>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <584af55f-1b73-4c17-bf85-c2d3ecf6692e@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 6/27/2025 2:38 PM, Hans de Goede wrote:
+> Hi,
+> 
+> On 27-Jun-25 9:18 PM, Dmitry Torokhov wrote:
+>> On Fri, Jun 27, 2025 at 01:56:53PM -0500, Mario Limonciello wrote:
+>>> On 6/27/2025 1:36 PM, Dmitry Torokhov wrote:
+>>>> On Fri, Jun 27, 2025 at 05:56:05PM +0200, Hans de Goede wrote:
+>>
+>> [ ... trim ... ]
+>>
+>>>>
+>>>> 2. There is a patch from Mario (a8605b0ed187) suppressing sending
+>>>> KEY_POWER as part of "normal" wakeup handling, pretty much the same as
+>>>> what he and you are proposing to do in gpio-keys (and eventually in
+>>>> every driver keyboard or button driver in the kernel). This means we no
+>>>> longer can tell if wakeup is done by power button or sleep button (on
+>>>> systems with dual-button models, see ACPI 4.8.3.1).
+>>>
+>>> Actually a8605b0ed187 was about a runtime regression not a suspend
+>>> regression.  I didn't change anything with sending KEY_POWER during wakeup
+>>> handling.
+>>
+>> Ah, right, ignorng events for "suspended" buttons was done in
+>> e71eeb2a6bcc ("ACPI / button: Do not propagate wakeup-from-suspend
+>> events"). Again trying to add heuristic to the kernel instead of
+>> enlightening userspace.
+>>
+>> I am curious why the system is sending "Notify Wake" events when not
+>> sleeping though?
+>>
+>> [ .. skip .. ]
+>>
+>>>
+>>> FTR I did test Hans suggestion and it does work effectively (code below).
+>>>
+>>> diff --git a/drivers/input/keyboard/gpio_keys.c
+>>> b/drivers/input/keyboard/gpio_keys.c
+>>> index f9db86da0818b..3bc8c95e9943b 100644
+>>> --- a/drivers/input/keyboard/gpio_keys.c
+>>> +++ b/drivers/input/keyboard/gpio_keys.c
+>>> @@ -425,7 +425,8 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void
+>>> *dev_id)
+>>>                           * already released by the time we got interrupt
+>>>                           * handler to run.
+>>>                           */
+>>> -                       input_report_key(bdata->input, button->code, 1);
+>>> +                       input_report_key(bdata->input, *bdata->code, 1);
+>>> +                       input_sync(bdata->input);
+>>
+>> I start wondering if we should keep the fake press given that we do not
+>> know for sure if wakeup truly happened because of this button press...
+> 
+> AFAIK we cannot drop the fake press because then Android userspace
+> will immediately go back to sleep again assuming the wakeup was
+> e.g. just some data coming in from the modem which did not result
+> in a notification to show, so no need to turn on the display,
+> but instead immediately go back to sleep.
+> 
+> IIRC last time we had this discussion (man years ago) the reason
+> to send KEY_POWER was to let Android know that it should actualy
+> turn on the display and show the unlock screen because the user
+> wants that to happen.
+> 
+> I believe this is also what the KEY_WAKEUP thing in the ACPI button
+> code is for.
+> 
+>> Can we track back to the wakeup source and determine this? It will not
+>> help your problem, but I still believe userspace is where policy should
+>> live.
+> 
+> There is /sys/power/pm_wakeup_irq we could correlate that to the IRQ
+> number of the ISR and then AFAICT we will definitively know if
+> the power-button was the wakeup source ?
+> 
 
+So at least in my case when woken up by this power button press the IRQ 
+isn't the one for the GPIO itself, but rather for the GPIO controller 
+master interrupt.
 
-> On Jun 27, 2025, at 8:36=E2=80=AFPM, Danilo Krummrich =
-<dakr@kernel.org> wrote:
->=20
-> On Fri, Jun 27, 2025 at 08:16:38PM +0200, Vitaly Wool wrote:
->> Add support for specifying NUMA ids in Rust allocators as an Option
->> (i. e. providing `None` as nid corresponds to NUMA_NO_NODE). To do
->> this, modify ReallocFunc to use the new extended realloc primitives
->> from the C side of the kernel (i. e. k[v]realloc_node/vrealloc_node)
->> and add the new function alloc_node to the Allocator trait while
->> keeping the existing one (alloc) for backward compatibility.
->>=20
->> This will allow to specify node to use for allocation of e. g.
->> {KV}Box, as well as for future NUMA aware users of the API.
->>=20
->> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
->=20
-> Did you see [1]? I can't see the feedback being addressed.
->=20
-> [1] https://lore.kernel.org/lkml/aF5-a-bUp1pD5tiS@pollux/
+# cat /sys/power/pm_wakeup_irq
+7
+# grep . /sys/kernel/irq/7/*
+/sys/kernel/irq/7/actions:pinctrl_amd
+/sys/kernel/irq/7/chip_name:IR-IO-APIC
+/sys/kernel/irq/7/hwirq:7
+/sys/kernel/irq/7/name:fasteoi
+/sys/kernel/irq/7/per_cpu_count:0,0,0,0,0,5,0,0
+/sys/kernel/irq/7/type:level
+/sys/kernel/irq/7/wakeup:enabled
 
-Awkwardly enough, this one I did miss.=20=
+# grep . /sys/kernel/irq/102/*
+/sys/kernel/irq/102/actions:power
+/sys/kernel/irq/102/chip_name:amd_gpio
+/sys/kernel/irq/102/hwirq:0
+/sys/kernel/irq/102/per_cpu_count:0,1,0,2,1,0,0,1
+/sys/kernel/irq/102/type:edge
+/sys/kernel/irq/102/wakeup:disabled
+
