@@ -1,53 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1B7289E0F;
-	Fri, 27 Jun 2025 21:32:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D0122CBF9;
+	Fri, 27 Jun 2025 21:33:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751059964; cv=none; b=LFxC4nDQR/GiRm93Y07ZJ7KLw9Vgfmmi+htK6qjq69VvpbcBpxjANctN5yKWvepgDzBg7j/+BQqnTRQsmGnm6cy1SFb441fFBZHXJ6Jm7OExEEe/PzDnCwYEK/ijuqYePMDTe6kMHXDXBUDAcn36+iAdVzMFjHEfrsbGSXOJyng=
+	t=1751060012; cv=none; b=Mdd3ToCzSmY1YCjmnb69AozG0cnca2WwKq0vFnlqc2IcK6dkS3Y8GARtiG0jUq/RV7qDrs1WozXhyM0FBDc9IWVqJEes5WWTpyyTS7TMmK6UgNPwoT7p0up0ZKUSSu/f6m4B0bJGuP8/9zqYtTTmhFugOD03WrciZkWx3EqXlJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751059964; c=relaxed/simple;
-	bh=eESCjft7xsEYKmoabjp8my7YY1IIc+dHMAl27BLkGmw=;
+	s=arc-20240116; t=1751060012; c=relaxed/simple;
+	bh=vyY1Kd5OUBJc97l8JCKcVQzjxkPjwMl4qd1YNIXtXrw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TcfR4gLIE1sOTmuJgFMXRIcwumid9mF+RNn03RLfjDP4YrKQy8SY4nZz1aIpfv2jDP8cgB4c/n2quMP7MiilfMNQcQvljpubcaaVIsYB7hxq4g7zJxOfAXmWKlBYfad7N1T7sHYfdY8B2WLdhDA6gQ5bFYPyomBsGchHgo1mAd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IXZJr6Cf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kggk2pWtp/0645TGj2fi81o/XzwWLvLT1Wj0Xpft47TbEG/ZULIhBEvDAdnPuimfYvRmgQvXfDH9tyL/lsxtzd5ID/O3KuD9vosVf2dYebZBEqVNacUXkJDwYPd5KhofrrHzL3i42zayyGMcAPzDhFsCJdj4TDRWHWg4+7lsC2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GY31+U2U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IXZJr6Cf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7D18C4CEE3;
-	Fri, 27 Jun 2025 21:32:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GY31+U2U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 731D7C4CEE3;
+	Fri, 27 Jun 2025 21:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751059962;
-	bh=eESCjft7xsEYKmoabjp8my7YY1IIc+dHMAl27BLkGmw=;
+	s=k20201202; t=1751060010;
+	bh=vyY1Kd5OUBJc97l8JCKcVQzjxkPjwMl4qd1YNIXtXrw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IXZJr6CfuxBkcfN8mZSn9MAoIkUuXaEy2JhX2uh2CQ5+wDL6J6HIKYdf6QuRbb4Xq
-	 i5zffCh21MBYbP/lUKV+Jq8h4CnTNEoKpgTa7LaVp/m6V+GlE4ly/iWiZazEbfOQnX
-	 vu7DThsboBweTluoTrIY2DNsHHWx8j3LDJ1kBIGabVv4k/ML+/4BldBnY3LJo7uIpJ
-	 xkfLVlb6HHtTpXPZ8q31XLO+neTDlA1TUL27U4fZyMm3VG3Xv6xqe3sG6B6zhpCVru
-	 fuNDfwUXv83ckLLxitPDEPll6B5P1OiwUP6PagGLygGxjDJD5OppcRjEZbvA5JqOX7
-	 DUw9qwaqbe5OQ==
-Date: Fri, 27 Jun 2025 16:32:41 -0500
-From: Rob Herring <robh@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 24/31] of/irq: Add of_msi_xlate() helper function
-Message-ID: <20250627213241.GA168190-robh@kernel.org>
-References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
- <20250626-gicv5-host-v6-24-48e046af4642@kernel.org>
+	b=GY31+U2Up6DSuFAyMyCXciFelgNHeiFOfu3fFcykOxMm+/tQKtm/zoJAzmhPriZM4
+	 +ywCeNtAByQQcrLbmknsU+oQ4LWwCr9nDpCD+EURTY864Dv91cJaez8aNhOfHh0cXt
+	 ouMMzuOxHMqPXBDL649v/o+JBVFuAWzC0JGGsKEcb1nJRYjH2YkVa9ag975wnKGqtw
+	 2L82Rqoxcgz1dG9tjl311wO7ShvZqSQIqW5Fghj/I4vEAaM0oDdA8nFpmW40QFO4Nd
+	 QrtWtPtPyEDp6H+76Bn97IPeprzYTDGbxsp53XgI2R+KGeqU/lUDwuQQFnD0+Vcq7L
+	 mjNJWhaEfAc1g==
+Date: Fri, 27 Jun 2025 16:33:29 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Cc: devicetree@vger.kernel.org, conor+dt@kernel.org,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	jic23@kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: ad4851: add spi-3wire
+Message-ID: <175106000949.179484.16704763216983853791.robh@kernel.org>
+References: <20250626104024.8645-1-antoniu.miclaus@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,66 +43,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250626-gicv5-host-v6-24-48e046af4642@kernel.org>
+In-Reply-To: <20250626104024.8645-1-antoniu.miclaus@analog.com>
 
-On Thu, Jun 26, 2025 at 12:26:15PM +0200, Lorenzo Pieralisi wrote:
-> Add an of_msi_xlate() helper that maps a device ID and returns
-> the device node of the MSI controller the device ID is mapped to.
+
+On Thu, 26 Jun 2025 13:40:23 +0300, Antoniu Miclaus wrote:
+> Add devicetree support for spi 3-wire configuration.
 > 
-> Required by core functions that need an MSI controller device node
-> pointer at the same time as a mapped device ID, of_msi_map_id() is not
-> sufficient for that purpose.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
 > ---
->  drivers/of/irq.c       | 22 +++++++++++++++++-----
->  include/linux/of_irq.h |  5 +++++
->  2 files changed, 22 insertions(+), 5 deletions(-)
+>  Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index f8ad79b9b1c9..74aaea61de13 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -670,8 +670,20 @@ void __init of_irq_init(const struct of_device_id *matches)
->  	}
->  }
->  
-> -static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
-> -			    u32 id_in)
-> +/**
-> + * of_msi_xlate - map a MSI ID and find relevant MSI controller node
-> + * @dev: device for which the mapping is to be done.
-> + * @msi_np: Pointer to store the MSI controller node
-> + * @id_in: Device ID.
-> + *
-> + * Walk up the device hierarchy looking for devices with a "msi-map"
-> + * property. If found, apply the mapping to @id_in. @msi_np pointed
-> + * value must be NULL on entry, if an MSI controller is found @msi_np is
-> + * initialized to the MSI controller node with a reference held.
-> + *
-> + * Returns: The mapped MSI id.
-> + */
-> +u32 of_msi_xlate(struct device *dev, struct device_node **msi_np, u32 id_in)
->  {
->  	struct device *parent_dev;
->  	u32 id_out = id_in;
-> @@ -682,7 +694,7 @@ static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
->  	 */
->  	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent)
->  		if (!of_map_id(parent_dev->of_node, id_in, "msi-map",
-> -				"msi-map-mask", np, &id_out))
-> +				"msi-map-mask", msi_np, &id_out))
->  			break;
->  	return id_out;
->  }
-> @@ -700,7 +712,7 @@ static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
->   */
->  u32 of_msi_map_id(struct device *dev, struct device_node *msi_np, u32 id_in)
 
-Can we replace the 2 callers of of_msi_map_id() with of_msi_xlate()? 
-The series is already big enough, so that can be a follow-up or do it 
-for 6.17 if the series isn't going to make it.
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-Rob
