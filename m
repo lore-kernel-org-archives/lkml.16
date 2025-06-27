@@ -1,133 +1,254 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6D6215783
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 18:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3F42F1FE2
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 18:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751049785; cv=none; b=GEJUt5BIZUbWxPw5o5HqTOyW454CV8a4bRI2d0LOBKiiDaJu8gnUnCYJ6M+hpIEYh5cJpakV2l+F7LRy2F29qfq9CocTJhEUtyDQTF4/wHrhRJ/tfw7xvxqtDgEeDgZ/c8cSvXRaaJOj7FQA5BUBV1nzLQVhDVcIdX22QJt8/z8=
+	t=1751050019; cv=none; b=BDrWQwKfSsRQMzvYRBkIwsSip3Fq0QcBuAzcG8v22ti63p8gGZUlhxqfmFYQo2eVr9QB0CyHuUO5rb8W7J7tMFLDC2wKrCdl0zC87Gf6hb6i0pSnX0yanlWUEknTmQEB1YSFHGI3ym8JH4va4ygm0sZcLywtNVvi5KGKH3XuigI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751049785; c=relaxed/simple;
-	bh=rnZF8L3Q5EZ19XSt7J/GSfcc3N0PJHE2K3Q35Vmq6Pg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ItaAk2Yyphsouf2fJyGuEtG6MrZMt80WEVT+gunN62mHkmabFpWdC98plAhmGGkqsF+7dX2lR0FRZTRR/sASVMUgmNT3E8gKkXoQrRCZvwf4saXZ6L1icC+rTptsD1ThNncSkvMTAHbUQjLQdKoGjvAq0M5ICkRXqudPGvHPzJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddd90ca184so19256115ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:43:04 -0700 (PDT)
+	s=arc-20240116; t=1751050019; c=relaxed/simple;
+	bh=flY69kVEnXnfcQQ45AsLPiwuqdUyVK7Moa0qGWPewPM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EWcv3DVatfywEhSpY5IiqApCrWdqEwELSSxa56hB/miLOZYAQ+ZQkBvhpl04VIlxQdi46+ygPm+ZTf/wPmCWSo5Lsg2QH69EmJqmWOw1RUJ25m2hEAsCQCJy+/ZUCAtK5UADdvLhlnDoCqGybVdZvMYXTTeN47Fr7nSjZM7uowQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DCWD4yUG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DCWD4yUG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751050015;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wPsuOShwW8rcUabyA/w40dAw+qv83nK9tnkMUhJXu8o=;
+	b=DCWD4yUGm6ZS6QlE9p4Q99bC4D+36gok9uiaY6BQeJ9XWbwQCIW/ivIg7YMUwmEdWnthOQ
+	79ERLLVfemRJWoe1J/46F8BN4uQHGVwW7TJnDCLc+nLGoc6T46hq+D37zZI9i4Wsvrgc+K
+	Cd2PyNQ5yvoLsdnB+9mf8Cwb6qbHcSw=
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
+ [209.85.167.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-327-RZceZ7_mNQG8q_Ne9ZhBPg-1; Fri, 27 Jun 2025 14:46:44 -0400
+X-MC-Unique: RZceZ7_mNQG8q_Ne9ZhBPg-1
+X-Mimecast-MFC-AGG-ID: RZceZ7_mNQG8q_Ne9ZhBPg_1751050003
+Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-40abfc09f67so929440b6e.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 11:46:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751049783; x=1751654583;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O1qQb9akbNTEDJX75WZwiooNPq0rpaHgg3Xk3vYwsWk=;
-        b=HmTno3Rc4wQs9+KCArHg435TNN1OTSk4qupT/QnsQFFP5zFgvgI+QapRnnFV4l4BUh
-         fgNcs9rNpucJYzYYQMYIj/ngrjjVJLCQaYYqog+3ixfXEDorioa/gFTguU3xP0xZUGgB
-         Go+3iHg28VtViFS9KJetz0U3hagon3RlJGQMlhg/y/79M0UZ0q7gV2sau5DZB7xXR9vG
-         gOIryvcYXOB7q26cnlBeu97jq66H/KpxITG0F/iKFwoMm5it9Mfgii5ftyJeQaxB5ujb
-         e0V12XDaOjSDolvkWJO1F2ewsHWQqQbAR8NRZOaLHYM2CZByCsC1CagYd4Sg8SGo9USZ
-         ge9w==
-X-Gm-Message-State: AOJu0YwqJPzdaAqb/Sm2ROyaq2GVrYuSDc7F/qJTGVoB3SypVPlIL801
-	84XL5c3vXWelZ92U5BE0YXQcFc3Y5JMn25+lhKyN680td7MraP6BBDof4Yrh53IgoUvL+ESWQbg
-	LHKiOLxj6LqDDaEBZ1hIVVNDfLNAhyWIfvPOAF+PfekszcmUjQEUCR3+YAVA=
-X-Google-Smtp-Source: AGHT+IGdOz+cNghG49r4DgnJitiJCm0oc6stRnAukLr5SOx99lr5FusVguFeDp10wBws2lA+/K0SekzolDnncdNT8WNl7ZYcKkjF
+        d=1e100.net; s=20230601; t=1751050003; x=1751654803;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wPsuOShwW8rcUabyA/w40dAw+qv83nK9tnkMUhJXu8o=;
+        b=fqVJtLThm8z/IgL+rvglXjASppiWGDEzE2MkZGUTsAC37EzjZS/stkiYxKKUgzpEhn
+         5+Q5K4tJAzgMYjvVt2L4zIK+KB5QBdjN081V/neFYNNjoHMav5asyfch/Dyi0Q0jeTxq
+         SQyrCRNzFe/qq2yu9wNir6myUVeuxAzz/nLcBvr2URhAmhr3BUDc86X5z4ZFCdfIeEtz
+         1UfRsnQeqsgkv+AN82VGv7V9SQ1uDveORTgpJwNnx/PZ/4e6uIIM/upd6Ave6dT51CHS
+         foe0ItQA0054HjiydLQwoAJv9o0IXhfvze+qv4FLudZLjT4tVHgeBZ45s0af+vyCD8wt
+         gkzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXhxD8+RLscctzNxDTP3fGhqDWdBSOWajDSaNcWs6wpAbJ3yyq0seiKT7uCaqbvYEnHGPdZZtaZa9rQ2DI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPo/rV7ZJUt1+8wSVIqI8h4H43X7JVfNueAUFfzWW14DUoxvv/
+	/JmUA4+0+GUiRJ2TSczlXEPhmj0eonoN9hQtlTFdBNaRzPw4oLLtq6+MU8080u6mEhVJXSc2puZ
+	fuJ787CnfOSC4MoK9kGgpB49W1C20cHodEP5waznuKt++PFynzkON/XyUpZ5oqY4TnA==
+X-Gm-Gg: ASbGncuyQeTm8uw0C/C5Gk8JmNreAvtn4NMzcSYCXulPqJ4lxdOp1uKktx7zVmJ6+/e
+	8xodb6UR7D+ww8S4iMjWafabEwjFPhFGA9a5ChqDyOvpuSfgA8AAio44/865ObOm2uNGhmykHG9
+	eajIFZYvc1x/tHFlI+zdiPZpkdEvi5wNIRDm7ubLCly8Zoi9BuplxNMYqwpgYTzsvvZflcodbrq
+	CgSTbIEuxkUvboTEbWZtD51XceHLc4Q4x8s9rpJDzqb/iabUJYgyAy9prXrzB8Btut4ythzdmEk
+	fK9FSmmLXP+l6Q==
+X-Received: by 2002:a05:6808:1887:b0:3f6:6d8f:1365 with SMTP id 5614622812f47-40b33c181f7mr3137109b6e.3.1751050003462;
+        Fri, 27 Jun 2025 11:46:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGBkeyZbHONdPICNY/ngZpaDDN33V/Cjjb5FkFPOhcDzAO8OcJNj0te7ITvNSIpnVPEr+Vc1Q==
+X-Received: by 2002:a05:6808:1887:b0:3f6:6d8f:1365 with SMTP id 5614622812f47-40b33c181f7mr3137094b6e.3.1751050003038;
+        Fri, 27 Jun 2025 11:46:43 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b324050c7sm470446b6e.30.2025.06.27.11.46.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 11:46:42 -0700 (PDT)
+Date: Fri, 27 Jun 2025 14:46:31 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Nikita Kalyazin <kalyazin@amazon.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Hugh Dickins <hughd@google.com>, Oscar Salvador <osalvador@suse.de>,
+	Michal Hocko <mhocko@suse.com>,
+	David Hildenbrand <david@redhat.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Ujwal Kundur <ujwal.kundur@gmail.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	James Houghton <jthoughton@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Axel Rasmussen <axelrasmussen@google.com>
+Subject: Re: [PATCH 0/4] mm/userfaultfd: modulize memory types
+Message-ID: <aF7nBzakfWRU_A0Z@x1.local>
+References: <20250620190342.1780170-1-peterx@redhat.com>
+ <114133f5-0282-463d-9d65-3143aa658806@amazon.com>
+ <aFxZUHcQh3hSraqe@x1.local>
+ <7666ee96-6f09-4dc1-8cb2-002a2d2a29cf@amazon.com>
+ <aF6h7rYVnVTMtJ0S@x1.local>
+ <7455220c-e35b-4509-b7c3-a78fde5b12d5@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2287:b0:3df:3bc5:bac1 with SMTP id
- e9e14a558f8ab-3df4ab5e330mr53974025ab.5.1751049783445; Fri, 27 Jun 2025
- 11:43:03 -0700 (PDT)
-Date: Fri, 27 Jun 2025 11:43:03 -0700
-In-Reply-To: <f63acb1b-083f-4a48-8352-d07d48827330@linux.dev>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685ee637.a00a0220.3efde.0000.GAE@google.com>
-Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
-From: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	yanjun.zhu@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <7455220c-e35b-4509-b7c3-a78fde5b12d5@amazon.com>
 
-Hello,
+On Fri, Jun 27, 2025 at 05:59:49PM +0100, Nikita Kalyazin wrote:
+> 
+> 
+> On 27/06/2025 14:51, Peter Xu wrote:
+> > On Thu, Jun 26, 2025 at 05:09:47PM +0100, Nikita Kalyazin wrote:
+> > > 
+> > > 
+> > > On 25/06/2025 21:17, Peter Xu wrote:
+> > > > On Wed, Jun 25, 2025 at 05:56:23PM +0100, Nikita Kalyazin wrote:
+> > > > > 
+> > > > > 
+> > > > > On 20/06/2025 20:03, Peter Xu wrote:
+> > > > > > [based on akpm/mm-new]
+> > > > > > 
+> > > > > > This series is an alternative proposal of what Nikita proposed here on the
+> > > > > > initial three patches:
+> > > > > > 
+> > > > > >      https://lore.kernel.org/r/20250404154352.23078-1-kalyazin@amazon.com
+> > > > > > 
+> > > > > > This is not yet relevant to any guest-memfd support, but paving way for it.
+> > > > > 
+> > > > > Hi Peter,
+> > > > 
+> > > > Hi, Nikita,
+> > > > 
+> > > > > 
+> > > > > Thanks for posting this.  I confirmed that minor fault handling was working
+> > > > > for guest_memfd based on this series and looked simple (a draft based on
+> > > > > mmap support in guest_memfd v7 [1]):
+> > > > 
+> > > > Thanks for the quick spin, glad to know it works. Some trivial things to
+> > > > mention below..
+> > > 
+> > > Following up, I drafted UFFDIO_COPY support for guest_memfd to confirm it
+> > > works as well:
+> > 
+> > Appreciated.
+> > 
+> > Since at it, I'll comment quickly below.
+> > 
+> > > 
+> > > diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> > > index 8c44e4b9f5f8..b5458a22fff4 100644
+> > > --- a/virt/kvm/guest_memfd.c
+> > > +++ b/virt/kvm/guest_memfd.c
+> > > @@ -349,12 +349,19 @@ static bool kvm_gmem_offset_is_shared(struct file
+> > > *file, pgoff_t index)
+> > > 
+> > >   static vm_fault_t kvm_gmem_fault(struct vm_fault *vmf)
+> > >   {
+> > > +     struct vm_area_struct *vma = vmf ? vmf->vma : NULL;
+> > >        struct inode *inode = file_inode(vmf->vma->vm_file);
+> > >        struct folio *folio;
+> > >        vm_fault_t ret = VM_FAULT_LOCKED;
+> > > 
+> > >        filemap_invalidate_lock_shared(inode->i_mapping);
+> > > 
+> > > +     folio = filemap_get_entry(inode->i_mapping, vmf->pgoff);
+> > > +     if (!folio && vma && userfaultfd_missing(vma)) {
+> > > +             filemap_invalidate_unlock_shared(inode->i_mapping);
+> > > +             return handle_userfault(vmf, VM_UFFD_MISSING);
+> > > +     }
+> > 
+> > Likely a possible refcount leak when folio != NULL here.
+> 
+> Thank you.  I was only aiming to cover the happy case for know.  I will keep
+> it in mind for the future.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KASAN: wild-memory-access Read in __rxe_get
+Yep that's good enough, thanks.  It's really something I'd comment
+passingly, it's definitely reassuring to know the happy case works.
 
-==================================================================
-BUG: KASAN: wild-memory-access in instrument_atomic_read include/linux/instrumented.h:68 [inline]
-BUG: KASAN: wild-memory-access in atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
-BUG: KASAN: wild-memory-access in refcount_read include/linux/refcount.h:170 [inline]
-BUG: KASAN: wild-memory-access in __refcount_add_not_zero include/linux/refcount.h:176 [inline]
-BUG: KASAN: wild-memory-access in __refcount_inc_not_zero include/linux/refcount.h:317 [inline]
-BUG: KASAN: wild-memory-access in refcount_inc_not_zero include/linux/refcount.h:335 [inline]
-BUG: KASAN: wild-memory-access in kref_get_unless_zero include/linux/kref.h:131 [inline]
-BUG: KASAN: wild-memory-access in __rxe_get+0x79/0x1c0 drivers/infiniband/sw/rxe/rxe_pool.c:241
-Read of size 4 at addr 0006000000000210 by task kworker/u4:6/1038
+> > > +
+> > >        folio = kvm_gmem_get_folio(inode, vmf->pgoff);
+> > >        if (IS_ERR(folio)) {
+> > >                int err = PTR_ERR(folio);
+> > > @@ -438,10 +445,57 @@ static int kvm_gmem_uffd_get_folio(struct inode
+> > > *inode, pgoff_t pgoff,
+> > >        return 0;
+> > >   }
+> > > 
+> > > +static int kvm_gmem_mfill_atomic_pte(pmd_t *dst_pmd,
+> > > +                        struct vm_area_struct *dst_vma,
+> > > +                        unsigned long dst_addr,
+> > > +                        unsigned long src_addr,
+> > > +                        uffd_flags_t flags,
+> > > +                        struct folio **foliop)
+> > > +{
+> > > +     struct inode *inode = file_inode(dst_vma->vm_file);
+> > > +     pgoff_t pgoff = linear_page_index(dst_vma, dst_addr);
+> > > +     struct folio *folio;
+> > > +     int ret;
+> > > +
+> > > +     folio = kvm_gmem_get_folio(inode, pgoff);
+> > > +     if (IS_ERR(folio)) {
+> > > +             ret = PTR_ERR(folio);
+> > > +             goto out;
+> > > +     }
+> > > +
+> > > +     folio_unlock(folio);
+> > > +
+> > > +     if (uffd_flags_mode_is(flags, MFILL_ATOMIC_COPY)) {
+> > > +             void *vaddr = kmap_local_folio(folio, 0);
+> > > +             ret = copy_from_user(vaddr, (const void __user *)src_addr, PAGE_SIZE);
+> > > +             kunmap_local(vaddr);
+> > > +             if (unlikely(ret)) {
+> > > +                     *foliop = folio;
+> > > +                     ret = -ENOENT;
+> > > +                     goto out;
+> > > +             }
+> > > +     } else {                /* ZEROPAGE */
+> > > +             clear_user_highpage(&folio->page, dst_addr);
+> > > +     }
+> > > +
+> > > +     kvm_gmem_mark_prepared(folio);
+> > 
+> > Since Faud's series hasn't yet landed, so I'm almost looking at the current
+> > code base with an imagination of what might happen.
+> > 
+> > In general, missing trapping for guest-memfd could start to be slightly
+> > trickier.  So far IIUC guest-memfd cache pool needs to be populated only by
+> > a prior fallocate() syscall, not during fault.  So I suppose we will need
+> > to use uptodate bit to mark folio ready, like what's done here.
+> 
+> I don't think I'm familiar with the fallocate() requirement in guest_memfd.
+> Fuad's v12 [1] (although I think it has been like that from the beginning)
+> calls kvm_gmem_get_folio() that populates pagecache in the fault handler
+> (kvm_gmem_fault_shared()).  SEV [2] and TDX [3] seem to use
+> kvm_gmem_populate() for both allocation and preparation.
 
-CPU: 0 UID: 0 PID: 1038 Comm: kworker/u4:6 Not tainted 6.16.0-rc3-syzkaller-gfa5598b27d21 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: rxe_wq do_work
-Call Trace:
- <IRQ>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- kasan_report+0x118/0x150 mm/kasan/report.c:634
- check_region_inline mm/kasan/generic.c:-1 [inline]
- kasan_check_range+0x2b0/0x2c0 mm/kasan/generic.c:189
- instrument_atomic_read include/linux/instrumented.h:68 [inline]
- atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
- refcount_read include/linux/refcount.h:170 [inline]
- __refcount_add_not_zero include/linux/refcount.h:176 [inline]
- __refcount_inc_not_zero include/linux/refcount.h:317 [inline]
- refcount_inc_not_zero include/linux/refcount.h:335 [inline]
- kref_get_unless_zero include/linux/kref.h:131 [inline]
- __rxe_get+0x79/0x1c0 drivers/infiniband/sw/rxe/rxe_pool.c:241
- rxe_skb_tx_dtor+0x79/0x1e0 drivers/infiniband/sw/rxe/rxe_net.c:363
- skb_release_head_state+0xfe/0x250 net/core/skbuff.c:1139
- napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
- e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
- e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
- e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
- __napi_poll+0xc4/0x480 net/core/dev.c:7414
- napi_poll net/core/dev.c:7478 [inline]
- net_rx_action+0x707/0xe30 net/core/dev.c:7605
- handle_softirqs+0x286/0x870 kernel/softirq.c:579
- do_softirq+0xec/0x180 kernel/softirq.c:480
- </IRQ>
- <TASK>
- __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
- local_bh_enable include/linux/bottom_half.h:33 [inline]
- rcu_read_unlock_bh include/linux/rcupdate.h:910 [inline]
- __dev_queue_xmit+0x1cd7/0x3a70 net/core/dev.c:4740
- neigh_output include/net/neighbour.h:539 [inline]
- ip6_finish_output2+0x11fe/0x16a0 net/ipv6/ip6_output.c:141
- __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
- ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
- rxe_send drivers/infiniband/sw/rxe/rxe_net.c:385 [inline]
- rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:444
- rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
- rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
- do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
- do_work+0x1b1/0x6c0 drivers/infiniband/sw/rxe/rxe_task.c:187
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-==================================================================
+I actually didn't notice fault() uses kvm_gmem_get_folio(), which has
+FGP_CREAT indeed.
 
+I checked Ackerley's latest 1G patchset, which also did the same that
+kvm_gmem_get_folio() will invoke the custom allocator to allocate 1G pages
+even during a fault().
 
-Tested on:
+Not sure whether it's intentional though, for example, if the tests in
+userspace always does fallocate() then the code should run the same, and
+FGP_CREAT will just never be used.
 
-commit:         fa5598b2 RDNA/rxe: Fix rxe_skb_tx_dtor problem
-git tree:       https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
-console output: https://syzkaller.appspot.com/x/log.txt?x=16b943d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
-dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+Thanks for pointing this out.  I definitely didn't notice this trivial
+detail before. Looks like it's not a major issue, if the folio can be
+dynamically allocated, then MISSING mode (if/when it'll be supported) can
+capture both "!folio" and "folio && !uptodate" cases here as missing.
 
-Note: no patches were applied.
+> 
+> [1] https://lore.kernel.org/kvm/20250611133330.1514028-1-tabba@google.com/T/#m15b53a741e4f328e61f995a01afb9c4682ffe611
+> [2] https://elixir.bootlin.com/linux/v6.16-rc3/source/arch/x86/kvm/svm/sev.c#L2331
+> [3] https://elixir.bootlin.com/linux/v6.16-rc3/source/arch/x86/kvm/vmx/tdx.c#L3236
+
+-- 
+Peter Xu
+
