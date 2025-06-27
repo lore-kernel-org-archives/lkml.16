@@ -1,193 +1,184 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08291E0E00;
-	Fri, 27 Jun 2025 18:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD95A2ECD02
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 18:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751049099; cv=none; b=RRN+TzRcBnTl8WlReWWO8u3JSMFpJ+Rh81PgYAex9YGqNJxCRea0H6d4v05eqiCyG80DPdrv1S/03OVeAOj9w1CtYnYSnZ1EI71LdTDZB+ju8ylAPAuKVR84xKSq+9EkaVCutlyW0XHuLwhgI0AhlD8LfWA9OlVog4sxIAonTzk=
+	t=1751049103; cv=none; b=U90azmuOkY8bXckOY5A40geKGBkT9KvYnZM/y4KPFdRXApImELbz2Wejd4HqhsqGmkQGKi9RhFWYKgetlIWq5RbTKwqSGs063hKboEUXj0Ax2jgIjcvl1YwiuWwkQY5qcUKhAVjt+G/v1s6AZw14ZboD/sBPi2A49GUSVu56eCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751049099; c=relaxed/simple;
-	bh=96qoqGEGVdnAX8QpuygeTA1TC0XltmIypgFTfajk9nY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=D41v5A2U2qdrJX9w8QArNfCyk3qtjuGZqNP7m6D4cHvudzmuQCJL9SQpGJ8VmCVLeICiV+0lMwtDDLmhUNQ9YJp1y5Gry9mrygJEK7zfWJBdOrZfae9MvRI2D6xvOCVWMjvZqqJwpxnO+vmEu92R7EHR59Wxmy3UNYofTNN58jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VtwgYHH6; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1751049103; c=relaxed/simple;
+	bh=AusrS8KkiP0iQzvArLjb8hmDy4OYftr39dfHttN9wHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PrJLp/0tC6SPWnbriVI3NRiU7XyhbQjmD7PYR4GqxhCY5xFLogifawy40n5zAtdL9Qh1zjNLj4+iid8u3ZxUpkDjNAygLiq9eA1xgur98nOcHXQYNeGsCJ9IY4pmogOS52mSXTfgLqaeKqmSyoytQm9ZJ70T5/sqATX4vX4+/3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=N5gP4/Cy; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=G0Li8utu; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lTrpLGOK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=q8izR8Oh; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VtwgYHH6"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55RIV8u82813254;
-	Fri, 27 Jun 2025 13:31:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1751049068;
-	bh=JRbaxnkTkZMDCwScqng54pu0iNXDXjKP0blla/5kMUw=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=VtwgYHH6Ua0w8FnfvQHjTy6h2vYlAFkdEjyx7ml0oxEckoBNc+TJvKsc/Al5XsKtU
-	 MHFKc6KUtvOGYel4PjVIS59uULMlT+BD73TCujxcaWOsHg41qvGGgBIuZLCK9hBYQ0
-	 JlBzscJ2PX3GOvZEA3ZC8NvZSICbElmu2LVuJ/V4=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55RIV8Vk696729
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 27 Jun 2025 13:31:08 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 27
- Jun 2025 13:31:08 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Fri, 27 Jun 2025 13:31:08 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55RIV7DN3525813;
-	Fri, 27 Jun 2025 13:31:07 -0500
-Message-ID: <8fbe03d0-ee45-4b1f-92ec-bebf6d7b9041@ti.com>
-Date: Fri, 27 Jun 2025 13:31:07 -0500
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="N5gP4/Cy";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="G0Li8utu";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lTrpLGOK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="q8izR8Oh"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2F0B521179;
+	Fri, 27 Jun 2025 18:31:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751049097; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RyhwaPh79BMrE75uWZB91lbgrMRquBRZX78hoQrxYqo=;
+	b=N5gP4/Cy/k5IBaRkCdVqYtFJtVuwYQ1vY+jQZQgOZNhqqwp9SemQUWRId2wR4GmMemCBHH
+	Dr77KrDXypcU9LKnW7qzNbYEvsjNkmOLnSQGP7qoXwGPfQkQgZpvwshMmS5NhzngdfaTOv
+	qoEBeftNef9bycCteiIubeXIoJ3b7dA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751049097;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RyhwaPh79BMrE75uWZB91lbgrMRquBRZX78hoQrxYqo=;
+	b=G0Li8utuNRVOigHgze2hPCkieX7XmSZJ4J8vZl+1RLx9z6JXiBz9yPPLoWHpM/vPyqSR0I
+	OMKaZP5YKuL+OyBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751049096; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RyhwaPh79BMrE75uWZB91lbgrMRquBRZX78hoQrxYqo=;
+	b=lTrpLGOKRDlFULbQzkj2leVJYCzvO8rqTR8hgMTnrMOGTzZH9kIuoZAyHd9a/IKuw1adXm
+	W9MUUjcC/3i6pIRJxuPm3TgARGDbYj1QoervAhA5WipxmB49+6OyA8kMLgnvyQbtS7CvBx
+	V/xHczVOycK1qm/r6OeaYJTEWW43XdA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751049096;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RyhwaPh79BMrE75uWZB91lbgrMRquBRZX78hoQrxYqo=;
+	b=q8izR8OhXxcBLxzBc5Z7CfF8sY1u7ZeWPMZdDbfn8xrF9XsBb/8Mcw/nLBWGrKoGTDrlpl
+	Pwd9aNTfKxY2PEBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0F3A213786;
+	Fri, 27 Jun 2025 18:31:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id NF9LA4jjXmj+FAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 27 Jun 2025 18:31:36 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 7C789A08D2; Fri, 27 Jun 2025 20:31:35 +0200 (CEST)
+Date: Fri, 27 Jun 2025 20:31:35 +0200
+From: Jan Kara <jack@suse.cz>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, jack@suse.cz, 
+	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, linux-kernel@vger.kernel.org, 
+	yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH v2 04/16] ext4: utilize multiple global goals to reduce
+ contention
+Message-ID: <xmhuzjcgujdvmgmnc3mfd45txehmq73fiyg32vr6h7ldznctlq@rosxe25scojb>
+References: <20250623073304.3275702-1-libaokun1@huawei.com>
+ <20250623073304.3275702-5-libaokun1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] watchdog: rti_wdt: Add reaction control
-To: Judith Mendez <jm@ti.com>, Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250625143338.2381726-1-jm@ti.com>
- <20250625143338.2381726-3-jm@ti.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250625143338.2381726-3-jm@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250623073304.3275702-5-libaokun1@huawei.com>
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,suse.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On 6/25/25 9:33 AM, Judith Mendez wrote:
-> This allows to configure reaction between NMI and reset for WWD.
+On Mon 23-06-25 15:32:52, Baokun Li wrote:
+> When allocating data blocks, if the first try (goal allocation) fails and
+> stream allocation is on, it tries a global goal starting from the last
+> group we used (s_mb_last_group). This helps cluster large files together
+> to reduce free space fragmentation, and the data block contiguity also
+> accelerates write-back to disk.
 > 
-> On K3 SoC's other than AM62L SoC [0], watchdog reset output is routed
-> to the ESM module which can subsequently route the signal to safety
-> master or SoC reset. On AM62L, the watchdog reset output is routed
-> to the SoC HW reset block. So, add a new compatible for AM62l to add
-> SoC data and configure reaction to reset instead of NMI.
-
-Should this be something we configure, not selected based on device,
-do we know if all user of AM62L want the device reset on WDT?
-
+> However, when multiple processes allocate blocks, having just one global
+> goal means they all fight over the same group. This drastically lowers
+> the chances of extents merging and leads to much worse file fragmentation.
 > 
-> [0] https://www.ti.com/product/AM62L
-> Signed-off-by: Judith Mendez <jm@ti.com>
-> ---
-> Changes since v1-resend:
-> - no change
-> ---
->   drivers/watchdog/rti_wdt.c | 31 +++++++++++++++++++++++++++----
->   1 file changed, 27 insertions(+), 4 deletions(-)
+> To mitigate this multi-process contention, we now employ multiple global
+> goals, with the number of goals being the CPU count rounded up to the
+> nearest power of 2. To ensure a consistent goal for each inode, we select
+> the corresponding goal by taking the inode number modulo the total number
+> of goals.
 > 
-> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
-> index d1f9ce4100a8..d419884c86c4 100644
-> --- a/drivers/watchdog/rti_wdt.c
-> +++ b/drivers/watchdog/rti_wdt.c
-> @@ -35,7 +35,8 @@
->   #define RTIWWDRXCTRL	0xa4
->   #define RTIWWDSIZECTRL	0xa8
->   
-> -#define RTIWWDRX_NMI	0xa
-> +#define RTIWWDRXN_RST	0x5
-> +#define RTIWWDRXN_NMI	0xa
->   
->   #define RTIWWDSIZE_50P		0x50
->   #define RTIWWDSIZE_25P		0x500
-> @@ -63,22 +64,29 @@
->   
->   static int heartbeat;
->   
-> +struct rti_wdt_data {
-> +	bool reset;
-> +};
-> +
->   /*
->    * struct to hold data for each WDT device
->    * @base - base io address of WD device
->    * @freq - source clock frequency of WDT
->    * @wdd  - hold watchdog device as is in WDT core
-> + * @data - hold configuration data
->    */
->   struct rti_wdt_device {
->   	void __iomem		*base;
->   	unsigned long		freq;
->   	struct watchdog_device	wdd;
-> +	const struct rti_wdt_data *data;
->   };
->   
->   static int rti_wdt_start(struct watchdog_device *wdd)
->   {
->   	u32 timer_margin;
->   	struct rti_wdt_device *wdt = watchdog_get_drvdata(wdd);
-> +	u8 reaction;
->   	int ret;
->   
->   	ret = pm_runtime_resume_and_get(wdd->parent);
-> @@ -101,8 +109,12 @@ static int rti_wdt_start(struct watchdog_device *wdd)
->   	 */
->   	wdd->min_hw_heartbeat_ms = 520 * wdd->timeout + MAX_HW_ERROR;
->   
-> -	/* Generate NMI when wdt expires */
-> -	writel_relaxed(RTIWWDRX_NMI, wdt->base + RTIWWDRXCTRL);
-> +	/* Generate reset or NMI when timer expires/serviced outside of window */
-> +	reaction = RTIWWDRXN_NMI;
-> +	if (wdt->data->reset)
-> +		reaction = RTIWWDRXN_RST;
+> Performance test data follows:
+> 
+> Test: Running will-it-scale/fallocate2 on CPU-bound containers.
+> Observation: Average fallocate operations per container per second.
+> 
+>                    | Kunpeng 920 / 512GB -P80|  AMD 9654 / 1536GB -P96 |
+>  Disk: 960GB SSD   |-------------------------|-------------------------|
+>                    | base  |    patched      | base  |    patched      |
+> -------------------|-------|-----------------|-------|-----------------|
+> mb_optimize_scan=0 | 7612  | 19699 (+158%)   | 21647 | 53093 (+145%)   |
+> mb_optimize_scan=1 | 7568  | 9862  (+30.3%)  | 9117  | 14401 (+57.9%)  |
+> 
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+
+...
+
+> +/*
+> + * Number of mb last groups
+> + */
+> +#ifdef CONFIG_SMP
+> +#define MB_LAST_GROUPS roundup_pow_of_two(nr_cpu_ids)
+> +#else
+> +#define MB_LAST_GROUPS 1
+> +#endif
 > +
 
-Suggest:
+I think this is too aggressive. nr_cpu_ids is easily 4096 or similar for
+distribution kernels (it is just a theoretical maximum for the number of
+CPUs the kernel can support) which seems like far too much for small
+filesystems with say 100 block groups. I'd rather pick the array size like:
 
-/* Reset device if wdt serviced outside of window or generate NMI if available */
-if (wdt->data->reset)
-	reaction = RTIWWDRXN_RST;
-else
-	reaction = RTIWWDRXN_NMI;
+min(num_possible_cpus(), sbi->s_groups_count/4)
 
-> +	writel_relaxed(reaction, wdt->base + RTIWWDRXCTRL);
->   
->   	/* Open window size 50%; this is the largest window size available */
->   	writel_relaxed(RTIWWDSIZE_50P, wdt->base + RTIWWDSIZECTRL);
-> @@ -255,6 +267,8 @@ static int rti_wdt_probe(struct platform_device *pdev)
->   	wdd->timeout = DEFAULT_HEARTBEAT;
->   	wdd->parent = dev;
->   
-> +	wdt->data = of_device_get_match_data(dev);
+to
 
-You can use device_get_match_data() here.
+a) don't have too many slots so we still concentrate big allocations in
+somewhat limited area of the filesystem (a quarter of block groups here).
 
-Andrew
+b) have at most one slot per CPU the machine hardware can in principle
+support.
 
-> +
->   	watchdog_set_drvdata(wdd, wdt);
->   	watchdog_set_nowayout(wdd, 1);
->   	watchdog_set_restart_priority(wdd, 128);
-> @@ -369,8 +383,17 @@ static void rti_wdt_remove(struct platform_device *pdev)
->   	pm_runtime_disable(&pdev->dev);
->   }
->   
-> +static struct rti_wdt_data j7_wdt = {
-> +	.reset = false,
-> +};
-> +
-> +static struct rti_wdt_data am62l_wdt = {
-> +	.reset = true,
-> +};
-> +
->   static const struct of_device_id rti_wdt_of_match[] = {
-> -	{ .compatible = "ti,j7-rti-wdt", },
-> +	{ .compatible = "ti,j7-rti-wdt", .data = &j7_wdt },
-> +	{ .compatible = "ti,am62l-rti-wdt", .data = &am62l_wdt },
->   	{},
->   };
->   MODULE_DEVICE_TABLE(of, rti_wdt_of_match);
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
