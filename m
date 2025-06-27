@@ -1,114 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207BF292B51
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDB7293B55;
+	Fri, 27 Jun 2025 09:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751014967; cv=none; b=B7ufr9voDC8iwyTj2rf9477m84l4T3ToxoXK6FN+d3crLKivWZ6OA8CqdQtvsVr1B7G8qZVBkcqKZoIJIdyaVK/nop6HZB0HrLCbDTplT1hyv+Q8vQ7PnLjP/2LMtGIDJkFR6ezz2NW/9lASpLXiRTYFGdn5CkufNh53uEt7Op4=
+	t=1751014972; cv=none; b=EubNZ2r3AKVEew7o4Cip1zJxfrpDLZxumhTTnScH7H/Pk+dvl3HbD/uZkAWnBiyU9rUXM6udjf2y9RTletzuOH5rWTHPSReqVl1WoeAs5z0+TbEkxMtFdyPRQVbMQJdrtWauyeeIx4vTKS4SXUUqnTOAzSjwoDVWvRzijTgQGmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751014967; c=relaxed/simple;
-	bh=NOeNUst4aqb6XWbyNCciAT3+m81vf6e1Uk8OTBoBk98=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qvZHh3x48HO3ZaOVAsAEnSJnP4DIKbedo9zR3PuMNeaSEQmGZkoWDsH3Mniq5eOA3A+FGF/JXt4K85HtRGp2PMnFEyCntPv6MexgVriN78ncByLwWRidPTLlMX5JKP4fsv9kcU3hmpfxyChVlm5jSSXFA5mMK+lh2IWOPMORkys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MyrHe7/V; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MyrHe7/V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751014966; x=1782550966;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NOeNUst4aqb6XWbyNCciAT3+m81vf6e1Uk8OTBoBk98=;
-  b=MyrHe7/VY89maHkP/byCQSJhI3atZOpFj8kwuCX2uB0tjZOaCMc0D2za
-   9p+sI1YU01XhNuNkJpfqGv3infReoB2Hx61+3BpsHr+19p+f/6XdL/9xU
-   mx0iuLIS38M+/diONWApuNSqiEaIVBTrtq3l2i5LcEGcD5UjsGP80TDXm
-   sr0nSTiTtd/b90ypg9dQdYUZ5JDZPd/PZIGDb5seWhBwSyRgkxd9AVyeT
-   ddWnUlZbO6yFTyMVVNDsSKbR253QWV2zMnQWQ/McA0akNdG0y+Z9SUrXs
-   wHTuRb9MEUQw/mOxgUD6XyrxgSBMbT/7NlQRn2KCujUoWFDldpO9by4fd
-   Q==;
-X-CSE-ConnectionGUID: xjAZ8D4iT3COQpywOHSH0w==
-X-CSE-MsgGUID: KKF4RdNxTJCOav06rDkR+Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53421870"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="53421870"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 02:02:46 -0700
-X-CSE-ConnectionGUID: m+Zx1QH0S7mxQYd4c3iScQ==
-X-CSE-MsgGUID: fuI0lNsTQAaCbtG+u/Oemg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="152275456"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 02:02:43 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uV4ym-0000000AQt0-0125;
-	Fri, 27 Jun 2025 12:02:40 +0300
-Date: Fri, 27 Jun 2025 12:02:39 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Javier Martinez Canillas <javierm@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH v1 1/2] firmware: sysfb: Unorphan sysfb files
-Message-ID: <aF5eL1o3WNo3Q7_p@smile.fi.intel.com>
-References: <20250626172039.329052-1-andriy.shevchenko@linux.intel.com>
- <20250626172039.329052-2-andriy.shevchenko@linux.intel.com>
- <87ikkhd0uv.fsf@minerva.mail-host-address-is-not-set>
+	s=arc-20240116; t=1751014972; c=relaxed/simple;
+	bh=qaBguxJ/59Y70qyBDlyzD5aimjI4J8ODIPajo/Wefvc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XZsdRdF2VAkSNepNq0ahuwu/hslZx+10q/INpl/6B4T0yCqDzfcGg6NAfICWAZVb2cgzxtmxvxDY08zvs6ZKOJ5xKUUAu8tSHSLl2IvAfd9aBgCPsZcAN+bHjfqiwUxabwNj0tRc+ce4XfXZy5zflt7F6Qgf8eoBj8g17NR7UXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bT8hc4FsFzYQvD3;
+	Fri, 27 Jun 2025 17:02:40 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 78AA41A10F6;
+	Fri, 27 Jun 2025 17:02:39 +0800 (CST)
+Received: from [10.67.109.79] (unknown [10.67.109.79])
+	by APP3 (Coremail) with SMTP id _Ch0CgCH2MItXl5oDsw0Qg--.9912S2;
+	Fri, 27 Jun 2025 17:02:39 +0800 (CST)
+Message-ID: <5f622eec-a039-4e82-9f37-3cad1692f268@huaweicloud.com>
+Date: Fri, 27 Jun 2025 17:02:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ikkhd0uv.fsf@minerva.mail-host-address-is-not-set>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 00/28] Eliminate Dying Memory Cgroup
+To: Kairui Song <ryncsn@gmail.com>, Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Muchun Song <muchun.song@linux.dev>,
+ Muchun Song <songmuchun@bytedance.com>, hannes@cmpxchg.org,
+ mhocko@kernel.org, shakeel.butt@linux.dev, akpm@linux-foundation.org,
+ david@fromorbit.com, zhengqi.arch@bytedance.com, yosry.ahmed@linux.dev,
+ nphamcs@gmail.com, chengming.zhou@linux.dev, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-mm@kvack.org,
+ hamzamahfooz@linux.microsoft.com, apais@linux.microsoft.com,
+ yuzhao@google.com
+References: <20250415024532.26632-1-songmuchun@bytedance.com>
+ <CAMgjq7BAfh-op06++LEgXf4UM47Pp1=ER+1WvdOn3-6YYQHYmw@mail.gmail.com>
+ <F9BDE357-C7DA-4860-A167-201B01A274FC@linux.dev>
+ <CAMgjq7D+GXce=nTzxPyR+t6YZSLWf-8eByo+0NpprQf61gXjPA@mail.gmail.com>
+ <aAF2eUG26_xDYIDU@google.com>
+ <CAMgjq7BNUMFzsFCOt--mvTqSmgdA65PWcn57G_6-gEj0ps-jCg@mail.gmail.com>
+Content-Language: en-US
+From: Chen Ridong <chenridong@huaweicloud.com>
+In-Reply-To: <CAMgjq7BNUMFzsFCOt--mvTqSmgdA65PWcn57G_6-gEj0ps-jCg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgCH2MItXl5oDsw0Qg--.9912S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4xtw47CFWUWryUuFyxAFb_yoW8Ar4fpF
+	WFqF42kFs5ur95A3y0y34kWFyUta97Wr15Ar1rJrn8tw1DZF1FyF47CrWF9as29r1xZ3yI
+	vrWDur4UK3WDZa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	bAw3UUUUU==
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
-On Fri, Jun 27, 2025 at 10:50:48AM +0200, Javier Martinez Canillas wrote:
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+
+
+On 2025/4/28 11:43, Kairui Song wrote:
+> On Fri, Apr 18, 2025 at 5:45 AM Roman Gushchin <roman.gushchin@linux.dev> wrote:
+>>
+>> On Fri, Apr 18, 2025 at 02:22:12AM +0800, Kairui Song wrote:
+>>>
+>>> We currently have some workloads running with `nokmem` due to objcg
+>>> performance issues. I know there are efforts to improve them, but so
+>>> far it's still not painless to have. So I'm a bit worried about
+>>> this...
+>>
+>> Do you mind sharing more details here?
+>>
+>> Thanks!
 > 
-> > The commit d391c5827107 ("drivers/firmware: move x86 Generic
-> > System Framebuffers support") moved some code to the common
-> > folders and effectively orphaned it without any reason. Put
-> > it back under DRM MISC record.
+> Hi,
 > 
-> What do you mean that it was "orphaned without any reason" ? There were no
-> regex matchs for the old file paths in MAINTAINERS either before that commit.
+> Sorry for the late response, I was busy with another series and other works.
+> 
+> It's not hard to observe such slow down, for example a simple redis
+> test can expose it:
+> 
+> Without nokmem:
+> redis-benchmark -h 127.0.0.1 -q -t set,get -n 80000 -c 1
+> SET: 16393.44 requests per second, p50=0.055 msec
+> GET: 16956.34 requests per second, p50=0.055 msec
+> 
+> With nokmem:
+> redis-benchmark -h 127.0.0.1 -q -t set,get -n 80000 -c 1
+> SET: 17263.70 requests per second, p50=0.055 msec
+> GET: 17410.23 requests per second, p50=0.055 msec
+> 
+> And I'm testing with latest kernel:
+> uname -a
+> Linux localhost 6.15.0-rc2+ #1594 SMP PREEMPT_DYNAMIC Sun Apr 27
+> 15:13:27 CST 2025 x86_64 GNU/Linux
+> 
+> This is just an example. For redis, it can be a workaround by using
+> things like redis pipeline, but not all workloads can be adjusted
+> that flexibly.
+> 
+> And the slowdown could be amplified in some cases.
 
-There were maintainers for that code before. The change in question dropped that.
+Hi Kairui,
 
-[((bf44e8cecc03...))]$ scripts/get_maintainer.pl -f arch/x86/kernel/sysfb*
-Thomas Gleixner <tglx@linutronix.de> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Ingo Molnar <mingo@redhat.com> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Borislav Petkov <bp@alien8.de> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-"H. Peter Anvin" <hpa@zytor.com> (reviewer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+We've also encountered this issue in our Redis scenario. May I confirm
+whether your testing is based on cgroup v1 or v2?
 
-[((d391c5827107...))]$ scripts/get_maintainer.pl -f drivers/firmware/sysfb*
-linux-kernel@vger.kernel.org (open list)
+In our environment using cgroup v1, we've identified memcg_account_kmem
+as the critical performance bottleneck function - which, as you know, is
+specific to the v1 implementation.
 
-See the difference?
-
-...
-
-> > +F:	drivers/firmware/sysfb*.c
-
-> I would prefer these to be in the "DRM DRIVER FOR FIRMWARE FRAMEBUFFERS"
-> entry instead of "DRM DRIVERS" since the former is what has most of the
-> code for the sysfb infrastructure.
-
-Then do it, please, fix the above.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Best regards,
+Ridong
 
