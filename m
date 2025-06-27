@@ -1,160 +1,135 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADA617C21C;
-	Fri, 27 Jun 2025 12:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AEB1E48A;
+	Fri, 27 Jun 2025 12:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751027347; cv=none; b=J2snNB0jdmcg6UPPaawR3C3IZG++ey8TXedW1f0tLatHmtO+yaTAe2gSbz8DBQM1L/vcfQS5abTqRQ0xnKaKoyAKt0JU7MFaypkwlMcgNW+M78N74UbRcyATL940nd6GoC/iyaE8FWbX11fVl2XLOE0mZiJu1ltga4Iwy3ob5xo=
+	t=1751027446; cv=none; b=rfX3wAu5tcILXO4u8HuTsDdHMKFdCslyZw3l5SDJ9OEP0EN7mbfHtDSMrQAiezjKTtwDUr7ru/4D88psG7ZmQnaES7FE9NvZc+NNXu9sdaT4NrCRZGL5q0RHPQHgh31tORKMBh48PEBwrwECoOhO5Ve8CBwIL2dz5ejHI95BsVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751027347; c=relaxed/simple;
-	bh=EtshUSUcNz/EcdgguxC9OOdXGB2IBgMhJVAOJyuE9yY=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=gwIlCuGcKi6HSHUTo+xg1d9m3Jv+NTl50yJGOO6xBWnjoIRWUAwVYZB5RPqGN8KffbCUZ5s99ZQ5BkA4xHFbW3ote7mXlWNNPKRetzrUCd36ou3GSqN9PKQviOPoGrEf03iBbTsOHzAOQTFq4mUgR1HLiwoSaMRAOiD8A7RfC4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Iz5OfdKj; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1751027446; c=relaxed/simple;
+	bh=Ok27ndXbgJvGzAwvRibXZyVHRTGL33CZGAg3z69nm2g=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=rkYFwIV5po13pNwVP31gliCVuzTWUovrQIRKIJA7ACt2xfNxzZsIgSpIpTr9E0gTQ8F9gUIUjh5F0DqEV1LI89IhBhT9j4yxiUf5+DSDTEZOMZqTflsEt3AYZP3X9+KM39nfeef/I+iRNJLhZG3jBkW+N3Bo/6/AqaA1Q48e19c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mk5XWHEr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=teF/KbJV; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Iz5OfdKj"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id BE00824CE2;
-	Fri, 27 Jun 2025 14:29:03 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id a-Vi0xHrL_L8; Fri, 27 Jun 2025 14:29:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1751027342; bh=EtshUSUcNz/EcdgguxC9OOdXGB2IBgMhJVAOJyuE9yY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Iz5OfdKj6tJy1F91PBHFqCdCfHs+sxsFQcWGG3bBiYzpqR1aPcf7Lzxm6Ff+GuGXk
-	 1OXZThqT8gFO7exnrQIQVG84R/sQd5c+Hj/B+ceIWiFssn79jGI7jweBHA0FTFLs+7
-	 /pewIt+aa0AmzeDs6lnlC6PRlMp8auU3FBSOmbB3bpIQrEkMrJHRqPhHi1n49wNBTL
-	 J9RUeRH+h2LEbUd7ZMiRaa0AQyx9D6t/VT7w4GxW/8yBaC+eyGOyQ1SRlA7NF0a2N+
-	 G1rhJBnMJxswRIYj9mNn47hmhyNPC6+x2sk+3jRfy2EB+MRYfIAXU0QEO9ra53ZmPy
-	 8mPJdvLa2xdPA==
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mk5XWHEr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="teF/KbJV"
+Date: Fri, 27 Jun 2025 12:30:42 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751027443;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L5UuquIOd48LNDRf/YpkEhP7n0TMXAByxXWh/bA6cGs=;
+	b=mk5XWHErVVr4pekI58kdZkVIifpvb2JyQCbNlpgmUAUHFfo0iu6wtVhA2hxjxTaETtioFQ
+	mKnOyI+683CUrksEcat9uaQg/XATUEFsPEJUshpl6TcnAIBhDWdlxgDaWvhUIITLKaYxOS
+	HxkyXRmm1WFMPX5YBZvEeMqgvsWR8hclkgqANRFwwBC5I6DzPGTcJP8q5yefQUyFVJgJAa
+	f7OJ2i2a2uNO2qVD00k2JTQzKN53akeh2SBXw0+sK6PIcsptaffiRewJXYcsOx8dj9Ggwy
+	WpEfA3A81yVXldZh23yL2DAGXGFYJUwzXbyA01cRZ75HkCs9r/0i3lTRmACg8w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751027443;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L5UuquIOd48LNDRf/YpkEhP7n0TMXAByxXWh/bA6cGs=;
+	b=teF/KbJVTMt7XBUr+Y5J9rA+4LcssstxAZXG8G2nrY6Pv2QLPVzfjvbpcjWgJuEMVEKl2n
+	KUpZs2KuZoHZ3iAg==
+From: "tip-bot2 for Gerd Hoffmann" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/sev] x86/sev/vc: Fix EFI runtime instruction emulation
+Cc: Gerd Hoffmann <kraxel@redhat.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Pankaj Gupta <pankaj.gupta@amd.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250626114014.373748-2-kraxel@redhat.com>
+References: <20250626114014.373748-2-kraxel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 27 Jun 2025 12:29:01 +0000
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-To: Inki Dae <daeinki@gmail.com>
-Cc: Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski
- <m.szyprowski@samsung.com>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil
- Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park
- <kyungmin.park@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Alim
- Akhtar <alim.akhtar@samsung.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v2 01/13] drm/bridge: samsung-dsim: separate LINK and DPHY
- status registers
-In-Reply-To: <CAAQKjZOHUGg8WEZxfhVxrUPS3O68BQJ6=cDnUSk6BomYjuY62Q@mail.gmail.com>
-References: <20250627-exynos7870-dsim-v2-0-1433b67378d3@disroot.org>
- <20250627-exynos7870-dsim-v2-1-1433b67378d3@disroot.org>
- <CAAQKjZOHUGg8WEZxfhVxrUPS3O68BQJ6=cDnUSk6BomYjuY62Q@mail.gmail.com>
-Message-ID: <922117777d718b77c86be3a43e86dd7f@disroot.org>
-X-Sender: kauschluss@disroot.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Message-ID: <175102744208.406.15035701661646196374.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On 2025-06-27 10:07, Inki Dae wrote:
-> 2025년 6월 27일 (금) 오전 4:42, Kaustabh Chakraborty 
-> <kauschluss@disroot.org>님이 작성:
->> 
->> Exynos7870's DSIM has separate registers for LINK and DPHY status. 
->> This
->> is in contrast to other devices in the driver which use a single
->> register for both.
->> 
->> Add their respective entries in the register list. Devices having a
->> single status register have been assigned the same offset for both
->> entries.
->> 
->> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
->> ---
->>  drivers/gpu/drm/bridge/samsung-dsim.c | 15 +++++++++------
->>  1 file changed, 9 insertions(+), 6 deletions(-)
->> 
->> diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c 
->> b/drivers/gpu/drm/bridge/samsung-dsim.c
->> index 
->> f2f666b27d2d5ec016d7a7f47c87fcdf1377d41a..7fd4c34cdc3170d363942f98feec048097da3c06 
->> 100644
->> --- a/drivers/gpu/drm/bridge/samsung-dsim.c
->> +++ b/drivers/gpu/drm/bridge/samsung-dsim.c
->> @@ -30,7 +30,7 @@
->>  /* returns true iff both arguments logically differs */
->>  #define NEQV(a, b) (!(a) ^ !(b))
->> 
->> -/* DSIM_STATUS */
->> +/* DSIM_DPHY_STATUS */
->>  #define DSIM_STOP_STATE_DAT(x)         (((x) & 0xf) << 0)
->>  #define DSIM_STOP_STATE_CLK            BIT(8)
->>  #define DSIM_TX_READY_HS_CLK           BIT(10)
->> @@ -239,7 +239,8 @@ enum samsung_dsim_transfer_type {
->>  };
->> 
->>  enum reg_idx {
->> -       DSIM_STATUS_REG,        /* Status register */
-> 
-> According to the datasheets I have, both Exynos5422 and Exynos7420 use
-> DSIM_STATUS, while Exynos8890 splits this into DSIM_LINK_STATUS and
-> DSIM_PHY_STATUS. It appears that Exynos7870 follows the same approach
-> as Exynos8890.
-> 
-> The current modification removes the legacy DSIM_STATUS_REG and adds
-> new DSIM_LINK_STATUS_REG and DSIM_DPHY_STATUS_REG. However, this
-> change causes the register names used for older SoC versions to differ
-> from those in the datasheets, so I think it is better to keep the
-> legacy name for backward compatibility.
-> 
-> How about modifying it as follows?
-> enum reg_idx {
->     DSIM_STATUS_REG,          /* Status register (legacy) */
->     DSIM_LINK_STATUS_REG,     /* Link status register (Exynos7870, ...) 
-> */
->     DSIM_PHY_STATUS_REG,      /* PHY status register (Exynos7870, ...) 
-> */
->     ...
-> };
-> 
-> static const unsigned int exynos7870_reg_ofs[] = {
->     [DSIM_STATUS_REG] = 0x00,        /* Legacy compatibility - use
-> LINK_STATUS */
->     [DSIM_LINK_STATUS_REG] = 0x04,   /* Link status register */
->     [DSIM_PHY_STATUS_REG] = 0x08,    /* PHY status register */
->     ...
-> };
-> 
-> Additionally, by configuring the hw_type field in the
-> samsung_dsim_plat_data structure like you did with the patch[1], you
-> can use the appropriate register name for each SoC as shown below:
-> if (dsi->plat_data->hw_type == DSIM_TYPE_EXYNOS7870)
+The following commit has been merged into the x86/sev branch of tip:
 
-I've instead added a flag to the driver data indicating the
-availability of legacy status register. In my opinion, this
-approach quickly turns cumbersome as the number of variants
-increase.
+Commit-ID:     7b22e0432981c2fa230f1b493082b7e67112c4aa
+Gitweb:        https://git.kernel.org/tip/7b22e0432981c2fa230f1b493082b7e67112c4aa
+Author:        Gerd Hoffmann <kraxel@redhat.com>
+AuthorDate:    Thu, 26 Jun 2025 13:40:11 +02:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Fri, 27 Jun 2025 13:53:12 +02:00
 
-Thanks for the suggestion.
+x86/sev/vc: Fix EFI runtime instruction emulation
 
->     reg = samsung_dsim_read(dsi, DSIM_LINK_STATUS_REG);
-> else
->     reg = samsung_dsim_read(dsi, DSIM_STATUS_REG);
-> 
-> 
-> [1] [PATCH v2 12/13] drm/bridge: samsung-dsim: add driver support for
-> exynos7870 DSIM bridge
-> 
-> Thanks,
-> Inki Dae
+In case efi_mm is active go use the userspace instruction decoder which
+supports fetching instructions from active_mm.  This is needed to make
+instruction emulation work for EFI runtime code, so it can use CPUID and
+RDMSR.
+
+EFI runtime code uses the CPUID instruction to gather information about
+the environment it is running in, such as SEV being enabled or not, and
+choose (if needed) the SEV code path for ioport access.
+
+EFI runtime code uses the RDMSR instruction to get the location of the
+CAA page (see SVSM spec, section 4.2 - "Post Boot").
+
+The big picture behind this is that the kernel needs to be able to
+properly handle #VC exceptions that come from EFI runtime services.
+Since EFI runtime services have a special page table mapping for the EFI
+virtual address space, the efi_mm context must be used when decoding
+instructions during #VC handling.
+
+  [ bp: Massage. ]
+
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
+Link: https://lore.kernel.org/20250626114014.373748-2-kraxel@redhat.com
+---
+ arch/x86/coco/sev/vc-handle.c |  9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/coco/sev/vc-handle.c b/arch/x86/coco/sev/vc-handle.c
+index 0989d98..faf1fce 100644
+--- a/arch/x86/coco/sev/vc-handle.c
++++ b/arch/x86/coco/sev/vc-handle.c
+@@ -17,6 +17,7 @@
+ #include <linux/mm.h>
+ #include <linux/io.h>
+ #include <linux/psp-sev.h>
++#include <linux/efi.h>
+ #include <uapi/linux/sev-guest.h>
+ 
+ #include <asm/init.h>
+@@ -178,9 +179,15 @@ static enum es_result __vc_decode_kern_insn(struct es_em_ctxt *ctxt)
+ 		return ES_OK;
+ }
+ 
++/*
++ * User instruction decoding is also required for the EFI runtime. Even though
++ * the EFI runtime is running in kernel mode, it uses special EFI virtual
++ * address mappings that require the use of efi_mm to properly address and
++ * decode.
++ */
+ static enum es_result vc_decode_insn(struct es_em_ctxt *ctxt)
+ {
+-	if (user_mode(ctxt->regs))
++	if (user_mode(ctxt->regs) || mm_is_efi(current->active_mm))
+ 		return __vc_decode_user_insn(ctxt);
+ 	else
+ 		return __vc_decode_kern_insn(ctxt);
