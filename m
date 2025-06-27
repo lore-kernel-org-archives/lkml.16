@@ -1,150 +1,125 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605C82E9748
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9822EAB70
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751042657; cv=none; b=LCBm9bmMnioRBfnhfYb5DBxwoNmrsAzjxCxFjY2K3s0RYthFNgq9OkT0UqDOkWMadyTjj/daqBLdset16MeUAU13bXTa/y22i2CDci5D8r2Wy5Sxx07NWbvlolYWXTNbVnIFEaf2yYbHyUz+kvQBcCprKgKMrZTmvXydUiQCGIg=
+	t=1751042661; cv=none; b=P0Q8mKXh6fKfrLvFi5XfW7WfOCvQZemISOqieL1uETtDn9BuBAzutS7oFCAFK93rSssErb2gWh5O9gNHqBAOBFEb0dTTcGkIAWdtAQaUKrXPbw0P+5zIjTpLayMotX+FV0LauU1r7nTB+E/I223+SItArdAiYO6Xx9nVTu5vHfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751042657; c=relaxed/simple;
-	bh=9s1eA5KwrVKwd9rWss4PkqOIrDE9CSV2z3UbUlBIJKE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SJGCdwjaEgX8Q1AOS7RXHCH9P6t6EDo5jyNA8WnKq3/8o1brIbHS2NbT8km0qMCI/zu0YES87jblIDorZdQQLSWR8dM19EsQyXzLkvRZlPVzTpCU4O2I9HFAeD35P+BqqhMe5JEAVN7CfwtVGdup0xcZRg0LMG9d6riqsA0CsuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jq6rD8SK; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751042661; c=relaxed/simple;
+	bh=TSgOQXH2cylh/c8/YzG1JlJ0nKvfIZhvP1Qcm1/EaFA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AK6Rw00Yl70rLoRzP/hYRCgJdl+OvgbURFWcXx+vENu/kIh7P3UFSjDpvTePvfLc9ZATstaxctIAY82wxSyXBmQu+eyn4rQ//jFKwN4UdoJebvNEif8Cjhgkv364EAdBRq405ydPmWBCGL1YtQmGAawrzLCLWVNCCNN/Z+IKryk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ClC/ugHm; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jq6rD8SK"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3de210e6076so2165ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:44:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751042654; x=1751647454; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9s1eA5KwrVKwd9rWss4PkqOIrDE9CSV2z3UbUlBIJKE=;
-        b=jq6rD8SKGMCuNrME36sTI/KFxTM6BEo9gz10KGTulZJX15CnBpQeqPwEfLgn7UvNM5
-         z5eYtyWDfBRa+paGJaoZrIC0+xhm/fixddafEGda+guF9nWAEK3SqurXBqHh99Fx5XnW
-         h3OuI80idTCaK0tp9DnCEktDZWr8eRJPpa1S+8RX9gtYeXOw7lk9ofRil0r2suRga7Fo
-         JuGNUv5p8OtosmXC/4z0UQ3YZkS3Mmk0ea+XSJnvu20K+8BRtR3hlFxW6QGsTlHzHOUZ
-         qgGlHEVwanPmkQBqpnqpH6vRV3S9M6B3ZfqQGQd+fHUu2qROuwUtF5NpJbpI2/ssibdS
-         y+fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751042654; x=1751647454;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9s1eA5KwrVKwd9rWss4PkqOIrDE9CSV2z3UbUlBIJKE=;
-        b=TlJFalvnrMMs2laqS57U58cwg5uplqRdqZJmIjwjVLz05cxmRy31/RJinJuRtq4gjl
-         jRP/iVCd3l2Ulwi4MJEkTHgk0OVvIc/zEw/qRH4gZOORfHZgXdUQ40Tu/VeeIQRVuFbH
-         nqj5ORul/rkM8/X3gsluQJ2hrWCWKeyfi+F3DsjzbxeelA1tWl0XMR/sbyfObCnYJ6nn
-         /M9EkHx+VMRgT6cXxLAEu3OnQWF5IsTBRP6Z9wykrLAGQXHMwH7fS5YWlxFEYguQtOPV
-         ueh9jqkK5y9TnzTtNmHACd19jt+3rFK/cToOA9VVKJjL6PvYXfckluNlJQbjuITdl9rK
-         WgKg==
-X-Forwarded-Encrypted: i=1; AJvYcCWHVnKEbbosKWWOMvHnX9bGF5jeev0VPckrk1PPoiSiFVtpN32zVsTq+Gn/EOaViCB4bwAmHZGwxqEdQS0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmfBHg3NdOUwqwq3F0btWSQJd0+z6OxHeaYxI34TGxTR++AKGx
-	62wA0+7n3MFV6XJAniiHXr6Q8EqAEyW3BjtROLkMjPQc82F5TFoWxotmgxxGFqu+xlKp1mUjsW7
-	SR5OcU5kzcDLvzm1G7YO/G2IiwtAj+FKYoMwPj6dX
-X-Gm-Gg: ASbGncuHRCk2HpIN4yJmfL58CcLxlDkH4IrbtJ1W80JlMTuwYe9fY85vF4Z60qokMRe
-	pLuzZt+o16m1STiA6c/Scih2o+qyrtUHp/fm1LJycjVQa0s8+J4pnHfIiKEWlw3yFHc3a+14fN/
-	vpq4JWvPtEZErub04tBQ0FVC5IEWUpoTjNrTDERjztuODG
-X-Google-Smtp-Source: AGHT+IHvztp7L1kXPm4qHzp2aVdvq9iPLHibmjsOFDZjxgx47/40qOE255pl9PfqbsmBA2gt1yngKEvvPvtuRKfJNak=
-X-Received: by 2002:a05:6e02:1a68:b0:3dc:88ca:5eb5 with SMTP id
- e9e14a558f8ab-3df53bb8ab1mr524965ab.1.1751042654180; Fri, 27 Jun 2025
- 09:44:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ClC/ugHm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751042660; x=1782578660;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TSgOQXH2cylh/c8/YzG1JlJ0nKvfIZhvP1Qcm1/EaFA=;
+  b=ClC/ugHmtQBnH2E/osUup/TVLKjXxusApFG1fhFxQbFP7Al9YiLONGFi
+   pZsWG9u6cw1zVBA3j9fcroXw3XsstgSBbuTwOsGWsG637F0y5RzKr1rbC
+   EZ29zUnFx4QP/2DvBrdnvpnTJad7chAS2mpchQfRlNrJvLsF0ieeIxYsi
+   IgBk6WImT/ndQ9lY446okPDxZN77FlbY9nj6FBouRU8c6j7/+ISERzLAl
+   bdAi4SxdoTxUpiz2v4xnrEC6KrdAvp+64TXX08G4PX3JPqAO9hbt766/E
+   kt4zGKFXKOUwgzPswNtu1bJ7uqG0WKzKkTRKoHaVpheQxeB5WGZzBFKzQ
+   Q==;
+X-CSE-ConnectionGUID: e/D+1XsnQ9SuGZkA+m2VyQ==
+X-CSE-MsgGUID: Jm0dL+TUTJCxDS0N+I7FWg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="57142557"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="57142557"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 09:44:19 -0700
+X-CSE-ConnectionGUID: jQNau0O0Q+O1RMMTIlbW1g==
+X-CSE-MsgGUID: DBf9Q/T1RqKi6tq9M3cw5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="152951937"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 27 Jun 2025 09:44:17 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 11A3F2BA; Fri, 27 Jun 2025 19:44:15 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Subject: [PATCH v2 1/1] mfd: syscon: atmel-smc: Don't use "proxy" headers
+Date: Fri, 27 Jun 2025 19:43:58 +0300
+Message-ID: <20250627164414.1043434-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417230740.86048-1-irogers@google.com> <20250417230740.86048-7-irogers@google.com>
- <aF3Vd0C-7jqZwz91@google.com> <CAP-5=fV4x0q7YdeYJd6GAHXd48Qochpa-+jq5jsRJWK36v7rSA@mail.gmail.com>
-In-Reply-To: <CAP-5=fV4x0q7YdeYJd6GAHXd48Qochpa-+jq5jsRJWK36v7rSA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 27 Jun 2025 09:44:02 -0700
-X-Gm-Features: Ac12FXxK697QImT-ty4XbntVKcoV6r674s1RbV5RKCu1qYoOEhu-OUGYgs394-o
-Message-ID: <CAP-5=fXLUO3yvSmM4nSnNV_qQGGLP_XTcfPgOhgOkuaNnr3Hvw@mail.gmail.com>
-Subject: Re: [PATCH v4 06/19] perf capstone: Support for dlopen-ing libcapstone.so
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 26, 2025 at 9:53=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Thu, Jun 26, 2025 at 4:19=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > On Thu, Apr 17, 2025 at 04:07:27PM -0700, Ian Rogers wrote:
-> > > If perf wasn't built against libcapstone, no HAVE_LIBCAPSTONE_SUPPORT=
-,
-> > > support dlopen-ing libcapstone.so and then calling the necessary
-> > > functions by looking them up using dlsym. Reverse engineer the types
-> > > in the API using pahole, adding only what's used in the perf code or
-> > > necessary for the sake of struct size and alignment.
-> >
-> > I still think it's simpler to require capstone headers at build time an=
-d
-> > add LIBCAPSTONE_DYNAMIC=3D1 or something to support dlopen.
->
-> I agree, having a header file avoids the need to declare the header
-> file values. This is simpler. Can we make the build require
-> libcapstone and libLLVM in the same way that libtraceevent is
-> required? That is you have to explicitly build with NO_LIBTRACEEVENT=3D1
-> to get a no libtraceevent build to succeed. If we don't do this then
-> having LIBCAPSTONE_DYNAMIC will most likely be an unused option and
-> not worth carrying in the code base, I think that's sad. If we require
-> the libraries I don't like the idea of people arguing, "why do I need
-> to install libcapstone and libLLVM just to get the kernel/perf to
-> build now?" The non-simple, but still not very complex, approach taken
-> here was taken as a compromise to get the best result (a perf that
-> gets faster, BPF support, .. when libraries are available without
-> explicitly depending on them) while trying not to offend kernel
-> developers who are often trying to build on minimal systems.
+Update header inclusions to follow IWYU (Include What You Use)
+principle.
 
-Fwiw, a situation that I think is analogous (and was playing on my
-mind while writing the code) is that we don't require python to build
-perf and carry around empty-pmu-events.c:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/pmu-events/empty-pmu-events.c?h=3Dperf-tools-next
-It would be simpler (in the code base and in general) to require
-everyone building perf to have python.
-Having python on a system seems less of a stretch than requiring
-libcapstone and libLLVM.
+Note that kernel.h is discouraged to be included as it's written
+at the top of that file.
 
-If we keep the existing build approach, optional capstone and libLLVM
-by detecting it as a feature, then just linking against the libraries
-is natural. Someone would need to know they care about optionality and
-enable LIBCAPSTONE_DYNAMIC=3D1. An average build where the libraries
-weren't present would lose the libcapstone and libLLVM support. We
-could warn about this situation but some people are upset about build
-warnings, and if we do warn we could be pushing people into just
-linking against libcapstone and libLLVM which seems like we'll fall
-foul of the, "perf has too many library dependencies," complaint. We
-could warn about linking against libraries when there is a _DYNAMIC
-alternative like this available, but again people don't like build
-warnings and they could legitimately want to link against libcapstone
-or libLLVM.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
-Anyway, that's why I ended up with the code in this state, to best try
-to play off all the different compromises and complaints that have
-been dealt with in the past.
+v2: fixed multiple compilation errors (LKP)
 
-Thanks,
-Ian
+ drivers/mfd/atmel-smc.c              | 9 ++++++++-
+ include/linux/mfd/syscon/atmel-smc.h | 8 +++++---
+ 2 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mfd/atmel-smc.c b/drivers/mfd/atmel-smc.c
+index 4628ca14e766..0a5b42c83f17 100644
+--- a/drivers/mfd/atmel-smc.c
++++ b/drivers/mfd/atmel-smc.c
+@@ -8,9 +8,16 @@
+  * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
+  */
+ 
+-#include <linux/mfd/syscon/atmel-smc.h>
++#include <linux/bits.h>
++#include <linux/err.h>
++#include <linux/export.h>
++#include <linux/mod_devicetable.h>
++#include <linux/of.h>
++#include <linux/regmap.h>
+ #include <linux/string.h>
+ 
++#include <linux/mfd/syscon/atmel-smc.h>
++
+ /**
+  * atmel_smc_cs_conf_init - initialize a SMC CS conf
+  * @conf: the SMC CS conf to initialize
+diff --git a/include/linux/mfd/syscon/atmel-smc.h b/include/linux/mfd/syscon/atmel-smc.h
+index e9e24f4c4578..9b9119c742a2 100644
+--- a/include/linux/mfd/syscon/atmel-smc.h
++++ b/include/linux/mfd/syscon/atmel-smc.h
+@@ -11,9 +11,11 @@
+ #ifndef _LINUX_MFD_SYSCON_ATMEL_SMC_H_
+ #define _LINUX_MFD_SYSCON_ATMEL_SMC_H_
+ 
+-#include <linux/kernel.h>
+-#include <linux/of.h>
+-#include <linux/regmap.h>
++#include <linux/bits.h>
++#include <linux/types.h>
++
++struct device_node;
++struct regmap;
+ 
+ #define ATMEL_SMC_SETUP(cs)			(((cs) * 0x10))
+ #define ATMEL_HSMC_SETUP(layout, cs)		\
+-- 
+2.47.2
+
