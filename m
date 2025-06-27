@@ -1,211 +1,124 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11022114.outbound.protection.outlook.com [52.101.66.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470681C5496
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.114
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751052992; cv=fail; b=YwSJXPvbIYR7jGE/OCmAp0W8StHXZY54aKqMZrmVm4q/UEjEqRPmtUJESVF3kKp5GwqqBbeh2JE/2y4QXggis9ywb5jGyG1mZPQSTyLrxwsfjcd76K0O+4s4eFd4m2D7EgHu9DtzR4C5IibWS/oGpfahJz3Vwpjjwi13SOCIicU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751052992; c=relaxed/simple;
-	bh=HvWVHXXjN1F64+YacFwfHg3KwRc/Zd8qXpNxqwKGzzk=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b8SeEQKyGIBlL9qGqX6G+QCDKbhxcB4+HFNQXHJIAdLpa9Vr9Ra1NKaJC09YwhnQ8vlgL1/iZ6Ecrg6hU0NETdkGbfkZJ3eorewiTIgktzeUqDYOFE/N+Tmf+WYOwDskxoftX3+BYn5y3b1rWizZM9iR8aamyHTxFGvuVekz4Ag=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sesame.org.jo; spf=pass smtp.mailfrom=sesame.org.jo; dkim=pass (1024-bit key) header.d=sesame.org.jo header.i=@sesame.org.jo header.b=SxtqOLJ5; arc=fail smtp.client-ip=52.101.66.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sesame.org.jo
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sesame.org.jo
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A5513C3CD;
+	Fri, 27 Jun 2025 19:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751053009; cv=none; b=oWltiRjZHb6WxH30/qVOOHvfTRegPq/QvyhJxKskJan+iPPnxzQlsQCQKZhUclt8NJp71X0JhqjcDMJACDWosfNM6yaenFu9U6onzq5a6Q/TMBY4MUjvx0PYxe3zkIxUVUEdhkhwjqaTZYXyyQpbiDnRbx2IJH5hXEGLzvLpEc0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751053009; c=relaxed/simple;
+	bh=OBlHHv5BRcsAM2/X4ERxjnFddBc06xIgBu7EDmZ7r+A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qIPkkrh3BNb6b4j7XWrA6+2ps3PccGvjYmvg23eUqg+A9s198QPkY+70orUIt5O8VIjT19hEpKJSy44q+G4vvnG2eR65lBwVREHZDiH+qLJ+O8xNOq5QpQmVayc+V2yNszCtqY+psNGb0PI9fVsBlpIi1vMlvFLwn0Ead5H+ikQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l2gygZhI; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=sesame.org.jo header.i=@sesame.org.jo header.b="SxtqOLJ5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=l7TcD7Ark9IqHCEFHDfDvvJbzlg3d+6WqrDgGvk0xuQrXiPwemiQ35CS8S1PAMomsnssEmB+A4GBwuXbtqfvmaZ4w8I2jpRUNu4r0MaSAMxziGN6m4TIPPHy8u4nyW6YFBezWy86anfOon4mA4jOOucOgVmh2RU/nVUkcLOydWqzQ5Qvl6McwGmwB9fzVN416pE6NWv/ShyVaOc4KO8I0I7fSmhs2hOk9SfUa+jRSuCYpuJC2pwqT+MjJ0vk5JRhcaCj9sUH+BP+JerQ6u1zIEg2HORfJct9R2vviPwumPLSCNa1bYbayhmLrhNdwzRhalXXRypGpTqHNgkDtGoSgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tgZAwqWDakGrornFTk6XKwUteN61VEw6SWRRvSD+XwU=;
- b=JlYUL+HRoIsQl7IuenrrFZEtHC52t3LHROEC0Hml7qZqTsiYW84d2tq9PJFHuPthQH5P95Pd5WU00WfqmzhXNv8G0WR43W8D5LIPlOgU/+sM+qke7k6VsDr/qMCVyM5F/wGAoqAYtqLSyu9a2D3/o5n+zvjz9893xzZ8NxJ2a0Y+lww9pco714M2wEFjDFPRaUi9tfiFhjkg7mIMChlXyHiel2H3QZz1/zw7qInz7EtkgMw449JihyoL3F44JItSoT7oN5dyasfMMzKWaC7YPG/lsx1yQxjAhsz6M2fUHk9XyGmqpf6gzwRnhxvzwEfPASM0voaEUdaDU/lkpvkB1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 80.90.171.68) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=sesame.org.jo;
- dmarc=bestguesspass action=none header.from=sesame.org.jo; dkim=none (message
- not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sesame.org.jo;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tgZAwqWDakGrornFTk6XKwUteN61VEw6SWRRvSD+XwU=;
- b=SxtqOLJ59RLMaAdCL+7n32wYfm3JNvvRXHwBt6LT/wBX/c7fxzRFMYxj5PKwfop9F8TfuWug0Q5dqwZbcNkFbY0h7SIVT4OZ/y5gJAqU/WA2inEBbJUhGeQJ5Lu/k1wq/+38p3DI9HtFsUp2RQYmT+A33AGQ3aLXy+4ZZYPTPxo=
-Received: from PAZP264CA0158.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:1f9::18)
- by AS2PR08MB8903.eurprd08.prod.outlook.com (2603:10a6:20b:5f7::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.24; Fri, 27 Jun
- 2025 19:36:27 +0000
-Received: from AMS0EPF0000019D.eurprd05.prod.outlook.com
- (2603:10a6:102:1f9:cafe::80) by PAZP264CA0158.outlook.office365.com
- (2603:10a6:102:1f9::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.23 via Frontend Transport; Fri,
- 27 Jun 2025 19:36:27 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 80.90.171.68)
- smtp.mailfrom=sesame.org.jo; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=sesame.org.jo;
-Received-SPF: Pass (protection.outlook.com: domain of sesame.org.jo designates
- 80.90.171.68 as permitted sender) receiver=protection.outlook.com;
- client-ip=80.90.171.68; helo=SESAME-SMTP.SESAME.LOCAL; pr=C
-Received: from SESAME-SMTP.SESAME.LOCAL (80.90.171.68) by
- AMS0EPF0000019D.mail.protection.outlook.com (10.167.16.249) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8880.14 via Frontend Transport; Fri, 27 Jun 2025 19:36:26 +0000
-Received: from mail.sesame.org.jo ([10.1.100.13]) by SESAME-SMTP.SESAME.LOCAL with Microsoft SMTPSVC(10.0.14393.4169);
-	 Fri, 27 Jun 2025 22:36:42 +0300
-From: Abdalla Al-Dalleh <abdalla.ahmad@sesame.org.jo>
-To: Dave Penkler <dpenkler@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Michael Rubin <matchstick@neverthere.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	=?UTF-8?q?Paul=20Retourn=C3=A9?= <paul.retourne@orange.fr>,
-	Abdalla Al-Dalleh <abdalla.ahmad@sesame.org.jo>,
-	linux-staging@lists.linux.dev (open list:STAGING SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drivers: staging: gpib: minor fixes for some C macros.
-Date: Fri, 27 Jun 2025 22:36:13 +0300
-Message-ID: <20250627193613.552193-1-abdalla.ahmad@sesame.org.jo>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l2gygZhI"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so2238155e9.1;
+        Fri, 27 Jun 2025 12:36:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751053006; x=1751657806; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sge9kv+qWhs416U9rXTCWTTRXiONTUBYiDk8dbiU+UA=;
+        b=l2gygZhIfnwDPqwy9UFdxk4wNqdnNagDl8jWmog0KugaXJ1Du9exAwhTj3wv2RMZHK
+         eoKpTDUHZYvTu6bhZLVZMI5NZExEmqXVKVaIH74aaf/xKK/AQ696mAM5HBY50jg+Kr3d
+         GoNZrhvlU5zoYwI2Z8mhEeuRozNkj96bRpTgRguJNhRQEN2jgM/xBgwOxTc+h3eU8aB1
+         EX0uxzB0ry7exq9e/GSWHBLKHnwUnqmytxOp80GdwoOZ9hX+1YhHB1KEcoqU/1IN990Y
+         lWaOTJaKlSd86vRrlhLs/2y4IrDjWkyDQOjOS6E6vdVdP43aua2Qrw7gkhjFWQE26AVU
+         iqNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751053006; x=1751657806;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sge9kv+qWhs416U9rXTCWTTRXiONTUBYiDk8dbiU+UA=;
+        b=KLUKOyztMwfOBpbrthpXUKJkEDXeo2lzeq9xu8qjjvi3h/LgkP8JrmKoSSDo55T+Dq
+         qcuA8kPe+qjEbvl+qs9hj0yIe1nwdOZHoC2vJabdW1/V9MEKCP/qknOOvFlBQUcqyMi4
+         4Qbri8UpDkU6n0AVaunKufJ8CkytVo263gdtAHMF97kHfsQhxFouc8XQhkYp09LGZsna
+         KaPOTTNT7kTyemd5oVQlnF+Ax/0Td6PbvrdI2mmMXmRtVyCT9HBLZ6jJLsibSHODiXo4
+         BuTW3SdBfo/IZQAV+8OgjBoB92FMz4O8XwaQr+G85RlMhLGUlB3Fzc6M62apPeREz72z
+         qTSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVU0rDvZM7uRSy+Jgh26dr8a8soy7/3Gy/yIIbdn7Mr8ELYek0aAgN1pujb/tmkb7ASihc=@vger.kernel.org, AJvYcCWYwdrhASKo+o8gIn9JHBsm4Pfi70kLQycmt7UUv4zuPQT9MjINrMOopRPl0HQ9BhjZmPuqXv8dEHewhxrx@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZtbcWUGOhG1iqwEuaGVDLleT1u0IoY6koeXLfZSonhvV2eBI1
+	1T4iVT2KEhzl07NfGsJk/gcVsRL2evisvKoiE1px5ypF961xvWo675J8MQJOZVrtRk7XJcdYG/N
+	S6GIozNV6Jy+OdDE+lleW8JBdcIiVXtM=
+X-Gm-Gg: ASbGncu6x3iYt+r4VxJ5KONLaVv8YHHKM4De+g622LQAWT1A0PJ94PX1ESVpAVA6o7e
+	MojAEgPy8v/kk1/v+vxEe9Fx+R84ugdoT/4wHuikcgKY4GEV28Q3IHaW163P1D3hPD/ZHxoa7XM
+	/bNDu0g5vYL2mLtrZA2fworDfMJNBteDSxth1jnHB6Kg5/6pqduCgsEsFC6Cs2RCCyzot57VZb
+X-Google-Smtp-Source: AGHT+IFJ6sW9aZlzHYqG6nZQUslfkO9AEHSytfv659QepQEpvvFk963bE9My7AemXeg9KlUdJGrL5HrZ59n6bl/5xEY=
+X-Received: by 2002:a05:600c:4fd6:b0:43c:f63c:babb with SMTP id
+ 5b1f17b1804b1-4538ee4f9c5mr44636075e9.1.1751053006033; Fri, 27 Jun 2025
+ 12:36:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 27 Jun 2025 19:36:42.0037 (UTC) FILETIME=[CEEFE650:01DBE79A]
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS0EPF0000019D:EE_|AS2PR08MB8903:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: fe959d39-cdbc-4a13-bd31-08ddb5b1e87e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013|41320700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7Px2HBr5pMe67RxOy38tWNOwlGDQBtDLFQGtsNgW6qw5O37f6nYH46ecaD/a?=
- =?us-ascii?Q?7ttobxgfH0m4Kpns4Q75tceEx4on7UbnWdxO7H+lBqLjJAGAikus5jBxBHet?=
- =?us-ascii?Q?+kjKX/ebHt7znQMeCO0edoIpjQBuzkAx6fOd4/lhXY87ZzjtBHIBfSM4aVEv?=
- =?us-ascii?Q?nHR2QBLxVfn/V2vpZNU5gqWES9e7I26pZWKv4fGt4n4CtbWyqC5GoVYmw0WS?=
- =?us-ascii?Q?QNAow9/CMD/dqJSPFdTynbbtu/BA6HXK4xvFis8ZqHp03qgc9+sN6pBWEpM6?=
- =?us-ascii?Q?FpHKWOZI1LsvtBMa0PfY0geHuyVQIOOJ9ODcbNLoF6iN76HaFEdO7Zh/I9MO?=
- =?us-ascii?Q?NofFgarjmjlTO6jqEO9ndEnazToZqcNIabU7ifEpY9j6GTyOxnjM57fDcQgc?=
- =?us-ascii?Q?ZCoLOc50g/PcpA/mkL/vKupJVAl2uut7Bka/IqXfxsg1ehfAnRKbGkvw+CCw?=
- =?us-ascii?Q?1l2KZKxlGzkiStcWimRl/ag8N6dcLPiOJNosdHjtszzIL/KyRT4HEY9W76AM?=
- =?us-ascii?Q?N2tr0/TFv+6CbfPfbD/YdrCOCjjcg3NCk8ZDzbhePNGyW5+WYXf4ZP+kGbmp?=
- =?us-ascii?Q?NNNGcf0cyOMMjfCAaLpmwmD+WP0oOtgRN1vYE/g83jAdvQYAiCG6oAI10w5K?=
- =?us-ascii?Q?QR/JEPHD0K56IHYMZuVQI8vLChBv+xQ8P1Cx0TNoJPsatgBOUDy3jRlhFGAf?=
- =?us-ascii?Q?2cqmKaZVsFFAlekc43PuMcotEy5iOptviOMuoP5UoRftjOna1Y9hDy6AnA6v?=
- =?us-ascii?Q?hpAaDLWavr+Blcp/57uhC0eNA7D7GffsnFJuUz5fMfZazu5GccxRp2Gwo2KM?=
- =?us-ascii?Q?iypkVnoz7Q7S032Dy+hvWZ+BVFNuCiod/rW29Vi3LdRI0EIaGavnW63krF6e?=
- =?us-ascii?Q?ub1rsPJATerdzK6aM255sn9PHXEizQ/QgnuzGLCFBuTPT15Jy/2wX+zP7DDZ?=
- =?us-ascii?Q?FQGiS5sYzKj2S7GUVk57gaQEaHUqMNwk22mKxAcxp4pTV+jqWkwG7wKcFqp3?=
- =?us-ascii?Q?KQ+x3QbxfqwFAbcrYNk4tAAoILm28HM04pHkHW4vMxN3fDf2SOkSQrRjz0rG?=
- =?us-ascii?Q?3J4UgsGeMzLJDG2pHn6v4QghZZ+MMOMbByX0n6Rd7afWLqT04kVi5eoc7W7j?=
- =?us-ascii?Q?cUgiUHAtlkTYIjQOxiE6WPt8sRdBF1sntuTBLrKxjPHZe/n/sU+JrltLsAuT?=
- =?us-ascii?Q?wmAkBBBN5cz156BofvUzG7BDlcgk0fQN1Mvq2nSsdlzOpXTHYUz+XVQEoD4s?=
- =?us-ascii?Q?T55qC7muimmQteSdejlh1y4VVTApSPsvNlkN8v6mr+cZNzTBlqQwOuGUvVdq?=
- =?us-ascii?Q?i6jfvPAnY/5A+j1zMY5dgNb5dwqdhouehyPEjSzA77PuxxKbWkrnR1LNJAbl?=
- =?us-ascii?Q?NIT9kVLK7j6nXKVgSDu2jHy/+aNM/ahxQXr/TsCjhCqDRNM114+mK9iDiwsf?=
- =?us-ascii?Q?5b81NwNcRHfpjfn4SiKEbMlTN6cEmwUHsN3OaxDEiAPc9ytKfa588TTt3jq2?=
- =?us-ascii?Q?kLOHIvKBB97CkAOKBUfFHYTJg7LKR+nXapIE?=
-X-Forefront-Antispam-Report:
-	CIP:80.90.171.68;CTRY:JO;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SESAME-SMTP.SESAME.LOCAL;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013)(41320700013);DIR:OUT;SFP:1102;
-X-OriginatorOrg: sesame.org.jo
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 19:36:26.6380
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe959d39-cdbc-4a13-bd31-08ddb5b1e87e
-X-MS-Exchange-CrossTenant-Id: 0788906c-6e04-423a-b37e-862cc7808738
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0788906c-6e04-423a-b37e-862cc7808738;Ip=[80.90.171.68];Helo=[SESAME-SMTP.SESAME.LOCAL]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF0000019D.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR08MB8903
+References: <20250616095532.47020-1-matt@readmodwrite.com> <CAPhsuW4ie=vvDSc97pk5qH+faoKjz+b51MDYGA3shaJwNd677Q@mail.gmail.com>
+ <CAENh_SQPLHC8pswTRoqh0bQR84HHQmnO3bM07UQa1Xu9uY_3WA@mail.gmail.com>
+ <CAADnVQ+QyPqi7XJ2p=S9FVDbOxMXvVPU859n+2ApuRQv5T2S5w@mail.gmail.com>
+ <CAENh_SQgZ5yVpshKRhiezhGMDAMvgV7SmwD_8u++mACE33oNrg@mail.gmail.com>
+ <CAADnVQJgOyBCCySnBkTk-VCsz0dy+ppdGHpggxbtDpBBGhaXVg@mail.gmail.com>
+ <CALrw=nFvUwmpjUMYh5iJqjo6SbAO8fZt8pkys7iDjZHfpF2DxQ@mail.gmail.com>
+ <CAADnVQLC44+D-FAW=k=iw+RQA057_ohTdwTYePm5PVMY-BEyqw@mail.gmail.com> <CAENh_SSduKpUtkW_=L5Gg0PYcgDCpkgX4g+7grm4kxucWmq0Ag@mail.gmail.com>
+In-Reply-To: <CAENh_SSduKpUtkW_=L5Gg0PYcgDCpkgX4g+7grm4kxucWmq0Ag@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 27 Jun 2025 12:36:34 -0700
+X-Gm-Features: Ac12FXyQ4sgWqPMwQr7JA7YNzD6LlQrc0xOw38ZKRBCSk16gbbU4DbSm-TLpMD4
+Message-ID: <CAADnVQ+_UZ2xUaV-=mb63f+Hy2aVcfC+y9ds1X70tbZhV8W9gw@mail.gmail.com>
+Subject: Re: [PATCH] bpf: Call cond_resched() to avoid soft lockup in trie_free()
+To: Matt Fleming <matt@readmodwrite.com>
+Cc: Ignat Korchagin <ignat@cloudflare.com>, Song Liu <song@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	kernel-team <kernel-team@cloudflare.com>, Matt Fleming <mfleming@cloudflare.com>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ran checkpatch.pl on drivers/staging/gpib/, found the following:
- - gpio: gpib_bitbang.c: wrapped LINVAL macro w/ parenthesis.
- - hp_82341: hp_82341.c: Used comments instead of "#if 0"
- - tnt4882: tnt4882_gpib.c: Used comments instead of "#if 0"
+On Fri, Jun 27, 2025 at 6:20=E2=80=AFAM Matt Fleming <matt@readmodwrite.com=
+> wrote:
+>
+> On Wed, Jun 18, 2025 at 3:50=E2=80=AFPM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> >
+> > Do your homework pls.
+> > Set max_entries to 100G and report back.
+> > Then set max_entries to 1G _with_ cond_rescehd() hack and report back.
+>
+> Hi,
+>
+> I put together a small reproducer
+> https://github.com/xdp-project/bpf-examples/pull/130 which gives the
+> following results on an AMD EPYC 9684X 96-Core machine:
+>
+> | Num of map entries | Linux 6.12.32 |  KASAN  | cond_resched |
+> |--------------------|---------------|---------|--------------|
+> | 1K                 | 0ms           | 4ms     | 0ms          |
+> | 10K                | 2ms           | 50ms    | 2ms          |
+> | 100K               | 32ms          | 511ms   | 32ms         |
+> | 1M                 | 427ms         | 5478ms  | 420ms        |
+> | 10M                | 5056ms        | 55714ms | 5040ms       |
+> | 100M               | 67253ms       | *       | 62630ms      |
+>
+> * - I gave up waiting after 11.5 hours
+>
+> Enabling KASAN makes the durations an order of magnitude bigger. The
+> cond_resched() patch eliminates the soft lockups with no effect on the
+> times.
 
-Signed-off-by: Abdalla Al-Dalleh <abdalla.ahmad@sesame.org.jo>
----
- drivers/staging/gpib/gpio/gpib_bitbang.c    |  4 ++--
- drivers/staging/gpib/hp_82341/hp_82341.c    | 14 +++++++-------
- drivers/staging/gpib/tnt4882/tnt4882_gpib.c | 14 +++++++-------
- 3 files changed, 16 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/staging/gpib/gpio/gpib_bitbang.c b/drivers/staging/gpib/gpio/gpib_bitbang.c
-index 625fef24a0bf..45cf4571c58d 100644
---- a/drivers/staging/gpib/gpio/gpib_bitbang.c
-+++ b/drivers/staging/gpib/gpio/gpib_bitbang.c
-@@ -47,10 +47,10 @@
- 			dev_dbg(board->gpib_dev, frm, ## __VA_ARGS__); } \
- 	while (0)
- 
--#define LINVAL gpiod_get_value(DAV),		\
-+#define LINVAL (gpiod_get_value(DAV),		\
- 		gpiod_get_value(NRFD),		\
- 		gpiod_get_value(NDAC),		\
--		gpiod_get_value(SRQ)
-+		gpiod_get_value(SRQ))
- #define LINFMT "DAV: %d	 NRFD:%d  NDAC: %d SRQ: %d"
- 
- #include "gpibP.h"
-diff --git a/drivers/staging/gpib/hp_82341/hp_82341.c b/drivers/staging/gpib/hp_82341/hp_82341.c
-index 1b0822b2a3b8..f641613e128b 100644
---- a/drivers/staging/gpib/hp_82341/hp_82341.c
-+++ b/drivers/staging/gpib/hp_82341/hp_82341.c
-@@ -805,14 +805,14 @@ static void hp_82341_detach(struct gpib_board *board)
- 	hp_82341_free_private(board);
- }
- 
--#if 0
- /* unused, will be needed when the driver is turned into a pnp_driver */
--static const struct pnp_device_id hp_82341_pnp_table[] = {
--	{.id = "HWP1411"},
--	{.id = ""}
--};
--MODULE_DEVICE_TABLE(pnp, hp_82341_pnp_table);
--#endif
-+/*
-+ * static const struct pnp_device_id hp_82341_pnp_table[] = {
-+ *	{.id = "HWP1411"},
-+ *	{.id = ""}
-+ * };
-+ * MODULE_DEVICE_TABLE(pnp, hp_82341_pnp_table);
-+ */
- 
- static int __init hp_82341_init_module(void)
- {
-diff --git a/drivers/staging/gpib/tnt4882/tnt4882_gpib.c b/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-index a17b69e34986..7d679604488e 100644
---- a/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-+++ b/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-@@ -1369,14 +1369,14 @@ static struct pci_driver tnt4882_pci_driver = {
- 	.probe = &tnt4882_pci_probe
- };
- 
--#if 0
- /* unused, will be needed when the driver is turned into a pnp_driver */
--static const struct pnp_device_id tnt4882_pnp_table[] = {
--	{.id = "NICC601"},
--	{.id = ""}
--};
--MODULE_DEVICE_TABLE(pnp, tnt4882_pnp_table);
--#endif
-+/*
-+ * static const struct pnp_device_id tnt4882_pnp_table[] = {
-+ *	{.id = "NICC601"},
-+ *	{.id = ""}
-+ * };
-+ * MODULE_DEVICE_TABLE(pnp, tnt4882_pnp_table);
-+ */
- 
- #ifdef CONFIG_GPIB_PCMCIA
- static struct gpib_interface ni_pcmcia_interface;
--- 
-2.43.0
-
+Good. Now you see my point, right?
+The cond_resched() doesn't fix the issue.
+1hr to free a trie of 100M elements is horrible.
+Try 100M kmalloc/kfree to see that slab is not the issue.
+trie_free() algorithm is to blame. It doesn't need to start
+from the root for every element. Fix the root cause.
