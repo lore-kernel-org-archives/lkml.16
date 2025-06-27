@@ -1,74 +1,73 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD211DE2C9
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055BC294A0A;
+	Fri, 27 Jun 2025 09:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751018013; cv=none; b=oWfOJX7Nws1TATLgY22QbQTslJq66T1+68RJq52Hi+OUB7D1skGoHgGSMy+GPPvhkYuMVGUceEbtjOzvckkpNVraDJ1oEcJcn/PO4ZLoY9gl1unZ5uSemZTRjkB4KcKaT7kMGIcFpaBRT4wI848NbD7/Dhxx0Xth7wurQhM+i2Q=
+	t=1751018025; cv=none; b=evn+7dp7M+axnP9Bot9JyBnHEaoeyLu7NxAE5IpxgZ280FZ/gXsw91r6PrEK9C2RX5W1h+LqLEoc52CPGrxMtrg87Cpp7K8bJXQwALrht/MX9guSxDWrcis4SbhyvzyyxVR8k9tMZ5G2X2/OBtaoT1aEeriVQ2CwepjbBxWX2nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751018013; c=relaxed/simple;
-	bh=kmRQkEN2KNCvcisa7bUIX6+rp+G2mwUuwtT+WIoz/7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VbQxBvDYd/ajJadlNqV4JnEyPlL1xY5wUVfLgJ3aPrr7UL4OCva65bcEtHiu2h44XBr2/ZAgdAYWvlwarN+D6K5uQnfOc7IPwDvhgIu9LEwIbVUDEEZWbIUfkEE55vy1/WWxY5WG2TcZKHwNQXx0v2CXyi/xRsHmGNaHuKVD884=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k2iADpdv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L9WITtaa; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k2iADpdv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L9WITtaa"
-Date: Fri, 27 Jun 2025 11:53:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751018010;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y9vhrsp7QZvTqYOj7ek2BlquX7altZRuzwvy5tsKFHE=;
-	b=k2iADpdvrNuJCjXW1lpo4dsA7Opqr7yQ5DO0tTz/zTCDj9UqBrAMwp1OR35WLItIHKLp4S
-	nJH8hw5PiWQgpRqzuC5K6G7k8wEJ5GAhCrojtwwMbiAvMXqEiAhqKoW2TiXbyQb8OpYQE0
-	73oh0jTNBks9kVXJtgYHY14TdNYiZx7vFefanmvJrDv/pTM/ayYIAZoZNxxlTTW6gI1+Qv
-	epr6XQ7KEh1PYaDKCzWuE5HoZPWRV+tx3veil77Wgs4cnTcNMU6KRGeClvANwmHCCB2twH
-	53v4yFRh7vlilzAK4cYTEXTL+MXhLGbUfRTkx4D02KGmUz/pg5FdXyQ8VsGtiw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751018010;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y9vhrsp7QZvTqYOj7ek2BlquX7altZRuzwvy5tsKFHE=;
-	b=L9WITtaakBJQMLHa8mH/q+Ou4J2hqnEjRagwucfnjjTG16tO/c8US9UlAUe2TzfS/rvM0w
-	kXbeqk3jtRNVI5BQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] um: virt-pci: Switch to
- msi_create_parent_irq_domain()
-Message-ID: <20250627095328.ce5O9YWf@linutronix.de>
-References: <cover.1750947651.git.namcao@linutronix.de>
- <b911c2f15c031354850eee277a773832890c3c17.1750947651.git.namcao@linutronix.de>
- <45f44f0298259abf1862b965805307b7c01a279d.camel@sipsolutions.net>
- <20250627084943.nCYOI4Vp@linutronix.de>
- <94de787f4c3ad6fc3a44c50c2a5d5311861ddd6c.camel@sipsolutions.net>
- <20250627094901.bkxjYmHj@linutronix.de>
+	s=arc-20240116; t=1751018025; c=relaxed/simple;
+	bh=6AFadw6CGTRIudYySdDeQGhQanMktZJn559I5i3x3xg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Acr2ghEp3vQNNzAZdzchZaOt5ZFEX8hKQCiSkdAR3Vf0D5k6y2Nt5JTuG4Ml0pM41SLMe5j8oPKXSvBGAlBbMvguq54OTXSBu8wIQaSDnqhGXavyvMDQ/rSLyfQ2eUfOODr2Eh9RqQJUtAKQCL2+MwPE/Ha1WVQKuHF+/MOSKlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bT9qG42NRz6L5FZ;
+	Fri, 27 Jun 2025 17:53:30 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id C1E141402F5;
+	Fri, 27 Jun 2025 17:53:39 +0800 (CST)
+Received: from localhost (10.48.153.213) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 27 Jun
+ 2025 11:53:38 +0200
+Date: Fri, 27 Jun 2025 10:53:36 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
+	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
+	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v10 03/17] PCI/AER: Report CXL or PCIe bus error type in
+ trace logging
+Message-ID: <20250627105336.0000297a@huawei.com>
+In-Reply-To: <20250626224252.1415009-4-terry.bowman@amd.com>
+References: <20250626224252.1415009-1-terry.bowman@amd.com>
+	<20250626224252.1415009-4-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627094901.bkxjYmHj@linutronix.de>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, Jun 27, 2025 at 11:49:03AM +0200, Nam Cao wrote:
-> My understanding of UM is limited, but I think I get it. We dereference a
-> NULL pointer and get SIGSEGV. We go into that code path and lockdep yells.
+On Thu, 26 Jun 2025 17:42:38 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
+
+> The AER service driver and aer_event tracing currently log 'PCIe Bus Type'
+> for all errors. Update the driver and aer_event tracing to log 'CXL Bus
+> Type' for CXL device errors.
 > 
-> With the NULL pointer deref removed, we won't go into that path, so it
-> should be good.
-
-By "that code path" I mean SIGSEGV handler.
-
-Nam
+> This requires the AER can identify and distinguish between PCIe errors and
+> CXL errors.
+> 
+> Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
+> aer_get_device_error_info() and pci_print_aer().
+> 
+> Update the aer_event trace routine to accept a bus type string parameter.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
