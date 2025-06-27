@@ -1,121 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05FC38DF9;
-	Fri, 27 Jun 2025 17:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F67A1F09A5;
+	Fri, 27 Jun 2025 17:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751046419; cv=none; b=f6Clcbt5sjFnuJ8g9UqCRpq1ZZVb4GnEYafNcZ2LqTLCdTEvS3GqzGJWfsQVhyrXSEFUKaSVgHXE/SyeVzjl911/jruaFXctPG/JqofUZVRHh82ec42TGkD6wrA2JMEAOWjXIR9nRBJEqbjQDvutVD1y00Knv3G0rbVh0rvMii4=
+	t=1751046584; cv=none; b=SPRqXalHlwDsEEquzsAH0oNEKzGhsLncXBxHLrLMrrrvcFJx0ZISQdgEp5Xczzv4SVcQtKHj5b4Mp30JRh7Lrj9aqV5uKJZdYAuSnDFtQVot58Li9Z+hm2Ze+Sq6xajWCZ7c2P9qmcCwnZqC1QnzWlr/oJQnvcR+NGJv7hCitu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751046419; c=relaxed/simple;
-	bh=834LtEDDKmSJjQzk82TMIFq6V2flBM6uUKKjUnRC5r4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NWmITPnw0ZxraJhRmkaM+itBilPlHKLsjmnN4gk+d44yfsTdL59LZdRArDC0fb2Vs5MuhFL/Fcp9reFYQS8YOwBU1nzVcFqb7QmTya/N9MGmhEKery8N5LdpV4+urEeQuFsV4NoCxh227QxthO54luc1liu4x3UJAPEUW9zU3Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K8WOH50W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751046584; c=relaxed/simple;
+	bh=3ErIgRlfbf0U1gwA6wQ8w3TtIiNWijhEOxcs6ejoPnM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IR3Zsy0XQgxkIUkEM0IRq9Djb6cZDXCnihv6jlzTtn7cXfIxlmdbBJuiC2GHhjY08hHVFO6WVmkPigfSK4ikX6Jvecbs2sG0lqEGp2/qIjO84pLGyHzl/CNqZjKv0zlO/p/mSzZeYjIywPnfkED2o5ey9CrUq35pTLmaCCPOZoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F0a6r9of; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K8WOH50W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B5BDC4CEE3;
-	Fri, 27 Jun 2025 17:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751046419;
-	bh=834LtEDDKmSJjQzk82TMIFq6V2flBM6uUKKjUnRC5r4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K8WOH50W226cAG8yh101MReBaS0kxcmuk6tb3FXa8IGpKPAT8qLaThlDmdgww8Mi1
-	 KKjW/88AdBaQSo933UN9uoLqap1BWIVOFLa+xLbB5OxxXy5jcvi6AtjSrTMLCbyDFf
-	 PLrtWm/rT1ZDbYT2WmQx/LxJmqemJfspgvnn0etju8SNcV8zBbpr4M9cz4pXtzppKO
-	 qEZqe530TgIWsaRmxiBLqWQ9orKqjOq0GxDqZmLX6exil5klt7ozsnPVzWz9iD51iD
-	 OFbyeFdManIJw/jmEri40jKgngZhfEJKTarp+DakNaqGSvv8XFIXFe3fNTtWESqlug
-	 hiUVTxejSJIRg==
-Date: Fri, 27 Jun 2025 10:46:58 -0700
-From: Vinod Koul <vkoul@kernel.org>
-To: srinivas.kandagatla@oss.qualcomm.com
-Cc: broonie@kernel.org, yung-chuan.liao@linux.intel.com,
-	pierre-louis.bossart@linux.dev, lgirdwood@gmail.com, perex@perex.cz,
-	tiwai@suse.com, krzysztof.kozlowski@linaro.org,
-	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 1/4] soundwire: bus: add of_sdw_find_device_by_node helper
-Message-ID: <aF7ZEi9qQxshnWed@vaman>
-References: <20250627155103.441547-1-srinivas.kandagatla@oss.qualcomm.com>
- <20250627155103.441547-2-srinivas.kandagatla@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0a6r9of"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-748e81d37a7so1973452b3a.1;
+        Fri, 27 Jun 2025 10:49:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751046582; x=1751651382; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wf/mQBAVXHaioZjerZGUfPR5HpKRHhYxWynkJWTASXg=;
+        b=F0a6r9offhDeT84T1Oz5gtdFxZ5NoC+hI30i869LlUCIi9UNv02OmkMN+D7Ew/0zy/
+         eY84J/7cHUWNpnLu4Vcr1BbgdaHANJ5rq7Ah5cVog++mC/rzNNgNUhpCnZsj33+/5dWC
+         OHcp8hloVUDqJg2jCttlGIpu9FCsQrPAn54UsJGpj7a8bieUysU9+/uAbwVT9Wp4dmDy
+         2CU7ishEM1eEnqYv9RIVQD3HxNJlFTWHravgSxBJ9ZdLOA9iKIbHuGS5sSAdBGCjQow7
+         XuLvLogthxe4keZw7WSLmxIh6NaP//l7VTxU3TBauTbdjhaWott0vHSKbKdeybf4Cj9s
+         TuDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751046582; x=1751651382;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Wf/mQBAVXHaioZjerZGUfPR5HpKRHhYxWynkJWTASXg=;
+        b=dLxW20KWDLPnxsvhPy67KoG4/OGDF9xhCGS+F9jwtIqehbpTLoR/bp05ckSCJ7D7Yf
+         Kq6DYIG52WcUCQEkn4saj+nMiN2Z7/2iO/LOtP8oMzsmjSckck37K/KkpF1BcnXURcyM
+         hW31l8FldtQy+DQOgflhYBFZCdoPWTjto5Ngearo8pwruyu362FYyq+1f53A9p12geK4
+         SkTaZ+78RJd+ZkxG+4wZMjYS42blKfg8Qm+4Pjh5iS+GQJwlwPbydTOPl80uissPdIqG
+         Yv+PH4f/+UGT4u3MmWx2/xcgYebFAMS0q55WIRSutWTPfMumkbH6oIFwspREcA8aJpq1
+         P7IA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2IljDuTiqoyUkOB0wfrJaEg+kmZ2kbZehZlozUZrms4oB8V+TmlBVPEfzJP1bI1L2mj0Tyk+leOpLevw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWPD+HxPg+xQxS86Ovvd/MxsI3V4+uvvuChsKB/MZl/QF2PMU0
+	hVGH9ERrjBIavfhyx40b119hMEotJyYuTpwJd9Shl7KXqLPh5SovbRrn
+X-Gm-Gg: ASbGncvhJUjgu6AWyeWGWq9EG2F9Z+9rWXOhVSAPmNNT1Cr1tbhoTEXxmhtOmGM+ZE8
+	wEv0urRZByctS22vmvK4Dy69mRXBm/xJnxLMUa1NqcRw7Rs+7qA5NkxkRAAFmdSnAbFmwPYyY31
+	mgiluycVoESkh/mRB4zl5n3mGLOK13PTdFkwhdC54gBi+t9Tb7CSvWdeMtAUN+d3q9hrqTsJMvG
+	sC1QQi1eba3ee91ESO8evvxijiTspn6kwLlA2uL/kxDLYm3GJIbf3F7N1CriKzEb4pyKd4ejEPY
+	Vp3vcC1qvvSH413Z7liF5JKE5KpWQ6y5URGJfrPM0ASybJ05zBEqJZsuY4a7R/mnIO+83gx4Awz
+	W3Av7zB7hFXc5nspO2cI73NkQSimVSL9HyIkNFnHRItA5hz2h7yBiGdMInig5
+X-Google-Smtp-Source: AGHT+IE5VKp0UGyBHHpNzEYVbSOSJhRVx9PwTPiAsX+Gy7MkrzawLittTtIsa2Z7xpKwX5NRAfuCeg==
+X-Received: by 2002:a17:903:110d:b0:237:d734:5642 with SMTP id d9443c01a7336-23ac48a72d7mr70421905ad.41.1751046582465;
+        Fri, 27 Jun 2025 10:49:42 -0700 (PDT)
+Received: from jpkobryn-fedora-PF5CFKNC.lan (c-67-180-10-175.hsd1.ca.comcast.net. [67.180.10.175])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3ad16fsm22267355ad.141.2025.06.27.10.49.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 10:49:42 -0700 (PDT)
+From: JP Kobryn <inwardvessel@gmail.com>
+To: tony.luck@intel.com,
+	bp@alien8.de,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	aijay@meta.com
+Cc: linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: [PATCH tip: x86/bugs v2] x86/mce: make sure cmci banks are cleared during shutdown on intel
+Date: Fri, 27 Jun 2025 10:49:35 -0700
+Message-ID: <20250627174935.95194-1-inwardvessel@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627155103.441547-2-srinivas.kandagatla@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
 
-On 27-06-25, 16:51, srinivas.kandagatla@oss.qualcomm.com wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-> 
-> There has been more than 3 instances of this helper in multiple codec
-> drivers, it does not make sense to keep duplicating this part of code.
-> 
-> Lets add a helper of_sdw_find_device_by_node for codec drivers to use it.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-> ---
->  drivers/soundwire/slave.c     | 6 ++++++
->  include/linux/soundwire/sdw.h | 9 +++++++++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
-> index d2d99555ec5a..3d4d00188c26 100644
-> --- a/drivers/soundwire/slave.c
-> +++ b/drivers/soundwire/slave.c
-> @@ -273,4 +273,10 @@ int sdw_of_find_slaves(struct sdw_bus *bus)
->  	return 0;
->  }
->  
-> +struct device *of_sdw_find_device_by_node(struct device_node *np)
-> +{
-> +	return bus_find_device_by_of_node(&sdw_bus_type, np);
-> +}
-> +EXPORT_SYMBOL_GPL(of_sdw_find_device_by_node);
+CMCI banks are not cleared during shutdown on intel CPU's. As a side effect
+when a kexec is performed, CPU's coming back online are unable to
+rediscover/claim these occupied banks which breaks MCE reporting.
 
-Helper for single code lines?? why!
+Clear the CPU ownership during shutdown via cmci_clear() so the banks can
+be reclaimed and MCE reporting will become functional once more.
 
-> +
->  MODULE_IMPORT_NS("SND_SOC_SDCA");
-> diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-> index 2362f621d94c..84d1a101b155 100644
-> --- a/include/linux/soundwire/sdw.h
-> +++ b/include/linux/soundwire/sdw.h
-> @@ -18,6 +18,7 @@
->  
->  struct dentry;
->  struct fwnode_handle;
-> +struct device_node;
->  
->  struct sdw_bus;
->  struct sdw_slave;
-> @@ -1080,6 +1081,8 @@ int sdw_stream_add_slave(struct sdw_slave *slave,
->  int sdw_stream_remove_slave(struct sdw_slave *slave,
->  			    struct sdw_stream_runtime *stream);
->  
-> +struct device *of_sdw_find_device_by_node(struct device_node *np);
-> +
->  int sdw_slave_get_scale_index(struct sdw_slave *slave, u8 *base);
->  
->  /* messaging and data APIs */
-> @@ -1113,6 +1116,12 @@ static inline int sdw_stream_remove_slave(struct sdw_slave *slave,
->  	return -EINVAL;
->  }
->  
-> +static inline struct device *of_sdw_find_device_by_node(struct device_node *np)
-> +{
-> +	WARN_ONCE(1, "SoundWire API is disabled");
-> +	return NULL;
-> +}
-> +
->  /* messaging and data APIs */
->  static inline int sdw_read(struct sdw_slave *slave, u32 addr)
->  {
-> -- 
-> 2.49.0
+Signed-off-by: JP Kobryn <inwardvessel@gmail.com>
+Reported-by: Aijay Adams <aijay@meta.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+---
+ arch/x86/kernel/cpu/mce/intel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
+index efcf21e9552e..9b149b9c4109 100644
+--- a/arch/x86/kernel/cpu/mce/intel.c
++++ b/arch/x86/kernel/cpu/mce/intel.c
+@@ -478,6 +478,7 @@ void mce_intel_feature_init(struct cpuinfo_x86 *c)
+ void mce_intel_feature_clear(struct cpuinfo_x86 *c)
+ {
+ 	intel_clear_lmce();
++	cmci_clear();
+ }
+ 
+ bool intel_filter_mce(struct mce *m)
 -- 
-~Vinod
+2.47.1
+
