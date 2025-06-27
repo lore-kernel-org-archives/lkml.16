@@ -1,178 +1,234 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AB7524F;
-	Fri, 27 Jun 2025 12:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751027446; cv=none; b=R9wkurvfMt0oi4xYowryhUY55mz0QrDLIRIK5Jf8/gqGbZnvVA4+bDfrQlTB+C/FuN9kByymo6yOtjeVHW740CjrSpNbnFYZNo7SSBI4IE+fR5WoOBhUWxQfvamPmJ+UdD6rlWlTVqRF2mqRQOWqs0kbYCmx0P2+FCgSJckCVQ0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751027446; c=relaxed/simple;
-	bh=tPqD7lpNKtBZq2fnjCtdln3EGyIBusmFyGEYGF4soFY=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ryNtz1W8G3xnNVHXaGKhj9CmnmZoZ8N5XNH+D3Q2mzvrpyR3gJRqT6cNdqKO8gpPcgCADp5ygwkDe+iZ2mBzoFmkjtuWJ5upqchvUHmVAFXlQWDa/dYLuwjJ/4FTdV1HkkgQUrtkKX42dyCyj3KB4B6C8Ni0Hc0RPqGc58+BnJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kNfq05Kw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bj8Wugek; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAA2524F;
+	Fri, 27 Jun 2025 12:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751027553; cv=fail; b=Y53d8wsm7QcrW7lQvuD+Fp0vZUs7r2zksZsG5JUFAPdyiSIVEaeKdRl+5FYUkLp/b2MgCmml3jVOl+63ctgQD7GlwYKtvRFu6TrJJOz+Lss8YAij50dk+39ZfXbNEl387c/zbsalz8MFdQ36XD2z/Wu6UWbHyCcR0pIjo+9+ttc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751027553; c=relaxed/simple;
+	bh=htlLKp+IE1ugHq7G/RErb/tSVatr4/C7tDBGB7wnxWI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=jO+Bs35p+aPXtq/HPILqfKOtOclJt5s9hDUbF9wVcZCxz86u8tGn2nlCSd2pOBBPiiaTrZxIzjAFMWvrTmThaGMQFZ6IuV17dtCim8aBo2U6A945BJluYyMSBDixG1vYp2R5q+AMQ9Hn/Y8ZNmhSysrolXhPMnOe846+mR6sbmw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D7jy1alX; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kNfq05Kw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bj8Wugek"
-Date: Fri, 27 Jun 2025 12:30:40 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751027442;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zogBGtOsfthpizvbogRciEFuJA+7qVueBtxw/sQquSY=;
-	b=kNfq05KwvZC5C3mvXu2dzYJZVprkvg+I3plREGXJdD6rEonbSeZOm5/aj3YfTELeIVpVuF
-	gUb0FqCbygvBxO8rLjljZ38MO/rpS3dM+PjMjkaQ5SF0NhfbEqzVEQuoqPn4XZvdzhBKQB
-	0YaDargaJLgpISrw0rOlxQZwnXlzsO2sUpBbxFHadBPaBniazYlNlCB3en3zuhD+T9yRWl
-	ckcOZfYovKg6L1rPd5JTmoWRib80tF5OcNO3lFfw05zzLnkK6xk4f3IY3JaOOyjIosAalz
-	iuvpzDk1SXkookbERTplFmMY9FpC9LP7KsvKirG/iiajTjwQa3BfMab5M6A6nA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751027442;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zogBGtOsfthpizvbogRciEFuJA+7qVueBtxw/sQquSY=;
-	b=bj8WugekMk1g3zoi6hZ82Z0hnOemW3C6p+apxDvAN+y4OFLVGKWQyeEMGBdb8hOhsR8RGA
-	l+XCsEW/hemrPoDg==
-From: "tip-bot2 for Gerd Hoffmann" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/sev] x86/sev: Let sev_es_efi_map_ghcbs() map the CA pages too
-Cc: Gerd Hoffmann <kraxel@redhat.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250626114014.373748-4-kraxel@redhat.com>
-References: <20250626114014.373748-4-kraxel@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D7jy1alX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751027552; x=1782563552;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=htlLKp+IE1ugHq7G/RErb/tSVatr4/C7tDBGB7wnxWI=;
+  b=D7jy1alXutEc7M96e/IwBc7qJG8s/G5xN2nHX8v110g8UsUp1WradcbQ
+   DvYCgNM8MG+Tm2o5O05+bJWTzorDJoZuWJOmPh/l/Enae7bUWQmrG09ta
+   0Ocob9yL+v1ETQYn/RYEF+ms2H/y+y04CN3lfoc/v3IWqaWkaiMMmQZRW
+   Y8KSkQezaoAcX5Q79JPPRw8YHW1wEaTGX0eXapoXY1Li2RKkzJr58DSWx
+   XkkXVa4Yid7zaqEK2QxM+ohjZDo+DvelndzrpBL5LiSOLNwwWV5XipTVh
+   xOBrCiesS5lneNxGNQ51V2JR0vyhIGRx2mWm2qW9qHHNtLf4fOW2QJGaN
+   Q==;
+X-CSE-ConnectionGUID: 1/G6ODUaQlaJdKsX+o64iw==
+X-CSE-MsgGUID: hIK10oqpRb2Km9opwIOrIQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="63936800"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="63936800"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 05:32:31 -0700
+X-CSE-ConnectionGUID: Ct9uVfZvQD6JRbyyzk8KGg==
+X-CSE-MsgGUID: cLTZL3AqRyyL4q3n+XNUGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="176475172"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 05:32:31 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 27 Jun 2025 05:32:30 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 27 Jun 2025 05:32:30 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.81)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 27 Jun 2025 05:32:29 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UP4emvpd5Z1VABsgk4b9wBufSibfvgRQr4rka1xoeTCJi0CgVb/ANy3ANT2EF1B2s4Slw3lCBuLEuJAWkb8u10ancp7qXT+nHeJSuFpqHaVDYM80LfTfO4rzudd6pIg26SsiMv4Hp7sS0tVGyK58390siaW2ziFanEHWriLnDcgDk8RsHD+aeDd51Aaav/iV+iNdkF2Bp+zO2FfXYlZ7HmZz0NSHEGegbvvFoU8Vq3E8J4hkBzqolgAOTzQ0RPSwOJdkRLdZUFPjiybINFX0DfRXog1t+6Vehc6Trq5DoESe/D1WlnLszY2xH12pjCMNUODkJPXXOUYeBVMN8IoJ5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+HYlzGw9CsBlmQBjfHisWMeMlxwKq8lS+oTGhYoNSR0=;
+ b=ZkzDBsWcdoQmwEelw2x5bLfvo/zI/MeN5lx13wtVTVfJK0X+5aNr6fSrDCSJt50qvhiBMQA31dKkPwYJacn5YM9usd/cmv2k2brqd9EyQBo4AS4XYc3iHAKuKIiAB2FpQ/JtG49ijnGVlGAjwhQXGuGovi+MOElip8GPSf+bApJpod1JI0EjuVU+1Ew4HK7w4TZY+6UgXZvT9FkRaFhhWh1471k4S9F6Nt3ZF078xobnXDNM7aV9QIY65WypRw9Zx1eQO6x725+GN7qhxYBTFNOhHts9a8Fh/CO5vY42q82hqlv04XGr2xvo4b6BbYeIIIN8Jg7vKAsfmU/7UZ1CjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CO1PR11MB5057.namprd11.prod.outlook.com (2603:10b6:303:6c::15)
+ by SJ2PR11MB8497.namprd11.prod.outlook.com (2603:10b6:a03:57b::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.26; Fri, 27 Jun
+ 2025 12:32:22 +0000
+Received: from CO1PR11MB5057.namprd11.prod.outlook.com
+ ([fe80::3b75:a8d2:464e:30cc]) by CO1PR11MB5057.namprd11.prod.outlook.com
+ ([fe80::3b75:a8d2:464e:30cc%4]) with mapi id 15.20.8857.026; Fri, 27 Jun 2025
+ 12:32:22 +0000
+Date: Fri, 27 Jun 2025 12:32:13 +0000
+From: Krzysztof Karas <krzysztof.karas@intel.com>
+To: Jeff Layton <jlayton@kernel.org>
+CC: Andrew Morton <akpm@linux-foundation.org>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+	<horms@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, "Jani
+ Nikula" <jani.nikula@linux.intel.com>, Joonas Lahtinen
+	<joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>, Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Qasim Ijaz <qasdev00@gmail.com>, Nathan Chancellor <nathan@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<intel-gfx@lists.freedesktop.org>
+Subject: Re: [PATCH v15 5/9] ref_tracker: allow pr_ostream() to print
+ directly to a seq_file
+Message-ID: <gzivdr6uvr4fps7uu2wl7ti63lnevmlekww6lbqfvyp4crm424@srxb7pzsj3fi>
+"Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173,
+ 80-298 Gdansk - KRS 101882 - NIP 957-07-52-316"
+References: <20250618-reftrack-dbgfs-v15-0-24fc37ead144@kernel.org>
+ <20250618-reftrack-dbgfs-v15-5-24fc37ead144@kernel.org>
+ <kd4urnnwx22njawv54ppewljkwlh2usqa4iengp64bpxyevpad@26vjqeu3dvn3>
+ <61c653aa5f298ded89f35eef76374b3138d17b02.camel@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <61c653aa5f298ded89f35eef76374b3138d17b02.camel@kernel.org>
+X-ClientProxiedBy: DB8P191CA0009.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:10:130::19) To CO1PR11MB5057.namprd11.prod.outlook.com
+ (2603:10b6:303:6c::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <175102744074.406.15128722963377307885.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR11MB5057:EE_|SJ2PR11MB8497:EE_
+X-MS-Office365-Filtering-Correlation-Id: 34593276-2751-495f-55b3-08ddb576aa13
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?aXdtZzBiZ1d4dTBSb1pjWk9KNFE0Y0NlNnNzcFhZUmRHbjF4SGpSd2RiY0hT?=
+ =?utf-8?B?ZUF0cUs0bXpUZTFNSTJUdkUzMGZXT1F0TzVWVmpWbExtQ25VcWFPYytnMmpy?=
+ =?utf-8?B?ZkM0TnhnRzJHMFk3cjU4MmZjOW55bGJKRlRvY25rU3dZVWtaclB1ZjdZaytv?=
+ =?utf-8?B?TGVnd1hmeFlkS2tWM1dFR3QvSDMvVVRYVElkMk9XT2ZoZ1djZUtNVkQwYWEz?=
+ =?utf-8?B?WTIwd0tYV2ZpYXBlS2Z1NlJiWm02WUhXRlkwanJDOWxucHQwTHBac3JFSlJl?=
+ =?utf-8?B?SjlnSm5zcmszYkVsTWlCQVhiN0VuYmQrdVpZVitZc1BuRnN5cWpadTJZSXA1?=
+ =?utf-8?B?VytCckIrRnpidmJFQlFHcndDeGNKNVhpSVp2VTF2a2V2eXVINUhiWlZUWDV2?=
+ =?utf-8?B?K0t5TU1vb3hPVHNGNlhaRTd2cVNWWXdPVDBDOUJJZVJpZ3FwY3ZMenBFcTh2?=
+ =?utf-8?B?UStwL2VqRExPUHl0cmRHcFZWSEl3Vit2dmVZWW4zZVpxWVIwMnIyaDhIZHVK?=
+ =?utf-8?B?NGVaNHFjSHp4a1JabDdPTzFqanp2c0J5OTFHSjI1TjBERXdmRlZpeGVnOExl?=
+ =?utf-8?B?Y3NqVVczQ2FuL3NiVDg1Qmp6OFhJZTJ5ZnU1N01qSStHeVFxV1M3Q1h2bGJj?=
+ =?utf-8?B?bGl4NVBReVdwWlJ1SzlLazBQODBJbUw3ZzNQVDBWK3lMQkF3ck1lb3BIUFVC?=
+ =?utf-8?B?RXp3eWNodW1JL1BWUThMdHEvaHlhQTF5aWxaSmtWRmdibXZINWVWV2lPZnV0?=
+ =?utf-8?B?YjlNNGFmUWxuNDl2TThQYnlJTjhWcTVxM1dEV2VZKzlGeEhxd0UrZFZ5ZmFC?=
+ =?utf-8?B?TmlqemlTd1VNUjZLazQ0RGRMMzkwTFRVSFUrWUc4UmhvOEVyYUJpOXd1dHcx?=
+ =?utf-8?B?WFpydjN2WWV0bEdRb3hESWZiNm9nVG8vcHBLUjVGRVhuaGNpNlhrcm5Cdy9h?=
+ =?utf-8?B?U0Q3WXJGY2I4a0diZjhjVjBXdUZOVWs2elB2SnREQ1d3ZG9DRElaVnFDTVRp?=
+ =?utf-8?B?NzVXUkxKajJlcHVFbHQ1V3dJa21IQnVGNHRQUCt5VElaQlc4enZOd2VrWVFr?=
+ =?utf-8?B?NEthNzBSN3RjSzhaZ0NjdkJKK0VEL2w5N012MFlKb2JMYnNWYmpDM2FrdGRm?=
+ =?utf-8?B?U2xCU2IwWmlkcEp0ZFBFRWgwbEF1eUd2d1NpNzM2cGE1Wms5UVQ0ek1HTWoz?=
+ =?utf-8?B?YnBMaENDaWQwcWY1aGdlTldvbnEzOFQ3a1drWUZSWW03L2ZJNjUwYmcrU3NR?=
+ =?utf-8?B?Y2luRjVVeGZUc3ZyZUlDeXJqcnc4VjF5Qit5dVNqNE9KbmJqaFQzaXc4QlU1?=
+ =?utf-8?B?Q0ZPcXRnMTcrRngzSUpnalNUWjU2TkJaVG5CVmNwL0Z6aUwvZ3Y0elRmVWxO?=
+ =?utf-8?B?ZUU4ak1zNk9RdElxWGI5UGFISDJPdmJoWFVlVms5NjlkUzNiR0w4RDZUK0li?=
+ =?utf-8?B?MGhiZVhZL2I2ZFdacHN2RlhvUHZhYTFjRWpWSHNmeEw4NUxWR0ptTVBkYitH?=
+ =?utf-8?B?K01BdjRxbG9RT0NXeTlhcUZRbUVVT0FMRmpqdmVTR2wrQXVKbFNSelJSd3hj?=
+ =?utf-8?B?N1pOQlJJdXRTUU9kbWpHRjJZQWVudUlRb1JmUThKT1lWdmUvUHRMZmhMaHR3?=
+ =?utf-8?B?U01CVXplNXk0MDNScHRUeWdjSHBnUHIvQm1GdmYyQjJlZTRjcGFUR3dHM0xU?=
+ =?utf-8?B?RjFPbk9YbkJaaDJvWHJ1U0RQV3M1OURqTnRyWnVYREV0WnA0S1Vua0lxa0du?=
+ =?utf-8?B?emJqRUVIVDFoYkxSUWIweWx0d25mOGtNNE1wQWVEdUxaY21ORG9NcW9QanFh?=
+ =?utf-8?B?YmNQOVREcUxQN29kblh6WWVNMWhFQ1Q2bWk3VWJDU21BUVZMTFR4ajRDeXEr?=
+ =?utf-8?B?VjVpNlpuTE5GS3ZIWENBeGlpNkl2TlRIVVBjOG4wWEdvNHFSMnhiNEc3ZVRD?=
+ =?utf-8?Q?SNdex98Z7R8=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5057.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bmExbGY5YnMvWmQyYVlhS0Y0THh2ckdiNnhsMzk4dGxkTXVRbVRQa0VEa0h2?=
+ =?utf-8?B?YUE1ZXpsOUh4eGFwdnRHZm9US0NJUzlybkl0MytJN3FmOU9CMlRGOGJvNkZM?=
+ =?utf-8?B?SVc2dm9tOGxZaFJHNllKZXcxdFJUUm5uRlVOcWw4aXlYaHNXYzNVRGFXUUJv?=
+ =?utf-8?B?V24vNE02YWgzc2orQVpWQXBnSHo3anpHRHBYcklXLzl0YW83am16MkJzQk5W?=
+ =?utf-8?B?ZGlRUWNvbHN0RHZZZHhxTjhoOW0vdmdhNDZQTjFtKzA2N1lkbXluaERhVkh6?=
+ =?utf-8?B?cnpnS0VMUkxYMkplbGt1Y3FJN21xMVVQWFdDY0NNcHdsb2xKa284OVMwYnht?=
+ =?utf-8?B?SFpZbmFVTDh3dVcvM2tUZnp5S2VZMWlkaDB5amcwdDFXSEYzc2IwU3ZJRHNG?=
+ =?utf-8?B?LzhRb0ZPeWtuUU1ENEJoK1puME9RcFZBSVF0SDZUd3NXMTdmMUdWUmhiUmlC?=
+ =?utf-8?B?MnRBU1QrWFFsQ2FiaWhINHVhcURHVUNNZnNub0p3KzhWOHdDV2N1NURYeC96?=
+ =?utf-8?B?cGdvUUhBQzZmVjZVN3Z4RzNCZTZKUitQZy9IRE4yQXpScGVzUU11cnBzcDlZ?=
+ =?utf-8?B?aVl2N3ZHc1FvaldublAvMzNDRlJ2dGRQM0Z0VTV6M3d0WjAzYTlXVWtCZ0hr?=
+ =?utf-8?B?bnMzYjhwdnF1UmxzUnJvaFdid1NyUHppWVBXTEdnV24zZzgzbEE5Q0VkZDMy?=
+ =?utf-8?B?cEFlY2R5VWNFaTJFamR6TVNDL1FWUG5WTFBPdEpvZWlMWVV3d2M2NEtOTits?=
+ =?utf-8?B?UERQQXR1d1RPUmZlSTIvb09LbHFlQWYwUS8wcHpmVm9GOHdQaTlha1lMbndF?=
+ =?utf-8?B?SXNHUzdYVnRFR3RDRUF1aWNoekp6OUxGcWp4N0R4UTNYVGw2b0FGS3lCNzBV?=
+ =?utf-8?B?K1B0Rlk5RlRmaUhTaUFSdmJIRXFIYUN6UjVTWTRPUUZwQ3hnSW5sNlJlMnpD?=
+ =?utf-8?B?eHlBZHhaMndiN3djaGVVd2tETlVSV3pGL0pJci9uZ1QrWi85MitKR1g3djQ4?=
+ =?utf-8?B?b2NtMURiZnczeW83NmI2WEdPS2F1eVFKME5iMlAxNGJwYWNBcXdQblEvRnNj?=
+ =?utf-8?B?Yks3Vm1FVjdhOXRPc3Bmc2R1clZUcWordHhCOFdYdFVrNUZPMkQ5WkxGYktX?=
+ =?utf-8?B?MDdIL0tvQWhrbW9Jam02d3U5Nm9CVUduVmNaYXUxY1V4UXBOWndabmMrQ3o1?=
+ =?utf-8?B?cTg5WG5EUlAvNzlaRlVhZkgvZGF4dERaUk1EWCs4b1VzakJHeVVabjQwVG4x?=
+ =?utf-8?B?US95ek1mZXpNdUZSeUJTVzZPVHk4MnFzanI5MFIraUFDL1lIT2VqMUZabVlt?=
+ =?utf-8?B?aHpaRjlpSmVwZE93N29IQkFvSWhvVU9OVitscjFUdFlrbmttSTBBL1QzZlZw?=
+ =?utf-8?B?aWU2QnJ2K3dlN1l4Vkpkdm42OVhLVnRjRi9mUnhUTHNNS09aVDdCTjdQL1I1?=
+ =?utf-8?B?cWlSeE9tcHhnTnJVZnMwaDVnaEwzdURVUndnZ2lSYmllUFdwdG1RdXRmQjVr?=
+ =?utf-8?B?NUh5NnA4Y1pOdkZmdmJDZWczaHFvSWh6emo3ek9kSjJ1TGtMU3B4OXdYbU5E?=
+ =?utf-8?B?bFhKdS9UcXBkM1dUTkt4b1VsRjZjQXBNTGdBS0s3U3czSUg4NUpDcDV2VkFB?=
+ =?utf-8?B?bjlZYzA3bkZYVnN1QnhPamZ5OU5MME16ZkRkUFNYOFIzR2pmUFVXU2lQbmEz?=
+ =?utf-8?B?am5Yb3RpbGVHN01VNk15bE1ma0tKelo3YzlDNGhLNzQ4SkNYblpOTERwM01F?=
+ =?utf-8?B?SmhQZjRHMW5jd0U4bGxjL0VCNWpuNkVESFozeVd0Q2QvS1Y2dUFJWDZXR2FT?=
+ =?utf-8?B?RGVRVUxBaUVSMVREYW83a29ZellSL1czOThJc2F3NWJPeUFlSkVQVExUa0g0?=
+ =?utf-8?B?UmgyMjM5L1o5aTM2dnNiVlZaaWVyMXdqakF1NUlDeXIzMmU4SzNhU3VyRnM5?=
+ =?utf-8?B?M1NLOHl4UHgvTnR4R1NRZWdzL3NxS2U1SkVTVjhENm5neTBBanpVV0lTVXRI?=
+ =?utf-8?B?V2YwN05HdVV3Q0RUZk9hVDdEdFdRbGJrcTRvUDZYSUxJaU9HdnNHZHRIcmp2?=
+ =?utf-8?B?Q1lSV2pPM0Juam9UalVaUFlBWTdFTzZINFgzR3FwWHpZWVRPSzhDL056a3R0?=
+ =?utf-8?B?ZFBwbjd5dEVoL0hoWk1RRno3SHZHSS8vUzF1TkZwY2h0aXRhMVhUdmliZWNs?=
+ =?utf-8?B?d0E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34593276-2751-495f-55b3-08ddb576aa13
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5057.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 12:32:22.1827
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: L0jKn6sLgpMPOAKTm8HRgwTNPdjQdatL52yjINWHluZQykMohwSx6WskfltS1GnNZUNs0++s9ffIeojZBsTgeCiTCWluAjc+ZnnPDI0YS9o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8497
+X-OriginatorOrg: intel.com
 
-The following commit has been merged into the x86/sev branch of tip:
+Hi Jeff,
 
-Commit-ID:     a7549636f67f973474ebe1ad262acc2aa4d1327d
-Gitweb:        https://git.kernel.org/tip/a7549636f67f973474ebe1ad262acc2aa4d1327d
-Author:        Gerd Hoffmann <kraxel@redhat.com>
-AuthorDate:    Thu, 26 Jun 2025 13:40:13 +02:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Fri, 27 Jun 2025 14:07:10 +02:00
+> On Mon, 2025-06-23 at 14:01 +0000, Krzysztof Karas wrote:
+> > Hi Jeff,
+> > 
+> > [...]
+> > > +static __maybe_unused int
+> > > +ref_tracker_dir_seq_print(struct ref_tracker_dir *dir, struct seq_file *seq)
+> > > +{
+> > > +	struct ostream os = { .func = pr_ostream_seq,
+> > > +			      .prefix = "",
+> > This is also a "ref_tracker_*" function, so maybe use the same
+> > prefix as in other functions? I mean .prefix = "ref_tracker:".
+> > Unless, you have a reason for leaving it empty ;)
+> > 
+> 
+> I have a reason to leave it empty.
+> 
+> That is the prefix for each line that gets printed by the pr_ostream()
+> call. This one is for the lines that go to the debugfs files. I think
+> it will be redundant to prepend every line in these files with
+> "ref_tracker: ".
 
-x86/sev: Let sev_es_efi_map_ghcbs() map the CA pages too
+OK, this makes sense.
+Reviewed-by: Krzysztof Karas <krzysztof.karas@intel.com>
 
-OVMF EFI firmware needs access to the CA page to do SVSM protocol calls. For
-example, when the SVSM implements an EFI variable store, such calls will be
-necessary.
-
-So add that to sev_es_efi_map_ghcbs() and also rename the function to reflect
-the additional job it is doing now.
-
-  [ bp: Massage. ]
-
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/20250626114014.373748-4-kraxel@redhat.com
 ---
- arch/x86/coco/sev/core.c       | 17 +++++++++++++++--
- arch/x86/include/asm/sev.h     |  4 ++--
- arch/x86/platform/efi/efi_64.c |  4 ++--
- 3 files changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 8375ca7..46bd895 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -1045,11 +1045,13 @@ int __init sev_es_setup_ap_jump_table(struct real_mode_header *rmh)
-  * This is needed by the OVMF UEFI firmware which will use whatever it finds in
-  * the GHCB MSR as its GHCB to talk to the hypervisor. So make sure the per-cpu
-  * runtime GHCBs used by the kernel are also mapped in the EFI page-table.
-+ *
-+ * When running under SVSM the CA page is needed too, so map it as well.
-  */
--int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
-+int __init sev_es_efi_map_ghcbs_cas(pgd_t *pgd)
- {
-+	unsigned long address, pflags, pflags_enc;
- 	struct sev_es_runtime_data *data;
--	unsigned long address, pflags;
- 	int cpu;
- 	u64 pfn;
- 
-@@ -1057,6 +1059,7 @@ int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
- 		return 0;
- 
- 	pflags = _PAGE_NX | _PAGE_RW;
-+	pflags_enc = cc_mkenc(pflags);
- 
- 	for_each_possible_cpu(cpu) {
- 		data = per_cpu(runtime_data, cpu);
-@@ -1066,6 +1069,16 @@ int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
- 
- 		if (kernel_map_pages_in_pgd(pgd, pfn, address, 1, pflags))
- 			return 1;
-+
-+		if (snp_vmpl) {
-+			address = per_cpu(svsm_caa_pa, cpu);
-+			if (!address)
-+				return 1;
-+
-+			pfn = address >> PAGE_SHIFT;
-+			if (kernel_map_pages_in_pgd(pgd, pfn, address, 1, pflags_enc))
-+				return 1;
-+		}
- 	}
- 
- 	return 0;
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index fbb616f..a81769a 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -446,7 +446,7 @@ static __always_inline void sev_es_nmi_complete(void)
- 	    cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
- 		__sev_es_nmi_complete();
- }
--extern int __init sev_es_efi_map_ghcbs(pgd_t *pgd);
-+extern int __init sev_es_efi_map_ghcbs_cas(pgd_t *pgd);
- extern void sev_enable(struct boot_params *bp);
- 
- /*
-@@ -554,7 +554,7 @@ static inline void sev_es_ist_enter(struct pt_regs *regs) { }
- static inline void sev_es_ist_exit(void) { }
- static inline int sev_es_setup_ap_jump_table(struct real_mode_header *rmh) { return 0; }
- static inline void sev_es_nmi_complete(void) { }
--static inline int sev_es_efi_map_ghcbs(pgd_t *pgd) { return 0; }
-+static inline int sev_es_efi_map_ghcbs_cas(pgd_t *pgd) { return 0; }
- static inline void sev_enable(struct boot_params *bp) { }
- static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate) { return 0; }
- static inline int rmpadjust(unsigned long vaddr, bool rmp_psize, unsigned long attrs) { return 0; }
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index e7e8f77..b4409df 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -216,8 +216,8 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
- 	 * When SEV-ES is active, the GHCB as set by the kernel will be used
- 	 * by firmware. Create a 1:1 unencrypted mapping for each GHCB.
- 	 */
--	if (sev_es_efi_map_ghcbs(pgd)) {
--		pr_err("Failed to create 1:1 mapping for the GHCBs!\n");
-+	if (sev_es_efi_map_ghcbs_cas(pgd)) {
-+		pr_err("Failed to create 1:1 mapping for the GHCBs and CAs!\n");
- 		return 1;
- 	}
- 
+Best Regards,
+Krzysztof
